@@ -5,13 +5,16 @@
 
 import * as THREE from 'three';
 import { Rail } from './rails';
+import { CONST } from './tuning';
 
 export interface Crate {
   mesh: THREE.Mesh;
   box: THREE.Box3;
   alive: boolean;
-  nitro?: boolean; // green, bobbing, ANY touch = death; cannot be broken safely
+  nitro?: boolean; // green, bobbing, touch = instant detonation (manual past it!)
   bouncy?: boolean; // yellow arrow crate: stomp = super bounce, never breaks
+  tnt?: boolean; // red TNT: touch lights a 3s fuse, then it blows
+  fuse?: number; // seconds left on a lit TNT
 }
 
 export interface Enemy {
@@ -53,11 +56,17 @@ export class Level {
   killY = -48; // per-level death height
   name = LEVEL_NAMES[0];
 
+  explosions: { center: THREE.Vector3; t: number }[] = [];
+
   private scene: THREE.Scene;
   private root = new THREE.Group(); // everything the level owns, for disposal
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private arrowTex: THREE.CanvasTexture | null = null;
+  private tntTex: THREE.CanvasTexture | null = null;
+  private blastMeshes: { outer: THREE.Mesh; inner: THREE.Mesh; ex: { center: THREE.Vector3; t: number } }[] = [];
+  private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
+  private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
 
   constructor(scene: THREE.Scene, courseId = 0) {
     this.scene = scene;
@@ -80,7 +89,7 @@ export class Level {
   }
 
   get totalCrates(): number {
-    return this.crates.filter((c) => !c.nitro && !c.bouncy).length;
+    return this.crates.filter((c) => !c.nitro && !c.bouncy && !c.tnt).length;
   }
 
   update(dt: number): void {
@@ -111,6 +120,55 @@ export class Level {
       c.mesh.position.y =
         (c.mesh.userData.baseY as number) + Math.sin(this.time * 4 + c.mesh.position.z) * 0.12;
     }
+    // Lit TNT fuses: pulse faster and faster, then blow.
+    for (const c of this.crates) {
+      if (!c.tnt || !c.alive || c.fuse === undefined) continue;
+      c.fuse -= dt;
+      const urgency = 6 + (CONST.tntFuse - c.fuse) * 6;
+      c.mesh.scale.setScalar(1 + Math.abs(Math.sin(this.time * urgency)) * 0.14);
+      if (c.fuse <= 0) this.detonate(c);
+    }
+
+    // Expanding blasts: chain explosives, break crates, kill enemies.
+    for (const ex of this.explosions) {
+      ex.t += dt;
+      if (ex.t <= CONST.blastGrow + 0.05) {
+        const r = CONST.blastRadius * Math.min(1, ex.t / CONST.blastGrow);
+        for (const c of this.crates) {
+          if (!c.alive || c.bouncy) continue;
+          if (c.mesh.position.distanceTo(ex.center) < r + 0.6) {
+            if (c.nitro || c.tnt) this.detonate(c);
+            else {
+              this.breakCrate(c);
+              this.blastBroken.push(c);
+            }
+          }
+        }
+        for (const e of this.enemies) {
+          if (e.alive && e.group.position.distanceTo(ex.center) < r + 0.8) this.killEnemy(e);
+        }
+      }
+    }
+    for (let i = this.blastMeshes.length - 1; i >= 0; i--) {
+      const b = this.blastMeshes[i];
+      const r = Math.max(0.01, CONST.blastRadius * Math.min(1, b.ex.t / CONST.blastGrow));
+      b.outer.scale.setScalar(r);
+      b.inner.scale.setScalar(r * 0.55);
+      const fade = Math.max(0, 1 - b.ex.t / 0.6);
+      (b.outer.material as THREE.MeshBasicMaterial).opacity = 0.55 * fade;
+      (b.inner.material as THREE.MeshBasicMaterial).opacity = 0.9 * fade;
+      if (b.ex.t > 0.6) {
+        this.root.remove(b.outer);
+        this.root.remove(b.inner);
+        (b.outer.material as THREE.Material).dispose();
+        (b.inner.material as THREE.Material).dispose();
+        this.blastMeshes.splice(i, 1);
+      }
+    }
+    for (let i = this.explosions.length - 1; i >= 0; i--) {
+      if (this.explosions[i].t > 0.7) this.explosions.splice(i, 1);
+    }
+
     // Quick scale-pop for broken crates / squashed enemies.
     for (let i = this.pops.length - 1; i >= 0; i--) {
       const p = this.pops[i];
@@ -127,6 +185,43 @@ export class Level {
   breakCrate(crate: Crate): void {
     crate.alive = false;
     this.pops.push({ obj: crate.mesh, t: 0.12 });
+  }
+
+  lightFuse(c: Crate): void {
+    if (c.alive && c.tnt && c.fuse === undefined) c.fuse = CONST.tntFuse;
+  }
+
+  // Blow up a nitro/TNT box: expanding blast that chains neighbors, breaks
+  // normal crates, kills enemies, and (checked player-side) kills the rider.
+  detonate(c: Crate): void {
+    if (!c.alive) return;
+    c.alive = false;
+    c.fuse = undefined;
+    c.mesh.visible = false;
+    const center = c.mesh.position.clone();
+    const ex = { center, t: 0 };
+    this.explosions.push(ex);
+    const outer = new THREE.Mesh(
+      Level.blastGeo,
+      new THREE.MeshBasicMaterial({ color: 0xff7a28, transparent: true, opacity: 0.55 }),
+    );
+    const inner = new THREE.Mesh(
+      Level.blastGeo,
+      new THREE.MeshBasicMaterial({ color: 0xfff2c8, transparent: true, opacity: 0.9 }),
+    );
+    outer.position.copy(center);
+    inner.position.copy(center);
+    outer.scale.setScalar(0.01);
+    inner.scale.setScalar(0.01);
+    this.root.add(outer);
+    this.root.add(inner);
+    this.blastMeshes.push({ outer, inner, ex });
+  }
+
+  consumeBlastBroken(): Crate[] {
+    const b = this.blastBroken;
+    this.blastBroken = [];
+    return b;
   }
 
   killEnemy(enemy: Enemy): void {
@@ -153,6 +248,15 @@ export class Level {
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
     this.pops.length = 0;
+    this.explosions.length = 0;
+    this.blastBroken.length = 0;
+    for (const b of this.blastMeshes) {
+      this.root.remove(b.outer);
+      this.root.remove(b.inner);
+      (b.outer.material as THREE.Material).dispose();
+      (b.inner.material as THREE.Material).dispose();
+    }
+    this.blastMeshes.length = 0;
 
     if (!hard && this.activeCheckpoint) {
       const snap = this.activeCheckpoint.savedAlive;
@@ -160,12 +264,14 @@ export class Level {
         c.alive = snap[i];
         c.mesh.visible = snap[i];
         c.mesh.scale.setScalar(1);
+        c.fuse = undefined;
       });
     } else {
       for (const c of this.crates) {
         c.alive = true;
         c.mesh.visible = true;
         c.mesh.scale.setScalar(1);
+        c.fuse = undefined;
       }
     }
 
@@ -369,8 +475,19 @@ export class Level {
     this.crate(3.5, -12.8, -788);
     this.crate(3.5, -12.8, -822, 'nitro');
     this.crate(3.5, -12.8, -840);
-    // Rail yard landing: a bouncy crate off the racing line, for fun.
+    // Corridor D: a big mixed explosive block off the left lane — chain it
+    // from a distance with a TNT touch, or manual straight past it.
+    this.crate(-2.6, -13, -530, 'tnt');
+    this.crate(-2.6, -11.8, -530, 'nitro');
+    this.crate(-1.3, -13, -530, 'tnt');
+    this.crate(-3.9, -13, -530);
+    // Rail yard landing: a bouncy crate off the racing line, and a 2x2 nitro
+    // block guarding the left side.
     this.crate(2.5, -13.5, -868, 'bouncy');
+    this.crate(-3, -13.5, -866, 'nitro');
+    this.crate(-4.3, -13.5, -866, 'nitro');
+    this.crate(-3, -12.3, -866, 'nitro');
+    this.crate(-4.3, -12.3, -866, 'nitro');
     // Final downhill: offset dodge crates (thread between them at speed).
     this.crate(-2.2, this.downhillY(-905), -905);
     this.crate(2.2, this.downhillY(-925), -925);
@@ -456,6 +573,7 @@ export class Level {
     this.slab('forked path', -150, -205, 1.5, 14, matJungle);
     this.wall(0, -177, 4, 40, 1.5, 3); // the ruin wall splitting the lanes
     this.crate(-4, 1.5, -165);
+    this.crate(-4, 1.5, -175, 'tnt'); // brush it and keep moving
     this.crate(-4, 1.5, -185);
     this.crate(4, 1.5, -172);
     this.crate(3.5, 1.5, -190, 'nitro'); // right lane is the greedy lane
@@ -478,6 +596,10 @@ export class Level {
     this.slab('stone ruins', -264, -310, 1.5, 12, matStone);
     for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 1.5, -285); // ruin crate wall
     this.crate(4, 1.5, -300, 'bouncy');
+    // big nitro block stacked in the ruin corner
+    this.crate(4.5, 1.5, -272, 'nitro');
+    this.crate(4.5, 2.7, -272, 'nitro');
+    this.crate(3.2, 1.5, -272, 'nitro');
 
     // climb to the exit
     this.ramp('temple ramp', -310, 1.5, -340, 6, 10, matRamp);
@@ -549,6 +671,7 @@ export class Level {
     this.slab('landing 2', -205, -230, 18, 10, matWood2);
     this.checkpoint(18, -212);
     for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 18, -221); // plank wall
+    this.crate(2, 18, -217, 'tnt'); // light it and the blast clears the planks
     this.enemy(-3, 3, 18, -227, 5);
 
     // stair steps up (hop, or bounce the arrow crate to skip two)
@@ -673,13 +796,15 @@ export class Level {
     }
   }
 
-  private crate(x: number, deckY: number, z: number, kind?: 'nitro' | 'bouncy'): void {
+  private crate(x: number, deckY: number, z: number, kind?: 'nitro' | 'bouncy' | 'tnt'): void {
     const size = 1.2;
     let mat: THREE.MeshLambertMaterial;
     if (kind === 'nitro') {
       mat = new THREE.MeshLambertMaterial({ color: 0x35d054, emissive: 0x0c3a16 });
     } else if (kind === 'bouncy') {
       mat = new THREE.MeshLambertMaterial({ color: 0xe8c832, map: this.arrowTexture() });
+    } else if (kind === 'tnt') {
+      mat = new THREE.MeshLambertMaterial({ color: 0xd04038, map: this.tntTexture() });
     } else {
       mat = new THREE.MeshLambertMaterial({ color: 0xb08a4a });
     }
@@ -692,7 +817,33 @@ export class Level {
       mesh.position.clone(),
       new THREE.Vector3(size, size, size),
     );
-    this.crates.push({ mesh, box, alive: true, nitro: kind === 'nitro', bouncy: kind === 'bouncy' });
+    this.crates.push({
+      mesh,
+      box,
+      alive: true,
+      nitro: kind === 'nitro',
+      bouncy: kind === 'bouncy',
+      tnt: kind === 'tnt',
+    });
+  }
+
+  // Classic red TNT face (shared texture).
+  private tntTexture(): THREE.CanvasTexture {
+    if (this.tntTex) return this.tntTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#d04038';
+    ctx.fillRect(0, 0, 32, 32);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('TNT', 16, 17);
+    this.tntTex = new THREE.CanvasTexture(canvas);
+    this.tntTex.magFilter = THREE.NearestFilter;
+    return this.tntTex;
   }
 
   // Chunky white up-arrow on the bouncy crates (shared texture).

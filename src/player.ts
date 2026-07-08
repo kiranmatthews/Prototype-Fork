@@ -41,7 +41,8 @@ export class Player {
 
   // debug readouts
   railCandidateDist = Infinity;
-  balance = 0; // THPS grind balance needle, -1..1 (bail at the ends)
+  balance = 0; // THPS balance needle (grinds AND manuals), -1..1
+  manualing = false; // THPS manual: wheelie on the ground, safe over explosives
 
   // wired up by main.ts
   onDeath: () => void = () => {};
@@ -61,6 +62,13 @@ export class Player {
   private slideTimer = 0;
   private slideCd = 0;
   private slidePose = 0;
+  private manualTime = 0;
+  private manualCd = 0;
+  private manualPose = 0;
+  private sincePosY = 9; // seconds since stick was pushed up / down (flick detect)
+  private sinceNegY = 9;
+  private prevMoveY = 0;
+  private downHold = 0;
   private grabSpinAngle = 0; // trick spin while holding the grab (visual only)
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
@@ -153,6 +161,10 @@ export class Player {
     this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
     this.slideTimer = 0;
     this.slideCd = 0;
+    this.manualing = false;
+    this.manualCd = 0;
+    this.sincePosY = 9;
+    this.sinceNegY = 9;
     for (const f of this.fruits) {
       f.age = -1;
       f.mesh.visible = false;
@@ -184,7 +196,55 @@ export class Player {
     this.flipTimer = Math.max(0, this.flipTimer - dt);
     this.slideCd = Math.max(0, this.slideCd - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
+    this.manualCd = Math.max(0, this.manualCd - dt);
     this.prevPos.copy(this.pos);
+
+    // THPS manual: a quick up->down (or down->up) flick while riding pops a
+    // wheelie. Balance it with left/right; roll safely over nitro and TNT.
+    this.sincePosY += dt;
+    this.sinceNegY += dt;
+    if (input.moveY > 0.5) this.sincePosY = 0;
+    if (input.moveY < -0.5) this.sinceNegY = 0;
+    const downFlick = this.prevMoveY >= -0.5 && input.moveY < -0.5 && this.sincePosY < CONST.manualFlickWindow;
+    const upFlick = this.prevMoveY <= 0.5 && input.moveY > 0.5 && this.sinceNegY < CONST.manualFlickWindow;
+    if ((downFlick || upFlick) && this.state === 'ride' && this.grounded) {
+      if (this.manualing) {
+        this.manualing = false;
+        this.balance = 0;
+        this.manualCd = 0.25;
+      } else if (this.manualCd <= 0 && Math.abs(this.speed) >= CONST.manualMinSpeed) {
+        this.manualing = true;
+        this.manualTime = 0;
+        this.downHold = 0;
+        this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
+      }
+    }
+    this.prevMoveY = input.moveY;
+
+    if (this.manualing) {
+      if (this.state !== 'ride' || !this.grounded || Math.abs(this.speed) < 6) {
+        this.manualing = false;
+        this.balance = 0;
+      } else {
+        this.manualTime += dt;
+        this.downHold = input.moveY < -0.5 ? this.downHold + dt : 0;
+        const instability = TUNING.balanceDrift * (1 + this.manualTime * CONST.balanceRamp);
+        this.balance += Math.sign(this.balance || 1) * instability * dt;
+        this.balance += input.moveX * TUNING.balanceControl * dt;
+        if (Math.abs(this.balance) >= 1) {
+          // stumble: keep your life, lose your speed
+          this.manualing = false;
+          this.balance = 0;
+          this.manualCd = 0.6;
+          this.speed *= 0.4;
+          this.emitSparks(6, 0xffb545, 1.5);
+        } else if (this.downHold > CONST.manualDownHoldExit) {
+          this.manualing = false; // you meant to brake
+          this.balance = 0;
+          this.manualCd = 0.25;
+        }
+      }
+    }
 
     // Circle/Q on the ground at speed starts a slide (in the air it's a grab).
     if (
@@ -252,6 +312,24 @@ export class Player {
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
+      // Blast aftermath: tally crates the explosions broke, and die if we're
+      // inside an expanding blast sphere.
+      for (const c of level.consumeBlastBroken()) {
+        this.cratesBroken++;
+        this.spawnFruit(c.box);
+      }
+      // collide() above may have killed us; TS can't see that mutation.
+      if ((this.state as MoveState) !== 'dead') {
+        const center = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
+        for (const ex of level.explosions) {
+          if (ex.t > CONST.blastGrow + 0.05) continue;
+          const r = CONST.blastRadius * Math.min(1, ex.t / CONST.blastGrow);
+          if (center.distanceTo(ex.center) < r + 0.5) {
+            this.die();
+            break;
+          }
+        }
+      }
       if (this.pos.y < level.killY) this.die();
     }
 
@@ -303,8 +381,9 @@ export class Player {
     this.pos.addScaledVector(FORWARD, this.speed * dt);
 
     // Axis-locked sidestep: direct velocity while held, dead stop on release.
-    // Left is ALWAYS screen-left, even while backing up.
-    if (Math.abs(input.moveX) > 0.05) {
+    // Left is ALWAYS screen-left, even while backing up. During a manual the
+    // stick belongs to the balance meter instead.
+    if (!this.manualing && Math.abs(input.moveX) > 0.05) {
       this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
     }
 
@@ -367,6 +446,7 @@ export class Player {
       this.state = 'air';
       this.grounded = false;
       this.coyoteTimer = 0;
+      this.manualing = false;
       this.canCutJump = true; // release Space early for a short precise hop
       // Crash rules: a stationary/short hop doesn't flip.
       if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
@@ -523,6 +603,7 @@ export class Player {
     this.vVel = 0;
     this.coyoteTimer = 0;
     this.vertLock = false;
+    this.manualing = false;
     this.grabActive = false;
     this.grabGraceTimer = 0;
     this.grindTime = 0;
@@ -659,10 +740,20 @@ export class Player {
     for (const c of level.crates) {
       if (!c.alive) continue;
       if (c.nitro) {
-        // Nitro: ANY body contact detonates. No safe way to break it — avoid.
+        // Nitro: body contact detonates it (and you with it) — unless you're
+        // balanced in a manual, which rolls right past.
+        if (this.manualing) continue;
         if (this.playerBox.intersectsBox(c.box)) {
+          level.detonate(c);
           this.die();
           return;
+        }
+        continue;
+      }
+      if (c.tnt) {
+        // TNT: contact lights the 3s fuse (get clear!). Manuals don't light it.
+        if (!this.manualing && c.fuse === undefined && this.playerBox.intersectsBox(c.box)) {
+          level.lightFuse(c);
         }
         continue;
       }
@@ -860,9 +951,10 @@ export class Player {
   private syncVisual(input: Input, dt: number): void {
     this.group.position.copy(this.pos);
 
-    // Chunky little carve lean; while grinding, the lean IS the balance needle.
+    // Chunky little carve lean; on a rail or in a manual, the lean IS the
+    // balance needle.
     const targetLean =
-      this.state === 'grind'
+      this.state === 'grind' || this.manualing
         ? this.balance * 0.55 // tip toward the needle/d-pad side (balance>0 = right)
         : this.grounded
           ? -input.moveX * 0.28
@@ -896,10 +988,15 @@ export class Player {
     this.grabPose += (targetPose - this.grabPose) * Math.min(1, 16 * dt);
     const targetSlide = this.sliding ? 1 : 0;
     this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
+    const targetManual = this.manualing ? 1 : 0;
+    this.manualPose += (targetManual - this.manualPose) * Math.min(1, 14 * dt);
     const flip =
       this.flipTimer > 0 ? (1 - this.flipTimer / CONST.flipDuration) * Math.PI * 2 : 0;
     this.bodyGroup.rotation.x =
-      flip * (1 - this.grabPose) + 0.45 * this.grabPose - 0.35 * this.slidePose;
+      flip * (1 - this.grabPose) +
+      0.45 * this.grabPose -
+      0.35 * this.slidePose -
+      0.5 * this.manualPose; // wheelie: nose up
     this.bodyGroup.position.y = this.grabPose * -0.12 - this.slidePose * 0.32;
 
     this.group.visible = this.state !== 'dead';

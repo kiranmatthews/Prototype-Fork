@@ -87,6 +87,12 @@ export const CONST = {
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   bounceCrateForce: 30, // arrow-crate launch (vs ~18 from a normal stomp)
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
+  manualMinSpeed: 8, // need this much speed to pop a manual
+  manualFlickWindow: 0.2, // up->down (or down->up) within this = manual flick
+  manualDownHoldExit: 0.4, // holding down this long during a manual = you meant to brake
+  tntFuse: 3, // Crash-style TNT countdown
+  blastRadius: 5.5, // explosion kill/break radius (expands over blastGrow)
+  blastGrow: 0.35, // seconds for the blast sphere to reach full size
   shortHopGravity: 3, // rise-gravity multiplier when Space is released early (tap = short hop)
   hpSnapWindow: 2.2, // taller ground-snap window on halfpipe walls so steep climbs stick
   deadzone: 0.18,

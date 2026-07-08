@@ -116,7 +116,7 @@ function frame(): void {
 
   updateCamera(dt);
 
-  ui.updateBalance(player.state === 'grind', player.balance);
+  ui.updateBalance(player.state === 'grind' || player.manualing, player.balance);
   ui.setStats({
     speed: player.speed,
     state: player.state,
