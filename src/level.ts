@@ -468,7 +468,8 @@ export class Level {
     this.crate(14, 0, -20);
     this.crate(31, 0, -28);
     this.crate(37, 0, -12, 'bouncy');
-    this.towerClimb(-8, 0, 4, 34); // pen tower: four stories, crates up top
+    this.towerClimb(-8, 0, 4, 34); // staggered tower: four stories, crates up top
+    this.stairClimb(10, 0, 7, 13, 7); // flush guarded stair: seven stories, hard to fall off
     // Halfpipe: bouncy arrow crate launches you up to the lip rails.
     this.crate(-2.2, -13.5, -735, 'bouncy');
     this.crate(0, -13.5, -755); // wumpa snack on the floor line
@@ -615,8 +616,8 @@ export class Level {
     this.crate(4.5, 2.7, -272, 'nitro');
     this.crate(3.2, 1.5, -272, 'nitro');
 
-    // the temple stair: four stories of stone columns over the water
-    const climb = this.towerClimb(-312, 1.5, 4);
+    // the temple stair: four flush guarded stories over the water
+    const climb = this.stairClimb(-312, 1.5, 4);
     const top = climb.topY;
     this.slab('temple top', climb.endZ - 2, -420, top, 12, matStone);
     this.enemy(-4, 4, top, -370, 6);
@@ -841,6 +842,32 @@ export class Level {
     return { endZ: z, topY: y };
   }
 
+  // Flush staircase: steps butt directly against each other (no gap to fall
+  // through) with guard rails along both sides — the safe way to gain real
+  // height. Bonk the riser, hop up, repeat.
+  private stairClimb(
+    zStart: number,
+    baseY: number,
+    stories: number,
+    xCenter = 0,
+    width = 8,
+  ): { endZ: number; topY: number } {
+    const depth = 5;
+    let y = baseY;
+    let z = zStart;
+    for (let i = 0; i < stories; i++) {
+      y += 2.6;
+      this.stepBlock(xCenter, z - depth / 2, width, depth, y - 10, y);
+      // guard rails so you can't slip off the sides
+      for (const side of [-1, 1]) {
+        this.wall(xCenter + side * (width / 2 + 0.3), z - depth / 2, 0.6, depth, y, 1.6);
+      }
+      if (i % 2 === 1) this.crate(xCenter, y, z - depth / 2);
+      z -= depth;
+    }
+    return { endZ: z, topY: y };
+  }
+
   // Dark edge strips so deck borders read at speed. Visual only.
   private curbs(z0: number, z1: number, topY: number, width: number): void {
     const mat = new THREE.MeshLambertMaterial({ color: 0x4a4e58 });
@@ -1045,8 +1072,8 @@ export class Level {
         dist += len;
         lastGap = true;
       } else if (roll < 0.9) {
-        // temple stair tower over the void: climb it or die trying
-        const t = this.towerClimb(z - 2, y, 4);
+        // flush temple stair over the void
+        const t = this.stairClimb(z - 2, y, 4);
         dist += z - t.endZ + 4;
         z = t.endZ - 4;
         y = t.topY;

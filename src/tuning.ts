@@ -9,7 +9,10 @@ export const TUNING = {
   lateralSpeed: 12, // Crash-style axis-locked sidestep, ground and air
   riseGravity: 40, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 107, // gravity while falling (heavier = snappy PS1 landing)
-  jumpVelocity: 23.5,
+  jumpVelocity: 23.5, // fully-charged jump (hold X)
+  jumpMinVelocity: 17, // quick-tap jump
+  jumpChargeTime: 0.6, // hold this long for full power
+  chargeBoost: 14, // holding X also pumps speed toward maxSpeed
   slopeBoost: 42, // fake downhill acceleration, scaled by slope grade
   uphillSlowdown: 30, // fake uphill deceleration, scaled by slope grade
   railSnapDistance: 3.1, // forgiving radius for Triangle/E grind snap
@@ -39,6 +42,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   riseGravity: { min: 10, max: 120, step: 1 },
   fallGravity: { min: 10, max: 160, step: 1 },
   jumpVelocity: { min: 4, max: 30, step: 0.5 },
+  jumpMinVelocity: { min: 6, max: 25, step: 0.5 },
+  jumpChargeTime: { min: 0.2, max: 1.5, step: 0.05 },
+  chargeBoost: { min: 0, max: 40, step: 1 },
   slopeBoost: { min: 0, max: 120, step: 1 },
   uphillSlowdown: { min: 0, max: 120, step: 1 },
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
@@ -94,7 +100,6 @@ export const CONST = {
   tntFuse: 3, // Crash-style TNT countdown
   blastRadius: 5.5, // explosion kill/break radius (expands over blastGrow)
   blastGrow: 0.35, // seconds for the blast sphere to reach full size
-  shortHopGravity: 3, // rise-gravity multiplier when Space is released early (tap = short hop)
   hpSnapWindow: 2.2, // taller ground-snap window on halfpipe walls so steep climbs stick
   deadzone: 0.18,
   renderScale: 0.5, // low internal resolution for the PS1 look

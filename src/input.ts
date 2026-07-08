@@ -18,6 +18,7 @@ export class Input {
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.
   jumpPressed = false;
+  jumpReleased = false;
   grindPressed = false;
   spinPressed = false;
   grabPressed = false;
@@ -48,7 +49,10 @@ export class Input {
         if (e.code === 'KeyR') this.restartPressed = true;
       }
     });
-    window.addEventListener('keyup', (e) => this.keys.delete(e.code));
+    window.addEventListener('keyup', (e) => {
+      this.keys.delete(e.code);
+      if (e.code === 'Space') this.jumpReleased = true;
+    });
     window.addEventListener('blur', () => this.keys.clear());
     window.addEventListener('gamepadconnected', (e) => {
       this.gamepadName = e.gamepad.id;
@@ -99,6 +103,7 @@ export class Input {
     this.grabHeld = grab;
 
     this.jumpPressed = this.jumpPressed || (jump && !this.prevJump);
+    this.jumpReleased = this.jumpReleased || (!jump && this.prevJump);
     this.grindPressed = this.grindPressed || (grind && !this.prevGrind);
     this.spinPressed = this.spinPressed || (spin && !this.prevSpin);
     this.grabPressed = this.grabPressed || (grab && !this.prevGrab);
@@ -115,6 +120,7 @@ export class Input {
   // fires once.
   consumeEdges(): void {
     this.jumpPressed = false;
+    this.jumpReleased = false;
     this.grindPressed = false;
     this.spinPressed = false;
     this.grabPressed = false;

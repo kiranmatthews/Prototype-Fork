@@ -82,7 +82,9 @@ export class Player {
   private respawnTimer = 0;
   private coyoteTimer = 0; // jump grace after running off a ledge
   private vertLock = false; // airborne off the halfpipe lip: x is pinned to the pipe
-  private canCutJump = false; // this air came from the jump button (tap = short hop)
+  private chargeTimer = 0; // X held on the ground: builds jump power + speed
+  private charging = false;
+  private chargePose = 0;
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
@@ -175,7 +177,8 @@ export class Player {
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.vertLock = false;
-    this.canCutJump = false;
+    this.charging = false;
+    this.chargeTimer = 0;
     this.grabActive = false;
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
@@ -342,6 +345,30 @@ export class Player {
 
   // ---------------------------------------------------------------- states --
 
+  // Release-triggered charged jump: tap = jumpMinVelocity, full hold =
+  // jumpVelocity. Slide chains still convert into distance.
+  private chargedJump(): void {
+    const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
+    if (this.slideTimer > 0) {
+      const cap = TUNING.maxSpeed * CONST.maxOverspeed;
+      this.speed = THREE.MathUtils.clamp(
+        this.speed + TUNING.slideJumpBoost * Math.sign(this.speed || 1),
+        -cap,
+        cap,
+      );
+      this.slideTimer = 0;
+      this.slideCd = CONST.slideCooldown;
+    }
+    this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
+    this.state = 'air';
+    this.grounded = false;
+    this.coyoteTimer = 0;
+    this.manualing = false;
+    this.charging = false;
+    this.chargeTimer = 0;
+    if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
+  }
+
   private stepRide(dt: number, input: Input, level: Level): void {
     // Authored accel / brake / reverse / friction. Input that OPPOSES current
     // travel uses the much stronger turnaround rate, so flipping direction is
@@ -425,7 +452,8 @@ export class Player {
           this.grounded = false;
           this.vVel = TUNING.vertLaunch;
           this.vertLock = true;
-          this.canCutJump = false;
+          this.charging = false;
+          this.chargeTimer = 0;
           this.emitSparks(5, 0xfff3d0, 1.2);
         } else if (!pushingOut && hit.slideRate) {
           // Not pushing outward: the transition rolls you back to the flat.
@@ -443,45 +471,38 @@ export class Player {
       this.coyoteTimer = CONST.coyoteTime;
     }
 
-    // Coyote grace: a jump pressed on the exact tick we ran off the lip (or
-    // just after) still counts, so late gap jumps aren't eaten.
-    if (input.jumpPressed && (this.state === 'ride' || this.coyoteTimer > 0)) {
-      // Slide-jump chain: jumping out of a slide converts it into extra
-      // distance.
-      if (this.slideTimer > 0) {
-        const cap = TUNING.maxSpeed * CONST.maxOverspeed;
-        this.speed = THREE.MathUtils.clamp(
-          this.speed + TUNING.slideJumpBoost * Math.sign(this.speed || 1),
-          -cap,
-          cap,
-        );
-        this.slideTimer = 0;
-        this.slideCd = CONST.slideCooldown;
+    // Charge jump: holding X crouches, builds jump power, and pumps speed;
+    // releasing fires the jump (coyote grace applies at ledges). A quick tap
+    // still gives a serviceable hop.
+    if (this.state === 'ride' && input.jumpHeld) {
+      this.charging = true;
+      this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      if (Math.abs(this.speed) < TUNING.maxSpeed && Math.abs(this.speed) > 0.5) {
+        const s = Math.sign(this.speed);
+        this.speed = s * Math.min(Math.abs(this.speed) + TUNING.chargeBoost * dt, TUNING.maxSpeed);
       }
-      this.vVel = TUNING.jumpVelocity;
-      this.state = 'air';
-      this.grounded = false;
-      this.coyoteTimer = 0;
-      this.manualing = false;
-      this.canCutJump = true; // release Space early for a short precise hop
-      // Crash rules: a stationary/short hop doesn't flip.
-      if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
+    }
+    if (input.jumpReleased && this.charging && (this.state === 'ride' || this.coyoteTimer > 0)) {
+      this.chargedJump();
     }
   }
 
   private stepAir(dt: number, input: Input, level: Level): void {
-    if (input.jumpPressed && this.coyoteTimer > 0) {
-      this.vVel = TUNING.jumpVelocity;
-      this.coyoteTimer = 0;
-      this.canCutJump = true;
-      if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
+    // Coyote release: letting go of a charge just after rolling off a ledge
+    // still jumps. A press-then-release fully in the air (tap) works too.
+    if (this.coyoteTimer > 0) {
+      if (input.jumpHeld && !this.charging) this.charging = true; // tap started mid-air
+      if (input.jumpReleased && this.charging) {
+        this.chargedJump();
+      }
+    } else if (this.charging) {
+      // grace expired: the charge fizzles
+      this.charging = false;
+      this.chargeTimer = 0;
     }
 
     // Asymmetric fake gravity: heavier on the way down for a snappy arc.
-    // Button jumps are height-variable: releasing Space early cuts the rise
-    // short, so a tap gives a small precise hop.
-    let g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
-    if (this.vVel > 0 && this.canCutJump && !input.jumpHeld) g *= CONST.shortHopGravity;
+    const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
     this.vVel -= g * dt;
 
     // Crash-style directional air control: up/down stretches or shortens the
@@ -524,7 +545,6 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.vertLock = false;
-      this.canCutJump = false;
       // Landing a held (or just-released) grab pays out a short speed burst.
       if (this.grabActive || this.grabGraceTimer > 0) {
         this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
@@ -571,9 +591,15 @@ export class Player {
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
     this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck
 
-    if (input.jumpPressed) {
-      this.exitGrind(TUNING.grindJumpForce);
-      this.canCutJump = true;
+    if (input.jumpHeld) {
+      this.charging = true;
+      this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+    }
+    if (input.jumpReleased && this.charging) {
+      const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
+      this.charging = false;
+      this.chargeTimer = 0;
+      this.exitGrind(THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t));
       if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
   }
@@ -780,7 +806,8 @@ export class Player {
             this.vVel = CONST.bounceCrateForce;
             this.state = 'air';
             this.grounded = false;
-            this.canCutJump = false;
+            this.charging = false;
+          this.chargeTimer = 0;
           } else {
             this.pushOutOf(c.box);
           }
@@ -821,7 +848,8 @@ export class Player {
           this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
-          this.canCutJump = false;
+          this.charging = false;
+          this.chargeTimer = 0;
         } else {
           this.die();
           return;
@@ -1031,7 +1059,10 @@ export class Player {
       0.35 * this.slidePose -
       0.5 * this.manualPose - // wheelie: nose up
       0.28 * this.teeterPose; // arms-back "whoa whoa" lean
-    this.bodyGroup.position.y = this.grabPose * -0.12 - this.slidePose * 0.32;
+    const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
+    this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
+    this.bodyGroup.position.y =
+      this.grabPose * -0.12 - this.slidePose * 0.32 - this.chargePose * 0.26;
 
     this.group.visible = this.state !== 'dead';
 
