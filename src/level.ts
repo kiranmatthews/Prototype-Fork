@@ -37,7 +37,7 @@ export interface Checkpoint {
   savedFruit: number; // wumpa counter captured when this was broken
 }
 
-export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate'];
+export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate', 'Random'];
 
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
@@ -74,6 +74,7 @@ export class Level {
     this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
     if (courseId === 1) this.buildNSanity();
     else if (courseId === 2) this.buildGreatGate();
+    else if (courseId === 3) this.buildRandom();
     else this.buildTestCourse();
   }
 
@@ -431,6 +432,11 @@ export class Level {
     this.crate(-4.5, -3.8, -132); // stack
     this.crate(4.5, -5, -145);
     this.crate(4.5, -3.8, -145); // stack
+    // Corridor B: ascending step platforms on the right with crate rewards.
+    this.stepBlock(4, -192, 4, 6, -5.5, -3.3);
+    this.crate(4, -3.3, -192);
+    this.stepBlock(4, -202, 4, 6, -5.5, -1.2);
+    this.crate(4, -1.2, -202);
     // Corridor B: risky edge lines between the enemies.
     this.crate(5, -5.5, -205);
     this.crate(5, -5.5, -208);
@@ -596,6 +602,9 @@ export class Level {
     this.slab('stone ruins', -264, -310, 1.5, 12, matStone);
     for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 1.5, -285); // ruin crate wall
     this.crate(4, 1.5, -300, 'bouncy');
+    // step platform up the ruin wall
+    this.stepBlock(-4, -292, 4, 6, 1.5, 3.6);
+    this.crate(-4, 3.6, -292);
     // big nitro block stacked in the ruin corner
     this.crate(4.5, 1.5, -272, 'nitro');
     this.crate(4.5, 2.7, -272, 'nitro');
@@ -785,6 +794,26 @@ export class Level {
     );
   }
 
+  // Solid raised platform: walkable top, solid sides (jump up onto it).
+  private stepBlock(x: number, z: number, w: number, d: number, baseY: number, topY: number): void {
+    const h = topY - baseY;
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(w, h, d),
+      new THREE.MeshLambertMaterial({ color: 0x6e7683 }),
+    );
+    mesh.position.set(x, baseY + h / 2, z);
+    mesh.name = 'step block';
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+    // Side collider stops a hair below the top so standing on it doesn't shove.
+    this.walls.push(
+      new THREE.Box3(
+        new THREE.Vector3(x - w / 2, baseY - 1, z - d / 2),
+        new THREE.Vector3(x + w / 2, topY - 0.2, z + d / 2),
+      ),
+    );
+  }
+
   // Dark edge strips so deck borders read at speed. Visual only.
   private curbs(z0: number, z1: number, topY: number, width: number): void {
     const mat = new THREE.MeshLambertMaterial({ color: 0x4a4e58 });
@@ -914,6 +943,106 @@ export class Level {
       savedCratesBroken: 0,
       savedFruit: 0,
     });
+  }
+
+  // Crude seedless random course: flats with random furniture, gaps, slopes,
+  // rails over pits, kickers, step blocks. Re-select "Random" to reroll.
+  private buildRandom(): void {
+    const mats = [0x8a8f9a, 0x767b87, 0x7d95a5, 0x86937e].map(
+      (c) => new THREE.MeshLambertMaterial({ color: c }),
+    );
+    const mat = () => mats[Math.floor(Math.random() * mats.length)];
+    let z = 14;
+    let y = 0;
+    let minY = 0;
+    let dist = 0;
+    let lastGap = false;
+    let cpDue = 170;
+    this.slab('start', z, z - 30, y, 14, mat());
+    z -= 30;
+    while (dist < 800) {
+      const roll = Math.random();
+      if (roll < 0.34 || lastGap) {
+        // flat deck with random furniture
+        const len = 28 + Math.random() * 22;
+        const w = 10 + Math.random() * 4;
+        this.slab('deck', z, z - len, y, w, mat());
+        const crates = Math.floor(Math.random() * 3);
+        for (let i = 0; i < crates; i++) {
+          this.crate(Math.round(Math.random() * 8 - 4), y, z - 6 - Math.random() * (len - 12));
+        }
+        if (Math.random() < 0.5) this.enemy(-3.5, 3.5, y, z - len / 2, 3 + Math.random() * 5);
+        if (Math.random() < 0.35) this.crate(Math.random() < 0.5 ? -4 : 4, y, z - len * 0.7, 'nitro');
+        if (Math.random() < 0.22) this.crate(Math.random() < 0.5 ? -3 : 3, y, z - len * 0.4, 'tnt');
+        if (Math.random() < 0.3) {
+          const bx = Math.random() < 0.5 ? -2.5 : 2.5;
+          this.stepBlock(bx, z - len * 0.5, 4, 5, y, y + 2.2);
+          this.crate(bx, y + 2.2, z - len * 0.5);
+        }
+        if (cpDue <= 0) {
+          this.checkpoint(y, z - len + 6);
+          cpDue = 200 + Math.random() * 80;
+        }
+        z -= len;
+        dist += len;
+        cpDue -= len;
+        lastGap = false;
+      } else if (roll < 0.49) {
+        // gap over the void
+        const len = 10 + Math.random() * 8;
+        z -= len;
+        dist += len;
+        lastGap = true;
+      } else if (roll < 0.64) {
+        // slope (downhill-biased)
+        const len = 28 + Math.random() * 12;
+        const dy = Math.random() < 0.65 ? -(3 + Math.random() * 5) : 2 + Math.random() * 2.5;
+        this.ramp('slope', z, y, z - len, y + dy, 10, mat());
+        z -= len;
+        y += dy;
+        minY = Math.min(minY, y);
+        dist += len;
+        cpDue -= len;
+        lastGap = false;
+      } else if (roll < 0.82) {
+        // rail over a pit (always follows solid ground)
+        const len = 36 + Math.random() * 20;
+        const rail = new Rail([
+          new THREE.Vector3(0, y + 0.9, z + 4),
+          new THREE.Vector3(Math.round(Math.random() * 5 - 2.5), y + 1.1, z - len / 2),
+          new THREE.Vector3(0, y + 0.9, z - len - 4),
+        ]);
+        this.rails.push(rail);
+        this.root.add(rail.object);
+        z -= len;
+        dist += len;
+        lastGap = true;
+      } else {
+        // kicker lip into a gap
+        this.ramp('kicker', z, y, z - 10, y + 2.4, 10, mat());
+        z -= 10 + 12 + Math.random() * 6;
+        dist += 28;
+        minY = Math.min(minY, y);
+        lastGap = true;
+      }
+    }
+    if (lastGap) {
+      this.slab('landing', z, z - 30, y, 12, mat());
+      z -= 30;
+    }
+    this.slab('finish run', z, z - 45, y, 14, mat());
+    this.finishZ = z - 30;
+    this.endWallZ = z - 42;
+    this.finishGate(y, this.finishZ);
+    this.endWall(y);
+    this.killY = minY - 26;
+    const pit = new THREE.Mesh(
+      new THREE.PlaneGeometry(1400, 1400),
+      new THREE.MeshBasicMaterial({ color: 0x3a1a2e }),
+    );
+    pit.rotation.x = -Math.PI / 2;
+    pit.position.set(0, minY - 34, z / 2);
+    this.root.add(pit);
   }
 
   private endWall(deckY: number): void {
