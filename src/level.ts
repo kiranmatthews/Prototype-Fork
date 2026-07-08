@@ -15,6 +15,7 @@ export interface Crate {
   bouncy?: boolean; // yellow arrow crate: stomp = super bounce, never breaks
   tnt?: boolean; // red TNT: touch lights a 3s fuse, then it blows
   fuse?: number; // seconds left on a lit TNT
+  mask?: boolean; // Aku crate: breaking it grants a protective mask
 }
 
 export interface Enemy {
@@ -35,6 +36,8 @@ export interface Checkpoint {
   savedAlive: boolean[]; // crate alive-states captured when this was broken
   savedCratesBroken: number; // crate counter captured when this was broken
   savedFruit: number; // wumpa counter captured when this was broken
+  savedMasks: number;
+  savedTrickMeter: number;
 }
 
 export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate', 'Random'];
@@ -63,7 +66,8 @@ export class Level {
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private arrowTex: THREE.CanvasTexture | null = null;
-  private tntTex: THREE.CanvasTexture | null = null;
+  private tntTexCache = new Map<string, THREE.CanvasTexture>();
+  private maskTex: THREE.CanvasTexture | null = null;
   private blastMeshes: { outer: THREE.Mesh; inner: THREE.Mesh; ex: { center: THREE.Vector3; t: number } }[] = [];
   private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
   private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
@@ -125,8 +129,13 @@ export class Level {
     for (const c of this.crates) {
       if (!c.tnt || !c.alive || c.fuse === undefined) continue;
       c.fuse -= dt;
+      const digit = Math.max(1, Math.ceil(c.fuse));
+      if (c.mesh.userData.digit !== digit) {
+        c.mesh.userData.digit = digit;
+        (c.mesh.material as THREE.MeshLambertMaterial).map = this.tntTexture(String(digit));
+      }
       const urgency = 6 + (CONST.tntFuse - c.fuse) * 6;
-      c.mesh.scale.setScalar(1 + Math.abs(Math.sin(this.time * urgency)) * 0.14);
+      c.mesh.scale.setScalar(1 + Math.abs(Math.sin(this.time * urgency)) * 0.06);
       if (c.fuse <= 0) this.detonate(c);
     }
 
@@ -232,15 +241,24 @@ export class Level {
 
   // Broken (spun/stomped) like a normal box; banks the respawn point and a
   // snapshot of exactly which crates are broken + the counter at this moment.
-  activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0): void {
+  activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0, masks = 0, trickMeter = 0): void {
     cp.active = true;
     cp.savedAlive = this.crates.map((c) => c.alive);
     cp.savedCratesBroken = cratesBroken;
     cp.savedFruit = fruit;
+    cp.savedMasks = masks;
+    cp.savedTrickMeter = trickMeter;
     this.currentSpawn.copy(cp.spawnPos);
     this.activeCheckpoint = cp;
     cp.mesh.scale.setScalar(1);
     this.pops.push({ obj: cp.mesh, t: 0.12 }); // break it like a crate
+  }
+
+  private restoreTntFace(c: Crate): void {
+    if (c.tnt && c.mesh.userData.digit !== undefined) {
+      c.mesh.userData.digit = undefined;
+      (c.mesh.material as THREE.MeshLambertMaterial).map = this.tntTexture('TNT');
+    }
   }
 
   // Soft reset (death): restore the crate world to the last checkpoint's
@@ -266,6 +284,7 @@ export class Level {
         c.mesh.visible = snap[i];
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        this.restoreTntFace(c);
       });
     } else {
       for (const c of this.crates) {
@@ -273,6 +292,7 @@ export class Level {
         c.mesh.visible = true;
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        this.restoreTntFace(c);
       }
     }
 
@@ -311,7 +331,7 @@ export class Level {
     const matFinish = new THREE.MeshLambertMaterial({ color: 0x9a8f6e });
 
     // --- decks (N. Sanity flow: beach -> funnel -> corridors -> finish) ---
-    this.slab('beach', 14, -40, 0, 20, matBeach);
+    this.slab('beach', 14, -40, 0, 20, matBeach, false);
 
     // --- practice pen: walled rail playground east of the beach ---
     const penMesh = new THREE.Mesh(
@@ -424,6 +444,8 @@ export class Level {
     // --- crates ---
     // Beach: one dead-ahead (bump = full stop now: spin it or hop on it).
     this.crate(0, 0, -25);
+    this.crate(-3, -5, -95, 'mask');
+    this.crate(2.5, -13.5, -872, 'mask');
     this.crate(5, 0, -32);
     this.crate(6.5, 0, -32);
     // Corridor A: full-width wall — spin through, or jump on top to bounce.
@@ -557,7 +579,7 @@ export class Level {
     this.root.add(sea);
 
     // beach start (walled at the back and sides, like the cove)
-    this.slab('beach', 14, -30, 0, 22, matSand);
+    this.slab('beach', 14, -30, 0, 22, matSand, false);
     this.wall(0, 15.5, 26, 1, 0);
     this.wall(-11.5, -8, 1, 48, 0);
     this.wall(11.5, -8, 1, 48, 0);
@@ -569,6 +591,7 @@ export class Level {
     this.slab('sand path', -30, -90, 0, 12, matSand);
     this.crate(2, 0, -45);
     this.crate(-3, 0, -60);
+    this.crate(-2, 0, -50, 'mask');
     this.crate(0, 0, -75);
     this.crate(0, 1.2, -75); // stack
     this.enemy(-3, 3, 0, -70, 3);
@@ -652,7 +675,7 @@ export class Level {
     this.root.add(haze);
 
     // base of the gate
-    this.slab('gate base', 10, -20, 0, 14, matWood);
+    this.slab('gate base', 10, -20, 0, 14, matWood, false);
     this.wall(0, 11, 16, 1, 0);
     this.wall(-7.5, -5, 1, 32, 0);
     this.wall(7.5, -5, 1, 32, 0);
@@ -669,6 +692,7 @@ export class Level {
     this.checkpoint(8, -110);
     this.crate(-3, 8, -105);
     this.crate(3, 8, -105);
+    this.crate(0, 8, -108, 'mask');
     this.enemy(-3, 3, 8, -118, 4);
 
     // ascent B: gap mid-way, with a rising scaffold rail as the smooth line
@@ -726,7 +750,15 @@ export class Level {
 
   // Flat deck. z0 is the near (higher z) edge, z1 the far edge, topY the
   // surface height the player rides on.
-  private slab(name: string, z0: number, z1: number, topY: number, width: number, mat: THREE.Material): void {
+  private slab(
+    name: string,
+    z0: number,
+    z1: number,
+    topY: number,
+    width: number,
+    mat: THREE.Material,
+    grindEdges = true,
+  ): void {
     const depth = Math.abs(z1 - z0);
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, 1, depth), mat);
     mesh.position.set(0, topY - 0.5, (z0 + z1) / 2);
@@ -734,6 +766,20 @@ export class Level {
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     this.curbs(z0, z1, topY, width);
+    if (grindEdges) this.edgeRails(z0, topY, z1, topY, width);
+  }
+
+  // The curb lines themselves are grindable: invisible rails along both deck
+  // edges, THPS ledge-style.
+  private edgeRails(z0: number, y0: number, z1: number, y1: number, width: number): void {
+    for (const side of [-1, 1]) {
+      const x = side * (width / 2 - 0.15);
+      const rail = new Rail(
+        [new THREE.Vector3(x, y0 + 0.05, z0), new THREE.Vector3(x, y1 + 0.05, z1)],
+        false,
+      );
+      this.rails.push(rail);
+    }
   }
 
   // Sloped deck between two top-surface edge lines (z0,y0) -> (z1,y1).
@@ -879,7 +925,7 @@ export class Level {
     }
   }
 
-  private crate(x: number, deckY: number, z: number, kind?: 'nitro' | 'bouncy' | 'tnt'): void {
+  private crate(x: number, deckY: number, z: number, kind?: 'nitro' | 'bouncy' | 'tnt' | 'mask'): void {
     const size = 1.2;
     let mat: THREE.MeshLambertMaterial;
     if (kind === 'nitro') {
@@ -887,7 +933,9 @@ export class Level {
     } else if (kind === 'bouncy') {
       mat = new THREE.MeshLambertMaterial({ color: 0xe8c832, map: this.arrowTexture() });
     } else if (kind === 'tnt') {
-      mat = new THREE.MeshLambertMaterial({ color: 0xd04038, map: this.tntTexture() });
+      mat = new THREE.MeshLambertMaterial({ color: 0xd04038, map: this.tntTexture('TNT') });
+    } else if (kind === 'mask') {
+      mat = new THREE.MeshLambertMaterial({ color: 0xd08a3a, map: this.maskTexture() });
     } else {
       mat = new THREE.MeshLambertMaterial({ color: 0xb08a4a });
     }
@@ -896,9 +944,11 @@ export class Level {
     mesh.userData.baseY = mesh.position.y;
     if (!kind) mesh.rotation.y = 0.15;
     this.root.add(mesh);
+    // TNT gets a 30% smaller trigger box: brushing past it is forgiving.
+    const hit = kind === 'tnt' ? size * 0.7 : size;
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),
-      new THREE.Vector3(size, size, size),
+      new THREE.Vector3(hit, hit, hit),
     );
     this.crates.push({
       mesh,
@@ -907,12 +957,33 @@ export class Level {
       nitro: kind === 'nitro',
       bouncy: kind === 'bouncy',
       tnt: kind === 'tnt',
+      mask: kind === 'mask',
     });
   }
 
-  // Classic red TNT face (shared texture).
-  private tntTexture(): THREE.CanvasTexture {
-    if (this.tntTex) return this.tntTex;
+  // Aku-style mask face (shared texture).
+  private maskTexture(): THREE.CanvasTexture {
+    if (this.maskTex) return this.maskTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#d08a3a';
+    ctx.fillRect(0, 0, 32, 32);
+    ctx.fillStyle = '#5a2d12';
+    ctx.fillRect(6, 4, 20, 4); // headdress band
+    ctx.fillRect(9, 12, 5, 6); // eyes
+    ctx.fillRect(18, 12, 5, 6);
+    ctx.fillRect(10, 23, 12, 3); // mouth
+    this.maskTex = new THREE.CanvasTexture(canvas);
+    this.maskTex.magFilter = THREE.NearestFilter;
+    return this.maskTex;
+  }
+
+  // Classic red TNT face; lit fuses swap it for big 3 / 2 / 1 digits.
+  private tntTexture(label: string): THREE.CanvasTexture {
+    const cached = this.tntTexCache.get(label);
+    if (cached) return cached;
     const canvas = document.createElement('canvas');
     canvas.width = 32;
     canvas.height = 32;
@@ -920,13 +991,14 @@ export class Level {
     ctx.fillStyle = '#d04038';
     ctx.fillRect(0, 0, 32, 32);
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px monospace';
+    ctx.font = label.length > 1 ? 'bold 11px monospace' : 'bold 26px monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('TNT', 16, 17);
-    this.tntTex = new THREE.CanvasTexture(canvas);
-    this.tntTex.magFilter = THREE.NearestFilter;
-    return this.tntTex;
+    ctx.fillText(label, 16, 18);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter;
+    this.tntTexCache.set(label, tex);
+    return tex;
   }
 
   // Chunky white up-arrow on the bouncy crates (shared texture).
@@ -996,6 +1068,8 @@ export class Level {
       savedAlive: [],
       savedCratesBroken: 0,
       savedFruit: 0,
+      savedMasks: 0,
+      savedTrickMeter: 0,
     });
   }
 
@@ -1028,6 +1102,7 @@ export class Level {
         if (Math.random() < 0.5) this.enemy(-3.5, 3.5, y, z - len / 2, 3 + Math.random() * 5);
         if (Math.random() < 0.35) this.crate(Math.random() < 0.5 ? -4 : 4, y, z - len * 0.7, 'nitro');
         if (Math.random() < 0.22) this.crate(Math.random() < 0.5 ? -3 : 3, y, z - len * 0.4, 'tnt');
+        if (Math.random() < 0.12) this.crate(Math.random() < 0.5 ? -2 : 2, y, z - len * 0.3, 'mask');
         if (Math.random() < 0.3) {
           const bx = Math.random() < 0.5 ? -2.5 : 2.5;
           this.stepBlock(bx, z - len * 0.5, 4, 5, y, y + 2.2);

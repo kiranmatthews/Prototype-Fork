@@ -5,7 +5,8 @@
 export const TUNING = {
   maxSpeed: 43, // top speed from pedaling on flat ground
   acceleration: 37, // forward input accel
-  friction: 25.5, // speed bleed when not holding forward
+  friction: 25.5, // speed bleed when not holding forward (above stopSpeed)
+  stopSpeed: 14, // below this, coasting halts almost instantly (Crash walk feel)
   lateralSpeed: 12, // Crash-style axis-locked sidestep, ground and air
   riseGravity: 40, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 107, // gravity while falling (heavier = snappy PS1 landing)
@@ -38,6 +39,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   maxSpeed: { min: 5, max: 60, step: 1 },
   acceleration: { min: 5, max: 80, step: 1 },
   friction: { min: 0, max: 30, step: 0.5 },
+  stopSpeed: { min: 2, max: 30, step: 1 },
   lateralSpeed: { min: 2, max: 25, step: 0.5 },
   riseGravity: { min: 10, max: 120, step: 1 },
   fallGravity: { min: 10, max: 160, step: 1 },
@@ -75,6 +77,8 @@ export const CONST = {
   playerHalf: { x: 0.5, y: 0.9, z: 0.5 }, // capsule-ish AABB approximation
   spinReach: 1.4, // extra horizontal hit reach while spinning
   spinCooldown: 0.15,
+  stopFriction: 90, // the near-instant halt below stopSpeed
+  maskInvuln: 1.0, // grace after a mask absorbs an enemy hit
   coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line

@@ -15,14 +15,16 @@ export class Rail {
   readonly points: THREE.Vector3[];
   readonly totalLength: number;
   readonly object: THREE.Group;
+  private hasVisual = true;
 
   private segDirs: THREE.Vector3[] = [];
   private segLengths: number[] = [];
   private cumLengths: number[] = []; // arc length at the start of each segment
 
-  constructor(points: THREE.Vector3[]) {
+  constructor(points: THREE.Vector3[], visual = true) {
     if (points.length < 2) throw new Error('rail needs at least 2 points');
     this.points = points;
+    this.hasVisual = visual;
 
     let total = 0;
     for (let i = 0; i < points.length - 1; i++) {
@@ -35,7 +37,7 @@ export class Rail {
     }
     this.totalLength = total;
 
-    this.object = this.buildVisual();
+    this.object = this.hasVisual ? this.buildVisual() : new THREE.Group();
   }
 
   // Closest point on the polyline to `pos`, as arc length + tangent.

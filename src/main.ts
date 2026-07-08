@@ -128,6 +128,7 @@ function frame(): void {
     railDist: player.railCandidateDist,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     fruit: player.fruit,
+    masks: `${player.masks} (${Math.round(player.trickMeter * 100)}%)`,
     time: player.runTime,
   });
 

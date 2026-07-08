@@ -38,6 +38,8 @@ export class Player {
   runTime = 0;
   cratesBroken = 0;
   fruit = 0; // wumpa collected
+  masks = 0; // Aku masks held (max 2): absorb one enemy hit or balance bail
+  trickMeter = 0; // 0..1, fills from landed tricks; full = +1 mask
 
   // debug readouts
   railCandidateDist = Infinity;
@@ -85,6 +87,9 @@ export class Player {
   private chargeTimer = 0; // X held on the ground: builds jump power + speed
   private charging = false;
   private chargePose = 0;
+  private invulnTimer = 0; // grace after a mask absorbs a hit
+  private maskMesh: THREE.Mesh | null = null;
+  private armR: THREE.Mesh | null = null;
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
@@ -116,6 +121,21 @@ export class Player {
     );
     this.shadow.rotation.x = -Math.PI / 2;
     scene.add(this.shadow);
+
+    // Floating Aku mask, visible while you hold one.
+    const mask = new THREE.Mesh(
+      new THREE.BoxGeometry(0.42, 0.55, 0.12),
+      new THREE.MeshLambertMaterial({ color: 0xd08a3a }),
+    );
+    const maskEyeMat = new THREE.MeshBasicMaterial({ color: 0x3a2210 });
+    for (const side of [-0.1, 0.1]) {
+      const eye = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.1, 0.03), maskEyeMat);
+      eye.position.set(side, 0.08, 0.07);
+      mask.add(eye);
+    }
+    mask.visible = false;
+    scene.add(mask);
+    this.maskMesh = mask;
 
     // Chunky PS1 spark pool for grinds and grab-boost landings.
     const sparkGeo = new THREE.BoxGeometry(0.09, 0.09, 0.09);
@@ -164,6 +184,9 @@ export class Player {
     // reset (reset() cleared activeCheckpoint) starts from zero.
     this.cratesBroken = level.activeCheckpoint ? level.activeCheckpoint.savedCratesBroken : 0;
     this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
+    this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
+    this.trickMeter = level.activeCheckpoint ? level.activeCheckpoint.savedTrickMeter : 0;
+    this.invulnTimer = 0;
     this.slideTimer = 0;
     this.slideCd = 0;
     this.manualing = false;
@@ -203,6 +226,7 @@ export class Player {
     this.slideCd = Math.max(0, this.slideCd - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.manualCd = Math.max(0, this.manualCd - dt);
+    this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.prevPos.copy(this.pos);
     this.teetering = false; // stepRide re-detects it each tick
 
@@ -238,7 +262,11 @@ export class Player {
         const instability = TUNING.balanceDrift * (1 + this.manualTime * CONST.balanceRamp);
         this.balance += Math.sign(this.balance || 1) * instability * dt;
         this.balance += input.moveX * TUNING.balanceControl * dt;
-        if (Math.abs(this.balance) >= 1) {
+        if (Math.abs(this.balance) >= 1 && this.spendMask()) {
+          // a mask absorbs the stumble: needle resets, manual continues
+          this.balance = 0;
+          this.manualTime = 0;
+        } else if (Math.abs(this.balance) >= 1) {
           // stumble: keep your life, lose your speed
           this.manualing = false;
           this.balance = 0;
@@ -323,7 +351,8 @@ export class Player {
       // inside an expanding blast sphere.
       for (const c of level.consumeBlastBroken()) {
         this.cratesBroken++;
-        this.spawnFruit(c.box);
+        if (c.mask) this.masks = Math.min(2, this.masks + 1);
+        else this.spawnFruit(c.box);
       }
       // collide() above may have killed us; TS can't see that mutation.
       if ((this.state as MoveState) !== 'dead') {
@@ -345,6 +374,25 @@ export class Player {
 
   // ---------------------------------------------------------------- states --
 
+  // Landed tricks fill the meter; a full meter converts into a mask (max 2).
+  private awardTrick(v: number): void {
+    this.trickMeter += v;
+    while (this.trickMeter >= 1 && this.masks < 2) {
+      this.masks++;
+      this.trickMeter -= 1;
+    }
+    this.trickMeter = Math.min(this.trickMeter, 1);
+  }
+
+  // Spend a mask to survive something. Returns true if one was available.
+  private spendMask(): boolean {
+    if (this.masks <= 0) return false;
+    this.masks--;
+    this.invulnTimer = CONST.maskInvuln;
+    this.emitSparks(8, 0xffd27a, 2);
+    return true;
+  }
+
   // Release-triggered charged jump: tap = jumpMinVelocity, full hold =
   // jumpVelocity. Slide chains still convert into distance.
   private chargedJump(): void {
@@ -358,6 +406,7 @@ export class Player {
       );
       this.slideTimer = 0;
       this.slideCd = CONST.slideCooldown;
+      this.awardTrick(0.15); // slide-jump chain
     }
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
     this.state = 'air';
@@ -382,8 +431,12 @@ export class Player {
       const rate = this.speed > 0.01 ? TUNING.turnaround : CONST.brakePower;
       this.speed = Math.max(-TUNING.reverseSpeed, this.speed + rate * input.moveY * dt);
     } else if (this.slideTimer <= 0) {
-      // No friction while sliding — the slide keeps its momentum.
-      const drop = TUNING.friction * dt;
+      // No friction while sliding — the slide keeps its momentum. Below
+      // stopSpeed, coasting halts almost instantly (Crash walk feel) so box
+      // puzzles and platforming are precise; above it, momentum carries and
+      // has to be managed.
+      const f = Math.abs(this.speed) < TUNING.stopSpeed ? CONST.stopFriction : TUNING.friction;
+      const drop = f * dt;
       this.speed = Math.abs(this.speed) <= drop ? 0 : this.speed - Math.sign(this.speed) * drop;
     }
 
@@ -545,6 +598,7 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.vertLock = false;
+      if (this.vertLock) this.awardTrick(0.3); // landed a vert air
       // Landing a held (or just-released) grab pays out a short speed burst.
       if (this.grabActive || this.grabGraceTimer > 0) {
         this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
@@ -552,6 +606,7 @@ export class Player {
         this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
         this.grabActive = false;
         this.grabGraceTimer = 0;
+        this.awardTrick(0.35); // landed a grab
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
       return;
@@ -571,8 +626,14 @@ export class Player {
     this.balance += Math.sign(this.balance || 1) * instability * dt;
     this.balance += input.moveX * TUNING.balanceControl * dt;
     if (Math.abs(this.balance) >= 1) {
-      this.bailFromRail();
-      return;
+      // A mask absorbs the bail: the needle resets and the grind continues.
+      if (this.spendMask()) {
+        this.balance = 0;
+        this.grindTime = 0;
+      } else {
+        this.bailFromRail();
+        return;
+      }
     }
 
     this.grindT += this.grindDir * TUNING.grindSpeed * dt;
@@ -662,6 +723,7 @@ export class Player {
   }
 
   private exitGrind(vVel: number): void {
+    if (this.grindTime > 1.2) this.awardTrick(0.3); // held a long grind
     if (this.grindRail) {
       // Project the rail velocity onto the course axis — exits snap straight,
       // matching the axis-locked movement.
@@ -716,9 +778,11 @@ export class Player {
     if (this.state === 'air') {
       if (input.grabHeld) {
         this.grabActive = true;
-        // Trick spin while the grab is held — pure visual, the trajectory is
-        // already locked by the air-control gate.
-        this.grabSpinAngle += CONST.grabSpinRate * dt;
+        // Circle alone = grab pose. Circle + left/right = grab-spin in that
+        // direction. Pure visual — the trajectory is locked either way.
+        if (Math.abs(input.moveX) > 0.3) {
+          this.grabSpinAngle += CONST.grabSpinRate * Math.sign(input.moveX) * dt;
+        }
       } else if (this.grabActive) {
         // Released mid-air: a short grace window still pays out on landing.
         this.grabActive = false;
@@ -867,14 +931,14 @@ export class Player {
     for (const cp of level.checkpoints) {
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
-        level.activateCheckpoint(cp, this.cratesBroken, this.fruit);
+        level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter);
         this.onCheckpoint();
       } else if (this.playerBox.intersectsBox(cp.box)) {
         if (this.sliding) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit);
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter);
           this.onCheckpoint();
         } else if (this.isStomping(cp.box)) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit);
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter);
           this.onCheckpoint();
           this.vVel = TUNING.crateBounce;
           this.state = 'air';
@@ -895,7 +959,8 @@ export class Player {
   private smashCrate(level: Level, c: Crate): void {
     level.breakCrate(c);
     this.cratesBroken++;
-    this.spawnFruit(c.box);
+    if (c.mask) this.masks = Math.min(2, this.masks + 1);
+    else this.spawnFruit(c.box);
   }
 
   // Wumpa burst: fruit pops out of the box, arcs, then homes to the player.
@@ -1043,6 +1108,21 @@ export class Player {
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 20 * dt);
     this.bodyGroup.rotation.y = this.visualYaw + this.spinAngle + this.grabSpinAngle;
 
+    // Grab arm reaches for the board; mask hovers at the shoulder; the whole
+    // body flickers during mask-invulnerability grace.
+    if (this.armR) this.armR.rotation.x = this.grabPose * 1.5;
+    this.bodyGroup.visible =
+      this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead';
+    if (this.maskMesh) {
+      this.maskMesh.visible = this.masks > 0 && this.state !== 'dead';
+      this.maskMesh.position.set(
+        this.pos.x + 1.0,
+        this.pos.y + 1.7 + Math.sin(this.runTime * 3) * 0.09,
+        this.pos.z + 0.2,
+      );
+      this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
+    }
+
     // Grab tuck + Crash front-flip + slide crouch, blended (they're mutually
     // exclusive in practice: grab is air-only, slide is ground-only).
     const targetPose = this.grabActive ? 1 : 0;
@@ -1113,6 +1193,16 @@ export class Player {
     );
     head.position.y = 1.42;
     g.add(head);
+
+    // Simple arms; the right one reaches down to the board during a grab.
+    const armMat = new THREE.MeshLambertMaterial({ color: 0x3aa68f });
+    for (const side of [-1, 1]) {
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.5, 0.13), armMat);
+      arm.position.set(side * 0.33, 1.05, 0);
+      arm.rotation.z = side * 0.25;
+      g.add(arm);
+      if (side === 1) this.armR = arm;
+    }
 
     // Crude face on the travel side (+Z), so backing up shows it to the camera.
     const faceMat = new THREE.MeshBasicMaterial({ color: 0x222428 });

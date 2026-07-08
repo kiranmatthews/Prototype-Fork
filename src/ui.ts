@@ -14,6 +14,7 @@ export interface Stats {
   railDist: number;
   crates: string;
   fruit: number;
+  masks: string;
   time: number;
 }
 
@@ -112,6 +113,7 @@ export class UI {
       row('rail dist', railDist) +
       row('crates', s.crates) +
       row('wumpa', String(s.fruit)) +
+      row('mask', s.masks) +
       row('time', s.time.toFixed(2) + 's');
   }
 
