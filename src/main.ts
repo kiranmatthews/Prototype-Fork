@@ -106,6 +106,7 @@ function frame(): void {
     controller: input.gamepadName,
     railDist: player.railCandidateDist,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
+    fruit: player.fruit,
     time: player.runTime,
   });
 

@@ -19,6 +19,8 @@ export const TUNING = {
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
   reverseSpeed: 18, // Crash-style backing up on stick-down
   grabBoost: 8, // speed burst on landing a Circle/Q air grab
+  crateBounce: 18, // vertical pop from stomping a crate — tuned for chaining crate to crate
+  slideJumpBoost: 8, // extra speed when a Circle/Q ground slide is strung into a jump
   airControl: 14, // forward/back speed adjustment in the air
   balanceDrift: 0.55, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.6, // how hard left/right fights the needle
@@ -44,6 +46,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   reverseSpeed: { min: 2, max: 20, step: 1 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
+  crateBounce: { min: 5, max: 30, step: 0.5 },
+  slideJumpBoost: { min: 0, max: 20, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
@@ -68,7 +72,12 @@ export const CONST = {
   grabGrace: 0.18, // releasing the grab this close to landing still counts
   grabSpinRate: 9, // rad/s of the grab trick spin (visual only)
   flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
-  crateBounce: 13, // vertical pop from breaking a crate by landing on it
+  flipMinSpeed: 12, // below this speed a jump is a plain hop, no flip (Crash rules)
+  slideDuration: 0.55, // Circle/Q ground slide length
+  slideMinSpeed: 10, // need this much speed to start a slide
+  slideInitBoost: 3, // small shove when the slide starts
+  slideCooldown: 0.25,
+  fruitPerCrate: 3, // wumpa spawned per broken box
   balanceStart: 0.15, // initial needle kick when a grind starts
   balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail

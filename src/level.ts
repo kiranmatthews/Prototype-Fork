@@ -29,6 +29,7 @@ export interface Checkpoint {
   spawnPos: THREE.Vector3;
   savedAlive: boolean[]; // crate alive-states captured when this was broken
   savedCratesBroken: number; // crate counter captured when this was broken
+  savedFruit: number; // wumpa counter captured when this was broken
 }
 
 export class Level {
@@ -102,10 +103,11 @@ export class Level {
 
   // Broken (spun/stomped) like a normal box; banks the respawn point and a
   // snapshot of exactly which crates are broken + the counter at this moment.
-  activateCheckpoint(cp: Checkpoint, cratesBroken: number): void {
+  activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0): void {
     cp.active = true;
     cp.savedAlive = this.crates.map((c) => c.alive);
     cp.savedCratesBroken = cratesBroken;
+    cp.savedFruit = fruit;
     this.currentSpawn.copy(cp.spawnPos);
     this.activeCheckpoint = cp;
     cp.mesh.scale.setScalar(1);
@@ -392,6 +394,7 @@ export class Level {
       spawnPos: new THREE.Vector3(0, deckY + 0.1, z),
       savedAlive: [],
       savedCratesBroken: 0,
+      savedFruit: 0,
     });
   }
 

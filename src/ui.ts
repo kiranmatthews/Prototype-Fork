@@ -12,6 +12,7 @@ export interface Stats {
   controller: string;
   railDist: number;
   crates: string;
+  fruit: number;
   time: number;
 }
 
@@ -41,7 +42,7 @@ export class UI {
     help.textContent =
       'stick/arrows: up=go down=back left/right=sidestep (also in air) · X/Space: jump · ' +
       'Triangle/E: hold to grind (balance with left/right!) · Square/F: spin · ' +
-      'Circle/Q: grab-spin, boost on landing · R/Options: restart run';
+      'Circle/Q: air grab / ground slide (jump out for distance) · R/Options: restart run';
 
     this.msgWrap = div('hud-msg');
     this.msgTitle = div('hud-msg-title');
@@ -86,6 +87,7 @@ export class UI {
       row('controller', s.controller) +
       row('rail dist', railDist) +
       row('crates', s.crates) +
+      row('wumpa', String(s.fruit)) +
       row('time', s.time.toFixed(2) + 's');
   }
 

@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { Input } from './input';
-import { Level } from './level';
+import { Crate, Level } from './level';
 import { Rail, RailSample, nearestRail } from './rails';
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'finished';
@@ -35,6 +35,7 @@ export class Player {
   surfaceName = '-';
   runTime = 0;
   cratesBroken = 0;
+  fruit = 0; // wumpa collected
 
   // debug readouts
   railCandidateDist = Infinity;
@@ -55,6 +56,9 @@ export class Player {
   private grabActive = false;
   private grabGraceTimer = 0;
   private grabPose = 0;
+  private slideTimer = 0;
+  private slideCd = 0;
+  private slidePose = 0;
   private grabSpinAngle = 0; // trick spin while holding the grab (visual only)
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
@@ -76,6 +80,7 @@ export class Player {
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
+  private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number }[] = [];
 
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
@@ -103,10 +108,24 @@ export class Player {
       scene.add(mesh);
       this.sparks.push({ mesh, vel: new THREE.Vector3(), life: 0, maxLife: 1 });
     }
+
+    // Wumpa pool: fruit bursts out of broken boxes, then homes to the player.
+    const fruitGeo = new THREE.SphereGeometry(0.17, 6, 5);
+    const fruitMat = new THREE.MeshLambertMaterial({ color: 0xff9028, emissive: 0x3a1c05 });
+    for (let i = 0; i < 24; i++) {
+      const mesh = new THREE.Mesh(fruitGeo, fruitMat);
+      mesh.visible = false;
+      scene.add(mesh);
+      this.fruits.push({ mesh, vel: new THREE.Vector3(), age: -1 });
+    }
   }
 
   get spinning(): boolean {
     return this.spinTimer > 0;
+  }
+
+  get sliding(): boolean {
+    return this.slideTimer > 0 && this.state === 'ride' && this.grounded;
   }
 
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
@@ -124,9 +143,16 @@ export class Player {
     this.grindRail = null;
     this.regrindCd = 0;
     if (hard) this.runTime = 0;
-    // Respawning at a checkpoint restores the crate counter it banked; a hard
+    // Respawning at a checkpoint restores the counters it banked; a hard
     // reset (reset() cleared activeCheckpoint) starts from zero.
     this.cratesBroken = level.activeCheckpoint ? level.activeCheckpoint.savedCratesBroken : 0;
+    this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
+    this.slideTimer = 0;
+    this.slideCd = 0;
+    for (const f of this.fruits) {
+      f.age = -1;
+      f.mesh.visible = false;
+    }
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.grabActive = false;
@@ -150,7 +176,27 @@ export class Player {
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
     this.flipTimer = Math.max(0, this.flipTimer - dt);
+    this.slideCd = Math.max(0, this.slideCd - dt);
+    this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.prevPos.copy(this.pos);
+
+    // Circle/Q on the ground at speed starts a slide (in the air it's a grab).
+    if (
+      input.grabPressed &&
+      this.state === 'ride' &&
+      this.grounded &&
+      this.slideTimer <= 0 &&
+      this.slideCd <= 0 &&
+      Math.abs(this.speed) >= CONST.slideMinSpeed
+    ) {
+      this.slideTimer = CONST.slideDuration;
+      const cap = TUNING.maxSpeed * CONST.maxOverspeed;
+      this.speed = THREE.MathUtils.clamp(
+        this.speed + CONST.slideInitBoost * Math.sign(this.speed),
+        -cap,
+        cap,
+      );
+    }
 
     // Rail candidate is computed once per step: used for grind entry, the
     // assisted landing snap, and the debug panel.
@@ -196,6 +242,7 @@ export class Player {
     this.updateSpin(dt, input);
     this.updateGrab(dt, input);
     this.updateSparks(dt);
+    this.updateFruit(dt);
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
@@ -216,7 +263,8 @@ export class Player {
       }
     } else if (input.moveY < -0.05) {
       this.speed = Math.max(-TUNING.reverseSpeed, this.speed + CONST.brakePower * input.moveY * dt);
-    } else {
+    } else if (this.slideTimer <= 0) {
+      // No friction while sliding — the slide keeps its momentum.
       const drop = TUNING.friction * dt;
       this.speed = Math.abs(this.speed) <= drop ? 0 : this.speed - Math.sign(this.speed) * drop;
     }
@@ -273,11 +321,24 @@ export class Player {
     // Coyote grace: a jump pressed on the exact tick we ran off the lip (or
     // just after) still counts, so late gap jumps aren't eaten.
     if (input.jumpPressed && (this.state === 'ride' || this.coyoteTimer > 0)) {
+      // Slide-jump chain: jumping out of a slide converts it into extra
+      // distance.
+      if (this.slideTimer > 0) {
+        const cap = TUNING.maxSpeed * CONST.maxOverspeed;
+        this.speed = THREE.MathUtils.clamp(
+          this.speed + TUNING.slideJumpBoost * Math.sign(this.speed || 1),
+          -cap,
+          cap,
+        );
+        this.slideTimer = 0;
+        this.slideCd = CONST.slideCooldown;
+      }
       this.vVel = TUNING.jumpVelocity;
       this.state = 'air';
       this.grounded = false;
       this.coyoteTimer = 0;
-      this.flipTimer = CONST.flipDuration; // Crash front-flip
+      // Crash rules: a stationary/short hop doesn't flip.
+      if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
   }
 
@@ -285,7 +346,7 @@ export class Player {
     if (input.jumpPressed && this.coyoteTimer > 0) {
       this.vVel = TUNING.jumpVelocity;
       this.coyoteTimer = 0;
-      this.flipTimer = CONST.flipDuration;
+      if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
 
     // Asymmetric fake gravity: heavier on the way down for a snappy arc.
@@ -369,7 +430,7 @@ export class Player {
 
     if (input.jumpPressed) {
       this.exitGrind(TUNING.grindJumpForce);
-      this.flipTimer = CONST.flipDuration;
+      if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
   }
 
@@ -549,14 +610,16 @@ export class Player {
     for (const c of level.crates) {
       if (!c.alive) continue;
       if (this.spinning && this.spinBox.intersectsBox(c.box)) {
-        level.breakCrate(c);
-        this.cratesBroken++;
+        this.smashCrate(level, c);
       } else if (this.playerBox.intersectsBox(c.box)) {
-        if (this.isStomping(c.box)) {
-          // Crash rules: landing on top breaks it and bounces you.
-          level.breakCrate(c);
-          this.cratesBroken++;
-          this.vVel = CONST.crateBounce;
+        if (this.sliding) {
+          // Sliding smashes boxes without breaking stride.
+          this.smashCrate(level, c);
+        } else if (this.isStomping(c.box)) {
+          // Crash rules: landing on top breaks it and bounces you — high
+          // enough to chain crate to crate.
+          this.smashCrate(level, c);
+          this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
         } else {
@@ -574,7 +637,7 @@ export class Player {
         if (this.isStomping(e.box)) {
           // Crash rules: jumping on an enemy squashes it and bounces you.
           level.killEnemy(e);
-          this.vVel = CONST.crateBounce;
+          this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
         } else {
@@ -587,17 +650,20 @@ export class Player {
     for (const cp of level.checkpoints) {
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
-        level.activateCheckpoint(cp, this.cratesBroken);
+        level.activateCheckpoint(cp, this.cratesBroken, this.fruit);
         this.onCheckpoint();
       } else if (this.playerBox.intersectsBox(cp.box)) {
-        if (this.isStomping(cp.box)) {
-          level.activateCheckpoint(cp, this.cratesBroken);
+        if (this.sliding) {
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit);
           this.onCheckpoint();
-          this.vVel = CONST.crateBounce;
+        } else if (this.isStomping(cp.box)) {
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit);
+          this.onCheckpoint();
+          this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
         } else {
-          // Bump = wall, like a normal box. Spin or stomp to bank it.
+          // Bump = wall, like a normal box. Spin, slide, or stomp to bank it.
           this.pushOutOf(cp.box);
         }
       }
@@ -606,6 +672,53 @@ export class Player {
     if (this.playerBox.intersectsBox(level.finishBox)) {
       this.state = 'finished';
       this.onFinish(this.runTime);
+    }
+  }
+
+  private smashCrate(level: Level, c: Crate): void {
+    level.breakCrate(c);
+    this.cratesBroken++;
+    this.spawnFruit(c.box);
+  }
+
+  // Wumpa burst: fruit pops out of the box, arcs, then homes to the player.
+  private spawnFruit(box: THREE.Box3): void {
+    let count = CONST.fruitPerCrate;
+    const cx = (box.min.x + box.max.x) / 2;
+    const cy = (box.min.y + box.max.y) / 2;
+    const cz = (box.min.z + box.max.z) / 2;
+    for (const f of this.fruits) {
+      if (count <= 0) break;
+      if (f.age >= 0) continue;
+      count--;
+      f.age = 0;
+      f.mesh.visible = true;
+      f.mesh.position.set(cx, cy + 0.3, cz);
+      f.vel.set((Math.random() - 0.5) * 5, 6 + Math.random() * 4, (Math.random() - 0.5) * 5);
+    }
+  }
+
+  private updateFruit(dt: number): void {
+    for (const f of this.fruits) {
+      if (f.age < 0) continue;
+      f.age += dt;
+      if (f.age < 0.35) {
+        // free arc out of the box
+        f.vel.y -= 26 * dt;
+        f.mesh.position.addScaledVector(f.vel, dt);
+      } else {
+        // home to the player and collect
+        const target = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
+        const d = target.sub(f.mesh.position);
+        const dist = d.length();
+        if (dist < 1.0 || f.age > 2.5) {
+          if (dist < 1.0) this.fruit++;
+          f.age = -1;
+          f.mesh.visible = false;
+          continue;
+        }
+        f.mesh.position.addScaledVector(d.normalize(), Math.max(18, dist * 6) * dt);
+      }
     }
   }
 
@@ -689,13 +802,17 @@ export class Player {
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 20 * dt);
     this.bodyGroup.rotation.y = this.visualYaw + this.spinAngle + this.grabSpinAngle;
 
-    // Grab tuck + Crash front-flip, blended so a grab overrides the flip.
+    // Grab tuck + Crash front-flip + slide crouch, blended (they're mutually
+    // exclusive in practice: grab is air-only, slide is ground-only).
     const targetPose = this.grabActive ? 1 : 0;
     this.grabPose += (targetPose - this.grabPose) * Math.min(1, 16 * dt);
+    const targetSlide = this.sliding ? 1 : 0;
+    this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
     const flip =
       this.flipTimer > 0 ? (1 - this.flipTimer / CONST.flipDuration) * Math.PI * 2 : 0;
-    this.bodyGroup.rotation.x = flip * (1 - this.grabPose) + 0.45 * this.grabPose;
-    this.bodyGroup.position.y = this.grabPose * -0.12;
+    this.bodyGroup.rotation.x =
+      flip * (1 - this.grabPose) + 0.45 * this.grabPose - 0.35 * this.slidePose;
+    this.bodyGroup.position.y = this.grabPose * -0.12 - this.slidePose * 0.32;
 
     this.group.visible = this.state !== 'dead';
 

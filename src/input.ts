@@ -20,6 +20,7 @@ export class Input {
   jumpPressed = false;
   grindPressed = false;
   spinPressed = false;
+  grabPressed = false;
   restartPressed = false;
 
   gamepadName = 'no controller';
@@ -28,6 +29,7 @@ export class Input {
   private prevJump = false;
   private prevGrind = false;
   private prevSpin = false;
+  private prevGrab = false;
   private prevRestart = false;
 
   constructor() {
@@ -42,6 +44,7 @@ export class Input {
         if (e.code === 'Space') this.jumpPressed = true;
         if (e.code === 'KeyE') this.grindPressed = true;
         if (e.code === 'KeyF') this.spinPressed = true;
+        if (e.code === 'KeyQ') this.grabPressed = true;
         if (e.code === 'KeyR') this.restartPressed = true;
       }
     });
@@ -98,11 +101,13 @@ export class Input {
     this.jumpPressed = this.jumpPressed || (jump && !this.prevJump);
     this.grindPressed = this.grindPressed || (grind && !this.prevGrind);
     this.spinPressed = this.spinPressed || (spin && !this.prevSpin);
+    this.grabPressed = this.grabPressed || (grab && !this.prevGrab);
     this.restartPressed = this.restartPressed || (restart && !this.prevRestart);
 
     this.prevJump = jump;
     this.prevGrind = grind;
     this.prevSpin = spin;
+    this.prevGrab = grab;
     this.prevRestart = restart;
   }
 
@@ -112,6 +117,7 @@ export class Input {
     this.jumpPressed = false;
     this.grindPressed = false;
     this.spinPressed = false;
+    this.grabPressed = false;
     this.restartPressed = false;
   }
 
