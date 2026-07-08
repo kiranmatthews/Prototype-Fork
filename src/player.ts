@@ -36,6 +36,7 @@ export class Player {
   // wired up by main.ts
   onDeath: () => void = () => {};
   onFinish: (time: number) => void = () => {};
+  onRespawn: () => void = () => {};
 
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
@@ -48,6 +49,7 @@ export class Player {
   private grindDir = 1;
   private regrindCd = 0;
   private respawnTimer = 0;
+  private coyoteTimer = 0; // jump grace after running off a ledge
   private lastGrade = 0; // slope along travel; >0 downhill, <0 uphill
   private groundHit: GroundHit | null = null;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
@@ -91,12 +93,15 @@ export class Player {
     this.runTime = 0;
     this.cratesBroken = 0;
     this.groundHit = null;
+    this.coyoteTimer = 0;
+    this.onRespawn();
   }
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
+    this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
 
     // Rail candidate is computed once per step: used for grind entry, the
     // assisted landing snap, and the debug panel.
@@ -145,6 +150,10 @@ export class Player {
       this.collide(level);
       if (this.pos.y < CONST.killY) this.die();
     }
+
+    // Keep heading in [-PI, PI] so the camera's angle lerp never sees a
+    // multi-revolution delta.
+    this.heading -= Math.PI * 2 * Math.round(this.heading / (Math.PI * 2));
 
     this.syncVisual(input, dt);
   }
@@ -204,16 +213,25 @@ export class Player {
       this.groundHit = hit;
       // Authored kicker launch: leaving an uphill lip converts speed to lift.
       this.vVel = this.lastGrade < -0.05 ? Math.min(-this.lastGrade * this.speed, 20) : 0;
+      this.coyoteTimer = CONST.coyoteTime;
     }
 
-    if (this.state === 'ride' && input.jumpPressed) {
+    // Coyote grace: a jump pressed on the exact tick we ran off the lip (or
+    // just after) still counts, so late gap jumps aren't eaten.
+    if (input.jumpPressed && (this.state === 'ride' || this.coyoteTimer > 0)) {
       this.vVel = TUNING.jumpVelocity;
       this.state = 'air';
       this.grounded = false;
+      this.coyoteTimer = 0;
     }
   }
 
   private stepAir(dt: number, input: Input, level: Level): void {
+    if (input.jumpPressed && this.coyoteTimer > 0) {
+      this.vVel = TUNING.jumpVelocity;
+      this.coyoteTimer = 0;
+    }
+
     this.heading -= input.moveX * TUNING.turnRate * CONST.airTurnFactor * dt;
 
     // Asymmetric fake gravity: heavier on the way down for a snappy arc.
@@ -231,6 +249,7 @@ export class Player {
       this.state = 'ride';
       this.grounded = true;
       this.surfaceName = hit.name;
+      this.coyoteTimer = 0;
       return;
     }
 
@@ -271,6 +290,9 @@ export class Player {
   private stepFinished(dt: number, level: Level): void {
     this.speed = Math.max(0, this.speed - 40 * dt);
     this.pos.addScaledVector(this.forward(), this.speed * dt);
+    // Keep the outro on the deck: no sliding sideways off the edge into a
+    // midair hover after the run is already over.
+    this.pos.x = THREE.MathUtils.clamp(this.pos.x, -5.2, 5.2);
     if (this.pos.z < level.endWallZ + 1) {
       this.pos.z = level.endWallZ + 1;
       this.speed = 0;
@@ -302,6 +324,7 @@ export class Player {
     this.state = 'grind';
     this.grounded = false;
     this.vVel = 0;
+    this.coyoteTimer = 0;
     this.speed = TUNING.grindSpeed;
     const tan = sample.tangent.clone().multiplyScalar(this.grindDir);
     this.heading = Math.atan2(tan.x, tan.z);

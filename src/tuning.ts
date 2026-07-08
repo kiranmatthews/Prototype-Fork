@@ -52,6 +52,7 @@ export const CONST = {
   playerHalf: { x: 0.5, y: 0.9, z: 0.5 }, // capsule-ish AABB approximation
   spinReach: 1.4, // extra horizontal hit reach while spinning
   spinCooldown: 0.15,
+  coyoteTime: 0.12, // ledge-edge grace window so late jumps aren't eaten
   railRideHeight: 0.15, // feet ride this far above the rail line
   assistSnapFactor: 0.6, // landing auto-snap radius = railSnapDistance * this
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail

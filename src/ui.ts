@@ -159,5 +159,10 @@ function div(cls: string): HTMLElement {
 }
 
 function row(label: string, value: string): string {
-  return `<div class="hud-row"><span>${label}</span><b>${value}</b></div>`;
+  return `<div class="hud-row"><span>${label}</span><b>${esc(value)}</b></div>`;
+}
+
+// Values like the gamepad name are arbitrary strings going into innerHTML.
+function esc(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

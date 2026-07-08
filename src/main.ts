@@ -47,6 +47,7 @@ player.onDeath = () => {
 player.onFinish = (time) => {
   ui.showMessage('COURSE CLEAR!', `time ${time.toFixed(2)}s — press R / Options to go again`, 0);
 };
+player.onRespawn = () => ui.hideMessage();
 
 // --- Crash-style corridor camera -------------------------------------------
 // Sits behind the player, but its yaw is anchored to the authored course
@@ -62,7 +63,9 @@ const camForward = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
 
 function lerpAngle(a: number, b: number, t: number): number {
-  const d = ((b - a + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+  // Symmetric shortest-arc wrap (JS % keeps the dividend's sign, so the usual
+  // "+3PI mod 2PI" trick breaks for large negative deltas).
+  const d = b - a - Math.PI * 2 * Math.round((b - a) / (Math.PI * 2));
   return a + d * t;
 }
 
