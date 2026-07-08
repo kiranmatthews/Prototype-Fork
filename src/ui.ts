@@ -21,6 +21,8 @@ export class UI {
   private msgSub: HTMLElement;
   private msgWrap: HTMLElement;
   private flashEl: HTMLElement;
+  private balanceWrap: HTMLElement;
+  private balanceNeedle: HTMLElement;
   private msgTimer: number | undefined;
 
   constructor() {
@@ -37,8 +39,9 @@ export class UI {
 
     const help = div('hud-help');
     help.textContent =
-      'stick/arrows: steer+speed (down = back up) · X/Space: jump · Triangle/E: hold to grind · ' +
-      'Square/F: spin · Circle/Q: air grab, boost on landing · R/Options: restart';
+      'stick/arrows: steer+speed, air control (down = back up) · X/Space: jump · ' +
+      'Triangle/E: hold to grind (balance with left/right!) · Square/F: spin · ' +
+      'Circle/Q: grab-spin, boost on landing · R/Options: restart run';
 
     this.msgWrap = div('hud-msg');
     this.msgTitle = div('hud-msg-title');
@@ -49,9 +52,26 @@ export class UI {
 
     this.flashEl = div('hud-flash');
 
-    for (const el of [stats, panel, help, this.msgWrap, this.flashEl]) {
+    // THPS-style grind balance meter (visible only while grinding).
+    this.balanceWrap = div('hud-balance');
+    this.balanceNeedle = div('hud-balance-needle');
+    const balanceCenter = div('hud-balance-center');
+    this.balanceWrap.appendChild(balanceCenter);
+    this.balanceWrap.appendChild(this.balanceNeedle);
+    this.balanceWrap.style.display = 'none';
+
+    for (const el of [stats, panel, help, this.msgWrap, this.flashEl, this.balanceWrap]) {
       document.body.appendChild(el);
     }
+  }
+
+  // value in [-1, 1]; pegging either end is a bail.
+  updateBalance(visible: boolean, value: number): void {
+    this.balanceWrap.style.display = visible ? 'block' : 'none';
+    if (!visible) return;
+    const pct = 50 + value * 46;
+    this.balanceNeedle.style.left = pct + '%';
+    this.balanceNeedle.style.background = Math.abs(value) > 0.7 ? '#e2483d' : '#8fd4a8';
   }
 
   setStats(s: Stats): void {
@@ -147,6 +167,20 @@ export class UI {
       .hud-flash {
         position: fixed; z-index: 12; inset: 0; background: #a3202a;
         opacity: 0; pointer-events: none;
+      }
+      .hud-balance {
+        position: fixed; z-index: 10; left: 50%; bottom: 18%;
+        transform: translateX(-50%); width: 240px; height: 14px;
+        background: rgba(14, 16, 22, 0.8); border: 1px solid #3a4152;
+        border-radius: 7px;
+      }
+      .hud-balance-center {
+        position: absolute; left: 50%; top: 2px; bottom: 2px; width: 2px;
+        margin-left: -1px; background: #5a6478;
+      }
+      .hud-balance-needle {
+        position: absolute; top: -4px; width: 8px; height: 20px;
+        margin-left: -4px; border-radius: 2px; background: #8fd4a8;
       }
     `;
     document.head.appendChild(style);

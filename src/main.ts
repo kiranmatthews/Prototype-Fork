@@ -15,7 +15,7 @@ app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x232634);
-scene.fog = new THREE.Fog(0x232634, 30, 150);
+scene.fog = new THREE.Fog(0x232634, 30, 170);
 
 scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x32281f, 1.0));
 const sun = new THREE.DirectionalLight(0xfff2d8, 1.4);
@@ -38,7 +38,7 @@ const input = new Input();
 const ui = new UI();
 const level = new Level(scene);
 const player = new Player(scene);
-player.respawn(level);
+player.respawn(level, true);
 
 player.onDeath = () => {
   ui.flash();
@@ -48,6 +48,7 @@ player.onFinish = (time) => {
   ui.showMessage('COURSE CLEAR!', `time ${time.toFixed(2)}s — press R / Options to go again`, 0);
 };
 player.onRespawn = () => ui.hideMessage();
+player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
 
 // --- Crash-style corridor camera -------------------------------------------
 // Sits behind the player, but its yaw is anchored to the authored course
@@ -113,6 +114,7 @@ function frame(): void {
 
   updateCamera(dt);
 
+  ui.updateBalance(player.state === 'grind', player.balance);
   ui.setStats({
     speed: player.speed,
     state: player.state,

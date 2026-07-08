@@ -3,23 +3,27 @@
 // sliders in the debug panel (ui.ts) for live tuning.
 
 export const TUNING = {
-  maxSpeed: 26, // top speed from pedaling on flat ground
-  acceleration: 30, // forward input accel
-  friction: 5, // speed bleed when not holding forward
-  turnRate: 2.6, // radians/sec of heading change at full stick
+  maxSpeed: 43, // top speed from pedaling on flat ground
+  acceleration: 37, // forward input accel
+  friction: 25.5, // speed bleed when not holding forward
+  turnRate: 2.8, // radians/sec of heading change at full stick
   riseGravity: 40, // gravity while moving up (lighter = floatier jump arc)
-  fallGravity: 70, // gravity while falling (heavier = snappy PS1 landing)
-  jumpVelocity: 15,
+  fallGravity: 107, // gravity while falling (heavier = snappy PS1 landing)
+  jumpVelocity: 23.5,
   slopeBoost: 42, // fake downhill acceleration, scaled by slope grade
   uphillSlowdown: 30, // fake uphill deceleration, scaled by slope grade
-  railSnapDistance: 3.5, // forgiving radius for Triangle/E grind snap
-  grindSpeed: 24, // rail owns the player: constant authored speed
-  grindJumpForce: 14, // vertical pop when jumping off a rail
-  spinDuration: 0.45,
+  railSnapDistance: 3.1, // forgiving radius for Triangle/E grind snap
+  grindSpeed: 20, // rail owns the player: constant authored speed
+  grindJumpForce: 24.5, // vertical pop when jumping off a rail
+  spinDuration: 0.3,
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
-  reverseSpeed: 10, // Crash-style backing up on stick-down
+  reverseSpeed: 18, // Crash-style backing up on stick-down
   strafeSpeed: 6, // sideways step speed when (near) stationary
   grabBoost: 8, // speed burst on landing a Circle/Q air grab
+  airControl: 14, // Crash-style forward/back drift accel in the air
+  airDrift: 8, // Crash-style lateral drift speed in the air
+  balanceDrift: 0.55, // THPS grind balance: how fast the needle runs away
+  balanceControl: 2.6, // how hard left/right fights the needle
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -43,6 +47,10 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   reverseSpeed: { min: 2, max: 20, step: 1 },
   strafeSpeed: { min: 1, max: 15, step: 0.5 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
+  airControl: { min: 0, max: 40, step: 1 },
+  airDrift: { min: 0, max: 20, step: 0.5 },
+  balanceDrift: { min: 0.1, max: 2, step: 0.05 },
+  balanceControl: { min: 0.5, max: 6, step: 0.1 },
 };
 
 // Fixed authored constants that are part of the feel but stay off the sliders
@@ -52,8 +60,7 @@ export const CONST = {
   brakePower: 34, // pulling back on the stick
   overspeedDecay: 3, // bleed rate when above maxSpeed on flat ground
   maxOverspeed: 1.6, // hard cap = maxSpeed * this (downhill can exceed maxSpeed)
-  airTurnFactor: 0.55, // reduced steering authority in the air
-  killY: -22, // fall below this = instant death
+  killY: -48, // fall below this = instant death
   respawnDelay: 0.7, // quick Crash-style respawn
   playerHalf: { x: 0.5, y: 0.9, z: 0.5 }, // capsule-ish AABB approximation
   spinReach: 1.4, // extra horizontal hit reach while spinning
@@ -64,6 +71,12 @@ export const CONST = {
   strafeFade: 8, // speed at which sidestep fully hands over to carving turns
   turnLowSpeedFactor: 0.35, // turn authority when stationary (ramps to 1 at strafeFade)
   grabGrace: 0.18, // releasing the grab this close to landing still counts
+  grabSpinRate: 9, // rad/s of the grab trick spin (visual only)
+  flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
+  crateBounce: 13, // vertical pop from breaking a crate by landing on it
+  balanceStart: 0.15, // initial needle kick when a grind starts
+  balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
+  balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   deadzone: 0.18,
   renderScale: 0.5, // low internal resolution for the PS1 look
 };

@@ -19,6 +19,10 @@ interface GroundHit {
 
 const DOWN = new THREE.Vector3(0, -1, 0);
 
+function wrapAngle(a: number): number {
+  return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
+}
+
 export class Player {
   pos = new THREE.Vector3(); // feet position
   heading = Math.PI; // yaw; forward = (sin, 0, cos)
@@ -32,11 +36,13 @@ export class Player {
 
   // debug readouts
   railCandidateDist = Infinity;
+  balance = 0; // THPS grind balance needle, -1..1 (bail at the ends)
 
   // wired up by main.ts
   onDeath: () => void = () => {};
   onFinish: (time: number) => void = () => {};
   onRespawn: () => void = () => {};
+  onCheckpoint: () => void = () => {};
 
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
@@ -47,6 +53,12 @@ export class Player {
   private grabActive = false;
   private grabGraceTimer = 0;
   private grabPose = 0;
+  private grabSpinAngle = 0; // trick spin while holding the grab (visual only)
+  private spinAngle = 0; // spin-attack rotation (visual only)
+  private visualYaw = 0; // Crash-style body facing vs. movement heading
+  private flipTimer = 0; // front-flip on jump (visual only)
+  private grindTime = 0; // how long this grind has lasted (balance ramps up)
+  private prevPos = new THREE.Vector3(); // for travel-direction facing
   private grindRail: Rail | null = null;
   private grindT = 0;
   private grindDir = 1;
@@ -94,9 +106,11 @@ export class Player {
     return this.spinTimer > 0;
   }
 
-  respawn(level: Level): void {
-    level.reset();
-    this.pos.copy(level.spawnPos);
+  // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
+  // returns to the start and relights checkpoints.
+  respawn(level: Level, hard = false): void {
+    level.reset(hard);
+    this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
     this.heading = level.spawnHeading;
     this.speed = 0;
     this.vVel = 0;
@@ -107,12 +121,18 @@ export class Player {
     this.bodyGroup.rotation.y = 0;
     this.grindRail = null;
     this.regrindCd = 0;
-    this.runTime = 0;
+    if (hard) this.runTime = 0;
     this.cratesBroken = 0;
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.grabActive = false;
     this.grabGraceTimer = 0;
+    this.grabSpinAngle = 0;
+    this.spinAngle = 0;
+    this.visualYaw = 0;
+    this.flipTimer = 0;
+    this.balance = 0;
+    this.prevPos.copy(this.pos);
     for (const s of this.sparks) {
       s.life = 0;
       s.mesh.visible = false;
@@ -125,6 +145,8 @@ export class Player {
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
+    this.flipTimer = Math.max(0, this.flipTimer - dt);
+    this.prevPos.copy(this.pos);
 
     // Rail candidate is computed once per step: used for grind entry, the
     // assisted landing snap, and the debug panel.
@@ -132,7 +154,7 @@ export class Player {
     this.railCandidateDist = this.railCand ? this.railCand.sample.distance : Infinity;
 
     if (input.restartPressed) {
-      this.respawn(level);
+      this.respawn(level, true);
       this.syncVisual(input, dt);
       return;
     }
@@ -267,6 +289,7 @@ export class Player {
       this.state = 'air';
       this.grounded = false;
       this.coyoteTimer = 0;
+      this.flipTimer = CONST.flipDuration; // Crash front-flip
     }
   }
 
@@ -274,13 +297,34 @@ export class Player {
     if (input.jumpPressed && this.coyoteTimer > 0) {
       this.vVel = TUNING.jumpVelocity;
       this.coyoteTimer = 0;
+      this.flipTimer = CONST.flipDuration;
     }
-
-    this.heading -= input.moveX * TUNING.turnRate * CONST.airTurnFactor * dt;
 
     // Asymmetric fake gravity: heavier on the way down for a snappy arc.
     const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
     this.vVel -= g * dt;
+
+    // Crash-style directional air control: up/down stretches or shortens the
+    // jump, left/right drifts sideways. Locked while holding a grab — the
+    // trick freezes your trajectory.
+    if (!this.grabActive) {
+      if (Math.abs(input.moveY) > 0.05) {
+        const cap = TUNING.maxSpeed * CONST.maxOverspeed;
+        this.speed = THREE.MathUtils.clamp(
+          this.speed + TUNING.airControl * input.moveY * dt,
+          -TUNING.reverseSpeed,
+          cap,
+        );
+      }
+      if (Math.abs(input.moveX) > 0.05) {
+        const right = new THREE.Vector3(
+          Math.sin(this.heading - Math.PI / 2),
+          0,
+          Math.cos(this.heading - Math.PI / 2),
+        );
+        this.pos.addScaledVector(right, input.moveX * TUNING.airDrift * dt);
+      }
+    }
 
     this.pos.addScaledVector(this.forward(), this.speed * dt);
     this.pos.y += this.vVel * dt;
@@ -311,6 +355,19 @@ export class Player {
 
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
+    this.grindTime += dt;
+
+    // THPS balance: the needle is an unstable equilibrium that runs away from
+    // center, faster the longer you grind; left/right input fights it. Pegging
+    // the meter bails you off the rail.
+    const instability = TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp);
+    this.balance += Math.sign(this.balance || 1) * instability * dt;
+    this.balance += input.moveX * TUNING.balanceControl * dt;
+    if (Math.abs(this.balance) >= 1) {
+      this.bailFromRail();
+      return;
+    }
+
     this.grindT += this.grindDir * TUNING.grindSpeed * dt;
 
     if (this.grindT <= 0 || this.grindT >= rail.totalLength) {
@@ -331,6 +388,7 @@ export class Player {
 
     if (input.jumpPressed) {
       this.exitGrind(TUNING.grindJumpForce);
+      this.flipTimer = CONST.flipDuration;
     }
   }
 
@@ -374,6 +432,9 @@ export class Player {
     this.coyoteTimer = 0;
     this.grabActive = false;
     this.grabGraceTimer = 0;
+    this.grindTime = 0;
+    // Start the needle slightly off-center in a random direction.
+    this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     this.speed = TUNING.grindSpeed;
     const tan = sample.tangent.clone().multiplyScalar(this.grindDir);
@@ -391,6 +452,19 @@ export class Player {
     this.state = 'air';
     this.vVel = vVel;
     this.regrindCd = CONST.regrindCooldown;
+    this.balance = 0;
+  }
+
+  // Pegged the balance meter: stumble off the rail with most speed gone.
+  // Over a pit that usually means a drop into it.
+  private bailFromRail(): void {
+    this.grindRail = null;
+    this.state = 'air';
+    this.vVel = 3;
+    this.speed *= CONST.balanceBailSpeedKeep;
+    this.regrindCd = CONST.regrindCooldown * 2;
+    this.balance = 0;
+    this.emitSparks(8, 0xffb545, 2);
   }
 
   // ------------------------------------------------------------------ spin --
@@ -407,9 +481,9 @@ export class Player {
     if (this.spinTimer > 0) {
       this.spinTimer -= dt;
       const progress = 1 - Math.max(this.spinTimer, 0) / TUNING.spinDuration;
-      this.bodyGroup.rotation.y = progress * Math.PI * 2;
+      this.spinAngle = progress * Math.PI * 2;
       if (this.spinTimer <= 0) {
-        this.bodyGroup.rotation.y = 0;
+        this.spinAngle = 0;
         this.spinCd = CONST.spinCooldown;
       }
     }
@@ -422,13 +496,18 @@ export class Player {
     if (this.state === 'air') {
       if (input.grabHeld) {
         this.grabActive = true;
+        // Trick spin while the grab is held — pure visual, the trajectory is
+        // already locked by the air-control gate.
+        this.grabSpinAngle += CONST.grabSpinRate * dt;
       } else if (this.grabActive) {
         // Released mid-air: a short grace window still pays out on landing.
         this.grabActive = false;
         this.grabGraceTimer = CONST.grabGrace;
+        this.grabSpinAngle = 0;
       }
-    } else if (this.grabActive) {
+    } else if (this.grabActive || this.grabSpinAngle !== 0) {
       this.grabActive = false;
+      this.grabSpinAngle = 0;
     }
   }
 
@@ -486,10 +565,17 @@ export class Player {
         level.breakCrate(c);
         this.cratesBroken++;
       } else if (this.playerBox.intersectsBox(c.box)) {
-        // Plowing into a crate without spinning breaks it but kills your flow.
-        level.breakCrate(c);
-        this.cratesBroken++;
-        this.speed *= 0.35;
+        if (this.isStomping(c.box)) {
+          // Crash rules: landing on top breaks it and bounces you.
+          level.breakCrate(c);
+          this.cratesBroken++;
+          this.vVel = CONST.crateBounce;
+          this.state = 'air';
+          this.grounded = false;
+        } else {
+          // Bumping does nothing to the crate — it's a wall. Full stop.
+          this.pushOutOf(c.box);
+        }
       }
     }
 
@@ -498,8 +584,23 @@ export class Player {
       if (this.spinning && this.spinBox.intersectsBox(e.box)) {
         level.killEnemy(e);
       } else if (this.playerBox.intersectsBox(e.box)) {
-        this.die();
-        return;
+        if (this.isStomping(e.box)) {
+          // Crash rules: jumping on an enemy squashes it and bounces you.
+          level.killEnemy(e);
+          this.vVel = CONST.crateBounce;
+          this.state = 'air';
+          this.grounded = false;
+        } else {
+          this.die();
+          return;
+        }
+      }
+    }
+
+    for (const cp of level.checkpoints) {
+      if (!cp.active && this.playerBox.intersectsBox(cp.box)) {
+        level.activateCheckpoint(cp);
+        this.onCheckpoint();
       }
     }
 
@@ -507,6 +608,32 @@ export class Player {
       this.state = 'finished';
       this.onFinish(this.runTime);
     }
+  }
+
+  // Falling and our feet are near the target's top face = a stomp. The window
+  // is deep enough that a max-speed fall can't step past it in one tick.
+  private isStomping(box: THREE.Box3): boolean {
+    return this.state === 'air' && this.vVel < 0 && this.pos.y > box.max.y - 0.75;
+  }
+
+  // Shove the player back out the side they came IN from (based on this
+  // step's travel), so a fast approach can't teleport through the far face.
+  // Chunky, deliberate, Crash-like full stop.
+  private pushOutOf(box: THREE.Box3): void {
+    const dx = this.pos.x - this.prevPos.x;
+    const dz = this.pos.z - this.prevPos.z;
+    const hx = CONST.playerHalf.x + 0.02;
+    const hz = CONST.playerHalf.z + 0.02;
+    if (Math.abs(dz) >= Math.abs(dx) && dz !== 0) {
+      this.pos.z = dz < 0 ? box.max.z + hz : box.min.z - hz;
+    } else if (dx !== 0) {
+      this.pos.x = dx < 0 ? box.max.x + hx : box.min.x - hx;
+    } else {
+      // Not moving (spawned overlapping?): nearest z face.
+      const cz = (box.min.z + box.max.z) / 2;
+      this.pos.z = this.pos.z < cz ? box.min.z - hz : box.max.z + hz;
+    }
+    this.speed = 0;
   }
 
   private die(): void {
@@ -538,15 +665,38 @@ export class Player {
     this.group.position.copy(this.pos);
     this.group.rotation.y = this.heading;
 
-    // Chunky little carve lean.
-    const targetLean = this.grounded || this.state === 'grind' ? -input.moveX * 0.28 : -input.moveX * 0.12;
+    // Chunky little carve lean; while grinding, the lean IS the balance needle.
+    const targetLean =
+      this.state === 'grind'
+        ? -this.balance * 0.55
+        : this.grounded
+          ? -input.moveX * 0.28
+          : -input.moveX * 0.12;
     this.lean += (targetLean - this.lean) * Math.min(1, 12 * dt);
     this.group.rotation.z = this.lean;
 
-    // Grab tuck: lean back and crouch while Circle/Q is held in the air.
+    // Crash walk facing: at low speed on the ground the body snaps to face the
+    // actual travel direction — sidesteps face sideways, backing up faces the
+    // camera. At speed it snaps back to the board's heading.
+    let targetYaw = 0;
+    if (this.grounded && (this.speed < -0.5 || Math.abs(this.speed) < CONST.strafeFade)) {
+      const vx = this.pos.x - this.prevPos.x;
+      const vz = this.pos.z - this.prevPos.z;
+      if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
+        targetYaw = wrapAngle(Math.atan2(vx, vz) - this.heading);
+      } else {
+        targetYaw = this.visualYaw; // idle: keep facing where we last walked
+      }
+    }
+    this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 20 * dt);
+    this.bodyGroup.rotation.y = this.visualYaw + this.spinAngle + this.grabSpinAngle;
+
+    // Grab tuck + Crash front-flip, blended so a grab overrides the flip.
     const targetPose = this.grabActive ? 1 : 0;
     this.grabPose += (targetPose - this.grabPose) * Math.min(1, 16 * dt);
-    this.bodyGroup.rotation.x = this.grabPose * 0.45;
+    const flip =
+      this.flipTimer > 0 ? (1 - this.flipTimer / CONST.flipDuration) * Math.PI * 2 : 0;
+    this.bodyGroup.rotation.x = flip * (1 - this.grabPose) + 0.45 * this.grabPose;
     this.bodyGroup.position.y = this.grabPose * -0.12;
 
     this.group.visible = this.state !== 'dead';
@@ -598,6 +748,17 @@ export class Player {
     );
     head.position.y = 1.42;
     g.add(head);
+
+    // Crude face on the travel side (+Z), so backing up shows it to the camera.
+    const faceMat = new THREE.MeshBasicMaterial({ color: 0x222428 });
+    for (const side of [-0.075, 0.075]) {
+      const eye = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.07, 0.02), faceMat);
+      eye.position.set(side, 1.47, 0.165);
+      g.add(eye);
+    }
+    const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.03, 0.02), faceMat);
+    mouth.position.set(0, 1.36, 0.165);
+    g.add(mouth);
 
     return g;
   }
