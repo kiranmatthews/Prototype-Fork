@@ -648,7 +648,7 @@ export class Player {
     // Chunky little carve lean; while grinding, the lean IS the balance needle.
     const targetLean =
       this.state === 'grind'
-        ? -this.balance * 0.55
+        ? this.balance * 0.55 // tip toward the needle/d-pad side (balance>0 = right)
         : this.grounded
           ? -input.moveX * 0.28
           : -input.moveX * 0.12;
