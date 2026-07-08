@@ -169,9 +169,11 @@ export class Level {
 
     // --- finish gate ---
     this.finishGate(-10, this.finishZ);
+    // Tall trigger so no jump arc (even with abusive slider settings) can
+    // clear the gate without registering.
     this.finishBox.setFromCenterAndSize(
-      new THREE.Vector3(0, -10 + 2.5, this.finishZ),
-      new THREE.Vector3(DECK_W, 5, 2),
+      new THREE.Vector3(0, -10 + 15, this.finishZ),
+      new THREE.Vector3(DECK_W, 30, 2),
     );
 
     // --- end wall (visual for the authored hard stop) ---
@@ -275,8 +277,8 @@ export class Level {
   private finishGate(deckY: number, z: number): void {
     const postMat = new THREE.MeshLambertMaterial({ color: 0xd8d8d8 });
     for (const side of [-1, 1]) {
-      const post = new THREE.Mesh(new THREE.BoxGeometry(0.5, 5, 0.5), postMat);
-      post.position.set(side * 5.5, deckY + 2.5, z);
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.5, 7, 0.5), postMat);
+      post.position.set(side * 5.5, deckY + 3.5, z);
       this.scene.add(post);
     }
     // Checkered banner via a tiny canvas texture.
@@ -296,7 +298,8 @@ export class Level {
       new THREE.BoxGeometry(11.5, 1.2, 0.2),
       new THREE.MeshBasicMaterial({ map: tex }),
     );
-    banner.position.set(0, deckY + 4.6, z);
+    // High enough that the post-finish camera (player.y + 4.2) slides under it.
+    banner.position.set(0, deckY + 6.4, z);
     this.scene.add(banner);
   }
 }
