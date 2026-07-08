@@ -11,9 +11,9 @@ export interface Crate {
   mesh: THREE.Mesh;
   box: THREE.Box3;
   alive: boolean;
-  nitro?: boolean; // green, bobbing, touch = instant detonation (manual past it!)
+  nitro?: boolean; // green, bobbing, touch = instant detonation
   bouncy?: boolean; // yellow arrow crate: stomp = super bounce, never breaks
-  tnt?: boolean; // red TNT: touch lights a 3s fuse, then it blows
+  tnt?: boolean; // red TNT: solid box; stomp lights the 3-2-1 fuse, spin/slam detonates
   fuse?: number; // seconds left on a lit TNT
   mask?: boolean; // Aku crate: breaking it grants a protective mask
 }
@@ -40,7 +40,7 @@ export interface Checkpoint {
   savedTrickMeter: number;
 }
 
-export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate', 'Random'];
+export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate', 'Sidewinder', 'Random'];
 
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
@@ -55,11 +55,13 @@ export class Level {
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
-  halfpipeLipY = -6.2; // top of the halfpipe transition (vert launch height)
+  halfpipeLipY = -7.6; // top of the halfpipe transition (vert launch height)
+  halfpipeLipX = 10.3; // outer edge of the transition walls
   killY = -48; // per-level death height
   name = LEVEL_NAMES[0];
 
-  explosions: { center: THREE.Vector3; t: number }[] = [];
+  // safe = triggered by the player's own spin/slam: breaks the world, not them
+  explosions: { center: THREE.Vector3; t: number; radius: number; safe: boolean }[] = [];
 
   private scene: THREE.Scene;
   private root = new THREE.Group(); // everything the level owns, for disposal
@@ -68,7 +70,7 @@ export class Level {
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
   private maskTex: THREE.CanvasTexture | null = null;
-  private blastMeshes: { outer: THREE.Mesh; inner: THREE.Mesh; ex: { center: THREE.Vector3; t: number } }[] = [];
+  private blastMeshes: { outer: THREE.Mesh; inner: THREE.Mesh; ex: { center: THREE.Vector3; t: number; radius: number } }[] = [];
   private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
   private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
 
@@ -78,7 +80,8 @@ export class Level {
     this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
     if (courseId === 1) this.buildNSanity();
     else if (courseId === 2) this.buildGreatGate();
-    else if (courseId === 3) this.buildRandom();
+    else if (courseId === 3) this.buildSidewinder();
+    else if (courseId === 4) this.buildRandom();
     else this.buildTestCourse();
   }
 
@@ -143,7 +146,7 @@ export class Level {
     for (const ex of this.explosions) {
       ex.t += dt;
       if (ex.t <= CONST.blastGrow + 0.05) {
-        const r = CONST.blastRadius * Math.min(1, ex.t / CONST.blastGrow);
+        const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
         for (const c of this.crates) {
           if (!c.alive || c.bouncy) continue;
           if (c.mesh.position.distanceTo(ex.center) < r + 0.6) {
@@ -161,7 +164,7 @@ export class Level {
     }
     for (let i = this.blastMeshes.length - 1; i >= 0; i--) {
       const b = this.blastMeshes[i];
-      const r = Math.max(0.01, CONST.blastRadius * Math.min(1, b.ex.t / CONST.blastGrow));
+      const r = Math.max(0.01, b.ex.radius * Math.min(1, b.ex.t / CONST.blastGrow));
       b.outer.scale.setScalar(r);
       b.inner.scale.setScalar(r * 0.55);
       const fade = Math.max(0, 1 - b.ex.t / 0.6);
@@ -203,13 +206,16 @@ export class Level {
 
   // Blow up a nitro/TNT box: expanding blast that chains neighbors, breaks
   // normal crates, kills enemies, and (checked player-side) kills the rider.
-  detonate(c: Crate): void {
+  // safe=true (the player spun/slammed it themselves) spares the rider — but
+  // anything it CHAINS detonates unsafe, so popping a stack up close is a risk.
+  detonate(c: Crate, safe = false): void {
     if (!c.alive) return;
     c.alive = false;
     c.fuse = undefined;
     c.mesh.visible = false;
     const center = c.mesh.position.clone();
-    const ex = { center, t: 0 };
+    const radius = c.tnt ? CONST.blastRadius * CONST.tntBlastScale : CONST.blastRadius;
+    const ex = { center, t: 0, radius, safe };
     this.explosions.push(ex);
     const outer = new THREE.Mesh(
       Level.blastGeo,
@@ -361,19 +367,22 @@ export class Level {
     this.slab('corridor D', -505, -575, -13, 12, matA);
     // rail 2 pit: -575 .. -655
     this.slab('rail 2 landing', -655, -710, -13.5, 12, matB);
-    // halfpipe: tall curved transitions (4 segments each side approximating a
-    // quarter-pipe), lips are grindable rails. Carving over the lip with
-    // outward input pops a LOCKED vert air (see player.ts). slideRate rolls
-    // you back down toward the flat when you're not pushing outward.
-    this.slab('halfpipe floor', -710, -770, -13.5, 6, matA);
-    const profile: [number, number, number, number, number][] = [
-      // xIn, xOut, yBase, yTop, slideRate
-      [3.0, 4.6, -13.5, -12.8, 1],
-      [4.6, 5.9, -12.8, -11.2, 4],
-      [5.9, 6.8, -11.2, -8.9, 8],
-      [6.8, 7.4, -8.9, -6.2, 11],
+    // Halfpipe, THPS fake physics: lateral speed built on the flat carries up
+    // the transition (player.ts pipeVel), bleeds against the steepness, and
+    // whatever is left at the lip converts into a locked vert air. The walls
+    // approximate a radius-7.3 quarter-pipe; lips are grindable rails.
+    const hpFloor = this.slab('halfpipe floor', -710, -770, -13.5, 6, matA, false);
+    hpFloor.userData.hpFloor = true;
+    const profile: [number, number, number, number][] = [
+      // xIn, xOut, yBase, yTop — circle points, steepening toward the lip
+      [3.0, 4.8, -13.5, -13.27],
+      [4.8, 6.3, -13.27, -12.71],
+      [6.3, 7.5, -12.71, -11.95],
+      [7.5, 8.7, -11.95, -10.76],
+      [8.7, 9.6, -10.76, -9.32],
+      [9.6, 10.3, -9.32, -7.4],
     ];
-    for (const [xIn, xOut, yBase, yTop, slideRate] of profile) {
+    for (const [xIn, xOut, yBase, yTop] of profile) {
       for (const side of [1, -1]) {
         const wall = this.bank(
           'halfpipe wall',
@@ -386,9 +395,10 @@ export class Level {
           matRamp,
         );
         wall.userData.hpWall = true;
-        wall.userData.slideRate = slideRate;
       }
     }
+    this.halfpipeLipY = -7.6;
+    this.halfpipeLipX = 10.3;
     // rail yard entry deck, then a pit crossed by three parallel rails
     this.slab('rail yard entry', -770, -778, -13.5, 14, matB);
     // pit: -778 .. -850
@@ -420,8 +430,8 @@ export class Level {
       new THREE.Vector3(0, -11.5, -659),
     ]);
     // Halfpipe lip rails along both top edges.
-    const lipL = new Rail([new THREE.Vector3(-7.5, -6, -712), new THREE.Vector3(-7.5, -6, -766)]);
-    const lipR = new Rail([new THREE.Vector3(7.5, -6, -712), new THREE.Vector3(7.5, -6, -766)]);
+    const lipL = new Rail([new THREE.Vector3(-10.4, -7.2, -712), new THREE.Vector3(-10.4, -7.2, -766)]);
+    const lipR = new Rail([new THREE.Vector3(10.4, -7.2, -712), new THREE.Vector3(10.4, -7.2, -766)]);
     // Rail yard: three parallel rails over the pit — jump between them.
     const yardL = new Rail([new THREE.Vector3(-3.5, -12.6, -776), new THREE.Vector3(-3.5, -12.6, -852)]);
     const yardC = new Rail([new THREE.Vector3(0, -12.6, -776), new THREE.Vector3(0, -12.6, -852)]);
@@ -509,8 +519,8 @@ export class Level {
     this.crate(3.5, -12.8, -788);
     this.crate(3.5, -12.8, -822, 'nitro');
     this.crate(3.5, -12.8, -840);
-    // Corridor D: a big mixed explosive block off the left lane — chain it
-    // from a distance with a TNT touch, or manual straight past it.
+    // Corridor D: a big mixed explosive block off the left lane — spin the
+    // TNT to pop it (your own pop is safe, the chained nitro blast is NOT).
     this.crate(-2.6, -13, -530, 'tnt');
     this.crate(-2.6, -11.8, -530, 'nitro');
     this.crate(-1.3, -13, -530, 'tnt');
@@ -748,8 +758,95 @@ export class Level {
     this.endWall(33);
   }
 
+  // Side-to-side platforming: staggered pads over a void, so nearly every jump
+  // is a lateral hop. Every pad edge is a grindable lip; a couple of rails and
+  // a bouncy crate offer skip lines.
+  private buildSidewinder(): void {
+    const matA = new THREE.MeshLambertMaterial({ color: 0x7f8fa0 });
+    const matB = new THREE.MeshLambertMaterial({ color: 0x6d7d8e });
+    const matC = new THREE.MeshLambertMaterial({ color: 0x8b9a7c });
+
+    this.killY = -26;
+    this.finishZ = -240;
+    this.endWallZ = -252;
+
+    const pit = new THREE.Mesh(
+      new THREE.PlaneGeometry(900, 900),
+      new THREE.MeshBasicMaterial({ color: 0x2a1c30 }),
+    );
+    pit.rotation.x = -Math.PI / 2;
+    pit.position.set(0, -34, -120);
+    this.root.add(pit);
+
+    // walled start deck
+    this.slab('start', 14, -16, 0, 16, matA, false);
+    this.wall(0, 15, 18, 1, 0);
+    this.wall(-8.5, 0, 1, 32, 0);
+    this.wall(8.5, 0, 1, 32, 0);
+    this.crate(2, 0, -8);
+
+    // pad(cx, z0, len, y[, width, mat]): one hop of the zig-zag
+    const pad = (cx: number, z0: number, len: number, y: number, w = 6.5, m: THREE.Material = matB) =>
+      this.slab('pad', z0, z0 - len, y, w, m, true, cx);
+
+    pad(-6, -22, 12, 0);
+    this.crate(-6, 0, -30);
+    pad(5.5, -30, 12, 0, 6.5, matC);
+    pad(-5.5, -44, 12, 1);
+    this.crate(-5.5, 1, -52);
+    pad(5.5, -52, 12, 1, 6.5, matC);
+    this.crate(5.5, 1, -60, 'mask');
+
+    // rest pad with the first checkpoint
+    pad(0, -68, 14, 2, 8, matA);
+    this.checkpoint(2, -74);
+    this.enemy(-3, 3, 2, -78, 4);
+
+    // wider swings, nitro punishing the greedy inside line
+    pad(-7, -86, 11, 2);
+    this.crate(-4.6, 2, -90, 'nitro');
+    pad(7, -92, 11, 2, 5.5, matC);
+    pad(-7, -104, 11, 3.2);
+    this.crate(-7, 3.2, -110);
+
+    // center pad with a bouncy crate: launch over the next two hops
+    pad(0, -118, 12, 3.2, 7, matA);
+    this.crate(0, 3.2, -123, 'bouncy');
+    pad(6.5, -134, 12, 4.4);
+    this.crate(6.5, 4.4, -140);
+    pad(-6.5, -142, 12, 4.4, 6.5, matC);
+    this.crate(-6.5, 4.4, -148, 'tnt');
+    this.crate(-6.5, 4.4, -150);
+
+    // second checkpoint, then an S-rail as the smooth line over the last swings
+    pad(0, -158, 14, 5, 8, matA);
+    this.checkpoint(5, -164);
+    this.enemy(-3, 3, 5, -168, 5);
+    const sRail = new Rail([
+      new THREE.Vector3(1.5, 5.9, -168),
+      new THREE.Vector3(-6.5, 6.3, -184),
+      new THREE.Vector3(6.5, 6.9, -204),
+      new THREE.Vector3(0, 6.4, -216),
+    ]);
+    this.rails.push(sRail);
+    this.root.add(sRail.object);
+    pad(-6.5, -176, 11, 5);
+    pad(6.5, -184, 11, 5.6, 5.5, matC);
+    this.crate(6.5, 5.6, -190);
+    pad(-6.5, -196, 11, 6.2);
+    this.crate(-6.5, 6.2, -202, 'nitro');
+
+    // finish runway
+    this.slab('finish run', -212, -256, 6.2, 12, matA);
+    this.crate(-3, 6.2, -222);
+    this.crate(3, 6.2, -228);
+    this.enemy(-4, 4, 6.2, -232, 5);
+    this.finishGate(6.2, this.finishZ);
+    this.endWall(6.2);
+  }
+
   // Flat deck. z0 is the near (higher z) edge, z1 the far edge, topY the
-  // surface height the player rides on.
+  // surface height the player rides on. cx offsets the deck laterally.
   private slab(
     name: string,
     z0: number,
@@ -758,22 +855,24 @@ export class Level {
     width: number,
     mat: THREE.Material,
     grindEdges = true,
-  ): void {
+    cx = 0,
+  ): THREE.Mesh {
     const depth = Math.abs(z1 - z0);
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, 1, depth), mat);
-    mesh.position.set(0, topY - 0.5, (z0 + z1) / 2);
+    mesh.position.set(cx, topY - 0.5, (z0 + z1) / 2);
     mesh.name = name;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-    this.curbs(z0, z1, topY, width);
-    if (grindEdges) this.edgeRails(z0, topY, z1, topY, width);
+    this.curbs(z0, z1, topY, width, cx);
+    if (grindEdges) this.edgeRails(z0, topY, z1, topY, width, cx);
+    return mesh;
   }
 
   // The curb lines themselves are grindable: invisible rails along both deck
   // edges, THPS ledge-style.
-  private edgeRails(z0: number, y0: number, z1: number, y1: number, width: number): void {
+  private edgeRails(z0: number, y0: number, z1: number, y1: number, width: number, cx = 0): void {
     for (const side of [-1, 1]) {
-      const x = side * (width / 2 - 0.15);
+      const x = cx + side * (width / 2 - 0.15);
       const rail = new Rail(
         [new THREE.Vector3(x, y0 + 0.05, z0), new THREE.Vector3(x, y1 + 0.05, z1)],
         false,
@@ -915,12 +1014,12 @@ export class Level {
   }
 
   // Dark edge strips so deck borders read at speed. Visual only.
-  private curbs(z0: number, z1: number, topY: number, width: number): void {
+  private curbs(z0: number, z1: number, topY: number, width: number, cx = 0): void {
     const mat = new THREE.MeshLambertMaterial({ color: 0x4a4e58 });
     const depth = Math.abs(z1 - z0);
     for (const side of [-1, 1]) {
       const curb = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.22, depth), mat);
-      curb.position.set(side * (width / 2 - 0.2), topY + 0.11, (z0 + z1) / 2);
+      curb.position.set(cx + side * (width / 2 - 0.2), topY + 0.11, (z0 + z1) / 2);
       this.root.add(curb);
     }
   }
@@ -944,11 +1043,9 @@ export class Level {
     mesh.userData.baseY = mesh.position.y;
     if (!kind) mesh.rotation.y = 0.15;
     this.root.add(mesh);
-    // TNT gets a 30% smaller trigger box: brushing past it is forgiving.
-    const hit = kind === 'tnt' ? size * 0.7 : size;
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),
-      new THREE.Vector3(hit, hit, hit),
+      new THREE.Vector3(size, size, size),
     );
     this.crates.push({
       mesh,
@@ -1048,13 +1145,13 @@ export class Level {
   // A distinct blue box that sits on the deck like a normal crate. Spin or
   // stomp it (bumping is a wall) to bank the checkpoint; its trigger matches
   // the box, so it can be dodged rather than being an unmissable gate.
-  private checkpoint(deckY: number, z: number): void {
+  private checkpoint(deckY: number, z: number, x = 0): void {
     const size = 1.4;
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(size, size, size),
       new THREE.MeshLambertMaterial({ color: 0x4aa0e0, emissive: 0x123049 }),
     );
-    mesh.position.set(0, deckY + size / 2, z);
+    mesh.position.set(x, deckY + size / 2, z);
     this.root.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),
@@ -1064,7 +1161,7 @@ export class Level {
       mesh,
       box,
       active: false,
-      spawnPos: new THREE.Vector3(0, deckY + 0.1, z),
+      spawnPos: new THREE.Vector3(x, deckY + 0.1, z),
       savedAlive: [],
       savedCratesBroken: 0,
       savedFruit: 0,

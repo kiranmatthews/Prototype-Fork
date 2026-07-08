@@ -23,13 +23,15 @@ export const TUNING = {
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
   reverseSpeed: 18, // Crash-style backing up on stick-down
   turnaround: 150, // braking rate when input opposes travel — snappy direction flips
-  grabBoost: 8, // speed burst on landing a Circle/Q air grab
+  grabBoost: 8, // speed burst on landing a clean Circle/Q air grab
   crateBounce: 18, // vertical pop from stomping a crate — tuned for chaining crate to crate
   slideJumpBoost: 8, // extra speed when a Circle/Q ground slide is strung into a jump
   airControl: 14, // forward/back speed adjustment in the air
   balanceDrift: 0.55, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.6, // how hard left/right fights the needle
-  vertLaunch: 22, // upward pop when carving over the halfpipe lip (locked air)
+  crawlSpeed: 5.5, // Crash crouch-crawl speed while holding Circle stopped
+  pipeAccel: 46, // halfpipe: lateral carve accel on the flat (pump the walls!)
+  pipeLift: 1.15, // halfpipe: carve speed left at the lip converts to air at this rate
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -62,7 +64,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
-  vertLaunch: { min: 8, max: 40, step: 1 },
+  crawlSpeed: { min: 2, max: 10, step: 0.5 },
+  pipeAccel: { min: 10, max: 90, step: 1 },
+  pipeLift: { min: 0.5, max: 2, step: 0.05 },
 };
 
 // Fixed authored constants that are part of the feel but stay off the sliders
@@ -78,33 +82,41 @@ export const CONST = {
   spinReach: 1.4, // extra horizontal hit reach while spinning
   spinCooldown: 0.15,
   stopFriction: 90, // the near-instant halt below stopSpeed
-  maskInvuln: 1.0, // grace after a mask absorbs an enemy hit
+  maskInvuln: 1.0, // grace after a mask absorbs a hit or bail
   coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
   walkFaceSpeed: 8, // below this forward speed the body faces its travel direction
   grabGrace: 0.18, // releasing the grab this close to landing still counts
-  grabSpinRate: 9, // rad/s of the grab trick spin (visual only)
+  grabSpinRate: 9, // rad/s of the directional grab-spin (visual only)
+  grabSnapRate: 10, // rad/s the rotation eases back on-axis after release
+  grabOffAxisTolerance: 0.65, // landing more than this off-axis (rad) = bail
   flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
   flipMinSpeed: 12, // below this speed a jump is a plain hop, no flip (Crash rules)
-  slideDuration: 0.55, // Circle/Q ground slide length
-  slideMinSpeed: 10, // need this much speed to start a slide
-  slideInitBoost: 3, // small shove when the slide starts
+  slideDuration: 0.55, // Circle/Q canned ground slide length (direction locked)
+  slideMinSpeed: 10, // need this much speed to slide; slower + held Circle = crawl
+  slideInitBoost: 6, // direction-locked shove when the slide starts
   slideCooldown: 0.25,
+  slamSpeed: 46, // Circle+down pancake slam: authored fall rate
+  slamRadius: 2.4, // slam impact breaks crates/enemies within this radius
+  slamSquashTime: 0.3, // pancake squash pose on impact
   fruitPerCrate: 3, // wumpa spawned per broken box
   balanceStart: 0.15, // initial needle kick when a grind starts
   balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   bounceCrateForce: 30, // arrow-crate launch (vs ~18 from a normal stomp)
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
-  manualMinSpeed: 8, // need this much speed to pop a manual
-  manualFlickWindow: 0.2, // up->down (or down->up) within this = manual flick
-  manualDownHoldExit: 0.4, // holding down this long during a manual = you meant to brake
-  tntFuse: 3, // Crash-style TNT countdown
-  blastRadius: 5.5, // explosion kill/break radius (expands over blastGrow)
+  tntFuse: 3, // Crash-style TNT countdown (stomp lights it)
+  tntBlastScale: 0.6, // TNT blast radius vs nitro (40% smaller)
+  blastRadius: 5.5, // nitro explosion kill/break radius (expands over blastGrow)
   blastGrow: 0.35, // seconds for the blast sphere to reach full size
-  hpSnapWindow: 2.2, // taller ground-snap window on halfpipe walls so steep climbs stick
+  hpSnapWindow: 2.6, // taller ground-snap window on halfpipe walls so steep climbs stick
+  pipeMaxVel: 30, // halfpipe lateral carve speed cap
+  pipeGravity: 46, // halfpipe: transition steepness bleeds carve speed at this rate
+  pipeFriction: 9, // halfpipe: carve speed decay on the flat with no input
+  pipeLandKeep: 0.55, // landing on the transition converts fall speed back to carve
+  pipeMinLaunch: 5, // need this much carve left at the lip to air out
   deadzone: 0.18,
   renderScale: 0.5, // low internal resolution for the PS1 look
 };

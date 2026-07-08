@@ -16,7 +16,7 @@ interface GroundHit {
   normal: THREE.Vector3;
   name: string;
   hpWall?: boolean; // halfpipe transition segment
-  slideRate?: number; // how fast this segment rolls you back toward the flat
+  hpFloor?: boolean; // halfpipe flat — lateral movement is inertial carve here
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -43,8 +43,7 @@ export class Player {
 
   // debug readouts
   railCandidateDist = Infinity;
-  balance = 0; // THPS balance needle (grinds AND manuals), -1..1
-  manualing = false; // THPS manual: wheelie on the ground, safe over explosives
+  balance = 0; // THPS grind balance needle, -1..1
 
   // wired up by main.ts
   onDeath: () => void = () => {};
@@ -64,14 +63,14 @@ export class Player {
   private slideTimer = 0;
   private slideCd = 0;
   private slidePose = 0;
-  private manualTime = 0;
-  private manualCd = 0;
-  private manualPose = 0;
-  private sincePosY = 9; // seconds since stick was pushed up / down (flick detect)
-  private sinceNegY = 9;
-  private prevMoveY = 0;
-  private downHold = 0;
-  private grabSpinAngle = 0; // trick spin while holding the grab (visual only)
+  private crawling = false; // Circle held while stopped: low slow crawl
+  private slamActive = false; // Circle+down in the air: pancake body slam
+  private slamPose = 0;
+  private slamSquash = 0; // pancake pose timer after a slam lands
+  private pipeVel = 0; // halfpipe lateral carve velocity (world x, signed)
+  private bailing = false; // death with a tumble animation instead of a blink-out
+  private bailSpin = 0;
+  private grabSpinAngle = 0; // directional grab-spin; land off-axis = bail
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
   private flipTimer = 0; // front-flip on jump (visual only)
@@ -189,10 +188,13 @@ export class Player {
     this.invulnTimer = 0;
     this.slideTimer = 0;
     this.slideCd = 0;
-    this.manualing = false;
-    this.manualCd = 0;
-    this.sincePosY = 9;
-    this.sinceNegY = 9;
+    this.crawling = false;
+    this.slamActive = false;
+    this.slamSquash = 0;
+    this.pipeVel = 0;
+    this.bailing = false;
+    this.bailSpin = 0;
+    this.bodyGroup.rotation.x = 0;
     for (const f of this.fruits) {
       f.age = -1;
       f.mesh.visible = false;
@@ -225,67 +227,19 @@ export class Player {
     this.flipTimer = Math.max(0, this.flipTimer - dt);
     this.slideCd = Math.max(0, this.slideCd - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
-    this.manualCd = Math.max(0, this.manualCd - dt);
+    this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.prevPos.copy(this.pos);
     this.teetering = false; // stepRide re-detects it each tick
 
-    // THPS manual: a quick up->down (or down->up) flick while riding pops a
-    // wheelie. Balance it with left/right; roll safely over nitro and TNT.
-    this.sincePosY += dt;
-    this.sinceNegY += dt;
-    if (input.moveY > 0.5) this.sincePosY = 0;
-    if (input.moveY < -0.5) this.sinceNegY = 0;
-    const downFlick = this.prevMoveY >= -0.5 && input.moveY < -0.5 && this.sincePosY < CONST.manualFlickWindow;
-    const upFlick = this.prevMoveY <= 0.5 && input.moveY > 0.5 && this.sinceNegY < CONST.manualFlickWindow;
-    if ((downFlick || upFlick) && this.state === 'ride' && this.grounded) {
-      if (this.manualing) {
-        this.manualing = false;
-        this.balance = 0;
-        this.manualCd = 0.25;
-      } else if (this.manualCd <= 0 && Math.abs(this.speed) >= CONST.manualMinSpeed) {
-        this.manualing = true;
-        this.manualTime = 0;
-        this.downHold = 0;
-        this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
-      }
-    }
-    this.prevMoveY = input.moveY;
-
-    if (this.manualing) {
-      if (this.state !== 'ride' || !this.grounded || Math.abs(this.speed) < 6) {
-        this.manualing = false;
-        this.balance = 0;
-      } else {
-        this.manualTime += dt;
-        this.downHold = input.moveY < -0.5 ? this.downHold + dt : 0;
-        const instability = TUNING.balanceDrift * (1 + this.manualTime * CONST.balanceRamp);
-        this.balance += Math.sign(this.balance || 1) * instability * dt;
-        this.balance += input.moveX * TUNING.balanceControl * dt;
-        if (Math.abs(this.balance) >= 1 && this.spendMask()) {
-          // a mask absorbs the stumble: needle resets, manual continues
-          this.balance = 0;
-          this.manualTime = 0;
-        } else if (Math.abs(this.balance) >= 1) {
-          // stumble: keep your life, lose your speed
-          this.manualing = false;
-          this.balance = 0;
-          this.manualCd = 0.6;
-          this.speed *= 0.4;
-          this.emitSparks(6, 0xffb545, 1.5);
-        } else if (this.downHold > CONST.manualDownHoldExit) {
-          this.manualing = false; // you meant to brake
-          this.balance = 0;
-          this.manualCd = 0.25;
-        }
-      }
-    }
-
-    // Circle/Q on the ground at speed starts a slide (in the air it's a grab).
+    // Circle/Q on the ground at speed fires a brief canned slide: direction
+    // locked, a shove of speed, smashes crates. (Stopped, holding it crawls
+    // instead — see stepRide. In the air it's a grab.)
     if (
       input.grabPressed &&
       this.state === 'ride' &&
       this.grounded &&
+      !this.crawling &&
       this.slideTimer <= 0 &&
       this.slideCd <= 0 &&
       Math.abs(this.speed) >= CONST.slideMinSpeed
@@ -358,8 +312,8 @@ export class Player {
       if ((this.state as MoveState) !== 'dead') {
         const center = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
         for (const ex of level.explosions) {
-          if (ex.t > CONST.blastGrow + 0.05) continue;
-          const r = CONST.blastRadius * Math.min(1, ex.t / CONST.blastGrow);
+          if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
+          const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
           if (center.distanceTo(ex.center) < r + 0.5) {
             this.die();
             break;
@@ -412,71 +366,115 @@ export class Player {
     this.state = 'air';
     this.grounded = false;
     this.coyoteTimer = 0;
-    this.manualing = false;
+    this.crawling = false;
     this.charging = false;
     this.chargeTimer = 0;
     if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
-    // Authored accel / brake / reverse / friction. Input that OPPOSES current
-    // travel uses the much stronger turnaround rate, so flipping direction is
-    // snappy instead of a long sticky brake.
-    if (input.moveY > 0.05) {
-      const rate = this.speed < -0.01 ? TUNING.turnaround : TUNING.acceleration;
-      if (this.speed < TUNING.maxSpeed) {
-        this.speed = Math.min(this.speed + rate * input.moveY * dt, TUNING.maxSpeed);
+    // Crash crouch-crawl: holding Circle while (nearly) stopped drops you into
+    // a low, slow, precise crawl — direct velocity, no inertia, until release.
+    if (input.grabHeld && (this.crawling || (Math.abs(this.speed) < CONST.slideMinSpeed && this.slideTimer <= 0))) {
+      this.crawling = true;
+    } else {
+      this.crawling = false;
+    }
+
+    // Was the last step on halfpipe surface? There, lateral movement is an
+    // inertial carve (build speed on the flat, carry it up the transition)
+    // instead of the usual direct sidestep.
+    const pipeMode = this.groundHit !== null && (this.groundHit.hpWall === true || this.groundHit.hpFloor === true);
+
+    if (this.crawling) {
+      // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction.
+      this.speed = input.moveY * TUNING.crawlSpeed;
+      this.lastGrade = 0;
+      this.pos.addScaledVector(FORWARD, this.speed * dt);
+      if (Math.abs(input.moveX) > 0.05) {
+        this.pos.x += input.moveX * TUNING.crawlSpeed * dt;
       }
-    } else if (input.moveY < -0.05) {
-      const rate = this.speed > 0.01 ? TUNING.turnaround : CONST.brakePower;
-      this.speed = Math.max(-TUNING.reverseSpeed, this.speed + rate * input.moveY * dt);
-    } else if (this.slideTimer <= 0) {
-      // No friction while sliding — the slide keeps its momentum. Below
-      // stopSpeed, coasting halts almost instantly (Crash walk feel) so box
-      // puzzles and platforming are precise; above it, momentum carries and
-      // has to be managed.
-      const f = Math.abs(this.speed) < TUNING.stopSpeed ? CONST.stopFriction : TUNING.friction;
-      const drop = f * dt;
-      this.speed = Math.abs(this.speed) <= drop ? 0 : this.speed - Math.sign(this.speed) * drop;
-    }
+    } else {
+      // Authored accel / brake / reverse / friction. Input that OPPOSES current
+      // travel uses the much stronger turnaround rate, so flipping direction is
+      // snappy instead of a long sticky brake. A slide is canned: it ignores the
+      // stick entirely and keeps its momentum.
+      if (this.slideTimer > 0) {
+        // direction locked — no input, no friction
+      } else if (input.moveY > 0.05) {
+        const rate = this.speed < -0.01 ? TUNING.turnaround : TUNING.acceleration;
+        if (this.speed < TUNING.maxSpeed) {
+          this.speed = Math.min(this.speed + rate * input.moveY * dt, TUNING.maxSpeed);
+        }
+      } else if (input.moveY < -0.05) {
+        const rate = this.speed > 0.01 ? TUNING.turnaround : CONST.brakePower;
+        this.speed = Math.max(-TUNING.reverseSpeed, this.speed + rate * input.moveY * dt);
+      } else {
+        // Below stopSpeed, coasting halts almost instantly (Crash walk feel) so
+        // box puzzles and platforming are precise; above it, momentum carries
+        // and has to be managed.
+        const f = Math.abs(this.speed) < TUNING.stopSpeed ? CONST.stopFriction : TUNING.friction;
+        const drop = f * dt;
+        this.speed = Math.abs(this.speed) <= drop ? 0 : this.speed - Math.sign(this.speed) * drop;
+      }
 
-    // Fake slope response from the ground normal: grade > 0 means the surface
-    // drops away down-course. Sign-safe, so stalling on a ramp rolls you back
-    // down it.
-    let grade = 0;
-    if (this.groundHit) {
-      const n = this.groundHit.normal;
-      grade = -n.z / Math.max(n.y, 0.2);
-    }
-    if (Math.abs(grade) > 0.02) {
-      this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * dt;
-    }
-    this.lastGrade = grade;
+      // Fake slope response from the ground normal: grade > 0 means the surface
+      // drops away down-course. Sign-safe, so stalling on a ramp rolls you back
+      // down it.
+      let grade = 0;
+      if (this.groundHit) {
+        const n = this.groundHit.normal;
+        grade = -n.z / Math.max(n.y, 0.2);
+      }
+      if (Math.abs(grade) > 0.02) {
+        this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * dt;
+      }
+      this.lastGrade = grade;
 
-    // Downhill may exceed maxSpeed up to a hard cap; on the flat the excess
-    // bleeds back off. Reverse is capped separately.
-    const hardCap = TUNING.maxSpeed * CONST.maxOverspeed;
-    if (this.speed > hardCap) this.speed = hardCap;
-    if (this.speed > TUNING.maxSpeed && grade <= 0.02) {
-      this.speed = Math.max(TUNING.maxSpeed, this.speed - CONST.overspeedDecay * dt);
-    }
-    this.speed = Math.max(this.speed, -TUNING.reverseSpeed);
+      // Downhill may exceed maxSpeed up to a hard cap; on the flat the excess
+      // bleeds back off. Reverse is capped separately.
+      const hardCap = TUNING.maxSpeed * CONST.maxOverspeed;
+      if (this.speed > hardCap) this.speed = hardCap;
+      if (this.speed > TUNING.maxSpeed && grade <= 0.02) {
+        this.speed = Math.max(TUNING.maxSpeed, this.speed - CONST.overspeedDecay * dt);
+      }
+      this.speed = Math.max(this.speed, -TUNING.reverseSpeed);
 
-    this.pos.addScaledVector(FORWARD, this.speed * dt);
+      this.pos.addScaledVector(FORWARD, this.speed * dt);
 
-    // Axis-locked sidestep: direct velocity while held, dead stop on release.
-    // Left is ALWAYS screen-left, even while backing up. During a manual the
-    // stick belongs to the balance meter instead.
-    if (!this.manualing && Math.abs(input.moveX) > 0.05) {
-      this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
+      if (pipeMode) {
+        // Halfpipe carve: the stick accelerates an inertial lateral velocity
+        // (pump!), the flat bleeds a little, and the transition's steepness
+        // fights the climb — whatever survives to the lip becomes air.
+        this.pipeVel += input.moveX * TUNING.pipeAccel * dt;
+        if (this.groundHit!.hpWall) {
+          const outward = Math.sign(this.pos.x) || 1;
+          const steep = Math.min(1, Math.abs(this.groundHit!.normal.x));
+          this.pipeVel -= outward * CONST.pipeGravity * steep * dt;
+        } else if (Math.abs(input.moveX) < 0.05) {
+          const drop = CONST.pipeFriction * dt;
+          this.pipeVel = Math.abs(this.pipeVel) <= drop ? 0 : this.pipeVel - Math.sign(this.pipeVel) * drop;
+        }
+        this.pipeVel = THREE.MathUtils.clamp(this.pipeVel, -CONST.pipeMaxVel, CONST.pipeMaxVel);
+        this.pos.x += this.pipeVel * dt;
+      } else {
+        this.pipeVel = 0;
+        // Axis-locked sidestep: direct velocity while held, dead stop on
+        // release. Left is ALWAYS screen-left, even while backing up. Slides
+        // are direction locked: no steering mid-slide.
+        if (this.slideTimer <= 0 && Math.abs(input.moveX) > 0.05) {
+          this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
+        }
+      }
     }
 
     // Follow the ground within a chunky snap window, otherwise we ran off an
-    // edge and go airborne. Halfpipe transitions get a taller window so steep
-    // climbs stick to the surface.
+    // edge and go airborne. Halfpipe transitions get a taller window (both
+    // ways) so steep climbs and descents stick to the surface.
     const hit = this.queryGround(level);
     const upWindow = hit && hit.hpWall ? CONST.hpSnapWindow : 0.8;
-    if (hit && hit.y >= this.pos.y - 1.4 && hit.y <= this.pos.y + upWindow) {
+    const downWindow = hit && hit.hpWall ? CONST.hpSnapWindow : 1.4;
+    if (hit && hit.y >= this.pos.y - downWindow && hit.y <= this.pos.y + upWindow) {
       this.pos.y = hit.y;
       this.groundHit = hit;
       this.grounded = true;
@@ -485,7 +483,7 @@ export class Player {
       // Crash teeter: slow/stopped with part of the board hanging over an
       // edge — wobble as a warning; step back (or jump) to save yourself.
       this.teetering = false;
-      if (Math.abs(this.speed) < CONST.teeterSpeed && !this.manualing && !hit.hpWall) {
+      if (Math.abs(this.speed) < CONST.teeterSpeed && !hit.hpWall) {
         for (const [ox, oz] of [[0.55, 0], [-0.55, 0], [0, 0.55], [0, -0.55]]) {
           if (!this.queryGround(level, ox, oz)) {
             this.teetering = true;
@@ -494,29 +492,31 @@ export class Player {
         }
       }
 
-      // THPS halfpipe behavior on the transition walls:
+      // Carried carve speed all the way over the lip: locked vert air. Height
+      // comes from the speed you brought, THPS-style — you go UP, x pinned,
+      // and drop back into the pipe.
       if (hit.hpWall) {
         const outward = Math.sign(this.pos.x) || 1;
-        const pushingOut = input.moveX * outward > 0.05;
-        if (pushingOut && this.pos.y > level.halfpipeLipY - 0.5) {
-          // Carved over the lip: locked vert air. You go UP, not off the edge,
-          // and come back down into the pipe.
+        if (this.pipeVel * outward > CONST.pipeMinLaunch && this.pos.y > level.halfpipeLipY - 0.5) {
           this.state = 'air';
           this.grounded = false;
-          this.vVel = TUNING.vertLaunch;
+          this.vVel = Math.min(Math.abs(this.pipeVel) * TUNING.pipeLift, 36);
           this.vertLock = true;
+          this.pipeVel = 0;
           this.charging = false;
           this.chargeTimer = 0;
           this.emitSparks(5, 0xfff3d0, 1.2);
-        } else if (!pushingOut && hit.slideRate) {
-          // Not pushing outward: the transition rolls you back to the flat.
-          this.pos.x -= outward * hit.slideRate * dt;
+        } else {
+          // backstop: never carve past the physical edge of the wall
+          const lipX = level.halfpipeLipX - 0.1;
+          this.pos.x = THREE.MathUtils.clamp(this.pos.x, -lipX, lipX);
         }
       }
     } else {
       this.state = 'air';
       this.grounded = false;
       this.groundHit = hit;
+      this.crawling = false;
       // Authored kicker launch: leaving an uphill lip converts speed to lift
       // (forward travel only — backing off an edge just drops).
       this.vVel =
@@ -530,7 +530,7 @@ export class Player {
     if (this.state === 'ride' && input.jumpHeld) {
       this.charging = true;
       this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
-      if (Math.abs(this.speed) < TUNING.maxSpeed && Math.abs(this.speed) > 0.5) {
+      if (!this.crawling && Math.abs(this.speed) < TUNING.maxSpeed && Math.abs(this.speed) > 0.5) {
         const s = Math.sign(this.speed);
         this.speed = s * Math.min(Math.abs(this.speed) + TUNING.chargeBoost * dt, TUNING.maxSpeed);
       }
@@ -554,15 +554,32 @@ export class Player {
       this.chargeTimer = 0;
     }
 
-    // Asymmetric fake gravity: heavier on the way down for a snappy arc.
-    const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
-    this.vVel -= g * dt;
+    // Circle + down: pancake body slam. Drops like a rock, no steering, and
+    // the impact breaks everything around you (TNT pops safely, nitro does NOT).
+    if (!this.slamActive && input.grabHeld && input.moveY < -0.5) {
+      this.slamActive = true;
+      this.grabActive = false;
+      this.grabGraceTimer = 0;
+      this.grabSpinAngle = 0;
+      this.speed *= 0.3;
+      this.charging = false;
+      this.chargeTimer = 0;
+      this.flipTimer = 0;
+    }
+
+    if (this.slamActive) {
+      this.vVel = -CONST.slamSpeed; // authored plummet, gravity doesn't apply
+    } else {
+      // Asymmetric fake gravity: heavier on the way down for a snappy arc.
+      const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
+      this.vVel -= g * dt;
+    }
 
     // Crash-style directional air control: up/down stretches or shortens the
     // jump (down brakes extra hard for precision), left/right sidesteps
-    // laterally. Locked while holding a grab, and a vert air off the halfpipe
-    // lip pins x to the pipe — you can only ease back toward the middle.
-    if (!this.grabActive) {
+    // laterally. Locked while holding a grab or slamming, and a vert air off
+    // the halfpipe lip pins x — you can only ease back toward the middle.
+    if (!this.grabActive && !this.slamActive) {
       if (Math.abs(input.moveY) > 0.05) {
         const rate =
           input.moveY < 0 ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
@@ -591,6 +608,8 @@ export class Player {
     const hit = this.queryGround(level);
     this.groundHit = hit;
     if (hit && this.vVel <= 0 && this.pos.y <= hit.y + 0.05) {
+      const impact = -this.vVel;
+      const wasVert = this.vertLock;
       this.pos.y = hit.y;
       this.vVel = 0;
       this.state = 'ride';
@@ -598,14 +617,42 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.vertLock = false;
-      if (this.vertLock) this.awardTrick(0.3); // landed a vert air
-      // Landing a held (or just-released) grab pays out a short speed burst.
-      if (this.grabActive || this.grabGraceTimer > 0) {
+      // Falling onto the halfpipe transition converts the drop back into carve
+      // speed down the wall — momentum survives the round trip, THPS-style.
+      if (hit.hpWall) {
+        this.pipeVel =
+          -(Math.sign(this.pos.x) || 1) * Math.min(impact * CONST.pipeLandKeep, CONST.pipeMaxVel);
+      }
+      if (wasVert) this.awardTrick(0.3); // landed a vert air
+
+      if (this.slamActive) {
+        this.slamImpact(level);
+        return;
+      }
+
+      // Grab landing rules: still holding the pose at touchdown is a bail, and
+      // a recent release only lands clean if the spin is back on axis. A mask
+      // absorbs the bail; otherwise you tumble.
+      const a = ((this.grabSpinAngle % Math.PI) + Math.PI) % Math.PI;
+      const offAxis = Math.min(a, Math.PI - a) > CONST.grabOffAxisTolerance;
+      if (this.grabActive || (this.grabGraceTimer > 0 && offAxis)) {
+        if (this.spendMask()) {
+          this.grabActive = false;
+          this.grabGraceTimer = 0;
+          this.grabSpinAngle = 0;
+          this.speed *= 0.6;
+        } else {
+          this.bail();
+        }
+        return;
+      }
+      // A clean (released in time, on-axis) grab pays out a speed burst.
+      if (this.grabGraceTimer > 0) {
         this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
         const cap = TUNING.maxSpeed * CONST.maxOverspeed;
         this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
-        this.grabActive = false;
         this.grabGraceTimer = 0;
+        this.grabSpinAngle = 0;
         this.awardTrick(0.35); // landed a grab
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
@@ -613,6 +660,38 @@ export class Player {
     }
     // No assisted rail snap here on purpose: THPS2 rules — you have to be
     // holding/pressing Triangle to start a grind.
+  }
+
+  // Slam touchdown: pancake squash and a small shockwave that breaks crates
+  // and enemies. TNT pops safely (you slammed it on purpose); nitro is still
+  // nitro — the blast check upstairs will get you.
+  private slamImpact(level: Level): void {
+    this.slamActive = false;
+    this.slamSquash = CONST.slamSquashTime;
+    this.emitSparks(12, 0xd8e6ff, 2.5);
+    for (const c of level.crates) {
+      if (!c.alive || c.bouncy) continue;
+      const p = c.mesh.position;
+      const dx = p.x - this.pos.x;
+      const dz = p.z - this.pos.z;
+      if (dx * dx + dz * dz > CONST.slamRadius * CONST.slamRadius) continue;
+      if (Math.abs(p.y - this.pos.y) > 1.8) continue;
+      if (c.tnt) level.detonate(c, true);
+      else if (c.nitro) level.detonate(c);
+      else this.smashCrate(level, c);
+    }
+    for (const e of level.enemies) {
+      if (e.alive && e.group.position.distanceTo(this.pos) < CONST.slamRadius + 0.6) {
+        level.killEnemy(e);
+      }
+    }
+  }
+
+  // Botched a grab landing: tumble out and eat the respawn.
+  private bail(): void {
+    this.bailing = true;
+    this.speed *= 0.3;
+    this.die();
   }
 
   private stepGrind(dt: number, input: Input, level: Level): void {
@@ -706,9 +785,11 @@ export class Player {
     this.vVel = 0;
     this.coyoteTimer = 0;
     this.vertLock = false;
-    this.manualing = false;
+    this.crawling = false;
+    this.slamActive = false;
     this.grabActive = false;
     this.grabGraceTimer = 0;
+    this.grabSpinAngle = 0;
     this.grindTime = 0;
     // Start the needle slightly off-center in a random direction.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
@@ -776,18 +857,28 @@ export class Player {
   private updateGrab(dt: number, input: Input): void {
     this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
     if (this.state === 'air') {
-      if (input.grabHeld) {
+      if (input.grabHeld && !this.slamActive) {
         this.grabActive = true;
         // Circle alone = grab pose. Circle + left/right = grab-spin in that
-        // direction. Pure visual — the trajectory is locked either way.
+        // direction. The trajectory is locked either way — but land off-axis
+        // (or still holding) and you bail.
         if (Math.abs(input.moveX) > 0.3) {
           this.grabSpinAngle += CONST.grabSpinRate * Math.sign(input.moveX) * dt;
         }
-      } else if (this.grabActive) {
-        // Released mid-air: a short grace window still pays out on landing.
-        this.grabActive = false;
-        this.grabGraceTimer = CONST.grabGrace;
-        this.grabSpinAngle = 0;
+      } else {
+        if (this.grabActive) {
+          // Released mid-air: a short grace window still pays out on landing.
+          this.grabActive = false;
+          this.grabGraceTimer = CONST.grabGrace;
+        }
+        // After release the rotation eases home to the nearest on-axis facing;
+        // release early enough and you'll land clean.
+        if (this.grabSpinAngle !== 0) {
+          const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
+          const d = target - this.grabSpinAngle;
+          const step = CONST.grabSnapRate * dt;
+          this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
+        }
       }
     } else if (this.grabActive || this.grabSpinAngle !== 0) {
       this.grabActive = false;
@@ -846,9 +937,7 @@ export class Player {
     for (const c of level.crates) {
       if (!c.alive) continue;
       if (c.nitro) {
-        // Nitro: body contact detonates it (and you with it) — unless you're
-        // balanced in a manual, which rolls right past.
-        if (this.manualing) continue;
+        // Nitro: body contact detonates it (and you with it).
         if (this.playerBox.intersectsBox(c.box)) {
           level.detonate(c);
           this.die();
@@ -857,9 +946,28 @@ export class Player {
         continue;
       }
       if (c.tnt) {
-        // TNT: contact lights the 3s fuse (get clear!). Manuals don't light it.
-        if (!this.manualing && c.fuse === undefined && this.playerBox.intersectsBox(c.box)) {
-          level.lightFuse(c);
+        // TNT is a solid box, Crash rules: spinning (or slamming through it)
+        // pops it instantly — safely, it was on purpose. Stomping lights the
+        // 3-2-1 fuse and bounces you. Bumping it is just a wall.
+        if (this.spinning && this.spinBox.intersectsBox(c.box)) {
+          level.detonate(c, true);
+        } else if (this.playerBox.intersectsBox(c.box)) {
+          if (this.state === 'grind' || this.sliding) {
+            level.detonate(c, true);
+          } else if (this.isStomping(c.box)) {
+            if (this.slamActive) {
+              level.detonate(c, true);
+            } else {
+              level.lightFuse(c);
+              this.vVel = TUNING.crateBounce;
+              this.state = 'air';
+              this.grounded = false;
+              this.charging = false;
+              this.chargeTimer = 0;
+            }
+          } else {
+            this.pushOutOf(c.box);
+          }
         }
         continue;
       }
@@ -886,11 +994,13 @@ export class Player {
           this.smashCrate(level, c);
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
-          // enough to chain crate to crate.
+          // enough to chain crate to crate. A slam punches straight through.
           this.smashCrate(level, c);
-          this.vVel = TUNING.crateBounce;
-          this.state = 'air';
-          this.grounded = false;
+          if (!this.slamActive) {
+            this.vVel = TUNING.crateBounce;
+            this.state = 'air';
+            this.grounded = false;
+          }
         } else {
           // Bumping does nothing to the crate — it's a wall. Full stop.
           this.pushOutOf(c.box);
@@ -907,13 +1017,16 @@ export class Player {
           // Crash 3 rules: the slide takes out enemies too.
           level.killEnemy(e);
         } else if (this.isStomping(e.box)) {
-          // Crash rules: jumping on an enemy squashes it and bounces you.
+          // Crash rules: jumping on an enemy squashes it and bounces you
+          // (slams punch straight through instead).
           level.killEnemy(e);
-          this.vVel = TUNING.crateBounce;
-          this.state = 'air';
-          this.grounded = false;
-          this.charging = false;
-          this.chargeTimer = 0;
+          if (!this.slamActive) {
+            this.vVel = TUNING.crateBounce;
+            this.state = 'air';
+            this.grounded = false;
+            this.charging = false;
+            this.chargeTimer = 0;
+          }
         } else {
           this.die();
           return;
@@ -1053,17 +1166,16 @@ export class Player {
       normal,
       name: hit.object.name,
       hpWall: hit.object.userData.hpWall === true,
-      slideRate: hit.object.userData.slideRate as number | undefined,
+      hpFloor: hit.object.userData.hpFloor === true,
     };
   }
 
   private syncVisual(input: Input, dt: number): void {
     this.group.position.copy(this.pos);
 
-    // Chunky little carve lean; on a rail or in a manual, the lean IS the
-    // balance needle.
+    // Chunky little carve lean; on a rail, the lean IS the balance needle.
     const targetLean =
-      this.state === 'grind' || this.manualing
+      this.state === 'grind'
         ? this.balance * 0.55 // tip toward the needle/d-pad side (balance>0 = right)
         : this.grounded
           ? -input.moveX * 0.28
@@ -1108,9 +1220,12 @@ export class Player {
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 20 * dt);
     this.bodyGroup.rotation.y = this.visualYaw + this.spinAngle + this.grabSpinAngle;
 
-    // Grab arm reaches for the board; mask hovers at the shoulder; the whole
-    // body flickers during mask-invulnerability grace.
-    if (this.armR) this.armR.rotation.x = this.grabPose * 1.5;
+    // Grab arm reaches down and holds the board; mask hovers at the shoulder;
+    // the whole body flickers during mask-invulnerability grace.
+    if (this.armR) {
+      this.armR.rotation.x = this.grabPose * 2.1;
+      this.armR.rotation.z = 0.25 - this.grabPose * 0.55; // tucks in toward the rail of the deck
+    }
     this.bodyGroup.visible =
       this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead';
     if (this.maskMesh) {
@@ -1123,28 +1238,38 @@ export class Player {
       this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
     }
 
-    // Grab tuck + Crash front-flip + slide crouch, blended (they're mutually
-    // exclusive in practice: grab is air-only, slide is ground-only).
+    // Grab tuck + Crash front-flip + slide/crawl crouch + slam pancake,
+    // blended (they're mutually exclusive in practice).
     const targetPose = this.grabActive ? 1 : 0;
     this.grabPose += (targetPose - this.grabPose) * Math.min(1, 16 * dt);
-    const targetSlide = this.sliding ? 1 : 0;
+    const targetSlide = this.sliding || this.crawling ? 1 : 0;
     this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
-    const targetManual = this.manualing ? 1 : 0;
-    this.manualPose += (targetManual - this.manualPose) * Math.min(1, 14 * dt);
+    const targetSlam = this.slamActive ? 1 : 0;
+    this.slamPose += (targetSlam - this.slamPose) * Math.min(1, 18 * dt);
     const flip =
       this.flipTimer > 0 ? (1 - this.flipTimer / CONST.flipDuration) * Math.PI * 2 : 0;
-    this.bodyGroup.rotation.x =
-      flip * (1 - this.grabPose) +
-      0.45 * this.grabPose -
-      0.35 * this.slidePose -
-      0.5 * this.manualPose - // wheelie: nose up
-      0.28 * this.teeterPose; // arms-back "whoa whoa" lean
+    if (this.state === 'dead' && this.bailing) {
+      // Bail tumble: rag-doll head-over-heels until the respawn.
+      this.bailSpin += 13 * dt;
+      this.bodyGroup.rotation.x = this.bailSpin;
+    } else {
+      this.bodyGroup.rotation.x =
+        flip * (1 - this.grabPose) +
+        0.6 * this.grabPose -
+        0.35 * this.slidePose +
+        1.45 * this.slamPose - // belly-first pancake
+        0.28 * this.teeterPose; // arms-back "whoa whoa" lean
+    }
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     this.bodyGroup.position.y =
-      this.grabPose * -0.12 - this.slidePose * 0.32 - this.chargePose * 0.26;
+      this.grabPose * -0.26 - this.slidePose * 0.32 - this.chargePose * 0.26;
+    // Impact squash right after a slam lands.
+    const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
+    this.bodyGroup.scale.y = 1.18 * (1 - 0.6 * squash);
 
-    this.group.visible = this.state !== 'dead';
+    // A bail stays visible so the tumble reads; a plain death blinks out.
+    this.group.visible = this.state !== 'dead' || this.bailing;
 
     // Blob shadow: critical for judging gap landings.
     if (this.groundHit && this.state !== 'dead') {

@@ -36,7 +36,7 @@ resize();
 
 const input = new Input();
 const ui = new UI();
-let currentCourse = Math.min(3, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
+let currentCourse = Math.min(4, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
 player.respawn(level, true);
@@ -59,6 +59,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Digit2') switchLevel(1);
   if (e.code === 'Digit3') switchLevel(2);
   if (e.code === 'Digit4') switchLevel(3);
+  if (e.code === 'Digit5') switchLevel(4);
 });
 
 player.onDeath = () => {
@@ -74,15 +75,26 @@ player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
 // --- Crash-style corridor camera -------------------------------------------
 // Hard-locked to the course axis: it only translates, never yaws, so screen
 // left/right always equal world left/right. Crash 2 framing: close and low,
-// narrow lens, the player reads big against the corridor.
+// narrow lens, the player reads big against the corridor. Traveling BACK
+// toward the camera (riding or grinding) eases it up and away and swings the
+// look-at behind you, so the nitros you're backing into stay on screen.
 const CAM_DIST = 7;
 const CAM_HEIGHT = 3.3;
 const CAM_LOOKAHEAD = 5.5;
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
+let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
+let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
-  camTarget.set(player.pos.x, player.pos.y + CAM_HEIGHT, player.pos.z + CAM_DIST);
+  const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
+  prevPlayerZ = player.pos.z;
+  const movingBack = vz > 2.5 || (player.grounded && player.speed < -1.5);
+  camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
+
+  const dist = CAM_DIST + camBack * 4.5;
+  const height = CAM_HEIGHT + camBack * 1.3;
+  camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
   // Snap after respawn teleports; damp otherwise.
   if (camera.position.distanceTo(camTarget) > 30) {
@@ -91,7 +103,11 @@ function updateCamera(dt: number): void {
     camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
   }
 
-  lookPoint.set(player.pos.x, player.pos.y + 1.0, player.pos.z - CAM_LOOKAHEAD);
+  lookPoint.set(
+    player.pos.x,
+    player.pos.y + 1.0,
+    player.pos.z - CAM_LOOKAHEAD + camBack * 9.5,
+  );
   camera.lookAt(lookPoint);
 }
 
@@ -117,7 +133,7 @@ function frame(): void {
 
   updateCamera(dt);
 
-  ui.updateBalance(player.state === 'grind' || player.manualing, player.balance);
+  ui.updateBalance(player.state === 'grind', player.balance);
   ui.setStats({
     speed: player.speed,
     state: player.state,

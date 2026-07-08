@@ -61,9 +61,10 @@ export class UI {
 
     const help = div('hud-help');
     help.textContent =
-      'stick/arrows: up=go down=back left/right=sidestep (also in air) · X/Space: jump · ' +
+      'stick/arrows: up=go down=back left/right=sidestep (also in air) · X/Space: hold+release to jump · ' +
       'Triangle/E: hold to grind (balance with left/right!) · Square/F: spin · ' +
-      'Circle/Q: air grab / ground slide · flick up-down: manual (rolls safely over nitro/TNT) · R/Options: restart run';
+      'Circle/Q air: grab (+left/right spin-grab, +down body slam — release before landing!) · ' +
+      'Circle/Q ground: slide at speed, hold to crawl when stopped · R/Options: restart run';
 
     this.msgWrap = div('hud-msg');
     this.msgTitle = div('hud-msg-title');
