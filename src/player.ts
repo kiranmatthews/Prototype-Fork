@@ -83,6 +83,9 @@ export class Player {
   private coyoteTimer = 0; // jump grace after running off a ledge
   private vertLock = false; // airborne off the halfpipe lip: x is pinned to the pipe
   private canCutJump = false; // this air came from the jump button (tap = short hop)
+  private teetering = false; // stopped on a ledge lip, Crash-style wobble
+  private teeterPhase = 0;
+  private teeterPose = 0;
   private lastGrade = 0; // slope along travel; >0 downhill, <0 uphill
   private groundHit: GroundHit | null = null;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
@@ -198,6 +201,7 @@ export class Player {
     this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.manualCd = Math.max(0, this.manualCd - dt);
     this.prevPos.copy(this.pos);
+    this.teetering = false; // stepRide re-detects it each tick
 
     // THPS manual: a quick up->down (or down->up) flick while riding pops a
     // wheelie. Balance it with left/right; roll safely over nitro and TNT.
@@ -397,6 +401,18 @@ export class Player {
       this.groundHit = hit;
       this.grounded = true;
       this.surfaceName = hit.name;
+
+      // Crash teeter: slow/stopped with part of the board hanging over an
+      // edge — wobble as a warning; step back (or jump) to save yourself.
+      this.teetering = false;
+      if (Math.abs(this.speed) < CONST.teeterSpeed && !this.manualing && !hit.hpWall) {
+        for (const [ox, oz] of [[0.55, 0], [-0.55, 0], [0, 0.55], [0, -0.55]]) {
+          if (!this.queryGround(level, ox, oz)) {
+            this.teetering = true;
+            break;
+          }
+        }
+      }
 
       // THPS halfpipe behavior on the transition walls:
       if (hit.hpWall) {
@@ -932,8 +948,8 @@ export class Player {
 
   // ------------------------------------------------------------------ misc --
 
-  private queryGround(level: Level): GroundHit | null {
-    this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
+  private queryGround(level: Level, ox = 0, oz = 0): GroundHit | null {
+    this.raycaster.set(new THREE.Vector3(this.pos.x + ox, this.pos.y + 2.5, this.pos.z + oz), DOWN);
     this.raycaster.far = 12;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     if (hits.length === 0) return null;
@@ -960,7 +976,24 @@ export class Player {
           ? -input.moveX * 0.28
           : -input.moveX * 0.12;
     this.lean += (targetLean - this.lean) * Math.min(1, 12 * dt);
-    this.group.rotation.z = this.lean;
+
+    // Edge panic: wobble while teetering on a lip, or flailing in the coyote
+    // grace right after rolling off — the visual cue that a jump still saves you.
+    const edgeGrace =
+      this.state === 'air' &&
+      this.coyoteTimer > 0 &&
+      this.vVel <= 0 &&
+      !this.grabActive &&
+      !this.vertLock;
+    let wobble = 0;
+    if (this.teetering || edgeGrace) {
+      this.teeterPhase += dt;
+      wobble = Math.sin(this.teeterPhase * 16) * (edgeGrace ? 0.3 : 0.22);
+    } else {
+      this.teeterPhase = 0;
+    }
+    this.teeterPose += ((this.teetering || edgeGrace ? 1 : 0) - this.teeterPose) * Math.min(1, 14 * dt);
+    this.group.rotation.z = this.lean + wobble;
 
     // Crash walk facing: at low speed on the ground the body snaps to face the
     // actual travel direction — sidesteps face sideways, backing up faces the
@@ -996,7 +1029,8 @@ export class Player {
       flip * (1 - this.grabPose) +
       0.45 * this.grabPose -
       0.35 * this.slidePose -
-      0.5 * this.manualPose; // wheelie: nose up
+      0.5 * this.manualPose - // wheelie: nose up
+      0.28 * this.teeterPose; // arms-back "whoa whoa" lean
     this.bodyGroup.position.y = this.grabPose * -0.12 - this.slidePose * 0.32;
 
     this.group.visible = this.state !== 'dead';

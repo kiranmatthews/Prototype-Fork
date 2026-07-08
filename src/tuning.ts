@@ -69,7 +69,8 @@ export const CONST = {
   playerHalf: { x: 0.5, y: 0.9, z: 0.5 }, // capsule-ish AABB approximation
   spinReach: 1.4, // extra horizontal hit reach while spinning
   spinCooldown: 0.15,
-  coyoteTime: 0.12, // ledge-edge grace window so late jumps aren't eaten
+  coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
+  teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
   walkFaceSpeed: 8, // below this forward speed the body faces its travel direction
