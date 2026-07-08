@@ -46,6 +46,8 @@ export class Level {
   spawnPos = new THREE.Vector3(0, 0.1, 0);
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
+  walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
+  halfpipeLipY = -6.2; // top of the halfpipe transition (vert launch height)
 
   private scene: THREE.Scene;
   private pops: { obj: THREE.Object3D; t: number }[] = [];
@@ -183,6 +185,21 @@ export class Level {
 
     // --- decks (N. Sanity flow: beach -> funnel -> corridors -> finish) ---
     this.slab('beach', 14, -40, 0, 20, matBeach);
+
+    // --- practice pen: walled rail playground east of the beach ---
+    const penMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(30, 1, 54),
+      new THREE.MeshLambertMaterial({ color: 0x86937e }),
+    );
+    penMesh.position.set(25, -0.5, -13);
+    penMesh.name = 'practice pen';
+    this.scene.add(penMesh);
+    this.groundMeshes.push(penMesh);
+    // Perimeter walls (also backstop the beach so you can't fall off the start).
+    this.wall(15, 15, 52, 1, 0); // north, spans beach + pen
+    this.wall(-10.5, -13, 1, 54, 0); // west edge of the beach
+    this.wall(40.5, -13, 1, 54, 0); // east edge of the pen
+    this.wall(25, -40.5, 30, 1, 0); // south edge of the pen
     this.ramp('funnel slope', -40, 0, -80, -5, 14, matRamp);
     this.slab('corridor A', -80, -150, -5, 12, matA);
     // gap 1: -150 .. -165
@@ -197,10 +214,34 @@ export class Level {
     this.slab('corridor D', -505, -575, -13, 12, matA);
     // rail 2 pit: -575 .. -655
     this.slab('rail 2 landing', -655, -710, -13.5, 12, matB);
-    // halfpipe: narrow floor with banked walls; the lips are grindable rails
+    // halfpipe: tall curved transitions (4 segments each side approximating a
+    // quarter-pipe), lips are grindable rails. Carving over the lip with
+    // outward input pops a LOCKED vert air (see player.ts). slideRate rolls
+    // you back down toward the flat when you're not pushing outward.
     this.slab('halfpipe floor', -710, -770, -13.5, 6, matA);
-    this.bank('halfpipe left', -710, -770, -3, -7, -13.5, -10, matRamp);
-    this.bank('halfpipe right', -710, -770, 3, 7, -13.5, -10, matRamp);
+    const profile: [number, number, number, number, number][] = [
+      // xIn, xOut, yBase, yTop, slideRate
+      [3.0, 4.6, -13.5, -12.8, 1],
+      [4.6, 5.9, -12.8, -11.2, 4],
+      [5.9, 6.8, -11.2, -8.9, 8],
+      [6.8, 7.4, -8.9, -6.2, 11],
+    ];
+    for (const [xIn, xOut, yBase, yTop, slideRate] of profile) {
+      for (const side of [1, -1]) {
+        const wall = this.bank(
+          'halfpipe wall',
+          -710,
+          -770,
+          side * xIn,
+          side * xOut,
+          yBase,
+          yTop,
+          matRamp,
+        );
+        wall.userData.hpWall = true;
+        wall.userData.slideRate = slideRate;
+      }
+    }
     // rail yard entry deck, then a pit crossed by three parallel rails
     this.slab('rail yard entry', -770, -778, -13.5, 14, matB);
     // pit: -778 .. -850
@@ -232,13 +273,23 @@ export class Level {
       new THREE.Vector3(0, -11.5, -659),
     ]);
     // Halfpipe lip rails along both top edges.
-    const lipL = new Rail([new THREE.Vector3(-7, -9.8, -712), new THREE.Vector3(-7, -9.8, -766)]);
-    const lipR = new Rail([new THREE.Vector3(7, -9.8, -712), new THREE.Vector3(7, -9.8, -766)]);
+    const lipL = new Rail([new THREE.Vector3(-7.5, -6, -712), new THREE.Vector3(-7.5, -6, -766)]);
+    const lipR = new Rail([new THREE.Vector3(7.5, -6, -712), new THREE.Vector3(7.5, -6, -766)]);
     // Rail yard: three parallel rails over the pit — jump between them.
     const yardL = new Rail([new THREE.Vector3(-3.5, -12.6, -776), new THREE.Vector3(-3.5, -12.6, -852)]);
     const yardC = new Rail([new THREE.Vector3(0, -12.6, -776), new THREE.Vector3(0, -12.6, -852)]);
     const yardR = new Rail([new THREE.Vector3(3.5, -12.6, -776), new THREE.Vector3(3.5, -12.6, -852)]);
-    for (const rail of [rail1, rail2, lipL, lipR, yardL, yardC, yardR]) {
+    // Practice pen rails: straight, zigzag, and a high line.
+    const penStraight = new Rail([new THREE.Vector3(18, 1, -2), new THREE.Vector3(18, 1, -32)]);
+    const penZigzag = new Rail([
+      new THREE.Vector3(26, 1.2, 2),
+      new THREE.Vector3(30, 1.6, -10),
+      new THREE.Vector3(24, 1.4, -22),
+      new THREE.Vector3(28, 1.2, -34),
+    ]);
+    const penHigh = new Rail([new THREE.Vector3(35, 2.8, -4), new THREE.Vector3(35, 2.8, -30)]);
+
+    for (const rail of [rail1, rail2, lipL, lipR, yardL, yardC, yardR, penStraight, penZigzag, penHigh]) {
       this.rails.push(rail);
       this.scene.add(rail.object);
     }
@@ -277,6 +328,10 @@ export class Level {
     // Rail 2 entry flanks.
     this.crate(-2.4, -13, -567);
     this.crate(2.4, -13, -567);
+    // Practice pen toys.
+    this.crate(14, 0, -20);
+    this.crate(31, 0, -28);
+    this.crate(37, 0, -12, 'bouncy');
     // Halfpipe: bouncy arrow crate launches you up to the lip rails.
     this.crate(-2.2, -13.5, -735, 'bouncy');
     this.crate(0, -13.5, -755); // wumpa snack on the floor line
@@ -387,7 +442,7 @@ export class Level {
     yBase: number,
     yTop: number,
     mat: THREE.Material,
-  ): void {
+  ): THREE.Mesh {
     const dx = xOut - xIn;
     const dy = yTop - yBase;
     const len = Math.hypot(dx, dy);
@@ -403,6 +458,20 @@ export class Level {
     mesh.name = name;
     this.scene.add(mesh);
     this.groundMeshes.push(mesh);
+    return mesh;
+  }
+
+  // Solid barrier: visual box + collider. Bump = full stop, never breaks.
+  private wall(cx: number, cz: number, w: number, d: number, baseY: number, h = 5): void {
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(w, h, d),
+      new THREE.MeshLambertMaterial({ color: 0x5a5f6a }),
+    );
+    mesh.position.set(cx, baseY + h / 2, cz);
+    this.scene.add(mesh);
+    this.walls.push(
+      new THREE.Box3().setFromCenterAndSize(mesh.position.clone(), new THREE.Vector3(w, h, d)),
+    );
   }
 
   // Dark edge strips so deck borders read at speed. Visual only.

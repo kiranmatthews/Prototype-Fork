@@ -25,6 +25,7 @@ export const TUNING = {
   airControl: 14, // forward/back speed adjustment in the air
   balanceDrift: 0.55, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.6, // how hard left/right fights the needle
+  vertLaunch: 22, // upward pop when carving over the halfpipe lip (locked air)
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -53,6 +54,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
+  vertLaunch: { min: 8, max: 40, step: 1 },
 };
 
 // Fixed authored constants that are part of the feel but stay off the sliders
@@ -84,6 +86,9 @@ export const CONST = {
   balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   bounceCrateForce: 30, // arrow-crate launch (vs ~18 from a normal stomp)
+  airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
+  shortHopGravity: 3, // rise-gravity multiplier when Space is released early (tap = short hop)
+  hpSnapWindow: 2.2, // taller ground-snap window on halfpipe walls so steep climbs stick
   deadzone: 0.18,
   renderScale: 0.5, // low internal resolution for the PS1 look
 };

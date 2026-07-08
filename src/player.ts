@@ -15,6 +15,8 @@ interface GroundHit {
   y: number;
   normal: THREE.Vector3;
   name: string;
+  hpWall?: boolean; // halfpipe transition segment
+  slideRate?: number; // how fast this segment rolls you back toward the flat
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -71,6 +73,8 @@ export class Player {
   private regrindCd = 0;
   private respawnTimer = 0;
   private coyoteTimer = 0; // jump grace after running off a ledge
+  private vertLock = false; // airborne off the halfpipe lip: x is pinned to the pipe
+  private canCutJump = false; // this air came from the jump button (tap = short hop)
   private lastGrade = 0; // slope along travel; >0 downhill, <0 uphill
   private groundHit: GroundHit | null = null;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
@@ -155,6 +159,8 @@ export class Player {
     }
     this.groundHit = null;
     this.coyoteTimer = 0;
+    this.vertLock = false;
+    this.canCutJump = false;
     this.grabActive = false;
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
@@ -303,13 +309,34 @@ export class Player {
     }
 
     // Follow the ground within a chunky snap window, otherwise we ran off an
-    // edge and go airborne.
+    // edge and go airborne. Halfpipe transitions get a taller window so steep
+    // climbs stick to the surface.
     const hit = this.queryGround(level);
-    if (hit && hit.y >= this.pos.y - 1.4 && hit.y <= this.pos.y + 0.8) {
+    const upWindow = hit && hit.hpWall ? CONST.hpSnapWindow : 0.8;
+    if (hit && hit.y >= this.pos.y - 1.4 && hit.y <= this.pos.y + upWindow) {
       this.pos.y = hit.y;
       this.groundHit = hit;
       this.grounded = true;
       this.surfaceName = hit.name;
+
+      // THPS halfpipe behavior on the transition walls:
+      if (hit.hpWall) {
+        const outward = Math.sign(this.pos.x) || 1;
+        const pushingOut = input.moveX * outward > 0.05;
+        if (pushingOut && this.pos.y > level.halfpipeLipY - 0.5) {
+          // Carved over the lip: locked vert air. You go UP, not off the edge,
+          // and come back down into the pipe.
+          this.state = 'air';
+          this.grounded = false;
+          this.vVel = TUNING.vertLaunch;
+          this.vertLock = true;
+          this.canCutJump = false;
+          this.emitSparks(5, 0xfff3d0, 1.2);
+        } else if (!pushingOut && hit.slideRate) {
+          // Not pushing outward: the transition rolls you back to the flat.
+          this.pos.x -= outward * hit.slideRate * dt;
+        }
+      }
     } else {
       this.state = 'air';
       this.grounded = false;
@@ -340,6 +367,7 @@ export class Player {
       this.state = 'air';
       this.grounded = false;
       this.coyoteTimer = 0;
+      this.canCutJump = true; // release Space early for a short precise hop
       // Crash rules: a stationary/short hop doesn't flip.
       if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
@@ -349,27 +377,41 @@ export class Player {
     if (input.jumpPressed && this.coyoteTimer > 0) {
       this.vVel = TUNING.jumpVelocity;
       this.coyoteTimer = 0;
+      this.canCutJump = true;
       if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
 
     // Asymmetric fake gravity: heavier on the way down for a snappy arc.
-    const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
+    // Button jumps are height-variable: releasing Space early cuts the rise
+    // short, so a tap gives a small precise hop.
+    let g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
+    if (this.vVel > 0 && this.canCutJump && !input.jumpHeld) g *= CONST.shortHopGravity;
     this.vVel -= g * dt;
 
     // Crash-style directional air control: up/down stretches or shortens the
-    // jump, left/right sidesteps laterally — same axes as on the ground.
-    // Locked while holding a grab: the trick freezes your trajectory.
+    // jump (down brakes extra hard for precision), left/right sidesteps
+    // laterally. Locked while holding a grab, and a vert air off the halfpipe
+    // lip pins x to the pipe — you can only ease back toward the middle.
     if (!this.grabActive) {
       if (Math.abs(input.moveY) > 0.05) {
+        const rate =
+          input.moveY < 0 ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
         const cap = TUNING.maxSpeed * CONST.maxOverspeed;
         this.speed = THREE.MathUtils.clamp(
-          this.speed + TUNING.airControl * input.moveY * dt,
+          this.speed + rate * input.moveY * dt,
           -TUNING.reverseSpeed,
           cap,
         );
       }
       if (Math.abs(input.moveX) > 0.05) {
-        this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
+        if (this.vertLock) {
+          const inward = -Math.sign(this.pos.x) || 1;
+          if (input.moveX * inward > 0) {
+            this.pos.x += inward * TUNING.lateralSpeed * 0.5 * dt;
+          }
+        } else {
+          this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
+        }
       }
     }
 
@@ -385,6 +427,8 @@ export class Player {
       this.grounded = true;
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
+      this.vertLock = false;
+      this.canCutJump = false;
       // Landing a held (or just-released) grab pays out a short speed burst.
       if (this.grabActive || this.grabGraceTimer > 0) {
         this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
@@ -433,6 +477,7 @@ export class Player {
 
     if (input.jumpPressed) {
       this.exitGrind(TUNING.grindJumpForce);
+      this.canCutJump = true;
       if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
   }
@@ -477,6 +522,7 @@ export class Player {
     this.grounded = false;
     this.vVel = 0;
     this.coyoteTimer = 0;
+    this.vertLock = false;
     this.grabActive = false;
     this.grabGraceTimer = 0;
     this.grindTime = 0;
@@ -627,6 +673,7 @@ export class Player {
             this.vVel = CONST.bounceCrateForce;
             this.state = 'air';
             this.grounded = false;
+            this.canCutJump = false;
           } else {
             this.pushOutOf(c.box);
           }
@@ -667,10 +714,18 @@ export class Player {
           this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
+          this.canCutJump = false;
         } else {
           this.die();
           return;
         }
+      }
+    }
+
+    // Solid walls: shove out, full stop, nothing breaks.
+    for (const w of level.walls) {
+      if (this.playerBox.intersectsBox(w)) {
+        this.pushOutOf(w);
       }
     }
 
@@ -793,7 +848,13 @@ export class Player {
     if (hits.length === 0) return null;
     const hit = hits[0];
     const normal = hit.face!.normal.clone().transformDirection(hit.object.matrixWorld);
-    return { y: hit.point.y, normal, name: hit.object.name };
+    return {
+      y: hit.point.y,
+      normal,
+      name: hit.object.name,
+      hpWall: hit.object.userData.hpWall === true,
+      slideRate: hit.object.userData.slideRate as number | undefined,
+    };
   }
 
   private syncVisual(input: Input, dt: number): void {
