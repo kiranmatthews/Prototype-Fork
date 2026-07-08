@@ -22,7 +22,7 @@ const sun = new THREE.DirectionalLight(0xfff2d8, 1.4);
 sun.position.set(30, 60, 20);
 scene.add(sun);
 
-const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 400);
+const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 400);
 
 function resize(): void {
   const w = window.innerWidth;
@@ -53,10 +53,12 @@ player.onRespawn = () => ui.hideMessage();
 // Sits behind the player, but its yaw is anchored to the authored course
 // direction and only partly follows the player's heading, so the forward path
 // always reads. Not a free-orbit camera.
+// Crash 2 framing: closer and lower behind the character, narrower lens so
+// the player reads big against the corridor.
 const COURSE_YAW = Math.PI; // the whole course runs toward -Z
-const CAM_DIST = 9;
-const CAM_HEIGHT = 4.2;
-const CAM_LOOKAHEAD = 7;
+const CAM_DIST = 7;
+const CAM_HEIGHT = 3.3;
+const CAM_LOOKAHEAD = 5.5;
 let camYaw = COURSE_YAW;
 const camTarget = new THREE.Vector3();
 const camForward = new THREE.Vector3();
@@ -81,11 +83,11 @@ function updateCamera(dt: number): void {
   if (camera.position.distanceTo(camTarget) > 30) {
     camera.position.copy(camTarget);
   } else {
-    camera.position.lerp(camTarget, 1 - Math.exp(-8 * dt));
+    camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
   }
 
   lookPoint.copy(player.pos).addScaledVector(camForward, CAM_LOOKAHEAD);
-  lookPoint.y = player.pos.y + 1.2;
+  lookPoint.y = player.pos.y + 1.0;
   camera.lookAt(lookPoint);
 }
 

@@ -44,6 +44,9 @@ export class Player {
 
   private spinTimer = 0;
   private spinCd = 0;
+  private grabActive = false;
+  private grabGraceTimer = 0;
+  private grabPose = 0;
   private grindRail: Rail | null = null;
   private grindT = 0;
   private grindDir = 1;
@@ -58,10 +61,15 @@ export class Player {
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
+  private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
 
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
+    // Slightly chunkier character, Crash-proportioned against the corridor.
+    // Visual only — the collision box in tuning.ts is unchanged (reads as
+    // slightly forgiving hitboxes, which suits the arcade feel).
+    this.bodyGroup.scale.setScalar(1.18);
     this.group.add(this.bodyGroup);
     scene.add(this.group);
 
@@ -71,6 +79,15 @@ export class Player {
     );
     this.shadow.rotation.x = -Math.PI / 2;
     scene.add(this.shadow);
+
+    // Chunky PS1 spark pool for grinds and grab-boost landings.
+    const sparkGeo = new THREE.BoxGeometry(0.09, 0.09, 0.09);
+    for (let i = 0; i < 40; i++) {
+      const mesh = new THREE.Mesh(sparkGeo, new THREE.MeshBasicMaterial({ color: 0xffb545 }));
+      mesh.visible = false;
+      scene.add(mesh);
+      this.sparks.push({ mesh, vel: new THREE.Vector3(), life: 0, maxLife: 1 });
+    }
   }
 
   get spinning(): boolean {
@@ -94,6 +111,12 @@ export class Player {
     this.cratesBroken = 0;
     this.groundHit = null;
     this.coyoteTimer = 0;
+    this.grabActive = false;
+    this.grabGraceTimer = 0;
+    for (const s of this.sparks) {
+      s.life = 0;
+      s.mesh.visible = false;
+    }
     this.onRespawn();
   }
 
@@ -145,6 +168,8 @@ export class Player {
     }
 
     this.updateSpin(dt, input);
+    this.updateGrab(dt, input);
+    this.updateSparks(dt);
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
@@ -161,43 +186,60 @@ export class Player {
   // ---------------------------------------------------------------- states --
 
   private stepRide(dt: number, input: Input, level: Level): void {
-    this.heading -= input.moveX * TUNING.turnRate * dt;
+    // Turning hands over to sidestepping at low speed: full carve authority
+    // arrives by strafeFade, below that you mostly step sideways (Crash-style
+    // lane adjustment) with a little rotation.
+    const speedT = THREE.MathUtils.clamp(Math.abs(this.speed) / CONST.strafeFade, 0, 1);
+    const turnAuthority = THREE.MathUtils.lerp(CONST.turnLowSpeedFactor, 1, speedT);
+    this.heading -= input.moveX * TUNING.turnRate * turnAuthority * dt;
 
-    // Authored accel / brake / friction.
+    // Authored accel / brake / reverse / friction. Holding down brakes through
+    // zero into a capped backward roll, like backing up in Crash.
     if (input.moveY > 0.05) {
       if (this.speed < TUNING.maxSpeed) {
         this.speed = Math.min(this.speed + TUNING.acceleration * input.moveY * dt, TUNING.maxSpeed);
       }
     } else if (input.moveY < -0.05) {
-      this.speed = Math.max(0, this.speed + CONST.brakePower * input.moveY * dt);
+      this.speed = Math.max(-TUNING.reverseSpeed, this.speed + CONST.brakePower * input.moveY * dt);
     } else {
-      this.speed = Math.max(0, this.speed - TUNING.friction * dt);
+      const drop = TUNING.friction * dt;
+      this.speed = Math.abs(this.speed) <= drop ? 0 : this.speed - Math.sign(this.speed) * drop;
     }
 
     // Fake slope response from the ground normal: grade > 0 means the surface
-    // drops away along our heading.
+    // drops away along our heading. Sign-safe, so stalling on a ramp rolls you
+    // back down it.
     const f = this.forward();
     let grade = 0;
     if (this.groundHit) {
       const n = this.groundHit.normal;
       grade = (n.x * f.x + n.z * f.z) / Math.max(n.y, 0.2);
     }
-    if (grade > 0.02) {
-      this.speed += TUNING.slopeBoost * grade * dt;
-    } else if (grade < -0.02) {
-      this.speed = Math.max(0, this.speed + TUNING.uphillSlowdown * grade * dt);
+    if (Math.abs(grade) > 0.02) {
+      this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * dt;
     }
     this.lastGrade = grade;
 
     // Downhill may exceed maxSpeed up to a hard cap; on the flat the excess
-    // bleeds back off.
+    // bleeds back off. Reverse is capped separately.
     const hardCap = TUNING.maxSpeed * CONST.maxOverspeed;
     if (this.speed > hardCap) this.speed = hardCap;
     if (this.speed > TUNING.maxSpeed && grade <= 0.02) {
       this.speed = Math.max(TUNING.maxSpeed, this.speed - CONST.overspeedDecay * dt);
     }
+    this.speed = Math.max(this.speed, -TUNING.reverseSpeed);
 
     this.pos.addScaledVector(f, this.speed * dt);
+
+    // Low-speed sidestep, fading out as carving takes over.
+    if (Math.abs(input.moveX) > 0.05 && speedT < 1) {
+      const right = new THREE.Vector3(
+        Math.sin(this.heading - Math.PI / 2),
+        0,
+        Math.cos(this.heading - Math.PI / 2),
+      );
+      this.pos.addScaledVector(right, input.moveX * TUNING.strafeSpeed * (1 - speedT) * dt);
+    }
 
     // Follow the ground within a chunky snap window, otherwise we ran off an
     // edge and go airborne.
@@ -211,8 +253,10 @@ export class Player {
       this.state = 'air';
       this.grounded = false;
       this.groundHit = hit;
-      // Authored kicker launch: leaving an uphill lip converts speed to lift.
-      this.vVel = this.lastGrade < -0.05 ? Math.min(-this.lastGrade * this.speed, 20) : 0;
+      // Authored kicker launch: leaving an uphill lip converts speed to lift
+      // (forward travel only — backing off an edge just drops).
+      this.vVel =
+        this.speed > 0 && this.lastGrade < -0.05 ? Math.min(-this.lastGrade * this.speed, 20) : 0;
       this.coyoteTimer = CONST.coyoteTime;
     }
 
@@ -250,17 +294,19 @@ export class Player {
       this.grounded = true;
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
+      // Landing a held (or just-released) grab pays out a short speed burst.
+      if (this.grabActive || this.grabGraceTimer > 0) {
+        this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
+        const cap = TUNING.maxSpeed * CONST.maxOverspeed;
+        this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
+        this.grabActive = false;
+        this.grabGraceTimer = 0;
+        this.emitSparks(10, 0xfff3d0, 2.2);
+      }
       return;
     }
-
-    // Assisted snap: falling in close to a rail hops on without pressing
-    // Triangle, so landings on the rail are forgiving.
-    if (this.vVel < 0 && this.regrindCd <= 0 && this.railCand) {
-      const s = this.railCand.sample;
-      if (s.distance < TUNING.railSnapDistance * CONST.assistSnapFactor && this.pos.y > s.point.y - 0.6) {
-        this.enterGrind(this.railCand.rail, s);
-      }
-    }
+    // No assisted rail snap here on purpose: THPS2 rules — you have to be
+    // holding/pressing Triangle to start a grind.
   }
 
   private stepGrind(dt: number, input: Input, level: Level): void {
@@ -281,6 +327,7 @@ export class Player {
     this.speed = TUNING.grindSpeed;
     this.surfaceName = 'rail';
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
+    this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck
 
     if (input.jumpPressed) {
       this.exitGrind(TUNING.grindJumpForce);
@@ -325,6 +372,9 @@ export class Player {
     this.grounded = false;
     this.vVel = 0;
     this.coyoteTimer = 0;
+    this.grabActive = false;
+    this.grabGraceTimer = 0;
+    this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     this.speed = TUNING.grindSpeed;
     const tan = sample.tangent.clone().multiplyScalar(this.grindDir);
     this.heading = Math.atan2(tan.x, tan.z);
@@ -362,6 +412,60 @@ export class Player {
         this.bodyGroup.rotation.y = 0;
         this.spinCd = CONST.spinCooldown;
       }
+    }
+  }
+
+  // ------------------------------------------------------------------ grab --
+
+  private updateGrab(dt: number, input: Input): void {
+    this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
+    if (this.state === 'air') {
+      if (input.grabHeld) {
+        this.grabActive = true;
+      } else if (this.grabActive) {
+        // Released mid-air: a short grace window still pays out on landing.
+        this.grabActive = false;
+        this.grabGraceTimer = CONST.grabGrace;
+      }
+    } else if (this.grabActive) {
+      this.grabActive = false;
+    }
+  }
+
+  // ---------------------------------------------------------------- sparks --
+
+  private emitSparks(count: number, color: number, kick: number): void {
+    const back = this.forward().multiplyScalar(-1);
+    for (const s of this.sparks) {
+      if (count <= 0) break;
+      if (s.life > 0) continue;
+      count--;
+      s.maxLife = 0.2 + Math.random() * 0.2;
+      s.life = s.maxLife;
+      (s.mesh.material as THREE.MeshBasicMaterial).color.setHex(color);
+      s.mesh.visible = true;
+      s.mesh.position.set(
+        this.pos.x + (Math.random() - 0.5) * 0.3,
+        this.pos.y + 0.05,
+        this.pos.z + (Math.random() - 0.5) * 0.3,
+      );
+      s.vel
+        .set((Math.random() - 0.5) * 2.4, 0.8 + Math.random() * 2.4, (Math.random() - 0.5) * 2.4)
+        .addScaledVector(back, (0.5 + Math.random() * 2) * kick);
+    }
+  }
+
+  private updateSparks(dt: number): void {
+    for (const s of this.sparks) {
+      if (s.life <= 0) continue;
+      s.life -= dt;
+      if (s.life <= 0) {
+        s.mesh.visible = false;
+        continue;
+      }
+      s.vel.y -= 22 * dt;
+      s.mesh.position.addScaledVector(s.vel, dt);
+      s.mesh.scale.setScalar(Math.max(s.life / s.maxLife, 0.25));
     }
   }
 
@@ -438,6 +542,12 @@ export class Player {
     const targetLean = this.grounded || this.state === 'grind' ? -input.moveX * 0.28 : -input.moveX * 0.12;
     this.lean += (targetLean - this.lean) * Math.min(1, 12 * dt);
     this.group.rotation.z = this.lean;
+
+    // Grab tuck: lean back and crouch while Circle/Q is held in the air.
+    const targetPose = this.grabActive ? 1 : 0;
+    this.grabPose += (targetPose - this.grabPose) * Math.min(1, 16 * dt);
+    this.bodyGroup.rotation.x = this.grabPose * 0.45;
+    this.bodyGroup.position.y = this.grabPose * -0.12;
 
     this.group.visible = this.state !== 'dead';
 

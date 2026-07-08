@@ -17,6 +17,9 @@ export const TUNING = {
   grindJumpForce: 14, // vertical pop when jumping off a rail
   spinDuration: 0.45,
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
+  reverseSpeed: 10, // Crash-style backing up on stick-down
+  strafeSpeed: 6, // sideways step speed when (near) stationary
+  grabBoost: 8, // speed burst on landing a Circle/Q air grab
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -37,6 +40,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
+  reverseSpeed: { min: 2, max: 20, step: 1 },
+  strafeSpeed: { min: 1, max: 15, step: 0.5 },
+  grabBoost: { min: 0, max: 20, step: 0.5 },
 };
 
 // Fixed authored constants that are part of the feel but stay off the sliders
@@ -54,8 +60,10 @@ export const CONST = {
   spinCooldown: 0.15,
   coyoteTime: 0.12, // ledge-edge grace window so late jumps aren't eaten
   railRideHeight: 0.15, // feet ride this far above the rail line
-  assistSnapFactor: 0.6, // landing auto-snap radius = railSnapDistance * this
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
+  strafeFade: 8, // speed at which sidestep fully hands over to carving turns
+  turnLowSpeedFactor: 0.35, // turn authority when stationary (ramps to 1 at strafeFade)
+  grabGrace: 0.18, // releasing the grab this close to landing still counts
   deadzone: 0.18,
   renderScale: 0.5, // low internal resolution for the PS1 look
 };

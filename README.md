@@ -16,10 +16,12 @@ npm run dev
 
 | Action | PS4 controller | Keyboard |
 | --- | --- | --- |
-| Steer / accelerate / brake | Left stick or d-pad | Arrow keys / WASD |
+| Steer / accelerate / back up | Left stick or d-pad | Arrow keys / WASD |
+| Sidestep (when slow/stationary) | Left stick left/right | Left/Right |
 | Jump | X (Cross) | Space |
-| Grind (near a rail) | Triangle | E |
+| Grind (hold near/over a rail) | Triangle | E |
 | Spin attack / trick | Square | F |
+| Air grab (speed boost on landing) | Circle | Q |
 | Restart | Options | R |
 
 Death respawns automatically. Plug in a controller and press any button on it —
@@ -28,8 +30,9 @@ the detected name shows in the debug panel.
 ## The course
 
 Start pad → downhill ramp (speed boost) → jump a death pit → landing deck →
-grind rail over a big pit (Triangle near the rail, or land close and it snaps) →
-spin the enemy and crates → kicker ramp with a gap (carry speed!) → finish gate.
+grind rail over a big pit (hold Triangle near/over the rail — landing on it
+without Triangle won't grind, THPS2 rules) → spin the enemy and crates →
+kicker ramp with a gap (carry speed!) → finish gate.
 
 ## Files
 

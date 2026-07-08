@@ -1,7 +1,8 @@
 // Keyboard + Gamepad API input, merged into one snapshot per frame.
 // DualShock 4 exposes the browser "standard" mapping:
-//   buttons[0] = Cross (X), buttons[2] = Square, buttons[3] = Triangle,
-//   buttons[9] = Options, buttons[12..15] = d-pad, axes[0/1] = left stick.
+//   buttons[0] = Cross (X), buttons[1] = Circle, buttons[2] = Square,
+//   buttons[3] = Triangle, buttons[9] = Options, buttons[12..15] = d-pad,
+//   axes[0/1] = left stick.
 
 import { CONST } from './tuning';
 
@@ -12,6 +13,7 @@ export class Input {
   jumpHeld = false;
   grindHeld = false;
   spinHeld = false;
+  grabHeld = false;
 
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.
@@ -62,6 +64,7 @@ export class Input {
     let jump = k.has('Space');
     let grind = k.has('KeyE');
     let spin = k.has('KeyF');
+    let grab = k.has('KeyQ');
     let restart = k.has('KeyR');
 
     const pad = this.pollGamepad();
@@ -78,6 +81,7 @@ export class Input {
       if (pad.buttons[15]?.pressed) moveX = 1;
 
       jump = jump || !!pad.buttons[0]?.pressed; // Cross
+      grab = grab || !!pad.buttons[1]?.pressed; // Circle
       spin = spin || !!pad.buttons[2]?.pressed; // Square
       grind = grind || !!pad.buttons[3]?.pressed; // Triangle
       restart = restart || !!pad.buttons[9]?.pressed; // Options
@@ -89,6 +93,7 @@ export class Input {
     this.jumpHeld = jump;
     this.grindHeld = grind;
     this.spinHeld = spin;
+    this.grabHeld = grab;
 
     this.jumpPressed = this.jumpPressed || (jump && !this.prevJump);
     this.grindPressed = this.grindPressed || (grind && !this.prevGrind);
