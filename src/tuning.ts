@@ -83,6 +83,7 @@ export const CONST = {
   balanceStart: 0.15, // initial needle kick when a grind starts
   balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
+  bounceCrateForce: 30, // arrow-crate launch (vs ~18 from a normal stomp)
   deadzone: 0.18,
   renderScale: 0.5, // low internal resolution for the PS1 look
 };

@@ -10,6 +10,8 @@ export interface Crate {
   mesh: THREE.Mesh;
   box: THREE.Box3;
   alive: boolean;
+  nitro?: boolean; // green, bobbing, ANY touch = death; cannot be broken safely
+  bouncy?: boolean; // yellow arrow crate: stomp = super bounce, never breaks
 }
 
 export interface Enemy {
@@ -39,14 +41,16 @@ export class Level {
   checkpoints: Checkpoint[] = [];
   rails: Rail[] = [];
   finishBox = new THREE.Box3();
-  finishZ = -830;
-  endWallZ = -846; // authored hard stop after the finish gate
+  finishZ = -1005;
+  endWallZ = -1021; // authored hard stop after the finish gate
   spawnPos = new THREE.Vector3(0, 0.1, 0);
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
 
   private scene: THREE.Scene;
   private pops: { obj: THREE.Object3D; t: number }[] = [];
+  private time = 0;
+  private arrowTex: THREE.CanvasTexture | null = null;
 
   constructor(scene: THREE.Scene) {
     this.scene = scene;
@@ -54,7 +58,7 @@ export class Level {
   }
 
   get totalCrates(): number {
-    return this.crates.length;
+    return this.crates.filter((c) => !c.nitro && !c.bouncy).length;
   }
 
   update(dt: number): void {
@@ -77,6 +81,13 @@ export class Level {
     // Unbroken checkpoint boxes idle-spin so they read as special.
     for (const c of this.checkpoints) {
       if (!c.active) c.mesh.rotation.y += dt * 1.2;
+    }
+    // Nitro crates bob menacingly.
+    this.time += dt;
+    for (const c of this.crates) {
+      if (!c.nitro) continue;
+      c.mesh.position.y =
+        (c.mesh.userData.baseY as number) + Math.sin(this.time * 4 + c.mesh.position.z) * 0.12;
     }
     // Quick scale-pop for broken crates / squashed enemies.
     for (let i = this.pops.length - 1; i >= 0; i--) {
@@ -186,9 +197,17 @@ export class Level {
     this.slab('corridor D', -505, -575, -13, 12, matA);
     // rail 2 pit: -575 .. -655
     this.slab('rail 2 landing', -655, -710, -13.5, 12, matB);
-    this.ramp('final downhill', -710, -13.5, -765, -22, 12, matRamp);
-    // gap 4: -765 .. -791 (fast)
-    this.slab('finish run', -791, -850, -22, 12, matFinish);
+    // halfpipe: narrow floor with banked walls; the lips are grindable rails
+    this.slab('halfpipe floor', -710, -770, -13.5, 6, matA);
+    this.bank('halfpipe left', -710, -770, -3, -7, -13.5, -10, matRamp);
+    this.bank('halfpipe right', -710, -770, 3, 7, -13.5, -10, matRamp);
+    // rail yard entry deck, then a pit crossed by three parallel rails
+    this.slab('rail yard entry', -770, -778, -13.5, 14, matB);
+    // pit: -778 .. -850
+    this.slab('rail yard landing', -850, -885, -13.5, 14, matA);
+    this.ramp('final downhill', -885, -13.5, -940, -22, 12, matRamp);
+    // gap 4: -940 .. -966 (fast)
+    this.slab('finish run', -966, -1025, -22, 12, matFinish);
 
     // --- death pit floor (visual only, below killY) ---
     const pit = new THREE.Mesh(
@@ -212,7 +231,14 @@ export class Level {
       new THREE.Vector3(-2.5, -10.5, -620),
       new THREE.Vector3(0, -11.5, -659),
     ]);
-    for (const rail of [rail1, rail2]) {
+    // Halfpipe lip rails along both top edges.
+    const lipL = new Rail([new THREE.Vector3(-7, -9.8, -712), new THREE.Vector3(-7, -9.8, -766)]);
+    const lipR = new Rail([new THREE.Vector3(7, -9.8, -712), new THREE.Vector3(7, -9.8, -766)]);
+    // Rail yard: three parallel rails over the pit — jump between them.
+    const yardL = new Rail([new THREE.Vector3(-3.5, -12.6, -776), new THREE.Vector3(-3.5, -12.6, -852)]);
+    const yardC = new Rail([new THREE.Vector3(0, -12.6, -776), new THREE.Vector3(0, -12.6, -852)]);
+    const yardR = new Rail([new THREE.Vector3(3.5, -12.6, -776), new THREE.Vector3(3.5, -12.6, -852)]);
+    for (const rail of [rail1, rail2, lipL, lipR, yardL, yardC, yardR]) {
       this.rails.push(rail);
       this.scene.add(rail.object);
     }
@@ -251,9 +277,28 @@ export class Level {
     // Rail 2 entry flanks.
     this.crate(-2.4, -13, -567);
     this.crate(2.4, -13, -567);
+    // Halfpipe: bouncy arrow crate launches you up to the lip rails.
+    this.crate(-2.2, -13.5, -735, 'bouncy');
+    this.crate(0, -13.5, -755); // wumpa snack on the floor line
+    // Rail yard: crates and nitro at grind height above the rails.
+    // Center rail: two smashables, then a nitro you must jump, then a snack.
+    this.crate(0, -12.8, -790);
+    this.crate(0, -12.8, -800);
+    this.crate(0, -12.8, -815, 'nitro');
+    this.crate(0, -12.8, -835);
+    // Left rail: nitro early, then safe smashables.
+    this.crate(-3.5, -12.8, -795, 'nitro');
+    this.crate(-3.5, -12.8, -820);
+    this.crate(-3.5, -12.8, -828);
+    // Right rail: smashable, nitro, smashable.
+    this.crate(3.5, -12.8, -788);
+    this.crate(3.5, -12.8, -822, 'nitro');
+    this.crate(3.5, -12.8, -840);
+    // Rail yard landing: a bouncy crate off the racing line, for fun.
+    this.crate(2.5, -13.5, -868, 'bouncy');
     // Final downhill: offset dodge crates (thread between them at speed).
-    this.crate(-2.2, this.downhillY(-730), -730);
-    this.crate(2.2, this.downhillY(-748), -748);
+    this.crate(-2.2, this.downhillY(-905), -905);
+    this.crate(2.2, this.downhillY(-925), -925);
 
     // --- enemies (patrolling across the corridor) ---
     this.enemy(-3.5, 3.5, -5, -120, 5);
@@ -271,6 +316,10 @@ export class Level {
     this.checkpoint(-5.5, -185);
     this.checkpoint(-13, -425);
     this.checkpoint(-13.5, -670);
+    this.checkpoint(-13.5, -862);
+
+    // --- extra enemy guarding the rail yard landing ---
+    this.enemy(-4, 4, -13.5, -876, 6);
 
     // --- finish gate ---
     this.finishGate(-22, this.finishZ);
@@ -290,7 +339,7 @@ export class Level {
 
   // Deck height along the final downhill ramp (for crate placement).
   private downhillY(z: number): number {
-    return THREE.MathUtils.mapLinear(z, -710, -765, -13.5, -22);
+    return THREE.MathUtils.mapLinear(z, -885, -940, -13.5, -22);
   }
 
   // Flat deck. z0 is the near (higher z) edge, z1 the far edge, topY the
@@ -326,6 +375,36 @@ export class Level {
     this.groundMeshes.push(mesh);
   }
 
+  // Side-banked surface (halfpipe wall): top face runs from (xIn, yBase) up to
+  // (xOut, yTop), constant along z. Box rotated about Z so a downward ray sees
+  // the slope.
+  private bank(
+    name: string,
+    z0: number,
+    z1: number,
+    xIn: number,
+    xOut: number,
+    yBase: number,
+    yTop: number,
+    mat: THREE.Material,
+  ): void {
+    const dx = xOut - xIn;
+    const dy = yTop - yBase;
+    const len = Math.hypot(dx, dy);
+    const alpha = Math.atan2(dy, dx); // local +X maps to (cos a, sin a, 0)
+    const depth = Math.abs(z1 - z0);
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(len, 1, depth), mat);
+    mesh.rotation.z = alpha;
+    const normal = new THREE.Vector3(-dy / len, dx / len, 0);
+    if (normal.y < 0) normal.negate();
+    mesh.position
+      .set((xIn + xOut) / 2, (yBase + yTop) / 2, (z0 + z1) / 2)
+      .addScaledVector(normal, -0.5);
+    mesh.name = name;
+    this.scene.add(mesh);
+    this.groundMeshes.push(mesh);
+  }
+
   // Dark edge strips so deck borders read at speed. Visual only.
   private curbs(z0: number, z1: number, topY: number, width: number): void {
     const mat = new THREE.MeshLambertMaterial({ color: 0x4a4e58 });
@@ -337,20 +416,51 @@ export class Level {
     }
   }
 
-  private crate(x: number, deckY: number, z: number): void {
+  private crate(x: number, deckY: number, z: number, kind?: 'nitro' | 'bouncy'): void {
     const size = 1.2;
-    const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(size, size, size),
-      new THREE.MeshLambertMaterial({ color: 0xb08a4a }),
-    );
+    let mat: THREE.MeshLambertMaterial;
+    if (kind === 'nitro') {
+      mat = new THREE.MeshLambertMaterial({ color: 0x35d054, emissive: 0x0c3a16 });
+    } else if (kind === 'bouncy') {
+      mat = new THREE.MeshLambertMaterial({ color: 0xe8c832, map: this.arrowTexture() });
+    } else {
+      mat = new THREE.MeshLambertMaterial({ color: 0xb08a4a });
+    }
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, deckY + size / 2, z);
-    mesh.rotation.y = 0.15;
+    mesh.userData.baseY = mesh.position.y;
+    if (!kind) mesh.rotation.y = 0.15;
     this.scene.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),
       new THREE.Vector3(size, size, size),
     );
-    this.crates.push({ mesh, box, alive: true });
+    this.crates.push({ mesh, box, alive: true, nitro: kind === 'nitro', bouncy: kind === 'bouncy' });
+  }
+
+  // Chunky white up-arrow on the bouncy crates (shared texture).
+  private arrowTexture(): THREE.CanvasTexture {
+    if (this.arrowTex) return this.arrowTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#e8c832';
+    ctx.fillRect(0, 0, 32, 32);
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.moveTo(16, 4);
+    ctx.lineTo(27, 16);
+    ctx.lineTo(20, 16);
+    ctx.lineTo(20, 28);
+    ctx.lineTo(12, 28);
+    ctx.lineTo(12, 16);
+    ctx.lineTo(5, 16);
+    ctx.closePath();
+    ctx.fill();
+    this.arrowTex = new THREE.CanvasTexture(canvas);
+    this.arrowTex.magFilter = THREE.NearestFilter;
+    return this.arrowTex;
   }
 
   private enemy(x0: number, x1: number, deckY: number, z: number, speed: number): void {

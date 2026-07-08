@@ -612,11 +612,32 @@ export class Player {
 
     for (const c of level.crates) {
       if (!c.alive) continue;
+      if (c.nitro) {
+        // Nitro: ANY body contact detonates. No safe way to break it — avoid.
+        if (this.playerBox.intersectsBox(c.box)) {
+          this.die();
+          return;
+        }
+        continue;
+      }
+      if (c.bouncy) {
+        // Arrow crate: land on it for a super bounce; it never breaks.
+        if (this.playerBox.intersectsBox(c.box)) {
+          if (this.isStomping(c.box)) {
+            this.vVel = CONST.bounceCrateForce;
+            this.state = 'air';
+            this.grounded = false;
+          } else {
+            this.pushOutOf(c.box);
+          }
+        }
+        continue;
+      }
       if (this.spinning && this.spinBox.intersectsBox(c.box)) {
         this.smashCrate(level, c);
       } else if (this.playerBox.intersectsBox(c.box)) {
-        if (this.sliding) {
-          // Sliding smashes boxes without breaking stride.
+        if (this.sliding || this.state === 'grind') {
+          // Slides and grinds smash boxes without breaking stride.
           this.smashCrate(level, c);
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
