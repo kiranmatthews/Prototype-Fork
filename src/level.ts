@@ -432,11 +432,15 @@ export class Level {
     this.crate(-4.5, -3.8, -132); // stack
     this.crate(4.5, -5, -145);
     this.crate(4.5, -3.8, -145); // stack
-    // Corridor B: ascending step platforms on the right with crate rewards.
+    // Corridor B: a 4-story step string on the right with crate rewards.
     this.stepBlock(4, -192, 4, 6, -5.5, -3.3);
     this.crate(4, -3.3, -192);
-    this.stepBlock(4, -202, 4, 6, -5.5, -1.2);
-    this.crate(4, -1.2, -202);
+    this.stepBlock(4, -199, 4, 6, -5.5, -1.1);
+    this.crate(4, -1.1, -199);
+    this.stepBlock(4, -206, 4, 6, -3, 1.1);
+    this.crate(4, 1.1, -206);
+    this.stepBlock(4, -213, 4, 6, -1, 3.3);
+    this.crate(4, 3.3, -213);
     // Corridor B: risky edge lines between the enemies.
     this.crate(5, -5.5, -205);
     this.crate(5, -5.5, -208);
@@ -464,6 +468,7 @@ export class Level {
     this.crate(14, 0, -20);
     this.crate(31, 0, -28);
     this.crate(37, 0, -12, 'bouncy');
+    this.towerClimb(-8, 0, 4, 34); // pen tower: four stories, crates up top
     // Halfpipe: bouncy arrow crate launches you up to the lip rails.
     this.crate(-2.2, -13.5, -735, 'bouncy');
     this.crate(0, -13.5, -755); // wumpa snack on the floor line
@@ -610,18 +615,19 @@ export class Level {
     this.crate(4.5, 2.7, -272, 'nitro');
     this.crate(3.2, 1.5, -272, 'nitro');
 
-    // climb to the exit
-    this.ramp('temple ramp', -310, 1.5, -340, 6, 10, matRamp);
-    this.slab('temple top', -340, -420, 6, 12, matStone);
-    this.enemy(-4, 4, 6, -370, 6);
-    this.checkpoint(6, -390);
-    this.crate(-4.5, 6, -405, 'nitro');
-    this.crate(4.5, 6, -405, 'nitro');
-    this.crate(0, 6, -405);
+    // the temple stair: four stories of stone columns over the water
+    const climb = this.towerClimb(-312, 1.5, 4);
+    const top = climb.topY;
+    this.slab('temple top', climb.endZ - 2, -420, top, 12, matStone);
+    this.enemy(-4, 4, top, -370, 6);
+    this.checkpoint(top, -390);
+    this.crate(-4.5, top, -405, 'nitro');
+    this.crate(4.5, top, -405, 'nitro');
+    this.crate(0, top, -405);
 
-    this.slab('exit', -420, -470, 6, 14, matSand);
-    this.finishGate(6, this.finishZ);
-    this.endWall(6);
+    this.slab('exit', -420, -470, top, 14, matSand);
+    this.finishGate(top, this.finishZ);
+    this.endWall(top);
   }
 
   // Crash 1 level 2: climb the great wall. Ascending walkways with gaps, a
@@ -812,6 +818,27 @@ export class Level {
         new THREE.Vector3(x + w / 2, topY - 0.2, z + d / 2),
       ),
     );
+  }
+
+  // Crash-style temple stair: staggered solid columns strung into a real
+  // multi-story climb (each step ~2.6 up, small hop between). Returns where
+  // the top block ends so the course can continue at height.
+  private towerClimb(
+    zStart: number,
+    baseY: number,
+    stories: number,
+    xCenter = 0,
+  ): { endZ: number; topY: number } {
+    let y = baseY;
+    let z = zStart;
+    for (let i = 0; i < stories; i++) {
+      y += 2.6;
+      const x = xCenter + (i % 2 === 0 ? -2.2 : 2.2);
+      this.stepBlock(x, z - 2.5, 5, 5, y - 9, y);
+      if (i % 2 === 1 || i === stories - 1) this.crate(x, y, z - 2.5);
+      z -= 7;
+    }
+    return { endZ: z, topY: y };
   }
 
   // Dark edge strips so deck borders read at speed. Visual only.
@@ -1017,6 +1044,13 @@ export class Level {
         z -= len;
         dist += len;
         lastGap = true;
+      } else if (roll < 0.9) {
+        // temple stair tower over the void: climb it or die trying
+        const t = this.towerClimb(z - 2, y, 4);
+        dist += z - t.endZ + 4;
+        z = t.endZ - 4;
+        y = t.topY;
+        lastGap = true; // force a solid deck right after the top block
       } else {
         // kicker lip into a gap
         this.ramp('kicker', z, y, z - 10, y + 2.4, 10, mat());
