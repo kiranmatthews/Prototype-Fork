@@ -124,7 +124,9 @@ export class Player {
     this.grindRail = null;
     this.regrindCd = 0;
     if (hard) this.runTime = 0;
-    this.cratesBroken = 0;
+    // Respawning at a checkpoint restores the crate counter it banked; a hard
+    // reset (reset() cleared activeCheckpoint) starts from zero.
+    this.cratesBroken = level.activeCheckpoint ? level.activeCheckpoint.savedCratesBroken : 0;
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.grabActive = false;
@@ -583,9 +585,21 @@ export class Player {
     }
 
     for (const cp of level.checkpoints) {
-      if (!cp.active && this.playerBox.intersectsBox(cp.box)) {
-        level.activateCheckpoint(cp);
+      if (cp.active) continue;
+      if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
+        level.activateCheckpoint(cp, this.cratesBroken);
         this.onCheckpoint();
+      } else if (this.playerBox.intersectsBox(cp.box)) {
+        if (this.isStomping(cp.box)) {
+          level.activateCheckpoint(cp, this.cratesBroken);
+          this.onCheckpoint();
+          this.vVel = CONST.crateBounce;
+          this.state = 'air';
+          this.grounded = false;
+        } else {
+          // Bump = wall, like a normal box. Spin or stomp to bank it.
+          this.pushOutOf(cp.box);
+        }
       }
     }
 

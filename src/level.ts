@@ -27,6 +27,8 @@ export interface Checkpoint {
   box: THREE.Box3;
   active: boolean;
   spawnPos: THREE.Vector3;
+  savedAlive: boolean[]; // crate alive-states captured when this was broken
+  savedCratesBroken: number; // crate counter captured when this was broken
 }
 
 export class Level {
@@ -40,6 +42,7 @@ export class Level {
   endWallZ = -846; // authored hard stop after the finish gate
   spawnPos = new THREE.Vector3(0, 0.1, 0);
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
+  activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
 
   private scene: THREE.Scene;
   private pops: { obj: THREE.Object3D; t: number }[] = [];
@@ -70,9 +73,9 @@ export class Level {
         new THREE.Vector3(1.3, 1.1, 1.3),
       );
     }
-    // Checkpoint crates idle-spin so they read as pickups.
+    // Unbroken checkpoint boxes idle-spin so they read as special.
     for (const c of this.checkpoints) {
-      c.mesh.rotation.y += dt * 1.2;
+      if (!c.active) c.mesh.rotation.y += dt * 1.2;
     }
     // Quick scale-pop for broken crates / squashed enemies.
     for (let i = this.pops.length - 1; i >= 0; i--) {
@@ -97,21 +100,40 @@ export class Level {
     this.pops.push({ obj: enemy.group, t: 0.12 });
   }
 
-  activateCheckpoint(cp: Checkpoint): void {
+  // Broken (spun/stomped) like a normal box; banks the respawn point and a
+  // snapshot of exactly which crates are broken + the counter at this moment.
+  activateCheckpoint(cp: Checkpoint, cratesBroken: number): void {
     cp.active = true;
-    (cp.mesh.material as THREE.MeshLambertMaterial).color.setHex(0x59d47f);
+    cp.savedAlive = this.crates.map((c) => c.alive);
+    cp.savedCratesBroken = cratesBroken;
     this.currentSpawn.copy(cp.spawnPos);
+    this.activeCheckpoint = cp;
+    cp.mesh.scale.setScalar(1);
+    this.pops.push({ obj: cp.mesh, t: 0.12 }); // break it like a crate
   }
 
-  // Soft reset (death): crates and enemies come back, checkpoints stay lit.
-  // Hard reset (R / new run): everything, including checkpoints and spawn.
+  // Soft reset (death): restore the crate world to the last checkpoint's
+  // snapshot — boxes broken before it stay broken, boxes broken after it come
+  // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
+  // everything and relights every checkpoint box.
   reset(hard: boolean): void {
     this.pops.length = 0;
-    for (const c of this.crates) {
-      c.alive = true;
-      c.mesh.visible = true;
-      c.mesh.scale.setScalar(1);
+
+    if (!hard && this.activeCheckpoint) {
+      const snap = this.activeCheckpoint.savedAlive;
+      this.crates.forEach((c, i) => {
+        c.alive = snap[i];
+        c.mesh.visible = snap[i];
+        c.mesh.scale.setScalar(1);
+      });
+    } else {
+      for (const c of this.crates) {
+        c.alive = true;
+        c.mesh.visible = true;
+        c.mesh.scale.setScalar(1);
+      }
     }
+
     for (const e of this.enemies) {
       e.alive = true;
       e.group.visible = true;
@@ -120,11 +142,19 @@ export class Level {
       e.dir = 1;
       e.box.makeEmpty();
     }
-    if (hard) {
-      for (const cp of this.checkpoints) {
+
+    for (const cp of this.checkpoints) {
+      cp.mesh.scale.setScalar(1);
+      if (hard) {
         cp.active = false;
-        (cp.mesh.material as THREE.MeshLambertMaterial).color.setHex(0xf0f0f0);
+        cp.mesh.visible = true;
+      } else {
+        cp.mesh.visible = !cp.active; // consumed checkpoints stay broken
       }
+    }
+
+    if (hard) {
+      this.activeCheckpoint = null;
       this.currentSpawn.copy(this.spawnPos);
     }
   }
@@ -340,24 +370,28 @@ export class Level {
     this.enemies.push({ group, box: new THREE.Box3(), alive: true, x0, x1, dir: 1, speed });
   }
 
-  // A floating white crate; touch it to set your respawn point. Trigger spans
-  // the full corridor so you can't accidentally miss it.
+  // A distinct blue box that sits on the deck like a normal crate. Spin or
+  // stomp it (bumping is a wall) to bank the checkpoint; its trigger matches
+  // the box, so it can be dodged rather than being an unmissable gate.
   private checkpoint(deckY: number, z: number): void {
+    const size = 1.4;
     const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(1.4, 1.4, 1.4),
-      new THREE.MeshLambertMaterial({ color: 0xf0f0f0 }),
+      new THREE.BoxGeometry(size, size, size),
+      new THREE.MeshLambertMaterial({ color: 0x4aa0e0, emissive: 0x123049 }),
     );
-    mesh.position.set(0, deckY + 1.6, z);
+    mesh.position.set(0, deckY + size / 2, z);
     this.scene.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
-      new THREE.Vector3(0, deckY + 2, z),
-      new THREE.Vector3(12, 5, 1.6),
+      mesh.position.clone(),
+      new THREE.Vector3(size, size, size),
     );
     this.checkpoints.push({
       mesh,
       box,
       active: false,
       spawnPos: new THREE.Vector3(0, deckY + 0.1, z),
+      savedAlive: [],
+      savedCratesBroken: 0,
     });
   }
 
