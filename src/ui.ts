@@ -39,7 +39,7 @@ export class UI {
 
     const help = div('hud-help');
     help.textContent =
-      'stick/arrows: steer+speed, air control (down = back up) · X/Space: jump · ' +
+      'stick/arrows: up=go down=back left/right=sidestep (also in air) · X/Space: jump · ' +
       'Triangle/E: hold to grind (balance with left/right!) · Square/F: spin · ' +
       'Circle/Q: grab-spin, boost on landing · R/Options: restart run';
 

@@ -6,7 +6,7 @@ export const TUNING = {
   maxSpeed: 43, // top speed from pedaling on flat ground
   acceleration: 37, // forward input accel
   friction: 25.5, // speed bleed when not holding forward
-  turnRate: 2.8, // radians/sec of heading change at full stick
+  lateralSpeed: 12, // Crash-style axis-locked sidestep, ground and air
   riseGravity: 40, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 107, // gravity while falling (heavier = snappy PS1 landing)
   jumpVelocity: 23.5,
@@ -18,10 +18,8 @@ export const TUNING = {
   spinDuration: 0.3,
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
   reverseSpeed: 18, // Crash-style backing up on stick-down
-  strafeSpeed: 6, // sideways step speed when (near) stationary
   grabBoost: 8, // speed burst on landing a Circle/Q air grab
-  airControl: 14, // Crash-style forward/back drift accel in the air
-  airDrift: 8, // Crash-style lateral drift speed in the air
+  airControl: 14, // forward/back speed adjustment in the air
   balanceDrift: 0.55, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.6, // how hard left/right fights the needle
 };
@@ -33,7 +31,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   maxSpeed: { min: 5, max: 60, step: 1 },
   acceleration: { min: 5, max: 80, step: 1 },
   friction: { min: 0, max: 30, step: 0.5 },
-  turnRate: { min: 0.5, max: 6, step: 0.1 },
+  lateralSpeed: { min: 2, max: 25, step: 0.5 },
   riseGravity: { min: 10, max: 120, step: 1 },
   fallGravity: { min: 10, max: 160, step: 1 },
   jumpVelocity: { min: 4, max: 30, step: 0.5 },
@@ -45,10 +43,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   reverseSpeed: { min: 2, max: 20, step: 1 },
-  strafeSpeed: { min: 1, max: 15, step: 0.5 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
-  airDrift: { min: 0, max: 20, step: 0.5 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
 };
@@ -68,8 +64,7 @@ export const CONST = {
   coyoteTime: 0.12, // ledge-edge grace window so late jumps aren't eaten
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
-  strafeFade: 8, // speed at which sidestep fully hands over to carving turns
-  turnLowSpeedFactor: 0.35, // turn authority when stationary (ramps to 1 at strafeFade)
+  walkFaceSpeed: 8, // below this forward speed the body faces its travel direction
   grabGrace: 0.18, // releasing the grab this close to landing still counts
   grabSpinRate: 9, // rad/s of the grab trick spin (visual only)
   flipDuration: 0.55, // Crash front-flip time on jumps (visual only)

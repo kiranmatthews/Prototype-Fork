@@ -51,34 +51,17 @@ player.onRespawn = () => ui.hideMessage();
 player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
 
 // --- Crash-style corridor camera -------------------------------------------
-// Sits behind the player, but its yaw is anchored to the authored course
-// direction and only partly follows the player's heading, so the forward path
-// always reads. Not a free-orbit camera.
-// Crash 2 framing: closer and lower behind the character, narrower lens so
-// the player reads big against the corridor.
-const COURSE_YAW = Math.PI; // the whole course runs toward -Z
+// Hard-locked to the course axis: it only translates, never yaws, so screen
+// left/right always equal world left/right. Crash 2 framing: close and low,
+// narrow lens, the player reads big against the corridor.
 const CAM_DIST = 7;
 const CAM_HEIGHT = 3.3;
 const CAM_LOOKAHEAD = 5.5;
-let camYaw = COURSE_YAW;
 const camTarget = new THREE.Vector3();
-const camForward = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
 
-function lerpAngle(a: number, b: number, t: number): number {
-  // Symmetric shortest-arc wrap (JS % keeps the dividend's sign, so the usual
-  // "+3PI mod 2PI" trick breaks for large negative deltas).
-  const d = b - a - Math.PI * 2 * Math.round((b - a) / (Math.PI * 2));
-  return a + d * t;
-}
-
 function updateCamera(dt: number): void {
-  const wantYaw = lerpAngle(COURSE_YAW, player.heading, 0.35);
-  camYaw = lerpAngle(camYaw, wantYaw, 1 - Math.exp(-6 * dt));
-  camForward.set(Math.sin(camYaw), 0, Math.cos(camYaw));
-
-  camTarget.copy(player.pos).addScaledVector(camForward, -CAM_DIST);
-  camTarget.y = player.pos.y + CAM_HEIGHT;
+  camTarget.set(player.pos.x, player.pos.y + CAM_HEIGHT, player.pos.z + CAM_DIST);
 
   // Snap after respawn teleports; damp otherwise.
   if (camera.position.distanceTo(camTarget) > 30) {
@@ -87,8 +70,7 @@ function updateCamera(dt: number): void {
     camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
   }
 
-  lookPoint.copy(player.pos).addScaledVector(camForward, CAM_LOOKAHEAD);
-  lookPoint.y = player.pos.y + 1.0;
+  lookPoint.set(player.pos.x, player.pos.y + 1.0, player.pos.z - CAM_LOOKAHEAD);
   camera.lookAt(lookPoint);
 }
 

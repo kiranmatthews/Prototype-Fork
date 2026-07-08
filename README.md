@@ -16,8 +16,8 @@ npm run dev
 
 | Action | PS4 controller | Keyboard |
 | --- | --- | --- |
-| Steer / accelerate / back up | Left stick or d-pad | Arrow keys / WASD |
-| Sidestep (when slow/stationary) | Left stick left/right | Left/Right |
+| Forward / back up | Left stick or d-pad up/down | Up/Down (W/S) |
+| Sidestep (axis-locked, works in air) | Left stick left/right | Left/Right (A/D) |
 | Jump | X (Cross) | Space |
 | Grind (hold near/over a rail) | Triangle | E |
 | Spin attack / trick | Square | F |

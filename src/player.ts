@@ -18,6 +18,9 @@ interface GroundHit {
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
+// The course axis. All movement is locked to it, Crash-style: `speed` runs
+// along -Z (positive = down the course), left/right is pure lateral X.
+const FORWARD = new THREE.Vector3(0, 0, -1);
 
 function wrapAngle(a: number): number {
   return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
@@ -25,8 +28,7 @@ function wrapAngle(a: number): number {
 
 export class Player {
   pos = new THREE.Vector3(); // feet position
-  heading = Math.PI; // yaw; forward = (sin, 0, cos)
-  speed = 0;
+  speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
   vVel = 0;
   state: MoveState = 'ride';
   grounded = false;
@@ -83,6 +85,7 @@ export class Player {
     // slightly forgiving hitboxes, which suits the arcade feel).
     this.bodyGroup.scale.setScalar(1.18);
     this.group.add(this.bodyGroup);
+    this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
 
     this.shadow = new THREE.Mesh(
@@ -111,7 +114,6 @@ export class Player {
   respawn(level: Level, hard = false): void {
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
-    this.heading = level.spawnHeading;
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -198,23 +200,12 @@ export class Player {
       if (this.pos.y < CONST.killY) this.die();
     }
 
-    // Keep heading in [-PI, PI] so the camera's angle lerp never sees a
-    // multi-revolution delta.
-    this.heading -= Math.PI * 2 * Math.round(this.heading / (Math.PI * 2));
-
     this.syncVisual(input, dt);
   }
 
   // ---------------------------------------------------------------- states --
 
   private stepRide(dt: number, input: Input, level: Level): void {
-    // Turning hands over to sidestepping at low speed: full carve authority
-    // arrives by strafeFade, below that you mostly step sideways (Crash-style
-    // lane adjustment) with a little rotation.
-    const speedT = THREE.MathUtils.clamp(Math.abs(this.speed) / CONST.strafeFade, 0, 1);
-    const turnAuthority = THREE.MathUtils.lerp(CONST.turnLowSpeedFactor, 1, speedT);
-    this.heading -= input.moveX * TUNING.turnRate * turnAuthority * dt;
-
     // Authored accel / brake / reverse / friction. Holding down brakes through
     // zero into a capped backward roll, like backing up in Crash.
     if (input.moveY > 0.05) {
@@ -229,13 +220,12 @@ export class Player {
     }
 
     // Fake slope response from the ground normal: grade > 0 means the surface
-    // drops away along our heading. Sign-safe, so stalling on a ramp rolls you
-    // back down it.
-    const f = this.forward();
+    // drops away down-course. Sign-safe, so stalling on a ramp rolls you back
+    // down it.
     let grade = 0;
     if (this.groundHit) {
       const n = this.groundHit.normal;
-      grade = (n.x * f.x + n.z * f.z) / Math.max(n.y, 0.2);
+      grade = -n.z / Math.max(n.y, 0.2);
     }
     if (Math.abs(grade) > 0.02) {
       this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * dt;
@@ -251,16 +241,12 @@ export class Player {
     }
     this.speed = Math.max(this.speed, -TUNING.reverseSpeed);
 
-    this.pos.addScaledVector(f, this.speed * dt);
+    this.pos.addScaledVector(FORWARD, this.speed * dt);
 
-    // Low-speed sidestep, fading out as carving takes over.
-    if (Math.abs(input.moveX) > 0.05 && speedT < 1) {
-      const right = new THREE.Vector3(
-        Math.sin(this.heading - Math.PI / 2),
-        0,
-        Math.cos(this.heading - Math.PI / 2),
-      );
-      this.pos.addScaledVector(right, input.moveX * TUNING.strafeSpeed * (1 - speedT) * dt);
+    // Axis-locked sidestep: direct velocity while held, dead stop on release.
+    // Left is ALWAYS screen-left, even while backing up.
+    if (Math.abs(input.moveX) > 0.05) {
+      this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
     }
 
     // Follow the ground within a chunky snap window, otherwise we ran off an
@@ -305,8 +291,8 @@ export class Player {
     this.vVel -= g * dt;
 
     // Crash-style directional air control: up/down stretches or shortens the
-    // jump, left/right drifts sideways. Locked while holding a grab — the
-    // trick freezes your trajectory.
+    // jump, left/right sidesteps laterally — same axes as on the ground.
+    // Locked while holding a grab: the trick freezes your trajectory.
     if (!this.grabActive) {
       if (Math.abs(input.moveY) > 0.05) {
         const cap = TUNING.maxSpeed * CONST.maxOverspeed;
@@ -317,16 +303,11 @@ export class Player {
         );
       }
       if (Math.abs(input.moveX) > 0.05) {
-        const right = new THREE.Vector3(
-          Math.sin(this.heading - Math.PI / 2),
-          0,
-          Math.cos(this.heading - Math.PI / 2),
-        );
-        this.pos.addScaledVector(right, input.moveX * TUNING.airDrift * dt);
+        this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
       }
     }
 
-    this.pos.addScaledVector(this.forward(), this.speed * dt);
+    this.pos.addScaledVector(FORWARD, this.speed * dt);
     this.pos.y += this.vVel * dt;
 
     const hit = this.queryGround(level);
@@ -379,8 +360,6 @@ export class Player {
     }
 
     this.placeOnRail(rail);
-    const tan = rail.tangentAt(this.grindT).multiplyScalar(this.grindDir);
-    this.heading = Math.atan2(tan.x, tan.z);
     this.speed = TUNING.grindSpeed;
     this.surfaceName = 'rail';
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
@@ -394,7 +373,7 @@ export class Player {
 
   private stepFinished(dt: number, level: Level): void {
     this.speed = Math.max(0, this.speed - 40 * dt);
-    this.pos.addScaledVector(this.forward(), this.speed * dt);
+    this.pos.addScaledVector(FORWARD, this.speed * dt);
     // Keep the outro on the deck: no sliding sideways off the edge into a
     // midair hover after the run is already over.
     this.pos.x = THREE.MathUtils.clamp(this.pos.x, -5.2, 5.2);
@@ -425,7 +404,9 @@ export class Player {
   private enterGrind(rail: Rail, sample: RailSample): void {
     this.grindRail = rail;
     this.grindT = sample.t;
-    this.grindDir = sample.tangent.dot(this.forward()) >= 0 ? 1 : -1;
+    // Ride the rail in whichever direction matches our along-course travel.
+    const travelZ = this.speed >= 0 ? -1 : 1;
+    this.grindDir = sample.tangent.z * travelZ >= 0 ? 1 : -1;
     this.state = 'grind';
     this.grounded = false;
     this.vVel = 0;
@@ -437,8 +418,6 @@ export class Player {
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     this.speed = TUNING.grindSpeed;
-    const tan = sample.tangent.clone().multiplyScalar(this.grindDir);
-    this.heading = Math.atan2(tan.x, tan.z);
     this.placeOnRail(rail);
   }
 
@@ -448,6 +427,12 @@ export class Player {
   }
 
   private exitGrind(vVel: number): void {
+    if (this.grindRail) {
+      // Project the rail velocity onto the course axis — exits snap straight,
+      // matching the axis-locked movement.
+      const tz = this.grindRail.tangentAt(this.grindT).z * this.grindDir;
+      this.speed = -tz * TUNING.grindSpeed;
+    }
     this.grindRail = null;
     this.state = 'air';
     this.vVel = vVel;
@@ -514,7 +499,7 @@ export class Player {
   // ---------------------------------------------------------------- sparks --
 
   private emitSparks(count: number, color: number, kick: number): void {
-    const back = this.forward().multiplyScalar(-1);
+    const back = FORWARD.clone().multiplyScalar(-Math.sign(this.speed || 1));
     for (const s of this.sparks) {
       if (count <= 0) break;
       if (s.life > 0) continue;
@@ -647,10 +632,6 @@ export class Player {
 
   // ------------------------------------------------------------------ misc --
 
-  private forward(): THREE.Vector3 {
-    return new THREE.Vector3(Math.sin(this.heading), 0, Math.cos(this.heading));
-  }
-
   private queryGround(level: Level): GroundHit | null {
     this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
     this.raycaster.far = 12;
@@ -663,7 +644,6 @@ export class Player {
 
   private syncVisual(input: Input, dt: number): void {
     this.group.position.copy(this.pos);
-    this.group.rotation.y = this.heading;
 
     // Chunky little carve lean; while grinding, the lean IS the balance needle.
     const targetLean =
@@ -677,13 +657,17 @@ export class Player {
 
     // Crash walk facing: at low speed on the ground the body snaps to face the
     // actual travel direction — sidesteps face sideways, backing up faces the
-    // camera. At speed it snaps back to the board's heading.
+    // camera. On rails it faces along the rail. Movement itself never leaves
+    // the course axes; this is purely the model turning.
     let targetYaw = 0;
-    if (this.grounded && (this.speed < -0.5 || Math.abs(this.speed) < CONST.strafeFade)) {
+    const facingApplies =
+      (this.grounded && (this.speed < -0.5 || Math.abs(this.speed) < CONST.walkFaceSpeed)) ||
+      this.state === 'grind';
+    if (facingApplies) {
       const vx = this.pos.x - this.prevPos.x;
       const vz = this.pos.z - this.prevPos.z;
       if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
-        targetYaw = wrapAngle(Math.atan2(vx, vz) - this.heading);
+        targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
       } else {
         targetYaw = this.visualYaw; // idle: keep facing where we last walked
       }

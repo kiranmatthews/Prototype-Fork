@@ -39,7 +39,6 @@ export class Level {
   finishZ = -830;
   endWallZ = -846; // authored hard stop after the finish gate
   spawnPos = new THREE.Vector3(0, 0.1, 0);
-  spawnHeading = Math.PI; // facing -Z
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
 
   private scene: THREE.Scene;
