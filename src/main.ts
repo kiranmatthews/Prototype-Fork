@@ -3,7 +3,7 @@
 
 import * as THREE from 'three';
 import { Input } from './input';
-import { Level } from './level';
+import { Level, LEVEL_NAMES } from './level';
 import { Player } from './player';
 import { UI } from './ui';
 import { TUNING, CONST } from './tuning';
@@ -36,9 +36,29 @@ resize();
 
 const input = new Input();
 const ui = new UI();
-const level = new Level(scene);
+let currentCourse = Math.min(2, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
+let level = new Level(scene, currentCourse);
 const player = new Player(scene);
 player.respawn(level, true);
+
+function switchLevel(id: number): void {
+  currentCourse = id;
+  localStorage.setItem('protoLevel', String(id));
+  level.dispose();
+  level = new Level(scene, id);
+  player.respawn(level, true);
+  ui.setLevel(id);
+  ui.showMessage(LEVEL_NAMES[id].toUpperCase(), '', 1400);
+  (window as unknown as Record<string, unknown>).__game &&
+    (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
+}
+ui.onLevelSelect = switchLevel;
+ui.setLevel(currentCourse);
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Digit1') switchLevel(0);
+  if (e.code === 'Digit2') switchLevel(1);
+  if (e.code === 'Digit3') switchLevel(2);
+});
 
 player.onDeath = () => {
   ui.flash();
@@ -115,4 +135,4 @@ function frame(): void {
 frame();
 
 // Smoke-test / console-poking hook.
-(window as unknown as Record<string, unknown>).__game = { player, level, input, TUNING };
+(window as unknown as Record<string, unknown>).__game = { player, level, input, TUNING, switchLevel };

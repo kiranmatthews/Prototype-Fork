@@ -34,6 +34,8 @@ export interface Checkpoint {
   savedFruit: number; // wumpa counter captured when this was broken
 }
 
+export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate'];
+
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
   crates: Crate[] = [];
@@ -48,15 +50,33 @@ export class Level {
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
   halfpipeLipY = -6.2; // top of the halfpipe transition (vert launch height)
+  killY = -48; // per-level death height
+  name = LEVEL_NAMES[0];
 
   private scene: THREE.Scene;
+  private root = new THREE.Group(); // everything the level owns, for disposal
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private arrowTex: THREE.CanvasTexture | null = null;
 
-  constructor(scene: THREE.Scene) {
+  constructor(scene: THREE.Scene, courseId = 0) {
     this.scene = scene;
-    this.build();
+    scene.add(this.root);
+    this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
+    if (courseId === 1) this.buildNSanity();
+    else if (courseId === 2) this.buildGreatGate();
+    else this.buildTestCourse();
+  }
+
+  dispose(): void {
+    this.root.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.geometry) m.geometry.dispose();
+      const mat = m.material as THREE.Material | THREE.Material[] | undefined;
+      if (Array.isArray(mat)) mat.forEach((x) => x.dispose());
+      else mat?.dispose();
+    });
+    this.scene.remove(this.root);
   }
 
   get totalCrates(): number {
@@ -176,7 +196,7 @@ export class Level {
 
   // ---------------------------------------------------------------- build --
 
-  private build(): void {
+  private buildTestCourse(): void {
     const matA = new THREE.MeshLambertMaterial({ color: 0x8a8f9a });
     const matB = new THREE.MeshLambertMaterial({ color: 0x767b87 });
     const matRamp = new THREE.MeshLambertMaterial({ color: 0x7d95a5 });
@@ -193,7 +213,7 @@ export class Level {
     );
     penMesh.position.set(25, -0.5, -13);
     penMesh.name = 'practice pen';
-    this.scene.add(penMesh);
+    this.root.add(penMesh);
     this.groundMeshes.push(penMesh);
     // Perimeter walls (also backstop the beach so you can't fall off the start).
     this.wall(15, 15, 52, 1, 0); // north, spans beach + pen
@@ -257,7 +277,7 @@ export class Level {
     );
     pit.rotation.x = -Math.PI / 2;
     pit.position.set(0, -60, -420);
-    this.scene.add(pit);
+    this.root.add(pit);
 
     // --- grind rails ---
     const rail1 = new Rail([
@@ -291,7 +311,7 @@ export class Level {
 
     for (const rail of [rail1, rail2, lipL, lipR, yardL, yardC, yardR, penStraight, penZigzag, penHigh]) {
       this.rails.push(rail);
-      this.scene.add(rail.object);
+      this.root.add(rail.object);
     }
 
     // --- crates ---
@@ -376,25 +396,193 @@ export class Level {
     // --- extra enemy guarding the rail yard landing ---
     this.enemy(-4, 4, -13.5, -876, 6);
 
-    // --- finish gate ---
+    // --- finish gate + end wall ---
     this.finishGate(-22, this.finishZ);
-    this.finishBox.setFromCenterAndSize(
-      new THREE.Vector3(0, -22 + 15, this.finishZ),
-      new THREE.Vector3(12, 30, 2),
-    );
-
-    // --- end wall (visual for the authored hard stop) ---
-    const wall = new THREE.Mesh(
-      new THREE.BoxGeometry(12, 4, 1),
-      new THREE.MeshLambertMaterial({ color: 0x5a5f6a }),
-    );
-    wall.position.set(0, -22 + 2, this.endWallZ - 1);
-    this.scene.add(wall);
+    this.endWall(-22);
   }
 
   // Deck height along the final downhill ramp (for crate placement).
   private downhillY(z: number): number {
     return THREE.MathUtils.mapLinear(z, -885, -940, -13.5, -22);
+  }
+
+  // Crash 1 level 1: beach -> winding jungle path -> forked ruin path ->
+  // water gaps -> stone ruins -> uphill to the exit gate. Gentle, crab-heavy.
+  private buildNSanity(): void {
+    const matSand = new THREE.MeshLambertMaterial({ color: 0xc9b87a });
+    const matJungle = new THREE.MeshLambertMaterial({ color: 0x6f8f5e });
+    const matStone = new THREE.MeshLambertMaterial({ color: 0x7d8288 });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
+
+    this.killY = -30;
+    this.finishZ = -440;
+    this.endWallZ = -464;
+
+    // water far below the gaps
+    const sea = new THREE.Mesh(
+      new THREE.PlaneGeometry(900, 900),
+      new THREE.MeshBasicMaterial({ color: 0x1a3448 }),
+    );
+    sea.rotation.x = -Math.PI / 2;
+    sea.position.set(0, -40, -230);
+    this.root.add(sea);
+
+    // beach start (walled at the back and sides, like the cove)
+    this.slab('beach', 14, -30, 0, 22, matSand);
+    this.wall(0, 15.5, 26, 1, 0);
+    this.wall(-11.5, -8, 1, 48, 0);
+    this.wall(11.5, -8, 1, 48, 0);
+    this.crate(3, 0, -5);
+    this.crate(4.5, 0, -5);
+    this.crate(3.75, 1.2, -5); // little beach pyramid
+
+    // sand path inland
+    this.slab('sand path', -30, -90, 0, 12, matSand);
+    this.crate(2, 0, -45);
+    this.crate(-3, 0, -60);
+    this.crate(0, 0, -75);
+    this.crate(0, 1.2, -75); // stack
+    this.enemy(-3, 3, 0, -70, 3);
+
+    // water gap 1
+    // -90 .. -102
+    this.ramp('jungle rise', -102, 0, -112, 1.5, 12, matRamp);
+    this.slab('jungle path', -112, -150, 1.5, 10, matJungle);
+    this.crate(-2.5, 1.5, -128);
+    this.crate(2.5, 1.5, -140);
+    this.enemy(-3.5, 3.5, 1.5, -135, 4);
+
+    // forked path around a ruin block
+    this.slab('forked path', -150, -205, 1.5, 14, matJungle);
+    this.wall(0, -177, 4, 40, 1.5, 3); // the ruin wall splitting the lanes
+    this.crate(-4, 1.5, -165);
+    this.crate(-4, 1.5, -185);
+    this.crate(4, 1.5, -172);
+    this.crate(3.5, 1.5, -190, 'nitro'); // right lane is the greedy lane
+    this.enemy(-5, -2.5, 1.5, -196, 3);
+
+    // rejoin, checkpoint, more crabs
+    this.slab('ruin approach', -205, -250, 1.5, 12, matJungle);
+    this.checkpoint(1.5, -215);
+    this.enemy(-4, 4, 1.5, -230, 5);
+    this.crate(0, 1.5, -240);
+    this.crate(0, 2.7, -240); // stack
+
+    // water gap 2 with an optional log rail
+    // -250 .. -264
+    const logRail = new Rail([new THREE.Vector3(0, 2.4, -248), new THREE.Vector3(0, 2.4, -266)]);
+    this.rails.push(logRail);
+    this.root.add(logRail.object);
+
+    // stone ruins
+    this.slab('stone ruins', -264, -310, 1.5, 12, matStone);
+    for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 1.5, -285); // ruin crate wall
+    this.crate(4, 1.5, -300, 'bouncy');
+
+    // climb to the exit
+    this.ramp('temple ramp', -310, 1.5, -340, 6, 10, matRamp);
+    this.slab('temple top', -340, -420, 6, 12, matStone);
+    this.enemy(-4, 4, 6, -370, 6);
+    this.checkpoint(6, -390);
+    this.crate(-4.5, 6, -405, 'nitro');
+    this.crate(4.5, 6, -405, 'nitro');
+    this.crate(0, 6, -405);
+
+    this.slab('exit', -420, -470, 6, 14, matSand);
+    this.finishGate(6, this.finishZ);
+    this.endWall(6);
+  }
+
+  // Crash 1 level 2: climb the great wall. Ascending walkways with gaps, a
+  // rising scaffold rail, stair-step hops, and a nitro rampart near the top.
+  private buildGreatGate(): void {
+    const matWood = new THREE.MeshLambertMaterial({ color: 0x8a6b4a });
+    const matWood2 = new THREE.MeshLambertMaterial({ color: 0x75593c });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0x9a7a52 });
+
+    this.killY = -20;
+    this.finishZ = -415;
+    this.endWallZ = -428;
+
+    // hazy ground far below the wall
+    const haze = new THREE.Mesh(
+      new THREE.PlaneGeometry(900, 900),
+      new THREE.MeshBasicMaterial({ color: 0x2b2137 }),
+    );
+    haze.rotation.x = -Math.PI / 2;
+    haze.position.set(0, -32, -220);
+    this.root.add(haze);
+
+    // base of the gate
+    this.slab('gate base', 10, -20, 0, 14, matWood);
+    this.wall(0, 11, 16, 1, 0);
+    this.wall(-7.5, -5, 1, 32, 0);
+    this.wall(7.5, -5, 1, 32, 0);
+    this.crate(-3, 0, -10);
+    this.crate(3, 0, -14);
+
+    // ascent A: two ramps with a gap between
+    this.ramp('rampart A', -20, 0, -58, 4, 8, matRamp);
+    // gap: -58 .. -66
+    this.ramp('rampart A2', -66, 4.4, -100, 8, 8, matRamp);
+
+    // rest platform 1
+    this.slab('landing 1', -100, -125, 8, 10, matWood2);
+    this.checkpoint(8, -110);
+    this.crate(-3, 8, -105);
+    this.crate(3, 8, -105);
+    this.enemy(-3, 3, 8, -118, 4);
+
+    // ascent B: gap mid-way, with a rising scaffold rail as the smooth line
+    this.ramp('rampart B', -125, 8, -160, 13, 8, matRamp);
+    // gap: -160 .. -170
+    this.ramp('rampart B2', -170, 13.5, -205, 18, 8, matRamp);
+    const scaffold = new Rail([
+      new THREE.Vector3(5, 8.8, -128),
+      new THREE.Vector3(5, 13.6, -164),
+      new THREE.Vector3(5, 18.6, -202),
+    ]);
+    this.rails.push(scaffold);
+    this.root.add(scaffold.object);
+
+    // rest platform 2
+    this.slab('landing 2', -205, -230, 18, 10, matWood2);
+    this.checkpoint(18, -212);
+    for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 18, -221); // plank wall
+    this.enemy(-3, 3, 18, -227, 5);
+
+    // stair steps up (hop, or bounce the arrow crate to skip two)
+    const steps: [number, number][] = [
+      [-230, 20.2],
+      [-244, 22.4],
+      [-258, 24.6],
+      [-272, 26.8],
+      [-286, 29],
+    ];
+    for (const [z0, y] of steps) this.slab('step', z0, z0 - 8, y, 8, matWood);
+    this.crate(0, 22.4, -248, 'bouncy');
+    this.crate(2, 20.2, -234);
+
+    // nitro rampart along the top, with a high bypass rail beside it
+    this.slab('high rampart', -294, -360, 29, 8, matWood2);
+    this.crate(0, 29, -310, 'nitro');
+    this.crate(0, 29, -325, 'nitro');
+    this.crate(0, 29, -340, 'nitro');
+    this.crate(-3, 29, -330);
+    this.crate(3, 29, -318);
+    this.enemy(-3.2, 3.2, 29, -334, 6);
+    const bypass = new Rail([new THREE.Vector3(-5, 30.8, -300), new THREE.Vector3(-5, 30.8, -358)]);
+    this.rails.push(bypass);
+    this.root.add(bypass.object);
+
+    // crest of the gate
+    this.ramp('crest ramp', -360, 29, -380, 33, 10, matRamp);
+    this.slab('gate top', -380, -430, 33, 14, matWood);
+    this.checkpoint(33, -390);
+    this.crate(-4, 33, -400);
+    this.crate(4, 33, -400);
+    this.finishGate(33, this.finishZ);
+    this.endWall(33);
   }
 
   // Flat deck. z0 is the near (higher z) edge, z1 the far edge, topY the
@@ -404,7 +592,7 @@ export class Level {
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, 1, depth), mat);
     mesh.position.set(0, topY - 0.5, (z0 + z1) / 2);
     mesh.name = name;
-    this.scene.add(mesh);
+    this.root.add(mesh);
     this.groundMeshes.push(mesh);
     this.curbs(z0, z1, topY, width);
   }
@@ -426,7 +614,7 @@ export class Level {
       .set(0, (y0 + y1) / 2, (z0 + z1) / 2)
       .addScaledVector(normal, -0.5);
     mesh.name = name;
-    this.scene.add(mesh);
+    this.root.add(mesh);
     this.groundMeshes.push(mesh);
   }
 
@@ -456,7 +644,7 @@ export class Level {
       .set((xIn + xOut) / 2, (yBase + yTop) / 2, (z0 + z1) / 2)
       .addScaledVector(normal, -0.5);
     mesh.name = name;
-    this.scene.add(mesh);
+    this.root.add(mesh);
     this.groundMeshes.push(mesh);
     return mesh;
   }
@@ -468,7 +656,7 @@ export class Level {
       new THREE.MeshLambertMaterial({ color: 0x5a5f6a }),
     );
     mesh.position.set(cx, baseY + h / 2, cz);
-    this.scene.add(mesh);
+    this.root.add(mesh);
     this.walls.push(
       new THREE.Box3().setFromCenterAndSize(mesh.position.clone(), new THREE.Vector3(w, h, d)),
     );
@@ -481,7 +669,7 @@ export class Level {
     for (const side of [-1, 1]) {
       const curb = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.22, depth), mat);
       curb.position.set(side * (width / 2 - 0.2), topY + 0.11, (z0 + z1) / 2);
-      this.scene.add(curb);
+      this.root.add(curb);
     }
   }
 
@@ -499,7 +687,7 @@ export class Level {
     mesh.position.set(x, deckY + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
     if (!kind) mesh.rotation.y = 0.15;
-    this.scene.add(mesh);
+    this.root.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),
       new THREE.Vector3(size, size, size),
@@ -547,7 +735,7 @@ export class Level {
       group.add(eye);
     }
     group.position.set((x0 + x1) / 2, deckY, z);
-    this.scene.add(group);
+    this.root.add(group);
     this.enemies.push({ group, box: new THREE.Box3(), alive: true, x0, x1, dir: 1, speed });
   }
 
@@ -561,7 +749,7 @@ export class Level {
       new THREE.MeshLambertMaterial({ color: 0x4aa0e0, emissive: 0x123049 }),
     );
     mesh.position.set(0, deckY + size / 2, z);
-    this.scene.add(mesh);
+    this.root.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),
       new THREE.Vector3(size, size, size),
@@ -577,12 +765,25 @@ export class Level {
     });
   }
 
+  private endWall(deckY: number): void {
+    const wall = new THREE.Mesh(
+      new THREE.BoxGeometry(14, 4, 1),
+      new THREE.MeshLambertMaterial({ color: 0x5a5f6a }),
+    );
+    wall.position.set(0, deckY + 2, this.endWallZ - 1);
+    this.root.add(wall);
+  }
+
   private finishGate(deckY: number, z: number): void {
+    this.finishBox.setFromCenterAndSize(
+      new THREE.Vector3(0, deckY + 15, z),
+      new THREE.Vector3(14, 30, 2),
+    );
     const postMat = new THREE.MeshLambertMaterial({ color: 0xd8d8d8 });
     for (const side of [-1, 1]) {
       const post = new THREE.Mesh(new THREE.BoxGeometry(0.5, 7, 0.5), postMat);
       post.position.set(side * 5.5, deckY + 3.5, z);
-      this.scene.add(post);
+      this.root.add(post);
     }
     const canvas = document.createElement('canvas');
     canvas.width = 64;
@@ -601,6 +802,6 @@ export class Level {
       new THREE.MeshBasicMaterial({ map: tex }),
     );
     banner.position.set(0, deckY + 6.4, z);
-    this.scene.add(banner);
+    this.root.add(banner);
   }
 }

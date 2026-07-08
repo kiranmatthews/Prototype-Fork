@@ -1,6 +1,7 @@
 // DOM debug/tuning overlay: live stats on the left, tuning sliders on the
 // right, big center messages for death/finish. Deliberately ugly and dense.
 
+import { LEVEL_NAMES } from './level';
 import { TUNING, TUNING_RANGES, TuningKey } from './tuning';
 
 export interface Stats {
@@ -25,11 +26,30 @@ export class UI {
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private msgTimer: number | undefined;
+  private levelButtons: HTMLElement[] = [];
+
+  // wired up by main.ts
+  onLevelSelect: (id: number) => void = () => {};
 
   constructor() {
     this.injectStyle();
 
-    const stats = div('hud-stats');
+    const statsWrap = div('hud-stats');
+    const levelRow = div('hud-levelrow');
+    LEVEL_NAMES.forEach((name, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'hud-levelbtn';
+      btn.textContent = `${i + 1}· ${name}`;
+      btn.addEventListener('click', () => {
+        this.onLevelSelect(i);
+        btn.blur(); // give the keyboard back to the game
+      });
+      levelRow.appendChild(btn);
+      this.levelButtons.push(btn);
+    });
+    statsWrap.appendChild(levelRow);
+    const stats = div('hud-statlines');
+    statsWrap.appendChild(stats);
     this.statsEl = stats;
 
     const panel = div('hud-tuning');
@@ -61,9 +81,13 @@ export class UI {
     this.balanceWrap.appendChild(this.balanceNeedle);
     this.balanceWrap.style.display = 'none';
 
-    for (const el of [stats, panel, help, this.msgWrap, this.flashEl, this.balanceWrap]) {
+    for (const el of [statsWrap, panel, help, this.msgWrap, this.flashEl, this.balanceWrap]) {
       document.body.appendChild(el);
     }
+  }
+
+  setLevel(id: number): void {
+    this.levelButtons.forEach((b, i) => b.classList.toggle('active', i === id));
   }
 
   // value in [-1, 1]; pegging either end is a bail.
@@ -153,6 +177,13 @@ export class UI {
       .hud-tuning { top: 10px; right: 10px; width: 250px; max-height: calc(100vh - 80px); overflow-y: auto; }
       .hud-help { bottom: 10px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
+      .hud-levelrow { display: flex; gap: 4px; margin-bottom: 6px; }
+      .hud-levelbtn {
+        flex: 1; font: 10px ui-monospace, Menlo, Consolas, monospace;
+        background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152;
+        border-radius: 3px; padding: 3px 2px; cursor: pointer; white-space: nowrap;
+      }
+      .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
       .hud-row { display: flex; justify-content: space-between; gap: 12px; }
       .hud-row b { color: #eef4ff; font-weight: normal; }
       .hud-slider { display: grid; grid-template-columns: 110px 1fr 34px; gap: 6px; align-items: center; }

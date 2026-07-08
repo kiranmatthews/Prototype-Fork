@@ -252,7 +252,7 @@ export class Player {
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
-      if (this.pos.y < CONST.killY) this.die();
+      if (this.pos.y < level.killY) this.die();
     }
 
     this.syncVisual(input, dt);
