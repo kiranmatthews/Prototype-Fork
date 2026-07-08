@@ -18,6 +18,7 @@ export const TUNING = {
   spinDuration: 0.3,
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
   reverseSpeed: 18, // Crash-style backing up on stick-down
+  turnaround: 150, // braking rate when input opposes travel — snappy direction flips
   grabBoost: 8, // speed burst on landing a Circle/Q air grab
   crateBounce: 18, // vertical pop from stomping a crate — tuned for chaining crate to crate
   slideJumpBoost: 8, // extra speed when a Circle/Q ground slide is strung into a jump
@@ -45,6 +46,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   reverseSpeed: { min: 2, max: 20, step: 1 },
+  turnaround: { min: 40, max: 300, step: 5 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   slideJumpBoost: { min: 0, max: 20, step: 0.5 },
@@ -57,7 +59,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 // to keep the panel focused.
 export const CONST = {
   fixedStep: 1 / 60, // deterministic chunky update rate
-  brakePower: 34, // pulling back on the stick
+  brakePower: 90, // reverse build rate once you're already stopped/backing
   overspeedDecay: 3, // bleed rate when above maxSpeed on flat ground
   maxOverspeed: 1.6, // hard cap = maxSpeed * this (downhill can exceed maxSpeed)
   killY: -48, // fall below this = instant death

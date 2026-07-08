@@ -255,14 +255,17 @@ export class Player {
   // ---------------------------------------------------------------- states --
 
   private stepRide(dt: number, input: Input, level: Level): void {
-    // Authored accel / brake / reverse / friction. Holding down brakes through
-    // zero into a capped backward roll, like backing up in Crash.
+    // Authored accel / brake / reverse / friction. Input that OPPOSES current
+    // travel uses the much stronger turnaround rate, so flipping direction is
+    // snappy instead of a long sticky brake.
     if (input.moveY > 0.05) {
+      const rate = this.speed < -0.01 ? TUNING.turnaround : TUNING.acceleration;
       if (this.speed < TUNING.maxSpeed) {
-        this.speed = Math.min(this.speed + TUNING.acceleration * input.moveY * dt, TUNING.maxSpeed);
+        this.speed = Math.min(this.speed + rate * input.moveY * dt, TUNING.maxSpeed);
       }
     } else if (input.moveY < -0.05) {
-      this.speed = Math.max(-TUNING.reverseSpeed, this.speed + CONST.brakePower * input.moveY * dt);
+      const rate = this.speed > 0.01 ? TUNING.turnaround : CONST.brakePower;
+      this.speed = Math.max(-TUNING.reverseSpeed, this.speed + rate * input.moveY * dt);
     } else if (this.slideTimer <= 0) {
       // No friction while sliding — the slide keeps its momentum.
       const drop = TUNING.friction * dt;
@@ -634,7 +637,10 @@ export class Player {
       if (this.spinning && this.spinBox.intersectsBox(e.box)) {
         level.killEnemy(e);
       } else if (this.playerBox.intersectsBox(e.box)) {
-        if (this.isStomping(e.box)) {
+        if (this.sliding) {
+          // Crash 3 rules: the slide takes out enemies too.
+          level.killEnemy(e);
+        } else if (this.isStomping(e.box)) {
           // Crash rules: jumping on an enemy squashes it and bounces you.
           level.killEnemy(e);
           this.vVel = TUNING.crateBounce;
