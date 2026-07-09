@@ -106,6 +106,7 @@ export class Player {
   private armR: THREE.Mesh | null = null;
   private armL: THREE.Mesh | null = null;
   private legs: THREE.Mesh | null = null;
+  private boardG: THREE.Group | null = null; // board + wheels: pulled up during grabs
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
@@ -285,9 +286,10 @@ export class Player {
       if (this.comboTimer <= 0) this.bankCombo();
     }
 
-    // Circle/Q on the ground at speed fires a brief canned slide: direction
-    // locked, a shove of speed, smashes crates. (Stopped, holding it crawls
-    // instead — see stepRide. In the air it's a grab.)
+    // Circle/Q on the ground while moving fires a brief canned slide:
+    // direction locked, bursts to slideSpeed, smashes crates. All three feel
+    // numbers (trigger threshold, duration, speed) are sliders. (Stopped,
+    // holding it crawls instead — see stepRide. In the air it's a grab.)
     if (
       input.grabPressed &&
       this.state === 'ride' &&
@@ -295,12 +297,12 @@ export class Player {
       !this.crawling &&
       this.slideTimer <= 0 &&
       this.slideCd <= 0 &&
-      Math.abs(this.speed) >= CONST.slideMinSpeed
+      Math.abs(this.speed) >= TUNING.slideMinSpeed
     ) {
-      this.slideTimer = CONST.slideDuration;
+      this.slideTimer = TUNING.slideDuration;
       const cap = TUNING.maxSpeed * CONST.maxOverspeed;
       this.speed = THREE.MathUtils.clamp(
-        this.speed + CONST.slideInitBoost * Math.sign(this.speed),
+        Math.sign(this.speed || 1) * Math.max(Math.abs(this.speed), TUNING.slideSpeed),
         -cap,
         cap,
       );
@@ -433,6 +435,7 @@ export class Player {
       this.slideCd = CONST.slideCooldown;
       this.awardTrick(0.15); // slide-jump chain
     }
+    this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
     this.state = 'air';
     this.grounded = false;
@@ -446,11 +449,18 @@ export class Player {
   private stepRide(dt: number, input: Input, level: Level): void {
     // Crash crouch-crawl: holding Circle while (nearly) stopped drops you into
     // a low, slow, precise crawl — direct velocity, no inertia, until release.
-    if (input.grabHeld && (this.crawling || (Math.abs(this.speed) < CONST.slideMinSpeed && this.slideTimer <= 0))) {
+    if (input.grabHeld && (this.crawling || (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))) {
       this.crawling = true;
     } else {
       this.crawling = false;
     }
+
+    // Walk vs skate: on foot by default (Crash direct drive); holding X puts
+    // the board down and builds speed, and any carried momentum — downhill,
+    // rail exits, slides, boosts — keeps you skating until it bleeds back to
+    // walking pace.
+    const skating =
+      this.charging || this.slideTimer > 0 || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
 
     // Was the last step on halfpipe surface? There, lateral movement is an
     // inertial carve (build speed on the flat, carry it up the transition)
@@ -461,35 +471,38 @@ export class Player {
       // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction.
       this.speed = input.moveY * TUNING.crawlSpeed;
       this.lastGrade = 0;
-      this.pos.addScaledVector(FORWARD, this.speed * dt);
-      if (Math.abs(input.moveX) > 0.05) {
-        this.pos.x += input.moveX * TUNING.crawlSpeed * dt;
-      }
+    } else if (!skating) {
+      // WALK: direct drive, instant start and stop, no inertia, no slope
+      // physics — precise Crash platforming in all four directions.
+      this.speed = input.moveY * TUNING.walkSpeed;
+      this.lastGrade = 0;
     } else {
-      // Authored accel / brake / friction — fully symmetric: forward and back
-      // share the same accel, top speed, and caps. Input that OPPOSES current
-      // travel uses the much stronger turnaround rate, so flipping direction is
-      // snappy instead of a long sticky brake. A slide is canned: it ignores the
-      // stick entirely and keeps its momentum.
+      // SKATE: authored momentum. X (charge) is the only accelerator; input
+      // against travel brakes hard (turnaround); input with travel coasts
+      // easy; no input bleeds friction back toward walking pace. A slide is
+      // canned: it ignores the stick entirely and keeps its momentum.
       if (this.slideTimer > 0) {
         // direction locked — no input, no friction
-      } else if (input.moveY > 0.05) {
-        const rate = this.speed < -0.01 ? TUNING.turnaround : TUNING.acceleration;
-        if (this.speed < TUNING.maxSpeed) {
-          this.speed = Math.min(this.speed + rate * input.moveY * dt, TUNING.maxSpeed);
-        }
-      } else if (input.moveY < -0.05) {
-        const rate = this.speed > 0.01 ? TUNING.turnaround : TUNING.acceleration;
-        if (this.speed > -TUNING.maxSpeed) {
-          this.speed = Math.max(this.speed + rate * input.moveY * dt, -TUNING.maxSpeed);
-        }
+      } else if (this.charging) {
+        // build toward maxSpeed in the stick's direction (forward if idle)
+        const dir = Math.abs(input.moveY) > 0.05 ? Math.sign(input.moveY) : Math.sign(this.speed || 1);
+        const rate = dir * this.speed < -0.01 ? TUNING.turnaround : TUNING.chargeBoost;
+        this.speed = THREE.MathUtils.clamp(
+          this.speed + rate * dir * dt,
+          -TUNING.maxSpeed,
+          TUNING.maxSpeed,
+        );
+      } else if (Math.abs(input.moveY) > 0.05 && input.moveY * this.speed < 0) {
+        // stick against travel: snappy brake (crossing walking pace drops
+        // you onto your feet, where the walk logic takes the stick)
+        this.speed += TUNING.turnaround * Math.sign(input.moveY) * dt;
+      } else if (Math.abs(input.moveY) > 0.05) {
+        // stick with travel: easy coast, light bleed
+        const drop = TUNING.friction * 0.35 * dt;
+        this.speed -= Math.sign(this.speed) * Math.min(drop, Math.abs(this.speed));
       } else {
-        // Below stopSpeed, coasting halts almost instantly (Crash walk feel) so
-        // box puzzles and platforming are precise; above it, momentum carries
-        // and has to be managed.
-        const f = Math.abs(this.speed) < TUNING.stopSpeed ? CONST.stopFriction : TUNING.friction;
-        const drop = f * dt;
-        this.speed = Math.abs(this.speed) <= drop ? 0 : this.speed - Math.sign(this.speed) * drop;
+        const drop = TUNING.friction * dt;
+        this.speed -= Math.sign(this.speed) * Math.min(drop, Math.abs(this.speed));
       }
 
       // Fake slope response from the ground normal: grade > 0 means the surface
@@ -514,32 +527,34 @@ export class Player {
           Math.sign(this.speed) *
           Math.max(TUNING.maxSpeed, Math.abs(this.speed) - CONST.overspeedDecay * dt);
       }
+    }
 
-      this.pos.addScaledVector(FORWARD, this.speed * dt);
+    this.pos.addScaledVector(FORWARD, this.speed * dt);
 
-      if (pipeMode) {
-        // Halfpipe carve: the stick accelerates an inertial lateral velocity
-        // (pump!), the flat bleeds a little, and the transition's steepness
-        // fights the climb — whatever survives to the lip becomes air.
-        this.pipeVel += input.moveX * TUNING.pipeAccel * dt;
-        if (this.groundHit!.hpWall) {
-          const outward = Math.sign(this.pos.x) || 1;
-          const steep = Math.min(1, Math.abs(this.groundHit!.normal.x));
-          this.pipeVel -= outward * CONST.pipeGravity * steep * dt;
-        } else if (Math.abs(input.moveX) < 0.05) {
-          const drop = CONST.pipeFriction * dt;
-          this.pipeVel = Math.abs(this.pipeVel) <= drop ? 0 : this.pipeVel - Math.sign(this.pipeVel) * drop;
-        }
-        this.pipeVel = THREE.MathUtils.clamp(this.pipeVel, -CONST.pipeMaxVel, CONST.pipeMaxVel);
-        this.pos.x += this.pipeVel * dt;
-      } else {
-        this.pipeVel = 0;
-        // Axis-locked sidestep: direct velocity while held, dead stop on
-        // release. Left is ALWAYS screen-left, even while backing up. Slides
-        // are direction locked: no steering mid-slide.
-        if (this.slideTimer <= 0 && Math.abs(input.moveX) > 0.05) {
-          this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
-        }
+    if (pipeMode) {
+      // Halfpipe carve: the stick accelerates an inertial lateral velocity
+      // (pump!), the flat bleeds a little, and the transition's steepness
+      // fights the climb — whatever survives to the lip becomes air.
+      this.pipeVel += input.moveX * TUNING.pipeAccel * dt;
+      if (this.groundHit!.hpWall) {
+        const outward = Math.sign(this.pos.x) || 1;
+        const steep = Math.min(1, Math.abs(this.groundHit!.normal.x));
+        this.pipeVel -= outward * CONST.pipeGravity * steep * dt;
+      } else if (Math.abs(input.moveX) < 0.05) {
+        const drop = CONST.pipeFriction * dt;
+        this.pipeVel = Math.abs(this.pipeVel) <= drop ? 0 : this.pipeVel - Math.sign(this.pipeVel) * drop;
+      }
+      this.pipeVel = THREE.MathUtils.clamp(this.pipeVel, -CONST.pipeMaxVel, CONST.pipeMaxVel);
+      this.pos.x += this.pipeVel * dt;
+    } else {
+      this.pipeVel = 0;
+      // Axis-locked sidestep: direct velocity while held, dead stop on
+      // release. Left is ALWAYS screen-left, even while backing up. Slides
+      // are direction locked: no steering mid-slide.
+      if (this.crawling) {
+        if (Math.abs(input.moveX) > 0.05) this.pos.x += input.moveX * TUNING.crawlSpeed * dt;
+      } else if (this.slideTimer <= 0 && Math.abs(input.moveX) > 0.05) {
+        this.pos.x += input.moveX * (skating ? TUNING.lateralSpeed : TUNING.walkSpeed) * dt;
       }
     }
 
@@ -599,16 +614,13 @@ export class Player {
       this.coyoteTimer = CONST.coyoteTime;
     }
 
-    // Charge jump: holding X crouches, builds jump power, and pumps speed;
-    // releasing fires the jump (coyote grace applies at ledges). A quick tap
-    // still gives a serviceable hop.
+    // Charge jump: holding X drops the board, crouches, builds jump power,
+    // and skates (the speed build lives in the skate branch above); releasing
+    // fires the jump (coyote grace applies at ledges). A quick tap still
+    // gives a serviceable hop.
     if (this.state === 'ride' && input.jumpHeld) {
       this.charging = true;
       this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
-      if (!this.crawling && Math.abs(this.speed) < TUNING.maxSpeed && Math.abs(this.speed) > 0.5) {
-        const s = Math.sign(this.speed);
-        this.speed = s * Math.min(Math.abs(this.speed) + TUNING.chargeBoost * dt, TUNING.maxSpeed);
-      }
     }
     if (input.jumpReleased && this.charging && (this.state === 'ride' || this.coyoteTimer > 0)) {
       this.chargedJump();
@@ -765,6 +777,8 @@ export class Player {
         this.grabSpinTotal = 0;
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
+      // Safe landing = the combo is over: bank it on the spot.
+      this.bankCombo();
       return;
     }
     // No assisted rail snap here on purpose: THPS2 rules — you have to be
@@ -793,8 +807,11 @@ export class Player {
     for (const e of level.enemies) {
       if (e.alive && e.group.position.distanceTo(this.pos) < CONST.slamRadius + 0.6) {
         level.killEnemy(e);
+        this.score(CONST.ptsEnemy);
       }
     }
+    // A landed slam is a safe landing too: bank the string.
+    this.bankCombo();
   }
 
   // Botched a grab landing: tumble out and eat the respawn.
@@ -1439,28 +1456,28 @@ export class Player {
     // up = nosegrab (pitch forward), left = melon (other hand, lean left),
     // right = indy (lean right). Left/right also spin (see updateGrab).
     const raw = this.rawInput;
-    let pitchT = 0.7;
+    let pitchT = 0.9;
     let rollT = 0;
-    let armRT = 2.2; // right hand on the board
-    let armLT = -1.4; // left arm thrown high
+    let armRT = 2.4; // right hand on the board
+    let armLT = -1.9; // left arm thrown high
     if (this.grabbing) {
       if (raw.moveY > 0.4) {
-        pitchT = 1.05; // nosegrab: pitched hard over the nose
-        armRT = 2.5;
-        armLT = -1.7;
+        pitchT = 1.25; // nosegrab: pitched hard over the nose
+        armRT = 2.7;
+        armLT = -2.2;
       } else if (raw.moveX < -0.4) {
-        pitchT = 0.55; // melon: leading hand swaps, lean left
-        rollT = -0.35;
-        armRT = -1.4;
-        armLT = 2.2;
+        pitchT = 0.6; // melon: leading hand swaps, lean left
+        rollT = -0.5;
+        armRT = -1.9;
+        armLT = 2.4;
       } else if (raw.moveX > 0.4) {
-        pitchT = 0.55; // indy: lean right
-        rollT = 0.35;
-        armRT = 2.4;
-        armLT = -1.1;
+        pitchT = 0.6; // indy: lean right
+        rollT = 0.5;
+        armRT = 2.6;
+        armLT = -1.4;
       }
     }
-    const poseBlend = Math.min(1, 10 * dt);
+    const poseBlend = Math.min(1, 12 * dt);
     this.grabPitch += (pitchT - this.grabPitch) * poseBlend;
     this.grabRoll += (rollT - this.grabRoll) * poseBlend;
     this.armRPose += (armRT - this.armRPose) * poseBlend;
@@ -1473,11 +1490,25 @@ export class Player {
       this.armL.rotation.x = this.armLPose * this.grabPose;
       this.armL.rotation.z = -0.25 + this.grabPose * 0.45;
     }
-    // Knees up: legs shorten toward the hips while the body crouches deep.
+    // Knees up: legs shorten toward the hips while the body crouches deep,
+    // and the board comes up with them, into the grabbing hand.
     if (this.legs) {
-      const tuck = 1 - 0.45 * this.grabPose;
+      const tuck = 1 - 0.5 * this.grabPose;
       this.legs.scale.y = tuck;
       this.legs.position.y = 0.71 - 0.25 * tuck;
+    }
+    if (this.boardG) {
+      this.boardG.position.y = 0.5 * this.grabPose;
+      this.boardG.rotation.x = 0.3 * this.grabPose; // nose tips up in the hand
+      // On foot the board is stowed — it reappears the moment you're skating
+      // (charging, sliding, grinding, carrying speed) or holding a grab.
+      this.boardG.visible =
+        this.state === 'grind' ||
+        this.charging ||
+        this.slideTimer > 0 ||
+        this.vertLock ||
+        this.grabPose > 0.05 ||
+        Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
     }
     this.bodyGroup.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
@@ -1529,7 +1560,7 @@ export class Player {
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     this.bodyGroup.position.y =
-      this.grabPose * -0.3 - this.slidePose * 0.32 - this.chargePose * 0.26;
+      this.grabPose * -0.5 - this.slidePose * 0.32 - this.chargePose * 0.26;
     // Impact squash right after a slam lands.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
     this.bodyGroup.scale.y = 1.18 * (1 - 0.6 * squash);
@@ -1552,19 +1583,23 @@ export class Player {
   private buildVisual(): THREE.Group {
     const g = new THREE.Group();
 
-    // Board (visual only), nose toward local +Z.
+    // Board (visual only), nose toward local +Z. Grouped with its wheels so
+    // grabs can pull the whole board up into the hand.
+    const boardG = new THREE.Group();
     const board = new THREE.Mesh(
       new THREE.BoxGeometry(0.5, 0.09, 1.7),
       new THREE.MeshLambertMaterial({ color: 0x8a4a3a }),
     );
     board.position.y = 0.16;
-    g.add(board);
+    boardG.add(board);
     const wheelMat = new THREE.MeshLambertMaterial({ color: 0x22242a });
     for (const [x, z] of [[-0.2, 0.55], [0.2, 0.55], [-0.2, -0.55], [0.2, -0.55]]) {
       const wheel = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.12), wheelMat);
       wheel.position.set(x, 0.06, z);
-      g.add(wheel);
+      boardG.add(wheel);
     }
+    g.add(boardG);
+    this.boardG = boardG;
 
     // Low-poly rider.
     const legs = new THREE.Mesh(
