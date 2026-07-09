@@ -100,6 +100,7 @@ export class Player {
   private visualYaw = 0; // Crash-style body facing vs. movement heading
   private flipTimer = 0; // front-flip on jump (visual only)
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
+  private lastPlanar = 0; // measured ground speed last step, any direction
   // FREE-HEADING SKATE: while on the board (not walking / pipe / sliding),
   // the travel axes ARE the board's heading and the stick carves them around
   // — no more axis-locked "brake if you turn too far".
@@ -417,6 +418,10 @@ export class Player {
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
+    // Actual planar speed from last step's displacement (any direction) —
+    // the skate-entry gate uses this so sideways motion counts, not just the
+    // forward-axis `speed` scalar. Computed before prevPos is overwritten.
+    this.lastPlanar = Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
     this.prevPos.copy(this.pos);
     this.teetering = false; // stepRide re-detects it each tick
 
@@ -634,10 +639,15 @@ export class Player {
   // Release-triggered charged jump: tap = jumpMinVelocity, full hold =
   // jumpVelocity. The jump's IDENTITY is decided here, at release, from the
   // state and speed you're carrying — not from how X was pressed.
-  private chargedJump(): void {
+  private chargedJump(dt: number): void {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
     const wasCrawling = this.crawling;
     const fromSlide = this.slideTimer > 0;
+    // Measured planar speed this step, so the jump reads your ACTUAL movement
+    // in any direction — a fast sideways walk stores nothing in `speed` (that
+    // scalar is the forward axis), but it still deserves a Forward Flip.
+    const planar =
+      Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
     if (fromSlide) {
       const cap = TUNING.maxSpeed * CONST.maxOverspeed;
       this.speed = THREE.MathUtils.clamp(
@@ -652,7 +662,7 @@ export class Player {
     this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
     if (wasCrawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
-    const spd = Math.abs(this.speed);
+    const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
     if (fromSlide) {
       this.lastJumpType = 'Slide Launch';
       sfx.play('ollie', 0.7);
@@ -704,25 +714,38 @@ export class Player {
     // X is release-to-jump; HOLDING it is the commit meter. Skate drive only
     // engages after skateHoldTime of X + a held direction AND skateEntrySpeed
     // of real movement — quick taps and stationary crouches stay pure Crash.
-    const stickHeld = input.moveY !== 0; // input is digital: held or not
+    // ANY held direction commits (digital), and the entry speed gate reads
+    // actual movement in any direction — so pushing sideways skates exactly
+    // like pushing forward, never stuck in second-class walk.
+    const stickHeld = input.moveX !== 0 || input.moveY !== 0;
     if (this.charging && stickHeld) this.skateCharge += dt;
     else this.skateCharge = 0;
+    const planarSpeed = Math.max(Math.abs(this.speed), this.lastPlanar);
     const pushingOff =
       this.charging &&
       stickHeld &&
       this.skateCharge >= TUNING.skateHoldTime &&
-      Math.abs(this.speed) >= TUNING.skateEntrySpeed;
+      planarSpeed >= TUNING.skateEntrySpeed;
     this.skateOn = pushingOff;
     const skating =
-      pushingOff || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
+      pushingOff || this.slideTimer > 0 || pipeMode || planarSpeed > TUNING.walkSpeed + 0.5;
 
     // Enter/leave free-heading mode. Walking, the halfpipe, and canned
     // slides keep the classic course-axis model; the board carves free.
     const free = skating && !pipeMode && this.slideTimer <= 0 && !slamFlat && !this.crawling;
     if (free && !this.freeSkate) {
-      // heading = the direction you're actually moving (backward walk-off
-      // becomes a backward heading with positive speed)
-      if (this.speed < 0) {
+      // Seed the skate velocity from the direction you're actually going, so
+      // a sideways walk hands its momentum straight into the skate (the
+      // forward-only `speed` scalar was 0 for pure sideways).
+      const rx = this.rawInput.moveX;
+      const ry = this.rawInput.moveY;
+      if (rx !== 0 || ry !== 0) {
+        const inv = 1 / Math.hypot(rx, ry);
+        this.axisF.set(rx * inv, 0, -ry * inv);
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+        this.speed = Math.max(Math.abs(this.speed), this.lastPlanar);
+      } else if (this.speed < 0) {
+        // coasting in on backward momentum: flip to a positive heading
         this.axisF.negate();
         this.axisL.negate();
         this.speed = -this.speed;
@@ -764,30 +787,31 @@ export class Player {
         this.speed =
           this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
       } else if (this.freeSkate) {
-        // FREE CARVE: the stick points a WORLD direction and the board's
-        // heading chases it — ANY direction, all the way around. Holding a
-        // way steers you to face it and hold that line; sweeping the stick
-        // curves your path. Sharp turns scrub a little speed (THPS carve),
-        // but you never lose the board just for turning. X accelerates along
-        // the heading; releasing everything coasts down to your feet.
+        // OMNIDIRECTIONAL SKATE: whichever way you push, the heading turns to
+        // follow it — carrying your speed with it (a carve, not a brake), so
+        // forward, sideways, and back are all first-class. X accelerates along
+        // the heading; release everything and you coast down to your feet.
         const rx = this.rawInput.moveX;
         const ry = this.rawInput.moveY;
         if (rx !== 0 || ry !== 0) {
           const inv = 1 / Math.hypot(rx, ry);
-          const wx = rx * inv;
-          const wz = -ry * inv;
-          const fwd = wx * this.axisF.x + wz * this.axisF.z;
-          const lat = wx * this.axisF.z - wz * this.axisF.x; // toward the +90° perp
-          const err = Math.atan2(lat, fwd); // signed angle heading->stick
-          const maxTurn = THREE.MathUtils.degToRad(TUNING.carveTurnRate) * dt;
-          const turn = THREE.MathUtils.clamp(err, -maxTurn, maxTurn);
-          this.rotateHeading(turn);
-          this.speed = Math.max(0, this.speed * (1 - Math.abs(turn) * TUNING.carveScrub));
-          if (this.charging) {
-            this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
-          } else {
-            this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
-          }
+          const dx = rx * inv;
+          const dz = -ry * inv; // stick up = world -Z
+          // signed angle from heading toward the stick, then turn (capped by
+          // carveGrip) while KEEPING the speed — momentum survives the carve.
+          const fwd = dx * this.axisF.x + dz * this.axisF.z;
+          const side = dx * this.axisF.z - dz * this.axisF.x;
+          const ang = Math.atan2(side, fwd);
+          const maxTurn = THREE.MathUtils.degToRad(TUNING.carveGrip) * dt;
+          const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
+          const c = Math.cos(turn);
+          const s = Math.sin(turn);
+          const nfx = this.axisF.x * c + this.axisF.z * s;
+          const nfz = -this.axisF.x * s + this.axisF.z * c;
+          this.axisF.set(nfx, 0, nfz);
+          this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+          if (this.charging) this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+          else this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
         } else if (this.charging && this.speed > 1) {
           this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
         } else {
@@ -961,7 +985,7 @@ export class Player {
       this.jumpBufferT = 0;
       if (!input.jumpHeld) {
         this.chargeTimer = this.jumpBufferCharge;
-        this.chargedJump();
+        this.chargedJump(dt);
         return;
       }
     }
@@ -975,7 +999,7 @@ export class Player {
       this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
     }
     if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
-      this.chargedJump();
+      this.chargedJump(dt);
     }
   }
 
@@ -985,7 +1009,7 @@ export class Player {
     if (this.coyoteTimer > 0) {
       if (input.jumpHeld && !this.charging) this.charging = true; // tap started mid-air
       if (input.jumpReleased && this.charging) {
-        this.chargedJump();
+        this.chargedJump(dt);
       }
     } else {
       if (input.jumpReleased) {
@@ -1372,19 +1396,6 @@ export class Player {
     );
     this.speed = this.grindVel;
     this.placeOnRail(rail);
-  }
-
-  // Rotate the heading axes about Y by `a` radians (positive turns toward
-  // the +90° perpendicular the carve math measures against).
-  private rotateHeading(a: number): void {
-    const cos = Math.cos(a);
-    const sin = Math.sin(a);
-    const fx = this.axisF.x * cos + this.axisF.z * sin;
-    const fz = -this.axisF.x * sin + this.axisF.z * cos;
-    this.axisF.set(fx, 0, fz);
-    const lx = this.axisL.x * cos + this.axisL.z * sin;
-    const lz = -this.axisL.x * sin + this.axisL.z * cos;
-    this.axisL.set(lx, 0, lz);
   }
 
   private placeOnRail(rail: Rail): void {
