@@ -100,6 +100,10 @@ export class Player {
   private visualYaw = 0; // Crash-style body facing vs. movement heading
   private flipTimer = 0; // front-flip on jump (visual only)
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
+  // FREE-HEADING SKATE: while on the board (not walking / pipe / sliding),
+  // the travel axes ARE the board's heading and the stick carves them around
+  // — no more axis-locked "brake if you turn too far".
+  private freeSkate = false;
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
@@ -312,6 +316,7 @@ export class Player {
     this.charging = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
+    this.freeSkate = false;
     this.jumpBufferT = 0;
     this.grabPhase = 'none';
     this.grabT = 0;
@@ -356,7 +361,9 @@ export class Player {
     // is pushing along it.
     const zone = level.zoneAt(this.pos.x, this.pos.z);
     const wantDir = zone ? zone.dir : 'S';
-    if (wantDir !== this.travelDir && this.state !== 'grind') {
+    // Corner flips are a WALKING concept — free-heading skating just carves
+    // through corners, so the axes are left alone while on the board.
+    if (wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
       const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
       const alongNew =
@@ -364,12 +371,29 @@ export class Player {
       this.speed =
         Math.abs(alongNew) > 0.3 ? Math.sign(alongNew) * Math.abs(oldSpeed) * 0.7 : 0;
     }
-    const ctl =
+    let ctl =
       this.travelDir === 'S'
         ? input
         : this.travelDir === 'E'
           ? ({ ...input, moveY: input.moveX, moveX: input.moveY } as unknown as Input)
           : ({ ...input, moveY: -input.moveX, moveX: input.moveY } as unknown as Input);
+    if (this.freeSkate) {
+      // Decompose the screen-space stick onto the CURRENT heading axes, so
+      // downstream code (acceleration, slides, air control, lean) reads
+      // "forward" as "along the board" no matter where it points.
+      const rx = input.moveX;
+      const ry = input.moveY;
+      if (rx !== 0 || ry !== 0) {
+        const inv = 1 / Math.hypot(rx, ry);
+        const wx = rx * inv;
+        const wz = -ry * inv; // stick up = world -Z (the camera never turns)
+        ctl = {
+          ...input,
+          moveY: wx * this.axisF.x + wz * this.axisF.z,
+          moveX: wx * this.axisL.x + wz * this.axisL.z,
+        } as unknown as Input;
+      }
+    }
     input = ctl;
 
     // The blob shadow is a landing indicator: probe far down for the floor
@@ -687,6 +711,27 @@ export class Player {
     const skating =
       pushingOff || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
 
+    // Enter/leave free-heading mode. Walking, the halfpipe, and canned
+    // slides keep the classic course-axis model; the board carves free.
+    const free = skating && !pipeMode && this.slideTimer <= 0 && !slamFlat && !this.crawling;
+    if (free && !this.freeSkate) {
+      // heading = the direction you're actually moving (backward walk-off
+      // becomes a backward heading with positive speed)
+      if (this.speed < 0) {
+        this.axisF.negate();
+        this.axisL.negate();
+        this.speed = -this.speed;
+      }
+    } else if (!free && this.freeSkate) {
+      // back onto the course grid: keep the along-course velocity component
+      const vx = this.axisF.x * this.speed;
+      const vz = this.axisF.z * this.speed;
+      const zn = level.zoneAt(this.pos.x, this.pos.z);
+      this.setTravelDir(zn ? zn.dir : 'S');
+      this.speed = vx * this.axisF.x + vz * this.axisF.z;
+    }
+    this.freeSkate = free;
+
     // Digital diagonals: with both axes held, normalize the direct-drive
     // moves so a diagonal walk/crawl isn't sqrt(2) faster than a straight one.
     const diag = input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
@@ -713,6 +758,36 @@ export class Player {
         // the cross component is applied in the lateral block below
         this.speed =
           this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
+      } else if (this.freeSkate) {
+        // FREE CARVE: the stick points a WORLD direction and the board's
+        // heading chases it — ANY direction, all the way around. Holding a
+        // way steers you to face it and hold that line; sweeping the stick
+        // curves your path. Sharp turns scrub a little speed (THPS carve),
+        // but you never lose the board just for turning. X accelerates along
+        // the heading; releasing everything coasts down to your feet.
+        const rx = this.rawInput.moveX;
+        const ry = this.rawInput.moveY;
+        if (rx !== 0 || ry !== 0) {
+          const inv = 1 / Math.hypot(rx, ry);
+          const wx = rx * inv;
+          const wz = -ry * inv;
+          const fwd = wx * this.axisF.x + wz * this.axisF.z;
+          const lat = wx * this.axisF.z - wz * this.axisF.x; // toward the +90° perp
+          const err = Math.atan2(lat, fwd); // signed angle heading->stick
+          const maxTurn = THREE.MathUtils.degToRad(TUNING.carveTurnRate) * dt;
+          const turn = THREE.MathUtils.clamp(err, -maxTurn, maxTurn);
+          this.rotateHeading(turn);
+          this.speed = Math.max(0, this.speed * (1 - Math.abs(turn) * TUNING.carveScrub));
+          if (this.charging) {
+            this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+          } else {
+            this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
+          }
+        } else if (this.charging && this.speed > 1) {
+          this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+        } else {
+          this.speed = Math.max(0, this.speed - TUNING.friction * dt);
+        }
       } else if (this.charging) {
         // build toward maxSpeed in the stick's direction; with no direction
         // held, only maintain momentum you already have (no phantom takeoff)
@@ -767,6 +842,9 @@ export class Player {
           Math.sign(this.speed) *
           Math.max(TUNING.maxSpeed, Math.abs(this.speed) - CONST.overspeedDecay * dt);
       }
+      // A free heading never reverses through zero — stalling on a hill just
+      // stops you, and below walking pace your feet take over.
+      if (this.freeSkate) this.speed = Math.max(0, this.speed);
     }
 
     this.pos.addScaledVector(this.axisF, this.speed * dt);
@@ -801,10 +879,9 @@ export class Player {
         // the slide's cross-course component
         const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
         this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
-      } else if (input.moveX !== 0) {
-        // Skate steering scales with speed so fast lines can actually carve
-        // (feels "360"); walking keeps the direct crisp step (diagonal-
-        // normalized, since input is digital).
+      } else if (input.moveX !== 0 && !this.freeSkate) {
+        // Walking keeps the direct crisp sidestep (diagonal-normalized).
+        // Free-heading skating has NO sidestep — carving IS the steering.
         const latRate = skating
           ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
           : TUNING.walkSpeed * diag;
@@ -1281,6 +1358,19 @@ export class Player {
     this.placeOnRail(rail);
   }
 
+  // Rotate the heading axes about Y by `a` radians (positive turns toward
+  // the +90° perpendicular the carve math measures against).
+  private rotateHeading(a: number): void {
+    const cos = Math.cos(a);
+    const sin = Math.sin(a);
+    const fx = this.axisF.x * cos + this.axisF.z * sin;
+    const fz = -this.axisF.x * sin + this.axisF.z * cos;
+    this.axisF.set(fx, 0, fz);
+    const lx = this.axisL.x * cos + this.axisL.z * sin;
+    const lz = -this.axisL.x * sin + this.axisL.z * cos;
+    this.axisL.set(lx, 0, lz);
+  }
+
   private placeOnRail(rail: Rail): void {
     const p = rail.pointAt(this.grindT);
     this.pos.set(p.x, p.y + CONST.railRideHeight, p.z);
@@ -1288,11 +1378,22 @@ export class Player {
 
   private exitGrind(vVel: number): void {
     if (this.grindRail) {
-      // Project the rail velocity onto the course axis — exits snap straight,
-      // matching the axis-locked movement.
+      // Exit ALONG the rail: the tangent becomes the free-skate heading, so
+      // diagonal and curved rails launch you where they were pointing.
       const t = this.grindRail.tangentAt(this.grindT);
-      const along = (t.x * this.axisF.x + t.z * this.axisF.z) * this.grindDir;
-      this.speed = along * this.grindVel;
+      const hx = t.x * this.grindDir;
+      const hz = t.z * this.grindDir;
+      const len = Math.hypot(hx, hz);
+      if (len > 0.05) {
+        this.axisF.set(hx / len, 0, hz / len);
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+        this.speed = this.grindVel;
+        this.freeSkate = true;
+      } else {
+        // near-vertical tangent (shouldn't happen): keep the old projection
+        const along = (t.x * this.axisF.x + t.z * this.axisF.z) * this.grindDir;
+        this.speed = along * this.grindVel;
+      }
     }
     this.grindRail = null;
     this.state = 'air';
