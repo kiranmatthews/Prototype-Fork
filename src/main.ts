@@ -152,6 +152,12 @@ function frame(): void {
   updateCamera(dt);
 
   ui.updateBalance(player.state === 'grind', player.balance);
+  ui.setHUD({
+    points: player.points,
+    combo: player.comboMult > 0 ? `${player.comboPoints} × ${player.comboMult}` : '',
+    fruit: player.fruit,
+    crates: `${player.cratesBroken}/${level.totalCrates}`,
+  });
   ui.setStats({
     speed: player.speed,
     state: player.state,

@@ -46,6 +46,7 @@ export interface Checkpoint {
   savedFruit: number; // wumpa counter captured when this was broken
   savedMasks: number;
   savedTrickMeter: number;
+  savedPoints: number;
 }
 
 export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate', 'Sideways', 'Random'];
@@ -318,13 +319,14 @@ export class Level {
 
   // Broken (spun/stomped) like a normal box; banks the respawn point and a
   // snapshot of exactly which crates are broken + the counter at this moment.
-  activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0, masks = 0, trickMeter = 0): void {
+  activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0, masks = 0, trickMeter = 0, points = 0): void {
     cp.active = true;
     cp.savedAlive = this.crates.map((c) => c.alive);
     cp.savedCratesBroken = cratesBroken;
     cp.savedFruit = fruit;
     cp.savedMasks = masks;
     cp.savedTrickMeter = trickMeter;
+    cp.savedPoints = points;
     this.currentSpawn.copy(cp.spawnPos);
     this.activeCheckpoint = cp;
     cp.mesh.scale.setScalar(1);
@@ -1315,6 +1317,7 @@ export class Level {
       savedFruit: 0,
       savedMasks: 0,
       savedTrickMeter: 0,
+      savedPoints: 0,
     });
   }
 

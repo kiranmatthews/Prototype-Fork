@@ -26,6 +26,7 @@ export class UI {
   private flashEl: HTMLElement;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
+  private gameHud!: HTMLElement;
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
   private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLSpanElement }>();
@@ -103,6 +104,9 @@ export class UI {
 
     this.flashEl = div('hud-flash');
 
+    // The game HUD proper: score + live combo, wumpa, boxes. Big and dumb.
+    this.gameHud = div('hud-game');
+
     // THPS-style grind balance meter (visible only while grinding).
     this.balanceWrap = div('hud-balance');
     this.balanceNeedle = div('hud-balance-needle');
@@ -111,9 +115,16 @@ export class UI {
     this.balanceWrap.appendChild(this.balanceNeedle);
     this.balanceWrap.style.display = 'none';
 
-    for (const el of [statsWrap, panel, this.msgWrap, this.flashEl, this.balanceWrap]) {
+    for (const el of [statsWrap, panel, this.msgWrap, this.flashEl, this.balanceWrap, this.gameHud]) {
       document.body.appendChild(el);
     }
+  }
+
+  setHUD(s: { points: number; combo: string; fruit: number; crates: string }): void {
+    this.gameHud.innerHTML =
+      `<div class="hud-score">${s.points}</div>` +
+      `<div class="hud-combo">${esc(s.combo)}&nbsp;</div>` +
+      `<div class="hud-sub">WUMPA ${s.fruit} · BOXES ${esc(s.crates)}</div>`;
   }
 
   // Saved tuning snapshot from this browser, if any. Only keys that still
@@ -271,6 +282,14 @@ export class UI {
         position: absolute; top: -4px; width: 8px; height: 20px;
         margin-left: -4px; border-radius: 2px; background: #8fd4a8;
       }
+      .hud-game {
+        position: fixed; z-index: 10; top: 10px; left: 50%;
+        transform: translateX(-50%); text-align: center; pointer-events: none;
+        font: bold 26px ui-monospace, Menlo, Consolas, monospace; color: #fff;
+        text-shadow: 2px 2px 0 #000;
+      }
+      .hud-game .hud-combo { font-size: 15px; color: #ffd27a; min-height: 19px; }
+      .hud-game .hud-sub { font-size: 13px; color: #cfe3d8; }
     `;
     document.head.appendChild(style);
   }

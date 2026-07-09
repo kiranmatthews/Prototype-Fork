@@ -17,7 +17,7 @@ export const TUNING = {
   slopeBoost: 42, // fake downhill acceleration, scaled by slope grade
   uphillSlowdown: 30, // fake uphill deceleration, scaled by slope grade
   railSnapDistance: 3.1, // forgiving radius for Triangle/E grind snap
-  grindSpeed: 20, // rail owns the player: constant authored speed
+  grindSpeed: 20, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 24.5, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
@@ -86,6 +86,21 @@ export const CONST = {
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
+  grindMinSpeed: 8, // slowest a grind can crawl (and the floor for speed bleed)
+  grindBleed: 2, // grind speed lost per second on the rail
+  comboWindow: 3, // seconds of plain rolling before a combo banks
+  // Base point values — combo total = sum of bases x number of actions.
+  ptsCrate: 25,
+  ptsFruit: 10,
+  ptsEnemy: 100,
+  ptsBouncy: 25,
+  ptsSlide: 30,
+  ptsSlam: 75,
+  ptsGrab: 150,
+  ptsGrabSpin: 100, // bonus for landing a spun grab
+  ptsVert: 200,
+  ptsGrindBase: 100,
+  ptsGrindPerSec: 25,
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 10, // rad/s the rotation eases back on-axis after release

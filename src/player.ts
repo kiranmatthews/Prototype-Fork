@@ -38,8 +38,12 @@ export class Player {
   runTime = 0;
   cratesBroken = 0;
   fruit = 0; // wumpa collected
-  masks = 0; // Aku masks held (max 2): absorb one enemy hit or balance bail
+  masks = 0; // Aku masks held (max 2): absorb one hit or bail
   trickMeter = 0; // 0..1, fills from landed tricks; full = +1 mask
+  points = 0; // banked score
+  comboPoints = 0; // pending combo: sum of base values...
+  comboMult = 0; // ...times the number of actions strung together
+  private comboTimer = 0; // plain-rolling time left before the combo banks
 
   // debug readouts
   railCandidateDist = Infinity;
@@ -88,6 +92,8 @@ export class Player {
   private grindRail: Rail | null = null;
   private grindT = 0;
   private grindDir = 1;
+  private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
+  private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
   private regrindCd = 0;
   private respawnTimer = 0;
   private coyoteTimer = 0; // jump grace after running off a ledge
@@ -203,6 +209,10 @@ export class Player {
     this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
     this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
     this.trickMeter = level.activeCheckpoint ? level.activeCheckpoint.savedTrickMeter : 0;
+    this.points = level.activeCheckpoint ? level.activeCheckpoint.savedPoints : 0;
+    this.comboPoints = 0;
+    this.comboMult = 0;
+    this.comboTimer = 0;
     this.invulnTimer = 0;
     this.slideTimer = 0;
     this.slideCd = 0;
@@ -268,6 +278,13 @@ export class Player {
     this.prevPos.copy(this.pos);
     this.teetering = false; // stepRide re-detects it each tick
 
+    // The combo clock only runs while plain-rolling — airs, grinds, and
+    // slides keep the string alive. Roll clean for the window and it banks.
+    if (this.comboTimer > 0 && this.state === 'ride' && this.grounded && !this.sliding) {
+      this.comboTimer -= dt;
+      if (this.comboTimer <= 0) this.bankCombo();
+    }
+
     // Circle/Q on the ground at speed fires a brief canned slide: direction
     // locked, a shove of speed, smashes crates. (Stopped, holding it crawls
     // instead — see stepRide. In the air it's a grab.)
@@ -287,6 +304,7 @@ export class Player {
         -cap,
         cap,
       );
+      this.score(CONST.ptsSlide);
     }
 
     // Rail candidate is computed once per step: used for grind entry, the
@@ -341,6 +359,7 @@ export class Player {
       // inside an expanding blast sphere.
       for (const c of level.consumeBlastBroken()) {
         this.cratesBroken++;
+        this.score(CONST.ptsCrate);
         if (c.mask) this.masks = Math.min(2, this.masks + 1);
         else this.spawnFruit(c.box);
       }
@@ -364,6 +383,21 @@ export class Player {
   }
 
   // ---------------------------------------------------------------- states --
+
+  // Add a scoring action to the pending combo: every action raises both the
+  // base sum and the multiplier, THPS-style. Bail or die = the combo is gone.
+  private score(base: number): void {
+    this.comboPoints += base;
+    this.comboMult += 1;
+    this.comboTimer = CONST.comboWindow;
+  }
+
+  private bankCombo(): void {
+    if (this.comboMult > 0) this.points += this.comboPoints * this.comboMult;
+    this.comboPoints = 0;
+    this.comboMult = 0;
+    this.comboTimer = 0;
+  }
 
   // Landed tricks fill the meter; a full meter converts into a mask (max 2).
   private awardTrick(v: number): void {
@@ -655,7 +689,27 @@ export class Player {
 
     const hit = this.queryGround(level);
     this.groundHit = hit;
-    if (hit && this.vVel <= 0 && this.pos.y <= hit.y + 0.05) {
+
+    // Ceiling: rising into the UNDERSIDE of a deck bonks (decks are 1 thick;
+    // tall blocks already have wall colliders). Stops the head passing up
+    // through elevated platforms.
+    if (hit && this.vVel > 0) {
+      const underside = hit.y - 1.0;
+      const head = this.pos.y + CONST.playerHalf.y * 2;
+      if (this.pos.y < underside - 0.05 && head > underside) {
+        this.pos.y = underside - CONST.playerHalf.y * 2;
+        this.vVel = 0;
+      }
+    }
+
+    // Land only on surfaces we were actually ABOVE last step (with a small
+    // ledge forgiveness) — a surface overhead must never teleport us onto it.
+    if (
+      hit &&
+      this.vVel <= 0 &&
+      this.pos.y <= hit.y + 0.05 &&
+      (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - 0.35)
+    ) {
       const impact = -this.vVel;
       const wasVert = this.vertLock;
       this.pos.y = hit.y;
@@ -671,7 +725,10 @@ export class Player {
         this.pipeVel =
           -(Math.sign(this.pos.x) || 1) * Math.min(impact * CONST.pipeLandKeep, CONST.pipeMaxVel);
       }
-      if (wasVert) this.awardTrick(0.3); // landed a vert air
+      if (wasVert) {
+        this.awardTrick(0.3); // landed a vert air
+        this.score(CONST.ptsVert);
+      }
 
       if (this.slamActive) {
         this.slamImpact(level);
@@ -704,6 +761,8 @@ export class Player {
         this.grabGraceTimer = 0;
         this.grabSpinAngle = 0;
         this.awardTrick(0.35); // landed a grab
+        this.score(CONST.ptsGrab + (this.grabSpinTotal > 2.5 ? CONST.ptsGrabSpin : 0));
+        this.grabSpinTotal = 0;
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
       return;
@@ -718,6 +777,7 @@ export class Player {
   private slamImpact(level: Level): void {
     this.slamActive = false;
     this.slamSquash = CONST.slamSquashTime;
+    this.score(CONST.ptsSlam);
     this.emitSparks(12, 0xd8e6ff, 2.5);
     for (const c of level.crates) {
       if (!c.alive || c.bouncy) continue;
@@ -747,11 +807,19 @@ export class Player {
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
     this.grindTime += dt;
+    // Grinds ride at the speed you brought and bleed a little on the rail.
+    this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - CONST.grindBleed * dt);
 
     // THPS balance: the needle is an unstable equilibrium that runs away from
-    // center, faster the longer you grind; left/right input fights it. Pegging
-    // the meter bails you off the rail.
-    const instability = TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp);
+    // center, faster the longer you grind; left/right input fights it. Slow
+    // grinds are wobblier than fast ones. Pegging the meter bails you off.
+    const speedFactor = THREE.MathUtils.clamp(
+      TUNING.grindSpeed / Math.max(this.grindVel, 1),
+      0.6,
+      2.2,
+    );
+    const instability =
+      TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp) * speedFactor;
     this.balance += Math.sign(this.balance || 1) * instability * dt;
     this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
     if (Math.abs(this.balance) >= 1) {
@@ -765,7 +833,7 @@ export class Player {
       }
     }
 
-    this.grindT += this.grindDir * TUNING.grindSpeed * dt;
+    this.grindT += this.grindDir * this.grindVel * dt;
 
     if (this.grindT <= 0 || this.grindT >= rail.totalLength) {
       // Ran off the end of the rail: small pop, keep carrying grind speed.
@@ -776,7 +844,7 @@ export class Player {
     }
 
     this.placeOnRail(rail);
-    this.speed = TUNING.grindSpeed;
+    this.speed = this.grindVel;
     this.surfaceName = 'rail';
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
     this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck
@@ -846,7 +914,14 @@ export class Player {
     // Start the needle slightly off-center in a random direction.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
-    this.speed = TUNING.grindSpeed;
+    // The rail keeps the speed you arrived with (within reason) — hit it
+    // fast to cross fast; crawl onto it and you'll wobble across.
+    this.grindVel = THREE.MathUtils.clamp(
+      Math.abs(this.speed),
+      CONST.grindMinSpeed,
+      TUNING.maxSpeed * CONST.maxOverspeed,
+    );
+    this.speed = this.grindVel;
     this.placeOnRail(rail);
   }
 
@@ -857,11 +932,13 @@ export class Player {
 
   private exitGrind(vVel: number): void {
     if (this.grindTime > 1.2) this.awardTrick(0.3); // held a long grind
+    // A survived grind scores: base + time held on the rail.
+    this.score(CONST.ptsGrindBase + Math.round(this.grindTime * CONST.ptsGrindPerSec));
     if (this.grindRail) {
       // Project the rail velocity onto the course axis — exits snap straight,
       // matching the axis-locked movement.
       const tz = this.grindRail.tangentAt(this.grindT).z * this.grindDir;
-      this.speed = -tz * TUNING.grindSpeed;
+      this.speed = -tz * this.grindVel;
     }
     this.grindRail = null;
     this.state = 'air';
@@ -870,8 +947,8 @@ export class Player {
     this.balance = 0;
   }
 
-  // Pegged the balance meter: stumble off the rail with most speed gone.
-  // Over a pit that usually means a drop into it.
+  // Pegged the balance meter (or hit a crate): stumble off the rail with most
+  // speed gone and the pending combo lost. Over a pit that means a drop.
   private bailFromRail(): void {
     this.grindRail = null;
     this.state = 'air';
@@ -879,6 +956,9 @@ export class Player {
     this.speed *= CONST.balanceBailSpeedKeep;
     this.regrindCd = CONST.regrindCooldown * 2;
     this.balance = 0;
+    this.comboPoints = 0;
+    this.comboMult = 0;
+    this.comboTimer = 0;
     this.emitSparks(8, 0xffb545, 2);
   }
 
@@ -923,6 +1003,7 @@ export class Player {
         // and you bail.
         if (Math.abs(this.rawInput.moveX) > 0.3) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
+          this.grabSpinTotal += TUNING.grabSpinRate * dt;
         }
       } else {
         // Released: reach back OUT of the pose. Only once that motion
@@ -949,6 +1030,7 @@ export class Player {
       this.grabPhase = 'none';
       this.grabT = 0;
       this.grabSpinAngle = 0;
+      this.grabSpinTotal = 0;
     }
   }
 
@@ -1020,14 +1102,19 @@ export class Player {
         continue;
       }
       if (c.tnt) {
-        // TNT is a solid box, Crash rules: spinning (or slamming through it)
-        // pops it instantly — safely, it was on purpose. Stomping lights the
-        // 3-2-1 fuse and bounces you. Bumping it is just a wall.
+        // TNT is a solid box, Crash rules: spinning (or slamming/sliding
+        // through it) pops it instantly — safely, it was on purpose. Stomping
+        // lights the 3-2-1 fuse and bounces you; a headbutt from below lights
+        // it too. Grinding into one unspun knocks you off the rail. Bumping
+        // it is just a wall.
         if (this.spinning && this.spinBox.intersectsBox(c.box)) {
           level.detonate(c, true);
         } else if (this.playerBox.intersectsBox(c.box)) {
-          if (this.state === 'grind' || this.sliding) {
+          if (this.sliding) {
             level.detonate(c, true);
+          } else if (this.state === 'grind') {
+            if (this.spendMask()) level.detonate(c, true);
+            else this.bailFromRail();
           } else if (this.isStomping(c.box)) {
             if (this.slamActive) {
               level.detonate(c, true);
@@ -1039,6 +1126,9 @@ export class Player {
               this.charging = false;
               this.chargeTimer = 0;
             }
+          } else if (this.isBonking(c.box)) {
+            level.lightFuse(c);
+            this.vVel = -1;
           } else {
             this.pushOutOf(c.box);
           }
@@ -1053,7 +1143,10 @@ export class Player {
             this.state = 'air';
             this.grounded = false;
             this.charging = false;
-          this.chargeTimer = 0;
+            this.chargeTimer = 0;
+            this.score(CONST.ptsBouncy);
+          } else if (this.isBonking(c.box)) {
+            this.vVel = -1; // head bonk on the underside
           } else {
             this.pushOutOf(c.box);
           }
@@ -1063,9 +1156,14 @@ export class Player {
       if (this.spinning && this.spinBox.intersectsBox(c.box)) {
         this.smashCrate(level, c);
       } else if (this.playerBox.intersectsBox(c.box)) {
-        if (this.sliding || this.state === 'grind') {
-          // Slides and grinds smash boxes without breaking stride.
+        if (this.sliding) {
+          // Slides smash boxes without breaking stride.
           this.smashCrate(level, c);
+        } else if (this.state === 'grind') {
+          // Crates on the rail line are obstacles now: spin them, hop and
+          // bounce them, or they knock you straight off (a mask absorbs it).
+          if (this.spendMask()) this.smashCrate(level, c);
+          else this.bailFromRail();
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
           // enough to chain crate to crate. A slam punches straight through.
@@ -1075,6 +1173,10 @@ export class Player {
             this.state = 'air';
             this.grounded = false;
           }
+        } else if (this.isBonking(c.box)) {
+          // Crash headbutt: jumping into a box from below breaks it.
+          this.smashCrate(level, c);
+          this.vVel = Math.min(this.vVel, 2);
         } else {
           // Bumping does nothing to the crate — it's a wall. Full stop.
           this.pushOutOf(c.box);
@@ -1086,14 +1188,17 @@ export class Player {
       if (!e.alive) continue;
       if (this.spinning && this.spinBox.intersectsBox(e.box)) {
         level.killEnemy(e);
+        this.score(CONST.ptsEnemy);
       } else if (this.playerBox.intersectsBox(e.box)) {
         if (this.sliding) {
           // Crash 3 rules: the slide takes out enemies too.
           level.killEnemy(e);
+          this.score(CONST.ptsEnemy);
         } else if (this.isStomping(e.box)) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
           level.killEnemy(e);
+          this.score(CONST.ptsEnemy);
           if (!this.slamActive) {
             this.vVel = TUNING.crateBounce;
             this.state = 'air';
@@ -1118,18 +1223,22 @@ export class Player {
     for (const cp of level.checkpoints) {
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
-        level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter);
+        level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
         this.onCheckpoint();
       } else if (this.playerBox.intersectsBox(cp.box)) {
         if (this.sliding) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter);
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
           this.onCheckpoint();
         } else if (this.isStomping(cp.box)) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter);
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
           this.onCheckpoint();
           this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
+        } else if (this.isBonking(cp.box)) {
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
+          this.onCheckpoint();
+          this.vVel = Math.min(this.vVel, 2);
         } else {
           // Bump = wall, like a normal box. Spin, slide, or stomp to bank it.
           this.pushOutOf(cp.box);
@@ -1144,10 +1253,12 @@ export class Player {
         p.alive = false;
         p.mesh.visible = false;
         this.fruit++;
+        this.score(CONST.ptsFruit);
       }
     }
 
     if (this.playerBox.intersectsBox(level.finishBox)) {
+      this.bankCombo(); // whatever is pending counts at the line
       this.state = 'finished';
       this.onFinish(this.runTime);
     }
@@ -1156,6 +1267,7 @@ export class Player {
   private smashCrate(level: Level, c: Crate): void {
     level.breakCrate(c);
     this.cratesBroken++;
+    this.score(CONST.ptsCrate);
     if (c.mask) this.masks = Math.min(2, this.masks + 1);
     else this.spawnFruit(c.box);
   }
@@ -1191,7 +1303,10 @@ export class Player {
         const d = target.sub(f.mesh.position);
         const dist = d.length();
         if (dist < 1.0 || f.age > 2.5) {
-          if (dist < 1.0) this.fruit++;
+          if (dist < 1.0) {
+            this.fruit++;
+            this.score(CONST.ptsFruit);
+          }
           f.age = -1;
           f.mesh.visible = false;
           continue;
@@ -1205,6 +1320,15 @@ export class Player {
   // is deep enough that a max-speed fall can't step past it in one tick.
   private isStomping(box: THREE.Box3): boolean {
     return this.state === 'air' && this.vVel < 0 && this.pos.y > box.max.y - 0.75;
+  }
+
+  // Rising and our head is at the target's bottom face = a headbutt from below.
+  private isBonking(box: THREE.Box3): boolean {
+    return (
+      this.state === 'air' &&
+      this.vVel > 0 &&
+      this.pos.y + CONST.playerHalf.y * 2 < box.min.y + 0.6
+    );
   }
 
   // Shove the player back out the side they came IN from (based on this
@@ -1233,6 +1357,10 @@ export class Player {
     this.respawnTimer = CONST.respawnDelay;
     this.speed = 0;
     this.vVel = 0;
+    // the pending combo dies with you; banked points survive
+    this.comboPoints = 0;
+    this.comboMult = 0;
+    this.comboTimer = 0;
     this.onDeath();
   }
 
