@@ -572,6 +572,7 @@ export class Level {
     this.crate(5, -5.5, -205);
     this.crate(5, -5.5, -208);
     this.crate(-5, -5.5, -222);
+    this.crate(-5, -5.5, -195, 'mask');
     // Corridor C: center cluster + risky pair before the first rail.
     this.crate(-1.5, -13, -315);
     this.crate(0, -13, -315);
@@ -579,6 +580,7 @@ export class Level {
     this.crate(0, -11.8, -315); // stack
     this.crate(5.2, -13, -330);
     this.crate(5.2, -13, -333);
+    this.crate(-5, -13, -322, 'mask');
     // Rail 1 entry flanks.
     this.crate(-2.4, -13, -342);
     this.crate(2.4, -13, -342);
@@ -588,10 +590,14 @@ export class Level {
     this.crate(-4.8, -11.8, -565); // stack
     this.crate(4.8, -13, -565);
     this.crate(4.8, -11.8, -565); // stack
+    this.crate(4.8, -13, -545, 'mask');
     // Rail 2 entry flanks.
     this.crate(-2.4, -13, -567);
     this.crate(2.4, -13, -567);
-    // Practice pen toys.
+    // Practice pen toys — including a mask row for testing triple-mask mode.
+    this.crate(22, 0, -6, 'mask');
+    this.crate(25, 0, -6, 'mask');
+    this.crate(28, 0, -6, 'mask');
     this.crate(14, 0, -20);
     this.crate(31, 0, -28);
     this.crate(37, 0, -12, 'bouncy');
@@ -600,6 +606,7 @@ export class Level {
     // Halfpipe: bouncy arrow crate launches you up to the lip rails.
     this.crate(-2.2, -13.5, -735, 'bouncy');
     this.crate(0, -13.5, -755); // wumpa snack on the floor line
+    this.crate(2.2, -13.5, -745, 'mask');
     // Rail yard: crates and nitro at grind height above the rails.
     // Center rail: two smashables, then a nitro you must jump, then a snack.
     this.crate(0, -12.8, -790);
@@ -707,6 +714,7 @@ export class Level {
     this.slab('jungle path', -112, -150, 1.5, 10, matJungle);
     this.crate(-2.5, 1.5, -128);
     this.crate(2.5, 1.5, -140);
+    this.crate(3, 1.5, -146, 'mask');
     this.enemy(-3.5, 3.5, 1.5, -135, 4);
 
     // forked path around a ruin block
@@ -739,6 +747,7 @@ export class Level {
     // step platform up the ruin wall
     this.stepBlock(-4, -292, 4, 6, 1.5, 3.6);
     this.crate(-4, 3.6, -292);
+    this.crate(-4, 1.5, -300, 'mask');
     // big nitro block stacked in the ruin corner
     this.crate(4.5, 1.5, -272, 'nitro');
     this.crate(4.5, 2.7, -272, 'nitro');
@@ -749,6 +758,7 @@ export class Level {
     const top = climb.topY;
     this.slab('temple top', climb.endZ - 2, -420, top, 12, matStone);
     this.enemy(-4, 4, top, -370, 6);
+    this.crate(2, top, -382, 'mask');
     this.checkpoint(top, -390);
     this.crate(-4.5, top, -405, 'nitro');
     this.crate(4.5, top, -405, 'nitro');
@@ -798,6 +808,7 @@ export class Level {
     this.crate(-3, 8, -105);
     this.crate(3, 8, -105);
     this.crate(0, 8, -108, 'mask');
+    this.crate(3, 8, -115, 'mask');
     this.enemy(-3, 3, 8, -118, 4);
 
     // ascent B: gap mid-way, with a rising scaffold rail as the smooth line
@@ -816,6 +827,7 @@ export class Level {
     this.slab('landing 2', -205, -230, 18, 10, matWood2);
     this.checkpoint(18, -212);
     for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 18, -221); // plank wall
+    this.crate(-3, 18, -214, 'mask');
     this.crate(2, 18, -217, 'tnt'); // light it and the blast clears the planks
     this.enemy(-3, 3, 18, -227, 5);
 
@@ -847,6 +859,7 @@ export class Level {
     this.ramp('crest ramp', -360, 29, -380, 33, 10, matRamp);
     this.slab('gate top', -380, -430, 33, 14, matWood);
     this.checkpoint(33, -390);
+    this.crate(0, 33, -395, 'mask');
     this.crate(-4, 33, -400);
     this.crate(4, 33, -400);
     this.finishGate(33, this.finishZ);
@@ -904,6 +917,7 @@ export class Level {
     this.slabX('ruin walk', 13, 34, 0, 9, matGround, CZ);
     this.crate(24, 0, CZ);
     this.crate(24, 1.2, CZ);
+    this.crate(24, 2.4, CZ, 'mask'); // crown the stack
     this.fruitRowX(15, 21, 1.3, 4, CZ);
     // ascending floating platforms over the pit
     this.slabX('plat A', 40, 50, 1.5, 9, matPlat, CZ);
@@ -941,6 +955,7 @@ export class Level {
     this.slab('descent', -56, -70, 3.6, 10, matPlat, true, 152);
     this.slab('step down', -74, -84, 1.6, 10, matPlat, true, 152);
     this.slab('final run', -88, -120, 0, 12, matStone, true, 152);
+    this.crate(149, 0, -91, 'mask');
     this.crate(152, 0, -94);
     this.crate(152, 1.2, -94);
     this.crate(152, 2.4, -94); // tower: spin through or bounce up
@@ -1393,7 +1408,7 @@ export class Level {
         if (Math.random() < 0.5) this.enemy(xc - 3.5, xc + 3.5, y, z - len / 2, 3 + Math.random() * 5);
         if (Math.random() < 0.35) this.crate(xc + (Math.random() < 0.5 ? -4 : 4), y, z - len * 0.7, 'nitro');
         if (Math.random() < 0.22) this.crate(xc + (Math.random() < 0.5 ? -3 : 3), y, z - len * 0.4, 'tnt');
-        if (Math.random() < 0.12) this.crate(xc + (Math.random() < 0.5 ? -2 : 2), y, z - len * 0.3, 'mask');
+        if (Math.random() < 0.22) this.crate(xc + (Math.random() < 0.5 ? -2 : 2), y, z - len * 0.3, 'mask');
         if (Math.random() < 0.25) this.fruitRow(z - 8, z - len + 8, y + 1.4, 4, xc);
         if (Math.random() < 0.3) {
           const bx = xc + (Math.random() < 0.5 ? -2.5 : 2.5);

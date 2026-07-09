@@ -37,6 +37,7 @@ const FILES: Record<string, string> = {
   tntBoom: 'tnt-boom.wav',
   enemyDown: 'unsure.wav',
   fruitSpun: 'spin-away.wav', // spun a wumpa away instead of collecting it
+  uberMusic: 'uber-music.mp3', // triple-mask invincibility theme
 };
 
 interface LoopChannel {

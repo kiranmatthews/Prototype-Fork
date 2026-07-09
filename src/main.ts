@@ -144,6 +144,8 @@ function updateAudio(dt: number): void {
     0.85 + speedAbs / 120,
   );
   sfx.setLoop('grind', 'grindLoop', player.state === 'grind', 0.55, 1);
+  // Triple-mask invincibility gets its theme music for the whole ride.
+  sfx.setLoop('uber', 'uberMusic', player.uberTimer > 0, 0.65, 1);
 
   stepTimer -= dt;
   const walking = onGround && !player.sliding && speedAbs > 2 && speedAbs <= TUNING.walkSpeed + 0.5;
