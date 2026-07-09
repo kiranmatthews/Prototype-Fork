@@ -34,7 +34,7 @@ const FILES: Record<string, string> = {
   death: 'death.wav',
   tntCount: 'tnt-count.wav',
   tntCount2: 'tnt-count-2.wav',
-  tntBoom: 'tnt-boom.wav',
+  tntBoom: 'explosion.mp3', // the real nitro/TNT detonation
   enemyDown: 'unsure.wav',
   fruitSpun: 'spin-away.wav', // spun a wumpa away instead of collecting it
   uberMusic: 'uber-music.mp3', // triple-mask invincibility theme
