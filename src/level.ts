@@ -5,7 +5,7 @@
 
 import * as THREE from 'three';
 import { Rail } from './rails';
-import { CONST } from './tuning';
+import { CONST, TUNING } from './tuning';
 import { sfx } from './audio';
 
 export interface Crate {
@@ -471,10 +471,12 @@ export class Level {
       }
       if (b.active) {
         const gap = this.playerPos.z - p.z; // how far ahead the runner is
-        let sp = 25;
-        if (gap < -2) sp = 34; // it already passed you: let it thunder off
-        else if (gap < 14) sp = 21; // right on your heels: a sliver of mercy
-        else if (gap > 50) sp = 32; // never let it fall out of frame
+        // Rubber-band around the tunable base speed (ratios preserved).
+        const base = TUNING.boulderSpeed;
+        let sp = base;
+        if (gap < -2) sp = base * 1.36; // it already passed you: let it thunder off
+        else if (gap < 14) sp = base * 0.84; // right on your heels: a sliver of mercy
+        else if (gap > 50) sp = base * 1.28; // never let it fall out of frame
         st.speed = sp;
         p.z += sp * dt;
         p.y = this.boulderGroundY(p.z) + st.r * 0.92;

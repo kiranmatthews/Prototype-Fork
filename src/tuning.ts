@@ -37,6 +37,7 @@ export const TUNING = {
   crawlSpeed: 5.5, // Crash crouch-crawl speed while holding Circle stopped
   pipeAccel: 46, // halfpipe: lateral carve accel on the flat (pump the walls!)
   pipeLift: 1.15, // halfpipe: carve speed left at the lip converts to air at this rate
+  boulderSpeed: 25, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -77,6 +78,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
   pipeAccel: { min: 10, max: 90, step: 1 },
   pipeLift: { min: 0.5, max: 2, step: 0.05 },
+  boulderSpeed: { min: 10, max: 45, step: 1 },
 };
 
 // Hover text for the tuning panel: what each slider actually does in play.
@@ -132,6 +134,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   pipeAccel: 'Halfpipe carve acceleration from the stick — pumping strength on the flat and walls.',
   pipeLift:
     'How much carve speed left at the halfpipe lip converts into vertical air (launch = carve x this).',
+  boulderSpeed:
+    'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
 };
 
 // Fixed authored constants that are part of the feel but stay off the sliders

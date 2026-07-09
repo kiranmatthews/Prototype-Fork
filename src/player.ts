@@ -91,6 +91,7 @@ export class Player {
   private slamFlatT = 0; // lie pancaked on the ground for a beat after impact
   private hangPose = 0;
   private dropPose = 0;
+  private skatePose = 0; // feet-on-the-board stance while rolling
   private slamSquash = 0; // pancake pose timer after a slam lands
   private pipeVel = 0; // halfpipe lateral carve velocity (world x, signed)
   private bailing = false; // death with a tumble animation instead of a blink-out
@@ -2088,9 +2089,27 @@ export class Player {
     // Flip tuck: knees snap to the chest through the somersault (peaks mid-air).
     const flipProg = this.flipTimer > 0 ? 1 - this.flipTimer / CONST.flipDuration : 0;
     const flipTuck = flipProg > 0 ? Math.sin(flipProg * Math.PI) : 0;
+    // Skate stance: while actually rolling on the board, plant the feet on the
+    // deck — spread fore-aft (front foot toward the nose, back toward the tail)
+    // and angled out — instead of hanging together at the plank's centre.
+    const onBoard =
+      this.grounded &&
+      this.state === 'ride' &&
+      this.grabPose < 0.05 &&
+      this.slideTimer <= 0 &&
+      !this.crawling &&
+      (this.inPipe ||
+        Math.abs(this.speed) > TUNING.boardSpeed ||
+        (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
+    this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
+    const sk = this.skatePose;
     if (this.legL && this.legR) {
       this.legL.rotation.x = swing + 1.6 * flipTuck;
       this.legR.rotation.x = -swing + 1.6 * flipTuck;
+      this.legR.position.set(0.115 + 0.05 * sk, 0, 0.42 * sk); // front foot, toward nose
+      this.legL.position.set(-0.115 - 0.05 * sk, 0, -0.34 * sk); // back foot, toward tail
+      this.legR.rotation.y = 0.22 * sk;
+      this.legL.rotation.y = -0.16 * sk;
     }
 
     const raw = this.rawInput;
@@ -2210,6 +2229,7 @@ export class Player {
         0.55 * this.hangPose + // rear back: "...uh oh"
         1.45 * this.dropPose - // belly-first pancake
         0.28 * this.teeterPose + // arms-back "whoa whoa" lean
+        0.18 * this.skatePose + // athletic crouch over the board
         this.grindPoseX; // nosegrind / 5-0 lean
     }
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;

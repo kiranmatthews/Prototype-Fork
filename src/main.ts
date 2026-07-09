@@ -164,18 +164,6 @@ let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
-  if (level.chaseCam) {
-    // Boulder-chase framing: high and pulled way back, the player sprints AT
-    // the lens while the boulder fills the corridor behind them. Steeper
-    // angle = a sliver of upcoming ground visible at the bottom of frame.
-    camTarget.set(player.pos.x, player.pos.y + 7.2, player.pos.z + 13.5);
-    if (camera.position.distanceTo(camTarget) > 40) camera.position.copy(camTarget);
-    else camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
-    lookPoint.set(player.pos.x * 0.4, player.pos.y + 1.0, player.pos.z - 4.5);
-    camera.lookAt(lookPoint);
-    prevPlayerZ = player.pos.z;
-    return;
-  }
   // ONE rig, always facing down -Z. When the path right-angles into an
   // X-running stretch, the same camera sees it side-on — no yaw, just a
   // slightly wider, higher frame with less forward lead.
