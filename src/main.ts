@@ -103,7 +103,7 @@ resize();
 
 const input = new Input();
 const ui = new UI();
-let currentCourse = Math.min(6, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
+let currentCourse = Math.min(7, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
 player.respawn(level, true);
@@ -131,6 +131,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Digit5') switchLevel(4);
   if (e.code === 'Digit6') switchLevel(5);
   if (e.code === 'Digit7') switchLevel(6);
+  if (e.code === 'Digit8') switchLevel(7);
 });
 
 player.onDeath = () => {

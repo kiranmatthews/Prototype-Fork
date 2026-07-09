@@ -144,6 +144,7 @@ export const LEVEL_NAMES = [
   'Random',
   'The Gauntlet',
   'Boulder Dash',
+  'The Flats',
 ];
 
 export class Level {
@@ -380,6 +381,7 @@ export class Level {
     else if (courseId === 4) this.buildRandom();
     else if (courseId === 5) this.buildGauntlet();
     else if (courseId === 6) this.buildBoulderDash();
+    else if (courseId === 7) this.buildFlats();
     else this.buildTestCourse();
     this.buildAmbient(); // theme is set by the builder above
   }
@@ -2771,6 +2773,55 @@ export class Level {
       ],
       gates,
     };
+  }
+
+  // Level 8, "The Flats": a gigantic featureless slab for movement testing.
+  // No gaps, no hazards, no finish — walls only at the far perimeter, so
+  // there is nothing to fall off. Marker posts along the axes give bearings.
+  private buildFlats(): void {
+    const mat = new THREE.MeshLambertMaterial({ color: 0x8a929e });
+    this.killY = -60;
+    this.finishZ = -1e9; // no finish gate: endless test slab
+    this.endWallZ = -2100;
+    this.theme = {
+      skyTop: '#4a6a9a',
+      skyBottom: '#c8d8e4',
+      sunColorHex: '#fff6e0',
+      sunU: 0.3,
+      sunV: 0.22,
+      stars: false,
+      fog: 0xaebccc,
+      fogNear: 60,
+      fogFar: 260,
+      hemiSky: 0xe8f0ff,
+      hemiGround: 0x707a86,
+      hemiI: 1.15,
+      sunColor: 0xfff2d8,
+      sunI: 1.5,
+      particleColor: 0xffffff,
+      particleWind: [0.5, -0.3, 0.2],
+    };
+    this.slab('the flats', 2100, -2100, 0, 4200, mat, false);
+    // perimeter walls, two kilometres out in every direction
+    this.wall(0, 2098, 4200, 4, 0, 8);
+    this.wall(0, -2098, 4200, 4, 0, 8);
+    this.wall(2098, 0, 4, 4200, 0, 8);
+    this.wall(-2098, 0, 4, 4200, 0, 8);
+    // bearing markers along both axes (visual only — nothing to bump into)
+    const postMat = new THREE.MeshLambertMaterial({ color: 0x5a6470 });
+    for (let d = 50; d <= 400; d += 50) {
+      const h = 2 + d / 100;
+      for (const [x, z] of [
+        [d, 0],
+        [-d, 0],
+        [0, d],
+        [0, -d],
+      ]) {
+        const post = new THREE.Mesh(new THREE.BoxGeometry(0.8, h, 0.8), postMat);
+        post.position.set(x, h / 2, z);
+        this.root.add(post);
+      }
+    }
   }
 
   // Level 7, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
