@@ -3,40 +3,40 @@
 // sliders in the debug panel (ui.ts) for live tuning.
 
 export const TUNING = {
-  maxSpeed: 43, // top skate speed
-  walkSpeed: 12, // Crash walk: direct drive, instant stop; also the skate/walk boundary
-  friction: 25.5, // skate speed bleed toward walking pace when coasting
-  riseGravity: 40, // gravity while moving up (lighter = floatier jump arc)
-  fallGravity: 107, // gravity while falling (heavier = snappy PS1 landing)
-  jumpVelocity: 23.5, // fully-charged jump (hold X)
-  jumpMinVelocity: 17, // quick-tap jump
-  jumpChargeTime: 0.6, // hold this long for full power
-  chargeBoost: 20, // THE skate acceleration: holding X builds speed toward maxSpeed
-  slopeBoost: 42, // fake downhill acceleration, scaled by slope grade
-  uphillSlowdown: 30, // fake uphill deceleration, scaled by slope grade
+  maxSpeed: 20, // top skate speed
+  walkSpeed: 9.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
+  friction: 1.5, // skate speed bleed toward walking pace when coasting
+  riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
+  fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
+  jumpVelocity: 17, // fully-charged jump (hold X)
+  jumpMinVelocity: 12.5, // quick-tap jump
+  jumpChargeTime: 0.4, // hold this long for full power
+  chargeBoost: 11, // THE skate acceleration: holding X builds speed toward maxSpeed
+  slopeBoost: 81, // fake downhill acceleration, scaled by slope grade
+  uphillSlowdown: 74, // fake uphill deceleration, scaled by slope grade
   railSnapDistance: 3.1, // forgiving radius for Triangle/E grind snap
   grindSpeed: 20, // reference speed: you grind at ENTRY speed; slower than this drifts harder
-  grindJumpForce: 24.5, // vertical pop when jumping off a rail
+  grindJumpForce: 20, // vertical pop when jumping off a rail
   spinDuration: 0.3,
-  spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
-  turnaround: 150, // braking rate when input opposes travel — snappy direction flips
+  spinAirCorrection: 12, // small vertical stall from spinning in air (not a rescue)
+  turnaround: 40, // braking rate when input opposes travel — snappy direction flips
   grabBoost: 8, // speed burst on landing a clean Circle/Q air grab
-  grabSpinRate: 9, // rad/s of the directional grab-spin (left arrow = spin left)
-  crateBounce: 18, // vertical pop from stomping a crate — tuned for chaining crate to crate
-  boardSpeed: 16, // the board (visual + sound) only comes out above this speed
-  skateHoldTime: 0.3, // X held this long (with a direction) before skate drive engages
+  grabSpinRate: 8, // rad/s of the directional grab-spin (left arrow = spin left)
+  crateBounce: 5, // vertical pop from stomping a crate — tuned for chaining crate to crate
+  boardSpeed: 9.5, // the board (visual + sound) only comes out above this speed
+  skateHoldTime: 0.4, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   carveGrip: 240, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
-  slideMinSpeed: 8, // moving at least this fast + Circle = slide (slower + held = crawl)
-  slideDistance: 9, // how far the canned slide carries you (world units)
-  slideSpeed: 26, // the slide bursts to at least this speed, direction locked
-  slideJumpBoost: 8, // extra speed when a slide is strung into a jump
-  airControl: 14, // forward/back speed adjustment in the air
-  balanceDrift: 0.55, // THPS grind balance: how fast the needle runs away
-  balanceControl: 2.6, // how hard left/right fights the needle
-  crawlSpeed: 5.5, // Crash crouch-crawl speed while holding Circle stopped
-  pipeAccel: 46, // halfpipe: lateral carve accel on the flat (pump the walls!)
-  pipeLift: 1.15, // halfpipe: carve speed left at the lip converts to air at this rate
+  slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
+  slideDistance: 7.5, // how far the canned slide carries you (world units)
+  slideSpeed: 37, // the slide bursts to at least this speed, direction locked
+  slideJumpBoost: 14, // extra speed when a slide is strung into a jump
+  airControl: 6, // forward/back speed adjustment in the air
+  balanceDrift: 0.2, // THPS grind balance: how fast the needle runs away
+  balanceControl: 2.8, // how hard left/right fights the needle
+  crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
+  pipeAccel: 23, // halfpipe: lateral carve accel on the flat (pump the walls!)
+  pipeLift: 1.1, // halfpipe: carve speed left at the lip converts to air at this rate
   boulderSpeed: 25, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
 };
 
