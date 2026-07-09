@@ -1,5 +1,5 @@
-// DOM debug/tuning overlay: live stats on the left, tuning sliders on the
-// right, big center messages for death/finish. Deliberately ugly and dense.
+// DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
+// plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import { LEVEL_NAMES } from './level';
 import { TUNING, TUNING_RANGES, TUNING_INFO, TuningKey } from './tuning';
@@ -18,6 +18,16 @@ export interface Stats {
   time: number;
 }
 
+export interface HudState {
+  points: number;
+  comboPoints: number;
+  comboMult: number;
+  tricks: string;
+  fruit: number;
+  lives: number;
+  crates: string;
+}
+
 export class UI {
   private statsEl: HTMLElement;
   private msgTitle: HTMLElement;
@@ -26,11 +36,16 @@ export class UI {
   private flashEl: HTMLElement;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
-  private gameHud!: HTMLElement;
-  private comboEl!: HTMLElement;
-  private comboTotalEl!: HTMLElement;
-  private comboTricksEl!: HTMLElement;
   private deathEl!: HTMLElement;
+  // game HUD elements
+  private scoreEl!: HTMLElement;
+  private cratesEl!: HTMLElement;
+  private wumpaEl!: HTMLElement;
+  private livesEl!: HTMLElement;
+  private trickPlate!: HTMLElement;
+  private trickLineEl!: HTMLElement;
+  private trickTotalEl!: HTMLElement;
+  private prevHud = { points: -1, fruit: -1, lives: -1, crates: '' };
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
   private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLSpanElement }>();
@@ -44,6 +59,7 @@ export class UI {
   constructor() {
     this.injectStyle();
 
+    // ---- LEFT side panel (level menu + debug), behind a collapsible tab ----
     const statsWrap = div('hud-stats');
     const levelRow = div('hud-levelrow');
     LEVEL_NAMES.forEach((name, i) => {
@@ -62,6 +78,7 @@ export class UI {
     statsWrap.appendChild(stats);
     this.statsEl = stats;
 
+    // ---- RIGHT side panel (tuning sliders) ----
     // Apply any saved tuning BEFORE building the sliders, so they show it.
     const saved = this.readSaved();
     if (saved) this.applyTuning(saved);
@@ -77,7 +94,7 @@ export class UI {
       b.textContent = label;
       b.addEventListener('click', () => {
         fn();
-        b.blur(); // give the keyboard back to the game
+        b.blur();
       });
       btnRow.appendChild(b);
     };
@@ -99,25 +116,57 @@ export class UI {
       panel.appendChild(this.sliderRow(key));
     }
 
+    document.body.appendChild(this.sidePanel('left', 'MENU', statsWrap));
+    document.body.appendChild(this.sidePanel('right', 'TUNER', panel));
+
+    // ---- center messages / flash ----
     this.msgWrap = div('hud-msg');
     this.msgTitle = div('hud-msg-title');
     this.msgSub = div('hud-msg-sub');
     this.msgWrap.appendChild(this.msgTitle);
     this.msgWrap.appendChild(this.msgSub);
     this.msgWrap.style.display = 'none';
-
     this.flashEl = div('hud-flash');
 
-    // The game HUD proper: score/wumpa/boxes up top, the live combo at the
-    // bottom of the screen where the action is.
-    this.gameHud = div('hud-game');
-    this.comboEl = div('hud-combo-banner');
-    this.comboTotalEl = div('hud-combo-total');
-    this.comboTricksEl = div('hud-combo-tricks');
-    this.comboEl.appendChild(this.comboTotalEl);
-    this.comboEl.appendChild(this.comboTricksEl);
+    // ---- game HUD: Crash-style counters + THPS trick plate ----
+    // top-left: crate + wumpa counters
+    const tl = div('hud-tl');
+    const crateRow = div('hud-counter');
+    crateRow.appendChild(div('hud-icon hud-icon-crate'));
+    this.cratesEl = div('hud-num');
+    crateRow.appendChild(this.cratesEl);
+    const wumpaRow = div('hud-counter');
+    wumpaRow.appendChild(div('hud-icon hud-icon-wumpa'));
+    this.wumpaEl = div('hud-num');
+    wumpaRow.appendChild(this.wumpaEl);
+    tl.appendChild(crateRow);
+    tl.appendChild(wumpaRow);
 
-    // Black game-over screen: any button restarts.
+    // top-center: score plate
+    const scorePlate = div('hud-scoreplate');
+    const scoreLabel = div('hud-scorelabel');
+    scoreLabel.textContent = 'SCORE';
+    this.scoreEl = div('hud-scorenum');
+    scorePlate.appendChild(scoreLabel);
+    scorePlate.appendChild(this.scoreEl);
+
+    // top-right: lives
+    const tr = div('hud-tr');
+    const livesRow = div('hud-counter');
+    livesRow.appendChild(div('hud-icon hud-icon-face'));
+    this.livesEl = div('hud-num');
+    livesRow.appendChild(this.livesEl);
+    tr.appendChild(livesRow);
+
+    // bottom-center: THPS trick plate
+    this.trickPlate = div('hud-trickplate');
+    this.trickLineEl = div('hud-trickline');
+    this.trickTotalEl = div('hud-tricktotal');
+    this.trickPlate.appendChild(this.trickLineEl);
+    this.trickPlate.appendChild(this.trickTotalEl);
+    this.trickPlate.style.display = 'none';
+
+    // black game-over screen: any button restarts
     this.deathEl = div('hud-death');
     this.deathEl.innerHTML =
       '<div class="hud-death-title">GAME OVER</div>' +
@@ -132,29 +181,67 @@ export class UI {
     this.balanceWrap.appendChild(this.balanceNeedle);
     this.balanceWrap.style.display = 'none';
 
-    for (const el of [statsWrap, panel, this.msgWrap, this.flashEl, this.balanceWrap, this.gameHud, this.comboEl, this.deathEl]) {
+    for (const el of [this.msgWrap, this.flashEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.deathEl]) {
       document.body.appendChild(el);
     }
+  }
+
+  // A fixed side wrapper with a vertical tab that slides the content off-screen.
+  // Collapsed by default (game view); state persists per side.
+  private sidePanel(side: 'left' | 'right', label: string, content: HTMLElement): HTMLElement {
+    const wrap = div(`side-wrap ${side}`);
+    const tab = document.createElement('button');
+    tab.className = 'side-tab';
+    tab.textContent = label;
+    const key = 'protoPanel_' + side;
+    if (localStorage.getItem(key) !== 'open') wrap.classList.add('collapsed');
+    tab.addEventListener('click', () => {
+      wrap.classList.toggle('collapsed');
+      localStorage.setItem(key, wrap.classList.contains('collapsed') ? 'closed' : 'open');
+      tab.blur();
+    });
+    if (side === 'left') {
+      wrap.appendChild(content);
+      wrap.appendChild(tab);
+    } else {
+      wrap.appendChild(tab);
+      wrap.appendChild(content);
+    }
+    return wrap;
   }
 
   showDeathScreen(visible: boolean): void {
     this.deathEl.style.display = visible ? 'flex' : 'none';
   }
 
-  setHUD(s: {
-    points: number;
-    combo: string;
-    tricks: string;
-    fruit: number;
-    lives: number;
-    crates: string;
-  }): void {
-    this.gameHud.innerHTML =
-      `<div class="hud-score">${s.points}</div>` +
-      `<div class="hud-sub">LIVES ${s.lives} · WUMPA ${s.fruit} · BOXES ${esc(s.crates)}</div>`;
-    this.comboTotalEl.textContent = s.combo;
-    this.comboTricksEl.textContent = s.tricks;
-    this.comboEl.style.display = s.combo ? 'block' : 'none';
+  setHUD(s: HudState): void {
+    if (s.points !== this.prevHud.points) {
+      this.scoreEl.textContent = String(s.points);
+      pop(this.scoreEl);
+      this.prevHud.points = s.points;
+    }
+    if (s.crates !== this.prevHud.crates) {
+      this.cratesEl.textContent = s.crates;
+      pop(this.cratesEl);
+      this.prevHud.crates = s.crates;
+    }
+    if (s.fruit !== this.prevHud.fruit) {
+      this.wumpaEl.textContent = String(s.fruit);
+      pop(this.wumpaEl);
+      this.prevHud.fruit = s.fruit;
+    }
+    if (s.lives !== this.prevHud.lives) {
+      this.livesEl.textContent = String(s.lives);
+      pop(this.livesEl);
+      this.prevHud.lives = s.lives;
+    }
+    if (s.comboMult > 0) {
+      this.trickPlate.style.display = 'block';
+      this.trickLineEl.textContent = s.tricks.toUpperCase();
+      this.trickTotalEl.textContent = `${s.comboPoints}  X${s.comboMult}`;
+    } else {
+      this.trickPlate.style.display = 'none';
+    }
   }
 
   // Saved tuning snapshot from this browser, if any. Only keys that still
@@ -266,13 +353,13 @@ export class UI {
     const style = document.createElement('style');
     style.textContent = `
       .hud-stats, .hud-tuning {
-        position: fixed; z-index: 10; color: #cfe3d8;
+        color: #cfe3d8;
         font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
-        background: rgba(14, 16, 22, 0.75); border: 1px solid #3a4152;
+        background: rgba(14, 16, 22, 0.85); border: 1px solid #3a4152;
         padding: 8px 10px; border-radius: 4px;
       }
-      .hud-stats { top: 10px; left: 10px; min-width: 230px; }
-      .hud-tuning { top: 10px; right: 10px; width: 250px; max-height: calc(100vh - 80px); overflow-y: auto; }
+      .hud-stats { min-width: 230px; }
+      .hud-tuning { width: 250px; max-height: calc(100vh - 60px); overflow-y: auto; }
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
       .hud-levelrow { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
@@ -288,6 +375,101 @@ export class UI {
       .hud-slider label { color: #9fb0c8; }
       .hud-slider span { text-align: right; color: #eef4ff; }
       .hud-slider input { width: 100%; accent-color: #8fd4a8; }
+
+      /* --- collapsible side panels --- */
+      .side-wrap {
+        position: fixed; top: 10px; z-index: 15; display: flex;
+        align-items: flex-start; transition: transform 0.25s ease;
+      }
+      .side-wrap.left { left: 0; }
+      .side-wrap.right { right: 0; }
+      .side-wrap.left.collapsed { transform: translateX(calc(-100% + 24px)); }
+      .side-wrap.right.collapsed { transform: translateX(calc(100% - 24px)); }
+      .side-tab {
+        width: 24px; padding: 10px 2px; cursor: pointer;
+        writing-mode: vertical-rl; text-orientation: upright;
+        font: bold 10px ui-monospace, Menlo, Consolas, monospace;
+        letter-spacing: 2px; color: #cfe3d8;
+        background: rgba(14, 16, 22, 0.85); border: 1px solid #3a4152;
+      }
+      .side-wrap.left .side-tab { border-radius: 0 5px 5px 0; border-left: none; }
+      .side-wrap.right .side-tab { border-radius: 5px 0 0 5px; border-right: none; }
+
+      /* --- Crash-style game HUD --- */
+      .hud-tl { position: fixed; top: 12px; left: 34px; z-index: 10; pointer-events: none; }
+      .hud-tr { position: fixed; top: 12px; right: 34px; z-index: 10; pointer-events: none; }
+      .hud-counter { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+      .hud-num {
+        font: italic 900 30px Impact, 'Arial Black', sans-serif;
+        color: #ffb43a; letter-spacing: 1px; transform: skewX(-6deg);
+        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
+          0 -2px 0 #3a1c05, 3px 3px 0 #000;
+      }
+      .hud-icon { width: 30px; height: 30px; image-rendering: pixelated; }
+      .hud-icon-crate {
+        background:
+          linear-gradient(45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
+          linear-gradient(-45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
+          #b08a4a;
+        border: 3px solid #6e4f24; box-shadow: 2px 2px 0 #000;
+      }
+      .hud-icon-wumpa {
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #ffd24a, #e2521e 70%);
+        box-shadow: 2px 2px 0 #000;
+      }
+      .hud-icon-face {
+        border-radius: 40%;
+        background: radial-gradient(circle at 40% 35%, #f4b56a, #c96f28 75%);
+        box-shadow: 2px 2px 0 #000; position: relative;
+      }
+      .hud-icon-face::before {
+        content: ''; position: absolute; left: 7px; top: 9px; width: 4px; height: 6px;
+        background: #35200c; box-shadow: 12px 0 0 #35200c;
+      }
+      .hud-pop { animation: hudpop 0.22s ease-out; }
+      @keyframes hudpop {
+        0% { transform: skewX(-6deg) scale(1.45); }
+        100% { transform: skewX(-6deg) scale(1); }
+      }
+
+      /* score plate */
+      .hud-scoreplate {
+        position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+        z-index: 10; pointer-events: none; text-align: center;
+        background: linear-gradient(#9aa096, #6f746e);
+        border: 2px solid #3d403c; border-radius: 5px; padding: 2px 18px 4px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 3px 3px 0 rgba(0,0,0,0.5);
+      }
+      .hud-scorelabel {
+        font: italic bold 11px Impact, 'Arial Black', sans-serif; letter-spacing: 3px;
+        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.35);
+      }
+      .hud-scorenum {
+        font: italic 900 26px Impact, 'Arial Black', sans-serif; letter-spacing: 2px;
+        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.35);
+      }
+
+      /* THPS trick plate */
+      .hud-trickplate {
+        position: fixed; z-index: 10; bottom: 9%; left: 50%;
+        transform: translateX(-50%); pointer-events: none; text-align: center;
+        background: linear-gradient(#8f948e, #63685f);
+        border: 2px solid #3d403c; border-radius: 6px; padding: 8px 26px 10px;
+        max-width: 76vw;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 4px 4px 0 rgba(0,0,0,0.5);
+        display: none;
+      }
+      .hud-trickline {
+        font: italic bold 17px Impact, 'Arial Black', sans-serif; letter-spacing: 1px;
+        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.35);
+        white-space: nowrap; overflow: hidden;
+      }
+      .hud-tricktotal {
+        font: italic 900 24px Impact, 'Arial Black', sans-serif; letter-spacing: 3px;
+        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.4); margin-top: 2px;
+      }
+
       .hud-msg {
         position: fixed; z-index: 11; top: 34%; left: 50%; transform: translate(-50%, -50%);
         text-align: center; color: #fff; pointer-events: none;
@@ -298,6 +480,17 @@ export class UI {
       .hud-flash {
         position: fixed; z-index: 12; inset: 0; background: #a3202a;
         opacity: 0; pointer-events: none;
+      }
+      .hud-death {
+        position: fixed; z-index: 20; inset: 0; background: #000;
+        display: none; flex-direction: column; align-items: center;
+        justify-content: center; color: #fff;
+        font: bold 54px ui-monospace, Menlo, Consolas, monospace;
+      }
+      .hud-death .hud-death-title { letter-spacing: 6px; }
+      .hud-death .hud-death-sub {
+        font-size: 16px; font-weight: normal; color: #9fb0c8; margin-top: 14px;
+        letter-spacing: 2px;
       }
       .hud-balance {
         position: fixed; z-index: 10; left: 50%; bottom: 18%;
@@ -313,37 +506,16 @@ export class UI {
         position: absolute; top: -4px; width: 8px; height: 20px;
         margin-left: -4px; border-radius: 2px; background: #8fd4a8;
       }
-      .hud-game {
-        position: fixed; z-index: 10; top: 10px; left: 50%;
-        transform: translateX(-50%); text-align: center; pointer-events: none;
-        font: bold 26px ui-monospace, Menlo, Consolas, monospace; color: #fff;
-        text-shadow: 2px 2px 0 #000;
-      }
-      .hud-game .hud-sub { font-size: 13px; color: #cfe3d8; }
-      .hud-combo-banner {
-        position: fixed; z-index: 10; bottom: 12%; left: 50%;
-        transform: translateX(-50%); pointer-events: none; text-align: center;
-        font: bold 24px ui-monospace, Menlo, Consolas, monospace; color: #ffd27a;
-        text-shadow: 2px 2px 0 #000; display: none;
-      }
-      .hud-combo-tricks {
-        font-size: 13px; font-weight: normal; color: #ffe9bd; margin-top: 2px;
-        max-width: 70vw; white-space: nowrap; overflow: hidden;
-      }
-      .hud-death {
-        position: fixed; z-index: 20; inset: 0; background: #000;
-        display: none; flex-direction: column; align-items: center;
-        justify-content: center; color: #fff;
-        font: bold 54px ui-monospace, Menlo, Consolas, monospace;
-      }
-      .hud-death .hud-death-title { letter-spacing: 6px; }
-      .hud-death .hud-death-sub {
-        font-size: 16px; font-weight: normal; color: #9fb0c8; margin-top: 14px;
-        letter-spacing: 2px;
-      }
     `;
     document.head.appendChild(style);
   }
+}
+
+// Restartable pop animation for counters that just changed.
+function pop(el: HTMLElement): void {
+  el.classList.remove('hud-pop');
+  void el.offsetWidth; // reflow restarts the animation
+  el.classList.add('hud-pop');
 }
 
 function div(cls: string): HTMLElement {

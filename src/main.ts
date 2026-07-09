@@ -185,7 +185,8 @@ function frame(): void {
   const tricks = player.comboLabels;
   ui.setHUD({
     points: player.points,
-    combo: player.comboMult > 0 ? `${player.comboPoints} × ${player.comboMult}` : '',
+      comboPoints: player.comboPoints,
+      comboMult: player.comboMult,
     tricks: (tricks.length > 6 ? '… + ' : '') + tricks.slice(-6).join(' + '),
     fruit: player.fruit,
     lives: Math.max(0, player.lives),
