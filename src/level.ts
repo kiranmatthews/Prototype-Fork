@@ -84,6 +84,41 @@ export class Level {
   private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
   private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
   private static pickupGeo = new THREE.SphereGeometry(0.24, 8, 6);
+  private checkerTex: THREE.CanvasTexture | null = null;
+
+  // Subtle checker tiles (tinted by each deck's color) so ground movement
+  // reads even without landmarks — crucial on the side-scroll camera.
+  private checkerTexture(): THREE.CanvasTexture {
+    if (this.checkerTex) return this.checkerTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    for (let y = 0; y < 2; y++) {
+      for (let x = 0; x < 2; x++) {
+        ctx.fillStyle = (x + y) % 2 === 0 ? '#ffffff' : '#cfcfcf';
+        ctx.fillRect(x * 32, y * 32, 32, 32);
+      }
+    }
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.22)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, 62, 62);
+    this.checkerTex = new THREE.CanvasTexture(canvas);
+    this.checkerTex.magFilter = THREE.NearestFilter;
+    this.checkerTex.wrapS = THREE.RepeatWrapping;
+    this.checkerTex.wrapT = THREE.RepeatWrapping;
+    return this.checkerTex;
+  }
+
+  // Per-deck clone of a base material with the checker tiled to ~2u squares.
+  private patterned(mat: THREE.Material, w: number, d: number): THREE.MeshLambertMaterial {
+    const m = (mat as THREE.MeshLambertMaterial).clone();
+    const tex = this.checkerTexture().clone();
+    tex.repeat.set(Math.max(1, Math.round(w / 4)), Math.max(1, Math.round(d / 4)));
+    tex.needsUpdate = true;
+    m.map = tex;
+    return m;
+  }
 
   constructor(scene: THREE.Scene, courseId = 0) {
     this.scene = scene;
@@ -97,12 +132,17 @@ export class Level {
   }
 
   dispose(): void {
+    const disposeMat = (x: THREE.Material): void => {
+      const map = (x as THREE.MeshLambertMaterial).map;
+      if (map) map.dispose();
+      x.dispose();
+    };
     this.root.traverse((o) => {
       const m = o as THREE.Mesh;
       if (m.geometry) m.geometry.dispose();
       const mat = m.material as THREE.Material | THREE.Material[] | undefined;
-      if (Array.isArray(mat)) mat.forEach((x) => x.dispose());
-      else mat?.dispose();
+      if (Array.isArray(mat)) mat.forEach(disposeMat);
+      else if (mat) disposeMat(mat);
     });
     this.scene.remove(this.root);
   }
@@ -827,8 +867,8 @@ export class Level {
     pit.position.set(0, -24, -112);
     this.root.add(pit);
 
-    const W = 7; // deck depth; the side camera never shows it
-    // no grindable deck edges here: they'd sit in the locked depth axis
+    const W = 9; // deck depth — up/down walks it, so give it real room
+    // no grindable deck edges here: they'd sit across the depth axis
 
     // start ledge
     this.slab('start ledge', 16, -12, 0, W, matGround, false);
@@ -912,7 +952,10 @@ export class Level {
     cx = 0,
   ): THREE.Mesh {
     const depth = Math.abs(z1 - z0);
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, 1, depth), mat);
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(width, 1, depth),
+      this.patterned(mat, width, depth),
+    );
     mesh.position.set(cx, topY - 0.5, (z0 + z1) / 2);
     mesh.name = name;
     this.root.add(mesh);
@@ -945,7 +988,10 @@ export class Level {
     // Box local +Z under rotation.x = a maps to (0, -sin a, cos a). The course
     // runs toward -Z, so align local +Z with the *reverse* travel direction.
     const alpha = Math.atan2(dyn, -dzn);
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, 1, len), mat);
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(width, 1, len),
+      this.patterned(mat, width, len),
+    );
     mesh.rotation.x = alpha;
     const normal = new THREE.Vector3(0, -dzn, dyn);
     mesh.position

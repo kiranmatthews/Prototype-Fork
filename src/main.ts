@@ -88,7 +88,10 @@ let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
   // Side-scroll levels: camera off to the +X side, screen right = down-course.
-  // Still axis-locked — it only translates.
+  // The look direction is a CONSTANT offset from the camera itself (not the
+  // player), so the damped follow can never tilt the horizon — the camera
+  // only translates, and movement reads through parallax and the floor
+  // pattern.
   if (level.sideScroll) {
     camTarget.set(player.pos.x + 14, player.pos.y + 3.6, player.pos.z - 1.5);
     if (camera.position.distanceTo(camTarget) > 30) {
@@ -96,7 +99,7 @@ function updateCamera(dt: number): void {
     } else {
       camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
     }
-    lookPoint.set(player.pos.x, player.pos.y + 1.6, player.pos.z - 1.5);
+    lookPoint.set(camera.position.x - 14, camera.position.y - 2.0, camera.position.z);
     camera.lookAt(lookPoint);
     prevPlayerZ = player.pos.z;
     return;

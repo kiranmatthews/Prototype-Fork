@@ -223,12 +223,14 @@ export class Player {
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
     // Side-scroll levels: the camera sits off to the +X side, so screen right
-    // = down-course. Remap the stick — left/right drives speed, depth is
-    // locked — while the raw stick stays available (rawInput) for the slam,
-    // grab-spin direction, and grind balance.
+    // = down-course. Remap the stick — left/right drives speed, and up/down
+    // is the depth sidestep (up = away from the camera), the exact same
+    // direct-velocity move as left/right in corridor levels. The raw stick
+    // stays available (rawInput) for the slam, grab-spin direction, and
+    // grind balance.
     this.rawInput = input;
     const ctl = level.sideScroll
-      ? ({ ...input, moveY: input.moveX, moveX: 0 } as unknown as Input)
+      ? ({ ...input, moveY: input.moveX, moveX: -input.moveY } as unknown as Input)
       : input;
     input = ctl;
 

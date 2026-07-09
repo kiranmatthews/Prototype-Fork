@@ -28,6 +28,10 @@ export class UI {
   private balanceNeedle: HTMLElement;
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
+  private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLSpanElement }>();
+  // Build defaults, captured before any saved tuning is applied — so a new
+  // build's numbers are always recoverable under the "defaults" button.
+  private defaults = { ...TUNING };
 
   // wired up by main.ts
   onLevelSelect: (id: number) => void = () => {};
@@ -53,18 +57,42 @@ export class UI {
     statsWrap.appendChild(stats);
     this.statsEl = stats;
 
+    // Apply any saved tuning BEFORE building the sliders, so they show it.
+    const saved = this.readSaved();
+    if (saved) this.applyTuning(saved);
+
     const panel = div('hud-tuning');
     panel.innerHTML = '<div class="hud-title">TUNING</div>';
+    // save = snapshot to this browser (survives new builds); reset = back to
+    // that snapshot; defaults = forget the snapshot, use the build's numbers.
+    const btnRow = div('hud-tunebtns');
+    const mkBtn = (label: string, fn: () => void): void => {
+      const b = document.createElement('button');
+      b.className = 'hud-levelbtn';
+      b.textContent = label;
+      b.addEventListener('click', () => {
+        fn();
+        b.blur(); // give the keyboard back to the game
+      });
+      btnRow.appendChild(b);
+    };
+    mkBtn('save', () => {
+      localStorage.setItem('protoTuning', JSON.stringify(TUNING));
+      this.showMessage('TUNING SAVED', '', 800);
+    });
+    mkBtn('reset', () => {
+      this.applyTuning(this.readSaved() ?? this.defaults);
+      this.showMessage('TUNING RESET', '', 800);
+    });
+    mkBtn('defaults', () => {
+      localStorage.removeItem('protoTuning');
+      this.applyTuning(this.defaults);
+      this.showMessage('BUILD DEFAULTS', '', 800);
+    });
+    panel.appendChild(btnRow);
     for (const key of Object.keys(TUNING_RANGES) as TuningKey[]) {
       panel.appendChild(this.sliderRow(key));
     }
-
-    const help = div('hud-help');
-    help.textContent =
-      'stick/arrows: up=go down=back left/right=sidestep (also in air) · X/Space: hold+release to jump · ' +
-      'Triangle/E: hold to grind (balance with left/right!) · Square/F: spin · ' +
-      'Circle/Q air: grab (+left/right spin-grab, +down body slam — release before landing!) · ' +
-      'Circle/Q ground: slide at speed, hold to crawl when stopped · R/Options: restart run';
 
     this.msgWrap = div('hud-msg');
     this.msgTitle = div('hud-msg-title');
@@ -83,8 +111,32 @@ export class UI {
     this.balanceWrap.appendChild(this.balanceNeedle);
     this.balanceWrap.style.display = 'none';
 
-    for (const el of [statsWrap, panel, help, this.msgWrap, this.flashEl, this.balanceWrap]) {
+    for (const el of [statsWrap, panel, this.msgWrap, this.flashEl, this.balanceWrap]) {
       document.body.appendChild(el);
+    }
+  }
+
+  // Saved tuning snapshot from this browser, if any. Only keys that still
+  // exist in the current build are applied, so stale saves never break a
+  // newer build's numbers.
+  private readSaved(): Partial<Record<TuningKey, number>> | null {
+    try {
+      return JSON.parse(localStorage.getItem('protoTuning') ?? 'null');
+    } catch {
+      return null;
+    }
+  }
+
+  private applyTuning(vals: Partial<Record<TuningKey, number>>): void {
+    for (const key of Object.keys(TUNING_RANGES) as TuningKey[]) {
+      const v = vals[key];
+      if (typeof v !== 'number' || !isFinite(v)) continue;
+      TUNING[key] = v;
+      const el = this.sliderEls.get(key);
+      if (el) {
+        el.input.value = String(v);
+        el.value.textContent = String(v);
+      }
     }
   }
 
@@ -164,13 +216,14 @@ export class UI {
     wrap.appendChild(label);
     wrap.appendChild(input);
     wrap.appendChild(value);
+    this.sliderEls.set(key, { input, value });
     return wrap;
   }
 
   private injectStyle(): void {
     const style = document.createElement('style');
     style.textContent = `
-      .hud-stats, .hud-tuning, .hud-help {
+      .hud-stats, .hud-tuning {
         position: fixed; z-index: 10; color: #cfe3d8;
         font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
         background: rgba(14, 16, 22, 0.75); border: 1px solid #3a4152;
@@ -178,9 +231,9 @@ export class UI {
       }
       .hud-stats { top: 10px; left: 10px; min-width: 230px; }
       .hud-tuning { top: 10px; right: 10px; width: 250px; max-height: calc(100vh - 80px); overflow-y: auto; }
-      .hud-help { bottom: 10px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
       .hud-levelrow { display: flex; gap: 4px; margin-bottom: 6px; }
+      .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-levelbtn {
         flex: 1; font: 10px ui-monospace, Menlo, Consolas, monospace;
         background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152;
