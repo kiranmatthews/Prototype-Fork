@@ -57,15 +57,24 @@ export class Player {
 
   private spinTimer = 0;
   private spinCd = 0;
-  private grabActive = false;
+  // Grab is a little state machine: reaching into the pose, holding it, and
+  // reaching back out. Landing anywhere but 'none' is a bail.
+  private grabPhase: 'none' | 'enter' | 'held' | 'exit' = 'none';
+  private grabT = 0;
   private grabGraceTimer = 0;
   private grabPose = 0;
+  private grabPitch = 0; // smoothed pose-variant params (up/left/right grabs)
+  private grabRoll = 0;
+  private armRPose = 0;
+  private armLPose = 0;
   private slideTimer = 0;
   private slideCd = 0;
   private slidePose = 0;
   private crawling = false; // Circle held while stopped: low slow crawl
   private slamActive = false; // Circle+down in the air: pancake body slam
-  private slamPose = 0;
+  private slamHangT = 0; // cartoon hang before the drop
+  private hangPose = 0;
+  private dropPose = 0;
   private slamSquash = 0; // pancake pose timer after a slam lands
   private pipeVel = 0; // halfpipe lateral carve velocity (world x, signed)
   private bailing = false; // death with a tumble animation instead of a blink-out
@@ -89,6 +98,8 @@ export class Player {
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
   private armR: THREE.Mesh | null = null;
+  private armL: THREE.Mesh | null = null;
+  private legs: THREE.Mesh | null = null;
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
@@ -166,6 +177,11 @@ export class Player {
     return this.slideTimer > 0 && this.state === 'ride' && this.grounded;
   }
 
+  // Reaching for or holding the grab (air control locks during these).
+  private get grabbing(): boolean {
+    return this.grabPhase === 'enter' || this.grabPhase === 'held';
+  }
+
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
@@ -192,6 +208,7 @@ export class Player {
     this.slideCd = 0;
     this.crawling = false;
     this.slamActive = false;
+    this.slamHangT = 0;
     this.slamSquash = 0;
     this.pipeVel = 0;
     this.bailing = false;
@@ -206,7 +223,8 @@ export class Player {
     this.vertLock = false;
     this.charging = false;
     this.chargeTimer = 0;
-    this.grabActive = false;
+    this.grabPhase = 'none';
+    this.grabT = 0;
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
     this.spinAngle = 0;
@@ -327,13 +345,14 @@ export class Player {
         else this.spawnFruit(c.box);
       }
       // collide() above may have killed us; TS can't see that mutation.
-      if ((this.state as MoveState) !== 'dead') {
+      // Masks (and the flicker after spending one) protect from blasts too.
+      if ((this.state as MoveState) !== 'dead' && this.invulnTimer <= 0) {
         const center = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
         for (const ex of level.explosions) {
           if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
           const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
           if (center.distanceTo(ex.center) < r + 0.5) {
-            this.die();
+            if (!this.spendMask()) this.die();
             break;
           }
         }
@@ -413,7 +432,8 @@ export class Player {
         this.pos.x += input.moveX * TUNING.crawlSpeed * dt;
       }
     } else {
-      // Authored accel / brake / reverse / friction. Input that OPPOSES current
+      // Authored accel / brake / friction — fully symmetric: forward and back
+      // share the same accel, top speed, and caps. Input that OPPOSES current
       // travel uses the much stronger turnaround rate, so flipping direction is
       // snappy instead of a long sticky brake. A slide is canned: it ignores the
       // stick entirely and keeps its momentum.
@@ -425,8 +445,10 @@ export class Player {
           this.speed = Math.min(this.speed + rate * input.moveY * dt, TUNING.maxSpeed);
         }
       } else if (input.moveY < -0.05) {
-        const rate = this.speed > 0.01 ? TUNING.turnaround : CONST.brakePower;
-        this.speed = Math.max(-TUNING.reverseSpeed, this.speed + rate * input.moveY * dt);
+        const rate = this.speed > 0.01 ? TUNING.turnaround : TUNING.acceleration;
+        if (this.speed > -TUNING.maxSpeed) {
+          this.speed = Math.max(this.speed + rate * input.moveY * dt, -TUNING.maxSpeed);
+        }
       } else {
         // Below stopSpeed, coasting halts almost instantly (Crash walk feel) so
         // box puzzles and platforming are precise; above it, momentum carries
@@ -450,13 +472,14 @@ export class Player {
       this.lastGrade = grade;
 
       // Downhill may exceed maxSpeed up to a hard cap; on the flat the excess
-      // bleeds back off. Reverse is capped separately.
+      // bleeds back off. Same caps in both directions.
       const hardCap = TUNING.maxSpeed * CONST.maxOverspeed;
-      if (this.speed > hardCap) this.speed = hardCap;
-      if (this.speed > TUNING.maxSpeed && grade <= 0.02) {
-        this.speed = Math.max(TUNING.maxSpeed, this.speed - CONST.overspeedDecay * dt);
+      this.speed = THREE.MathUtils.clamp(this.speed, -hardCap, hardCap);
+      if (Math.abs(this.speed) > TUNING.maxSpeed && Math.abs(grade) <= 0.02) {
+        this.speed =
+          Math.sign(this.speed) *
+          Math.max(TUNING.maxSpeed, Math.abs(this.speed) - CONST.overspeedDecay * dt);
       }
-      this.speed = Math.max(this.speed, -TUNING.reverseSpeed);
 
       this.pos.addScaledVector(FORWARD, this.speed * dt);
 
@@ -572,21 +595,30 @@ export class Player {
       this.chargeTimer = 0;
     }
 
-    // Circle + down: pancake body slam. Drops like a rock, no steering, and
-    // the impact breaks everything around you (TNT pops safely, nitro does NOT).
+    // Circle + down: pancake body slam, Wile E. Coyote rules — engage, FREEZE
+    // in the air for a beat (momentum screeches to nothing), then plummet.
+    // The impact breaks everything around you (TNT pops safely, nitro does NOT).
     if (!this.slamActive && input.grabHeld && this.rawInput.moveY < -0.5) {
       this.slamActive = true;
-      this.grabActive = false;
+      this.slamHangT = CONST.slamHang;
+      this.grabPhase = 'none';
+      this.grabT = 0;
       this.grabGraceTimer = 0;
       this.grabSpinAngle = 0;
-      this.speed *= 0.3;
       this.charging = false;
       this.chargeTimer = 0;
       this.flipTimer = 0;
     }
 
     if (this.slamActive) {
-      this.vVel = -CONST.slamSpeed; // authored plummet, gravity doesn't apply
+      if (this.slamHangT > 0) {
+        // the cartoon hang: no gravity, forward motion screeches off
+        this.slamHangT -= dt;
+        this.vVel = 0;
+        this.speed *= Math.max(0, 1 - 10 * dt);
+      } else {
+        this.vVel = -CONST.slamSpeed; // authored plummet, gravity doesn't apply
+      }
     } else {
       // Asymmetric fake gravity: heavier on the way down for a snappy arc.
       const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
@@ -597,16 +629,14 @@ export class Player {
     // jump (down brakes extra hard for precision), left/right sidesteps
     // laterally. Locked while holding a grab or slamming, and a vert air off
     // the halfpipe lip pins x — you can only ease back toward the middle.
-    if (!this.grabActive && !this.slamActive) {
+    if (!this.grabbing && !this.slamActive) {
       if (Math.abs(input.moveY) > 0.05) {
-        const rate =
-          input.moveY < 0 ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
+        // Braking (input against travel) bites harder than stretching, in
+        // either direction.
+        const opposing = input.moveY * this.speed < 0;
+        const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
         const cap = TUNING.maxSpeed * CONST.maxOverspeed;
-        this.speed = THREE.MathUtils.clamp(
-          this.speed + rate * input.moveY * dt,
-          -TUNING.reverseSpeed,
-          cap,
-        );
+        this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       if (Math.abs(input.moveX) > 0.05) {
         if (this.vertLock) {
@@ -648,14 +678,16 @@ export class Player {
         return;
       }
 
-      // Grab landing rules: still holding the pose at touchdown is a bail, and
-      // a recent release only lands clean if the spin is back on axis. A mask
-      // absorbs the bail; otherwise you tumble.
+      // Grab landing rules: touching down while reaching into, holding, or
+      // reaching out of the pose is a bail — release early enough for the
+      // whole motion to finish. A completed grab only lands clean if the spin
+      // is back on axis. A mask absorbs the bail; otherwise you tumble.
       const a = ((this.grabSpinAngle % Math.PI) + Math.PI) % Math.PI;
       const offAxis = Math.min(a, Math.PI - a) > CONST.grabOffAxisTolerance;
-      if (this.grabActive || (this.grabGraceTimer > 0 && offAxis)) {
+      if (this.grabPhase !== 'none' || (this.grabGraceTimer > 0 && offAxis)) {
         if (this.spendMask()) {
-          this.grabActive = false;
+          this.grabPhase = 'none';
+          this.grabT = 0;
           this.grabGraceTimer = 0;
           this.grabSpinAngle = 0;
           this.speed *= 0.6;
@@ -805,7 +837,9 @@ export class Player {
     this.vertLock = false;
     this.crawling = false;
     this.slamActive = false;
-    this.grabActive = false;
+    this.slamHangT = 0;
+    this.grabPhase = 'none';
+    this.grabT = 0;
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
     this.grindTime = 0;
@@ -876,21 +910,34 @@ export class Player {
     this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
     if (this.state === 'air') {
       if (input.grabHeld && !this.slamActive) {
-        this.grabActive = true;
-        // Circle alone = grab pose. Circle + left/right = grab-spin in that
-        // direction. The trajectory is locked either way — but land off-axis
-        // (or still holding) and you bail.
+        // Reach into the pose over grabTransition, then hold it.
+        if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
+          this.grabPhase = 'enter';
+          this.grabT = 0;
+        } else if (this.grabPhase === 'enter') {
+          this.grabT += dt;
+          if (this.grabT >= CONST.grabTransition) this.grabPhase = 'held';
+        }
+        // Circle + left/right = grab-spin THAT way (left arrow spins left).
+        // The trajectory is locked either way — but land mid-pose or off-axis
+        // and you bail.
         if (Math.abs(this.rawInput.moveX) > 0.3) {
-          this.grabSpinAngle += CONST.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
+          this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
         }
       } else {
-        if (this.grabActive) {
-          // Released mid-air: a short grace window still pays out on landing.
-          this.grabActive = false;
-          this.grabGraceTimer = CONST.grabGrace;
+        // Released: reach back OUT of the pose. Only once that motion
+        // finishes does the payout window open — land before then = bail.
+        if (this.grabPhase === 'enter' || this.grabPhase === 'held') {
+          this.grabPhase = 'exit';
+          this.grabT = 0;
+        } else if (this.grabPhase === 'exit') {
+          this.grabT += dt;
+          if (this.grabT >= CONST.grabTransition) {
+            this.grabPhase = 'none';
+            this.grabGraceTimer = CONST.grabGrace;
+          }
         }
-        // After release the rotation eases home to the nearest on-axis facing;
-        // release early enough and you'll land clean.
+        // The rotation eases home to the nearest on-axis facing.
         if (this.grabSpinAngle !== 0) {
           const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
           const d = target - this.grabSpinAngle;
@@ -898,8 +945,9 @@ export class Player {
           this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
         }
       }
-    } else if (this.grabActive || this.grabSpinAngle !== 0) {
-      this.grabActive = false;
+    } else if (this.grabPhase !== 'none' || this.grabSpinAngle !== 0) {
+      this.grabPhase = 'none';
+      this.grabT = 0;
       this.grabSpinAngle = 0;
     }
   }
@@ -955,11 +1003,19 @@ export class Player {
     for (const c of level.crates) {
       if (!c.alive) continue;
       if (c.nitro) {
-        // Nitro: body contact detonates it (and you with it).
+        // Nitro: body contact detonates it — fatally, unless a mask (or the
+        // invuln flicker from one) absorbs the hit.
         if (this.playerBox.intersectsBox(c.box)) {
-          level.detonate(c);
-          this.die();
-          return;
+          if (this.invulnTimer > 0) {
+            level.detonate(c, true); // already flickering: plow through it
+          } else if (this.spendMask()) {
+            level.detonate(c, true);
+            this.speed *= 0.6;
+          } else {
+            level.detonate(c);
+            this.die();
+            return;
+          }
         }
         continue;
       }
@@ -1225,7 +1281,8 @@ export class Player {
       this.state === 'air' &&
       this.coyoteTimer > 0 &&
       this.vVel <= 0 &&
-      !this.grabActive &&
+      !this.grabbing &&
+      !this.slamActive &&
       !this.vertLock;
     let wobble = 0;
     if (this.teetering || edgeGrace) {
@@ -1237,32 +1294,66 @@ export class Player {
     this.teeterPose += ((this.teetering || edgeGrace ? 1 : 0) - this.teeterPose) * Math.min(1, 14 * dt);
     this.group.rotation.z = this.lean + wobble;
 
-    // Crash walk facing: at low speed on the ground the body snaps to face the
-    // actual travel direction — sidesteps face sideways, backing up faces the
-    // camera. On rails it faces along the rail. Movement itself never leaves
-    // the course axes; this is purely the model turning.
-    let targetYaw = 0;
-    const facingApplies =
-      (this.grounded && (this.speed < -0.5 || Math.abs(this.speed) < CONST.walkFaceSpeed)) ||
-      this.state === 'grind';
-    if (facingApplies) {
-      const vx = this.pos.x - this.prevPos.x;
-      const vz = this.pos.z - this.prevPos.z;
-      if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
-        targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
-      } else {
-        targetYaw = this.visualYaw; // idle: keep facing where we last walked
-      }
+    // The body ALWAYS faces its actual travel direction — riding, grinding,
+    // sidestepping, and mid-air drift all turn the model, Crash-style.
+    // Movement itself never leaves the course axes; this is purely visual.
+    let targetYaw = this.visualYaw; // stationary: keep facing the last direction
+    const vx = this.pos.x - this.prevPos.x;
+    const vz = this.pos.z - this.prevPos.z;
+    if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
+      targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
     }
-    this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 20 * dt);
+    this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
     this.bodyGroup.rotation.y = this.visualYaw + this.spinAngle + this.grabSpinAngle;
 
-    // Grab arm reaches down and holds the board; mask hovers at the shoulder;
-    // the whole body flickers during mask-invulnerability grace.
-    if (this.armR) {
-      this.armR.rotation.x = this.grabPose * 2.1;
-      this.armR.rotation.z = 0.25 - this.grabPose * 0.55; // tucks in toward the rail of the deck
+    // Grab pose, skate-photo style: knees tucked high, one hand pulls the
+    // board, the other arm throws up. Direction held picks the variant —
+    // up = nosegrab (pitch forward), left = melon (other hand, lean left),
+    // right = indy (lean right). Left/right also spin (see updateGrab).
+    const raw = this.rawInput;
+    let pitchT = 0.7;
+    let rollT = 0;
+    let armRT = 2.2; // right hand on the board
+    let armLT = -1.4; // left arm thrown high
+    if (this.grabbing) {
+      if (raw.moveY > 0.4) {
+        pitchT = 1.05; // nosegrab: pitched hard over the nose
+        armRT = 2.5;
+        armLT = -1.7;
+      } else if (raw.moveX < -0.4) {
+        pitchT = 0.55; // melon: leading hand swaps, lean left
+        rollT = -0.35;
+        armRT = -1.4;
+        armLT = 2.2;
+      } else if (raw.moveX > 0.4) {
+        pitchT = 0.55; // indy: lean right
+        rollT = 0.35;
+        armRT = 2.4;
+        armLT = -1.1;
+      }
     }
+    const poseBlend = Math.min(1, 10 * dt);
+    this.grabPitch += (pitchT - this.grabPitch) * poseBlend;
+    this.grabRoll += (rollT - this.grabRoll) * poseBlend;
+    this.armRPose += (armRT - this.armRPose) * poseBlend;
+    this.armLPose += (armLT - this.armLPose) * poseBlend;
+    if (this.armR) {
+      this.armR.rotation.x = this.armRPose * this.grabPose;
+      this.armR.rotation.z = 0.25 - this.grabPose * 0.55;
+    }
+    if (this.armL) {
+      this.armL.rotation.x = this.armLPose * this.grabPose;
+      this.armL.rotation.z = -0.25 + this.grabPose * 0.45;
+    }
+    // Knees up: legs shorten toward the hips while the body crouches deep.
+    if (this.legs) {
+      const tuck = 1 - 0.45 * this.grabPose;
+      this.legs.scale.y = tuck;
+      this.legs.position.y = 0.71 - 0.25 * tuck;
+    }
+    this.bodyGroup.rotation.z = this.grabRoll * this.grabPose;
+    // Mask hovers at the shoulder; the whole body flickers during
+    // mask-invulnerability grace.
     this.bodyGroup.visible =
       this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead';
     if (this.maskMesh) {
@@ -1275,14 +1366,23 @@ export class Player {
       this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
     }
 
-    // Grab tuck + Crash front-flip + slide/crawl crouch + slam pancake,
-    // blended (they're mutually exclusive in practice).
-    const targetPose = this.grabActive ? 1 : 0;
-    this.grabPose += (targetPose - this.grabPose) * Math.min(1, 16 * dt);
+    // Grab tuck + Crash front-flip + slide/crawl crouch + slam poses,
+    // blended (they're mutually exclusive in practice). The grab pose ramps
+    // over grabTransition — land while it's anywhere but flat and you bail.
+    const targetPose = this.grabbing ? 1 : 0;
+    const grabRate = dt / CONST.grabTransition;
+    this.grabPose = THREE.MathUtils.clamp(
+      this.grabPose + (targetPose > this.grabPose ? grabRate : -grabRate),
+      0,
+      1,
+    );
     const targetSlide = this.sliding || this.crawling ? 1 : 0;
     this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
-    const targetSlam = this.slamActive ? 1 : 0;
-    this.slamPose += (targetSlam - this.slamPose) * Math.min(1, 18 * dt);
+    // Slam has two beats: the "uh oh" hang (rear back), then the pancake drop.
+    const hanging = this.slamActive && this.slamHangT > 0;
+    const dropping = this.slamActive && this.slamHangT <= 0;
+    this.hangPose += ((hanging ? 1 : 0) - this.hangPose) * Math.min(1, 16 * dt);
+    this.dropPose += ((dropping ? 1 : 0) - this.dropPose) * Math.min(1, 20 * dt);
     const flip =
       this.flipTimer > 0 ? (1 - this.flipTimer / CONST.flipDuration) * Math.PI * 2 : 0;
     if (this.state === 'dead' && this.bailing) {
@@ -1292,15 +1392,16 @@ export class Player {
     } else {
       this.bodyGroup.rotation.x =
         flip * (1 - this.grabPose) +
-        0.6 * this.grabPose -
-        0.35 * this.slidePose +
-        1.45 * this.slamPose - // belly-first pancake
+        this.grabPitch * this.grabPose -
+        0.35 * this.slidePose -
+        0.55 * this.hangPose + // rear back: "...uh oh"
+        1.45 * this.dropPose - // belly-first pancake
         0.28 * this.teeterPose; // arms-back "whoa whoa" lean
     }
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     this.bodyGroup.position.y =
-      this.grabPose * -0.26 - this.slidePose * 0.32 - this.chargePose * 0.26;
+      this.grabPose * -0.3 - this.slidePose * 0.32 - this.chargePose * 0.26;
     // Impact squash right after a slam lands.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
     this.bodyGroup.scale.y = 1.18 * (1 - 0.6 * squash);
@@ -1344,6 +1445,7 @@ export class Player {
     );
     legs.position.y = 0.46;
     g.add(legs);
+    this.legs = legs;
     const torso = new THREE.Mesh(
       new THREE.BoxGeometry(0.5, 0.55, 0.34),
       new THREE.MeshLambertMaterial({ color: 0x3aa68f }),
@@ -1357,7 +1459,8 @@ export class Player {
     head.position.y = 1.42;
     g.add(head);
 
-    // Simple arms; the right one reaches down to the board during a grab.
+    // Simple arms; during a grab one reaches down to the board and the other
+    // throws high (which one depends on the grab variant).
     const armMat = new THREE.MeshLambertMaterial({ color: 0x3aa68f });
     for (const side of [-1, 1]) {
       const arm = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.5, 0.13), armMat);
@@ -1365,6 +1468,7 @@ export class Player {
       arm.rotation.z = side * 0.25;
       g.add(arm);
       if (side === 1) this.armR = arm;
+      else this.armL = arm;
     }
 
     // Crude face on the travel side (+Z), so backing up shows it to the camera.

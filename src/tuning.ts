@@ -21,9 +21,9 @@ export const TUNING = {
   grindJumpForce: 24.5, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 3.5, // small vertical stall from spinning in air (not a rescue)
-  reverseSpeed: 18, // Crash-style backing up on stick-down
   turnaround: 150, // braking rate when input opposes travel — snappy direction flips
   grabBoost: 8, // speed burst on landing a clean Circle/Q air grab
+  grabSpinRate: 9, // rad/s of the directional grab-spin (left arrow = spin left)
   crateBounce: 18, // vertical pop from stomping a crate — tuned for chaining crate to crate
   slideJumpBoost: 8, // extra speed when a Circle/Q ground slide is strung into a jump
   airControl: 14, // forward/back speed adjustment in the air
@@ -56,9 +56,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
-  reverseSpeed: { min: 2, max: 20, step: 1 },
   turnaround: { min: 40, max: 300, step: 5 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
+  grabSpinRate: { min: 3, max: 20, step: 0.5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   slideJumpBoost: { min: 0, max: 20, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
@@ -73,7 +73,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 // to keep the panel focused.
 export const CONST = {
   fixedStep: 1 / 60, // deterministic chunky update rate
-  brakePower: 90, // reverse build rate once you're already stopped/backing
   overspeedDecay: 3, // bleed rate when above maxSpeed on flat ground
   maxOverspeed: 1.6, // hard cap = maxSpeed * this (downhill can exceed maxSpeed)
   killY: -48, // fall below this = instant death
@@ -87,9 +86,8 @@ export const CONST = {
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
-  walkFaceSpeed: 8, // below this forward speed the body faces its travel direction
-  grabGrace: 0.18, // releasing the grab this close to landing still counts
-  grabSpinRate: 9, // rad/s of the directional grab-spin (visual only)
+  grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
+  grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 10, // rad/s the rotation eases back on-axis after release
   grabOffAxisTolerance: 0.65, // landing more than this off-axis (rad) = bail
   flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
@@ -99,6 +97,7 @@ export const CONST = {
   slideInitBoost: 6, // direction-locked shove when the slide starts
   slideCooldown: 0.25,
   slamSpeed: 46, // Circle+down pancake slam: authored fall rate
+  slamHang: 0.32, // Wile E. Coyote beat: freeze in the air before the drop
   slamRadius: 2.4, // slam impact breaks crates/enemies within this radius
   slamSquashTime: 0.3, // pancake squash pose on impact
   fruitPerCrate: 3, // wumpa spawned per broken box
