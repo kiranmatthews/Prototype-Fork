@@ -643,31 +643,16 @@ export class Player {
   private chargedJump(dt: number): void {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
     const wasCrawling = this.crawling;
-    const fromSlide = this.slideTimer > 0;
     // Measured planar speed this step, so the jump reads your ACTUAL movement
     // in any direction — a fast sideways walk stores nothing in `speed` (that
     // scalar is the forward axis), but it still deserves a Forward Flip.
     const planar =
       Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
-    if (fromSlide) {
-      const cap = TUNING.maxSpeed * CONST.maxOverspeed;
-      this.speed = THREE.MathUtils.clamp(
-        this.speed + TUNING.slideJumpBoost * Math.sign(this.speed || 1),
-        -cap,
-        cap,
-      );
-      this.slideTimer = 0;
-      this.slideCd = CONST.slideCooldown;
-      this.slideFromWalk = false; // jumping out of the slide keeps the burst
-    }
     this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
     if (wasCrawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
     const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
-    if (fromSlide) {
-      this.lastJumpType = 'Slide Launch';
-      sfx.play('ollie', 0.7);
-    } else if (spd > TUNING.walkSpeed + 0.5) {
+    if (spd > TUNING.walkSpeed + 0.5) {
       // leaving actual skating: THPS board ollie
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
@@ -980,27 +965,35 @@ export class Player {
       this.coyoteTimer = CONST.coyoteTime;
     }
 
-    // Buffered pre-landing release: fire it now that we're down. If X is
-    // already held again, the fresh charge wins and the buffer is dropped.
-    if (this.jumpBufferT > 0 && !slamFlat && this.state === 'ride') {
+    // A slide is a committed move — it never launches a jump. Ignore jump
+    // input for its whole duration; charging only resumes once it ends.
+    if (this.slideTimer > 0) {
+      this.charging = false;
+      this.chargeTimer = 0;
       this.jumpBufferT = 0;
-      if (!input.jumpHeld) {
-        this.chargeTimer = this.jumpBufferCharge;
-        this.chargedJump(dt);
-        return;
+    } else {
+      // Buffered pre-landing release: fire it now that we're down. If X is
+      // already held again, the fresh charge wins and the buffer is dropped.
+      if (this.jumpBufferT > 0 && !slamFlat && this.state === 'ride') {
+        this.jumpBufferT = 0;
+        if (!input.jumpHeld) {
+          this.chargeTimer = this.jumpBufferCharge;
+          this.chargedJump(dt);
+          return;
+        }
       }
-    }
 
-    // Charge jump: holding X drops the board, crouches, builds jump power,
-    // and skates (the speed build lives in the skate branch above); releasing
-    // fires the jump (coyote grace applies at ledges). A quick tap still
-    // gives a serviceable hop.
-    if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
-      this.charging = true;
-      this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
-    }
-    if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
-      this.chargedJump(dt);
+      // Charge jump: holding X drops the board, crouches, builds jump power,
+      // and skates (the speed build lives in the skate branch above); releasing
+      // fires the jump (coyote grace applies at ledges). A quick tap still
+      // gives a serviceable hop.
+      if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
+        this.charging = true;
+        this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      }
+      if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
+        this.chargedJump(dt);
+      }
     }
   }
 

@@ -30,7 +30,6 @@ export const TUNING = {
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 7.5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
-  slideJumpBoost: 14, // extra speed when a slide is strung into a jump
   airControl: 6, // forward/back speed adjustment in the air
   balanceDrift: 0.2, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
@@ -71,7 +70,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
   slideDistance: { min: 3, max: 25, step: 0.5 },
   slideSpeed: { min: 10, max: 45, step: 1 },
-  slideJumpBoost: { min: 0, max: 20, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
@@ -125,7 +123,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   slideDistance:
     'How far the canned slide carries you, in world units — duration adapts to slide speed so the distance stays consistent.',
   slideSpeed: 'The speed the slide bursts to (it never slows you below your current speed).',
-  slideJumpBoost: 'Extra speed converted when you jump out of a slide mid-burst.',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
