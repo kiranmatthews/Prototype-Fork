@@ -11,6 +11,7 @@ export interface Stats {
   vVel: number;
   surface: string;
   controller: string;
+  jump: string;
   railDist: number;
   crates: string;
   fruit: number;
@@ -291,6 +292,7 @@ export class UI {
       row('vVel', s.vVel.toFixed(1)) +
       row('surface', s.surface) +
       row('controller', s.controller) +
+      row('jump', s.jump) +
       row('rail dist', railDist) +
       row('crates', s.crates) +
       row('wumpa', String(s.fruit)) +

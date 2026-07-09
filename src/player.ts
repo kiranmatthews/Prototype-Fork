@@ -99,6 +99,11 @@ export class Player {
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
   private flipTimer = 0; // front-flip on jump (visual only)
+  private skateCharge = 0; // commit meter: time X has been held WITH a direction
+  skateOn = false; // debug: the charge is currently driving the board
+  lastJumpType = '—'; // debug: what the last X release produced
+  private jumpBufferT = 0; // X released just before touchdown: jump on landing
+  private jumpBufferCharge = 0;
   private grindTime = 0; // how long this grind has lasted (balance ramps up)
   private prevPos = new THREE.Vector3(); // for travel-direction facing
   private grindRail: Rail | null = null;
@@ -220,6 +225,14 @@ export class Player {
   }
 
   // On halfpipe surface (always ridden on the board).
+  // debug readouts for the jump/skate-commit system
+  get xHoldT(): number {
+    return this.chargeTimer;
+  }
+  get skateChargeT(): number {
+    return this.skateCharge;
+  }
+
   get inPipe(): boolean {
     return (
       this.grounded &&
@@ -298,6 +311,8 @@ export class Player {
     this.setTravelDir(zn ? zn.dir : 'S');
     this.charging = false;
     this.chargeTimer = 0;
+    this.skateCharge = 0;
+    this.jumpBufferT = 0;
     this.grabPhase = 'none';
     this.grabT = 0;
     this.grabGraceTimer = 0;
@@ -325,6 +340,7 @@ export class Player {
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
+    this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
     // is the depth sidestep (up = away from the camera), the exact same
@@ -587,10 +603,13 @@ export class Player {
   }
 
   // Release-triggered charged jump: tap = jumpMinVelocity, full hold =
-  // jumpVelocity. Slide chains still convert into distance.
+  // jumpVelocity. The jump's IDENTITY is decided here, at release, from the
+  // state and speed you're carrying — not from how X was pressed.
   private chargedJump(): void {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
-    if (this.slideTimer > 0) {
+    const wasCrawling = this.crawling;
+    const fromSlide = this.slideTimer > 0;
+    if (fromSlide) {
       const cap = TUNING.maxSpeed * CONST.maxOverspeed;
       this.speed = THREE.MathUtils.clamp(
         this.speed + TUNING.slideJumpBoost * Math.sign(this.speed || 1),
@@ -603,18 +622,31 @@ export class Player {
     }
     this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
-    if (this.crawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
-    // Board-pop only when the jump leaves actual skating; on-foot hops —
-    // including stationary charge jumps — get a soft sneaker scuff instead.
-    if (Math.abs(this.speed) > TUNING.walkSpeed + 0.5) sfx.play('ollie', 0.7);
-    else sfx.play('footstep2', 0.55, 1.5);
+    if (wasCrawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
+    const spd = Math.abs(this.speed);
+    if (fromSlide) {
+      this.lastJumpType = 'Slide Launch';
+      sfx.play('ollie', 0.7);
+    } else if (spd > TUNING.walkSpeed + 0.5) {
+      // leaving actual skating: THPS board ollie
+      this.lastJumpType = 'Board Ollie';
+      sfx.play('ollie', 0.7);
+    } else if (spd > TUNING.walkSpeed * 0.45) {
+      // on foot with real run speed: Crash forward somersault
+      this.lastJumpType = 'Forward Flip';
+      this.flipTimer = CONST.flipDuration;
+      sfx.play('footstep2', 0.55, 1.5);
+    } else {
+      // (near-)standing: plain vertical Crash hop
+      this.lastJumpType = wasCrawling ? 'Crouch Jump' : 'Neutral Hop';
+      sfx.play('footstep2', 0.55, 1.5);
+    }
     this.state = 'air';
     this.grounded = false;
     this.coyoteTimer = 0;
-    this.crawling = false;
     this.charging = false;
     this.chargeTimer = 0;
-    if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
+    if (spd >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
@@ -640,14 +672,18 @@ export class Player {
 
     // The halfpipe is always ridden ON THE BOARD: force skate mode there, so
     // carving never drops you into the walking state mid-transition.
-    // Holding X while STANDING STILL is just a jump crouch — skating only
-    // starts once you also push a direction (or already carry speed).
-    // X is the accelerator only once it's clearly HELD — a quick tap is just
-    // a hop, and must never shove a walker into skate drift for a frame.
+    // X is release-to-jump; HOLDING it is the commit meter. Skate drive only
+    // engages after skateHoldTime of X + a held direction AND skateEntrySpeed
+    // of real movement — quick taps and stationary crouches stay pure Crash.
+    const stickHeld = Math.abs(input.moveY) > TUNING.inputThreshold;
+    if (this.charging && stickHeld) this.skateCharge += dt;
+    else this.skateCharge = 0;
     const pushingOff =
       this.charging &&
-      this.chargeTimer > 0.18 &&
-      (Math.abs(input.moveY) > 0.35 || Math.abs(this.speed) > 4);
+      stickHeld &&
+      this.skateCharge >= TUNING.skateHoldTime &&
+      Math.abs(this.speed) >= TUNING.skateEntrySpeed;
+    this.skateOn = pushingOff;
     const skating =
       pushingOff || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
 
@@ -832,6 +868,17 @@ export class Player {
       this.coyoteTimer = CONST.coyoteTime;
     }
 
+    // Buffered pre-landing release: fire it now that we're down. If X is
+    // already held again, the fresh charge wins and the buffer is dropped.
+    if (this.jumpBufferT > 0 && !slamFlat && this.state === 'ride') {
+      this.jumpBufferT = 0;
+      if (!input.jumpHeld) {
+        this.chargeTimer = this.jumpBufferCharge;
+        this.chargedJump();
+        return;
+      }
+    }
+
     // Charge jump: holding X drops the board, crouches, builds jump power,
     // and skates (the speed build lives in the skate branch above); releasing
     // fires the jump (coyote grace applies at ledges). A quick tap still
@@ -853,10 +900,18 @@ export class Player {
       if (input.jumpReleased && this.charging) {
         this.chargedJump();
       }
-    } else if (this.charging) {
-      // grace expired: the charge fizzles
-      this.charging = false;
-      this.chargeTimer = 0;
+    } else {
+      if (input.jumpReleased) {
+        // X let go in the air: buffer a landing jump for a beat, so a release
+        // a hair before touchdown still hops (it only fires if landing soon).
+        this.jumpBufferT = 0.14;
+        this.jumpBufferCharge = this.charging ? this.chargeTimer : 0;
+      }
+      if (this.charging) {
+        // grace expired: the charge fizzles
+        this.charging = false;
+        this.chargeTimer = 0;
+      }
     }
 
     // Circle + down: pancake body slam, Wile E. Coyote rules — engage, FREEZE
@@ -1124,6 +1179,7 @@ export class Player {
       const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
       this.charging = false;
       this.chargeTimer = 0;
+      this.lastJumpType = 'Grind Exit';
       sfx.play('ollie', 0.7);
       this.exitGrind(THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t));
       if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;

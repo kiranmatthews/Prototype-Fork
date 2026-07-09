@@ -292,6 +292,10 @@ function frame(): void {
     vVel: player.vVel,
     surface: player.surfaceName,
     controller: input.gamepadName,
+    jump:
+      `${player.lastJumpType} · hold ${player.xHoldT.toFixed(2)}s` +
+      ` · skate ${player.skateChargeT.toFixed(2)}/${TUNING.skateHoldTime.toFixed(2)}` +
+      (player.skateOn ? ' ✓' : ''),
     railDist: player.railCandidateDist,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     fruit: player.fruit,
