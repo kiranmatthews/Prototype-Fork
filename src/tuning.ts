@@ -6,7 +6,6 @@ export const TUNING = {
   maxSpeed: 43, // top skate speed
   walkSpeed: 12, // Crash walk: direct drive, instant stop; also the skate/walk boundary
   friction: 25.5, // skate speed bleed toward walking pace when coasting
-  lateralSpeed: 12, // axis-locked sidestep while skating, ground and air
   riseGravity: 40, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 107, // gravity while falling (heavier = snappy PS1 landing)
   jumpVelocity: 23.5, // fully-charged jump (hold X)
@@ -43,7 +42,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   maxSpeed: { min: 5, max: 60, step: 1 },
   walkSpeed: { min: 6, max: 20, step: 0.5 },
   friction: { min: 0, max: 30, step: 0.5 },
-  lateralSpeed: { min: 2, max: 25, step: 0.5 },
   riseGravity: { min: 10, max: 120, step: 1 },
   fallGravity: { min: 10, max: 160, step: 1 },
   jumpVelocity: { min: 4, max: 30, step: 0.5 },
@@ -85,13 +83,14 @@ export const CONST = {
   spinReach: 1.4, // extra horizontal hit reach while spinning
   spinCooldown: 0.15,
   maskInvuln: 1.0, // grace after a mask absorbs a hit or bail
+  uberTime: 12, // third mask = Crash-style invincibility for this long
   coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
   grindMinSpeed: 8, // slowest a grind can crawl (and the floor for speed bleed)
   grindBleed: 2, // grind speed lost per second on the rail
-  comboWindow: 0.5, // ground-string grace; airborne/grind combos bank on clean landing
+  comboWindow: 0.15, // near-zero: combos live in the air/on rails, not on the ground
   // Base point values — combo total = sum of bases x number of actions.
   ptsCrate: 25,
   ptsFruit: 10,

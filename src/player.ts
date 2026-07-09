@@ -38,8 +38,8 @@ export class Player {
   runTime = 0;
   cratesBroken = 0;
   fruit = 0; // wumpa collected
-  masks = 0; // Aku masks held (max 2): absorb one hit or bail
-  trickMeter = 0; // 0..1, fills from landed tricks; full = +1 mask
+  masks = 0; // Aku masks held (max 2): absorb one hit or bail; the 3rd = uber
+  uberTimer = 0; // Crash third-mask invincibility: auto-smash, perfect balance
   points = 0; // banked score
   comboPoints = 0; // pending combo: sum of base values...
   comboMult = 0; // ...times the number of actions strung together
@@ -74,6 +74,8 @@ export class Player {
   private slideTimer = 0;
   private slideCd = 0;
   private slidePose = 0;
+  private slideFromWalk = false; // slid off your feet: don't launch into skating
+  private landingScoring = false; // landing-tick payouts still count as air tricks
   private crawling = false; // Circle held while stopped: low slow crawl
   private slamActive = false; // Circle+down in the air: pancake body slam
   private slamHangT = 0; // cartoon hang before the drop
@@ -117,6 +119,7 @@ export class Player {
   private lean = 0;
 
   private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
+  private mapSide = false; // control mapping, latched across camera-zone flips
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
@@ -209,8 +212,9 @@ export class Player {
     this.cratesBroken = level.activeCheckpoint ? level.activeCheckpoint.savedCratesBroken : 0;
     this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
     this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
-    this.trickMeter = level.activeCheckpoint ? level.activeCheckpoint.savedTrickMeter : 0;
     this.points = level.activeCheckpoint ? level.activeCheckpoint.savedPoints : 0;
+    this.uberTimer = 0;
+    this.slideFromWalk = false;
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
@@ -232,6 +236,7 @@ export class Player {
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.vertLock = false;
+    this.mapSide = level.isSide(this.pos.z);
     this.charging = false;
     this.chargeTimer = 0;
     this.grabPhase = 'none';
@@ -259,7 +264,14 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
-    const ctl = level.sideScroll
+    // Crossing a camera-zone boundary while HOLDING a direction keeps the old
+    // mapping (your trajectory continues); the new mapping latches in the
+    // moment the stick passes through neutral. No surprise right-angle turns.
+    const zoneSide = level.isSide(this.pos.z);
+    if (zoneSide !== this.mapSide && Math.abs(input.moveX) < 0.3 && Math.abs(input.moveY) < 0.3) {
+      this.mapSide = zoneSide;
+    }
+    const ctl = this.mapSide
       ? ({ ...input, moveY: input.moveX, moveX: -input.moveY } as unknown as Input)
       : input;
     input = ctl;
@@ -276,8 +288,17 @@ export class Player {
     this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
+    this.uberTimer = Math.max(0, this.uberTimer - dt);
+    if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     this.prevPos.copy(this.pos);
     this.teetering = false; // stepRide re-detects it each tick
+
+    // A slide taken from your feet ends back on your feet — the burst never
+    // launches you into skating (jumping out of it mid-slide still does).
+    if (this.slideFromWalk && this.slideTimer <= 0 && this.state === 'ride' && this.grounded) {
+      this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
+      this.slideFromWalk = false;
+    }
 
     // The combo clock only runs while plain-rolling — airs, grinds, and
     // slides keep the string alive. Roll clean for the window and it banks.
@@ -299,6 +320,9 @@ export class Player {
       this.slideCd <= 0 &&
       Math.abs(this.speed) >= TUNING.slideMinSpeed
     ) {
+      // A slide off your feet is Crash's slide: canned burst, then back to
+      // walking. A slide at skate speed keeps its momentum.
+      this.slideFromWalk = !this.charging && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
       this.slideTimer = TUNING.slideDuration;
       const cap = TUNING.maxSpeed * CONST.maxOverspeed;
       this.speed = THREE.MathUtils.clamp(
@@ -362,12 +386,12 @@ export class Player {
       for (const c of level.consumeBlastBroken()) {
         this.cratesBroken++;
         this.score(CONST.ptsCrate);
-        if (c.mask) this.masks = Math.min(2, this.masks + 1);
+        if (c.mask) this.gainMask();
         else this.spawnFruit(c.box);
       }
       // collide() above may have killed us; TS can't see that mutation.
-      // Masks (and the flicker after spending one) protect from blasts too.
-      if ((this.state as MoveState) !== 'dead' && this.invulnTimer <= 0) {
+      // Uber and masks (and the flicker after spending one) block blasts.
+      if ((this.state as MoveState) !== 'dead' && this.invulnTimer <= 0 && this.uberTimer <= 0) {
         const center = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
         for (const ex of level.explosions) {
           if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
@@ -386,12 +410,20 @@ export class Player {
 
   // ---------------------------------------------------------------- states --
 
-  // Add a scoring action to the pending combo: every action raises both the
-  // base sum and the multiplier, THPS-style. Bail or die = the combo is gone.
+  // Score an action. Combos live in the AIR and on rails/slides only: those
+  // actions stack base + multiplier, THPS-style, and bank on a clean landing.
+  // Plain ground actions (spinning a box while standing there) just pay flat
+  // points — they never start or feed a combo. Bail or die = the combo dies.
   private score(base: number): void {
-    this.comboPoints += base;
-    this.comboMult += 1;
-    this.comboTimer = CONST.comboWindow;
+    const inTrick =
+      this.landingScoring || this.state === 'air' || this.state === 'grind' || this.sliding;
+    if (inTrick) {
+      this.comboPoints += base;
+      this.comboMult += 1;
+      this.comboTimer = CONST.comboWindow;
+    } else {
+      this.points += base;
+    }
   }
 
   private bankCombo(): void {
@@ -401,14 +433,16 @@ export class Player {
     this.comboTimer = 0;
   }
 
-  // Landed tricks fill the meter; a full meter converts into a mask (max 2).
-  private awardTrick(v: number): void {
-    this.trickMeter += v;
-    while (this.trickMeter >= 1 && this.masks < 2) {
+  // Crash mask rules: masks come from mask crates only. The first two are
+  // held; the THIRD triggers temporary invincibility (uber) — auto-smash on
+  // touch, perfect rail balance, immune to everything except the pit.
+  private gainMask(): void {
+    if (this.masks >= 2 || this.uberTimer > 0) {
+      this.uberTimer = CONST.uberTime;
+      this.emitSparks(14, 0xffd700, 2.5);
+    } else {
       this.masks++;
-      this.trickMeter -= 1;
     }
-    this.trickMeter = Math.min(this.trickMeter, 1);
   }
 
   // Spend a mask to survive something. Returns true if one was available.
@@ -433,7 +467,7 @@ export class Player {
       );
       this.slideTimer = 0;
       this.slideCd = CONST.slideCooldown;
-      this.awardTrick(0.15); // slide-jump chain
+      this.slideFromWalk = false; // jumping out of the slide keeps the burst
     }
     this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
@@ -554,7 +588,7 @@ export class Player {
       if (this.crawling) {
         if (Math.abs(input.moveX) > 0.05) this.pos.x += input.moveX * TUNING.crawlSpeed * dt;
       } else if (this.slideTimer <= 0 && Math.abs(input.moveX) > 0.05) {
-        this.pos.x += input.moveX * (skating ? TUNING.lateralSpeed : TUNING.walkSpeed) * dt;
+        this.pos.x += input.moveX * (skating ? TUNING.walkSpeed : TUNING.walkSpeed) * dt;
       }
     }
 
@@ -688,10 +722,10 @@ export class Player {
         if (this.vertLock) {
           const inward = -Math.sign(this.pos.x) || 1;
           if (input.moveX * inward > 0) {
-            this.pos.x += inward * TUNING.lateralSpeed * 0.5 * dt;
+            this.pos.x += inward * TUNING.walkSpeed * 0.5 * dt;
           }
         } else {
-          this.pos.x += input.moveX * TUNING.lateralSpeed * dt;
+          this.pos.x += input.moveX * TUNING.walkSpeed * dt;
         }
       }
     }
@@ -737,48 +771,50 @@ export class Player {
         this.pipeVel =
           -(Math.sign(this.pos.x) || 1) * Math.min(impact * CONST.pipeLandKeep, CONST.pipeMaxVel);
       }
-      if (wasVert) {
-        this.awardTrick(0.3); // landed a vert air
-        this.score(CONST.ptsVert);
-      }
+      // Landing-tick payouts (vert, grab, slam impact) are still air tricks
+      // for combo purposes even though the state just flipped to 'ride'.
+      this.landingScoring = true;
+      if (wasVert) this.score(CONST.ptsVert);
 
       if (this.slamActive) {
         this.slamImpact(level);
+        this.landingScoring = false;
         return;
       }
 
       // Grab landing rules: touching down while reaching into, holding, or
       // reaching out of the pose is a bail — release early enough for the
       // whole motion to finish. A completed grab only lands clean if the spin
-      // is back on axis. A mask absorbs the bail; otherwise you tumble.
+      // is back on axis. Uber shrugs it off; a mask absorbs it; otherwise
+      // you tumble.
       const a = ((this.grabSpinAngle % Math.PI) + Math.PI) % Math.PI;
       const offAxis = Math.min(a, Math.PI - a) > CONST.grabOffAxisTolerance;
       if (this.grabPhase !== 'none' || (this.grabGraceTimer > 0 && offAxis)) {
-        if (this.spendMask()) {
+        if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
           this.grabT = 0;
           this.grabGraceTimer = 0;
           this.grabSpinAngle = 0;
-          this.speed *= 0.6;
+          if (this.uberTimer <= 0) this.speed *= 0.6;
         } else {
+          this.landingScoring = false;
           this.bail();
+          return;
         }
-        return;
-      }
-      // A clean (released in time, on-axis) grab pays out a speed burst.
-      if (this.grabGraceTimer > 0) {
+      } else if (this.grabGraceTimer > 0) {
+        // A clean (released in time, on-axis) grab pays out a speed burst.
         this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
         const cap = TUNING.maxSpeed * CONST.maxOverspeed;
         this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
         this.grabGraceTimer = 0;
         this.grabSpinAngle = 0;
-        this.awardTrick(0.35); // landed a grab
         this.score(CONST.ptsGrab + (this.grabSpinTotal > 2.5 ? CONST.ptsGrabSpin : 0));
         this.grabSpinTotal = 0;
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
       // Safe landing = the combo is over: bank it on the spot.
       this.bankCombo();
+      this.landingScoring = false;
       return;
     }
     // No assisted rail snap here on purpose: THPS2 rules — you have to be
@@ -830,6 +866,7 @@ export class Player {
     // THPS balance: the needle is an unstable equilibrium that runs away from
     // center, faster the longer you grind; left/right input fights it. Slow
     // grinds are wobblier than fast ones. Pegging the meter bails you off.
+    // The third-mask uber locks the needle dead center.
     const speedFactor = THREE.MathUtils.clamp(
       TUNING.grindSpeed / Math.max(this.grindVel, 1),
       0.6,
@@ -839,6 +876,7 @@ export class Player {
       TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp) * speedFactor;
     this.balance += Math.sign(this.balance || 1) * instability * dt;
     this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
+    if (this.uberTimer > 0) this.balance = 0; // perfect balance
     if (Math.abs(this.balance) >= 1) {
       // A mask absorbs the bail: the needle resets and the grind continues.
       if (this.spendMask()) {
@@ -948,7 +986,6 @@ export class Player {
   }
 
   private exitGrind(vVel: number): void {
-    if (this.grindTime > 1.2) this.awardTrick(0.3); // held a long grind
     // A survived grind scores: base + time held on the rail.
     this.score(CONST.ptsGrindBase + Math.round(this.grindTime * CONST.ptsGrindPerSec));
     if (this.grindRail) {
@@ -1102,11 +1139,11 @@ export class Player {
     for (const c of level.crates) {
       if (!c.alive) continue;
       if (c.nitro) {
-        // Nitro: body contact detonates it — fatally, unless a mask (or the
-        // invuln flicker from one) absorbs the hit.
+        // Nitro: body contact detonates it — fatally, unless uber or a mask
+        // (or the invuln flicker from one) absorbs the hit.
         if (this.playerBox.intersectsBox(c.box)) {
-          if (this.invulnTimer > 0) {
-            level.detonate(c, true); // already flickering: plow through it
+          if (this.uberTimer > 0 || this.invulnTimer > 0) {
+            level.detonate(c, true); // plow straight through it
           } else if (this.spendMask()) {
             level.detonate(c, true);
             this.speed *= 0.6;
@@ -1127,7 +1164,7 @@ export class Player {
         if (this.spinning && this.spinBox.intersectsBox(c.box)) {
           level.detonate(c, true);
         } else if (this.playerBox.intersectsBox(c.box)) {
-          if (this.sliding) {
+          if (this.uberTimer > 0 || this.sliding) {
             level.detonate(c, true);
           } else if (this.state === 'grind') {
             if (this.spendMask()) level.detonate(c, true);
@@ -1173,12 +1210,15 @@ export class Player {
       if (this.spinning && this.spinBox.intersectsBox(c.box)) {
         this.smashCrate(level, c);
       } else if (this.playerBox.intersectsBox(c.box)) {
-        if (this.sliding) {
+        if (this.uberTimer > 0 && !this.isStomping(c.box)) {
+          // Uber: boxes shatter on touch (stomps below still bounce).
+          this.smashCrate(level, c);
+        } else if (this.sliding) {
           // Slides smash boxes without breaking stride.
           this.smashCrate(level, c);
         } else if (this.state === 'grind') {
-          // Crates on the rail line are obstacles now: spin them, hop and
-          // bounce them, or they knock you straight off (a mask absorbs it).
+          // Crates on the rail line are obstacles: spin them, hop and bounce
+          // them, or they knock you straight off (a mask absorbs it).
           if (this.spendMask()) this.smashCrate(level, c);
           else this.bailFromRail();
         } else if (this.isStomping(c.box)) {
@@ -1207,8 +1247,8 @@ export class Player {
         level.killEnemy(e);
         this.score(CONST.ptsEnemy);
       } else if (this.playerBox.intersectsBox(e.box)) {
-        if (this.sliding) {
-          // Crash 3 rules: the slide takes out enemies too.
+        if (this.uberTimer > 0 || this.sliding) {
+          // Uber plows through; Crash 3 rules: the slide takes out enemies too.
           level.killEnemy(e);
           this.score(CONST.ptsEnemy);
         } else if (this.isStomping(e.box)) {
@@ -1240,20 +1280,20 @@ export class Player {
     for (const cp of level.checkpoints) {
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
-        level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
+        level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
         this.onCheckpoint();
       } else if (this.playerBox.intersectsBox(cp.box)) {
         if (this.sliding) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
         } else if (this.isStomping(cp.box)) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
           this.vVel = TUNING.crateBounce;
           this.state = 'air';
           this.grounded = false;
         } else if (this.isBonking(cp.box)) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.trickMeter, this.points);
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
           this.vVel = Math.min(this.vVel, 2);
         } else {
@@ -1285,7 +1325,7 @@ export class Player {
     level.breakCrate(c);
     this.cratesBroken++;
     this.score(CONST.ptsCrate);
-    if (c.mask) this.masks = Math.min(2, this.masks + 1);
+    if (c.mask) this.gainMask();
     else this.spawnFruit(c.box);
   }
 
@@ -1516,13 +1556,20 @@ export class Player {
     this.bodyGroup.visible =
       this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead';
     if (this.maskMesh) {
-      this.maskMesh.visible = this.masks > 0 && this.state !== 'dead';
+      this.maskMesh.visible = (this.masks > 0 || this.uberTimer > 0) && this.state !== 'dead';
       this.maskMesh.position.set(
         this.pos.x + 1.0,
-        this.pos.y + 1.7 + Math.sin(this.runTime * 3) * 0.09,
+        this.pos.y + 1.7 + Math.sin(this.runTime * (this.uberTimer > 0 ? 9 : 3)) * 0.09,
         this.pos.z + 0.2,
       );
-      this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
+      if (this.uberTimer > 0) {
+        // third-mask frenzy: the mask spins and pulses for the whole ride
+        this.maskMesh.rotation.y += 8 * dt;
+        this.maskMesh.scale.setScalar(1.35 + Math.sin(this.runTime * 10) * 0.15);
+      } else {
+        this.maskMesh.rotation.y = 0;
+        this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
+      }
     }
 
     // Grab tuck + Crash front-flip + slide/crawl crouch + slam poses,

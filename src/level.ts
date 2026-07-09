@@ -45,7 +45,6 @@ export interface Checkpoint {
   savedCratesBroken: number; // crate counter captured when this was broken
   savedFruit: number; // wumpa counter captured when this was broken
   savedMasks: number;
-  savedTrickMeter: number;
   savedPoints: number;
 }
 
@@ -58,7 +57,10 @@ export class Level {
   checkpoints: Checkpoint[] = [];
   pickups: Pickup[] = [];
   rails: Rail[] = [];
-  sideScroll = false; // side-on camera; screen right = down-course, depth locked
+  // Side-scroll camera ZONES along the course (from > to, since z runs
+  // negative): inside one, the camera swings to the side and the stick
+  // remaps. Levels can mix corridor and side sections freely.
+  sideZones: { from: number; to: number }[] = [];
   finishBox = new THREE.Box3();
   finishZ = -1005;
   endWallZ = -1021; // authored hard stop after the finish gate
@@ -150,6 +152,13 @@ export class Level {
 
   get totalCrates(): number {
     return this.crates.filter((c) => !c.nitro && !c.bouncy && !c.tnt).length;
+  }
+
+  isSide(z: number): boolean {
+    for (const s of this.sideZones) {
+      if (z <= s.from && z >= s.to) return true;
+    }
+    return false;
   }
 
   update(dt: number): void {
@@ -319,13 +328,12 @@ export class Level {
 
   // Broken (spun/stomped) like a normal box; banks the respawn point and a
   // snapshot of exactly which crates are broken + the counter at this moment.
-  activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0, masks = 0, trickMeter = 0, points = 0): void {
+  activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0, masks = 0, points = 0): void {
     cp.active = true;
     cp.savedAlive = this.crates.map((c) => c.alive);
     cp.savedCratesBroken = cratesBroken;
     cp.savedFruit = fruit;
     cp.savedMasks = masks;
-    cp.savedTrickMeter = trickMeter;
     cp.savedPoints = points;
     this.currentSpawn.copy(cp.spawnPos);
     this.activeCheckpoint = cp;
@@ -839,16 +847,17 @@ export class Level {
     this.endWall(33);
   }
 
-  // Crash 2-style SIDE-SCROLLING level: the camera sits off to the +X side,
-  // so screen right = down-course and depth is locked (see player.ts /
-  // main.ts). Floating platforms over a pit, fruit rows, a grind line, a
-  // bouncy-crate high route — classic sideways ruins.
+  // Mixed-camera level: a corridor intro, then the camera swings to the side
+  // for the Crash 2 sideways-ruins stretch (floating platforms, fruit rows, a
+  // grind line, a bouncy-crate high route), then swings back for the final
+  // corridor descent and runway.
   private buildSideways(): void {
     const matGround = new THREE.MeshLambertMaterial({ color: 0x77955e });
     const matPlat = new THREE.MeshLambertMaterial({ color: 0x8a8f79 });
     const matStone = new THREE.MeshLambertMaterial({ color: 0x7d8288 });
 
-    this.sideScroll = true;
+    // the sideways stretch: enters on the lower path, exits on the step-downs
+    this.sideZones = [{ from: -30, to: -198 }];
     this.killY = -20;
     this.finishZ = -246;
     this.endWallZ = -252;
@@ -1316,13 +1325,13 @@ export class Level {
       savedCratesBroken: 0,
       savedFruit: 0,
       savedMasks: 0,
-      savedTrickMeter: 0,
       savedPoints: 0,
     });
   }
 
   // Crude seedless random course: flats with random furniture, gaps, slopes,
-  // rails over pits, kickers, step blocks. Re-select "Random" to reroll.
+  // rails over pits, kickers, step blocks — and the camera occasionally
+  // swings sideways for a stretch. Re-select "Random" to reroll.
   private buildRandom(): void {
     const mats = [0x8a8f9a, 0x767b87, 0x7d95a5, 0x86937e].map(
       (c) => new THREE.MeshLambertMaterial({ color: c }),
@@ -1334,6 +1343,7 @@ export class Level {
     let dist = 0;
     let lastGap = false;
     let cpDue = 170;
+    let inSide = false; // camera-zone boundaries only ever land on flat decks
     this.slab('start', z, z - 30, y, 14, mat());
     z -= 30;
     while (dist < 800) {
@@ -1343,15 +1353,31 @@ export class Level {
         const len = 28 + Math.random() * 22;
         const w = 10 + Math.random() * 4;
         this.slab('deck', z, z - len, y, w, mat());
+        // sometimes swing the camera to the side (or back) for a stretch
+        if (Math.random() < 0.28) {
+          if (!inSide) this.sideZones.push({ from: z - 5, to: -1e9 });
+          else this.sideZones[this.sideZones.length - 1].to = z - 5;
+          inSide = !inSide;
+        }
         const crates = Math.floor(Math.random() * 3);
         for (let i = 0; i < crates; i++) {
-          this.crate(Math.round(Math.random() * 8 - 4), y, z - 6 - Math.random() * (len - 12));
+          this.crate(
+            inSide ? 0 : Math.round(Math.random() * 8 - 4),
+            y,
+            z - 6 - Math.random() * (len - 12),
+          );
         }
-        if (Math.random() < 0.5) this.enemy(-3.5, 3.5, y, z - len / 2, 3 + Math.random() * 5);
-        if (Math.random() < 0.35) this.crate(Math.random() < 0.5 ? -4 : 4, y, z - len * 0.7, 'nitro');
-        if (Math.random() < 0.22) this.crate(Math.random() < 0.5 ? -3 : 3, y, z - len * 0.4, 'tnt');
-        if (Math.random() < 0.12) this.crate(Math.random() < 0.5 ? -2 : 2, y, z - len * 0.3, 'mask');
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.5) {
+          if (inSide) this.enemyZ(z - len + 6, z - 6, y, 0, 3 + Math.random() * 4);
+          else this.enemy(-3.5, 3.5, y, z - len / 2, 3 + Math.random() * 5);
+        }
+        if (Math.random() < 0.35) this.crate(inSide ? 0 : Math.random() < 0.5 ? -4 : 4, y, z - len * 0.7, 'nitro');
+        if (Math.random() < 0.22) this.crate(inSide ? 0 : Math.random() < 0.5 ? -3 : 3, y, z - len * 0.4, 'tnt');
+        if (Math.random() < 0.12) this.crate(inSide ? 0 : Math.random() < 0.5 ? -2 : 2, y, z - len * 0.3, 'mask');
+        if (inSide && Math.random() < 0.6) {
+          this.fruitRow(z - 8, z - len + 8, y + 1.4, 4);
+        }
+        if (!inSide && Math.random() < 0.3) {
           const bx = Math.random() < 0.5 ? -2.5 : 2.5;
           this.stepBlock(bx, z - len * 0.5, 4, 5, y, y + 2.2);
           this.crate(bx, y + 2.2, z - len * 0.5);
@@ -1414,6 +1440,8 @@ export class Level {
       this.slab('landing', z, z - 30, y, 12, mat());
       z -= 30;
     }
+    // never finish sideways: close any open camera zone before the runway
+    if (inSide) this.sideZones[this.sideZones.length - 1].to = z + 2;
     this.slab('finish run', z, z - 45, y, 14, mat());
     this.finishZ = z - 30;
     this.endWallZ = z - 42;
