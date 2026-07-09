@@ -35,8 +35,7 @@ export const TUNING = {
   balanceDrift: 0.2, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
-  pipeAccel: 23, // halfpipe: lateral carve accel on the flat (pump the walls!)
-  pipeLift: 1.1, // halfpipe: carve speed left at the lip converts to air at this rate
+  smashSpeed: 16, // skating/grinding at or above this speed plows straight through plain crates
   boulderSpeed: 25, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
 };
 
@@ -76,8 +75,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
-  pipeAccel: { min: 10, max: 90, step: 1 },
-  pipeLift: { min: 0.5, max: 2, step: 0.05 },
+  smashSpeed: { min: 8, max: 40, step: 0.5 },
   boulderSpeed: { min: 10, max: 45, step: 1 },
 };
 
@@ -132,9 +130,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
-  pipeAccel: 'Halfpipe carve acceleration from the stick — pumping strength on the flat and walls.',
-  pipeLift:
-    'How much carve speed left at the halfpipe lip converts into vertical air (launch = carve x this).',
+  smashSpeed:
+    'Skating or grinding at or above this speed plows straight through plain wooden crates (TNT and nitro stay dangerous). Below it, a crate is a wall.',
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
 };
@@ -158,7 +155,6 @@ export const CONST = {
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
   grindMinSpeed: 8, // slowest a grind can crawl (and the floor for speed bleed)
-  grindSmashSpeed: 28, // at or above this grind speed, plain crates just shatter
   grindBleed: 2, // grind speed lost per second on the rail
   comboWindow: 0.15, // near-zero: combos live in the air/on rails, not on the ground
   // Base point values — combo total = sum of bases x number of actions.
@@ -171,7 +167,6 @@ export const CONST = {
   ptsGrab: 150,
   ptsGrabQuarter: 40, // per 90 degrees of grab rotation landed
   ptsGrabTick: 4, // accrues every quarter second a grab is held (THPS-style)
-  ptsVert: 200,
   ptsGrindBase: 100,
   ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
@@ -198,11 +193,13 @@ export const CONST = {
   tntBlastScale: 0.6, // TNT blast radius vs nitro (40% smaller)
   blastRadius: 5.5, // nitro explosion kill/break radius (expands over blastGrow)
   blastGrow: 0.35, // seconds for the blast sphere to reach full size
-  hpSnapWindow: 2.6, // taller ground-snap window on halfpipe walls so steep climbs stick
-  pipeMaxVel: 30, // halfpipe lateral carve speed cap
-  pipeGravity: 46, // halfpipe: transition steepness bleeds carve speed at this rate
-  pipeFriction: 9, // halfpipe: carve speed decay on the flat with no input
-  pipeLandKeep: 0.55, // landing on the transition converts fall speed back to carve
-  pipeMinLaunch: 5, // need this much carve left at the lip to air out
+  // Steep-ground rules: the halfpipe is just terrain now — these decide when
+  // a slope stops being floor and starts being transition.
+  steepStand: 0.78, // ground normal.y below this (~39deg+) = too steep to stand: always ridden
+  steepSnapNormal: 0.85, // below this, ground-follow + landing windows widen for transitions
+  steepSnapWindow: 2.6, // taller ground-snap window on steep transitions so fast climbs stick
+  steepLandGive: 1.5, // landing penetration forgiveness on steep faces (vs 0.35 on decks)
+  vertGrade: 1.2, // leaving a lip steeper than this counts as vert coping...
+  vertKeep: 0.25, // ...and keeps only this fraction of planar speed (air goes UP, back into the pipe)
   renderScale: 0.5, // low internal resolution for the PS1 look
 };

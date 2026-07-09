@@ -1053,9 +1053,9 @@ export class Level {
     this.jungle('corridor D', -488, -575, -13, 12, matA);
     // rail 2 pit: -575 .. -655
     this.jungle('rail 2 landing', -655, -710, -13.5, 12, matB);
-    // Halfpipe, THPS fake physics: lateral speed built on the flat carries up
-    // the transition (player.ts pipeVel), bleeds against the steepness, and
-    // whatever is left at the lip converts into a locked vert air. The walls
+    // Halfpipe: plain terrain under the normal skate/slope physics — carve up
+    // the transition, the steepness bleeds your speed, and whatever crests the
+    // near-vertical lip converts into (mostly upward) air. The walls
     // approximate a radius-7.3 quarter-pipe; lips are grindable rails.
     const hpFloor = this.slab('halfpipe floor', -710, -770, -13.5, 6, matA, false);
     hpFloor.userData.hpFloor = true;

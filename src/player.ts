@@ -16,8 +16,6 @@ interface GroundHit {
   y: number;
   normal: THREE.Vector3;
   name: string;
-  hpWall?: boolean; // halfpipe transition segment
-  hpFloor?: boolean; // halfpipe flat — lateral movement is inertial carve here
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
 }
@@ -92,8 +90,9 @@ export class Player {
   private hangPose = 0;
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
+  private slopePose = 0; // body pitches to match the ground under the board
+  private slopeRoll = 0; // ...and rolls to match the cross-slope (bank/wall)
   private slamSquash = 0; // pancake pose timer after a slam lands
-  private pipeVel = 0; // halfpipe lateral carve velocity (world x, signed)
   private bailing = false; // death with a tumble animation instead of a blink-out
   private bailSpin = 0;
   private grabSpinAngle = 0; // directional grab-spin; land off-axis = bail
@@ -130,7 +129,6 @@ export class Player {
   private regrindCd = 0;
   private respawnTimer = 0;
   private coyoteTimer = 0; // jump grace after running off a ledge
-  private vertLock = false; // airborne off the halfpipe lip: x is pinned to the pipe
   private chargeTimer = 0; // X held on the ground: builds jump power + speed
   private charging = false;
   private chargePose = 0;
@@ -239,7 +237,6 @@ export class Player {
     return this.grabPhase === 'enter' || this.grabPhase === 'held';
   }
 
-  // On halfpipe surface (always ridden on the board).
   // debug readouts for the jump/skate-commit system
   get xHoldT(): number {
     return this.chargeTimer;
@@ -248,16 +245,10 @@ export class Player {
     return this.skateCharge;
   }
 
-  get inPipe(): boolean {
-    return (
-      this.grounded &&
-      this.groundHit !== null &&
-      (this.groundHit.hpWall === true || this.groundHit.hpFloor === true)
-    );
-  }
-
-  get carveSpeed(): number {
-    return Math.abs(this.pipeVel);
+  // Momentum-skate mode is live (board down, heading model driving) — used by
+  // the audio loop so slow carves on a transition still sound like rolling.
+  get boardRolling(): boolean {
+    return this.freeSkate;
   }
 
   private setTravelDir(dir: 'S' | 'E' | 'W'): void {
@@ -311,7 +302,6 @@ export class Player {
     this.slamActive = false;
     this.slamHangT = 0;
     this.slamSquash = 0;
-    this.pipeVel = 0;
     this.bailing = false;
     this.bailSpin = 0;
     this.bodyGroup.rotation.x = 0;
@@ -321,7 +311,8 @@ export class Player {
     }
     this.groundHit = null;
     this.coyoteTimer = 0;
-    this.vertLock = false;
+    this.slopePose = 0;
+    this.slopeRoll = 0;
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     this.charging = false;
@@ -715,13 +706,6 @@ export class Player {
     // the board down and builds speed, and any carried momentum — downhill,
     // rail exits, slides, boosts — keeps you skating until it bleeds back to
     // walking pace.
-    // Was the last step on halfpipe surface? There, lateral movement is an
-    // inertial carve (build speed on the flat, carry it up the transition)
-    // instead of the usual direct sidestep.
-    const pipeMode = this.groundHit !== null && (this.groundHit.hpWall === true || this.groundHit.hpFloor === true);
-
-    // The halfpipe is always ridden ON THE BOARD: force skate mode there, so
-    // carving never drops you into the walking state mid-transition.
     // X is release-to-jump; HOLDING it is the commit meter. Skate drive only
     // engages after skateHoldTime of X + a held direction AND skateEntrySpeed
     // of real movement — quick taps and stationary crouches stay pure Crash.
@@ -738,12 +722,17 @@ export class Player {
       this.skateCharge >= TUNING.skateHoldTime &&
       planarSpeed >= TUNING.skateEntrySpeed;
     this.skateOn = pushingOff;
+    // Ground too steep to stand on (halfpipe transitions, steep banks): feet
+    // can't grip there, so it's always ridden with real momentum. Flat ground
+    // — including the halfpipe FLOOR — plays by the normal walk/skate rules.
+    const steepGround = this.groundHit !== null && this.groundHit.normal.y < CONST.steepStand;
     const skating =
-      pushingOff || this.slideTimer > 0 || pipeMode || planarSpeed > TUNING.walkSpeed + 0.5;
+      pushingOff || this.slideTimer > 0 || steepGround || planarSpeed > TUNING.walkSpeed + 0.5;
 
-    // Enter/leave free-heading mode. Walking, the halfpipe, and canned
-    // slides keep the classic course-axis model; the board carves free.
-    const free = skating && !pipeMode && this.slideTimer <= 0 && !slamFlat && !this.crawling;
+    // Enter/leave free-heading mode. Walking and canned slides keep the
+    // classic course-axis model; the board carves free — everywhere,
+    // transitions included.
+    const free = skating && this.slideTimer <= 0 && !slamFlat && !this.crawling;
     if (free && !this.freeSkate) {
       // Seed the skate velocity from the direction you're actually going, so
       // a sideways walk hands its momentum straight into the skate (the
@@ -832,11 +821,16 @@ export class Player {
             const nfz = -this.axisF.x * s + this.axisF.z * c;
             this.axisF.set(nfx, 0, nfz);
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-            if (this.charging) this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
-            else this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
+            // The charge only ADDS speed up to maxSpeed — it must never chop
+            // hard-earned downhill overspeed back down (that read as greasy).
+            if (this.charging && this.speed < TUNING.maxSpeed)
+              this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+            else if (!this.charging)
+              this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
           }
         } else if (this.charging && this.speed > 1) {
-          this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+          if (this.speed < TUNING.maxSpeed)
+            this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
         } else {
           this.speed = Math.max(0, this.speed - TUNING.friction * dt);
         }
@@ -879,8 +873,10 @@ export class Player {
         grade = (n.x * this.axisF.x + n.z * this.axisF.z) / Math.max(n.y, 0.2);
       }
       if (Math.abs(grade) > 0.02) {
-        // X held = attack the ramp (more boost); no X = mellow roll
-        const rampFactor = this.charging ? 1.3 : 0.8;
+        // X held = attack the ramp: MORE boost downhill, LESS bleed uphill —
+        // pumping a transition with X is how you build the height to crest
+        // it. Coasting takes the honest hit both ways.
+        const rampFactor = grade > 0 ? (this.charging ? 1.3 : 0.8) : this.charging ? 0.55 : 0.8;
         this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * rampFactor * dt;
       }
       this.lastGrade = grade;
@@ -895,59 +891,76 @@ export class Player {
           Math.max(TUNING.maxSpeed, Math.abs(this.speed) - CONST.overspeedDecay * dt);
       }
       // A free heading never reverses through zero — stalling on a hill just
-      // stops you, and below walking pace your feet take over.
-      if (this.freeSkate) this.speed = Math.max(0, this.speed);
+      // stops you, and below walking pace your feet take over. EXCEPT on
+      // ground too steep to stand: there the board swings downhill and you
+      // roll straight back into the transition — no parking on the wall.
+      if (this.freeSkate) {
+        if (this.speed <= 0.01 && steepGround) {
+          const n = this.groundHit!.normal;
+          const len = Math.hypot(n.x, n.z);
+          if (len > 1e-4) {
+            this.axisF.set(n.x / len, 0, n.z / len);
+            this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+            // keep any inbound magnitude (vert-air re-entry), else a nudge
+            this.speed = Math.max(1.5, -this.speed);
+          }
+        }
+        this.speed = Math.max(0, this.speed);
+      }
     }
 
     this.pos.addScaledVector(this.axisF, this.speed * dt);
 
-    if (pipeMode) {
-      // Halfpipe carve: the stick accelerates an inertial lateral velocity
-      // (pump!), the flat bleeds a little, and the transition's steepness
-      // fights the climb — whatever survives to the lip becomes air.
-      this.pipeVel += input.moveX * TUNING.pipeAccel * dt;
-      if (this.groundHit!.hpWall) {
-        const outward = Math.sign(this.pos.x) || 1;
-        const steep = Math.min(1, Math.abs(this.groundHit!.normal.x));
-        this.pipeVel -= outward * CONST.pipeGravity * steep * dt;
-      } else if (Math.abs(input.moveX) < 0.05) {
-        const drop = CONST.pipeFriction * dt;
-        this.pipeVel = Math.abs(this.pipeVel) <= drop ? 0 : this.pipeVel - Math.sign(this.pipeVel) * drop;
+    // Axis-locked sidestep: direct velocity while held, dead stop on
+    // release. Left is ALWAYS screen-left, even while backing up. Slides
+    // are direction locked: no steering mid-slide.
+    if (slamFlat) {
+      // pancaked: no steering
+    } else if (this.crawling) {
+      if (input.moveX !== 0) {
+        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * diag * dt);
       }
-      this.pipeVel = THREE.MathUtils.clamp(this.pipeVel, -CONST.pipeMaxVel, CONST.pipeMaxVel);
-      this.pos.x += this.pipeVel * dt;
-    } else {
-      this.pipeVel = 0;
-      // Axis-locked sidestep: direct velocity while held, dead stop on
-      // release. Left is ALWAYS screen-left, even while backing up. Slides
-      // are direction locked: no steering mid-slide.
-      if (slamFlat) {
-        // pancaked: no steering
-      } else if (this.crawling) {
-        if (input.moveX !== 0) {
-          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * diag * dt);
-        }
-      } else if (this.slideTimer > 0) {
-        // the slide's cross-course component
-        const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
-        this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
-      } else if (input.moveX !== 0 && !this.freeSkate) {
-        // Walking keeps the direct crisp sidestep (diagonal-normalized).
-        // Free-heading skating has NO sidestep — carving IS the steering.
-        const latRate = skating
-          ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
-          : TUNING.walkSpeed * diag;
-        this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt);
-      }
+    } else if (this.slideTimer > 0) {
+      // the slide's cross-course component
+      const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
+      this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
+    } else if (input.moveX !== 0 && !this.freeSkate) {
+      // Walking keeps the direct crisp sidestep (diagonal-normalized).
+      // Free-heading skating has NO sidestep — carving IS the steering.
+      const latRate = skating
+        ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
+        : TUNING.walkSpeed * diag;
+      this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt);
     }
 
     // Follow the ground within a chunky snap window, otherwise we ran off an
-    // edge and go airborne. Halfpipe transitions get a taller window (both
-    // ways) so steep climbs and descents stick to the surface.
+    // edge and go airborne. Steep transitions (halfpipe walls, banks) get a
+    // taller window both ways so fast climbs and descents stick to the surface.
     const hit = this.queryGround(level);
-    const upWindow = hit && hit.hpWall ? CONST.hpSnapWindow : 0.8;
-    const downWindow = hit && hit.hpWall ? CONST.hpSnapWindow : 1.4;
-    if (hit && hit.y >= this.pos.y - downWindow && hit.y <= this.pos.y + upWindow) {
+    const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
+    const upWindow = steepHit ? CONST.steepSnapWindow : 0.8;
+    const downWindow = steepHit ? CONST.steepSnapWindow : 1.4;
+    // Cresting a vert lip: last frame the board was climbing a near-vertical
+    // face; now the surface under us has gone flat (the coping's backside).
+    // Convert the climb into UP-air right here — a launch you earned — with
+    // the small planar remainder flipped back INTO the transition, so vert
+    // airs drop you into the pipe instead of flinging you across the void.
+    if (
+      hit &&
+      this.speed > 0.5 &&
+      this.lastGrade < -CONST.vertGrade &&
+      hit.normal.y >= CONST.steepSnapNormal
+    ) {
+      this.state = 'air';
+      this.grounded = false;
+      this.groundHit = hit;
+      const lipFactor = this.charging ? 1.3 : 0.85;
+      this.vVel = Math.min(-this.lastGrade * this.speed * lipFactor, this.charging ? 25 : 18);
+      this.speed *= -CONST.vertKeep;
+      sfx.play('woosh2', 0.6);
+      this.emitSparks(5, 0xfff3d0, 1.2);
+      this.coyoteTimer = 0;
+    } else if (hit && hit.y >= this.pos.y - downWindow && hit.y <= this.pos.y + upWindow) {
       this.pos.y = hit.y;
       this.groundHit = hit;
       this.grounded = true;
@@ -955,35 +968,14 @@ export class Player {
 
       // Crash teeter: slow/stopped with part of the board hanging over an
       // edge — wobble as a warning; step back (or jump) to save yourself.
+      // Steep transitions don't count: their "edges" are just the next slab.
       this.teetering = false;
-      if (Math.abs(this.speed) < CONST.teeterSpeed && !hit.hpWall) {
+      if (Math.abs(this.speed) < CONST.teeterSpeed && !steepHit) {
         for (const [ox, oz] of [[0.55, 0], [-0.55, 0], [0, 0.55], [0, -0.55]]) {
           if (!this.queryGround(level, ox, oz)) {
             this.teetering = true;
             break;
           }
-        }
-      }
-
-      // Carried carve speed all the way over the lip: locked vert air. Height
-      // comes from the speed you brought, THPS-style — you go UP, x pinned,
-      // and drop back into the pipe.
-      if (hit.hpWall) {
-        const outward = Math.sign(this.pos.x) || 1;
-        if (this.pipeVel * outward > CONST.pipeMinLaunch && this.pos.y > level.halfpipeLipY - 0.5) {
-          this.state = 'air';
-          this.grounded = false;
-          this.vVel = Math.min(Math.abs(this.pipeVel) * TUNING.pipeLift, 36);
-          sfx.play('woosh2', 0.7);
-          this.vertLock = true;
-          this.pipeVel = 0;
-          this.charging = false;
-          this.chargeTimer = 0;
-          this.emitSparks(5, 0xfff3d0, 1.2);
-        } else {
-          // backstop: never carve past the physical edge of the wall
-          const lipX = level.halfpipeLipX - 0.1;
-          this.pos.x = THREE.MathUtils.clamp(this.pos.x, -lipX, lipX);
         }
       }
     } else {
@@ -999,6 +991,13 @@ export class Player {
         this.speed > 0 && this.lastGrade < -0.05
           ? Math.min(-this.lastGrade * this.speed * lipFactor, this.charging ? 25 : 18)
           : 0;
+      // A near-vertical lip (halfpipe coping) throws you mostly UP: the
+      // planar remainder is small AND flipped back toward the transition,
+      // so the air drops you into the pipe instead of across the deck.
+      if (this.vVel > 0.5 && this.lastGrade < -CONST.vertGrade) {
+        this.speed *= -CONST.vertKeep;
+        sfx.play('woosh2', 0.6);
+      }
       this.coyoteTimer = CONST.coyoteTime;
     }
 
@@ -1100,12 +1099,10 @@ export class Player {
 
     // Crash-style directional air control: up/down stretches or shortens the
     // jump (down brakes extra hard for precision), left/right sidesteps
-    // laterally. Locked while holding a grab or slamming, and a vert air off
-    // the halfpipe lip pins x — you can only ease back toward the middle.
+    // laterally. Locked while holding a grab or slamming.
     if (!this.grabbing && !this.slamActive) {
       const footAir =
         !this.charging &&
-        !this.vertLock &&
         !this.airMomentum && // grind/slide exits keep flying, even when slow
         Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
       // Digital diagonals in the air get the same normalization as the walk.
@@ -1123,14 +1120,7 @@ export class Player {
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       if (Math.abs(input.moveX) > 0.05) {
-        if (this.vertLock) {
-          const inward = -Math.sign(this.pos.x) || 1;
-          if (input.moveX * inward > 0) {
-            this.pos.x += inward * TUNING.walkSpeed * 0.5 * dt;
-          }
-        } else {
-          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * diag * dt);
-        }
+        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * diag * dt);
       }
     }
 
@@ -1142,8 +1132,9 @@ export class Player {
 
     // Ceiling: rising into the UNDERSIDE of a deck bonks (decks are 1 thick;
     // tall blocks already have wall colliders). Stops the head passing up
-    // through elevated platforms.
-    if (hit && this.vVel > 0) {
+    // through elevated platforms. Steep banks are never ceilings — rising
+    // past a transition face must not bonk you on its coping.
+    if (hit && this.vVel > 0 && hit.normal.y >= CONST.steepSnapNormal) {
       const underside = hit.y - 1.0;
       const head = this.pos.y + CONST.playerHalf.y * 2;
       if (this.pos.y < underside - 0.05 && head > underside) {
@@ -1154,32 +1145,26 @@ export class Player {
 
     // Land only on surfaces we were actually ABOVE last step (with a small
     // ledge forgiveness) — a surface overhead must never teleport us onto it.
+    // Steep transitions get a much deeper forgiveness: falling with sideways
+    // drift can cross a rising bank face by more than a deck's worth in one
+    // step, and that's a landing, not a clip-through.
+    const landGive = hit && hit.normal.y < CONST.steepSnapNormal ? CONST.steepLandGive : 0.35;
     if (
       hit &&
       this.vVel <= 0 &&
       this.pos.y <= hit.y + 0.05 &&
-      (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - 0.35)
+      (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - landGive)
     ) {
-      const impact = -this.vVel;
-      const wasVert = this.vertLock;
       this.pos.y = hit.y;
       this.vVel = 0;
       this.state = 'ride';
       this.grounded = true;
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
-      this.vertLock = false;
       this.airMomentum = false; // touchdown: normal ground rules resume
-      // Falling onto the halfpipe transition converts the drop back into carve
-      // speed down the wall — momentum survives the round trip, THPS-style.
-      if (hit.hpWall) {
-        this.pipeVel =
-          -(Math.sign(this.pos.x) || 1) * Math.min(impact * CONST.pipeLandKeep, CONST.pipeMaxVel);
-      }
-      // Landing-tick payouts (vert, grab, slam impact) are still air tricks
+      // Landing-tick payouts (grab, slam impact) are still air tricks
       // for combo purposes even though the state just flipped to 'ride'.
       this.landingScoring = true;
-      if (wasVert) this.score(CONST.ptsVert, 'Vert Air');
 
       if (this.slamActive) {
         this.slamImpact(level);
@@ -1396,7 +1381,6 @@ export class Player {
     this.grounded = false;
     this.vVel = 0;
     this.coyoteTimer = 0;
-    this.vertLock = false;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -1663,7 +1647,7 @@ export class Player {
           if (this.uberTimer > 0 || this.sliding) {
             level.detonate(c, true);
           } else if (this.state === 'grind') {
-            if (this.grindVel >= CONST.grindSmashSpeed || this.spendMask()) level.detonate(c, true);
+            if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c, true);
             else this.bailFromRail();
           } else if (this.isStomping(c.box)) {
             if (this.slamActive) {
@@ -1718,7 +1702,7 @@ export class Player {
           // Crates on the rail line are obstacles: spin them, hop them, or
           // hit them FAST enough to shatter straight through — otherwise
           // they knock you off (a mask absorbs it).
-          if (this.grindVel >= CONST.grindSmashSpeed || this.spendMask()) this.smashCrate(level, c);
+          if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) this.smashCrate(level, c);
           else this.bailFromRail();
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
@@ -1734,6 +1718,12 @@ export class Player {
           // Crash headbutt: jumping into a box from below breaks it.
           this.smashCrate(level, c);
           this.vVel = Math.min(this.vVel, 2);
+        } else if (Math.abs(this.speed) >= TUNING.smashSpeed) {
+          // Fast skating plows straight through plain crates — barely
+          // breaking stride. TNT and nitro stay dangerous; this is only
+          // the everyday wood.
+          this.smashCrate(level, c);
+          this.speed *= 0.92;
         } else {
           // Bumping does nothing to the crate — it's a wall. Full stop.
           this.pushOutOf(c.box);
@@ -2097,8 +2087,6 @@ export class Player {
       y: hit.point.y,
       normal,
       name: hit.object.name,
-      hpWall: hit.object.userData.hpWall === true,
-      hpFloor: hit.object.userData.hpFloor === true,
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
     };
@@ -2132,8 +2120,7 @@ export class Player {
       this.coyoteTimer > 0 &&
       this.vVel <= 0 &&
       !this.grabbing &&
-      !this.slamActive &&
-      !this.vertLock;
+      !this.slamActive;
     let wobble = 0;
     if (this.teetering || edgeGrace) {
       this.teeterPhase += dt;
@@ -2170,7 +2157,7 @@ export class Player {
       this.grounded &&
       this.state === 'ride' &&
       !this.charging &&
-      !this.inPipe &&
+      !this.freeSkate &&
       this.slideTimer <= 0 &&
       !this.crawling &&
       Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
@@ -2199,7 +2186,7 @@ export class Player {
       this.grabPose < 0.05 &&
       this.slideTimer <= 0 &&
       !this.crawling &&
-      (this.inPipe ||
+      (this.freeSkate ||
         Math.abs(this.speed) > TUNING.boardSpeed ||
         (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
@@ -2254,26 +2241,33 @@ export class Player {
     // Knees up: legs shorten toward the hips while the body crouches deep,
     // and the board comes up with them, into the grabbing hand.
     if (this.legs) {
-      // knees pull up to the chest — for the grab tuck and the flip tuck
-      this.legs.scale.y = 1 - 0.5 * this.grabPose - 0.4 * flipTuck;
+      // knees pull up to the chest — for the grab tuck and the flip tuck —
+      // and fold deeper through a rolling charge crouch so the feet stay
+      // planted on the deck while the body sinks (never into the floor).
+      this.legs.scale.y = Math.max(
+        0.15,
+        1 - 0.5 * this.grabPose - 0.4 * flipTuck - 0.43 * this.chargePose * this.skatePose,
+      );
     }
     if (this.boardG) {
-      this.boardG.position.y = 0.5 * this.grabPose;
+      // The charge crouch drops the whole bodyGroup 0.26 (world) — the board
+      // rides that group, so push it back up (0.26 / the 1.18 body scale) to
+      // keep the wheels ON the ground instead of clipping through it.
+      this.boardG.position.y = 0.5 * this.grabPose + 0.22 * this.chargePose;
       this.boardG.rotation.x = 0.3 * this.grabPose; // nose tips up in the hand
       // On foot the board is stowed — it only comes out for real skating:
-      // grinding, the halfpipe, grabs, speed above the boardSpeed slider, or
-      // a charge that's actually propelling past walking pace. A stationary
-      // jump crouch or a walk-hop tap never flashes the board.
+      // grinding, momentum-skate mode, grabs, speed above the boardSpeed
+      // slider, or a charge that's actually propelling past walking pace. A
+      // stationary jump crouch or a walk-hop tap never flashes the board.
       this.boardG.visible =
         this.slideTimer <= 0 &&
         (this.state === 'grind' ||
           (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5) ||
-          this.vertLock ||
-          this.inPipe ||
+          this.freeSkate ||
           this.grabPose > 0.05 ||
           Math.abs(this.speed) > TUNING.boardSpeed);
     }
-    this.bodyGroup.rotation.z = this.grabRoll * this.grabPose;
+    this.bodyGroup.rotation.z = this.grabRoll * this.grabPose + this.slopeRoll;
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace.
     this.bodyGroup.visible =
@@ -2307,6 +2301,25 @@ export class Player {
     );
     const targetSlide = this.sliding ? 1 : 0;
     this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
+    // Slope pitch + roll: on the ground, the body tilts to lie along the
+    // surface — nose down rolling downhill, nose up climbing, and leaning
+    // into a cross-slope (bank / halfpipe wall) — so ramps and transitions
+    // never shear through a bolt-upright model. Measured in the FACING frame
+    // (which tracks real travel), so walking backward down a ramp tilts the
+    // right way too.
+    let slopeT = 0;
+    let slopeRollT = 0;
+    if (this.grounded && this.state === 'ride' && this.groundHit) {
+      const n = this.groundHit.normal;
+      const fx = Math.sin(this.visualYaw + Math.PI);
+      const fz = Math.cos(this.visualYaw + Math.PI);
+      const gf = (n.x * fx + n.z * fz) / Math.max(n.y, 0.2); // drops ahead > 0
+      const gl = (n.x * fz - n.z * fx) / Math.max(n.y, 0.2); // drops to the left > 0
+      slopeT = THREE.MathUtils.clamp(Math.atan(gf), -1.0, 1.0) * 0.85;
+      slopeRollT = THREE.MathUtils.clamp(-Math.atan(gl), -1.0, 1.0) * 0.85;
+    }
+    this.slopePose += (slopeT - this.slopePose) * Math.min(1, 10 * dt);
+    this.slopeRoll += (slopeRollT - this.slopeRoll) * Math.min(1, 10 * dt);
     // All-fours crawl pose (dog stance): torso pitched over, hands down.
     this.crawlPose += ((this.crawling ? 1 : 0) - this.crawlPose) * Math.min(1, 14 * dt);
     // Slam has three beats: the "uh oh" hang, the pancake drop, then lying
@@ -2331,6 +2344,7 @@ export class Player {
         1.45 * this.dropPose - // belly-first pancake
         0.28 * this.teeterPose + // arms-back "whoa whoa" lean
         0.18 * this.skatePose + // athletic crouch over the board
+        this.slopePose + // lie along the ramp/transition under the board
         this.grindPoseX; // nosegrind / 5-0 lean
     }
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;

@@ -207,19 +207,19 @@ let stepIdx = 0;
 function updateAudio(dt: number): void {
   const speedAbs = Math.abs(player.speed);
   const onGround = player.state === 'ride' && player.grounded;
-  // Board rolling loop: above the boardSpeed slider, or carving the halfpipe.
+  // Board rolling loop: above the boardSpeed slider, or any real momentum-
+  // skate roll (slow carves up a transition still sound like wheels).
   // Slides are body slides — no board, no board noise.
-  const carve = player.inPipe ? player.carveSpeed : 0;
-  const rollSpeed = Math.max(speedAbs, carve);
   const skatingNow =
-    (onGround && !player.sliding && speedAbs > TUNING.boardSpeed) ||
-    (player.inPipe && rollSpeed > 4);
+    onGround &&
+    !player.sliding &&
+    (speedAbs > TUNING.boardSpeed || (player.boardRolling && speedAbs > 3));
   sfx.setLoop(
     'skate',
     'skateLoop',
     skatingNow,
-    Math.min(0.55, 0.15 + rollSpeed / 90),
-    0.85 + rollSpeed / 120,
+    Math.min(0.55, 0.15 + speedAbs / 90),
+    0.85 + speedAbs / 120,
   );
   sfx.setLoop('grind', 'grindLoop', player.state === 'grind', 0.55, 1);
   // Triple-mask invincibility gets its theme music for the whole ride.
@@ -237,7 +237,7 @@ function updateAudio(dt: number): void {
 
   stepTimer -= dt;
   const walking =
-    onGround && !player.sliding && !player.inPipe && speedAbs > 2 && speedAbs <= TUNING.walkSpeed + 0.5;
+    onGround && !player.sliding && !player.boardRolling && speedAbs > 2 && speedAbs <= TUNING.walkSpeed + 0.5;
   if (walking && stepTimer <= 0) {
     sfx.play('footstep' + (1 + (stepIdx++ % 3)), 0.35);
     stepTimer = 0.26;
