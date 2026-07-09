@@ -41,6 +41,7 @@ export class Player {
   fruit = 0; // wumpa collected
   masks = 0; // Aku masks held (max 2): absorb one hit or bail; the 3rd = uber
   uberTimer = 0; // Crash third-mask invincibility: auto-smash, perfect balance
+  lives = 3; // Crash lives: death costs one, 100 wumpa earns one, out = fresh start
   points = 0; // banked score
   comboPoints = 0; // pending combo: sum of base values...
   comboMult = 0; // ...times the number of actions strung together
@@ -52,6 +53,7 @@ export class Player {
 
   // wired up by main.ts
   onDeath: () => void = () => {};
+  onGameOver: () => void = () => {};
   onFinish: (time: number) => void = () => {};
   onRespawn: () => void = () => {};
   onCheckpoint: () => void = () => {};
@@ -77,9 +79,11 @@ export class Player {
   private slidePose = 0;
   private slideFromWalk = false; // slid off your feet: don't launch into skating
   private landingScoring = false; // landing-tick payouts still count as air tricks
-  private crawling = false; // Circle held while stopped: low slow crawl
+  private crawling = false; // Circle held while stopped: all-fours crawl
+  private crawlPose = 0;
   private slamActive = false; // Circle+down in the air: pancake body slam
   private slamHangT = 0; // cartoon hang before the drop
+  private slamFlatT = 0; // lie pancaked on the ground for a beat after impact
   private hangPose = 0;
   private dropPose = 0;
   private slamSquash = 0; // pancake pose timer after a slam lands
@@ -96,6 +100,10 @@ export class Player {
   private grindT = 0;
   private grindDir = 1;
   private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
+  private grindStyle: 'normal' | 'nose' | 'five0' | 'board' = 'normal'; // held dir at entry
+  private grindPoseX = 0; // nose-up / nose-down grind lean
+  private grindYawPose = 0; // boardslide: body across the rail
+  private grindYawDir = 1;
   private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
   private regrindCd = 0;
   private respawnTimer = 0;
@@ -203,6 +211,19 @@ export class Player {
     return this.grabPhase === 'enter' || this.grabPhase === 'held';
   }
 
+  // On halfpipe surface (always ridden on the board).
+  get inPipe(): boolean {
+    return (
+      this.grounded &&
+      this.groundHit !== null &&
+      (this.groundHit.hpWall === true || this.groundHit.hpFloor === true)
+    );
+  }
+
+  get carveSpeed(): number {
+    return Math.abs(this.pipeVel);
+  }
+
   private setTravelDir(dir: 'S' | 'E' | 'W'): void {
     this.travelDir = dir;
     if (dir === 'S') {
@@ -221,6 +242,12 @@ export class Player {
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
+    // Out of lives: the whole run starts over, Crash rules.
+    if (!hard && this.lives < 0) {
+      hard = true;
+      this.onGameOver();
+    }
+    if (hard) this.lives = 3;
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
     this.speed = 0;
@@ -292,13 +319,20 @@ export class Player {
     // grind balance.
     this.rawInput = input;
     // The path can right-angle into an X-running stretch (the camera never
-    // turns — the turned path IS the side-scroll view). Crossing a boundary
-    // while HOLDING a direction keeps the old axes so your trajectory
-    // continues; the new axes latch the moment the stick passes neutral.
+    // turns — the turned path IS the side-scroll view). Because the camera is
+    // fixed, every mapping agrees in WORLD space (right is always screen
+    // right), so axes flip the instant you cross a corner — no lock, no
+    // latch. Held skate speed transfers into the new direction if the stick
+    // is pushing along it.
     const zone = level.zoneAt(this.pos.x, this.pos.z);
     const wantDir = zone ? zone.dir : 'S';
-    if (wantDir !== this.travelDir && Math.abs(input.moveX) < 0.3 && Math.abs(input.moveY) < 0.3) {
+    if (wantDir !== this.travelDir && this.state !== 'grind') {
+      const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
+      const alongNew =
+        wantDir === 'S' ? input.moveY : wantDir === 'E' ? input.moveX : -input.moveX;
+      this.speed =
+        Math.abs(alongNew) > 0.3 ? Math.sign(alongNew) * Math.abs(oldSpeed) * 0.7 : 0;
     }
     const ctl =
       this.travelDir === 'S'
@@ -320,6 +354,7 @@ export class Player {
     this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.haltCd = Math.max(0, this.haltCd - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
+    this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
@@ -356,13 +391,15 @@ export class Player {
       // A slide off your feet is Crash's slide: canned burst, then back to
       // walking. A slide at skate speed keeps its momentum.
       this.slideFromWalk = !this.charging && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
-      this.slideTimer = TUNING.slideDuration;
       const cap = TUNING.maxSpeed * CONST.maxOverspeed;
       this.speed = THREE.MathUtils.clamp(
         Math.sign(this.speed || 1) * Math.max(Math.abs(this.speed), TUNING.slideSpeed),
         -cap,
         cap,
       );
+      // duration follows from the distance slider, so slides cover a
+      // consistent length no matter the burst speed
+      this.slideTimer = TUNING.slideDistance / Math.max(Math.abs(this.speed), 6);
       this.score(CONST.ptsSlide);
       sfx.play('woosh', 0.7);
     }
@@ -420,8 +457,7 @@ export class Player {
       for (const c of level.consumeBlastBroken()) {
         this.cratesBroken++;
         this.score(CONST.ptsCrate);
-        if (c.mask) this.gainMask();
-        else this.spawnFruit(c.box);
+        this.crateReward(c);
       }
       // collide() above may have killed us; TS can't see that mutation.
       // Uber and masks (and the flicker after spending one) block blasts.
@@ -508,6 +544,7 @@ export class Player {
     }
     this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
+    if (this.crawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
     sfx.play('ollie', 0.7);
     this.state = 'air';
     this.grounded = false;
@@ -519,9 +556,12 @@ export class Player {
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
+    // Flattened after a slam: pancaked on the ground for a beat, no control.
+    const slamFlat = this.slamFlatT > 0;
+
     // Crash crouch-crawl: holding Circle while (nearly) stopped drops you into
-    // a low, slow, precise crawl — direct velocity, no inertia, until release.
-    if (input.grabHeld && (this.crawling || (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))) {
+    // a low, slow, all-fours crawl — direct velocity, no inertia, until release.
+    if (!slamFlat && input.grabHeld && (this.crawling || (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))) {
       this.crawling = true;
     } else {
       this.crawling = false;
@@ -531,15 +571,20 @@ export class Player {
     // the board down and builds speed, and any carried momentum — downhill,
     // rail exits, slides, boosts — keeps you skating until it bleeds back to
     // walking pace.
-    const skating =
-      this.charging || this.slideTimer > 0 || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
-
     // Was the last step on halfpipe surface? There, lateral movement is an
     // inertial carve (build speed on the flat, carry it up the transition)
     // instead of the usual direct sidestep.
     const pipeMode = this.groundHit !== null && (this.groundHit.hpWall === true || this.groundHit.hpFloor === true);
 
-    if (this.crawling) {
+    // The halfpipe is always ridden ON THE BOARD: force skate mode there, so
+    // carving never drops you into the walking state mid-transition.
+    const skating =
+      this.charging || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
+
+    if (slamFlat) {
+      this.speed = 0;
+      this.lastGrade = 0;
+    } else if (this.crawling) {
       // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction.
       this.speed = input.moveY * TUNING.crawlSpeed;
       this.lastGrade = 0;
@@ -623,7 +668,9 @@ export class Player {
       // Axis-locked sidestep: direct velocity while held, dead stop on
       // release. Left is ALWAYS screen-left, even while backing up. Slides
       // are direction locked: no steering mid-slide.
-      if (this.crawling) {
+      if (slamFlat) {
+        // pancaked: no steering
+      } else if (this.crawling) {
         if (Math.abs(input.moveX) > 0.05) {
           this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * dt);
         }
@@ -693,11 +740,11 @@ export class Player {
     // and skates (the speed build lives in the skate branch above); releasing
     // fires the jump (coyote grace applies at ledges). A quick tap still
     // gives a serviceable hop.
-    if (this.state === 'ride' && input.jumpHeld) {
+    if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
       this.charging = true;
       this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
     }
-    if (input.jumpReleased && this.charging && (this.state === 'ride' || this.coyoteTimer > 0)) {
+    if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
       this.chargedJump();
     }
   }
@@ -752,7 +799,13 @@ export class Player {
     // laterally. Locked while holding a grab or slamming, and a vert air off
     // the halfpipe lip pins x — you can only ease back toward the middle.
     if (!this.grabbing && !this.slamActive) {
-      if (Math.abs(input.moveY) > 0.05) {
+      const footAir =
+        !this.charging && !this.vertLock && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
+      if (footAir) {
+        // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
+        // precision hops (bouncy crates!) never drift.
+        this.speed = input.moveY * TUNING.walkSpeed;
+      } else if (Math.abs(input.moveY) > 0.05) {
         // Braking (input against travel) bites harder than stretching, in
         // either direction.
         const opposing = input.moveY * this.speed < 0;
@@ -854,7 +907,7 @@ export class Player {
         this.grabSpinTotal = 0;
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
-      if (Math.abs(this.speed) > TUNING.walkSpeed + 0.5) sfx.play('skateTransition', 0.5);
+      if (Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
       // Safe landing = the combo is over: bank it on the spot.
       this.bankCombo();
       this.landingScoring = false;
@@ -870,6 +923,8 @@ export class Player {
   private slamImpact(level: Level): void {
     this.slamActive = false;
     this.slamSquash = CONST.slamSquashTime;
+    this.slamFlatT = CONST.slamFlat; // stay pancaked for a beat
+    this.speed = 0;
     this.score(CONST.ptsSlam);
     sfx.play('crunch', 0.9);
     this.emitSparks(12, 0xd8e6ff, 2.5);
@@ -904,8 +959,10 @@ export class Player {
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
     this.grindTime += dt;
-    // Grinds ride at the speed you brought and bleed a little on the rail.
-    this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - CONST.grindBleed * dt);
+    // Grinds ride at the speed you brought and bleed a little on the rail
+    // (nosegrinds hold their speed better).
+    const bleed = this.grindStyle === 'nose' ? CONST.grindBleed * 0.4 : CONST.grindBleed;
+    this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - bleed * dt);
 
     // THPS balance: the needle is an unstable equilibrium that runs away from
     // center, faster the longer you grind; left/right input fights it. Slow
@@ -916,8 +973,10 @@ export class Player {
       0.6,
       2.2,
     );
+    // boardslides look coolest and wobble hardest
+    const styleWobble = this.grindStyle === 'board' ? 1.25 : 1;
     const instability =
-      TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp) * speedFactor;
+      TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp) * speedFactor * styleWobble;
     this.balance += Math.sign(this.balance || 1) * instability * dt;
     this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
     if (this.uberTimer > 0) this.balance = 0; // perfect balance
@@ -944,7 +1003,7 @@ export class Player {
 
     this.placeOnRail(rail);
     this.speed = this.grindVel;
-    this.surfaceName = 'rail';
+    this.surfaceName = this.grindStyle === 'normal' ? 'rail (50-50)' : 'rail (' + this.grindStyle + ')';
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
     this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck
 
@@ -1015,6 +1074,12 @@ export class Player {
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
     this.grindTime = 0;
+    // Grind style from the direction held at entry (THPS flavor):
+    // up = nosegrind, down = 5-0, left/right = boardslide, none = 50-50.
+    const rIn = this.rawInput;
+    this.grindStyle =
+      rIn.moveY > 0.4 ? 'nose' : rIn.moveY < -0.4 ? 'five0' : Math.abs(rIn.moveX) > 0.4 ? 'board' : 'normal';
+    this.grindYawDir = rIn.moveX >= 0 ? 1 : -1;
     // Start the needle slightly off-center in a random direction.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
@@ -1036,8 +1101,9 @@ export class Player {
   }
 
   private exitGrind(vVel: number): void {
-    // A survived grind scores: base + time held on the rail.
-    this.score(CONST.ptsGrindBase + Math.round(this.grindTime * CONST.ptsGrindPerSec));
+    // A survived grind scores: base + time held, with a style bonus.
+    const styleMult = this.grindStyle === 'normal' ? 1 : this.grindStyle === 'board' ? 1.5 : 1.25;
+    this.score(Math.round((CONST.ptsGrindBase + this.grindTime * CONST.ptsGrindPerSec) * styleMult));
     if (this.grindRail) {
       // Project the rail velocity onto the course axis — exits snap straight,
       // matching the axis-locked movement.
@@ -1301,7 +1367,12 @@ export class Player {
     for (const e of level.enemies) {
       if (!e.alive) continue;
       if (this.spinning && this.spinBox.intersectsBox(e.box)) {
-        level.killEnemy(e);
+        // Spin PINGS the enemy away — it can smash crates it happens to hit.
+        const fling = e.group.position.clone().sub(this.pos).setY(0);
+        if (fling.lengthSq() < 0.01) fling.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
+        fling.normalize().multiplyScalar(24);
+        fling.y = 8;
+        level.killEnemy(e, fling);
         this.score(CONST.ptsEnemy);
       } else if (this.playerBox.intersectsBox(e.box)) {
         if (this.uberTimer > 0 || this.sliding) {
@@ -1325,6 +1396,19 @@ export class Player {
           this.die();
           return;
         }
+      }
+    }
+
+    // Rolling stones: flatten you on touch (uber/invuln/mask absorb it).
+    for (const st of level.stones) {
+      if (this.playerBox.intersectsBox(st.box)) {
+        if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
+        if (this.spendMask()) {
+          this.speed *= 0.5;
+          continue;
+        }
+        this.die();
+        return;
       }
     }
 
@@ -1372,9 +1456,7 @@ export class Player {
       } else if (this.playerBox.intersectsBox(p.box)) {
         p.alive = false;
         p.mesh.visible = false;
-        this.fruit++;
-        this.score(CONST.ptsFruit);
-        sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][this.fruit % 3], 0.6);
+        this.collectFruit();
       }
     }
 
@@ -1390,13 +1472,44 @@ export class Player {
     level.breakCrate(c);
     this.cratesBroken++;
     this.score(CONST.ptsCrate);
-    if (c.mask) this.gainMask();
-    else this.spawnFruit(c.box);
+    this.crateReward(c);
+  }
+
+  // What falls out of a broken box. Mystery crates roll their contents.
+  private crateReward(c: Crate): void {
+    if (c.mask) {
+      this.gainMask();
+    } else if (c.mystery) {
+      const r = Math.random();
+      if (r < 0.55) this.spawnFruit(c.box, 5);
+      else if (r < 0.8) this.spawnFruit(c.box, 10);
+      else if (r < 0.93) this.gainMask();
+      else {
+        this.lives++;
+        sfx.play('lifeGet', 1.0);
+        this.emitSparks(10, 0x9fe07a, 2);
+      }
+    } else {
+      this.spawnFruit(c.box);
+    }
+  }
+
+  // Central wumpa collection: 100 fruit converts into a life, Crash rules.
+  private collectFruit(): void {
+    this.fruit++;
+    this.score(CONST.ptsFruit);
+    if (this.fruit >= 100) {
+      this.fruit -= 100;
+      this.lives++;
+      sfx.play('lifeGet', 1.0);
+    } else {
+      sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][this.fruit % 3], 0.6);
+    }
   }
 
   // Wumpa burst: fruit pops out of the box, arcs, then homes to the player.
-  private spawnFruit(box: THREE.Box3): void {
-    let count = CONST.fruitPerCrate;
+  private spawnFruit(box: THREE.Box3, n = CONST.fruitPerCrate): void {
+    let count = n;
     const cx = (box.min.x + box.max.x) / 2;
     const cy = (box.min.y + box.max.y) / 2;
     const cz = (box.min.z + box.max.z) / 2;
@@ -1444,11 +1557,7 @@ export class Player {
             sfx.play('fruitSpun', 0.7);
             continue;
           }
-          if (dist < 1.0) {
-            this.fruit++;
-            this.score(CONST.ptsFruit);
-            sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][this.fruit % 3], 0.6);
-          }
+          if (dist < 1.0) this.collectFruit();
           f.age = -1;
           f.mesh.visible = false;
           continue;
@@ -1500,6 +1609,7 @@ export class Player {
   private die(): void {
     if (this.state === 'dead') return;
     this.state = 'dead';
+    this.lives--;
     this.respawnTimer = CONST.respawnDelay;
     sfx.play('death', 0.9);
     this.speed = 0;
@@ -1579,7 +1689,8 @@ export class Player {
       targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
     }
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
-    this.bodyGroup.rotation.y = this.visualYaw + this.spinAngle + this.grabSpinAngle;
+    this.bodyGroup.rotation.y =
+      this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose;
 
     // Grab pose, skate-photo style: knees tucked high, one hand pulls the
     // board, the other arm throws up. Direction held picks the variant —
@@ -1594,6 +1705,7 @@ export class Player {
       this.grounded &&
       this.state === 'ride' &&
       !this.charging &&
+      !this.inPipe &&
       this.slideTimer <= 0 &&
       !this.crawling &&
       Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
@@ -1601,7 +1713,14 @@ export class Player {
     this.walkAmp += ((runningAnim ? 1 : 0) - this.walkAmp) * Math.min(1, 10 * dt);
     this.idleAmp += ((onFoot && !runningAnim ? 1 : 0) - this.idleAmp) * Math.min(1, 6 * dt);
     if (runningAnim) this.walkPhase += (4 + planar * 1.0) * dt;
-    const swing = Math.sin(this.walkPhase) * 0.65 * this.walkAmp;
+    else if (this.crawling && planar > 0.5) this.walkPhase += (2 + planar * 0.8) * dt;
+    // Grind style lean: nose down, tail down, or body across the rail.
+    const gp =
+      this.state === 'grind' ? (this.grindStyle === 'nose' ? 0.4 : this.grindStyle === 'five0' ? -0.45 : 0) : 0;
+    this.grindPoseX += (gp - this.grindPoseX) * Math.min(1, 12 * dt);
+    const gy = this.state === 'grind' && this.grindStyle === 'board' ? this.grindYawDir * (Math.PI / 2) : 0;
+    this.grindYawPose += (gy - this.grindYawPose) * Math.min(1, 12 * dt);
+    const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, this.crawlPose * 0.6);
     const breathe = Math.sin(this.runTime * 2.3);
     if (this.legL && this.legR) {
       this.legL.rotation.x = swing;
@@ -1635,13 +1754,15 @@ export class Player {
     this.grabRoll += (rollT - this.grabRoll) * poseBlend;
     this.armRPose += (armRT - this.armRPose) * poseBlend;
     this.armLPose += (armLT - this.armLPose) * poseBlend;
-    const armAnim = (-swing * 0.8 + breathe * 0.06 * this.idleAmp) * (1 - this.grabPose);
+    const armAnim =
+      (-swing * 0.8 + breathe * 0.06 * this.idleAmp) * (1 - this.grabPose) +
+      2.3 * this.crawlPose * (1 - this.grabPose); // hands to the ground on all fours
     if (this.armR) {
       this.armR.rotation.x = this.armRPose * this.grabPose + armAnim;
       this.armR.rotation.z = 0.25 - this.grabPose * 0.55;
     }
     if (this.armL) {
-      this.armL.rotation.x = this.armLPose * this.grabPose - armAnim;
+      this.armL.rotation.x = this.armLPose * this.grabPose - armAnim + swing * 1.6 * this.crawlPose;
       this.armL.rotation.z = -0.25 + this.grabPose * 0.45;
     }
     // Knees up: legs shorten toward the hips while the body crouches deep,
@@ -1652,16 +1773,17 @@ export class Player {
     if (this.boardG) {
       this.boardG.position.y = 0.5 * this.grabPose;
       this.boardG.rotation.x = 0.3 * this.grabPose; // nose tips up in the hand
-      // On foot the board is stowed — it reappears the moment you're skating
-      // (charging, sliding, grinding, carrying speed) or holding a grab.
-      // Slides are body slides — the board stays stowed for them.
+      // On foot the board is stowed — it only comes out for real skating:
+      // charging, grinding, the halfpipe, grabs, or speed above the
+      // boardSpeed slider. Slides are body slides — never on the board.
       this.boardG.visible =
         this.slideTimer <= 0 &&
         (this.state === 'grind' ||
           this.charging ||
           this.vertLock ||
+          this.inPipe ||
           this.grabPose > 0.05 ||
-          Math.abs(this.speed) > TUNING.walkSpeed + 0.5);
+          Math.abs(this.speed) > TUNING.boardSpeed);
     }
     this.bodyGroup.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
@@ -1695,11 +1817,14 @@ export class Player {
       0,
       1,
     );
-    const targetSlide = this.sliding || this.crawling ? 1 : 0;
+    const targetSlide = this.sliding ? 1 : 0;
     this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
-    // Slam has two beats: the "uh oh" hang (rear back), then the pancake drop.
+    // All-fours crawl pose (dog stance): torso pitched over, hands down.
+    this.crawlPose += ((this.crawling ? 1 : 0) - this.crawlPose) * Math.min(1, 14 * dt);
+    // Slam has three beats: the "uh oh" hang, the pancake drop, then lying
+    // flat on the ground for a moment before getting up.
     const hanging = this.slamActive && this.slamHangT > 0;
-    const dropping = this.slamActive && this.slamHangT <= 0;
+    const dropping = (this.slamActive && this.slamHangT <= 0) || this.slamFlatT > 0;
     this.hangPose += ((hanging ? 1 : 0) - this.hangPose) * Math.min(1, 16 * dt);
     this.dropPose += ((dropping ? 1 : 0) - this.dropPose) * Math.min(1, 20 * dt);
     const flip =
@@ -1712,17 +1837,21 @@ export class Player {
       this.bodyGroup.rotation.x =
         flip * (1 - this.grabPose) +
         this.grabPitch * this.grabPose -
-        0.35 * this.slidePose -
+        0.35 * this.slidePose +
+        1.3 * this.crawlPose - // all fours: torso pitched right over
         0.55 * this.hangPose + // rear back: "...uh oh"
         1.45 * this.dropPose - // belly-first pancake
-        0.28 * this.teeterPose; // arms-back "whoa whoa" lean
+        0.28 * this.teeterPose + // arms-back "whoa whoa" lean
+        this.grindPoseX; // nosegrind / 5-0 lean
     }
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     this.bodyGroup.position.y =
       this.grabPose * -0.5 -
       this.slidePose * 0.32 -
-      this.chargePose * 0.26 +
+      this.crawlPose * 0.55 -
+      this.chargePose * 0.26 -
+      (this.grounded ? 0.45 * this.dropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.05 * this.walkAmp +
       breathe * 0.015 * this.idleAmp;
     // Impact squash right after a slam lands.

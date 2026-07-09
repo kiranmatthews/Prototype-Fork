@@ -72,6 +72,7 @@ player.onFinish = (time) => {
 };
 player.onRespawn = () => ui.hideMessage();
 player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
+player.onGameOver = () => ui.showMessage('GAME OVER', 'out of lives — fresh start', 1800);
 
 // --- Crash-style corridor camera -------------------------------------------
 // Hard-locked to the course axis: it only translates, never yaws, so screen
@@ -134,21 +135,27 @@ let stepIdx = 0;
 function updateAudio(dt: number): void {
   const speedAbs = Math.abs(player.speed);
   const onGround = player.state === 'ride' && player.grounded;
+  // Board rolling loop: above the boardSpeed slider, or carving the halfpipe.
   // Slides are body slides — no board, no board noise.
-  const skatingNow = onGround && !player.sliding && speedAbs > TUNING.walkSpeed + 0.5;
+  const carve = player.inPipe ? player.carveSpeed : 0;
+  const rollSpeed = Math.max(speedAbs, carve);
+  const skatingNow =
+    (onGround && !player.sliding && speedAbs > TUNING.boardSpeed) ||
+    (player.inPipe && rollSpeed > 4);
   sfx.setLoop(
     'skate',
     'skateLoop',
     skatingNow,
-    Math.min(0.55, 0.15 + speedAbs / 90),
-    0.85 + speedAbs / 120,
+    Math.min(0.55, 0.15 + rollSpeed / 90),
+    0.85 + rollSpeed / 120,
   );
   sfx.setLoop('grind', 'grindLoop', player.state === 'grind', 0.55, 1);
   // Triple-mask invincibility gets its theme music for the whole ride.
   sfx.setLoop('uber', 'uberMusic', player.uberTimer > 0, 0.65, 1);
 
   stepTimer -= dt;
-  const walking = onGround && !player.sliding && speedAbs > 2 && speedAbs <= TUNING.walkSpeed + 0.5;
+  const walking =
+    onGround && !player.sliding && !player.inPipe && speedAbs > 2 && speedAbs <= TUNING.walkSpeed + 0.5;
   if (walking && stepTimer <= 0) {
     sfx.play('footstep' + (1 + (stepIdx++ % 3)), 0.35);
     stepTimer = 0.26;
@@ -176,6 +183,7 @@ function frame(): void {
     points: player.points,
     combo: player.comboMult > 0 ? `${player.comboPoints} × ${player.comboMult}` : '',
     fruit: player.fruit,
+    lives: player.lives,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
   });
   ui.setStats({

@@ -23,8 +23,9 @@ export const TUNING = {
   grabBoost: 8, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 9, // rad/s of the directional grab-spin (left arrow = spin left)
   crateBounce: 18, // vertical pop from stomping a crate — tuned for chaining crate to crate
+  boardSpeed: 16, // the board (visual + sound) only comes out above this speed
   slideMinSpeed: 8, // moving at least this fast + Circle = slide (slower + held = crawl)
-  slideDuration: 0.55, // how long the canned slide runs (distance = duration x speed)
+  slideDistance: 9, // how far the canned slide carries you (world units)
   slideSpeed: 26, // the slide bursts to at least this speed, direction locked
   slideJumpBoost: 8, // extra speed when a slide is strung into a jump
   airControl: 14, // forward/back speed adjustment in the air
@@ -59,8 +60,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grabBoost: { min: 0, max: 20, step: 0.5 },
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
+  boardSpeed: { min: 8, max: 30, step: 0.5 },
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
-  slideDuration: { min: 0.2, max: 1.2, step: 0.05 },
+  slideDistance: { min: 3, max: 25, step: 0.5 },
   slideSpeed: { min: 10, max: 45, step: 1 },
   slideJumpBoost: { min: 0, max: 20, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
@@ -69,6 +71,55 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
   pipeAccel: { min: 10, max: 90, step: 1 },
   pipeLift: { min: 0.5, max: 2, step: 0.05 },
+};
+
+// Hover text for the tuning panel: what each slider actually does in play.
+export const TUNING_INFO: Record<TuningKey, string> = {
+  maxSpeed:
+    'Top skate speed. Caps what holding X can build to; downhill can exceed it up to a hard cap (1.6x) before bleeding back.',
+  walkSpeed:
+    'On-foot speed AND the walk/skate boundary. Walking is direct drive: instant start/stop, zero inertia, all four directions. Any carried speed above this counts as skating.',
+  friction:
+    'How fast skate speed bleeds back toward walking pace when coasting with no input. Holding into travel bleeds at ~1/3 of this.',
+  riseGravity:
+    'Gravity on the way UP in a jump. Lower = floatier, longer hang time for tricks.',
+  fallGravity:
+    'Gravity on the way DOWN. Higher = snappier PS1 landings and shorter overall airtime.',
+  jumpVelocity: 'Launch speed of a FULLY charged jump (X held for jumpChargeTime).',
+  jumpMinVelocity: 'Launch speed of a quick X tap — the smallest hop.',
+  jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
+  chargeBoost:
+    'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
+  slopeBoost: 'Fake downhill acceleration while skating, scaled by how steep the surface is.',
+  uphillSlowdown: 'Fake uphill drag while skating; stalling on a ramp rolls you back down it.',
+  railSnapDistance:
+    'How close (in units) a rail must be for Triangle to snap you onto it. Bigger = more forgiving grind grabs.',
+  grindSpeed:
+    'REFERENCE grind speed: you actually grind at whatever speed you arrive with, but slower than this wobbles the balance meter harder and faster than it steadies it.',
+  grindJumpForce: 'Vertical pop of a fully-charged jump off a rail.',
+  spinDuration: 'How long the Square spin attack stays active per press.',
+  spinAirCorrection:
+    'Small upward stall from spinning in the air (capped, never a full rescue) — Crash-style ledge save.',
+  turnaround:
+    'Braking rate when your input opposes travel while skating. Higher = snappier direction flips and harder stops.',
+  grabBoost: 'Speed burst paid out when a grab is completed cleanly before landing.',
+  grabSpinRate: 'Rotation speed of the directional grab-spin (left arrow = spin left).',
+  crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
+  boardSpeed:
+    'The board (visual + rolling sound) only appears above this speed. Raise it if the board flickers in during normal platforming; the walk/skate physics boundary is walkSpeed, not this.',
+  slideMinSpeed: 'Minimum speed for Circle to trigger a slide; slower than this, holding Circle crawls.',
+  slideDistance:
+    'How far the canned slide carries you, in world units — duration adapts to slide speed so the distance stays consistent.',
+  slideSpeed: 'The speed the slide bursts to (it never slows you below your current speed).',
+  slideJumpBoost: 'Extra speed converted when you jump out of a slide mid-burst.',
+  airControl:
+    'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
+  balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
+  balanceControl: 'How hard left/right input fights the balance needle.',
+  crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
+  pipeAccel: 'Halfpipe carve acceleration from the stick — pumping strength on the flat and walls.',
+  pipeLift:
+    'How much carve speed left at the halfpipe lip converts into vertical air (launch = carve x this).',
 };
 
 // Fixed authored constants that are part of the feel but stay off the sliders
@@ -112,6 +163,8 @@ export const CONST = {
   slideCooldown: 0.25,
   slamSpeed: 46, // Circle+down pancake slam: authored fall rate
   slamHang: 0.32, // Wile E. Coyote beat: freeze in the air before the drop
+  slamFlat: 0.5, // lie pancaked on the ground this long after impact
+  crouchJumpMult: 1.35, // crouch (crawl) jumps launch this much higher
   slamRadius: 2.4, // slam impact breaks crates/enemies within this radius
   slamSquashTime: 0.3, // pancake squash pose on impact
   fruitPerCrate: 3, // wumpa spawned per broken box

@@ -2,7 +2,7 @@
 // right, big center messages for death/finish. Deliberately ugly and dense.
 
 import { LEVEL_NAMES } from './level';
-import { TUNING, TUNING_RANGES, TuningKey } from './tuning';
+import { TUNING, TUNING_RANGES, TUNING_INFO, TuningKey } from './tuning';
 
 export interface Stats {
   speed: number;
@@ -123,10 +123,10 @@ export class UI {
     }
   }
 
-  setHUD(s: { points: number; combo: string; fruit: number; crates: string }): void {
+  setHUD(s: { points: number; combo: string; fruit: number; lives: number; crates: string }): void {
     this.gameHud.innerHTML =
       `<div class="hud-score">${s.points}</div>` +
-      `<div class="hud-sub">WUMPA ${s.fruit} · BOXES ${esc(s.crates)}</div>`;
+      `<div class="hud-sub">LIVES ${s.lives} · WUMPA ${s.fruit} · BOXES ${esc(s.crates)}</div>`;
     this.comboEl.textContent = s.combo;
     this.comboEl.style.display = s.combo ? 'block' : 'none';
   }
@@ -212,6 +212,7 @@ export class UI {
   private sliderRow(key: TuningKey): HTMLElement {
     const range = TUNING_RANGES[key];
     const wrap = div('hud-slider');
+    wrap.title = TUNING_INFO[key]; // hover for what this number does in play
     const label = document.createElement('label');
     label.textContent = key;
     const value = document.createElement('span');
