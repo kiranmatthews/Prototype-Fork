@@ -4,11 +4,11 @@
 //   buttons[3] = Triangle, buttons[9] = Options, buttons[12..15] = d-pad,
 //   axes[0/1] = left stick.
 
-import { CONST } from './tuning';
-
 export class Input {
-  moveX = 0; // -1 left .. +1 right
-  moveY = 0; // +1 forward .. -1 brake
+  // ALL directional input is digital: -1, 0, or +1. Analog sticks are
+  // thresholded into a d-pad — there is no analog magnitude anywhere.
+  moveX = 0; // -1 left, 0, +1 right
+  moveY = 0; // +1 forward, 0, -1 brake
 
   jumpHeld = false;
   grindHeld = false;
@@ -76,11 +76,11 @@ export class Input {
 
     const pad = this.pollGamepad();
     if (pad) {
-      const dz = CONST.deadzone;
+      // Stick = digital d-pad: past half deflection counts as held.
       const ax = pad.axes[0] ?? 0;
       const ay = pad.axes[1] ?? 0;
-      if (Math.abs(ax) > dz) moveX = ax;
-      if (Math.abs(ay) > dz) moveY = -ay; // stick up = forward
+      if (Math.abs(ax) > 0.5) moveX = Math.sign(ax);
+      if (Math.abs(ay) > 0.5) moveY = -Math.sign(ay); // stick up = forward
       // D-pad
       if (pad.buttons[12]?.pressed) moveY = 1;
       if (pad.buttons[13]?.pressed) moveY = -1;
@@ -94,8 +94,8 @@ export class Input {
       restart = restart || !!pad.buttons[9]?.pressed; // Options
     }
 
-    this.moveX = Math.max(-1, Math.min(1, moveX));
-    this.moveY = Math.max(-1, Math.min(1, moveY));
+    this.moveX = Math.sign(moveX);
+    this.moveY = Math.sign(moveY);
 
     this.jumpHeld = jump;
     this.grindHeld = grind;

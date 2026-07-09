@@ -675,7 +675,7 @@ export class Player {
     // X is release-to-jump; HOLDING it is the commit meter. Skate drive only
     // engages after skateHoldTime of X + a held direction AND skateEntrySpeed
     // of real movement — quick taps and stationary crouches stay pure Crash.
-    const stickHeld = Math.abs(input.moveY) > TUNING.inputThreshold;
+    const stickHeld = input.moveY !== 0; // input is digital: held or not
     if (this.charging && stickHeld) this.skateCharge += dt;
     else this.skateCharge = 0;
     const pushingOff =
@@ -687,17 +687,21 @@ export class Player {
     const skating =
       pushingOff || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
 
+    // Digital diagonals: with both axes held, normalize the direct-drive
+    // moves so a diagonal walk/crawl isn't sqrt(2) faster than a straight one.
+    const diag = input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
+
     if (slamFlat) {
       this.speed = 0;
       this.lastGrade = 0;
     } else if (this.crawling) {
-      // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction.
-      this.speed = input.moveY * TUNING.crawlSpeed;
+      // Direct-drive crawl. Speed snaps to the d-pad; no slopes, no friction.
+      this.speed = input.moveY * TUNING.crawlSpeed * diag;
       this.lastGrade = 0;
     } else if (!skating) {
       // WALK: direct drive, instant start and stop, no inertia, no slope
-      // physics — precise Crash platforming in all four directions.
-      this.speed = input.moveY * TUNING.walkSpeed;
+      // physics — precise Crash platforming in all eight directions.
+      this.speed = input.moveY * TUNING.walkSpeed * diag;
       this.lastGrade = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
@@ -790,19 +794,20 @@ export class Player {
       if (slamFlat) {
         // pancaked: no steering
       } else if (this.crawling) {
-        if (Math.abs(input.moveX) > 0.05) {
-          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * dt);
+        if (input.moveX !== 0) {
+          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * diag * dt);
         }
       } else if (this.slideTimer > 0) {
         // the slide's cross-course component
         const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
         this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
-      } else if (Math.abs(input.moveX) > 0.05) {
+      } else if (input.moveX !== 0) {
         // Skate steering scales with speed so fast lines can actually carve
-        // (feels "360"); walking keeps the direct crisp step.
+        // (feels "360"); walking keeps the direct crisp step (diagonal-
+        // normalized, since input is digital).
         const latRate = skating
           ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
-          : TUNING.walkSpeed;
+          : TUNING.walkSpeed * diag;
         this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt);
       }
     }
@@ -952,10 +957,12 @@ export class Player {
     if (!this.grabbing && !this.slamActive) {
       const footAir =
         !this.charging && !this.vertLock && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
+      // Digital diagonals in the air get the same normalization as the walk.
+      const diag = footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
       if (footAir) {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift.
-        this.speed = input.moveY * TUNING.walkSpeed;
+        this.speed = input.moveY * TUNING.walkSpeed * diag;
       } else if (Math.abs(input.moveY) > 0.05) {
         // Braking (input against travel) bites harder than stretching, in
         // either direction.
@@ -971,7 +978,7 @@ export class Player {
             this.pos.x += inward * TUNING.walkSpeed * 0.5 * dt;
           }
         } else {
-          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * dt);
+          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * diag * dt);
         }
       }
     }

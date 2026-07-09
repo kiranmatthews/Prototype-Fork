@@ -26,7 +26,6 @@ export const TUNING = {
   boardSpeed: 16, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.3, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
-  inputThreshold: 0.35, // stick deflection that counts as 'a direction is held'
   slideMinSpeed: 8, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 9, // how far the canned slide carries you (world units)
   slideSpeed: 26, // the slide bursts to at least this speed, direction locked
@@ -66,7 +65,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
   skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
-  inputThreshold: { min: 0.1, max: 0.9, step: 0.05 },
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
   slideDistance: { min: 3, max: 25, step: 0.5 },
   slideSpeed: { min: 10, max: 45, step: 1 },
@@ -117,8 +115,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     "Skate commit meter: X must be HELD this long (while pushing a direction) before the charge becomes the skate accelerator. Quick taps stay pure Crash hops.",
   skateEntrySpeed:
     "Second gate on the skate transition: you must already be moving this fast (walking counts) when the hold meter fills. Roughly 40% of walk speed feels right.",
-  inputThreshold:
-    "How far the stick must be pushed to count as 'holding a direction' for the skate transition meter.",
   slideMinSpeed: 'Minimum speed for Circle to trigger a slide; slower than this, holding Circle crawls.',
   slideDistance:
     'How far the canned slide carries you, in world units — duration adapts to slide speed so the distance stays consistent.',
@@ -197,6 +193,5 @@ export const CONST = {
   pipeFriction: 9, // halfpipe: carve speed decay on the flat with no input
   pipeLandKeep: 0.55, // landing on the transition converts fall speed back to carve
   pipeMinLaunch: 5, // need this much carve left at the lip to air out
-  deadzone: 0.18,
   renderScale: 0.5, // low internal resolution for the PS1 look
 };
