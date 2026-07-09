@@ -391,10 +391,11 @@ export class Level {
       // ping away instead of popping; update() flies it into whatever lines up
       enemy.flungVel = fling.clone();
       enemy.flungT = 0;
+      sfx.play('fruitSpun', 0.8); // the "spun away" zing
     } else {
       this.pops.push({ obj: enemy.group, t: 0.12 });
+      sfx.play('enemyDown', 0.7);
     }
-    sfx.play('enemyDown', 0.7);
   }
 
   // Broken (spun/stomped) like a normal box; banks the respawn point and a

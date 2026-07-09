@@ -140,6 +140,7 @@ export const CONST = {
   railRideHeight: 0.15, // feet ride this far above the rail line
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
   grindMinSpeed: 8, // slowest a grind can crawl (and the floor for speed bleed)
+  grindSmashSpeed: 28, // at or above this grind speed, plain crates just shatter
   grindBleed: 2, // grind speed lost per second on the rail
   comboWindow: 0.15, // near-zero: combos live in the air/on rails, not on the ground
   // Base point values — combo total = sum of bases x number of actions.
@@ -150,10 +151,11 @@ export const CONST = {
   ptsSlide: 30,
   ptsSlam: 75,
   ptsGrab: 150,
-  ptsGrabSpin: 100, // bonus for landing a spun grab
+  ptsGrabQuarter: 40, // per 90 degrees of grab rotation landed
+  ptsGrabTick: 4, // accrues every quarter second a grab is held (THPS-style)
   ptsVert: 200,
   ptsGrindBase: 100,
-  ptsGrindPerSec: 25,
+  ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 10, // rad/s the rotation eases back on-axis after release

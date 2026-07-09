@@ -70,9 +70,12 @@ player.onDeath = () => {
 player.onFinish = (time) => {
   ui.showMessage('COURSE CLEAR!', `time ${time.toFixed(2)}s — press R / Options to go again`, 0);
 };
-player.onRespawn = () => ui.hideMessage();
+player.onRespawn = () => {
+  ui.hideMessage();
+  ui.showDeathScreen(false);
+};
 player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
-player.onGameOver = () => ui.showMessage('GAME OVER', 'out of lives — fresh start', 1800);
+player.onGameOver = () => ui.showDeathScreen(true);
 
 // --- Crash-style corridor camera -------------------------------------------
 // Hard-locked to the course axis: it only translates, never yaws, so screen
@@ -179,11 +182,13 @@ function frame(): void {
   updateAudio(dt);
 
   ui.updateBalance(player.state === 'grind', player.balance);
+  const tricks = player.comboLabels;
   ui.setHUD({
     points: player.points,
     combo: player.comboMult > 0 ? `${player.comboPoints} × ${player.comboMult}` : '',
+    tricks: (tricks.length > 6 ? '… + ' : '') + tricks.slice(-6).join(' + '),
     fruit: player.fruit,
-    lives: player.lives,
+    lives: Math.max(0, player.lives),
     crates: `${player.cratesBroken}/${level.totalCrates}`,
   });
   ui.setStats({

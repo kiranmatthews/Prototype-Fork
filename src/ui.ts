@@ -28,6 +28,9 @@ export class UI {
   private balanceNeedle: HTMLElement;
   private gameHud!: HTMLElement;
   private comboEl!: HTMLElement;
+  private comboTotalEl!: HTMLElement;
+  private comboTricksEl!: HTMLElement;
+  private deathEl!: HTMLElement;
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
   private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLSpanElement }>();
@@ -109,6 +112,17 @@ export class UI {
     // bottom of the screen where the action is.
     this.gameHud = div('hud-game');
     this.comboEl = div('hud-combo-banner');
+    this.comboTotalEl = div('hud-combo-total');
+    this.comboTricksEl = div('hud-combo-tricks');
+    this.comboEl.appendChild(this.comboTotalEl);
+    this.comboEl.appendChild(this.comboTricksEl);
+
+    // Black game-over screen: any button restarts.
+    this.deathEl = div('hud-death');
+    this.deathEl.innerHTML =
+      '<div class="hud-death-title">GAME OVER</div>' +
+      '<div class="hud-death-sub">press any button</div>';
+    this.deathEl.style.display = 'none';
 
     // THPS-style grind balance meter (visible only while grinding).
     this.balanceWrap = div('hud-balance');
@@ -118,16 +132,28 @@ export class UI {
     this.balanceWrap.appendChild(this.balanceNeedle);
     this.balanceWrap.style.display = 'none';
 
-    for (const el of [statsWrap, panel, this.msgWrap, this.flashEl, this.balanceWrap, this.gameHud, this.comboEl]) {
+    for (const el of [statsWrap, panel, this.msgWrap, this.flashEl, this.balanceWrap, this.gameHud, this.comboEl, this.deathEl]) {
       document.body.appendChild(el);
     }
   }
 
-  setHUD(s: { points: number; combo: string; fruit: number; lives: number; crates: string }): void {
+  showDeathScreen(visible: boolean): void {
+    this.deathEl.style.display = visible ? 'flex' : 'none';
+  }
+
+  setHUD(s: {
+    points: number;
+    combo: string;
+    tricks: string;
+    fruit: number;
+    lives: number;
+    crates: string;
+  }): void {
     this.gameHud.innerHTML =
       `<div class="hud-score">${s.points}</div>` +
       `<div class="hud-sub">LIVES ${s.lives} · WUMPA ${s.fruit} · BOXES ${esc(s.crates)}</div>`;
-    this.comboEl.textContent = s.combo;
+    this.comboTotalEl.textContent = s.combo;
+    this.comboTricksEl.textContent = s.tricks;
     this.comboEl.style.display = s.combo ? 'block' : 'none';
   }
 
@@ -296,9 +322,24 @@ export class UI {
       .hud-game .hud-sub { font-size: 13px; color: #cfe3d8; }
       .hud-combo-banner {
         position: fixed; z-index: 10; bottom: 12%; left: 50%;
-        transform: translateX(-50%); pointer-events: none;
+        transform: translateX(-50%); pointer-events: none; text-align: center;
         font: bold 24px ui-monospace, Menlo, Consolas, monospace; color: #ffd27a;
         text-shadow: 2px 2px 0 #000; display: none;
+      }
+      .hud-combo-tricks {
+        font-size: 13px; font-weight: normal; color: #ffe9bd; margin-top: 2px;
+        max-width: 70vw; white-space: nowrap; overflow: hidden;
+      }
+      .hud-death {
+        position: fixed; z-index: 20; inset: 0; background: #000;
+        display: none; flex-direction: column; align-items: center;
+        justify-content: center; color: #fff;
+        font: bold 54px ui-monospace, Menlo, Consolas, monospace;
+      }
+      .hud-death .hud-death-title { letter-spacing: 6px; }
+      .hud-death .hud-death-sub {
+        font-size: 16px; font-weight: normal; color: #9fb0c8; margin-top: 14px;
+        letter-spacing: 2px;
       }
     `;
     document.head.appendChild(style);

@@ -10,7 +10,7 @@ import { Crate, Level } from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 
-export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'finished';
+export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'gameover' | 'finished';
 
 interface GroundHit {
   y: number;
@@ -45,6 +45,7 @@ export class Player {
   points = 0; // banked score
   comboPoints = 0; // pending combo: sum of base values...
   comboMult = 0; // ...times the number of actions strung together
+  comboLabels: string[] = []; // THPS-style trick names for the combo readout
   private comboTimer = 0; // plain-rolling time left before the combo banks
 
   // debug readouts
@@ -78,6 +79,8 @@ export class Player {
   private slideCd = 0;
   private slidePose = 0;
   private slideFromWalk = false; // slid off your feet: don't launch into skating
+  private slideVec = new THREE.Vector3(); // world-space slide direction (8-axis)
+  private slideSpd = 0;
   private landingScoring = false; // landing-tick payouts still count as air tricks
   private crawling = false; // Circle held while stopped: all-fours crawl
   private crawlPose = 0;
@@ -105,6 +108,9 @@ export class Player {
   private grindYawPose = 0; // boardslide: body across the rail
   private grindYawDir = 1;
   private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
+  private grabTrickName = 'Grab'; // variant name for the combo readout
+  private grabTickT = 0; // THPS accrual while the grab is held
+  private grindTickT = 0; // THPS accrual while grinding
   private regrindCd = 0;
   private respawnTimer = 0;
   private coyoteTimer = 0; // jump grace after running off a ledge
@@ -242,11 +248,6 @@ export class Player {
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
-    // Out of lives: the whole run starts over, Crash rules.
-    if (!hard && this.lives < 0) {
-      hard = true;
-      this.onGameOver();
-    }
     if (hard) this.lives = 3;
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
@@ -270,6 +271,7 @@ export class Player {
     this.slideFromWalk = false;
     this.comboPoints = 0;
     this.comboMult = 0;
+    this.comboLabels = [];
     this.comboTimer = 0;
     this.invulnTimer = 0;
     this.slideTimer = 0;
@@ -379,6 +381,7 @@ export class Player {
     // direction locked, bursts to slideSpeed, smashes crates. All three feel
     // numbers (trigger threshold, duration, speed) are sliders. (Stopped,
     // holding it crawls instead — see stepRide. In the air it's a grab.)
+    const stickMag = Math.abs(input.moveX) + Math.abs(input.moveY);
     if (
       input.grabPressed &&
       this.state === 'ride' &&
@@ -386,21 +389,28 @@ export class Player {
       !this.crawling &&
       this.slideTimer <= 0 &&
       this.slideCd <= 0 &&
-      Math.abs(this.speed) >= TUNING.slideMinSpeed
+      (Math.abs(this.speed) >= TUNING.slideMinSpeed || stickMag > 0.4)
     ) {
-      // A slide off your feet is Crash's slide: canned burst, then back to
-      // walking. A slide at skate speed keeps its momentum.
+      // 8-axis slide: it fires along the stick (diagonals included), or along
+      // current travel if the stick is idle. A slide off your feet is Crash's
+      // slide: canned burst, then back to walking; at skate speed it keeps
+      // its momentum.
       this.slideFromWalk = !this.charging && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
-      const cap = TUNING.maxSpeed * CONST.maxOverspeed;
-      this.speed = THREE.MathUtils.clamp(
-        Math.sign(this.speed || 1) * Math.max(Math.abs(this.speed), TUNING.slideSpeed),
-        -cap,
-        cap,
+      if (stickMag > 0.4) {
+        this.slideVec
+          .copy(this.axisF)
+          .multiplyScalar(input.moveY)
+          .addScaledVector(this.axisL, input.moveX)
+          .normalize();
+      } else {
+        this.slideVec.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
+      }
+      this.slideSpd = Math.min(
+        Math.max(Math.abs(this.speed), TUNING.slideSpeed),
+        TUNING.maxSpeed * CONST.maxOverspeed,
       );
-      // duration follows from the distance slider, so slides cover a
-      // consistent length no matter the burst speed
-      this.slideTimer = TUNING.slideDistance / Math.max(Math.abs(this.speed), 6);
-      this.score(CONST.ptsSlide);
+      this.slideTimer = TUNING.slideDistance / Math.max(this.slideSpd, 6);
+      this.score(CONST.ptsSlide, 'Slide');
       sfx.play('woosh', 0.7);
     }
 
@@ -418,7 +428,26 @@ export class Player {
     switch (this.state) {
       case 'dead':
         this.respawnTimer -= dt;
-        if (this.respawnTimer <= 0) this.respawn(level);
+        if (this.respawnTimer <= 0) {
+          if (this.lives < 0) {
+            // out of lives: hold on the black screen until any button
+            this.state = 'gameover';
+            this.onGameOver();
+          } else {
+            this.respawn(level);
+          }
+        }
+        break;
+      case 'gameover':
+        if (
+          input.jumpPressed ||
+          input.spinPressed ||
+          input.grabPressed ||
+          input.grindPressed ||
+          input.restartPressed
+        ) {
+          this.respawn(level, true);
+        }
         break;
       case 'finished':
         this.stepFinished(dt, level);
@@ -456,7 +485,7 @@ export class Player {
       // inside an expanding blast sphere.
       for (const c of level.consumeBlastBroken()) {
         this.cratesBroken++;
-        this.score(CONST.ptsCrate);
+        this.score(CONST.ptsCrate, 'Box');
         this.crateReward(c);
       }
       // collide() above may have killed us; TS can't see that mutation.
@@ -484,16 +513,33 @@ export class Player {
   // actions stack base + multiplier, THPS-style, and bank on a clean landing.
   // Plain ground actions (spinning a box while standing there) just pay flat
   // points — they never start or feed a combo. Bail or die = the combo dies.
-  private score(base: number): void {
+  private score(base: number, label?: string): void {
     const inTrick =
       this.landingScoring || this.state === 'air' || this.state === 'grind' || this.sliding;
     if (inTrick) {
       this.comboPoints += base;
       this.comboMult += 1;
       this.comboTimer = CONST.comboWindow;
+      if (label) this.pushLabel(label);
     } else {
       this.points += base;
     }
+  }
+
+  // THPS readout: repeated tricks collapse into "Box x3".
+  private pushLabel(label: string): void {
+    const n = this.comboLabels.length;
+    if (n > 0) {
+      const last = this.comboLabels[n - 1];
+      const m = last.match(/^(.*) x(\d+)$/);
+      const base = m ? m[1] : last;
+      if (base === label) {
+        const count = m ? parseInt(m[2], 10) + 1 : 2;
+        this.comboLabels[n - 1] = `${label} x${count}`;
+        return;
+      }
+    }
+    this.comboLabels.push(label);
   }
 
   private bankCombo(): void {
@@ -501,6 +547,7 @@ export class Player {
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
+    this.comboLabels = [];
   }
 
   // Crash mask rules: masks come from mask crates only. The first two are
@@ -578,8 +625,11 @@ export class Player {
 
     // The halfpipe is always ridden ON THE BOARD: force skate mode there, so
     // carving never drops you into the walking state mid-transition.
+    // Holding X while STANDING STILL is just a jump crouch — skating only
+    // starts once you also push a direction (or already carry speed).
+    const pushingOff = this.charging && (Math.abs(input.moveY) > 0.35 || Math.abs(this.speed) > 4);
     const skating =
-      this.charging || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
+      pushingOff || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
 
     if (slamFlat) {
       this.speed = 0;
@@ -599,16 +649,27 @@ export class Player {
       // easy; no input bleeds friction back toward walking pace. A slide is
       // canned: it ignores the stick entirely and keeps its momentum.
       if (this.slideTimer > 0) {
-        // direction locked — no input, no friction
+        // canned 8-axis slide: the along-course component lives in `speed`,
+        // the cross component is applied in the lateral block below
+        this.speed =
+          this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
       } else if (this.charging) {
-        // build toward maxSpeed in the stick's direction (forward if idle)
-        const dir = Math.abs(input.moveY) > 0.05 ? Math.sign(input.moveY) : Math.sign(this.speed || 1);
-        const rate = dir * this.speed < -0.01 ? TUNING.turnaround : TUNING.chargeBoost;
-        this.speed = THREE.MathUtils.clamp(
-          this.speed + rate * dir * dt,
-          -TUNING.maxSpeed,
-          TUNING.maxSpeed,
-        );
+        // build toward maxSpeed in the stick's direction; with no direction
+        // held, only maintain momentum you already have (no phantom takeoff)
+        const dir =
+          Math.abs(input.moveY) > 0.35
+            ? Math.sign(input.moveY)
+            : Math.abs(this.speed) > 1
+              ? Math.sign(this.speed)
+              : 0;
+        if (dir !== 0) {
+          const rate = dir * this.speed < -0.01 ? TUNING.turnaround : TUNING.chargeBoost;
+          this.speed = THREE.MathUtils.clamp(
+            this.speed + rate * dir * dt,
+            -TUNING.maxSpeed,
+            TUNING.maxSpeed,
+          );
+        }
       } else if (Math.abs(input.moveY) > 0.05 && input.moveY * this.speed < 0) {
         // stick against travel: snappy brake (crossing walking pace drops
         // you onto your feet, where the walk logic takes the stick)
@@ -631,7 +692,9 @@ export class Player {
         grade = (n.x * this.axisF.x + n.z * this.axisF.z) / Math.max(n.y, 0.2);
       }
       if (Math.abs(grade) > 0.02) {
-        this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * dt;
+        // X held = attack the ramp (more boost); no X = mellow roll
+        const rampFactor = this.charging ? 1.3 : 0.8;
+        this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * rampFactor * dt;
       }
       this.lastGrade = grade;
 
@@ -674,8 +737,17 @@ export class Player {
         if (Math.abs(input.moveX) > 0.05) {
           this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * dt);
         }
-      } else if (this.slideTimer <= 0 && Math.abs(input.moveX) > 0.05) {
-        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * dt);
+      } else if (this.slideTimer > 0) {
+        // the slide's cross-course component
+        const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
+        this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
+      } else if (Math.abs(input.moveX) > 0.05) {
+        // Skate steering scales with speed so fast lines can actually carve
+        // (feels "360"); walking keeps the direct crisp step.
+        const latRate = skating
+          ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
+          : TUNING.walkSpeed;
+        this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt);
       }
     }
 
@@ -730,9 +802,13 @@ export class Player {
       this.groundHit = hit;
       this.crawling = false;
       // Authored kicker launch: leaving an uphill lip converts speed to lift
-      // (forward travel only — backing off an edge just drops).
+      // (forward travel only — backing off an edge just drops). X held at the
+      // lip = bigger air; rolling off without it is mellower.
+      const lipFactor = this.charging ? 1.3 : 0.85;
       this.vVel =
-        this.speed > 0 && this.lastGrade < -0.05 ? Math.min(-this.lastGrade * this.speed, 20) : 0;
+        this.speed > 0 && this.lastGrade < -0.05
+          ? Math.min(-this.lastGrade * this.speed * lipFactor, this.charging ? 25 : 18)
+          : 0;
       this.coyoteTimer = CONST.coyoteTime;
     }
 
@@ -869,7 +945,7 @@ export class Player {
       // Landing-tick payouts (vert, grab, slam impact) are still air tricks
       // for combo purposes even though the state just flipped to 'ride'.
       this.landingScoring = true;
-      if (wasVert) this.score(CONST.ptsVert);
+      if (wasVert) this.score(CONST.ptsVert, 'Vert Air');
 
       if (this.slamActive) {
         this.slamImpact(level);
@@ -903,7 +979,13 @@ export class Player {
         this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
         this.grabGraceTimer = 0;
         this.grabSpinAngle = 0;
-        this.score(CONST.ptsGrab + (this.grabSpinTotal > 2.5 ? CONST.ptsGrabSpin : 0));
+        // rotation pays in 90-degree increments, THPS-style
+        const quarters = Math.floor(this.grabSpinTotal / (Math.PI / 2));
+        const deg = quarters * 90;
+        this.score(
+          CONST.ptsGrab + quarters * CONST.ptsGrabQuarter,
+          deg > 0 ? `${this.grabTrickName} ${deg}°` : this.grabTrickName,
+        );
         this.grabSpinTotal = 0;
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
@@ -925,7 +1007,7 @@ export class Player {
     this.slamSquash = CONST.slamSquashTime;
     this.slamFlatT = CONST.slamFlat; // stay pancaked for a beat
     this.speed = 0;
-    this.score(CONST.ptsSlam);
+    this.score(CONST.ptsSlam, 'Body Slam');
     sfx.play('crunch', 0.9);
     this.emitSparks(12, 0xd8e6ff, 2.5);
     for (const c of level.crates) {
@@ -942,7 +1024,7 @@ export class Player {
     for (const e of level.enemies) {
       if (e.alive && e.group.position.distanceTo(this.pos) < CONST.slamRadius + 0.6) {
         level.killEnemy(e);
-        this.score(CONST.ptsEnemy);
+        this.score(CONST.ptsEnemy, 'Flattened');
       }
     }
     // A landed slam is a safe landing too: bank the string.
@@ -1004,6 +1086,13 @@ export class Player {
     this.placeOnRail(rail);
     this.speed = this.grindVel;
     this.surfaceName = this.grindStyle === 'normal' ? 'rail (50-50)' : 'rail (' + this.grindStyle + ')';
+    // THPS accrual: the longer the grind, the more the combo is worth.
+    this.grindTickT += dt;
+    while (this.grindTickT >= 0.25) {
+      this.grindTickT -= 0.25;
+      this.comboPoints += CONST.ptsGrindTick;
+      this.comboTimer = CONST.comboWindow;
+    }
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
     this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck
 
@@ -1080,6 +1169,20 @@ export class Player {
     this.grindStyle =
       rIn.moveY > 0.4 ? 'nose' : rIn.moveY < -0.4 ? 'five0' : Math.abs(rIn.moveX) > 0.4 ? 'board' : 'normal';
     this.grindYawDir = rIn.moveX >= 0 ? 1 : -1;
+    this.grindTickT = 0;
+    // The trick is scored the moment you lock in — the rail then RACKS UP
+    // points for as long as you hold it (see stepGrind), THPS-style.
+    const styleMult =
+      this.grindStyle === 'normal' ? 1 : this.grindStyle === 'board' ? 1.5 : 1.25;
+    const styleName =
+      this.grindStyle === 'normal'
+        ? '50-50'
+        : this.grindStyle === 'nose'
+          ? 'Nosegrind'
+          : this.grindStyle === 'five0'
+            ? '5-0'
+            : 'Boardslide';
+    this.score(Math.round(CONST.ptsGrindBase * styleMult), styleName);
     // Start the needle slightly off-center in a random direction.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
@@ -1101,9 +1204,6 @@ export class Player {
   }
 
   private exitGrind(vVel: number): void {
-    // A survived grind scores: base + time held, with a style bonus.
-    const styleMult = this.grindStyle === 'normal' ? 1 : this.grindStyle === 'board' ? 1.5 : 1.25;
-    this.score(Math.round((CONST.ptsGrindBase + this.grindTime * CONST.ptsGrindPerSec) * styleMult));
     if (this.grindRail) {
       // Project the rail velocity onto the course axis — exits snap straight,
       // matching the axis-locked movement.
@@ -1131,6 +1231,7 @@ export class Player {
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
+    this.comboLabels = [];
     this.emitSparks(8, 0xffb545, 2);
   }
 
@@ -1167,6 +1268,8 @@ export class Player {
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
           this.grabPhase = 'enter';
           this.grabT = 0;
+          this.grabTrickName = 'Grab';
+          this.grabTickT = 0;
           sfx.play('woosh2', 0.4);
         } else if (this.grabPhase === 'enter') {
           this.grabT += dt;
@@ -1178,6 +1281,22 @@ export class Player {
         if (Math.abs(this.rawInput.moveX) > 0.3) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
+        }
+        // variant name for the combo readout
+        this.grabTrickName =
+          this.rawInput.moveY > 0.4
+            ? 'Nosegrab'
+            : this.rawInput.moveX < -0.4
+              ? 'Melon'
+              : this.rawInput.moveX > 0.4
+                ? 'Indy'
+                : this.grabTrickName;
+        // THPS accrual: held grabs are worth more
+        this.grabTickT += dt;
+        while (this.grabTickT >= 0.25) {
+          this.grabTickT -= 0.25;
+          this.comboPoints += CONST.ptsGrabTick;
+          this.comboTimer = CONST.comboWindow;
         }
       } else {
         // Released: reach back OUT of the pose. Only once that motion
@@ -1287,7 +1406,7 @@ export class Player {
           if (this.uberTimer > 0 || this.sliding) {
             level.detonate(c, true);
           } else if (this.state === 'grind') {
-            if (this.spendMask()) level.detonate(c, true);
+            if (this.grindVel >= CONST.grindSmashSpeed || this.spendMask()) level.detonate(c, true);
             else this.bailFromRail();
           } else if (this.isStomping(c.box)) {
             if (this.slamActive) {
@@ -1319,7 +1438,7 @@ export class Player {
             this.grounded = false;
             this.charging = false;
             this.chargeTimer = 0;
-            this.score(CONST.ptsBouncy);
+            this.score(CONST.ptsBouncy, 'Boing');
             sfx.play('bouncyBounce', 0.9);
           } else if (this.isBonking(c.box)) {
             this.vVel = -1; // head bonk on the underside
@@ -1339,9 +1458,10 @@ export class Player {
           // Slides smash boxes without breaking stride.
           this.smashCrate(level, c);
         } else if (this.state === 'grind') {
-          // Crates on the rail line are obstacles: spin them, hop and bounce
-          // them, or they knock you straight off (a mask absorbs it).
-          if (this.spendMask()) this.smashCrate(level, c);
+          // Crates on the rail line are obstacles: spin them, hop them, or
+          // hit them FAST enough to shatter straight through — otherwise
+          // they knock you off (a mask absorbs it).
+          if (this.grindVel >= CONST.grindSmashSpeed || this.spendMask()) this.smashCrate(level, c);
           else this.bailFromRail();
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
@@ -1370,20 +1490,20 @@ export class Player {
         // Spin PINGS the enemy away — it can smash crates it happens to hit.
         const fling = e.group.position.clone().sub(this.pos).setY(0);
         if (fling.lengthSq() < 0.01) fling.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
-        fling.normalize().multiplyScalar(24);
-        fling.y = 8;
+        fling.normalize().multiplyScalar(42); // pinball ricochet
+        fling.y = 10;
         level.killEnemy(e, fling);
-        this.score(CONST.ptsEnemy);
+        this.score(CONST.ptsEnemy, 'Takedown');
       } else if (this.playerBox.intersectsBox(e.box)) {
         if (this.uberTimer > 0 || this.sliding) {
           // Uber plows through; Crash 3 rules: the slide takes out enemies too.
           level.killEnemy(e);
-          this.score(CONST.ptsEnemy);
+          this.score(CONST.ptsEnemy, 'Takedown');
         } else if (this.isStomping(e.box)) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
           level.killEnemy(e);
-          this.score(CONST.ptsEnemy);
+          this.score(CONST.ptsEnemy, 'Bonk');
           if (!this.slamActive) {
             this.vVel = TUNING.crateBounce;
           sfx.play('crateBounce', 0.7);
@@ -1471,7 +1591,7 @@ export class Player {
   private smashCrate(level: Level, c: Crate): void {
     level.breakCrate(c);
     this.cratesBroken++;
-    this.score(CONST.ptsCrate);
+    this.score(CONST.ptsCrate, 'Box');
     this.crateReward(c);
   }
 
@@ -1618,6 +1738,7 @@ export class Player {
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
+    this.comboLabels = [];
     this.onDeath();
   }
 
@@ -1859,11 +1980,11 @@ export class Player {
     this.bodyGroup.scale.y = 1.18 * (1 - 0.6 * squash);
 
     // A bail stays visible so the tumble reads; a plain death blinks out.
-    this.group.visible = this.state !== 'dead' || this.bailing;
+    this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
 
     // Blob shadow: persistent landing indicator, snapped to whatever floor is
     // below no matter how high the air. Shrinks with height but never fades.
-    if (this.shadowGroundY !== null && this.state !== 'dead') {
+    if (this.shadowGroundY !== null && this.state !== 'dead' && this.state !== 'gameover') {
       const h = Math.max(0, this.pos.y - this.shadowGroundY);
       this.shadow.visible = true;
       this.shadow.position.set(this.pos.x, this.shadowGroundY + 0.03, this.pos.z);
