@@ -102,6 +102,9 @@ export class Player {
   private flipTimer = 0; // front-flip on jump (visual only)
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
+  // Momentum exits (grind jumps, slide jumps) keep their speed in the air:
+  // footAir's direct-drive zeroing never applies until the next touchdown.
+  private airMomentum = false;
   // FREE-HEADING SKATE: while on the board (not walking / pipe / sliding),
   // the travel axes ARE the board's heading and the stick carves them around
   // — no more axis-locked "brake if you turn too far".
@@ -324,6 +327,7 @@ export class Player {
     this.chargeTimer = 0;
     this.skateCharge = 0;
     this.freeSkate = false;
+    this.airMomentum = false;
     this.jumpBufferT = 0;
     this.grabPhase = 'none';
     this.grabT = 0;
@@ -427,9 +431,12 @@ export class Player {
     this.teetering = false; // stepRide re-detects it each tick
 
     // A slide taken from your feet ends back on your feet — the burst never
-    // launches you into skating (jumping out of it mid-slide still does).
+    // launches you into skating. lastPlanar still holds the slide's burst
+    // speed from the previous step, so clamp it too or the skate-entry gate
+    // reads it and takes over anyway.
     if (this.slideFromWalk && this.slideTimer <= 0 && this.state === 'ride' && this.grounded) {
       this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
+      this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
       this.slideFromWalk = false;
     }
 
@@ -473,6 +480,11 @@ export class Player {
         TUNING.maxSpeed * CONST.maxOverspeed,
       );
       this.slideTimer = TUNING.slideDistance / Math.max(this.slideSpd, 6);
+      // Entering the slide drops any charge held from BEFORE it — only a
+      // FRESH X press during the slide arms the Crash slide-jump.
+      this.charging = false;
+      this.chargeTimer = 0;
+      this.jumpBufferT = 0;
       this.score(CONST.ptsSlide, 'Slide');
       sfx.play('woosh', 0.7);
     }
@@ -643,16 +655,28 @@ export class Player {
   private chargedJump(dt: number): void {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
     const wasCrawling = this.crawling;
+    const fromSlide = this.slideTimer > 0;
     // Measured planar speed this step, so the jump reads your ACTUAL movement
     // in any direction — a fast sideways walk stores nothing in `speed` (that
     // scalar is the forward axis), but it still deserves a Forward Flip.
     const planar =
       Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
     this.crawling = false;
-    this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
+    this.vVel =
+      THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t) *
+      (fromSlide ? TUNING.slideJumpHeight : 1);
     if (wasCrawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
     const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
-    if (spd > TUNING.walkSpeed + 0.5) {
+    if (fromSlide) {
+      // Crash slide-jump: a HIGH leap out of the slide. The burst's momentum
+      // carries through the air; a walk-slide still lands back on your feet
+      // (slideFromWalk stays set, so touchdown clamps to walking pace).
+      this.slideTimer = 0;
+      this.slideCd = CONST.slideCooldown;
+      this.airMomentum = true;
+      this.lastJumpType = 'Slide Jump';
+      sfx.play('woosh2', 0.6);
+    } else if (spd > TUNING.walkSpeed + 0.5) {
       // leaving actual skating: THPS board ollie
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
@@ -788,16 +812,28 @@ export class Player {
           const fwd = dx * this.axisF.x + dz * this.axisF.z;
           const side = dx * this.axisF.z - dz * this.axisF.x;
           const ang = Math.atan2(side, fwd);
-          const maxTurn = THREE.MathUtils.degToRad(TUNING.carveGrip) * dt;
-          const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
-          const c = Math.cos(turn);
-          const s = Math.sin(turn);
-          const nfx = this.axisF.x * c + this.axisF.z * s;
-          const nfz = -this.axisF.x * s + this.axisF.z * c;
-          this.axisF.set(nfx, 0, nfz);
-          this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-          if (this.charging) this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
-          else this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
+          if (Math.abs(ang) > CONST.carveBrakeAngle) {
+            // Pulling (nearly) opposite your travel = the brake, and THE
+            // dismount: speed bleeds hard, and dropping under walking pace
+            // hands you back to your feet with the stick in charge.
+            // Diagonals still carve — only a true pull-back skids.
+            if (this.speed > 12 && this.haltCd <= 0) {
+              sfx.play('skateHalt', 0.6);
+              this.haltCd = 0.6;
+            }
+            this.speed = Math.max(0, this.speed - TUNING.turnaround * dt);
+          } else {
+            const maxTurn = THREE.MathUtils.degToRad(TUNING.carveGrip) * dt;
+            const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
+            const c = Math.cos(turn);
+            const s = Math.sin(turn);
+            const nfx = this.axisF.x * c + this.axisF.z * s;
+            const nfz = -this.axisF.x * s + this.axisF.z * c;
+            this.axisF.set(nfx, 0, nfz);
+            this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+            if (this.charging) this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+            else this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
+          }
         } else if (this.charging && this.speed > 1) {
           this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
         } else {
@@ -965,12 +1001,19 @@ export class Player {
       this.coyoteTimer = CONST.coyoteTime;
     }
 
-    // A slide is a committed move — it never launches a jump. Ignore jump
-    // input for its whole duration; charging only resumes once it ends.
+    // Crash slide-jump: a charge held from BEFORE the slide was dropped at
+    // slide start, so releasing it mid-slide does nothing — but a FRESH X
+    // press during the slide arms a high leap, fired on release.
     if (this.slideTimer > 0) {
-      this.charging = false;
-      this.chargeTimer = 0;
       this.jumpBufferT = 0;
+      if (input.jumpPressed) this.charging = true;
+      if (this.charging && input.jumpHeld) {
+        this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      }
+      if (input.jumpReleased && this.charging) {
+        this.chargedJump(dt);
+        return;
+      }
     } else {
       // Buffered pre-landing release: fire it now that we're down. If X is
       // already held again, the fresh charge wins and the buffer is dropped.
@@ -1060,7 +1103,10 @@ export class Player {
     // the halfpipe lip pins x — you can only ease back toward the middle.
     if (!this.grabbing && !this.slamActive) {
       const footAir =
-        !this.charging && !this.vertLock && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
+        !this.charging &&
+        !this.vertLock &&
+        !this.airMomentum && // grind/slide exits keep flying, even when slow
+        Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
       // Digital diagonals in the air get the same normalization as the walk.
       const diag = footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
       if (footAir) {
@@ -1122,6 +1168,7 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.vertLock = false;
+      this.airMomentum = false; // touchdown: normal ground rules resume
       // Falling onto the halfpipe transition converts the drop back into carve
       // speed down the wall — momentum survives the round trip, THPS-style.
       if (hit.hpWall) {
@@ -1421,6 +1468,9 @@ export class Player {
     this.vVel = vVel;
     this.regrindCd = CONST.regrindCooldown;
     this.balance = 0;
+    // Grind exits fly forward: the rail speed rides through the whole air,
+    // even if it's below walking pace (footAir must not zero it).
+    this.airMomentum = true;
   }
 
   // Pegged the balance meter (or hit a crate): stumble off the rail with most
@@ -1429,6 +1479,7 @@ export class Player {
     this.grindRail = null;
     this.state = 'air';
     this.vVel = 3;
+    this.airMomentum = false; // a bail is a stumble, not a launch
     this.speed *= CONST.balanceBailSpeedKeep;
     this.regrindCd = CONST.regrindCooldown * 2;
     this.balance = 0;
