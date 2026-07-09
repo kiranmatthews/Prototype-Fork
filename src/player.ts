@@ -97,6 +97,7 @@ export class Player {
   private railCand: { rail: Rail; sample: RailSample } | null = null;
   private lean = 0;
 
+  private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
@@ -221,6 +222,16 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    // Side-scroll levels: the camera sits off to the +X side, so screen right
+    // = down-course. Remap the stick — left/right drives speed, depth is
+    // locked — while the raw stick stays available (rawInput) for the slam,
+    // grab-spin direction, and grind balance.
+    this.rawInput = input;
+    const ctl = level.sideScroll
+      ? ({ ...input, moveY: input.moveX, moveX: 0 } as unknown as Input)
+      : input;
+    input = ctl;
+
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
@@ -556,7 +567,7 @@ export class Player {
 
     // Circle + down: pancake body slam. Drops like a rock, no steering, and
     // the impact breaks everything around you (TNT pops safely, nitro does NOT).
-    if (!this.slamActive && input.grabHeld && input.moveY < -0.5) {
+    if (!this.slamActive && input.grabHeld && this.rawInput.moveY < -0.5) {
       this.slamActive = true;
       this.grabActive = false;
       this.grabGraceTimer = 0;
@@ -703,7 +714,7 @@ export class Player {
     // the meter bails you off the rail.
     const instability = TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp);
     this.balance += Math.sign(this.balance || 1) * instability * dt;
-    this.balance += input.moveX * TUNING.balanceControl * dt;
+    this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
     if (Math.abs(this.balance) >= 1) {
       // A mask absorbs the bail: the needle resets and the grind continues.
       if (this.spendMask()) {
@@ -862,8 +873,8 @@ export class Player {
         // Circle alone = grab pose. Circle + left/right = grab-spin in that
         // direction. The trajectory is locked either way — but land off-axis
         // (or still holding) and you bail.
-        if (Math.abs(input.moveX) > 0.3) {
-          this.grabSpinAngle += CONST.grabSpinRate * Math.sign(input.moveX) * dt;
+        if (Math.abs(this.rawInput.moveX) > 0.3) {
+          this.grabSpinAngle += CONST.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
         }
       } else {
         if (this.grabActive) {
@@ -1060,6 +1071,16 @@ export class Player {
           // Bump = wall, like a normal box. Spin, slide, or stomp to bank it.
           this.pushOutOf(cp.box);
         }
+      }
+    }
+
+    // Floating wumpa: touch to collect.
+    for (const p of level.pickups) {
+      if (!p.alive) continue;
+      if (this.playerBox.intersectsBox(p.box)) {
+        p.alive = false;
+        p.mesh.visible = false;
+        this.fruit++;
       }
     }
 

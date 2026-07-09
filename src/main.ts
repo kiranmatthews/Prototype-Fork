@@ -87,6 +87,21 @@ let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the c
 let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
+  // Side-scroll levels: camera off to the +X side, screen right = down-course.
+  // Still axis-locked — it only translates.
+  if (level.sideScroll) {
+    camTarget.set(player.pos.x + 14, player.pos.y + 3.6, player.pos.z - 1.5);
+    if (camera.position.distanceTo(camTarget) > 30) {
+      camera.position.copy(camTarget);
+    } else {
+      camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
+    }
+    lookPoint.set(player.pos.x, player.pos.y + 1.6, player.pos.z - 1.5);
+    camera.lookAt(lookPoint);
+    prevPlayerZ = player.pos.z;
+    return;
+  }
+
   const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
   prevPlayerZ = player.pos.z;
   const movingBack = vz > 2.5 || (player.grounded && player.speed < -1.5);
