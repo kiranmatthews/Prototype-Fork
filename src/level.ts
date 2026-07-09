@@ -44,6 +44,7 @@ export interface Stone {
   dir: number;
   speed: number;
   r: number;
+  chase?: boolean; // boulder-chase mode: rolls after the player instead of patrolling
 }
 
 // Floating wumpa, Crash-style: touch to collect (side-scroll levels).
@@ -65,7 +66,15 @@ export interface Checkpoint {
   savedPoints: number;
 }
 
-export const LEVEL_NAMES = ['Test Course', 'N. Sanity Beach', 'The Great Gate', 'Sideways', 'Random'];
+export const LEVEL_NAMES = [
+  'Test Course',
+  'N. Sanity Beach',
+  'The Great Gate',
+  'Sideways',
+  'Random',
+  'The Gauntlet',
+  'Boulder Dash',
+];
 
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
@@ -90,6 +99,21 @@ export class Level {
   halfpipeLipX = 10.3; // outer edge of the transition walls
   killY = -48; // per-level death height
   name = LEVEL_NAMES[0];
+  // Boulder-chase machinery (Boulder Dash). player.step reports its position
+  // here each step so the chase can trigger, rubber-band, and reset fairly.
+  playerPos = new THREE.Vector3(0, 0, -1e9);
+  chaseCam = false; // high, pulled-back framing: the player runs AT the lens
+  boulder: {
+    st: Stone;
+    active: boolean;
+    falling: boolean;
+    fallV: number;
+    endZ: number; // where the floor runs out — the boulder tips into the pit
+    triggerZ: number; // player crossing this line starts the roll
+    h0: number; // ground-height profile sampled at build time
+    hStep: number;
+    heights: number[];
+  } | null = null;
 
   // safe = triggered by the player's own spin/slam: breaks the world, not them
   explosions: { center: THREE.Vector3; t: number; radius: number; safe: boolean }[] = [];
@@ -150,6 +174,8 @@ export class Level {
     else if (courseId === 2) this.buildGreatGate();
     else if (courseId === 3) this.buildSideways();
     else if (courseId === 4) this.buildRandom();
+    else if (courseId === 5) this.buildGauntlet();
+    else if (courseId === 6) this.buildBoulderDash();
     else this.buildTestCourse();
   }
 
@@ -208,6 +234,7 @@ export class Level {
 
     // Rolling stones: back and forth along the course, always turning.
     for (const st of this.stones) {
+      if (st.chase) continue; // the boulder has its own brain below
       st.mesh.position.z += st.dir * st.speed * dt;
       if (st.mesh.position.z < st.z1) {
         st.mesh.position.z = st.z1;
@@ -221,6 +248,55 @@ export class Level {
         st.mesh.position,
         new THREE.Vector3(st.r * 1.7, st.r * 2, st.r * 1.7),
       );
+    }
+
+    // THE BOULDER. Waits behind the spawn until the player bolts, then rolls
+    // +Z after them — rubber-banding so it stays scary but beatable. It fills
+    // the corridor wall to wall (no dodging sideways), crushes crates, sets
+    // off explosives, flattens enemies, and finally tips into the end pit.
+    const b = this.boulder;
+    if (b) {
+      const st = b.st;
+      const p = st.mesh.position;
+      if (!b.active && !b.falling && this.playerPos.z > b.triggerZ) {
+        b.active = true;
+        sfx.play('crunch', 0.9, 0.55);
+      }
+      if (b.active) {
+        const gap = this.playerPos.z - p.z; // how far ahead the runner is
+        let sp = 25;
+        if (gap < -2) sp = 34; // it already passed you: let it thunder off
+        else if (gap < 14) sp = 21; // right on your heels: a sliver of mercy
+        else if (gap > 50) sp = 32; // never let it fall out of frame
+        st.speed = sp;
+        p.z += sp * dt;
+        p.y = this.boulderGroundY(p.z) + st.r * 0.92;
+        st.mesh.rotation.x += (sp * dt) / st.r;
+        // Wall-to-wall kill box: you outrun a boulder, you don't sidestep it.
+        st.box.setFromCenterAndSize(p, new THREE.Vector3(12.5, st.r * 1.9, st.r * 1.4));
+        for (const c of this.crates) {
+          if (!c.alive) continue;
+          const cp = c.mesh.position;
+          if (Math.abs(cp.z - p.z) < st.r + 0.8 && Math.abs(cp.x - p.x) < st.r + 0.8) {
+            if (c.nitro || c.tnt) this.detonate(c);
+            else this.breakCrate(c);
+          }
+        }
+        for (const e of this.enemies) {
+          if (e.alive && Math.abs(e.group.position.z - p.z) < st.r + 0.8) this.killEnemy(e);
+        }
+        if (p.z >= b.endZ) {
+          b.active = false;
+          b.falling = true;
+          st.box.makeEmpty();
+        }
+      } else if (b.falling) {
+        b.fallV += 32 * dt;
+        p.y -= b.fallV * dt;
+        p.z += 5 * dt; // tips forward into the pit
+        st.mesh.rotation.x += 2 * dt;
+        if (p.y < this.killY - 20) b.falling = false;
+      }
     }
 
     for (const e of this.enemies) {
@@ -495,6 +571,21 @@ export class Level {
     if (hard) {
       this.activeCheckpoint = null;
       this.currentSpawn.copy(this.spawnPos);
+    }
+
+    // Boulder: back to its mark a fair headstart behind wherever you respawn,
+    // waiting for you to move before it rolls again.
+    if (this.boulder) {
+      const b = this.boulder;
+      b.active = false;
+      b.falling = false;
+      b.fallV = 0;
+      b.triggerZ = this.currentSpawn.z + 5;
+      const bz = this.currentSpawn.z - 39;
+      b.st.mesh.position.set(0, this.boulderGroundY(bz) + b.st.r * 0.92, bz);
+      b.st.mesh.rotation.set(0, 0, 0);
+      b.st.mesh.visible = true;
+      b.st.box.makeEmpty();
     }
   }
 
@@ -1087,6 +1178,7 @@ export class Level {
     width: number,
     mat: THREE.Material,
     opts: { amp?: number; dips?: number[]; berms?: boolean } = {},
+    cx = 0,
   ): void {
     const depth = Math.abs(z1 - z0);
     const cz = (z0 + z1) / 2;
@@ -1119,19 +1211,19 @@ export class Level {
     }
     geo.computeVertexNormals();
     const mesh = new THREE.Mesh(geo, this.patterned(mat, width, depth));
-    mesh.position.set(0, baseY, cz);
+    mesh.position.set(cx, baseY, cz);
     mesh.name = name;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-    if (opts.berms !== false) this.berms(z0, z1, baseY, width);
+    if (opts.berms !== false) this.berms(z0, z1, baseY, width, cx);
   }
 
   // Firm raised edges: visible ridge + solid collider + a grindable lip rail.
-  private berms(z0: number, z1: number, baseY: number, width: number): void {
+  private berms(z0: number, z1: number, baseY: number, width: number, cx = 0): void {
     const depth = Math.abs(z1 - z0);
     const mat = new THREE.MeshLambertMaterial({ color: 0x4d5c42 });
     for (const side of [-1, 1]) {
-      const x = side * (width / 2 - 0.45);
+      const x = cx + side * (width / 2 - 0.45);
       const berm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.5, depth), mat);
       berm.position.set(x, baseY + 0.55, (z0 + z1) / 2);
       this.root.add(berm);
@@ -1606,6 +1698,434 @@ export class Level {
       savedMasks: 0,
       savedPoints: 0,
     });
+  }
+
+  // Level 6, "The Gauntlet": everything the toolkit can do in one long run —
+  // jungle approach, terraced climb with a scaffold-rail bypass, a high ridge
+  // with real gaps, a kicker launch, a halfpipe alley, a right-angle turn
+  // across floating ruins, a downhill slalom, a rail canyon, a crate maze,
+  // vine bridges, and a rolling-stone finale. Roughly 1.5x the Test Course.
+  private buildGauntlet(): void {
+    const matSand = new THREE.MeshLambertMaterial({ color: 0xc9b87a });
+    const matJungle = new THREE.MeshLambertMaterial({ color: 0x6f8f5e });
+    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x77955e });
+    const matStone = new THREE.MeshLambertMaterial({ color: 0x7d8288 });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
+    const matPlat = new THREE.MeshLambertMaterial({ color: 0x8a8f79 });
+    const matWood = new THREE.MeshLambertMaterial({ color: 0x8a6b4a });
+    const matFinish = new THREE.MeshLambertMaterial({ color: 0x9a8f6e });
+
+    this.killY = -34;
+    this.finishZ = -1200;
+    this.endWallZ = -1212;
+
+    // pit floor far below everything
+    const pit = new THREE.Mesh(
+      new THREE.PlaneGeometry(1900, 1900),
+      new THREE.MeshBasicMaterial({ color: 0x2e1626 }),
+    );
+    pit.rotation.x = -Math.PI / 2;
+    pit.position.set(70, -44, -620);
+    this.root.add(pit);
+
+    // --- A: walled start + jungle approach ---------------------------------
+    this.slab('start', 14, -30, 0, 20, matSand, false);
+    this.wall(0, 15, 22, 1, 0);
+    this.wall(-10.5, -8, 1, 46, 0);
+    this.wall(10.5, -8, 1, 46, 0);
+    this.crate(3, 0, -12);
+    this.crate(4.5, 0, -12);
+    this.crate(3.75, 1.2, -12); // little pyramid
+    this.crate(-4, 0, -20, 'mask');
+    this.fruitRow(-6, -24, 1.3, 5, -1);
+    this.jungle('approach A', -30, -95, 0, 12, matJungle, { dips: [-60] });
+    this.log(1.5, 5.5, 0, -70);
+    this.crate(-3, 0, -48);
+    this.crate(2, 0, -82, 'mystery');
+    this.enemy(-3.5, 3.5, 0, -55, 5);
+    this.enemy(-4, 4, 0, -85, 6);
+    this.jungle('approach B', -95, -150, 0, 12, matJungle2, { dips: [-130] });
+    for (let i = 0; i < 8; i++) this.crate(-4.6 + i * 1.3, 0, -115); // crate fence
+    this.crate(4.8, 0, -115, 'tnt'); // pop the fence from the flank
+    this.stone(-3, 0, -100, -145, 6);
+    this.crate(-4, 0, -140, 'bouncy');
+    this.checkpoint(0, -143);
+
+    // --- B: terraced climb (0 -> +9) with a scaffold-rail bypass ------------
+    this.ramp('terrace ramp 1', -150, 0, -175, 3, 12, matRamp);
+    this.jungle('terrace 1', -175, -215, 3, 12, matJungle);
+    this.crate(0, 3, -190);
+    this.crate(0, 4.2, -190); // stack
+    this.crate(-4.5, 3, -205, 'nitro');
+    this.log(2, 5.8, 3, -183);
+    this.enemy(-4, 4, 3, -198, 6);
+    this.ramp('terrace ramp 2', -215, 3, -240, 6, 12, matRamp);
+    this.jungle('terrace 2', -240, -280, 6, 12, matJungle2, { dips: [-262] });
+    this.crate(2.6, 6, -256);
+    this.crate(3.9, 6, -256, 'tnt');
+    this.crate(5.2, 6, -256);
+    this.crate(-5, 6, -268, 'mask');
+    this.enemy(-4, 4, 6, -250, 5);
+    this.enemy(-3.5, 3.5, 6, -270, 7);
+    this.checkpoint(6, -276);
+    this.ramp('terrace ramp 3', -280, 6, -300, 9, 10, matRamp);
+    const scaffold = new Rail([
+      new THREE.Vector3(5, 1.4, -152),
+      new THREE.Vector3(5, 4.6, -215),
+      new THREE.Vector3(5, 7.6, -280),
+      new THREE.Vector3(5, 10.4, -302),
+    ]);
+    this.rails.push(scaffold);
+    this.root.add(scaffold.object);
+
+    // --- C: high ridge with two gaps and a bypass rail ----------------------
+    this.jungle('ridge A', -300, -345, 9, 11, matJungle);
+    this.checkpoint(9, -308);
+    this.crate(-3, 9, -320);
+    this.crate(-3, 10.2, -320); // stack
+    this.fruitRow(-315, -338, 10.3, 5);
+    // gap: -345 .. -357
+    this.jungle('ridge B', -357, -400, 9, 11, matJungle2, { dips: [-380] });
+    this.stone(3.2, 9, -362, -396, 8);
+    this.crate(-4, 9, -370, 'mystery');
+    this.log(-5.4, -2, 9, -388);
+    const bypass = new Rail([new THREE.Vector3(-4, 10.2, -396), new THREE.Vector3(-4, 10.4, -421)]);
+    this.rails.push(bypass);
+    this.root.add(bypass.object);
+    // gap: -400 .. -416 (long: carry speed, or grind the bypass line)
+    this.jungle('ridge C', -416, -450, 9, 11, matJungle);
+    this.enemy(-4, 4, 9, -432, 7);
+    this.crate(4.5, 9, -440, 'mask');
+    this.crate(-2, 9, -425);
+    this.crate(2, 9, -425);
+    this.checkpoint(9, -445, -3.5);
+
+    // --- D: kicker launch off the ridge, 8 units down to the pipe deck ------
+    this.ramp('ridge kicker', -450, 9, -460, 11, 10, matRamp);
+    // flight gap: -460 .. -482
+    this.fruitRow(-464, -478, 13.5, 5);
+    this.jungle('drop landing', -482, -540, 3, 13, matJungle2, { dips: [-518] });
+    this.crate(-5, 3, -500, 'mystery');
+    this.crate(5, 3, -520, 'bouncy');
+    this.stepBlock(5, -527, 4, 6, 3, 8.2);
+    this.crate(5, 8.2, -527, 'mask'); // bounce up for it
+    this.enemy(-4, 4, 3, -510, 6);
+    this.checkpoint(3, -534, -4);
+
+    // --- E: halfpipe alley ---------------------------------------------------
+    const hpBase = 3;
+    const hpFloor = this.slab('gauntlet pipe', -540, -595, hpBase, 6, matStone, false);
+    hpFloor.userData.hpFloor = true;
+    const profile: [number, number, number, number][] = [
+      [3.0, 4.8, 0, 0.23],
+      [4.8, 6.3, 0.23, 0.79],
+      [6.3, 7.5, 0.79, 1.55],
+      [7.5, 8.7, 1.55, 2.74],
+      [8.7, 9.6, 2.74, 4.18],
+      [9.6, 10.3, 4.18, 6.1],
+    ];
+    for (const [xIn, xOut, dBase, dTop] of profile) {
+      for (const side of [1, -1]) {
+        const wallMesh = this.bank(
+          'pipe wall',
+          -540,
+          -595,
+          side * xIn,
+          side * xOut,
+          hpBase + dBase,
+          hpBase + dTop,
+          matRamp,
+        );
+        wallMesh.userData.hpWall = true;
+      }
+    }
+    this.halfpipeLipY = hpBase + 5.9;
+    this.halfpipeLipX = 10.3;
+    const lipL = new Rail([
+      new THREE.Vector3(-10.4, hpBase + 6.3, -542),
+      new THREE.Vector3(-10.4, hpBase + 6.3, -593),
+    ]);
+    const lipR = new Rail([
+      new THREE.Vector3(10.4, hpBase + 6.3, -542),
+      new THREE.Vector3(10.4, hpBase + 6.3, -593),
+    ]);
+    for (const r of [lipL, lipR]) {
+      this.rails.push(r);
+      this.root.add(r.object);
+    }
+    this.crate(-2.2, hpBase, -560, 'bouncy');
+    this.crate(2.2, hpBase, -575);
+    this.pickup(-7, hpBase + 3.4, -555);
+    this.pickup(7, hpBase + 3.4, -580);
+    this.slab('pipe exit', -595, -615, hpBase, 14, matStone);
+
+    // --- F: the turn — floating ruins running east ---------------------------
+    this.slab('corner east', -615, -635, 3, 20, matPlat, false, 4);
+    this.wall(4, -636.5, 20, 1.5, 3);
+    this.wall(-6.5, -625, 1.5, 20, 3);
+    this.zones.push({ xMin: 9, xMax: 141, zMin: -635, zMax: -615, dir: 'E' });
+    const CZ = -625;
+    this.slabX('ruin walk', 13, 36, 3, 9, matPlat, CZ);
+    this.crate(24, 3, CZ);
+    this.crate(24, 4.2, CZ); // stack
+    this.fruitRowX(15, 33, 4.3, 5, CZ);
+    this.slabX('ruin pad A', 44, 56, 4.5, 9, matPlat, CZ);
+    this.crate(50, 4.5, CZ, 'tnt');
+    this.slabX('ruin pad B', 62, 74, 6, 9, matPlat, CZ);
+    this.crate(64, 6, CZ, 'mystery');
+    this.checkpoint(6, CZ, 69);
+    const pitRail = new Rail([new THREE.Vector3(74, 6.9, CZ), new THREE.Vector3(100, 6.3, CZ)]);
+    this.rails.push(pitRail);
+    this.root.add(pitRail.object);
+    this.fruitRowX(78, 96, 8.2, 5, CZ);
+    this.slabX('pit pad', 80, 88, 5.2, 9, matPlat, CZ);
+    this.slabX('ruin shelf', 100, 118, 6, 9, matJungle, CZ);
+    this.crate(108, 6, CZ, 'nitro');
+    this.enemy(103, 115, 6, CZ, 5);
+    // split: bounce up to the high fruit ledge, or run the TNT low road
+    this.crate(117, 6, CZ, 'bouncy');
+    this.slabX('high ledge', 120, 134, 10.5, 9, matPlat, CZ);
+    this.crate(127, 10.5, CZ, 'mask');
+    this.fruitRowX(122, 132, 11.8, 5, CZ);
+    this.slabX('low road', 120, 134, 5.4, 9, matStone, CZ);
+    this.crate(126, 5.4, CZ, 'tnt');
+    this.crate(131, 5.4, CZ, 'tnt');
+    this.slabX('rejoin', 136, 141.5, 6, 9, matPlat, CZ);
+
+    // --- G: corner back south, then the downhill slalom ----------------------
+    this.slab('corner south', -615, -635, 6, 20, matPlat, false, 152);
+    this.wall(162.5, -625, 1.5, 20, 6);
+    this.wall(152, -613.5, 20, 1.5, 6);
+    const dhY = (z: number): number => THREE.MathUtils.mapLinear(z, -635, -705, 6, -4);
+    this.ramp('gauntlet downhill', -635, 6, -705, -4, 12, matRamp, 152);
+    this.crate(149, dhY(-655), -655);
+    this.crate(155, dhY(-668), -668);
+    this.crate(149.5, dhY(-681), -681, 'nitro');
+    this.crate(154.5, dhY(-692), -692, 'nitro');
+    this.fruitRow(-648, -662, dhY(-655) + 1.3, 4, 152);
+    this.fruitRow(-676, -690, dhY(-683) + 1.3, 4, 152);
+    this.jungle('runout', -705, -760, -4, 12, matJungle, { dips: [-730] }, 152);
+    this.stone(149, -4, -710, -755, 9);
+    this.crate(152, -4, -738);
+    this.crate(152, -2.8, -738); // stack
+    this.enemy(148, 156, -4, -746, 6);
+    this.checkpoint(-4, -755, 152);
+
+    // --- H: rail canyon — S-curve line left, rail-hop chain right ------------
+    this.slab('canyon ledge', -760, -775, -4, 14, matStone, true, 152);
+    // pit: -775 .. -860
+    const sCurve = new Rail([
+      new THREE.Vector3(149, -3, -772),
+      new THREE.Vector3(147, -2.2, -800),
+      new THREE.Vector3(151.5, -2.6, -830),
+      new THREE.Vector3(149.5, -3.4, -858),
+    ]);
+    const chainA = new Rail([
+      new THREE.Vector3(155.5, -3, -772),
+      new THREE.Vector3(155.5, -3.4, -814),
+    ]);
+    const chainB = new Rail([
+      new THREE.Vector3(158, -3.1, -822),
+      new THREE.Vector3(158, -3.6, -858),
+    ]);
+    for (const r of [sCurve, chainA, chainB]) {
+      this.rails.push(r);
+      this.root.add(r.object);
+    }
+    this.crate(155.5, -2.6, -795); // smash it or get knocked into the pit
+    this.crate(149.5, -2.9, -850, 'mask'); // floats at grind height on the S-curve
+    this.fruitRow(-782, -808, -1.4, 4, 147.5);
+    this.fruitRow(-826, -852, -1.8, 4, 158);
+    this.slab('canyon landing', -860, -885, -4, 14, matStone, true, 152);
+    this.berms(-860, -885, -4, 14, 152);
+    this.checkpoint(-4, -880, 152);
+
+    // --- I: crate maze --------------------------------------------------------
+    this.slab('crate maze', -885, -960, -4, 18, matSand, false, 152);
+    this.wall(142.9, -922.5, 1.2, 75, -4);
+    this.wall(161.1, -922.5, 1.2, 75, -4);
+    // row 1: pass on the right (or spin the TNT)
+    for (let i = 0; i < 9; i++) this.crate(144 + i * 1.3, -4, -900, i === 3 ? 'tnt' : undefined);
+    this.crate(159, -4, -895, 'mystery');
+    this.enemy(155.5, 160, -4, -907, 4);
+    // row 2: pass on the left (nitro in the wall — no spinning through blind)
+    for (let i = 0; i < 9; i++) this.crate(149.7 + i * 1.3, -4, -915, i === 5 ? 'nitro' : undefined);
+    this.enemy(144, 148.5, -4, -922, 4);
+    // row 3: full width — bounce over it, or blow the TNT posts
+    this.crate(152, -4, -925, 'bouncy');
+    for (let i = 0; i < 14; i++) {
+      this.crate(143.6 + i * 1.3, -4, -930, i === 4 || i === 9 ? 'tnt' : undefined);
+    }
+    this.crate(145, -4, -940, 'mystery');
+    this.crate(152, -4, -950, 'mask');
+    this.fruitRow(-892, -898, -2.7, 3, 158);
+    this.fruitRow(-908, -914, -2.7, 3, 145.5);
+    this.checkpoint(-4, -955, 152);
+
+    // --- J: vine bridges — pick a lane over the long pit ----------------------
+    // left is broken mid-span, center is mined, right is logged. Edges grind.
+    // pit: -960 .. -1050
+    this.slab('bridge left A', -960, -998, -4, 3.2, matWood, true, 146.5);
+    this.slab('bridge left B', -1010, -1050, -4, 3.2, matWood, true, 146.5);
+    this.slab('bridge center', -960, -1050, -4, 3.2, matWood, true, 152);
+    this.crate(151.3, -4, -985, 'nitro');
+    this.crate(152.7, -4, -1012, 'nitro');
+    this.slab('bridge right', -960, -1050, -4, 3.2, matWood, true, 157.5);
+    this.log(155.9, 159.1, -4, -980);
+    this.log(155.9, 159.1, -4, -1022);
+    this.fruitRow(-966, -1044, -2.7, 8, 146.5);
+    this.fruitRow(-970, -1040, -2.7, 6, 157.5);
+    this.slab('bridge landing', -1050, -1075, -4, 14, matStone, true, 152);
+    this.checkpoint(-4, -1070, 152);
+
+    // --- K: stone gauntlet + finish -------------------------------------------
+    this.jungle('gauntlet A', -1075, -1130, -4, 11, matJungle2, { dips: [-1102] }, 152);
+    this.stone(149.5, -4, -1080, -1126, 10);
+    this.stone(154.5, -4, -1080, -1126, 13);
+    // gap: -1130 .. -1142
+    this.jungle('gauntlet B', -1142, -1185, -4, 11, matJungle, {}, 152);
+    this.enemy(148.5, 155.5, -4, -1160, 7);
+    this.enemy(149, 155, -4, -1175, 9);
+    this.fruitRow(-1148, -1180, -2.6, 6, 152);
+    this.slab('finish run', -1185, -1215, -4, 14, matFinish, true, 152);
+    this.finishGate(-4, this.finishZ, 152);
+    this.endWall(-4, 152);
+  }
+
+  // Level 7, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
+  // the corridor and sprint back TOWARD the camera (hold down + X to skate)
+  // while a boulder thunders after you. It crushes crates, detonates
+  // explosives, and flattens anything slower than it — then tips into the
+  // pit at the end. Jump the same pit and cruise to the gate.
+  private buildBoulderDash(): void {
+    const matJungle = new THREE.MeshLambertMaterial({ color: 0x6f8f5e });
+    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x77955e });
+    const matSand = new THREE.MeshLambertMaterial({ color: 0xc9b87a });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
+
+    this.chaseCam = true;
+    this.killY = -30;
+    this.finishZ = 8;
+    this.endWallZ = -470; // the far-end clamp doubles as the wall behind spawn
+    this.spawnPos.set(0, 0.1, -448);
+    this.currentSpawn.copy(this.spawnPos);
+
+    // pit floor
+    const pit = new THREE.Mesh(
+      new THREE.PlaneGeometry(1200, 1200),
+      new THREE.MeshBasicMaterial({ color: 0x2e1626 }),
+    );
+    pit.rotation.x = -Math.PI / 2;
+    pit.position.set(0, -40, -220);
+    this.root.add(pit);
+
+    // spawn deck — open behind, so you can SEE the thing waiting for you
+    this.slab('chase start', -440, -458, 0, 14, matSand, false);
+    this.wall(-7.5, -449, 1, 18, 0);
+    this.wall(7.5, -449, 1, 18, 0);
+
+    this.jungle('chase A', -380, -440, 0, 12, matJungle, { dips: [-410] });
+    this.fruitRow(-434, -390, 1.3, 8);
+    this.log(0.5, 5.5, 0, -396);
+    this.crate(-4.5, 0, -420, 'nitro');
+    // gap 1: -368 .. -380
+    this.jungle('chase B', -300, -368, 0, 12, matJungle2, { dips: [-330] });
+    this.crate(-1.3, 0, -350, 'tnt');
+    this.crate(1.3, 0, -350, 'tnt'); // swerve or hop the pair
+    this.log(-5.5, -0.5, 0, -318);
+    this.fruitRow(-362, -306, 1.3, 8);
+    this.checkpoint(0, -308, -3.5);
+    this.ramp('chase rise', -285, 2, -300, 0, 12, matRamp);
+    this.jungle('chase C', -215, -285, 2, 12, matJungle, { dips: [-240] });
+    this.crate(-3.2, 2, -260, 'nitro');
+    this.crate(3.2, 2, -260, 'nitro'); // thread the middle
+    this.log(-5.5, -1.5, 2, -228);
+    this.fruitRow(-278, -222, 3.3, 8);
+    // gap 2: -204 .. -215
+    this.jungle('chase D', -130, -204, 2, 12, matJungle2, { dips: [-160] });
+    this.crate(0, 2, -182, 'tnt');
+    this.crate(-2.6, 2, -176, 'tnt');
+    this.crate(2.6, 2, -170, 'tnt'); // staggered minefield: weave it
+    this.enemy(-4, 4, 2, -150, 6);
+    this.fruitRow(-198, -140, 3.3, 8);
+    this.checkpoint(2, -138, 3.5);
+    this.ramp('chase drop', -112, 0, -130, 2, 12, matRamp);
+    this.jungle('chase E', -45, -112, 0, 13, matJungle, { dips: [-75] });
+    this.log(0.5, 6, 0, -95);
+    this.crate(-4.8, 0, -60, 'nitro');
+    this.fruitRow(-106, -52, 1.3, 8);
+    // the boulder pit: -32 .. -45 — you jump it; the boulder can't
+    this.slab('escape', 14, -32, 0, 14, matSand);
+    this.wall(-7.5, -9, 1, 46, 0);
+    this.wall(7.5, -9, 1, 46, 0);
+    this.crate(-3, 0, -20, 'mask');
+    this.crate(3, 0, -16, 'mystery');
+    this.crate(0, 0, -24);
+    this.fruitRow(-28, -12, 1.3, 5);
+    this.finishGate(0, this.finishZ);
+    // no end-wall mesh — the far clamp sits invisibly behind the spawn deck
+
+    this.buildChaseBoulder(-487, -47);
+  }
+
+  // The chase boulder: a boulder-sized Stone that rolls +Z after the player.
+  private buildChaseBoulder(startZ: number, endZ: number): void {
+    const r = 4.3;
+    const geo = new THREE.SphereGeometry(r, 16, 12);
+    const posAttr = geo.attributes.position as THREE.BufferAttribute;
+    const v = new THREE.Vector3();
+    for (let i = 0; i < posAttr.count; i++) {
+      v.fromBufferAttribute(posAttr, i);
+      const lump = 1 + 0.07 * Math.sin(v.x * 2.1) * Math.sin(v.y * 2.7 + 1.3) * Math.sin(v.z * 1.9 + 2.6);
+      v.multiplyScalar(lump);
+      posAttr.setXYZ(i, v.x, v.y, v.z);
+    }
+    geo.computeVertexNormals();
+    const mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: 0x7b6f60 }));
+    this.root.add(mesh);
+    const st: Stone = {
+      mesh,
+      box: new THREE.Box3(),
+      x: 0,
+      z0: startZ,
+      z1: startZ,
+      dir: 1,
+      speed: 25,
+      r,
+      chase: true,
+    };
+    this.stones.push(st);
+    // Ground profile sampled once at build time; gaps carry the last height,
+    // so the big fella rolls right over them.
+    const h0 = startZ - 12;
+    const hStep = 3;
+    const heights: number[] = [];
+    let prev = 0;
+    for (let z = h0; z <= 20; z += hStep) {
+      prev = this.floorY(0, z, prev);
+      heights.push(prev);
+    }
+    this.boulder = {
+      st,
+      active: false,
+      falling: false,
+      fallV: 0,
+      endZ,
+      triggerZ: this.spawnPos.z + 5,
+      h0,
+      hStep,
+      heights,
+    };
+    mesh.position.set(0, this.boulderGroundY(startZ) + r * 0.92, startZ);
+  }
+
+  private boulderGroundY(z: number): number {
+    const b = this.boulder;
+    if (!b) return 0;
+    const t = (z - b.h0) / b.hStep;
+    const i = Math.max(0, Math.min(b.heights.length - 2, Math.floor(t)));
+    const f = Math.max(0, Math.min(1, t - i));
+    return b.heights[i] * (1 - f) + b.heights[i + 1] * f;
   }
 
   // Crude seedless random course: flats with random furniture, gaps, slopes,

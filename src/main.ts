@@ -37,7 +37,7 @@ resize();
 
 const input = new Input();
 const ui = new UI();
-let currentCourse = Math.min(4, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
+let currentCourse = Math.min(6, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
 player.respawn(level, true);
@@ -61,6 +61,8 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Digit3') switchLevel(2);
   if (e.code === 'Digit4') switchLevel(3);
   if (e.code === 'Digit5') switchLevel(4);
+  if (e.code === 'Digit6') switchLevel(5);
+  if (e.code === 'Digit7') switchLevel(6);
 });
 
 player.onDeath = () => {
@@ -93,6 +95,18 @@ let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
+  if (level.chaseCam) {
+    // Boulder-chase framing: high and pulled way back, the player sprints AT
+    // the lens while the boulder fills the corridor behind them. Steeper
+    // angle = a sliver of upcoming ground visible at the bottom of frame.
+    camTarget.set(player.pos.x, player.pos.y + 8, player.pos.z + 15);
+    if (camera.position.distanceTo(camTarget) > 40) camera.position.copy(camTarget);
+    else camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
+    lookPoint.set(player.pos.x * 0.4, player.pos.y + 1.0, player.pos.z - 5);
+    camera.lookAt(lookPoint);
+    prevPlayerZ = player.pos.z;
+    return;
+  }
   // ONE rig, always facing down -Z. When the path right-angles into an
   // X-running stretch, the same camera sees it side-on — no yaw, just a
   // slightly wider, higher frame with less forward lead.
@@ -155,6 +169,16 @@ function updateAudio(dt: number): void {
   sfx.setLoop('grind', 'grindLoop', player.state === 'grind', 0.55, 1);
   // Triple-mask invincibility gets its theme music for the whole ride.
   sfx.setLoop('uber', 'uberMusic', player.uberTimer > 0, 0.65, 1);
+  // Boulder rumble: the grind loop pitched way down, louder as it closes in.
+  const bo = level.boulder;
+  const bDist = bo ? Math.abs(bo.st.mesh.position.z - player.pos.z) : 999;
+  sfx.setLoop(
+    'boulder',
+    'grindLoop',
+    !!bo && bo.active,
+    Math.max(0.12, Math.min(0.85, 1.05 - bDist / 55)),
+    0.3,
+  );
 
   stepTimer -= dt;
   const walking =
@@ -185,8 +209,8 @@ function frame(): void {
   const tricks = player.comboLabels;
   ui.setHUD({
     points: player.points,
-      comboPoints: player.comboPoints,
-      comboMult: player.comboMult,
+    comboPoints: player.comboPoints,
+    comboMult: player.comboMult,
     tricks: (tricks.length > 6 ? '… + ' : '') + tricks.slice(-6).join(' + '),
     fruit: player.fruit,
     lives: Math.max(0, player.lives),

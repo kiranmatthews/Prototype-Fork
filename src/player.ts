@@ -251,6 +251,7 @@ export class Player {
     if (hard) this.lives = 3;
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
+    level.playerPos.copy(this.pos); // keep the boulder trigger honest across respawns
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -313,6 +314,7 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    level.playerPos.copy(this.pos); // the boulder chase reads this
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
     // is the depth sidestep (up = away from the camera), the exact same
