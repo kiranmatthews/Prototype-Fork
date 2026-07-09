@@ -1044,17 +1044,17 @@ export class Level {
     this.wall(40.5, -13, 1, 54, 0); // east edge of the pen
     this.wall(25, -40.5, 30, 1, 0); // south edge of the pen
     this.ramp('funnel slope', -40, 0, -80, -5, 14, matRamp);
-    this.jungle('corridor A', -80, -150, -5, 12, matA, { dips: [-112] });
-    // gap 1: -150 .. -165
-    this.jungle('corridor B', -165, -235, -5.5, 12, matB, { dips: [-222] });
+    this.jungle('corridor A', -80, -153, -5, 12, matA, { dips: [-112] });
+    // gap 1: -153 .. -162 (rebalanced for the slower feel)
+    this.jungle('corridor B', -162, -235, -5.5, 12, matB, { dips: [-222] });
     this.ramp('big slope', -235, -5.5, -275, -13, 12, matRamp);
-    // gap 2: -275 .. -297 (carry speed)
-    this.jungle('corridor C', -297, -350, -13, 12, matA);
+    // gap 2: -275 .. -288 (carry speed)
+    this.jungle('corridor C', -288, -350, -13, 12, matA);
     // rail 1 pit: -350 .. -410
     this.jungle('rail 1 landing', -410, -465, -13, 12, matB, { dips: [-445] });
     this.ramp('kicker', -465, -13, -475, -10.2, 12, matRamp);
-    // gap 3: -475 .. -505 (jump off the kicker lip)
-    this.jungle('corridor D', -505, -575, -13, 12, matA);
+    // gap 3: -475 .. -488 (kicker lip + drop to the landing)
+    this.jungle('corridor D', -488, -575, -13, 12, matA);
     // rail 2 pit: -575 .. -655
     this.jungle('rail 2 landing', -655, -710, -13.5, 12, matB);
     // Halfpipe, THPS fake physics: lateral speed built on the flat carries up
@@ -1095,8 +1095,8 @@ export class Level {
     this.slab('rail yard landing', -850, -885, -13.5, 14, matA);
     this.berms(-850, -885, -13.5, 14);
     this.ramp('final downhill', -885, -13.5, -940, -22, 12, matRamp);
-    // gap 4: -940 .. -966 (fast)
-    this.jungle('finish run', -966, -1025, -22, 12, matFinish);
+    // gap 4: -940 .. -953 (fast, downhill speed carries you)
+    this.jungle('finish run', -953, -1025, -22, 12, matFinish);
 
     // --- death pit floor (visual only, below killY) ---
     this.pitPlane('lava', -60, 0, -420);
@@ -1324,7 +1324,7 @@ export class Level {
     this.crate(3.75, 1.2, -5); // little beach pyramid
 
     // sand path inland
-    this.jungle('sand path', -30, -90, 0, 12, matSand, { dips: [-70] });
+    this.jungle('sand path', -30, -93, 0, 12, matSand, { dips: [-70] });
     this.crate(2, 0, -45);
     this.crate(-3, 0, -60);
     this.crate(-2, 0, -50, 'mask');
@@ -1333,7 +1333,7 @@ export class Level {
     this.enemy(-3, 3, 0, -70, 3);
 
     // water gap 1
-    // -90 .. -102
+    // -93 .. -102 (rebalanced)
     this.ramp('jungle rise', -102, 0, -112, 1.5, 12, matRamp);
     this.jungle('jungle path', -112, -150, 1.5, 10, matJungle);
     this.crate(-2.5, 1.5, -128);
@@ -1352,20 +1352,20 @@ export class Level {
     this.enemy(-5, -2.5, 1.5, -196, 3);
 
     // rejoin, checkpoint, more crabs
-    this.jungle('ruin approach', -205, -250, 1.5, 12, matJungle, { dips: [-232] });
+    this.jungle('ruin approach', -205, -253, 1.5, 12, matJungle, { dips: [-232] });
     this.checkpoint(1.5, -215);
     this.enemy(-4, 4, 1.5, -230, 5);
     this.crate(0, 1.5, -240);
     this.crate(0, 2.7, -240); // stack
 
     // water gap 2 with an optional log rail
-    // -250 .. -264
+    // -253 .. -261 (rebalanced)
     const logRail = new Rail([new THREE.Vector3(0, 2.4, -248), new THREE.Vector3(0, 2.4, -266)]);
     this.rails.push(logRail);
     this.root.add(logRail.object);
 
     // stone ruins
-    this.jungle('stone ruins', -264, -310, 1.5, 12, matStone, { amp: 0.3 });
+    this.jungle('stone ruins', -261, -310, 1.5, 12, matStone, { amp: 0.3 });
     for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 1.5, -285); // ruin crate wall
     this.crate(4, 1.5, -300, 'bouncy');
     // step platform up the ruin wall
@@ -1442,8 +1442,8 @@ export class Level {
     this.crate(3, 0, -14);
 
     // ascent A: two ramps with a gap between
-    this.ramp('rampart A', -20, 0, -58, 4, 8, matRamp);
-    // gap: -58 .. -66
+    this.ramp('rampart A', -20, 0, -62, 4.4, 8, matRamp);
+    // gap: -62 .. -66 (rebalanced — less run-up at the slower feel)
     this.ramp('rampart A2', -66, 4.4, -100, 8, 8, matRamp);
 
     // rest platform 1
@@ -1457,8 +1457,8 @@ export class Level {
     this.enemy(-3, 3, 8, -118, 4);
 
     // ascent B: gap mid-way, with a rising scaffold rail as the smooth line
-    this.ramp('rampart B', -125, 8, -160, 13, 8, matRamp);
-    // gap: -160 .. -170
+    this.ramp('rampart B', -125, 8, -164, 13.5, 8, matRamp);
+    // gap: -164 .. -170 (rebalanced)
     this.ramp('rampart B2', -170, 13.5, -205, 18, 8, matRamp);
     const scaffold = new Rail([
       new THREE.Vector3(5, 8.8, -128),
@@ -2479,13 +2479,13 @@ export class Level {
     this.root.add(scaffold.object);
 
     // --- C: high ridge with two gaps and a bypass rail ----------------------
-    this.jungle('ridge A', -300, -345, 9, 11, matJungle);
+    this.jungle('ridge A', -300, -347, 9, 11, matJungle);
     this.checkpoint(9, -308);
     this.crate(-3, 9, -320);
     this.crate(-3, 10.2, -320); // stack
     this.fruitRow(-315, -338, 10.3, 5);
-    // gap: -345 .. -357
-    this.jungle('ridge B', -357, -400, 9, 11, matJungle2, { dips: [-380] });
+    // gap: -347 .. -355 (rebalanced)
+    this.jungle('ridge B', -355, -400, 9, 11, matJungle2, { dips: [-380] });
     this.stone(3.2, 9, -362, -396, 8);
     this.crate(-4, 9, -370, 'mystery');
     this.log(-5.4, -2, 9, -388);
@@ -2505,9 +2505,9 @@ export class Level {
 
     // --- D: kicker launch off the ridge, 8 units down to the pipe deck ------
     this.ramp('ridge kicker', -450, 9, -460, 11, 10, matRamp);
-    // flight gap: -460 .. -482
-    this.fruitRow(-464, -478, 13.5, 5);
-    this.jungle('drop landing', -482, -540, 3, 13, matJungle2, { dips: [-518] });
+    // flight gap: -460 .. -470 (rebalanced — kicker + 8u drop still clears it)
+    this.fruitRow(-464, -469, 13.5, 3);
+    this.jungle('drop landing', -470, -540, 3, 13, matJungle2, { dips: [-518] });
     this.crate(-5, 3, -500, 'mystery');
     this.crate(5, 3, -520, 'bouncy');
     this.stepBlock(5, -527, 4, 6, 3, 8.2);
@@ -2705,14 +2705,14 @@ export class Level {
     this.checkpoint(-4, -1070, 152);
 
     // --- K: stone gauntlet + finish -------------------------------------------
-    this.jungle('gauntlet A', -1075, -1130, -4, 11, matJungle2, { dips: [-1102] }, 152);
+    this.jungle('gauntlet A', -1075, -1133, -4, 11, matJungle2, { dips: [-1102] }, 152);
     this.stone(149.5, -4, -1080, -1102, 10);
     this.stone(154.5, -4, -1080, -1102, 13);
     // twin pendulum blades close out the stretch, out of phase
     this.pendulum(152, 2.0, -1112, 4.6, 1.15, 1.8);
     this.pendulum(152, 2.0, -1122, 4.6, 1.15, 1.5, Math.PI);
-    // gap: -1130 .. -1142
-    this.jungle('gauntlet B', -1142, -1185, -4, 11, matJungle, {}, 152);
+    // gap: -1133 .. -1139 (rebalanced)
+    this.jungle('gauntlet B', -1139, -1185, -4, 11, matJungle, {}, 152);
     this.enemy(148.5, 155.5, -4, -1160, 7);
     this.enemy(149, 155, -4, -1175, 9);
     this.fruitRow(-1148, -1180, -2.6, 6, 152);
@@ -2870,25 +2870,25 @@ export class Level {
     this.wall(-7.5, -449, 1, 18, 0);
     this.wall(7.5, -449, 1, 18, 0);
 
-    this.jungle('chase A', -380, -440, 0, 12, matJungle, { dips: [-410] });
+    this.jungle('chase A', -377, -440, 0, 12, matJungle, { dips: [-410] });
     this.fruitRow(-434, -390, 1.3, 8);
     this.log(0.5, 5.5, 0, -396);
     this.crate(-4.5, 0, -420, 'nitro');
-    // gap 1: -368 .. -380
-    this.jungle('chase B', -300, -368, 0, 12, matJungle2, { dips: [-330] });
+    // gap 1: -371 .. -377 (rebalanced — clearable mid-chase)
+    this.jungle('chase B', -300, -371, 0, 12, matJungle2, { dips: [-330] });
     this.crate(-1.3, 0, -350, 'tnt');
     this.crate(1.3, 0, -350, 'tnt'); // swerve or hop the pair
     this.log(-5.5, -0.5, 0, -318);
     this.fruitRow(-362, -306, 1.3, 8);
     this.checkpoint(0, -308, -3.5);
     this.ramp('chase rise', -285, 2, -300, 0, 12, matRamp);
-    this.jungle('chase C', -215, -285, 2, 12, matJungle, { dips: [-240] });
+    this.jungle('chase C', -212, -285, 2, 12, matJungle, { dips: [-240] });
     this.crate(-3.2, 2, -260, 'nitro');
     this.crate(3.2, 2, -260, 'nitro'); // thread the middle
     this.log(-5.5, -1.5, 2, -228);
     this.fruitRow(-278, -222, 3.3, 8);
-    // gap 2: -204 .. -215
-    this.jungle('chase D', -130, -204, 2, 12, matJungle2, { dips: [-160] });
+    // gap 2: -207 .. -212 (rebalanced)
+    this.jungle('chase D', -130, -207, 2, 12, matJungle2, { dips: [-160] });
     this.crate(0, 2, -182, 'tnt');
     this.crate(-2.6, 2, -176, 'tnt');
     this.crate(2.6, 2, -170, 'tnt'); // staggered minefield: weave it
@@ -2896,12 +2896,12 @@ export class Level {
     this.fruitRow(-198, -140, 3.3, 8);
     this.checkpoint(2, -138, 3.5);
     this.ramp('chase drop', -112, 0, -130, 2, 12, matRamp);
-    this.jungle('chase E', -45, -112, 0, 13, matJungle, { dips: [-75] });
+    this.jungle('chase E', -42, -112, 0, 13, matJungle, { dips: [-75] });
     this.log(0.5, 6, 0, -95);
     this.crate(-4.8, 0, -60, 'nitro');
     this.fruitRow(-106, -52, 1.3, 8);
-    // the boulder pit: -32 .. -45 — you jump it; the boulder can't
-    this.slab('escape', 14, -32, 0, 14, matSand, true, 0, 'sand');
+    // the boulder pit: -35 .. -42 — you jump it; the boulder tips in
+    this.slab('escape', 14, -35, 0, 14, matSand, true, 0, 'sand');
     this.wall(-7.5, -9, 1, 46, 0);
     this.wall(7.5, -9, 1, 46, 0);
     this.crate(-3, 0, -20, 'mask');
@@ -2911,7 +2911,7 @@ export class Level {
     this.finishGate(0, this.finishZ);
     // no end-wall mesh — the far clamp sits invisibly behind the spawn deck
 
-    this.buildChaseBoulder(-487, -47);
+    this.buildChaseBoulder(-487, -44);
   }
 
   // The chase boulder: a boulder-sized Stone that rolls +Z after the player.
@@ -3062,8 +3062,8 @@ export class Level {
         cpDue -= len;
         lastGap = false;
       } else if (roll < 0.49) {
-        // gap over the void
-        const len = 10 + Math.random() * 8;
+        // gap over the void (rebalanced for the slower feel: 7-11u)
+        const len = 7 + Math.random() * 4;
         z -= len;
         dist += len;
         lastGap = true;
@@ -3099,10 +3099,10 @@ export class Level {
         y = t.topY;
         lastGap = true; // force a solid deck right after the top block
       } else {
-        // kicker lip into a gap
+        // kicker lip into a gap (rebalanced: 7-10u gap after the lip)
         this.ramp('kicker', z, y, z - 10, y + 2.4, 10, mat(), xc);
-        z -= 10 + 12 + Math.random() * 6;
-        dist += 28;
+        z -= 10 + 7 + Math.random() * 3;
+        dist += 20;
         minY = Math.min(minY, y);
         lastGap = true;
       }
