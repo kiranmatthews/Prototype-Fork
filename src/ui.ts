@@ -396,36 +396,43 @@ export class UI {
       .side-wrap.right .side-tab { border-radius: 5px 0 0 5px; border-right: none; }
 
       /* --- Crash-style game HUD --- */
-      .hud-tl { position: fixed; top: 12px; left: 34px; z-index: 10; pointer-events: none; }
-      .hud-tr { position: fixed; top: 12px; right: 34px; z-index: 10; pointer-events: none; }
-      .hud-counter { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+      .hud-tl { position: fixed; top: 16px; left: 40px; z-index: 10; pointer-events: none; }
+      .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
+      .hud-counter { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
       .hud-num {
-        font: italic 900 30px Impact, 'Arial Black', sans-serif;
-        color: #ffb43a; letter-spacing: 1px; transform: skewX(-6deg);
-        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 3px 3px 0 #000;
+        font: italic 900 clamp(44px, 8.5vh, 78px) Impact, 'Arial Black', sans-serif;
+        color: #ffb43a; letter-spacing: 2px; transform: skewX(-6deg);
+        text-shadow: 3px 0 0 #3a1c05, -3px 0 0 #3a1c05, 0 3px 0 #3a1c05,
+          0 -3px 0 #3a1c05, 5px 5px 0 #000;
       }
-      .hud-icon { width: 30px; height: 30px; image-rendering: pixelated; }
+      .hud-icon {
+        width: clamp(52px, 9.5vh, 84px); height: clamp(52px, 9.5vh, 84px);
+        image-rendering: pixelated; flex-shrink: 0;
+      }
       .hud-icon-crate {
         background:
           linear-gradient(45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
           linear-gradient(-45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
           #b08a4a;
-        border: 3px solid #6e4f24; box-shadow: 2px 2px 0 #000;
+        border: 5px solid #6e4f24; box-shadow: 4px 4px 0 #000;
       }
       .hud-icon-wumpa {
         border-radius: 50%;
         background: radial-gradient(circle at 35% 30%, #ffd24a, #e2521e 70%);
-        box-shadow: 2px 2px 0 #000;
+        box-shadow: 4px 4px 0 #000;
       }
       .hud-icon-face {
         border-radius: 40%;
         background: radial-gradient(circle at 40% 35%, #f4b56a, #c96f28 75%);
-        box-shadow: 2px 2px 0 #000; position: relative;
+        box-shadow: 4px 4px 0 #000; position: relative;
       }
       .hud-icon-face::before {
-        content: ''; position: absolute; left: 7px; top: 9px; width: 4px; height: 6px;
-        background: #35200c; box-shadow: 12px 0 0 #35200c;
+        content: ''; position: absolute; left: 24%; top: 28%; width: 12%; height: 20%;
+        background: #35200c;
+      }
+      .hud-icon-face::after {
+        content: ''; position: absolute; left: 60%; top: 28%; width: 12%; height: 20%;
+        background: #35200c;
       }
       .hud-pop { animation: hudpop 0.22s ease-out; }
       @keyframes hudpop {
@@ -435,39 +442,43 @@ export class UI {
 
       /* score plate */
       .hud-scoreplate {
-        position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+        position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
         z-index: 10; pointer-events: none; text-align: center;
         background: linear-gradient(#9aa096, #6f746e);
-        border: 2px solid #3d403c; border-radius: 5px; padding: 2px 18px 4px;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 3px 3px 0 rgba(0,0,0,0.5);
+        border: 3px solid #3d403c; border-radius: 7px; padding: 4px 30px 6px;
+        box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), 4px 4px 0 rgba(0,0,0,0.5);
       }
       .hud-scorelabel {
-        font: italic bold 11px Impact, 'Arial Black', sans-serif; letter-spacing: 3px;
+        font: italic bold clamp(13px, 2.2vh, 20px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px;
         color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.35);
       }
       .hud-scorenum {
-        font: italic 900 26px Impact, 'Arial Black', sans-serif; letter-spacing: 2px;
-        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.35);
+        font: italic 900 clamp(32px, 5.5vh, 50px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 3px;
+        color: #2e2f2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.35);
       }
 
       /* THPS trick plate */
       .hud-trickplate {
-        position: fixed; z-index: 10; bottom: 9%; left: 50%;
+        position: fixed; z-index: 10; bottom: 6%; left: 50%;
         transform: translateX(-50%); pointer-events: none; text-align: center;
         background: linear-gradient(#8f948e, #63685f);
-        border: 2px solid #3d403c; border-radius: 6px; padding: 8px 26px 10px;
-        max-width: 76vw;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 4px 4px 0 rgba(0,0,0,0.5);
+        border: 3px solid #3d403c; border-radius: 8px; padding: 14px 44px 16px;
+        max-width: 82vw; min-width: 46vw;
+        box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), 6px 6px 0 rgba(0,0,0,0.5);
         display: none;
       }
       .hud-trickline {
-        font: italic bold 17px Impact, 'Arial Black', sans-serif; letter-spacing: 1px;
-        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.35);
+        font: italic bold clamp(20px, 3.8vh, 36px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 2px;
+        color: #2e2f2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.35);
         white-space: nowrap; overflow: hidden;
       }
       .hud-tricktotal {
-        font: italic 900 24px Impact, 'Arial Black', sans-serif; letter-spacing: 3px;
-        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.4); margin-top: 2px;
+        font: italic 900 clamp(32px, 6vh, 56px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 5px;
+        color: #2e2f2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.4); margin-top: 4px;
       }
 
       .hud-msg {

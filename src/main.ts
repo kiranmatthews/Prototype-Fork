@@ -87,7 +87,9 @@ function applyTheme(): void {
   if (old) old.dispose();
 }
 
-const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 400);
+// Slightly wide lens: exaggerates depth so corridors read longer, while the
+// close rig below keeps the skater big in frame.
+const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 400);
 
 function resize(): void {
   const w = window.innerWidth;
@@ -151,9 +153,9 @@ player.onGameOver = () => ui.showDeathScreen(true);
 // narrow lens, the player reads big against the corridor. Traveling BACK
 // toward the camera (riding or grinding) eases it up and away and swings the
 // look-at behind you, so the nitros you're backing into stay on screen.
-const CAM_DIST = 7;
-const CAM_HEIGHT = 3.3;
-const CAM_LOOKAHEAD = 5.5;
+const CAM_DIST = 5.2;
+const CAM_HEIGHT = 2.8;
+const CAM_LOOKAHEAD = 5.0;
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
@@ -165,10 +167,10 @@ function updateCamera(dt: number): void {
     // Boulder-chase framing: high and pulled way back, the player sprints AT
     // the lens while the boulder fills the corridor behind them. Steeper
     // angle = a sliver of upcoming ground visible at the bottom of frame.
-    camTarget.set(player.pos.x, player.pos.y + 8, player.pos.z + 15);
+    camTarget.set(player.pos.x, player.pos.y + 7.2, player.pos.z + 13.5);
     if (camera.position.distanceTo(camTarget) > 40) camera.position.copy(camTarget);
     else camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
-    lookPoint.set(player.pos.x * 0.4, player.pos.y + 1.0, player.pos.z - 5);
+    lookPoint.set(player.pos.x * 0.4, player.pos.y + 1.0, player.pos.z - 4.5);
     camera.lookAt(lookPoint);
     prevPlayerZ = player.pos.z;
     return;
@@ -185,8 +187,8 @@ function updateCamera(dt: number): void {
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF); // reverse pull-back is a corridor thing
 
-  const dist = THREE.MathUtils.lerp(CAM_DIST, 11.5, sideF) + back * 4.5;
-  const height = THREE.MathUtils.lerp(CAM_HEIGHT, 4.4, sideF) + back * 1.3;
+  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8;
+  const height = THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1;
   camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
   // Snap after respawn teleports; damp otherwise.
@@ -199,7 +201,7 @@ function updateCamera(dt: number): void {
   lookPoint.set(
     player.pos.x,
     player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF),
-    player.pos.z - THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.2, sideF) + back * 9.5,
+    player.pos.z - THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.0, sideF) + back * 8.5,
   );
   camera.lookAt(lookPoint);
 }
