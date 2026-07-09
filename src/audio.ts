@@ -35,7 +35,8 @@ const FILES: Record<string, string> = {
   tntCount: 'tnt-count.wav',
   tntCount2: 'tnt-count-2.wav',
   tntBoom: 'tnt-boom.wav',
-  enemyDown: 'enemy-down.wav',
+  enemyDown: 'unsure.wav',
+  fruitSpun: 'spin-away.wav', // spun a wumpa away instead of collecting it
 };
 
 interface LoopChannel {

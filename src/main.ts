@@ -84,39 +84,27 @@ const CAM_HEIGHT = 3.3;
 const CAM_LOOKAHEAD = 5.5;
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
-const corridorTarget = new THREE.Vector3();
-const corridorLook = new THREE.Vector3();
-const sideTarget = new THREE.Vector3();
-const sideLook = new THREE.Vector3();
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
-let sideBlend = 0; // 0 = corridor rig, 1 = side-scroll rig; eases across zones
+let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
-  // Two rigs, blended: the corridor cam behind the player, and the side cam
-  // off to +X (screen right = down-course). Crossing a level's side-scroll
-  // zone boundary swings smoothly between them.
-  const wantSide = level.isSide(player.pos.z) ? 1 : 0;
-  sideBlend += (wantSide - sideBlend) * Math.min(1, 3.5 * dt);
+  // ONE rig, always facing down -Z. When the path right-angles into an
+  // X-running stretch, the same camera sees it side-on — no yaw, just a
+  // slightly wider, higher frame with less forward lead.
+  const inTurn = level.zoneAt(player.pos.x, player.pos.z) !== null;
+  sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
-  // corridor rig (with the reverse-travel pull-back)
   const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
   prevPlayerZ = player.pos.z;
   const movingBack = vz > 2.5 || (player.grounded && player.speed < -1.5);
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
-  const dist = CAM_DIST + camBack * 4.5;
-  const height = CAM_HEIGHT + camBack * 1.3;
-  corridorTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
-  corridorLook.set(
-    player.pos.x,
-    player.pos.y + 1.0,
-    player.pos.z - CAM_LOOKAHEAD + camBack * 9.5,
-  );
+  const back = camBack * (1 - sideF); // reverse pull-back is a corridor thing
 
-  // side rig
-  sideTarget.set(player.pos.x + 14, player.pos.y + 3.6, player.pos.z - 1.5);
+  const dist = THREE.MathUtils.lerp(CAM_DIST, 11.5, sideF) + back * 4.5;
+  const height = THREE.MathUtils.lerp(CAM_HEIGHT, 4.4, sideF) + back * 1.3;
+  camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
-  camTarget.copy(corridorTarget).lerp(sideTarget, sideBlend);
   // Snap after respawn teleports; damp otherwise.
   if (camera.position.distanceTo(camTarget) > 30) {
     camera.position.copy(camTarget);
@@ -124,10 +112,11 @@ function updateCamera(dt: number): void {
     camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
   }
 
-  // The side rig's look direction is a CONSTANT offset from the camera itself
-  // so the damped follow can never tilt the horizon in side view.
-  sideLook.set(camera.position.x - 14, camera.position.y - 2.0, camera.position.z);
-  lookPoint.copy(corridorLook).lerp(sideLook, sideBlend);
+  lookPoint.set(
+    player.pos.x,
+    player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF),
+    player.pos.z - THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.2, sideF) + back * 9.5,
+  );
   camera.lookAt(lookPoint);
 }
 
@@ -145,7 +134,8 @@ let stepIdx = 0;
 function updateAudio(dt: number): void {
   const speedAbs = Math.abs(player.speed);
   const onGround = player.state === 'ride' && player.grounded;
-  const skatingNow = onGround && speedAbs > TUNING.walkSpeed + 0.5;
+  // Slides are body slides — no board, no board noise.
+  const skatingNow = onGround && !player.sliding && speedAbs > TUNING.walkSpeed + 0.5;
   sfx.setLoop(
     'skate',
     'skateLoop',

@@ -58,10 +58,10 @@ export class Level {
   checkpoints: Checkpoint[] = [];
   pickups: Pickup[] = [];
   rails: Rail[] = [];
-  // Side-scroll camera ZONES along the course (from > to, since z runs
-  // negative): inside one, the camera swings to the side and the stick
-  // remaps. Levels can mix corridor and side sections freely.
-  sideZones: { from: number; to: number }[] = [];
+  // Travel zones: rectangular regions where the course itself runs along X
+  // instead of -Z (a real right-angle turn in the path). The camera never
+  // yaws — the turned path is what makes those stretches side-scrolling.
+  zones: { xMin: number; xMax: number; zMin: number; zMax: number; dir: 'E' | 'W' }[] = [];
   finishBox = new THREE.Box3();
   finishZ = -1005;
   endWallZ = -1021; // authored hard stop after the finish gate
@@ -155,11 +155,11 @@ export class Level {
     return this.crates.filter((c) => !c.nitro && !c.bouncy && !c.tnt).length;
   }
 
-  isSide(z: number): boolean {
-    for (const s of this.sideZones) {
-      if (z <= s.from && z >= s.to) return true;
+  zoneAt(x: number, z: number): { dir: 'E' | 'W' } | null {
+    for (const zn of this.zones) {
+      if (x >= zn.xMin && x <= zn.xMax && z >= zn.zMin && z <= zn.zMax) return zn;
     }
-    return false;
+    return null;
   }
 
   update(dt: number): void {
@@ -853,107 +853,101 @@ export class Level {
     this.endWall(33);
   }
 
-  // Mixed-camera level: a corridor intro, then the camera swings to the side
-  // for the Crash 2 sideways-ruins stretch (floating platforms, fruit rows, a
-  // grind line, a bouncy-crate high route), then swings back for the final
-  // corridor descent and runway.
+  // The "Sideways" level is an L-shaped course now: a corridor intro heading
+  // down -Z, a right-angle turn onto a stretch that runs along +X — which the
+  // fixed camera therefore sees side-on (real side-scroll platforming, no
+  // camera move) — then a second corner back onto -Z for the finish.
   private buildSideways(): void {
+    const matA = new THREE.MeshLambertMaterial({ color: 0x7f8fa0 });
     const matGround = new THREE.MeshLambertMaterial({ color: 0x77955e });
     const matPlat = new THREE.MeshLambertMaterial({ color: 0x8a8f79 });
     const matStone = new THREE.MeshLambertMaterial({ color: 0x7d8288 });
 
-    // the sideways stretch: enters on the lower path, exits on the step-downs
-    this.sideZones = [{ from: -30, to: -198 }];
     this.killY = -20;
-    this.finishZ = -246;
-    this.endWallZ = -252;
+    this.finishZ = -104;
+    this.endWallZ = -116;
 
-    // giant cliff face behind the action — the side-scroller backdrop
+    // the turned stretch: path runs +X between the two corner decks
+    this.zones = [{ xMin: 9, xMax: 146, zMin: -62, zMax: -38, dir: 'E' }];
+
+    // cliff backdrop behind the sideways stretch, and the pit below it
     const cliff = new THREE.Mesh(
-      new THREE.BoxGeometry(1.5, 64, 330),
+      new THREE.BoxGeometry(200, 60, 1.5),
       new THREE.MeshLambertMaterial({ color: 0x31543c }),
     );
-    cliff.position.set(-8.5, 10, -112);
+    cliff.position.set(88, 8, -64);
     this.root.add(cliff);
-    // and the pit you must not fall into
     const pit = new THREE.Mesh(
       new THREE.PlaneGeometry(900, 900),
       new THREE.MeshBasicMaterial({ color: 0x1c1220 }),
     );
     pit.rotation.x = -Math.PI / 2;
-    pit.position.set(0, -24, -112);
+    pit.position.set(80, -24, -60);
     this.root.add(pit);
 
-    const W = 9; // deck depth — up/down walks it, so give it real room
-    // no grindable deck edges here: they'd sit across the depth axis
-
-    // start ledge
-    this.slab('start ledge', 16, -12, 0, W, matGround, false);
-    this.wall(0, 17, 8, 1, 0);
+    // corridor intro heading down -Z
+    this.slab('start', 16, -12, 0, 10, matA, false);
+    this.wall(0, 17, 12, 1, 0);
     this.crate(0, 0, -3, 'mask');
-    this.fruitRow(-6, -10, 1.3, 4);
-
-    // first run, first crab
-    this.slab('lower path', -12, -44, 0, W, matGround, false);
+    this.fruitRow(-16, -22, 1.3, 4);
+    this.slab('approach', -12, -38, 0, 10, matGround);
     this.crate(0, 0, -24);
-    this.crate(0, 1.2, -24); // stack: spin or bounce
-    this.enemyZ(-40, -28, 0, 0, 4);
-    this.fruitRow(-30, -38, 1.4, 5);
+    this.crate(0, 1.2, -24); // stack: spin, bounce, or headbutt
+    this.enemy(-3, 3, 0, -31, 4);
 
+    // CORNER 1: the path right-angles east; a wall dead ahead sells the turn
+    this.slab('corner', -38, -56, 0, 18, matA, false, 4);
+    this.wall(4, -57.5, 18, 1.5, 0);
+
+    // the sideways stretch: everything below runs along +X at the z band -47
+    const CZ = -47;
+    this.slabX('ruin walk', 13, 34, 0, 9, matGround, CZ);
+    this.crate(24, 0, CZ);
+    this.crate(24, 1.2, CZ);
+    this.fruitRowX(15, 21, 1.3, 4, CZ);
     // ascending floating platforms over the pit
-    this.fruitRow(-45, -49, 3.2, 3); // arc over the first gap
-    this.slab('platform A', -50, -60, 1.8, W, matPlat, false);
-    this.crate(0, 1.8, -55);
-    this.slab('platform B', -64, -74, 3.4, W, matPlat, false);
-    this.crate(0, 3.4, -69, 'tnt');
-    this.slab('platform C', -78, -90, 4.8, W, matPlat, false);
-    this.checkpoint(4.8, -84);
-
-    // big pit: grind the rail across (fruit lines the rail), or hop the pads
-    const pitRail = new Rail([new THREE.Vector3(0, 5.8, -90), new THREE.Vector3(0, 5.0, -112)]);
+    this.slabX('plat A', 40, 50, 1.5, 9, matPlat, CZ);
+    this.crate(45, 1.5, CZ, 'tnt');
+    this.slabX('plat B', 56, 66, 3, 9, matPlat, CZ);
+    this.checkpoint(3, CZ, 61);
+    // big pit: grind the rail across (fruit lines it), or hop the pads
+    const pitRail = new Rail([new THREE.Vector3(66, 3.9, CZ), new THREE.Vector3(90, 3.3, CZ)]);
     this.rails.push(pitRail);
     this.root.add(pitRail.object);
-    this.fruitRow(-94, -108, 6.8, 5);
-    this.slab('pit pad 1', -95, -100, 4.8, W, matPlat, false);
-    this.slab('pit pad 2', -104, -109, 5.4, W, matPlat, false);
+    this.fruitRowX(70, 86, 5.2, 5, CZ);
+    this.slabX('pit pad', 74, 80, 3, 9, matPlat, CZ);
+    // landing shelf: nitro squats the lane, crab patrols the screen
+    this.slabX('mid shelf', 90, 108, 3.2, 9, matGround, CZ);
+    this.crate(98, 3.2, CZ, 'nitro');
+    this.enemy(94, 106, 3.2, CZ, 5);
+    // split: bounce the arrow crate up to the high ledge, or run the TNT road
+    this.crate(107, 3.2, CZ, 'bouncy');
+    this.slabX('high ledge', 110, 128, 8.4, 9, matPlat, CZ);
+    this.crate(118, 8.4, CZ, 'mask');
+    this.fruitRowX(112, 126, 9.7, 6, CZ);
+    this.slabX('low road', 110, 132, 2.8, 9, matStone, CZ);
+    this.crate(117, 2.8, CZ, 'tnt');
+    this.crate(124, 2.8, CZ, 'tnt');
+    // rejoin before the second corner
+    this.slabX('rejoin', 136, 146, 3.6, 9, matGround, CZ);
+    this.checkpoint(3.6, CZ, 141);
 
-    // landing shelf: a nitro squats the lane — jump it
-    this.slab('mid shelf', -112, -142, 5, W, matGround, false);
-    this.crate(0, 5, -122, 'nitro');
-    this.crate(0, 5, -130);
-    this.enemyZ(-140, -126, 5, 0, 5);
+    // CORNER 2: the path turns back south toward the gate
+    this.slab('corner 2', -38, -56, 3.6, 18, matA, false, 152);
+    this.wall(161.5, -47, 1.5, 18, 3.6);
+    this.wall(152, -37, 18, 1.5, 3.6); // north lip of the corner
 
-    // split route: bounce the arrow crate up to the high ledge (mask + fruit),
-    // or run the low road through the TNT field
-    this.crate(0, 5, -139, 'bouncy');
-    this.slab('high ledge', -142, -162, 10.6, W, matPlat, false);
-    this.crate(0, 10.6, -150, 'mask');
-    this.fruitRow(-146, -158, 11.9, 6);
-    this.slab('low road', -142, -164, 4.6, W, matStone, false);
-    this.crate(0, 4.6, -148, 'tnt');
-    this.crate(0, 4.6, -155, 'tnt');
-    this.enemyZ(-162, -150, 4.6, 0, 6);
-
-    // routes rejoin, second checkpoint
-    this.slab('rejoin', -168, -190, 6, W, matGround, false);
-    this.checkpoint(6, -174);
-    this.enemyZ(-188, -178, 6, 0, 5);
-
-    // descending steps with fruit arcs
-    this.slab('step down 1', -194, -202, 3.6, W, matPlat, false);
-    this.fruitRow(-191, -194, 5.2, 2);
-    this.slab('step down 2', -206, -214, 1.4, W, matPlat, false);
-    this.fruitRow(-203, -206, 3, 2);
-
-    // final run: crate tower, last crab, gate
-    this.slab('final run', -218, -256, 0, W, matStone, false);
-    this.crate(0, 0, -228);
-    this.crate(0, 1.2, -228);
-    this.crate(0, 2.4, -228); // tower: spin through or bounce up it
-    this.enemyZ(-242, -232, 0, 0, 6);
-    this.fruitRow(-234, -242, 1.4, 5);
-    this.finishGate(0, this.finishZ);
-    this.endWall(0);
+    // corridor finish at the far end of the L
+    this.slab('descent', -56, -70, 3.6, 10, matPlat, true, 152);
+    this.slab('step down', -74, -84, 1.6, 10, matPlat, true, 152);
+    this.slab('final run', -88, -120, 0, 12, matStone, true, 152);
+    this.crate(152, 0, -94);
+    this.crate(152, 1.2, -94);
+    this.crate(152, 2.4, -94); // tower: spin through or bounce up
+    this.enemy(148, 156, 0, -99, 5);
+    this.fruitRow(-90, -96, 1.4, 4, 149);
+    this.finishGate(0, this.finishZ, 152);
+    this.endWall(0, 152);
   }
 
   // Flat deck. z0 is the near (higher z) edge, z1 the far edge, topY the
@@ -995,8 +989,37 @@ export class Level {
     }
   }
 
+  // Flat deck running along X (for turned, side-scrolling stretches).
+  // x0 < x1; depth is the deck's size along z, centered on cz.
+  private slabX(
+    name: string,
+    x0: number,
+    x1: number,
+    topY: number,
+    depth: number,
+    mat: THREE.Material,
+    cz: number,
+  ): THREE.Mesh {
+    const len = Math.abs(x1 - x0);
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(len, 1, depth),
+      this.patterned(mat, len, depth),
+    );
+    mesh.position.set((x0 + x1) / 2, topY - 0.5, cz);
+    mesh.name = name;
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+    return mesh;
+  }
+
+  private fruitRowX(x0: number, x1: number, y: number, n: number, z: number): void {
+    for (let i = 0; i < n; i++) {
+      this.pickup(THREE.MathUtils.lerp(x0, x1, n === 1 ? 0 : i / (n - 1)), y, z);
+    }
+  }
+
   // Sloped deck between two top-surface edge lines (z0,y0) -> (z1,y1).
-  private ramp(name: string, z0: number, y0: number, z1: number, y1: number, width: number, mat: THREE.Material): void {
+  private ramp(name: string, z0: number, y0: number, z1: number, y1: number, width: number, mat: THREE.Material, cx = 0): void {
     const dy = y1 - y0;
     const dz = z1 - z0;
     const len = Math.hypot(dy, dz);
@@ -1012,7 +1035,7 @@ export class Level {
     mesh.rotation.x = alpha;
     const normal = new THREE.Vector3(0, -dzn, dyn);
     mesh.position
-      .set(0, (y0 + y1) / 2, (z0 + z1) / 2)
+      .set(cx, (y0 + y1) / 2, (z0 + z1) / 2)
       .addScaledVector(normal, -0.5);
     mesh.name = name;
     this.root.add(mesh);
@@ -1264,24 +1287,6 @@ export class Level {
     this.enemies.push({ group, box: new THREE.Box3(), alive: true, x0, x1, dir: 1, speed });
   }
 
-  // Side-scroll enemy: patrols along the course axis (across the screen).
-  private enemyZ(z0: number, z1: number, deckY: number, x: number, speed: number): void {
-    const group = this.enemyGroup();
-    const lo = Math.min(z0, z1);
-    const hi = Math.max(z0, z1);
-    group.position.set(x, deckY, (lo + hi) / 2);
-    this.enemies.push({
-      group,
-      box: new THREE.Box3(),
-      alive: true,
-      x0: lo,
-      x1: hi,
-      dir: 1,
-      speed,
-      axis: 'z',
-    });
-  }
-
   // Floating collectable wumpa.
   private pickup(x: number, y: number, z: number): void {
     const mesh = new THREE.Mesh(
@@ -1349,47 +1354,54 @@ export class Level {
     let dist = 0;
     let lastGap = false;
     let cpDue = 170;
-    let inSide = false; // camera-zone boundaries only ever land on flat decks
-    this.slab('start', z, z - 30, y, 14, mat());
+    let xc = 0; // course centerline: a sideways jog shifts everything after it
+    let jogDone = false;
+    this.slab('start', z, z - 30, y, 14, mat(), true, xc);
     z -= 30;
     while (dist < 800) {
       const roll = Math.random();
-      if (roll < 0.34 || lastGap) {
+      if (!jogDone && !lastGap && dist > 150 && dist < 600 && roll < 0.12) {
+        // SIDEWAYS JOG: the path right-angles east across floating pads, then
+        // turns south again — the fixed camera sees the stretch side-on.
+        const JOG = 70;
+        this.slab('corner', z, z - 16, y, 16, mat(), false, xc + 3);
+        this.wall(xc + 3, z - 17.5, 16, 1.5, y);
+        this.zones.push({ xMin: xc + 9, xMax: xc + JOG - 9, zMin: z - 16, zMax: z, dir: 'E' });
+        const cz = z - 8;
+        for (let px = xc + 11; px + 9 <= xc + JOG - 8; px += 14) {
+          this.slabX('side pad', px, px + 9, y, 9, mat(), cz);
+          if (Math.random() < 0.4) this.crate(px + 4.5, y, cz);
+          if (Math.random() < 0.5) this.fruitRowX(px + 2, px + 7, y + 1.3, 3, cz);
+        }
+        this.slab('corner', z, z - 16, y, 16, mat(), false, xc + JOG - 3);
+        this.wall(xc + JOG + 6.5, z - 8, 1.5, 16, y);
+        xc += JOG - 3;
+        z -= 16;
+        dist += 50;
+        cpDue -= 16;
+        lastGap = false;
+        jogDone = true;
+      } else if (roll < 0.34 || lastGap) {
         // flat deck with random furniture
         const len = 28 + Math.random() * 22;
         const w = 10 + Math.random() * 4;
-        this.slab('deck', z, z - len, y, w, mat());
-        // sometimes swing the camera to the side (or back) for a stretch
-        if (Math.random() < 0.28) {
-          if (!inSide) this.sideZones.push({ from: z - 5, to: -1e9 });
-          else this.sideZones[this.sideZones.length - 1].to = z - 5;
-          inSide = !inSide;
-        }
+        this.slab('deck', z, z - len, y, w, mat(), true, xc);
         const crates = Math.floor(Math.random() * 3);
         for (let i = 0; i < crates; i++) {
-          this.crate(
-            inSide ? 0 : Math.round(Math.random() * 8 - 4),
-            y,
-            z - 6 - Math.random() * (len - 12),
-          );
+          this.crate(xc + Math.round(Math.random() * 8 - 4), y, z - 6 - Math.random() * (len - 12));
         }
-        if (Math.random() < 0.5) {
-          if (inSide) this.enemyZ(z - len + 6, z - 6, y, 0, 3 + Math.random() * 4);
-          else this.enemy(-3.5, 3.5, y, z - len / 2, 3 + Math.random() * 5);
-        }
-        if (Math.random() < 0.35) this.crate(inSide ? 0 : Math.random() < 0.5 ? -4 : 4, y, z - len * 0.7, 'nitro');
-        if (Math.random() < 0.22) this.crate(inSide ? 0 : Math.random() < 0.5 ? -3 : 3, y, z - len * 0.4, 'tnt');
-        if (Math.random() < 0.12) this.crate(inSide ? 0 : Math.random() < 0.5 ? -2 : 2, y, z - len * 0.3, 'mask');
-        if (inSide && Math.random() < 0.6) {
-          this.fruitRow(z - 8, z - len + 8, y + 1.4, 4);
-        }
-        if (!inSide && Math.random() < 0.3) {
-          const bx = Math.random() < 0.5 ? -2.5 : 2.5;
+        if (Math.random() < 0.5) this.enemy(xc - 3.5, xc + 3.5, y, z - len / 2, 3 + Math.random() * 5);
+        if (Math.random() < 0.35) this.crate(xc + (Math.random() < 0.5 ? -4 : 4), y, z - len * 0.7, 'nitro');
+        if (Math.random() < 0.22) this.crate(xc + (Math.random() < 0.5 ? -3 : 3), y, z - len * 0.4, 'tnt');
+        if (Math.random() < 0.12) this.crate(xc + (Math.random() < 0.5 ? -2 : 2), y, z - len * 0.3, 'mask');
+        if (Math.random() < 0.25) this.fruitRow(z - 8, z - len + 8, y + 1.4, 4, xc);
+        if (Math.random() < 0.3) {
+          const bx = xc + (Math.random() < 0.5 ? -2.5 : 2.5);
           this.stepBlock(bx, z - len * 0.5, 4, 5, y, y + 2.2);
           this.crate(bx, y + 2.2, z - len * 0.5);
         }
         if (cpDue <= 0) {
-          this.checkpoint(y, z - len + 6);
+          this.checkpoint(y, z - len + 6, xc);
           cpDue = 200 + Math.random() * 80;
         }
         z -= len;
@@ -1406,7 +1418,7 @@ export class Level {
         // slope (downhill-biased)
         const len = 28 + Math.random() * 12;
         const dy = Math.random() < 0.65 ? -(3 + Math.random() * 5) : 2 + Math.random() * 2.5;
-        this.ramp('slope', z, y, z - len, y + dy, 10, mat());
+        this.ramp('slope', z, y, z - len, y + dy, 10, mat(), xc);
         z -= len;
         y += dy;
         minY = Math.min(minY, y);
@@ -1417,9 +1429,9 @@ export class Level {
         // rail over a pit (always follows solid ground)
         const len = 36 + Math.random() * 20;
         const rail = new Rail([
-          new THREE.Vector3(0, y + 0.9, z + 4),
-          new THREE.Vector3(Math.round(Math.random() * 5 - 2.5), y + 1.1, z - len / 2),
-          new THREE.Vector3(0, y + 0.9, z - len - 4),
+          new THREE.Vector3(xc, y + 0.9, z + 4),
+          new THREE.Vector3(xc + Math.round(Math.random() * 5 - 2.5), y + 1.1, z - len / 2),
+          new THREE.Vector3(xc, y + 0.9, z - len - 4),
         ]);
         this.rails.push(rail);
         this.root.add(rail.object);
@@ -1428,14 +1440,14 @@ export class Level {
         lastGap = true;
       } else if (roll < 0.9) {
         // flush temple stair over the void
-        const t = this.stairClimb(z - 2, y, 4);
+        const t = this.stairClimb(z - 2, y, 4, xc);
         dist += z - t.endZ + 4;
         z = t.endZ - 4;
         y = t.topY;
         lastGap = true; // force a solid deck right after the top block
       } else {
         // kicker lip into a gap
-        this.ramp('kicker', z, y, z - 10, y + 2.4, 10, mat());
+        this.ramp('kicker', z, y, z - 10, y + 2.4, 10, mat(), xc);
         z -= 10 + 12 + Math.random() * 6;
         dist += 28;
         minY = Math.min(minY, y);
@@ -1443,16 +1455,14 @@ export class Level {
       }
     }
     if (lastGap) {
-      this.slab('landing', z, z - 30, y, 12, mat());
+      this.slab('landing', z, z - 30, y, 12, mat(), true, xc);
       z -= 30;
     }
-    // never finish sideways: close any open camera zone before the runway
-    if (inSide) this.sideZones[this.sideZones.length - 1].to = z + 2;
-    this.slab('finish run', z, z - 45, y, 14, mat());
+    this.slab('finish run', z, z - 45, y, 14, mat(), true, xc);
     this.finishZ = z - 30;
     this.endWallZ = z - 42;
-    this.finishGate(y, this.finishZ);
-    this.endWall(y);
+    this.finishGate(y, this.finishZ, xc);
+    this.endWall(y, xc);
     this.killY = minY - 26;
     const pit = new THREE.Mesh(
       new THREE.PlaneGeometry(1400, 1400),
@@ -1463,24 +1473,24 @@ export class Level {
     this.root.add(pit);
   }
 
-  private endWall(deckY: number): void {
+  private endWall(deckY: number, cx = 0): void {
     const wall = new THREE.Mesh(
       new THREE.BoxGeometry(14, 4, 1),
       new THREE.MeshLambertMaterial({ color: 0x5a5f6a }),
     );
-    wall.position.set(0, deckY + 2, this.endWallZ - 1);
+    wall.position.set(cx, deckY + 2, this.endWallZ - 1);
     this.root.add(wall);
   }
 
-  private finishGate(deckY: number, z: number): void {
+  private finishGate(deckY: number, z: number, cx = 0): void {
     this.finishBox.setFromCenterAndSize(
-      new THREE.Vector3(0, deckY + 15, z),
+      new THREE.Vector3(cx, deckY + 15, z),
       new THREE.Vector3(14, 30, 2),
     );
     const postMat = new THREE.MeshLambertMaterial({ color: 0xd8d8d8 });
     for (const side of [-1, 1]) {
       const post = new THREE.Mesh(new THREE.BoxGeometry(0.5, 7, 0.5), postMat);
-      post.position.set(side * 5.5, deckY + 3.5, z);
+      post.position.set(cx + side * 5.5, deckY + 3.5, z);
       this.root.add(post);
     }
     const canvas = document.createElement('canvas');
@@ -1499,7 +1509,7 @@ export class Level {
       new THREE.BoxGeometry(11.5, 1.2, 0.2),
       new THREE.MeshBasicMaterial({ map: tex }),
     );
-    banner.position.set(0, deckY + 6.4, z);
+    banner.position.set(cx, deckY + 6.4, z);
     this.root.add(banner);
   }
 }

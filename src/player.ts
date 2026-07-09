@@ -108,7 +108,12 @@ export class Player {
   private maskMesh: THREE.Mesh | null = null;
   private armR: THREE.Mesh | null = null;
   private armL: THREE.Mesh | null = null;
-  private legs: THREE.Mesh | null = null;
+  private legs: THREE.Group | null = null;
+  private legL: THREE.Mesh | null = null;
+  private legR: THREE.Mesh | null = null;
+  private walkPhase = 0; // procedural run cycle
+  private walkAmp = 0;
+  private idleAmp = 0;
   private boardG: THREE.Group | null = null; // board + wheels: pulled up during grabs
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
@@ -120,13 +125,17 @@ export class Player {
   private lean = 0;
 
   private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
-  private mapSide = false; // control mapping, latched across camera-zone flips
+  // Travel axes, latched across zone boundaries: the course usually runs
+  // along -Z ('S'), but turned stretches run along +X ('E') / -X ('W').
+  private travelDir: 'S' | 'E' | 'W' = 'S';
+  private axisF = new THREE.Vector3(0, 0, -1); // along-course
+  private axisL = new THREE.Vector3(1, 0, 0); // stick-right sidestep
   private haltCd = 0; // screech-sound cooldown for wall stops
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
-  private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number }[] = [];
+  private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
 
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
@@ -194,6 +203,21 @@ export class Player {
     return this.grabPhase === 'enter' || this.grabPhase === 'held';
   }
 
+  private setTravelDir(dir: 'S' | 'E' | 'W'): void {
+    this.travelDir = dir;
+    if (dir === 'S') {
+      this.axisF.set(0, 0, -1);
+      this.axisL.set(1, 0, 0);
+    } else if (dir === 'E') {
+      // stick-up = away from the camera (-Z) on turned stretches
+      this.axisF.set(1, 0, 0);
+      this.axisL.set(0, 0, -1);
+    } else {
+      this.axisF.set(-1, 0, 0);
+      this.axisL.set(0, 0, -1);
+    }
+  }
+
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
@@ -238,7 +262,8 @@ export class Player {
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.vertLock = false;
-    this.mapSide = level.isSide(this.pos.z);
+    const zn = level.zoneAt(this.pos.x, this.pos.z);
+    this.setTravelDir(zn ? zn.dir : 'S');
     this.charging = false;
     this.chargeTimer = 0;
     this.grabPhase = 'none';
@@ -266,16 +291,21 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
-    // Crossing a camera-zone boundary while HOLDING a direction keeps the old
-    // mapping (your trajectory continues); the new mapping latches in the
-    // moment the stick passes through neutral. No surprise right-angle turns.
-    const zoneSide = level.isSide(this.pos.z);
-    if (zoneSide !== this.mapSide && Math.abs(input.moveX) < 0.3 && Math.abs(input.moveY) < 0.3) {
-      this.mapSide = zoneSide;
+    // The path can right-angle into an X-running stretch (the camera never
+    // turns — the turned path IS the side-scroll view). Crossing a boundary
+    // while HOLDING a direction keeps the old axes so your trajectory
+    // continues; the new axes latch the moment the stick passes neutral.
+    const zone = level.zoneAt(this.pos.x, this.pos.z);
+    const wantDir = zone ? zone.dir : 'S';
+    if (wantDir !== this.travelDir && Math.abs(input.moveX) < 0.3 && Math.abs(input.moveY) < 0.3) {
+      this.setTravelDir(wantDir);
     }
-    const ctl = this.mapSide
-      ? ({ ...input, moveY: input.moveX, moveX: -input.moveY } as unknown as Input)
-      : input;
+    const ctl =
+      this.travelDir === 'S'
+        ? input
+        : this.travelDir === 'E'
+          ? ({ ...input, moveY: input.moveX, moveX: input.moveY } as unknown as Input)
+          : ({ ...input, moveY: -input.moveX, moveX: input.moveY } as unknown as Input);
     input = ctl;
 
     // The blob shadow is a landing indicator: probe far down for the floor
@@ -553,7 +583,7 @@ export class Player {
       let grade = 0;
       if (this.groundHit) {
         const n = this.groundHit.normal;
-        grade = -n.z / Math.max(n.y, 0.2);
+        grade = (n.x * this.axisF.x + n.z * this.axisF.z) / Math.max(n.y, 0.2);
       }
       if (Math.abs(grade) > 0.02) {
         this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * dt;
@@ -571,7 +601,7 @@ export class Player {
       }
     }
 
-    this.pos.addScaledVector(FORWARD, this.speed * dt);
+    this.pos.addScaledVector(this.axisF, this.speed * dt);
 
     if (pipeMode) {
       // Halfpipe carve: the stick accelerates an inertial lateral velocity
@@ -594,9 +624,11 @@ export class Player {
       // release. Left is ALWAYS screen-left, even while backing up. Slides
       // are direction locked: no steering mid-slide.
       if (this.crawling) {
-        if (Math.abs(input.moveX) > 0.05) this.pos.x += input.moveX * TUNING.crawlSpeed * dt;
+        if (Math.abs(input.moveX) > 0.05) {
+          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * dt);
+        }
       } else if (this.slideTimer <= 0 && Math.abs(input.moveX) > 0.05) {
-        this.pos.x += input.moveX * (skating ? TUNING.walkSpeed : TUNING.walkSpeed) * dt;
+        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * dt);
       }
     }
 
@@ -735,12 +767,12 @@ export class Player {
             this.pos.x += inward * TUNING.walkSpeed * 0.5 * dt;
           }
         } else {
-          this.pos.x += input.moveX * TUNING.walkSpeed * dt;
+          this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * dt);
         }
       }
     }
 
-    this.pos.addScaledVector(FORWARD, this.speed * dt);
+    this.pos.addScaledVector(this.axisF, this.speed * dt);
     this.pos.y += this.vVel * dt;
 
     const hit = this.queryGround(level);
@@ -935,7 +967,11 @@ export class Player {
     this.pos.addScaledVector(FORWARD, this.speed * dt);
     // Keep the outro on the deck: no sliding sideways off the edge into a
     // midair hover after the run is already over.
-    this.pos.x = THREE.MathUtils.clamp(this.pos.x, -5.2, 5.2);
+    this.pos.x = THREE.MathUtils.clamp(
+      this.pos.x,
+      level.finishBox.min.x + 1.5,
+      level.finishBox.max.x - 1.5,
+    );
     if (this.pos.z < level.endWallZ + 1) {
       this.pos.z = level.endWallZ + 1;
       this.speed = 0;
@@ -964,8 +1000,8 @@ export class Player {
     this.grindRail = rail;
     this.grindT = sample.t;
     // Ride the rail in whichever direction matches our along-course travel.
-    const travelZ = this.speed >= 0 ? -1 : 1;
-    this.grindDir = sample.tangent.z * travelZ >= 0 ? 1 : -1;
+    const along = sample.tangent.x * this.axisF.x + sample.tangent.z * this.axisF.z;
+    this.grindDir = along * Math.sign(this.speed || 1) >= 0 ? 1 : -1;
     this.state = 'grind';
     this.grounded = false;
     this.vVel = 0;
@@ -1005,8 +1041,9 @@ export class Player {
     if (this.grindRail) {
       // Project the rail velocity onto the course axis — exits snap straight,
       // matching the axis-locked movement.
-      const tz = this.grindRail.tangentAt(this.grindT).z * this.grindDir;
-      this.speed = -tz * this.grindVel;
+      const t = this.grindRail.tangentAt(this.grindT);
+      const along = (t.x * this.axisF.x + t.z * this.axisF.z) * this.grindDir;
+      this.speed = along * this.grindVel;
     }
     this.grindRail = null;
     this.state = 'air';
@@ -1108,7 +1145,7 @@ export class Player {
   // ---------------------------------------------------------------- sparks --
 
   private emitSparks(count: number, color: number, kick: number): void {
-    const back = FORWARD.clone().multiplyScalar(-Math.sign(this.speed || 1));
+    const back = this.axisF.clone().multiplyScalar(-Math.sign(this.speed || 1));
     for (const s of this.sparks) {
       if (count <= 0) break;
       if (s.life > 0) continue;
@@ -1325,10 +1362,14 @@ export class Player {
       }
     }
 
-    // Floating wumpa: touch to collect.
+    // Floating wumpa: touch to collect — but a spin smacks it away.
     for (const p of level.pickups) {
       if (!p.alive) continue;
-      if (this.playerBox.intersectsBox(p.box)) {
+      if (this.spinning && this.spinBox.intersectsBox(p.box)) {
+        p.alive = false;
+        p.mesh.visible = false;
+        sfx.play('fruitSpun', 0.7);
+      } else if (this.playerBox.intersectsBox(p.box)) {
         p.alive = false;
         p.mesh.visible = false;
         this.fruit++;
@@ -1364,6 +1405,7 @@ export class Player {
       if (f.age >= 0) continue;
       count--;
       f.age = 0;
+      f.flung = false;
       f.mesh.visible = true;
       f.mesh.position.set(cx, cy + 0.3, cz);
       f.vel.set((Math.random() - 0.5) * 5, 6 + Math.random() * 4, (Math.random() - 0.5) * 5);
@@ -1374,6 +1416,16 @@ export class Player {
     for (const f of this.fruits) {
       if (f.age < 0) continue;
       f.age += dt;
+      if (f.flung) {
+        // smacked away by a spin: pure ballistic, then gone
+        f.vel.y -= 26 * dt;
+        f.mesh.position.addScaledVector(f.vel, dt);
+        if (f.age > 0.9) {
+          f.age = -1;
+          f.mesh.visible = false;
+        }
+        continue;
+      }
       if (f.age < 0.35) {
         // free arc out of the box
         f.vel.y -= 26 * dt;
@@ -1384,6 +1436,14 @@ export class Player {
         const d = target.sub(f.mesh.position);
         const dist = d.length();
         if (dist < 1.0 || f.age > 2.5) {
+          if (dist < 1.0 && this.spinning) {
+            // spinning smacks the wumpa away instead of collecting it
+            f.flung = true;
+            f.age = 0;
+            f.vel.set((Math.random() - 0.5) * 16, 8, (Math.random() - 0.5) * 16);
+            sfx.play('fruitSpun', 0.7);
+            continue;
+          }
           if (dist < 1.0) {
             this.fruit++;
             this.score(CONST.ptsFruit);
@@ -1525,6 +1585,29 @@ export class Player {
     // board, the other arm throws up. Direction held picks the variant —
     // up = nosegrab (pitch forward), left = melon (other hand, lean left),
     // right = indy (lean right). Left/right also spin (see updateGrab).
+    // Procedural run + idle: on foot and moving, the legs scissor and the
+    // arms pump; standing still gets a breathing bob. Skating/air poses win.
+    const vxAnim = this.pos.x - this.prevPos.x;
+    const vzAnim = this.pos.z - this.prevPos.z;
+    const planar = Math.sqrt(vxAnim * vxAnim + vzAnim * vzAnim) / Math.max(dt, 1e-4);
+    const onFoot =
+      this.grounded &&
+      this.state === 'ride' &&
+      !this.charging &&
+      this.slideTimer <= 0 &&
+      !this.crawling &&
+      Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
+    const runningAnim = onFoot && planar > 1.5;
+    this.walkAmp += ((runningAnim ? 1 : 0) - this.walkAmp) * Math.min(1, 10 * dt);
+    this.idleAmp += ((onFoot && !runningAnim ? 1 : 0) - this.idleAmp) * Math.min(1, 6 * dt);
+    if (runningAnim) this.walkPhase += (4 + planar * 1.0) * dt;
+    const swing = Math.sin(this.walkPhase) * 0.65 * this.walkAmp;
+    const breathe = Math.sin(this.runTime * 2.3);
+    if (this.legL && this.legR) {
+      this.legL.rotation.x = swing;
+      this.legR.rotation.x = -swing;
+    }
+
     const raw = this.rawInput;
     let pitchT = 0.9;
     let rollT = 0;
@@ -1552,33 +1635,33 @@ export class Player {
     this.grabRoll += (rollT - this.grabRoll) * poseBlend;
     this.armRPose += (armRT - this.armRPose) * poseBlend;
     this.armLPose += (armLT - this.armLPose) * poseBlend;
+    const armAnim = (-swing * 0.8 + breathe * 0.06 * this.idleAmp) * (1 - this.grabPose);
     if (this.armR) {
-      this.armR.rotation.x = this.armRPose * this.grabPose;
+      this.armR.rotation.x = this.armRPose * this.grabPose + armAnim;
       this.armR.rotation.z = 0.25 - this.grabPose * 0.55;
     }
     if (this.armL) {
-      this.armL.rotation.x = this.armLPose * this.grabPose;
+      this.armL.rotation.x = this.armLPose * this.grabPose - armAnim;
       this.armL.rotation.z = -0.25 + this.grabPose * 0.45;
     }
     // Knees up: legs shorten toward the hips while the body crouches deep,
     // and the board comes up with them, into the grabbing hand.
     if (this.legs) {
-      const tuck = 1 - 0.5 * this.grabPose;
-      this.legs.scale.y = tuck;
-      this.legs.position.y = 0.71 - 0.25 * tuck;
+      this.legs.scale.y = 1 - 0.5 * this.grabPose; // knees pull up to the chest
     }
     if (this.boardG) {
       this.boardG.position.y = 0.5 * this.grabPose;
       this.boardG.rotation.x = 0.3 * this.grabPose; // nose tips up in the hand
       // On foot the board is stowed — it reappears the moment you're skating
       // (charging, sliding, grinding, carrying speed) or holding a grab.
+      // Slides are body slides — the board stays stowed for them.
       this.boardG.visible =
-        this.state === 'grind' ||
-        this.charging ||
-        this.slideTimer > 0 ||
-        this.vertLock ||
-        this.grabPose > 0.05 ||
-        Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
+        this.slideTimer <= 0 &&
+        (this.state === 'grind' ||
+          this.charging ||
+          this.vertLock ||
+          this.grabPose > 0.05 ||
+          Math.abs(this.speed) > TUNING.walkSpeed + 0.5);
     }
     this.bodyGroup.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
@@ -1637,7 +1720,11 @@ export class Player {
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     this.bodyGroup.position.y =
-      this.grabPose * -0.5 - this.slidePose * 0.32 - this.chargePose * 0.26;
+      this.grabPose * -0.5 -
+      this.slidePose * 0.32 -
+      this.chargePose * 0.26 +
+      Math.abs(Math.sin(this.walkPhase)) * 0.05 * this.walkAmp +
+      breathe * 0.015 * this.idleAmp;
     // Impact squash right after a slam lands.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
     this.bodyGroup.scale.y = 1.18 * (1 - 0.6 * squash);
@@ -1678,12 +1765,19 @@ export class Player {
     g.add(boardG);
     this.boardG = boardG;
 
-    // Low-poly rider.
-    const legs = new THREE.Mesh(
-      new THREE.BoxGeometry(0.42, 0.5, 0.3),
-      new THREE.MeshLambertMaterial({ color: 0x35506e }),
-    );
-    legs.position.y = 0.46;
+    // Low-poly rider: two legs pivoting from the hip for the run cycle.
+    const legs = new THREE.Group();
+    legs.position.y = 0.71; // hip line
+    const legGeo = new THREE.BoxGeometry(0.17, 0.5, 0.26);
+    legGeo.translate(0, -0.25, 0); // swing from the hip
+    const legMat = new THREE.MeshLambertMaterial({ color: 0x35506e });
+    for (const side of [-1, 1]) {
+      const leg = new THREE.Mesh(legGeo, legMat);
+      leg.position.x = side * 0.115;
+      legs.add(leg);
+      if (side === 1) this.legR = leg;
+      else this.legL = leg;
+    }
     g.add(legs);
     this.legs = legs;
     const torso = new THREE.Mesh(
