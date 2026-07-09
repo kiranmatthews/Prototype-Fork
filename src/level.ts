@@ -138,8 +138,6 @@ export interface Checkpoint {
 
 export const LEVEL_NAMES = [
   'Test Course',
-  'N. Sanity Beach',
-  'The Great Gate',
   'Sideways',
   'Random',
   'The Gauntlet',
@@ -375,13 +373,11 @@ export class Level {
     this.scene = scene;
     scene.add(this.root);
     this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
-    if (courseId === 1) this.buildNSanity();
-    else if (courseId === 2) this.buildGreatGate();
-    else if (courseId === 3) this.buildSideways();
-    else if (courseId === 4) this.buildRandom();
-    else if (courseId === 5) this.buildGauntlet();
-    else if (courseId === 6) this.buildBoulderDash();
-    else if (courseId === 7) this.buildFlats();
+    if (courseId === 1) this.buildSideways();
+    else if (courseId === 2) this.buildRandom();
+    else if (courseId === 3) this.buildGauntlet();
+    else if (courseId === 4) this.buildBoulderDash();
+    else if (courseId === 5) this.buildFlats();
     else this.buildTestCourse();
     this.buildAmbient(); // theme is set by the builder above
   }
@@ -1281,236 +1277,6 @@ export class Level {
     return THREE.MathUtils.mapLinear(z, -885, -940, -13.5, -22);
   }
 
-  // Crash 1 level 1: beach -> winding jungle path -> forked ruin path ->
-  // water gaps -> stone ruins -> uphill to the exit gate. Gentle, crab-heavy.
-  private buildNSanity(): void {
-    const matSand = new THREE.MeshLambertMaterial({ color: 0xc9b87a });
-    const matJungle = new THREE.MeshLambertMaterial({ color: 0x6f8f5e });
-    const matStone = new THREE.MeshLambertMaterial({ color: 0x7d8288 });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
-
-    this.killY = -30;
-    this.finishZ = -440;
-    this.endWallZ = -464;
-    this.theme = {
-      skyTop: '#3f7edb',
-      skyBottom: '#c8e8f4',
-      sunColorHex: '#fff8e0',
-      sunU: 0.68,
-      sunV: 0.18,
-      stars: false,
-      fog: 0x9fc4d8,
-      fogNear: 34,
-      fogFar: 150,
-      hemiSky: 0xd8ecff,
-      hemiGround: 0x8a7a5a,
-      hemiI: 1.15,
-      sunColor: 0xfff6e0,
-      sunI: 1.6,
-      particleColor: 0xffffff,
-      particleWind: [0.9, -0.4, 0.4],
-    };
-
-    // water far below the gaps
-    this.pitPlane('water', -40, 0, -230, 900);
-
-    // beach start (walled at the back and sides, like the cove)
-    this.slab('beach', 14, -30, 0, 22, matSand, false, 0, 'sand');
-    this.wall(0, 15.5, 26, 1, 0);
-    this.wall(-11.5, -8, 1, 48, 0);
-    this.wall(11.5, -8, 1, 48, 0);
-    this.crate(3, 0, -5);
-    this.crate(4.5, 0, -5);
-    this.crate(3.75, 1.2, -5); // little beach pyramid
-
-    // sand path inland
-    this.jungle('sand path', -30, -93, 0, 12, matSand, { dips: [-70] });
-    this.crate(2, 0, -45);
-    this.crate(-3, 0, -60);
-    this.crate(-2, 0, -50, 'mask');
-    this.crate(0, 0, -75);
-    this.crate(0, 1.2, -75); // stack
-    this.enemy(-3, 3, 0, -70, 3);
-
-    // water gap 1
-    // -93 .. -102 (rebalanced)
-    this.ramp('jungle rise', -102, 0, -112, 1.5, 12, matRamp);
-    this.jungle('jungle path', -112, -150, 1.5, 10, matJungle);
-    this.crate(-2.5, 1.5, -128);
-    this.crate(2.5, 1.5, -140);
-    this.crate(3, 1.5, -146, 'mask');
-    this.enemy(-3.5, 3.5, 1.5, -135, 4);
-
-    // forked path around a ruin block
-    this.jungle('forked path', -150, -205, 1.5, 14, matJungle);
-    this.wall(0, -177, 4, 40, 1.5, 3); // the ruin wall splitting the lanes
-    this.crate(-4, 1.5, -165);
-    this.crate(-4, 1.5, -175, 'tnt'); // brush it and keep moving
-    this.crate(-4, 1.5, -185);
-    this.crate(4, 1.5, -172);
-    this.crate(3.5, 1.5, -190, 'nitro'); // right lane is the greedy lane
-    this.enemy(-5, -2.5, 1.5, -196, 3);
-
-    // rejoin, checkpoint, more crabs
-    this.jungle('ruin approach', -205, -253, 1.5, 12, matJungle, { dips: [-232] });
-    this.checkpoint(1.5, -215);
-    this.enemy(-4, 4, 1.5, -230, 5);
-    this.crate(0, 1.5, -240);
-    this.crate(0, 2.7, -240); // stack
-
-    // water gap 2 with an optional log rail
-    // -253 .. -261 (rebalanced)
-    const logRail = new Rail([new THREE.Vector3(0, 2.4, -248), new THREE.Vector3(0, 2.4, -266)]);
-    this.rails.push(logRail);
-    this.root.add(logRail.object);
-
-    // stone ruins
-    this.jungle('stone ruins', -261, -310, 1.5, 12, matStone, { amp: 0.3 });
-    for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 1.5, -285); // ruin crate wall
-    this.crate(4, 1.5, -300, 'bouncy');
-    // step platform up the ruin wall
-    this.stepBlock(-4, -292, 4, 6, 1.5, 3.6);
-    this.crate(-4, 3.6, -292);
-    this.crate(-4, 1.5, -300, 'mask');
-    // big nitro block stacked in the ruin corner
-    this.crate(4.5, 1.5, -272, 'nitro');
-    this.crate(4.5, 2.7, -272, 'nitro');
-    this.crate(3.2, 1.5, -272, 'nitro');
-
-    // jungle furniture
-    this.log(-4, 2, 0, -55);
-    this.log(-2, 5, 1.5, -196);
-    this.log(-6, 0, 1.5, -246);
-    this.stone(0, 0, -40, -85, 6.5);
-    this.crate(2, 0, -80, 'mystery');
-    this.crate(-4, 1.5, -220, 'mystery');
-
-    // the temple stair: four flush guarded stories over the water
-    const climb = this.stairClimb(-312, 1.5, 4);
-    const top = climb.topY;
-    this.slab('temple top', climb.endZ - 2, -420, top, 12, matStone, true, 0, 'stone');
-    this.enemy(-4, 4, top, -370, 6);
-    this.crate(2, top, -382, 'mask');
-    this.checkpoint(top, -390);
-    this.crate(-4.5, top, -405, 'nitro');
-    this.crate(4.5, top, -405, 'nitro');
-    this.crate(0, top, -405);
-
-    this.slab('exit', -420, -470, top, 14, matSand, true, 0, 'sand');
-    this.finishGate(top, this.finishZ);
-    this.endWall(top);
-  }
-
-  // Crash 1 level 2: climb the great wall. Ascending walkways with gaps, a
-  // rising scaffold rail, stair-step hops, and a nitro rampart near the top.
-  private buildGreatGate(): void {
-    const matWood = new THREE.MeshLambertMaterial({ color: 0x8a6b4a });
-    const matWood2 = new THREE.MeshLambertMaterial({ color: 0x75593c });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0x9a7a52 });
-
-    this.killY = -20;
-    this.finishZ = -415;
-    this.endWallZ = -428;
-    this.theme = {
-      skyTop: '#472a5e',
-      skyBottom: '#e07840',
-      sunColorHex: '#ffcf90',
-      sunU: 0.5,
-      sunV: 0.6,
-      stars: true,
-      fog: 0x54344a,
-      fogNear: 27,
-      fogFar: 135,
-      hemiSky: 0xd8a8c0,
-      hemiGround: 0x402828,
-      hemiI: 1.0,
-      sunColor: 0xffb070,
-      sunI: 1.5,
-      particleColor: 0xffc8a0,
-      particleWind: [0.5, -0.5, 0.2],
-    };
-
-    // hazy ground far below the wall
-    this.pitPlane('void', -32, 0, -220, 900);
-
-    // base of the gate
-    this.slab('gate base', 10, -20, 0, 14, matWood, false, 0, 'wood');
-    this.wall(0, 11, 16, 1, 0);
-    this.wall(-7.5, -5, 1, 32, 0);
-    this.wall(7.5, -5, 1, 32, 0);
-    this.crate(-3, 0, -10);
-    this.crate(3, 0, -14);
-
-    // ascent A: two ramps with a gap between
-    this.ramp('rampart A', -20, 0, -62, 4.4, 8, matRamp);
-    // gap: -62 .. -66 (rebalanced — less run-up at the slower feel)
-    this.ramp('rampart A2', -66, 4.4, -100, 8, 8, matRamp);
-
-    // rest platform 1
-    this.slab('landing 1', -100, -125, 8, 10, matWood2, true, 0, 'wood');
-    this.checkpoint(8, -110);
-    this.crate(-3, 8, -105);
-    this.crate(3, 8, -105);
-    this.crate(0, 8, -108, 'mask');
-    this.crate(3, 8, -115, 'mask');
-    this.crate(-2, 8, -120, 'mystery');
-    this.enemy(-3, 3, 8, -118, 4);
-
-    // ascent B: gap mid-way, with a rising scaffold rail as the smooth line
-    this.ramp('rampart B', -125, 8, -164, 13.5, 8, matRamp);
-    // gap: -164 .. -170 (rebalanced)
-    this.ramp('rampart B2', -170, 13.5, -205, 18, 8, matRamp);
-    const scaffold = new Rail([
-      new THREE.Vector3(5, 8.8, -128),
-      new THREE.Vector3(5, 13.6, -164),
-      new THREE.Vector3(5, 18.6, -202),
-    ]);
-    this.rails.push(scaffold);
-    this.root.add(scaffold.object);
-
-    // rest platform 2
-    this.slab('landing 2', -205, -230, 18, 10, matWood2, true, 0, 'wood');
-    this.checkpoint(18, -212);
-    for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 18, -221); // plank wall
-    this.crate(-3, 18, -214, 'mask');
-    this.crate(2, 18, -217, 'tnt'); // light it and the blast clears the planks
-    this.enemy(-3, 3, 18, -227, 5);
-
-    // stair steps up (hop, or bounce the arrow crate to skip two)
-    const steps: [number, number][] = [
-      [-230, 20.2],
-      [-244, 22.4],
-      [-258, 24.6],
-      [-272, 26.8],
-      [-286, 29],
-    ];
-    for (const [z0, y] of steps) this.slab('step', z0, z0 - 8, y, 8, matWood, true, 0, 'wood');
-    this.crate(0, 22.4, -248, 'bouncy');
-    this.crate(2, 20.2, -234);
-
-    // nitro rampart along the top, with a high bypass rail beside it
-    this.slab('high rampart', -294, -360, 29, 8, matWood2, true, 0, 'wood');
-    this.crate(0, 29, -310, 'nitro');
-    this.crate(0, 29, -325, 'nitro');
-    this.crate(0, 29, -340, 'nitro');
-    this.crate(-3, 29, -330);
-    this.crate(3, 29, -318);
-    this.enemy(-3.2, 3.2, 29, -334, 6);
-    const bypass = new Rail([new THREE.Vector3(-5, 30.8, -300), new THREE.Vector3(-5, 30.8, -358)]);
-    this.rails.push(bypass);
-    this.root.add(bypass.object);
-
-    // crest of the gate
-    this.ramp('crest ramp', -360, 29, -380, 33, 10, matRamp);
-    this.slab('gate top', -380, -430, 33, 14, matWood, true, 0, 'wood');
-    this.checkpoint(33, -390);
-    this.crate(0, 33, -395, 'mask');
-    this.crate(-4, 33, -400);
-    this.crate(4, 33, -400);
-    this.finishGate(33, this.finishZ);
-    this.endWall(33);
-  }
-
   // The "Sideways" level is an L-shaped course now: a corridor intro heading
   // down -Z, a right-angle turn onto a stretch that runs along +X — which the
   // fixed camera therefore sees side-on (real side-scroll platforming, no
@@ -1692,10 +1458,13 @@ export class Level {
       const berm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.5, depth), mat);
       berm.position.set(x, baseY + 0.55, (z0 + z1) / 2);
       this.root.add(berm);
+      // Collider matches the VISUAL (1.5 tall). It used to be 3 tall — an
+      // invisible extension that swallowed the lip rail above it, so grinding
+      // the lip fought the wall push every frame and glitched you off.
       this.walls.push(
         new THREE.Box3().setFromCenterAndSize(
           berm.position.clone(),
-          new THREE.Vector3(0.9, 3, depth),
+          new THREE.Vector3(0.9, 1.5, depth),
         ),
       );
       const lip = new Rail(
@@ -2388,7 +2157,7 @@ export class Level {
     });
   }
 
-  // Level 6, "The Gauntlet": everything the toolkit can do in one long run —
+  // Level 4, "The Gauntlet": everything the toolkit can do in one long run —
   // jungle approach, terraced climb with a scaffold-rail bypass, a high ridge
   // with real gaps, a kicker launch, a halfpipe alley, a right-angle turn
   // across floating ruins, a downhill slalom, a rail canyon, a crate maze,
@@ -2777,7 +2546,7 @@ export class Level {
     };
   }
 
-  // Level 8, "The Flats": a gigantic featureless slab for movement testing.
+  // Level 6, "The Flats": a gigantic featureless slab for movement testing.
   // No gaps, no hazards, no finish — walls only at the far perimeter, so
   // there is nothing to fall off. Marker posts along the axes give bearings.
   private buildFlats(): void {
@@ -2826,7 +2595,7 @@ export class Level {
     }
   }
 
-  // Level 7, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
+  // Level 5, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
   // the corridor and sprint back TOWARD the camera (hold down + X to skate)
   // while a boulder thunders after you. It crushes crates, detonates
   // explosives, and flattens anything slower than it — then tips into the

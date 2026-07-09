@@ -164,6 +164,7 @@ export class Player {
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
+  private enemyTouch = new THREE.Box3(); // scratch: shrunken enemy touch box
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
   private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
 
@@ -1769,6 +1770,21 @@ export class Player {
             this.chargeTimer = 0;
           }
         } else {
+          // Plain touch: invuln grace applies, and a mask absorbs it with a
+          // knockback away from the enemy (Crash rules — the video showed a
+          // death WITH a mask in hand, which was flatly wrong). The touch
+          // box is slightly forgiving; stomps/spins keep the full box.
+          if (this.invulnTimer > 0) continue;
+          this.enemyTouch.copy(e.box).expandByScalar(-0.15);
+          if (!this.playerBox.intersectsBox(this.enemyTouch)) continue;
+          if (this.spendMask()) {
+            const away = this.pos.clone().sub(e.group.position).setY(0);
+            if (away.lengthSq() < 0.01) away.copy(this.axisF).multiplyScalar(-1);
+            away.normalize();
+            this.pos.addScaledVector(away, 1.1);
+            this.speed *= 0.4;
+            continue;
+          }
           this.die();
           return;
         }
@@ -1814,13 +1830,17 @@ export class Player {
         this.die();
         return;
       }
-      this.pushOutOf(cr.box);
+      if (this.state !== 'grind') this.pushOutOf(cr.box);
     }
 
-    // Solid walls: shove out, full stop, nothing breaks.
-    for (const w of level.walls) {
-      if (this.playerBox.intersectsBox(w)) {
-        this.pushOutOf(w);
+    // Solid walls: shove out, full stop, nothing breaks. NEVER while
+    // grinding — the rail owns the position, and a wall collider brushing
+    // the rail line (berm lips!) must not wrestle you off it.
+    if (this.state !== 'grind') {
+      for (const w of level.walls) {
+        if (this.playerBox.intersectsBox(w)) {
+          this.pushOutOf(w);
+        }
       }
     }
 
@@ -1987,28 +2007,65 @@ export class Player {
     );
   }
 
-  // Shove the player back out the side they came IN from (based on this
-  // step's travel), so a fast approach can't teleport through the far face.
-  // Chunky, deliberate, Crash-like full stop.
+  // Robust solid resolution (swept, Minkowski-expanded). Three rules:
+  // 1. The step's actual movement segment is SWEPT against the box, so a
+  //    fast approach clamps at the face it truly crossed — never the far one.
+  // 2. Starting already inside (bad ejection, spawn overlap, moved platform)
+  //    exits via the SHALLOWEST face, capped per frame — smooth un-stick,
+  //    never a warp across the level.
+  // 3. Only a head-on hit kills speed (Crash full stop + skid); scraping
+  //    along a wall at an angle slides and keeps your momentum.
   private pushOutOf(box: THREE.Box3): void {
-    if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
-      sfx.play('skateHalt', 0.7);
-      this.haltCd = 0.5;
-    }
-    const dx = this.pos.x - this.prevPos.x;
-    const dz = this.pos.z - this.prevPos.z;
     const hx = CONST.playerHalf.x + 0.02;
     const hz = CONST.playerHalf.z + 0.02;
-    if (Math.abs(dz) >= Math.abs(dx) && dz !== 0) {
-      this.pos.z = dz < 0 ? box.max.z + hz : box.min.z - hz;
-    } else if (dx !== 0) {
-      this.pos.x = dx < 0 ? box.max.x + hx : box.min.x - hx;
-    } else {
-      // Not moving (spawned overlapping?): nearest z face.
-      const cz = (box.min.z + box.max.z) / 2;
-      this.pos.z = this.pos.z < cz ? box.min.z - hz : box.max.z + hz;
+    const minX = box.min.x - hx;
+    const maxX = box.max.x + hx;
+    const minZ = box.min.z - hz;
+    const maxZ = box.max.z + hz;
+    const px = this.prevPos.x;
+    const pz = this.prevPos.z;
+    const insideBefore = px > minX && px < maxX && pz > minZ && pz < maxZ;
+
+    if (insideBefore) {
+      // Un-stick: shallowest way out, at most 0.5u per frame.
+      const cand: [number, 'x' | 'z', number][] = [
+        [this.pos.x - minX, 'x', -1],
+        [maxX - this.pos.x, 'x', 1],
+        [this.pos.z - minZ, 'z', -1],
+        [maxZ - this.pos.z, 'z', 1],
+      ];
+      cand.sort((a, b) => a[0] - b[0]);
+      const [pen, ax, dir] = cand[0];
+      const step = Math.min(pen + 0.01, 0.5) * dir;
+      if (ax === 'x') this.pos.x += step;
+      else this.pos.z += step;
+      return;
     }
-    this.speed = 0;
+
+    // Swept slab test: the axis whose face was crossed LAST is the one we
+    // actually hit; clamp only that axis so the other keeps sliding.
+    const dx = this.pos.x - px;
+    const dz = this.pos.z - pz;
+    let t1x = -Infinity;
+    let t1z = -Infinity;
+    if (dx !== 0) t1x = Math.min((minX - px) / dx, (maxX - px) / dx);
+    if (dz !== 0) t1z = Math.min((minZ - pz) / dz, (maxZ - pz) / dz);
+    let axis: 'x' | 'z';
+    if (t1x > t1z) axis = 'x';
+    else if (t1z > t1x) axis = 'z';
+    else axis = Math.abs(dz) >= Math.abs(dx) ? 'z' : 'x';
+    if (axis === 'x') this.pos.x = dx > 0 ? minX - 0.01 : maxX + 0.01;
+    else this.pos.z = dz > 0 ? minZ - 0.01 : maxZ + 0.01;
+
+    // Head-on (heading mostly into the clamped face) = Crash full stop.
+    const head = axis === 'x' ? Math.abs(this.axisF.x) : Math.abs(this.axisF.z);
+    if (head > 0.6 && Math.abs(this.speed) > 0.1) {
+      if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
+        sfx.play('skateHalt', 0.7);
+        this.haltCd = 0.5;
+      }
+      this.speed = 0;
+    }
   }
 
   private die(): void {
