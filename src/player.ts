@@ -604,7 +604,10 @@ export class Player {
     this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
     if (this.crawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
-    sfx.play('ollie', 0.7);
+    // Board-pop only when the jump leaves actual skating; on-foot hops —
+    // including stationary charge jumps — get a soft sneaker scuff instead.
+    if (Math.abs(this.speed) > TUNING.walkSpeed + 0.5) sfx.play('ollie', 0.7);
+    else sfx.play('footstep2', 0.55, 1.5);
     this.state = 'air';
     this.grounded = false;
     this.coyoteTimer = 0;
@@ -639,7 +642,12 @@ export class Player {
     // carving never drops you into the walking state mid-transition.
     // Holding X while STANDING STILL is just a jump crouch — skating only
     // starts once you also push a direction (or already carry speed).
-    const pushingOff = this.charging && (Math.abs(input.moveY) > 0.35 || Math.abs(this.speed) > 4);
+    // X is the accelerator only once it's clearly HELD — a quick tap is just
+    // a hop, and must never shove a walker into skate drift for a frame.
+    const pushingOff =
+      this.charging &&
+      this.chargeTimer > 0.18 &&
+      (Math.abs(input.moveY) > 0.35 || Math.abs(this.speed) > 4);
     const skating =
       pushingOff || this.slideTimer > 0 || pipeMode || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
 
@@ -1938,12 +1946,13 @@ export class Player {
       this.boardG.position.y = 0.5 * this.grabPose;
       this.boardG.rotation.x = 0.3 * this.grabPose; // nose tips up in the hand
       // On foot the board is stowed — it only comes out for real skating:
-      // charging, grinding, the halfpipe, grabs, or speed above the
-      // boardSpeed slider. Slides are body slides — never on the board.
+      // grinding, the halfpipe, grabs, speed above the boardSpeed slider, or
+      // a charge that's actually propelling past walking pace. A stationary
+      // jump crouch or a walk-hop tap never flashes the board.
       this.boardG.visible =
         this.slideTimer <= 0 &&
         (this.state === 'grind' ||
-          this.charging ||
+          (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5) ||
           this.vertLock ||
           this.inPipe ||
           this.grabPose > 0.05 ||
