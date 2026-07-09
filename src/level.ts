@@ -32,6 +32,76 @@ export interface Enemy {
   // Spun enemies ping away ballistically and can smash what they hit.
   flungVel?: THREE.Vector3;
   flungT?: number;
+  // Arena-fight enemies stay hidden until their wave is called.
+  arenaWave?: number;
+}
+
+// Moving platform: slides along one axis on a sine, carrying the rider.
+interface Mover {
+  mesh: THREE.Mesh;
+  base: THREE.Vector3;
+  axisV: THREE.Vector3;
+  amp: number;
+  speed: number;
+  phase: number;
+  lastDelta: THREE.Vector3;
+}
+
+// Crumble pad: stand on it and it shakes, drops away, and (maybe) regrows.
+interface Crumble {
+  mesh: THREE.Mesh;
+  base: THREE.Vector3;
+  state: 'idle' | 'shake' | 'fall' | 'gone';
+  t: number;
+  regen: number | null; // seconds until it comes back; null = only on reset
+}
+
+// Timed crusher block: hangs, slams, rests, rises. Solid except when falling.
+interface Crusher {
+  mesh: THREE.Mesh;
+  box: THREE.Box3;
+  x: number;
+  z: number;
+  w: number;
+  d: number;
+  h: number;
+  restY: number; // block center when it sits on the deck
+  raise: number; // how far above rest it hangs
+  cycle: number;
+  phase: number;
+  crushing: boolean;
+  slammed: boolean; // edge flag for the impact thud
+}
+
+// Swinging pendulum blade across the corridor.
+interface Pendulum {
+  pivot: THREE.Group;
+  len: number;
+  amp: number;
+  speed: number;
+  phase: number;
+  box: THREE.Box3;
+  lastSign: number;
+}
+
+// Per-level look: sky gradient, fog, lights, ambient particle weather.
+export interface Theme {
+  skyTop: string;
+  skyBottom: string;
+  sunColorHex: string; // sky-dome sun disc tint ('' = no disc)
+  sunU: number; // disc position on the dome (0..1 around, 0..1 down from top)
+  sunV: number;
+  stars: boolean;
+  fog: number;
+  fogNear: number;
+  fogFar: number;
+  hemiSky: number;
+  hemiGround: number;
+  hemiI: number;
+  sunColor: number;
+  sunI: number;
+  particleColor: number;
+  particleWind: [number, number, number]; // drift per second (y up = rising embers)
 }
 
 // Rolling stone hazard: patrols along the course, flattens careless riders.
@@ -115,6 +185,58 @@ export class Level {
     heights: number[];
   } | null = null;
 
+  // --- motion toolkit ---
+  movers: Mover[] = [];
+  crumbles: Crumble[] = [];
+  crushers: Crusher[] = [];
+  pendulums: Pendulum[] = [];
+  killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
+
+  // --- set pieces ---
+  // Arena lock: enter the zone, gates slam shut, survive the waves.
+  arena: {
+    zone: THREE.Box3;
+    state: 'idle' | 'active' | 'done';
+    wave: number;
+    waveT: number;
+    waves: Enemy[][];
+    gates: { mesh: THREE.Mesh; upY: number; downY: number; box: THREE.Box3 }[];
+  } | null = null;
+  // Collapse wave: cross the trigger and the bridge falls away behind you.
+  collapse: {
+    planks: Crumble[];
+    xMin: number;
+    xMax: number;
+    triggerZ: number;
+    endZ: number;
+    startZ: number;
+    frontZ: number;
+    speed: number;
+    active: boolean;
+  } | null = null;
+
+  // --- visual pass ---
+  theme: Theme = {
+    skyTop: '#1e2a52',
+    skyBottom: '#6b4a72',
+    sunColorHex: '#ffd8a0',
+    sunU: 0.3,
+    sunV: 0.34,
+    stars: true,
+    fog: 0x2c2440,
+    fogNear: 30,
+    fogFar: 170,
+    hemiSky: 0x9fb0e8,
+    hemiGround: 0x3a2c38,
+    hemiI: 1.0,
+    sunColor: 0xffd8a8,
+    sunI: 1.3,
+    particleColor: 0xd8c8ff,
+    particleWind: [0.6, -0.7, 0.3],
+  };
+  private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] = [];
+  private ambient: { points: THREE.Points; drift: Float32Array } | null = null;
+
   // safe = triggered by the player's own spin/slam: breaks the world, not them
   explosions: { center: THREE.Vector3; t: number; radius: number; safe: boolean }[] = [];
 
@@ -156,11 +278,93 @@ export class Level {
     return this.checkerTex;
   }
 
-  // Per-deck clone of a base material with the checker tiled to ~2u squares.
-  private patterned(mat: THREE.Material, w: number, d: number): THREE.MeshLambertMaterial {
+  // Light-toned surface textures — near-white so each deck's material color
+  // tints them. All 64px, pixel-filtered, cached per kind.
+  private surfTexCache = new Map<string, THREE.CanvasTexture>();
+  private surfaceTexture(kind: string): THREE.CanvasTexture {
+    if (kind === 'checker') return this.checkerTexture();
+    const cached = this.surfTexCache.get(kind);
+    if (cached) return cached;
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    if (kind === 'grass') {
+      ctx.fillStyle = '#e9efdf';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 46; i++) {
+        const g = 200 + Math.floor(Math.random() * 40);
+        ctx.fillStyle = `rgb(${g - 22},${g},${g - 30})`;
+        ctx.beginPath();
+        ctx.ellipse(Math.random() * 64, Math.random() * 64, 3 + Math.random() * 6, 2 + Math.random() * 4, Math.random() * 3, 0, 7);
+        ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      for (let i = 0; i < 22; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+    } else if (kind === 'stone') {
+      ctx.fillStyle = '#9a9a9a';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let row = 0; row < 2; row++) {
+        const off = row % 2 === 0 ? 0 : 16;
+        for (let cx = -1; cx < 3; cx++) {
+          const v = 215 + Math.floor(Math.random() * 25);
+          ctx.fillStyle = `rgb(${v},${v},${v + 4})`;
+          ctx.fillRect(cx * 32 + off + 2, row * 32 + 2, 28, 28);
+          ctx.fillStyle = 'rgba(120,120,120,0.35)';
+          ctx.fillRect(cx * 32 + off + 2, row * 32 + 26, 28, 4); // bottom shade
+        }
+      }
+    } else if (kind === 'wood') {
+      for (let p = 0; p < 4; p++) {
+        const v = 222 + Math.floor(Math.random() * 22);
+        ctx.fillStyle = `rgb(${v},${v - 14},${v - 34})`;
+        ctx.fillRect(p * 16, 0, 16, 64);
+        ctx.strokeStyle = 'rgba(120,90,60,0.5)';
+        ctx.lineWidth = 1;
+        for (let g = 0; g < 3; g++) {
+          ctx.beginPath();
+          const gx = p * 16 + 3 + g * 5;
+          ctx.moveTo(gx, 0);
+          ctx.bezierCurveTo(gx + 2, 20, gx - 2, 42, gx + 1, 64);
+          ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(90,70,50,0.8)';
+        ctx.fillRect(p * 16, 0, 1, 64); // plank seam
+        ctx.fillRect(p * 16 + 6, 6, 2, 2); // nails
+        ctx.fillRect(p * 16 + 6, 56, 2, 2);
+      }
+    } else {
+      // sand: pale speckle
+      ctx.fillStyle = '#f2ecd8';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 90; i++) {
+        const v = 190 + Math.floor(Math.random() * 50);
+        ctx.fillStyle = `rgb(${v},${v - 8},${v - 30})`;
+        ctx.fillRect(Math.random() * 63, Math.random() * 63, 1.5, 1.5);
+      }
+      ctx.strokeStyle = 'rgba(180,160,120,0.35)';
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        const y = 8 + i * 16;
+        ctx.moveTo(0, y);
+        ctx.bezierCurveTo(20, y + 4, 44, y - 4, 64, y);
+        ctx.stroke();
+      }
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter;
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    this.surfTexCache.set(kind, tex);
+    return tex;
+  }
+
+  // Per-deck clone of a base material with a surface texture tiled on it.
+  private patterned(mat: THREE.Material, w: number, d: number, kind = 'checker'): THREE.MeshLambertMaterial {
     const m = (mat as THREE.MeshLambertMaterial).clone();
-    const tex = this.checkerTexture().clone();
-    tex.repeat.set(Math.max(1, Math.round(w / 4)), Math.max(1, Math.round(d / 4)));
+    const tex = this.surfaceTexture(kind).clone();
+    const density = kind === 'grass' ? 7 : kind === 'wood' ? 3.2 : kind === 'sand' ? 6 : 4;
+    tex.repeat.set(Math.max(1, Math.round(w / density)), Math.max(1, Math.round(d / density)));
     tex.needsUpdate = true;
     m.map = tex;
     return m;
@@ -177,6 +381,7 @@ export class Level {
     else if (courseId === 5) this.buildGauntlet();
     else if (courseId === 6) this.buildBoulderDash();
     else this.buildTestCourse();
+    this.buildAmbient(); // theme is set by the builder above
   }
 
   dispose(): void {
@@ -297,6 +502,199 @@ export class Level {
         st.mesh.rotation.x += 2 * dt;
         if (p.y < this.killY - 20) b.falling = false;
       }
+    }
+
+    // Moving platforms: sine slide along one axis; the player reads lastDelta
+    // at the top of their step so they ride along.
+    for (const m of this.movers) {
+      const s = Math.sin(this.time * m.speed + m.phase) * m.amp;
+      m.lastDelta
+        .copy(m.base)
+        .addScaledVector(m.axisV, s)
+        .sub(m.mesh.position);
+      m.mesh.position.add(m.lastDelta);
+    }
+
+    // Crumble pads: shake, drop, (maybe) regrow.
+    for (const c of this.crumbles) {
+      if (c.state === 'idle') continue;
+      c.t += dt;
+      if (c.state === 'shake') {
+        c.mesh.position.x = c.base.x + Math.sin(c.t * 55) * 0.06;
+        c.mesh.position.y = c.base.y - c.t * 0.25;
+        if (c.t > 0.35) {
+          c.state = 'fall';
+          c.t = 0;
+          if (Math.abs(c.base.z - this.playerPos.z) < 45) sfx.play('crunch', 0.45, 0.9);
+        }
+      } else if (c.state === 'fall') {
+        c.mesh.position.y -= 30 * c.t * dt;
+        c.mesh.rotation.x += 1.6 * dt;
+        c.mesh.rotation.z += 0.9 * dt;
+        if (c.t > 1.1) {
+          c.state = 'gone';
+          c.t = 0;
+          c.mesh.visible = false;
+          c.mesh.position.y = c.base.y - 400; // park far below any raycast
+        }
+      } else if (c.state === 'gone' && c.regen !== null && c.t > c.regen) {
+        c.state = 'idle';
+        c.mesh.visible = true;
+        c.mesh.position.copy(c.base);
+        c.mesh.rotation.set(0, 0, 0);
+      }
+    }
+
+    // Crushers: hang -> slam -> rest -> rise, on a loop.
+    for (const cr of this.crushers) {
+      const t = (this.time + cr.phase) % cr.cycle;
+      const f = t / cr.cycle;
+      let y: number;
+      cr.crushing = false;
+      if (f < 0.38) {
+        y = cr.restY + cr.raise; // hanging, shadow of doom below
+        cr.slammed = false;
+      } else if (f < 0.46) {
+        y = cr.restY + cr.raise * (1 - (f - 0.38) / 0.08); // the slam
+        cr.crushing = true;
+      } else if (f < 0.7) {
+        y = cr.restY; // resting: a solid wall
+        if (!cr.slammed) {
+          cr.slammed = true;
+          if (Math.abs(cr.z - this.playerPos.z) < 45) sfx.play('crunch', 0.8, 0.5);
+        }
+      } else {
+        y = cr.restY + cr.raise * ((f - 0.7) / 0.3); // slow menacing rise
+      }
+      cr.mesh.position.y = y;
+      cr.box.setFromCenterAndSize(
+        new THREE.Vector3(cr.x, y, cr.z),
+        new THREE.Vector3(cr.w, cr.h, cr.d),
+      );
+    }
+
+    // Pendulum blades: swing across the corridor; the bob is a kill box.
+    this.killBoxes.length = 0;
+    for (const pd of this.pendulums) {
+      const a = Math.sin(this.time * pd.speed + pd.phase) * pd.amp;
+      pd.pivot.rotation.z = a;
+      const bx = pd.pivot.position.x + Math.sin(a) * pd.len;
+      const by = pd.pivot.position.y - Math.cos(a) * pd.len;
+      pd.box.setFromCenterAndSize(
+        new THREE.Vector3(bx, by, pd.pivot.position.z),
+        new THREE.Vector3(2.0, 2.0, 1.6),
+      );
+      this.killBoxes.push(pd.box);
+      const sign = Math.sign(a) || 1;
+      if (sign !== pd.lastSign) {
+        pd.lastSign = sign;
+        const dz = Math.abs(pd.pivot.position.z - this.playerPos.z);
+        const dx = Math.abs(pd.pivot.position.x - this.playerPos.x);
+        if (dz < 26 && dx < 26) sfx.play('woosh', 0.28, 1.25);
+      }
+    }
+
+    // Arena lock: gates up, waves in, gates down when the pit is clear.
+    const ar = this.arena;
+    if (ar) {
+      if (ar.state === 'idle' && ar.zone.containsPoint(this.playerPos)) {
+        ar.state = 'active';
+        ar.wave = 0;
+        ar.waveT = 0.4;
+        for (const g of ar.gates) this.walls.push(g.box);
+        sfx.play('railLand', 0.9, 0.6);
+      }
+      if (ar.state === 'active') {
+        if (ar.waveT > 0) {
+          // countdown, then the wave drops in
+          ar.waveT -= dt;
+          if (ar.waveT <= 0) {
+            for (const e of ar.waves[ar.wave]) {
+              e.alive = true;
+              e.group.visible = true;
+              e.group.scale.setScalar(1);
+            }
+            sfx.play('enemyDown', 0.6, 1.2);
+            ar.waveT = 0;
+          }
+        } else if (!ar.waves[ar.wave].some((e) => e.alive)) {
+          ar.wave++;
+          if (ar.wave >= ar.waves.length) {
+            ar.state = 'done';
+            for (const g of ar.gates) {
+              const i = this.walls.indexOf(g.box);
+              if (i >= 0) this.walls.splice(i, 1);
+            }
+            sfx.play('lifeGet', 0.9);
+          } else {
+            ar.waveT = 0.7; // breather before the next wave
+          }
+        }
+      }
+      // gate meshes chase their target height
+      for (const g of ar.gates) {
+        const target = ar.state === 'active' ? g.upY : g.downY;
+        g.mesh.position.y += THREE.MathUtils.clamp(target - g.mesh.position.y, -9 * dt, 9 * dt);
+      }
+    }
+
+    // Collapse wave: once triggered, the bridge falls away toward the exit —
+    // slightly slower than a committed sprint, so hesitation is what kills.
+    const cw = this.collapse;
+    if (cw) {
+      if (
+        !cw.active &&
+        this.playerPos.z < cw.triggerZ &&
+        this.playerPos.z > cw.endZ &&
+        this.playerPos.x > cw.xMin &&
+        this.playerPos.x < cw.xMax
+      ) {
+        cw.active = true;
+        cw.frontZ = cw.startZ;
+      }
+      if (cw.active) {
+        cw.frontZ -= cw.speed * dt;
+        for (const p of cw.planks) {
+          if (p.state === 'idle' && p.base.z > cw.frontZ) {
+            p.state = 'shake';
+            p.t = 0;
+          }
+        }
+        if (cw.frontZ < cw.endZ - 10) cw.active = false; // spent
+      }
+    }
+
+    // Scrolling pit textures (water/lava) drift forever.
+    for (const s of this.scrollTexes) {
+      s.tex.offset.x = (s.tex.offset.x + s.su * dt) % 1;
+      s.tex.offset.y = (s.tex.offset.y + s.sv * dt) % 1;
+    }
+
+    // Ambient weather: leaves/embers/dust drifting in a box around the player.
+    if (this.ambient) {
+      const pts = this.ambient.points;
+      const attr = pts.geometry.attributes.position as THREE.BufferAttribute;
+      const drift = this.ambient.drift;
+      const [wx, wy, wz] = this.theme.particleWind;
+      const px = this.playerPos.x;
+      const py = this.playerPos.y;
+      const pz = this.playerPos.z;
+      const R = 34;
+      const RY = 18;
+      for (let i = 0; i < attr.count; i++) {
+        let x = attr.getX(i) + (wx + drift[i * 3]) * dt + Math.sin(this.time * 0.9 + i) * 0.5 * dt;
+        let y = attr.getY(i) + (wy + drift[i * 3 + 1]) * dt;
+        let z = attr.getZ(i) + (wz + drift[i * 3 + 2]) * dt;
+        // wrap into the box around the player
+        if (x < px - R) x += R * 2;
+        else if (x > px + R) x -= R * 2;
+        if (y < py - 6) y += RY + 6;
+        else if (y > py + RY) y -= RY + 6;
+        if (z < pz - R) z += R * 2;
+        else if (z > pz + R) z -= R * 2;
+        attr.setXYZ(i, x, y, z);
+      }
+      attr.needsUpdate = true;
     }
 
     for (const e of this.enemies) {
@@ -533,8 +931,8 @@ export class Level {
     }
 
     for (const e of this.enemies) {
-      e.alive = true;
-      e.group.visible = true;
+      e.alive = e.arenaWave === undefined; // arena waves wait to be called
+      e.group.visible = e.alive;
       e.group.scale.setScalar(1);
       e.group.rotation.set(0, 0, 0);
       e.flungT = undefined;
@@ -573,6 +971,32 @@ export class Level {
       this.currentSpawn.copy(this.spawnPos);
     }
 
+    // Crumble pads grow back whole; the collapse wave re-arms.
+    for (const c of this.crumbles) {
+      c.state = 'idle';
+      c.t = 0;
+      c.mesh.visible = true;
+      c.mesh.position.copy(c.base);
+      c.mesh.rotation.set(0, 0, 0);
+    }
+    if (this.collapse) {
+      this.collapse.active = false;
+      this.collapse.frontZ = this.collapse.startZ;
+    }
+
+    // Arena: unlock, sink the gates, waves back on standby.
+    if (this.arena) {
+      const ar = this.arena;
+      ar.state = 'idle';
+      ar.wave = 0;
+      ar.waveT = 0;
+      for (const g of ar.gates) {
+        const i = this.walls.indexOf(g.box);
+        if (i >= 0) this.walls.splice(i, 1);
+        g.mesh.position.y = g.downY;
+      }
+    }
+
     // Boulder: back to its mark a fair headstart behind wherever you respawn,
     // waiting for you to move before it rolls again.
     if (this.boulder) {
@@ -599,7 +1023,7 @@ export class Level {
     const matFinish = new THREE.MeshLambertMaterial({ color: 0x9a8f6e });
 
     // --- decks (N. Sanity flow: beach -> funnel -> corridors -> finish) ---
-    this.slab('beach', 14, -40, 0, 20, matBeach, false);
+    this.slab('beach', 14, -40, 0, 20, matBeach, false, 0, 'sand');
 
     // --- practice pen: walled rail playground east of the beach ---
     const penMesh = new THREE.Mesh(
@@ -671,13 +1095,7 @@ export class Level {
     this.jungle('finish run', -966, -1025, -22, 12, matFinish);
 
     // --- death pit floor (visual only, below killY) ---
-    const pit = new THREE.Mesh(
-      new THREE.PlaneGeometry(1400, 1400),
-      new THREE.MeshBasicMaterial({ color: 0x461420 }),
-    );
-    pit.rotation.x = -Math.PI / 2;
-    pit.position.set(0, -60, -420);
-    this.root.add(pit);
+    this.pitPlane('lava', -60, 0, -420);
 
     // --- grind rails ---
     const rail1 = new Rail([
@@ -771,6 +1189,13 @@ export class Level {
     this.crate(37, 0, -12, 'bouncy');
     this.towerClimb(-8, 0, 4, 34); // staggered tower: four stories, crates up top
     this.stairClimb(10, 0, 7, 13, 7); // flush guarded stair: seven stories, hard to fall off
+    // Motion-toolkit sandbox: ride the mover, hop the crumble pads, time the
+    // crusher, duck the pendulum guarding the beach-pen doorway.
+    this.mover(20, 1.2, -36, 3.2, 3.2, 'x', 3.2, 0.9);
+    this.crumblePad(26, 1.2, -30, 3, 3);
+    this.crumblePad(26, 1.2, -26, 3, 3);
+    this.crusher(24, 0, 8, 4.5, 3, 3.4, 0);
+    this.pendulum(14, 7, 8, 5.2, 1.0, 1.7);
     // Halfpipe: bouncy arrow crate launches you up to the lip rails.
     this.crate(-2.2, -13.5, -735, 'bouncy');
     this.crate(0, -13.5, -755); // wumpa snack on the floor line
@@ -863,18 +1288,30 @@ export class Level {
     this.killY = -30;
     this.finishZ = -440;
     this.endWallZ = -464;
+    this.theme = {
+      skyTop: '#3f7edb',
+      skyBottom: '#c8e8f4',
+      sunColorHex: '#fff8e0',
+      sunU: 0.68,
+      sunV: 0.18,
+      stars: false,
+      fog: 0x9fc4d8,
+      fogNear: 45,
+      fogFar: 210,
+      hemiSky: 0xd8ecff,
+      hemiGround: 0x8a7a5a,
+      hemiI: 1.15,
+      sunColor: 0xfff6e0,
+      sunI: 1.6,
+      particleColor: 0xffffff,
+      particleWind: [0.9, -0.4, 0.4],
+    };
 
     // water far below the gaps
-    const sea = new THREE.Mesh(
-      new THREE.PlaneGeometry(900, 900),
-      new THREE.MeshBasicMaterial({ color: 0x1a3448 }),
-    );
-    sea.rotation.x = -Math.PI / 2;
-    sea.position.set(0, -40, -230);
-    this.root.add(sea);
+    this.pitPlane('water', -40, 0, -230, 900);
 
     // beach start (walled at the back and sides, like the cove)
-    this.slab('beach', 14, -30, 0, 22, matSand, false);
+    this.slab('beach', 14, -30, 0, 22, matSand, false, 0, 'sand');
     this.wall(0, 15.5, 26, 1, 0);
     this.wall(-11.5, -8, 1, 48, 0);
     this.wall(11.5, -8, 1, 48, 0);
@@ -947,7 +1384,7 @@ export class Level {
     // the temple stair: four flush guarded stories over the water
     const climb = this.stairClimb(-312, 1.5, 4);
     const top = climb.topY;
-    this.slab('temple top', climb.endZ - 2, -420, top, 12, matStone);
+    this.slab('temple top', climb.endZ - 2, -420, top, 12, matStone, true, 0, 'stone');
     this.enemy(-4, 4, top, -370, 6);
     this.crate(2, top, -382, 'mask');
     this.checkpoint(top, -390);
@@ -955,7 +1392,7 @@ export class Level {
     this.crate(4.5, top, -405, 'nitro');
     this.crate(0, top, -405);
 
-    this.slab('exit', -420, -470, top, 14, matSand);
+    this.slab('exit', -420, -470, top, 14, matSand, true, 0, 'sand');
     this.finishGate(top, this.finishZ);
     this.endWall(top);
   }
@@ -970,18 +1407,30 @@ export class Level {
     this.killY = -20;
     this.finishZ = -415;
     this.endWallZ = -428;
+    this.theme = {
+      skyTop: '#472a5e',
+      skyBottom: '#e07840',
+      sunColorHex: '#ffcf90',
+      sunU: 0.5,
+      sunV: 0.6,
+      stars: true,
+      fog: 0x54344a,
+      fogNear: 35,
+      fogFar: 185,
+      hemiSky: 0xd8a8c0,
+      hemiGround: 0x402828,
+      hemiI: 1.0,
+      sunColor: 0xffb070,
+      sunI: 1.5,
+      particleColor: 0xffc8a0,
+      particleWind: [0.5, -0.5, 0.2],
+    };
 
     // hazy ground far below the wall
-    const haze = new THREE.Mesh(
-      new THREE.PlaneGeometry(900, 900),
-      new THREE.MeshBasicMaterial({ color: 0x2b2137 }),
-    );
-    haze.rotation.x = -Math.PI / 2;
-    haze.position.set(0, -32, -220);
-    this.root.add(haze);
+    this.pitPlane('void', -32, 0, -220, 900);
 
     // base of the gate
-    this.slab('gate base', 10, -20, 0, 14, matWood, false);
+    this.slab('gate base', 10, -20, 0, 14, matWood, false, 0, 'wood');
     this.wall(0, 11, 16, 1, 0);
     this.wall(-7.5, -5, 1, 32, 0);
     this.wall(7.5, -5, 1, 32, 0);
@@ -994,7 +1443,7 @@ export class Level {
     this.ramp('rampart A2', -66, 4.4, -100, 8, 8, matRamp);
 
     // rest platform 1
-    this.slab('landing 1', -100, -125, 8, 10, matWood2);
+    this.slab('landing 1', -100, -125, 8, 10, matWood2, true, 0, 'wood');
     this.checkpoint(8, -110);
     this.crate(-3, 8, -105);
     this.crate(3, 8, -105);
@@ -1016,7 +1465,7 @@ export class Level {
     this.root.add(scaffold.object);
 
     // rest platform 2
-    this.slab('landing 2', -205, -230, 18, 10, matWood2);
+    this.slab('landing 2', -205, -230, 18, 10, matWood2, true, 0, 'wood');
     this.checkpoint(18, -212);
     for (let i = 0; i < 7; i++) this.crate(-3.9 + i * 1.3, 18, -221); // plank wall
     this.crate(-3, 18, -214, 'mask');
@@ -1031,12 +1480,12 @@ export class Level {
       [-272, 26.8],
       [-286, 29],
     ];
-    for (const [z0, y] of steps) this.slab('step', z0, z0 - 8, y, 8, matWood);
+    for (const [z0, y] of steps) this.slab('step', z0, z0 - 8, y, 8, matWood, true, 0, 'wood');
     this.crate(0, 22.4, -248, 'bouncy');
     this.crate(2, 20.2, -234);
 
     // nitro rampart along the top, with a high bypass rail beside it
-    this.slab('high rampart', -294, -360, 29, 8, matWood2);
+    this.slab('high rampart', -294, -360, 29, 8, matWood2, true, 0, 'wood');
     this.crate(0, 29, -310, 'nitro');
     this.crate(0, 29, -325, 'nitro');
     this.crate(0, 29, -340, 'nitro');
@@ -1049,7 +1498,7 @@ export class Level {
 
     // crest of the gate
     this.ramp('crest ramp', -360, 29, -380, 33, 10, matRamp);
-    this.slab('gate top', -380, -430, 33, 14, matWood);
+    this.slab('gate top', -380, -430, 33, 14, matWood, true, 0, 'wood');
     this.checkpoint(33, -390);
     this.crate(0, 33, -395, 'mask');
     this.crate(-4, 33, -400);
@@ -1071,6 +1520,24 @@ export class Level {
     this.killY = -20;
     this.finishZ = -104;
     this.endWallZ = -116;
+    this.theme = {
+      skyTop: '#57806d',
+      skyBottom: '#b8d0c0',
+      sunColorHex: '#f0f8e0',
+      sunU: 0.35,
+      sunV: 0.28,
+      stars: false,
+      fog: 0x7a9484,
+      fogNear: 24,
+      fogFar: 135,
+      hemiSky: 0xd8e8d8,
+      hemiGround: 0x4a5a48,
+      hemiI: 1.1,
+      sunColor: 0xe8f0d8,
+      sunI: 1.1,
+      particleColor: 0xd8e8d8,
+      particleWind: [0.8, -0.3, 0.3],
+    };
 
     // the turned stretch: path runs +X between the two corner decks
     this.zones = [{ xMin: 9, xMax: 146, zMin: -62, zMax: -38, dir: 'E' }];
@@ -1082,13 +1549,7 @@ export class Level {
     );
     cliff.position.set(88, 8, -64);
     this.root.add(cliff);
-    const pit = new THREE.Mesh(
-      new THREE.PlaneGeometry(900, 900),
-      new THREE.MeshBasicMaterial({ color: 0x1c1220 }),
-    );
-    pit.rotation.x = -Math.PI / 2;
-    pit.position.set(80, -24, -60);
-    this.root.add(pit);
+    this.pitPlane('void', -24, 80, -60, 900);
 
     // corridor intro heading down -Z
     this.slab('start', 16, -12, 0, 10, matA, false);
@@ -1210,7 +1671,7 @@ export class Level {
       pos.setY(i, h);
     }
     geo.computeVertexNormals();
-    const mesh = new THREE.Mesh(geo, this.patterned(mat, width, depth));
+    const mesh = new THREE.Mesh(geo, this.patterned(mat, width, depth, 'grass'));
     mesh.position.set(cx, baseY, cz);
     mesh.name = name;
     this.root.add(mesh);
@@ -1239,6 +1700,228 @@ export class Level {
       );
       this.rails.push(lip);
     }
+  }
+
+  // ---------------------------------------------------------- motion kit --
+
+  moverDelta(id: number): THREE.Vector3 {
+    return this.movers[id]?.lastDelta ?? new THREE.Vector3();
+  }
+
+  touchCrumble(id: number): void {
+    const c = this.crumbles[id];
+    if (c && c.state === 'idle') {
+      c.state = 'shake';
+      c.t = 0;
+    }
+  }
+
+  // Moving platform sliding along one axis on a sine.
+  private mover(
+    x: number,
+    topY: number,
+    z: number,
+    w: number,
+    d: number,
+    axis: 'x' | 'y' | 'z',
+    amp: number,
+    speed: number,
+    phase = 0,
+  ): void {
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(w, 0.8, d),
+      this.patterned(
+        new THREE.MeshLambertMaterial({ color: 0x8a96c8, emissive: 0x141c38 }),
+        w,
+        d,
+        'stone',
+      ),
+    );
+    mesh.position.set(x, topY - 0.4, z);
+    mesh.name = 'moving platform';
+    mesh.userData.moverId = this.movers.length;
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+    const axisV = axis === 'x' ? new THREE.Vector3(1, 0, 0) : axis === 'y' ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 0, 1);
+    this.movers.push({
+      mesh,
+      base: mesh.position.clone(),
+      axisV,
+      amp,
+      speed,
+      phase,
+      lastDelta: new THREE.Vector3(),
+    });
+  }
+
+  // Crumble pad: plank that shakes and drops when stood on.
+  private crumblePad(x: number, topY: number, z: number, w: number, d: number, regen: number | null = 3): Crumble {
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(w, 0.5, d),
+      this.patterned(new THREE.MeshLambertMaterial({ color: 0xa8845c }), w, d, 'wood'),
+    );
+    mesh.position.set(x, topY - 0.25, z);
+    mesh.name = 'crumble pad';
+    mesh.userData.crumbleId = this.crumbles.length;
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+    const c: Crumble = { mesh, base: mesh.position.clone(), state: 'idle', t: 0, regen };
+    this.crumbles.push(c);
+    return c;
+  }
+
+  // Timed crusher block over the path.
+  private crusher(x: number, deckY: number, z: number, w: number, d: number, cycle = 3.2, phase = 0, h = 3, raise = 4.4): void {
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(w, h, d),
+      this.patterned(new THREE.MeshLambertMaterial({ color: 0x8f8f98 }), w, h, 'stone'),
+    );
+    const restY = deckY + h / 2 - 0.1;
+    mesh.position.set(x, restY + raise, z);
+    mesh.name = 'crusher';
+    this.root.add(mesh);
+    this.crushers.push({
+      mesh,
+      box: new THREE.Box3(),
+      x,
+      z,
+      w,
+      d,
+      h,
+      restY,
+      raise,
+      cycle,
+      phase,
+      crushing: false,
+      slammed: false,
+    });
+  }
+
+  // Pendulum blade swinging across the corridor between two posts.
+  private pendulum(x: number, pivotY: number, z: number, len: number, amp = 1.0, speed = 1.6, phase = 0): void {
+    const mat = new THREE.MeshLambertMaterial({ color: 0x6a7078 });
+    const pivot = new THREE.Group();
+    pivot.position.set(x, pivotY, z);
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.22, len, 0.22), mat);
+    arm.position.y = -len / 2;
+    pivot.add(arm);
+    const bob = new THREE.Mesh(new THREE.SphereGeometry(0.95, 10, 8), new THREE.MeshLambertMaterial({ color: 0x565c66, emissive: 0x16181c }));
+    bob.position.y = -len;
+    pivot.add(bob);
+    this.root.add(pivot);
+    // gallows: two posts + a crossbeam so the thing reads at speed
+    const postMat = new THREE.MeshLambertMaterial({ color: 0x5c4a36 });
+    const postH = len + 2.5;
+    for (const side of [-1, 1]) {
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.6, postH, 0.6), postMat);
+      post.position.set(x + side * (len + 1.2), pivotY - postH / 2 + 0.8, z);
+      this.root.add(post);
+    }
+    const beam = new THREE.Mesh(new THREE.BoxGeometry((len + 1.2) * 2 + 0.6, 0.5, 0.7), postMat);
+    beam.position.set(x, pivotY + 0.3, z);
+    this.root.add(beam);
+    this.pendulums.push({ pivot, len, amp, speed, phase, box: new THREE.Box3(), lastSign: 1 });
+  }
+
+  // ---------------------------------------------------------- visual kit --
+
+  // Animated pit floor: scrolling water, lava, or drifting void haze.
+  private pitPlane(kind: 'water' | 'lava' | 'void', y: number, cx: number, cz: number, size = 1400): void {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    let su = 0.004;
+    let sv = 0.002;
+    if (kind === 'water') {
+      ctx.fillStyle = '#1d3d55';
+      ctx.fillRect(0, 0, 64, 64);
+      ctx.strokeStyle = 'rgba(120,190,220,0.55)';
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < 7; i++) {
+        ctx.beginPath();
+        const yy = 4 + i * 9;
+        ctx.moveTo(0, yy);
+        ctx.bezierCurveTo(16, yy + 5, 44, yy - 5, 64, yy);
+        ctx.stroke();
+      }
+      ctx.fillStyle = 'rgba(200,240,255,0.5)';
+      for (let i = 0; i < 12; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+      su = 0.008;
+      sv = 0.004;
+    } else if (kind === 'lava') {
+      ctx.fillStyle = '#1c0a08';
+      ctx.fillRect(0, 0, 64, 64);
+      ctx.strokeStyle = '#ff6a22';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 6; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 64, 0);
+        let px = Math.random() * 64;
+        for (let s = 1; s <= 4; s++) {
+          px += (Math.random() - 0.5) * 26;
+          ctx.lineTo(px, s * 16);
+        }
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#ffb050';
+      for (let i = 0; i < 10; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
+      su = 0.0035;
+      sv = 0.0018;
+    } else {
+      ctx.fillStyle = '#0c0a12';
+      ctx.fillRect(0, 0, 64, 64);
+      ctx.fillStyle = 'rgba(60,50,80,0.5)';
+      for (let i = 0; i < 8; i++) {
+        ctx.beginPath();
+        ctx.ellipse(Math.random() * 64, Math.random() * 64, 8 + Math.random() * 10, 5 + Math.random() * 6, 0, 0, 7);
+        ctx.fill();
+      }
+      su = 0.0016;
+      sv = 0.001;
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter;
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(size / 34, size / 34);
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(size, size),
+      new THREE.MeshBasicMaterial({ map: tex }),
+    );
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.set(cx, y, cz);
+    this.root.add(mesh);
+    this.scrollTexes.push({ tex, su, sv });
+  }
+
+  // Ambient weather: a wrapping cloud of leaves/embers/dust near the player.
+  private buildAmbient(): void {
+    if (window.location.search.includes('lite')) return; // headless smoke mode
+    const N = 130;
+    const pos = new Float32Array(N * 3);
+    const drift = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 68;
+      pos[i * 3 + 1] = Math.random() * 20 - 4;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 68;
+      drift[i * 3] = (Math.random() - 0.5) * 1.2;
+      drift[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
+      drift[i * 3 + 2] = (Math.random() - 0.5) * 1.2;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const mat = new THREE.PointsMaterial({
+      color: this.theme.particleColor,
+      size: 0.28,
+      transparent: true,
+      opacity: 0.6,
+      depthWrite: false,
+    });
+    const points = new THREE.Points(geo, mat);
+    points.frustumCulled = false;
+    this.root.add(points);
+    this.ambient = { points, drift };
   }
 
   // A fallen log across (part of) the path: hop it. Solid, never breaks.
@@ -1280,11 +1963,12 @@ export class Level {
     mat: THREE.Material,
     grindEdges = true,
     cx = 0,
+    tex = 'checker',
   ): THREE.Mesh {
     const depth = Math.abs(z1 - z0);
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(width, 1, depth),
-      this.patterned(mat, width, depth),
+      this.patterned(mat, width, depth, tex),
     );
     mesh.position.set(cx, topY - 0.5, (z0 + z1) / 2);
     mesh.name = name;
@@ -1349,7 +2033,7 @@ export class Level {
     const alpha = Math.atan2(dyn, -dzn);
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(width, 1, len),
-      this.patterned(mat, width, len),
+      this.patterned(mat, width, len, 'stone'),
     );
     mesh.rotation.x = alpha;
     const normal = new THREE.Vector3(0, -dzn, dyn);
@@ -1718,18 +2402,30 @@ export class Level {
     this.killY = -34;
     this.finishZ = -1200;
     this.endWallZ = -1212;
+    this.theme = {
+      skyTop: '#2a4a3a',
+      skyBottom: '#a8c86a',
+      sunColorHex: '#ffe8b0',
+      sunU: 0.72,
+      sunV: 0.28,
+      stars: false,
+      fog: 0x3a5040,
+      fogNear: 32,
+      fogFar: 185,
+      hemiSky: 0xc8e8b8,
+      hemiGround: 0x2c3820,
+      hemiI: 1.05,
+      sunColor: 0xffe8b0,
+      sunI: 1.45,
+      particleColor: 0x9fd06a,
+      particleWind: [0.7, -0.9, 0.4],
+    };
 
-    // pit floor far below everything
-    const pit = new THREE.Mesh(
-      new THREE.PlaneGeometry(1900, 1900),
-      new THREE.MeshBasicMaterial({ color: 0x2e1626 }),
-    );
-    pit.rotation.x = -Math.PI / 2;
-    pit.position.set(70, -44, -620);
-    this.root.add(pit);
+    // river far below everything
+    this.pitPlane('water', -44, 70, -620, 1900);
 
     // --- A: walled start + jungle approach ---------------------------------
-    this.slab('start', 14, -30, 0, 20, matSand, false);
+    this.slab('start', 14, -30, 0, 20, matSand, false, 0, 'sand');
     this.wall(0, 15, 22, 1, 0);
     this.wall(-10.5, -8, 1, 46, 0);
     this.wall(10.5, -8, 1, 46, 0);
@@ -1792,7 +2488,10 @@ export class Level {
     const bypass = new Rail([new THREE.Vector3(-4, 10.2, -396), new THREE.Vector3(-4, 10.4, -421)]);
     this.rails.push(bypass);
     this.root.add(bypass.object);
-    // gap: -400 .. -416 (long: carry speed, or grind the bypass line)
+    // gap: -400 .. -416 (long: carry speed, grind the bypass line, or trust
+    // the crumble pads — they won't hold long)
+    this.crumblePad(1.5, 9, -404, 4, 4.6);
+    this.crumblePad(-1.5, 9, -410.5, 4, 4.6);
     this.jungle('ridge C', -416, -450, 9, 11, matJungle);
     this.enemy(-4, 4, 9, -432, 7);
     this.crate(4.5, 9, -440, 'mask');
@@ -1811,10 +2510,15 @@ export class Level {
     this.crate(5, 8.2, -527, 'mask'); // bounce up for it
     this.enemy(-4, 4, 3, -510, 6);
     this.checkpoint(3, -534, -4);
+    // elevator up to a lookout shelf — drop onto the halfpipe lip from it
+    this.mover(-5, 8.5, -528, 3.4, 3.4, 'y', 4.6, 0.55);
+    this.slab('lookout', -534, -539, 13, 5, matPlat, false, -5, 'stone');
+    this.crate(-5, 13, -537, 'mystery');
+    this.fruitRow(-535, -538, 14.3, 2, -5);
 
     // --- E: halfpipe alley ---------------------------------------------------
     const hpBase = 3;
-    const hpFloor = this.slab('gauntlet pipe', -540, -595, hpBase, 6, matStone, false);
+    const hpFloor = this.slab('gauntlet pipe', -540, -595, hpBase, 6, matStone, false, 0, 'stone');
     hpFloor.userData.hpFloor = true;
     const profile: [number, number, number, number][] = [
       [3.0, 4.8, 0, 0.23],
@@ -1857,10 +2561,10 @@ export class Level {
     this.crate(2.2, hpBase, -575);
     this.pickup(-7, hpBase + 3.4, -555);
     this.pickup(7, hpBase + 3.4, -580);
-    this.slab('pipe exit', -595, -615, hpBase, 14, matStone);
+    this.slab('pipe exit', -595, -615, hpBase, 14, matStone, true, 0, 'stone');
 
     // --- F: the turn — floating ruins running east ---------------------------
-    this.slab('corner east', -615, -635, 3, 20, matPlat, false, 4);
+    this.slab('corner east', -615, -635, 3, 20, matPlat, false, 4, 'stone');
     this.wall(4, -636.5, 20, 1.5, 3);
     this.wall(-6.5, -625, 1.5, 20, 3);
     this.zones.push({ xMin: 9, xMax: 141, zMin: -635, zMax: -615, dir: 'E' });
@@ -1878,7 +2582,7 @@ export class Level {
     this.rails.push(pitRail);
     this.root.add(pitRail.object);
     this.fruitRowX(78, 96, 8.2, 5, CZ);
-    this.slabX('pit pad', 80, 88, 5.2, 9, matPlat, CZ);
+    this.mover(84, 5.4, CZ, 6, 7, 'x', 6, 0.55); // ferry pad under the rail
     this.slabX('ruin shelf', 100, 118, 6, 9, matJungle, CZ);
     this.crate(108, 6, CZ, 'nitro');
     this.enemy(103, 115, 6, CZ, 5);
@@ -1893,7 +2597,7 @@ export class Level {
     this.slabX('rejoin', 136, 141.5, 6, 9, matPlat, CZ);
 
     // --- G: corner back south, then the downhill slalom ----------------------
-    this.slab('corner south', -615, -635, 6, 20, matPlat, false, 152);
+    this.slab('corner south', -615, -635, 6, 20, matPlat, false, 152, 'stone');
     this.wall(162.5, -625, 1.5, 20, 6);
     this.wall(152, -613.5, 20, 1.5, 6);
     const dhY = (z: number): number => THREE.MathUtils.mapLinear(z, -635, -705, 6, -4);
@@ -1905,14 +2609,16 @@ export class Level {
     this.fruitRow(-648, -662, dhY(-655) + 1.3, 4, 152);
     this.fruitRow(-676, -690, dhY(-683) + 1.3, 4, 152);
     this.jungle('runout', -705, -760, -4, 12, matJungle, { dips: [-730] }, 152);
-    this.stone(149, -4, -710, -755, 9);
-    this.crate(152, -4, -738);
-    this.crate(152, -2.8, -738); // stack
-    this.enemy(148, 156, -4, -746, 6);
-    this.checkpoint(-4, -755, 152);
+    // twin crushers guard the runout, alternating: read the rhythm, pick a side
+    this.crusher(149.3, -4, -718, 5.6, 3, 3.4, 0);
+    this.crusher(154.7, -4, -736, 5.6, 3, 3.4, 1.7);
+    this.crate(152, -4, -748);
+    this.crate(152, -2.8, -748); // stack
+    this.enemy(148, 156, -4, -752, 6);
+    this.checkpoint(-4, -757, 152);
 
     // --- H: rail canyon — S-curve line left, rail-hop chain right ------------
-    this.slab('canyon ledge', -760, -775, -4, 14, matStone, true, 152);
+    this.slab('canyon ledge', -760, -775, -4, 14, matStone, true, 152, 'stone');
     // pit: -775 .. -860
     const sCurve = new Rail([
       new THREE.Vector3(149, -3, -772),
@@ -1936,12 +2642,14 @@ export class Level {
     this.crate(149.5, -2.9, -850, 'mask'); // floats at grind height on the S-curve
     this.fruitRow(-782, -808, -1.4, 4, 147.5);
     this.fruitRow(-826, -852, -1.8, 4, 158);
-    this.slab('canyon landing', -860, -885, -4, 14, matStone, true, 152);
+    this.slab('canyon landing', -860, -885, -4, 14, matStone, true, 152, 'stone');
     this.berms(-860, -885, -4, 14, 152);
-    this.checkpoint(-4, -880, 152);
+    // ARENA: land off the rails and the gates slam shut — two waves to clear
+    this.buildArena(152, -4, -861, -884, 14);
+    this.checkpoint(-4, -890, 152);
 
     // --- I: crate maze --------------------------------------------------------
-    this.slab('crate maze', -885, -960, -4, 18, matSand, false, 152);
+    this.slab('crate maze', -885, -960, -4, 18, matSand, false, 152, 'sand');
     this.wall(142.9, -922.5, 1.2, 75, -4);
     this.wall(161.1, -922.5, 1.2, 75, -4);
     // row 1: pass on the right (or spin the TNT)
@@ -1965,31 +2673,104 @@ export class Level {
     // --- J: vine bridges — pick a lane over the long pit ----------------------
     // left is broken mid-span, center is mined, right is logged. Edges grind.
     // pit: -960 .. -1050
-    this.slab('bridge left A', -960, -998, -4, 3.2, matWood, true, 146.5);
-    this.slab('bridge left B', -1010, -1050, -4, 3.2, matWood, true, 146.5);
-    this.slab('bridge center', -960, -1050, -4, 3.2, matWood, true, 152);
-    this.crate(151.3, -4, -985, 'nitro');
-    this.crate(152.7, -4, -1012, 'nitro');
-    this.slab('bridge right', -960, -1050, -4, 3.2, matWood, true, 157.5);
+    this.slab('bridge left A', -960, -998, -4, 3.2, matWood, true, 146.5, 'wood');
+    this.slab('bridge left B', -1010, -1050, -4, 3.2, matWood, true, 146.5, 'wood');
+    // center bridge: planks that collapse in a wave behind you once you
+    // commit past the trigger — sprint, don't sightsee
+    const planks: Crumble[] = [];
+    for (let i = 0; i < 12; i++) {
+      planks.push(this.crumblePad(152, -4, -963.7 - i * 7.5, 3.2, 7.3, null));
+    }
+    this.collapse = {
+      planks,
+      xMin: 149.6,
+      xMax: 154.4,
+      triggerZ: -974,
+      endZ: -1050,
+      startZ: -958,
+      frontZ: -958,
+      speed: 15,
+      active: false,
+    };
+    this.slab('bridge right', -960, -1050, -4, 3.2, matWood, true, 157.5, 'wood');
     this.log(155.9, 159.1, -4, -980);
     this.log(155.9, 159.1, -4, -1022);
     this.fruitRow(-966, -1044, -2.7, 8, 146.5);
     this.fruitRow(-970, -1040, -2.7, 6, 157.5);
-    this.slab('bridge landing', -1050, -1075, -4, 14, matStone, true, 152);
+    this.slab('bridge landing', -1050, -1075, -4, 14, matStone, true, 152, 'stone');
     this.checkpoint(-4, -1070, 152);
 
     // --- K: stone gauntlet + finish -------------------------------------------
     this.jungle('gauntlet A', -1075, -1130, -4, 11, matJungle2, { dips: [-1102] }, 152);
-    this.stone(149.5, -4, -1080, -1126, 10);
-    this.stone(154.5, -4, -1080, -1126, 13);
+    this.stone(149.5, -4, -1080, -1102, 10);
+    this.stone(154.5, -4, -1080, -1102, 13);
+    // twin pendulum blades close out the stretch, out of phase
+    this.pendulum(152, 2.0, -1112, 4.6, 1.15, 1.8);
+    this.pendulum(152, 2.0, -1122, 4.6, 1.15, 1.5, Math.PI);
     // gap: -1130 .. -1142
     this.jungle('gauntlet B', -1142, -1185, -4, 11, matJungle, {}, 152);
     this.enemy(148.5, 155.5, -4, -1160, 7);
     this.enemy(149, 155, -4, -1175, 9);
     this.fruitRow(-1148, -1180, -2.6, 6, 152);
-    this.slab('finish run', -1185, -1215, -4, 14, matFinish, true, 152);
+    this.slab('finish run', -1185, -1215, -4, 14, matFinish, true, 152, 'stone');
     this.finishGate(-4, this.finishZ, 152);
     this.endWall(-4, 152);
+  }
+
+  // Arena lock: two gates and two waves of critters on an enclosed deck.
+  // Trigger zone sits well inside the gates so nobody gets pinched at entry.
+  private buildArena(cx: number, deckY: number, zNear: number, zFar: number, width: number): void {
+    const gates: { mesh: THREE.Mesh; upY: number; downY: number; box: THREE.Box3 }[] = [];
+    for (const gz of [zNear, zFar]) {
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(width, 3.6, 1),
+        this.patterned(new THREE.MeshLambertMaterial({ color: 0x8a6034 }), width, 3.6, 'wood'),
+      );
+      const upY = deckY + 1.7;
+      const downY = deckY - 2.7;
+      mesh.position.set(cx, downY, gz);
+      this.root.add(mesh);
+      gates.push({
+        mesh,
+        upY,
+        downY,
+        box: new THREE.Box3().setFromCenterAndSize(
+          new THREE.Vector3(cx, deckY + 1.8, gz),
+          new THREE.Vector3(width, 4.2, 1.3),
+        ),
+      });
+    }
+    const mkWave = (idx: number, defs: [number, number, number, number][]): Enemy[] =>
+      defs.map(([x0, x1, z, speed]) => {
+        this.enemy(x0, x1, deckY, z, speed);
+        const e = this.enemies[this.enemies.length - 1];
+        e.arenaWave = idx;
+        e.alive = false;
+        e.group.visible = false;
+        return e;
+      });
+    const zm = (zNear + zFar) / 2;
+    this.arena = {
+      zone: new THREE.Box3(
+        new THREE.Vector3(cx - width / 2, deckY - 2, zFar + 5),
+        new THREE.Vector3(cx + width / 2, deckY + 4, zNear - 5),
+      ),
+      state: 'idle',
+      wave: 0,
+      waveT: 0,
+      waves: [
+        mkWave(0, [
+          [cx - 5, cx + 5, zm + 4, 6],
+          [cx - 4, cx + 4, zm - 5, 5],
+        ]),
+        mkWave(1, [
+          [cx - 5, cx + 5, zm + 6, 8],
+          [cx - 5, cx + 5, zm, 7],
+          [cx - 4, cx + 4, zm - 6, 9],
+        ]),
+      ],
+      gates,
+    };
   }
 
   // Level 7, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
@@ -2009,18 +2790,30 @@ export class Level {
     this.endWallZ = -470; // the far-end clamp doubles as the wall behind spawn
     this.spawnPos.set(0, 0.1, -448);
     this.currentSpawn.copy(this.spawnPos);
+    this.theme = {
+      skyTop: '#351114',
+      skyBottom: '#7a2818',
+      sunColorHex: '#ff6a3a',
+      sunU: 0.5,
+      sunV: 0.42,
+      stars: false,
+      fog: 0x461a14,
+      fogNear: 26,
+      fogFar: 150,
+      hemiSky: 0xd88a70,
+      hemiGround: 0x351410,
+      hemiI: 0.92,
+      sunColor: 0xff8a50,
+      sunI: 1.25,
+      particleColor: 0xff8a4a,
+      particleWind: [0.3, 1.4, 0.2], // rising embers
+    };
 
-    // pit floor
-    const pit = new THREE.Mesh(
-      new THREE.PlaneGeometry(1200, 1200),
-      new THREE.MeshBasicMaterial({ color: 0x2e1626 }),
-    );
-    pit.rotation.x = -Math.PI / 2;
-    pit.position.set(0, -40, -220);
-    this.root.add(pit);
+    // the floor of the world is lava — very motivating
+    this.pitPlane('lava', -40, 0, -220, 1200);
 
     // spawn deck — open behind, so you can SEE the thing waiting for you
-    this.slab('chase start', -440, -458, 0, 14, matSand, false);
+    this.slab('chase start', -440, -458, 0, 14, matSand, false, 0, 'sand');
     this.wall(-7.5, -449, 1, 18, 0);
     this.wall(7.5, -449, 1, 18, 0);
 
@@ -2055,7 +2848,7 @@ export class Level {
     this.crate(-4.8, 0, -60, 'nitro');
     this.fruitRow(-106, -52, 1.3, 8);
     // the boulder pit: -32 .. -45 — you jump it; the boulder can't
-    this.slab('escape', 14, -32, 0, 14, matSand);
+    this.slab('escape', 14, -32, 0, 14, matSand, true, 0, 'sand');
     this.wall(-7.5, -9, 1, 46, 0);
     this.wall(7.5, -9, 1, 46, 0);
     this.crate(-3, 0, -20, 'mask');
@@ -2136,6 +2929,24 @@ export class Level {
       (c) => new THREE.MeshLambertMaterial({ color: c }),
     );
     const mat = () => mats[Math.floor(Math.random() * mats.length)];
+    this.theme = {
+      skyTop: '#2a1a4a',
+      skyBottom: '#d05a8a',
+      sunColorHex: '#ffd0e0',
+      sunU: 0.25,
+      sunV: 0.48,
+      stars: true,
+      fog: 0x3a2450,
+      fogNear: 30,
+      fogFar: 165,
+      hemiSky: 0xc0a8e8,
+      hemiGround: 0x38203a,
+      hemiI: 1.0,
+      sunColor: 0xffb8d8,
+      sunI: 1.25,
+      particleColor: 0xff9fd0,
+      particleWind: [0.4, -0.6, 0.3],
+    };
     let z = 14;
     let y = 0;
     let minY = 0;
@@ -2253,13 +3064,7 @@ export class Level {
     this.finishGate(y, this.finishZ, xc);
     this.endWall(y, xc);
     this.killY = minY - 26;
-    const pit = new THREE.Mesh(
-      new THREE.PlaneGeometry(1400, 1400),
-      new THREE.MeshBasicMaterial({ color: 0x3a1a2e }),
-    );
-    pit.rotation.x = -Math.PI / 2;
-    pit.position.set(0, minY - 34, z / 2);
-    this.root.add(pit);
+    this.pitPlane('void', minY - 34, 0, z / 2, 1400);
   }
 
   private endWall(deckY: number, cx = 0): void {

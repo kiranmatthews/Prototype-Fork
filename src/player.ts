@@ -18,6 +18,8 @@ interface GroundHit {
   name: string;
   hpWall?: boolean; // halfpipe transition segment
   hpFloor?: boolean; // halfpipe flat — lateral movement is inertial carve here
+  moverId?: number; // standing on a moving platform: ride along with it
+  crumbleId?: number; // standing on a crumble pad: it starts breaking
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -314,6 +316,14 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    // Moving ground: ride along with the platform you're standing on (the
+    // platform advanced once in level.update since our last step — apply that
+    // delta before this step's movement so we stay glued). Crumble pads get
+    // told they've been stepped on.
+    if (this.grounded && this.groundHit) {
+      if (this.groundHit.moverId !== undefined) this.pos.add(level.moverDelta(this.groundHit.moverId));
+      if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
+    }
     level.playerPos.copy(this.pos); // the boulder chase reads this
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
@@ -1534,6 +1544,35 @@ export class Player {
       }
     }
 
+    // Swinging blades and other touch-kill hazards: same rules as stones.
+    for (const hz of level.killBoxes) {
+      if (this.playerBox.intersectsBox(hz)) {
+        if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
+        if (this.spendMask()) {
+          this.speed *= 0.5;
+          continue;
+        }
+        this.die();
+        return;
+      }
+    }
+
+    // Crushers: the block is a solid wall while resting or rising, and a
+    // press while it slams — get caught under it and you're flattened.
+    for (const cr of level.crushers) {
+      if (!this.playerBox.intersectsBox(cr.box)) continue;
+      if (cr.crushing) {
+        if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
+        if (this.spendMask()) {
+          this.speed *= 0.5;
+          continue;
+        }
+        this.die();
+        return;
+      }
+      this.pushOutOf(cr.box);
+    }
+
     // Solid walls: shove out, full stop, nothing breaks.
     for (const w of level.walls) {
       if (this.playerBox.intersectsBox(w)) {
@@ -1759,6 +1798,8 @@ export class Player {
       name: hit.object.name,
       hpWall: hit.object.userData.hpWall === true,
       hpFloor: hit.object.userData.hpFloor === true,
+      moverId: hit.object.userData.moverId as number | undefined,
+      crumbleId: hit.object.userData.crumbleId as number | undefined,
     };
   }
 

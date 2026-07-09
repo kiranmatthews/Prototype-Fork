@@ -18,10 +18,74 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x232634);
 scene.fog = new THREE.Fog(0x232634, 30, 170);
 
-scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x32281f, 1.0));
+const hemi = new THREE.HemisphereLight(0xbfd4ff, 0x32281f, 1.0);
+scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xfff2d8, 1.4);
 sun.position.set(30, 60, 20);
 scene.add(sun);
+
+// '?lite' strips the pure-visual layers (sky dome, ambient particles) — used
+// by the headless smoke autopilot, where software rendering can't afford the
+// fill rate and slow frames desync its wall-clock input scripting.
+const LITE = window.location.search.includes('lite');
+
+// Sky dome: a big inward-facing sphere that follows the camera, painted with
+// each level's gradient + sun + stars. Sits behind everything, ignores fog.
+const sky = new THREE.Mesh(
+  new THREE.SphereGeometry(370, 24, 12),
+  new THREE.MeshBasicMaterial({ side: THREE.BackSide, fog: false, depthWrite: false }),
+);
+sky.renderOrder = -1;
+sky.frustumCulled = false;
+sky.visible = !LITE;
+scene.add(sky);
+
+function makeSkyTexture(t: Level['theme']): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d')!;
+  const grad = ctx.createLinearGradient(0, 0, 0, 256);
+  grad.addColorStop(0, t.skyTop);
+  grad.addColorStop(1, t.skyBottom);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 256, 256);
+  if (t.stars) {
+    for (let i = 0; i < 80; i++) {
+      ctx.globalAlpha = 0.2 + Math.random() * 0.65;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(Math.random() * 256, Math.random() * 125, 1.5, 1.5);
+    }
+    ctx.globalAlpha = 1;
+  }
+  if (t.sunColorHex) {
+    const sx = t.sunU * 256;
+    const sy = t.sunV * 256;
+    const disc = ctx.createRadialGradient(sx, sy, 2, sx, sy, 44);
+    disc.addColorStop(0, t.sunColorHex);
+    disc.addColorStop(0.22, t.sunColorHex + 'bb');
+    disc.addColorStop(1, t.sunColorHex + '00');
+    ctx.fillStyle = disc;
+    ctx.fillRect(0, 0, 256, 256);
+  }
+  return new THREE.CanvasTexture(canvas);
+}
+
+function applyTheme(): void {
+  const t = level.theme;
+  scene.fog = new THREE.Fog(t.fog, t.fogNear, t.fogFar);
+  scene.background = new THREE.Color(t.fog);
+  hemi.color.set(t.hemiSky);
+  hemi.groundColor.set(t.hemiGround);
+  hemi.intensity = t.hemiI;
+  sun.color.set(t.sunColor);
+  sun.intensity = t.sunI;
+  const mat = sky.material as THREE.MeshBasicMaterial;
+  const old = mat.map;
+  mat.map = makeSkyTexture(t);
+  mat.needsUpdate = true;
+  if (old) old.dispose();
+}
 
 const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 400);
 
@@ -41,6 +105,7 @@ let currentCourse = Math.min(6, Math.max(0, Number(localStorage.getItem('protoLe
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
 player.respawn(level, true);
+applyTheme();
 
 function switchLevel(id: number): void {
   currentCourse = id;
@@ -48,6 +113,7 @@ function switchLevel(id: number): void {
   level.dispose();
   level = new Level(scene, id);
   player.respawn(level, true);
+  applyTheme();
   ui.setLevel(id);
   ui.showMessage(LEVEL_NAMES[id].toUpperCase(), '', 1400);
   (window as unknown as Record<string, unknown>).__game &&
@@ -204,6 +270,7 @@ function frame(): void {
 
   updateCamera(dt);
   updateAudio(dt);
+  sky.position.copy(camera.position);
 
   ui.updateBalance(player.state === 'grind', player.balance);
   const tricks = player.comboLabels;
