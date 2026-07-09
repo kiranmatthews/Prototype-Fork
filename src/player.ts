@@ -165,6 +165,11 @@ export class Player {
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
+    // YXZ so the yaw (facing travel) is the OUTERMOST rotation: the flip and
+    // pose pitch on rotation.x then happen in the FACING frame, so a front
+    // flip always tumbles along the direction you're actually moving — not
+    // about a fixed world axis (which made it look wrong going sideways/back).
+    this.bodyGroup.rotation.order = 'YXZ';
     // Slightly chunkier character, Crash-proportioned against the corridor.
     // Visual only — the collision box in tuning.ts is unchanged (reads as
     // slightly forgiving hitboxes, which suits the arcade feel).
@@ -1025,6 +1030,10 @@ export class Player {
       // Asymmetric fake gravity: heavier on the way down for a snappy arc.
       const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
       this.vVel -= g * dt;
+      // Terminal velocity: cap the fall so one step can never drop farther
+      // than the ground ray can reach up (2.5u) — otherwise a fast fall
+      // tunnels straight through a deck and you die under the level.
+      if (this.vVel < -CONST.maxFallSpeed) this.vVel = -CONST.maxFallSpeed;
     }
 
     // Crash-style directional air control: up/down stretches or shortens the
@@ -1295,7 +1304,10 @@ export class Player {
 
   private tryGrind(): boolean {
     if (this.regrindCd > 0 || !this.railCand) return false;
-    const s = this.railCand.sample;
+    // railCand was sampled at the START of this step; re-close on the CURRENT
+    // position so a fast step snaps onto the point actually under our feet,
+    // not where we were 1-2 units ago.
+    const s = this.railCand.rail.closest(this.pos);
     if (s.distance > TUNING.railSnapDistance) return false;
     // Deck-level grabs are the normal case (rails sit ~1u above the deck);
     // only block grabbing from far beneath the rail.
@@ -1307,9 +1319,13 @@ export class Player {
   private enterGrind(rail: Rail, sample: RailSample): void {
     this.grindRail = rail;
     this.grindT = sample.t;
-    // Ride the rail in whichever direction matches our along-course travel.
-    const along = sample.tangent.x * this.axisF.x + sample.tangent.z * this.axisF.z;
-    this.grindDir = along * Math.sign(this.speed || 1) >= 0 ? 1 : -1;
+    // How much of our actual velocity runs ALONG the rail. Free-heading skate
+    // lets you meet a rail at any angle — a perpendicular clip should give a
+    // gentle grind, never rocket you down the rail at full cross-speed.
+    const worldVx = this.axisF.x * this.speed;
+    const worldVz = this.axisF.z * this.speed;
+    const alongVel = worldVx * sample.tangent.x + worldVz * sample.tangent.z;
+    this.grindDir = alongVel >= 0 ? 1 : -1;
     this.state = 'grind';
     this.grounded = false;
     this.vVel = 0;
@@ -1347,10 +1363,10 @@ export class Player {
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     sfx.play('railLand', 0.8);
-    // The rail keeps the speed you arrived with (within reason) — hit it
-    // fast to cross fast; crawl onto it and you'll wobble across.
+    // The rail keeps the speed you carried ALONG it — hit it fast and aligned
+    // to cross fast; clip it sideways and you just barely creep across.
     this.grindVel = THREE.MathUtils.clamp(
-      Math.abs(this.speed),
+      Math.abs(alongVel),
       CONST.grindMinSpeed,
       TUNING.maxSpeed * CONST.maxOverspeed,
     );
@@ -2058,9 +2074,12 @@ export class Player {
     this.grindYawPose += (gy - this.grindYawPose) * Math.min(1, 12 * dt);
     const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, this.crawlPose * 0.6);
     const breathe = Math.sin(this.runTime * 2.3);
+    // Flip tuck: knees snap to the chest through the somersault (peaks mid-air).
+    const flipProg = this.flipTimer > 0 ? 1 - this.flipTimer / CONST.flipDuration : 0;
+    const flipTuck = flipProg > 0 ? Math.sin(flipProg * Math.PI) : 0;
     if (this.legL && this.legR) {
-      this.legL.rotation.x = swing;
-      this.legR.rotation.x = -swing;
+      this.legL.rotation.x = swing + 1.6 * flipTuck;
+      this.legR.rotation.x = -swing + 1.6 * flipTuck;
     }
 
     const raw = this.rawInput;
@@ -2104,7 +2123,8 @@ export class Player {
     // Knees up: legs shorten toward the hips while the body crouches deep,
     // and the board comes up with them, into the grabbing hand.
     if (this.legs) {
-      this.legs.scale.y = 1 - 0.5 * this.grabPose; // knees pull up to the chest
+      // knees pull up to the chest — for the grab tuck and the flip tuck
+      this.legs.scale.y = 1 - 0.5 * this.grabPose - 0.4 * flipTuck;
     }
     if (this.boardG) {
       this.boardG.position.y = 0.5 * this.grabPose;

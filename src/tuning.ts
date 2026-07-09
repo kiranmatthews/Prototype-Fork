@@ -147,7 +147,7 @@ export const CONST = {
   killY: -48, // fall below this = instant death
   respawnDelay: 0.7, // quick Crash-style respawn
   playerHalf: { x: 0.5, y: 0.9, z: 0.5 }, // capsule-ish AABB approximation
-  spinReach: 1.4, // extra horizontal hit reach while spinning
+  spinReach: 0.8, // extra horizontal hit reach while spinning (arm+board span)
   spinCooldown: 0.15,
   maskInvuln: 1.0, // grace after a mask absorbs a hit or bail
   uberTime: 12, // third mask = Crash-style invincibility for this long
@@ -180,6 +180,7 @@ export const CONST = {
   flipMinSpeed: 12, // below this speed a jump is a plain hop, no flip (Crash rules)
   slideCooldown: 0.25,
   slamSpeed: 46, // Circle+down pancake slam: authored fall rate
+  maxFallSpeed: 52, // terminal velocity: fall no faster than the ground ray can catch (no deck tunneling)
   slamHang: 0.32, // Wile E. Coyote beat: freeze in the air before the drop
   slamFlat: 0.5, // lie pancaked on the ground this long after impact
   crouchJumpMult: 1.35, // crouch (crawl) jumps launch this much higher

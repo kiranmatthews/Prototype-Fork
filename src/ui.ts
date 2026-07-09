@@ -236,7 +236,10 @@ export class UI {
       pop(this.livesEl);
       this.prevHud.lives = s.lives;
     }
-    if (s.comboMult > 0) {
+    // The trick readout only appears once a combo actually chains — a single
+    // trick isn't worth the callout (its points already land on the SCORE).
+    const chained = s.comboMult > 0 && (s.tricks.includes(' + ') || s.tricks.includes('…'));
+    if (chained) {
       this.trickPlate.style.display = 'block';
       this.trickLineEl.textContent = s.tricks.toUpperCase();
       this.trickTotalEl.textContent = `${s.comboPoints}  X${s.comboMult}`;
@@ -461,26 +464,24 @@ export class UI {
         color: #2e2f2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.35);
       }
 
-      /* THPS trick plate */
+      /* THPS trick readout — bare text, no plate, reads on any background */
       .hud-trickplate {
-        position: fixed; z-index: 10; bottom: 6%; left: 50%;
+        position: fixed; z-index: 10; bottom: 4%; left: 50%;
         transform: translateX(-50%); pointer-events: none; text-align: center;
-        background: linear-gradient(#8f948e, #63685f);
-        border: 3px solid #3d403c; border-radius: 8px; padding: 14px 44px 16px;
-        max-width: 82vw; min-width: 46vw;
-        box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), 6px 6px 0 rgba(0,0,0,0.5);
-        display: none;
+        max-width: 92vw; display: none;
       }
       .hud-trickline {
-        font: italic bold clamp(20px, 3.8vh, 36px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 2px;
-        color: #2e2f2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.35);
-        white-space: nowrap; overflow: hidden;
+        font: italic bold clamp(18px, 3.2vh, 30px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 2px; color: #ffe08a;
+        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
+          0 -2px 0 #3a1c05, 3px 3px 0 #000;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .hud-tricktotal {
-        font: italic 900 clamp(32px, 6vh, 56px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 5px;
-        color: #2e2f2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.4); margin-top: 4px;
+        font: italic 900 clamp(28px, 5vh, 46px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px; color: #ffb43a; transform: skewX(-6deg); margin-top: 2px;
+        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
+          0 -2px 0 #3a1c05, 4px 4px 0 #000;
       }
 
       .hud-msg {
@@ -506,7 +507,7 @@ export class UI {
         letter-spacing: 2px;
       }
       .hud-balance {
-        position: fixed; z-index: 10; left: 50%; bottom: 18%;
+        position: fixed; z-index: 10; left: 50%; bottom: 24%;
         transform: translateX(-50%); width: 240px; height: 14px;
         background: rgba(14, 16, 22, 0.8); border: 1px solid #3a4152;
         border-radius: 7px;
