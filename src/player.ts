@@ -93,6 +93,7 @@ export class Player {
   private teeterPhase = 0;
   private teeterPose = 0;
   private lastGrade = 0; // slope along travel; >0 downhill, <0 uphill
+  private shadowGroundY: number | null = null; // long-range floor probe for the blob shadow
   private groundHit: GroundHit | null = null;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
   private lean = 0;
@@ -233,6 +234,10 @@ export class Player {
       ? ({ ...input, moveY: input.moveX, moveX: -input.moveY } as unknown as Input)
       : input;
     input = ctl;
+
+    // The blob shadow is a landing indicator: probe far down for the floor
+    // every step, independent of the short gameplay ground-follow ray.
+    this.shadowGroundY = this.queryShadowGround(level);
 
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
@@ -1193,6 +1198,15 @@ export class Player {
     };
   }
 
+  // Long-range floor probe under the player — shadow/landing indicator only,
+  // never gameplay (queryGround stays short so ground-follow is unchanged).
+  private queryShadowGround(level: Level): number | null {
+    this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
+    this.raycaster.far = 120;
+    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    return hits.length > 0 ? hits[0].point.y : null;
+  }
+
   private syncVisual(input: Input, dt: number): void {
     this.group.position.copy(this.pos);
 
@@ -1294,12 +1308,13 @@ export class Player {
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = this.state !== 'dead' || this.bailing;
 
-    // Blob shadow: critical for judging gap landings.
-    if (this.groundHit && this.state !== 'dead') {
-      const h = Math.max(0, this.pos.y - this.groundHit.y);
+    // Blob shadow: persistent landing indicator, snapped to whatever floor is
+    // below no matter how high the air. Shrinks with height but never fades.
+    if (this.shadowGroundY !== null && this.state !== 'dead') {
+      const h = Math.max(0, this.pos.y - this.shadowGroundY);
       this.shadow.visible = true;
-      this.shadow.position.set(this.pos.x, this.groundHit.y + 0.03, this.pos.z);
-      this.shadow.scale.setScalar(THREE.MathUtils.clamp(1.3 - h * 0.06, 0.45, 1.3));
+      this.shadow.position.set(this.pos.x, this.shadowGroundY + 0.03, this.pos.z);
+      this.shadow.scale.setScalar(THREE.MathUtils.clamp(1.3 - h * 0.045, 0.4, 1.3));
     } else {
       this.shadow.visible = false; // no shadow = you are over the pit
     }
