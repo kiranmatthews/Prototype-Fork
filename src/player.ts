@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { Input } from './input';
 import { Crate, Level } from './level';
+import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'finished';
@@ -120,6 +121,7 @@ export class Player {
 
   private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
   private mapSide = false; // control mapping, latched across camera-zone flips
+  private haltCd = 0; // screech-sound cooldown for wall stops
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
@@ -286,6 +288,7 @@ export class Player {
     this.flipTimer = Math.max(0, this.flipTimer - dt);
     this.slideCd = Math.max(0, this.slideCd - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
+    this.haltCd = Math.max(0, this.haltCd - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.uberTimer = Math.max(0, this.uberTimer - dt);
@@ -331,6 +334,7 @@ export class Player {
         cap,
       );
       this.score(CONST.ptsSlide);
+      sfx.play('woosh', 0.7);
     }
 
     // Rail candidate is computed once per step: used for grind entry, the
@@ -440,8 +444,10 @@ export class Player {
     if (this.masks >= 2 || this.uberTimer > 0) {
       this.uberTimer = CONST.uberTime;
       this.emitSparks(14, 0xffd700, 2.5);
+      sfx.play('lifeGet', 1.0);
     } else {
       this.masks++;
+      sfx.play('maskGet', 0.9);
     }
   }
 
@@ -450,6 +456,7 @@ export class Player {
     if (this.masks <= 0) return false;
     this.masks--;
     this.invulnTimer = CONST.maskInvuln;
+    sfx.play('maskLoss', 0.9);
     this.emitSparks(8, 0xffd27a, 2);
     return true;
   }
@@ -471,6 +478,7 @@ export class Player {
     }
     this.crawling = false;
     this.vVel = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
+    sfx.play('ollie', 0.7);
     this.state = 'air';
     this.grounded = false;
     this.coyoteTimer = 0;
@@ -625,6 +633,7 @@ export class Player {
           this.state = 'air';
           this.grounded = false;
           this.vVel = Math.min(Math.abs(this.pipeVel) * TUNING.pipeLift, 36);
+          sfx.play('woosh2', 0.7);
           this.vertLock = true;
           this.pipeVel = 0;
           this.charging = false;
@@ -688,6 +697,7 @@ export class Player {
       this.charging = false;
       this.chargeTimer = 0;
       this.flipTimer = 0;
+      sfx.play('woosh3', 0.8);
     }
 
     if (this.slamActive) {
@@ -812,6 +822,7 @@ export class Player {
         this.grabSpinTotal = 0;
         this.emitSparks(10, 0xfff3d0, 2.2);
       }
+      if (Math.abs(this.speed) > TUNING.walkSpeed + 0.5) sfx.play('skateTransition', 0.5);
       // Safe landing = the combo is over: bank it on the spot.
       this.bankCombo();
       this.landingScoring = false;
@@ -828,6 +839,7 @@ export class Player {
     this.slamActive = false;
     this.slamSquash = CONST.slamSquashTime;
     this.score(CONST.ptsSlam);
+    sfx.play('crunch', 0.9);
     this.emitSparks(12, 0xd8e6ff, 2.5);
     for (const c of level.crates) {
       if (!c.alive || c.bouncy) continue;
@@ -912,6 +924,7 @@ export class Player {
       const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
       this.charging = false;
       this.chargeTimer = 0;
+      sfx.play('ollie', 0.7);
       this.exitGrind(THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t));
       if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
     }
@@ -969,6 +982,7 @@ export class Player {
     // Start the needle slightly off-center in a random direction.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
+    sfx.play('railLand', 0.8);
     // The rail keeps the speed you arrived with (within reason) — hit it
     // fast to cross fast; crawl onto it and you'll wobble across.
     this.grindVel = THREE.MathUtils.clamp(
@@ -1010,6 +1024,7 @@ export class Player {
     this.speed *= CONST.balanceBailSpeedKeep;
     this.regrindCd = CONST.regrindCooldown * 2;
     this.balance = 0;
+    sfx.play('takeDamage', 0.8);
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
@@ -1022,6 +1037,7 @@ export class Player {
     const canSpin = this.state === 'ride' || this.state === 'air' || this.state === 'grind';
     if (input.spinPressed && !this.spinning && this.spinCd <= 0 && canSpin) {
       this.spinTimer = TUNING.spinDuration;
+      sfx.play(['spin1', 'spin2', 'spin3'][Math.floor(Math.random() * 3)], 0.5);
       if (this.state === 'air' && this.vVel < 7) {
         // Tiny Crash-style stall. Never boosts an already-rising jump.
         this.vVel = Math.min(this.vVel + TUNING.spinAirCorrection, 7);
@@ -1048,6 +1064,7 @@ export class Player {
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
           this.grabPhase = 'enter';
           this.grabT = 0;
+          sfx.play('woosh2', 0.4);
         } else if (this.grabPhase === 'enter') {
           this.grabT += dt;
           if (this.grabT >= CONST.grabTransition) this.grabPhase = 'held';
@@ -1175,6 +1192,7 @@ export class Player {
             } else {
               level.lightFuse(c);
               this.vVel = TUNING.crateBounce;
+          sfx.play('crateBounce', 0.7);
               this.state = 'air';
               this.grounded = false;
               this.charging = false;
@@ -1199,6 +1217,7 @@ export class Player {
             this.charging = false;
             this.chargeTimer = 0;
             this.score(CONST.ptsBouncy);
+            sfx.play('bouncyBounce', 0.9);
           } else if (this.isBonking(c.box)) {
             this.vVel = -1; // head bonk on the underside
           } else {
@@ -1227,6 +1246,7 @@ export class Player {
           this.smashCrate(level, c);
           if (!this.slamActive) {
             this.vVel = TUNING.crateBounce;
+          sfx.play('crateBounce', 0.7);
             this.state = 'air';
             this.grounded = false;
           }
@@ -1258,6 +1278,7 @@ export class Player {
           this.score(CONST.ptsEnemy);
           if (!this.slamActive) {
             this.vVel = TUNING.crateBounce;
+          sfx.play('crateBounce', 0.7);
             this.state = 'air';
             this.grounded = false;
             this.charging = false;
@@ -1290,6 +1311,7 @@ export class Player {
           level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
           this.vVel = TUNING.crateBounce;
+          sfx.play('crateBounce', 0.7);
           this.state = 'air';
           this.grounded = false;
         } else if (this.isBonking(cp.box)) {
@@ -1311,11 +1333,13 @@ export class Player {
         p.mesh.visible = false;
         this.fruit++;
         this.score(CONST.ptsFruit);
+        sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][this.fruit % 3], 0.6);
       }
     }
 
     if (this.playerBox.intersectsBox(level.finishBox)) {
       this.bankCombo(); // whatever is pending counts at the line
+      sfx.play('lifeGet', 1.0);
       this.state = 'finished';
       this.onFinish(this.runTime);
     }
@@ -1363,6 +1387,7 @@ export class Player {
           if (dist < 1.0) {
             this.fruit++;
             this.score(CONST.ptsFruit);
+            sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][this.fruit % 3], 0.6);
           }
           f.age = -1;
           f.mesh.visible = false;
@@ -1392,6 +1417,10 @@ export class Player {
   // step's travel), so a fast approach can't teleport through the far face.
   // Chunky, deliberate, Crash-like full stop.
   private pushOutOf(box: THREE.Box3): void {
+    if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
+      sfx.play('skateHalt', 0.7);
+      this.haltCd = 0.5;
+    }
     const dx = this.pos.x - this.prevPos.x;
     const dz = this.pos.z - this.prevPos.z;
     const hx = CONST.playerHalf.x + 0.02;
@@ -1412,6 +1441,7 @@ export class Player {
     if (this.state === 'dead') return;
     this.state = 'dead';
     this.respawnTimer = CONST.respawnDelay;
+    sfx.play('death', 0.9);
     this.speed = 0;
     this.vVel = 0;
     // the pending combo dies with you; banked points survive

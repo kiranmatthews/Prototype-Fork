@@ -7,6 +7,7 @@ import { Level, LEVEL_NAMES } from './level';
 import { Player } from './player';
 import { UI } from './ui';
 import { TUNING, CONST } from './tuning';
+import { sfx } from './audio';
 
 const app = document.getElementById('app')!;
 const renderer = new THREE.WebGLRenderer({ antialias: false });
@@ -136,6 +137,31 @@ camera.position.y += CAM_HEIGHT;
 // --- fixed-step loop --------------------------------------------------------
 const clock = new THREE.Clock();
 let acc = 0;
+let stepTimer = 0;
+let stepIdx = 0;
+
+// Continuous audio: skating/grinding loops track state and speed; walking
+// pace gets footsteps.
+function updateAudio(dt: number): void {
+  const speedAbs = Math.abs(player.speed);
+  const onGround = player.state === 'ride' && player.grounded;
+  const skatingNow = onGround && speedAbs > TUNING.walkSpeed + 0.5;
+  sfx.setLoop(
+    'skate',
+    'skateLoop',
+    skatingNow,
+    Math.min(0.55, 0.15 + speedAbs / 90),
+    0.85 + speedAbs / 120,
+  );
+  sfx.setLoop('grind', 'grindLoop', player.state === 'grind', 0.55, 1);
+
+  stepTimer -= dt;
+  const walking = onGround && !player.sliding && speedAbs > 2 && speedAbs <= TUNING.walkSpeed + 0.5;
+  if (walking && stepTimer <= 0) {
+    sfx.play('footstep' + (1 + (stepIdx++ % 3)), 0.35);
+    stepTimer = 0.26;
+  }
+}
 
 function frame(): void {
   requestAnimationFrame(frame);
@@ -151,6 +177,7 @@ function frame(): void {
   }
 
   updateCamera(dt);
+  updateAudio(dt);
 
   ui.updateBalance(player.state === 'grind', player.balance);
   ui.setHUD({

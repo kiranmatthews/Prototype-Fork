@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { Rail } from './rails';
 import { CONST } from './tuning';
+import { sfx } from './audio';
 
 export interface Crate {
   mesh: THREE.Mesh;
@@ -217,6 +218,7 @@ export class Level {
       if (c.mesh.userData.digit !== digit) {
         c.mesh.userData.digit = digit;
         (c.mesh.material as THREE.MeshLambertMaterial).map = this.tntTexture(String(digit));
+        sfx.play(digit % 2 === 0 ? 'tntCount2' : 'tntCount', 0.7);
       }
       const urgency = 6 + (CONST.tntFuse - c.fuse) * 6;
       c.mesh.scale.setScalar(1 + Math.abs(Math.sin(this.time * urgency)) * 0.06);
@@ -279,6 +281,7 @@ export class Level {
   breakCrate(crate: Crate): void {
     crate.alive = false;
     this.pops.push({ obj: crate.mesh, t: 0.12 });
+    sfx.play(Math.random() < 0.5 ? 'crateBreak1' : 'crateBreak2', 0.8);
   }
 
   lightFuse(c: Crate): void {
@@ -298,6 +301,7 @@ export class Level {
     const radius = c.tnt ? CONST.blastRadius * CONST.tntBlastScale : CONST.blastRadius;
     const ex = { center, t: 0, radius, safe };
     this.explosions.push(ex);
+    sfx.play('tntBoom', 0.9);
     const outer = new THREE.Mesh(
       Level.blastGeo,
       new THREE.MeshBasicMaterial({ color: 0xff7a28, transparent: true, opacity: 0.55 }),
@@ -324,6 +328,7 @@ export class Level {
   killEnemy(enemy: Enemy): void {
     enemy.alive = false;
     this.pops.push({ obj: enemy.group, t: 0.12 });
+    sfx.play('enemyDown', 0.7);
   }
 
   // Broken (spun/stomped) like a normal box; banks the respawn point and a
@@ -339,6 +344,7 @@ export class Level {
     this.activeCheckpoint = cp;
     cp.mesh.scale.setScalar(1);
     this.pops.push({ obj: cp.mesh, t: 0.12 }); // break it like a crate
+    sfx.play('lifeGet', 0.8);
   }
 
   private restoreTntFace(c: Crate): void {
