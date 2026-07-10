@@ -12,6 +12,9 @@ export const TUNING = {
   jumpMinVelocity: 12.5, // quick-tap jump
   jumpChargeTime: 0.4, // hold this long for full power
   chargeBoost: 7, // THE skate acceleration: holding X builds speed toward maxSpeed
+  cruiseSpeed: 10, // baseline the board holds on its own while skating (no input)
+  chargeDecay: 4, // rate speed settles back to cruiseSpeed after releasing X
+  downhillMax: 21, // hard ceiling for speed EARNED downhill / in pipes (charge still tops at maxSpeed)
   slopeBoost: 26, // downhill acceleration, scaled by sin(slope along travel)
   uphillSlowdown: 20, // uphill deceleration, scaled by sin(slope along travel)
   pipePump: 16, // crouch-pump gain: X held on ground too steep to stand
@@ -43,6 +46,7 @@ export const TUNING = {
   balanceDrift: 1.25, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
   balanceSpeedEffect: 2, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
+  bailGrace: 0.35, // pegged-needle beat where slamming the stick back can still save the grind
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
@@ -68,6 +72,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   jumpMinVelocity: { min: 6, max: 25, step: 0.5 },
   jumpChargeTime: { min: 0.2, max: 1.5, step: 0.05 },
   chargeBoost: { min: 0, max: 40, step: 1 },
+  cruiseSpeed: { min: 6, max: 20, step: 0.5 },
+  chargeDecay: { min: 0.5, max: 20, step: 0.5 },
+  downhillMax: { min: 10, max: 45, step: 0.5 },
   slopeBoost: { min: 0, max: 120, step: 1 },
   uphillSlowdown: { min: 0, max: 120, step: 1 },
   pipePump: { min: 0, max: 40, step: 0.5 },
@@ -99,6 +106,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
   balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
+  bailGrace: { min: 0, max: 1.2, step: 0.05 },
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
   smashSpeed: { min: 8, max: 40, step: 0.5 },
   arrowBounce: { min: 10, max: 60, step: 1 },
@@ -114,7 +122,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 // Hover text for the tuning panel: what each slider actually does in play.
 export const TUNING_INFO: Record<TuningKey, string> = {
   maxSpeed:
-    'Top skate speed. Caps what holding X can build to; downhill can exceed it up to a hard cap (1.6x) before bleeding back.',
+    'Top skate speed from CHARGING. Downhill/pipe riding can exceed it up to the downhillMax slider before bleeding back on the flat.',
   walkSpeed:
     'On-foot speed AND the walk/skate boundary. Walking is direct drive: instant start/stop, zero inertia, all four directions. Any carried speed above this counts as skating.',
   friction:
@@ -128,6 +136,12 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
   chargeBoost:
     'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
+  cruiseSpeed:
+    'Baseline skate speed: the board holds this on its own, no input needed. The ladder: cruiseSpeed -> hold X toward maxSpeed -> release decays back at chargeDecay -> downhill/pipes exceed everything up to downhillMax.',
+  chargeDecay:
+    'How fast speed settles back to cruiseSpeed after releasing X — and how fast it recovers up to cruise after a hill scrubs you below it.',
+  downhillMax:
+    'Hard ceiling for speed EARNED from downhill and pipe riding. Charging alone still tops out at maxSpeed; slopes carry you up to this, and the excess bleeds off on the flat.',
   slopeBoost: 'Downhill acceleration while skating, scaled by the sine of the slope along travel (bounded — vert never explodes).',
   uphillSlowdown: 'Uphill drag while skating, same sine scaling; stalling on a ramp rolls you back down it.',
   pipePump:
@@ -176,6 +190,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   balanceControl: 'How hard left/right input fights the balance needle.',
   balanceSpeedEffect:
     'Baseline for how much grind speed sways the needle. 0 = speed is ignored; 1 = slow grinds wobble up to 1.5x, fast grinds less; 2 = that effect doubled.',
+  bailGrace:
+    'Rail forgiveness buffer: once the balance needle pegs, you have this many seconds to slam the stick the other way before the bail actually fires. 0 = pegging is instant death for the grind.',
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
   smashSpeed:
     'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
@@ -205,7 +221,9 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'SKATING',
     keys: [
       'maxSpeed',
+      'cruiseSpeed',
       'chargeBoost',
+      'chargeDecay',
       'friction',
       'turnaround',
       'boardSpeed',
@@ -218,6 +236,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   {
     title: 'SLOPES & PIPES',
     keys: [
+      'downhillMax',
       'slopeBoost',
       'uphillSlowdown',
       'pipePump',
@@ -232,7 +251,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideJumpHeight', 'slideJumpGrace'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect'],
+    keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'bailGrace'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
@@ -245,7 +264,7 @@ export const CONST = {
   carveBrakeAngle: 2.7, // rad (~155 deg): stick pulled this far from the heading = brake/dismount, not a carve
   fixedStep: 1 / 60, // deterministic chunky update rate
   overspeedDecay: 3, // bleed rate when above maxSpeed on flat ground
-  maxOverspeed: 1.6, // hard cap = maxSpeed * this (downhill can exceed maxSpeed)
+  bailDownTime: 1.1, // knocked-down beat after a mask-less bail before getting up
   killY: -48, // fall below this = instant death
   respawnDelay: 0.7, // quick Crash-style respawn
   playerHalf: { x: 0.5, y: 0.9, z: 0.5 }, // capsule-ish AABB approximation
@@ -292,7 +311,6 @@ export const CONST = {
   balanceStart: 0.15, // initial needle kick when a grind starts
   balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
   balanceGrace: 2, // seconds before the drift ramp starts growing (no hidden max grind length)
-  balanceCritWindow: 0.35, // pegged-needle beat where opposite input can still save the grind
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
   tntFuse: 3, // Crash-style TNT countdown (stomp lights it)

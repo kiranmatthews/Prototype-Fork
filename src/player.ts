@@ -100,6 +100,13 @@ export class Player {
   private slamSquash = 0; // pancake pose timer after a slam lands
   private bailing = false; // death with a tumble animation instead of a blink-out
   private bailSpin = 0;
+  // Knocked down after a mask-less bail: flat on the ground, input dead,
+  // back up in place when it runs out. Non-lethal — pits stay the killers.
+  private bailDownT = 0;
+  // Whether the current airtime started from SKATING (ollie, slide/grind
+  // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
+  // Crash hop never offers them (the slam stays available from any air).
+  private airFromSkate = false;
   private grabSpinAngle = 0; // directional grab-spin; land off-axis = bail
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
@@ -328,6 +335,8 @@ export class Player {
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
+    this.bailDownT = 0;
+    this.airFromSkate = false;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -452,6 +461,7 @@ export class Player {
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
+    this.bailDownT = Math.max(0, this.bailDownT - dt);
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     // Actual planar speed from last step's displacement (any direction) —
@@ -508,7 +518,7 @@ export class Player {
       }
       this.slideSpd = Math.min(
         Math.max(Math.abs(this.speed), TUNING.slideSpeed),
-        TUNING.maxSpeed * CONST.maxOverspeed,
+        TUNING.downhillMax,
       );
       this.slideTimer = TUNING.slideDistance / Math.max(this.slideSpd, 6);
       // Entering the slide drops any charge held from BEFORE it — only a
@@ -702,6 +712,9 @@ export class Player {
     // The slide boost applies during the slide AND for slideJumpGrace seconds
     // after it ends — the old exact-window timing was nearly unhittable.
     const fromSlide = this.slideTimer > 0 || this.slideGraceT > 0;
+    // Grabs are board tricks: only airs that START from skating offer them.
+    this.airFromSkate =
+      this.freeSkate || fromSlide || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
     this.slideGraceT = 0;
     // Measured planar speed this step, so the jump reads your ACTUAL movement
     // in any direction — a fast sideways walk stores nothing in `speed` (that
@@ -750,8 +763,9 @@ export class Player {
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
-    // Flattened after a slam: pancaked on the ground for a beat, no control.
-    const slamFlat = this.slamFlatT > 0;
+    // Flattened after a slam OR knocked down by a bail: pancaked on the
+    // ground for a beat, no control.
+    const slamFlat = this.slamFlatT > 0 || this.bailDownT > 0;
 
     // Crash crouch-crawl: holding Circle while (nearly) stopped drops you into
     // a low, slow, all-fours crawl — direct velocity, no inertia, until release.
@@ -886,14 +900,13 @@ export class Player {
             // hard-earned downhill overspeed back down (that read as greasy).
             if (this.charging && this.speed < TUNING.maxSpeed)
               this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
-            else if (!this.charging)
-              this.speed = Math.max(0, this.speed - TUNING.friction * 0.35 * dt); // easy coast
+            else if (!this.charging) this.cruiseEase(dt, steepGround);
           }
         } else if (this.charging && this.speed > 1) {
           if (this.speed < TUNING.maxSpeed)
             this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
         } else {
-          this.speed = Math.max(0, this.speed - TUNING.friction * dt);
+          this.cruiseEase(dt, steepGround);
         }
       } else if (this.charging) {
         // build toward maxSpeed in the stick's direction; with no direction
@@ -954,7 +967,7 @@ export class Player {
 
       // Downhill may exceed maxSpeed up to a hard cap; on the flat the excess
       // bleeds back off. Same caps in both directions.
-      const hardCap = TUNING.maxSpeed * CONST.maxOverspeed;
+      const hardCap = TUNING.downhillMax;
       this.speed = THREE.MathUtils.clamp(this.speed, -hardCap, hardCap);
       if (Math.abs(this.speed) > TUNING.maxSpeed && Math.abs(ty) <= 0.02) {
         this.speed =
@@ -1048,6 +1061,7 @@ export class Player {
       this.state = 'air';
       this.grounded = false;
       this.groundHit = hit;
+      this.airFromSkate = true; // vert launches only happen from riding
       const lipFactor = this.charging ? 1.3 : 0.85;
       // lastTy IS the sine of the climb: lift = the climb-rate you earned.
       this.vVel = Math.min(this.lastTy * this.speed * lipFactor, this.charging ? 25 : 18);
@@ -1083,6 +1097,7 @@ export class Player {
       this.grounded = false;
       this.groundHit = hit;
       this.crawling = false;
+      this.airFromSkate = this.freeSkate; // rolling off on the board keeps tricks live
       // Authored kicker launch: leaving an uphill lip converts speed to lift
       // (forward travel only — backing off an edge just drops). X held at the
       // lip = bigger air; rolling off without it is mellower.
@@ -1224,7 +1239,7 @@ export class Player {
         // either direction.
         const opposing = input.moveY * this.speed < 0;
         const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
-        const cap = TUNING.maxSpeed * CONST.maxOverspeed;
+        const cap = TUNING.downhillMax;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       if (Math.abs(input.moveX) > 0.05) {
@@ -1304,7 +1319,7 @@ export class Player {
       } else if (this.grabGraceTimer > 0) {
         // A clean (released in time, on-axis) grab pays out a speed burst.
         this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
-        const cap = TUNING.maxSpeed * CONST.maxOverspeed;
+        const cap = TUNING.downhillMax;
         this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
         this.grabGraceTimer = 0;
         this.grabSpinAngle = 0;
@@ -1360,11 +1375,44 @@ export class Player {
     this.bankCombo();
   }
 
-  // Botched a grab landing: tumble out and eat the respawn.
+  // BASELINE CRUISE: while free-skating the board holds cruiseSpeed on its
+  // own. Above it (a released charge, spent downhill speed) it settles back
+  // down at chargeDecay; below it (a hill scrubbed you) the same rate eases
+  // you back up. No assist on ground too steep to stand — pipes stay honest,
+  // and the pull-back brake still cuts straight through to the dismount.
+  private cruiseEase(dt: number, steep: boolean): void {
+    const cruise = Math.min(TUNING.cruiseSpeed, TUNING.maxSpeed);
+    if (this.speed > cruise) {
+      this.speed = Math.max(cruise, this.speed - TUNING.chargeDecay * dt);
+    } else if (!steep && this.grounded) {
+      this.speed = Math.min(cruise, this.speed + TUNING.chargeDecay * dt);
+    } else if (steep) {
+      // No assist on transitions — and the old friction bleed stays, so a
+      // sideways crawl on a wall dies out and the stall-flip can roll you
+      // back into the pipe instead of parking you mid-face.
+      this.speed = Math.max(0, this.speed - TUNING.friction * dt);
+    }
+  }
+
+  // Botched a grab landing: no death — you eat the floor, the pending combo
+  // is gone, and you lie flat for a beat before getting up right where you
+  // fell. (A mask upstream absorbs the bail entirely, same as before.)
   private bail(): void {
-    this.bailing = true;
-    this.speed *= 0.3;
-    this.die();
+    this.bailDownT = CONST.bailDownTime;
+    this.speed = 0;
+    this.vVel = 0;
+    this.invulnTimer = CONST.maskInvuln; // nothing chews you while you're down
+    this.comboPoints = 0;
+    this.comboMult = 0;
+    this.comboTimer = 0;
+    this.comboLabels = [];
+    this.grabPhase = 'none';
+    this.grabT = 0;
+    this.grabGraceTimer = 0;
+    this.grabSpinAngle = 0;
+    this.grabSpinTotal = 0;
+    sfx.play('takeDamage', 0.8);
+    this.emitSparks(8, 0xffb545, 2);
   }
 
   private stepGrind(dt: number, input: Input, level: Level): void {
@@ -1401,7 +1449,7 @@ export class Player {
     if (Math.abs(this.balance) >= 1) {
       this.balance = Math.sign(this.balance); // pinned at the edge, flailing
       this.balanceCritT += dt;
-      if (this.balanceCritT > CONST.balanceCritWindow) {
+      if (this.balanceCritT > TUNING.bailGrace) {
         // A mask absorbs the bail: the needle resets and the grind continues.
         if (this.spendMask()) {
           this.balance = 0;
@@ -1543,7 +1591,7 @@ export class Player {
     this.grindVel = THREE.MathUtils.clamp(
       Math.abs(alongVel),
       CONST.grindMinSpeed,
-      TUNING.maxSpeed * CONST.maxOverspeed,
+      TUNING.downhillMax,
     );
     this.speed = this.grindVel;
     // Remember how far off the rail the body was at entry; placeOnRail eases
@@ -1569,6 +1617,8 @@ export class Player {
   }
 
   private exitGrind(vVel: number): void {
+    this.airFromSkate = true; // leaving a rail is a board air: tricks live
+
     if (this.grindRail) {
       // Exit ALONG the rail: the tangent becomes the free-skate heading, so
       // diagonal and curved rails launch you where they were pointing.
@@ -1603,6 +1653,7 @@ export class Player {
   private bailFromRail(): void {
     this.grindRail = null;
     this.state = 'air';
+    this.airFromSkate = false; // a stumble is not a trick window
     this.vVel = 3;
     this.airMomentum = false; // a bail is a stumble, not a launch
     this.speed *= CONST.balanceBailSpeedKeep;
@@ -1645,7 +1696,7 @@ export class Player {
   private updateGrab(dt: number, input: Input): void {
     this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
     if (this.state === 'air') {
-      if (input.grabHeld && !this.slamActive) {
+      if (input.grabHeld && !this.slamActive && this.airFromSkate) {
         // Reach into the pose over grabTransition, then hold it.
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
           this.grabPhase = 'enter';
@@ -2601,7 +2652,8 @@ export class Player {
     // Slam has three beats: the "uh oh" hang, the pancake drop, then lying
     // flat on the ground for a moment before getting up.
     const hanging = this.slamActive && this.slamHangT > 0;
-    const dropping = (this.slamActive && this.slamHangT <= 0) || this.slamFlatT > 0;
+    const dropping =
+      (this.slamActive && this.slamHangT <= 0) || this.slamFlatT > 0 || this.bailDownT > 0;
     this.hangPose += ((hanging ? 1 : 0) - this.hangPose) * Math.min(1, 16 * dt);
     this.dropPose += ((dropping ? 1 : 0) - this.dropPose) * Math.min(1, 20 * dt);
     const flip =
