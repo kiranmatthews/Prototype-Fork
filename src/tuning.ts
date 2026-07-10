@@ -75,7 +75,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
   slideDistance: { min: 3, max: 25, step: 0.5 },
   slideSpeed: { min: 10, max: 45, step: 1 },
-  slideJumpHeight: { min: 1, max: 2.2, step: 0.05 },
+  slideJumpHeight: { min: 1, max: 4, step: 0.05 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },

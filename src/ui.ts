@@ -117,6 +117,17 @@ export class UI {
       this.applyTuning(this.defaults);
       this.showMessage('BUILD DEFAULTS', '', 800);
     });
+    // Export the live values: paste the JSON into chat and they can be baked
+    // in as the next build's defaults.
+    mkBtn('copy', () => {
+      const json = JSON.stringify(TUNING, null, 1);
+      const done = (): void => this.showMessage('TUNING COPIED', 'paste it into the chat', 1600);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(json).then(done, () => window.prompt('copy your tuning:', json));
+      } else {
+        window.prompt('copy your tuning:', json);
+      }
+    });
     panel.appendChild(btnRow);
     // Sliders grouped under labelled section headers (walking, skating, ...).
     const placed = new Set<TuningKey>();
