@@ -38,6 +38,8 @@ export const TUNING = {
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 16, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 30, // arrow-crate super bounce launch velocity
+  arrowBoostMult: 1.25, // perfect-timed X press on an arrow crate multiplies the launch
+  arrowBoostWindow: 0.12, // press X within this many seconds of impact for the perfect bounce
   slamRadius: 3.2, // pancake slam: crates/enemies within this radius break on impact
   nitroRadius: 5.5, // nitro explosion kill/break radius
   tntRadius: 3.3, // TNT explosion kill/break radius
@@ -83,6 +85,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
   smashSpeed: { min: 8, max: 40, step: 0.5 },
   arrowBounce: { min: 10, max: 60, step: 1 },
+  arrowBoostMult: { min: 1, max: 2, step: 0.05 },
+  arrowBoostWindow: { min: 0.04, max: 0.3, step: 0.01 },
   slamRadius: { min: 1.5, max: 7, step: 0.1 },
   nitroRadius: { min: 2, max: 12, step: 0.25 },
   tntRadius: { min: 1.5, max: 10, step: 0.25 },
@@ -145,6 +149,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   smashSpeed:
     'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
   arrowBounce: 'Launch velocity of the yellow arrow-crate super bounce (a normal crate stomp is ~18).',
+  arrowBoostMult:
+    'PERFECT BOUNCE: press X right as you hit an arrow crate and the launch is multiplied by this (1 = feature off).',
+  arrowBoostWindow:
+    'How tight the perfect-bounce timing is: X must be pressed within this many seconds before impact.',
   slamRadius: 'Pancake slam blast radius — crates and enemies within this range of the impact break.',
   nitroRadius: 'Nitro explosion radius — everything (including you, unmasked) within it when a nitro pops.',
   tntRadius: 'TNT explosion radius once the 3-2-1 fuse runs out (or it is spun/slammed).',
@@ -181,7 +189,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'slamRadius'] },
-  { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'nitroRadius', 'tntRadius'] },
+  { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },
 ];
 

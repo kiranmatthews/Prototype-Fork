@@ -115,6 +115,7 @@ export class Player {
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
   private jumpBufferCharge = 0;
+  private jumpPressT = 0; // time left since the last fresh X press (perfect-bounce timing)
   private grindTime = 0; // how long this grind has lasted (balance ramps up)
   private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
   private snapOffset = new THREE.Vector3(); // entry offset, eased away on the rail
@@ -365,6 +366,9 @@ export class Player {
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
     level.setRelics(this.hasCrystal, this.gemEarned); // gate icons mirror the haul
+    // Fresh X presses feed the perfect-bounce timing window.
+    if (input.jumpPressed) this.jumpPressT = TUNING.arrowBoostWindow;
+    else this.jumpPressT = Math.max(0, this.jumpPressT - dt);
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
@@ -1744,15 +1748,21 @@ export class Player {
       }
       if (c.bouncy) {
         // Arrow crate: land on it for a super bounce; it never breaks.
+        // PERFECT BOUNCE: pressing X within arrowBoostWindow of the impact
+        // (the classic "jump right at the bottom" timing) adds a little
+        // extra launch — the press is consumed so it can't carry to chains.
         if (this.playerBox.intersectsBox(c.box)) {
           if (this.isStomping(c.box)) {
-            this.vVel = TUNING.arrowBounce;
+            const perfect = this.jumpPressT > 0;
+            this.jumpPressT = 0;
+            this.vVel = TUNING.arrowBounce * (perfect ? TUNING.arrowBoostMult : 1);
             this.state = 'air';
             this.grounded = false;
             this.charging = false;
             this.chargeTimer = 0;
-            this.score(CONST.ptsBouncy, 'Boing');
-            sfx.play('bouncyBounce', 0.9);
+            this.score(CONST.ptsBouncy * (perfect ? 2 : 1), perfect ? 'Perfect Boing' : 'Boing');
+            sfx.play('bouncyBounce', 0.9, perfect ? 1.3 : 1);
+            if (perfect) this.emitSparks(6, 0xfff3d0, 1.4);
           } else if (this.isBonking(c.box)) {
             this.vVel = -1; // head bonk on the underside
           } else {
