@@ -184,16 +184,18 @@ function updateCamera(dt: number): void {
   const inTurn = level.zoneAt(player.pos.x, player.pos.z) !== null;
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
+  // Boulder-chase framing: same zoom/scale, but the camera rides higher and
+  // tips DOWN so the ground under and just ahead of the skater — where the
+  // obstacles arrive from — fills more of the frame. It REPLACES the reverse
+  // pull-back below (stacking both shoved the look target behind the player
+  // and dumped the skater out of the frame).
+  boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
+
   const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
   prevPlayerZ = player.pos.z;
   const movingBack = vz > 2.5 || (player.grounded && player.speed < -1.5);
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
-  const back = camBack * (1 - sideF); // reverse pull-back is a corridor thing
-
-  // Boulder-chase framing: same zoom/scale, but the camera rides higher and
-  // tips DOWN so the ground under and just ahead of the skater — where the
-  // obstacles arrive from — fills more of the frame.
-  boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
+  const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
   const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8;
   const height =
@@ -209,11 +211,11 @@ function updateCamera(dt: number): void {
 
   lookPoint.set(
     player.pos.x,
-    player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF) - boulderF * 1.3,
+    player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF) - boulderF * 1.2,
     player.pos.z -
       THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.0, sideF) +
       back * 8.5 +
-      boulderF * 3.0,
+      boulderF * 3.5,
   );
   camera.lookAt(lookPoint);
 }
