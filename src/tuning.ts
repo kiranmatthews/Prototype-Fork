@@ -12,8 +12,15 @@ export const TUNING = {
   jumpMinVelocity: 12.5, // quick-tap jump
   jumpChargeTime: 0.4, // hold this long for full power
   chargeBoost: 7, // THE skate acceleration: holding X builds speed toward maxSpeed
-  slopeBoost: 20, // fake downhill acceleration, scaled by slope grade
-  uphillSlowdown: 15, // fake uphill deceleration, scaled by slope grade
+  slopeBoost: 26, // downhill acceleration, scaled by sin(slope along travel)
+  uphillSlowdown: 20, // uphill deceleration, scaled by sin(slope along travel)
+  pipePump: 16, // crouch-pump gain: X held on ground too steep to stand
+  pipeSmooth: 10, // per-second easing of the ride plane across segmented transitions
+  steepStand: 0.78, // ground normal.y below this = too steep to stand: always ridden
+  vertLip: 0.72, // slope (sine along travel) that counts as vert coping at the lip
+  vertCarry: 0.25, // planar speed kept off vert coping (rest goes UP, back into the pipe)
+  wallStick: 2.6, // ground-snap window on steep transitions (how hard the wall holds the board)
+  landGive: 1.5, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2, // forgiving radius for Triangle/E grind snap
   grindSpeed: 7, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 15, // vertical pop when jumping off a rail
@@ -63,6 +70,13 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   chargeBoost: { min: 0, max: 40, step: 1 },
   slopeBoost: { min: 0, max: 120, step: 1 },
   uphillSlowdown: { min: 0, max: 120, step: 1 },
+  pipePump: { min: 0, max: 40, step: 0.5 },
+  pipeSmooth: { min: 2, max: 25, step: 0.5 },
+  steepStand: { min: 0.5, max: 0.95, step: 0.01 },
+  vertLip: { min: 0.4, max: 0.95, step: 0.01 },
+  vertCarry: { min: 0, max: 1, step: 0.05 },
+  wallStick: { min: 0.8, max: 5, step: 0.1 },
+  landGive: { min: 0.35, max: 3, step: 0.05 },
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
@@ -114,8 +128,19 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
   chargeBoost:
     'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
-  slopeBoost: 'Fake downhill acceleration while skating, scaled by how steep the surface is.',
-  uphillSlowdown: 'Fake uphill drag while skating; stalling on a ramp rolls you back down it.',
+  slopeBoost: 'Downhill acceleration while skating, scaled by the sine of the slope along travel (bounded — vert never explodes).',
+  uphillSlowdown: 'Uphill drag while skating, same sine scaling; stalling on a ramp rolls you back down it.',
+  pipePump:
+    'Crouch-pump: speed gained per second holding X on ground too steep to stand — the honest way to build vert height. Steeper wall = stronger pump.',
+  pipeSmooth:
+    'How fast the board’s ride plane eases across segmented transitions. Lower = surfy and smooth, higher = snappy and reactive.',
+  steepStand:
+    'Ground normal.y below this is too steep to stand on: always ridden with momentum, feet never grip.',
+  vertLip:
+    'Slope steepness (sine along travel) that counts as vert coping when you leave it — crest steeper than this and the climb converts to UP-air that drops you back into the pipe.',
+  vertCarry: 'Fraction of planar speed kept when launching off vert coping; the rest becomes lift.',
+  wallStick: 'Ground-snap window on steep transitions — how hard the wall holds the board through fast climbs.',
+  landGive: 'Landing forgiveness on steep transition faces (flat decks stay strict).',
   railSnapDistance:
     'How close (in units) a rail must be for Triangle to snap you onto it. Bigger = more forgiving grind grabs.',
   grindSpeed:
@@ -190,7 +215,20 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'smashSpeed',
     ],
   },
-  { title: 'SLOPES & PIPES', keys: ['slopeBoost', 'uphillSlowdown'] },
+  {
+    title: 'SLOPES & PIPES',
+    keys: [
+      'slopeBoost',
+      'uphillSlowdown',
+      'pipePump',
+      'pipeSmooth',
+      'steepStand',
+      'vertLip',
+      'vertCarry',
+      'wallStick',
+      'landGive',
+    ],
+  },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideJumpHeight', 'slideJumpGrace'] },
   {
     title: 'GRINDS',
@@ -259,13 +297,8 @@ export const CONST = {
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
   tntFuse: 3, // Crash-style TNT countdown (stomp lights it)
   blastGrow: 0.35, // seconds for the blast sphere to reach full size
-  // Steep-ground rules: the halfpipe is just terrain now — these decide when
-  // a slope stops being floor and starts being transition.
-  steepStand: 0.78, // ground normal.y below this (~39deg+) = too steep to stand: always ridden
+  // Steep-ground rules live in TUNING now (steepStand/vertLip/vertCarry/
+  // wallStick/landGive sliders); only the structural facet threshold stays.
   steepSnapNormal: 0.85, // below this, ground-follow + landing windows widen for transitions
-  steepSnapWindow: 2.6, // taller ground-snap window on steep transitions so fast climbs stick
-  steepLandGive: 1.5, // landing penetration forgiveness on steep faces (vs 0.35 on decks)
-  vertGrade: 1.2, // leaving a lip steeper than this counts as vert coping...
-  vertKeep: 0.25, // ...and keeps only this fraction of planar speed (air goes UP, back into the pipe)
   renderScale: 0.75, // build default for the internal resolution (live knob: TUNING.renderScale)
 };

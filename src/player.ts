@@ -162,7 +162,13 @@ export class Player {
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
-  private lastGrade = 0; // slope along travel; >0 downhill, <0 uphill
+  // Sine of the slope along travel (from the SMOOTHED ride plane):
+  // > 0 climbing, < 0 descending. Bounded ±1 by construction, so vert walls
+  // pull hard but never explode the way the old tan-based grade did.
+  private lastTy = 0;
+  // The ride plane: ground normal eased over time, so segmented transitions
+  // read as one continuous curve instead of a stack of facets.
+  private rideNormal = new THREE.Vector3(0, 1, 0);
   private shadowGroundY: number | null = null; // long-range floor probe for the blob shadow
   private groundHit: GroundHit | null = null;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
@@ -352,6 +358,8 @@ export class Player {
     this.flipTimer = 0;
     this.balance = 0;
     this.balanceCritT = 0;
+    this.lastTy = 0;
+    this.rideNormal.set(0, 1, 0);
     this.prevPos.copy(this.pos);
     for (const s of this.sparks) {
       s.life = 0;
@@ -776,7 +784,7 @@ export class Player {
     // Ground too steep to stand on (halfpipe transitions, steep banks): feet
     // can't grip there, so it's always ridden with real momentum. Flat ground
     // — including the halfpipe FLOOR — plays by the normal walk/skate rules.
-    const steepGround = this.groundHit !== null && this.groundHit.normal.y < CONST.steepStand;
+    const steepGround = this.groundHit !== null && this.groundHit.normal.y < TUNING.steepStand;
     const skating =
       pushingOff || this.slideTimer > 0 || steepGround || planarSpeed > TUNING.walkSpeed + 0.5;
 
@@ -817,18 +825,18 @@ export class Player {
 
     if (slamFlat) {
       this.speed = 0;
-      this.lastGrade = 0;
+      this.lastTy = 0;
     } else if (this.crawling) {
       // Direct-drive crawl. Speed snaps to the d-pad; no slopes, no friction.
       this.speed = input.moveY * TUNING.crawlSpeed * diag;
-      this.lastGrade = 0;
+      this.lastTy = 0;
     } else if (!skating) {
       // WALK: direct drive, instant start and stop, no inertia, no slope
       // physics — precise Crash platforming in all eight directions. A
       // planted charge (X held from a standstill) pins the feet instead.
       this.speed =
         this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed * diag;
-      this.lastGrade = 0;
+      this.lastTy = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
       // against travel brakes hard (turnaround); input with travel coasts
@@ -917,28 +925,38 @@ export class Player {
         this.speed -= Math.sign(this.speed) * Math.min(drop, Math.abs(this.speed));
       }
 
-      // Fake slope response from the ground normal: grade > 0 means the surface
-      // drops away down-course. Sign-safe, so stalling on a ramp rolls you back
-      // down it.
-      let grade = 0;
+      // Slope response from the SMOOTHED ride plane: project the heading onto
+      // the surface — the tangent's rise is the SINE of the slope along
+      // travel. Bounded ±1, so a vert wall pulls hard but never explodes;
+      // sign-safe, so stalling on a ramp rolls you back down it.
+      let ty = 0;
       if (this.groundHit) {
-        const n = this.groundHit.normal;
-        grade = (n.x * this.axisF.x + n.z * this.axisF.z) / Math.max(n.y, 0.2);
+        const n = this.rideNormal;
+        const fdotn = this.axisF.x * n.x + this.axisF.z * n.z; // axisF.y is 0
+        const tx = this.axisF.x - n.x * fdotn;
+        const tyRaw = -n.y * fdotn;
+        const tz = this.axisF.z - n.z * fdotn;
+        const tl = Math.hypot(tx, tyRaw, tz);
+        if (tl > 1e-4) ty = tyRaw / tl; // > 0 climbing, < 0 descending
       }
-      if (Math.abs(grade) > 0.02) {
-        // X held = attack the ramp: MORE boost downhill, LESS bleed uphill —
-        // pumping a transition with X is how you build the height to crest
-        // it. Coasting takes the honest hit both ways.
-        const rampFactor = grade > 0 ? (this.charging ? 1.3 : 0.8) : this.charging ? 0.55 : 0.8;
-        this.speed += (grade > 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * grade * rampFactor * dt;
+      if (Math.abs(ty) > 0.02) {
+        // X held = attack the ramp: MORE boost downhill, LESS bleed uphill.
+        const attack = ty < 0 ? (this.charging ? 1.3 : 0.8) : this.charging ? 0.55 : 0.8;
+        this.speed += (ty < 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * -ty * attack * dt;
       }
-      this.lastGrade = grade;
+      // CROUCH-PUMP: X held on ground too steep to stand = working the
+      // transition for speed, the honest way to build vert height. Scales
+      // with steepness so the stretch below the coping pumps hardest.
+      if (this.charging && this.groundHit && this.groundHit.normal.y < TUNING.steepStand) {
+        this.speed += TUNING.pipePump * (1 - this.groundHit.normal.y) * dt;
+      }
+      this.lastTy = ty;
 
       // Downhill may exceed maxSpeed up to a hard cap; on the flat the excess
       // bleeds back off. Same caps in both directions.
       const hardCap = TUNING.maxSpeed * CONST.maxOverspeed;
       this.speed = THREE.MathUtils.clamp(this.speed, -hardCap, hardCap);
-      if (Math.abs(this.speed) > TUNING.maxSpeed && Math.abs(grade) <= 0.02) {
+      if (Math.abs(this.speed) > TUNING.maxSpeed && Math.abs(ty) <= 0.02) {
         this.speed =
           Math.sign(this.speed) *
           Math.max(TUNING.maxSpeed, Math.abs(this.speed) - CONST.overspeedDecay * dt);
@@ -962,7 +980,29 @@ export class Player {
       }
     }
 
-    this.pos.addScaledVector(this.axisF, this.speed * dt);
+    // Ride the SURFACE, not the map. On a slope the heading projects onto the
+    // ride plane, splitting speed honestly between planar travel and climb —
+    // a vert wall climbs at speed*sin(slope) instead of the old full-speed
+    // horizontal advance with a hidden vertical teleport from the snap. Walks
+    // and flat ground keep the crisp planar step (identical math at n.y≈1).
+    if (this.freeSkate && this.grounded && this.groundHit && this.rideNormal.y < 0.995) {
+      const n = this.rideNormal;
+      const fdotn = this.axisF.x * n.x + this.axisF.z * n.z;
+      const tx = this.axisF.x - n.x * fdotn;
+      const tyRaw = -n.y * fdotn;
+      const tz = this.axisF.z - n.z * fdotn;
+      const tl = Math.hypot(tx, tyRaw, tz);
+      if (tl > 1e-4) {
+        const s = (this.speed * dt) / tl;
+        this.pos.x += tx * s;
+        this.pos.y += tyRaw * s;
+        this.pos.z += tz * s;
+      } else {
+        this.pos.addScaledVector(this.axisF, this.speed * dt);
+      }
+    } else {
+      this.pos.addScaledVector(this.axisF, this.speed * dt);
+    }
 
     // Axis-locked sidestep: direct velocity while held, dead stop on
     // release. Left is ALWAYS screen-left, even while backing up. Slides
@@ -992,8 +1032,8 @@ export class Player {
     // taller window both ways so fast climbs and descents stick to the surface.
     const hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
-    const upWindow = steepHit ? CONST.steepSnapWindow : 0.8;
-    const downWindow = steepHit ? CONST.steepSnapWindow : 1.4;
+    const upWindow = steepHit ? TUNING.wallStick : 0.8;
+    const downWindow = steepHit ? TUNING.wallStick : 1.4;
     // Cresting a vert lip: last frame the board was climbing a near-vertical
     // face; now the surface under us has gone flat (the coping's backside).
     // Convert the climb into UP-air right here — a launch you earned — with
@@ -1002,15 +1042,16 @@ export class Player {
     if (
       hit &&
       this.speed > 0.5 &&
-      this.lastGrade < -CONST.vertGrade &&
+      this.lastTy > TUNING.vertLip &&
       hit.normal.y >= CONST.steepSnapNormal
     ) {
       this.state = 'air';
       this.grounded = false;
       this.groundHit = hit;
       const lipFactor = this.charging ? 1.3 : 0.85;
-      this.vVel = Math.min(-this.lastGrade * this.speed * lipFactor, this.charging ? 25 : 18);
-      this.speed *= -CONST.vertKeep;
+      // lastTy IS the sine of the climb: lift = the climb-rate you earned.
+      this.vVel = Math.min(this.lastTy * this.speed * lipFactor, this.charging ? 25 : 18);
+      this.speed *= -TUNING.vertCarry;
       sfx.play('woosh2', 0.6);
       this.emitSparks(5, 0xfff3d0, 1.2);
       this.coyoteTimer = 0;
@@ -1019,6 +1060,11 @@ export class Player {
       this.groundHit = hit;
       this.grounded = true;
       this.surfaceName = hit.name;
+      // Ease the ride plane toward the facet under the board: segmented
+      // transitions blend into one continuous curve. Fresh landings snap so
+      // a stale plane can't misread the first frames of a new surface.
+      const ease = Math.min(1, TUNING.pipeSmooth * dt);
+      this.rideNormal.lerp(hit.normal, ease).normalize();
 
       // Crash teeter: slow/stopped with part of the board hanging over an
       // edge — wobble as a warning; step back (or jump) to save yourself.
@@ -1042,14 +1088,14 @@ export class Player {
       // lip = bigger air; rolling off without it is mellower.
       const lipFactor = this.charging ? 1.3 : 0.85;
       this.vVel =
-        this.speed > 0 && this.lastGrade < -0.05
-          ? Math.min(-this.lastGrade * this.speed * lipFactor, this.charging ? 25 : 18)
+        this.speed > 0 && this.lastTy > 0.05
+          ? Math.min(this.lastTy * this.speed * lipFactor, this.charging ? 25 : 18)
           : 0;
       // A near-vertical lip (halfpipe coping) throws you mostly UP: the
       // planar remainder is small AND flipped back toward the transition,
       // so the air drops you into the pipe instead of across the deck.
-      if (this.vVel > 0.5 && this.lastGrade < -CONST.vertGrade) {
-        this.speed *= -CONST.vertKeep;
+      if (this.vVel > 0.5 && this.lastTy > TUNING.vertLip) {
+        this.speed *= -TUNING.vertCarry;
         sfx.play('woosh2', 0.6);
       }
       this.coyoteTimer = CONST.coyoteTime;
@@ -1210,7 +1256,7 @@ export class Player {
     // Steep transitions get a much deeper forgiveness: falling with sideways
     // drift can cross a rising bank face by more than a deck's worth in one
     // step, and that's a landing, not a clip-through.
-    const landGive = hit && hit.normal.y < CONST.steepSnapNormal ? CONST.steepLandGive : 0.35;
+    const landGive = hit && hit.normal.y < CONST.steepSnapNormal ? TUNING.landGive : 0.35;
     if (
       hit &&
       this.vVel <= 0 &&
@@ -1224,6 +1270,7 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
+      this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
       // Landing-tick payouts (grab, slam impact) are still air tricks
       // for combo purposes even though the state just flipped to 'ride'.
       this.landingScoring = true;
@@ -2538,7 +2585,7 @@ export class Player {
     let slopeT = 0;
     let slopeRollT = 0;
     if (this.grounded && this.state === 'ride' && this.groundHit) {
-      const n = this.groundHit.normal;
+      const n = this.rideNormal; // smoothed ride plane: no facet snap in the pose
       const fx = Math.sin(this.visualYaw + Math.PI);
       const fz = Math.cos(this.visualYaw + Math.PI);
       const gf = (n.x * fx + n.z * fz) / Math.max(n.y, 0.2); // drops ahead > 0
