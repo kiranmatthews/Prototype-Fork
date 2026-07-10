@@ -416,8 +416,10 @@ export class UI {
       .hud-stats, .hud-tuning {
         color: #cfe3d8;
         font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
-        background: rgba(14, 16, 22, 0.85); border: 1px solid #3a4152;
+        background: linear-gradient(180deg, rgba(26, 30, 44, 0.92), rgba(10, 12, 18, 0.92));
+        border: 1px solid #3a4152;
         padding: 8px 10px; border-radius: 4px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.45);
       }
       .hud-stats { min-width: 230px; }
       .hud-tuning { width: 250px; max-height: calc(100vh - 60px); overflow-y: auto; }
@@ -429,6 +431,7 @@ export class UI {
         background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152;
         border-radius: 3px; padding: 3px 2px; cursor: pointer; white-space: nowrap;
       }
+      .hud-levelbtn:hover { background: #243044; color: #cfe3d8; }
       .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
       .hud-row { display: flex; justify-content: space-between; gap: 12px; }
       .hud-row b { color: #eef4ff; font-weight: normal; }
@@ -452,7 +455,9 @@ export class UI {
         writing-mode: vertical-rl; text-orientation: upright;
         font: bold 10px ui-monospace, Menlo, Consolas, monospace;
         letter-spacing: 2px; color: #cfe3d8;
-        background: rgba(14, 16, 22, 0.85); border: 1px solid #3a4152;
+        background: linear-gradient(180deg, rgba(26, 30, 44, 0.92), rgba(10, 12, 18, 0.92));
+        border: 1px solid #3a4152;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
       }
       .side-wrap.left .side-tab { border-radius: 0 5px 5px 0; border-left: none; }
       .side-wrap.right .side-tab { border-radius: 5px 0 0 5px; border-right: none; }
@@ -486,22 +491,24 @@ export class UI {
       .hud-relics { gap: 10px; }
       .hud-icon-crystal {
         width: clamp(30px, 5.5vh, 48px); height: clamp(42px, 7.5vh, 66px);
-        background: linear-gradient(160deg, #ff9af0 15%, #c03fe0 55%, #7a1898 90%);
+        background: linear-gradient(160deg, #ffd4f8 8%, #ff9af0 22%, #c03fe0 55%, #7a1898 90%);
         clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
-        filter: drop-shadow(3px 3px 0 #000);
+        filter: drop-shadow(3px 3px 0 #000) drop-shadow(0 0 7px rgba(255, 120, 240, 0.6));
       }
       .hud-icon-gem {
         width: clamp(38px, 7vh, 60px); height: clamp(28px, 5vh, 44px);
-        background: linear-gradient(160deg, #bfffff 15%, #35cfe4 55%, #147a90 90%);
+        background: linear-gradient(160deg, #eaffff 8%, #bfffff 22%, #35cfe4 55%, #147a90 90%);
         clip-path: polygon(25% 0%, 75% 0%, 100% 35%, 50% 100%, 0% 35%);
-        filter: drop-shadow(3px 3px 0 #000);
+        filter: drop-shadow(3px 3px 0 #000) drop-shadow(0 0 7px rgba(80, 220, 255, 0.6));
         align-self: center;
       }
       .hud-relic-off { opacity: 0.22; filter: grayscale(1) drop-shadow(3px 3px 0 #000); }
       .hud-icon-face {
         border-radius: 40%;
         background: radial-gradient(circle at 40% 35%, #f4b56a, #c96f28 75%);
-        box-shadow: 4px 4px 0 #000; position: relative;
+        border: 3px solid rgba(0, 0, 0, 0.65);
+        box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.3), 4px 4px 0 #000;
+        position: relative;
       }
       .hud-icon-face::before {
         content: ''; position: absolute; left: 24%; top: 28%; width: 12%; height: 20%;
@@ -517,30 +524,41 @@ export class UI {
         100% { transform: skewX(-6deg) scale(1); }
       }
 
-      /* score plate */
+      /* score plate: dark arcade marquee — layered metal gradient, 1px top
+         highlight, gold digits with a hard offset shadow */
       .hud-scoreplate {
         position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
         z-index: 10; pointer-events: none; text-align: center;
-        background: linear-gradient(#9aa096, #6f746e);
-        border: 3px solid #3d403c; border-radius: 7px; padding: 4px 30px 6px;
-        box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), 4px 4px 0 rgba(0,0,0,0.5);
+        background: linear-gradient(180deg, #333a4e 0%, #1b202e 55%, #12151f 100%);
+        border: 3px solid #05070c; border-radius: 7px; padding: 4px 30px 6px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.28),
+          inset 0 -8px 14px rgba(0,0,0,0.45), 4px 4px 0 rgba(0,0,0,0.5);
       }
       .hud-scorelabel {
         font: italic bold clamp(13px, 2.2vh, 20px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 4px;
-        color: #2e2f2a; text-shadow: 1px 1px 0 rgba(255,255,255,0.35);
+        letter-spacing: 5px;
+        color: #ffd24a; text-shadow: 2px 2px 0 #000;
       }
       .hud-scorenum {
         font: italic 900 clamp(32px, 5.5vh, 50px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 3px;
-        color: #2e2f2a; text-shadow: 2px 2px 0 rgba(255,255,255,0.35);
+        letter-spacing: 4px;
+        color: #ffe9b0;
+        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
+          0 -2px 0 #3a1c05, 4px 4px 0 #000;
       }
 
-      /* THPS trick readout — bare text, no plate, reads on any background */
+      /* THPS trick readout — bare text, no plate, reads on any background.
+         The entrance animation restarts on the existing display none->block
+         toggle, so a fresh combo slams in without any new JS. */
       .hud-trickplate {
         position: fixed; z-index: 10; bottom: 4%; left: 50%;
         transform: translateX(-50%); pointer-events: none; text-align: center;
         max-width: 92vw; display: none;
+        animation: trickin 0.18s ease-out;
+      }
+      @keyframes trickin {
+        0% { transform: translateX(-50%) scale(1.35); opacity: 0.3; }
+        100% { transform: translateX(-50%) scale(1); opacity: 1; }
       }
       .hud-trickline {
         font: italic bold clamp(18px, 3.2vh, 30px) Impact, 'Arial Black', sans-serif;
@@ -554,6 +572,11 @@ export class UI {
         letter-spacing: 4px; color: #ffb43a; transform: skewX(-6deg); margin-top: 2px;
         text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
           0 -2px 0 #3a1c05, 4px 4px 0 #000;
+        animation: combopulse 0.5s ease-in-out infinite alternate;
+      }
+      @keyframes combopulse {
+        from { transform: skewX(-6deg) scale(1); }
+        to { transform: skewX(-6deg) scale(1.05); }
       }
 
       .hud-msg {
@@ -561,7 +584,11 @@ export class UI {
         text-align: center; color: #fff; pointer-events: none;
         text-shadow: 3px 3px 0 #000;
       }
-      .hud-msg-title { font: bold 52px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 4px; }
+      .hud-msg-title {
+        font: bold 52px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 4px;
+        text-shadow: 3px 0 0 #000, -3px 0 0 #000, 0 3px 0 #000, 0 -3px 0 #000,
+          5px 5px 0 rgba(0, 0, 0, 0.8);
+      }
       .hud-msg-sub { font: 16px ui-monospace, Menlo, Consolas, monospace; margin-top: 8px; color: #cfe3d8; }
       .hud-flash {
         position: fixed; z-index: 12; inset: 0; background: #a3202a;
@@ -581,8 +608,9 @@ export class UI {
       .hud-balance {
         position: fixed; z-index: 10; left: 50%; bottom: 24%;
         transform: translateX(-50%); width: 240px; height: 14px;
-        background: rgba(14, 16, 22, 0.8); border: 1px solid #3a4152;
-        border-radius: 7px;
+        background: linear-gradient(180deg, rgba(8, 10, 15, 0.9), rgba(26, 30, 44, 0.9));
+        border: 1px solid #3a4152; border-radius: 7px;
+        box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.12);
       }
       .hud-balance-center {
         position: absolute; left: 50%; top: 2px; bottom: 2px; width: 2px;
@@ -591,6 +619,7 @@ export class UI {
       .hud-balance-needle {
         position: absolute; top: -4px; width: 8px; height: 20px;
         margin-left: -4px; border-radius: 2px; background: #8fd4a8;
+        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
       }
     `;
     document.head.appendChild(style);

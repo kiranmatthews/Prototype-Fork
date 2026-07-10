@@ -213,23 +213,25 @@ export class Level {
   } | null = null;
 
   // --- visual pass ---
+  // Default = Test Course: golden-hour beach. Teal zenith melting into peach,
+  // amber sun low over the water, warm sand bounce light, golden dust motes.
   theme: Theme = {
-    skyTop: '#1e2a52',
-    skyBottom: '#6b4a72',
-    sunColorHex: '#ffd8a0',
+    skyTop: '#1d7a8c',
+    skyBottom: '#ffc98a',
+    sunColorHex: '#ffb843',
     sunU: 0.3,
-    sunV: 0.34,
-    stars: true,
-    fog: 0x2c2440,
+    sunV: 0.4,
+    stars: false,
+    fog: 0xd89a6a, // fog to the horizon peach so distance melts, not greys
     fogNear: 24,
-    fogFar: 125,
-    hemiSky: 0x9fb0e8,
-    hemiGround: 0x3a2c38,
-    hemiI: 1.0,
-    sunColor: 0xffd8a8,
-    sunI: 1.3,
-    particleColor: 0xd8c8ff,
-    particleWind: [0.6, -0.7, 0.3],
+    fogFar: 130,
+    hemiSky: 0x8ad0d8,
+    hemiGround: 0x6a4a2c,
+    hemiI: 1.05,
+    sunColor: 0xffc070,
+    sunI: 1.5,
+    particleColor: 0xffe0a8,
+    particleWind: [0.8, -0.4, 0.3],
   };
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] = [];
   private ambient: { points: THREE.Points; drift: Float32Array } | null = null;
@@ -352,6 +354,113 @@ export class Level {
         ctx.fillRect(p * 16 + 6, 6, 2, 2); // nails
         ctx.fillRect(p * 16 + 6, 56, 2, 2);
       }
+    } else if (kind === 'jungle') {
+      // dense leaf canopy floor: layered blobs + shadow flecks + sun tips
+      ctx.fillStyle = '#dfe8ca';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 70; i++) {
+        const g = 195 + Math.floor(Math.random() * 50);
+        ctx.fillStyle = `rgb(${g - 35},${g},${g - 45})`;
+        ctx.beginPath();
+        ctx.ellipse(Math.random() * 64, Math.random() * 64, 2 + Math.random() * 4, 1.5 + Math.random() * 3, Math.random() * 3, 0, 7);
+        ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(70,95,55,0.4)'; // under-canopy shade
+      for (let i = 0; i < 26; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
+      ctx.fillStyle = 'rgba(255,255,240,0.6)'; // sun catching leaf tips
+      for (let i = 0; i < 14; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+    } else if (kind === 'dirt') {
+      // trodden earth: warm blotches, pebbles, dry highlights
+      ctx.fillStyle = '#e4d8be';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 16; i++) {
+        const v = 200 + Math.floor(Math.random() * 34);
+        ctx.fillStyle = `rgb(${v},${v - 16},${v - 42})`;
+        ctx.beginPath();
+        ctx.ellipse(Math.random() * 64, Math.random() * 64, 5 + Math.random() * 9, 3 + Math.random() * 5, Math.random() * 3, 0, 7);
+        ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(120,95,60,0.55)'; // pebbles
+      for (let i = 0; i < 30; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
+      ctx.fillStyle = 'rgba(255,246,220,0.5)';
+      for (let i = 0; i < 16; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+    } else if (kind === 'pavement') {
+      // concrete: 32px slabs, expansion lines, speckle so aprons don't band
+      for (let py = 0; py < 2; py++) {
+        for (let px = 0; px < 2; px++) {
+          const v = 214 + Math.floor(Math.random() * 22);
+          ctx.fillStyle = `rgb(${v},${v},${v - 6})`;
+          ctx.fillRect(px * 32, py * 32, 32, 32);
+        }
+      }
+      ctx.fillStyle = 'rgba(150,150,145,0.5)';
+      for (let i = 0; i < 44; i++) ctx.fillRect(Math.random() * 63, Math.random() * 63, 1.5, 1.5);
+      ctx.fillStyle = 'rgba(105,105,100,0.65)'; // expansion joints
+      ctx.fillRect(0, 31, 64, 2);
+      ctx.fillRect(31, 0, 2, 64);
+      ctx.fillRect(0, 0, 64, 1);
+      ctx.fillRect(0, 0, 1, 64);
+      ctx.fillStyle = 'rgba(255,255,250,0.5)'; // sun-bleached slab lips
+      ctx.fillRect(0, 33, 64, 1);
+      ctx.fillRect(33, 0, 1, 64);
+    } else if (kind === 'asphalt') {
+      // FULL-COLOUR (pair with a white material): blacktop + painted lane
+      // line along one tile edge — tiled, it reads as parking-lot bays.
+      ctx.fillStyle = '#3e4046';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 120; i++) {
+        const v = 44 + Math.floor(Math.random() * 46);
+        ctx.fillStyle = `rgb(${v},${v + 2},${v + 6})`;
+        ctx.fillRect(Math.random() * 63, Math.random() * 63, 1.5, 1.5);
+      }
+      ctx.strokeStyle = 'rgba(22,22,26,0.7)'; // hairline cracks
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        let px = Math.random() * 64;
+        ctx.moveTo(px, 0);
+        for (let s = 1; s <= 4; s++) {
+          px += (Math.random() - 0.5) * 14;
+          ctx.lineTo(px, s * 16);
+        }
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#e8e2c8'; // worn paint stripe
+      ctx.fillRect(0, 0, 64, 3);
+      ctx.fillStyle = 'rgba(62,64,70,0.5)'; // scuff it back
+      for (let i = 0; i < 10; i++) ctx.fillRect(Math.random() * 62, 0, 3, 2);
+    } else if (kind === 'metal') {
+      // brushed deck plate: lengthwise strokes, panel seams, corner rivets
+      ctx.fillStyle = '#dde0e4';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 40; i++) {
+        const v = 200 + Math.floor(Math.random() * 46);
+        ctx.fillStyle = `rgba(${v},${v + 2},${v + 8},0.7)`;
+        ctx.fillRect(0, Math.random() * 63, 34 + Math.random() * 30, 1);
+      }
+      ctx.fillStyle = 'rgba(110,116,128,0.8)'; // seams
+      ctx.fillRect(0, 0, 64, 2);
+      ctx.fillRect(0, 0, 2, 64);
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillRect(0, 2, 64, 1);
+      ctx.fillStyle = 'rgba(90,96,108,0.9)'; // rivets
+      for (const [rx, ry] of [[6, 6], [58, 6], [6, 58], [58, 58], [32, 6], [32, 58]] as const) {
+        ctx.fillRect(rx - 1, ry - 1, 3, 3);
+      }
+    } else if (kind === 'plank') {
+      // boardwalk: 8px cross-planks, staggered butt joints, worn grain
+      for (let p = 0; p < 8; p++) {
+        const v = 216 + Math.floor(Math.random() * 26);
+        ctx.fillStyle = `rgb(${v},${v - 18},${v - 40})`;
+        ctx.fillRect(0, p * 8, 64, 8);
+        ctx.fillStyle = 'rgba(110,80,50,0.8)';
+        ctx.fillRect(0, p * 8, 64, 1); // seam
+        ctx.fillRect(((p * 29) % 61) + 2, p * 8, 1, 8); // butt joint
+        ctx.fillStyle = 'rgba(140,105,65,0.5)'; // grain scratch
+        ctx.fillRect(Math.random() * 40, p * 8 + 2 + Math.random() * 4, 14 + Math.random() * 18, 1);
+      }
+      ctx.fillStyle = 'rgba(255,240,210,0.35)';
+      for (let i = 0; i < 12; i++) ctx.fillRect(Math.random() * 60, Math.random() * 62, 3, 1);
     } else {
       // sand: pale speckle
       ctx.fillStyle = '#f2ecd8';
@@ -382,11 +491,68 @@ export class Level {
   private patterned(mat: THREE.Material, w: number, d: number, kind = 'checker'): THREE.MeshLambertMaterial {
     const m = (mat as THREE.MeshLambertMaterial).clone();
     const tex = this.surfaceTexture(kind).clone();
-    const density = kind === 'grass' ? 7 : kind === 'wood' ? 3.2 : kind === 'sand' ? 6 : 4;
+    const density =
+      kind === 'grass' ? 7
+      : kind === 'jungle' ? 6.5
+      : kind === 'wood' ? 3.2
+      : kind === 'plank' ? 3.4
+      : kind === 'sand' ? 6
+      : kind === 'dirt' ? 5.5
+      : kind === 'pavement' ? 6
+      : kind === 'asphalt' ? 8 // one paint stripe per 8u = parking bays
+      : kind === 'metal' ? 3
+      : 4;
     tex.repeat.set(Math.max(1, Math.round(w / density)), Math.max(1, Math.round(d / density)));
     tex.needsUpdate = true;
     m.map = tex;
     return m;
+  }
+
+  // Shared structural materials — one per role per level (walls, blocks,
+  // curbs, logs, rocks...), fixed texture repeat. Box UVs run 0..1 per face,
+  // so texel size breathes with mesh size: very PS1, very cheap. kind '' = no
+  // map (flat painted accents). Builders re-tint via the *Tint fields below
+  // BEFORE placing geometry.
+  private baseMats = new Map<string, THREE.MeshLambertMaterial>();
+  private baseMat(key: string, color: number, kind = '', rx = 2, ry = 2): THREE.MeshLambertMaterial {
+    let m = this.baseMats.get(key);
+    if (m) return m;
+    m = new THREE.MeshLambertMaterial({ color });
+    if (kind !== '') {
+      const tex = this.surfaceTexture(kind).clone();
+      tex.repeat.set(rx, ry);
+      tex.needsUpdate = true;
+      m.map = tex;
+    }
+    this.baseMats.set(key, m);
+    return m;
+  }
+
+  // Per-level structural palette (defaults suit the Test Course beach).
+  private wallTint = 0xb89a70; // perimeter walls / end wall
+  private blockTint = 0xc0a878; // step blocks, stair climbs
+  private curbTint = 0xe8a84e; // painted deck-edge strips
+  private bermTint = 0x4e7a3c; // jungle strip shoulders
+
+  // Rails come out of rails.ts plain grey; reskin every segment in the
+  // warp-room chrome (cool-tinted so it reads as polished steel with a magic
+  // sheen) and the posts in dark iron. Shared materials, and the chrome clone
+  // rides the scrollTexes list so the bands drift — grind lines glint from
+  // across the map. Visual only: rail snap logic never looks at these meshes.
+  private dressRails(): void {
+    const chrome = this.chromeTexture().clone();
+    chrome.repeat.set(1, 5); // bands streak along the pipe
+    chrome.needsUpdate = true;
+    this.scrollTexes.push({ tex: chrome, su: 0.22, sv: 0.045 });
+    const railMat = new THREE.MeshLambertMaterial({ map: chrome, color: 0xdce8f2, emissive: 0x46506a });
+    const postMat = new THREE.MeshLambertMaterial({ color: 0x3c424e, emissive: 0x11141a });
+    for (const rail of this.rails) {
+      rail.object.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (!m.isMesh) return;
+        m.material = m.geometry.type === 'CylinderGeometry' ? railMat : postMat;
+      });
+    }
   }
 
   constructor(scene: THREE.Scene, courseId = 0) {
@@ -399,6 +565,7 @@ export class Level {
     else if (courseId === 4) this.buildBoulderDash();
     else if (courseId === 5) this.buildFlats();
     else this.buildTestCourse();
+    this.dressRails(); // every builder is done adding rails by now
     this.buildAmbient(); // theme is set by the builder above
   }
 
@@ -1051,11 +1218,14 @@ export class Level {
   // ---------------------------------------------------------------- build --
 
   private buildTestCourse(): void {
-    const matA = new THREE.MeshLambertMaterial({ color: 0x8a8f9a });
-    const matB = new THREE.MeshLambertMaterial({ color: 0x767b87 });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0x7d95a5 });
-    const matBeach = new THREE.MeshLambertMaterial({ color: 0x9a9678 });
-    const matFinish = new THREE.MeshLambertMaterial({ color: 0x9a8f6e });
+    // Golden-hour beach: sunlit + shaded jungle greens, sandstone banks,
+    // hot-gold sand. Textures are near-white, so these tints carry the look.
+    const matA = new THREE.MeshLambertMaterial({ color: 0x6fa055 });
+    const matB = new THREE.MeshLambertMaterial({ color: 0x5c8a4a });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0xc8a06a });
+    const matBeach = new THREE.MeshLambertMaterial({ color: 0xe8c88a });
+    const matPlaza = new THREE.MeshLambertMaterial({ color: 0xb0a08a }); // rail-yard stonework
+    const matFinish = new THREE.MeshLambertMaterial({ color: 0xd0b070 });
 
     // --- decks (N. Sanity flow: beach -> funnel -> corridors -> finish) ---
     this.slab('beach', 14, -40, 0, 20, matBeach, false, 0, 'sand');
@@ -1063,7 +1233,7 @@ export class Level {
     // --- practice pen: walled rail playground east of the beach ---
     const penMesh = new THREE.Mesh(
       new THREE.BoxGeometry(30, 1, 54),
-      new THREE.MeshLambertMaterial({ color: 0x86937e }),
+      this.patterned(new THREE.MeshLambertMaterial({ color: 0x8fae62 }), 30, 54, 'grass'),
     );
     penMesh.position.set(25, -0.5, -13);
     penMesh.name = 'practice pen';
@@ -1093,7 +1263,7 @@ export class Level {
     // the transition, the steepness bleeds your speed, and whatever crests the
     // near-vertical lip converts into (mostly upward) air. The walls
     // approximate a radius-7.3 quarter-pipe; lips are grindable rails.
-    this.slab('halfpipe floor', -710, -770, -13.5, 6, matA, false);
+    this.slab('halfpipe floor', -710, -770, -13.5, 6, matRamp, false, 0, 'pavement');
     const profile: [number, number, number, number][] = [
       // xIn, xOut, yBase, yTop — circle points, steepening toward the lip
       [3.0, 4.8, -13.5, -13.27],
@@ -1118,9 +1288,9 @@ export class Level {
       }
     }
     // rail yard entry deck, then a pit crossed by three parallel rails
-    this.slab('rail yard entry', -770, -778, -13.5, 14, matB);
+    this.slab('rail yard entry', -770, -778, -13.5, 14, matPlaza, true, 0, 'stone');
     // pit: -778 .. -850
-    this.slab('rail yard landing', -850, -885, -13.5, 14, matA);
+    this.slab('rail yard landing', -850, -885, -13.5, 14, matPlaza, true, 0, 'stone');
     this.berms(-850, -885, -13.5, 14);
     this.ramp('final downhill', -885, -13.5, -940, -22, 12, matRamp);
     // gap 4: -940 .. -953 (fast, downhill speed carries you)
@@ -1299,6 +1469,13 @@ export class Level {
     // --- extra enemy guarding the rail yard landing ---
     this.enemy(-4, 4, -13.5, -876, 6);
 
+    // --- dressing: palms off the play space (visual only, no colliders) ---
+    this.palm(-13, 0, -6, 5.2, 0.14);
+    this.palm(-14.5, 0, -26, 4.4, -0.1);
+    this.palm(-12.5, 0, 8, 4.8, 0.08);
+    this.palm(4.6, -22, -1014, 4.6, -0.12); // finish deck, behind the gate
+    this.palm(-4.6, -22, -1017, 5.0, 0.1);
+
     // --- finish gate + end wall ---
     this.finishGate(-22, this.finishZ);
     this.endWall(-22);
@@ -1314,40 +1491,45 @@ export class Level {
   // fixed camera therefore sees side-on (real side-scroll platforming, no
   // camera move) — then a second corner back onto -Z for the finish.
   private buildSideways(): void {
-    const matA = new THREE.MeshLambertMaterial({ color: 0x7f8fa0 });
-    const matGround = new THREE.MeshLambertMaterial({ color: 0x77955e });
-    const matPlat = new THREE.MeshLambertMaterial({ color: 0x8a8f79 });
-    const matStone = new THREE.MeshLambertMaterial({ color: 0x7d8288 });
+    // Vaporwave dusk: lavender concrete, teal turf, hot-pink platforms.
+    this.wallTint = 0x7a5a9a;
+    this.blockTint = 0x8a6aa8;
+    this.curbTint = 0xff79c8;
+    const matA = new THREE.MeshLambertMaterial({ color: 0xa898c8 });
+    const matGround = new THREE.MeshLambertMaterial({ color: 0x62a878 });
+    const matPlat = new THREE.MeshLambertMaterial({ color: 0xc87ab0 });
+    const matStone = new THREE.MeshLambertMaterial({ color: 0x8a7ab8 });
 
     this.killY = -20;
     this.finishZ = -104;
     this.endWallZ = -116;
     this.theme = {
-      skyTop: '#57806d',
-      skyBottom: '#b8d0c0',
-      sunColorHex: '#f0f8e0',
+      skyTop: '#241454',
+      skyBottom: '#ff6ea8',
+      sunColorHex: '#ffb0e0',
       sunU: 0.35,
-      sunV: 0.28,
-      stars: false,
-      fog: 0x7a9484,
+      sunV: 0.3,
+      stars: true, // first stars over a neon horizon
+      fog: 0x8a4a86, // magenta haze to match the pink band
       fogNear: 20,
-      fogFar: 105,
-      hemiSky: 0xd8e8d8,
-      hemiGround: 0x4a5a48,
-      hemiI: 1.1,
-      sunColor: 0xe8f0d8,
-      sunI: 1.1,
-      particleColor: 0xd8e8d8,
+      fogFar: 110,
+      hemiSky: 0xc8a0e8,
+      hemiGround: 0x3a2848,
+      hemiI: 1.05,
+      sunColor: 0xff9ad0,
+      sunI: 1.2,
+      particleColor: 0xffb8e8,
       particleWind: [0.8, -0.3, 0.3],
     };
 
     // the turned stretch: path runs +X between the two corner decks
     this.zones = [{ xMin: 9, xMax: 146, zMin: -62, zMax: -38, dir: 'E' }];
 
-    // cliff backdrop behind the sideways stretch, and the pit below it
+    // cliff backdrop behind the sideways stretch, and the pit below it —
+    // a giant stone-block silhouette going violet into the dusk
     const cliff = new THREE.Mesh(
       new THREE.BoxGeometry(200, 60, 1.5),
-      new THREE.MeshLambertMaterial({ color: 0x31543c }),
+      this.patterned(new THREE.MeshLambertMaterial({ color: 0x3a2a5c }), 200, 60, 'stone'),
     );
     cliff.position.set(88, 8, -64);
     this.root.add(cliff);
@@ -1358,7 +1540,7 @@ export class Level {
     this.wall(0, 17, 12, 1, 0);
     this.crate(0, 0, -3, 'mask');
     this.fruitRow(-16, -22, 1.3, 4);
-    this.slab('approach', -12, -38, 0, 10, matGround);
+    this.slab('approach', -12, -38, 0, 10, matGround, true, 0, 'grass');
     this.crate(0, 0, -24);
     this.crate(0, 1.2, -24); // stack: spin, bounce, or headbutt
     this.enemy(-3, 3, 0, -31, 4);
@@ -1366,11 +1548,13 @@ export class Level {
     // CORNER 1: the path right-angles east; a wall dead ahead sells the turn
     this.slab('corner', -38, -56, 0, 18, matA, false, 4);
     this.wall(4, -57.5, 18, 1.5, 0);
+    this.rock(11.5, 0, -54, 1.8); // tucked corner dressing, off the racing line
+    this.rock(-3.8, 0, -55, 1.2);
     this.crystal(70, 0.4, -47); // mid east-stretch, on the main line
 
     // the sideways stretch: everything below runs along +X at the z band -47
     const CZ = -47;
-    this.slabX('ruin walk', 13, 34, 0, 9, matGround, CZ);
+    this.slabX('ruin walk', 13, 34, 0, 9, matGround, CZ, 'grass');
     this.crate(24, 0, CZ);
     this.crate(24, 1.2, CZ);
     this.crate(24, 2.4, CZ, 'mask'); // crown the stack
@@ -1388,7 +1572,7 @@ export class Level {
     this.fruitRowX(70, 86, 5.2, 5, CZ);
     this.slabX('pit pad', 74, 80, 3, 9, matPlat, CZ);
     // landing shelf: nitro squats the lane, crab patrols the screen
-    this.slabX('mid shelf', 90, 108, 3.2, 9, matGround, CZ);
+    this.slabX('mid shelf', 90, 108, 3.2, 9, matGround, CZ, 'grass');
     this.crate(98, 3.2, CZ, 'nitro');
     this.enemy(94, 106, 3.2, CZ, 5);
     // split: bounce the arrow crate up to the high ledge, or run the TNT road
@@ -1396,22 +1580,23 @@ export class Level {
     this.slabX('high ledge', 110, 128, 8.4, 9, matPlat, CZ);
     this.crate(118, 8.4, CZ, 'mask');
     this.fruitRowX(112, 126, 9.7, 6, CZ);
-    this.slabX('low road', 110, 132, 2.8, 9, matStone, CZ);
+    this.slabX('low road', 110, 132, 2.8, 9, matStone, CZ, 'stone');
     this.crate(117, 2.8, CZ, 'tnt');
     this.crate(124, 2.8, CZ, 'tnt');
     // rejoin before the second corner
-    this.slabX('rejoin', 136, 146, 3.6, 9, matGround, CZ);
+    this.slabX('rejoin', 136, 146, 3.6, 9, matGround, CZ, 'grass');
     this.checkpoint(3.6, CZ, 141);
 
     // CORNER 2: the path turns back south toward the gate
     this.slab('corner 2', -38, -56, 3.6, 18, matA, false, 152);
     this.wall(161.5, -47, 1.5, 18, 3.6);
+    this.rock(158.5, 3.6, -54.5, 1.6);
     this.wall(152, -37, 18, 1.5, 3.6); // north lip of the corner
 
     // corridor finish at the far end of the L
     this.slab('descent', -56, -70, 3.6, 10, matPlat, true, 152);
     this.slab('step down', -74, -84, 1.6, 10, matPlat, true, 152);
-    this.slab('final run', -88, -120, 0, 12, matStone, true, 152);
+    this.slab('final run', -88, -120, 0, 12, matStone, true, 152, 'stone');
     this.crate(149, 0, -91, 'mask');
     this.crate(152, 0, -94);
     this.crate(152, 1.2, -94);
@@ -1441,7 +1626,7 @@ export class Level {
     baseY: number,
     width: number,
     mat: THREE.Material,
-    opts: { amp?: number; dips?: number[]; berms?: boolean } = {},
+    opts: { amp?: number; dips?: number[]; berms?: boolean; tex?: string } = {},
     cx = 0,
   ): void {
     const depth = Math.abs(z1 - z0);
@@ -1474,7 +1659,7 @@ export class Level {
       pos.setY(i, h);
     }
     geo.computeVertexNormals();
-    const mesh = new THREE.Mesh(geo, this.patterned(mat, width, depth, 'grass'));
+    const mesh = new THREE.Mesh(geo, this.patterned(mat, width, depth, opts.tex ?? 'jungle'));
     mesh.position.set(cx, baseY, cz);
     mesh.name = name;
     this.root.add(mesh);
@@ -1485,7 +1670,7 @@ export class Level {
   // Firm raised edges: visible ridge + solid collider + a grindable lip rail.
   private berms(z0: number, z1: number, baseY: number, width: number, cx = 0): void {
     const depth = Math.abs(z1 - z0);
-    const mat = new THREE.MeshLambertMaterial({ color: 0x4d5c42 });
+    const mat = this.baseMat('berm', this.bermTint, 'jungle', 1, 8);
     for (const side of [-1, 1]) {
       const x = cx + side * (width / 2 - 0.45);
       const berm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.5, depth), mat);
@@ -1540,7 +1725,7 @@ export class Level {
         new THREE.MeshLambertMaterial({ color: 0x8a96c8, emissive: 0x141c38 }),
         w,
         d,
-        'stone',
+        'metal', // riveted hover-plate
       ),
     );
     mesh.position.set(x, topY - 0.4, z);
@@ -1616,7 +1801,7 @@ export class Level {
     pivot.add(bob);
     this.root.add(pivot);
     // gallows: two posts + a crossbeam so the thing reads at speed
-    const postMat = new THREE.MeshLambertMaterial({ color: 0x5c4a36 });
+    const postMat = this.baseMat('gallows', 0x8a6a48, 'wood', 1, 2);
     const postH = len + 2.5;
     for (const side of [-1, 1]) {
       const post = new THREE.Mesh(new THREE.BoxGeometry(0.6, postH, 0.6), postMat);
@@ -1658,9 +1843,11 @@ export class Level {
     } else if (kind === 'lava') {
       ctx.fillStyle = '#1c0a08';
       ctx.fillRect(0, 0, 64, 64);
-      ctx.strokeStyle = '#ff6a22';
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 6; i++) {
+      // sparse thin veins at partial alpha: the chase cam fills the frame
+      // with this plane, so crust must dominate and embers stay accents
+      ctx.strokeStyle = 'rgba(255,106,34,0.6)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 3; i++) {
         ctx.beginPath();
         ctx.moveTo(Math.random() * 64, 0);
         let px = Math.random() * 64;
@@ -1670,8 +1857,14 @@ export class Level {
         }
         ctx.stroke();
       }
+      ctx.fillStyle = 'rgba(90,38,24,0.7)'; // cooled crust plates
+      for (let i = 0; i < 9; i++) {
+        ctx.beginPath();
+        ctx.ellipse(Math.random() * 64, Math.random() * 64, 6 + Math.random() * 9, 4 + Math.random() * 6, Math.random() * 3, 0, 7);
+        ctx.fill();
+      }
       ctx.fillStyle = '#ffb050';
-      for (let i = 0; i < 10; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
+      for (let i = 0; i < 6; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
       su = 0.0035;
       sv = 0.0018;
     } else {
@@ -1690,7 +1883,9 @@ export class Level {
     tex.magFilter = THREE.NearestFilter;
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(size / 34, size / 34);
+    // one tile per ~14u: veins/waves read as surface detail, not spaghetti,
+    // even when the tilted boulder-chase camera fills the frame with the pit
+    tex.repeat.set(size / 14, size / 14);
     const mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(size, size),
       new THREE.MeshBasicMaterial({ map: tex }),
@@ -1735,7 +1930,7 @@ export class Level {
     const len = Math.abs(x1 - x0);
     const geo = new THREE.CylinderGeometry(0.55, 0.55, len, 8);
     geo.rotateZ(Math.PI / 2);
-    const mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: 0x6b4a2e }));
+    const mesh = new THREE.Mesh(geo, this.baseMat('log', 0x96683c, 'wood', 2, 1));
     const gy = this.floorY((x0 + x1) / 2, z, y);
     mesh.position.set((x0 + x1) / 2, gy + 0.55, z);
     this.root.add(mesh);
@@ -1747,11 +1942,46 @@ export class Level {
     );
   }
 
+  // Cheap PS1 palm: leaning 5-sided trunk + five solid drooping fronds on a
+  // shared geometry/material. Pure dressing — never a collider, never a
+  // groundMesh, so it cannot touch physics or floorY probes.
+  private static palmFrondGeo: THREE.BoxGeometry | null = null;
+  private palm(x: number, y: number, z: number, h = 4.5, lean = 0.12): void {
+    const trunkMat = this.baseMat('palmTrunk', 0xa87848, 'wood', 1, 3);
+    const frondMat = this.baseMat('palmFrond', 0x3f9a44);
+    const g = new THREE.Group();
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.3, h, 5), trunkMat);
+    trunk.position.y = h / 2;
+    g.add(trunk);
+    if (!Level.palmFrondGeo) Level.palmFrondGeo = new THREE.BoxGeometry(2.6, 0.09, 0.6);
+    for (let i = 0; i < 5; i++) {
+      const f = new THREE.Mesh(Level.palmFrondGeo, frondMat);
+      const a = (i / 5) * Math.PI * 2 + x * 0.7; // deterministic twist per tree
+      f.position.set(Math.cos(a) * 1.05, h - 0.15 + (i % 2) * 0.14, Math.sin(a) * 1.05);
+      f.rotation.set(0, -a, -0.45); // fan out, droop the tips
+      g.add(f);
+    }
+    g.position.set(x, y, z);
+    g.rotation.z = lean;
+    this.root.add(g);
+  }
+
+  // Squat silhouette boulder for set dressing. Visual only, shared geo/mat.
+  private static rockGeo: THREE.DodecahedronGeometry | null = null;
+  private rock(x: number, y: number, z: number, s = 1.6): void {
+    if (!Level.rockGeo) Level.rockGeo = new THREE.DodecahedronGeometry(1, 0);
+    const m = new THREE.Mesh(Level.rockGeo, this.baseMat('rock', 0xa08a70, 'dirt', 2, 2));
+    m.scale.set(s, s * 0.62, s * 0.8);
+    m.rotation.y = x * 1.3 + z * 0.7; // deterministic tumble
+    m.position.set(x, y + s * 0.34, z);
+    this.root.add(m);
+  }
+
   // Rolling stone hazard patrolling the course between z0 (near) and z1 (far).
   private stone(x: number, y: number, z0: number, z1: number, speed: number, r = 0.9): void {
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(r, 10, 8),
-      new THREE.MeshLambertMaterial({ color: 0x8d8478 }),
+      this.baseMat('rock', 0xa08a70, 'dirt', 2, 2),
     );
     mesh.position.set(x, this.floorY(x, (z0 + z1) / 2, y) + r, (z0 + z1) / 2);
     this.root.add(mesh);
@@ -1808,11 +2038,12 @@ export class Level {
     depth: number,
     mat: THREE.Material,
     cz: number,
+    tex = 'checker',
   ): THREE.Mesh {
     const len = Math.abs(x1 - x0);
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(len, 1, depth),
-      this.patterned(mat, len, depth),
+      this.patterned(mat, len, depth, tex),
     );
     mesh.position.set((x0 + x1) / 2, topY - 0.5, cz);
     mesh.name = name;
@@ -1828,7 +2059,7 @@ export class Level {
   }
 
   // Sloped deck between two top-surface edge lines (z0,y0) -> (z1,y1).
-  private ramp(name: string, z0: number, y0: number, z1: number, y1: number, width: number, mat: THREE.Material, cx = 0): void {
+  private ramp(name: string, z0: number, y0: number, z1: number, y1: number, width: number, mat: THREE.Material, cx = 0, tex = 'stone'): void {
     const dy = y1 - y0;
     const dz = z1 - z0;
     const len = Math.hypot(dy, dz);
@@ -1839,7 +2070,7 @@ export class Level {
     const alpha = Math.atan2(dyn, -dzn);
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(width, 1, len),
-      this.patterned(mat, width, len, 'stone'),
+      this.patterned(mat, width, len, tex),
     );
     mesh.rotation.x = alpha;
     const normal = new THREE.Vector3(0, -dzn, dyn);
@@ -1863,13 +2094,14 @@ export class Level {
     yBase: number,
     yTop: number,
     mat: THREE.Material,
+    tex = 'pavement',
   ): THREE.Mesh {
     const dx = xOut - xIn;
     const dy = yTop - yBase;
     const len = Math.hypot(dx, dy);
     const alpha = Math.atan2(dy, dx); // local +X maps to (cos a, sin a, 0)
     const depth = Math.abs(z1 - z0);
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(len, 1, depth), mat);
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(len, 1, depth), this.patterned(mat, len, depth, tex));
     mesh.rotation.z = alpha;
     const normal = new THREE.Vector3(-dy / len, dx / len, 0);
     if (normal.y < 0) normal.negate();
@@ -1886,7 +2118,7 @@ export class Level {
   private wall(cx: number, cz: number, w: number, d: number, baseY: number, h = 5): void {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
-      new THREE.MeshLambertMaterial({ color: 0x5a5f6a }),
+      this.baseMat('wall', this.wallTint, 'stone', 3, 1),
     );
     mesh.position.set(cx, baseY + h / 2, cz);
     this.root.add(mesh);
@@ -1900,7 +2132,7 @@ export class Level {
     const h = topY - baseY;
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
-      new THREE.MeshLambertMaterial({ color: 0x6e7683 }),
+      this.baseMat('step', this.blockTint, 'stone', 2, 2),
     );
     mesh.position.set(x, baseY + h / 2, z);
     mesh.name = 'step block';
@@ -1962,9 +2194,10 @@ export class Level {
     return { endZ: z, topY: y };
   }
 
-  // Dark edge strips so deck borders read at speed. Visual only.
+  // Painted edge strips so deck borders read at speed. Visual only — the
+  // per-level accent tint (THPS painted-curb energy) is set by each builder.
   private curbs(z0: number, z1: number, topY: number, width: number, cx = 0): void {
-    const mat = new THREE.MeshLambertMaterial({ color: 0x4a4e58 });
+    const mat = this.baseMat('curb', this.curbTint);
     const depth = Math.abs(z1 - z0);
     for (const side of [-1, 1]) {
       const curb = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.22, depth), mat);
@@ -2662,35 +2895,40 @@ export class Level {
   // across floating ruins, a downhill slalom, a rail canyon, a crate maze,
   // vine bridges, and a rolling-stone finale. Roughly 1.5x the Test Course.
   private buildGauntlet(): void {
-    const matSand = new THREE.MeshLambertMaterial({ color: 0xc9b87a });
-    const matJungle = new THREE.MeshLambertMaterial({ color: 0x6f8f5e });
-    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x77955e });
-    const matStone = new THREE.MeshLambertMaterial({ color: 0x7d8288 });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
-    const matPlat = new THREE.MeshLambertMaterial({ color: 0x8a8f79 });
-    const matWood = new THREE.MeshLambertMaterial({ color: 0x8a6b4a });
-    const matFinish = new THREE.MeshLambertMaterial({ color: 0x9a8f6e });
+    // Red canyon dusk: scrub greens against rust rock, everything warmed.
+    this.wallTint = 0xa86048;
+    this.blockTint = 0xb07050;
+    this.curbTint = 0xe89a4a;
+    this.bermTint = 0x6a5a34;
+    const matSand = new THREE.MeshLambertMaterial({ color: 0xd8b276 });
+    const matJungle = new THREE.MeshLambertMaterial({ color: 0x7a9a4e });
+    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x6a8c46 });
+    const matStone = new THREE.MeshLambertMaterial({ color: 0xa87a5c });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0xba8a56 });
+    const matPlat = new THREE.MeshLambertMaterial({ color: 0xb09a6e });
+    const matWood = new THREE.MeshLambertMaterial({ color: 0xa87848 });
+    const matFinish = new THREE.MeshLambertMaterial({ color: 0xc9a86a });
 
     this.killY = -34;
     this.finishZ = -1200;
     this.endWallZ = -1212;
     this.theme = {
-      skyTop: '#2a4a3a',
-      skyBottom: '#a8c86a',
-      sunColorHex: '#ffe8b0',
+      skyTop: '#3c1430',
+      skyBottom: '#ff8a4e',
+      sunColorHex: '#ffcf86',
       sunU: 0.72,
-      sunV: 0.28,
+      sunV: 0.3,
       stars: false,
-      fog: 0x3a5040,
+      fog: 0xb05a3a, // canyon dust — distance goes to burnt orange
       fogNear: 25,
-      fogFar: 135,
-      hemiSky: 0xc8e8b8,
-      hemiGround: 0x2c3820,
-      hemiI: 1.05,
-      sunColor: 0xffe8b0,
-      sunI: 1.45,
-      particleColor: 0x9fd06a,
-      particleWind: [0.7, -0.9, 0.4],
+      fogFar: 140,
+      hemiSky: 0xe8a878,
+      hemiGround: 0x481e18,
+      hemiI: 1.0,
+      sunColor: 0xffb060,
+      sunI: 1.5,
+      particleColor: 0xffc890,
+      particleWind: [1.1, -0.5, 0.3],
     };
 
     // river far below everything
@@ -3046,29 +3284,31 @@ export class Level {
   // No gaps, no hazards, no finish — walls only at the far perimeter, so
   // there is nothing to fall off. Marker posts along the axes give bearings.
   private buildFlats(): void {
-    const mat = new THREE.MeshLambertMaterial({ color: 0x8a929e });
+    // Crisp SoCal noon over an endless blacktop lot: high sun, thin haze,
+    // parking-bay paint stripes to give the eye a texel scale everywhere.
+    const mat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // asphalt is full-colour
     this.killY = -60;
     this.finishZ = -1e9; // no finish gate: endless test slab
     this.endWallZ = -2100;
     this.theme = {
-      skyTop: '#4a6a9a',
-      skyBottom: '#c8d8e4',
-      sunColorHex: '#fff6e0',
-      sunU: 0.3,
-      sunV: 0.22,
+      skyTop: '#2d7ecf',
+      skyBottom: '#c2e6f2',
+      sunColorHex: '#fff8dc',
+      sunU: 0.68,
+      sunV: 0.14,
       stars: false,
-      fog: 0xaebccc,
-      fogNear: 60,
-      fogFar: 260,
-      hemiSky: 0xe8f0ff,
-      hemiGround: 0x707a86,
-      hemiI: 1.15,
-      sunColor: 0xfff2d8,
-      sunI: 1.5,
+      fog: 0xbdd8e4,
+      fogNear: 70,
+      fogFar: 300,
+      hemiSky: 0xeaf6ff,
+      hemiGround: 0x8c98a2,
+      hemiI: 1.2,
+      sunColor: 0xfff6dc,
+      sunI: 1.55,
       particleColor: 0xffffff,
       particleWind: [0.5, -0.3, 0.2],
     };
-    this.slab('the flats', 2100, -2100, 0, 4200, mat, false);
+    this.slab('the flats', 2100, -2100, 0, 4200, mat, false, 0, 'asphalt');
     // perimeter walls, two kilometres out in every direction
     this.wall(0, 2098, 4200, 4, 0, 8);
     this.wall(0, -2098, 4200, 4, 0, 8);
@@ -3124,12 +3364,12 @@ export class Level {
 
     // --- ramp staircase: seven ramps of increasing steepness ---------------
     // grades 0.15 (8.5 deg) up to 1.9 (62 deg): walk, roll, and pump tests.
-    const matRampF = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
+    const matRampF = new THREE.MeshLambertMaterial({ color: 0xaab4ba }); // skatepark concrete
     const grades = [0.15, 0.3, 0.5, 0.75, 1.0, 1.4, 1.9];
     for (let i = 0; i < grades.length; i++) {
       const x = 38 + i * 12;
       const len = 8;
-      this.ramp(`test ramp ${i + 1}`, -40, 0, -40 - len, grades[i] * len, 5, matRampF, x);
+      this.ramp(`test ramp ${i + 1}`, -40, 0, -40 - len, grades[i] * len, 5, matRampF, x, 'pavement');
     }
   }
 
@@ -3235,7 +3475,7 @@ export class Level {
       posAttr.setXYZ(i, v.x, v.y, v.z);
     }
     geo.computeVertexNormals();
-    const mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: 0x7b6f60 }));
+    const mesh = new THREE.Mesh(geo, this.baseMat('boulder', 0x8a7660, 'dirt', 3, 2));
     this.root.add(mesh);
     const st: Stone = {
       mesh,
@@ -3433,7 +3673,7 @@ export class Level {
   private endWall(deckY: number, cx = 0): void {
     const wall = new THREE.Mesh(
       new THREE.BoxGeometry(14, 4, 1),
-      new THREE.MeshLambertMaterial({ color: 0x5a5f6a }),
+      this.baseMat('wall', this.wallTint, 'stone', 3, 1),
     );
     wall.position.set(cx, deckY + 2, this.endWallZ - 1);
     this.root.add(wall);

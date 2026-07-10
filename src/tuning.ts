@@ -45,6 +45,7 @@ export const TUNING = {
   nitroRadius: 2.75, // nitro explosion kill/break radius
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
+  renderScale: 0.5, // internal render resolution as a fraction of the window — the PS1 chunk knob
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -93,6 +94,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   nitroRadius: { min: 2, max: 12, step: 0.25 },
   tntRadius: { min: 1.5, max: 10, step: 0.25 },
   boulderSpeed: { min: 10, max: 45, step: 1 },
+  renderScale: { min: 0.25, max: 1, step: 0.05 },
 };
 
 // Hover text for the tuning panel: what each slider actually does in play.
@@ -162,6 +164,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   tntRadius: 'TNT explosion radius once the 3-2-1 fuse runs out (or it is spun/slammed).',
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
+  renderScale:
+    'Internal render resolution as a fraction of the window, stretched back up with pixelated sampling. Lower = fatter pixels = chunkier PS1 look; 1 = native and clean. Purely visual.',
 };
 
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
@@ -194,7 +198,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
-  { title: 'WORLD', keys: ['boulderSpeed'] },
+  { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
 ];
 
 // Fixed authored constants that are part of the feel but stay off the sliders
@@ -263,5 +267,5 @@ export const CONST = {
   steepLandGive: 1.5, // landing penetration forgiveness on steep faces (vs 0.35 on decks)
   vertGrade: 1.2, // leaving a lip steeper than this counts as vert coping...
   vertKeep: 0.25, // ...and keeps only this fraction of planar speed (air goes UP, back into the pipe)
-  renderScale: 0.5, // low internal resolution for the PS1 look
+  renderScale: 0.5, // build default for the low internal resolution (live knob: TUNING.renderScale)
 };

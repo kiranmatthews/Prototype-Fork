@@ -2581,23 +2581,119 @@ export class Player {
     }
   }
 
+  // Character/board skins: tiny canvases, NearestFilter'd — the chunky texel
+  // read IS the PS1 look, so nothing here goes above 64px. minFilter stays
+  // default like every other CanvasTexture in the game.
+  private pixelTex(size: number, draw: (ctx: CanvasRenderingContext2D) => void): THREE.CanvasTexture {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    draw(canvas.getContext('2d')!);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter;
+    return tex;
+  }
+
+  // 1px noise pass so no face reads as a flat vector fill — the instant
+  // giveaway of programmer art. Used for fabric, skin, and grip alike.
+  private speckle(ctx: CanvasRenderingContext2D, size: number, color: string, n: number): void {
+    ctx.fillStyle = color;
+    for (let i = 0; i < n; i++) {
+      ctx.fillRect(Math.floor(Math.random() * size), Math.floor(Math.random() * size), 1, 1);
+    }
+  }
+
+  // 5-point star path — chest logo and the grip-tape spray stencil share it.
+  private starPath(ctx: CanvasRenderingContext2D, cx: number, cy: number, rOut: number, rIn: number): void {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const r = i % 2 === 0 ? rOut : rIn;
+      const a = -Math.PI / 2 + (i * Math.PI) / 5;
+      if (i === 0) ctx.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+      else ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+    }
+    ctx.closePath();
+  }
+
   private buildVisual(): THREE.Group {
     const g = new THREE.Group();
+    const lam = (tex: THREE.CanvasTexture) => new THREE.MeshLambertMaterial({ map: tex });
 
     // Board (visual only), nose toward local +Z. Grouped with its wheels so
-    // grabs can pull the whole board up into the hand.
+    // grabs can pull the whole board up into the hand. Multi-material box:
+    // grip speckle on top, deck art on the BOTTOM — the underside is what the
+    // camera actually sees through grabs and flips, so the flames go there.
     const boardG = new THREE.Group();
-    const board = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5, 0.09, 1.7),
-      new THREE.MeshLambertMaterial({ color: 0x8a4a3a }),
-    );
-    board.position.y = 0.16;
-    boardG.add(board);
-    const wheelMat = new THREE.MeshLambertMaterial({ color: 0x22242a });
-    for (const [x, z] of [[-0.2, 0.55], [0.2, 0.55], [-0.2, -0.55], [0.2, -0.55]]) {
-      const wheel = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.12), wheelMat);
-      wheel.position.set(x, 0.06, z);
-      boardG.add(wheel);
+    const gripM = lam(this.pixelTex(64, (ctx) => {
+      ctx.fillStyle = '#17181c';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 130; i++) {
+        const v = 44 + Math.floor(Math.random() * 46);
+        ctx.fillStyle = `rgb(${v},${v},${v + 6})`;
+        ctx.fillRect(Math.floor(Math.random() * 64), Math.floor(Math.random() * 64), 1, 1);
+      }
+      // spray-stencil star, half scuffed away by foot drag
+      ctx.fillStyle = 'rgba(255,122,31,0.85)';
+      this.starPath(ctx, 32, 32, 11, 4.5);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(23,24,28,0.6)';
+      for (let i = 0; i < 30; i++) ctx.fillRect(20 + Math.random() * 22, 20 + Math.random() * 22, 2, 1);
+    }));
+    const artM = lam(this.pixelTex(64, (ctx) => {
+      // underside art: banded magenta dusk, flames off the tail, star sparkles
+      const bands = ['#241047', '#3d1663', '#631d7e', '#8f2492'];
+      for (let i = 0; i < 4; i++) {
+        ctx.fillStyle = bands[i];
+        ctx.fillRect(0, i * 16, 64, 16);
+      }
+      const flame = (color: string, h: number) => {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(0, 64);
+        for (let x = 0; x <= 64; x += 8) {
+          ctx.lineTo(x + 4, 64 - h - Math.sin(x * 0.6) * 5 - Math.random() * 8);
+          ctx.lineTo(x + 8, 64 - h * 0.35);
+        }
+        ctx.lineTo(64, 64);
+        ctx.closePath();
+        ctx.fill();
+      };
+      flame('#ff7a1f', 26);
+      flame('#ffd23f', 15);
+      flame('#fff3c4', 6);
+      ctx.fillStyle = '#f4f1e6';
+      for (const [x, y] of [[12, 10], [50, 7], [33, 16]]) {
+        ctx.fillRect(x - 1, y - 3, 2, 6); // little 4-point sparkle
+        ctx.fillRect(x - 3, y - 1, 6, 2);
+      }
+    }));
+    const edgeM = new THREE.MeshLambertMaterial({ color: 0xd89b52 }); // ply edge
+    const deckMats = [edgeM, edgeM, gripM, artM, edgeM, edgeM]; // +x -x top bottom +z -z
+    const deck = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.09, 1.7), deckMats);
+    deck.position.y = 0.16;
+    boardG.add(deck);
+    // Kicked nose/tail — same material array, so grip + art wrap them free.
+    const kickGeo = new THREE.BoxGeometry(0.46, 0.08, 0.3);
+    for (const side of [-1, 1]) {
+      const kick = new THREE.Mesh(kickGeo, deckMats);
+      kick.position.set(0, 0.185, side * 0.9);
+      kick.rotation.x = -side * 0.35;
+      boardG.add(kick);
+    }
+    const truckM = new THREE.MeshLambertMaterial({ color: 0xb9bfc9 });
+    const truckGeo = new THREE.BoxGeometry(0.32, 0.07, 0.1);
+    const wheelM = new THREE.MeshLambertMaterial({ color: 0xffd23f }); // urethane
+    const wheelGeo = new THREE.CylinderGeometry(0.068, 0.068, 0.1, 8);
+    for (const z of [0.55, -0.55]) {
+      const truck = new THREE.Mesh(truckGeo, truckM);
+      truck.position.set(0, 0.1, z);
+      boardG.add(truck);
+      for (const x of [-0.21, 0.21]) {
+        const wheel = new THREE.Mesh(wheelGeo, wheelM);
+        wheel.rotation.z = Math.PI / 2; // axle along x
+        wheel.position.set(x, 0.068, z);
+        boardG.add(wheel);
+      }
     }
     g.add(boardG);
     this.boardG = boardG;
@@ -2607,19 +2703,102 @@ export class Player {
     legs.position.y = 0.71; // hip line
     const legGeo = new THREE.BoxGeometry(0.17, 0.5, 0.26);
     legGeo.translate(0, -0.25, 0); // swing from the hip
-    const legMat = new THREE.MeshLambertMaterial({ color: 0x35506e });
+    const legMat = lam(this.pixelTex(64, (ctx) => {
+      // worn denim: vertical weave streaks, knee wear, hem, edge stitching
+      ctx.fillStyle = '#35506e';
+      ctx.fillRect(0, 0, 64, 64);
+      for (let x = 0; x < 64; x += 3) {
+        ctx.fillStyle = x % 6 === 0 ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)';
+        ctx.fillRect(x, 0, 1, 64);
+      }
+      this.speckle(ctx, 64, 'rgba(220,230,255,0.16)', 50);
+      ctx.fillStyle = 'rgba(160,190,220,0.22)';
+      ctx.fillRect(18, 30, 28, 14); // knee wear patch
+      ctx.fillStyle = '#26374a';
+      ctx.fillRect(0, 58, 64, 6); // rolled hem
+      ctx.fillStyle = '#e8a33d';
+      for (let y = 2; y < 58; y += 5) {
+        ctx.fillRect(1, y, 1, 3); // seam stitches land on the box corners
+        ctx.fillRect(62, y, 1, 3);
+      }
+    }));
+    const shoeM = lam(this.pixelTex(32, (ctx) => {
+      // chunky skate shoe: white upper, gum sole, grey lace crosses
+      ctx.fillStyle = '#f0ede4';
+      ctx.fillRect(0, 0, 32, 32);
+      this.speckle(ctx, 32, 'rgba(120,120,130,0.25)', 24);
+      ctx.fillStyle = '#b98a52';
+      ctx.fillRect(0, 26, 32, 6); // gum sole
+      ctx.fillStyle = '#2b2e35';
+      ctx.fillRect(0, 24, 32, 2); // foxing stripe
+      ctx.strokeStyle = '#8d94a3';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(8 + i * 6, 6);
+        ctx.lineTo(14 + i * 6, 14);
+        ctx.moveTo(14 + i * 6, 6);
+        ctx.lineTo(8 + i * 6, 14);
+        ctx.stroke();
+      }
+    }));
+    const padM = new THREE.MeshLambertMaterial({ color: 0x2b2e35 });
+    const shoeGeo = new THREE.BoxGeometry(0.2, 0.11, 0.32);
+    const padGeo = new THREE.BoxGeometry(0.15, 0.11, 0.05);
     for (const side of [-1, 1]) {
       const leg = new THREE.Mesh(legGeo, legMat);
       leg.position.x = side * 0.115;
       legs.add(leg);
+      // Shoe + kneepad ride the leg mesh: they swing with the run cycle and
+      // squash with legs.scale.y, same as everything else on the rig.
+      const shoe = new THREE.Mesh(shoeGeo, shoeM);
+      shoe.position.set(0, -0.47, 0.05);
+      leg.add(shoe);
+      const pad = new THREE.Mesh(padGeo, padM);
+      pad.position.set(0, -0.26, 0.145);
+      leg.add(pad);
       if (side === 1) this.legR = leg;
       else this.legL = leg;
     }
     g.add(legs);
     this.legs = legs;
+
+    // Tee: one plain fabric canvas for the sides; the front gets the sunburst
+    // logo, the back gets a race number — separate materials on the same box
+    // so neither graphic mirrors around the body.
+    const teeBase = (ctx: CanvasRenderingContext2D) => {
+      ctx.fillStyle = '#2fa88d';
+      ctx.fillRect(0, 0, 64, 64);
+      this.speckle(ctx, 64, 'rgba(255,255,255,0.10)', 60);
+      this.speckle(ctx, 64, 'rgba(0,60,50,0.18)', 40);
+      ctx.fillStyle = '#1d6e5d';
+      ctx.fillRect(0, 60, 64, 4); // hem band right at the hip line
+    };
+    const teeM = lam(this.pixelTex(64, teeBase));
+    const teeFrontM = lam(this.pixelTex(64, (ctx) => {
+      teeBase(ctx);
+      ctx.fillStyle = '#1d6e5d';
+      ctx.fillRect(18, 0, 28, 5); // collar
+      ctx.fillStyle = '#ff7a1f'; // chest sunburst, yellow core
+      this.starPath(ctx, 32, 30, 15, 6);
+      ctx.fill();
+      ctx.fillStyle = '#ffd23f';
+      ctx.beginPath();
+      ctx.arc(32, 30, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }));
+    const teeBackM = lam(this.pixelTex(64, (ctx) => {
+      teeBase(ctx);
+      ctx.fillStyle = '#1d6e5d';
+      ctx.fillRect(18, 0, 28, 5);
+      ctx.fillStyle = '#f4f1e6';
+      ctx.font = 'bold 30px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('98', 32, 42); // race number
+    }));
     const torso = new THREE.Mesh(
       new THREE.BoxGeometry(0.5, 0.55, 0.34),
-      new THREE.MeshLambertMaterial({ color: 0x3aa68f }),
+      [teeM, teeM, teeM, teeM, teeFrontM, teeBackM],
     );
     // Upper body rides in its own group so the shoulders can open side-on
     // (skate stance) and counter-swing against the run without dragging the
@@ -2627,17 +2806,77 @@ export class Player {
     const upper = new THREE.Group();
     torso.position.y = 0.98;
     upper.add(torso);
+
+    // Head: the whole face lives in the +Z texture (eye whites, pupils,
+    // brows, grin) — no more floating eye/mouth boxes. headM still pitches
+    // in syncVisual for the horizon look-at.
+    const skin = '#e8c39a';
+    const hair = '#4a2e1a';
+    const headSideM = lam(this.pixelTex(32, (ctx) => {
+      ctx.fillStyle = skin;
+      ctx.fillRect(0, 0, 32, 32);
+      this.speckle(ctx, 32, 'rgba(160,90,40,0.15)', 20);
+      ctx.fillStyle = hair;
+      ctx.fillRect(0, 0, 32, 6);
+      for (let x = 0; x < 32; x += 5) ctx.fillRect(x, 6, 3, 2); // fringe under the cap
+      ctx.fillStyle = '#d4a97e';
+      ctx.fillRect(13, 14, 6, 8); // ear
+    }));
+    const faceM = lam(this.pixelTex(64, (ctx) => {
+      ctx.fillStyle = skin;
+      ctx.fillRect(0, 0, 64, 64);
+      this.speckle(ctx, 64, 'rgba(160,90,40,0.12)', 40);
+      ctx.fillStyle = hair;
+      ctx.fillRect(0, 0, 64, 9);
+      for (let x = 2; x < 64; x += 9) ctx.fillRect(x, 9, 5, 3); // jagged fringe
+      ctx.fillStyle = '#3a2413'; // brows, one cocked higher — mid-trick face
+      ctx.fillRect(10, 20, 16, 4);
+      ctx.fillRect(38, 18, 16, 4);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(12, 26, 13, 12);
+      ctx.fillRect(39, 26, 13, 12);
+      ctx.fillStyle = '#20232b';
+      ctx.fillRect(20, 30, 5, 7); // pupils pulled in toward the nose: focus
+      ctx.fillRect(39, 30, 5, 7);
+      ctx.fillStyle = '#d4a97e';
+      ctx.fillRect(29, 36, 6, 5); // nose
+      ctx.fillStyle = '#5e2413'; // big Crash grin, corners turned up
+      ctx.fillRect(16, 46, 32, 9);
+      ctx.fillRect(12, 44, 6, 6);
+      ctx.fillRect(46, 44, 6, 6);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(18, 46, 28, 4); // tooth row
+      ctx.fillStyle = 'rgba(150,80,40,0.55)';
+      for (const [x, y] of [[8, 40], [12, 42], [53, 41], [57, 39]]) ctx.fillRect(x, y, 2, 2); // freckles
+    }));
     const head = new THREE.Mesh(
       new THREE.BoxGeometry(0.32, 0.32, 0.32),
-      new THREE.MeshLambertMaterial({ color: 0xe8c39a }),
+      [headSideM, headSideM, headSideM, headSideM, faceM, headSideM],
     );
     head.position.y = 1.42;
     upper.add(head);
     this.headM = head;
+    // Backwards cap: crown + rear brim as head children, so every nod and
+    // look-at pitch carries them for free.
+    const capM = new THREE.MeshLambertMaterial({ color: 0xf04e23 });
+    const crown = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.11, 0.36), capM);
+    crown.position.y = 0.195;
+    head.add(crown);
+    const brim = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.03, 0.18), capM);
+    brim.position.set(0, 0.16, -0.25);
+    head.add(brim);
 
     // Arms hang from the SHOULDER (geometry translated like the legs), so
     // swings, grabs, and windmills pivot where a shoulder actually is.
-    const armMat = new THREE.MeshLambertMaterial({ color: 0x3aa68f });
+    const armMat = lam(this.pixelTex(32, (ctx) => {
+      ctx.fillStyle = skin;
+      ctx.fillRect(0, 0, 32, 32);
+      this.speckle(ctx, 32, 'rgba(160,90,40,0.15)', 18);
+      ctx.fillStyle = '#2fa88d';
+      ctx.fillRect(0, 0, 32, 10); // tee sleeve at the shoulder
+      ctx.fillStyle = '#1d6e5d';
+      ctx.fillRect(0, 10, 32, 2); // sleeve hem
+    }));
     const armGeo = new THREE.BoxGeometry(0.13, 0.52, 0.13);
     armGeo.translate(0, -0.26, 0);
     for (const side of [-1, 1]) {
@@ -2646,19 +2885,14 @@ export class Player {
       arm.rotation.z = side * 0.25;
       upper.add(arm);
       if (side === 1) this.armR = arm;
-      else this.armL = arm;
+      else {
+        this.armL = arm;
+        // one sweatband on one wrist — cheap asymmetry for the silhouette
+        const band = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.06, 0.16), capM);
+        band.position.y = -0.42;
+        arm.add(band);
+      }
     }
-
-    // Crude face on the travel side (+Z), so backing up shows it to the camera.
-    const faceMat = new THREE.MeshBasicMaterial({ color: 0x222428 });
-    for (const side of [-0.075, 0.075]) {
-      const eye = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.07, 0.02), faceMat);
-      eye.position.set(side, 0.05, 0.165);
-      head.add(eye);
-    }
-    const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.03, 0.02), faceMat);
-    mouth.position.set(0, -0.06, 0.165);
-    head.add(mouth);
     g.add(upper);
     this.upperG = upper;
 
