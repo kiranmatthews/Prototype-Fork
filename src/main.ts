@@ -141,8 +141,18 @@ player.onDeath = () => {
   ui.flash();
   ui.showMessage('WIPEOUT!', '', 800);
 };
+player.onRelic = (title, sub) => ui.showMessage(title, sub, 1400);
 player.onFinish = (time) => {
-  ui.showMessage('COURSE CLEAR!', `time ${time.toFixed(2)}s — press R / Options to go again`, 0);
+  // the gate tallies the collectathon haul alongside the clear time
+  const gem = player.gemEarned
+    ? 'gem ✓'
+    : `gem ✗ (${player.cratesBroken}/${level.totalCrates} boxes)`;
+  const crystal = player.hasCrystal ? 'crystal ✓' : 'crystal ✗';
+  ui.showMessage(
+    'COURSE CLEAR!',
+    `time ${time.toFixed(2)}s — ${crystal} · ${gem} — press R / Options to go again`,
+    0,
+  );
 };
 player.onRespawn = () => {
   ui.hideMessage();
@@ -286,6 +296,8 @@ function frame(): void {
     fruit: player.fruit,
     lives: Math.max(0, player.lives),
     crates: `${player.cratesBroken}/${level.totalCrates}`,
+    hasCrystal: player.hasCrystal,
+    hasGem: player.gemEarned,
   });
   ui.setStats({
     speed: player.speed,

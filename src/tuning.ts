@@ -210,6 +210,8 @@ export const CONST = {
   ptsGrab: 150,
   ptsGrabQuarter: 40, // per 90 degrees of grab rotation landed
   ptsGrabTick: 4, // accrues every quarter second a grab is held (THPS-style)
+  ptsCrystal: 500, // the level crystal pickup
+  ptsGem: 1000, // all-boxes gem
   ptsGrindBase: 100,
   ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail

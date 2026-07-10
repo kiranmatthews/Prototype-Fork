@@ -58,6 +58,9 @@ export class Player {
   onFinish: (time: number) => void = () => {};
   onRespawn: () => void = () => {};
   onCheckpoint: () => void = () => {};
+  onRelic: (title: string, sub: string) => void = () => {};
+  hasCrystal = false; // Crash collectathon: the level crystal
+  gemEarned = false; // ...and the all-boxes gem
 
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
@@ -274,7 +277,11 @@ export class Player {
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
-    if (hard) this.lives = 3;
+    if (hard) {
+      this.lives = 3;
+      this.hasCrystal = false;
+      this.gemEarned = false;
+    }
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
     level.playerPos.copy(this.pos); // keep the boulder trigger honest across respawns
@@ -355,6 +362,7 @@ export class Player {
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
+    level.setRelics(this.hasCrystal, this.gemEarned); // gate icons mirror the haul
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
@@ -555,6 +563,19 @@ export class Player {
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
+      // All boxes broken -> the gem materializes on the spot, Crash rules.
+      if (
+        !this.gemEarned &&
+        level.totalCrates > 0 &&
+        this.cratesBroken >= level.totalCrates &&
+        (this.state as MoveState) !== 'dead'
+      ) {
+        this.gemEarned = true;
+        level.awardGem(this.pos);
+        sfx.play('lifeGet', 0.9);
+        this.score(CONST.ptsGem, 'Gem');
+        this.onRelic('ALL BOXES!', 'gem earned');
+      }
       // Blast aftermath: tally crates the explosions broke, and die if we're
       // inside an expanding blast sphere.
       for (const c of level.consumeBlastBroken()) {
@@ -1914,6 +1935,17 @@ export class Player {
         p.mesh.visible = false;
         this.collectFruit();
       }
+    }
+
+    // The level crystal: ride/walk/fly through it and it's yours (a death
+    // won't take it back; only a hard reset re-seats it).
+    const cr = level.crystalPickup;
+    if (cr && !cr.collected && this.playerBox.intersectsBox(cr.box)) {
+      this.hasCrystal = true;
+      level.collectCrystal();
+      sfx.play('maskGet', 0.9);
+      this.score(CONST.ptsCrystal, 'Crystal');
+      this.onRelic('CRYSTAL GET!', '');
     }
 
     if (this.playerBox.intersectsBox(level.finishBox)) {

@@ -250,6 +250,25 @@ export class Level {
   private plainTex: THREE.CanvasTexture | null = null;
   private nitroTex: THREE.CanvasTexture | null = null;
   private cpTex: THREE.CanvasTexture | null = null;
+
+  // ---- warp-room VFX + collectathon relics (demoscene math, PS1 budget) ----
+  crystalPickup: { group: THREE.Group; box: THREE.Box3; collected: boolean } | null = null;
+  private crystalPlaced = false; // Random level: drop it on one mid-course deck
+  private gemG: THREE.Group | null = null; // materializes when every box breaks
+  private vfxT = 0; // animation clock for all the procedural magic
+  private plasmaTex: THREE.CanvasTexture | null = null;
+  private plasmaData: ImageData | null = null;
+  private plasmaCtx: CanvasRenderingContext2D | null = null;
+  private plasmaPal: Uint8Array | null = null; // 256-entry blue/cyan palette
+  private plasmaFrame = 0;
+  private chromeTex: THREE.CanvasTexture | null = null; // UV-scrolled fake chrome
+  private glintTex: THREE.CanvasTexture | null = null;
+  private glints: { spr: THREE.Sprite; life: number; max: number; vy: number }[] = [];
+  private glintT = 0;
+  private glowRings: { mesh: THREE.Mesh; phase: number; speed: number; base: number }[] = [];
+  private gateCrystalIcon: THREE.Mesh | null = null;
+  private gateGemIcon: THREE.Mesh | null = null;
+  private relics = { crystal: false, gem: false };
   private blastMeshes: { outer: THREE.Mesh; inner: THREE.Mesh; ex: { center: THREE.Vector3; t: number; radius: number } }[] = [];
   private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
   private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
@@ -413,6 +432,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.updateVfx(dt);
     // Spun-away enemies: ballistic tumble; anything they hit, breaks.
     for (const e of this.enemies) {
       if (e.flungT === undefined || !e.flungVel) continue;
@@ -903,6 +923,20 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    // Hard reset re-seats the crystal and clears the materialized gem; a soft
+    // (death) respawn keeps them — Crash rules, once it's yours it's yours.
+    if (hard) {
+      if (this.crystalPickup) {
+        this.crystalPickup.collected = false;
+        this.crystalPickup.group.visible = true;
+      }
+      if (this.gemG) {
+        this.root.remove(this.gemG);
+        this.gemG = null;
+      }
+      this.relics = { crystal: true, gem: true };
+      this.setRelics(false, false);
+    }
     this.pops.length = 0;
     this.explosions.length = 0;
     this.blastBroken.length = 0;
@@ -1054,6 +1088,7 @@ export class Level {
     this.ramp('kicker', -465, -13, -475, -10.2, 12, matRamp);
     // gap 3: -475 .. -488 (kicker lip + drop to the landing)
     this.jungle('corridor D', -488, -575, -13, 12, matA);
+    this.crystal(0, -12.4, -530); // the level crystal, dead on the main route
     // rail 2 pit: -575 .. -655
     this.jungle('rail 2 landing', -655, -710, -13.5, 12, matB);
     // Halfpipe: plain terrain under the normal skate/slope physics — carve up
@@ -1337,6 +1372,7 @@ export class Level {
     // CORNER 1: the path right-angles east; a wall dead ahead sells the turn
     this.slab('corner', -38, -56, 0, 18, matA, false, 4);
     this.wall(4, -57.5, 18, 1.5, 0);
+    this.crystal(70, 0.4, -47); // mid east-stretch, on the main line
 
     // the sideways stretch: everything below runs along +X at the z band -47
     const CZ = -47;
@@ -2213,6 +2249,337 @@ export class Level {
     return this.cpTex;
   }
 
+  // -------------------------------------------- warp-room VFX + relics --
+
+  // Diagonal magenta/white bands; scrolled through the crystal's UVs every
+  // frame = cheap fake chrome (texture-coordinate animation, no reflections).
+  private chromeTexture(): THREE.CanvasTexture {
+    if (this.chromeTex) return this.chromeTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d')!;
+    for (let y = 0; y < 32; y++) {
+      for (let x = 0; x < 32; x++) {
+        const band = (Math.sin((x + y * 2) * 0.55) + Math.sin((x - y) * 0.23)) * 0.5;
+        const t = band * 0.5 + 0.5;
+        const r = Math.floor(150 + 105 * t);
+        const g = Math.floor(40 + 160 * t * t);
+        const b = Math.floor(200 + 55 * t);
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(x, y, 1, 1);
+      }
+    }
+    this.chromeTex = new THREE.CanvasTexture(canvas);
+    this.chromeTex.magFilter = THREE.NearestFilter;
+    this.chromeTex.wrapS = THREE.RepeatWrapping;
+    this.chromeTex.wrapT = THREE.RepeatWrapping;
+    return this.chromeTex;
+  }
+
+  // Chunky 4-point starburst for the additive billboard glints.
+  private glintTexture(): THREE.CanvasTexture {
+    if (this.glintTex) return this.glintTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d')!;
+    ctx.clearRect(0, 0, 32, 32);
+    const arm = (w: number, a: number) => {
+      ctx.fillStyle = `rgba(210,245,255,${a})`;
+      ctx.fillRect(16 - w / 2, 2, w, 28); // vertical
+      ctx.fillRect(2, 16 - w / 2, 28, w); // horizontal
+    };
+    arm(6, 0.35);
+    arm(4, 0.6);
+    arm(2, 1);
+    ctx.fillStyle = 'rgba(255,255,255,1)';
+    ctx.fillRect(13, 13, 6, 6);
+    this.glintTex = new THREE.CanvasTexture(canvas);
+    this.glintTex.magFilter = THREE.NearestFilter;
+    return this.glintTex;
+  }
+
+  // Flat additive ring; pulses + spins in update (radial-wave magic circle).
+  private glowRing(x: number, y: number, z: number, r: number, color: number, upright = false): THREE.Mesh {
+    const mesh = new THREE.Mesh(
+      new THREE.RingGeometry(r * 0.62, r, 20),
+      new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity: 0.45,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      }),
+    );
+    mesh.position.set(x, y, z);
+    if (!upright) mesh.rotation.x = -Math.PI / 2;
+    this.root.add(mesh);
+    this.glowRings.push({ mesh, phase: Math.random() * 6, speed: 1.6 + Math.random(), base: 1 });
+    return mesh;
+  }
+
+  private spawnGlint(x: number, y: number, z: number, scale = 1): void {
+    let slot = this.glints.find((g) => g.life <= 0);
+    if (!slot && this.glints.length < 14) {
+      const spr = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: this.glintTexture(),
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        }),
+      );
+      spr.visible = false;
+      this.root.add(spr);
+      slot = { spr, life: 0, max: 0.6, vy: 0 };
+      this.glints.push(slot);
+    }
+    if (!slot) return;
+    slot.max = 0.4 + Math.random() * 0.45;
+    slot.life = slot.max;
+    slot.vy = 0.4 + Math.random() * 0.8;
+    slot.spr.position.set(x, y, z);
+    slot.spr.userData.s = scale;
+    slot.spr.visible = true;
+  }
+
+  // The crystal: Crash 2/3 style pickup on the main route. Faceted octahedron
+  // wearing the scrolling chrome, magic ring at its base, glints in update.
+  private crystal(x: number, y: number, z: number): void {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.85),
+      new THREE.MeshLambertMaterial({
+        map: this.chromeTexture(),
+        color: 0xffffff,
+        emissive: 0xa02fd0,
+        emissiveIntensity: 0.55,
+        flatShading: true,
+      }),
+    );
+    body.scale.y = 1.5;
+    g.add(body);
+    // additive inner core sells the inner light without any real glow pass
+    const core = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.5),
+      new THREE.MeshBasicMaterial({
+        color: 0xff7af2,
+        transparent: true,
+        opacity: 0.55,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    core.scale.y = 1.5;
+    g.add(core);
+    g.position.set(x, y + 0.9, z);
+    g.userData.baseY = y + 0.9;
+    this.root.add(g);
+    this.glowRing(x, y + 0.12, z, 1.5, 0xd06aff);
+    this.crystalPickup = {
+      group: g,
+      box: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(x, y + 1.0, z),
+        new THREE.Vector3(2.0, 2.6, 2.0),
+      ),
+      collected: false,
+    };
+    this.crystalPlaced = true;
+  }
+
+  collectCrystal(): void {
+    const c = this.crystalPickup;
+    if (!c) return;
+    c.collected = true;
+    c.group.visible = false;
+    for (let i = 0; i < 8; i++) {
+      this.spawnGlint(
+        c.group.position.x + (Math.random() - 0.5) * 2.2,
+        c.group.position.y + (Math.random() - 0.5) * 2.2,
+        c.group.position.z + (Math.random() - 0.5) * 2.2,
+        1.6,
+      );
+    }
+  }
+
+  // All boxes broken: the gem materializes over the player, THPS-photo style.
+  awardGem(pos: THREE.Vector3): void {
+    if (this.gemG) return;
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.7),
+      new THREE.MeshLambertMaterial({
+        map: this.chromeTexture(),
+        color: 0xbfffff,
+        emissive: 0x20c0d8,
+        emissiveIntensity: 0.7,
+        flatShading: true,
+      }),
+    );
+    body.scale.set(1.25, 0.7, 1.25); // squat gem cut
+    g.add(body);
+    const core = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.42),
+      new THREE.MeshBasicMaterial({
+        color: 0x9ffcff,
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    core.scale.set(1.25, 0.7, 1.25);
+    g.add(core);
+    g.position.set(pos.x, pos.y + 3.2, pos.z);
+    g.userData.baseY = pos.y + 3.2;
+    this.root.add(g);
+    this.gemG = g;
+    this.glowRing(pos.x, pos.y + 3.2, pos.z, 1.6, 0x66eaff, true);
+    for (let i = 0; i < 8; i++) {
+      this.spawnGlint(
+        pos.x + (Math.random() - 0.5) * 2.5,
+        pos.y + 2.5 + Math.random() * 1.8,
+        pos.z + (Math.random() - 0.5) * 2.5,
+        1.6,
+      );
+    }
+  }
+
+  // The finish gate mirrors your relic haul: earned icons light up and spin.
+  setRelics(crystal: boolean, gem: boolean): void {
+    if (crystal === this.relics.crystal && gem === this.relics.gem) return;
+    this.relics = { crystal, gem };
+    const style = (icon: THREE.Mesh | null, earned: boolean, emissive: number): void => {
+      if (!icon) return;
+      const m = icon.material as THREE.MeshLambertMaterial;
+      if (earned) {
+        m.color.set(0xffffff);
+        m.emissive.set(emissive);
+        m.emissiveIntensity = 0.85;
+        m.opacity = 1;
+      } else {
+        m.color.set(0x2a2f3a);
+        m.emissive.set(0x000000);
+        m.opacity = 0.4;
+      }
+    };
+    style(this.gateCrystalIcon, crystal, 0xc03fe0);
+    style(this.gateGemIcon, gem, 0x20c8e0);
+  }
+
+  // 256-entry blue -> cyan -> white palette for the plasma (palette cycling:
+  // the field is static-ish maths; the LOOKUP slides, so it always moves).
+  private plasmaSetup(): void {
+    if (this.plasmaTex) return;
+    const pal = new Uint8Array(256 * 3);
+    for (let i = 0; i < 256; i++) {
+      const t = i / 255;
+      const w = Math.sin(t * Math.PI); // bright mid-band
+      pal[i * 3] = Math.floor(18 + 90 * t * t + 60 * w * t);
+      pal[i * 3 + 1] = Math.floor(40 + 170 * t);
+      pal[i * 3 + 2] = Math.floor(120 + 135 * Math.min(1, t * 1.4));
+    }
+    this.plasmaPal = pal;
+    const canvas = document.createElement('canvas');
+    canvas.width = 48;
+    canvas.height = 48;
+    this.plasmaCtx = canvas.getContext('2d')!;
+    this.plasmaData = this.plasmaCtx.createImageData(48, 48);
+    this.plasmaTex = new THREE.CanvasTexture(canvas);
+    this.plasmaTex.magFilter = THREE.NearestFilter; // chunky PS1 texels
+  }
+
+  // Classic demoscene plasma: three drifting sine bands + one radial ripple,
+  // summed (interference), palette-cycled. 48x48, every third frame.
+  private updatePlasma(): void {
+    if (!this.plasmaTex || !this.plasmaData || !this.plasmaCtx || !this.plasmaPal) return;
+    const t = this.vfxT;
+    const d = this.plasmaData.data;
+    const pal = this.plasmaPal;
+    let i = 0;
+    for (let y = 0; y < 48; y++) {
+      for (let x = 0; x < 48; x++) {
+        const dx = x - 24;
+        const dy = y - 24;
+        const v =
+          Math.sin(x * 0.32 + t * 1.3) +
+          Math.sin(y * 0.27 - t * 0.9) +
+          Math.sin((x + y) * 0.17 + t * 0.6) +
+          Math.sin(Math.sqrt(dx * dx + dy * dy) * 0.55 - t * 2.2);
+        const idx = (Math.floor((v + 4) * 31.9 + t * 26) & 255) * 3;
+        d[i] = pal[idx];
+        d[i + 1] = pal[idx + 1];
+        d[i + 2] = pal[idx + 2];
+        d[i + 3] = 255;
+        i += 4;
+      }
+    }
+    this.plasmaCtx.putImageData(this.plasmaData, 0, 0);
+    this.plasmaTex.needsUpdate = true;
+  }
+
+  // Per-frame VFX tick: plasma, chrome scroll, bobs, spins, rings, glints.
+  private updateVfx(dt: number): void {
+    this.vfxT += dt;
+    this.plasmaFrame++;
+    if (this.plasmaFrame % 3 === 0) this.updatePlasma();
+    // fake chrome = UV scroll
+    if (this.chromeTex) {
+      this.chromeTex.offset.x = (this.vfxT * 0.34) % 1;
+      this.chromeTex.offset.y = (this.vfxT * 0.11) % 1;
+    }
+    const bobSpin = (g: THREE.Group | null, rate: number): void => {
+      if (!g || !g.visible) return;
+      g.position.y = (g.userData.baseY as number) + Math.sin(this.vfxT * 2.1) * 0.22;
+      g.rotation.y += rate * dt;
+    };
+    if (this.crystalPickup && !this.crystalPickup.collected) bobSpin(this.crystalPickup.group, 1.7);
+    bobSpin(this.gemG, 2.4);
+    // gate relic icons: earned ones spin and bob, ghosts sit still
+    if (this.gateCrystalIcon && this.relics.crystal) this.gateCrystalIcon.rotation.y += 2.2 * dt;
+    if (this.gateGemIcon && this.relics.gem) this.gateGemIcon.rotation.y += 2.2 * dt;
+    // magic rings: radial pulse + slow spin
+    for (const r of this.glowRings) {
+      const p = 1 + 0.16 * Math.sin(this.vfxT * r.speed + r.phase);
+      r.mesh.scale.setScalar(p);
+      r.mesh.rotation.z += 0.5 * dt;
+      (r.mesh.material as THREE.MeshBasicMaterial).opacity = 0.3 + 0.2 * Math.sin(this.vfxT * r.speed * 1.3 + r.phase);
+    }
+    // ambient glints drip off whatever magic is live
+    this.glintT -= dt;
+    if (this.glintT <= 0) {
+      this.glintT = 0.16;
+      const anchors: THREE.Vector3[] = [];
+      if (this.crystalPickup && !this.crystalPickup.collected) anchors.push(this.crystalPickup.group.position);
+      if (this.gemG) anchors.push(this.gemG.position);
+      if (this.gateCrystalIcon && this.relics.crystal) anchors.push(this.gateCrystalIcon.position);
+      if (this.gateGemIcon && this.relics.gem) anchors.push(this.gateGemIcon.position);
+      if (anchors.length > 0) {
+        const a = anchors[Math.floor(Math.random() * anchors.length)];
+        this.spawnGlint(
+          a.x + (Math.random() - 0.5) * 1.8,
+          a.y + (Math.random() - 0.5) * 1.8,
+          a.z + (Math.random() - 0.5) * 1.8,
+        );
+      }
+    }
+    for (const g of this.glints) {
+      if (g.life <= 0) continue;
+      g.life -= dt;
+      if (g.life <= 0) {
+        g.spr.visible = false;
+        continue;
+      }
+      g.spr.position.y += g.vy * dt;
+      const k = Math.sin((1 - g.life / g.max) * Math.PI); // in-out
+      const s = ((g.spr.userData.s as number) || 1) * k * 0.7;
+      g.spr.scale.set(s, s, 1);
+      (g.spr.material as THREE.SpriteMaterial).rotation += 1.5 * dt;
+    }
+  }
+
   private enemyGroup(): THREE.Group {
     const group = new THREE.Group();
     const body = new THREE.Mesh(
@@ -2469,6 +2836,7 @@ export class Level {
     }
     this.crate(-2.2, hpBase, -560, 'bouncy');
     this.crate(2.2, hpBase, -575);
+    this.crystal(0, hpBase + 0.4, -567); // pipe-alley centre: ride through it
     this.pickup(-7, hpBase + 3.4, -555);
     this.pickup(7, hpBase + 3.4, -580);
     this.slab('pipe exit', -595, -615, hpBase, 14, matStone, true, 0, 'stone');
@@ -2761,6 +3129,7 @@ export class Level {
     // a TNT and a nitro for blast testing, well apart
     this.crate(16, 0, -60, 'tnt');
     this.crate(20, 0, -75, 'nitro');
+    this.crystal(0, 0.4, -45); // test crystal between the lanes
   }
 
   // Level 5, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
@@ -2822,6 +3191,7 @@ export class Level {
     this.jungle('chase C', -212, -285, 2, 12, matJungle, { dips: [-240] });
     this.crate(-3.2, 2, -260, 'nitro');
     this.crate(3.2, 2, -260, 'nitro'); // thread the middle
+    this.crystal(0, 2.4, -250); // grab it WHILE fleeing — right up the middle
     this.log(-5.5, -1.5, 2, -228);
     this.fruitRow(-278, -222, 3.3, 8);
     // gap 2: -207 .. -212 (rebalanced)
@@ -2975,6 +3345,7 @@ export class Level {
         const len = 28 + Math.random() * 22;
         const w = 10 + Math.random() * 4;
         this.slab('deck', z, z - len, y, w, mat(), true, xc);
+        if (!this.crystalPlaced && dist > 300) this.crystal(xc, y + 0.4, z - len * 0.5);
         const crates = Math.floor(Math.random() * 3);
         for (let i = 0; i < crates; i++) {
           this.crate(xc + Math.round(Math.random() * 8 - 4), y, z - 6 - Math.random() * (len - 12));
@@ -3049,6 +3420,7 @@ export class Level {
       z -= 30;
     }
     this.slab('finish run', z, z - 45, y, 14, mat(), true, xc);
+    if (!this.crystalPlaced) this.crystal(xc, y + 0.4, z - 10); // fallback: pre-gate
     this.finishZ = z - 30;
     this.endWallZ = z - 42;
     this.finishGate(y, this.finishZ, xc);
@@ -3095,5 +3467,45 @@ export class Level {
     );
     banner.position.set(cx, deckY + 6.4, z);
     this.root.add(banner);
+
+    // Warp portal: the demoscene plasma plane hangs between the posts, framed
+    // by a pulsing additive ring — Crash warp room meets iTunes visualizer.
+    this.plasmaSetup();
+    const portal = new THREE.Mesh(
+      new THREE.PlaneGeometry(10.4, 5.4),
+      new THREE.MeshBasicMaterial({
+        map: this.plasmaTex!,
+        transparent: true,
+        opacity: 0.85,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      }),
+    );
+    portal.position.set(cx, deckY + 3.1, z - 0.35);
+    this.root.add(portal);
+    this.glowRing(cx, deckY + 3.1, z - 0.25, 3.6, 0x66eaff, true);
+
+    // Relic scoreboard: crystal + gem icons over the gate — dark ghosts until
+    // earned, then they light up and spin (see setRelics).
+    const iconMat = (): THREE.MeshLambertMaterial =>
+      new THREE.MeshLambertMaterial({
+        map: this.chromeTexture(),
+        color: 0x2a2f3a,
+        transparent: true,
+        opacity: 0.4,
+        flatShading: true,
+      });
+    const cIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
+    cIcon.scale.y = 1.5;
+    cIcon.position.set(cx - 1.7, deckY + 8.1, z);
+    this.root.add(cIcon);
+    this.gateCrystalIcon = cIcon;
+    const gIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
+    gIcon.scale.set(1.25, 0.7, 1.25);
+    gIcon.position.set(cx + 1.7, deckY + 8.1, z);
+    this.root.add(gIcon);
+    this.gateGemIcon = gIcon;
+    this.relics = { crystal: true, gem: true }; // force the ghost restyle below
+    this.setRelics(false, false);
   }
 }

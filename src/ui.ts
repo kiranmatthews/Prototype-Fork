@@ -27,6 +27,8 @@ export interface HudState {
   fruit: number;
   lives: number;
   crates: string;
+  hasCrystal: boolean;
+  hasGem: boolean;
 }
 
 export class UI {
@@ -46,7 +48,9 @@ export class UI {
   private trickPlate!: HTMLElement;
   private trickLineEl!: HTMLElement;
   private trickTotalEl!: HTMLElement;
-  private prevHud = { points: -1, fruit: -1, lives: -1, crates: '' };
+  private crystalIcon!: HTMLElement;
+  private gemIcon!: HTMLElement;
+  private prevHud = { points: -1, fruit: -1, lives: -1, crates: '', crystal: false, gem: false };
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
   private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLSpanElement }>();
@@ -158,6 +162,13 @@ export class UI {
     wumpaRow.appendChild(this.wumpaEl);
     tl.appendChild(crateRow);
     tl.appendChild(wumpaRow);
+    // relic haul: crystal + gem, ghosted until earned
+    const relicRow = div('hud-counter hud-relics');
+    this.crystalIcon = div('hud-icon hud-icon-crystal hud-relic-off');
+    this.gemIcon = div('hud-icon hud-icon-gem hud-relic-off');
+    relicRow.appendChild(this.crystalIcon);
+    relicRow.appendChild(this.gemIcon);
+    tl.appendChild(relicRow);
 
     // top-center: score plate
     const scorePlate = div('hud-scoreplate');
@@ -254,6 +265,16 @@ export class UI {
       this.wumpaEl.textContent = String(s.fruit);
       pop(this.wumpaEl);
       this.prevHud.fruit = s.fruit;
+    }
+    if (s.hasCrystal !== this.prevHud.crystal) {
+      this.crystalIcon.classList.toggle('hud-relic-off', !s.hasCrystal);
+      if (s.hasCrystal) pop(this.crystalIcon);
+      this.prevHud.crystal = s.hasCrystal;
+    }
+    if (s.hasGem !== this.prevHud.gem) {
+      this.gemIcon.classList.toggle('hud-relic-off', !s.hasGem);
+      if (s.hasGem) pop(this.gemIcon);
+      this.prevHud.gem = s.hasGem;
     }
     if (s.lives !== this.prevHud.lives) {
       this.livesEl.textContent = String(s.lives);
@@ -451,6 +472,21 @@ export class UI {
         background: radial-gradient(circle at 35% 30%, #ffd24a, #e2521e 70%);
         box-shadow: 4px 4px 0 #000;
       }
+      .hud-relics { gap: 10px; }
+      .hud-icon-crystal {
+        width: clamp(30px, 5.5vh, 48px); height: clamp(42px, 7.5vh, 66px);
+        background: linear-gradient(160deg, #ff9af0 15%, #c03fe0 55%, #7a1898 90%);
+        clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
+        filter: drop-shadow(3px 3px 0 #000);
+      }
+      .hud-icon-gem {
+        width: clamp(38px, 7vh, 60px); height: clamp(28px, 5vh, 44px);
+        background: linear-gradient(160deg, #bfffff 15%, #35cfe4 55%, #147a90 90%);
+        clip-path: polygon(25% 0%, 75% 0%, 100% 35%, 50% 100%, 0% 35%);
+        filter: drop-shadow(3px 3px 0 #000);
+        align-self: center;
+      }
+      .hud-relic-off { opacity: 0.22; filter: grayscale(1) drop-shadow(3px 3px 0 #000); }
       .hud-icon-face {
         border-radius: 40%;
         background: radial-gradient(circle at 40% 35%, #f4b56a, #c96f28 75%);
