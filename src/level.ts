@@ -853,7 +853,7 @@ export class Level {
     c.fuse = undefined;
     c.mesh.visible = false;
     const center = c.mesh.position.clone();
-    const radius = c.tnt ? CONST.blastRadius * CONST.tntBlastScale : CONST.blastRadius;
+    const radius = c.tnt ? TUNING.tntRadius : TUNING.nitroRadius;
     const ex = { center, t: 0, radius, safe };
     this.explosions.push(ex);
     sfx.play('tntBoom', 0.9);

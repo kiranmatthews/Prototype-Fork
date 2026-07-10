@@ -39,6 +39,8 @@ export const TUNING = {
   smashSpeed: 16, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 30, // arrow-crate super bounce launch velocity
   slamRadius: 3.2, // pancake slam: crates/enemies within this radius break on impact
+  nitroRadius: 5.5, // nitro explosion kill/break radius
+  tntRadius: 3.3, // TNT explosion kill/break radius
   boulderSpeed: 25, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
 };
 
@@ -82,6 +84,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   smashSpeed: { min: 8, max: 40, step: 0.5 },
   arrowBounce: { min: 10, max: 60, step: 1 },
   slamRadius: { min: 1.5, max: 7, step: 0.1 },
+  nitroRadius: { min: 2, max: 12, step: 0.25 },
+  tntRadius: { min: 1.5, max: 10, step: 0.25 },
   boulderSpeed: { min: 10, max: 45, step: 1 },
 };
 
@@ -142,6 +146,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
   arrowBounce: 'Launch velocity of the yellow arrow-crate super bounce (a normal crate stomp is ~18).',
   slamRadius: 'Pancake slam blast radius — crates and enemies within this range of the impact break.',
+  nitroRadius: 'Nitro explosion radius — everything (including you, unmasked) within it when a nitro pops.',
+  tntRadius: 'TNT explosion radius once the 3-2-1 fuse runs out (or it is spun/slammed).',
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
 };
@@ -175,7 +181,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'slamRadius'] },
-  { title: 'CRATES', keys: ['crateBounce', 'arrowBounce'] },
+  { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'nitroRadius', 'tntRadius'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },
 ];
 
@@ -235,8 +241,6 @@ export const CONST = {
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
   tntFuse: 3, // Crash-style TNT countdown (stomp lights it)
-  tntBlastScale: 0.6, // TNT blast radius vs nitro (40% smaller)
-  blastRadius: 5.5, // nitro explosion kill/break radius (expands over blastGrow)
   blastGrow: 0.35, // seconds for the blast sphere to reach full size
   // Steep-ground rules: the halfpipe is just terrain now — these decide when
   // a slope stops being floor and starts being transition.
