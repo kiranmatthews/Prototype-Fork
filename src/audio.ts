@@ -28,6 +28,7 @@ const FILES: Record<string, string> = {
   wumpa2: 'wumpa-get-2.wav',
   wumpa3: 'fruit-get.wav',
   maskGet: 'mask-get.wav',
+  crystalGet: 'crystal-collect.mp3', // Crash crystal pickup jingle
   maskLoss: 'mask-loss.wav',
   lifeGet: 'life-get.wav',
   takeDamage: 'take-damage.wav',

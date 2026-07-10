@@ -1979,7 +1979,7 @@ export class Player {
     if (cr && !cr.collected && this.playerBox.intersectsBox(cr.box)) {
       this.hasCrystal = true;
       level.collectCrystal();
-      sfx.play('maskGet', 0.9);
+      sfx.play('crystalGet', 0.9);
       this.score(CONST.ptsCrystal, 'Crystal');
       this.onRelic('CRYSTAL GET!', '');
     }
