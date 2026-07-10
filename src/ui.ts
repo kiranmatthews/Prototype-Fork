@@ -54,6 +54,10 @@ export class UI {
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
   private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLSpanElement }>();
+  // Bookmarked slider names (green) — persisted attention markers, no effect.
+  private tunerMarks = new Set<string>(
+    JSON.parse(localStorage.getItem('protoTunerMarks') ?? '[]') as string[],
+  );
   // Build defaults, captured before any saved tuning is applied — so a new
   // build's numbers are always recoverable under the "defaults" button.
   private defaults = { ...TUNING };
@@ -389,6 +393,16 @@ export class UI {
     wrap.title = TUNING_INFO[key]; // hover for what this number does in play
     const label = document.createElement('label');
     label.textContent = key;
+    // Click the name to bookmark it (green) — pure attention bookkeeping for
+    // tuning sessions, remembered like the values are, zero gameplay effect.
+    if (this.tunerMarks.has(key)) label.classList.add('hud-marked');
+    label.style.cursor = 'pointer';
+    label.addEventListener('click', () => {
+      if (this.tunerMarks.has(key)) this.tunerMarks.delete(key);
+      else this.tunerMarks.add(key);
+      label.classList.toggle('hud-marked');
+      localStorage.setItem('protoTunerMarks', JSON.stringify([...this.tunerMarks]));
+    });
     const value = document.createElement('span');
     value.textContent = String(TUNING[key]);
     const input = document.createElement('input');
@@ -438,6 +452,7 @@ export class UI {
       .hud-secttitle { margin: 10px 0 2px; padding-bottom: 2px; border-bottom: 1px solid rgba(143, 212, 168, 0.35); color: #8fd4a8; font-size: 11px; letter-spacing: 2px; }
       .hud-slider { display: grid; grid-template-columns: 110px 1fr 34px; gap: 6px; align-items: center; }
       .hud-slider label { color: #9fb0c8; }
+      .hud-slider label.hud-marked { color: #58e08a; }
       .hud-slider span { text-align: right; color: #eef4ff; }
       .hud-slider input { width: 100%; accent-color: #8fd4a8; }
 

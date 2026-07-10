@@ -1238,11 +1238,12 @@ export class Player {
     const hit = this.queryGround(level);
     this.groundHit = hit;
 
-    // Ceiling: rising into the UNDERSIDE of a deck bonks (decks are 1 thick;
-    // tall blocks already have wall colliders). Stops the head passing up
-    // through elevated platforms. Steep banks are never ceilings — rising
-    // past a transition face must not bonk you on its coping.
-    if (hit && this.vVel > 0 && hit.normal.y >= CONST.steepSnapNormal) {
+    // Ceiling: rising into the UNDERSIDE of a deck or ramp belly bonks
+    // (surfaces are 1 thick; tall blocks already have wall colliders). Stops
+    // the head passing up through elevated platforms AND sloped ramp
+    // undersides. Only near-vertical transition faces are exempt — rising
+    // past one must not bonk you on its coping.
+    if (hit && this.vVel > 0 && hit.normal.y >= 0.4) {
       const underside = hit.y - 1.0;
       const head = this.pos.y + CONST.playerHalf.y * 2;
       if (this.pos.y < underside - 0.05 && head > underside) {
@@ -2811,6 +2812,9 @@ export class Player {
         boardG.add(wheel);
       }
     }
+    // The deck reads ~25% oversized against the body — scale the whole board
+    // group down (grab lift/tip animate position/rotation, unaffected).
+    boardG.scale.setScalar(0.8);
     g.add(boardG);
     this.boardG = boardG;
 
