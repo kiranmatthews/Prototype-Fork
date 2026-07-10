@@ -150,7 +150,6 @@ export class Player {
   private armL: THREE.Mesh | null = null;
   private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
   private headM: THREE.Mesh | null = null;
-  private boardMat: THREE.MeshLambertMaterial | null = null; // grab-landing safety tint
   private legs: THREE.Group | null = null;
   private legL: THREE.Mesh | null = null;
   private legR: THREE.Mesh | null = null;
@@ -2467,16 +2466,6 @@ export class Player {
           this.grabPose > 0.05 ||
           Math.abs(this.speed) > TUNING.boardSpeed);
     }
-    // Grab-landing readability: while a grab/spin is live, the board glows
-    // RED whenever touching down right now would bail (spin off-axis or the
-    // pose still mid-transition) — neutral again when the landing is clean.
-    if (this.boardMat) {
-      const a = ((this.grabSpinAngle % Math.PI) + Math.PI) % Math.PI;
-      const offAxisNow = Math.min(a, Math.PI - a) > CONST.grabOffAxisTolerance;
-      const unsafe =
-        this.state === 'air' && (this.grabPhase !== 'none' || (this.grabGraceTimer > 0 && offAxisNow));
-      this.boardMat.emissive.setHex(unsafe ? 0x991111 : 0x000000);
-    }
     this.bodyGroup.rotation.z = this.grabRoll * this.grabPose + this.slopeRoll;
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace.
@@ -2504,11 +2493,11 @@ export class Player {
     // over grabTransition — land while it's anywhere but flat and you bail.
     const targetPose = this.grabbing ? 1 : 0;
     const grabRate = dt / CONST.grabTransition;
-    this.grabPose = THREE.MathUtils.clamp(
-      this.grabPose + (targetPose > this.grabPose ? grabRate : -grabRate),
-      0,
-      1,
-    );
+    // Move-toward, STOPPING at the target: stepping past it and bouncing back
+    // made the whole pose strobe between two frames once the grab was fully
+    // reached — which on screen read as the skater flashing "transparent".
+    const grabDelta = targetPose - this.grabPose;
+    this.grabPose += Math.sign(grabDelta) * Math.min(Math.abs(grabDelta), grabRate);
     const targetSlide = this.sliding ? 1 : 0;
     this.slidePose += (targetSlide - this.slidePose) * Math.min(1, 18 * dt);
     // Slope pitch + roll: on the ground, the body tilts to lie along the
@@ -2598,9 +2587,10 @@ export class Player {
     // Board (visual only), nose toward local +Z. Grouped with its wheels so
     // grabs can pull the whole board up into the hand.
     const boardG = new THREE.Group();
-    const boardMat = new THREE.MeshLambertMaterial({ color: 0x8a4a3a });
-    this.boardMat = boardMat;
-    const board = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.09, 1.7), boardMat);
+    const board = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5, 0.09, 1.7),
+      new THREE.MeshLambertMaterial({ color: 0x8a4a3a }),
+    );
     board.position.y = 0.16;
     boardG.add(board);
     const wheelMat = new THREE.MeshLambertMaterial({ color: 0x22242a });
