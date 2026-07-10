@@ -117,6 +117,8 @@ export class Player {
   private jumpBufferCharge = 0;
   private grindTime = 0; // how long this grind has lasted (balance ramps up)
   private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
+  private snapOffset = new THREE.Vector3(); // entry offset, eased away on the rail
+  private snapEase = 1; // 0 -> 1 over railSnapEase seconds after a grind starts
   private prevPos = new THREE.Vector3(); // for travel-direction facing
   private grindRail: Rail | null = null;
   private grindT = 0;
@@ -1299,6 +1301,7 @@ export class Player {
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
     this.grindTime += dt;
+    this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
     // Grinds ride at the speed you brought and bleed a little on the rail
     // (nosegrinds hold their speed better).
     const bleed = this.grindStyle === 'nose' ? CONST.grindBleed * 0.4 : CONST.grindBleed;
@@ -1474,12 +1477,26 @@ export class Player {
       TUNING.maxSpeed * CONST.maxOverspeed,
     );
     this.speed = this.grindVel;
+    // Remember how far off the rail the body was at entry; placeOnRail eases
+    // it to zero so the snap reads as a quick glide, not a teleport.
+    this.snapOffset.set(
+      this.pos.x - sample.point.x,
+      this.pos.y - (sample.point.y + CONST.railRideHeight),
+      this.pos.z - sample.point.z,
+    );
+    this.snapEase = 0;
     this.placeOnRail(rail);
   }
 
   private placeOnRail(rail: Rail): void {
     const p = rail.pointAt(this.grindT);
     this.pos.set(p.x, p.y + CONST.railRideHeight, p.z);
+    // Glide onto the rail: the entry offset eases away over railSnapEase
+    // seconds instead of yanking the body sideways in a single frame.
+    if (this.snapEase < 1) {
+      const k = 1 - this.snapEase;
+      this.pos.addScaledVector(this.snapOffset, k * k); // ease-out
+    }
   }
 
   private exitGrind(vVel: number): void {

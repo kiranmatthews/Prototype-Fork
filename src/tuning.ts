@@ -202,6 +202,7 @@ export const CONST = {
   coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
+  railSnapEase: 0.12, // seconds to glide onto a grabbed rail (no one-frame zap)
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
   grindMinSpeed: 8, // slowest a grind can crawl (and the floor for speed bleed)
   grindBleed: 2, // grind speed lost per second on the rail
