@@ -2,7 +2,7 @@
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import { LEVEL_NAMES } from './level';
-import { TUNING, TUNING_RANGES, TUNING_INFO, TuningKey } from './tuning';
+import { TUNING, TUNING_RANGES, TUNING_INFO, TUNING_SECTIONS, TuningKey } from './tuning';
 
 export interface Stats {
   speed: number;
@@ -56,6 +56,7 @@ export class UI {
 
   // wired up by main.ts
   onLevelSelect: (id: number) => void = () => {};
+  onLifeCheat: () => void = () => {};
 
   constructor() {
     this.injectStyle();
@@ -113,9 +114,24 @@ export class UI {
       this.showMessage('BUILD DEFAULTS', '', 800);
     });
     panel.appendChild(btnRow);
-    for (const key of Object.keys(TUNING_RANGES) as TuningKey[]) {
-      panel.appendChild(this.sliderRow(key));
+    // Sliders grouped under labelled section headers (walking, skating, ...).
+    const placed = new Set<TuningKey>();
+    const addSection = (title: string, keys: TuningKey[]): void => {
+      if (keys.length === 0) return;
+      const head = div('hud-secttitle');
+      head.textContent = title;
+      panel.appendChild(head);
+      for (const key of keys) {
+        panel.appendChild(this.sliderRow(key));
+        placed.add(key);
+      }
+    };
+    for (const sect of TUNING_SECTIONS) {
+      addSection(sect.title, sect.keys.filter((k) => TUNING_RANGES[k] !== undefined));
     }
+    // Anything new that hasn't been assigned a section yet still shows up.
+    const leftovers = (Object.keys(TUNING_RANGES) as TuningKey[]).filter((k) => !placed.has(k));
+    addSection('OTHER', leftovers);
 
     document.body.appendChild(this.sidePanel('left', 'MENU', statsWrap));
     document.body.appendChild(this.sidePanel('right', 'TUNER', panel));
@@ -158,6 +174,14 @@ export class UI {
     this.livesEl = div('hud-num');
     livesRow.appendChild(this.livesEl);
     tr.appendChild(livesRow);
+    // Debug cheat: clicking the face banks an extra life. The HUD layer is
+    // pointer-transparent, so this row opts back in.
+    livesRow.style.cursor = 'pointer';
+    livesRow.style.pointerEvents = 'auto';
+    livesRow.title = 'click: +1 life';
+    livesRow.addEventListener('click', () => {
+      this.onLifeCheat();
+    });
 
     // bottom-center: THPS trick plate
     this.trickPlate = div('hud-trickplate');
@@ -376,6 +400,7 @@ export class UI {
       .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
       .hud-row { display: flex; justify-content: space-between; gap: 12px; }
       .hud-row b { color: #eef4ff; font-weight: normal; }
+      .hud-secttitle { margin: 10px 0 2px; padding-bottom: 2px; border-bottom: 1px solid rgba(143, 212, 168, 0.35); color: #8fd4a8; font-size: 11px; letter-spacing: 2px; }
       .hud-slider { display: grid; grid-template-columns: 110px 1fr 34px; gap: 6px; align-items: center; }
       .hud-slider label { color: #9fb0c8; }
       .hud-slider span { text-align: right; color: #eef4ff; }

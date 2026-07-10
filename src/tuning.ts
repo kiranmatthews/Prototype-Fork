@@ -34,8 +34,11 @@ export const TUNING = {
   airControl: 6, // forward/back speed adjustment in the air
   balanceDrift: 0.2, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
+  balanceSpeedEffect: 1, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 16, // skating/grinding at or above this speed plows straight through plain crates
+  arrowBounce: 30, // arrow-crate super bounce launch velocity
+  slamRadius: 3.2, // pancake slam: crates/enemies within this radius break on impact
   boulderSpeed: 25, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
 };
 
@@ -74,8 +77,11 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
+  balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
   smashSpeed: { min: 8, max: 40, step: 0.5 },
+  arrowBounce: { min: 10, max: 60, step: 1 },
+  slamRadius: { min: 1.5, max: 7, step: 0.1 },
   boulderSpeed: { min: 10, max: 45, step: 1 },
 };
 
@@ -129,12 +135,49 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
+  balanceSpeedEffect:
+    'Baseline for how much grind speed sways the needle. 0 = speed is ignored; 1 = slow grinds wobble up to 1.5x, fast grinds less; 2 = that effect doubled.',
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
   smashSpeed:
-    'Skating or grinding at or above this speed plows straight through plain wooden crates (TNT and nitro stay dangerous). Below it, a crate is a wall.',
+    'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
+  arrowBounce: 'Launch velocity of the yellow arrow-crate super bounce (a normal crate stomp is ~18).',
+  slamRadius: 'Pancake slam blast radius — crates and enemies within this range of the impact break.',
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
 };
+
+// Debug-panel layout: sliders grouped under labelled sections, in this order.
+// Every TuningKey should appear exactly once; anything missed lands in OTHER.
+export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
+  { title: 'WALKING', keys: ['walkSpeed', 'crawlSpeed'] },
+  {
+    title: 'JUMPS & AIR',
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'jumpChargeTime', 'riseGravity', 'fallGravity', 'airControl'],
+  },
+  {
+    title: 'SKATING',
+    keys: [
+      'maxSpeed',
+      'chargeBoost',
+      'friction',
+      'turnaround',
+      'boardSpeed',
+      'skateHoldTime',
+      'skateEntrySpeed',
+      'carveGrip',
+      'smashSpeed',
+    ],
+  },
+  { title: 'SLOPES & PIPES', keys: ['slopeBoost', 'uphillSlowdown'] },
+  { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideJumpHeight'] },
+  {
+    title: 'GRINDS',
+    keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect'],
+  },
+  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'slamRadius'] },
+  { title: 'CRATES', keys: ['crateBounce', 'arrowBounce'] },
+  { title: 'WORLD', keys: ['boulderSpeed'] },
+];
 
 // Fixed authored constants that are part of the feel but stay off the sliders
 // to keep the panel focused.
@@ -181,13 +224,13 @@ export const CONST = {
   slamHang: 0.32, // Wile E. Coyote beat: freeze in the air before the drop
   slamFlat: 0.5, // lie pancaked on the ground this long after impact
   crouchJumpMult: 1.35, // crouch (crawl) jumps launch this much higher
-  slamRadius: 2.4, // slam impact breaks crates/enemies within this radius
   slamSquashTime: 0.3, // pancake squash pose on impact
   fruitPerCrate: 3, // wumpa spawned per broken box
   balanceStart: 0.15, // initial needle kick when a grind starts
   balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
+  balanceGrace: 2, // seconds before the drift ramp starts growing (no hidden max grind length)
+  balanceCritWindow: 0.35, // pegged-needle beat where opposite input can still save the grind
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
-  bounceCrateForce: 30, // arrow-crate launch (vs ~18 from a normal stomp)
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
   tntFuse: 3, // Crash-style TNT countdown (stomp lights it)
   tntBlastScale: 0.6, // TNT blast radius vs nitro (40% smaller)

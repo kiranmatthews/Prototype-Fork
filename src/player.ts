@@ -113,6 +113,7 @@ export class Player {
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
   private jumpBufferCharge = 0;
   private grindTime = 0; // how long this grind has lasted (balance ramps up)
+  private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
   private prevPos = new THREE.Vector3(); // for travel-direction facing
   private grindRail: Rail | null = null;
   private grindT = 0;
@@ -121,6 +122,7 @@ export class Player {
   private grindStyle: 'normal' | 'nose' | 'five0' | 'board' = 'normal'; // held dir at entry
   private grindPoseX = 0; // nose-up / nose-down grind lean
   private grindYawPose = 0; // boardslide: body across the rail
+  private grindArmPose = 0; // arms out wide for balance on the rail
   private grindYawDir = 1;
   private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
   private grabTrickName = 'Grab'; // variant name for the combo readout
@@ -131,11 +133,14 @@ export class Player {
   private coyoteTimer = 0; // jump grace after running off a ledge
   private chargeTimer = 0; // X held on the ground: builds jump power + speed
   private charging = false;
+  private chargePlanted = false; // charge began at a standstill: feet pinned
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
   private armR: THREE.Mesh | null = null;
   private armL: THREE.Mesh | null = null;
+  private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
+  private headM: THREE.Mesh | null = null;
   private legs: THREE.Group | null = null;
   private legL: THREE.Mesh | null = null;
   private legR: THREE.Mesh | null = null;
@@ -316,6 +321,7 @@ export class Player {
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     this.charging = false;
+    this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
     this.freeSkate = false;
@@ -329,6 +335,7 @@ export class Player {
     this.visualYaw = 0;
     this.flipTimer = 0;
     this.balance = 0;
+    this.balanceCritT = 0;
     this.prevPos.copy(this.pos);
     for (const s of this.sparks) {
       s.life = 0;
@@ -773,8 +780,10 @@ export class Player {
       this.lastGrade = 0;
     } else if (!skating) {
       // WALK: direct drive, instant start and stop, no inertia, no slope
-      // physics — precise Crash platforming in all eight directions.
-      this.speed = input.moveY * TUNING.walkSpeed * diag;
+      // physics — precise Crash platforming in all eight directions. A
+      // planted charge (X held from a standstill) pins the feet instead.
+      this.speed =
+        this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed * diag;
       this.lastGrade = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
@@ -924,9 +933,10 @@ export class Player {
       // the slide's cross-course component
       const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
       this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
-    } else if (input.moveX !== 0 && !this.freeSkate) {
+    } else if (input.moveX !== 0 && !this.freeSkate && !(this.charging && this.chargePlanted)) {
       // Walking keeps the direct crisp sidestep (diagonal-normalized).
       // Free-heading skating has NO sidestep — carving IS the steering.
+      // A planted charge never sidesteps: the feet are pinned until release.
       const latRate = skating
         ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
         : TUNING.walkSpeed * diag;
@@ -1031,6 +1041,14 @@ export class Player {
       // fires the jump (coyote grace applies at ledges). A quick tap still
       // gives a serviceable hop.
       if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
+        if (!this.charging) {
+          // A charge begun at a STANDSTILL plants the feet: holding a
+          // direction won't slide you around or trip the skate — it aims the
+          // jump, playing out as air movement the moment you release.
+          // (lastPlanar = PREVIOUS frame's measured movement — the walk drive
+          // above may have already set this frame's speed before we arm.)
+          this.chargePlanted = this.lastPlanar < 1 && this.slideTimer <= 0;
+        }
         this.charging = true;
         this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
       }
@@ -1234,14 +1252,14 @@ export class Player {
       const p = c.mesh.position;
       const dx = p.x - this.pos.x;
       const dz = p.z - this.pos.z;
-      if (dx * dx + dz * dz > CONST.slamRadius * CONST.slamRadius) continue;
+      if (dx * dx + dz * dz > TUNING.slamRadius * TUNING.slamRadius) continue;
       if (Math.abs(p.y - this.pos.y) > 1.8) continue;
       if (c.tnt) level.detonate(c, true);
       else if (c.nitro) level.detonate(c);
       else this.smashCrate(level, c);
     }
     for (const e of level.enemies) {
-      if (e.alive && e.group.position.distanceTo(this.pos) < CONST.slamRadius + 0.6) {
+      if (e.alive && e.group.position.distanceTo(this.pos) < TUNING.slamRadius + 0.6) {
         level.killEnemy(e);
         this.score(CONST.ptsEnemy, 'Flattened');
       }
@@ -1266,30 +1284,43 @@ export class Player {
     this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - bleed * dt);
 
     // THPS balance: the needle is an unstable equilibrium that runs away from
-    // center, faster the longer you grind; left/right input fights it. Slow
-    // grinds are wobblier than fast ones. Pegging the meter bails you off.
+    // center, ramping up the longer you grind — but only after a settle-in
+    // grace, so there's no hidden "max grind length" booting you off long
+    // rails. Left/right input fights it; slow grinds are somewhat wobblier.
+    // Pegging the meter starts a short CRITICAL beat — slam the stick the
+    // other way and you can still save it — before the bail.
     // The third-mask uber locks the needle dead center.
-    const speedFactor = THREE.MathUtils.clamp(
+    const rawSpeedFactor = THREE.MathUtils.clamp(
       TUNING.grindSpeed / Math.max(this.grindVel, 1),
       0.6,
-      2.2,
+      1.5,
     );
+    // How much grind speed matters to the needle at all (slider): 0 = not at
+    // all, 1 = slow grinds wobble the full amount, higher = exaggerated.
+    const speedFactor = 1 + (rawSpeedFactor - 1) * TUNING.balanceSpeedEffect;
     // boardslides look coolest and wobble hardest
     const styleWobble = this.grindStyle === 'board' ? 1.25 : 1;
-    const instability =
-      TUNING.balanceDrift * (1 + this.grindTime * CONST.balanceRamp) * speedFactor * styleWobble;
+    const ramp = Math.max(0, this.grindTime - CONST.balanceGrace) * CONST.balanceRamp;
+    const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
     this.balance += Math.sign(this.balance || 1) * instability * dt;
     this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
     if (this.uberTimer > 0) this.balance = 0; // perfect balance
     if (Math.abs(this.balance) >= 1) {
-      // A mask absorbs the bail: the needle resets and the grind continues.
-      if (this.spendMask()) {
-        this.balance = 0;
-        this.grindTime = 0;
-      } else {
-        this.bailFromRail();
-        return;
+      this.balance = Math.sign(this.balance); // pinned at the edge, flailing
+      this.balanceCritT += dt;
+      if (this.balanceCritT > CONST.balanceCritWindow) {
+        // A mask absorbs the bail: the needle resets and the grind continues.
+        if (this.spendMask()) {
+          this.balance = 0;
+          this.grindTime = 0;
+          this.balanceCritT = 0;
+        } else {
+          this.bailFromRail();
+          return;
+        }
       }
+    } else {
+      this.balanceCritT = 0;
     }
 
     this.grindT += this.grindDir * this.grindVel * dt;
@@ -1411,6 +1442,7 @@ export class Player {
     this.score(Math.round(CONST.ptsGrindBase * styleMult), styleName);
     // Start the needle slightly off-center in a random direction.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
+    this.balanceCritT = 0;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     sfx.play('railLand', 0.8);
     // The rail keeps the speed you carried ALONG it — hit it fast and aligned
@@ -1453,6 +1485,7 @@ export class Player {
     this.vVel = vVel;
     this.regrindCd = CONST.regrindCooldown;
     this.balance = 0;
+    this.balanceCritT = 0;
     // Grind exits fly forward: the rail speed rides through the whole air,
     // even if it's below walking pace (footAir must not zero it).
     this.airMomentum = true;
@@ -1468,6 +1501,7 @@ export class Player {
     this.speed *= CONST.balanceBailSpeedKeep;
     this.regrindCd = CONST.regrindCooldown * 2;
     this.balance = 0;
+    this.balanceCritT = 0;
     sfx.play('takeDamage', 0.8);
     this.comboPoints = 0;
     this.comboMult = 0;
@@ -1674,7 +1708,7 @@ export class Player {
         // Arrow crate: land on it for a super bounce; it never breaks.
         if (this.playerBox.intersectsBox(c.box)) {
           if (this.isStomping(c.box)) {
-            this.vVel = CONST.bounceCrateForce;
+            this.vVel = TUNING.arrowBounce;
             this.state = 'air';
             this.grounded = false;
             this.charging = false;
@@ -1701,8 +1735,10 @@ export class Player {
         } else if (this.state === 'grind') {
           // Crates on the rail line are obstacles: spin them, hop them, or
           // hit them FAST enough to shatter straight through — otherwise
-          // they knock you off (a mask absorbs it).
-          if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) this.smashCrate(level, c);
+          // they knock you off (a mask absorbs it). Mask crates are the
+          // exception: grinding through one always pops it (it's a reward,
+          // not a trap).
+          if (c.mask || this.grindVel >= TUNING.smashSpeed || this.spendMask()) this.smashCrate(level, c);
           else this.bailFromRail();
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
@@ -1854,8 +1890,13 @@ export class Player {
           level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
           this.vVel = Math.min(this.vVel, 2);
+        } else if (Math.abs(this.speed) >= TUNING.smashSpeed) {
+          // Fast skating banks it on the way through, same as plain crates.
+          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
+          this.onCheckpoint();
+          this.speed *= 0.92;
         } else {
-          // Bump = wall, like a normal box. Spin, slide, or stomp to bank it.
+          // Slow bump = wall, like a normal box. Spin, slide, or stomp to bank it.
           this.pushOutOf(cp.box);
         }
       }
@@ -2192,34 +2233,61 @@ export class Player {
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
     if (this.legL && this.legR) {
-      this.legL.rotation.x = swing + 1.6 * flipTuck;
-      this.legR.rotation.x = -swing + 1.6 * flipTuck;
+      // baseball slide: lead leg kicked out ahead, trailing leg half-bent
+      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose;
+      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose;
       this.legR.position.set(0.115 + 0.05 * sk, 0, 0.42 * sk); // front foot, toward nose
       this.legL.position.set(-0.115 - 0.05 * sk, 0, -0.34 * sk); // back foot, toward tail
       this.legR.rotation.y = 0.22 * sk;
       this.legL.rotation.y = -0.16 * sk;
     }
 
+    // Shoulders: open side-on in the skate stance (the board and hips keep
+    // pointing along travel), square through a boardslide (the yaw pose has
+    // the whole body), and counter-swing the legs on foot — plus the head
+    // keeps the eyes on the horizon whatever the body is doing.
+    if (this.upperG) {
+      const stance =
+        0.55 * sk + (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 : 0);
+      const counter = -swing * 0.22;
+      this.upperG.rotation.y +=
+        (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
+    }
+    if (this.headM) {
+      const look =
+        -0.6 * this.crawlPose -
+        0.5 * this.dropPose -
+        0.4 * this.slidePose -
+        0.3 * this.chargePose -
+        0.45 * this.grabPitch * this.grabPose +
+        0.3 * this.hangPose -
+        0.55 * this.slopePose;
+      this.headM.rotation.x +=
+        (THREE.MathUtils.clamp(look, -1.0, 0.6) - this.headM.rotation.x) * Math.min(1, 12 * dt);
+    }
+
     const raw = this.rawInput;
+    // Grab variants, skate-photo poses (arms pivot at the SHOULDER: 0 = arm
+    // hanging, positive = swinging forward/up, negative = back/up).
     let pitchT = 0.9;
     let rollT = 0;
-    let armRT = 2.4; // right hand on the board
-    let armLT = -1.9; // left arm thrown high
+    let armRT = 1.1; // right hand pulls the board at the tucked knees
+    let armLT = -2.2; // left arm thrown high behind
     if (this.grabbing) {
       if (raw.moveY > 0.4) {
         pitchT = 1.25; // nosegrab: pitched hard over the nose
-        armRT = 2.7;
-        armLT = -2.2;
+        armRT = 1.5;
+        armLT = -2.4;
       } else if (raw.moveX < -0.4) {
         pitchT = 0.6; // melon: leading hand swaps, lean left
         rollT = -0.5;
-        armRT = -1.9;
-        armLT = 2.4;
+        armRT = -2.0;
+        armLT = 1.2;
       } else if (raw.moveX > 0.4) {
         pitchT = 0.6; // indy: lean right
         rollT = 0.5;
-        armRT = 2.6;
-        armLT = -1.4;
+        armRT = 1.2;
+        armLT = -1.7;
       }
     }
     const poseBlend = Math.min(1, 12 * dt);
@@ -2227,26 +2295,63 @@ export class Player {
     this.grabRoll += (rollT - this.grabRoll) * poseBlend;
     this.armRPose += (armRT - this.armRPose) * poseBlend;
     this.armLPose += (armLT - this.armLPose) * poseBlend;
-    const armAnim =
-      (-swing * 0.8 + breathe * 0.06 * this.idleAmp) * (1 - this.grabPose) +
-      2.3 * this.crawlPose * (1 - this.grabPose); // hands to the ground on all fours
+    // Grind: arms come out wide for balance, tipping with the needle.
+    this.grindArmPose += ((this.state === 'grind' ? 1 : 0) - this.grindArmPose) * Math.min(1, 10 * dt);
+
+    // Arm channels. ANTI-symmetric: the run swing (arms counter the legs).
+    // SYMMETRIC (both arms together): crawl hands to the ground, charge
+    // wind-up (arms swept back, loading the spring), flip tuck wrap, teeter
+    // windmill, pegged-needle flail, bail flail.
+    const windmill = this.teeterPose * Math.sin(this.teeterPhase * 13) * 1.3;
+    const critFlail = this.balanceCritT > 0 ? Math.sin(this.runTime * 22) * 0.8 : 0;
+    const bailFlail = this.bailing ? Math.sin(this.bailSpin * 2.7) * 1.1 : 0;
+    const anti = -swing * 0.9 * (1 - this.grabPose);
+    const sym =
+      (breathe * 0.06 * this.idleAmp +
+        0.8 * this.crawlPose - // hands down-forward to the ground
+        0.95 * this.chargePose +
+        1.9 * flipTuck +
+        windmill +
+        critFlail +
+        bailFlail) *
+      (1 - this.grabPose);
+    // Slide: trailing hand drags behind, lead arm reaches ahead.
+    const slideR = -1.1 * this.slidePose;
+    const slideL = 0.7 * this.slidePose;
     if (this.armR) {
-      this.armR.rotation.x = this.armRPose * this.grabPose + armAnim;
-      this.armR.rotation.z = 0.25 - this.grabPose * 0.55;
+      this.armR.rotation.x = this.armRPose * this.grabPose + anti + sym + slideR;
+      this.armR.rotation.z =
+        0.25 -
+        this.grabPose * 0.55 +
+        1.15 * this.grindArmPose * (1 + 0.6 * this.balance) + // balance arms out wide
+        1.25 * this.dropPose + // slam starfish
+        0.35 * this.skatePose; // loose skate arms
     }
     if (this.armL) {
-      this.armL.rotation.x = this.armLPose * this.grabPose - armAnim + swing * 1.6 * this.crawlPose;
-      this.armL.rotation.z = -0.25 + this.grabPose * 0.45;
+      this.armL.rotation.x =
+        this.armLPose * this.grabPose - anti + sym + slideL + swing * 1.6 * this.crawlPose;
+      this.armL.rotation.z =
+        -0.25 +
+        this.grabPose * 0.45 -
+        1.15 * this.grindArmPose * (1 - 0.6 * this.balance) -
+        1.25 * this.dropPose -
+        0.35 * this.skatePose;
     }
     // Knees up: legs shorten toward the hips while the body crouches deep,
     // and the board comes up with them, into the grabbing hand.
     if (this.legs) {
       // knees pull up to the chest — for the grab tuck and the flip tuck —
-      // and fold deeper through a rolling charge crouch so the feet stay
-      // planted on the deck while the body sinks (never into the floor).
+      // fold deeper through a rolling charge crouch so the feet stay planted
+      // on the deck, tuck under the hips on all fours, and bend through the
+      // slide — never poking through the floor.
       this.legs.scale.y = Math.max(
         0.15,
-        1 - 0.5 * this.grabPose - 0.4 * flipTuck - 0.43 * this.chargePose * this.skatePose,
+        1 -
+          0.5 * this.grabPose -
+          0.4 * flipTuck -
+          0.43 * this.chargePose * this.skatePose -
+          0.45 * this.crawlPose -
+          0.25 * this.slidePose,
       );
     }
     if (this.boardG) {
@@ -2335,26 +2440,32 @@ export class Player {
       this.bailSpin += 13 * dt;
       this.bodyGroup.rotation.x = this.bailSpin;
     } else {
+      // forward lean builds with real running speed (sprint posture)
+      const runLean = 0.14 * this.walkAmp * Math.min(1, planar / Math.max(TUNING.walkSpeed, 1));
       this.bodyGroup.rotation.x =
         flip * (1 - this.grabPose) +
         this.grabPitch * this.grabPose -
-        0.35 * this.slidePose +
-        1.3 * this.crawlPose - // all fours: torso pitched right over
+        0.6 * this.slidePose + // baseball slide: leaned back on the hip
+        1.25 * this.crawlPose - // all fours: torso pitched right over
         0.55 * this.hangPose + // rear back: "...uh oh"
         1.45 * this.dropPose - // belly-first pancake
         0.28 * this.teeterPose + // arms-back "whoa whoa" lean
         0.18 * this.skatePose + // athletic crouch over the board
+        runLean +
         this.slopePose + // lie along the ramp/transition under the board
         this.grindPoseX; // nosegrind / 5-0 lean
     }
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
+    // Crouch drops. The crawl and slam use SMALL drops: their pitch already
+    // lays the torso out at ground level, and the old deep crawl drop was
+    // burying the whole body under the floor.
     this.bodyGroup.position.y =
       this.grabPose * -0.5 -
-      this.slidePose * 0.32 -
-      this.crawlPose * 0.55 -
+      this.slidePose * 0.38 -
+      this.crawlPose * 0.12 -
       this.chargePose * 0.26 -
-      (this.grounded ? 0.45 * this.dropPose : 0) +
+      (this.grounded ? 0.1 * this.dropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.05 * this.walkAmp +
       breathe * 0.015 * this.idleAmp;
     // Impact squash right after a slam lands.
@@ -2416,23 +2527,30 @@ export class Player {
       new THREE.BoxGeometry(0.5, 0.55, 0.34),
       new THREE.MeshLambertMaterial({ color: 0x3aa68f }),
     );
+    // Upper body rides in its own group so the shoulders can open side-on
+    // (skate stance) and counter-swing against the run without dragging the
+    // hips, legs, or board around with them.
+    const upper = new THREE.Group();
     torso.position.y = 0.98;
-    g.add(torso);
+    upper.add(torso);
     const head = new THREE.Mesh(
       new THREE.BoxGeometry(0.32, 0.32, 0.32),
       new THREE.MeshLambertMaterial({ color: 0xe8c39a }),
     );
     head.position.y = 1.42;
-    g.add(head);
+    upper.add(head);
+    this.headM = head;
 
-    // Simple arms; during a grab one reaches down to the board and the other
-    // throws high (which one depends on the grab variant).
+    // Arms hang from the SHOULDER (geometry translated like the legs), so
+    // swings, grabs, and windmills pivot where a shoulder actually is.
     const armMat = new THREE.MeshLambertMaterial({ color: 0x3aa68f });
+    const armGeo = new THREE.BoxGeometry(0.13, 0.52, 0.13);
+    armGeo.translate(0, -0.26, 0);
     for (const side of [-1, 1]) {
-      const arm = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.5, 0.13), armMat);
-      arm.position.set(side * 0.33, 1.05, 0);
+      const arm = new THREE.Mesh(armGeo, armMat);
+      arm.position.set(side * 0.33, 1.22, 0);
       arm.rotation.z = side * 0.25;
-      g.add(arm);
+      upper.add(arm);
       if (side === 1) this.armR = arm;
       else this.armL = arm;
     }
@@ -2441,12 +2559,14 @@ export class Player {
     const faceMat = new THREE.MeshBasicMaterial({ color: 0x222428 });
     for (const side of [-0.075, 0.075]) {
       const eye = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.07, 0.02), faceMat);
-      eye.position.set(side, 1.47, 0.165);
-      g.add(eye);
+      eye.position.set(side, 0.05, 0.165);
+      head.add(eye);
     }
     const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.03, 0.02), faceMat);
-    mouth.position.set(0, 1.36, 0.165);
-    g.add(mouth);
+    mouth.position.set(0, -0.06, 0.165);
+    head.add(mouth);
+    g.add(upper);
+    this.upperG = upper;
 
     return g;
   }

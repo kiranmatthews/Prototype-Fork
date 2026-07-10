@@ -247,6 +247,9 @@ export class Level {
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
   private maskTex: THREE.CanvasTexture | null = null;
   private mysteryTex: THREE.CanvasTexture | null = null;
+  private plainTex: THREE.CanvasTexture | null = null;
+  private nitroTex: THREE.CanvasTexture | null = null;
+  private cpTex: THREE.CanvasTexture | null = null;
   private blastMeshes: { outer: THREE.Mesh; inner: THREE.Mesh; ex: { center: THREE.Vector3; t: number; radius: number } }[] = [];
   private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
   private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
@@ -1944,17 +1947,17 @@ export class Level {
     const size = 1.2;
     let mat: THREE.MeshLambertMaterial;
     if (kind === 'nitro') {
-      mat = new THREE.MeshLambertMaterial({ color: 0x35d054, emissive: 0x0c3a16 });
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0x0c3a16, map: this.nitroTexture() });
     } else if (kind === 'bouncy') {
-      mat = new THREE.MeshLambertMaterial({ color: 0xe8c832, map: this.arrowTexture() });
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.arrowTexture() });
     } else if (kind === 'tnt') {
-      mat = new THREE.MeshLambertMaterial({ color: 0xd04038, map: this.tntTexture('TNT') });
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.tntTexture('TNT') });
     } else if (kind === 'mask') {
-      mat = new THREE.MeshLambertMaterial({ color: 0xd08a3a, map: this.maskTexture() });
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.maskTexture() });
     } else if (kind === 'mystery') {
-      mat = new THREE.MeshLambertMaterial({ color: 0x8a5fc0, map: this.mysteryTexture() });
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.mysteryTexture() });
     } else {
-      mat = new THREE.MeshLambertMaterial({ color: 0xb08a4a });
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.plainTexture() });
     }
     // Seat the box: on top of an existing crate at this spot (stacks), else
     // on the actual terrain (wavy jungle floors), else at the given height.
@@ -1990,43 +1993,121 @@ export class Level {
       mask: kind === 'mask',
       mystery: kind === 'mystery',
     });
+    // Classic Crash formation: every arrow crate carries a breakable fruit
+    // crate floating above it — bounce off the arrow, headbutt the reward.
+    if (kind === 'bouncy') {
+      this.crate(x, base + size + 3.2, z);
+    }
   }
 
-  // Big '?' on the mystery crates (shared texture).
-  private mysteryTexture(): THREE.CanvasTexture {
-    if (this.mysteryTex) return this.mysteryTex;
+  // Classic PSX crate face: light planked wood, beveled frame, corner studs.
+  // Every crate variant draws its icon over this base (drawn per reference
+  // rips of the original series' crate sheet, recreated by hand).
+  private crateWood(ctx: CanvasRenderingContext2D, brace: boolean): void {
+    ctx.fillStyle = '#b5762f';
+    ctx.fillRect(0, 0, 32, 32);
+    // plank seams + grain flecks
+    ctx.fillStyle = '#94601f';
+    ctx.fillRect(0, 10, 32, 1);
+    ctx.fillRect(0, 21, 32, 1);
+    ctx.fillRect(6, 5, 4, 1);
+    ctx.fillRect(20, 15, 5, 1);
+    ctx.fillRect(9, 26, 5, 1);
+    if (brace) {
+      // X brace
+      ctx.strokeStyle = '#8a5a22';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(3, 3);
+      ctx.lineTo(29, 29);
+      ctx.moveTo(29, 3);
+      ctx.lineTo(3, 29);
+      ctx.stroke();
+    }
+    // beveled frame + corner studs
+    ctx.fillStyle = '#8a5a22';
+    ctx.fillRect(0, 0, 32, 3);
+    ctx.fillRect(0, 29, 32, 3);
+    ctx.fillRect(0, 0, 3, 32);
+    ctx.fillRect(29, 0, 3, 32);
+    ctx.fillStyle = '#d19b4a';
+    ctx.fillRect(0, 0, 32, 1);
+    ctx.fillRect(0, 0, 1, 32);
+    ctx.fillStyle = '#6e4517';
+    for (const [cx, cy] of [[1, 1], [27, 1], [1, 27], [27, 27]] as const) {
+      ctx.fillRect(cx, cy, 4, 4);
+    }
+  }
+
+  // Outlined icon text, chunky PSX style.
+  private crateLabel(
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    px: number,
+    fill: string,
+    outline: string,
+    x = 16,
+    y = 18,
+  ): void {
+    ctx.font = `bold ${px}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = outline;
+    for (const [ox, oy] of [[-1, 0], [1, 0], [0, -1], [0, 1]] as const) {
+      ctx.fillText(text, x + ox, y + oy);
+    }
+    ctx.fillStyle = fill;
+    ctx.fillText(text, x, y);
+  }
+
+  private makeTex(draw: (ctx: CanvasRenderingContext2D) => void): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     canvas.width = 32;
     canvas.height = 32;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = '#8a5fc0';
-    ctx.fillRect(0, 0, 32, 32);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 24px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('?', 16, 17);
-    this.mysteryTex = new THREE.CanvasTexture(canvas);
-    this.mysteryTex.magFilter = THREE.NearestFilter;
+    draw(canvas.getContext('2d')!);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter;
+    return tex;
+  }
+
+  // Plain wooden crate: planks + X brace, nothing else.
+  private plainTexture(): THREE.CanvasTexture {
+    if (!this.plainTex) this.plainTex = this.makeTex((ctx) => this.crateWood(ctx, true));
+    return this.plainTex;
+  }
+
+  // Big orange '?' on plain wood.
+  private mysteryTexture(): THREE.CanvasTexture {
+    if (!this.mysteryTex)
+      this.mysteryTex = this.makeTex((ctx) => {
+        this.crateWood(ctx, false);
+        this.crateLabel(ctx, '?', 22, '#ff8c1a', '#5a2d08', 16, 17);
+      });
     return this.mysteryTex;
   }
 
-  // Aku-style mask face (shared texture).
+  // Aku mask on wood: orange face, feathered headdress band, heavy brows.
   private maskTexture(): THREE.CanvasTexture {
-    if (this.maskTex) return this.maskTex;
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = '#d08a3a';
-    ctx.fillRect(0, 0, 32, 32);
-    ctx.fillStyle = '#5a2d12';
-    ctx.fillRect(6, 4, 20, 4); // headdress band
-    ctx.fillRect(9, 12, 5, 6); // eyes
-    ctx.fillRect(18, 12, 5, 6);
-    ctx.fillRect(10, 23, 12, 3); // mouth
-    this.maskTex = new THREE.CanvasTexture(canvas);
-    this.maskTex.magFilter = THREE.NearestFilter;
+    if (!this.maskTex)
+      this.maskTex = this.makeTex((ctx) => {
+        this.crateWood(ctx, false);
+        // feathers
+        for (const [fx, fc] of [[8, '#c03a2a'], [13, '#3a9a4a'], [18, '#c03a2a']] as const) {
+          ctx.fillStyle = fc;
+          ctx.fillRect(fx, 3, 4, 5);
+        }
+        // face
+        ctx.fillStyle = '#e89040';
+        ctx.fillRect(8, 7, 16, 20);
+        ctx.fillStyle = '#5a2d12';
+        ctx.fillRect(8, 7, 16, 3); // brow band
+        ctx.fillRect(10, 13, 4, 5); // eyes
+        ctx.fillRect(18, 13, 4, 5);
+        ctx.fillRect(11, 22, 10, 3); // grin
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(12, 23, 2, 1); // teeth glints
+        ctx.fillRect(17, 23, 2, 1);
+      });
     return this.maskTex;
   }
 
@@ -2034,46 +2115,102 @@ export class Level {
   private tntTexture(label: string): THREE.CanvasTexture {
     const cached = this.tntTexCache.get(label);
     if (cached) return cached;
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = '#d04038';
-    ctx.fillRect(0, 0, 32, 32);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = label.length > 1 ? 'bold 11px monospace' : 'bold 26px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(label, 16, 18);
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter;
+    const tex = this.makeTex((ctx) => {
+      ctx.fillStyle = '#c23a30';
+      ctx.fillRect(0, 0, 32, 32);
+      ctx.fillStyle = '#8f2018';
+      ctx.fillRect(0, 10, 32, 1);
+      ctx.fillRect(0, 21, 32, 1);
+      ctx.fillRect(0, 0, 32, 3);
+      ctx.fillRect(0, 29, 32, 3);
+      ctx.fillRect(0, 0, 3, 32);
+      ctx.fillRect(29, 0, 3, 32);
+      ctx.fillStyle = '#e06a52';
+      ctx.fillRect(0, 0, 32, 1);
+      ctx.fillRect(0, 0, 1, 32);
+      if (label.length > 1) this.crateLabel(ctx, label, 12, '#ffffff', '#3a0c08', 16, 17);
+      else this.crateLabel(ctx, label, 24, '#ffe84a', '#3a0c08', 16, 17);
+    });
     this.tntTexCache.set(label, tex);
     return tex;
   }
 
-  // Chunky white up-arrow on the bouncy crates (shared texture).
+  // Green NITRO: jittery goo crate, hazard-striped frame.
+  private nitroTexture(): THREE.CanvasTexture {
+    if (!this.nitroTex)
+      this.nitroTex = this.makeTex((ctx) => {
+        ctx.fillStyle = '#2fae44';
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#1c7a2c';
+        ctx.fillRect(0, 0, 32, 3);
+        ctx.fillRect(0, 29, 32, 3);
+        ctx.fillRect(0, 0, 3, 32);
+        ctx.fillRect(29, 0, 3, 32);
+        // hazard notches on the frame
+        ctx.fillStyle = '#0e4a18';
+        for (let x = 0; x < 32; x += 8) {
+          ctx.fillRect(x, 0, 4, 3);
+          ctx.fillRect(x + 4, 29, 4, 3);
+        }
+        ctx.fillStyle = '#7ce890';
+        ctx.fillRect(0, 0, 32, 1);
+        ctx.fillRect(0, 0, 1, 32);
+        this.crateLabel(ctx, 'NITRO', 9, '#eafff0', '#0e4a18', 16, 16);
+        this.crateLabel(ctx, '!', 12, '#ffe84a', '#0e4a18', 16, 25);
+      });
+    return this.nitroTex;
+  }
+
+  // Chunky green up-arrow on wood (the super-bounce crate).
   private arrowTexture(): THREE.CanvasTexture {
-    if (this.arrowTex) return this.arrowTex;
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = '#e8c832';
-    ctx.fillRect(0, 0, 32, 32);
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(16, 4);
-    ctx.lineTo(27, 16);
-    ctx.lineTo(20, 16);
-    ctx.lineTo(20, 28);
-    ctx.lineTo(12, 28);
-    ctx.lineTo(12, 16);
-    ctx.lineTo(5, 16);
-    ctx.closePath();
-    ctx.fill();
-    this.arrowTex = new THREE.CanvasTexture(canvas);
-    this.arrowTex.magFilter = THREE.NearestFilter;
+    if (!this.arrowTex)
+      this.arrowTex = this.makeTex((ctx) => {
+        this.crateWood(ctx, false);
+        ctx.fillStyle = '#1c6a28';
+        ctx.beginPath();
+        ctx.moveTo(16, 4);
+        ctx.lineTo(28, 17);
+        ctx.lineTo(21, 17);
+        ctx.lineTo(21, 29);
+        ctx.lineTo(11, 29);
+        ctx.lineTo(11, 17);
+        ctx.lineTo(4, 17);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#3fae4a';
+        ctx.beginPath();
+        ctx.moveTo(16, 6);
+        ctx.lineTo(26, 16);
+        ctx.lineTo(20, 16);
+        ctx.lineTo(20, 28);
+        ctx.lineTo(12, 28);
+        ctx.lineTo(12, 16);
+        ctx.lineTo(6, 16);
+        ctx.closePath();
+        ctx.fill();
+      });
     return this.arrowTex;
+  }
+
+  // Blue checkpoint crate with the classic 'C'.
+  private cpTexture(): THREE.CanvasTexture {
+    if (!this.cpTex)
+      this.cpTex = this.makeTex((ctx) => {
+        ctx.fillStyle = '#4aa0e0';
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#2a6ba0';
+        ctx.fillRect(0, 10, 32, 1);
+        ctx.fillRect(0, 21, 32, 1);
+        ctx.fillRect(0, 0, 32, 3);
+        ctx.fillRect(0, 29, 32, 3);
+        ctx.fillRect(0, 0, 3, 32);
+        ctx.fillRect(29, 0, 3, 32);
+        ctx.fillStyle = '#9fd4ff';
+        ctx.fillRect(0, 0, 32, 1);
+        ctx.fillRect(0, 0, 1, 32);
+        this.crateLabel(ctx, 'C', 22, '#ffffff', '#123049', 16, 17);
+      });
+    return this.cpTex;
   }
 
   private enemyGroup(): THREE.Group {
@@ -2136,7 +2273,7 @@ export class Level {
     const gy = this.floorY(x, z, deckY);
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(size, size, size),
-      new THREE.MeshLambertMaterial({ color: 0x4aa0e0, emissive: 0x123049 }),
+      new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0x123049, map: this.cpTexture() }),
     );
     mesh.position.set(x, gy + size / 2, z);
     this.root.add(mesh);
@@ -2593,6 +2730,37 @@ export class Level {
         this.root.add(post);
       }
     }
+
+    // --- rail garden: practice lines just south of spawn -------------------
+    const V = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
+    // flat starter rail (0.9 above the deck: crates on the line DO clip a
+    // grinder, same as the Test Course rail yard)
+    const flatRail = new Rail([V(5, 0.9, -25), V(5, 0.9, -85)]);
+    // sloped rail: grind it up to a high dismount (or bomb it back down)
+    const slopeRail = new Rail([V(12, 0.9, -25), V(12, 6.5, -95)]);
+    // three staggered parallel rails — hop rail-to-rail without touching down
+    const parA = new Rail([V(-6, 0.9, -25), V(-6, 0.9, -110)]);
+    const parB = new Rail([V(-10, 0.9, -40), V(-10, 0.9, -125)]);
+    const parC = new Rail([V(-14, 0.9, -55), V(-14, 0.9, -140)]);
+    for (const r of [flatRail, slopeRail, parA, parB, parC]) {
+      this.rails.push(r);
+      this.root.add(r.object);
+    }
+    // crates in the lanes between the parallel rails (smash practice)
+    for (let z = -48; z >= -108; z -= 12) {
+      this.crate(-8, 0, z);
+      this.crate(-12, 0, z + 6);
+    }
+    // crates ON the center rail line: plain ones punish slow grinds, the
+    // mask crate always pops (grind-through reward)
+    this.crate(-10, 0, -70);
+    this.crate(-10, 0, -100, 'mask');
+    // arrow crates with their classic floating fruit crate above
+    this.crate(9, 0, -40, 'bouncy');
+    this.crate(-2, 0, -60, 'bouncy');
+    // a TNT and a nitro for blast testing, well apart
+    this.crate(16, 0, -60, 'tnt');
+    this.crate(20, 0, -75, 'nitro');
   }
 
   // Level 5, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
