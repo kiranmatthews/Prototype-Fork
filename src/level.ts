@@ -2525,10 +2525,11 @@ export class Level {
     this.vfxT += dt;
     this.plasmaFrame++;
     if (this.plasmaFrame % 3 === 0) this.updatePlasma();
-    // fake chrome = UV scroll
+    // fake chrome = UV scroll + a sine wobble (texture-coordinate distortion),
+    // so the bands swim liquidly across the facets instead of gliding straight
     if (this.chromeTex) {
-      this.chromeTex.offset.x = (this.vfxT * 0.34) % 1;
-      this.chromeTex.offset.y = (this.vfxT * 0.11) % 1;
+      this.chromeTex.offset.x = (this.vfxT * 0.34 + Math.sin(this.vfxT * 2.7) * 0.08) % 1;
+      this.chromeTex.offset.y = (this.vfxT * 0.11 + Math.cos(this.vfxT * 1.9) * 0.06) % 1;
     }
     const bobSpin = (g: THREE.Group | null, rate: number): void => {
       if (!g || !g.visible) return;
