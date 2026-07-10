@@ -45,7 +45,7 @@ export const TUNING = {
   nitroRadius: 2.75, // nitro explosion kill/break radius
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
-  renderScale: 0.5, // internal render resolution as a fraction of the window — the PS1 chunk knob
+  renderScale: 0.75, // internal render resolution as a fraction of the window — the era knob
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -165,7 +165,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
   renderScale:
-    'Internal render resolution as a fraction of the window, stretched back up with pixelated sampling. Lower = fatter pixels = chunkier PS1 look; 1 = native and clean. Purely visual.',
+    'Internal render resolution as a fraction of the window. 0.75-1 = full-smooth PS2 look (linear upscale); below 0.7 the upscale goes pixelated, and below 0.5 it is full PS1 crunch. Purely visual.',
 };
 
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
@@ -267,5 +267,5 @@ export const CONST = {
   steepLandGive: 1.5, // landing penetration forgiveness on steep faces (vs 0.35 on decks)
   vertGrade: 1.2, // leaving a lip steeper than this counts as vert coping...
   vertKeep: 0.25, // ...and keeps only this fraction of planar speed (air goes UP, back into the pipe)
-  renderScale: 0.5, // build default for the low internal resolution (live knob: TUNING.renderScale)
+  renderScale: 0.75, // build default for the internal resolution (live knob: TUNING.renderScale)
 };

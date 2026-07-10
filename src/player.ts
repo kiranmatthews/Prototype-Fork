@@ -151,8 +151,10 @@ export class Player {
   private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
   private headM: THREE.Mesh | null = null;
   private legs: THREE.Group | null = null;
-  private legL: THREE.Mesh | null = null;
-  private legR: THREE.Mesh | null = null;
+  private legL: THREE.Group | null = null; // hip pivots (thigh + knee joint inside)
+  private legR: THREE.Group | null = null;
+  private kneeL: THREE.Group | null = null; // knee pivots (shin + shoe inside)
+  private kneeR: THREE.Group | null = null;
   private walkPhase = 0; // procedural run cycle
   private walkAmp = 0;
   private idleAmp = 0;
@@ -1771,7 +1773,16 @@ export class Player {
         // (the classic "jump right at the bottom" timing) adds a little
         // extra launch — the press is consumed so it can't carry to chains.
         if (this.playerBox.intersectsBox(c.box)) {
-          if (this.isStomping(c.box)) {
+          if (this.isStomping(c.box) && this.slamActive) {
+            // Crash rules: the body slam is the ONE move that breaks an arrow
+            // crate. Also load-bearing: without it the slam's down-force
+            // re-stomps the trampoline every frame — infinite Boing points
+            // with the controls locked. Broken by hand (not smashCrate)
+            // because bouncy crates sit outside the all-boxes gem tally.
+            level.breakCrate(c);
+            this.score(CONST.ptsCrate, 'Slam Smash');
+            this.spawnFruit(c.box);
+          } else if (this.isStomping(c.box)) {
             const perfect = this.jumpPressT > 0;
             this.jumpPressT = 0;
             this.vVel = TUNING.arrowBounce * (perfect ? TUNING.arrowBoostMult : 1);
@@ -2332,6 +2343,24 @@ export class Player {
       this.legR.rotation.z = -1.05 * star; // straddle split
       this.legL.rotation.z = 1.05 * star;
     }
+    // KNEE JOINTS — additive only, layered AFTER the hip channel writes
+    // above (which stay untouched). Flex reads off the same pose channels:
+    // surf crouch on the board (front knee deeper than back), charge load,
+    // grab/flip tuck, crawl fold, rail balance, the back-swing leg through
+    // the run cycle — and star jumps lock both legs straight. Hips counter
+    // half the standing flex so knees drive forward and feet stay on deck.
+    if (this.kneeL && this.kneeR && this.legL && this.legR) {
+      const straight = 1 - star;
+      const tuck = 1.35 * this.grabPose + 1.1 * flipTuck + 1.2 * this.crawlPose;
+      const backL = 0.9 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
+      const backR = 0.9 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
+      const stanceR = 0.95 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // front leg
+      const stanceL = 0.65 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // back leg
+      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + 0.35 * this.slidePose);
+      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + 1.0 * this.slidePose);
+      this.legR.rotation.x -= straight * 0.5 * stanceR;
+      this.legL.rotation.x -= straight * 0.5 * stanceL;
+    }
 
     // Shoulders: open side-on in the skate stance (the board and hips keep
     // pointing along travel), square through a boardslide (the yaw pose has
@@ -2581,25 +2610,52 @@ export class Player {
     }
   }
 
-  // Character/board skins: tiny canvases, NearestFilter'd — the chunky texel
-  // read IS the PS1 look, so nothing here goes above 64px. minFilter stays
-  // default like every other CanvasTexture in the game.
-  private pixelTex(size: number, draw: (ctx: CanvasRenderingContext2D) => void): THREE.CanvasTexture {
+  // Character/board skins: painted canvases, up to 128px. Organic surfaces
+  // keep the default LinearFilter so gradients shade smooth — the PS2 read;
+  // `crisp` opts back into NearestFilter only where hard texels still sell
+  // (grip grit). minFilter stays default like every CanvasTexture in the game.
+  private paintTex(
+    size: number,
+    draw: (ctx: CanvasRenderingContext2D) => void,
+    crisp = false,
+  ): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
     draw(canvas.getContext('2d')!);
     const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter;
+    if (crisp) tex.magFilter = THREE.NearestFilter;
     return tex;
   }
 
-  // 1px noise pass so no face reads as a flat vector fill — the instant
-  // giveaway of programmer art. Used for fabric, skin, and grip alike.
+  // 1px noise pass — grip-tape grit only now; fabric and skin get airbrush.
   private speckle(ctx: CanvasRenderingContext2D, size: number, color: string, n: number): void {
     ctx.fillStyle = color;
     for (let i = 0; i < n; i++) {
       ctx.fillRect(Math.floor(Math.random() * size), Math.floor(Math.random() * size), 1, 1);
+    }
+  }
+
+  // Low-alpha radial blobs — the painterly shading pass for fabric and skin,
+  // where 1px speckle would read as pixel grit instead of soft wear.
+  private airbrush(
+    ctx: CanvasRenderingContext2D,
+    size: number,
+    rgb: string,
+    a: number,
+    n: number,
+    rMin: number,
+    rMax: number,
+  ): void {
+    for (let i = 0; i < n; i++) {
+      const r = rMin + Math.random() * (rMax - rMin);
+      const x = Math.random() * size;
+      const y = Math.random() * size;
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, `rgba(${rgb},${a})`);
+      grad.addColorStop(1, `rgba(${rgb},0)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
     }
   }
 
@@ -2623,8 +2679,9 @@ export class Player {
     // grabs can pull the whole board up into the hand. Multi-material box:
     // grip speckle on top, deck art on the BOTTOM — the underside is what the
     // camera actually sees through grabs and flips, so the flames go there.
+    // Grip stays crisp — texel grit IS grip tape; the art shades smooth.
     const boardG = new THREE.Group();
-    const gripM = lam(this.pixelTex(64, (ctx) => {
+    const gripM = lam(this.paintTex(64, (ctx) => {
       ctx.fillStyle = '#17181c';
       ctx.fillRect(0, 0, 64, 64);
       for (let i = 0; i < 130; i++) {
@@ -2632,58 +2689,70 @@ export class Player {
         ctx.fillStyle = `rgb(${v},${v},${v + 6})`;
         ctx.fillRect(Math.floor(Math.random() * 64), Math.floor(Math.random() * 64), 1, 1);
       }
+      this.speckle(ctx, 64, 'rgba(0,0,0,0.5)', 40);
       // spray-stencil star, half scuffed away by foot drag
       ctx.fillStyle = 'rgba(255,122,31,0.85)';
       this.starPath(ctx, 32, 32, 11, 4.5);
       ctx.fill();
       ctx.fillStyle = 'rgba(23,24,28,0.6)';
       for (let i = 0; i < 30; i++) ctx.fillRect(20 + Math.random() * 22, 20 + Math.random() * 22, 2, 1);
-    }));
-    const artM = lam(this.pixelTex(64, (ctx) => {
-      // underside art: banded magenta dusk, flames off the tail, star sparkles
-      const bands = ['#241047', '#3d1663', '#631d7e', '#8f2492'];
-      for (let i = 0; i < 4; i++) {
-        ctx.fillStyle = bands[i];
-        ctx.fillRect(0, i * 16, 64, 16);
-      }
+    }, true));
+    const artM = lam(this.paintTex(128, (ctx) => {
+      // underside art: magenta dusk gradient, curling flames off the tail,
+      // star sparkles — airbrushed, no hard bands
+      const dusk = ctx.createLinearGradient(0, 0, 0, 128);
+      dusk.addColorStop(0, '#241047');
+      dusk.addColorStop(0.45, '#631d7e');
+      dusk.addColorStop(1, '#a1289a');
+      ctx.fillStyle = dusk;
+      ctx.fillRect(0, 0, 128, 128);
       const flame = (color: string, h: number) => {
         ctx.fillStyle = color;
         ctx.beginPath();
-        ctx.moveTo(0, 64);
-        for (let x = 0; x <= 64; x += 8) {
-          ctx.lineTo(x + 4, 64 - h - Math.sin(x * 0.6) * 5 - Math.random() * 8);
-          ctx.lineTo(x + 8, 64 - h * 0.35);
+        ctx.moveTo(0, 128);
+        for (let x = 0; x <= 128; x += 16) {
+          const peak = 128 - h - Math.sin(x * 0.3) * 9 - Math.random() * 12;
+          ctx.quadraticCurveTo(x + 4, peak + 16, x + 8, peak);
+          ctx.quadraticCurveTo(x + 12, peak + 16, x + 16, 128 - h * 0.3);
         }
-        ctx.lineTo(64, 64);
+        ctx.lineTo(128, 128);
         ctx.closePath();
         ctx.fill();
       };
-      flame('#ff7a1f', 26);
-      flame('#ffd23f', 15);
-      flame('#fff3c4', 6);
+      flame('#ff7a1f', 52);
+      flame('#ffd23f', 30);
+      flame('#fff3c4', 12);
       ctx.fillStyle = '#f4f1e6';
-      for (const [x, y] of [[12, 10], [50, 7], [33, 16]]) {
-        ctx.fillRect(x - 1, y - 3, 2, 6); // little 4-point sparkle
-        ctx.fillRect(x - 3, y - 1, 6, 2);
+      for (const [x, y] of [[24, 20], [100, 14], [66, 32]]) {
+        ctx.beginPath(); // soft 4-point sparkle
+        ctx.moveTo(x, y - 7);
+        ctx.quadraticCurveTo(x + 1.5, y - 1.5, x + 7, y);
+        ctx.quadraticCurveTo(x + 1.5, y + 1.5, x, y + 7);
+        ctx.quadraticCurveTo(x - 1.5, y + 1.5, x - 7, y);
+        ctx.quadraticCurveTo(x - 1.5, y - 1.5, x, y - 7);
+        ctx.fill();
       }
     }));
     const edgeM = new THREE.MeshLambertMaterial({ color: 0xd89b52 }); // ply edge
     const deckMats = [edgeM, edgeM, gripM, artM, edgeM, edgeM]; // +x -x top bottom +z -z
-    const deck = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.09, 1.7), deckMats);
+    const deck = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.09, 1.4), deckMats);
     deck.position.y = 0.16;
     boardG.add(deck);
-    // Kicked nose/tail — same material array, so grip + art wrap them free.
-    const kickGeo = new THREE.BoxGeometry(0.46, 0.08, 0.3);
+    // Rounded kicked nose/tail: squashed cylinder caps — grip up, art down,
+    // ply on the rim — so the plank silhouette curves instead of boxing off.
+    const kickGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.08, 10);
+    const kickMats = [edgeM, gripM, artM]; // side, top cap, bottom cap
     for (const side of [-1, 1]) {
-      const kick = new THREE.Mesh(kickGeo, deckMats);
-      kick.position.set(0, 0.185, side * 0.9);
-      kick.rotation.x = -side * 0.35;
+      const kick = new THREE.Mesh(kickGeo, kickMats);
+      kick.scale.z = 1.35; // stretched into an oval nose
+      kick.position.set(0, 0.175, side * 0.72);
+      kick.rotation.x = -side * 0.3;
       boardG.add(kick);
     }
     const truckM = new THREE.MeshLambertMaterial({ color: 0xb9bfc9 });
     const truckGeo = new THREE.BoxGeometry(0.32, 0.07, 0.1);
     const wheelM = new THREE.MeshLambertMaterial({ color: 0xffd23f }); // urethane
-    const wheelGeo = new THREE.CylinderGeometry(0.068, 0.068, 0.1, 8);
+    const wheelGeo = new THREE.CylinderGeometry(0.068, 0.068, 0.1, 10);
     for (const z of [0.55, -0.55]) {
       const truck = new THREE.Mesh(truckGeo, truckM);
       truck.position.set(0, 0.1, z);
@@ -2698,108 +2767,145 @@ export class Player {
     g.add(boardG);
     this.boardG = boardG;
 
-    // Low-poly rider: two legs pivoting from the hip for the run cycle.
+    // Rider legs: hip-pivot groups with a REAL knee joint each — thigh
+    // capsule down to a knee group carrying shin + shoe + pad — so crouches
+    // read as bent-knee posture, not stretched planks. syncVisual owns every
+    // joint angle; total reach matches the old one-piece leg (~0.5 hip→sole).
     const legs = new THREE.Group();
     legs.position.y = 0.71; // hip line
-    const legGeo = new THREE.BoxGeometry(0.17, 0.5, 0.26);
-    legGeo.translate(0, -0.25, 0); // swing from the hip
-    const legMat = lam(this.pixelTex(64, (ctx) => {
-      // worn denim: vertical weave streaks, knee wear, hem, edge stitching
-      ctx.fillStyle = '#35506e';
-      ctx.fillRect(0, 0, 64, 64);
-      for (let x = 0; x < 64; x += 3) {
-        ctx.fillStyle = x % 6 === 0 ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)';
-        ctx.fillRect(x, 0, 1, 64);
-      }
-      this.speckle(ctx, 64, 'rgba(220,230,255,0.16)', 50);
-      ctx.fillStyle = 'rgba(160,190,220,0.22)';
-      ctx.fillRect(18, 30, 28, 14); // knee wear patch
+    const denimM = lam(this.paintTex(128, (ctx) => {
+      // worn denim: soft indigo wash, broad knee fade, rolled hem, one
+      // drifting outseam stitch
+      const wash = ctx.createLinearGradient(0, 0, 0, 128);
+      wash.addColorStop(0, '#3c5a7c');
+      wash.addColorStop(0.5, '#35506e');
+      wash.addColorStop(1, '#2c4460');
+      ctx.fillStyle = wash;
+      ctx.fillRect(0, 0, 128, 128);
+      this.airbrush(ctx, 128, '190,210,235', 0.1, 14, 10, 26);
+      this.airbrush(ctx, 128, '18,32,52', 0.12, 10, 12, 30);
+      const wear = ctx.createRadialGradient(64, 72, 4, 64, 72, 34);
+      wear.addColorStop(0, 'rgba(170,200,225,0.35)');
+      wear.addColorStop(1, 'rgba(170,200,225,0)');
+      ctx.fillStyle = wear;
+      ctx.fillRect(28, 36, 72, 72);
       ctx.fillStyle = '#26374a';
-      ctx.fillRect(0, 58, 64, 6); // rolled hem
-      ctx.fillStyle = '#e8a33d';
-      for (let y = 2; y < 58; y += 5) {
-        ctx.fillRect(1, y, 1, 3); // seam stitches land on the box corners
-        ctx.fillRect(62, y, 1, 3);
-      }
+      ctx.fillRect(0, 118, 128, 10); // rolled hem (ankle on the shin, knee shadow on the thigh)
+      ctx.strokeStyle = 'rgba(232,163,61,0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(8, 0);
+      ctx.quadraticCurveTo(3, 64, 8, 118);
+      ctx.stroke();
     }));
-    const shoeM = lam(this.pixelTex(32, (ctx) => {
-      // chunky skate shoe: white upper, gum sole, grey lace crosses
-      ctx.fillStyle = '#f0ede4';
-      ctx.fillRect(0, 0, 32, 32);
-      this.speckle(ctx, 32, 'rgba(120,120,130,0.25)', 24);
+    const shoeM = lam(this.paintTex(64, (ctx) => {
+      // chunky skate shoe on a squashed sphere: pale upper, lace crosses up
+      // top, gum sole wrapping the underside
+      const upper = ctx.createLinearGradient(0, 0, 0, 64);
+      upper.addColorStop(0, '#f4f1e8');
+      upper.addColorStop(0.7, '#e6e1d4');
+      upper.addColorStop(1, '#d8d2c2');
+      ctx.fillStyle = upper;
+      ctx.fillRect(0, 0, 64, 64);
+      this.airbrush(ctx, 64, '120,120,130', 0.14, 8, 5, 12);
       ctx.fillStyle = '#b98a52';
-      ctx.fillRect(0, 26, 32, 6); // gum sole
+      ctx.fillRect(0, 50, 64, 14); // gum sole
       ctx.fillStyle = '#2b2e35';
-      ctx.fillRect(0, 24, 32, 2); // foxing stripe
+      ctx.fillRect(0, 47, 64, 3); // foxing stripe
       ctx.strokeStyle = '#8d94a3';
       ctx.lineWidth = 2;
       for (let i = 0; i < 3; i++) {
         ctx.beginPath();
-        ctx.moveTo(8 + i * 6, 6);
-        ctx.lineTo(14 + i * 6, 14);
-        ctx.moveTo(14 + i * 6, 6);
-        ctx.lineTo(8 + i * 6, 14);
+        ctx.moveTo(22 + i * 7, 8);
+        ctx.lineTo(28 + i * 7, 18);
+        ctx.moveTo(28 + i * 7, 8);
+        ctx.lineTo(22 + i * 7, 18);
         ctx.stroke();
       }
     }));
     const padM = new THREE.MeshLambertMaterial({ color: 0x2b2e35 });
-    const shoeGeo = new THREE.BoxGeometry(0.2, 0.11, 0.32);
-    const padGeo = new THREE.BoxGeometry(0.15, 0.11, 0.05);
+    const thighGeo = new THREE.CapsuleGeometry(0.085, 0.14, 3, 10);
+    thighGeo.translate(0, -0.15, 0); // hip → knee
+    const shinGeo = new THREE.CapsuleGeometry(0.068, 0.12, 3, 10);
+    shinGeo.translate(0, -0.11, 0); // knee → ankle
+    const shoeGeo = new THREE.SphereGeometry(0.105, 10, 8);
+    const padGeo = new THREE.SphereGeometry(0.08, 8, 6);
     for (const side of [-1, 1]) {
-      const leg = new THREE.Mesh(legGeo, legMat);
+      const leg = new THREE.Group(); // hip pivot — syncVisual writes rot + pos
       leg.position.x = side * 0.115;
       legs.add(leg);
-      // Shoe + kneepad ride the leg mesh: they swing with the run cycle and
-      // squash with legs.scale.y, same as everything else on the rig.
+      leg.add(new THREE.Mesh(thighGeo, denimM));
+      // Knee group pivots where the thigh ends; shin/shoe/pad swing with it
+      // and squash with legs.scale.y, same as everything else on the rig.
+      const knee = new THREE.Group();
+      knee.position.y = -0.26;
+      leg.add(knee);
+      knee.add(new THREE.Mesh(shinGeo, denimM));
       const shoe = new THREE.Mesh(shoeGeo, shoeM);
-      shoe.position.set(0, -0.47, 0.05);
-      leg.add(shoe);
-      const pad = new THREE.Mesh(padGeo, padM);
-      pad.position.set(0, -0.26, 0.145);
-      leg.add(pad);
-      if (side === 1) this.legR = leg;
-      else this.legL = leg;
+      shoe.scale.set(1, 0.55, 1.6);
+      shoe.position.set(0, -0.21, 0.05);
+      knee.add(shoe);
+      const pad = new THREE.Mesh(padGeo, padM); // kneepad dome over the joint
+      pad.scale.set(1, 0.85, 0.7);
+      pad.position.set(0, -0.01, 0.075);
+      knee.add(pad);
+      if (side === 1) {
+        this.legR = leg;
+        this.kneeR = knee;
+      } else {
+        this.legL = leg;
+        this.kneeL = knee;
+      }
     }
     g.add(legs);
     this.legs = legs;
 
-    // Tee: one plain fabric canvas for the sides; the front gets the sunburst
-    // logo, the back gets a race number — separate materials on the same box
-    // so neither graphic mirrors around the body.
-    const teeBase = (ctx: CanvasRenderingContext2D) => {
-      ctx.fillStyle = '#2fa88d';
-      ctx.fillRect(0, 0, 64, 64);
-      this.speckle(ctx, 64, 'rgba(255,255,255,0.10)', 60);
-      this.speckle(ctx, 64, 'rgba(0,60,50,0.18)', 40);
+    // Tee: ONE wrapped canvas on a lathe torso — phiStart 1.5π puts u=0.25
+    // (canvas x=32) at local +Z, so the chest sunburst paints at x=32 and the
+    // race number at x=96 lands square on the back, no mirroring. Broad
+    // shoulders easing into the waist come from the profile, not a box.
+    const teeM = lam(this.paintTex(128, (ctx) => {
+      const fabric = ctx.createLinearGradient(0, 0, 0, 128);
+      fabric.addColorStop(0, '#37b191');
+      fabric.addColorStop(0.6, '#2fa88d');
+      fabric.addColorStop(1, '#27957c');
+      ctx.fillStyle = fabric;
+      ctx.fillRect(0, 0, 128, 128);
+      this.airbrush(ctx, 128, '255,255,255', 0.07, 12, 10, 26);
+      this.airbrush(ctx, 128, '0,70,58', 0.1, 10, 12, 30);
       ctx.fillStyle = '#1d6e5d';
-      ctx.fillRect(0, 60, 64, 4); // hem band right at the hip line
-    };
-    const teeM = lam(this.pixelTex(64, teeBase));
-    const teeFrontM = lam(this.pixelTex(64, (ctx) => {
-      teeBase(ctx);
-      ctx.fillStyle = '#1d6e5d';
-      ctx.fillRect(18, 0, 28, 5); // collar
-      ctx.fillStyle = '#ff7a1f'; // chest sunburst, yellow core
-      this.starPath(ctx, 32, 30, 15, 6);
+      ctx.fillRect(0, 0, 128, 7); // collar band
+      ctx.fillRect(0, 120, 128, 8); // hem right at the hip line
+      ctx.fillStyle = '#ff7a1f'; // chest sunburst, warm core
+      this.starPath(ctx, 32, 52, 17, 7);
       ctx.fill();
-      ctx.fillStyle = '#ffd23f';
+      const core = ctx.createRadialGradient(32, 52, 1, 32, 52, 8);
+      core.addColorStop(0, '#fff3c4');
+      core.addColorStop(1, '#ffd23f');
+      ctx.fillStyle = core;
       ctx.beginPath();
-      ctx.arc(32, 30, 6, 0, Math.PI * 2);
+      ctx.arc(32, 52, 7, 0, Math.PI * 2);
       ctx.fill();
-    }));
-    const teeBackM = lam(this.pixelTex(64, (ctx) => {
-      teeBase(ctx);
-      ctx.fillStyle = '#1d6e5d';
-      ctx.fillRect(18, 0, 28, 5);
       ctx.fillStyle = '#f4f1e6';
-      ctx.font = 'bold 30px sans-serif';
+      ctx.font = 'bold 34px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('98', 32, 42); // race number
+      ctx.fillText('98', 96, 64); // race number
     }));
+    const torsoProfile = [
+      new THREE.Vector2(0.06, -0.3), // tucked under the hem
+      new THREE.Vector2(0.17, -0.27),
+      new THREE.Vector2(0.2, -0.16),
+      new THREE.Vector2(0.215, -0.04),
+      new THREE.Vector2(0.235, 0.08),
+      new THREE.Vector2(0.26, 0.2), // shoulder
+      new THREE.Vector2(0.24, 0.27),
+      new THREE.Vector2(0.1, 0.31), // roll off to the collar
+    ];
     const torso = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5, 0.55, 0.34),
-      [teeM, teeM, teeM, teeM, teeFrontM, teeBackM],
+      new THREE.LatheGeometry(torsoProfile, 12, Math.PI * 1.5, Math.PI * 2),
+      teeM,
     );
+    torso.scale.z = 0.7; // chest oval, not a tube
     // Upper body rides in its own group so the shoulders can open side-on
     // (skate stance) and counter-swing against the run without dragging the
     // hips, legs, or board around with them.
@@ -2807,89 +2913,142 @@ export class Player {
     torso.position.y = 0.98;
     upper.add(torso);
 
-    // Head: the whole face lives in the +Z texture (eye whites, pupils,
-    // brows, grin) — no more floating eye/mouth boxes. headM still pitches
-    // in syncVisual for the horizon look-at.
+    // Head: one sphere, everything painted into the wrap — three's sphere
+    // puts local +Z at u=0.25, so the face (whites, irises, cocked brows,
+    // grin) sits around canvas x=32, hair crowns the top rows and pools at
+    // the back (x=96), ears ride the u=0/u=0.5 seams. headM still pitches in
+    // syncVisual for the horizon look-at.
     const skin = '#e8c39a';
     const hair = '#4a2e1a';
-    const headSideM = lam(this.pixelTex(32, (ctx) => {
+    const headTexM = lam(this.paintTex(128, (ctx) => {
       ctx.fillStyle = skin;
-      ctx.fillRect(0, 0, 32, 32);
-      this.speckle(ctx, 32, 'rgba(160,90,40,0.15)', 20);
+      ctx.fillRect(0, 0, 128, 128);
+      this.airbrush(ctx, 128, '200,120,60', 0.08, 12, 8, 22);
       ctx.fillStyle = hair;
-      ctx.fillRect(0, 0, 32, 6);
-      for (let x = 0; x < 32; x += 5) ctx.fillRect(x, 6, 3, 2); // fringe under the cap
+      ctx.fillRect(0, 0, 128, 22); // crown band under the cap
+      for (let x = 4; x <= 124; x += 12) {
+        ctx.beginPath(); // soft fringe scallops
+        ctx.arc(x, 22, 6, 0, Math.PI);
+        ctx.fill();
+      }
+      ctx.beginPath(); // back of the skull
+      ctx.ellipse(96, 40, 30, 34, 0, 0, Math.PI * 2);
+      ctx.fill();
       ctx.fillStyle = '#d4a97e';
-      ctx.fillRect(13, 14, 6, 8); // ear
-    }));
-    const faceM = lam(this.pixelTex(64, (ctx) => {
-      ctx.fillStyle = skin;
-      ctx.fillRect(0, 0, 64, 64);
-      this.speckle(ctx, 64, 'rgba(160,90,40,0.12)', 40);
-      ctx.fillStyle = hair;
-      ctx.fillRect(0, 0, 64, 9);
-      for (let x = 2; x < 64; x += 9) ctx.fillRect(x, 9, 5, 3); // jagged fringe
-      ctx.fillStyle = '#3a2413'; // brows, one cocked higher — mid-trick face
-      ctx.fillRect(10, 20, 16, 4);
-      ctx.fillRect(38, 18, 16, 4);
+      for (const ex of [0, 128, 64]) {
+        ctx.beginPath(); // ears — drawn at both seam edges so they join
+        ctx.ellipse(ex, 58, 6, 9, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.strokeStyle = '#3a2413'; // brows, one cocked higher — mid-trick face
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(18, 47);
+      ctx.quadraticCurveTo(24, 43, 30, 46);
+      ctx.moveTo(34, 44);
+      ctx.quadraticCurveTo(40, 40, 46, 44);
+      ctx.stroke();
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(12, 26, 13, 12);
-      ctx.fillRect(39, 26, 13, 12);
-      ctx.fillStyle = '#20232b';
-      ctx.fillRect(20, 30, 5, 7); // pupils pulled in toward the nose: focus
-      ctx.fillRect(39, 30, 5, 7);
+      for (const ex of [25, 39]) {
+        ctx.beginPath();
+        ctx.ellipse(ex, 56, 6, 7.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      for (const ex of [26.5, 37.5]) {
+        ctx.fillStyle = '#2e7f6a'; // irises pulled toward the nose: focus
+        ctx.beginPath();
+        ctx.arc(ex, 57, 3.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#20232b';
+        ctx.beginPath();
+        ctx.arc(ex, 57, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.fillStyle = '#d4a97e';
-      ctx.fillRect(29, 36, 6, 5); // nose
+      ctx.beginPath(); // nose
+      ctx.ellipse(32, 64, 3.5, 2.8, 0, 0, Math.PI * 2);
+      ctx.fill();
       ctx.fillStyle = '#5e2413'; // big Crash grin, corners turned up
-      ctx.fillRect(16, 46, 32, 9);
-      ctx.fillRect(12, 44, 6, 6);
-      ctx.fillRect(46, 44, 6, 6);
+      ctx.beginPath();
+      ctx.moveTo(18, 71);
+      ctx.quadraticCurveTo(32, 87, 46, 71);
+      ctx.quadraticCurveTo(32, 77, 18, 71);
+      ctx.closePath();
+      ctx.fill();
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(18, 46, 28, 4); // tooth row
-      ctx.fillStyle = 'rgba(150,80,40,0.55)';
-      for (const [x, y] of [[8, 40], [12, 42], [53, 41], [57, 39]]) ctx.fillRect(x, y, 2, 2); // freckles
+      ctx.beginPath(); // tooth row along the top lip
+      ctx.moveTo(20, 71.5);
+      ctx.quadraticCurveTo(32, 76, 44, 71.5);
+      ctx.quadraticCurveTo(32, 80, 20, 71.5);
+      ctx.fill();
+      for (const bx of [16, 48]) {
+        const blush = ctx.createRadialGradient(bx, 63, 1, bx, 63, 8);
+        blush.addColorStop(0, 'rgba(235,130,90,0.35)');
+        blush.addColorStop(1, 'rgba(235,130,90,0)');
+        ctx.fillStyle = blush;
+        ctx.fillRect(bx - 8, 55, 16, 16);
+      }
+      ctx.fillStyle = 'rgba(150,80,40,0.5)';
+      for (const [x, y] of [[16, 68], [20, 70], [44, 69], [48, 67]]) {
+        ctx.beginPath(); // freckles
+        ctx.arc(x, y, 1.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }));
-    const head = new THREE.Mesh(
-      new THREE.BoxGeometry(0.32, 0.32, 0.32),
-      [headSideM, headSideM, headSideM, headSideM, faceM, headSideM],
-    );
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.185, 12, 10), headTexM);
+    head.scale.set(1, 1.05, 0.95);
     head.position.y = 1.42;
     upper.add(head);
     this.headM = head;
-    // Backwards cap: crown + rear brim as head children, so every nod and
-    // look-at pitch carries them for free.
+    // Backwards cap: sphere-slice crown + curved half-cylinder rear brim as
+    // head children, so every nod and look-at pitch carries them for free.
     const capM = new THREE.MeshLambertMaterial({ color: 0xf04e23 });
-    const crown = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.11, 0.36), capM);
-    crown.position.y = 0.195;
+    const crown = new THREE.Mesh(
+      new THREE.SphereGeometry(0.2, 12, 7, 0, Math.PI * 2, 0, Math.PI * 0.38),
+      capM,
+    );
+    crown.position.y = 0.02;
+    crown.rotation.x = -0.12; // front rim lifted off the brows
     head.add(crown);
-    const brim = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.03, 0.18), capM);
-    brim.position.set(0, 0.16, -0.25);
+    const brim = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.17, 0.19, 0.03, 9, 1, false, Math.PI / 2, Math.PI),
+      capM,
+    );
+    brim.position.set(0, 0.075, -0.06);
+    brim.rotation.x = -0.25; // rear brim dips off the crown
     head.add(brim);
 
     // Arms hang from the SHOULDER (geometry translated like the legs), so
     // swings, grabs, and windmills pivot where a shoulder actually is.
-    const armMat = lam(this.pixelTex(32, (ctx) => {
+    // Sleeved capsules with mitt-sphere hands; capsule top = canvas top.
+    const armMat = lam(this.paintTex(64, (ctx) => {
       ctx.fillStyle = skin;
-      ctx.fillRect(0, 0, 32, 32);
-      this.speckle(ctx, 32, 'rgba(160,90,40,0.15)', 18);
+      ctx.fillRect(0, 0, 64, 64);
+      this.airbrush(ctx, 64, '200,120,60', 0.1, 8, 5, 12);
       ctx.fillStyle = '#2fa88d';
-      ctx.fillRect(0, 0, 32, 10); // tee sleeve at the shoulder
+      ctx.fillRect(0, 0, 64, 18); // tee sleeve at the shoulder
       ctx.fillStyle = '#1d6e5d';
-      ctx.fillRect(0, 10, 32, 2); // sleeve hem
+      ctx.fillRect(0, 18, 64, 4); // sleeve hem
     }));
-    const armGeo = new THREE.BoxGeometry(0.13, 0.52, 0.13);
-    armGeo.translate(0, -0.26, 0);
+    const handM = new THREE.MeshLambertMaterial({ color: 0xdcb289 });
+    const armGeo = new THREE.CapsuleGeometry(0.062, 0.33, 3, 9);
+    armGeo.translate(0, -0.245, 0);
+    const handGeo = new THREE.SphereGeometry(0.058, 8, 6);
     for (const side of [-1, 1]) {
       const arm = new THREE.Mesh(armGeo, armMat);
       arm.position.set(side * 0.33, 1.22, 0);
       arm.rotation.z = side * 0.25;
       upper.add(arm);
+      const hand = new THREE.Mesh(handGeo, handM);
+      hand.position.y = -0.48;
+      arm.add(hand);
       if (side === 1) this.armR = arm;
       else {
         this.armL = arm;
         // one sweatband on one wrist — cheap asymmetry for the silhouette
-        const band = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.06, 0.16), capM);
-        band.position.y = -0.42;
+        const band = new THREE.Mesh(new THREE.TorusGeometry(0.062, 0.026, 6, 10), capM);
+        band.rotation.x = Math.PI / 2; // ring around the wrist
+        band.position.y = -0.41;
         arm.add(band);
       }
     }

@@ -10,17 +10,20 @@ import { TUNING, CONST } from './tuning';
 import { sfx } from './audio';
 
 const app = document.getElementById('app')!;
-const renderer = new THREE.WebGLRenderer({ antialias: false });
-renderer.setPixelRatio(1); // low internal res + pixelated upscale = PS1 vibe
+// '?lite' (headless smoke) renders in software: no AA, and resize() caps the
+// internal resolution — slow frames desync the suite's wall-clock scripting.
+const LITE_RENDER = window.location.search.includes('lite');
+const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
+renderer.setPixelRatio(1); // internal res is the renderScale knob, not the DPR
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x232634);
 scene.fog = new THREE.Fog(0x232634, 30, 170);
 
-const hemi = new THREE.HemisphereLight(0xbfd4ff, 0x32281f, 1.0);
+const hemi = new THREE.HemisphereLight(0xbfd4ff, 0x8a6b46, 1.0);
 scene.add(hemi);
-const sun = new THREE.DirectionalLight(0xfff2d8, 1.4);
+const sun = new THREE.DirectionalLight(0xffe4ae, 1.55);
 sun.position.set(30, 60, 20);
 scene.add(sun);
 // Cool fill from opposite the sun: faint sky-colored bounce so the faces the
@@ -34,8 +37,9 @@ scene.add(fill);
 // fill rate and slow frames desync its wall-clock input scripting.
 const LITE = window.location.search.includes('lite');
 
-// CRT dressing: scanlines + vignette (styles live in index.html). Pure DOM,
-// zero GPU cost — skipped in lite along with the rest of the presentation.
+// Screen dressing: barely-there scanline texture + gentle vignette (styles
+// live in index.html). Pure DOM, zero GPU cost — skipped in lite along with
+// the rest of the presentation.
 if (!LITE) {
   const crt = document.createElement('div');
   crt.className = 'crt-overlay';
@@ -95,92 +99,91 @@ function makeSkyTexture(t: Level['theme']): THREE.CanvasTexture {
   const sunC = t.sunColorHex ? rgbOf(t.sunColorHex) : bottom;
   const white: RGB = [255, 255, 255];
 
-  // Deliberately banded gradient: skyTop -> skyBottom quantized into fat
-  // steps, a checkered dither row chewing each seam. PS1 sky, not airbrush.
+  // Smooth airbrush gradient, skyTop -> skyBottom, warming into the fog as it
+  // nears the horizon. Only a whisper of banding survives — an era tell, not
+  // a texture.
   const skyH = Math.round(H * 0.58);
-  const BANDS = 14;
+  const grad = ctx.createLinearGradient(0, 0, 0, skyH);
+  grad.addColorStop(0, css(top));
+  grad.addColorStop(0.55, css(mixRGB(top, bottom, 0.5)));
+  grad.addColorStop(0.88, css(bottom));
+  grad.addColorStop(1, css(mixRGB(bottom, fog, 0.4)));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, skyH);
+  const BANDS = 6;
+  ctx.globalAlpha = 0.045;
   for (let i = 0; i < BANDS; i++) {
-    const y0 = Math.round((i / BANDS) * skyH);
-    const y1 = Math.round(((i + 1) / BANDS) * skyH);
     ctx.fillStyle = css(mixRGB(top, bottom, i / (BANDS - 1)));
-    ctx.fillRect(0, y0, W, y1 - y0);
-    if (i > 0) {
-      // the previous band bleeds down in alternating 4px cells
-      ctx.fillStyle = css(mixRGB(top, bottom, (i - 1) / (BANDS - 1)));
-      for (let x = (i % 2) * 4; x < W; x += 8) ctx.fillRect(x, y0, 4, 2);
-    }
+    ctx.fillRect(0, Math.round((i / BANDS) * skyH), W, Math.round(skyH / BANDS));
   }
+  ctx.globalAlpha = 1;
   // below the horizon it's all fog — that's what you see going off a cliff
   ctx.fillStyle = css(fog);
   ctx.fillRect(0, skyH, W, H - skyH);
 
+  // Soft-edged radial blob: the one brush the whole sky is painted with.
+  const puff = (x: number, y: number, r: number, col: RGB, a: number): void => {
+    const g = ctx.createRadialGradient(x, y, r * 0.1, x, y, r);
+    g.addColorStop(0, css(col, a));
+    g.addColorStop(0.6, css(col, a * 0.75));
+    g.addColorStop(1, css(col, 0));
+    ctx.fillStyle = g;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  };
+
   if (t.stars) {
-    // varied specks up high, fading toward the horizon glow
-    for (let i = 0; i < 130; i++) {
+    // soft glow dots up high, fading toward the horizon
+    for (let i = 0; i < 110; i++) {
+      const x = Math.random() * W;
       const y = Math.random() * H * 0.44;
-      const s = Math.random() < 0.14 ? 3 : Math.random() < 0.45 ? 2 : 1;
-      ctx.globalAlpha = (0.25 + Math.random() * 0.6) * (1 - y / (H * 0.6));
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(Math.random() * W, y, s, s);
+      const r = Math.random() < 0.18 ? 4 : 2.5;
+      puff(x, y, r, white, (0.35 + Math.random() * 0.5) * (1 - y / (H * 0.6)));
     }
-    // ...and a few hero stars with cross-sparkle arms
+    // ...and a few hero stars: hot center inside a wide gentle halo
     for (let i = 0; i < 3; i++) {
       const x = 20 + Math.random() * (W - 40);
       const y = H * 0.04 + Math.random() * H * 0.26;
-      ctx.globalAlpha = 0.95;
-      ctx.fillRect(x - 1, y - 1, 3, 3);
-      ctx.globalAlpha = 0.45;
-      ctx.fillRect(x - 7, y, 15, 1);
-      ctx.fillRect(x, y - 7, 1, 15);
+      puff(x, y, 11, white, 0.35);
+      puff(x, y, 3, white, 0.95);
     }
-    ctx.globalAlpha = 1;
   }
 
   if (t.sunColorHex) {
-    // big soft halo, a hot core, and an anamorphic glare stripe across it —
-    // painted before the ridges so a low sun sets behind them
+    // one big soft atmospheric glow with a soft-edged hot core — painted
+    // before the ridges so a low sun sets behind them
     const sx = t.sunU * W;
     const sy = t.sunV * H;
-    const halo = ctx.createRadialGradient(sx, sy, 4, sx, sy, 120);
-    halo.addColorStop(0, css(sunC, 0.95));
-    halo.addColorStop(0.2, css(sunC, 0.55));
+    const halo = ctx.createRadialGradient(sx, sy, 0, sx, sy, 185);
+    halo.addColorStop(0, css(sunC, 0.65));
+    halo.addColorStop(0.3, css(sunC, 0.3));
     halo.addColorStop(1, css(sunC, 0));
     ctx.fillStyle = halo;
     ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = css(mixRGB(sunC, white, 0.6));
-    ctx.beginPath();
-    ctx.arc(sx, sy, 15, 0, Math.PI * 2);
-    ctx.fill();
-    const glare = ctx.createLinearGradient(sx - 170, 0, sx + 170, 0);
-    glare.addColorStop(0, css(sunC, 0));
-    glare.addColorStop(0.5, css(mixRGB(sunC, white, 0.4), 0.55));
-    glare.addColorStop(1, css(sunC, 0));
-    ctx.fillStyle = glare;
-    ctx.fillRect(sx - 170, sy - 1, 340, 3);
-    ctx.globalAlpha = 0.35;
-    ctx.fillRect(sx - 110, sy - 4, 220, 9);
-    ctx.globalAlpha = 1;
+    puff(sx, sy, 34, mixRGB(sunC, white, 0.45), 0.85);
+    puff(sx, sy, 17, mixRGB(sunC, white, 0.75), 1);
   }
 
-  // blocky cutout clouds, lit from the sun's side of the palette (kept off
-  // the texture seam so the wrap never slices one in half)
-  const lit = mixRGB(sunC, white, 0.6);
+  // rounded cumulus: a shaded belly row with sun-lit crowns stacked on top
+  // (kept off the texture seam so the wrap never slices one in half)
+  const lit = mixRGB(sunC, white, 0.72);
   const shade = mixRGB(mixRGB(sunC, bottom, 0.5), top, 0.35);
   for (let i = 0; i < 5; i++) {
-    const cx = W * (0.12 + Math.random() * 0.76);
-    const cy = H * (0.16 + Math.random() * 0.24);
-    const cw = 46 + Math.random() * 72;
-    ctx.globalAlpha = 0.85;
-    ctx.fillStyle = css(shade);
-    ctx.fillRect(cx - cw / 2, cy, cw, 7);
-    ctx.fillStyle = css(lit);
-    ctx.fillRect(cx - cw / 2 + 7, cy - 6, cw * 0.72, 6);
-    ctx.fillRect(cx - cw / 2 + 18, cy - 11, cw * 0.38, 5);
+    const cx = W * (0.14 + Math.random() * 0.72);
+    const cy = H * (0.15 + Math.random() * 0.25);
+    const cw = 46 + Math.random() * 70;
+    const n = 4 + Math.floor(Math.random() * 3);
+    for (let p = 0; p < n; p++) {
+      const px = cx + (p / (n - 1) - 0.5) * cw;
+      puff(px, cy + 3 + Math.random() * 3, 11 + Math.random() * 7, shade, 0.7);
+    }
+    for (let p = 0; p < n - 1; p++) {
+      const px = cx + (p / (n - 1) - 0.5) * cw + cw / (2 * (n - 1));
+      puff(px, cy - 6 - Math.random() * 6, 12 + Math.random() * 9, lit, 0.85);
+    }
   }
-  ctx.globalAlpha = 1;
 
-  // three ridge silhouettes stepping out of the fog: far ones hazy
-  // (fog-tinted), near ones darker — cheap painted depth on the horizon
+  // three rolling silhouettes easing out of the fog: far ones fog-tinted
+  // (atmospheric perspective), near ones darker — painted depth, no steps
   const ridges = [
     { base: 0.5, amp: 15, col: mixRGB(fog, bottom, 0.4), seed: 3.7 },
     { base: 0.525, amp: 24, col: mixRGB(fog, [0, 0, 0], 0.22), seed: 8.1 },
@@ -190,17 +193,24 @@ function makeSkyTexture(t: Level['theme']): THREE.CanvasTexture {
     ctx.fillStyle = css(r.col);
     ctx.beginPath();
     ctx.moveTo(0, H);
-    for (let x = 0; x <= W; x += 4) {
-      // 4px columns, heights snapped to 3px: chunky polygon mountains
+    for (let x = 0; x <= W; x += 2) {
       const h = (ridge(x / W, r.seed) * 0.5 + 0.5) * r.amp;
-      const y = Math.round((r.base * H - h) / 3) * 3;
-      ctx.lineTo(x, y);
-      ctx.lineTo(x + 4, y);
+      ctx.lineTo(x, r.base * H - h);
     }
     ctx.lineTo(W, H);
     ctx.closePath();
     ctx.fill();
   }
+
+  // thin warm haze hugging the horizon: sunlight scattered through the fog,
+  // softening the ridge bases into the distance
+  const hazeC = mixRGB(mixRGB(sunC, white, 0.2), fog, 0.45);
+  const haze = ctx.createLinearGradient(0, H * 0.44, 0, H * 0.58);
+  haze.addColorStop(0, css(hazeC, 0));
+  haze.addColorStop(0.8, css(hazeC, 0.32));
+  haze.addColorStop(1, css(hazeC, 0.12));
+  ctx.fillStyle = haze;
+  ctx.fillRect(0, Math.round(H * 0.44), W, Math.round(H * 0.14));
 
   // the whole horizon melts back into the fog at the bottom, so the ridges
   // read as haze, never a hard silhouette edge against the void
@@ -210,9 +220,8 @@ function makeSkyTexture(t: Level['theme']): THREE.CanvasTexture {
   ctx.fillStyle = melt;
   ctx.fillRect(0, Math.round(H * 0.56), W, H - Math.round(H * 0.56));
 
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.magFilter = THREE.NearestFilter; // keep the dither cells crisp on the dome
-  return tex;
+  // default LinearFilter: the dome samples smooth, no crisped-up texels
+  return new THREE.CanvasTexture(canvas);
 }
 
 function applyTheme(): void {
@@ -220,10 +229,12 @@ function applyTheme(): void {
   scene.fog = new THREE.Fog(t.fog, t.fogNear, t.fogFar);
   scene.background = new THREE.Color(t.fog);
   hemi.color.set(t.hemiSky);
-  hemi.groundColor.set(t.hemiGround);
+  // ground bounce leans toward warm sand: every theme reads a touch tropical
+  hemi.groundColor.set(t.hemiGround).lerp(new THREE.Color(0xc79a62), 0.3);
   hemi.intensity = t.hemiI;
-  sun.color.set(t.sunColor);
-  sun.intensity = t.sunI;
+  // key light nudged warmer and brighter than the theme asks — golden-hour key
+  sun.color.set(t.sunColor).lerp(new THREE.Color(0xffc46a), 0.15);
+  sun.intensity = t.sunI * 1.1;
   // the counter-light stays a fraction of the sky light so it never competes
   fill.color.set(t.hemiSky);
   fill.intensity = t.hemiI * 0.22;
@@ -241,7 +252,11 @@ const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 400);
 function resize(): void {
   const w = window.innerWidth;
   const h = window.innerHeight;
-  renderer.setSize(Math.round(w * TUNING.renderScale), Math.round(h * TUNING.renderScale), false);
+  const rs = LITE_RENDER ? Math.min(TUNING.renderScale, 0.5) : TUNING.renderScale;
+  renderer.setSize(Math.round(w * rs), Math.round(h * rs), false);
+  // Upscale sampling follows the scale: chunky pixels only when the slider is
+  // pulled into PS1 territory; at 0.7+ the stretch stays smooth.
+  renderer.domElement.style.imageRendering = TUNING.renderScale < 0.7 ? 'pixelated' : '';
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
 }

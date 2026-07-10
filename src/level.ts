@@ -213,24 +213,24 @@ export class Level {
   } | null = null;
 
   // --- visual pass ---
-  // Default = Test Course: golden-hour beach. Teal zenith melting into peach,
-  // amber sun low over the water, warm sand bounce light, golden dust motes.
+  // Default = Test Course: Sentinel-Beach morning. Brilliant turquoise zenith
+  // over warm sand haze, high gold sun, jungle bounce light, drifting motes.
   theme: Theme = {
-    skyTop: '#1d7a8c',
-    skyBottom: '#ffc98a',
-    sunColorHex: '#ffb843',
+    skyTop: '#0fa3c2',
+    skyBottom: '#ffe6ae',
+    sunColorHex: '#fff0b8',
     sunU: 0.3,
     sunV: 0.4,
     stars: false,
-    fog: 0xd89a6a, // fog to the horizon peach so distance melts, not greys
+    fog: 0xbfe0cd, // warm aqua haze so distance melts into the lagoon
     fogNear: 24,
-    fogFar: 130,
-    hemiSky: 0x8ad0d8,
-    hemiGround: 0x6a4a2c,
-    hemiI: 1.05,
-    sunColor: 0xffc070,
-    sunI: 1.5,
-    particleColor: 0xffe0a8,
+    fogFar: 150,
+    hemiSky: 0x9fdfe4,
+    hemiGround: 0x8a6a3a,
+    hemiI: 1.1,
+    sunColor: 0xffe0a0,
+    sunI: 1.45,
+    particleColor: 0xfff0c0,
     particleWind: [0.8, -0.4, 0.3],
   };
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] = [];
@@ -300,28 +300,46 @@ export class Level {
   }
 
   // Light-toned surface textures — near-white so each deck's material color
-  // tints them. All 64px, pixel-filtered, cached per kind.
+  // tints them. Organic kinds (grass/jungle/dirt/sand/wood) paint at 128px
+  // with layered soft radial blobs and keep the default LinearFilter — the
+  // smooth PS2 read. Man-made kinds stay 64px pixel-crisp. Cached per kind.
   private surfTexCache = new Map<string, THREE.CanvasTexture>();
   private surfaceTexture(kind: string): THREE.CanvasTexture {
     if (kind === 'checker') return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    const soft = kind === 'grass' || kind === 'jungle' || kind === 'dirt' || kind === 'sand' || kind === 'wood';
+    const S = soft ? 128 : 64;
     const canvas = document.createElement('canvas');
-    canvas.width = 64;
-    canvas.height = 64;
+    canvas.width = S;
+    canvas.height = S;
     const ctx = canvas.getContext('2d')!;
-    if (kind === 'grass') {
-      ctx.fillStyle = '#e9efdf';
-      ctx.fillRect(0, 0, 64, 64);
-      for (let i = 0; i < 46; i++) {
-        const g = 200 + Math.floor(Math.random() * 40);
-        ctx.fillStyle = `rgb(${g - 22},${g},${g - 30})`;
-        ctx.beginPath();
-        ctx.ellipse(Math.random() * 64, Math.random() * 64, 3 + Math.random() * 6, 2 + Math.random() * 4, Math.random() * 3, 0, 7);
-        ctx.fill();
+    // Soft gradient blob, stamped at every wrapped position so tiles seam.
+    const blob = (x: number, y: number, r: number, color: string): void => {
+      for (const ox of [-S, 0, S]) {
+        for (const oy of [-S, 0, S]) {
+          const bx = x + ox;
+          const by = y + oy;
+          if (bx < -r || bx > S + r || by < -r || by > S + r) continue;
+          const g = ctx.createRadialGradient(bx, by, r * 0.15, bx, by, r);
+          g.addColorStop(0, color);
+          g.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = g;
+          ctx.fillRect(bx - r, by - r, r * 2, r * 2);
+        }
       }
-      ctx.fillStyle = 'rgba(255,255,255,0.5)';
-      for (let i = 0; i < 22; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+    };
+    if (kind === 'grass') {
+      // meadow wash: overlapping green pools, shade, sun patches — painterly
+      ctx.fillStyle = '#e6eed8';
+      ctx.fillRect(0, 0, S, S);
+      for (let i = 0; i < 26; i++) {
+        const g = 205 + Math.floor(Math.random() * 34);
+        const r = g - 24 - Math.floor(Math.random() * 14);
+        blob(Math.random() * S, Math.random() * S, 14 + Math.random() * 16, `rgba(${r},${g},${g - 36},0.5)`);
+      }
+      for (let i = 0; i < 10; i++) blob(Math.random() * S, Math.random() * S, 10 + Math.random() * 12, 'rgba(112,138,88,0.2)');
+      for (let i = 0; i < 12; i++) blob(Math.random() * S, Math.random() * S, 5 + Math.random() * 8, 'rgba(255,255,236,0.3)');
     } else if (kind === 'stone') {
       ctx.fillStyle = '#9a9a9a';
       ctx.fillRect(0, 0, 64, 64);
@@ -336,54 +354,50 @@ export class Level {
         }
       }
     } else if (kind === 'wood') {
+      // sun-warmed timber: per-plank tonal wash, soft grain, shaded seams
       for (let p = 0; p < 4; p++) {
-        const v = 222 + Math.floor(Math.random() * 22);
-        ctx.fillStyle = `rgb(${v},${v - 14},${v - 34})`;
-        ctx.fillRect(p * 16, 0, 16, 64);
-        ctx.strokeStyle = 'rgba(120,90,60,0.5)';
-        ctx.lineWidth = 1;
+        const v = 218 + Math.floor(Math.random() * 24);
+        const gr = ctx.createLinearGradient(p * 32, 0, p * 32 + 32, 0);
+        gr.addColorStop(0, `rgb(${v - 10},${v - 26},${v - 46})`);
+        gr.addColorStop(0.5, `rgb(${v},${v - 14},${v - 34})`);
+        gr.addColorStop(1, `rgb(${v - 12},${v - 28},${v - 48})`);
+        ctx.fillStyle = gr;
+        ctx.fillRect(p * 32, 0, 32, S);
+        ctx.strokeStyle = 'rgba(126,94,60,0.35)';
+        ctx.lineWidth = 2;
         for (let g = 0; g < 3; g++) {
+          const gx = p * 32 + 7 + g * 9;
           ctx.beginPath();
-          const gx = p * 16 + 3 + g * 5;
           ctx.moveTo(gx, 0);
-          ctx.bezierCurveTo(gx + 2, 20, gx - 2, 42, gx + 1, 64);
+          ctx.bezierCurveTo(gx + 4, S * 0.3, gx - 4, S * 0.65, gx, S);
           ctx.stroke();
         }
-        ctx.fillStyle = 'rgba(90,70,50,0.8)';
-        ctx.fillRect(p * 16, 0, 1, 64); // plank seam
-        ctx.fillRect(p * 16 + 6, 6, 2, 2); // nails
-        ctx.fillRect(p * 16 + 6, 56, 2, 2);
+        blob(p * 32 + 8 + Math.random() * 16, Math.random() * S, 4 + Math.random() * 3, 'rgba(122,88,52,0.45)'); // knot
+        ctx.fillStyle = 'rgba(96,72,48,0.5)';
+        ctx.fillRect(p * 32, 0, 2, S); // seam
       }
     } else if (kind === 'jungle') {
-      // dense leaf canopy floor: layered blobs + shadow flecks + sun tips
-      ctx.fillStyle = '#dfe8ca';
-      ctx.fillRect(0, 0, 64, 64);
-      for (let i = 0; i < 70; i++) {
-        const g = 195 + Math.floor(Math.random() * 50);
-        ctx.fillStyle = `rgb(${g - 35},${g},${g - 45})`;
-        ctx.beginPath();
-        ctx.ellipse(Math.random() * 64, Math.random() * 64, 2 + Math.random() * 4, 1.5 + Math.random() * 3, Math.random() * 3, 0, 7);
-        ctx.fill();
+      // canopy floor: deep leaf pools under sunlit tops, all soft-edged
+      ctx.fillStyle = '#dbe6c4';
+      ctx.fillRect(0, 0, S, S);
+      for (let i = 0; i < 30; i++) {
+        const g = 196 + Math.floor(Math.random() * 44);
+        const b = g - 48 + Math.floor(Math.random() * 16);
+        blob(Math.random() * S, Math.random() * S, 10 + Math.random() * 14, `rgba(${g - 40},${g},${b},0.55)`);
       }
-      ctx.fillStyle = 'rgba(70,95,55,0.4)'; // under-canopy shade
-      for (let i = 0; i < 26; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
-      ctx.fillStyle = 'rgba(255,255,240,0.6)'; // sun catching leaf tips
-      for (let i = 0; i < 14; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+      for (let i = 0; i < 14; i++) blob(Math.random() * S, Math.random() * S, 8 + Math.random() * 12, 'rgba(74,102,60,0.24)');
+      for (let i = 0; i < 12; i++) blob(Math.random() * S, Math.random() * S, 4 + Math.random() * 7, 'rgba(255,255,232,0.32)');
     } else if (kind === 'dirt') {
-      // trodden earth: warm blotches, pebbles, dry highlights
-      ctx.fillStyle = '#e4d8be';
-      ctx.fillRect(0, 0, 64, 64);
+      // trodden earth: warm soft blotches, moss creep, dry sunlit patches
+      ctx.fillStyle = '#e5dabd';
+      ctx.fillRect(0, 0, S, S);
       for (let i = 0; i < 16; i++) {
-        const v = 200 + Math.floor(Math.random() * 34);
-        ctx.fillStyle = `rgb(${v},${v - 16},${v - 42})`;
-        ctx.beginPath();
-        ctx.ellipse(Math.random() * 64, Math.random() * 64, 5 + Math.random() * 9, 3 + Math.random() * 5, Math.random() * 3, 0, 7);
-        ctx.fill();
+        const v = 198 + Math.floor(Math.random() * 36);
+        blob(Math.random() * S, Math.random() * S, 12 + Math.random() * 18, `rgba(${v},${v - 20},${v - 52},0.5)`);
       }
-      ctx.fillStyle = 'rgba(120,95,60,0.55)'; // pebbles
-      for (let i = 0; i < 30; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
-      ctx.fillStyle = 'rgba(255,246,220,0.5)';
-      for (let i = 0; i < 16; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+      for (let i = 0; i < 8; i++) blob(Math.random() * S, Math.random() * S, 8 + Math.random() * 10, 'rgba(140,132,86,0.2)');
+      for (let i = 0; i < 14; i++) blob(Math.random() * S, Math.random() * S, 2.5 + Math.random() * 3.5, 'rgba(122,96,62,0.4)'); // pebbles
+      for (let i = 0; i < 8; i++) blob(Math.random() * S, Math.random() * S, 6 + Math.random() * 9, 'rgba(255,246,220,0.32)');
     } else if (kind === 'pavement') {
       // concrete: 32px slabs, expansion lines, speckle so aprons don't band
       for (let py = 0; py < 2; py++) {
@@ -462,25 +476,26 @@ export class Level {
       ctx.fillStyle = 'rgba(255,240,210,0.35)';
       for (let i = 0; i < 12; i++) ctx.fillRect(Math.random() * 60, Math.random() * 62, 3, 1);
     } else {
-      // sand: pale speckle
-      ctx.fillStyle = '#f2ecd8';
-      ctx.fillRect(0, 0, 64, 64);
-      for (let i = 0; i < 90; i++) {
-        const v = 190 + Math.floor(Math.random() * 50);
-        ctx.fillStyle = `rgb(${v},${v - 8},${v - 30})`;
-        ctx.fillRect(Math.random() * 63, Math.random() * 63, 1.5, 1.5);
+      // sand: warm tonal pools under soft ripple shadows
+      ctx.fillStyle = '#f3ecd6';
+      ctx.fillRect(0, 0, S, S);
+      for (let i = 0; i < 18; i++) {
+        const v = 205 + Math.floor(Math.random() * 34);
+        blob(Math.random() * S, Math.random() * S, 16 + Math.random() * 20, `rgba(${v},${v - 12},${v - 40},0.35)`);
       }
-      ctx.strokeStyle = 'rgba(180,160,120,0.35)';
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 8; i++) blob(Math.random() * S, Math.random() * S, 10 + Math.random() * 12, 'rgba(255,250,232,0.35)');
+      ctx.strokeStyle = 'rgba(186,164,120,0.22)';
+      ctx.lineWidth = 3;
+      for (let i = 0; i < 5; i++) {
         ctx.beginPath();
-        const y = 8 + i * 16;
+        const y = 12 + i * 24;
         ctx.moveTo(0, y);
-        ctx.bezierCurveTo(20, y + 4, 44, y - 4, 64, y);
+        ctx.bezierCurveTo(S * 0.3, y + 7, S * 0.7, y - 7, S, y);
         ctx.stroke();
       }
     }
     const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter;
+    if (!soft) tex.magFilter = THREE.NearestFilter; // crisp = man-made only
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.RepeatWrapping;
     this.surfTexCache.set(kind, tex);
@@ -492,12 +507,12 @@ export class Level {
     const m = (mat as THREE.MeshLambertMaterial).clone();
     const tex = this.surfaceTexture(kind).clone();
     const density =
-      kind === 'grass' ? 7
-      : kind === 'jungle' ? 6.5
+      kind === 'grass' ? 8.5 // soft 128px kinds tile larger so blobs read
+      : kind === 'jungle' ? 8
       : kind === 'wood' ? 3.2
       : kind === 'plank' ? 3.4
-      : kind === 'sand' ? 6
-      : kind === 'dirt' ? 5.5
+      : kind === 'sand' ? 7.5
+      : kind === 'dirt' ? 7
       : kind === 'pavement' ? 6
       : kind === 'asphalt' ? 8 // one paint stripe per 8u = parking bays
       : kind === 'metal' ? 3
@@ -532,7 +547,7 @@ export class Level {
   private wallTint = 0xb89a70; // perimeter walls / end wall
   private blockTint = 0xc0a878; // step blocks, stair climbs
   private curbTint = 0xe8a84e; // painted deck-edge strips
-  private bermTint = 0x4e7a3c; // jungle strip shoulders
+  private bermTint = 0x3f8a34; // jungle strip shoulders
 
   // Rails come out of rails.ts plain grey; reskin every segment in the
   // warp-room chrome (cool-tinted so it reads as polished steel with a magic
@@ -1218,12 +1233,12 @@ export class Level {
   // ---------------------------------------------------------------- build --
 
   private buildTestCourse(): void {
-    // Golden-hour beach: sunlit + shaded jungle greens, sandstone banks,
-    // hot-gold sand. Textures are near-white, so these tints carry the look.
-    const matA = new THREE.MeshLambertMaterial({ color: 0x6fa055 });
-    const matB = new THREE.MeshLambertMaterial({ color: 0x5c8a4a });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0xc8a06a });
-    const matBeach = new THREE.MeshLambertMaterial({ color: 0xe8c88a });
+    // Sentinel-Beach morning: saturated jungle greens, sandstone banks, warm
+    // gold sand. Textures are near-white, so these tints carry the look.
+    const matA = new THREE.MeshLambertMaterial({ color: 0x5da84e });
+    const matB = new THREE.MeshLambertMaterial({ color: 0x4c9a44 });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0xd0a86e });
+    const matBeach = new THREE.MeshLambertMaterial({ color: 0xf0d092 });
     const matPlaza = new THREE.MeshLambertMaterial({ color: 0xb0a08a }); // rail-yard stonework
     const matFinish = new THREE.MeshLambertMaterial({ color: 0xd0b070 });
 
@@ -1233,14 +1248,14 @@ export class Level {
     // --- practice pen: walled rail playground east of the beach ---
     const penMesh = new THREE.Mesh(
       new THREE.BoxGeometry(30, 1, 54),
-      this.patterned(new THREE.MeshLambertMaterial({ color: 0x8fae62 }), 30, 54, 'grass'),
+      this.patterned(new THREE.MeshLambertMaterial({ color: 0x7cb45a }), 30, 54, 'grass'),
     );
     penMesh.position.set(25, -0.5, -13);
     penMesh.name = 'practice pen';
     this.root.add(penMesh);
     this.groundMeshes.push(penMesh);
     // Perimeter walls (also backstop the beach so you can't fall off the start).
-    this.wall(15, 15, 52, 1, 0); // north, spans beach + pen
+    this.wall(15, 15, 52, 1, 0, 5, 0.7); // north, behind spawn: curb-high so the camera sees out
     this.wall(-10.5, -13, 1, 54, 0); // west edge of the beach
     this.wall(40.5, -13, 1, 54, 0); // east edge of the pen
     this.wall(25, -40.5, 30, 1, 0); // south edge of the pen
@@ -1469,12 +1484,46 @@ export class Level {
     // --- extra enemy guarding the rail yard landing ---
     this.enemy(-4, 4, -13.5, -876, 6);
 
-    // --- dressing: palms off the play space (visual only, no colliders) ---
-    this.palm(-13, 0, -6, 5.2, 0.14);
-    this.palm(-14.5, 0, -26, 4.4, -0.1);
-    this.palm(-12.5, 0, 8, 4.8, 0.08);
-    this.palm(4.6, -22, -1014, 4.6, -0.12); // finish deck, behind the gate
-    this.palm(-4.6, -22, -1017, 5.0, 0.1);
+    // --- dressing: tropical fringe off the play space (visual only) ---
+    // west beach edge + spawn surrounds
+    this.palm(-13, 0, -4, 5.6, 0.14);
+    this.palm(-15, 0, -19, 4.6, -0.09);
+    this.palm(-12.6, 0, -33, 5.9, 0.1);
+    this.palm(-14, 0, 9, 4.3, 0.05);
+    this.fern(-8.6, 0, 5, 1.2);
+    this.fern(-8.9, 0, -13);
+    this.broadleaf(-8.3, 0, -34, 1.2);
+    this.flowers(-7.6, 0, 12);
+    this.flowers(-8.2, 0, -20);
+    this.rock(-8.6, 0, 13, 1.4);
+    // east of the practice pen
+    this.palm(43.5, 0, -2, 5.4, -0.12);
+    this.palm(45, 0, -21, 4.6, 0.08);
+    this.palm(43.2, 0, -37, 5.7, -0.06);
+    this.fern(38.9, 0, 3, 1.1);
+    this.flowers(39.4, 0, -37);
+    // halfpipe surrounds (lips at x ±10.3 — everything sits outside them)
+    this.palm(13.6, -13.5, -716, 5.4, -0.1);
+    this.palm(14.6, -13.5, -741, 4.7, 0.12);
+    this.palm(13.4, -13.5, -763, 5.8, -0.07);
+    this.palm(-13.8, -13.5, -722, 5.2, 0.1);
+    this.palm(-14.6, -13.5, -748, 4.5, -0.1);
+    this.palm(-13.4, -13.5, -768, 5.6, 0.06);
+    this.fern(-12.2, -13.5, -732, 1.3);
+    this.fern(12.4, -13.5, -754, 1.2);
+    this.rock(12.8, -13.5, -708, 1.6);
+    this.rock(-12.6, -13.5, -772, 1.9);
+    this.flowers(-12.4, -13.5, -712);
+    // rail-yard landing fringe
+    this.palm(9.4, -13.5, -858, 4.9, -0.1);
+    this.palm(-9.6, -13.5, -876, 5.3, 0.1);
+    this.fern(-8.9, -13.5, -856, 1.2);
+    // finish deck, behind the gate
+    this.palm(4.6, -22, -1014, 4.8, -0.12);
+    this.palm(-4.6, -22, -1017, 5.2, 0.1);
+    this.broadleaf(7.4, -22, -1008, 1.3);
+    this.broadleaf(-7.6, -22, -1010, 1.1);
+    this.flowers(6.8, -22, -1013);
 
     // --- finish gate + end wall ---
     this.finishGate(-22, this.finishZ);
@@ -1491,7 +1540,8 @@ export class Level {
   // fixed camera therefore sees side-on (real side-scroll platforming, no
   // camera move) — then a second corner back onto -Z for the finish.
   private buildSideways(): void {
-    // Vaporwave dusk: lavender concrete, teal turf, hot-pink platforms.
+    // Coral dusk: vaporwave warmed toward the tropics — lavender concrete,
+    // lush turf, hot-pink platforms under a coral horizon band.
     this.wallTint = 0x7a5a9a;
     this.blockTint = 0x8a6aa8;
     this.curbTint = 0xff79c8;
@@ -1504,21 +1554,21 @@ export class Level {
     this.finishZ = -104;
     this.endWallZ = -116;
     this.theme = {
-      skyTop: '#241454',
-      skyBottom: '#ff6ea8',
-      sunColorHex: '#ffb0e0',
+      skyTop: '#2a1650',
+      skyBottom: '#ff8a70',
+      sunColorHex: '#ffc0a0',
       sunU: 0.35,
       sunV: 0.3,
-      stars: true, // first stars over a neon horizon
-      fog: 0x8a4a86, // magenta haze to match the pink band
+      stars: true, // first stars over a coral horizon
+      fog: 0x9a5464, // rose haze to match the coral band
       fogNear: 20,
-      fogFar: 110,
-      hemiSky: 0xc8a0e8,
-      hemiGround: 0x3a2848,
+      fogFar: 120,
+      hemiSky: 0xd8a8c0,
+      hemiGround: 0x3a2840,
       hemiI: 1.05,
-      sunColor: 0xff9ad0,
+      sunColor: 0xffa888,
       sunI: 1.2,
-      particleColor: 0xffb8e8,
+      particleColor: 0xffc8a8,
       particleWind: [0.8, -0.3, 0.3],
     };
 
@@ -1537,7 +1587,7 @@ export class Level {
 
     // corridor intro heading down -Z
     this.slab('start', 16, -12, 0, 10, matA, false);
-    this.wall(0, 17, 12, 1, 0);
+    this.wall(0, 17, 12, 1, 0, 5, 0.7); // behind spawn: low curb, full-height collider
     this.crate(0, 0, -3, 'mask');
     this.fruitRow(-16, -22, 1.3, 4);
     this.slab('approach', -12, -38, 0, 10, matGround, true, 0, 'grass');
@@ -1605,6 +1655,31 @@ export class Level {
     this.fruitRow(-90, -96, 1.4, 4, 149);
     this.finishGate(0, this.finishZ, 152);
     this.endWall(0, 152);
+
+    // --- dressing: hanging gardens off the floating decks (visual only) ---
+    const VZ = CZ + 4.4; // south lip of the sideways decks, facing the camera
+    this.vine(16, -0.05, VZ, 2.4);
+    this.vine(30, -0.05, VZ, 3.0);
+    this.vine(43, 1.45, VZ, 2.2);
+    this.vine(60, 2.95, VZ, 2.6);
+    this.vine(77, 2.95, VZ, 2.0);
+    this.vine(94, 3.15, VZ, 3.2);
+    this.vine(104, 3.15, VZ, 2.4);
+    this.vine(114, 8.35, VZ, 3.4);
+    this.vine(124, 8.35, VZ, 2.8);
+    this.vine(128, 2.75, VZ, 2.2);
+    this.vine(140, 3.55, VZ, 2.6);
+    // corner decks: planters + blooms tucked against the turn walls
+    this.planter(0.5, 0, -54.6);
+    this.planter(8.5, 0, -55);
+    this.flowers(4.5, 0, -54.8);
+    this.fern(-3.6, 0, -54.9, 1.1);
+    this.planter(147.5, 3.6, -54.6);
+    this.planter(158, 3.6, -52.5);
+    this.flowers(154, 3.6, -54.6);
+    // finish stretch: dusk palms behind the gate
+    this.palm(147.6, 0, -110, 4.9, 0.1);
+    this.palm(156.4, 0, -112, 5.3, -0.1);
   }
 
   // Build-time ground probe: what the terrain actually is at (x, z). Used to
@@ -1816,28 +1891,45 @@ export class Level {
 
   // ---------------------------------------------------------- visual kit --
 
-  // Animated pit floor: scrolling water, lava, or drifting void haze.
+  // Animated pit floor: scrolling water, lava, or drifting void haze. Water
+  // paints soft at 128 (lagoon two-tone + caustics); lava/void stay crisp.
   private pitPlane(kind: 'water' | 'lava' | 'void', y: number, cx: number, cz: number, size = 1400): void {
     const canvas = document.createElement('canvas');
-    canvas.width = 64;
-    canvas.height = 64;
+    const S = kind === 'water' ? 128 : 64;
+    canvas.width = S;
+    canvas.height = S;
     const ctx = canvas.getContext('2d')!;
     let su = 0.004;
     let sv = 0.002;
     if (kind === 'water') {
-      ctx.fillStyle = '#1d3d55';
-      ctx.fillRect(0, 0, 64, 64);
-      ctx.strokeStyle = 'rgba(120,190,220,0.55)';
-      ctx.lineWidth = 1.5;
-      for (let i = 0; i < 7; i++) {
+      ctx.fillStyle = '#2b8a96';
+      ctx.fillRect(0, 0, S, S);
+      const pool = (px: number, py: number, r: number, color: string): void => {
+        for (const ox of [-S, 0, S]) {
+          for (const oy of [-S, 0, S]) {
+            const bx = px + ox;
+            const by = py + oy;
+            if (bx < -r || bx > S + r || by < -r || by > S + r) continue;
+            const g = ctx.createRadialGradient(bx, by, r * 0.2, bx, by, r);
+            g.addColorStop(0, color);
+            g.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = g;
+            ctx.fillRect(bx - r, by - r, r * 2, r * 2);
+          }
+        }
+      };
+      for (let i = 0; i < 12; i++) pool(Math.random() * S, Math.random() * S, 16 + Math.random() * 20, 'rgba(23,105,128,0.5)'); // deep pools
+      for (let i = 0; i < 10; i++) pool(Math.random() * S, Math.random() * S, 10 + Math.random() * 16, 'rgba(94,196,196,0.45)'); // shallows
+      ctx.strokeStyle = 'rgba(214,246,240,0.4)'; // caustic arcs
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < 6; i++) {
         ctx.beginPath();
-        const yy = 4 + i * 9;
+        const yy = 10 + i * 20;
         ctx.moveTo(0, yy);
-        ctx.bezierCurveTo(16, yy + 5, 44, yy - 5, 64, yy);
+        ctx.bezierCurveTo(S * 0.28, yy + 8, S * 0.72, yy - 8, S, yy);
         ctx.stroke();
       }
-      ctx.fillStyle = 'rgba(200,240,255,0.5)';
-      for (let i = 0; i < 12; i++) ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 1);
+      for (let i = 0; i < 8; i++) pool(Math.random() * S, Math.random() * S, 3 + Math.random() * 4, 'rgba(232,255,250,0.5)'); // sparkle
       su = 0.008;
       sv = 0.004;
     } else if (kind === 'lava') {
@@ -1880,7 +1972,7 @@ export class Level {
       sv = 0.001;
     }
     const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter;
+    if (kind !== 'water') tex.magFilter = THREE.NearestFilter; // water blends
     tex.wrapS = THREE.RepeatWrapping;
     tex.wrapT = THREE.RepeatWrapping;
     // one tile per ~14u: veins/waves read as surface detail, not spaghetti,
@@ -1942,38 +2034,291 @@ export class Level {
     );
   }
 
-  // Cheap PS1 palm: leaning 5-sided trunk + five solid drooping fronds on a
-  // shared geometry/material. Pure dressing — never a collider, never a
-  // groundMesh, so it cannot touch physics or floorY probes.
-  private static palmFrondGeo: THREE.BoxGeometry | null = null;
-  private palm(x: number, y: number, z: number, h = 4.5, lean = 0.12): void {
-    const trunkMat = this.baseMat('palmTrunk', 0xa87848, 'wood', 1, 3);
-    const frondMat = this.baseMat('palmFrond', 0x3f9a44);
-    const g = new THREE.Group();
-    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.3, h, 5), trunkMat);
-    trunk.position.y = h / 2;
-    g.add(trunk);
-    if (!Level.palmFrondGeo) Level.palmFrondGeo = new THREE.BoxGeometry(2.6, 0.09, 0.6);
-    for (let i = 0; i < 5; i++) {
-      const f = new THREE.Mesh(Level.palmFrondGeo, frondMat);
-      const a = (i / 5) * Math.PI * 2 + x * 0.7; // deterministic twist per tree
-      f.position.set(Math.cos(a) * 1.05, h - 0.15 + (i % 2) * 0.14, Math.sin(a) * 1.05);
-      f.rotation.set(0, -a, -0.45); // fan out, droop the tips
-      g.add(f);
+  // ------------------------------------------------------- tropical decor --
+  // Everything below is pure dressing: added to root only, never a collider,
+  // never a groundMesh, so it cannot touch physics or floorY probes. Blades
+  // and clusters bake into one buffer each — a whole palm is three meshes.
+
+  // Bake transformed copies of a geometry into one smooth-shaded buffer.
+  private static mergeGeos(parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[]): THREE.BufferGeometry {
+    const pos: number[] = [];
+    const norm: number[] = [];
+    const uv: number[] = [];
+    const v = new THREE.Vector3();
+    const nm = new THREE.Matrix3();
+    for (const part of parts) {
+      const g = part.geo.index ? part.geo.toNonIndexed() : part.geo;
+      nm.getNormalMatrix(part.m);
+      const p = g.attributes.position as THREE.BufferAttribute;
+      const n = g.attributes.normal as THREE.BufferAttribute;
+      const u = g.attributes.uv as THREE.BufferAttribute;
+      for (let i = 0; i < p.count; i++) {
+        v.fromBufferAttribute(p, i).applyMatrix4(part.m);
+        pos.push(v.x, v.y, v.z);
+        v.fromBufferAttribute(n, i).applyNormalMatrix(nm).normalize();
+        norm.push(v.x, v.y, v.z);
+        uv.push(u.getX(i), u.getY(i));
+      }
+      if (g !== part.geo) g.dispose();
     }
+    const out = new THREE.BufferGeometry();
+    out.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    out.setAttribute('normal', new THREE.Float32BufferAttribute(norm, 3));
+    out.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    return out;
+  }
+
+  // One leaf blade: a narrow plane arched up then drooped, tapered to the
+  // tip, running +X from the origin. Smooth vertex normals do the shading.
+  private static bladeGeo(len: number, wid: number, droop: number): THREE.BufferGeometry {
+    const g = new THREE.PlaneGeometry(len, wid, 4, 1);
+    g.rotateX(-Math.PI / 2);
+    g.translate(len / 2, 0, 0);
+    const p = g.attributes.position as THREE.BufferAttribute;
+    for (let i = 0; i < p.count; i++) {
+      const t = p.getX(i) / len;
+      p.setY(i, len * (0.32 * Math.sin(t * 2.2) - droop * t * t));
+      p.setZ(i, p.getZ(i) * (1 - 0.7 * t));
+    }
+    g.computeVertexNormals();
+    return g;
+  }
+
+  // Fan `count` copies of a blade around the origin; consumes the blade.
+  private static fanGeo(blade: THREE.BufferGeometry, count: number, tilt: number): THREE.BufferGeometry {
+    const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
+    const e = new THREE.Euler();
+    const q = new THREE.Quaternion();
+    const one = new THREE.Vector3(1, 1, 1);
+    for (let i = 0; i < count; i++) {
+      e.set(0, (i / count) * Math.PI * 2 + i * 0.7, tilt + (i % 2) * 0.16);
+      q.setFromEuler(e);
+      parts.push({
+        geo: blade,
+        m: new THREE.Matrix4().compose(new THREE.Vector3(0, (i % 3) * 0.05, 0), q, one),
+      });
+    }
+    const out = Level.mergeGeos(parts);
+    blade.dispose();
+    return out;
+  }
+
+  // Soft-painted decor canvases (128px, LinearFilter). Per level, like
+  // surfTexCache, so dispose() frees them with everything else level-owned.
+  private decorTexCache = new Map<string, THREE.CanvasTexture>();
+  private decorTexture(kind: 'leaf' | 'moss'): THREE.CanvasTexture {
+    const cached = this.decorTexCache.get(kind);
+    if (cached) return cached;
+    const S = 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = S;
+    canvas.height = S;
+    const ctx = canvas.getContext('2d')!;
+    const blob = (x: number, y: number, r: number, color: string): void => {
+      const g = ctx.createRadialGradient(x, y, r * 0.15, x, y, r);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    };
+    if (kind === 'leaf') {
+      // two-tone frond: lit rib band shading darker toward both edges
+      const gr = ctx.createLinearGradient(0, 0, 0, S);
+      gr.addColorStop(0, '#c6dda2');
+      gr.addColorStop(0.5, '#f0f7d6');
+      gr.addColorStop(1, '#b9d494');
+      ctx.fillStyle = gr;
+      ctx.fillRect(0, 0, S, S);
+      ctx.strokeStyle = 'rgba(120,150,80,0.35)'; // veins sweeping tipward
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 9; i++) {
+        const y0 = 8 + i * 14;
+        ctx.beginPath();
+        ctx.moveTo(0, y0);
+        ctx.quadraticCurveTo(S * 0.55, y0 + (i % 2 === 0 ? 9 : -9), S, y0);
+        ctx.stroke();
+      }
+      for (let i = 0; i < 6; i++) blob(Math.random() * S, Math.random() * S, 12 + Math.random() * 14, 'rgba(255,255,238,0.22)');
+    } else {
+      // moss: grey-green stone under soft growth pads (near-white, tintable)
+      ctx.fillStyle = '#e2e4d6';
+      ctx.fillRect(0, 0, S, S);
+      for (let i = 0; i < 14; i++) {
+        const v = 200 + Math.floor(Math.random() * 30);
+        blob(Math.random() * S, Math.random() * S, 12 + Math.random() * 16, `rgba(${v - 26},${v},${v - 40},0.45)`);
+      }
+      for (let i = 0; i < 8; i++) blob(Math.random() * S, Math.random() * S, 8 + Math.random() * 10, 'rgba(128,132,118,0.3)');
+      for (let i = 0; i < 6; i++) blob(Math.random() * S, Math.random() * S, 5 + Math.random() * 7, 'rgba(255,255,240,0.3)');
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    this.decorTexCache.set(kind, tex);
+    return tex;
+  }
+
+  // Shared decor materials — one per role per level, tinted at first call.
+  private decorMats = new Map<string, THREE.MeshLambertMaterial>();
+  private decorMat(key: string, color: number, tex: 'leaf' | 'moss' | '' = '', double = false): THREE.MeshLambertMaterial {
+    let m = this.decorMats.get(key);
+    if (m) return m;
+    m = new THREE.MeshLambertMaterial({ color });
+    if (tex !== '') m.map = this.decorTexture(tex);
+    if (double) m.side = THREE.DoubleSide;
+    this.decorMats.set(key, m);
+    return m;
+  }
+
+  // Tropical dressing is pure garnish: '?lite' (headless smoke) skips ALL of
+  // it — software rendering can't afford the fill rate, and slow frames
+  // desync the suite's wall-clock input scripting.
+  private readonly liteDecor = window.location.search.includes('lite');
+
+  // Jak-era palm: bowed trunk, merged frond crown, coconut cluster — three
+  // meshes on shared geometry. h scales the whole tree; lean > 0 tips the
+  // top toward -x (the trunk's baked bow runs +x, so leans read as S-curves).
+  private static palmTrunkGeo: THREE.BufferGeometry | null = null;
+  private static palmCrownGeo: THREE.BufferGeometry | null = null;
+  private static coconutGeo: THREE.BufferGeometry | null = null;
+  private palm(x: number, y: number, z: number, h = 4.8, lean = 0.12): void {
+    if (this.liteDecor) return;
+    if (!Level.palmTrunkGeo) {
+      const g = new THREE.CylinderGeometry(0.13, 0.3, 4.8, 7, 6);
+      g.translate(0, 2.4, 0);
+      const p = g.attributes.position as THREE.BufferAttribute;
+      for (let i = 0; i < p.count; i++) {
+        const t = p.getY(i) / 4.8;
+        p.setX(i, p.getX(i) + 0.85 * t * t); // bow toward +x
+      }
+      Level.palmTrunkGeo = g;
+    }
+    if (!Level.palmCrownGeo) Level.palmCrownGeo = Level.fanGeo(Level.bladeGeo(2.7, 0.62, 0.72), 8, 0.08);
+    if (!Level.coconutGeo) {
+      const nut = new THREE.SphereGeometry(0.17, 7, 5);
+      Level.coconutGeo = Level.mergeGeos([
+        { geo: nut, m: new THREE.Matrix4().makeTranslation(0.17, 0, 0.03) },
+        { geo: nut, m: new THREE.Matrix4().makeTranslation(-0.1, 0.05, 0.15) },
+        { geo: nut, m: new THREE.Matrix4().makeTranslation(-0.06, -0.03, -0.15) },
+      ]);
+      nut.dispose();
+    }
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(Level.palmTrunkGeo, this.baseMat('palmTrunk', 0xb08556, 'wood', 1, 3)));
+    const two = Math.abs(Math.round(x + z)) % 2 === 0;
+    const crown = new THREE.Mesh(
+      Level.palmCrownGeo,
+      this.decorMat(two ? 'frondA' : 'frondB', two ? 0x3fa04a : 0x5cae3c, 'leaf', true),
+    );
+    crown.position.set(0.85, 4.72, 0);
+    crown.rotation.y = x * 1.7 + z * 0.4; // deterministic twist per tree
+    g.add(crown);
+    const nuts = new THREE.Mesh(Level.coconutGeo, this.decorMat('coconut', 0x7a5a34));
+    nuts.position.set(0.85, 4.45, 0);
+    g.add(nuts);
+    g.scale.setScalar(h / 4.8);
     g.position.set(x, y, z);
     g.rotation.z = lean;
     this.root.add(g);
   }
 
-  // Squat silhouette boulder for set dressing. Visual only, shared geo/mat.
-  private static rockGeo: THREE.DodecahedronGeometry | null = null;
+  // Fern tuft: six arcing blades in one buffer.
+  private static fernGeoCache: THREE.BufferGeometry | null = null;
+  private fern(x: number, y: number, z: number, s = 1): void {
+    if (this.liteDecor) return;
+    if (!Level.fernGeoCache) Level.fernGeoCache = Level.fanGeo(Level.bladeGeo(1.15, 0.3, 0.95), 6, 0.7);
+    const m = new THREE.Mesh(Level.fernGeoCache, this.decorMat('fern', 0x4a9a40, 'leaf', true));
+    m.scale.setScalar(s);
+    m.rotation.y = x * 2.1 + z * 0.6;
+    m.position.set(x, y + 0.02, z);
+    this.root.add(m);
+  }
+
+  // Broadleaf plant: five wide paddles. Key/color per role (jungle, succulent).
+  private static leafGeoCache: THREE.BufferGeometry | null = null;
+  private broadleaf(x: number, y: number, z: number, s = 1, key = 'leafy', color = 0x3e8e46): void {
+    if (this.liteDecor) return;
+    if (!Level.leafGeoCache) Level.leafGeoCache = Level.fanGeo(Level.bladeGeo(1.5, 0.95, 0.5), 5, 0.5);
+    const m = new THREE.Mesh(Level.leafGeoCache, this.decorMat(key, color, 'leaf', true));
+    m.scale.setScalar(s);
+    m.rotation.y = x * 1.9 + z * 0.8;
+    m.position.set(x, y + 0.02, z);
+    this.root.add(m);
+  }
+
+  // Hanging vine spill: nine down-turned blades in one buffer; len scales it.
+  private static vineGeoCache: THREE.BufferGeometry | null = null;
+  private vine(x: number, y: number, z: number, len = 2.6): void {
+    if (this.liteDecor) return;
+    if (!Level.vineGeoCache) {
+      const blade = Level.bladeGeo(1.0, 0.3, 0.85);
+      const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
+      const q = new THREE.Quaternion();
+      for (let i = 0; i < 9; i++) {
+        q.setFromEuler(new THREE.Euler(0, i * 2.4, -0.95 - (i % 3) * 0.3));
+        parts.push({
+          geo: blade,
+          m: new THREE.Matrix4().compose(
+            new THREE.Vector3(0, -i * 0.34, 0),
+            q.clone(),
+            new THREE.Vector3().setScalar(1 - i * 0.05),
+          ),
+        });
+      }
+      Level.vineGeoCache = Level.mergeGeos(parts);
+      blade.dispose();
+    }
+    const m = new THREE.Mesh(Level.vineGeoCache, this.decorMat('vine', 0x55a848, 'leaf', true));
+    m.scale.set(0.9, len / 3.4, 0.9);
+    m.rotation.y = x * 1.3 + z;
+    m.position.set(x, y, z);
+    this.root.add(m);
+  }
+
+  // Flower dots: a bright six-berry cluster, one buffer, coral/orange/pink.
+  private static flowerGeoCache: THREE.BufferGeometry | null = null;
+  private flowers(x: number, y: number, z: number): void {
+    if (this.liteDecor) return;
+    if (!Level.flowerGeoCache) {
+      const bud = new THREE.SphereGeometry(0.09, 6, 5);
+      const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2;
+        parts.push({
+          geo: bud,
+          m: new THREE.Matrix4().makeTranslation(
+            Math.cos(a) * (0.12 + (i % 3) * 0.09),
+            0.1 + (i % 3) * 0.09,
+            Math.sin(a) * (0.12 + (i % 2) * 0.11),
+          ),
+        });
+      }
+      Level.flowerGeoCache = Level.mergeGeos(parts);
+      bud.dispose();
+    }
+    const keys = [['bloomA', 0xff5a48], ['bloomB', 0xff9a2e], ['bloomC', 0xf84a8e]] as const;
+    const [key, color] = keys[Math.abs(Math.round(x * 3 + z * 5)) % 3];
+    const m = new THREE.Mesh(Level.flowerGeoCache, this.decorMat(key, color));
+    m.position.set(x, y, z);
+    this.root.add(m);
+  }
+
+  // Deck planter: terracotta pot with a fern spilling out.
+  private static potGeo: THREE.CylinderGeometry | null = null;
+  private planter(x: number, y: number, z: number): void {
+    if (this.liteDecor) return;
+    if (!Level.potGeo) Level.potGeo = new THREE.CylinderGeometry(0.52, 0.38, 0.6, 9);
+    const pot = new THREE.Mesh(Level.potGeo, this.decorMat('pot', 0xc86a42));
+    pot.position.set(x, y + 0.3, z);
+    this.root.add(pot);
+    this.fern(x, y + 0.55, z, 0.9);
+  }
+
+  // Rounded mossy boulder: squashed sphere, soft shading. Visual only.
+  private static rockGeo: THREE.SphereGeometry | null = null;
   private rock(x: number, y: number, z: number, s = 1.6): void {
-    if (!Level.rockGeo) Level.rockGeo = new THREE.DodecahedronGeometry(1, 0);
-    const m = new THREE.Mesh(Level.rockGeo, this.baseMat('rock', 0xa08a70, 'dirt', 2, 2));
-    m.scale.set(s, s * 0.62, s * 0.8);
+    if (!Level.rockGeo) Level.rockGeo = new THREE.SphereGeometry(1, 10, 8);
+    const m = new THREE.Mesh(Level.rockGeo, this.decorMat('mossRock', 0xa8b090, 'moss'));
+    m.scale.set(s, s * 0.6, s * 0.82);
     m.rotation.y = x * 1.3 + z * 0.7; // deterministic tumble
-    m.position.set(x, y + s * 0.34, z);
+    m.position.set(x, y + s * 0.4, z);
     this.root.add(m);
   }
 
@@ -2115,15 +2460,21 @@ export class Level {
   }
 
   // Solid barrier: visual box + collider. Bump = full stop, never breaks.
-  private wall(cx: number, cz: number, w: number, d: number, baseY: number, h = 5): void {
+  // visH: the VISIBLE wall height — the collider always stands the full h.
+  // Spawn-side back walls use a low visH curb so the trailing camera sees
+  // over them instead of eating a face full of bricks.
+  private wall(cx: number, cz: number, w: number, d: number, baseY: number, h = 5, visH = h): void {
     const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(w, h, d),
+      new THREE.BoxGeometry(w, visH, d),
       this.baseMat('wall', this.wallTint, 'stone', 3, 1),
     );
-    mesh.position.set(cx, baseY + h / 2, cz);
+    mesh.position.set(cx, baseY + visH / 2, cz);
     this.root.add(mesh);
     this.walls.push(
-      new THREE.Box3().setFromCenterAndSize(mesh.position.clone(), new THREE.Vector3(w, h, d)),
+      new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(cx, baseY + h / 2, cz),
+        new THREE.Vector3(w, h, d),
+      ),
     );
   }
 
@@ -2895,14 +3246,14 @@ export class Level {
   // across floating ruins, a downhill slalom, a rail canyon, a crate maze,
   // vine bridges, and a rolling-stone finale. Roughly 1.5x the Test Course.
   private buildGauntlet(): void {
-    // Red canyon dusk: scrub greens against rust rock, everything warmed.
+    // Terracotta canyon dusk: scrub greens against warm clay rock.
     this.wallTint = 0xa86048;
     this.blockTint = 0xb07050;
     this.curbTint = 0xe89a4a;
     this.bermTint = 0x6a5a34;
     const matSand = new THREE.MeshLambertMaterial({ color: 0xd8b276 });
-    const matJungle = new THREE.MeshLambertMaterial({ color: 0x7a9a4e });
-    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x6a8c46 });
+    const matJungle = new THREE.MeshLambertMaterial({ color: 0x71a048 });
+    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x62933f });
     const matStone = new THREE.MeshLambertMaterial({ color: 0xa87a5c });
     const matRamp = new THREE.MeshLambertMaterial({ color: 0xba8a56 });
     const matPlat = new THREE.MeshLambertMaterial({ color: 0xb09a6e });
@@ -2913,21 +3264,21 @@ export class Level {
     this.finishZ = -1200;
     this.endWallZ = -1212;
     this.theme = {
-      skyTop: '#3c1430',
-      skyBottom: '#ff8a4e',
-      sunColorHex: '#ffcf86',
+      skyTop: '#4a1c22',
+      skyBottom: '#ffa060',
+      sunColorHex: '#ffd890',
       sunU: 0.72,
       sunV: 0.3,
       stars: false,
-      fog: 0xb05a3a, // canyon dust — distance goes to burnt orange
+      fog: 0xc06a40, // canyon dust — distance goes to warm terracotta
       fogNear: 25,
-      fogFar: 140,
-      hemiSky: 0xe8a878,
-      hemiGround: 0x481e18,
+      fogFar: 155,
+      hemiSky: 0xf0b088,
+      hemiGround: 0x50241a,
       hemiI: 1.0,
-      sunColor: 0xffb060,
+      sunColor: 0xffb868,
       sunI: 1.5,
-      particleColor: 0xffc890,
+      particleColor: 0xffd0a0,
       particleWind: [1.1, -0.5, 0.3],
     };
 
@@ -2936,7 +3287,7 @@ export class Level {
 
     // --- A: walled start + jungle approach ---------------------------------
     this.slab('start', 14, -30, 0, 20, matSand, false, 0, 'sand');
-    this.wall(0, 15, 22, 1, 0);
+    this.wall(0, 15, 22, 1, 0, 5, 0.7); // behind spawn: low curb, full-height collider
     this.wall(-10.5, -8, 1, 46, 0);
     this.wall(10.5, -8, 1, 46, 0);
     this.crate(3, 0, -12);
@@ -3222,6 +3573,37 @@ export class Level {
     this.slab('finish run', -1185, -1215, -4, 14, matFinish, true, 152, 'stone');
     this.finishGate(-4, this.finishZ, 152);
     this.endWall(-4, 152);
+
+    // --- dressing: hardy palms + succulents on the fringes (visual only) ---
+    this.palm(-13, 0, 2, 4.6, 0.18);
+    this.palm(13.5, 0, -6, 5.2, -0.12);
+    this.palm(-8.2, 0, -58, 4.4, 0.1);
+    this.palm(8.4, 0, -104, 4.8, -0.08);
+    this.palm(-8.2, 3, -196, 4.3, 0.12);
+    this.palm(8.2, 6, -252, 4.9, -0.1);
+    this.palm(-8, 9, -318, 4.4, 0.1);
+    this.palm(8, 9, -430, 4.6, -0.12);
+    this.broadleaf(-4.9, 0, -40, 1.1, 'succulent', 0x9ab060);
+    this.broadleaf(4.9, 0, -92, 1.0, 'succulent', 0x9ab060);
+    this.broadleaf(-4.9, 3, -180, 1.2, 'succulent', 0x9ab060);
+    this.broadleaf(4.9, 6, -246, 1.0, 'succulent', 0x9ab060);
+    this.broadleaf(-4.8, 9, -312, 1.1, 'succulent', 0x9ab060);
+    this.broadleaf(4.8, 3, -488, 1.2, 'succulent', 0x9ab060);
+    this.fern(-5.9, 3, -498, 1.1);
+    this.fern(4.9, 0, -68, 1.2);
+    this.rock(-8.4, 0, -20, 1.7);
+    this.rock(13, 0, -14, 1.3);
+    this.flowers(-4.4, 0, -32);
+    // crate-maze rim + finish
+    this.palm(140.4, -4, -898, 4.7, 0.1);
+    this.palm(163.6, -4, -912, 5.1, -0.1);
+    this.palm(140.6, -4, -934, 4.4, 0.08);
+    this.palm(163.4, -4, -948, 4.9, -0.08);
+    this.rock(140.8, -4, -952, 1.5);
+    this.palm(146.4, -4, -1206, 4.8, 0.1);
+    this.palm(157.6, -4, -1209, 5.2, -0.1);
+    this.broadleaf(147, -4, -1191, 1.1, 'succulent', 0x9ab060);
+    this.flowers(157, -4, -1192);
   }
 
   // Arena lock: two gates and two waves of critters on an enclosed deck.
@@ -3284,24 +3666,24 @@ export class Level {
   // No gaps, no hazards, no finish — walls only at the far perimeter, so
   // there is nothing to fall off. Marker posts along the axes give bearings.
   private buildFlats(): void {
-    // Crisp SoCal noon over an endless blacktop lot: high sun, thin haze,
-    // parking-bay paint stripes to give the eye a texel scale everywhere.
+    // Tropical resort noon over an endless blacktop lot: high sun, turquoise
+    // horizon haze, parking-bay stripes to give the eye a texel scale.
     const mat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // asphalt is full-colour
     this.killY = -60;
     this.finishZ = -1e9; // no finish gate: endless test slab
     this.endWallZ = -2100;
     this.theme = {
-      skyTop: '#2d7ecf',
-      skyBottom: '#c2e6f2',
+      skyTop: '#159ecd',
+      skyBottom: '#c9f0e4',
       sunColorHex: '#fff8dc',
       sunU: 0.68,
       sunV: 0.14,
       stars: false,
-      fog: 0xbdd8e4,
+      fog: 0xbee8dd, // turquoise haze
       fogNear: 70,
-      fogFar: 300,
-      hemiSky: 0xeaf6ff,
-      hemiGround: 0x8c98a2,
+      fogFar: 320,
+      hemiSky: 0xeafcff,
+      hemiGround: 0x94a294,
       hemiI: 1.2,
       sunColor: 0xfff6dc,
       sunI: 1.55,
@@ -3371,6 +3753,26 @@ export class Level {
       const len = 8;
       this.ramp(`test ramp ${i + 1}`, -40, 0, -40 - len, grades[i] * len, 5, matRampF, x, 'pavement');
     }
+
+    // --- dressing: resort avenues, well clear of every test lane -----------
+    // (nothing within 30u of the rail garden / ramp block: x -20..115, z 0..-160)
+    for (let i = 0; i < 6; i++) {
+      const z = 45 - i * 62;
+      this.palm(-78, 0, z, 5 + (i % 3) * 0.6, i % 2 === 0 ? 0.12 : -0.1);
+      this.palm(150, 0, z - 20, 5.3 - (i % 2) * 0.5, i % 2 === 0 ? -0.1 : 0.12);
+    }
+    for (let i = 0; i < 5; i++) {
+      this.palm(-60 + i * 45, 0, 64, 4.8 + (i % 2) * 0.7, 0.1 - (i % 3) * 0.08);
+    }
+    // planter islands
+    for (const [ix, iz] of [[-78, -400], [150, -400], [-140, 70]] as const) {
+      this.rock(ix, 0, iz, 2.2);
+      this.palm(ix + 2.5, 0, iz + 2, 5.8, -0.12);
+      this.fern(ix - 2.2, 0, iz - 1.5, 1.3);
+      this.fern(ix + 1.8, 0, iz - 2.6, 1.1);
+      this.flowers(ix - 1.5, 0, iz + 2.2);
+      this.planter(ix + 4, 0, iz - 1);
+    }
   }
 
   // Level 5, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
@@ -3379,10 +3781,12 @@ export class Level {
   // explosives, and flattens anything slower than it — then tips into the
   // pit at the end. Jump the same pit and cruise to the gate.
   private buildBoulderDash(): void {
-    const matJungle = new THREE.MeshLambertMaterial({ color: 0x6f8f5e });
-    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x77955e });
-    const matSand = new THREE.MeshLambertMaterial({ color: 0xc9b87a });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
+    // Deep jungle under a lava sky: rich greens lit warm amber, so the
+    // corridor reads lush even while everything behind you is on fire.
+    const matJungle = new THREE.MeshLambertMaterial({ color: 0x4f9440 });
+    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x5aa048 });
+    const matSand = new THREE.MeshLambertMaterial({ color: 0xd2bc7e });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0x6f9a50 });
 
     this.chaseCam = true;
     this.killY = -30;
@@ -3391,21 +3795,21 @@ export class Level {
     this.spawnPos.set(0, 0.1, -448);
     this.currentSpawn.copy(this.spawnPos);
     this.theme = {
-      skyTop: '#351114',
-      skyBottom: '#7a2818',
-      sunColorHex: '#ff6a3a',
+      skyTop: '#14322a',
+      skyBottom: '#c85f28',
+      sunColorHex: '#ff8a4a',
       sunU: 0.5,
       sunV: 0.42,
       stars: false,
-      fog: 0x461a14,
+      fog: 0x4c3c22, // amber-green murk under the canopy
       fogNear: 21,
-      fogFar: 115,
-      hemiSky: 0xd88a70,
-      hemiGround: 0x351410,
-      hemiI: 0.92,
-      sunColor: 0xff8a50,
+      fogFar: 130,
+      hemiSky: 0xd8b878, // warm amber sky light keeps the greens green
+      hemiGround: 0x22381e,
+      hemiI: 1.0,
+      sunColor: 0xffa055,
       sunI: 1.25,
-      particleColor: 0xff8a4a,
+      particleColor: 0xff9a52,
       particleWind: [0.3, 1.4, 0.2], // rising embers
     };
 
@@ -3460,6 +3864,37 @@ export class Level {
     // no end-wall mesh — the far clamp sits invisibly behind the spawn deck
 
     this.buildChaseBoulder(-487, -44);
+
+    // --- dressing: jungle walls tight outside the 12u corridor (visual only,
+    // x ±7.5 clears the ±6 deck edge) + canopy palms bowing over the lane ---
+    const strips: [number, number, number][] = [
+      [0, -388, -434],
+      [0, -306, -366],
+      [2, -218, -280],
+      [2, -136, -202],
+      [0, -48, -108],
+    ];
+    let k = 0;
+    for (const [sy, zn, zf] of strips) {
+      for (let z = zn; z >= zf; z -= 16) {
+        const side = k % 2 === 0 ? 1 : -1;
+        if (k % 3 === 2) this.broadleaf(side * 7.6, sy, z, 1.35);
+        else this.fern(side * 7.5, sy, z, 1.45);
+        if (k % 4 === 1) this.fern(-side * 7.7, sy, z - 5, 1.25);
+        k++;
+      }
+    }
+    this.palm(7.9, 0, -400, 7.4, 0.45);
+    this.palm(-7.9, 0, -330, 7.2, -0.45);
+    this.palm(7.9, 2, -250, 7.6, 0.42);
+    this.palm(-7.9, 2, -168, 7.3, -0.42);
+    this.palm(7.9, 0, -84, 7.5, 0.44);
+    this.palm(-7.9, 0, -60, 7.1, -0.4);
+    // escape deck: the beach you were sprinting for
+    this.palm(-6.4, 0, -1, 5.4, 0.1);
+    this.palm(6.4, 0, -3, 5.8, -0.1);
+    this.flowers(-6.4, 0, -28);
+    this.fern(6.6, 0, -30, 1.2);
   }
 
   // The chase boulder: a boulder-sized Stone that rolls +Z after the player.
@@ -3526,27 +3961,28 @@ export class Level {
   // rails over pits, kickers, step blocks — and the camera occasionally
   // swings sideways for a stretch. Re-select "Random" to reroll.
   private buildRandom(): void {
-    const mats = [0x8a8f9a, 0x767b87, 0x7d95a5, 0x86937e].map(
+    const mats = [0x87939a, 0x74838a, 0x7a99a0, 0x7f9884].map(
       (c) => new THREE.MeshLambertMaterial({ color: c }),
     );
     const mat = () => mats[Math.floor(Math.random() * mats.length)];
+    // Jungle night: deep teal dark, moonlit decks, warm fireflies adrift.
     this.theme = {
-      skyTop: '#2a1a4a',
-      skyBottom: '#d05a8a',
-      sunColorHex: '#ffd0e0',
+      skyTop: '#0a2a34',
+      skyBottom: '#1e6a5e',
+      sunColorHex: '#c8f2dc', // low moon
       sunU: 0.25,
       sunV: 0.48,
       stars: true,
-      fog: 0x3a2450,
+      fog: 0x16403e,
       fogNear: 24,
-      fogFar: 120,
-      hemiSky: 0xc0a8e8,
-      hemiGround: 0x38203a,
+      fogFar: 132,
+      hemiSky: 0x64b0a4,
+      hemiGround: 0x18302a,
       hemiI: 1.0,
-      sunColor: 0xffb8d8,
-      sunI: 1.25,
-      particleColor: 0xff9fd0,
-      particleWind: [0.4, -0.6, 0.3],
+      sunColor: 0x9ae8cc,
+      sunI: 1.15,
+      particleColor: 0xffd86e, // fireflies
+      particleWind: [0.3, 0.25, 0.2],
     };
     let z = 14;
     let y = 0;

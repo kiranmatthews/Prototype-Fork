@@ -418,7 +418,7 @@ export class UI {
         font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
         background: linear-gradient(180deg, rgba(26, 30, 44, 0.92), rgba(10, 12, 18, 0.92));
         border: 1px solid #3a4152;
-        padding: 8px 10px; border-radius: 4px;
+        padding: 8px 10px; border-radius: 8px;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.45);
       }
       .hud-stats { min-width: 230px; }
@@ -429,7 +429,7 @@ export class UI {
       .hud-levelbtn {
         flex: 1; font: 10px ui-monospace, Menlo, Consolas, monospace;
         background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152;
-        border-radius: 3px; padding: 3px 2px; cursor: pointer; white-space: nowrap;
+        border-radius: 6px; padding: 3px 2px; cursor: pointer; white-space: nowrap;
       }
       .hud-levelbtn:hover { background: #243044; color: #cfe3d8; }
       .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
@@ -459,8 +459,8 @@ export class UI {
         border: 1px solid #3a4152;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
       }
-      .side-wrap.left .side-tab { border-radius: 0 5px 5px 0; border-left: none; }
-      .side-wrap.right .side-tab { border-radius: 5px 0 0 5px; border-right: none; }
+      .side-wrap.left .side-tab { border-radius: 0 8px 8px 0; border-left: none; }
+      .side-wrap.right .side-tab { border-radius: 8px 0 0 8px; border-right: none; }
 
       /* --- Crash-style game HUD --- */
       .hud-tl { position: fixed; top: 16px; left: 40px; z-index: 10; pointer-events: none; }
@@ -470,7 +470,7 @@ export class UI {
         font: italic 900 clamp(44px, 8.5vh, 78px) Impact, 'Arial Black', sans-serif;
         color: #ffb43a; letter-spacing: 2px; transform: skewX(-6deg);
         text-shadow: 3px 0 0 #3a1c05, -3px 0 0 #3a1c05, 0 3px 0 #3a1c05,
-          0 -3px 0 #3a1c05, 5px 5px 0 #000;
+          0 -3px 0 #3a1c05, 0 5px 10px rgba(0, 0, 0, 0.65);
       }
       .hud-icon {
         width: clamp(52px, 9.5vh, 84px); height: clamp(52px, 9.5vh, 84px);
@@ -481,33 +481,34 @@ export class UI {
           linear-gradient(45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
           linear-gradient(-45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
           #b08a4a;
-        border: 5px solid #6e4f24; box-shadow: 4px 4px 0 #000;
+        border: 5px solid #6e4f24; box-shadow: 0 4px 9px rgba(0, 0, 0, 0.55);
+        border-radius: 6px;
       }
       .hud-icon-wumpa {
         border-radius: 50%;
         background: radial-gradient(circle at 35% 30%, #ffd24a, #e2521e 70%);
-        box-shadow: 4px 4px 0 #000;
+        box-shadow: 0 4px 9px rgba(0, 0, 0, 0.55);
       }
       .hud-relics { gap: 10px; }
       .hud-icon-crystal {
         width: clamp(30px, 5.5vh, 48px); height: clamp(42px, 7.5vh, 66px);
         background: linear-gradient(160deg, #ffd4f8 8%, #ff9af0 22%, #c03fe0 55%, #7a1898 90%);
         clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
-        filter: drop-shadow(3px 3px 0 #000) drop-shadow(0 0 7px rgba(255, 120, 240, 0.6));
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(255, 120, 240, 0.6));
       }
       .hud-icon-gem {
         width: clamp(38px, 7vh, 60px); height: clamp(28px, 5vh, 44px);
         background: linear-gradient(160deg, #eaffff 8%, #bfffff 22%, #35cfe4 55%, #147a90 90%);
         clip-path: polygon(25% 0%, 75% 0%, 100% 35%, 50% 100%, 0% 35%);
-        filter: drop-shadow(3px 3px 0 #000) drop-shadow(0 0 7px rgba(80, 220, 255, 0.6));
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(80, 220, 255, 0.6));
         align-self: center;
       }
-      .hud-relic-off { opacity: 0.22; filter: grayscale(1) drop-shadow(3px 3px 0 #000); }
+      .hud-relic-off { opacity: 0.22; filter: grayscale(1) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)); }
       .hud-icon-face {
         border-radius: 40%;
         background: radial-gradient(circle at 40% 35%, #f4b56a, #c96f28 75%);
         border: 3px solid rgba(0, 0, 0, 0.65);
-        box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.3), 4px 4px 0 #000;
+        box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.3), 0 4px 9px rgba(0, 0, 0, 0.55);
         position: relative;
       }
       .hud-icon-face::before {
@@ -524,27 +525,27 @@ export class UI {
         100% { transform: skewX(-6deg) scale(1); }
       }
 
-      /* score plate: dark arcade marquee — layered metal gradient, 1px top
-         highlight, gold digits with a hard offset shadow */
+      /* score plate: dark marquee — layered metal gradient, 1px top
+         highlight, gold digits over a soft drop */
       .hud-scoreplate {
         position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
         z-index: 10; pointer-events: none; text-align: center;
         background: linear-gradient(180deg, #333a4e 0%, #1b202e 55%, #12151f 100%);
-        border: 3px solid #05070c; border-radius: 7px; padding: 4px 30px 6px;
+        border: 3px solid #05070c; border-radius: 12px; padding: 4px 30px 6px;
         box-shadow: inset 0 1px 0 rgba(255,255,255,0.28),
-          inset 0 -8px 14px rgba(0,0,0,0.45), 4px 4px 0 rgba(0,0,0,0.5);
+          inset 0 -8px 14px rgba(0,0,0,0.45), 0 5px 14px rgba(0,0,0,0.5);
       }
       .hud-scorelabel {
         font: italic bold clamp(13px, 2.2vh, 20px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 5px;
-        color: #ffd24a; text-shadow: 2px 2px 0 #000;
+        color: #ffd24a; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.75);
       }
       .hud-scorenum {
         font: italic 900 clamp(32px, 5.5vh, 50px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px;
         color: #ffe9b0;
         text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 4px 4px 0 #000;
+          0 -2px 0 #3a1c05, 0 4px 8px rgba(0, 0, 0, 0.6);
       }
 
       /* THPS trick readout — bare text, no plate, reads on any background.
@@ -564,14 +565,14 @@ export class UI {
         font: italic bold clamp(18px, 3.2vh, 30px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 2px; color: #ffe08a;
         text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 3px 3px 0 #000;
+          0 -2px 0 #3a1c05, 0 3px 7px rgba(0, 0, 0, 0.6);
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .hud-tricktotal {
         font: italic 900 clamp(28px, 5vh, 46px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px; color: #ffb43a; transform: skewX(-6deg); margin-top: 2px;
         text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 4px 4px 0 #000;
+          0 -2px 0 #3a1c05, 0 4px 8px rgba(0, 0, 0, 0.6);
         animation: combopulse 0.5s ease-in-out infinite alternate;
       }
       @keyframes combopulse {
@@ -582,12 +583,12 @@ export class UI {
       .hud-msg {
         position: fixed; z-index: 11; top: 34%; left: 50%; transform: translate(-50%, -50%);
         text-align: center; color: #fff; pointer-events: none;
-        text-shadow: 3px 3px 0 #000;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
       }
       .hud-msg-title {
         font: bold 52px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 4px;
         text-shadow: 3px 0 0 #000, -3px 0 0 #000, 0 3px 0 #000, 0 -3px 0 #000,
-          5px 5px 0 rgba(0, 0, 0, 0.8);
+          0 5px 12px rgba(0, 0, 0, 0.75);
       }
       .hud-msg-sub { font: 16px ui-monospace, Menlo, Consolas, monospace; margin-top: 8px; color: #cfe3d8; }
       .hud-flash {
@@ -618,8 +619,8 @@ export class UI {
       }
       .hud-balance-needle {
         position: absolute; top: -4px; width: 8px; height: 20px;
-        margin-left: -4px; border-radius: 2px; background: #8fd4a8;
-        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
+        margin-left: -4px; border-radius: 4px; background: #8fd4a8;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
       }
     `;
     document.head.appendChild(style);
