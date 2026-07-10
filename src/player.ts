@@ -94,6 +94,8 @@ export class Player {
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
   private slopePose = 0; // body pitches to match the ground under the board
+  private starTimer = 0; // Crash star-jump beat after crouch/slide jumps
+  private starPose = 0;
   private slopeRoll = 0; // ...and rolls to match the cross-slope (bank/wall)
   private slamSquash = 0; // pancake pose timer after a slam lands
   private bailing = false; // death with a tumble animation instead of a blink-out
@@ -148,6 +150,7 @@ export class Player {
   private armL: THREE.Mesh | null = null;
   private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
   private headM: THREE.Mesh | null = null;
+  private boardMat: THREE.MeshLambertMaterial | null = null; // grab-landing safety tint
   private legs: THREE.Group | null = null;
   private legL: THREE.Mesh | null = null;
   private legR: THREE.Mesh | null = null;
@@ -186,10 +189,10 @@ export class Player {
     // flip always tumbles along the direction you're actually moving — not
     // about a fixed world axis (which made it look wrong going sideways/back).
     this.bodyGroup.rotation.order = 'YXZ';
-    // Slightly chunkier character, Crash-proportioned against the corridor.
-    // Visual only — the collision box in tuning.ts is unchanged (reads as
-    // slightly forgiving hitboxes, which suits the arcade feel).
-    this.bodyGroup.scale.setScalar(1.18);
+    // Slightly chunkier character, Crash-proportioned against the corridor,
+    // stretched a little extra in Y (taller, not wider). Visual only — the
+    // collision box in tuning.ts is unchanged (slightly forgiving hitboxes).
+    this.bodyGroup.scale.set(1.18, 1.36, 1.18);
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
@@ -702,6 +705,8 @@ export class Player {
       (fromSlide ? TUNING.slideJumpHeight : 1);
     if (wasCrawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
     const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
+    // Crouch and slide jumps strike the classic Crash star pose in the air.
+    if (fromSlide || wasCrawling) this.starTimer = 0.6;
     if (fromSlide) {
       // Crash slide-jump: a HIGH leap out of the slide. The burst's momentum
       // carries through the air; a walk-slide still lands back on your feet
@@ -730,7 +735,9 @@ export class Player {
     this.coyoteTimer = 0;
     this.charging = false;
     this.chargeTimer = 0;
-    if (spd >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
+    // fast jumps flip — EXCEPT star jumps (crouch/slide), which hold the
+    // classic spread-eagle instead of tumbling through it
+    if (spd >= CONST.flipMinSpeed && this.starTimer <= 0) this.flipTimer = CONST.flipDuration;
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
@@ -1696,6 +1703,9 @@ export class Player {
     const half = CONST.playerHalf;
     const center = new THREE.Vector3(this.pos.x, this.pos.y + half.y, this.pos.z);
     this.playerBox.setFromCenterAndSize(center, new THREE.Vector3(half.x * 2, half.y * 2, half.z * 2));
+    // On a rail the board and trucks hang BELOW the feet — reach down so
+    // crates sitting on the rail line still clip a grinder.
+    if (this.state === 'grind') this.playerBox.min.y -= 0.35;
     this.spinBox.copy(this.playerBox);
     if (this.spinning) {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0.2, CONST.spinReach));
@@ -1740,7 +1750,8 @@ export class Player {
             } else {
               level.lightFuse(c);
               this.vVel = TUNING.crateBounce;
-          sfx.play('crateBounce', 0.7);
+              this.pos.y = c.box.max.y + 0.02; // bounce OFF the lid, no re-intersect
+              sfx.play('crateBounce', 0.7);
               this.state = 'air';
               this.grounded = false;
               this.charging = false;
@@ -1765,6 +1776,10 @@ export class Player {
             const perfect = this.jumpPressT > 0;
             this.jumpPressT = 0;
             this.vVel = TUNING.arrowBounce * (perfect ? TUNING.arrowBoostMult : 1);
+            // snap to the lid: a deep stomp frame left the feet inside the
+            // box, and the next rising frame would sideways-eject (the
+            // no-input bounce drift). Bounce OFF the top, cleanly.
+            this.pos.y = c.box.max.y + 0.02;
             this.state = 'air';
             this.grounded = false;
             this.charging = false;
@@ -1940,6 +1955,7 @@ export class Player {
           level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
           this.vVel = TUNING.crateBounce;
+          this.pos.y = cp.box.max.y + 0.02; // bounce OFF the lid, no re-intersect
           sfx.play('crateBounce', 0.7);
           this.state = 'air';
           this.grounded = false;
@@ -2300,6 +2316,12 @@ export class Player {
         (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
+    // Crash star jump: legs split wide, arms thrown up — held for a beat
+    // after crouch/slide jumps, fading the moment you land.
+    if (this.state !== 'air') this.starTimer = 0;
+    else this.starTimer = Math.max(0, this.starTimer - dt);
+    this.starPose += ((this.starTimer > 0 ? 1 : 0) - this.starPose) * Math.min(1, 14 * dt);
+    const star = this.starPose;
     if (this.legL && this.legR) {
       // baseball slide: lead leg kicked out ahead, trailing leg half-bent
       this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose;
@@ -2308,6 +2330,8 @@ export class Player {
       this.legL.position.set(-0.115 - 0.05 * sk, 0, -0.34 * sk); // back foot, toward tail
       this.legR.rotation.y = 0.22 * sk;
       this.legL.rotation.y = -0.16 * sk;
+      this.legR.rotation.z = -1.05 * star; // straddle split
+      this.legL.rotation.z = 1.05 * star;
     }
 
     // Shoulders: open side-on in the skate stance (the board and hips keep
@@ -2393,6 +2417,7 @@ export class Player {
         this.grabPose * 0.55 +
         1.15 * this.grindArmPose * (1 + 0.6 * this.balance) + // balance arms out wide
         1.25 * this.dropPose + // slam starfish
+        2.1 * this.starPose + // star jump: arms thrown up-out
         0.35 * this.skatePose; // loose skate arms
     }
     if (this.armL) {
@@ -2403,6 +2428,7 @@ export class Player {
         this.grabPose * 0.45 -
         1.15 * this.grindArmPose * (1 - 0.6 * this.balance) -
         1.25 * this.dropPose -
+        2.1 * this.starPose - // star jump: arms thrown up-out
         0.35 * this.skatePose;
     }
     // Knees up: legs shorten toward the hips while the body crouches deep,
@@ -2434,11 +2460,22 @@ export class Player {
       // stationary jump crouch or a walk-hop tap never flashes the board.
       this.boardG.visible =
         this.slideTimer <= 0 &&
+        this.starPose < 0.4 && // stowed through the star-jump beat
         (this.state === 'grind' ||
           (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5) ||
           this.freeSkate ||
           this.grabPose > 0.05 ||
           Math.abs(this.speed) > TUNING.boardSpeed);
+    }
+    // Grab-landing readability: while a grab/spin is live, the board glows
+    // RED whenever touching down right now would bail (spin off-axis or the
+    // pose still mid-transition) — neutral again when the landing is clean.
+    if (this.boardMat) {
+      const a = ((this.grabSpinAngle % Math.PI) + Math.PI) % Math.PI;
+      const offAxisNow = Math.min(a, Math.PI - a) > CONST.grabOffAxisTolerance;
+      const unsafe =
+        this.state === 'air' && (this.grabPhase !== 'none' || (this.grabGraceTimer > 0 && offAxisNow));
+      this.boardMat.emissive.setHex(unsafe ? 0x991111 : 0x000000);
     }
     this.bodyGroup.rotation.z = this.grabRoll * this.grabPose + this.slopeRoll;
     // Mask hovers at the shoulder; the whole body flickers during
@@ -2538,7 +2575,7 @@ export class Player {
       breathe * 0.015 * this.idleAmp;
     // Impact squash right after a slam lands.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
-    this.bodyGroup.scale.y = 1.18 * (1 - 0.6 * squash);
+    this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash);
 
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
@@ -2561,10 +2598,9 @@ export class Player {
     // Board (visual only), nose toward local +Z. Grouped with its wheels so
     // grabs can pull the whole board up into the hand.
     const boardG = new THREE.Group();
-    const board = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5, 0.09, 1.7),
-      new THREE.MeshLambertMaterial({ color: 0x8a4a3a }),
-    );
+    const boardMat = new THREE.MeshLambertMaterial({ color: 0x8a4a3a });
+    this.boardMat = boardMat;
+    const board = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.09, 1.7), boardMat);
     board.position.y = 0.16;
     boardG.add(board);
     const wheelMat = new THREE.MeshLambertMaterial({ color: 0x22242a });

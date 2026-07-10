@@ -3,48 +3,48 @@
 // sliders in the debug panel (ui.ts) for live tuning.
 
 export const TUNING = {
-  maxSpeed: 20, // top skate speed
-  walkSpeed: 9.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
+  maxSpeed: 13, // top skate speed
+  walkSpeed: 8.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
   friction: 1.5, // skate speed bleed toward walking pace when coasting
   riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
   jumpVelocity: 17, // fully-charged jump (hold X)
   jumpMinVelocity: 12.5, // quick-tap jump
   jumpChargeTime: 0.4, // hold this long for full power
-  chargeBoost: 11, // THE skate acceleration: holding X builds speed toward maxSpeed
-  slopeBoost: 81, // fake downhill acceleration, scaled by slope grade
-  uphillSlowdown: 74, // fake uphill deceleration, scaled by slope grade
-  railSnapDistance: 3.1, // forgiving radius for Triangle/E grind snap
-  grindSpeed: 20, // reference speed: you grind at ENTRY speed; slower than this drifts harder
-  grindJumpForce: 20, // vertical pop when jumping off a rail
+  chargeBoost: 7, // THE skate acceleration: holding X builds speed toward maxSpeed
+  slopeBoost: 20, // fake downhill acceleration, scaled by slope grade
+  uphillSlowdown: 15, // fake uphill deceleration, scaled by slope grade
+  railSnapDistance: 2, // forgiving radius for Triangle/E grind snap
+  grindSpeed: 7, // reference speed: you grind at ENTRY speed; slower than this drifts harder
+  grindJumpForce: 15, // vertical pop when jumping off a rail
   spinDuration: 0.3,
-  spinAirCorrection: 12, // small vertical stall from spinning in air (not a rescue)
-  turnaround: 40, // braking rate when input opposes travel — snappy direction flips
-  grabBoost: 8, // speed burst on landing a clean Circle/Q air grab
-  grabSpinRate: 8, // rad/s of the directional grab-spin (left arrow = spin left)
-  crateBounce: 5, // vertical pop from stomping a crate — tuned for chaining crate to crate
-  boardSpeed: 9.5, // the board (visual + sound) only comes out above this speed
+  spinAirCorrection: 2, // small vertical stall from spinning in air (not a rescue)
+  turnaround: 40, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
+  grabBoost: 4.5, // speed burst on landing a clean Circle/Q air grab
+  grabSpinRate: 9, // rad/s of the directional grab-spin (left arrow = spin left)
+  crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
+  boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.4, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
-  carveGrip: 240, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
+  carveGrip: 300, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
-  slideDistance: 7.5, // how far the canned slide carries you (world units)
+  slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
-  slideJumpHeight: 1.5, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
-  slideJumpGrace: 0.25, // jumps this long AFTER a slide ends still get the slide boost
-  airControl: 6, // forward/back speed adjustment in the air
-  balanceDrift: 0.2, // THPS grind balance: how fast the needle runs away
+  slideJumpHeight: 1.3, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
+  slideJumpGrace: 0.1, // jumps this long AFTER a slide ends still get the slide boost
+  airControl: 0, // forward/back speed adjustment in the air
+  balanceDrift: 1.25, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
-  balanceSpeedEffect: 1, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
+  balanceSpeedEffect: 2, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
-  smashSpeed: 16, // skating/grinding at or above this speed plows straight through plain crates
-  arrowBounce: 30, // arrow-crate super bounce launch velocity
+  smashSpeed: 12, // skating/grinding at or above this speed plows straight through plain crates
+  arrowBounce: 16, // arrow-crate super bounce launch velocity
   arrowBoostMult: 1.25, // perfect-timed X press on an arrow crate multiplies the launch
-  arrowBoostWindow: 0.12, // press X within this many seconds of impact for the perfect bounce
-  slamRadius: 3.2, // pancake slam: crates/enemies within this radius break on impact
-  nitroRadius: 5.5, // nitro explosion kill/break radius
-  tntRadius: 3.3, // TNT explosion kill/break radius
-  boulderSpeed: 25, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
+  arrowBoostWindow: 0.09, // press X within this many seconds of impact for the perfect bounce
+  slamRadius: 2.7, // pancake slam: crates/enemies within this radius break on impact
+  nitroRadius: 2.75, // nitro explosion kill/break radius
+  tntRadius: 2.75, // TNT explosion kill/break radius
+  boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -123,7 +123,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   spinAirCorrection:
     'Small upward stall from spinning in the air (capped, never a full rescue) — Crash-style ledge save.',
   turnaround:
-    'Braking rate when your input opposes travel while skating. Higher = snappier direction flips and harder stops.',
+    'PULL-BACK BRAKE (still live!): carving handles all turning now, but yanking the stick (near-)opposite your travel bleeds speed at this rate — the intentional slow-down-and-dismount. Higher = harder stops.',
   grabBoost: 'Speed burst paid out when a grab is completed cleanly before landing.',
   grabSpinRate: 'Rotation speed of the directional grab-spin (left arrow = spin left).',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
@@ -235,8 +235,8 @@ export const CONST = {
   ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
-  grabSnapRate: 10, // rad/s the rotation eases back on-axis after release
-  grabOffAxisTolerance: 0.65, // landing more than this off-axis (rad) = bail
+  grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
+  grabOffAxisTolerance: 0.95, // landing more than this off-axis (rad) = bail (forgiving)
   flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
   flipMinSpeed: 12, // below this speed a jump is a plain hop, no flip (Crash rules)
   slideCooldown: 0.25,

@@ -1974,7 +1974,7 @@ export class Level {
   }
 
   private crate(x: number, deckY: number, z: number, kind?: 'nitro' | 'bouncy' | 'tnt' | 'mask' | 'mystery'): void {
-    const size = 1.2;
+    const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
     let mat: THREE.MeshLambertMaterial;
     if (kind === 'nitro') {
       mat = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0x0c3a16, map: this.nitroTexture() });
@@ -2631,7 +2631,7 @@ export class Level {
   // stomp it (bumping is a wall) to bank the checkpoint; its trigger matches
   // the box, so it can be dodged rather than being an unmissable gate.
   private checkpoint(deckY: number, z: number, x = 0): void {
-    const size = 1.4;
+    const size = 0.96; // same footprint as every other crate now
     const gy = this.floorY(x, z, deckY);
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(size, size, size),
@@ -3121,6 +3121,16 @@ export class Level {
     this.crate(16, 0, -60, 'tnt');
     this.crate(20, 0, -75, 'nitro');
     this.crystal(0, 0.4, -45); // test crystal between the lanes
+
+    // --- ramp staircase: seven ramps of increasing steepness ---------------
+    // grades 0.15 (8.5 deg) up to 1.9 (62 deg): walk, roll, and pump tests.
+    const matRampF = new THREE.MeshLambertMaterial({ color: 0x8aa06a });
+    const grades = [0.15, 0.3, 0.5, 0.75, 1.0, 1.4, 1.9];
+    for (let i = 0; i < grades.length; i++) {
+      const x = 38 + i * 12;
+      const len = 8;
+      this.ramp(`test ramp ${i + 1}`, -40, 0, -40 - len, grades[i] * len, 5, matRampF, x);
+    }
   }
 
   // Level 5, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
