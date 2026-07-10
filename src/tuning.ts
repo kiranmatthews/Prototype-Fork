@@ -31,6 +31,7 @@ export const TUNING = {
   slideDistance: 7.5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
   slideJumpHeight: 1.5, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
+  slideJumpGrace: 0.25, // jumps this long AFTER a slide ends still get the slide boost
   airControl: 6, // forward/back speed adjustment in the air
   balanceDrift: 0.2, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
@@ -78,6 +79,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   slideDistance: { min: 3, max: 25, step: 0.5 },
   slideSpeed: { min: 10, max: 45, step: 1 },
   slideJumpHeight: { min: 1, max: 4, step: 0.05 },
+  slideJumpGrace: { min: 0, max: 0.8, step: 0.05 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
@@ -139,6 +141,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   slideSpeed: 'The speed the slide bursts to (it never slows you below your current speed).',
   slideJumpHeight:
     'Crash slide-jump: a fresh X press+release during a slide leaps THIS much higher than a normal jump. The burst momentum carries through the air; a walk-slide still lands on your feet.',
+  slideJumpGrace:
+    'Timing forgiveness: releasing the jump within this many seconds AFTER the slide ends still fires the boosted slide jump (0 = strict, boost only mid-slide).',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
@@ -183,7 +187,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     ],
   },
   { title: 'SLOPES & PIPES', keys: ['slopeBoost', 'uphillSlowdown'] },
-  { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideJumpHeight'] },
+  { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideJumpHeight', 'slideJumpGrace'] },
   {
     title: 'GRINDS',
     keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect'],

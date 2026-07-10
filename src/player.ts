@@ -116,6 +116,7 @@ export class Player {
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
   private jumpBufferCharge = 0;
   private jumpPressT = 0; // time left since the last fresh X press (perfect-bounce timing)
+  private slideGraceT = 0; // window after a slide ends where a jump still slide-boosts
   private grindTime = 0; // how long this grind has lasted (balance ramps up)
   private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
   private snapOffset = new THREE.Vector3(); // entry offset, eased away on the rail
@@ -313,6 +314,7 @@ export class Player {
     this.invulnTimer = 0;
     this.slideTimer = 0;
     this.slideCd = 0;
+    this.slideGraceT = 0;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -369,6 +371,10 @@ export class Player {
     // Fresh X presses feed the perfect-bounce timing window.
     if (input.jumpPressed) this.jumpPressT = TUNING.arrowBoostWindow;
     else this.jumpPressT = Math.max(0, this.jumpPressT - dt);
+    // While sliding, keep the slide-jump grace topped up; after the slide it
+    // runs down, and a release inside it still counts as a slide jump.
+    if (this.slideTimer > 0) this.slideGraceT = TUNING.slideJumpGrace;
+    else this.slideGraceT = Math.max(0, this.slideGraceT - dt);
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
@@ -681,7 +687,10 @@ export class Player {
   private chargedJump(dt: number): void {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
     const wasCrawling = this.crawling;
-    const fromSlide = this.slideTimer > 0;
+    // The slide boost applies during the slide AND for slideJumpGrace seconds
+    // after it ends — the old exact-window timing was nearly unhittable.
+    const fromSlide = this.slideTimer > 0 || this.slideGraceT > 0;
+    this.slideGraceT = 0;
     // Measured planar speed this step, so the jump reads your ACTUAL movement
     // in any direction — a fast sideways walk stores nothing in `speed` (that
     // scalar is the forward axis), but it still deserves a Forward Flip.
