@@ -197,9 +197,9 @@ function updateCamera(dt: number): void {
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8;
+  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 1.9;
   const height =
-    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 1.5;
+    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 2.05;
   camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
   // Snap after respawn teleports; damp otherwise.
@@ -211,11 +211,11 @@ function updateCamera(dt: number): void {
 
   lookPoint.set(
     player.pos.x,
-    player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF) - boulderF * 1.2,
+    player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF) - boulderF * 1.1,
     player.pos.z -
       THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.0, sideF) +
       back * 8.5 +
-      boulderF * 3.5,
+      boulderF * 6.5,
   );
   camera.lookAt(lookPoint);
 }
