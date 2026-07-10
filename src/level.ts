@@ -164,8 +164,6 @@ export class Level {
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
-  halfpipeLipY = -7.6; // top of the halfpipe transition (vert launch height)
-  halfpipeLipX = 10.3; // outer edge of the transition walls
   killY = -48; // per-level death height
   name = LEVEL_NAMES[0];
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
@@ -1095,8 +1093,7 @@ export class Level {
     // the transition, the steepness bleeds your speed, and whatever crests the
     // near-vertical lip converts into (mostly upward) air. The walls
     // approximate a radius-7.3 quarter-pipe; lips are grindable rails.
-    const hpFloor = this.slab('halfpipe floor', -710, -770, -13.5, 6, matA, false);
-    hpFloor.userData.hpFloor = true;
+    this.slab('halfpipe floor', -710, -770, -13.5, 6, matA, false);
     const profile: [number, number, number, number][] = [
       // xIn, xOut, yBase, yTop — circle points, steepening toward the lip
       [3.0, 4.8, -13.5, -13.27],
@@ -1108,7 +1105,7 @@ export class Level {
     ];
     for (const [xIn, xOut, yBase, yTop] of profile) {
       for (const side of [1, -1]) {
-        const wall = this.bank(
+        this.bank(
           'halfpipe wall',
           -710,
           -770,
@@ -1118,11 +1115,8 @@ export class Level {
           yTop,
           matRamp,
         );
-        wall.userData.hpWall = true;
       }
     }
-    this.halfpipeLipY = -7.6;
-    this.halfpipeLipX = 10.3;
     // rail yard entry deck, then a pit crossed by three parallel rails
     this.slab('rail yard entry', -770, -778, -13.5, 14, matB);
     // pit: -778 .. -850
@@ -2796,8 +2790,7 @@ export class Level {
 
     // --- E: halfpipe alley ---------------------------------------------------
     const hpBase = 3;
-    const hpFloor = this.slab('gauntlet pipe', -540, -595, hpBase, 6, matStone, false, 0, 'stone');
-    hpFloor.userData.hpFloor = true;
+    this.slab('gauntlet pipe', -540, -595, hpBase, 6, matStone, false, 0, 'stone');
     const profile: [number, number, number, number][] = [
       [3.0, 4.8, 0, 0.23],
       [4.8, 6.3, 0.23, 0.79],
@@ -2808,7 +2801,7 @@ export class Level {
     ];
     for (const [xIn, xOut, dBase, dTop] of profile) {
       for (const side of [1, -1]) {
-        const wallMesh = this.bank(
+        this.bank(
           'pipe wall',
           -540,
           -595,
@@ -2818,11 +2811,8 @@ export class Level {
           hpBase + dTop,
           matRamp,
         );
-        wallMesh.userData.hpWall = true;
       }
     }
-    this.halfpipeLipY = hpBase + 5.9;
-    this.halfpipeLipX = 10.3;
     const lipL = new Rail([
       new THREE.Vector3(-10.4, hpBase + 6.3, -542),
       new THREE.Vector3(-10.4, hpBase + 6.3, -593),
