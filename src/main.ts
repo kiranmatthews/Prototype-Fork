@@ -402,10 +402,12 @@ function updateAudio(dt: number): void {
   // Board rolling loop: above the boardSpeed slider, or any real momentum-
   // skate roll (slow carves up a transition still sound like wheels).
   // Slides are body slides — no board, no board noise.
+  // Tied to the skating STATE: wheels roll for as long as the board is out
+  // and actually moving — all the way down the roll-out, no speed cutoff.
   const skatingNow =
     onGround &&
     !player.sliding &&
-    (speedAbs > TUNING.boardSpeed || (player.boardRolling && speedAbs > 3));
+    (speedAbs > TUNING.boardSpeed || (player.boardRolling && speedAbs > 0.3));
   sfx.setLoop(
     'skate',
     'skateLoop',

@@ -122,6 +122,9 @@ export class Player {
   // the travel axes ARE the board's heading and the stick carves them around
   // — no more axis-locked "brake if you turn too far".
   private freeSkate = false;
+  // Deliberate dismount (pull-back brake bled to walking pace): drop the
+  // skate persistence THIS frame so the feet take the stick immediately.
+  private stepOff = false;
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
@@ -339,6 +342,7 @@ export class Player {
     this.slamHangT = 0;
     this.bailDownT = 0;
     this.airFromSkate = false;
+    this.stepOff = false;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -837,11 +841,19 @@ export class Player {
         if ((vx * ux + vz * uz) / vl > 0.3) onFootClimb = true;
       }
     }
+    // ROLLOUT: skating is a STATE, not a speed threshold. Once the board is
+    // out it stays under you — through the whole friction roll-out down to a
+    // dead stop — so re-holding a direction ramps you back to cruise instead
+    // of dumping you to feet, and the wheels/pose persist to zero. Only a
+    // true stop or the deliberate pull-back dismount steps off.
+    const rollingOut = this.freeSkate && Math.abs(this.speed) > 0.08 && !this.stepOff;
+    this.stepOff = false;
     const skating =
       pushingOff ||
       this.slideTimer > 0 ||
       (steepGround && !onFootClimb) ||
-      planarSpeed > TUNING.walkSpeed + 0.5;
+      planarSpeed > TUNING.walkSpeed + 0.5 ||
+      rollingOut;
 
     // Enter/leave free-heading mode. Walking and canned slides keep the
     // classic course-axis model; the board carves free — everywhere,
@@ -928,6 +940,9 @@ export class Player {
               this.haltCd = 0.6;
             }
             this.speed = Math.max(0, this.speed - TUNING.turnaround * dt);
+            // classic dismount: braking through walking pace = step off, feet
+            // take the stick next frame (rollout persistence must not fight it)
+            if (this.speed <= TUNING.walkSpeed + 0.5) this.stepOff = true;
           } else {
             const maxTurn = THREE.MathUtils.degToRad(TUNING.carveGrip) * dt;
             const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
