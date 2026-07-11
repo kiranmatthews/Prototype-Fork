@@ -264,7 +264,21 @@ export class Level {
   private plasmaFrame = 0;
   private chromeTex: THREE.CanvasTexture | null = null; // UV-scrolled fake chrome
   private glintTex: THREE.CanvasTexture | null = null;
-  private glints: { spr: THREE.Sprite; life: number; max: number; vy: number }[] = [];
+  private flareTex: THREE.CanvasTexture | null = null; // big collection starburst
+  private glowTex: THREE.CanvasTexture | null = null; // soft radial halo
+  // sparkle/burst billboards: outward drift (vx/vz), spin, per-sprite tint, and
+  // an optional grow-then-shrink pop for the big collection flare.
+  private glints: {
+    spr: THREE.Sprite;
+    life: number;
+    max: number;
+    vx: number;
+    vy: number;
+    vz: number;
+    spin: number;
+    scale: number;
+    pop: boolean;
+  }[] = [];
   private glintT = 0;
   private glowRings: { mesh: THREE.Mesh; phase: number; speed: number; base: number }[] = [];
   private gateCrystalIcon: THREE.Mesh | null = null;
@@ -2892,27 +2906,103 @@ export class Level {
     return this.chromeTex;
   }
 
-  // Chunky 4-point starburst for the additive billboard glints.
+  // Sharp 4-point twinkle for the additive sparkle billboards. Drawn WHITE so
+  // a per-sprite material colour tints it (purple crystal glints, cyan gem).
   private glintTexture(): THREE.CanvasTexture {
     if (this.glintTex) return this.glintTex;
     const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
+    canvas.width = 64;
+    canvas.height = 64;
     const ctx = canvas.getContext('2d')!;
-    ctx.clearRect(0, 0, 32, 32);
-    const arm = (w: number, a: number) => {
-      ctx.fillStyle = `rgba(210,245,255,${a})`;
-      ctx.fillRect(16 - w / 2, 2, w, 28); // vertical
-      ctx.fillRect(2, 16 - w / 2, 28, w); // horizontal
+    ctx.clearRect(0, 0, 64, 64);
+    // long thin diamond arms: taper from the hot centre to sharp points
+    const arm = (len: number, w: number, a: number) => {
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.beginPath(); // vertical spindle
+      ctx.moveTo(32, 32 - len);
+      ctx.lineTo(32 + w, 32);
+      ctx.lineTo(32, 32 + len);
+      ctx.lineTo(32 - w, 32);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath(); // horizontal spindle
+      ctx.moveTo(32 - len, 32);
+      ctx.lineTo(32, 32 - w);
+      ctx.lineTo(32 + len, 32);
+      ctx.lineTo(32, 32 + w);
+      ctx.closePath();
+      ctx.fill();
     };
-    arm(6, 0.35);
-    arm(4, 0.6);
-    arm(2, 1);
-    ctx.fillStyle = 'rgba(255,255,255,1)';
-    ctx.fillRect(13, 13, 6, 6);
+    arm(30, 6, 0.5);
+    arm(30, 2.5, 0.9);
+    // white-hot core
+    const cg = ctx.createRadialGradient(32, 32, 0, 32, 32, 9);
+    cg.addColorStop(0, 'rgba(255,255,255,1)');
+    cg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = cg;
+    ctx.fillRect(20, 20, 24, 24);
     this.glintTex = new THREE.CanvasTexture(canvas);
     this.glintTex.magFilter = THREE.NearestFilter;
     return this.glintTex;
+  }
+
+  // The big collection flash: a blazing white core with long anamorphic rays
+  // (the lens-flare starbursts in the reference). White; tinted per burst.
+  private flareTexture(): THREE.CanvasTexture {
+    if (this.flareTex) return this.flareTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext('2d')!;
+    ctx.clearRect(0, 0, 128, 128);
+    ctx.translate(64, 64);
+    // eight rays, cardinals long, diagonals shorter — additive so they streak
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    for (let k = 0; k < 8; k++) {
+      const len = k % 2 === 0 ? 62 : 34;
+      const w = k % 2 === 0 ? 3.5 : 2;
+      ctx.save();
+      ctx.rotate((k * Math.PI) / 4);
+      ctx.beginPath();
+      ctx.moveTo(0, -6);
+      ctx.lineTo(w, 0);
+      ctx.lineTo(0, len);
+      ctx.lineTo(-w, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    // fat radial core
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 30);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.4, 'rgba(255,255,255,0.7)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, 30, 0, Math.PI * 2);
+    ctx.fill();
+    this.flareTex = new THREE.CanvasTexture(canvas);
+    this.flareTex.magFilter = THREE.LinearFilter;
+    return this.flareTex;
+  }
+
+  // Soft round halo — the pink/cyan glow that hangs around the pickups. White,
+  // tinted by the sprite material.
+  private glowTexture(): THREE.CanvasTexture {
+    if (this.glowTex) return this.glowTex;
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, 'rgba(255,255,255,0.62)');
+    g.addColorStop(0.3, 'rgba(255,255,255,0.3)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 64, 64);
+    this.glowTex = new THREE.CanvasTexture(canvas);
+    this.glowTex.magFilter = THREE.LinearFilter;
+    return this.glowTex;
   }
 
   // Flat additive ring; pulses + spins in update (radial-wave magic circle).
@@ -2935,9 +3025,23 @@ export class Level {
     return mesh;
   }
 
-  private spawnGlint(x: number, y: number, z: number, scale = 1): void {
+  private spawnGlint(
+    x: number,
+    y: number,
+    z: number,
+    scale = 1,
+    opts: {
+      tex?: THREE.CanvasTexture;
+      color?: number;
+      vx?: number;
+      vy?: number;
+      vz?: number;
+      life?: number;
+      pop?: boolean;
+    } = {},
+  ): void {
     let slot = this.glints.find((g) => g.life <= 0);
-    if (!slot && this.glints.length < 14) {
+    if (!slot && this.glints.length < 48) {
       const spr = new THREE.Sprite(
         new THREE.SpriteMaterial({
           map: this.glintTexture(),
@@ -2948,56 +3052,186 @@ export class Level {
       );
       spr.visible = false;
       this.root.add(spr);
-      slot = { spr, life: 0, max: 0.6, vy: 0 };
+      slot = { spr, life: 0, max: 0.6, vx: 0, vy: 0, vz: 0, spin: 0, scale: 1, pop: false };
       this.glints.push(slot);
     }
     if (!slot) return;
-    slot.max = 0.4 + Math.random() * 0.45;
+    const mat = slot.spr.material as THREE.SpriteMaterial;
+    mat.map = opts.tex ?? this.glintTexture();
+    mat.color.setHex(opts.color ?? 0xffffff);
+    mat.needsUpdate = true;
+    slot.max = opts.life ?? 0.4 + Math.random() * 0.45;
     slot.life = slot.max;
-    slot.vy = 0.4 + Math.random() * 0.8;
+    slot.vx = opts.vx ?? 0;
+    slot.vy = opts.vy ?? 0.4 + Math.random() * 0.8;
+    slot.vz = opts.vz ?? 0;
+    slot.spin = (Math.random() - 0.5) * 4;
+    slot.scale = scale;
+    slot.pop = opts.pop ?? false;
     slot.spr.position.set(x, y, z);
-    slot.spr.userData.s = scale;
     slot.spr.visible = true;
+  }
+
+  // COLLECTION GLIMMER (Crash relic pickup): a blazing white-cored starburst at
+  // the pickup, then a shower of small purple/cyan twinkles that fan outward
+  // and fade — recreated from the reference capture.
+  private glimmerBurst(pos: THREE.Vector3, hue: number): void {
+    // central flares: big flash that pops up then shrinks fast
+    for (let i = 0; i < 3; i++) {
+      this.spawnGlint(
+        pos.x + (Math.random() - 0.5) * 0.8,
+        pos.y + (Math.random() - 0.5) * 0.8,
+        pos.z + (Math.random() - 0.5) * 0.8,
+        7 + Math.random() * 3,
+        { tex: this.flareTexture(), color: i === 0 ? 0xffffff : hue, vy: 0.3, life: 0.45, pop: true },
+      );
+    }
+    // dispersing sparkle shower: fan outward across a wide radius, staggered
+    for (let i = 0; i < 26; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const spd = 2.5 + Math.random() * 6;
+      this.spawnGlint(
+        pos.x + (Math.random() - 0.5) * 1.5,
+        pos.y + (Math.random() - 0.2) * 1.5,
+        pos.z + (Math.random() - 0.5) * 1.5,
+        1.1 + Math.random() * 1.4,
+        {
+          color: hue,
+          vx: Math.cos(ang) * spd,
+          vz: Math.sin(ang) * spd,
+          vy: 1 + Math.random() * 3,
+          life: 0.5 + Math.random() * 0.7,
+        },
+      );
+    }
+  }
+
+  // ---- collectible geometry (reference-accurate) ----------------------------
+
+  // Tall purple crystal shard: a stretched hexagonal bipyramid with a hot inner
+  // core streak and a pink glow halo (Crash coloured-gem look).
+  private crystalMesh(scale = 1): THREE.Group {
+    const g = new THREE.Group();
+    const R = 0.55 * scale;
+    const H = 1.05 * scale; // half-height of each pyramid
+    const shellMat = new THREE.MeshPhongMaterial({
+      color: 0x9a34d8,
+      emissive: 0x50128f,
+      emissiveIntensity: 0.4,
+      specular: 0xffffff,
+      shininess: 70,
+      flatShading: true,
+      transparent: true,
+      opacity: 0.92,
+    });
+    // two 6-sided cones base-to-base = bipyramid; flat facets catch the sun's
+    // specular per-face and it sweeps as the crystal spins (the canned glint)
+    const top = new THREE.Mesh(new THREE.ConeGeometry(R, H, 6), shellMat);
+    top.position.y = H / 2;
+    g.add(top);
+    const bot = new THREE.Mesh(new THREE.ConeGeometry(R, H, 6), shellMat);
+    bot.rotation.z = Math.PI;
+    bot.position.y = -H / 2;
+    g.add(bot);
+    // hot inner streak: a slim bright bipyramid, additive
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: 0xffcbff,
+      transparent: true,
+      opacity: 0.7,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const ctop = new THREE.Mesh(new THREE.ConeGeometry(R * 0.42, H * 0.95, 6), coreMat);
+    ctop.position.y = H / 2;
+    g.add(ctop);
+    const cbot = new THREE.Mesh(new THREE.ConeGeometry(R * 0.42, H * 0.95, 6), coreMat);
+    cbot.rotation.z = Math.PI;
+    cbot.position.y = -H / 2;
+    g.add(cbot);
+    // pink glow halo (billboard), brightest low
+    const halo = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: this.glowTexture(),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    (halo.material as THREE.SpriteMaterial).color.setHex(0xd83af0);
+    halo.scale.set(2.9 * scale, 3.8 * scale, 1);
+    halo.position.y = -0.2 * scale;
+    g.add(halo);
+    return g;
+  }
+
+  // Clear brilliant-cut diamond: octagonal table + crown facets over a pointed
+  // pavilion, silvery-white with a cool glow (Crash clear-gem look).
+  private gemMesh(scale = 1): THREE.Group {
+    const g = new THREE.Group();
+    const girdle = 0.72 * scale;
+    const table = 0.4 * scale;
+    const crownH = 0.42 * scale;
+    const pavH = 0.8 * scale;
+    const mat = new THREE.MeshPhongMaterial({
+      color: 0xdcefff,
+      emissive: 0x243a52,
+      emissiveIntensity: 0.25,
+      specular: 0xffffff,
+      shininess: 100,
+      flatShading: true,
+      transparent: true,
+      opacity: 0.86,
+    });
+    // crown: 8-sided frustum, wide girdle at the bottom, narrow table on top
+    const crown = new THREE.Mesh(new THREE.CylinderGeometry(table, girdle, crownH, 8), mat);
+    crown.position.y = crownH / 2;
+    g.add(crown);
+    // pavilion: 8-sided cone to a point below the girdle
+    const pav = new THREE.Mesh(new THREE.ConeGeometry(girdle, pavH, 8), mat);
+    pav.rotation.z = Math.PI; // apex down
+    pav.position.y = -pavH / 2;
+    g.add(pav);
+    // faint white sparkle core
+    const core = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.3 * scale),
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    core.scale.y = 1.4;
+    g.add(core);
+    const halo = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: this.glowTexture(),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    // faint cool aura only — the reference gem is clean silver, no glow blob
+    (halo.material as THREE.SpriteMaterial).color.setHex(0x5c86a8);
+    halo.scale.set(1.7 * scale, 1.6 * scale, 1);
+    g.add(halo);
+    return g;
   }
 
   // The crystal: Crash 2/3 style pickup on the main route. Faceted octahedron
   // wearing the scrolling chrome, magic ring at its base, glints in update.
   private crystal(x: number, y: number, z: number): void {
-    const g = new THREE.Group();
-    const body = new THREE.Mesh(
-      new THREE.OctahedronGeometry(0.85),
-      new THREE.MeshLambertMaterial({
-        map: this.chromeTexture(),
-        color: 0xffffff,
-        emissive: 0xa02fd0,
-        emissiveIntensity: 0.55,
-        flatShading: true,
-      }),
-    );
-    body.scale.y = 1.5;
-    g.add(body);
-    // additive inner core sells the inner light without any real glow pass
-    const core = new THREE.Mesh(
-      new THREE.OctahedronGeometry(0.5),
-      new THREE.MeshBasicMaterial({
-        color: 0xff7af2,
-        transparent: true,
-        opacity: 0.55,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      }),
-    );
-    core.scale.y = 1.5;
-    g.add(core);
-    g.position.set(x, y + 0.9, z);
-    g.userData.baseY = y + 0.9;
+    const g = this.crystalMesh(1);
+    g.position.set(x, y + 1.05, z);
+    g.userData.baseY = y + 1.05;
     this.root.add(g);
     this.glowRing(x, y + 0.12, z, 1.5, 0xd06aff);
     this.crystalPickup = {
       group: g,
       box: new THREE.Box3().setFromCenterAndSize(
         new THREE.Vector3(x, y + 1.0, z),
-        new THREE.Vector3(2.0, 2.6, 2.0),
+        new THREE.Vector3(2.0, 2.8, 2.0),
       ),
       collected: false,
     };
@@ -3009,57 +3243,19 @@ export class Level {
     if (!c) return;
     c.collected = true;
     c.group.visible = false;
-    for (let i = 0; i < 8; i++) {
-      this.spawnGlint(
-        c.group.position.x + (Math.random() - 0.5) * 2.2,
-        c.group.position.y + (Math.random() - 0.5) * 2.2,
-        c.group.position.z + (Math.random() - 0.5) * 2.2,
-        1.6,
-      );
-    }
+    this.glimmerBurst(c.group.position, 0xc83af0);
   }
 
   // All boxes broken: the gem materializes over the player, THPS-photo style.
   awardGem(pos: THREE.Vector3): void {
     if (this.gemG) return;
-    const g = new THREE.Group();
-    const body = new THREE.Mesh(
-      new THREE.OctahedronGeometry(0.7),
-      new THREE.MeshLambertMaterial({
-        map: this.chromeTexture(),
-        color: 0xbfffff,
-        emissive: 0x20c0d8,
-        emissiveIntensity: 0.7,
-        flatShading: true,
-      }),
-    );
-    body.scale.set(1.25, 0.7, 1.25); // squat gem cut
-    g.add(body);
-    const core = new THREE.Mesh(
-      new THREE.OctahedronGeometry(0.42),
-      new THREE.MeshBasicMaterial({
-        color: 0x9ffcff,
-        transparent: true,
-        opacity: 0.6,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      }),
-    );
-    core.scale.set(1.25, 0.7, 1.25);
-    g.add(core);
+    const g = this.gemMesh(1);
     g.position.set(pos.x, pos.y + 3.2, pos.z);
     g.userData.baseY = pos.y + 3.2;
     this.root.add(g);
     this.gemG = g;
-    this.glowRing(pos.x, pos.y + 3.2, pos.z, 1.6, 0x66eaff, true);
-    for (let i = 0; i < 8; i++) {
-      this.spawnGlint(
-        pos.x + (Math.random() - 0.5) * 2.5,
-        pos.y + 2.5 + Math.random() * 1.8,
-        pos.z + (Math.random() - 0.5) * 2.5,
-        1.6,
-      );
-    }
+    // no magic ring on the gem — the reference is a clean spinning diamond
+    this.glimmerBurst(g.position, 0x9fe0ff);
   }
 
   // The finish gate mirrors your relic haul: earned icons light up and spin.
@@ -3163,21 +3359,25 @@ export class Level {
       r.mesh.rotation.z += 0.5 * dt;
       (r.mesh.material as THREE.MeshBasicMaterial).opacity = 0.3 + 0.2 * Math.sin(this.vfxT * r.speed * 1.3 + r.phase);
     }
-    // ambient glints drip off whatever magic is live
+    // ambient glints drip off whatever magic is live (tinted to the pickup)
     this.glintT -= dt;
     if (this.glintT <= 0) {
-      this.glintT = 0.16;
-      const anchors: THREE.Vector3[] = [];
-      if (this.crystalPickup && !this.crystalPickup.collected) anchors.push(this.crystalPickup.group.position);
-      if (this.gemG) anchors.push(this.gemG.position);
-      if (this.gateCrystalIcon && this.relics.crystal) anchors.push(this.gateCrystalIcon.position);
-      if (this.gateGemIcon && this.relics.gem) anchors.push(this.gateGemIcon.position);
+      this.glintT = 0.2;
+      const anchors: { p: THREE.Vector3; c: number }[] = [];
+      if (this.crystalPickup && !this.crystalPickup.collected)
+        anchors.push({ p: this.crystalPickup.group.position, c: 0xd863f2 });
+      if (this.gemG) anchors.push({ p: this.gemG.position, c: 0xaee6ff });
+      if (this.gateCrystalIcon && this.relics.crystal)
+        anchors.push({ p: this.gateCrystalIcon.position, c: 0xd863f2 });
+      if (this.gateGemIcon && this.relics.gem) anchors.push({ p: this.gateGemIcon.position, c: 0xaee6ff });
       if (anchors.length > 0) {
         const a = anchors[Math.floor(Math.random() * anchors.length)];
         this.spawnGlint(
-          a.x + (Math.random() - 0.5) * 1.8,
-          a.y + (Math.random() - 0.5) * 1.8,
-          a.z + (Math.random() - 0.5) * 1.8,
+          a.p.x + (Math.random() - 0.5) * 1.6,
+          a.p.y + (Math.random() - 0.5) * 1.9,
+          a.p.z + (Math.random() - 0.5) * 1.6,
+          0.9 + Math.random() * 0.5,
+          { color: a.c, vy: 0.5 + Math.random() * 0.7 },
         );
       }
     }
@@ -3188,11 +3388,19 @@ export class Level {
         g.spr.visible = false;
         continue;
       }
+      // drift outward + up; the shower decelerates as it fans (air drag feel)
+      g.spr.position.x += g.vx * dt;
       g.spr.position.y += g.vy * dt;
-      const k = Math.sin((1 - g.life / g.max) * Math.PI); // in-out
-      const s = ((g.spr.userData.s as number) || 1) * k * 0.7;
+      g.spr.position.z += g.vz * dt;
+      const drag = Math.max(0, 1 - 2.2 * dt);
+      g.vx *= drag;
+      g.vz *= drag;
+      const prog = 1 - g.life / g.max;
+      // pop flares grow fast then shrink; sparkles ease in-out; both fade at end
+      const k = g.pop ? (prog < 0.25 ? prog / 0.25 : 1 - (prog - 0.25) / 0.75) : Math.sin(prog * Math.PI);
+      const s = g.scale * k;
       g.spr.scale.set(s, s, 1);
-      (g.spr.material as THREE.SpriteMaterial).rotation += 1.5 * dt;
+      (g.spr.material as THREE.SpriteMaterial).rotation += g.spin * dt;
     }
   }
 
