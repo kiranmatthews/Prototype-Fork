@@ -19,9 +19,10 @@ export const TUNING = {
   uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
   pipePump: 16, // crouch-pump gain: X held on ground too steep to stand
   pipeSmooth: 10, // per-second easing of the ride plane across segmented transitions
-  steepStand: 0.78, // ground normal.y below this = too steep to stand: always ridden
+  footGrip: 0.62, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
+  steepStand: 0.78, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
   vertLip: 0.72, // slope (sine along travel) that counts as vert coping at the lip
-  vertCarry: 0.25, // planar speed kept off vert coping (rest goes UP, back into the pipe)
+  landingFlow: 0.9, // how much fall speed converts into riding speed when you land on a ramp/wall
   vertGlue: 8, // hang time: how hard a vert air is pulled back onto the wall plane
   vertDrift: 6, // hang time: stick drift speed ALONG the coping during a vert air
   wallStick: 2.6, // ground-snap window on steep transitions (how hard the wall holds the board)
@@ -88,9 +89,10 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   uphillSlowdown: { min: 0, max: 120, step: 1 },
   pipePump: { min: 0, max: 40, step: 0.5 },
   pipeSmooth: { min: 2, max: 25, step: 0.5 },
+  footGrip: { min: 0.3, max: 0.95, step: 0.01 },
   steepStand: { min: 0.5, max: 0.95, step: 0.01 },
   vertLip: { min: 0.4, max: 0.95, step: 0.01 },
-  vertCarry: { min: 0, max: 1, step: 0.05 },
+  landingFlow: { min: 0, max: 1, step: 0.05 },
   vertGlue: { min: 0, max: 20, step: 0.5 },
   vertDrift: { min: 0, max: 15, step: 0.5 },
   wallStick: { min: 0.8, max: 5, step: 0.1 },
@@ -166,13 +168,16 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Crouch-pump: speed gained per second holding X on ground too steep to stand — the honest way to build vert height. Steeper wall = stronger pump.',
   pipeSmooth:
     'How fast the board’s ride plane eases across segmented transitions. Lower = surfy and smooth, higher = snappy and reactive.',
+  footGrip:
+    'ON FOOT ONLY: the steepest ground your feet can grip (higher = grips less). Below it a walker slides down the fall line instead of climbing — this is the ONE knob that stops walking up pipes. Test: walk up a ramp, raise this, the walk becomes a slither.',
   steepStand:
-    'Ground normal.y below this is too steep to stand on: always ridden with momentum, feet never grip.',
+    'WITH MOMENTUM: normal.y below this pops the board out so you ride the transition (banks, halfpipe walls). Only affects skaters/momentum now — feet obey footGrip. Test: roll at a ramp, lower this, the board comes out sooner.',
   vertLip:
-    'Slope steepness (sine along travel) that counts as vert coping when you leave it — crest steeper than this and the climb converts to UP-air that drops you back into the pipe.',
-  vertCarry: 'Fraction of planar speed kept when launching off vert coping; the rest becomes lift.',
+    'Slope steepness (sine along travel) that counts as vert coping when you crest it — steeper than this gives THPS2 hang time; shallower is a plain kicker air. Test: hit the coping, lower it, ordinary ramps start giving hang time.',
+  landingFlow:
+    'How much of your FALL speed becomes riding speed when you land on a ramp or wall (0 = dead stop like before, 1 = keep it all). This is what makes dropping in from hang time flow instead of stalling. Test: drop into a pipe, raise it, you rocket out the far wall.',
   vertGlue:
-    'THPS2 hang time: how hard a vert air is pulled back onto the wall plane so you drop into the same transition. 0 = free air. Escape at the lip by HOLDING the direction of travel.',
+    'THPS2 hang time: how hard a vert air is pulled back onto the wall plane so you drop into the same transition. 0 = free air, high = riveted. Test: hang time, raise it, you always drop back down the same face.',
   vertDrift:
     'During vert hang time the stick moves you ALONG the coping at this speed — line up your landing without leaving the wall.',
   wallStick: 'Ground-snap window on steep transitions — how hard the wall holds the board through fast climbs.',
@@ -278,9 +283,10 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'uphillSlowdown',
       'pipePump',
       'pipeSmooth',
+      'footGrip',
       'steepStand',
       'vertLip',
-      'vertCarry',
+      'landingFlow',
       'vertGlue',
       'vertDrift',
       'wallStick',
@@ -351,8 +357,9 @@ export const CONST = {
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
   tntFuse: 3, // Crash-style TNT countdown (stomp lights it)
   blastGrow: 0.35, // seconds for the blast sphere to reach full size
-  // Steep-ground rules live in TUNING now (steepStand/vertLip/vertCarry/
-  // wallStick/landGive sliders); only the structural facet threshold stays.
+  // Steep-ground rules live in TUNING now (footGrip/steepStand/vertLip/
+  // landingFlow/wallStick/landGive sliders); only the structural facet
+  // threshold stays fixed here.
   steepSnapNormal: 0.85, // below this, ground-follow + landing windows widen for transitions
   renderScale: 0.75, // build default for the internal resolution (live knob: TUNING.renderScale)
 };

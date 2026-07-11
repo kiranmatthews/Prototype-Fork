@@ -126,6 +126,11 @@ export class Player {
   private lastPlanar = 0; // measured ground speed last step, any direction
   private lastVelX = 0; // measured horizontal velocity last step (u/s) —
   private lastVelZ = 0; // direction-of-travel source that no convention can lie about
+  // ON-FOOT SLIP: ground steeper than footGrip can't be walked — feet slither
+  // down the fall line. slipClamp caps next frame's measured planar (same latch
+  // pattern as slideLandClamp) so the descent can't trip the skate gate.
+  slipping = false;
+  private slipClamp = false;
   // Momentum exits (grind jumps, slide jumps) keep their speed in the air:
   // footAir's direct-drive zeroing never applies until the next touchdown.
   private airMomentum = false;
@@ -142,11 +147,15 @@ export class Player {
   // THPS2 VERT HANG TIME: an air earned off a vert lip stays GLUED to the
   // wall — the planar position is pulled back to the launch plane so gravity
   // drops you into the same transition, stick drift allowed ALONG the coping
-  // only. Escape at the lip by holding the direction of travel.
+  // only. Escape at the lip by RELEASING X (ollie out over the coping).
   vertAir = false;
   readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
-  vertPose = 0; // eased 0..1 blend of the hang-time 90° body tilt (visual only)
+  // UNIFIED SURFACE ALIGNMENT: one eased tilt that lays the whole rig onto the
+  // surface — gently on banks, flat-out on vert walls, all the way through hang
+  // time — so the body tracks the wall while riding AND while glued in the air.
+  alignPose = 0; // 0 = upright, 1 = fully lying on alignNormal
+  readonly alignNormal = new THREE.Vector3(0, 1, 0); // eased surface normal the rig lies on
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
@@ -379,6 +388,10 @@ export class Player {
     this.coyoteTimer = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
+    this.alignPose = 0;
+    this.alignNormal.set(0, 1, 0);
+    this.slipping = false;
+    this.slipClamp = false;
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     this.charging = false;
@@ -508,6 +521,12 @@ export class Player {
       // the skate-entry gate can't read the burst and take over
       this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
       this.slideLandClamp = false;
+    }
+    if (this.slipClamp) {
+      // a slither down a steep face can measure faster than a walk — cap it so
+      // the descent never trips the skate-entry gate into a phantom board pop
+      this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+      this.slipClamp = false;
     }
     this.teetering = false; // stepRide re-detects it each tick
 
@@ -840,41 +859,26 @@ export class Player {
       this.skateCharge >= TUNING.skateHoldTime &&
       planarSpeed >= TUNING.skateEntrySpeed;
     this.skateOn = pushingOff;
-    // Ground too steep to stand on (halfpipe transitions, steep banks): feet
-    // can't grip there, so it's always ridden with real momentum. Flat ground
-    // — including the halfpipe FLOOR — plays by the normal walk/skate rules.
-    // Steepness reads the SMOOTHED ride plane, not the raw facet: seams
-    // between transition boxes can return a side-face normal for one frame,
-    // and a single spike must not snap the board out from under a walker.
+    // Ground too steep to RIDE (halfpipe transitions, steep banks): with real
+    // momentum the board pops out here. Steepness reads the SMOOTHED ride plane,
+    // not the raw facet: seams between transition boxes can return a side-face
+    // normal for one frame, and a single spike must not snap the board out.
     const steepGround = this.groundHit !== null && this.rideNormal.y < TUNING.steepStand;
-    // On foot and pushing UP a steep face: keep walking, don't snap the board
-    // out. Feet grip the climb (Crash walks up ramps); the ground-snap carries
-    // you up the surface, and it naturally stalls where the wall out-steepens
-    // your stride. Only genuine skate momentum / descent rides a transition.
-    let onFootClimb = false;
-    if (
-      steepGround &&
-      this.rideNormal.y >= 0.45 && // feet grip ramps, not near-vert
+    // ON FOOT the ONE authority is footGrip: a walker (no board momentum, no
+    // charge) can stand/walk on anything with rideNormal.y >= footGrip and
+    // SLIPS down anything steeper — no matter the stick direction. This is what
+    // makes footGrip the single legible knob for "can I walk up this pipe".
+    // A hair of hysteresis stops the boundary flickering into a slither.
+    const walkerCtx =
       !this.freeSkate &&
       !this.charging &&
       !pushingOff &&
       this.slideTimer <= 0 &&
-      planarSpeed <= TUNING.walkSpeed + 0.5 &&
-      stickHeld
-    ) {
-      const n = this.groundHit!.normal;
-      const nl = Math.hypot(n.x, n.z);
-      // MEASURED movement vs the uphill direction (last step's velocity) —
-      // the walk drive owns direction conventions; read what it actually did.
-      const vx = this.lastVelX;
-      const vz = this.lastVelZ;
-      const vl = this.lastPlanar;
-      if (nl > 1e-4 && vl > 1.2) {
-        const ux = -n.x / nl; // world uphill (horizontal)
-        const uz = -n.z / nl;
-        if ((vx * ux + vz * uz) / vl > 0.3) onFootClimb = true;
-      }
-    }
+      planarSpeed <= TUNING.walkSpeed + 0.5;
+    const gripEdge = TUNING.footGrip - (this.slipping ? 0.03 : 0);
+    const footSlip = walkerCtx && steepGround && this.rideNormal.y < gripEdge;
+    const footPlant = walkerCtx && steepGround && !footSlip;
+    this.slipping = footSlip;
     // ROLLOUT: skating is a STATE, not a speed threshold. Once the board is
     // out it stays under you — through the whole friction roll-out down to a
     // dead stop — so re-holding a direction ramps you back to cruise instead
@@ -882,10 +886,13 @@ export class Player {
     // true stop or the deliberate pull-back dismount steps off.
     const rollingOut = this.freeSkate && Math.abs(this.speed) > 0.08 && !this.stepOff;
     this.stepOff = false;
+    // On steep ground the board only pops out when it's a RIDER (charge/
+    // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
+    // obeys footGrip. Standing still on a bank no longer flashes the board.
     const skating =
       pushingOff ||
       this.slideTimer > 0 ||
-      (steepGround && !onFootClimb) ||
+      (steepGround && !footPlant && !footSlip) ||
       planarSpeed > TUNING.walkSpeed + 0.5 ||
       rollingOut;
 
@@ -1073,18 +1080,20 @@ export class Player {
           Math.max(TUNING.maxSpeed, Math.abs(this.speed) - CONST.overspeedDecay * dt);
       }
       // A free heading never reverses through zero — stalling on a hill just
-      // stops you, and below walking pace your feet take over. EXCEPT on
-      // ground too steep to stand: there the board swings downhill and you
-      // roll straight back into the transition — no parking on the wall.
+      // stops you. On ground too steep to stand, you can't hover: whenever the
+      // board is SLOW and pointed roughly along the coping (|ty| small — not
+      // already committed up or down the wall), swing it down the fall line and
+      // roll back into the transition. The |ty| gate lets a fast descent/climb
+      // pass untouched, and beating the pipePump lift (which fires just above)
+      // is why this can't be a `speed <= 0` check — it would never trigger.
       if (this.freeSkate) {
-        if (this.speed <= 0.01 && steepGround) {
+        if (steepGround && this.speed < 2 && Math.abs(this.lastTy) < 0.15) {
           const n = this.groundHit!.normal;
           const len = Math.hypot(n.x, n.z);
           if (len > 1e-4) {
             this.axisF.set(n.x / len, 0, n.z / len);
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-            // keep any inbound magnitude (vert-air re-entry), else a nudge
-            this.speed = Math.max(1.5, -this.speed);
+            this.speed = Math.max(this.speed, 1.5);
           }
         }
         this.speed = Math.max(0, this.speed);
@@ -1139,6 +1148,32 @@ export class Player {
       this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt);
     }
 
+    // FOOT SLIP: too steep to grip. Cancel whatever UPHILL displacement the
+    // walk/sidestep just wrote (so feet can never claw up the fall line), then
+    // slither DOWN it — faster the steeper it gets. Sideways/downhill input
+    // survives (strafe off the wall, or ride the slide down), so this reads as
+    // Crash scrabbling on a bank, never as a snap to the board.
+    if (footSlip && this.groundHit) {
+      const n = this.groundHit.normal;
+      const nl = Math.hypot(n.x, n.z);
+      if (nl > 1e-4) {
+        const ux = -n.x / nl; // world uphill (horizontal)
+        const uz = -n.z / nl;
+        const dpx = this.pos.x - this.prevPos.x;
+        const dpz = this.pos.z - this.prevPos.z;
+        const up = dpx * ux + dpz * uz;
+        if (up > 0) {
+          this.pos.x -= ux * up;
+          this.pos.z -= uz * up;
+        }
+        const steepFrac = THREE.MathUtils.clamp((TUNING.footGrip - n.y) * 5, 0.25, 1);
+        const slip = TUNING.walkSpeed * 0.75 * steepFrac;
+        this.pos.x -= ux * slip * dt;
+        this.pos.z -= uz * slip * dt;
+        this.slipClamp = true;
+      }
+    }
+
     // Follow the ground within a chunky snap window, otherwise we ran off an
     // edge and go airborne. Steep transitions (halfpipe walls, banks) get a
     // taller window both ways so fast climbs and descents stick to the surface.
@@ -1146,11 +1181,11 @@ export class Player {
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
-    // Cresting a vert lip: last frame the board was climbing a near-vertical
-    // face; now the surface under us has gone flat (the coping's backside).
-    // Convert the climb into UP-air right here — a launch you earned — with
-    // the small planar remainder flipped back INTO the transition, so vert
-    // airs drop you into the pipe instead of flinging you across the void.
+    // Cresting a vert lip: the board was climbing a near-vertical face; now the
+    // surface ahead has gone flat (the coping's backside). Convert the climb
+    // straight into UP-air — the vertical launch IS the climb rate you earned
+    // (speed up a near-vertical wall is almost all upward). No fudge cap: pump
+    // harder, fly higher. The drop-in landing re-mints that energy as speed.
     if (
       hit &&
       this.speed > 0.5 &&
@@ -1161,10 +1196,12 @@ export class Player {
       this.grounded = false;
       this.groundHit = hit;
       this.airFromSkate = true; // vert launches only happen from riding
-      const lipFactor = this.charging ? 1.3 : 0.85;
-      // lastTy IS the sine of the climb: lift = the climb-rate you earned.
-      this.vVel = Math.min(this.lastTy * this.speed * lipFactor, this.charging ? 25 : 18);
-      this.enterVertAir();
+      this.vVel = Math.min(this.lastTy * this.speed, CONST.maxFallSpeed);
+      // HANG is the default. Releasing X (or a fresh tap) at the lip OLLIES OUT
+      // over the coping keeping your speed; holding X keeps you in the pipe.
+      this.enterVertAir(
+        input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0,
+      );
       sfx.play('woosh2', 0.6);
       this.emitSparks(5, 0xfff3d0, 1.2);
       this.coyoteTimer = 0;
@@ -1197,19 +1234,17 @@ export class Player {
       this.groundHit = hit;
       this.crawling = false;
       this.airFromSkate = this.freeSkate; // rolling off on the board keeps tricks live
-      // Authored kicker launch: leaving an uphill lip converts speed to lift
-      // (forward travel only — backing off an edge just drops). X held at the
-      // lip = bigger air; rolling off without it is mellower.
-      const lipFactor = this.charging ? 1.3 : 0.85;
+      // Authored kicker launch: leaving an uphill lip converts the climb to
+      // lift (forward travel only — backing off an edge just drops).
       this.vVel =
         this.speed > 0 && this.lastTy > 0.05
-          ? Math.min(this.lastTy * this.speed * lipFactor, this.charging ? 25 : 18)
+          ? Math.min(this.lastTy * this.speed, CONST.maxFallSpeed)
           : 0;
-      // A near-vertical lip (halfpipe coping) throws you mostly UP: the
-      // planar remainder is small AND flipped back toward the transition,
-      // so the air drops you into the pipe instead of across the deck.
+      // A near-vertical lip (halfpipe coping) is hang time unless you ollie out.
       if (this.vVel > 0.5 && this.lastTy > TUNING.vertLip) {
-        this.enterVertAir();
+        this.enterVertAir(
+          input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0,
+        );
         sfx.play('woosh2', 0.6);
       }
       this.coyoteTimer = CONST.coyoteTime;
@@ -1344,8 +1379,10 @@ export class Player {
 
     // Crash-style directional air control: up/down stretches or shortens the
     // jump (down brakes extra hard for precision), left/right sidesteps
-    // laterally. Locked while holding a grab or slamming.
-    if (!this.grabbing && !this.slamActive) {
+    // laterally. Locked while holding a grab, slamming, or GLUED IN HANG TIME
+    // (there the wall glue + vertDrift own all motion, so vertDrift is the sole
+    // coping-drift control and nothing zeroes the parked speed).
+    if (!this.grabbing && !this.slamActive && !this.vertAir) {
       const footAir =
         !this.charging &&
         !this.airMomentum && // grind/slide exits keep flying, even when slow
@@ -1402,13 +1439,44 @@ export class Player {
       (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - landGive)
     ) {
       this.pos.y = hit.y;
-      this.vVel = 0;
       this.state = 'ride';
       this.grounded = true;
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
+      // ENERGY-CONSERVING LANDING (board airs only): project the incoming 3D
+      // velocity onto the landing surface so a drop DOWN a wall becomes speed
+      // down the wall instead of a dead stop — this is what makes hang-time
+      // drop-ins flow. On flat ground the vertical is normal to the surface, so
+      // it simply falls away and horizontal speed is untouched (a no-op); only
+      // steep faces convert. landingFlow scales how much of the fall survives.
+      if (this.airFromSkate && hit.normal.y < TUNING.steepStand) {
+        const n = hit.normal;
+        const vvx = this.speed * this.axisF.x;
+        const vvz = this.speed * this.axisF.z;
+        const vdotn = vvx * n.x + this.vVel * n.y + vvz * n.z;
+        const tvx = vvx - vdotn * n.x;
+        const tvy = this.vVel - vdotn * n.y;
+        const tvz = vvz - vdotn * n.z;
+        const tangSpeed = Math.hypot(tvx, tvy, tvz);
+        if (tangSpeed > 0.5) {
+          // new heading = downhill along the surface (horizontal projection;
+          // fall-line from the normal if the projection is degenerate on vert)
+          let hx = tvx;
+          let hz = tvz;
+          if (Math.hypot(hx, hz) < 1e-3) {
+            hx = n.x;
+            hz = n.z;
+          }
+          const hl = Math.hypot(hx, hz) || 1;
+          this.axisF.set(hx / hl, 0, hz / hl);
+          this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+          const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
+          this.speed = Math.min(keep, TUNING.downhillMax);
+        }
+      }
+      this.vVel = 0;
       // A slide taken from your feet lands back ON your feet — clamp the
       // carried burst at the touchdown instant (not next frame) so nothing
       // downstream can read the unclamped speed and flip out the board.
@@ -1538,23 +1606,21 @@ export class Player {
     this.bankCombo();
   }
 
-  // Leaving a vert lip: HOLDING the direction of travel escapes over the
-  // gap (momentum carries, no lock); anything else is THPS2 hang time — the
-  // planar remainder flips back INTO the pipe and the air stays glued to
-  // the wall plane until touchdown.
-  private enterVertAir(): void {
-    const rx = this.rawInput.moveX;
-    const ry = this.rawInput.moveY;
-    let escape = false;
-    if (rx !== 0 || ry !== 0) {
-      const inv = 1 / Math.hypot(rx, ry);
-      escape = rx * inv * this.axisF.x + -ry * inv * this.axisF.z > 0.5;
-    }
-    if (escape) {
-      this.speed *= 0.9; // fly the gap: forward momentum survives the lip
+  // Leaving a vert lip. HANG is the default (glue to the wall plane, drop back
+  // into the same transition). airOut = the player released/tapped X at the lip
+  // to OLLIE OUT over the coping: keep all your speed, no glue, a plain board
+  // air. (vVel — the launch height — is already set by the caller.)
+  private enterVertAir(airOut: boolean): void {
+    if (airOut) {
+      this.vVel += TUNING.grindJumpForce * 0.4; // a deliberate pop over the lip
+      this.charging = false;
+      this.chargeTimer = 0;
       return;
     }
-    this.speed *= -TUNING.vertCarry;
+    // HANG: park planar speed — the energy is in vVel now, and the drop-in
+    // landing converts it back into speed DOWN the wall (see the touchdown
+    // block). No reverse-and-delete: momentum is conserved through the cycle.
+    this.speed = 0;
     this.vertNormal.set(this.rideNormal.x, 0, this.rideNormal.z);
     const nl = this.vertNormal.length();
     if (nl < 1e-4) return; // degenerate lip: plain air
@@ -2658,15 +2724,33 @@ export class Player {
     // only .z would compound last frame's tilt forever.
     this.group.rotation.set(0, Math.PI, this.lean + wobble);
 
-    // HANG TIME: the vert wall is the new ground. The whole rig tips ~90°
-    // about the coping line so the body plane matches the wall — feet/board
-    // to the coping, head out into the pipe — easing in on launch and back
-    // upright through the landing. Spins (bodyGroup yaw below) now run
-    // about the body's own axis, i.e. the wall normal, THPS-style.
-    this.vertPose += ((this.vertAir ? 1 : 0) - this.vertPose) * Math.min(1, 9 * dt);
-    if (this.vertPose > 0.001) {
-      VERT_Q.setFromUnitVectors(VERT_UP, this.vertNormal);
-      VERT_Q2.identity().slerp(VERT_Q, this.vertPose);
+    // UNIFIED SURFACE ALIGNMENT: the wall is the new ground. The whole rig
+    // lays onto the surface normal — gently on banks, flat-out (~90°) on vert
+    // walls — the SAME quaternion while riding the transition AND while glued
+    // in hang time, so lip → hang → drop-in has no snap. Spins (bodyGroup yaw)
+    // then run about the rig's own up = the surface normal, THPS-style.
+    let alignT = 0;
+    let targetN: THREE.Vector3 | null = null;
+    if (this.vertAir) {
+      alignT = 1; // hang time: fully on the wall plane
+      targetN = this.vertNormal;
+    } else if (this.grounded && this.state === 'ride' && this.groundHit) {
+      // steepness-weighted: upright at/above steepStand, fully lying by ~vert
+      const flatY = TUNING.steepStand;
+      const vertY = 0.25;
+      const t = THREE.MathUtils.clamp((flatY - this.rideNormal.y) / (flatY - vertY), 0, 1);
+      alignT = t * t * (3 - 2 * t); // smoothstep
+      targetN = this.rideNormal;
+    }
+    this.alignPose += (alignT - this.alignPose) * Math.min(1, 12 * dt);
+    if (targetN) {
+      this.alignNormal.lerp(targetN, Math.min(1, 12 * dt));
+      if (this.alignNormal.lengthSq() < 1e-6) this.alignNormal.copy(targetN);
+      this.alignNormal.normalize();
+    }
+    if (this.alignPose > 0.001) {
+      VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
+      VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
       this.group.quaternion.premultiply(VERT_Q2);
     }
 
@@ -2996,6 +3080,12 @@ export class Player {
       const gl = (n.x * fz - n.z * fx) / Math.max(n.y, 0.2); // drops to the left > 0
       slopeT = THREE.MathUtils.clamp(Math.atan(gf), -1.0, 1.0) * 0.85;
       slopeRollT = THREE.MathUtils.clamp(-Math.atan(gl), -1.0, 1.0) * 0.85;
+      // On steep ground the ROOT alignment (above) already lays the rig on the
+      // wall; fade these capped body-pitch/roll channels out as it takes over,
+      // or the two stack and over-rotate the torso past the surface.
+      const fade = 1 - this.alignPose;
+      slopeT *= fade;
+      slopeRollT *= fade;
     }
     this.slopePose += (slopeT - this.slopePose) * Math.min(1, 10 * dt);
     this.slopeRoll += (slopeRollT - this.slopeRoll) * Math.min(1, 10 * dt);
