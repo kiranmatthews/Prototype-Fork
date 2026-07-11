@@ -436,6 +436,8 @@ function updateAudio(dt: number): void {
   }
 }
 
+let paused = false;
+
 function frame(): void {
   requestAnimationFrame(frame);
   if (TUNING.renderScale !== appliedScale) {
@@ -444,6 +446,19 @@ function frame(): void {
   }
   const dt = Math.min(clock.getDelta(), 0.1);
   input.update();
+
+  // Options / P toggles pause: the sim stops dead, the frame still renders.
+  if (input.pausePressed) {
+    paused = !paused;
+    if (paused) ui.showMessage('PAUSED', 'Options / P to resume', 0);
+    else ui.hideMessage();
+  }
+  if (paused) {
+    input.consumeEdges(); // presses while paused must not fire on resume
+    acc = 0;
+    renderer.render(scene, camera);
+    return;
+  }
 
   acc += dt;
   while (acc >= CONST.fixedStep) {

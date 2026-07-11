@@ -1,7 +1,8 @@
 // Keyboard + Gamepad API input, merged into one snapshot per frame.
 // DualShock 4 exposes the browser "standard" mapping:
 //   buttons[0] = Cross (X), buttons[1] = Circle, buttons[2] = Square,
-//   buttons[3] = Triangle, buttons[9] = Options, buttons[12..15] = d-pad,
+//   buttons[3] = Triangle, buttons[8] = Share (reset), buttons[9] = Options
+//   (pause), buttons[12..15] = d-pad,
 //   axes[0/1] = left stick.
 
 export class Input {
@@ -23,6 +24,7 @@ export class Input {
   spinPressed = false;
   grabPressed = false;
   restartPressed = false;
+  pausePressed = false;
 
   gamepadName = 'no controller';
 
@@ -32,6 +34,7 @@ export class Input {
   private prevSpin = false;
   private prevGrab = false;
   private prevRestart = false;
+  private prevPause = false;
 
   constructor() {
     window.addEventListener('keydown', (e) => {
@@ -47,6 +50,7 @@ export class Input {
         if (e.code === 'KeyF') this.spinPressed = true;
         if (e.code === 'KeyQ') this.grabPressed = true;
         if (e.code === 'KeyR') this.restartPressed = true;
+        if (e.code === 'KeyP' || e.code === 'Escape') this.pausePressed = true;
       }
     });
     window.addEventListener('keyup', (e) => {
@@ -73,6 +77,7 @@ export class Input {
     let spin = k.has('KeyF');
     let grab = k.has('KeyQ');
     let restart = k.has('KeyR');
+    let pause = k.has('KeyP') || k.has('Escape');
 
     const pad = this.pollGamepad();
     if (pad) {
@@ -91,7 +96,8 @@ export class Input {
       grab = grab || !!pad.buttons[1]?.pressed; // Circle
       spin = spin || !!pad.buttons[2]?.pressed; // Square
       grind = grind || !!pad.buttons[3]?.pressed; // Triangle
-      restart = restart || !!pad.buttons[9]?.pressed; // Options
+      restart = restart || !!pad.buttons[8]?.pressed; // Share = reset
+      pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
     }
 
     this.moveX = Math.sign(moveX);
@@ -108,12 +114,14 @@ export class Input {
     this.spinPressed = this.spinPressed || (spin && !this.prevSpin);
     this.grabPressed = this.grabPressed || (grab && !this.prevGrab);
     this.restartPressed = this.restartPressed || (restart && !this.prevRestart);
+    this.pausePressed = this.pausePressed || (pause && !this.prevPause);
 
     this.prevJump = jump;
     this.prevGrind = grind;
     this.prevSpin = spin;
     this.prevGrab = grab;
     this.prevRestart = restart;
+    this.prevPause = pause;
   }
 
   // Called after the first fixed step of each frame so a single press only
@@ -125,6 +133,7 @@ export class Input {
     this.spinPressed = false;
     this.grabPressed = false;
     this.restartPressed = false;
+    this.pausePressed = false;
   }
 
   private pollGamepad(): Gamepad | null {

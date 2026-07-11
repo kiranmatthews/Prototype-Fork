@@ -113,6 +113,8 @@ export class Player {
   private flipTimer = 0; // front-flip on jump (visual only)
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
+  private lastVelX = 0; // measured horizontal velocity last step (u/s) —
+  private lastVelZ = 0; // direction-of-travel source that no convention can lie about
   // Momentum exits (grind jumps, slide jumps) keep their speed in the air:
   // footAir's direct-drive zeroing never applies until the next touchdown.
   private airMomentum = false;
@@ -467,7 +469,9 @@ export class Player {
     // Actual planar speed from last step's displacement (any direction) —
     // the skate-entry gate uses this so sideways motion counts, not just the
     // forward-axis `speed` scalar. Computed before prevPos is overwritten.
-    this.lastPlanar = Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
+    this.lastVelX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-4);
+    this.lastVelZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
+    this.lastPlanar = Math.hypot(this.lastVelX, this.lastVelZ);
     this.prevPos.copy(this.pos);
     this.teetering = false; // stepRide re-detects it each tick
 
@@ -733,6 +737,9 @@ export class Player {
       // Crash slide-jump: a HIGH leap out of the slide. The burst's momentum
       // carries through the air; a walk-slide still lands back on your feet
       // (slideFromWalk stays set, so touchdown clamps to walking pace).
+      // slideJumpHeight owns the pop; slideJumpTravel scales the horizontal
+      // launch so you can keep the height without flying across the map.
+      this.speed *= TUNING.slideJumpTravel;
       this.slideTimer = 0;
       this.slideCd = CONST.slideCooldown;
       this.airMomentum = true;
@@ -798,9 +805,43 @@ export class Player {
     // Ground too steep to stand on (halfpipe transitions, steep banks): feet
     // can't grip there, so it's always ridden with real momentum. Flat ground
     // — including the halfpipe FLOOR — plays by the normal walk/skate rules.
-    const steepGround = this.groundHit !== null && this.groundHit.normal.y < TUNING.steepStand;
+    // Steepness reads the SMOOTHED ride plane, not the raw facet: seams
+    // between transition boxes can return a side-face normal for one frame,
+    // and a single spike must not snap the board out from under a walker.
+    const steepGround = this.groundHit !== null && this.rideNormal.y < TUNING.steepStand;
+    // On foot and pushing UP a steep face: keep walking, don't snap the board
+    // out. Feet grip the climb (Crash walks up ramps); the ground-snap carries
+    // you up the surface, and it naturally stalls where the wall out-steepens
+    // your stride. Only genuine skate momentum / descent rides a transition.
+    let onFootClimb = false;
+    if (
+      steepGround &&
+      this.rideNormal.y >= 0.45 && // feet grip ramps, not near-vert
+      !this.freeSkate &&
+      !this.charging &&
+      !pushingOff &&
+      this.slideTimer <= 0 &&
+      planarSpeed <= TUNING.walkSpeed + 0.5 &&
+      stickHeld
+    ) {
+      const n = this.groundHit!.normal;
+      const nl = Math.hypot(n.x, n.z);
+      // MEASURED movement vs the uphill direction (last step's velocity) —
+      // the walk drive owns direction conventions; read what it actually did.
+      const vx = this.lastVelX;
+      const vz = this.lastVelZ;
+      const vl = this.lastPlanar;
+      if (nl > 1e-4 && vl > 1.2) {
+        const ux = -n.x / nl; // world uphill (horizontal)
+        const uz = -n.z / nl;
+        if ((vx * ux + vz * uz) / vl > 0.3) onFootClimb = true;
+      }
+    }
     const skating =
-      pushingOff || this.slideTimer > 0 || steepGround || planarSpeed > TUNING.walkSpeed + 0.5;
+      pushingOff ||
+      this.slideTimer > 0 ||
+      (steepGround && !onFootClimb) ||
+      planarSpeed > TUNING.walkSpeed + 0.5;
 
     // Enter/leave free-heading mode. Walking and canned slides keep the
     // classic course-axis model; the board carves free — everywhere,
@@ -906,7 +947,10 @@ export class Player {
           if (this.speed < TUNING.maxSpeed)
             this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
         } else {
-          this.cruiseEase(dt, steepGround);
+          // TRULY idle (no stick, no X): friction bleeds you all the way to a
+          // stop, below cruise. Coasting WITH a direction held (above) settles
+          // to cruise and holds; letting go completely rolls you out.
+          this.frictionBleed(dt, steepGround);
         }
       } else if (this.charging) {
         // build toward maxSpeed in the stick's direction; with no direction
@@ -1390,8 +1434,22 @@ export class Player {
       // No assist on transitions — and the old friction bleed stays, so a
       // sideways crawl on a wall dies out and the stall-flip can roll you
       // back into the pipe instead of parking you mid-face.
-      this.speed = Math.max(0, this.speed - TUNING.friction * dt);
+      this.frictionBleed(dt, steep);
     }
+  }
+
+  // FRICTION to a full stop, ease-out curve. Fires only when there is NO
+  // input at all — the board coasts, then rolls to rest below cruise. The
+  // bleed scales with current speed (fast up top, gentle as you settle) plus
+  // a small floor so it actually reaches zero. friction 0 = frictionless.
+  private frictionBleed(dt: number, steep: boolean): void {
+    const s = Math.abs(this.speed);
+    if (s < 1e-4) return;
+    // steep ground keeps the flat linear bleed so the stall-flip fires cleanly
+    const bleed = steep
+      ? TUNING.friction * dt
+      : TUNING.friction * dt * (0.35 + 0.65 * Math.min(1, s / Math.max(TUNING.maxSpeed, 1)));
+    this.speed -= Math.sign(this.speed) * Math.min(bleed, s);
   }
 
   // Botched a grab landing: no death — you eat the floor, the pending combo
@@ -1455,7 +1513,13 @@ export class Player {
           this.balance = 0;
           this.grindTime = 0;
           this.balanceCritT = 0;
+        } else if (this.railFallSide(level) === 'vert') {
+          // The needle threw us INTO the transition — that's not a crash,
+          // it's the grind ending: drop in and keep riding the line.
+          this.dropOffRail();
+          return;
         } else {
+          // thrown toward the deck / uphill side: the honest bail
           this.bailFromRail();
           return;
         }
@@ -1646,6 +1710,56 @@ export class Player {
     // Grind exits fly forward: the rail speed rides through the whole air,
     // even if it's below walking pace (footAir must not zero it).
     this.airMomentum = true;
+  }
+
+  // Which way is the balance needle throwing us, and what's over there?
+  // Steep ground or a real drop on the fall side = the transition ('vert'):
+  // falling that way reads as dropping in, not crashing. Flat ground near
+  // rail height = the deck/uphill side, where a fall is still a bail.
+  private railFallSide(level: Level): 'vert' | 'deck' {
+    const rail = this.grindRail;
+    if (!rail) return 'deck';
+    const t = rail.tangentAt(this.grindT);
+    const hx = t.x * this.grindDir;
+    const hz = t.z * this.grindDir;
+    const hl = Math.hypot(hx, hz);
+    if (hl < 1e-4) return 'deck';
+    // screen-right of travel (same construction as axisL from axisF), flipped
+    // to whichever side the needle pegged toward
+    const side = Math.sign(this.balance || 1);
+    const ox = (hz / hl) * side * 2.2;
+    const oz = (-hx / hl) * side * 2.2;
+    const probe = this.queryGround(level, ox, oz);
+    if (!probe) return 'vert'; // open air: riding the drop out beats a face-plant
+    if (probe.normal.y < TUNING.steepStand) return 'vert'; // transition face
+    return this.pos.y - probe.y > 1.6 ? 'vert' : 'deck';
+  }
+
+  // The needle threw us INTO the transition: end the grind cleanly — heading
+  // bends off the rail toward the drop, speed and pending combo both live.
+  private dropOffRail(): void {
+    const rail = this.grindRail!;
+    const t = rail.tangentAt(this.grindT);
+    const hx = t.x * this.grindDir;
+    const hz = t.z * this.grindDir;
+    const hl = Math.hypot(hx, hz) || 1;
+    const side = Math.sign(this.balance || 1);
+    const fx = hx / hl + (hz / hl) * side * 0.9;
+    const fz = hz / hl + (-hx / hl) * side * 0.9;
+    const fl = Math.hypot(fx, fz) || 1;
+    this.axisF.set(fx / fl, 0, fz / fl);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.grindRail = null;
+    this.state = 'air';
+    this.airFromSkate = true; // still a board air: tricks live
+    this.freeSkate = true;
+    this.speed = Math.max(this.grindVel * 0.85, 3);
+    this.vVel = 1.2;
+    this.airMomentum = true;
+    this.regrindCd = CONST.regrindCooldown;
+    this.balance = 0;
+    this.balanceCritT = 0;
+    sfx.play('skateTransition', 0.6);
   }
 
   // Pegged the balance meter (or hit a crate): stumble off the rail with most
