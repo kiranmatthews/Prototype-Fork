@@ -4524,9 +4524,9 @@ export class Level {
     const WX = 44; // hall half-width (x)
     const WZ = 44; // hall half-depth (z)
     const QH = 6; // upper-level height (QP lips / platform / ridge)
-    const QR = 6; // quarter-pipe reach from the wall (= radius, so the lip goes VERTICAL)
+    // quarter-pipe reach from the wall = QH = 6, so the lip goes VERTICAL
     const DECK = 4; // flat coping deck behind each lip (room to air + grind out)
-    const CR = 6; // rounded-corner radius (matches QR)
+    const CR = 6; // rounded-corner radius (matches the QP reach of 6)
     // TRUE quarter-circle profile [distance from wall, height]: mellow at the
     // floor, VERTICAL at the coping — so pumping the wall crests into hang time
     // (a mellow ramp never gets steep enough to trigger it). R = QR = QH = 6.
