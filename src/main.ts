@@ -300,6 +300,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Digit5') switchLevel(4);
   if (e.code === 'Digit6') switchLevel(5);
   if (e.code === 'Digit7') switchLevel(6);
+  if (e.code === 'Digit8') switchLevel(7);
 });
 
 player.onDeath = () => {
