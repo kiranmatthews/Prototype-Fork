@@ -337,12 +337,9 @@ const CAM_HEIGHT = 2.8;
 const CAM_LOOKAHEAD = 5.0;
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
-const vertCam = new THREE.Vector3();
-const vertLook = new THREE.Vector3();
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
-let vertF = 0; // THPS2 hang-time camera blend
 let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
@@ -386,21 +383,6 @@ function updateCamera(dt: number): void {
       boulderF * 6.5,
   );
 
-  // THPS2 HANG TIME: while a vert air is glued to the wall, the camera stops
-  // trailing — it swings out into the pipe near lip height and watches the
-  // skater side-on against the wall until they drop back in.
-  vertF += ((player.vertAir ? 1 : 0) - vertF) * Math.min(1, (player.vertAir ? 6 : 2.8) * dt);
-  if (vertF > 0.003) {
-    const n = player.vertNormal; // horizontal, pointing off the wall into the pipe
-    vertCam.set(
-      player.pos.x + n.x * 8.5,
-      Math.max(player.vertAnchor.y + 1.4, player.pos.y - 3.2),
-      player.pos.z + n.z * 8.5,
-    );
-    camera.position.lerp(vertCam, vertF);
-    vertLook.set(player.pos.x, player.pos.y + 0.9, player.pos.z);
-    lookPoint.lerp(vertLook, vertF);
-  }
   camera.lookAt(lookPoint);
 }
 

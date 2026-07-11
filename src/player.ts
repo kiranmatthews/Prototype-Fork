@@ -783,7 +783,9 @@ export class Player {
     this.chargeTimer = 0;
     // fast jumps flip — EXCEPT star jumps (crouch/slide), which hold the
     // classic spread-eagle instead of tumbling through it
-    if (spd >= CONST.flipMinSpeed && this.starTimer <= 0) this.flipTimer = CONST.flipDuration;
+    // the somersault is a RUNNING trick: board jumps (ollies) never flip
+    if (spd >= CONST.flipMinSpeed && this.starTimer <= 0 && !this.freeSkate)
+      this.flipTimer = CONST.flipDuration;
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
@@ -1652,7 +1654,7 @@ export class Player {
       this.lastJumpType = 'Grind Exit';
       sfx.play('ollie', 0.7);
       this.exitGrind(THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t));
-      if (Math.abs(this.speed) >= CONST.flipMinSpeed) this.flipTimer = CONST.flipDuration;
+      // grind exits are board airs: no somersault
     }
   }
 
@@ -1948,8 +1950,13 @@ export class Player {
             this.grabGraceTimer = CONST.grabGrace;
           }
         }
-        // The rotation eases home to the nearest on-axis facing.
-        if (this.grabSpinAngle !== 0) {
+        // HANG-TIME SPIN: glued to the wall, the stick alone spins you —
+        // no grab needed. Same spin fields, so landing rules and switch
+        // stance judge it exactly like a grab-spin.
+        if (this.vertAir && !this.slamActive && Math.abs(this.rawInput.moveX) > 0.3) {
+          this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
+          this.grabSpinTotal += TUNING.grabSpinRate * dt;
+        } else if (this.grabSpinAngle !== 0) {
           const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
           const d = target - this.grabSpinAngle;
           const step = CONST.grabSnapRate * dt;
@@ -2578,8 +2585,9 @@ export class Player {
     if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
       targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
     }
-    // Switch stance: the body faces AWAY from travel (the board doesn't care)
-    if (this.stance < 0 && this.freeSkate && this.state !== 'grind') {
+    // Switch stance: the body faces AWAY from travel (the board doesn't
+    // care) — on the ground, in the air, and on RAILS alike.
+    if (this.stance < 0 && (this.freeSkate || this.state === 'grind')) {
       targetYaw = wrapAngle(targetYaw + Math.PI);
     }
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
@@ -2645,10 +2653,11 @@ export class Player {
       this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose;
       // switch stance mirrors the feet fore-aft (and the ankle angles)
       const stz = this.stance;
-      this.legR.position.set(0.115 + 0.05 * sk, 0, 0.42 * sk * stz); // front foot, toward nose
-      this.legL.position.set(-0.115 - 0.05 * sk, 0, -0.34 * sk * stz); // back foot, toward tail
-      this.legR.rotation.y = 0.22 * sk * stz;
-      this.legL.rotation.y = -0.16 * sk * stz;
+      // feet stay under the hips: a modest fore-aft split, not a lunge
+      this.legR.position.set(0.115 + 0.02 * sk, 0, 0.24 * sk * stz); // front foot, toward nose
+      this.legL.position.set(-0.115 - 0.02 * sk, 0, -0.2 * sk * stz); // back foot, toward tail
+      this.legR.rotation.y = 0.12 * sk * stz;
+      this.legL.rotation.y = -0.09 * sk * stz;
       this.legR.rotation.z = -1.05 * star; // straddle split
       this.legL.rotation.z = 1.05 * star;
     }
@@ -2663,8 +2672,8 @@ export class Player {
       const tuck = 1.35 * this.grabPose + 1.1 * flipTuck + 1.2 * this.crawlPose;
       const backL = 0.9 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
       const backR = 0.9 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
-      const stanceR = 0.95 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // front leg
-      const stanceL = 0.65 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // back leg
+      const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // front leg
+      const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // back leg
       this.kneeR.rotation.x = straight * (stanceR + tuck + backR + 0.35 * this.slidePose);
       this.kneeL.rotation.x = straight * (stanceL + tuck + backL + 1.0 * this.slidePose);
       this.legR.rotation.x -= straight * 0.5 * stanceR;
@@ -2677,7 +2686,8 @@ export class Player {
     // keeps the eyes on the horizon whatever the body is doing.
     if (this.upperG) {
       const stance =
-        0.55 * sk * this.stance + (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 : 0);
+        0.55 * sk * this.stance +
+        (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 * this.stance : 0);
       const counter = -swing * 0.22;
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
@@ -2804,7 +2814,8 @@ export class Player {
           this.grabPose > 0.05 ||
           Math.abs(this.speed) > TUNING.boardSpeed);
     }
-    this.bodyGroup.rotation.z = this.grabRoll * this.grabPose + this.slopeRoll;
+    this.bodyGroup.rotation.z = this.slopeRoll;
+    if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace.
     this.bodyGroup.visible =
