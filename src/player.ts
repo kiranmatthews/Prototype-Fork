@@ -128,6 +128,13 @@ export class Player {
   // SWITCH STANCE: 1 = regular, -1 = switch (landed a 180 — the body faces
   // opposite the travel direction until the next 180 or stepping off).
   private stance: 1 | -1 = 1;
+  // THPS2 VERT HANG TIME: an air earned off a vert lip stays GLUED to the
+  // wall — the planar position is pulled back to the launch plane so gravity
+  // drops you into the same transition, stick drift allowed ALONG the coping
+  // only. Escape at the lip by holding the direction of travel.
+  vertAir = false;
+  readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
+  readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
@@ -347,6 +354,7 @@ export class Player {
     this.airFromSkate = false;
     this.stepOff = false;
     this.stance = 1;
+    this.vertAir = false;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -472,6 +480,7 @@ export class Player {
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.bailDownT = Math.max(0, this.bailDownT - dt);
+    if (this.state !== 'air') this.vertAir = false;
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     // Actual planar speed from last step's displacement (any direction) —
@@ -1129,7 +1138,7 @@ export class Player {
       const lipFactor = this.charging ? 1.3 : 0.85;
       // lastTy IS the sine of the climb: lift = the climb-rate you earned.
       this.vVel = Math.min(this.lastTy * this.speed * lipFactor, this.charging ? 25 : 18);
-      this.speed *= -TUNING.vertCarry;
+      this.enterVertAir();
       sfx.play('woosh2', 0.6);
       this.emitSparks(5, 0xfff3d0, 1.2);
       this.coyoteTimer = 0;
@@ -1174,7 +1183,7 @@ export class Player {
       // planar remainder is small AND flipped back toward the transition,
       // so the air drops you into the pipe instead of across the deck.
       if (this.vVel > 0.5 && this.lastTy > TUNING.vertLip) {
-        this.speed *= -TUNING.vertCarry;
+        this.enterVertAir();
         sfx.play('woosh2', 0.6);
       }
       this.coyoteTimer = CONST.coyoteTime;
@@ -1252,8 +1261,31 @@ export class Player {
     // Circle + down: pancake body slam, Wile E. Coyote rules — engage, FREEZE
     // in the air for a beat (momentum screeches to nothing), then plummet.
     // The impact breaks everything around you (TNT pops safely, nitro does NOT).
+    // VERT HANG TIME: glued to the wall. The planar position eases back to
+    // the launch plane (gravity brings you down INTO the transition), while
+    // the stick drifts you along the coping — never away from the wall.
+    if (this.vertAir) {
+      const g = Math.min(1, TUNING.vertGlue * dt);
+      const dx = this.pos.x - this.vertAnchor.x;
+      const dz = this.pos.z - this.vertAnchor.z;
+      const d = dx * this.vertNormal.x + dz * this.vertNormal.z;
+      this.pos.x -= this.vertNormal.x * d * g;
+      this.pos.z -= this.vertNormal.z * d * g;
+      const rx = this.rawInput.moveX;
+      const ry = this.rawInput.moveY;
+      if (rx !== 0 || ry !== 0) {
+        const tx = -this.vertNormal.z; // wall tangent (along the coping)
+        const tz = this.vertNormal.x;
+        const inv = 1 / Math.hypot(rx, ry);
+        const along = rx * inv * tx + -ry * inv * tz;
+        this.pos.x += tx * along * TUNING.vertDrift * dt;
+        this.pos.z += tz * along * TUNING.vertDrift * dt;
+      }
+    }
+
     if (!this.slamActive && input.grabHeld && this.rawInput.moveY < -0.5) {
       this.slamActive = true;
+      this.vertAir = false; // the slam plummets straight down, no wall glue
       this.slamHangT = CONST.slamHang;
       this.grabPhase = 'none';
       this.grabT = 0;
@@ -1448,6 +1480,33 @@ export class Player {
     }
     // A landed slam is a safe landing too: bank the string.
     this.bankCombo();
+  }
+
+  // Leaving a vert lip: HOLDING the direction of travel escapes over the
+  // gap (momentum carries, no lock); anything else is THPS2 hang time — the
+  // planar remainder flips back INTO the pipe and the air stays glued to
+  // the wall plane until touchdown.
+  private enterVertAir(): void {
+    const rx = this.rawInput.moveX;
+    const ry = this.rawInput.moveY;
+    let escape = false;
+    if (rx !== 0 || ry !== 0) {
+      const inv = 1 / Math.hypot(rx, ry);
+      escape = rx * inv * this.axisF.x + -ry * inv * this.axisF.z > 0.5;
+    }
+    if (escape) {
+      this.speed *= 0.9; // fly the gap: forward momentum survives the lip
+      return;
+    }
+    this.speed *= -TUNING.vertCarry;
+    this.vertNormal.set(this.rideNormal.x, 0, this.rideNormal.z);
+    const nl = this.vertNormal.length();
+    if (nl < 1e-4) return; // degenerate lip: plain air
+    this.vertNormal.divideScalar(nl);
+    // glue plane sits a hair INSIDE the pipe, so the drop lands on the
+    // transition face proper rather than balancing on the coping line
+    this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, 1.2);
+    this.vertAir = true;
   }
 
   // BASELINE CRUISE: while free-skating the board holds cruiseSpeed on its

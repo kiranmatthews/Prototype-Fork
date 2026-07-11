@@ -22,6 +22,8 @@ export const TUNING = {
   steepStand: 0.78, // ground normal.y below this = too steep to stand: always ridden
   vertLip: 0.72, // slope (sine along travel) that counts as vert coping at the lip
   vertCarry: 0.25, // planar speed kept off vert coping (rest goes UP, back into the pipe)
+  vertGlue: 8, // hang time: how hard a vert air is pulled back onto the wall plane
+  vertDrift: 6, // hang time: stick drift speed ALONG the coping during a vert air
   wallStick: 2.6, // ground-snap window on steep transitions (how hard the wall holds the board)
   landGive: 1.5, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
@@ -85,6 +87,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   steepStand: { min: 0.5, max: 0.95, step: 0.01 },
   vertLip: { min: 0.4, max: 0.95, step: 0.01 },
   vertCarry: { min: 0, max: 1, step: 0.05 },
+  vertGlue: { min: 0, max: 20, step: 0.5 },
+  vertDrift: { min: 0, max: 15, step: 0.5 },
   wallStick: { min: 0.8, max: 5, step: 0.1 },
   landGive: { min: 0.35, max: 3, step: 0.05 },
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
@@ -159,6 +163,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   vertLip:
     'Slope steepness (sine along travel) that counts as vert coping when you leave it — crest steeper than this and the climb converts to UP-air that drops you back into the pipe.',
   vertCarry: 'Fraction of planar speed kept when launching off vert coping; the rest becomes lift.',
+  vertGlue:
+    'THPS2 hang time: how hard a vert air is pulled back onto the wall plane so you drop into the same transition. 0 = free air. Escape at the lip by HOLDING the direction of travel.',
+  vertDrift:
+    'During vert hang time the stick moves you ALONG the coping at this speed — line up your landing without leaving the wall.',
   wallStick: 'Ground-snap window on steep transitions — how hard the wall holds the board through fast climbs.',
   landGive: 'Landing forgiveness on steep transition faces (flat decks stay strict).',
   railSnapDistance:
@@ -256,6 +264,8 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'steepStand',
       'vertLip',
       'vertCarry',
+      'vertGlue',
+      'vertDrift',
       'wallStick',
       'landGive',
     ],
