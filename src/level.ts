@@ -2986,6 +2986,75 @@ export class Level {
     return this.flareTex;
   }
 
+  // CANNED REFLECTION (matcap): a painted "photo of a lit sphere" that the
+  // material samples by the surface normal — so the bright highlight is baked
+  // INTO the surface and sweeps across the facets as the crystal/gem spins,
+  // with zero dependence on the scene's real lights (the PS1 studio-reflection
+  // look). kind picks the purple crystal vs the silver gem palette.
+  private matcapTex: { crystal?: THREE.CanvasTexture; gem?: THREE.CanvasTexture } = {};
+  private matcapTexture(kind: 'crystal' | 'gem'): THREE.CanvasTexture {
+    const cached = this.matcapTex[kind];
+    if (cached) return cached;
+    const S = 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = S;
+    canvas.height = S;
+    const ctx = canvas.getContext('2d')!;
+    const c = S / 2;
+    const blob = (x: number, y: number, r: number, col: string) => {
+      const gr = ctx.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, col);
+      gr.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gr;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    if (kind === 'crystal') {
+      // deep-purple sphere: bright toward the centre, dark magenta at the rim
+      const base = ctx.createRadialGradient(c, c, 0, c, c, c);
+      base.addColorStop(0, '#8a34c8');
+      base.addColorStop(0.55, '#5a1aa0');
+      base.addColorStop(0.85, '#320c60');
+      base.addColorStop(1, '#1a0636');
+      ctx.fillStyle = base;
+      ctx.fillRect(0, 0, S, S);
+      // THE canned highlight: a fat lavender-white streak up the upper-left,
+      // with a hot white core — this is what sweeps over the faces
+      ctx.save();
+      ctx.translate(c - 20, c - 26);
+      ctx.rotate(-0.35);
+      ctx.scale(0.5, 1.5);
+      blob(0, 0, 40, 'rgba(240,210,255,0.95)');
+      ctx.restore();
+      blob(c - 26, c - 34, 14, 'rgba(255,255,255,0.95)'); // hot spot
+      blob(c + 30, c + 34, 26, 'rgba(210,70,220,0.5)'); // magenta rim bounce
+    } else {
+      // silver-white sphere: bright silver centre, cool slate at the rim
+      const base = ctx.createRadialGradient(c, c, 0, c, c, c);
+      base.addColorStop(0, '#eef4fb');
+      base.addColorStop(0.5, '#aebecd');
+      base.addColorStop(0.82, '#5e6e7e');
+      base.addColorStop(1, '#333f4a');
+      ctx.fillStyle = base;
+      ctx.fillRect(0, 0, S, S);
+      // diamonds throw multiple hard glints: a couple of bright streaks + spots
+      ctx.save();
+      ctx.translate(c - 18, c - 28);
+      ctx.rotate(-0.5);
+      ctx.scale(0.42, 1.35);
+      blob(0, 0, 38, 'rgba(255,255,255,0.98)');
+      ctx.restore();
+      blob(c + 26, c + 10, 16, 'rgba(255,255,255,0.75)');
+      blob(c - 34, c + 30, 12, 'rgba(210,228,245,0.7)');
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter; // chunky PS1 texels
+    tex.minFilter = THREE.NearestFilter;
+    this.matcapTex[kind] = tex;
+    return tex;
+  }
+
   // Soft round halo — the pink/cyan glow that hangs around the pickups. White,
   // tinted by the sprite material.
   private glowTexture(): THREE.CanvasTexture {
@@ -3114,18 +3183,16 @@ export class Level {
     const g = new THREE.Group();
     const R = 0.55 * scale;
     const H = 1.05 * scale; // half-height of each pyramid
-    const shellMat = new THREE.MeshPhongMaterial({
-      color: 0x9a34d8,
-      emissive: 0x50128f,
-      emissiveIntensity: 0.4,
-      specular: 0xffffff,
-      shininess: 70,
+    // CANNED reflection: matcap, not scene lighting. Each flat facet samples
+    // the painted highlight by its normal, so the bright streak sweeps face to
+    // face as the crystal spins — independent of the world's real lights.
+    const shellMat = new THREE.MeshMatcapMaterial({
+      matcap: this.matcapTexture('crystal'),
       flatShading: true,
       transparent: true,
-      opacity: 0.92,
+      opacity: 0.95,
     });
-    // two 6-sided cones base-to-base = bipyramid; flat facets catch the sun's
-    // specular per-face and it sweeps as the crystal spins (the canned glint)
+    // two 6-sided cones base-to-base = bipyramid
     const top = new THREE.Mesh(new THREE.ConeGeometry(R, H, 6), shellMat);
     top.position.y = H / 2;
     g.add(top);
@@ -3172,15 +3239,13 @@ export class Level {
     const table = 0.4 * scale;
     const crownH = 0.42 * scale;
     const pavH = 0.8 * scale;
-    const mat = new THREE.MeshPhongMaterial({
-      color: 0xdcefff,
-      emissive: 0x243a52,
-      emissiveIntensity: 0.25,
-      specular: 0xffffff,
-      shininess: 100,
+    // canned reflection (matcap) so the silver glints sweep the crown facets
+    // as the gem spins, no scene lighting
+    const mat = new THREE.MeshMatcapMaterial({
+      matcap: this.matcapTexture('gem'),
       flatShading: true,
       transparent: true,
-      opacity: 0.86,
+      opacity: 0.9,
     });
     // crown: 8-sided frustum, wide girdle at the bottom, narrow table on top
     const crown = new THREE.Mesh(new THREE.CylinderGeometry(table, girdle, crownH, 8), mat);
