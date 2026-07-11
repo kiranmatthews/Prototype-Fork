@@ -5,7 +5,7 @@
 export const TUNING = {
   maxSpeed: 23, // top skate speed
   walkSpeed: 8.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
-  friction: 5, // idle roll-out: NO input at all bleeds speed to a stop (0 = frictionless)
+  friction: 7, // idle roll-out: NO input at all bleeds speed to a stop (0 = frictionless)
   riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
   jumpVelocity: 17, // fully-charged jump (hold X)
@@ -15,8 +15,8 @@ export const TUNING = {
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate speed settles back to cruiseSpeed after releasing X
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill / in pipes (charge still tops at maxSpeed)
-  slopeBoost: 72, // downhill acceleration, scaled by sin(slope along travel)
-  uphillSlowdown: 18, // uphill deceleration, scaled by sin(slope along travel)
+  slopeBoost: 38, // downhill acceleration, scaled by sin(slope along travel)
+  uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
   pipePump: 16, // crouch-pump gain: X held on ground too steep to stand
   pipeSmooth: 10, // per-second easing of the ride plane across segmented transitions
   steepStand: 0.78, // ground normal.y below this = too steep to stand: always ridden
@@ -27,37 +27,37 @@ export const TUNING = {
   wallStick: 2.6, // ground-snap window on steep transitions (how hard the wall holds the board)
   landGive: 1.5, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
-  grindSpeed: 7, // reference speed: you grind at ENTRY speed; slower than this drifts harder
+  grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 15, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
   turnaround: 120, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
-  grabSpinRate: 3, // rad/s of the directional grab-spin (left arrow = spin left)
+  grabSpinRate: 7.5, // rad/s of the directional grab-spin (left arrow = spin left)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
-  spinTolerance: 45, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
+  spinTolerance: 15, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.4, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   carveGrip: 300, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
-  carveGripRatio: 0.5, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
+  carveGripRatio: 0, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
   slideJumpHeight: 1.2, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
-  slideJumpTravel: 1, // horizontal launch speed scale out of a slide-jump (independent of height)
+  slideJumpTravel: 0.5, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.1, // jumps this long AFTER a slide ends still get the slide boost
   airControl: 0, // forward/back speed adjustment in the air
-  balanceDrift: 1.25, // THPS grind balance: how fast the needle runs away
+  balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
-  balanceSpeedEffect: 2, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
+  balanceSpeedEffect: 1.4, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
   balanceGrace: 2, // seconds of flat difficulty at the start of every grind
   balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
   balanceRampMax: 2.5, // difficulty CEILING: drift never exceeds this multiple of balanceDrift
   bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
-  smashSpeed: 12, // skating/grinding at or above this speed plows straight through plain crates
+  smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
   arrowBoostMult: 1.25, // perfect-timed X press on an arrow crate multiplies the launch
   arrowBoostWindow: 0.09, // press X within this many seconds of impact for the perfect bounce

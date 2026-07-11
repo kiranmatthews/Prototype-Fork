@@ -87,6 +87,7 @@ export class Player {
   private slideCd = 0;
   private slidePose = 0;
   private slideFromWalk = false; // slid off your feet: don't launch into skating
+  private slideLandClamp = false; // walk-slide touchdown: cap the next measured planar too
   private slideVec = new THREE.Vector3(); // world-space slide direction (8-axis)
   private slideSpd = 0;
   private landingScoring = false; // landing-tick payouts still count as air tricks
@@ -98,6 +99,11 @@ export class Player {
   private hangPose = 0;
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
+  // SIDE-ON STANCE: a real skater faces 90° across the board — face and
+  // belly toward the rail side, head turned to look down the line. This
+  // blends the whole body into that pose whenever the board is under you
+  // (riding, ollie airs, non-boardslide grinds); stance flips the side.
+  private sidePose = 0;
   private slopePose = 0; // body pitches to match the ground under the board
   private starTimer = 0; // Crash star-jump beat after crouch/slide jumps
   private starPose = 0;
@@ -496,6 +502,13 @@ export class Player {
     this.lastVelZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
     this.lastPlanar = Math.hypot(this.lastVelX, this.lastVelZ);
     this.prevPos.copy(this.pos);
+    if (this.slideLandClamp) {
+      // first full frame after a walk-slide touchdown: the measurement above
+      // still holds the landing step's air speed — keep it at walking pace so
+      // the skate-entry gate can't read the burst and take over
+      this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+      this.slideLandClamp = false;
+    }
     this.teetering = false; // stepRide re-detects it each tick
 
     // A slide taken from your feet ends back on your feet — the burst never
@@ -908,23 +921,19 @@ export class Player {
     }
     this.freeSkate = free;
 
-    // Digital diagonals: with both axes held, normalize the direct-drive
-    // moves so a diagonal walk/crawl isn't sqrt(2) faster than a straight one.
-    const diag = input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
-
     if (slamFlat) {
       this.speed = 0;
       this.lastTy = 0;
     } else if (this.crawling) {
-      // Direct-drive crawl. Speed snaps to the d-pad; no slopes, no friction.
-      this.speed = input.moveY * TUNING.crawlSpeed * diag;
+      // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction.
+      // (The input vector is unit-clamped, so diagonals need no re-scaling.)
+      this.speed = input.moveY * TUNING.crawlSpeed;
       this.lastTy = 0;
     } else if (!skating) {
       // WALK: direct drive, instant start and stop, no inertia, no slope
       // physics — precise Crash platforming in all eight directions. A
       // planted charge (X held from a standstill) pins the feet instead.
-      this.speed =
-        this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed * diag;
+      this.speed = this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed;
       this.lastTy = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
@@ -1113,19 +1122,20 @@ export class Player {
       // pancaked: no steering
     } else if (this.crawling) {
       if (input.moveX !== 0) {
-        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * diag * dt);
+        this.pos.addScaledVector(this.axisL, input.moveX * TUNING.crawlSpeed * dt);
       }
     } else if (this.slideTimer > 0) {
       // the slide's cross-course component
       const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
       this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
     } else if (input.moveX !== 0 && !this.freeSkate && !(this.charging && this.chargePlanted)) {
-      // Walking keeps the direct crisp sidestep (diagonal-normalized).
+      // Walking keeps the direct crisp sidestep (the unit-clamped input
+      // vector already normalizes diagonals).
       // Free-heading skating has NO sidestep — carving IS the steering.
       // A planted charge never sidesteps: the feet are pinned until release.
       const latRate = skating
         ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
-        : TUNING.walkSpeed * diag;
+        : TUNING.walkSpeed;
       this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt);
     }
 
@@ -1399,6 +1409,18 @@ export class Player {
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
+      // A slide taken from your feet lands back ON your feet — clamp the
+      // carried burst at the touchdown instant (not next frame) so nothing
+      // downstream can read the unclamped speed and flip out the board.
+      // The latch also caps NEXT frame's measured planar: the landing step
+      // itself moved at air speed, and without it the skate gate reads that
+      // measurement and takes over anyway (board out + cruise assist).
+      if (this.slideFromWalk && this.slideTimer <= 0) {
+        this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
+        this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+        this.slideFromWalk = false;
+        this.slideLandClamp = true;
+      }
       // Landing-tick payouts (grab, slam impact) are still air tricks
       // for combo purposes even though the state just flipped to 'ride'.
       this.landingScoring = true;
@@ -1429,6 +1451,7 @@ export class Player {
           this.grabPhase = 'none';
           this.grabT = 0;
           this.grabGraceTimer = 0;
+          this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle); // no unwind
           this.grabSpinAngle = 0;
           if (this.uberTimer <= 0) this.speed *= 0.6;
         } else {
@@ -1461,6 +1484,15 @@ export class Player {
         }
         if (landedTrick) this.emitSparks(10, 0xfff3d0, 2.2);
         this.grabGraceTimer = 0;
+        // Absorb the landed rotation into the facing yaw — zeroing the spin
+        // must not unwind the body. On a switch landing the stance flip also
+        // inverts the ±90° side term, so fold that in too: a 180 from
+        // regular side-on IS the switch side-on pose — the body stays put.
+        this.visualYaw = wrapAngle(
+          this.visualYaw +
+            this.grabSpinAngle +
+            (isSwitch ? -this.stance * Math.PI * this.sidePose : 0),
+        );
         this.grabSpinAngle = 0;
         this.grabSpinTotal = 0;
       }
@@ -1639,8 +1671,9 @@ export class Player {
           this.dropOffRail();
           return;
         } else {
-          // thrown toward the deck / uphill side: the honest bail
-          this.bailFromRail();
+          // thrown toward the deck / uphill side: the honest bail — and the
+          // tumble goes to the SIDE the needle pegged, not down the rail
+          this.bailFromRail(Math.sign(this.balance || 1));
           return;
         }
       }
@@ -1884,7 +1917,22 @@ export class Player {
 
   // Pegged the balance meter (or hit a crate): stumble off the rail with most
   // speed gone and the pending combo lost. Over a pit that means a drop.
-  private bailFromRail(): void {
+  // sideSign ±1 = the needle pegged that way: the stumble EJECTS toward that
+  // side (heading tips hard off the rail), so you fall where you failed.
+  private bailFromRail(sideSign = 0): void {
+    const rail = this.grindRail;
+    if (sideSign !== 0 && rail) {
+      const t = rail.tangentAt(this.grindT);
+      const hx = t.x * this.grindDir;
+      const hz = t.z * this.grindDir;
+      const hl = Math.hypot(hx, hz) || 1;
+      const fx = hx / hl + (hz / hl) * sideSign * 1.4;
+      const fz = hz / hl + (-hx / hl) * sideSign * 1.4;
+      const fl = Math.hypot(fx, fz) || 1;
+      this.axisF.set(fx / fl, 0, fz / fl);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      this.speed = Math.abs(this.speed); // the new heading carries the fall
+    }
     this.grindRail = null;
     this.state = 'air';
     this.airFromSkate = false; // a stumble is not a trick window
@@ -1994,6 +2042,9 @@ export class Player {
     } else if (this.grabPhase !== 'none' || this.grabSpinAngle !== 0) {
       this.grabPhase = 'none';
       this.grabT = 0;
+      // leaving the air by any other door (grind entry, slam): keep the
+      // facing where the spin left it rather than snapping back
+      this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle);
       this.grabSpinAngle = 0;
       this.grabSpinTotal = 0;
     }
@@ -2628,14 +2679,14 @@ export class Player {
     if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
       targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
     }
-    // Switch stance: the body faces AWAY from travel (the board doesn't
-    // care) — on the ground, in the air, and on RAILS alike.
-    if (this.stance < 0 && (this.freeSkate || this.state === 'grind')) {
-      targetYaw = wrapAngle(targetYaw + Math.PI);
-    }
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
+    // Stance is a 90° body turn: regular faces one side of the board,
+    // switch faces the other (that's the whole difference — the board and
+    // travel don't care). sidePose blends it in; the board counter-rotates
+    // below so the deck stays along the line of travel.
+    const sideYaw = this.stance * (Math.PI / 2) * this.sidePose;
     this.bodyGroup.rotation.y =
-      this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose;
+      this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose + sideYaw;
 
     // Grab pose, skate-photo style: knees tucked high, one hand pulls the
     // board, the other arm throws up. Direction held picks the variant —
@@ -2684,6 +2735,15 @@ export class Player {
         (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
+    // Side-on stance target: whenever the board is genuinely under you —
+    // rolling, plain skate airs (grabs square back up; their poses are
+    // authored in the forward frame), and grinds except boardslides (the
+    // grindYawPose owns that body turn). The yaw itself is applied above.
+    const sideOn =
+      onBoard ||
+      (this.state === 'grind' && this.grindStyle !== 'board') ||
+      (this.state === 'air' && this.airFromSkate && !this.grabbing && !this.slamActive && this.grabPose < 0.3);
+    this.sidePose += ((sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
     // Crash star jump: legs split wide, arms thrown up — held for a beat
     // after crouch/slide jumps, fading the moment you land.
     if (this.state !== 'air') this.starTimer = 0;
@@ -2696,11 +2756,18 @@ export class Player {
       this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose;
       // switch stance mirrors the feet fore-aft (and the ankle angles)
       const stz = this.stance;
-      // feet stay under the hips: a modest fore-aft split, not a lunge
-      this.legR.position.set(0.115 + 0.02 * sk, 0, 0.24 * sk * stz); // front foot, toward nose
-      this.legL.position.set(-0.115 - 0.02 * sk, 0, -0.2 * sk * stz); // back foot, toward tail
-      this.legR.rotation.y = 0.12 * sk * stz;
-      this.legL.rotation.y = -0.09 * sk * stz;
+      // Side-on frame: the body is turned 90°, so the hip line IS the board
+      // line — feet spread apart along local X (one over the nose side, one
+      // over the tail), toes pointing where the chest points. The board is
+      // under whatever the deck pose is: rolling (sk) or a grind.
+      const sp = this.sidePose;
+      const fw = 1 - sp; // forward-frame weight
+      const deck = Math.max(sk, this.grindArmPose); // feet planted on a deck
+      // forward frame keeps the old modest fore-aft split along local Z
+      this.legR.position.set(0.115 + 0.02 * sk * fw + 0.16 * deck * sp, 0, 0.24 * sk * stz * fw);
+      this.legL.position.set(-0.115 - 0.02 * sk * fw - 0.16 * deck * sp, 0, -0.2 * sk * stz * fw);
+      this.legR.rotation.y = 0.12 * sk * stz * fw - 0.12 * stz * sp;
+      this.legL.rotation.y = -0.09 * sk * stz * fw - 0.12 * stz * sp;
       this.legR.rotation.z = -1.05 * star; // straddle split
       this.legL.rotation.z = 1.05 * star;
     }
@@ -2728,9 +2795,15 @@ export class Player {
     // the whole body), and counter-swing the legs on foot — plus the head
     // keeps the eyes on the horizon whatever the body is doing.
     if (this.upperG) {
+      // The 90° turn lives in the body yaw now; the shoulders just OPEN a
+      // touch back toward travel (skaters lead with the chest down the
+      // line). The old fake side-on shoulder twist fades out with sidePose.
+      const fwS = 1 - this.sidePose;
       const stance =
-        0.55 * sk * this.stance +
-        (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 * this.stance : 0);
+        (0.55 * sk * this.stance +
+          (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 * this.stance : 0)) *
+          fwS -
+        0.35 * this.stance * this.sidePose;
       const counter = -swing * 0.22;
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
@@ -2746,6 +2819,10 @@ export class Player {
         0.55 * this.slopePose;
       this.headM.rotation.x +=
         (THREE.MathUtils.clamp(look, -1.0, 0.6) - this.headM.rotation.x) * Math.min(1, 12 * dt);
+      // Side-on: the head turns back over the lead shoulder to watch the
+      // line of travel (the body faces across the board; the eyes don't).
+      const headYaw = -0.85 * this.stance * this.sidePose;
+      this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
     }
 
     const raw = this.rawInput;
@@ -2844,10 +2921,18 @@ export class Player {
       // keep the wheels ON the ground instead of clipping through it.
       this.boardG.position.y = 0.5 * this.grabPose + 0.22 * this.chargePose;
       this.boardG.rotation.x = 0.3 * this.grabPose; // nose tips up in the hand
+      // The deck does NOT turn with the side-on body: counter-rotate the
+      // stance yaw so the board stays along the line of travel (spins and
+      // boardslides still carry it — those live in the body yaw terms).
+      this.boardG.rotation.y = -this.stance * (Math.PI / 2) * this.sidePose;
       // On foot the board is stowed — it only comes out for real skating:
       // grinding, momentum-skate mode, grabs, speed above the boardSpeed
       // slider, or a charge that's actually propelling past walking pace. A
       // stationary jump crouch or a walk-hop tap never flashes the board.
+      // A walk-slide air (slideFromWalk) NEVER shows the board: it lands
+      // back on feet, and the slide-jump burst can carry past boardSpeed for
+      // seconds on a long drop — the board popping out mid-fall reads as
+      // "my slide turned into skating".
       this.boardG.visible =
         this.slideTimer <= 0 &&
         this.starPose < 0.4 && // stowed through the star-jump beat
@@ -2855,7 +2940,7 @@ export class Player {
           (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5) ||
           this.freeSkate ||
           this.grabPose > 0.05 ||
-          Math.abs(this.speed) > TUNING.boardSpeed);
+          (Math.abs(this.speed) > TUNING.boardSpeed && !this.slideFromWalk));
     }
     this.bodyGroup.rotation.z = this.slopeRoll;
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;

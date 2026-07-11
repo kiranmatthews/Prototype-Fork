@@ -8,8 +8,8 @@
 export class Input {
   // ALL directional input is digital: -1, 0, or +1. Analog sticks are
   // thresholded into a d-pad — there is no analog magnitude anywhere.
-  moveX = 0; // -1 left, 0, +1 right
-  moveY = 0; // +1 forward, 0, -1 brake
+  moveX = 0; // analog, -1 left .. +1 right (keyboard/d-pad = full ±1)
+  moveY = 0; // analog, +1 forward .. -1 brake; (moveX, moveY) is unit-clamped
 
   jumpHeld = false;
   grindHeld = false;
@@ -81,12 +81,18 @@ export class Input {
 
     const pad = this.pollGamepad();
     if (pad) {
-      // Stick = digital d-pad: past half deflection counts as held.
+      // ANALOG stick: radial deadzone, then rescaled so a full push is 1.
+      // Passing the true direction through (not snapping to 8 ways) is what
+      // keeps ground carves smooth instead of locking to 45° increments.
       const ax = pad.axes[0] ?? 0;
       const ay = pad.axes[1] ?? 0;
-      if (Math.abs(ax) > 0.5) moveX = Math.sign(ax);
-      if (Math.abs(ay) > 0.5) moveY = -Math.sign(ay); // stick up = forward
-      // D-pad
+      const mag = Math.hypot(ax, ay);
+      if (mag > 0.22) {
+        const scaled = Math.min(1, (mag - 0.22) / (1 - 0.22));
+        moveX = (ax / mag) * scaled;
+        moveY = (-ay / mag) * scaled; // stick up = forward
+      }
+      // D-pad stays digital
       if (pad.buttons[12]?.pressed) moveY = 1;
       if (pad.buttons[13]?.pressed) moveY = -1;
       if (pad.buttons[14]?.pressed) moveX = -1;
@@ -100,8 +106,16 @@ export class Input {
       pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
     }
 
-    this.moveX = Math.sign(moveX);
-    this.moveY = Math.sign(moveY);
+    // Clamp the combined vector to unit length (keyboard diagonals become
+    // 0.707/0.707) so downstream drive code can use components directly —
+    // no separate diagonal normalization, and analog magnitudes survive.
+    const m = Math.hypot(moveX, moveY);
+    if (m > 1) {
+      moveX /= m;
+      moveY /= m;
+    }
+    this.moveX = moveX;
+    this.moveY = moveY;
 
     this.jumpHeld = jump;
     this.grindHeld = grind;
