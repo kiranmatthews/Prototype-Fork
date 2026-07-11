@@ -32,6 +32,8 @@ export const TUNING = {
   turnaround: 120, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 3, // rad/s of the directional grab-spin (left arrow = spin left)
+  grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
+  spinTolerance: 45, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.4, // X held this long (with a direction) before skate drive engages
@@ -93,6 +95,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   turnaround: { min: 40, max: 300, step: 5 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
+  grabRelease: { min: 0.05, max: 0.6, step: 0.05 },
+  spinTolerance: { min: 10, max: 90, step: 5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
@@ -169,6 +173,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'PULL-BACK BRAKE (still live!): carving handles all turning now, but yanking the stick (near-)opposite your travel bleeds speed at this rate — the intentional slow-down-and-dismount. Higher = harder stops.',
   grabBoost: 'Speed burst paid out when a grab is completed cleanly before landing.',
   grabSpinRate: 'Rotation speed of the directional grab-spin (left arrow = spin left).',
+  grabRelease:
+    'How long the grab pose takes to animate back to neutral after RELEASING Circle. Land any time before it finishes (or while still holding) = bail; pose back at neutral = clean, spin permitting.',
+  spinTolerance:
+    'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
   boardSpeed:
     'The board (visual + rolling sound) only appears above this speed. Raise it if the board flickers in during normal platforming; the walk/skate physics boundary is walkSpeed, not this.',
@@ -257,7 +265,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'GRINDS',
     keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'bailGrace'],
   },
-  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'slamRadius'] },
+  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
 ];
@@ -301,7 +309,6 @@ export const CONST = {
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
-  grabOffAxisTolerance: 0.95, // landing more than this off-axis (rad) = bail (forgiving)
   flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
   flipMinSpeed: 12, // below this speed a jump is a plain hop, no flip (Crash rules)
   slideCooldown: 0.25,

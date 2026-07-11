@@ -125,6 +125,9 @@ export class Player {
   // Deliberate dismount (pull-back brake bled to walking pace): drop the
   // skate persistence THIS frame so the feet take the stick immediately.
   private stepOff = false;
+  // SWITCH STANCE: 1 = regular, -1 = switch (landed a 180 — the body faces
+  // opposite the travel direction until the next 180 or stepping off).
+  private stance: 1 | -1 = 1;
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
@@ -343,6 +346,7 @@ export class Player {
     this.bailDownT = 0;
     this.airFromSkate = false;
     this.stepOff = false;
+    this.stance = 1;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -877,6 +881,7 @@ export class Player {
         this.speed = -this.speed;
       }
     } else if (!free && this.freeSkate) {
+      this.stance = 1; // feet down: the next push starts regular
       // back onto the course grid: keep the along-course velocity component
       const vx = this.axisF.x * this.speed;
       const vz = this.axisF.z * this.speed;
@@ -1356,14 +1361,22 @@ export class Player {
         return;
       }
 
-      // Grab landing rules: touching down while reaching into, holding, or
-      // reaching out of the pose is a bail — release early enough for the
-      // whole motion to finish. A completed grab only lands clean if the spin
-      // is back on axis. Uber shrugs it off; a mask absorbs it; otherwise
-      // you tumble.
-      const a = ((this.grabSpinAngle % Math.PI) + Math.PI) % Math.PI;
-      const offAxis = Math.min(a, Math.PI - a) > CONST.grabOffAxisTolerance;
-      if (this.grabPhase !== 'none' || (this.grabGraceTimer > 0 && offAxis)) {
+      // GRAB LANDING RULES:
+      //  - Circle still held (or the pose still returning — grabRelease is
+      //    how long that takes) = bail. Release early enough to be neutral.
+      //  - Spin within spinTolerance of the travel line = clean landing.
+      //  - Spin within spinTolerance of the 180 line = clean SWITCH landing:
+      //    the stance flips and you ride away facing backward.
+      //  - Anything between = you landed funny: bail.
+      // Uber shrugs a bail off; a mask absorbs it; otherwise you tumble.
+      const TAU = Math.PI * 2;
+      const a2 = ((this.grabSpinAngle % TAU) + TAU) % TAU;
+      const dev0 = Math.min(a2, TAU - a2);
+      const devPi = Math.abs(a2 - Math.PI);
+      const tol = THREE.MathUtils.degToRad(TUNING.spinTolerance);
+      const spun = Math.abs(this.grabSpinAngle) > 0.02;
+      const funny = spun && dev0 > tol && devPi > tol;
+      if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
           this.grabT = 0;
@@ -1375,22 +1388,25 @@ export class Player {
           this.bail();
           return;
         }
-      } else if (this.grabGraceTimer > 0) {
-        // A clean (released in time, on-axis) grab pays out a speed burst.
-        this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
-        const cap = TUNING.downhillMax;
-        this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
+      } else {
+        // pose is neutral and the spin lines up with 0 or 180
+        const isSwitch = spun && devPi <= tol;
+        if (isSwitch) this.stance = -this.stance as 1 | -1; // landed backward: swap feet
+        if (this.grabGraceTimer > 0) {
+          // A clean (released in time, on-line) grab pays out a speed burst.
+          this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
+          const cap = TUNING.downhillMax;
+          this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
+          // rotation pays in 90-degree increments, THPS-style
+          const quarters = Math.floor(this.grabSpinTotal / (Math.PI / 2));
+          const deg = quarters * 90;
+          const name = deg > 0 ? `${this.grabTrickName} ${deg}°` : this.grabTrickName;
+          this.score(CONST.ptsGrab + quarters * CONST.ptsGrabQuarter, isSwitch ? `Switch ${name}` : name);
+          this.emitSparks(10, 0xfff3d0, 2.2);
+        }
         this.grabGraceTimer = 0;
         this.grabSpinAngle = 0;
-        // rotation pays in 90-degree increments, THPS-style
-        const quarters = Math.floor(this.grabSpinTotal / (Math.PI / 2));
-        const deg = quarters * 90;
-        this.score(
-          CONST.ptsGrab + quarters * CONST.ptsGrabQuarter,
-          deg > 0 ? `${this.grabTrickName} ${deg}°` : this.grabTrickName,
-        );
         this.grabSpinTotal = 0;
-        this.emitSparks(10, 0xfff3d0, 2.2);
       }
       if (Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
       // Safe landing = the combo is over: bank it on the spot.
@@ -1868,7 +1884,7 @@ export class Player {
           this.grabT = 0;
         } else if (this.grabPhase === 'exit') {
           this.grabT += dt;
-          if (this.grabT >= CONST.grabTransition) {
+          if (this.grabT >= TUNING.grabRelease) {
             this.grabPhase = 'none';
             this.grabGraceTimer = CONST.grabGrace;
           }
@@ -2503,6 +2519,10 @@ export class Player {
     if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
       targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
     }
+    // Switch stance: the body faces AWAY from travel (the board doesn't care)
+    if (this.stance < 0 && this.freeSkate && this.state !== 'grind') {
+      targetYaw = wrapAngle(targetYaw + Math.PI);
+    }
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
     this.bodyGroup.rotation.y =
       this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose;
@@ -2564,10 +2584,12 @@ export class Player {
       // baseball slide: lead leg kicked out ahead, trailing leg half-bent
       this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose;
       this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose;
-      this.legR.position.set(0.115 + 0.05 * sk, 0, 0.42 * sk); // front foot, toward nose
-      this.legL.position.set(-0.115 - 0.05 * sk, 0, -0.34 * sk); // back foot, toward tail
-      this.legR.rotation.y = 0.22 * sk;
-      this.legL.rotation.y = -0.16 * sk;
+      // switch stance mirrors the feet fore-aft (and the ankle angles)
+      const stz = this.stance;
+      this.legR.position.set(0.115 + 0.05 * sk, 0, 0.42 * sk * stz); // front foot, toward nose
+      this.legL.position.set(-0.115 - 0.05 * sk, 0, -0.34 * sk * stz); // back foot, toward tail
+      this.legR.rotation.y = 0.22 * sk * stz;
+      this.legL.rotation.y = -0.16 * sk * stz;
       this.legR.rotation.z = -1.05 * star; // straddle split
       this.legL.rotation.z = 1.05 * star;
     }
@@ -2596,7 +2618,7 @@ export class Player {
     // keeps the eyes on the horizon whatever the body is doing.
     if (this.upperG) {
       const stance =
-        0.55 * sk + (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 : 0);
+        0.55 * sk * this.stance + (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 : 0);
       const counter = -swing * 0.22;
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
@@ -2749,7 +2771,10 @@ export class Player {
     // blended (they're mutually exclusive in practice). The grab pose ramps
     // over grabTransition — land while it's anywhere but flat and you bail.
     const targetPose = this.grabbing ? 1 : 0;
-    const grabRate = dt / CONST.grabTransition;
+    // reach IN at the snappy constant; the return-to-neutral matches the
+    // grabRelease slider, so what you see IS the bail window
+    const grabRate =
+      targetPose > this.grabPose ? dt / CONST.grabTransition : dt / Math.max(TUNING.grabRelease, 0.05);
     // Move-toward, STOPPING at the target: stepping past it and bouncing back
     // made the whole pose strobe between two frames once the grab was fully
     // reached — which on screen read as the skater flashing "transparent".
