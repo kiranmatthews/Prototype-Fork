@@ -41,6 +41,7 @@ export const TUNING = {
   skateHoldTime: 0.4, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   carveGrip: 300, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
+  carveGripRatio: 0.5, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
@@ -51,6 +52,9 @@ export const TUNING = {
   balanceDrift: 1.25, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
   balanceSpeedEffect: 2, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
+  balanceGrace: 2, // seconds of flat difficulty at the start of every grind
+  balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
+  balanceRampMax: 2.5, // difficulty CEILING: drift never exceeds this multiple of balanceDrift
   bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12, // skating/grinding at or above this speed plows straight through plain crates
@@ -106,6 +110,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
   skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
   carveGrip: { min: 90, max: 720, step: 15 },
+  carveGripRatio: { min: 0, max: 1.5, step: 0.05 },
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
   slideDistance: { min: 3, max: 25, step: 0.5 },
   slideSpeed: { min: 10, max: 45, step: 1 },
@@ -116,6 +121,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
   balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
+  balanceGrace: { min: 0, max: 6, step: 0.25 },
+  balanceRamp: { min: 0, max: 1.5, step: 0.05 },
+  balanceRampMax: { min: 1, max: 6, step: 0.25 },
   bailGrace: { min: 0, max: 1.2, step: 0.05 },
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
   smashSpeed: { min: 8, max: 40, step: 0.5 },
@@ -193,7 +201,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   skateEntrySpeed:
     "Second gate on the skate transition: you must already be moving this fast (walking counts) when the hold meter fills. Roughly 40% of walk speed feels right.",
   carveGrip:
-    "Skate turn rate (deg/sec) the heading swings toward the direction you push, carrying your speed with it. Higher = sideways/turns feel immediate; lower = long drifty carves.",
+    "Skate turn rate (deg/sec) the heading swings toward the direction you push, carrying your speed with it. Higher = sideways/turns feel immediate; lower = long drifty carves. This is the rate AT cruise speed — see carveGripRatio.",
+  carveGripRatio:
+    'Speed-to-grip coupling: effective turn rate = carveGrip × (1 + ratio × (speed/cruise − 1)), clamped ×0.5–×2. 0 = same grip at every speed (old feel); 1 = your turning circle stays the same size no matter how fast you go; 0.5 = at full charge you carve ~1.5× sharper, at half cruise ~25% lazier.',
   slideMinSpeed: 'Minimum speed for Circle to trigger a slide; slower than this, holding Circle crawls.',
   slideDistance:
     'How far the canned slide carries you, in world units — duration adapts to slide speed so the distance stays consistent.',
@@ -210,6 +220,12 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   balanceControl: 'How hard left/right input fights the balance needle.',
   balanceSpeedEffect:
     'Baseline for how much grind speed sways the needle. 0 = speed is ignored; 1 = slow grinds wobble up to 1.5x, fast grinds less; 2 = that effect doubled.',
+  balanceGrace:
+    'Every grind starts with this many seconds at BASE difficulty — the needle ramp only starts growing after.',
+  balanceRamp:
+    'After the grace, needle drift grows by this fraction of balanceDrift per second — long grinds get progressively dicier.',
+  balanceRampMax:
+    'The difficulty ceiling: drift never exceeds this multiple of balanceDrift, so marathon grinds stay hard but never impossible.',
   bailGrace:
     'Rail forgiveness buffer: once the balance needle pegs, you have this many seconds to slam the stick the other way before the bail actually fires. 0 = pegging is instant death for the grind.',
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
@@ -250,6 +266,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'skateHoldTime',
       'skateEntrySpeed',
       'carveGrip',
+      'carveGripRatio',
       'smashSpeed',
     ],
   },
@@ -273,7 +290,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'bailGrace'],
+    keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
@@ -310,7 +327,7 @@ export const CONST = {
   ptsSlide: 30,
   ptsSlam: 75,
   ptsGrab: 150,
-  ptsGrabQuarter: 40, // per 90 degrees of grab rotation landed
+  ptsSpin: 80, // per 180 degrees of air rotation landed — a rotation is its own trick
   ptsGrabTick: 4, // accrues every quarter second a grab is held (THPS-style)
   ptsCrystal: 500, // the level crystal pickup
   ptsGem: 1000, // all-boxes gem
@@ -330,8 +347,6 @@ export const CONST = {
   slamSquashTime: 0.3, // pancake squash pose on impact
   fruitPerCrate: 3, // wumpa spawned per broken box
   balanceStart: 0.15, // initial needle kick when a grind starts
-  balanceRamp: 0.25, // per-second growth of needle drift (longer grind = harder)
-  balanceGrace: 2, // seconds before the drift ramp starts growing (no hidden max grind length)
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
   tntFuse: 3, // Crash-style TNT countdown (stomp lights it)

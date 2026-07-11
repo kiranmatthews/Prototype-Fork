@@ -29,6 +29,11 @@ function wrapAngle(a: number): number {
   return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
 }
 
+// scratch objects for the hang-time body tilt (no per-frame allocation)
+const VERT_UP = new THREE.Vector3(0, 1, 0);
+const VERT_Q = new THREE.Quaternion();
+const VERT_Q2 = new THREE.Quaternion();
+
 export class Player {
   pos = new THREE.Vector3(); // feet position
   speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
@@ -135,6 +140,7 @@ export class Player {
   vertAir = false;
   readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
+  vertPose = 0; // eased 0..1 blend of the hang-time 90° body tilt (visual only)
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
   private jumpBufferT = 0; // X released just before touchdown: jump on landing
@@ -960,7 +966,15 @@ export class Player {
             // take the stick next frame (rollout persistence must not fight it)
             if (this.speed <= TUNING.walkSpeed + 0.5) this.stepOff = true;
           } else {
-            const maxTurn = THREE.MathUtils.degToRad(TUNING.carveGrip) * dt;
+            // Grip grows with speed: at cruise you get carveGrip exactly;
+            // faster carves sharper, slower carves lazier. carveGripRatio is
+            // the coupling strength (0 = constant, 1 = turn radius stays the
+            // same size at any speed), clamped to x0.5..x2 of the base rate.
+            const speedFrac = Math.abs(this.speed) / Math.max(TUNING.cruiseSpeed, 1);
+            const grip =
+              TUNING.carveGrip *
+              THREE.MathUtils.clamp(1 + (speedFrac - 1) * TUNING.carveGripRatio, 0.5, 2);
+            const maxTurn = THREE.MathUtils.degToRad(grip) * dt;
             const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
             const c = Math.cos(turn);
             const s = Math.sin(turn);
@@ -1426,18 +1440,26 @@ export class Player {
         // pose is neutral and the spin lines up with 0 or 180
         const isSwitch = spun && devPi <= tol;
         if (isSwitch) this.stance = -this.stance as 1 | -1; // landed backward: swap feet
+        // A ROTATION IS A TRICK: any landed 180+ scores its own combo entry,
+        // grab or no grab — so grab + rotation strings TWO tricks together
+        // (a real combo), and a bare hang-time spin still pays on its own.
+        // Net rotation, credited in 180s (the snap already pulled it on-axis).
+        const halves = Math.round(Math.abs(this.grabSpinAngle) / Math.PI);
+        let landedTrick = false;
         if (this.grabGraceTimer > 0) {
           // A clean (released in time, on-line) grab pays out a speed burst.
           this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
           const cap = TUNING.downhillMax;
           this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
-          // rotation pays in 90-degree increments, THPS-style
-          const quarters = Math.floor(this.grabSpinTotal / (Math.PI / 2));
-          const deg = quarters * 90;
-          const name = deg > 0 ? `${this.grabTrickName} ${deg}°` : this.grabTrickName;
-          this.score(CONST.ptsGrab + quarters * CONST.ptsGrabQuarter, isSwitch ? `Switch ${name}` : name);
-          this.emitSparks(10, 0xfff3d0, 2.2);
+          this.score(CONST.ptsGrab, this.grabTrickName);
+          landedTrick = true;
         }
+        if (halves > 0) {
+          const deg = halves * 180;
+          this.score(halves * CONST.ptsSpin, isSwitch ? `Switch ${deg}°` : `${deg}°`);
+          landedTrick = true;
+        }
+        if (landedTrick) this.emitSparks(10, 0xfff3d0, 2.2);
         this.grabGraceTimer = 0;
         this.grabSpinAngle = 0;
         this.grabSpinTotal = 0;
@@ -1591,7 +1613,13 @@ export class Player {
     const speedFactor = 1 + (rawSpeedFactor - 1) * TUNING.balanceSpeedEffect;
     // boardslides look coolest and wobble hardest
     const styleWobble = this.grindStyle === 'board' ? 1.25 : 1;
-    const ramp = Math.max(0, this.grindTime - CONST.balanceGrace) * CONST.balanceRamp;
+    // Difficulty ramps with grind length: flat for balanceGrace seconds,
+    // then grows at balanceRamp per second up to the balanceRampMax ceiling —
+    // marathon grinds get dicey, never impossible.
+    const ramp = Math.min(
+      Math.max(0, TUNING.balanceRampMax - 1),
+      Math.max(0, this.grindTime - TUNING.balanceGrace) * TUNING.balanceRamp,
+    );
     const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
     this.balance += Math.sign(this.balance || 1) * instability * dt;
     this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
@@ -2574,7 +2602,22 @@ export class Player {
       this.teeterPhase = 0;
     }
     this.teeterPose += ((this.teetering || edgeGrace ? 1 : 0) - this.teeterPose) * Math.min(1, 14 * dt);
-    this.group.rotation.z = this.lean + wobble;
+    // Full euler reset every frame (y=PI is the model's base facing): the
+    // hang-time premultiply below syncs back into rotation.x/y, so writing
+    // only .z would compound last frame's tilt forever.
+    this.group.rotation.set(0, Math.PI, this.lean + wobble);
+
+    // HANG TIME: the vert wall is the new ground. The whole rig tips ~90°
+    // about the coping line so the body plane matches the wall — feet/board
+    // to the coping, head out into the pipe — easing in on launch and back
+    // upright through the landing. Spins (bodyGroup yaw below) now run
+    // about the body's own axis, i.e. the wall normal, THPS-style.
+    this.vertPose += ((this.vertAir ? 1 : 0) - this.vertPose) * Math.min(1, 9 * dt);
+    if (this.vertPose > 0.001) {
+      VERT_Q.setFromUnitVectors(VERT_UP, this.vertNormal);
+      VERT_Q2.identity().slerp(VERT_Q, this.vertPose);
+      this.group.quaternion.premultiply(VERT_Q2);
+    }
 
     // The body ALWAYS faces its actual travel direction — riding, grinding,
     // sidestepping, and mid-air drift all turn the model, Crash-style.
