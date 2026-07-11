@@ -4482,16 +4482,22 @@ export class Level {
   // a spatial tuning reference so the skating physics can be dialed against a
   // matching park. Sandbox — no finish line.
   private buildWarehouse2(): void {
-    const matFloor = new THREE.MeshLambertMaterial({ color: 0xbcc0c4 }); // concrete slab
+    // A faithful reconstruction of the reference warehouse (plan + iso). The
+    // footprint is a WIDE north hall that steps into a NARROWER south wing —
+    // the two walled "rooms" of the raised loading DOCK (the uppermost story).
+    // You spawn up on the dock and roll DOWNHILL (−Z) into the hall: a long
+    // central channel funbox (the dominant feature), a mini half-pipe, an
+    // A-frame near the forklift, perimeter quarter-pipes with rounded far
+    // corners, the red wall ledge, the valve, and crate piles.
+    const matFloor = new THREE.MeshLambertMaterial({ color: 0xbcc0c4 }); // concrete
     const matTrans = new THREE.MeshLambertMaterial({ color: 0x9a7d55 }); // masonite ramps
     const matDeck = new THREE.MeshLambertMaterial({ color: 0xb08d5e }); // plywood decks
-    this.wallTint = 0x5f5344; // dim brick
+    const matRed = new THREE.MeshLambertMaterial({ color: 0x8f2f26 }); // the red wall ledge
+    this.wallTint = 0x5f5344;
     this.blockTint = 0xb08d5e;
     this.killY = -40;
     this.finishZ = -1e9; // sandbox
-    this.endWallZ = -90;
-    this.spawnPos.set(0, 0.1, 30); // clear floor, well into the hall (camera room)
-    this.currentSpawn.copy(this.spawnPos);
+    this.endWallZ = -70;
     this.theme = {
       skyTop: '#151820',
       skyBottom: '#333947',
@@ -4500,8 +4506,8 @@ export class Level {
       sunV: 0.28,
       stars: false,
       fog: 0x252932,
-      fogNear: 45,
-      fogFar: 240,
+      fogNear: 60,
+      fogFar: 280,
       hemiSky: 0x9aa4b8,
       hemiGround: 0x3a342c,
       hemiI: 0.9,
@@ -4518,18 +4524,23 @@ export class Level {
       this.root.add(r.object);
     };
 
-    // Square-ish hall (matches the blueprint proportions); the UPPER LEVEL —
-    // every quarter-pipe lip, the west platform, the spine ridge — sits at QH,
-    // a full story above the floor (per the iso's elevation read).
-    const WX = 44; // hall half-width (x)
-    const WZ = 44; // hall half-depth (z)
-    const QH = 6; // upper-level height (QP lips / platform / ridge)
-    // quarter-pipe reach from the wall = QH = 6, so the lip goes VERTICAL
-    const DECK = 4; // flat coping deck behind each lip (room to air + grind out)
-    const CR = 6; // rounded-corner radius (matches the QP reach of 6)
-    // TRUE quarter-circle profile [distance from wall, height]: mellow at the
-    // floor, VERTICAL at the coping — so pumping the wall crests into hang time
-    // (a mellow ramp never gets steep enough to trigger it). R = QR = QH = 6.
+    // ---- footprint (portrait; hall wide, dock wing narrower, per the plan) --
+    const WXN = 34; // north hall half-width
+    const WXS = 26; // south dock-wing half-width (the room steps in here)
+    const ZN = -54; // north wall (far, open hall)
+    const ZW = 8; // waist: the room steps in from WXN to WXS at this z
+    const ZS = 42; // south wall (behind the dock)
+    const DH = 7; // dock / upper-story height — a full story
+    const CR = 6; // rounded far-corner radius (= QP reach)
+    const CHW = 5; // dock channel half-width (the central corridor between the rooms)
+    const DOCKZ = 18; // dock front edge (its north face / top of the roll-in)
+
+    // Spawn up on the WEST dock room, facing −Z (downhill). Default dir 'S'
+    // gives axisF = (0,0,−1), so the roll-in points north into the hall.
+    this.spawnPos.set(-15, DH + 0.1, 34);
+    this.currentSpawn.copy(this.spawnPos);
+
+    // TRUE quarter-circle QP profile [dist from wall, height] — vertical lip.
     const prof: [number, number][] = [
       [6, 0],
       [3.75, 0.44],
@@ -4540,32 +4551,53 @@ export class Level {
       [0, 6],
     ];
 
-    // --- main floor (hall + the north channel bay) ------------------------
-    this.slab('wh2 floor', WZ, -(WZ + 24), 0, WX * 2, matFloor, false, 0, 'pavement');
+    // ---------- FLOOR (wide hall + narrower south wing) ----------
+    this.slab('wh2 hall floor', ZN, ZW, 0, WXN * 2, matFloor, false, 0, 'pavement');
+    this.slab('wh2 wing floor', ZW, ZS, 0, WXS * 2, matFloor, false, 0, 'pavement');
 
-    // --- perimeter quarter pipes: banks + a flat coping deck + a lip rail --
-    const qpX = (side: number, z0: number, z1: number, deck = true): void => {
-      for (let i = 0; i < prof.length - 1; i++) {
-        this.bank('wh2 qp', z0, z1, side * (WX - prof[i][0]), side * (WX - prof[i + 1][0]), prof[i][1], prof[i + 1][1], matTrans);
-      }
-      if (deck) this.slab('wh2 qp deck', z0, z1, QH, DECK, matDeck, false, side * (WX + DECK / 2), 'plank');
-      addRail(V(side * WX, QH + 0.05, z0), V(side * WX, QH + 0.05, z1));
+    // ---------- SOUTH DOCK: two raised walled ROOMS + central corridor ------
+    const roomW = WXS - CHW; // width of each dock room (21)
+    const cxW = -(CHW + roomW / 2); // −15.5
+    const cxE = CHW + roomW / 2; // +15.5
+    // solid raised rooms (walkable top, solid sides you jump/roll off, not clip)
+    this.stepBlock(cxW, (DOCKZ + ZS) / 2, roomW, ZS - DOCKZ, 0, DH); // west room
+    this.stepBlock(cxE, (DOCKZ + ZS) / 2, roomW, ZS - DOCKZ, 0, DH); // east room
+    // wide roll-in bank off the north face of each room (DH → 0 over 10z)
+    this.ramp('wh2 rollin W', DOCKZ - 10, 0, DOCKZ, DH, roomW, matTrans, cxW);
+    this.ramp('wh2 rollin E', DOCKZ - 10, 0, DOCKZ, DH, roomW, matTrans, cxE);
+    // grind rail along each dock room's front (north) lip
+    addRail(V(cxW - roomW / 2, DH + 0.06, DOCKZ), V(cxW + roomW / 2, DH + 0.06, DOCKZ));
+    addRail(V(cxE - roomW / 2, DH + 0.06, DOCKZ), V(cxE + roomW / 2, DH + 0.06, DOCKZ));
+    // rail down each side of the central corridor (grind the channel edge)
+    addRail(V(-CHW, DH + 0.06, DOCKZ), V(-CHW, DH + 0.06, ZS));
+    addRail(V(CHW, DH + 0.06, DOCKZ), V(CHW, DH + 0.06, ZS));
+
+    // ---------- PERIMETER QUARTER-PIPES (hall) ----------
+    const qpEast = (xw: number, z0: number, z1: number): void => {
+      for (let i = 0; i < prof.length - 1; i++)
+        this.bank('wh2 qp E', z0, z1, xw - prof[i][0], xw - prof[i + 1][0], prof[i][1], prof[i + 1][1], matTrans);
+      addRail(V(xw, DH + 0.05, z0), V(xw, DH + 0.05, z1));
     };
-    const qpZ = (side: number, x0: number, x1: number, deck = true): void => {
-      const zEdge = (d: number): number => side * (WZ - d);
+    const qpWest = (xw: number, z0: number, z1: number): void => {
+      for (let i = 0; i < prof.length - 1; i++)
+        this.bank('wh2 qp W', z0, z1, xw + prof[i][0], xw + prof[i + 1][0], prof[i][1], prof[i + 1][1], matTrans);
+      addRail(V(xw, DH + 0.05, z0), V(xw, DH + 0.05, z1));
+    };
+    const qpNorth = (zw: number, x0: number, x1: number): void => {
       const w = Math.abs(x1 - x0);
       const cx = (x0 + x1) / 2;
-      for (let i = 0; i < prof.length - 1; i++) {
-        this.ramp('wh2 qp', zEdge(prof[i][0]), prof[i][1], zEdge(prof[i + 1][0]), prof[i + 1][1], w, matTrans, cx, 'pavement');
-      }
-      if (deck) this.slab('wh2 qp deck', side * WZ, side * (WZ + DECK), QH, w, matDeck, false, cx, 'plank');
-      addRail(V(x0, QH + 0.05, side * WZ), V(x1, QH + 0.05, side * WZ));
+      for (let i = 0; i < prof.length - 1; i++)
+        this.ramp('wh2 qp N', zw + prof[i][0], prof[i][1], zw + prof[i + 1][0], prof[i + 1][1], w, matTrans, cx, 'pavement');
+      addRail(V(x0, DH + 0.05, zw), V(x1, DH + 0.05, zw));
     };
-    // rounded corner QP (quarter-cone from the floor corner to the lip arc) +
-    // a corner deck fan, so grinds carry around the corner (blueprint corners).
-    const cornerQP = (sx: number, sz: number): void => {
-      const ccx = sx * (WX - CR);
-      const ccz = sz * (WZ - CR);
+    qpEast(WXN, ZN + CR, ZW); // east hall wall
+    qpWest(-WXN, ZN + CR, ZW); // west hall wall
+    qpNorth(ZN, -WXN + CR, WXN - CR); // north wall
+
+    // rounded far corners (NE, NW): quarter-cones from floor to the lip arc
+    const cornerCone = (cxWall: number, czWall: number, sx: number, sz: number): void => {
+      const ccx = cxWall - sx * CR;
+      const ccz = czWall - sz * CR;
       for (let i = 0; i < prof.length - 1; i++) {
         const r0 = CR - prof[i][0];
         const r1 = CR - prof[i + 1][0];
@@ -4582,63 +4614,21 @@ export class Level {
           );
         }
       }
-      // corner deck fan + lip arc rail
-      const lipArc: THREE.Vector3[] = [];
-      for (let j = 0; j <= 5; j++) {
-        const a = (j / 5) * (Math.PI / 2);
-        lipArc.push(V(ccx + sx * Math.cos(a) * (CR + DECK), QH, ccz + sz * Math.sin(a) * (CR + DECK)));
-      }
-      for (let j = 0; j < 5; j++) {
-        const a0 = (j / 5) * (Math.PI / 2);
-        const a1 = ((j + 1) / 5) * (Math.PI / 2);
-        this.quadFace(
-          'wh2 corner deck',
-          [ccx + sx * Math.cos(a0) * CR, QH, ccz + sz * Math.sin(a0) * CR],
-          [ccx + sx * Math.cos(a0) * (CR + DECK), QH, ccz + sz * Math.sin(a0) * (CR + DECK)],
-          [ccx + sx * Math.cos(a1) * (CR + DECK), QH, ccz + sz * Math.sin(a1) * (CR + DECK)],
-          [ccx + sx * Math.cos(a1) * CR, QH, ccz + sz * Math.sin(a1) * CR],
-          matDeck,
-          'plank',
-        );
-      }
-      addRail(V(ccx + sx * CR, QH + 0.05, ccz), V(ccx, QH + 0.05, ccz + sz * CR)); // approx lip arc chord
-      void lipArc;
+      addRail(V(ccx + sx * CR, DH + 0.05, ccz), V(ccx, DH + 0.05, ccz + sz * CR));
     };
+    cornerCone(WXN, ZN, 1, -1); // NE
+    cornerCone(-WXN, ZN, -1, -1); // NW
 
-    // East + South + the two EAST corners are the classic rounded bowl edge.
-    qpX(1, -(WZ - CR), WZ - CR); // east wall
-    qpZ(1, -(WX - CR), WX - CR); // south wall (behind spawn)
-    cornerQP(1, 1); // SE rounded corner
-    cornerQP(1, -1); // NE rounded corner
-    // North wall QP is SPLIT by the channel bay (x in [-15,15] open as the mouth)
-    qpZ(-1, -(WX - CR), -15);
-    qpZ(-1, 15, WX - CR);
+    // ---------- perimeter brick walls (trace the stepped outline) ----------
+    this.wall(0, ZN - 2, WXN * 2 + 8, 2.6, 0, 16); // north
+    this.wall(WXN + 2, (ZN + ZW) / 2, 2.6, ZW - ZN + 6, 0, 16); // east hall
+    this.wall(-WXN - 2, (ZN + ZW) / 2, 2.6, ZW - ZN + 6, 0, 16); // west hall
+    this.wall(0, ZW - 1.3, (WXN - WXS) * 2, 2.6, 0, 16, 5); // waist step (east+west jogs) — low curb
+    this.wall(WXS + 2, (ZW + ZS) / 2, 2.6, ZS - ZW + 4, 0, 16); // east wing
+    this.wall(-WXS - 2, (ZW + ZS) / 2, 2.6, ZS - ZW + 4, 0, 16); // west wing
+    this.wall(0, ZS + 2, WXS * 2 + 8, 2.6, 0, 16); // south (behind the dock)
 
-    // --- WEST RAISED PLATFORM (a full story up, per the iso) ---------------
-    // The west QP tops directly onto a big raised deck at QH; its inner edge is
-    // the CHANNEL — a drop back to the floor with a rail to grind along it.
-    qpX(-1, -(WZ - CR), WZ - CR, false); // west QP (no thin deck — the platform is the deck)
-    const PLX = -30; // platform inner edge (the channel line)
-    this.slab('wh2 west platform', -(WZ - CR), WZ - CR, QH, WX + PLX, matDeck, true, (-WX + PLX) / 2, 'plank');
-    // channel rail down the platform's inner edge
-    addRail(V(PLX, QH + 0.06, -(WZ - CR)), V(PLX, QH + 0.06, WZ - CR));
-    // a wide bank up onto the platform mid-way (get up without airing the QP)
-    // — the wide central bank ramp from the iso. Slopes along X (an X-bank).
-    this.bank('wh2 west ramp', -8, 16, PLX + 12, PLX, 0, QH, matTrans);
-
-    // --- perimeter walls behind the decks/platform ------------------------
-    this.wall(WX + DECK + 1.6, 0, 2.6, WZ * 2 + CR * 2, 0, 16); // east
-    this.wall(-(WX + 1.6), 0, 2.6, WZ * 2 + CR * 2, 0, 16); // west (behind the platform)
-    this.wall(0, WZ + DECK + 1.6, WX * 2 + CR * 2, 2.6, 0, 16); // south
-    this.wall(-(WX * 0.5 + 4), -(WZ + DECK + 1.6), WX - 15, 2.6, 0, 16); // north-left
-    this.wall(WX * 0.5 + 4, -(WZ + DECK + 1.6), WX - 15, 2.6, 0, 16); // north-right
-
-    // --- TALL CENTRAL A-FRAME SPINE (the dominant structure + red rail) ----
-    this.bank('wh2 spine W', -16, 16, -14, 0, 0, QH, matTrans);
-    this.bank('wh2 spine E', -16, 16, 14, 0, 0, QH, matTrans);
-    addRail(V(0, QH + 0.05, -16), V(0, QH + 0.05, 16)); // ridge rail
-
-    // --- flat-top funbox helper (banks up all four faces, grindable top) ---
+    // ---------- flat-top funbox helper ----------
     const funbox = (cx: number, cz: number, half: number, h: number, tex = 'plank'): void => {
       const run = h * 2.2;
       this.slab('wh2 funbox top', cz - half, cz + half, h, half * 2, matDeck, true, cx, tex);
@@ -4649,43 +4639,100 @@ export class Level {
       addRail(V(cx - half, h + 0.05, cz - half), V(cx + half, h + 0.05, cz - half));
       addRail(V(cx - half, h + 0.05, cz + half), V(cx + half, h + 0.05, cz + half));
     };
-    // valve platform (mid height) + the valve wheel prop on top
-    funbox(20, 6, 4.5, 2.6);
+
+    // ---------- CENTRAL CHANNEL FUNBOX (the dominant middle feature) --------
+    // A long raised box running north-south with a channel slot down the middle
+    // (x ∈ [−2, 2]); banks up the north & south ends, grind rails all around,
+    // and a rail spanning the channel — the classic THPS "1-2-3" island.
+    const FBz0 = -20;
+    const FBz1 = 2;
+    const FBh = 3.5;
+    const FBhalf = 9;
+    // two long ledges flanking the channel
+    for (const s of [-1, 1]) {
+      const lx = s * (2 + (FBhalf - 2) / 2); // ledge centre (west/east of the slot)
+      const lw = FBhalf - 2; // ledge width
+      this.slab('wh2 island top', FBz0, FBz1, FBh, lw, matDeck, true, lx, 'plank');
+      this.bank('wh2 island out', FBz0, FBz1, s * (FBhalf + FBh * 2.2), s * FBhalf, 0, FBh, matTrans);
+    }
+    // end banks (north & south) spanning the whole island
+    this.ramp('wh2 island N', FBz0 - FBh * 2.2, 0, FBz0, FBh, FBhalf * 2, matTrans, 0);
+    this.ramp('wh2 island S', FBz1 + FBh * 2.2, 0, FBz1, FBh, FBhalf * 2, matTrans, 0);
+    addRail(V(-9, FBh + 0.08, (FBz0 + FBz1) / 2), V(9, FBh + 0.08, (FBz0 + FBz1) / 2)); // cross rail over the channel
+
+    // ---------- MINI HALF-PIPE (west hall: two facing quarter-pipes) --------
+    // a self-contained mini-ramp valley you pump between (H=5).
+    const mpZ0 = -40;
+    const mpZ1 = -26;
+    const mpH = 5;
+    const mpCx = -18;
+    this.bank('wh2 mini W', mpZ0, mpZ1, mpCx - 9 - mpH * 1.4, mpCx - 9, 0, mpH, matTrans);
+    this.bank('wh2 mini E', mpZ0, mpZ1, mpCx + 9 + mpH * 1.4, mpCx + 9, 0, mpH, matTrans);
+    this.slab('wh2 mini flat', mpZ0, mpZ1, 0.02, 18, matFloor, false, mpCx, 'pavement');
+    addRail(V(mpCx - 9, mpH + 0.05, mpZ0), V(mpCx - 9, mpH + 0.05, mpZ1));
+    addRail(V(mpCx + 9, mpH + 0.05, mpZ0), V(mpCx + 9, mpH + 0.05, mpZ1));
+
+    // ---------- valve funbox + wheel prop (east of centre, per the iso) -----
+    funbox(20, -6, 4.5, 2.4);
     const valve = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.6, 1.6, 0.5, 18),
+      new THREE.CylinderGeometry(1.5, 1.5, 0.5, 18),
       new THREE.MeshLambertMaterial({ color: 0xcaa23a }),
     );
     valve.rotation.x = Math.PI / 2;
-    valve.position.set(20, 2.6 + 0.28, 6);
+    valve.position.set(20, 2.4 + 0.28, -6);
     this.root.add(valve);
-    // two low kicker funboxes on the open floor
-    funbox(24, -20, 3.5, 1.4);
-    funbox(8, 30, 3.5, 1.4);
 
-    // --- floor rails (the red rails) --------------------------------------
-    addRail(V(-8, 0.06, 20), V(26, 0.06, 20)); // long cross rail
-    addRail(V(6, 0.06, -6), V(-6, 0.06, -34)); // angled floor rail into the bay
+    // ---------- RED WALL LEDGE (plan: the red bar on the east side) ---------
+    this.slab('wh2 red ledge', -14, 2, 1.8, 5, matRed, true, 28, 'brick');
 
-    // --- NORTH CHANNEL BAY: a recessed corridor cut into the north wall (the
-    // north QPs frame its mouth). A rail spans the mouth (gap it or drop in);
-    // the back is a QP; the sides keep you in with a grindable top edge.
-    const BZ = -(WZ + 22); // bay back
-    const BM = 15; // bay half-width (mouth x in [-15,15])
-    addRail(V(-BM, QH + 0.06, -WZ + 0.1), V(BM, QH + 0.06, -WZ + 0.1)); // channel-mouth rail
-    // back-wall quarter pipe (rises along +Z from the bay floor to the back wall)
-    for (let i = 0; i < prof.length - 1; i++) {
-      this.ramp('wh2 bay back', BZ + prof[i][0], prof[i][1], BZ + prof[i + 1][0], prof[i + 1][1], BM * 2, matTrans, 0);
+    // ---------- FORKLIFT prop (plan/iso: the yellow vehicle, top-centre) ----
+    const forklift = (fx: number, fz: number): void => {
+      const g = new THREE.Group();
+      const yellow = new THREE.MeshLambertMaterial({ color: 0xd9a72a });
+      const dark = new THREE.MeshLambertMaterial({ color: 0x2f2f2f });
+      const body = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.4, 4), yellow);
+      body.position.y = 1.0;
+      g.add(body);
+      const cab = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.5, 1.8), yellow);
+      cab.position.set(0, 2.2, -0.7);
+      g.add(cab);
+      for (const mx of [-0.85, 0.85]) {
+        const mast = new THREE.Mesh(new THREE.BoxGeometry(0.28, 3.4, 0.28), dark);
+        mast.position.set(mx, 1.7, 2.1);
+        g.add(mast);
+      }
+      g.position.set(fx, 0, fz);
+      this.root.add(g);
+      this.walls.push(
+        new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(fx, 1, fz), new THREE.Vector3(2.6, 2, 4)),
+      );
+    };
+    forklift(-2, -46);
+
+    // ---------- small kicker + diagonal rail (plan: west-of-centre bits) ----
+    funbox(-26, 0, 3.5, 1.4);
+    addRail(V(-14, 0.06, -18), V(-4, 0.06, -6)); // diagonal floor rail
+
+    // ---------- crate piles + wumpa ----------
+    for (const [cx, cz] of [
+      [11, -12],
+      [13, -10],
+      [12, -8],
+      [-6, 8],
+      [-4, 8],
+      [6, 6],
+    ] as [number, number][]) {
+      this.crate(cx, 0, cz);
     }
-    // bay side walls + a grind rail along each top edge
-    for (const s of [1, -1]) {
-      this.wall(s * (BM + 1.3), (-WZ + BZ) / 2, 2.6, Math.abs(BZ + WZ), 0, QH + 5);
-      addRail(V(s * BM, QH + 0.06, -WZ), V(s * BM, QH + 0.06, BZ));
-    }
-    this.wall(0, BZ - 1.4, BM * 2 + 6, 2.6, 0, QH + 5); // bay back wall
-
-    // a handful of wumpa to read the space (spawn itself is the respawn point)
-    for (const [px, pz] of [[0, 0], [20, 6], [24, -20], [0, -40]] as [number, number][]) {
-      this.pickup(px, 1.4, pz);
+    for (const [px, py, pz] of [
+      [-15, DH + 1.4, 30],
+      [0, 1.4, 6],
+      [0, FBh + 1.6, -9],
+      [-18, 1.4, -33],
+      [-2, 1.4, -46],
+      [20, 3.2, -6],
+    ] as [number, number, number][]) {
+      this.pickup(px, py, pz);
     }
   }
 

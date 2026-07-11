@@ -512,4 +512,4 @@ function frame(): void {
 frame();
 
 // Smoke-test / console-poking hook.
-(window as unknown as Record<string, unknown>).__game = { player, level, input, TUNING, switchLevel };
+(window as unknown as Record<string, unknown>).__game = { player, level, input, TUNING, switchLevel, scene, camera, renderer, THREE };
