@@ -17,19 +17,19 @@ export const TUNING = {
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill / in pipes (charge still tops at maxSpeed)
   slopeBoost: 38, // downhill acceleration, scaled by sin(slope along travel)
   uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
-  pipePump: 16, // crouch-pump gain: X held on ground too steep to stand
-  pipeSmooth: 10, // per-second easing of the ride plane across segmented transitions
-  footGrip: 0.62, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
-  steepStand: 0.78, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
-  vertLip: 0.72, // slope (sine along travel) that counts as vert coping at the lip
-  hangLaunch: 6, // extra UP pop when you release X right at the lip to fly into hang time
-  hangSnapAngle: 15, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
-  hangLateral: 1, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
-  landingFlow: 0.9, // how much fall speed converts into riding speed when you land on a ramp/wall
-  vertGlue: 8, // hang time: how hard a vert air is pulled back onto the wall plane
-  vertDrift: 6, // hang time: stick drift speed ALONG the coping during a vert air
-  wallStick: 2.6, // ground-snap window on steep transitions (how hard the wall holds the board)
-  landGive: 1.5, // landing forgiveness on steep faces (vs 0.35 on flat decks)
+  pipePump: 4, // crouch-pump gain: X held on ground too steep to stand
+  pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
+  footGrip: 0.4, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
+  steepStand: 0.95, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
+  vertLip: 0.59, // slope (sine along travel) that counts as vert coping at the lip
+  hangLaunch: 9, // extra UP pop when you release X right at the lip to fly into hang time
+  hangSnapAngle: 3, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
+  hangLateral: 1.55, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
+  landingFlow: 1, // how much fall speed converts into riding speed when you land on a ramp/wall
+  vertGlue: 17.5, // hang time: how hard a vert air is pulled back onto the wall plane
+  vertDrift: 4.5, // hang time: stick drift speed ALONG the coping during a vert air
+  wallStick: 5, // ground-snap window on steep transitions (how hard the wall holds the board)
+  landGive: 3, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 15, // vertical pop when jumping off a rail
@@ -39,26 +39,26 @@ export const TUNING = {
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 7.5, // rad/s of the directional grab-spin (left arrow = spin left)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
-  spinTolerance: 15, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
+  spinTolerance: 10, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
-  skateHoldTime: 0.4, // X held this long (with a direction) before skate drive engages
+  skateHoldTime: 0.1, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
-  carveGrip: 300, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
-  carveGripRatio: 0, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
+  carveGrip: 180, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
+  carveGripRatio: 0.1, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
   slideJumpHeight: 1.2, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
-  slideJumpTravel: 0.5, // horizontal launch speed scale out of a slide-jump (independent of height)
-  slideJumpGrace: 0.1, // jumps this long AFTER a slide ends still get the slide boost
+  slideJumpTravel: 0.95, // horizontal launch speed scale out of a slide-jump (independent of height)
+  slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
   airControl: 0, // forward/back speed adjustment in the air
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
   balanceSpeedEffect: 1.4, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
   balanceGrace: 2, // seconds of flat difficulty at the start of every grind
   balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
-  balanceRampMax: 2.5, // difficulty CEILING: drift never exceeds this multiple of balanceDrift
+  balanceRampMax: 6, // difficulty CEILING: drift never exceeds this multiple of balanceDrift
   bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
