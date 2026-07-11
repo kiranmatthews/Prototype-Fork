@@ -22,6 +22,9 @@ export const TUNING = {
   footGrip: 0.62, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
   steepStand: 0.78, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
   vertLip: 0.72, // slope (sine along travel) that counts as vert coping at the lip
+  hangLaunch: 6, // extra UP pop when you release X right at the lip to fly into hang time
+  hangSnapAngle: 15, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
+  hangLateral: 1, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
   landingFlow: 0.9, // how much fall speed converts into riding speed when you land on a ramp/wall
   vertGlue: 8, // hang time: how hard a vert air is pulled back onto the wall plane
   vertDrift: 6, // hang time: stick drift speed ALONG the coping during a vert air
@@ -92,6 +95,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   footGrip: { min: 0.3, max: 0.95, step: 0.01 },
   steepStand: { min: 0.5, max: 0.95, step: 0.01 },
   vertLip: { min: 0.4, max: 0.95, step: 0.01 },
+  hangLaunch: { min: 0, max: 15, step: 0.5 },
+  hangSnapAngle: { min: 0, max: 60, step: 1 },
+  hangLateral: { min: 0, max: 2, step: 0.05 },
   landingFlow: { min: 0, max: 1, step: 0.05 },
   vertGlue: { min: 0, max: 20, step: 0.5 },
   vertDrift: { min: 0, max: 15, step: 0.5 },
@@ -174,6 +180,12 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'WITH MOMENTUM: normal.y below this pops the board out so you ride the transition (banks, halfpipe walls). Only affects skaters/momentum now — feet obey footGrip. Test: roll at a ramp, lower this, the board comes out sooner.',
   vertLip:
     'Slope steepness (sine along travel) that counts as vert coping when you crest it — steeper than this gives THPS2 hang time; shallower is a plain kicker air. Test: hit the coping, lower it, ordinary ramps start giving hang time.',
+  hangLaunch:
+    'Extra UP pop when you RELEASE X right at the lip — that flick launches you higher into hang time (holding X gives a lower, mellower hang). Test: pump a wall, let go of X at the top, watch the air get taller.',
+  hangSnapAngle:
+    'Hit the coping within this many degrees of head-on and you snap to a PURE vertical hang (glued, drop straight back in). Steeper angles carry sideways momentum instead. Test: raise it and even angled approaches drop straight in.',
+  hangLateral:
+    'Once your approach is past hangSnapAngle, how much of that off-axis speed becomes SIDEWAYS hang-time drift — this is what lets you carry across a gap or transfer to the far wall. Test: hit the lip at an angle, raise it, you sail further sideways.',
   landingFlow:
     'How much of your FALL speed becomes riding speed when you land on a ramp or wall (0 = dead stop like before, 1 = keep it all). This is what makes dropping in from hang time flow instead of stalling. Test: drop into a pipe, raise it, you rocket out the far wall.',
   vertGlue:
@@ -286,6 +298,9 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'footGrip',
       'steepStand',
       'vertLip',
+      'hangLaunch',
+      'hangSnapAngle',
+      'hangLateral',
       'landingFlow',
       'vertGlue',
       'vertDrift',

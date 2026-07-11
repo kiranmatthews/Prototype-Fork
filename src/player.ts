@@ -151,6 +151,8 @@ export class Player {
   vertAir = false;
   readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
+  vertLatVel = 0; // hang-time lateral drift along the coping (from the approach angle)
+  private vertLaunchT = 0; // X released while climbing a vert wall: arm a lip launch
   // UNIFIED SURFACE ALIGNMENT: one eased tilt that lays the whole rig onto the
   // surface — gently on banks, flat-out on vert walls, all the way through hang
   // time — so the body tracks the wall while riding AND while glued in the air.
@@ -376,6 +378,7 @@ export class Player {
     this.stepOff = false;
     this.stance = 1;
     this.vertAir = false;
+    this.vertLatVel = 0;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -440,6 +443,7 @@ export class Player {
     if (this.slideTimer > 0) this.slideGraceT = TUNING.slideJumpGrace;
     else this.slideGraceT = Math.max(0, this.slideGraceT - dt);
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
+    this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
     // is the depth sidestep (up = away from the camera), the exact same
@@ -505,7 +509,10 @@ export class Player {
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.bailDownT = Math.max(0, this.bailDownT - dt);
-    if (this.state !== 'air') this.vertAir = false;
+    if (this.state !== 'air') {
+      this.vertAir = false;
+      this.vertLatVel = 0;
+    }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     // Actual planar speed from last step's displacement (any direction) —
@@ -1183,13 +1190,16 @@ export class Player {
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
     // Cresting a vert lip: the board was climbing a near-vertical face; now the
     // surface ahead has gone flat (the coping's backside). Convert the climb
-    // straight into UP-air — the vertical launch IS the climb rate you earned
-    // (speed up a near-vertical wall is almost all upward). No fudge cap: pump
-    // harder, fly higher. The drop-in landing re-mints that energy as speed.
+    // straight into UP-air — the vertical launch IS the climb rate you earned.
+    // The lip fires on the STEEPER of: slope-along-travel (head-on) OR the wall
+    // itself being near-vert (rideNormal) — so an ANGLED approach still crests
+    // into hang time (with lateral), instead of failing because the projected
+    // slope dropped below vertLip. vertLip maps to the wall-normal threshold.
+    const vertWallY = Math.sqrt(Math.max(0, 1 - TUNING.vertLip * TUNING.vertLip));
     if (
       hit &&
       this.speed > 0.5 &&
-      this.lastTy > TUNING.vertLip &&
+      (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY) &&
       hit.normal.y >= CONST.steepSnapNormal
     ) {
       this.state = 'air';
@@ -1197,10 +1207,11 @@ export class Player {
       this.groundHit = hit;
       this.airFromSkate = true; // vert launches only happen from riding
       this.vVel = Math.min(this.lastTy * this.speed, CONST.maxFallSpeed);
-      // HANG is the default. Releasing X (or a fresh tap) at the lip OLLIES OUT
-      // over the coping keeping your speed; holding X keeps you in the pipe.
+      // ALWAYS hang time. Releasing X (or a fresh tap) at the lip LAUNCHES you
+      // higher into the hang (the intuitive pop); holding X = a mellow hang.
+      // Approach angle decides straight-in vs a sideways gap (see enterVertAir).
       this.enterVertAir(
-        input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0,
+        input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || this.vertLaunchT > 0,
       );
       sfx.play('woosh2', 0.6);
       this.emitSparks(5, 0xfff3d0, 1.2);
@@ -1228,6 +1239,15 @@ export class Player {
           }
         }
       }
+    } else if (this.slideTimer > 0) {
+      // CARTOON SLIDE: a canned slide carries you straight over a gap at a
+      // FIXED height — no edge-drop, no gravity, no teeter — so sliding (and
+      // slide-jumping) along a ledge can't yeet you off. Gravity resumes the
+      // instant the slide ends, so you fall then if there's nothing under you.
+      this.grounded = true;
+      this.vVel = 0;
+      this.teetering = false;
+      // pos.y stays exactly where it was (the slide moved planar only)
     } else {
       this.state = 'air';
       this.grounded = false;
@@ -1240,10 +1260,11 @@ export class Player {
         this.speed > 0 && this.lastTy > 0.05
           ? Math.min(this.lastTy * this.speed, CONST.maxFallSpeed)
           : 0;
-      // A near-vertical lip (halfpipe coping) is hang time unless you ollie out.
-      if (this.vVel > 0.5 && this.lastTy > TUNING.vertLip) {
+      // A near-vertical lip (halfpipe coping) is hang time; releasing X launches.
+      // Same head-on-OR-vert-wall test as the grounded crest (angled entries too).
+      if (this.vVel > 0.5 && (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY)) {
         this.enterVertAir(
-          input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0,
+          input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || this.vertLaunchT > 0,
         );
         sfx.play('woosh2', 0.6);
       }
@@ -1292,7 +1313,13 @@ export class Player {
         this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
       }
       if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
-        this.chargedJump(dt);
+        // Climbing a near-vert wall: DON'T ollie into the wall — reserve the
+        // release as the lip LAUNCH (the imminent crest reads vertLaunchT and
+        // flies you higher into hang time). If no crest comes, it just fizzles.
+        const climbingVert =
+          steepGround && this.speed > 0.5 && this.lastTy > TUNING.vertLip * 0.5;
+        if (climbingVert) this.vertLaunchT = 0.25;
+        else this.chargedJump(dt);
       }
     }
   }
@@ -1332,11 +1359,18 @@ export class Player {
       const d = dx * this.vertNormal.x + dz * this.vertNormal.z;
       this.pos.x -= this.vertNormal.x * d * g;
       this.pos.z -= this.vertNormal.z * d * g;
+      const tx = -this.vertNormal.z; // wall tangent (along the coping)
+      const tz = this.vertNormal.x;
+      // carried lateral momentum from an off-axis entry: this is what flies you
+      // across a gap / transfers you to the far wall (glue only pins the normal)
+      if (this.vertLatVel !== 0) {
+        this.pos.x += tx * this.vertLatVel * dt;
+        this.pos.z += tz * this.vertLatVel * dt;
+      }
+      // plus fine stick steering along the coping
       const rx = this.rawInput.moveX;
       const ry = this.rawInput.moveY;
       if (rx !== 0 || ry !== 0) {
-        const tx = -this.vertNormal.z; // wall tangent (along the coping)
-        const tz = this.vertNormal.x;
         const inv = 1 / Math.hypot(rx, ry);
         const along = rx * inv * tx + -ry * inv * tz;
         this.pos.x += tx * along * TUNING.vertDrift * dt;
@@ -1347,6 +1381,7 @@ export class Player {
     if (!this.slamActive && input.grabHeld && this.rawInput.moveY < -0.5) {
       this.slamActive = true;
       this.vertAir = false; // the slam plummets straight down, no wall glue
+      this.vertLatVel = 0;
       this.slamHangT = CONST.slamHang;
       this.grabPhase = 'none';
       this.grabT = 0;
@@ -1445,6 +1480,18 @@ export class Player {
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
+      // Landing out of a lateral hang: keep the sideways momentum so a gap
+      // transfer flows on the far side instead of stalling. Seed it as speed
+      // along the coping BEFORE the projection below folds in any fall energy.
+      if (this.vertLatVel !== 0) {
+        const tx = -this.vertNormal.z;
+        const tz = this.vertNormal.x;
+        const s = Math.sign(this.vertLatVel);
+        this.axisF.set(tx * s, 0, tz * s);
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+        this.speed = Math.abs(this.vertLatVel);
+        this.vertLatVel = 0;
+      }
       // ENERGY-CONSERVING LANDING (board airs only): project the incoming 3D
       // velocity onto the landing surface so a drop DOWN a wall becomes speed
       // down the wall instead of a dead stop — this is what makes hang-time
@@ -1606,25 +1653,43 @@ export class Player {
     this.bankCombo();
   }
 
-  // Leaving a vert lip. HANG is the default (glue to the wall plane, drop back
-  // into the same transition). airOut = the player released/tapped X at the lip
-  // to OLLIE OUT over the coping: keep all your speed, no glue, a plain board
-  // air. (vVel — the launch height — is already set by the caller.)
-  private enterVertAir(airOut: boolean): void {
-    if (airOut) {
-      this.vVel += TUNING.grindJumpForce * 0.4; // a deliberate pop over the lip
+  // Leaving a vert lip: ALWAYS hang time now (glue to the wall plane, drop back
+  // into the transition). Two feel controls:
+  //  - launch: you RELEASED X right at the lip — that flick pops you HIGHER
+  //    into the hang (the intuitive "jump into hang time"). Holding X = mellow.
+  //  - off-axis: hit the coping head-on (within hangSnapAngle) and it snaps to
+  //    a pure vertical hang; steeper angles carry SIDEWAYS momentum along the
+  //    coping (hangLateral) so you can drift across a gap / transfer walls.
+  // (vVel — the base launch height — is already set by the caller.)
+  private enterVertAir(launch: boolean): void {
+    this.vertLaunchT = 0;
+    this.jumpBufferT = 0;
+    if (launch) {
+      this.vVel += TUNING.hangLaunch;
       this.charging = false;
       this.chargeTimer = 0;
-      return;
     }
-    // HANG: park planar speed — the energy is in vVel now, and the drop-in
-    // landing converts it back into speed DOWN the wall (see the touchdown
-    // block). No reverse-and-delete: momentum is conserved through the cycle.
-    this.speed = 0;
+    const entrySpeed = this.speed;
     this.vertNormal.set(this.rideNormal.x, 0, this.rideNormal.z);
     const nl = this.vertNormal.length();
-    if (nl < 1e-4) return; // degenerate lip: plain air
+    if (nl < 1e-4) {
+      this.speed = 0;
+      this.vertLatVel = 0;
+      return; // degenerate lip: plain air
+    }
     this.vertNormal.divideScalar(nl);
+    // decompose the entry heading into into-wall vs along-the-coping. `along`
+    // is the sideways fraction (0 = dead head-on, ±1 = skimming the coping).
+    const tx = -this.vertNormal.z; // coping tangent
+    const tz = this.vertNormal.x;
+    const along = THREE.MathUtils.clamp(this.axisF.x * tx + this.axisF.z * tz, -1, 1);
+    const angleOff = Math.abs(Math.asin(along));
+    if (angleOff <= THREE.MathUtils.degToRad(TUNING.hangSnapAngle)) {
+      this.vertLatVel = 0; // snapped to a pure vertical hang
+    } else {
+      this.vertLatVel = entrySpeed * along * TUNING.hangLateral;
+    }
+    this.speed = 0; // the energy is in vVel (up) + vertLatVel (across) now
     // glue plane sits a hair INSIDE the pipe, so the drop lands on the
     // transition face proper rather than balancing on the coping line
     this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, 1.2);

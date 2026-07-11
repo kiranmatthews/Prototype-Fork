@@ -3011,42 +3011,41 @@ export class Level {
       ctx.fill();
     };
     if (kind === 'crystal') {
-      // deep-purple sphere: bright toward the centre, dark magenta at the rim
-      const base = ctx.createRadialGradient(c, c, 0, c, c, c);
-      base.addColorStop(0, '#8a34c8');
-      base.addColorStop(0.55, '#5a1aa0');
-      base.addColorStop(0.85, '#320c60');
-      base.addColorStop(1, '#1a0636');
+      // BRIGHT white-lavender crystal: the front face reads near-white and only
+      // the rim/side facets go saturated purple → magenta (matches the ref,
+      // which glows white-hot with purple edges, not a dark purple stone).
+      const base = ctx.createRadialGradient(c - 12, c - 14, 4, c, c, c);
+      base.addColorStop(0, '#ffffff');
+      base.addColorStop(0.3, '#f0e2ff');
+      base.addColorStop(0.55, '#d3a6f2');
+      base.addColorStop(0.78, '#a848e0');
+      base.addColorStop(0.92, '#6a1cb0');
+      base.addColorStop(1, '#3c0c72');
       ctx.fillStyle = base;
       ctx.fillRect(0, 0, S, S);
-      // THE canned highlight: a fat lavender-white streak up the upper-left,
-      // with a hot white core — this is what sweeps over the faces
-      ctx.save();
-      ctx.translate(c - 20, c - 26);
-      ctx.rotate(-0.35);
-      ctx.scale(0.5, 1.5);
-      blob(0, 0, 40, 'rgba(240,210,255,0.95)');
-      ctx.restore();
-      blob(c - 26, c - 34, 14, 'rgba(255,255,255,0.95)'); // hot spot
-      blob(c + 30, c + 34, 26, 'rgba(210,70,220,0.5)'); // magenta rim bounce
+      // hot core + a lavender bloom so the facing face blazes
+      blob(c - 12, c - 16, 30, 'rgba(255,255,255,0.9)');
+      blob(c - 16, c - 20, 12, 'rgba(255,255,255,1)');
+      blob(c + 34, c + 30, 30, 'rgba(200,60,215,0.55)'); // magenta rim bounce
     } else {
       // silver-white sphere: bright silver centre, cool slate at the rim
-      const base = ctx.createRadialGradient(c, c, 0, c, c, c);
-      base.addColorStop(0, '#eef4fb');
-      base.addColorStop(0.5, '#aebecd');
-      base.addColorStop(0.82, '#5e6e7e');
-      base.addColorStop(1, '#333f4a');
+      const base = ctx.createRadialGradient(c - 10, c - 12, 4, c, c, c);
+      base.addColorStop(0, '#ffffff');
+      base.addColorStop(0.42, '#c6d4e2');
+      base.addColorStop(0.72, '#7d8d9d');
+      base.addColorStop(0.9, '#4c5c6c');
+      base.addColorStop(1, '#2c3742');
       ctx.fillStyle = base;
       ctx.fillRect(0, 0, S, S);
-      // diamonds throw multiple hard glints: a couple of bright streaks + spots
+      // diamonds throw multiple hard glints: bright streaks + spots that sweep
       ctx.save();
-      ctx.translate(c - 18, c - 28);
+      ctx.translate(c - 16, c - 26);
       ctx.rotate(-0.5);
-      ctx.scale(0.42, 1.35);
-      blob(0, 0, 38, 'rgba(255,255,255,0.98)');
+      ctx.scale(0.42, 1.4);
+      blob(0, 0, 40, 'rgba(255,255,255,1)');
       ctx.restore();
-      blob(c + 26, c + 10, 16, 'rgba(255,255,255,0.75)');
-      blob(c - 34, c + 30, 12, 'rgba(210,228,245,0.7)');
+      blob(c + 28, c + 8, 18, 'rgba(255,255,255,0.9)');
+      blob(c - 32, c + 32, 13, 'rgba(225,238,250,0.8)');
     }
     const tex = new THREE.CanvasTexture(canvas);
     tex.magFilter = THREE.NearestFilter; // chunky PS1 texels
@@ -3177,45 +3176,48 @@ export class Level {
 
   // ---- collectible geometry (reference-accurate) ----------------------------
 
-  // Tall purple crystal shard: a stretched hexagonal bipyramid with a hot inner
-  // core streak and a pink glow halo (Crash coloured-gem look).
+  // Tall white-lavender crystal shard: an ASYMMETRIC bipyramid — a short blunt
+  // top over a long tapering bottom point (matches the ref proportions) — with
+  // a canned matcap sweep and a pink glow that blazes at the bottom tip.
   private crystalMesh(scale = 1): THREE.Group {
     const g = new THREE.Group();
-    const R = 0.55 * scale;
-    const H = 1.05 * scale; // half-height of each pyramid
+    const R = 0.52 * scale;
+    const HTOP = 0.72 * scale; // short upper pyramid
+    const HBOT = 1.5 * scale; // long lower point
     // CANNED reflection: matcap, not scene lighting. Each flat facet samples
-    // the painted highlight by its normal, so the bright streak sweeps face to
-    // face as the crystal spins — independent of the world's real lights.
+    // the painted highlight by its normal, so the bright face sweeps as the
+    // crystal spins — independent of the world's real lights.
     const shellMat = new THREE.MeshMatcapMaterial({
       matcap: this.matcapTexture('crystal'),
       flatShading: true,
       transparent: true,
-      opacity: 0.95,
+      opacity: 0.96,
     });
-    // two 6-sided cones base-to-base = bipyramid
-    const top = new THREE.Mesh(new THREE.ConeGeometry(R, H, 6), shellMat);
-    top.position.y = H / 2;
+    const SIDES = 5; // few big facets = a sharp shard
+    const top = new THREE.Mesh(new THREE.ConeGeometry(R, HTOP, SIDES), shellMat);
+    top.position.y = HTOP / 2; // belt (widest ring) sits at y=0
     g.add(top);
-    const bot = new THREE.Mesh(new THREE.ConeGeometry(R, H, 6), shellMat);
+    const bot = new THREE.Mesh(new THREE.ConeGeometry(R, HBOT, SIDES), shellMat);
     bot.rotation.z = Math.PI;
-    bot.position.y = -H / 2;
+    bot.position.y = -HBOT / 2;
     g.add(bot);
-    // hot inner streak: a slim bright bipyramid, additive
+    // hot inner streak: a slim bright core following the same asymmetric shape
     const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xffcbff,
+      color: 0xffe6ff,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.55,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
-    const ctop = new THREE.Mesh(new THREE.ConeGeometry(R * 0.42, H * 0.95, 6), coreMat);
-    ctop.position.y = H / 2;
+    const ctop = new THREE.Mesh(new THREE.ConeGeometry(R * 0.4, HTOP * 0.95, SIDES), coreMat);
+    ctop.position.y = HTOP / 2;
     g.add(ctop);
-    const cbot = new THREE.Mesh(new THREE.ConeGeometry(R * 0.42, H * 0.95, 6), coreMat);
+    const cbot = new THREE.Mesh(new THREE.ConeGeometry(R * 0.4, HBOT * 0.95, SIDES), coreMat);
     cbot.rotation.z = Math.PI;
-    cbot.position.y = -H / 2;
+    cbot.position.y = -HBOT / 2;
     g.add(cbot);
-    // pink glow halo (billboard), brightest low
+    // pink glow halo (billboard), taller and offset DOWN so it blazes at the
+    // long bottom tip like the reference
     const halo = new THREE.Sprite(
       new THREE.SpriteMaterial({
         map: this.glowTexture(),
@@ -3224,10 +3226,25 @@ export class Level {
         depthWrite: false,
       }),
     );
-    (halo.material as THREE.SpriteMaterial).color.setHex(0xd83af0);
-    halo.scale.set(2.9 * scale, 3.8 * scale, 1);
-    halo.position.y = -0.2 * scale;
+    (halo.material as THREE.SpriteMaterial).color.setHex(0xe24cf0);
+    halo.scale.set(3.0 * scale, 4.4 * scale, 1);
+    halo.position.y = -0.55 * scale;
+    halo.userData.pulse = true;
     g.add(halo);
+    // a second hot pink glow concentrated at the bottom point
+    const tipGlow = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: this.glowTexture(),
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    (tipGlow.material as THREE.SpriteMaterial).color.setHex(0xff6ae0);
+    tipGlow.scale.set(1.6 * scale, 1.6 * scale, 1);
+    tipGlow.position.y = -HBOT * 0.95;
+    tipGlow.userData.pulse = true;
+    g.add(tipGlow);
     return g;
   }
 
@@ -3288,15 +3305,17 @@ export class Level {
   // wearing the scrolling chrome, magic ring at its base, glints in update.
   private crystal(x: number, y: number, z: number): void {
     const g = this.crystalMesh(1);
-    g.position.set(x, y + 1.05, z);
-    g.userData.baseY = y + 1.05;
+    // belt sits at the group origin; the long bottom point reaches ~1.5 below,
+    // so float the group up to keep the tip hovering just above the ground
+    g.position.set(x, y + 1.75, z);
+    g.userData.baseY = y + 1.75;
     this.root.add(g);
     this.glowRing(x, y + 0.12, z, 1.5, 0xd06aff);
     this.crystalPickup = {
       group: g,
       box: new THREE.Box3().setFromCenterAndSize(
-        new THREE.Vector3(x, y + 1.0, z),
-        new THREE.Vector3(2.0, 2.8, 2.0),
+        new THREE.Vector3(x, y + 1.3, z),
+        new THREE.Vector3(2.0, 3.4, 2.0),
       ),
       collected: false,
     };
@@ -3407,10 +3426,17 @@ export class Level {
       this.chromeTex.offset.x = (this.vfxT * 0.34 + Math.sin(this.vfxT * 2.7) * 0.08) % 1;
       this.chromeTex.offset.y = (this.vfxT * 0.11 + Math.cos(this.vfxT * 1.9) * 0.06) % 1;
     }
+    const pulse = 0.75 + 0.25 * Math.sin(this.vfxT * 3.3); // shared glow breathe
     const bobSpin = (g: THREE.Group | null, rate: number): void => {
       if (!g || !g.visible) return;
       g.position.y = (g.userData.baseY as number) + Math.sin(this.vfxT * 2.1) * 0.22;
       g.rotation.y += rate * dt;
+      // breathe the glow halos so the lighting loop lives even at rest
+      for (const child of g.children) {
+        if (child.userData.pulse) {
+          ((child as THREE.Sprite).material as THREE.SpriteMaterial).opacity = pulse;
+        }
+      }
     };
     if (this.crystalPickup && !this.crystalPickup.collected) bobSpin(this.crystalPickup.group, 1.7);
     bobSpin(this.gemG, 2.4);
