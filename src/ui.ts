@@ -407,7 +407,7 @@ export class UI {
     // It accepts anything and clamps to the slider's range on commit.
     const value = document.createElement('input');
     value.type = 'number';
-    value.className = 'hud-num';
+    value.className = 'hud-tunernum';
     value.min = String(range.min);
     value.max = String(range.max);
     value.step = 'any'; // typing isn't bound to the drag step
@@ -483,8 +483,8 @@ export class UI {
       .hud-slider label { color: #9fb0c8; }
       .hud-slider label.hud-marked { color: #58e08a; }
       .hud-slider input[type=range] { width: 100%; accent-color: #8fd4a8; }
-      .hud-num { width: 100%; text-align: right; color: #eef4ff; background: #1c2230; border: 1px solid #3a4152; border-radius: 4px; padding: 1px 2px; font: inherit; box-sizing: border-box; }
-      .hud-num:focus { outline: none; border-color: #8fd4a8; background: #243044; }
+      .hud-tunernum { width: 100%; text-align: right; color: #eef4ff; background: #1c2230; border: 1px solid #3a4152; border-radius: 4px; padding: 1px 2px; font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace; box-sizing: border-box; }
+      .hud-tunernum:focus { outline: none; border-color: #8fd4a8; background: #243044; }
 
       /* --- collapsible side panels --- */
       .side-wrap {
