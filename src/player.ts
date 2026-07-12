@@ -887,7 +887,7 @@ export class Player {
     } else if (spd > TUNING.walkSpeed * 0.45) {
       // on foot with real run speed: Crash forward somersault
       this.lastJumpType = 'Forward Flip';
-      this.flipTimer = CONST.flipDuration;
+      if (CONST.frontFlip) this.flipTimer = CONST.flipDuration; // flip anim disabled for now
       sfx.play('footstep2', 0.55, 1.5);
     } else {
       // (near-)standing: plain vertical Crash hop
@@ -902,7 +902,8 @@ export class Player {
     // fast jumps flip — EXCEPT star jumps (crouch/slide), which hold the
     // classic spread-eagle instead of tumbling through it
     // the somersault is a RUNNING trick: board jumps (ollies) never flip
-    if (spd >= CONST.flipMinSpeed && this.starTimer <= 0 && !this.freeSkate)
+    // (whole flip animation gated OFF for now — re-enable via CONST.frontFlip)
+    if (CONST.frontFlip && spd >= CONST.flipMinSpeed && this.starTimer <= 0 && !this.freeSkate)
       this.flipTimer = CONST.flipDuration;
   }
 

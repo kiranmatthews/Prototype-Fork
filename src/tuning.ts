@@ -371,6 +371,7 @@ export const CONST = {
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
+  frontFlip: false, // running-jump somersault animation — OFF for now; re-enable with a better character model
   flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
   flipMinSpeed: 12, // below this speed a jump is a plain hop, no flip (Crash rules)
   slideCooldown: 0.25,
