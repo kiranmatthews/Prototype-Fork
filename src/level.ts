@@ -137,13 +137,11 @@ export interface Checkpoint {
 }
 
 export const LEVEL_NAMES = [
-  'Test Course',
+  'Test Course', // the test course flows straight into the gauntlet (combined)
   'Sideways',
   'Random',
-  'The Gauntlet',
   'Boulder Dash',
   'The Flats',
-  'The Warehouse',
   'Warehouse 2',
 ];
 
@@ -592,12 +590,10 @@ export class Level {
     this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
     if (courseId === 1) this.buildSideways();
     else if (courseId === 2) this.buildRandom();
-    else if (courseId === 3) this.buildGauntlet();
-    else if (courseId === 4) this.buildBoulderDash();
-    else if (courseId === 5) this.buildFlats();
-    else if (courseId === 6) this.buildWarehouse();
-    else if (courseId === 7) this.buildWarehouse2();
-    else this.buildTestCourse();
+    else if (courseId === 3) this.buildBoulderDash();
+    else if (courseId === 4) this.buildFlats();
+    else if (courseId === 5) this.buildWarehouse2();
+    else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
     this.buildAmbient(); // theme is set by the builder above
   }
@@ -1250,9 +1246,11 @@ export class Level {
 
   // ---------------------------------------------------------------- build --
 
-  private buildTestCourse(): void {
+  private buildTestCourse(asPrefix = false): void {
     // Sentinel-Beach morning: saturated jungle greens, sandstone banks, warm
     // gold sand. Textures are near-white, so these tints carry the look.
+    // asPrefix: this course flows straight into another (the combined
+    // Test+Gauntlet level), so skip the finish gate + end wall at the far end.
     const matA = new THREE.MeshLambertMaterial({ color: 0x5da84e });
     const matB = new THREE.MeshLambertMaterial({ color: 0x4c9a44 });
     const matRamp = new THREE.MeshLambertMaterial({ color: 0xd0a86e });
@@ -1544,8 +1542,123 @@ export class Level {
     this.flowers(6.8, -22, -1013);
 
     // --- finish gate + end wall ---
-    this.finishGate(-22, this.finishZ);
-    this.endWall(-22);
+    if (!asPrefix) {
+      this.finishGate(-22, this.finishZ);
+      this.endWall(-22);
+    }
+  }
+
+  // Combined "Test Course": the whole test course flows straight into the
+  // whole Gauntlet, the gauntlet shifted down-course so the two never overlap
+  // (no crates clipping each other or the wall obstacles at the seam).
+  private buildTestGauntlet(): void {
+    this.buildTestCourse(true); // prefix mode: no finish gate, flows onward
+    const savedSpawn = this.spawnPos.clone();
+    const savedTheme = this.theme;
+    const preArena = this.arena;
+    const preCollapse = this.collapse;
+    const preCrystal = this.crystalPickup;
+    const snap = {
+      root: this.root.children.length,
+      crates: this.crates.length,
+      enemies: this.enemies.length,
+      stones: this.stones.length,
+      checkpoints: this.checkpoints.length,
+      pickups: this.pickups.length,
+      rails: this.rails.length,
+      walls: this.walls.length,
+      movers: this.movers.length,
+      crumbles: this.crumbles.length,
+      crushers: this.crushers.length,
+      zones: this.zones.length,
+    };
+    this.buildGauntlet(true); // continuation: no behind-spawn wall at the seam
+    // The test course's finish-run corridor ends at z≈−1025, y=−22. Drop the
+    // gauntlet in so its start slab OVERLAPS that corridor end at the same
+    // height (its +Z edge lands at z≈−1021), so you skate straight across.
+    const DZ = -1035;
+    const DY = -22;
+    this.shiftBuilt(snap, 0, DY, DZ, preArena, preCollapse, preCrystal);
+    this.finishZ += DZ; // gauntlet −1200 → −2240 becomes the combined finish
+    this.endWallZ += DZ; // −1212 → −2252
+    this.killY = -48; // below every floor in either half
+    this.spawnPos.copy(savedSpawn); // keep the beach spawn
+    this.currentSpawn.copy(savedSpawn);
+    this.theme = savedTheme; // and the Test Course beach look throughout
+  }
+
+  // Translate everything created since `snap` by (dx,dy,dz). Visual meshes and
+  // the groundMeshes that reference them all live in root, so one pass moves
+  // the geometry plus each object's bob/ground-snap baseY; the rest is the
+  // logic/collision state that isn't re-derived from a mesh each frame (static
+  // boxes, patrol/roll ranges, rail points, zones, and the set-pieces).
+  private shiftBuilt(
+    snap: {
+      root: number; crates: number; enemies: number; stones: number; checkpoints: number;
+      pickups: number; rails: number; walls: number; movers: number; crumbles: number;
+      crushers: number; zones: number;
+    },
+    dx: number,
+    dy: number,
+    dz: number,
+    preArena: Level['arena'],
+    preCollapse: Level['collapse'],
+    preCrystal: Level['crystalPickup'],
+  ): void {
+    const off = new THREE.Vector3(dx, dy, dz);
+    const kids = this.root.children;
+    for (let i = snap.root; i < kids.length; i++) {
+      kids[i].position.add(off);
+      const b = kids[i].userData.baseY;
+      if (typeof b === 'number') kids[i].userData.baseY = b + dy;
+    }
+    for (let i = snap.crates; i < this.crates.length; i++) this.crates[i].box.translate(off);
+    for (let i = snap.walls; i < this.walls.length; i++) this.walls[i].translate(off);
+    for (let i = snap.rails; i < this.rails.length; i++)
+      for (const p of this.rails[i].points) p.add(off);
+    for (let i = snap.enemies; i < this.enemies.length; i++) {
+      const e = this.enemies[i];
+      // box rebuilds each update from the (shifted) group; only side-scroll
+      // patrols store world-Z bounds that must move with it.
+      if (e.axis === 'z') { e.x0 += dz; e.x1 += dz; }
+    }
+    for (let i = snap.stones; i < this.stones.length; i++) {
+      const s = this.stones[i];
+      s.x += dx; s.z0 += dz; s.z1 += dz;
+    }
+    for (let i = snap.checkpoints; i < this.checkpoints.length; i++) {
+      this.checkpoints[i].box.translate(off);
+      this.checkpoints[i].spawnPos.add(off);
+    }
+    for (let i = snap.pickups; i < this.pickups.length; i++) this.pickups[i].box.translate(off);
+    for (let i = snap.movers; i < this.movers.length; i++) this.movers[i].base.add(off);
+    for (let i = snap.crumbles; i < this.crumbles.length; i++) this.crumbles[i].base.add(off);
+    for (let i = snap.crushers; i < this.crushers.length; i++) {
+      const c = this.crushers[i];
+      c.x += dx; c.z += dz; c.restY += dy;
+      c.box.translate(off);
+    }
+    // pendulum boxes re-derive from their (shifted) pivot group each update.
+    for (let i = snap.zones; i < this.zones.length; i++) {
+      const z = this.zones[i];
+      z.xMin += dx; z.xMax += dx; z.zMin += dz; z.zMax += dz;
+    }
+    if (this.arena && this.arena !== preArena) {
+      this.arena.zone.translate(off);
+      for (const g of this.arena.gates) {
+        g.box.translate(off);
+        g.upY += dy;
+        g.downY += dy;
+      }
+    }
+    if (this.collapse && this.collapse !== preCollapse) {
+      const c = this.collapse;
+      c.xMin += dx; c.xMax += dx;
+      c.triggerZ += dz; c.endZ += dz; c.startZ += dz; c.frontZ += dz;
+    }
+    if (this.crystalPickup && this.crystalPickup !== preCrystal)
+      this.crystalPickup.box.translate(off);
+    this.finishBox.translate(off);
   }
 
   // Deck height along the final downhill ramp (for crate placement).
@@ -3583,7 +3696,10 @@ export class Level {
   // with real gaps, a kicker launch, a halfpipe alley, a right-angle turn
   // across floating ruins, a downhill slalom, a rail canyon, a crate maze,
   // vine bridges, and a rolling-stone finale. Roughly 1.5x the Test Course.
-  private buildGauntlet(): void {
+  private buildGauntlet(asContinuation = false): void {
+    // asContinuation: spliced onto the end of another course (the combined
+    // Test+Gauntlet level), so skip the behind-spawn wall that would otherwise
+    // block the seam you skate in through.
     // Terracotta canyon dusk: scrub greens against warm clay rock.
     this.wallTint = 0xa86048;
     this.blockTint = 0xb07050;
@@ -3625,7 +3741,7 @@ export class Level {
 
     // --- A: walled start + jungle approach ---------------------------------
     this.slab('start', 14, -30, 0, 20, matSand, false, 0, 'sand');
-    this.wall(0, 15, 22, 1, 0, 5, 0.7); // behind spawn: low curb, full-height collider
+    if (!asContinuation) this.wall(0, 15, 22, 1, 0, 5, 0.7); // behind spawn: low curb, full-height collider
     this.wall(-10.5, -8, 1, 46, 0);
     this.wall(10.5, -8, 1, 46, 0);
     this.crate(3, 0, -12);
@@ -4110,367 +4226,6 @@ export class Level {
       this.fern(ix + 1.8, 0, iz - 2.6, 1.1);
       this.flowers(ix - 1.5, 0, iz + 2.2);
       this.planter(ix + 4, 0, iz - 1);
-    }
-  }
-
-  // Level 6, "The Warehouse": one enclosed room where everything connects.
-  // The floor rolls up into a giant quarter-pipe bowl on all four walls —
-  // curved pool corners included — and the middle is packed: full halfpipe,
-  // sunken octagonal bowl, spine, funbox, kickers, rollers, rail lines.
-  // Endless sandbox: no gate, no pit, just transitions to work.
-  private buildWarehouse(): void {
-    const matFloor = new THREE.MeshLambertMaterial({ color: 0xffffff }); // asphalt is full-colour
-    const matTrans = new THREE.MeshLambertMaterial({ color: 0xb4bcc2 }); // masonite/concrete transitions
-    this.wallTint = 0x6a5a48; // warehouse brick above the coping
-    this.blockTint = 0xb08d5e; // plywood boxes
-    this.killY = -40;
-    this.finishZ = -1e9; // sandbox: session over when YOU say so
-    this.endWallZ = -70;
-    this.spawnPos.set(0, 0.1, 52);
-    this.currentSpawn.copy(this.spawnPos);
-    this.theme = {
-      skyTop: '#151820', // rafters lost in the dark
-      skyBottom: '#333947',
-      sunColorHex: '#ffd9a0', // skylight shaft
-      sunU: 0.5,
-      sunV: 0.28,
-      stars: false,
-      fog: 0x252932,
-      fogNear: 45,
-      fogFar: 240,
-      hemiSky: 0x9aa4b8, // cool skylight fill
-      hemiGround: 0x3a342c,
-      hemiI: 0.9,
-      sunColor: 0xffc880, // warm sodium key
-      sunI: 1.35,
-      particleColor: 0xcabb9a, // drifting dust
-      particleWind: [0.2, -0.05, 0.1],
-    };
-
-    const W = 44; // room half-extent, x
-    const D = 64; // room half-extent, z
-    const R = 10; // perimeter transition radius — THPS-warehouse mellow
-    const LIP = 6.1;
-    // circle profile, wall-relative: [distance from wall, height]
-    const P: [number, number][] = [
-      [10, 0],
-      [7.5, 0.23],
-      [5.5, 0.79],
-      [3.8, 1.55],
-      [2.2, 2.74],
-      [0.95, 4.18],
-      [0, 6.1],
-    ];
-    const V = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
-    const addRail = (a: THREE.Vector3, b: THREE.Vector3): void => {
-      const r = new Rail([a, b]);
-      this.rails.push(r);
-      this.root.add(r.object);
-    };
-
-    // --- the giant enclosing bowl -----------------------------------------
-    // Straight transitions along all four walls (corners carry the curve).
-    for (let i = 0; i < P.length - 1; i++) {
-      const [w0, y0] = P[i];
-      const [w1, y1] = P[i + 1];
-      this.bank('bowl wall E', -(D - R), D - R, W - w0, W - w1, y0, y1, matTrans);
-      this.bank('bowl wall W', -(D - R), D - R, -(W - w0), -(W - w1), y0, y1, matTrans);
-      this.ramp('bowl wall N', D - w0, y0, D - w1, y1, (W - R) * 2, matTrans, 0, 'pavement');
-      this.ramp('bowl wall S', -(D - w0), y0, -(D - w1), y1, (W - R) * 2, matTrans, 0, 'pavement');
-    }
-    // Curved pool corners: quarter-cone patches rising from the floor point
-    // to the lip arc — full profile resolution and 5 arc steps, so the scoop
-    // grinds and rides as one seamless curve.
-    for (const sx of [1, -1]) {
-      for (const sz of [1, -1]) {
-        const ccx = sx * (W - R);
-        const ccz = sz * (D - R);
-        for (let i = 0; i < P.length - 1; i++) {
-          const r0 = R - P[i][0];
-          const y0 = P[i][1];
-          const r1 = R - P[i + 1][0];
-          const y1 = P[i + 1][1];
-          for (let j = 0; j < 5; j++) {
-            const a0 = (j / 5) * (Math.PI / 2);
-            const a1 = ((j + 1) / 5) * (Math.PI / 2);
-            this.quadFace(
-              'bowl corner',
-              [ccx + sx * Math.cos(a0) * r0, y0, ccz + sz * Math.sin(a0) * r0],
-              [ccx + sx * Math.cos(a0) * r1, y1, ccz + sz * Math.sin(a0) * r1],
-              [ccx + sx * Math.cos(a1) * r1, y1, ccz + sz * Math.sin(a1) * r1],
-              [ccx + sx * Math.cos(a1) * r0, y0, ccz + sz * Math.sin(a1) * r0],
-              matTrans,
-            );
-          }
-        }
-      }
-    }
-    // ONE continuous coping loop: four straight lips joined by quarter arcs,
-    // so a grind carries around the corners instead of dying at a seam.
-    const lr = R - 0.1;
-    const loop: THREE.Vector3[] = [];
-    const arc = (ccx: number, ccz: number, a0: number): void => {
-      for (let j = 1; j <= 5; j++) {
-        const a = a0 + (Math.PI / 2) * (j / 5);
-        loop.push(V(ccx + Math.cos(a) * lr, LIP + 0.05, ccz + Math.sin(a) * lr));
-      }
-    };
-    loop.push(V(W - 0.1, LIP + 0.05, -(D - R)));
-    loop.push(V(W - 0.1, LIP + 0.05, D - R));
-    arc(W - R, D - R, 0); // NE
-    loop.push(V(-(W - R), LIP + 0.05, D - 0.1));
-    arc(-(W - R), D - R, Math.PI / 2); // NW
-    loop.push(V(-(W - 0.1), LIP + 0.05, -(D - R)));
-    arc(-(W - R), -(D - R), Math.PI); // SW
-    loop.push(V(W - R, LIP + 0.05, -(D - 0.1)));
-    arc(W - R, -(D - R), Math.PI * 1.5); // SE, closes next to the start
-    const loopRail = new Rail(loop);
-    this.rails.push(loopRail);
-    this.root.add(loopRail.object);
-    // FLAT DECK behind every lip — grind exits and coping stalls land on
-    // boards, not inside the wall. Walls move outward to make the room.
-    const DECK = 3;
-    const WX = W + DECK;
-    const WZ = D + DECK;
-    this.slab('bowl deck E', D - R, -(D - R), LIP, DECK, matTrans, false, W + DECK / 2, 'plank');
-    this.slab('bowl deck W', D - R, -(D - R), LIP, DECK, matTrans, false, -(W + DECK / 2), 'plank');
-    this.slab('bowl deck N', WZ, D, LIP, (W - R) * 2, matTrans, false, 0, 'plank');
-    this.slab('bowl deck S', -D, -WZ, LIP, (W - R) * 2, matTrans, false, 0, 'plank');
-    // corner deck fans: arc -> outer wall square, flat at lip height
-    for (const sx of [1, -1]) {
-      for (const sz of [1, -1]) {
-        const ccx = sx * (W - R);
-        const ccz = sz * (D - R);
-        const spread = R + DECK; // wall square, corner-local
-        for (let j = 0; j < 5; j++) {
-          const a0 = (j / 5) * (Math.PI / 2);
-          const a1 = ((j + 1) / 5) * (Math.PI / 2);
-          const bnd = (a: number): [number, number] => {
-            const t = Math.min(
-              spread / Math.max(Math.abs(Math.cos(a)), 1e-4),
-              spread / Math.max(Math.abs(Math.sin(a)), 1e-4),
-            );
-            return [ccx + sx * Math.cos(a) * t, ccz + sz * Math.sin(a) * t];
-          };
-          const [bx0, bz0] = bnd(a0);
-          const [bx1, bz1] = bnd(a1);
-          this.quadFace(
-            'bowl deck corner',
-            [ccx + sx * Math.cos(a0) * R, LIP, ccz + sz * Math.sin(a0) * R],
-            [ccx + sx * Math.cos(a1) * R, LIP, ccz + sz * Math.sin(a1) * R],
-            [bx1, LIP, bz1],
-            [bx0, LIP, bz0],
-            matTrans,
-            'plank',
-          );
-        }
-      }
-    }
-    // brick above the coping, sealing the room
-    this.wall(0, WZ + 0.7, WX * 2 + 4, 1.5, LIP, 10);
-    this.wall(0, -(WZ + 0.7), WX * 2 + 4, 1.5, LIP, 10);
-    this.wall(WX + 0.7, 0, 1.5, WZ * 2 + 4, LIP, 10);
-    this.wall(-(WX + 0.7), 0, 1.5, WZ * 2 + 4, LIP, 10);
-
-    // --- floor: strips around the sunken bowl footprint --------------------
-    const bx = 20; // bowl center
-    const bz = -22;
-    const BRIM = 13; // bowl rim radius (octagon)
-    this.slab('floor north', D, bz + BRIM, 0, W * 2, matFloor, false, 0, 'asphalt');
-    this.slab('floor south', bz - BRIM, -D, 0, W * 2, matFloor, false, 0, 'asphalt');
-    this.slab('floor west', bz + BRIM, bz - BRIM, 0, bx - BRIM + W, matFloor, false, (bx - BRIM - W) / 2, 'asphalt');
-    this.slab('floor east', bz + BRIM, bz - BRIM, 0, W - bx - BRIM, matFloor, false, (W + bx + BRIM) / 2, 'asphalt');
-    // octagon-to-square apron: 8 flat quads seal the bowl surround exactly
-    const sq = (a: number): [number, number] => {
-      const c = Math.cos(a);
-      const s = Math.sin(a);
-      const t = BRIM / Math.max(Math.abs(c), Math.abs(s));
-      return [bx + c * t, bz + s * t];
-    };
-    for (let j = 0; j < 8; j++) {
-      const a0 = (j / 8) * Math.PI * 2;
-      const a1 = ((j + 1) / 8) * Math.PI * 2;
-      const [qx0, qz0] = sq(a0);
-      const [qx1, qz1] = sq(a1);
-      this.quadFace(
-        'bowl apron',
-        [bx + Math.cos(a0) * BRIM, 0, bz + Math.sin(a0) * BRIM],
-        [bx + Math.cos(a1) * BRIM, 0, bz + Math.sin(a1) * BRIM],
-        [qx1, 0, qz1],
-        [qx0, 0, qz0],
-        matFloor,
-        'asphalt',
-      );
-    }
-
-    // --- sunken octagonal pool bowl ----------------------------------------
-    const BR: [number, number][] = [
-      [13, 0],
-      [10.6, -1.5],
-      [8.2, -2.7],
-    ];
-    for (let i = 0; i < BR.length - 1; i++) {
-      const [r0, y0] = BR[i];
-      const [r1, y1] = BR[i + 1];
-      for (let j = 0; j < 8; j++) {
-        const a0 = (j / 8) * Math.PI * 2;
-        const a1 = ((j + 1) / 8) * Math.PI * 2;
-        this.quadFace(
-          'pool bowl',
-          [bx + Math.cos(a0) * r0, y0, bz + Math.sin(a0) * r0],
-          [bx + Math.cos(a0) * r1, y1, bz + Math.sin(a0) * r1],
-          [bx + Math.cos(a1) * r1, y1, bz + Math.sin(a1) * r1],
-          [bx + Math.cos(a1) * r0, y0, bz + Math.sin(a1) * r0],
-          matTrans,
-        );
-      }
-    }
-    this.slab('pool floor', bz + 7.7, bz - 7.7, -2.7, 15.4, matTrans, false, bx, 'pavement');
-    this.crystal(bx, -1.6, bz); // dive for it
-
-    // --- full halfpipe (west side) ------------------------------------------
-    const HP: [number, number, number, number][] = [
-      [3.0, 4.8, 0, 0.23],
-      [4.8, 6.3, 0.23, 0.79],
-      [6.3, 7.5, 0.79, 1.55],
-      [7.5, 8.7, 1.55, 2.74],
-      [8.7, 9.6, 2.74, 4.18],
-      [9.6, 10.3, 4.18, 6.1],
-    ];
-    const hpx = -24;
-    for (const [xi, xo, yb, yt] of HP) {
-      for (const s of [1, -1]) {
-        this.bank('halfpipe wall', -40, -8, hpx + s * xi, hpx + s * xo, yb, yt, matTrans);
-      }
-    }
-    addRail(V(hpx + 10.3, LIP + 0.05, -8), V(hpx + 10.3, LIP + 0.05, -40));
-    addRail(V(hpx - 10.3, LIP + 0.05, -8), V(hpx - 10.3, LIP + 0.05, -40));
-
-    // --- spine (hit it travelling either way along z) -----------------------
-    this.ramp('spine south', 19, 0, 14.5, 2.2, 10, matTrans, 0, 'pavement');
-    this.ramp('spine north', 10, 0, 14.5, 2.2, 10, matTrans, 0, 'pavement');
-    addRail(V(-5, 2.35, 14.5), V(5, 2.35, 14.5));
-
-    // --- funbox with rail over the top ---------------------------------------
-    this.stepBlock(0, 38, 12, 10, 0, 1.5);
-    this.ramp('funbox south', 46, 0, 43, 1.5, 12, matTrans, 0, 'pavement');
-    this.ramp('funbox north', 30, 0, 33, 1.5, 12, matTrans, 0, 'pavement');
-    this.bank('funbox east', 33, 43, 8.5, 6, 0, 1.5, matTrans);
-    this.bank('funbox west', 33, 43, -8.5, -6, 0, 1.5, matTrans);
-    addRail(V(0, 2.1, 47), V(0, 2.1, 29));
-
-    // --- kicker row (drop in off the north wall, launch into the room) -------
-    // Exact single-face quads: a box ramp's 1-thick back edge is itself a
-    // ridable sliver that catches riders at the lip; a quad has no back.
-    for (const [kx, kh] of [
-      [-14, 2.4],
-      [-24, 3.2],
-      [-34, 4.2],
-    ] as const) {
-      this.quadFace(
-        `kicker ${kx}`,
-        [kx - 2, 0, 45],
-        [kx + 2, 0, 45],
-        [kx + 2, kh, 41.5],
-        [kx - 2, kh, 41.5],
-        matTrans,
-        'pavement',
-      );
-    }
-
-    // --- roller hums along the east lane -------------------------------------
-    for (let k = 0; k < 3; k++) {
-      const z0 = 26 - k * 8;
-      this.ramp(`roller ${k + 1} up`, z0, 0, z0 - 2.2, 0.9, 5, matTrans, 30, 'pavement');
-      this.ramp(`roller ${k + 1} down`, z0 - 4.4, 0, z0 - 2.2, 0.9, 5, matTrans, 30, 'pavement');
-    }
-
-    // --- street tier (from the iso reference): a second vertical level -------
-    // Elevated deck along the south end: quarter-pipe face into the room,
-    // stair set with handrail at the east end, bank at the west end, ledge
-    // and drop rails — every void underneath sealed with visible walls.
-    this.slab('street deck', -41, -53, 3.2, 48, matTrans, true, -10, 'plank');
-    this.ramp('street qp a', -36.4, 0, -38.1, 0.9, 40, matTrans, -14, 'pavement');
-    this.ramp('street qp b', -38.1, 0.9, -39.7, 2.2, 40, matTrans, -14, 'pavement');
-    this.ramp('street qp c', -39.7, 2.2, -41, 3.2, 40, matTrans, -14, 'pavement');
-    this.stepBlock(11, -39.8, 6, 2.4, 0, 2.3);
-    this.stepBlock(11, -37.4, 6, 2.4, 0, 1.5);
-    this.stepBlock(11, -35, 6, 2.4, 0, 0.75);
-    addRail(V(11, 3.6, -41.5), V(11, 0.8, -33.5)); // handrail down the set
-    this.bank('street bank', -53, -41, -38.5, -34, 0, 3.2, matTrans);
-    addRail(V(-30, 3.35, -41.15), V(2, 3.35, -41.15)); // deck-edge ledge
-    addRail(V(4, 3.35, -41), V(4, 0.9, -33)); // drop rail off the deck
-    this.wall(14.3, -47, 0.6, 12.6, 0, 2.7); // seal the under-deck void
-    this.wall(-10, -53.3, 48.6, 0.6, 0, 2.7);
-    this.wall(7, -41.3, 2.4, 0.6, 0, 2.7); // slot between QP face and stairs
-    this.crate(-24, 3.2, -47); // deck loot
-    this.crate(-24, 4.2, -47, 'mystery');
-
-    // --- center pyramid with an overtop rail ---------------------------------
-    this.ramp('pyramid n', -18, 0, -22, 1.8, 12, matTrans, -3, 'pavement');
-    this.ramp('pyramid s', -30, 0, -26, 1.8, 12, matTrans, -3, 'pavement');
-    this.bank('pyramid e', -26, -22, 3, 1, 0, 1.8, matTrans);
-    this.bank('pyramid w', -26, -22, -9, -7, 0, 1.8, matTrans);
-    this.slab('pyramid top', -22, -26, 1.8, 8, matTrans, false, -3, 'pavement');
-    addRail(V(-3, 2.3, -16.5), V(-3, 2.3, -31.5));
-
-    // --- manual pads (curb-height: roll up, pop off) --------------------------
-    this.slab('manual pad a', -42.5, -46.5, 0.7, 8, matTrans, true, 29, 'pavement');
-    this.slab('manual pad b', -48, -51.5, 1.0, 8, matTrans, true, 29, 'pavement');
-
-    // --- solid backs: no more skating through ramp bellies --------------------
-    // Backs sit 0.7 behind the riding face: flush colliders clip riders near
-    // the lip, and the 0.7 slot is narrower than the player, so it can't be
-    // entered — solid from outside, invisible to anyone on the face.
-    this.wall(hpx - 11.7, -24, 0.6, 32, 0, 6.1); // halfpipe outer backs
-    this.wall(hpx + 11.7, -24, 0.6, 32, 0, 6.1);
-    this.wall(-14, 40.4, 4, 0.5, 0, 2.4); // kicker backboards (tall-edge side)
-    this.wall(-24, 40.4, 4, 0.5, 0, 3.2);
-    this.wall(-34, 40.4, 4, 0.5, 0, 4.2);
-
-    // --- rail lines -----------------------------------------------------------
-    addRail(V(-10, 0.9, 44), V(-10, 0.9, 24)); // flat ledge line near spawn
-    addRail(V(12, 3.2, 26), V(12, 0.9, 4)); // sloped line off the kicker side
-    addRail(V(-38, 0.9, 20), V(-38, 0.9, -4)); // west wall approach line
-
-    // --- crates & relics -------------------------------------------------------
-    for (let i = 0; i < 5; i++) this.crate(-6 + i * 3, 0, 24);
-    this.crate(-10, 0, 34, 'mystery');
-    this.crate(11, 0, -31, 'mask'); // tucked on the pool apron
-    this.crate(-8, 0, -24, 'bouncy'); // by the halfpipe entry (classic stack spawns above)
-    this.crate(30, 0, 36, 'tnt');
-    this.crate(30, 0, 42, 'nitro');
-    this.crate(-34, 0, 30);
-    this.crate(-34, 1, 30);
-    this.crate(-34, 2, 30, 'mystery'); // corner stack: spin the base out
-    this.checkpoint(0, 8, 14);
-
-    // --- warehouse dressing (pure visual, skipped in lite) --------------------
-    if (!this.liteDecor) {
-      const beamMat = new THREE.MeshLambertMaterial({ color: 0x4a3f34 });
-      const lightMat = new THREE.MeshLambertMaterial({ color: 0xffe9b8, emissive: 0xffc86a });
-      const beamGeo = new THREE.BoxGeometry(W * 2 - 2, 0.6, 0.8);
-      const lampGeo = new THREE.BoxGeometry(1.6, 0.5, 0.8);
-      for (let z = -48; z <= 48; z += 24) {
-        const beam = new THREE.Mesh(beamGeo, beamMat);
-        beam.position.set(0, 15, z);
-        this.root.add(beam);
-        for (const lx of [-22, 0, 22]) {
-          const lamp = new THREE.Mesh(lampGeo, lightMat);
-          lamp.position.set(lx, 14.3, z);
-          this.root.add(lamp);
-        }
-      }
-      // high window strips: glowing panes on the long walls
-      const paneMat = new THREE.MeshLambertMaterial({ color: 0xbfd8e8, emissive: 0x5a7688 });
-      const paneGeo = new THREE.BoxGeometry(0.3, 2.6, 7);
-      for (const sx of [1, -1]) {
-        for (let z = -50; z <= 50; z += 20) {
-          const pane = new THREE.Mesh(paneGeo, paneMat);
-          pane.position.set(sx * (W + 3.2), 11.5, z);
-          this.root.add(pane);
-        }
-      }
     }
   }
 

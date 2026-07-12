@@ -52,6 +52,8 @@ export const TUNING = {
   slideJumpHeight: 1.2, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
   slideJumpTravel: 0.95, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
+  slideRecharge: 0.6, // cooldown after a PLAIN slide before you can slide again (no spamming for speed)
+  slideEndKeep: 0.55, // fraction of the burst speed kept when a plain slide ends (a little slow-down; slide JUMPS keep it all)
   airControl: 0, // forward/back speed adjustment in the air
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
@@ -125,6 +127,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   slideJumpHeight: { min: 1, max: 4, step: 0.05 },
   slideJumpTravel: { min: 0.2, max: 1.5, step: 0.05 },
   slideJumpGrace: { min: 0, max: 0.8, step: 0.05 },
+  slideRecharge: { min: 0, max: 2, step: 0.05 },
+  slideEndKeep: { min: 0.2, max: 1, step: 0.05 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
@@ -231,6 +235,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Horizontal launch speed out of a slide-jump, scaled independently of the height — turn it down to keep the big pop without flying across the map.',
   slideJumpGrace:
     'Timing forgiveness: releasing the jump within this many seconds AFTER the slide ends still fires the boosted slide jump (0 = strict, boost only mid-slide).',
+  slideRecharge:
+    'Cooldown after a PLAIN slide before you can slide again — stops you spamming slides for constant free speed. A slide JUMP is exempt (it pays its own tiny cooldown).',
+  slideEndKeep:
+    'How much of the slide burst you keep when a plain slide ENDS (only bites when the slide left you above cruise): 1 = keep it all (old behaviour), lower = a little slow-down so the slide nets no free speed. Slide JUMPS keep their full boost.',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
@@ -308,7 +316,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'landGive',
     ],
   },
-  { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
+  { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecharge', 'slideEndKeep', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
   {
     title: 'GRINDS',
     keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
@@ -327,7 +335,7 @@ export const CONST = {
   bailDownTime: 1.1, // knocked-down beat after a mask-less bail before getting up
   killY: -48, // fall below this = instant death
   respawnDelay: 0.7, // quick Crash-style respawn
-  playerHalf: { x: 0.5, y: 0.9, z: 0.5 }, // capsule-ish AABB approximation
+  playerHalf: { x: 0.5, y: 0.46, z: 0.5 }, // capsule-ish AABB: full height 0.92, just shy of one crate (0.96)
   spinReach: 0.8, // extra horizontal hit reach while spinning (arm+board span)
   spinCooldown: 0.15,
   maskInvuln: 1.0, // grace after a mask absorbs a hit or bail

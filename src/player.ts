@@ -90,6 +90,7 @@ export class Player {
   private slideLandClamp = false; // walk-slide touchdown: cap the next measured planar too
   private slideVec = new THREE.Vector3(); // world-space slide direction (8-axis)
   private slideSpd = 0;
+  private slideEndPending = false; // a slide is running; its end (scrub+recharge) not yet resolved
   private landingScoring = false; // landing-tick payouts still count as air tricks
   private crawling = false; // Circle held while stopped: all-fours crawl
   private crawlPose = 0;
@@ -230,7 +231,7 @@ export class Player {
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
   private enemyTouch = new THREE.Box3(); // scratch: shrunken enemy touch box
-  private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
+  private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; dust?: boolean }[] = [];
   private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
 
   constructor(scene: THREE.Scene) {
@@ -370,6 +371,7 @@ export class Player {
     this.slideTimer = 0;
     this.slideCd = 0;
     this.slideGraceT = 0;
+    this.slideEndPending = false;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -440,8 +442,27 @@ export class Player {
     else this.jumpPressT = Math.max(0, this.jumpPressT - dt);
     // While sliding, keep the slide-jump grace topped up; after the slide it
     // runs down, and a release inside it still counts as a slide jump.
-    if (this.slideTimer > 0) this.slideGraceT = TUNING.slideJumpGrace;
-    else this.slideGraceT = Math.max(0, this.slideGraceT - dt);
+    if (this.slideTimer > 0) {
+      this.slideGraceT = TUNING.slideJumpGrace;
+      this.slideEndPending = true; // a slide is running; its end isn't resolved yet
+    } else if (this.slideGraceT > 0) {
+      this.slideGraceT = Math.max(0, this.slideGraceT - dt);
+      // Grace fully elapsed with NO slide jump taken (a slide jump zeroes
+      // slideGraceT in chargedJump, so we never reach here after one): a PLAIN
+      // slide just ended. Scrub the burst back toward cruise and arm a recharge
+      // so slides can't be chained for constant free speed. Slide JUMPS keep
+      // their boost untouched.
+      if (this.slideGraceT <= 0 && this.slideEndPending) {
+        this.slideEndPending = false;
+        if (this.state === 'ride' && this.grounded) {
+          this.slideCd = Math.max(this.slideCd, TUNING.slideRecharge);
+          if (Math.abs(this.speed) > TUNING.cruiseSpeed)
+            this.speed =
+              Math.sign(this.speed) *
+              Math.max(TUNING.cruiseSpeed, Math.abs(this.speed) * TUNING.slideEndKeep);
+        }
+      }
+    }
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
@@ -658,6 +679,7 @@ export class Player {
 
     this.updateSpin(dt, input);
     this.updateGrab(dt, input);
+    if (this.sliding) this.emitDust(2); // baseball-slide dust off the ground
     this.updateSparks(dt);
     this.updateFruit(dt);
 
@@ -803,6 +825,7 @@ export class Player {
       // launch so you can keep the height without flying across the map.
       this.speed *= TUNING.slideJumpTravel;
       this.slideTimer = 0;
+      this.slideEndPending = false; // consumed by a slide JUMP: no plain-slide scrub
       this.slideCd = CONST.slideCooldown;
       this.airMomentum = true;
       this.lastJumpType = 'Slide Jump';
@@ -2189,6 +2212,7 @@ export class Player {
       if (count <= 0) break;
       if (s.life > 0) continue;
       count--;
+      s.dust = false;
       s.maxLife = 0.2 + Math.random() * 0.2;
       s.life = s.maxLife;
       (s.mesh.material as THREE.MeshBasicMaterial).color.setHex(color);
@@ -2204,6 +2228,30 @@ export class Player {
     }
   }
 
+  // Ground dust/smoke kicked up by the baseball slide: pale, low, drifting out
+  // behind the plant — floats and drags instead of arcing like a spark.
+  private emitDust(count: number): void {
+    const back = this.axisF.clone().multiplyScalar(-Math.sign(this.speed || 1));
+    for (const s of this.sparks) {
+      if (count <= 0) break;
+      if (s.life > 0) continue;
+      count--;
+      s.dust = true;
+      s.maxLife = 0.4 + Math.random() * 0.35;
+      s.life = s.maxLife;
+      (s.mesh.material as THREE.MeshBasicMaterial).color.setHex(0xd8cdb6); // pale dust
+      s.mesh.visible = true;
+      s.mesh.position.set(
+        this.pos.x + (Math.random() - 0.5) * 0.7,
+        this.pos.y + 0.06,
+        this.pos.z + (Math.random() - 0.5) * 0.7,
+      );
+      s.vel
+        .set((Math.random() - 0.5) * 1.4, 0.5 + Math.random() * 0.9, (Math.random() - 0.5) * 1.4)
+        .addScaledVector(back, 0.8 + Math.random() * 1.6);
+    }
+  }
+
   private updateSparks(dt: number): void {
     for (const s of this.sparks) {
       if (s.life <= 0) continue;
@@ -2212,9 +2260,18 @@ export class Player {
         s.mesh.visible = false;
         continue;
       }
-      s.vel.y -= 22 * dt;
-      s.mesh.position.addScaledVector(s.vel, dt);
-      s.mesh.scale.setScalar(Math.max(s.life / s.maxLife, 0.25));
+      const k = s.life / s.maxLife;
+      if (s.dust) {
+        // dust hangs: light gravity, air drag, and it puffs OUT as it fades
+        s.vel.y -= 3.5 * dt;
+        s.vel.multiplyScalar(1 - Math.min(1, 4 * dt));
+        s.mesh.position.addScaledVector(s.vel, dt);
+        s.mesh.scale.setScalar(1.4 + (1 - k) * 2.6);
+      } else {
+        s.vel.y -= 22 * dt;
+        s.mesh.position.addScaledVector(s.vel, dt);
+        s.mesh.scale.setScalar(Math.max(k, 0.25));
+      }
     }
   }
 
@@ -2901,8 +2958,10 @@ export class Player {
     const star = this.starPose;
     if (this.legL && this.legR) {
       // baseball slide: lead leg kicked out ahead, trailing leg half-bent
-      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose;
-      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose;
+      // crawl: hips fold FORWARD so the thighs come under the body (knees down),
+      // not trailing straight out behind the pitched-over torso.
+      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose + 0.6 * this.crawlPose;
+      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose + 0.6 * this.crawlPose;
       // switch stance mirrors the feet fore-aft (and the ankle angles)
       const stz = this.stance;
       // Side-on frame: the body is turned 90°, so the hip line IS the board
@@ -3176,7 +3235,7 @@ export class Player {
         flip * (1 - this.grabPose) +
         this.grabPitch * this.grabPose -
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
-        1.25 * this.crawlPose - // all fours: torso pitched right over
+        0.68 * this.crawlPose - // all fours: torso hunched forward (not a flat dive/belly-flop)
         0.55 * this.hangPose + // rear back: "...uh oh"
         1.45 * this.dropPose - // belly-first pancake
         0.28 * this.teeterPose + // arms-back "whoa whoa" lean
@@ -3193,14 +3252,15 @@ export class Player {
     this.bodyGroup.position.y =
       this.grabPose * -0.5 -
       this.slidePose * 0.38 -
-      this.crawlPose * 0.12 -
+      this.crawlPose * 0.26 - // hunch down (hips stay up so it's a crawl, not a belly-flop)
       this.chargePose * 0.26 -
       (this.grounded ? 0.1 * this.dropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.05 * this.walkAmp +
       breathe * 0.015 * this.idleAmp;
-    // Impact squash right after a slam lands.
+    // Impact squash right after a slam lands; crawl also compresses the rig so
+    // the whole body sits low and compact instead of floating pitched-over.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
-    this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash);
+    this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash) * (1 - 0.22 * this.crawlPose);
 
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;

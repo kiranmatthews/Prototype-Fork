@@ -299,8 +299,6 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Digit4') switchLevel(3);
   if (e.code === 'Digit5') switchLevel(4);
   if (e.code === 'Digit6') switchLevel(5);
-  if (e.code === 'Digit7') switchLevel(6);
-  if (e.code === 'Digit8') switchLevel(7);
 });
 
 player.onDeath = () => {
@@ -512,4 +510,4 @@ function frame(): void {
 frame();
 
 // Smoke-test / console-poking hook.
-(window as unknown as Record<string, unknown>).__game = { player, level, input, TUNING, switchLevel, scene, camera, renderer, THREE };
+(window as unknown as Record<string, unknown>).__game = { player, level, input, TUNING, switchLevel, scene, camera, renderer };
