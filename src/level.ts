@@ -4237,22 +4237,25 @@ export class Level {
   // a spatial tuning reference so the skating physics can be dialed against a
   // matching park. Sandbox — no finish line.
   private buildWarehouse2(): void {
-    // A faithful reconstruction of the reference warehouse (plan + iso). The
-    // footprint is a WIDE north hall that steps into a NARROWER south wing —
-    // the two walled "rooms" of the raised loading DOCK (the uppermost story).
-    // You spawn up on the dock and roll DOWNHILL (−Z) into the hall: a long
-    // central channel funbox (the dominant feature), a mini half-pipe, an
-    // A-frame near the forklift, perimeter quarter-pipes with rounded far
-    // corners, the red wall ledge, the valve, and crate piles.
-    const matFloor = new THREE.MeshLambertMaterial({ color: 0xbcc0c4 }); // concrete
+    // Built to the annotated reference (plan + iso). A big MAIN HALL at
+    // Elevation 1 opens SOUTH into a raised WING. Elevations are the spec's
+    // numbers mapped to world Y by E() below (Elevation 1 = floor 0).
+    // MAIN HALL: sunken half-pipe (Elevation 0.5) with two feed ramps + a slope
+    // exit, a centre rail, two tiny ramps, a small obstacle jump, perimeter
+    // quarter-pipes up to Elevation 2 decks, and a long curved pipe wrapping the
+    // NE corner. SOUTH WING: two matching curved slopes flank a tall central
+    // wall block (Elevation 10, solid all sides) and climb to the Elevation 6
+    // deck + Elevation 7 quarter-pipe mezzanine, with Elevation 2 side rooms.
+    // Spawn is up on the Elevation 7 wing, facing downhill (−Z) into the park.
+    const matFloor = new THREE.MeshLambertMaterial({ color: 0xbec2c6 }); // concrete
     const matTrans = new THREE.MeshLambertMaterial({ color: 0x9a7d55 }); // masonite ramps
     const matDeck = new THREE.MeshLambertMaterial({ color: 0xb08d5e }); // plywood decks
-    const matRed = new THREE.MeshLambertMaterial({ color: 0x8f2f26 }); // the red wall ledge
+    const matRed = new THREE.MeshLambertMaterial({ color: 0x8f2f26 }); // the red ledge
     this.wallTint = 0x5f5344;
-    this.blockTint = 0xb08d5e;
+    this.blockTint = 0x83817b;
     this.killY = -40;
     this.finishZ = -1e9; // sandbox
-    this.endWallZ = -70;
+    this.endWallZ = -80;
     this.theme = {
       skyTop: '#151820',
       skyBottom: '#333947',
@@ -4261,11 +4264,11 @@ export class Level {
       sunV: 0.28,
       stars: false,
       fog: 0x252932,
-      fogNear: 60,
-      fogFar: 280,
+      fogNear: 70,
+      fogFar: 320,
       hemiSky: 0x9aa4b8,
       hemiGround: 0x3a342c,
-      hemiI: 0.9,
+      hemiI: 0.95,
       sunColor: 0xffc880,
       sunI: 1.35,
       particleColor: 0xcabb9a,
@@ -4278,224 +4281,172 @@ export class Level {
       this.rails.push(r);
       this.root.add(r.object);
     };
+    // Elevation number -> world Y. The spec's Elevation 1 is the main floor (0).
+    const E = (n: number): number => (n - 1) * 1.5;
 
-    // ---- footprint (portrait; hall wide, dock wing narrower, per the plan) --
-    const WXN = 34; // north hall half-width
-    const WXS = 26; // south dock-wing half-width (the room steps in here)
-    const ZN = -54; // north wall (far, open hall)
-    const ZW = 8; // waist: the room steps in from WXN to WXS at this z
-    const ZS = 42; // south wall (behind the dock)
-    const DH = 7; // dock / upper-story height — a full story
-    const CR = 6; // rounded far-corner radius (= QP reach)
-    const CHW = 5; // dock channel half-width (the central corridor between the rooms)
-    const DOCKZ = 18; // dock front edge (its north face / top of the roll-in)
+    // Quarter-circle profile [dist-from-wall, height] for a QP of radius R:
+    // mellow at the floor, vertical at the coping, so pumping crests into air.
+    const qprof = (R: number): [number, number][] =>
+      ([[1, 0], [0.625, 0.073], [0.332, 0.257], [0.133, 0.5], [0.038, 0.725], [0.005, 0.895], [0, 1]] as [number, number][]).map(
+        ([d, h]) => [d * R, h * R],
+      );
 
-    // Spawn up on the WEST dock room, facing −Z (downhill). Default dir 'S'
-    // gives axisF = (0,0,−1), so the roll-in points north into the hall.
-    this.spawnPos.set(-15, DH + 0.1, 34);
-    this.currentSpawn.copy(this.spawnPos);
-
-    // TRUE quarter-circle QP profile [dist from wall, height] — vertical lip.
-    const prof: [number, number][] = [
-      [6, 0],
-      [3.75, 0.44],
-      [1.99, 1.54],
-      [0.8, 3.0],
-      [0.23, 4.35],
-      [0.03, 5.37],
-      [0, 6],
-    ];
-
-    // ---------- FLOOR (wide hall + narrower south wing) ----------
-    this.slab('wh2 hall floor', ZN, ZW, 0, WXN * 2, matFloor, false, 0, 'pavement');
-    this.slab('wh2 wing floor', ZW, ZS, 0, WXS * 2, matFloor, false, 0, 'pavement');
-
-    // ---------- SOUTH DOCK: two raised walled ROOMS + central corridor ------
-    const roomW = WXS - CHW; // width of each dock room (21)
-    const cxW = -(CHW + roomW / 2); // −15.5
-    const cxE = CHW + roomW / 2; // +15.5
-    // solid raised rooms (walkable top, solid sides you jump/roll off, not clip)
-    this.stepBlock(cxW, (DOCKZ + ZS) / 2, roomW, ZS - DOCKZ, 0, DH); // west room
-    this.stepBlock(cxE, (DOCKZ + ZS) / 2, roomW, ZS - DOCKZ, 0, DH); // east room
-    // wide roll-in bank off the north face of each room (DH → 0 over 10z)
-    this.ramp('wh2 rollin W', DOCKZ - 10, 0, DOCKZ, DH, roomW, matTrans, cxW);
-    this.ramp('wh2 rollin E', DOCKZ - 10, 0, DOCKZ, DH, roomW, matTrans, cxE);
-    // grind rail along each dock room's front (north) lip
-    addRail(V(cxW - roomW / 2, DH + 0.06, DOCKZ), V(cxW + roomW / 2, DH + 0.06, DOCKZ));
-    addRail(V(cxE - roomW / 2, DH + 0.06, DOCKZ), V(cxE + roomW / 2, DH + 0.06, DOCKZ));
-    // rail down each side of the central corridor (grind the channel edge)
-    addRail(V(-CHW, DH + 0.06, DOCKZ), V(-CHW, DH + 0.06, ZS));
-    addRail(V(CHW, DH + 0.06, DOCKZ), V(CHW, DH + 0.06, ZS));
-
-    // ---------- PERIMETER QUARTER-PIPES (hall) ----------
-    const qpEast = (xw: number, z0: number, z1: number): void => {
-      for (let i = 0; i < prof.length - 1; i++)
-        this.bank('wh2 qp E', z0, z1, xw - prof[i][0], xw - prof[i + 1][0], prof[i][1], prof[i + 1][1], matTrans);
-      addRail(V(xw, DH + 0.05, z0), V(xw, DH + 0.05, z1));
+    // QP on an X-wall (rises in X toward xWall), base->base+H, spanning z0..z1.
+    const qpX = (xWall: number, dir: number, z0: number, z1: number, base: number, H: number, deck = 0): void => {
+      const pr = qprof(H);
+      for (let i = 0; i < pr.length - 1; i++)
+        this.bank('wh2 qp', z0, z1, xWall - dir * pr[i][0], xWall - dir * pr[i + 1][0], base + pr[i][1], base + pr[i + 1][1], matTrans);
+      if (deck > 0) this.slab('wh2 qp deck', z0, z1, base + H, deck, matDeck, false, xWall + dir * deck / 2, 'plank');
+      addRail(V(xWall, base + H + 0.05, z0), V(xWall, base + H + 0.05, z1));
     };
-    const qpWest = (xw: number, z0: number, z1: number): void => {
-      for (let i = 0; i < prof.length - 1; i++)
-        this.bank('wh2 qp W', z0, z1, xw + prof[i][0], xw + prof[i + 1][0], prof[i][1], prof[i + 1][1], matTrans);
-      addRail(V(xw, DH + 0.05, z0), V(xw, DH + 0.05, z1));
-    };
-    const qpNorth = (zw: number, x0: number, x1: number): void => {
+    // QP on a Z-wall (rises in Z toward zWall), base->base+H, spanning x0..x1.
+    const qpZ = (zWall: number, dir: number, x0: number, x1: number, base: number, H: number, deck = 0): void => {
+      const pr = qprof(H);
       const w = Math.abs(x1 - x0);
       const cx = (x0 + x1) / 2;
-      for (let i = 0; i < prof.length - 1; i++)
-        this.ramp('wh2 qp N', zw + prof[i][0], prof[i][1], zw + prof[i + 1][0], prof[i + 1][1], w, matTrans, cx, 'pavement');
-      addRail(V(x0, DH + 0.05, zw), V(x1, DH + 0.05, zw));
+      for (let i = 0; i < pr.length - 1; i++)
+        this.ramp('wh2 qp', zWall - dir * pr[i][0], base + pr[i][1], zWall - dir * pr[i + 1][0], base + pr[i + 1][1], w, matTrans, cx, 'pavement');
+      if (deck > 0) this.slab('wh2 qp deck', zWall, zWall + dir * deck, base + H, w, matDeck, false, cx, 'plank');
+      addRail(V(x0, base + H + 0.05, zWall), V(x1, base + H + 0.05, zWall));
     };
-    qpEast(WXN, ZN + CR, ZW); // east hall wall
-    qpWest(-WXN, ZN + CR, ZW); // west hall wall
-    qpNorth(ZN, -WXN + CR, WXN - CR); // north wall
 
-    // rounded far corners (NE, NW): quarter-cones from floor to the lip arc
-    const cornerCone = (cxWall: number, czWall: number, sx: number, sz: number): void => {
-      const ccx = cxWall - sx * CR;
-      const ccz = czWall - sz * CR;
-      for (let i = 0; i < prof.length - 1; i++) {
-        const r0 = CR - prof[i][0];
-        const r1 = CR - prof[i + 1][0];
-        for (let j = 0; j < 5; j++) {
-          const a0 = (j / 5) * (Math.PI / 2);
-          const a1 = ((j + 1) / 5) * (Math.PI / 2);
-          this.quadFace(
-            'wh2 corner',
-            [ccx + sx * Math.cos(a0) * r0, prof[i][1], ccz + sz * Math.sin(a0) * r0],
-            [ccx + sx * Math.cos(a0) * r1, prof[i + 1][1], ccz + sz * Math.sin(a0) * r1],
-            [ccx + sx * Math.cos(a1) * r1, prof[i + 1][1], ccz + sz * Math.sin(a1) * r1],
-            [ccx + sx * Math.cos(a1) * r0, prof[i][1], ccz + sz * Math.sin(a1) * r0],
-            matTrans,
-          );
-        }
+    // --- MAIN HALL floor (Elevation 1 = y0) --------------------------------
+    const HX = 44; // hall half-width
+    const HN = -54; // hall north wall
+    const HS = 12; // hall south edge (meets the wing structure)
+    // The floor is a FRAME around the sunken half-pipe pit (footprint x[6,38],
+    // z[-38,2]) — a single slab would bury the pit. (+3 south overlaps the wing.)
+    this.slab('wh2 hall floor W', HN, HS + 3, E(1), 50, matFloor, false, -19, 'pavement'); // west of pit
+    this.slab('wh2 hall floor E', HN, HS + 3, E(1), 6, matFloor, false, 41, 'pavement'); // east strip
+    this.slab('wh2 hall floor N', HN, -38, E(1), 32, matFloor, false, 22, 'pavement'); // north of pit
+    this.slab('wh2 hall floor S', 2, HS + 3, E(1), 32, matFloor, false, 22, 'pavement'); // south of pit
+
+    // perimeter walls (tall brick)
+    this.wall(0, HN - 2, HX * 2 + 8, 2.6, E(1) - 1, 20); // north
+    this.wall(-HX - 2, (HN + HS) / 2, 2.6, HS - HN + 6, E(1) - 1, 20); // west
+    this.wall(HX + 2, (HN - 18) / 2 - 2, 2.6, HN * -1 - 18, E(1) - 1, 20); // east (upper only; wing opens below)
+
+    // --- perimeter quarter pipes up to Elevation 2 decks -------------------
+    qpZ(HN, -1, -HX + 6, HX - 6, E(1), E(2) - E(1), 4); // north wall QP -> E2 deck
+    qpX(-HX, -1, HN + 6, HS, E(1), E(2) - E(1), 4); // west wall QP -> E2 deck
+    qpX(HX, 1, HN + 6, -18, E(1), E(2) - E(1), 4); // east wall QP (upper hall) -> E2 deck
+
+    // --- LONG CURVED PIPE around the NE corner (rises to E2) ---------------
+    // quarter-cone arc that carries a grind around the north-east corner.
+    const CR = 8;
+    const ccx = HX - CR, ccz = HN + CR;
+    const CH = E(2) - E(1);
+    const pr = qprof(CR);
+    for (let i = 0; i < pr.length - 1; i++) {
+      const r0 = CR - pr[i][0], r1 = CR - pr[i + 1][0];
+      const h0 = (pr[i][1] / CR) * CH, h1 = (pr[i + 1][1] / CR) * CH;
+      for (let j = 0; j < 6; j++) {
+        const a0 = (j / 6) * (Math.PI / 2), a1 = ((j + 1) / 6) * (Math.PI / 2);
+        this.quadFace(
+          'wh2 curved pipe',
+          [ccx + Math.cos(a0) * r0, E(1) + h0, ccz - Math.sin(a0) * r0],
+          [ccx + Math.cos(a0) * r1, E(1) + h1, ccz - Math.sin(a0) * r1],
+          [ccx + Math.cos(a1) * r1, E(1) + h1, ccz - Math.sin(a1) * r1],
+          [ccx + Math.cos(a1) * r0, E(1) + h0, ccz - Math.sin(a1) * r0],
+          matTrans,
+        );
       }
-      addRail(V(ccx + sx * CR, DH + 0.05, ccz), V(ccx, DH + 0.05, ccz + sz * CR));
-    };
-    cornerCone(WXN, ZN, 1, -1); // NE
-    cornerCone(-WXN, ZN, -1, -1); // NW
-
-    // ---------- perimeter brick walls (trace the stepped outline) ----------
-    this.wall(0, ZN - 2, WXN * 2 + 8, 2.6, 0, 16); // north
-    this.wall(WXN + 2, (ZN + ZW) / 2, 2.6, ZW - ZN + 6, 0, 16); // east hall
-    this.wall(-WXN - 2, (ZN + ZW) / 2, 2.6, ZW - ZN + 6, 0, 16); // west hall
-    this.wall(0, ZW - 1.3, (WXN - WXS) * 2, 2.6, 0, 16, 5); // waist step (east+west jogs) — low curb
-    this.wall(WXS + 2, (ZW + ZS) / 2, 2.6, ZS - ZW + 4, 0, 16); // east wing
-    this.wall(-WXS - 2, (ZW + ZS) / 2, 2.6, ZS - ZW + 4, 0, 16); // west wing
-    this.wall(0, ZS + 2, WXS * 2 + 8, 2.6, 0, 16); // south (behind the dock)
-
-    // ---------- flat-top funbox helper ----------
-    const funbox = (cx: number, cz: number, half: number, h: number, tex = 'plank'): void => {
-      const run = h * 2.2;
-      this.slab('wh2 funbox top', cz - half, cz + half, h, half * 2, matDeck, true, cx, tex);
-      this.ramp('wh2 funbox S', cz + half + run, 0, cz + half, h, half * 2, matTrans, cx);
-      this.ramp('wh2 funbox N', cz - half - run, 0, cz - half, h, half * 2, matTrans, cx);
-      this.bank('wh2 funbox W', cz - half, cz + half, cx - half - run, cx - half, 0, h, matTrans);
-      this.bank('wh2 funbox E', cz - half, cz + half, cx + half + run, cx + half, 0, h, matTrans);
-      addRail(V(cx - half, h + 0.05, cz - half), V(cx + half, h + 0.05, cz - half));
-      addRail(V(cx - half, h + 0.05, cz + half), V(cx + half, h + 0.05, cz + half));
-    };
-
-    // ---------- CENTRAL CHANNEL FUNBOX (the dominant middle feature) --------
-    // A long raised box running north-south with a channel slot down the middle
-    // (x ∈ [−2, 2]); banks up the north & south ends, grind rails all around,
-    // and a rail spanning the channel — the classic THPS "1-2-3" island.
-    const FBz0 = -20;
-    const FBz1 = 2;
-    const FBh = 3.5;
-    const FBhalf = 9;
-    // two long ledges flanking the channel
-    for (const s of [-1, 1]) {
-      const lx = s * (2 + (FBhalf - 2) / 2); // ledge centre (west/east of the slot)
-      const lw = FBhalf - 2; // ledge width
-      this.slab('wh2 island top', FBz0, FBz1, FBh, lw, matDeck, true, lx, 'plank');
-      this.bank('wh2 island out', FBz0, FBz1, s * (FBhalf + FBh * 2.2), s * FBhalf, 0, FBh, matTrans);
     }
-    // end banks (north & south) spanning the whole island
-    this.ramp('wh2 island N', FBz0 - FBh * 2.2, 0, FBz0, FBh, FBhalf * 2, matTrans, 0);
-    this.ramp('wh2 island S', FBz1 + FBh * 2.2, 0, FBz1, FBh, FBhalf * 2, matTrans, 0);
-    addRail(V(-9, FBh + 0.08, (FBz0 + FBz1) / 2), V(9, FBh + 0.08, (FBz0 + FBz1) / 2)); // cross rail over the channel
+    addRail(V(HX, E(2) + 0.05, ccz), V(ccx, E(2) + 0.05, HN)); // corner lip chord
 
-    // ---------- MINI HALF-PIPE (west hall: two facing quarter-pipes) --------
-    // a self-contained mini-ramp valley you pump between (H=5).
-    const mpZ0 = -40;
-    const mpZ1 = -26;
-    const mpH = 5;
-    const mpCx = -18;
-    this.bank('wh2 mini W', mpZ0, mpZ1, mpCx - 9 - mpH * 1.4, mpCx - 9, 0, mpH, matTrans);
-    this.bank('wh2 mini E', mpZ0, mpZ1, mpCx + 9 + mpH * 1.4, mpCx + 9, 0, mpH, matTrans);
-    this.slab('wh2 mini flat', mpZ0, mpZ1, 0.02, 18, matFloor, false, mpCx, 'pavement');
-    addRail(V(mpCx - 9, mpH + 0.05, mpZ0), V(mpCx - 9, mpH + 0.05, mpZ1));
-    addRail(V(mpCx + 9, mpH + 0.05, mpZ0), V(mpCx + 9, mpH + 0.05, mpZ1));
+    // --- HALF PIPE (Elevation 0.5, sunken) with feed ramps + slope exit ----
+    // A U pit centred east-of-centre: floor dips to E0.5, side banks climb back
+    // up to the hall, a broad ramp feeds in from the north, a slope exits south.
+    const hpX0 = 12, hpX1 = 32, hpZ0 = -30, hpZ1 = -8; // pit floor extent
+    const hpCx = (hpX0 + hpX1) / 2;
+    const hpFloor = E(0.5);
+    this.slab('wh2 hp floor', hpZ0, hpZ1, hpFloor, hpX1 - hpX0, matFloor, false, hpCx, 'pavement');
+    // side transitions (west + east) climbing E0.5 -> E1 (fill to the frame edges)
+    this.bank('wh2 hp W', hpZ0, hpZ1, 6, hpX0, hpFloor, E(1), matTrans);
+    this.bank('wh2 hp E', hpZ0, hpZ1, 38, hpX1, hpFloor, E(1), matTrans);
+    // feed ramp from the north (E1 hall down into the pit) + slope exit south
+    this.ramp('wh2 hp feed', -38, E(1), hpZ0, hpFloor, hpX1 - hpX0, matTrans, hpCx);
+    this.ramp('wh2 slope exit', hpZ1, hpFloor, 2, E(1), hpX1 - hpX0, matTrans, hpCx);
+    // two ramps on the far east up onto an E2 deck edge (the plan's "ramp" x2)
+    this.ramp('wh2 ramp N', -22, E(1), -14, E(2), 12, matTrans, HX - 6);
+    this.ramp('wh2 ramp S', -4, E(2), 4, E(1), 12, matTrans, HX - 6);
+    this.slab('wh2 red ledge', -14, -4, E(2), 5, matRed, true, HX - 6, 'brick'); // red bar between the ramps
 
-    // ---------- valve funbox + wheel prop (east of centre, per the iso) -----
-    funbox(20, -6, 4.5, 2.4);
-    const valve = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.5, 1.5, 0.5, 18),
-      new THREE.MeshLambertMaterial({ color: 0xcaa23a }),
-    );
-    valve.rotation.x = Math.PI / 2;
-    valve.position.set(20, 2.4 + 0.28, -6);
-    this.root.add(valve);
+    // --- centre RAIL, two TINY RAMPS, small obstacle jump ------------------
+    addRail(V(-6, E(1) + 0.06, -28), V(-6, E(1) + 0.06, -8)); // grind rail
+    const tinyRamp = (cx: number, cz: number): void => {
+      this.ramp('wh2 tiny ramp', cz + 3, E(1), cz - 3, E(1) + 1.1, 5, matTrans, cx);
+    };
+    tinyRamp(-30, -34);
+    tinyRamp(-30, -20);
+    // small obstacle jump: a low funbox with a crate cluster
+    this.slab('wh2 obstacle', -46, -38, E(1) + 1.2, 8, matDeck, true, 4, 'plank');
+    this.ramp('wh2 obstacle N', -50, E(1), -46, E(1) + 1.2, 8, matTrans, 4);
+    this.ramp('wh2 obstacle S', -34, E(1), -38, E(1) + 1.2, 8, matTrans, 4);
+    for (const [cx, cz] of [[2, -42], [6, -42], [4, -40]] as [number, number][]) this.crate(cx, E(1) + 1.2, cz);
 
-    // ---------- RED WALL LEDGE (plan: the red bar on the east side) ---------
-    this.slab('wh2 red ledge', -14, 2, 1.8, 5, matRed, true, 28, 'brick');
+    // ================= SOUTH WING =========================================
+    const WZ0 = HS; // wing starts where the hall ends
+    // --- E2 side rooms (left + right) with quarter pipes -------------------
+    // Left room
+    this.slab('wh2 Lroom', WZ0 + 4, WZ0 + 28, E(2), 22, matFloor, false, -23, 'pavement');
+    qpZ(WZ0 + 4, 1, -34, -12, E(2), E(2), 4); // north QP of left room (into the hall lip)
+    qpZ(WZ0 + 28, -1, -34, -12, E(2), E(2), 4); // south QP of left room
+    this.wall(-35, WZ0 + 16, 2.6, 30, E(1) - 1, 20); // left room west wall
+    // Right room
+    this.slab('wh2 Rroom', WZ0 + 4, WZ0 + 22, E(2), 22, matFloor, false, 27, 'pavement');
+    qpZ(WZ0 + 4, 1, 16, 38, E(2), E(2), 4); // north QP of right room
+    this.wall(39, WZ0 + 13, 2.6, 24, E(1) - 1, 20); // right room east wall
 
-    // ---------- FORKLIFT prop (plan/iso: the yellow vehicle, top-centre) ----
-    const forklift = (fx: number, fz: number): void => {
-      const g = new THREE.Group();
-      const yellow = new THREE.MeshLambertMaterial({ color: 0xd9a72a });
-      const dark = new THREE.MeshLambertMaterial({ color: 0x2f2f2f });
-      const body = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.4, 4), yellow);
-      body.position.y = 1.0;
-      g.add(body);
-      const cab = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.5, 1.8), yellow);
-      cab.position.set(0, 2.2, -0.7);
-      g.add(cab);
-      for (const mx of [-0.85, 0.85]) {
-        const mast = new THREE.Mesh(new THREE.BoxGeometry(0.28, 3.4, 0.28), dark);
-        mast.position.set(mx, 1.7, 2.1);
-        g.add(mast);
+    // --- CENTRAL structure: 2 curved slopes | wall block | E6/E7 wing ------
+    const cz0 = WZ0; // near (hall) edge of the slopes — meets the hall floor (no gap)
+    const cz1 = WZ0 + 34; // far edge where they meet the E6 deck
+    // a curved (concave) slope rising base->top over z, as a fan of quads
+    const curvedSlope = (x0: number, x1: number, zNear: number, zFar: number, yNear: number, yFar: number): void => {
+      const N = 8;
+      for (let i = 0; i < N; i++) {
+        const t0 = i / N, t1 = (i + 1) / N;
+        const z0s = THREE.MathUtils.lerp(zNear, zFar, t0), z1s = THREE.MathUtils.lerp(zNear, zFar, t1);
+        // ease-in curve (concave): height accelerates toward the top
+        const y0 = THREE.MathUtils.lerp(yNear, yFar, t0 * t0), y1 = THREE.MathUtils.lerp(yNear, yFar, t1 * t1);
+        this.quadFace('wh2 curved slope', [x0, y0, z0s], [x1, y0, z0s], [x1, y1, z1s], [x0, y1, z1s], matTrans);
       }
-      g.position.set(fx, 0, fz);
-      this.root.add(g);
-      this.walls.push(
-        new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(fx, 1, fz), new THREE.Vector3(2.6, 2, 4)),
-      );
+      addRail(V((x0 + x1) / 2, yFar + 0.05, zFar), V((x0 + x1) / 2, yNear + 0.05, zNear), false);
     };
-    forklift(-2, -46);
+    curvedSlope(-13, -1, cz0, cz1, E(1), E(6)); // left curved slope
+    curvedSlope(5, 17, cz0, cz1, E(1), E(6)); // right curved slope (matching)
 
-    // ---------- small kicker + diagonal rail (plan: west-of-centre bits) ----
-    funbox(-26, 0, 3.5, 1.4);
-    addRail(V(-14, 0.06, -18), V(-4, 0.06, -6)); // diagonal floor rail
+    // tall central WALL BLOCK (Elevation 10, solid on all sides)
+    this.stepBlock(2, WZ0 + 17, 6, 22, E(1) - 1, E(10));
 
-    // ---------- crate piles + wumpa ----------
-    for (const [cx, cz] of [
-      [11, -12],
-      [13, -10],
-      [12, -8],
-      [-6, 8],
-      [-4, 8],
-      [6, 6],
-    ] as [number, number][]) {
-      this.crate(cx, 0, cz);
-    }
+    // Elevation 6 deck (behind the wall block / top of the curved slopes)
+    this.slab('wh2 E6 deck', cz1, cz1 + 10, E(6), 32, matFloor, false, 2, 'pavement');
+    // step up to Elevation 7 wing + its quarter pipe (the mezzanine top)
+    this.ramp('wh2 E6-7', cz1 + 10, E(6), cz1 + 14, E(7), 32, matTrans, 2);
+    this.slab('wh2 E7 wing', cz1 + 14, cz1 + 26, E(7), 32, matDeck, true, 2, 'plank');
+    qpZ(cz1 + 26, -1, -14, 18, E(7), E(2)); // E7 quarter pipe at the far south lip (no wing-side deck)
+    this.wall(-15, cz1 + 20, 2.6, 26, E(1) - 1, 24); // wing west wall
+    this.wall(19, cz1 + 20, 2.6, 26, E(1) - 1, 24); // wing east wall
+    this.wall(2, cz1 + 30, 40, 2.6, E(1) - 1, 24); // wing south wall (behind spawn)
+
+    // --- spawn on the Elevation 7 wing, facing −Z (downhill into the park),
+    // lined up with the LEFT curved slope so the roll-in clears the wall block.
+    this.spawnPos.set(-7, E(7) + 0.1, cz1 + 18); // centred on the wing, clear of the south lip QP
+    this.currentSpawn.copy(this.spawnPos);
+
+    // a few wumpa to read the volumes
     for (const [px, py, pz] of [
-      [-15, DH + 1.4, 30],
-      [0, 1.4, 6],
-      [0, FBh + 1.6, -9],
-      [-18, 1.4, -33],
-      [-2, 1.4, -46],
-      [20, 3.2, -6],
+      [2, E(7) + 1.4, cz1 + 18],
+      [2, E(6) + 1.4, cz1 + 4],
+      [-23, E(2) + 1.4, WZ0 + 16],
+      [27, E(2) + 1.4, WZ0 + 12],
+      [28, E(0.5) + 1.4, -20],
+      [-6, E(1) + 1.4, -18],
+      [0, E(1) + 1.4, -46],
     ] as [number, number, number][]) {
       this.pickup(px, py, pz);
     }
   }
-
-  // Level 5, "Boulder Dash": the Crash 2 chase. You spawn at the FAR end of
-  // the corridor and sprint back TOWARD the camera (hold down + X to skate)
-  // while a boulder thunders after you. It crushes crates, detonates
-  // explosives, and flattens anything slower than it — then tips into the
-  // pit at the end. Jump the same pit and cruise to the gate.
   private buildBoulderDash(): void {
     // Deep jungle under a lava sky: rich greens lit warm amber, so the
     // corridor reads lush even while everything behind you is on fire.
