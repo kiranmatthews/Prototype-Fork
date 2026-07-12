@@ -1104,8 +1104,10 @@ export class Player {
         this.brakeT += dt;
         const s = Math.abs(this.speed);
         const ramp = Math.min(1, this.brakeT / TUNING.brakeRampTime);
-        const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
-        const rate = TUNING.turnaround * ramp * ramp * ease;
+        // deceleration RAMPS UP as you slow (below cruise) so you snap to a clean
+        // stop instead of hanging at a crawl — brakeStopSnap sets how hard.
+        const snap = 1 + TUNING.brakeStopSnap * (1 - Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1)));
+        const rate = TUNING.turnaround * ramp * ramp * snap;
         this.speed = Math.sign(this.speed) * Math.max(0, s - rate * dt);
         braking = true;
         // screech only once the brake is really biting, not on a light tap
@@ -1143,8 +1145,9 @@ export class Player {
               this.haltCd = 0.6;
             }
             const s = Math.abs(this.speed);
-            const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
-            this.speed = Math.max(0, this.speed - TUNING.turnaround * ease * dt);
+            // same low-speed bite-up as the Circle brake: no hang near a stop.
+            const snap = 1 + TUNING.brakeStopSnap * (1 - Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1)));
+            this.speed = Math.max(0, this.speed - TUNING.turnaround * snap * dt);
             braking = true;
             // The stick is still yanked BACKWARD, so once you're under walking
             // pace refresh the post-brake lock: walk/sidestep stay dead (no

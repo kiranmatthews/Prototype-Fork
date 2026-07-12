@@ -39,6 +39,8 @@ export const TUNING = {
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
   turnaround: 25, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
   brakeRampTime: 0.25, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
+  brakeStopSnap: 2, // brake deceleration RAMPS UP as you slow (below cruise): rate x(1 + this) near a dead stop, so you don't hang at a crawl. 0 = constant bleed rate
+
   brakeLockTime: 0.3, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
   brakeLockRamp: 0.55, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
@@ -118,6 +120,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
+  brakeStopSnap: { min: 0, max: 6, step: 0.1 },
   brakeLockTime: { min: 0, max: 2, step: 0.05 },
   brakeLockRamp: { min: 0, max: 2, step: 0.05 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
@@ -222,6 +225,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'PULL-BACK BRAKE (still live!): carving handles all turning now, but yanking the stick (near-)opposite your travel bleeds speed at this rate — the intentional slow-down-and-dismount. Also the FULL-FORCE rate the Circle brake ramps up to. Higher = harder stops.',
   brakeRampTime:
     'Circle brake on the board eases in: a quick TAP barely slows you, and the slow-down accelerates the longer you hold, reaching full force (the turnaround rate) after this many seconds — so you cannot insta-stop with one tap. Lower = the brake bites sooner.',
+  brakeStopSnap:
+    'How much HARDER a brake bites the slower you go: below cruise the deceleration ramps up to x(1 + this) at a dead stop, so you settle to zero cleanly instead of hanging at a crawl for ages. 0 = one constant bleed rate all the way down; higher = a sharper final snap to a stop. Applies to both the Circle brake and the pull-back.',
   brakeLockTime:
     'After a brake (Circle or a pull-back) has stopped you, movement stays LOCKED for this long once you let the brake go — the "getting up" beat that stops you snapping straight into a reverse run or a crouch. The clock only runs after you release the brake; hold it and you stay locked. 0 = no lock (instant control back).',
   brakeLockRamp:
@@ -304,6 +309,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'friction',
       'turnaround',
       'brakeRampTime',
+      'brakeStopSnap',
       'brakeLockTime',
       'brakeLockRamp',
       'boardSpeed',
