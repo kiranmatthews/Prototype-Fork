@@ -169,6 +169,10 @@ export class Player {
   // trick-spin that then bails you on the drop-back-in). Deliberate spins off the
   // lip still work via the Square spin button.
   private pipeHang = false;
+  // Short timer set every frame you're on a halfpipe surface. ANY vert launch
+  // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
+  // both the dedicated coping launch AND the general crest a fast pump takes.
+  private pipeRideT = 0;
   // UNIFIED SURFACE ALIGNMENT: one eased tilt that lays the whole rig onto the
   // surface — gently on banks, flat-out on vert walls, all the way through hang
   // time — so the body tracks the wall while riding AND while glued in the air.
@@ -412,6 +416,7 @@ export class Player {
     this.vertLatVel = 0;
     this.pipeFlipCd = 0;
     this.pipeHang = false;
+    this.pipeRideT = 0;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -584,6 +589,7 @@ export class Player {
     }
     this.haltCd = Math.max(0, this.haltCd - dt);
     this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
+    this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
@@ -1011,6 +1017,7 @@ export class Player {
     // whip wall-to-wall and pump up over the coping instead of freezing on the
     // face (which is exactly what the asymmetric slopeBoost/uphillSlowdown did).
     const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
+    if (onPipe) this.pipeRideT = 0.2; // any vert launch off this becomes a pipeHang (no phantom spin)
     // ON FOOT the ONE authority is footGrip: a walker (no board momentum, no
     // charge) can stand/walk on anything with rideNormal.y >= footGrip and
     // SLIPS down anything steeper — no matter the stick direction. This is what
@@ -1935,6 +1942,13 @@ export class Player {
   private enterVertAir(launch: boolean): void {
     this.vertLaunchT = 0;
     this.jumpBufferT = 0;
+    // Launched off a halfpipe (via ANY crest path — the fast pump can take the
+    // general one): suppress the hang-time stick-spin so the climb-hold doesn't
+    // spin you into a phantom bail. Deliberate spins use the Square button.
+    if (this.pipeRideT > 0) {
+      this.pipeHang = true;
+      this.grabSpinAngle = 0;
+    }
     if (launch) {
       this.vVel += TUNING.hangLaunch;
       this.charging = false;
