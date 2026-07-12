@@ -1062,23 +1062,25 @@ export class Player {
         this.speed =
           this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
       } else if (this.freeSkate && input.grabHeld) {
-        // O = BRAKE / DISMOUNT: held on the board it bleeds speed (ignoring the
-        // stick) and steps you off onto your feet the moment you cross under
-        // walking pace. The slow-down EASES IN — a quick tap barely bites, and
-        // the braking force accelerates the longer you hold (quadratic ramp to
-        // the full turnaround rate over brakeRampTime) — so you can't insta-stop
-        // with one tap. Circle while skating is a brake; sliding is on-foot only.
+        // O = BRAKE: held on the board it bleeds speed (ignoring the stick) and
+        // rolls you to a FULL stop, then steps off at ~0. Two shaping curves:
+        //  - EASE-IN over the hold (quadratic ramp to full force over
+        //    brakeRampTime) so a quick tap barely bites and can't insta-stop.
+        //  - EASE-OUT near rest (rate scales with speed) so it settles to zero
+        //    smoothly, the same roll-to-a-stop feel as the no-input decay,
+        //    instead of snapping off the board at walking pace.
+        // Circle while skating is a brake; sliding is on-foot only.
         this.brakeT += dt;
+        const s = Math.abs(this.speed);
         const ramp = Math.min(1, this.brakeT / TUNING.brakeRampTime);
-        const rate = TUNING.turnaround * ramp * ramp; // accelerating slow-down
-        const mag = Math.max(0, Math.abs(this.speed) - rate * dt);
-        this.speed = Math.sign(this.speed) * mag;
+        const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
+        const rate = TUNING.turnaround * ramp * ramp * ease;
+        this.speed = Math.sign(this.speed) * Math.max(0, s - rate * dt);
         // screech only once the brake is really biting, not on a light tap
-        if (this.brakeT > 0.25 && Math.abs(this.speed) > 12 && this.haltCd <= 0) {
+        if (this.brakeT > 0.25 && s > 12 && this.haltCd <= 0) {
           sfx.play('skateHalt', 0.6);
           this.haltCd = 0.6;
         }
-        if (mag <= TUNING.walkSpeed + 0.5) this.stepOff = true; // dismount to feet
         this.oBrakeHold = true; // Circle held out of the brake: no crouch until released
       } else if (this.freeSkate) {
         // OMNIDIRECTIONAL SKATE: whichever way you push, the heading turns to
@@ -1097,22 +1099,23 @@ export class Player {
           const side = dx * this.axisF.z - dz * this.axisF.x;
           const ang = Math.atan2(side, fwd);
           if (Math.abs(ang) > CONST.carveBrakeAngle) {
-            // Pulling (nearly) opposite your travel = the brake, and THE
-            // dismount: speed bleeds hard, and dropping under walking pace
-            // hands you back to your feet with the stick in charge.
-            // Diagonals still carve — only a true pull-back skids.
+            // Pulling (nearly) opposite your travel = the brake: speed bleeds to
+            // a FULL stop and then steps off at ~0. It EASES OUT near rest (rate
+            // scales with speed) so it rolls smoothly to zero like the no-input
+            // decay, instead of snapping off at walking pace. Diagonals still
+            // carve — only a true pull-back skids.
             if (this.speed > 12 && this.haltCd <= 0) {
               sfx.play('skateHalt', 0.6);
               this.haltCd = 0.6;
             }
-            this.speed = Math.max(0, this.speed - TUNING.turnaround * dt);
-            // classic dismount: braking through walking pace = step off, but the
-            // stick is still yanked BACKWARD — arm the run-lock so the walk stays
-            // dead until it releases, instead of instantly sprinting in reverse.
-            if (this.speed <= TUNING.walkSpeed + 0.5) {
-              this.stepOff = true;
-              this.runLock = true;
-            }
+            const s = Math.abs(this.speed);
+            const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
+            this.speed = Math.max(0, this.speed - TUNING.turnaround * ease * dt);
+            // The stick is still yanked BACKWARD, so once you're under walking
+            // pace arm the run-lock: the walk stays dead until the stick releases
+            // (no instant reverse sprint). Let it keep bleeding to a full stop on
+            // the board — the rollout steps you off at ~0, no snap-dismount.
+            if (this.speed <= TUNING.walkSpeed + 0.5) this.runLock = true;
           } else {
             // Grip grows with speed: at cruise you get carveGrip exactly;
             // faster carves sharper, slower carves lazier. carveGripRatio is
