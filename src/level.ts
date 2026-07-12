@@ -5,6 +5,7 @@
 
 import * as THREE from 'three';
 import { Rail } from './rails';
+import { Halfpipe } from './halfpipe';
 import { CONST, TUNING } from './tuning';
 import { sfx } from './audio';
 
@@ -152,6 +153,7 @@ export class Level {
   checkpoints: Checkpoint[] = [];
   pickups: Pickup[] = [];
   rails: Rail[] = [];
+  halfpipes: Halfpipe[] = []; // dedicated smooth transitions ridden by the pipe physics
   // Travel zones: rectangular regions where the course itself runs along X
   // instead of -Z (a real right-angle turn in the path). The camera never
   // yaws — the turned path is what makes those stretches side-scrolling.
@@ -1288,34 +1290,14 @@ export class Level {
     this.crystal(0, -12.4, -530); // the level crystal, dead on the main route
     // rail 2 pit: -575 .. -655
     this.jungle('rail 2 landing', -655, -710, -13.5, 12, matB);
-    // Halfpipe: plain terrain under the normal skate/slope physics — carve up
-    // the transition, the steepness bleeds your speed, and whatever crests the
-    // near-vertical lip converts into (mostly upward) air. The walls
-    // approximate a radius-7.3 quarter-pipe; lips are grindable rails.
+    // Halfpipe: a dedicated SMOOTH transition ridden by the pipe rail-physics
+    // (see player.stepPipe). Carve up either wall, pump on the way up to build
+    // height, pop off the coping for hang-time air, drop back in. The flat
+    // bottom is a normal ground slab; the walls are the analytic Halfpipe.
     this.slab('halfpipe floor', -710, -770, -13.5, 6, matRamp, false, 0, 'pavement');
-    const profile: [number, number, number, number][] = [
-      // xIn, xOut, yBase, yTop — circle points, steepening toward the lip
-      [3.0, 4.8, -13.5, -13.27],
-      [4.8, 6.3, -13.27, -12.71],
-      [6.3, 7.5, -12.71, -11.95],
-      [7.5, 8.7, -11.95, -10.76],
-      [8.7, 9.6, -10.76, -9.32],
-      [9.6, 10.3, -9.32, -7.4],
-    ];
-    for (const [xIn, xOut, yBase, yTop] of profile) {
-      for (const side of [1, -1]) {
-        this.bank(
-          'halfpipe wall',
-          -710,
-          -770,
-          side * xIn,
-          side * xOut,
-          yBase,
-          yTop,
-          matRamp,
-        );
-      }
-    }
+    const hp = new Halfpipe(-710, -770, -13.5, 3, 7, matRamp); // F=3, R=7 → lip x±10, y-6.5
+    this.halfpipes.push(hp);
+    this.root.add(hp.object);
     // rail yard entry deck, then a pit crossed by three parallel rails
     this.slab('rail yard entry', -770, -778, -13.5, 14, matPlaza, true, 0, 'stone');
     // pit: -778 .. -850
@@ -1342,8 +1324,8 @@ export class Level {
       new THREE.Vector3(0, -11.5, -659),
     ]);
     // Halfpipe lip rails along both top edges.
-    const lipL = new Rail([new THREE.Vector3(-10.4, -7.2, -712), new THREE.Vector3(-10.4, -7.2, -766)]);
-    const lipR = new Rail([new THREE.Vector3(10.4, -7.2, -712), new THREE.Vector3(10.4, -7.2, -766)]);
+    const lipL = new Rail([new THREE.Vector3(-10.1, -6.4, -710), new THREE.Vector3(-10.1, -6.4, -770)]);
+    const lipR = new Rail([new THREE.Vector3(10.1, -6.4, -710), new THREE.Vector3(10.1, -6.4, -770)]);
     // Rail yard: three parallel rails over the pit — jump between them.
     const yardL = new Rail([new THREE.Vector3(-3.5, -12.6, -776), new THREE.Vector3(-3.5, -12.6, -852)]);
     const yardC = new Rail([new THREE.Vector3(0, -12.6, -776), new THREE.Vector3(0, -12.6, -852)]);
