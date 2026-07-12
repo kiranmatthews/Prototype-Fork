@@ -37,6 +37,7 @@ export const TUNING = {
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
   turnaround: 120, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
+  brakeRampTime: 0.6, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 7.5, // rad/s of the directional grab-spin (left arrow = spin left)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
@@ -112,6 +113,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 40, max: 300, step: 5 },
+  brakeRampTime: { min: 0.1, max: 2, step: 0.05 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
   grabRelease: { min: 0.05, max: 0.6, step: 0.05 },
@@ -209,7 +211,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   spinAirCorrection:
     'Small upward stall from spinning in the air (capped, never a full rescue) — Crash-style ledge save.',
   turnaround:
-    'PULL-BACK BRAKE (still live!): carving handles all turning now, but yanking the stick (near-)opposite your travel bleeds speed at this rate — the intentional slow-down-and-dismount. Higher = harder stops.',
+    'PULL-BACK BRAKE (still live!): carving handles all turning now, but yanking the stick (near-)opposite your travel bleeds speed at this rate — the intentional slow-down-and-dismount. Also the FULL-FORCE rate the Circle brake ramps up to. Higher = harder stops.',
+  brakeRampTime:
+    'Circle brake on the board eases in: a quick TAP barely slows you, and the slow-down accelerates the longer you hold, reaching full force (the turnaround rate) after this many seconds — so you cannot insta-stop with one tap. Lower = the brake bites sooner.',
   grabBoost: 'Speed burst paid out when a grab is completed cleanly before landing.',
   grabSpinRate: 'Rotation speed of the directional grab-spin (left arrow = spin left).',
   grabRelease:
@@ -287,6 +291,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'chargeDecay',
       'friction',
       'turnaround',
+      'brakeRampTime',
       'boardSpeed',
       'skateHoldTime',
       'skateEntrySpeed',
