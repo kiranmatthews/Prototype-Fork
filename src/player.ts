@@ -164,6 +164,11 @@ export class Player {
   // fall line at the top of a wall, a brief lockout stops it re-flipping while
   // you're still slow near the apex.
   private pipeFlipCd = 0;
+  // Popped off a halfpipe coping into the hang: SUPPRESS the hang-time stick-spin
+  // (you hold a direction to CLIMB the wall, and that hold must not be read as a
+  // trick-spin that then bails you on the drop-back-in). Deliberate spins off the
+  // lip still work via the Square spin button.
+  private pipeHang = false;
   // UNIFIED SURFACE ALIGNMENT: one eased tilt that lays the whole rig onto the
   // surface — gently on banks, flat-out on vert walls, all the way through hang
   // time — so the body tracks the wall while riding AND while glued in the air.
@@ -406,6 +411,7 @@ export class Player {
     this.vertAir = false;
     this.vertLatVel = 0;
     this.pipeFlipCd = 0;
+    this.pipeHang = false;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -584,6 +590,7 @@ export class Player {
     this.bailDownT = Math.max(0, this.bailDownT - dt);
     if (this.state !== 'air') {
       this.vertAir = false;
+      this.pipeHang = false;
       this.vertLatVel = 0;
     }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
@@ -1441,6 +1448,8 @@ export class Player {
       this.grounded = false;
       this.groundHit = hit;
       this.airFromSkate = true;
+      this.pipeHang = true; // climb-hold must not read as a trick-spin (no phantom bail)
+      this.grabSpinAngle = 0;
       // vertical launch = the climb speed you carried up, plus a pop so even a
       // gentle arrival clears the coping into a hang.
       this.vVel = Math.min(
@@ -2428,7 +2437,7 @@ export class Player {
         // HANG-TIME SPIN: glued to the wall, the stick alone spins you —
         // no grab needed. Same spin fields, so landing rules and switch
         // stance judge it exactly like a grab-spin.
-        if (this.vertAir && !this.slamActive && Math.abs(this.rawInput.moveX) > 0.3) {
+        if (this.vertAir && !this.slamActive && !this.pipeHang && Math.abs(this.rawInput.moveX) > 0.3) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
@@ -2777,11 +2786,16 @@ export class Player {
     // Rails are solid on foot: a side-on walk is curbed, a fast skate trips.
     // Only while grounded and riding — grinding owns the position, airs clear
     // it, a slide slips under, and a fresh dismount (regrindCd) or knockdown
-    // (bailDownT) is left alone.
+    // (bailDownT) is left alone. EXCEPT on a halfpipe: the lip grind-rails sit
+    // right at the coping, and pumping UP the wall to them must not read as a
+    // side-on street-rail hit and trip you — you pop over (or grind them with
+    // the grind button, which is a separate path). So skip the trip on the pipe.
+    const onPipeSurface = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
     if (
       this.state === 'ride' &&
       this.grounded &&
       !this.sliding &&
+      !onPipeSurface &&
       this.bailDownT <= 0 &&
       this.regrindCd <= 0
     ) {
