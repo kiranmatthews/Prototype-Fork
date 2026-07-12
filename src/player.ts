@@ -818,12 +818,15 @@ export class Player {
     // Crouch and slide jumps strike the classic Crash star pose in the air.
     if (fromSlide || wasCrawling) this.starTimer = 0.6;
     if (fromSlide) {
-      // Crash slide-jump: a HIGH leap out of the slide. The burst's momentum
-      // carries through the air; a walk-slide still lands back on your feet
-      // (slideFromWalk stays set, so touchdown clamps to walking pace).
-      // slideJumpHeight owns the pop; slideJumpTravel scales the horizontal
-      // launch so you can keep the height without flying across the map.
-      this.speed *= TUNING.slideJumpTravel;
+      // Crash slide-jump: a HIGH, CONTROLLED platforming leap — deliberately NOT
+      // a skating move. The horizontal launch is a consistent punch over WALK
+      // speed (independent of how fast the slide was, so distance is
+      // predictable), it grants no board tricks, and it always lands back on
+      // your feet — never flipping out the board into skating. slideJumpHeight
+      // owns the pop; slideJumpTravel is the extra horizontal reach over a walk.
+      this.speed = Math.sign(this.speed || 1) * TUNING.walkSpeed * (1 + TUNING.slideJumpTravel);
+      this.airFromSkate = false; // a platforming hop, not a board air (no grabs, no skate carry)
+      this.slideFromWalk = true; // force the on-foot touchdown clamp: no skate takeover on landing
       this.slideTimer = 0;
       this.slideEndPending = false; // consumed by a slide JUMP: no plain-slide scrub
       this.slideCd = CONST.slideCooldown;

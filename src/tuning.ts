@@ -230,9 +230,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How far the canned slide carries you, in world units — duration adapts to slide speed so the distance stays consistent.',
   slideSpeed: 'The speed the slide bursts to (it never slows you below your current speed).',
   slideJumpHeight:
-    'Crash slide-jump: a fresh X press+release during a slide leaps THIS much higher than a normal jump. The burst momentum carries through the air; a walk-slide still lands on your feet.',
+    'Crash slide-jump: a fresh X press+release during a slide leaps THIS much higher than a normal jump. It is a PLATFORMING move — always lands back on your feet, never flips out the board into skating.',
   slideJumpTravel:
-    'Horizontal launch speed out of a slide-jump, scaled independently of the height — turn it down to keep the big pop without flying across the map.',
+    'Extra horizontal reach of a slide-jump, as a multiple of WALK speed OVER a normal jump (0.95 = launches ~1.95x walk speed). The launch is a fixed punch regardless of how fast the slide was, so the gap-clearing distance stays predictable — it is not a speed carry.',
   slideJumpGrace:
     'Timing forgiveness: releasing the jump within this many seconds AFTER the slide ends still fires the boosted slide jump (0 = strict, boost only mid-slide).',
   slideRecharge:
