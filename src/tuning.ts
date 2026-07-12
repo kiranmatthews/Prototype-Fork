@@ -5,7 +5,7 @@
 export const TUNING = {
   maxSpeed: 23, // top skate speed
   walkSpeed: 8.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
-  walkRampTime: 0, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
+  walkRampTime: 0.15, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
   friction: 7, // idle roll-out: NO input at all bleeds speed to a stop (0 = frictionless)
   riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
@@ -32,14 +32,14 @@ export const TUNING = {
   wallStick: 5, // ground-snap window on steep transitions (how hard the wall holds the board)
   landGive: 3, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
-  railTripSpeed: 13, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
+  railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 15, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
-  turnaround: 25, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
-  brakeRampTime: 0.25, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
-  brakeLockTime: 0.3, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
+  turnaround: 20, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
+  brakeRampTime: 0.4, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
+  brakeLockTime: 0.6, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
   brakeLockRamp: 0.55, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 7.5, // rad/s of the directional grab-spin (left arrow = spin left)
@@ -57,7 +57,7 @@ export const TUNING = {
   slideJumpHeight: 1.2, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
   slideJumpTravel: 0.65, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
-  slideRecover: 0.45, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
+  slideRecover: 0.5, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
   airControl: 0, // forward/back speed adjustment in the air
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle

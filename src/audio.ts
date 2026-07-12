@@ -58,11 +58,34 @@ class SfxEngine {
   private loading = false;
 
   constructor() {
-    const unlock = (): void => {
-      void this.init();
-    };
+    // Warm up at PAGE LOAD: create the (suspended) context and start decoding
+    // every buffer right away, so sound is ready the instant something resumes
+    // the context — instead of only starting the async load on the first gesture
+    // (which left the opening seconds silent). unlock() then just resumes.
+    void this.init();
+    const unlock = (): void => this.unlock();
+    // keydown/pointer/touch are real user gestures; gamepadconnected + the
+    // per-frame poll (see main.ts) cover controller-only players, who fire none
+    // of the DOM gesture events.
     window.addEventListener('keydown', unlock);
     window.addEventListener('pointerdown', unlock);
+    window.addEventListener('touchstart', unlock, { passive: true });
+    window.addEventListener('gamepadconnected', unlock);
+  }
+
+  // Resume the context on any interaction (cheap no-op once it's running). Safe
+  // to call every frame from the input loop — the browser only actually resumes
+  // it inside a user gesture, but the extra attempts are harmless.
+  unlock(): void {
+    try {
+      if (!this.ctx) {
+        void this.init();
+        return;
+      }
+      if (this.ctx.state === 'suspended') void this.ctx.resume();
+    } catch {
+      /* no audio — fine */
+    }
   }
 
   private async init(): Promise<void> {

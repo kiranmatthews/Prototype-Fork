@@ -448,6 +448,12 @@ function frame(): void {
   const dt = Math.min(clock.getDelta(), 0.1);
   input.update();
 
+  // Controller-only players fire no keydown/pointer gesture, so the audio
+  // context would stay suspended until they touched the keyboard. Nudge it from
+  // the poll whenever there's any input (a cheap no-op once it's running).
+  if (input.moveX || input.moveY || input.jumpHeld || input.grindHeld || input.spinHeld || input.grabHeld)
+    sfx.unlock();
+
   // Options / P toggles pause: the sim stops dead, the frame still renders.
   if (input.pausePressed) {
     paused = !paused;
