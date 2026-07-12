@@ -31,6 +31,7 @@ export const TUNING = {
   wallStick: 5, // ground-snap window on steep transitions (how hard the wall holds the board)
   landGive: 3, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
+  railTripSpeed: 13, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 15, // vertical pop when jumping off a rail
   spinDuration: 0.3,
@@ -52,8 +53,7 @@ export const TUNING = {
   slideJumpHeight: 1.2, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
   slideJumpTravel: 0.95, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
-  slideRecharge: 0.6, // cooldown after a PLAIN slide before you can slide again (no spamming for speed)
-  slideEndKeep: 0.55, // fraction of the burst speed kept when a plain slide ends (a little slow-down; slide JUMPS keep it all)
+  slideRecover: 0.45, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
   airControl: 0, // forward/back speed adjustment in the air
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
@@ -106,6 +106,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallStick: { min: 0.8, max: 5, step: 0.1 },
   landGive: { min: 0.35, max: 3, step: 0.05 },
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
+  railTripSpeed: { min: 8, max: 30, step: 0.5 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
@@ -127,8 +128,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   slideJumpHeight: { min: 1, max: 4, step: 0.05 },
   slideJumpTravel: { min: 0.2, max: 1.5, step: 0.05 },
   slideJumpGrace: { min: 0, max: 0.8, step: 0.05 },
-  slideRecharge: { min: 0, max: 2, step: 0.05 },
-  slideEndKeep: { min: 0.2, max: 1, step: 0.05 },
+  slideRecover: { min: 0, max: 1.2, step: 0.05 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
@@ -200,6 +200,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   landGive: 'Landing forgiveness on steep transition faces (flat decks stay strict).',
   railSnapDistance:
     'How close (in units) a rail must be for Triangle to snap you onto it. Bigger = more forgiving grind grabs.',
+  railTripSpeed:
+    'Running/skating STRAIGHT INTO a rail from the side (no jump, no grind): below this speed the rail simply BLOCKS you like a curb; at or above it you catch the rail and TRIP (bail/stumble). Jump over it or grind it to pass cleanly.',
   grindSpeed:
     'REFERENCE grind speed: you actually grind at whatever speed you arrive with, but slower than this wobbles the balance meter harder and faster than it steadies it.',
   grindJumpForce: 'Vertical pop of a fully-charged jump off a rail.',
@@ -235,10 +237,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Extra horizontal reach of a slide-jump, as a multiple of WALK speed OVER a normal jump (0.95 = launches ~1.95x walk speed). The launch is a fixed punch regardless of how fast the slide was, so the gap-clearing distance stays predictable — it is not a speed carry.',
   slideJumpGrace:
     'Timing forgiveness: releasing the jump within this many seconds AFTER the slide ends still fires the boosted slide jump (0 = strict, boost only mid-slide).',
-  slideRecharge:
-    'Cooldown after a PLAIN slide before you can slide again — stops you spamming slides for constant free speed. A slide JUMP is exempt (it pays its own tiny cooldown).',
-  slideEndKeep:
-    'How much of the slide burst you keep when a plain slide ENDS (only bites when the slide left you above cruise): 1 = keep it all (old behaviour), lower = a little slow-down so the slide nets no free speed. Slide JUMPS keep their full boost.',
+  slideRecover:
+    'Get-up beat after a PLAIN slide: for this long the skater is picking themselves off the ground and CANNOT run — movement input is dead and leftover speed bleeds to a stop, then control returns. Stops slide-spam for constant free speed. A slide JUMP is exempt (it launches straight out of the slide).',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
@@ -316,10 +316,10 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'landGive',
     ],
   },
-  { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecharge', 'slideEndKeep', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
+  { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
+    keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
@@ -343,6 +343,7 @@ export const CONST = {
   coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
+  railBlockRadius: 0.2, // on-foot rail block/trip: horizontal contact skin around the rail line (added to player half)
   railSnapEase: 0.12, // seconds to glide onto a grabbed rail (no one-frame zap)
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
   grindMinSpeed: 8, // slowest a grind can crawl (and the floor for speed bleed)

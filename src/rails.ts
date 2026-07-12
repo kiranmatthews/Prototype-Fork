@@ -59,6 +59,28 @@ export class Rail {
     return best!;
   }
 
+  // Closest point on the polyline measured in the XZ plane only (ignoring
+  // height), plus the rail's local tangent and the interpolated rail height
+  // there. Used by the on-foot rail block / high-speed trip, which cares about
+  // horizontal proximity to the rail line and tests vertical overlap
+  // separately (a rail overhead or underfoot must not block you).
+  closestXZ(pos: THREE.Vector3): { point: THREE.Vector3; tangent: THREE.Vector3; distXZ: number } {
+    let best: { point: THREE.Vector3; tangent: THREE.Vector3; distXZ: number } | null = null;
+    for (let i = 0; i < this.segLengths.length; i++) {
+      const a = this.points[i];
+      const dir = this.segDirs[i];
+      const len = this.segLengths[i];
+      // project (pos - a) onto the segment using XZ components only
+      const ox = pos.x - a.x;
+      const oz = pos.z - a.z;
+      const along = THREE.MathUtils.clamp(ox * dir.x + oz * dir.z, 0, len);
+      const point = a.clone().addScaledVector(dir, along); // carries the rail's Y here
+      const dxz = Math.hypot(pos.x - point.x, pos.z - point.z);
+      if (!best || dxz < best.distXZ) best = { point, tangent: dir.clone(), distXZ: dxz };
+    }
+    return best!;
+  }
+
   pointAt(t: number): THREE.Vector3 {
     const i = this.segmentIndexAt(t);
     const local = THREE.MathUtils.clamp(t - this.cumLengths[i], 0, this.segLengths[i]);

@@ -91,6 +91,9 @@ export class Player {
   private slideVec = new THREE.Vector3(); // world-space slide direction (8-axis)
   private slideSpd = 0;
   private slideEndPending = false; // a slide is running; its end (scrub+recharge) not yet resolved
+  private slideAirLat = 0; // slide-jump: launch velocity component ACROSS the heading (keeps sideways slide-jumps sideways)
+  private slideJumpAir = false; // in a committed slide-jump arc: no input air-steer (no diagonal drift)
+  private slideRecoverT = 0; // get-up beat after a slide: movement locked while the skater gets off the ground
   private landingScoring = false; // landing-tick payouts still count as air tricks
   private crawling = false; // Circle held while stopped: all-fours crawl
   private crawlPose = 0;
@@ -372,6 +375,9 @@ export class Player {
     this.slideCd = 0;
     this.slideGraceT = 0;
     this.slideEndPending = false;
+    this.slideAirLat = 0;
+    this.slideJumpAir = false;
+    this.slideRecoverT = 0;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -449,18 +455,20 @@ export class Player {
       this.slideGraceT = Math.max(0, this.slideGraceT - dt);
       // Grace fully elapsed with NO slide jump taken (a slide jump zeroes
       // slideGraceT in chargedJump, so we never reach here after one): a PLAIN
-      // slide just ended. Scrub the burst back toward cruise and arm a recharge
-      // so slides can't be chained for constant free speed. Slide JUMPS keep
-      // their boost untouched.
+      // slide just ended. If it was an ON-FOOT slide (walk pace — the player was
+      // "running", now clamped back to walk), arm the get-up beat: the skater
+      // picks themselves off the ground for a moment, controls dead, so slides
+      // can't be chained for constant free travel. A fast SKATE-slide keeps its
+      // momentum (you're on the board, not sprawled) and a slide JUMP launches
+      // straight out — both exempt.
       if (this.slideGraceT <= 0 && this.slideEndPending) {
         this.slideEndPending = false;
-        if (this.state === 'ride' && this.grounded) {
-          this.slideCd = Math.max(this.slideCd, TUNING.slideRecharge);
-          if (Math.abs(this.speed) > TUNING.cruiseSpeed)
-            this.speed =
-              Math.sign(this.speed) *
-              Math.max(TUNING.cruiseSpeed, Math.abs(this.speed) * TUNING.slideEndKeep);
-        }
+        if (
+          this.state === 'ride' &&
+          this.grounded &&
+          Math.abs(this.speed) <= TUNING.walkSpeed + 0.5
+        )
+          this.slideRecoverT = TUNING.slideRecover;
       }
     }
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
@@ -515,6 +523,18 @@ export class Player {
     }
     input = ctl;
 
+    // GET-UP BEAT: a plain slide leaves the skater sprawled on the ground.
+    // While the recover timer runs (and they're back on their feet, not
+    // airborne) the controls are dead — no running, no fresh slide/crawl, and
+    // any leftover speed is bled to a stop — so a slide can't be chained into
+    // constant free speed. It clears the instant they go airborne (a slide
+    // JUMP launches straight out and never arms this).
+    if (this.slideRecoverT > 0 && this.state === 'ride' && this.grounded) {
+      input = { ...input, moveX: 0, moveY: 0, grabPressed: false, grabHeld: false } as Input;
+      this.speed = 0;
+      this.charging = false;
+    }
+
     // The blob shadow is a landing indicator: probe far down for the floor
     // every step, independent of the short gameplay ground-follow ray.
     this.shadowGroundY = this.queryShadowGround(level);
@@ -525,6 +545,7 @@ export class Player {
     this.flipTimer = Math.max(0, this.flipTimer - dt);
     this.slideCd = Math.max(0, this.slideCd - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
+    this.slideRecoverT = Math.max(0, this.slideRecoverT - dt);
     this.haltCd = Math.max(0, this.haltCd - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
@@ -587,6 +608,8 @@ export class Player {
       !this.crawling &&
       this.slideTimer <= 0 &&
       this.slideCd <= 0 &&
+      !this.slideEndPending && // the last slide hasn't fully resolved (its grace/get-up beat is still running) — no re-fire yet
+      this.slideRecoverT <= 0 &&
       (Math.abs(this.speed) >= TUNING.slideMinSpeed || stickMag > 0.4)
     ) {
       // 8-axis slide: it fires along the stick (diagonals included), or along
@@ -824,7 +847,17 @@ export class Player {
       // predictable), it grants no board tricks, and it always lands back on
       // your feet — never flipping out the board into skating. slideJumpHeight
       // owns the pop; slideJumpTravel is the extra horizontal reach over a walk.
-      this.speed = Math.sign(this.speed || 1) * TUNING.walkSpeed * (1 + TUNING.slideJumpTravel);
+      // Launch in the SLIDE's actual direction: split the controlled magnitude
+      // into along-heading (speed) and across-heading (slideAirLat) parts so a
+      // SIDEWAYS slide-jump flies sideways, a forward one flies forward — no
+      // forced forward component turning it diagonal.
+      const sjMag = TUNING.walkSpeed * (1 + TUNING.slideJumpTravel);
+      const dir = this.slideVec.lengthSq() > 0.01 ? this.slideVec : this.axisF;
+      const fwd = dir.x * this.axisF.x + dir.z * this.axisF.z;
+      const lat = dir.x * this.axisL.x + dir.z * this.axisL.z;
+      this.speed = sjMag * fwd;
+      this.slideAirLat = sjMag * lat;
+      this.slideJumpAir = true; // committed arc: input can't add a diagonal
       this.airFromSkate = false; // a platforming hop, not a board air (no grabs, no skate carry)
       this.slideFromWalk = true; // force the on-foot touchdown clamp: no skate takeover on landing
       this.slideTimer = 0;
@@ -1443,7 +1476,7 @@ export class Player {
     // laterally. Locked while holding a grab, slamming, or GLUED IN HANG TIME
     // (there the wall glue + vertDrift own all motion, so vertDrift is the sole
     // coping-drift control and nothing zeroes the parked speed).
-    if (!this.grabbing && !this.slamActive && !this.vertAir) {
+    if (!this.grabbing && !this.slamActive && !this.vertAir && !this.slideJumpAir) {
       const footAir =
         !this.charging &&
         !this.airMomentum && // grind/slide exits keep flying, even when slow
@@ -1468,6 +1501,7 @@ export class Player {
     }
 
     this.pos.addScaledVector(this.axisF, this.speed * dt);
+    if (this.slideAirLat !== 0) this.pos.addScaledVector(this.axisL, this.slideAirLat * dt); // slide-jump cross-heading launch
     this.pos.y += this.vVel * dt;
 
     const hit = this.queryGround(level);
@@ -1505,6 +1539,8 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
+      this.slideAirLat = 0; // slide-jump arc is done
+      this.slideJumpAir = false;
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
       // Landing out of a lateral hang: keep the sideways momentum so a gap
       // transfer flows on the far side instead of stalling. Seed it as speed
@@ -2532,6 +2568,20 @@ export class Player {
       }
     }
 
+    // Rails are solid on foot: a side-on walk is curbed, a fast skate trips.
+    // Only while grounded and riding — grinding owns the position, airs clear
+    // it, a slide slips under, and a fresh dismount (regrindCd) or knockdown
+    // (bailDownT) is left alone.
+    if (
+      this.state === 'ride' &&
+      this.grounded &&
+      !this.sliding &&
+      this.bailDownT <= 0 &&
+      this.regrindCd <= 0
+    ) {
+      this.railBlock(level);
+    }
+
     for (const cp of level.checkpoints) {
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
@@ -2770,6 +2820,51 @@ export class Player {
         this.haltCd = 0.5;
       }
       this.speed = 0;
+    }
+  }
+
+  // Grind rails are SOLID to a grounded skater who meets them side-on without
+  // jumping or grinding: a walk is stopped like a curb, and a fast skate CATCHES
+  // a truck and TRIPS (a non-lethal stumble). Grinding (a held Triangle snaps you
+  // on earlier this step) and jumping (you're airborne) are the clean ways past —
+  // this only runs on the ground while riding. Blocking is horizontal only: a
+  // rail overhead or well underfoot is ignored, so you never snag on one you can
+  // walk beneath or that sits below the deck you're on.
+  private railBlock(level: Level): void {
+    const half = CONST.playerHalf;
+    const reach = half.x + CONST.railBlockRadius;
+    for (const rail of level.rails) {
+      const s = rail.closestXZ(this.pos);
+      if (s.distXZ > reach) continue;
+      // Vertical overlap: the rail line must sit within the body column (from a
+      // shade below the feet up to a shade over the head) to count — a rail well
+      // overhead is walk-under, one below the deck you're on is ignored.
+      if (s.point.y < this.pos.y - 0.3 || s.point.y > this.pos.y + half.y * 2 + 0.3) continue;
+      // Perpendicular to the rail (in XZ). Push back out toward the side we came
+      // FROM so a fast clip can't tunnel to the far side.
+      const perpX = s.tangent.z;
+      const perpZ = -s.tangent.x;
+      const sidePrev = (this.prevPos.x - s.point.x) * perpX + (this.prevPos.z - s.point.z) * perpZ;
+      const sideNow = (this.pos.x - s.point.x) * perpX + (this.pos.z - s.point.z) * perpZ;
+      const side = sidePrev !== 0 ? Math.sign(sidePrev) : sideNow !== 0 ? Math.sign(sideNow) : 1;
+      // Skimming ALONG the rail (riding beside it) is not a side-on hit — let it
+      // pass so a parallel graze never wrestles you.
+      const mx = this.pos.x - this.prevPos.x;
+      const mz = this.pos.z - this.prevPos.z;
+      const moveMag = Math.hypot(mx, mz);
+      if (moveMag > 1e-4 && Math.abs(mx * s.tangent.x + mz * s.tangent.z) / moveMag > 0.85) continue;
+      // Eject to the near side, a hair past the skin so we don't re-hit next step.
+      this.pos.x = s.point.x + perpX * side * (reach + 0.02);
+      this.pos.z = s.point.z + perpZ * side * (reach + 0.02);
+      const skating = this.freeSkate || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
+      if (skating && Math.abs(this.speed) >= TUNING.railTripSpeed) {
+        this.bail(); // caught a truck: go down (non-lethal), speed killed, knocked flat
+        this.emitSparks(6, 0xffd166, 1.6);
+      } else if (Math.abs(this.speed) > 0.1) {
+        // Curb stop: kill the into-rail component of travel.
+        if (Math.abs(this.axisF.x * perpX + this.axisF.z * perpZ) > 0.35) this.speed = 0;
+      }
+      return; // one rail resolves the step
     }
   }
 
@@ -3344,20 +3439,12 @@ export class Player {
   private buildVisual(): THREE.Group {
     const g = new THREE.Group();
     const lam = (tex: THREE.CanvasTexture) => new THREE.MeshLambertMaterial({ map: tex });
-    // --- pop-punk cat palette -------------------------------------------
-    const FUR = '#d6cbe0'; // pale lavender-grey fur
-    const PINK = '#ff3d97'; // hot pink
-    const PINKLT = '#ff8ac4'; // soft pink (inner ear, nose, blush)
-    const BLK = '#1b1b24'; // punk black
-    const BLKSH = '#101016';
-    const EYE = '#39d9a8'; // vivid green eyes
-    const furM = new THREE.MeshLambertMaterial({ color: 0xd6cbe0 });
-    const pinkM = new THREE.MeshLambertMaterial({ color: 0xff3d97 });
-    const pinkLtM = new THREE.MeshLambertMaterial({ color: 0xff8ac4 });
-    const blkM = new THREE.MeshLambertMaterial({ color: 0x1b1b24 });
 
-    // Board (visual only), nose toward local +Z — the magenta-dusk flame deck
-    // already reads pop-punk, so it stays. Grouped with wheels for grab lift.
+    // Board (visual only), nose toward local +Z. Grouped with its wheels so
+    // grabs can pull the whole board up into the hand. Multi-material box:
+    // grip speckle on top, deck art on the BOTTOM — the underside is what the
+    // camera actually sees through grabs and flips, so the flames go there.
+    // Grip stays crisp — texel grit IS grip tape; the art shades smooth.
     const boardG = new THREE.Group();
     const gripM = lam(this.paintTex(64, (ctx) => {
       ctx.fillStyle = '#17181c';
@@ -3368,13 +3455,16 @@ export class Player {
         ctx.fillRect(Math.floor(Math.random() * 64), Math.floor(Math.random() * 64), 1, 1);
       }
       this.speckle(ctx, 64, 'rgba(0,0,0,0.5)', 40);
-      ctx.fillStyle = 'rgba(255,61,151,0.85)'; // pink spray star
+      // spray-stencil star, half scuffed away by foot drag
+      ctx.fillStyle = 'rgba(255,122,31,0.85)';
       this.starPath(ctx, 32, 32, 11, 4.5);
       ctx.fill();
       ctx.fillStyle = 'rgba(23,24,28,0.6)';
       for (let i = 0; i < 30; i++) ctx.fillRect(20 + Math.random() * 22, 20 + Math.random() * 22, 2, 1);
     }, true));
     const artM = lam(this.paintTex(128, (ctx) => {
+      // underside art: magenta dusk gradient, curling flames off the tail,
+      // star sparkles — airbrushed, no hard bands
       const dusk = ctx.createLinearGradient(0, 0, 0, 128);
       dusk.addColorStop(0, '#241047');
       dusk.addColorStop(0.45, '#631d7e');
@@ -3394,12 +3484,12 @@ export class Player {
         ctx.closePath();
         ctx.fill();
       };
-      flame('#ff2f9e', 52);
-      flame('#ff7ac4', 30);
+      flame('#ff7a1f', 52);
+      flame('#ffd23f', 30);
       flame('#fff3c4', 12);
       ctx.fillStyle = '#f4f1e6';
       for (const [x, y] of [[24, 20], [100, 14], [66, 32]]) {
-        ctx.beginPath();
+        ctx.beginPath(); // soft 4-point sparkle
         ctx.moveTo(x, y - 7);
         ctx.quadraticCurveTo(x + 1.5, y - 1.5, x + 7, y);
         ctx.quadraticCurveTo(x + 1.5, y + 1.5, x, y + 7);
@@ -3408,23 +3498,25 @@ export class Player {
         ctx.fill();
       }
     }));
-    const edgeM = new THREE.MeshLambertMaterial({ color: 0xd89b52 });
-    const deckMats = [edgeM, edgeM, gripM, artM, edgeM, edgeM];
+    const edgeM = new THREE.MeshLambertMaterial({ color: 0xd89b52 }); // ply edge
+    const deckMats = [edgeM, edgeM, gripM, artM, edgeM, edgeM]; // +x -x top bottom +z -z
     const deck = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.09, 1.4), deckMats);
     deck.position.y = 0.16;
     boardG.add(deck);
+    // Rounded kicked nose/tail: squashed cylinder caps — grip up, art down,
+    // ply on the rim — so the plank silhouette curves instead of boxing off.
     const kickGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.08, 10);
-    const kickMats = [edgeM, gripM, artM];
+    const kickMats = [edgeM, gripM, artM]; // side, top cap, bottom cap
     for (const side of [-1, 1]) {
       const kick = new THREE.Mesh(kickGeo, kickMats);
-      kick.scale.z = 1.35;
+      kick.scale.z = 1.35; // stretched into an oval nose
       kick.position.set(0, 0.175, side * 0.72);
       kick.rotation.x = -side * 0.3;
       boardG.add(kick);
     }
     const truckM = new THREE.MeshLambertMaterial({ color: 0xb9bfc9 });
     const truckGeo = new THREE.BoxGeometry(0.32, 0.07, 0.1);
-    const wheelM = new THREE.MeshLambertMaterial({ color: 0xff5fb0 }); // pink urethane
+    const wheelM = new THREE.MeshLambertMaterial({ color: 0xffd23f }); // urethane
     const wheelGeo = new THREE.CylinderGeometry(0.068, 0.068, 0.1, 10);
     for (const z of [0.55, -0.55]) {
       const truck = new THREE.Mesh(truckGeo, truckM);
@@ -3432,74 +3524,87 @@ export class Player {
       boardG.add(truck);
       for (const x of [-0.21, 0.21]) {
         const wheel = new THREE.Mesh(wheelGeo, wheelM);
-        wheel.rotation.z = Math.PI / 2;
+        wheel.rotation.z = Math.PI / 2; // axle along x
         wheel.position.set(x, 0.068, z);
         boardG.add(wheel);
       }
     }
+    // The deck reads ~25% oversized against the body — scale the whole board
+    // group down (grab lift/tip animate position/rotation, unaffected).
     boardG.scale.setScalar(0.8);
     g.add(boardG);
     this.boardG = boardG;
 
-    // Rider legs: black ripped skinnies with hot-pink stitching + studded cuff,
-    // chunky skate shoes with pink laces + gum sole, dark kneepads.
+    // Rider legs: hip-pivot groups with a REAL knee joint each — thigh
+    // capsule down to a knee group carrying shin + shoe + pad — so crouches
+    // read as bent-knee posture, not stretched planks. syncVisual owns every
+    // joint angle; total reach matches the old one-piece leg (~0.5 hip→sole).
     const legs = new THREE.Group();
-    legs.position.y = 0.71;
+    legs.position.y = 0.71; // hip line
     const denimM = lam(this.paintTex(128, (ctx) => {
+      // worn denim: soft indigo wash, broad knee fade, rolled hem, one
+      // drifting outseam stitch
       const wash = ctx.createLinearGradient(0, 0, 0, 128);
-      wash.addColorStop(0, BLK);
-      wash.addColorStop(0.5, '#22222c');
-      wash.addColorStop(1, BLKSH);
+      wash.addColorStop(0, '#3c5a7c');
+      wash.addColorStop(0.5, '#35506e');
+      wash.addColorStop(1, '#2c4460');
       ctx.fillStyle = wash;
       ctx.fillRect(0, 0, 128, 128);
-      this.airbrush(ctx, 128, '90,90,110', 0.1, 12, 10, 24);
-      // ripped-knee light patch with frayed threads
-      const wear = ctx.createRadialGradient(64, 70, 3, 64, 70, 26);
-      wear.addColorStop(0, 'rgba(150,150,165,0.35)');
-      wear.addColorStop(1, 'rgba(150,150,165,0)');
+      this.airbrush(ctx, 128, '190,210,235', 0.1, 14, 10, 26);
+      this.airbrush(ctx, 128, '18,32,52', 0.12, 10, 12, 30);
+      const wear = ctx.createRadialGradient(64, 72, 4, 64, 72, 34);
+      wear.addColorStop(0, 'rgba(170,200,225,0.35)');
+      wear.addColorStop(1, 'rgba(170,200,225,0)');
       ctx.fillStyle = wear;
-      ctx.fillRect(38, 46, 52, 52);
-      ctx.strokeStyle = 'rgba(210,210,225,0.55)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(52 + i * 5, 62); ctx.lineTo(52 + i * 5, 78); ctx.stroke(); }
-      ctx.fillStyle = '#0b0b0f';
-      ctx.fillRect(0, 116, 128, 12); // rolled cuff
-      // pink studs along the cuff + a pink outseam stitch
-      ctx.fillStyle = PINK;
-      for (let x = 6; x < 128; x += 12) { ctx.beginPath(); ctx.arc(x, 122, 2, 0, Math.PI * 2); ctx.fill(); }
-      ctx.strokeStyle = 'rgba(255,61,151,0.85)';
+      ctx.fillRect(28, 36, 72, 72);
+      ctx.fillStyle = '#26374a';
+      ctx.fillRect(0, 118, 128, 10); // rolled hem (ankle on the shin, knee shadow on the thigh)
+      ctx.strokeStyle = 'rgba(232,163,61,0.8)';
       ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(8, 0); ctx.quadraticCurveTo(3, 64, 8, 116); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(8, 0);
+      ctx.quadraticCurveTo(3, 64, 8, 118);
+      ctx.stroke();
     }));
     const shoeM = lam(this.paintTex(64, (ctx) => {
+      // chunky skate shoe on a squashed sphere: pale upper, lace crosses up
+      // top, gum sole wrapping the underside
       const upper = ctx.createLinearGradient(0, 0, 0, 64);
-      upper.addColorStop(0, '#24242e');
-      upper.addColorStop(1, '#15151b');
+      upper.addColorStop(0, '#f4f1e8');
+      upper.addColorStop(0.7, '#e6e1d4');
+      upper.addColorStop(1, '#d8d2c2');
       ctx.fillStyle = upper;
       ctx.fillRect(0, 0, 64, 64);
-      ctx.fillStyle = '#e9dfd0';
-      ctx.fillRect(0, 50, 64, 14); // cream gum sole
-      ctx.fillStyle = PINK;
-      ctx.fillRect(0, 47, 64, 3); // pink foxing stripe
-      ctx.strokeStyle = PINK; // pink laces
+      this.airbrush(ctx, 64, '120,120,130', 0.14, 8, 5, 12);
+      ctx.fillStyle = '#b98a52';
+      ctx.fillRect(0, 50, 64, 14); // gum sole
+      ctx.fillStyle = '#2b2e35';
+      ctx.fillRect(0, 47, 64, 3); // foxing stripe
+      ctx.strokeStyle = '#8d94a3';
       ctx.lineWidth = 2;
       for (let i = 0; i < 3; i++) {
-        ctx.beginPath(); ctx.moveTo(22 + i * 7, 8); ctx.lineTo(28 + i * 7, 18); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(28 + i * 7, 8); ctx.lineTo(22 + i * 7, 18); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(22 + i * 7, 8);
+        ctx.lineTo(28 + i * 7, 18);
+        ctx.moveTo(28 + i * 7, 8);
+        ctx.lineTo(22 + i * 7, 18);
+        ctx.stroke();
       }
     }));
-    const padM = new THREE.MeshLambertMaterial({ color: 0x26262f });
+    const padM = new THREE.MeshLambertMaterial({ color: 0x2b2e35 });
     const thighGeo = new THREE.CapsuleGeometry(0.085, 0.14, 3, 10);
-    thighGeo.translate(0, -0.15, 0);
+    thighGeo.translate(0, -0.15, 0); // hip → knee
     const shinGeo = new THREE.CapsuleGeometry(0.068, 0.12, 3, 10);
-    shinGeo.translate(0, -0.11, 0);
+    shinGeo.translate(0, -0.11, 0); // knee → ankle
     const shoeGeo = new THREE.SphereGeometry(0.105, 10, 8);
     const padGeo = new THREE.SphereGeometry(0.08, 8, 6);
     for (const side of [-1, 1]) {
-      const leg = new THREE.Group();
+      const leg = new THREE.Group(); // hip pivot — syncVisual writes rot + pos
       leg.position.x = side * 0.115;
       legs.add(leg);
       leg.add(new THREE.Mesh(thighGeo, denimM));
+      // Knee group pivots where the thigh ends; shin/shoe/pad swing with it
+      // and squash with legs.scale.y, same as everything else on the rig.
       const knee = new THREE.Group();
       knee.position.y = -0.26;
       leg.add(knee);
@@ -3508,203 +3613,192 @@ export class Player {
       shoe.scale.set(1, 0.55, 1.6);
       shoe.position.set(0, -0.21, 0.05);
       knee.add(shoe);
-      const pad = new THREE.Mesh(padGeo, padM);
+      const pad = new THREE.Mesh(padGeo, padM); // kneepad dome over the joint
       pad.scale.set(1, 0.85, 0.7);
       pad.position.set(0, -0.01, 0.075);
       knee.add(pad);
-      if (side === 1) { this.legR = leg; this.kneeR = knee; }
-      else { this.legL = leg; this.kneeL = knee; }
+      if (side === 1) {
+        this.legR = leg;
+        this.kneeR = knee;
+      } else {
+        this.legL = leg;
+        this.kneeL = knee;
+      }
     }
     g.add(legs);
     this.legs = legs;
 
-    // Cat TAIL: a fluffy overlapping tube of fur spheres that sweeps back off
-    // the hips, arcs up and curls forward at the pink tip. Hung off the body
-    // group (mostly static). Dense overlap so it reads solid, not beaded.
-    const tail = new THREE.Group();
-    tail.position.set(0, 0.62, -0.13);
-    const TN = 16;
-    for (let i = 0; i < TN; i++) {
-      const t = i / (TN - 1);
-      const y = t * 0.62; // rise up the back
-      const z = -0.04 - Math.sin(t * Math.PI * 0.92) * 0.26; // sweep out then curl back in
-      const x = Math.sin(t * 5.5) * 0.012; // faint wiggle
-      const r = 0.088 * (1 - t * 0.5) + 0.02; // taper but stay fluffy
-      const seg = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), t > 0.7 ? pinkM : furM);
-      seg.position.set(x, y, z);
-      tail.add(seg);
-    }
-    g.add(tail);
-
-    // Black band tee: hot-pink star on the chest, a pink lightning bolt on the
-    // back, studded pink hem. Lathe torso, same profile as before.
+    // Tee: ONE wrapped canvas on a lathe torso — phiStart 1.5π puts u=0.25
+    // (canvas x=32) at local +Z, so the chest sunburst paints at x=32 and the
+    // race number at x=96 lands square on the back, no mirroring. Broad
+    // shoulders easing into the waist come from the profile, not a box.
     const teeM = lam(this.paintTex(128, (ctx) => {
       const fabric = ctx.createLinearGradient(0, 0, 0, 128);
-      fabric.addColorStop(0, '#26262f');
-      fabric.addColorStop(0.6, BLK);
-      fabric.addColorStop(1, BLKSH);
+      fabric.addColorStop(0, '#37b191');
+      fabric.addColorStop(0.6, '#2fa88d');
+      fabric.addColorStop(1, '#27957c');
       ctx.fillStyle = fabric;
       ctx.fillRect(0, 0, 128, 128);
-      this.airbrush(ctx, 128, '90,90,110', 0.06, 12, 10, 24);
-      ctx.fillStyle = '#0d0d12';
-      ctx.fillRect(0, 0, 128, 7); // collar
-      ctx.fillStyle = PINK;
-      ctx.fillRect(0, 118, 128, 4); // pink hem band
-      ctx.fillStyle = '#ffd0e6';
-      for (let x = 6; x < 128; x += 11) { ctx.beginPath(); ctx.arc(x, 124, 1.6, 0, Math.PI * 2); ctx.fill(); } // hem studs
-      // chest: big pink star with a bright core
-      ctx.fillStyle = PINK;
-      this.starPath(ctx, 32, 50, 18, 7.5);
+      this.airbrush(ctx, 128, '255,255,255', 0.07, 12, 10, 26);
+      this.airbrush(ctx, 128, '0,70,58', 0.1, 10, 12, 30);
+      ctx.fillStyle = '#1d6e5d';
+      ctx.fillRect(0, 0, 128, 7); // collar band
+      ctx.fillRect(0, 120, 128, 8); // hem right at the hip line
+      ctx.fillStyle = '#ff7a1f'; // chest sunburst, warm core
+      this.starPath(ctx, 32, 52, 17, 7);
       ctx.fill();
-      const core = ctx.createRadialGradient(32, 50, 1, 32, 50, 8);
-      core.addColorStop(0, '#fff0f7');
-      core.addColorStop(1, PINKLT);
+      const core = ctx.createRadialGradient(32, 52, 1, 32, 52, 8);
+      core.addColorStop(0, '#fff3c4');
+      core.addColorStop(1, '#ffd23f');
       ctx.fillStyle = core;
-      ctx.beginPath(); ctx.arc(32, 50, 6.5, 0, Math.PI * 2); ctx.fill();
-      // back: pink lightning bolt
-      ctx.fillStyle = PINK;
       ctx.beginPath();
-      ctx.moveTo(100, 34); ctx.lineTo(90, 62); ctx.lineTo(98, 62); ctx.lineTo(92, 84);
-      ctx.lineTo(106, 56); ctx.lineTo(98, 56); ctx.lineTo(104, 34);
-      ctx.closePath(); ctx.fill();
+      ctx.arc(32, 52, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#f4f1e6';
+      ctx.font = 'bold 34px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('98', 96, 64); // race number
     }));
     const torsoProfile = [
-      new THREE.Vector2(0.06, -0.3),
+      new THREE.Vector2(0.06, -0.3), // tucked under the hem
       new THREE.Vector2(0.17, -0.27),
       new THREE.Vector2(0.2, -0.16),
       new THREE.Vector2(0.215, -0.04),
       new THREE.Vector2(0.235, 0.08),
-      new THREE.Vector2(0.26, 0.2),
+      new THREE.Vector2(0.26, 0.2), // shoulder
       new THREE.Vector2(0.24, 0.27),
-      new THREE.Vector2(0.1, 0.31),
+      new THREE.Vector2(0.1, 0.31), // roll off to the collar
     ];
-    const torso = new THREE.Mesh(new THREE.LatheGeometry(torsoProfile, 12, Math.PI * 1.5, Math.PI * 2), teeM);
-    torso.scale.z = 0.7;
+    const torso = new THREE.Mesh(
+      new THREE.LatheGeometry(torsoProfile, 12, Math.PI * 1.5, Math.PI * 2),
+      teeM,
+    );
+    torso.scale.z = 0.7; // chest oval, not a tube
+    // Upper body rides in its own group so the shoulders can open side-on
+    // (skate stance) and counter-swing against the run without dragging the
+    // hips, legs, or board around with them.
     const upper = new THREE.Group();
     torso.position.y = 0.98;
     upper.add(torso);
 
-    // Cat HEAD: lavender fur, swept pink fringe, big lined green eyes, pink
-    // muzzle+nose, whisker dots, cocky smirk with a fang, cheek tufts, a little
-    // star decal by one eye. Human ears gone — cat ears added in 3D below.
+    // Head: one sphere, everything painted into the wrap — three's sphere
+    // puts local +Z at u=0.25, so the face (whites, irises, cocked brows,
+    // grin) sits around canvas x=32, hair crowns the top rows and pools at
+    // the back (x=96), ears ride the u=0/u=0.5 seams. headM still pitches in
+    // syncVisual for the horizon look-at.
+    const skin = '#e8c39a';
+    const hair = '#4a2e1a';
     const headTexM = lam(this.paintTex(128, (ctx) => {
-      ctx.fillStyle = FUR;
+      ctx.fillStyle = skin;
       ctx.fillRect(0, 0, 128, 128);
-      this.airbrush(ctx, 128, '150,135,175', 0.1, 12, 8, 22);
-      // muzzle: paler fur oval around nose+mouth
-      ctx.fillStyle = '#efe8f5';
-      ctx.beginPath(); ctx.ellipse(32, 66, 15, 12, 0, 0, Math.PI * 2); ctx.fill();
-      // swept pink fringe across the top (choppy scallops), black roots
-      ctx.fillStyle = BLK;
-      ctx.fillRect(0, 0, 128, 16);
-      ctx.fillStyle = PINK;
-      ctx.fillRect(0, 0, 128, 30);
-      ctx.fillStyle = FUR;
-      for (let x = -2; x <= 130; x += 11) { ctx.beginPath(); ctx.moveTo(x, 30); ctx.lineTo(x + 5, 40); ctx.lineTo(x + 10, 30); ctx.closePath(); ctx.fill(); }
-      // side-swept bang dipping over the left brow (canvas right of face)
-      ctx.fillStyle = PINK;
-      ctx.beginPath(); ctx.moveTo(44, 24); ctx.quadraticCurveTo(52, 44, 40, 52); ctx.quadraticCurveTo(46, 40, 40, 30); ctx.closePath(); ctx.fill();
-      // back of the skull hair pool
-      ctx.fillStyle = BLK; ctx.beginPath(); ctx.ellipse(96, 34, 30, 24, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = PINK; ctx.beginPath(); ctx.ellipse(96, 28, 30, 16, 0, 0, Math.PI * 2); ctx.fill();
-      // WINGED eyeliner + big eyes with green irises
-      ctx.strokeStyle = '#141018'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(17, 52); ctx.quadraticCurveTo(25, 47, 32, 50); ctx.stroke(); // liner L
-      ctx.beginPath(); ctx.moveTo(16, 51); ctx.lineTo(13, 48); ctx.stroke(); // wing L
-      ctx.beginPath(); ctx.moveTo(46, 50); ctx.quadraticCurveTo(39, 47, 34, 50); ctx.stroke(); // liner R
-      ctx.beginPath(); ctx.moveTo(47, 49); ctx.lineTo(50, 46); ctx.stroke(); // wing R
-      for (const ex of [24, 40]) {
-        ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(ex, 57, 6, 7.5, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = EYE; ctx.beginPath(); ctx.arc(ex, 58, 4.2, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#141018'; ctx.beginPath(); ctx.arc(ex, 58, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ex - 1.4, 55.6, 1.1, 0, Math.PI * 2); ctx.fill(); // catch-light
+      this.airbrush(ctx, 128, '200,120,60', 0.08, 12, 8, 22);
+      ctx.fillStyle = hair;
+      ctx.fillRect(0, 0, 128, 22); // crown band under the cap
+      for (let x = 4; x <= 124; x += 12) {
+        ctx.beginPath(); // soft fringe scallops
+        ctx.arc(x, 22, 6, 0, Math.PI);
+        ctx.fill();
       }
-      // pink nose (little triangle) + mouth smirk with a fang
-      ctx.fillStyle = PINK;
-      ctx.beginPath(); ctx.moveTo(32, 62); ctx.lineTo(28, 66); ctx.lineTo(36, 66); ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = '#5a4668'; ctx.lineWidth = 2.2; ctx.beginPath();
-      ctx.moveTo(24, 74); ctx.quadraticCurveTo(33, 80, 42, 72); ctx.stroke(); // cocky smirk up on one side
-      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.moveTo(38, 73); ctx.lineTo(41, 73); ctx.lineTo(40, 77); ctx.closePath(); ctx.fill(); // fang
-      // whisker dots + cheek blush + a pink star decal by the right eye
-      ctx.fillStyle = 'rgba(90,70,110,0.6)';
-      for (const [x, y] of [[19, 66], [21, 70], [45, 66], [43, 70]]) { ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill(); }
+      ctx.beginPath(); // back of the skull
+      ctx.ellipse(96, 40, 30, 34, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#d4a97e';
+      for (const ex of [0, 128, 64]) {
+        ctx.beginPath(); // ears — drawn at both seam edges so they join
+        ctx.ellipse(ex, 58, 6, 9, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.strokeStyle = '#3a2413'; // brows, one cocked higher — mid-trick face
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(18, 47);
+      ctx.quadraticCurveTo(24, 43, 30, 46);
+      ctx.moveTo(34, 44);
+      ctx.quadraticCurveTo(40, 40, 46, 44);
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      for (const ex of [25, 39]) {
+        ctx.beginPath();
+        ctx.ellipse(ex, 56, 6, 7.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      for (const ex of [26.5, 37.5]) {
+        ctx.fillStyle = '#2e7f6a'; // irises pulled toward the nose: focus
+        ctx.beginPath();
+        ctx.arc(ex, 57, 3.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#20232b';
+        ctx.beginPath();
+        ctx.arc(ex, 57, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = '#d4a97e';
+      ctx.beginPath(); // nose
+      ctx.ellipse(32, 64, 3.5, 2.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#5e2413'; // big Crash grin, corners turned up
+      ctx.beginPath();
+      ctx.moveTo(18, 71);
+      ctx.quadraticCurveTo(32, 87, 46, 71);
+      ctx.quadraticCurveTo(32, 77, 18, 71);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); // tooth row along the top lip
+      ctx.moveTo(20, 71.5);
+      ctx.quadraticCurveTo(32, 76, 44, 71.5);
+      ctx.quadraticCurveTo(32, 80, 20, 71.5);
+      ctx.fill();
       for (const bx of [16, 48]) {
-        const blush = ctx.createRadialGradient(bx, 64, 1, bx, 64, 7);
-        blush.addColorStop(0, 'rgba(255,120,180,0.4)'); blush.addColorStop(1, 'rgba(255,120,180,0)');
-        ctx.fillStyle = blush; ctx.fillRect(bx - 7, 57, 14, 14);
+        const blush = ctx.createRadialGradient(bx, 63, 1, bx, 63, 8);
+        blush.addColorStop(0, 'rgba(235,130,90,0.35)');
+        blush.addColorStop(1, 'rgba(235,130,90,0)');
+        ctx.fillStyle = blush;
+        ctx.fillRect(bx - 8, 55, 16, 16);
       }
-      ctx.fillStyle = PINK; this.starPath(ctx, 47, 64, 2.6, 1.1); ctx.fill(); // face star
+      ctx.fillStyle = 'rgba(150,80,40,0.5)';
+      for (const [x, y] of [[16, 68], [20, 70], [44, 69], [48, 67]]) {
+        ctx.beginPath(); // freckles
+        ctx.arc(x, y, 1.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }));
     const head = new THREE.Mesh(new THREE.SphereGeometry(0.185, 12, 10), headTexM);
     head.scale.set(1, 1.05, 0.95);
     head.position.y = 1.42;
     upper.add(head);
     this.headM = head;
-
-    // choppy pink/black HAIR first: a low back-swept shell that covers the back
-    // and sides but leaves the CROWN open, so the cat ears own the top. A dark
-    // under-layer with a hot-pink outer reads as dyed pop-punk hair.
-    const hairM = new THREE.MeshLambertMaterial({ color: 0xff3d97 });
-    const hairRootM = new THREE.MeshLambertMaterial({ color: 0x1b1b24 });
-    const under = new THREE.Mesh(
-      new THREE.SphereGeometry(0.2, 12, 8, 0, Math.PI * 2, Math.PI * 0.22, Math.PI * 0.42),
-      hairRootM,
-    );
-    under.position.set(0, -0.03, -0.02);
-    head.add(under);
+    // Backwards cap: sphere-slice crown + curved half-cylinder rear brim as
+    // head children, so every nod and look-at pitch carries them for free.
+    const capM = new THREE.MeshLambertMaterial({ color: 0xf04e23 });
     const crown = new THREE.Mesh(
-      new THREE.SphereGeometry(0.196, 12, 8, 0, Math.PI * 2, Math.PI * 0.2, Math.PI * 0.4),
-      hairM,
+      new THREE.SphereGeometry(0.2, 12, 7, 0, Math.PI * 2, 0, Math.PI * 0.38),
+      capM,
     );
-    crown.position.set(0, -0.015, -0.03);
+    crown.position.y = 0.02;
+    crown.rotation.x = -0.12; // front rim lifted off the brows
     head.add(crown);
-    // choppy tufts round the back + a swept side-fringe over one brow
-    for (const [sx, sy, sz, rot, len, pink] of [
-      [-0.13, 0.05, -0.08, 0.7, 0.16, 1], [-0.05, 0.09, -0.16, 0.15, 0.18, 0],
-      [0.06, 0.08, -0.16, -0.2, 0.17, 1], [0.14, 0.04, -0.06, -0.7, 0.15, 0],
-      [0.12, 0.02, 0.1, -1.0, 0.15, 1], [-0.13, 0.0, 0.08, 1.0, 0.14, 1],
-    ] as [number, number, number, number, number, number][]) {
-      const spike = new THREE.Mesh(new THREE.ConeGeometry(0.05, len, 6), pink ? hairM : hairRootM);
-      spike.position.set(sx, sy, sz);
-      spike.rotation.set(-2.5 + sz * 2, 0, rot);
-      head.add(spike);
-    }
-    // swept pink side-fringe dipping over the right brow (a flat wedge)
-    const fringe = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.19, 5), hairM);
-    fringe.scale.set(1, 1, 0.35);
-    fringe.position.set(0.08, 0.11, 0.13);
-    fringe.rotation.set(-1.9, 0.3, -0.9);
-    head.add(fringe);
+    const brim = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.17, 0.19, 0.03, 9, 1, false, Math.PI / 2, Math.PI),
+      capM,
+    );
+    brim.position.set(0, 0.075, -0.06);
+    brim.rotation.x = -0.25; // rear brim dips off the crown
+    head.add(brim);
 
-    // Cat EARS on top, clearly above the hair: tall fur cones with a pink inner
-    // cone, tilted out. Children of the head so look-at pitch carries them.
-    for (const side of [-1, 1]) {
-      const ear = new THREE.Group();
-      ear.position.set(side * 0.105, 0.17, -0.01);
-      ear.rotation.z = side * 0.32;
-      ear.rotation.x = -0.12;
-      head.add(ear);
-      const outer = new THREE.Mesh(new THREE.ConeGeometry(0.064, 0.19, 8), furM);
-      ear.add(outer);
-      const inner = new THREE.Mesh(new THREE.ConeGeometry(0.036, 0.12, 8), pinkLtM);
-      inner.position.set(0, 0.006, 0.03);
-      ear.add(inner);
-    }
-
-    // Arms: black tee sleeve -> lavender fur forearm, striped pink/black
-    // arm-warmer, dark fingerless-glove hands, a studded pink wristband.
+    // Arms hang from the SHOULDER (geometry translated like the legs), so
+    // swings, grabs, and windmills pivot where a shoulder actually is.
+    // Sleeved capsules with mitt-sphere hands; capsule top = canvas top.
     const armMat = lam(this.paintTex(64, (ctx) => {
-      ctx.fillStyle = FUR;
+      ctx.fillStyle = skin;
       ctx.fillRect(0, 0, 64, 64);
-      this.airbrush(ctx, 64, '150,135,175', 0.1, 8, 5, 12);
-      ctx.fillStyle = BLK;
-      ctx.fillRect(0, 0, 64, 20); // tee sleeve
-      ctx.fillStyle = PINK;
-      ctx.fillRect(0, 20, 64, 2); // pink sleeve trim
-      // striped arm-warmer on the forearm (lower canvas = toward the hand)
-      for (let y = 40; y < 64; y += 5) { ctx.fillStyle = ((y / 5) | 0) % 2 ? PINK : BLK; ctx.fillRect(0, y, 64, 5); }
+      this.airbrush(ctx, 64, '200,120,60', 0.1, 8, 5, 12);
+      ctx.fillStyle = '#2fa88d';
+      ctx.fillRect(0, 0, 64, 18); // tee sleeve at the shoulder
+      ctx.fillStyle = '#1d6e5d';
+      ctx.fillRect(0, 18, 64, 4); // sleeve hem
     }));
-    const handM = new THREE.MeshLambertMaterial({ color: 0x24242e }); // fingerless glove
+    const handM = new THREE.MeshLambertMaterial({ color: 0xdcb289 });
     const armGeo = new THREE.CapsuleGeometry(0.062, 0.33, 3, 9);
     armGeo.translate(0, -0.245, 0);
     const handGeo = new THREE.SphereGeometry(0.058, 8, 6);
@@ -3716,21 +3810,15 @@ export class Player {
       const hand = new THREE.Mesh(handGeo, handM);
       hand.position.y = -0.48;
       arm.add(hand);
-      const band = new THREE.Mesh(new THREE.TorusGeometry(0.064, 0.028, 6, 10), side === 1 ? pinkM : blkM);
-      band.rotation.x = Math.PI / 2;
-      band.position.y = -0.41;
-      arm.add(band);
-      // little pink studs on the wristband
-      if (side === 1) {
-        for (let i = 0; i < 6; i++) {
-          const stud = new THREE.Mesh(new THREE.SphereGeometry(0.012, 5, 4), pinkLtM);
-          const a = (i / 6) * Math.PI * 2;
-          stud.position.set(Math.cos(a) * 0.064, -0.41, Math.sin(a) * 0.064);
-          arm.add(stud);
-        }
-      }
       if (side === 1) this.armR = arm;
-      else this.armL = arm;
+      else {
+        this.armL = arm;
+        // one sweatband on one wrist — cheap asymmetry for the silhouette
+        const band = new THREE.Mesh(new THREE.TorusGeometry(0.062, 0.026, 6, 10), capM);
+        band.rotation.x = Math.PI / 2; // ring around the wrist
+        band.position.y = -0.41;
+        arm.add(band);
+      }
     }
     g.add(upper);
     this.upperG = upper;
