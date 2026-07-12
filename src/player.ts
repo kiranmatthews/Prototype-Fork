@@ -596,15 +596,17 @@ export class Player {
       if (this.comboTimer <= 0) this.bankCombo();
     }
 
-    // Circle/Q on the ground while moving fires a brief canned slide:
+    // Circle/Q ON FOOT while moving fires a brief canned Crash slide:
     // direction locked, bursts to slideSpeed, smashes crates. All three feel
     // numbers (trigger threshold, duration, speed) are sliders. (Stopped,
-    // holding it crawls instead — see stepRide. In the air it's a grab.)
+    // holding it crawls instead — see stepRide. In the air it's a grab. ON THE
+    // BOARD it's a brake/dismount instead — see the freeSkate branch below.)
     const stickMag = Math.abs(input.moveX) + Math.abs(input.moveY);
     if (
       input.grabPressed &&
       this.state === 'ride' &&
       this.grounded &&
+      !this.freeSkate && // skating? O is the brake, not a slide — this is an on-foot move only
       !this.crawling &&
       this.slideTimer <= 0 &&
       this.slideCd <= 0 &&
@@ -614,8 +616,7 @@ export class Player {
     ) {
       // 8-axis slide: it fires along the stick (diagonals included), or along
       // current travel if the stick is idle. A slide off your feet is Crash's
-      // slide: canned burst, then back to walking; at skate speed it keeps
-      // its momentum.
+      // slide: canned burst, then back to walking.
       this.slideFromWalk = !this.charging && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
       if (stickMag > 0.4) {
         this.slideVec
@@ -1018,6 +1019,18 @@ export class Player {
         // the cross component is applied in the lateral block below
         this.speed =
           this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
+      } else if (this.freeSkate && input.grabHeld) {
+        // O = BRAKE / DISMOUNT: held on the board, bleed speed hard (ignoring
+        // the stick) and step off onto your feet the moment you cross under
+        // walking pace. This is what Circle does while skating — a slide is now
+        // an on-foot move only.
+        if (Math.abs(this.speed) > 12 && this.haltCd <= 0) {
+          sfx.play('skateHalt', 0.6);
+          this.haltCd = 0.6;
+        }
+        const mag = Math.max(0, Math.abs(this.speed) - TUNING.turnaround * dt);
+        this.speed = Math.sign(this.speed) * mag;
+        if (mag <= TUNING.walkSpeed + 0.5) this.stepOff = true; // dismount to feet
       } else if (this.freeSkate) {
         // OMNIDIRECTIONAL SKATE: whichever way you push, the heading turns to
         // follow it — carrying your speed with it (a carve, not a brake), so
