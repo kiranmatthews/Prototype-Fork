@@ -94,6 +94,7 @@ export class Player {
   private slideAirLat = 0; // slide-jump: launch velocity component ACROSS the heading (keeps sideways slide-jumps sideways)
   private slideJumpAir = false; // in a committed slide-jump arc: no input air-steer (no diagonal drift)
   private slideRecoverT = 0; // get-up beat after a slide: movement locked while the skater gets off the ground
+  private slideCrawlChain = false; // Circle held through a slide: flow straight into the crawl on the way out (no get-up beat)
   private landingScoring = false; // landing-tick payouts still count as air tricks
   private crawling = false; // Circle held while stopped: all-fours crawl
   private crawlPose = 0;
@@ -378,6 +379,7 @@ export class Player {
     this.slideAirLat = 0;
     this.slideJumpAir = false;
     this.slideRecoverT = 0;
+    this.slideCrawlChain = false;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -466,6 +468,7 @@ export class Player {
         if (
           this.state === 'ride' &&
           this.grounded &&
+          !this.crawling && // flowed into the crawl instead (Circle held out of the slide) — no get-up beat
           Math.abs(this.speed) <= TUNING.walkSpeed + 0.5
         )
           this.slideRecoverT = TUNING.slideRecover;
@@ -632,6 +635,9 @@ export class Player {
         TUNING.downhillMax,
       );
       this.slideTimer = TUNING.slideDistance / Math.max(this.slideSpd, 6);
+      // Keeping Circle held out the far side of the slide flows into the crawl
+      // instead of the get-up beat (a release drops it — see stepRide).
+      this.slideCrawlChain = true;
       // Entering the slide drops any charge held from BEFORE it — only a
       // FRESH X press during the slide arms the Crash slide-jump.
       this.charging = false;
@@ -863,6 +869,7 @@ export class Player {
       this.slideFromWalk = true; // force the on-foot touchdown clamp: no skate takeover on landing
       this.slideTimer = 0;
       this.slideEndPending = false; // consumed by a slide JUMP: no plain-slide scrub
+      this.slideCrawlChain = false; // a jump out of the slide, not a crawl chain
       this.slideCd = CONST.slideCooldown;
       this.airMomentum = true;
       this.lastJumpType = 'Slide Jump';
@@ -898,9 +905,20 @@ export class Player {
     // ground for a beat, no control.
     const slamFlat = this.slamFlatT > 0 || this.bailDownT > 0;
 
+    // Circle held with no direction is released? forget the slide->crawl chain.
+    if (!input.grabHeld) this.slideCrawlChain = false;
     // Crash crouch-crawl: holding Circle while (nearly) stopped drops you into
     // a low, slow, all-fours crawl — direct velocity, no inertia, until release.
-    if (!slamFlat && input.grabHeld && (this.crawling || (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))) {
+    // Holding Circle THROUGH a slide flows straight out of it into the crawl
+    // (slideCrawlChain), so a slide + held Circle + direction keeps you low and
+    // moving instead of triggering the get-up beat.
+    if (
+      !slamFlat &&
+      input.grabHeld &&
+      (this.crawling ||
+        (this.slideCrawlChain && this.slideTimer <= 0) ||
+        (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))
+    ) {
       this.crawling = true;
     } else {
       this.crawling = false;
