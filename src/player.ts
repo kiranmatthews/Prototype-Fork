@@ -1104,10 +1104,8 @@ export class Player {
         this.brakeT += dt;
         const s = Math.abs(this.speed);
         const ramp = Math.min(1, this.brakeT / TUNING.brakeRampTime);
-        // deceleration RAMPS UP as you slow (below cruise) so you snap to a clean
-        // stop instead of hanging at a crawl — brakeStopSnap sets how hard.
-        const snap = 1 + TUNING.brakeStopSnap * (1 - Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1)));
-        const rate = TUNING.turnaround * ramp * ramp * snap;
+        const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
+        const rate = TUNING.turnaround * ramp * ramp * ease;
         this.speed = Math.sign(this.speed) * Math.max(0, s - rate * dt);
         braking = true;
         // screech only once the brake is really biting, not on a light tap
@@ -1116,8 +1114,13 @@ export class Player {
           this.haltCd = 0.6;
         }
         // Circle brake arms the CROUCH lock (lock-til-release): no crawl until
-        // you let Circle go. The timed RUN lock is the pull-back brake's job.
+        // you let Circle go. If a DIRECTION is also held (a turnaround while
+        // Circle-braking), arm the timed RUN lock too — a combined brake still
+        // gets the running delay, not just a bare pull-back.
         this.oBrakeHold = true;
+        const dirHeld = Math.abs(this.rawInput.moveX) > 0.3 || Math.abs(this.rawInput.moveY) > 0.3;
+        if (dirHeld && Math.abs(this.speed) <= TUNING.walkSpeed + 0.5)
+          this.brakeLockT = TUNING.brakeLockTime;
       } else if (this.freeSkate) {
         // OMNIDIRECTIONAL SKATE: whichever way you push, the heading turns to
         // follow it — carrying your speed with it (a carve, not a brake), so
@@ -1145,9 +1148,8 @@ export class Player {
               this.haltCd = 0.6;
             }
             const s = Math.abs(this.speed);
-            // same low-speed bite-up as the Circle brake: no hang near a stop.
-            const snap = 1 + TUNING.brakeStopSnap * (1 - Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1)));
-            this.speed = Math.max(0, this.speed - TUNING.turnaround * snap * dt);
+            const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
+            this.speed = Math.max(0, this.speed - TUNING.turnaround * ease * dt);
             braking = true;
             // The stick is still yanked BACKWARD, so once you're under walking
             // pace refresh the post-brake lock: walk/sidestep stay dead (no
