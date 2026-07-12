@@ -1269,11 +1269,19 @@ export class Player {
       // the slide's cross-course component
       const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
       this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
-    } else if (input.moveX !== 0 && !this.freeSkate && !(this.charging && this.chargePlanted)) {
+    } else if (
+      input.moveX !== 0 &&
+      !this.freeSkate &&
+      !this.runLock &&
+      !(this.charging && this.chargePlanted)
+    ) {
       // Walking keeps the direct crisp sidestep (the unit-clamped input
       // vector already normalizes diagonals).
       // Free-heading skating has NO sidestep — carving IS the steering.
       // A planted charge never sidesteps: the feet are pinned until release.
+      // The pull-back-brake run-lock pins the sidestep too, so a brake from a
+      // SIDEWAYS skate stays put (not just a forward one) until the stick
+      // releases — the lock is the same in every direction.
       const latRate = skating
         ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
         : TUNING.walkSpeed;
