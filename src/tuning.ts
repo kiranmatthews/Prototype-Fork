@@ -23,6 +23,7 @@ export const TUNING = {
   pipePumpGain: 16, // HALFPIPE: speed added per second holding X up a wall — the pump that builds you over the coping
   pipeFriction: 0.6, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
   pipePop: 5, // HALFPIPE: extra vertical launch popped over the coping into the hang
+  pipeAirGravity: 30, // HALFPIPE: SYMMETRIC gravity for the air above the coping (same up + down) so you drop back at the speed you left — no asymmetric-fall speed surge that pings you off on landing. Lower = floatier hang.
   pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
   footGrip: 0.4, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
   steepStand: 0.95, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
@@ -106,6 +107,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   pipePumpGain: { min: 0, max: 80, step: 1 },
   pipeFriction: { min: 0, max: 6, step: 0.1 },
   pipePop: { min: 0, max: 20, step: 0.5 },
+  pipeAirGravity: { min: 10, max: 90, step: 1 },
   pipeSmooth: { min: 2, max: 25, step: 0.5 },
   footGrip: { min: 0.3, max: 0.95, step: 0.01 },
   steepStand: { min: 0.5, max: 0.95, step: 0.01 },
@@ -202,6 +204,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'HALFPIPE speed bleed per second on the transition. Keep this LOW — too much and the swing dies at the bottom instead of carrying your speed wall to wall.',
   pipePop:
     'HALFPIPE: extra vertical launch popped over the coping — an ollie-out into hang time on top of the speed you carried up. Bigger = higher airs off the lip.',
+  pipeAirGravity:
+    'HALFPIPE hang gravity ABOVE the coping. SYMMETRIC (same rising and falling) so you drop back in at the speed you launched — no asymmetric-fall surge that pings you across the pipe on landing. Lower = floatier, longer hang.',
   pipeSmooth:
     'How fast the board’s ride plane eases across segmented transitions. Lower = surfy and smooth, higher = snappy and reactive.',
   footGrip:
@@ -341,6 +345,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'pipePumpGain',
       'pipeFriction',
       'pipePop',
+      'pipeAirGravity',
       'pipeSmooth',
       'footGrip',
       'steepStand',

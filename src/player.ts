@@ -1679,7 +1679,15 @@ export class Player {
       }
     } else {
       // Asymmetric fake gravity: heavier on the way down for a snappy arc.
-      const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
+      // EXCEPT a halfpipe hang: SYMMETRIC gravity so you drop back in at the
+      // speed you launched — the asymmetric fall (119 vs 33) would slam you down
+      // at 2x the launch speed, converting into a huge down-wall speed on landing
+      // that pings you across the pipe. Symmetric keeps the vert energy honest.
+      const g = this.pipeHang
+        ? TUNING.pipeAirGravity
+        : this.vVel > 0
+          ? TUNING.riseGravity
+          : TUNING.fallGravity;
       this.vVel -= g * dt;
       // Terminal velocity: cap the fall so one step can never drop farther
       // than the ground ray can reach up (2.5u) — otherwise a fast fall
@@ -1838,7 +1846,10 @@ export class Player {
       const devPi = Math.abs(a2 - Math.PI);
       const tol = THREE.MathUtils.degToRad(TUNING.spinTolerance);
       const spun = Math.abs(this.grabSpinAngle) > 0.02;
-      const funny = spun && dev0 > tol && devPi > tol;
+      // A halfpipe hang never bails or switches you on any residual rotation —
+      // you were CLIMBING (holding a direction), not doing a trick spin, so the
+      // drop-back-in is always a clean neutral landing.
+      const funny = spun && dev0 > tol && devPi > tol && !this.pipeHang;
       if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
@@ -1854,7 +1865,7 @@ export class Player {
         }
       } else {
         // pose is neutral and the spin lines up with 0 or 180
-        const isSwitch = spun && devPi <= tol;
+        const isSwitch = spun && devPi <= tol && !this.pipeHang; // pipe hangs never force a switch
         if (isSwitch) this.stance = -this.stance as 1 | -1; // landed backward: swap feet
         // A ROTATION IS A TRICK: any landed 180+ scores its own combo entry,
         // grab or no grab — so grab + rotation strings TWO tricks together
