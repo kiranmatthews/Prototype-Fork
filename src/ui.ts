@@ -53,7 +53,7 @@ export class UI {
   private prevHud = { points: -1, fruit: -1, lives: -1, crates: '', crystal: false, gem: false };
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
-  private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLSpanElement }>();
+  private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLInputElement }>();
   // Bookmarked slider names (green) — persisted attention markers, no effect.
   private tunerMarks = new Set<string>(
     JSON.parse(localStorage.getItem('protoTunerMarks') ?? '[]') as string[],
@@ -327,7 +327,7 @@ export class UI {
       const el = this.sliderEls.get(key);
       if (el) {
         el.input.value = String(v);
-        el.value.textContent = String(v);
+        el.value.value = String(v);
       }
     }
   }
@@ -403,8 +403,15 @@ export class UI {
       label.classList.toggle('hud-marked');
       localStorage.setItem('protoTunerMarks', JSON.stringify([...this.tunerMarks]));
     });
-    const value = document.createElement('span');
-    value.textContent = String(TUNING[key]);
+    // Editable number box: click and type an exact value (or use the arrows).
+    // It accepts anything and clamps to the slider's range on commit.
+    const value = document.createElement('input');
+    value.type = 'number';
+    value.className = 'hud-num';
+    value.min = String(range.min);
+    value.max = String(range.max);
+    value.step = 'any'; // typing isn't bound to the drag step
+    value.value = String(TUNING[key]);
     const input = document.createElement('input');
     input.type = 'range';
     input.min = String(range.min);
@@ -413,9 +420,31 @@ export class UI {
     input.value = String(TUNING[key]);
     input.addEventListener('input', () => {
       TUNING[key] = Number(input.value);
-      value.textContent = input.value;
+      value.value = input.value;
     });
-    // Keep slider drags from stealing keyboard control of the game.
+    // Typing commits live; clamp to range only on blur/Enter so an in-progress
+    // number (e.g. "1" before "12") isn't yanked to the min mid-keystroke.
+    value.addEventListener('input', () => {
+      const v = Number(value.value);
+      if (Number.isFinite(v)) {
+        TUNING[key] = v;
+        input.value = String(v);
+      }
+    });
+    const commit = (): void => {
+      let v = Number(value.value);
+      if (!Number.isFinite(v)) v = TUNING[key];
+      v = Math.min(range.max, Math.max(range.min, v));
+      TUNING[key] = v;
+      input.value = String(v);
+      value.value = String(v);
+    };
+    value.addEventListener('change', commit);
+    // Keep field keystrokes (digits, WASD, arrows) out of the game's global key
+    // handlers, and slider drags from stealing focus.
+    for (const ev of ['keydown', 'keyup', 'keypress'])
+      value.addEventListener(ev, (e) => e.stopPropagation());
+    value.addEventListener('blur', commit);
     input.addEventListener('change', () => input.blur());
     wrap.appendChild(label);
     wrap.appendChild(input);
@@ -450,11 +479,12 @@ export class UI {
       .hud-row { display: flex; justify-content: space-between; gap: 12px; }
       .hud-row b { color: #eef4ff; font-weight: normal; }
       .hud-secttitle { margin: 10px 0 2px; padding-bottom: 2px; border-bottom: 1px solid rgba(143, 212, 168, 0.35); color: #8fd4a8; font-size: 11px; letter-spacing: 2px; }
-      .hud-slider { display: grid; grid-template-columns: 110px 1fr 34px; gap: 6px; align-items: center; }
+      .hud-slider { display: grid; grid-template-columns: 104px 1fr 52px; gap: 6px; align-items: center; }
       .hud-slider label { color: #9fb0c8; }
       .hud-slider label.hud-marked { color: #58e08a; }
-      .hud-slider span { text-align: right; color: #eef4ff; }
-      .hud-slider input { width: 100%; accent-color: #8fd4a8; }
+      .hud-slider input[type=range] { width: 100%; accent-color: #8fd4a8; }
+      .hud-num { width: 100%; text-align: right; color: #eef4ff; background: #1c2230; border: 1px solid #3a4152; border-radius: 4px; padding: 1px 2px; font: inherit; box-sizing: border-box; }
+      .hud-num:focus { outline: none; border-color: #8fd4a8; background: #243044; }
 
       /* --- collapsible side panels --- */
       .side-wrap {

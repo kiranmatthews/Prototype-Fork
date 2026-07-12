@@ -232,6 +232,8 @@ export class Player {
   private axisL = new THREE.Vector3(1, 0, 0); // stick-right sidestep
   private haltCd = 0; // screech-sound cooldown for wall stops
   private brakeT = 0; // how long Circle has been held as a brake on the board (eases the slow-down in)
+  private runLock = false; // after a pull-back (turnaround) brake stops you: walk stays dead until the stick releases, so you don't instantly reverse-run
+  private oBrakeHold = false; // Circle held through the on-board brake: no crouch/crawl until you let go (don't insta-crouch out of the stop)
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
@@ -381,6 +383,9 @@ export class Player {
     this.slideJumpAir = false;
     this.slideRecoverT = 0;
     this.slideCrawlChain = false;
+    this.brakeT = 0;
+    this.runLock = false;
+    this.oBrakeHold = false;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -906,19 +911,31 @@ export class Player {
     // ground for a beat, no control.
     const slamFlat = this.slamFlatT > 0 || this.bailDownT > 0;
 
-    // Circle held with no direction is released? forget the slide->crawl chain.
-    if (!input.grabHeld) this.slideCrawlChain = false;
+    // Letting go of Circle clears the flags that persist across a held press:
+    // the slide->crawl chain and the post-brake crouch lock both re-arm only on
+    // a fresh press.
+    if (!input.grabHeld) {
+      this.slideCrawlChain = false;
+      this.oBrakeHold = false;
+    }
     // The Circle brake's ease-in only accumulates while it's actually braking
     // (skating + held); anything else re-arms it from a light tap.
     if (!input.grabHeld || !this.freeSkate) this.brakeT = 0;
+    // Pull-back (turnaround) brake run-lock lifts the instant the stick returns
+    // to neutral — then a fresh push runs you (so you never auto-reverse).
+    if (Math.abs(this.rawInput.moveX) < 0.3 && Math.abs(this.rawInput.moveY) < 0.3)
+      this.runLock = false;
     // Crash crouch-crawl: holding Circle while (nearly) stopped drops you into
     // a low, slow, all-fours crawl — direct velocity, no inertia, until release.
     // Holding Circle THROUGH a slide flows straight out of it into the crawl
     // (slideCrawlChain), so a slide + held Circle + direction keeps you low and
-    // moving instead of triggering the get-up beat.
+    // moving instead of triggering the get-up beat. But Circle held out of a
+    // BRAKE (oBrakeHold) does NOT crouch until you release — same "let go first"
+    // rule as the run-lock.
     if (
       !slamFlat &&
       input.grabHeld &&
+      !this.oBrakeHold &&
       (this.crawling ||
         (this.slideCrawlChain && this.slideTimer <= 0) ||
         (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))
@@ -1028,8 +1045,11 @@ export class Player {
     } else if (!skating) {
       // WALK: direct drive, instant start and stop, no inertia, no slope
       // physics — precise Crash platforming in all eight directions. A
-      // planted charge (X held from a standstill) pins the feet instead.
-      this.speed = this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed;
+      // planted charge (X held from a standstill) pins the feet — and so does a
+      // fresh pull-back-brake stop (runLock), until the stick releases, so a
+      // brake never rolls straight into a backward run.
+      this.speed =
+        (this.charging && this.chargePlanted) || this.runLock ? 0 : input.moveY * TUNING.walkSpeed;
       this.lastTy = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
@@ -1059,6 +1079,7 @@ export class Player {
           this.haltCd = 0.6;
         }
         if (mag <= TUNING.walkSpeed + 0.5) this.stepOff = true; // dismount to feet
+        this.oBrakeHold = true; // Circle held out of the brake: no crouch until released
       } else if (this.freeSkate) {
         // OMNIDIRECTIONAL SKATE: whichever way you push, the heading turns to
         // follow it — carrying your speed with it (a carve, not a brake), so
@@ -1085,9 +1106,13 @@ export class Player {
               this.haltCd = 0.6;
             }
             this.speed = Math.max(0, this.speed - TUNING.turnaround * dt);
-            // classic dismount: braking through walking pace = step off, feet
-            // take the stick next frame (rollout persistence must not fight it)
-            if (this.speed <= TUNING.walkSpeed + 0.5) this.stepOff = true;
+            // classic dismount: braking through walking pace = step off, but the
+            // stick is still yanked BACKWARD — arm the run-lock so the walk stays
+            // dead until it releases, instead of instantly sprinting in reverse.
+            if (this.speed <= TUNING.walkSpeed + 0.5) {
+              this.stepOff = true;
+              this.runLock = true;
+            }
           } else {
             // Grip grows with speed: at cruise you get carveGrip exactly;
             // faster carves sharper, slower carves lazier. carveGripRatio is
@@ -2212,7 +2237,13 @@ export class Player {
   private updateGrab(dt: number, input: Input): void {
     this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
     if (this.state === 'air') {
-      if (input.grabHeld && !this.slamActive && this.airFromSkate) {
+      // A grab needs a DIRECTION to start (the stick picks the variant): Circle
+      // alone in the air does nothing, so braking with Circle off a lip doesn't
+      // fire an accidental no-input grab. Once a grab is committed it holds even
+      // if you re-center the stick.
+      const grabActive = this.grabPhase === 'enter' || this.grabPhase === 'held';
+      const grabDir = Math.abs(this.rawInput.moveX) > 0.3 || Math.abs(this.rawInput.moveY) > 0.3;
+      if (input.grabHeld && !this.slamActive && this.airFromSkate && (grabActive || grabDir)) {
         // Reach into the pose over grabTransition, then hold it.
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
           this.grabPhase = 'enter';

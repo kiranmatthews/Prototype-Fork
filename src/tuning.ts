@@ -112,7 +112,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
-  turnaround: { min: 5, max: 300, step: 5 },
+  turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
