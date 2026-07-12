@@ -11,7 +11,7 @@ import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 
-export type MoveState = 'ride' | 'air' | 'grind' | 'pipe' | 'dead' | 'gameover' | 'finished';
+export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'gameover' | 'finished';
 
 interface GroundHit {
   y: number;
@@ -19,6 +19,7 @@ interface GroundHit {
   name: string;
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
+  halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -159,13 +160,10 @@ export class Player {
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
   vertLatVel = 0; // hang-time lateral drift along the coping (from the approach angle)
   private vertLaunchT = 0; // X released while climbing a vert wall: arm a lip launch
-  // ---- DEDICATED HALFPIPE (pipe state) — a 1-D rail across the transition ----
-  private pipe: Halfpipe | null = null; // the pipe currently being ridden / launched from
-  private pipeU = 0; // arc-position across the cross-section (0 = centre of the flat)
-  private pipeV = 0; // speed ALONG the cross-section curve (+ toward +X wall)
-  private pipeVz = 0; // free speed along the channel (Z)
-  private pipeAir = false; // airborne off a pipe lip: watch for a drop-back-in re-attach
-  private pipeCoolT = 0; // brief lockout so a fresh pipe exit doesn't instantly re-enter
+  // HALFPIPE stall-flip cooldown: after the pendulum flips your heading down the
+  // fall line at the top of a wall, a brief lockout stops it re-flipping while
+  // you're still slow near the apex.
+  private pipeFlipCd = 0;
   // UNIFIED SURFACE ALIGNMENT: one eased tilt that lays the whole rig onto the
   // surface — gently on banks, flat-out on vert walls, all the way through hang
   // time — so the body tracks the wall while riding AND while glued in the air.
@@ -407,12 +405,7 @@ export class Player {
     this.stance = 1;
     this.vertAir = false;
     this.vertLatVel = 0;
-    this.pipe = null;
-    this.pipeU = 0;
-    this.pipeV = 0;
-    this.pipeVz = 0;
-    this.pipeAir = false;
-    this.pipeCoolT = 0;
+    this.pipeFlipCd = 0;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -584,7 +577,7 @@ export class Player {
       this.brakeRampT = Math.max(0, this.brakeRampT - dt);
     }
     this.haltCd = Math.max(0, this.haltCd - dt);
-    this.pipeCoolT = Math.max(0, this.pipeCoolT - dt);
+    this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
@@ -724,18 +717,8 @@ export class Player {
         this.runTime += dt;
         if ((input.grindPressed || input.grindHeld) && this.tryGrind()) {
           // snapped straight onto the rail this tick
-        } else if (this.tryEnterPipe(level)) {
-          this.stepPipe(dt, input); // rolled into a halfpipe this tick
         } else {
           this.stepRide(dt, input, level);
-        }
-        break;
-      case 'pipe':
-        this.runTime += dt;
-        if ((input.grindPressed || input.grindHeld) && this.tryGrind()) {
-          // grabbed a coping rail off the pipe
-        } else {
-          this.stepPipe(dt, input);
         }
         break;
       case 'air':
@@ -758,12 +741,7 @@ export class Player {
     this.updateSparks(dt);
     this.updateFruit(dt);
 
-    if (
-      this.state === 'ride' ||
-      this.state === 'air' ||
-      this.state === 'grind' ||
-      this.state === 'pipe'
-    ) {
+    if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
       // All boxes broken -> the gem materializes on the spot, Crash rules.
       if (
@@ -1019,6 +997,13 @@ export class Player {
     // not the raw facet: seams between transition boxes can return a side-face
     // normal for one frame, and a single spike must not snap the board out.
     const steepGround = this.groundHit !== null && this.rideNormal.y < TUNING.steepStand;
+    // HALFPIPE surface (analytic transition wall or its flat bottom). Riding one
+    // swaps the general ramp physics for a clean, energy-CONSERVING pendulum:
+    // symmetric wall gravity, near-frictionless, and a stall-flip that turns you
+    // down the fall line at the top of the wall no matter your heading — so you
+    // whip wall-to-wall and pump up over the coping instead of freezing on the
+    // face (which is exactly what the asymmetric slopeBoost/uphillSlowdown did).
+    const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
     // ON FOOT the ONE authority is footGrip: a walker (no board momentum, no
     // charge) can stand/walk on anything with rideNormal.y >= footGrip and
     // SLIPS down anything steeper — no matter the stick direction. This is what
@@ -1208,7 +1193,7 @@ export class Player {
             // hard-earned downhill overspeed back down (that read as greasy).
             if (this.charging && this.speed < TUNING.maxSpeed)
               this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
-            else if (!this.charging) this.cruiseEase(dt, steepGround);
+            else if (!this.charging && !onPipe) this.cruiseEase(dt, steepGround);
           }
         } else if (this.charging && this.speed > 1) {
           if (this.speed < TUNING.maxSpeed)
@@ -1216,8 +1201,9 @@ export class Player {
         } else {
           // TRULY idle (no stick, no X): friction bleeds you all the way to a
           // stop, below cruise. Coasting WITH a direction held (above) settles
-          // to cruise and holds; letting go completely rolls you out.
-          this.frictionBleed(dt, steepGround);
+          // to cruise and holds; letting go completely rolls you out. The pipe
+          // keeps its own tiny bleed (the slope response) instead.
+          if (!onPipe) this.frictionBleed(dt, steepGround);
         }
       } else if (this.charging) {
         // build toward maxSpeed in the stick's direction; with no direction
@@ -1240,6 +1226,9 @@ export class Player {
         // stick against travel: snappy brake (crossing walking pace drops
         // you onto your feet, where the walk logic takes the stick)
         this.speed += TUNING.turnaround * Math.sign(input.moveY) * dt;
+      } else if (onPipe) {
+        // halfpipe carries its own tiny friction (below the slope response) — the
+        // heavy general roll-out would bleed a swing dead in a second.
       } else if (Math.abs(input.moveY) > 0.05) {
         // stick with travel: easy coast, light bleed
         const drop = TUNING.friction * 0.35 * dt;
@@ -1263,20 +1252,36 @@ export class Player {
         const tl = Math.hypot(tx, tyRaw, tz);
         if (tl > 1e-4) ty = tyRaw / tl; // > 0 climbing, < 0 descending
       }
-      // While actively braking, the DOWNHILL boost yields — otherwise a low
-      // turnaround rate can never out-decelerate gravity and you can't come to
-      // a full stop on a slope. Uphill slowdown still applies (it only helps you
-      // stop). Not braking: normal slope physics.
-      if (Math.abs(ty) > 0.02 && !(braking && ty < 0)) {
+      if (onPipe) {
+        // HALFPIPE: one SYMMETRIC gravity both ways (climb decelerates,
+        // descent accelerates at the same rate) = a clean, energy-conserving
+        // pendulum that whips you wall-to-wall instead of the asymmetric ramp
+        // physics that bled you to a dead stop on the face.
+        if (Math.abs(ty) > 0.02) this.speed += -TUNING.pipeGravity * ty * dt;
+      } else if (Math.abs(ty) > 0.02 && !(braking && ty < 0)) {
+        // While actively braking, the DOWNHILL boost yields — otherwise a low
+        // turnaround rate can never out-decelerate gravity and you can't come to
+        // a full stop on a slope. Uphill slowdown still applies (it only helps
+        // you stop). Not braking: normal slope physics.
         // X held = attack the ramp: MORE boost downhill, LESS bleed uphill.
         const attack = ty < 0 ? (this.charging ? 1.3 : 0.8) : this.charging ? 0.55 : 0.8;
         this.speed += (ty < 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * -ty * attack * dt;
       }
-      // CROUCH-PUMP: X held on ground too steep to stand = working the
-      // transition for speed, the honest way to build vert height. Scales
-      // with steepness so the stretch below the coping pumps hardest.
+      // PUMP: hold X to work the transition for speed — the honest way to build
+      // vert height. On the halfpipe this is the strong pipePumpGain (it has to
+      // out-build gravity+friction over successive swings to clear the coping);
+      // on general steep banks it's the gentler crouch pipePump. Both scale with
+      // steepness so the stretch below the coping pumps hardest.
       if (this.charging && this.groundHit && this.groundHit.normal.y < TUNING.steepStand) {
-        this.speed += TUNING.pipePump * (1 - this.groundHit.normal.y) * dt;
+        const gain = onPipe ? TUNING.pipePumpGain : TUNING.pipePump;
+        this.speed += gain * (1 - this.groundHit.normal.y) * dt;
+      }
+      // HALFPIPE near-frictionless: the general idle friction (7) bleeds a swing
+      // dead in a couple of seconds; on the pipe a tiny bleed lets momentum
+      // carry wall-to-wall. Applied here so it hits every frame, not just idle.
+      if (onPipe && Math.abs(this.speed) > 0) {
+        const fr = Math.min(TUNING.pipeFriction * dt, Math.abs(this.speed));
+        this.speed -= Math.sign(this.speed) * fr;
       }
       this.lastTy = ty;
 
@@ -1297,7 +1302,24 @@ export class Player {
       // pass untouched, and beating the pipePump lift (which fires just above)
       // is why this can't be a `speed <= 0` check — it would never trigger.
       if (this.freeSkate) {
-        if (steepGround && this.speed < 2 && Math.abs(this.lastTy) < 0.15) {
+        if (onPipe && steepGround && this.rideNormal.y > 0.25 && this.speed < 2 && this.pipeFlipCd <= 0) {
+          // HALFPIPE APEX FLIP: stalled part-way up a wall (but below the coping,
+          // rideNormal.y > 0.25) — turn the heading DOWN the fall line (in X,
+          // toward centre) so you drop back in, but KEEP the channel (Z) heading
+          // so you keep flowing down the pipe. Fires at ANY heading (the general
+          // flip below only fires along the coping). Right AT the coping
+          // (rideNormal.y <= 0.25) the flip yields to the coping launch instead,
+          // so you pop over into hang time rather than flipping just short of it.
+          const nx = this.rideNormal.x; // < 0 on the +X wall, > 0 on the −X wall (points to centre)
+          if (Math.abs(nx) > 1e-3) {
+            this.axisF.set(Math.sign(nx), 0, this.axisF.z);
+            const l = this.axisF.length() || 1;
+            this.axisF.divideScalar(l);
+            this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+            this.speed = Math.max(this.speed, 1.5);
+            this.pipeFlipCd = 0.3; // don't re-flip until gravity has pulled you away
+          }
+        } else if (steepGround && this.speed < 2 && Math.abs(this.lastTy) < 0.15) {
           const n = this.groundHit!.normal;
           const len = Math.hypot(n.x, n.z);
           if (len > 1e-4) {
@@ -1402,7 +1424,36 @@ export class Player {
     // into hang time (with lateral), instead of failing because the projected
     // slope dropped below vertLip. vertLip maps to the wall-normal threshold.
     const vertWallY = Math.sqrt(Math.max(0, 1 - TUNING.vertLip * TUNING.vertLip));
+    // HALFPIPE COPING LAUNCH: climbing a transition and reaching the near-vert
+    // top (rideNormal.y <= 0.25, up near the lip height) pops you over into the
+    // EXISTING vert hang-time — a big air if you rocketed up with speed, a small
+    // pop if you just pumped to the lip. Either way you HANG and drop back into
+    // the pipe (reusing the mature glue) instead of freezing on the face or
+    // flinging off to your death. This is what the old dedicated launch lacked.
+    const hpNow = this.freeSkate && hit ? hit.halfpipe : undefined;
     if (
+      hpNow &&
+      this.lastTy > 0.15 && // heading is still climbing (not dropping back down)
+      this.rideNormal.y <= 0.25 && // at the near-vertical coping stretch
+      this.pos.y > hpNow.lipY - 1.2 // and up near the lip
+    ) {
+      this.state = 'air';
+      this.grounded = false;
+      this.groundHit = hit;
+      this.airFromSkate = true;
+      // vertical launch = the climb speed you carried up, plus a pop so even a
+      // gentle arrival clears the coping into a hang.
+      this.vVel = Math.min(
+        this.speed * Math.max(this.lastTy, 0.6) + TUNING.pipePop,
+        CONST.maxFallSpeed,
+      );
+      this.enterVertAir(
+        input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || !input.jumpHeld,
+      );
+      sfx.play('woosh2', 0.6);
+      this.emitSparks(5, 0xfff3d0, 1.2);
+      this.coyoteTimer = 0;
+    } else if (
       hit &&
       this.speed > 0.5 &&
       (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY) &&
@@ -1612,15 +1663,7 @@ export class Player {
       }
     } else {
       // Asymmetric fake gravity: heavier on the way down for a snappy arc.
-      // EXCEPT a pipe air (launched off a coping): use a symmetric gravity so
-      // the launch and its drop-back-in conserve energy — the asymmetric one
-      // makes you fall back far faster than you left, amplifying every bounce
-      // into a runaway. Symmetric keeps the vert honest and adds hang time.
-      const g = this.pipeAir
-        ? TUNING.pipeAirGravity
-        : this.vVel > 0
-          ? TUNING.riseGravity
-          : TUNING.fallGravity;
+      const g = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
       this.vVel -= g * dt;
       // Terminal velocity: cap the fall so one step can never drop farther
       // than the ground ray can reach up (2.5u) — otherwise a fast fall
@@ -1664,41 +1707,6 @@ export class Player {
     const hit = this.queryGround(level);
     this.groundHit = hit;
 
-    // PIPE DROP-IN: launched off a coping and now falling back toward the same
-    // transition — catch it and convert the fall into arc speed (the flow
-    // re-entry that makes a halfpipe feel continuous). Projects the incoming
-    // world velocity onto the arc tangent so a drop down the wall becomes speed
-    // down the wall, not a dead stop. Must win over the normal landing (the
-    // pipe walls aren't ground colliders, so queryGround can't see them).
-    if (this.pipeAir && this.pipe && this.vVel <= 0) {
-      const hp = this.pipe;
-      if (hp.contains(this.pos.x, this.pos.z)) {
-        const u = hp.xToU(this.pos.x);
-        const surfY = hp.surfaceY(u);
-        if (this.pos.y <= surfY + 0.4) {
-          const th = hp.theta(u);
-          const sgn = Math.sign(u) || 1;
-          const vxW = this.speed * this.axisF.x;
-          const vzW = this.speed * this.axisF.z;
-          // arc tangent (increasing u) = (cosθ, sgn·sinθ); project (vxW, vVel)
-          this.pipeU = u;
-          this.pipeV = vxW * Math.cos(th) + this.vVel * sgn * Math.sin(th);
-          this.pipeVz = vzW;
-          this.pos.y = surfY;
-          this.state = 'pipe';
-          this.grounded = true;
-          this.vVel = 0;
-          this.pipeAir = false;
-          this.airMomentum = false;
-          this.airFromSkate = false;
-          hp.normalAt(u, this.rideNormal);
-          this.groundHit = null;
-          sfx.play('woosh', 0.45);
-          return;
-        }
-      }
-    }
-
     // Ceiling: rising into the UNDERSIDE of a deck or ramp belly bonks
     // (surfaces are 1 thick; tall blocks already have wall colliders). Stops
     // the head passing up through elevated platforms AND sloped ramp
@@ -1731,8 +1739,6 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
-      this.pipeAir = false; // a pipe launch that didn't drop back in is over
-      this.pipe = null;
       this.slideAirLat = 0; // slide-jump arc is done
       this.slideJumpAir = false;
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
@@ -2004,205 +2010,6 @@ export class Player {
     this.grabSpinTotal = 0;
     sfx.play('takeDamage', 0.8);
     this.emitSparks(8, 0xffb545, 2);
-  }
-
-  // ===================== DEDICATED HALFPIPE (pipe state) =====================
-  // A halfpipe is a channel running along Z with a quarter-pipe transition on
-  // each ±X wall and a flat bottom between them. Instead of fighting the general
-  // slope physics (which bleed all your speed climbing a vert face and freeze
-  // you on the wall), the pipe is ridden as a 1-D rail across the cross-section:
-  // we track an arc position `pipeU` (0 = centre of the flat, ±uLip = coping)
-  // and a speed `pipeV` ALONG that curve, plus a free channel speed `pipeVz`
-  // along Z. Gravity is a clean scalar `-g·sinθ` that pulls you back to centre,
-  // so carving up a wall and swinging back is a frictionless pendulum. Pump on
-  // the rise to build amplitude, pop off the coping for hang-time air, drop back
-  // in. Nothing here touches the general ride/air code for other levels.
-
-  // Rolling into a halfpipe footprint with real board momentum snaps into pipe
-  // physics. A slow walker on the flat bottom is left alone (the floor is a
-  // normal slab), so you can stand in the pipe without being grabbed.
-  private tryEnterPipe(level: Level): boolean {
-    if (this.pipeCoolT > 0 || !this.grounded) return false;
-    const moving =
-      this.freeSkate ||
-      Math.abs(this.speed) > TUNING.walkSpeed ||
-      this.lastPlanar > TUNING.walkSpeed;
-    if (!moving) return false;
-    for (const hp of level.halfpipes) {
-      if (!hp.contains(this.pos.x, this.pos.z)) continue;
-      const u = hp.xToU(this.pos.x);
-      const surfY = hp.surfaceY(u);
-      if (this.pos.y > surfY + 0.6) continue; // flying over it, not on it
-      const th = hp.theta(u);
-      // Seed the arc + channel speed from the world velocity we rolled in with.
-      // On the flat the arc tangent is +X, so pipeV picks up the sideways drift
-      // and pipeVz keeps the down-course momentum.
-      this.pipe = hp;
-      this.pipeU = u;
-      this.pipeV = this.lastVelX * Math.cos(th);
-      this.pipeVz = this.lastVelZ;
-      this.pos.y = surfY;
-      this.state = 'pipe';
-      this.grounded = true;
-      this.vVel = 0;
-      this.freeSkate = false;
-      this.crawling = false;
-      this.charging = false;
-      this.chargeTimer = 0;
-      this.slideTimer = 0;
-      this.pipeAir = false;
-      hp.normalAt(u, this.rideNormal);
-      return true;
-    }
-    return false;
-  }
-
-  private stepPipe(dt: number, input: Input): void {
-    const hp = this.pipe;
-    if (!hp) {
-      this.state = 'ride';
-      return;
-    }
-    // Raw screen stick maps to WORLD directions in the pipe (the structure is
-    // world-aligned, so heading-relative remapping would just confuse it):
-    //   moveX = carve toward the ±X walls,   moveY(up) = travel down-course (-Z).
-    const rx = this.rawInput.moveX;
-    const ry = this.rawInput.moveY;
-    const s = Math.sign(this.pipeU);
-
-    // --- cross-section pendulum (the vert) ---
-    // Scalar gravity along the curve pulls you back toward the centre.
-    this.pipeV += -TUNING.pipeGravity * hp.slopeGrad(this.pipeU) * dt;
-    // Carve: pushing the stick toward a wall drives you up the transition —
-    // responsive enough to session the walls, but (by design) not enough to
-    // clear the coping on its own. That takes a pump.
-    if (Math.abs(rx) > 0.05) this.pipeV += rx * TUNING.pipeCarve * dt;
-    // PUMP: hold X while rising (or crossing the flat) to build amplitude.
-    const rising = s !== 0 && this.pipeV * s > 0 && Math.abs(this.pipeU) > hp.flatHalf * 0.5;
-    const onFlat = Math.abs(this.pipeU) <= hp.flatHalf;
-    if (input.jumpHeld && (rising || onFlat) && Math.abs(this.pipeV) > 0.1) {
-      this.pipeV += Math.sign(this.pipeV) * TUNING.pipePumpGain * dt;
-    }
-    // Near-frictionless bleed so a parked swing eventually dies instead of
-    // oscillating forever.
-    const fr = Math.min(TUNING.pipeFriction * dt, Math.abs(this.pipeV));
-    this.pipeV -= Math.sign(this.pipeV) * fr;
-
-    // Integrate the arc position.
-    this.pipeU += this.pipeV * dt;
-
-    // --- channel travel (free along Z) ---
-    // Stick up = down-course (-Z). Near-frictionless so entry momentum COASTS
-    // you down the length of the pipe (pump each wall as you flow through);
-    // stick pushes to hold speed or brake to dwell and session in place.
-    this.pipeVz += -ry * 20 * dt;
-    this.pipeVz *= Math.max(0, 1 - 0.25 * dt);
-    this.pipeVz = THREE.MathUtils.clamp(this.pipeVz, -TUNING.downhillMax, TUNING.downhillMax);
-
-    // --- LAUNCH off a lip: reached the coping with speed still carrying up ---
-    const nearLip = Math.abs(this.pipeU) >= hp.uLip - 0.05;
-    if (nearLip && this.pipeV * s > 3) {
-      this.launchFromPipe(hp, input);
-      return;
-    }
-    // Otherwise clamp at the coping (ride the lip, gravity brings you back).
-    if (this.pipeU > hp.uLip) {
-      this.pipeU = hp.uLip;
-      if (this.pipeV > 0) this.pipeV = 0;
-    } else if (this.pipeU < -hp.uLip) {
-      this.pipeU = -hp.uLip;
-      if (this.pipeV < 0) this.pipeV = 0;
-    }
-
-    // --- derive world position + surface pose ---
-    this.pos.x = hp.surfaceX(this.pipeU);
-    this.pos.y = hp.surfaceY(this.pipeU);
-    this.pos.z += this.pipeVz * dt;
-    hp.normalAt(this.pipeU, this.rideNormal);
-    this.groundHit = null;
-    this.grounded = true;
-    // Legible speed readout / pose gate: the faster of arc-swing and channel.
-    this.speed = Math.max(Math.abs(this.pipeV), Math.abs(this.pipeVz));
-    this.lastTy = 0;
-
-    // --- roll out the ends of the channel back to normal riding ---
-    if (this.pos.z > hp.z0 + 0.4 || this.pos.z < hp.z1 - 0.4) {
-      this.exitPipeToRide(hp);
-      return;
-    }
-
-    this.emitPipeDust(dt);
-  }
-
-  // Pop off the coping into a real air. The vertical launch IS the arc speed
-  // projected up the tangent (θ→90° at the lip, so it's nearly all vertical),
-  // the channel speed becomes forward air travel, and a jump adds a pop. The
-  // pipe reference is kept so a drop-back-in can re-attach (see stepAir).
-  private launchFromPipe(hp: Halfpipe, input: Input): void {
-    const th = hp.theta(this.pipeU);
-    const s = Math.sign(this.pipeU) || 1;
-    const arc = Math.abs(this.pipeV);
-    const pop =
-      input.jumpHeld || input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0
-        ? TUNING.pipePop
-        : 0;
-    this.vVel = arc * Math.sin(th) + pop;
-    const hx = arc * Math.cos(th) * s; // outward over the coping (tiny at vert)
-    const hz = this.pipeVz;
-    const hl = Math.hypot(hx, hz);
-    if (hl > 0.3) {
-      this.axisF.set(hx / hl, 0, hz / hl);
-      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-      this.speed = hl;
-    } else {
-      this.speed = 0;
-    }
-    this.pos.x = hp.surfaceX(this.pipeU);
-    this.pos.y = hp.surfaceY(this.pipeU) + 0.05;
-    this.state = 'air';
-    this.grounded = false;
-    this.airFromSkate = true; // pipe airs are board tricks: grabs live
-    this.airMomentum = true; // keep the launch speed, no footAir zeroing
-    this.pipeAir = true; // watch for a drop-back-in
-    this.pipeCoolT = 0.25;
-    this.slideAirLat = 0;
-    this.coyoteTimer = 0;
-    this.jumpBufferT = 0;
-    this.lastJumpType = 'Pipe air';
-    sfx.play('woosh2', 0.6);
-    this.emitSparks(6, 0xfff3d0, 1.4);
-  }
-
-  // Left the channel out one of the ends: hand momentum back to the normal ride
-  // as a heading + speed, so a pipe run flows straight onto the course.
-  private exitPipeToRide(hp: Halfpipe): void {
-    const s = Math.sign(this.pipeU) || 1;
-    const th = hp.theta(this.pipeU);
-    const hx = this.pipeV * Math.cos(th) * s;
-    const hz = this.pipeVz;
-    const hl = Math.hypot(hx, hz);
-    if (hl > 0.5) {
-      this.axisF.set(hx / hl, 0, hz / hl);
-      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-      this.speed = hl;
-    } else {
-      this.speed = Math.abs(this.pipeVz);
-    }
-    this.state = 'ride';
-    this.grounded = true;
-    this.vVel = 0;
-    this.freeSkate = Math.abs(this.speed) > TUNING.boardSpeed;
-    this.pipe = null;
-    this.pipeAir = false;
-    this.pipeCoolT = 0.3;
-    this.rideNormal.set(0, 1, 0);
-  }
-
-  // Little tyre-scuff sparks off the wall while carving, scaled with swing speed.
-  private emitPipeDust(dt: number): void {
-    if (Math.abs(this.pipeV) > 6 && Math.abs(this.pipeU) > (this.pipe?.flatHalf ?? 3) && Math.random() < 20 * dt) {
-      this.emitSparks(1, 0xdfe7f0, 1);
-    }
   }
 
   private stepGrind(dt: number, input: Input, level: Level): void {
@@ -3291,13 +3098,20 @@ export class Player {
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     if (hits.length === 0) return null;
     const hit = hits[0];
-    const normal = hit.face!.normal.clone().transformDirection(hit.object.matrixWorld);
+    const hp = hit.object.userData.halfpipe as Halfpipe | undefined;
+    // Halfpipe walls hand back the exact ANALYTIC surface normal (perfectly
+    // smooth across the transition and always oriented up/inward) instead of
+    // the faceted triangle normal — no seams, no wrong-way winding.
+    const normal = hp
+      ? hp.normalAt(hp.xToU(hit.point.x), new THREE.Vector3())
+      : hit.face!.normal.clone().transformDirection(hit.object.matrixWorld);
     return {
       y: hit.point.y,
       normal,
       name: hit.object.name,
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
+      halfpipe: hp,
     };
   }
 
@@ -3353,12 +3167,9 @@ export class Player {
     if (this.vertAir) {
       alignT = 1; // hang time: fully on the wall plane
       targetN = this.vertNormal;
-    } else if (
-      (this.grounded && this.state === 'ride' && this.groundHit) ||
-      this.state === 'pipe'
-    ) {
+    } else if (this.grounded && this.state === 'ride' && this.groundHit) {
       // steepness-weighted: upright at/above steepStand, fully lying by ~vert.
-      // In the pipe rideNormal IS the analytic transition normal, so the rig
+      // On the halfpipe rideNormal is the analytic transition normal, so the rig
       // lays smoothly onto the wall as it carves up and stands back up at the
       // bottom — no facets, no snap.
       const flatY = TUNING.steepStand;
@@ -3434,15 +3245,14 @@ export class Player {
     // deck — spread fore-aft (front foot toward the nose, back toward the tail)
     // and angled out — instead of hanging together at the plank's centre.
     const onBoard =
-      (this.state === 'pipe') ||
-      (this.grounded &&
-        this.state === 'ride' &&
-        this.grabPose < 0.05 &&
-        this.slideTimer <= 0 &&
-        !this.crawling &&
-        (this.freeSkate ||
-          Math.abs(this.speed) > TUNING.boardSpeed ||
-          (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5)));
+      this.grounded &&
+      this.state === 'ride' &&
+      this.grabPose < 0.05 &&
+      this.slideTimer <= 0 &&
+      !this.crawling &&
+      (this.freeSkate ||
+        Math.abs(this.speed) > TUNING.boardSpeed ||
+        (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
     // Side-on stance target: whenever the board is genuinely under you —

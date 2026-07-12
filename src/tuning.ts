@@ -19,12 +19,10 @@ export const TUNING = {
   slopeBoost: 38, // downhill acceleration, scaled by sin(slope along travel)
   uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
   pipePump: 4, // crouch-pump gain: X held on ground too steep to stand
-  pipeGravity: 42, // HALFPIPE: scalar gravity along the transition curve — the punch of the wall-to-wall oscillation
-  pipeCarve: 24, // HALFPIPE: how hard the stick (toward a wall) drives you up the transition — responsive, but not enough to launch on its own
-  pipePumpGain: 16, // HALFPIPE: energy added per second while pumping (X held) up a wall — this is what builds you over the coping
-  pipeFriction: 0.6, // HALFPIPE: tiny speed bleed per second on the rail (keep low; too much and the pipe dies at the bottom)
-  pipePop: 5, // HALFPIPE: extra vertical launch when you jump (X) right at the coping
-  pipeAirGravity: 33, // HALFPIPE: symmetric gravity for the air ABOVE the coping — keeps launch↔drop-in energy honest (no asymmetric-gravity runaway)
+  pipeGravity: 42, // HALFPIPE: symmetric pendulum gravity on the transition walls — the punch of the wall-to-wall swing (both ways, so it conserves energy)
+  pipePumpGain: 16, // HALFPIPE: speed added per second holding X up a wall — the pump that builds you over the coping
+  pipeFriction: 0.6, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
+  pipePop: 5, // HALFPIPE: extra vertical launch popped over the coping into the hang
   pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
   footGrip: 0.4, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
   steepStand: 0.95, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
@@ -105,11 +103,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   uphillSlowdown: { min: 0, max: 120, step: 1 },
   pipePump: { min: 0, max: 40, step: 0.5 },
   pipeGravity: { min: 10, max: 90, step: 1 },
-  pipeCarve: { min: 0, max: 60, step: 1 },
   pipePumpGain: { min: 0, max: 80, step: 1 },
   pipeFriction: { min: 0, max: 6, step: 0.1 },
   pipePop: { min: 0, max: 20, step: 0.5 },
-  pipeAirGravity: { min: 10, max: 90, step: 1 },
   pipeSmooth: { min: 2, max: 25, step: 0.5 },
   footGrip: { min: 0.3, max: 0.95, step: 0.01 },
   steepStand: { min: 0.5, max: 0.95, step: 0.01 },
@@ -199,17 +195,13 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   pipePump:
     'Crouch-pump: speed gained per second holding X on ground too steep to stand — the honest way to build vert height. Steeper wall = stronger pump.',
   pipeGravity:
-    'HALFPIPE oscillation punch: the gravity that pulls you down the transition curve (scaled by the wall angle). Higher = you whip wall-to-wall faster and snappier; lower = floaty and mellow.',
-  pipeCarve:
-    'HALFPIPE carve: how hard pushing the stick toward a wall drives you up the transition. High enough to ride up and session the walls, deliberately NOT enough to launch on its own — that takes a pump.',
+    'HALFPIPE swing punch: SYMMETRIC gravity on the transition walls (decelerates the climb and accelerates the drop at the same rate = a conserving pendulum). Higher = you whip wall-to-wall faster and snappier; lower = floaty and mellow.',
   pipePumpGain:
-    'HALFPIPE pump: energy per second added while holding X going UP a wall — the skill move that builds height over successive pumps and pops you over the coping. 0 = no pump (carve + momentum only).',
+    'HALFPIPE pump: speed per second added while holding X on a wall — the skill move that builds height over successive swings and carries you to the coping. 0 = carve + momentum only (you session the walls but never quite launch).',
   pipeFriction:
-    'HALFPIPE speed bleed per second on the transition. Keep this LOW — too much and the pipe dies at the bottom instead of carrying your speed wall to wall.',
+    'HALFPIPE speed bleed per second on the transition. Keep this LOW — too much and the swing dies at the bottom instead of carrying your speed wall to wall.',
   pipePop:
-    'HALFPIPE: extra vertical launch added when you jump (X) right at the coping — an ollie out of the pipe on top of your transition speed.',
-  pipeAirGravity:
-    'HALFPIPE air gravity: gravity for the hang ABOVE the coping. Symmetric (same up and down) so a launch and its drop-back-in conserve energy — lower = more floaty hang time. Keeps the pipe from runaway-amplifying each air.',
+    'HALFPIPE: extra vertical launch popped over the coping — an ollie-out into hang time on top of the speed you carried up. Bigger = higher airs off the lip.',
   pipeSmooth:
     'How fast the board’s ride plane eases across segmented transitions. Lower = surfy and smooth, higher = snappy and reactive.',
   footGrip:
@@ -346,11 +338,9 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'uphillSlowdown',
       'pipePump',
       'pipeGravity',
-      'pipeCarve',
       'pipePumpGain',
       'pipeFriction',
       'pipePop',
-      'pipeAirGravity',
       'pipeSmooth',
       'footGrip',
       'steepStand',

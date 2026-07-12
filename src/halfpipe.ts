@@ -28,6 +28,7 @@ export class Halfpipe {
   readonly uWall: number; // R·π/2 (arc length of one transition)
   readonly uLip: number; // F + uWall (centre → coping)
   readonly object: THREE.Group;
+  readonly walls: THREE.Mesh[] = []; // the two transition ribbons — pushed into groundMeshes so they're SOLID
 
   constructor(
     z0: number,
@@ -137,7 +138,13 @@ export class Halfpipe {
       geo.computeVertexNormals();
       const mesh = new THREE.Mesh(geo, wallMat);
       mesh.receiveShadow = true;
+      mesh.name = 'halfpipe';
+      // Tag the mesh with its Halfpipe so queryGround can substitute the exact
+      // ANALYTIC surface normal (the raycast only returns faceted triangle
+      // normals; the analytic one is perfectly smooth AND always oriented up).
+      mesh.userData.halfpipe = this;
       group.add(mesh);
+      this.walls.push(mesh);
     }
     return group;
   }

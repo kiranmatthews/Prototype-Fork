@@ -1298,6 +1298,7 @@ export class Level {
     const hp = new Halfpipe(-710, -770, -13.5, 3, 7, matRamp); // F=3, R=7 → lip x±10, y-6.5
     this.halfpipes.push(hp);
     this.root.add(hp.object);
+    for (const w of hp.walls) this.groundMeshes.push(w); // SOLID walls (no more clip-through-and-die)
     // rail yard entry deck, then a pit crossed by three parallel rails
     this.slab('rail yard entry', -770, -778, -13.5, 14, matPlaza, true, 0, 'stone');
     // pit: -778 .. -850
@@ -1409,10 +1410,8 @@ export class Level {
     this.crumblePad(26, 1.2, -26, 3, 3);
     this.crusher(24, 0, 8, 4.5, 3, 3.4, 0);
     this.pendulum(14, 7, 8, 5.2, 1.0, 1.7);
-    // Halfpipe: bouncy arrow crate launches you up to the lip rails.
-    this.crate(-2.2, -13.5, -735, 'bouncy');
-    this.crate(0, -13.5, -755); // wumpa snack on the floor line
-    this.crate(2.2, -13.5, -745, 'mask');
+    // Halfpipe is kept clear — no crates or obstacles in the transition, so the
+    // carve/pump/air line is pure. (Pickups live on the approach and the exit.)
     // Rail yard: crates and nitro at grind height above the rails.
     // Center rail: two smashables, then a nitro you must jump, then a snack.
     this.crate(0, -12.8, -790);
@@ -1469,7 +1468,7 @@ export class Level {
     this.enemy(-4, 4, -13, -445, 7);
     this.enemy(-4.5, 4.5, -13, -540, 8);
     this.enemy(-4, 4, -13, -562, 6);
-    this.enemy(-4, 4, -13.5, -690, 7);
+    // (no enemy at the halfpipe mouth — the run into the pipe stays clean)
 
     // --- checkpoints ---
     this.checkpoint(-5.5, -185);
