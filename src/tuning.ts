@@ -36,15 +36,17 @@ export const TUNING = {
   grindJumpForce: 15, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
-  turnaround: 120, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
-  brakeRampTime: 0.6, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
+  turnaround: 15, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
+  brakeRampTime: 0.25, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
+  brakeLockTime: 0.3, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
+  brakeLockRamp: 0.3, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 7.5, // rad/s of the directional grab-spin (left arrow = spin left)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
   spinTolerance: 10, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
-  skateHoldTime: 0.1, // X held this long (with a direction) before skate drive engages
+  skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   carveGrip: 180, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
   carveGripRatio: 0.1, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
@@ -52,7 +54,7 @@ export const TUNING = {
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
   slideJumpHeight: 1.2, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
-  slideJumpTravel: 0.95, // horizontal launch speed scale out of a slide-jump (independent of height)
+  slideJumpTravel: 0.65, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
   slideRecover: 0.45, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
   airControl: 0, // forward/back speed adjustment in the air
@@ -114,6 +116,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
+  brakeLockTime: { min: 0, max: 2, step: 0.05 },
+  brakeLockRamp: { min: 0, max: 2, step: 0.05 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
   grabRelease: { min: 0.05, max: 0.6, step: 0.05 },
@@ -214,6 +218,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'PULL-BACK BRAKE (still live!): carving handles all turning now, but yanking the stick (near-)opposite your travel bleeds speed at this rate — the intentional slow-down-and-dismount. Also the FULL-FORCE rate the Circle brake ramps up to. Higher = harder stops.',
   brakeRampTime:
     'Circle brake on the board eases in: a quick TAP barely slows you, and the slow-down accelerates the longer you hold, reaching full force (the turnaround rate) after this many seconds — so you cannot insta-stop with one tap. Lower = the brake bites sooner.',
+  brakeLockTime:
+    'After a brake (Circle or a pull-back) has stopped you, movement stays LOCKED for this long once you let the brake go — the "getting up" beat that stops you snapping straight into a reverse run or a crouch. The clock only runs after you release the brake; hold it and you stay locked. 0 = no lock (instant control back).',
+  brakeLockRamp:
+    'How gradually walk / crawl movement eases from a standstill back to full AFTER the lock ends — the recovery ramp. Higher = a slower, smoother pick-up; 0 = movement snaps straight back to full.',
   grabBoost: 'Speed burst paid out when a grab is completed cleanly before landing.',
   grabSpinRate: 'Rotation speed of the directional grab-spin (left arrow = spin left).',
   grabRelease:
@@ -292,6 +300,8 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'friction',
       'turnaround',
       'brakeRampTime',
+      'brakeLockTime',
+      'brakeLockRamp',
       'boardSpeed',
       'skateHoldTime',
       'skateEntrySpeed',
