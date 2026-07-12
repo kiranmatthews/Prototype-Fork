@@ -5,6 +5,7 @@
 export const TUNING = {
   maxSpeed: 23, // top skate speed
   walkSpeed: 8.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
+  walkRampTime: 0, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
   friction: 7, // idle roll-out: NO input at all bleeds speed to a stop (0 = frictionless)
   riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
@@ -36,10 +37,10 @@ export const TUNING = {
   grindJumpForce: 15, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
-  turnaround: 15, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
+  turnaround: 25, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
   brakeRampTime: 0.25, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
   brakeLockTime: 0.3, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
-  brakeLockRamp: 0.3, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
+  brakeLockRamp: 0.55, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 7.5, // rad/s of the directional grab-spin (left arrow = spin left)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
@@ -49,7 +50,7 @@ export const TUNING = {
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   carveGrip: 180, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
-  carveGripRatio: 0.1, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
+  carveGripRatio: 0.05, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
@@ -83,6 +84,7 @@ export type TuningKey = keyof typeof TUNING;
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
   maxSpeed: { min: 5, max: 60, step: 1 },
   walkSpeed: { min: 6, max: 20, step: 0.5 },
+  walkRampTime: { min: 0, max: 2, step: 0.05 },
   friction: { min: 0, max: 30, step: 0.5 },
   riseGravity: { min: 10, max: 120, step: 1 },
   fallGravity: { min: 10, max: 160, step: 1 },
@@ -161,6 +163,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Top skate speed from CHARGING. Downhill/pipe riding can exceed it up to the downhillMax slider before bleeding back on the flat.',
   walkSpeed:
     'On-foot speed AND the walk/skate boundary. Walking is direct drive: instant start/stop, zero inertia, all four directions. Any carried speed above this counts as skating.',
+  walkRampTime:
+    'Soft-start for on-foot walking: a fresh push eases from a standstill up to full walkSpeed over this many seconds (applies to sidesteps too). 0 = the instant Crash snap; higher = a gentler pick-up. The STOP stays instant, and it resets every time you let go so each start ramps fresh.',
   friction:
     'Idle roll-out: with NO input at all, speed bleeds to a full stop on an ease-out curve (fast up top, gentle near rest). Holding a direction coasts at cruiseSpeed instead; 0 = frictionless forever-glide.',
   riseGravity:
@@ -285,7 +289,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
 // Every TuningKey should appear exactly once; anything missed lands in OTHER.
 export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
-  { title: 'WALKING', keys: ['walkSpeed', 'crawlSpeed'] },
+  { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
     keys: ['jumpVelocity', 'jumpMinVelocity', 'jumpChargeTime', 'riseGravity', 'fallGravity', 'airControl'],

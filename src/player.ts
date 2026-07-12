@@ -232,8 +232,10 @@ export class Player {
   private axisL = new THREE.Vector3(1, 0, 0); // stick-right sidestep
   private haltCd = 0; // screech-sound cooldown for wall stops
   private brakeT = 0; // how long Circle has been held as a brake on the board (eases the slow-down in)
-  private brakeLockT = 0; // post-brake movement lock timer; refreshed each frame while braking near a stop, counts down once the brake releases
-  private brakeRampT = 0; // after the lock, walk/crawl ease-back timer (counts down; movement scales 0->1 over brakeLockRamp)
+  private brakeLockT = 0; // pull-back-brake RUN lock timer; refreshed while braking near a stop, counts down once the brake releases (then eases the walk back)
+  private brakeRampT = 0; // after the run lock, walk/sidestep ease-back timer (counts down; movement scales 0->1 over brakeLockRamp)
+  private oBrakeHold = false; // Circle brake CROUCH lock: no crawl until you release Circle (the classic lock-til-release, kept separate from the run lock)
+  private walkRamp = 0; // regular-walk ease-in fraction (0->1 over walkRampTime while a direction is held; resets on stop / on the board)
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
   private spinBox = new THREE.Box3();
@@ -386,6 +388,8 @@ export class Player {
     this.brakeT = 0;
     this.brakeLockT = 0;
     this.brakeRampT = 0;
+    this.oBrakeHold = false;
+    this.walkRamp = 0;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -922,15 +926,18 @@ export class Player {
     // ground for a beat, no control.
     const slamFlat = this.slamFlatT > 0 || this.bailDownT > 0;
 
-    // Letting go of Circle forgets the slide->crawl chain (it re-arms on a fresh
-    // press).
-    if (!input.grabHeld) this.slideCrawlChain = false;
+    // Letting go of Circle forgets the slide->crawl chain and lifts the Circle
+    // brake's crouch lock (both re-arm only on a fresh press).
+    if (!input.grabHeld) {
+      this.slideCrawlChain = false;
+      this.oBrakeHold = false;
+    }
     // The Circle brake's ease-in only accumulates while it's actually braking
     // (skating + held); anything else re-arms it from a light tap.
     if (!input.grabHeld || !this.freeSkate) this.brakeT = 0;
-    // Post-brake move lock -> ease-back scale. 0 while the lock timer runs (dead
-    // controls, no reverse-run / no insta-crouch), then ramps 0->1 over
-    // brakeLockRamp as the ease-back timer drains. 1 = full normal movement.
+    // Post-PULL-BACK-brake RUN lock -> ease-back scale. 0 while the lock timer
+    // runs (walk dead, no reverse-run), then ramps 0->1 over brakeLockRamp. This
+    // is the RUN lock only; the crawl lock is a separate lock-til-release below.
     const moveScale =
       this.brakeLockT > 0
         ? 0
@@ -941,12 +948,13 @@ export class Player {
     // a low, slow, all-fours crawl — direct velocity, no inertia, until release.
     // Holding Circle THROUGH a slide flows straight out of it into the crawl
     // (slideCrawlChain), so a slide + held Circle + direction keeps you low and
-    // moving instead of triggering the get-up beat. But you can't crouch WHILE
-    // the post-brake lock is running (brakeLockT) — the "let go first" beat.
+    // moving instead of triggering the get-up beat. But Circle held out of a
+    // BRAKE (oBrakeHold) does NOT crouch until you release it — the classic
+    // lock-til-release, separate from the timed run lock.
     if (
       !slamFlat &&
       input.grabHeld &&
-      this.brakeLockT <= 0 &&
+      !this.oBrakeHold &&
       (this.crawling ||
         (this.slideCrawlChain && this.slideTimer <= 0) ||
         (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))
@@ -1045,23 +1053,33 @@ export class Player {
     }
     this.freeSkate = free;
 
+    // Regular-walk EASE-IN: while walking with a direction held, the walk
+    // fraction ramps 0->1 over walkRampTime (a soft start instead of the instant
+    // snap); it resets the moment you stop or hop on the board. runScale folds in
+    // the post-brake run lock too (whichever is more restrictive wins), so a
+    // walk after a brake still respects the lock + brakeLockRamp ease-back.
+    const walkDir = input.moveX !== 0 || input.moveY !== 0;
+    if (this.freeSkate || this.crawling || slamFlat || !walkDir) this.walkRamp = 0;
+    else if (TUNING.walkRampTime > 0)
+      this.walkRamp = Math.min(1, this.walkRamp + dt / TUNING.walkRampTime);
+    else this.walkRamp = 1;
+    const runScale = Math.min(moveScale, this.walkRamp);
+
     if (slamFlat) {
       this.speed = 0;
       this.lastTy = 0;
     } else if (this.crawling) {
-      // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction.
-      // (The input vector is unit-clamped, so diagonals need no re-scaling.)
-      // moveScale eases the crawl back in after a post-brake lock.
-      this.speed = input.moveY * TUNING.crawlSpeed * moveScale;
+      // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction, no
+      // ramp — the crawl is instant (its own lock-til-release owns the delay).
+      this.speed = input.moveY * TUNING.crawlSpeed;
       this.lastTy = 0;
     } else if (!skating) {
-      // WALK: direct drive, instant start and stop, no inertia, no slope
-      // physics — precise Crash platforming in all eight directions. A planted
-      // charge (X from a standstill) pins the feet; and moveScale holds you at 0
-      // through a post-brake lock, then eases you back to full — so a brake never
-      // rolls straight into a backward run.
+      // WALK: near-direct drive — a planted charge (X from a standstill) pins the
+      // feet, otherwise the walk eases in over walkRampTime (runScale) and holds
+      // at 0 through a post-brake run lock, so a brake never rolls into a reverse
+      // run and a fresh walk starts soft.
       this.speed =
-        this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed * moveScale;
+        this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed * runScale;
       this.lastTy = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
@@ -1095,9 +1113,9 @@ export class Player {
           sfx.play('skateHalt', 0.6);
           this.haltCd = 0.6;
         }
-        // refresh the post-brake lock while the brake holds you near a stop —
-        // it starts counting down (then eases movement back) once you let go.
-        if (Math.abs(this.speed) <= TUNING.walkSpeed + 0.5) this.brakeLockT = TUNING.brakeLockTime;
+        // Circle brake arms the CROUCH lock (lock-til-release): no crawl until
+        // you let Circle go. The timed RUN lock is the pull-back brake's job.
+        this.oBrakeHold = true;
       } else if (this.freeSkate) {
         // OMNIDIRECTIONAL SKATE: whichever way you push, the heading turns to
         // follow it — carrying your speed with it (a carve, not a brake), so
@@ -1299,13 +1317,13 @@ export class Player {
       // vector already normalizes diagonals).
       // Free-heading skating has NO sidestep — carving IS the steering.
       // A planted charge never sidesteps: the feet are pinned until release.
-      // moveScale pins the sidestep too through a post-brake lock (0 = dead),
-      // then eases it back — so a brake from a SIDEWAYS skate stays put in every
-      // direction, not just a forward one.
+      // runScale carries the walk ease-in AND the post-brake run lock into the
+      // sidestep (0 = dead), so a fresh sidestep starts soft and a brake from a
+      // SIDEWAYS skate stays put in every direction until it eases back.
       const latRate = skating
         ? Math.max(TUNING.walkSpeed, Math.abs(this.speed) * 0.5)
         : TUNING.walkSpeed;
-      this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt * moveScale);
+      this.pos.addScaledVector(this.axisL, input.moveX * latRate * dt * runScale);
     }
 
     // FOOT SLIP: too steep to grip. Cancel whatever UPHILL displacement the
