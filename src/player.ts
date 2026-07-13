@@ -1004,11 +1004,21 @@ export class Player {
     if (this.charging && stickHeld) this.skateCharge += dt;
     else this.skateCharge = 0;
     const planarSpeed = Math.max(Math.abs(this.speed), this.lastPlanar);
-    const pushingOff =
+    // Standstill launch: a charge planted from a dead stop keeps the feet pinned
+    // the whole time (no slide), then pops STRAIGHT onto the board the instant
+    // it's held long enough with a direction — no entry-speed gate, because the
+    // feet never moved to build one. The seed below gives it its first roll.
+    const plantedPush =
       this.charging &&
+      this.chargePlanted &&
       stickHeld &&
-      this.skateCharge >= TUNING.skateHoldTime &&
-      planarSpeed >= TUNING.skateEntrySpeed;
+      this.skateCharge >= TUNING.skateHoldTime;
+    const pushingOff =
+      plantedPush ||
+      (this.charging &&
+        stickHeld &&
+        this.skateCharge >= TUNING.skateHoldTime &&
+        planarSpeed >= TUNING.skateEntrySpeed);
     this.skateOn = pushingOff;
     // Ground too steep to RIDE (halfpipe transitions, steep banks): with real
     // momentum the board pops out here. Steepness reads the SMOOTHED ride plane,
@@ -1070,6 +1080,9 @@ export class Player {
         this.axisF.set(rx * inv, 0, -ry * inv);
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
         this.speed = Math.max(Math.abs(this.speed), this.lastPlanar);
+        // Popped straight onto the board from a standstill: hand it a first roll
+        // so it skates off immediately instead of revving up from a dead stop.
+        if (plantedPush) this.speed = Math.max(this.speed, TUNING.skateEntrySpeed);
       } else if (this.speed < 0) {
         // coasting in on backward momentum: flip to a positive heading
         this.axisF.negate();
@@ -1109,13 +1122,14 @@ export class Player {
       this.lastTy = 0;
     } else if (!skating) {
       // WALK: near-direct drive. A planted charge (X from a standstill) pins the
-      // feet ONLY while no direction is held — that's a pure vertical jump charge.
-      // The moment you hold a direction it PUSHES OFF (kicks into a skate): the
-      // walk drives you, you build past skateEntrySpeed and the board comes out.
+      // feet the WHOLE time — no slide, no sidestep — whether or not a direction
+      // is held. Releasing X jumps (aimed by the held direction); holding it past
+      // skateHoldTime pops STRAIGHT onto the board (plantedPush, seeded above), so
+      // the skater snaps onto the board in place instead of sliding up to speed.
       // Otherwise the walk eases in over walkRampTime (runScale) and holds at 0
       // through a post-brake run lock, so a brake never rolls into a reverse run.
       this.speed =
-        this.charging && this.chargePlanted && !stickHeld
+        this.charging && this.chargePlanted
           ? 0
           : input.moveY * TUNING.walkSpeed * runScale;
       this.lastTy = 0;
@@ -1404,12 +1418,12 @@ export class Player {
       // the slide's cross-course component
       const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
       this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
-    } else if (input.moveX !== 0 && !this.freeSkate && !(this.charging && this.chargePlanted && !stickHeld)) {
+    } else if (input.moveX !== 0 && !this.freeSkate && !(this.charging && this.chargePlanted)) {
       // Walking keeps the direct crisp sidestep (the unit-clamped input
-      // vector already normalizes diagonals). A held direction also unpins a
-      // planted charge here, so a sideways push-off kicks into a skate too.
+      // vector already normalizes diagonals).
       // Free-heading skating has NO sidestep — carving IS the steering.
-      // A planted charge never sidesteps: the feet are pinned until release.
+      // A planted charge never sidesteps: the feet stay pinned the whole charge,
+      // then a sideways hold pops straight onto the board (no slide).
       // runScale carries the walk ease-in AND the post-brake run lock into the
       // sidestep (0 = dead), so a fresh sidestep starts soft and a brake from a
       // SIDEWAYS skate stays put in every direction until it eases back.
