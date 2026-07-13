@@ -20,7 +20,8 @@ export const TUNING = {
   uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
   pipePump: 4, // crouch-pump gain: X held on ground too steep to stand
   pipeGravity: 42, // HALFPIPE: symmetric pendulum gravity on the transition walls — the punch of the wall-to-wall swing (both ways, so it conserves energy)
-  pipePumpGain: 16, // HALFPIPE: speed added per second holding X up a wall — the pump that builds you over the coping
+  pipeCarve: 26, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
+  pipePumpGain: 16, // HALFPIPE: EXTRA speed added per second holding X up a wall — the hard pump on top of the carve, to reach the coping
   pipeFriction: 0.6, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
   pipePop: 5, // HALFPIPE: extra vertical launch popped over the coping into the hang
   pipeAirGravity: 30, // HALFPIPE: SYMMETRIC gravity for the air above the coping (same up + down) so you drop back at the speed you left — no asymmetric-fall speed surge that pings you off on landing. Lower = floatier hang.
@@ -104,6 +105,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   uphillSlowdown: { min: 0, max: 120, step: 1 },
   pipePump: { min: 0, max: 40, step: 0.5 },
   pipeGravity: { min: 10, max: 90, step: 1 },
+  pipeCarve: { min: 0, max: 80, step: 1 },
   pipePumpGain: { min: 0, max: 80, step: 1 },
   pipeFriction: { min: 0, max: 6, step: 0.1 },
   pipePop: { min: 0, max: 20, step: 0.5 },
@@ -198,6 +200,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Crouch-pump: speed gained per second holding X on ground too steep to stand — the honest way to build vert height. Steeper wall = stronger pump.',
   pipeGravity:
     'HALFPIPE swing punch: SYMMETRIC gravity on the transition walls (decelerates the climb and accelerates the drop at the same rate = a conserving pendulum). Higher = you whip wall-to-wall faster and snappier; lower = floaty and mellow.',
+  pipeCarve:
+    'HALFPIPE carve: momentum built just by HOLDING a direction on the transition — no X needed. This is the "carving pumps you" feel; higher = holding toward the wall drives you up harder and builds speed faster. Scaled by wall steepness, so the flat bottom gives no free speed.',
   pipePumpGain:
     'HALFPIPE pump: speed per second added while holding X on a wall — the skill move that builds height over successive swings and carries you to the coping. 0 = carve + momentum only (you session the walls but never quite launch).',
   pipeFriction:
@@ -342,6 +346,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'uphillSlowdown',
       'pipePump',
       'pipeGravity',
+      'pipeCarve',
       'pipePumpGain',
       'pipeFriction',
       'pipePop',

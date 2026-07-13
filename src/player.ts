@@ -1281,11 +1281,23 @@ export class Player {
         const attack = ty < 0 ? (this.charging ? 1.3 : 0.8) : this.charging ? 0.55 : 0.8;
         this.speed += (ty < 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * -ty * attack * dt;
       }
-      // PUMP: hold X to work the transition for speed — the honest way to build
-      // vert height. On the halfpipe this is the strong pipePumpGain (it has to
-      // out-build gravity+friction over successive swings to clear the coping);
-      // on general steep banks it's the gentler crouch pipePump. Both scale with
-      // steepness so the stretch below the coping pumps hardest.
+      // HALFPIPE CARVE: just HOLDING a direction on the transition works the wall
+      // for momentum — no X needed. This is the "carving pumps you" feel: hold
+      // toward the wall and you drive up it and build speed. Scaled by steepness,
+      // so the flat bottom gives no free speed and the wall carves hardest.
+      if (
+        onPipe &&
+        this.groundHit &&
+        (input.moveX !== 0 || input.moveY !== 0) &&
+        this.groundHit.normal.y < TUNING.steepStand
+      ) {
+        this.speed += TUNING.pipeCarve * (1 - this.groundHit.normal.y) * dt;
+      }
+      // PUMP: hold X to work the transition for EXTRA speed — the hard pump on
+      // top of the carve, the honest way to build vert height. On the halfpipe
+      // this is the strong pipePumpGain (it has to out-build gravity+friction over
+      // successive swings to clear the coping); on general steep banks it's the
+      // gentler crouch pipePump. Both scale with steepness (hardest below the coping).
       if (this.charging && this.groundHit && this.groundHit.normal.y < TUNING.steepStand) {
         const gain = onPipe ? TUNING.pipePumpGain : TUNING.pipePump;
         this.speed += gain * (1 - this.groundHit.normal.y) * dt;
