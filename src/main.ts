@@ -291,6 +291,9 @@ function switchLevel(id: number): void {
     (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
 }
 ui.onLevelSelect = switchLevel;
+ui.onCharacterToggle = (on) => {
+  player.useSkater = on;
+};
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
   player.lives++;

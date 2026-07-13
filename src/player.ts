@@ -71,8 +71,13 @@ export class Player {
   gemEarned = false; // ...and the all-boxes gem
 
   readonly group: THREE.Group;
-  readonly skater: SkaterModel; // rigged glTF character that replaces the procedural body
-  private skaterSwapped = false; // procedural body hidden once the model is ready
+  // Rigged glTF character. OFF by default — the procedural hero is the dev
+  // model; flip useSkater (menu toggle) for the occasional demo. Lazy-loaded on
+  // first enable so it costs nothing when off.
+  useSkater = false;
+  skater: SkaterModel | null = null;
+  private skaterSwapped = false; // procedural body currently hidden for the model
+  private readonly scene: THREE.Scene;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   private shadow: THREE.Mesh;
 
@@ -277,10 +282,7 @@ export class Player {
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
-
-    // Rigged, animated character. Loads async; until ready the procedural body
-    // stays. Lives in its own scene group (physics drives its transform).
-    this.skater = new SkaterModel(scene, import.meta.env.BASE_URL + 'models/ch46.glb');
+    this.scene = scene; // kept for lazy-loading the rigged model on first enable
 
     this.shadow = new THREE.Mesh(
       new THREE.CircleGeometry(0.6, 12),
@@ -3727,18 +3729,27 @@ export class Player {
       this.shadow.visible = false; // no shadow = you are over the pit
     }
 
-    // Drive the rigged character: it follows the physics transform and plays
-    // the clip for the current state. Once it's loaded, hide the procedural
-    // body (the board + shadow stay).
-    if (this.skater.ready) {
-      if (!this.skaterSwapped) {
+    // Rigged character (menu toggle, off by default). Lazy-load on first enable;
+    // once ready it follows the physics transform and plays the state's clip,
+    // hiding the procedural body (board + shadow stay). Toggling back off
+    // restores the procedural hero and parks the model.
+    if (this.useSkater) {
+      if (!this.skater)
+        this.skater = new SkaterModel(this.scene, import.meta.env.BASE_URL + 'models/ch46.glb');
+      if (this.skater.ready) {
         if (this.upperG) this.upperG.visible = false;
         if (this.legs) this.legs.visible = false;
         this.skaterSwapped = true;
+        this.skater.setVisible(true);
+        const yaw =
+          Math.PI + this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose;
+        this.skater.update(dt, this.pos, yaw, this.skaterClip());
       }
-      const yaw =
-        Math.PI + this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose;
-      this.skater.update(dt, this.pos, yaw, this.skaterClip());
+    } else if (this.skaterSwapped) {
+      if (this.upperG) this.upperG.visible = true;
+      if (this.legs) this.legs.visible = true;
+      if (this.skater) this.skater.setVisible(false);
+      this.skaterSwapped = false;
     }
   }
 
