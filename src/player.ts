@@ -1108,12 +1108,16 @@ export class Player {
       this.speed = input.moveY * TUNING.crawlSpeed;
       this.lastTy = 0;
     } else if (!skating) {
-      // WALK: near-direct drive — a planted charge (X from a standstill) pins the
-      // feet, otherwise the walk eases in over walkRampTime (runScale) and holds
-      // at 0 through a post-brake run lock, so a brake never rolls into a reverse
-      // run and a fresh walk starts soft.
+      // WALK: near-direct drive. A planted charge (X from a standstill) pins the
+      // feet ONLY while no direction is held — that's a pure vertical jump charge.
+      // The moment you hold a direction it PUSHES OFF (kicks into a skate): the
+      // walk drives you, you build past skateEntrySpeed and the board comes out.
+      // Otherwise the walk eases in over walkRampTime (runScale) and holds at 0
+      // through a post-brake run lock, so a brake never rolls into a reverse run.
       this.speed =
-        this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed * runScale;
+        this.charging && this.chargePlanted && !stickHeld
+          ? 0
+          : input.moveY * TUNING.walkSpeed * runScale;
       this.lastTy = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
@@ -1400,9 +1404,10 @@ export class Player {
       // the slide's cross-course component
       const lat = this.slideVec.x * this.axisL.x + this.slideVec.z * this.axisL.z;
       this.pos.addScaledVector(this.axisL, this.slideSpd * lat * dt);
-    } else if (input.moveX !== 0 && !this.freeSkate && !(this.charging && this.chargePlanted)) {
+    } else if (input.moveX !== 0 && !this.freeSkate && !(this.charging && this.chargePlanted && !stickHeld)) {
       // Walking keeps the direct crisp sidestep (the unit-clamped input
-      // vector already normalizes diagonals).
+      // vector already normalizes diagonals). A held direction also unpins a
+      // planted charge here, so a sideways push-off kicks into a skate too.
       // Free-heading skating has NO sidestep — carving IS the steering.
       // A planted charge never sidesteps: the feet are pinned until release.
       // runScale carries the walk ease-in AND the post-brake run lock into the
