@@ -347,11 +347,14 @@ function updateCamera(dt: number): void {
   const inTurn = level.zoneAt(player.pos.x, player.pos.z) !== null;
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
-  // Boulder-chase framing: same zoom/scale, but the camera rides higher and
-  // tips DOWN so the ground under and just ahead of the skater — where the
-  // obstacles arrive from — fills more of the frame. It REPLACES the reverse
-  // pull-back below (stacking both shoved the look target behind the player
-  // and dumped the skater out of the frame).
+  // Boulder-chase framing: the camera rides HIGHER and further back and aims
+  // its look point BACK UP the corridor — toward the boulder chasing from
+  // behind — instead of at the ground ahead. That does two things the classic
+  // Crash boulder run needs: the deck sprawls out below the lower-centre hero
+  // (more visible under/around him), and the boulder is framed bearing down
+  // over his shoulder instead of sitting off the top edge behind the HUD.
+  // It REPLACES the reverse pull-back below (stacking both dumped the skater
+  // out of frame).
   boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
 
   const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
@@ -360,9 +363,9 @@ function updateCamera(dt: number): void {
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 1.9;
+  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 2.8;
   const height =
-    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 2.05;
+    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 3.8;
   camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
   // Snap after respawn teleports; damp otherwise.
@@ -378,7 +381,7 @@ function updateCamera(dt: number): void {
     player.pos.z -
       THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.0, sideF) +
       back * 8.5 +
-      boulderF * 6.5,
+      boulderF * 2.2, // aim back up-corridor so the chasing boulder is in frame
   );
 
   camera.lookAt(lookPoint);
