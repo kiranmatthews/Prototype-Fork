@@ -10,6 +10,7 @@ import { Crate, Level } from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
+import { SkaterModel } from './skater';
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'gameover' | 'finished';
 
@@ -70,6 +71,8 @@ export class Player {
   gemEarned = false; // ...and the all-boxes gem
 
   readonly group: THREE.Group;
+  readonly skater: SkaterModel; // rigged glTF character that replaces the procedural body
+  private skaterSwapped = false; // procedural body hidden once the model is ready
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   private shadow: THREE.Mesh;
 
@@ -275,6 +278,10 @@ export class Player {
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
 
+    // Rigged, animated character. Loads async; until ready the procedural body
+    // stays. Lives in its own scene group (physics drives its transform).
+    this.skater = new SkaterModel(scene, import.meta.env.BASE_URL + 'models/ch46.glb');
+
     this.shadow = new THREE.Mesh(
       new THREE.CircleGeometry(0.6, 12),
       new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35 }),
@@ -323,6 +330,24 @@ export class Player {
 
   get sliding(): boolean {
     return this.slideTimer > 0 && this.state === 'ride' && this.grounded;
+  }
+
+  // Which baked clip the rigged skater plays for the current move state.
+  skaterClip(): string {
+    if (this.state === 'finished') return 'victory';
+    if (this.state === 'dead' || this.state === 'gameover' || this.bailing || this.bailDownT > 0)
+      return 'bail';
+    if (this.crawling) return 'crawl';
+    if (this.slideTimer > 0 && this.grounded) return 'slide';
+    if (this.state === 'grind') return 'skate'; // no dedicated grind clip yet
+    if (this.state === 'air' || !this.grounded) {
+      if (this.slideFromWalk) return 'slide_jump';
+      return this.freeSkate ? 'skate_jump' : 'jump';
+    }
+    if (this.teetering) return 'teeter';
+    if (this.charging && (this.pipeHang || this.pipeRideT > 0)) return 'pump';
+    if (this.freeSkate) return this.skateOn ? 'push' : 'skate';
+    return Math.abs(this.speed) > 2 ? 'run' : 'idle';
   }
 
   // Reaching for or holding the grab (air control locks during these).
@@ -3681,6 +3706,20 @@ export class Player {
       this.shadow.scale.setScalar(THREE.MathUtils.clamp(1.3 - h * 0.045, 0.4, 1.3));
     } else {
       this.shadow.visible = false; // no shadow = you are over the pit
+    }
+
+    // Drive the rigged character: it follows the physics transform and plays
+    // the clip for the current state. Once it's loaded, hide the procedural
+    // body (the board + shadow stay).
+    if (this.skater.ready) {
+      if (!this.skaterSwapped) {
+        if (this.upperG) this.upperG.visible = false;
+        if (this.legs) this.legs.visible = false;
+        this.skaterSwapped = true;
+      }
+      const yaw =
+        Math.PI + this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose;
+      this.skater.update(dt, this.pos, yaw, this.skaterClip());
     }
   }
 
