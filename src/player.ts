@@ -54,7 +54,10 @@ export class Player {
   comboPoints = 0; // pending combo: sum of base values...
   comboMult = 0; // ...times the number of actions strung together
   comboLabels: string[] = []; // THPS-style trick names for the combo readout
+  comboHasTrick = false; // a REAL trick (grab/grind/wallride/slide) is in the combo — gates the HUD plate; bare spins/bounces/enemy pops don't show it
   private comboTimer = 0; // plain-rolling time left before the combo banks
+  onComboBank: (amount: number) => void = () => {}; // combo landed clean → cash-in ticker
+  onComboBail: () => void = () => {}; // combo lost on a bail → red shake + drop
 
   // debug readouts
   railCandidateDist = Infinity;
@@ -429,6 +432,7 @@ export class Player {
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboLabels = [];
+    this.comboHasTrick = false;
     this.comboTimer = 0;
     this.invulnTimer = 0;
     this.slideTimer = 0;
@@ -853,7 +857,14 @@ export class Player {
       this.comboPoints += base;
       this.comboMult += 1;
       this.comboTimer = CONST.comboWindow;
-      if (label) this.pushLabel(label);
+      if (label) {
+        this.pushLabel(label);
+        // Real tricks (grabs, grinds, wallride, slide, body slam) light up the
+        // combo plate; bare platforming — spins (…°), crate bounces (Boing),
+        // enemy pops (Flattened/Takedown/Bonk), box smashes — do not on their own.
+        if (!/°$|Boing|Flattened|Takedown|Bonk|^Box$|Slam Smash|Crystal|Gem/.test(label))
+          this.comboHasTrick = true;
+      }
     } else {
       this.points += base;
     }
@@ -876,11 +887,18 @@ export class Player {
   }
 
   private bankCombo(): void {
-    if (this.comboMult > 0) this.points += this.comboPoints * this.comboMult;
+    if (this.comboMult > 0) {
+      const amount = this.comboPoints * this.comboMult;
+      this.points += amount;
+      // Cash-in ticker only when the plate was actually up (a real trick chained);
+      // platforming-only points just land on the score.
+      if (this.comboHasTrick) this.onComboBank(amount);
+    }
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
     this.comboLabels = [];
+    this.comboHasTrick = false;
   }
 
   // Crash mask rules: masks come from mask crates only. The first two are
@@ -2146,10 +2164,12 @@ export class Player {
     this.speed = 0;
     this.vVel = 0;
     this.invulnTimer = CONST.maskInvuln; // nothing chews you while you're down
+    if (this.comboHasTrick && this.comboMult > 0) this.onComboBail(); // red shake + drop
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
     this.comboLabels = [];
+    this.comboHasTrick = false;
     this.grabPhase = 'none';
     this.grabT = 0;
     this.grabGraceTimer = 0;

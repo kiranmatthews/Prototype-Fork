@@ -294,6 +294,8 @@ ui.onLevelSelect = switchLevel;
 ui.onCharacterToggle = (on) => {
   player.useSkater = on;
 };
+player.onComboBank = (amount) => ui.comboBank(amount);
+player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
   player.lives++;
@@ -503,6 +505,7 @@ function frame(): void {
     points: player.points,
     comboPoints: player.comboPoints,
     comboMult: player.comboMult,
+    comboHasTrick: player.comboHasTrick,
     tricks: (tricks.length > 6 ? '… + ' : '') + tricks.slice(-6).join(' + '),
     fruit: player.fruit,
     lives: Math.max(0, player.lives),

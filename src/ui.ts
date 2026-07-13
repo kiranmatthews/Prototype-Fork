@@ -23,6 +23,7 @@ export interface HudState {
   points: number;
   comboPoints: number;
   comboMult: number;
+  comboHasTrick: boolean;
   tricks: string;
   fruit: number;
   lives: number;
@@ -51,6 +52,11 @@ export class UI {
   private crystalIcon!: HTMLElement;
   private gemIcon!: HTMLElement;
   private prevHud = { points: -1, fruit: -1, lives: -1, crates: '', crystal: false, gem: false };
+  // Score/combo tickers: displayed numbers chase the real ones fast (arcade feel).
+  private dispScore = 0;
+  private dispCombo = 0;
+  private comboState: 'none' | 'active' | 'cashin' | 'bail' = 'none';
+  private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
   private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLInputElement }>();
@@ -283,12 +289,56 @@ export class UI {
     this.deathEl.style.display = visible ? 'flex' : 'none';
   }
 
+  // Arcade ticker: step the shown number toward the target fast (≥1/frame, up
+  // to 20% of the gap), landing exactly on it.
+  private ticker(cur: number, target: number): number {
+    const d = target - cur;
+    if (d === 0) return cur;
+    const step = Math.min(Math.abs(d), Math.max(2, Math.ceil(Math.abs(d) * 0.28)));
+    return cur + Math.sign(d) * step;
+  }
+
+  private startCombo(s: HudState): void {
+    this.comboState = 'active';
+    this.trickPlate.style.display = 'block';
+    this.trickPlate.classList.remove('hud-trick-bail');
+    this.trickLineEl.textContent = s.tricks.toUpperCase();
+  }
+
+  private endCombo(): void {
+    this.comboState = 'none';
+    this.trickPlate.style.display = 'none';
+    this.trickPlate.classList.remove('hud-trick-bail');
+    this.dispCombo = 0;
+  }
+
+  // Combo landed clean: freeze the total on the plate and drain it to zero while
+  // the score ticks up to match.
+  comboBank(amount: number): void {
+    this.dispCombo = amount;
+    this.comboState = 'cashin';
+    this.trickPlate.style.display = 'block';
+    this.trickPlate.classList.remove('hud-trick-bail');
+    pop(this.scoreEl);
+  }
+
+  // Combo lost on a bail: red, shake, drop away.
+  comboBail(): void {
+    this.comboState = 'bail';
+    this.comboBailEnd = performance.now() + 700;
+    this.trickPlate.style.display = 'block';
+    this.trickPlate.classList.add('hud-trick-bail');
+    this.trickLineEl.textContent = 'BAILED!';
+    this.trickTotalEl.textContent = 'NO';
+  }
+
   setHUD(s: HudState): void {
-    if (s.points !== this.prevHud.points) {
-      this.scoreEl.textContent = String(s.points);
-      pop(this.scoreEl);
-      this.prevHud.points = s.points;
-    }
+    // SCORE ticker: the shown number chases the real score fast.
+    if (this.prevHud.points < 0) this.dispScore = s.points; // snap on first frame
+    if (s.points > this.prevHud.points && this.prevHud.points >= 0) pop(this.scoreEl);
+    this.dispScore = this.ticker(this.dispScore, s.points);
+    this.scoreEl.textContent = String(Math.round(this.dispScore));
+    this.prevHud.points = s.points;
     if (s.crates !== this.prevHud.crates) {
       this.cratesEl.textContent = s.crates;
       pop(this.cratesEl);
@@ -314,15 +364,28 @@ export class UI {
       pop(this.livesEl);
       this.prevHud.lives = s.lives;
     }
-    // The trick readout only appears once a combo actually chains — a single
-    // trick isn't worth the callout (its points already land on the SCORE).
-    const chained = s.comboMult > 0 && (s.tricks.includes(' + ') || s.tricks.includes('…'));
-    if (chained) {
-      this.trickPlate.style.display = 'block';
-      this.trickLineEl.textContent = s.tricks.toUpperCase();
-      this.trickTotalEl.textContent = `${s.comboPoints}  X${s.comboMult}`;
-    } else {
-      this.trickPlate.style.display = 'none';
+    // COMBO plate: appears the moment a REAL trick is in the combo (grind/grab/
+    // wallride/slide) — not for bare platforming (spins, crate bounces, enemy
+    // pops). The total tickers up while chaining; on a clean bank it drains to
+    // zero as the score climbs to match; on a bail it red-shakes and drops away.
+    const show = s.comboHasTrick && s.comboMult > 0;
+    if (this.comboState === 'cashin') {
+      if (show) {
+        this.startCombo(s); // a fresh combo interrupts the cash-in
+      } else {
+        this.dispCombo = this.ticker(this.dispCombo, 0);
+        this.trickTotalEl.textContent = String(Math.round(this.dispCombo));
+        if (this.dispCombo <= 0) this.endCombo();
+      }
+    } else if (this.comboState === 'bail') {
+      if (show) this.startCombo(s);
+      else if (performance.now() >= this.comboBailEnd) this.endCombo();
+    } else if (show) {
+      this.startCombo(s);
+      this.dispCombo = this.ticker(this.dispCombo, s.comboPoints * s.comboMult);
+      this.trickTotalEl.textContent = `${Math.round(this.dispCombo)}  ×${s.comboMult}`;
+    } else if (this.comboState === 'active') {
+      this.endCombo(); // combo fizzled with no bank/bail signal
     }
   }
 
@@ -641,6 +704,25 @@ export class UI {
       @keyframes combopulse {
         from { transform: skewX(-6deg) scale(1); }
         to { transform: skewX(-6deg) scale(1.05); }
+      }
+      /* BAILED combo: text goes red, shakes "no", then drops away. */
+      .hud-trick-bail .hud-trickline,
+      .hud-trick-bail .hud-tricktotal {
+        color: #ff3b30 !important;
+        text-shadow: 2px 0 0 #4a0000, -2px 0 0 #4a0000, 0 2px 0 #4a0000,
+          0 -2px 0 #4a0000, 0 3px 8px rgba(0, 0, 0, 0.75);
+        animation: none;
+      }
+      .hud-trick-bail { animation: trickbail 0.7s ease-in forwards; }
+      @keyframes trickbail {
+        0%   { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 1; }
+        9%   { transform: translateX(-50%) translateY(0) rotate(-5deg); }
+        18%  { transform: translateX(-50%) translateY(0) rotate(5deg); }
+        27%  { transform: translateX(-50%) translateY(0) rotate(-5deg); }
+        36%  { transform: translateX(-50%) translateY(0) rotate(4deg); }
+        45%  { transform: translateX(-50%) translateY(0) rotate(-2deg); }
+        58%  { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateX(-50%) translateY(64px) rotate(0deg); opacity: 0; }
       }
 
       .hud-msg {
