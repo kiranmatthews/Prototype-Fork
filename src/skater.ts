@@ -20,8 +20,11 @@ export class SkaterModel {
   constructor(scene: THREE.Scene, url: string) {
     this.group.scale.setScalar(this.scale);
     scene.add(this.group);
+    // The packed single-file artifact has no server to fetch from, so it inlines
+    // the GLB as a base64 data URI (like the SFX). Prefer it when present.
+    const src = (typeof window !== 'undefined' && (window as { __CH46_GLB?: string }).__CH46_GLB) || url;
     new GLTFLoader().load(
-      url,
+      src,
       (gltf) => {
         const root = gltf.scene;
         root.traverse((o) => {
