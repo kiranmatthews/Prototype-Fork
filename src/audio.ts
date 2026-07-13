@@ -8,6 +8,7 @@ const FILES: Record<string, string> = {
   railLand: 'rail-land.wav',
   grindLoop: 'grinding-loop.wav',
   skateLoop: 'skating-loop.wav',
+  wallrideLoop: 'skating-loop-5.wav',
   skateHalt: 'skate-halt.wav',
   skateTransition: 'skate-transition.wav',
   crunch: 'crunch.wav',

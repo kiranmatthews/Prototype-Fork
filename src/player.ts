@@ -184,7 +184,8 @@ export class Player {
   // THPS WALLRIDE: ollie into a wall HOLDING GRIND and stick to its face, riding
   // along it under gentle gravity; jump to kick off. Owns its own motion while
   // active (its own branch in stepAir).
-  private wallriding = false;
+  wallriding = false;
+  private wallTickT = 0; // THPS accrual while wallriding
   private readonly wallNormal = new THREE.Vector3(); // wall outward normal (horizontal, toward the skater)
   private wallBox: THREE.Box3 | null = null; // the wall we're riding (for glue + run-off)
   private wallSpeed = 0; // along-wall speed (heading held in axisF)
@@ -2003,10 +2004,12 @@ export class Player {
         let landedTrick = false;
         if (this.grabGraceTimer > 0) {
           // A clean (released in time, on-line) grab pays out a speed burst.
+          // The grab itself already scored on START (it's a timed trick that
+          // ticks up on the combo plate), so the landing only pays the burst —
+          // scoring again here would double-count it.
           this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
           const cap = TUNING.downhillMax;
           this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
-          this.score(CONST.ptsGrab, this.grabTrickName);
           landedTrick = true;
         }
         if (halves > 0) {
@@ -2551,6 +2554,9 @@ export class Player {
           this.grabT = 0;
           this.grabTrickName = 'Grab';
           this.grabTickT = 0;
+          // Timed trick: register it NOW so the combo plate shows straight away
+          // and ticks up while held (a botched landing bails the whole thing).
+          this.score(CONST.ptsGrab, this.grabTrickName);
           sfx.play('woosh2', 0.4);
         } else if (this.grabPhase === 'enter') {
           this.grabT += dt;
@@ -3246,6 +3252,8 @@ export class Player {
     this.wallBox = w;
     this.wallriding = true;
     this.wallrideT = TUNING.wallrideMaxTime;
+    this.wallTickT = 0;
+    this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
     this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall
     this.airFromSkate = true;
     this.charging = false;
@@ -3284,6 +3292,13 @@ export class Player {
     this.pos.addScaledVector(this.axisF, this.wallSpeed * dt);
     this.pos.y += this.vVel * dt;
     this.wallrideT -= dt;
+    // THPS accrual: the longer the wallride, the more the combo is worth.
+    this.wallTickT += dt;
+    while (this.wallTickT >= 0.25) {
+      this.wallTickT -= 0.25;
+      this.comboPoints += CONST.ptsWallrideTick;
+      this.comboTimer = CONST.comboWindow;
+    }
     this.emitSparks(1, 0xffd0a0, 0.7); // trail of sparks off the trucks
 
     let off = false;

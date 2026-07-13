@@ -289,12 +289,14 @@ export class UI {
     this.deathEl.style.display = visible ? 'flex' : 'none';
   }
 
-  // Arcade ticker: step the shown number toward the target fast (≥1/frame, up
-  // to 20% of the gap), landing exactly on it.
+  // Arcade ticker: step the shown number toward the target, landing exactly on
+  // it. Slow + smooth — ~9% of the gap per frame (≈3× the duration of a snappy
+  // count) with a 1/frame floor (twice the frames of a 2-floor), so the number
+  // visibly rolls up rather than jumping.
   private ticker(cur: number, target: number): number {
     const d = target - cur;
     if (d === 0) return cur;
-    const step = Math.min(Math.abs(d), Math.max(2, Math.ceil(Math.abs(d) * 0.28)));
+    const step = Math.min(Math.abs(d), Math.max(1, Math.ceil(Math.abs(d) * 0.09)));
     return cur + Math.sign(d) * step;
   }
 

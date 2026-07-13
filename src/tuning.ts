@@ -438,6 +438,8 @@ export const CONST = {
   ptsGem: 1000, // all-boxes gem
   ptsGrindBase: 100,
   ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
+  ptsWallride: 120, // base for a wallride (shows the plate immediately)
+  ptsWallrideTick: 6, // accrues every quarter second on a wallride (THPS-style)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
