@@ -1582,6 +1582,25 @@ export class Player {
       this.vVel = 0;
       this.teetering = false;
       // pos.y stays exactly where it was (the slide moved planar only)
+    } else if (
+      // Slow onto a LETHAL edge: catch at the brink and teeter instead of
+      // yeeting off. Only for genuine death drops (pit/void below, not a
+      // survivable step-down), only below teeterCatchSpeed, never off a lip
+      // (that's a launch) or mid-slide (slides carry over gaps on their own).
+      TUNING.teeterCatchSpeed > 0 &&
+      Math.abs(this.speed) < TUNING.teeterCatchSpeed &&
+      this.slideTimer <= 0 &&
+      this.lastTy < TUNING.vertLip &&
+      (() => {
+        const belowY = this.queryShadowGround(level);
+        return belowY === null || belowY <= level.killY;
+      })()
+    ) {
+      this.pos.copy(this.prevPos); // step back onto the ledge
+      this.grounded = true;
+      this.speed = 0;
+      this.vVel = 0;
+      this.teetering = true;
     } else {
       this.state = 'air';
       this.grounded = false;

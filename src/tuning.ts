@@ -55,6 +55,7 @@ export const TUNING = {
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
+  teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
   carveGrip: 180, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
   carveGripRatio: 0.05, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
@@ -140,6 +141,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
   skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
+  teeterCatchSpeed: { min: 0, max: 15, step: 0.5 },
   carveGrip: { min: 90, max: 720, step: 15 },
   carveGripRatio: { min: 0, max: 1.5, step: 0.05 },
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
@@ -263,6 +265,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     "Skate commit meter: X must be HELD this long (while pushing a direction) before the charge becomes the skate accelerator. Quick taps stay pure Crash hops.",
   skateEntrySpeed:
     "Second gate on the skate transition: you must already be moving this fast (walking counts) when the hold meter fills. Roughly 40% of walk speed feels right.",
+  teeterCatchSpeed:
+    "Ledge forgiveness: roll or skate off a LETHAL edge (a pit, not a step-down) slower than this and you're caught at the brink in a teeter wobble instead of yeeting off to your death. Above it you commit and fall. 0 = no catch, always fall.",
   carveGrip:
     "Skate turn rate (deg/sec) the heading swings toward the direction you push, carrying your speed with it. Higher = sideways/turns feel immediate; lower = long drifty carves. This is the rate AT cruise speed — see carveGripRatio.",
   carveGripRatio:
@@ -333,6 +337,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'boardSpeed',
       'skateHoldTime',
       'skateEntrySpeed',
+      'teeterCatchSpeed',
       'carveGrip',
       'carveGripRatio',
       'smashSpeed',
