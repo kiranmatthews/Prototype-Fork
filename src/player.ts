@@ -208,7 +208,6 @@ export class Player {
   private coyoteTimer = 0; // jump grace after running off a ledge
   private chargeTimer = 0; // X held on the ground: builds jump power + speed
   private charging = false;
-  private chargeSpent = false; // a planted full charge auto-fired: don't re-charge/buffer until X releases
   private chargePlanted = false; // charge began at a standstill: feet pinned
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
@@ -439,7 +438,6 @@ export class Player {
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     this.charging = false;
-    this.chargeSpent = false;
     this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
@@ -1592,7 +1590,7 @@ export class Player {
       // and skates (the speed build lives in the skate branch above); releasing
       // fires the jump (coyote grace applies at ledges). A quick tap still
       // gives a serviceable hop.
-      if (this.state === 'ride' && input.jumpHeld && !slamFlat && !this.chargeSpent) {
+      if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
         if (!this.charging) {
           // A charge begun at a STANDSTILL plants the feet: holding a
           // direction won't slide you around or trip the skate — it aims the
@@ -1603,19 +1601,7 @@ export class Player {
         }
         this.charging = true;
         this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
-        // STATIONARY (planted, on-foot) full charge fires ITSELF the instant it
-        // tops out — no need to hold longer and release. Skating charges (not
-        // planted) still fire on release so you keep building speed.
-        if (
-          this.chargePlanted &&
-          !this.freeSkate &&
-          this.chargeTimer >= TUNING.jumpChargeTime
-        ) {
-          this.chargeSpent = true; // one hold = one auto-jump (no re-charge / no landing double)
-          this.chargedJump(dt);
-        }
       }
-      if (input.jumpReleased) this.chargeSpent = false;
       if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
         // Climbing a near-vert wall: DON'T ollie into the wall — reserve the
         // release as the lip LAUNCH (the imminent crest reads vertLaunchT and
@@ -1640,13 +1626,8 @@ export class Player {
       if (input.jumpReleased) {
         // X let go in the air: buffer a landing jump for a beat, so a release
         // a hair before touchdown still hops (it only fires if landing soon).
-        // EXCEPT the release that ends an auto-fired planted charge — that hold
-        // already spent its jump, so it must not buffer a second one on landing.
-        if (!this.chargeSpent) {
-          this.jumpBufferT = 0.14;
-          this.jumpBufferCharge = this.charging ? this.chargeTimer : 0;
-        }
-        this.chargeSpent = false;
+        this.jumpBufferT = 0.14;
+        this.jumpBufferCharge = this.charging ? this.chargeTimer : 0;
       }
       if (this.charging) {
         // grace expired: the charge fizzles
