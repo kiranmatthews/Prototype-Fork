@@ -68,6 +68,7 @@ export const TUNING = {
   wallrideGravity: 8, // THPS wallride: gentle sink while riding a wall (vs 33 rise / 119 fall)
   wallrideFriction: 3, // along-wall speed bleed per second on a wallride
   wallrideMinSpeed: 8, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
+  wallrideMaxAngle: 50, // max approach angle OFF PARALLEL (deg) to stick — steeper/more head-on and you bonk off
   wallrideMaxTime: 1.6, // longest a single wallride lasts before you drop off
   wallKickUp: 12, // the WALLIE: vertical pop when you ollie OFF a wallride
   wallKickOut: 8, // push away from the wall when you kick off
@@ -160,6 +161,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallrideGravity: { min: 0, max: 40, step: 1 },
   wallrideFriction: { min: 0, max: 20, step: 0.5 },
   wallrideMinSpeed: { min: 0, max: 25, step: 0.5 },
+  wallrideMaxAngle: { min: 15, max: 90, step: 5 },
   wallrideMaxTime: { min: 0.3, max: 12, step: 0.1 },
   wallKickUp: { min: 0, max: 30, step: 0.5 },
   wallKickOut: { min: 0, max: 25, step: 0.5 },
@@ -300,6 +302,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   wallrideFriction: 'How fast your along-the-wall speed bleeds off during a wallride (higher = shorter rides).',
   wallrideMinSpeed:
     'Minimum horizontal speed needed (airborne, grind held, moving into the wall) to stick to a wall instead of bonking off it.',
+  wallrideMaxAngle:
+    'How PARALLEL your approach must be to stick to a wall. This is the biggest angle (in degrees) your flight can be off the wall face — glide in almost parallel (0 = dead parallel) and you catch it; come in too head-on (past this angle) and you bonk off. You also have to HOLD the stick toward the wall + hold Triangle. Lower = stricter (must be very parallel), higher = catch steeper approaches.',
   wallrideMaxTime: 'Longest a single wallride can last before you automatically drop off.',
   wallKickUp: 'The WALLIE: vertical pop you get when you ollie OFF a wallride (press jump to leave the wall, like a rail kick-off).',
   wallKickOut: 'How hard the kick-off shoves you AWAY from the wall (out into the level) when you jump off a wallride.',
@@ -391,7 +395,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     ],
   },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
-  { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallKickOut'] },
+  { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideMaxAngle', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallKickOut'] },
   {
     title: 'GRINDS',
     keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
@@ -440,6 +444,7 @@ export const CONST = {
   ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
   ptsWallride: 120, // base for a wallride (shows the plate immediately)
   ptsWallrideTick: 6, // accrues every quarter second on a wallride (THPS-style)
+  wallrideHoldDot: 0.3, // how squarely the stick must point INTO the wall to stick (0..1; 1 = dead-on, 0.3 ≈ within 72°)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release

@@ -3231,16 +3231,30 @@ export class Player {
 
     const extX = w.max.x - w.min.x;
     const extZ = w.max.z - w.min.z;
-    if (extX <= extZ) {
-      // wall runs along Z; normal is ±X, ride along Z
-      const nx = this.pos.x >= (w.min.x + w.max.x) / 2 ? 1 : -1;
+    const alongZ = extX <= extZ; // thin in X → wall runs along Z (normal ±X); else along X
+    // Outward normal: points from the wall face back toward the skater.
+    const nx = alongZ ? (this.pos.x >= (w.min.x + w.max.x) / 2 ? 1 : -1) : 0;
+    const nz = alongZ ? 0 : this.pos.z >= (w.min.z + w.max.z) / 2 ? 1 : -1;
+    // APPROACH ANGLE: your flight has to run close to PARALLEL with the face —
+    // the along-wall run vs the into-wall dive. Come in too head-on and you bonk
+    // off it instead of sticking. The off-parallel limit is a slider.
+    const along = alongZ ? Math.abs(vz) : Math.abs(vx);
+    const into = alongZ ? -vx * nx : -vz * nz; // + = flying toward the face
+    const approach = (Math.atan2(Math.abs(into), Math.max(0.001, along)) * 180) / Math.PI;
+    if (approach > TUNING.wallrideMaxAngle) return false;
+    // HOLD TOWARD THE WALL: you must be STEERING into the face (Triangle is
+    // already held above) — pinning yourself to it, not just brushing past.
+    const inX = this.rawInput.moveX;
+    const inZ = -this.rawInput.moveY; // stick → world dir (fixed camera)
+    const inMag = Math.hypot(inX, inZ);
+    if (inMag < 0.3 || -(inX * nx + inZ * nz) / inMag < CONST.wallrideHoldDot) return false;
+
+    if (alongZ) {
       this.wallNormal.set(nx, 0, 0);
       const tdir = Math.abs(vz) > 0.01 ? Math.sign(vz) : 1;
       this.axisF.set(0, 0, tdir);
       this.pos.x = (nx > 0 ? w.max.x : w.min.x) + nx * (CONST.playerHalf.x + 0.05);
     } else {
-      // wall runs along X; normal is ±Z, ride along X
-      const nz = this.pos.z >= (w.min.z + w.max.z) / 2 ? 1 : -1;
       this.wallNormal.set(0, 0, nz);
       const tdir = Math.abs(vx) > 0.01 ? Math.sign(vx) : 1;
       this.axisF.set(tdir, 0, 0);
@@ -3714,24 +3728,26 @@ export class Player {
     const slideR = -1.1 * this.slidePose;
     const slideL = 0.7 * this.slidePose;
     if (this.armR) {
-      this.armR.rotation.x = this.armRPose * this.grabPose + anti + sym + slideR;
+      this.armR.rotation.x = this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose; // lead hand reaches down the wall
       this.armR.rotation.z =
         0.25 -
         this.grabPose * 0.55 +
         1.15 * this.grindArmPose * (1 + 0.6 * this.balance) + // balance arms out wide
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
+        1.05 * this.wallridePose + // wallride: arm flung out for balance
         0.35 * this.skatePose; // loose skate arms
     }
     if (this.armL) {
       this.armL.rotation.x =
-        this.armLPose * this.grabPose - anti + sym + slideL + swing * 1.6 * this.crawlPose;
+        this.armLPose * this.grabPose - anti + sym + slideL + swing * 1.6 * this.crawlPose - 0.65 * this.wallridePose; // trailing arm swept back
       this.armL.rotation.z =
         -0.25 +
         this.grabPose * 0.45 -
         1.15 * this.grindArmPose * (1 - 0.6 * this.balance) -
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
+        1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
     }
     // Knees up: legs shorten toward the hips while the body crouches deep,
@@ -3748,7 +3764,8 @@ export class Player {
           0.4 * flipTuck -
           0.43 * this.chargePose * this.skatePose -
           0.45 * this.crawlPose -
-          0.25 * this.slidePose,
+          0.25 * this.slidePose -
+          0.28 * this.wallridePose, // knees bent tucking the board onto the wall
       );
     }
     if (this.boardG) {
