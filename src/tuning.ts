@@ -65,6 +65,12 @@ export const TUNING = {
   slideJumpTravel: 0.65, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
   slideRecover: 0.5, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
+  wallrideGravity: 8, // THPS wallride: gentle sink while riding a wall (vs 33 rise / 119 fall)
+  wallrideFriction: 3, // along-wall speed bleed per second on a wallride
+  wallrideMinSpeed: 8, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
+  wallrideMaxTime: 1.6, // longest a single wallride lasts before you drop off
+  wallKickUp: 12, // vertical pop when you jump OFF a wallride
+  wallKickOut: 8, // push away from the wall when you kick off
   airControl: 0, // forward/back speed adjustment in the air
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
@@ -151,6 +157,12 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   slideJumpTravel: { min: 0.2, max: 1.5, step: 0.05 },
   slideJumpGrace: { min: 0, max: 0.8, step: 0.05 },
   slideRecover: { min: 0, max: 1.2, step: 0.05 },
+  wallrideGravity: { min: 0, max: 40, step: 1 },
+  wallrideFriction: { min: 0, max: 20, step: 0.5 },
+  wallrideMinSpeed: { min: 0, max: 25, step: 0.5 },
+  wallrideMaxTime: { min: 0.3, max: 4, step: 0.1 },
+  wallKickUp: { min: 0, max: 30, step: 0.5 },
+  wallKickOut: { min: 0, max: 25, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
@@ -283,6 +295,14 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Timing forgiveness: releasing the jump within this many seconds AFTER the slide ends still fires the boosted slide jump (0 = strict, boost only mid-slide).',
   slideRecover:
     'Get-up beat after a PLAIN slide: for this long the skater is picking themselves off the ground and CANNOT run — movement input is dead and leftover speed bleeds to a stop, then control returns. Stops slide-spam for constant free speed. A slide JUMP is exempt (it launches straight out of the slide).',
+  wallrideGravity:
+    'THPS wallride sink rate: jump into a wall while HOLDING GRIND (E) and you ride along its face. This is the gentle gravity while stuck to the wall (0 = ride dead level, higher = sink faster). Normal air gravity is 33 up / 119 down for reference.',
+  wallrideFriction: 'How fast your along-the-wall speed bleeds off during a wallride (higher = shorter rides).',
+  wallrideMinSpeed:
+    'Minimum horizontal speed needed (airborne, grind held, moving into the wall) to stick to a wall instead of bonking off it.',
+  wallrideMaxTime: 'Longest a single wallride can last before you automatically drop off.',
+  wallKickUp: 'Vertical pop you get when you jump OFF a wallride (like a rail kick-off).',
+  wallKickOut: 'How hard the kick-off shoves you AWAY from the wall (out into the level) when you jump off a wallride.',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
@@ -371,6 +391,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     ],
   },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
+  { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallKickOut'] },
   {
     title: 'GRINDS',
     keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],

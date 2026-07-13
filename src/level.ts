@@ -4032,6 +4032,13 @@ export class Level {
     this.wall(0, -2098, 4200, 4, 0, 8);
     this.wall(2098, 0, 4, 4200, 0, 8);
     this.wall(-2098, 0, 4, 4200, 0, 8);
+    // --- wallride walls: tall faces just west of spawn. Skate at one, ollie (X)
+    // and HOLD GRIND (E) to stick and ride along it, jump to kick off. Two
+    // parallel walls let you transfer wall-to-wall.
+    this.wall(-16, 0, 1.2, 70, 0, 5);
+    this.wall(-32, 0, 1.2, 70, 0, 5);
+    // a cross wall to the NE, for wallriding along the other axis
+    this.wall(26, 28, 48, 1.2, 0, 5);
     // bearing markers along both axes (visual only — nothing to bump into)
     const postMat = new THREE.MeshLambertMaterial({ color: 0x5a6470 });
     for (let d = 50; d <= 400; d += 50) {

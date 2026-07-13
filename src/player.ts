@@ -178,6 +178,16 @@ export class Player {
   // trick-spin that then bails you on the drop-back-in). Deliberate spins off the
   // lip still work via the Square spin button.
   private pipeHang = false;
+  // THPS WALLRIDE: ollie into a wall HOLDING GRIND and stick to its face, riding
+  // along it under gentle gravity; jump to kick off. Owns its own motion while
+  // active (its own branch in stepAir).
+  private wallriding = false;
+  private readonly wallNormal = new THREE.Vector3(); // wall outward normal (horizontal, toward the skater)
+  private wallBox: THREE.Box3 | null = null; // the wall we're riding (for glue + run-off)
+  private wallSpeed = 0; // along-wall speed (heading held in axisF)
+  private wallrideT = 0; // remaining ride time
+  private wallCoolT = 0; // brief no-restick window after leaving a wall
+  private wallridePose = 0; // 0..1 visual tilt onto the wall
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
   // both the dedicated coping launch AND the general crest a fast pump takes.
@@ -336,6 +346,7 @@ export class Player {
 
   // Which baked clip the rigged skater plays for the current move state.
   skaterClip(): string {
+    if (this.wallriding) return 'skate';
     if (this.state === 'finished') return 'victory';
     if (this.state === 'dead' || this.state === 'gameover' || this.bailing || this.bailDownT > 0)
       return 'bail';
@@ -456,6 +467,9 @@ export class Player {
     }
     this.groundHit = null;
     this.coyoteTimer = 0;
+    this.wallriding = false;
+    this.wallCoolT = 0;
+    this.wallridePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
     this.alignPose = 0;
@@ -618,6 +632,7 @@ export class Player {
       this.brakeRampT = Math.max(0, this.brakeRampT - dt);
     }
     this.haltCd = Math.max(0, this.haltCd - dt);
+    this.wallCoolT = Math.max(0, this.wallCoolT - dt);
     this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
@@ -766,7 +781,7 @@ export class Player {
         break;
       case 'air':
         this.runTime += dt;
-        if ((input.grindPressed || input.grindHeld) && this.tryGrind()) {
+        if (!this.wallriding && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
           // grabbed the rail
         } else {
           this.stepAir(dt, input, level);
@@ -1680,6 +1695,10 @@ export class Player {
   }
 
   private stepAir(dt: number, input: Input, level: Level): void {
+    if (this.wallriding) {
+      this.stepWallride(dt, input, level);
+      return;
+    }
     // Coyote release: letting go of a charge just after rolling off a ledge
     // still jumps. A press-then-release fully in the air (tap) works too.
     if (this.coyoteTimer > 0) {
@@ -2895,9 +2914,10 @@ export class Player {
     // Solid walls: shove out, full stop, nothing breaks. NEVER while
     // grinding — the rail owns the position, and a wall collider brushing
     // the rail line (berm lips!) must not wrestle you off it.
-    if (this.state !== 'grind') {
+    if (this.state !== 'grind' && !this.wallriding) {
       for (const w of level.walls) {
         if (this.playerBox.intersectsBox(w)) {
+          if (this.tryWallride(w)) break; // stuck to the wall — ride it
           this.pushOutOf(w);
         }
       }
@@ -3160,6 +3180,126 @@ export class Player {
         this.haltCd = 0.5;
       }
       this.speed = 0;
+    }
+  }
+
+  // THPS WALLRIDE — try to stick to a wall we've bumped into: must be airborne,
+  // holding grind, off cooldown, moving fast enough, and within the wall's
+  // height. The wall is a thin box; its NORMAL is the thin axis, the ride runs
+  // along the long axis carrying your speed. Returns true if it grabbed.
+  private tryWallride(w: THREE.Box3): boolean {
+    if (
+      this.state !== 'air' ||
+      this.wallCoolT > 0 ||
+      this.vertAir ||
+      this.slamActive ||
+      this.grabbing ||
+      !this.rawInput.grindHeld
+    )
+      return false;
+    const vx = this.axisF.x * this.speed;
+    const vz = this.axisF.z * this.speed;
+    const hspeed = Math.hypot(vx, vz);
+    if (hspeed < TUNING.wallrideMinSpeed) return false;
+    if (this.pos.y > w.max.y || this.pos.y + CONST.playerHalf.y * 2 < w.min.y) return false;
+
+    const extX = w.max.x - w.min.x;
+    const extZ = w.max.z - w.min.z;
+    if (extX <= extZ) {
+      // wall runs along Z; normal is ±X, ride along Z
+      const nx = this.pos.x >= (w.min.x + w.max.x) / 2 ? 1 : -1;
+      this.wallNormal.set(nx, 0, 0);
+      const tdir = Math.abs(vz) > 0.01 ? Math.sign(vz) : 1;
+      this.axisF.set(0, 0, tdir);
+      this.pos.x = (nx > 0 ? w.max.x : w.min.x) + nx * (CONST.playerHalf.x + 0.05);
+    } else {
+      // wall runs along X; normal is ±Z, ride along X
+      const nz = this.pos.z >= (w.min.z + w.max.z) / 2 ? 1 : -1;
+      this.wallNormal.set(0, 0, nz);
+      const tdir = Math.abs(vx) > 0.01 ? Math.sign(vx) : 1;
+      this.axisF.set(tdir, 0, 0);
+      this.pos.z = (nz > 0 ? w.max.z : w.min.z) + nz * (CONST.playerHalf.z + 0.05);
+    }
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.wallSpeed = hspeed; // redirect full momentum along the wall
+    this.speed = hspeed;
+    this.wallBox = w;
+    this.wallriding = true;
+    this.wallrideT = TUNING.wallrideMaxTime;
+    this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall
+    this.airFromSkate = true;
+    this.charging = false;
+    sfx.play('woosh2', 0.5);
+    this.emitSparks(4, 0xffd0a0, 1);
+    return true;
+  }
+
+  // Ride the wall: gentle gravity, along-wall travel + bleed, glued to the face.
+  // Jump to kick off; else drop when it times out / stalls / runs off / you let
+  // go of grind / you meet the ground.
+  private stepWallride(dt: number, input: Input, level: Level): void {
+    const w = this.wallBox;
+    if (input.jumpPressed || input.jumpReleased) {
+      const outVx = this.wallNormal.x * TUNING.wallKickOut + this.axisF.x * this.wallSpeed * 0.7;
+      const outVz = this.wallNormal.z * TUNING.wallKickOut + this.axisF.z * this.wallSpeed * 0.7;
+      this.speed = Math.hypot(outVx, outVz);
+      if (this.speed > 0.01) {
+        this.axisF.set(outVx / this.speed, 0, outVz / this.speed);
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      }
+      this.vVel = TUNING.wallKickUp;
+      this.wallriding = false;
+      this.wallCoolT = 0.35;
+      this.state = 'air';
+      this.airFromSkate = true;
+      sfx.play('woosh2', 0.7);
+      this.emitSparks(6, 0xffd0a0, 1.2);
+      return;
+    }
+
+    this.vVel -= TUNING.wallrideGravity * dt;
+    if (this.vVel < -CONST.maxFallSpeed) this.vVel = -CONST.maxFallSpeed;
+    this.wallSpeed = Math.max(0, this.wallSpeed - TUNING.wallrideFriction * dt);
+    this.speed = this.wallSpeed;
+    this.pos.addScaledVector(this.axisF, this.wallSpeed * dt);
+    this.pos.y += this.vVel * dt;
+    this.wallrideT -= dt;
+    this.emitSparks(1, 0xffd0a0, 0.7); // trail of sparks off the trucks
+
+    let off = false;
+    if (w) {
+      if (this.wallNormal.x !== 0) {
+        this.pos.x = (this.wallNormal.x > 0 ? w.max.x : w.min.x) + this.wallNormal.x * (CONST.playerHalf.x + 0.05);
+        if (this.pos.z < w.min.z - 0.3 || this.pos.z > w.max.z + 0.3) off = true;
+      } else {
+        this.pos.z = (this.wallNormal.z > 0 ? w.max.z : w.min.z) + this.wallNormal.z * (CONST.playerHalf.z + 0.05);
+        if (this.pos.x < w.min.x - 0.3 || this.pos.x > w.max.x + 0.3) off = true;
+      }
+      if (this.pos.y > w.max.y + 0.25) off = true; // rode over the top
+    } else {
+      off = true;
+    }
+
+    // Meet the ground on the way down → land and roll out.
+    const hit = this.queryGround(level);
+    this.groundHit = hit;
+    if (hit && this.vVel <= 0 && this.pos.y <= hit.y + 0.05) {
+      this.pos.y = hit.y;
+      this.state = 'ride';
+      this.grounded = true;
+      this.surfaceName = hit.name;
+      this.rideNormal.copy(hit.normal);
+      this.airMomentum = true; // keep the speed on touchdown
+      this.wallriding = false;
+      this.wallCoolT = 0.2;
+      return;
+    }
+
+    if (this.wallrideT <= 0 || this.wallSpeed < 1 || off || !input.grindHeld) {
+      this.wallriding = false;
+      this.wallCoolT = 0.35;
+      this.state = 'air';
+      this.airFromSkate = true;
     }
   }
 
@@ -3603,7 +3743,15 @@ export class Player {
           this.grabPose > 0.05 ||
           (Math.abs(this.speed) > TUNING.boardSpeed && !this.slideFromWalk));
     }
-    this.bodyGroup.rotation.z = this.slopeRoll;
+    // WALLRIDE: tilt the whole body onto the wall (board against the face), the
+    // lean toward the wall — sign from heading × outward-normal.
+    this.wallridePose += ((this.wallriding ? 1 : 0) - this.wallridePose) * Math.min(1, 12 * dt);
+    let wallRoll = 0;
+    if (this.wallridePose > 0.01) {
+      const side = Math.sign(this.axisF.z * this.wallNormal.x - this.axisF.x * this.wallNormal.z) || 1;
+      wallRoll = this.wallridePose * side * 1.15; // ~66° up onto the wall
+    }
+    this.bodyGroup.rotation.z = this.slopeRoll + wallRoll;
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace.
