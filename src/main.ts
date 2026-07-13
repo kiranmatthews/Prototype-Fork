@@ -347,14 +347,13 @@ function updateCamera(dt: number): void {
   const inTurn = level.zoneAt(player.pos.x, player.pos.z) !== null;
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
-  // Boulder-chase framing: the camera rides HIGHER and further back and aims
-  // its look point BACK UP the corridor — toward the boulder chasing from
-  // behind — instead of at the ground ahead. That does two things the classic
-  // Crash boulder run needs: the deck sprawls out below the lower-centre hero
-  // (more visible under/around him), and the boulder is framed bearing down
-  // over his shoulder instead of sitting off the top edge behind the HUD.
-  // It REPLACES the reverse pull-back below (stacking both dumped the skater
-  // out of frame).
+  // Boulder-chase framing: the camera rides HIGH and pulls WAY back and aims
+  // its look point up the corridor toward the boulder chasing from behind.
+  // Pulling back is what buys the extra runway — obstacles enter the frame
+  // sooner so you can read and dodge them — while shrinking the hero to a
+  // lower-centre figure with the deck sprawling out below him and the boulder
+  // framed bearing down up-course. It REPLACES the reverse pull-back below
+  // (stacking both dumped the skater out of frame).
   boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
 
   const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
@@ -363,9 +362,9 @@ function updateCamera(dt: number): void {
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 2.8;
+  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 5.0;
   const height =
-    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 3.8;
+    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 4.8;
   camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
   // Snap after respawn teleports; damp otherwise.
