@@ -1,0 +1,20 @@
+[
+  { "file": "d3b5a353-Crouch_Idle_pump.fbx",                                        "clip": "pump",         "purpose": "crouch idle pump (on pipe)" },
+  { "file": "4307c9c8-Dying_enemy.fbx",                                             "clip": "enemy_death",  "purpose": "enemy death" },
+  { "file": "38a9d0c7-Hit_To_Head_trip_over_rail.fbx",                             "clip": "trip_rail",    "purpose": "trip over rail" },
+  { "file": "f7dd871f-Idle_standing_non_skate.fbx",                                "clip": "idle",         "purpose": "standing idle (non-skate)" },
+  { "file": "063dba8b-Jump_jump.fbx",                                              "clip": "jump",         "purpose": "jump" },
+  { "file": "7a151db0-Jumping_Up_slide_jump.fbx",                                  "clip": "slide_jump",   "purpose": "slide jump" },
+  { "file": "fa47eb69-Low_Crawl_crawl.fbx",                                        "clip": "crawl",        "purpose": "crawl" },
+  { "file": "598fe0c2-Reaction_mask_enemy_damage.fbx",                             "clip": "damage",       "purpose": "damage reaction (enemy hit)" },
+  { "file": "51767164-Running_Forward_Flip_front_flip_for_long_distance_jump_if_we_add.fbx", "clip": "front_flip", "purpose": "front flip (long jump, optional)" },
+  { "file": "b0c5cedf-Running_Slide_slide.fbx",                                    "clip": "slide",        "purpose": "slide" },
+  { "file": "74819263-Silly_Dancing_end_of_level.fbx",                             "clip": "victory",      "purpose": "end of level dance" },
+  { "file": "c7cace6a-Skateboarding2starting_kick_push.fbx",                       "clip": "push",         "purpose": "starting kick push" },
+  { "file": "78aa5324-Skateboardingat_speed.fbx",                                  "clip": "skate",        "purpose": "skateboarding at speed" },
+  { "file": "5bcfc6d3-Slow_Run_run.fbx",                                           "clip": "run",          "purpose": "run (slow run)" },
+  { "file": "d3f5aaaf-Soccer_Tackle_slide.fbx",                                    "clip": "tackle_slide", "purpose": "tackle slide (alt slide)" },
+  { "file": "26d42212-Tripping_bail.fbx",                                          "clip": "bail",         "purpose": "bail (tripping)" },
+  { "file": "c021acd2-Standing_Jump_skate_jump.fbx",                               "clip": "skate_jump",   "purpose": "skate jump (standing jump)" },
+  { "file": "cbfb71b5-Teeter_edge_wobble.fbx",                                     "clip": "teeter",       "purpose": "edge wobble teeter" }
+]
