@@ -246,8 +246,13 @@ function applyTheme(): void {
 }
 
 // Slightly wide lens: exaggerates depth so corridors read longer, while the
-// close rig below keeps the skater big in frame.
-const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 400);
+// close rig below keeps the skater big in frame. The boulder chase swaps to a
+// tighter, telephoto lens (updateCamera lerps toward it) — narrowing the FOV
+// compresses depth so the runway lays out flat and readable instead of
+// crushing to a foreshortened sliver at the horizon.
+const CAM_FOV = 62;
+const BOULDER_FOV = 44;
+const camera = new THREE.PerspectiveCamera(CAM_FOV, 1, 0.1, 400);
 
 function resize(): void {
   const w = window.innerWidth;
@@ -347,14 +352,21 @@ function updateCamera(dt: number): void {
   const inTurn = level.zoneAt(player.pos.x, player.pos.z) !== null;
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
-  // Boulder-chase framing: the camera rides HIGH and pulls WAY back and aims
-  // its look point up the corridor toward the boulder chasing from behind.
-  // Pulling back is what buys the extra runway — obstacles enter the frame
-  // sooner so you can read and dodge them — while shrinking the hero to a
-  // lower-centre figure with the deck sprawling out below him and the boulder
-  // framed bearing down up-course. It REPLACES the reverse pull-back below
-  // (stacking both dumped the skater out of frame).
+  // Boulder-chase framing is a proper cinematographic shot, not just a further
+  // dolly-back. The skater runs TOWARD camera, so "ahead" is the foreground the
+  // wide lens crushes flat. Four levers fix it: (1) a telephoto FOV compresses
+  // depth so the runway reads instead of foreshortening away; (2) a high, steep
+  // angle looks down and lays the deck out; (3) the look point aims down-course
+  // (+Z, where you're heading) so upcoming crates/gaps get frame room; (4) that
+  // same aim floats the hero UP off centre into the top third — lead room below
+  // for the obstacles rushing up at him. The chasing boulder drops off the top
+  // except when it's right on him (its rumble sells the rest).
   boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
+  const targetFov = THREE.MathUtils.lerp(CAM_FOV, BOULDER_FOV, boulderF);
+  if (Math.abs(camera.fov - targetFov) > 0.005) {
+    camera.fov = targetFov;
+    camera.updateProjectionMatrix();
+  }
 
   const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
   prevPlayerZ = player.pos.z;
@@ -362,9 +374,9 @@ function updateCamera(dt: number): void {
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 5.0;
+  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 7.8;
   const height =
-    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 4.8;
+    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 8.2;
   camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
   // Snap after respawn teleports; damp otherwise.
@@ -376,11 +388,11 @@ function updateCamera(dt: number): void {
 
   lookPoint.set(
     player.pos.x,
-    player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF) - boulderF * 1.1,
+    player.pos.y + THREE.MathUtils.lerp(1.0, 1.5, sideF) - boulderF * 0.3,
     player.pos.z -
       THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.0, sideF) +
       back * 8.5 +
-      boulderF * 2.2, // aim back up-corridor so the chasing boulder is in frame
+      boulderF * 6.2, // aim DOWN-course (+Z) so the runway ahead is framed and the hero floats up off centre
   );
 
   camera.lookAt(lookPoint);
