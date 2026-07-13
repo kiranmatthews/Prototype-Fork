@@ -1638,7 +1638,10 @@ export class Player {
     // the launch plane (gravity brings you down INTO the transition), while
     // the stick drifts you along the coping — never away from the wall.
     if (this.vertAir) {
-      const g = Math.min(1, TUNING.vertGlue * dt);
+      // A halfpipe hang locks HARD to the launch axis (near 100%) so you rise
+      // and fall on the same vertical line and drop back onto your take-off spot
+      // — no drift into the pipe. General vert crests keep the softer vertGlue.
+      const g = this.pipeHang ? 1 : Math.min(1, TUNING.vertGlue * dt);
       const dx = this.pos.x - this.vertAnchor.x;
       const dz = this.pos.z - this.vertAnchor.z;
       const d = dx * this.vertNormal.x + dz * this.vertNormal.z;
@@ -1998,9 +2001,12 @@ export class Player {
       this.vertLatVel = entrySpeed * along * TUNING.hangLateral;
     }
     this.speed = 0; // the energy is in vVel (up) + vertLatVel (across) now
-    // glue plane sits a hair INSIDE the pipe, so the drop lands on the
-    // transition face proper rather than balancing on the coping line
-    this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, 1.2);
+    // Glue plane. A general vert crest sits it a hair INSIDE (1.2) so the drop
+    // lands on the transition face. A HALFPIPE hang glues right on the launch
+    // line (tiny inset) so you go straight up the vert axis and drop back onto
+    // the SAME spot — no inward drift into the pipe, no funny landing.
+    const inset = this.pipeHang ? 0.25 : 1.2;
+    this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, inset);
     this.vertAir = true;
   }
 
@@ -3215,23 +3221,28 @@ export class Player {
     // then run about the rig's own up = the surface normal, THPS-style.
     let alignT = 0;
     let targetN: THREE.Vector3 | null = null;
+    const onPipeVis = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
     if (this.vertAir) {
       alignT = 1; // hang time: fully on the wall plane
       targetN = this.vertNormal;
     } else if (this.grounded && this.state === 'ride' && this.groundHit) {
       // steepness-weighted: upright at/above steepStand, fully lying by ~vert.
-      // On the halfpipe rideNormal is the analytic transition normal, so the rig
-      // lays smoothly onto the wall as it carves up and stands back up at the
-      // bottom — no facets, no snap.
+      // On the HALFPIPE the board lays FLUSH on the transition much sooner (and
+      // stays flush all the way up) so it hugs the full curve of the vert as you
+      // climb instead of standing too upright and clipping the wall. rideNormal
+      // is the exact analytic normal, so the fit is seamless.
       const flatY = TUNING.steepStand;
-      const vertY = 0.25;
+      const vertY = onPipeVis ? 0.72 : 0.25; // pipe: reach flush by a ~45° wall
       const t = THREE.MathUtils.clamp((flatY - this.rideNormal.y) / (flatY - vertY), 0, 1);
       alignT = t * t * (3 - 2 * t); // smoothstep
       targetN = this.rideNormal;
     }
-    this.alignPose += (alignT - this.alignPose) * Math.min(1, 12 * dt);
+    // Track the changing wall angle FAST on the pipe so the board hugs the curve
+    // as you climb (the slow general ease lagged behind and let the board clip).
+    const alignEase = onPipeVis || this.pipeHang ? 24 : 12;
+    this.alignPose += (alignT - this.alignPose) * Math.min(1, alignEase * dt);
     if (targetN) {
-      this.alignNormal.lerp(targetN, Math.min(1, 12 * dt));
+      this.alignNormal.lerp(targetN, Math.min(1, alignEase * dt));
       if (this.alignNormal.lengthSq() < 1e-6) this.alignNormal.copy(targetN);
       this.alignNormal.normalize();
     }
