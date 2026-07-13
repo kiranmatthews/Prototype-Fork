@@ -1294,19 +1294,19 @@ export class Level {
     // (see player.stepPipe). Carve up either wall, pump on the way up to build
     // height, pop off the coping for hang-time air, drop back in. The flat
     // bottom is a normal ground slab; the walls are the analytic Halfpipe.
-    this.slab('halfpipe floor', -710, -770, -13.5, 6, matRamp, false, 0, 'pavement');
-    const hp = new Halfpipe(-710, -770, -13.5, 3, 7, matRamp); // F=3, R=7 → lip x±10, y-6.5
+    this.slab('halfpipe floor', -710, -830, -13.5, 6, matRamp, false, 0, 'pavement');
+    const hp = new Halfpipe(-710, -830, -13.5, 3, 7, matRamp); // F=3, R=7 → lip x±10, y-6.5 (twice as long)
     this.halfpipes.push(hp);
     this.root.add(hp.object);
     for (const w of hp.walls) this.groundMeshes.push(w); // SOLID walls (no more clip-through-and-die)
     // rail yard entry deck, then a pit crossed by three parallel rails
-    this.slab('rail yard entry', -770, -778, -13.5, 14, matPlaza, true, 0, 'stone');
-    // pit: -778 .. -850
-    this.slab('rail yard landing', -850, -885, -13.5, 14, matPlaza, true, 0, 'stone');
-    this.berms(-850, -885, -13.5, 14);
-    this.ramp('final downhill', -885, -13.5, -940, -22, 12, matRamp);
-    // gap 4: -940 .. -953 (fast, downhill speed carries you)
-    this.jungle('finish run', -953, -1025, -22, 12, matFinish);
+    this.slab('rail yard entry', -830, -838, -13.5, 14, matPlaza, true, 0, 'stone');
+    // pit: -838 .. -910
+    this.slab('rail yard landing', -910, -945, -13.5, 14, matPlaza, true, 0, 'stone');
+    this.berms(-910, -945, -13.5, 14);
+    this.ramp('final downhill', -945, -13.5, -1000, -22, 12, matRamp);
+    // gap 4: -1000 .. -1013 (fast, downhill speed carries you)
+    this.jungle('finish run', -1013, -1085, -22, 12, matFinish);
 
     // --- death pit floor (visual only, below killY) ---
     this.pitPlane('lava', -60, 0, -420);
@@ -1324,13 +1324,13 @@ export class Level {
       new THREE.Vector3(-2.5, -10.5, -620),
       new THREE.Vector3(0, -11.5, -659),
     ]);
-    // Halfpipe lip rails along both top edges.
-    const lipL = new Rail([new THREE.Vector3(-10.1, -6.4, -710), new THREE.Vector3(-10.1, -6.4, -770)]);
-    const lipR = new Rail([new THREE.Vector3(10.1, -6.4, -710), new THREE.Vector3(10.1, -6.4, -770)]);
+    // Halfpipe lip rails along both top edges (full doubled length).
+    const lipL = new Rail([new THREE.Vector3(-10.1, -6.4, -710), new THREE.Vector3(-10.1, -6.4, -830)]);
+    const lipR = new Rail([new THREE.Vector3(10.1, -6.4, -710), new THREE.Vector3(10.1, -6.4, -830)]);
     // Rail yard: three parallel rails over the pit — jump between them.
-    const yardL = new Rail([new THREE.Vector3(-3.5, -12.6, -776), new THREE.Vector3(-3.5, -12.6, -852)]);
-    const yardC = new Rail([new THREE.Vector3(0, -12.6, -776), new THREE.Vector3(0, -12.6, -852)]);
-    const yardR = new Rail([new THREE.Vector3(3.5, -12.6, -776), new THREE.Vector3(3.5, -12.6, -852)]);
+    const yardL = new Rail([new THREE.Vector3(-3.5, -12.6, -836), new THREE.Vector3(-3.5, -12.6, -912)]);
+    const yardC = new Rail([new THREE.Vector3(0, -12.6, -836), new THREE.Vector3(0, -12.6, -912)]);
+    const yardR = new Rail([new THREE.Vector3(3.5, -12.6, -836), new THREE.Vector3(3.5, -12.6, -912)]);
     // Practice pen rails: straight, zigzag, and a high line.
     const penStraight = new Rail([new THREE.Vector3(18, 1, -2), new THREE.Vector3(18, 1, -32)]);
     const penZigzag = new Rail([
@@ -1350,7 +1350,7 @@ export class Level {
     // Beach: one dead-ahead (bump = full stop now: spin it or hop on it).
     this.crate(0, 0, -25);
     this.crate(-3, -5, -95, 'mask');
-    this.crate(2.5, -13.5, -872, 'mask');
+    this.crate(2.5, -13.5, -932, 'mask');
     this.crate(5, 0, -32);
     this.crate(6.5, 0, -32);
     // Corridor A: full-width wall — spin through, or jump on top to bounce.
@@ -1414,18 +1414,18 @@ export class Level {
     // carve/pump/air line is pure. (Pickups live on the approach and the exit.)
     // Rail yard: crates and nitro at grind height above the rails.
     // Center rail: two smashables, then a nitro you must jump, then a snack.
-    this.crate(0, -12.8, -790);
-    this.crate(0, -12.8, -800);
-    this.crate(0, -12.8, -815, 'nitro');
-    this.crate(0, -12.8, -835);
+    this.crate(0, -12.8, -850);
+    this.crate(0, -12.8, -860);
+    this.crate(0, -12.8, -875, 'nitro');
+    this.crate(0, -12.8, -895);
     // Left rail: nitro early, then safe smashables.
-    this.crate(-3.5, -12.8, -795, 'nitro');
-    this.crate(-3.5, -12.8, -820);
-    this.crate(-3.5, -12.8, -828);
+    this.crate(-3.5, -12.8, -855, 'nitro');
+    this.crate(-3.5, -12.8, -880);
+    this.crate(-3.5, -12.8, -888);
     // Right rail: smashable, nitro, smashable.
-    this.crate(3.5, -12.8, -788);
-    this.crate(3.5, -12.8, -822, 'nitro');
-    this.crate(3.5, -12.8, -840);
+    this.crate(3.5, -12.8, -848);
+    this.crate(3.5, -12.8, -882, 'nitro');
+    this.crate(3.5, -12.8, -900);
     // Corridor D: a big mixed explosive block off the left lane — spin the
     // TNT to pop it (your own pop is safe, the chained nitro blast is NOT).
     this.crate(-2.6, -13, -530, 'tnt');
@@ -1434,14 +1434,14 @@ export class Level {
     this.crate(-3.9, -13, -530);
     // Rail yard landing: a bouncy crate off the racing line, and a 2x2 nitro
     // block guarding the left side.
-    this.crate(2.5, -13.5, -868, 'bouncy');
-    this.crate(-3, -13.5, -866, 'nitro');
-    this.crate(-4.3, -13.5, -866, 'nitro');
-    this.crate(-3, -12.3, -866, 'nitro');
-    this.crate(-4.3, -12.3, -866, 'nitro');
+    this.crate(2.5, -13.5, -928, 'bouncy');
+    this.crate(-3, -13.5, -926, 'nitro');
+    this.crate(-4.3, -13.5, -926, 'nitro');
+    this.crate(-3, -12.3, -926, 'nitro');
+    this.crate(-4.3, -12.3, -926, 'nitro');
     // Final downhill: offset dodge crates (thread between them at speed).
-    this.crate(-2.2, this.downhillY(-905), -905);
-    this.crate(2.2, this.downhillY(-925), -925);
+    this.crate(-2.2, this.downhillY(-965), -965);
+    this.crate(2.2, this.downhillY(-985), -985);
 
     // --- jungle furniture: fallen logs (hop them) + rolling stones ---
     this.log(-6, 1.2, -5, -145); // corridor A, cleared by the gap-1 flight
@@ -1456,7 +1456,7 @@ export class Level {
     this.crate(4, -5, -118, 'mystery');
     this.crate(-4, -13, -345, 'mystery');
     this.crate(-3, -13, -558, 'mystery');
-    this.crate(5, -13.5, -874, 'mystery');
+    this.crate(5, -13.5, -934, 'mystery');
 
     // --- enemies (patrolling across the corridor) ---
     this.enemy(-3.5, 3.5, -5, -120, 5);
@@ -1474,10 +1474,10 @@ export class Level {
     this.checkpoint(-5.5, -185);
     this.checkpoint(-13, -425);
     this.checkpoint(-13.5, -670);
-    this.checkpoint(-13.5, -862);
+    this.checkpoint(-13.5, -922);
 
     // --- extra enemy guarding the rail yard landing ---
-    this.enemy(-4, 4, -13.5, -876, 6);
+    this.enemy(-4, 4, -13.5, -936, 6);
 
     // --- dressing: tropical fringe off the play space (visual only) ---
     // west beach edge + spawn surrounds
@@ -1497,28 +1497,31 @@ export class Level {
     this.palm(43.2, 0, -37, 5.7, -0.06);
     this.fern(38.9, 0, 3, 1.1);
     this.flowers(39.4, 0, -37);
-    // halfpipe surrounds (lips at x ±10.3 — everything sits outside them)
+    // halfpipe surrounds (lips at x ±10.3 — everything sits outside them); the
+    // pipe is now twice as long (z −710..−830), so the fringe spans further.
     this.palm(13.6, -13.5, -716, 5.4, -0.1);
-    this.palm(14.6, -13.5, -741, 4.7, 0.12);
-    this.palm(13.4, -13.5, -763, 5.8, -0.07);
+    this.palm(14.6, -13.5, -748, 4.7, 0.12);
+    this.palm(13.4, -13.5, -782, 5.8, -0.07);
+    this.palm(14.2, -13.5, -816, 5.1, 0.09);
     this.palm(-13.8, -13.5, -722, 5.2, 0.1);
-    this.palm(-14.6, -13.5, -748, 4.5, -0.1);
-    this.palm(-13.4, -13.5, -768, 5.6, 0.06);
-    this.fern(-12.2, -13.5, -732, 1.3);
-    this.fern(12.4, -13.5, -754, 1.2);
-    this.rock(12.8, -13.5, -708, 1.6);
-    this.rock(-12.6, -13.5, -772, 1.9);
-    this.flowers(-12.4, -13.5, -712);
+    this.palm(-14.6, -13.5, -756, 4.5, -0.1);
+    this.palm(-13.4, -13.5, -790, 5.6, 0.06);
+    this.palm(-14.0, -13.5, -824, 5.0, -0.08);
+    this.fern(-12.2, -13.5, -735, 1.3);
+    this.fern(12.4, -13.5, -800, 1.2);
+    this.rock(12.8, -13.5, -710, 1.6);
+    this.rock(-12.6, -13.5, -828, 1.9);
+    this.flowers(-12.4, -13.5, -770);
     // rail-yard landing fringe
-    this.palm(9.4, -13.5, -858, 4.9, -0.1);
-    this.palm(-9.6, -13.5, -876, 5.3, 0.1);
-    this.fern(-8.9, -13.5, -856, 1.2);
+    this.palm(9.4, -13.5, -918, 4.9, -0.1);
+    this.palm(-9.6, -13.5, -936, 5.3, 0.1);
+    this.fern(-8.9, -13.5, -916, 1.2);
     // finish deck, behind the gate
-    this.palm(4.6, -22, -1014, 4.8, -0.12);
-    this.palm(-4.6, -22, -1017, 5.2, 0.1);
-    this.broadleaf(7.4, -22, -1008, 1.3);
-    this.broadleaf(-7.6, -22, -1010, 1.1);
-    this.flowers(6.8, -22, -1013);
+    this.palm(4.6, -22, -1074, 4.8, -0.12);
+    this.palm(-4.6, -22, -1077, 5.2, 0.1);
+    this.broadleaf(7.4, -22, -1068, 1.3);
+    this.broadleaf(-7.6, -22, -1070, 1.1);
+    this.flowers(6.8, -22, -1073);
 
     // --- finish gate + end wall ---
     if (!asPrefix) {
@@ -1555,7 +1558,7 @@ export class Level {
     // The test course's finish-run corridor ends at z≈−1025, y=−22. Drop the
     // gauntlet in so its start slab OVERLAPS that corridor end at the same
     // height (its +Z edge lands at z≈−1021), so you skate straight across.
-    const DZ = -1035;
+    const DZ = -1095; // test course is 60u longer now (doubled halfpipe) — seam the gauntlet on after it
     const DY = -22;
     this.shiftBuilt(snap, 0, DY, DZ, preArena, preCollapse, preCrystal);
     this.finishZ += DZ; // gauntlet −1200 → −2240 becomes the combined finish
@@ -1642,7 +1645,7 @@ export class Level {
 
   // Deck height along the final downhill ramp (for crate placement).
   private downhillY(z: number): number {
-    return THREE.MathUtils.mapLinear(z, -885, -940, -13.5, -22);
+    return THREE.MathUtils.mapLinear(z, -945, -1000, -13.5, -22);
   }
 
   // The "Sideways" level is an L-shaped course now: a corridor intro heading
@@ -2535,38 +2538,6 @@ export class Level {
     mesh.name = name;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-  }
-
-  // Side-banked surface (halfpipe wall): top face runs from (xIn, yBase) up to
-  // (xOut, yTop), constant along z. Box rotated about Z so a downward ray sees
-  // the slope.
-  private bank(
-    name: string,
-    z0: number,
-    z1: number,
-    xIn: number,
-    xOut: number,
-    yBase: number,
-    yTop: number,
-    mat: THREE.Material,
-    tex = 'pavement',
-  ): THREE.Mesh {
-    const dx = xOut - xIn;
-    const dy = yTop - yBase;
-    const len = Math.hypot(dx, dy);
-    const alpha = Math.atan2(dy, dx); // local +X maps to (cos a, sin a, 0)
-    const depth = Math.abs(z1 - z0);
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(len, 1, depth), this.patterned(mat, len, depth, tex));
-    mesh.rotation.z = alpha;
-    const normal = new THREE.Vector3(-dy / len, dx / len, 0);
-    if (normal.y < 0) normal.negate();
-    mesh.position
-      .set((xIn + xOut) / 2, (yBase + yTop) / 2, (z0 + z1) / 2)
-      .addScaledVector(normal, -0.5);
-    mesh.name = name;
-    this.root.add(mesh);
-    this.groundMeshes.push(mesh);
-    return mesh;
   }
 
   // Solid barrier: visual box + collider. Bump = full stop, never breaks.
@@ -3775,43 +3746,10 @@ export class Level {
     this.crate(-5, 13, -537, 'mystery');
     this.fruitRow(-535, -538, 14.3, 2, -5);
 
-    // --- E: halfpipe alley ---------------------------------------------------
+    // --- E: open alley (was a faceted "halfpipe" — removed; the good halfpipe
+    // is the dedicated one back on the beach stretch) ------------------------
     const hpBase = 3;
-    this.slab('gauntlet pipe', -540, -595, hpBase, 6, matStone, false, 0, 'stone');
-    const profile: [number, number, number, number][] = [
-      [3.0, 4.8, 0, 0.23],
-      [4.8, 6.3, 0.23, 0.79],
-      [6.3, 7.5, 0.79, 1.55],
-      [7.5, 8.7, 1.55, 2.74],
-      [8.7, 9.6, 2.74, 4.18],
-      [9.6, 10.3, 4.18, 6.1],
-    ];
-    for (const [xIn, xOut, dBase, dTop] of profile) {
-      for (const side of [1, -1]) {
-        this.bank(
-          'pipe wall',
-          -540,
-          -595,
-          side * xIn,
-          side * xOut,
-          hpBase + dBase,
-          hpBase + dTop,
-          matRamp,
-        );
-      }
-    }
-    const lipL = new Rail([
-      new THREE.Vector3(-10.4, hpBase + 6.3, -542),
-      new THREE.Vector3(-10.4, hpBase + 6.3, -593),
-    ]);
-    const lipR = new Rail([
-      new THREE.Vector3(10.4, hpBase + 6.3, -542),
-      new THREE.Vector3(10.4, hpBase + 6.3, -593),
-    ]);
-    for (const r of [lipL, lipR]) {
-      this.rails.push(r);
-      this.root.add(r.object);
-    }
+    this.slab('gauntlet alley', -540, -595, hpBase, 22, matStone, true, 0, 'stone');
     this.crate(-2.2, hpBase, -560, 'bouncy');
     this.crate(2.2, hpBase, -575);
     this.crystal(0, hpBase + 0.4, -567); // pipe-alley centre: ride through it

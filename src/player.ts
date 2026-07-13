@@ -169,6 +169,10 @@ export class Player {
   // trick-spin that then bails you on the drop-back-in). Deliberate spins off the
   // lip still work via the Square spin button.
   private pipeHang = false;
+  // Deliberate hang spins are RE-ARMED only once the stick returns to neutral
+  // after a pipe launch — so the direction you were HOLDING to climb the wall
+  // doesn't auto-spin you, but a fresh flick in the air rotates you (grab-free).
+  private pipeHangSpinArmed = false;
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
   // both the dedicated coping launch AND the general crest a fast pump takes.
@@ -416,6 +420,7 @@ export class Player {
     this.vertLatVel = 0;
     this.pipeFlipCd = 0;
     this.pipeHang = false;
+    this.pipeHangSpinArmed = false;
     this.pipeRideT = 0;
     this.slamSquash = 0;
     this.bailing = false;
@@ -597,6 +602,7 @@ export class Player {
     if (this.state !== 'air') {
       this.vertAir = false;
       this.pipeHang = false;
+      this.pipeHangSpinArmed = false;
       this.vertLatVel = 0;
     }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
@@ -1879,8 +1885,9 @@ export class Player {
           return;
         }
       } else {
-        // pose is neutral and the spin lines up with 0 or 180
-        const isSwitch = spun && devPi <= tol && !this.pipeHang; // pipe hangs never force a switch
+        // pose is neutral and the spin lines up with 0 or 180. A pipe hang only
+        // switches on a DELIBERATE (armed) rotation — never on the climb hold.
+        const isSwitch = spun && devPi <= tol && (!this.pipeHang || this.pipeHangSpinArmed);
         if (isSwitch) this.stance = -this.stance as 1 | -1; // landed backward: swap feet
         // A ROTATION IS A TRICK: any landed 180+ scores its own combo entry,
         // grab or no grab — so grab + rotation strings TWO tricks together
@@ -1973,6 +1980,7 @@ export class Player {
     // spin you into a phantom bail. Deliberate spins use the Square button.
     if (this.pipeRideT > 0) {
       this.pipeHang = true;
+      this.pipeHangSpinArmed = false; // must neutralise the stick before a spin arms
       this.grabSpinAngle = 0;
     }
     if (launch) {
@@ -2479,8 +2487,19 @@ export class Player {
         }
         // HANG-TIME SPIN: glued to the wall, the stick alone spins you —
         // no grab needed. Same spin fields, so landing rules and switch
-        // stance judge it exactly like a grab-spin.
-        if (this.vertAir && !this.slamActive && !this.pipeHang && Math.abs(this.rawInput.moveX) > 0.3) {
+        // stance judge it exactly like a grab-spin. On a HALFPIPE hang the
+        // spin only arms once the stick has returned to neutral (so the climb
+        // hold doesn't auto-spin you), then a fresh flick rotates you.
+        if (
+          this.pipeHang &&
+          !this.pipeHangSpinArmed &&
+          Math.abs(this.rawInput.moveX) < 0.2 &&
+          Math.abs(this.rawInput.moveY) < 0.2
+        ) {
+          this.pipeHangSpinArmed = true;
+        }
+        const spinReady = !this.pipeHang || this.pipeHangSpinArmed;
+        if (this.vertAir && !this.slamActive && spinReady && Math.abs(this.rawInput.moveX) > 0.3) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
