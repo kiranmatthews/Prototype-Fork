@@ -96,6 +96,7 @@ export class Player {
   private slideAirLat = 0; // slide-jump: launch velocity component ACROSS the heading (keeps sideways slide-jumps sideways)
   private slideJumpAir = false; // in a committed slide-jump arc: no input air-steer (no diagonal drift)
   private slideRecoverT = 0; // get-up beat after a slide: movement locked while the skater gets off the ground
+  private skateBlockT = 0; // brief window after a slide-jump touchdown where the board CAN'T pop (a slide jump lands on foot, period — slope re-accel or a held direction mustn't flip it out)
   private slideCrawlChain = false; // Circle held through a slide: flow straight into the crawl on the way out (no get-up beat)
   private landingScoring = false; // landing-tick payouts still count as air tricks
   private crawling = false; // Circle held while stopped: all-fours crawl
@@ -169,10 +170,6 @@ export class Player {
   // trick-spin that then bails you on the drop-back-in). Deliberate spins off the
   // lip still work via the Square spin button.
   private pipeHang = false;
-  // Deliberate hang spins are RE-ARMED only once the stick returns to neutral
-  // after a pipe launch — so the direction you were HOLDING to climb the wall
-  // doesn't auto-spin you, but a fresh flick in the air rotates you (grab-free).
-  private pipeHangSpinArmed = false;
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
   // both the dedicated coping launch AND the general crest a fast pump takes.
@@ -211,6 +208,7 @@ export class Player {
   private coyoteTimer = 0; // jump grace after running off a ledge
   private chargeTimer = 0; // X held on the ground: builds jump power + speed
   private charging = false;
+  private chargeSpent = false; // a planted full charge auto-fired: don't re-charge/buffer until X releases
   private chargePlanted = false; // charge began at a standstill: feet pinned
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
@@ -403,6 +401,7 @@ export class Player {
     this.slideAirLat = 0;
     this.slideJumpAir = false;
     this.slideRecoverT = 0;
+    this.skateBlockT = 0;
     this.slideCrawlChain = false;
     this.brakeT = 0;
     this.brakeLockT = 0;
@@ -420,7 +419,6 @@ export class Player {
     this.vertLatVel = 0;
     this.pipeFlipCd = 0;
     this.pipeHang = false;
-    this.pipeHangSpinArmed = false;
     this.pipeRideT = 0;
     this.slamSquash = 0;
     this.bailing = false;
@@ -441,6 +439,7 @@ export class Player {
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     this.charging = false;
+    this.chargeSpent = false;
     this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
@@ -582,6 +581,7 @@ export class Player {
     this.slideCd = Math.max(0, this.slideCd - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.slideRecoverT = Math.max(0, this.slideRecoverT - dt);
+    this.skateBlockT = Math.max(0, this.skateBlockT - dt);
     // Post-brake lock: the timer is refreshed each frame the brake is still
     // holding you near a stop (see the brake branches), so it only starts
     // counting down once you LET GO of the brake. When it lands on zero it arms
@@ -602,7 +602,6 @@ export class Player {
     if (this.state !== 'air') {
       this.vertAir = false;
       this.pipeHang = false;
-      this.pipeHangSpinArmed = false;
       this.vertLatVel = 0;
     }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
@@ -914,6 +913,8 @@ export class Player {
       this.slideJumpAir = true; // committed arc: input can't add a diagonal
       this.airFromSkate = false; // a platforming hop, not a board air (no grabs, no skate carry)
       this.slideFromWalk = true; // force the on-foot touchdown clamp: no skate takeover on landing
+      this.freeSkate = false; // DROP the board — a slide jump is on-foot even if you slid out of a skate
+      this.stepOff = true;
       this.slideTimer = 0;
       this.slideEndPending = false; // consumed by a slide JUMP: no plain-slide scrub
       this.slideCrawlChain = false; // a jump out of the slide, not a crawl chain
@@ -1059,7 +1060,7 @@ export class Player {
     // Enter/leave free-heading mode. Walking and canned slides keep the
     // classic course-axis model; the board carves free — everywhere,
     // transitions included.
-    const free = skating && this.slideTimer <= 0 && !slamFlat && !this.crawling;
+    const free = skating && this.slideTimer <= 0 && !slamFlat && !this.crawling && this.skateBlockT <= 0;
     if (free && !this.freeSkate) {
       // Seed the skate velocity from the direction you're actually going, so
       // a sideways walk hands its momentum straight into the skate (the
@@ -1591,7 +1592,7 @@ export class Player {
       // and skates (the speed build lives in the skate branch above); releasing
       // fires the jump (coyote grace applies at ledges). A quick tap still
       // gives a serviceable hop.
-      if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
+      if (this.state === 'ride' && input.jumpHeld && !slamFlat && !this.chargeSpent) {
         if (!this.charging) {
           // A charge begun at a STANDSTILL plants the feet: holding a
           // direction won't slide you around or trip the skate — it aims the
@@ -1602,7 +1603,19 @@ export class Player {
         }
         this.charging = true;
         this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+        // STATIONARY (planted, on-foot) full charge fires ITSELF the instant it
+        // tops out — no need to hold longer and release. Skating charges (not
+        // planted) still fire on release so you keep building speed.
+        if (
+          this.chargePlanted &&
+          !this.freeSkate &&
+          this.chargeTimer >= TUNING.jumpChargeTime
+        ) {
+          this.chargeSpent = true; // one hold = one auto-jump (no re-charge / no landing double)
+          this.chargedJump(dt);
+        }
       }
+      if (input.jumpReleased) this.chargeSpent = false;
       if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
         // Climbing a near-vert wall: DON'T ollie into the wall — reserve the
         // release as the lip LAUNCH (the imminent crest reads vertLaunchT and
@@ -1627,8 +1640,13 @@ export class Player {
       if (input.jumpReleased) {
         // X let go in the air: buffer a landing jump for a beat, so a release
         // a hair before touchdown still hops (it only fires if landing soon).
-        this.jumpBufferT = 0.14;
-        this.jumpBufferCharge = this.charging ? this.chargeTimer : 0;
+        // EXCEPT the release that ends an auto-fired planted charge — that hold
+        // already spent its jump, so it must not buffer a second one on landing.
+        if (!this.chargeSpent) {
+          this.jumpBufferT = 0.14;
+          this.jumpBufferCharge = this.charging ? this.chargeTimer : 0;
+        }
+        this.chargeSpent = false;
       }
       if (this.charging) {
         // grace expired: the charge fizzles
@@ -1842,6 +1860,10 @@ export class Player {
         this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
         this.slideFromWalk = false;
         this.slideLandClamp = true;
+        // Slide-jump touchdown (a slideFromWalk air always lands on foot): hold
+        // the board OFF for a beat so a slope re-accelerating you — or a
+        // direction you're holding — can't flip the deck out.
+        this.skateBlockT = 0.3;
       }
       // Landing-tick payouts (grab, slam impact) are still air tricks
       // for combo purposes even though the state just flipped to 'ride'.
@@ -1885,9 +1907,10 @@ export class Player {
           return;
         }
       } else {
-        // pose is neutral and the spin lines up with 0 or 180. A pipe hang only
-        // switches on a DELIBERATE (armed) rotation — never on the climb hold.
-        const isSwitch = spun && devPi <= tol && (!this.pipeHang || this.pipeHangSpinArmed);
+        // pose is neutral and the spin lines up with 0 or 180: a landed 180 rides
+        // away switch. (A pipe hang can't reach here off the climb hold unless you
+        // actually held a rotation — the snap-on-release lands sub-90 spins at 0.)
+        const isSwitch = spun && devPi <= tol;
         if (isSwitch) this.stance = -this.stance as 1 | -1; // landed backward: swap feet
         // A ROTATION IS A TRICK: any landed 180+ scores its own combo entry,
         // grab or no grab — so grab + rotation strings TWO tricks together
@@ -1980,8 +2003,7 @@ export class Player {
     // spin you into a phantom bail. Deliberate spins use the Square button.
     if (this.pipeRideT > 0) {
       this.pipeHang = true;
-      this.pipeHangSpinArmed = false; // must neutralise the stick before a spin arms
-      this.grabSpinAngle = 0;
+      this.grabSpinAngle = 0; // start the hang un-spun; a held direction rotates from here
     }
     if (launch) {
       this.vVel += TUNING.hangLaunch;
@@ -2485,21 +2507,11 @@ export class Player {
             this.grabGraceTimer = CONST.grabGrace;
           }
         }
-        // HANG-TIME SPIN: glued to the wall, the stick alone spins you —
-        // no grab needed. Same spin fields, so landing rules and switch
-        // stance judge it exactly like a grab-spin. On a HALFPIPE hang the
-        // spin only arms once the stick has returned to neutral (so the climb
-        // hold doesn't auto-spin you), then a fresh flick rotates you.
-        if (
-          this.pipeHang &&
-          !this.pipeHangSpinArmed &&
-          Math.abs(this.rawInput.moveX) < 0.2 &&
-          Math.abs(this.rawInput.moveY) < 0.2
-        ) {
-          this.pipeHangSpinArmed = true;
-        }
-        const spinReady = !this.pipeHang || this.pipeHangSpinArmed;
-        if (this.vertAir && !this.slamActive && spinReady && Math.abs(this.rawInput.moveX) > 0.3) {
+        // HANG-TIME SPIN: glued to the wall, the stick alone spins you — no grab
+        // needed. HOLD left/right (even the direction you carved up with) to keep
+        // rotating; release to snap to the nearest 180 and land. A pipe hang never
+        // bails on this, so it's a free, grab-less rotation you control by holding.
+        if (this.vertAir && !this.slamActive && Math.abs(this.rawInput.moveX) > 0.3) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
