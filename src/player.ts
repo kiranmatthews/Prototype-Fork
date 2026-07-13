@@ -3254,7 +3254,7 @@ export class Player {
     this.wallrideT = TUNING.wallrideMaxTime;
     this.wallTickT = 0;
     this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
-    this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall
+    this.vVel = Math.max(this.vVel, TUNING.walliePop); // the WALLIE: launch UP the wall face on the catch
     this.airFromSkate = true;
     this.charging = false;
     sfx.play('woosh2', 0.5);

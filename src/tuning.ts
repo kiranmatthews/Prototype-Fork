@@ -69,6 +69,7 @@ export const TUNING = {
   wallrideFriction: 3, // along-wall speed bleed per second on a wallride
   wallrideMinSpeed: 8, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
   wallrideMaxTime: 1.6, // longest a single wallride lasts before you drop off
+  walliePop: 14, // the WALLIE: upward launch the instant you catch the wall, so you ride UP the face (0 = glide on flat)
   wallKickUp: 12, // vertical pop when you jump OFF a wallride
   wallKickOut: 8, // push away from the wall when you kick off
   airControl: 0, // forward/back speed adjustment in the air
@@ -160,7 +161,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallrideGravity: { min: 0, max: 40, step: 1 },
   wallrideFriction: { min: 0, max: 20, step: 0.5 },
   wallrideMinSpeed: { min: 0, max: 25, step: 0.5 },
-  wallrideMaxTime: { min: 0.3, max: 4, step: 0.1 },
+  wallrideMaxTime: { min: 0.3, max: 12, step: 0.1 },
+  walliePop: { min: 0, max: 30, step: 0.5 },
   wallKickUp: { min: 0, max: 30, step: 0.5 },
   wallKickOut: { min: 0, max: 25, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
@@ -301,6 +303,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   wallrideMinSpeed:
     'Minimum horizontal speed needed (airborne, grind held, moving into the wall) to stick to a wall instead of bonking off it.',
   wallrideMaxTime: 'Longest a single wallride can last before you automatically drop off.',
+  walliePop:
+    'The WALLIE: upward launch the instant you catch a wall, so you pop UP the face and ride it like a wallie instead of gliding along flat. Higher = you climb further up the wall (and can pop off the top). 0 = ride dead level.',
   wallKickUp: 'Vertical pop you get when you jump OFF a wallride (like a rail kick-off).',
   wallKickOut: 'How hard the kick-off shoves you AWAY from the wall (out into the level) when you jump off a wallride.',
   airControl:
@@ -391,7 +395,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     ],
   },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
-  { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallKickOut'] },
+  { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'walliePop', 'wallKickUp', 'wallKickOut'] },
   {
     title: 'GRINDS',
     keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
