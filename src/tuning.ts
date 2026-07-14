@@ -460,6 +460,8 @@ export const CONST = {
   slideCooldown: 0.25,
   slamSpeed: 46, // Circle+down pancake slam: authored fall rate
   maxFallSpeed: 52, // terminal velocity: fall no faster than the ground ray can catch (no deck tunneling)
+  slippyFriction: 0.12, // friction multiplier on slick/icy planks (near-frictionless slide)
+  slipAccel: 3.5, // ice-walk responsiveness on slick planks (low = more momentum/coast, harder to stop)
   slamHang: 0.32, // Wile E. Coyote beat: freeze in the air before the drop
   slamFlat: 0.5, // lie pancaked on the ground this long after impact
   crouchJumpMult: 1.35, // crouch (crawl) jumps launch this much higher

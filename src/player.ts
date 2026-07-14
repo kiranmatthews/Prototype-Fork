@@ -20,6 +20,7 @@ interface GroundHit {
   name: string;
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
+  slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
 }
 
@@ -1199,10 +1200,16 @@ export class Player {
       // the skater snaps onto the board in place instead of sliding up to speed.
       // Otherwise the walk eases in over walkRampTime (runScale) and holds at 0
       // through a post-brake run lock, so a brake never rolls into a reverse run.
-      this.speed =
-        this.charging && this.chargePlanted
-          ? 0
-          : input.moveY * TUNING.walkSpeed * runScale;
+      const walkTarget =
+        this.charging && this.chargePlanted ? 0 : input.moveY * TUNING.walkSpeed * runScale;
+      if (this.groundHit && this.groundHit.slippy && !(this.charging && this.chargePlanted)) {
+        // ICE WALK on a slick plank: momentum, not instant stop — you accelerate
+        // toward the target and COAST when you let go, so you can't stop on a dime
+        // before the gap. (A planted charge still pins the feet, above.)
+        this.speed += (walkTarget - this.speed) * Math.min(1, CONST.slipAccel * dt);
+      } else {
+        this.speed = walkTarget;
+      }
       this.lastTy = 0;
     } else {
       // SKATE: authored momentum. X (charge) is the only accelerator; input
@@ -1640,6 +1647,13 @@ export class Player {
       (() => {
         const belowY = this.queryShadowGround(level);
         return belowY === null || belowY <= level.killY;
+      })() &&
+      (() => {
+        // Only teeter if there's an actual LEDGE to step back onto. If the plank
+        // under you just broke away (nothing at prevPos either), there's nothing
+        // to catch — you fall, not hover in mid-air.
+        const back = this.queryGround(level, this.prevPos.x - this.pos.x, this.prevPos.z - this.pos.z);
+        return back !== null && Math.abs(back.y - this.prevPos.y) < 1.0;
       })()
     ) {
       this.pos.copy(this.prevPos); // step back onto the ledge
@@ -2171,9 +2185,12 @@ export class Player {
     const s = Math.abs(this.speed);
     if (s < 1e-4) return;
     // steep ground keeps the flat linear bleed so the stall-flip fires cleanly
-    const bleed = steep
+    let bleed = steep
       ? TUNING.friction * dt
       : TUNING.friction * dt * (0.35 + 0.65 * Math.min(1, s / Math.max(TUNING.maxSpeed, 1)));
+    // Slick planks (icy sky-bridge boards): almost no friction, so you keep
+    // sliding and can't stop short of the gap — the precision hazard.
+    if (this.groundHit && this.groundHit.slippy) bleed *= CONST.slippyFriction;
     this.speed -= Math.sign(this.speed) * Math.min(bleed, s);
   }
 
@@ -2203,6 +2220,7 @@ export class Player {
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
     this.grindTime += dt;
+    level.grindRope(rail); // sky-bridge ropes: grinding one makes it sag, wobble, and eventually snap
     this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
     // Grinds ride at the speed you brought and bleed a little on the rail
     // (nosegrinds hold their speed better).
@@ -3447,7 +3465,19 @@ export class Player {
     this.raycaster.far = 12;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     if (hits.length === 0) return null;
-    const hit = hits[0];
+    // A plank that's already breaking away (fall/gone) is no longer solid — skip
+    // it so a grinder/stander drops straight through instead of riding it down.
+    let hit = null as (typeof hits)[number] | null;
+    for (const h of hits) {
+      const cid = h.object.userData.crumbleId as number | undefined;
+      if (cid !== undefined) {
+        const c = level.crumbles[cid];
+        if (c && (c.state === 'fall' || c.state === 'gone')) continue;
+      }
+      hit = h;
+      break;
+    }
+    if (!hit) return null;
     const hp = hit.object.userData.halfpipe as Halfpipe | undefined;
     // Halfpipe walls hand back the exact ANALYTIC surface normal (perfectly
     // smooth across the transition and always oriented up/inward) instead of
@@ -3461,6 +3491,7 @@ export class Player {
       name: hit.object.name,
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
+      slippy: hit.object.userData.slippy as boolean | undefined,
       halfpipe: hp,
     };
   }

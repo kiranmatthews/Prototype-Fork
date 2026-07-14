@@ -55,6 +55,22 @@ interface Crumble {
   state: 'idle' | 'shake' | 'fall' | 'gone';
   t: number;
   regen: number | null; // seconds until it comes back; null = only on reset
+  shakeTime: number; // seconds of shaking before it drops (near-0 = breaks on landing)
+}
+
+// Sky-bridge side rope: a grindable rail that SAGS + wobbles under a grinder
+// and, if you linger, snaps and drops you into the void. Eases back to taut
+// if you hop off in time.
+interface SkyRope {
+  rail: Rail;
+  segs: THREE.Mesh[]; // visual rope segments, repositioned each frame to the live nodes
+  rest: THREE.Vector3[]; // taut rest positions of the N+1 nodes
+  state: 'idle' | 'sag' | 'break' | 'gone';
+  t: number; // time in the current state / grind-load timer
+  active: boolean; // being ground THIS frame (set by grindRope, cleared each update)
+  breakTime: number; // seconds of continuous grinding before it snaps
+  regen: number | null; // seconds to restring after it's gone; null = only on reset
+  sagAmt: number; // how far the middle dips
 }
 
 // Timed crusher block: hangs, slams, rests, rises. Solid except when falling.
@@ -144,6 +160,7 @@ export const LEVEL_NAMES = [
   'Boulder Dash',
   'The Flats',
   'Half Pipes',
+  'Sky Bridge',
 ];
 
 export class Level {
@@ -187,6 +204,8 @@ export class Level {
   // --- motion toolkit ---
   movers: Mover[] = [];
   crumbles: Crumble[] = [];
+  ropes: SkyRope[] = [];
+  narrowCam = false; // tight-FOV over-the-shoulder framing (the Sky Bridge twist)
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
@@ -595,6 +614,7 @@ export class Level {
     else if (courseId === 3) this.buildBoulderDash();
     else if (courseId === 4) this.buildFlats();
     else if (courseId === 5) this.buildHalfpipePark();
+    else if (courseId === 6) this.buildSkyBridge();
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
     this.buildAmbient(); // theme is set by the builder above
@@ -741,7 +761,7 @@ export class Level {
       if (c.state === 'shake') {
         c.mesh.position.x = c.base.x + Math.sin(c.t * 55) * 0.06;
         c.mesh.position.y = c.base.y - c.t * 0.25;
-        if (c.t > 0.35) {
+        if (c.t > c.shakeTime) {
           c.state = 'fall';
           c.t = 0;
           if (Math.abs(c.base.z - this.playerPos.z) < 45) sfx.play('crunch', 0.45, 0.9);
@@ -762,6 +782,61 @@ export class Level {
         c.mesh.position.copy(c.base);
         c.mesh.rotation.set(0, 0, 0);
       }
+    }
+
+    // Sky-bridge ropes: sag + wobble under a grinder, snap if you linger too
+    // long, ease back taut if you hop off in time, restring after the fall.
+    for (const r of this.ropes) {
+      const N = r.rest.length - 1;
+      if (r.state === 'break') {
+        r.t += dt;
+        for (let i = 1; i < N; i++) r.rail.points[i].y -= 34 * r.t * dt; // the span plunges — a grinder rides it into the void
+        this.syncRope(r);
+        if (r.t > 1.2) {
+          r.state = 'gone';
+          r.t = 0;
+          for (const s of r.segs) s.visible = false;
+        }
+        r.active = false;
+        continue;
+      }
+      if (r.state === 'gone') {
+        r.t += dt;
+        if (r.regen !== null && r.t > r.regen) {
+          r.state = 'idle';
+          r.t = 0;
+          for (let i = 0; i <= N; i++) r.rail.points[i].copy(r.rest[i]);
+          for (const s of r.segs) s.visible = true;
+          this.syncRope(r);
+        }
+        r.active = false;
+        continue;
+      }
+      if (r.active) {
+        if (r.state === 'idle') {
+          r.state = 'sag';
+          r.t = 0;
+        }
+        r.t += dt;
+        if (r.t > r.breakTime) {
+          r.state = 'break';
+          r.t = 0;
+          r.active = false;
+          if (Math.abs(r.rest[0].z - this.playerPos.z) < 55) sfx.play('crunch', 0.5, 1.15);
+          continue;
+        }
+      } else if (r.state === 'sag') {
+        r.t = Math.max(0, r.t - dt * 1.6); // hopped off: recover toward taut
+        if (r.t <= 0) r.state = 'idle';
+      }
+      const load = r.state === 'sag' ? Math.min(1, r.t / 0.25) : 0;
+      for (let i = 1; i < N; i++) {
+        const shape = Math.sin((Math.PI * i) / N); // 0 at the posts, 1 at mid-span
+        const wob = Math.sin(this.time * 9 + i * 1.3) * 0.09 * shape * load;
+        r.rail.points[i].y = r.rest[i].y - shape * r.sagAmt * load + wob;
+      }
+      this.syncRope(r);
+      r.active = false;
     }
 
     // Crushers: hang -> slam -> rest -> rise, on a loop.
@@ -1211,6 +1286,15 @@ export class Level {
       c.mesh.visible = true;
       c.mesh.position.copy(c.base);
       c.mesh.rotation.set(0, 0, 0);
+    }
+    // Sky-bridge ropes restring taut.
+    for (const r of this.ropes) {
+      r.state = 'idle';
+      r.t = 0;
+      r.active = false;
+      for (let i = 0; i < r.rest.length; i++) r.rail.points[i].copy(r.rest[i]);
+      for (const s of r.segs) s.visible = true;
+      this.syncRope(r);
     }
     if (this.collapse) {
       this.collapse.active = false;
@@ -1897,6 +1981,74 @@ export class Level {
     }
   }
 
+  // The player grinds a rope this frame — flag its rope so the update loop sags
+  // it and counts down to the snap. No-op for ordinary rails.
+  grindRope(rail: Rail): void {
+    for (const r of this.ropes) {
+      if (r.rail === rail && (r.state === 'idle' || r.state === 'sag')) {
+        r.active = true;
+        return;
+      }
+    }
+  }
+
+  // Repoint a rope's visual segments onto its live (sagged) grind nodes.
+  private syncRope(r: SkyRope): void {
+    const up = new THREE.Vector3(0, 1, 0);
+    const dir = new THREE.Vector3();
+    for (let i = 0; i < r.segs.length; i++) {
+      const a = r.rail.points[i];
+      const bb = r.rail.points[i + 1];
+      dir.copy(bb).sub(a);
+      const len = dir.length() || 1e-3;
+      dir.divideScalar(len);
+      const seg = r.segs[i];
+      seg.position.copy(a).addScaledVector(dir, len / 2);
+      seg.quaternion.setFromUnitVectors(up, dir);
+      seg.scale.y = len;
+    }
+  }
+
+  // Sky-bridge side rope: a grindable, saggable, breakable rope running along Z.
+  private skyRope(
+    x: number,
+    z0: number,
+    z1: number,
+    y: number,
+    breakTime = 3,
+    sagAmt = 1.2,
+    regen: number | null = 4,
+  ): void {
+    const N = 8;
+    const rest: THREE.Vector3[] = [];
+    for (let i = 0; i <= N; i++) {
+      rest.push(new THREE.Vector3(x, y, THREE.MathUtils.lerp(z0, z1, i / N)));
+    }
+    const rail = new Rail(
+      rest.map((p) => p.clone()),
+      false, // grindable, but we draw our own dynamic rope
+    );
+    this.rails.push(rail);
+    const group = new THREE.Group();
+    const ropeMat = new THREE.MeshLambertMaterial({ color: 0xc2a878 });
+    const segs: THREE.Mesh[] = [];
+    for (let i = 0; i < N; i++) {
+      const seg = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 1, 6), ropeMat);
+      group.add(seg);
+      segs.push(seg);
+    }
+    const postMat = new THREE.MeshLambertMaterial({ color: 0x6b4a2a });
+    for (const zp of [z0, z1]) {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.3, 1.8, 7), postMat);
+      post.position.set(x, y - 0.5, zp);
+      group.add(post);
+    }
+    this.root.add(group);
+    const rope: SkyRope = { rail, segs, rest, state: 'idle', t: 0, active: false, breakTime, regen, sagAmt };
+    this.ropes.push(rope);
+    this.syncRope(rope);
+  }
+
   // Moving platform sliding along one axis on a sine.
   private mover(
     x: number,
@@ -1935,18 +2087,28 @@ export class Level {
     });
   }
 
-  // Crumble pad: plank that shakes and drops when stood on.
-  private crumblePad(x: number, topY: number, z: number, w: number, d: number, regen: number | null = 3): Crumble {
+  // Crumble pad: plank that shakes and drops when stood on. shakeTime near 0
+  // breaks on landing; a longer shakeTime gives you a beat before it goes.
+  private crumblePad(
+    x: number,
+    topY: number,
+    z: number,
+    w: number,
+    d: number,
+    regen: number | null = 3,
+    shakeTime = 0.35,
+    color = 0xa8845c,
+  ): Crumble {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, 0.5, d),
-      this.patterned(new THREE.MeshLambertMaterial({ color: 0xa8845c }), w, d, 'wood'),
+      this.patterned(new THREE.MeshLambertMaterial({ color }), w, d, 'wood'),
     );
     mesh.position.set(x, topY - 0.25, z);
     mesh.name = 'crumble pad';
     mesh.userData.crumbleId = this.crumbles.length;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-    const c: Crumble = { mesh, base: mesh.position.clone(), state: 'idle', t: 0, regen };
+    const c: Crumble = { mesh, base: mesh.position.clone(), state: 'idle', t: 0, regen, shakeTime };
     this.crumbles.push(c);
     return c;
   }
@@ -4194,6 +4356,107 @@ export class Level {
     addPipe(18, -18, -56, 'x');
     for (const z of [-38 - lipX, -47, -56 + lipX]) copingRail(V(-18, lipY + 0.05, z), V(18, lipY + 0.05, z));
     for (const cz of [-38, -56]) for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
+  }
+
+  // SKY BRIDGE: a long, narrow rope-and-plank bridge strung across an open sky.
+  // Precision platforming on a cramped tight-FOV frame — slick planks, planks
+  // that drop the instant you land (or a beat later), patrolling foes, and side
+  // ropes you grind across gaps that sag, wobble, and snap if you dawdle. One
+  // misstep is a long way down.
+  private buildSkyBridge(): void {
+    this.narrowCam = true;
+    this.killY = -22; // off the bridge = a fatal drop into the clouds
+    this.finishZ = -1e9;
+    this.endWallZ = -400;
+    this.theme = {
+      skyTop: '#8fbfe6',
+      skyBottom: '#f2f6f8',
+      sunColorHex: '#fff4d8',
+      sunU: 0.6,
+      sunV: 0.2,
+      stars: false,
+      fog: 0xeef4f8, // the void below is bright cloud haze
+      fogNear: 40,
+      fogFar: 210,
+      hemiSky: 0xdff0ff,
+      hemiGround: 0xb9c6cf,
+      hemiI: 1.25,
+      sunColor: 0xfff2d4,
+      sunI: 1.5,
+      particleColor: 0xffffff,
+      particleWind: [0.3, -0.15, 0.25],
+    };
+    const woodCol = 0xb98a52;
+    const iceCol = 0x9fc7de;
+    // A fixed board footprint keeps the bridge cramped: the deck is barely
+    // wider than Crash, so a slippy carry or a sloppy jump goes over the side.
+    const W = 2.6;
+    const plank = (z: number, d = 2, slippy = false, w = W): THREE.Mesh => {
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(w, 0.5, d),
+        this.patterned(new THREE.MeshLambertMaterial({ color: slippy ? iceCol : woodCol }), w, d, 'wood'),
+      );
+      mesh.position.set(0, -0.25, z);
+      mesh.name = slippy ? 'slippy plank' : 'plank';
+      if (slippy) mesh.userData.slippy = true;
+      this.root.add(mesh);
+      this.groundMeshes.push(mesh);
+      return mesh;
+    };
+    const breakOnLand = (z: number, d = 2): void => void this.crumblePad(0, 0, z, W, d, null, 0.02, 0xcf6a48);
+    const breakSoon = (z: number, d = 2): void => void this.crumblePad(0, 0, z, W, d, null, 0.7, 0xd0a24a);
+
+    // --- start deck ---------------------------------------------------------
+    plank(3, 9, false, 7); // wide safe landing to launch from
+    this.spawnPos.set(0, 0.1, 4);
+    this.currentSpawn.copy(this.spawnPos);
+
+    // --- section A: warm-up hops, then slick planks -------------------------
+    plank(-4);
+    plank(-8);
+    // gap
+    plank(-14, 2, true); // slippy trio: carry bleeds slow, so stop short or slide off
+    plank(-17.5, 2, true);
+    plank(-21, 2, true);
+    this.pickup(0, 1.2, -17.5);
+
+    // --- section B: drop planks ---------------------------------------------
+    plank(-27); // safe breather
+    breakOnLand(-31); // land + it's already gone — keep moving
+    breakOnLand(-34.5);
+    plank(-39); // safe landing
+    this.checkpoint(0, -39); // first checkpoint
+
+    // --- section C: enemy on a wide deck ------------------------------------
+    plank(-45, 5, false, 5); // wide enough to dodge on
+    this.enemy(-2, 2, 0, -45, 3.2);
+    plank(-51);
+    breakSoon(-55); // stand a beat, then it drops
+    breakSoon(-58.5);
+
+    // --- section D: grind a side rope across the void -----------------------
+    plank(-63);
+    // no deck from -66..-78: two side ropes span the gap. Jump on, grind across,
+    // hop off before it snaps.
+    for (const rx of [-1.1, 1.1]) this.skyRope(rx, -65, -79, 0.95, 3.6, 1.3, 4);
+    plank(-82, 3, false, 4); // landing deck after the ropes
+    this.pickup(0, 1.2, -82);
+    this.checkpoint(0, -82);
+
+    // --- section E: everything at once --------------------------------------
+    plank(-88, 2, true); // slippy launch
+    breakOnLand(-92);
+    plank(-96, 5, false, 5);
+    this.enemy(-2, 2, 0, -96, 4);
+    breakSoon(-101);
+    plank(-105, 2, true);
+    // final rope to the goal deck
+    for (const rx of [-1.1, 1.1]) this.skyRope(rx, -108, -120, 0.95, 3.2, 1.4, 4);
+
+    // --- goal deck ----------------------------------------------------------
+    plank(-125, 8, false, 7);
+    this.pickup(0, 1.2, -125);
+    this.crystal(0, 0.6, -125);
   }
 
   private buildBoulderDash(): void {
