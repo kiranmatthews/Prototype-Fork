@@ -80,8 +80,10 @@ export const TUNING = {
   manualDrift: 1.0, // manual balance: how fast the pitch needle runs away
   manualControl: 3.2, // how hard up/down input fights the manual needle
   manualFlickWindow: 0.28, // max seconds between the two stick flicks (up-then-down = manual, down-then-up = nose)
-  lipAngle: 22, // LIP TRICK: approach must be within this many degrees of dead-on (90 deg to the coping) — off-axis arrivals grind the coping instead
+  lipAngle: 30, // LIP TRICK: approach must be within this many degrees of dead-on (90 deg to the coping) — off-axis arrivals grind the coping instead
   lipMaxTime: 2.5, // longest a lip stall holds before you drop back in
+  lipDrift: 0.8, // lip stall balance: how fast the needle runs away on its own
+  lipControl: 3.4, // how hard up/down input fights the lip needle
   spineDrift: 5, // hang time: how fast holding INTO the lip carries you across a spine/ridge (over the coping only)
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
@@ -183,8 +185,10 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   manualDrift: { min: 0.2, max: 3, step: 0.05 },
   manualControl: { min: 0.5, max: 8, step: 0.1 },
   manualFlickWindow: { min: 0.1, max: 0.6, step: 0.02 },
-  lipAngle: { min: 5, max: 45, step: 1 },
+  lipAngle: { min: 5, max: 60, step: 1 },
   lipMaxTime: { min: 0.5, max: 12, step: 0.25 },
+  lipDrift: { min: 0.1, max: 3, step: 0.05 },
+  lipControl: { min: 0.5, max: 8, step: 0.1 },
   spineDrift: { min: 0, max: 12, step: 0.5 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
@@ -341,8 +345,11 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   manualFlickWindow:
     'Max time between the two stick flicks that pop a manual. Finish the flick mid-air (within a beat of touchdown) and you LAND INTO the manual — the combo stays alive.',
   lipAngle:
-    'LIP TRICKS: climb the wall within this many degrees of DEAD-ON (square to the coping) holding Triangle and reaching the top stalls on the lip — any speed. Arrive more off-axis than this and Triangle grinds the coping instead. While stalled: balance with up/down (the vertical meter) — tip into the pipe and you drop back in keeping the trick; tip out the back and you bail; ollie out any time.',
+    'LIP TRICKS: reach the top of the pipe within this many degrees of DEAD-ON (square to the coping) with Triangle down and you stall on the lip — any speed, press it on the climb or around the lip. Arrive more off-axis than this and Triangle grinds the coping instead. Once stalled you can let go of Triangle: balance alone holds the trick.',
   lipMaxTime: 'Longest a lip stall holds before it auto-drops back into the pipe (keeping the trick).',
+  lipDrift:
+    'How fast the lip stall balance needle runs away on its own (fought with up/down on the stick — the vertical meter). Tip INTO the pipe = drop back in keeping the trick; tip out the BACK = bail onto the deck. Ollie out any time.',
+  lipControl: 'How hard up/down input fights the lip stall needle.',
   spineDrift:
     'SPINE TRANSFER: during hang time above the coping, hold the stick INTO/over the lip to carry across a spine or ridge — land the far side for a Spine Transfer. Higher = crosses faster. 0 = disabled.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
@@ -438,7 +445,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   {
     title: 'MANUAL & LIP',
-    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'lipAngle', 'lipMaxTime', 'spineDrift'],
+    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl', 'spineDrift'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },

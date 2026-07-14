@@ -887,14 +887,37 @@ export class Player {
         }
         break;
       }
-      case 'air':
+      case 'air': {
         this.runTime += dt;
-        if (!this.wallriding && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
+        // LIP CATCH (air) — THPS2 flow: Triangle around the lip means the
+        // STALL, not a 50-50. Cresting launches you into the hang a beat
+        // before the press usually arrives, so the press lands here airborne
+        // — and the rail snap below would steal the coping every time. While
+        // SQUARE over the pipe you crested with Triangle down, the coping is
+        // reserved for the stall: catch it falling through the lip band, and
+        // hold the rail snap off in the meantime. Off-axis hangs fall
+        // through to the snap and grind the coping as usual.
+        const lipHp =
+          this.freeSkate &&
+          this.hangPipe &&
+          this.lipCoolT <= 0 &&
+          (input.grindHeld || input.grindPressed) &&
+          Math.abs(this.hangPipe.crossCoord(this.pos.x, this.pos.z) - this.hangPipe.cross) <=
+            this.hangPipe.lipX + 0.6 &&
+          this.lipHeadOn(this.hangPipe)
+            ? this.hangPipe
+            : null;
+        if (lipHp && this.vVel <= 0 && Math.abs(this.pos.y - lipHp.lipY) < 0.9) {
+          this.enterLipStall(lipHp, !this.pipeHang);
+          break;
+        }
+        if (!this.wallriding && !lipHp && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
           // grabbed the rail
         } else {
           this.stepAir(dt, input, level);
         }
         break;
+      }
       case 'grind':
         this.runTime += dt;
         this.stepGrind(dt, input, level);
@@ -1143,8 +1166,8 @@ export class Player {
         Math.max(0, TUNING.balanceRampMax - 1),
         stallAge * TUNING.balanceRamp * 2,
       );
-      this.balance += Math.sign(this.balance || 1) * TUNING.manualDrift * (1 + lipRamp) * dt;
-      this.balance -= this.rawInput.moveY * TUNING.manualControl * dt;
+      this.balance += Math.sign(this.balance || 1) * TUNING.lipDrift * (1 + lipRamp) * dt;
+      this.balance -= this.rawInput.moveY * TUNING.lipControl * dt;
       if (this.uberTimer > 0) this.balance = 0;
       if (Math.abs(this.balance) >= 1) {
         this.balance = Math.sign(this.balance);
@@ -1164,7 +1187,10 @@ export class Player {
         this.comboTimer = CONST.comboWindow;
       }
       this.emitSparks(Math.random() < 0.3 ? 1 : 0, 0xffe08a, 0.6);
-      if (!input.grindHeld || input.jumpPressed || this.lipStallT <= 0) {
+      // The press got you ON the lip; BALANCE keeps you there (THPS2: no
+      // hold-to-maintain). You leave by ollieing out (X), tipping the needle
+      // (into the pipe = ride it out, out the back = bail), or timing out.
+      if (input.jumpPressed || this.lipStallT <= 0) {
         this.lipDrop(input.jumpPressed);
       }
       return;
@@ -2083,19 +2109,6 @@ export class Player {
           }
         }
       }
-      // DISASTER CATCH: descending past the lip line holding Triangle hooks
-      // the coping into a lip stall instead of dropping back in.
-      if (
-        this.pipeHang &&
-        this.hangPipe &&
-        this.vVel < 0 &&
-        this.rawInput.grindHeld &&
-        this.lipCoolT <= 0 &&
-        Math.abs(this.pos.y - this.hangPipe.lipY) < 0.5
-      ) {
-        this.enterLipStall(this.hangPipe, true);
-        return;
-      }
     }
 
     // Pancake slam is an ON-FOOT move (Circle+down from a walking jump). A
@@ -2660,6 +2673,12 @@ export class Player {
     this.vertAir = false;
     this.pipeHang = false;
     this.vertLatVel = 0;
+    // an air catch can arrive mid-grab or mid-spin — the stall absorbs both
+    this.grabPhase = 'none';
+    this.grabT = 0;
+    this.grabGraceTimer = 0;
+    this.grabSpinAngle = 0;
+    this.grabSpinTotal = 0;
     this.endManual();
     this.balance = 0; // needle: + tips INTO the pipe (forgiving), − out the back (bail)
     this.balanceCritT = 0;
