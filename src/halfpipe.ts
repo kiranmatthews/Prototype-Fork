@@ -103,6 +103,49 @@ export class Halfpipe {
     return this.axis === 'z' ? this.crossToU(x) : this.crossToU(z);
   }
 
+  // NEAREST point on the cross-section curve to a (crossWorld, y) sample — the
+  // exact parametric attach the ride physics glue to. Uses RADIAL projection on
+  // the wall arcs (a vertical projection degenerates on the near-vertical
+  // coping stretch) and vertical projection on the flat. `pen` is the signed
+  // penetration INTO the wall material (positive = below/inside the curve —
+  // tunnelled; negative = open air above it). Returns null when the sample is
+  // over the coping (above lip height on the wall side) — that's air over the
+  // lip, not wall.
+  project(crossWorld: number, y: number): { u: number; cross: number; y: number; pen: number } | null {
+    const c = crossWorld - this.cross;
+    const ac = Math.abs(c);
+    if (ac <= this.flatHalf) {
+      return { u: c, cross: crossWorld, y: this.yBottom, pen: this.yBottom - y };
+    }
+    if (ac > this.lipX + 0.05) return null; // beyond the coping line: behind the wall, not on it
+    const s = Math.sign(c);
+    // Wall arc: quarter circle centred at (±flatHalf, yBottom + R), radius R.
+    const vx = ac - this.flatHalf; // >= 0 toward the wall
+    const vy = y - (this.yBottom + this.radius);
+    if (vy > 0) return null; // above coping height: over the lip
+    const d = Math.hypot(vx, vy);
+    if (d < 1e-6) return null; // dead on the arc centre: no unique projection
+    const phi = Math.atan2(vx, -vy); // 0 at the arc's bottom, π/2 at the coping
+    const nx = vx / d;
+    const ny = vy / d;
+    return {
+      u: s * (this.flatHalf + this.radius * phi),
+      cross: this.cross + s * (this.flatHalf + this.radius * nx),
+      y: this.yBottom + this.radius + this.radius * ny,
+      pen: d - this.radius, // outside the circle = inside the wall wedge
+    };
+  }
+
+  // Cross-axis world coordinate of a position (the coordinate project() wants).
+  crossCoord(x: number, z: number): number {
+    return this.axis === 'z' ? x : z;
+  }
+
+  // Along-axis world coordinate; within [min(l0,l1), max(l0,l1)] = on the pipe.
+  alongCoord(x: number, z: number): number {
+    return this.axis === 'z' ? z : x;
+  }
+
   // Inside the pipe footprint (with a little slack at the ends)?
   contains(x: number, z: number): boolean {
     const lo = Math.min(this.l0, this.l1) - 0.5;

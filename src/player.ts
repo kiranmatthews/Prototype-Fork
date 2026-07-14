@@ -22,6 +22,7 @@ interface GroundHit {
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
+  pipeCross?: number; // analytic pipe hit: exact cross-axis coordinate of the surface point
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -182,6 +183,11 @@ export class Player {
   // trick-spin that then bails you on the drop-back-in). Deliberate spins off the
   // lip still work via the Square spin button.
   private pipeHang = false;
+  // Post-drop-in grace: after a pipe-hang landing, the stick is usually still
+  // held the way you were CLIMBING — which is now opposite travel. For this
+  // beat that stale hold must not read as a pull-back brake (the skateHalt
+  // stall) or carve you back up the face: the drop-in flows.
+  private pipeLandGraceT = 0;
   // THPS WALLRIDE: ollie into a wall HOLDING GRIND and stick to its face, riding
   // along it under gentle gravity; jump to kick off. Owns its own motion while
   // active (its own branch in stepAir).
@@ -466,6 +472,7 @@ export class Player {
     this.pipeFlipCd = 0;
     this.pipeHang = false;
     this.pipeRideT = 0;
+    this.pipeLandGraceT = 0;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -647,6 +654,7 @@ export class Player {
     this.wallCoolT = Math.max(0, this.wallCoolT - dt);
     this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
+    this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
@@ -1267,7 +1275,11 @@ export class Player {
           const fwd = dx * this.axisF.x + dz * this.axisF.z;
           const side = dx * this.axisF.z - dz * this.axisF.x;
           const ang = Math.atan2(side, fwd);
-          if (Math.abs(ang) > CONST.carveBrakeAngle) {
+          if (Math.abs(ang) > CONST.carveBrakeAngle && this.pipeLandGraceT > 0) {
+            // Fresh off a pipe drop-in: the stick is still held the way you were
+            // CLIMBING, which is now behind you. That's stale intent, not a
+            // brake — ignore it and let the transition carry the swing.
+          } else if (Math.abs(ang) > CONST.carveBrakeAngle) {
             // Pulling (nearly) opposite your travel = the brake: speed bleeds to
             // a FULL stop and then steps off at ~0. It EASES OUT near rest (rate
             // scales with speed) so it rolls smoothly to zero like the no-input
@@ -1540,7 +1552,41 @@ export class Player {
     // Follow the ground within a chunky snap window, otherwise we ran off an
     // edge and go airborne. Steep transitions (halfpipe walls, banks) get a
     // taller window both ways so fast climbs and descents stick to the surface.
-    const hit = this.queryGround(level);
+    // ANALYTIC PIPE ATTACH: riding a halfpipe, the body glues to the exact
+    // parametric curve instead of chasing raycasts — a down-ray runs parallel
+    // to the near-vertical top and flickers/misses (the stutter climbing the
+    // wall), and the eased normal lagged the curve. Attached, position and
+    // normal are exact every frame: seamless from flat to coping. The attach
+    // hands back to the normal path past the coping (the launch logic) or off
+    // the pipe's ends.
+    let hit: GroundHit | null = null;
+    const ridingPipe = this.grounded && this.groundHit ? this.groundHit.halfpipe : undefined;
+    if (ridingPipe) {
+      const along = ridingPipe.alongCoord(this.pos.x, this.pos.z);
+      const lo = Math.min(ridingPipe.l0, ridingPipe.l1) - 0.3;
+      const hi = Math.max(ridingPipe.l0, ridingPipe.l1) + 0.3;
+      if (along >= lo && along <= hi) {
+        const pr = ridingPipe.project(
+          ridingPipe.crossCoord(this.pos.x, this.pos.z),
+          this.pos.y,
+        );
+        // |pen| window ≈ the old wallStick: near or into the surface = attached
+        if (pr && Math.abs(pr.u) < ridingPipe.uLip - 0.02 && pr.pen > -TUNING.wallStick) {
+          if (ridingPipe.axis === 'z') this.pos.x = pr.cross;
+          else this.pos.z = pr.cross;
+          // exact surface point; the y-window below passes trivially (dy = 0)
+          hit = {
+            y: pr.y,
+            normal: ridingPipe.normalAt(pr.u, new THREE.Vector3()),
+            name: 'halfpipe',
+            halfpipe: ridingPipe,
+          };
+          // the analytic normal IS smooth — track it exactly, no easing lag
+          this.rideNormal.copy(hit.normal);
+        }
+      }
+    }
+    if (!hit) hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
@@ -1875,7 +1921,22 @@ export class Player {
     if (this.slideAirLat !== 0) this.pos.addScaledVector(this.axisL, this.slideAirLat * dt); // slide-jump cross-heading launch
     this.pos.y += this.vVel * dt;
 
-    const hit = this.queryGround(level);
+    let hit = this.queryGround(level);
+    // ANALYTIC PIPE CATCH: crossed a halfpipe's cross-section curve this step
+    // (jumped/fell INTO the transition — rising or falling, any speed). Land
+    // exactly ON the curve: position snaps to the surface point and the landing
+    // below runs unconditionally (the energy projection converts the flight
+    // into riding the wall, THPS-style). This replaces the raycast for pipe
+    // walls — a down-ray is parallel to a near-vertical face and tunnels.
+    const pipeCatch = this.wallriding ? null : this.pipeCrossHit(level);
+    if (pipeCatch) {
+      const hp = pipeCatch.halfpipe!;
+      if (hp.axis === 'z') this.pos.x = pipeCatch.pipeCross!;
+      else this.pos.z = pipeCatch.pipeCross!;
+      this.pos.y = pipeCatch.y;
+      hit = pipeCatch;
+      this.pipeRideT = 0.2; // landing on a pipe: the next crest is a pipe hang
+    }
     this.groundHit = hit;
 
     // Ceiling: rising into the UNDERSIDE of a deck or ramp belly bonks
@@ -1908,9 +1969,10 @@ export class Player {
           : 0.35;
     if (
       hit &&
-      this.vVel <= 0 &&
-      this.pos.y <= hit.y + 0.05 &&
-      (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - landGive)
+      (pipeCatch !== null || // the analytic catch already resolved the contact exactly
+        (this.vVel <= 0 &&
+          this.pos.y <= hit.y + 0.05 &&
+          (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - landGive)))
     ) {
       this.pos.y = hit.y;
       this.state = 'ride';
@@ -1921,6 +1983,9 @@ export class Player {
       this.slideAirLat = 0; // slide-jump arc is done
       this.slideJumpAir = false;
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
+      const wasPipeHang = this.pipeHang; // (cleared next step; needed for drop-in rules below)
+      const preFx = this.axisF.x; // heading BEFORE the landing projection — a
+      const preFz = this.axisF.z; // reversal against it = landed riding fakie
       // Landing out of a lateral hang: keep the sideways momentum so a gap
       // transfer flows on the far side instead of stalling. Seed it as speed
       // along the coping BEFORE the projection below folds in any fall energy.
@@ -1965,6 +2030,19 @@ export class Player {
         }
       }
       this.vVel = 0;
+      // FAKIE DROP-IN (THPS rules): a pipe-hang drop that lands travelling
+      // roughly OPPOSITE the way it took off has effectively switched stance —
+      // going up forward and coming down IS riding away fakie. Flip the stance
+      // and absorb the 180 into the facing yaw so the body pose is continuous:
+      // no slow turn-around animation, no phantom "stance switch" beat.
+      if (wasPipeHang && this.axisF.x * preFx + this.axisF.z * preFz < -0.2) {
+        const oldStance = this.stance;
+        this.stance = -this.stance as 1 | -1;
+        this.visualYaw = wrapAngle(this.visualYaw + oldStance * Math.PI * this.sidePose);
+      }
+      // And for a beat, the stick you were still holding to CLIMB (now opposite
+      // travel) must not read as a pull-back brake — the drop-in flows.
+      if (wasPipeHang) this.pipeLandGraceT = 0.4;
       // A slide taken from your feet lands back ON your feet — clamp the
       // carried burst at the touchdown instant (not next frame) so nothing
       // downstream can read the unclamped speed and flip out the board.
@@ -2063,7 +2141,10 @@ export class Player {
         this.grabSpinAngle = 0;
         this.grabSpinTotal = 0;
       }
-      if (Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
+      // A pipe drop-in doesn't announce itself — the wheels just meet the
+      // transition and roll (THPS: the landing IS the flow). Ordinary fast
+      // landings keep the transition sound.
+      if (!wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
       // Safe landing = the combo is over: bank it on the spot.
       this.bankCombo();
       this.landingScoring = false;
@@ -2638,7 +2719,24 @@ export class Player {
         // needed. HOLD left/right (even the direction you carved up with) to keep
         // rotating; release to snap to the nearest 180 and land. A pipe hang never
         // bails on this, so it's a free, grab-less rotation you control by holding.
-        if (this.vertAir && !this.slamActive && Math.abs(this.rawInput.moveX) > 0.3) {
+        // THPS AUTO-CORRECT: in the FINAL beat of a pipe-hang descent the
+        // rotation COMMITS — it completes to the nearest 180 before the wheels
+        // touch, at whatever rate the time left demands (held stick included).
+        // Where you visibly rotate to IS where you land: no 15°-off touchdown
+        // that then re-snaps on the ground.
+        const committing = (() => {
+          if (!this.pipeHang || this.vVel >= 0 || this.grabSpinAngle === 0) return false;
+          const h = this.pos.y - this.vertAnchor.y; // height above the take-off line
+          return h / Math.max(1, -this.vVel) < 0.25; // ≈ time to touchdown
+        })();
+        if (committing) {
+          const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
+          const d = target - this.grabSpinAngle;
+          const tLeft = Math.max(0.06, (this.pos.y - this.vertAnchor.y) / Math.max(1, -this.vVel));
+          const rate = Math.max(CONST.grabSnapRate, Math.abs(d) / (tLeft * 0.7));
+          const step = rate * dt;
+          this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
+        } else if (this.vertAir && !this.slamActive && Math.abs(this.rawInput.moveX) > 0.3) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
@@ -3459,6 +3557,37 @@ export class Player {
   }
 
   // ------------------------------------------------------------------ misc --
+
+  // ANALYTIC halfpipe wall crossing for this step: did the body pass through
+  // the pipe's cross-section curve between prevPos and pos? The down-raycast
+  // can't see a near-vertical wall (the ray runs parallel to the face) and a
+  // fast step can clear the ribbon's whole projected footprint — this test is
+  // exact, so a jump INTO the transition lands ON it instead of tunnelling
+  // through into the void. Only fires on an inside→wall crossing: approaching
+  // from behind/under the shell (where there's no solid) never teleports you up.
+  private pipeCrossHit(level: Level): GroundHit | null {
+    for (const hp of level.halfpipes) {
+      const along = hp.alongCoord(this.pos.x, this.pos.z);
+      const lo = Math.min(hp.l0, hp.l1) - 0.5;
+      const hi = Math.max(hp.l0, hp.l1) + 0.5;
+      if (along < lo || along > hi) continue;
+      const now = hp.project(hp.crossCoord(this.pos.x, this.pos.z), this.pos.y);
+      if (!now || now.pen <= 0) continue; // in open air above the curve
+      if (now.pen > hp.radius * 0.8) continue; // buried deep: not a this-step crossing
+      const prev = hp.project(hp.crossCoord(this.prevPos.x, this.prevPos.z), this.prevPos.y);
+      if (prev && prev.pen > 0.08) continue; // was already inside the material: came from behind
+      const normal = hp.normalAt(now.u, new THREE.Vector3());
+      return {
+        y: now.y,
+        normal,
+        name: 'halfpipe',
+        halfpipe: hp,
+        // the exact surface point to land at (cross axis resolved below)
+        pipeCross: now.cross,
+      };
+    }
+    return null;
+  }
 
   private queryGround(level: Level, ox = 0, oz = 0): GroundHit | null {
     this.raycaster.set(new THREE.Vector3(this.pos.x + ox, this.pos.y + 2.5, this.pos.z + oz), DOWN);
