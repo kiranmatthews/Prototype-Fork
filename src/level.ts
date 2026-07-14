@@ -143,6 +143,7 @@ export const LEVEL_NAMES = [
   'Random',
   'Boulder Dash',
   'The Flats',
+  'Half Pipes',
 ];
 
 export class Level {
@@ -593,6 +594,7 @@ export class Level {
     else if (courseId === 2) this.buildRandom();
     else if (courseId === 3) this.buildBoulderDash();
     else if (courseId === 4) this.buildFlats();
+    else if (courseId === 5) this.buildHalfpipePark();
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
     this.buildAmbient(); // theme is set by the builder above
@@ -4117,6 +4119,81 @@ export class Level {
       this.flowers(ix - 1.5, 0, iz + 2.2);
       this.planter(ix + 4, 0, iz - 1);
     }
+  }
+
+  // HALF PIPES: a flats-style blacktop with nothing but transition. Two
+  // halfpipes sit right up against each other (a shared coping ridge — a "W"
+  // you can pump one side and drop the other), then a neighbouring pair rotated
+  // 90° so you can transfer between the two orientations.
+  private buildHalfpipePark(): void {
+    const ground = new THREE.MeshLambertMaterial({ color: 0xffffff }); // full-colour asphalt
+    const matPipe = new THREE.MeshLambertMaterial({ color: 0xaab4ba }); // skatepark concrete
+    this.killY = -60;
+    this.finishZ = -1e9; // no finish: an endless play park
+    this.endWallZ = -2100;
+    this.theme = {
+      skyTop: '#159ecd',
+      skyBottom: '#c9f0e4',
+      sunColorHex: '#fff8dc',
+      sunU: 0.68,
+      sunV: 0.14,
+      stars: false,
+      fog: 0xbee8dd,
+      fogNear: 80,
+      fogFar: 340,
+      hemiSky: 0xeafcff,
+      hemiGround: 0x94a294,
+      hemiI: 1.2,
+      sunColor: 0xfff6dc,
+      sunI: 1.55,
+      particleColor: 0xffffff,
+      particleWind: [0.5, -0.3, 0.2],
+    };
+    this.spawnPos.set(0, 0.1, 32);
+    this.currentSpawn.copy(this.spawnPos);
+
+    // The whole lot is one flat slab at y=0; the pipe troughs ARE this floor and
+    // the transition walls climb up out of it.
+    this.slab('park floor', 60, -120, 0, 130, ground, false, 0, 'asphalt');
+    this.wall(0, 58, 130, 4, 0, 6); // perimeter
+    this.wall(0, -118, 130, 4, 0, 6);
+    this.wall(64, -30, 4, 180, 0, 6);
+    this.wall(-64, -30, 4, 180, 0, 6);
+
+    const F = 3;
+    const R = 6; // lipX = 9, coping at y = 6, each pipe 18 wide
+    const lipX = F + R;
+    const lipY = R;
+    const addPipe = (l0: number, l1: number, cross: number, axis: 'z' | 'x'): Halfpipe => {
+      const hp = new Halfpipe(l0, l1, 0, F, R, matPipe, cross, axis);
+      this.halfpipes.push(hp);
+      this.root.add(hp.object);
+      for (const w of hp.walls) this.groundMeshes.push(w); // SOLID transitions
+      return hp;
+    };
+    const V = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
+    const copingRail = (a: THREE.Vector3, b: THREE.Vector3): void => {
+      const r = new Rail([a, b]);
+      this.rails.push(r);
+      this.root.add(r.object);
+    };
+
+    // --- PAIR 1: two pipes running along Z, right up against each other -------
+    // A centred at x -9, B at x +9 → their inner copings meet at x 0 (a shared
+    // ridge). Troughs at x -9 and x +9, length z 20 → -20.
+    addPipe(20, -20, -9, 'z');
+    addPipe(20, -20, 9, 'z');
+    for (const x of [-9 - lipX, 0, 9 + lipX]) copingRail(V(x, lipY + 0.05, 20), V(x, lipY + 0.05, -20));
+    // fruit lines down each trough, a crystal on the shared ridge
+    for (const cx of [-9, 9]) for (let z = 14; z >= -14; z -= 7) this.pickup(cx, 0.4, z);
+    this.crystal(0, lipY + 0.6, 0);
+
+    // --- PAIR 2: two more pipes rotated 90° (running along X), neighbouring ----
+    // C centred at z -38, D at z -56 → shared ridge at z -47. Length x -18 → 18.
+    addPipe(18, -18, -38, 'x');
+    addPipe(18, -18, -56, 'x');
+    for (const z of [-38 - lipX, -47, -56 + lipX]) copingRail(V(-18, lipY + 0.05, z), V(18, lipY + 0.05, z));
+    for (const cz of [-38, -56]) for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
   }
 
   private buildBoulderDash(): void {

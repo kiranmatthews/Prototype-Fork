@@ -3441,7 +3441,7 @@ export class Player {
     // smooth across the transition and always oriented up/inward) instead of
     // the faceted triangle normal — no seams, no wrong-way winding.
     const normal = hp
-      ? hp.normalAt(hp.xToU(hit.point.x), new THREE.Vector3())
+      ? hp.normalAt(hp.pointToU(hit.point.x, hit.point.z), new THREE.Vector3())
       : hit.face!.normal.clone().transformDirection(hit.object.matrixWorld);
     return {
       y: hit.point.y,
