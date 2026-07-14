@@ -864,19 +864,20 @@ export class Player {
         break;
       case 'ride': {
         this.runTime += dt;
-        // Triangle on a halfpipe TRANSITION means the LIP TRICK, not a rail
-        // snap — riding up the face, the only rail in reach is the coping
-        // above you, and snapping it would steal the stall (and yank climbs
-        // onto the lip). On the flat, decks, and everywhere else Triangle
-        // still grabs rails as usual. A live stall also owns the button.
-        const onWall =
-          this.grounded &&
-          this.groundHit !== null &&
-          this.groundHit.halfpipe !== undefined &&
-          this.groundHit.normal.y < 0.9;
+        // Triangle on a halfpipe TRANSITION splits by approach angle: SQUARE
+        // to the wall (within lipAngle of 90°) it means the LIP STALL, so the
+        // rail snap must not steal the coping mid-climb. OFF-AXIS, the coping
+        // is a rail like any other — Triangle grinds it. On the flat, decks,
+        // and everywhere else Triangle always grabs rails as usual. A live
+        // stall also owns the button.
+        const wallPipe =
+          this.grounded && this.groundHit !== null && this.groundHit.normal.y < 0.9
+            ? this.groundHit.halfpipe
+            : undefined;
+        const stallApproach = wallPipe !== undefined && this.lipHeadOn(wallPipe);
         if (
           this.lipStallT <= 0 &&
-          !onWall &&
+          !stallApproach &&
           (input.grindPressed || input.grindHeld) &&
           this.tryGrind()
         ) {
@@ -1123,13 +1124,39 @@ export class Player {
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
-    // LIP STALL owns the whole frame: parked on the coping, points ticking,
-    // combo alive. Release Triangle (or jump, or the timer) drops back in.
+    // LIP STALL owns the whole frame: parked stationary on the coping,
+    // BALANCING — the needle (up/down on the stick, the vertical meter) tips
+    // between the pipe below and the deck out back. Points tick, combo alive.
+    //  - tip INTO the pipe (needle pegs low)  -> drop back in, trick KEPT
+    //  - tip OUT THE BACK (needle pegs high)  -> the honest bail
+    //  - ollie out any time                    -> an air; land it and it banks
+    //  - release Triangle / timer up           -> drop back in, trick kept
     if (this.lipStallT > 0) {
       this.lipStallT -= dt;
       this.runTime += dt;
       this.speed = 0;
       this.vVel = 0;
+      // needle: + = tipping into the pipe (drifts there naturally), − = deck.
+      // Difficulty ramps the longer you hold the stall.
+      const stallAge = TUNING.lipMaxTime - this.lipStallT;
+      const lipRamp = Math.min(
+        Math.max(0, TUNING.balanceRampMax - 1),
+        stallAge * TUNING.balanceRamp * 2,
+      );
+      this.balance += Math.sign(this.balance || 1) * TUNING.manualDrift * (1 + lipRamp) * dt;
+      this.balance -= this.rawInput.moveY * TUNING.manualControl * dt;
+      if (this.uberTimer > 0) this.balance = 0;
+      if (Math.abs(this.balance) >= 1) {
+        this.balance = Math.sign(this.balance);
+        this.balanceCritT += dt;
+        if (this.balanceCritT > TUNING.bailGrace) {
+          if (this.balance > 0) this.lipDrop(false); // fell into the pipe: ride it out
+          else this.lipBail(); // fell out the back: eat the deck
+          return;
+        }
+      } else {
+        this.balanceCritT = 0;
+      }
       this.lipTickT += dt;
       while (this.lipTickT >= 0.25) {
         this.lipTickT -= 0.25;
@@ -1736,6 +1763,21 @@ export class Player {
     // the pipe's ends.
     let hit: GroundHit | null = null;
     const ridingPipe = this.grounded && this.groundHit ? this.groundHit.halfpipe : undefined;
+    // LIP STALL CATCH: climbed SQUARE to the wall (within lipAngle of head-on),
+    // holding Triangle, and actually REACHED the coping — park on the lip, at
+    // any speed. Checked before the attach/launch so a fast climb can't blow
+    // straight past the catch zone into a hang.
+    if (
+      ridingPipe &&
+      this.freeSkate &&
+      this.lipCoolT <= 0 &&
+      this.rawInput.grindHeld &&
+      this.pos.y >= ridingPipe.lipY - 0.9 &&
+      this.lipHeadOn(ridingPipe)
+    ) {
+      this.enterLipStall(ridingPipe);
+      return;
+    }
     if (ridingPipe) {
       const along = ridingPipe.alongCoord(this.pos.x, this.pos.z);
       const lo = Math.min(ridingPipe.l0, ridingPipe.l1) - 0.3;
@@ -1762,20 +1804,6 @@ export class Player {
       }
     }
     if (!hit) hit = this.queryGround(level);
-    // LIP STALL CATCH: reached the coping SLOW while holding Triangle — park
-    // on the lip instead of cresting. (Fast arrivals still launch into hang.)
-    if (
-      hit &&
-      hit.halfpipe &&
-      this.freeSkate &&
-      this.lipCoolT <= 0 &&
-      this.rawInput.grindHeld &&
-      this.pos.y >= hit.halfpipe.lipY - 0.6 &&
-      Math.abs(this.speed) <= TUNING.lipCatchSpeed
-    ) {
-      this.enterLipStall(hit.halfpipe);
-      return;
-    }
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
@@ -1800,6 +1828,14 @@ export class Player {
       this.rideNormal.y <= 0.25 && // at the near-vertical coping stretch
       this.pos.y > hpNow.lipY - 1.2 // and up near the lip
     ) {
+      // LIP STALL: reaching the top IS this launch condition — so the stall
+      // check lives here, ahead of the pop. Holding Triangle, SQUARE to the
+      // wall (within lipAngle of 90°): park on the coping instead of hanging.
+      // Speed doesn't matter — only that you actually made it up here.
+      if (this.lipCoolT <= 0 && this.rawInput.grindHeld && this.lipHeadOn(hpNow)) {
+        this.enterLipStall(hpNow);
+        return;
+      }
       this.state = 'air';
       this.grounded = false;
       this.groundHit = hit;
@@ -2589,28 +2625,33 @@ export class Player {
   // the tail, needle sinks to the bottom; push UP to level out). null = hidden.
   get balanceMeter(): { mode: 'grind' | 'manual'; bal: number; crit: boolean } | null {
     if (this.state === 'grind') return { mode: 'grind', bal: this.balance, crit: this.balanceCritT > 0 };
-    if (this.manualing !== 0) return { mode: 'manual', bal: this.balance, crit: this.balanceCritT > 0 };
+    if (this.manualing !== 0 || this.lipStallT > 0)
+      return { mode: 'manual', bal: this.balance, crit: this.balanceCritT > 0 };
     return null;
   }
 
   // --------------------------------------------------------------- lip stall --
 
-  // Park on the coping. Named by how you arrived: head-on = Rock to Fakie,
-  // angled = Axle Stall, caught out of the air = Disaster.
+  // Was the approach square to the wall? The lip trick wants a (near) 90°
+  // hit — within lipAngle of dead-on. Off-axis arrivals grind the coping.
+  private lipHeadOn(hp: Halfpipe): boolean {
+    const along = hp.axis === 'z' ? this.axisF.z : this.axisF.x;
+    return Math.abs(along) <= Math.sin(THREE.MathUtils.degToRad(TUNING.lipAngle));
+  }
+
+  // Park on the coping, BALANCING: the needle (shared with the manual meter)
+  // tips between the pipe below and the deck behind. Named by the entry door.
   private enterLipStall(hp: Halfpipe, fromAir = false): void {
     const pr = hp.project(hp.crossCoord(this.pos.x, this.pos.z), this.pos.y);
-    this.lipSide = Math.sign(pr ? pr.u : 1) || 1;
+    this.lipSide = Math.sign(pr ? pr.u : hp.crossCoord(this.pos.x, this.pos.z) - hp.cross) || 1;
     this.lipPipe = hp;
     this.lipStallT = TUNING.lipMaxTime;
     this.lipTickT = 0;
-    // pin exactly on the lip point (cross stays wherever along the pipe you are)
+    // pin exactly on the lip point (stay wherever you are ALONG the pipe)
     const lipCross = hp.cross + this.lipSide * hp.lipX;
     if (hp.axis === 'z') this.pos.x = lipCross;
     else this.pos.z = lipCross;
     this.pos.y = hp.lipY;
-    // entry angle picks the trick name: along-the-coping component of travel
-    const alongDir = hp.axis === 'z' ? Math.abs(this.axisF.z) : Math.abs(this.axisF.x);
-    const name = fromAir ? 'Disaster' : alongDir > 0.45 ? 'Axle Stall' : 'Rock to Fakie';
     this.state = 'ride';
     this.grounded = true;
     this.surfaceName = 'coping';
@@ -2620,11 +2661,35 @@ export class Player {
     this.pipeHang = false;
     this.vertLatVel = 0;
     this.endManual();
-    this.balance = 0;
+    this.balance = 0; // needle: + tips INTO the pipe (forgiving), − out the back (bail)
+    this.balanceCritT = 0;
     this.rideNormal.set(0, 1, 0);
-    this.score(CONST.ptsLip, name);
+    this.score(CONST.ptsLip, fromAir ? 'Disaster' : 'Axle Stall');
     sfx.play('railLand', 0.7);
     this.emitSparks(5, 0xffe08a, 1.2);
+  }
+
+  // Tipped out the BACK of the coping: the honest lip bail — ejected onto the
+  // deck side, eating it wherever you come down.
+  private lipBail(): void {
+    const hp = this.lipPipe!;
+    const out = this.lipSide; // away from the pipe centre
+    if (hp.axis === 'z') {
+      this.pos.x += out * 0.7;
+      this.axisF.set(out, 0, 0);
+    } else {
+      this.pos.z += out * 0.7;
+      this.axisF.set(0, 0, out);
+    }
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.lipStallT = 0;
+    this.lipPipe = null;
+    this.lipCoolT = 0.5;
+    this.state = 'air';
+    this.grounded = false;
+    this.bail(); // wipes the combo + flops (also zeroes velocity, so push after)
+    this.speed = 2;
+    this.vVel = 0.5;
   }
 
   // Drop back into the pipe — travel reverses vs the climb, so it's a fakie:
@@ -2810,7 +2875,10 @@ export class Player {
   // ----------------------------------------------------------------- grind --
 
   private tryGrind(): boolean {
-    if (this.regrindCd > 0 || !this.railCand) return false;
+    // A flopped bail can't grab a rail — the lip bail ejects you right over
+    // the coping with Triangle still held, and snapping it would turn the
+    // punishment into a free 50-50.
+    if (this.regrindCd > 0 || this.bailDownT > 0 || !this.railCand) return false;
     // railCand was sampled at the START of this step; re-close on the CURRENT
     // position so a fast step snaps onto the point actually under our feet,
     // not where we were 1-2 units ago.
