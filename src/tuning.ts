@@ -19,12 +19,12 @@ export const TUNING = {
   slopeBoost: 38, // downhill acceleration, scaled by sin(slope along travel)
   uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
   pipePump: 1.5, // crouch-pump gain: X held on ground too steep to stand
-  pipeGravity: 42, // HALFPIPE: symmetric pendulum gravity on the transition walls — the punch of the wall-to-wall swing (both ways, so it conserves energy)
-  pipeCarve: 26, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
-  pipePumpGain: 42, // HALFPIPE: EXTRA speed added per second holding X up a wall — the hard pump on top of the carve, to reach the coping
+  pipeGravity: 34, // HALFPIPE: symmetric pendulum gravity on the transition walls — matches riseGravity so wall climbs decelerate like jumps do (reads physically consistent)
+  pipeCarve: 16, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
+  pipePumpGain: 24, // HALFPIPE: EXTRA speed added per second holding X up a wall — the THPS skill loop: a first swing barely clears the lip, each well-timed pump grows the air toward the cap
   pipeFriction: 0.1, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
-  pipePop: 10, // HALFPIPE: extra vertical launch popped over the coping into the hang
-  pipeAirGravity: 28, // HALFPIPE: SYMMETRIC gravity for the air above the coping (same up + down) so you drop back at the speed you left — no asymmetric-fall speed surge that pings you off on landing. Lower = floatier hang.
+  pipePop: 6, // HALFPIPE: extra vertical launch popped over the coping into the hang (the earned climb speed dominates; this is just the over-the-lip garnish)
+  pipeAirGravity: 33, // HALFPIPE: SYMMETRIC gravity for the air above the coping (same up + down) so you drop back at the speed you left — matches riseGravity so hangs feel like the rest of the game. Lower = floatier.
   pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
   footGrip: 0.3, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
   steepStand: 0.76, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
@@ -48,7 +48,7 @@ export const TUNING = {
   brakeLockTime: 0.6, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
   brakeLockRamp: 0.55, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
-  grabSpinRate: 7.5, // rad/s of the directional grab-spin (left arrow = spin left)
+  grabSpinRate: 9, // rad/s of the directional grab-spin (~515°/s — 540s reachable on medium airs; the pre-land auto-correct keeps landings clean)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
   spinTolerance: 10, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
