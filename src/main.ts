@@ -252,7 +252,6 @@ function applyTheme(): void {
 // crushing to a foreshortened sliver at the horizon.
 const CAM_FOV = 62;
 const BOULDER_FOV = 27;
-const BRIDGE_FOV = 40; // Sky Bridge: telephoto, cramped frame
 const camera = new THREE.PerspectiveCamera(CAM_FOV, 1, 0.1, 400);
 
 function resize(): void {
@@ -351,7 +350,6 @@ const lookPoint = new THREE.Vector3();
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
-let bridgeF = 0; // eases to 1 on the Sky Bridge: tight-FOV, close over-the-shoulder frame
 let prevPlayerZ = 0;
 
 function updateCamera(dt: number): void {
@@ -372,11 +370,7 @@ function updateCamera(dt: number): void {
   // hero HIGH up the screen, well off centre, with all the lead room below him
   // for the crates/gaps rushing up.
   boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
-  // Sky Bridge twist: a long telephoto lens (tight FOV) crushes the depth so the
-  // narrow deck reads flat and cramped, hiding what's coming.
-  bridgeF += ((level.narrowCam ? 1 : 0) - bridgeF) * Math.min(1, 3 * dt);
-  const baseFov = THREE.MathUtils.lerp(CAM_FOV, BRIDGE_FOV, bridgeF);
-  const targetFov = THREE.MathUtils.lerp(baseFov, BOULDER_FOV, boulderF);
+  const targetFov = THREE.MathUtils.lerp(CAM_FOV, BOULDER_FOV, boulderF);
   if (Math.abs(camera.fov - targetFov) > 0.005) {
     camera.fov = targetFov;
     camera.updateProjectionMatrix();
@@ -388,9 +382,9 @@ function updateCamera(dt: number): void {
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 18.8 + bridgeF * 3.2;
+  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 18.8;
   const height =
-    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 1.7 + bridgeF * 0.9;
+    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 1.7;
   camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
   // Snap after respawn teleports; damp otherwise.

@@ -205,7 +205,6 @@ export class Level {
   movers: Mover[] = [];
   crumbles: Crumble[] = [];
   ropes: SkyRope[] = [];
-  narrowCam = false; // tight-FOV over-the-shoulder framing (the Sky Bridge twist)
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
@@ -4358,13 +4357,13 @@ export class Level {
     for (const cz of [-38, -56]) for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
   }
 
-  // SKY BRIDGE: a long, narrow rope-and-plank bridge strung across an open sky.
-  // Precision platforming on a cramped tight-FOV frame — slick planks, planks
-  // that drop the instant you land (or a beat later), patrolling foes, and side
-  // ropes you grind across gaps that sag, wobble, and snap if you dawdle. One
-  // misstep is a long way down.
+  // SKY BRIDGE: a long, narrow plank bridge strung across an open sky with rope
+  // handrails running BOTH sides most of the way. Precision platforming — slick
+  // planks, planks that drop the instant you land (or a beat later), patrolling
+  // foes — and the twist: those side ropes are grindable, but they sag, wobble,
+  // and snap after a few seconds, so grinding the rail is a gamble. One misstep
+  // is a long way down.
   private buildSkyBridge(): void {
-    this.narrowCam = true;
     this.killY = -22; // off the bridge = a fatal drop into the clouds
     this.finishZ = -1e9;
     this.endWallZ = -400;
@@ -4434,13 +4433,13 @@ export class Level {
     breakSoon(-55); // stand a beat, then it drops
     breakSoon(-58.5);
 
-    // --- section D: grind a side rope across the void -----------------------
+    // --- section D: stepping-stone hops (grind the side ropes for a fast line)
     plank(-63);
-    // no deck from -66..-78: two side ropes span the gap. Jump on, grind across,
-    // hop off before it snaps.
-    for (const rx of [-1.1, 1.1]) this.skyRope(rx, -65, -79, 0.95, 3.6, 1.3, 4);
-    plank(-82, 3, false, 4); // landing deck after the ropes
-    this.pickup(0, 1.2, -82);
+    plank(-68, 1.6);
+    plank(-73, 1.6);
+    plank(-78, 1.6);
+    plank(-82, 3, false, 4); // landing deck
+    this.pickup(0, 1.2, -73);
     this.checkpoint(0, -82);
 
     // --- section E: everything at once --------------------------------------
@@ -4450,13 +4449,28 @@ export class Level {
     this.enemy(-2, 2, 0, -96, 4);
     breakSoon(-101);
     plank(-105, 2, true);
-    // final rope to the goal deck
-    for (const rx of [-1.1, 1.1]) this.skyRope(rx, -108, -120, 0.95, 3.2, 1.4, 4);
+    plank(-110, 1.6);
+    breakSoon(-115);
+    plank(-120, 1.6);
 
     // --- goal deck ----------------------------------------------------------
     plank(-125, 8, false, 7);
     this.pickup(0, 1.2, -125);
     this.crystal(0, 0.6, -125);
+
+    // --- SIDE ROPES: grindable handrails running the whole span, both sides.
+    // Segmented so each snaps on its own; they sag + wobble under a grinder and
+    // break after a few seconds — the safe-looking rail is a gamble.
+    const ropeY = 1.0;
+    const ropeX = W / 2 + 0.5; // just outside the deck edge
+    // Longer segments (~24u) so a grinder is on ONE rope long enough for the
+    // ~3s snap to bite — linger and it drops you; zip across fast and you make it.
+    const zEdges = [-2, -26, -50, -74, -98, -122];
+    for (let s = 0; s < zEdges.length - 1; s++) {
+      for (const rx of [-ropeX, ropeX]) {
+        this.skyRope(rx, zEdges[s], zEdges[s + 1], ropeY, 3.0, 1.15, 4);
+      }
+    }
   }
 
   private buildBoulderDash(): void {
