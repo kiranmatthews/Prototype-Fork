@@ -191,6 +191,7 @@ export class Player {
   private wallSpeed = 0; // along-wall speed (heading held in axisF)
   private wallrideT = 0; // remaining ride time
   private wallCoolT = 0; // brief no-restick window after leaving a wall
+  private wallrideLatched = false; // one wallride per air-time: blocks a new one until you touch ground or a rail
   private wallridePose = 0; // 0..1 visual tilt onto the wall
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
@@ -474,6 +475,7 @@ export class Player {
     this.coyoteTimer = 0;
     this.wallriding = false;
     this.wallCoolT = 0;
+    this.wallrideLatched = false;
     this.wallridePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
@@ -841,6 +843,10 @@ export class Player {
       }
       if (this.pos.y < level.killY) this.die();
     }
+
+    // Re-arm the wallride once you've touched the ground or caught a rail grind
+    // (you get one wallride per air-time — no wall-to-wall chaining).
+    if (this.grounded || this.state === 'grind') this.wallrideLatched = false;
 
     this.syncVisual(input, dt);
   }
@@ -3217,6 +3223,7 @@ export class Player {
     if (
       this.state !== 'air' ||
       this.wallCoolT > 0 ||
+      this.wallrideLatched || // already used a wallride this air-time — land or grind to re-arm
       this.vertAir ||
       this.slamActive ||
       this.grabbing ||
@@ -3242,12 +3249,6 @@ export class Player {
     const into = alongZ ? -vx * nx : -vz * nz; // + = flying toward the face
     const approach = (Math.atan2(Math.abs(into), Math.max(0.001, along)) * 180) / Math.PI;
     if (approach > TUNING.wallrideMaxAngle) return false;
-    // HOLD TOWARD THE WALL: you must be STEERING into the face (Triangle is
-    // already held above) — pinning yourself to it, not just brushing past.
-    const inX = this.rawInput.moveX;
-    const inZ = -this.rawInput.moveY; // stick → world dir (fixed camera)
-    const inMag = Math.hypot(inX, inZ);
-    if (inMag < 0.3 || -(inX * nx + inZ * nz) / inMag < CONST.wallrideHoldDot) return false;
 
     if (alongZ) {
       this.wallNormal.set(nx, 0, 0);
@@ -3265,6 +3266,7 @@ export class Player {
     this.speed = hspeed;
     this.wallBox = w;
     this.wallriding = true;
+    this.wallrideLatched = true; // no second wallride until you land or grind
     this.wallrideT = TUNING.wallrideMaxTime;
     this.wallTickT = 0;
     this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
@@ -3344,7 +3346,9 @@ export class Player {
       return;
     }
 
-    if (this.wallrideT <= 0 || this.wallSpeed < 1 || off || !input.grindHeld) {
+    // Ends only when you ollie off (handled above), run out of air-time, stall,
+    // or run off the wall — NOT when you let go of grind.
+    if (this.wallrideT <= 0 || this.wallSpeed < 1 || off) {
       this.wallriding = false;
       this.wallCoolT = 0.35;
       this.state = 'air';
