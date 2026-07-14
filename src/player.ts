@@ -192,6 +192,7 @@ export class Player {
   private wallrideT = 0; // remaining ride time
   private wallCoolT = 0; // brief no-restick window after leaving a wall
   private wallrideLatched = false; // one wallride per air-time: blocks a new one until you touch ground or a rail
+  private wallChargeT = 0; // how long X has been PUMPED on the wall — release to spring off, bigger with more charge
   private wallridePose = 0; // 0..1 visual tilt onto the wall
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
@@ -476,6 +477,7 @@ export class Player {
     this.wallriding = false;
     this.wallCoolT = 0;
     this.wallrideLatched = false;
+    this.wallChargeT = 0;
     this.wallridePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
@@ -3269,6 +3271,7 @@ export class Player {
     this.wallrideLatched = true; // no second wallride until you land or grind
     this.wallrideT = TUNING.wallrideMaxTime;
     this.wallTickT = 0;
+    this.wallChargeT = 0; // pump loads fresh on each wall
     this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
     this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall (ollie OUT with jump — the wallie)
     this.airFromSkate = true;
@@ -3279,11 +3282,16 @@ export class Player {
   }
 
   // Ride the wall: gentle gravity, along-wall travel + bleed, glued to the face.
-  // Jump to kick off; else drop when it times out / stalls / runs off / you let
-  // go of grind / you meet the ground.
+  // PUMP X (hold) to load a spring, RELEASE to leap off — the longer the pump,
+  // the bigger the pop. Else drop when it times out / stalls / runs off / you
+  // meet the ground.
   private stepWallride(dt: number, input: Input, level: Level): void {
     const w = this.wallBox;
-    if (input.jumpPressed || input.jumpReleased) {
+    if (input.jumpHeld) this.wallChargeT = Math.min(TUNING.wallChargeMax, this.wallChargeT + dt);
+    if (input.jumpReleased) {
+      // charge 0..1 over wallChargeMax; a quick tap barely loads (normal ollie),
+      // a full pump adds the whole bonus on top for a big launch.
+      const charge = TUNING.wallChargeMax > 0 ? this.wallChargeT / TUNING.wallChargeMax : 0;
       const outVx = this.wallNormal.x * TUNING.wallKickOut + this.axisF.x * this.wallSpeed * 0.7;
       const outVz = this.wallNormal.z * TUNING.wallKickOut + this.axisF.z * this.wallSpeed * 0.7;
       this.speed = Math.hypot(outVx, outVz);
@@ -3291,13 +3299,14 @@ export class Player {
         this.axisF.set(outVx / this.speed, 0, outVz / this.speed);
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
       }
-      this.vVel = TUNING.wallKickUp;
+      this.vVel = TUNING.wallKickUp + charge * TUNING.wallPumpBonus;
       this.wallriding = false;
       this.wallCoolT = 0.35;
       this.state = 'air';
       this.airFromSkate = true;
+      sfx.play('ollie', 0.6 + 0.4 * charge, 1 - 0.15 * charge); // deeper/louder the more you loaded it
       sfx.play('woosh2', 0.7);
-      this.emitSparks(6, 0xffd0a0, 1.2);
+      this.emitSparks(6 + Math.round(charge * 8), 0xffd0a0, 1.2);
       return;
     }
 
@@ -3799,15 +3808,24 @@ export class Player {
           this.grabPose > 0.05 ||
           (Math.abs(this.speed) > TUNING.boardSpeed && !this.slideFromWalk));
     }
-    // WALLRIDE: tilt the whole body onto the wall (board against the face), the
-    // lean toward the wall — sign from heading × outward-normal.
+    // WALLRIDE: the deck tips onto its SIDE against the wall (all four wheels to
+    // the face) while the RIDER stays upright — head on top — hanging off it,
+    // leaning out from the wall. sign from heading × outward-normal.
     this.wallridePose += ((this.wallriding ? 1 : 0) - this.wallridePose) * Math.min(1, 12 * dt);
     let wallRoll = 0;
+    let wallSide = 0;
     if (this.wallridePose > 0.01) {
-      const side = Math.sign(this.axisF.z * this.wallNormal.x - this.axisF.x * this.wallNormal.z) || 1;
-      wallRoll = this.wallridePose * side * 1.15; // ~66° up onto the wall
+      wallSide = Math.sign(this.axisF.z * this.wallNormal.x - this.axisF.x * this.wallNormal.z) || 1;
+      wallRoll = this.wallridePose * -wallSide * 0.32; // body hangs slightly OUT, torso upright, head up (~18°)
     }
     this.bodyGroup.rotation.z = this.slopeRoll + wallRoll;
+    if (this.boardG) {
+      // Roll the deck a quarter-turn onto its edge so the WHEELS meet the wall
+      // (deck faces out), and press it against the face up at the rider's feet.
+      this.boardG.rotation.z = this.wallridePose * wallSide * (Math.PI / 2);
+      this.boardG.position.x = this.wallridePose * wallSide * 0.62; // flush to the wall
+      this.boardG.position.y += this.wallridePose * 0.34; // up to foot height
+    }
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace.

@@ -70,7 +70,9 @@ export const TUNING = {
   wallrideMinSpeed: 8, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
   wallrideMaxAngle: 50, // max approach angle OFF PARALLEL (deg) to stick — steeper/more head-on and you bonk off
   wallrideMaxTime: 1.6, // longest a single wallride lasts before you drop off
-  wallKickUp: 12, // the WALLIE: vertical pop when you ollie OFF a wallride
+  wallKickUp: 12, // the WALLIE: base vertical pop when you ollie OFF a wallride (a quick tap)
+  wallPumpBonus: 16, // extra vertical launch at FULL pump — hold X on the wall, release to spring off big
+  wallChargeMax: 0.45, // seconds of pumping X to reach a full-power wall launch
   wallKickOut: 8, // push away from the wall when you kick off
   airControl: 0, // forward/back speed adjustment in the air
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
@@ -164,6 +166,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallrideMaxAngle: { min: 15, max: 90, step: 5 },
   wallrideMaxTime: { min: 0.3, max: 12, step: 0.1 },
   wallKickUp: { min: 0, max: 30, step: 0.5 },
+  wallPumpBonus: { min: 0, max: 40, step: 1 },
+  wallChargeMax: { min: 0.05, max: 1.5, step: 0.05 },
   wallKickOut: { min: 0, max: 25, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
@@ -305,7 +309,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   wallrideMaxAngle:
     'How PARALLEL your approach must be to stick to a wall. This is the biggest angle (in degrees) your flight can be off the wall face — glide in almost parallel (0 = dead parallel) and you catch it; come in too head-on (past this angle) and you bonk off. Ollie into the wall holding Triangle to catch it. Lower = stricter (must be very parallel), higher = catch steeper approaches.',
   wallrideMaxTime: 'Longest a single wallride can last before you automatically drop off.',
-  wallKickUp: 'The WALLIE: vertical pop you get when you ollie OFF a wallride (press jump to leave the wall, like a rail kick-off).',
+  wallKickUp: 'The WALLIE: BASE vertical pop when you ollie off a wallride — what a quick tap-and-release of X gives you.',
+  wallPumpBonus:
+    'Extra vertical launch at a FULL pump. On the wall, HOLD X to load a spring then RELEASE to leap off — a quick tap gives the base pop (wallKickUp), a full pump adds this whole bonus on top for a big jump.',
+  wallChargeMax: 'How long you have to hold (pump) X on the wall to reach a full-power launch. Shorter = the pump maxes out faster.',
   wallKickOut: 'How hard the kick-off shoves you AWAY from the wall (out into the level) when you jump off a wallride.',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
@@ -395,7 +402,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     ],
   },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
-  { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideMaxAngle', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallKickOut'] },
+  { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideMaxAngle', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallPumpBonus', 'wallChargeMax', 'wallKickOut'] },
   {
     title: 'GRINDS',
     keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
