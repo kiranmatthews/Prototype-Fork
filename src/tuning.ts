@@ -18,32 +18,32 @@ export const TUNING = {
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill / in pipes (charge still tops at maxSpeed)
   slopeBoost: 38, // downhill acceleration, scaled by sin(slope along travel)
   uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
-  pipePump: 4, // crouch-pump gain: X held on ground too steep to stand
+  pipePump: 1.5, // crouch-pump gain: X held on ground too steep to stand
   pipeGravity: 42, // HALFPIPE: symmetric pendulum gravity on the transition walls — the punch of the wall-to-wall swing (both ways, so it conserves energy)
   pipeCarve: 26, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
-  pipePumpGain: 16, // HALFPIPE: EXTRA speed added per second holding X up a wall — the hard pump on top of the carve, to reach the coping
-  pipeFriction: 0.6, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
-  pipePop: 5, // HALFPIPE: extra vertical launch popped over the coping into the hang
-  pipeAirGravity: 30, // HALFPIPE: SYMMETRIC gravity for the air above the coping (same up + down) so you drop back at the speed you left — no asymmetric-fall speed surge that pings you off on landing. Lower = floatier hang.
+  pipePumpGain: 42, // HALFPIPE: EXTRA speed added per second holding X up a wall — the hard pump on top of the carve, to reach the coping
+  pipeFriction: 0.1, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
+  pipePop: 10, // HALFPIPE: extra vertical launch popped over the coping into the hang
+  pipeAirGravity: 28, // HALFPIPE: SYMMETRIC gravity for the air above the coping (same up + down) so you drop back at the speed you left — no asymmetric-fall speed surge that pings you off on landing. Lower = floatier hang.
   pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
-  footGrip: 0.4, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
-  steepStand: 0.95, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
+  footGrip: 0.3, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
+  steepStand: 0.76, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
   vertLip: 0.59, // slope (sine along travel) that counts as vert coping at the lip
-  hangLaunch: 9, // extra UP pop when you release X right at the lip to fly into hang time
-  hangSnapAngle: 3, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
-  hangLateral: 1.55, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
+  hangLaunch: 2.5, // extra UP pop when you release X right at the lip to fly into hang time
+  hangSnapAngle: 6, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
+  hangLateral: 0.7, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
   landingFlow: 1, // how much fall speed converts into riding speed when you land on a ramp/wall
-  vertGlue: 17.5, // hang time: how hard a vert air is pulled back onto the wall plane
+  vertGlue: 20, // hang time: how hard a vert air is pulled back onto the wall plane
   vertDrift: 4.5, // hang time: stick drift speed ALONG the coping during a vert air
   wallStick: 5, // ground-snap window on steep transitions (how hard the wall holds the board)
-  landGive: 3, // landing forgiveness on steep faces (vs 0.35 on flat decks)
+  landGive: 0.35, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 15, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
-  turnaround: 20, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
+  turnaround: 35, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
   brakeRampTime: 0.4, // Circle brake on the board: seconds of HOLDING before the slow-down reaches full force (eases in, so a tap barely bites)
   brakeLockTime: 0.6, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
   brakeLockRamp: 0.55, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
@@ -65,15 +65,15 @@ export const TUNING = {
   slideJumpTravel: 0.65, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
   slideRecover: 0.5, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
-  wallrideGravity: 8, // THPS wallride: gentle sink while riding a wall (vs 33 rise / 119 fall)
-  wallrideFriction: 3, // along-wall speed bleed per second on a wallride
-  wallrideMinSpeed: 8, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
-  wallrideMaxAngle: 50, // max approach angle OFF PARALLEL (deg) to stick — steeper/more head-on and you bonk off
-  wallrideMaxTime: 1.6, // longest a single wallride lasts before you drop off
-  wallKickUp: 12, // the WALLIE: base vertical pop when you ollie OFF a wallride (a quick tap)
-  wallPumpBonus: 16, // extra vertical launch at FULL pump — hold X on the wall, release to spring off big
-  wallChargeMax: 0.45, // seconds of pumping X to reach a full-power wall launch
-  wallKickOut: 8, // push away from the wall when you kick off
+  wallrideGravity: 16, // THPS wallride: gentle sink while riding a wall (vs 33 rise / 119 fall)
+  wallrideFriction: 1, // along-wall speed bleed per second on a wallride
+  wallrideMinSpeed: 7.5, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
+  wallrideMaxAngle: 76, // max approach angle OFF PARALLEL (deg) to stick — steeper/more head-on and you bonk off
+  wallrideMaxTime: 12, // longest a single wallride lasts before you drop off
+  wallKickUp: 10.5, // the WALLIE: base vertical pop when you ollie OFF a wallride (a quick tap)
+  wallPumpBonus: 17, // extra vertical launch at FULL pump — hold X on the wall, release to spring off big
+  wallChargeMax: 1.5, // seconds of pumping X to reach a full-power wall launch
+  wallKickOut: 1.5, // push away from the wall when you kick off
   airControl: 0, // forward/back speed adjustment in the air
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle

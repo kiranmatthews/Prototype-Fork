@@ -1882,8 +1882,16 @@ export class Player {
     // ledge forgiveness) — a surface overhead must never teleport us onto it.
     // Steep transitions get a much deeper forgiveness: falling with sideways
     // drift can cross a rising bank face by more than a deck's worth in one
-    // step, and that's a landing, not a clip-through.
-    const landGive = hit && hit.normal.y < CONST.steepSnapNormal ? TUNING.landGive : 0.35;
+    // step, and that's a landing, not a clip-through. A HALFPIPE wall always
+    // gets a deep window no matter how low the slider is set — its transition
+    // is near-vertical near the coping, so a fast, drifting descent must LAND
+    // on the pipe, never punch through it into the pit below.
+    const landGive =
+      hit && hit.halfpipe
+        ? Math.max(TUNING.landGive, 4)
+        : hit && hit.normal.y < CONST.steepSnapNormal
+          ? TUNING.landGive
+          : 0.35;
     if (
       hit &&
       this.vVel <= 0 &&
@@ -3138,7 +3146,11 @@ export class Player {
           f.mesh.visible = false;
           continue;
         }
-        f.mesh.position.addScaledVector(d.normalize(), Math.max(18, dist * 6) * dt);
+        // Home faster than the skater can flee (else a pump-skate outruns it and
+        // it trails forever, then times out uncollected) — always the player's
+        // own speed plus a margin, or a hard pull when it's far behind.
+        const chase = Math.max(dist * 6, Math.abs(this.speed) + 12);
+        f.mesh.position.addScaledVector(d.normalize(), chase * dt);
       }
     }
   }
