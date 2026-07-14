@@ -51,6 +51,7 @@ export const TUNING = {
   grabSpinRate: 9, // rad/s of the directional grab-spin (~515°/s — 540s reachable on medium airs; the pre-land auto-correct keeps landings clean)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
   spinTolerance: 10, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
+  sketchyTolerance: 25, // past spinTolerance but inside this = SKETCHY landing: you keep it with a wobble, speed cut, and half points
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
@@ -75,6 +76,13 @@ export const TUNING = {
   wallChargeMax: 1.5, // seconds of pumping X to reach a full-power wall launch
   wallKickOut: 1.5, // push away from the wall when you kick off
   airControl: 0, // forward/back speed adjustment in the air
+  manualMinSpeed: 6, // must be rolling at least this fast to pop (or hold) a manual
+  manualDrift: 1.0, // manual balance: how fast the pitch needle runs away
+  manualControl: 3.2, // how hard up/down input fights the manual needle
+  manualFlickWindow: 0.28, // max seconds between the two stick flicks (up-then-down = manual, down-then-up = nose)
+  lipCatchSpeed: 10, // arrive at the coping at/below this climb speed HOLDING Triangle to stall on the lip
+  lipMaxTime: 2.5, // longest a lip stall holds before you drop back in
+  spineDrift: 5, // hang time: how fast holding INTO the lip carries you across a spine/ridge (over the coping only)
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
   balanceSpeedEffect: 1.4, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
@@ -146,6 +154,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
   grabRelease: { min: 0.05, max: 0.6, step: 0.05 },
   spinTolerance: { min: 10, max: 90, step: 5 },
+  sketchyTolerance: { min: 10, max: 45, step: 1 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
@@ -170,6 +179,13 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallChargeMax: { min: 0.05, max: 1.5, step: 0.05 },
   wallKickOut: { min: 0, max: 25, step: 0.5 },
   airControl: { min: 0, max: 40, step: 1 },
+  manualMinSpeed: { min: 0, max: 15, step: 0.5 },
+  manualDrift: { min: 0.2, max: 3, step: 0.05 },
+  manualControl: { min: 0.5, max: 8, step: 0.1 },
+  manualFlickWindow: { min: 0.1, max: 0.6, step: 0.02 },
+  lipCatchSpeed: { min: 2, max: 25, step: 0.5 },
+  lipMaxTime: { min: 0.5, max: 12, step: 0.25 },
+  spineDrift: { min: 0, max: 12, step: 0.5 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
   balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
@@ -276,6 +292,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How long the grab pose takes to animate back to neutral after RELEASING Circle. Land any time before it finishes (or while still holding) = bail; pose back at neutral = clean, spin permitting.',
   spinTolerance:
     'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
+  sketchyTolerance:
+    'The SKETCHY window: a spin landed past spinTolerance but inside this many degrees off-line is kept — a wobble, a speed cut, and half points instead of a bail. Beyond it you eat the floor.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
   boardSpeed:
     'The board (visual + rolling sound) only appears above this speed. Raise it if the board flickers in during normal platforming; the walk/skate physics boundary is walkSpeed, not this.',
@@ -316,6 +334,17 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   wallKickOut: 'How hard the kick-off shoves you AWAY from the wall (out into the level) when you jump off a wallride.',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
+  manualMinSpeed:
+    'Minimum rolling speed to pop a manual (flick the stick up-then-down) or nose manual (down-then-up), and the speed a held manual drops out at.',
+  manualDrift: 'How fast the manual balance needle runs away on its own (fought with up/down on the stick). Pegging it = bail.',
+  manualControl: 'How hard up/down input fights the manual needle.',
+  manualFlickWindow:
+    'Max time between the two stick flicks that pop a manual. Finish the flick mid-air (within a beat of touchdown) and you LAND INTO the manual — the combo stays alive.',
+  lipCatchSpeed:
+    'LIP TRICKS: reach the halfpipe coping at/below this climb speed while HOLDING Triangle to stall on the lip (Rock to Fakie head-on, Axle Stall at an angle). Release (or jump) to drop back in; points tick while stalled.',
+  lipMaxTime: 'Longest a lip stall holds before it auto-drops back into the pipe.',
+  spineDrift:
+    'SPINE TRANSFER: during hang time above the coping, hold the stick INTO/over the lip to carry across a spine or ridge — land the far side for a Spine Transfer. Higher = crosses faster. 0 = disabled.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
   balanceSpeedEffect:
@@ -407,7 +436,11 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'GRINDS',
     keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
   },
-  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius'] },
+  {
+    title: 'MANUAL & LIP',
+    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'lipCatchSpeed', 'lipMaxTime', 'spineDrift'],
+  },
+  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
 ];
@@ -451,6 +484,12 @@ export const CONST = {
   ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
   ptsWallride: 120, // base for a wallride (shows the plate immediately)
   ptsWallrideTick: 6, // accrues every quarter second on a wallride (THPS-style)
+  ptsManualBase: 100, // popping a manual / nose manual
+  ptsManualTick: 5, // accrues every quarter second balanced on two wheels
+  ptsLip: 125, // catching a lip stall on the coping
+  ptsLipTick: 6, // accrues every quarter second stalled on the lip
+  ptsSpine: 250, // spine transfer: carried over the ridge, landed the far side
+  manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release

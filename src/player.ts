@@ -183,6 +183,35 @@ export class Player {
   // trick-spin that then bails you on the drop-back-in). Deliberate spins off the
   // lip still work via the Square spin button.
   private pipeHang = false;
+  // THPS MANUAL: flick the stick up-then-down (manual, nose up) or down-then-up
+  // (nose manual) while rolling — or finish the flick just before touchdown to
+  // LAND INTO it — and ride on two wheels. The needle lives on the pitch axis
+  // (up/down fights it, reusing the grind balance field + visuals); pegging it
+  // is a bail. It's the combo CONNECTOR: ticks refresh the combo window, and
+  // landing an air into a manual keeps the string alive instead of banking.
+  manualing: 0 | 1 | -1 = 0; // 0 = four wheels, 1 = manual (nose up), -1 = nose manual
+  private manualTime = 0; // how long this manual has held (difficulty ramps)
+  private manualTickT = 0;
+  private manualPitch = 0; // eased visual pitch
+  private prevMoveY = 0; // stick edge detection for the flick
+  private flickUpT = 99; // seconds since the stick flicked up / down
+  private flickDownT = 99;
+  private manualArmed: 0 | 1 | -1 = 0; // flick completed mid-air: land into it
+  private manualArmT = 0;
+  // LIP TRICKS: reach the coping slow holding Triangle -> stall on the lip
+  // (Rock to Fakie / Axle Stall / Disaster from the air), points tick while
+  // held, release/jump/timeout drops back in fakie.
+  lipStallT = 0; // > 0 = stalled on the coping (counts down to auto-drop)
+  private lipPipe: Halfpipe | null = null;
+  private lipSide = 1; // sign of u at the stall (which coping)
+  private lipTickT = 0;
+  private lipCoolT = 0; // no instant re-catch right after dropping in
+  // SKETCHY LANDING: rotation landed off-line but inside the sketchy window —
+  // you keep it (half points, speed cut) with a wobble instead of a bail.
+  private sketchyT = 0;
+  // SPINE TRANSFER: which pipe the current hang crested from; landing a hang on
+  // a DIFFERENT pipe = carried across the ridge.
+  private hangPipe: Halfpipe | null = null;
   // Post-drop-in grace: after a pipe-hang landing, the stick is usually still
   // held the way you were CLIMBING — which is now opposite travel. For this
   // beat that stale hold must not read as a pull-back brake (the skateHalt
@@ -473,6 +502,14 @@ export class Player {
     this.pipeHang = false;
     this.pipeRideT = 0;
     this.pipeLandGraceT = 0;
+    this.manualing = 0;
+    this.manualArmed = 0;
+    this.manualArmT = 0;
+    this.lipStallT = 0;
+    this.lipPipe = null;
+    this.lipCoolT = 0;
+    this.sketchyT = 0;
+    this.hangPipe = null;
     this.slamSquash = 0;
     this.bailing = false;
     this.bailSpin = 0;
@@ -573,6 +610,27 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
+    // MANUAL FLICK: watch the raw stick's vertical axis for the two-beat flick.
+    // Up-then-down pops a manual (nose up), down-then-up a nose manual. On the
+    // ground it fires immediately; mid-air it ARMS a land-into-manual for a
+    // beat, so finishing the flick just before touchdown keeps the combo alive.
+    this.flickUpT += dt;
+    this.flickDownT += dt;
+    this.manualArmT = Math.max(0, this.manualArmT - dt);
+    {
+      const my = this.rawInput.moveY;
+      const win = TUNING.manualFlickWindow;
+      if (my > 0.6 && this.prevMoveY <= 0.6) {
+        if (this.flickDownT < win) this.tryManual(-1); // down-then-up: nose manual
+        this.flickUpT = 0;
+      } else if (my < -0.6 && this.prevMoveY >= -0.6) {
+        if (this.flickUpT < win) this.tryManual(1); // up-then-down: manual
+        this.flickDownT = 0;
+      }
+      this.prevMoveY = my;
+    }
+    // A manual only lives on rideable flat ground: any other state drops it.
+    if (this.manualing !== 0 && (this.state !== 'ride' || !this.grounded)) this.endManual();
     // The path can right-angle into an X-running stretch (the camera never
     // turns — the turned path IS the side-scroll view). Because the camera is
     // fixed, every mapping agrees in WORLD space (right is always screen
@@ -655,6 +713,8 @@ export class Player {
     this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
+    this.lipCoolT = Math.max(0, this.lipCoolT - dt);
+    this.sketchyT = Math.max(0, this.sketchyT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
@@ -663,6 +723,7 @@ export class Player {
       this.vertAir = false;
       this.pipeHang = false;
       this.vertLatVel = 0;
+      this.hangPipe = null;
     }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
@@ -700,7 +761,17 @@ export class Player {
 
     // The combo clock only runs while plain-rolling — airs, grinds, and
     // slides keep the string alive. Roll clean for the window and it banks.
-    if (this.comboTimer > 0 && this.state === 'ride' && this.grounded && !this.sliding) {
+    // Plain rolling runs the combo window out — but a live MANUAL or LIP STALL
+    // is the connector itself: like a grind, the string never decays while
+    // you're still balancing on it.
+    if (
+      this.comboTimer > 0 &&
+      this.state === 'ride' &&
+      this.grounded &&
+      !this.sliding &&
+      this.manualing === 0 &&
+      this.lipStallT <= 0
+    ) {
       this.comboTimer -= dt;
       if (this.comboTimer <= 0) this.bankCombo();
     }
@@ -791,14 +862,30 @@ export class Player {
       case 'finished':
         this.stepFinished(dt, level);
         break;
-      case 'ride':
+      case 'ride': {
         this.runTime += dt;
-        if ((input.grindPressed || input.grindHeld) && this.tryGrind()) {
+        // Triangle on a halfpipe TRANSITION means the LIP TRICK, not a rail
+        // snap — riding up the face, the only rail in reach is the coping
+        // above you, and snapping it would steal the stall (and yank climbs
+        // onto the lip). On the flat, decks, and everywhere else Triangle
+        // still grabs rails as usual. A live stall also owns the button.
+        const onWall =
+          this.grounded &&
+          this.groundHit !== null &&
+          this.groundHit.halfpipe !== undefined &&
+          this.groundHit.normal.y < 0.9;
+        if (
+          this.lipStallT <= 0 &&
+          !onWall &&
+          (input.grindPressed || input.grindHeld) &&
+          this.tryGrind()
+        ) {
           // snapped straight onto the rail this tick
         } else {
           this.stepRide(dt, input, level);
         }
         break;
+      }
       case 'air':
         this.runTime += dt;
         if (!this.wallriding && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
@@ -872,7 +959,12 @@ export class Player {
   // points — they never start or feed a combo. Bail or die = the combo dies.
   private score(base: number, label?: string): void {
     const inTrick =
-      this.landingScoring || this.state === 'air' || this.state === 'grind' || this.sliding;
+      this.landingScoring ||
+      this.state === 'air' ||
+      this.state === 'grind' ||
+      this.sliding ||
+      this.manualing !== 0 || // balanced on two wheels: the combo connector
+      this.lipStallT > 0; // parked on the coping: same deal
     if (inTrick) {
       this.comboPoints += base;
       this.comboMult += 1;
@@ -951,6 +1043,9 @@ export class Player {
   private chargedJump(dt: number): void {
     const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
     const wasCrawling = this.crawling;
+    // Ollieing out of a manual is the CLEAN exit — back to four wheels in the
+    // air, combo string still alive (the air refreshes it with the next trick).
+    if (this.manualing !== 0) this.endManual();
     // The slide boost applies during the slide AND for slideJumpGrace seconds
     // after it ends — the old exact-window timing was nearly unhittable.
     const fromSlide = this.slideTimer > 0 || this.slideGraceT > 0;
@@ -1028,6 +1123,26 @@ export class Player {
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
+    // LIP STALL owns the whole frame: parked on the coping, points ticking,
+    // combo alive. Release Triangle (or jump, or the timer) drops back in.
+    if (this.lipStallT > 0) {
+      this.lipStallT -= dt;
+      this.runTime += dt;
+      this.speed = 0;
+      this.vVel = 0;
+      this.lipTickT += dt;
+      while (this.lipTickT >= 0.25) {
+        this.lipTickT -= 0.25;
+        this.comboPoints += CONST.ptsLipTick;
+        this.comboTimer = CONST.comboWindow;
+      }
+      this.emitSparks(Math.random() < 0.3 ? 1 : 0, 0xffe08a, 0.6);
+      if (!input.grindHeld || input.jumpPressed || this.lipStallT <= 0) {
+        this.lipDrop(input.jumpPressed);
+      }
+      return;
+    }
+
     // Flattened after a slam OR knocked down by a bail: pancaked on the
     // ground for a beat, no control.
     const slamFlat = this.slamFlatT > 0 || this.bailDownT > 0;
@@ -1193,7 +1308,25 @@ export class Player {
     const runScale = Math.min(moveScale, this.walkRamp);
 
     if (slamFlat) {
-      this.speed = 0;
+      // Pancaked/bailed: normally parked dead — but a bail ON A TRANSITION
+      // TUMBLES down the face instead of sticking to a near-vertical wall:
+      // the body swings down the fall line and slides into the flat (the
+      // lying-flat pose riding downhill with dust IS the tumble).
+      const steepBail =
+        this.bailDownT > 0 &&
+        this.grounded &&
+        this.groundHit !== null &&
+        this.groundHit.normal.y < TUNING.steepStand;
+      if (steepBail) {
+        const n = this.groundHit!.normal;
+        const l = Math.hypot(n.x, n.z) || 1;
+        this.axisF.set(n.x / l, 0, n.z / l); // the fall line (normal leans toward the flat)
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+        this.speed = Math.min(this.speed + TUNING.slopeBoost * 0.6 * dt, 12);
+        this.emitDust(1);
+      } else {
+        this.speed = 0;
+      }
       this.lastTy = 0;
     } else if (this.crawling) {
       // Direct-drive crawl. Speed snaps to the stick; no slopes, no friction, no
@@ -1264,8 +1397,10 @@ export class Player {
         // follow it — carrying your speed with it (a carve, not a brake), so
         // forward, sideways, and back are all first-class. X accelerates along
         // the heading; release everything and you coast down to your feet.
-        const rx = this.rawInput.moveX;
-        const ry = this.rawInput.moveY;
+        const rx = this.manualing !== 0 ? 0 : this.rawInput.moveX;
+        const ry = this.manualing !== 0 ? 0 : this.rawInput.moveY;
+        // (during a MANUAL the stick is the balance pole, not the tiller — no
+        // carve, no pull-back brake; the heading holds and friction rules)
         if (rx !== 0 || ry !== 0) {
           const inv = 1 / Math.hypot(rx, ry);
           const dx = rx * inv;
@@ -1471,6 +1606,45 @@ export class Player {
       }
     }
 
+    // MANUAL: balanced on two wheels while everything else about riding keeps
+    // working (carve, slopes, the combo window). The needle lives on the PITCH
+    // axis — up/down on the stick fights it (reusing the grind balance field, so
+    // the balance arms/flail visuals just work). Pegging past the grace = the
+    // honest bail; rolling too slow / steep ground / leaving the deck simply
+    // drops you back onto four wheels, combo timer still running.
+    if (this.manualing !== 0) {
+      if (!this.canManual()) {
+        this.endManual();
+      } else {
+        this.manualTime += dt;
+        const ramp = Math.min(
+          Math.max(0, TUNING.balanceRampMax - 1),
+          Math.max(0, this.manualTime - TUNING.balanceGrace * 0.5) * TUNING.balanceRamp * 1.5,
+        );
+        this.balance +=
+          Math.sign(this.balance || this.manualing) * TUNING.manualDrift * (1 + ramp) * dt;
+        this.balance -= this.rawInput.moveY * TUNING.manualControl * dt;
+        if (this.uberTimer > 0) this.balance = 0;
+        if (Math.abs(this.balance) >= 1) {
+          this.balance = Math.sign(this.balance);
+          this.balanceCritT += dt;
+          if (this.balanceCritT > TUNING.bailGrace) {
+            this.endManual();
+            this.bail();
+            return;
+          }
+        } else {
+          this.balanceCritT = 0;
+        }
+        this.manualTickT += dt;
+        while (this.manualTickT >= 0.25) {
+          this.manualTickT -= 0.25;
+          this.comboPoints += CONST.ptsManualTick;
+          this.comboTimer = CONST.comboWindow;
+        }
+      }
+    }
+
     // Ride the SURFACE, not the map. On a slope the heading projects onto the
     // ride plane, splitting speed honestly between planar travel and climb —
     // a vert wall climbs at speed*sin(slope) instead of the old full-speed
@@ -1587,6 +1761,20 @@ export class Player {
       }
     }
     if (!hit) hit = this.queryGround(level);
+    // LIP STALL CATCH: reached the coping SLOW while holding Triangle — park
+    // on the lip instead of cresting. (Fast arrivals still launch into hang.)
+    if (
+      hit &&
+      hit.halfpipe &&
+      this.freeSkate &&
+      this.lipCoolT <= 0 &&
+      this.rawInput.grindHeld &&
+      this.pos.y >= hit.halfpipe.lipY - 0.6 &&
+      Math.abs(this.speed) <= TUNING.lipCatchSpeed
+    ) {
+      this.enterLipStall(hit.halfpipe);
+      return;
+    }
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
@@ -1616,6 +1804,7 @@ export class Player {
       this.groundHit = hit;
       this.airFromSkate = true;
       this.pipeHang = true; // climb-hold must not read as a trick-spin (no phantom bail)
+      this.hangPipe = hpNow; // remember which pipe launched this hang (spine transfers)
       this.grabSpinAngle = 0;
       // vertical launch = the climb speed you carried up, plus a pop so even a
       // gentle arrival clears the coping into a hang.
@@ -1639,6 +1828,7 @@ export class Player {
       this.grounded = false;
       this.groundHit = hit;
       this.airFromSkate = true; // vert launches only happen from riding
+      this.hangPipe = ridingPipe ?? hit.halfpipe ?? null; // spine-transfer bookkeeping
       this.vVel = Math.min(this.lastTy * this.speed, CONST.maxFallSpeed);
       // ALWAYS hang time. Releasing X (or a fresh tap) at the lip LAUNCHES you
       // higher into the hang (the intuitive pop); holding X = a mellow hang.
@@ -1841,6 +2031,33 @@ export class Player {
         const along = rx * inv * tx + -ry * inv * tz;
         this.pos.x += tx * along * TUNING.vertDrift * dt;
         this.pos.z += tz * along * TUNING.vertDrift * dt;
+        // SPINE CARRY: above the coping, the stick's INTO-the-lip component
+        // walks the glue plane across the ridge — drop on the far side for a
+        // spine transfer. Below lip height the wall is solid: no push-through.
+        if (
+          TUNING.spineDrift > 0 &&
+          this.pipeHang &&
+          this.hangPipe &&
+          this.pos.y > this.hangPipe.lipY + 0.15
+        ) {
+          const push = -(rx * inv * this.vertNormal.x) - -ry * inv * this.vertNormal.z;
+          if (push > 0.4) {
+            this.vertAnchor.addScaledVector(this.vertNormal, -TUNING.spineDrift * push * dt);
+          }
+        }
+      }
+      // DISASTER CATCH: descending past the lip line holding Triangle hooks
+      // the coping into a lip stall instead of dropping back in.
+      if (
+        this.pipeHang &&
+        this.hangPipe &&
+        this.vVel < 0 &&
+        this.rawInput.grindHeld &&
+        this.lipCoolT <= 0 &&
+        Math.abs(this.pos.y - this.hangPipe.lipY) < 0.5
+      ) {
+        this.enterLipStall(this.hangPipe, true);
+        return;
       }
     }
 
@@ -2063,6 +2280,13 @@ export class Player {
       // for combo purposes even though the state just flipped to 'ride'.
       this.landingScoring = true;
 
+      // SPINE TRANSFER: this hang crested one pipe and came down on a
+      // DIFFERENT one — you carried it over the ridge.
+      if (wasPipeHang && hit.halfpipe && this.hangPipe && hit.halfpipe !== this.hangPipe) {
+        this.score(CONST.ptsSpine, 'Spine Transfer');
+        this.emitSparks(8, 0xa0e8ff, 2);
+      }
+
       if (this.slamActive) {
         this.slamImpact(level);
         this.landingScoring = false;
@@ -2087,7 +2311,36 @@ export class Player {
       // you were CLIMBING (holding a direction), not doing a trick spin, so the
       // drop-back-in is always a clean neutral landing.
       const funny = spun && dev0 > tol && devPi > tol && !this.pipeHang;
-      if (this.grabPhase !== 'none' || funny) {
+      // SKETCHY TIER (THPS rules): landed off-line but within the sketchy
+      // window — or came down STILL HOLDING the grab out of a pipe hang — you
+      // keep it: a wobble, a speed cut, and half points instead of the floor.
+      const sketchTol = THREE.MathUtils.degToRad(TUNING.sketchyTolerance);
+      const sketchy =
+        (funny && Math.min(dev0, devPi) <= sketchTol) ||
+        (wasPipeHang && this.grabPhase !== 'none' && !funny);
+      if (sketchy) {
+        const isSwitch = devPi < dev0; // whichever line is closer decides the feet
+        if (isSwitch) this.stance = -this.stance as 1 | -1;
+        const halves = Math.round(Math.abs(this.grabSpinAngle) / Math.PI);
+        if (halves > 0) {
+          this.score(Math.max(5, Math.round((halves * CONST.ptsSpin) / 2)), `Sketchy ${halves * 180}`);
+        } else {
+          this.score(5, 'Sketchy');
+        }
+        this.grabPhase = 'none';
+        this.grabT = 0;
+        this.grabGraceTimer = 0;
+        this.visualYaw = wrapAngle(
+          this.visualYaw +
+            this.grabSpinAngle +
+            (isSwitch ? -this.stance * Math.PI * this.sidePose : 0),
+        );
+        this.grabSpinAngle = 0;
+        this.grabSpinTotal = 0;
+        this.speed *= 0.55;
+        this.sketchyT = 0.6; // the visible wobble
+        sfx.play('skateHalt', 0.35);
+      } else if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
           this.grabT = 0;
@@ -2145,8 +2398,14 @@ export class Player {
       // transition and roll (THPS: the landing IS the flow). Ordinary fast
       // landings keep the transition sound.
       if (!wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
-      // Safe landing = the combo is over: bank it on the spot.
-      this.bankCombo();
+      // LAND INTO A MANUAL: the flick finished moments before touchdown — come
+      // down balanced on two wheels and the combo string STAYS ALIVE (no bank).
+      if (this.manualArmT > 0 && this.manualArmed !== 0 && this.canManual()) {
+        this.enterManual(this.manualArmed);
+      } else {
+        // Safe landing = the combo is over: bank it on the spot.
+        this.bankCombo();
+      }
       this.landingScoring = false;
       return;
     }
@@ -2273,6 +2532,124 @@ export class Player {
     // sliding and can't stop short of the gap — the precision hazard.
     if (this.groundHit && this.groundHit.slippy) bleed *= CONST.slippyFriction;
     this.speed -= Math.sign(this.speed) * Math.min(bleed, s);
+  }
+
+  // ------------------------------------------------------------------ manual --
+
+  // The stick flick landed: pop a manual now (on the ground) or, mid-air, arm
+  // a LAND-INTO-manual for a beat.
+  private tryManual(type: 1 | -1): void {
+    if (this.manualing !== 0 || this.lipStallT > 0 || this.wallriding) return;
+    if (this.state === 'air') {
+      if (this.airFromSkate) {
+        this.manualArmed = type;
+        this.manualArmT = CONST.manualArmWindow;
+      }
+      return;
+    }
+    if (this.canManual()) this.enterManual(type);
+  }
+
+  private canManual(): boolean {
+    return (
+      this.state === 'ride' &&
+      this.grounded &&
+      this.freeSkate &&
+      this.slideTimer <= 0 &&
+      !this.crawling &&
+      this.lipStallT <= 0 &&
+      Math.abs(this.speed) >= TUNING.manualMinSpeed &&
+      (this.groundHit === null || this.groundHit.normal.y >= TUNING.steepStand)
+    );
+  }
+
+  private enterManual(type: 1 | -1): void {
+    this.manualing = type;
+    this.manualTime = 0;
+    this.manualTickT = 0;
+    this.balance = 0; // the manual needle reuses the grind balance field + visuals
+    this.balanceCritT = 0;
+    this.manualArmed = 0;
+    this.manualArmT = 0;
+    this.score(CONST.ptsManualBase, type === 1 ? 'Manual' : 'Nose Manual');
+    sfx.play('skateTransition', 0.35);
+  }
+
+  // Clean drop back onto four wheels — no bail, and no bank: the combo keeps
+  // riding its own window.
+  private endManual(): void {
+    this.manualing = 0;
+    this.balance = 0;
+    this.balanceCritT = 0;
+  }
+
+  // --------------------------------------------------------------- lip stall --
+
+  // Park on the coping. Named by how you arrived: head-on = Rock to Fakie,
+  // angled = Axle Stall, caught out of the air = Disaster.
+  private enterLipStall(hp: Halfpipe, fromAir = false): void {
+    const pr = hp.project(hp.crossCoord(this.pos.x, this.pos.z), this.pos.y);
+    this.lipSide = Math.sign(pr ? pr.u : 1) || 1;
+    this.lipPipe = hp;
+    this.lipStallT = TUNING.lipMaxTime;
+    this.lipTickT = 0;
+    // pin exactly on the lip point (cross stays wherever along the pipe you are)
+    const lipCross = hp.cross + this.lipSide * hp.lipX;
+    if (hp.axis === 'z') this.pos.x = lipCross;
+    else this.pos.z = lipCross;
+    this.pos.y = hp.lipY;
+    // entry angle picks the trick name: along-the-coping component of travel
+    const alongDir = hp.axis === 'z' ? Math.abs(this.axisF.z) : Math.abs(this.axisF.x);
+    const name = fromAir ? 'Disaster' : alongDir > 0.45 ? 'Axle Stall' : 'Rock to Fakie';
+    this.state = 'ride';
+    this.grounded = true;
+    this.surfaceName = 'coping';
+    this.speed = 0;
+    this.vVel = 0;
+    this.vertAir = false;
+    this.pipeHang = false;
+    this.vertLatVel = 0;
+    this.endManual();
+    this.balance = 0;
+    this.rideNormal.set(0, 1, 0);
+    this.score(CONST.ptsLip, name);
+    sfx.play('railLand', 0.7);
+    this.emitSparks(5, 0xffe08a, 1.2);
+  }
+
+  // Drop back into the pipe — travel reverses vs the climb, so it's a fakie:
+  // flip the stance and absorb the turn into the facing (same rule as the
+  // hang drop-in), then hand the wall back to the analytic attach.
+  private lipDrop(jumped: boolean): void {
+    const hp = this.lipPipe!;
+    const inward = -this.lipSide; // toward the pipe centre along the cross axis
+    if (hp.axis === 'z') {
+      this.pos.x += inward * 0.6;
+      this.axisF.set(inward, 0, 0);
+    } else {
+      this.pos.z += inward * 0.6;
+      this.axisF.set(0, 0, inward);
+    }
+    this.pos.y = hp.lipY - 0.3;
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    const oldStance = this.stance;
+    this.stance = -this.stance as 1 | -1;
+    this.visualYaw = wrapAngle(this.visualYaw + oldStance * Math.PI * this.sidePose);
+    this.speed = 4;
+    this.lipStallT = 0;
+    this.lipCoolT = 0.5;
+    this.lipPipe = null;
+    this.pipeRideT = 0.2; // dropping in: a re-crest is a pipe hang
+    this.pipeLandGraceT = 0.35; // a stale held direction must not brake the drop
+    if (jumped) {
+      this.state = 'air';
+      this.grounded = false;
+      this.airFromSkate = true;
+      this.vVel = TUNING.grindJumpForce * 0.6;
+      sfx.play('ollie', 0.6);
+    } else {
+      sfx.play('skateTransition', 0.45);
+    }
   }
 
   // Botched a grab landing: no death — you eat the floor, the pending combo
@@ -2655,6 +3032,22 @@ export class Player {
 
   // ------------------------------------------------------------------ grab --
 
+  // Spin drive for an air. Ordinary airs read the raw screen left/right; a
+  // PIPE HANG reads the stick's component ALONG the coping instead — so spin
+  // feels identical on any pipe orientation, and the into-the-wall axis stays
+  // reserved for the spine carry.
+  private spinStick(): number {
+    const rx = this.rawInput.moveX;
+    const ry = this.rawInput.moveY;
+    if (!this.pipeHang) return Math.abs(rx) > 0.3 ? rx : 0;
+    if (rx === 0 && ry === 0) return 0;
+    const inv = 1 / Math.hypot(rx, ry);
+    const tx = -this.vertNormal.z; // coping tangent
+    const tz = this.vertNormal.x;
+    const along = rx * inv * tx + -ry * inv * tz;
+    return Math.abs(along) > 0.3 ? along : 0;
+  }
+
   private updateGrab(dt: number, input: Input): void {
     this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
     if (this.state === 'air') {
@@ -2664,6 +3057,23 @@ export class Player {
       // if you re-center the stick.
       const grabActive = this.grabPhase === 'enter' || this.grabPhase === 'held';
       const grabDir = Math.abs(this.rawInput.moveX) > 0.3 || Math.abs(this.rawInput.moveY) > 0.3;
+      // THPS AUTO-CORRECT: in the FINAL beat of a pipe-hang descent any live
+      // rotation COMMITS — it completes to the nearest 180 before the wheels
+      // touch, at whatever rate the time left demands (grabbing or not, stick
+      // held or not). Where you visibly rotate to IS where you land.
+      const committing =
+        this.pipeHang &&
+        this.vVel < 0 &&
+        this.grabSpinAngle !== 0 &&
+        (this.pos.y - this.vertAnchor.y) / Math.max(1, -this.vVel) < 0.25;
+      const commitSpin = (dtc: number): void => {
+        const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
+        const d = target - this.grabSpinAngle;
+        const tLeft = Math.max(0.06, (this.pos.y - this.vertAnchor.y) / Math.max(1, -this.vVel));
+        const rate = Math.max(CONST.grabSnapRate, Math.abs(d) / (tLeft * 0.7));
+        const step = rate * dtc;
+        this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
+      };
       if (input.grabHeld && !this.slamActive && this.airFromSkate && (grabActive || grabDir)) {
         // Reach into the pose over grabTransition, then hold it.
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
@@ -2681,9 +3091,13 @@ export class Player {
         }
         // Circle + left/right = grab-spin THAT way (left arrow spins left).
         // The trajectory is locked either way — but land mid-pose or off-axis
-        // and you bail.
-        if (Math.abs(this.rawInput.moveX) > 0.3) {
-          this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
+        // and you bail. In a pipe hang the final descent auto-corrects the
+        // rotation so the grab lands on-axis.
+        const gsp = this.spinStick();
+        if (committing) {
+          commitSpin(dt);
+        } else if (gsp !== 0) {
+          this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(gsp) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         }
         // variant name for the combo readout
@@ -2716,28 +3130,15 @@ export class Player {
           }
         }
         // HANG-TIME SPIN: glued to the wall, the stick alone spins you — no grab
-        // needed. HOLD left/right (even the direction you carved up with) to keep
-        // rotating; release to snap to the nearest 180 and land. A pipe hang never
-        // bails on this, so it's a free, grab-less rotation you control by holding.
-        // THPS AUTO-CORRECT: in the FINAL beat of a pipe-hang descent the
-        // rotation COMMITS — it completes to the nearest 180 before the wheels
-        // touch, at whatever rate the time left demands (held stick included).
-        // Where you visibly rotate to IS where you land: no 15°-off touchdown
-        // that then re-snaps on the ground.
-        const committing = (() => {
-          if (!this.pipeHang || this.vVel >= 0 || this.grabSpinAngle === 0) return false;
-          const h = this.pos.y - this.vertAnchor.y; // height above the take-off line
-          return h / Math.max(1, -this.vVel) < 0.25; // ≈ time to touchdown
-        })();
+        // needed. HOLD toward either end of the coping (even the direction you
+        // carved up with) to keep rotating; release to snap to the nearest 180
+        // and land. A pipe hang never bails on this, and the final descent
+        // auto-corrects (committing) so where you rotate to is where you land.
+        const hsp = this.spinStick();
         if (committing) {
-          const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
-          const d = target - this.grabSpinAngle;
-          const tLeft = Math.max(0.06, (this.pos.y - this.vertAnchor.y) / Math.max(1, -this.vVel));
-          const rate = Math.max(CONST.grabSnapRate, Math.abs(d) / (tLeft * 0.7));
-          const step = rate * dt;
-          this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
-        } else if (this.vertAir && !this.slamActive && Math.abs(this.rawInput.moveX) > 0.3) {
-          this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(this.rawInput.moveX) * dt;
+          commitSpin(dt);
+        } else if (this.vertAir && !this.slamActive && hsp !== 0) {
+          this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(hsp) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
           const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
@@ -3892,7 +4293,12 @@ export class Player {
     this.armRPose += (armRT - this.armRPose) * poseBlend;
     this.armLPose += (armLT - this.armLPose) * poseBlend;
     // Grind: arms come out wide for balance, tipping with the needle.
-    this.grindArmPose += ((this.state === 'grind' ? 1 : 0) - this.grindArmPose) * Math.min(1, 10 * dt);
+    // Balance arms come out for grinds, manuals, AND lip stalls (the manual
+    // writes the same balance field, so the tipping visual just works).
+    this.grindArmPose +=
+      ((this.state === 'grind' || this.manualing !== 0 || this.lipStallT > 0 ? 1 : 0) -
+        this.grindArmPose) *
+      Math.min(1, 10 * dt);
 
     // Arm channels. ANTI-symmetric: the run swing (arms counter the legs).
     // SYMMETRIC (both arms together): crawl hands to the ground, charge
@@ -4098,8 +4504,13 @@ export class Player {
         0.18 * this.skatePose + // athletic crouch over the board
         runLean +
         this.slopePose + // lie along the ramp/transition under the board
-        this.grindPoseX; // nosegrind / 5-0 lean
+        this.grindPoseX + // nosegrind / 5-0 lean
+        this.manualPitch; // two wheels: nose up (manual) or nose down (nose manual)
     }
+    // Manual pitch eases in/out; the sketchy wobble jitters it briefly.
+    const manualTarget = this.manualing === 1 ? -0.45 : this.manualing === -1 ? 0.4 : 0;
+    this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 10 * dt);
+    if (this.sketchyT > 0) this.bodyGroup.rotation.z += Math.sin(this.runTime * 24) * 0.14 * Math.min(1, this.sketchyT / 0.3);
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     // Crouch drops. The crawl and slam use SMALL drops: their pitch already
