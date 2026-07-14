@@ -3822,7 +3822,7 @@ export class Player {
     if (this.boardG) {
       // Roll the deck a quarter-turn onto its edge so the WHEELS meet the wall
       // (deck faces out), and press it against the face up at the rider's feet.
-      this.boardG.rotation.z = this.wallridePose * wallSide * (Math.PI / 2);
+      this.boardG.rotation.z = this.wallridePose * -wallSide * (Math.PI / 2);
       this.boardG.position.x = this.wallridePose * wallSide * 0.62; // flush to the wall
       this.boardG.position.y += this.wallridePose * 0.34; // up to foot height
     }
