@@ -503,7 +503,7 @@ function frame(): void {
   updateAudio(dt);
   sky.position.copy(camera.position);
 
-  ui.updateBalance(player.state === 'grind', player.balance);
+  ui.updateBalance(player.balanceMeter);
   const tricks = player.comboLabels;
   ui.setHUD({
     points: player.points,

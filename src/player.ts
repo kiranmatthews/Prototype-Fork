@@ -1397,10 +1397,11 @@ export class Player {
         // follow it — carrying your speed with it (a carve, not a brake), so
         // forward, sideways, and back are all first-class. X accelerates along
         // the heading; release everything and you coast down to your feet.
-        const rx = this.manualing !== 0 ? 0 : this.rawInput.moveX;
+        const rx = this.rawInput.moveX;
         const ry = this.manualing !== 0 ? 0 : this.rawInput.moveY;
-        // (during a MANUAL the stick is the balance pole, not the tiller — no
-        // carve, no pull-back brake; the heading holds and friction rules)
+        // (during a MANUAL, up/down is the balance pole ONLY — no accel, no
+        // pull-back brake — while left/right keeps steering the line; a pure
+        // side stick sits at 90° off the heading, well under the brake angle)
         if (rx !== 0 || ry !== 0) {
           const inv = 1 / Math.hypot(rx, ry);
           const dx = rx * inv;
@@ -2581,6 +2582,15 @@ export class Player {
     this.manualing = 0;
     this.balance = 0;
     this.balanceCritT = 0;
+  }
+
+  // The HUD balance meter: grinds get the horizontal bar (left/right needle),
+  // manuals the vertical one (up/down needle — balance + = tipping back onto
+  // the tail, needle sinks to the bottom; push UP to level out). null = hidden.
+  get balanceMeter(): { mode: 'grind' | 'manual'; bal: number; crit: boolean } | null {
+    if (this.state === 'grind') return { mode: 'grind', bal: this.balance, crit: this.balanceCritT > 0 };
+    if (this.manualing !== 0) return { mode: 'manual', bal: this.balance, crit: this.balanceCritT > 0 };
+    return null;
   }
 
   // --------------------------------------------------------------- lip stall --
@@ -4306,6 +4316,9 @@ export class Player {
     // windmill, pegged-needle flail, bail flail.
     const windmill = this.teeterPose * Math.sin(this.teeterPhase * 13) * 1.3;
     const critFlail = this.balanceCritT > 0 ? Math.sin(this.runTime * 22) * 0.8 : 0;
+    // Only GRINDS tip the spread arms sideways with the needle — a manual's
+    // needle is fought in pitch (see manualPitch), so its arms stay symmetric.
+    const railBal = this.state === 'grind' ? this.balance : 0;
     const bailFlail = this.bailing ? Math.sin(this.bailSpin * 2.7) * 1.1 : 0;
     const anti = -swing * 0.9 * (1 - this.grabPose);
     const sym =
@@ -4325,7 +4338,7 @@ export class Player {
       this.armR.rotation.z =
         0.25 -
         this.grabPose * 0.55 +
-        1.15 * this.grindArmPose * (1 + 0.6 * this.balance) + // balance arms out wide
+        1.15 * this.grindArmPose * (1 + 0.6 * railBal) + // balance arms out wide (grinds tip them sideways; manual balance lives in the PITCH instead)
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         1.05 * this.wallridePose + // wallride: arm flung out for balance
@@ -4337,7 +4350,7 @@ export class Player {
       this.armL.rotation.z =
         -0.25 +
         this.grabPose * 0.45 -
-        1.15 * this.grindArmPose * (1 - 0.6 * this.balance) -
+        1.15 * this.grindArmPose * (1 - 0.6 * railBal) -
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         1.05 * this.wallridePose - // wallride: arm flung out for balance
@@ -4507,9 +4520,12 @@ export class Player {
         this.grindPoseX + // nosegrind / 5-0 lean
         this.manualPitch; // two wheels: nose up (manual) or nose down (nose manual)
     }
-    // Manual pitch eases in/out; the sketchy wobble jitters it briefly.
-    const manualTarget = this.manualing === 1 ? -0.45 : this.manualing === -1 ? 0.4 : 0;
-    this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 10 * dt);
+    // Manual pitch eases in/out — and the balance needle LIVES in the pitch:
+    // tipping backward (balance +) pulls the nose higher, tipping forward dips
+    // it, so the wobble you fight reads as up-and-down, not a sideways lean.
+    const manualTarget =
+      this.manualing !== 0 ? (this.manualing === 1 ? -0.4 : 0.35) - this.balance * 0.4 : 0;
+    this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 14 * dt);
     if (this.sketchyT > 0) this.bodyGroup.rotation.z += Math.sin(this.runTime * 24) * 0.14 * Math.min(1, this.sketchyT / 0.3);
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);

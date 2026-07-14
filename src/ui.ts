@@ -40,6 +40,8 @@ export class UI {
   private flashEl: HTMLElement;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
+  private vBalanceWrap!: HTMLElement;
+  private vBalanceNeedle!: HTMLElement;
   private deathEl!: HTMLElement;
   // game HUD elements
   private scoreEl!: HTMLElement;
@@ -256,7 +258,22 @@ export class UI {
     this.balanceWrap.appendChild(this.balanceNeedle);
     this.balanceWrap.style.display = 'none';
 
-    for (const el of [this.msgWrap, this.flashEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.deathEl]) {
+    // VERTICAL balance meter for MANUALS: up/down on the stick fights the
+    // needle (nose at the top, tail at the bottom); left/right stays steering.
+    this.vBalanceWrap = div('hud-vbalance');
+    this.vBalanceNeedle = div('hud-vbalance-needle');
+    const vCenter = div('hud-vbalance-center');
+    const noseTick = div('hud-vbalance-cap');
+    noseTick.style.top = '2px';
+    const tailTick = div('hud-vbalance-cap');
+    tailTick.style.bottom = '2px';
+    this.vBalanceWrap.appendChild(vCenter);
+    this.vBalanceWrap.appendChild(noseTick);
+    this.vBalanceWrap.appendChild(tailTick);
+    this.vBalanceWrap.appendChild(this.vBalanceNeedle);
+    this.vBalanceWrap.style.display = 'none';
+
+    for (const el of [this.msgWrap, this.flashEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl]) {
       document.body.appendChild(el);
     }
   }
@@ -419,13 +436,33 @@ export class UI {
     this.levelButtons.forEach((b, i) => b.classList.toggle('active', i === id));
   }
 
-  // value in [-1, 1]; pegging either end is a bail.
-  updateBalance(visible: boolean, value: number): void {
-    this.balanceWrap.style.display = visible ? 'block' : 'none';
-    if (!visible) return;
-    const pct = 50 + value * 46;
-    this.balanceNeedle.style.left = pct + '%';
-    this.balanceNeedle.style.background = Math.abs(value) > 0.7 ? '#e2483d' : '#8fd4a8';
+  // THPS balance meters. Grinds show the HORIZONTAL bar (left/right needle);
+  // manuals show the VERTICAL one (needle sinks toward the tail as you tip
+  // back, rises toward the nose tipping forward — push the stick up/down
+  // AGAINST it). bal in [-1, 1]; pegging either end is the bail. crit = the
+  // last-chance beat: the needle flashes.
+  updateBalance(meter: { mode: 'grind' | 'manual'; bal: number; crit: boolean } | null): void {
+    const grind = meter !== null && meter.mode === 'grind';
+    const manual = meter !== null && meter.mode === 'manual';
+    this.balanceWrap.style.display = grind ? 'block' : 'none';
+    this.vBalanceWrap.style.display = manual ? 'block' : 'none';
+    if (!meter) return;
+    const hot = meter.crit || Math.abs(meter.bal) > 0.7;
+    const color = meter.crit
+      ? Math.sin(performance.now() * 0.045) > 0
+        ? '#ff2d1e'
+        : '#ffd23f'
+      : hot
+        ? '#e2483d'
+        : '#8fd4a8';
+    if (grind) {
+      this.balanceNeedle.style.left = 50 + meter.bal * 46 + '%';
+      this.balanceNeedle.style.background = color;
+    } else {
+      // balance + = tipping BACK onto the tail -> needle drops to the bottom
+      this.vBalanceNeedle.style.top = 50 + meter.bal * 44 + '%';
+      this.vBalanceNeedle.style.background = color;
+    }
   }
 
   setStats(s: Stats): void {
@@ -767,6 +804,26 @@ export class UI {
       .hud-balance-needle {
         position: absolute; top: -4px; width: 8px; height: 20px;
         margin-left: -4px; border-radius: 4px; background: #8fd4a8;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      }
+      .hud-vbalance {
+        position: fixed; z-index: 10; left: calc(50% + 96px); bottom: 22%;
+        width: 14px; height: 132px;
+        background: linear-gradient(90deg, rgba(8, 10, 15, 0.9), rgba(26, 30, 44, 0.9));
+        border: 1px solid #3a4152; border-radius: 7px;
+        box-shadow: inset 2px 0 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+      .hud-vbalance-center {
+        position: absolute; top: 50%; left: 2px; right: 2px; height: 2px;
+        margin-top: -1px; background: #5a6478;
+      }
+      .hud-vbalance-cap {
+        position: absolute; left: 4px; right: 4px; height: 2px;
+        background: #454e62; border-radius: 1px;
+      }
+      .hud-vbalance-needle {
+        position: absolute; left: -4px; height: 8px; width: 22px;
+        margin-top: -4px; border-radius: 4px; background: #8fd4a8;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
       }
     `;
