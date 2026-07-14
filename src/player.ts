@@ -194,6 +194,7 @@ export class Player {
   private wallrideLatched = false; // one wallride per air-time: blocks a new one until you touch ground or a rail
   private wallChargeT = 0; // how long X has been PUMPED on the wall — release to spring off, bigger with more charge
   private wallridePose = 0; // 0..1 visual tilt onto the wall
+  private wallChargePose = 0; // 0..1 eased crouch while pumping the wall (visual charge tell)
   // Short timer set every frame you're on a halfpipe surface. ANY vert launch
   // taken while it's fresh becomes a pipeHang (suppressed stick-spin) — covers
   // both the dedicated coping launch AND the general crest a fast pump takes.
@@ -479,6 +480,7 @@ export class Player {
     this.wallrideLatched = false;
     this.wallChargeT = 0;
     this.wallridePose = 0;
+    this.wallChargePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
     this.alignPose = 0;
@@ -3778,7 +3780,8 @@ export class Player {
           0.43 * this.chargePose * this.skatePose -
           0.45 * this.crawlPose -
           0.25 * this.slidePose -
-          0.28 * this.wallridePose, // knees bent tucking the board onto the wall
+          0.28 * this.wallridePose - // knees bent tucking the board onto the wall
+          0.4 * this.wallChargePose, // sink deeper the more you pump the launch
       );
     }
     if (this.boardG) {
@@ -3812,6 +3815,12 @@ export class Player {
     // the face) while the RIDER stays upright — head on top — hanging off it,
     // leaning out from the wall. sign from heading × outward-normal.
     this.wallridePose += ((this.wallriding ? 1 : 0) - this.wallridePose) * Math.min(1, 12 * dt);
+    // Pumping the wall (holding X to load a launch) sinks the rider into a
+    // crouch that deepens with the charge — a visual tell for how loaded it is.
+    const wallChargeTarget = this.wallriding
+      ? Math.min(1, this.wallChargeT / Math.max(0.001, TUNING.wallChargeMax))
+      : 0;
+    this.wallChargePose += (wallChargeTarget - this.wallChargePose) * Math.min(1, 14 * dt);
     let wallRoll = 0;
     let wallSide = 0;
     if (this.wallridePose > 0.01) {
@@ -3929,6 +3938,7 @@ export class Player {
       this.slidePose * 0.38 -
       this.crawlPose * 0.26 - // hunch down (hips stay up so it's a crawl, not a belly-flop)
       this.chargePose * 0.26 -
+      this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * this.dropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.05 * this.walkAmp +
       breathe * 0.015 * this.idleAmp;
