@@ -345,9 +345,13 @@ export class Player {
     scene.add(this.group);
     this.installRoo(); // swap the placeholder body for the authored model when it lands
 
+    // Crash-reference shadow: a TIGHT dark ellipse under the feet (~0.75 of
+    // a crate wide), not a faint pancake — it anchors the character hard.
+    const shadowGeo = new THREE.CircleGeometry(0.42, 12);
+    shadowGeo.scale(1, 0.85, 1); // slightly wider than deep once laid flat
     this.shadow = new THREE.Mesh(
-      new THREE.CircleGeometry(0.6, 12),
-      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35 }),
+      shadowGeo,
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 }),
     );
     this.shadow.rotation.x = -Math.PI / 2;
     scene.add(this.shadow);
@@ -4421,6 +4425,11 @@ export class Player {
         (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
+    // Standing still on foot: the reference idle is SUBTLE — slow weight-shift
+    // sway, breathing, a lazy head wander. Builds on the eased idleAmp and
+    // fades the moment any pose takes over.
+    const idleW =
+      this.idleAmp * (1 - sk) * (1 - this.crawlPose) * (1 - this.slidePose) * (1 - this.chargePose);
     // Side-on stance target: whenever the board is genuinely under you —
     // rolling, plain skate airs (grabs square back up; their poses are
     // authored in the forward frame), and grinds except boardslides (the
@@ -4492,7 +4501,7 @@ export class Player {
           (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 * this.stance : 0)) *
           fwS -
         0.35 * this.stance * this.sidePose;
-      const counter = -swing * 0.22;
+      const counter = -swing * 0.22 + 0.05 * Math.sin(this.runTime * 0.7) * idleW; // idle: lazy shoulder wander
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
     }
@@ -4504,12 +4513,14 @@ export class Player {
         0.3 * this.chargePose -
         0.45 * this.grabPitch * this.grabPose +
         0.3 * this.hangPose -
-        0.55 * this.slopePose;
+        0.55 * this.slopePose +
+        0.035 * breathe * idleW; // idle: breath lifts the chin a touch
       this.headM.rotation.x +=
         (THREE.MathUtils.clamp(look, -1.0, 0.6) - this.headM.rotation.x) * Math.min(1, 12 * dt);
       // Side-on: the head turns back over the lead shoulder to watch the
       // line of travel (the body faces across the board; the eyes don't).
-      const headYaw = -0.85 * this.stance * this.sidePose;
+      // Idling, she glances around the scene slowly instead.
+      const headYaw = -0.85 * this.stance * this.sidePose + 0.09 * Math.sin(this.runTime * 0.55) * idleW;
       this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
     }
     // Tail + ponytail follow-through: the kangaroo signature. The tail
@@ -4607,7 +4618,8 @@ export class Player {
     const leanR = (this.armR?.userData.lean as number | undefined) ?? 0.25;
     const leanL = (this.armL?.userData.lean as number | undefined) ?? 0.25;
     if (this.armR) {
-      this.armR.rotation.x = this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose; // lead hand reaches down the wall
+      this.armR.rotation.x =
+        this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.03 * breathe * idleW; // lead hand reaches down the wall; breath sways the idle hang
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
@@ -4619,7 +4631,13 @@ export class Player {
     }
     if (this.armL) {
       this.armL.rotation.x =
-        this.armLPose * this.grabPose - anti + sym + slideL + swing * 1.6 * this.crawlPose - 0.65 * this.wallridePose; // trailing arm swept back
+        this.armLPose * this.grabPose -
+        anti +
+        sym +
+        slideL +
+        swing * 1.6 * this.crawlPose -
+        0.65 * this.wallridePose +
+        0.03 * breathe * idleW; // trailing arm swept back; breath sways the idle hang
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
@@ -4635,10 +4653,16 @@ export class Player {
     if (this.elbowR || this.elbowL) {
       const straight = 1 - 0.9 * Math.max(this.grabPose, this.dropPose, this.starPose);
       const bendR =
-        (0.12 + 0.5 * Math.max(0, anti) + 0.25 * this.skatePose + 0.5 * this.crawlPose + 0.3 * this.slidePose) *
+        (0.12 +
+          0.02 * breathe * idleW +
+          0.5 * Math.max(0, anti) +
+          0.25 * this.skatePose +
+          0.5 * this.crawlPose +
+          0.3 * this.slidePose) *
         straight;
       const bendL =
-        (0.12 + 0.5 * Math.max(0, -anti) + 0.25 * this.skatePose + 0.5 * this.crawlPose) * straight;
+        (0.12 + 0.02 * breathe * idleW + 0.5 * Math.max(0, -anti) + 0.25 * this.skatePose + 0.5 * this.crawlPose) *
+        straight;
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
       if (this.elbowL) this.elbowL.rotation.x = -Math.max(0.05, bendL);
     }
@@ -4850,7 +4874,7 @@ export class Player {
       const h = Math.max(0, this.pos.y - this.shadowGroundY);
       this.shadow.visible = true;
       this.shadow.position.set(this.pos.x, this.shadowGroundY + 0.03, this.pos.z);
-      this.shadow.scale.setScalar(THREE.MathUtils.clamp(1.3 - h * 0.045, 0.4, 1.3));
+      this.shadow.scale.setScalar(THREE.MathUtils.clamp(0.95 - h * 0.04, 0.35, 0.95));
     } else {
       this.shadow.visible = false; // no shadow = you are over the pit
     }
