@@ -212,6 +212,7 @@ export class Player {
   // SPINE TRANSFER: which pipe the current hang crested from; landing a hang on
   // a DIFFERENT pipe = carried across the ridge.
   private hangPipe: Halfpipe | null = null;
+  private transferCoolT = 0; // debounce between R2 spine transfers
   // Where the follow camera is AIMING (XZ-projected, unit), fed by main every
   // frame. The lip stall projects its tip axis onto this so the balance meter
   // and the stick axis that fights it match what's on screen.
@@ -720,6 +721,7 @@ export class Player {
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
     this.lipCoolT = Math.max(0, this.lipCoolT - dt);
+    this.transferCoolT = Math.max(0, this.transferCoolT - dt);
     this.sketchyT = Math.max(0, this.sketchyT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
@@ -902,6 +904,9 @@ export class Player {
       }
       case 'air':
         this.runTime += dt;
+        // SPINE TRANSFER: R2 mid-hang pops the hang over the coping onto the
+        // adjacent vert (when there is one). Deliberate, edge-triggered.
+        if (input.transferPressed) this.trySpineTransfer(level);
         // NOTE: there is deliberately NO lip-stall catch from the air. The
         // stall is committed ON the wall (climb square holding Triangle,
         // through the crest) — once you're in hangtime, coming down onto the
@@ -2782,6 +2787,53 @@ export class Player {
     this.score(CONST.ptsLip, 'Axle Stall');
     sfx.play('railLand', 0.7);
     this.emitSparks(5, 0xffe08a, 1.2);
+  }
+
+  // SPINE TRANSFER — deliberate: R2 during a pipe hang, near or above the
+  // coping. If another vert's mouth sits right across the lip line you're
+  // hanging over, the hang does a one-way switch onto that pipe: position
+  // and glue plane mirror across the coping, the arc (vVel) carries over,
+  // and you come down the far transition. No target = the press does
+  // nothing. Nothing too crazy.
+  private trySpineTransfer(level: Level): boolean {
+    if (!this.vertAir || !this.pipeHang || !this.hangPipe || this.transferCoolT > 0) return false;
+    const hp = this.hangPipe;
+    if (this.pos.y < hp.lipY - 0.5) return false; // below the coping the ridge is solid
+    const anchorCross = hp.crossCoord(this.vertAnchor.x, this.vertAnchor.z);
+    const side = Math.sign(anchorCross - hp.cross) || 1;
+    const lipCross = hp.cross + side * hp.lipX;
+    const along = hp.alongCoord(this.pos.x, this.pos.z);
+    // probe a step past the coping on the far side
+    const px = hp.axis === 'z' ? lipCross + side * 1.0 : along;
+    const pz = hp.axis === 'z' ? along : lipCross + side * 1.0;
+    let target: Halfpipe | null = null;
+    for (const other of level.halfpipes) {
+      if (other === hp || other.axis !== hp.axis) continue;
+      const oAlong = other.alongCoord(px, pz);
+      if (oAlong < Math.min(other.l0, other.l1) - 0.2) continue;
+      if (oAlong > Math.max(other.l0, other.l1) + 0.2) continue;
+      if (Math.abs(other.crossCoord(px, pz) - other.cross) <= other.lipX - 0.3) {
+        target = other;
+        break;
+      }
+    }
+    if (!target) return false;
+    // mirror pos + glue plane across the lip line; keep height, arc, lateral
+    const myCross = hp.crossCoord(this.pos.x, this.pos.z);
+    if (hp.axis === 'z') {
+      this.pos.x = 2 * lipCross - myCross;
+      this.vertAnchor.x = 2 * lipCross - anchorCross;
+    } else {
+      this.pos.z = 2 * lipCross - myCross;
+      this.vertAnchor.z = 2 * lipCross - anchorCross;
+    }
+    this.vertNormal.negate(); // the far pipe's wall faces the other way
+    this.hangPipe = target;
+    this.transferCoolT = 0.3;
+    this.score(CONST.ptsSpine, 'Spine Transfer');
+    sfx.play('woosh2', 0.7);
+    this.emitSparks(8, 0xa0e8ff, 2);
+    return true;
   }
 
   // Is another vert's mouth right behind this coping? (A spine/ridge stall —

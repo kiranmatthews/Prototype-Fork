@@ -15,6 +15,7 @@ export class Input {
   grindHeld = false;
   spinHeld = false;
   grabHeld = false;
+  transferHeld = false; // R2: spine transfer during a pipe hang
 
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.
@@ -23,6 +24,7 @@ export class Input {
   grindPressed = false;
   spinPressed = false;
   grabPressed = false;
+  transferPressed = false;
   restartPressed = false;
   pausePressed = false;
 
@@ -33,6 +35,7 @@ export class Input {
   private prevGrind = false;
   private prevSpin = false;
   private prevGrab = false;
+  private prevTransfer = false;
   private prevRestart = false;
   private prevPause = false;
 
@@ -49,6 +52,7 @@ export class Input {
         if (e.code === 'KeyE') this.grindPressed = true;
         if (e.code === 'KeyF') this.spinPressed = true;
         if (e.code === 'KeyQ') this.grabPressed = true;
+        if (e.code === 'KeyT') this.transferPressed = true;
         if (e.code === 'KeyR') this.restartPressed = true;
         if (e.code === 'KeyP' || e.code === 'Escape') this.pausePressed = true;
       }
@@ -76,6 +80,7 @@ export class Input {
     let grind = k.has('KeyE');
     let spin = k.has('KeyF');
     let grab = k.has('KeyQ');
+    let transfer = k.has('KeyT');
     let restart = k.has('KeyR');
     let pause = k.has('KeyP') || k.has('Escape');
 
@@ -102,6 +107,7 @@ export class Input {
       grab = grab || !!pad.buttons[1]?.pressed; // Circle
       spin = spin || !!pad.buttons[2]?.pressed; // Square
       grind = grind || !!pad.buttons[3]?.pressed; // Triangle
+      transfer = transfer || !!pad.buttons[7]?.pressed; // R2 = spine transfer
       restart = restart || !!pad.buttons[8]?.pressed; // Share = reset
       pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
     }
@@ -121,12 +127,14 @@ export class Input {
     this.grindHeld = grind;
     this.spinHeld = spin;
     this.grabHeld = grab;
+    this.transferHeld = transfer;
 
     this.jumpPressed = this.jumpPressed || (jump && !this.prevJump);
     this.jumpReleased = this.jumpReleased || (!jump && this.prevJump);
     this.grindPressed = this.grindPressed || (grind && !this.prevGrind);
     this.spinPressed = this.spinPressed || (spin && !this.prevSpin);
     this.grabPressed = this.grabPressed || (grab && !this.prevGrab);
+    this.transferPressed = this.transferPressed || (transfer && !this.prevTransfer);
     this.restartPressed = this.restartPressed || (restart && !this.prevRestart);
     this.pausePressed = this.pausePressed || (pause && !this.prevPause);
 
@@ -134,6 +142,7 @@ export class Input {
     this.prevGrind = grind;
     this.prevSpin = spin;
     this.prevGrab = grab;
+    this.prevTransfer = transfer;
     this.prevRestart = restart;
     this.prevPause = pause;
   }
@@ -146,6 +155,7 @@ export class Input {
     this.grindPressed = false;
     this.spinPressed = false;
     this.grabPressed = false;
+    this.transferPressed = false;
     this.restartPressed = false;
     this.pausePressed = false;
   }

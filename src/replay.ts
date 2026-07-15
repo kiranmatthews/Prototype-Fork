@@ -10,7 +10,9 @@
 
 import { TUNING } from './tuning';
 
-// the ten button channels the sim reads, packed into one bitmask per frame
+// the button channels the sim reads, packed into one bitmask per frame.
+// APPEND-ONLY: bit positions are the file format — old replays simply never
+// set the newer bits.
 const CHANNELS = [
   'jumpHeld',
   'grindHeld',
@@ -22,6 +24,8 @@ const CHANNELS = [
   'spinPressed',
   'grabPressed',
   'restartPressed',
+  'transferHeld',
+  'transferPressed',
 ] as const;
 
 type InputLike = { moveX: number; moveY: number } & Record<(typeof CHANNELS)[number], boolean>;

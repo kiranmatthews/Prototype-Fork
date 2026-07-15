@@ -77,13 +77,13 @@ export const TUNING = {
   wallKickOut: 1.5, // push away from the wall when you kick off
   airControl: 0, // forward/back speed adjustment in the air
   manualMinSpeed: 6, // must be rolling at least this fast to pop (or hold) a manual
-  manualDrift: 1.0, // manual balance: how fast the pitch needle runs away
+  manualDrift: 1, // manual balance: how fast the pitch needle runs away
   manualControl: 3.2, // how hard up/down input fights the manual needle
   manualFlickWindow: 0.28, // max seconds between the two stick flicks (up-then-down = manual, down-then-up = nose)
-  lipAngle: 30, // LIP TRICK: approach must be within this many degrees of dead-on (90 deg to the coping) — off-axis arrivals grind the coping instead
-  lipMaxTime: 2.5, // longest a lip stall holds before you drop back in
-  lipDrift: 0.8, // lip stall balance: how fast the needle runs away on its own
-  lipControl: 3.4, // how hard up/down input fights the lip needle
+  lipAngle: 10, // LIP TRICK: approach must be within this many degrees of dead-on (90 deg to the coping) — off-axis arrivals grind the coping instead
+  lipMaxTime: 12, // longest a lip stall holds before you drop back in
+  lipDrift: 0.95, // lip stall balance: how fast the needle runs away on its own
+  lipControl: 2.1, // how hard up/down input fights the lip needle
   // (spineDrift is RETIRED — the hold-into-the-lip spine carry walked the
   // glue anchor off the wall and is removed from the code entirely; old
   // saves/replays that still carry the key are ignored. Spine transfers
@@ -114,7 +114,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 2;
+export const TUNING_VERSION = 3;
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
