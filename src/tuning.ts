@@ -496,6 +496,8 @@ export const CONST = {
   ptsLip: 125, // catching a lip stall on the coping
   ptsLipTick: 6, // accrues every quarter second stalled on the lip
   ptsSpine: 250, // spine transfer: carried over the ridge, landed the far side
+  hangLatMax: 8, // pipe hang: cap on the off-axis lateral carry (locked-in vert, no launching down the pipe)
+  hangLatDamp: 1.8, // pipe hang: how fast the lateral carry bleeds off (drift early, come down locked)
   manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out

@@ -1190,7 +1190,13 @@ export class Player {
         this.balanceCritT += dt;
         if (this.balanceCritT > TUNING.bailGrace) {
           if (this.balance > 0) this.lipDrop(false); // fell into the pipe: ride it out
-          else this.lipBail(); // fell out the back: eat the deck
+          else {
+            // fell out the back — onto the DECK it's the honest bail, but on
+            // a spine/ridge stall the "back" is another vert: ride that out
+            const back = this.pipeBehindLip(level);
+            if (back) this.lipDrop(false, back);
+            else this.lipBail();
+          }
           return;
         }
       } else {
@@ -2101,6 +2107,9 @@ export class Player {
       if (this.vertLatVel !== 0) {
         this.pos.x += tx * this.vertLatVel * dt;
         this.pos.z += tz * this.vertLatVel * dt;
+        // ...but a PIPE hang bleeds it off through the hang: drift down the
+        // pipe early, come down LOCKED over one spot (the THPS contract).
+        if (this.pipeHang) this.vertLatVel *= Math.exp(-CONST.hangLatDamp * dt);
       }
       // plus fine stick steering along the coping
       const rx = this.rawInput.moveX;
@@ -2123,6 +2132,22 @@ export class Player {
           if (push > 0.4) {
             this.vertAnchor.addScaledVector(this.vertNormal, -TUNING.spineDrift * push * dt);
           }
+        }
+      }
+      // THPS LOCK-IN, the hard guarantee: a hang over a pipe can never float
+      // past the END of the pipe — past the end there is no wall to catch
+      // you, and drifting there dumped you out of the hang onto the flat.
+      // Clamp to the trough span; hitting the clamp kills the carry.
+      if (this.hangPipe) {
+        const hp = this.hangPipe;
+        const lo = Math.min(hp.l0, hp.l1) + 0.4;
+        const hi = Math.max(hp.l0, hp.l1) - 0.4;
+        const along = hp.alongCoord(this.pos.x, this.pos.z);
+        const clamped = THREE.MathUtils.clamp(along, lo, hi);
+        if (clamped !== along) {
+          if (hp.axis === 'z') this.pos.z = clamped;
+          else this.pos.x = clamped;
+          this.vertLatVel = 0;
         }
       }
     }
@@ -2553,6 +2578,11 @@ export class Player {
       this.vertLatVel = 0; // snapped to a pure vertical hang
     } else {
       this.vertLatVel = entrySpeed * along * TUNING.hangLateral;
+      // A PIPE hang is locked-in THPS vert: an angled entry drifts you down
+      // the pipe a few feet, never launches you down its length (a hard
+      // carve at top speed used to out-run the pipe entirely).
+      if (this.pipeHang)
+        this.vertLatVel = THREE.MathUtils.clamp(this.vertLatVel, -CONST.hangLatMax, CONST.hangLatMax);
     }
     this.speed = 0; // the energy is in vVel (up) + vertLatVel (across) now
     // Glue plane. A general vert crest sits it a hair INSIDE (1.2) so the drop
@@ -2742,6 +2772,23 @@ export class Player {
     this.emitSparks(5, 0xffe08a, 1.2);
   }
 
+  // Is another vert's mouth right behind this coping? (A spine/ridge stall —
+  // two pipes sharing the lip line.) Tipping out the "back" there is not a
+  // bail: you fall into the OTHER pipe and ride it out.
+  private pipeBehindLip(level: Level): Halfpipe | null {
+    const hp = this.lipPipe!;
+    const px = this.pos.x + (hp.axis === 'z' ? this.lipSide * 0.9 : 0);
+    const pz = this.pos.z + (hp.axis === 'z' ? 0 : this.lipSide * 0.9);
+    for (const other of level.halfpipes) {
+      if (other === hp) continue;
+      const along = other.alongCoord(px, pz);
+      if (along < Math.min(other.l0, other.l1) - 0.2) continue;
+      if (along > Math.max(other.l0, other.l1) + 0.2) continue;
+      if (Math.abs(other.crossCoord(px, pz) - other.cross) <= other.lipX - 0.3) return other;
+    }
+    return null;
+  }
+
   // Tipped out the BACK of the coping: the honest lip bail — ejected onto the
   // deck side, eating it wherever you come down.
   private lipBail(): void {
@@ -2767,24 +2814,27 @@ export class Player {
     this.vVel = 0.5;
   }
 
-  // Drop back into the pipe — travel reverses vs the climb, so it's a fakie:
-  // flip the stance and absorb the turn into the facing (same rule as the
-  // hang drop-in), then hand the wall back to the analytic attach.
-  private lipDrop(jumped: boolean): void {
-    const hp = this.lipPipe!;
-    const inward = -this.lipSide; // toward the pipe centre along the cross axis
-    if (hp.axis === 'z') {
-      this.pos.x += inward * 0.6;
-      this.axisF.set(inward, 0, 0);
-    } else {
-      this.pos.z += inward * 0.6;
-      this.axisF.set(0, 0, inward);
-    }
+  // Drop off the coping into a pipe — by default the one you stalled on:
+  // travel reverses vs the climb, so it's a fakie (flip the stance, absorb
+  // the turn into the facing, same rule as the hang drop-in). Passing the
+  // NEIGHBOURING pipe instead (a ridge stall tipping out the "back") rides
+  // straight on through — same travel direction, so the stance stays.
+  private lipDrop(jumped: boolean, hp: Halfpipe = this.lipPipe!): void {
+    // toward the target pipe's centre along its cross axis
+    const inward = Math.sign(hp.cross - hp.crossCoord(this.pos.x, this.pos.z)) || 1;
+    if (hp.axis === 'z') this.pos.x += inward * 0.6;
+    else this.pos.z += inward * 0.6;
+    const ix = hp.axis === 'z' ? inward : 0;
+    const iz = hp.axis === 'z' ? 0 : inward;
+    const ridesOn = this.axisF.x * ix + this.axisF.z * iz > 0; // continuing the climb direction
+    this.axisF.set(ix, 0, iz);
     this.pos.y = hp.lipY - 0.3;
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    const oldStance = this.stance;
-    this.stance = -this.stance as 1 | -1;
-    this.visualYaw = wrapAngle(this.visualYaw + oldStance * Math.PI * this.sidePose);
+    if (!ridesOn) {
+      const oldStance = this.stance;
+      this.stance = -this.stance as 1 | -1;
+      this.visualYaw = wrapAngle(this.visualYaw + oldStance * Math.PI * this.sidePose);
+    }
     this.speed = 4;
     this.lipStallT = 0;
     this.lipCoolT = 0.5;
