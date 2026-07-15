@@ -32,6 +32,8 @@ export interface HudState {
   hasGem: boolean;
 }
 
+declare const __BUILD_TAG__: string; // injected by vite.config define
+
 export class UI {
   private statsEl: HTMLElement;
   private msgTitle: HTMLElement;
@@ -225,6 +227,12 @@ export class UI {
     this.msgWrap.appendChild(this.msgSub);
     this.msgWrap.style.display = 'none';
     this.flashEl = div('hud-flash');
+
+    // Build stamp: baked at compile time. If a playtest doesn't show a
+    // change, check this first — it answers "which build am I running?".
+    const stamp = div('hud-build');
+    stamp.textContent = 'build ' + __BUILD_TAG__;
+    document.body.appendChild(stamp);
 
     // ---- game HUD: Crash-style counters + THPS trick plate ----
     // top-left: crate + wumpa counters
@@ -708,6 +716,11 @@ export class UI {
 
       /* --- Crash-style game HUD --- */
       .hud-tl { position: fixed; top: 16px; left: 40px; z-index: 10; pointer-events: none; }
+      .hud-build {
+        position: fixed; bottom: 6px; left: 8px; z-index: 10; pointer-events: none;
+        font: 10px ui-monospace, Menlo, Consolas, monospace; color: rgba(220, 228, 240, 0.5);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+      }
       .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
       .hud-counter { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
       .hud-num {

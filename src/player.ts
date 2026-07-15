@@ -326,6 +326,7 @@ export class Player {
   private spinBox = new THREE.Box3();
   private enemyTouch = new THREE.Box3(); // scratch: shrunken enemy touch box
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; dust?: boolean }[] = [];
+  private runStepSign = 1; // footfall edge detector for the run dust trail
   private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
 
   constructor(scene: THREE.Scene) {
@@ -914,6 +915,14 @@ export class Player {
     this.updateSpin(dt, input);
     this.updateGrab(dt, input);
     if (this.sliding) this.emitDust(2); // baseball-slide dust off the ground
+    // Running kicks up a puff at every footfall — the Crash dust trail.
+    if (this.grounded && this.walkAmp > 0.5) {
+      const stepSgn = Math.sign(Math.sin(this.walkPhase)) || 1;
+      if (stepSgn !== this.runStepSign) {
+        this.runStepSign = stepSgn;
+        this.emitDust(2);
+      }
+    }
     this.updateSparks(dt);
     this.updateFruit(dt);
 
