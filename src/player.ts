@@ -327,6 +327,7 @@ export class Player {
   private enemyTouch = new THREE.Box3(); // scratch: shrunken enemy touch box
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; dust?: boolean }[] = [];
   private runStepSign = 1; // footfall edge detector for the run dust trail
+  private jumpPose = 0; // on-foot jump: overhead arm throw + leg tuck (Crash reference)
   private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
 
   constructor(scene: THREE.Scene) {
@@ -4439,6 +4440,18 @@ export class Player {
     // fades the moment any pose takes over.
     const idleW =
       this.idleAmp * (1 - sk) * (1 - this.crawlPose) * (1 - this.slidePose) * (1 - this.chargePose);
+    // On-foot jump (the Crash reference): arms THROW straight up through the
+    // rise, hold high across the apex, and ease as she falls; legs tuck on
+    // the way up. Star jumps, grabs, and slams keep their own poses.
+    const onFootAir =
+      this.state === 'air' &&
+      !this.freeSkate &&
+      !this.slamActive &&
+      this.starTimer <= 0 &&
+      this.grabPose < 0.1;
+    this.jumpPose += ((onFootAir ? 1 : 0) - this.jumpPose) * Math.min(1, 14 * dt);
+    const jp = this.jumpPose * (1 - this.starPose);
+    const riseK = THREE.MathUtils.clamp(this.vVel / 6, -1, 1); // +1 launching, -1 dropping
     // Side-on stance target: whenever the board is genuinely under you —
     // rolling, plain skate airs (grabs square back up; their poses are
     // authored in the forward frame), and grinds except boardslides (the
@@ -4466,6 +4479,10 @@ export class Player {
       const liftR = Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
       this.legL.rotation.x -= 0.45 * liftL;
       this.legR.rotation.x -= 0.45 * liftR;
+      // jump: thighs tuck up through the rise, back to hanging for the drop
+      const jTuck = 0.7 * jp * Math.max(0, riseK);
+      this.legL.rotation.x -= jTuck;
+      this.legR.rotation.x -= jTuck * 0.8; // slight stagger reads livelier than a sync tuck
       // switch stance mirrors the feet fore-aft (and the ankle angles)
       const stz = this.stance;
       // Side-on frame: the body is turned 90°, so the hip line IS the board
@@ -4495,8 +4512,8 @@ export class Player {
       const backL = 0.9 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
       const backR = 0.9 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
       // the lifted leg folds its shin under the raised thigh (prance step)
-      const frontL = 1.1 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
-      const frontR = 1.1 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
+      const frontL = 1.1 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp + 0.8 * jp * Math.max(0, riseK);
+      const frontR = 1.1 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp + 0.65 * jp * Math.max(0, riseK);
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // back leg
       this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose);
@@ -4534,7 +4551,8 @@ export class Player {
         0.45 * this.grabPitch * this.grabPose +
         0.3 * this.hangPose -
         0.55 * this.slopePose +
-        0.06 * breathe * idleW; // idle: breath lifts the chin a touch
+        0.06 * breathe * idleW + // idle: breath lifts the chin a touch
+        0.18 * jp * Math.max(0, riseK); // jump: chin up through the launch
       this.headM.rotation.x +=
         (THREE.MathUtils.clamp(look, -1.0, 0.6) - this.headM.rotation.x) * Math.min(1, 12 * dt);
       // Side-on: the head turns back over the lead shoulder to watch the
@@ -4553,7 +4571,8 @@ export class Player {
         0.3 * this.grindArmPose +
         0.3 * sk - // rolling: swing clear of the deck
         0.35 * this.crawlPose +
-        0.25 * this.walkAmp; // running: the tail streams out behind, counterweight up
+        0.25 * this.walkAmp + // running: the tail streams out behind, counterweight up
+        0.35 * jp; // jumping: the tail flares as the counterweight
       const wag = 0.16 * breathe + 0.5 * swing;
       // Each joint carries its rest angle in userData (authored chunks bake
       // the curve, so theirs is 0) plus a share of the flex — decaying lift
@@ -4647,6 +4666,7 @@ export class Player {
         1.15 * this.grindArmPose * (1 + 0.6 * railBal) + // balance arms out wide (grinds tip them sideways; manual balance lives in the PITCH instead)
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
+        (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
         1.05 * this.wallridePose + // wallride: arm flung out for balance
         0.35 * this.skatePose; // loose skate arms
     }
@@ -4665,6 +4685,7 @@ export class Player {
         1.15 * this.grindArmPose * (1 - 0.6 * railBal) -
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
+        (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
         1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
     }
@@ -4678,6 +4699,7 @@ export class Player {
           0.02 * breathe * idleW +
           0.65 * Math.max(0, anti) +
           0.35 * this.walkAmp + // running: elbows stay cocked like the reference
+          0.3 * jp + // overhead throw keeps a reference-style elbow bend
           0.25 * this.skatePose +
           0.5 * this.crawlPose +
           0.3 * this.slidePose) *
@@ -4687,6 +4709,7 @@ export class Player {
           0.02 * breathe * idleW +
           0.65 * Math.max(0, -anti) +
           0.35 * this.walkAmp +
+          0.3 * jp +
           0.25 * this.skatePose +
           0.5 * this.crawlPose) *
         straight;
