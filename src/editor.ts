@@ -94,6 +94,19 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
 
 const CRATE_KINDS = ['wood', 'bouncy', 'nitro', 'tnt', 'mask', 'mystery', 'bang', 'nitrobang'] as const;
 
+// components that grow draggable resize handles on double-click
+const RESIZABLE = new Set(['platform', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'pipe', 'enemy', 'pendulum']);
+
+// A resize handle: lives at `pos`, drags along `dir` (world space, outward),
+// and `apply` rewrites the component from its grab-time snapshot given the
+// travel distance — pure from `orig`, so re-applying while dragging is stable.
+interface HandleDef {
+  pos: THREE.Vector3;
+  dir: THREE.Vector3;
+  apply: (orig: CustomComponent, c: CustomComponent, d: number) => void;
+}
+const HANDLE_GEO = new THREE.BoxGeometry(0.55, 0.55, 0.55);
+
 export class Editor {
   active = false;
   data: CustomLevelData;
@@ -118,6 +131,20 @@ export class Editor {
   private dragOrig: [number, number, number] = [0, 0, 0];
   private dragVertical = false;
   private downAt: { x: number; y: number } | null = null;
+  // resize-handle state (enter by double-clicking a component)
+  private resizeIdx = -1;
+  private hdlDefs: HandleDef[] = [];
+  private handleGroup: THREE.Group | null = null;
+  private handleMeshes: THREE.Mesh[] = [];
+  private hdlDrag: {
+    i: number;
+    lineO: THREE.Vector3;
+    lineD: THREE.Vector3;
+    t0: number;
+    orig: CustomComponent;
+  } | null = null;
+  private lastLiveRebuild = 0;
+  private resizeHintShown = false;
 
   constructor(
     scene: THREE.Scene,
@@ -136,6 +163,7 @@ export class Editor {
     dom.addEventListener('pointerdown', this.onDown);
     dom.addEventListener('pointermove', this.onMove);
     dom.addEventListener('pointerup', this.onUp);
+    dom.addEventListener('dblclick', this.onDbl);
     window.addEventListener('keydown', this.onKey);
   }
 
@@ -163,6 +191,7 @@ export class Editor {
     this.controls = null;
     this.panel.style.display = 'none';
     this.select(-1);
+    this.dom.style.cursor = '';
     this.setGhostsVisible(false);
     if (this.spawnMarker) {
       this.scene.remove(this.spawnMarker);
@@ -172,6 +201,10 @@ export class Editor {
 
   update(): void {
     this.controls?.update();
+    // keep resize handles a steady on-screen size at any zoom
+    for (const m of this.handleMeshes) {
+      m.scale.setScalar(THREE.MathUtils.clamp(this.camera.position.distanceTo(m.position) * 0.022, 0.7, 3));
+    }
   }
 
   get selectedIndex(): number {
@@ -197,6 +230,8 @@ export class Editor {
   onLevelRebuilt(): void {
     if (this.selected >= this.data.components.length) this.select(-1);
     else this.refreshSelectionBox();
+    if (this.resizeIdx >= this.data.components.length) this.resizeIdx = -1;
+    this.refreshHandles();
     this.refreshSpawnMarker();
     this.setGhostsVisible(this.active);
   }
@@ -288,6 +323,7 @@ export class Editor {
   // ---- selection + picking ----
 
   private select(idx: number): void {
+    if (idx !== this.resizeIdx) this.setResize(-1); // handles follow the selection
     this.selected = idx;
     this.refreshSelectionBox();
     this.renderProps();
@@ -320,7 +356,12 @@ export class Editor {
     const r = this.dom.getBoundingClientRect();
     this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     this.raycaster.setFromCamera(this.pointer, this.camera);
-    const hits = this.raycaster.intersectObjects(this.getLevel().pickRoot.children, true);
+    // A commit rebuilds the level synchronously; a click landing before the
+    // next render (the 2nd half of a double-click) would raycast fresh meshes
+    // with identity matrices — everything "at the origin" — and mis-pick.
+    const root = this.getLevel().pickRoot;
+    root.updateMatrixWorld(true);
+    const hits = this.raycaster.intersectObjects(root.children, true);
     for (const h of hits) {
       let o: THREE.Object3D | null = h.object;
       while (o) {
@@ -338,10 +379,237 @@ export class Editor {
     return this.raycaster.ray.intersectPlane(plane, out) !== null;
   }
 
+  // ---- resize handles (double-click a component) ----
+
+  private setResize(idx: number): void {
+    this.resizeIdx = idx;
+    if (idx >= 0) this.materializeDims(this.data.components[idx]);
+    this.refreshHandles();
+  }
+
+  // fill defaulted dimensions in, so handle math (and its grab snapshot) is concrete
+  private materializeDims(c: CustomComponent): void {
+    if (c.t === 'platform') c.s = c.s ?? [8, 1, 8];
+    else if (c.t === 'wall') c.s = c.s ?? [8, 4, 1];
+    else if (c.t === 'pit') c.s = c.s ?? [6, 1, 6];
+    else if (c.t === 'crumble') c.s = c.s ?? [3, 1, 3];
+    else if (c.t === 'crusher') c.s = c.s ?? [4, 3, 3];
+    else if (c.t === 'ramp') {
+      c.len = c.len ?? 10;
+      c.rise = c.rise ?? 4;
+      c.w = c.w ?? 8;
+    } else if (c.t === 'rail') c.len = c.len ?? 12;
+    else if (c.t === 'pipe') c.len = c.len ?? 36;
+    else if (c.t === 'enemy') c.range = c.range ?? 5;
+    else if (c.t === 'pendulum') c.len = c.len ?? 5;
+  }
+
+  private handleDefsFor(c: CustomComponent): HandleDef[] {
+    const defs: HandleDef[] = [];
+    const P = new THREE.Vector3(c.p[0], c.p[1], c.p[2]);
+    const UP = new THREE.Vector3(0, 1, 0);
+    const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    const loc = (x: number, y: number, z: number): THREE.Vector3 =>
+      new THREE.Vector3(x, y, z).applyAxisAngle(UP, yaw);
+    // drag a box face outward: s[idx] grows and (if anchored) the component
+    // center shifts by half, so the OPPOSITE face stays where it was
+    const face = (u: THREE.Vector3, at: THREE.Vector3, idx: number, min: number, anchor = true): void => {
+      defs.push({
+        pos: at,
+        dir: u,
+        apply: (orig, cc, d) => {
+          const os = orig.s!;
+          const v = Math.max(min, os[idx] + d);
+          const ns: [number, number, number] = [os[0], os[1], os[2]];
+          ns[idx] = v;
+          cc.s = ns;
+          const g = anchor ? (v - os[idx]) / 2 : 0;
+          cc.p = [orig.p[0] + u.x * g, orig.p[1] + u.y * g, orig.p[2] + u.z * g];
+        },
+      });
+    };
+    // length-ish scalar (rail/pipe len, ramp w, enemy range); recenter keeps
+    // the far end planted while this end follows the handle
+    const span = (
+      u: THREE.Vector3,
+      at: THREE.Vector3,
+      key: 'len' | 'w' | 'range',
+      min: number,
+      recenter: boolean,
+    ): void => {
+      defs.push({
+        pos: at,
+        dir: u,
+        apply: (orig, cc, d) => {
+          const v = Math.max(min, (orig[key] as number) + d);
+          cc[key] = v;
+          const g = recenter ? (v - (orig[key] as number)) / 2 : 0;
+          cc.p = [orig.p[0] + u.x * g, orig.p[1] + u.y * g, orig.p[2] + u.z * g];
+        },
+      });
+    };
+    if (c.t === 'platform') {
+      const s = c.s!;
+      face(loc(1, 0, 0), P.clone().addScaledVector(loc(1, 0, 0), s[0] / 2), 0, 0.5);
+      face(loc(-1, 0, 0), P.clone().addScaledVector(loc(-1, 0, 0), s[0] / 2), 0, 0.5);
+      face(loc(0, 0, 1), P.clone().addScaledVector(loc(0, 0, 1), s[2] / 2), 2, 0.5);
+      face(loc(0, 0, -1), P.clone().addScaledVector(loc(0, 0, -1), s[2] / 2), 2, 0.5);
+      face(new THREE.Vector3(0, 1, 0), P.clone().setY(P.y + s[1] / 2), 1, 0.5);
+      face(new THREE.Vector3(0, -1, 0), P.clone().setY(P.y - s[1] / 2), 1, 0.5);
+    } else if (c.t === 'wall') {
+      const s = c.s!;
+      const mid = P.clone().setY(P.y + s[1] / 2); // p is the BASE center
+      face(new THREE.Vector3(1, 0, 0), mid.clone().setX(mid.x + s[0] / 2), 0, 0.5);
+      face(new THREE.Vector3(-1, 0, 0), mid.clone().setX(mid.x - s[0] / 2), 0, 0.5);
+      face(new THREE.Vector3(0, 0, 1), mid.clone().setZ(mid.z + s[2] / 2), 2, 0.5);
+      face(new THREE.Vector3(0, 0, -1), mid.clone().setZ(mid.z - s[2] / 2), 2, 0.5);
+      face(new THREE.Vector3(0, 1, 0), P.clone().setY(P.y + s[1]), 1, 0.5, false); // grows up from the base
+    } else if (c.t === 'pit' || c.t === 'crumble' || c.t === 'crusher') {
+      const s = c.s!;
+      const y = c.t === 'crusher' ? P.y + 1.2 : P.y;
+      const at = (x: number, z: number): THREE.Vector3 => new THREE.Vector3(P.x + x, y, P.z + z);
+      face(new THREE.Vector3(1, 0, 0), at(s[0] / 2, 0), 0, 1);
+      face(new THREE.Vector3(-1, 0, 0), at(-s[0] / 2, 0), 0, 1);
+      face(new THREE.Vector3(0, 0, 1), at(0, s[2] / 2), 2, 1);
+      face(new THREE.Vector3(0, 0, -1), at(0, -s[2] / 2), 2, 1);
+    } else if (c.t === 'ramp') {
+      const len = c.len!;
+      const rise = c.rise!;
+      const w = c.w!;
+      const zl = loc(0, 0, 1); // toward the LOW end
+      const xl = loc(1, 0, 0);
+      span(zl, P.clone().addScaledVector(zl, len / 2).setY(P.y + 0.2), 'len', 1, true);
+      span(zl.clone().negate(), P.clone().addScaledVector(zl, -len / 2).setY(P.y + rise), 'len', 1, true);
+      span(xl, P.clone().addScaledVector(xl, w / 2).setY(P.y + rise / 2), 'w', 1, true);
+      span(xl.clone().negate(), P.clone().addScaledVector(xl, -w / 2).setY(P.y + rise / 2), 'w', 1, true);
+      defs.push({
+        pos: P.clone().addScaledVector(zl, -len / 2).setY(P.y + rise + 0.4),
+        dir: new THREE.Vector3(0, 1, 0),
+        apply: (orig, cc, d) => {
+          cc.rise = orig.rise! + d;
+        },
+      });
+    } else if (c.t === 'rail') {
+      const u = loc(0, 0, 1); // (sin yaw, 0, cos yaw): the rail's run
+      const len = c.len!;
+      span(u, P.clone().addScaledVector(u, len / 2), 'len', 1, true);
+      span(u.clone().negate(), P.clone().addScaledVector(u, -len / 2), 'len', 1, true);
+    } else if (c.t === 'pipe') {
+      const u = (c.axis ?? 'z') === 'z' ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(1, 0, 0);
+      const len = c.len!;
+      span(u, P.clone().addScaledVector(u, len / 2).setY(P.y + 1.2), 'len', 6, true);
+      span(u.clone().negate(), P.clone().addScaledVector(u, -len / 2).setY(P.y + 1.2), 'len', 6, true);
+    } else if (c.t === 'enemy') {
+      const r = c.range!;
+      span(new THREE.Vector3(1, 0, 0), new THREE.Vector3(P.x + r, P.y + 0.4, P.z), 'range', 0.5, false);
+      span(new THREE.Vector3(-1, 0, 0), new THREE.Vector3(P.x - r, P.y + 0.4, P.z), 'range', 0.5, false);
+    } else if (c.t === 'pendulum') {
+      defs.push({
+        pos: P.clone().setY(P.y - c.len!),
+        dir: new THREE.Vector3(0, -1, 0),
+        apply: (orig, cc, d) => {
+          cc.len = Math.max(1, orig.len! + d);
+        },
+      });
+    }
+    return defs;
+  }
+
+  private refreshHandles(): void {
+    if (this.handleGroup) {
+      this.scene.remove(this.handleGroup);
+      this.handleGroup = null;
+    }
+    this.handleMeshes = [];
+    this.hdlDefs = [];
+    if (!this.active || this.resizeIdx < 0) return;
+    const c = this.data.components[this.resizeIdx];
+    if (!c) {
+      this.resizeIdx = -1;
+      return;
+    }
+    this.hdlDefs = this.handleDefsFor(c);
+    if (this.hdlDefs.length === 0) {
+      this.resizeIdx = -1;
+      return;
+    }
+    const g = new THREE.Group();
+    this.hdlDefs.forEach((def, i) => {
+      const m = new THREE.Mesh(
+        HANDLE_GEO,
+        new THREE.MeshBasicMaterial({ color: 0xffd75e, depthTest: false, transparent: true, opacity: 0.92 }),
+      );
+      m.renderOrder = 999; // draw on top: grabbable even inside geometry
+      m.position.copy(def.pos);
+      m.userData.hdl = i;
+      g.add(m);
+      this.handleMeshes.push(m);
+    });
+    this.scene.add(g);
+    this.handleGroup = g;
+  }
+
+  private setRay(e: { clientX: number; clientY: number }): void {
+    const r = this.dom.getBoundingClientRect();
+    this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    this.raycaster.setFromCamera(this.pointer, this.camera);
+  }
+
+  // travel along the handle's axis line to the point nearest the pointer ray
+  private axisT(lineO: THREE.Vector3, lineD: THREE.Vector3): number | null {
+    const ray = this.raycaster.ray;
+    const w0 = new THREE.Vector3().subVectors(lineO, ray.origin);
+    const b = lineD.dot(ray.direction);
+    const denom = 1 - b * b;
+    if (Math.abs(denom) < 1e-4) return null; // axis points straight at the camera
+    return (b * ray.direction.dot(w0) - lineD.dot(w0)) / denom;
+  }
+
+  private onDbl = (e: MouseEvent): void => {
+    if (!this.active) return;
+    const hit = this.pick(e as PointerEvent);
+    if (hit >= 0 && RESIZABLE.has(this.data.components[hit].t)) {
+      this.select(hit);
+      this.setResize(hit);
+      if (!this.resizeHintShown) {
+        this.resizeHintShown = true;
+        this.hooks.showMsg('RESIZE MODE', 'drag the gold handles · esc or click away = done');
+      }
+    } else {
+      this.setResize(-1);
+      if (hit >= 0) this.hooks.showMsg('FIXED SIZE', `a ${this.data.components[hit].t} can't be resized`);
+    }
+  };
+
   // ---- pointer handlers ----
 
   private onDown = (e: PointerEvent): void => {
     if (!this.active || e.button !== 0) return;
+    // resize handles grab first — they float over everything else
+    if (this.resizeIdx >= 0 && this.handleMeshes.length > 0) {
+      this.setRay(e);
+      this.handleGroup?.updateMatrixWorld(true); // may not have rendered yet
+      const hits = this.raycaster.intersectObjects(this.handleMeshes, false);
+      if (hits.length > 0) {
+        const i = hits[0].object.userData.hdl as number;
+        const def = this.hdlDefs[i];
+        const lineO = def.pos.clone();
+        const lineD = def.dir.clone();
+        const t0 = this.axisT(lineO, lineD);
+        if (t0 !== null) {
+          this.hdlDrag = {
+            i,
+            lineO,
+            lineD,
+            t0,
+            orig: JSON.parse(JSON.stringify(this.data.components[this.resizeIdx])) as CustomComponent,
+          };
+          if (this.controls) this.controls.enabled = false;
+          this.downAt = null;
+          return;
+        }
+      }
+    }
     this.downAt = { x: e.clientX, y: e.clientY };
     const hit = this.pick(e);
     // dragging starts only from the ALREADY selected component — first click
@@ -364,7 +632,35 @@ export class Editor {
   };
 
   private onMove = (e: PointerEvent): void => {
-    if (!this.active || !this.dragging || this.selected < 0) return;
+    if (!this.active) return;
+    // resize-handle drag: re-apply from the grab snapshot at the new travel
+    if (this.hdlDrag && this.resizeIdx >= 0) {
+      this.setRay(e);
+      const t = this.axisT(this.hdlDrag.lineO, this.hdlDrag.lineD);
+      if (t === null) return;
+      let d = t - this.hdlDrag.t0;
+      if (this.snap) d = Math.round(d * 2) / 2;
+      const c = this.data.components[this.resizeIdx];
+      this.hdlDefs[this.hdlDrag.i].apply(this.hdlDrag.orig, c, d);
+      // handles + panel track live; geometry rebuilds on a light throttle
+      const defs = this.handleDefsFor(c);
+      defs.forEach((df, j) => this.handleMeshes[j]?.position.copy(df.pos));
+      this.hdlDefs = defs;
+      this.renderProps();
+      const now = performance.now();
+      if (now - this.lastLiveRebuild > 90) {
+        this.lastLiveRebuild = now;
+        this.hooks.rebuild();
+      }
+      return;
+    }
+    // hovering a handle: show it's grabbable
+    if (this.resizeIdx >= 0 && !this.dragging && this.handleMeshes.length > 0) {
+      this.setRay(e);
+      const over = this.raycaster.intersectObjects(this.handleMeshes, false).length > 0;
+      this.dom.style.cursor = over ? 'grab' : '';
+    }
+    if (!this.dragging || this.selected < 0) return;
     const hit = new THREE.Vector3();
     if (!this.groundPoint(e, this.dragPlane, hit)) return;
     const c = this.data.components[this.selected];
@@ -396,6 +692,12 @@ export class Editor {
 
   private onUp = (e: PointerEvent): void => {
     if (!this.active) return;
+    if (this.hdlDrag) {
+      this.hdlDrag = null;
+      if (this.controls) this.controls.enabled = true;
+      this.commit(); // one undo step for the whole handle stretch
+      return;
+    }
     if (this.dragging) {
       this.dragging = false;
       if (this.controls) this.controls.enabled = true;
@@ -413,6 +715,7 @@ export class Editor {
     if (!this.active) return;
     const typing = (e.target as HTMLElement)?.tagName === 'INPUT' || (e.target as HTMLElement)?.tagName === 'SELECT';
     if (typing) return;
+    if (e.code === 'Escape' && this.resizeIdx >= 0) this.setResize(-1);
     if (e.code === 'Delete' || e.code === 'Backspace') this.deleteSelected();
     if (e.code === 'KeyD' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
@@ -583,7 +886,7 @@ export class Editor {
     });
     panel.appendChild(test);
     panel.appendChild(
-      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo</div>'),
+      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo</div>'),
     );
 
     document.body.appendChild(panel);
