@@ -4410,13 +4410,18 @@ export class Player {
     this.idleAmp += ((onFoot && !runningAnim ? 1 : 0) - this.idleAmp) * Math.min(1, 6 * dt);
     if (runningAnim) this.walkPhase += (4 + planar * 1.0) * dt;
     else if (this.crawling && planar > 0.5) this.walkPhase += (2 + planar * 0.8) * dt;
+    // Circle-hold splits by motion (the reference does): standing still is a
+    // compact upright SQUAT; the all-fours crawl only takes over once she
+    // actually moves.
+    const crawlMove = this.crawlPose * Math.min(1, planar / 1.2);
+    const crouchW = Math.max(0, this.crawlPose - crawlMove);
     // Grind style lean: nose down, tail down, or body across the rail.
     const gp =
       this.state === 'grind' ? (this.grindStyle === 'nose' ? 0.4 : this.grindStyle === 'five0' ? -0.45 : 0) : 0;
     this.grindPoseX += (gp - this.grindPoseX) * Math.min(1, 12 * dt);
     const gy = this.state === 'grind' && this.grindStyle === 'board' ? this.grindYawDir * (Math.PI / 2) : 0;
     this.grindYawPose += (gy - this.grindYawPose) * Math.min(1, 12 * dt);
-    const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, this.crawlPose * 0.6);
+    const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
     const breathe = Math.sin(this.runTime * 2.3);
     // Flip tuck: knees snap to the chest through the somersault (peaks mid-air).
     const flipProg = this.flipTimer > 0 ? 1 - this.flipTimer / CONST.flipDuration : 0;
@@ -4469,10 +4474,11 @@ export class Player {
     const star = this.starPose;
     if (this.legL && this.legR) {
       // baseball slide: lead leg kicked out ahead, trailing leg half-bent
-      // crawl: hips fold FORWARD so the thighs come under the body (knees down),
-      // not trailing straight out behind the pitched-over torso.
-      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose + 0.6 * this.crawlPose;
-      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose + 0.6 * this.crawlPose;
+      // crawl: hips COUNTER the 0.75 body pitch (negative = knee swings
+      // forward) so the thighs stay under the body — knees at the ground,
+      // never feet flung up behind the pitched-over torso.
+      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW;
+      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW;
       // Crash-reference high knees: the swing-through leg lifts extra hard
       // (thigh toward horizontal), giving the run its cartoon prance.
       const liftL = Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
@@ -4508,7 +4514,10 @@ export class Player {
     // half the standing flex so knees drive forward and feet stay on deck.
     if (this.kneeL && this.kneeR && this.legL && this.legR) {
       const straight = 1 - star;
-      const tuck = 1.35 * this.grabPose + 1.1 * flipTuck + 1.2 * this.crawlPose;
+      // squat: knees fold DEEP and forward (heels under the butt) — never
+      // soles-up behind her, which is what a backward hip swing plus this
+      // fold used to produce.
+      const tuck = 1.35 * this.grabPose + 1.1 * flipTuck + 1.4 * crawlMove + 2.2 * crouchW;
       const backL = 0.9 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
       const backR = 0.9 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
       // the lifted leg folds its shin under the raised thigh (prance step)
@@ -4544,7 +4553,8 @@ export class Player {
     }
     if (this.headM) {
       const look =
-        -0.6 * this.crawlPose -
+        -0.45 * crawlMove - // crawl: the NECK counters the body pitch (negative = chin up) — eyes forward
+        0.05 * crouchW -
         0.5 * this.dropPose -
         0.4 * this.slidePose -
         0.3 * this.chargePose -
@@ -4569,8 +4579,9 @@ export class Player {
         0.45 * this.hangPose +
         0.5 * this.grabPose +
         0.3 * this.grindArmPose +
-        0.3 * sk - // rolling: swing clear of the deck
-        0.35 * this.crawlPose +
+        0.3 * sk + // rolling: swing clear of the deck
+        -0.45 * crawlMove - // crawling: counter the body pitch so the tail trails LEVEL behind
+        0.15 * crouchW +
         0.25 * this.walkAmp + // running: the tail streams out behind, counterweight up
         0.35 * jp; // jumping: the tail flares as the counterweight
       const wag = 0.16 * breathe + 0.5 * swing;
@@ -4580,7 +4591,7 @@ export class Player {
       // delayed, so sways whip instead of rotating rigidly.
       const liftW = [0.5, 0.3, 0.2, 0.14, 0.1];
       const wagW = [0.35, 0.3, 0.25, 0.2, 0.16];
-      const lag = Math.sin(this.walkPhase - 0.9) * 0.65 * Math.max(this.walkAmp, this.crawlPose * 0.6);
+      const lag = Math.sin(this.walkPhase - 0.9) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
       const wagLag = 0.16 * breathe + 0.5 * lag;
       this.tailChain.forEach((j, i) => {
         const rest = (j.userData.rest as number | undefined) ?? 0;
@@ -4643,7 +4654,8 @@ export class Player {
     const anti = -swing * 1.35 * (1 - this.grabPose); // reference arm pump: big, from the shoulder
     const sym =
       (breathe * 0.06 * this.idleAmp +
-        0.8 * this.crawlPose - // hands down-forward to the ground
+        -1.0 * crawlMove + // hands reach down-FORWARD to the ground (negative = forward swing)
+        0.15 * crouchW - // squat: arms hang easy by the knees
         0.95 * this.chargePose +
         1.9 * flipTuck +
         windmill +
@@ -4675,8 +4687,7 @@ export class Player {
         this.armLPose * this.grabPose -
         anti +
         sym +
-        slideL +
-        swing * 1.6 * this.crawlPose -
+        slideL -
         0.65 * this.wallridePose +
         0.06 * breathe * idleW; // trailing arm swept back; breath sways the idle hang
       this.armL.rotation.z =
@@ -4701,7 +4712,8 @@ export class Player {
           0.35 * this.walkAmp + // running: elbows stay cocked like the reference
           0.3 * jp + // overhead throw keeps a reference-style elbow bend
           0.25 * this.skatePose +
-          0.5 * this.crawlPose +
+          0.45 * crawlMove +
+          0.3 * crouchW +
           0.3 * this.slidePose) *
         straight;
       const bendL =
@@ -4711,7 +4723,8 @@ export class Player {
           0.35 * this.walkAmp +
           0.3 * jp +
           0.25 * this.skatePose +
-          0.5 * this.crawlPose) *
+          0.45 * crawlMove +
+          0.3 * crouchW) *
         straight;
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
       if (this.elbowL) this.elbowL.rotation.x = -Math.max(0.05, bendL);
@@ -4870,7 +4883,7 @@ export class Player {
         flip * (1 - this.grabPose) +
         this.grabPitch * this.grabPose -
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
-        0.68 * this.crawlPose - // all fours: torso hunched forward (not a flat dive/belly-flop)
+        (0.75 * crawlMove + 0.16 * crouchW) - // all fours hunch when MOVING; a squat stays upright
         0.55 * this.hangPose + // rear back: "...uh oh"
         1.45 * this.dropPose - // belly-first pancake
         0.28 * this.teeterPose + // arms-back "whoa whoa" lean
@@ -4904,7 +4917,7 @@ export class Player {
     this.bodyGroup.position.y =
       this.grabPose * -0.5 -
       this.slidePose * 0.38 -
-      this.crawlPose * 0.26 - // hunch down (hips stay up so it's a crawl, not a belly-flop)
+      (crawlMove * 0.2 + crouchW * 0.36) - // crawl: shallow drop — the pitch already lays her out; deeper buries the knees
       this.chargePose * 0.26 -
       this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * this.dropPose : 0) +
