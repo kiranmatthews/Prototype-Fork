@@ -9,6 +9,7 @@ import { UI } from './ui';
 import { TUNING, CONST } from './tuning';
 import { sfx } from './audio';
 import { Recorder, Replayer, ReplayFile } from './replay';
+import { Editor } from './editor';
 
 const app = document.getElementById('app')!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -290,6 +291,7 @@ function switchLevel(id: number): void {
     replayer.end();
     ui.setReplayBadge(false);
   }
+  if (editor.active && id !== 7) editor.exit(); // leaving Custom closes the editor
   level.dispose();
   level = new Level(scene, id);
   player.respawn(level, true);
@@ -300,6 +302,39 @@ function switchLevel(id: number): void {
   (window as unknown as Record<string, unknown>).__game &&
     (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
 }
+
+// ---- level editor (Custom level, slot 8) -----------------------------------
+const editor = new Editor(scene, camera, renderer.domElement, () => level, {
+  // every edit rebuilds the custom level from data, so edit = play truth
+  rebuild: () => {
+    level.dispose();
+    level = new Level(scene, 7);
+    player.respawn(level, true);
+    applyTheme();
+    recorder.start(7);
+    (window as unknown as Record<string, unknown>).__game &&
+      (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
+    editor.onLevelRebuilt();
+  },
+  exitToPlay: () => {
+    editor.exit();
+    player.respawn(level, true);
+    ui.showMessage('TEST RUN', 'press ✎ LEVEL EDITOR to keep editing', 1600);
+  },
+  showMsg: (t, s) => ui.showMessage(t, s ?? '', 1800),
+});
+function openEditor(): void {
+  if (editor.active) return;
+  if (currentCourse !== 7) switchLevel(7);
+  // clear anything that could sit over/under the editor: a paused sim, a
+  // dead/game-over player, the death overlay
+  paused = false;
+  ui.hideMessage();
+  player.respawn(level, true);
+  ui.showDeathScreen(false);
+  editor.enter();
+}
+ui.onEditorOpen = openEditor;
 
 // ---- playtest capture: input replays + gameplay video ----------------------
 
@@ -369,7 +404,7 @@ ui.onLoadReplay = (text) => {
     ui.showMessage('BAD REPLAY FILE', '', 1400);
   }
 };
-// drag a replay .json anywhere onto the game to watch it
+// drag a .json anywhere onto the game: replays play back, levels import
 window.addEventListener('dragover', (e) => e.preventDefault());
 window.addEventListener('drop', (e) => {
   e.preventDefault();
@@ -377,9 +412,19 @@ window.addEventListener('drop', (e) => {
   if (f)
     f.text().then((txt) => {
       try {
-        loadReplay(JSON.parse(txt) as ReplayFile);
+        const obj = JSON.parse(txt) as { components?: unknown; b?: unknown };
+        if (Array.isArray(obj.components)) {
+          // a custom LEVEL file: adopt it and go there
+          if (currentCourse !== 7) switchLevel(7);
+          editor.importLevel(obj as never);
+          ui.showMessage('LEVEL IMPORTED', '', 1600);
+        } else if (Array.isArray(obj.b)) {
+          loadReplay(obj as ReplayFile);
+        } else {
+          ui.showMessage('UNRECOGNIZED FILE', '', 1400);
+        }
       } catch {
-        ui.showMessage('BAD REPLAY FILE', '', 1400);
+        ui.showMessage('BAD FILE', '', 1400);
       }
     });
 });
@@ -403,6 +448,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Digit5') switchLevel(4);
   if (e.code === 'Digit6') switchLevel(5);
   if (e.code === 'Digit7') switchLevel(6);
+  if (e.code === 'Digit8') switchLevel(7); // Custom (the editor's level)
   if (e.code === 'F8') saveReplay(); // playtest capture: input take -> .json
   if (e.code === 'F9') toggleVideo(); // playtest capture: canvas -> .webm
 });
@@ -574,6 +620,17 @@ function frame(): void {
   if (input.moveX || input.moveY || input.jumpHeld || input.grindHeld || input.spinHeld || input.grabHeld)
     sfx.unlock();
 
+  // EDITOR MODE owns the frame outright (it supersedes pause — the sim is
+  // frozen anyway, and the orbit camera + panel must keep responding).
+  if (editor.active) {
+    editor.update();
+    input.consumeEdges();
+    acc = 0;
+    sky.position.copy(camera.position);
+    renderer.render(scene, camera);
+    return;
+  }
+
   // Options / P toggles pause: the sim stops dead, the frame still renders.
   if (input.pausePressed) {
     paused = !paused;
@@ -668,4 +725,6 @@ frame();
   toggleVideo,
   replayer,
   recorder,
+  editor,
+  openEditor,
 };

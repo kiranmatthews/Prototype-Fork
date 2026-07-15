@@ -77,6 +77,7 @@ export class UI {
   onSaveReplay: (() => void) | null = null;
   onToggleVideo: (() => void) | null = null;
   onLoadReplay: ((text: string) => void) | null = null;
+  onEditorOpen: (() => void) | null = null;
   private recBtn!: HTMLButtonElement;
   private replayBadge!: HTMLElement;
   private recBadge!: HTMLElement;
@@ -99,6 +100,16 @@ export class UI {
       this.levelButtons.push(btn);
     });
     statsWrap.appendChild(levelRow);
+    // The level EDITOR lives on the Custom level (8): build/arrange your own
+    // course, then hit TEST in the editor panel to play it.
+    const editBtn = document.createElement('button');
+    editBtn.className = 'hud-levelbtn hud-editbtn';
+    editBtn.textContent = '✎ LEVEL EDITOR';
+    editBtn.addEventListener('click', () => {
+      if (this.onEditorOpen) this.onEditorOpen();
+      editBtn.blur();
+    });
+    statsWrap.appendChild(editBtn);
 
     // Rigged 3D character toggle (off by default — procedural hero is the dev
     // model). Flip it on for the occasional demo.
@@ -868,6 +879,7 @@ export class UI {
         display: none; flex-direction: column; align-items: center;
         justify-content: center; color: #fff;
         font: bold 54px ui-monospace, Menlo, Consolas, monospace;
+        pointer-events: none; /* fullscreen INFO: it must never eat clicks */
       }
       .hud-death .hud-death-title { letter-spacing: 6px; }
       .hud-death .hud-death-sub {

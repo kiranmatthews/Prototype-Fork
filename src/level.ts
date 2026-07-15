@@ -161,7 +161,87 @@ export const LEVEL_NAMES = [
   'The Flats',
   'Half Pipes',
   'Sky Bridge',
+  'Custom', // built from CUSTOM_LEVEL data (the in-game level editor owns it)
 ];
+
+// ---- CUSTOM LEVEL: a data-driven course the in-game editor builds ----------
+// Every component maps onto an existing primitive. Positions are centers
+// (except where noted); pits are simply where you DON'T put floor — anything
+// falling below killY dies.
+export interface CustomComponent {
+  t:
+    | 'platform' // solid box: p = center, s = [w,h,d]
+    | 'ramp' // slope along Z (low end at +Z): p = center of the base line, len along z, rise = height gained, w = width
+    | 'wall' // solid barrier: p = base center, s = [w,h,d]
+    | 'rail' // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z)
+    | 'pipe' // halfpipe: p = trough center at ground, len along its axis, axis 'z'|'x'
+    | 'crumble' // breakaway pad: p = top center, s = [w,-,d], shake = seconds before it drops (0.02 = instant)
+    | 'crate' // p = [x, deckY, z], kind picks the crate
+    | 'checkpoint'
+    | 'enemy' // patrols along X around p, range each way
+    | 'wumpa'
+    | 'crystal';
+  p: [number, number, number];
+  s?: [number, number, number];
+  len?: number;
+  rise?: number;
+  w?: number;
+  yaw?: number;
+  axis?: 'z' | 'x';
+  shake?: number;
+  kind?: 'wood' | 'bouncy' | 'nitro' | 'tnt' | 'mask' | 'mystery';
+  range?: number;
+  speed?: number;
+}
+
+export interface CustomLevelData {
+  v: 1;
+  name: string;
+  spawn: [number, number, number];
+  killY: number;
+  components: CustomComponent[];
+}
+
+export function starterCustomLevel(): CustomLevelData {
+  return {
+    v: 1,
+    name: 'My Level',
+    spawn: [0, 0.6, 20],
+    killY: -12,
+    components: [
+      { t: 'platform', p: [0, 0, 12], s: [26, 1, 32] }, // home deck
+      { t: 'platform', p: [0, 0, -18], s: [26, 1, 20] }, // across the first pit
+      { t: 'rail', p: [6, 1.0, -2], len: 16, yaw: 0 },
+      { t: 'pipe', p: [-24, -0.5, -8], len: 36, axis: 'z' },
+      { t: 'crate', p: [-4, 0.5, 4], kind: 'wood' },
+      { t: 'crate', p: [-4, 0.5, 0], kind: 'bouncy' },
+      { t: 'wumpa', p: [0, 1.2, 4] },
+      { t: 'wumpa', p: [0, 1.2, 0] },
+      { t: 'wumpa', p: [0, 1.2, -4] },
+      { t: 'enemy', p: [4, 0.5, -20], range: 5, speed: 3 },
+      { t: 'crystal', p: [0, 0.5, -24] },
+    ],
+  };
+}
+
+// The working custom level, set by the editor / loaded from storage before a
+// Level with courseId 7 is constructed.
+let CUSTOM_LEVEL: CustomLevelData | null = null;
+export function setCustomLevelData(d: CustomLevelData): void {
+  CUSTOM_LEVEL = d;
+}
+export function getCustomLevelData(): CustomLevelData {
+  if (!CUSTOM_LEVEL) {
+    try {
+      const raw = JSON.parse(localStorage.getItem('protoCustomLevel') ?? 'null') as CustomLevelData | null;
+      if (raw && raw.v === 1 && Array.isArray(raw.components)) CUSTOM_LEVEL = raw;
+    } catch {
+      /* fall through to starter */
+    }
+    if (!CUSTOM_LEVEL) CUSTOM_LEVEL = starterCustomLevel();
+  }
+  return CUSTOM_LEVEL;
+}
 
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
@@ -614,9 +694,131 @@ export class Level {
     else if (courseId === 4) this.buildFlats();
     else if (courseId === 5) this.buildHalfpipePark();
     else if (courseId === 6) this.buildSkyBridge();
+    else if (courseId === 7) this.buildCustom();
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
     this.buildAmbient(); // theme is set by the builder above
+  }
+
+  // The editor raycasts level geometry for picking; everything a component
+  // creates is tagged with userData.editorIdx (see buildCustom).
+  get pickRoot(): THREE.Group {
+    return this.root;
+  }
+
+  // CUSTOM: build the editor's level from data. Two passes so entities that
+  // seat themselves on the ground (crates, enemies, checkpoints) see the
+  // geometry pass's floors. Every scene object a component creates gets
+  // tagged with its component index for editor picking.
+  private buildCustom(): void {
+    const data = getCustomLevelData();
+    this.killY = data.killY;
+    this.finishZ = -1e9; // endless playground: no finish gate
+    this.endWallZ = -1e9;
+    this.theme = {
+      skyTop: '#159ecd',
+      skyBottom: '#c9f0e4',
+      sunColorHex: '#fff8dc',
+      sunU: 0.68,
+      sunV: 0.14,
+      stars: false,
+      fog: 0xbee8dd,
+      fogNear: 90,
+      fogFar: 380,
+      hemiSky: 0xeafcff,
+      hemiGround: 0x94a294,
+      hemiI: 1.2,
+      sunColor: 0xfff6dc,
+      sunI: 1.55,
+      particleColor: 0xffffff,
+      particleWind: [0.5, -0.3, 0.2],
+    };
+    this.spawnPos.set(data.spawn[0], data.spawn[1], data.spawn[2]);
+    this.currentSpawn.copy(this.spawnPos);
+
+    const deck = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    const matPipe = new THREE.MeshLambertMaterial({ color: 0xaab4ba });
+    // tag every root child a component adds with that component's index
+    const buildTagged = (idx: number, fn: () => void): void => {
+      const before = this.root.children.length;
+      fn();
+      for (let c = before; c < this.root.children.length; c++) {
+        this.root.children[c].traverse((o) => (o.userData.editorIdx = idx));
+        this.root.children[c].userData.editorIdx = idx;
+      }
+    };
+    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble']);
+    for (const pass of [true, false]) {
+      data.components.forEach((c, i) => {
+        if (geomPass.has(c.t) !== pass) return;
+        buildTagged(i, () => {
+          if (c.t === 'platform') {
+            const s = c.s ?? [8, 1, 8];
+            const mesh = new THREE.Mesh(
+              new THREE.BoxGeometry(s[0], s[1], s[2]),
+              this.patterned(deck, s[0], s[2], 'checker'),
+            );
+            mesh.position.set(c.p[0], c.p[1], c.p[2]);
+            mesh.name = 'platform';
+            this.root.add(mesh);
+            this.groundMeshes.push(mesh);
+          } else if (c.t === 'ramp') {
+            const len = c.len ?? 10;
+            const rise = c.rise ?? 4;
+            const w = c.w ?? 8;
+            this.ramp('ramp', c.p[2] + len / 2, c.p[1], c.p[2] - len / 2, c.p[1] + rise, w, deck, c.p[0]);
+          } else if (c.t === 'wall') {
+            const s = c.s ?? [8, 4, 1];
+            this.wall(c.p[0], c.p[2], s[0], s[2], c.p[1], s[1]);
+          } else if (c.t === 'rail') {
+            const len = c.len ?? 12;
+            const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
+            const dx = (Math.sin(a) * len) / 2;
+            const dz = (Math.cos(a) * len) / 2;
+            const rail = new Rail([
+              new THREE.Vector3(c.p[0] - dx, c.p[1], c.p[2] - dz),
+              new THREE.Vector3(c.p[0] + dx, c.p[1], c.p[2] + dz),
+            ]);
+            this.rails.push(rail);
+            this.root.add(rail.object);
+          } else if (c.t === 'pipe') {
+            const len = c.len ?? 36;
+            const axis = c.axis ?? 'z';
+            const along = axis === 'z' ? c.p[2] : c.p[0];
+            const cross = axis === 'z' ? c.p[0] : c.p[2];
+            const hp = new Halfpipe(along + len / 2, along - len / 2, c.p[1], 3, 6, matPipe, cross, axis);
+            this.halfpipes.push(hp);
+            this.root.add(hp.object);
+            for (const wm of hp.walls) this.groundMeshes.push(wm);
+            // both copings are grindable, like the authored pipes
+            for (const side of [-1, 1]) {
+              const lipC = cross + side * hp.lipX;
+              const y = hp.lipY + 0.05;
+              const rail =
+                axis === 'z'
+                  ? new Rail([new THREE.Vector3(lipC, y, along + len / 2), new THREE.Vector3(lipC, y, along - len / 2)])
+                  : new Rail([new THREE.Vector3(along + len / 2, y, lipC), new THREE.Vector3(along - len / 2, y, lipC)]);
+              this.rails.push(rail);
+              this.root.add(rail.object);
+            }
+          } else if (c.t === 'crumble') {
+            const s = c.s ?? [3, 1, 3];
+            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7);
+          } else if (c.t === 'crate') {
+            this.crate(c.p[0], c.p[1], c.p[2], c.kind === 'wood' ? undefined : c.kind);
+          } else if (c.t === 'checkpoint') {
+            this.checkpoint(c.p[1], c.p[2], c.p[0]);
+          } else if (c.t === 'enemy') {
+            const r = c.range ?? 5;
+            this.enemy(c.p[0] - r, c.p[0] + r, c.p[1], c.p[2], c.speed ?? 3);
+          } else if (c.t === 'wumpa') {
+            this.pickup(c.p[0], c.p[1], c.p[2]);
+          } else if (c.t === 'crystal') {
+            this.crystal(c.p[0], c.p[1], c.p[2]);
+          }
+        });
+      });
+    }
   }
 
   dispose(): void {
