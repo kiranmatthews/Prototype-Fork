@@ -351,7 +351,7 @@ export class Player {
     shadowGeo.scale(1, 0.85, 1); // slightly wider than deep once laid flat
     this.shadow = new THREE.Mesh(
       shadowGeo,
-      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 }),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.55 }),
     );
     this.shadow.rotation.x = -Math.PI / 2;
     scene.add(this.shadow);
@@ -4451,6 +4451,12 @@ export class Player {
       // not trailing straight out behind the pitched-over torso.
       this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose + 0.6 * this.crawlPose;
       this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose + 0.6 * this.crawlPose;
+      // Crash-reference high knees: the swing-through leg lifts extra hard
+      // (thigh toward horizontal), giving the run its cartoon prance.
+      const liftL = Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
+      const liftR = Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
+      this.legL.rotation.x -= 0.45 * liftL;
+      this.legR.rotation.x -= 0.45 * liftR;
       // switch stance mirrors the feet fore-aft (and the ankle angles)
       const stz = this.stance;
       // Side-on frame: the body is turned 90°, so the hip line IS the board
@@ -4479,10 +4485,13 @@ export class Player {
       const tuck = 1.35 * this.grabPose + 1.1 * flipTuck + 1.2 * this.crawlPose;
       const backL = 0.9 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
       const backR = 0.9 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
+      // the lifted leg folds its shin under the raised thigh (prance step)
+      const frontL = 1.1 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
+      const frontR = 1.1 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp;
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // back leg
-      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + 0.35 * this.slidePose);
-      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + 1.0 * this.slidePose);
+      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose);
+      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose);
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
     }
@@ -4501,9 +4510,11 @@ export class Player {
           (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 * this.stance : 0)) *
           fwS -
         0.35 * this.stance * this.sidePose;
-      const counter = -swing * 0.22 + 0.05 * Math.sin(this.runTime * 0.7) * idleW; // idle: lazy shoulder wander
+      const counter = -swing * 0.22 + 0.1 * Math.sin(this.runTime * 0.7) * idleW; // idle: lazy shoulder wander
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
+      // Crash runs chest-out, almost leaning BACK — never hunched forward.
+      this.upperG.rotation.x = -0.07 * this.walkAmp;
     }
     if (this.headM) {
       const look =
@@ -4514,13 +4525,13 @@ export class Player {
         0.45 * this.grabPitch * this.grabPose +
         0.3 * this.hangPose -
         0.55 * this.slopePose +
-        0.035 * breathe * idleW; // idle: breath lifts the chin a touch
+        0.06 * breathe * idleW; // idle: breath lifts the chin a touch
       this.headM.rotation.x +=
         (THREE.MathUtils.clamp(look, -1.0, 0.6) - this.headM.rotation.x) * Math.min(1, 12 * dt);
       // Side-on: the head turns back over the lead shoulder to watch the
       // line of travel (the body faces across the board; the eyes don't).
       // Idling, she glances around the scene slowly instead.
-      const headYaw = -0.85 * this.stance * this.sidePose + 0.09 * Math.sin(this.runTime * 0.55) * idleW;
+      const headYaw = -0.85 * this.stance * this.sidePose + 0.17 * Math.sin(this.runTime * 0.55) * idleW;
       this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
     }
     // Tail + ponytail follow-through: the kangaroo signature. The tail
@@ -4532,7 +4543,8 @@ export class Player {
         0.5 * this.grabPose +
         0.3 * this.grindArmPose +
         0.3 * sk - // rolling: swing clear of the deck
-        0.35 * this.crawlPose;
+        0.35 * this.crawlPose +
+        0.25 * this.walkAmp; // running: the tail streams out behind, counterweight up
       const wag = 0.16 * breathe + 0.5 * swing;
       // Each joint carries its rest angle in userData (authored chunks bake
       // the curve, so theirs is 0) plus a share of the flex — decaying lift
@@ -4600,7 +4612,7 @@ export class Player {
     // needle is fought in pitch (see manualPitch), so its arms stay symmetric.
     const railBal = this.state === 'grind' ? this.balance : 0;
     const bailFlail = this.bailing ? Math.sin(this.bailSpin * 2.7) * 1.1 : 0;
-    const anti = -swing * 0.9 * (1 - this.grabPose);
+    const anti = -swing * 1.35 * (1 - this.grabPose); // reference arm pump: big, from the shoulder
     const sym =
       (breathe * 0.06 * this.idleAmp +
         0.8 * this.crawlPose - // hands down-forward to the ground
@@ -4619,7 +4631,7 @@ export class Player {
     const leanL = (this.armL?.userData.lean as number | undefined) ?? 0.25;
     if (this.armR) {
       this.armR.rotation.x =
-        this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.03 * breathe * idleW; // lead hand reaches down the wall; breath sways the idle hang
+        this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.06 * breathe * idleW; // lead hand reaches down the wall; breath sways the idle hang
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
@@ -4637,7 +4649,7 @@ export class Player {
         slideL +
         swing * 1.6 * this.crawlPose -
         0.65 * this.wallridePose +
-        0.03 * breathe * idleW; // trailing arm swept back; breath sways the idle hang
+        0.06 * breathe * idleW; // trailing arm swept back; breath sways the idle hang
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
@@ -4655,13 +4667,19 @@ export class Player {
       const bendR =
         (0.12 +
           0.02 * breathe * idleW +
-          0.5 * Math.max(0, anti) +
+          0.65 * Math.max(0, anti) +
+          0.35 * this.walkAmp + // running: elbows stay cocked like the reference
           0.25 * this.skatePose +
           0.5 * this.crawlPose +
           0.3 * this.slidePose) *
         straight;
       const bendL =
-        (0.12 + 0.02 * breathe * idleW + 0.5 * Math.max(0, -anti) + 0.25 * this.skatePose + 0.5 * this.crawlPose) *
+        (0.12 +
+          0.02 * breathe * idleW +
+          0.65 * Math.max(0, -anti) +
+          0.35 * this.walkAmp +
+          0.25 * this.skatePose +
+          0.5 * this.crawlPose) *
         straight;
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
       if (this.elbowL) this.elbowL.rotation.x = -Math.max(0.05, bendL);
@@ -4858,7 +4876,7 @@ export class Player {
       this.chargePose * 0.26 -
       this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * this.dropPose : 0) +
-      Math.abs(Math.sin(this.walkPhase)) * 0.05 * this.walkAmp +
+      Math.abs(Math.sin(this.walkPhase)) * 0.075 * this.walkAmp + // reference bounce: each step hops
       breathe * 0.015 * this.idleAmp;
     // Impact squash right after a slam lands; crawl also compresses the rig so
     // the whole body sits low and compact instead of floating pitched-over.
@@ -4874,7 +4892,7 @@ export class Player {
       const h = Math.max(0, this.pos.y - this.shadowGroundY);
       this.shadow.visible = true;
       this.shadow.position.set(this.pos.x, this.shadowGroundY + 0.03, this.pos.z);
-      this.shadow.scale.setScalar(THREE.MathUtils.clamp(0.95 - h * 0.04, 0.35, 0.95));
+      this.shadow.scale.setScalar(THREE.MathUtils.clamp(0.9 - h * 0.04, 0.35, 0.9));
     } else {
       this.shadow.visible = false; // no shadow = you are over the pit
     }

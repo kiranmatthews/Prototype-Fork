@@ -493,7 +493,7 @@ player.onGameOver = () => ui.showDeathScreen(true);
 // ~18° down so crate TOPS read, hero's feet near the bottom of frame,
 // hero ~30% of frame height.
 const CAM_DIST = 5.2;
-const CAM_HEIGHT = 3.5;
+const CAM_HEIGHT = 4.1;
 const CAM_LOOKAHEAD = 5.0;
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
@@ -547,7 +547,7 @@ function updateCamera(dt: number): void {
 
   lookPoint.set(
     player.pos.x,
-    player.pos.y + THREE.MathUtils.lerp(0.5, 1.5, sideF) + boulderF * 1.1, // raise the aim: tilt UP toward the boulder up-course
+    player.pos.y + THREE.MathUtils.lerp(0.15, 1.5, sideF) + boulderF * 1.45, // raise the aim: tilt UP toward the boulder up-course
     player.pos.z -
       THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.0, sideF) +
       back * 8.5 +
