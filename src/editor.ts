@@ -110,7 +110,9 @@ const HANDLE_GEO = new THREE.BoxGeometry(0.55, 0.55, 0.55);
 export class Editor {
   active = false;
   data: CustomLevelData;
-  private selected = -1;
+  // SELECTION is an ordered set of component indices; the LAST one is the
+  // primary (it drives the props panel, snapping, and align actions).
+  private sel: number[] = [];
   private camera: THREE.PerspectiveCamera;
   private dom: HTMLElement;
   private scene: THREE.Scene;
@@ -121,16 +123,28 @@ export class Editor {
   private propsEl!: HTMLElement;
   private raycaster = new THREE.Raycaster();
   private pointer = new THREE.Vector2();
-  private selBox: THREE.Box3Helper | null = null;
+  private selBoxes: THREE.Box3Helper[] = [];
   private spawnMarker: THREE.Group | null = null;
   private snap = true;
-  // drag state
+  // drag state — a grab on any selected component moves the WHOLE selection
   private dragging = false;
   private dragPlane = new THREE.Plane();
   private dragStart = new THREE.Vector3(); // plane hit at drag start
-  private dragOrig: [number, number, number] = [0, 0, 0];
+  private dragOrig: [number, number, number] = [0, 0, 0]; // grabbed comp at drag start
+  private dragSel: { idx: number; p: [number, number, number] }[] = [];
   private dragVertical = false;
   private downAt: { x: number; y: number } | null = null;
+  // marquee (shift-drag on empty space): screen-space rubber band
+  private marquee: { x0: number; y0: number; x1: number; y1: number } | null = null;
+  private marqueeEl: HTMLDivElement | null = null;
+  // copy/paste — survives entering/leaving the editor within a session
+  private clipboard: CustomComponent[] = [];
+  private pasteBump = 0;
+  private lastPasteKey = '';
+  private hoverAt = 0;
+  // nudge coalescing: a burst of arrow taps is ONE undo step
+  private lastCoalesce = '';
+  private lastCommitT = 0;
   // resize-handle state (enter by double-clicking a component)
   private resizeIdx = -1;
   private hdlDefs: HandleDef[] = [];
@@ -181,7 +195,7 @@ export class Editor {
     this.select(-1);
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
-    this.hooks.showMsg('LEVEL EDITOR', 'click to select · drag to move · shift-drag = height');
+    this.hooks.showMsg('LEVEL EDITOR', 'click select · shift-click/shift-drag = multi · ⌘C/⌘V copy');
   }
 
   exit(): void {
@@ -191,6 +205,10 @@ export class Editor {
     this.controls = null;
     this.panel.style.display = 'none';
     this.select(-1);
+    this.marquee = null;
+    this.hideMarquee();
+    this.dragging = false;
+    this.dragSel = [];
     this.dom.style.cursor = '';
     this.setGhostsVisible(false);
     if (this.spawnMarker) {
@@ -207,8 +225,17 @@ export class Editor {
     }
   }
 
+  // the primary selection (last picked) — or -1
+  private get selected(): number {
+    return this.sel.length ? this.sel[this.sel.length - 1] : -1;
+  }
+
   get selectedIndex(): number {
     return this.selected;
+  }
+
+  get selection(): number[] {
+    return [...this.sel];
   }
 
   // test/debug hook: what would a click at these client coords select?
@@ -228,7 +255,8 @@ export class Editor {
 
   // main calls this after every rebuild so the highlight tracks fresh meshes
   onLevelRebuilt(): void {
-    if (this.selected >= this.data.components.length) this.select(-1);
+    const kept = this.sel.filter((i) => i < this.data.components.length);
+    if (kept.length !== this.sel.length) this.setSelection(kept);
     else this.refreshSelectionBox();
     if (this.resizeIdx >= this.data.components.length) this.resizeIdx = -1;
     this.refreshHandles();
@@ -250,13 +278,19 @@ export class Editor {
   private redoStack: string[] = [];
   private lastCommitted = '';
 
-  private commit(rebuild = true): void {
+  // `coalesce`: edits sharing a key within a second merge into ONE undo step
+  // (arrow-key nudge bursts, held number spinners)
+  private commit(rebuild = true, coalesce = ''): void {
     const now = JSON.stringify(this.data);
-    if (this.lastCommitted && now !== this.lastCommitted) {
+    const t = performance.now();
+    const chained = coalesce !== '' && coalesce === this.lastCoalesce && t - this.lastCommitT < 1000;
+    if (this.lastCommitted && now !== this.lastCommitted && !chained) {
       this.undoStack.push(this.lastCommitted);
       if (this.undoStack.length > 100) this.undoStack.shift();
       this.redoStack.length = 0; // a fresh edit forks history
     }
+    this.lastCoalesce = coalesce;
+    this.lastCommitT = t;
     this.lastCommitted = now;
     setCustomLevelData(this.data);
     try {
@@ -305,28 +339,118 @@ export class Editor {
     this.select(this.data.components.length - 1);
   }
 
+  // append a batch (duplicate/paste) as ONE undo step and select the copies.
+  // The one-crystal rule holds: a crystal in the batch replaces the level's.
+  private addBatch(batch: CustomComponent[]): void {
+    if (batch.length === 0) return;
+    const lastCrystal = batch.map((c) => c.t).lastIndexOf('crystal');
+    const clean = batch.filter((c, i) => c.t !== 'crystal' || i === lastCrystal);
+    if (lastCrystal >= 0) {
+      this.data.components = this.data.components.filter((o) => o.t !== 'crystal');
+    }
+    const start = this.data.components.length;
+    this.data.components.push(...clean);
+    this.commit();
+    this.setSelection(clean.map((_, i) => start + i));
+  }
+
   private deleteSelected(): void {
-    if (this.selected < 0) return;
-    this.data.components.splice(this.selected, 1);
+    if (this.sel.length === 0) return;
+    const dying = [...this.sel].sort((a, b) => b - a);
+    for (const i of dying) this.data.components.splice(i, 1);
     this.select(-1);
     this.commit();
   }
 
   private duplicateSelected(): void {
-    if (this.selected < 0) return;
-    const src = this.data.components[this.selected];
-    const copy = JSON.parse(JSON.stringify(src)) as CustomComponent;
-    copy.p = [copy.p[0] + 3, copy.p[1], copy.p[2] + 3];
-    this.addComponent(copy);
+    if (this.sel.length === 0) return;
+    const copies = this.sel.map((i) => {
+      const copy = JSON.parse(JSON.stringify(this.data.components[i])) as CustomComponent;
+      copy.p = [copy.p[0] + 3, copy.p[1], copy.p[2] + 3];
+      return copy;
+    });
+    this.addBatch(copies);
+  }
+
+  // ---- clipboard ----
+
+  copySelected(): void {
+    if (this.sel.length === 0) return;
+    this.clipboard = this.sel.map(
+      (i) => JSON.parse(JSON.stringify(this.data.components[i])) as CustomComponent,
+    );
+    this.pasteBump = 0;
+    this.lastPasteKey = '';
+    this.hooks.showMsg(`COPIED ${this.clipboard.length}`, 'paste with ⌘V — lands at the camera focus');
+  }
+
+  cutSelected(): void {
+    if (this.sel.length === 0) return;
+    this.copySelected();
+    this.deleteSelected();
+  }
+
+  // paste keeps the group's exact layout and heights; its X/Z centroid moves
+  // to the camera focus. Pasting again at the same focus stacks with a bump
+  // so repeats never land invisibly on top of each other.
+  paste(): void {
+    if (this.clipboard.length === 0) return;
+    const t = this.controls ? this.controls.target : new THREE.Vector3();
+    let cx = 0;
+    let cz = 0;
+    for (const c of this.clipboard) {
+      cx += c.p[0];
+      cz += c.p[2];
+    }
+    cx /= this.clipboard.length;
+    cz /= this.clipboard.length;
+    const key = `${Math.round(t.x)},${Math.round(t.z)}`;
+    if (key === this.lastPasteKey) this.pasteBump += 2;
+    else {
+      this.pasteBump = 0;
+      this.lastPasteKey = key;
+    }
+    let dx = t.x - cx + this.pasteBump;
+    let dz = t.z - cz + this.pasteBump;
+    if (this.snap) {
+      dx = Math.round(dx * 2) / 2;
+      dz = Math.round(dz * 2) / 2;
+    }
+    const copies = this.clipboard.map((c) => {
+      const copy = JSON.parse(JSON.stringify(c)) as CustomComponent;
+      copy.p = [copy.p[0] + dx, copy.p[1], copy.p[2] + dz];
+      return copy;
+    });
+    this.addBatch(copies);
   }
 
   // ---- selection + picking ----
 
   private select(idx: number): void {
-    if (idx !== this.resizeIdx) this.setResize(-1); // handles follow the selection
-    this.selected = idx;
+    this.setSelection(idx < 0 ? [] : [idx]);
+  }
+
+  private setSelection(list: number[]): void {
+    const seen = new Set<number>();
+    const valid: number[] = [];
+    for (const i of list) {
+      if (i >= 0 && i < this.data.components.length && !seen.has(i)) {
+        seen.add(i);
+        valid.push(i);
+      }
+    }
+    // resize handles only make sense on a lone component
+    if (valid.length !== 1 || valid[0] !== this.resizeIdx) this.setResize(-1);
+    this.sel = valid;
     this.refreshSelectionBox();
     this.renderProps();
+  }
+
+  private toggleSelect(idx: number): void {
+    if (idx < 0) return;
+    const at = this.sel.indexOf(idx);
+    if (at >= 0) this.setSelection(this.sel.filter((i) => i !== idx));
+    else this.setSelection([...this.sel, idx]); // newest = primary
   }
 
   private objectsFor(idx: number): THREE.Object3D[] {
@@ -337,19 +461,74 @@ export class Editor {
     return out;
   }
 
-  private refreshSelectionBox(): void {
-    if (this.selBox) {
-      this.scene.remove(this.selBox);
-      this.selBox = null;
-    }
-    if (this.selected < 0) return;
-    const objs = this.objectsFor(this.selected);
-    if (objs.length === 0) return;
+  private boxFor(idx: number): THREE.Box3 | null {
+    const objs = this.objectsFor(idx);
+    if (objs.length === 0) return null;
     const box = new THREE.Box3();
     for (const o of objs) box.expandByObject(o);
-    box.expandByScalar(0.15);
-    this.selBox = new THREE.Box3Helper(box, new THREE.Color(0x58e08a));
-    this.scene.add(this.selBox);
+    return box;
+  }
+
+  private refreshSelectionBox(): void {
+    for (const b of this.selBoxes) this.scene.remove(b);
+    this.selBoxes = [];
+    for (const idx of this.sel) {
+      const box = this.boxFor(idx);
+      if (!box) continue;
+      box.expandByScalar(0.15);
+      // primary pops bright green; the rest of the selection reads softer
+      const primary = idx === this.selected;
+      const helper = new THREE.Box3Helper(box, new THREE.Color(primary ? 0x58e08a : 0x2f9a86));
+      this.scene.add(helper);
+      this.selBoxes.push(helper);
+    }
+  }
+
+  // F: frame the selection (or the whole level) in the orbit view
+  private frameSelection(): void {
+    if (!this.controls) return;
+    const box = new THREE.Box3();
+    let any = false;
+    const idxs = this.sel.length ? this.sel : this.data.components.map((_, i) => i);
+    for (const idx of idxs) {
+      const b = this.boxFor(idx);
+      if (b) {
+        box.union(b);
+        any = true;
+      }
+    }
+    if (!any) return;
+    const cen = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3()).length();
+    const dist = THREE.MathUtils.clamp(size * 1.1 + 6, 10, 120);
+    const dir = new THREE.Vector3().subVectors(this.camera.position, this.controls.target).normalize();
+    if (dir.lengthSq() < 0.5) dir.set(0.45, 0.7, 0.55).normalize();
+    this.controls.target.copy(cen);
+    this.camera.position.copy(cen).addScaledVector(dir, dist);
+  }
+
+  // arrow keys: nudge the selection one grid step, mapped to the camera view
+  // (up = away from you). A burst of taps coalesces into one undo step.
+  private nudge(fwd: number, right: number, up: number): void {
+    if (this.sel.length === 0 || !this.controls) return;
+    const step = this.snap ? 0.5 : 0.25;
+    const f = new THREE.Vector3().subVectors(this.controls.target, this.camera.position);
+    f.y = 0;
+    if (f.lengthSq() < 1e-6) f.set(0, 0, -1);
+    f.normalize();
+    // snap "forward" to the dominant world axis so nudges stay on-grid
+    if (Math.abs(f.x) > Math.abs(f.z)) f.set(Math.sign(f.x), 0, 0);
+    else f.set(0, 0, Math.sign(f.z));
+    const r = new THREE.Vector3(-f.z, 0, f.x); // forward rotated to screen-right
+    const d = new THREE.Vector3()
+      .addScaledVector(f, fwd * step)
+      .addScaledVector(r, right * step)
+      .setY(up * step);
+    for (const idx of this.sel) {
+      const c = this.data.components[idx];
+      c.p = [c.p[0] + d.x, c.p[1] + d.y, c.p[2] + d.z];
+    }
+    this.commit(true, 'nudge');
   }
 
   private pick(e: PointerEvent): number {
@@ -612,10 +791,31 @@ export class Editor {
     }
     this.downAt = { x: e.clientX, y: e.clientY };
     const hit = this.pick(e);
-    // dragging starts only from the ALREADY selected component — first click
-    // selects, second grab moves (keeps orbit usable everywhere else)
-    if (hit >= 0 && hit === this.selected) {
-      const c = this.data.components[this.selected];
+    // shift-drag on EMPTY space: marquee box-select (adds to the selection)
+    if (hit < 0 && e.shiftKey) {
+      this.marquee = { x0: e.clientX, y0: e.clientY, x1: e.clientX, y1: e.clientY };
+      this.showMarquee();
+      if (this.controls) this.controls.enabled = false;
+      return;
+    }
+    // dragging starts only from an ALREADY selected component — first click
+    // selects, second grab moves (keeps orbit usable everywhere else). A grab
+    // with ctrl/cmd held is a toggle-click, never a move.
+    const plainGrab = !e.ctrlKey && !e.metaKey;
+    if (hit >= 0 && this.sel.includes(hit) && plainGrab) {
+      let grabbed = hit;
+      // alt-drag clones: the copies come along, the originals stay put
+      if (e.altKey) {
+        const order = [...this.sel];
+        const start = this.data.components.length;
+        const copies = order.map(
+          (i) => JSON.parse(JSON.stringify(this.data.components[i])) as CustomComponent,
+        );
+        grabbed = start + order.indexOf(hit);
+        this.addBatch(copies); // selects the clones (one undo step)
+        if (grabbed >= this.data.components.length) grabbed = this.selected; // crystal filtered
+      }
+      const c = this.data.components[grabbed];
       this.dragVertical = e.shiftKey;
       this.dragPlane = this.dragVertical
         ? new THREE.Plane().setFromNormalAndCoplanarPoint(
@@ -626,10 +826,85 @@ export class Editor {
       if (this.groundPoint(e, this.dragPlane, this.dragStart)) {
         this.dragging = true;
         this.dragOrig = [...c.p] as [number, number, number];
+        // the grabbed one leads; every selected component keeps its offset
+        this.dragSel = this.sel.map((idx) => ({
+          idx,
+          p: [...this.data.components[idx].p] as [number, number, number],
+        }));
+        // move the grabbed item to the selection tail so snapping tracks IT
+        if (grabbed !== this.selected) {
+          this.sel = [...this.sel.filter((i) => i !== grabbed), grabbed];
+          this.refreshSelectionBox();
+        }
         if (this.controls) this.controls.enabled = false;
       }
     }
   };
+
+  // ---- marquee (screen-space rubber band) ----
+
+  private showMarquee(): void {
+    if (!this.marqueeEl) {
+      const el = document.createElement('div');
+      el.className = 'ed-marquee';
+      document.body.appendChild(el);
+      this.marqueeEl = el;
+    }
+    const m = this.marquee;
+    if (!m) return;
+    const x = Math.min(m.x0, m.x1);
+    const y = Math.min(m.y0, m.y1);
+    this.marqueeEl.style.display = 'block';
+    this.marqueeEl.style.left = `${x}px`;
+    this.marqueeEl.style.top = `${y}px`;
+    this.marqueeEl.style.width = `${Math.abs(m.x1 - m.x0)}px`;
+    this.marqueeEl.style.height = `${Math.abs(m.y1 - m.y0)}px`;
+  }
+
+  private hideMarquee(): void {
+    if (this.marqueeEl) this.marqueeEl.style.display = 'none';
+  }
+
+  // every component whose screen-projected bounds touch the marquee rect
+  private marqueePick(m: { x0: number; y0: number; x1: number; y1: number }): number[] {
+    const rx0 = Math.min(m.x0, m.x1);
+    const ry0 = Math.min(m.y0, m.y1);
+    const rx1 = Math.max(m.x0, m.x1);
+    const ry1 = Math.max(m.y0, m.y1);
+    const r = this.dom.getBoundingClientRect();
+    const camDir = this.camera.getWorldDirection(new THREE.Vector3());
+    const out: number[] = [];
+    const v = new THREE.Vector3();
+    for (let idx = 0; idx < this.data.components.length; idx++) {
+      const box = this.boxFor(idx);
+      if (!box) continue;
+      // skip anything behind the camera — projection would mirror it
+      if (v.copy(box.getCenter(new THREE.Vector3())).sub(this.camera.position).dot(camDir) < 0) continue;
+      let sx0 = Infinity;
+      let sy0 = Infinity;
+      let sx1 = -Infinity;
+      let sy1 = -Infinity;
+      for (let corner = 0; corner < 8; corner++) {
+        v.set(
+          corner & 1 ? box.max.x : box.min.x,
+          corner & 2 ? box.max.y : box.min.y,
+          corner & 4 ? box.max.z : box.min.z,
+        ).project(this.camera);
+        const px = r.left + ((v.x + 1) / 2) * r.width;
+        const py = r.top + ((1 - v.y) / 2) * r.height;
+        sx0 = Math.min(sx0, px);
+        sy0 = Math.min(sy0, py);
+        sx1 = Math.max(sx1, px);
+        sy1 = Math.max(sy1, py);
+      }
+      const touches = sx1 >= rx0 && sx0 <= rx1 && sy1 >= ry0 && sy0 <= ry1;
+      // a component whose projection CONTAINS the whole rect wasn't lassoed —
+      // you swept a box on top of it (else any sweep grabs the floor too)
+      const swallows = sx0 <= rx0 && sy0 <= ry0 && sx1 >= rx1 && sy1 >= ry1;
+      if (touches && !swallows) out.push(idx);
+    }
+    return out;
+  }
 
   private onMove = (e: PointerEvent): void => {
     if (!this.active) return;
@@ -654,16 +929,36 @@ export class Editor {
       }
       return;
     }
+    // marquee: track the corner
+    if (this.marquee) {
+      this.marquee.x1 = e.clientX;
+      this.marquee.y1 = e.clientY;
+      this.showMarquee();
+      return;
+    }
     // hovering a handle: show it's grabbable
     if (this.resizeIdx >= 0 && !this.dragging && this.handleMeshes.length > 0) {
       this.setRay(e);
       const over = this.raycaster.intersectObjects(this.handleMeshes, false).length > 0;
-      this.dom.style.cursor = over ? 'grab' : '';
+      if (over) {
+        this.dom.style.cursor = 'grab';
+        return;
+      }
     }
-    if (!this.dragging || this.selected < 0) return;
+    // idle hover: a pointer cursor says "this is selectable" (throttled)
+    if (!this.dragging && !this.downAt) {
+      const now = performance.now();
+      if (now - this.hoverAt > 80) {
+        this.hoverAt = now;
+        const over = this.pick(e);
+        this.dom.style.cursor = over >= 0 ? (this.sel.includes(over) ? 'move' : 'pointer') : '';
+      }
+    }
+    if (!this.dragging || this.sel.length === 0) return;
     const hit = new THREE.Vector3();
     if (!this.groundPoint(e, this.dragPlane, hit)) return;
-    const c = this.data.components[this.selected];
+    // the grabbed component's target snaps to the grid; the rest of the
+    // selection follows by the SAME delta so the group's layout never warps
     let nx = this.dragOrig[0];
     let ny = this.dragOrig[1];
     let nz = this.dragOrig[2];
@@ -678,13 +973,27 @@ export class Editor {
       ny = Math.round(ny * 2) / 2;
       nz = Math.round(nz * 2) / 2;
     }
-    // live-preview: shift the tagged visuals; physics catches up on release
-    const dx = nx - c.p[0];
-    const dy = ny - c.p[1];
-    const dz = nz - c.p[2];
-    if (dx || dy || dz) {
-      for (const o of this.objectsFor(this.selected)) o.position.add(new THREE.Vector3(dx, dy, dz));
-      c.p = [nx, ny, nz];
+    const gdx = nx - this.dragOrig[0];
+    const gdy = ny - this.dragOrig[1];
+    const gdz = nz - this.dragOrig[2];
+    let moved = false;
+    for (const entry of this.dragSel) {
+      const c = this.data.components[entry.idx];
+      if (!c) continue;
+      const tx = entry.p[0] + gdx;
+      const ty = entry.p[1] + gdy;
+      const tz = entry.p[2] + gdz;
+      const dx = tx - c.p[0];
+      const dy = ty - c.p[1];
+      const dz = tz - c.p[2];
+      if (dx || dy || dz) {
+        // live-preview: shift the tagged visuals; physics catches up on release
+        for (const o of this.objectsFor(entry.idx)) o.position.add(new THREE.Vector3(dx, dy, dz));
+        c.p = [tx, ty, tz];
+        moved = true;
+      }
+    }
+    if (moved) {
       this.refreshSelectionBox();
       this.renderProps();
     }
@@ -698,15 +1007,39 @@ export class Editor {
       this.commit(); // one undo step for the whole handle stretch
       return;
     }
+    const clickish =
+      this.downAt !== null &&
+      Math.hypot(e.clientX - this.downAt.x, e.clientY - this.downAt.y) < 5 &&
+      e.button === 0;
+    if (this.marquee) {
+      const m = this.marquee;
+      this.marquee = null;
+      this.hideMarquee();
+      if (this.controls) this.controls.enabled = true;
+      // a real sweep adds everything it touched; a sub-click shift-tap on
+      // empty space falls through to the click logic (which keeps selection)
+      if (!clickish) {
+        this.setSelection([...this.sel, ...this.marqueePick(m)]);
+        this.downAt = null;
+        return;
+      }
+    }
     if (this.dragging) {
       this.dragging = false;
+      this.dragSel = [];
       if (this.controls) this.controls.enabled = true;
-      this.commit(); // rebuild: colliders/rails regenerate at the new spot
-      return;
+      if (!clickish) {
+        this.commit(); // rebuild: colliders/rails regenerate at the new spot
+        this.downAt = null;
+        return;
+      }
+      // grab-with-no-movement is just a click — fall through
     }
-    // plain click (no drag distance): select / deselect
-    if (this.downAt && Math.hypot(e.clientX - this.downAt.x, e.clientY - this.downAt.y) < 5 && e.button === 0) {
-      this.select(this.pick(e));
+    // plain click: select / deselect · modifier-click: toggle in/out
+    if (clickish) {
+      const hit = this.pick(e);
+      if (e.shiftKey || e.metaKey || e.ctrlKey) this.toggleSelect(hit);
+      else this.select(hit);
     }
     this.downAt = null;
   };
@@ -715,14 +1048,44 @@ export class Editor {
     if (!this.active) return;
     const typing = (e.target as HTMLElement)?.tagName === 'INPUT' || (e.target as HTMLElement)?.tagName === 'SELECT';
     if (typing) return;
-    if (e.code === 'Escape' && this.resizeIdx >= 0) this.setResize(-1);
+    const cmd = e.metaKey || e.ctrlKey;
+    if (e.code === 'Escape') {
+      // step out: resize mode first, then the selection itself
+      if (this.resizeIdx >= 0) this.setResize(-1);
+      else this.select(-1);
+    }
     if (e.code === 'Delete' || e.code === 'Backspace') this.deleteSelected();
-    if (e.code === 'KeyD' && (e.ctrlKey || e.metaKey)) {
+    if (e.code === 'KeyD' && cmd) {
       e.preventDefault();
       this.duplicateSelected();
     }
+    if (e.code === 'KeyC' && cmd) {
+      e.preventDefault();
+      this.copySelected();
+    }
+    if (e.code === 'KeyX' && cmd) {
+      e.preventDefault();
+      this.cutSelected();
+    }
+    if (e.code === 'KeyV' && cmd) {
+      e.preventDefault();
+      this.paste();
+    }
+    if (e.code === 'KeyA' && cmd) {
+      e.preventDefault();
+      this.setSelection(this.data.components.map((_, i) => i));
+    }
+    if (e.code === 'KeyF' && !cmd) this.frameSelection();
+    // arrows nudge the selection a grid step (shift+up/down = height)
+    if (e.code.startsWith('Arrow') && this.sel.length > 0) {
+      e.preventDefault();
+      if (e.code === 'ArrowUp') this.nudge(e.shiftKey ? 0 : 1, 0, e.shiftKey ? 1 : 0);
+      else if (e.code === 'ArrowDown') this.nudge(e.shiftKey ? 0 : -1, 0, e.shiftKey ? -1 : 0);
+      else if (e.code === 'ArrowLeft') this.nudge(0, -1, 0);
+      else if (e.code === 'ArrowRight') this.nudge(0, 1, 0);
+    }
     // Cmd+Z / Cmd+Shift+Z (mac) — Ctrl works too
-    if (e.code === 'KeyZ' && (e.metaKey || e.ctrlKey)) {
+    if (e.code === 'KeyZ' && cmd) {
       e.preventDefault();
       if (e.shiftKey) this.redo();
       else this.undo();
@@ -765,6 +1128,11 @@ export class Editor {
     };
     panel.appendChild(h('<div class="ed-title">LEVEL EDITOR</div>'));
 
+    // selection properties FIRST — what you just clicked is always in view
+    panel.appendChild(h('<div class="ed-sect">SELECTION</div>'));
+    this.propsEl = h('<div class="ed-props"><div class="ed-dim">click a component…</div></div>');
+    panel.appendChild(this.propsEl);
+
     // add palette: grouped, icon + label per component
     for (const sect of PALETTE_SECTIONS) {
       panel.appendChild(h(`<div class="ed-sect">ADD · ${sect.title}</div>`));
@@ -794,11 +1162,6 @@ export class Editor {
       }
       panel.appendChild(pal);
     }
-
-    // selection properties (rebuilt on select)
-    panel.appendChild(h('<div class="ed-sect">SELECTION</div>'));
-    this.propsEl = h('<div class="ed-props"><div class="ed-dim">click a component…</div></div>');
-    panel.appendChild(this.propsEl);
 
     // level settings
     panel.appendChild(h('<div class="ed-sect">LEVEL</div>'));
@@ -886,7 +1249,7 @@ export class Editor {
     });
     panel.appendChild(test);
     panel.appendChild(
-      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo</div>'),
+      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>alt-drag selected = drag out a copy<br>shift-click = add to selection<br>shift-drag empty = box select · ⌘A = all<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo</div>'),
     );
 
     document.body.appendChild(panel);
@@ -910,7 +1273,8 @@ export class Editor {
       const v = parseFloat(input.value);
       if (isFinite(v)) {
         set(v);
-        this.commit();
+        // spinner-arrow bursts on one field merge into a single undo step
+        this.commit(true, `num:${label}`);
       }
       input.value = String(get());
     });
@@ -922,8 +1286,55 @@ export class Editor {
   // properties for the current selection, generated per component type
   private renderProps(): void {
     this.propsEl.innerHTML = '';
-    if (this.selected < 0 || !this.data.components[this.selected]) {
-      this.propsEl.innerHTML = '<div class="ed-dim">click a component…</div>';
+    if (this.sel.length === 0 || !this.data.components[this.selected]) {
+      this.propsEl.innerHTML =
+        '<div class="ed-dim">click a component…<br>shift-click adds · shift-drag empty space = box select</div>';
+      return;
+    }
+    // MULTI-selection: a group toolkit instead of per-type fields
+    if (this.sel.length > 1) {
+      const counts = new Map<string, number>();
+      for (const i of this.sel) {
+        const t = this.data.components[i].t;
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      }
+      const parts = [...counts.entries()]
+        .map(([t, n]) => (n > 1 ? `${t} ×${n}` : t))
+        .join(' · ');
+      const head = document.createElement('div');
+      head.className = 'ed-selhead';
+      head.textContent = `${this.sel.length} selected`;
+      this.propsEl.appendChild(head);
+      const list = document.createElement('div');
+      list.className = 'ed-dim ed-sellist';
+      list.textContent = parts;
+      this.propsEl.appendChild(list);
+      const grid = document.createElement('div');
+      grid.className = 'ed-grid';
+      const mkBtn = (label: string, fn: () => void, danger = false): void => {
+        const b = document.createElement('button');
+        b.className = danger ? 'ed-btn ed-danger' : 'ed-btn';
+        b.textContent = label;
+        b.addEventListener('click', () => {
+          fn();
+          b.blur();
+        });
+        grid.appendChild(b);
+      };
+      mkBtn('copy ⌘C', () => this.copySelected());
+      mkBtn('duplicate ⌘D', () => this.duplicateSelected());
+      mkBtn('match height', () => {
+        // align the group to the PRIMARY's y — the fast way to level a row
+        const y = this.data.components[this.selected].p[1];
+        for (const i of this.sel) this.data.components[i].p[1] = y;
+        this.commit();
+      });
+      mkBtn('delete', () => this.deleteSelected(), true);
+      this.propsEl.appendChild(grid);
+      const hint = document.createElement('div');
+      hint.className = 'ed-dim';
+      hint.textContent = 'drag any selected piece to move the group · arrows nudge';
+      this.propsEl.appendChild(hint);
       return;
     }
     const c = this.data.components[this.selected];
@@ -1049,11 +1460,16 @@ export class Editor {
     dup.className = 'ed-btn';
     dup.textContent = 'duplicate';
     dup.addEventListener('click', () => this.duplicateSelected());
+    const cpy = document.createElement('button');
+    cpy.className = 'ed-btn';
+    cpy.textContent = 'copy ⌘C';
+    cpy.addEventListener('click', () => this.copySelected());
     const del = document.createElement('button');
     del.className = 'ed-btn ed-danger';
     del.textContent = 'delete';
     del.addEventListener('click', () => this.deleteSelected());
     row.appendChild(dup);
+    row.appendChild(cpy);
     row.appendChild(del);
     this.propsEl.appendChild(row);
   }
@@ -1094,6 +1510,12 @@ export class Editor {
       }
       .ed-selhead { color: #ffd75e; margin: 4px 0; }
       .ed-dim { color: #6b7890; margin-top: 8px; line-height: 1.5; }
+      .ed-sellist { margin: 0 0 6px; }
+      .ed-marquee {
+        position: fixed; display: none; z-index: 55; pointer-events: none;
+        border: 1px dashed #58e08a; background: rgba(88, 224, 138, 0.10);
+        border-radius: 2px;
+      }
     `;
     document.head.appendChild(css);
   }
