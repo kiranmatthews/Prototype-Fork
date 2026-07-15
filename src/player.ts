@@ -2156,23 +2156,12 @@ export class Player {
         this.pos.x += tx * along * TUNING.vertDrift * dt;
         this.pos.z += tz * along * TUNING.vertDrift * dt;
       }
-      // SPINE CARRY (0 = off, redesign pending): above the coping, the
-      // stick's INTO-the-lip component walks the glue plane across the
-      // ridge — drop on the far side for a spine transfer. Below lip
-      // height the wall is solid: no push-through.
-      if (
-        TUNING.spineDrift > 0 &&
-        (rx !== 0 || ry !== 0) &&
-        this.pipeHang &&
-        this.hangPipe &&
-        this.pos.y > this.hangPipe.lipY + 0.15
-      ) {
-        const inv = 1 / Math.hypot(rx, ry);
-        const push = -(rx * inv * this.vertNormal.x) - -ry * inv * this.vertNormal.z;
-        if (push > 0.4) {
-          this.vertAnchor.addScaledVector(this.vertNormal, -TUNING.spineDrift * push * dt);
-        }
-      }
+      // (The old SPINE CARRY — holding into the lip walked the glue plane
+      // across the ridge — is REMOVED, not just zeroed: a stale saved-tuning
+      // snapshot kept resurrecting it, marching the anchor out the back of
+      // the wall at spineDrift u/s and dumping glued hangs onto the deck
+      // floor. That WAS the "float out of hangtime". Spine transfers return
+      // as a deliberate mechanic in the redesign.)
       // THPS LOCK-IN, the hard guarantee: a hang over a pipe can never float
       // past the END of the pipe — past the end there is no wall to catch
       // you, and drifting there dumped you out of the hang onto the flat.

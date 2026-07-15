@@ -2,7 +2,7 @@
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import { LEVEL_NAMES } from './level';
-import { TUNING, TUNING_RANGES, TUNING_INFO, TUNING_SECTIONS, TuningKey } from './tuning';
+import { TUNING, TUNING_RANGES, TUNING_INFO, TUNING_SECTIONS, TUNING_VERSION, TuningKey } from './tuning';
 
 export interface Stats {
   speed: number;
@@ -141,7 +141,12 @@ export class UI {
       btnRow.appendChild(b);
     };
     mkBtn('save', () => {
-      localStorage.setItem('protoTuning', JSON.stringify(TUNING));
+      // store the defaults alongside, so a future build can tell which keys
+      // were DELIBERATE tweaks (only those survive across default changes)
+      localStorage.setItem(
+        'protoTuning',
+        JSON.stringify({ __v: TUNING_VERSION, tuning: TUNING, defaults: this.defaults }),
+      );
       this.showMessage('TUNING SAVED', '', 800);
     });
     mkBtn('reset', () => {
@@ -462,12 +467,29 @@ export class UI {
     }
   }
 
-  // Saved tuning snapshot from this browser, if any. Only keys that still
-  // exist in the current build are applied, so stale saves never break a
-  // newer build's numbers.
+  // Saved tuning snapshot from this browser, if any — merged so that ONLY
+  // keys the user deliberately moved off their build's defaults carry over;
+  // everything they never touched follows the CURRENT build's numbers. (A
+  // legacy flat snapshot can't tell tweaks from stale defaults — it once
+  // kept a retired mechanic alive for days — so it is dropped outright.)
   private readSaved(): Partial<Record<TuningKey, number>> | null {
     try {
-      return JSON.parse(localStorage.getItem('protoTuning') ?? 'null');
+      const raw = JSON.parse(localStorage.getItem('protoTuning') ?? 'null') as {
+        __v?: number;
+        tuning?: Record<string, number>;
+        defaults?: Record<string, number>;
+      } | null;
+      if (!raw) return null;
+      if (raw.__v === undefined || !raw.tuning || !raw.defaults) {
+        localStorage.removeItem('protoTuning'); // pre-versioning save: retire it
+        return null;
+      }
+      const merged: Partial<Record<TuningKey, number>> = { ...this.defaults };
+      for (const key of Object.keys(TUNING_RANGES) as TuningKey[]) {
+        const v = raw.tuning[key];
+        if (typeof v === 'number' && isFinite(v) && v !== raw.defaults[key]) merged[key] = v;
+      }
+      return merged;
     } catch {
       return null;
     }

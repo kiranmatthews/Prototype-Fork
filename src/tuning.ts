@@ -84,7 +84,10 @@ export const TUNING = {
   lipMaxTime: 2.5, // longest a lip stall holds before you drop back in
   lipDrift: 0.8, // lip stall balance: how fast the needle runs away on its own
   lipControl: 3.4, // how hard up/down input fights the lip needle
-  spineDrift: 0, // hang time: how fast holding INTO the lip carries you across a spine/ridge. DISABLED (0) for now — the carry displaces you off the coping and ruins lip catches; control/logic redesign pending
+  // (spineDrift is RETIRED — the hold-into-the-lip spine carry walked the
+  // glue anchor off the wall and is removed from the code entirely; old
+  // saves/replays that still carry the key are ignored. Spine transfers
+  // return as a deliberate mechanic in the redesign.)
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
   balanceSpeedEffect: 1.4, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
@@ -105,6 +108,13 @@ export const TUNING = {
 };
 
 export type TuningKey = keyof typeof TUNING;
+
+// Bump when shipped DEFAULTS change in a way saved snapshots must not mask.
+// A saved tuning records the defaults it was taken against; on load, only
+// the keys the user actually MOVED off those defaults are re-applied — every
+// untouched key follows the new build. (The spineDrift saga: a snapshot from
+// an old build silently kept a retired mechanic alive for days.)
+export const TUNING_VERSION = 2;
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
@@ -189,7 +199,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   lipMaxTime: { min: 0.5, max: 12, step: 0.25 },
   lipDrift: { min: 0.1, max: 3, step: 0.05 },
   lipControl: { min: 0.5, max: 8, step: 0.1 },
-  spineDrift: { min: 0, max: 12, step: 0.5 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
   balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
@@ -350,8 +359,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   lipDrift:
     'How fast the lip stall balance needle runs away on its own. The meter + stick axis auto-align with the CAMERA: when tipping reads left/right on screen you fight with left/right (horizontal bar); when it reads toward/away you fight with up/down (vertical bar). Tip INTO the pipe = drop back in keeping the trick; tip out the BACK = bail onto the deck. Ollie out any time.',
   lipControl: 'How hard stick input fights the lip stall needle (along whichever screen axis the meter shows).',
-  spineDrift:
-    'SPINE TRANSFER: during hang time above the coping, hold the stick INTO/over the lip to carry across a spine or ridge — land the far side for a Spine Transfer. Higher = crosses faster. 0 = disabled.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
   balanceSpeedEffect:
@@ -445,7 +452,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   {
     title: 'MANUAL & LIP',
-    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl', 'spineDrift'],
+    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
