@@ -430,9 +430,6 @@ window.addEventListener('drop', (e) => {
     });
 });
 ui.onLevelSelect = switchLevel;
-ui.onCharacterToggle = (on) => {
-  player.useSkater = on;
-};
 player.onComboBank = (amount) => ui.comboBank(amount);
 player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.

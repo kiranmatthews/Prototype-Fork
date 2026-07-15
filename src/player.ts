@@ -10,7 +10,6 @@ import { Crate, Level } from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
-import { SkaterModel } from './skater';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'gameover' | 'finished';
@@ -77,13 +76,6 @@ export class Player {
   gemEarned = false; // ...and the all-boxes gem
 
   readonly group: THREE.Group;
-  // Rigged glTF character. OFF by default — the procedural hero is the dev
-  // model; flip useSkater (menu toggle) for the occasional demo. Lazy-loaded on
-  // first enable so it costs nothing when off.
-  useSkater = false;
-  skater: SkaterModel | null = null;
-  private skaterSwapped = false; // procedural body currently hidden for the model
-  private readonly scene: THREE.Scene;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   private shadow: THREE.Mesh;
 
@@ -351,7 +343,6 @@ export class Player {
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
-    this.scene = scene; // kept for lazy-loading the rigged model on first enable
     this.installRoo(); // swap the placeholder body for the authored model when it lands
 
     this.shadow = new THREE.Mesh(
@@ -402,25 +393,6 @@ export class Player {
 
   get sliding(): boolean {
     return this.slideTimer > 0 && this.state === 'ride' && this.grounded;
-  }
-
-  // Which baked clip the rigged skater plays for the current move state.
-  skaterClip(): string {
-    if (this.wallriding) return 'skate';
-    if (this.state === 'finished') return 'victory';
-    if (this.state === 'dead' || this.state === 'gameover' || this.bailing || this.bailDownT > 0)
-      return 'bail';
-    if (this.crawling) return 'crawl';
-    if (this.slideTimer > 0 && this.grounded) return 'slide';
-    if (this.state === 'grind') return 'skate'; // no dedicated grind clip yet
-    if (this.state === 'air' || !this.grounded) {
-      if (this.slideFromWalk) return 'slide_jump';
-      return this.freeSkate ? 'skate_jump' : 'jump';
-    }
-    if (this.teetering) return 'teeter';
-    if (this.charging && (this.pipeHang || this.pipeRideT > 0)) return 'pump';
-    if (this.freeSkate) return this.skateOn ? 'push' : 'skate';
-    return Math.abs(this.speed) > 2 ? 'run' : 'idle';
   }
 
   // Reaching for or holding the grab (air control locks during these).
@@ -4883,30 +4855,6 @@ export class Player {
       this.shadow.visible = false; // no shadow = you are over the pit
     }
 
-    // Rigged character (menu toggle, off by default). Lazy-load on first enable;
-    // once ready it follows the physics transform and plays the state's clip,
-    // hiding the procedural body (board + shadow stay). Toggling back off
-    // restores the procedural hero and parks the model.
-    if (this.useSkater) {
-      if (!this.skater)
-        this.skater = new SkaterModel(this.scene, import.meta.env.BASE_URL + 'models/ch46.glb');
-      if (this.skater.ready) {
-        if (this.upperG) this.upperG.visible = false;
-        if (this.legs) this.legs.visible = false;
-        if (this.tailRoot) this.tailRoot.visible = false;
-        this.skaterSwapped = true;
-        this.skater.setVisible(true);
-        const yaw =
-          Math.PI + this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose;
-        this.skater.update(dt, this.pos, yaw, this.skaterClip());
-      }
-    } else if (this.skaterSwapped) {
-      if (this.upperG) this.upperG.visible = true;
-      if (this.legs) this.legs.visible = true;
-      if (this.tailRoot) this.tailRoot.visible = true;
-      if (this.skater) this.skater.setVisible(false);
-      this.skaterSwapped = false;
-    }
   }
 
   // Character/board skins: painted canvases, up to 128px. Organic surfaces
@@ -5011,7 +4959,7 @@ export class Player {
     // Rig space: feet at 0. bodyGroup scales (1.18, 1.36, 1.18), so x/z pick
     // up the extra 1.36/1.18 here — the world result is uniform. HEIGHT is
     // the one knob: world units from sole to crown (crates are 0.96).
-    const HEIGHT = 1.85;
+    const HEIGHT = 2.0;
     const SY = HEIGHT / 1.36;
     const SXZ = SY * (1.36 / 1.18);
     // skeleton heights derived from the same mapping, so the leg pivots sit

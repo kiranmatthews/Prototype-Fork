@@ -72,7 +72,6 @@ export class UI {
 
   // wired up by main.ts
   onLevelSelect: (id: number) => void = () => {};
-  onCharacterToggle: (on: boolean) => void = () => {};
   onLifeCheat: () => void = () => {};
   onSaveReplay: (() => void) | null = null;
   onToggleVideo: (() => void) | null = null;
@@ -111,21 +110,6 @@ export class UI {
     });
     statsWrap.appendChild(editBtn);
 
-    // Rigged 3D character toggle (off by default — procedural hero is the dev
-    // model). Flip it on for the occasional demo.
-    const charRow = div('hud-levelrow');
-    let charOn = false;
-    const charBtn = document.createElement('button');
-    charBtn.className = 'hud-levelbtn';
-    charBtn.textContent = '3D character: OFF';
-    charBtn.addEventListener('click', () => {
-      charOn = !charOn;
-      charBtn.textContent = `3D character: ${charOn ? 'ON' : 'OFF'}`;
-      this.onCharacterToggle(charOn);
-      charBtn.blur();
-    });
-    charRow.appendChild(charBtn);
-    statsWrap.appendChild(charRow);
 
     const stats = div('hud-statlines');
     statsWrap.appendChild(stats);
