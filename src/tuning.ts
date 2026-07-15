@@ -263,13 +263,13 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   hangSnapAngle:
     'Hit the coping within this many degrees of head-on and you snap to a PURE vertical hang (glued, drop straight back in). Steeper angles carry sideways momentum instead. Test: raise it and even angled approaches drop straight in.',
   hangLateral:
-    'Once your approach is past hangSnapAngle, how much of that off-axis speed becomes SIDEWAYS hang-time drift — this is what lets you carry across a gap or transfer to the far wall. Test: hit the lip at an angle, raise it, you sail further sideways.',
+    'Once your approach is past hangSnapAngle, how much of that off-axis speed becomes SIDEWAYS hang-time drift. LOCKED-IN rules: the drift is capped, bleeds off through the hang, and can never carry you past the end of a pipe — an angled entry moves you a few feet down the coping, then you come down glued. Test: hit the lip at an angle, raise it, you shift further before locking.',
   landingFlow:
     'How much of your FALL speed becomes riding speed when you land on a ramp or wall (0 = dead stop like before, 1 = keep it all). This is what makes dropping in from hang time flow instead of stalling. Test: drop into a pipe, raise it, you rocket out the far wall.',
   vertGlue:
     'THPS2 hang time: how hard a vert air is pulled back onto the wall plane so you drop into the same transition. 0 = free air, high = riveted. Test: hang time, raise it, you always drop back down the same face.',
   vertDrift:
-    'During vert hang time the stick moves you ALONG the coping at this speed — line up your landing without leaving the wall.',
+    'During a NON-PIPE vert crest the stick moves you along the lip at this speed. Pipe hangs ignore it — there the stick spins you (left/right, any wall) and never translates you: locked-in vert.',
   wallStick: 'Ground-snap window on steep transitions — how hard the wall holds the board through fast climbs.',
   landGive: 'Landing forgiveness on steep transition faces (flat decks stay strict).',
   railSnapDistance:

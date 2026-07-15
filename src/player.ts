@@ -2107,31 +2107,38 @@ export class Player {
       if (this.vertLatVel !== 0) {
         this.pos.x += tx * this.vertLatVel * dt;
         this.pos.z += tz * this.vertLatVel * dt;
-        // ...but a PIPE hang bleeds it off through the hang: drift down the
-        // pipe early, come down LOCKED over one spot (the THPS contract).
-        if (this.pipeHang) this.vertLatVel *= Math.exp(-CONST.hangLatDamp * dt);
+        // ...but it bleeds off through the hang: drift down the pipe early,
+        // come down LOCKED over one spot (the THPS contract — pipes, ramp
+        // crests, all of it).
+        this.vertLatVel *= Math.exp(-CONST.hangLatDamp * dt);
       }
-      // plus fine stick steering along the coping
+      // Stick steering along the coping — OFF during a pipe hang (locked-in
+      // vert: the stick SPINS you, it never translates you; this slide is
+      // exactly why spin attempts floated you down the pipe). vertDrift
+      // keeps it available for general non-pipe crests via the tuner.
       const rx = this.rawInput.moveX;
       const ry = this.rawInput.moveY;
-      if (rx !== 0 || ry !== 0) {
+      if ((rx !== 0 || ry !== 0) && !this.pipeHang) {
         const inv = 1 / Math.hypot(rx, ry);
         const along = rx * inv * tx + -ry * inv * tz;
         this.pos.x += tx * along * TUNING.vertDrift * dt;
         this.pos.z += tz * along * TUNING.vertDrift * dt;
-        // SPINE CARRY: above the coping, the stick's INTO-the-lip component
-        // walks the glue plane across the ridge — drop on the far side for a
-        // spine transfer. Below lip height the wall is solid: no push-through.
-        if (
-          TUNING.spineDrift > 0 &&
-          this.pipeHang &&
-          this.hangPipe &&
-          this.pos.y > this.hangPipe.lipY + 0.15
-        ) {
-          const push = -(rx * inv * this.vertNormal.x) - -ry * inv * this.vertNormal.z;
-          if (push > 0.4) {
-            this.vertAnchor.addScaledVector(this.vertNormal, -TUNING.spineDrift * push * dt);
-          }
+      }
+      // SPINE CARRY (0 = off, redesign pending): above the coping, the
+      // stick's INTO-the-lip component walks the glue plane across the
+      // ridge — drop on the far side for a spine transfer. Below lip
+      // height the wall is solid: no push-through.
+      if (
+        TUNING.spineDrift > 0 &&
+        (rx !== 0 || ry !== 0) &&
+        this.pipeHang &&
+        this.hangPipe &&
+        this.pos.y > this.hangPipe.lipY + 0.15
+      ) {
+        const inv = 1 / Math.hypot(rx, ry);
+        const push = -(rx * inv * this.vertNormal.x) - -ry * inv * this.vertNormal.z;
+        if (push > 0.4) {
+          this.vertAnchor.addScaledVector(this.vertNormal, -TUNING.spineDrift * push * dt);
         }
       }
       // THPS LOCK-IN, the hard guarantee: a hang over a pipe can never float
@@ -2578,11 +2585,11 @@ export class Player {
       this.vertLatVel = 0; // snapped to a pure vertical hang
     } else {
       this.vertLatVel = entrySpeed * along * TUNING.hangLateral;
-      // A PIPE hang is locked-in THPS vert: an angled entry drifts you down
-      // the pipe a few feet, never launches you down its length (a hard
-      // carve at top speed used to out-run the pipe entirely).
-      if (this.pipeHang)
-        this.vertLatVel = THREE.MathUtils.clamp(this.vertLatVel, -CONST.hangLatMax, CONST.hangLatMax);
+      // Locked-in THPS vert, EVERY vert air (pipes and ramp crests): an
+      // angled entry drifts you down the coping a few feet, never launches
+      // you down its length (a hard carve at top speed used to out-run the
+      // pipe — or fly clean off the side of a ramp).
+      this.vertLatVel = THREE.MathUtils.clamp(this.vertLatVel, -CONST.hangLatMax, CONST.hangLatMax);
     }
     this.speed = 0; // the energy is in vVel (up) + vertLatVel (across) now
     // Glue plane. A general vert crest sits it a hair INSIDE (1.2) so the drop
@@ -3237,20 +3244,14 @@ export class Player {
 
   // ------------------------------------------------------------------ grab --
 
-  // Spin drive for an air. Ordinary airs read the raw screen left/right; a
-  // PIPE HANG reads the stick's component ALONG the coping instead — so spin
-  // feels identical on any pipe orientation, and the into-the-wall axis stays
-  // reserved for the spine carry.
+  // Spin drive for an air: screen left/right, ALWAYS — hangs included, on
+  // every wall. (This used to remap to the coping tangent during a pipe
+  // hang, which made left/right a dead axis on E/W walls — "spins are
+  // broken" — while the axis that did respond doubled as a positional slide
+  // down the pipe. One stick meaning everywhere: left/right = rotate.)
   private spinStick(): number {
     const rx = this.rawInput.moveX;
-    const ry = this.rawInput.moveY;
-    if (!this.pipeHang) return Math.abs(rx) > 0.3 ? rx : 0;
-    if (rx === 0 && ry === 0) return 0;
-    const inv = 1 / Math.hypot(rx, ry);
-    const tx = -this.vertNormal.z; // coping tangent
-    const tz = this.vertNormal.x;
-    const along = rx * inv * tx + -ry * inv * tz;
-    return Math.abs(along) > 0.3 ? along : 0;
+    return Math.abs(rx) > 0.3 ? rx : 0;
   }
 
   private updateGrab(dt: number, input: Input): void {
