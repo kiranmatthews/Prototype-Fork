@@ -5008,10 +5008,17 @@ export class Player {
       side: THREE.DoubleSide, // chunk interiors show at joint gaps — paint them
     });
     // Model space: normalized T-pose, feet y=-0.5 → crown +0.5, facing +Z.
-    // Rig space: feet 0, ~1.62 tall. bodyGroup scales (1.18, 1.36, 1.18), so
-    // x/z pick up the extra 1.36/1.18 here — the world result is uniform.
-    const SY = 1.62;
+    // Rig space: feet at 0. bodyGroup scales (1.18, 1.36, 1.18), so x/z pick
+    // up the extra 1.36/1.18 here — the world result is uniform. HEIGHT is
+    // the one knob: world units from sole to crown (crates are 0.96).
+    const HEIGHT = 1.85;
+    const SY = HEIGHT / 1.36;
     const SXZ = SY * (1.36 / 1.18);
+    // skeleton heights derived from the same mapping, so the leg pivots sit
+    // on the anatomy at ANY height
+    const HIP = (-0.062 + 0.5) * SY;
+    const KNEE = (-0.222 + 0.5) * SY;
+    const NECK = (0.195 + 0.5) * SY + 0.02;
     // Joint planes measured off the mesh (model space): neck 0.195 (the side
     // ponytail bottoms out at 0.227, so it rides with the head), arm tubes at
     // |x|>0.155 spanning y 0.06..0.24 angled slightly forward, crotch -0.155,
@@ -5106,7 +5113,7 @@ export class Player {
       verts: number[];
     }
     const parts: Record<string, Part> = {
-      head: { test: (_x, y) => y > 0.195, pivot: [0, 1.16, 0], verts: [] }, // pivot AT the neck seam
+      head: { test: (_x, y) => y > 0.195, pivot: [0, NECK, 0], verts: [] }, // pivot AT the neck seam
       foreArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0.285, pivot: [armJ.R.el.x, armJ.R.el.y, armJ.R.el.z], q: armJ.R.qFo, verts: [] },
       foreArmL: { test: (x, y, z) => isArm(x, y, z) && x < -0.285, pivot: [armJ.L.el.x, armJ.L.el.y, armJ.L.el.z], q: armJ.L.qFo, verts: [] },
       upperArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [armJ.R.sh.x, armJ.R.sh.y, armJ.R.sh.z], q: armJ.R.qUp, verts: [] },
@@ -5118,21 +5125,21 @@ export class Player {
       tail4: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 4, pivot: [TJ[4].x, TJ[4].y, TJ[4].z], verts: [] },
       // cut BELOW the baggy cuff + knee pad (leg pinches at -0.28): the sock
       // and shoe fold from inside the cuff, pads ride the thigh chunk
-      shinR: { test: (x, y) => y <= -0.27 && x >= 0, pivot: [0.115, 0.45, 0], verts: [] },
-      shinL: { test: (x, y) => y <= -0.27 && x < 0, pivot: [-0.115, 0.45, 0], verts: [] },
+      shinR: { test: (x, y) => y <= -0.27 && x >= 0, pivot: [0.115, KNEE, 0], verts: [] },
+      shinL: { test: (x, y) => y <= -0.27 && x < 0, pivot: [-0.115, KNEE, 0], verts: [] },
       // the front cargo pouches hang y -0.08..-0.26 across the crotch line:
       // they belong to the leg wholesale or they tear in half mid-stride
       thighR: {
         test: (x, y, z) => (y <= -0.155 || (z > 0.1 && y <= -0.06)) && x >= 0,
-        pivot: [0.115, 0.71, 0],
+        pivot: [0.115, HIP, 0],
         verts: [],
       },
       thighL: {
         test: (x, y, z) => (y <= -0.155 || (z > 0.1 && y <= -0.06)) && x < 0,
-        pivot: [-0.115, 0.71, 0],
+        pivot: [-0.115, HIP, 0],
         verts: [],
       },
-      pelvis: { test: (_x, y) => y <= -0.062, pivot: [0, 0.71, 0], verts: [] },
+      pelvis: { test: (_x, y) => y <= -0.062, pivot: [0, HIP, 0], verts: [] },
       torso: { test: () => true, pivot: [0, 0, 0], verts: [] },
     };
     // One owner per triangle (duplicating seam tris z-fights at rest); the
@@ -5218,6 +5225,7 @@ export class Player {
     stripMeshes(this.upperG); // tank/waist/neck/necklace (arm + head groups stay)
     this.upperG!.add(build(parts.torso));
     stripMeshes(this.legs); // pelvis/belt/chain (leg groups stay)
+    this.legs.position.y = HIP; // re-seat the leg skeleton on the scaled anatomy
     this.legs.add(build(parts.pelvis));
     stripMeshes(this.legR);
     stripMeshes(this.legL);
@@ -5225,6 +5233,8 @@ export class Player {
     this.legL!.add(build(parts.thighL));
     stripMeshes(this.kneeR);
     stripMeshes(this.kneeL);
+    this.kneeR!.position.y = KNEE - HIP;
+    this.kneeL!.position.y = KNEE - HIP;
     this.kneeR!.add(build(parts.shinR));
     this.kneeL!.add(build(parts.shinL));
     // tail: rebuild the joint chain — FIVE joints seated on the authored
