@@ -900,37 +900,20 @@ export class Player {
         }
         break;
       }
-      case 'air': {
+      case 'air':
         this.runTime += dt;
-        // LIP CATCH (air) — THPS2 flow: Triangle around the lip means the
-        // STALL, not a 50-50. Cresting launches you into the hang a beat
-        // before the press usually arrives, so the press lands here airborne
-        // — and the rail snap below would steal the coping every time. While
-        // SQUARE over the pipe you crested with Triangle down, the coping is
-        // reserved for the stall: catch it falling through the lip band, and
-        // hold the rail snap off in the meantime. Off-axis hangs fall
-        // through to the snap and grind the coping as usual.
-        const lipHp =
-          this.freeSkate &&
-          this.hangPipe &&
-          this.lipCoolT <= 0 &&
-          (input.grindHeld || input.grindPressed) &&
-          Math.abs(this.hangPipe.crossCoord(this.pos.x, this.pos.z) - this.hangPipe.cross) <=
-            this.hangPipe.lipX + 0.6 &&
-          this.lipHeadOn(this.hangPipe)
-            ? this.hangPipe
-            : null;
-        if (lipHp && this.vVel <= 0 && Math.abs(this.pos.y - lipHp.lipY) < 0.9) {
-          this.enterLipStall(lipHp, !this.pipeHang);
-          break;
-        }
-        if (!this.wallriding && !lipHp && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
+        // NOTE: there is deliberately NO lip-stall catch from the air. The
+        // stall is committed ON the wall (climb square holding Triangle,
+        // through the crest) — once you're in hangtime, coming down onto the
+        // lip drops you back in (or snaps a coping grind like any rail if
+        // Triangle is held). Getting parked on the coping out of a big hang
+        // killed the flow.
+        if (!this.wallriding && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
           // grabbed the rail
         } else {
           this.stepAir(dt, input, level);
         }
         break;
-      }
       case 'grind':
         this.runTime += dt;
         this.stepGrind(dt, input, level);
@@ -2764,8 +2747,9 @@ export class Player {
   }
 
   // Park on the coping, BALANCING: the needle (shared with the manual meter)
-  // tips between the pipe below and the deck behind. Named by the entry door.
-  private enterLipStall(hp: Halfpipe, fromAir = false): void {
+  // tips between the pipe below and the deck behind. Ride-side entry ONLY —
+  // climb square holding Triangle through the crest; airs never catch it.
+  private enterLipStall(hp: Halfpipe): void {
     const pr = hp.project(hp.crossCoord(this.pos.x, this.pos.z), this.pos.y);
     this.lipSide = Math.sign(pr ? pr.u : hp.crossCoord(this.pos.x, this.pos.z) - hp.cross) || 1;
     this.lipPipe = hp;
@@ -2795,7 +2779,7 @@ export class Player {
     this.balanceCritT = 0;
     this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.rideNormal.set(0, 1, 0);
-    this.score(CONST.ptsLip, fromAir ? 'Disaster' : 'Axle Stall');
+    this.score(CONST.ptsLip, 'Axle Stall');
     sfx.play('railLand', 0.7);
     this.emitSparks(5, 0xffe08a, 1.2);
   }
