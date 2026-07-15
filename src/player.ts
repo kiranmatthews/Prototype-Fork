@@ -322,6 +322,7 @@ export class Player {
   private walkRamp = 0; // regular-walk ease-in fraction (0->1 over walkRampTime while a direction is held; resets on stop / on the board)
   private raycaster = new THREE.Raycaster();
   private playerBox = new THREE.Box3();
+  private feetBox = new THREE.Box3(); // body box WITHOUT the grind reach-down (pit checks)
   private spinBox = new THREE.Box3();
   private enemyTouch = new THREE.Box3(); // scratch: shrunken enemy touch box
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; dust?: boolean }[] = [];
@@ -3498,6 +3499,7 @@ export class Player {
     const half = CONST.playerHalf;
     const center = new THREE.Vector3(this.pos.x, this.pos.y + half.y, this.pos.z);
     this.playerBox.setFromCenterAndSize(center, new THREE.Vector3(half.x * 2, half.y * 2, half.z * 2));
+    this.feetBox.copy(this.playerBox);
     // On a rail the board and trucks hang BELOW the feet — reach down so
     // crates sitting on the rail line still clip a grinder.
     if (this.state === 'grind') this.playerBox.min.y -= 0.35;
@@ -3707,8 +3709,12 @@ export class Player {
     }
 
     // Swinging blades and other touch-kill hazards: same rules as stones.
+    // Death pits use the body box WITHOUT the grind reach-down — grinding a
+    // rail strung over lava is a THPS staple, only real feet contact burns.
     for (const hz of level.killBoxes) {
-      if (this.playerBox.intersectsBox(hz)) {
+      const box =
+        this.state === 'grind' && level.pitBoxes.includes(hz) ? this.feetBox : this.playerBox;
+      if (box.intersectsBox(hz)) {
         if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
         if (this.spendMask()) {
           this.speed *= 0.5;

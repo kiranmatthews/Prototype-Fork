@@ -868,10 +868,13 @@ export class Level {
             );
             rim.position.set(c.p[0], c.p[1] + 0.001, c.p[2]);
             this.root.add(rim);
+            // Kill volume hugs the pool: only 0.25 above the surface (feet must
+            // actually touch the lava — landing on a crate seated over the pit
+            // is safe), and 2.0 deep so a max-gravity fall can't step past it.
             this.pitBoxes.push(
               new THREE.Box3().setFromCenterAndSize(
-                new THREE.Vector3(c.p[0], c.p[1] + 0.5, c.p[2]),
-                new THREE.Vector3(s[0], 1.4, s[2]),
+                new THREE.Vector3(c.p[0], c.p[1] - 0.75, c.p[2]),
+                new THREE.Vector3(s[0], 2.0, s[2]),
               ),
             );
           } else if (c.t === 'metal') {
