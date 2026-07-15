@@ -280,15 +280,22 @@ export class Player {
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
-  private armR: THREE.Mesh | null = null;
-  private armL: THREE.Mesh | null = null;
+  private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
+  private armL: THREE.Group | null = null;
   private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
-  private headM: THREE.Mesh | null = null;
+  private headM: THREE.Group | null = null; // head pivot: skull, muzzle, ears, hair, eyes
   private legs: THREE.Group | null = null;
   private legL: THREE.Group | null = null; // hip pivots (thigh + knee joint inside)
   private legR: THREE.Group | null = null;
   private kneeL: THREE.Group | null = null; // knee pivots (shin + shoe inside)
   private kneeR: THREE.Group | null = null;
+  // Kangaroo appendages — jointed for follow-through animation.
+  private tailRoot: THREE.Group | null = null;
+  private tailBase: THREE.Group | null = null;
+  private tailMid: THREE.Group | null = null;
+  private tailTip: THREE.Group | null = null;
+  private ponyA: THREE.Group | null = null; // ponytail: scrunchie+puff, then the tip
+  private ponyB: THREE.Group | null = null;
   private walkPhase = 0; // procedural run cycle
   private walkAmp = 0;
   private idleAmp = 0;
@@ -4531,6 +4538,21 @@ export class Player {
       const headYaw = -0.85 * this.stance * this.sidePose;
       this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
     }
+    // Tail + ponytail follow-through: the kangaroo signature. The tail
+    // counter-swings the run, flares up through airs and grabs for balance,
+    // and tucks low on all fours; the ponytail bobs against the same beat.
+    if (this.tailBase && this.tailMid && this.tailTip) {
+      const lift =
+        0.45 * this.hangPose + 0.5 * this.grabPose + 0.3 * this.grindArmPose - 0.35 * this.crawlPose;
+      const wag = 0.16 * breathe + 0.5 * swing;
+      this.tailBase.rotation.set(1.15 + 0.5 * lift, 0.35 * wag, 0.05 * breathe);
+      this.tailMid.rotation.set(0.55 + 0.3 * lift, 0.3 * wag, 0);
+      this.tailTip.rotation.set(0.4 + 0.2 * lift, 0.25 * wag, 0);
+    }
+    if (this.ponyA && this.ponyB) {
+      this.ponyA.rotation.set(1.2 + 0.06 * breathe - 0.3 * this.hangPose, 0.18 * swing, 0);
+      this.ponyB.rotation.x = 0.5 + 0.05 * breathe;
+    }
 
     const raw = this.rawInput;
     // Grab variants, skate-photo poses (arms pivot at the SHOULDER: 0 = arm
@@ -4838,6 +4860,7 @@ export class Player {
       if (this.skater.ready) {
         if (this.upperG) this.upperG.visible = false;
         if (this.legs) this.legs.visible = false;
+        if (this.tailRoot) this.tailRoot.visible = false;
         this.skaterSwapped = true;
         this.skater.setVisible(true);
         const yaw =
@@ -4847,6 +4870,7 @@ export class Player {
     } else if (this.skaterSwapped) {
       if (this.upperG) this.upperG.visible = true;
       if (this.legs) this.legs.visible = true;
+      if (this.tailRoot) this.tailRoot.visible = true;
       if (this.skater) this.skater.setVisible(false);
       this.skaterSwapped = false;
     }
@@ -4993,7 +5017,7 @@ export class Player {
     }
     const truckM = new THREE.MeshLambertMaterial({ color: 0xb9bfc9 });
     const truckGeo = new THREE.BoxGeometry(0.32, 0.07, 0.1);
-    const wheelM = new THREE.MeshLambertMaterial({ color: 0xffd23f }); // urethane
+    const wheelM = new THREE.MeshLambertMaterial({ color: 0xe0568a }); // pink urethane
     const wheelGeo = new THREE.CylinderGeometry(0.068, 0.068, 0.1, 10);
     for (const z of [0.55, -0.55]) {
       const truck = new THREE.Mesh(truckGeo, truckM);
@@ -5012,88 +5036,134 @@ export class Player {
     g.add(boardG);
     this.boardG = boardG;
 
-    // Rider legs: hip-pivot groups with a REAL knee joint each — thigh
-    // capsule down to a knee group carrying shin + shoe + pad — so crouches
-    // read as bent-knee posture, not stretched planks. syncVisual owns every
-    // joint angle; total reach matches the old one-piece leg (~0.5 hip→sole).
+    // ——— The rider: a Crash-era kangaroo girl. Same skeleton as ever —
+    // hip pivots at ±0.115 under legs@0.71, knees at −0.26, shoulders at
+    // (±0.33, 1.22), hands at −0.48, head pivot at 1.42 — syncVisual owns
+    // every joint, so only the flesh changed. Flat-shaded solid materials
+    // give the PS2 facet look; canvases only where cloth needs a print.
+    const flat = (color: number): THREE.MeshLambertMaterial =>
+      new THREE.MeshLambertMaterial({ color, flatShading: true });
+    const FUR = flat(0xf39133); // kangaroo orange
+    const FUR_DK = flat(0xdd7621); // tail tip / shading pieces
+    const EAR = flat(0xe86a8a); // inner ear pink
+    const HAIR = flat(0xf5c952); // blonde
+    const HAIR_DK = flat(0xe3ab38); // ponytail tip / side sweep
+    const PINK = flat(0xe8447a); // trim pink (scrunchie, cuffs, stitching)
+    const SHOE_PINK = flat(0xe0357a);
+    const BLACK = flat(0x232529); // cargo shorts / gloves
+    const PAD = flat(0x2c2f36); // knee + elbow pads
+    const WHITE = flat(0xf2efe8); // socks / straps
+    const CREAM = flat(0xefe6d6); // platform soles
+    const SILVER = flat(0xb9bfc9); // buckle, chain, studs
+    // eyes + face read cleaner smooth-shaded
+    const EYE_WHITE = new THREE.MeshLambertMaterial({ color: 0xfbfbf6 });
+    const EYE_GREEN = new THREE.MeshLambertMaterial({ color: 0x53b04b });
+    const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // nose, pupils, lashes, smile
+
+    // Legs: hip-pivot groups with a REAL knee joint each. Cargo-short thigh
+    // down to a knee group carrying the shorts cuff, knee pad, bare shin,
+    // sock, and chunky platform sneaker.
     const legs = new THREE.Group();
     legs.position.y = 0.71; // hip line
-    const denimM = lam(this.paintTex(128, (ctx) => {
-      // worn denim: soft indigo wash, broad knee fade, rolled hem, one
-      // drifting outseam stitch
-      const wash = ctx.createLinearGradient(0, 0, 0, 128);
-      wash.addColorStop(0, '#3c5a7c');
-      wash.addColorStop(0.5, '#35506e');
-      wash.addColorStop(1, '#2c4460');
-      ctx.fillStyle = wash;
-      ctx.fillRect(0, 0, 128, 128);
-      this.airbrush(ctx, 128, '190,210,235', 0.1, 14, 10, 26);
-      this.airbrush(ctx, 128, '18,32,52', 0.12, 10, 12, 30);
-      const wear = ctx.createRadialGradient(64, 72, 4, 64, 72, 34);
-      wear.addColorStop(0, 'rgba(170,200,225,0.35)');
-      wear.addColorStop(1, 'rgba(170,200,225,0)');
-      ctx.fillStyle = wear;
-      ctx.fillRect(28, 36, 72, 72);
-      ctx.fillStyle = '#26374a';
-      ctx.fillRect(0, 118, 128, 10); // rolled hem (ankle on the shin, knee shadow on the thigh)
-      ctx.strokeStyle = 'rgba(232,163,61,0.8)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(8, 0);
-      ctx.quadraticCurveTo(3, 64, 8, 118);
-      ctx.stroke();
-    }));
-    const shoeM = lam(this.paintTex(64, (ctx) => {
-      // chunky skate shoe on a squashed sphere: pale upper, lace crosses up
-      // top, gum sole wrapping the underside
-      const upper = ctx.createLinearGradient(0, 0, 0, 64);
-      upper.addColorStop(0, '#f4f1e8');
-      upper.addColorStop(0.7, '#e6e1d4');
-      upper.addColorStop(1, '#d8d2c2');
-      ctx.fillStyle = upper;
-      ctx.fillRect(0, 0, 64, 64);
-      this.airbrush(ctx, 64, '120,120,130', 0.14, 8, 5, 12);
-      ctx.fillStyle = '#b98a52';
-      ctx.fillRect(0, 50, 64, 14); // gum sole
-      ctx.fillStyle = '#2b2e35';
-      ctx.fillRect(0, 47, 64, 3); // foxing stripe
-      ctx.strokeStyle = '#8d94a3';
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.moveTo(22 + i * 7, 8);
-        ctx.lineTo(28 + i * 7, 18);
-        ctx.moveTo(28 + i * 7, 8);
-        ctx.lineTo(22 + i * 7, 18);
-        ctx.stroke();
-      }
-    }));
-    const padM = new THREE.MeshLambertMaterial({ color: 0x2b2e35 });
-    const thighGeo = new THREE.CapsuleGeometry(0.085, 0.14, 3, 10);
-    thighGeo.translate(0, -0.15, 0); // hip → knee
-    const shinGeo = new THREE.CapsuleGeometry(0.068, 0.12, 3, 10);
-    shinGeo.translate(0, -0.11, 0); // knee → ankle
-    const shoeGeo = new THREE.SphereGeometry(0.105, 10, 8);
-    const padGeo = new THREE.SphereGeometry(0.08, 8, 6);
+    // Pelvis: the shorts' seat, riding the legs root (top of the leg squash,
+    // so it stays put through crouches while the legs fold under it).
+    const hipProfile = [
+      new THREE.Vector2(0.115, -0.12),
+      new THREE.Vector2(0.16, -0.06),
+      new THREE.Vector2(0.175, 0.02),
+      new THREE.Vector2(0.16, 0.08),
+      new THREE.Vector2(0.145, 0.115),
+    ];
+    const pelvis = new THREE.Mesh(new THREE.LatheGeometry(hipProfile, 10), BLACK);
+    pelvis.scale.z = 0.85;
+    legs.add(pelvis);
+    const belt = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.024, 6, 12), PAD);
+    belt.rotation.x = Math.PI / 2;
+    belt.position.y = 0.115;
+    belt.scale.set(1, 0.85, 1); // hips are an oval (scale acts pre-rotation: z is world depth)
+    legs.add(belt);
+    const buckle = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.05, 0.025), SILVER);
+    buckle.position.set(0, 0.115, 0.14);
+    legs.add(buckle);
+    // wallet chain swinging off the right hip
+    const linkGeo = new THREE.TorusGeometry(0.021, 0.007, 5, 8);
+    const chainPts: [number, number, number, number][] = [
+      [0.14, 0.07, 0.075, 0.3],
+      [0.16, 0.025, 0.04, 1.2],
+      [0.165, -0.015, 0.0, 0.5],
+    ];
+    for (const [cx, cy, cz, rot] of chainPts) {
+      const link = new THREE.Mesh(linkGeo, SILVER);
+      link.position.set(cx, cy, cz);
+      link.rotation.set(rot, 0.6, 0);
+      legs.add(link);
+    }
+    const thighGeo = new THREE.CylinderGeometry(0.088, 0.082, 0.24, 9);
+    thighGeo.translate(0, -0.13, 0); // hip → knee, baggy cargo leg
+    const pocketGeo = new THREE.BoxGeometry(0.035, 0.095, 0.075);
+    const flapGeo = new THREE.BoxGeometry(0.037, 0.014, 0.077);
+    const cuffGeo = new THREE.CylinderGeometry(0.086, 0.09, 0.06, 9);
+    const cuffTrimGeo = new THREE.CylinderGeometry(0.091, 0.091, 0.013, 9);
+    const kneePadGeo = new THREE.SphereGeometry(0.072, 8, 6);
+    const shinGeo = new THREE.CylinderGeometry(0.048, 0.042, 0.1, 8);
+    shinGeo.translate(0, -0.115, 0); // bare fur between cuff and sock
+    const sockGeo = new THREE.CylinderGeometry(0.054, 0.058, 0.055, 8);
+    const sockStripeGeo = new THREE.CylinderGeometry(0.059, 0.059, 0.013, 8);
+    const shoeGeo = new THREE.SphereGeometry(0.1, 9, 7);
+    const strapGeo = new THREE.BoxGeometry(0.115, 0.018, 0.055);
+    const soleGeo = new THREE.BoxGeometry(0.145, 0.05, 0.34);
     for (const side of [-1, 1]) {
       const leg = new THREE.Group(); // hip pivot — syncVisual writes rot + pos
       leg.position.x = side * 0.115;
       legs.add(leg);
-      leg.add(new THREE.Mesh(thighGeo, denimM));
-      // Knee group pivots where the thigh ends; shin/shoe/pad swing with it
-      // and squash with legs.scale.y, same as everything else on the rig.
+      leg.add(new THREE.Mesh(thighGeo, BLACK));
+      const pocket = new THREE.Mesh(pocketGeo, BLACK); // cargo pocket on the outseam
+      pocket.position.set(side * 0.082, -0.14, 0.01);
+      leg.add(pocket);
+      const flap = new THREE.Mesh(flapGeo, PINK); // pink-stitched flap
+      flap.position.set(side * 0.082, -0.095, 0.01);
+      leg.add(flap);
+      // Knee group pivots where the thigh ends; everything below swings with
+      // it and squashes with legs.scale.y, same as the rest of the rig.
       const knee = new THREE.Group();
       knee.position.y = -0.26;
       leg.add(knee);
-      knee.add(new THREE.Mesh(shinGeo, denimM));
-      const shoe = new THREE.Mesh(shoeGeo, shoeM);
-      shoe.scale.set(1, 0.55, 1.6);
-      shoe.position.set(0, -0.21, 0.05);
-      knee.add(shoe);
-      const pad = new THREE.Mesh(padGeo, padM); // kneepad dome over the joint
-      pad.scale.set(1, 0.85, 0.7);
-      pad.position.set(0, -0.01, 0.075);
+      const cuff = new THREE.Mesh(cuffGeo, BLACK); // capri cuff just past the knee
+      cuff.position.y = -0.015;
+      knee.add(cuff);
+      const cuffTrim = new THREE.Mesh(cuffTrimGeo, PINK);
+      cuffTrim.position.y = -0.052;
+      knee.add(cuffTrim);
+      const pad = new THREE.Mesh(kneePadGeo, PAD); // strapped knee pad dome
+      pad.scale.set(1, 0.8, 0.65);
+      pad.position.set(0, -0.005, 0.075);
       knee.add(pad);
+      const padTrim = new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.009, 5, 10), PINK);
+      padTrim.position.set(0, -0.005, 0.09);
+      padTrim.scale.set(1, 0.85, 1);
+      knee.add(padTrim);
+      knee.add(new THREE.Mesh(shinGeo, FUR));
+      const sock = new THREE.Mesh(sockGeo, WHITE);
+      sock.position.y = -0.15;
+      knee.add(sock);
+      const stripe = new THREE.Mesh(sockStripeGeo, PINK);
+      stripe.position.y = -0.128;
+      knee.add(stripe);
+      const shoe = new THREE.Mesh(shoeGeo, SHOE_PINK); // chunky pink hi-top
+      shoe.scale.set(1, 0.6, 1.5);
+      shoe.position.set(0, -0.205, 0.055);
+      knee.add(shoe);
+      const strapA = new THREE.Mesh(strapGeo, WHITE);
+      strapA.position.set(0, -0.175, 0.115);
+      strapA.rotation.x = 0.35;
+      knee.add(strapA);
+      const strapB = new THREE.Mesh(strapGeo, WHITE);
+      strapB.position.set(0, -0.19, 0.045);
+      strapB.rotation.x = 0.15;
+      knee.add(strapB);
+      const sole = new THREE.Mesh(soleGeo, CREAM); // platform slab (same floor reach as before)
+      sole.position.set(0, -0.255, 0.05);
+      knee.add(sole);
       if (side === 1) {
         this.legR = leg;
         this.kneeR = knee;
@@ -5105,196 +5175,285 @@ export class Player {
     g.add(legs);
     this.legs = legs;
 
-    // Tee: ONE wrapped canvas on a lathe torso — phiStart 1.5π puts u=0.25
-    // (canvas x=32) at local +Z, so the chest sunburst paints at x=32 and the
-    // race number at x=96 lands square on the back, no mirroring. Broad
-    // shoulders easing into the waist come from the profile, not a box.
-    const teeM = lam(this.paintTex(128, (ctx) => {
-      const fabric = ctx.createLinearGradient(0, 0, 0, 128);
-      fabric.addColorStop(0, '#37b191');
-      fabric.addColorStop(0.6, '#2fa88d');
-      fabric.addColorStop(1, '#27957c');
-      ctx.fillStyle = fabric;
+    // Tail: the kangaroo signature — three chained joints drooping off the
+    // hips then curling back up. Parented to the body root (NOT the legs
+    // group) so leg squashes don't pancake it; syncVisual drives the sway.
+    const tailRoot = new THREE.Group();
+    tailRoot.position.set(0, 0.68, -0.14);
+    g.add(tailRoot);
+    const tailBase = new THREE.Group();
+    tailRoot.add(tailBase);
+    const tailBaseGeo = new THREE.CapsuleGeometry(0.082, 0.2, 3, 8);
+    tailBaseGeo.translate(0, -0.14, 0);
+    tailBase.add(new THREE.Mesh(tailBaseGeo, FUR));
+    const tailMid = new THREE.Group();
+    tailMid.position.y = -0.3;
+    tailBase.add(tailMid);
+    const tailMidGeo = new THREE.CapsuleGeometry(0.06, 0.18, 3, 8);
+    tailMidGeo.translate(0, -0.12, 0);
+    tailMid.add(new THREE.Mesh(tailMidGeo, FUR));
+    const tailTip = new THREE.Group();
+    tailTip.position.y = -0.26;
+    tailMid.add(tailTip);
+    const tailTipGeo = new THREE.ConeGeometry(0.048, 0.2, 7);
+    tailTipGeo.rotateX(Math.PI); // point away from the body
+    tailTipGeo.translate(0, -0.1, 0);
+    tailTip.add(new THREE.Mesh(tailTipGeo, FUR_DK));
+    tailBase.rotation.x = 1.15; // rest curve (+x swings the -Y chain back); the driver overwrites each frame
+    tailMid.rotation.x = 0.55;
+    tailTip.rotation.x = 0.4;
+    this.tailRoot = tailRoot;
+    this.tailBase = tailBase;
+    this.tailMid = tailMid;
+    this.tailTip = tailTip;
+
+    // Crop tank: ONE wrapped canvas on a lathe — phiStart 1.5π puts u=0.25
+    // (canvas x=32) at local +Z, so the chest heart paints at x=32 square on
+    // the front. Hem stops high: the midriff below is bare fur.
+    const tankM = lam(this.paintTex(128, (ctx) => {
+      ctx.fillStyle = '#f4f1ec';
       ctx.fillRect(0, 0, 128, 128);
-      this.airbrush(ctx, 128, '255,255,255', 0.07, 12, 10, 26);
-      this.airbrush(ctx, 128, '0,70,58', 0.1, 10, 12, 30);
-      ctx.fillStyle = '#1d6e5d';
-      ctx.fillRect(0, 0, 128, 7); // collar band
-      ctx.fillRect(0, 120, 128, 8); // hem right at the hip line
-      ctx.fillStyle = '#ff7a1f'; // chest sunburst, warm core
-      this.starPath(ctx, 32, 52, 17, 7);
-      ctx.fill();
-      const core = ctx.createRadialGradient(32, 52, 1, 32, 52, 8);
-      core.addColorStop(0, '#fff3c4');
-      core.addColorStop(1, '#ffd23f');
-      ctx.fillStyle = core;
+      this.airbrush(ctx, 128, '215,205,195', 0.08, 10, 8, 20);
+      ctx.fillStyle = '#e8447a';
+      ctx.fillRect(0, 0, 128, 9); // collar trim
+      ctx.fillRect(0, 117, 128, 11); // hem trim
+      // little heart print on the chest
+      const hx = 32;
+      const hy = 56;
+      const s = 9;
       ctx.beginPath();
-      ctx.arc(32, 52, 7, 0, Math.PI * 2);
+      ctx.moveTo(hx, hy + s);
+      ctx.bezierCurveTo(hx - s * 1.4, hy, hx - s * 0.7, hy - s, hx, hy - s * 0.35);
+      ctx.bezierCurveTo(hx + s * 0.7, hy - s, hx + s * 1.4, hy, hx, hy + s);
       ctx.fill();
-      ctx.fillStyle = '#f4f1e6';
-      ctx.font = 'bold 34px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('98', 96, 64); // race number
     }));
-    const torsoProfile = [
-      new THREE.Vector2(0.06, -0.3), // tucked under the hem
-      new THREE.Vector2(0.17, -0.27),
-      new THREE.Vector2(0.2, -0.16),
-      new THREE.Vector2(0.215, -0.04),
-      new THREE.Vector2(0.235, 0.08),
-      new THREE.Vector2(0.26, 0.2), // shoulder
-      new THREE.Vector2(0.24, 0.27),
-      new THREE.Vector2(0.1, 0.31), // roll off to the collar
+    const tankProfile = [
+      new THREE.Vector2(0.105, -0.13), // tucked under the hem — hem rides HIGH: bare midriff below
+      new THREE.Vector2(0.155, -0.1), // hem flare over the waist
+      new THREE.Vector2(0.165, -0.04),
+      new THREE.Vector2(0.18, 0.03), // chest
+      new THREE.Vector2(0.215, 0.12), // shoulder, broad enough to meet the arms
+      new THREE.Vector2(0.19, 0.185),
+      new THREE.Vector2(0.09, 0.235), // roll off to the collar
     ];
-    const torso = new THREE.Mesh(
-      new THREE.LatheGeometry(torsoProfile, 12, Math.PI * 1.5, Math.PI * 2),
-      teeM,
-    );
-    torso.scale.z = 0.7; // chest oval, not a tube
+    const tank = new THREE.Mesh(new THREE.LatheGeometry(tankProfile, 12, Math.PI * 1.5, Math.PI * 2), tankM);
+    tank.scale.z = 0.72; // chest oval, not a tube
     // Upper body rides in its own group so the shoulders can open side-on
     // (skate stance) and counter-swing against the run without dragging the
     // hips, legs, or board around with them.
     const upper = new THREE.Group();
-    torso.position.y = 0.98;
-    upper.add(torso);
+    tank.position.y = 1.06;
+    upper.add(tank);
+    // bare midriff: slim fur waist between shorts and hem
+    const waistProfile = [
+      new THREE.Vector2(0.128, -0.05),
+      new THREE.Vector2(0.112, 0.03),
+      new THREE.Vector2(0.115, 0.1),
+      new THREE.Vector2(0.128, 0.17), // reaches up under the higher hem
+    ];
+    const waist = new THREE.Mesh(new THREE.LatheGeometry(waistProfile, 10), FUR);
+    waist.scale.z = 0.8;
+    waist.position.y = 0.85;
+    upper.add(waist);
+    // neck + thin necklace with a little pendant
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), FUR);
+    neck.position.y = 1.325;
+    upper.add(neck);
+    const necklace = new THREE.Mesh(new THREE.TorusGeometry(0.072, 0.007, 5, 12), SILVER);
+    necklace.rotation.x = 1.45; // lies nearly flat, dipping toward the chest
+    necklace.position.y = 1.3;
+    upper.add(necklace);
+    const pendant = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 5), SILVER);
+    pendant.position.set(0, 1.272, 0.068);
+    upper.add(pendant);
 
-    // Head: one sphere, everything painted into the wrap — three's sphere
-    // puts local +Z at u=0.25, so the face (whites, irises, cocked brows,
-    // grin) sits around canvas x=32, hair crowns the top rows and pools at
-    // the back (x=96), ears ride the u=0/u=0.5 seams. headM still pitches in
-    // syncVisual for the horizon look-at.
-    const skin = '#e8c39a';
-    const hair = '#4a2e1a';
-    const headTexM = lam(this.paintTex(128, (ctx) => {
-      ctx.fillStyle = skin;
-      ctx.fillRect(0, 0, 128, 128);
-      this.airbrush(ctx, 128, '200,120,60', 0.08, 12, 8, 22);
-      ctx.fillStyle = hair;
-      ctx.fillRect(0, 0, 128, 22); // crown band under the cap
-      for (let x = 4; x <= 124; x += 12) {
-        ctx.beginPath(); // soft fringe scallops
-        ctx.arc(x, 22, 6, 0, Math.PI);
-        ctx.fill();
-      }
-      ctx.beginPath(); // back of the skull
-      ctx.ellipse(96, 40, 30, 34, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#d4a97e';
-      for (const ex of [0, 128, 64]) {
-        ctx.beginPath(); // ears — drawn at both seam edges so they join
-        ctx.ellipse(ex, 58, 6, 9, 0, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.strokeStyle = '#3a2413'; // brows, one cocked higher — mid-trick face
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(18, 47);
-      ctx.quadraticCurveTo(24, 43, 30, 46);
-      ctx.moveTo(34, 44);
-      ctx.quadraticCurveTo(40, 40, 46, 44);
-      ctx.stroke();
-      ctx.fillStyle = '#ffffff';
-      for (const ex of [25, 39]) {
-        ctx.beginPath();
-        ctx.ellipse(ex, 56, 6, 7.5, 0, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      for (const ex of [26.5, 37.5]) {
-        ctx.fillStyle = '#2e7f6a'; // irises pulled toward the nose: focus
-        ctx.beginPath();
-        ctx.arc(ex, 57, 3.4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#20232b';
-        ctx.beginPath();
-        ctx.arc(ex, 57, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.fillStyle = '#d4a97e';
-      ctx.beginPath(); // nose
-      ctx.ellipse(32, 64, 3.5, 2.8, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#5e2413'; // big Crash grin, corners turned up
-      ctx.beginPath();
-      ctx.moveTo(18, 71);
-      ctx.quadraticCurveTo(32, 87, 46, 71);
-      ctx.quadraticCurveTo(32, 77, 18, 71);
-      ctx.closePath();
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath(); // tooth row along the top lip
-      ctx.moveTo(20, 71.5);
-      ctx.quadraticCurveTo(32, 76, 44, 71.5);
-      ctx.quadraticCurveTo(32, 80, 20, 71.5);
-      ctx.fill();
-      for (const bx of [16, 48]) {
-        const blush = ctx.createRadialGradient(bx, 63, 1, bx, 63, 8);
-        blush.addColorStop(0, 'rgba(235,130,90,0.35)');
-        blush.addColorStop(1, 'rgba(235,130,90,0)');
-        ctx.fillStyle = blush;
-        ctx.fillRect(bx - 8, 55, 16, 16);
-      }
-      ctx.fillStyle = 'rgba(150,80,40,0.5)';
-      for (const [x, y] of [[16, 68], [20, 70], [44, 69], [48, 67]]) {
-        ctx.beginPath(); // freckles
-        ctx.arc(x, y, 1.3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }));
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.185, 12, 10), headTexM);
-    head.scale.set(1, 1.05, 0.95);
+    // Head: a GROUP pivot at 1.42 (syncVisual pitches/yaws it for the
+    // horizon look-at) carrying the whole kangaroo face — skull, muzzle,
+    // geometric eyes, tall ears, blonde bangs, and the jointed ponytail.
+    const head = new THREE.Group();
     head.position.y = 1.42;
     upper.add(head);
     this.headM = head;
-    // Backwards cap: sphere-slice crown + curved half-cylinder rear brim as
-    // head children, so every nod and look-at pitch carries them for free.
-    const capM = new THREE.MeshLambertMaterial({ color: 0xf04e23 });
+    const skull = new THREE.Mesh(new THREE.SphereGeometry(0.175, 12, 9), FUR);
+    skull.scale.set(0.95, 1.0, 0.9);
+    head.add(skull);
+    const jaw = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8), FUR); // cheek/jaw mass
+    jaw.scale.set(1.2, 0.75, 1.05);
+    jaw.position.set(0, -0.075, 0.05);
+    head.add(jaw);
+    const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8), FUR);
+    muzzle.scale.set(0.82, 0.58, 1.05);
+    muzzle.position.set(0, -0.045, 0.125);
+    head.add(muzzle);
+    const nose = new THREE.Mesh(new THREE.SphereGeometry(0.033, 8, 6), INK);
+    nose.scale.set(1.2, 0.75, 0.7);
+    nose.position.set(0, 0.005, 0.225); // sits on TOP of the muzzle, Crash-style
+    head.add(nose);
+    // smile: a thin torus arc lying on the muzzle's underside
+    const smileArc = Math.PI * 0.7;
+    const smile = new THREE.Mesh(new THREE.TorusGeometry(0.054, 0.008, 5, 12, smileArc), INK);
+    smile.rotation.set(0.35, 0, -Math.PI / 2 - smileArc / 2); // arc centered on the bottom
+    smile.position.set(0, -0.055, 0.185);
+    head.add(smile);
+    // eyes: big almond whites hugging the face curve, green iris, dark pupil,
+    // and a lash arc over the top lid
+    const lashArc = Math.PI * 0.6;
+    for (const e of [-1, 1]) {
+      const white = new THREE.Mesh(new THREE.SphereGeometry(0.05, 9, 8), EYE_WHITE);
+      white.scale.set(0.72, 1.05, 0.42);
+      white.position.set(e * 0.066, 0.03, 0.135);
+      white.rotation.y = e * 0.3;
+      head.add(white);
+      const iris = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), EYE_GREEN);
+      iris.scale.set(1, 1.15, 0.45);
+      iris.position.set(e * 0.069, 0.025, 0.168);
+      head.add(iris);
+      const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.012, 6, 5), INK);
+      pupil.scale.set(1, 1, 0.5);
+      pupil.position.set(e * 0.07, 0.025, 0.185);
+      head.add(pupil);
+      const lash = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.007, 4, 10, lashArc), INK);
+      lash.rotation.set(-0.15, e * 0.3, Math.PI / 2 - lashArc / 2); // arc centered on top
+      lash.position.set(e * 0.066, 0.035, 0.148);
+      head.add(lash);
+    }
+    // ears: the silhouette — tall flattened cones, pink inside
+    const earOuterGeo = new THREE.ConeGeometry(0.058, 0.26, 7);
+    earOuterGeo.translate(0, 0.13, 0); // pivot at the base
+    const earInnerGeo = new THREE.ConeGeometry(0.032, 0.13, 6);
+    earInnerGeo.translate(0, 0.065, 0);
+    for (const e of [-1, 1]) {
+      const ear = new THREE.Group();
+      ear.position.set(e * 0.095, 0.135, -0.02);
+      ear.rotation.set(-0.15, 0, -e * 0.42); // splayed up-and-out, tipped back
+      head.add(ear);
+      const outer = new THREE.Mesh(earOuterGeo, FUR);
+      outer.scale.z = 0.55;
+      ear.add(outer);
+      const inner = new THREE.Mesh(earInnerGeo, EAR); // pink lining, kept inside the rim
+      inner.scale.z = 0.3;
+      inner.position.z = 0.026;
+      ear.add(inner);
+    }
+    // hair: blonde crown + swept bangs + high ponytail (two joints so it can
+    // swing with the tail driver)
     const crown = new THREE.Mesh(
-      new THREE.SphereGeometry(0.2, 12, 7, 0, Math.PI * 2, 0, Math.PI * 0.38),
-      capM,
+      new THREE.SphereGeometry(0.185, 12, 7, 0, Math.PI * 2, 0, Math.PI * 0.42),
+      HAIR,
     );
-    crown.position.y = 0.02;
-    crown.rotation.x = -0.12; // front rim lifted off the brows
+    crown.position.y = 0.015;
+    crown.rotation.x = -0.06;
+    crown.scale.set(0.97, 1.05, 0.95);
     head.add(crown);
-    const brim = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.17, 0.19, 0.03, 9, 1, false, Math.PI / 2, Math.PI),
-      capM,
-    );
-    brim.position.set(0, 0.075, -0.06);
-    brim.rotation.x = -0.25; // rear brim dips off the crown
-    head.add(brim);
+    const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.15, 10, 8), HAIR);
+    backHair.scale.set(1.05, 1.1, 0.66); // slim: the ponytail needs to clear it
+    backHair.position.set(0, 0.01, -0.075);
+    head.add(backHair);
+    const bang = (bx: number, by: number, bz: number, r: number, sx: number, rz: number, m = HAIR): void => {
+      const b = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), m);
+      b.scale.set(sx, 0.7, 0.6);
+      b.position.set(bx, by, bz);
+      b.rotation.z = rz;
+      head.add(b);
+    };
+    bang(-0.075, 0.09, 0.115, 0.055, 1.0, 0.25);
+    bang(0.0, 0.105, 0.13, 0.06, 1.05, 0);
+    bang(0.08, 0.085, 0.115, 0.05, 0.95, -0.25);
+    // long side sweep drifting across the right brow
+    const sweep = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), HAIR_DK);
+    sweep.scale.set(0.66, 1.5, 0.5);
+    sweep.position.set(0.115, 0.03, 0.09);
+    sweep.rotation.z = -0.35;
+    head.add(sweep);
+    const ponyA = new THREE.Group(); // scrunchie + puff
+    ponyA.position.set(0, 0.175, -0.145); // clears the back-hair mass
+    ponyA.rotation.x = 1.2; // swung well out off the crown
+    head.add(ponyA);
+    const scrunchie = new THREE.Mesh(new THREE.TorusGeometry(0.038, 0.022, 6, 10), PINK);
+    scrunchie.rotation.x = Math.PI / 2;
+    scrunchie.position.y = 0.012; // proud of the crown so the pink ring reads
+    ponyA.add(scrunchie);
+    const puffGeo = new THREE.CapsuleGeometry(0.082, 0.1, 3, 8);
+    puffGeo.translate(0, -0.1, 0);
+    const puff = new THREE.Mesh(puffGeo, HAIR);
+    puff.scale.set(0.95, 1, 0.85);
+    ponyA.add(puff);
+    const ponyB = new THREE.Group(); // tapering tip
+    ponyB.position.y = -0.21;
+    ponyB.rotation.x = 0.5;
+    ponyA.add(ponyB);
+    const ponyTipGeo = new THREE.ConeGeometry(0.052, 0.2, 7);
+    ponyTipGeo.rotateX(Math.PI);
+    ponyTipGeo.translate(0, -0.08, 0);
+    ponyB.add(new THREE.Mesh(ponyTipGeo, HAIR_DK));
+    this.ponyA = ponyA;
+    this.ponyB = ponyB;
 
-    // Arms hang from the SHOULDER (geometry translated like the legs), so
-    // swings, grabs, and windmills pivot where a shoulder actually is.
-    // Sleeved capsules with mitt-sphere hands; capsule top = canvas top.
-    const armMat = lam(this.paintTex(64, (ctx) => {
-      ctx.fillStyle = skin;
+    // Arms: shoulder-pivot GROUPS (origin at the shoulder, geometry hangs
+    // down) so swings, grabs, and windmills pivot where a shoulder is.
+    // Bare fur upper arm, fishnet sleeve forearm, elbow pad, fingerless
+    // glove with pink cuff (left) / studded band (right).
+    const netM = lam(this.paintTex(64, (ctx) => {
+      ctx.fillStyle = '#f08a2a'; // fur shows through the net
       ctx.fillRect(0, 0, 64, 64);
-      this.airbrush(ctx, 64, '200,120,60', 0.1, 8, 5, 12);
-      ctx.fillStyle = '#2fa88d';
-      ctx.fillRect(0, 0, 64, 18); // tee sleeve at the shoulder
-      ctx.fillStyle = '#1d6e5d';
-      ctx.fillRect(0, 18, 64, 4); // sleeve hem
+      ctx.strokeStyle = 'rgba(24,24,30,0.9)';
+      ctx.lineWidth = 1.6;
+      for (let i = -64; i < 128; i += 8) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i + 64, 64);
+        ctx.moveTo(i + 64, 0);
+        ctx.lineTo(i, 64);
+        ctx.stroke();
+      }
     }));
-    const handM = new THREE.MeshLambertMaterial({ color: 0xdcb289 });
-    const armGeo = new THREE.CapsuleGeometry(0.062, 0.33, 3, 9);
-    armGeo.translate(0, -0.245, 0);
-    const handGeo = new THREE.SphereGeometry(0.058, 8, 6);
+    const shoulderGeo = new THREE.SphereGeometry(0.062, 8, 6);
+    const upperArmGeo = new THREE.CapsuleGeometry(0.047, 0.13, 3, 8);
+    upperArmGeo.translate(0, -0.105, 0);
+    const foreArmGeo = new THREE.CylinderGeometry(0.044, 0.038, 0.17, 8);
+    foreArmGeo.translate(0, -0.315, 0);
+    const elbowGeo = new THREE.SphereGeometry(0.05, 8, 6);
+    const handGeo = new THREE.SphereGeometry(0.072, 8, 6);
+    const fingerGeo = new THREE.SphereGeometry(0.042, 7, 5);
     for (const side of [-1, 1]) {
-      const arm = new THREE.Mesh(armGeo, armMat);
-      arm.position.set(side * 0.33, 1.22, 0);
-      arm.rotation.z = side * 0.25;
+      const arm = new THREE.Group();
+      arm.position.set(side * 0.3, 1.22, 0); // snug to the tank's shoulder line
       upper.add(arm);
-      const hand = new THREE.Mesh(handGeo, handM);
+      const shoulder = new THREE.Mesh(shoulderGeo, FUR);
+      shoulder.position.set(-side * 0.015, -0.005, 0);
+      arm.add(shoulder);
+      arm.add(new THREE.Mesh(upperArmGeo, FUR));
+      const elbow = new THREE.Mesh(elbowGeo, PAD); // little elbow pad
+      elbow.scale.set(0.85, 1, 0.85);
+      elbow.position.y = -0.22;
+      arm.add(elbow);
+      arm.add(new THREE.Mesh(foreArmGeo, netM)); // fishnet sleeve
+      const hand = new THREE.Mesh(handGeo, BLACK); // fingerless glove
+      hand.scale.set(1, 0.92, 1.02);
       hand.position.y = -0.48;
       arm.add(hand);
-      if (side === 1) this.armR = arm;
-      else {
-        this.armL = arm;
-        // one sweatband on one wrist — cheap asymmetry for the silhouette
-        const band = new THREE.Mesh(new THREE.TorusGeometry(0.062, 0.026, 6, 10), capM);
-        band.rotation.x = Math.PI / 2; // ring around the wrist
-        band.position.y = -0.41;
+      const fingers = new THREE.Mesh(fingerGeo, FUR); // bare fingertips poking out
+      fingers.scale.set(1, 0.7, 1);
+      fingers.position.set(0, -0.53, 0.015);
+      arm.add(fingers);
+      if (side === 1) {
+        const band = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.015, 5, 10), BLACK);
+        band.rotation.x = Math.PI / 2;
+        band.position.y = -0.415;
         arm.add(band);
+        for (let s = 0; s < 4; s++) {
+          const a = (s / 4) * Math.PI * 2 + 0.4;
+          const stud = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.014, 0.014), SILVER);
+          stud.position.set(Math.cos(a) * 0.058, -0.415, Math.sin(a) * 0.058);
+          arm.add(stud);
+        }
+        this.armR = arm;
+      } else {
+        const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.013, 5, 10), PINK);
+        cuff.rotation.x = Math.PI / 2;
+        cuff.position.y = -0.415;
+        arm.add(cuff);
+        this.armL = arm;
       }
     }
     g.add(upper);
