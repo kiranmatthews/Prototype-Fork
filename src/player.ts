@@ -5017,11 +5017,18 @@ export class Player {
     // |x|>0.155 spanning y 0.06..0.24 angled slightly forward, crotch -0.155,
     // knees -0.222, tail = everything behind z<-0.105 below the waistline.
     const isTail = (_x: number, y: number, z: number): boolean => z < -0.105 && y < -0.02;
-    // whole arm tube from the armpit crease out (inboard tris rotate up over
-    // the pivot and become the shoulder cap); tight y-band keeps the tank
-    // straps and chest on the torso
-    const isArm = (x: number, y: number, z: number): boolean =>
-      Math.abs(x) > 0.135 && y > 0.09 && y < 0.21 && z > -0.03;
+    // Whole arm from the armpit out — nothing of the T-pose tube may stay on
+    // the torso or it juts sideways forever. Outboard of 0.135 a simple band
+    // suffices; at the root (0.105..0.135) only triangles hugging the arm's
+    // axis come along, so the tank's side wall stays with the torso.
+    const isArm = (x: number, y: number, z: number): boolean => {
+      const ax = Math.abs(x);
+      if (ax <= 0.105 || z <= -0.03) return false;
+      if (ax > 0.135) return y > 0.09 && y < 0.21;
+      const dy = y - 0.155;
+      const dz = z - 0.076;
+      return dy * dy + dz * dz < 0.0036; // within 0.06 of the arm axis
+    };
     // Tail joints come from the mesh itself: 5 bands along the tail's curve,
     // joints at the midpoints between neighbouring band centroids — so the
     // chain sits ON the authored S-curve wherever Meshy put it.
@@ -5056,24 +5063,54 @@ export class Player {
           : (b ?? a ?? new THREE.Vector3(0.1 * k, yB[Math.min(k - 1, 3)], -0.15));
       TJ[k] = mapV(m);
     }
-    // arm joints: shoulder at the arm root (|x|=0.16), elbow mid-tube (0.285)
-    const SHX = 0.16 * SXZ;
-    const SHY = 1.045;
-    const SHZ = 0.048 * SXZ;
-    const ELX = 0.285 * SXZ;
-    const ELZ = 0.076 * SXZ;
+    // Arm joints come from the mesh too: centroid "stations" along each
+    // T-pose arm give the true shoulder→elbow→wrist axis (Meshy's arms droop
+    // and sweep forward), and each chunk rotates its OWN axis exactly onto
+    // straight-down — so the hang is vertical no matter how the T-pose leans.
+    const DOWN = new THREE.Vector3(0, -1, 0);
+    const station = (side: 1 | -1, x0: number, x1: number, fallback: number): THREE.Vector3 => {
+      const c = new THREE.Vector3();
+      let n = 0;
+      for (let i = 0; i < P.count; i++) {
+        const x = P.getX(i);
+        const y = P.getY(i);
+        const z = P.getZ(i);
+        if (side * x > x0 && side * x < x1 && isArm(x, y, z)) {
+          c.x += x;
+          c.y += y;
+          c.z += z;
+          n++;
+        }
+      }
+      return n > 0 ? c.multiplyScalar(1 / n) : new THREE.Vector3(side * fallback, 0.145, 0.076);
+    };
+    const armJ: Record<string, { sh: THREE.Vector3; el: THREE.Vector3; qUp: THREE.Quaternion; qFo: THREE.Quaternion; elLen: number }> = {};
+    for (const side of [-1, 1] as const) {
+      const shM = station(side, 0.105, 0.16, 0.13);
+      shM.x = side * 0.112; // pivot AT the armpit crease: the whole arm hangs below its hinge
+      const sh = mapV(shM);
+      const el = mapV(station(side, 0.26, 0.31, 0.285));
+      const wr = mapV(station(side, 0.36, 0.42, 0.39));
+      armJ[side === 1 ? 'R' : 'L'] = {
+        sh,
+        el,
+        qUp: new THREE.Quaternion().setFromUnitVectors(el.clone().sub(sh).normalize(), DOWN),
+        qFo: new THREE.Quaternion().setFromUnitVectors(wr.clone().sub(el).normalize(), DOWN),
+        elLen: el.distanceTo(sh),
+      };
+    }
     interface Part {
       test: (x: number, y: number, z: number) => boolean;
       pivot: [number, number, number]; // rig space
-      hang?: 1 | -1; // arm chunks rotate T-pose (±X out) → hanging (-Y)
+      q?: THREE.Quaternion; // arm chunks: rotate the T-pose axis onto -Y
       verts: number[];
     }
     const parts: Record<string, Part> = {
       head: { test: (_x, y) => y > 0.195, pivot: [0, 1.16, 0], verts: [] }, // pivot AT the neck seam
-      foreArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0.285, pivot: [ELX, SHY, ELZ], hang: 1, verts: [] },
-      foreArmL: { test: (x, y, z) => isArm(x, y, z) && x < -0.285, pivot: [-ELX, SHY, ELZ], hang: -1, verts: [] },
-      upperArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [SHX, SHY, SHZ], hang: 1, verts: [] },
-      upperArmL: { test: (x, y, z) => isArm(x, y, z) && x < 0, pivot: [-SHX, SHY, SHZ], hang: -1, verts: [] },
+      foreArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0.285, pivot: [armJ.R.el.x, armJ.R.el.y, armJ.R.el.z], q: armJ.R.qFo, verts: [] },
+      foreArmL: { test: (x, y, z) => isArm(x, y, z) && x < -0.285, pivot: [armJ.L.el.x, armJ.L.el.y, armJ.L.el.z], q: armJ.L.qFo, verts: [] },
+      upperArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [armJ.R.sh.x, armJ.R.sh.y, armJ.R.sh.z], q: armJ.R.qUp, verts: [] },
+      upperArmL: { test: (x, y, z) => isArm(x, y, z) && x < 0, pivot: [armJ.L.sh.x, armJ.L.sh.y, armJ.L.sh.z], q: armJ.L.qUp, verts: [] },
       tail0: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 0, pivot: [TJ[0].x, TJ[0].y, TJ[0].z], verts: [] },
       tail1: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 1, pivot: [TJ[1].x, TJ[1].y, TJ[1].z], verts: [] },
       tail2: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 2, pivot: [TJ[2].x, TJ[2].y, TJ[2].z], verts: [] },
@@ -5116,21 +5153,24 @@ export class Player {
       const p: number[] = [];
       const nn: number[] = [];
       const uu: number[] = [];
+      const v = new THREE.Vector3();
+      const nv = new THREE.Vector3();
       for (const vi of part.verts) {
-        let x = P.getX(vi) * SXZ - part.pivot[0];
-        let y = (P.getY(vi) + 0.5) * SY - part.pivot[1];
-        const z = P.getZ(vi) * SXZ - part.pivot[2];
-        // normals: undo the anisotropic stretch, then match the arm swing
-        let nx = N.getX(vi) / SXZ;
-        let ny = N.getY(vi) / SY;
-        const nz = N.getZ(vi) / SXZ;
-        if (part.hang) {
-          [x, y] = [part.hang * y, -part.hang * x]; // ±X out → -Y down
-          [nx, ny] = [part.hang * ny, -part.hang * nx];
+        v.set(
+          P.getX(vi) * SXZ - part.pivot[0],
+          (P.getY(vi) + 0.5) * SY - part.pivot[1],
+          P.getZ(vi) * SXZ - part.pivot[2],
+        );
+        // normals: undo the anisotropic stretch, then match the chunk rotation
+        nv.set(N.getX(vi) / SXZ, N.getY(vi) / SY, N.getZ(vi) / SXZ);
+        if (part.q) {
+          v.applyQuaternion(part.q);
+          nv.applyQuaternion(part.q);
+          v.y = Math.min(v.y, 0.015); // no slivers above the hinge: flatten to the shoulder line
         }
-        const nl = Math.hypot(nx, ny, nz) || 1;
-        p.push(x, y, z);
-        nn.push(nx / nl, ny / nl, nz / nl);
+        nv.normalize();
+        p.push(v.x, v.y, v.z);
+        nn.push(nv.x, nv.y, nv.z);
         uu.push(UV.getX(vi), UV.getY(vi));
       }
       const cg = new THREE.BufferGeometry();
@@ -5159,17 +5199,18 @@ export class Player {
     // relaxed hang (userData.lean) instead of the placeholder's A-frame
     for (const child of [...this.armR.children]) this.armR.remove(child);
     for (const child of [...this.armL.children]) this.armL.remove(child);
-    this.armR.position.set(parts.upperArmR.pivot[0], parts.upperArmR.pivot[1], parts.upperArmR.pivot[2]);
-    this.armL.position.set(parts.upperArmL.pivot[0], parts.upperArmL.pivot[1], parts.upperArmL.pivot[2]);
+    this.armR.position.copy(armJ.R.sh);
+    this.armL.position.copy(armJ.L.sh);
     this.armR.userData.lean = 0.1;
     this.armL.userData.lean = 0.1;
     this.armR.add(build(parts.upperArmR));
     this.armL.add(build(parts.upperArmL));
     this.elbowR = new THREE.Group();
     this.elbowL = new THREE.Group();
-    // elbow position in hanging arm space: down the tube, keeping its forward drift
-    this.elbowR.position.set(0, -(ELX - SHX), ELZ - SHZ);
-    this.elbowL.position.set(0, -(ELX - SHX), ELZ - SHZ);
+    // the upper arm's axis was rotated exactly onto -Y, so the elbow sits
+    // straight below the shoulder at the measured arm length
+    this.elbowR.position.set(0, -armJ.R.elLen, 0);
+    this.elbowL.position.set(0, -armJ.L.elLen, 0);
     this.armR.add(this.elbowR);
     this.armL.add(this.elbowL);
     this.elbowR.add(build(parts.foreArmR));
