@@ -19,6 +19,8 @@ export interface Crate {
   fuse?: number; // seconds left on a lit TNT
   mask?: boolean; // Aku crate: breaking it grants a protective mask
   mystery?: boolean; // ? crate: random reward (wumpa burst, mask, or a life)
+  bang?: boolean; // yellow '!' crate: breaking it materializes every OUTLINE crate
+  nitroBang?: boolean; // green '!' crate: breaking it detonates every nitro on the map
 }
 
 export interface Enemy {
@@ -170,17 +172,22 @@ export const LEVEL_NAMES = [
 // falling below killY dies.
 export interface CustomComponent {
   t:
-    | 'platform' // solid box: p = center, s = [w,h,d]
-    | 'ramp' // slope along Z (low end at +Z): p = center of the base line, len along z, rise = height gained, w = width
-    | 'wall' // solid barrier: p = base center, s = [w,h,d]
+    | 'platform' // solid box: p = center, s = [w,h,d], yaw degrees
+    | 'ramp' // slope along Z (low end at +Z): p = center of the base line, len along z, rise = height gained, w = width, yaw
+    | 'wall' // solid barrier: p = base center, s = [w,h,d]; invisible = collider only (ghost in the editor)
     | 'rail' // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z)
     | 'pipe' // halfpipe: p = trough center at ground, len along its axis, axis 'z'|'x'
     | 'crumble' // breakaway pad: p = top center, s = [w,-,d], shake = seconds before it drops (0.02 = instant)
+    | 'pit' // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d]
     | 'crate' // p = [x, deckY, z], kind picks the crate
+    | 'metal' // unbreakable steel crate: solid terrain, spin/slam-proof
+    | 'outline' // ghost crate: pass-through until a yellow '!' crate makes it real
     | 'checkpoint'
     | 'enemy' // patrols along X around p, range each way
+    | 'crusher' // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
+    | 'pendulum' // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
     | 'wumpa'
-    | 'crystal';
+    | 'crystal'; // one per level (the editor enforces it)
   p: [number, number, number];
   s?: [number, number, number];
   len?: number;
@@ -189,9 +196,14 @@ export interface CustomComponent {
   yaw?: number;
   axis?: 'z' | 'x';
   shake?: number;
-  kind?: 'wood' | 'bouncy' | 'nitro' | 'tnt' | 'mask' | 'mystery';
+  kind?: 'wood' | 'bouncy' | 'nitro' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang';
   range?: number;
   speed?: number;
+  invisible?: boolean;
+  cycle?: number;
+  phase?: number;
+  amp?: number;
+  color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble
 }
 
 export interface CustomLevelData {
@@ -288,6 +300,7 @@ export class Level {
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
+  pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
 
   // --- set pieces ---
   // Arena lock: enter the zone, gates slam shut, survive the waves.
@@ -747,18 +760,21 @@ export class Level {
         this.root.children[c].userData.editorIdx = idx;
       }
     };
-    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble']);
+    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal']);
     for (const pass of [true, false]) {
       data.components.forEach((c, i) => {
         if (geomPass.has(c.t) !== pass) return;
         buildTagged(i, () => {
+          const tinted = (fallback: THREE.MeshLambertMaterial): THREE.MeshLambertMaterial =>
+            c.color ? new THREE.MeshLambertMaterial({ color: new THREE.Color(c.color) }) : fallback;
           if (c.t === 'platform') {
             const s = c.s ?? [8, 1, 8];
             const mesh = new THREE.Mesh(
               new THREE.BoxGeometry(s[0], s[1], s[2]),
-              this.patterned(deck, s[0], s[2], 'checker'),
+              this.patterned(tinted(deck), s[0], s[2], 'checker'),
             );
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
+            mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0); // ride surface is raycast: free spin is fine
             mesh.name = 'platform';
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
@@ -766,10 +782,88 @@ export class Level {
             const len = c.len ?? 10;
             const rise = c.rise ?? 4;
             const w = c.w ?? 8;
-            this.ramp('ramp', c.p[2] + len / 2, c.p[1], c.p[2] - len / 2, c.p[1] + rise, w, deck, c.p[0]);
+            this.ramp('ramp', c.p[2] + len / 2, c.p[1], c.p[2] - len / 2, c.p[1] + rise, w, tinted(deck), c.p[0]);
+            const rad = THREE.MathUtils.degToRad(c.yaw ?? 0);
+            if (rad) {
+              // spin the built slope around the component centre: orbit its
+              // offset position and compose the yaw BEFORE the slope pitch
+              const m = this.root.children[this.root.children.length - 1];
+              const dx = m.position.x - c.p[0];
+              const dz = m.position.z - c.p[2];
+              m.position.x = c.p[0] + dx * Math.cos(rad) + dz * Math.sin(rad);
+              m.position.z = c.p[2] - dx * Math.sin(rad) + dz * Math.cos(rad);
+              m.rotation.order = 'YXZ';
+              m.rotation.y = rad;
+            }
           } else if (c.t === 'wall') {
             const s = c.s ?? [8, 4, 1];
-            this.wall(c.p[0], c.p[2], s[0], s[2], c.p[1], s[1]);
+            if (c.invisible) {
+              // collider only + an editor-mode ghost so it stays selectable
+              this.walls.push(
+                new THREE.Box3().setFromCenterAndSize(
+                  new THREE.Vector3(c.p[0], c.p[1] + s[1] / 2, c.p[2]),
+                  new THREE.Vector3(s[0], s[1], s[2]),
+                ),
+              );
+              const ghost = new THREE.Mesh(
+                new THREE.BoxGeometry(s[0], s[1], s[2]),
+                new THREE.MeshBasicMaterial({ color: 0x64d8ff, transparent: true, opacity: 0.22, depthWrite: false }),
+              );
+              ghost.position.set(c.p[0], c.p[1] + s[1] / 2, c.p[2]);
+              ghost.visible = false; // the editor reveals it while editing
+              ghost.userData.editorGhost = true;
+              this.root.add(ghost);
+            } else if (c.color) {
+              // tinted wall: same collider as wall(), custom-colored face
+              const mesh = new THREE.Mesh(
+                new THREE.BoxGeometry(s[0], s[1], s[2]),
+                this.patterned(new THREE.MeshLambertMaterial({ color: new THREE.Color(c.color) }), s[0], s[1], 'stone'),
+              );
+              mesh.position.set(c.p[0], c.p[1] + s[1] / 2, c.p[2]);
+              this.root.add(mesh);
+              this.walls.push(
+                new THREE.Box3().setFromCenterAndSize(
+                  new THREE.Vector3(c.p[0], c.p[1] + s[1] / 2, c.p[2]),
+                  new THREE.Vector3(s[0], s[1], s[2]),
+                ),
+              );
+            } else {
+              this.wall(c.p[0], c.p[2], s[0], s[2], c.p[1], s[1]);
+            }
+          } else if (c.t === 'pit') {
+            const s = c.s ?? [6, 1, 6];
+            // dark pool + faint ember rim; the volume is a touch-kill box
+            const pool = new THREE.Mesh(
+              new THREE.BoxGeometry(s[0], 0.18, s[2]),
+              new THREE.MeshLambertMaterial({ color: 0x07070c, emissive: 0x1a0406 }),
+            );
+            pool.position.set(c.p[0], c.p[1] + 0.02, c.p[2]);
+            this.root.add(pool);
+            const rim = new THREE.Mesh(
+              new THREE.BoxGeometry(s[0] + 0.5, 0.06, s[2] + 0.5),
+              new THREE.MeshBasicMaterial({ color: 0xb0402a, transparent: true, opacity: 0.5 }),
+            );
+            rim.position.set(c.p[0], c.p[1] + 0.001, c.p[2]);
+            this.root.add(rim);
+            this.pitBoxes.push(
+              new THREE.Box3().setFromCenterAndSize(
+                new THREE.Vector3(c.p[0], c.p[1] + 0.5, c.p[2]),
+                new THREE.Vector3(s[0], 1.4, s[2]),
+              ),
+            );
+          } else if (c.t === 'metal') {
+            // unbreakable steel box: stand on it, bonk off it, never break it
+            const size = 0.96;
+            const mesh = new THREE.Mesh(
+              new THREE.BoxGeometry(size, size, size),
+              new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.metalTexture() }),
+            );
+            mesh.position.set(c.p[0], c.p[1] + size / 2, c.p[2]);
+            this.root.add(mesh);
+            this.groundMeshes.push(mesh);
+            this.walls.push(
+              new THREE.Box3().setFromCenterAndSize(mesh.position.clone(), new THREE.Vector3(size, size, size)),
+            );
           } else if (c.t === 'rail') {
             const len = c.len ?? 12;
             const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
@@ -803,14 +897,37 @@ export class Level {
             }
           } else if (c.t === 'crumble') {
             const s = c.s ?? [3, 1, 3];
-            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7);
+            const col = c.color ? new THREE.Color(c.color).getHex() : undefined;
+            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col);
           } else if (c.t === 'crate') {
             this.crate(c.p[0], c.p[1], c.p[2], c.kind === 'wood' ? undefined : c.kind);
+          } else if (c.t === 'outline') {
+            // ghost crate: wireframe-ish translucent shell, no collision —
+            // a yellow '!' crate turns it into the real thing
+            const size = 0.96;
+            const ghost = new THREE.Mesh(
+              new THREE.BoxGeometry(size, size, size),
+              new THREE.MeshBasicMaterial({ color: 0xe8d9a8, transparent: true, opacity: 0.28, depthWrite: false }),
+            );
+            const edges = new THREE.LineSegments(
+              new THREE.EdgesGeometry(ghost.geometry),
+              new THREE.LineBasicMaterial({ color: 0xf2e2b0 }),
+            );
+            ghost.add(edges);
+            const gy = this.floorY(c.p[0], c.p[2], c.p[1]);
+            ghost.position.set(c.p[0], gy + size / 2, c.p[2]);
+            this.root.add(ghost);
+            this.outlines.push({ mesh: ghost, x: c.p[0], deckY: c.p[1], z: c.p[2] });
           } else if (c.t === 'checkpoint') {
             this.checkpoint(c.p[1], c.p[2], c.p[0]);
           } else if (c.t === 'enemy') {
             const r = c.range ?? 5;
             this.enemy(c.p[0] - r, c.p[0] + r, c.p[1], c.p[2], c.speed ?? 3);
+          } else if (c.t === 'crusher') {
+            const s = c.s ?? [4, 3, 3];
+            this.crusher(c.p[0], c.p[1], c.p[2], s[0], s[2], c.cycle ?? 3.2, c.phase ?? 0);
+          } else if (c.t === 'pendulum') {
+            this.pendulum(c.p[0], c.p[1], c.p[2], c.len ?? 5, c.amp ?? 1.0, c.speed ?? 1.6, c.phase ?? 0);
           } else if (c.t === 'wumpa') {
             this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === 'crystal') {
@@ -1070,6 +1187,8 @@ export class Level {
 
     // Pendulum blades: swing across the corridor; the bob is a kill box.
     this.killBoxes.length = 0;
+    // static death pits (editor component): always-on touch-kill volumes
+    for (const b of this.pitBoxes) this.killBoxes.push(b);
     for (const pd of this.pendulums) {
       const a = Math.sin(this.time * pd.speed + pd.phase) * pd.amp;
       pd.pivot.rotation.z = a;
@@ -1311,6 +1430,29 @@ export class Level {
     crate.alive = false;
     this.pops.push({ obj: crate.mesh, t: 0.12 });
     sfx.play(Math.random() < 0.5 ? 'crateBreak1' : 'crateBreak2', 0.8);
+    // '!' crates: yellow materializes every OUTLINE ghost into a real crate;
+    // green detonates every nitro on the map (safely — classic Crash rules).
+    if (crate.bang) this.materializeOutlines();
+    if (crate.nitroBang) {
+      for (const c of this.crates) {
+        if (c.alive && c.nitro) this.detonate(c, true);
+      }
+    }
+  }
+
+  // OUTLINE crates: pass-through ghosts until a yellow '!' crate makes them
+  // real (solid, breakable wood).
+  private outlines: { mesh: THREE.Object3D; x: number; deckY: number; z: number }[] = [];
+  private materializeOutlines(): void {
+    if (this.outlines.length === 0) return;
+    for (const o of this.outlines) {
+      o.mesh.visible = false;
+      this.crate(o.x, o.deckY, o.z);
+    }
+    this.outlines.length = 0;
+    sfx.play('crateBreak1', 0.6, 1.4);
+    // give the fresh boxes the same editor tag as nothing — they belong to
+    // gameplay now; the ghosts stay the editable objects
   }
 
   lightFuse(c: Crate): void {
@@ -3003,7 +3145,12 @@ export class Level {
     }
   }
 
-  private crate(x: number, deckY: number, z: number, kind?: 'nitro' | 'bouncy' | 'tnt' | 'mask' | 'mystery'): void {
+  private crate(
+    x: number,
+    deckY: number,
+    z: number,
+    kind?: 'nitro' | 'bouncy' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang',
+  ): void {
     const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
     let mat: THREE.MeshLambertMaterial;
     if (kind === 'nitro') {
@@ -3016,6 +3163,10 @@ export class Level {
       mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.maskTexture() });
     } else if (kind === 'mystery') {
       mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.mysteryTexture() });
+    } else if (kind === 'bang') {
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.bangTexture() });
+    } else if (kind === 'nitrobang') {
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0x0c3a16, map: this.nitroBangTexture() });
     } else {
       mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.plainTexture() });
     }
@@ -3052,6 +3203,8 @@ export class Level {
       tnt: kind === 'tnt',
       mask: kind === 'mask',
       mystery: kind === 'mystery',
+      bang: kind === 'bang',
+      nitroBang: kind === 'nitrobang',
     });
     // Classic Crash formation: every arrow crate carries a breakable fruit
     // crate floating above it — bounce off the arrow, headbutt the reward.
@@ -3134,6 +3287,59 @@ export class Level {
   private plainTexture(): THREE.CanvasTexture {
     if (!this.plainTex) this.plainTex = this.makeTex((ctx) => this.crateWood(ctx, true));
     return this.plainTex;
+  }
+
+  // Yellow '!' on wood: breaking it makes every OUTLINE crate real.
+  private bangTex: THREE.CanvasTexture | null = null;
+  private bangTexture(): THREE.CanvasTexture {
+    if (!this.bangTex)
+      this.bangTex = this.makeTex((ctx) => {
+        this.crateWood(ctx, false);
+        this.crateLabel(ctx, '!', 24, '#ffd934', '#5a2d08', 16, 18);
+      });
+    return this.bangTex;
+  }
+
+  // White '!' on nitro green: breaking it detonates every nitro on the map.
+  private nitroBangTex: THREE.CanvasTexture | null = null;
+  private nitroBangTexture(): THREE.CanvasTexture {
+    if (!this.nitroBangTex)
+      this.nitroBangTex = this.makeTex((ctx) => {
+        ctx.fillStyle = '#2fae44';
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#1c7a2c';
+        ctx.fillRect(0, 0, 32, 3);
+        ctx.fillRect(0, 29, 32, 3);
+        ctx.fillRect(0, 0, 3, 32);
+        ctx.fillRect(29, 0, 3, 32);
+        this.crateLabel(ctx, '!', 24, '#eafff0', '#0e4a18', 16, 18);
+      });
+    return this.nitroBangTex;
+  }
+
+  // Riveted steel: the UNBREAKABLE crate (solid terrain, spin/slam-proof).
+  private metalTex: THREE.CanvasTexture | null = null;
+  private metalTexture(): THREE.CanvasTexture {
+    if (!this.metalTex)
+      this.metalTex = this.makeTex((ctx) => {
+        ctx.fillStyle = '#9aa2ac';
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#7d8590';
+        ctx.fillRect(0, 0, 32, 4);
+        ctx.fillRect(0, 28, 32, 4);
+        ctx.fillRect(0, 0, 4, 32);
+        ctx.fillRect(28, 0, 4, 32);
+        ctx.fillStyle = '#b8c0ca';
+        ctx.fillRect(4, 4, 24, 2); // top sheen
+        ctx.fillStyle = '#666e78';
+        for (const [rx, ry] of [[6, 6], [24, 6], [6, 24], [24, 24]] as const) {
+          ctx.fillRect(rx, ry, 3, 3); // corner rivets
+        }
+        ctx.fillStyle = '#8a929c';
+        ctx.fillRect(14, 8, 4, 16); // center brace
+        ctx.fillRect(8, 14, 16, 4);
+      });
+    return this.metalTex;
   }
 
   // Big orange '?' on plain wood.

@@ -41,6 +41,10 @@ export class Input {
 
   constructor() {
     window.addEventListener('keydown', (e) => {
+      // typing in a panel field (tuner numbers, editor coordinates) must not
+      // drive the game — 'p' in an input used to pause, 'r' restarted…
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
         e.preventDefault();
       }

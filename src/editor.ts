@@ -26,22 +26,73 @@ interface Hooks {
   showMsg: (title: string, sub?: string) => void;
 }
 
-// what the ADD palette spawns, at the camera's focus point
-const PALETTE: { label: string; make: (at: THREE.Vector3) => CustomComponent }[] = [
-  { label: 'platform', make: (at) => ({ t: 'platform', p: [at.x, at.y, at.z], s: [10, 1, 10] }) },
-  { label: 'ramp', make: (at) => ({ t: 'ramp', p: [at.x, at.y, at.z], len: 10, rise: 4, w: 8 }) },
-  { label: 'wall', make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1] }) },
-  { label: 'rail', make: (at) => ({ t: 'rail', p: [at.x, at.y + 1, at.z], len: 12, yaw: 0 }) },
-  { label: 'halfpipe', make: (at) => ({ t: 'pipe', p: [at.x, at.y, at.z], len: 36, axis: 'z' }) },
-  { label: 'crumble', make: (at) => ({ t: 'crumble', p: [at.x, at.y + 1, at.z], s: [3, 1, 3], shake: 0.7 }) },
-  { label: 'crate', make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'wood' }) },
-  { label: 'checkpoint', make: (at) => ({ t: 'checkpoint', p: [at.x, at.y + 0.5, at.z] }) },
-  { label: 'enemy', make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3 }) },
-  { label: 'wumpa', make: (at) => ({ t: 'wumpa', p: [at.x, at.y + 1.2, at.z] }) },
-  { label: 'crystal', make: (at) => ({ t: 'crystal', p: [at.x, at.y + 0.5, at.z] }) },
+// what the ADD palette spawns, at the camera's focus point — grouped, each
+// with a little drawn icon so the crate language reads at a glance
+type Draw = (x: CanvasRenderingContext2D) => void;
+interface PalItem {
+  label: string;
+  icon: Draw;
+  make: (at: THREE.Vector3) => CustomComponent;
+}
+
+const box = (x: CanvasRenderingContext2D, fill: string, frame: string): void => {
+  x.fillStyle = fill;
+  x.fillRect(2, 2, 14, 14);
+  x.strokeStyle = frame;
+  x.lineWidth = 2;
+  x.strokeRect(3, 3, 12, 12);
+};
+const glyph = (x: CanvasRenderingContext2D, ch: string, color: string): void => {
+  x.fillStyle = color;
+  x.font = 'bold 11px monospace';
+  x.textAlign = 'center';
+  x.textBaseline = 'middle';
+  x.fillText(ch, 9, 10);
+};
+
+const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
+  {
+    title: 'TERRAIN',
+    items: [
+      { label: 'platform', icon: (x) => { x.fillStyle = '#cfd4cf'; x.fillRect(1, 7, 16, 5); x.fillStyle = '#aeb4ae'; for (let i = 0; i < 4; i++) x.fillRect(1 + i * 4, 7 + (i % 2) * 2.5, 4, 2.5); }, make: (at) => ({ t: 'platform', p: [at.x, at.y, at.z], s: [10, 1, 10] }) },
+      { label: 'ramp', icon: (x) => { x.fillStyle = '#c8b088'; x.beginPath(); x.moveTo(1, 15); x.lineTo(17, 15); x.lineTo(17, 3); x.closePath(); x.fill(); }, make: (at) => ({ t: 'ramp', p: [at.x, at.y, at.z], len: 10, rise: 4, w: 8 }) },
+      { label: 'wall', icon: (x) => { x.fillStyle = '#9a8a7a'; x.fillRect(3, 3, 12, 12); x.strokeStyle = '#6a5d50'; x.lineWidth = 1; for (let r = 0; r < 3; r++) { x.strokeRect(3, 3 + r * 4, 6, 4); x.strokeRect(9, 3 + r * 4, 6, 4); } }, make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1] }) },
+      { label: 'invis wall', icon: (x) => { x.strokeStyle = '#64d8ff'; x.lineWidth = 1.5; x.setLineDash([3, 2]); x.strokeRect(3, 3, 12, 12); x.setLineDash([]); }, make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1], invisible: true }) },
+      { label: 'rail', icon: (x) => { x.strokeStyle = '#c8d4e2'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 6); x.lineTo(16, 6); x.stroke(); x.lineWidth = 1.5; x.beginPath(); x.moveTo(5, 6); x.lineTo(5, 14); x.moveTo(13, 6); x.lineTo(13, 14); x.stroke(); }, make: (at) => ({ t: 'rail', p: [at.x, at.y + 1, at.z], len: 12, yaw: 0 }) },
+      { label: 'halfpipe', icon: (x) => { x.strokeStyle = '#aab4ba'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'pipe', p: [at.x, at.y, at.z], len: 36, axis: 'z' }) },
+      { label: 'crumble', icon: (x) => { x.fillStyle = '#cf6a48'; x.fillRect(2, 7, 14, 5); x.strokeStyle = '#7a3520'; x.lineWidth = 1; x.beginPath(); x.moveTo(6, 7); x.lineTo(8, 12); x.moveTo(11, 7); x.lineTo(10, 12); x.stroke(); }, make: (at) => ({ t: 'crumble', p: [at.x, at.y + 1, at.z], s: [3, 1, 3], shake: 0.7 }) },
+      { label: 'death pit', icon: (x) => { x.fillStyle = '#b0402a'; x.fillRect(2, 6, 14, 7); x.fillStyle = '#0a0a10'; x.fillRect(3.5, 7.5, 11, 4); }, make: (at) => ({ t: 'pit', p: [at.x, at.y, at.z], s: [6, 1, 6] }) },
+    ],
+  },
+  {
+    title: 'CRATES',
+    items: [
+      { label: 'wood', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '▦', '#8a5a22'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'wood' }) },
+      { label: 'arrow', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '↑', '#3a9a4a'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'bouncy' }) },
+      { label: 'TNT', icon: (x) => { box(x, '#c03a2a', '#6a180e'); glyph(x, 'T', '#ffe9d8'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'tnt' }) },
+      { label: 'nitro', icon: (x) => { box(x, '#2fae44', '#0e4a18'); glyph(x, 'N', '#eafff0'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'nitro' }) },
+      { label: 'mask', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '☻', '#e89040'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'mask' }) },
+      { label: '? crate', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '?', '#ff8c1a'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'mystery' }) },
+      { label: '! crate', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '!', '#ffd934'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'bang' }) },
+      { label: 'nitro !', icon: (x) => { box(x, '#2fae44', '#0e4a18'); glyph(x, '!', '#eafff0'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'nitrobang' }) },
+      { label: 'metal', icon: (x) => { box(x, '#9aa2ac', '#666e78'); x.fillStyle = '#666e78'; for (const [rx, ry] of [[5, 5], [12, 5], [5, 12], [12, 12]]) x.fillRect(rx, ry, 2, 2); }, make: (at) => ({ t: 'metal', p: [at.x, at.y, at.z] }) },
+      { label: 'outline', icon: (x) => { x.strokeStyle = '#f2e2b0'; x.lineWidth = 1.5; x.setLineDash([3, 2]); x.strokeRect(3, 3, 12, 12); x.setLineDash([]); }, make: (at) => ({ t: 'outline', p: [at.x, at.y, at.z] }) },
+      { label: 'checkpoint', icon: (x) => { box(x, '#2a5a8a', '#123049'); glyph(x, 'C', '#cfe8ff'); }, make: (at) => ({ t: 'checkpoint', p: [at.x, at.y + 0.5, at.z] }) },
+    ],
+  },
+  {
+    title: 'HAZARDS & THINGS',
+    items: [
+      { label: 'enemy', icon: (x) => { x.fillStyle = '#c03a2a'; x.beginPath(); x.arc(9, 11, 5, 0, 7); x.fill(); x.fillStyle = '#fff'; x.fillRect(6, 9, 2, 2); x.fillRect(10, 9, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3 }) },
+      { label: 'crusher', icon: (x) => { x.fillStyle = '#8f8f98'; x.fillRect(3, 2, 12, 7); glyph(x, '↓', '#2a2a30'); }, make: (at) => ({ t: 'crusher', p: [at.x, at.y, at.z], s: [4, 3, 3], cycle: 3.2, phase: 0 }) },
+      { label: 'pendulum', icon: (x) => { x.strokeStyle = '#6a7078'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 11); x.stroke(); x.fillStyle = '#565c66'; x.beginPath(); x.arc(13.5, 13, 3, 0, 7); x.fill(); }, make: (at) => ({ t: 'pendulum', p: [at.x, at.y + 7, at.z], len: 5, amp: 1.0, speed: 1.6, phase: 0 }) },
+      { label: 'wumpa', icon: (x) => { x.fillStyle = '#ff9028'; x.beginPath(); x.arc(9, 10, 5, 0, 7); x.fill(); x.fillStyle = '#3a9a4a'; x.fillRect(8, 3, 2, 3); }, make: (at) => ({ t: 'wumpa', p: [at.x, at.y + 1.2, at.z] }) },
+      { label: 'crystal', icon: (x) => { x.fillStyle = '#c83af0'; x.beginPath(); x.moveTo(9, 2); x.lineTo(14, 9); x.lineTo(9, 16); x.lineTo(4, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'crystal', p: [at.x, at.y + 0.5, at.z] }) },
+    ],
+  },
 ];
 
-const CRATE_KINDS = ['wood', 'bouncy', 'nitro', 'tnt', 'mask', 'mystery'] as const;
+const CRATE_KINDS = ['wood', 'bouncy', 'nitro', 'tnt', 'mask', 'mystery', 'bang', 'nitrobang'] as const;
 
 export class Editor {
   active = false;
@@ -100,6 +151,7 @@ export class Editor {
     this.panel.style.display = 'block';
     this.select(-1);
     this.refreshSpawnMarker();
+    this.setGhostsVisible(true);
     this.hooks.showMsg('LEVEL EDITOR', 'click to select · drag to move · shift-drag = height');
   }
 
@@ -110,6 +162,7 @@ export class Editor {
     this.controls = null;
     this.panel.style.display = 'none';
     this.select(-1);
+    this.setGhostsVisible(false);
     if (this.spawnMarker) {
       this.scene.remove(this.spawnMarker);
       this.spawnMarker = null;
@@ -131,6 +184,9 @@ export class Editor {
 
   // Adopt a full level (drag-dropped file / shared JSON) as the working data.
   importLevel(d: CustomLevelData): void {
+    // enforce the one-crystal rule on imported files too (keep the last)
+    const lastCrystal = d.components.map((c) => c.t).lastIndexOf('crystal');
+    d.components = d.components.filter((c, i) => c.t !== 'crystal' || i === lastCrystal);
     this.data = d;
     this.select(-1);
     this.commit();
@@ -141,6 +197,15 @@ export class Editor {
     if (this.selected >= this.data.components.length) this.select(-1);
     else this.refreshSelectionBox();
     this.refreshSpawnMarker();
+    this.setGhostsVisible(this.active);
+  }
+
+  // invisible walls (and future collider-only pieces) render as ghosts while
+  // editing, vanish in play
+  private setGhostsVisible(on: boolean): void {
+    this.getLevel().pickRoot.traverse((o) => {
+      if (o.userData.editorGhost) o.visible = on;
+    });
   }
 
   // ---- data mutation ----
@@ -156,6 +221,10 @@ export class Editor {
   }
 
   private addComponent(c: CustomComponent): void {
+    // ONE crystal per level: placing a new one replaces the old
+    if (c.t === 'crystal') {
+      this.data.components = this.data.components.filter((o) => o.t !== 'crystal');
+    }
     this.data.components.push(c);
     this.commit();
     this.select(this.data.components.length - 1);
@@ -347,24 +416,35 @@ export class Editor {
     };
     panel.appendChild(h('<div class="ed-title">LEVEL EDITOR</div>'));
 
-    // add palette
-    panel.appendChild(h('<div class="ed-sect">ADD (at camera focus)</div>'));
-    const pal = h('<div class="ed-grid"></div>');
-    for (const p of PALETTE) {
-      const b = h(`<button class="ed-btn">${p.label}</button>`) as HTMLButtonElement;
-      b.addEventListener('click', () => {
-        const at = this.controls ? this.controls.target.clone() : new THREE.Vector3();
-        if (this.snap) {
-          at.x = Math.round(at.x * 2) / 2;
-          at.y = Math.round(at.y * 2) / 2;
-          at.z = Math.round(at.z * 2) / 2;
-        }
-        this.addComponent(p.make(at));
-        b.blur();
-      });
-      pal.appendChild(b);
+    // add palette: grouped, icon + label per component
+    for (const sect of PALETTE_SECTIONS) {
+      panel.appendChild(h(`<div class="ed-sect">ADD · ${sect.title}</div>`));
+      const pal = h('<div class="ed-grid"></div>');
+      for (const p of sect.items) {
+        const b = h('<button class="ed-btn ed-palbtn"></button>') as HTMLButtonElement;
+        const cv = document.createElement('canvas');
+        cv.width = 18;
+        cv.height = 18;
+        const ctx = cv.getContext('2d');
+        if (ctx) p.icon(ctx);
+        b.appendChild(cv);
+        const lab = document.createElement('span');
+        lab.textContent = p.label;
+        b.appendChild(lab);
+        b.addEventListener('click', () => {
+          const at = this.controls ? this.controls.target.clone() : new THREE.Vector3();
+          if (this.snap) {
+            at.x = Math.round(at.x * 2) / 2;
+            at.y = Math.round(at.y * 2) / 2;
+            at.z = Math.round(at.z * 2) / 2;
+          }
+          this.addComponent(p.make(at));
+          b.blur();
+        });
+        pal.appendChild(b);
+      }
+      panel.appendChild(pal);
     }
-    panel.appendChild(pal);
 
     // selection properties (rebuilt on select)
     panel.appendChild(h('<div class="ed-sect">SELECTION</div>'));
@@ -509,18 +589,49 @@ export class Editor {
       if (!c.s) c.s = [8, 1, 8];
       num(label, () => c.s![idx], (v) => (c.s![idx] = Math.max(0.2, v)));
     };
+    const colorRow = (): void => {
+      const row = document.createElement('div');
+      row.className = 'ed-row';
+      const lab = document.createElement('label');
+      lab.textContent = 'color';
+      const input = document.createElement('input');
+      input.type = 'color';
+      input.value = c.color ?? '#ffffff';
+      input.addEventListener('change', () => {
+        c.color = input.value;
+        this.commit();
+      });
+      row.appendChild(lab);
+      row.appendChild(input);
+      this.propsEl.appendChild(row);
+    };
     if (c.t === 'platform' || c.t === 'wall') {
       sizeRow(0, 'width');
       sizeRow(1, 'height');
+      sizeRow(2, 'depth');
+      if (c.t === 'platform') num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      if (c.t === 'wall' && c.invisible) {
+        const note = document.createElement('div');
+        note.className = 'ed-dim';
+        note.textContent = 'invisible in play (ghost here)';
+        this.propsEl.appendChild(note);
+      } else {
+        colorRow();
+      }
+    } else if (c.t === 'pit') {
+      sizeRow(0, 'width');
       sizeRow(2, 'depth');
     } else if (c.t === 'crumble') {
       sizeRow(0, 'width');
       sizeRow(2, 'depth');
       num('shake', () => c.shake ?? 0.7, (v) => (c.shake = Math.max(0, v)), 0.1);
+      colorRow();
     } else if (c.t === 'ramp') {
       num('length', () => c.len ?? 10, (v) => (c.len = Math.max(1, v)));
       num('rise', () => c.rise ?? 4, (v) => (c.rise = v));
       num('width', () => c.w ?? 8, (v) => (c.w = Math.max(1, v)));
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      colorRow();
     } else if (c.t === 'rail') {
       num('length', () => c.len ?? 12, (v) => (c.len = Math.max(1, v)));
       num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
@@ -553,9 +664,36 @@ export class Editor {
     } else if (c.t === 'enemy') {
       num('patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
       num('speed', () => c.speed ?? 3, (v) => (c.speed = Math.max(0.5, v)));
+    } else if (c.t === 'crusher') {
+      sizeRow(0, 'width');
+      sizeRow(2, 'depth');
+      num('cycle s', () => c.cycle ?? 3.2, (v) => (c.cycle = Math.max(0.5, v)), 0.2);
+      num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
+    } else if (c.t === 'pendulum') {
+      num('arm len', () => c.len ?? 5, (v) => (c.len = Math.max(1, v)));
+      num('swing amp', () => c.amp ?? 1.0, (v) => (c.amp = Math.max(0.1, v)), 0.1);
+      num('speed', () => c.speed ?? 1.6, (v) => (c.speed = Math.max(0.2, v)), 0.1);
+      num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
     }
     const row = document.createElement('div');
     row.className = 'ed-grid';
+    // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
+    const rotatable = ['platform', 'ramp', 'rail'].includes(c.t);
+    const swappable = ['wall', 'crumble', 'pit', 'crusher'].includes(c.t);
+    if (rotatable || swappable || c.t === 'pipe') {
+      const rot = document.createElement('button');
+      rot.className = 'ed-btn';
+      rot.textContent = 'rotate 90°';
+      rot.addEventListener('click', () => {
+        if (rotatable) c.yaw = ((c.yaw ?? 0) + 90) % 360;
+        else if (c.t === 'pipe') c.axis = (c.axis ?? 'z') === 'z' ? 'x' : 'z';
+        else if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
+        else c.s = [8, 1, 8];
+        this.commit();
+        this.renderProps();
+      });
+      row.appendChild(rot);
+    }
     const dup = document.createElement('button');
     dup.className = 'ed-btn';
     dup.textContent = 'duplicate';
@@ -588,6 +726,12 @@ export class Editor {
         border-radius: 6px; padding: 5px 4px; cursor: pointer;
       }
       .ed-btn:hover { background: #262e42; color: #d5e0f0; }
+      .ed-palbtn {
+        display: flex; align-items: center; gap: 6px; text-align: left;
+        padding: 3px 6px;
+      }
+      .ed-palbtn canvas { flex: 0 0 18px; image-rendering: pixelated; }
+      .ed-row input[type=color] { padding: 0; height: 22px; }
       .ed-danger { color: #ff8484; }
       .ed-test { width: 100%; margin-top: 10px; color: #58e08a; font-weight: bold; padding: 8px; }
       .ed-row { display: grid; grid-template-columns: 80px 1fr; gap: 6px; align-items: center; margin: 3px 0; }

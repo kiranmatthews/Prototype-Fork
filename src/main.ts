@@ -441,14 +441,22 @@ ui.onLifeCheat = () => {
 };
 ui.setLevel(currentCourse);
 window.addEventListener('keydown', (e) => {
-  if (e.code === 'Digit1') switchLevel(0);
-  if (e.code === 'Digit2') switchLevel(1);
-  if (e.code === 'Digit3') switchLevel(2);
-  if (e.code === 'Digit4') switchLevel(3);
-  if (e.code === 'Digit5') switchLevel(4);
-  if (e.code === 'Digit6') switchLevel(5);
-  if (e.code === 'Digit7') switchLevel(6);
-  if (e.code === 'Digit8') switchLevel(7); // Custom (the editor's level)
+  // typing in a panel field (editor coordinates, tuner values) must not
+  // switch levels or fire capture hotkeys
+  const t = e.target as HTMLElement | null;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
+  if (!editor.active) {
+    // level hotkeys are gameplay-only — inside the editor they'd yank the
+    // level out from under you
+    if (e.code === 'Digit1') switchLevel(0);
+    if (e.code === 'Digit2') switchLevel(1);
+    if (e.code === 'Digit3') switchLevel(2);
+    if (e.code === 'Digit4') switchLevel(3);
+    if (e.code === 'Digit5') switchLevel(4);
+    if (e.code === 'Digit6') switchLevel(5);
+    if (e.code === 'Digit7') switchLevel(6);
+    if (e.code === 'Digit8') switchLevel(7); // Custom (the editor's level)
+  }
   if (e.code === 'F8') saveReplay(); // playtest capture: input take -> .json
   if (e.code === 'F9') toggleVideo(); // playtest capture: canvas -> .webm
 });
