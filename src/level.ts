@@ -778,6 +778,29 @@ export class Level {
             mesh.name = 'platform';
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
+            // SIDE COLLISION: without it you clip into a thick platform's
+            // face, and from inside the box the ground raycast sees only
+            // backfaces — you fall through the map. The collider's top is
+            // tucked UNDER the walk surface (wall pushes are XZ-only and the
+            // boxes are boundary-inclusive, so a full-height box would shove
+            // anyone standing on top). Axis-aligned yaws only — the collision
+            // engine is AABB; free-spun platforms stay raycast-only.
+            const yawQ = (((c.yaw ?? 0) % 360) + 360) % 360;
+            if (yawQ % 90 === 0) {
+              const swapped = yawQ % 180 !== 0;
+              const w = swapped ? s[2] : s[0];
+              const d = swapped ? s[0] : s[2];
+              const top = c.p[1] + s[1] / 2 - 0.25;
+              const bottom = c.p[1] - s[1] / 2;
+              if (top > bottom) {
+                this.walls.push(
+                  new THREE.Box3().setFromCenterAndSize(
+                    new THREE.Vector3(c.p[0], (top + bottom) / 2, c.p[2]),
+                    new THREE.Vector3(w, top - bottom, d),
+                  ),
+                );
+              }
+            }
           } else if (c.t === 'ramp') {
             const len = c.len ?? 10;
             const rise = c.rise ?? 4;
@@ -861,8 +884,13 @@ export class Level {
             mesh.position.set(c.p[0], c.p[1] + size / 2, c.p[2]);
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
+            // side collider stops under the top face — standing on the box
+            // must not trigger the XZ push-out (see the platform note)
             this.walls.push(
-              new THREE.Box3().setFromCenterAndSize(mesh.position.clone(), new THREE.Vector3(size, size, size)),
+              new THREE.Box3().setFromCenterAndSize(
+                new THREE.Vector3(mesh.position.x, mesh.position.y - 0.125, mesh.position.z),
+                new THREE.Vector3(size, size - 0.25, size),
+              ),
             );
           } else if (c.t === 'rail') {
             const len = c.len ?? 12;
@@ -894,6 +922,35 @@ export class Level {
                   : new Rail([new THREE.Vector3(along + len / 2, y, lipC), new THREE.Vector3(along - len / 2, y, lipC)]);
               this.rails.push(rail);
               this.root.add(rail.object);
+              // SOLID BACK: the transition is a one-sided sheet — from behind
+              // you'd walk (or fall) straight through into the pipe. A box
+              // just outside each wall blocks that, stopping under the coping
+              // so lip play stays clear. Skipped when another pipe's mouth is
+              // right across this lip line (a shared ridge — the spine
+              // transfer and ride-through must stay open).
+              const probe = lipC + side * 1.0;
+              const covered = data.components.some((o) => {
+                if (o === c || o.t !== 'pipe' || (o.axis ?? 'z') !== axis) return false;
+                const oCross = axis === 'z' ? o.p[0] : o.p[2];
+                const oAlong = axis === 'z' ? o.p[2] : o.p[0];
+                const oLen = o.len ?? 36;
+                if (Math.abs(oAlong - along) > (oLen + len) / 2) return false;
+                return Math.abs(probe - oCross) <= 9 - 0.3; // inside its mouth (lipX = 9)
+              });
+              if (!covered) {
+                const h = hp.lipY - hp.yBottom - 0.4;
+                const cy = hp.yBottom + h / 2;
+                // offset 0.8 clear of the lip line: a rider hugging the
+                // INSIDE face at the coping reaches within a player-half of
+                // it, and the back box must never clip the climb
+                const bc = lipC + side * 1.45;
+                this.walls.push(
+                  new THREE.Box3().setFromCenterAndSize(
+                    axis === 'z' ? new THREE.Vector3(bc, cy, along) : new THREE.Vector3(along, cy, bc),
+                    axis === 'z' ? new THREE.Vector3(1.3, h, len) : new THREE.Vector3(len, h, 1.3),
+                  ),
+                );
+              }
             }
           } else if (c.t === 'crumble') {
             const s = c.s ?? [3, 1, 3];
