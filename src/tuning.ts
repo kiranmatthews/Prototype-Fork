@@ -84,7 +84,7 @@ export const TUNING = {
   lipMaxTime: 2.5, // longest a lip stall holds before you drop back in
   lipDrift: 0.8, // lip stall balance: how fast the needle runs away on its own
   lipControl: 3.4, // how hard up/down input fights the lip needle
-  spineDrift: 5, // hang time: how fast holding INTO the lip carries you across a spine/ridge (over the coping only)
+  spineDrift: 0, // hang time: how fast holding INTO the lip carries you across a spine/ridge. DISABLED (0) for now — the carry displaces you off the coping and ruins lip catches; control/logic redesign pending
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
   balanceSpeedEffect: 1.4, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)

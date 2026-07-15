@@ -731,6 +731,13 @@ export class Player {
       this.vertLatVel = 0;
       this.hangPipe = null;
     }
+    // The crit flag only means something while a balance meter is live —
+    // anywhere else it must be OFF, or the last-chance arm flail plays
+    // forever (grinds/manuals/stalls each reset it, but every exit path has
+    // to agree, so enforce it centrally).
+    if (this.state !== 'grind' && this.manualing === 0 && this.lipStallT <= 0) {
+      this.balanceCritT = 0;
+    }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     // Actual planar speed from last step's displacement (any direction) —
@@ -2751,6 +2758,8 @@ export class Player {
     this.lipStallT = 0;
     this.lipPipe = null;
     this.lipCoolT = 0.5;
+    this.balance = 0; // the needle is done — a stuck crit flag flails the arms forever
+    this.balanceCritT = 0;
     this.state = 'air';
     this.grounded = false;
     this.bail(); // wipes the combo + flops (also zeroes velocity, so push after)
@@ -2780,6 +2789,8 @@ export class Player {
     this.lipStallT = 0;
     this.lipCoolT = 0.5;
     this.lipPipe = null;
+    this.balance = 0; // see lipBail: never leak a pegged needle out of the stall
+    this.balanceCritT = 0;
     this.pipeRideT = 0.2; // dropping in: a re-crest is a pipe hang
     this.pipeLandGraceT = 0.35; // a stale held direction must not brake the drop
     if (jumped) {
@@ -4664,7 +4675,7 @@ export class Player {
     if (this.lipStallT > 0 && this.lipPipe) {
       const tipX = this.lipPipe.axis === 'z' ? -this.lipSide : 0;
       const tipZ = this.lipPipe.axis === 'z' ? 0 : -this.lipSide;
-      stallLean = (tipX * this.axisF.x + tipZ * this.axisF.z) * this.balance * 0.45;
+      stallLean = (tipX * this.axisF.x + tipZ * this.axisF.z) * this.balance * 0.65;
     }
     const manualTarget =
       this.manualing !== 0 ? (this.manualing === 1 ? -0.4 : 0.35) - this.balance * 0.4 : stallLean;
