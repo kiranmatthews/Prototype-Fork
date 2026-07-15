@@ -283,6 +283,8 @@ export class Player {
   private maskMesh: THREE.Mesh | null = null;
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
   private armL: THREE.Group | null = null;
+  private elbowR: THREE.Group | null = null; // forearm pivots inside each arm (authored model only)
+  private elbowL: THREE.Group | null = null;
   private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
   private headM: THREE.Group | null = null; // head pivot: skull, muzzle, ears, hair, eyes
   private legs: THREE.Group | null = null;
@@ -292,9 +294,7 @@ export class Player {
   private kneeR: THREE.Group | null = null;
   // Kangaroo appendages — jointed for follow-through animation.
   private tailRoot: THREE.Group | null = null;
-  private tailBase: THREE.Group | null = null;
-  private tailMid: THREE.Group | null = null;
-  private tailTip: THREE.Group | null = null;
+  private tailChain: THREE.Group[] = []; // all tail joints root→tip (3 procedural, 5 authored)
   private ponyA: THREE.Group | null = null; // ponytail: scrunchie+puff, then the tip
   private ponyB: THREE.Group | null = null;
   private walkPhase = 0; // procedural run cycle
@@ -4543,7 +4543,7 @@ export class Player {
     // Tail + ponytail follow-through: the kangaroo signature. The tail
     // counter-swings the run, flares up through airs and grabs for balance,
     // and tucks low on all fours; the ponytail bobs against the same beat.
-    if (this.tailBase && this.tailMid && this.tailTip) {
+    if (this.tailChain.length > 0) {
       const lift =
         0.45 * this.hangPose +
         0.5 * this.grabPose +
@@ -4551,14 +4551,19 @@ export class Player {
         0.3 * sk - // rolling: swing clear of the deck
         0.35 * this.crawlPose;
       const wag = 0.16 * breathe + 0.5 * swing;
-      // authored chunks bake the tail's curve (userData.rest = 0): the driver
-      // only flexes deltas; the procedural fallback carries its full rest pose
-      const r0 = (this.tailBase.userData.rest as number | undefined) ?? 1.15;
-      const r1 = (this.tailMid.userData.rest as number | undefined) ?? 0.55;
-      const r2 = (this.tailTip.userData.rest as number | undefined) ?? 0.4;
-      this.tailBase.rotation.set(r0 + 0.5 * lift, 0.35 * wag, 0.05 * breathe);
-      this.tailMid.rotation.set(r1 + 0.3 * lift, 0.3 * wag, 0);
-      this.tailTip.rotation.set(r2 + 0.2 * lift, 0.25 * wag, 0);
+      // Each joint carries its rest angle in userData (authored chunks bake
+      // the curve, so theirs is 0) plus a share of the flex — decaying lift
+      // toward the tip, and a wag that travels down the chain slightly
+      // delayed, so sways whip instead of rotating rigidly.
+      const liftW = [0.5, 0.3, 0.2, 0.14, 0.1];
+      const wagW = [0.35, 0.3, 0.25, 0.2, 0.16];
+      const lag = Math.sin(this.walkPhase - 0.9) * 0.65 * Math.max(this.walkAmp, this.crawlPose * 0.6);
+      const wagLag = 0.16 * breathe + 0.5 * lag;
+      this.tailChain.forEach((j, i) => {
+        const rest = (j.userData.rest as number | undefined) ?? 0;
+        const w = i < 2 ? wag : wagLag; // tip half follows a beat behind
+        j.rotation.set(rest + lift * (liftW[i] ?? 0.1), w * (wagW[i] ?? 0.15), i === 0 ? 0.05 * breathe : 0);
+      });
     }
     if (this.ponyA && this.ponyB) {
       this.ponyA.rotation.set(1.2 + 0.06 * breathe - 0.3 * this.hangPose, 0.18 * swing, 0);
@@ -4625,10 +4630,14 @@ export class Player {
     // Slide: trailing hand drags behind, lead arm reaches ahead.
     const slideR = -1.1 * this.slidePose;
     const slideL = 0.7 * this.slidePose;
+    // the authored model hangs closer to the body (userData.lean); the
+    // procedural fallback keeps its old 0.25 A-frame lean
+    const leanR = (this.armR?.userData.lean as number | undefined) ?? 0.25;
+    const leanL = (this.armL?.userData.lean as number | undefined) ?? 0.25;
     if (this.armR) {
       this.armR.rotation.x = this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose; // lead hand reaches down the wall
       this.armR.rotation.z =
-        0.25 -
+        leanR -
         this.grabPose * 0.55 +
         1.15 * this.grindArmPose * (1 + 0.6 * railBal) + // balance arms out wide (grinds tip them sideways; manual balance lives in the PITCH instead)
         1.25 * this.dropPose + // slam starfish
@@ -4640,13 +4649,26 @@ export class Player {
       this.armL.rotation.x =
         this.armLPose * this.grabPose - anti + sym + slideL + swing * 1.6 * this.crawlPose - 0.65 * this.wallridePose; // trailing arm swept back
       this.armL.rotation.z =
-        -0.25 +
+        -leanL +
         this.grabPose * 0.45 -
         1.15 * this.grindArmPose * (1 - 0.6 * railBal) -
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
+    }
+    // ELBOWS (authored model): a relaxed base bend, deeper when that arm
+    // swings forward through the run, pumping on the board, or on all fours —
+    // and snapped straight for star jumps, slams, and board grabs.
+    if (this.elbowR || this.elbowL) {
+      const straight = 1 - 0.9 * Math.max(this.grabPose, this.dropPose, this.starPose);
+      const bendR =
+        (0.12 + 0.5 * Math.max(0, anti) + 0.25 * this.skatePose + 0.5 * this.crawlPose + 0.3 * this.slidePose) *
+        straight;
+      const bendL =
+        (0.12 + 0.5 * Math.max(0, -anti) + 0.25 * this.skatePose + 0.5 * this.crawlPose) * straight;
+      if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
+      if (this.elbowL) this.elbowL.rotation.x = -Math.max(0.05, bendL);
     }
     // Knees up: legs shorten toward the hips while the body crouches deep,
     // and the board comes up with them, into the grabbing hand.
@@ -4995,12 +5017,51 @@ export class Player {
     // |x|>0.155 spanning y 0.06..0.24 angled slightly forward, crotch -0.155,
     // knees -0.222, tail = everything behind z<-0.105 below the waistline.
     const isTail = (_x: number, y: number, z: number): boolean => z < -0.105 && y < -0.02;
+    // whole arm tube from the armpit crease out (inboard tris rotate up over
+    // the pivot and become the shoulder cap); tight y-band keeps the tank
+    // straps and chest on the torso
     const isArm = (x: number, y: number, z: number): boolean =>
-      Math.abs(x) > 0.155 && y > 0.06 && y < 0.24 && z > -0.03;
-    // tail joints (model space, from band centroids) mapped to rig space
-    const J1 = new THREE.Vector3(0, (-0.06 + 0.5) * SY, -0.11 * SXZ);
-    const J2 = new THREE.Vector3(0.08 * SXZ, (-0.16 + 0.5) * SY, -0.145 * SXZ);
-    const J3 = new THREE.Vector3(0.18 * SXZ, (-0.28 + 0.5) * SY, -0.175 * SXZ);
+      Math.abs(x) > 0.135 && y > 0.09 && y < 0.21 && z > -0.03;
+    // Tail joints come from the mesh itself: 5 bands along the tail's curve,
+    // joints at the midpoints between neighbouring band centroids — so the
+    // chain sits ON the authored S-curve wherever Meshy put it.
+    const yB = [-0.14, -0.22, -0.3, -0.36];
+    const bandOf = (y: number): number => {
+      for (let k = 0; k < yB.length; k++) if (y > yB[k]) return k;
+      return yB.length;
+    };
+    const cents = Array.from({ length: 5 }, () => new THREE.Vector3());
+    const counts = new Array(5).fill(0) as number[];
+    for (let i = 0; i < P.count; i++) {
+      const x = P.getX(i);
+      const y = P.getY(i);
+      const z = P.getZ(i);
+      if (!isTail(x, y, z)) continue;
+      const b = bandOf(y);
+      cents[b].x += x;
+      cents[b].y += y;
+      cents[b].z += z;
+      counts[b]++;
+    }
+    for (let b = 0; b < 5; b++) if (counts[b] > 0) cents[b].multiplyScalar(1 / counts[b]);
+    const mapV = (v: THREE.Vector3): THREE.Vector3 =>
+      new THREE.Vector3(v.x * SXZ, (v.y + 0.5) * SY, v.z * SXZ);
+    const TJ: THREE.Vector3[] = [new THREE.Vector3(0, (-0.055 + 0.5) * SY, -0.105 * SXZ)]; // attach at the seat
+    for (let k = 1; k < 5; k++) {
+      const a = counts[k - 1] > 0 ? cents[k - 1] : null;
+      const b = counts[k] > 0 ? cents[k] : null;
+      const m =
+        a && b
+          ? a.clone().add(b).multiplyScalar(0.5)
+          : (b ?? a ?? new THREE.Vector3(0.1 * k, yB[Math.min(k - 1, 3)], -0.15));
+      TJ[k] = mapV(m);
+    }
+    // arm joints: shoulder at the arm root (|x|=0.16), elbow mid-tube (0.285)
+    const SHX = 0.16 * SXZ;
+    const SHY = 1.045;
+    const SHZ = 0.048 * SXZ;
+    const ELX = 0.285 * SXZ;
+    const ELZ = 0.076 * SXZ;
     interface Part {
       test: (x: number, y: number, z: number) => boolean;
       pivot: [number, number, number]; // rig space
@@ -5008,12 +5069,16 @@ export class Player {
       verts: number[];
     }
     const parts: Record<string, Part> = {
-      head: { test: (_x, y) => y > 0.195, pivot: [0, 1.42, 0], verts: [] },
-      armR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [0.3, 1.045, 0.09], hang: 1, verts: [] },
-      armL: { test: (x, y, z) => isArm(x, y, z) && x < 0, pivot: [-0.3, 1.045, 0.09], hang: -1, verts: [] },
-      tailTip: { test: (x, y, z) => isTail(x, y, z) && y < -0.28, pivot: [J3.x, J3.y, J3.z], verts: [] },
-      tailMid: { test: (x, y, z) => isTail(x, y, z) && y < -0.16, pivot: [J2.x, J2.y, J2.z], verts: [] },
-      tailBase: { test: isTail, pivot: [J1.x, J1.y, J1.z], verts: [] },
+      head: { test: (_x, y) => y > 0.195, pivot: [0, 1.16, 0], verts: [] }, // pivot AT the neck seam
+      foreArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0.285, pivot: [ELX, SHY, ELZ], hang: 1, verts: [] },
+      foreArmL: { test: (x, y, z) => isArm(x, y, z) && x < -0.285, pivot: [-ELX, SHY, ELZ], hang: -1, verts: [] },
+      upperArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [SHX, SHY, SHZ], hang: 1, verts: [] },
+      upperArmL: { test: (x, y, z) => isArm(x, y, z) && x < 0, pivot: [-SHX, SHY, SHZ], hang: -1, verts: [] },
+      tail0: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 0, pivot: [TJ[0].x, TJ[0].y, TJ[0].z], verts: [] },
+      tail1: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 1, pivot: [TJ[1].x, TJ[1].y, TJ[1].z], verts: [] },
+      tail2: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 2, pivot: [TJ[2].x, TJ[2].y, TJ[2].z], verts: [] },
+      tail3: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 3, pivot: [TJ[3].x, TJ[3].y, TJ[3].z], verts: [] },
+      tail4: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 4, pivot: [TJ[4].x, TJ[4].y, TJ[4].z], verts: [] },
       // cut BELOW the baggy cuff + knee pad (leg pinches at -0.28): the sock
       // and shoe fold from inside the cuff, pads ride the thigh chunk
       shinR: { test: (x, y) => y <= -0.27 && x >= 0, pivot: [0.115, 0.45, 0], verts: [] },
@@ -5082,17 +5147,33 @@ export class Player {
       }
     };
     if (!this.headM || !this.armR || !this.armL || !this.legs) return;
-    // head: everything goes (ears/hair/pony groups included) — the chunk has it all
+    // head: everything goes (ears/hair/pony groups included) — the chunk has
+    // it all, and the pivot drops to the NECK so look-at pitches and crouches
+    // hinge at the seam instead of arcing the head off the body
     for (const child of [...this.headM.children]) this.headM.remove(child);
     this.ponyA = null; // the authored pony is part of the head chunk now
     this.ponyB = null;
+    this.headM.position.y = parts.head.pivot[1];
     this.headM.add(build(parts.head));
+    // arms: shoulder pivot at the arm root, elbow joint mid-tube, and a
+    // relaxed hang (userData.lean) instead of the placeholder's A-frame
     for (const child of [...this.armR.children]) this.armR.remove(child);
     for (const child of [...this.armL.children]) this.armL.remove(child);
-    this.armR.position.set(parts.armR.pivot[0], parts.armR.pivot[1], parts.armR.pivot[2]);
-    this.armL.position.set(parts.armL.pivot[0], parts.armL.pivot[1], parts.armL.pivot[2]);
-    this.armR.add(build(parts.armR));
-    this.armL.add(build(parts.armL));
+    this.armR.position.set(parts.upperArmR.pivot[0], parts.upperArmR.pivot[1], parts.upperArmR.pivot[2]);
+    this.armL.position.set(parts.upperArmL.pivot[0], parts.upperArmL.pivot[1], parts.upperArmL.pivot[2]);
+    this.armR.userData.lean = 0.1;
+    this.armL.userData.lean = 0.1;
+    this.armR.add(build(parts.upperArmR));
+    this.armL.add(build(parts.upperArmL));
+    this.elbowR = new THREE.Group();
+    this.elbowL = new THREE.Group();
+    // elbow position in hanging arm space: down the tube, keeping its forward drift
+    this.elbowR.position.set(0, -(ELX - SHX), ELZ - SHZ);
+    this.elbowL.position.set(0, -(ELX - SHX), ELZ - SHZ);
+    this.armR.add(this.elbowR);
+    this.armL.add(this.elbowL);
+    this.elbowR.add(build(parts.foreArmR));
+    this.elbowL.add(build(parts.foreArmL));
     stripMeshes(this.upperG); // tank/waist/neck/necklace (arm + head groups stay)
     this.upperG!.add(build(parts.torso));
     stripMeshes(this.legs); // pelvis/belt/chain (leg groups stay)
@@ -5105,21 +5186,24 @@ export class Player {
     stripMeshes(this.kneeL);
     this.kneeR!.add(build(parts.shinR));
     this.kneeL!.add(build(parts.shinL));
-    // tail: re-seat the joints on the authored curve; the chunks carry the
-    // shape, so the sway driver switches to small deltas (rest = 0)
-    if (this.tailRoot && this.tailBase && this.tailMid && this.tailTip) {
-      this.tailRoot.position.set(J1.x, J1.y, J1.z);
-      this.tailMid.position.copy(J2).sub(J1);
-      this.tailTip.position.copy(J3).sub(J2);
-      stripMeshes(this.tailBase);
-      stripMeshes(this.tailMid);
-      stripMeshes(this.tailTip);
-      this.tailBase.userData.rest = 0;
-      this.tailMid.userData.rest = 0;
-      this.tailTip.userData.rest = 0;
-      this.tailBase.add(build(parts.tailBase));
-      this.tailMid.add(build(parts.tailMid));
-      this.tailTip.add(build(parts.tailTip));
+    // tail: rebuild the joint chain — FIVE joints seated on the authored
+    // curve. The chunks carry the shape, so every joint's rest is 0 and the
+    // sway driver only flexes deltas down the chain.
+    if (this.tailRoot) {
+      for (const child of [...this.tailRoot.children]) this.tailRoot.remove(child);
+      this.tailRoot.position.copy(TJ[0]);
+      this.tailChain = [];
+      let parent: THREE.Object3D = this.tailRoot;
+      for (let k = 0; k < 5; k++) {
+        const joint = new THREE.Group();
+        if (k === 0) joint.position.set(0, 0, 0);
+        else joint.position.copy(TJ[k]).sub(TJ[k - 1]);
+        joint.userData.rest = 0;
+        parent.add(joint);
+        joint.add(build(parts['tail' + k]));
+        this.tailChain.push(joint);
+        parent = joint;
+      }
     }
   }
 
@@ -5388,10 +5472,11 @@ export class Player {
     tailBase.rotation.x = 1.15; // rest curve (+x swings the -Y chain back); the driver overwrites each frame
     tailMid.rotation.x = 0.55;
     tailTip.rotation.x = 0.4;
+    tailBase.userData.rest = 1.15; // procedural chunks are straight: rest pose lives in the joints
+    tailMid.userData.rest = 0.55;
+    tailTip.userData.rest = 0.4;
     this.tailRoot = tailRoot;
-    this.tailBase = tailBase;
-    this.tailMid = tailMid;
-    this.tailTip = tailTip;
+    this.tailChain = [tailBase, tailMid, tailTip];
 
     // Crop tank: ONE wrapped canvas on a lathe — phiStart 1.5π puts u=0.25
     // (canvas x=32) at local +Z, so the chest heart paints at x=32 square on
