@@ -11,6 +11,7 @@ import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { SkaterModel } from './skater';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'gameover' | 'finished';
 
@@ -351,6 +352,7 @@ export class Player {
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
     this.scene = scene; // kept for lazy-loading the rigged model on first enable
+    this.installRoo(); // swap the placeholder body for the authored model when it lands
 
     this.shadow = new THREE.Mesh(
       new THREE.CircleGeometry(0.6, 12),
@@ -4543,11 +4545,20 @@ export class Player {
     // and tucks low on all fours; the ponytail bobs against the same beat.
     if (this.tailBase && this.tailMid && this.tailTip) {
       const lift =
-        0.45 * this.hangPose + 0.5 * this.grabPose + 0.3 * this.grindArmPose - 0.35 * this.crawlPose;
+        0.45 * this.hangPose +
+        0.5 * this.grabPose +
+        0.3 * this.grindArmPose +
+        0.3 * sk - // rolling: swing clear of the deck
+        0.35 * this.crawlPose;
       const wag = 0.16 * breathe + 0.5 * swing;
-      this.tailBase.rotation.set(1.15 + 0.5 * lift, 0.35 * wag, 0.05 * breathe);
-      this.tailMid.rotation.set(0.55 + 0.3 * lift, 0.3 * wag, 0);
-      this.tailTip.rotation.set(0.4 + 0.2 * lift, 0.25 * wag, 0);
+      // authored chunks bake the tail's curve (userData.rest = 0): the driver
+      // only flexes deltas; the procedural fallback carries its full rest pose
+      const r0 = (this.tailBase.userData.rest as number | undefined) ?? 1.15;
+      const r1 = (this.tailMid.userData.rest as number | undefined) ?? 0.55;
+      const r2 = (this.tailTip.userData.rest as number | undefined) ?? 0.4;
+      this.tailBase.rotation.set(r0 + 0.5 * lift, 0.35 * wag, 0.05 * breathe);
+      this.tailMid.rotation.set(r1 + 0.3 * lift, 0.3 * wag, 0);
+      this.tailTip.rotation.set(r2 + 0.2 * lift, 0.25 * wag, 0);
     }
     if (this.ponyA && this.ponyB) {
       this.ponyA.rotation.set(1.2 + 0.06 * breathe - 0.3 * this.hangPose, 0.18 * swing, 0);
@@ -4935,6 +4946,181 @@ export class Player {
       else ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
     }
     ctx.closePath();
+  }
+
+  // ——— The authored kangaroo girl (models/roo.glb, made in Meshy) ————————
+  // A single static T-pose mesh with one texture — no skeleton. We carve it
+  // into PS1-style rigid body segments at the joint planes and bolt each one
+  // onto the existing pose rig, exactly like a PSX character: no skinning,
+  // seams live inside overlapping geometry. The procedural body stays up
+  // until the model lands (and remains the fallback if it never does).
+  private installRoo(): void {
+    const src =
+      (window as { __ROO_GLB?: string }).__ROO_GLB || import.meta.env.BASE_URL + 'models/roo.glb';
+    new GLTFLoader().load(
+      src,
+      (gltf) => {
+        let source: THREE.Mesh | null = null;
+        gltf.scene.traverse((o) => {
+          if (!source && (o as THREE.Mesh).isMesh) source = o as THREE.Mesh;
+        });
+        if (!source) return;
+        try {
+          this.segmentRoo(source);
+        } catch (e) {
+          console.warn('roo segmentation failed (procedural body stays):', e);
+        }
+      },
+      undefined,
+      (e) => console.warn('roo model failed to load (procedural body stays):', e),
+    );
+  }
+
+  private segmentRoo(source: THREE.Mesh): void {
+    const geo = (source.geometry as THREE.BufferGeometry).toNonIndexed();
+    const P = geo.getAttribute('position');
+    const N = geo.getAttribute('normal');
+    const UV = geo.getAttribute('uv');
+    const mat = new THREE.MeshLambertMaterial({
+      map: (source.material as THREE.MeshStandardMaterial).map ?? null,
+      side: THREE.DoubleSide, // chunk interiors show at joint gaps — paint them
+    });
+    // Model space: normalized T-pose, feet y=-0.5 → crown +0.5, facing +Z.
+    // Rig space: feet 0, ~1.62 tall. bodyGroup scales (1.18, 1.36, 1.18), so
+    // x/z pick up the extra 1.36/1.18 here — the world result is uniform.
+    const SY = 1.62;
+    const SXZ = SY * (1.36 / 1.18);
+    // Joint planes measured off the mesh (model space): neck 0.195 (the side
+    // ponytail bottoms out at 0.227, so it rides with the head), arm tubes at
+    // |x|>0.155 spanning y 0.06..0.24 angled slightly forward, crotch -0.155,
+    // knees -0.222, tail = everything behind z<-0.105 below the waistline.
+    const isTail = (_x: number, y: number, z: number): boolean => z < -0.105 && y < -0.02;
+    const isArm = (x: number, y: number, z: number): boolean =>
+      Math.abs(x) > 0.155 && y > 0.06 && y < 0.24 && z > -0.03;
+    // tail joints (model space, from band centroids) mapped to rig space
+    const J1 = new THREE.Vector3(0, (-0.06 + 0.5) * SY, -0.11 * SXZ);
+    const J2 = new THREE.Vector3(0.08 * SXZ, (-0.16 + 0.5) * SY, -0.145 * SXZ);
+    const J3 = new THREE.Vector3(0.18 * SXZ, (-0.28 + 0.5) * SY, -0.175 * SXZ);
+    interface Part {
+      test: (x: number, y: number, z: number) => boolean;
+      pivot: [number, number, number]; // rig space
+      hang?: 1 | -1; // arm chunks rotate T-pose (±X out) → hanging (-Y)
+      verts: number[];
+    }
+    const parts: Record<string, Part> = {
+      head: { test: (_x, y) => y > 0.195, pivot: [0, 1.42, 0], verts: [] },
+      armR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [0.3, 1.045, 0.09], hang: 1, verts: [] },
+      armL: { test: (x, y, z) => isArm(x, y, z) && x < 0, pivot: [-0.3, 1.045, 0.09], hang: -1, verts: [] },
+      tailTip: { test: (x, y, z) => isTail(x, y, z) && y < -0.28, pivot: [J3.x, J3.y, J3.z], verts: [] },
+      tailMid: { test: (x, y, z) => isTail(x, y, z) && y < -0.16, pivot: [J2.x, J2.y, J2.z], verts: [] },
+      tailBase: { test: isTail, pivot: [J1.x, J1.y, J1.z], verts: [] },
+      // cut BELOW the baggy cuff + knee pad (leg pinches at -0.28): the sock
+      // and shoe fold from inside the cuff, pads ride the thigh chunk
+      shinR: { test: (x, y) => y <= -0.27 && x >= 0, pivot: [0.115, 0.45, 0], verts: [] },
+      shinL: { test: (x, y) => y <= -0.27 && x < 0, pivot: [-0.115, 0.45, 0], verts: [] },
+      // the front cargo pouches hang y -0.08..-0.26 across the crotch line:
+      // they belong to the leg wholesale or they tear in half mid-stride
+      thighR: {
+        test: (x, y, z) => (y <= -0.155 || (z > 0.1 && y <= -0.06)) && x >= 0,
+        pivot: [0.115, 0.71, 0],
+        verts: [],
+      },
+      thighL: {
+        test: (x, y, z) => (y <= -0.155 || (z > 0.1 && y <= -0.06)) && x < 0,
+        pivot: [-0.115, 0.71, 0],
+        verts: [],
+      },
+      pelvis: { test: (_x, y) => y <= -0.062, pivot: [0, 0.71, 0], verts: [] },
+      torso: { test: () => true, pivot: [0, 0, 0], verts: [] },
+    };
+    // One owner per triangle (duplicating seam tris z-fights at rest); the
+    // double-sided material paints chunk interiors, so joint gaps read as
+    // shadowed creases — the honest PS1 look.
+    const order = Object.values(parts);
+    for (let t = 0; t < P.count; t += 3) {
+      const cx = (P.getX(t) + P.getX(t + 1) + P.getX(t + 2)) / 3;
+      const cy = (P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3;
+      const cz = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
+      for (const part of order) {
+        if (!part.test(cx, cy, cz)) continue;
+        part.verts.push(t, t + 1, t + 2);
+        break;
+      }
+    }
+    const build = (part: Part): THREE.Mesh => {
+      const p: number[] = [];
+      const nn: number[] = [];
+      const uu: number[] = [];
+      for (const vi of part.verts) {
+        let x = P.getX(vi) * SXZ - part.pivot[0];
+        let y = (P.getY(vi) + 0.5) * SY - part.pivot[1];
+        const z = P.getZ(vi) * SXZ - part.pivot[2];
+        // normals: undo the anisotropic stretch, then match the arm swing
+        let nx = N.getX(vi) / SXZ;
+        let ny = N.getY(vi) / SY;
+        const nz = N.getZ(vi) / SXZ;
+        if (part.hang) {
+          [x, y] = [part.hang * y, -part.hang * x]; // ±X out → -Y down
+          [nx, ny] = [part.hang * ny, -part.hang * nx];
+        }
+        const nl = Math.hypot(nx, ny, nz) || 1;
+        p.push(x, y, z);
+        nn.push(nx / nl, ny / nl, nz / nl);
+        uu.push(UV.getX(vi), UV.getY(vi));
+      }
+      const cg = new THREE.BufferGeometry();
+      cg.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
+      cg.setAttribute('normal', new THREE.Float32BufferAttribute(nn, 3));
+      cg.setAttribute('uv', new THREE.Float32BufferAttribute(uu, 2));
+      return new THREE.Mesh(cg, mat);
+    };
+    // strip the procedural flesh, keep the joint groups
+    const stripMeshes = (grp: THREE.Object3D | null): void => {
+      if (!grp) return;
+      for (const child of [...grp.children]) {
+        if ((child as THREE.Mesh).isMesh) grp.remove(child);
+      }
+    };
+    if (!this.headM || !this.armR || !this.armL || !this.legs) return;
+    // head: everything goes (ears/hair/pony groups included) — the chunk has it all
+    for (const child of [...this.headM.children]) this.headM.remove(child);
+    this.ponyA = null; // the authored pony is part of the head chunk now
+    this.ponyB = null;
+    this.headM.add(build(parts.head));
+    for (const child of [...this.armR.children]) this.armR.remove(child);
+    for (const child of [...this.armL.children]) this.armL.remove(child);
+    this.armR.position.set(parts.armR.pivot[0], parts.armR.pivot[1], parts.armR.pivot[2]);
+    this.armL.position.set(parts.armL.pivot[0], parts.armL.pivot[1], parts.armL.pivot[2]);
+    this.armR.add(build(parts.armR));
+    this.armL.add(build(parts.armL));
+    stripMeshes(this.upperG); // tank/waist/neck/necklace (arm + head groups stay)
+    this.upperG!.add(build(parts.torso));
+    stripMeshes(this.legs); // pelvis/belt/chain (leg groups stay)
+    this.legs.add(build(parts.pelvis));
+    stripMeshes(this.legR);
+    stripMeshes(this.legL);
+    this.legR!.add(build(parts.thighR));
+    this.legL!.add(build(parts.thighL));
+    stripMeshes(this.kneeR);
+    stripMeshes(this.kneeL);
+    this.kneeR!.add(build(parts.shinR));
+    this.kneeL!.add(build(parts.shinL));
+    // tail: re-seat the joints on the authored curve; the chunks carry the
+    // shape, so the sway driver switches to small deltas (rest = 0)
+    if (this.tailRoot && this.tailBase && this.tailMid && this.tailTip) {
+      this.tailRoot.position.set(J1.x, J1.y, J1.z);
+      this.tailMid.position.copy(J2).sub(J1);
+      this.tailTip.position.copy(J3).sub(J2);
+      stripMeshes(this.tailBase);
+      stripMeshes(this.tailMid);
+      stripMeshes(this.tailTip);
+      this.tailBase.userData.rest = 0;
+      this.tailMid.userData.rest = 0;
+      this.tailTip.userData.rest = 0;
+      this.tailBase.add(build(parts.tailBase));
+      this.tailMid.add(build(parts.tailMid));
+      this.tailTip.add(build(parts.tailTip));
+    }
   }
 
   private buildVisual(): THREE.Group {

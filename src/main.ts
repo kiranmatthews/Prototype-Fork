@@ -10,6 +10,7 @@ import { TUNING, CONST } from './tuning';
 import { sfx } from './audio';
 import { Recorder, Replayer, ReplayFile } from './replay';
 import { Editor } from './editor';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const app = document.getElementById('app')!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -735,4 +736,5 @@ frame();
   recorder,
   editor,
   openEditor,
+  GLTFLoader, // debug: inspect model files from the console/harness
 };
