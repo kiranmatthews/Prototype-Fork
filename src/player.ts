@@ -1090,6 +1090,38 @@ export class Player {
     this.airFromSkate =
       this.freeSkate || fromSlide || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
     this.slideGraceT = 0;
+    // VERT OLLIE: X popped while riding a halfpipe TRANSITION face. The flat
+    // ollie below would carry the whole climb speed as HORIZONTAL velocity —
+    // an unglued air that sails clean across the pipe (THE "float out of
+    // hangtime": pump with X held, release at the lip, fly to the flat).
+    // On the wall, the pop converts the climb to HEIGHT and the wall glue
+    // owns the air, exactly like cresting — locked-in hang time, spins and
+    // grabs included. The pipe's flat bottom (normal.y ~ 1) still gets the
+    // ordinary ollie: jumping ACROSS the trough from the flat is legit.
+    if (
+      this.grounded &&
+      this.freeSkate &&
+      !fromSlide &&
+      this.groundHit !== null &&
+      this.groundHit.halfpipe !== undefined &&
+      this.groundHit.normal.y < 0.9
+    ) {
+      const pop = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
+      const climb = Math.max(0, this.speed * Math.max(this.lastTy, 0));
+      this.vVel = Math.min(pop + climb, CONST.maxFallSpeed);
+      this.hangPipe = this.groundHit.halfpipe;
+      this.pipeRideT = Math.max(this.pipeRideT, 0.05); // enterVertAir: pipe-hang rules
+      this.lastJumpType = 'Board Ollie';
+      this.state = 'air';
+      this.grounded = false;
+      this.coyoteTimer = 0;
+      this.charging = false;
+      this.chargeTimer = 0;
+      this.crawling = false;
+      this.enterVertAir(false); // the pop IS the launch: glue on, speed into the hang
+      sfx.play('ollie', 0.7);
+      return;
+    }
     // Measured planar speed this step, so the jump reads your ACTUAL movement
     // in any direction — a fast sideways walk stores nothing in `speed` (that
     // scalar is the forward axis), but it still deserves a Forward Flip.
