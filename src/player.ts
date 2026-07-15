@@ -2528,7 +2528,7 @@ export class Player {
     sfx.play('crunch', 0.9);
     this.emitSparks(12, 0xd8e6ff, 2.5);
     for (const c of level.crates) {
-      if (!c.alive || c.bouncy) continue;
+      if (!c.alive || c.bouncy || c.metalBounce || c.pending) continue;
       const p = c.mesh.position;
       const dx = p.x - this.pos.x;
       const dz = p.z - this.pos.z;
@@ -2536,6 +2536,7 @@ export class Player {
       if (Math.abs(p.y - this.pos.y) > 1.8) continue;
       if (c.tnt) level.detonate(c, true);
       else if (c.nitro) level.detonate(c);
+      else if (c.bang) level.triggerBang(c); // shockwave flips the switch
       else this.smashCrate(level, c);
     }
     for (const e of level.enemies) {
@@ -3504,7 +3505,7 @@ export class Player {
     }
 
     for (const c of level.crates) {
-      if (!c.alive) continue;
+      if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
       if (c.nitro) {
         // Nitro: body contact detonates it — fatally, unless uber or a mask
         // (or the invuln flicker from one) absorbs the hit.
@@ -3558,21 +3559,34 @@ export class Player {
         }
         continue;
       }
-      if (c.bouncy) {
-        // Arrow crate: land on it for a super bounce; it never breaks.
+      if (c.bouncy || c.metalBounce) {
+        // Arrow crates: land on one for a super bounce. WOOD arrows break
+        // like any box under a spin or body slam (and count for the gem);
+        // METAL arrows are indestructible trampolines.
         // PERFECT BOUNCE: pressing X within arrowBoostWindow of the impact
         // (the classic "jump right at the bottom" timing) adds a little
         // extra launch — the press is consumed so it can't carry to chains.
+        if (c.bouncy && this.spinning && this.spinBox.intersectsBox(c.box)) {
+          this.smashCrate(level, c);
+          continue;
+        }
         if (this.playerBox.intersectsBox(c.box)) {
           if (this.isStomping(c.box) && this.slamActive) {
-            // Crash rules: the body slam is the ONE move that breaks an arrow
-            // crate. Also load-bearing: without it the slam's down-force
-            // re-stomps the trampoline every frame — infinite Boing points
-            // with the controls locked. Broken by hand (not smashCrate)
-            // because bouncy crates sit outside the all-boxes gem tally.
-            level.breakCrate(c);
-            this.score(CONST.ptsCrate, 'Slam Smash');
-            this.spawnFruit(c.box);
+            // Slam on WOOD breaks it. Slam on METAL cancels into a plain
+            // bounce — clearing slamActive is load-bearing: without it the
+            // slam's down-force re-stomps the trampoline every frame
+            // (infinite Boing points with the controls locked).
+            if (c.bouncy) {
+              this.smashCrate(level, c);
+            } else {
+              this.slamActive = false;
+              this.vVel = TUNING.arrowBounce;
+              this.pos.y = c.box.max.y + 0.02;
+              this.state = 'air';
+              this.grounded = false;
+              this.score(CONST.ptsBouncy, 'Boing');
+              sfx.play('bouncyBounce', 0.9, 0.8);
+            }
           } else if (this.isStomping(c.box)) {
             const perfect = this.jumpPressT > 0;
             this.jumpPressT = 0;
@@ -3590,6 +3604,37 @@ export class Player {
             if (perfect) this.emitSparks(6, 0xfff3d0, 1.4);
           } else if (this.isBonking(c.box)) {
             this.vVel = -1; // head bonk on the underside
+          } else {
+            this.pushOutOf(c.box);
+          }
+        }
+        continue;
+      }
+      if (c.bang) {
+        // Metal '!' SWITCH: any real hit fires it — spin, stomp, headbutt,
+        // slide, or a grind-through. It stays solid (bounce off the lid like
+        // a box that refuses to break) and never counts toward the tally.
+        if (this.spinning && this.spinBox.intersectsBox(c.box)) {
+          level.triggerBang(c);
+        } else if (this.playerBox.intersectsBox(c.box)) {
+          if (this.isStomping(c.box)) {
+            level.triggerBang(c);
+            this.slamActive = false; // same anti-relock rule as the metal arrow
+            this.vVel = TUNING.crateBounce;
+            this.pos.y = c.box.max.y + 0.02;
+            this.state = 'air';
+            this.grounded = false;
+            this.charging = false;
+            this.chargeTimer = 0;
+            sfx.play('crateBounce', 0.7);
+          } else if (this.isBonking(c.box)) {
+            level.triggerBang(c);
+            this.vVel = -1;
+          } else if (this.state === 'grind') {
+            level.triggerBang(c); // grind-through flips it — no bail, no shove
+          } else if (this.sliding || this.uberTimer > 0) {
+            level.triggerBang(c);
+            this.pushOutOf(c.box);
           } else {
             this.pushOutOf(c.box);
           }
@@ -3835,7 +3880,9 @@ export class Player {
 
   private smashCrate(level: Level, c: Crate): void {
     level.breakCrate(c);
-    this.cratesBroken++;
+    // switches and metal never actually broke — no tally, no reward
+    if (c.alive) return;
+    if (!c.nitroBang) this.cratesBroken++; // green '!' sits outside the gem tally
     this.score(CONST.ptsCrate, 'Box');
     this.crateReward(c);
   }

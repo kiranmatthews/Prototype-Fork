@@ -336,6 +336,10 @@ function openEditor(): void {
   editor.enter();
 }
 ui.onEditorOpen = openEditor;
+// Refresh-proof editing: if the page reloads mid-edit, walk straight back
+// into the editor (the camera pose is restored by Editor.enter()). Deferred
+// past module init — openEditor touches state declared further down.
+if (localStorage.getItem('protoEditorOpen') === '1') setTimeout(() => openEditor(), 0);
 
 // ---- playtest capture: input replays + gameplay video ----------------------
 

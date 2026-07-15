@@ -14,13 +14,21 @@ export interface Crate {
   box: THREE.Box3;
   alive: boolean;
   nitro?: boolean; // green, bobbing, touch = instant detonation
-  bouncy?: boolean; // yellow arrow crate: stomp = super bounce, never breaks
+  bouncy?: boolean; // WOOD arrow crate: stomp = super bounce; spin/slam breaks it
+  metalBounce?: boolean; // METAL arrow crate: same bounce, never breaks, uncounted
   tnt?: boolean; // red TNT: solid box; stomp lights the 3-2-1 fuse, spin/slam detonates
   fuse?: number; // seconds left on a lit TNT
   mask?: boolean; // Aku crate: breaking it grants a protective mask
   mystery?: boolean; // ? crate: random reward (wumpa burst, mask, or a life)
-  bang?: boolean; // yellow '!' crate: breaking it materializes every OUTLINE crate
+  bang?: boolean; // metal '!' SWITCH: hitting it materializes its group's outline crates; never breaks, uncounted
+  bangUsed?: boolean; // the switch fires once, then dims
   nitroBang?: boolean; // green '!' crate: breaking it detonates every nitro on the map
+  pending?: boolean; // OUTLINE state: ghost visual, no collision, no interactions — until a '!' fires
+  wasOutline?: boolean; // authored as an outline: resets re-ghost it
+  groupIds?: number[]; // editor group chain: wires '!' switches to their outlines
+  realMat?: THREE.Material; // the true face (kept while ghosted)
+  ghostMat?: THREE.Material; // the translucent shell (kept for resets)
+  ghostEdges?: THREE.LineSegments; // outline wireframe, hidden on materialize
 }
 
 export interface Enemy {
@@ -149,6 +157,8 @@ export interface Checkpoint {
   active: boolean;
   spawnPos: THREE.Vector3;
   savedAlive: boolean[]; // crate alive-states captured when this was broken
+  savedPending: boolean[]; // outline-ghost states captured alongside
+  savedBangUsed: boolean[]; // '!' switch states captured alongside
   savedCratesBroken: number; // crate counter captured when this was broken
   savedFruit: number; // wumpa counter captured when this was broken
   savedMasks: number;
@@ -179,9 +189,10 @@ export interface CustomComponent {
     | 'pipe' // halfpipe: p = trough center at ground, len along its axis, axis 'z'|'x'
     | 'crumble' // breakaway pad: p = top center, s = [w,-,d], shake = seconds before it drops (0.02 = instant)
     | 'pit' // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d]
-    | 'crate' // p = [x, deckY, z], kind picks the crate
+    | 'crate' // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
     | 'metal' // unbreakable steel crate: solid terrain, spin/slam-proof
-    | 'outline' // ghost crate: pass-through until a yellow '!' crate makes it real
+    | 'rock' // low-poly boulder: p = center, s = [w,h,d] bounds, seed shapes it; solid + walkable
+    | 'outline' // LEGACY ghost crate (old saves) — loads as a wood crate with outline: true
     | 'checkpoint'
     | 'enemy' // patrols along X around p, range each way
     | 'crusher' // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
@@ -196,14 +207,29 @@ export interface CustomComponent {
   yaw?: number;
   axis?: 'z' | 'x';
   shake?: number;
-  kind?: 'wood' | 'bouncy' | 'nitro' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang';
+  kind?: 'wood' | 'bouncy' | 'metalbounce' | 'nitro' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang';
+  outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
   range?: number;
   speed?: number;
   invisible?: boolean;
   cycle?: number;
   phase?: number;
   amp?: number;
-  color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble
+  seed?: number; // rock: shapes the jitter deterministically
+  color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
+  layer?: number; // editor layer id (default 0)
+  grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
+}
+
+export interface CustomLayer {
+  id: number;
+  name: string;
+  locked?: boolean;
+}
+
+export interface CustomGroup {
+  id: number;
+  parent?: number; // nesting: groups can live inside groups
 }
 
 export interface CustomLevelData {
@@ -212,6 +238,32 @@ export interface CustomLevelData {
   spawn: [number, number, number];
   killY: number;
   components: CustomComponent[];
+  layers?: CustomLayer[];
+  groups?: CustomGroup[];
+}
+
+// the full ancestor chain of group ids for a component (innermost first)
+export function groupChainOf(c: CustomComponent, data: CustomLevelData): number[] {
+  const chain: number[] = [];
+  let id = c.grp;
+  let guard = 0;
+  while (id !== undefined && guard++ < 64) {
+    if (chain.includes(id)) break;
+    chain.push(id);
+    id = data.groups?.find((g) => g.id === id)?.parent;
+  }
+  return chain;
+}
+
+// LEGACY MIGRATION: t:'outline' predates outline-as-a-state; load it as a
+// wood crate flagged outline so the new '!' wiring applies uniformly.
+export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
+  d.components = d.components.map((c) =>
+    c.t === 'outline' ? { ...c, t: 'crate' as const, kind: 'wood' as const, outline: true } : c,
+  );
+  if (!d.layers || d.layers.length === 0) d.layers = [{ id: 0, name: 'main' }];
+  if (!d.groups) d.groups = [];
+  return d;
 }
 
 export function starterCustomLevel(): CustomLevelData {
@@ -251,6 +303,7 @@ export function getCustomLevelData(): CustomLevelData {
       /* fall through to starter */
     }
     if (!CUSTOM_LEVEL) CUSTOM_LEVEL = starterCustomLevel();
+    CUSTOM_LEVEL = migrateCustomLevel(CUSTOM_LEVEL);
   }
   return CUSTOM_LEVEL;
 }
@@ -760,7 +813,7 @@ export class Level {
         this.root.children[c].userData.editorIdx = idx;
       }
     };
-    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal']);
+    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal', 'rock']);
     for (const pass of [true, false]) {
       data.components.forEach((c, i) => {
         if (geomPass.has(c.t) !== pass) return;
@@ -800,6 +853,51 @@ export class Level {
                   ),
                 );
               }
+            }
+          } else if (c.t === 'rock') {
+            // Low-poly boulder: a seeded, jittered dodecahedron squeezed into
+            // the s-box. Walkable via the ground raycast; sides push like a
+            // slightly-inset wall so the round face doesn't feel like glass.
+            const s = c.s ?? [3, 2, 3];
+            const seed = c.seed ?? i * 7919;
+            let rng = (seed | 0) + 0x6d2b79f5;
+            const rand = (): number => {
+              rng = Math.imul(rng ^ (rng >>> 15), rng | 1);
+              rng ^= rng + Math.imul(rng ^ (rng >>> 7), rng | 61);
+              return ((rng ^ (rng >>> 14)) >>> 0) / 4294967296;
+            };
+            const geo = new THREE.DodecahedronGeometry(0.5, 0).toNonIndexed();
+            const pos = geo.getAttribute('position') as THREE.BufferAttribute;
+            // jitter shared corners identically (keyed by rounded position)
+            // so the faceted shell stays watertight
+            const jit = new Map<string, number>();
+            for (let v = 0; v < pos.count; v++) {
+              const key = `${pos.getX(v).toFixed(3)},${pos.getY(v).toFixed(3)},${pos.getZ(v).toFixed(3)}`;
+              if (!jit.has(key)) jit.set(key, 0.78 + rand() * 0.42);
+              const k = jit.get(key)!;
+              pos.setXYZ(v, pos.getX(v) * k, pos.getY(v) * k, pos.getZ(v) * k);
+            }
+            geo.scale(s[0], s[1], s[2]);
+            geo.computeVertexNormals(); // non-indexed = flat faceted shading
+            const rockColor = c.color ? new THREE.Color(c.color).getHex() : 0x8d8678;
+            const mesh = new THREE.Mesh(
+              geo,
+              new THREE.MeshLambertMaterial({ color: rockColor, map: this.surfaceTexture('stone') }),
+            );
+            mesh.position.set(c.p[0], c.p[1], c.p[2]);
+            mesh.rotation.y = (seed % 7) * 0.9;
+            mesh.name = 'rock';
+            this.root.add(mesh);
+            this.groundMeshes.push(mesh);
+            const top = c.p[1] + s[1] / 2 - 0.3;
+            const bottom = c.p[1] - s[1] / 2;
+            if (top > bottom) {
+              this.walls.push(
+                new THREE.Box3().setFromCenterAndSize(
+                  new THREE.Vector3(c.p[0], (top + bottom) / 2, c.p[2]),
+                  new THREE.Vector3(s[0] * 0.8, top - bottom, s[2] * 0.8),
+                ),
+              );
             }
           } else if (c.t === 'ramp') {
             const len = c.len ?? 10;
@@ -960,24 +1058,16 @@ export class Level {
             const col = c.color ? new THREE.Color(c.color).getHex() : undefined;
             this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col);
           } else if (c.t === 'crate') {
-            this.crate(c.p[0], c.p[1], c.p[2], c.kind === 'wood' ? undefined : c.kind);
+            this.crate(c.p[0], c.p[1], c.p[2], c.kind === 'wood' ? undefined : c.kind, {
+              outline: c.outline,
+              groupIds: groupChainOf(c, data),
+            });
           } else if (c.t === 'outline') {
-            // ghost crate: wireframe-ish translucent shell, no collision —
-            // a yellow '!' crate turns it into the real thing
-            const size = 0.96;
-            const ghost = new THREE.Mesh(
-              new THREE.BoxGeometry(size, size, size),
-              new THREE.MeshBasicMaterial({ color: 0xe8d9a8, transparent: true, opacity: 0.28, depthWrite: false }),
-            );
-            const edges = new THREE.LineSegments(
-              new THREE.EdgesGeometry(ghost.geometry),
-              new THREE.LineBasicMaterial({ color: 0xf2e2b0 }),
-            );
-            ghost.add(edges);
-            const gy = this.floorY(c.p[0], c.p[2], c.p[1]);
-            ghost.position.set(c.p[0], gy + size / 2, c.p[2]);
-            this.root.add(ghost);
-            this.outlines.push({ mesh: ghost, x: c.p[0], deckY: c.p[1], z: c.p[2] });
+            // LEGACY saves: build as a wood crate in the outline state
+            this.crate(c.p[0], c.p[1], c.p[2], undefined, {
+              outline: true,
+              groupIds: groupChainOf(c, data),
+            });
           } else if (c.t === 'checkpoint') {
             this.checkpoint(c.p[1], c.p[2], c.p[0]);
           } else if (c.t === 'enemy') {
@@ -1015,7 +1105,10 @@ export class Level {
   }
 
   get totalCrates(): number {
-    return this.crates.filter((c) => !c.nitro && !c.bouncy && !c.tnt).length;
+    // the gem tally: real breakable boxes. Wood arrow crates count (they
+    // break now); explosives, switches, and the metal family never do.
+    return this.crates.filter((c) => !c.nitro && !c.tnt && !c.bang && !c.nitroBang && !c.metalBounce)
+      .length;
   }
 
   zoneAt(x: number, z: number): { dir: 'E' | 'W' } | null {
@@ -1036,7 +1129,7 @@ export class Level {
       e.group.rotation.x += 9 * dt;
       e.group.rotation.y += 5 * dt;
       for (const c of this.crates) {
-        if (!c.alive || c.bouncy) continue;
+        if (!c.alive || c.bouncy || c.metalBounce || c.bang || c.pending) continue;
         if (e.group.position.distanceTo(c.mesh.position) < 1.5) {
           if (c.nitro || c.tnt) this.detonate(c);
           else {
@@ -1097,7 +1190,7 @@ export class Level {
         // Wall-to-wall kill box: you outrun a boulder, you don't sidestep it.
         st.box.setFromCenterAndSize(p, new THREE.Vector3(12.5, st.r * 1.9, st.r * 1.4));
         for (const c of this.crates) {
-          if (!c.alive) continue;
+          if (!c.alive || c.pending || c.metalBounce) continue; // the boulder can still slam a '!' switch
           const cp = c.mesh.position;
           if (Math.abs(cp.z - p.z) < st.r + 0.8 && Math.abs(cp.x - p.x) < st.r + 0.8) {
             if (c.nitro || c.tnt) this.detonate(c);
@@ -1439,9 +1532,10 @@ export class Level {
       if (ex.t <= CONST.blastGrow + 0.05) {
         const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
         for (const c of this.crates) {
-          if (!c.alive || c.bouncy) continue;
+          if (!c.alive || c.bouncy || c.metalBounce || c.pending) continue;
           if (c.mesh.position.distanceTo(ex.center) < r + 0.6) {
             if (c.nitro || c.tnt) this.detonate(c);
+            else if (c.bang) this.triggerBang(c); // a blast can flip the switch
             else {
               this.breakCrate(c);
               this.blastBroken.push(c);
@@ -1487,12 +1581,17 @@ export class Level {
   }
 
   breakCrate(crate: Crate): void {
+    // metal-family crates never break: the '!' switch fires instead, the
+    // metal arrow crate just shrugs it off. Outline ghosts aren't there yet.
+    if (crate.bang) {
+      this.triggerBang(crate);
+      return;
+    }
+    if (crate.metalBounce || crate.pending) return;
     crate.alive = false;
     this.pops.push({ obj: crate.mesh, t: 0.12 });
     sfx.play(Math.random() < 0.5 ? 'crateBreak1' : 'crateBreak2', 0.8);
-    // '!' crates: yellow materializes every OUTLINE ghost into a real crate;
-    // green detonates every nitro on the map (safely — classic Crash rules).
-    if (crate.bang) this.materializeOutlines();
+    // green '!': detonates every nitro on the map (safely — classic rules)
     if (crate.nitroBang) {
       for (const c of this.crates) {
         if (c.alive && c.nitro) this.detonate(c, true);
@@ -1500,19 +1599,35 @@ export class Level {
     }
   }
 
-  // OUTLINE crates: pass-through ghosts until a yellow '!' crate makes them
-  // real (solid, breakable wood).
-  private outlines: { mesh: THREE.Object3D; x: number; deckY: number; z: number }[] = [];
-  private materializeOutlines(): void {
-    if (this.outlines.length === 0) return;
-    for (const o of this.outlines) {
-      o.mesh.visible = false;
-      this.crate(o.x, o.deckY, o.z);
-    }
-    this.outlines.length = 0;
+  // '!' SWITCH: one-shot. Materializes outline crates wired to it — those
+  // sharing an editor group anywhere up its chain — then dims. A switch with
+  // no group fires every ungrouped outline (and legacy imports).
+  triggerBang(crate: Crate): void {
+    if (!crate.alive || crate.bangUsed || crate.pending) return;
+    crate.bangUsed = true;
+    (crate.mesh.material as THREE.MeshLambertMaterial).color.setScalar(0.45); // spent switch
+    this.activateOutlines(crate.groupIds && crate.groupIds.length > 0 ? crate.groupIds : null);
     sfx.play('crateBreak1', 0.6, 1.4);
-    // give the fresh boxes the same editor tag as nothing — they belong to
-    // gameplay now; the ghosts stay the editable objects
+  }
+
+  // Swap outline ghosts for the real crates. `filter` = group ids that count
+  // as wired; null = only outlines with no group of their own.
+  private activateOutlines(filter: number[] | null): void {
+    for (const c of this.crates) {
+      if (!c.pending) continue;
+      const ids = c.groupIds ?? [];
+      const wired = filter === null ? ids.length === 0 : ids.some((id) => filter.includes(id));
+      if (wired) this.setCratePending(c, false);
+    }
+  }
+
+  // Flip a crate between ghost (outline) and real — both faces are kept so
+  // level resets and checkpoint restores can flip it back.
+  private setCratePending(c: Crate, pending: boolean): void {
+    c.pending = pending;
+    if (!c.wasOutline) return;
+    if (c.realMat && c.ghostMat) c.mesh.material = pending ? c.ghostMat : c.realMat;
+    if (c.ghostEdges) c.ghostEdges.visible = pending;
   }
 
   lightFuse(c: Crate): void {
@@ -1574,6 +1689,8 @@ export class Level {
   activateCheckpoint(cp: Checkpoint, cratesBroken: number, fruit = 0, masks = 0, points = 0): void {
     cp.active = true;
     cp.savedAlive = this.crates.map((c) => c.alive);
+    cp.savedPending = this.crates.map((c) => !!c.pending);
+    cp.savedBangUsed = this.crates.map((c) => !!c.bangUsed);
     cp.savedCratesBroken = cratesBroken;
     cp.savedFruit = fruit;
     cp.savedMasks = masks;
@@ -1623,13 +1740,16 @@ export class Level {
     this.blastMeshes.length = 0;
 
     if (!hard && this.activeCheckpoint) {
-      const snap = this.activeCheckpoint.savedAlive;
+      const cpSnap = this.activeCheckpoint;
       this.crates.forEach((c, i) => {
-        c.alive = snap[i];
-        c.mesh.visible = snap[i];
+        c.alive = cpSnap.savedAlive[i];
+        c.mesh.visible = cpSnap.savedAlive[i];
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
         this.restoreTntFace(c);
+        this.setCratePending(c, cpSnap.savedPending?.[i] ?? !!c.pending);
+        c.bangUsed = cpSnap.savedBangUsed?.[i] ?? c.bangUsed;
+        if (c.bang) (c.mesh.material as THREE.MeshLambertMaterial).color.setScalar(c.bangUsed ? 0.45 : 1);
       });
     } else {
       for (const c of this.crates) {
@@ -1638,6 +1758,10 @@ export class Level {
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
         this.restoreTntFace(c);
+        // outlines return to ghosts, switches re-arm
+        this.setCratePending(c, !!c.wasOutline);
+        c.bangUsed = false;
+        if (c.bang) (c.mesh.material as THREE.MeshLambertMaterial).color.setScalar(1);
       }
     }
 
@@ -3209,7 +3333,8 @@ export class Level {
     x: number,
     deckY: number,
     z: number,
-    kind?: 'nitro' | 'bouncy' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang',
+    kind?: 'nitro' | 'bouncy' | 'metalbounce' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang',
+    opts?: { outline?: boolean; groupIds?: number[] },
   ): void {
     const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
     let mat: THREE.MeshLambertMaterial;
@@ -3217,6 +3342,8 @@ export class Level {
       mat = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0x0c3a16, map: this.nitroTexture() });
     } else if (kind === 'bouncy') {
       mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.arrowTexture() });
+    } else if (kind === 'metalbounce') {
+      mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.metalArrowTexture() });
     } else if (kind === 'tnt') {
       mat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.tntTexture('TNT') });
     } else if (kind === 'mask') {
@@ -3254,22 +3381,91 @@ export class Level {
       mesh.position.clone(),
       new THREE.Vector3(size, size, size),
     );
-    this.crates.push({
+    const entry: Crate = {
       mesh,
       box,
       alive: true,
       nitro: kind === 'nitro',
       bouncy: kind === 'bouncy',
+      metalBounce: kind === 'metalbounce',
       tnt: kind === 'tnt',
       mask: kind === 'mask',
       mystery: kind === 'mystery',
       bang: kind === 'bang',
       nitroBang: kind === 'nitrobang',
-    });
+      groupIds: opts?.groupIds,
+    };
+    // OUTLINE state: keep the true face stashed and show a pass-through ghost
+    // shell. A grouped '!' switch swaps the real thing in; resets re-ghost it.
+    if (opts?.outline) {
+      entry.wasOutline = true;
+      entry.pending = true;
+      entry.realMat = mesh.material as THREE.Material;
+      entry.ghostMat = new THREE.MeshBasicMaterial({
+        color: 0xe8d9a8,
+        transparent: true,
+        opacity: 0.22,
+        depthWrite: false,
+      });
+      (mesh as THREE.Mesh).material = entry.ghostMat;
+      const edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(mesh.geometry as THREE.BufferGeometry),
+        new THREE.LineBasicMaterial({ color: 0xf2e2b0 }),
+      );
+      mesh.add(edges);
+      entry.ghostEdges = edges;
+    }
+    this.crates.push(entry);
     // Classic Crash formation: every arrow crate carries a breakable fruit
     // crate floating above it — bounce off the arrow, headbutt the reward.
-    if (kind === 'bouncy') {
+    if (kind === 'bouncy' && !opts?.outline) {
       this.crate(x, base + size + 3.2, z);
+    }
+  }
+
+  // A light metal plate face for the unbreakable arrow crate: same green
+  // bounce arrow, riveted steel instead of planks.
+  private metalArrowTex: THREE.CanvasTexture | null = null;
+  private metalArrowTexture(): THREE.CanvasTexture {
+    if (!this.metalArrowTex)
+      this.metalArrowTex = this.makeTex((ctx) => {
+        this.crateMetalBase(ctx);
+        ctx.fillStyle = '#3a9a4a';
+        ctx.beginPath();
+        ctx.moveTo(16, 5);
+        ctx.lineTo(25, 15);
+        ctx.lineTo(20, 15);
+        ctx.lineTo(20, 26);
+        ctx.lineTo(12, 26);
+        ctx.lineTo(12, 15);
+        ctx.lineTo(7, 15);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#1c5a28';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+    return this.metalArrowTex;
+  }
+
+  // Brushed plate + rivets, shared by the metal-family crate faces.
+  private crateMetalBase(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = '#9aa2ac';
+    ctx.fillRect(0, 0, 32, 32);
+    ctx.fillStyle = '#8a929c';
+    ctx.fillRect(0, 8, 32, 2);
+    ctx.fillRect(0, 22, 32, 2);
+    ctx.fillStyle = '#666e78';
+    ctx.fillRect(0, 0, 32, 2);
+    ctx.fillRect(0, 30, 32, 2);
+    ctx.fillRect(0, 0, 2, 32);
+    ctx.fillRect(30, 0, 2, 32);
+    ctx.fillStyle = '#b8c0ca';
+    ctx.fillRect(0, 0, 32, 1);
+    ctx.fillRect(0, 0, 1, 32);
+    ctx.fillStyle = '#565e68';
+    for (const [rx, ry] of [[4, 4], [26, 4], [4, 26], [26, 26]] as const) {
+      ctx.fillRect(rx, ry, 3, 3);
     }
   }
 
@@ -3349,13 +3545,14 @@ export class Level {
     return this.plainTex;
   }
 
-  // Yellow '!' on wood: breaking it makes every OUTLINE crate real.
+  // Yellow '!' on METAL: the switch that materializes its group's outline
+  // crates. Never breaks, never counts toward the box tally.
   private bangTex: THREE.CanvasTexture | null = null;
   private bangTexture(): THREE.CanvasTexture {
     if (!this.bangTex)
       this.bangTex = this.makeTex((ctx) => {
-        this.crateWood(ctx, false);
-        this.crateLabel(ctx, '!', 24, '#ffd934', '#5a2d08', 16, 18);
+        this.crateMetalBase(ctx);
+        this.crateLabel(ctx, '!', 24, '#ffd934', '#3a3f46', 16, 18);
       });
     return this.bangTex;
   }
@@ -4230,6 +4427,8 @@ export class Level {
       active: false,
       spawnPos: new THREE.Vector3(x, gy + 0.1, z),
       savedAlive: [],
+      savedPending: [],
+      savedBangUsed: [],
       savedCratesBroken: 0,
       savedFruit: 0,
       savedMasks: 0,

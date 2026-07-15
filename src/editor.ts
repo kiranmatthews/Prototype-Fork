@@ -18,6 +18,8 @@ import {
   getCustomLevelData,
   setCustomLevelData,
   starterCustomLevel,
+  migrateCustomLevel,
+  groupChainOf,
 } from './level';
 
 interface Hooks {
@@ -62,6 +64,9 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'halfpipe', icon: (x) => { x.strokeStyle = '#aab4ba'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'pipe', p: [at.x, at.y, at.z], len: 36, axis: 'z' }) },
       { label: 'crumble', icon: (x) => { x.fillStyle = '#cf6a48'; x.fillRect(2, 7, 14, 5); x.strokeStyle = '#7a3520'; x.lineWidth = 1; x.beginPath(); x.moveTo(6, 7); x.lineTo(8, 12); x.moveTo(11, 7); x.lineTo(10, 12); x.stroke(); }, make: (at) => ({ t: 'crumble', p: [at.x, at.y + 1, at.z], s: [3, 1, 3], shake: 0.7 }) },
       { label: 'death pit', icon: (x) => { x.fillStyle = '#b0402a'; x.fillRect(2, 6, 14, 7); x.fillStyle = '#0a0a10'; x.fillRect(3.5, 7.5, 11, 4); }, make: (at) => ({ t: 'pit', p: [at.x, at.y, at.z], s: [6, 1, 6] }) },
+      { label: 'rock', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.moveTo(4, 14); x.lineTo(2, 9); x.lineTo(7, 4); x.lineTo(13, 5); x.lineTo(16, 10); x.lineTo(13, 14); x.closePath(); x.fill(); x.fillStyle = '#a49c8c'; x.beginPath(); x.moveTo(7, 4); x.lineTo(13, 5); x.lineTo(10, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 1, at.z], s: [3, 2, 3], seed: Math.floor(Math.random() * 1e6) }) },
+      { label: 'boulder', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.arc(9, 10, 7, 0, 7); x.fill(); x.fillStyle = '#a49c8c'; x.beginPath(); x.moveTo(5, 6); x.lineTo(12, 4); x.lineTo(13, 9); x.lineTo(6, 10); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 2, at.z], s: [5.5, 4, 5.5], seed: Math.floor(Math.random() * 1e6) }) },
+      { label: 'spire', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 12); x.lineTo(12, 16); x.lineTo(6, 16); x.lineTo(5, 11); x.closePath(); x.fill(); x.fillStyle = '#6e685c'; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 12); x.lineTo(10, 14); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 3, at.z], s: [2.5, 6, 2.5], seed: Math.floor(Math.random() * 1e6) }) },
     ],
   },
   {
@@ -69,6 +74,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
     items: [
       { label: 'wood', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '▦', '#8a5a22'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'wood' }) },
       { label: 'arrow', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '↑', '#3a9a4a'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'bouncy' }) },
+      { label: 'arrow metal', icon: (x) => { box(x, '#9aa2ac', '#666e78'); glyph(x, '↑', '#3a9a4a'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'metalbounce' }) },
       { label: 'TNT', icon: (x) => { box(x, '#c03a2a', '#6a180e'); glyph(x, 'T', '#ffe9d8'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'tnt' }) },
       { label: 'nitro', icon: (x) => { box(x, '#2fae44', '#0e4a18'); glyph(x, 'N', '#eafff0'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'nitro' }) },
       { label: 'mask', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '☻', '#e89040'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'mask' }) },
@@ -76,7 +82,6 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: '! crate', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '!', '#ffd934'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'bang' }) },
       { label: 'nitro !', icon: (x) => { box(x, '#2fae44', '#0e4a18'); glyph(x, '!', '#eafff0'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'nitrobang' }) },
       { label: 'metal', icon: (x) => { box(x, '#9aa2ac', '#666e78'); x.fillStyle = '#666e78'; for (const [rx, ry] of [[5, 5], [12, 5], [5, 12], [12, 12]]) x.fillRect(rx, ry, 2, 2); }, make: (at) => ({ t: 'metal', p: [at.x, at.y, at.z] }) },
-      { label: 'outline', icon: (x) => { x.strokeStyle = '#f2e2b0'; x.lineWidth = 1.5; x.setLineDash([3, 2]); x.strokeRect(3, 3, 12, 12); x.setLineDash([]); }, make: (at) => ({ t: 'outline', p: [at.x, at.y, at.z] }) },
       { label: 'checkpoint', icon: (x) => { box(x, '#2a5a8a', '#123049'); glyph(x, 'C', '#cfe8ff'); }, make: (at) => ({ t: 'checkpoint', p: [at.x, at.y + 0.5, at.z] }) },
     ],
   },
@@ -92,10 +97,10 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
   },
 ];
 
-const CRATE_KINDS = ['wood', 'bouncy', 'nitro', 'tnt', 'mask', 'mystery', 'bang', 'nitrobang'] as const;
+const CRATE_KINDS = ['wood', 'bouncy', 'metalbounce', 'nitro', 'tnt', 'mask', 'mystery', 'bang', 'nitrobang'] as const;
 
 // components that grow draggable resize handles on double-click
-const RESIZABLE = new Set(['platform', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'pipe', 'enemy', 'pendulum']);
+const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'pipe', 'enemy', 'pendulum']);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
 // and `apply` rewrites the component from its grab-time snapshot given the
@@ -145,6 +150,12 @@ export class Editor {
   // nudge coalescing: a burst of arrow taps is ONE undo step
   private lastCoalesce = '';
   private lastCommitT = 0;
+  // layers: new components land on the active layer; locked layers are
+  // untouchable (no pick, no marquee, no select-all)
+  private activeLayer = 0;
+  private layersEl: HTMLElement | null = null;
+  private renamingLayer = -1;
+  private camSaveAt = 0;
   // resize-handle state (enter by double-clicking a component)
   private resizeIdx = -1;
   private hdlDefs: HandleDef[] = [];
@@ -184,23 +195,45 @@ export class Editor {
   enter(): void {
     if (this.active) return;
     this.active = true;
-    this.data = getCustomLevelData();
+    this.data = migrateCustomLevel(getCustomLevelData());
+    if (!this.data.layers!.some((l) => l.id === this.activeLayer)) this.activeLayer = this.data.layers![0].id;
     if (!this.lastCommitted) this.lastCommitted = JSON.stringify(this.data);
     this.controls = new OrbitControls(this.camera, this.dom);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.12;
-    this.controls.target.set(this.data.spawn[0], this.data.spawn[1], this.data.spawn[2] - 6);
-    this.camera.position.set(this.data.spawn[0] + 16, this.data.spawn[1] + 26, this.data.spawn[2] + 26);
+    // refresh-proof: come back exactly where you were looking
+    let restored = false;
+    try {
+      const cam = JSON.parse(localStorage.getItem('protoEditorCam') ?? 'null') as {
+        p: number[];
+        t: number[];
+      } | null;
+      if (cam && cam.p?.length === 3 && cam.t?.length === 3) {
+        this.camera.position.set(cam.p[0], cam.p[1], cam.p[2]);
+        this.controls.target.set(cam.t[0], cam.t[1], cam.t[2]);
+        restored = true;
+      }
+    } catch {
+      /* fresh view below */
+    }
+    if (!restored) {
+      this.controls.target.set(this.data.spawn[0], this.data.spawn[1], this.data.spawn[2] - 6);
+      this.camera.position.set(this.data.spawn[0] + 16, this.data.spawn[1] + 26, this.data.spawn[2] + 26);
+    }
+    localStorage.setItem('protoEditorOpen', '1'); // refresh lands back in the editor
     this.panel.style.display = 'block';
     this.select(-1);
+    this.renderLayers();
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
-    this.hooks.showMsg('LEVEL EDITOR', 'click select · shift-click/shift-drag = multi · ⌘C/⌘V copy');
+    this.hooks.showMsg('LEVEL EDITOR', 'click select · shift-click/shift-drag = multi · ⌘G group');
   }
 
   exit(): void {
     if (!this.active) return;
     this.active = false;
+    this.saveCam();
+    localStorage.removeItem('protoEditorOpen');
     this.controls?.dispose();
     this.controls = null;
     this.panel.style.display = 'none';
@@ -222,6 +255,27 @@ export class Editor {
     // keep resize handles a steady on-screen size at any zoom
     for (const m of this.handleMeshes) {
       m.scale.setScalar(THREE.MathUtils.clamp(this.camera.position.distanceTo(m.position) * 0.022, 0.7, 3));
+    }
+    // periodic camera save: a refresh mid-edit comes back to this exact view
+    const now = performance.now();
+    if (this.active && now - this.camSaveAt > 1500) {
+      this.camSaveAt = now;
+      this.saveCam();
+    }
+  }
+
+  private saveCam(): void {
+    if (!this.controls) return;
+    try {
+      localStorage.setItem(
+        'protoEditorCam',
+        JSON.stringify({
+          p: this.camera.position.toArray().map((v) => +v.toFixed(2)),
+          t: this.controls.target.toArray().map((v) => +v.toFixed(2)),
+        }),
+      );
+    } catch {
+      /* storage full: skip */
     }
   }
 
@@ -248,7 +302,8 @@ export class Editor {
     // enforce the one-crystal rule on imported files too (keep the last)
     const lastCrystal = d.components.map((c) => c.t).lastIndexOf('crystal');
     d.components = d.components.filter((c, i) => c.t !== 'crystal' || i === lastCrystal);
-    this.data = d;
+    this.data = migrateCustomLevel(d);
+    if (!this.data.layers!.some((l) => l.id === this.activeLayer)) this.activeLayer = this.data.layers![0].id;
     this.select(-1);
     this.commit();
   }
@@ -292,6 +347,8 @@ export class Editor {
     this.lastCoalesce = coalesce;
     this.lastCommitT = t;
     this.lastCommitted = now;
+    this.pruneGroups();
+    this.renderLayers();
     setCustomLevelData(this.data);
     try {
       localStorage.setItem('protoCustomLevel', now);
@@ -303,7 +360,8 @@ export class Editor {
 
   // swap in a history state WITHOUT recording it as a new edit
   private applyState(json: string): void {
-    this.data = JSON.parse(json) as CustomLevelData;
+    this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
+    if (!this.data.layers!.some((l) => l.id === this.activeLayer)) this.activeLayer = this.data.layers![0].id;
     this.lastCommitted = json;
     setCustomLevelData(this.data);
     try {
@@ -334,6 +392,7 @@ export class Editor {
     if (c.t === 'crystal') {
       this.data.components = this.data.components.filter((o) => o.t !== 'crystal');
     }
+    if (this.activeLayer !== 0) c.layer = this.activeLayer; // new pieces land on the active layer
     this.data.components.push(c);
     this.commit();
     this.select(this.data.components.length - 1);
@@ -369,6 +428,7 @@ export class Editor {
       copy.p = [copy.p[0] + 3, copy.p[1], copy.p[2] + 3];
       return copy;
     });
+    this.remapGroups(copies); // fresh group wiring for the copies
     this.addBatch(copies);
   }
 
@@ -421,7 +481,143 @@ export class Editor {
       copy.p = [copy.p[0] + dx, copy.p[1], copy.p[2] + dz];
       return copy;
     });
+    this.remapGroups(copies); // fresh group wiring for the batch
     this.addBatch(copies);
+  }
+
+  // ---- layers ----
+
+  private layerOf(c: CustomComponent): number {
+    return c.layer ?? 0;
+  }
+
+  private isLockedIdx(idx: number): boolean {
+    const c = this.data.components[idx];
+    if (!c) return false;
+    const l = this.data.layers?.find((L) => L.id === this.layerOf(c));
+    return !!l?.locked;
+  }
+
+  private nextLayerId(): number {
+    return (this.data.layers ?? []).reduce((m, l) => Math.max(m, l.id), -1) + 1;
+  }
+
+  // ---- groups (nesting: a group's parent is another group) ----
+
+  private chainOf(idx: number): number[] {
+    const c = this.data.components[idx];
+    return c ? groupChainOf(c, this.data) : [];
+  }
+
+  private rootGroupOf(idx: number): number | undefined {
+    const chain = this.chainOf(idx);
+    return chain.length ? chain[chain.length - 1] : undefined;
+  }
+
+  private groupMembers(gid: number): number[] {
+    const out: number[] = [];
+    for (let i = 0; i < this.data.components.length; i++) {
+      if (this.chainOf(i).includes(gid)) out.push(i);
+    }
+    return out;
+  }
+
+  // a click on a grouped component means the whole (outermost) group —
+  // minus anything on a locked layer
+  private expandToGroup(idx: number): number[] {
+    if (idx < 0) return [];
+    const root = this.rootGroupOf(idx);
+    const all = root === undefined ? [idx] : this.groupMembers(root);
+    return all.filter((i) => !this.isLockedIdx(i));
+  }
+
+  private nextGroupId(): number {
+    return (this.data.groups ?? []).reduce((m, g) => Math.max(m, g.id), -1) + 1;
+  }
+
+  // ⌘G: bundle the selection. Fully-selected existing groups nest INTO the
+  // new group; loose components join it directly (a component that's only
+  // partially group-selected is pulled out of its old group — Figma rules).
+  groupSelection(): void {
+    if (this.sel.length < 2) return;
+    if (!this.data.groups) this.data.groups = [];
+    const G = this.nextGroupId();
+    const selSet = new Set(this.sel);
+    // read the WHOLE plan before mutating: reparenting mid-loop would send
+    // later chain walks through the half-built new group
+    const rootOf = new Map<number, number | undefined>();
+    for (const idx of this.sel) rootOf.set(idx, this.rootGroupOf(idx));
+    const fullRoots = new Set<number>();
+    for (const idx of this.sel) {
+      const r = rootOf.get(idx);
+      if (
+        r !== undefined &&
+        !fullRoots.has(r) &&
+        this.groupMembers(r).every((m) => selSet.has(m) || this.isLockedIdx(m))
+      ) {
+        fullRoots.add(r);
+      }
+    }
+    // fully-selected groups nest whole; everything else joins directly
+    for (const idx of this.sel) {
+      const r = rootOf.get(idx);
+      if (r === undefined || !fullRoots.has(r)) this.data.components[idx].grp = G;
+    }
+    for (const r of fullRoots) {
+      const g = this.data.groups.find((x) => x.id === r);
+      if (g) g.parent = G;
+    }
+    this.data.groups.push({ id: G });
+    this.commit();
+    this.hooks.showMsg(`GROUPED ${this.sel.length}`, 'a "!" crate in a group wires its outline crates');
+  }
+
+  // ⌘⇧G: dissolve the selection's outermost group(s) one level
+  ungroupSelection(): void {
+    if (!this.data.groups) return;
+    const roots = new Set<number>();
+    for (const idx of this.sel) {
+      const r = this.rootGroupOf(idx);
+      if (r !== undefined) roots.add(r);
+    }
+    if (roots.size === 0) return;
+    for (const r of roots) {
+      for (const c of this.data.components) if (c.grp === r) c.grp = undefined;
+      for (const g of this.data.groups) if (g.parent === r) g.parent = undefined;
+      this.data.groups = this.data.groups.filter((g) => g.id !== r);
+    }
+    this.commit();
+    this.hooks.showMsg('UNGROUPED');
+  }
+
+  // drop group entries no component chain references (post delete/ungroup)
+  private pruneGroups(): void {
+    if (!this.data.groups || this.data.groups.length === 0) return;
+    const used = new Set<number>();
+    for (const c of this.data.components) {
+      for (const id of groupChainOf(c, this.data)) used.add(id);
+    }
+    this.data.groups = this.data.groups.filter((g) => used.has(g.id));
+  }
+
+  // pasted/duplicated components get a FRESH copy of their group structure
+  // (same wiring within the batch, no leash back to the originals)
+  private remapGroups(copies: CustomComponent[]): void {
+    if (!this.data.groups) return;
+    const referenced = new Set<number>();
+    for (const c of copies) for (const id of groupChainOf(c, this.data)) referenced.add(id);
+    if (referenced.size === 0) return;
+    const map = new Map<number, number>();
+    let next = this.nextGroupId();
+    for (const id of referenced) map.set(id, next++);
+    for (const id of referenced) {
+      const src = this.data.groups.find((g) => g.id === id);
+      const parent = src?.parent !== undefined && map.has(src.parent) ? map.get(src.parent) : undefined;
+      this.data.groups.push(parent !== undefined ? { id: map.get(id)!, parent } : { id: map.get(id)! });
+    }
+    for (const c of copies) {
+      if (c.grp !== undefined && map.has(c.grp)) c.grp = map.get(c.grp);
+    }
   }
 
   // ---- selection + picking ----
@@ -444,13 +640,6 @@ export class Editor {
     this.sel = valid;
     this.refreshSelectionBox();
     this.renderProps();
-  }
-
-  private toggleSelect(idx: number): void {
-    if (idx < 0) return;
-    const at = this.sel.indexOf(idx);
-    if (at >= 0) this.setSelection(this.sel.filter((i) => i !== idx));
-    else this.setSelection([...this.sel, idx]); // newest = primary
   }
 
   private objectsFor(idx: number): THREE.Object3D[] {
@@ -479,6 +668,30 @@ export class Editor {
       // primary pops bright green; the rest of the selection reads softer
       const primary = idx === this.selected;
       const helper = new THREE.Box3Helper(box, new THREE.Color(primary ? 0x58e08a : 0x2f9a86));
+      this.scene.add(helper);
+      this.selBoxes.push(helper);
+    }
+    // one blue hull per fully-selected group: the "this moves as a unit" read
+    const roots = new Set<number>();
+    for (const idx of this.sel) {
+      const r = this.rootGroupOf(idx);
+      if (r !== undefined) roots.add(r);
+    }
+    for (const r of roots) {
+      const members = this.groupMembers(r);
+      if (!members.every((m) => this.sel.includes(m) || this.isLockedIdx(m))) continue;
+      const hull = new THREE.Box3();
+      let any = false;
+      for (const m of members) {
+        const b = this.boxFor(m);
+        if (b) {
+          hull.union(b);
+          any = true;
+        }
+      }
+      if (!any) continue;
+      hull.expandByScalar(0.32);
+      const helper = new THREE.Box3Helper(hull, new THREE.Color(0x5aa9ff));
       this.scene.add(helper);
       this.selBoxes.push(helper);
     }
@@ -544,7 +757,12 @@ export class Editor {
     for (const h of hits) {
       let o: THREE.Object3D | null = h.object;
       while (o) {
-        if (o.userData.editorIdx !== undefined) return o.userData.editorIdx as number;
+        if (o.userData.editorIdx !== undefined) {
+          const idx = o.userData.editorIdx as number;
+          // locked layers are click-through: keep walking the deeper hits
+          if (this.isLockedIdx(idx)) break;
+          return idx;
+        }
         o = o.parent;
       }
     }
@@ -569,6 +787,7 @@ export class Editor {
   // fill defaulted dimensions in, so handle math (and its grab snapshot) is concrete
   private materializeDims(c: CustomComponent): void {
     if (c.t === 'platform') c.s = c.s ?? [8, 1, 8];
+    else if (c.t === 'rock') c.s = c.s ?? [3, 2, 3];
     else if (c.t === 'wall') c.s = c.s ?? [8, 4, 1];
     else if (c.t === 'pit') c.s = c.s ?? [6, 1, 6];
     else if (c.t === 'crumble') c.s = c.s ?? [3, 1, 3];
@@ -627,7 +846,7 @@ export class Editor {
         },
       });
     };
-    if (c.t === 'platform') {
+    if (c.t === 'platform' || c.t === 'rock') {
       const s = c.s!;
       face(loc(1, 0, 0), P.clone().addScaledVector(loc(1, 0, 0), s[0] / 2), 0, 0.5);
       face(loc(-1, 0, 0), P.clone().addScaledVector(loc(-1, 0, 0), s[0] / 2), 0, 0.5);
@@ -811,6 +1030,7 @@ export class Editor {
         const copies = order.map(
           (i) => JSON.parse(JSON.stringify(this.data.components[i])) as CustomComponent,
         );
+        this.remapGroups(copies); // clones get their own group wiring
         grabbed = start + order.indexOf(hit);
         this.addBatch(copies); // selects the clones (one undo step)
         if (grabbed >= this.data.components.length) grabbed = this.selected; // crystal filtered
@@ -876,6 +1096,7 @@ export class Editor {
     const out: number[] = [];
     const v = new THREE.Vector3();
     for (let idx = 0; idx < this.data.components.length; idx++) {
+      if (this.isLockedIdx(idx)) continue; // locked layers ignore the marquee
       const box = this.boxFor(idx);
       if (!box) continue;
       // skip anything behind the camera — projection would mirror it
@@ -1016,10 +1237,11 @@ export class Editor {
       this.marquee = null;
       this.hideMarquee();
       if (this.controls) this.controls.enabled = true;
-      // a real sweep adds everything it touched; a sub-click shift-tap on
-      // empty space falls through to the click logic (which keeps selection)
+      // a real sweep adds everything it touched (whole groups come along);
+      // a sub-click shift-tap on empty space falls through to click logic
       if (!clickish) {
-        this.setSelection([...this.sel, ...this.marqueePick(m)]);
+        const hits = this.marqueePick(m).flatMap((i) => this.expandToGroup(i));
+        this.setSelection([...this.sel, ...hits]);
         this.downAt = null;
         return;
       }
@@ -1035,11 +1257,20 @@ export class Editor {
       }
       // grab-with-no-movement is just a click — fall through
     }
-    // plain click: select / deselect · modifier-click: toggle in/out
+    // plain click: select / deselect · modifier-click: toggle in/out.
+    // Groups select as a unit — the click lands on the whole group.
     if (clickish) {
       const hit = this.pick(e);
-      if (e.shiftKey || e.metaKey || e.ctrlKey) this.toggleSelect(hit);
-      else this.select(hit);
+      const unit = this.expandToGroup(hit);
+      if (e.shiftKey || e.metaKey || e.ctrlKey) {
+        if (hit >= 0) {
+          const allIn = unit.every((i) => this.sel.includes(i));
+          if (allIn) this.setSelection(this.sel.filter((i) => !unit.includes(i)));
+          else this.setSelection([...this.sel, ...unit]);
+        }
+      } else {
+        this.setSelection(unit);
+      }
     }
     this.downAt = null;
   };
@@ -1073,7 +1304,12 @@ export class Editor {
     }
     if (e.code === 'KeyA' && cmd) {
       e.preventDefault();
-      this.setSelection(this.data.components.map((_, i) => i));
+      this.setSelection(this.data.components.map((_, i) => i).filter((i) => !this.isLockedIdx(i)));
+    }
+    if (e.code === 'KeyG' && cmd) {
+      e.preventDefault();
+      if (e.shiftKey) this.ungroupSelection();
+      else this.groupSelection();
     }
     if (e.code === 'KeyF' && !cmd) this.frameSelection();
     // arrows nudge the selection a grid step (shift+up/down = height)
@@ -1132,6 +1368,11 @@ export class Editor {
     panel.appendChild(h('<div class="ed-sect">SELECTION</div>'));
     this.propsEl = h('<div class="ed-props"><div class="ed-dim">click a component…</div></div>');
     panel.appendChild(this.propsEl);
+
+    // layers: name it, lock it, stack it — new pieces land on the active one
+    panel.appendChild(h('<div class="ed-sect">LAYERS</div>'));
+    this.layersEl = h('<div class="ed-layers"></div>');
+    panel.appendChild(this.layersEl);
 
     // add palette: grouped, icon + label per component
     for (const sect of PALETTE_SECTIONS) {
@@ -1249,7 +1490,7 @@ export class Editor {
     });
     panel.appendChild(test);
     panel.appendChild(
-      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>alt-drag selected = drag out a copy<br>shift-click = add to selection<br>shift-drag empty = box select · ⌘A = all<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo</div>'),
+      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>alt-drag selected = drag out a copy<br>shift-click = add to selection<br>shift-drag empty = box select · ⌘A = all<br>⌘G = group · ⌘⇧G = ungroup (groups click as one)<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
     );
 
     document.body.appendChild(panel);
@@ -1258,6 +1499,125 @@ export class Editor {
   }
 
   private buildPanelLevelRefresh: (() => void) | null = null;
+
+  // ---- layers panel ----
+
+  private renderLayers(): void {
+    if (!this.layersEl) return;
+    const layers = this.data.layers ?? [];
+    this.layersEl.innerHTML = '';
+    const counts = new Map<number, number>();
+    for (const c of this.data.components) {
+      counts.set(this.layerOf(c), (counts.get(this.layerOf(c)) ?? 0) + 1);
+    }
+    for (const L of layers) {
+      const row = document.createElement('div');
+      row.className = 'ed-layerrow' + (L.id === this.activeLayer ? ' ed-layer-active' : '');
+      // lock toggle: locked layers can't be picked, marqueed, or edited
+      const lock = document.createElement('button');
+      lock.className = 'ed-lbtn';
+      lock.textContent = L.locked ? '🔒' : '🔓';
+      lock.title = L.locked ? 'unlock layer' : 'lock layer';
+      lock.addEventListener('click', () => {
+        L.locked = !L.locked;
+        if (L.locked) this.setSelection(this.sel.filter((i) => !this.isLockedIdx(i)));
+        this.commit(false); // pure metadata: no geometry rebuild needed
+        this.renderLayers();
+      });
+      row.appendChild(lock);
+      // name: click = make active · rename via ✎ (inline input)
+      if (this.renamingLayer === L.id) {
+        const input = document.createElement('input');
+        input.className = 'ed-layername-input';
+        input.value = L.name;
+        input.addEventListener('keydown', (ev) => {
+          if (ev.code === 'Enter') input.blur();
+          ev.stopPropagation(); // typing guard: editor hotkeys stay out
+        });
+        input.addEventListener('blur', () => {
+          L.name = input.value.trim() || L.name;
+          this.renamingLayer = -1;
+          this.commit(false);
+          this.renderLayers();
+        });
+        row.appendChild(input);
+        setTimeout(() => {
+          input.focus();
+          input.select();
+        }, 0);
+      } else {
+        const name = document.createElement('button');
+        name.className = 'ed-layername';
+        name.textContent = `${L.id === this.activeLayer ? '● ' : ''}${L.name}`;
+        name.title = 'click: make active — new pieces land here';
+        name.addEventListener('click', () => {
+          this.activeLayer = L.id;
+          this.renderLayers();
+        });
+        row.appendChild(name);
+      }
+      const n = document.createElement('span');
+      n.className = 'ed-layercount';
+      n.textContent = String(counts.get(L.id) ?? 0);
+      row.appendChild(n);
+      const ren = document.createElement('button');
+      ren.className = 'ed-lbtn';
+      ren.textContent = '✎';
+      ren.title = 'rename layer';
+      ren.addEventListener('click', () => {
+        this.renamingLayer = L.id;
+        this.renderLayers();
+      });
+      row.appendChild(ren);
+      // delete: only an EMPTY non-last layer (no surprise data loss)
+      if ((counts.get(L.id) ?? 0) === 0 && layers.length > 1) {
+        const del = document.createElement('button');
+        del.className = 'ed-lbtn ed-danger';
+        del.textContent = '✕';
+        del.title = 'delete empty layer';
+        del.addEventListener('click', () => {
+          this.data.layers = layers.filter((x) => x.id !== L.id);
+          if (this.activeLayer === L.id) this.activeLayer = this.data.layers[0].id;
+          this.commit(false);
+          this.renderLayers();
+        });
+        row.appendChild(del);
+      }
+      this.layersEl.appendChild(row);
+    }
+    const actions = document.createElement('div');
+    actions.className = 'ed-grid';
+    const add = document.createElement('button');
+    add.className = 'ed-btn';
+    add.textContent = '+ layer';
+    add.addEventListener('click', () => {
+      const id = this.nextLayerId();
+      this.data.layers = [...layers, { id, name: `layer ${id}` }];
+      this.activeLayer = id;
+      this.renamingLayer = id; // name it right away
+      this.commit(false);
+      this.renderLayers();
+      add.blur();
+    });
+    actions.appendChild(add);
+    const assign = document.createElement('button');
+    assign.className = 'ed-btn';
+    assign.textContent = 'selection → layer';
+    assign.title = 'move the selected pieces onto the active layer';
+    assign.addEventListener('click', () => {
+      if (this.sel.length === 0) return;
+      for (const i of this.sel) {
+        const c = this.data.components[i];
+        if (this.activeLayer === 0) delete c.layer;
+        else c.layer = this.activeLayer;
+      }
+      this.commit(false);
+      this.renderLayers();
+      assign.blur();
+    });
+    actions.appendChild(assign);
+    this.layersEl.appendChild(actions);
+  }
 
   // a labelled number field that commits on change
   private numRow(label: string, get: () => number, set: (v: number) => void, step = 0.5): HTMLElement {
@@ -1323,6 +1683,10 @@ export class Editor {
       };
       mkBtn('copy ⌘C', () => this.copySelected());
       mkBtn('duplicate ⌘D', () => this.duplicateSelected());
+      mkBtn('group ⌘G', () => this.groupSelection());
+      if (this.sel.some((i) => this.chainOf(i).length > 0)) {
+        mkBtn('ungroup ⌘⇧G', () => this.ungroupSelection());
+      }
       mkBtn('match height', () => {
         // align the group to the PRIMARY's y — the fast way to level a row
         const y = this.data.components[this.selected].p[1];
@@ -1333,14 +1697,16 @@ export class Editor {
       this.propsEl.appendChild(grid);
       const hint = document.createElement('div');
       hint.className = 'ed-dim';
-      hint.textContent = 'drag any selected piece to move the group · arrows nudge';
+      hint.textContent =
+        'drag any selected piece to move the group · arrows nudge · a "!" crate grouped with outline crates becomes their switch';
       this.propsEl.appendChild(hint);
       return;
     }
     const c = this.data.components[this.selected];
     const head = document.createElement('div');
     head.className = 'ed-selhead';
-    head.textContent = `#${this.selected} · ${c.t}`;
+    const inGroup = this.chainOf(this.selected).length > 0;
+    head.textContent = `#${this.selected} · ${c.t}${inGroup ? ' · in group' : ''}`;
     this.propsEl.appendChild(head);
     const num = (label: string, get: () => number, set: (v: number) => void, step = 0.5): void =>
       void this.propsEl.appendChild(this.numRow(label, get, set, step));
@@ -1414,15 +1780,61 @@ export class Editor {
       for (const k of CRATE_KINDS) {
         const o = document.createElement('option');
         o.value = k;
-        o.textContent = k;
+        o.textContent = k === 'metalbounce' ? 'arrow (metal)' : k === 'bouncy' ? 'arrow (wood)' : k;
         if ((c.kind ?? 'wood') === k) o.selected = true;
         sel.appendChild(o);
       }
       sel.addEventListener('change', () => {
         c.kind = sel.value as CustomComponent['kind'];
         this.commit();
+        this.renderProps();
       });
       this.propsEl.appendChild(sel);
+      if (c.kind === 'bang') {
+        const note = document.createElement('div');
+        note.className = 'ed-dim';
+        note.textContent =
+          'metal switch: hit it in play to materialize the OUTLINE crates in its group (⌘G). ungrouped = fires all ungrouped outlines. never breaks, not counted';
+        this.propsEl.appendChild(note);
+      } else {
+        // outline state: any crate can start as a pass-through ghost
+        const row = document.createElement('div');
+        row.className = 'ed-row';
+        const lab = document.createElement('label');
+        lab.textContent = 'outline';
+        const chk = document.createElement('input');
+        chk.type = 'checkbox';
+        chk.checked = !!c.outline;
+        chk.addEventListener('change', () => {
+          if (chk.checked) c.outline = true;
+          else delete c.outline;
+          this.commit();
+        });
+        row.appendChild(lab);
+        row.appendChild(chk);
+        this.propsEl.appendChild(row);
+        if (c.outline) {
+          const note = document.createElement('div');
+          note.className = 'ed-dim';
+          note.textContent = 'ghost (no collision) until a "!" crate in its group is hit';
+          this.propsEl.appendChild(note);
+        }
+      }
+    } else if (c.t === 'rock') {
+      this.materializeDims(c); // rocks default 3×2×3, not the platform 8×1×8
+      sizeRow(0, 'width');
+      sizeRow(1, 'height');
+      sizeRow(2, 'depth');
+      const shuffle = document.createElement('button');
+      shuffle.className = 'ed-btn';
+      shuffle.textContent = 'reshuffle shape';
+      shuffle.addEventListener('click', () => {
+        c.seed = Math.floor(Math.random() * 1e6);
+        this.commit();
+        shuffle.blur();
+      });
+      this.propsEl.appendChild(shuffle);
+      colorRow();
     } else if (c.t === 'enemy') {
       num('patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
       num('speed', () => c.speed ?? 3, (v) => (c.speed = Math.max(0.5, v)));
@@ -1511,6 +1923,30 @@ export class Editor {
       .ed-selhead { color: #ffd75e; margin: 4px 0; }
       .ed-dim { color: #6b7890; margin-top: 8px; line-height: 1.5; }
       .ed-sellist { margin: 0 0 6px; }
+      .ed-layerrow {
+        display: flex; align-items: center; gap: 4px; margin: 2px 0;
+        padding: 2px 3px; border-radius: 5px;
+      }
+      .ed-layer-active { background: rgba(88, 224, 138, 0.08); }
+      .ed-lbtn {
+        font: 10px ui-monospace, Menlo, Consolas, monospace;
+        background: none; border: none; color: #9fb0c8; cursor: pointer;
+        padding: 1px 2px;
+      }
+      .ed-lbtn:hover { color: #d5e0f0; }
+      .ed-layername {
+        flex: 1; text-align: left; font: 11px ui-monospace, Menlo, Consolas, monospace;
+        background: none; border: none; color: #cdd6e4; cursor: pointer; padding: 2px;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .ed-layer-active .ed-layername { color: #58e08a; }
+      .ed-layername-input {
+        flex: 1; font: 11px ui-monospace, Menlo, Consolas, monospace;
+        background: #10141e; color: #d5e0f0; border: 1px solid #3a4152;
+        border-radius: 4px; padding: 1px 4px; min-width: 0;
+      }
+      .ed-layercount { color: #6b7890; font-size: 10px; }
+      .ed-layers .ed-grid { margin-top: 4px; }
       .ed-marquee {
         position: fixed; display: none; z-index: 55; pointer-events: none;
         border: 1px dashed #58e08a; background: rgba(88, 224, 138, 0.10);
