@@ -143,6 +143,7 @@ export class Editor {
     if (this.active) return;
     this.active = true;
     this.data = getCustomLevelData();
+    if (!this.lastCommitted) this.lastCommitted = JSON.stringify(this.data);
     this.controls = new OrbitControls(this.camera, this.dom);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.12;
@@ -208,16 +209,55 @@ export class Editor {
     });
   }
 
-  // ---- data mutation ----
+  // ---- data mutation + history ----
+
+  private undoStack: string[] = [];
+  private redoStack: string[] = [];
+  private lastCommitted = '';
 
   private commit(rebuild = true): void {
+    const now = JSON.stringify(this.data);
+    if (this.lastCommitted && now !== this.lastCommitted) {
+      this.undoStack.push(this.lastCommitted);
+      if (this.undoStack.length > 100) this.undoStack.shift();
+      this.redoStack.length = 0; // a fresh edit forks history
+    }
+    this.lastCommitted = now;
     setCustomLevelData(this.data);
     try {
-      localStorage.setItem('protoCustomLevel', JSON.stringify(this.data));
+      localStorage.setItem('protoCustomLevel', now);
     } catch {
       /* storage full: the working copy still lives in memory */
     }
     if (rebuild) this.hooks.rebuild();
+  }
+
+  // swap in a history state WITHOUT recording it as a new edit
+  private applyState(json: string): void {
+    this.data = JSON.parse(json) as CustomLevelData;
+    this.lastCommitted = json;
+    setCustomLevelData(this.data);
+    try {
+      localStorage.setItem('protoCustomLevel', json);
+    } catch {
+      /* ignore */
+    }
+    this.select(-1);
+    this.hooks.rebuild();
+  }
+
+  undo(): void {
+    const prev = this.undoStack.pop();
+    if (!prev) return;
+    this.redoStack.push(JSON.stringify(this.data));
+    this.applyState(prev);
+  }
+
+  redo(): void {
+    const next = this.redoStack.pop();
+    if (!next) return;
+    this.undoStack.push(JSON.stringify(this.data));
+    this.applyState(next);
   }
 
   private addComponent(c: CustomComponent): void {
@@ -378,6 +418,12 @@ export class Editor {
       e.preventDefault();
       this.duplicateSelected();
     }
+    // Cmd+Z / Cmd+Shift+Z (mac) — Ctrl works too
+    if (e.code === 'KeyZ' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      if (e.shiftKey) this.redo();
+      else this.undo();
+    }
   };
 
   // ---- spawn marker ----
@@ -525,6 +571,8 @@ export class Editor {
       this.select(-1);
       this.commit();
     });
+    mk('undo ⌘Z', () => this.undo());
+    mk('redo ⌘⇧Z', () => this.redo());
     panel.appendChild(file);
 
     // play
@@ -535,7 +583,7 @@ export class Editor {
     });
     panel.appendChild(test);
     panel.appendChild(
-      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>del = delete · ctrl+D = duplicate</div>'),
+      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo</div>'),
     );
 
     document.body.appendChild(panel);
