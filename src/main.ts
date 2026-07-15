@@ -8,6 +8,7 @@ import { Player } from './player';
 import { UI } from './ui';
 import { TUNING, CONST } from './tuning';
 import { sfx } from './audio';
+import { Recorder, Replayer, ReplayFile } from './replay';
 
 const app = document.getElementById('app')!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -272,24 +273,116 @@ let appliedScale = TUNING.renderScale;
 
 const input = new Input();
 const ui = new UI();
+const recorder = new Recorder();
+const replayer = new Replayer();
 let currentCourse = Math.min(LEVEL_NAMES.length - 1, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
 player.respawn(level, true);
 applyTheme();
+recorder.start(currentCourse); // the take always runs: level load -> now
 
 function switchLevel(id: number): void {
   currentCourse = id;
   localStorage.setItem('protoLevel', String(id));
+  if (replayer.active) {
+    // a manual level switch cancels a running replay (and restores tuning)
+    replayer.end();
+    ui.setReplayBadge(false);
+  }
   level.dispose();
   level = new Level(scene, id);
   player.respawn(level, true);
   applyTheme();
   ui.setLevel(id);
   ui.showMessage(LEVEL_NAMES[id].toUpperCase(), '', 1400);
+  recorder.start(id); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
     (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
 }
+
+// ---- playtest capture: input replays + gameplay video ----------------------
+
+// Export the take since the last level load as a downloadable JSON. Drop the
+// file into the chat with a note about what went wrong; the same file plays
+// back deterministically (drag it onto the game window).
+function exportReplay(): ReplayFile {
+  return recorder.export();
+}
+function saveReplay(): void {
+  const data = exportReplay();
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `replay-${LEVEL_NAMES[data.level].replace(/\s+/g, '')}-${data.date.replace(/[:.]/g, '-').slice(0, 19)}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  const secs = (data.frames / 60).toFixed(0);
+  ui.showMessage('REPLAY SAVED', `${secs}s of input — drop the file into the chat`, 2200);
+}
+
+function loadReplay(data: ReplayFile): void {
+  switchLevel(data.level); // clean slate: replay assumes a fresh level load
+  replayer.begin(data);
+  ui.setReplayBadge(true);
+  if (data.level === 2) ui.showMessage('REPLAY', 'random level: layout may differ from the take', 2000);
+  else ui.showMessage('REPLAY', `${(data.frames / 60).toFixed(0)}s take`, 1400);
+}
+
+// Gameplay video: records the canvas, downloads a .webm on stop.
+let videoRec: MediaRecorder | null = null;
+let videoChunks: Blob[] = [];
+function toggleVideo(): void {
+  if (videoRec) {
+    videoRec.stop();
+    return;
+  }
+  const stream = renderer.domElement.captureStream(60);
+  const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  videoRec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8_000_000 });
+  videoChunks = [];
+  videoRec.ondataavailable = (e) => {
+    if (e.data.size > 0) videoChunks.push(e.data);
+  };
+  videoRec.onstop = () => {
+    const blob = new Blob(videoChunks, { type: 'video/webm' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `gameplay-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}.webm`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    videoRec = null;
+    ui.setRecBadge(false);
+    ui.showMessage('VIDEO SAVED', 'drop the .webm into the chat', 2000);
+  };
+  videoRec.start(1000);
+  ui.setRecBadge(true);
+  ui.showMessage('RECORDING VIDEO', 'press rec again to stop + save', 1800);
+}
+
+ui.onSaveReplay = saveReplay;
+ui.onToggleVideo = toggleVideo;
+ui.onLoadReplay = (text) => {
+  try {
+    loadReplay(JSON.parse(text) as ReplayFile);
+  } catch {
+    ui.showMessage('BAD REPLAY FILE', '', 1400);
+  }
+};
+// drag a replay .json anywhere onto the game to watch it
+window.addEventListener('dragover', (e) => e.preventDefault());
+window.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const f = e.dataTransfer?.files?.[0];
+  if (f)
+    f.text().then((txt) => {
+      try {
+        loadReplay(JSON.parse(txt) as ReplayFile);
+      } catch {
+        ui.showMessage('BAD REPLAY FILE', '', 1400);
+      }
+    });
+});
 ui.onLevelSelect = switchLevel;
 ui.onCharacterToggle = (on) => {
   player.useSkater = on;
@@ -310,6 +403,8 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Digit5') switchLevel(4);
   if (e.code === 'Digit6') switchLevel(5);
   if (e.code === 'Digit7') switchLevel(6);
+  if (e.code === 'F8') saveReplay(); // playtest capture: input take -> .json
+  if (e.code === 'F9') toggleVideo(); // playtest capture: canvas -> .webm
 });
 
 player.onDeath = () => {
@@ -500,8 +595,18 @@ function frame(): void {
 
   acc += dt;
   while (acc >= CONST.fixedStep) {
+    // Playback: overwrite the live input with the recorded frame; when the
+    // take runs out, reset to a clean level so the next live take is valid.
+    if (replayer.active && !replayer.feed(input)) {
+      ui.setReplayBadge(false);
+      ui.showMessage('REPLAY DONE', '', 1200);
+      switchLevel(currentCourse);
+      break;
+    }
     player.step(CONST.fixedStep, input, level);
     level.update(CONST.fixedStep);
+    // record exactly what the sim consumed (edges intact, pre-consume)
+    if (!replayer.active) recorder.record(input);
     input.consumeEdges(); // one press = one step
     acc -= CONST.fixedStep;
   }
@@ -547,4 +652,20 @@ function frame(): void {
 frame();
 
 // Smoke-test / console-poking hook.
-(window as unknown as Record<string, unknown>).__game = { player, level, input, TUNING, switchLevel, scene, camera, renderer };
+(window as unknown as Record<string, unknown>).__game = {
+  player,
+  level,
+  input,
+  TUNING,
+  switchLevel,
+  scene,
+  camera,
+  renderer,
+  // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
+  exportReplay,
+  saveReplay,
+  loadReplay,
+  toggleVideo,
+  replayer,
+  recorder,
+};

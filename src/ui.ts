@@ -74,6 +74,12 @@ export class UI {
   onLevelSelect: (id: number) => void = () => {};
   onCharacterToggle: (on: boolean) => void = () => {};
   onLifeCheat: () => void = () => {};
+  onSaveReplay: (() => void) | null = null;
+  onToggleVideo: (() => void) | null = null;
+  onLoadReplay: ((text: string) => void) | null = null;
+  private recBtn!: HTMLButtonElement;
+  private replayBadge!: HTMLElement;
+  private recBadge!: HTMLElement;
 
   constructor() {
     this.injectStyle();
@@ -159,6 +165,36 @@ export class UI {
       }
     });
     panel.appendChild(btnRow);
+    // ---- playtest capture: input replays + gameplay video ----
+    // 'save replay' downloads the input take since the last level load as a
+    // .json (F8). 'load replay' / dragging the file onto the game plays it
+    // back. 'rec video' toggles a .webm recording of the canvas (F9).
+    const capRow = div('hud-tunebtns');
+    const mkCapBtn = (label: string, fn: () => void): HTMLButtonElement => {
+      const b = document.createElement('button');
+      b.className = 'hud-levelbtn';
+      b.textContent = label;
+      b.addEventListener('click', () => {
+        fn();
+        b.blur();
+      });
+      capRow.appendChild(b);
+      return b;
+    };
+    mkCapBtn('save replay', () => this.onSaveReplay && this.onSaveReplay());
+    const filePick = document.createElement('input');
+    filePick.type = 'file';
+    filePick.accept = '.json,application/json';
+    filePick.style.display = 'none';
+    filePick.addEventListener('change', () => {
+      const f = filePick.files && filePick.files[0];
+      if (f) f.text().then((txt) => this.onLoadReplay && this.onLoadReplay(txt));
+      filePick.value = '';
+    });
+    capRow.appendChild(filePick);
+    mkCapBtn('load replay', () => filePick.click());
+    this.recBtn = mkCapBtn('rec video', () => this.onToggleVideo && this.onToggleVideo());
+    panel.appendChild(capRow);
     // Sliders grouped under labelled section headers (walking, skating, ...).
     const placed = new Set<TuningKey>();
     const addSection = (title: string, keys: TuningKey[]): void => {
@@ -273,9 +309,27 @@ export class UI {
     this.vBalanceWrap.appendChild(this.vBalanceNeedle);
     this.vBalanceWrap.style.display = 'none';
 
-    for (const el of [this.msgWrap, this.flashEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl]) {
+    // Playtest capture badges: ▶ REPLAY while a take plays back, ● REC while
+    // the canvas is being recorded to video.
+    this.replayBadge = div('hud-capbadge');
+    this.replayBadge.textContent = '▶ REPLAY';
+    this.replayBadge.style.display = 'none';
+    this.recBadge = div('hud-capbadge hud-recbadge');
+    this.recBadge.textContent = '● REC';
+    this.recBadge.style.display = 'none';
+
+    for (const el of [this.msgWrap, this.flashEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
       document.body.appendChild(el);
     }
+  }
+
+  setReplayBadge(on: boolean): void {
+    this.replayBadge.style.display = on ? 'block' : 'none';
+  }
+
+  setRecBadge(on: boolean): void {
+    this.recBadge.style.display = on ? 'block' : 'none';
+    this.recBtn.textContent = on ? 'stop + save' : 'rec video';
   }
 
   // A fixed side wrapper with a vertical tab that slides the content off-screen.
@@ -589,6 +643,14 @@ export class UI {
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
       .hud-levelrow { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
+      .hud-capbadge {
+        position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+        font: bold 12px ui-monospace, Menlo, Consolas, monospace;
+        color: #ffd75e; background: rgba(20, 24, 34, 0.75);
+        padding: 4px 10px; border-radius: 10px; letter-spacing: 1px;
+        pointer-events: none; z-index: 40;
+      }
+      .hud-recbadge { color: #ff5e5e; top: 34px; }
       .hud-levelbtn {
         flex: 1; font: 10px ui-monospace, Menlo, Consolas, monospace;
         background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152;
