@@ -347,6 +347,7 @@ const CAM_HEIGHT = 2.8;
 const CAM_LOOKAHEAD = 5.0;
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
+const camAimTmp = new THREE.Vector3();
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
@@ -490,6 +491,12 @@ function frame(): void {
     renderer.render(scene, camera);
     return;
   }
+
+  // Tell the player where the camera is aiming (XZ) — the lip stall aligns
+  // its balance meter + stick axis with the screen using this.
+  camera.getWorldDirection(camAimTmp);
+  camAimTmp.y = 0;
+  if (camAimTmp.lengthSq() > 1e-6) player.camDir.copy(camAimTmp.normalize());
 
   acc += dt;
   while (acc >= CONST.fixedStep) {

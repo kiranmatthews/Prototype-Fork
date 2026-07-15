@@ -212,6 +212,12 @@ export class Player {
   // SPINE TRANSFER: which pipe the current hang crested from; landing a hang on
   // a DIFFERENT pipe = carried across the ridge.
   private hangPipe: Halfpipe | null = null;
+  // Where the follow camera is AIMING (XZ-projected, unit), fed by main every
+  // frame. The lip stall projects its tip axis onto this so the balance meter
+  // and the stick axis that fights it match what's on screen.
+  readonly camDir = new THREE.Vector3(0, 0, -1);
+  private lipMeterH = false; // stall meter reads horizontal (screen L/R) vs vertical
+  private lipDispSign = 1; // needle sign: + always points where you're leaning on screen
   // Post-drop-in grace: after a pipe-hang landing, the stick is usually still
   // held the way you were CLIMBING — which is now opposite travel. For this
   // beat that stale hold must not read as a pull-back brake (the skateHalt
@@ -1167,7 +1173,10 @@ export class Player {
         stallAge * TUNING.balanceRamp * 2,
       );
       this.balance += Math.sign(this.balance || 1) * TUNING.lipDrift * (1 + lipRamp) * dt;
-      this.balance -= this.rawInput.moveY * TUNING.lipControl * dt;
+      // fight along the SCREEN axis the tip reads on (see lipAim)
+      const lipSgn = this.lipAim(false);
+      const fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
+      this.balance += fightStick * lipSgn * TUNING.lipControl * dt;
       if (this.uberTimer > 0) this.balance = 0;
       if (Math.abs(this.balance) >= 1) {
         this.balance = Math.sign(this.balance);
@@ -2638,8 +2647,15 @@ export class Player {
   // the tail, needle sinks to the bottom; push UP to level out). null = hidden.
   get balanceMeter(): { mode: 'grind' | 'manual'; bal: number; crit: boolean } | null {
     if (this.state === 'grind') return { mode: 'grind', bal: this.balance, crit: this.balanceCritT > 0 };
-    if (this.manualing !== 0 || this.lipStallT > 0)
-      return { mode: 'manual', bal: this.balance, crit: this.balanceCritT > 0 };
+    if (this.lipStallT > 0)
+      // stall: whichever bar reads true on screen ('grind' = the horizontal
+      // bar, 'manual' = the vertical one), needle signed to the screen too
+      return {
+        mode: this.lipMeterH ? 'grind' : 'manual',
+        bal: this.balance * this.lipDispSign,
+        crit: this.balanceCritT > 0,
+      };
+    if (this.manualing !== 0) return { mode: 'manual', bal: this.balance, crit: this.balanceCritT > 0 };
     return null;
   }
 
@@ -2650,6 +2666,36 @@ export class Player {
   private lipHeadOn(hp: Halfpipe): boolean {
     const along = hp.axis === 'z' ? this.axisF.z : this.axisF.x;
     return Math.abs(along) <= Math.sin(THREE.MathUtils.degToRad(TUNING.lipAngle));
+  }
+
+  // Align the stall's balance with the SCREEN, not the world: project the tip
+  // axis (leaning into the pipe) onto the camera. If tipping reads mostly
+  // LEFT/RIGHT on screen, the horizontal meter + left/right stick fight it;
+  // if it reads mostly TOWARD/AWAY, the vertical meter + up/down. Pipes come
+  // in 4 orientations and the camera aims where it likes — this projection is
+  // what keeps "push toward the deck" meaning the same thing on all of them.
+  // Returns the sign that maps the fighting stick axis onto the needle; also
+  // refreshes lipMeterH/lipDispSign (25% hysteresis unless fresh, so a
+  // drifting camera can't flicker the meter mid-stall).
+  private lipAim(fresh: boolean): number {
+    const hp = this.lipPipe!;
+    const tipX = hp.axis === 'z' ? -this.lipSide : 0; // world dir of leaning INTO the pipe
+    const tipZ = hp.axis === 'z' ? 0 : -this.lipSide;
+    const dotR = -tipX * this.camDir.z + tipZ * this.camDir.x; // tip . camera-right
+    const dotF = tipX * this.camDir.x + tipZ * this.camDir.z; // tip . camera-forward
+    const h = Math.abs(dotR);
+    const v = Math.abs(dotF);
+    if (fresh) this.lipMeterH = h >= v;
+    else if (h > v * 1.25) this.lipMeterH = true;
+    else if (v > h * 1.25) this.lipMeterH = false;
+    if (this.lipMeterH) {
+      const s = dotR >= 0 ? 1 : -1;
+      this.lipDispSign = s; // bal + (into pipe) -> needle toward the pipe's screen side
+      return s;
+    }
+    const s = dotF >= 0 ? 1 : -1;
+    this.lipDispSign = -s; // vertical bar: bal + -> needle sinks, so flip when the pipe reads "away"
+    return s;
   }
 
   // Park on the coping, BALANCING: the needle (shared with the manual meter)
@@ -2682,6 +2728,7 @@ export class Player {
     this.endManual();
     this.balance = 0; // needle: + tips INTO the pipe (forgiving), − out the back (bail)
     this.balanceCritT = 0;
+    this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.rideNormal.set(0, 1, 0);
     this.score(CONST.ptsLip, fromAir ? 'Disaster' : 'Axle Stall');
     sfx.play('railLand', 0.7);
@@ -4610,8 +4657,17 @@ export class Player {
     // Manual pitch eases in/out — and the balance needle LIVES in the pitch:
     // tipping backward (balance +) pulls the nose higher, tipping forward dips
     // it, so the wobble you fight reads as up-and-down, not a sideways lean.
+    // Lip stall: lean IN-WORLD along the tip axis (into the pipe vs out the
+    // back). The stall faces the deck, so that axis is (nearly) the facing —
+    // project it and ride the same eased pitch channel the manual uses.
+    let stallLean = 0;
+    if (this.lipStallT > 0 && this.lipPipe) {
+      const tipX = this.lipPipe.axis === 'z' ? -this.lipSide : 0;
+      const tipZ = this.lipPipe.axis === 'z' ? 0 : -this.lipSide;
+      stallLean = (tipX * this.axisF.x + tipZ * this.axisF.z) * this.balance * 0.45;
+    }
     const manualTarget =
-      this.manualing !== 0 ? (this.manualing === 1 ? -0.4 : 0.35) - this.balance * 0.4 : 0;
+      this.manualing !== 0 ? (this.manualing === 1 ? -0.4 : 0.35) - this.balance * 0.4 : stallLean;
     this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 14 * dt);
     if (this.sketchyT > 0) this.bodyGroup.rotation.z += Math.sin(this.runTime * 24) * 0.14 * Math.min(1, this.sketchyT / 0.3);
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;

@@ -4353,7 +4353,9 @@ export class Level {
     // C centred at z -38, D at z -56 → shared ridge at z -47. Length x -18 → 18.
     addPipe(18, -18, -38, 'x');
     addPipe(18, -18, -56, 'x');
-    for (const z of [-38 - lipX, -47, -56 + lipX]) copingRail(V(-18, lipY + 0.05, z), V(18, lipY + 0.05, z));
+    // outer copings at -29 and -65, shared ridge at -47 (the old signs put
+    // all three rails ON the ridge and left the outer lips bare)
+    for (const z of [-38 + lipX, -47, -56 - lipX]) copingRail(V(-18, lipY + 0.05, z), V(18, lipY + 0.05, z));
     for (const cz of [-38, -56]) for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
   }
 

@@ -348,8 +348,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'LIP TRICKS: reach the top of the pipe within this many degrees of DEAD-ON (square to the coping) with Triangle down and you stall on the lip — any speed, press it on the climb or around the lip. Arrive more off-axis than this and Triangle grinds the coping instead. Once stalled you can let go of Triangle: balance alone holds the trick.',
   lipMaxTime: 'Longest a lip stall holds before it auto-drops back into the pipe (keeping the trick).',
   lipDrift:
-    'How fast the lip stall balance needle runs away on its own (fought with up/down on the stick — the vertical meter). Tip INTO the pipe = drop back in keeping the trick; tip out the BACK = bail onto the deck. Ollie out any time.',
-  lipControl: 'How hard up/down input fights the lip stall needle.',
+    'How fast the lip stall balance needle runs away on its own. The meter + stick axis auto-align with the CAMERA: when tipping reads left/right on screen you fight with left/right (horizontal bar); when it reads toward/away you fight with up/down (vertical bar). Tip INTO the pipe = drop back in keeping the trick; tip out the BACK = bail onto the deck. Ollie out any time.',
+  lipControl: 'How hard stick input fights the lip stall needle (along whichever screen axis the meter shows).',
   spineDrift:
     'SPINE TRANSFER: during hang time above the coping, hold the stick INTO/over the lip to carry across a spine or ridge — land the far side for a Spine Transfer. Higher = crosses faster. 0 = disabled.',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
