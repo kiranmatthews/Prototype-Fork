@@ -7,10 +7,13 @@ export const TUNING = {
   walkSpeed: 8.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
   walkRampTime: 0.15, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
   friction: 7, // idle roll-out: NO input at all bleeds speed to a stop (0 = frictionless)
-  riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
-  fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
-  jumpVelocity: 17, // fully-charged jump (hold X)
-  jumpMinVelocity: 12.5, // quick-tap jump
+  // Jump ballistics fit to the Crash 3 reference clips (jeans-pixel-tracked):
+  // held jump peaks 2.44u in 0.47s up / 0.28s down, tap peaks 1.73u. The old
+  // values had the same TIMING but ~1.6x the height.
+  riseGravity: 22, // gravity while moving up (lighter = floatier jump arc)
+  fallGravity: 62, // gravity while falling (heavier = snappy PS1 landing)
+  jumpVelocity: 10.4, // fully-charged jump (hold X)
+  jumpMinVelocity: 8.7, // quick-tap jump
   jumpChargeTime: 0.4, // hold this long for full power
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
