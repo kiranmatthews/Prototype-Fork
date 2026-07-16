@@ -597,14 +597,21 @@ function updateCamera(dt: number): void {
   // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
   // skater, not the skater — a jump rises THROUGH the frame (gentle tilt
   // tracks it) instead of yanking the whole rig skyward and pulling the
-  // landing spot out of shot. The anchor eases along slopes/steps, follows
-  // the player when there's no floor below (pits), and never lets them get
-  // more than ~7 above it (big verts still stay framed). The boulder shot
-  // keeps its authored full-follow.
+  // landing spot out of shot. FRAME-AWARE: how far a jump may rise before
+  // the rig starts lifting scales with the lens — a telephoto zoom-in has a
+  // tiny frame, so the rig gives sooner and an ollie never rockets across
+  // the whole screen. The anchor eases along slopes/steps, follows the
+  // player when there's no floor below (pits), and big verts stay framed.
+  // The boulder shot keeps its authored full-follow.
+  const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * TUNING.camDist;
+  const maxRise = THREE.MathUtils.clamp(frameHalf * 1.5, 1.5, 7);
   const floorY = player.groundBelowY;
-  const anchorGoal = Math.max(floorY ?? player.pos.y, player.pos.y - 7);
+  const anchorGoal = Math.max(floorY ?? player.pos.y, player.pos.y - maxRise);
   camAnchorY += (anchorGoal - camAnchorY) * Math.min(1, 4.5 * dt);
   const effY = THREE.MathUtils.lerp(camAnchorY, player.pos.y, boulderF);
+  // the gentle jump tilt also softens on tight lenses (magnified on screen);
+  // kept small overall — the ground stays in shot, the skater does the rising
+  const tiltTrack = 0.22 * Math.min(1, frameHalf / 4.5);
 
   camTarget.set(
     player.pos.x - camF.x * (dist - off),
@@ -649,7 +656,7 @@ function updateCamera(dt: number): void {
   );
   lookPoint.set(
     player.pos.x - camF.x * aimK,
-    effY + (player.pos.y - effY) * 0.35 + THREE.MathUtils.lerp(aimY, 1.6, boulderF),
+    effY + (player.pos.y - effY) * tiltTrack + THREE.MathUtils.lerp(aimY, 1.6, boulderF),
     player.pos.z - camF.z * aimK,
   );
   if (Number.isNaN(aimSmooth.x)) aimSmooth.copy(lookPoint);
