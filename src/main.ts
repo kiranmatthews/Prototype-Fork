@@ -505,7 +505,11 @@ const camAimTmp = new THREE.Vector3();
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
-let prevPlayerZ = 0;
+const prevPlayerPos = new THREE.Vector3();
+// The rig's "down-course" forward. Fixed at -Z normally; on levels with a
+// drawn CAMERA LANE it eases along the lane's local tangent, turning the
+// whole rig through winding corridors (Crash 3 camera rails).
+const camF = new THREE.Vector3(0, 0, -1);
 
 function updateCamera(dt: number): void {
   // ONE rig, always facing down -Z. When the path right-angles into an
@@ -531,9 +535,21 @@ function updateCamera(dt: number): void {
     camera.updateProjectionMatrix();
   }
 
-  const vz = dt > 0 ? (player.pos.z - prevPlayerZ) / dt : 0;
-  prevPlayerZ = player.pos.z;
-  const movingBack = vz > 2.5 || (player.grounded && player.speed < -1.5);
+  // CAMERA LANE: ease the rig's forward along the lane's local tangent (the
+  // player's course axes ease the same way, so screen-up stays "onward").
+  const lf = level.laneDirAt(player.pos.x, player.pos.z);
+  camF.x += ((lf ? lf.x : 0) - camF.x) * Math.min(1, 3.5 * dt);
+  camF.z += ((lf ? lf.z : -1) - camF.z) * Math.min(1, 3.5 * dt);
+  camF.y = 0;
+  if (camF.lengthSq() < 1e-4) camF.set(lf ? lf.x : 0, 0, lf ? lf.z : -1); // 180° pinch guard
+  camF.normalize();
+
+  const vAlong =
+    dt > 0
+      ? ((player.pos.x - prevPlayerPos.x) * camF.x + (player.pos.z - prevPlayerPos.z) * camF.z) / dt
+      : 0;
+  prevPlayerPos.copy(player.pos);
+  const movingBack = vAlong < -2.5 || (player.grounded && player.speed < -1.5);
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
@@ -546,7 +562,11 @@ function updateCamera(dt: number): void {
   // together, so the skater's resting spot in frame shifts while the tilt
   // stays put. The boulder shot authors its own framing; fade the knob out.
   const off = TUNING.camOffset * (1 - boulderF);
-  camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist - off);
+  camTarget.set(
+    player.pos.x - camF.x * (dist - off),
+    player.pos.y + height,
+    player.pos.z - camF.z * (dist - off),
+  );
 
   // Snap after respawn teleports; damp otherwise (camEase = chase stiffness).
   if (camera.position.distanceTo(camTarget) > 30) {
@@ -559,15 +579,15 @@ function updateCamera(dt: number): void {
   // pitch, re-derived). Side / reverse / boulder keep their authored absolute
   // aims, converted from the old look-ahead shots so defaults are identical.
   const aimY = THREE.MathUtils.lerp(TUNING.camTilt, TUNING.camTilt - 0.2, sideF);
+  const aimK = THREE.MathUtils.lerp(
+    THREE.MathUtils.lerp(-off, 3.5, back), // reversing: aim swings behind you
+    12, // boulder: aim well down-course, hero floats high with lead room below
+    boulderF,
+  );
   lookPoint.set(
-    player.pos.x,
+    player.pos.x - camF.x * aimK,
     player.pos.y + THREE.MathUtils.lerp(aimY, 1.6, boulderF), // boulder: tilt UP the corridor
-    player.pos.z +
-      THREE.MathUtils.lerp(
-        THREE.MathUtils.lerp(-off, 3.5, back), // reversing: aim swings behind you
-        12, // boulder: aim well down-course, hero floats high with lead room below
-        boulderF,
-      ),
+    player.pos.z - camF.z * aimK,
   );
 
   camera.lookAt(lookPoint);

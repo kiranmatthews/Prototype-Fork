@@ -529,6 +529,12 @@ export class Player {
     this.slipClamp = false;
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
+    // a camera lane owns the course frame: spawn facing straight down it
+    const lf0 = level.laneDirAt(this.pos.x, this.pos.z);
+    if (lf0) {
+      this.axisF.set(lf0.x, 0, lf0.z);
+      this.axisL.set(-this.axisF.z, 0, this.axisF.x);
+    }
     this.charging = false;
     this.chargePlanted = false;
     this.chargeTimer = 0;
@@ -632,11 +638,29 @@ export class Player {
     // right), so axes flip the instant you cross a corner — no lock, no
     // latch. Held skate speed transfers into the new direction if the stick
     // is pushing along it.
+    // CAMERA LANE (Crash 3 rails): when the level has a drawn lane, the
+    // course frame EASES along the local lane tangent — the camera turns with
+    // it (main.ts follows the same tangent), so a held "forward" walks
+    // winding corridors without the player steering the bends. The stick
+    // passes straight through: screen-up IS the lane direction.
+    const laneDir =
+      this.state !== 'grind' && !this.freeSkate ? level.laneDirAt(this.pos.x, this.pos.z) : null;
+    if (laneDir) {
+      const k = Math.min(1, 6 * dt);
+      this.axisF.x += (laneDir.x - this.axisF.x) * k;
+      this.axisF.z += (laneDir.z - this.axisF.z) * k;
+      this.axisF.y = 0;
+      const al = Math.hypot(this.axisF.x, this.axisF.z) || 1;
+      this.axisF.x /= al;
+      this.axisF.z /= al;
+      this.axisL.set(-this.axisF.z, 0, this.axisF.x);
+    }
     const zone = level.zoneAt(this.pos.x, this.pos.z);
     const wantDir = zone ? zone.dir : 'S';
     // Corner flips are a WALKING concept — free-heading skating just carves
-    // through corners, so the axes are left alone while on the board.
-    if (wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
+    // through corners, so the axes are left alone while on the board. A lane
+    // owns the axes outright (continuous turns, no cardinal flips).
+    if (!laneDir && !level.laneActive && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
       const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
       const alongNew =
@@ -645,7 +669,7 @@ export class Player {
         Math.abs(alongNew) > 0.3 ? Math.sign(alongNew) * Math.abs(oldSpeed) * 0.7 : 0;
     }
     let ctl =
-      this.travelDir === 'S'
+      this.travelDir === 'S' || level.laneActive
         ? input
         : this.travelDir === 'E'
           ? ({ ...input, moveY: input.moveX, moveX: input.moveY } as unknown as Input)
@@ -657,9 +681,13 @@ export class Player {
       const rx = input.moveX;
       const ry = input.moveY;
       if (rx !== 0 || ry !== 0) {
+        // screen-up = the camera's forward: -Z normally, the lane tangent on
+        // lane levels (the camera rig turns to match). screen-right is its
+        // perpendicular (-f.z, f.x). w = f*up + r*right.
+        const cf = level.laneDirAt(this.pos.x, this.pos.z) ?? { x: 0, z: -1 };
         const inv = 1 / Math.hypot(rx, ry);
-        const wx = rx * inv;
-        const wz = -ry * inv; // stick up = world -Z (the camera never turns)
+        const wx = (cf.x * ry - cf.z * rx) * inv;
+        const wz = (cf.z * ry + cf.x * rx) * inv;
         ctl = {
           ...input,
           moveY: wx * this.axisF.x + wz * this.axisF.z,

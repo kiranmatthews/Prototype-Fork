@@ -192,6 +192,7 @@ export interface CustomComponent {
     | 'crate' // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
     | 'metal' // unbreakable steel crate: solid terrain, spin/slam-proof
     | 'rock' // low-poly boulder: p = center, s = [w,h,d] bounds, seed shapes it; solid + walkable
+    | 'camnode' // camera-lane node: nodes chain in order into the lane the camera + controls steer along
     | 'outline' // LEGACY ghost crate (old saves) — loads as a wood crate with outline: true
     | 'checkpoint'
     | 'enemy' // patrols along X around p, range each way
@@ -827,6 +828,7 @@ export class Level {
       }
     };
     const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal', 'rock']);
+    const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     for (const pass of [true, false]) {
       data.components.forEach((c, i) => {
         if (geomPass.has(c.t) !== pass) return;
@@ -1093,11 +1095,49 @@ export class Level {
             this.pendulum(c.p[0], c.p[1], c.p[2], c.len ?? 5, c.amp ?? 1.0, c.speed ?? 1.6, c.phase ?? 0);
           } else if (c.t === 'wumpa') {
             this.pickup(c.p[0], c.p[1], c.p[2]);
+          } else if (c.t === 'camnode') {
+            // camera-lane node: pure editor object — a floating diamond you
+            // drag around; invisible (and non-physical) in play
+            this.lanePts.push({ x: c.p[0], z: c.p[2] });
+            laneVis.push(new THREE.Vector3(c.p[0], c.p[1], c.p[2]));
+            const marker = new THREE.Mesh(
+              new THREE.OctahedronGeometry(0.5, 0),
+              new THREE.MeshBasicMaterial({ color: 0xff5ad2, transparent: true, opacity: 0.85, depthWrite: false }),
+            );
+            marker.position.set(c.p[0], c.p[1], c.p[2]);
+            marker.visible = false;
+            marker.userData.editorGhost = true;
+            this.root.add(marker);
           } else if (c.t === 'crystal') {
             this.crystal(c.p[0], c.p[1], c.p[2]);
           }
         });
       });
+      // the lane itself: a ghost line with direction cones, editor-only and
+      // unpickable (no editorIdx — the NODES are the editable things)
+      if (laneVis.length >= 2) {
+        const line = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(laneVis),
+          new THREE.LineBasicMaterial({ color: 0xff5ad2 }),
+        );
+        line.visible = false;
+        line.userData.editorGhost = true;
+        this.root.add(line);
+        const up = new THREE.Vector3(0, 1, 0);
+        for (let i = 0; i < laneVis.length - 1; i++) {
+          const dir = laneVis[i + 1].clone().sub(laneVis[i]);
+          if (dir.lengthSq() < 1e-4) continue;
+          const cone = new THREE.Mesh(
+            new THREE.ConeGeometry(0.32, 0.85, 6),
+            new THREE.MeshBasicMaterial({ color: 0xff8ae0, transparent: true, opacity: 0.8, depthWrite: false }),
+          );
+          cone.position.copy(laneVis[i]).addScaledVector(dir, 0.5);
+          cone.quaternion.setFromUnitVectors(up, dir.clone().normalize());
+          cone.visible = false;
+          cone.userData.editorGhost = true;
+          this.root.add(cone);
+        }
+      }
     }
   }
 
@@ -1129,6 +1169,42 @@ export class Level {
       if (x >= zn.xMin && x <= zn.xMax && z >= zn.zMin && z <= zn.zMax) return zn;
     }
     return null;
+  }
+
+  // CAMERA LANE (Crash 3 camera rails): camnode components chain into a
+  // polyline; the tangent of the nearest segment is the local "down-course"
+  // direction the camera and the controls steer along.
+  private lanePts: { x: number; z: number }[] = [];
+  get laneActive(): boolean {
+    return this.lanePts.length >= 2;
+  }
+
+  laneDirAt(x: number, z: number): { x: number; z: number } | null {
+    const pts = this.lanePts;
+    if (pts.length < 2) return null;
+    let best = Infinity;
+    let bx = 0;
+    let bz = 0;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const ax = pts[i].x;
+      const az = pts[i].z;
+      const dx = pts[i + 1].x - ax;
+      const dz = pts[i + 1].z - az;
+      const len2 = dx * dx + dz * dz;
+      if (len2 < 1e-6) continue;
+      let t = ((x - ax) * dx + (z - az) * dz) / len2;
+      t = Math.max(0, Math.min(1, t));
+      const px = ax + dx * t;
+      const pz = az + dz * t;
+      const d2 = (x - px) * (x - px) + (z - pz) * (z - pz);
+      if (d2 < best) {
+        best = d2;
+        bx = dx;
+        bz = dz;
+      }
+    }
+    const l = Math.hypot(bx, bz);
+    return l > 1e-4 ? { x: bx / l, z: bz / l } : null;
   }
 
   update(dt: number): void {

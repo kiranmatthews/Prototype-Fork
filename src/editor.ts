@@ -86,6 +86,12 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
     ],
   },
   {
+    title: 'CAMERA',
+    items: [
+      { label: 'cam node', icon: (x) => { x.fillStyle = '#ff5ad2'; x.beginPath(); x.moveTo(9, 2); x.lineTo(15, 9); x.lineTo(9, 16); x.lineTo(3, 9); x.closePath(); x.fill(); x.strokeStyle = '#ff8ae0'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 9); x.lineTo(17, 9); x.stroke(); }, make: (at) => ({ t: 'camnode', p: [at.x, at.y + 1.5, at.z] }) },
+    ],
+  },
+  {
     title: 'HAZARDS & THINGS',
     items: [
       { label: 'enemy', icon: (x) => { x.fillStyle = '#c03a2a'; x.beginPath(); x.arc(9, 11, 5, 0, 7); x.fill(); x.fillStyle = '#fff'; x.fillRect(6, 9, 2, 2); x.fillRect(10, 9, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3 }) },
@@ -1627,6 +1633,11 @@ export class Editor {
     if (c.nm) return c.nm;
     if (c.t === 'crate') return `crate · ${c.kind ?? 'wood'}${c.outline ? ' (outline)' : ''}`;
     if (c.t === 'wall' && c.invisible) return 'invis wall';
+    if (c.t === 'camnode') {
+      // show the node's position in the chain: "cam node 2/5"
+      const nodes = this.data.components.filter((o) => o.t === 'camnode');
+      return `cam node ${nodes.indexOf(c) + 1}/${nodes.length}`;
+    }
     return c.t;
   }
 
@@ -2021,6 +2032,35 @@ export class Editor {
       });
       this.propsEl.appendChild(shuffle);
       colorRow();
+    } else if (c.t === 'camnode') {
+      const note = document.createElement('div');
+      note.className = 'ed-dim';
+      note.textContent =
+        'camera lane: nodes chain in order (see LAYERS). In play, the camera and the controls steer along the line — hold forward through winding corridors, Crash 3 style. 2+ nodes = live.';
+      this.propsEl.appendChild(note);
+      const chain = document.createElement('button');
+      chain.className = 'ed-btn';
+      chain.textContent = '+ chain next node';
+      chain.addEventListener('click', () => {
+        // continue the lane: step onward along the last segment's direction
+        const nodes: number[] = [];
+        this.data.components.forEach((o, i) => {
+          if (o.t === 'camnode') nodes.push(i);
+        });
+        const lastIdx = nodes[nodes.length - 1];
+        const last = this.data.components[lastIdx];
+        const prev = nodes.length > 1 ? this.data.components[nodes[nodes.length - 2]] : null;
+        let dx = 0;
+        let dz = -6;
+        if (prev) {
+          const l = Math.hypot(last.p[0] - prev.p[0], last.p[2] - prev.p[2]) || 1;
+          dx = ((last.p[0] - prev.p[0]) / l) * 6;
+          dz = ((last.p[2] - prev.p[2]) / l) * 6;
+        }
+        this.addComponent({ t: 'camnode', p: [last.p[0] + dx, last.p[1], last.p[2] + dz] });
+        chain.blur();
+      });
+      this.propsEl.appendChild(chain);
     } else if (c.t === 'enemy') {
       num('patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
       num('speed', () => c.speed ?? 3, (v) => (c.speed = Math.max(0.5, v)));
