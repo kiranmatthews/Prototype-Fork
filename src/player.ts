@@ -136,6 +136,7 @@ export class Player {
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
   private flipTimer = 0; // front-flip on jump (visual only)
+  private dirHoldT = 0; // seconds a direction has been held (roll-jump trigger)
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
   private lastVelX = 0; // measured horizontal velocity last step (u/s) —
@@ -717,7 +718,11 @@ export class Player {
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
-    this.flipTimer = Math.max(0, this.flipTimer - dt);
+    // touching down mid-somersault cuts it — Crash lands upright, no carry-over tumble
+    this.flipTimer = this.grounded ? 0 : Math.max(0, this.flipTimer - dt);
+    // The roll-jump gate: how long a direction has been HELD going into a
+    // jump. Steering only after takeoff never rolls — this is read AT launch.
+    this.dirHoldT = Math.hypot(input.moveX, input.moveY) > 0.5 ? this.dirHoldT + dt : 0;
     this.slideCd = Math.max(0, this.slideCd - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.slideRecoverT = Math.max(0, this.slideRecoverT - dt);
@@ -1182,9 +1187,16 @@ export class Player {
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
-      // on foot with real run speed: Crash forward somersault
-      this.lastJumpType = 'Forward Flip';
-      if (CONST.frontFlip) this.flipTimer = CONST.flipDuration; // flip anim disabled for now
+      // On foot with real run speed. The Crash rule from the reference: a
+      // direction HELD into the jump (flipHoldTime slider) is a committed
+      // running leap — full forward somersault. A neutral jump that's only
+      // steered after takeoff stays a plain jump, no roll.
+      if (CONST.frontFlip && this.dirHoldT >= TUNING.flipHoldTime && this.starTimer <= 0) {
+        this.lastJumpType = 'Forward Flip';
+        this.flipTimer = CONST.flipDuration;
+      } else {
+        this.lastJumpType = 'Running Jump';
+      }
       sfx.play('footstep2', 0.55, 1.5);
     } else {
       // (near-)standing: plain vertical Crash hop
@@ -1196,12 +1208,6 @@ export class Player {
     this.coyoteTimer = 0;
     this.charging = false;
     this.chargeTimer = 0;
-    // fast jumps flip — EXCEPT star jumps (crouch/slide), which hold the
-    // classic spread-eagle instead of tumbling through it
-    // the somersault is a RUNNING trick: board jumps (ollies) never flip
-    // (whole flip animation gated OFF for now — re-enable via CONST.frontFlip)
-    if (CONST.frontFlip && spd >= CONST.flipMinSpeed && this.starTimer <= 0 && !this.freeSkate)
-      this.flipTimer = CONST.flipDuration;
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
@@ -4576,9 +4582,14 @@ export class Player {
     this.grindYawPose += (gy - this.grindYawPose) * Math.min(1, 12 * dt);
     const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
     const breathe = Math.sin(this.runTime * 2.3);
-    // Flip tuck: knees snap to the chest through the somersault (peaks mid-air).
+    // Somersault phasing, straight from the reference: launch EXTENDED (the
+    // arm-throw jump pose), then the whole 360 whips through the middle of
+    // the arc — rotation lives in the 15%..80% window — and she's upright
+    // again well before touchdown. flipQ is the rotation's own 0..1 clock;
+    // the tuck (knees to chest, arms wrapping) peaks halfway through it.
     const flipProg = this.flipTimer > 0 ? 1 - this.flipTimer / CONST.flipDuration : 0;
-    const flipTuck = flipProg > 0 ? Math.sin(flipProg * Math.PI) : 0;
+    const flipQ = flipProg > 0 ? THREE.MathUtils.clamp((flipProg - 0.15) / 0.65, 0, 1) : 0;
+    const flipTuck = flipQ > 0 && flipQ < 1 ? Math.sin(flipQ * Math.PI) : 0;
     // Skate stance: while actually rolling on the board, plant the feet on the
     // deck — spread fore-aft (front foot toward the nose, back toward the tail)
     // and angled out — instead of hanging together at the plank's centre.
@@ -5039,8 +5050,8 @@ export class Player {
       (this.slamActive && this.slamHangT <= 0) || this.slamFlatT > 0 || this.bailDownT > 0;
     this.hangPose += ((hanging ? 1 : 0) - this.hangPose) * Math.min(1, 16 * dt);
     this.dropPose += ((dropping ? 1 : 0) - this.dropPose) * Math.min(1, 20 * dt);
-    const flip =
-      this.flipTimer > 0 ? (1 - this.flipTimer / CONST.flipDuration) * Math.PI * 2 : 0;
+    // smoothstep: the roll accelerates into the tuck and eases out upright
+    const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     if (this.state === 'dead' && this.bailing) {
       // Bail tumble: rag-doll head-over-heels until the respawn.
       this.bailSpin += 13 * dt;
@@ -5092,6 +5103,20 @@ export class Player {
       (this.grounded ? 0.1 * this.dropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.075 * this.walkAmp + // reference bounce: each step hops
       breathe * 0.015 * this.idleAmp;
+    // The somersault wheels around the WAIST, not the feet (the rig's origin):
+    // counter-translate so the hip stays pinned on the jump arc while the
+    // body rotates about it. The offset lives in the group frame, so the
+    // pitch axis has to account for the body's own yaw.
+    if (flip > 0) {
+      const waistH = 0.95;
+      const yawB = this.bodyGroup.rotation.y;
+      this.bodyGroup.position.y += waistH * (1 - Math.cos(flip));
+      this.bodyGroup.position.x = -waistH * Math.sin(flip) * Math.sin(yawB);
+      this.bodyGroup.position.z = -waistH * Math.sin(flip) * Math.cos(yawB);
+    } else {
+      this.bodyGroup.position.x = 0;
+      this.bodyGroup.position.z = 0;
+    }
     // Impact squash right after a slam lands; crawl also compresses the rig so
     // the whole body sits low and compact instead of floating pitched-over.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;

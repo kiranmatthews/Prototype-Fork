@@ -15,6 +15,7 @@ export const TUNING = {
   jumpVelocity: 17, // fully-charged jump (hold X)
   jumpMinVelocity: 12.5, // quick-tap jump
   jumpChargeTime: 0.4, // hold this long for full power
+  flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate speed settles back to cruiseSpeed after releasing X
@@ -126,7 +127,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 4; // v4: camera reparametrized (camTilt aims at the body, camLookAhead -> camOffset translation)
+export const TUNING_VERSION = 5; // v5: flipHoldTime added (directional roll jump)
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
@@ -169,6 +170,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
+  flipHoldTime: { min: 0, max: 0.6, step: 0.02 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
@@ -252,6 +254,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   jumpVelocity: 'Launch speed of a FULLY charged jump (X held for jumpChargeTime).',
   jumpMinVelocity: 'Launch speed of a quick X tap — the smallest hop.',
   jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
+  flipHoldTime:
+    'The roll-jump gate: a direction held at least this long GOING INTO an on-foot jump triggers the forward somersault (Crash rules). Jumping neutral and only steering mid-air never rolls. 0 = every moving jump rolls; raise it to demand a longer committed run-up.',
   chargeBoost:
     'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
   cruiseSpeed:
@@ -419,7 +423,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'jumpChargeTime', 'riseGravity', 'fallGravity', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'riseGravity', 'fallGravity', 'airControl'],
   },
   {
     title: 'SKATING',
@@ -535,9 +539,8 @@ export const CONST = {
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
-  frontFlip: false, // running-jump somersault animation — OFF for now; re-enable with a better character model
-  flipDuration: 0.55, // Crash front-flip time on jumps (visual only)
-  flipMinSpeed: 12, // below this speed a jump is a plain hop, no flip (Crash rules)
+  frontFlip: true, // running-jump somersault animation (triggered by TUNING.flipHoldTime)
+  flipDuration: 0.75, // full somersault clock — matches the reference full-hold jump arc; rotation lives in the 15..80% window (visual only)
   slideCooldown: 0.25,
   slamSpeed: 46, // Circle+down pancake slam: authored fall rate
   maxFallSpeed: 52, // terminal velocity: fall no faster than the ground ray can catch (no deck tunneling)
