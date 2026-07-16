@@ -12,8 +12,9 @@ export const TUNING = {
   // THIS game's speed and level scale; the reference timing already matched.)
   riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
-  jumpVelocity: 17, // fully-charged jump (hold X)
-  jumpMinVelocity: 12.5, // quick-tap jump
+  jumpVelocity: 15.5, // fully-charged jump (hold X)
+  jumpMinVelocity: 10, // quick-tap jump
+  ollieVelocity: 13, // BOARD OLLIE pop while skating — fixed, not charge-scaled (X is the accelerator, so a skate jump is always released at full charge; charge-scaling made every ollie a max-height moon jump)
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
@@ -129,7 +130,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 5; // v5: flipHoldTime added (directional roll jump)
+export const TUNING_VERSION = 6; // v6: ollieVelocity added (fixed board-ollie pop); jump pops retuned (15.5 / 10)
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
@@ -141,6 +142,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   fallGravity: { min: 10, max: 160, step: 1 },
   jumpVelocity: { min: 4, max: 30, step: 0.5 },
   jumpMinVelocity: { min: 6, max: 25, step: 0.5 },
+  ollieVelocity: { min: 6, max: 20, step: 0.5 },
   jumpChargeTime: { min: 0.2, max: 1.5, step: 0.05 },
   chargeBoost: { min: 0, max: 40, step: 1 },
   cruiseSpeed: { min: 6, max: 20, step: 0.5 },
@@ -257,6 +259,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Gravity on the way DOWN. Higher = snappier PS1 landings and shorter overall airtime.',
   jumpVelocity: 'Launch speed of a FULLY charged jump (X held for jumpChargeTime).',
   jumpMinVelocity: 'Launch speed of a quick X tap — the smallest hop.',
+  ollieVelocity:
+    'BOARD OLLIE: the fixed pop of a jump while actually skating. Skate jumps cannot charge-scale — X is the accelerator, so you are ALWAYS at full charge when you release — which made every ollie a max-height moon jump. This slider owns skate-jump height on its own; on-foot jumps still charge between jumpMinVelocity and jumpVelocity, and vert/pipe ollies keep their earned climb.',
   jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
   flipHoldTime:
     'The roll-jump gate: a direction held at least this long GOING INTO an on-foot jump triggers the forward somersault (Crash rules). Jumping neutral and only steering mid-air never rolls. 0 = every moving jump rolls; raise it to demand a longer committed run-up.',
@@ -431,7 +435,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'riseGravity', 'fallGravity', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'riseGravity', 'fallGravity', 'airControl'],
   },
   {
     title: 'SKATING',

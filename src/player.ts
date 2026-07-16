@@ -1236,7 +1236,11 @@ export class Player {
       this.lastJumpType = 'Slide Jump';
       sfx.play('woosh2', 0.6);
     } else if (spd > TUNING.walkSpeed + 0.5) {
-      // leaving actual skating: THPS board ollie
+      // leaving actual skating: THPS board ollie. X doubles as the skate
+      // accelerator, so a skating jump is ALWAYS released at full charge —
+      // charge-scaled height turned every ollie into a max-power moon jump.
+      // The ollie owns its own fixed pop instead.
+      this.vVel = TUNING.ollieVelocity;
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
