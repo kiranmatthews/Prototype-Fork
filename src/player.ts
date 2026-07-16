@@ -1225,6 +1225,14 @@ export class Player {
         this.comboTimer = CONST.comboWindow;
       }
       this.emitSparks(Math.random() < 0.3 ? 1 : 0, 0xffe08a, 0.6);
+      // R2 from the stall: a DELIBERATE exit out the back — onto the deck
+      // (clean, no bail) or through a shared ridge into the other pipe.
+      if (input.transferPressed) {
+        const back = this.pipeBehindLip(level);
+        if (back) this.lipDrop(false, back);
+        else this.lipExit();
+        return;
+      }
       // The press got you ON the lip; BALANCE keeps you there (THPS2: no
       // hold-to-maintain). You leave by ollieing out (X), tipping the needle
       // (into the pipe = ride it out, out the back = bail), or timing out.
@@ -2793,7 +2801,12 @@ export class Player {
   // and you come down the far transition. No target = the press does
   // nothing. Nothing too crazy.
   private trySpineTransfer(level: Level): boolean {
-    if (!this.vertAir || !this.pipeHang || !this.hangPipe || this.transferCoolT > 0) return false;
+    if (!this.vertAir || this.transferCoolT > 0) return false;
+    // general vert crest (a ramp lip, not a pipe): R2 still pulls you OUT —
+    // eject over the top onto whatever's behind the wall
+    if (!this.pipeHang || !this.hangPipe) {
+      return this.vertExit(this.vertNormal.clone().negate(), this.pos.y);
+    }
     const hp = this.hangPipe;
     if (this.pos.y < hp.lipY - 0.5) return false; // below the coping the ridge is solid
     const anchorCross = hp.crossCoord(this.vertAnchor.x, this.vertAnchor.z);
@@ -2814,7 +2827,14 @@ export class Player {
         break;
       }
     }
-    if (!target) return false;
+    if (!target) {
+      // no pipe across the ridge — R2 pulls you OUT of the vert instead:
+      // hop the coping onto the deck/platform behind it and roll away
+      const out = new THREE.Vector3(hp.axis === 'z' ? side : 0, 0, hp.axis === 'z' ? 0 : side);
+      if (hp.axis === 'z') this.pos.x = lipCross + side * 1.2;
+      else this.pos.z = lipCross + side * 1.2;
+      return this.vertExit(out, Math.max(this.pos.y, hp.lipY + 0.3));
+    }
     // mirror pos + glue plane across the lip line; keep height, arc, lateral
     const myCross = hp.crossCoord(this.pos.x, this.pos.z);
     if (hp.axis === 'z') {
@@ -2833,6 +2853,31 @@ export class Player {
     return true;
   }
 
+  // R2 pull-out: leave the glued vert cleanly in `out`'s direction — a small
+  // outward hop that lands on regular ground (deck, platform, whatever's
+  // there). Not a bail: the combo survives, you just roll away.
+  private vertExit(out: THREE.Vector3, y: number): boolean {
+    if (out.lengthSq() < 1e-6) return false;
+    out.setY(0).normalize();
+    this.pos.addScaledVector(out, 0.6);
+    this.pos.y = y;
+    this.vertAir = false;
+    this.pipeHang = false;
+    this.hangPipe = null;
+    this.vertLatVel = 0;
+    this.axisF.copy(out);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.speed = Math.max(5, Math.abs(this.speed) * 0.5); // roll-out push (hang speed sits in vVel)
+    this.vVel = Math.max(this.vVel, 2.5);
+    this.state = 'air';
+    this.grounded = false;
+    this.airFromSkate = true;
+    this.pipeLandGraceT = 0.35; // a stale held direction must not brake the exit
+    this.transferCoolT = 0.3;
+    sfx.play('woosh2', 0.55);
+    return true;
+  }
+
   // Is another vert's mouth right behind this coping? (A spine/ridge stall —
   // two pipes sharing the lip line.) Tipping out the "back" there is not a
   // bail: you fall into the OTHER pipe and ride it out.
@@ -2848,6 +2893,35 @@ export class Player {
       if (Math.abs(other.crossCoord(px, pz) - other.cross) <= other.lipX - 0.3) return other;
     }
     return null;
+  }
+
+  // R2 out of a lip stall: step off the coping onto the DECK side, upright
+  // and rolling — the deliberate cousin of lipBail (which is the punishment
+  // for losing the needle).
+  private lipExit(): void {
+    const hp = this.lipPipe!;
+    const out = this.lipSide; // away from the pipe centre
+    if (hp.axis === 'z') {
+      this.pos.x += out * 0.9;
+      this.axisF.set(out, 0, 0);
+    } else {
+      this.pos.z += out * 0.9;
+      this.axisF.set(0, 0, out);
+    }
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.pos.y = hp.lipY + 0.1;
+    this.lipStallT = 0;
+    this.lipPipe = null;
+    this.lipCoolT = 0.5;
+    this.balance = 0;
+    this.balanceCritT = 0;
+    this.state = 'air';
+    this.grounded = false;
+    this.airFromSkate = true;
+    this.speed = 4;
+    this.vVel = 2.5;
+    this.pipeLandGraceT = 0.35;
+    sfx.play('skateTransition', 0.5);
   }
 
   // Tipped out the BACK of the coping: the honest lip bail — ejected onto the

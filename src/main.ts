@@ -496,9 +496,9 @@ player.onGameOver = () => ui.showDeathScreen(true);
 // Idle-reference calibration (Crash 3 Toad Village clip): camera pitched
 // ~18° down so crate TOPS read, hero's feet near the bottom of frame,
 // hero ~30% of frame height.
-const CAM_DIST = 5.2;
-const CAM_HEIGHT = 4.1;
-const CAM_LOOKAHEAD = 5.0;
+// Base framing now lives on TUNING sliders (CAMERA section): camDist,
+// camHeight, camTilt, camLookAhead, camFov, camEase. The hand-tuned defaults
+// are unchanged; special shots (side-scroll, boulder) scale relative to them.
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
 const camAimTmp = new THREE.Vector3();
@@ -525,7 +525,7 @@ function updateCamera(dt: number): void {
   // hero HIGH up the screen, well off centre, with all the lead room below him
   // for the crates/gaps rushing up.
   boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
-  const targetFov = THREE.MathUtils.lerp(CAM_FOV, BOULDER_FOV, boulderF);
+  const targetFov = THREE.MathUtils.lerp(TUNING.camFov, BOULDER_FOV, boulderF);
   if (Math.abs(camera.fov - targetFov) > 0.005) {
     camera.fov = targetFov;
     camera.updateProjectionMatrix();
@@ -537,23 +537,25 @@ function updateCamera(dt: number): void {
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const dist = THREE.MathUtils.lerp(CAM_DIST, 9.2, sideF) + back * 3.8 + boulderF * 18.8;
+  // side-scroll stretches scale off the sliders (9.2/5.2 and 3.7/4.1 were the
+  // authored ratios) so a re-tuned base carries its feel into the turns
+  const dist = THREE.MathUtils.lerp(TUNING.camDist, TUNING.camDist * 1.77, sideF) + back * 3.8 + boulderF * 18.8;
   const height =
-    THREE.MathUtils.lerp(CAM_HEIGHT, 3.7, sideF) + back * 1.1 + boulderF * 1.7;
+    THREE.MathUtils.lerp(TUNING.camHeight, TUNING.camHeight * 0.9, sideF) + back * 1.1 + boulderF * 1.7;
   camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
 
-  // Snap after respawn teleports; damp otherwise.
+  // Snap after respawn teleports; damp otherwise (camEase = chase stiffness).
   if (camera.position.distanceTo(camTarget) > 30) {
     camera.position.copy(camTarget);
   } else {
-    camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
+    camera.position.lerp(camTarget, 1 - Math.exp(-TUNING.camEase * dt));
   }
 
   lookPoint.set(
     player.pos.x,
-    player.pos.y + THREE.MathUtils.lerp(0.15, 1.5, sideF) + boulderF * 1.45, // raise the aim: tilt UP toward the boulder up-course
+    player.pos.y + THREE.MathUtils.lerp(TUNING.camTilt, 1.35 + TUNING.camTilt, sideF) + boulderF * 1.45, // raise the aim: tilt UP toward the boulder up-course
     player.pos.z -
-      THREE.MathUtils.lerp(CAM_LOOKAHEAD, 2.0, sideF) +
+      THREE.MathUtils.lerp(TUNING.camLookAhead, TUNING.camLookAhead * 0.4, sideF) +
       back * 8.5 +
       boulderF * 17, // aim well DOWN-course (+Z) so the hero floats high up the screen, lead room below
   );
@@ -561,8 +563,8 @@ function updateCamera(dt: number): void {
   camera.lookAt(lookPoint);
 }
 
-camera.position.copy(player.pos).addScaledVector(new THREE.Vector3(0, 0, 1), CAM_DIST);
-camera.position.y += CAM_HEIGHT;
+camera.position.copy(player.pos).addScaledVector(new THREE.Vector3(0, 0, 1), TUNING.camDist);
+camera.position.y += TUNING.camHeight;
 
 // --- fixed-step loop --------------------------------------------------------
 const clock = new THREE.Clock();
