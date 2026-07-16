@@ -253,9 +253,8 @@ function applyTheme(): void {
 // tighter, telephoto lens (updateCamera lerps toward it) — narrowing the FOV
 // compresses depth so the runway lays out flat and readable instead of
 // crushing to a foreshortened sliver at the horizon.
-const CAM_FOV = 62;
 const BOULDER_FOV = 27;
-const camera = new THREE.PerspectiveCamera(CAM_FOV, 1, 0.1, 400);
+const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 
 function resize(): void {
   const w = window.innerWidth;
@@ -497,7 +496,7 @@ player.onGameOver = () => ui.showDeathScreen(true);
 // ~18° down so crate TOPS read, hero's feet near the bottom of frame,
 // hero ~30% of frame height.
 // Base framing now lives on TUNING sliders (CAMERA section): camDist,
-// camHeight, camTilt, camLookAhead, camFov, camEase. The hand-tuned defaults
+// camHeight, camTilt, camOffset, camFov, camEase. The hand-tuned defaults
 // are unchanged; special shots (side-scroll, boulder) scale relative to them.
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();

@@ -632,12 +632,11 @@ export class Player {
     }
     // A manual only lives on rideable flat ground: any other state drops it.
     if (this.manualing !== 0 && (this.state !== 'ride' || !this.grounded)) this.endManual();
-    // The path can right-angle into an X-running stretch (the camera never
-    // turns — the turned path IS the side-scroll view). Because the camera is
-    // fixed, every mapping agrees in WORLD space (right is always screen
-    // right), so axes flip the instant you cross a corner — no lock, no
-    // latch. Held skate speed transfers into the new direction if the stick
-    // is pushing along it.
+    // ZONES (built-in levels): the path can right-angle into an X-running
+    // stretch — there the camera holds its frame and the turned path IS the
+    // side-scroll view, so axes flip the instant you cross a corner (no lock,
+    // no latch) and held skate speed transfers if the stick pushes along the
+    // new direction. Custom levels steer with the camera LANE above instead.
     // CAMERA LANE (Crash 3 rails): when the level has a drawn lane, the
     // course frame EASES along the local lane tangent — the camera turns with
     // it (main.ts follows the same tangent), so a held "forward" walks

@@ -128,6 +128,10 @@ interface HandleDef {
 }
 const HANDLE_GEO = new THREE.BoxGeometry(0.55, 0.55, 0.55);
 
+// grid rounding + structural copies, used all over the editor
+const snapHalf = (v: number): number => Math.round(v * 2) / 2;
+const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
+
 export class Editor {
   active = false;
   data: CustomLevelData;
@@ -463,7 +467,7 @@ export class Editor {
   private duplicateSelected(): void {
     if (this.sel.length === 0) return;
     const copies = this.sel.map((i) => {
-      const copy = JSON.parse(JSON.stringify(this.data.components[i])) as CustomComponent;
+      const copy = deepClone(this.data.components[i]);
       copy.p = [copy.p[0] + 3, copy.p[1], copy.p[2] + 3];
       return copy;
     });
@@ -476,7 +480,7 @@ export class Editor {
   copySelected(): void {
     if (this.sel.length === 0) return;
     this.clipboard = this.sel.map(
-      (i) => JSON.parse(JSON.stringify(this.data.components[i])) as CustomComponent,
+      (i) => deepClone(this.data.components[i]),
     );
     this.pasteBump = 0;
     this.lastPasteKey = '';
@@ -512,11 +516,11 @@ export class Editor {
     let dx = t.x - cx + this.pasteBump;
     let dz = t.z - cz + this.pasteBump;
     if (this.snap) {
-      dx = Math.round(dx * 2) / 2;
-      dz = Math.round(dz * 2) / 2;
+      dx = snapHalf(dx);
+      dz = snapHalf(dz);
     }
     const copies = this.clipboard.map((c) => {
-      const copy = JSON.parse(JSON.stringify(c)) as CustomComponent;
+      const copy = deepClone(c);
       copy.p = [copy.p[0] + dx, copy.p[1], copy.p[2] + dz];
       return copy;
     });
@@ -1069,7 +1073,7 @@ export class Editor {
             lineO,
             lineD,
             t0: 0,
-            orig: JSON.parse(JSON.stringify(this.data.components[this.resizeIdx])) as CustomComponent,
+            orig: deepClone(this.data.components[this.resizeIdx]),
             vtx: def.vtx,
             plane: new THREE.Plane(new THREE.Vector3(0, 1, 0), -def.pos.y),
           };
@@ -1084,7 +1088,7 @@ export class Editor {
             lineO,
             lineD,
             t0,
-            orig: JSON.parse(JSON.stringify(this.data.components[this.resizeIdx])) as CustomComponent,
+            orig: deepClone(this.data.components[this.resizeIdx]),
           };
           if (this.controls) this.controls.enabled = false;
           this.downAt = null;
@@ -1118,7 +1122,7 @@ export class Editor {
         const order = [...this.sel];
         const start = this.data.components.length;
         const copies = order.map(
-          (i) => JSON.parse(JSON.stringify(this.data.components[i])) as CustomComponent,
+          (i) => deepClone(this.data.components[i]),
         );
         this.remapGroups(copies); // clones get their own group wiring
         grabbed = start + order.indexOf(hit);
@@ -1156,7 +1160,7 @@ export class Editor {
   startDraw(t: 'platform' | 'pit' | 'wall'): void {
     this.cancelDraw();
     this.select(-1);
-    const y = this.controls ? Math.round(this.controls.target.y * 2) / 2 : 0;
+    const y = this.controls ? snapHalf(this.controls.target.y) : 0;
     this.drawing = { t, y, pts: [] };
     this.dom.style.cursor = 'crosshair';
     this.hooks.showMsg(
@@ -1214,8 +1218,8 @@ export class Editor {
     const out = new THREE.Vector3();
     if (!this.groundPoint(e, plane, out)) return null;
     if (this.snap) {
-      out.x = Math.round(out.x * 2) / 2;
-      out.z = Math.round(out.z * 2) / 2;
+      out.x = snapHalf(out.x);
+      out.z = snapHalf(out.z);
     }
     out.y = d.y;
     return out;
@@ -1239,11 +1243,9 @@ export class Editor {
       cx += pt.x;
       cz += pt.z;
     }
-    cx = Math.round((cx / pts.length) * 2) / 2;
-    cz = Math.round((cz / pts.length) * 2) / 2;
-    const rel = pts.map(
-      (pt) => [Math.round((pt.x - cx) * 2) / 2, Math.round((pt.z - cz) * 2) / 2] as [number, number],
-    );
+    cx = snapHalf(cx / pts.length);
+    cz = snapHalf(cz / pts.length);
+    const rel = pts.map((pt) => [snapHalf(pt.x - cx), snapHalf(pt.z - cz)] as [number, number]);
     const s: [number, number, number] = [1, d.t === 'wall' ? 4 : 1, 1];
     this.addComponent({ t: d.t, p: [cx, d.y, cz], s, pts: rel });
     this.cancelDraw();
@@ -1336,8 +1338,8 @@ export class Editor {
         if (!this.groundPoint(e, this.hdlDrag.plane, hit)) return;
         const c = this.data.components[this.resizeIdx];
         if (!c.pts) return;
-        const nx = this.snap ? Math.round((hit.x - c.p[0]) * 2) / 2 : hit.x - c.p[0];
-        const nz = this.snap ? Math.round((hit.z - c.p[2]) * 2) / 2 : hit.z - c.p[2];
+        const nx = this.snap ? snapHalf(hit.x - c.p[0]) : hit.x - c.p[0];
+        const nz = this.snap ? snapHalf(hit.z - c.p[2]) : hit.z - c.p[2];
         c.pts[this.hdlDrag.vtx] = [nx, nz];
         const defs2 = this.handleDefsFor(c);
         defs2.forEach((df, j) => this.handleMeshes[j]?.position.copy(df.pos));
@@ -1354,7 +1356,7 @@ export class Editor {
       const t = this.axisT(this.hdlDrag.lineO, this.hdlDrag.lineD);
       if (t === null) return;
       let d = t - this.hdlDrag.t0;
-      if (this.snap) d = Math.round(d * 2) / 2;
+      if (this.snap) d = snapHalf(d);
       const c = this.data.components[this.resizeIdx];
       this.hdlDefs[this.hdlDrag.i].apply!(this.hdlDrag.orig, c, d);
       // handles + panel track live; geometry rebuilds on a light throttle
@@ -1409,9 +1411,9 @@ export class Editor {
       nz = this.dragOrig[2] + (hit.z - this.dragStart.z);
     }
     if (this.snap) {
-      nx = Math.round(nx * 2) / 2;
-      ny = Math.round(ny * 2) / 2;
-      nz = Math.round(nz * 2) / 2;
+      nx = snapHalf(nx);
+      ny = snapHalf(ny);
+      nz = snapHalf(nz);
     }
     const gdx = nx - this.dragOrig[0];
     const gdy = ny - this.dragOrig[1];
@@ -1658,9 +1660,7 @@ export class Editor {
           }
           const at = this.controls ? this.controls.target.clone() : new THREE.Vector3();
           if (this.snap) {
-            at.x = Math.round(at.x * 2) / 2;
-            at.y = Math.round(at.y * 2) / 2;
-            at.z = Math.round(at.z * 2) / 2;
+            at.set(snapHalf(at.x), snapHalf(at.y), snapHalf(at.z));
           }
           this.addComponent(p.make!(at));
           b.blur();
@@ -1711,9 +1711,8 @@ export class Editor {
     spawnHere.addEventListener('click', () => {
       if (!this.controls) return;
       const t = this.controls.target;
-      this.data.spawn = [Math.round(t.x * 2) / 2, Math.round(t.y * 2) / 2 + 0.6, Math.round(t.z * 2) / 2];
+      this.data.spawn = [snapHalf(t.x), snapHalf(t.y) + 0.6, snapHalf(t.z)];
       this.commit();
-      this.buildPanelLevelRefresh?.();
       spawnHere.blur();
     });
     lvl.appendChild(spawnHere);
@@ -1793,8 +1792,6 @@ export class Editor {
     this.panel = panel;
     this.injectStyle();
   }
-
-  private buildPanelLevelRefresh: (() => void) | null = null;
 
   // one pop-out at a time (photoshop-dock rules); '' closes both
   private setPop(which: 'add' | 'layers' | ''): void {
@@ -2428,7 +2425,6 @@ export class Editor {
         background: none; border: none; color: #cdd6e4; cursor: pointer; padding: 2px;
         overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       }
-      .ed-layer-active .ed-layername { color: #58e08a; }
       .ed-layername-input {
         flex: 1; font: 11px ui-monospace, Menlo, Consolas, monospace;
         background: #10141e; color: #d5e0f0; border: 1px solid #3a4152;
