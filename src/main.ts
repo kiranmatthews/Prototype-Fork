@@ -510,12 +510,18 @@ const prevPlayerPos = new THREE.Vector3();
 // drawn CAMERA LANE it eases along the lane's local tangent, turning the
 // whole rig through winding corridors (Crash 3 camera rails).
 const camF = new THREE.Vector3(0, 0, -1);
+// CHASE CAM heading: the player's own travel direction, held while stopped.
+// With TUNING.chaseCam on, camF follows THIS instead — the camera swings
+// around behind wherever they go, so the skater always faces forward.
+const chaseF = new THREE.Vector3(0, 0, -1);
 
 function updateCamera(dt: number): void {
   // ONE rig, always facing down -Z. When the path right-angles into an
   // X-running stretch, the same camera sees it side-on — no yaw, just a
   // slightly wider, higher frame with less forward lead.
-  const inTurn = level.zoneAt(player.pos.x, player.pos.z) !== null;
+  // CHASE CAM ignores zones — the rig yaws behind the player instead.
+  const chaseOn = TUNING.chaseCam > 0.5 && !level.boulder;
+  const inTurn = !chaseOn && level.zoneAt(player.pos.x, player.pos.z) !== null;
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
   // Boulder-chase framing is a proper cinematographic shot, not just a further
@@ -535,11 +541,25 @@ function updateCamera(dt: number): void {
     camera.updateProjectionMatrix();
   }
 
+  // CHASE CAM: track the player's travel direction (held while stopped —
+  // idling never spins the shot). Real movement only; a walking pace is
+  // enough to steer it.
+  const vx = dt > 0 ? (player.pos.x - prevPlayerPos.x) / dt : 0;
+  const vz = dt > 0 ? (player.pos.z - prevPlayerPos.z) / dt : 0;
+  if (chaseOn && vx * vx + vz * vz > 9) {
+    chaseF.set(vx, 0, vz).normalize();
+  }
+
   // CAMERA LANE: ease the rig's forward along the lane's local tangent (the
   // player's course axes ease the same way, so screen-up stays "onward").
-  const lf = level.laneDirAt(player.pos.x, player.pos.z);
-  camF.x += ((lf ? lf.x : 0) - camF.x) * Math.min(1, 3.5 * dt);
-  camF.z += ((lf ? lf.z : -1) - camF.z) * Math.min(1, 3.5 * dt);
+  // Chase mode feeds the player's own heading through the same rig instead.
+  // The turn rate sets the carve radius (radius ≈ speed / rate, since the
+  // frame chases its own tail while you hold a side) — keep it LAZY: a held
+  // side is a wide arc, not a spin-top.
+  const lf = chaseOn ? chaseF : level.laneDirAt(player.pos.x, player.pos.z);
+  const turnK = Math.min(1, (chaseOn ? 1.6 : 3.5) * dt);
+  camF.x += ((lf ? lf.x : 0) - camF.x) * turnK;
+  camF.z += ((lf ? lf.z : -1) - camF.z) * turnK;
   camF.y = 0;
   if (camF.lengthSq() < 1e-4) camF.set(lf ? lf.x : 0, 0, lf ? lf.z : -1); // 180° pinch guard
   camF.normalize();
@@ -549,7 +569,8 @@ function updateCamera(dt: number): void {
       ? ((player.pos.x - prevPlayerPos.x) * camF.x + (player.pos.z - prevPlayerPos.z) * camF.z) / dt
       : 0;
   prevPlayerPos.copy(player.pos);
-  const movingBack = vAlong < -2.5 || (player.grounded && player.speed < -1.5);
+  // chase mode swings around behind instead of dollying back
+  const movingBack = !chaseOn && (vAlong < -2.5 || (player.grounded && player.speed < -1.5));
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 

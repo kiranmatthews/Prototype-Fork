@@ -646,8 +646,15 @@ export class Player {
     // it (main.ts follows the same tangent), so a held "forward" walks
     // winding corridors without the player steering the bends. The stick
     // passes straight through: screen-up IS the lane direction.
+    // CHASE CAM: the course frame follows the CAMERA's forward (which main
+    // is easing behind the travel direction) — stick-up is always "away from
+    // camera", and the skater reads always-facing-forward.
+    const chaseMode = TUNING.chaseCam > 0.5 && !level.boulder;
     const laneDir =
-      this.state !== 'grind' && !this.freeSkate ? level.laneDirAt(this.pos.x, this.pos.z) : null;
+      this.state !== 'grind' && !this.freeSkate
+        ? (level.laneDirAt(this.pos.x, this.pos.z) ??
+          (chaseMode ? { x: this.camDir.x, z: this.camDir.z } : null))
+        : null;
     if (laneDir) {
       const k = Math.min(1, 6 * dt);
       this.axisF.x += (laneDir.x - this.axisF.x) * k;
@@ -663,7 +670,7 @@ export class Player {
     // Corner flips are a WALKING concept — free-heading skating just carves
     // through corners, so the axes are left alone while on the board. A lane
     // owns the axes outright (continuous turns, no cardinal flips).
-    if (!laneDir && !level.laneActive && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
+    if (!laneDir && !level.laneActive && !chaseMode && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
       const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
       const alongNew =
@@ -685,9 +692,11 @@ export class Player {
       const ry = input.moveY;
       if (rx !== 0 || ry !== 0) {
         // screen-up = the camera's forward: -Z normally, the lane tangent on
-        // lane levels (the camera rig turns to match). screen-right is its
-        // perpendicular (-f.z, f.x). w = f*up + r*right.
-        const cf = level.laneDirAt(this.pos.x, this.pos.z) ?? { x: 0, z: -1 };
+        // lane levels, the live camera aim in chase mode (the rig turns to
+        // match all three). screen-right is its perpendicular (-f.z, f.x).
+        const cf =
+          level.laneDirAt(this.pos.x, this.pos.z) ??
+          (chaseMode ? { x: this.camDir.x, z: this.camDir.z } : { x: 0, z: -1 });
         const inv = 1 / Math.hypot(rx, ry);
         const wx = (cf.x * ry - cf.z * rx) * inv;
         const wz = (cf.z * ry + cf.x * rx) * inv;

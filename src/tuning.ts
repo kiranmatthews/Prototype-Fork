@@ -114,6 +114,7 @@ export const TUNING = {
   // reproduces the old 21° down-pitch); camOffset TRANSLATES the whole rig
   // down-course, so framing moves without the tilt changing. Decoupled knobs.
   camFov: 62, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
+  chaseCam: 0, // 1 = third-person follow: camera swings behind the travel direction, skater always faces forward
   camDist: 5.2, // trailing distance behind the character
   camHeight: 4.1, // camera elevation above the character
   camTilt: 2.1, // aim height on the character: higher = camera tilts UP (sees more sky)
@@ -231,6 +232,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   boulderSpeed: { min: 10, max: 45, step: 1 },
   renderScale: { min: 0.25, max: 1, step: 0.05 },
   camFov: { min: 30, max: 100, step: 1 },
+  chaseCam: { min: 0, max: 1, step: 1 },
   camDist: { min: 2, max: 14, step: 0.1 },
   camHeight: { min: 0.5, max: 10, step: 0.1 },
   camTilt: { min: -6, max: 10, step: 0.05 },
@@ -415,6 +417,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   camOffset:
     'OFFSET: slides the WHOLE rig (camera + aim together) down-course — moves where the skater rests in the frame WITHOUT changing the tilt. Positive = she sits lower in frame with more road ahead; negative = she rides higher/closer.',
   camHeight: 'ELEVATION: how high above the character the camera rides. Higher = more top-down.',
+  chaseCam:
+    'CHASE CAM (0 = off, 1 = on): third-person follow — the camera swings around behind wherever you travel, so the skater always faces forward and stick-up is always "onward". Overrides the fixed corridor framing, drawn camera lanes, and corner zones while on; the boulder chase keeps its authored shot. All the other CAMERA sliders still shape the rig.',
 };
 
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
@@ -485,7 +489,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
-  { title: 'CAMERA', keys: ['camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight'] },
+  { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
 ];
 
