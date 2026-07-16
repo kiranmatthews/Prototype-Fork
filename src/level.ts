@@ -66,6 +66,7 @@ interface Crumble {
   t: number;
   regen: number | null; // seconds until it comes back; null = only on reset
   shakeTime: number; // seconds of shaking before it drops (near-0 = breaks on landing)
+  yaw: number; // resting spin (radians) — restored after the tumble-and-regrow animation
 }
 
 // Sky-bridge side rope: a grindable rail that SAGS + wobbles under a grinder
@@ -107,6 +108,7 @@ interface Pendulum {
   amp: number;
   speed: number;
   phase: number;
+  yaw: number; // radians: spins the swing plane (and the gallows frame)
   box: THREE.Box3;
   lastSign: number;
 }
@@ -301,6 +303,21 @@ export function starterCustomLevel(): CustomLevelData {
       { t: 'crystal', p: [0, 0.5, -24] },
     ],
   };
+}
+
+// The four corners of a w×d rectangle spun by yaw degrees (relative offsets)
+// — matches mesh.rotation.y = yaw applied to a BoxGeometry footprint.
+export function rectCorners(w: number, d: number, yawDeg: number): [number, number][] {
+  const r = (yawDeg * Math.PI) / 180;
+  const cos = Math.cos(r);
+  const sin = Math.sin(r);
+  const base: [number, number][] = [
+    [-w / 2, -d / 2],
+    [w / 2, -d / 2],
+    [w / 2, d / 2],
+    [-w / 2, d / 2],
+  ];
+  return base.map(([x, z]) => [x * cos + z * sin, -x * sin + z * cos] as [number, number]);
 }
 
 // Even-odd point-in-polygon test (pts relative to the same origin as x/z).
@@ -881,33 +898,7 @@ export class Level {
             mesh.position.set(c.p[0], c.p[1], c.p[2]); // extrude spans local y 0..h; p is the base centre
             this.root.add(mesh);
             this.groundMeshes.push(mesh); // the top is standable
-            let minZ = Infinity;
-            let maxZ = -Infinity;
-            for (const [, pz] of polyPts) {
-              minZ = Math.min(minZ, pz);
-              maxZ = Math.max(maxZ, pz);
-            }
-            let slabs = 0;
-            for (let z = Math.floor(minZ) + 0.5; z < maxZ && slabs < 240; z += 1) {
-              const xs: number[] = [];
-              for (let k = 0, j = polyPts.length - 1; k < polyPts.length; j = k++) {
-                const [xa, za] = polyPts[k];
-                const [xb, zb] = polyPts[j];
-                if (za > z !== zb > z) xs.push(xa + ((xb - xa) * (z - za)) / (zb - za));
-              }
-              xs.sort((a, b) => a - b);
-              for (let k = 0; k + 1 < xs.length; k += 2) {
-                const span = xs[k + 1] - xs[k];
-                if (span < 0.2) continue;
-                slabs++;
-                this.walls.push(
-                  new THREE.Box3().setFromCenterAndSize(
-                    new THREE.Vector3(c.p[0] + (xs[k] + xs[k + 1]) / 2, c.p[1] + h / 2, c.p[2] + z),
-                    new THREE.Vector3(span, h, 1),
-                  ),
-                );
-              }
-            }
+            this.fillWallSlabs(polyPts, c.p[0], c.p[2], c.p[1], h);
           } else if (c.t === 'pit' && polyPts) {
             // drawn death pool: dark polygon visual; the kill volume is the
             // bounding box gated by a true point-in-polygon test (see
@@ -955,19 +946,31 @@ export class Level {
             // anyone standing on top). Axis-aligned yaws only — the collision
             // engine is AABB; free-spun platforms stay raycast-only.
             const yawQ = (((c.yaw ?? 0) % 360) + 360) % 360;
-            if (yawQ % 90 === 0) {
-              const swapped = yawQ % 180 !== 0;
-              const w = swapped ? s[2] : s[0];
-              const d = swapped ? s[0] : s[2];
+            {
               const top = c.p[1] + s[1] / 2 - 0.25;
               const bottom = c.p[1] - s[1] / 2;
               if (top > bottom) {
-                this.walls.push(
-                  new THREE.Box3().setFromCenterAndSize(
-                    new THREE.Vector3(c.p[0], (top + bottom) / 2, c.p[2]),
-                    new THREE.Vector3(w, top - bottom, d),
-                  ),
-                );
+                if (yawQ % 90 === 0) {
+                  const swapped = yawQ % 180 !== 0;
+                  const w = swapped ? s[2] : s[0];
+                  const d = swapped ? s[0] : s[2];
+                  this.walls.push(
+                    new THREE.Box3().setFromCenterAndSize(
+                      new THREE.Vector3(c.p[0], (top + bottom) / 2, c.p[2]),
+                      new THREE.Vector3(w, top - bottom, d),
+                    ),
+                  );
+                } else {
+                  // free-spun: fill the rotated footprint with slabs (slight
+                  // inset — the walk surface must win at the rim)
+                  this.fillWallSlabs(
+                    rectCorners(s[0] * 0.96, s[2] * 0.96, yawQ),
+                    c.p[0],
+                    c.p[2],
+                    bottom,
+                    top - bottom,
+                  );
+                }
               }
             }
           } else if (c.t === 'rock') {
@@ -994,24 +997,34 @@ export class Level {
               pos.setXYZ(v, pos.getX(v) * k, pos.getY(v) * k, pos.getZ(v) * k);
             }
             geo.scale(s[0], s[1], s[2]);
+            // bake the seed spin AND the editor yaw into the geometry, so the
+            // collider below reads the rock's REAL world-space extents — the
+            // old fixed 0.8-inset box sat inside the jitter bulges (up to
+            // 1.2×) and let you wade straight through the fat sides.
+            geo.rotateY((seed % 7) * 0.9 + THREE.MathUtils.degToRad(c.yaw ?? 0));
             geo.computeVertexNormals(); // non-indexed = flat faceted shading
+            geo.computeBoundingBox();
+            const bb = geo.boundingBox!;
             const rockColor = c.color ? new THREE.Color(c.color).getHex() : 0x8d8678;
             const mesh = new THREE.Mesh(
               geo,
               new THREE.MeshLambertMaterial({ color: rockColor, map: this.surfaceTexture('stone') }),
             );
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
-            mesh.rotation.y = (seed % 7) * 0.9;
             mesh.name = 'rock';
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
-            const top = c.p[1] + s[1] / 2 - 0.3;
-            const bottom = c.p[1] - s[1] / 2;
+            const top = c.p[1] + bb.max.y - 0.25; // tucked under the walk surface
+            const bottom = c.p[1] + bb.min.y;
             if (top > bottom) {
               this.walls.push(
                 new THREE.Box3().setFromCenterAndSize(
-                  new THREE.Vector3(c.p[0], (top + bottom) / 2, c.p[2]),
-                  new THREE.Vector3(s[0] * 0.8, top - bottom, s[2] * 0.8),
+                  new THREE.Vector3(
+                    c.p[0] + (bb.min.x + bb.max.x) / 2,
+                    (top + bottom) / 2,
+                    c.p[2] + (bb.min.z + bb.max.z) / 2,
+                  ),
+                  new THREE.Vector3((bb.max.x - bb.min.x) * 0.94, top - bottom, (bb.max.z - bb.min.z) * 0.94),
                 ),
               );
             }
@@ -1034,63 +1047,105 @@ export class Level {
             }
           } else if (c.t === 'wall') {
             const s = c.s ?? [8, 4, 1];
+            const yawQ = (((c.yaw ?? 0) % 360) + 360) % 360;
+            const yawRad = THREE.MathUtils.degToRad(yawQ);
+            // one collider recipe for every wall flavor: exact box when the
+            // yaw is axis-aligned, rotated-footprint slabs otherwise
+            const wallCollider = (): void => {
+              if (yawQ % 90 === 0) {
+                const swapped = yawQ % 180 !== 0;
+                this.walls.push(
+                  new THREE.Box3().setFromCenterAndSize(
+                    new THREE.Vector3(c.p[0], c.p[1] + s[1] / 2, c.p[2]),
+                    new THREE.Vector3(swapped ? s[2] : s[0], s[1], swapped ? s[0] : s[2]),
+                  ),
+                );
+              } else {
+                this.fillWallSlabs(rectCorners(s[0], s[2], yawQ), c.p[0], c.p[2], c.p[1], s[1]);
+              }
+            };
             if (c.invisible) {
               // collider only + an editor-mode ghost so it stays selectable
-              this.walls.push(
-                new THREE.Box3().setFromCenterAndSize(
-                  new THREE.Vector3(c.p[0], c.p[1] + s[1] / 2, c.p[2]),
-                  new THREE.Vector3(s[0], s[1], s[2]),
-                ),
-              );
+              wallCollider();
               const ghost = new THREE.Mesh(
                 new THREE.BoxGeometry(s[0], s[1], s[2]),
                 new THREE.MeshBasicMaterial({ color: 0x64d8ff, transparent: true, opacity: 0.22, depthWrite: false }),
               );
               ghost.position.set(c.p[0], c.p[1] + s[1] / 2, c.p[2]);
+              ghost.rotation.y = yawRad;
               ghost.visible = false; // the editor reveals it while editing
               ghost.userData.editorGhost = true;
               this.root.add(ghost);
-            } else if (c.color) {
-              // tinted wall: same collider as wall(), custom-colored face
+            } else if (c.color || yawQ % 90 !== 0) {
+              // tinted and/or spun wall: own mesh so the yaw can rotate it
               const mesh = new THREE.Mesh(
                 new THREE.BoxGeometry(s[0], s[1], s[2]),
-                this.patterned(new THREE.MeshLambertMaterial({ color: new THREE.Color(c.color) }), s[0], s[1], 'stone'),
-              );
-              mesh.position.set(c.p[0], c.p[1] + s[1] / 2, c.p[2]);
-              this.root.add(mesh);
-              this.walls.push(
-                new THREE.Box3().setFromCenterAndSize(
-                  new THREE.Vector3(c.p[0], c.p[1] + s[1] / 2, c.p[2]),
-                  new THREE.Vector3(s[0], s[1], s[2]),
+                this.patterned(
+                  new THREE.MeshLambertMaterial({ color: c.color ? new THREE.Color(c.color) : new THREE.Color(0x9a8a7a) }),
+                  s[0],
+                  s[1],
+                  'stone',
                 ),
               );
+              mesh.position.set(c.p[0], c.p[1] + s[1] / 2, c.p[2]);
+              mesh.rotation.y = yawRad;
+              this.root.add(mesh);
+              wallCollider();
             } else {
-              this.wall(c.p[0], c.p[2], s[0], s[2], c.p[1], s[1]);
+              // axis-aligned default texture path; 90/270 swaps footprint
+              const swapped = yawQ % 180 !== 0;
+              this.wall(c.p[0], c.p[2], swapped ? s[2] : s[0], swapped ? s[0] : s[2], c.p[1], s[1]);
             }
           } else if (c.t === 'pit') {
             const s = c.s ?? [6, 1, 6];
+            const yawQ = (((c.yaw ?? 0) % 360) + 360) % 360;
+            const yawRad = THREE.MathUtils.degToRad(yawQ);
             // dark pool + faint ember rim; the volume is a touch-kill box
             const pool = new THREE.Mesh(
               new THREE.BoxGeometry(s[0], 0.18, s[2]),
               new THREE.MeshLambertMaterial({ color: 0x07070c, emissive: 0x1a0406 }),
             );
             pool.position.set(c.p[0], c.p[1] + 0.02, c.p[2]);
+            pool.rotation.y = yawRad;
             this.root.add(pool);
             const rim = new THREE.Mesh(
               new THREE.BoxGeometry(s[0] + 0.5, 0.06, s[2] + 0.5),
               new THREE.MeshBasicMaterial({ color: 0xb0402a, transparent: true, opacity: 0.5 }),
             );
             rim.position.set(c.p[0], c.p[1] + 0.001, c.p[2]);
+            rim.rotation.y = yawRad;
             this.root.add(rim);
             // Kill volume hugs the pool: only 0.25 above the surface (feet must
             // actually touch the lava — landing on a crate seated over the pit
             // is safe), and 2.0 deep so a max-gravity fall can't step past it.
-            this.pitBoxes.push(
-              new THREE.Box3().setFromCenterAndSize(
+            // A spun pit kills through the rotated-corner polygon; the box is
+            // just its broad phase (same machinery as drawn pits).
+            const corners = yawQ % 180 === 0 ? null : rectCorners(s[0], s[2], yawQ);
+            if (corners) {
+              let minX = Infinity;
+              let maxX = -Infinity;
+              let minZ = Infinity;
+              let maxZ = -Infinity;
+              for (const [px, pz] of corners) {
+                minX = Math.min(minX, px);
+                maxX = Math.max(maxX, px);
+                minZ = Math.min(minZ, pz);
+                maxZ = Math.max(maxZ, pz);
+              }
+              const box = new THREE.Box3().setFromCenterAndSize(
                 new THREE.Vector3(c.p[0], c.p[1] - 0.75, c.p[2]),
-                new THREE.Vector3(s[0], 2.0, s[2]),
-              ),
-            );
+                new THREE.Vector3(maxX - minX, 2.0, maxZ - minZ),
+              );
+              this.pitBoxes.push(box);
+              this.pitPolyByBox.set(box, { cx: c.p[0], cz: c.p[2], pts: corners });
+            } else {
+              this.pitBoxes.push(
+                new THREE.Box3().setFromCenterAndSize(
+                  new THREE.Vector3(c.p[0], c.p[1] - 0.75, c.p[2]),
+                  new THREE.Vector3(s[0], 2.0, s[2]),
+                ),
+              );
+            }
           } else if (c.t === 'metal') {
             // unbreakable steel box: stand on it, bonk off it, never break it
             const size = 0.96;
@@ -1172,7 +1227,7 @@ export class Level {
           } else if (c.t === 'crumble') {
             const s = c.s ?? [3, 1, 3];
             const col = c.color ? new THREE.Color(c.color).getHex() : undefined;
-            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col);
+            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col, c.yaw ?? 0);
           } else if (c.t === 'crate') {
             this.crate(c.p[0], c.p[1], c.p[2], c.kind === 'wood' ? undefined : c.kind, {
               outline: c.outline,
@@ -1188,12 +1243,19 @@ export class Level {
             this.checkpoint(c.p[1], c.p[2], c.p[0]);
           } else if (c.t === 'enemy') {
             const r = c.range ?? 5;
-            this.enemy(c.p[0] - r, c.p[0] + r, c.p[1], c.p[2], c.speed ?? 3);
+            // yaw 90/270 turns the patrol onto the Z axis (the walk is
+            // axis-bound; the editor exposes it as a patrol-direction toggle)
+            const eYaw = (((c.yaw ?? 0) % 360) + 360) % 360;
+            if (eYaw % 180 >= 45 && eYaw % 180 < 135) {
+              this.enemy(c.p[2] - r, c.p[2] + r, c.p[1], c.p[0], c.speed ?? 3, 'z');
+            } else {
+              this.enemy(c.p[0] - r, c.p[0] + r, c.p[1], c.p[2], c.speed ?? 3);
+            }
           } else if (c.t === 'crusher') {
             const s = c.s ?? [4, 3, 3];
             this.crusher(c.p[0], c.p[1], c.p[2], s[0], s[2], c.cycle ?? 3.2, c.phase ?? 0);
           } else if (c.t === 'pendulum') {
-            this.pendulum(c.p[0], c.p[1], c.p[2], c.len ?? 5, c.amp ?? 1.0, c.speed ?? 1.6, c.phase ?? 0);
+            this.pendulum(c.p[0], c.p[1], c.p[2], c.len ?? 5, c.amp ?? 1.0, c.speed ?? 1.6, c.phase ?? 0, c.yaw ?? 0);
           } else if (c.t === 'wumpa') {
             this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === 'camnode') {
@@ -1270,6 +1332,39 @@ export class Level {
       if (x >= zn.xMin && x <= zn.xMax && z >= zn.zMin && z <= zn.zMax) return zn;
     }
     return null;
+  }
+
+  // Fill a polygon footprint with 1-unit-deep axis-aligned collision slabs
+  // (scanline, even-odd) — how drawn walls and spun rectangles get solid
+  // sides out of an AABB-only collision engine. pts are relative to cx/cz.
+  private fillWallSlabs(pts: [number, number][], cx: number, cz: number, y0: number, h: number): void {
+    let minZ = Infinity;
+    let maxZ = -Infinity;
+    for (const [, pz] of pts) {
+      minZ = Math.min(minZ, pz);
+      maxZ = Math.max(maxZ, pz);
+    }
+    let slabs = 0;
+    for (let z = Math.floor(minZ) + 0.5; z < maxZ && slabs < 240; z += 1) {
+      const xs: number[] = [];
+      for (let k = 0, j = pts.length - 1; k < pts.length; j = k++) {
+        const [xa, za] = pts[k];
+        const [xb, zb] = pts[j];
+        if (za > z !== zb > z) xs.push(xa + ((xb - xa) * (z - za)) / (zb - za));
+      }
+      xs.sort((a, b) => a - b);
+      for (let k = 0; k + 1 < xs.length; k += 2) {
+        const span = xs[k + 1] - xs[k];
+        if (span < 0.2) continue;
+        slabs++;
+        this.walls.push(
+          new THREE.Box3().setFromCenterAndSize(
+            new THREE.Vector3(cx + (xs[k] + xs[k + 1]) / 2, y0 + h / 2, cz + z),
+            new THREE.Vector3(span, h, 1),
+          ),
+        );
+      }
+    }
   }
 
   // POLYGON death pits: the coarse Box3 lives in pitBoxes like any pit; the
@@ -1451,7 +1546,7 @@ export class Level {
         c.state = 'idle';
         c.mesh.visible = true;
         c.mesh.position.copy(c.base);
-        c.mesh.rotation.set(0, 0, 0);
+        c.mesh.rotation.set(0, c.yaw, 0);
       }
     }
 
@@ -1545,11 +1640,20 @@ export class Level {
     for (const pd of this.pendulums) {
       const a = Math.sin(this.time * pd.speed + pd.phase) * pd.amp;
       pd.pivot.rotation.z = a;
-      const bx = pd.pivot.position.x + Math.sin(a) * pd.len;
+      // bob world offset: the local x-swing spun by the pendulum's yaw
+      const swing = Math.sin(a) * pd.len;
+      const cos = Math.cos(pd.yaw);
+      const sin = Math.sin(pd.yaw);
+      const bx = pd.pivot.position.x + swing * cos;
+      const bz = pd.pivot.position.z - swing * sin;
       const by = pd.pivot.position.y - Math.cos(a) * pd.len;
       pd.box.setFromCenterAndSize(
-        new THREE.Vector3(bx, by, pd.pivot.position.z),
-        new THREE.Vector3(2.0, 2.0, 1.6),
+        new THREE.Vector3(bx, by, bz),
+        new THREE.Vector3(
+          2.0 * Math.abs(cos) + 1.6 * Math.abs(sin),
+          2.0,
+          2.0 * Math.abs(sin) + 1.6 * Math.abs(cos),
+        ),
       );
       this.killBoxes.push(pd.box);
       const sign = Math.sign(a) || 1;
@@ -2012,7 +2116,7 @@ export class Level {
       c.t = 0;
       c.mesh.visible = true;
       c.mesh.position.copy(c.base);
-      c.mesh.rotation.set(0, 0, 0);
+      c.mesh.rotation.set(0, c.yaw, 0);
     }
     // Sky-bridge ropes restring taut.
     for (const r of this.ropes) {
@@ -2825,17 +2929,19 @@ export class Level {
     regen: number | null = 3,
     shakeTime = 0.35,
     color = 0xa8845c,
+    yawDeg = 0,
   ): Crumble {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, 0.5, d),
       this.patterned(new THREE.MeshLambertMaterial({ color }), w, d, 'wood'),
     );
     mesh.position.set(x, topY - 0.25, z);
+    mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg); // stand-detection is the ground raycast: free spin is fine
     mesh.name = 'crumble pad';
     mesh.userData.crumbleId = this.crumbles.length;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-    const c: Crumble = { mesh, base: mesh.position.clone(), state: 'idle', t: 0, regen, shakeTime };
+    const c: Crumble = { mesh, base: mesh.position.clone(), state: 'idle', t: 0, regen, shakeTime, yaw: mesh.rotation.y };
     this.crumbles.push(c);
     return c;
   }
@@ -2868,10 +2974,13 @@ export class Level {
   }
 
   // Pendulum blade swinging across the corridor between two posts.
-  private pendulum(x: number, pivotY: number, z: number, len: number, amp = 1.0, speed = 1.6, phase = 0): void {
+  private pendulum(x: number, pivotY: number, z: number, len: number, amp = 1.0, speed = 1.6, phase = 0, yawDeg = 0): void {
+    const yaw = THREE.MathUtils.degToRad(yawDeg);
     const mat = new THREE.MeshLambertMaterial({ color: 0x6a7078 });
     const pivot = new THREE.Group();
     pivot.position.set(x, pivotY, z);
+    pivot.rotation.order = 'YZX'; // yaw FIRST, then the animated z-swing lives in the spun frame
+    pivot.rotation.y = yaw;
     const arm = new THREE.Mesh(new THREE.BoxGeometry(0.22, len, 0.22), mat);
     arm.position.y = -len / 2;
     pivot.add(arm);
@@ -2879,18 +2988,24 @@ export class Level {
     bob.position.y = -len;
     pivot.add(bob);
     this.root.add(pivot);
-    // gallows: two posts + a crossbeam so the thing reads at speed
+    // gallows: two posts + a crossbeam so the thing reads at speed — the
+    // whole frame spins with the swing plane
     const postMat = this.baseMat('gallows', 0x8a6a48, 'wood', 1, 2);
     const postH = len + 2.5;
+    const cos = Math.cos(yaw);
+    const sin = Math.sin(yaw);
     for (const side of [-1, 1]) {
       const post = new THREE.Mesh(new THREE.BoxGeometry(0.6, postH, 0.6), postMat);
-      post.position.set(x + side * (len + 1.2), pivotY - postH / 2 + 0.8, z);
+      const dx = side * (len + 1.2);
+      post.position.set(x + dx * cos, pivotY - postH / 2 + 0.8, z - dx * sin);
+      post.rotation.y = yaw;
       this.root.add(post);
     }
     const beam = new THREE.Mesh(new THREE.BoxGeometry((len + 1.2) * 2 + 0.6, 0.5, 0.7), postMat);
     beam.position.set(x, pivotY + 0.3, z);
+    beam.rotation.y = yaw;
     this.root.add(beam);
-    this.pendulums.push({ pivot, len, amp, speed, phase, box: new THREE.Box3(), lastSign: 1 });
+    this.pendulums.push({ pivot, len, amp, speed, phase, yaw, box: new THREE.Box3(), lastSign: 1 });
   }
 
   // ---------------------------------------------------------- visual kit --
@@ -4571,13 +4686,18 @@ export class Level {
     return group;
   }
 
-  private enemy(x0: number, x1: number, deckY: number, z: number, speed: number): void {
+  // Patrols a0..a1 along `axis` at the given cross coordinate (the Enemy
+  // struct's x0/x1 are axis-generic bounds — see its comment).
+  private enemy(a0: number, a1: number, deckY: number, cross: number, speed: number, axis: 'x' | 'z' = 'x'): void {
     const group = this.enemyGroup();
     // snap to real ground (wavy jungle floors), then remember it for resets
-    const gy = this.floorY((x0 + x1) / 2, z, deckY);
-    group.position.set((x0 + x1) / 2, gy, z);
+    const mid = (a0 + a1) / 2;
+    const gx = axis === 'z' ? cross : mid;
+    const gz = axis === 'z' ? mid : cross;
+    const gy = this.floorY(gx, gz, deckY);
+    group.position.set(gx, gy, gz);
     group.userData.baseY = gy;
-    this.enemies.push({ group, box: new THREE.Box3(), alive: true, x0, x1, dir: 1, speed });
+    this.enemies.push({ group, box: new THREE.Box3(), alive: true, x0: a0, x1: a1, dir: 1, speed, axis });
   }
 
   // Floating collectable wumpa.

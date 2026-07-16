@@ -905,19 +905,23 @@ export class Editor {
     } else if (c.t === 'wall') {
       const s = c.s!;
       const mid = P.clone().setY(P.y + s[1] / 2); // p is the BASE center
-      face(new THREE.Vector3(1, 0, 0), mid.clone().setX(mid.x + s[0] / 2), 0, 0.5);
-      face(new THREE.Vector3(-1, 0, 0), mid.clone().setX(mid.x - s[0] / 2), 0, 0.5);
-      face(new THREE.Vector3(0, 0, 1), mid.clone().setZ(mid.z + s[2] / 2), 2, 0.5);
-      face(new THREE.Vector3(0, 0, -1), mid.clone().setZ(mid.z - s[2] / 2), 2, 0.5);
+      const ux = loc(1, 0, 0); // handles ride the SPUN faces
+      const uz = loc(0, 0, 1);
+      face(ux, mid.clone().addScaledVector(ux, s[0] / 2), 0, 0.5);
+      face(ux.clone().negate(), mid.clone().addScaledVector(ux, -s[0] / 2), 0, 0.5);
+      face(uz, mid.clone().addScaledVector(uz, s[2] / 2), 2, 0.5);
+      face(uz.clone().negate(), mid.clone().addScaledVector(uz, -s[2] / 2), 2, 0.5);
       face(new THREE.Vector3(0, 1, 0), P.clone().setY(P.y + s[1]), 1, 0.5, false); // grows up from the base
     } else if (c.t === 'pit' || c.t === 'crumble' || c.t === 'crusher') {
       const s = c.s!;
       const y = c.t === 'crusher' ? P.y + 1.2 : P.y;
-      const at = (x: number, z: number): THREE.Vector3 => new THREE.Vector3(P.x + x, y, P.z + z);
-      face(new THREE.Vector3(1, 0, 0), at(s[0] / 2, 0), 0, 1);
-      face(new THREE.Vector3(-1, 0, 0), at(-s[0] / 2, 0), 0, 1);
-      face(new THREE.Vector3(0, 0, 1), at(0, s[2] / 2), 2, 1);
-      face(new THREE.Vector3(0, 0, -1), at(0, -s[2] / 2), 2, 1);
+      const mid = P.clone().setY(y);
+      const ux = loc(1, 0, 0); // spun pits/crumbles keep handles on their faces (crusher yaw = 0)
+      const uz = loc(0, 0, 1);
+      face(ux, mid.clone().addScaledVector(ux, s[0] / 2), 0, 1);
+      face(ux.clone().negate(), mid.clone().addScaledVector(ux, -s[0] / 2), 0, 1);
+      face(uz, mid.clone().addScaledVector(uz, s[2] / 2), 2, 1);
+      face(uz.clone().negate(), mid.clone().addScaledVector(uz, -s[2] / 2), 2, 1);
     } else if (c.t === 'ramp') {
       const len = c.len!;
       const rise = c.rise!;
@@ -2154,7 +2158,7 @@ export class Editor {
       sizeRow(0, 'width');
       sizeRow(1, 'height');
       sizeRow(2, 'depth');
-      if (c.t === 'platform') num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15); // platforms AND walls spin freely now
       if (c.t === 'wall' && c.invisible) {
         const note = document.createElement('div');
         note.className = 'ed-dim';
@@ -2166,10 +2170,12 @@ export class Editor {
     } else if (c.t === 'pit') {
       sizeRow(0, 'width');
       sizeRow(2, 'depth');
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
     } else if (c.t === 'crumble') {
       sizeRow(0, 'width');
       sizeRow(2, 'depth');
       num('shake', () => c.shake ?? 0.7, (v) => (c.shake = Math.max(0, v)), 0.1);
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       colorRow();
     } else if (c.t === 'ramp') {
       num('length', () => c.len ?? 10, (v) => (c.len = Math.max(1, v)));
@@ -2242,6 +2248,7 @@ export class Editor {
       sizeRow(0, 'width');
       sizeRow(1, 'height');
       sizeRow(2, 'depth');
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       const shuffle = document.createElement('button');
       shuffle.className = 'ed-btn';
       shuffle.textContent = 'reshuffle shape';
@@ -2282,8 +2289,19 @@ export class Editor {
       });
       this.propsEl.appendChild(chain);
     } else if (c.t === 'enemy') {
-      num('patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
+      const alongZ = (((c.yaw ?? 0) % 180) + 180) % 180 >= 45 && (((c.yaw ?? 0) % 180) + 180) % 180 < 135;
+      num(alongZ ? 'patrol ±z' : 'patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
       num('speed', () => c.speed ?? 3, (v) => (c.speed = Math.max(0.5, v)));
+      const axisBtn = document.createElement('button');
+      axisBtn.className = 'ed-btn';
+      axisBtn.textContent = `patrol: along ${alongZ ? 'Z' : 'X'}`;
+      axisBtn.title = 'the walk is axis-bound — rotation comes in 90° steps';
+      axisBtn.addEventListener('click', () => {
+        c.yaw = alongZ ? 0 : 90;
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(axisBtn);
     } else if (c.t === 'crusher') {
       sizeRow(0, 'width');
       sizeRow(2, 'depth');
@@ -2294,13 +2312,15 @@ export class Editor {
       num('swing amp', () => c.amp ?? 1.0, (v) => (c.amp = Math.max(0.1, v)), 0.1);
       num('speed', () => c.speed ?? 1.6, (v) => (c.speed = Math.max(0.2, v)), 0.1);
       num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15); // spins the whole gallows + swing plane
     }
     const row = document.createElement('div');
     row.className = 'ed-grid';
     // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
     // (drawn polygons keep their authored outline — no 90° tricks)
-    const rotatable = ['platform', 'ramp', 'rail'].includes(c.t) && !c.pts;
-    const swappable = ['wall', 'crumble', 'pit', 'crusher'].includes(c.t) && !c.pts;
+    const rotatable =
+      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy'].includes(c.t) && !c.pts;
+    const swappable = ['crusher'].includes(c.t) && !c.pts;
     if (rotatable || swappable || c.t === 'pipe') {
       const rot = document.createElement('button');
       rot.className = 'ed-btn';
