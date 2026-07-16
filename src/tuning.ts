@@ -542,6 +542,7 @@ export const CONST = {
   frontFlip: true, // running-jump somersault animation (triggered by TUNING.flipHoldTime)
   flipDuration: 0.75, // full somersault clock — matches the reference full-hold jump arc; rotation lives in the 15..80% window (visual only)
   slideCooldown: 0.25,
+  slideSpinCancel: 0.2, // spin inside the slide's last beat (or its grace/get-up) cancels the cool-off — slide-spin-slide chains
   slamSpeed: 46, // Circle+down pancake slam: authored fall rate
   maxFallSpeed: 52, // terminal velocity: fall no faster than the ground ray can catch (no deck tunneling)
   slippyFriction: 0.12, // friction multiplier on slick/icy planks (near-frictionless slide)

@@ -3393,6 +3393,20 @@ export class Player {
         // Tiny Crash-style stall. Never boosts an already-rising jump.
         this.vVel = Math.min(this.vVel + TUNING.spinAirCorrection, 7);
       }
+      // SLIDE-SPIN CANCEL (Crash 4 rules): a spin timed to the slide's END —
+      // its last beat, or the unresolved grace/get-up right after — wipes the
+      // re-fire blockers, so slide -> spin -> slide chains on timing instead
+      // of waiting out the cool-off. Spinning early in the slide cancels
+      // nothing, and a slide JUMP's cooldown stays.
+      const slideEnding = this.slideTimer > 0 && this.slideTimer <= CONST.slideSpinCancel;
+      const slideJustEnded =
+        this.slideTimer <= 0 && (this.slideEndPending || this.slideRecoverT > 0);
+      if (slideEnding || slideJustEnded) {
+        this.slideTimer = 0;
+        this.slideEndPending = false;
+        this.slideRecoverT = 0;
+        this.slideCd = 0;
+      }
     }
     if (this.spinTimer > 0) {
       this.spinTimer -= dt;
