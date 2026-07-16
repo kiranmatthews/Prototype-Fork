@@ -273,6 +273,7 @@ export class Player {
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
+  private smearG: THREE.Group | null = null; // whirlwind stand-in shown while spinning
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
   private armL: THREE.Group | null = null;
   private elbowR: THREE.Group | null = null; // forearm pivots inside each arm (authored model only)
@@ -346,6 +347,7 @@ export class Player {
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
     this.installRoo(); // swap the placeholder body for the authored model when it lands
+    this.installSmear(); // whirlwind smear model shown during the spin attack
 
     // Crash-reference shadow: a TIGHT dark ellipse under the feet (~0.75 of
     // a crate wide), not a faint pancake — it anchors the character hard.
@@ -4955,6 +4957,22 @@ export class Player {
     // mask-invulnerability grace.
     this.bodyGroup.visible =
       this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead';
+    // Spin smear: swap the skater for the whirlwind while the attack runs.
+    // Held poses, not a smooth turn: a new angle every 2 frames (30Hz), each
+    // step ~137° so consecutive holds never look alike — reads as a strobing
+    // cartoon blur, exactly like Crash's tornado frames.
+    if (this.smearG) {
+      const smearOn =
+        this.spinning && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
+      this.smearG.visible = smearOn && this.bodyGroup.visible; // inherit the invuln flicker
+      if (smearOn) {
+        this.bodyGroup.visible = false;
+        const step = Math.floor(this.runTime * 30);
+        this.smearG.rotation.y = step * 2.399; // golden angle
+        const pulse = 1 + 0.09 * Math.sin(step * 1.7);
+        this.smearG.scale.set(2.3 * pulse, 1.9 * (2 - pulse), 2.3 * pulse); // opposing squash
+      }
+    }
     if (this.maskMesh) {
       this.maskMesh.visible = (this.masks > 0 || this.uberTimer > 0) && this.state !== 'dead';
       this.maskMesh.position.set(
@@ -5181,6 +5199,46 @@ export class Player {
       },
       undefined,
       (e) => console.warn('roo model failed to load (procedural body stays):', e),
+    );
+  }
+
+  // ——— Spin smear (models/smear.glb) ————————————————————————————————————
+  // A cartoon motion-blur sculpted in 3D, Crash-style: while the spin attack
+  // runs, the whole skater (board included) is swapped for this whirlwind,
+  // re-posed at a new angle every couple of frames so it strobes instead of
+  // turning smoothly. If it never loads, spins just stay un-smeared.
+  private installSmear(): void {
+    const src =
+      (window as { __SMEAR_GLB?: string }).__SMEAR_GLB ||
+      import.meta.env.BASE_URL + 'models/smear.glb';
+    new GLTFLoader().load(
+      src,
+      (gltf) => {
+        let source: THREE.Mesh | null = null;
+        gltf.scene.traverse((o) => {
+          if (!source && (o as THREE.Mesh).isMesh) source = o as THREE.Mesh;
+        });
+        if (!source) return;
+        const src = source as THREE.Mesh;
+        const mesh = new THREE.Mesh(
+          src.geometry,
+          new THREE.MeshLambertMaterial({
+            map: (src.material as THREE.MeshStandardMaterial).map ?? null,
+            side: THREE.DoubleSide,
+          }),
+        );
+        const g = new THREE.Group();
+        g.add(mesh);
+        // model is a unit cube centered at 0 — size it to the spin's reach:
+        // wider than the body, a head shorter than standing
+        g.scale.set(2.3, 1.9, 2.3);
+        g.position.y = 0.95;
+        g.visible = false;
+        this.group.add(g);
+        this.smearG = g;
+      },
+      undefined,
+      (e) => console.warn('smear model failed to load (spins stay un-smeared):', e),
     );
   }
 
