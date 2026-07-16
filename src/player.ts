@@ -137,6 +137,7 @@ export class Player {
   private visualYaw = 0; // Crash-style body facing vs. movement heading
   private flipTimer = 0; // front-flip on jump (visual only)
   private dirHoldT = 0; // seconds a direction has been held (roll-jump trigger)
+  private airJumpUsed = false; // double jump: one extra pop per air
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
   private lastVelX = 0; // measured horizontal velocity last step (u/s) —
@@ -275,6 +276,7 @@ export class Player {
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
   private smearG: THREE.Group | null = null; // whirlwind stand-in shown while spinning
+  private floorX!: THREE.Group; // landing X pinned to the floor under the skater
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
   private armL: THREE.Group | null = null;
   private elbowR: THREE.Group | null = null; // forearm pivots inside each arm (authored model only)
@@ -361,6 +363,27 @@ export class Player {
     );
     this.shadow.rotation.x = -Math.PI / 2;
     scene.add(this.shadow);
+
+    // Landing X: a small cross pinned to the floor under the skater — the
+    // precise "you land HERE" mark the soft shadow blob can't give. Rides
+    // the same floor probe as the shadow, growing a touch with height so it
+    // stays readable from big airs.
+    const xMat = new THREE.MeshBasicMaterial({
+      color: 0xffe36e,
+      transparent: true,
+      opacity: 0.85,
+      depthWrite: false,
+    });
+    const xGroup = new THREE.Group();
+    for (const a of [Math.PI / 4, -Math.PI / 4]) {
+      const bar = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 0.08), xMat);
+      bar.rotation.z = a;
+      bar.renderOrder = 2;
+      xGroup.add(bar);
+    }
+    xGroup.rotation.x = -Math.PI / 2;
+    scene.add(xGroup);
+    this.floorX = xGroup;
 
     // Floating Aku mask, visible while you hold one.
     const mask = new THREE.Mesh(
@@ -741,6 +764,7 @@ export class Player {
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
     // touching down mid-somersault cuts it — Crash lands upright, no carry-over tumble
     this.flipTimer = this.grounded ? 0 : Math.max(0, this.flipTimer - dt);
+    if (this.grounded || this.state === 'grind') this.airJumpUsed = false; // double jump re-arms on any contact
     // The roll-jump gate: how long a direction has been HELD going into a
     // jump. Steering only after takeoff never rolls — this is read AT launch.
     this.dirHoldT = Math.hypot(input.moveX, input.moveY) > 0.5 ? this.dirHoldT + dt : 0;
@@ -2164,6 +2188,27 @@ export class Player {
       }
     }
 
+    // DOUBLE JUMP (tuner toggle): a fresh X press mid-air pops a second,
+    // smaller jump — one per air. Hangs, slams, and grabs own their airs;
+    // the coyote window keeps priority so a late first jump never turns
+    // into a wasted second one.
+    if (
+      TUNING.doubleJump > 0.5 &&
+      input.jumpPressed &&
+      !this.airJumpUsed &&
+      this.coyoteTimer <= 0 &&
+      !this.vertAir &&
+      !this.slamActive &&
+      !this.grabbing
+    ) {
+      this.airJumpUsed = true;
+      this.vVel = TUNING.jumpMinVelocity;
+      this.flipTimer = 0; // snap out of a somersault into the fresh pop
+      if (!this.airFromSkate) this.starTimer = 0.25; // on-foot flourish: spread-eagle flash
+      this.lastJumpType = 'Double Jump';
+      sfx.play('footstep2', 0.6, 1.8);
+    }
+
     // Circle + down: pancake body slam, Wile E. Coyote rules — engage, FREEZE
     // in the air for a beat (momentum screeches to nothing), then plummet.
     // The impact breaks everything around you (TNT pops safely, nitro does NOT).
@@ -3077,6 +3122,14 @@ export class Player {
     // (nosegrinds hold their speed better).
     const bleed = this.grindStyle === 'nose' ? CONST.grindBleed * 0.4 : CONST.grindBleed;
     this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - bleed * dt);
+    // SLOPED RAILS: gravity works the grind line — descending segments feed
+    // speed, climbs bleed it (the same knobs as ground slopes), capped like
+    // any earned downhill. tangent.y IS sin(slope) on a unit tangent.
+    const railSlope = rail.tangentAt(this.grindT).y * this.grindDir; // + = climbing
+    if (Math.abs(railSlope) > 1e-3) {
+      this.grindVel -= railSlope * (railSlope < 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * dt;
+      this.grindVel = THREE.MathUtils.clamp(this.grindVel, CONST.grindMinSpeed, TUNING.downhillMax);
+    }
 
     // THPS balance: the needle is an unstable equilibrium that runs away from
     // center, ramping up the longer you grind — but only after a settle-in
@@ -5199,8 +5252,14 @@ export class Player {
       this.shadow.visible = true;
       this.shadow.position.set(this.pos.x, this.shadowGroundY + 0.03, this.pos.z);
       this.shadow.scale.setScalar(THREE.MathUtils.clamp(0.9 - h * 0.04, 0.35, 0.9));
+      // the landing X rides the same probe, growing a touch with height so
+      // it reads from the top of a big air
+      this.floorX.visible = true;
+      this.floorX.position.set(this.pos.x, this.shadowGroundY + 0.05, this.pos.z);
+      this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
     } else {
       this.shadow.visible = false; // no shadow = you are over the pit
+      this.floorX.visible = false;
     }
 
   }
