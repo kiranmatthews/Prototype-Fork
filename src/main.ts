@@ -279,6 +279,7 @@ const replayer = new Replayer();
 let currentCourse = Math.min(LEVEL_NAMES.length - 1, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
+player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
 player.respawn(level, true);
 applyTheme();
 recorder.start(currentCourse); // the take always runs: level load -> now

@@ -331,6 +331,7 @@ export class Player {
   private runStepSign = 1; // footfall edge detector for the run dust trail
   private jumpPose = 0; // on-foot jump: overhead arm throw + leg tuck (Crash reference)
   private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
+  cam: THREE.PerspectiveCamera | null = null; // set by main: wumpa fly to the HUD counter, which lives on the lens
 
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
@@ -3981,7 +3982,7 @@ export class Player {
       } else if (this.playerBox.intersectsBox(p.box)) {
         p.alive = false;
         p.mesh.visible = false;
-        this.collectFruit();
+        this.flyFruit(p.mesh.position); // tally ticks when it lands on the HUD counter
       }
     }
 
@@ -4058,9 +4059,26 @@ export class Player {
       f.age = 0;
       f.flung = false;
       f.mesh.visible = true;
+      f.mesh.scale.setScalar(1);
       f.mesh.position.set(cx, cy + 0.3, cz);
       f.vel.set((Math.random() - 0.5) * 5, 6 + Math.random() * 4, (Math.random() - 0.5) * 5);
     }
+  }
+
+  // One already-earned wumpa (a touched ground pickup) launches from `pos`
+  // and flies straight to the HUD counter — no crate-burst arc first.
+  private flyFruit(pos: THREE.Vector3): void {
+    for (const f of this.fruits) {
+      if (f.age >= 0) continue;
+      f.age = 0.36; // skip the arc, go straight to homing
+      f.flung = false;
+      f.mesh.visible = true;
+      f.mesh.scale.setScalar(1);
+      f.mesh.position.copy(pos);
+      f.vel.set(0, 0, 0);
+      return;
+    }
+    this.collectFruit(); // pool exhausted: count it instantly rather than lose it
   }
 
   private updateFruit(dt: number): void {
@@ -4082,28 +4100,43 @@ export class Player {
         f.vel.y -= 26 * dt;
         f.mesh.position.addScaledVector(f.vel, dt);
       } else {
-        // home to the player and collect
+        // home to the WUMPA COUNTER: the HUD icon sits top-left, so chase the
+        // point that projects there — a few units out from the lens. The
+        // fruit swells as it flies at the camera, shrinks into the counter,
+        // and the tally ticks on ARRIVAL. (No camera = old skater homing.)
         const target = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
-        const d = target.sub(f.mesh.position);
-        const dist = d.length();
-        if (dist < 1.0 || f.age > 2.5) {
-          if (dist < 1.0 && this.spinning) {
-            // spinning smacks the wumpa away instead of collecting it
-            f.flung = true;
-            f.age = 0;
-            f.vel.set((Math.random() - 0.5) * 16, 8, (Math.random() - 0.5) * 16);
-            sfx.play('fruitSpun', 0.7);
-            continue;
-          }
-          if (dist < 1.0) this.collectFruit();
-          f.age = -1;
-          f.mesh.visible = false;
+        if (this.cam) {
+          target
+            .set(-0.85, 0.68, 0.5)
+            .unproject(this.cam)
+            .sub(this.cam.position)
+            .normalize()
+            .multiplyScalar(3.5)
+            .add(this.cam.position);
+        }
+        // a spin still smacks fruit out of the air if it swings past the body
+        if (this.spinning && this.spinBox.containsPoint(f.mesh.position)) {
+          f.flung = true;
+          f.age = 0;
+          f.mesh.scale.setScalar(1);
+          f.vel.set((Math.random() - 0.5) * 16, 8, (Math.random() - 0.5) * 16);
+          sfx.play('fruitSpun', 0.7);
           continue;
         }
-        // Home faster than the skater can flee (else a pump-skate outruns it and
-        // it trails forever, then times out uncollected) — always the player's
-        // own speed plus a margin, or a hard pull when it's far behind.
-        const chase = Math.max(dist * 6, Math.abs(this.speed) + 12);
+        const d = target.sub(f.mesh.position);
+        const dist = d.length();
+        if (dist < 0.55 || f.age > 2.5) {
+          this.collectFruit(); // earned either way — a timeout never eats the fruit
+          f.age = -1;
+          f.mesh.visible = false;
+          f.mesh.scale.setScalar(1);
+          continue;
+        }
+        // shrink into the counter over the last stretch
+        f.mesh.scale.setScalar(Math.min(1, dist / 1.4));
+        // Home faster than the camera can flee (it rides the skater) — the
+        // skater's own speed plus a margin, or a hard pull from far behind.
+        const chase = Math.max(dist * 6, Math.abs(this.speed) + 14);
         f.mesh.position.addScaledVector(d.normalize(), chase * dt);
       }
     }
