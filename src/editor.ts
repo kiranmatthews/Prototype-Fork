@@ -128,6 +128,11 @@ interface HandleDef {
   vtx?: number; // polygon vertex index: drags on the ground plane instead of an axis
 }
 const HANDLE_GEO = new THREE.BoxGeometry(0.55, 0.55, 0.55);
+// invisible fat hit-sphere around every handle: click targets stay forgiving
+// even when the visible box is a few pixels at distance
+const HANDLE_HIT_GEO = new THREE.SphereGeometry(1.0, 8, 6);
+const NODE_COLOR = 0xffd75e; // resting node
+const NODE_SEL_COLOR = 0x4da6ff; // selected node (Figma blue)
 
 // grid rounding + structural copies, used all over the editor
 const snapHalf = (v: number): number => Math.round(v * 2) / 2;
@@ -177,10 +182,11 @@ export class Editor {
   private closedGroups = new Set<number>(); // collapsed outliner nodes
   private renaming: { kind: 'group' | 'item'; id: number } | null = null;
   private marqueeAdd = false; // shift-marquee adds; plain marquee replaces
+  private marqueeNodes = false; // node mode: the sweep selects NODES of the edited shape
   private camSaveAt = 0;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
   private drawing: { t: 'platform' | 'pit' | 'wall' | 'rail'; y: number; pts: THREE.Vector3[] } | null = null;
-  private selVtx = -1; // node picked in resize mode: props show ITS corner radius (Figma-style)
+  private selVtxs = new Set<number>(); // nodes picked in resize mode (shift/cmd adds, marquee sweeps) — props batch-edit their shared values
   private drawVis: THREE.Group | null = null;
   // pop-out side panels (item picker / layers) + view cluster + space-pan
   private popWrap: HTMLElement | null = null;
@@ -193,7 +199,8 @@ export class Editor {
   private resizeIdx = -1;
   private hdlDefs: HandleDef[] = [];
   private handleGroup: THREE.Group | null = null;
-  private handleMeshes: THREE.Mesh[] = [];
+  private handleMeshes: THREE.Mesh[] = []; // visible boxes, one per handle def
+  private handleHits: THREE.Mesh[] = []; // invisible fat twins: the forgiving click targets
   private hdlDrag: {
     i: number;
     lineO: THREE.Vector3;
@@ -300,10 +307,16 @@ export class Editor {
 
   update(): void {
     this.controls?.update();
-    // keep resize handles a steady on-screen size at any zoom
-    for (const m of this.handleMeshes) {
-      m.scale.setScalar(THREE.MathUtils.clamp(this.camera.position.distanceTo(m.position) * 0.022, 0.7, 3));
-    }
+    // keep resize handles a steady on-screen size at any zoom; selected
+    // nodes read a step bigger, and the invisible hit targets track along
+    this.handleMeshes.forEach((m, i) => {
+      const base = THREE.MathUtils.clamp(this.camera.position.distanceTo(m.position) * 0.022, 0.7, 3);
+      const def = this.hdlDefs[i];
+      const selected = def?.vtx !== undefined && this.selVtxs.has(def.vtx);
+      m.scale.setScalar(base * (selected ? 1.35 : 1));
+      const hit = this.handleHits[i];
+      if (hit) hit.scale.setScalar(base);
+    });
     // periodic camera save: a refresh mid-edit comes back to this exact view
     const now = performance.now();
     if (this.active && now - this.camSaveAt > 1500) {
@@ -661,7 +674,7 @@ export class Editor {
   }
 
   private setSelection(list: number[]): void {
-    this.selVtx = -1; // node picks don't survive a selection change
+    this.selVtxs.clear(); // node picks don't survive a selection change
     const seen = new Set<number>();
     const valid: number[] = [];
     for (const i of list) {
@@ -979,6 +992,7 @@ export class Editor {
       this.handleGroup = null;
     }
     this.handleMeshes = [];
+    this.handleHits = [];
     this.hdlDefs = [];
     if (!this.active || this.resizeIdx < 0) return;
     const c = this.data.components[this.resizeIdx];
@@ -995,16 +1009,36 @@ export class Editor {
     this.hdlDefs.forEach((def, i) => {
       const m = new THREE.Mesh(
         HANDLE_GEO,
-        new THREE.MeshBasicMaterial({ color: 0xffd75e, depthTest: false, transparent: true, opacity: 0.92 }),
+        new THREE.MeshBasicMaterial({ color: NODE_COLOR, depthTest: false, transparent: true, opacity: 0.92 }),
       );
       m.renderOrder = 999; // draw on top: grabbable even inside geometry
       m.position.copy(def.pos);
       m.userData.hdl = i;
       g.add(m);
       this.handleMeshes.push(m);
+      // fat invisible twin: the actual click target (forgiving at any zoom)
+      const hit = new THREE.Mesh(
+        HANDLE_HIT_GEO,
+        new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthTest: false, depthWrite: false }),
+      );
+      hit.position.copy(def.pos);
+      hit.userData.hdl = i;
+      g.add(hit);
+      this.handleHits.push(hit);
     });
     this.scene.add(g);
     this.handleGroup = g;
+    this.tintHandles();
+  }
+
+  // selected nodes read Figma-blue (their size bump lives in update(), which
+  // owns handle scale for constant screen size)
+  private tintHandles(): void {
+    this.handleMeshes.forEach((m, i) => {
+      const isNode = this.hdlDefs[i]?.vtx !== undefined;
+      const selected = isNode && this.selVtxs.has(this.hdlDefs[i].vtx!);
+      (m.material as THREE.MeshBasicMaterial).color.setHex(selected ? NODE_SEL_COLOR : NODE_COLOR);
+    });
   }
 
   private setRay(e: { clientX: number; clientY: number }): void {
@@ -1077,16 +1111,27 @@ export class Editor {
     if (this.resizeIdx >= 0 && this.handleMeshes.length > 0) {
       this.setRay(e);
       this.handleGroup?.updateMatrixWorld(true); // may not have rendered yet
-      const hits = this.raycaster.intersectObjects(this.handleMeshes, false);
+      const hits = this.raycaster.intersectObjects([...this.handleMeshes, ...this.handleHits], false);
       if (hits.length > 0) {
         const i = hits[0].object.userData.hdl as number;
         const def = this.hdlDefs[i];
         const lineO = def.pos.clone();
         const lineD = def.dir.clone();
-        // shape node: free drag on the ground plane — and grabbing one
-        // SELECTS it, so the props panel shows its corner radius (Figma)
+        // shape node — Figma rules: shift/cmd-click toggles it in the node
+        // selection (no drag), plain click on an unselected node selects
+        // just it, and dragging any selected node moves them all. The props
+        // panel batch-edits whatever's selected.
         if (def.vtx !== undefined) {
-          this.selVtx = def.vtx;
+          if (e.shiftKey || e.metaKey || e.ctrlKey) {
+            if (this.selVtxs.has(def.vtx)) this.selVtxs.delete(def.vtx);
+            else this.selVtxs.add(def.vtx);
+            this.tintHandles();
+            this.renderProps();
+            this.downAt = null;
+            return;
+          }
+          if (!this.selVtxs.has(def.vtx)) this.selVtxs = new Set([def.vtx]);
+          this.tintHandles();
           this.renderProps();
           this.hdlDrag = {
             i,
@@ -1120,10 +1165,13 @@ export class Editor {
     const hit = this.pick(e);
     // FIGMA rules — drag on EMPTY space is the marquee box-select: plain
     // replaces the selection, shift adds to it. (The camera lives on the
-    // right/middle buttons and space-drag now.)
+    // right/middle buttons and space-drag now.) In NODE mode the marquee
+    // sweeps the shape's nodes instead of components.
     if (hit < 0) {
       this.marquee = { x0: e.clientX, y0: e.clientY, x1: e.clientX, y1: e.clientY };
       this.marqueeAdd = e.shiftKey;
+      this.marqueeNodes =
+        this.resizeIdx >= 0 && !!this.data.components[this.resizeIdx]?.pts;
       this.showMarquee();
       if (this.controls) this.controls.enabled = false;
       return;
@@ -1360,18 +1408,34 @@ export class Editor {
     }
     // resize-handle drag: re-apply from the grab snapshot at the new travel
     if (this.hdlDrag && this.resizeIdx >= 0) {
-      // polygon vertex: chase the pointer on the ground plane
+      // shape node: chase the pointer on the ground plane. Dragging a node
+      // that's part of a multi-node selection carries the whole selection
+      // along by the same delta (Figma).
       if (this.hdlDrag.vtx !== undefined && this.hdlDrag.plane) {
         const hit = new THREE.Vector3();
         if (!this.groundPoint(e, this.hdlDrag.plane, hit)) return;
         const c = this.data.components[this.resizeIdx];
-        if (!c.pts) return;
-        const nx = this.snap ? snapHalf(hit.x - c.p[0]) : hit.x - c.p[0];
-        const nz = this.snap ? snapHalf(hit.z - c.p[2]) : hit.z - c.p[2];
-        const keepR = c.pts[this.hdlDrag.vtx]?.[2]; // the node's corner radius rides along
-        c.pts[this.hdlDrag.vtx] = keepR !== undefined ? [nx, nz, keepR] : [nx, nz];
+        const orig = this.hdlDrag.orig;
+        if (!c.pts || !orig.pts) return;
+        const o = orig.pts[this.hdlDrag.vtx];
+        const dx = hit.x - c.p[0] - o[0];
+        const dz = hit.z - c.p[2] - o[1];
+        const targets =
+          this.selVtxs.has(this.hdlDrag.vtx) && this.selVtxs.size > 1
+            ? [...this.selVtxs]
+            : [this.hdlDrag.vtx];
+        for (const vi of targets) {
+          const op = orig.pts[vi];
+          if (!op) continue;
+          const px = this.snap ? snapHalf(op[0] + dx) : op[0] + dx;
+          const pz = this.snap ? snapHalf(op[1] + dz) : op[1] + dz;
+          c.pts[vi] = op[2] !== undefined ? [px, pz, op[2]] : [px, pz]; // radius rides along
+        }
         const defs2 = this.handleDefsFor(c);
-        defs2.forEach((df, j) => this.handleMeshes[j]?.position.copy(df.pos));
+        defs2.forEach((df, j) => {
+          this.handleMeshes[j]?.position.copy(df.pos);
+          this.handleHits[j]?.position.copy(df.pos);
+        });
         this.hdlDefs = defs2;
         this.renderProps();
         const now2 = performance.now();
@@ -1390,7 +1454,10 @@ export class Editor {
       this.hdlDefs[this.hdlDrag.i].apply!(this.hdlDrag.orig, c, d);
       // handles + panel track live; geometry rebuilds on a light throttle
       const defs = this.handleDefsFor(c);
-      defs.forEach((df, j) => this.handleMeshes[j]?.position.copy(df.pos));
+      defs.forEach((df, j) => {
+        this.handleMeshes[j]?.position.copy(df.pos);
+        this.handleHits[j]?.position.copy(df.pos);
+      });
       this.hdlDefs = defs;
       this.renderProps();
       const now = performance.now();
@@ -1410,7 +1477,8 @@ export class Editor {
     // hovering a handle: show it's grabbable
     if (this.resizeIdx >= 0 && !this.dragging && this.handleMeshes.length > 0) {
       this.setRay(e);
-      const over = this.raycaster.intersectObjects(this.handleMeshes, false).length > 0;
+      const over =
+        this.raycaster.intersectObjects([...this.handleMeshes, ...this.handleHits], false).length > 0;
       if (over) {
         this.dom.style.cursor = 'grab';
         return;
@@ -1490,12 +1558,35 @@ export class Editor {
       e.button === 0;
     if (this.marquee) {
       const m = this.marquee;
+      const nodesMode = this.marqueeNodes;
       this.marquee = null;
+      this.marqueeNodes = false;
       this.hideMarquee();
       if (this.controls) this.controls.enabled = true;
       // a real sweep adds everything it touched (whole groups come along);
       // a sub-click shift-tap on empty space falls through to click logic
       if (!clickish) {
+        if (nodesMode && this.resizeIdx >= 0) {
+          // node mode: the box selects the shape's NODES (screen-projected)
+          const r = this.dom.getBoundingClientRect();
+          const x0 = Math.min(m.x0, m.x1);
+          const x1 = Math.max(m.x0, m.x1);
+          const y0 = Math.min(m.y0, m.y1);
+          const y1 = Math.max(m.y0, m.y1);
+          const picked = new Set<number>(this.marqueeAdd ? this.selVtxs : []);
+          for (const def of this.hdlDefs) {
+            if (def.vtx === undefined) continue;
+            const s = def.pos.clone().project(this.camera);
+            const sx = r.left + ((s.x + 1) / 2) * r.width;
+            const sy = r.top + ((1 - s.y) / 2) * r.height;
+            if (sx >= x0 && sx <= x1 && sy >= y0 && sy <= y1) picked.add(def.vtx);
+          }
+          this.selVtxs = picked;
+          this.tintHandles();
+          this.renderProps();
+          this.downAt = null;
+          return;
+        }
         const hits = this.marqueePick(m).flatMap((i) => this.expandToGroup(i));
         this.setSelection(this.marqueeAdd ? [...this.sel, ...hits] : hits);
         this.downAt = null;
@@ -2124,6 +2215,58 @@ export class Editor {
       });
       mkBtn('delete', () => this.deleteSelected(), true);
       this.propsEl.appendChild(grid);
+      // SHARED variables (Figma): every field that applies to ALL selected
+      // pieces shows once — the value displayed is the primary's, typing
+      // batch-writes it to the whole selection.
+      const all = this.sel.map((i) => this.data.components[i]);
+      const prim = this.data.components[this.selected];
+      const shared = document.createElement('div');
+      shared.className = 'ed-dim';
+      shared.textContent = `shared values (apply to all ${this.sel.length}):`;
+      this.propsEl.appendChild(shared);
+      const brow = (label: string, get: () => number, set: (cc: CustomComponent, v: number) => void, step = 0.5): void =>
+        void this.propsEl.appendChild(
+          this.numRow(label, get, (v) => all.forEach((cc) => set(cc, v)), step),
+        );
+      brow('x', () => prim.p[0], (cc, v) => (cc.p[0] = v));
+      brow('y', () => prim.p[1], (cc, v) => (cc.p[1] = v));
+      brow('z', () => prim.p[2], (cc, v) => (cc.p[2] = v));
+      if (all.every((cc) => cc.s)) {
+        brow('width', () => prim.s![0], (cc, v) => (cc.s![0] = Math.max(0.2, v)));
+        brow('height', () => prim.s![1], (cc, v) => (cc.s![1] = Math.max(0.2, v)));
+        brow('depth', () => prim.s![2], (cc, v) => (cc.s![2] = Math.max(0.2, v)));
+      }
+      const yawable = new Set(['platform', 'ramp', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy', 'rail']);
+      if (all.every((cc) => yawable.has(cc.t) && !cc.pts)) {
+        brow('yaw °', () => prim.yaw ?? 0, (cc, v) => (cc.yaw = v), 15);
+      }
+      if (all.every((cc) => cc.len !== undefined)) {
+        brow('length', () => prim.len!, (cc, v) => (cc.len = Math.max(1, v)));
+      }
+      if (all.every((cc) => cc.t === 'enemy')) {
+        brow('speed', () => prim.speed ?? 3, (cc, v) => (cc.speed = Math.max(0.5, v)));
+        brow('patrol range', () => prim.range ?? 5, (cc, v) => (cc.range = Math.max(0.5, v)));
+      }
+      if (all.every((cc) => cc.t === 'camnode')) {
+        brow('corner radius', () => prim.radius ?? 0, (cc, v) => (cc.radius = Math.max(0, v)));
+      }
+      const colorable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock']);
+      if (all.every((cc) => colorable.has(cc.t))) {
+        const row = document.createElement('div');
+        row.className = 'ed-row';
+        const lab = document.createElement('label');
+        lab.textContent = 'color';
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.value = prim.color ?? '#ffffff';
+        input.addEventListener('change', () => {
+          for (const cc of all) cc.color = input.value;
+          this.commit();
+        });
+        row.appendChild(lab);
+        row.appendChild(input);
+        this.propsEl.appendChild(row);
+      }
       const hint = document.createElement('div');
       hint.className = 'ed-dim';
       hint.textContent =
@@ -2167,19 +2310,24 @@ export class Editor {
     // the collision, the kill footprint, and the grind line alike.
     const nodeRows = (): void => {
       if (!c.pts) return;
-      if (this.resizeIdx === this.selected && this.selVtx >= 0 && this.selVtx < c.pts.length) {
+      const picked = [...this.selVtxs].filter((i) => i >= 0 && i < c.pts!.length);
+      if (this.resizeIdx === this.selected && picked.length > 0) {
+        // one field batch-edits every selected node's radius (Figma)
         num(
-          `node ${this.selVtx + 1} radius`,
-          () => c.pts![this.selVtx][2] ?? 0,
+          picked.length > 1 ? `${picked.length} nodes · radius` : `node ${picked[0] + 1} radius`,
+          () => c.pts![picked[0]][2] ?? 0,
           (v) => {
-            const pt = c.pts![this.selVtx];
-            c.pts![this.selVtx] = v > 0.01 ? [pt[0], pt[1], Math.max(0, v)] : [pt[0], pt[1]];
+            for (const vi of picked) {
+              const pt = c.pts![vi];
+              c.pts![vi] = v > 0.01 ? [pt[0], pt[1], Math.max(0, v)] : [pt[0], pt[1]];
+            }
           },
         );
       } else {
         const tip = document.createElement('div');
         tip.className = 'ed-dim';
-        tip.textContent = 'double-click, then grab a node: set its corner radius here';
+        tip.textContent =
+          'double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit corner radius here';
         this.propsEl.appendChild(tip);
       }
     };
