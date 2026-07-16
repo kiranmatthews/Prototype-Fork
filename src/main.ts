@@ -608,7 +608,12 @@ function updateCamera(dt: number): void {
   const floorY = player.groundBelowY;
   const anchorGoal = Math.max(floorY ?? player.pos.y, player.pos.y - maxRise);
   camAnchorY += (anchorGoal - camAnchorY) * Math.min(1, 4.5 * dt);
-  const effY = THREE.MathUtils.lerp(camAnchorY, player.pos.y, boulderF);
+  // camAirLift: how much the rig rides UP with airborne height. 1 = classic
+  // full-follow (the camera rises with the jump, so airs read small and snappy
+  // on screen); 0 = pure ground anchor (the skater does all the on-screen
+  // rising — same physics, but every air reads much bigger and floatier).
+  const airLift = Math.max(TUNING.camAirLift, boulderF);
+  const effY = THREE.MathUtils.lerp(camAnchorY, player.pos.y, airLift);
   // the gentle jump tilt also softens on tight lenses (magnified on screen);
   // kept small overall — the ground stays in shot, the skater does the rising
   const tiltTrack = 0.22 * Math.min(1, frameHalf / 4.5);
@@ -637,7 +642,9 @@ function updateCamera(dt: number): void {
     const lat = dx * perpX + dz * perpZ;
     const kAlong = 1 - Math.exp(-9 * dt);
     const kLat = 1 - Math.exp(-THREE.MathUtils.lerp(3.2, 9, Math.max(sideF, boulderF)) * dt);
-    const kY = 1 - Math.exp(-6 * dt);
+    // full air-lift also restores the classic stiffer vertical chase — a soft
+    // y-spring on a followed jump reads as extra float
+    const kY = 1 - Math.exp(-THREE.MathUtils.lerp(6, 9, airLift) * dt);
     camera.position.x += camF.x * along * kAlong + perpX * lat * kLat;
     camera.position.z += camF.z * along * kAlong + perpZ * lat * kLat;
     camera.position.y += (camTarget.y - camera.position.y) * kY;
@@ -660,7 +667,13 @@ function updateCamera(dt: number): void {
     player.pos.z - camF.z * aimK,
   );
   if (Number.isNaN(aimSmooth.x)) aimSmooth.copy(lookPoint);
-  aimSmooth.lerp(lookPoint, 1 - Math.exp(-11 * dt));
+  // pan (xz) keeps the gentle smoothing; the vertical aim stiffens with
+  // camAirLift — the classic rig looked straight at the body with no lag
+  const kAim = 1 - Math.exp(-11 * dt);
+  const kAimY = 1 - Math.exp(-THREE.MathUtils.lerp(11, 45, airLift) * dt);
+  aimSmooth.x += (lookPoint.x - aimSmooth.x) * kAim;
+  aimSmooth.z += (lookPoint.z - aimSmooth.z) * kAim;
+  aimSmooth.y += (lookPoint.y - aimSmooth.y) * kAimY;
 
   camera.lookAt(aimSmooth);
 }

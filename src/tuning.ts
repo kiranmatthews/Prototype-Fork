@@ -119,6 +119,7 @@ export const TUNING = {
   chaseCam: 0, // 1 = third-person follow: camera swings behind the travel direction, skater always faces forward
   camDist: 5.2, // trailing distance behind the character
   camHeight: 4.1, // camera elevation above the character
+  camAirLift: 1, // how much the rig rises WITH an airborne jump: 1 = classic full-follow (jumps read small/snappy on screen), 0 = ground-anchored Crash rig (skater does all the rising on screen — same arc reads much bigger)
   camTilt: 2.1, // aim height on the character: higher = camera tilts UP (sees more sky)
   camOffset: 0, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
 };
@@ -239,6 +240,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   chaseCam: { min: 0, max: 1, step: 1 },
   camDist: { min: 2, max: 14, step: 0.1 },
   camHeight: { min: 0.5, max: 10, step: 0.1 },
+  camAirLift: { min: 0, max: 1, step: 0.05 },
   camTilt: { min: -6, max: 10, step: 0.05 },
   camOffset: { min: -8, max: 4, step: 0.25 },
 };
@@ -425,6 +427,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   camOffset:
     'OFFSET: slides the WHOLE rig (camera + aim together) down-course — moves where the skater rests in the frame WITHOUT changing the tilt. Positive = she sits lower in frame with more road ahead; negative = she rides higher/closer.',
   camHeight: 'ELEVATION: how high above the character the camera rides. Higher = more top-down.',
+  camAirLift:
+    'AIR LIFT: how much the camera rises WITH you during a jump. 1 = full follow — the rig tracks your height, so jumps read small and snappy on screen (the classic feel). 0 = ground-anchored — the camera holds at floor level and the skater does ALL the on-screen rising: the exact same jump arc reads much bigger and floatier, but your landing spot stays perfectly in shot. Values between blend the two.',
   chaseCam:
     'CHASE CAM (0 = off, 1 = on): third-person follow — the camera swings around behind wherever you travel, so the skater always faces forward and stick-up is always "onward". Overrides the fixed corridor framing, drawn camera lanes, and corner zones while on; the boulder chase keeps its authored shot. All the other CAMERA sliders still shape the rig.',
 };
@@ -497,7 +501,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
-  { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight'] },
+  { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
 ];
 
