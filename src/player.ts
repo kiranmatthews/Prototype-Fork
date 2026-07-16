@@ -138,6 +138,7 @@ export class Player {
   private flipTimer = 0; // front-flip on jump (visual only)
   private dirHoldT = 0; // seconds a direction has been held (roll-jump trigger)
   private airJumpUsed = false; // double jump: one extra pop per air
+  private airTapT = 0; // double jump tap timer: armed on press, dies if held (that's a charge)
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
   private lastVelX = 0; // measured horizontal velocity last step (u/s) —
@@ -2195,26 +2196,34 @@ export class Player {
       }
     }
 
-    // DOUBLE JUMP (tuner toggle): a fresh X press mid-air pops a second,
-    // smaller jump — one per air. Hangs, slams, and grabs own their airs;
-    // the coyote window keeps priority so a late first jump never turns
-    // into a wasted second one.
+    // DOUBLE JUMP (tuner toggle): a quick mid-air TAP of X pops a second,
+    // smaller jump — one per air, on-foot airs only. A TAP, specifically:
+    // press-and-HOLD is the landing recharge (the skate habit of loading X
+    // back up mid-air), and that must never pop — so the double fires on
+    // the release of a sub-0.2s press, not on the press itself. Hangs,
+    // slams, and grabs own their airs; the coyote window keeps priority.
     if (
       TUNING.doubleJump > 0.5 &&
-      input.jumpPressed &&
-      !this.airJumpUsed &&
-      !this.airFromSkate && // an on-foot move: board airs never double jump
+      !this.airFromSkate &&
       this.coyoteTimer <= 0 &&
       !this.vertAir &&
       !this.slamActive &&
       !this.grabbing
     ) {
-      this.airJumpUsed = true;
-      this.vVel = TUNING.jumpMinVelocity;
-      this.flipTimer = 0; // snap out of a somersault into the fresh pop
-      this.starTimer = 0.25; // spread-eagle flash so the double reads
-      this.lastJumpType = 'Double Jump';
-      sfx.play('footstep2', 0.6, 1.8);
+      if (input.jumpPressed && !this.airJumpUsed) this.airTapT = 1e-4; // arm the tap
+      else if (this.airTapT > 0 && input.jumpHeld) this.airTapT += dt;
+      if (this.airTapT > 0.2) this.airTapT = 0; // held past a tap: it's a charge
+      if (input.jumpReleased && this.airTapT > 0 && !this.airJumpUsed) {
+        this.airTapT = 0;
+        this.airJumpUsed = true;
+        this.vVel = TUNING.jumpMinVelocity;
+        this.flipTimer = 0; // snap out of a somersault into the fresh pop
+        this.starTimer = 0.25; // spread-eagle flash so the double reads
+        this.lastJumpType = 'Double Jump';
+        sfx.play('footstep2', 0.6, 1.8);
+      }
+    } else {
+      this.airTapT = 0;
     }
 
     // Circle + down: pancake body slam, Wile E. Coyote rules — engage, FREEZE
