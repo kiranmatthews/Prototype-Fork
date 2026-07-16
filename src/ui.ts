@@ -63,7 +63,10 @@ export class UI {
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
-  private sliderEls = new Map<TuningKey, { input: HTMLInputElement; value: HTMLInputElement }>();
+  private sliderEls = new Map<
+    TuningKey,
+    { input: HTMLInputElement; value: HTMLInputElement; sync?: () => void }
+  >();
   // Bookmarked slider names (green) — persisted attention markers, no effect.
   private tunerMarks = new Set<string>(
     JSON.parse(localStorage.getItem('protoTunerMarks') ?? '[]') as string[],
@@ -507,6 +510,7 @@ export class UI {
       if (el) {
         el.input.value = String(v);
         el.value.value = String(v);
+        el.sync?.(); // checkboxes mirror the number
       }
     }
   }
@@ -602,6 +606,26 @@ export class UI {
       label.classList.toggle('hud-marked');
       localStorage.setItem('protoTunerMarks', JSON.stringify([...this.tunerMarks]));
     });
+    // 0/1 toggles render as a CHECKBOX, not a two-notch slider. The unused
+    // input/value pair keeps the shared applyTuning refresh path happy;
+    // sync() mirrors save/reset/defaults into the box.
+    if (range.min === 0 && range.max === 1 && range.step === 1) {
+      const box = document.createElement('input');
+      box.type = 'checkbox';
+      box.className = 'hud-tunercheck';
+      box.checked = TUNING[key] > 0.5;
+      box.addEventListener('change', () => {
+        TUNING[key] = box.checked ? 1 : 0;
+      });
+      wrap.appendChild(label);
+      wrap.appendChild(box);
+      this.sliderEls.set(key, {
+        input: document.createElement('input'),
+        value: document.createElement('input'),
+        sync: () => (box.checked = TUNING[key] > 0.5),
+      });
+      return wrap;
+    }
     // Editable number box: click and type an exact value (or use the arrows).
     // It accepts anything and clamps to the slider's range on commit.
     const value = document.createElement('input');

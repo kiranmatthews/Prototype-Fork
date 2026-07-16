@@ -401,6 +401,17 @@ export class Player {
     return this.spinTimer > 0;
   }
 
+  // CHASE CAM: is the current travel a real heading — flat-ish ground or a
+  // grind — rather than cross-pipe oscillation or an air the camera should
+  // coast through? Transition walls and pipe troughs never steer the chase
+  // (the level's spine is camera noise); main.ts reads this every frame.
+  get chaseSteady(): boolean {
+    if (this.state === 'grind') return true;
+    if (this.state !== 'ride' || !this.grounded) return false;
+    const g = this.groundHit;
+    return !g || (g.normal.y > 0.9 && g.halfpipe === undefined);
+  }
+
   get sliding(): boolean {
     return this.slideTimer > 0 && this.state === 'ride' && this.grounded;
   }

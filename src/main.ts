@@ -514,6 +514,7 @@ const camF = new THREE.Vector3(0, 0, -1);
 // With TUNING.chaseCam on, camF follows THIS instead — the camera swings
 // around behind wherever they go, so the skater always faces forward.
 const chaseF = new THREE.Vector3(0, 0, -1);
+let chaseSteadyT = 0; // seconds of continuous steady travel (filters pipe swings)
 
 function updateCamera(dt: number): void {
   // ONE rig, always facing down -Z. When the path right-angles into an
@@ -541,13 +542,21 @@ function updateCamera(dt: number): void {
     camera.updateProjectionMatrix();
   }
 
-  // CHASE CAM: track the player's travel direction (held while stopped —
-  // idling never spins the shot). Real movement only; a walking pace is
-  // enough to steer it.
+  // CHASE CAM: track the player's travel direction — but only SUSTAINED,
+  // steady travel. Airs coast on the held heading; halfpipe transitions and
+  // trough crossings never steer it (swinging a pipe would pinwheel the
+  // shot — the level's spine is camera noise, not a heading); and the brief
+  // sustain window filters what's left. Held while stopped: idling never
+  // spins the frame.
   const vx = dt > 0 ? (player.pos.x - prevPlayerPos.x) / dt : 0;
   const vz = dt > 0 ? (player.pos.z - prevPlayerPos.z) / dt : 0;
-  if (chaseOn && vx * vx + vz * vz > 9) {
-    chaseF.set(vx, 0, vz).normalize();
+  chaseSteadyT = chaseOn && player.chaseSteady ? chaseSteadyT + dt : 0;
+  if (chaseOn && chaseSteadyT > 0.35 && vx * vx + vz * vz > 9) {
+    const inv = 1 / Math.hypot(vx, vz);
+    const k = Math.min(1, 2.5 * dt);
+    chaseF.x += (vx * inv - chaseF.x) * k;
+    chaseF.z += (vz * inv - chaseF.z) * k;
+    if (chaseF.lengthSq() > 1e-4) chaseF.normalize();
   }
 
   // CAMERA LANE: ease the rig's forward along the lane's local tangent (the
