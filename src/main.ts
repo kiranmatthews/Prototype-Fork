@@ -542,7 +542,11 @@ function updateCamera(dt: number): void {
   const dist = THREE.MathUtils.lerp(TUNING.camDist, TUNING.camDist * 1.77, sideF) + back * 3.8 + boulderF * 18.8;
   const height =
     THREE.MathUtils.lerp(TUNING.camHeight, TUNING.camHeight * 0.9, sideF) + back * 1.1 + boulderF * 1.7;
-  camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist);
+  // camOffset TRANSLATES the whole rig down-course — camera AND aim move
+  // together, so the skater's resting spot in frame shifts while the tilt
+  // stays put. The boulder shot authors its own framing; fade the knob out.
+  const off = TUNING.camOffset * (1 - boulderF);
+  camTarget.set(player.pos.x, player.pos.y + height, player.pos.z + dist - off);
 
   // Snap after respawn teleports; damp otherwise (camEase = chase stiffness).
   if (camera.position.distanceTo(camTarget) > 30) {
@@ -551,13 +555,19 @@ function updateCamera(dt: number): void {
     camera.position.lerp(camTarget, 1 - Math.exp(-TUNING.camEase * dt));
   }
 
+  // camTilt aims AT the body (2.1 = just over her head — the old 21° default
+  // pitch, re-derived). Side / reverse / boulder keep their authored absolute
+  // aims, converted from the old look-ahead shots so defaults are identical.
+  const aimY = THREE.MathUtils.lerp(TUNING.camTilt, TUNING.camTilt - 0.2, sideF);
   lookPoint.set(
     player.pos.x,
-    player.pos.y + THREE.MathUtils.lerp(TUNING.camTilt, 1.35 + TUNING.camTilt, sideF) + boulderF * 1.45, // raise the aim: tilt UP toward the boulder up-course
-    player.pos.z -
-      THREE.MathUtils.lerp(TUNING.camLookAhead, TUNING.camLookAhead * 0.4, sideF) +
-      back * 8.5 +
-      boulderF * 17, // aim well DOWN-course (+Z) so the hero floats high up the screen, lead room below
+    player.pos.y + THREE.MathUtils.lerp(aimY, 1.6, boulderF), // boulder: tilt UP the corridor
+    player.pos.z +
+      THREE.MathUtils.lerp(
+        THREE.MathUtils.lerp(-off, 3.5, back), // reversing: aim swings behind you
+        12, // boulder: aim well down-course, hero floats high with lead room below
+        boulderF,
+      ),
   );
 
   camera.lookAt(lookPoint);

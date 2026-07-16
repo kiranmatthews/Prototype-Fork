@@ -108,12 +108,15 @@ export const TUNING = {
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
   renderScale: 1, // internal render resolution as a fraction of the window — the era knob
-  // CAMERA defaults (the long-standing hand-tuned chase framing)
+  // CAMERA defaults (the long-standing hand-tuned chase framing).
+  // camTilt aims AT the character (2.1 ≈ just over her head — this exactly
+  // reproduces the old 21° down-pitch); camOffset TRANSLATES the whole rig
+  // down-course, so framing moves without the tilt changing. Decoupled knobs.
   camFov: 62, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
   camDist: 5.2, // trailing distance behind the character
   camHeight: 4.1, // camera elevation above the character
-  camTilt: 0.15, // vertical aim point on the character: higher = camera tilts UP (sees more sky)
-  camLookAhead: 5, // forward offset: how far ahead of the character the camera aims down-course
+  camTilt: 2.1, // aim height on the character: higher = camera tilts UP (sees more sky)
+  camOffset: 0, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
   camEase: 9, // movement easing: how fast the camera chases its target (higher = stiffer, lower = floatier)
 };
 
@@ -124,7 +127,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 3;
+export const TUNING_VERSION = 4; // v4: camera reparametrized (camTilt aims at the body, camLookAhead -> camOffset translation)
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
@@ -229,8 +232,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   camFov: { min: 30, max: 100, step: 1 },
   camDist: { min: 2, max: 14, step: 0.1 },
   camHeight: { min: 0.5, max: 10, step: 0.1 },
-  camTilt: { min: -1, max: 3, step: 0.05 },
-  camLookAhead: { min: 0, max: 12, step: 0.25 },
+  camTilt: { min: -6, max: 10, step: 0.05 },
+  camOffset: { min: -8, max: 4, step: 0.25 },
   camEase: { min: 1.5, max: 20, step: 0.5 },
 };
 
@@ -405,10 +408,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   camFov:
     'ZOOM (focal length): the camera lens angle. Lower = telephoto punch-in (tighter, flatter, more cinematic); higher = wide angle (more of the world, more distortion). Side-scroll zones and the boulder chase still add their own push.',
   camTilt:
-    'TILT: how high on the character the camera aims. Higher tilts the view UP (more horizon/sky in frame); lower aims at the feet (more ground).',
+    'TILT: the height on the character the camera aims at (2.1 = just over her head). Higher tilts the view UP toward the horizon/sky; lower buries the view into the ground. Pure angle — the framing position knob is camOffset.',
   camDist: 'DISTANCE: how far the camera trails behind the character. Side-scroll zones scale with it.',
-  camLookAhead:
-    'OFFSET: how far ahead of the character (down-course) the camera aims — bigger shows more of what is coming and pushes the character toward the bottom of the frame.',
+  camOffset:
+    'OFFSET: slides the WHOLE rig (camera + aim together) down-course — moves where the skater rests in the frame WITHOUT changing the tilt. Positive = she sits lower in frame with more road ahead; negative = she rides higher/closer.',
   camHeight: 'ELEVATION: how high above the character the camera rides. Higher = more top-down.',
   camEase:
     'MOVEMENT EASING: how quickly the camera chases its target position. Higher = stiff and locked-on; lower = a floaty, drifty follow that smooths out bumps.',
@@ -482,7 +485,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
-  { title: 'CAMERA', keys: ['camFov', 'camTilt', 'camDist', 'camLookAhead', 'camHeight', 'camEase'] },
+  { title: 'CAMERA', keys: ['camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camEase'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
 ];
 
