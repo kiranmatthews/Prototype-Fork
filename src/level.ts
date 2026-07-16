@@ -858,6 +858,14 @@ export class Level {
     };
     const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal', 'rock']);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
+    // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
+    // nesting) a '!' switch. Breakable crates in these groups start as
+    // outline ghosts automatically — no per-crate flag to remember.
+    const bangGroups = new Set<number>();
+    for (const c of data.components) {
+      if (c.t === 'crate' && c.kind === 'bang')
+        for (const id of groupChainOf(c, data)) bangGroups.add(id);
+    }
     for (const pass of [true, false]) {
       data.components.forEach((c, i) => {
         if (geomPass.has(c.t) !== pass) return;
@@ -1229,9 +1237,14 @@ export class Level {
             const col = c.color ? new THREE.Color(c.color).getHex() : undefined;
             this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col, c.yaw ?? 0);
           } else if (c.t === 'crate') {
+            const gids = groupChainOf(c, data);
+            // sharing a group with a '!' switch ghosts the crate until the
+            // switch fires (switches themselves stay solid)
+            const wiredToBang =
+              c.kind !== 'bang' && c.kind !== 'nitrobang' && gids.some((id) => bangGroups.has(id));
             this.crate(c.p[0], c.p[1], c.p[2], c.kind === 'wood' ? undefined : c.kind, {
-              outline: c.outline,
-              groupIds: groupChainOf(c, data),
+              outline: c.outline || wiredToBang,
+              groupIds: gids,
             });
           } else if (c.t === 'outline') {
             // LEGACY saves: build as a wood crate in the outline state
@@ -1909,7 +1922,11 @@ export class Level {
   triggerBang(crate: Crate): void {
     if (!crate.alive || crate.bangUsed || crate.pending) return;
     crate.bangUsed = true;
-    (crate.mesh.material as THREE.MeshLambertMaterial).color.setScalar(0.45); // spent switch
+    // spent switch: the '!' face comes OFF — it's just a plain metal box now
+    const m = crate.mesh.material as THREE.MeshLambertMaterial;
+    m.map = this.spentBangTexture();
+    m.color.setScalar(0.8);
+    m.needsUpdate = true;
     this.activateOutlines(crate.groupIds && crate.groupIds.length > 0 ? crate.groupIds : null);
     sfx.play('crateBreak1', 0.6, 1.4);
   }
@@ -2053,7 +2070,12 @@ export class Level {
         this.restoreTntFace(c);
         this.setCratePending(c, cpSnap.savedPending?.[i] ?? !!c.pending);
         c.bangUsed = cpSnap.savedBangUsed?.[i] ?? c.bangUsed;
-        if (c.bang) (c.mesh.material as THREE.MeshLambertMaterial).color.setScalar(c.bangUsed ? 0.45 : 1);
+        if (c.bang) {
+          const m = c.mesh.material as THREE.MeshLambertMaterial;
+          m.map = c.bangUsed ? this.spentBangTexture() : this.bangTexture();
+          m.color.setScalar(c.bangUsed ? 0.8 : 1);
+          m.needsUpdate = true;
+        }
       });
     } else {
       for (const c of this.crates) {
@@ -2065,7 +2087,12 @@ export class Level {
         // outlines return to ghosts, switches re-arm
         this.setCratePending(c, !!c.wasOutline);
         c.bangUsed = false;
-        if (c.bang) (c.mesh.material as THREE.MeshLambertMaterial).color.setScalar(1);
+        if (c.bang) {
+          const m = c.mesh.material as THREE.MeshLambertMaterial;
+          m.map = this.bangTexture();
+          m.color.setScalar(1);
+          m.needsUpdate = true;
+        }
       }
     }
 
@@ -3870,6 +3897,13 @@ export class Level {
         this.crateLabel(ctx, '!', 24, '#ffd934', '#3a3f46', 16, 18);
       });
     return this.bangTex;
+  }
+
+  // A fired '!' switch: same metal box, mark gone.
+  private spentBangTex: THREE.CanvasTexture | null = null;
+  private spentBangTexture(): THREE.CanvasTexture {
+    if (!this.spentBangTex) this.spentBangTex = this.makeTex((ctx) => this.crateMetalBase(ctx));
+    return this.spentBangTex;
   }
 
   // White '!' on nitro green: breaking it detonates every nitro on the map.
