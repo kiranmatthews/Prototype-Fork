@@ -156,6 +156,13 @@ export class Editor {
   private layersEl: HTMLElement | null = null;
   private renamingLayer = -1;
   private camSaveAt = 0;
+  // pop-out side panels (item picker / layers) + view cluster + space-pan
+  private popWrap: HTMLElement | null = null;
+  private popAdd: HTMLElement | null = null;
+  private popLayers: HTMLElement | null = null;
+  private tabAdd: HTMLButtonElement | null = null;
+  private tabLayers: HTMLButtonElement | null = null;
+  private spaceHeld = false;
   // resize-handle state (enter by double-clicking a component)
   private resizeIdx = -1;
   private hdlDefs: HandleDef[] = [];
@@ -190,6 +197,7 @@ export class Editor {
     dom.addEventListener('pointerup', this.onUp);
     dom.addEventListener('dblclick', this.onDbl);
     window.addEventListener('keydown', this.onKey);
+    window.addEventListener('keyup', this.onKeyUp);
   }
 
   enter(): void {
@@ -221,7 +229,10 @@ export class Editor {
       this.camera.position.set(this.data.spawn[0] + 16, this.data.spawn[1] + 26, this.data.spawn[2] + 26);
     }
     localStorage.setItem('protoEditorOpen', '1'); // refresh lands back in the editor
+    document.body.classList.add('ed-active'); // hides the play HUD under the tools
     this.panel.style.display = 'block';
+    if (this.popWrap) this.popWrap.style.display = 'block';
+    this.setPop((localStorage.getItem('protoEditorPop') as 'add' | 'layers' | '') ?? 'add');
     this.select(-1);
     this.renderLayers();
     this.refreshSpawnMarker();
@@ -236,12 +247,15 @@ export class Editor {
     localStorage.removeItem('protoEditorOpen');
     this.controls?.dispose();
     this.controls = null;
+    document.body.classList.remove('ed-active');
     this.panel.style.display = 'none';
+    if (this.popWrap) this.popWrap.style.display = 'none';
     this.select(-1);
     this.marquee = null;
     this.hideMarquee();
     this.dragging = false;
     this.dragSel = [];
+    this.spaceHeld = false;
     this.dom.style.cursor = '';
     this.setGhostsVisible(false);
     if (this.spawnMarker) {
@@ -964,7 +978,7 @@ export class Editor {
   }
 
   private onDbl = (e: MouseEvent): void => {
-    if (!this.active) return;
+    if (!this.active || this.spaceHeld) return;
     const hit = this.pick(e as PointerEvent);
     if (hit >= 0 && RESIZABLE.has(this.data.components[hit].t)) {
       this.select(hit);
@@ -983,6 +997,12 @@ export class Editor {
 
   private onDown = (e: PointerEvent): void => {
     if (!this.active || e.button !== 0) return;
+    // space-hand: the pointer belongs to the pan — no picking, no marquee
+    if (this.spaceHeld) {
+      this.downAt = null;
+      this.dom.style.cursor = 'grabbing';
+      return;
+    }
     // resize handles grab first — they float over everything else
     if (this.resizeIdx >= 0 && this.handleMeshes.length > 0) {
       this.setRay(e);
@@ -1129,6 +1149,7 @@ export class Editor {
 
   private onMove = (e: PointerEvent): void => {
     if (!this.active) return;
+    if (this.spaceHeld) return; // panning: OrbitControls owns the pointer
     // resize-handle drag: re-apply from the grab snapshot at the new travel
     if (this.hdlDrag && this.resizeIdx >= 0) {
       this.setRay(e);
@@ -1222,6 +1243,11 @@ export class Editor {
 
   private onUp = (e: PointerEvent): void => {
     if (!this.active) return;
+    if (this.spaceHeld) {
+      this.dom.style.cursor = 'grab';
+      this.downAt = null;
+      return;
+    }
     if (this.hdlDrag) {
       this.hdlDrag = null;
       if (this.controls) this.controls.enabled = true;
@@ -1279,6 +1305,16 @@ export class Editor {
     if (!this.active) return;
     const typing = (e.target as HTMLElement)?.tagName === 'INPUT' || (e.target as HTMLElement)?.tagName === 'SELECT';
     if (typing) return;
+    // HOLD SPACE: grabby hand — left-drag pans the canvas (Figma rules)
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (!this.spaceHeld && !this.dragging && !this.hdlDrag) {
+        this.spaceHeld = true;
+        if (this.controls) this.controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+        this.dom.style.cursor = 'grab';
+      }
+      return;
+    }
     const cmd = e.metaKey || e.ctrlKey;
     if (e.code === 'Escape') {
       // step out: resize mode first, then the selection itself
@@ -1328,6 +1364,14 @@ export class Editor {
     }
   };
 
+  private onKeyUp = (e: KeyboardEvent): void => {
+    if (e.code === 'Space' && this.spaceHeld) {
+      this.spaceHeld = false;
+      if (this.controls) this.controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
+      if (this.active) this.dom.style.cursor = '';
+    }
+  };
+
   // ---- spawn marker ----
 
   private refreshSpawnMarker(): void {
@@ -1369,14 +1413,25 @@ export class Editor {
     this.propsEl = h('<div class="ed-props"><div class="ed-dim">click a component…</div></div>');
     panel.appendChild(this.propsEl);
 
-    // layers: name it, lock it, stack it — new pieces land on the active one
-    panel.appendChild(h('<div class="ed-sect">LAYERS</div>'));
-    this.layersEl = h('<div class="ed-layers"></div>');
-    panel.appendChild(this.layersEl);
+    // ---- left-side pop-outs: the item picker and the layers panel live in
+    // their own tabs so the inspector stays short ----
+    const wrap = h('<div class="ed-popwrap" style="display:none"></div>');
+    const tabs = h('<div class="ed-tabs"></div>');
+    this.tabAdd = h('<button class="ed-tab">▦<span>ADD</span></button>') as HTMLButtonElement;
+    this.tabLayers = h('<button class="ed-tab">≡<span>LAYERS</span></button>') as HTMLButtonElement;
+    this.tabAdd.addEventListener('click', () => this.setPop(this.popAdd?.style.display === 'block' ? '' : 'add'));
+    this.tabLayers.addEventListener('click', () =>
+      this.setPop(this.popLayers?.style.display === 'block' ? '' : 'layers'),
+    );
+    tabs.appendChild(this.tabAdd);
+    tabs.appendChild(this.tabLayers);
+    wrap.appendChild(tabs);
 
-    // add palette: grouped, icon + label per component
+    // item picker pop-out: grouped, icon + label per component
+    const popAdd = h('<div class="ed-pop" style="display:none"></div>');
+    popAdd.appendChild(h('<div class="ed-title">ADD</div>'));
     for (const sect of PALETTE_SECTIONS) {
-      panel.appendChild(h(`<div class="ed-sect">ADD · ${sect.title}</div>`));
+      popAdd.appendChild(h(`<div class="ed-sect">${sect.title}</div>`));
       const pal = h('<div class="ed-grid"></div>');
       for (const p of sect.items) {
         const b = h('<button class="ed-btn ed-palbtn"></button>') as HTMLButtonElement;
@@ -1401,8 +1456,38 @@ export class Editor {
         });
         pal.appendChild(b);
       }
-      panel.appendChild(pal);
+      popAdd.appendChild(pal);
     }
+    this.popAdd = popAdd;
+    wrap.appendChild(popAdd);
+
+    // layers pop-out
+    const popLayers = h('<div class="ed-pop" style="display:none"></div>');
+    popLayers.appendChild(h('<div class="ed-title">LAYERS</div>'));
+    this.layersEl = h('<div class="ed-layers"></div>');
+    popLayers.appendChild(this.layersEl);
+    popLayers.appendChild(
+      h('<div class="ed-dim">new pieces land on the ● active layer<br>🔒 = click-through (safe from edits)</div>'),
+    );
+    this.popLayers = popLayers;
+    wrap.appendChild(popLayers);
+
+    // hard view snaps, bottom-left: X/Y/Z aim the orbit camera straight down
+    // that axis (click again = the opposite side)
+    const views = h('<div class="ed-views"></div>');
+    for (const ax of ['x', 'y', 'z'] as const) {
+      const vb = h(`<button class="ed-viewbtn">${ax.toUpperCase()}</button>`) as HTMLButtonElement;
+      vb.title = `snap view down ${ax.toUpperCase()} (again = other side)`;
+      vb.addEventListener('click', () => {
+        this.snapView(ax);
+        vb.blur();
+      });
+      views.appendChild(vb);
+    }
+    wrap.appendChild(views);
+
+    document.body.appendChild(wrap);
+    this.popWrap = wrap;
 
     // level settings
     panel.appendChild(h('<div class="ed-sect">LEVEL</div>'));
@@ -1490,7 +1575,7 @@ export class Editor {
     });
     panel.appendChild(test);
     panel.appendChild(
-      h('<div class="ed-dim">orbit: drag · zoom: wheel · pan: right-drag<br>move: drag selected (shift = height)<br>alt-drag selected = drag out a copy<br>shift-click = add to selection<br>shift-drag empty = box select · ⌘A = all<br>⌘G = group · ⌘⇧G = ungroup (groups click as one)<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
+      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>orbit: drag · zoom: wheel · pan: right-drag<br>HOLD SPACE = grabby-hand pan<br>X/Y/Z (bottom-left) = hard view snaps<br>move: drag selected (shift = height)<br>alt-drag selected = drag out a copy<br>shift-click = add to selection<br>shift-drag empty = box select · ⌘A = all<br>⌘G = group · ⌘⇧G = ungroup (groups click as one)<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
     );
 
     document.body.appendChild(panel);
@@ -1499,6 +1584,40 @@ export class Editor {
   }
 
   private buildPanelLevelRefresh: (() => void) | null = null;
+
+  // one pop-out at a time (photoshop-dock rules); '' closes both
+  private setPop(which: 'add' | 'layers' | ''): void {
+    if (this.popAdd) this.popAdd.style.display = which === 'add' ? 'block' : 'none';
+    if (this.popLayers) this.popLayers.style.display = which === 'layers' ? 'block' : 'none';
+    this.tabAdd?.classList.toggle('ed-tab-on', which === 'add');
+    this.tabLayers?.classList.toggle('ed-tab-on', which === 'layers');
+    try {
+      localStorage.setItem('protoEditorPop', which);
+    } catch {
+      /* ignore */
+    }
+    if (which === 'layers') this.renderLayers();
+  }
+
+  // aim the orbit camera straight down a world axis at the current focus,
+  // keeping the zoom. Already on that axis? Flip to the opposite side.
+  snapView(axis: 'x' | 'y' | 'z'): void {
+    if (!this.controls) return;
+    const t = this.controls.target;
+    const off = new THREE.Vector3().subVectors(this.camera.position, t);
+    const d = Math.max(6, off.length());
+    const u = { x: new THREE.Vector3(1, 0, 0), y: new THREE.Vector3(0, 1, 0), z: new THREE.Vector3(0, 0, 1) }[
+      axis
+    ];
+    const along = off.dot(u) / d; // how aligned are we already?
+    const sign = along > 0.98 ? -1 : 1; // second press = other side
+    const pos = t.clone().addScaledVector(u, d * sign);
+    // a perfectly vertical view gimbal-locks OrbitControls: lean a hair
+    if (axis === 'y') pos.z += d * 0.02;
+    this.camera.position.copy(pos);
+    this.camera.lookAt(t);
+    this.saveCam();
+  }
 
   // ---- layers panel ----
 
@@ -1923,6 +2042,41 @@ export class Editor {
       .ed-selhead { color: #ffd75e; margin: 4px 0; }
       .ed-dim { color: #6b7890; margin-top: 8px; line-height: 1.5; }
       .ed-sellist { margin: 0 0 6px; }
+      /* editing: the play HUD gets out of the tools' way (build stamp stays) */
+      body.ed-active [class^="hud-"]:not(.hud-build),
+      body.ed-active [class*=" hud-"]:not(.hud-build) { display: none !important; }
+      .ed-tabs {
+        position: fixed; left: 10px; top: 120px; z-index: 60;
+        display: flex; flex-direction: column; gap: 6px;
+      }
+      .ed-tab {
+        font: 10px ui-monospace, Menlo, Consolas, monospace;
+        background: rgba(16, 20, 30, 0.92); color: #9fb0c8;
+        border: 1px solid #3a4152; border-radius: 8px; cursor: pointer;
+        padding: 7px 6px; display: flex; flex-direction: column;
+        align-items: center; gap: 3px; width: 44px;
+      }
+      .ed-tab span { letter-spacing: 1px; font-size: 8px; }
+      .ed-tab:hover { background: #262e42; color: #d5e0f0; }
+      .ed-tab-on { background: #1c2a22; color: #58e08a; border-color: #2f6a48; }
+      .ed-pop {
+        position: fixed; left: 62px; top: 120px; z-index: 60; width: 212px;
+        max-height: calc(100vh - 190px); overflow-y: auto; padding: 10px;
+        font: 11px ui-monospace, Menlo, Consolas, monospace; color: #cdd6e4;
+        background: rgba(16, 20, 30, 0.94); border: 1px solid #3a4152;
+        border-radius: 10px;
+      }
+      .ed-views {
+        position: fixed; left: 10px; bottom: 26px; z-index: 60;
+        display: flex; gap: 5px;
+      }
+      .ed-viewbtn {
+        font: bold 11px ui-monospace, Menlo, Consolas, monospace;
+        background: rgba(16, 20, 30, 0.92); color: #9fb0c8;
+        border: 1px solid #3a4152; border-radius: 7px; cursor: pointer;
+        width: 30px; height: 26px;
+      }
+      .ed-viewbtn:hover { background: #262e42; color: #58e08a; }
       .ed-layerrow {
         display: flex; align-items: center; gap: 4px; margin: 2px 0;
         padding: 2px 3px; border-radius: 5px;
