@@ -219,7 +219,13 @@ export interface CustomComponent {
   phase?: number;
   amp?: number;
   seed?: number; // rock: shapes the jitter deterministically
-  pts?: [number, number][]; // VECTOR SHAPE: polygon outline in XZ relative to p (3+ points switches platform/wall/pit to polygon form)
+  // VECTOR SHAPE: node outline in XZ relative to p. 3+ points turns
+  // platform/wall/pit into a polygon; 2+ points turns a rail into a
+  // multi-node path. Each node's optional 3rd number is a CORNER RADIUS
+  // (world units, Figma-style) — the corner gets filleted in the visual,
+  // the collision, the kill footprint, and the grind line alike.
+  pts?: ([number, number] | [number, number, number])[];
+  radius?: number; // camnode: corner radius where the camera lane turns at this node
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   layer?: number; // LEGACY editor layer id (folded into lk by migration)
   grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
@@ -307,6 +313,61 @@ export function starterCustomLevel(): CustomLevelData {
 
 // The four corners of a w×d rectangle spun by yaw degrees (relative offsets)
 // — matches mesh.rotation.y = yaw applied to a BoxGeometry footprint.
+// Fillet the corners of a polyline/polygon (Figma corner radius). Each
+// vertex is [x, z, radius?]; a radiused corner is replaced by a quadratic
+// fillet trimmed to just under half of the shorter adjacent edge. Returns
+// dense points tagged with the source vertex index `i`, so per-node aux data
+// (a camnode's height, say) can ride along. Open paths never round their
+// endpoints. Consecutive near-duplicates are dropped (zero-length rail
+// segments would blow up direction math downstream).
+export function roundCorners(
+  pts: readonly (readonly number[])[],
+  closed: boolean,
+): { x: number; z: number; i: number }[] {
+  const n = pts.length;
+  const out: { x: number; z: number; i: number }[] = [];
+  const push = (x: number, z: number, i: number): void => {
+    const last = out[out.length - 1];
+    if (last && (last.x - x) * (last.x - x) + (last.z - z) * (last.z - z) < 4e-4) return;
+    out.push({ x, z, i });
+  };
+  for (let i = 0; i < n; i++) {
+    const r = pts[i][2] ?? 0;
+    const px = pts[i][0];
+    const pz = pts[i][1];
+    if (r <= 0.01 || n < 3 || (!closed && (i === 0 || i === n - 1))) {
+      push(px, pz, i);
+      continue;
+    }
+    const A = pts[(i - 1 + n) % n];
+    const B = pts[(i + 1) % n];
+    const inX = px - A[0];
+    const inZ = pz - A[1];
+    const outX = B[0] - px;
+    const outZ = B[1] - pz;
+    const inL = Math.hypot(inX, inZ);
+    const outL = Math.hypot(outX, outZ);
+    if (inL < 1e-4 || outL < 1e-4) {
+      push(px, pz, i);
+      continue;
+    }
+    const t = Math.min(r, inL * 0.49, outL * 0.49);
+    const ax = px - (inX / inL) * t;
+    const az = pz - (inZ / inL) * t;
+    const bx = px + (outX / outL) * t;
+    const bz = pz + (outZ / outL) * t;
+    const SEGS = 6;
+    for (let k = 0; k <= SEGS; k++) {
+      const u = k / SEGS;
+      const w0 = (1 - u) * (1 - u);
+      const w1 = 2 * u * (1 - u);
+      const w2 = u * u;
+      push(w0 * ax + w1 * px + w2 * bx, w0 * az + w1 * pz + w2 * bz, i);
+    }
+  }
+  return out;
+}
+
 export function rectCorners(w: number, d: number, yawDeg: number): [number, number][] {
   const r = (yawDeg * Math.PI) / 180;
   const cos = Math.cos(r);
@@ -858,6 +919,7 @@ export class Level {
     };
     const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal', 'rock']);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
+    const laneRaw: [number, number, number][] = []; // [x, z, corner radius] per node
     // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
     // nesting) a '!' switch. Breakable crates in these groups start as
     // outline ghosts automatically — no per-crate flag to remember.
@@ -875,7 +937,13 @@ export class Level {
           // VECTOR SHAPES: a 3+ point outline turns platform/wall/pit into a
           // drawn polygon. Shape points are authored in XZ around p; three.js
           // Shapes live in XY, so (x, -z) + rotateX(-90°) lands them flat.
-          const polyPts = c.pts && c.pts.length >= 3 ? c.pts : null;
+          // corner radii fillet the outline BEFORE any geometry/collision is
+          // derived, so the rounding is real everywhere (edits stay on the
+          // raw nodes — handles and saves never see the fillet points)
+          const polyPts =
+            c.pts && c.pts.length >= 3
+              ? roundCorners(c.pts, true).map((q) => [q.x, q.z] as [number, number])
+              : null;
           const polyShape = (): THREE.Shape => {
             const sh = new THREE.Shape();
             sh.moveTo(polyPts![0][0], -polyPts![0][1]);
@@ -1173,16 +1241,26 @@ export class Level {
               ),
             );
           } else if (c.t === 'rail') {
-            const len = c.len ?? 12;
-            const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
-            const dx = (Math.sin(a) * len) / 2;
-            const dz = (Math.cos(a) * len) / 2;
-            const rail = new Rail([
-              new THREE.Vector3(c.p[0] - dx, c.p[1], c.p[2] - dz),
-              new THREE.Vector3(c.p[0] + dx, c.p[1], c.p[2] + dz),
-            ]);
-            this.rails.push(rail);
-            this.root.add(rail.object);
+            if (c.pts && c.pts.length >= 2) {
+              // multi-node rail: pen-drawn path, corner radii round the bends
+              const rp = roundCorners(c.pts, false);
+              const rail = new Rail(
+                rp.map((q) => new THREE.Vector3(c.p[0] + q.x, c.p[1], c.p[2] + q.z)),
+              );
+              this.rails.push(rail);
+              this.root.add(rail.object);
+            } else {
+              const len = c.len ?? 12;
+              const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
+              const dx = (Math.sin(a) * len) / 2;
+              const dz = (Math.cos(a) * len) / 2;
+              const rail = new Rail([
+                new THREE.Vector3(c.p[0] - dx, c.p[1], c.p[2] - dz),
+                new THREE.Vector3(c.p[0] + dx, c.p[1], c.p[2] + dz),
+              ]);
+              this.rails.push(rail);
+              this.root.add(rail.object);
+            }
           } else if (c.t === 'pipe') {
             const len = c.len ?? 36;
             const axis = c.axis ?? 'z';
@@ -1273,8 +1351,10 @@ export class Level {
             this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === 'camnode') {
             // camera-lane node: pure editor object — a floating diamond you
-            // drag around; invisible (and non-physical) in play
-            this.lanePts.push({ x: c.p[0], z: c.p[2] });
+            // drag around; invisible (and non-physical) in play. lanePts is
+            // built AFTER the loop so per-node corner radii can round the
+            // whole path at once.
+            laneRaw.push([c.p[0], c.p[2], c.radius ?? 0]);
             laneVis.push(new THREE.Vector3(c.p[0], c.p[1], c.p[2]));
             const marker = new THREE.Mesh(
               new THREE.OctahedronGeometry(0.5, 0),
@@ -1290,10 +1370,16 @@ export class Level {
         });
       });
       // the lane itself: a ghost line with direction cones, editor-only and
-      // unpickable (no editorIdx — the NODES are the editable things)
+      // unpickable (no editorIdx — the NODES are the editable things).
+      // Corner radii round the STEERING path — the camera and controls sweep
+      // through the bend instead of pivoting at the node.
       if (laneVis.length >= 2) {
+        const laneRound = roundCorners(laneRaw, false);
+        this.lanePts = laneRound.map((q) => ({ x: q.x, z: q.z }));
         const line = new THREE.Line(
-          new THREE.BufferGeometry().setFromPoints(laneVis),
+          new THREE.BufferGeometry().setFromPoints(
+            laneRound.map((q) => new THREE.Vector3(q.x, laneVis[q.i].y, q.z)),
+          ),
           new THREE.LineBasicMaterial({ color: 0xff5ad2 }),
         );
         line.visible = false;

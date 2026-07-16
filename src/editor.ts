@@ -35,7 +35,7 @@ interface PalItem {
   label: string;
   icon: Draw;
   make?: (at: THREE.Vector3) => CustomComponent;
-  penDraw?: 'platform' | 'pit' | 'wall'; // pen tool: click-to-draw a polygon of this type
+  penDraw?: 'platform' | 'pit' | 'wall' | 'rail'; // pen tool: click-to-draw a polygon (or rail path) of this type
 }
 
 const box = (x: CanvasRenderingContext2D, fill: string, frame: string): void => {
@@ -92,6 +92,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'platform', icon: (x) => { x.strokeStyle = '#cfd4cf'; x.fillStyle = 'rgba(207,212,207,0.35)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 12); x.lineTo(7, 3); x.lineTo(15, 5); x.lineTo(13, 14); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#58e08a'; for (const [px, py] of [[3, 12], [7, 3], [15, 5], [13, 14]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'platform' },
       { label: 'death pit', icon: (x) => { x.strokeStyle = '#b0402a'; x.fillStyle = '#0a0a10'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 11); x.lineTo(8, 3); x.lineTo(16, 7); x.lineTo(12, 15); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ff8a5e'; for (const [px, py] of [[3, 11], [8, 3], [16, 7], [12, 15]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'pit' },
       { label: 'wall', icon: (x) => { x.strokeStyle = '#9a8a7a'; x.fillStyle = 'rgba(154,138,122,0.4)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 13); x.lineTo(6, 4); x.lineTo(14, 3); x.lineTo(15, 12); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ffd75e'; for (const [px, py] of [[3, 13], [6, 4], [14, 3], [15, 12]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'wall' },
+      { label: 'rail path', icon: (x) => { x.strokeStyle = '#b8a2ff'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 14); x.lineTo(7, 12); x.lineTo(11, 6); x.lineTo(16, 4); x.stroke(); x.fillStyle = '#d7c8ff'; for (const [px, py] of [[2, 14], [7, 12], [11, 6], [16, 4]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'rail' },
     ],
   },
   {
@@ -178,7 +179,8 @@ export class Editor {
   private marqueeAdd = false; // shift-marquee adds; plain marquee replaces
   private camSaveAt = 0;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
-  private drawing: { t: 'platform' | 'pit' | 'wall'; y: number; pts: THREE.Vector3[] } | null = null;
+  private drawing: { t: 'platform' | 'pit' | 'wall' | 'rail'; y: number; pts: THREE.Vector3[] } | null = null;
+  private selVtx = -1; // node picked in resize mode: props show ITS corner radius (Figma-style)
   private drawVis: THREE.Group | null = null;
   // pop-out side panels (item picker / layers) + view cluster + space-pan
   private popWrap: HTMLElement | null = null;
@@ -659,6 +661,7 @@ export class Editor {
   }
 
   private setSelection(list: number[]): void {
+    this.selVtx = -1; // node picks don't survive a selection change
     const seen = new Set<number>();
     const valid: number[] = [];
     for (const i of list) {
@@ -836,15 +839,20 @@ export class Editor {
   }
 
   private handleDefsFor(c: CustomComponent): HandleDef[] {
-    // drawn polygons: every vertex is a handle, dragged freely on the ground
-    // plane (the axis machinery below is for box faces)
-    if (c.pts && c.pts.length >= 3 && (c.t === 'platform' || c.t === 'wall' || c.t === 'pit')) {
+    // drawn shapes: every node is a handle, dragged freely on the ground
+    // plane (the axis machinery below is for box faces). Rails are open
+    // 2+ node paths; polygons need 3+.
+    const isPoly = c.pts && c.pts.length >= 3 && (c.t === 'platform' || c.t === 'wall' || c.t === 'pit');
+    const isPath = c.pts && c.pts.length >= 2 && c.t === 'rail';
+    if (c.pts && (isPoly || isPath)) {
       const y =
         c.t === 'wall'
           ? c.p[1] + (c.s?.[1] ?? 4)
           : c.t === 'platform'
             ? c.p[1] + (c.s?.[1] ?? 1) / 2
-            : c.p[1] + 0.15;
+            : c.t === 'rail'
+              ? c.p[1] + 0.1
+              : c.p[1] + 0.15;
       return c.pts.map((pt, i) => ({
         pos: new THREE.Vector3(c.p[0] + pt[0], y, c.p[2] + pt[1]),
         dir: new THREE.Vector3(0, 1, 0),
@@ -1048,11 +1056,16 @@ export class Editor {
       return;
     }
     // PEN TOOL: every click drops a vertex; clicking the first point closes
+    // (rails are OPEN paths — they finish on Enter/double-click instead)
     if (this.drawing) {
       this.downAt = null;
       const pt = this.drawPlanePoint(e);
       if (!pt) return;
-      if (this.drawing.pts.length >= 3 && pt.distanceTo(this.drawing.pts[0]) < 1.0) {
+      if (
+        this.drawing.t !== 'rail' &&
+        this.drawing.pts.length >= 3 &&
+        pt.distanceTo(this.drawing.pts[0]) < 1.0
+      ) {
         this.finishDraw();
         return;
       }
@@ -1070,8 +1083,11 @@ export class Editor {
         const def = this.hdlDefs[i];
         const lineO = def.pos.clone();
         const lineD = def.dir.clone();
-        // polygon vertex: free drag on the shape's ground plane
+        // shape node: free drag on the ground plane — and grabbing one
+        // SELECTS it, so the props panel shows its corner radius (Figma)
         if (def.vtx !== undefined) {
+          this.selVtx = def.vtx;
+          this.renderProps();
           this.hdlDrag = {
             i,
             lineO,
@@ -1161,7 +1177,7 @@ export class Editor {
 
   // ---- pen tool (draw polygon platforms / pits / walls) ----
 
-  startDraw(t: 'platform' | 'pit' | 'wall'): void {
+  startDraw(t: 'platform' | 'pit' | 'wall' | 'rail'): void {
     this.cancelDraw();
     this.select(-1);
     const y = this.controls ? snapHalf(this.controls.target.y) : 0;
@@ -1169,7 +1185,9 @@ export class Editor {
     this.dom.style.cursor = 'crosshair';
     this.hooks.showMsg(
       `DRAW ${t.toUpperCase()}`,
-      'click to drop points · click the FIRST point (or Enter) to close · esc = cancel',
+      t === 'rail'
+        ? 'click to drop nodes · Enter or double-click to finish · esc = cancel'
+        : 'click to drop points · click the FIRST point (or Enter) to close · esc = cancel',
     );
   }
 
@@ -1236,8 +1254,9 @@ export class Editor {
     const pts = d.pts.filter(
       (pt, i) => i === 0 || pt.distanceToSquared(d.pts[i - 1]) > 0.01,
     );
-    if (pts.length < 3) {
-      this.hooks.showMsg('NEED 3+ POINTS', 'shape cancelled');
+    const minPts = d.t === 'rail' ? 2 : 3;
+    if (pts.length < minPts) {
+      this.hooks.showMsg(`NEED ${minPts}+ POINTS`, 'shape cancelled');
       this.cancelDraw();
       return;
     }
@@ -1250,8 +1269,13 @@ export class Editor {
     cx = snapHalf(cx / pts.length);
     cz = snapHalf(cz / pts.length);
     const rel = pts.map((pt) => [snapHalf(pt.x - cx), snapHalf(pt.z - cz)] as [number, number]);
-    const s: [number, number, number] = [1, d.t === 'wall' ? 4 : 1, 1];
-    this.addComponent({ t: d.t, p: [cx, d.y, cz], s, pts: rel });
+    if (d.t === 'rail') {
+      // open path — no closing, no box dims; grind height is the draw plane
+      this.addComponent({ t: 'rail', p: [cx, d.y + 1, cz], pts: rel });
+    } else {
+      const s: [number, number, number] = [1, d.t === 'wall' ? 4 : 1, 1];
+      this.addComponent({ t: d.t, p: [cx, d.y, cz], s, pts: rel });
+    }
     this.cancelDraw();
   }
 
@@ -1344,7 +1368,8 @@ export class Editor {
         if (!c.pts) return;
         const nx = this.snap ? snapHalf(hit.x - c.p[0]) : hit.x - c.p[0];
         const nz = this.snap ? snapHalf(hit.z - c.p[2]) : hit.z - c.p[2];
-        c.pts[this.hdlDrag.vtx] = [nx, nz];
+        const keepR = c.pts[this.hdlDrag.vtx]?.[2]; // the node's corner radius rides along
+        c.pts[this.hdlDrag.vtx] = keepR !== undefined ? [nx, nz, keepR] : [nx, nz];
         const defs2 = this.handleDefsFor(c);
         defs2.forEach((df, j) => this.handleMeshes[j]?.position.copy(df.pos));
         this.hdlDefs = defs2;
@@ -2137,7 +2162,28 @@ export class Editor {
       row.appendChild(input);
       this.propsEl.appendChild(row);
     };
-    if (c.pts && c.pts.length >= 3) {
+    // Figma-style node editing: with a shape in resize mode, grabbing a node
+    // selects it and its CORNER RADIUS is editable here. Rounds the visual,
+    // the collision, the kill footprint, and the grind line alike.
+    const nodeRows = (): void => {
+      if (!c.pts) return;
+      if (this.resizeIdx === this.selected && this.selVtx >= 0 && this.selVtx < c.pts.length) {
+        num(
+          `node ${this.selVtx + 1} radius`,
+          () => c.pts![this.selVtx][2] ?? 0,
+          (v) => {
+            const pt = c.pts![this.selVtx];
+            c.pts![this.selVtx] = v > 0.01 ? [pt[0], pt[1], Math.max(0, v)] : [pt[0], pt[1]];
+          },
+        );
+      } else {
+        const tip = document.createElement('div');
+        tip.className = 'ed-dim';
+        tip.textContent = 'double-click, then grab a node: set its corner radius here';
+        this.propsEl.appendChild(tip);
+      }
+    };
+    if (c.pts && c.pts.length >= 3 && c.t !== 'rail') {
       // drawn polygon: the outline is edited with the vertex handles
       const note = document.createElement('div');
       note.className = 'ed-dim';
@@ -2154,6 +2200,7 @@ export class Editor {
         );
         colorRow();
       }
+      nodeRows();
     } else if (c.t === 'platform' || c.t === 'wall') {
       sizeRow(0, 'width');
       sizeRow(1, 'height');
@@ -2184,8 +2231,16 @@ export class Editor {
       num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       colorRow();
     } else if (c.t === 'rail') {
-      num('length', () => c.len ?? 12, (v) => (c.len = Math.max(1, v)));
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      if (c.pts && c.pts.length >= 2) {
+        const note = document.createElement('div');
+        note.className = 'ed-dim';
+        note.textContent = `rail path · ${c.pts.length} nodes — double-click to drag them`;
+        this.propsEl.appendChild(note);
+        nodeRows();
+      } else {
+        num('length', () => c.len ?? 12, (v) => (c.len = Math.max(1, v)));
+        num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      }
     } else if (c.t === 'pipe') {
       num('length', () => c.len ?? 36, (v) => (c.len = Math.max(6, v)), 2);
       const axisBtn = document.createElement('button');
@@ -2260,10 +2315,11 @@ export class Editor {
       this.propsEl.appendChild(shuffle);
       colorRow();
     } else if (c.t === 'camnode') {
+      num('corner radius', () => c.radius ?? 0, (v) => (c.radius = Math.max(0, v)));
       const note = document.createElement('div');
       note.className = 'ed-dim';
       note.textContent =
-        'camera lane: nodes chain in order (see LAYERS). In play, the camera and the controls steer along the line — hold forward through winding corridors, Crash 3 style. 2+ nodes = live.';
+        'camera lane: nodes chain in order (see LAYERS). In play, the camera and the controls steer along the line — hold forward through winding corridors, Crash 3 style. 2+ nodes = live. Corner radius rounds the turn AT this node.';
       this.propsEl.appendChild(note);
       const chain = document.createElement('button');
       chain.className = 'ed-btn';
