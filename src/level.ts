@@ -217,10 +217,14 @@ export interface CustomComponent {
   amp?: number;
   seed?: number; // rock: shapes the jitter deterministically
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
-  layer?: number; // editor layer id (default 0)
+  layer?: number; // LEGACY editor layer id (folded into lk by migration)
   grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
+  lk?: boolean; // editor lock: click-through, marquee-proof, edit-proof
+  nm?: string; // editor display name (outliner rename)
 }
 
+// LEGACY: the old named-layer containers. Migration folds their locks into
+// per-component lk flags; the outliner (items + groups) replaced them.
 export interface CustomLayer {
   id: number;
   name: string;
@@ -230,6 +234,7 @@ export interface CustomLayer {
 export interface CustomGroup {
   id: number;
   parent?: number; // nesting: groups can live inside groups
+  nm?: string; // editor display name (outliner rename)
 }
 
 export interface CustomLevelData {
@@ -256,12 +261,20 @@ export function groupChainOf(c: CustomComponent, data: CustomLevelData): number[
 }
 
 // LEGACY MIGRATION: t:'outline' predates outline-as-a-state; load it as a
-// wood crate flagged outline so the new '!' wiring applies uniformly.
+// wood crate flagged outline so the new '!' wiring applies uniformly. Named
+// layer containers fold into per-component locks (the outliner replaced them).
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   d.components = d.components.map((c) =>
     c.t === 'outline' ? { ...c, t: 'crate' as const, kind: 'wood' as const, outline: true } : c,
   );
-  if (!d.layers || d.layers.length === 0) d.layers = [{ id: 0, name: 'main' }];
+  if (d.layers && d.layers.length > 0) {
+    const locked = new Set(d.layers.filter((l) => l.locked).map((l) => l.id));
+    for (const c of d.components) {
+      if (c.layer !== undefined && locked.has(c.layer)) c.lk = true;
+      delete c.layer;
+    }
+    delete d.layers;
+  }
   if (!d.groups) d.groups = [];
   return d;
 }

@@ -150,11 +150,12 @@ export class Editor {
   // nudge coalescing: a burst of arrow taps is ONE undo step
   private lastCoalesce = '';
   private lastCommitT = 0;
-  // layers: new components land on the active layer; locked layers are
-  // untouchable (no pick, no marquee, no select-all)
-  private activeLayer = 0;
+  // outliner (the layers pop-out): every component is a row, groups are
+  // expandable nodes. Locks live per component (lk) — locked = untouchable.
   private layersEl: HTMLElement | null = null;
-  private renamingLayer = -1;
+  private closedGroups = new Set<number>(); // collapsed outliner nodes
+  private renaming: { kind: 'group' | 'item'; id: number } | null = null;
+  private marqueeAdd = false; // shift-marquee adds; plain marquee replaces
   private camSaveAt = 0;
   // pop-out side panels (item picker / layers) + view cluster + space-pan
   private popWrap: HTMLElement | null = null;
@@ -204,11 +205,16 @@ export class Editor {
     if (this.active) return;
     this.active = true;
     this.data = migrateCustomLevel(getCustomLevelData());
-    if (!this.data.layers!.some((l) => l.id === this.activeLayer)) this.activeLayer = this.data.layers![0].id;
     if (!this.lastCommitted) this.lastCommitted = JSON.stringify(this.data);
     this.controls = new OrbitControls(this.camera, this.dom);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.12;
+    // FIGMA pointer rules: LEFT is for selecting and moving things (marquee
+    // on empty space) — never the camera. Orbit = right-drag, pan = middle
+    // or space-drag, zoom = wheel.
+    this.controls.mouseButtons.LEFT = -1 as unknown as THREE.MOUSE;
+    this.controls.mouseButtons.MIDDLE = THREE.MOUSE.PAN;
+    this.controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
     // refresh-proof: come back exactly where you were looking
     let restored = false;
     try {
@@ -237,7 +243,7 @@ export class Editor {
     this.renderLayers();
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
-    this.hooks.showMsg('LEVEL EDITOR', 'click select · shift-click/shift-drag = multi · ⌘G group');
+    this.hooks.showMsg('LEVEL EDITOR', 'drag = select & move · RIGHT-drag = orbit · space = pan');
   }
 
   exit(): void {
@@ -317,7 +323,6 @@ export class Editor {
     const lastCrystal = d.components.map((c) => c.t).lastIndexOf('crystal');
     d.components = d.components.filter((c, i) => c.t !== 'crystal' || i === lastCrystal);
     this.data = migrateCustomLevel(d);
-    if (!this.data.layers!.some((l) => l.id === this.activeLayer)) this.activeLayer = this.data.layers![0].id;
     this.select(-1);
     this.commit();
   }
@@ -375,7 +380,6 @@ export class Editor {
   // swap in a history state WITHOUT recording it as a new edit
   private applyState(json: string): void {
     this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
-    if (!this.data.layers!.some((l) => l.id === this.activeLayer)) this.activeLayer = this.data.layers![0].id;
     this.lastCommitted = json;
     setCustomLevelData(this.data);
     try {
@@ -406,7 +410,6 @@ export class Editor {
     if (c.t === 'crystal') {
       this.data.components = this.data.components.filter((o) => o.t !== 'crystal');
     }
-    if (this.activeLayer !== 0) c.layer = this.activeLayer; // new pieces land on the active layer
     this.data.components.push(c);
     this.commit();
     this.select(this.data.components.length - 1);
@@ -499,21 +502,10 @@ export class Editor {
     this.addBatch(copies);
   }
 
-  // ---- layers ----
-
-  private layerOf(c: CustomComponent): number {
-    return c.layer ?? 0;
-  }
+  // ---- locks (per component; the outliner toggles them) ----
 
   private isLockedIdx(idx: number): boolean {
-    const c = this.data.components[idx];
-    if (!c) return false;
-    const l = this.data.layers?.find((L) => L.id === this.layerOf(c));
-    return !!l?.locked;
-  }
-
-  private nextLayerId(): number {
-    return (this.data.layers ?? []).reduce((m, l) => Math.max(m, l.id), -1) + 1;
+    return !!this.data.components[idx]?.lk;
   }
 
   // ---- groups (nesting: a group's parent is another group) ----
@@ -654,6 +646,7 @@ export class Editor {
     this.sel = valid;
     this.refreshSelectionBox();
     this.renderProps();
+    this.renderLayers(); // outliner rows highlight the live selection
   }
 
   private objectsFor(idx: number): THREE.Object3D[] {
@@ -1030,18 +1023,24 @@ export class Editor {
     }
     this.downAt = { x: e.clientX, y: e.clientY };
     const hit = this.pick(e);
-    // shift-drag on EMPTY space: marquee box-select (adds to the selection)
-    if (hit < 0 && e.shiftKey) {
+    // FIGMA rules — drag on EMPTY space is the marquee box-select: plain
+    // replaces the selection, shift adds to it. (The camera lives on the
+    // right/middle buttons and space-drag now.)
+    if (hit < 0) {
       this.marquee = { x0: e.clientX, y0: e.clientY, x1: e.clientX, y1: e.clientY };
+      this.marqueeAdd = e.shiftKey;
       this.showMarquee();
       if (this.controls) this.controls.enabled = false;
       return;
     }
-    // dragging starts only from an ALREADY selected component — first click
-    // selects, second grab moves (keeps orbit usable everywhere else). A grab
-    // with ctrl/cmd held is a toggle-click, never a move.
+    // ctrl/cmd-grab is a toggle-click, never a move
     const plainGrab = !e.ctrlKey && !e.metaKey;
-    if (hit >= 0 && this.sel.includes(hit) && plainGrab) {
+    // shift-grab on something OUTSIDE the selection = additive toggle on up
+    if (hit >= 0 && plainGrab && !(e.shiftKey && !this.sel.includes(hit))) {
+      // grab-to-move, no select-first needed: grabbing an unselected piece
+      // selects it (with its group) and the drag starts immediately
+      if (!this.sel.includes(hit)) this.setSelection(this.expandToGroup(hit));
+      if (!this.sel.includes(hit)) return; // locked (or filtered): no drag
       let grabbed = hit;
       // alt-drag clones: the copies come along, the originals stay put
       if (e.altKey) {
@@ -1267,7 +1266,7 @@ export class Editor {
       // a sub-click shift-tap on empty space falls through to click logic
       if (!clickish) {
         const hits = this.marqueePick(m).flatMap((i) => this.expandToGroup(i));
-        this.setSelection([...this.sel, ...hits]);
+        this.setSelection(this.marqueeAdd ? [...this.sel, ...hits] : hits);
         this.downAt = null;
         return;
       }
@@ -1367,7 +1366,8 @@ export class Editor {
   private onKeyUp = (e: KeyboardEvent): void => {
     if (e.code === 'Space' && this.spaceHeld) {
       this.spaceHeld = false;
-      if (this.controls) this.controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
+      // left goes back to being the SELECT button (disabled on the camera)
+      if (this.controls) this.controls.mouseButtons.LEFT = -1 as unknown as THREE.MOUSE;
       if (this.active) this.dom.style.cursor = '';
     }
   };
@@ -1467,7 +1467,7 @@ export class Editor {
     this.layersEl = h('<div class="ed-layers"></div>');
     popLayers.appendChild(this.layersEl);
     popLayers.appendChild(
-      h('<div class="ed-dim">new pieces land on the ● active layer<br>🔒 = click-through (safe from edits)</div>'),
+      h('<div class="ed-dim">every piece is a row · groups expand with ▸<br>click a name to select it in the world<br>🔒 = click-through (safe from edits)<br>⌘G groups the selection · ✎ renames</div>'),
     );
     this.popLayers = popLayers;
     wrap.appendChild(popLayers);
@@ -1575,7 +1575,7 @@ export class Editor {
     });
     panel.appendChild(test);
     panel.appendChild(
-      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>orbit: drag · zoom: wheel · pan: right-drag<br>HOLD SPACE = grabby-hand pan<br>X/Y/Z (bottom-left) = hard view snaps<br>move: drag selected (shift = height)<br>alt-drag selected = drag out a copy<br>shift-click = add to selection<br>shift-drag empty = box select · ⌘A = all<br>⌘G = group · ⌘⇧G = ungroup (groups click as one)<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
+      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
     );
 
     document.body.appendChild(panel);
@@ -1619,123 +1619,190 @@ export class Editor {
     this.saveCam();
   }
 
-  // ---- layers panel ----
+  // ---- outliner (the layers pop-out): items + groups as a tree ----
+
+  private itemLabel(idx: number): string {
+    const c = this.data.components[idx];
+    if (!c) return '?';
+    if (c.nm) return c.nm;
+    if (c.t === 'crate') return `crate · ${c.kind ?? 'wood'}${c.outline ? ' (outline)' : ''}`;
+    if (c.t === 'wall' && c.invisible) return 'invis wall';
+    return c.t;
+  }
+
+  private groupLabel(gid: number): string {
+    return this.data.groups?.find((g) => g.id === gid)?.nm ?? `group ${gid}`;
+  }
+
+  // inline rename input, shared by group and item rows
+  private renameField(current: string, done: (v: string) => void): HTMLInputElement {
+    const input = document.createElement('input');
+    input.className = 'ed-layername-input';
+    input.value = current;
+    input.addEventListener('keydown', (ev) => {
+      if (ev.code === 'Enter') input.blur();
+      ev.stopPropagation(); // typing guard: editor hotkeys stay out
+    });
+    input.addEventListener('blur', () => {
+      this.renaming = null;
+      done(input.value.trim());
+      this.commit(false);
+      this.renderLayers();
+    });
+    setTimeout(() => {
+      input.focus();
+      input.select();
+    }, 0);
+    return input;
+  }
 
   private renderLayers(): void {
     if (!this.layersEl) return;
-    const layers = this.data.layers ?? [];
     this.layersEl.innerHTML = '';
-    const counts = new Map<number, number>();
-    for (const c of this.data.components) {
-      counts.set(this.layerOf(c), (counts.get(this.layerOf(c)) ?? 0) + 1);
-    }
-    for (const L of layers) {
+    const groups = this.data.groups ?? [];
+    const childGroups = (parent: number | undefined): number[] =>
+      groups.filter((g) => g.parent === parent).map((g) => g.id);
+    const directItems = (gid: number | undefined): number[] => {
+      const out: number[] = [];
+      this.data.components.forEach((c, i) => {
+        if (c.grp === gid) out.push(i);
+      });
+      return out;
+    };
+
+    const itemRow = (idx: number, depth: number): HTMLElement => {
+      const c = this.data.components[idx];
       const row = document.createElement('div');
-      row.className = 'ed-layerrow' + (L.id === this.activeLayer ? ' ed-layer-active' : '');
-      // lock toggle: locked layers can't be picked, marqueed, or edited
+      row.className = 'ed-layerrow' + (this.sel.includes(idx) ? ' ed-layer-sel' : '');
+      row.style.paddingLeft = `${4 + depth * 12}px`;
       const lock = document.createElement('button');
-      lock.className = 'ed-lbtn';
-      lock.textContent = L.locked ? '🔒' : '🔓';
-      lock.title = L.locked ? 'unlock layer' : 'lock layer';
-      lock.addEventListener('click', () => {
-        L.locked = !L.locked;
-        if (L.locked) this.setSelection(this.sel.filter((i) => !this.isLockedIdx(i)));
-        this.commit(false); // pure metadata: no geometry rebuild needed
-        this.renderLayers();
+      lock.className = 'ed-lbtn' + (c.lk ? ' ed-lockon' : '');
+      lock.textContent = c.lk ? '🔒' : '🔓';
+      lock.title = c.lk ? 'unlock' : 'lock (click-through, edit-proof)';
+      lock.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        if (c.lk) delete c.lk;
+        else c.lk = true;
+        if (c.lk) this.setSelection(this.sel.filter((i) => i !== idx));
+        this.commit(false);
       });
       row.appendChild(lock);
-      // name: click = make active · rename via ✎ (inline input)
-      if (this.renamingLayer === L.id) {
-        const input = document.createElement('input');
-        input.className = 'ed-layername-input';
-        input.value = L.name;
-        input.addEventListener('keydown', (ev) => {
-          if (ev.code === 'Enter') input.blur();
-          ev.stopPropagation(); // typing guard: editor hotkeys stay out
-        });
-        input.addEventListener('blur', () => {
-          L.name = input.value.trim() || L.name;
-          this.renamingLayer = -1;
-          this.commit(false);
-          this.renderLayers();
-        });
-        row.appendChild(input);
-        setTimeout(() => {
-          input.focus();
-          input.select();
-        }, 0);
+      if (this.renaming?.kind === 'item' && this.renaming.id === idx) {
+        row.appendChild(
+          this.renameField(this.itemLabel(idx), (v) => {
+            if (v) c.nm = v;
+            else delete c.nm;
+          }),
+        );
       } else {
         const name = document.createElement('button');
         name.className = 'ed-layername';
-        name.textContent = `${L.id === this.activeLayer ? '● ' : ''}${L.name}`;
-        name.title = 'click: make active — new pieces land here';
+        name.textContent = this.itemLabel(idx);
+        name.title = 'click: select this piece';
         name.addEventListener('click', () => {
-          this.activeLayer = L.id;
-          this.renderLayers();
+          if (!this.isLockedIdx(idx)) this.setSelection([idx]);
+        });
+        row.appendChild(name);
+      }
+      const tag = document.createElement('span');
+      tag.className = 'ed-layercount';
+      tag.textContent = `#${idx}`;
+      row.appendChild(tag);
+      const ren = document.createElement('button');
+      ren.className = 'ed-lbtn';
+      ren.textContent = '✎';
+      ren.title = 'rename';
+      ren.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        this.renaming = { kind: 'item', id: idx };
+        this.renderLayers();
+      });
+      row.appendChild(ren);
+      return row;
+    };
+
+    const groupNode = (gid: number, depth: number, host: HTMLElement): void => {
+      const members = this.groupMembers(gid);
+      const open = !this.closedGroups.has(gid);
+      const row = document.createElement('div');
+      const allSel = members.length > 0 && members.every((m) => this.sel.includes(m) || this.isLockedIdx(m));
+      row.className = 'ed-layerrow ed-grouprow' + (allSel ? ' ed-layer-sel' : '');
+      row.style.paddingLeft = `${4 + depth * 12}px`;
+      const caret = document.createElement('button');
+      caret.className = 'ed-lbtn ed-caret';
+      caret.textContent = open ? '▾' : '▸';
+      caret.title = open ? 'collapse' : 'expand';
+      caret.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        if (open) this.closedGroups.add(gid);
+        else this.closedGroups.delete(gid);
+        this.renderLayers();
+      });
+      row.appendChild(caret);
+      const allLocked = members.length > 0 && members.every((m) => this.isLockedIdx(m));
+      const lock = document.createElement('button');
+      lock.className = 'ed-lbtn' + (allLocked ? ' ed-lockon' : '');
+      lock.textContent = allLocked ? '🔒' : '🔓';
+      lock.title = allLocked ? 'unlock group' : 'lock whole group';
+      lock.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        for (const m of members) {
+          if (allLocked) delete this.data.components[m].lk;
+          else this.data.components[m].lk = true;
+        }
+        if (!allLocked) this.setSelection(this.sel.filter((i) => !members.includes(i)));
+        this.commit(false);
+      });
+      row.appendChild(lock);
+      if (this.renaming?.kind === 'group' && this.renaming.id === gid) {
+        row.appendChild(
+          this.renameField(this.groupLabel(gid), (v) => {
+            const g = this.data.groups?.find((x) => x.id === gid);
+            if (g) {
+              if (v) g.nm = v;
+              else delete g.nm;
+            }
+          }),
+        );
+      } else {
+        const name = document.createElement('button');
+        name.className = 'ed-layername ed-groupname';
+        name.textContent = this.groupLabel(gid);
+        name.title = 'click: select the whole group';
+        name.addEventListener('click', () => {
+          this.setSelection(members.filter((m) => !this.isLockedIdx(m)));
         });
         row.appendChild(name);
       }
       const n = document.createElement('span');
       n.className = 'ed-layercount';
-      n.textContent = String(counts.get(L.id) ?? 0);
+      n.textContent = String(members.length);
       row.appendChild(n);
       const ren = document.createElement('button');
       ren.className = 'ed-lbtn';
       ren.textContent = '✎';
-      ren.title = 'rename layer';
-      ren.addEventListener('click', () => {
-        this.renamingLayer = L.id;
+      ren.title = 'rename group';
+      ren.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        this.renaming = { kind: 'group', id: gid };
         this.renderLayers();
       });
       row.appendChild(ren);
-      // delete: only an EMPTY non-last layer (no surprise data loss)
-      if ((counts.get(L.id) ?? 0) === 0 && layers.length > 1) {
-        const del = document.createElement('button');
-        del.className = 'ed-lbtn ed-danger';
-        del.textContent = '✕';
-        del.title = 'delete empty layer';
-        del.addEventListener('click', () => {
-          this.data.layers = layers.filter((x) => x.id !== L.id);
-          if (this.activeLayer === L.id) this.activeLayer = this.data.layers[0].id;
-          this.commit(false);
-          this.renderLayers();
-        });
-        row.appendChild(del);
-      }
-      this.layersEl.appendChild(row);
+      host.appendChild(row);
+      if (!open) return;
+      for (const sub of childGroups(gid)) groupNode(sub, depth + 1, host);
+      for (const idx of directItems(gid)) host.appendChild(itemRow(idx, depth + 1));
+    };
+
+    // root groups first, then loose items — every piece is a row somewhere
+    for (const gid of childGroups(undefined)) groupNode(gid, 0, this.layersEl);
+    for (const idx of directItems(undefined)) this.layersEl.appendChild(itemRow(idx, 0));
+    if (this.data.components.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'ed-dim';
+      empty.textContent = 'nothing yet — add pieces from the ▦ ADD tab';
+      this.layersEl.appendChild(empty);
     }
-    const actions = document.createElement('div');
-    actions.className = 'ed-grid';
-    const add = document.createElement('button');
-    add.className = 'ed-btn';
-    add.textContent = '+ layer';
-    add.addEventListener('click', () => {
-      const id = this.nextLayerId();
-      this.data.layers = [...layers, { id, name: `layer ${id}` }];
-      this.activeLayer = id;
-      this.renamingLayer = id; // name it right away
-      this.commit(false);
-      this.renderLayers();
-      add.blur();
-    });
-    actions.appendChild(add);
-    const assign = document.createElement('button');
-    assign.className = 'ed-btn';
-    assign.textContent = 'selection → layer';
-    assign.title = 'move the selected pieces onto the active layer';
-    assign.addEventListener('click', () => {
-      if (this.sel.length === 0) return;
-      for (const i of this.sel) {
-        const c = this.data.components[i];
-        if (this.activeLayer === 0) delete c.layer;
-        else c.layer = this.activeLayer;
-      }
-      this.commit(false);
-      this.renderLayers();
-      assign.blur();
-    });
-    actions.appendChild(assign);
-    this.layersEl.appendChild(actions);
   }
 
   // a labelled number field that commits on change
@@ -2081,7 +2148,11 @@ export class Editor {
         display: flex; align-items: center; gap: 4px; margin: 2px 0;
         padding: 2px 3px; border-radius: 5px;
       }
-      .ed-layer-active { background: rgba(88, 224, 138, 0.08); }
+      .ed-layer-sel { background: rgba(88, 224, 138, 0.12); }
+      .ed-grouprow { border-top: 1px solid rgba(58, 65, 82, 0.5); }
+      .ed-groupname { color: #8fd4ff; }
+      .ed-caret { width: 14px; }
+      .ed-lockon { opacity: 1; color: #ffd75e; }
       .ed-lbtn {
         font: 10px ui-monospace, Menlo, Consolas, monospace;
         background: none; border: none; color: #9fb0c8; cursor: pointer;
