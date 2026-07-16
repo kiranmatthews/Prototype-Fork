@@ -863,11 +863,14 @@ export class Editor {
           ? c.p[1] + (c.s?.[1] ?? 4)
           : c.t === 'platform'
             ? c.p[1] + (c.s?.[1] ?? 1) / 2
-            : c.t === 'rail'
-              ? c.p[1] + 0.1
-              : c.p[1] + 0.15;
+            : c.p[1] + 0.15;
+      // rail nodes ride their own height offsets (climbing grind lines)
       return c.pts.map((pt, i) => ({
-        pos: new THREE.Vector3(c.p[0] + pt[0], y, c.p[2] + pt[1]),
+        pos: new THREE.Vector3(
+          c.p[0] + pt[0],
+          c.t === 'rail' ? c.p[1] + (pt[3] ?? 0) + 0.1 : y,
+          c.p[2] + pt[1],
+        ),
         dir: new THREE.Vector3(0, 1, 0),
         vtx: i,
       }));
@@ -1427,9 +1430,10 @@ export class Editor {
         for (const vi of targets) {
           const op = orig.pts[vi];
           if (!op) continue;
-          const px = this.snap ? snapHalf(op[0] + dx) : op[0] + dx;
-          const pz = this.snap ? snapHalf(op[1] + dz) : op[1] + dz;
-          c.pts[vi] = op[2] !== undefined ? [px, pz, op[2]] : [px, pz]; // radius rides along
+          const nt = [...op] as [number, number, number, number]; // radius + height ride along
+          nt[0] = this.snap ? snapHalf(op[0] + dx) : op[0] + dx;
+          nt[1] = this.snap ? snapHalf(op[1] + dz) : op[1] + dz;
+          c.pts[vi] = nt;
         }
         const defs2 = this.handleDefsFor(c);
         defs2.forEach((df, j) => {
@@ -2312,22 +2316,36 @@ export class Editor {
       if (!c.pts) return;
       const picked = [...this.selVtxs].filter((i) => i >= 0 && i < c.pts!.length);
       if (this.resizeIdx === this.selected && picked.length > 0) {
-        // one field batch-edits every selected node's radius (Figma)
-        num(
-          picked.length > 1 ? `${picked.length} nodes · radius` : `node ${picked[0] + 1} radius`,
-          () => c.pts![picked[0]][2] ?? 0,
-          (v) => {
-            for (const vi of picked) {
-              const pt = c.pts![vi];
-              c.pts![vi] = v > 0.01 ? [pt[0], pt[1], Math.max(0, v)] : [pt[0], pt[1]];
-            }
-          },
-        );
+        // one field batch-edits every selected node (Figma). Values shown are
+        // WORLD coordinates; writing x/z to a multi-selection aligns the
+        // nodes onto that line. Rails also expose per-node height — grind
+        // lines climb and dive; polygons stay planar (collision needs it).
+        const tag = picked.length > 1 ? `${picked.length} nodes` : `node ${picked[0] + 1}`;
+        const mutate = (vi: number, mut: (nt: [number, number, number, number]) => void): void => {
+          const nt = [...c.pts![vi]] as [number, number, number, number];
+          if (nt[2] === undefined) nt[2] = 0; // radius slot (0 = square corner)
+          mut(nt);
+          c.pts![vi] = nt;
+        };
+        num(`${tag} · x`, () => c.p[0] + c.pts![picked[0]][0], (v) => {
+          for (const vi of picked) mutate(vi, (nt) => (nt[0] = v - c.p[0]));
+        });
+        if (c.t === 'rail') {
+          num(`${tag} · y`, () => c.p[1] + (c.pts![picked[0]][3] ?? 0), (v) => {
+            for (const vi of picked) mutate(vi, (nt) => (nt[3] = v - c.p[1]));
+          });
+        }
+        num(`${tag} · z`, () => c.p[2] + c.pts![picked[0]][1], (v) => {
+          for (const vi of picked) mutate(vi, (nt) => (nt[1] = v - c.p[2]));
+        });
+        num(`${tag} · radius`, () => c.pts![picked[0]][2] ?? 0, (v) => {
+          for (const vi of picked) mutate(vi, (nt) => (nt[2] = Math.max(0, v)));
+        });
       } else {
         const tip = document.createElement('div');
         tip.className = 'ed-dim';
         tip.textContent =
-          'double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit corner radius here';
+          'double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit its position + corner radius here';
         this.propsEl.appendChild(tip);
       }
     };

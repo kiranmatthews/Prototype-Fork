@@ -223,8 +223,11 @@ export interface CustomComponent {
   // platform/wall/pit into a polygon; 2+ points turns a rail into a
   // multi-node path. Each node's optional 3rd number is a CORNER RADIUS
   // (world units, Figma-style) — the corner gets filleted in the visual,
-  // the collision, the kill footprint, and the grind line alike.
-  pts?: ([number, number] | [number, number, number])[];
+  // the collision, the kill footprint, and the grind line alike. The
+  // optional 4th number is a HEIGHT OFFSET from p[1] — rails only (grind
+  // lines climb and dive node to node; polygons stay planar, their
+  // collision model depends on it).
+  pts?: ([number, number] | [number, number, number] | [number, number, number, number])[];
   radius?: number; // camnode: corner radius where the camera lane turns at this node
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   layer?: number; // LEGACY editor layer id (folded into lk by migration)
@@ -314,29 +317,32 @@ export function starterCustomLevel(): CustomLevelData {
 // The four corners of a w×d rectangle spun by yaw degrees (relative offsets)
 // — matches mesh.rotation.y = yaw applied to a BoxGeometry footprint.
 // Fillet the corners of a polyline/polygon (Figma corner radius). Each
-// vertex is [x, z, radius?]; a radiused corner is replaced by a quadratic
-// fillet trimmed to just under half of the shorter adjacent edge. Returns
-// dense points tagged with the source vertex index `i`, so per-node aux data
-// (a camnode's height, say) can ride along. Open paths never round their
-// endpoints. Consecutive near-duplicates are dropped (zero-length rail
-// segments would blow up direction math downstream).
+// vertex is [x, z, radius?, y?]; a radiused corner is replaced by a
+// quadratic fillet trimmed to just under half of the shorter adjacent edge.
+// The optional per-node HEIGHT rides the same bezier, so a rounded bend on
+// a climbing rail rises smoothly through the turn. Returns dense points
+// tagged with the source vertex index `i` (aux data can follow the tag).
+// Open paths never round their endpoints. Consecutive near-duplicates are
+// dropped (zero-length rail segments would blow up direction math).
 export function roundCorners(
   pts: readonly (readonly number[])[],
   closed: boolean,
-): { x: number; z: number; i: number }[] {
+): { x: number; z: number; y: number; i: number }[] {
   const n = pts.length;
-  const out: { x: number; z: number; i: number }[] = [];
-  const push = (x: number, z: number, i: number): void => {
+  const out: { x: number; z: number; y: number; i: number }[] = [];
+  const push = (x: number, z: number, y: number, i: number): void => {
     const last = out[out.length - 1];
     if (last && (last.x - x) * (last.x - x) + (last.z - z) * (last.z - z) < 4e-4) return;
-    out.push({ x, z, i });
+    out.push({ x, z, y, i });
   };
+  const yOf = (k: number): number => pts[((k % n) + n) % n][3] ?? 0;
   for (let i = 0; i < n; i++) {
     const r = pts[i][2] ?? 0;
     const px = pts[i][0];
     const pz = pts[i][1];
+    const py = yOf(i);
     if (r <= 0.01 || n < 3 || (!closed && (i === 0 || i === n - 1))) {
-      push(px, pz, i);
+      push(px, pz, py, i);
       continue;
     }
     const A = pts[(i - 1 + n) % n];
@@ -348,7 +354,7 @@ export function roundCorners(
     const inL = Math.hypot(inX, inZ);
     const outL = Math.hypot(outX, outZ);
     if (inL < 1e-4 || outL < 1e-4) {
-      push(px, pz, i);
+      push(px, pz, py, i);
       continue;
     }
     const t = Math.min(r, inL * 0.49, outL * 0.49);
@@ -356,13 +362,21 @@ export function roundCorners(
     const az = pz - (inZ / inL) * t;
     const bx = px + (outX / outL) * t;
     const bz = pz + (outZ / outL) * t;
+    // heights at the trim points sit on the straight edges' slopes
+    const ay = py + (yOf(i - 1) - py) * (t / inL);
+    const by = py + (yOf(i + 1) - py) * (t / outL);
     const SEGS = 6;
     for (let k = 0; k <= SEGS; k++) {
       const u = k / SEGS;
       const w0 = (1 - u) * (1 - u);
       const w1 = 2 * u * (1 - u);
       const w2 = u * u;
-      push(w0 * ax + w1 * px + w2 * bx, w0 * az + w1 * pz + w2 * bz, i);
+      push(
+        w0 * ax + w1 * px + w2 * bx,
+        w0 * az + w1 * pz + w2 * bz,
+        w0 * ay + w1 * py + w2 * by,
+        i,
+      );
     }
   }
   return out;
@@ -919,7 +933,7 @@ export class Level {
     };
     const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal', 'rock']);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
-    const laneRaw: [number, number, number][] = []; // [x, z, corner radius] per node
+    const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
     // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
     // nesting) a '!' switch. Breakable crates in these groups start as
     // outline ghosts automatically — no per-crate flag to remember.
@@ -1242,10 +1256,11 @@ export class Level {
             );
           } else if (c.t === 'rail') {
             if (c.pts && c.pts.length >= 2) {
-              // multi-node rail: pen-drawn path, corner radii round the bends
+              // multi-node rail: pen-drawn path — corner radii round the
+              // bends, per-node height offsets climb and dive
               const rp = roundCorners(c.pts, false);
               const rail = new Rail(
-                rp.map((q) => new THREE.Vector3(c.p[0] + q.x, c.p[1], c.p[2] + q.z)),
+                rp.map((q) => new THREE.Vector3(c.p[0] + q.x, c.p[1] + q.y, c.p[2] + q.z)),
               );
               this.rails.push(rail);
               this.root.add(rail.object);
@@ -1354,7 +1369,7 @@ export class Level {
             // drag around; invisible (and non-physical) in play. lanePts is
             // built AFTER the loop so per-node corner radii can round the
             // whole path at once.
-            laneRaw.push([c.p[0], c.p[2], c.radius ?? 0]);
+            laneRaw.push([c.p[0], c.p[2], c.radius ?? 0, c.p[1]]);
             laneVis.push(new THREE.Vector3(c.p[0], c.p[1], c.p[2]));
             const marker = new THREE.Mesh(
               new THREE.OctahedronGeometry(0.5, 0),
@@ -1378,7 +1393,7 @@ export class Level {
         this.lanePts = laneRound.map((q) => ({ x: q.x, z: q.z }));
         const line = new THREE.Line(
           new THREE.BufferGeometry().setFromPoints(
-            laneRound.map((q) => new THREE.Vector3(q.x, laneVis[q.i].y, q.z)),
+            laneRound.map((q) => new THREE.Vector3(q.x, q.y, q.z)),
           ),
           new THREE.LineBasicMaterial({ color: 0xff5ad2 }),
         );
