@@ -217,6 +217,7 @@ export interface CustomComponent {
   phase?: number;
   amp?: number;
   seed?: number; // rock: shapes the jitter deterministically
+  pts?: [number, number][]; // VECTOR SHAPE: polygon outline in XZ relative to p (3+ points switches platform/wall/pit to polygon form)
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   layer?: number; // LEGACY editor layer id (folded into lk by migration)
   grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
@@ -300,6 +301,17 @@ export function starterCustomLevel(): CustomLevelData {
       { t: 'crystal', p: [0, 0.5, -24] },
     ],
   };
+}
+
+// Even-odd point-in-polygon test (pts relative to the same origin as x/z).
+export function pointInPoly(x: number, z: number, pts: [number, number][]): boolean {
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, zi] = pts[i];
+    const [xj, zj] = pts[j];
+    if (zi > z !== zj > z && x < ((xj - xi) * (z - zi)) / (zj - zi) + xi) inside = !inside;
+  }
+  return inside;
 }
 
 // The working custom level, set by the editor / loaded from storage before a
@@ -835,7 +847,96 @@ export class Level {
         buildTagged(i, () => {
           const tinted = (fallback: THREE.MeshLambertMaterial): THREE.MeshLambertMaterial =>
             c.color ? new THREE.MeshLambertMaterial({ color: new THREE.Color(c.color) }) : fallback;
-          if (c.t === 'platform') {
+          // VECTOR SHAPES: a 3+ point outline turns platform/wall/pit into a
+          // drawn polygon. Shape points are authored in XZ around p; three.js
+          // Shapes live in XY, so (x, -z) + rotateX(-90°) lands them flat.
+          const polyPts = c.pts && c.pts.length >= 3 ? c.pts : null;
+          const polyShape = (): THREE.Shape => {
+            const sh = new THREE.Shape();
+            sh.moveTo(polyPts![0][0], -polyPts![0][1]);
+            for (let k = 1; k < polyPts!.length; k++) sh.lineTo(polyPts![k][0], -polyPts![k][1]);
+            sh.closePath();
+            return sh;
+          };
+          if (c.t === 'platform' && polyPts) {
+            // drawn deck: extruded slab, walkable via the ground raycast.
+            // Sides are raycast-only (the collision engine is AABB — same
+            // deal as free-spun rectangles).
+            const th = c.s?.[1] ?? 1;
+            const geo = new THREE.ExtrudeGeometry(polyShape(), { depth: th, bevelEnabled: false });
+            geo.rotateX(-Math.PI / 2);
+            const mesh = new THREE.Mesh(geo, this.patterned(tinted(deck), 8, 8, 'checker'));
+            mesh.position.set(c.p[0], c.p[1] - th / 2, c.p[2]); // extrude spans local y 0..th; p is the slab centre
+            mesh.name = 'platform';
+            this.root.add(mesh);
+            this.groundMeshes.push(mesh);
+          } else if (c.t === 'wall' && polyPts) {
+            // drawn wall/blocker: extruded up from the base; the solid inside
+            // is filled with 1-unit scanline slabs so the AABB engine pushes
+            // back everywhere, including diagonal faces (coarsely).
+            const h = c.s?.[1] ?? 4;
+            const geo = new THREE.ExtrudeGeometry(polyShape(), { depth: h, bevelEnabled: false });
+            geo.rotateX(-Math.PI / 2);
+            const mesh = new THREE.Mesh(geo, tinted(new THREE.MeshLambertMaterial({ color: 0x9a8a7a })));
+            mesh.position.set(c.p[0], c.p[1], c.p[2]); // extrude spans local y 0..h; p is the base centre
+            this.root.add(mesh);
+            this.groundMeshes.push(mesh); // the top is standable
+            let minZ = Infinity;
+            let maxZ = -Infinity;
+            for (const [, pz] of polyPts) {
+              minZ = Math.min(minZ, pz);
+              maxZ = Math.max(maxZ, pz);
+            }
+            let slabs = 0;
+            for (let z = Math.floor(minZ) + 0.5; z < maxZ && slabs < 240; z += 1) {
+              const xs: number[] = [];
+              for (let k = 0, j = polyPts.length - 1; k < polyPts.length; j = k++) {
+                const [xa, za] = polyPts[k];
+                const [xb, zb] = polyPts[j];
+                if (za > z !== zb > z) xs.push(xa + ((xb - xa) * (z - za)) / (zb - za));
+              }
+              xs.sort((a, b) => a - b);
+              for (let k = 0; k + 1 < xs.length; k += 2) {
+                const span = xs[k + 1] - xs[k];
+                if (span < 0.2) continue;
+                slabs++;
+                this.walls.push(
+                  new THREE.Box3().setFromCenterAndSize(
+                    new THREE.Vector3(c.p[0] + (xs[k] + xs[k + 1]) / 2, c.p[1] + h / 2, c.p[2] + z),
+                    new THREE.Vector3(span, h, 1),
+                  ),
+                );
+              }
+            }
+          } else if (c.t === 'pit' && polyPts) {
+            // drawn death pool: dark polygon visual; the kill volume is the
+            // bounding box gated by a true point-in-polygon test (see
+            // pitMissesPoly) so only the drawn shape burns.
+            const geo = new THREE.ShapeGeometry(polyShape());
+            geo.rotateX(-Math.PI / 2);
+            const pool = new THREE.Mesh(
+              geo,
+              new THREE.MeshBasicMaterial({ color: 0x0a0a10, side: THREE.DoubleSide }),
+            );
+            pool.position.set(c.p[0], c.p[1] + 0.02, c.p[2]);
+            this.root.add(pool);
+            let minX = Infinity;
+            let maxX = -Infinity;
+            let minZ = Infinity;
+            let maxZ = -Infinity;
+            for (const [px, pz] of polyPts) {
+              minX = Math.min(minX, px);
+              maxX = Math.max(maxX, px);
+              minZ = Math.min(minZ, pz);
+              maxZ = Math.max(maxZ, pz);
+            }
+            const box = new THREE.Box3().setFromCenterAndSize(
+              new THREE.Vector3(c.p[0] + (minX + maxX) / 2, c.p[1] - 0.75, c.p[2] + (minZ + maxZ) / 2),
+              new THREE.Vector3(maxX - minX, 2.0, maxZ - minZ),
+            );
+            this.pitBoxes.push(box);
+            this.pitPolyByBox.set(box, { cx: c.p[0], cz: c.p[2], pts: polyPts });
+          } else if (c.t === 'platform') {
             const s = c.s ?? [8, 1, 8];
             const mesh = new THREE.Mesh(
               new THREE.BoxGeometry(s[0], s[1], s[2]),
@@ -1169,6 +1270,16 @@ export class Level {
       if (x >= zn.xMin && x <= zn.xMax && z >= zn.zMin && z <= zn.zMax) return zn;
     }
     return null;
+  }
+
+  // POLYGON death pits: the coarse Box3 lives in pitBoxes like any pit; the
+  // actual shape is tested here. Returns true when the box HAS a polygon and
+  // the point falls outside it — the kill should be skipped.
+  private pitPolyByBox = new Map<THREE.Box3, { cx: number; cz: number; pts: [number, number][] }>();
+  pitMissesPoly(box: THREE.Box3, x: number, z: number): boolean {
+    const poly = this.pitPolyByBox.get(box);
+    if (!poly) return false;
+    return !pointInPoly(x - poly.cx, z - poly.cz, poly.pts);
   }
 
   // CAMERA LANE (Crash 3 camera rails): camnode components chain into a

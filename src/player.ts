@@ -3857,6 +3857,9 @@ export class Player {
       const box =
         this.state === 'grind' && level.pitBoxes.includes(hz) ? this.feetBox : this.playerBox;
       if (box.intersectsBox(hz)) {
+        // drawn (polygon) pits: the box is just the broad phase — only the
+        // actual shape burns
+        if (level.pitMissesPoly(hz, this.pos.x, this.pos.z)) continue;
         if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
         if (this.spendMask()) {
           this.speed *= 0.5;

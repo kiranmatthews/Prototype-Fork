@@ -34,7 +34,8 @@ type Draw = (x: CanvasRenderingContext2D) => void;
 interface PalItem {
   label: string;
   icon: Draw;
-  make: (at: THREE.Vector3) => CustomComponent;
+  make?: (at: THREE.Vector3) => CustomComponent;
+  penDraw?: 'platform' | 'pit' | 'wall'; // pen tool: click-to-draw a polygon of this type
 }
 
 const box = (x: CanvasRenderingContext2D, fill: string, frame: string): void => {
@@ -86,6 +87,14 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
     ],
   },
   {
+    title: 'DRAW (pen tool)',
+    items: [
+      { label: 'platform', icon: (x) => { x.strokeStyle = '#cfd4cf'; x.fillStyle = 'rgba(207,212,207,0.35)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 12); x.lineTo(7, 3); x.lineTo(15, 5); x.lineTo(13, 14); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#58e08a'; for (const [px, py] of [[3, 12], [7, 3], [15, 5], [13, 14]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'platform' },
+      { label: 'death pit', icon: (x) => { x.strokeStyle = '#b0402a'; x.fillStyle = '#0a0a10'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 11); x.lineTo(8, 3); x.lineTo(16, 7); x.lineTo(12, 15); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ff8a5e'; for (const [px, py] of [[3, 11], [8, 3], [16, 7], [12, 15]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'pit' },
+      { label: 'wall', icon: (x) => { x.strokeStyle = '#9a8a7a'; x.fillStyle = 'rgba(154,138,122,0.4)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 13); x.lineTo(6, 4); x.lineTo(14, 3); x.lineTo(15, 12); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ffd75e'; for (const [px, py] of [[3, 13], [6, 4], [14, 3], [15, 12]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'wall' },
+    ],
+  },
+  {
     title: 'CAMERA',
     items: [
       { label: 'cam node', icon: (x) => { x.fillStyle = '#ff5ad2'; x.beginPath(); x.moveTo(9, 2); x.lineTo(15, 9); x.lineTo(9, 16); x.lineTo(3, 9); x.closePath(); x.fill(); x.strokeStyle = '#ff8ae0'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 9); x.lineTo(17, 9); x.stroke(); }, make: (at) => ({ t: 'camnode', p: [at.x, at.y + 1.5, at.z] }) },
@@ -114,7 +123,8 @@ const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crushe
 interface HandleDef {
   pos: THREE.Vector3;
   dir: THREE.Vector3;
-  apply: (orig: CustomComponent, c: CustomComponent, d: number) => void;
+  apply?: (orig: CustomComponent, c: CustomComponent, d: number) => void;
+  vtx?: number; // polygon vertex index: drags on the ground plane instead of an axis
 }
 const HANDLE_GEO = new THREE.BoxGeometry(0.55, 0.55, 0.55);
 
@@ -163,6 +173,9 @@ export class Editor {
   private renaming: { kind: 'group' | 'item'; id: number } | null = null;
   private marqueeAdd = false; // shift-marquee adds; plain marquee replaces
   private camSaveAt = 0;
+  // PEN TOOL: click-to-draw polygon platforms / pits / walls
+  private drawing: { t: 'platform' | 'pit' | 'wall'; y: number; pts: THREE.Vector3[] } | null = null;
+  private drawVis: THREE.Group | null = null;
   // pop-out side panels (item picker / layers) + view cluster + space-pan
   private popWrap: HTMLElement | null = null;
   private popAdd: HTMLElement | null = null;
@@ -181,6 +194,8 @@ export class Editor {
     lineD: THREE.Vector3;
     t0: number;
     orig: CustomComponent;
+    vtx?: number; // polygon vertex drag: uses `plane` instead of the axis line
+    plane?: THREE.Plane;
   } | null = null;
   private lastLiveRebuild = 0;
   private resizeHintShown = false;
@@ -263,6 +278,7 @@ export class Editor {
     this.panel.style.display = 'none';
     if (this.popWrap) this.popWrap.style.display = 'none';
     this.select(-1);
+    this.cancelDraw();
     this.marquee = null;
     this.hideMarquee();
     this.dragging = false;
@@ -816,6 +832,21 @@ export class Editor {
   }
 
   private handleDefsFor(c: CustomComponent): HandleDef[] {
+    // drawn polygons: every vertex is a handle, dragged freely on the ground
+    // plane (the axis machinery below is for box faces)
+    if (c.pts && c.pts.length >= 3 && (c.t === 'platform' || c.t === 'wall' || c.t === 'pit')) {
+      const y =
+        c.t === 'wall'
+          ? c.p[1] + (c.s?.[1] ?? 4)
+          : c.t === 'platform'
+            ? c.p[1] + (c.s?.[1] ?? 1) / 2
+            : c.p[1] + 0.15;
+      return c.pts.map((pt, i) => ({
+        pos: new THREE.Vector3(c.p[0] + pt[0], y, c.p[2] + pt[1]),
+        dir: new THREE.Vector3(0, 1, 0),
+        vtx: i,
+      }));
+    }
     const defs: HandleDef[] = [];
     const P = new THREE.Vector3(c.p[0], c.p[1], c.p[2]);
     const UP = new THREE.Vector3(0, 1, 0);
@@ -978,6 +1009,12 @@ export class Editor {
 
   private onDbl = (e: MouseEvent): void => {
     if (!this.active || this.spaceHeld) return;
+    if (this.drawing) {
+      // double-click closes the shape (the extra click's duplicate point is
+      // deduped in finishDraw)
+      this.finishDraw();
+      return;
+    }
     const hit = this.pick(e as PointerEvent);
     if (hit >= 0 && RESIZABLE.has(this.data.components[hit].t)) {
       this.select(hit);
@@ -1002,6 +1039,19 @@ export class Editor {
       this.dom.style.cursor = 'grabbing';
       return;
     }
+    // PEN TOOL: every click drops a vertex; clicking the first point closes
+    if (this.drawing) {
+      this.downAt = null;
+      const pt = this.drawPlanePoint(e);
+      if (!pt) return;
+      if (this.drawing.pts.length >= 3 && pt.distanceTo(this.drawing.pts[0]) < 1.0) {
+        this.finishDraw();
+        return;
+      }
+      this.drawing.pts.push(pt);
+      this.updateDrawVis();
+      return;
+    }
     // resize handles grab first — they float over everything else
     if (this.resizeIdx >= 0 && this.handleMeshes.length > 0) {
       this.setRay(e);
@@ -1012,6 +1062,21 @@ export class Editor {
         const def = this.hdlDefs[i];
         const lineO = def.pos.clone();
         const lineD = def.dir.clone();
+        // polygon vertex: free drag on the shape's ground plane
+        if (def.vtx !== undefined) {
+          this.hdlDrag = {
+            i,
+            lineO,
+            lineD,
+            t0: 0,
+            orig: JSON.parse(JSON.stringify(this.data.components[this.resizeIdx])) as CustomComponent,
+            vtx: def.vtx,
+            plane: new THREE.Plane(new THREE.Vector3(0, 1, 0), -def.pos.y),
+          };
+          if (this.controls) this.controls.enabled = false;
+          this.downAt = null;
+          return;
+        }
         const t0 = this.axisT(lineO, lineD);
         if (t0 !== null) {
           this.hdlDrag = {
@@ -1086,6 +1151,104 @@ export class Editor {
     }
   };
 
+  // ---- pen tool (draw polygon platforms / pits / walls) ----
+
+  startDraw(t: 'platform' | 'pit' | 'wall'): void {
+    this.cancelDraw();
+    this.select(-1);
+    const y = this.controls ? Math.round(this.controls.target.y * 2) / 2 : 0;
+    this.drawing = { t, y, pts: [] };
+    this.dom.style.cursor = 'crosshair';
+    this.hooks.showMsg(
+      `DRAW ${t.toUpperCase()}`,
+      'click to drop points · click the FIRST point (or Enter) to close · esc = cancel',
+    );
+  }
+
+  private cancelDraw(): void {
+    this.drawing = null;
+    if (this.drawVis) {
+      this.scene.remove(this.drawVis);
+      this.drawVis = null;
+    }
+    if (this.active) this.dom.style.cursor = '';
+  }
+
+  // preview: the outline so far, vertex dots, a rubber segment to the cursor,
+  // and a green "close here" marker on the first point
+  private updateDrawVis(cursor?: THREE.Vector3): void {
+    if (this.drawVis) {
+      this.scene.remove(this.drawVis);
+      this.drawVis = null;
+    }
+    const d = this.drawing;
+    if (!d || (d.pts.length === 0 && !cursor)) return;
+    const g = new THREE.Group();
+    const color = d.t === 'pit' ? 0xff6a3a : d.t === 'wall' ? 0xffd75e : 0x58e08a;
+    const linePts = [...d.pts];
+    if (cursor) linePts.push(cursor);
+    if (linePts.length >= 2) {
+      g.add(
+        new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(linePts),
+          new THREE.LineBasicMaterial({ color }),
+        ),
+      );
+    }
+    d.pts.forEach((pt, i) => {
+      const dot = new THREE.Mesh(
+        new THREE.SphereGeometry(i === 0 ? 0.42 : 0.28, 8, 6),
+        new THREE.MeshBasicMaterial({ color: i === 0 ? 0x58e08a : color, depthTest: false }),
+      );
+      dot.renderOrder = 998;
+      dot.position.copy(pt);
+      g.add(dot);
+    });
+    this.scene.add(g);
+    this.drawVis = g;
+  }
+
+  private drawPlanePoint(e: PointerEvent): THREE.Vector3 | null {
+    const d = this.drawing!;
+    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -d.y);
+    const out = new THREE.Vector3();
+    if (!this.groundPoint(e, plane, out)) return null;
+    if (this.snap) {
+      out.x = Math.round(out.x * 2) / 2;
+      out.z = Math.round(out.z * 2) / 2;
+    }
+    out.y = d.y;
+    return out;
+  }
+
+  private finishDraw(): void {
+    const d = this.drawing;
+    if (!d) return;
+    // drop consecutive duplicates (a double-click leaves one behind)
+    const pts = d.pts.filter(
+      (pt, i) => i === 0 || pt.distanceToSquared(d.pts[i - 1]) > 0.01,
+    );
+    if (pts.length < 3) {
+      this.hooks.showMsg('NEED 3+ POINTS', 'shape cancelled');
+      this.cancelDraw();
+      return;
+    }
+    let cx = 0;
+    let cz = 0;
+    for (const pt of pts) {
+      cx += pt.x;
+      cz += pt.z;
+    }
+    cx = Math.round((cx / pts.length) * 2) / 2;
+    cz = Math.round((cz / pts.length) * 2) / 2;
+    const rel = pts.map(
+      (pt) => [Math.round((pt.x - cx) * 2) / 2, Math.round((pt.z - cz) * 2) / 2] as [number, number],
+    );
+    const s: [number, number, number] = [1, d.t === 'wall' ? 4 : 1, 1];
+    this.addComponent({ t: d.t, p: [cx, d.y, cz], s, pts: rel });
+    this.cancelDraw();
+  }
+
   // ---- marquee (screen-space rubber band) ----
 
   private showMarquee(): void {
@@ -1155,15 +1318,45 @@ export class Editor {
   private onMove = (e: PointerEvent): void => {
     if (!this.active) return;
     if (this.spaceHeld) return; // panning: OrbitControls owns the pointer
+    // pen tool: rubber-band the next segment to the cursor
+    if (this.drawing) {
+      const now = performance.now();
+      if (now - this.hoverAt > 33) {
+        this.hoverAt = now;
+        const pt = this.drawPlanePoint(e);
+        this.updateDrawVis(pt ?? undefined);
+      }
+      return;
+    }
     // resize-handle drag: re-apply from the grab snapshot at the new travel
     if (this.hdlDrag && this.resizeIdx >= 0) {
+      // polygon vertex: chase the pointer on the ground plane
+      if (this.hdlDrag.vtx !== undefined && this.hdlDrag.plane) {
+        const hit = new THREE.Vector3();
+        if (!this.groundPoint(e, this.hdlDrag.plane, hit)) return;
+        const c = this.data.components[this.resizeIdx];
+        if (!c.pts) return;
+        const nx = this.snap ? Math.round((hit.x - c.p[0]) * 2) / 2 : hit.x - c.p[0];
+        const nz = this.snap ? Math.round((hit.z - c.p[2]) * 2) / 2 : hit.z - c.p[2];
+        c.pts[this.hdlDrag.vtx] = [nx, nz];
+        const defs2 = this.handleDefsFor(c);
+        defs2.forEach((df, j) => this.handleMeshes[j]?.position.copy(df.pos));
+        this.hdlDefs = defs2;
+        this.renderProps();
+        const now2 = performance.now();
+        if (now2 - this.lastLiveRebuild > 90) {
+          this.lastLiveRebuild = now2;
+          this.hooks.rebuild();
+        }
+        return;
+      }
       this.setRay(e);
       const t = this.axisT(this.hdlDrag.lineO, this.hdlDrag.lineD);
       if (t === null) return;
       let d = t - this.hdlDrag.t0;
       if (this.snap) d = Math.round(d * 2) / 2;
       const c = this.data.components[this.resizeIdx];
-      this.hdlDefs[this.hdlDrag.i].apply(this.hdlDrag.orig, c, d);
+      this.hdlDefs[this.hdlDrag.i].apply!(this.hdlDrag.orig, c, d);
       // handles + panel track live; geometry rebuilds on a light throttle
       const defs = this.handleDefsFor(c);
       defs.forEach((df, j) => this.handleMeshes[j]?.position.copy(df.pos));
@@ -1248,6 +1441,7 @@ export class Editor {
 
   private onUp = (e: PointerEvent): void => {
     if (!this.active) return;
+    if (this.drawing) return; // pen tool owns the pointer (vertices drop on down)
     if (this.spaceHeld) {
       this.dom.style.cursor = 'grab';
       this.downAt = null;
@@ -1321,6 +1515,12 @@ export class Editor {
       return;
     }
     const cmd = e.metaKey || e.ctrlKey;
+    // pen tool: Enter closes the shape, Escape abandons it
+    if (this.drawing) {
+      if (e.code === 'Enter') this.finishDraw();
+      else if (e.code === 'Escape') this.cancelDraw();
+      return;
+    }
     if (e.code === 'Escape') {
       // step out: resize mode first, then the selection itself
       if (this.resizeIdx >= 0) this.setResize(-1);
@@ -1451,13 +1651,18 @@ export class Editor {
         lab.textContent = p.label;
         b.appendChild(lab);
         b.addEventListener('click', () => {
+          if (p.penDraw) {
+            this.startDraw(p.penDraw);
+            b.blur();
+            return;
+          }
           const at = this.controls ? this.controls.target.clone() : new THREE.Vector3();
           if (this.snap) {
             at.x = Math.round(at.x * 2) / 2;
             at.y = Math.round(at.y * 2) / 2;
             at.z = Math.round(at.z * 2) / 2;
           }
-          this.addComponent(p.make(at));
+          this.addComponent(p.make!(at));
           b.blur();
         });
         pal.appendChild(b);
@@ -1631,6 +1836,7 @@ export class Editor {
     const c = this.data.components[idx];
     if (!c) return '?';
     if (c.nm) return c.nm;
+    if (c.pts && c.pts.length >= 3) return `${c.t} · drawn`;
     if (c.t === 'crate') return `crate · ${c.kind ?? 'wood'}${c.outline ? ' (outline)' : ''}`;
     if (c.t === 'wall' && c.invisible) return 'invis wall';
     if (c.t === 'camnode') {
@@ -1930,7 +2136,24 @@ export class Editor {
       row.appendChild(input);
       this.propsEl.appendChild(row);
     };
-    if (c.t === 'platform' || c.t === 'wall') {
+    if (c.pts && c.pts.length >= 3) {
+      // drawn polygon: the outline is edited with the vertex handles
+      const note = document.createElement('div');
+      note.className = 'ed-dim';
+      note.textContent = `drawn polygon · ${c.pts.length} points — double-click to drag the corners`;
+      this.propsEl.appendChild(note);
+      if (c.t !== 'pit') {
+        num(
+          c.t === 'wall' ? 'height' : 'thickness',
+          () => c.s?.[1] ?? (c.t === 'wall' ? 4 : 1),
+          (v) => {
+            if (!c.s) c.s = [1, 1, 1];
+            c.s[1] = Math.max(0.2, v);
+          },
+        );
+        colorRow();
+      }
+    } else if (c.t === 'platform' || c.t === 'wall') {
       sizeRow(0, 'width');
       sizeRow(1, 'height');
       sizeRow(2, 'depth');
@@ -2078,8 +2301,9 @@ export class Editor {
     const row = document.createElement('div');
     row.className = 'ed-grid';
     // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
-    const rotatable = ['platform', 'ramp', 'rail'].includes(c.t);
-    const swappable = ['wall', 'crumble', 'pit', 'crusher'].includes(c.t);
+    // (drawn polygons keep their authored outline — no 90° tricks)
+    const rotatable = ['platform', 'ramp', 'rail'].includes(c.t) && !c.pts;
+    const swappable = ['wall', 'crumble', 'pit', 'crusher'].includes(c.t) && !c.pts;
     if (rotatable || swappable || c.t === 'pipe') {
       const rot = document.createElement('button');
       rot.className = 'ed-btn';
