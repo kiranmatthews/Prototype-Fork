@@ -496,7 +496,7 @@ player.onGameOver = () => ui.showDeathScreen(true);
 // ~18° down so crate TOPS read, hero's feet near the bottom of frame,
 // hero ~30% of frame height.
 // Base framing now lives on TUNING sliders (CAMERA section): camDist,
-// camHeight, camTilt, camOffset, camFov, camEase. The hand-tuned defaults
+// camHeight, camTilt, camOffset, camFov. The hand-tuned defaults
 // are unchanged; special shots (side-scroll, boulder) scale relative to them.
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
@@ -567,11 +567,11 @@ function updateCamera(dt: number): void {
     player.pos.z - camF.z * (dist - off),
   );
 
-  // Snap after respawn teleports; damp otherwise (camEase = chase stiffness).
+  // Snap after respawn teleports; damp otherwise.
   if (camera.position.distanceTo(camTarget) > 30) {
     camera.position.copy(camTarget);
   } else {
-    camera.position.lerp(camTarget, 1 - Math.exp(-TUNING.camEase * dt));
+    camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
   }
 
   // camTilt aims AT the body (2.1 = just over her head — the old 21° default

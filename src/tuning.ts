@@ -117,7 +117,6 @@ export const TUNING = {
   camHeight: 4.1, // camera elevation above the character
   camTilt: 2.1, // aim height on the character: higher = camera tilts UP (sees more sky)
   camOffset: 0, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
-  camEase: 9, // movement easing: how fast the camera chases its target (higher = stiffer, lower = floatier)
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -234,7 +233,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   camHeight: { min: 0.5, max: 10, step: 0.1 },
   camTilt: { min: -6, max: 10, step: 0.05 },
   camOffset: { min: -8, max: 4, step: 0.25 },
-  camEase: { min: 1.5, max: 20, step: 0.5 },
 };
 
 // Hover text for the tuning panel: what each slider actually does in play.
@@ -413,8 +411,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   camOffset:
     'OFFSET: slides the WHOLE rig (camera + aim together) down-course — moves where the skater rests in the frame WITHOUT changing the tilt. Positive = she sits lower in frame with more road ahead; negative = she rides higher/closer.',
   camHeight: 'ELEVATION: how high above the character the camera rides. Higher = more top-down.',
-  camEase:
-    'MOVEMENT EASING: how quickly the camera chases its target position. Higher = stiff and locked-on; lower = a floaty, drifty follow that smooths out bumps.',
 };
 
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
@@ -485,7 +481,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
-  { title: 'CAMERA', keys: ['camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camEase'] },
+  { title: 'CAMERA', keys: ['camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
 ];
 
