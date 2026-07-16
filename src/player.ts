@@ -4970,7 +4970,7 @@ export class Player {
         const step = Math.floor(this.runTime * 30);
         this.smearG.rotation.y = step * 2.399; // golden angle
         const pulse = 1 + 0.09 * Math.sin(step * 1.7);
-        this.smearG.scale.set(2.3 * pulse, 1.9 * (2 - pulse), 2.3 * pulse); // opposing squash
+        this.smearG.scale.set(1.84 * pulse, 1.52 * (2 - pulse), 1.84 * pulse); // opposing squash
       }
     }
     if (this.maskMesh) {
@@ -5231,8 +5231,8 @@ export class Player {
         g.add(mesh);
         // model is a unit cube centered at 0 — size it to the spin's reach:
         // wider than the body, a head shorter than standing
-        g.scale.set(2.3, 1.9, 2.3);
-        g.position.y = 0.95;
+        g.scale.set(1.84, 1.52, 1.84);
+        g.position.y = 0.76;
         g.visible = false;
         this.group.add(g);
         this.smearG = g;
