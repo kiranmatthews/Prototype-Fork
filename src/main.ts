@@ -502,6 +502,8 @@ player.onGameOver = () => ui.showDeathScreen(true);
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
 const camAimTmp = new THREE.Vector3();
+let camAnchorY = 0; // the rig's vertical anchor: the ground under the skater, eased
+const aimSmooth = new THREE.Vector3(NaN, 0, 0); // lightly-damped look target (NaN = seed on first frame)
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
@@ -592,22 +594,53 @@ function updateCamera(dt: number): void {
   // together, so the skater's resting spot in frame shifts while the tilt
   // stays put. The boulder shot authors its own framing; fade the knob out.
   const off = TUNING.camOffset * (1 - boulderF);
+  // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
+  // skater, not the skater — a jump rises THROUGH the frame (gentle tilt
+  // tracks it) instead of yanking the whole rig skyward and pulling the
+  // landing spot out of shot. The anchor eases along slopes/steps, follows
+  // the player when there's no floor below (pits), and never lets them get
+  // more than ~7 above it (big verts still stay framed). The boulder shot
+  // keeps its authored full-follow.
+  const floorY = player.groundBelowY;
+  const anchorGoal = Math.max(floorY ?? player.pos.y, player.pos.y - 7);
+  camAnchorY += (anchorGoal - camAnchorY) * Math.min(1, 4.5 * dt);
+  const effY = THREE.MathUtils.lerp(camAnchorY, player.pos.y, boulderF);
+
   camTarget.set(
     player.pos.x - camF.x * (dist - off),
-    player.pos.y + height,
+    effY + height,
     player.pos.z - camF.z * (dist - off),
   );
 
   // Snap after respawn teleports; damp otherwise.
   if (camera.position.distanceTo(camTarget) > 30) {
     camera.position.copy(camTarget);
+    camAnchorY = anchorGoal;
+    aimSmooth.set(NaN, 0, 0); // re-seed the aim at the new shot
   } else {
-    camera.position.lerp(camTarget, 1 - Math.exp(-9 * dt));
+    // CRASH RIG TRANSLATION: HARD along the travel axis — down-course
+    // normally, the turned axis through side-scroll zones, the chase heading
+    // in chase mode — and GENTLE across it, so strafes pan the view instead
+    // of sliding the world sideways.
+    const perpX = -camF.z;
+    const perpZ = camF.x;
+    const dx = camTarget.x - camera.position.x;
+    const dz = camTarget.z - camera.position.z;
+    const along = dx * camF.x + dz * camF.z;
+    const lat = dx * perpX + dz * perpZ;
+    const kAlong = 1 - Math.exp(-9 * dt);
+    const kLat = 1 - Math.exp(-THREE.MathUtils.lerp(3.2, 9, Math.max(sideF, boulderF)) * dt);
+    const kY = 1 - Math.exp(-6 * dt);
+    camera.position.x += camF.x * along * kAlong + perpX * lat * kLat;
+    camera.position.z += camF.z * along * kAlong + perpZ * lat * kLat;
+    camera.position.y += (camTarget.y - camera.position.y) * kY;
   }
 
   // camTilt aims AT the body (2.1 = just over her head — the old 21° default
   // pitch, re-derived). Side / reverse / boulder keep their authored absolute
   // aims, converted from the old look-ahead shots so defaults are identical.
+  // Vertically the aim tracks a jump at 35% — the gentle Crash tilt — while
+  // the XZ pan follows through a light smoothing.
   const aimY = THREE.MathUtils.lerp(TUNING.camTilt, TUNING.camTilt - 0.2, sideF);
   const aimK = THREE.MathUtils.lerp(
     THREE.MathUtils.lerp(-off, 3.5, back), // reversing: aim swings behind you
@@ -616,11 +649,13 @@ function updateCamera(dt: number): void {
   );
   lookPoint.set(
     player.pos.x - camF.x * aimK,
-    player.pos.y + THREE.MathUtils.lerp(aimY, 1.6, boulderF), // boulder: tilt UP the corridor
+    effY + (player.pos.y - effY) * 0.35 + THREE.MathUtils.lerp(aimY, 1.6, boulderF),
     player.pos.z - camF.z * aimK,
   );
+  if (Number.isNaN(aimSmooth.x)) aimSmooth.copy(lookPoint);
+  aimSmooth.lerp(lookPoint, 1 - Math.exp(-11 * dt));
 
-  camera.lookAt(lookPoint);
+  camera.lookAt(aimSmooth);
 }
 
 camera.position.copy(player.pos).addScaledVector(new THREE.Vector3(0, 0, 1), TUNING.camDist);

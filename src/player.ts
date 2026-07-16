@@ -424,6 +424,13 @@ export class Player {
     return this.spinTimer > 0;
   }
 
+  // The floor under the skater, wherever they are in the air — the camera
+  // rig anchors its height to THIS (Crash rules: jumps tilt the view, they
+  // never yank the rig skyward), and it's what the shadow/landing-X ride.
+  get groundBelowY(): number | null {
+    return this.shadowGroundY;
+  }
+
   // CHASE CAM: is the current travel a real heading — flat-ish ground or a
   // grind — rather than cross-pipe oscillation or an air the camera should
   // coast through? Transition walls and pipe troughs never steer the chase
@@ -2196,6 +2203,7 @@ export class Player {
       TUNING.doubleJump > 0.5 &&
       input.jumpPressed &&
       !this.airJumpUsed &&
+      !this.airFromSkate && // an on-foot move: board airs never double jump
       this.coyoteTimer <= 0 &&
       !this.vertAir &&
       !this.slamActive &&
@@ -2204,7 +2212,7 @@ export class Player {
       this.airJumpUsed = true;
       this.vVel = TUNING.jumpMinVelocity;
       this.flipTimer = 0; // snap out of a somersault into the fresh pop
-      if (!this.airFromSkate) this.starTimer = 0.25; // on-foot flourish: spread-eagle flash
+      this.starTimer = 0.25; // spread-eagle flash so the double reads
       this.lastJumpType = 'Double Jump';
       sfx.play('footstep2', 0.6, 1.8);
     }
