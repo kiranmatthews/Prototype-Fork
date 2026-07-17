@@ -471,6 +471,7 @@ window.addEventListener('keydown', (e) => {
     if (e.code === 'Digit6') switchLevel(5);
     if (e.code === 'Digit7') switchLevel(6);
     if (e.code === 'Digit8') switchLevel(7); // Custom (the editor's level)
+    if (e.code === 'Digit9') switchLevel(8); // The Overgrowth
   }
   if (e.code === 'F8') saveReplay(); // playtest capture: input take -> .json
   if (e.code === 'F9') toggleVideo(); // playtest capture: canvas -> .webm

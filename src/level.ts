@@ -176,6 +176,7 @@ export const LEVEL_NAMES = [
   'Half Pipes',
   'Sky Bridge',
   'Custom', // built from CUSTOM_LEVEL data (the in-game level editor owns it)
+  'The Overgrowth', // authored jungle corridor, built through the component pipeline
 ];
 
 // ---- CUSTOM LEVEL: a data-driven course the in-game editor builds ----------
@@ -290,6 +291,171 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   }
   if (!d.groups) d.groups = [];
   return d;
+}
+
+// ---- THE OVERGROWTH: an authored Crash-1-style jungle corridor ------------
+// Built entirely from editor components so it exercises the vector pipeline:
+// every deck, bank, wall and pit is a pen-tool polygon with per-node corner
+// radii, so all the edges read organic instead of boxy. Deterministic: a
+// seeded LCG jitters the blob outlines, never Math.random.
+function overgrownLevel(): CustomLevelData {
+  let rng = 1337;
+  const rand = (): number => {
+    rng = (Math.imul(rng, 1103515245) + 12345) & 0x7fffffff;
+    return rng / 0x7fffffff;
+  };
+  // organic outline: n points around an rx×rz oval, radius + angle jittered,
+  // every node carrying a fat corner radius so roundCorners melts it soft
+  const blob = (rx: number, rz: number, n = 9, wobble = 0.3): [number, number, number][] => {
+    const pts: [number, number, number][] = [];
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + (rand() - 0.5) * (Math.PI / n);
+      const kr = 1 - wobble / 2 + rand() * wobble;
+      const fil = Math.min(rx, rz) * (0.35 + rand() * 0.3);
+      pts.push([+(Math.cos(a) * rx * kr).toFixed(2), +(Math.sin(a) * rz * kr).toFixed(2), +fil.toFixed(2)]);
+    }
+    return pts;
+  };
+  const C: CustomComponent[] = [];
+  // -- the dirt path: three organic decks with the two pits as true gaps
+  const dirt = '#8a6a3f';
+  C.push({ t: 'platform', p: [0, 0, 31], s: [1, 1, 1], pts: blob(10, 15.5), color: dirt });
+  C.push({ t: 'platform', p: [0, 0, -14], s: [1, 1, 1], pts: blob(10, 14.5), color: dirt });
+  C.push({ t: 'platform', p: [0, 0, -60], s: [1, 1, 1], pts: blob(12.5, 14.5), color: '#7d6038' });
+  // -- PIT ONE: the corridor gap, crossed by a narrow orange truss beam.
+  // Pool sits a unit below the decks so the kill band can never reach feet
+  // standing on an overlapping deck rim — and the hole reads DEEP.
+  C.push({ t: 'pit', p: [0, -0.5, 8], pts: blob(10.8, 8.2, 10, 0.22) });
+  // earthen pit lining: dark faces descending into the black
+  C.push({ t: 'wall', p: [0, -1.9, 15.2], s: [19, 1.5, 0.8], color: '#33261a' });
+  C.push({ t: 'wall', p: [0, -1.9, 0.8], s: [19, 1.5, 0.8], color: '#33261a' });
+  C.push({ t: 'wall', p: [-9.5, -1.9, 8], s: [0.8, 1.5, 13.5], color: '#33261a' });
+  C.push({ t: 'wall', p: [9.5, -1.9, 8], s: [0.8, 1.5, 13.5], color: '#33261a' });
+  C.push({ t: 'platform', p: [0, 0.05, 8], s: [1.5, 0.9, 19], color: '#c47a24' }); // the beam
+  // truss sleepers across the beam top — pure dressing, 6cm proud
+  for (const z of [3, 6, 9, 12]) C.push({ t: 'platform', p: [0, 0.53, z], s: [2.0, 0.12, 0.55], color: '#93551a' });
+  C.push({ t: 'rail', p: [4.6, 1.0, 8], len: 21, yaw: 0 }); // skater's line over the pit
+  C.push({ t: 'metal', p: [-5.2, 0.5, 17.8, ] as [number, number, number] }); // the steel block by the drop
+  for (const z of [14, 11, 8, 5, 2]) C.push({ t: 'wumpa', p: [0, 1.5, z] });
+  // -- PIT TWO: wider maw, crossed on organic stepping stones
+  C.push({ t: 'pit', p: [0, -0.5, -37], pts: blob(11.2, 9.6, 10, 0.22) });
+  C.push({ t: 'wall', p: [0, -1.9, -28.4], s: [20, 1.5, 0.8], color: '#33261a' });
+  C.push({ t: 'wall', p: [0, -1.9, -45.6], s: [20, 1.5, 0.8], color: '#33261a' });
+  C.push({ t: 'wall', p: [-10, -1.9, -37], s: [0.8, 1.5, 15], color: '#33261a' });
+  C.push({ t: 'wall', p: [10, -1.9, -37], s: [0.8, 1.5, 15], color: '#33261a' });
+  const stones: [number, number, number][] = [
+    [-3.8, -31.6, 2.8],
+    [2.6, -37, 2.6],
+    [-2.4, -42.6, 2.7],
+  ];
+  for (const [sx, sz, sr] of stones) {
+    C.push({ t: 'platform', p: [sx, 0, sz], s: [1, 1, 1], pts: blob(sr, sr * 0.9, 7, 0.35), color: '#84936c' });
+    C.push({ t: 'wumpa', p: [sx, 1.5, sz] });
+  }
+  C.push({ t: 'rail', p: [6.8, 1.0, -37], len: 22, yaw: 0 }); // grind line past the stones
+  // -- grass banks: raised mossy shoulders squeezing the path organic
+  const banks: [number, number, number, number, string][] = [
+    [-10.8, 33, 3.6, 9, '#57a53d'],
+    [10.8, 29, 3.4, 8, '#4a9636'],
+    [-10.6, 12, 3.2, 6.5, '#4a9636'],
+    [10.6, 6, 3.2, 7, '#57a53d'],
+    [-10.8, -13, 3.6, 9.5, '#57a53d'],
+    [10.8, -19, 3.4, 8, '#4a9636'],
+    [-11.8, -37, 3.2, 8, '#4a9636'],
+    [11.8, -35, 3.2, 8, '#57a53d'],
+    [-13, -58, 3.8, 9, '#57a53d'],
+    [13, -62, 3.8, 9, '#4a9636'],
+    [0, -75, 9, 3.4, '#4a9636'],
+  ];
+  for (const [bx, bz, brx, brz, col] of banks) {
+    C.push({ t: 'platform', p: [bx, 0.55, bz], s: [1, 0.9, 1], pts: blob(brx, brz, 8, 0.34), color: col });
+  }
+  // -- mossy stone walls: tall organic slabs closing the corridor in
+  const wallCol = ['#66755d', '#5c6b54', '#707e66'];
+  const wallRuns: [number, number, number, number, number][] = [
+    [-14.8, 24, 3.6, 26, 8.5],
+    [14.8, 18, 3.6, 24, 9],
+    [-15, -20, 3.4, 18, 8],
+    [15, -24, 3.4, 18, 8.5],
+    [-16, -50, 3.6, 16, 9],
+    [16, -52, 3.6, 16, 8],
+    [-17.5, -68, 3.4, 9, 8.5],
+    [17.5, -68, 3.4, 9, 9],
+    [0, -79.5, 13, 3.2, 9.5],
+  ];
+  wallRuns.forEach(([wx, wz, wrx, wrz, wh], i) => {
+    C.push({ t: 'wall', p: [wx, 0, wz], s: [1, wh, 1], pts: blob(wrx, wrz, 8, 0.3), color: wallCol[i % 3] });
+  });
+  // -- crude trees: a trunk rock wearing a canopy rock, rooted on the banks
+  const trees: [number, number][] = [
+    [-9.8, 26],
+    [10.2, -8],
+    [-10.6, -55],
+    [11.6, -64],
+  ];
+  trees.forEach(([tx, tz], i) => {
+    C.push({ t: 'rock', p: [tx, 1.2, tz], s: [1.3, 5, 1.3], seed: 40 + i, color: '#6b4a2c' });
+    C.push({ t: 'rock', p: [tx, 5.6, tz], s: [4.8, 2.2, 4.8], seed: 80 + i, color: '#3b7a32' });
+  });
+  // -- undergrowth: bushes + flowering plants scattered along the shoulders
+  const bushes: [number, number, number][] = [
+    [-9.4, 38, 0],
+    [9.6, 33, 1],
+    [-9.8, 17, 2],
+    [9.2, 10, 0],
+    [-9.6, -9, 1],
+    [10, -22, 2],
+    [-10.8, -33, 0],
+    [11, -41, 1],
+    [-11.6, -63, 2],
+    [11.4, -57, 0],
+  ];
+  const bushCol = ['#469634', '#3a842e', '#67ad46'];
+  bushes.forEach(([bx, bz, ci], i) => {
+    C.push({ t: 'rock', p: [bx, 1.35, bz], s: [1.7, 1.3, 1.7], seed: 120 + i, color: bushCol[ci] });
+  });
+  const flowers: [number, number, string][] = [
+    [-8.8, 30, '#c74e8a'],
+    [9.0, 22, '#4a63c9'],
+    [-9.2, -16, '#d98a2b'],
+    [9.4, -28.5, '#c74e8a'],
+    [-10.9, -48, '#4a63c9'],
+    [10.6, -68, '#c74e8a'],
+  ];
+  flowers.forEach(([fx, fz, fc], i) => {
+    C.push({ t: 'rock', p: [fx, 1.35, fz], s: [0.75, 0.95, 0.75], seed: 200 + i, color: fc });
+  });
+  // -- crates, hazards, and the goodies
+  C.push({ t: 'crate', p: [4.2, 0.5, 27], kind: 'wood' });
+  C.push({ t: 'crate', p: [4.2, 1.46, 27], kind: 'mystery' });
+  C.push({ t: 'crate', p: [-4.4, 0.5, 34], kind: 'wood' });
+  C.push({ t: 'crate', p: [-3.6, 0.5, 19.4], kind: 'bouncy' }); // bounce line over pit one
+  C.push({ t: 'checkpoint', p: [3.2, 0.5, -3.4] });
+  C.push({ t: 'enemy', p: [0, 0.5, -14], range: 5.5, speed: 3 });
+  C.push({ t: 'crate', p: [-5, 0.5, -18.6], kind: 'wood' });
+  C.push({ t: 'crate', p: [5.2, 0.5, -20.4], kind: 'tnt' });
+  C.push({ t: 'crate', p: [-4.6, 0.5, -24], kind: 'wood' });
+  C.push({ t: 'crate', p: [5.4, 0.5, -55.6], kind: 'mask' });
+  C.push({ t: 'crate', p: [-5.8, 0.5, -60], kind: 'bouncy' });
+  for (const [wx, wz] of [
+    [0, 24],
+    [0, 20],
+    [-2, -8],
+    [-2, -11],
+    [2.6, -50],
+    [1.4, -53.4],
+  ] as [number, number][]) {
+    C.push({ t: 'wumpa', p: [wx, 1.4, wz] });
+  }
+  C.push({ t: 'crystal', p: [0, 1.5, -64] });
+  return {
+    v: 1,
+    name: 'The Overgrowth',
+    spawn: [0, 1.1, 44],
+    killY: -10,
+    components: C,
+    groups: [],
+  };
 }
 
 export function starterCustomLevel(): CustomLevelData {
@@ -879,6 +1045,7 @@ export class Level {
     else if (courseId === 5) this.buildHalfpipePark();
     else if (courseId === 6) this.buildSkyBridge();
     else if (courseId === 7) this.buildCustom();
+    else if (courseId === 8) this.buildCustom(overgrownLevel(), true);
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
     this.buildAmbient(); // theme is set by the builder above
@@ -894,29 +1061,49 @@ export class Level {
   // seat themselves on the ground (crates, enemies, checkpoints) see the
   // geometry pass's floors. Every scene object a component creates gets
   // tagged with its component index for editor picking.
-  private buildCustom(): void {
-    const data = getCustomLevelData();
+  private buildCustom(data: CustomLevelData = getCustomLevelData(), jungle = false): void {
     this.killY = data.killY;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;
-    this.theme = {
-      skyTop: '#159ecd',
-      skyBottom: '#c9f0e4',
-      sunColorHex: '#fff8dc',
-      sunU: 0.68,
-      sunV: 0.14,
-      stars: false,
-      fog: 0xbee8dd,
-      fogNear: 90,
-      fogFar: 380,
-      hemiSky: 0xeafcff,
-      hemiGround: 0x94a294,
-      hemiI: 1.2,
-      sunColor: 0xfff6dc,
-      sunI: 1.55,
-      particleColor: 0xffffff,
-      particleWind: [0.5, -0.3, 0.2],
-    };
+    this.theme = jungle
+      ? {
+          // deep-jungle corridor: low green fog closes the canopy in, warm
+          // shafts of sun, drifting spores
+          skyTop: '#175243',
+          skyBottom: '#a4cc96',
+          sunColorHex: '#fff2c0',
+          sunU: 0.32,
+          sunV: 0.2,
+          stars: false,
+          fog: 0x41604a,
+          fogNear: 55,
+          fogFar: 240,
+          hemiSky: 0xe2f4dc,
+          hemiGround: 0x39482c,
+          hemiI: 1.3,
+          sunColor: 0xfff2c0,
+          sunI: 1.5,
+          particleColor: 0xd6eda6,
+          particleWind: [0.22, -0.1, 0.08],
+        }
+      : {
+          skyTop: '#159ecd',
+          skyBottom: '#c9f0e4',
+          sunColorHex: '#fff8dc',
+          sunU: 0.68,
+          sunV: 0.14,
+          stars: false,
+          fog: 0xbee8dd,
+          fogNear: 90,
+          fogFar: 380,
+          hemiSky: 0xeafcff,
+          hemiGround: 0x94a294,
+          hemiI: 1.2,
+          sunColor: 0xfff6dc,
+          sunI: 1.55,
+          particleColor: 0xffffff,
+          particleWind: [0.5, -0.3, 0.2],
+        };
     this.spawnPos.set(data.spawn[0], data.spawn[1], data.spawn[2]);
     this.currentSpawn.copy(this.spawnPos);
 
