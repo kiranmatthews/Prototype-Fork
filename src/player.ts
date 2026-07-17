@@ -113,6 +113,7 @@ export class Player {
   private hangPose = 0;
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
+  private deckPose = 0; // 0..1: the deck is under the feet (rolling, skate airs, grinds) — legs shorten to stand ON it
   // SIDE-ON STANCE: a real skater faces 90° across the board — face and
   // belly toward the rail side, head turned to look down the line. This
   // blends the whole body into that pose whenever the board is under you
@@ -570,6 +571,7 @@ export class Player {
     this.wallrideLatched = false;
     this.wallChargeT = 0;
     this.wallridePose = 0;
+    this.deckPose = 0;
     this.wallChargePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
@@ -4772,6 +4774,11 @@ export class Player {
       (this.state === 'grind' && this.grindStyle !== 'board') ||
       (this.state === 'air' && this.airFromSkate && !this.grabbing && !this.slamActive && this.grabPose < 0.3);
     this.sidePose += ((sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
+    // Deck-stand: any time the board is glued under the feet — rolling, plain
+    // skate airs, every grind (boardslides included) — the legs shorten by the
+    // deck's height so the soles ride ON the grip instead of through it.
+    const deckOn = sideOn || this.state === 'grind';
+    this.deckPose += ((deckOn ? 1 : 0) - this.deckPose) * Math.min(1, 10 * dt);
     // Crash star jump: legs split wide, arms thrown up — held for a beat
     // after crouch/slide jumps, fading the moment you land.
     if (this.state !== 'air') this.starTimer = 0;
@@ -4829,8 +4836,12 @@ export class Player {
       // the lifted leg folds its shin under the raised thigh (prance step)
       const frontL = 1.1 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp + 0.8 * jp * Math.max(0, riseK);
       const frontR = 1.1 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp + 0.65 * jp * Math.max(0, riseK);
-      const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // front leg
-      const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + 0.85 * this.chargePose; // back leg
+      // the running-charge knee fold fades out on the board — folded knees
+      // swing the shoes forward THROUGH the deck; a board pump crouches via
+      // the torso drop instead, feet staying planted on the grip
+      const chargeBend = 0.85 * this.chargePose * (1 - sk);
+      const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
+      const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
       this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose);
       this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose);
       this.legR.rotation.x -= straight * 0.5 * stanceR;
@@ -5045,10 +5056,9 @@ export class Player {
       this.legs.scale.y = Math.max(
         0.15,
         1 -
-          0.22 * this.skatePose * (1 - this.wallridePose) - // stand ON the deck top, not through it (wallride keeps its own tuck)
+          0.22 * this.deckPose * (1 - this.wallridePose) - // stand ON the deck top, not through it (wallride keeps its own tuck)
           0.5 * this.grabPose -
           0.4 * flipTuck -
-          0.21 * this.chargePose * this.skatePose - // rolling charge crouch (0.43 total with the deck-stand term)
           0.45 * this.crawlPose -
           0.25 * this.slidePose -
           0.28 * this.wallridePose - // knees bent tucking the board onto the wall
