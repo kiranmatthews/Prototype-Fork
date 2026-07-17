@@ -1,9 +1,11 @@
-// Keyboard + Gamepad API input, merged into one snapshot per frame.
-// DualShock 4 exposes the browser "standard" mapping:
+// Keyboard + Gamepad API + touch overlay input, merged into one snapshot per
+// frame. DualShock 4 exposes the browser "standard" mapping:
 //   buttons[0] = Cross (X), buttons[1] = Circle, buttons[2] = Square,
 //   buttons[3] = Triangle, buttons[8] = Share (reset), buttons[9] = Options
 //   (pause), buttons[12..15] = d-pad,
 //   axes[0/1] = left stick.
+
+import { TouchControls } from './touch';
 
 export class Input {
   // ALL directional input is digital: -1, 0, or +1. Analog sticks are
@@ -31,6 +33,7 @@ export class Input {
   gamepadName = 'no controller';
 
   private keys = new Set<string>();
+  private touch = new TouchControls();
   private prevJump = false;
   private prevGrind = false;
   private prevSpin = false;
@@ -114,6 +117,22 @@ export class Input {
       transfer = transfer || !!pad.buttons[7]?.pressed; // R2 = spine transfer
       restart = restart || !!pad.buttons[8]?.pressed; // Share = reset
       pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
+    }
+
+    // Touch overlay merges like a second gamepad: the D-pad only speaks when
+    // touched, and edge flags fall out of the shared prev* comparison below.
+    const tc = this.touch;
+    if (tc.enabled) {
+      if (tc.moveX !== 0 || tc.moveY !== 0) {
+        moveX = tc.moveX;
+        moveY = tc.moveY;
+      }
+      jump = jump || tc.jumpHeld;
+      grab = grab || tc.grabHeld;
+      spin = spin || tc.spinHeld;
+      grind = grind || tc.grindHeld;
+      transfer = transfer || tc.transferActive(); // R2 = the upward swipe
+      if (this.gamepadName === 'no controller') this.gamepadName = 'touch';
     }
 
     // Clamp the combined vector to unit length (keyboard diagonals become
