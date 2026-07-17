@@ -19,6 +19,7 @@ export const TUNING = {
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
+  doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate speed settles back to cruiseSpeed after releasing X
@@ -179,6 +180,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   flipHoldTime: { min: 0, max: 0.6, step: 0.02 },
   doubleJump: { min: 0, max: 1, step: 1 },
+  doubleJumpWindow: { min: 0.1, max: 1.5, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
@@ -272,6 +274,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'The roll-jump gate: a direction held at least this long GOING INTO an on-foot jump triggers the forward somersault (Crash rules). Jumping neutral and only steering mid-air never rolls. 0 = every moving jump rolls; raise it to demand a longer committed run-up.',
   doubleJump:
     'DOUBLE JUMP: a fresh X press mid-air pops a second, smaller jump (quick-tap height) — one per air, re-armed by any ground or rail contact. Hangs, slams, and grabs own their airs and never double-jump.',
+  doubleJumpWindow:
+    'How LATE into the air the double jump can still fire, in seconds since leaving the ground. Short = the tap must come right after takeoff (a deliberate skill window); long = you can save yourself at the last moment of a fall.',
   chargeBoost:
     'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
   cruiseSpeed:
@@ -443,7 +447,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'riseGravity', 'fallGravity', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'airControl'],
   },
   {
     title: 'SKATING',

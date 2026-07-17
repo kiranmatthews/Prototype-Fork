@@ -139,6 +139,7 @@ export class Player {
   private dirHoldT = 0; // seconds a direction has been held (roll-jump trigger)
   private airJumpUsed = false; // double jump: one extra pop per air
   private airTapT = 0; // double jump tap timer: armed on press, dies if held (that's a charge)
+  private airborneT = 0; // seconds since leaving the ground — gates how LATE a double can fire
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
   private lastVelX = 0; // measured horizontal velocity last step (u/s) —
@@ -780,7 +781,12 @@ export class Player {
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
     // touching down mid-somersault cuts it — Crash lands upright, no carry-over tumble
     this.flipTimer = this.grounded ? 0 : Math.max(0, this.flipTimer - dt);
-    if (this.grounded || this.state === 'grind') this.airJumpUsed = false; // double jump re-arms on any contact
+    if (this.grounded || this.state === 'grind') {
+      this.airJumpUsed = false; // double jump re-arms on any contact
+      this.airborneT = 0; // the double-jump window clock starts at takeoff
+    } else {
+      this.airborneT += dt;
+    }
     // The roll-jump gate: how long a direction has been HELD going into a
     // jump. Steering only after takeoff never rolls — this is read AT launch.
     this.dirHoldT = Math.hypot(input.moveX, input.moveY) > 0.5 ? this.dirHoldT + dt : 0;
@@ -2217,6 +2223,7 @@ export class Player {
     // slams, and grabs own their airs; the coyote window keeps priority.
     if (
       TUNING.doubleJump > 0.5 &&
+      this.airborneT <= TUNING.doubleJumpWindow && // only this early into the air
       !this.airFromSkate &&
       this.coyoteTimer <= 0 &&
       !this.vertAir &&
