@@ -119,7 +119,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
 const CRATE_KINDS = ['wood', 'bouncy', 'metalbounce', 'nitro', 'tnt', 'mask', 'mystery', 'bang', 'nitrobang'] as const;
 
 // components that grow draggable resize handles on double-click
-const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'pipe', 'enemy', 'pendulum']);
+const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'pipe', 'enemy', 'pendulum']);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
 // and `apply` rewrites the component from its grab-time snapshot given the
