@@ -66,7 +66,7 @@ export class TouchControls {
   // every live right-hand pointer: which button it holds + swipe bookkeeping
   private rightTouches = new Map<
     number,
-    { btn: BtnDef['key'] | null; x0: number; y0: number; t0: number; swiped: boolean }
+    { btn: BtnDef['key'] | null; x0: number; y0: number; t0: number; swiped: boolean; onBtn: boolean }
   >();
 
   constructor() {
@@ -207,12 +207,17 @@ export class TouchControls {
 
     const down = (e: PointerEvent): void => {
       this.rightTouches.set(e.pointerId, {
-        btn: this.nearestBtn(e.clientX, e.clientY, 1.9),
+        btn: this.nearestBtn(e.clientX, e.clientY, 2.1),
         x0: e.clientX,
         y0: e.clientY,
         t0: performance.now(),
         swiped: false,
+        onBtn: false,
       });
+      const t = this.rightTouches.get(e.pointerId)!;
+      // a touch that STARTS on a button is a button press, full stop — it can
+      // never turn into an R2 swipe, so circle presses don't fight the flick
+      t.onBtn = t.btn !== null;
       this.capture(zone, e);
       this.refreshButtons();
       e.preventDefault();
@@ -221,8 +226,9 @@ export class TouchControls {
       const t = this.rightTouches.get(e.pointerId);
       if (!t) return;
       e.preventDefault();
-      if (!t.swiped) {
-        // R2: a quick, clearly-vertical upward flick anywhere on the right half
+      if (!t.swiped && !t.onBtn) {
+        // R2: a quick, clearly-vertical upward flick from EMPTY right-half
+        // space (touches that began on a button are excluded above)
         const rise = t.y0 - e.clientY;
         const dt = performance.now() - t.t0;
         if (
@@ -314,8 +320,8 @@ export class TouchControls {
       .tc-pad {
         position: absolute; left: 50%;
         bottom: max(6px, calc(env(safe-area-inset-bottom) - 24px));
-        width: min(38vw, 190px); height: min(38vw, 190px);
-        transform: translateX(-50%); pointer-events: none;
+        width: min(39vw, 195px); height: min(39vw, 195px);
+        transform: translateX(-44%); pointer-events: none;
       }
       .tc-hub {
         position: absolute; left: 34%; top: 34%; width: 32%; height: 32%;
@@ -340,10 +346,14 @@ export class TouchControls {
       .tc-a-down { left: 33%; bottom: 0; border-radius: 12% 12% 30% 30%; }
       .tc-a-left { left: 0; top: 33%; border-radius: 30% 12% 12% 30%; }
       .tc-a-right { right: 0; top: 33%; border-radius: 12% 30% 30% 12%; }
+      /* mirror of .tc-pad: the two groups sit side by side, equal size, at
+         the same height — pulled slightly inboard so the circle button
+         never crowds the screen edge */
       .tc-cluster {
-        position: absolute; right: 50%; bottom: calc(58px + env(safe-area-inset-bottom));
-        width: min(40vw, 200px); height: min(40vw, 200px);
-        transform: translateX(50%); pointer-events: none;
+        position: absolute; right: 50%;
+        bottom: max(6px, calc(env(safe-area-inset-bottom) - 24px));
+        width: min(39vw, 195px); height: min(39vw, 195px);
+        transform: translateX(44%); pointer-events: none;
       }
       .tc-btn {
         position: absolute; width: 44%; height: 44%;
