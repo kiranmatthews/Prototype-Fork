@@ -390,8 +390,7 @@ export class TouchControls {
       body.tc-on .hud-icon-gem { width: 21px; height: 16px; }
       body.tc-on .hud-relics { gap: 6px; }
       body.tc-on .hud-scoreplate {
-        left: auto; right: 42px; top: calc(max(8px, env(safe-area-inset-top)) + 38px);
-        transform: none; padding: 1px 10px 3px; border-width: 2px; border-radius: 8px;
+        right: 42px; top: calc(max(8px, env(safe-area-inset-top)) + 38px);
       }
       body.tc-on .hud-scorelabel { font-size: 9px; letter-spacing: 3px; }
       body.tc-on .hud-scorenum { font-size: 17px; letter-spacing: 2px; }

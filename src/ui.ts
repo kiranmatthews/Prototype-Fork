@@ -40,6 +40,8 @@ export class UI {
   private msgSub: HTMLElement;
   private msgWrap: HTMLElement;
   private flashEl: HTMLElement;
+  private fadeEl: HTMLElement;
+  private fadeTimer: number | null = null;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -247,6 +249,7 @@ export class UI {
     this.msgWrap.appendChild(this.msgSub);
     this.msgWrap.style.display = 'none';
     this.flashEl = div('hud-flash');
+    this.fadeEl = div('hud-fade'); // death blackout curtain
 
     // Build stamp: baked at compile time. If a playtest doesn't show a
     // change, check this first — it answers "which build am I running?".
@@ -346,7 +349,7 @@ export class UI {
     this.recBadge.textContent = '● REC';
     this.recBadge.style.display = 'none';
 
-    for (const el of [this.msgWrap, this.flashEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
+    for (const el of [this.msgWrap, this.flashEl, this.fadeEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
       document.body.appendChild(el);
     }
   }
@@ -608,6 +611,25 @@ export class UI {
     });
   }
 
+  // Death curtain: fade to black on the way out; on respawn hold the black a
+  // beat (the world teleports behind it), then reveal the checkpoint.
+  deathFade(out: boolean): void {
+    if (this.fadeTimer !== null) {
+      clearTimeout(this.fadeTimer);
+      this.fadeTimer = null;
+    }
+    if (out) {
+      this.fadeEl.style.transition = 'opacity 0.4s ease';
+      this.fadeEl.style.opacity = '1';
+    } else {
+      this.fadeTimer = window.setTimeout(() => {
+        this.fadeTimer = null;
+        this.fadeEl.style.transition = 'opacity 0.55s ease';
+        this.fadeEl.style.opacity = '0';
+      }, 280);
+    }
+  }
+
   private sliderRow(key: TuningKey): HTMLElement {
     const range = TUNING_RANGES[key];
     const wrap = div('hud-slider');
@@ -825,24 +847,21 @@ export class UI {
         100% { transform: skewX(-6deg) scale(1); }
       }
 
-      /* score plate: dark marquee — layered metal gradient, 1px top
-         highlight, gold digits over a soft drop */
+      /* score: bare gold digits under the lives counter, top-right — the
+         heavy text outline reads on any background, no plate needed */
       .hud-scoreplate {
-        position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
-        z-index: 10; pointer-events: none; text-align: center;
-        background: linear-gradient(180deg, #333a4e 0%, #1b202e 55%, #12151f 100%);
-        border: 3px solid #05070c; border-radius: 12px; padding: 4px 30px 6px;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.28),
-          inset 0 -8px 14px rgba(0,0,0,0.45), 0 5px 14px rgba(0,0,0,0.5);
+        /* tucked right under the lives face, whatever size the vh clamp gives it */
+        position: fixed; top: calc(16px + clamp(52px, 9.5vh, 84px) + 4px); right: 40px;
+        z-index: 10; pointer-events: none; text-align: right;
       }
       .hud-scorelabel {
-        font: italic bold clamp(13px, 2.2vh, 20px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 5px;
+        font: italic bold clamp(10px, 1.7vh, 14px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px;
         color: #ffd24a; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.75);
       }
       .hud-scorenum {
-        font: italic 900 clamp(32px, 5.5vh, 50px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 4px;
+        font: italic 900 clamp(20px, 3.6vh, 32px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 2px;
         color: #ffe9b0;
         text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
           0 -2px 0 #3a1c05, 0 4px 8px rgba(0, 0, 0, 0.6);
@@ -912,6 +931,11 @@ export class UI {
       .hud-msg-sub { font: 16px ui-monospace, Menlo, Consolas, monospace; margin-top: 8px; color: #cfe3d8; }
       .hud-flash {
         position: fixed; z-index: 12; inset: 0; background: #a3202a;
+        opacity: 0; pointer-events: none;
+      }
+      /* death blackout: above the HUD, below the GAME OVER text */
+      .hud-fade {
+        position: fixed; z-index: 19; inset: 0; background: #000;
         opacity: 0; pointer-events: none;
       }
       .hud-death {

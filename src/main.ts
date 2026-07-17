@@ -505,10 +505,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'F9') toggleVideo(); // playtest capture: canvas -> .webm
 });
 
-player.onDeath = () => {
-  ui.flash();
-  ui.showMessage('WIPEOUT!', '', 800);
-};
+player.onDeath = () => ui.deathFade(true);
 player.onRelic = (title, sub) => ui.showMessage(title, sub, 1400);
 player.onFinish = (time) => {
   // the gate tallies the collectathon haul alongside the clear time
@@ -525,6 +522,7 @@ player.onFinish = (time) => {
 player.onRespawn = () => {
   ui.hideMessage();
   ui.showDeathScreen(false);
+  ui.deathFade(false); // world's back in place behind the black — reveal it
 };
 player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
 player.onGameOver = () => ui.showDeathScreen(true);
@@ -650,8 +648,12 @@ function updateCamera(dt: number): void {
   // The boulder shot keeps its authored full-follow.
   const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * TUNING.camDist;
   const maxRise = THREE.MathUtils.clamp(frameHalf * 1.5, 1.5, 7);
+  // No floor below = this fall ends in the void: the rig HOLDS its height
+  // instead of chasing the body down (and clipping through the level floor).
+  // A rising jump over the gap can still lift it via the maxRise term.
   const floorY = player.groundBelowY;
-  const anchorGoal = Math.max(floorY ?? player.pos.y, player.pos.y - maxRise);
+  const anchorGoal =
+    floorY !== null ? Math.max(floorY, player.pos.y - maxRise) : Math.max(camAnchorY, player.pos.y - maxRise);
   camAnchorY += (anchorGoal - camAnchorY) * Math.min(1, 4.5 * dt);
   // camAirLift: how much the rig rides UP with airborne height. 1 = classic
   // full-follow (the camera rises with the jump, so airs read small and snappy
@@ -706,9 +708,13 @@ function updateCamera(dt: number): void {
     12, // boulder: aim well down-course, hero floats high with lead room below
     boulderF,
   );
+  // the tilt glances down at a body below the anchor but never dives after a
+  // long kill-plane fall — past a couple units the aim just lets them drop out
   lookPoint.set(
     player.pos.x - camF.x * aimK,
-    effY + (player.pos.y - effY) * tiltTrack + THREE.MathUtils.lerp(aimY, 1.6, boulderF),
+    effY +
+      Math.max(-2.5, (player.pos.y - effY) * tiltTrack) +
+      THREE.MathUtils.lerp(aimY, 1.6, boulderF),
     player.pos.z - camF.z * aimK,
   );
   if (Number.isNaN(aimSmooth.x)) aimSmooth.copy(lookPoint);
@@ -843,7 +849,9 @@ function frame(): void {
     acc -= CONST.fixedStep;
   }
 
-  updateCamera(dt);
+  // hold the last shot through the death blackout — no drifting after the
+  // corpse; the respawn teleport re-snaps the rig when play resumes
+  if (player.state !== 'dead' && player.state !== 'gameover') updateCamera(dt);
   updateAudio(dt);
   sky.position.copy(camera.position);
 
