@@ -2251,8 +2251,10 @@ export class Player {
         this.airTapT = 0;
         this.airJumpUsed = true;
         this.vVel = TUNING.jumpMinVelocity;
-        this.flipTimer = 0; // snap out of a somersault into the fresh pop
-        this.starTimer = 0.25; // spread-eagle flash so the double reads
+        // the second pop IS a somersault — restart the tumble fresh so the
+        // double reads (replaces the old spread-eagle flash)
+        this.flipTimer = CONST.frontFlip ? CONST.flipDuration : 0;
+        this.starTimer = 0; // the flip owns the pose — no star overlap
         this.lastJumpType = 'Double Jump';
         sfx.play('footstep2', 0.6, 1.8);
       }
