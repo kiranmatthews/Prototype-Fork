@@ -140,6 +140,7 @@ export class Player {
   private airJumpUsed = false; // double jump: one extra pop per air
   private airTapT = 0; // double jump tap timer: armed on press, dies if held (that's a charge)
   private airborneT = 0; // seconds since leaving the ground — gates how LATE a double can fire
+  private launchVy = 0; // vertical pop this air started with — scales the double-jump window
   private skateCharge = 0; // commit meter: time X has been held WITH a direction
   private lastPlanar = 0; // measured ground speed last step, any direction
   private lastVelX = 0; // measured horizontal velocity last step (u/s) —
@@ -785,6 +786,9 @@ export class Player {
       this.airJumpUsed = false; // double jump re-arms on any contact
       this.airborneT = 0; // the double-jump window clock starts at takeoff
     } else {
+      // first airborne frame records the pop that launched this air, so the
+      // double-jump window can scale with the jump's actual size
+      if (this.airborneT === 0) this.launchVy = Math.max(0, this.vVel);
       this.airborneT += dt;
     }
     // The roll-jump gate: how long a direction has been HELD going into a
@@ -2221,9 +2225,19 @@ export class Player {
     // back up mid-air), and that must never pop — so the double fires on
     // the release of a sub-0.2s press, not on the press itself. Hangs,
     // slams, and grabs own their airs; the coyote window keeps priority.
+    // The window SCALES with the jump: doubleJumpWindow is the allowance on a
+    // FULL-CHARGE jump, and each air multiplies it by its launch pop relative
+    // to that (arrow-crate boosts get longer, quick taps shorter). A plain
+    // walk-off fall launches with no pop — it keeps the base window so ledge
+    // saves still work.
+    const djWindow =
+      TUNING.doubleJumpWindow *
+      (this.launchVy > 1
+        ? THREE.MathUtils.clamp(this.launchVy / Math.max(TUNING.jumpVelocity, 1), 0.3, 2)
+        : 1);
     if (
       TUNING.doubleJump > 0.5 &&
-      this.airborneT <= TUNING.doubleJumpWindow && // only this early into the air
+      this.airborneT <= djWindow && // only this early into the air
       !this.airFromSkate &&
       this.coyoteTimer <= 0 &&
       !this.vertAir &&

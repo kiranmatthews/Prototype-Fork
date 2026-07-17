@@ -705,10 +705,11 @@ export class UI {
         padding: 8px 10px; border-radius: 8px;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.45);
       }
-      .hud-stats { min-width: 230px; }
+      .hud-stats { min-width: 230px; max-width: 330px; }
       .hud-tuning { width: 250px; max-height: calc(100vh - 60px); overflow-y: auto; }
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
-      .hud-levelrow { display: flex; gap: 4px; margin-bottom: 6px; }
+      .hud-levelrow { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+      .hud-levelrow .hud-levelbtn { flex: 1 1 auto; }
       .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-capbadge {
         position: fixed; top: 10px; left: 50%; transform: translateX(-50%);

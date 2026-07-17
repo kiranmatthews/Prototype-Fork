@@ -2482,7 +2482,8 @@ export class Editor {
     } else if (c.t === 'crumble') {
       sizeRow(0, 'width');
       sizeRow(2, 'depth');
-      num('shake', () => c.shake ?? 0.7, (v) => (c.shake = Math.max(0, v)), 0.1);
+      num('fall delay', () => c.shake ?? 0.7, (v) => (c.shake = Math.max(0, v)), 0.1);
+      num('fall speed', () => c.speed ?? 30, (v) => (c.speed = Math.max(2, v)), 5);
       num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       colorRow();
     } else if (c.t === 'ramp') {

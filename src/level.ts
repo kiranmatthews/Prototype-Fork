@@ -66,6 +66,7 @@ interface Crumble {
   t: number;
   regen: number | null; // seconds until it comes back; null = only on reset
   shakeTime: number; // seconds of shaking before it drops (near-0 = breaks on landing)
+  fallSpeed: number; // how hard it drops once it goes (accel, world units/s²) — 30 is the classic tumble
   yaw: number; // resting spin (radians) — restored after the tumble-and-regrow animation
 }
 
@@ -190,7 +191,7 @@ export interface CustomComponent {
     | 'wall' // solid barrier: p = base center, s = [w,h,d]; invisible = collider only (ghost in the editor)
     | 'rail' // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z)
     | 'pipe' // halfpipe: p = trough center at ground, len along its axis, axis 'z'|'x'
-    | 'crumble' // breakaway pad: p = top center, s = [w,-,d], shake = seconds before it drops (0.02 = instant)
+    | 'crumble' // breakaway pad: p = top center, s = [w,-,d], shake = fall delay in seconds (0.02 = instant), speed = fall accel (default 30)
     | 'pit' // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d]
     | 'crate' // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
     | 'metal' // unbreakable steel crate: solid terrain, spin/slam-proof
@@ -1250,6 +1251,7 @@ export class Level {
         p: [r2(cr.base.x), r2(cr.base.y + 0.25), r2(cr.base.z)],
         s: [r2(gp.width), 1, r2(gp.depth)],
         shake: r2(cr.shakeTime),
+        speed: cr.fallSpeed !== 30 ? r2(cr.fallSpeed) : undefined,
         yaw: cr.yaw ? Math.round(THREE.MathUtils.radToDeg(cr.yaw)) : undefined,
         ...matInfo(cr.mesh),
       });
@@ -1904,7 +1906,7 @@ export class Level {
           } else if (c.t === 'crumble') {
             const s = c.s ?? [3, 1, 3];
             const col = c.color ? new THREE.Color(c.color).getHex() : undefined;
-            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col, c.yaw ?? 0, c.tex ?? 'wood');
+            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col, c.yaw ?? 0, c.tex ?? 'wood', c.speed ?? 30);
           } else if (c.t === 'crate') {
             const gids = groupChainOf(c, data);
             // sharing a group with a '!' switch ghosts the crate until the
@@ -2227,10 +2229,12 @@ export class Level {
           if (Math.abs(c.base.z - this.playerPos.z) < 45) sfx.play('crunch', 0.45, 0.9);
         }
       } else if (c.state === 'fall') {
-        c.mesh.position.y -= 30 * c.t * dt;
+        c.mesh.position.y -= c.fallSpeed * c.t * dt;
         c.mesh.rotation.x += 1.6 * dt;
         c.mesh.rotation.z += 0.9 * dt;
-        if (c.t > 1.1) {
+        // vanish once it has tumbled well out of sight (distance-based so a
+        // slow faller stays visible all the way down); time cap catches speed ~0
+        if (c.base.y - c.mesh.position.y > 18 || c.t > 8) {
           c.state = 'gone';
           c.t = 0;
           c.mesh.visible = false;
@@ -3649,6 +3653,7 @@ export class Level {
     color = 0xa8845c,
     yawDeg = 0,
     tex = 'wood',
+    fallSpeed = 30,
   ): Crumble {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, 0.5, d),
@@ -3660,7 +3665,7 @@ export class Level {
     mesh.userData.crumbleId = this.crumbles.length;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-    const c: Crumble = { mesh, base: mesh.position.clone(), state: 'idle', t: 0, regen, shakeTime, yaw: mesh.rotation.y };
+    const c: Crumble = { mesh, base: mesh.position.clone(), state: 'idle', t: 0, regen, shakeTime, fallSpeed, yaw: mesh.rotation.y };
     this.crumbles.push(c);
     return c;
   }

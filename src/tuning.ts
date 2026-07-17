@@ -275,7 +275,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   doubleJump:
     'DOUBLE JUMP: a fresh X press mid-air pops a second, smaller jump (quick-tap height) — one per air, re-armed by any ground or rail contact. Hangs, slams, and grabs own their airs and never double-jump.',
   doubleJumpWindow:
-    'How LATE into the air the double jump can still fire, in seconds since leaving the ground. Short = the tap must come right after takeoff (a deliberate skill window); long = you can save yourself at the last moment of a fall.',
+    'How LATE into the air the double jump can still fire — seconds since takeoff for a FULL-CHARGE jump. The window scales with each air\'s launch power: bigger pops (arrow crates, crate bounces) earn proportionally more time, quick taps less, and a plain walk-off fall keeps the base value so ledge saves still work. Short = a right-after-takeoff skill window; long = last-moment saves.',
   chargeBoost:
     'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
   cruiseSpeed:
