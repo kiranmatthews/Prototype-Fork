@@ -2170,6 +2170,56 @@ export class Editor {
     return row;
   }
 
+  // Rotate the whole selection 90° about its center — the way you turn a
+  // stretch of course sideways for a side-scroll zone. Positions orbit the
+  // pivot; yaw-capable items add the turn; drawn shapes rotate their node
+  // coordinates; pipes flip axis; zones swap footprint AND remap their
+  // travel direction so the side-scroll follows the rotated geometry.
+  private rotateSelection(deg: 90 | -90): void {
+    const comps = this.sel.map((i) => this.data.components[i]);
+    if (comps.length === 0) return;
+    let cx = 0;
+    let cz = 0;
+    for (const c of comps) {
+      cx += c.p[0];
+      cz += c.p[2];
+    }
+    cx /= comps.length;
+    cz /= comps.length;
+    // R(+90) about +Y sends (x, z) -> (z, -x); R(-90) sends it to (-z, x) —
+    // the same transform three.js applies for rotation.y, so positions and
+    // per-item yaw stay in perfect agreement.
+    const rot = (x: number, z: number): [number, number] =>
+      deg === 90 ? [z, -x] : [-z, x];
+    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'pit']);
+    for (const c of comps) {
+      const [rx, rz] = rot(c.p[0] - cx, c.p[2] - cz);
+      c.p = [Math.round((cx + rx) * 100) / 100, c.p[1], Math.round((cz + rz) * 100) / 100];
+      if (c.pts) {
+        c.pts = c.pts.map((pt) => {
+          const [nx, nz] = rot(pt[0], pt[1]);
+          const out = [...pt] as typeof pt;
+          out[0] = Math.round(nx * 100) / 100;
+          out[1] = Math.round(nz * 100) / 100;
+          return out;
+        });
+      } else if (c.t === 'pipe') {
+        c.axis = (c.axis ?? 'z') === 'z' ? 'x' : 'z';
+      } else if (c.t === 'zone') {
+        if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
+        const map: Record<'E' | 'W' | 'N' | 'S', 'E' | 'W' | 'N' | 'S'> =
+          deg === 90 ? { W: 'N', N: 'E', E: 'S', S: 'W' } : { E: 'N', N: 'W', W: 'S', S: 'E' };
+        c.dir = map[c.dir ?? 'E'];
+      } else if (c.t === 'crusher') {
+        if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
+      } else if (yawable.has(c.t)) {
+        c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
+      }
+    }
+    this.commit();
+    this.renderProps();
+  }
+
   private numRow(label: string, get: () => number, set: (v: number) => void, step = 0.5): HTMLElement {
     const row = document.createElement('div');
     row.className = 'ed-row';
@@ -2233,6 +2283,8 @@ export class Editor {
       };
       mkBtn('copy ⌘C', () => this.copySelected());
       mkBtn('duplicate ⌘D', () => this.duplicateSelected());
+      mkBtn('rotate ⟲ 90°', () => this.rotateSelection(90));
+      mkBtn('rotate ⟳ 90°', () => this.rotateSelection(-90));
       mkBtn('group ⌘G', () => this.groupSelection());
       if (this.sel.some((i) => this.chainOf(i).length > 0)) {
         mkBtn('ungroup ⌘⇧G', () => this.ungroupSelection());
@@ -2456,10 +2508,17 @@ export class Editor {
       const dirBtn = document.createElement('button');
       dirBtn.className = 'ed-btn';
       const dirLabel = (d: string): string =>
-        d === 'E' ? 'side-scroll → (east)' : d === 'W' ? 'side-scroll ← (west)' : 'run AT the camera';
+        d === 'E'
+          ? 'side-scroll → (east)'
+          : d === 'W'
+            ? 'side-scroll ← (west)'
+            : d === 'N'
+              ? 'run AT the camera'
+              : 'normal corridor (south)';
       dirBtn.textContent = dirLabel(c.dir ?? 'E');
       dirBtn.addEventListener('click', () => {
-        c.dir = (c.dir ?? 'E') === 'E' ? 'W' : c.dir === 'W' ? 'N' : 'E';
+        const cycle: Record<string, 'E' | 'W' | 'N' | 'S'> = { E: 'W', W: 'N', N: 'S', S: 'E' };
+        c.dir = cycle[c.dir ?? 'E'];
         this.commit();
         this.renderProps();
       });

@@ -569,7 +569,7 @@ function updateCamera(dt: number): void {
   // side framing only on E/W stretches — a run-at-camera ('N') zone keeps the
   // normal corridor shot: the fixed lens IS the chase framing there
   const znHere = level.zoneAt(player.pos.x, player.pos.z);
-  const inTurn = !chaseOn && znHere !== null && znHere.dir !== 'N';
+  const inTurn = !chaseOn && znHere !== null && (znHere.dir === 'E' || znHere.dir === 'W');
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
   // Boulder-chase framing is a proper cinematographic shot, not just a further

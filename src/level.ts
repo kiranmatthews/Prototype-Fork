@@ -234,7 +234,7 @@ export interface CustomComponent {
   radius?: number; // camnode: corner radius where the camera lane turns at this node
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   tex?: string; // surface texture kind (see TEX_KINDS) for platform / ramp / wall / crumble / rock — tinted by color
-  dir?: 'E' | 'W' | 'N'; // zone: travel direction — E/W turn the course sideways (side-scroll), N runs it INTO the camera
+  dir?: 'E' | 'W' | 'N' | 'S'; // zone: travel direction — E/W turn the course sideways (side-scroll), N runs it INTO the camera, S = the normal corridor (still overrides a camera lane)
   layer?: number; // LEGACY editor layer id (folded into lk by migration)
   grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
   lk?: boolean; // editor lock: click-through, marquee-proof, edit-proof
@@ -625,7 +625,7 @@ export class Level {
   // Travel zones: rectangular regions where the course itself runs along X
   // instead of -Z (a real right-angle turn in the path). The camera never
   // yaws — the turned path is what makes those stretches side-scrolling.
-  zones: { xMin: number; xMax: number; zMin: number; zMax: number; dir: 'E' | 'W' | 'N' }[] = [];
+  zones: { xMin: number; xMax: number; zMin: number; zMax: number; dir: 'E' | 'W' | 'N' | 'S' }[] = [];
   finishBox = new THREE.Box3();
   finishZ = -1005;
   endWallZ = -1021; // authored hard stop after the finish gate
@@ -1897,6 +1897,7 @@ export class Level {
             arrow.position.set(c.p[0], c.p[1] + 1.4, c.p[2]);
             arrow.rotation.z = c.dir === 'E' ? -Math.PI / 2 : c.dir === 'W' ? Math.PI / 2 : 0;
             if (c.dir === 'N') arrow.rotation.x = Math.PI / 2; // points at the lens
+            if (c.dir === 'S') arrow.rotation.x = -Math.PI / 2; // points down-course
             arrow.visible = false;
             arrow.userData.editorGhost = true;
             this.root.add(arrow);
@@ -2016,7 +2017,7 @@ export class Level {
       .length;
   }
 
-  zoneAt(x: number, z: number): { dir: 'E' | 'W' | 'N' } | null {
+  zoneAt(x: number, z: number): { dir: 'E' | 'W' | 'N' | 'S' } | null {
     for (const zn of this.zones) {
       if (x >= zn.xMin && x <= zn.xMax && z >= zn.zMin && z <= zn.zMax) return zn;
     }
