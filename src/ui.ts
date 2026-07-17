@@ -82,6 +82,7 @@ export class UI {
   onToggleVideo: (() => void) | null = null;
   onLoadReplay: ((text: string) => void) | null = null;
   onEditorOpen: (() => void) | null = null;
+  onEditCopy: (() => void) | null = null;
   private recBtn!: HTMLButtonElement;
   private replayBadge!: HTMLElement;
   private recBadge!: HTMLElement;
@@ -114,6 +115,18 @@ export class UI {
       editBtn.blur();
     });
     statsWrap.appendChild(editBtn);
+    // Any built-in level can be CAPTURED into the editor as a component copy:
+    // the current level's geometry loads into the Custom slot for editing
+    // (the previous custom level is backed up first).
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'hud-levelbtn hud-editbtn';
+    copyBtn.textContent = '⧉ EDIT A COPY OF THIS LEVEL';
+    copyBtn.title = 'capture the current level into the editor (custom slot is backed up)';
+    copyBtn.addEventListener('click', () => {
+      if (this.onEditCopy) this.onEditCopy();
+      copyBtn.blur();
+    });
+    statsWrap.appendChild(copyBtn);
 
 
     const stats = div('hud-statlines');

@@ -3,7 +3,7 @@
 
 import * as THREE from 'three';
 import { Input } from './input';
-import { Level, LEVEL_NAMES } from './level';
+import { Level, LEVEL_NAMES, setCustomLevelData } from './level';
 import { Player } from './player';
 import { UI } from './ui';
 import { TUNING, CONST } from './tuning';
@@ -349,6 +349,25 @@ function openEditor(): void {
   editor.enter();
 }
 ui.onEditorOpen = openEditor;
+// EDIT A COPY: capture whatever level is loaded into editor components and
+// open the editor on it. The previous custom level is backed up so nothing
+// is silently lost. Bespoke set pieces without a component language
+// (boulder chase, side-scroll zones, sky-ropes, decor foliage) don't come
+// through — the copy is the editable geometry.
+ui.onEditCopy = () => {
+  const wasBuiltIn = currentCourse !== 7;
+  if (wasBuiltIn) {
+    const data = level.captureData();
+    const prev = localStorage.getItem('protoCustomLevel');
+    if (prev) localStorage.setItem('protoCustomLevelBackup', prev);
+    localStorage.setItem('protoCustomLevel', JSON.stringify(data));
+    setCustomLevelData(data);
+  }
+  openEditor();
+  if (wasBuiltIn) {
+    ui.showMessage('EDITING A COPY', `${level.name} → custom slot (previous custom backed up)`, 2600);
+  }
+};
 // Refresh-proof editing: if the page reloads mid-edit, walk straight back
 // into the editor (the camera pose is restored by Editor.enter()). Deferred
 // past module init — openEditor touches state declared further down.

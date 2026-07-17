@@ -20,6 +20,7 @@ import {
   starterCustomLevel,
   migrateCustomLevel,
   groupChainOf,
+  TEX_KINDS,
 } from './level';
 
 interface Hooks {
@@ -2144,6 +2145,29 @@ export class Editor {
   }
 
   // a labelled number field that commits on change
+  // texture dropdown: the surface-kind list shared with the game builder
+  private texRow(get: () => string | undefined, set: (v: string | undefined) => void): HTMLElement {
+    const row = document.createElement('div');
+    row.className = 'ed-row';
+    const lab = document.createElement('label');
+    lab.textContent = 'texture';
+    const sel = document.createElement('select');
+    for (const k of TEX_KINDS) {
+      const opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = k;
+      sel.appendChild(opt);
+    }
+    sel.value = get() ?? 'checker';
+    sel.addEventListener('change', () => {
+      set(sel.value === 'checker' ? undefined : sel.value);
+      this.commit();
+    });
+    row.appendChild(lab);
+    row.appendChild(sel);
+    return row;
+  }
+
   private numRow(label: string, get: () => number, set: (v: number) => void, step = 0.5): HTMLElement {
     const row = document.createElement('div');
     row.className = 'ed-row';
@@ -2270,6 +2294,15 @@ export class Editor {
         row.appendChild(lab);
         row.appendChild(input);
         this.propsEl.appendChild(row);
+        // batch texture: one pick re-surfaces the whole selection
+        this.propsEl.appendChild(
+          this.texRow(
+            () => prim.tex,
+            (v) => {
+              for (const cc of all) cc.tex = v;
+            },
+          ),
+        );
       }
       const hint = document.createElement('div');
       hint.className = 'ed-dim';
@@ -2308,6 +2341,14 @@ export class Editor {
       row.appendChild(lab);
       row.appendChild(input);
       this.propsEl.appendChild(row);
+      // TEXTURE: every paintable surface picks from the shared kind list —
+      // the tint above colors the texture, so the two knobs compose
+      this.propsEl.appendChild(
+        this.texRow(
+          () => c.tex,
+          (v) => (c.tex = v),
+        ),
+      );
     };
     // Figma-style node editing: with a shape in resize mode, grabbing a node
     // selects it and its CORNER RADIUS is editable here. Rounds the visual,
@@ -2409,6 +2450,8 @@ export class Editor {
       }
     } else if (c.t === 'pipe') {
       num('length', () => c.len ?? 36, (v) => (c.len = Math.max(6, v)), 2);
+      num('flat half', () => c.w ?? 3, (v) => (c.w = Math.max(1, v)));
+      num('wall radius', () => c.rise ?? 6, (v) => (c.rise = Math.max(2, v)));
       const axisBtn = document.createElement('button');
       axisBtn.className = 'ed-btn';
       axisBtn.textContent = `axis: along ${c.axis ?? 'z'}`;
@@ -2604,7 +2647,7 @@ export class Editor {
       .ed-test { width: 100%; margin-top: 10px; color: #58e08a; font-weight: bold; padding: 8px; }
       .ed-row { display: grid; grid-template-columns: 80px 1fr; gap: 6px; align-items: center; margin: 3px 0; }
       .ed-row label { color: #9fb0c8; }
-      .ed-row input, .ed-select {
+      .ed-row input, .ed-row select, .ed-select {
         width: 100%; font: 11px ui-monospace, Menlo, Consolas, monospace;
         background: #10141e; color: #d5e0f0; border: 1px solid #3a4152;
         border-radius: 4px; padding: 3px 5px;

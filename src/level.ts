@@ -231,11 +231,29 @@ export interface CustomComponent {
   pts?: ([number, number] | [number, number, number] | [number, number, number, number])[];
   radius?: number; // camnode: corner radius where the camera lane turns at this node
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
+  tex?: string; // surface texture kind (see TEX_KINDS) for platform / ramp / wall / crumble / rock — tinted by color
   layer?: number; // LEGACY editor layer id (folded into lk by migration)
   grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
   lk?: boolean; // editor lock: click-through, marquee-proof, edit-proof
   nm?: string; // editor display name (outliner rename)
 }
+
+// Every paintable surface kind the texture system offers. The editor's
+// texture dropdown is built from this list; 'checker' is the classic default.
+export const TEX_KINDS = [
+  'checker',
+  'grass',
+  'jungle',
+  'moss',
+  'dirt',
+  'sand',
+  'stone',
+  'wood',
+  'plank',
+  'pavement',
+  'asphalt',
+  'metal',
+] as const;
 
 // LEGACY: the old named-layer containers. Migration folds their locks into
 // per-component lk flags; the outliner (items + groups) replaced them.
@@ -319,9 +337,9 @@ function overgrownLevel(): CustomLevelData {
   const C: CustomComponent[] = [];
   // -- the dirt path: three organic decks with the two pits as true gaps
   const dirt = '#8a6a3f';
-  C.push({ t: 'platform', p: [0, 0, 31], s: [1, 1, 1], pts: blob(10, 15.5), color: dirt });
-  C.push({ t: 'platform', p: [0, 0, -14], s: [1, 1, 1], pts: blob(10, 14.5), color: dirt });
-  C.push({ t: 'platform', p: [0, 0, -60], s: [1, 1, 1], pts: blob(12.5, 14.5), color: '#7d6038' });
+  C.push({ t: 'platform', p: [0, 0, 31], s: [1, 1, 1], pts: blob(10, 15.5), color: dirt, tex: 'dirt' });
+  C.push({ t: 'platform', p: [0, 0, -14], s: [1, 1, 1], pts: blob(10, 14.5), color: dirt, tex: 'dirt' });
+  C.push({ t: 'platform', p: [0, 0, -60], s: [1, 1, 1], pts: blob(12.5, 14.5), color: '#7d6038', tex: 'jungle' });
   // -- PIT ONE: the corridor gap, crossed by a narrow orange truss beam.
   // Pool sits a unit below the decks so the kill band can never reach feet
   // standing on an overlapping deck rim — and the hole reads DEEP.
@@ -331,9 +349,9 @@ function overgrownLevel(): CustomLevelData {
   C.push({ t: 'wall', p: [0, -1.9, 0.8], s: [19, 1.5, 0.8], color: '#33261a' });
   C.push({ t: 'wall', p: [-9.5, -1.9, 8], s: [0.8, 1.5, 13.5], color: '#33261a' });
   C.push({ t: 'wall', p: [9.5, -1.9, 8], s: [0.8, 1.5, 13.5], color: '#33261a' });
-  C.push({ t: 'platform', p: [0, 0.05, 8], s: [1.5, 0.9, 19], color: '#c47a24' }); // the beam
+  C.push({ t: 'platform', p: [0, 0.05, 8], s: [1.5, 0.9, 19], color: '#c47a24', tex: 'plank' }); // the beam
   // truss sleepers across the beam top — pure dressing, 6cm proud
-  for (const z of [3, 6, 9, 12]) C.push({ t: 'platform', p: [0, 0.53, z], s: [2.0, 0.12, 0.55], color: '#93551a' });
+  for (const z of [3, 6, 9, 12]) C.push({ t: 'platform', p: [0, 0.53, z], s: [2.0, 0.12, 0.55], color: '#93551a', tex: 'wood' });
   C.push({ t: 'rail', p: [4.6, 1.0, 8], len: 21, yaw: 0 }); // skater's line over the pit
   C.push({ t: 'metal', p: [-5.2, 0.5, 17.8, ] as [number, number, number] }); // the steel block by the drop
   for (const z of [14, 11, 8, 5, 2]) C.push({ t: 'wumpa', p: [0, 1.5, z] });
@@ -349,7 +367,7 @@ function overgrownLevel(): CustomLevelData {
     [-2.4, -42.6, 2.7],
   ];
   for (const [sx, sz, sr] of stones) {
-    C.push({ t: 'platform', p: [sx, 0, sz], s: [1, 1, 1], pts: blob(sr, sr * 0.9, 7, 0.35), color: '#84936c' });
+    C.push({ t: 'platform', p: [sx, 0, sz], s: [1, 1, 1], pts: blob(sr, sr * 0.9, 7, 0.35), color: '#84936c', tex: 'stone' });
     C.push({ t: 'wumpa', p: [sx, 1.5, sz] });
   }
   C.push({ t: 'rail', p: [6.8, 1.0, -37], len: 22, yaw: 0 }); // grind line past the stones
@@ -368,7 +386,7 @@ function overgrownLevel(): CustomLevelData {
     [0, -75, 9, 3.4, '#4a9636'],
   ];
   for (const [bx, bz, brx, brz, col] of banks) {
-    C.push({ t: 'platform', p: [bx, 0.55, bz], s: [1, 0.9, 1], pts: blob(brx, brz, 8, 0.34), color: col });
+    C.push({ t: 'platform', p: [bx, 0.55, bz], s: [1, 0.9, 1], pts: blob(brx, brz, 8, 0.34), color: col, tex: 'grass' });
   }
   // -- mossy stone walls: tall organic slabs closing the corridor in
   const wallCol = ['#66755d', '#5c6b54', '#707e66'];
@@ -384,7 +402,7 @@ function overgrownLevel(): CustomLevelData {
     [0, -79.5, 13, 3.2, 9.5],
   ];
   wallRuns.forEach(([wx, wz, wrx, wrz, wh], i) => {
-    C.push({ t: 'wall', p: [wx, 0, wz], s: [1, wh, 1], pts: blob(wrx, wrz, 8, 0.3), color: wallCol[i % 3] });
+    C.push({ t: 'wall', p: [wx, 0, wz], s: [1, wh, 1], pts: blob(wrx, wrz, 8, 0.3), color: wallCol[i % 3], tex: 'moss' });
   });
   // -- crude trees: a trunk rock wearing a canopy rock, rooted on the banks
   const trees: [number, number][] = [
@@ -394,8 +412,8 @@ function overgrownLevel(): CustomLevelData {
     [11.6, -64],
   ];
   trees.forEach(([tx, tz], i) => {
-    C.push({ t: 'rock', p: [tx, 1.2, tz], s: [1.3, 5, 1.3], seed: 40 + i, color: '#6b4a2c' });
-    C.push({ t: 'rock', p: [tx, 5.6, tz], s: [4.8, 2.2, 4.8], seed: 80 + i, color: '#3b7a32' });
+    C.push({ t: 'rock', p: [tx, 1.2, tz], s: [1.3, 5, 1.3], seed: 40 + i, color: '#6b4a2c', tex: 'wood' });
+    C.push({ t: 'rock', p: [tx, 5.6, tz], s: [4.8, 2.2, 4.8], seed: 80 + i, color: '#3b7a32', tex: 'jungle' });
   });
   // -- undergrowth: bushes + flowering plants scattered along the shoulders
   const bushes: [number, number, number][] = [
@@ -412,7 +430,7 @@ function overgrownLevel(): CustomLevelData {
   ];
   const bushCol = ['#469634', '#3a842e', '#67ad46'];
   bushes.forEach(([bx, bz, ci], i) => {
-    C.push({ t: 'rock', p: [bx, 1.35, bz], s: [1.7, 1.3, 1.7], seed: 120 + i, color: bushCol[ci] });
+    C.push({ t: 'rock', p: [bx, 1.35, bz], s: [1.7, 1.3, 1.7], seed: 120 + i, color: bushCol[ci], tex: 'jungle' });
   });
   const flowers: [number, number, string][] = [
     [-8.8, 30, '#c74e8a'],
@@ -772,7 +790,8 @@ export class Level {
     if (kind === 'checker') return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
-    const soft = kind === 'grass' || kind === 'jungle' || kind === 'dirt' || kind === 'sand' || kind === 'wood';
+    const soft =
+      kind === 'grass' || kind === 'jungle' || kind === 'dirt' || kind === 'sand' || kind === 'wood' || kind === 'moss';
     const S = soft ? 128 : 64;
     const canvas = document.createElement('canvas');
     canvas.width = S;
@@ -862,6 +881,27 @@ export class Level {
       for (let i = 0; i < 8; i++) blob(Math.random() * S, Math.random() * S, 8 + Math.random() * 10, 'rgba(140,132,86,0.2)');
       for (let i = 0; i < 14; i++) blob(Math.random() * S, Math.random() * S, 2.5 + Math.random() * 3.5, 'rgba(122,96,62,0.4)'); // pebbles
       for (let i = 0; i < 8; i++) blob(Math.random() * S, Math.random() * S, 6 + Math.random() * 9, 'rgba(255,246,220,0.32)');
+    } else if (kind === 'moss') {
+      // grown-over stonework: pale block courses drowning under soft green
+      // creep — the lush-ruin wall the jungle levels want
+      ctx.fillStyle = '#c9cfbe';
+      ctx.fillRect(0, 0, S, S);
+      for (let row = 0; row < 4; row++) {
+        const off = row % 2 === 0 ? 0 : 16;
+        for (let cx = -1; cx < 5; cx++) {
+          const v = 200 + Math.floor(Math.random() * 26);
+          ctx.fillStyle = `rgb(${v - 6},${v},${v - 14})`;
+          ctx.fillRect(cx * 32 + off + 2, row * 32 + 2, 28, 28);
+          ctx.fillStyle = 'rgba(96,108,88,0.4)';
+          ctx.fillRect(cx * 32 + off + 2, row * 32 + 26, 28, 4);
+        }
+      }
+      for (let i = 0; i < 22; i++) {
+        const g = 170 + Math.floor(Math.random() * 46);
+        blob(Math.random() * S, Math.random() * S, 9 + Math.random() * 14, `rgba(${g - 62},${g},${g - 78},0.5)`);
+      }
+      for (let i = 0; i < 8; i++) blob(Math.random() * S, Math.random() * S, 6 + Math.random() * 9, 'rgba(70,96,58,0.3)');
+      for (let i = 0; i < 6; i++) blob(Math.random() * S, Math.random() * S, 4 + Math.random() * 6, 'rgba(240,248,220,0.28)');
     } else if (kind === 'pavement') {
       // concrete: 32px slabs, expansion lines, speckle so aprons don't band
       for (let py = 0; py < 2; py++) {
@@ -977,6 +1017,7 @@ export class Level {
       : kind === 'plank' ? 3.4
       : kind === 'sand' ? 7.5
       : kind === 'dirt' ? 7
+      : kind === 'moss' ? 6
       : kind === 'pavement' ? 6
       : kind === 'asphalt' ? 8 // one paint stripe per 8u = parking bays
       : kind === 'metal' ? 3
@@ -984,6 +1025,7 @@ export class Level {
     tex.repeat.set(Math.max(1, Math.round(w / density)), Math.max(1, Math.round(d / density)));
     tex.needsUpdate = true;
     m.map = tex;
+    m.userData.texKind = kind; // capture: editing a copy of a level reads this back
     return m;
   }
 
@@ -1002,6 +1044,7 @@ export class Level {
       tex.repeat.set(rx, ry);
       tex.needsUpdate = true;
       m.map = tex;
+      m.userData.texKind = kind; // capture reads this back
     }
     this.baseMats.set(key, m);
     return m;
@@ -1057,11 +1100,248 @@ export class Level {
     return this.root;
   }
 
+  // ---- CAPTURE: any level -> editor components -----------------------------
+  // Levels built from data return their own data verbatim. Hand-coded levels
+  // are HARVESTED from the live scene after building — positions are read off
+  // the final meshes/entities, so authored shifts (the gauntlet offset) come
+  // through correct by construction. Bespoke set pieces with no component
+  // language (boulder chase, side-scroll zones, sky-ropes, movers, decor
+  // foliage, finish gates) are skipped: the copy is the editable geometry.
+  private builtFromData: CustomLevelData | null = null;
+  captureData(): CustomLevelData {
+    if (this.builtFromData) {
+      return migrateCustomLevel(JSON.parse(JSON.stringify(this.builtFromData)) as CustomLevelData);
+    }
+    const r2 = (n: number): number => Math.round(n * 100) / 100;
+    const C: CustomComponent[] = [];
+    const groups: CustomGroup[] = [];
+    const matInfo = (m: THREE.Mesh): { color?: string; tex?: string } => {
+      const mat = m.material as THREE.MeshLambertMaterial;
+      const color = mat?.color ? '#' + mat.color.getHexString() : undefined;
+      const tex = (mat?.userData?.texKind as string) || undefined;
+      return { color: color === '#ffffff' ? undefined : color, tex: tex === 'checker' ? undefined : tex };
+    };
+    const hpWalls = new Set(this.halfpipes.flatMap((hp) => hp.walls));
+    const crumbleMeshes = new Set(this.crumbles.map((c) => c.mesh));
+    // decks, ramps, step blocks, metal crates — everything standable
+    for (const m of this.groundMeshes) {
+      if (hpWalls.has(m) || crumbleMeshes.has(m)) continue;
+      if (m.userData.metalCrate) {
+        C.push({ t: 'metal', p: [r2(m.position.x), r2(m.position.y - 0.48), r2(m.position.z)] });
+        continue;
+      }
+      const geo = m.geometry as THREE.BoxGeometry;
+      const { color, tex } = matInfo(m);
+      if (geo.type === 'BoxGeometry' && (geo as THREE.BoxGeometry).parameters) {
+        const gp = (geo as THREE.BoxGeometry).parameters;
+        if (Math.abs(m.rotation.x) > 0.01) {
+          // a slope built by ramp(): invert its construction — recover the two
+          // top-surface edge lines from the rotation and the surface normal
+          const len = gp.depth;
+          const dy = Math.sin(m.rotation.x) * len;
+          const dz = -Math.cos(m.rotation.x) * len;
+          const cy = m.position.y - (dz / len) * 0.5;
+          const cz = m.position.z + (dy / len) * 0.5;
+          let z0 = cz - dz / 2, z1 = cz + dz / 2, y0 = cy - dy / 2, y1 = cy + dy / 2;
+          if (z0 < z1) {
+            [z0, z1] = [z1, z0];
+            [y0, y1] = [y1, y0];
+          }
+          C.push({
+            t: 'ramp',
+            p: [r2(m.position.x), r2(y0), r2((z0 + z1) / 2)],
+            len: r2(z0 - z1),
+            rise: r2(y1 - y0),
+            w: r2(gp.width),
+            color,
+            tex,
+          });
+        } else {
+          const yaw = Math.round(THREE.MathUtils.radToDeg(m.rotation.y)) % 360;
+          C.push({
+            t: 'platform',
+            p: [r2(m.position.x), r2(m.position.y), r2(m.position.z)],
+            s: [r2(gp.width), r2(gp.height), r2(gp.depth)],
+            yaw: yaw !== 0 ? yaw : undefined,
+            color,
+            tex,
+          });
+        }
+      } else {
+        // exotic standable (wavy jungle floors, displaced planes): flatten to
+        // the bounding box — an editable stand-in for the sculpted original
+        geo.computeBoundingBox();
+        const bb = geo.boundingBox;
+        if (!bb) continue;
+        const sy = Math.max(0.5, bb.max.y - bb.min.y);
+        C.push({
+          t: 'platform',
+          p: [
+            r2(m.position.x + (bb.min.x + bb.max.x) / 2),
+            r2(m.position.y + bb.max.y - sy / 2),
+            r2(m.position.z + (bb.min.z + bb.max.z) / 2),
+          ],
+          s: [r2(bb.max.x - bb.min.x), r2(sy), r2(bb.max.z - bb.min.z)],
+          color,
+          tex,
+        });
+      }
+    }
+    // visible walls (built by wall(); positions live off the meshes)
+    this.root.traverse((o) => {
+      const m = o as THREE.Mesh;
+      const spec = m.userData?.wallSpec as { w: number; d: number; h: number; visH: number } | undefined;
+      if (!spec) return;
+      C.push({
+        t: 'wall',
+        p: [r2(m.position.x), r2(m.position.y - spec.visH / 2), r2(m.position.z)],
+        s: [r2(spec.w), r2(spec.visH), r2(spec.d)],
+        ...matInfo(m),
+      });
+    });
+    // halfpipes, with their true profile (flat half + radius)
+    for (const hp of this.halfpipes) {
+      const along = (hp.l0 + hp.l1) / 2;
+      C.push({
+        t: 'pipe',
+        p: hp.axis === 'z' ? [r2(hp.cross), r2(hp.yBottom), r2(along)] : [r2(along), r2(hp.yBottom), r2(hp.cross)],
+        len: r2(Math.abs(hp.l1 - hp.l0)),
+        axis: hp.axis,
+        w: r2(hp.flatHalf),
+        rise: r2(hp.radius),
+      });
+    }
+    // rails — skipping halfpipe coping lines (the pipe component regrows them)
+    const isCoping = (pts: THREE.Vector3[]): boolean =>
+      this.halfpipes.some((hp) => {
+        const y = hp.lipY + 0.05;
+        return pts.every((p) => {
+          const crossV = hp.axis === 'z' ? p.x : p.z;
+          const alongV = hp.axis === 'z' ? p.z : p.x;
+          return (
+            Math.abs(p.y - y) < 0.2 &&
+            Math.abs(Math.abs(crossV - hp.cross) - hp.lipX) < 0.3 &&
+            alongV > Math.min(hp.l0, hp.l1) - 1 &&
+            alongV < Math.max(hp.l0, hp.l1) + 1
+          );
+        });
+      });
+    for (const rail of this.rails) {
+      const pts = rail.points;
+      if (pts.length < 2 || isCoping(pts)) continue;
+      const p0 = pts[0];
+      C.push({
+        t: 'rail',
+        p: [r2(p0.x), r2(p0.y), r2(p0.z)],
+        pts: pts.map((p) => [r2(p.x - p0.x), r2(p.z - p0.z), 0, r2(p.y - p0.y)] as [number, number, number, number]),
+        invisible: rail.object.children.length === 0 ? true : undefined,
+      });
+    }
+    // crumble pads
+    for (const cr of this.crumbles) {
+      const gp = (cr.mesh.geometry as THREE.BoxGeometry).parameters;
+      C.push({
+        t: 'crumble',
+        p: [r2(cr.base.x), r2(cr.base.y + 0.25), r2(cr.base.z)],
+        s: [r2(gp.width), 1, r2(gp.depth)],
+        shake: r2(cr.shakeTime),
+        yaw: cr.yaw ? Math.round(THREE.MathUtils.radToDeg(cr.yaw)) : undefined,
+        ...matInfo(cr.mesh),
+      });
+    }
+    // crates (kind read back off the entity flags; outline wiring keeps its groups)
+    const seenGroups = new Set<number>();
+    for (const cr of this.crates) {
+      const kind = cr.nitro
+        ? cr.nitroBang ? 'nitrobang' : 'nitro'
+        : cr.bouncy ? 'bouncy'
+        : cr.metalBounce ? 'metalbounce'
+        : cr.tnt ? 'tnt'
+        : cr.mask ? 'mask'
+        : cr.mystery ? 'mystery'
+        : cr.bang ? 'bang'
+        : 'wood';
+      const gids = cr.groupIds ?? [];
+      for (let gi = 0; gi < gids.length; gi++) {
+        if (!seenGroups.has(gids[gi])) {
+          seenGroups.add(gids[gi]);
+          groups.push({ id: gids[gi], parent: gids[gi + 1] });
+        }
+      }
+      C.push({
+        t: 'crate',
+        p: [r2(cr.mesh.position.x), r2(cr.mesh.position.y - 0.48), r2(cr.mesh.position.z)],
+        kind: kind === 'wood' ? 'wood' : (kind as CustomComponent['kind']),
+        outline: cr.wasOutline || undefined,
+        grp: gids[0],
+      });
+    }
+    for (const e of this.enemies) {
+      const range = r2((e.x1 - e.x0) / 2);
+      C.push(
+        e.axis === 'z'
+          ? {
+              t: 'enemy',
+              p: [r2(e.group.position.x), r2(e.group.position.y), r2((e.x0 + e.x1) / 2)],
+              range,
+              speed: r2(e.speed),
+              yaw: 90,
+            }
+          : {
+              t: 'enemy',
+              p: [r2((e.x0 + e.x1) / 2), r2(e.group.position.y), r2(e.group.position.z)],
+              range,
+              speed: r2(e.speed),
+            },
+      );
+    }
+    for (const cp of this.checkpoints) {
+      C.push({ t: 'checkpoint', p: [r2(cp.spawnPos.x), r2(cp.spawnPos.y - 0.1), r2(cp.spawnPos.z)] });
+    }
+    for (const pk of this.pickups) {
+      const y = (pk.mesh.userData.baseY as number) ?? pk.mesh.position.y;
+      C.push({ t: 'wumpa', p: [r2(pk.mesh.position.x), r2(y), r2(pk.mesh.position.z)] });
+    }
+    for (const cu of this.crushers) {
+      C.push({
+        t: 'crusher',
+        p: [r2(cu.x), r2(cu.restY - cu.h / 2), r2(cu.z)],
+        s: [r2(cu.w), r2(cu.h), r2(cu.d)],
+        cycle: r2(cu.cycle),
+        phase: r2(cu.phase),
+      });
+    }
+    for (const pe of this.pendulums) {
+      C.push({
+        t: 'pendulum',
+        p: [r2(pe.pivot.position.x), r2(pe.pivot.position.y), r2(pe.pivot.position.z)],
+        len: r2(pe.len),
+        amp: r2(pe.amp),
+        speed: r2(pe.speed),
+        phase: r2(pe.phase),
+        yaw: pe.yaw ? Math.round(THREE.MathUtils.radToDeg(pe.yaw)) : undefined,
+      });
+    }
+    if (this.crystalPickup) {
+      const p = this.crystalPickup.group.position;
+      C.push({ t: 'crystal', p: [r2(p.x), r2(p.y), r2(p.z)] });
+    }
+    return {
+      v: 1,
+      name: `${this.name} (copy)`,
+      spawn: [r2(this.spawnPos.x), r2(this.spawnPos.y), r2(this.spawnPos.z)],
+      killY: r2(this.killY),
+      components: C,
+      groups,
+    };
+  }
+
   // CUSTOM: build the editor's level from data. Two passes so entities that
   // seat themselves on the ground (crates, enemies, checkpoints) see the
   // geometry pass's floors. Every scene object a component creates gets
   // tagged with its component index for editor picking.
   private buildCustom(data: CustomLevelData = getCustomLevelData(), jungle = false): void {
+    this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.killY = data.killY;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;
@@ -1152,6 +1432,15 @@ export class Level {
             sh.closePath();
             return sh;
           };
+          // texture tiling for drawn polygons follows the outline's bounds
+          const polySpan = (): [number, number] => {
+            let nx = Infinity, xx = -Infinity, nz = Infinity, xz = -Infinity;
+            for (const [px, pz] of polyPts!) {
+              nx = Math.min(nx, px); xx = Math.max(xx, px);
+              nz = Math.min(nz, pz); xz = Math.max(xz, pz);
+            }
+            return [xx - nx, xz - nz];
+          };
           if (c.t === 'platform' && polyPts) {
             // drawn deck: extruded slab, walkable via the ground raycast.
             // Sides are raycast-only (the collision engine is AABB — same
@@ -1159,7 +1448,8 @@ export class Level {
             const th = c.s?.[1] ?? 1;
             const geo = new THREE.ExtrudeGeometry(polyShape(), { depth: th, bevelEnabled: false });
             geo.rotateX(-Math.PI / 2);
-            const mesh = new THREE.Mesh(geo, this.patterned(tinted(deck), 8, 8, 'checker'));
+            const [pw, pd] = polySpan();
+            const mesh = new THREE.Mesh(geo, this.patterned(tinted(deck), pw, pd, c.tex ?? 'checker'));
             mesh.position.set(c.p[0], c.p[1] - th / 2, c.p[2]); // extrude spans local y 0..th; p is the slab centre
             mesh.name = 'platform';
             this.root.add(mesh);
@@ -1171,7 +1461,12 @@ export class Level {
             const h = c.s?.[1] ?? 4;
             const geo = new THREE.ExtrudeGeometry(polyShape(), { depth: h, bevelEnabled: false });
             geo.rotateX(-Math.PI / 2);
-            const mesh = new THREE.Mesh(geo, tinted(new THREE.MeshLambertMaterial({ color: 0x9a8a7a })));
+            const wallBase = tinted(new THREE.MeshLambertMaterial({ color: 0x9a8a7a }));
+            const [ww, wd] = polySpan();
+            const mesh = new THREE.Mesh(
+              geo,
+              c.tex ? this.patterned(wallBase, Math.max(ww, wd), h + 2, c.tex) : wallBase,
+            );
             mesh.position.set(c.p[0], c.p[1], c.p[2]); // extrude spans local y 0..h; p is the base centre
             this.root.add(mesh);
             this.groundMeshes.push(mesh); // the top is standable
@@ -1208,7 +1503,7 @@ export class Level {
             const s = c.s ?? [8, 1, 8];
             const mesh = new THREE.Mesh(
               new THREE.BoxGeometry(s[0], s[1], s[2]),
-              this.patterned(tinted(deck), s[0], s[2], 'checker'),
+              this.patterned(tinted(deck), s[0], s[2], c.tex ?? 'checker'),
             );
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
             mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0); // ride surface is raycast: free spin is fine
@@ -1285,7 +1580,7 @@ export class Level {
             const rockColor = c.color ? new THREE.Color(c.color).getHex() : 0x8d8678;
             const mesh = new THREE.Mesh(
               geo,
-              new THREE.MeshLambertMaterial({ color: rockColor, map: this.surfaceTexture('stone') }),
+              new THREE.MeshLambertMaterial({ color: rockColor, map: this.surfaceTexture(c.tex ?? 'stone') }),
             );
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
             mesh.name = 'rock';
@@ -1309,7 +1604,7 @@ export class Level {
             const len = c.len ?? 10;
             const rise = c.rise ?? 4;
             const w = c.w ?? 8;
-            this.ramp('ramp', c.p[2] + len / 2, c.p[1], c.p[2] - len / 2, c.p[1] + rise, w, tinted(deck), c.p[0]);
+            this.ramp('ramp', c.p[2] + len / 2, c.p[1], c.p[2] - len / 2, c.p[1] + rise, w, tinted(deck), c.p[0], c.tex ?? 'stone');
             const rad = THREE.MathUtils.degToRad(c.yaw ?? 0);
             if (rad) {
               // spin the built slope around the component centre: orbit its
@@ -1353,15 +1648,15 @@ export class Level {
               ghost.visible = false; // the editor reveals it while editing
               ghost.userData.editorGhost = true;
               this.root.add(ghost);
-            } else if (c.color || yawQ % 90 !== 0) {
-              // tinted and/or spun wall: own mesh so the yaw can rotate it
+            } else if (c.color || c.tex || yawQ % 90 !== 0) {
+              // tinted / textured / spun wall: own mesh so the yaw can rotate it
               const mesh = new THREE.Mesh(
                 new THREE.BoxGeometry(s[0], s[1], s[2]),
                 this.patterned(
                   new THREE.MeshLambertMaterial({ color: c.color ? new THREE.Color(c.color) : new THREE.Color(0x9a8a7a) }),
                   s[0],
                   s[1],
-                  'stone',
+                  c.tex ?? 'stone',
                 ),
               );
               mesh.position.set(c.p[0], c.p[1] + s[1] / 2, c.p[2]);
@@ -1430,6 +1725,7 @@ export class Level {
               new THREE.BoxGeometry(size, size, size),
               new THREE.MeshLambertMaterial({ color: 0xffffff, map: this.metalTexture() }),
             );
+            mesh.userData.metalCrate = true; // capture tag
             mesh.position.set(c.p[0], c.p[1] + size / 2, c.p[2]);
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
@@ -1442,12 +1738,15 @@ export class Level {
               ),
             );
           } else if (c.t === 'rail') {
+            // invisible = a bare grind line (captured deck-edge ledges): full
+            // physics, no chrome — the editor still shows its node handles
             if (c.pts && c.pts.length >= 2) {
               // multi-node rail: pen-drawn path — corner radii round the
               // bends, per-node height offsets climb and dive
               const rp = roundCorners(c.pts, false);
               const rail = new Rail(
                 rp.map((q) => new THREE.Vector3(c.p[0] + q.x, c.p[1] + q.y, c.p[2] + q.z)),
+                !c.invisible,
               );
               this.rails.push(rail);
               this.root.add(rail.object);
@@ -1456,10 +1755,13 @@ export class Level {
               const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
               const dx = (Math.sin(a) * len) / 2;
               const dz = (Math.cos(a) * len) / 2;
-              const rail = new Rail([
-                new THREE.Vector3(c.p[0] - dx, c.p[1], c.p[2] - dz),
-                new THREE.Vector3(c.p[0] + dx, c.p[1], c.p[2] + dz),
-              ]);
+              const rail = new Rail(
+                [
+                  new THREE.Vector3(c.p[0] - dx, c.p[1], c.p[2] - dz),
+                  new THREE.Vector3(c.p[0] + dx, c.p[1], c.p[2] + dz),
+                ],
+                !c.invisible,
+              );
               this.rails.push(rail);
               this.root.add(rail.object);
             }
@@ -1468,7 +1770,8 @@ export class Level {
             const axis = c.axis ?? 'z';
             const along = axis === 'z' ? c.p[2] : c.p[0];
             const cross = axis === 'z' ? c.p[0] : c.p[2];
-            const hp = new Halfpipe(along + len / 2, along - len / 2, c.p[1], 3, 6, matPipe, cross, axis);
+            // captured levels carry the source pipe's true profile in w/rise
+            const hp = new Halfpipe(along + len / 2, along - len / 2, c.p[1], c.w ?? 3, c.rise ?? 6, matPipe, cross, axis);
             this.halfpipes.push(hp);
             this.root.add(hp.object);
             for (const wm of hp.walls) this.groundMeshes.push(wm);
@@ -1515,7 +1818,7 @@ export class Level {
           } else if (c.t === 'crumble') {
             const s = c.s ?? [3, 1, 3];
             const col = c.color ? new THREE.Color(c.color).getHex() : undefined;
-            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col, c.yaw ?? 0);
+            this.crumblePad(c.p[0], c.p[1], c.p[2], s[0], s[2], null, c.shake ?? 0.7, col, c.yaw ?? 0, c.tex ?? 'wood');
           } else if (c.t === 'crate') {
             const gids = groupChainOf(c, data);
             // sharing a group with a '!' switch ghosts the crate until the
@@ -3245,10 +3548,11 @@ export class Level {
     shakeTime = 0.35,
     color = 0xa8845c,
     yawDeg = 0,
+    tex = 'wood',
   ): Crumble {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, 0.5, d),
-      this.patterned(new THREE.MeshLambertMaterial({ color }), w, d, 'wood'),
+      this.patterned(new THREE.MeshLambertMaterial({ color }), w, d, tex),
     );
     mesh.position.set(x, topY - 0.25, z);
     mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg); // stand-detection is the ground raycast: free spin is fine
@@ -3870,6 +4174,7 @@ export class Level {
       new THREE.BoxGeometry(w, visH, d),
       this.baseMat('wall', this.wallTint, 'stone', 3, 1),
     );
+    mesh.userData.wallSpec = { w, d, h, visH }; // capture: position is read live off the mesh
     mesh.position.set(cx, baseY + visH / 2, cz);
     this.root.add(mesh);
     this.walls.push(
