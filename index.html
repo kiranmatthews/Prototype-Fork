@@ -13,6 +13,11 @@
     <meta name="theme-color" content="#1a1c24" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="data:," />
+    <!-- Character + smear models: start these downloads in parallel with the
+         JS bundle so the authored body is ready the moment the game boots,
+         instead of the placeholder rig showing while they fetch afterward. -->
+    <link rel="preload" href="models/roo.glb" as="fetch" crossorigin />
+    <link rel="preload" href="models/smear.glb" as="fetch" crossorigin />
     <title>Board Platformer Proto</title>
     <style>
       /* touch-action: manipulation kills iOS double-tap-to-zoom everywhere

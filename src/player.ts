@@ -5045,9 +5045,10 @@ export class Player {
       this.legs.scale.y = Math.max(
         0.15,
         1 -
+          0.22 * this.skatePose * (1 - this.wallridePose) - // stand ON the deck top, not through it (wallride keeps its own tuck)
           0.5 * this.grabPose -
           0.4 * flipTuck -
-          0.43 * this.chargePose * this.skatePose -
+          0.21 * this.chargePose * this.skatePose - // rolling charge crouch (0.43 total with the deck-stand term)
           0.45 * this.crawlPose -
           0.25 * this.slidePose -
           0.28 * this.wallridePose - // knees bent tucking the board onto the wall
