@@ -939,11 +939,11 @@ export class Editor {
       face(uz, mid.clone().addScaledVector(uz, s[2] / 2), 2, 0.5);
       face(uz.clone().negate(), mid.clone().addScaledVector(uz, -s[2] / 2), 2, 0.5);
       face(new THREE.Vector3(0, 1, 0), P.clone().setY(P.y + s[1]), 1, 0.5, false); // grows up from the base
-    } else if (c.t === 'pit' || c.t === 'crumble' || c.t === 'crusher') {
-      const s = c.s!;
-      const y = c.t === 'crusher' ? P.y + 1.2 : P.y;
+    } else if (c.t === 'pit' || c.t === 'crumble' || c.t === 'crusher' || c.t === 'zone') {
+      const s = c.s ?? [14, 1, 10];
+      const y = c.t === 'crusher' ? P.y + 1.2 : c.t === 'zone' ? P.y + 0.5 : P.y;
       const mid = P.clone().setY(y);
-      const ux = loc(1, 0, 0); // spun pits/crumbles keep handles on their faces (crusher yaw = 0)
+      const ux = loc(1, 0, 0); // spun pits/crumbles keep handles on their faces (crusher/zone yaw = 0)
       const uz = loc(0, 0, 1);
       face(ux, mid.clone().addScaledVector(ux, s[0] / 2), 0, 1);
       face(ux.clone().negate(), mid.clone().addScaledVector(ux, -s[0] / 2), 0, 1);
@@ -966,9 +966,9 @@ export class Editor {
           cc.rise = orig.rise! + d;
         },
       });
-    } else if (c.t === 'rail') {
-      const u = loc(0, 0, 1); // (sin yaw, 0, cos yaw): the rail's run
-      const len = c.len!;
+    } else if (c.t === 'rail' || c.t === 'rope') {
+      const u = loc(0, 0, 1); // (sin yaw, 0, cos yaw): the run of the line
+      const len = c.len ?? 12;
       span(u, P.clone().addScaledVector(u, len / 2), 'len', 1, true);
       span(u.clone().negate(), P.clone().addScaledVector(u, -len / 2), 'len', 1, true);
     } else if (c.t === 'pipe') {
