@@ -3,10 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <!-- Add to Home Screen = true fullscreen: in-tab Safari always owns the
+         status bar / Dynamic Island strip in portrait, but the home-screen app
+         renders behind it (black-translucent) with safe-area insets set. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Board Proto" />
+    <meta name="theme-color" content="#1a1c24" />
+    <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="data:," />
     <title>Board Platformer Proto</title>
     <style>
-      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1c24; overscroll-behavior: none; }
+      /* touch-action: manipulation kills iOS double-tap-to-zoom everywhere
+         while leaving panel scrolling alone (game surfaces opt into 'none') */
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1c24; overscroll-behavior: none; touch-action: manipulation; }
       #app { width: 100%; height: 100%; }
       /* image-rendering is set live from main.ts's resize(): pixelated only
          when renderScale drops below 0.7, smooth linear upscale otherwise. */

@@ -78,6 +78,12 @@ export class TouchControls {
     this.injectStyle();
     this.buildDpad();
     this.buildButtons();
+    // iOS zoom killers: pinch (gesture*) and double-tap (dblclick) must never
+    // scale the game. touch-action handles modern Safari; these catch the rest.
+    const kill = (e: Event): void => e.preventDefault();
+    document.addEventListener('gesturestart', kill);
+    document.addEventListener('gesturechange', kill);
+    document.addEventListener('dblclick', kill);
     (window as unknown as Record<string, unknown>).__touch = this; // test hook
   }
 
@@ -368,7 +374,12 @@ export class TouchControls {
       body.tc-on .hud-stats {
         min-width: 0; width: min(76vw, 330px);
         max-height: calc(100dvh - 16px); overflow-y: auto;
+        touch-action: pan-y;
       }
+      body.tc-on .hud-tuning { touch-action: pan-y; }
+      /* standalone (home-screen) mode renders behind the Dynamic Island:
+         drop the side tabs below it */
+      body.tc-on .side-wrap { top: max(10px, env(safe-area-inset-top)); }
       body.tc-on .hud-levelrow { flex-wrap: wrap; }
       body.tc-on .hud-levelbtn { flex: 1 1 46%; font-size: 12px; padding: 10px 4px; }
       body.tc-on .hud-tuning { width: min(78vw, 320px); max-height: calc(100dvh - 16px); }

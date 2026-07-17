@@ -48,6 +48,14 @@ interface LoopChannel {
   name: string;
 }
 
+// ~50ms of silence as a playable <audio> src. Playing an HTML MEDIA element
+// once (inside a gesture) flips iOS's audio session from "ambient" to
+// "playback" — without this, Web Audio obeys the ringer/silent switch and an
+// iPhone with the mute switch on hears NOTHING, ever. Desktop ignores it.
+const SILENT_WAV =
+  'data:audio/wav;base64,UklGRnQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+  'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==';
+
 class SfxEngine {
   volume = 0.5; // master
 
@@ -57,6 +65,7 @@ class SfxEngine {
   private loops = new Map<string, LoopChannel>();
   private lastPlay = new Map<string, number>();
   private loading = false;
+  private sessionKicked = false;
 
   constructor() {
     // Warm up at PAGE LOAD: create the (suspended) context and start decoding
@@ -67,10 +76,11 @@ class SfxEngine {
     const unlock = (): void => this.unlock();
     // keydown/pointer/touch are real user gestures; gamepadconnected + the
     // per-frame poll (see main.ts) cover controller-only players, who fire none
-    // of the DOM gesture events.
+    // of the DOM gesture events. touchend is the one OLD iOS Safari counts.
     window.addEventListener('keydown', unlock);
     window.addEventListener('pointerdown', unlock);
     window.addEventListener('touchstart', unlock, { passive: true });
+    window.addEventListener('touchend', unlock, { passive: true });
     window.addEventListener('gamepadconnected', unlock);
   }
 
@@ -79,6 +89,15 @@ class SfxEngine {
   // it inside a user gesture, but the extra attempts are harmless.
   unlock(): void {
     try {
+      if (!this.sessionKicked) {
+        // iOS mute-switch bypass: one silent media-element play inside the
+        // first gesture reclassifies the audio session to "playback".
+        this.sessionKicked = true;
+        const a = new Audio(SILENT_WAV);
+        a.setAttribute('playsinline', '');
+        const p = a.play();
+        if (p) p.catch(() => {});
+      }
       if (!this.ctx) {
         void this.init();
         return;

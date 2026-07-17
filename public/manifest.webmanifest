@@ -1,0 +1,10 @@
+{
+  "name": "Board Platformer Proto",
+  "short_name": "Board Proto",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#1a1c24",
+  "theme_color": "#1a1c24",
+  "start_url": ".",
+  "icons": []
+}
