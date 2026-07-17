@@ -1236,11 +1236,12 @@ export class Player {
       this.lastJumpType = 'Slide Jump';
       sfx.play('woosh2', 0.6);
     } else if (spd > TUNING.walkSpeed + 0.5) {
-      // leaving actual skating: THPS board ollie. X doubles as the skate
-      // accelerator, so a skating jump is ALWAYS released at full charge —
-      // charge-scaled height turned every ollie into a max-power moon jump.
-      // The ollie owns its own fixed pop instead.
-      this.vVel = TUNING.ollieVelocity;
+      // leaving actual skating: THPS board ollie. The ollie charges on its
+      // OWN min..max scale, decoupled from the on-foot jump — X doubles as
+      // the skate accelerator, so riding the charge scale up to jumpVelocity
+      // made every accelerating jump a moon jump. Cruising on direction keys
+      // and tapping X gives the small pop; a held charge earns the big one.
+      this.vVel = THREE.MathUtils.lerp(TUNING.ollieMinVelocity, TUNING.ollieVelocity, t);
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
@@ -4697,10 +4698,13 @@ export class Player {
     const vxAnim = this.pos.x - this.prevPos.x;
     const vzAnim = this.pos.z - this.prevPos.z;
     const planar = Math.sqrt(vxAnim * vxAnim + vzAnim * vzAnim) / Math.max(dt, 1e-4);
+    // A MOVING charge keeps the run cycle alive (the charge crouch layers on
+    // top via chargePose) — freezing the legs mid-stride read as sliding
+    // along the floor. Only the PLANTED standstill charge pins the feet.
     const onFoot =
       this.grounded &&
       this.state === 'ride' &&
-      !this.charging &&
+      !(this.charging && this.chargePlanted) &&
       !this.freeSkate &&
       this.slideTimer <= 0 &&
       !this.crawling &&
