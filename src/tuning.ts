@@ -59,7 +59,6 @@ export const TUNING = {
   grabSpinRate: 9, // rad/s of the directional grab-spin (~515°/s — 540s reachable on medium airs; the pre-land auto-correct keeps landings clean)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
   spinTolerance: 10, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
-  sketchyTolerance: 25, // past spinTolerance but inside this = SKETCHY landing: you keep it with a wobble, speed cut, and half points
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
@@ -190,7 +189,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
   grabRelease: { min: 0.05, max: 0.6, step: 0.05 },
   spinTolerance: { min: 10, max: 90, step: 5 },
-  sketchyTolerance: { min: 10, max: 45, step: 1 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
@@ -346,8 +344,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How long the grab pose takes to animate back to neutral after RELEASING Circle. Land any time before it finishes (or while still holding) = bail; pose back at neutral = clean, spin permitting.',
   spinTolerance:
     'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
-  sketchyTolerance:
-    'The SKETCHY window: a spin landed past spinTolerance but inside this many degrees off-line is kept — a wobble, a speed cut, and half points instead of a bail. Beyond it you eat the floor.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
   boardSpeed:
     'The board (visual + rolling sound) only appears above this speed. Raise it if the board flickers in during normal platforming; the walk/skate physics boundary is walkSpeed, not this.',
@@ -507,7 +503,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'MANUAL & LIP',
     keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
-  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius'] },
+  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },

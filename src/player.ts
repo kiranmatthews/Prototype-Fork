@@ -204,9 +204,6 @@ export class Player {
   private lipSide = 1; // sign of u at the stall (which coping)
   private lipTickT = 0;
   private lipCoolT = 0; // no instant re-catch right after dropping in
-  // SKETCHY LANDING: rotation landed off-line but inside the sketchy window —
-  // you keep it (half points, speed cut) with a wobble instead of a bail.
-  private sketchyT = 0;
   // SPINE TRANSFER: which pipe the current hang crested from; landing a hang on
   // a DIFFERENT pipe = carried across the ridge.
   private hangPipe: Halfpipe | null = null;
@@ -557,7 +554,6 @@ export class Player {
     this.lipStallT = 0;
     this.lipPipe = null;
     this.lipCoolT = 0;
-    this.sketchyT = 0;
     this.hangPipe = null;
     this.slamSquash = 0;
     this.bailing = false;
@@ -815,7 +811,6 @@ export class Player {
     this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
     this.lipCoolT = Math.max(0, this.lipCoolT - dt);
     this.transferCoolT = Math.max(0, this.transferCoolT - dt);
-    this.sketchyT = Math.max(0, this.sketchyT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
@@ -2576,36 +2571,7 @@ export class Player {
       // you were CLIMBING (holding a direction), not doing a trick spin, so the
       // drop-back-in is always a clean neutral landing.
       const funny = spun && dev0 > tol && devPi > tol && !this.pipeHang;
-      // SKETCHY TIER (THPS rules): landed off-line but within the sketchy
-      // window — or came down STILL HOLDING the grab out of a pipe hang — you
-      // keep it: a wobble, a speed cut, and half points instead of the floor.
-      const sketchTol = THREE.MathUtils.degToRad(TUNING.sketchyTolerance);
-      const sketchy =
-        (funny && Math.min(dev0, devPi) <= sketchTol) ||
-        (wasPipeHang && this.grabPhase !== 'none' && !funny);
-      if (sketchy) {
-        const isSwitch = devPi < dev0; // whichever line is closer decides the feet
-        if (isSwitch) this.stance = -this.stance as 1 | -1;
-        const halves = Math.round(Math.abs(this.grabSpinAngle) / Math.PI);
-        if (halves > 0) {
-          this.score(Math.max(5, Math.round((halves * CONST.ptsSpin) / 2)), `Sketchy ${halves * 180}`);
-        } else {
-          this.score(5, 'Sketchy');
-        }
-        this.grabPhase = 'none';
-        this.grabT = 0;
-        this.grabGraceTimer = 0;
-        this.visualYaw = wrapAngle(
-          this.visualYaw +
-            this.grabSpinAngle +
-            (isSwitch ? -this.stance * Math.PI * this.sidePose : 0),
-        );
-        this.grabSpinAngle = 0;
-        this.grabSpinTotal = 0;
-        this.speed *= 0.55;
-        this.sketchyT = 0.6; // the visible wobble
-        sfx.play('skateHalt', 0.35);
-      } else if (this.grabPhase !== 'none' || funny) {
+      if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
           this.grabT = 0;
@@ -5264,7 +5230,6 @@ export class Player {
     const manualTarget =
       this.manualing !== 0 ? (this.manualing === 1 ? -0.4 : 0.35) - this.balance * 0.4 : stallLean;
     this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 14 * dt);
-    if (this.sketchyT > 0) this.bodyGroup.rotation.z += Math.sin(this.runTime * 24) * 0.14 * Math.min(1, this.sketchyT / 0.3);
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     // Crouch drops. The crawl and slam use SMALL drops: their pitch already
