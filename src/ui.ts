@@ -83,6 +83,10 @@ export class UI {
   onLoadReplay: ((text: string) => void) | null = null;
   onEditorOpen: (() => void) | null = null;
   onEditCopy: (() => void) | null = null;
+  // fired when a side tab (MENU / TUNER) is clicked, BEFORE the panel
+  // toggles — main.ts uses it to close the editor so the panel isn't a
+  // hidden husk while the tools own the screen
+  onSideTab: ((side: 'left' | 'right') => void) | null = null;
   private recBtn!: HTMLButtonElement;
   private replayBadge!: HTMLElement;
   private recBadge!: HTMLElement;
@@ -366,6 +370,7 @@ export class UI {
     const key = 'protoPanel_' + side;
     if (localStorage.getItem(key) !== 'open') wrap.classList.add('collapsed');
     tab.addEventListener('click', () => {
+      if (this.onSideTab) this.onSideTab(side);
       wrap.classList.toggle('collapsed');
       localStorage.setItem(key, wrap.classList.contains('collapsed') ? 'closed' : 'open');
       tab.blur();

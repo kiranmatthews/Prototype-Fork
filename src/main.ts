@@ -349,6 +349,15 @@ function openEditor(): void {
   editor.enter();
 }
 ui.onEditorOpen = openEditor;
+// MENU / TUNER while the editor owns the screen: the play panels are hidden
+// under the tools, so a tab tap first CLOSES the editor (edits are already
+// saved live) and drops back to play — then the panel opens normally.
+ui.onSideTab = () => {
+  if (!editor.active) return;
+  editor.exit();
+  player.respawn(level, true);
+  ui.showMessage('EDITOR CLOSED', 'press ✎ LEVEL EDITOR to keep editing', 1600);
+};
 // EDIT A COPY: capture whatever level is loaded into editor components and
 // open the editor on it. The previous custom level is backed up so nothing
 // is silently lost. Bespoke set pieces without a component language
