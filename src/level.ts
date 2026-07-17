@@ -2075,6 +2075,10 @@ export class Level {
   }
 
   laneDirAt(x: number, z: number): { x: number; z: number } | null {
+    // a travel ZONE is a deliberate LOCAL override of the camera spine:
+    // inside its rectangle the zone owns the course frame (side-scroll /
+    // run-at-camera), and the lane resumes where the zone ends
+    if (this.zoneAt(x, z)) return null;
     const pts = this.lanePts;
     if (pts.length < 2) return null;
     let best = Infinity;

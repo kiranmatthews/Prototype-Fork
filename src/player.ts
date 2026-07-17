@@ -717,8 +717,10 @@ export class Player {
     const wantDir = zone ? zone.dir : 'S';
     // Corner flips are a WALKING concept — free-heading skating just carves
     // through corners, so the axes are left alone while on the board. A lane
-    // owns the axes outright (continuous turns, no cardinal flips).
-    if (!laneDir && !level.laneActive && !chaseMode && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
+    // owns the axes outright (continuous turns, no cardinal flips) — EXCEPT
+    // inside a travel zone, which is a deliberate local override of the lane
+    // (laneDirAt already returns null in there).
+    if (!laneDir && !(level.laneActive && !zone) && !chaseMode && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
       const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
       const alongNew =
@@ -727,7 +729,7 @@ export class Player {
         Math.abs(alongNew) > 0.3 ? Math.sign(alongNew) * Math.abs(oldSpeed) * 0.7 : 0;
     }
     let ctl =
-      this.travelDir === 'S' || this.travelDir === 'N' || level.laneActive
+      this.travelDir === 'S' || this.travelDir === 'N' || (level.laneActive && !zone)
         ? input
         : this.travelDir === 'E'
           ? ({ ...input, moveY: input.moveX, moveX: input.moveY } as unknown as Input)
