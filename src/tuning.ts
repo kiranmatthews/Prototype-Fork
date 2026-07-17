@@ -12,10 +12,10 @@ export const TUNING = {
   // THIS game's speed and level scale; the reference timing already matched.)
   riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
   fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
-  jumpVelocity: 17, // fully-charged jump (hold X)
-  jumpMinVelocity: 12.5, // quick-tap jump
-  ollieVelocity: 13, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
-  ollieMinVelocity: 9, // quick-tap board ollie — the small pop when skating on direction keys and flicking X
+  jumpVelocity: 13, // fully-charged jump (hold X)
+  jumpMinVelocity: 10, // quick-tap jump
+  ollieVelocity: 12.5, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
+  ollieMinVelocity: 4, // quick-tap board ollie — the small pop when skating on direction keys and flicking X
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
@@ -47,7 +47,7 @@ export const TUNING = {
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
-  grindJumpForce: 15, // vertical pop when jumping off a rail
+  grindJumpForce: 12.5, // vertical pop when jumping off a rail
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
   turnaround: 35, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
@@ -64,7 +64,7 @@ export const TUNING = {
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
-  carveGrip: 180, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
+  carveGrip: 135, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
   carveGripRatio: 0.05, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
@@ -116,13 +116,13 @@ export const TUNING = {
   // camTilt aims AT the character (2.1 ≈ just over her head — this exactly
   // reproduces the old 21° down-pitch); camOffset TRANSLATES the whole rig
   // down-course, so framing moves without the tilt changing. Decoupled knobs.
-  camFov: 62, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
+  camFov: 53, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
   chaseCam: 0, // 1 = third-person follow: camera swings behind the travel direction, skater always faces forward
   camDist: 5.2, // trailing distance behind the character
-  camHeight: 4.1, // camera elevation above the character
-  camAirLift: 0.65, // how much the rig rises WITH an airborne jump: 1 = classic full-follow (jumps read small/snappy on screen), 0 = ground-anchored Crash rig (skater does all the rising on screen — same arc reads much bigger). 0.65 measured = jumps still read classic-snappy with half the anchored gentleness back
-  camTilt: 2.1, // aim height on the character: higher = camera tilts UP (sees more sky)
-  camOffset: 0, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
+  camHeight: 5.1, // camera elevation above the character
+  camAirLift: 0, // how much the rig rises WITH an airborne jump: 1 = classic full-follow (jumps read small/snappy on screen), 0 = ground-anchored Crash rig (skater does all the rising on screen). Default 0: with the small playtested jump pops the anchored rig reads clean and keeps the landing framed
+  camTilt: 1.7, // aim height on the character: higher = camera tilts UP (sees more sky)
+  camOffset: 1, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
 };
 
 export type TuningKey = keyof typeof TUNING;
@@ -132,7 +132,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 7; // v7: jump pops back to 17 / 12.5 (camAirLift owned the float, not the ballistics); camAirLift default 0.65
+export const TUNING_VERSION = 8; // v8: playtest bake — pops 13/10, ollies 12.5/4, grind pop 12.5, carve 135, anchored cam (airLift 0, fov 53, height 5.1, tilt 1.7, offset 1)
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
