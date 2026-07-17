@@ -33,11 +33,14 @@ interface BtnDef {
   tickRate: number; // audio feedback pitch per button
 }
 
+// diamond offsets in % of the cluster box from its centre — at 38% button
+// size, ±31% puts every button edge EXACTLY at the box edge (no overflow,
+// no clipping, even visual padding against the mirrored D-pad)
 const BTNS: BtnDef[] = [
-  { key: 'tri', glyph: '△', dx: 0, dy: -1.15, tickRate: 2.4 },
-  { key: 'o', glyph: '○', dx: 1.15, dy: 0, tickRate: 2.0 },
-  { key: 'x', glyph: '×', dx: 0, dy: 1.15, tickRate: 1.7 },
-  { key: 'sq', glyph: '□', dx: -1.15, dy: 0, tickRate: 2.2 },
+  { key: 'tri', glyph: '△', dx: 0, dy: -31, tickRate: 2.4 },
+  { key: 'o', glyph: '○', dx: 31, dy: 0, tickRate: 2.0 },
+  { key: 'x', glyph: '×', dx: 0, dy: 31, tickRate: 1.7 },
+  { key: 'sq', glyph: '□', dx: -31, dy: 0, tickRate: 2.2 },
 ];
 
 // R2 swipe gate: a clear, fast, mostly-vertical upward flick — button taps
@@ -197,8 +200,8 @@ export class TouchControls {
       const el = document.createElement('div');
       el.className = 'tc-btn';
       el.textContent = b.glyph;
-      el.style.left = `${50 + b.dx * 34}%`;
-      el.style.top = `${50 + b.dy * 34}%`;
+      el.style.left = `${50 + b.dx}%`;
+      el.style.top = `${50 + b.dy}%`;
       cluster.appendChild(el);
       this.btnEls.set(b.key, el);
     }
@@ -317,59 +320,58 @@ export class TouchControls {
       }
       .tc-left { left: 0; width: 50vw; height: 46%; }
       .tc-right { right: 0; width: 50vw; height: 78%; }
-      .tc-pad {
-        position: absolute; left: 50%;
-        bottom: max(6px, calc(env(safe-area-inset-bottom) - 24px));
+      /* the two groups: identical footprint, identical height, identical
+         distance from their screen edge — a matched pair */
+      .tc-pad, .tc-cluster {
+        position: absolute;
+        bottom: max(8px, calc(env(safe-area-inset-bottom) - 20px));
         width: min(39vw, 195px); height: min(39vw, 195px);
-        transform: translateX(-44%); pointer-events: none;
+        pointer-events: none;
+      }
+      .tc-pad { left: 14px; }
+      .tc-cluster { right: 14px; }
+      /* shared glass finish: frosted fill, hairline light edge, soft drop */
+      .tc-arrow, .tc-btn, .tc-hub {
+        box-sizing: border-box;
+        background: rgba(244, 238, 218, 0.30);
+        border: 1px solid rgba(255, 255, 255, 0.38);
+        -webkit-backdrop-filter: blur(6px) saturate(1.15);
+        backdrop-filter: blur(6px) saturate(1.15);
+        box-shadow: 0 2px 6px rgba(20, 14, 4, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        transition: background 0.06s, transform 0.06s, color 0.06s;
       }
       .tc-hub {
         position: absolute; left: 34%; top: 34%; width: 32%; height: 32%;
-        background: rgba(238, 232, 210, 0.24); border-radius: 20%;
-        border: 1px solid rgba(70, 58, 36, 0.16);
+        border-radius: 20%; background: rgba(244, 238, 218, 0.18);
+        box-shadow: none;
       }
       .tc-arrow {
         position: absolute; width: 34%; height: 34%;
-        background: rgba(238, 232, 210, 0.42); border-radius: 22%;
-        border: 1px solid rgba(70, 58, 36, 0.24);
-        box-sizing: border-box;
+        border-radius: 22%;
         display: flex; align-items: center; justify-content: center;
-        font: 600 clamp(13px, 4vw, 20px)/1 -apple-system, system-ui, sans-serif;
-        color: rgba(40, 36, 26, 0.5);
-        transition: background 0.06s, transform 0.06s;
+        font: 600 clamp(13px, 4vw, 19px)/1 -apple-system, system-ui, sans-serif;
+        color: rgba(52, 44, 30, 0.55);
       }
       .tc-arrow.on {
-        background: rgba(255, 244, 200, 0.7); transform: scale(0.94);
-        color: rgba(40, 36, 26, 0.8);
+        background: rgba(255, 246, 208, 0.68); transform: scale(0.94);
+        color: rgba(40, 36, 26, 0.85);
       }
-      .tc-a-up { left: 33%; top: 0; border-radius: 30% 30% 12% 12%; }
-      .tc-a-down { left: 33%; bottom: 0; border-radius: 12% 12% 30% 30%; }
-      .tc-a-left { left: 0; top: 33%; border-radius: 30% 12% 12% 30%; }
-      .tc-a-right { right: 0; top: 33%; border-radius: 12% 30% 30% 12%; }
-      /* mirror of .tc-pad: the two groups sit side by side, equal size, at
-         the same height — pulled slightly inboard so the circle button
-         never crowds the screen edge */
-      .tc-cluster {
-        position: absolute; right: 50%;
-        bottom: max(6px, calc(env(safe-area-inset-bottom) - 24px));
-        width: min(39vw, 195px); height: min(39vw, 195px);
-        transform: translateX(44%); pointer-events: none;
-      }
+      .tc-a-up { left: 33%; top: 0; border-radius: 30% 30% 14% 14%; }
+      .tc-a-down { left: 33%; bottom: 0; border-radius: 14% 14% 30% 30%; }
+      .tc-a-left { left: 0; top: 33%; border-radius: 30% 14% 14% 30%; }
+      .tc-a-right { right: 0; top: 33%; border-radius: 14% 30% 30% 14%; }
       .tc-btn {
-        position: absolute; width: 44%; height: 44%;
+        position: absolute; width: 38%; height: 38%;
         transform: translate(-50%, -50%);
-        border-radius: 50%; background: rgba(238, 232, 210, 0.38);
-        border: 1px solid rgba(70, 58, 36, 0.24);
-        box-sizing: border-box;
+        border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font: 600 clamp(20px, 6vw, 30px)/1 -apple-system, system-ui, sans-serif;
-        color: rgba(40, 36, 26, 0.55);
-        transition: background 0.06s, transform 0.06s;
+        font: 600 clamp(15px, 4.6vw, 22px)/1 -apple-system, system-ui, sans-serif;
+        color: rgba(52, 44, 30, 0.55);
       }
       .tc-btn.on {
-        background: rgba(255, 244, 200, 0.66);
+        background: rgba(255, 246, 208, 0.68);
         transform: translate(-50%, -50%) scale(0.92);
-        color: rgba(40, 36, 26, 0.8);
+        color: rgba(40, 36, 26, 0.85);
       }
 
       /* ---------- compact phone HUD ---------- */

@@ -18,10 +18,12 @@
       /* touch-action: manipulation kills iOS double-tap-to-zoom everywhere
          while leaving panel scrolling alone (game surfaces opt into 'none') */
       html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1c24; overscroll-behavior: none; touch-action: manipulation; }
-      /* iOS standalone: 100% can stop short of the home-indicator strip —
-         dvh is the true full screen, so the game fills to the bottom edge */
-      @supports (height: 100dvh) { html, body { height: 100dvh; } }
-      #app { width: 100%; height: 100%; }
+      /* sized by main.ts resize(): --vh carries the REAL device height. iOS
+         standalone underreports the viewport by the home-indicator strip and
+         never paints it (the black bar) — so the page deliberately sizes past
+         the viewport to the physical screen edge. */
+      html, body, #app { height: var(--vh, 100%); }
+      #app { width: 100%; }
       /* image-rendering is set live from main.ts's resize(): pixelated only
          when renderScale drops below 0.7, smooth linear upscale otherwise. */
       #app canvas { width: 100% !important; height: 100% !important; display: block; }

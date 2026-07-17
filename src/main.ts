@@ -258,7 +258,14 @@ const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 
 function resize(): void {
   const w = window.innerWidth;
-  const h = window.innerHeight;
+  let h = window.innerHeight;
+  // iOS standalone (home-screen) quirk: the layout viewport stops ABOVE the
+  // home indicator and that strip never gets painted — a permanent black bar.
+  // The screen knows the true height, so size the page past the viewport to
+  // the physical edge (portrait only; --vh feeds the html/body/#app CSS).
+  const standalone = (navigator as unknown as { standalone?: boolean }).standalone === true;
+  if (standalone && h > w && window.screen.height > h) h = window.screen.height;
+  document.documentElement.style.setProperty('--vh', h + 'px');
   const rs = LITE_RENDER ? Math.min(TUNING.renderScale, 0.5) : TUNING.renderScale;
   renderer.setSize(Math.round(w * rs), Math.round(h * rs), false);
   // Upscale sampling follows the scale: chunky pixels only when the slider is
