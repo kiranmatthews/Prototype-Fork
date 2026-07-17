@@ -99,10 +99,16 @@ export class TouchControls {
     const pad = document.createElement('div');
     pad.className = 'tc-pad';
     this.padEl = pad;
+    // faint centre hub ties the four arms into one visibly-centred plus
+    const hub = document.createElement('div');
+    hub.className = 'tc-hub';
+    pad.appendChild(hub);
     const arrows = {} as Record<'up' | 'down' | 'left' | 'right', HTMLElement>;
+    const glyphs = { up: '▲', down: '▼', left: '◀', right: '▶' } as const;
     for (const dir of ['up', 'down', 'left', 'right'] as const) {
       const a = document.createElement('div');
       a.className = `tc-arrow tc-a-${dir}`;
+      a.textContent = glyphs[dir];
       pad.appendChild(a);
       arrows[dir] = a;
     }
@@ -306,16 +312,30 @@ export class TouchControls {
       .tc-left { left: 0; width: 50vw; height: 46%; }
       .tc-right { right: 0; width: 50vw; height: 78%; }
       .tc-pad {
-        position: absolute; left: 50%; bottom: calc(58px + env(safe-area-inset-bottom));
+        position: absolute; left: 50%;
+        bottom: max(6px, calc(env(safe-area-inset-bottom) - 24px));
         width: min(38vw, 190px); height: min(38vw, 190px);
         transform: translateX(-50%); pointer-events: none;
       }
+      .tc-hub {
+        position: absolute; left: 34%; top: 34%; width: 32%; height: 32%;
+        background: rgba(238, 232, 210, 0.24); border-radius: 20%;
+        border: 1px solid rgba(70, 58, 36, 0.16);
+      }
       .tc-arrow {
         position: absolute; width: 34%; height: 34%;
-        background: rgba(238, 232, 210, 0.34); border-radius: 22%;
+        background: rgba(238, 232, 210, 0.42); border-radius: 22%;
+        border: 1px solid rgba(70, 58, 36, 0.24);
+        box-sizing: border-box;
+        display: flex; align-items: center; justify-content: center;
+        font: 600 clamp(13px, 4vw, 20px)/1 -apple-system, system-ui, sans-serif;
+        color: rgba(40, 36, 26, 0.5);
         transition: background 0.06s, transform 0.06s;
       }
-      .tc-arrow.on { background: rgba(255, 244, 200, 0.62); transform: scale(0.94); }
+      .tc-arrow.on {
+        background: rgba(255, 244, 200, 0.7); transform: scale(0.94);
+        color: rgba(40, 36, 26, 0.8);
+      }
       .tc-a-up { left: 33%; top: 0; border-radius: 30% 30% 12% 12%; }
       .tc-a-down { left: 33%; bottom: 0; border-radius: 12% 12% 30% 30%; }
       .tc-a-left { left: 0; top: 33%; border-radius: 30% 12% 12% 30%; }
@@ -328,7 +348,9 @@ export class TouchControls {
       .tc-btn {
         position: absolute; width: 44%; height: 44%;
         transform: translate(-50%, -50%);
-        border-radius: 50%; background: rgba(238, 232, 210, 0.34);
+        border-radius: 50%; background: rgba(238, 232, 210, 0.38);
+        border: 1px solid rgba(70, 58, 36, 0.24);
+        box-sizing: border-box;
         display: flex; align-items: center; justify-content: center;
         font: 600 clamp(20px, 6vw, 30px)/1 -apple-system, system-ui, sans-serif;
         color: rgba(40, 36, 26, 0.55);

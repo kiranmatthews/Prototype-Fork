@@ -268,6 +268,12 @@ function resize(): void {
   camera.updateProjectionMatrix();
 }
 window.addEventListener('resize', resize);
+// iOS standalone launches don't reliably fire 'resize' once the viewport
+// settles behind the Dynamic Island / home indicator — catch the stragglers.
+window.visualViewport?.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 250));
+setTimeout(resize, 400);
+setTimeout(resize, 1200);
 resize();
 // renderScale is a live tuner slider; the frame loop re-resizes when it moves.
 let appliedScale = TUNING.renderScale;
