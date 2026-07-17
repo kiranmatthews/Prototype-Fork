@@ -94,12 +94,14 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'death pit', icon: (x) => { x.strokeStyle = '#b0402a'; x.fillStyle = '#0a0a10'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 11); x.lineTo(8, 3); x.lineTo(16, 7); x.lineTo(12, 15); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ff8a5e'; for (const [px, py] of [[3, 11], [8, 3], [16, 7], [12, 15]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'pit' },
       { label: 'wall', icon: (x) => { x.strokeStyle = '#9a8a7a'; x.fillStyle = 'rgba(154,138,122,0.4)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 13); x.lineTo(6, 4); x.lineTo(14, 3); x.lineTo(15, 12); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ffd75e'; for (const [px, py] of [[3, 13], [6, 4], [14, 3], [15, 12]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'wall' },
       { label: 'rail path', icon: (x) => { x.strokeStyle = '#b8a2ff'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 14); x.lineTo(7, 12); x.lineTo(11, 6); x.lineTo(16, 4); x.stroke(); x.fillStyle = '#d7c8ff'; for (const [px, py] of [[2, 14], [7, 12], [11, 6], [16, 4]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'rail' },
+      { label: 'rope', icon: (x) => { x.strokeStyle = '#c2a878'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 5); x.quadraticCurveTo(9, 13, 16, 5); x.stroke(); x.fillStyle = '#6b4a2a'; x.fillRect(1, 4, 2, 8); x.fillRect(15, 4, 2, 8); }, make: (at) => ({ t: 'rope', p: [at.x, at.y + 2.5, at.z], len: 12, amp: 1.2, shake: 3 }) },
     ],
   },
   {
     title: 'CAMERA',
     items: [
       { label: 'cam node', icon: (x) => { x.fillStyle = '#ff5ad2'; x.beginPath(); x.moveTo(9, 2); x.lineTo(15, 9); x.lineTo(9, 16); x.lineTo(3, 9); x.closePath(); x.fill(); x.strokeStyle = '#ff8ae0'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 9); x.lineTo(17, 9); x.stroke(); }, make: (at) => ({ t: 'camnode', p: [at.x, at.y + 1.5, at.z] }) },
+      { label: 'travel zone', icon: (x) => { x.strokeStyle = '#9a6cff'; x.fillStyle = 'rgba(154,108,255,0.25)'; x.lineWidth = 1.5; x.fillRect(2, 5, 14, 9); x.strokeRect(2, 5, 14, 9); glyph(x, '→', '#c9b2ff'); }, make: (at) => ({ t: 'zone', p: [at.x, at.y, at.z], s: [14, 1, 10], dir: 'E' }) },
     ],
   },
   {
@@ -2448,6 +2450,35 @@ export class Editor {
         num('length', () => c.len ?? 12, (v) => (c.len = Math.max(1, v)));
         num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       }
+    } else if (c.t === 'zone') {
+      sizeRow(0, 'width');
+      sizeRow(2, 'depth');
+      const dirBtn = document.createElement('button');
+      dirBtn.className = 'ed-btn';
+      const dirLabel = (d: string): string =>
+        d === 'E' ? 'side-scroll → (east)' : d === 'W' ? 'side-scroll ← (west)' : 'run AT the camera';
+      dirBtn.textContent = dirLabel(c.dir ?? 'E');
+      dirBtn.addEventListener('click', () => {
+        c.dir = (c.dir ?? 'E') === 'E' ? 'W' : c.dir === 'W' ? 'N' : 'E';
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(dirBtn);
+      const note = document.createElement('div');
+      note.className = 'ed-dim';
+      note.textContent =
+        'inside this region the course TURNS: east/west = classic side-scroll, camera holds its corridor view · run-at-camera = boulder-chase framing, forward charges the lens';
+      this.propsEl.appendChild(note);
+    } else if (c.t === 'rope') {
+      num('length', () => c.len ?? 12, (v) => (c.len = Math.max(2, v)));
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      num('sag', () => c.amp ?? 1.2, (v) => (c.amp = Math.max(0.1, v)), 0.1);
+      num('break secs', () => c.shake ?? 3, (v) => (c.shake = Math.max(0.2, v)), 0.2);
+      const note = document.createElement('div');
+      note.className = 'ed-dim';
+      note.textContent =
+        'a grindable rope strung between posts: it sags under a grind, snaps after the break time, and restrings itself';
+      this.propsEl.appendChild(note);
     } else if (c.t === 'pipe') {
       num('length', () => c.len ?? 36, (v) => (c.len = Math.max(6, v)), 2);
       num('flat half', () => c.w ?? 3, (v) => (c.w = Math.max(1, v)));

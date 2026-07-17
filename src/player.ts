@@ -316,7 +316,7 @@ export class Player {
   private rawInput!: Input; // pre-remap stick (see step): slam/grab-spin/balance
   // Travel axes, latched across zone boundaries: the course usually runs
   // along -Z ('S'), but turned stretches run along +X ('E') / -X ('W').
-  private travelDir: 'S' | 'E' | 'W' = 'S';
+  private travelDir: 'S' | 'E' | 'W' | 'N' = 'S';
   private axisF = new THREE.Vector3(0, 0, -1); // along-course
   private axisL = new THREE.Vector3(1, 0, 0); // stick-right sidestep
   private haltCd = 0; // screech-sound cooldown for wall stops
@@ -466,10 +466,16 @@ export class Player {
     return this.freeSkate;
   }
 
-  private setTravelDir(dir: 'S' | 'E' | 'W'): void {
+  private setTravelDir(dir: 'S' | 'E' | 'W' | 'N'): void {
     this.travelDir = dir;
     if (dir === 'S') {
       this.axisF.set(0, 0, -1);
+      this.axisL.set(1, 0, 0);
+    } else if (dir === 'N') {
+      // RUN AT THE CAMERA (boulder-chase framing): forward is +Z, straight
+      // into the lens; stick-right stays screen-right (+X), so controls read
+      // exactly like the normal corridor — mirrored world, same hands
+      this.axisF.set(0, 0, 1);
       this.axisL.set(1, 0, 0);
     } else if (dir === 'E') {
       // stick-up = away from the camera (-Z) on turned stretches
@@ -716,12 +722,12 @@ export class Player {
       const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
       const alongNew =
-        wantDir === 'S' ? input.moveY : wantDir === 'E' ? input.moveX : -input.moveX;
+        wantDir === 'S' || wantDir === 'N' ? input.moveY : wantDir === 'E' ? input.moveX : -input.moveX;
       this.speed =
         Math.abs(alongNew) > 0.3 ? Math.sign(alongNew) * Math.abs(oldSpeed) * 0.7 : 0;
     }
     let ctl =
-      this.travelDir === 'S' || level.laneActive
+      this.travelDir === 'S' || this.travelDir === 'N' || level.laneActive
         ? input
         : this.travelDir === 'E'
           ? ({ ...input, moveY: input.moveX, moveX: input.moveY } as unknown as Input)

@@ -201,6 +201,8 @@ export interface CustomComponent {
     | 'enemy' // patrols along X around p, range each way
     | 'crusher' // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | 'pendulum' // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
+    | 'zone' // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
+    | 'rope' // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
     | 'wumpa'
     | 'crystal'; // one per level (the editor enforces it)
   p: [number, number, number];
@@ -232,6 +234,7 @@ export interface CustomComponent {
   radius?: number; // camnode: corner radius where the camera lane turns at this node
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   tex?: string; // surface texture kind (see TEX_KINDS) for platform / ramp / wall / crumble / rock — tinted by color
+  dir?: 'E' | 'W' | 'N'; // zone: travel direction — E/W turn the course sideways (side-scroll), N runs it INTO the camera
   layer?: number; // LEGACY editor layer id (folded into lk by migration)
   grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
   lk?: boolean; // editor lock: click-through, marquee-proof, edit-proof
@@ -622,7 +625,7 @@ export class Level {
   // Travel zones: rectangular regions where the course itself runs along X
   // instead of -Z (a real right-angle turn in the path). The camera never
   // yaws — the turned path is what makes those stretches side-scrolling.
-  zones: { xMin: number; xMax: number; zMin: number; zMax: number; dir: 'E' | 'W' }[] = [];
+  zones: { xMin: number; xMax: number; zMin: number; zMax: number; dir: 'E' | 'W' | 'N' }[] = [];
   finishBox = new THREE.Box3();
   finishZ = -1005;
   endWallZ = -1021; // authored hard stop after the finish gate
@@ -1105,8 +1108,9 @@ export class Level {
   // are HARVESTED from the live scene after building — positions are read off
   // the final meshes/entities, so authored shifts (the gauntlet offset) come
   // through correct by construction. Bespoke set pieces with no component
-  // language (boulder chase, side-scroll zones, sky-ropes, movers, decor
-  // foliage, finish gates) are skipped: the copy is the editable geometry.
+  // language (boulder chase, movers, decor foliage, finish gates) are
+  // skipped: the copy is the editable geometry. Travel zones and sagging
+  // ropes DO come through — they have components now.
   private builtFromData: CustomLevelData | null = null;
   captureData(): CustomLevelData {
     if (this.builtFromData) {
@@ -1226,9 +1230,10 @@ export class Level {
           );
         });
       });
+    const ropeRails = new Set(this.ropes.map((r) => r.rail));
     for (const rail of this.rails) {
       const pts = rail.points;
-      if (pts.length < 2 || isCoping(pts)) continue;
+      if (pts.length < 2 || isCoping(pts) || ropeRails.has(rail)) continue;
       const p0 = pts[0];
       C.push({
         t: 'rail',
@@ -1322,6 +1327,30 @@ export class Level {
         yaw: pe.yaw ? Math.round(THREE.MathUtils.radToDeg(pe.yaw)) : undefined,
       });
     }
+    // sagging ropes: endpoints off the taut rest nodes
+    for (const rope of this.ropes) {
+      const a = rope.rest[0];
+      const bnd = rope.rest[rope.rest.length - 1];
+      const len = Math.hypot(bnd.x - a.x, bnd.z - a.z);
+      const yaw = Math.round(THREE.MathUtils.radToDeg(Math.atan2(bnd.x - a.x, bnd.z - a.z)));
+      C.push({
+        t: 'rope',
+        p: [r2((a.x + bnd.x) / 2), r2(a.y), r2((a.z + bnd.z) / 2)],
+        len: r2(len),
+        yaw: yaw !== 0 ? yaw : undefined,
+        amp: r2(rope.sagAmt),
+        shake: r2(rope.breakTime),
+      });
+    }
+    // travel zones: side-scroll stretches / run-at-camera regions
+    for (const zn of this.zones) {
+      C.push({
+        t: 'zone',
+        p: [r2((zn.xMin + zn.xMax) / 2), 0.5, r2((zn.zMin + zn.zMax) / 2)],
+        s: [r2(zn.xMax - zn.xMin), 1, r2(zn.zMax - zn.zMin)],
+        dir: zn.dir,
+      });
+    }
     if (this.crystalPickup) {
       const p = this.crystalPickup.group.position;
       C.push({ t: 'crystal', p: [r2(p.x), r2(p.y), r2(p.z)] });
@@ -1398,7 +1427,7 @@ export class Level {
         this.root.children[c].userData.editorIdx = idx;
       }
     };
-    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'crumble', 'pit', 'metal', 'rock']);
+    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'rope', 'crumble', 'pit', 'metal', 'rock']);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
     // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
@@ -1815,6 +1844,62 @@ export class Level {
                 );
               }
             }
+          } else if (c.t === 'rope') {
+            // sagging grindable rope strung between two posts: len along yaw
+            const len = c.len ?? 12;
+            const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
+            const dx = (Math.sin(a) * len) / 2;
+            const dz = (Math.cos(a) * len) / 2;
+            this.skyRope(
+              c.p[0] - dx,
+              c.p[2] - dz,
+              c.p[0] + dx,
+              c.p[2] + dz,
+              c.p[1],
+              c.shake ?? 3,
+              c.amp ?? 1.2,
+              4,
+            );
+          } else if (c.t === 'zone') {
+            // travel zone: a region that turns the course sideways (E/W) or
+            // runs it straight AT the camera (N). Invisible in play; the
+            // editor reveals a tinted slab ghost with a direction arrow.
+            const s = c.s ?? [14, 1, 10];
+            this.zones.push({
+              xMin: c.p[0] - s[0] / 2,
+              xMax: c.p[0] + s[0] / 2,
+              zMin: c.p[2] - s[2] / 2,
+              zMax: c.p[2] + s[2] / 2,
+              dir: c.dir ?? 'E',
+            });
+            const ghost = new THREE.Mesh(
+              new THREE.BoxGeometry(s[0], 0.3, s[2]),
+              new THREE.MeshBasicMaterial({
+                color: c.dir === 'N' ? 0xffb060 : 0x9a6cff,
+                transparent: true,
+                opacity: 0.2,
+                depthWrite: false,
+              }),
+            );
+            ghost.position.set(c.p[0], c.p[1] + 0.3, c.p[2]);
+            ghost.visible = false;
+            ghost.userData.editorGhost = true;
+            this.root.add(ghost);
+            const arrow = new THREE.Mesh(
+              new THREE.ConeGeometry(0.9, 2.6, 5),
+              new THREE.MeshBasicMaterial({
+                color: c.dir === 'N' ? 0xffb060 : 0x9a6cff,
+                transparent: true,
+                opacity: 0.65,
+                depthWrite: false,
+              }),
+            );
+            arrow.position.set(c.p[0], c.p[1] + 1.4, c.p[2]);
+            arrow.rotation.z = c.dir === 'E' ? -Math.PI / 2 : c.dir === 'W' ? Math.PI / 2 : 0;
+            if (c.dir === 'N') arrow.rotation.x = Math.PI / 2; // points at the lens
+            arrow.visible = false;
+            arrow.userData.editorGhost = true;
+            this.root.add(arrow);
           } else if (c.t === 'crumble') {
             const s = c.s ?? [3, 1, 3];
             const col = c.color ? new THREE.Color(c.color).getHex() : undefined;
@@ -1931,7 +2016,7 @@ export class Level {
       .length;
   }
 
-  zoneAt(x: number, z: number): { dir: 'E' | 'W' } | null {
+  zoneAt(x: number, z: number): { dir: 'E' | 'W' | 'N' } | null {
     for (const zn of this.zones) {
       if (x >= zn.xMin && x <= zn.xMax && z >= zn.zMin && z <= zn.zMax) return zn;
     }
@@ -3460,8 +3545,9 @@ export class Level {
 
   // Sky-bridge side rope: a grindable, saggable, breakable rope running along Z.
   private skyRope(
-    x: number,
+    x0: number,
     z0: number,
+    x1: number,
     z1: number,
     y: number,
     breakTime = 3,
@@ -3471,7 +3557,13 @@ export class Level {
     const N = 8;
     const rest: THREE.Vector3[] = [];
     for (let i = 0; i <= N; i++) {
-      rest.push(new THREE.Vector3(x, y, THREE.MathUtils.lerp(z0, z1, i / N)));
+      rest.push(
+        new THREE.Vector3(
+          THREE.MathUtils.lerp(x0, x1, i / N),
+          y,
+          THREE.MathUtils.lerp(z0, z1, i / N),
+        ),
+      );
     }
     const rail = new Rail(
       rest.map((p) => p.clone()),
@@ -3487,9 +3579,12 @@ export class Level {
       segs.push(seg);
     }
     const postMat = new THREE.MeshLambertMaterial({ color: 0x6b4a2a });
-    for (const zp of [z0, z1]) {
+    for (const [px, pz] of [
+      [x0, z0],
+      [x1, z1],
+    ]) {
       const post = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.3, 1.8, 7), postMat);
-      post.position.set(x, y - 0.5, zp);
+      post.position.set(px, y - 0.5, pz);
       group.add(post);
     }
     this.root.add(group);
@@ -6084,7 +6179,7 @@ export class Level {
     const zEdges = [-2, -26, -50, -74, -98, -122];
     for (let s = 0; s < zEdges.length - 1; s++) {
       for (const rx of [-ropeX, ropeX]) {
-        this.skyRope(rx, zEdges[s], zEdges[s + 1], ropeY, 3.0, 1.15, 4);
+        this.skyRope(rx, zEdges[s], rx, zEdges[s + 1], ropeY, 3.0, 1.15, 4);
       }
     }
   }
