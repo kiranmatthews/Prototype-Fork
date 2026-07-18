@@ -4836,10 +4836,10 @@ export class Player {
       // the lifted leg folds its shin under the raised thigh (prance step)
       const frontL = 1.1 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp + 0.8 * jp * Math.max(0, riseK);
       const frontR = 1.1 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp + 0.65 * jp * Math.max(0, riseK);
-      // the running-charge knee fold fades out on the board — folded knees
-      // swing the shoes forward THROUGH the deck; a board pump crouches via
-      // the torso drop instead, feet staying planted on the grip
-      const chargeBend = 0.85 * this.chargePose * (1 - sk);
+      // the deep running-charge knee fold swings the shoes forward THROUGH
+      // the deck — on the board it eases down to a shallow athletic bend
+      // (the matching legs.scale term keeps the soles pinned to the grip)
+      const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk);
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
       this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose);
@@ -5057,6 +5057,7 @@ export class Player {
         0.15,
         1 -
           0.22 * this.deckPose * (1 - this.wallridePose) - // stand ON the deck top, not through it (wallride keeps its own tuck)
+          0.1 * this.chargePose * this.skatePose - // absorbs the pump's shallow knee bend so the feet stay planted
           0.5 * this.grabPose -
           0.4 * flipTuck -
           0.45 * this.crawlPose -
@@ -5069,7 +5070,7 @@ export class Player {
       // The charge crouch drops the whole bodyGroup 0.26 (world) — the board
       // rides that group, so push it back up (0.26 / the 1.18 body scale) to
       // keep the wheels ON the ground instead of clipping through it.
-      this.boardG.position.y = 0.5 * this.grabPose + 0.22 * this.chargePose;
+      this.boardG.position.y = 0.5 * this.grabPose + this.chargePose * (0.22 - 0.12 * this.skatePose);
       this.boardG.rotation.x = 0.3 * this.grabPose; // nose tips up in the hand
       // The deck does NOT turn with the side-on body: counter-rotate the
       // stance yaw so the board stays along the line of travel (spins and
@@ -5250,7 +5251,7 @@ export class Player {
       this.grabPose * -0.5 -
       this.slidePose * 0.38 -
       (crawlMove * 0.2 + crouchW * 0.36) - // crawl: shallow drop — the pitch already lays her out; deeper buries the knees
-      this.chargePose * 0.26 -
+      this.chargePose * (0.26 - 0.14 * this.skatePose) - // board pump: shallower — a full drop telescopes the torso through the deck
       this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * this.dropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.075 * this.walkAmp + // reference bounce: each step hops
