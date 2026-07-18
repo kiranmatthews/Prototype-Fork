@@ -89,7 +89,8 @@ export class Player {
   private comboGraceWarned = false;
   private comboDied = false;
   onComboGraceLow: () => void = () => {}; // grace nearly gone and still no combo — nudge the HUD
-  private balanceBoostT = 0; // perfect-balance window from a cyan boost crate
+  balanceBoostT = 0; // perfect-balance window from a cyan boost crate (HUD meters it)
+  speedBoostT = 0; // speed-surge window from an orange boost crate (HUD meters it)
   onComboRunStart: () => void = () => {};
   onComboRunFail: () => void = () => {};
   onComboRunWin: () => void = () => {};
@@ -536,6 +537,7 @@ export class Player {
     this.comboDied = false;
     this.comboWasLive = false;
     this.balanceBoostT = 0;
+    this.speedBoostT = 0;
     if (hard) {
       this.lives = 3;
       this.hasCrystal = false;
@@ -867,6 +869,14 @@ export class Player {
     // Perfect-balance boost window (cyan combo-run crates): teal sparkle cue.
     this.balanceBoostT = Math.max(0, this.balanceBoostT - dt);
     if (this.balanceBoostT > 0 && Math.random() < 0.3) this.emitSparks(1, 0x5ee0ff, 1.2);
+    // Speed surge (orange combo-run crates): the floor stays boosted for the
+    // window — friction can't bleed you back down until it runs out.
+    this.speedBoostT = Math.max(0, this.speedBoostT - dt);
+    if (this.speedBoostT > 0) {
+      if (Math.random() < 0.3) this.emitSparks(1, 0xff9a3a, 1.2);
+      if (this.speed >= 0 && (this.state === 'ride' || this.state === 'grind'))
+        this.speed = Math.max(this.speed, Math.min(TUNING.cruiseSpeed + 6, TUNING.maxSpeed));
+    }
     // COMBO RUN: the run lives exactly as long as the combo does. Any end —
     // banked, bailed, eaten — with the gem still out there = run failed. And
     // the combo must START promptly: the grace clock stops anyone strolling
@@ -4291,6 +4301,7 @@ export class Player {
         sfx.play('crystalGet', 0.55, 1.4);
       } else if (c.boost === 'speed') {
         this.speed = Math.min(Math.abs(this.speed) + 8, TUNING.maxSpeed + 6);
+        this.speedBoostT = 4; // the surge window the HUD meters
         this.emitSparks(10, 0xff9a3a, 2.2);
         sfx.play('crystalGet', 0.5, 1.6);
       } else if (c.boost === 'balance') {

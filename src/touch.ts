@@ -399,6 +399,7 @@ export class TouchControls {
       body.tc-on .hud-ttfreeze { font-size: 11px; }
       body.tc-on .hud-ttresults { min-width: 0; width: 78vw; padding: 12px 14px 10px; }
       body.tc-on .hud-ttres-time { font-size: 32px; }
+      body.tc-on .hud-boosts { bottom: 44%; }
       body.tc-on .hud-trickplate { bottom: 35%; }
       body.tc-on .hud-trickline { font-size: 15px; letter-spacing: 1px; }
       body.tc-on .hud-tricktotal { font-size: 23px; letter-spacing: 2px; }

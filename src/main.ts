@@ -906,6 +906,7 @@ function frame(): void {
 
   ui.updateBalance(player.balanceMeter);
   ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
+  ui.updateBoosts(player.speedBoostT, 4, player.balanceBoostT, 6);
   const tricks = player.comboLabels;
   ui.setHUD({
     points: player.points,

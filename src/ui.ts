@@ -51,6 +51,10 @@ export class UI {
   private ttOn = false;
   private haloEl!: HTMLElement; // combo-run green viewport halo
   private comboGemIcon!: HTMLElement;
+  private boostSpeedRow!: HTMLElement; // depleting meters for the boost-crate windows
+  private boostSpeedFill!: HTMLElement;
+  private boostBalRow!: HTMLElement;
+  private boostBalFill!: HTMLElement;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -318,6 +322,25 @@ export class UI {
     this.ttClockEl.style.display = 'none';
     this.ttResultsEl = div('hud-ttresults');
     this.ttResultsEl.style.display = 'none';
+
+    // boost meters: one depleting bar per active boost-crate window
+    const boosts = div('hud-boosts');
+    const mkBoost = (cls: string, label: string): [HTMLElement, HTMLElement] => {
+      const row = div(`hud-boost ${cls}`);
+      const lab = div('hud-boostlabel');
+      lab.textContent = label;
+      const bar = div('hud-boostbar');
+      const fill = div('hud-boostfill');
+      bar.appendChild(fill);
+      row.appendChild(lab);
+      row.appendChild(bar);
+      row.style.display = 'none';
+      boosts.appendChild(row);
+      return [row, fill];
+    };
+    [this.boostSpeedRow, this.boostSpeedFill] = mkBoost('hud-boost-speed', 'SPEED');
+    [this.boostBalRow, this.boostBalFill] = mkBoost('hud-boost-bal', 'BALANCE');
+    document.body.appendChild(boosts);
     // Debug cheat: clicking the face banks an extra life. The HUD layer is
     // pointer-transparent, so this row opts back in.
     livesRow.style.cursor = 'pointer';
@@ -656,6 +679,20 @@ export class UI {
   setRunRows(on: boolean): void {
     this.wumpaRowEl.style.display = on ? 'none' : '';
     this.livesRowEl.style.display = on ? 'none' : '';
+  }
+
+  // Boost-crate windows: a depleting bar per active boost, flashing when
+  // the last second is running out.
+  updateBoosts(speedT: number, speedMax: number, balT: number, balMax: number): void {
+    const setRow = (row: HTMLElement, fill: HTMLElement, t: number, max: number): void => {
+      const on = t > 0;
+      row.style.display = on ? 'flex' : 'none';
+      if (!on) return;
+      fill.style.width = `${Math.max(0, Math.min(1, t / max)) * 100}%`;
+      row.classList.toggle('hud-boost-low', t < 1);
+    };
+    setRow(this.boostSpeedRow, this.boostSpeedFill, speedT, speedMax);
+    setRow(this.boostBalRow, this.boostBalFill, balT, balMax);
   }
 
   // Combo-run viewport halo: 'on' = green glow breathing at the edges,
@@ -1108,6 +1145,31 @@ export class UI {
         font-size: 16px; font-weight: normal; color: #9fb0c8; margin-top: 14px;
         letter-spacing: 2px;
       }
+      /* boost-crate meters: small labeled bars above the trick readout */
+      .hud-boosts {
+        position: fixed; z-index: 10; left: 50%; bottom: 13%;
+        transform: translateX(-50%); pointer-events: none;
+        display: flex; flex-direction: column; gap: 4px; align-items: center;
+      }
+      .hud-boost { display: flex; align-items: center; gap: 7px; }
+      .hud-boostlabel {
+        font: italic bold 12px Impact, 'Arial Black', sans-serif; letter-spacing: 2px;
+        text-shadow: 1px 0 0 #101820, -1px 0 0 #101820, 0 1px 0 #101820, 0 -1px 0 #101820;
+      }
+      .hud-boost-speed .hud-boostlabel { color: #ffb45e; }
+      .hud-boost-bal .hud-boostlabel { color: #7ce8ff; }
+      .hud-boostbar {
+        width: 130px; height: 9px; border-radius: 5px; overflow: hidden;
+        background: linear-gradient(180deg, rgba(8, 10, 15, 0.85), rgba(26, 30, 44, 0.85));
+        border: 1px solid #3a4152;
+        box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+      .hud-boostfill { height: 100%; border-radius: 4px; }
+      .hud-boost-speed .hud-boostfill { background: linear-gradient(90deg, #ff8a2a, #ffd75e); }
+      .hud-boost-bal .hud-boostfill { background: linear-gradient(90deg, #2ab8e8, #8ef2ff); }
+      .hud-boost-low { animation: boostblink 0.3s steps(2, start) infinite; }
+      @keyframes boostblink { to { opacity: 0.35; } }
+
       .hud-balance {
         position: fixed; z-index: 10; left: 50%; bottom: 24%;
         transform: translateX(-50%); width: 240px; height: 14px;
