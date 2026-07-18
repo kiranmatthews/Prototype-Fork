@@ -5503,9 +5503,9 @@ export class Level {
             c.timeSecs = secsPattern[Math.floor(i / 3) % secsPattern.length];
             mat.map = this.timeTexture(c.timeSecs);
           } else {
-            // combo run: alternating speed bursts and perfect-balance windows
-            c.boost = Math.floor(i / 3) % 2 === 0 ? 'speed' : 'balance';
-            mat.map = this.boostTexture(c.boost);
+            // combo run: perfect-balance crates — the windows STACK
+            c.boost = 'balance';
+            mat.map = this.boostTexture('balance');
           }
         } else {
           mat.map = this.plainTexture();

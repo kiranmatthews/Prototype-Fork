@@ -51,10 +51,8 @@ export class UI {
   private ttOn = false;
   private haloEl!: HTMLElement; // combo-run green viewport halo
   private comboGemIcon!: HTMLElement;
-  private boostSpeedRow!: HTMLElement; // depleting meters for the boost-crate windows
-  private boostSpeedFill!: HTMLElement;
-  private boostBalRow!: HTMLElement;
-  private boostBalFill!: HTMLElement;
+  private boostRingWrap!: HTMLElement; // balance-boost ring: laps over itself as windows stack
+  private boostRing!: HTMLElement;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -323,23 +321,16 @@ export class UI {
     this.ttResultsEl = div('hud-ttresults');
     this.ttResultsEl.style.display = 'none';
 
-    // boost meters: one depleting bar per active boost-crate window
+    // balance-boost ring: a green radial meter that laps over itself as
+    // crate windows stack
     const boosts = div('hud-boosts');
-    const mkBoost = (cls: string, label: string): [HTMLElement, HTMLElement] => {
-      const row = div(`hud-boost ${cls}`);
-      const lab = div('hud-boostlabel');
-      lab.textContent = label;
-      const bar = div('hud-boostbar');
-      const fill = div('hud-boostfill');
-      bar.appendChild(fill);
-      row.appendChild(lab);
-      row.appendChild(bar);
-      row.style.display = 'none';
-      boosts.appendChild(row);
-      return [row, fill];
-    };
-    [this.boostSpeedRow, this.boostSpeedFill] = mkBoost('hud-boost-speed', 'SPEED');
-    [this.boostBalRow, this.boostBalFill] = mkBoost('hud-boost-bal', 'BALANCE');
+    this.boostRing = div('hud-boostring');
+    boosts.appendChild(this.boostRing);
+    const boostLab = div('hud-boostlabel');
+    boostLab.textContent = 'BALANCE';
+    boosts.appendChild(boostLab);
+    boosts.style.display = 'none';
+    this.boostRingWrap = boosts;
     document.body.appendChild(boosts);
     // Debug cheat: clicking the face banks an extra life. The HUD layer is
     // pointer-transparent, so this row opts back in.
@@ -681,18 +672,22 @@ export class UI {
     this.livesRowEl.style.display = on ? 'none' : '';
   }
 
-  // Boost-crate windows: a depleting bar per active boost, flashing when
-  // the last second is running out.
-  updateBoosts(speedT: number, speedMax: number, balT: number, balMax: number): void {
-    const setRow = (row: HTMLElement, fill: HTMLElement, t: number, max: number): void => {
-      const on = t > 0;
-      row.style.display = on ? 'flex' : 'none';
-      if (!on) return;
-      fill.style.width = `${Math.max(0, Math.min(1, t / max)) * 100}%`;
-      row.classList.toggle('hud-boost-low', t < 1);
-    };
-    setRow(this.boostSpeedRow, this.boostSpeedFill, speedT, speedMax);
-    setRow(this.boostBalRow, this.boostBalFill, balT, balMax);
+  // Balance-boost ring: each full turn is one crate window; stacked windows
+  // lap over themselves, the completed laps banked as a deeper green
+  // underneath the live arc. Flashes when the last second is running out.
+  updateBalanceBoost(t: number, per: number): void {
+    const on = t > 0;
+    this.boostRingWrap.style.display = on ? 'flex' : 'none';
+    if (!on) return;
+    const laps = Math.floor(t / per);
+    const frac = (t / per) % 1;
+    const shades = ['#1c6e3c', '#2fae5c', '#46e882', '#a4ffc8'];
+    const track = 'rgba(10, 30, 18, 0.75)';
+    const under = laps === 0 ? track : shades[Math.min(laps - 1, shades.length - 1)];
+    const over = shades[Math.min(laps, shades.length - 1)];
+    this.boostRing.style.background =
+      frac <= 0 ? under : `conic-gradient(${over} 0turn ${frac}turn, ${under} ${frac}turn 1turn)`;
+    this.boostRingWrap.classList.toggle('hud-boost-low', t < 1);
   }
 
   // Combo-run viewport halo: 'on' = green glow breathing at the edges,
@@ -1145,28 +1140,24 @@ export class UI {
         font-size: 16px; font-weight: normal; color: #9fb0c8; margin-top: 14px;
         letter-spacing: 2px;
       }
-      /* boost-crate meters: small labeled bars above the trick readout */
+      /* balance-boost ring: green radial meter above the trick readout,
+         lapping over itself when crate windows stack */
       .hud-boosts {
         position: fixed; z-index: 10; left: 50%; bottom: 13%;
         transform: translateX(-50%); pointer-events: none;
-        display: flex; flex-direction: column; gap: 4px; align-items: center;
+        display: flex; flex-direction: column; gap: 5px; align-items: center;
       }
-      .hud-boost { display: flex; align-items: center; gap: 7px; }
+      .hud-boostring {
+        width: 58px; height: 58px; border-radius: 50%;
+        -webkit-mask: radial-gradient(closest-side, transparent 60%, #000 61%);
+        mask: radial-gradient(closest-side, transparent 60%, #000 61%);
+        filter: drop-shadow(0 0 6px rgba(70, 232, 130, 0.45));
+      }
       .hud-boostlabel {
         font: italic bold 12px Impact, 'Arial Black', sans-serif; letter-spacing: 2px;
+        color: #46e882;
         text-shadow: 1px 0 0 #101820, -1px 0 0 #101820, 0 1px 0 #101820, 0 -1px 0 #101820;
       }
-      .hud-boost-speed .hud-boostlabel { color: #ffb45e; }
-      .hud-boost-bal .hud-boostlabel { color: #7ce8ff; }
-      .hud-boostbar {
-        width: 130px; height: 9px; border-radius: 5px; overflow: hidden;
-        background: linear-gradient(180deg, rgba(8, 10, 15, 0.85), rgba(26, 30, 44, 0.85));
-        border: 1px solid #3a4152;
-        box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.1);
-      }
-      .hud-boostfill { height: 100%; border-radius: 4px; }
-      .hud-boost-speed .hud-boostfill { background: linear-gradient(90deg, #ff8a2a, #ffd75e); }
-      .hud-boost-bal .hud-boostfill { background: linear-gradient(90deg, #2ab8e8, #8ef2ff); }
       .hud-boost-low { animation: boostblink 0.3s steps(2, start) infinite; }
       @keyframes boostblink { to { opacity: 0.35; } }
 
