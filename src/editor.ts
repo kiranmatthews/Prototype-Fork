@@ -31,6 +31,7 @@ interface Hooks {
   exitToPlay: () => void; // leave the editor and hand control back to the game
   showMsg: (title: string, sub?: string) => void;
   restoreOriginal: () => void; // built-in override: clear it, rebuild the hand-coded level
+  setView: (editing: boolean) => void; // toggle the fog-free, far-plane-extended editor view
 }
 
 // what the ADD palette spawns, at the camera's focus point — grouped, each
@@ -295,6 +296,7 @@ export class Editor {
     this.renderLayers();
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
+    this.hooks.setView(true); // no fog, far plane pushed out — see the whole level
     const editing = target === 7 ? 'CUSTOM SANDBOX' : `EDITING: ${LEVEL_NAMES[target].toUpperCase()}`;
     this.hooks.showMsg(editing, 'drag = select & move · RIGHT-drag = orbit · space = pan');
   }
@@ -302,6 +304,7 @@ export class Editor {
   exit(): void {
     if (!this.active) return;
     this.active = false;
+    this.hooks.setView(false); // restore the level's fog + play draw distance
     this.saveCam();
     localStorage.removeItem('protoEditorOpen');
     localStorage.removeItem('protoEditorTarget');

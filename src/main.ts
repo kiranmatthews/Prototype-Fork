@@ -244,9 +244,22 @@ function makeSkyTexture(t: Level['theme']): THREE.CanvasTexture {
   return new THREE.CanvasTexture(canvas);
 }
 
+// The editor wants to SEE the whole level — no fog swallowing the far end, no
+// draw-distance cull. Entering drops the fog and pushes the far plane way out;
+// exiting restores the level's atmosphere. The flag survives edit rebuilds
+// (applyTheme runs on every commit), so fog stays off the whole session.
+let editorViewActive = false;
+function setEditorView(editing: boolean): void {
+  editorViewActive = editing;
+  camera.far = editing ? 12000 : 400; // 400 = the play draw distance
+  camera.updateProjectionMatrix();
+  applyTheme(); // re-applies (or clears) fog for the new mode
+}
+
 function applyTheme(): void {
   const t = level.theme;
-  scene.fog = new THREE.Fog(t.fog, t.fogNear, t.fogFar);
+  // editor view: no fog at all, so distant geometry stays crisp and visible
+  scene.fog = editorViewActive ? null : new THREE.Fog(t.fog, t.fogNear, t.fogFar);
   scene.background = new THREE.Color(t.fog);
   hemi.color.set(t.hemiSky);
   // ground bounce leans toward warm sand: every theme reads a touch tropical
@@ -367,6 +380,8 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
     ui.showMessage('TEST RUN', 'press ✎ LEVEL EDITOR to keep editing', 1600);
   },
   showMsg: (t, s) => ui.showMessage(t, s ?? '', 1800),
+  // drop fog + extend the far plane on enter, restore on every exit path
+  setView: (editing) => setEditorView(editing),
 });
 function openEditor(target = 7): void {
   if (editor.active) return;
