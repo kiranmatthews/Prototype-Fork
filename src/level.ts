@@ -299,6 +299,22 @@ export function groupChainOf(c: CustomComponent, data: CustomLevelData): number[
   return chain;
 }
 
+// Where a finish gate lands when a level never had one: the deck of the
+// furthest down-course (-z) platform — guaranteed solid ground. Falls back
+// to just past spawn on a level with no platforms at all.
+function defaultGateFor(d: CustomLevelData): CustomComponent {
+  let best: CustomComponent | null = null;
+  for (const c of d.components) {
+    if (c.t !== 'platform') continue;
+    if (!best || c.p[2] < best.p[2]) best = c;
+  }
+  if (!best) return { t: 'gate', p: [d.spawn[0], Math.max(d.spawn[1] - 1, 0), d.spawn[2] - 12] };
+  const top = best.p[1] + (best.s?.[1] ?? 1);
+  // box decks: near the far (-z) edge; drawn blobs: their anchor point
+  const gz = best.pts ? best.p[2] : best.p[2] - (best.s?.[2] ?? 8) / 2 + 2.5;
+  return { t: 'gate', p: [+best.p[0].toFixed(2), +top.toFixed(2), +gz.toFixed(2)] };
+}
+
 // LEGACY MIGRATION: t:'outline' predates outline-as-a-state; load it as a
 // wood crate flagged outline so the new '!' wiring applies uniformly. Named
 // layer containers fold into per-component locks (the outliner replaced them).
@@ -315,6 +331,13 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     delete d.layers;
   }
   if (!d.groups) d.groups = [];
+  // TIME TRIAL PARADIGM: every level carries a finish gate the same way it
+  // carries a spawn point — without one a run could never end. Saves from
+  // before gates existed get one on their furthest down-course deck (move it
+  // wherever afterwards); duplicate gates collapse to the last one placed.
+  const lastGate = d.components.map((c) => c.t).lastIndexOf('gate');
+  if (lastGate === -1) d.components.push(defaultGateFor(d));
+  else d.components = d.components.filter((c, i) => c.t !== 'gate' || i === lastGate);
   return d;
 }
 

@@ -451,9 +451,9 @@ export class Editor {
   }
 
   private addComponent(c: CustomComponent): void {
-    // ONE crystal per level: placing a new one replaces the old
-    if (c.t === 'crystal') {
-      this.data.components = this.data.components.filter((o) => o.t !== 'crystal');
+    // ONE crystal / ONE finish gate per level: placing a new one replaces the old
+    if (c.t === 'crystal' || c.t === 'gate') {
+      this.data.components = this.data.components.filter((o) => o.t !== c.t);
     }
     this.data.components.push(c);
     this.commit();
@@ -461,14 +461,18 @@ export class Editor {
   }
 
   // append a batch (duplicate/paste) as ONE undo step and select the copies.
-  // The one-crystal rule holds: a crystal in the batch replaces the level's.
+  // The one-crystal / one-gate rules hold: one in the batch replaces the level's.
   private addBatch(batch: CustomComponent[]): void {
     if (batch.length === 0) return;
-    const lastCrystal = batch.map((c) => c.t).lastIndexOf('crystal');
-    const clean = batch.filter((c, i) => c.t !== 'crystal' || i === lastCrystal);
-    if (lastCrystal >= 0) {
-      this.data.components = this.data.components.filter((o) => o.t !== 'crystal');
+    let clean = batch;
+    for (const t of ['crystal', 'gate'] as const) {
+      const last = clean.map((c) => c.t).lastIndexOf(t);
+      if (last >= 0) {
+        clean = clean.filter((c, i) => c.t !== t || i === last);
+        this.data.components = this.data.components.filter((o) => o.t !== t);
+      }
     }
+    if (clean.length === 0) return;
     const start = this.data.components.length;
     this.data.components.push(...clean);
     this.commit();
@@ -477,7 +481,11 @@ export class Editor {
 
   private deleteSelected(): void {
     if (this.sel.length === 0) return;
-    const dying = [...this.sel].sort((a, b) => b - a);
+    // the finish gate is part of the level like the spawn point — move it, never delete it
+    const dying = [...this.sel].filter((i) => this.data.components[i].t !== 'gate').sort((a, b) => b - a);
+    if (dying.length < this.sel.length)
+      this.hooks.showMsg('THE FINISH GATE STAYS', 'every level keeps one — move it instead');
+    if (dying.length === 0) return;
     for (const i of dying) this.data.components.splice(i, 1);
     this.select(-1);
     this.commit();
