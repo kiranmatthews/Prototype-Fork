@@ -21,12 +21,16 @@ import {
   migrateCustomLevel,
   groupChainOf,
   TEX_KINDS,
+  LEVEL_NAMES,
+  getEditData,
+  persistEditData,
 } from './level';
 
 interface Hooks {
-  rebuild: () => void; // dispose + reconstruct the custom level from data
+  rebuild: () => void; // dispose + reconstruct the target level from data
   exitToPlay: () => void; // leave the editor and hand control back to the game
   showMsg: (title: string, sub?: string) => void;
+  restoreOriginal: () => void; // built-in override: clear it, rebuild the hand-coded level
 }
 
 // what the ADD palette spawns, at the camera's focus point — grouped, each
@@ -146,6 +150,8 @@ const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 
 export class Editor {
   active = false;
+  targetCourse = 7; // which level this session edits: 7 = custom sandbox, else a built-in's override
+  private resetBtn: HTMLButtonElement | null = null; // "start over" / "restore original" — label swaps by target
   data: CustomLevelData;
   // SELECTION is an ordered set of component indices; the LAST one is the
   // primary (it drives the props panel, snapping, and align actions).
@@ -241,11 +247,16 @@ export class Editor {
     window.addEventListener('keyup', this.onKeyUp);
   }
 
-  enter(): void {
+  enter(target = 7): void {
     if (this.active) return;
     this.active = true;
-    this.data = migrateCustomLevel(getCustomLevelData());
-    if (!this.lastCommitted) this.lastCommitted = JSON.stringify(this.data);
+    this.targetCourse = target;
+    localStorage.setItem('protoEditorTarget', String(target)); // refresh lands on the same level
+    this.data = migrateCustomLevel(getEditData(target));
+    // fresh history per target: switching levels must not undo across them
+    this.lastCommitted = JSON.stringify(this.data);
+    this.undoStack.length = 0;
+    this.redoStack.length = 0;
     this.controls = new OrbitControls(this.camera, this.dom);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.12;
@@ -275,6 +286,7 @@ export class Editor {
       this.camera.position.set(this.data.spawn[0] + 16, this.data.spawn[1] + 26, this.data.spawn[2] + 26);
     }
     localStorage.setItem('protoEditorOpen', '1'); // refresh lands back in the editor
+    if (this.resetBtn) this.resetBtn.textContent = target === 7 ? 'start over' : 'restore original';
     document.body.classList.add('ed-active'); // hides the play HUD under the tools
     this.panel.style.display = 'block';
     if (this.popWrap) this.popWrap.style.display = 'block';
@@ -283,7 +295,8 @@ export class Editor {
     this.renderLayers();
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
-    this.hooks.showMsg('LEVEL EDITOR', 'drag = select & move · RIGHT-drag = orbit · space = pan');
+    const editing = target === 7 ? 'CUSTOM SANDBOX' : `EDITING: ${LEVEL_NAMES[target].toUpperCase()}`;
+    this.hooks.showMsg(editing, 'drag = select & move · RIGHT-drag = orbit · space = pan');
   }
 
   exit(): void {
@@ -291,6 +304,7 @@ export class Editor {
     this.active = false;
     this.saveCam();
     localStorage.removeItem('protoEditorOpen');
+    localStorage.removeItem('protoEditorTarget');
     this.controls?.dispose();
     this.controls = null;
     document.body.classList.remove('ed-active');
@@ -415,12 +429,8 @@ export class Editor {
     this.lastCommitted = now;
     this.pruneGroups();
     this.renderLayers();
-    setCustomLevelData(this.data);
-    try {
-      localStorage.setItem('protoCustomLevel', now);
-    } catch {
-      /* storage full: the working copy still lives in memory */
-    }
+    if (this.targetCourse === 7) setCustomLevelData(this.data); // keep the sandbox cache fresh
+    persistEditData(this.targetCourse, now); // routes to the sandbox or the level's override slot
     if (rebuild) this.hooks.rebuild();
   }
 
@@ -428,12 +438,8 @@ export class Editor {
   private applyState(json: string): void {
     this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
     this.lastCommitted = json;
-    setCustomLevelData(this.data);
-    try {
-      localStorage.setItem('protoCustomLevel', json);
-    } catch {
-      /* ignore */
-    }
+    if (this.targetCourse === 7) setCustomLevelData(this.data);
+    persistEditData(this.targetCourse, json);
     this.select(-1);
     this.hooks.rebuild();
   }
@@ -1868,13 +1874,14 @@ export class Editor {
     // file ops
     panel.appendChild(h('<div class="ed-sect">FILE</div>'));
     const file = h('<div class="ed-grid"></div>');
-    const mk = (label: string, fn: () => void): void => {
+    const mk = (label: string, fn: () => void): HTMLButtonElement => {
       const b = h(`<button class="ed-btn">${label}</button>`) as HTMLButtonElement;
       b.addEventListener('click', () => {
         fn();
         b.blur();
       });
       file.appendChild(b);
+      return b;
     };
     mk('export', () => {
       const blob = new Blob([JSON.stringify(this.data, null, 1)], { type: 'application/json' });
@@ -1908,10 +1915,16 @@ export class Editor {
     });
     file.appendChild(filePick);
     mk('import', () => filePick.click());
-    mk('start over', () => {
-      this.data = starterCustomLevel();
-      this.select(-1);
-      this.commit();
+    // Sandbox: blank slate. Built-in override: hand back the original design
+    // (clears the override, which syncs as a reset). Label swaps in enter().
+    this.resetBtn = mk('start over', () => {
+      if (this.targetCourse === 7) {
+        this.data = starterCustomLevel();
+        this.select(-1);
+        this.commit();
+      } else {
+        this.hooks.restoreOriginal();
+      }
     });
     mk('undo ⌘Z', () => this.undo());
     mk('redo ⌘⇧Z', () => this.redo());

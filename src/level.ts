@@ -654,6 +654,122 @@ export function getCustomLevelData(): CustomLevelData {
   return CUSTOM_LEVEL;
 }
 
+// ---- DIRECT LEVEL EDITING: per-level override slots ------------------------
+// A synced editor writes a built-in level's edits to that level's own storage
+// slot; when a slot holds data, the level builds from it (through the same
+// component pipeline as Custom) instead of its hand-coded builder. Clearing
+// the slot brings the original back — the builders are never touched. These
+// slots double as the offline cache for the GitHub-synced levels file.
+export const EDITABLE_IDS = [0, 1, 2, 3, 4, 5, 6, 8]; // every level except the Custom sandbox
+export function levelOverrideKey(id: number): string {
+  return `protoLevelEdit:${id}`;
+}
+export function getLevelOverride(id: number): CustomLevelData | null {
+  try {
+    const raw = JSON.parse(localStorage.getItem(levelOverrideKey(id)) ?? 'null') as CustomLevelData | null;
+    if (raw && raw.v === 1 && Array.isArray(raw.components)) return raw;
+  } catch {
+    /* corrupt slot reads as pristine */
+  }
+  return null;
+}
+export function clearLevelOverride(id: number): void {
+  localStorage.removeItem(levelOverrideKey(id));
+}
+export function allLevelOverrides(): Record<string, CustomLevelData> {
+  const out: Record<string, CustomLevelData> = {};
+  for (const id of EDITABLE_IDS) {
+    const d = getLevelOverride(id);
+    if (d) out[String(id)] = d;
+  }
+  return out;
+}
+// Bring the local slots in line with the synced file. `skip` protects levels
+// with unpushed local edits (local wins until the push lands). Returns the
+// ids whose local data actually changed.
+export function applyRemoteLevels(remote: Record<string, CustomLevelData>, skip: Set<number>): number[] {
+  const changed: number[] = [];
+  for (const id of EDITABLE_IDS) {
+    if (skip.has(id)) continue;
+    const key = levelOverrideKey(id);
+    const local = localStorage.getItem(key);
+    const rem = remote[String(id)] ? JSON.stringify(remote[String(id)]) : null;
+    if (rem === local) continue;
+    if (rem) localStorage.setItem(key, rem);
+    else localStorage.removeItem(key);
+    changed.push(id);
+  }
+  return changed;
+}
+
+// DIRTY = edited locally since the last successful push. Dirty levels win over
+// the synced file (so a fetch never clobbers edits mid-session) and are the
+// payload a push sends.
+export function markLevelDirty(id: number): void {
+  const s = getDirtyIds();
+  s.add(id);
+  localStorage.setItem('protoLevelDirty', JSON.stringify([...s]));
+}
+export function getDirtyIds(): Set<number> {
+  try {
+    const raw = JSON.parse(localStorage.getItem('protoLevelDirty') ?? '[]') as number[];
+    if (Array.isArray(raw)) return new Set(raw);
+  } catch {
+    /* reset below */
+  }
+  return new Set();
+}
+export function clearDirty(ids: number[]): void {
+  const s = getDirtyIds();
+  for (const id of ids) s.delete(id);
+  localStorage.setItem('protoLevelDirty', JSON.stringify([...s]));
+}
+
+// The editor's working data for a given course: an existing override, else the
+// live custom sandbox (course 7). Always migrated so the gate/activators exist.
+export function getEditData(id: number): CustomLevelData {
+  if (id !== 7) {
+    const ov = getLevelOverride(id);
+    if (ov) return migrateCustomLevel(JSON.parse(JSON.stringify(ov)) as CustomLevelData);
+  }
+  return getCustomLevelData();
+}
+// Persist the editor's working data to the right slot for its target course
+// (the custom sandbox, or a built-in level's override — which marks it dirty).
+export function persistEditData(id: number, json: string): void {
+  try {
+    if (id === 7) {
+      localStorage.setItem('protoCustomLevel', json);
+    } else {
+      localStorage.setItem(levelOverrideKey(id), json);
+      markLevelDirty(id);
+    }
+  } catch {
+    /* storage full: the working copy still lives in memory */
+  }
+}
+
+// ---- DIRECT-EDIT UNLOCK: a client-side passcode gate ----------------------
+// Flips a built-in level's edit button from "edit a copy" to "edit this level
+// directly" and reveals the phone-sync controls. Not real security (the real
+// write credential is the GitHub token) — just a gate so a casual visitor to
+// the public build never trips into overwriting levels. SHA-256 of the
+// passcode is baked in; the cleartext never ships.
+const EDIT_PASS_HASH = '64145f0b744709a636dad052192339220347504f5c17ed4d0c22c5c27e416295';
+export async function checkEditPass(pass: string): Promise<boolean> {
+  const bytes = new TextEncoder().encode(pass);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  if (hex === EDIT_PASS_HASH) {
+    localStorage.setItem('protoEditUnlocked', '1');
+    return true;
+  }
+  return false;
+}
+export function isEditUnlocked(): boolean {
+  return localStorage.getItem('protoEditUnlocked') === '1';
+}
+
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
   crates: Crate[] = [];
@@ -1148,7 +1264,12 @@ export class Level {
     this.scene = scene;
     scene.add(this.root);
     this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
-    if (courseId === 1) this.buildSideways();
+    // DIRECT EDIT: a built-in level with a saved override builds from that
+    // data (through the component pipeline) instead of its hand-coded builder.
+    // Clearing the override brings the original straight back.
+    const override = courseId !== 7 ? getLevelOverride(courseId) : null;
+    if (override) this.buildCustom(migrateCustomLevel(override), courseId === 8);
+    else if (courseId === 1) this.buildSideways();
     else if (courseId === 2) this.buildRandom();
     else if (courseId === 3) this.buildBoulderDash();
     else if (courseId === 4) this.buildFlats();

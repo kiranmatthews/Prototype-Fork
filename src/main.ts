@@ -3,7 +3,24 @@
 
 import * as THREE from 'three';
 import { Input } from './input';
-import { Level, LEVEL_NAMES, setCustomLevelData } from './level';
+import {
+  Level,
+  LEVEL_NAMES,
+  CustomLevelData,
+  setCustomLevelData,
+  EDITABLE_IDS,
+  levelOverrideKey,
+  getLevelOverride,
+  clearLevelOverride,
+  allLevelOverrides,
+  applyRemoteLevels,
+  markLevelDirty,
+  getDirtyIds,
+  clearDirty,
+  isEditUnlocked,
+  checkEditPass,
+} from './level';
+import { pushLevels, fetchRemoteLevels, getToken, setToken } from './sync';
 import { Player } from './player';
 import { UI } from './ui';
 import { TUNING, CONST } from './tuning';
@@ -319,16 +336,30 @@ function switchLevel(id: number): void {
 
 // ---- level editor (Custom level, slot 8) -----------------------------------
 const editor = new Editor(scene, camera, renderer.domElement, () => level, {
-  // every edit rebuilds the custom level from data, so edit = play truth
+  // every edit rebuilds the level under edit from data, so edit = play truth.
+  // The target course is whatever the editor is bound to (custom sandbox, or a
+  // built-in level's override) — currentCourse tracks it (openEditor switched).
   rebuild: () => {
     level.dispose();
-    level = new Level(scene, 7);
+    level = new Level(scene, currentCourse);
     player.respawn(level, true);
     applyTheme();
-    recorder.start(7);
+    recorder.start(currentCourse);
     (window as unknown as Record<string, unknown>).__game &&
       (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
     editor.onLevelRebuilt();
+  },
+  // "restore original" on a built-in: drop the override, rebuild the hand-coded
+  // level, and mark it dirty so the RESET syncs to the phone too.
+  restoreOriginal: () => {
+    const id = editor.targetCourse;
+    if (id === 7) return;
+    clearLevelOverride(id);
+    markLevelDirty(id);
+    editor.exit();
+    switchLevel(id);
+    player.respawn(level, true);
+    ui.showMessage('ORIGINAL RESTORED', `${LEVEL_NAMES[id]} — SYNC to push the reset to your phone`, 2600);
   },
   exitToPlay: () => {
     editor.exit();
@@ -337,18 +368,18 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
   },
   showMsg: (t, s) => ui.showMessage(t, s ?? '', 1800),
 });
-function openEditor(): void {
+function openEditor(target = 7): void {
   if (editor.active) return;
-  if (currentCourse !== 7) switchLevel(7);
+  if (currentCourse !== target) switchLevel(target);
   // clear anything that could sit over/under the editor: a paused sim, a
   // dead/game-over player, the death overlay
   paused = false;
   ui.hideMessage();
   player.respawn(level, true);
   ui.showDeathScreen(false);
-  editor.enter();
+  editor.enter(target);
 }
-ui.onEditorOpen = openEditor;
+ui.onEditorOpen = () => openEditor(7); // the ✎ button opens the custom sandbox
 // MENU / TUNER while the editor owns the screen: the play panels are hidden
 // under the tools, so a tab tap first CLOSES the editor (edits are already
 // saved live) and drops back to play — then the panel opens normally.
@@ -372,15 +403,100 @@ ui.onEditCopy = () => {
     localStorage.setItem('protoCustomLevel', JSON.stringify(data));
     setCustomLevelData(data);
   }
-  openEditor();
+  openEditor(7);
   if (wasBuiltIn) {
     ui.showMessage('EDITING A COPY', `${level.name} → custom slot (previous custom backed up)`, 2600);
   }
 };
-// Refresh-proof editing: if the page reloads mid-edit, walk straight back
-// into the editor (the camera pose is restored by Editor.enter()). Deferred
-// past module init — openEditor touches state declared further down.
-if (localStorage.getItem('protoEditorOpen') === '1') setTimeout(() => openEditor(), 0);
+// EDIT THIS LEVEL (unlocked): edit the built-in level IN PLACE. First time on a
+// level, capture its geometry into that level's own override slot (named as the
+// level itself, not a "copy"); after that the override IS the level, so the
+// editor just reopens it. Bespoke set pieces (boulder chase, decor) don't round
+// -trip — but "restore original" always brings the hand-coded design back.
+ui.onEditThisLevel = () => {
+  const id = currentCourse;
+  if (id === 7 || !EDITABLE_IDS.includes(id)) {
+    openEditor(7);
+    return;
+  }
+  const fresh = !getLevelOverride(id);
+  if (fresh) {
+    const data = level.captureData();
+    data.name = LEVEL_NAMES[id]; // in place — not "(copy)"
+    localStorage.setItem(levelOverrideKey(id), JSON.stringify(data));
+    markLevelDirty(id);
+    switchLevel(id); // rebuild so the live level now IS its override
+  }
+  openEditor(id);
+  ui.showMessage(
+    `EDITING ${LEVEL_NAMES[id].toUpperCase()}`,
+    fresh ? 'edits save to this level — SYNC to push to your phone' : '',
+    2400,
+  );
+};
+// UNLOCK: the passcode gate for direct editing + phone sync.
+ui.onUnlockEditing = async (pass: string): Promise<boolean> => {
+  const ok = await checkEditPass(pass);
+  if (ok) {
+    ui.setEditUnlocked(true);
+    ui.showMessage('DIRECT EDITING UNLOCKED', 'EDIT THIS LEVEL + SYNC are on', 2200);
+  }
+  return ok;
+};
+// SYNC: push every locally-edited level to the repo file the phone reads.
+ui.onSyncPush = async (): Promise<void> => {
+  const dirtyBefore = [...getDirtyIds()];
+  ui.setSyncStatus('pushing to your phone…', 'busy');
+  const res = await pushLevels(allLevelOverrides());
+  if (res.ok) {
+    clearDirty(EDITABLE_IDS); // everything we just pushed is now clean
+    ui.setSyncStatus(res.msg, 'ok');
+    ui.refreshEditControls();
+  } else {
+    // a failed push must keep the dirty flags so the edits aren't lost
+    void dirtyBefore;
+    ui.setSyncStatus(res.msg, 'err');
+  }
+};
+ui.onTokenSet = (t: string) => {
+  setToken(t);
+  ui.setSyncStatus(getToken() ? 'token saved on this device' : 'token cleared', getToken() ? 'ok' : 'busy');
+  ui.refreshEditControls();
+};
+// Prime the UI with the current unlock/token/dirty state (state provider first,
+// so the initial refresh sees real values).
+ui.provideEditState = () => ({
+  unlocked: isEditUnlocked(),
+  hasToken: !!getToken(),
+  dirtyCount: getDirtyIds().size,
+  editable: EDITABLE_IDS.includes(currentCourse), // built-in editable levels (custom edits via ✎)
+  isOverride: currentCourse !== 7 && !!getLevelOverride(currentCourse),
+});
+ui.setEditUnlocked(isEditUnlocked());
+// Refresh-proof editing: if the page reloads mid-edit, walk straight back into
+// the editor on the SAME level (camera pose restored by Editor.enter()).
+// Deferred past module init — openEditor touches state declared further down.
+if (localStorage.getItem('protoEditorOpen') === '1') {
+  const t = Number(localStorage.getItem('protoEditorTarget')) || 7;
+  setTimeout(() => openEditor(t), 0);
+}
+
+// ---- CROSS-DEVICE SYNC: pull the published levels on load ------------------
+// Every device fetches the deployed levels.json and adopts it — EXCEPT levels
+// with unpushed local edits (those win until the next push). If a fetched
+// level differs from what's live right now (and we're not editing), rebuild it
+// so the change shows without a manual reload. This is how the phone picks up
+// what the Mac pushed.
+void (async () => {
+  const remote = await fetchRemoteLevels();
+  if (!remote) return;
+  const changed = applyRemoteLevels(remote as Record<string, CustomLevelData>, getDirtyIds());
+  if (changed.includes(currentCourse) && !editor.active) {
+    switchLevel(currentCourse);
+    player.respawn(level, true);
+  }
+  ui.refreshEditControls();
+})();
 
 // ---- playtest capture: input replays + gameplay video ----------------------
 
@@ -962,5 +1078,6 @@ frame();
   recorder,
   editor,
   openEditor,
+  ui, // debug: drive menu/sync controls from the console/harness
   GLTFLoader, // debug: inspect model files from the console/harness
 };

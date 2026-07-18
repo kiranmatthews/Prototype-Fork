@@ -96,11 +96,26 @@ export class UI {
   onLoadReplay: ((text: string) => void) | null = null;
   onEditorOpen: (() => void) | null = null;
   onEditCopy: (() => void) | null = null;
+  // direct-edit + phone sync (main.ts wires these)
+  onEditThisLevel: (() => void) | null = null;
+  onUnlockEditing: ((pass: string) => Promise<boolean>) | null = null;
+  onSyncPush: (() => Promise<void>) | null = null;
+  onTokenSet: ((token: string) => void) | null = null;
+  provideEditState:
+    | (() => { unlocked: boolean; hasToken: boolean; dirtyCount: number; editable: boolean; isOverride: boolean })
+    | null = null;
   // fired when a side tab (MENU / TUNER) is clicked, BEFORE the panel
   // toggles — main.ts uses it to close the editor so the panel isn't a
   // hidden husk while the tools own the screen
   onSideTab: ((side: 'left' | 'right') => void) | null = null;
   private recBtn!: HTMLButtonElement;
+  private copyBtn!: HTMLButtonElement; // "edit a copy" — hidden on editable levels once unlocked
+  private editThisBtn!: HTMLButtonElement; // "edit this level" — shown when unlocked
+  private syncPanel!: HTMLElement;
+  private tokenRow!: HTMLElement;
+  private pushRow!: HTMLElement;
+  private syncStatusEl!: HTMLElement;
+  private editUnlocked = false;
   private replayBadge!: HTMLElement;
   private recBadge!: HTMLElement;
 
@@ -144,6 +159,84 @@ export class UI {
       copyBtn.blur();
     });
     statsWrap.appendChild(copyBtn);
+    this.copyBtn = copyBtn;
+
+    // DIRECT EDIT (unlocked): edit the built-in level in place. Hidden until the
+    // passcode is entered; then it replaces the copy button on editable levels.
+    const editThisBtn = document.createElement('button');
+    editThisBtn.className = 'hud-levelbtn hud-editbtn hud-editthis';
+    editThisBtn.textContent = '✎ EDIT THIS LEVEL';
+    editThisBtn.title = 'edit this built-in level directly (syncs to your phone)';
+    editThisBtn.style.display = 'none';
+    editThisBtn.addEventListener('click', () => {
+      if (this.onEditThisLevel) this.onEditThisLevel();
+      editThisBtn.blur();
+    });
+    statsWrap.appendChild(editThisBtn);
+    this.editThisBtn = editThisBtn;
+
+    // UNLOCK / SYNC panel: a passcode row that expands into the phone-sync
+    // controls (GitHub token + push button + status) once unlocked.
+    const sync = div('hud-sync');
+    const unlockRow = div('hud-syncrow');
+    const passIn = document.createElement('input');
+    passIn.type = 'password';
+    passIn.className = 'hud-syncinput';
+    passIn.placeholder = 'passcode to unlock direct editing';
+    const unlockBtn = document.createElement('button');
+    unlockBtn.className = 'hud-syncbtn';
+    unlockBtn.textContent = 'unlock';
+    const tryUnlock = async (): Promise<void> => {
+      if (!this.onUnlockEditing) return;
+      const ok = await this.onUnlockEditing(passIn.value);
+      passIn.value = '';
+      if (!ok) this.setSyncStatus('wrong passcode', 'err');
+    };
+    unlockBtn.addEventListener('click', () => void tryUnlock());
+    passIn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') void tryUnlock();
+      e.stopPropagation(); // don't let level hotkeys eat the typing
+    });
+    unlockRow.appendChild(passIn);
+    unlockRow.appendChild(unlockBtn);
+    sync.appendChild(unlockRow);
+
+    // token + push (shown only when unlocked)
+    const tokenRow = div('hud-syncrow hud-synctoken');
+    const tokIn = document.createElement('input');
+    tokIn.type = 'password';
+    tokIn.className = 'hud-syncinput';
+    tokIn.placeholder = 'GitHub token (Contents: write)';
+    tokIn.addEventListener('keydown', (e) => e.stopPropagation());
+    const tokBtn = document.createElement('button');
+    tokBtn.className = 'hud-syncbtn';
+    tokBtn.textContent = 'save';
+    tokBtn.addEventListener('click', () => {
+      if (this.onTokenSet) this.onTokenSet(tokIn.value);
+      tokIn.value = '';
+    });
+    tokenRow.appendChild(tokIn);
+    tokenRow.appendChild(tokBtn);
+    sync.appendChild(tokenRow);
+    this.tokenRow = tokenRow;
+
+    const pushRow = div('hud-syncrow hud-syncpush');
+    const pushBtn = document.createElement('button');
+    pushBtn.className = 'hud-syncbtn hud-syncpushbtn';
+    pushBtn.textContent = '☁ SYNC LEVELS TO PHONE';
+    pushBtn.addEventListener('click', () => {
+      if (this.onSyncPush) void this.onSyncPush();
+      pushBtn.blur();
+    });
+    pushRow.appendChild(pushBtn);
+    sync.appendChild(pushRow);
+    this.pushRow = pushRow;
+
+    const status = div('hud-syncstatus');
+    sync.appendChild(status);
+    this.syncStatusEl = status;
+    statsWrap.appendChild(sync);
+    this.syncPanel = sync;
 
 
     const stats = div('hud-statlines');
@@ -582,6 +675,46 @@ export class UI {
 
   setLevel(id: number): void {
     this.levelButtons.forEach((b, i) => b.classList.toggle('active', i === id));
+    this.refreshEditControls();
+  }
+
+  // ---- direct-edit + phone sync controls ----
+  setEditUnlocked(on: boolean): void {
+    this.editUnlocked = on;
+    this.refreshEditControls();
+  }
+
+  setSyncStatus(msg: string, kind: 'ok' | 'err' | 'busy' = 'busy'): void {
+    if (!this.syncStatusEl) return;
+    this.syncStatusEl.textContent = msg;
+    this.syncStatusEl.className = `hud-syncstatus hud-sync-${kind}`;
+  }
+
+  // Reflect the unlock/token/dirty state into the menu: locked = just the
+  // passcode row + "edit a copy"; unlocked = token/push rows, and "edit this
+  // level" replaces "edit a copy" on levels that support in-place editing.
+  refreshEditControls(): void {
+    if (!this.syncPanel) return;
+    const st = this.provideEditState ? this.provideEditState() : null;
+    const unlocked = st ? st.unlocked : this.editUnlocked;
+    this.editUnlocked = unlocked;
+    // built-in editable level + unlocked → "edit this level"; otherwise the
+    // classic "edit a copy" (also the only option on the custom sandbox).
+    const direct = unlocked && !!st && st.editable;
+    this.editThisBtn.style.display = direct ? '' : 'none';
+    this.copyBtn.style.display = direct ? 'none' : '';
+    // sync rows + push appear only when unlocked; the passcode prompt hides.
+    this.tokenRow.style.display = unlocked ? '' : 'none';
+    this.pushRow.style.display = unlocked ? '' : 'none';
+    const unlockRow = this.syncPanel.firstElementChild as HTMLElement | null;
+    if (unlockRow) unlockRow.style.display = unlocked ? 'none' : '';
+    if (unlocked && st) {
+      const dirty = st.dirtyCount;
+      this.pushRow.querySelector('button')!.textContent =
+        dirty > 0 ? `☁ SYNC ${dirty} EDITED LEVEL${dirty > 1 ? 'S' : ''} TO PHONE` : '☁ SYNC LEVELS TO PHONE';
+      if (!st.hasToken && !this.syncStatusEl.textContent)
+        this.setSyncStatus('paste a GitHub token to enable sync', 'busy');
+    }
   }
 
   // THPS balance meters. Grinds show the HORIZONTAL bar (left/right needle);
@@ -871,6 +1004,31 @@ export class UI {
       }
       .hud-levelbtn:hover { background: #243044; color: #cfe3d8; }
       .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
+      .hud-editthis { background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
+      .hud-editthis:hover { background: #2b4c38; color: #c8ffe0; }
+      /* direct-edit unlock + phone sync */
+      .hud-sync {
+        margin-top: 8px; padding: 8px; border: 1px solid #33405a; border-radius: 8px;
+        background: rgba(14, 20, 32, 0.6); display: flex; flex-direction: column; gap: 6px;
+      }
+      .hud-syncrow { display: flex; gap: 6px; }
+      .hud-syncinput {
+        flex: 1; min-width: 0; font: 10px ui-monospace, Menlo, Consolas, monospace;
+        background: #10151f; color: #d6e2f0; border: 1px solid #3a4152; border-radius: 6px;
+        padding: 4px 6px;
+      }
+      .hud-syncinput::placeholder { color: #5f6f86; }
+      .hud-syncbtn {
+        font: 10px ui-monospace, Menlo, Consolas, monospace; cursor: pointer; white-space: nowrap;
+        background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152; border-radius: 6px; padding: 4px 8px;
+      }
+      .hud-syncbtn:hover { background: #243044; color: #cfe3d8; }
+      .hud-syncpushbtn { width: 100%; background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
+      .hud-syncpushbtn:hover { background: #2b4c38; }
+      .hud-syncstatus { font-size: 10px; min-height: 12px; color: #9fb0c8; }
+      .hud-sync-ok { color: #6fe0a0; }
+      .hud-sync-err { color: #ff9a7a; }
+      .hud-sync-busy { color: #e8c86a; }
       .hud-row { display: flex; justify-content: space-between; gap: 12px; }
       .hud-row b { color: #eef4ff; font-weight: normal; }
       .hud-secttitle { margin: 10px 0 2px; padding-bottom: 2px; border-bottom: 1px solid rgba(143, 212, 168, 0.35); color: #8fd4a8; font-size: 11px; letter-spacing: 2px; }
