@@ -691,12 +691,16 @@ export class Level {
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
 
   // --- set pieces ---
-  // Arena lock: enter the zone, gates slam shut, survive the waves.
+  // Arena lock: enter the zone, gates slam shut, survive the waves. The
+  // gates BREATHE on a cycle while the fight is on — up long enough to
+  // matter, down long enough to slip through — so a run is never hard-stuck.
   arena: {
     zone: THREE.Box3;
     state: 'idle' | 'active' | 'done';
     wave: number;
     waveT: number;
+    cycleT: number; // gate breathing clock while active
+    up: boolean; // gates currently raised (walls live)
     waves: Enemy[][];
     gates: { mesh: THREE.Mesh; upY: number; downY: number; box: THREE.Box3 }[];
   } | null = null;
@@ -2423,10 +2427,25 @@ export class Level {
         ar.state = 'active';
         ar.wave = 0;
         ar.waveT = 0.4;
+        ar.cycleT = 0;
+        ar.up = true;
         for (const g of ar.gates) this.walls.push(g.box);
         sfx.play('railLand', 0.9, 0.6);
       }
       if (ar.state === 'active') {
+        // gate breathing: 2.4s raised, 1.2s sunk, repeat — timing a dash
+        // through the down-beat is always an option
+        ar.cycleT += dt;
+        const upNow = ar.cycleT % 3.6 < 2.4;
+        if (upNow !== ar.up) {
+          ar.up = upNow;
+          if (upNow) sfx.play('railLand', 0.5, 0.7);
+          for (const g of ar.gates) {
+            const i = this.walls.indexOf(g.box);
+            if (upNow && i < 0) this.walls.push(g.box);
+            else if (!upNow && i >= 0) this.walls.splice(i, 1);
+          }
+        }
         if (ar.waveT > 0) {
           // countdown, then the wave drops in
           ar.waveT -= dt;
@@ -2455,7 +2474,7 @@ export class Level {
       }
       // gate meshes chase their target height
       for (const g of ar.gates) {
-        const target = ar.state === 'active' ? g.upY : g.downY;
+        const target = ar.state === 'active' && ar.up ? g.upY : g.downY;
         g.mesh.position.y += THREE.MathUtils.clamp(target - g.mesh.position.y, -9 * dt, 9 * dt);
       }
     }
@@ -2913,6 +2932,8 @@ export class Level {
       ar.state = 'idle';
       ar.wave = 0;
       ar.waveT = 0;
+      ar.cycleT = 0;
+      ar.up = false;
       for (const g of ar.gates) {
         const i = this.walls.indexOf(g.box);
         if (i >= 0) this.walls.splice(i, 1);
@@ -5376,17 +5397,14 @@ export class Level {
     const z = this.spawnPos.z + dir * 5;
     const y = this.floorY(x, z, this.spawnPos.y);
     const g = new THREE.Group();
-    const orb = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(0.52, 1),
-      new THREE.MeshLambertMaterial({ color: 0x46e882, emissive: 0x0e5c2c, flatShading: true }),
-    );
-    g.add(orb);
-    // a soft additive shell reads "glowy" at PS1 fidelity
-    const shell = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(0.72, 1),
-      new THREE.MeshBasicMaterial({ color: 0x46e882, transparent: true, opacity: 0.25, depthWrite: false }),
-    );
-    g.add(shell);
+    // a chunky 3D plus, spinning on the spot (bobSpin drives the turn)
+    const plusMat = new THREE.MeshLambertMaterial({ color: 0x46e882, emissive: 0x0e5c2c, flatShading: true });
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.36, 1.15, 0.36), plusMat));
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.36, 0.36), plusMat));
+    // a soft translucent plus around it reads "glowy" at PS1 fidelity
+    const shellMat = new THREE.MeshBasicMaterial({ color: 0x46e882, transparent: true, opacity: 0.22, depthWrite: false });
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(0.56, 1.38, 0.56), shellMat));
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.56, 0.56), shellMat));
     g.position.set(x, y + 1.3, z);
     g.userData.baseY = y + 1.3;
     this.root.add(g);
@@ -6215,6 +6233,8 @@ export class Level {
       state: 'idle',
       wave: 0,
       waveT: 0,
+      cycleT: 0,
+      up: false,
       waves: [
         mkWave(0, [
           [cx - 5, cx + 5, zm + 4, 6],

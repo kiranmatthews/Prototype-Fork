@@ -1080,11 +1080,14 @@ export class UI {
         position: fixed; z-index: 19; inset: 0; background: #000;
         opacity: 0; pointer-events: none;
       }
-      /* combo-run halo: green glow breathing at the viewport edges */
+      /* combo-run halo: green glow breathing at the viewport edges.
+         (inset box-shadow does the heavy lifting — it hugs all four edges at
+         any aspect ratio; the farthest-corner gradient warms the corners) */
       .hud-halo {
         position: fixed; z-index: 8; inset: 0; pointer-events: none; opacity: 0;
-        background: radial-gradient(ellipse 100% 100% at 50% 50%,
-          transparent 48%, rgba(70, 232, 130, 0.16) 72%, rgba(70, 232, 130, 0.65) 100%);
+        background: radial-gradient(ellipse farthest-corner at 50% 50%,
+          transparent 60%, rgba(70, 232, 130, 0.14) 82%, rgba(70, 232, 130, 0.5) 100%);
+        box-shadow: inset 0 0 clamp(70px, 11vw, 180px) rgba(70, 232, 130, 0.6);
         transition: opacity 0.45s ease;
       }
       .hud-halo.on { opacity: 1; animation: halopulse 1.5s ease-in-out infinite alternate; }

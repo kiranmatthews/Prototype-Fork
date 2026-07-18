@@ -85,7 +85,10 @@ export class Player {
   comboGemEarned = false;
   private comboWasLive = false; // last frame's "a combo is pending" — the falling edge is the fail
   private comboFailT = 0; // the despair beat: halo dissipates, then fade out + restart
+  private comboGraceT = 0; // seconds after the grab to START a combo — no strolling to the gem
+  private comboGraceWarned = false;
   private comboDied = false;
+  onComboGraceLow: () => void = () => {}; // grace nearly gone and still no combo — nudge the HUD
   private balanceBoostT = 0; // perfect-balance window from a cyan boost crate
   onComboRunStart: () => void = () => {};
   onComboRunFail: () => void = () => {};
@@ -528,6 +531,8 @@ export class Player {
     this.ttFreeze = 0;
     this.ttDied = false;
     this.comboFailT = 0;
+    this.comboGraceT = 0;
+    this.comboGraceWarned = false;
     this.comboDied = false;
     this.comboWasLive = false;
     this.balanceBoostT = 0;
@@ -863,11 +868,25 @@ export class Player {
     this.balanceBoostT = Math.max(0, this.balanceBoostT - dt);
     if (this.balanceBoostT > 0 && Math.random() < 0.3) this.emitSparks(1, 0x5ee0ff, 1.2);
     // COMBO RUN: the run lives exactly as long as the combo does. Any end —
-    // banked, bailed, eaten — with the gem still out there = run failed.
+    // banked, bailed, eaten — with the gem still out there = run failed. And
+    // the combo must START promptly: the grace clock stops anyone strolling
+    // the whole course and popping one trick at the gem.
     if (this.comboRun && this.comboFailT <= 0 && this.state !== 'dead') {
       const live = this.comboMult > 0;
-      if (this.comboWasLive && !live) this.failComboRun(level);
-      this.comboWasLive = live;
+      if (live) {
+        this.comboGraceT = 0; // the chain is rolling — grace did its job
+        this.comboWasLive = true;
+      } else if (this.comboWasLive) {
+        this.comboWasLive = false;
+        this.failComboRun(level);
+      } else if (this.comboGraceT > 0) {
+        this.comboGraceT -= dt;
+        if (this.comboGraceT < 1.0 && !this.comboGraceWarned) {
+          this.comboGraceWarned = true;
+          this.onComboGraceLow();
+        }
+        if (this.comboGraceT <= 0) this.failComboRun(level); // never started one
+      }
     } else {
       this.comboWasLive = this.comboMult > 0;
     }
@@ -4200,6 +4219,8 @@ export class Player {
       this.comboRun = true;
       this.comboWasLive = false;
       this.comboFailT = 0;
+      this.comboGraceT = 2.5; // start comboing NOW — no strolling to the gem
+      this.comboGraceWarned = false;
       sfx.play('crystalGet', 0.9, 1.25);
       this.onComboRunStart();
     }

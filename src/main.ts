@@ -552,8 +552,9 @@ player.onTTEnd = () => ui.setTimeTrial(false);
 player.onComboRunStart = () => {
   ui.setRunRows(true);
   ui.comboHalo('on');
-  ui.showMessage('COMBO RUN!', 'reach the green gem at the gate in ONE combo', 2000);
+  ui.showMessage('COMBO RUN!', 'start a combo NOW — one chain, all the way to the gem', 2000);
 };
+player.onComboGraceLow = () => ui.showMessage('START A COMBO!', '', 700);
 player.onComboRunFail = () => {
   ui.comboHalo('dissipate');
   ui.showMessage('COMBO BROKEN', '', 1100);
