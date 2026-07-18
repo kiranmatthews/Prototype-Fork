@@ -79,6 +79,7 @@ export class Player {
   ttTime = 0; // the running trial clock
   ttFreeze = 0; // banked freeze seconds still counting down
   private ttDied = false; // a trial death: the respawn goes to the very start
+  private bounceJump = false; // a crate bounce re-arms the double jump — even off a skate air
   onTTStart: () => void = () => {};
   onTTEnd: () => void = () => {}; // trial dropped without finishing (death / restart)
   onTTFinish: (time: number) => void = () => {};
@@ -802,6 +803,7 @@ export class Player {
     if (this.grounded || this.state === 'grind') {
       this.airJumpUsed = false; // double jump re-arms on any contact
       this.airborneT = 0; // the double-jump window clock starts at takeoff
+      this.bounceJump = false;
     } else {
       // first airborne frame records the pop that launched this air, so the
       // double-jump window can scale with the jump's actual size
@@ -2265,7 +2267,7 @@ export class Player {
     if (
       TUNING.doubleJump > 0.5 &&
       this.airborneT <= djWindow && // only this early into the air
-      !this.airFromSkate &&
+      (!this.airFromSkate || this.bounceJump) && // a crate bounce earns a tap even mid-skate-air
       this.coyoteTimer <= 0 &&
       !this.vertAir &&
       !this.slamActive &&
@@ -3795,6 +3797,7 @@ export class Player {
               sfx.play('crateBounce', 0.7);
               this.state = 'air';
               this.grounded = false;
+              this.bounceRefresh();
               this.charging = false;
               this.chargeTimer = 0;
             }
@@ -3832,6 +3835,7 @@ export class Player {
               this.pos.y = c.box.max.y + 0.02;
               this.state = 'air';
               this.grounded = false;
+              this.bounceRefresh();
               this.score(CONST.ptsBouncy, 'Boing');
               sfx.play('bouncyBounce', 0.9, 0.8);
             }
@@ -3845,6 +3849,7 @@ export class Player {
             this.pos.y = c.box.max.y + 0.02;
             this.state = 'air';
             this.grounded = false;
+            this.bounceRefresh();
             this.charging = false;
             this.chargeTimer = 0;
             this.score(CONST.ptsBouncy * (perfect ? 2 : 1), perfect ? 'Perfect Boing' : 'Boing');
@@ -3872,6 +3877,7 @@ export class Player {
             this.pos.y = c.box.max.y + 0.02;
             this.state = 'air';
             this.grounded = false;
+            this.bounceRefresh();
             this.charging = false;
             this.chargeTimer = 0;
             sfx.play('crateBounce', 0.7);
@@ -3915,6 +3921,7 @@ export class Player {
           sfx.play('crateBounce', 0.7);
             this.state = 'air';
             this.grounded = false;
+            this.bounceRefresh();
           }
         } else if (this.isBonking(c.box)) {
           // Crash headbutt: jumping into a box from below breaks it.
@@ -4081,6 +4088,7 @@ export class Player {
           sfx.play('crateBounce', 0.7);
           this.state = 'air';
           this.grounded = false;
+          this.bounceRefresh();
         } else if (this.isBonking(cp.box)) {
           level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
@@ -4146,6 +4154,15 @@ export class Player {
         this.onFinish(this.runTime);
       }
     }
+  }
+
+  // A crate bounce is a fresh launch: the double jump re-arms, its window
+  // clock restarts (next frame records the bounce pop as the window's scale),
+  // and even a skate-origin air earns ONE extra tap off the lid.
+  private bounceRefresh(): void {
+    this.airJumpUsed = false;
+    this.airborneT = 0;
+    this.bounceJump = true;
   }
 
   private smashCrate(level: Level, c: Crate): void {
