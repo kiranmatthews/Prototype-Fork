@@ -113,6 +113,8 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'wumpa', icon: (x) => { x.fillStyle = '#ff9028'; x.beginPath(); x.arc(9, 10, 5, 0, 7); x.fill(); x.fillStyle = '#3a9a4a'; x.fillRect(8, 3, 2, 3); }, make: (at) => ({ t: 'wumpa', p: [at.x, at.y + 1.2, at.z] }) },
       { label: 'crystal', icon: (x) => { x.fillStyle = '#c83af0'; x.beginPath(); x.moveTo(9, 2); x.lineTo(14, 9); x.lineTo(9, 16); x.lineTo(4, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'crystal', p: [at.x, at.y + 0.5, at.z] }) },
       { label: 'finish gate', icon: (x) => { x.fillStyle = '#d8d8d8'; x.fillRect(3, 4, 2, 12); x.fillRect(13, 4, 2, 12); for (let i = 0; i < 4; i++) { x.fillStyle = i % 2 === 0 ? '#e8e8e8' : '#20242c'; x.fillRect(5 + i * 2, 4, 2, 3); } }, make: (at) => ({ t: 'gate', p: [at.x, at.y, at.z] }) },
+      { label: 'tt clock', icon: (x) => { x.fillStyle = '#e8b53a'; x.fillRect(8, 2, 2, 3); x.beginPath(); x.arc(9, 10, 6, 0, 7); x.fill(); x.fillStyle = '#f4efdf'; x.beginPath(); x.arc(9, 10, 4.2, 0, 7); x.fill(); x.strokeStyle = '#3a3020'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 10); x.lineTo(9, 7); x.moveTo(9, 10); x.lineTo(12, 10); x.stroke(); }, make: (at) => ({ t: 'clock', p: [at.x, at.y, at.z] }) },
+      { label: 'combo orb', icon: (x) => { x.fillStyle = 'rgba(70,232,130,0.4)'; x.fillRect(6, 2, 6, 15); x.fillRect(2, 7, 15, 6); x.fillStyle = '#46e882'; x.fillRect(7, 3, 4, 13); x.fillRect(3, 8, 13, 4); }, make: (at) => ({ t: 'comboorb', p: [at.x, at.y, at.z] }) },
     ],
   },
 ];
@@ -451,8 +453,8 @@ export class Editor {
   }
 
   private addComponent(c: CustomComponent): void {
-    // ONE crystal / ONE finish gate per level: placing a new one replaces the old
-    if (c.t === 'crystal' || c.t === 'gate') {
+    // ONE crystal / gate / clock / combo orb per level: a new one replaces the old
+    if (c.t === 'crystal' || c.t === 'gate' || c.t === 'clock' || c.t === 'comboorb') {
       this.data.components = this.data.components.filter((o) => o.t !== c.t);
     }
     this.data.components.push(c);
@@ -465,7 +467,7 @@ export class Editor {
   private addBatch(batch: CustomComponent[]): void {
     if (batch.length === 0) return;
     let clean = batch;
-    for (const t of ['crystal', 'gate'] as const) {
+    for (const t of ['crystal', 'gate', 'clock', 'comboorb'] as const) {
       const last = clean.map((c) => c.t).lastIndexOf(t);
       if (last >= 0) {
         clean = clean.filter((c, i) => c.t !== t || i === last);
@@ -481,10 +483,12 @@ export class Editor {
 
   private deleteSelected(): void {
     if (this.sel.length === 0) return;
-    // the finish gate is part of the level like the spawn point — move it, never delete it
-    const dying = [...this.sel].filter((i) => this.data.components[i].t !== 'gate').sort((a, b) => b - a);
+    // the gate + run-mode activators are level furniture like the spawn
+    // point — move them, never delete them (a load would regrow them anyway)
+    const KEEP = new Set(['gate', 'clock', 'comboorb']);
+    const dying = [...this.sel].filter((i) => !KEEP.has(this.data.components[i].t)).sort((a, b) => b - a);
     if (dying.length < this.sel.length)
-      this.hooks.showMsg('THE FINISH GATE STAYS', 'every level keeps one — move it instead');
+      this.hooks.showMsg('GATE & ACTIVATORS STAY', 'every level keeps its gate, stopwatch and combo orb — move them instead');
     if (dying.length === 0) return;
     for (const i of dying) this.data.components.splice(i, 1);
     this.select(-1);
@@ -1972,6 +1976,8 @@ export class Editor {
     if (c.pts && c.pts.length >= 3) return `${c.t} · drawn`;
     if (c.t === 'crate') return `crate · ${c.kind ?? 'wood'}${c.outline ? ' (outline)' : ''}`;
     if (c.t === 'wall' && c.invisible) return 'invis wall';
+    if (c.t === 'clock') return 'tt clock';
+    if (c.t === 'comboorb') return 'combo orb';
     if (c.t === 'camnode') {
       // show the node's position in the chain: "cam node 2/5"
       const nodes = this.data.components.filter((o) => o.t === 'camnode');
@@ -2200,7 +2206,7 @@ export class Editor {
     // per-item yaw stay in perfect agreement.
     const rot = (x: number, z: number): [number, number] =>
       deg === 90 ? [z, -x] : [-z, x];
-    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'pit']);
+    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'pit', 'gate']);
     for (const c of comps) {
       const [rx, rz] = rot(c.p[0] - cx, c.p[2] - cz);
       c.p = [Math.round((cx + rx) * 100) / 100, c.p[1], Math.round((cz + rz) * 100) / 100];
@@ -2327,7 +2333,7 @@ export class Editor {
         brow('height', () => prim.s![1], (cc, v) => (cc.s![1] = Math.max(0.2, v)));
         brow('depth', () => prim.s![2], (cc, v) => (cc.s![2] = Math.max(0.2, v)));
       }
-      const yawable = new Set(['platform', 'ramp', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy', 'rail']);
+      const yawable = new Set(['platform', 'ramp', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy', 'rail', 'gate']);
       if (all.every((cc) => yawable.has(cc.t) && !cc.pts)) {
         brow('yaw °', () => prim.yaw ?? 0, (cc, v) => (cc.yaw = v), 15);
       }
@@ -2513,9 +2519,20 @@ export class Editor {
         num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       }
     } else if (c.t === 'gate') {
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       const note = document.createElement('div');
       note.className = 'ed-dim';
-      note.textContent = 'finish gate — crossing it ends the run (one per level, faces ±Z)';
+      note.textContent = 'finish gate — crossing its plane ends the run (one per level; yaw turns it with the course)';
+      this.propsEl.appendChild(note);
+    } else if (c.t === 'clock') {
+      const note = document.createElement('div');
+      note.className = 'ed-dim';
+      note.textContent = 'time-trial activator — skating through the stopwatch starts a timed run to the gate (one per level, lives near spawn)';
+      this.propsEl.appendChild(note);
+    } else if (c.t === 'comboorb') {
+      const note = document.createElement('div');
+      note.className = 'ed-dim';
+      note.textContent = 'combo-run activator — skating through the green plus starts a one-combo run to the gem at the gate (one per level, lives near spawn)';
       this.propsEl.appendChild(note);
     } else if (c.t === 'zone') {
       sizeRow(0, 'width');
@@ -2689,7 +2706,7 @@ export class Editor {
     // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
     // (drawn polygons keep their authored outline — no 90° tricks)
     const rotatable =
-      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy'].includes(c.t) && !c.pts;
+      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy', 'gate'].includes(c.t) && !c.pts;
     const swappable = ['crusher'].includes(c.t) && !c.pts;
     if (rotatable || swappable || c.t === 'pipe') {
       const rot = document.createElement('button');

@@ -26,9 +26,6 @@ interface GroundHit {
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
-// The course axis. All movement is locked to it, Crash-style: `speed` runs
-// along -Z (positive = down the course), left/right is pure lateral X.
-const FORWARD = new THREE.Vector3(0, 0, -1);
 
 function wrapAngle(a: number): number {
   return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
@@ -3343,14 +3340,18 @@ export class Player {
 
   private stepFinished(dt: number, level: Level): void {
     this.speed = Math.max(0, this.speed - 40 * dt);
-    this.pos.addScaledVector(FORWARD, this.speed * dt);
+    // Coast on through along the course's travel axis — sideways levels (and
+    // rotated gates) finish eastbound/westbound, not always -z.
+    this.pos.addScaledVector(this.axisF, this.speed * dt);
     // Keep the outro on the deck: no sliding sideways off the edge into a
-    // midair hover after the run is already over.
-    this.pos.x = THREE.MathUtils.clamp(
-      this.pos.x,
-      level.finishBox.min.x + 1.5,
-      level.finishBox.max.x - 1.5,
-    );
+    // midair hover after the run is already over. Clamp across the gate's
+    // WIDE axis (post to post), whichever world axis that is after its yaw.
+    const fb = level.finishBox;
+    if (fb.max.x - fb.min.x >= fb.max.z - fb.min.z) {
+      this.pos.x = THREE.MathUtils.clamp(this.pos.x, fb.min.x + 1.5, fb.max.x - 1.5);
+    } else {
+      this.pos.z = THREE.MathUtils.clamp(this.pos.z, fb.min.z + 1.5, fb.max.z - 1.5);
+    }
     if (this.pos.z < level.endWallZ + 1) {
       this.pos.z = level.endWallZ + 1;
       this.speed = 0;

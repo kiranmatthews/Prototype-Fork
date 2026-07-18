@@ -205,7 +205,9 @@ export interface CustomComponent {
     | 'enemy' // patrols along X around p, range each way
     | 'crusher' // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | 'pendulum' // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
-    | 'gate' // finish gate: crossing its plane ends the run (posts at ±x, faces along Z); p = [x, deckY, z]. One per level.
+    | 'gate' // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
+    | 'clock' // time-trial activator: the gold stopwatch near the start; p = [x, deckY, z]. One per level.
+    | 'comboorb' // combo-run activator: the green plus near the start; p = [x, deckY, z]. One per level.
     | 'zone' // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | 'rope' // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
     | 'wumpa'
@@ -339,6 +341,15 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   const lastGate = d.components.map((c) => c.t).lastIndexOf('gate');
   if (lastGate === -1) d.components.push(defaultGateFor(d));
   else d.components = d.components.filter((c, i) => c.t !== 'gate' || i === lastGate);
+  // RUN-MODE ACTIVATORS: the stopwatch and the combo orb are level furniture
+  // the same way the spawn and the gate are — old saves get them beside the
+  // spawn (move them wherever afterwards); duplicates collapse to the last.
+  for (const t of ['clock', 'comboorb'] as const) {
+    const last = d.components.map((c) => c.t).lastIndexOf(t);
+    if (last === -1)
+      d.components.push({ t, p: [d.spawn[0] + (t === 'clock' ? 2 : -2), d.spawn[1], d.spawn[2] - 5] });
+    else d.components = d.components.filter((c, i) => c.t !== t || i === last);
+  }
   return d;
 }
 
@@ -658,6 +669,7 @@ export class Level {
   zones: { xMin: number; xMax: number; zMin: number; zMax: number; dir: 'E' | 'W' | 'N' | 'S' }[] = [];
   finishBox = new THREE.Box3();
   finishZ = -1005;
+  gateYaw = 0; // finish-gate turn in degrees — sideways courses spin the whole gate
   endWallZ = -1021; // authored hard stop after the finish gate
   spawnPos = new THREE.Vector3(0, 0.1, 0);
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
@@ -767,6 +779,10 @@ export class Level {
   comboRun = false;
   comboGem: { group: THREE.Group; box: THREE.Box3 } | null = null;
   private gateSpec: { x: number; y: number; z: number } | null = null; // where finishGate stood (capture + clock placement)
+  // authored activator spots (custom levels) — idx ties the built pickup back
+  // to its component so the editor can pick and drag it
+  private clockSpot: { x: number; y: number; z: number; idx: number } | null = null;
+  private orbSpot: { x: number; y: number; z: number; idx: number } | null = null;
 
   // either special play mode: checkpoints/fruit/crystal sit out, boxes go empty
   get runMode(): boolean {
@@ -1292,9 +1308,21 @@ export class Level {
         invisible: rail.object.children.length === 0 ? true : undefined,
       });
     }
-    // finish gate (where the run ends)
+    // finish gate (where the run ends) + the run-mode activators beside spawn
     if (this.gateSpec) {
-      C.push({ t: 'gate', p: [r2(this.gateSpec.x), r2(this.gateSpec.y), r2(this.gateSpec.z)] });
+      C.push({
+        t: 'gate',
+        p: [r2(this.gateSpec.x), r2(this.gateSpec.y), r2(this.gateSpec.z)],
+        yaw: this.gateYaw ? r2(this.gateYaw) : undefined,
+      });
+    }
+    if (this.clockPickup) {
+      const g = this.clockPickup.group; // baseY, not live y — the bob animation is mid-flight
+      C.push({ t: 'clock', p: [r2(g.position.x), r2((g.userData.baseY as number) - 1.35), r2(g.position.z)] });
+    }
+    if (this.comboOrb) {
+      const g = this.comboOrb.group;
+      C.push({ t: 'comboorb', p: [r2(g.position.x), r2((g.userData.baseY as number) - 1.3), r2(g.position.z)] });
     }
     // crumble pads
     for (const cr of this.crumbles) {
@@ -1918,7 +1946,14 @@ export class Level {
           } else if (c.t === 'gate') {
             // finish gate: crossing its plane ends the run (and the time trial)
             this.finishZ = c.p[2];
-            this.finishGate(c.p[1], c.p[2], c.p[0]);
+            this.finishGate(c.p[1], c.p[2], c.p[0], c.yaw ?? 0);
+          } else if (c.t === 'clock' || c.t === 'comboorb') {
+            // run-mode activators: just remember the authored spot — the
+            // pickups build after every level's geometry (placeClock /
+            // placeComboOrb), which tags them back to this component
+            const spot = { x: c.p[0], y: c.p[1], z: c.p[2], idx: i };
+            if (c.t === 'clock') this.clockSpot = spot;
+            else this.orbSpot = spot;
           } else if (c.t === 'zone') {
             // travel zone: a region that turns the course sideways (E/W) or
             // runs it straight AT the camera (N). Invisible in play; the
@@ -5323,12 +5358,24 @@ export class Level {
   // The gold stopwatch floats just off the racing line at spawn. Touching it
   // starts the trial; skirting it is a normal run. Only levels with a finish
   // gate get one — a trial with no line to cross could never end.
+  // Tag everything a placer added to root since `before` with an editor
+  // component index — the activators build outside buildCustom's tagged loop.
+  private tagFrom(before: number, idx: number): void {
+    for (let k = before; k < this.root.children.length; k++) {
+      this.root.children[k].traverse((o) => (o.userData.editorIdx = idx));
+      this.root.children[k].userData.editorIdx = idx;
+    }
+  }
+
   private placeClock(): void {
     if (this.finishZ < -1e8 || !this.gateSpec) return;
+    this.root.updateMatrixWorld(true); // floorY raycasts — fresh builder meshes still hold identity matrices
+    const spot = this.clockSpot; // authored spot (custom levels) beats the spawn-side default
     const dir = this.chaseCam ? 1 : -1; // boulder chases run AT +z; everything else runs -z
-    const x = this.spawnPos.x + 2;
-    const z = this.spawnPos.z + dir * 5;
-    const y = this.floorY(x, z, this.spawnPos.y);
+    const x = spot ? spot.x : this.spawnPos.x + 2;
+    const z = spot ? spot.z : this.spawnPos.z + dir * 5;
+    const y = this.floorY(x, z, spot ? spot.y : this.spawnPos.y);
+    const before = this.root.children.length;
 
     const g = new THREE.Group();
     const gold = new THREE.MeshLambertMaterial({ color: 0xe8b53a, emissive: 0x40300a });
@@ -5369,6 +5416,7 @@ export class Level {
     g.userData.baseY = y + 1.35;
     this.root.add(g);
     this.glowRing(x, y + 0.12, z, 1.4, 0xffd75e);
+    if (spot) this.tagFrom(before, spot.idx);
     this.clockPickup = {
       group: g,
       box: new THREE.Box3().setFromCenterAndSize(
@@ -5392,10 +5440,13 @@ export class Level {
   // green gem appears at the finish gate — yours if you reach it in ONE combo.
   private placeComboOrb(): void {
     if (this.finishZ < -1e8 || !this.gateSpec) return;
+    this.root.updateMatrixWorld(true);
+    const spot = this.orbSpot;
     const dir = this.chaseCam ? 1 : -1;
-    const x = this.spawnPos.x - 2;
-    const z = this.spawnPos.z + dir * 5;
-    const y = this.floorY(x, z, this.spawnPos.y);
+    const x = spot ? spot.x : this.spawnPos.x - 2;
+    const z = spot ? spot.z : this.spawnPos.z + dir * 5;
+    const y = this.floorY(x, z, spot ? spot.y : this.spawnPos.y);
+    const before = this.root.children.length;
     const g = new THREE.Group();
     // a chunky 3D plus, spinning on the spot (bobSpin drives the turn)
     const plusMat = new THREE.MeshLambertMaterial({ color: 0x46e882, emissive: 0x0e5c2c, flatShading: true });
@@ -5409,6 +5460,7 @@ export class Level {
     g.userData.baseY = y + 1.3;
     this.root.add(g);
     this.glowRing(x, y + 0.12, z, 1.4, 0x46e882);
+    if (spot) this.tagFrom(before, spot.idx);
     this.comboOrb = {
       group: g,
       box: new THREE.Box3().setFromCenterAndSize(
@@ -5433,6 +5485,11 @@ export class Level {
     if (!this.gateSpec || this.comboGem) return;
     const dir = this.chaseCam ? -1 : 1; // a couple units on the NEAR side of the gate plane
     const { x, y, z } = this.gateSpec;
+    // the near-side offset turns with the gate, so rotated gates still park
+    // the prize on the approach side
+    const yawR = THREE.MathUtils.degToRad(this.gateYaw);
+    const gx = x + Math.sin(yawR) * dir * 2.5;
+    const gz = z + Math.cos(yawR) * dir * 2.5;
     const g = this.gemMesh(1.1);
     g.traverse((o) => {
       const mesh = o as THREE.Mesh;
@@ -5441,14 +5498,14 @@ export class Level {
         if (m && m.color) m.color.set(0x46e882); // the clear gem, run through green glass
       }
     });
-    g.position.set(x, y + 1.7, z + dir * 2.5);
+    g.position.set(gx, y + 1.7, gz);
     g.userData.baseY = y + 1.7;
     this.root.add(g);
-    this.glowRing(x, y + 0.12, z + dir * 2.5, 1.5, 0x46e882);
+    this.glowRing(gx, y + 0.12, gz, 1.5, 0x46e882);
     this.comboGem = {
       group: g,
       box: new THREE.Box3().setFromCenterAndSize(
-        new THREE.Vector3(x, y + 1.5, z + dir * 2.5),
+        new THREE.Vector3(gx, y + 1.5, gz),
         new THREE.Vector3(2.2, 3.2, 2.2),
       ),
     };
@@ -6904,17 +6961,28 @@ export class Level {
     this.root.add(wall);
   }
 
-  private finishGate(deckY: number, z: number, cx = 0): void {
+  private finishGate(deckY: number, z: number, cx = 0, yawDeg = 0): void {
     this.gateSpec = { x: cx, y: deckY, z };
+    this.gateYaw = yawDeg;
+    const yawR = THREE.MathUtils.degToRad(yawDeg);
+    // the trigger slab (14 across the posts, 2 through) turns with the gate;
+    // its AABB is exact at the cardinal angles, a safe cover in between
+    const hx = Math.abs(Math.cos(yawR)) * 7 + Math.abs(Math.sin(yawR)) * 1;
+    const hz = Math.abs(Math.sin(yawR)) * 7 + Math.abs(Math.cos(yawR)) * 1;
     this.finishBox.setFromCenterAndSize(
       new THREE.Vector3(cx, deckY + 15, z),
-      new THREE.Vector3(14, 30, 2),
+      new THREE.Vector3(hx * 2, 30, hz * 2),
     );
+    // every piece hangs off one group in gate-local space, so yaw is one turn
+    const gate = new THREE.Group();
+    gate.position.set(cx, deckY, z);
+    gate.rotation.y = yawR;
+    this.root.add(gate);
     const postMat = new THREE.MeshLambertMaterial({ color: 0xd8d8d8 });
     for (const side of [-1, 1]) {
       const post = new THREE.Mesh(new THREE.BoxGeometry(0.5, 7, 0.5), postMat);
-      post.position.set(cx + side * 5.5, deckY + 3.5, z);
-      this.root.add(post);
+      post.position.set(side * 5.5, 3.5, 0);
+      gate.add(post);
     }
     const canvas = document.createElement('canvas');
     canvas.width = 64;
@@ -6932,8 +7000,8 @@ export class Level {
       new THREE.BoxGeometry(11.5, 1.2, 0.2),
       new THREE.MeshBasicMaterial({ map: tex }),
     );
-    banner.position.set(cx, deckY + 6.4, z);
-    this.root.add(banner);
+    banner.position.set(0, 6.4, 0);
+    gate.add(banner);
 
     // Warp portal: the demoscene plasma plane hangs between the posts, framed
     // by a pulsing additive ring — Crash warp room meets iTunes visualizer.
@@ -6948,9 +7016,10 @@ export class Level {
         depthWrite: false,
       }),
     );
-    portal.position.set(cx, deckY + 3.1, z - 0.35);
-    this.root.add(portal);
-    this.glowRing(cx, deckY + 3.1, z - 0.25, 3.6, 0x66eaff, true);
+    portal.position.set(0, 3.1, -0.35);
+    gate.add(portal);
+    const ring = this.glowRing(0, 3.1, -0.25, 3.6, 0x66eaff, true);
+    gate.add(ring); // re-parents out of root: the ring spins with the gate
 
     // Relic scoreboard: crystal + gem icons over the gate — dark ghosts until
     // earned, then they light up and spin (see setRelics).
@@ -6964,13 +7033,13 @@ export class Level {
       });
     const cIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
     cIcon.scale.y = 1.5;
-    cIcon.position.set(cx - 1.7, deckY + 8.1, z);
-    this.root.add(cIcon);
+    cIcon.position.set(-1.7, 8.1, 0);
+    gate.add(cIcon);
     this.gateCrystalIcon = cIcon;
     const gIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
     gIcon.scale.set(1.25, 0.7, 1.25);
-    gIcon.position.set(cx + 1.7, deckY + 8.1, z);
-    this.root.add(gIcon);
+    gIcon.position.set(1.7, 8.1, 0);
+    gate.add(gIcon);
     this.gateGemIcon = gIcon;
     this.relics = { crystal: true, gem: true }; // force the ghost restyle below
     this.setRelics(false, false);
