@@ -30,6 +30,7 @@ export interface Crate {
   ghostMat?: THREE.Material; // the translucent shell (kept for resets)
   ghostEdges?: THREE.LineSegments; // outline wireframe, hidden on materialize
   timeSecs?: number; // TIME TRIAL: breaking this crate freezes the clock this many seconds
+  boost?: 'speed' | 'balance'; // COMBO RUN: breaking this crate = a speed burst / a perfect-balance window
   ttOrigMap?: THREE.Texture | null; // the normal-mode face, restored when the trial ends
 }
 
@@ -756,7 +757,17 @@ export class Level {
   // TIME TRIAL: the gold stopwatch near spawn — touch it to start the clock.
   clockPickup: { group: THREE.Group; box: THREE.Box3; collected: boolean } | null = null;
   timeTrial = false; // trial live: checkpoints/fruit dormant, time crates active
+  // COMBO RUN: the green orb near spawn — touch it and the green gem appears
+  // at the finish gate; reach it in ONE combo and it's yours.
+  comboOrb: { group: THREE.Group; box: THREE.Box3; collected: boolean } | null = null;
+  comboRun = false;
+  comboGem: { group: THREE.Group; box: THREE.Box3 } | null = null;
   private gateSpec: { x: number; y: number; z: number } | null = null; // where finishGate stood (capture + clock placement)
+
+  // either special play mode: checkpoints/fruit/crystal sit out, boxes go empty
+  get runMode(): boolean {
+    return this.timeTrial || this.comboRun;
+  }
   private crystalPlaced = false; // Random level: drop it on one mid-course deck
   private gemG: THREE.Group | null = null; // materializes when every box breaks
   private vfxT = 0; // animation clock for all the procedural magic
@@ -1128,6 +1139,7 @@ export class Level {
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
+    this.placeComboOrb(); // combo-run orb, the other side of the racing line
     this.buildAmbient(); // theme is set by the builder above
   }
 
@@ -2772,6 +2784,11 @@ export class Level {
       if (this.clockPickup && !this.timeTrial) {
         this.clockPickup.collected = false;
         this.clockPickup.group.visible = true;
+      }
+      // ...and so does the combo orb
+      if (this.comboOrb && !this.comboRun) {
+        this.comboOrb.collected = false;
+        this.comboOrb.group.visible = true;
       }
       if (this.gemG) {
         this.root.remove(this.gemG);
@@ -5349,6 +5366,91 @@ export class Level {
     this.glimmerBurst(c.group.position, 0xffd75e);
   }
 
+  // ------------------------------------------------------------ combo run --
+  // The green orb floats opposite the stopwatch at spawn. Touch it and the
+  // green gem appears at the finish gate — yours if you reach it in ONE combo.
+  private placeComboOrb(): void {
+    if (this.finishZ < -1e8 || !this.gateSpec) return;
+    const dir = this.chaseCam ? 1 : -1;
+    const x = this.spawnPos.x - 2;
+    const z = this.spawnPos.z + dir * 5;
+    const y = this.floorY(x, z, this.spawnPos.y);
+    const g = new THREE.Group();
+    const orb = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.52, 1),
+      new THREE.MeshLambertMaterial({ color: 0x46e882, emissive: 0x0e5c2c, flatShading: true }),
+    );
+    g.add(orb);
+    // a soft additive shell reads "glowy" at PS1 fidelity
+    const shell = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.72, 1),
+      new THREE.MeshBasicMaterial({ color: 0x46e882, transparent: true, opacity: 0.25, depthWrite: false }),
+    );
+    g.add(shell);
+    g.position.set(x, y + 1.3, z);
+    g.userData.baseY = y + 1.3;
+    this.root.add(g);
+    this.glowRing(x, y + 0.12, z, 1.4, 0x46e882);
+    this.comboOrb = {
+      group: g,
+      box: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(x, y + 1.2, z),
+        new THREE.Vector3(2.0, 2.8, 2.0),
+      ),
+      collected: false,
+    };
+  }
+
+  collectComboOrb(): void {
+    const o = this.comboOrb;
+    if (!o) return;
+    o.collected = true;
+    o.group.visible = false;
+    this.glimmerBurst(o.group.position, 0x46e882);
+  }
+
+  // The prize materializes just before the gate the moment the run starts,
+  // and stays exactly as long as the combo does.
+  spawnComboGem(): void {
+    if (!this.gateSpec || this.comboGem) return;
+    const dir = this.chaseCam ? -1 : 1; // a couple units on the NEAR side of the gate plane
+    const { x, y, z } = this.gateSpec;
+    const g = this.gemMesh(1.1);
+    g.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (mesh.isMesh) {
+        const m = mesh.material as THREE.MeshMatcapMaterial;
+        if (m && m.color) m.color.set(0x46e882); // the clear gem, run through green glass
+      }
+    });
+    g.position.set(x, y + 1.7, z + dir * 2.5);
+    g.userData.baseY = y + 1.7;
+    this.root.add(g);
+    this.glowRing(x, y + 0.12, z + dir * 2.5, 1.5, 0x46e882);
+    this.comboGem = {
+      group: g,
+      box: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(x, y + 1.5, z + dir * 2.5),
+        new THREE.Vector3(2.2, 3.2, 2.2),
+      ),
+    };
+  }
+
+  // The combo broke (or was cashed in): the prize evaporates.
+  removeComboGem(burst = false): void {
+    if (!this.comboGem) return;
+    if (burst) this.glimmerBurst(this.comboGem.group.position, 0x46e882);
+    this.root.remove(this.comboGem.group);
+    this.comboGem = null;
+  }
+
+  setComboRun(on: boolean): void {
+    if (this.comboRun === on) return;
+    this.comboRun = on;
+    this.applyRunDress(on, false);
+    if (!on) this.removeComboGem();
+  }
+
   // Flip the whole level in/out of trial dress: checkpoints + wumpa vanish,
   // and the breakable boxes reshuffle — every third plain/mystery box becomes
   // a numbered TIME crate (breaking it freezes the clock that many seconds),
@@ -5357,6 +5459,10 @@ export class Level {
   setTimeTrial(on: boolean): void {
     if (this.timeTrial === on) return;
     this.timeTrial = on;
+    this.applyRunDress(on, true);
+  }
+
+  private applyRunDress(on: boolean, withTimeCrates: boolean): void {
     for (const cp of this.checkpoints) cp.mesh.visible = !on && !cp.active;
     for (const p of this.pickups) p.mesh.visible = !on && p.alive;
     // the crystal sits the trial out too — pure racing, no collectathon
@@ -5371,11 +5477,19 @@ export class Level {
       const mat = (c.pending && c.realMat ? c.realMat : c.mesh.material) as THREE.MeshLambertMaterial;
       if (on) {
         c.ttOrigMap = mat.map;
+        c.timeSecs = undefined;
+        c.boost = undefined;
         if (i % 3 === 2) {
-          c.timeSecs = secsPattern[Math.floor(i / 3) % secsPattern.length];
-          mat.map = this.timeTexture(c.timeSecs);
+          if (withTimeCrates) {
+            // time trial: numbered freeze crates
+            c.timeSecs = secsPattern[Math.floor(i / 3) % secsPattern.length];
+            mat.map = this.timeTexture(c.timeSecs);
+          } else {
+            // combo run: alternating speed bursts and perfect-balance windows
+            c.boost = Math.floor(i / 3) % 2 === 0 ? 'speed' : 'balance';
+            mat.map = this.boostTexture(c.boost);
+          }
         } else {
-          c.timeSecs = undefined;
           mat.map = this.plainTexture();
         }
         mat.needsUpdate = true;
@@ -5386,6 +5500,7 @@ export class Level {
           c.ttOrigMap = undefined;
         }
         c.timeSecs = undefined;
+        c.boost = undefined;
       }
       i++;
     }
@@ -5412,6 +5527,58 @@ export class Level {
       this.crateLabel(ctx, String(n), 24, '#ffffff', '#5a4008', 16, 17);
     });
     this.timeTexCache.set(n, tex);
+    return tex;
+  }
+
+  // Combo-run boost crates: orange chevrons = speed burst, cyan needle =
+  // perfect balance for a few seconds.
+  private boostTexCache = new Map<string, THREE.CanvasTexture>();
+  private boostTexture(kind: 'speed' | 'balance'): THREE.CanvasTexture {
+    const cached = this.boostTexCache.get(kind);
+    if (cached) return cached;
+    const tex = this.makeTex((ctx) => {
+      const base = kind === 'speed' ? '#e8763a' : '#3ac2e8';
+      const dark = kind === 'speed' ? '#a8481c' : '#1c7ea8';
+      const light = kind === 'speed' ? '#ffb98a' : '#a8e8ff';
+      ctx.fillStyle = base;
+      ctx.fillRect(0, 0, 32, 32);
+      ctx.fillStyle = dark;
+      ctx.fillRect(0, 10, 32, 1);
+      ctx.fillRect(0, 21, 32, 1);
+      ctx.fillRect(0, 0, 32, 3);
+      ctx.fillRect(0, 29, 32, 3);
+      ctx.fillRect(0, 0, 3, 32);
+      ctx.fillRect(29, 0, 3, 32);
+      ctx.fillStyle = light;
+      ctx.fillRect(0, 0, 32, 1);
+      ctx.fillRect(0, 0, 1, 32);
+      if (kind === 'speed') {
+        // double chevron pointing right
+        ctx.fillStyle = '#ffffff';
+        for (const ox of [8, 15]) {
+          ctx.beginPath();
+          ctx.moveTo(ox, 9);
+          ctx.lineTo(ox + 6, 16);
+          ctx.lineTo(ox, 23);
+          ctx.lineTo(ox + 3, 23);
+          ctx.lineTo(ox + 9, 16);
+          ctx.lineTo(ox + 3, 9);
+          ctx.closePath();
+          ctx.fill();
+        }
+      } else {
+        // balance needle: beam + centered pivot triangle
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(7, 12, 18, 3);
+        ctx.beginPath();
+        ctx.moveTo(16, 15);
+        ctx.lineTo(11, 23);
+        ctx.lineTo(21, 23);
+        ctx.closePath();
+        ctx.fill();
+      }
+    });
+    this.boostTexCache.set(kind, tex);
     return tex;
   }
 
@@ -5525,6 +5692,8 @@ export class Level {
     };
     if (this.crystalPickup && !this.crystalPickup.collected) bobSpin(this.crystalPickup.group, 1.7);
     if (this.clockPickup && !this.clockPickup.collected) bobSpin(this.clockPickup.group, 1.3);
+    if (this.comboOrb && !this.comboOrb.collected) bobSpin(this.comboOrb.group, 1.6);
+    if (this.comboGem) bobSpin(this.comboGem.group, 2.0);
     bobSpin(this.gemG, 2.4);
     // gate relic icons: earned ones spin and bob, ghosts sit still
     if (this.gateCrystalIcon && this.relics.crystal) this.gateCrystalIcon.rotation.y += 2.2 * dt;

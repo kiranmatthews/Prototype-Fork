@@ -79,6 +79,18 @@ export class Player {
   ttTime = 0; // the running trial clock
   ttFreeze = 0; // banked freeze seconds still counting down
   private ttDied = false; // a trial death: the respawn goes to the very start
+  // COMBO RUN: grab the green orb, then reach the green gem at the gate in
+  // ONE combo. The gem lives exactly as long as the combo does.
+  comboRun = false;
+  comboGemEarned = false;
+  private comboWasLive = false; // last frame's "a combo is pending" — the falling edge is the fail
+  private comboFailT = 0; // the despair beat: halo dissipates, then fade out + restart
+  private comboDied = false;
+  private balanceBoostT = 0; // perfect-balance window from a cyan boost crate
+  onComboRunStart: () => void = () => {};
+  onComboRunFail: () => void = () => {};
+  onComboRunWin: () => void = () => {};
+  onComboRunEnd: () => void = () => {}; // mode dropped without ceremony (restart / level switch)
   private bounceJump = false; // a crate bounce re-arms the double jump — even off a skate air
   onTTStart: () => void = () => {};
   onTTEnd: () => void = () => {}; // trial dropped without finishing (death / restart)
@@ -501,19 +513,29 @@ export class Player {
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
-    // any respawn drops a live trial: back to normal dress, clock hidden
+    // any respawn drops a live trial or combo run: back to normal dress
     if (this.ttActive || level.timeTrial) {
       this.ttActive = false;
       level.setTimeTrial(false);
       this.onTTEnd();
     }
+    if (this.comboRun || level.comboRun) {
+      this.comboRun = false;
+      level.setComboRun(false);
+      this.onComboRunEnd();
+    }
     this.ttTime = 0;
     this.ttFreeze = 0;
     this.ttDied = false;
+    this.comboFailT = 0;
+    this.comboDied = false;
+    this.comboWasLive = false;
+    this.balanceBoostT = 0;
     if (hard) {
       this.lives = 3;
       this.hasCrystal = false;
       this.gemEarned = false;
+      this.comboGemEarned = false;
     }
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
@@ -837,6 +859,30 @@ export class Player {
       if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
       else this.ttTime += dt;
     }
+    // Perfect-balance boost window (cyan combo-run crates): teal sparkle cue.
+    this.balanceBoostT = Math.max(0, this.balanceBoostT - dt);
+    if (this.balanceBoostT > 0 && Math.random() < 0.3) this.emitSparks(1, 0x5ee0ff, 1.2);
+    // COMBO RUN: the run lives exactly as long as the combo does. Any end —
+    // banked, bailed, eaten — with the gem still out there = run failed.
+    if (this.comboRun && this.comboFailT <= 0 && this.state !== 'dead') {
+      const live = this.comboMult > 0;
+      if (this.comboWasLive && !live) this.failComboRun(level);
+      this.comboWasLive = live;
+    } else {
+      this.comboWasLive = this.comboMult > 0;
+    }
+    // The despair beat: the halo dissipates over it, then the standard
+    // fade-out carries you back to the very start of the level.
+    if (this.comboFailT > 0) {
+      this.comboFailT -= dt;
+      if (this.comboFailT <= 0 && this.state !== 'dead' && this.state !== 'gameover') {
+        this.comboDied = true;
+        this.state = 'dead';
+        this.bailing = false;
+        this.respawnTimer = CONST.respawnDelay;
+        this.onDeath(); // fade to black; the respawn restores normal dress
+      }
+    }
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
     this.lipCoolT = Math.max(0, this.lipCoolT - dt);
@@ -972,9 +1018,10 @@ export class Player {
       case 'dead':
         this.respawnTimer -= dt;
         if (this.respawnTimer <= 0) {
-          if (this.ttDied) {
-            // a time-trial death: back to the very start, trial off
+          if (this.ttDied || this.comboDied) {
+            // a special-mode death: back to the very start, mode off
             this.ttDied = false;
+            this.comboDied = false;
             this.respawn(level, true);
           } else if (this.lives < 0) {
             // out of lives: hold on the black screen until any button
@@ -1340,7 +1387,7 @@ export class Player {
       const lipSgn = this.lipAim(false);
       const fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
       this.balance += fightStick * lipSgn * TUNING.lipControl * dt;
-      if (this.uberTimer > 0) this.balance = 0;
+      if (this.uberTimer > 0 || this.balanceBoostT > 0) this.balance = 0;
       if (Math.abs(this.balance) >= 1) {
         this.balance = Math.sign(this.balance);
         this.balanceCritT += dt;
@@ -1864,7 +1911,7 @@ export class Player {
         this.balance +=
           Math.sign(this.balance || this.manualing) * TUNING.manualDrift * (1 + ramp) * dt;
         this.balance -= this.rawInput.moveY * TUNING.manualControl * dt;
-        if (this.uberTimer > 0) this.balance = 0;
+        if (this.uberTimer > 0 || this.balanceBoostT > 0) this.balance = 0;
         if (Math.abs(this.balance) >= 1) {
           this.balance = Math.sign(this.balance);
           this.balanceCritT += dt;
@@ -3211,7 +3258,7 @@ export class Player {
     const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
     this.balance += Math.sign(this.balance || 1) * instability * dt;
     this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
-    if (this.uberTimer > 0) this.balance = 0; // perfect balance
+    if (this.uberTimer > 0 || this.balanceBoostT > 0) this.balance = 0; // perfect balance
     if (Math.abs(this.balance) >= 1) {
       this.balance = Math.sign(this.balance); // pinned at the edge, flailing
       this.balanceCritT += dt;
@@ -4071,7 +4118,7 @@ export class Player {
     }
 
     for (const cp of level.checkpoints) {
-      if (level.timeTrial) break; // trials have no checkpoints — the start IS the checkpoint
+      if (level.runMode) break; // run modes have no checkpoints — the start IS the checkpoint
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
         level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
@@ -4107,7 +4154,7 @@ export class Player {
 
     // Floating wumpa: touch to collect — but a spin smacks it away.
     for (const p of level.pickups) {
-      if (level.timeTrial) break; // no fruit on the clock
+      if (level.runMode) break; // no fruit in a run mode
       if (!p.alive) continue;
       if (this.spinning && this.spinBox.intersectsBox(p.box)) {
         p.alive = false;
@@ -4123,7 +4170,7 @@ export class Player {
     // The level crystal: ride/walk/fly through it and it's yours (a death
     // won't take it back; only a hard reset re-seats it).
     const cr = level.crystalPickup;
-    if (cr && !cr.collected && !level.timeTrial && this.playerBox.intersectsBox(cr.box)) {
+    if (cr && !cr.collected && !level.runMode && this.playerBox.intersectsBox(cr.box)) {
       this.hasCrystal = true;
       level.collectCrystal();
       sfx.play('crystalGet', 0.9);
@@ -4133,7 +4180,7 @@ export class Player {
 
     // The trial stopwatch: touch it and the clock starts NOW.
     const ck = level.clockPickup;
-    if (ck && !ck.collected && !this.ttActive && this.playerBox.intersectsBox(ck.box)) {
+    if (ck && !ck.collected && !this.ttActive && !this.comboRun && this.playerBox.intersectsBox(ck.box)) {
       level.collectClock();
       level.setTimeTrial(true);
       this.ttActive = true;
@@ -4141,6 +4188,34 @@ export class Player {
       this.ttFreeze = 0;
       sfx.play('crystalGet', 0.9);
       this.onTTStart();
+    }
+
+    // The green orb: touch it and the combo run begins — the green gem
+    // materializes at the finish gate, yours if you get there in ONE combo.
+    const orb = level.comboOrb;
+    if (orb && !orb.collected && !this.comboRun && !this.ttActive && this.playerBox.intersectsBox(orb.box)) {
+      level.collectComboOrb();
+      level.setComboRun(true);
+      level.spawnComboGem();
+      this.comboRun = true;
+      this.comboWasLive = false;
+      this.comboFailT = 0;
+      sfx.play('crystalGet', 0.9, 1.25);
+      this.onComboRunStart();
+    }
+
+    // The green gem: only a LIVE combo may take it. Success ends the run
+    // cleanly — normal play resumes with the gem in your pocket.
+    const cg = level.comboGem;
+    if (cg && this.comboRun && this.comboFailT <= 0 && this.comboMult > 0 && this.playerBox.intersectsBox(cg.box)) {
+      this.comboGemEarned = true;
+      this.comboRun = false;
+      level.removeComboGem(true);
+      level.setComboRun(false);
+      this.bankCombo(); // the run's combo cashes in as the prize lands
+      this.points += CONST.ptsCrystal;
+      sfx.play('crystalGet', 1.0);
+      this.onComboRunWin();
     }
 
     if (this.playerBox.intersectsBox(level.finishBox)) {
@@ -4154,6 +4229,15 @@ export class Player {
         this.onFinish(this.runTime);
       }
     }
+  }
+
+  // The combo broke with the gem still out there: the prize evaporates and
+  // the despair beat starts (halo dissipates → fade out → back to the start).
+  private failComboRun(level: Level): void {
+    this.comboFailT = 1.2;
+    level.removeComboGem();
+    sfx.play('skateHalt', 0.5, 0.8);
+    this.onComboRunFail();
   }
 
   // A crate bounce is a fresh launch: the double jump re-arms, its window
@@ -4176,13 +4260,22 @@ export class Player {
 
   // What falls out of a broken box. Mystery crates roll their contents.
   private crateReward(c: Crate): void {
-    // TIME TRIAL rules: numbered crates freeze the clock, masks still work,
-    // everything else is an empty box — no fruit, no lives.
-    if (this.ttActive || c.timeSecs) {
+    // RUN-MODE rules (time trial / combo run): numbered crates freeze the
+    // clock, boost crates pay out speed or perfect balance, masks still
+    // work — everything else is an empty box. No fruit, no lives.
+    if (this.ttActive || this.comboRun || c.timeSecs || c.boost) {
       if (c.timeSecs) {
         this.ttFreeze += c.timeSecs;
         this.emitSparks(8, 0xffd75e, 2);
         sfx.play('crystalGet', 0.55, 1.4);
+      } else if (c.boost === 'speed') {
+        this.speed = Math.min(Math.abs(this.speed) + 8, TUNING.maxSpeed + 6);
+        this.emitSparks(10, 0xff9a3a, 2.2);
+        sfx.play('crystalGet', 0.5, 1.6);
+      } else if (c.boost === 'balance') {
+        this.balanceBoostT = 6; // a perfect-balance window
+        this.emitSparks(10, 0x5ee0ff, 2.2);
+        sfx.play('crystalGet', 0.5, 1.2);
       } else if (c.mask) {
         this.gainMask();
       }
@@ -4587,7 +4680,11 @@ export class Player {
     if (this.state === 'dead') return;
     this.state = 'dead';
     if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
-    else this.lives--;
+    else if (this.comboRun) {
+      this.comboDied = true; // same deal for combo runs
+      this.comboFailT = 0; // dying IS the despair — skip the beat
+      this.onComboRunFail(); // the halo dissipates through the death fade
+    } else this.lives--;
     this.respawnTimer = CONST.respawnDelay;
     sfx.play('death', 0.9);
     this.speed = 0;

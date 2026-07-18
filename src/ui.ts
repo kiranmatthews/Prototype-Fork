@@ -30,6 +30,7 @@ export interface HudState {
   crates: string;
   hasCrystal: boolean;
   hasGem: boolean;
+  hasComboGem: boolean;
 }
 
 declare const __BUILD_TAG__: string; // injected by vite.config define
@@ -48,6 +49,8 @@ export class UI {
   private ttFreezeEl!: HTMLElement;
   private ttResultsEl!: HTMLElement;
   private ttOn = false;
+  private haloEl!: HTMLElement; // combo-run green viewport halo
+  private comboGemIcon!: HTMLElement;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -63,7 +66,7 @@ export class UI {
   private trickTotalEl!: HTMLElement;
   private crystalIcon!: HTMLElement;
   private gemIcon!: HTMLElement;
-  private prevHud = { points: -1, fruit: -1, lives: -1, crates: '', crystal: false, gem: false };
+  private prevHud = { points: -1, fruit: -1, lives: -1, crates: '', crystal: false, gem: false, comboGem: false };
   // Score/combo tickers: displayed numbers chase the real ones fast (arcade feel).
   private dispScore = 0;
   private dispCombo = 0;
@@ -256,6 +259,7 @@ export class UI {
     this.msgWrap.style.display = 'none';
     this.flashEl = div('hud-flash');
     this.fadeEl = div('hud-fade'); // death blackout curtain
+    this.haloEl = div('hud-halo'); // combo-run green edge glow
 
     // Build stamp: baked at compile time. If a playtest doesn't show a
     // change, check this first — it answers "which build am I running?".
@@ -281,8 +285,10 @@ export class UI {
     const relicRow = div('hud-counter hud-relics');
     this.crystalIcon = div('hud-icon hud-icon-crystal hud-relic-off');
     this.gemIcon = div('hud-icon hud-icon-gem hud-relic-off');
+    this.comboGemIcon = div('hud-icon hud-icon-gem hud-icon-combogem hud-relic-off');
     relicRow.appendChild(this.crystalIcon);
     relicRow.appendChild(this.gemIcon);
+    relicRow.appendChild(this.comboGemIcon);
     tl.appendChild(relicRow);
 
     // top-center: score plate
@@ -368,7 +374,7 @@ export class UI {
     this.recBadge.textContent = '● REC';
     this.recBadge.style.display = 'none';
 
-    for (const el of [this.msgWrap, this.flashEl, this.fadeEl, tl, scorePlate, tr, this.ttClockEl, this.ttResultsEl, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
+    for (const el of [this.msgWrap, this.flashEl, this.fadeEl, this.haloEl, tl, scorePlate, tr, this.ttClockEl, this.ttResultsEl, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
       document.body.appendChild(el);
     }
   }
@@ -477,6 +483,11 @@ export class UI {
       this.crystalIcon.classList.toggle('hud-relic-off', !s.hasCrystal);
       if (s.hasCrystal) pop(this.crystalIcon);
       this.prevHud.crystal = s.hasCrystal;
+    }
+    if (s.hasComboGem !== this.prevHud.comboGem) {
+      this.comboGemIcon.classList.toggle('hud-relic-off', !s.hasComboGem);
+      if (s.hasComboGem) pop(this.comboGemIcon);
+      this.prevHud.comboGem = s.hasComboGem;
     }
     if (s.hasGem !== this.prevHud.gem) {
       this.gemIcon.classList.toggle('hud-relic-off', !s.hasGem);
@@ -636,9 +647,22 @@ export class UI {
   setTimeTrial(on: boolean): void {
     this.ttOn = on;
     this.ttClockEl.style.display = on ? 'block' : 'none';
+    this.setRunRows(on);
+    if (!on) this.ttResultsEl.style.display = 'none';
+  }
+
+  // Run-mode HUD: the fruit + lives counters sit out (shared by time trials
+  // and combo runs).
+  setRunRows(on: boolean): void {
     this.wumpaRowEl.style.display = on ? 'none' : '';
     this.livesRowEl.style.display = on ? 'none' : '';
-    if (!on) this.ttResultsEl.style.display = 'none';
+  }
+
+  // Combo-run viewport halo: 'on' = green glow breathing at the edges,
+  // 'dissipate' = the despair beat (slow fade to nothing), 'off' = gone now.
+  comboHalo(state: 'on' | 'dissipate' | 'off'): void {
+    this.haloEl.classList.toggle('on', state === 'on');
+    this.haloEl.classList.toggle('dissipate', state === 'dissipate');
   }
 
   private static fmtTime(t: number): string {
@@ -892,6 +916,11 @@ export class UI {
         filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(80, 220, 255, 0.6));
         align-self: center;
       }
+      /* the combo gem: same cut, run through green glass */
+      .hud-icon-combogem {
+        background: linear-gradient(160deg, #eaffe8 8%, #b8ffd2 22%, #35e47a 55%, #148f4a 90%);
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(80, 255, 150, 0.6));
+      }
       .hud-relic-off { opacity: 0.22; filter: grayscale(1) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)); }
       .hud-icon-face {
         border-radius: 40%;
@@ -1050,6 +1079,19 @@ export class UI {
       .hud-fade {
         position: fixed; z-index: 19; inset: 0; background: #000;
         opacity: 0; pointer-events: none;
+      }
+      /* combo-run halo: green glow breathing at the viewport edges */
+      .hud-halo {
+        position: fixed; z-index: 8; inset: 0; pointer-events: none; opacity: 0;
+        background: radial-gradient(ellipse 100% 100% at 50% 50%,
+          transparent 48%, rgba(70, 232, 130, 0.16) 72%, rgba(70, 232, 130, 0.65) 100%);
+        transition: opacity 0.45s ease;
+      }
+      .hud-halo.on { opacity: 1; animation: halopulse 1.5s ease-in-out infinite alternate; }
+      .hud-halo.dissipate { opacity: 0; transition: opacity 1.15s ease; animation: none; }
+      @keyframes halopulse {
+        from { filter: brightness(0.85); }
+        to { filter: brightness(1.3); }
       }
       .hud-death {
         position: fixed; z-index: 20; inset: 0; background: #000;

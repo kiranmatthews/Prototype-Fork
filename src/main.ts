@@ -547,6 +547,26 @@ player.onTTStart = () => {
   ui.showMessage('TIME TRIAL!', 'race to the gate — numbered crates freeze the clock', 1800);
 };
 player.onTTEnd = () => ui.setTimeTrial(false);
+
+// ---- combo run: green orb -> one combo to the green gem at the gate --------
+player.onComboRunStart = () => {
+  ui.setRunRows(true);
+  ui.comboHalo('on');
+  ui.showMessage('COMBO RUN!', 'reach the green gem at the gate in ONE combo', 2000);
+};
+player.onComboRunFail = () => {
+  ui.comboHalo('dissipate');
+  ui.showMessage('COMBO BROKEN', '', 1100);
+};
+player.onComboRunWin = () => {
+  ui.comboHalo('dissipate');
+  ui.setRunRows(false);
+  ui.showMessage('COMBO GEM!', 'the green gem is yours', 2200);
+};
+player.onComboRunEnd = () => {
+  ui.comboHalo('off');
+  ui.setRunRows(false);
+};
 player.onTTFinish = (time) => {
   const { list, rank } = recordTT(currentCourse, time);
   ui.setTimeTrial(false);
@@ -897,6 +917,7 @@ function frame(): void {
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     hasCrystal: player.hasCrystal,
     hasGem: player.gemEarned,
+    hasComboGem: player.comboGemEarned,
   });
   ui.setStats({
     speed: player.speed,
