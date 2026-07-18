@@ -112,6 +112,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'pendulum', icon: (x) => { x.strokeStyle = '#6a7078'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 11); x.stroke(); x.fillStyle = '#565c66'; x.beginPath(); x.arc(13.5, 13, 3, 0, 7); x.fill(); }, make: (at) => ({ t: 'pendulum', p: [at.x, at.y + 7, at.z], len: 5, amp: 1.0, speed: 1.6, phase: 0 }) },
       { label: 'wumpa', icon: (x) => { x.fillStyle = '#ff9028'; x.beginPath(); x.arc(9, 10, 5, 0, 7); x.fill(); x.fillStyle = '#3a9a4a'; x.fillRect(8, 3, 2, 3); }, make: (at) => ({ t: 'wumpa', p: [at.x, at.y + 1.2, at.z] }) },
       { label: 'crystal', icon: (x) => { x.fillStyle = '#c83af0'; x.beginPath(); x.moveTo(9, 2); x.lineTo(14, 9); x.lineTo(9, 16); x.lineTo(4, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'crystal', p: [at.x, at.y + 0.5, at.z] }) },
+      { label: 'finish gate', icon: (x) => { x.fillStyle = '#d8d8d8'; x.fillRect(3, 4, 2, 12); x.fillRect(13, 4, 2, 12); for (let i = 0; i < 4; i++) { x.fillStyle = i % 2 === 0 ? '#e8e8e8' : '#20242c'; x.fillRect(5 + i * 2, 4, 2, 3); } }, make: (at) => ({ t: 'gate', p: [at.x, at.y, at.z] }) },
     ],
   },
 ];
@@ -2503,6 +2504,11 @@ export class Editor {
         num('length', () => c.len ?? 12, (v) => (c.len = Math.max(1, v)));
         num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       }
+    } else if (c.t === 'gate') {
+      const note = document.createElement('div');
+      note.className = 'ed-dim';
+      note.textContent = 'finish gate — crossing it ends the run (one per level, faces ±Z)';
+      this.propsEl.appendChild(note);
     } else if (c.t === 'zone') {
       sizeRow(0, 'width');
       sizeRow(2, 'depth');

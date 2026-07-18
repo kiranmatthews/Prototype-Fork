@@ -72,6 +72,16 @@ export class Player {
   onRespawn: () => void = () => {};
   onCheckpoint: () => void = () => {};
   onRelic: (title: string, sub: string) => void = () => {};
+  // TIME TRIAL: grab the stopwatch at spawn to start the clock, cross the
+  // finish gate to stop it. Numbered time crates freeze it; dying restarts
+  // the level with the trial OFF (grab the clock again to retry).
+  ttActive = false;
+  ttTime = 0; // the running trial clock
+  ttFreeze = 0; // banked freeze seconds still counting down
+  private ttDied = false; // a trial death: the respawn goes to the very start
+  onTTStart: () => void = () => {};
+  onTTEnd: () => void = () => {}; // trial dropped without finishing (death / restart)
+  onTTFinish: (time: number) => void = () => {};
   hasCrystal = false; // Crash collectathon: the level crystal
   gemEarned = false; // ...and the all-boxes gem
 
@@ -490,6 +500,15 @@ export class Player {
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
+    // any respawn drops a live trial: back to normal dress, clock hidden
+    if (this.ttActive || level.timeTrial) {
+      this.ttActive = false;
+      level.setTimeTrial(false);
+      this.onTTEnd();
+    }
+    this.ttTime = 0;
+    this.ttFreeze = 0;
+    this.ttDied = false;
     if (hard) {
       this.lives = 3;
       this.hasCrystal = false;
@@ -809,6 +828,13 @@ export class Player {
     this.haltCd = Math.max(0, this.haltCd - dt);
     this.wallCoolT = Math.max(0, this.wallCoolT - dt);
     this.pipeFlipCd = Math.max(0, this.pipeFlipCd - dt);
+    // TIME TRIAL clock: runs through everything you do — except while a
+    // broken time crate's freeze is counting down, and never once you're
+    // dead or across the line.
+    if (this.ttActive && this.state !== 'dead' && this.state !== 'gameover' && this.state !== 'finished') {
+      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
+      else this.ttTime += dt;
+    }
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
     this.lipCoolT = Math.max(0, this.lipCoolT - dt);
@@ -944,7 +970,11 @@ export class Player {
       case 'dead':
         this.respawnTimer -= dt;
         if (this.respawnTimer <= 0) {
-          if (this.lives < 0) {
+          if (this.ttDied) {
+            // a time-trial death: back to the very start, trial off
+            this.ttDied = false;
+            this.respawn(level, true);
+          } else if (this.lives < 0) {
             // out of lives: hold on the black screen until any button
             this.state = 'gameover';
             this.onGameOver();
@@ -4034,6 +4064,7 @@ export class Player {
     }
 
     for (const cp of level.checkpoints) {
+      if (level.timeTrial) break; // trials have no checkpoints — the start IS the checkpoint
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
         level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
@@ -4068,6 +4099,7 @@ export class Player {
 
     // Floating wumpa: touch to collect — but a spin smacks it away.
     for (const p of level.pickups) {
+      if (level.timeTrial) break; // no fruit on the clock
       if (!p.alive) continue;
       if (this.spinning && this.spinBox.intersectsBox(p.box)) {
         p.alive = false;
@@ -4091,11 +4123,28 @@ export class Player {
       this.onRelic('CRYSTAL GET!', '');
     }
 
+    // The trial stopwatch: touch it and the clock starts NOW.
+    const ck = level.clockPickup;
+    if (ck && !ck.collected && !this.ttActive && this.playerBox.intersectsBox(ck.box)) {
+      level.collectClock();
+      level.setTimeTrial(true);
+      this.ttActive = true;
+      this.ttTime = 0;
+      this.ttFreeze = 0;
+      sfx.play('crystalGet', 0.9);
+      this.onTTStart();
+    }
+
     if (this.playerBox.intersectsBox(level.finishBox)) {
       this.bankCombo(); // whatever is pending counts at the line
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
-      this.onFinish(this.runTime);
+      if (this.ttActive) {
+        this.ttActive = false; // the clock stops dead on the line
+        this.onTTFinish(this.ttTime);
+      } else {
+        this.onFinish(this.runTime);
+      }
     }
   }
 
@@ -4110,6 +4159,18 @@ export class Player {
 
   // What falls out of a broken box. Mystery crates roll their contents.
   private crateReward(c: Crate): void {
+    // TIME TRIAL rules: numbered crates freeze the clock, masks still work,
+    // everything else is an empty box — no fruit, no lives.
+    if (this.ttActive || c.timeSecs) {
+      if (c.timeSecs) {
+        this.ttFreeze += c.timeSecs;
+        this.emitSparks(8, 0xffd75e, 2);
+        sfx.play('crystalGet', 0.55, 1.4);
+      } else if (c.mask) {
+        this.gainMask();
+      }
+      return;
+    }
     if (c.mask) {
       this.gainMask();
     } else if (c.mystery) {
@@ -4508,7 +4569,8 @@ export class Player {
   private die(): void {
     if (this.state === 'dead') return;
     this.state = 'dead';
-    this.lives--;
+    if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
+    else this.lives--;
     this.respawnTimer = CONST.respawnDelay;
     sfx.play('death', 0.9);
     this.speed = 0;

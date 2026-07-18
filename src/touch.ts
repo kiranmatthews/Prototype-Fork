@@ -394,6 +394,11 @@ export class TouchControls {
       }
       body.tc-on .hud-scorelabel { font-size: 9px; letter-spacing: 3px; }
       body.tc-on .hud-scorenum { font-size: 17px; letter-spacing: 2px; }
+      body.tc-on .hud-ttclock { top: max(8px, env(safe-area-inset-top)); }
+      body.tc-on .hud-tttime { font-size: 30px; letter-spacing: 2px; }
+      body.tc-on .hud-ttfreeze { font-size: 11px; }
+      body.tc-on .hud-ttresults { min-width: 0; width: 78vw; padding: 12px 14px 10px; }
+      body.tc-on .hud-ttres-time { font-size: 32px; }
       body.tc-on .hud-trickplate { bottom: 35%; }
       body.tc-on .hud-trickline { font-size: 15px; letter-spacing: 1px; }
       body.tc-on .hud-tricktotal { font-size: 23px; letter-spacing: 2px; }

@@ -29,6 +29,8 @@ export interface Crate {
   realMat?: THREE.Material; // the true face (kept while ghosted)
   ghostMat?: THREE.Material; // the translucent shell (kept for resets)
   ghostEdges?: THREE.LineSegments; // outline wireframe, hidden on materialize
+  timeSecs?: number; // TIME TRIAL: breaking this crate freezes the clock this many seconds
+  ttOrigMap?: THREE.Texture | null; // the normal-mode face, restored when the trial ends
 }
 
 export interface Enemy {
@@ -202,6 +204,7 @@ export interface CustomComponent {
     | 'enemy' // patrols along X around p, range each way
     | 'crusher' // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | 'pendulum' // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
+    | 'gate' // finish gate: crossing its plane ends the run (posts at ±x, faces along Z); p = [x, deckY, z]. One per level.
     | 'zone' // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | 'rope' // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
     | 'wumpa'
@@ -470,6 +473,7 @@ function overgrownLevel(): CustomLevelData {
     C.push({ t: 'wumpa', p: [wx, 1.4, wz] });
   }
   C.push({ t: 'crystal', p: [0, 1.5, -64] });
+  C.push({ t: 'gate', p: [0, 0, -70] }); // the run ends on the third deck
   return {
     v: 1,
     name: 'The Overgrowth',
@@ -498,6 +502,7 @@ export function starterCustomLevel(): CustomLevelData {
       { t: 'wumpa', p: [0, 1.2, -4] },
       { t: 'enemy', p: [4, 0.5, -20], range: 5, speed: 3 },
       { t: 'crystal', p: [0, 0.5, -24] },
+      { t: 'gate', p: [0, 0.5, -26] },
     ],
   };
 }
@@ -725,6 +730,10 @@ export class Level {
 
   // ---- warp-room VFX + collectathon relics (demoscene math, PS1 budget) ----
   crystalPickup: { group: THREE.Group; box: THREE.Box3; collected: boolean } | null = null;
+  // TIME TRIAL: the gold stopwatch near spawn — touch it to start the clock.
+  clockPickup: { group: THREE.Group; box: THREE.Box3; collected: boolean } | null = null;
+  timeTrial = false; // trial live: checkpoints/fruit dormant, time crates active
+  private gateSpec: { x: number; y: number; z: number } | null = null; // where finishGate stood (capture + clock placement)
   private crystalPlaced = false; // Random level: drop it on one mid-course deck
   private gemG: THREE.Group | null = null; // materializes when every box breaks
   private vfxT = 0; // animation clock for all the procedural magic
@@ -1095,6 +1104,7 @@ export class Level {
     else if (courseId === 8) this.buildCustom(overgrownLevel(), true);
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
+    this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
     this.buildAmbient(); // theme is set by the builder above
   }
 
@@ -1242,6 +1252,10 @@ export class Level {
         pts: pts.map((p) => [r2(p.x - p0.x), r2(p.z - p0.z), 0, r2(p.y - p0.y)] as [number, number, number, number]),
         invisible: rail.object.children.length === 0 ? true : undefined,
       });
+    }
+    // finish gate (where the run ends)
+    if (this.gateSpec) {
+      C.push({ t: 'gate', p: [r2(this.gateSpec.x), r2(this.gateSpec.y), r2(this.gateSpec.z)] });
     }
     // crumble pads
     for (const cr of this.crumbles) {
@@ -1429,7 +1443,7 @@ export class Level {
         this.root.children[c].userData.editorIdx = idx;
       }
     };
-    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'rope', 'crumble', 'pit', 'metal', 'rock']);
+    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'rope', 'crumble', 'pit', 'metal', 'rock', 'gate']);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
     // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
@@ -1862,6 +1876,10 @@ export class Level {
               c.amp ?? 1.2,
               4,
             );
+          } else if (c.t === 'gate') {
+            // finish gate: crossing its plane ends the run (and the time trial)
+            this.finishZ = c.p[2];
+            this.finishGate(c.p[1], c.p[2], c.p[0]);
           } else if (c.t === 'zone') {
             // travel zone: a region that turns the course sideways (E/W) or
             // runs it straight AT the camera (N). Invisible in play; the
@@ -2726,6 +2744,11 @@ export class Level {
       if (this.crystalPickup) {
         this.crystalPickup.collected = false;
         this.crystalPickup.group.visible = true;
+      }
+      // the trial stopwatch reappears — a fresh run can opt in again
+      if (this.clockPickup && !this.timeTrial) {
+        this.clockPickup.collected = false;
+        this.clockPickup.group.visible = true;
       }
       if (this.gemG) {
         this.root.remove(this.gemG);
@@ -5235,6 +5258,138 @@ export class Level {
     this.glimmerBurst(c.group.position, 0xc83af0);
   }
 
+  // ------------------------------------------------------------ time trial --
+  // The gold stopwatch floats just off the racing line at spawn. Touching it
+  // starts the trial; skirting it is a normal run. Only levels with a finish
+  // gate get one — a trial with no line to cross could never end.
+  private placeClock(): void {
+    if (this.finishZ < -1e8 || !this.gateSpec) return;
+    const dir = this.chaseCam ? 1 : -1; // boulder chases run AT +z; everything else runs -z
+    const x = this.spawnPos.x + 2;
+    const z = this.spawnPos.z + dir * 5;
+    const y = this.floorY(x, z, this.spawnPos.y);
+
+    const g = new THREE.Group();
+    const gold = new THREE.MeshLambertMaterial({ color: 0xe8b53a, emissive: 0x40300a });
+    // face: white dial, gold rim, hands at ten-past-ten
+    const faceTex = this.makeTex((ctx) => {
+      ctx.fillStyle = '#f4efdf';
+      ctx.fillRect(0, 0, 32, 32);
+      ctx.strokeStyle = '#c79a2e';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(16, 16, 14, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = '#3a3020';
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2;
+        ctx.fillRect(16 + Math.cos(a) * 11 - 1, 16 + Math.sin(a) * 11 - 1, 2, 2);
+      }
+      ctx.strokeStyle = '#20242c';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(16, 16);
+      ctx.lineTo(16 + 7, 16 - 4);
+      ctx.moveTo(16, 16);
+      ctx.lineTo(16 - 3, 16 - 8);
+      ctx.stroke();
+    });
+    const faceMat = new THREE.MeshLambertMaterial({ color: 0xffffff, map: faceTex });
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.3, 14), [gold, faceMat, faceMat]);
+    body.rotation.x = Math.PI / 2; // dial fronts the corridor
+    g.add(body);
+    const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.18, 8), gold);
+    crown.position.y = 0.72;
+    g.add(crown);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.05, 6, 10), gold);
+    ring.position.y = 0.92;
+    g.add(ring);
+    g.position.set(x, y + 1.35, z);
+    g.userData.baseY = y + 1.35;
+    this.root.add(g);
+    this.glowRing(x, y + 0.12, z, 1.4, 0xffd75e);
+    this.clockPickup = {
+      group: g,
+      box: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(x, y + 1.2, z),
+        new THREE.Vector3(2.0, 2.8, 2.0),
+      ),
+      collected: false,
+    };
+  }
+
+  collectClock(): void {
+    const c = this.clockPickup;
+    if (!c) return;
+    c.collected = true;
+    c.group.visible = false;
+    this.glimmerBurst(c.group.position, 0xffd75e);
+  }
+
+  // Flip the whole level in/out of trial dress: checkpoints + wumpa vanish,
+  // and the breakable boxes reshuffle — every third plain/mystery box becomes
+  // a numbered TIME crate (breaking it freezes the clock that many seconds),
+  // the rest turn into plain boxes with nothing inside. Arrows, masks, nitros,
+  // TNTs, switches, and metal keep their jobs. Fully reversible.
+  setTimeTrial(on: boolean): void {
+    if (this.timeTrial === on) return;
+    this.timeTrial = on;
+    for (const cp of this.checkpoints) cp.mesh.visible = !on && !cp.active;
+    for (const p of this.pickups) p.mesh.visible = !on && p.alive;
+    const secsPattern = [2, 1, 3, 1, 2, 4]; // mostly small freezes, the odd jackpot
+    let i = 0;
+    for (const c of this.crates) {
+      const convertible =
+        !c.nitro && !c.bouncy && !c.metalBounce && !c.tnt && !c.mask && !c.bang && !c.nitroBang;
+      if (!convertible) continue;
+      // pending outlines keep their ghost shell — repaint the REAL face under it
+      const mat = (c.pending && c.realMat ? c.realMat : c.mesh.material) as THREE.MeshLambertMaterial;
+      if (on) {
+        c.ttOrigMap = mat.map;
+        if (i % 3 === 2) {
+          c.timeSecs = secsPattern[Math.floor(i / 3) % secsPattern.length];
+          mat.map = this.timeTexture(c.timeSecs);
+        } else {
+          c.timeSecs = undefined;
+          mat.map = this.plainTexture();
+        }
+        mat.needsUpdate = true;
+      } else {
+        if (c.ttOrigMap !== undefined) {
+          mat.map = c.ttOrigMap;
+          mat.needsUpdate = true;
+          c.ttOrigMap = undefined;
+        }
+        c.timeSecs = undefined;
+      }
+      i++;
+    }
+  }
+
+  // Yellow numbered box: the Crash 3 time crate.
+  private timeTexCache = new Map<number, THREE.CanvasTexture>();
+  private timeTexture(n: number): THREE.CanvasTexture {
+    const cached = this.timeTexCache.get(n);
+    if (cached) return cached;
+    const tex = this.makeTex((ctx) => {
+      ctx.fillStyle = '#e8c33a';
+      ctx.fillRect(0, 0, 32, 32);
+      ctx.fillStyle = '#b08a1c';
+      ctx.fillRect(0, 10, 32, 1);
+      ctx.fillRect(0, 21, 32, 1);
+      ctx.fillRect(0, 0, 32, 3);
+      ctx.fillRect(0, 29, 32, 3);
+      ctx.fillRect(0, 0, 3, 32);
+      ctx.fillRect(29, 0, 3, 32);
+      ctx.fillStyle = '#ffe89a';
+      ctx.fillRect(0, 0, 32, 1);
+      ctx.fillRect(0, 0, 1, 32);
+      this.crateLabel(ctx, String(n), 24, '#ffffff', '#5a4008', 16, 17);
+    });
+    this.timeTexCache.set(n, tex);
+    return tex;
+  }
+
   // All boxes broken: the gem materializes over the player, THPS-photo style.
   awardGem(pos: THREE.Vector3): void {
     if (this.gemG) return;
@@ -5344,6 +5499,7 @@ export class Level {
       }
     };
     if (this.crystalPickup && !this.crystalPickup.collected) bobSpin(this.crystalPickup.group, 1.7);
+    if (this.clockPickup && !this.clockPickup.collected) bobSpin(this.clockPickup.group, 1.3);
     bobSpin(this.gemG, 2.4);
     // gate relic icons: earned ones spin and bob, ghosts sit still
     if (this.gateCrystalIcon && this.relics.crystal) this.gateCrystalIcon.rotation.y += 2.2 * dt;
@@ -5888,7 +6044,7 @@ export class Level {
     // horizon haze, parking-bay stripes to give the eye a texel scale.
     const mat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // asphalt is full-colour
     this.killY = -60;
-    this.finishZ = -1e9; // no finish gate: endless test slab
+    this.finishZ = -200; // gate past the rail garden: the lot's time-trial line
     this.endWallZ = -2100;
     this.theme = {
       skyTop: '#159ecd',
@@ -5990,6 +6146,8 @@ export class Level {
     for (let i = 0; i < 5; i++) {
       this.palm(-60 + i * 45, 0, 64, 4.8 + (i % 2) * 0.7, 0.1 - (i % 3) * 0.08);
     }
+    // finish gate: a straight sprint down the lot past the rail garden
+    this.finishGate(0, this.finishZ);
     // planter islands
     for (const [ix, iz] of [[-78, -400], [150, -400], [-140, 70]] as const) {
       this.rock(ix, 0, iz, 2.2);
@@ -6009,7 +6167,7 @@ export class Level {
     const ground = new THREE.MeshLambertMaterial({ color: 0xffffff }); // full-colour asphalt
     const matPipe = new THREE.MeshLambertMaterial({ color: 0xaab4ba }); // skatepark concrete
     this.killY = -60;
-    this.finishZ = -1e9; // no finish: an endless play park
+    this.finishZ = -110; // gate at the park's south end, past both pipe pairs
     this.endWallZ = -2100;
     this.theme = {
       skyTop: '#159ecd',
@@ -6076,6 +6234,8 @@ export class Level {
     // all three rails ON the ridge and left the outer lips bare)
     for (const z of [-38 + lipX, -47, -56 - lipX]) copingRail(V(-18, lipY + 0.05, z), V(18, lipY + 0.05, z));
     for (const cz of [-38, -56]) for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
+
+    this.finishGate(0, this.finishZ); // run the pipes, cross the line at the south wall
   }
 
   // SKY BRIDGE: a long, narrow plank bridge strung across an open sky with rope
@@ -6086,7 +6246,7 @@ export class Level {
   // is a long way down.
   private buildSkyBridge(): void {
     this.killY = -22; // off the bridge = a fatal drop into the clouds
-    this.finishZ = -1e9;
+    this.finishZ = -127; // gate on the goal deck
     this.endWallZ = -400;
     this.theme = {
       skyTop: '#8fbfe6',
@@ -6178,6 +6338,7 @@ export class Level {
     plank(-125, 8, false, 7);
     this.pickup(0, 1.2, -125);
     this.crystal(0, 0.6, -125);
+    this.finishGate(0, this.finishZ);
 
     // --- SIDE ROPES: grindable handrails running the whole span, both sides.
     // Segmented so each snaps on its own; they sag + wobble under a grinder and
@@ -6530,6 +6691,7 @@ export class Level {
   }
 
   private finishGate(deckY: number, z: number, cx = 0): void {
+    this.gateSpec = { x: cx, y: deckY, z };
     this.finishBox.setFromCenterAndSize(
       new THREE.Vector3(cx, deckY + 15, z),
       new THREE.Vector3(14, 30, 2),

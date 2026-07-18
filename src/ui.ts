@@ -42,6 +42,12 @@ export class UI {
   private flashEl: HTMLElement;
   private fadeEl: HTMLElement;
   private fadeTimer: number | null = null;
+  private wumpaRowEl!: HTMLElement; // hidden during time trials
+  private livesRowEl!: HTMLElement;
+  private ttClockEl!: HTMLElement; // the big trial clock, top center
+  private ttFreezeEl!: HTMLElement;
+  private ttResultsEl!: HTMLElement;
+  private ttOn = false;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -268,6 +274,7 @@ export class UI {
     wumpaRow.appendChild(div('hud-icon hud-icon-wumpa'));
     this.wumpaEl = div('hud-num');
     wumpaRow.appendChild(this.wumpaEl);
+    this.wumpaRowEl = wumpaRow;
     tl.appendChild(crateRow);
     tl.appendChild(wumpaRow);
     // relic haul: crystal + gem, ghosted until earned
@@ -293,6 +300,18 @@ export class UI {
     this.livesEl = div('hud-num');
     livesRow.appendChild(this.livesEl);
     tr.appendChild(livesRow);
+    this.livesRowEl = livesRow;
+
+    // TIME TRIAL: the big top-center clock (per-frame, centisecond digits)
+    // and the ranked-times card shown at the gate.
+    this.ttClockEl = div('hud-ttclock');
+    const ttTime = div('hud-tttime');
+    this.ttClockEl.appendChild(ttTime);
+    this.ttFreezeEl = div('hud-ttfreeze');
+    this.ttClockEl.appendChild(this.ttFreezeEl);
+    this.ttClockEl.style.display = 'none';
+    this.ttResultsEl = div('hud-ttresults');
+    this.ttResultsEl.style.display = 'none';
     // Debug cheat: clicking the face banks an extra life. The HUD layer is
     // pointer-transparent, so this row opts back in.
     livesRow.style.cursor = 'pointer';
@@ -349,7 +368,7 @@ export class UI {
     this.recBadge.textContent = '● REC';
     this.recBadge.style.display = 'none';
 
-    for (const el of [this.msgWrap, this.flashEl, this.fadeEl, tl, scorePlate, tr, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
+    for (const el of [this.msgWrap, this.flashEl, this.fadeEl, tl, scorePlate, tr, this.ttClockEl, this.ttResultsEl, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
       document.body.appendChild(el);
     }
   }
@@ -611,6 +630,54 @@ export class UI {
     });
   }
 
+  // ---- time trial ----------------------------------------------------------
+
+  // Trial dress on/off: the big clock appears, fruit + lives counters hide.
+  setTimeTrial(on: boolean): void {
+    this.ttOn = on;
+    this.ttClockEl.style.display = on ? 'block' : 'none';
+    this.wumpaRowEl.style.display = on ? 'none' : '';
+    this.livesRowEl.style.display = on ? 'none' : '';
+    if (!on) this.ttResultsEl.style.display = 'none';
+  }
+
+  private static fmtTime(t: number): string {
+    const m = Math.floor(t / 60);
+    const s = t - m * 60;
+    return `${m}:${s < 10 ? '0' : ''}${s.toFixed(2)}`;
+  }
+
+  // Called every frame while a trial runs — centisecond digits, and the whole
+  // clock goes ice-blue while a time crate's freeze is counting down.
+  updateTTClock(t: number, freeze: number): void {
+    if (!this.ttOn) return;
+    (this.ttClockEl.firstChild as HTMLElement).textContent = UI.fmtTime(t);
+    const frozen = freeze > 0;
+    this.ttClockEl.classList.toggle('hud-tt-frozen', frozen);
+    this.ttFreezeEl.textContent = frozen ? `FROZEN ${freeze.toFixed(1)}s` : '';
+  }
+
+  // Ranked times at the gate: this run slots into the level's best list.
+  showTTResults(time: number, list: number[], rank: number): void {
+    const rows = list
+      .slice(0, 5)
+      .map((v, i) => {
+        const isNew = i === rank;
+        return `<div class="hud-ttrow${isNew ? ' hud-ttrow-new' : ''}"><span>${i + 1}.</span><span>${UI.fmtTime(v)}</span></div>`;
+      })
+      .join('');
+    this.ttResultsEl.innerHTML =
+      `<div class="hud-ttres-title">${rank === 0 ? 'NEW RECORD!' : 'RUN COMPLETE'}</div>` +
+      `<div class="hud-ttres-time">${UI.fmtTime(time)}</div>` +
+      `<div class="hud-ttres-list">${rows}</div>` +
+      `<div class="hud-ttres-sub">press R / Options to go again</div>`;
+    this.ttResultsEl.style.display = 'block';
+  }
+
+  hideTTResults(): void {
+    this.ttResultsEl.style.display = 'none';
+  }
+
   // Death curtain: fade to black on the way out; on respawn hold the black a
   // beat (the world teleports behind it), then reveal the checkpoint.
   deathFade(out: boolean): void {
@@ -866,6 +933,51 @@ export class UI {
         text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
           0 -2px 0 #3a1c05, 0 4px 8px rgba(0, 0, 0, 0.6);
       }
+
+      /* TIME TRIAL: big top-center clock — bare gold digits like the score,
+         ice blue while a time crate's freeze holds it still */
+      .hud-ttclock {
+        position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+        z-index: 10; pointer-events: none; text-align: center;
+      }
+      .hud-tttime {
+        font: italic 900 clamp(40px, 7.5vh, 66px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px; color: #f2f7ff;
+        text-shadow: 3px 0 0 #101820, -3px 0 0 #101820, 0 3px 0 #101820,
+          0 -3px 0 #101820, 0 5px 12px rgba(0, 0, 0, 0.6);
+      }
+      .hud-tt-frozen .hud-tttime { color: #6ee6ff; }
+      .hud-ttfreeze {
+        font: italic bold clamp(13px, 2vh, 18px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 3px; color: #6ee6ff; margin-top: -4px;
+        text-shadow: 2px 0 0 #06222c, -2px 0 0 #06222c, 0 2px 0 #06222c, 0 -2px 0 #06222c;
+      }
+      /* ranked times card at the gate */
+      .hud-ttresults {
+        position: fixed; z-index: 15; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        min-width: 280px; text-align: center; pointer-events: none;
+        color: #cfe3d8;
+        background: linear-gradient(180deg, rgba(26, 30, 44, 0.94), rgba(10, 12, 18, 0.94));
+        border: 1px solid #3a4152; border-radius: 12px; padding: 18px 28px 14px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 30px rgba(0, 0, 0, 0.55);
+        font: 14px/1.6 ui-monospace, Menlo, Consolas, monospace;
+      }
+      .hud-ttres-title {
+        font: italic bold 26px Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px; color: #ffd24a; margin-bottom: 2px;
+        text-shadow: 0 2px 5px rgba(0,0,0,0.7);
+      }
+      .hud-ttres-time {
+        font: italic 900 44px Impact, 'Arial Black', sans-serif;
+        letter-spacing: 3px; color: #ffe9b0; margin-bottom: 10px;
+        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05, 0 -2px 0 #3a1c05;
+      }
+      .hud-ttrow {
+        display: flex; justify-content: space-between; gap: 24px;
+        padding: 1px 6px; border-radius: 4px; color: #9fb0c8;
+      }
+      .hud-ttrow-new { background: #2b4436; color: #b6f0cc; }
+      .hud-ttres-sub { margin-top: 10px; color: #9fb0c8; font-size: 12px; letter-spacing: 1px; }
 
       /* THPS trick readout — bare text, no plate, reads on any background.
          The entrance animation restarts on the existing display none->block

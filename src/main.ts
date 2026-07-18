@@ -522,7 +522,35 @@ player.onFinish = (time) => {
 player.onRespawn = () => {
   ui.hideMessage();
   ui.showDeathScreen(false);
+  ui.hideTTResults();
   ui.deathFade(false); // world's back in place behind the black — reveal it
+};
+
+// ---- time trial: ranked times per level, kept in this browser --------------
+function recordTT(levelId: number, time: number): { list: number[]; rank: number } {
+  let all: Record<string, number[]> = {};
+  try {
+    all = (JSON.parse(localStorage.getItem('protoTTtimes') ?? '{}') as Record<string, number[]>) ?? {};
+  } catch {
+    all = {};
+  }
+  const list = all[levelId] ?? [];
+  list.push(time);
+  list.sort((a, b) => a - b);
+  all[levelId] = list.slice(0, 8);
+  localStorage.setItem('protoTTtimes', JSON.stringify(all));
+  return { list: all[levelId], rank: all[levelId].indexOf(time) };
+}
+
+player.onTTStart = () => {
+  ui.setTimeTrial(true);
+  ui.showMessage('TIME TRIAL!', 'race to the gate — numbered crates freeze the clock', 1800);
+};
+player.onTTEnd = () => ui.setTimeTrial(false);
+player.onTTFinish = (time) => {
+  const { list, rank } = recordTT(currentCourse, time);
+  ui.setTimeTrial(false);
+  ui.showTTResults(time, list, rank);
 };
 player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
 player.onGameOver = () => ui.showDeathScreen(true);
@@ -856,6 +884,7 @@ function frame(): void {
   sky.position.copy(camera.position);
 
   ui.updateBalance(player.balanceMeter);
+  ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
   const tricks = player.comboLabels;
   ui.setHUD({
     points: player.points,
