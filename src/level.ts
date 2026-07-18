@@ -5336,6 +5336,8 @@ export class Level {
     this.timeTrial = on;
     for (const cp of this.checkpoints) cp.mesh.visible = !on && !cp.active;
     for (const p of this.pickups) p.mesh.visible = !on && p.alive;
+    // the crystal sits the trial out too — pure racing, no collectathon
+    if (this.crystalPickup && !this.crystalPickup.collected) this.crystalPickup.group.visible = !on;
     const secsPattern = [2, 1, 3, 1, 2, 4]; // mostly small freezes, the odd jackpot
     let i = 0;
     for (const c of this.crates) {
@@ -5516,7 +5518,7 @@ export class Level {
     if (this.glintT <= 0) {
       this.glintT = 0.2;
       const anchors: { p: THREE.Vector3; c: number }[] = [];
-      if (this.crystalPickup && !this.crystalPickup.collected)
+      if (this.crystalPickup && !this.crystalPickup.collected && !this.timeTrial)
         anchors.push({ p: this.crystalPickup.group.position, c: 0xd863f2 });
       if (this.gemG) anchors.push({ p: this.gemG.position, c: 0xaee6ff });
       if (this.gateCrystalIcon && this.relics.crystal)

@@ -4115,7 +4115,7 @@ export class Player {
     // The level crystal: ride/walk/fly through it and it's yours (a death
     // won't take it back; only a hard reset re-seats it).
     const cr = level.crystalPickup;
-    if (cr && !cr.collected && this.playerBox.intersectsBox(cr.box)) {
+    if (cr && !cr.collected && !level.timeTrial && this.playerBox.intersectsBox(cr.box)) {
       this.hasCrystal = true;
       level.collectCrystal();
       sfx.play('crystalGet', 0.9);

@@ -937,8 +937,9 @@ export class UI {
       /* TIME TRIAL: big top-center clock — bare gold digits like the score,
          ice blue while a time crate's freeze holds it still */
       .hud-ttclock {
-        position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-        z-index: 10; pointer-events: none; text-align: center;
+        /* top right, in the lives counter's spot (lives hide during trials) */
+        position: fixed; top: 10px; right: 36px;
+        z-index: 10; pointer-events: none; text-align: right;
       }
       .hud-tttime {
         font: italic 900 clamp(40px, 7.5vh, 66px) Impact, 'Arial Black', sans-serif;

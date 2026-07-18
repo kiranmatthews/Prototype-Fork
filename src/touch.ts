@@ -394,7 +394,7 @@ export class TouchControls {
       }
       body.tc-on .hud-scorelabel { font-size: 9px; letter-spacing: 3px; }
       body.tc-on .hud-scorenum { font-size: 17px; letter-spacing: 2px; }
-      body.tc-on .hud-ttclock { top: max(8px, env(safe-area-inset-top)); }
+      body.tc-on .hud-ttclock { top: max(8px, env(safe-area-inset-top)); right: 42px; }
       body.tc-on .hud-tttime { font-size: 30px; letter-spacing: 2px; }
       body.tc-on .hud-ttfreeze { font-size: 11px; }
       body.tc-on .hud-ttresults { min-width: 0; width: 78vw; padding: 12px 14px 10px; }
