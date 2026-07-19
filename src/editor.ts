@@ -14,6 +14,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import {
   Level,
   CustomComponent,
+  EnemyKind,
   CustomLevelData,
   getCustomLevelData,
   setCustomLevelData,
@@ -110,9 +111,21 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
     ],
   },
   {
+    title: 'FOES',
+    items: [
+      { label: 'grunt', icon: (x) => { x.fillStyle = '#c03a2a'; x.fillRect(4, 7, 10, 8); x.fillStyle = '#fff'; x.fillRect(6, 9, 2, 2); x.fillRect(10, 9, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3, foe: 'grunt' }) },
+      { label: 'spiker (spin)', icon: (x) => { x.fillStyle = '#7a3a8a'; x.fillRect(4, 9, 10, 6); x.fillStyle = '#e8e0f0'; for (let i = 0; i < 4; i++) { x.beginPath(); x.moveTo(4 + i * 3, 9); x.lineTo(5.5 + i * 3, 3); x.lineTo(7 + i * 3, 9); x.fill(); } }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3, foe: 'spiker' }) },
+      { label: 'turtle (jump)', icon: (x) => { x.fillStyle = '#2f7a44'; x.beginPath(); x.arc(9, 12, 6, Math.PI, 0); x.fill(); x.fillStyle = '#8a6a2a'; x.fillRect(2, 11, 2, 3); x.fillRect(14, 11, 2, 3); x.fillStyle = '#6cae5a'; x.fillRect(12, 8, 4, 3); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 4, speed: 2.4, foe: 'turtle' }) },
+      { label: 'charger', icon: (x) => { x.fillStyle = '#8a4a26'; x.fillRect(3, 7, 11, 8); x.fillStyle = '#f0e6d0'; x.beginPath(); x.moveTo(14, 8); x.lineTo(18, 6); x.lineTo(15, 10); x.fill(); x.beginPath(); x.moveTo(14, 12); x.lineTo(18, 13); x.lineTo(15, 14); x.fill(); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 9, speed: 4.5, foe: 'charger' }) },
+      { label: 'hopper', icon: (x) => { x.fillStyle = '#46a83a'; x.beginPath(); x.arc(9, 11, 5, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.arc(6.5, 7, 2, 0, 7); x.arc(11.5, 7, 2, 0, 7); x.fill(); x.fillStyle = '#101010'; x.fillRect(6, 6.5, 1.4, 1.4); x.fillRect(11, 6.5, 1.4, 1.4); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3.4, foe: 'hopper' }) },
+      { label: 'floater (spin)', icon: (x) => { x.strokeStyle = '#6c4ad0'; x.lineWidth = 1.5; x.beginPath(); x.ellipse(9, 9, 7, 3, 0, 0, 7); x.stroke(); x.fillStyle = '#9a6cff'; x.beginPath(); x.moveTo(9, 5); x.lineTo(12, 9); x.lineTo(9, 13); x.lineTo(6, 9); x.fill(); x.fillStyle = '#ffe27a'; x.fillRect(8, 8, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3, foe: 'floater' }) },
+      { label: 'sentry', icon: (x) => { x.fillStyle = '#4c525e'; x.fillRect(5, 12, 8, 4); x.fillStyle = '#8a3a3a'; x.fillRect(6, 6, 6, 6); x.fillStyle = '#33373f'; x.fillRect(11, 8, 5, 2); x.fillStyle = '#ff6a3a'; x.fillRect(8, 8, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 0, speed: 0, foe: 'sentry' }) },
+      { label: 'spinner', icon: (x) => { x.strokeStyle = '#d8dde2'; x.lineWidth = 2; for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + 0.4; x.beginPath(); x.moveTo(9, 9); x.lineTo(9 + Math.cos(a) * 7, 9 + Math.sin(a) * 7); x.stroke(); } x.fillStyle = '#b08a2a'; x.beginPath(); x.arc(9, 9, 2.5, 0, 7); x.fill(); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 0, speed: 0, foe: 'spinner' }) },
+    ],
+  },
+  {
     title: 'HAZARDS & THINGS',
     items: [
-      { label: 'enemy', icon: (x) => { x.fillStyle = '#c03a2a'; x.beginPath(); x.arc(9, 11, 5, 0, 7); x.fill(); x.fillStyle = '#fff'; x.fillRect(6, 9, 2, 2); x.fillRect(10, 9, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3 }) },
       { label: 'crusher', icon: (x) => { x.fillStyle = '#8f8f98'; x.fillRect(3, 2, 12, 7); glyph(x, '↓', '#2a2a30'); }, make: (at) => ({ t: 'crusher', p: [at.x, at.y, at.z], s: [4, 3, 3], cycle: 3.2, phase: 0 }) },
       { label: 'pendulum', icon: (x) => { x.strokeStyle = '#6a7078'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 11); x.stroke(); x.fillStyle = '#565c66'; x.beginPath(); x.arc(13.5, 13, 3, 0, 7); x.fill(); }, make: (at) => ({ t: 'pendulum', p: [at.x, at.y + 7, at.z], len: 5, amp: 1.0, speed: 1.6, phase: 0 }) },
       { label: 'wumpa', icon: (x) => { x.fillStyle = '#ff9028'; x.beginPath(); x.arc(9, 10, 5, 0, 7); x.fill(); x.fillStyle = '#3a9a4a'; x.fillRect(8, 3, 2, 3); }, make: (at) => ({ t: 'wumpa', p: [at.x, at.y + 1.2, at.z] }) },
@@ -125,6 +138,18 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
 ];
 
 const CRATE_KINDS = ['wood', 'bouncy', 'metalbounce', 'nitro', 'tnt', 'mask', 'mystery', 'bang', 'nitrobang'] as const;
+
+// enemy variants + a one-line hint on how each is beaten, shown in the dropdown
+const FOE_KINDS: { k: EnemyKind; label: string }[] = [
+  { k: 'grunt', label: 'grunt — any attack' },
+  { k: 'spiker', label: 'spiker — SPIN only (spikes)' },
+  { k: 'turtle', label: 'turtle — STOMP only (shell)' },
+  { k: 'charger', label: 'charger — bull, invincible mid-dash' },
+  { k: 'hopper', label: 'hopper — leaps; stomp when grounded' },
+  { k: 'floater', label: 'floater — flies; SPIN it down' },
+  { k: 'sentry', label: 'sentry — turret, fires orbs' },
+  { k: 'spinner', label: 'spinner — hit it when blades retract' },
+];
 
 // components that grow draggable resize handles on double-click
 const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'pipe', 'enemy', 'pendulum']);
@@ -2397,6 +2422,7 @@ export class Editor {
     if (c.nm) return c.nm;
     if (c.pts && c.pts.length >= 3) return `${c.t} · drawn`;
     if (c.t === 'crate') return `crate · ${c.kind ?? 'wood'}${c.outline ? ' (outline)' : ''}`;
+    if (c.t === 'enemy') return `foe · ${c.foe ?? 'grunt'}`;
     if (c.t === 'wall' && c.invisible) return 'invis wall';
     if (c.t === 'clock') return 'tt clock';
     if (c.t === 'comboorb') return 'combo orb';
@@ -3232,19 +3258,39 @@ export class Editor {
       });
       this.propsEl.appendChild(chain);
     } else if (c.t === 'enemy') {
-      const alongZ = (((c.yaw ?? 0) % 180) + 180) % 180 >= 45 && (((c.yaw ?? 0) % 180) + 180) % 180 < 135;
-      num(alongZ ? 'patrol ±z' : 'patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
-      num('speed', () => c.speed ?? 3, (v) => (c.speed = Math.max(0.5, v)));
-      const axisBtn = document.createElement('button');
-      axisBtn.className = 'ed-btn';
-      axisBtn.textContent = `patrol: along ${alongZ ? 'Z' : 'X'}`;
-      axisBtn.title = 'the walk is axis-bound — rotation comes in 90° steps';
-      axisBtn.addEventListener('click', () => {
-        c.yaw = alongZ ? 0 : 90;
+      const sel = document.createElement('select');
+      sel.className = 'ed-select';
+      for (const f of FOE_KINDS) {
+        const o = document.createElement('option');
+        o.value = f.k;
+        o.textContent = f.label;
+        if ((c.foe ?? 'grunt') === f.k) o.selected = true;
+        sel.appendChild(o);
+      }
+      sel.addEventListener('change', () => {
+        c.foe = sel.value as EnemyKind;
         this.commit();
         this.renderProps();
       });
-      this.propsEl.appendChild(axisBtn);
+      this.propsEl.appendChild(sel);
+      const stationary = c.foe === 'sentry' || c.foe === 'spinner';
+      const alongZ = (((c.yaw ?? 0) % 180) + 180) % 180 >= 45 && (((c.yaw ?? 0) % 180) + 180) % 180 < 135;
+      if (!stationary) {
+        num(alongZ ? 'patrol ±z' : 'patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
+        num('speed', () => c.speed ?? 3, (v) => (c.speed = Math.max(0.5, v)));
+      }
+      if (!stationary) {
+        const axisBtn = document.createElement('button');
+        axisBtn.className = 'ed-btn';
+        axisBtn.textContent = `patrol: along ${alongZ ? 'Z' : 'X'}`;
+        axisBtn.title = 'the walk is axis-bound — rotation comes in 90° steps';
+        axisBtn.addEventListener('click', () => {
+          c.yaw = alongZ ? 0 : 90;
+          this.commit();
+          this.renderProps();
+        });
+        this.propsEl.appendChild(axisBtn);
+      }
     } else if (c.t === 'crusher') {
       sizeRow(0, 'width');
       sizeRow(2, 'depth');

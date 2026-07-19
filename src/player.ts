@@ -2765,7 +2765,7 @@ export class Player {
       else this.smashCrate(level, c);
     }
     for (const e of level.enemies) {
-      if (e.alive && e.group.position.distanceTo(this.pos) < TUNING.slamRadius + 0.6) {
+      if (e.alive && e.meleeKill && e.group.position.distanceTo(this.pos) < TUNING.slamRadius + 0.6) {
         level.killEnemy(e);
         this.score(CONST.ptsEnemy, 'Flattened');
       }
@@ -4007,22 +4007,40 @@ export class Player {
       }
     }
 
+    // Typed foes publish per-frame flags (see Level.updateEnemies): spinKill /
+    // stompKill / meleeKill / touchHurt / spinRecoil. The rules below read them
+    // so each kind's "which attack works" is data, not a special case here.
     for (const e of level.enemies) {
       if (!e.alive) continue;
       if (this.spinning && this.spinBox.intersectsBox(e.box)) {
-        // Spin PINGS the enemy away — it can smash crates it happens to hit.
-        const fling = e.group.position.clone().sub(this.pos).setY(0);
-        if (fling.lengthSq() < 0.01) fling.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
-        fling.normalize().multiplyScalar(42); // pinball ricochet
-        fling.y = 10;
-        level.killEnemy(e, fling);
-        this.score(CONST.ptsEnemy, 'Takedown');
-      } else if (this.playerBox.intersectsBox(e.box)) {
-        if (this.uberTimer > 0 || this.sliding) {
+        if (e.spinKill) {
+          // Spin PINGS the enemy away — it can smash crates it happens to hit.
+          const fling = e.group.position.clone().sub(this.pos).setY(0);
+          if (fling.lengthSq() < 0.01) fling.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
+          fling.normalize().multiplyScalar(42); // pinball ricochet
+          fling.y = 10;
+          level.killEnemy(e, fling);
+          this.score(CONST.ptsEnemy, 'Takedown');
+          continue;
+        }
+        if (e.spinRecoil) {
+          // armored shell: the spin just knocks it back — safe, but no kill
+          const key = e.axis === 'z' ? 'z' : 'x';
+          const away = Math.sign(e.group.position[key] - this.pos[key]) || 1;
+          e.group.position[key] += away * 0.8;
+          e.dir = away;
+          sfx.play('crateBounce', 0.5, 0.7);
+          continue;
+        }
+        // else: spinning does NOT protect (active blades, a charging bull) —
+        // fall through and take the hit below.
+      }
+      if (this.playerBox.intersectsBox(e.box)) {
+        if ((this.uberTimer > 0 || this.sliding) && e.meleeKill) {
           // Uber plows through; Crash 3 rules: the slide takes out enemies too.
           level.killEnemy(e);
           this.score(CONST.ptsEnemy, 'Takedown');
-        } else if (this.isStomping(e.box)) {
+        } else if (this.isStomping(e.box) && e.stompKill) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
           level.killEnemy(e);
@@ -4036,11 +4054,12 @@ export class Player {
             this.chargeTimer = 0;
           }
         } else {
-          // Plain touch: invuln grace applies, and a mask absorbs it with a
-          // knockback away from the enemy (Crash rules — the video showed a
-          // death WITH a mask in hand, which was flatly wrong). The touch
-          // box is slightly forgiving; stomps/spins keep the full box.
-          if (this.invulnTimer > 0) continue;
+          // Not a valid attack for this foe. If it's dangerous right now it
+          // hurts (spikes, active blades, a dashing bull, a bad-timed stomp on
+          // a leaping frog); if it's in a safe window (retracted blades, a
+          // dizzy bull) you just bump it. invuln grace + mask absorb apply.
+          if (!e.touchHurt) continue;
+          if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
           this.enemyTouch.copy(e.box).expandByScalar(-0.15);
           if (!this.playerBox.intersectsBox(this.enemyTouch)) continue;
           if (this.spendMask()) {
@@ -4055,6 +4074,17 @@ export class Player {
           return;
         }
       }
+    }
+
+    // Sentry orbs: contact hurts (uber/invuln/mask absorb it); the orb pops.
+    for (let i = level.projectiles.length - 1; i >= 0; i--) {
+      const pr = level.projectiles[i];
+      if (!this.playerBox.intersectsBox(pr.box)) continue;
+      level.popProjectile(i);
+      if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
+      if (this.spendMask()) { this.speed *= 0.6; continue; }
+      this.die();
+      return;
     }
 
     // Rolling stones: flatten you on touch (uber/invuln/mask absorb it).

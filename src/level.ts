@@ -34,6 +34,19 @@ export interface Crate {
   ttOrigMap?: THREE.Texture | null; // the normal-mode face, restored when the trial ends
 }
 
+// Functionally distinct foes. Defeat rules and movement differ per kind —
+// the level's update owns each FSM and publishes per-frame combat flags
+// (spinKill/stompKill/...) that the player's collision simply reads.
+export type EnemyKind =
+  | 'grunt' // baseline: patrols, any attack kills, touch hurts
+  | 'spiker' // SPIN-ONLY: spikes on top, stomping it hurts you
+  | 'turtle' // STOMP-ONLY: hard shell, a spin just recoils it
+  | 'charger' // bull: patrol → telegraph → dash (invincible) → recover
+  | 'hopper' // frog: leaps in arcs; stompable only while grounded
+  | 'floater' // drone: hovers above stomp range, swoops; spin it down
+  | 'sentry' // turret: stationary, tracks + fires slow orbs on a cycle
+  | 'spinner'; // sawblade: blades OUT = untouchable touch-kill, IN = vulnerable
+
 export interface Enemy {
   group: THREE.Group;
   box: THREE.Box3;
@@ -48,6 +61,29 @@ export interface Enemy {
   flungT?: number;
   // Arena-fight enemies stay hidden until their wave is called.
   arenaWave?: number;
+  // ---- typed foes ----
+  kind: EnemyKind;
+  state: string; // per-kind FSM state
+  stateT: number; // seconds accumulated in the current state / cycle
+  baseY: number; // deck level; hop/float/dash offsets work from here
+  cross: number; // fixed cross-axis coordinate (facing / aim reference)
+  body: THREE.Mesh; // main body mesh, for squash/flash/state anims
+  vy: number; // hopper vertical velocity
+  // per-frame combat flags the player's collision reads (set each update):
+  spinKill: boolean; // a spin attack defeats it now
+  stompKill: boolean; // a jump-stomp defeats it now
+  meleeKill: boolean; // slide / uber / slam defeats it now
+  touchHurt: boolean; // plain body contact hurts the player now
+  spinRecoil: boolean; // spinning into it (when !spinKill) is SAFE + knocks it back
+}
+
+// A slow orb lobbed by a sentry. Straight-line flight; hitting the player
+// hurts (mask/die), same as any touch hazard.
+interface Projectile {
+  mesh: THREE.Mesh;
+  vel: THREE.Vector3;
+  life: number;
+  box: THREE.Box3;
 }
 
 // Moving platform: slides along one axis on a sine, carrying the rider.
@@ -224,6 +260,7 @@ export interface CustomComponent {
   outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
   range?: number;
   speed?: number;
+  foe?: EnemyKind; // enemy variant (grunt/spiker/turtle/charger/hopper/floater/sentry/spinner)
   invisible?: boolean;
   cycle?: number;
   phase?: number;
@@ -491,11 +528,14 @@ function overgrownLevel(): CustomLevelData {
   C.push({ t: 'crate', p: [-4.4, 0.5, 34], kind: 'wood' });
   C.push({ t: 'crate', p: [-3.6, 0.5, 19.4], kind: 'bouncy' }); // bounce line over pit one
   C.push({ t: 'checkpoint', p: [3.2, 0.5, -3.4] });
-  C.push({ t: 'enemy', p: [0, 0.5, -14], range: 5.5, speed: 3 });
+  C.push({ t: 'enemy', p: [0, 0.5, -14], range: 5.5, speed: 3, foe: 'hopper' });
   C.push({ t: 'crate', p: [-5, 0.5, -18.6], kind: 'wood' });
   C.push({ t: 'crate', p: [5.2, 0.5, -20.4], kind: 'tnt' });
+  C.push({ t: 'enemy', p: [-2, 0.5, -22], range: 4, speed: 3, foe: 'floater' }); // spin it out of the canopy
   C.push({ t: 'crate', p: [-4.6, 0.5, -24], kind: 'wood' });
+  C.push({ t: 'enemy', p: [0, 0.5, -40], range: 0, speed: 0, foe: 'spinner' }); // blades guard the third pit
   C.push({ t: 'crate', p: [5.4, 0.5, -55.6], kind: 'mask' });
+  C.push({ t: 'enemy', p: [3, 0.5, -57], range: 4, speed: 3, foe: 'spiker' });
   C.push({ t: 'crate', p: [-5.8, 0.5, -60], kind: 'bouncy' });
   for (const [wx, wz] of [
     [0, 24],
@@ -774,6 +814,7 @@ export class Level {
   groundMeshes: THREE.Mesh[] = [];
   crates: Crate[] = [];
   enemies: Enemy[] = [];
+  projectiles: Projectile[] = []; // sentry orbs in flight
   stones: Stone[] = [];
   checkpoints: Checkpoint[] = [];
   pickups: Pickup[] = [];
@@ -1487,20 +1528,23 @@ export class Level {
     }
     for (const e of this.enemies) {
       const range = r2((e.x1 - e.x0) / 2);
+      const foe = e.kind !== 'grunt' ? e.kind : undefined;
       C.push(
         e.axis === 'z'
           ? {
               t: 'enemy',
-              p: [r2(e.group.position.x), r2(e.group.position.y), r2((e.x0 + e.x1) / 2)],
+              p: [r2(e.group.position.x), r2(e.baseY), r2((e.x0 + e.x1) / 2)],
               range,
               speed: r2(e.speed),
+              foe,
               yaw: 90,
             }
           : {
               t: 'enemy',
-              p: [r2((e.x0 + e.x1) / 2), r2(e.group.position.y), r2(e.group.position.z)],
+              p: [r2((e.x0 + e.x1) / 2), r2(e.baseY), r2(e.group.position.z)],
               range,
               speed: r2(e.speed),
+              foe,
             },
       );
     }
@@ -2144,13 +2188,14 @@ export class Level {
             this.checkpoint(c.p[1], c.p[2], c.p[0]);
           } else if (c.t === 'enemy') {
             const r = c.range ?? 5;
+            const foe = (c.foe ?? 'grunt') as EnemyKind;
             // yaw 90/270 turns the patrol onto the Z axis (the walk is
             // axis-bound; the editor exposes it as a patrol-direction toggle)
             const eYaw = (((c.yaw ?? 0) % 360) + 360) % 360;
             if (eYaw % 180 >= 45 && eYaw % 180 < 135) {
-              this.enemy(c.p[2] - r, c.p[2] + r, c.p[1], c.p[0], c.speed ?? 3, 'z');
+              this.enemy(c.p[2] - r, c.p[2] + r, c.p[1], c.p[0], c.speed ?? 3, 'z', foe);
             } else {
-              this.enemy(c.p[0] - r, c.p[0] + r, c.p[1], c.p[2], c.speed ?? 3);
+              this.enemy(c.p[0] - r, c.p[0] + r, c.p[1], c.p[2], c.speed ?? 3, 'x', foe);
             }
           } else if (c.t === 'crusher') {
             const s = c.s ?? [4, 3, 3];
@@ -2698,35 +2743,8 @@ export class Level {
       attr.needsUpdate = true;
     }
 
-    for (const e of this.enemies) {
-      if (!e.alive) continue;
-      if (e.axis === 'z') {
-        // side-scroll patrol: back and forth across the screen
-        e.group.position.z += e.dir * e.speed * dt;
-        if (e.group.position.z > e.x1) {
-          e.group.position.z = e.x1;
-          e.dir = -1;
-        } else if (e.group.position.z < e.x0) {
-          e.group.position.z = e.x0;
-          e.dir = 1;
-        }
-        e.group.rotation.y = e.dir > 0 ? 0 : Math.PI;
-      } else {
-        e.group.position.x += e.dir * e.speed * dt;
-        if (e.group.position.x > e.x1) {
-          e.group.position.x = e.x1;
-          e.dir = -1;
-        } else if (e.group.position.x < e.x0) {
-          e.group.position.x = e.x0;
-          e.dir = 1;
-        }
-        e.group.rotation.y = e.dir > 0 ? Math.PI / 2 : -Math.PI / 2;
-      }
-      e.box.setFromCenterAndSize(
-        e.group.position.clone().add(new THREE.Vector3(0, 0.55, 0)),
-        new THREE.Vector3(1.3, 1.1, 1.3),
-      );
-    }
+    this.updateEnemies(dt);
+    this.updateProjectiles(dt);
     // Floating wumpa bob in place.
     for (const p of this.pickups) {
       if (!p.alive) continue;
@@ -3026,16 +3044,14 @@ export class Level {
     for (const e of this.enemies) {
       e.alive = e.arenaWave === undefined; // arena waves wait to be called
       e.group.visible = e.alive;
-      e.group.scale.setScalar(1);
-      e.group.rotation.set(0, 0, 0);
       e.flungT = undefined;
       e.flungVel = undefined;
       if (e.axis === 'z') e.group.position.z = (e.x0 + e.x1) / 2;
       else e.group.position.x = (e.x0 + e.x1) / 2;
-      e.group.position.y = e.group.userData.baseY as number;
-      e.dir = 1;
+      this.resetEnemyVisual(e); // pose + FSM back to start (handles y/rotation/scale)
       e.box.makeEmpty();
     }
+    this.clearProjectiles();
 
     for (const st of this.stones) {
       st.mesh.position.set(st.x, st.mesh.position.y, (st.z0 + st.z1) / 2);
@@ -3331,16 +3347,17 @@ export class Level {
     this.crate(-3, -13, -558, 'mystery');
     this.crate(5, -13.5, -934, 'mystery');
 
-    // --- enemies (patrolling across the corridor) ---
-    this.enemy(-3.5, 3.5, -5, -120, 5);
-    this.enemy(-4, 4, -5, -138, 7);
-    this.enemy(-4, 4, -5.5, -200, 6);
-    this.enemy(-4, 4, -5.5, -215, 8);
-    this.enemy(-3, 3, -5.5, -228, 5);
-    this.enemy(-4.5, 4.5, -13, -340, 9);
-    this.enemy(-4, 4, -13, -445, 7);
-    this.enemy(-4.5, 4.5, -13, -540, 8);
-    this.enemy(-4, 4, -13, -562, 6);
+    // --- enemies (a teaching order of the foe roster) ---
+    this.enemy(-3.5, 3.5, -5, -120, 5, 'x', 'grunt'); // meet the baseline first
+    this.enemy(-4, 4, -5, -138, 7, 'x', 'spiker'); // SPIN this one — don't land on it
+    this.enemy(-4, 4, -5.5, -200, 6, 'x', 'turtle'); // STOMP this one — a spin bounces off
+    this.enemy(-3, 3, -5.5, -228, 5, 'x', 'hopper'); // time the leaps
+    this.enemy(0, 0, -252, 4, 0, 'x', 'sentry'); // turret watching the choke
+    this.enemy(-4.5, 4.5, -13, -340, 9, 'x', 'charger'); // long straight = a bull's runway
+    this.enemy(-4, 4, -13, -445, 7, 'x', 'grunt');
+    this.enemy(-4.5, 4.5, -13, -540, 8, 'x', 'floater'); // spin it out of the air
+    this.enemy(0, 0, -556, 5, 0, 'x', 'spinner'); // blades gate the corridor
+    this.enemy(-4, 4, -13, -562, 6, 'x', 'grunt');
     // (no enemy at the halfpipe mouth — the run into the pipe stays clean)
 
     // --- checkpoints ---
@@ -3350,7 +3367,7 @@ export class Level {
     this.checkpoint(-13.5, -922);
 
     // --- extra enemy guarding the rail yard landing ---
-    this.enemy(-4, 4, -13.5, -936, 6);
+    this.enemy(-4, 4, -13.5, -936, 6, 'x', 'turtle');
 
     // --- dressing: tropical fringe off the play space (visual only) ---
     // west beach edge + spawn surrounds
@@ -3579,7 +3596,7 @@ export class Level {
     this.slab('approach', -12, -38, 0, 10, matGround, true, 0, 'grass');
     this.crate(0, 0, -24);
     this.crate(0, 1.2, -24); // stack: spin, bounce, or headbutt
-    this.enemy(-3, 3, 0, -31, 4);
+    this.enemy(-3, 3, 0, -31, 4, 'x', 'hopper');
 
     // CORNER 1: the path right-angles east; a wall dead ahead sells the turn
     this.slab('corner', -38, -56, 0, 18, matA, false, 4);
@@ -3610,7 +3627,7 @@ export class Level {
     // landing shelf: nitro squats the lane, crab patrols the screen
     this.slabX('mid shelf', 90, 108, 3.2, 9, matGround, CZ, 'grass');
     this.crate(98, 3.2, CZ, 'nitro');
-    this.enemy(94, 106, 3.2, CZ, 5);
+    this.enemy(94, 106, 3.2, CZ, 5, 'x', 'spiker');
     // split: bounce the arrow crate up to the high ledge, or run the TNT road
     this.crate(107, 3.2, CZ, 'bouncy');
     this.slabX('high ledge', 110, 128, 8.4, 9, matPlat, CZ);
@@ -3637,7 +3654,7 @@ export class Level {
     this.crate(152, 0, -94);
     this.crate(152, 1.2, -94);
     this.crate(152, 2.4, -94); // tower: spin through or bounce up
-    this.enemy(148, 156, 0, -99, 5);
+    this.enemy(148, 156, 0, -99, 5, 'x', 'charger');
     this.fruitRow(-90, -96, 1.4, 4, 149);
     this.finishGate(0, this.finishZ, 152);
     this.endWall(0, 152);
@@ -5977,28 +5994,161 @@ export class Level {
     }
   }
 
-  private enemyGroup(): THREE.Group {
-    const group = new THREE.Group();
-    const body = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 0.9, 1.1),
-      new THREE.MeshLambertMaterial({ color: 0xa03a3a }),
-    );
-    body.position.y = 0.55;
-    group.add(body);
+  // Two white pupil eyes on the front face at height y.
+  private enemyEyes(group: THREE.Group, y: number, z = 0.56, spread = 0.22): void {
     const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    for (const side of [-0.22, 0.22]) {
+    for (const side of [-spread, spread]) {
       const eye = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.14, 0.1), eyeMat);
-      eye.position.set(side, 0.75, 0.56);
+      eye.position.set(side, y, z);
       group.add(eye);
     }
+  }
+
+  // Build the mesh for a foe. Returns the group and the "body" — the mesh a
+  // kind squashes / flashes / spins for its state animation.
+  private enemyGroup(kind: EnemyKind): { group: THREE.Group; body: THREE.Mesh } {
+    const group = new THREE.Group();
+    const lam = (c: number, e = 0): THREE.MeshLambertMaterial =>
+      new THREE.MeshLambertMaterial({ color: c, emissive: e });
+    let body: THREE.Mesh;
+    if (kind === 'spiker') {
+      // squat purple body wearing a crown of up-pointing spikes (land = ouch)
+      body = new THREE.Mesh(new THREE.BoxGeometry(1, 0.7, 1.05), lam(0x7a3a8a));
+      body.position.y = 0.42;
+      group.add(body);
+      const spikeMat = lam(0xe8e0f0);
+      for (const [sx, sz] of [[-0.28, -0.28], [0.28, -0.28], [-0.28, 0.28], [0.28, 0.28], [0, 0]]) {
+        const spike = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.42, 4), spikeMat);
+        spike.position.set(sx, 0.86, sz);
+        group.add(spike);
+      }
+      this.enemyEyes(group, 0.55, 0.55);
+    } else if (kind === 'turtle') {
+      // domed green shell (safe to land on), gold side plates, a poking head.
+      // NO top spikes — stomping is the ONLY way through it.
+      body = new THREE.Mesh(new THREE.SphereGeometry(0.62, 10, 7, 0, Math.PI * 2, 0, Math.PI / 2), lam(0x2f7a44));
+      body.scale.set(1, 0.75, 1.15);
+      body.position.y = 0.34;
+      group.add(body);
+      for (const side of [-1, 1]) {
+        const plate = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.4, 0.9), lam(0x8a6a2a));
+        plate.position.set(side * 0.6, 0.3, 0);
+        group.add(plate);
+      }
+      const head = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.36, 0.4), lam(0x6cae5a));
+      head.position.set(0, 0.34, 0.62);
+      group.add(head);
+      this.enemyEyes(group, 0.42, 0.82, 0.12);
+    } else if (kind === 'charger') {
+      // bulky bull with forward horns — the reared-back telegraph reads clearly
+      body = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.95, 1.45), lam(0x8a4a26));
+      body.position.y = 0.6;
+      group.add(body);
+      for (const side of [-0.34, 0.34]) {
+        const horn = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.5, 5), lam(0xf0e6d0));
+        horn.position.set(side, 0.82, 0.82);
+        horn.rotation.x = Math.PI / 2.1;
+        group.add(horn);
+      }
+      const snout = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.4, 0.3), lam(0x6e3a1e));
+      snout.position.set(0, 0.42, 0.82);
+      group.add(snout);
+      this.enemyEyes(group, 0.82, 0.74, 0.28);
+    } else if (kind === 'hopper') {
+      // rounded frog, eyes bulging on top, folded hind legs (springs on launch)
+      body = new THREE.Mesh(new THREE.SphereGeometry(0.5, 9, 7), lam(0x46a83a));
+      body.scale.set(1.1, 0.85, 1);
+      body.position.y = 0.46;
+      group.add(body);
+      const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const pupMat = new THREE.MeshBasicMaterial({ color: 0x101010 });
+      for (const side of [-0.24, 0.24]) {
+        const e = new THREE.Mesh(new THREE.SphereGeometry(0.17, 7, 6), eyeMat);
+        e.position.set(side, 0.86, 0.16);
+        group.add(e);
+        const p = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6, 5), pupMat);
+        p.position.set(side, 0.9, 0.29);
+        group.add(p);
+      }
+      for (const side of [-0.4, 0.4]) {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.24, 0.4), lam(0x35862c));
+        leg.position.set(side, 0.2, -0.18);
+        group.add(leg);
+      }
+    } else if (kind === 'floater') {
+      // hovering drone: a violet core diamond ringed by a spinning rotor blur,
+      // a single wary eye. It never touches the ground.
+      body = new THREE.Mesh(new THREE.OctahedronGeometry(0.42), lam(0x9a6cff, 0x2a1466));
+      body.position.y = 0.05;
+      group.add(body);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.07, 6, 16), lam(0x6c4ad0, 0x160a40));
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.05;
+      ring.name = 'rotor';
+      group.add(ring);
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffe27a }));
+      eye.position.set(0, 0.05, 0.4);
+      group.add(eye);
+    } else if (kind === 'sentry') {
+      // fixed base + a rotating head with a barrel and a charge-eye that glows
+      const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.62, 0.5, 8), lam(0x4c525e));
+      base.position.y = 0.25;
+      group.add(base);
+      body = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.6, 0.85), lam(0x8a3a3a));
+      body.position.y = 0.72;
+      body.name = 'head';
+      group.add(body);
+      const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.6, 8), lam(0x33373f));
+      barrel.rotation.x = Math.PI / 2;
+      barrel.position.set(0, 0.72, 0.55);
+      barrel.name = 'barrel';
+      body.add(barrel);
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff6a3a }));
+      eye.position.set(0, 0.72, 0.44);
+      eye.name = 'eye';
+      body.add(eye);
+    } else if (kind === 'spinner') {
+      // a brass hub with radial blades that telescope out (danger) and in (safe)
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.5, 8), lam(0xb08a2a, 0x2a1e06));
+      hub.position.y = 0.55;
+      group.add(hub);
+      body = hub;
+      const bladeMat = lam(0xd8dde2, 0x22262a);
+      for (let i = 0; i < 4; i++) {
+        const pivot = new THREE.Group();
+        pivot.rotation.y = (i / 4) * Math.PI * 2;
+        pivot.position.y = 0.55;
+        pivot.name = 'blade';
+        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.12, 0.28), bladeMat);
+        blade.position.x = 0.7;
+        pivot.add(blade);
+        group.add(pivot);
+      }
+    } else {
+      // grunt (default): the classic red box crab with two eyes
+      body = new THREE.Mesh(new THREE.BoxGeometry(1, 0.9, 1.1), lam(0xa03a3a));
+      body.position.y = 0.55;
+      group.add(body);
+      this.enemyEyes(group, 0.75);
+    }
+    body.userData.baseY = body.position.y; // rest height, for pose reset
     this.root.add(group);
-    return group;
+    return { group, body };
   }
 
   // Patrols a0..a1 along `axis` at the given cross coordinate (the Enemy
-  // struct's x0/x1 are axis-generic bounds — see its comment).
-  private enemy(a0: number, a1: number, deckY: number, cross: number, speed: number, axis: 'x' | 'z' = 'x'): void {
-    const group = this.enemyGroup();
+  // struct's x0/x1 are axis-generic bounds — see its comment). `kind` picks
+  // the foe's look, movement pattern, and which attacks defeat it.
+  private enemy(
+    a0: number,
+    a1: number,
+    deckY: number,
+    cross: number,
+    speed: number,
+    axis: 'x' | 'z' = 'x',
+    kind: EnemyKind = 'grunt',
+  ): void {
+    const { group, body } = this.enemyGroup(kind);
     // snap to real ground (wavy jungle floors), then remember it for resets
     const mid = (a0 + a1) / 2;
     const gx = axis === 'z' ? cross : mid;
@@ -6006,7 +6156,299 @@ export class Level {
     const gy = this.floorY(gx, gz, deckY);
     group.position.set(gx, gy, gz);
     group.userData.baseY = gy;
-    this.enemies.push({ group, box: new THREE.Box3(), alive: true, x0: a0, x1: a1, dir: 1, speed, axis });
+    // sentry/spinner are stationary — collapse the patrol span so they hold post
+    if (kind === 'sentry' || kind === 'spinner') { a0 = a1 = mid; }
+    this.enemies.push({
+      group, box: new THREE.Box3(), alive: true, x0: a0, x1: a1, dir: 1, speed, axis,
+      kind, state: this.enemyStartState(kind), stateT: 0, baseY: gy, cross, body, vy: 0,
+      spinKill: true, stompKill: true, meleeKill: true, touchHurt: true, spinRecoil: false,
+    });
+  }
+
+  private enemyStartState(kind: EnemyKind): string {
+    if (kind === 'charger') return 'patrol';
+    if (kind === 'hopper') return 'crouch';
+    if (kind === 'floater') return 'hover';
+    if (kind === 'sentry') return 'track';
+    if (kind === 'spinner') return 'out';
+    return 'patrol';
+  }
+
+  // Restore a foe's pose + FSM to its starting state (respawn / checkpoint).
+  private resetEnemyVisual(e: Enemy): void {
+    e.state = this.enemyStartState(e.kind);
+    e.stateT = 0;
+    e.vy = 0;
+    e.dir = 1;
+    e.group.position.y = e.baseY;
+    e.group.rotation.set(0, 0, 0);
+    e.group.scale.setScalar(1);
+    e.body.rotation.set(0, 0, 0);
+    e.body.scale.setScalar(1);
+    e.body.position.y = e.body.userData.baseY ?? e.body.position.y;
+    e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
+    e.spinRecoil = false;
+    e.group.traverse((o) => {
+      if (o.name === 'blade') o.scale.setScalar(1);
+      if (o.name === 'eye') o.scale.setScalar(1);
+    });
+  }
+
+  // Facing yaw for an axis-bound walker given travel direction.
+  private faceDir(e: Enemy, d: number): void {
+    e.group.rotation.y = e.axis === 'z' ? (d > 0 ? 0 : Math.PI) : d > 0 ? Math.PI / 2 : -Math.PI / 2;
+  }
+
+  // Back-and-forth patrol between x0/x1 along the enemy's axis (speedMul lets a
+  // charger amble at half pace, etc). Returns true on a bound bounce.
+  private patrolStep(e: Enemy, dt: number, speedMul = 1): boolean {
+    const key = e.axis === 'z' ? 'z' : 'x';
+    e.group.position[key] += e.dir * e.speed * speedMul * dt;
+    let bounced = false;
+    if (e.group.position[key] > e.x1) { e.group.position[key] = e.x1; e.dir = -1; bounced = true; }
+    else if (e.group.position[key] < e.x0) { e.group.position[key] = e.x0; e.dir = 1; bounced = true; }
+    this.faceDir(e, e.dir);
+    return bounced;
+  }
+
+  // player position resolved onto the enemy's own along/cross axes
+  private playerAlong(e: Enemy): number { return e.axis === 'z' ? this.playerPos.z : this.playerPos.x; }
+  private playerCross(e: Enemy): number { return e.axis === 'z' ? this.playerPos.x : this.playerPos.z; }
+  private enemyAlong(e: Enemy): number { return e.axis === 'z' ? e.group.position.z : e.group.position.x; }
+
+  // Drive every foe's FSM + movement, and publish the per-frame combat flags
+  // (spinKill/stompKill/meleeKill/touchHurt/spinRecoil) the player reads.
+  private updateEnemies(dt: number): void {
+    for (const e of this.enemies) {
+      if (!e.alive) continue;
+      // grunt defaults — each kind tweaks what differs
+      e.spinKill = true; e.stompKill = true; e.meleeKill = true; e.touchHurt = true; e.spinRecoil = false;
+      let boxW = 1.3, boxH = 1.1, cy = 0.55;
+      switch (e.kind) {
+        case 'grunt':
+          this.patrolStep(e, dt);
+          break;
+        case 'spiker':
+          this.patrolStep(e, dt);
+          e.stompKill = false; // land on the spikes = you take the hit
+          break;
+        case 'turtle':
+          this.patrolStep(e, dt, 0.7);
+          e.spinKill = false; e.spinRecoil = true; // a spin just bumps the shell
+          boxH = 0.9; cy = 0.42;
+          break;
+        case 'charger':
+          this.chargerStep(e, dt);
+          boxW = 1.45;
+          break;
+        case 'hopper':
+          this.hopperStep(e, dt);
+          break;
+        case 'floater':
+          this.floaterStep(e, dt);
+          e.stompKill = false; // it flies above your feet — spin it down
+          cy = 0.05;
+          break;
+        case 'sentry':
+          this.sentryStep(e, dt);
+          boxW = 1.05; boxH = 1.15; cy = 0.6;
+          break;
+        case 'spinner':
+          this.spinnerStep(e, dt);
+          boxW = e.state === 'out' ? 2.1 : 0.8; cy = 0.55;
+          break;
+      }
+      e.box.setFromCenterAndSize(
+        new THREE.Vector3(e.group.position.x, e.group.position.y + cy, e.group.position.z),
+        new THREE.Vector3(boxW, boxH, boxW),
+      );
+    }
+  }
+
+  // BULL: amble → spot you in its lane → rear back (telegraph) → DASH (invincible,
+  // touch-kill) → overshoot into a dizzy recover (safe to hit) → amble again.
+  private chargerStep(e: Enemy, dt: number): void {
+    e.stateT += dt;
+    const along = this.enemyAlong(e);
+    const pAlong = this.playerAlong(e);
+    const gap = pAlong - along; // +/- ahead along the lane
+    const inLane = Math.abs(this.playerCross(e) - e.cross) < 3.6;
+    if (e.state === 'patrol') {
+      e.body.rotation.x = 0; e.group.scale.setScalar(1);
+      this.patrolStep(e, dt, 0.5);
+      if (inLane && Math.abs(gap) > 2.5 && Math.abs(gap) < 26) {
+        e.dir = Math.sign(gap) || 1;
+        this.faceDir(e, e.dir);
+        e.state = 'telegraph'; e.stateT = 0;
+        sfx.play('woosh', 0.5, 0.7);
+      }
+    } else if (e.state === 'telegraph') {
+      // rear back and shudder
+      e.body.rotation.x = -0.35;
+      e.group.scale.setScalar(1 + Math.sin(e.stateT * 40) * 0.06);
+      if (e.stateT > 0.55) { e.state = 'dash'; e.stateT = 0; e.group.scale.setScalar(1); sfx.play('crunch', 0.7, 0.8); }
+    } else if (e.state === 'dash') {
+      e.spinKill = false; e.stompKill = false; e.meleeKill = false; // nothing stops a charge
+      e.body.rotation.x = 0.3;
+      const key = e.axis === 'z' ? 'z' : 'x';
+      e.group.position[key] += e.dir * e.speed * 3.4 * dt;
+      const hitBound = e.group.position[key] >= e.x1 || e.group.position[key] <= e.x0;
+      e.group.position[key] = THREE.MathUtils.clamp(e.group.position[key], e.x0, e.x1);
+      if (hitBound || e.stateT > 1.3) { e.state = 'recover'; e.stateT = 0; sfx.play('crunch', 0.6, 1.1); }
+    } else { // recover: dizzy, harmless, wide open
+      e.touchHurt = false;
+      e.body.rotation.x = 0;
+      e.group.rotation.z = Math.sin(e.stateT * 18) * 0.18;
+      if (e.stateT > 1.1) { e.group.rotation.z = 0; e.state = 'patrol'; e.stateT = 0; }
+    }
+  }
+
+  // FROG: crouches, then leaps in a forward arc. While airborne the stomp misses
+  // (your feet pass under it) — spin it out of the air, or wait for the landing.
+  private hopperStep(e: Enemy, dt: number): void {
+    e.stateT += dt;
+    const key = e.axis === 'z' ? 'z' : 'x';
+    if (e.state === 'crouch') {
+      e.body.scale.set(1.15, 0.7, 1.0); e.body.position.y = 0.36;
+      if (e.stateT > 0.45) {
+        e.state = 'leap'; e.stateT = 0; e.vy = 8.6;
+        e.body.scale.set(0.9, 1.2, 0.95); e.body.position.y = 0.5;
+        sfx.play('woosh3', 0.4, 1.3);
+      }
+    } else {
+      // airborne arc
+      e.vy -= 24 * dt;
+      e.group.position.y += e.vy * dt;
+      e.group.position[key] += e.dir * e.speed * dt;
+      if (e.group.position[key] > e.x1) { e.group.position[key] = e.x1; e.dir = -1; }
+      else if (e.group.position[key] < e.x0) { e.group.position[key] = e.x0; e.dir = 1; }
+      this.faceDir(e, e.dir);
+      if (e.group.position.y <= e.baseY && e.vy < 0) {
+        e.group.position.y = e.baseY; e.vy = 0;
+        e.state = 'crouch'; e.stateT = 0;
+        e.body.scale.set(1.15, 0.85, 1.0); e.body.position.y = 0.46;
+        sfx.play('crunch', 0.4, 1.4);
+      }
+    }
+    e.stompKill = e.group.position.y <= e.baseY + 0.06; // only squashable on the ground
+  }
+
+  // DRONE: hovers above stomp range, drifts its lane, and periodically swoops at
+  // the deck. Too high to jump on — spin it (a jump-spin) to bring it down.
+  private floaterStep(e: Enemy, dt: number): void {
+    e.stateT += dt;
+    const hoverH = 1.65;
+    this.patrolStep(e, dt);
+    const rotor = e.group.getObjectByName('rotor');
+    if (rotor) rotor.rotation.z += dt * 12;
+    if (e.state === 'hover') {
+      e.group.position.y = e.baseY + hoverH + Math.sin(this.time * 3 + e.cross) * 0.18;
+      const near = Math.abs(this.playerAlong(e) - this.enemyAlong(e)) < 12 && Math.abs(this.playerCross(e) - e.cross) < 6;
+      if (e.stateT > 2.6 && near) { e.state = 'swoop'; e.stateT = 0; sfx.play('woosh2', 0.5, 0.8); }
+    } else {
+      // dip toward the deck and rise back over ~0.8s
+      const k = Math.sin(Math.min(1, e.stateT / 0.8) * Math.PI);
+      e.group.position.y = e.baseY + hoverH - k * (hoverH - 0.35);
+      if (e.stateT > 0.8) { e.state = 'hover'; e.stateT = 0; }
+    }
+  }
+
+  // TURRET: rooted, tracks you, and fires a slow orb on a track→charge→fire→cool
+  // cycle. The body itself dies to anything — the danger is the shot.
+  private sentryStep(e: Enemy, dt: number): void {
+    e.stateT += dt;
+    const head = e.body;
+    const dx = this.playerPos.x - e.group.position.x;
+    const dz = this.playerPos.z - e.group.position.z;
+    const targetYaw = Math.atan2(dx, dz);
+    // ease the head toward the player
+    let dy = targetYaw - head.rotation.y;
+    while (dy > Math.PI) dy -= Math.PI * 2;
+    while (dy < -Math.PI) dy += Math.PI * 2;
+    head.rotation.y += dy * Math.min(1, dt * 6);
+    const eye = head.getObjectByName('eye');
+    const inRange = Math.hypot(dx, dz) < 44;
+    if (e.state === 'track') {
+      if (eye) eye.scale.setScalar(1);
+      if (e.stateT > 1.3 && inRange) { e.state = 'charge'; e.stateT = 0; }
+    } else if (e.state === 'charge') {
+      if (eye) eye.scale.setScalar(1 + e.stateT * 2.4);
+      if (e.stateT > 0.55) {
+        e.state = 'fire'; e.stateT = 0;
+        const muzzle = new THREE.Vector3(
+          e.group.position.x + Math.sin(head.rotation.y) * 0.8,
+          e.group.position.y + 0.72,
+          e.group.position.z + Math.cos(head.rotation.y) * 0.8,
+        );
+        this.spawnProjectile(muzzle, new THREE.Vector3(this.playerPos.x, this.playerPos.y + 0.7, this.playerPos.z));
+      }
+    } else if (e.state === 'fire') {
+      if (eye) eye.scale.setScalar(1);
+      if (e.stateT > 0.15) { e.state = 'cooldown'; e.stateT = 0; }
+    } else {
+      if (e.stateT > 0.7) { e.state = 'track'; e.stateT = 0; }
+    }
+  }
+
+  // SAWBLADE: blades telescope OUT (spinning, untouchable, touch-kill) then IN
+  // (retracted, dead-still window where any attack finishes it). Pure timing.
+  private spinnerStep(e: Enemy, dt: number): void {
+    e.stateT += dt;
+    if (e.state === 'out') {
+      e.body.rotation.y += dt * 9;
+      e.spinKill = false; e.stompKill = false; e.meleeKill = false; e.touchHurt = true;
+      if (e.stateT > 2.2) { e.state = 'in'; e.stateT = 0; sfx.play('woosh', 0.4, 1.6); }
+    } else {
+      e.body.rotation.y += dt * 1.5;
+      e.touchHurt = false; // retracted: safe to brush, wide open to any hit
+      if (e.stateT > 1.35) { e.state = 'out'; e.stateT = 0; sfx.play('woosh2', 0.4, 0.7); }
+    }
+    // lerp the blades over the first 0.2s of a state change for a mechanical feel
+    const cur = e.state === 'out' ? Math.min(1, 0.2 + e.stateT * 4) : Math.max(0.2, 1 - e.stateT * 4);
+    e.group.traverse((o) => { if (o.name === 'blade') o.scale.x = cur; });
+  }
+
+  private spawnProjectile(from: THREE.Vector3, target: THREE.Vector3): void {
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(0.28, 8, 6),
+      new THREE.MeshBasicMaterial({ color: 0xff6a3a }),
+    );
+    mesh.position.copy(from);
+    this.root.add(mesh);
+    const dir = target.clone().sub(from);
+    if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
+    dir.normalize().multiplyScalar(15);
+    this.projectiles.push({ mesh, vel: dir, life: 3.4, box: new THREE.Box3() });
+    sfx.play('woosh2', 0.55, 1.5);
+  }
+
+  private updateProjectiles(dt: number): void {
+    for (let i = this.projectiles.length - 1; i >= 0; i--) {
+      const pr = this.projectiles[i];
+      pr.life -= dt;
+      pr.mesh.position.addScaledVector(pr.vel, dt);
+      pr.mesh.rotation.x += dt * 6;
+      pr.mesh.rotation.y += dt * 4;
+      pr.box.setFromCenterAndSize(pr.mesh.position, new THREE.Vector3(0.7, 0.7, 0.7));
+      if (pr.life <= 0 || pr.mesh.position.y < this.killY - 4) {
+        this.root.remove(pr.mesh);
+        this.projectiles.splice(i, 1);
+      }
+    }
+  }
+
+  // Clear every in-flight sentry orb (respawn / level switch).
+  private clearProjectiles(): void {
+    for (const pr of this.projectiles) this.root.remove(pr.mesh);
+    this.projectiles.length = 0;
+  }
+
+  // Remove a single orb by index (the player caught it — see player collision).
+  popProjectile(index: number): void {
+    const pr = this.projectiles[index];
+    if (!pr) return;
+    this.root.remove(pr.mesh);
+    this.projectiles.splice(index, 1);
   }
 
   // Floating collectable wumpa.
@@ -6127,8 +6569,8 @@ export class Level {
     this.log(1.5, 5.5, 0, -70);
     this.crate(-3, 0, -48);
     this.crate(2, 0, -82, 'mystery');
-    this.enemy(-3.5, 3.5, 0, -55, 5);
-    this.enemy(-4, 4, 0, -85, 6);
+    this.enemy(-3.5, 3.5, 0, -55, 5, 'x', 'spiker');
+    this.enemy(-4, 4, 0, -85, 6, 'x', 'hopper');
     this.jungle('approach B', -95, -150, 0, 12, matJungle2, { dips: [-130] });
     for (let i = 0; i < 8; i++) this.crate(-4.6 + i * 1.3, 0, -115); // crate fence
     this.crate(4.8, 0, -115, 'tnt'); // pop the fence from the flank
@@ -6143,15 +6585,15 @@ export class Level {
     this.crate(0, 4.2, -190); // stack
     this.crate(-4.5, 3, -205, 'nitro');
     this.log(2, 5.8, 3, -183);
-    this.enemy(-4, 4, 3, -198, 6);
+    this.enemy(-4, 4, 3, -198, 6, 'x', 'turtle');
     this.ramp('terrace ramp 2', -215, 3, -240, 6, 12, matRamp);
     this.jungle('terrace 2', -240, -280, 6, 12, matJungle2, { dips: [-262] });
     this.crate(2.6, 6, -256);
     this.crate(3.9, 6, -256, 'tnt');
     this.crate(5.2, 6, -256);
     this.crate(-5, 6, -268, 'mask');
-    this.enemy(-4, 4, 6, -250, 5);
-    this.enemy(-3.5, 3.5, 6, -270, 7);
+    this.enemy(-4, 4, 6, -250, 5, 'x', 'floater');
+    this.enemy(-3.5, 3.5, 6, -270, 7, 'x', 'grunt');
     this.checkpoint(6, -276);
     this.ramp('terrace ramp 3', -280, 6, -300, 9, 10, matRamp);
     const scaffold = new Rail([
@@ -6182,7 +6624,7 @@ export class Level {
     this.crumblePad(1.5, 9, -404, 4, 4.6);
     this.crumblePad(-1.5, 9, -410.5, 4, 4.6);
     this.jungle('ridge C', -416, -450, 9, 11, matJungle);
-    this.enemy(-4, 4, 9, -432, 7);
+    this.enemy(-4, 4, 9, -432, 7, 'x', 'charger');
     this.crate(4.5, 9, -440, 'mask');
     this.crate(-2, 9, -425);
     this.crate(2, 9, -425);
@@ -6197,7 +6639,7 @@ export class Level {
     this.crate(5, 3, -520, 'bouncy');
     this.stepBlock(5, -527, 4, 6, 3, 8.2);
     this.crate(5, 8.2, -527, 'mask'); // bounce up for it
-    this.enemy(-4, 4, 3, -510, 6);
+    this.enemy(-4, 4, 3, -510, 6, 'x', 'spinner');
     this.checkpoint(3, -534, -4);
     // elevator up to a lookout shelf — drop onto the halfpipe lip from it
     this.mover(-5, 8.5, -528, 3.4, 3.4, 'y', 4.6, 0.55);
@@ -6238,7 +6680,7 @@ export class Level {
     this.mover(84, 5.4, CZ, 6, 7, 'x', 6, 0.55); // ferry pad under the rail
     this.slabX('ruin shelf', 100, 118, 6, 9, matJungle, CZ);
     this.crate(108, 6, CZ, 'nitro');
-    this.enemy(103, 115, 6, CZ, 5);
+    this.enemy(103, 115, 6, CZ, 5, 'x', 'sentry');
     // split: bounce up to the high fruit ledge, or run the TNT low road
     this.crate(117, 6, CZ, 'bouncy');
     this.slabX('high ledge', 120, 134, 10.5, 9, matPlat, CZ);
@@ -6267,7 +6709,7 @@ export class Level {
     this.crusher(154.7, -4, -736, 5.6, 3, 3.4, 1.7);
     this.crate(152, -4, -748);
     this.crate(152, -2.8, -748); // stack
-    this.enemy(148, 156, -4, -752, 6);
+    this.enemy(148, 156, -4, -752, 6, 'x', 'hopper');
     this.checkpoint(-4, -757, 152);
 
     // --- H: rail canyon — S-curve line left, rail-hop chain right ------------
@@ -6308,10 +6750,10 @@ export class Level {
     // row 1: pass on the right (or spin the TNT)
     for (let i = 0; i < 9; i++) this.crate(144 + i * 1.3, -4, -900, i === 3 ? 'tnt' : undefined);
     this.crate(159, -4, -895, 'mystery');
-    this.enemy(155.5, 160, -4, -907, 4);
+    this.enemy(155.5, 160, -4, -907, 4, 'x', 'spiker');
     // row 2: pass on the left (nitro in the wall — no spinning through blind)
     for (let i = 0; i < 9; i++) this.crate(149.7 + i * 1.3, -4, -915, i === 5 ? 'nitro' : undefined);
-    this.enemy(144, 148.5, -4, -922, 4);
+    this.enemy(144, 148.5, -4, -922, 4, 'x', 'turtle');
     // row 3: full width — bounce over it, or blow the TNT posts
     this.crate(152, -4, -925, 'bouncy');
     for (let i = 0; i < 14; i++) {
@@ -6362,8 +6804,8 @@ export class Level {
     this.pendulum(152, 2.0, -1122, 4.6, 1.15, 1.5, Math.PI);
     // gap: -1133 .. -1139 (rebalanced)
     this.jungle('gauntlet B', -1139, -1185, -4, 11, matJungle, {}, 152);
-    this.enemy(148.5, 155.5, -4, -1160, 7);
-    this.enemy(149, 155, -4, -1175, 9);
+    this.enemy(148.5, 155.5, -4, -1160, 7, 'x', 'charger');
+    this.enemy(149, 155, -4, -1175, 9, 'x', 'floater');
     this.fruitRow(-1148, -1180, -2.6, 6, 152);
     this.slab('finish run', -1185, -1215, -4, 14, matFinish, true, 152, 'stone');
     this.finishGate(-4, this.finishZ, 152);
@@ -6424,9 +6866,13 @@ export class Level {
         ),
       });
     }
+    // each wave leans on a different foe so the fight escalates in skill demand
+    const waveKinds: EnemyKind[] = ['grunt', 'spiker', 'turtle', 'charger', 'hopper'];
     const mkWave = (idx: number, defs: [number, number, number, number][]): Enemy[] =>
-      defs.map(([x0, x1, z, speed]) => {
-        this.enemy(x0, x1, deckY, z, speed);
+      defs.map(([x0, x1, z, speed], i) => {
+        // one odd foe per wave keeps you honest (mix a floater/spinner in)
+        const kind = i === 0 && idx >= 2 ? (idx % 2 ? 'floater' : 'spinner') : waveKinds[idx % waveKinds.length];
+        this.enemy(x0, x1, deckY, z, speed, 'x', kind);
         const e = this.enemies[this.enemies.length - 1];
         e.arenaWave = idx;
         e.alive = false;
@@ -6569,6 +7015,16 @@ export class Level {
     for (let i = 0; i < 5; i++) {
       this.palm(-60 + i * 45, 0, 64, 4.8 + (i % 2) * 0.7, 0.1 - (i % 3) * 0.08);
     }
+    // --- foe sampler: one of each takedown, lined up down the centre lane past
+    // the trick lanes (rail garden/ramps sit at x -20..115, z 0..-160) --------
+    this.enemy(-6, 6, 0, -166, 4, 'x', 'grunt');
+    this.enemy(-6, 6, 0, -172, 4, 'x', 'spiker'); // spin
+    this.enemy(-6, 6, 0, -178, 3, 'x', 'turtle'); // stomp
+    this.enemy(-12, 12, 0, -184, 5, 'x', 'charger'); // bull runway
+    this.enemy(-6, 6, 0, -190, 4, 'x', 'hopper');
+    this.enemy(-8, 8, 0, -196, 3.5, 'x', 'floater');
+    this.enemy(0, 0, 0, -175, 0, 'x', 'sentry'); // turret watching the lane
+    this.enemy(0, 0, 0, -187, 0, 'x', 'spinner');
     // finish gate: a straight sprint down the lot past the rail garden
     this.finishGate(0, this.finishZ);
     // planter islands
@@ -6658,6 +7114,12 @@ export class Level {
     for (const z of [-38 + lipX, -47, -56 - lipX]) copingRail(V(-18, lipY + 0.05, z), V(18, lipY + 0.05, z));
     for (const cz of [-38, -56]) for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
 
+    // --- a few foes on the SIDE flats, clear of the spawn sprint + the pipe
+    // runs (pipes sit within |x|<18; spawn is dead-centre) ------------------
+    this.enemy(26, 44, 0, -10, 4, 'x', 'grunt'); // patrols the east flat
+    this.enemy(-44, -26, 0, -30, 3.5, 'x', 'floater'); // drifts the west flat
+    this.enemy(38, 38, 0, -47, 0, 'x', 'spinner'); // blades parked off the ridge
+
     this.finishGate(0, this.finishZ); // run the pipes, cross the line at the south wall
   }
 
@@ -6732,7 +7194,7 @@ export class Level {
 
     // --- section C: enemy on a wide deck ------------------------------------
     plank(-45, 5, false, 5); // wide enough to dodge on
-    this.enemy(-2, 2, 0, -45, 3.2);
+    this.enemy(-2, 2, 0, -45, 3.2, 'x', 'floater');
     plank(-51);
     breakSoon(-55); // stand a beat, then it drops
     breakSoon(-58.5);
@@ -6750,7 +7212,7 @@ export class Level {
     plank(-88, 2, true); // slippy launch
     breakOnLand(-92);
     plank(-96, 5, false, 5);
-    this.enemy(-2, 2, 0, -96, 4);
+    this.enemy(-2, 2, 0, -96, 4, 'x', 'spiker');
     breakSoon(-101);
     plank(-105, 2, true);
     plank(-110, 1.6);
@@ -6842,7 +7304,7 @@ export class Level {
     this.crate(0, 2, -182, 'tnt');
     this.crate(-2.6, 2, -176, 'tnt');
     this.crate(2.6, 2, -170, 'tnt'); // staggered minefield: weave it
-    this.enemy(-4, 4, 2, -150, 6);
+    this.enemy(-4, 4, 2, -150, 6, 'x', 'hopper');
     this.fruitRow(-198, -140, 3.3, 8);
     this.checkpoint(2, -138, 3.5);
     this.ramp('chase drop', -112, 0, -130, 2, 12, matRamp);
@@ -7025,7 +7487,11 @@ export class Level {
         for (let i = 0; i < crates; i++) {
           this.crate(xc + Math.round(Math.random() * 8 - 4), y, z - 6 - Math.random() * (len - 12));
         }
-        if (Math.random() < 0.5) this.enemy(xc - 3.5, xc + 3.5, y, z - len / 2, 3 + Math.random() * 5);
+        if (Math.random() < 0.5) {
+          const roster: EnemyKind[] = ['grunt', 'spiker', 'turtle', 'charger', 'hopper', 'floater', 'sentry', 'spinner'];
+          const foe = roster[Math.floor(Math.random() * roster.length)];
+          this.enemy(xc - 3.5, xc + 3.5, y, z - len / 2, 3 + Math.random() * 5, 'x', foe);
+        }
         if (Math.random() < 0.35) this.crate(xc + (Math.random() < 0.5 ? -4 : 4), y, z - len * 0.7, 'nitro');
         if (Math.random() < 0.22) this.crate(xc + (Math.random() < 0.5 ? -3 : 3), y, z - len * 0.4, 'tnt');
         if (Math.random() < 0.22) this.crate(xc + (Math.random() < 0.5 ? -2 : 2), y, z - len * 0.3, 'mask');
