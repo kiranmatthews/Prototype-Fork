@@ -190,6 +190,12 @@ export class Editor {
   private controls: OrbitControls | null = null;
   private panel!: HTMLElement;
   private propsEl!: HTMLElement;
+  // right-panel tabs: selection vs project (level/file/help)
+  private selPane: HTMLElement | null = null;
+  private projPane: HTMLElement | null = null;
+  private tabSelBtn: HTMLButtonElement | null = null;
+  private tabProjBtn: HTMLButtonElement | null = null;
+  private panelTab: 'sel' | 'proj' = 'sel';
   private raycaster = new THREE.Raycaster();
   private pointer = new THREE.Vector2();
   private selBoxes: THREE.Box3Helper[] = [];
@@ -772,6 +778,7 @@ export class Editor {
     this.refreshSelectionBox();
     this.renderProps();
     this.renderLayers(); // outliner rows highlight the live selection
+    if (valid.length > 0 && this.panelTab !== 'sel') this.setPanelTab('sel'); // jump to the fields you just picked
   }
 
   private objectsFor(idx: number): THREE.Object3D[] {
@@ -2126,10 +2133,27 @@ export class Editor {
     };
     panel.appendChild(h('<div class="ed-title">LEVEL EDITOR</div>'));
 
+    // TWO TABS: the current selection vs the project (level + file + help).
+    // TEST lives below the tabs, always one click away.
+    const ptabs = h('<div class="ed-ptabs"></div>');
+    this.tabSelBtn = h('<button class="ed-ptab ed-ptab-on">SELECTION</button>') as HTMLButtonElement;
+    this.tabProjBtn = h('<button class="ed-ptab">PROJECT</button>') as HTMLButtonElement;
+    this.tabSelBtn.addEventListener('click', () => this.setPanelTab('sel'));
+    this.tabProjBtn.addEventListener('click', () => this.setPanelTab('proj'));
+    ptabs.appendChild(this.tabSelBtn);
+    ptabs.appendChild(this.tabProjBtn);
+    panel.appendChild(ptabs);
+    const selPane = h('<div class="ed-pane"></div>');
+    const projPane = h('<div class="ed-pane" style="display:none"></div>');
+    this.selPane = selPane;
+    this.projPane = projPane;
+
     // selection properties FIRST — what you just clicked is always in view
-    panel.appendChild(h('<div class="ed-sect">SELECTION</div>'));
+    selPane.appendChild(h('<div class="ed-sect">SELECTION</div>'));
     this.propsEl = h('<div class="ed-props"><div class="ed-dim">click a component…</div></div>');
-    panel.appendChild(this.propsEl);
+    selPane.appendChild(this.propsEl);
+    panel.appendChild(selPane);
+    panel.appendChild(projPane);
 
     // ---- left-side pop-outs: the item picker and the layers panel live in
     // their own tabs so the inspector stays short ----
@@ -2210,8 +2234,9 @@ export class Editor {
     document.body.appendChild(wrap);
     this.popWrap = wrap;
 
-    // level settings
-    panel.appendChild(h('<div class="ed-sect">LEVEL</div>'));
+    // level settings (PROJECT tab)
+    const projPane2 = this.projPane!;
+    projPane2.appendChild(h('<div class="ed-sect">LEVEL</div>'));
     const lvl = h('<div class="ed-props"></div>');
     lvl.appendChild(this.numRow('spawn x', () => this.data.spawn[0], (v) => (this.data.spawn[0] = v)));
     lvl.appendChild(this.numRow('spawn y', () => this.data.spawn[1], (v) => (this.data.spawn[1] = v)));
@@ -2243,10 +2268,10 @@ export class Editor {
       surfBtn.blur();
     });
     lvl.appendChild(surfBtn);
-    panel.appendChild(lvl);
+    projPane2.appendChild(lvl);
 
     // file ops
-    panel.appendChild(h('<div class="ed-sect">FILE</div>'));
+    projPane2.appendChild(h('<div class="ed-sect">FILE</div>'));
     const file = h('<div class="ed-grid"></div>');
     const mk = (label: string, fn: () => void): HTMLButtonElement => {
       const b = h(`<button class="ed-btn">${label}</button>`) as HTMLButtonElement;
@@ -2302,18 +2327,19 @@ export class Editor {
     });
     mk('undo ⌘Z', () => this.undo());
     mk('redo ⌘⇧Z', () => this.redo());
-    panel.appendChild(file);
+    projPane2.appendChild(file);
 
-    // play
+    projPane2.appendChild(
+      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a name to rename<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
+    );
+
+    // play — always visible under the tabs
     const test = h('<button class="ed-btn ed-test">▶ TEST (play it)</button>') as HTMLButtonElement;
     test.addEventListener('click', () => {
       this.hooks.exitToPlay();
       test.blur();
     });
     panel.appendChild(test);
-    panel.appendChild(
-      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate<br>⌘Z = undo · ⌘⇧Z = redo<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
-    );
 
     document.body.appendChild(panel);
     this.panel = panel;
@@ -2332,6 +2358,15 @@ export class Editor {
       /* ignore */
     }
     if (which === 'layers') this.renderLayers();
+  }
+
+  // right-panel tab: selection fields vs project (level/file/help)
+  private setPanelTab(which: 'sel' | 'proj'): void {
+    this.panelTab = which;
+    if (this.selPane) this.selPane.style.display = which === 'sel' ? '' : 'none';
+    if (this.projPane) this.projPane.style.display = which === 'proj' ? '' : 'none';
+    this.tabSelBtn?.classList.toggle('ed-ptab-on', which === 'sel');
+    this.tabProjBtn?.classList.toggle('ed-ptab-on', which === 'proj');
   }
 
   // aim the orbit camera straight down a world axis at the current focus,
@@ -2420,7 +2455,8 @@ export class Editor {
       row.style.paddingLeft = `${4 + depth * 12}px`;
       const lock = document.createElement('button');
       lock.className = 'ed-lbtn' + (c.lk ? ' ed-lockon' : '');
-      lock.textContent = c.lk ? '🔒' : '🔓';
+      lock.textContent = '🔒'; // same padlock always; opacity tells the state apart
+      lock.style.opacity = c.lk ? '1' : '0.2';
       lock.title = c.lk ? 'unlock' : 'lock (click-through, edit-proof)';
       lock.addEventListener('click', (ev) => {
         ev.stopPropagation();
@@ -2441,9 +2477,14 @@ export class Editor {
         const name = document.createElement('button');
         name.className = 'ed-layername';
         name.textContent = this.itemLabel(idx);
-        name.title = 'click: select this piece';
+        name.title = 'click: select · double-click: rename';
         name.addEventListener('click', () => {
           if (!this.isLockedIdx(idx)) this.setSelection([idx]);
+        });
+        name.addEventListener('dblclick', (ev) => {
+          ev.stopPropagation();
+          this.renaming = { kind: 'item', id: idx };
+          this.renderLayers();
         });
         row.appendChild(name);
       }
@@ -2485,7 +2526,8 @@ export class Editor {
       const allLocked = members.length > 0 && members.every((m) => this.isLockedIdx(m));
       const lock = document.createElement('button');
       lock.className = 'ed-lbtn' + (allLocked ? ' ed-lockon' : '');
-      lock.textContent = allLocked ? '🔒' : '🔓';
+      lock.textContent = '🔒';
+      lock.style.opacity = allLocked ? '1' : '0.2';
       lock.title = allLocked ? 'unlock group' : 'lock whole group';
       lock.addEventListener('click', (ev) => {
         ev.stopPropagation();
@@ -2511,9 +2553,14 @@ export class Editor {
         const name = document.createElement('button');
         name.className = 'ed-layername ed-groupname';
         name.textContent = this.groupLabel(gid);
-        name.title = 'click: select the whole group';
+        name.title = 'click: select the whole group · double-click: rename';
         name.addEventListener('click', () => {
           this.setSelection(members.filter((m) => !this.isLockedIdx(m)));
+        });
+        name.addEventListener('dblclick', (ev) => {
+          ev.stopPropagation();
+          this.renaming = { kind: 'group', id: gid };
+          this.renderLayers();
         });
         row.appendChild(name);
       }
@@ -2631,15 +2678,72 @@ export class Editor {
     input.type = 'number';
     input.step = String(step);
     input.value = String(get());
-    input.addEventListener('change', () => {
+    input.title = 'shift+↑/↓ = ±10 · drag up/down to scrub';
+    // read the field, apply it, coalesce bursts into one undo step, resync
+    const apply = (): void => {
       const v = parseFloat(input.value);
       if (isFinite(v)) {
         set(v);
-        // spinner-arrow bursts on one field merge into a single undo step
         this.commit(true, `num:${label}`);
       }
       input.value = String(get());
+    };
+    input.addEventListener('change', apply);
+    // SHIFT+ARROW = coarse ±10 steps (plain arrows keep the field's fine step)
+    input.addEventListener('keydown', (e) => {
+      if (e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+        e.preventDefault();
+        const cur = parseFloat(input.value) || 0;
+        input.value = String(+(cur + (e.key === 'ArrowUp' ? 10 : -10)).toFixed(4));
+        apply();
+      }
     });
+    // DRAG-SCRUB: press and drag up/down on the field to slide the value
+    // (Blender/Figma style). Shift while scrubbing = coarse. A plain click
+    // (no drag) still focuses the field for typing.
+    let scrub: { y: number; val: number; moved: boolean; id: number } | null = null;
+    let lastScrub = 0;
+    input.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      scrub = { y: e.clientY, val: parseFloat(input.value) || 0, moved: false, id: e.pointerId };
+    });
+    input.addEventListener('pointermove', (e) => {
+      if (!scrub) return;
+      const dy = scrub.y - e.clientY; // up = increase
+      if (!scrub.moved) {
+        if (Math.abs(dy) < 3) return; // small movement is still a click
+        scrub.moved = true;
+        try {
+          input.setPointerCapture(scrub.id);
+        } catch {
+          /* capture optional */
+        }
+        input.style.cursor = 'ns-resize';
+        input.blur(); // no text caret while scrubbing
+      }
+      e.preventDefault();
+      const per = e.shiftKey ? 2 : 0.25; // world units per pixel
+      input.value = String(+(scrub.val + dy * per).toFixed(3));
+      const now = performance.now();
+      if (now - lastScrub > 60) {
+        lastScrub = now;
+        apply();
+      }
+    });
+    const endScrub = (): void => {
+      if (scrub?.moved) {
+        try {
+          input.releasePointerCapture(scrub.id);
+        } catch {
+          /* ignore */
+        }
+        input.style.cursor = '';
+        apply(); // land the final value
+      }
+      scrub = null;
+    };
+    input.addEventListener('pointerup', endScrub);
+    input.addEventListener('pointercancel', endScrub);
     row.appendChild(lab);
     row.appendChild(input);
     return row;
@@ -3203,6 +3307,14 @@ export class Editor {
         border-radius: 10px;
       }
       .ed-title { font-weight: bold; letter-spacing: 1px; color: #58e08a; margin-bottom: 8px; }
+      .ed-ptabs { display: flex; gap: 4px; margin-bottom: 6px; }
+      .ed-ptab {
+        flex: 1; font: 9px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 1px;
+        background: #141a26; color: #7c8aa6; border: 1px solid #2a3142;
+        border-radius: 6px; padding: 5px 4px; cursor: pointer;
+      }
+      .ed-ptab:hover { color: #cdd6e4; }
+      .ed-ptab-on { background: #1c2a22; color: #58e08a; border-color: #2f6a48; }
       .ed-sect { color: #8fa2c0; letter-spacing: 1px; font-size: 10px; margin: 10px 0 4px; border-bottom: 1px solid #2a3142; padding-bottom: 2px; }
       .ed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
       .ed-btn {
