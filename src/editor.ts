@@ -138,6 +138,31 @@ interface HandleDef {
   apply?: (orig: CustomComponent, c: CustomComponent, d: number) => void;
   vtx?: number; // polygon vertex index: drags on the ground plane instead of an axis
 }
+// A group-scale gizmo handle: sits at a normalized spot on the selection's
+// bounding box (0=min, 0.5=center, 1=max per axis) and scales the axes in `ax`
+// about the OPPOSITE side. Corners scale X+Z (proportional by default, Shift =
+// free); edges scale one ground axis; the top handle scales Y off the floor.
+interface GizmoHandle {
+  nx: number;
+  ny: number;
+  nz: number;
+  ax: ('x' | 'y' | 'z')[];
+  corner: boolean;
+}
+const GIZMO_HANDLES: GizmoHandle[] = [
+  // ground corners (scale width + depth)
+  { nx: 0, ny: 0, nz: 0, ax: ['x', 'z'], corner: true },
+  { nx: 1, ny: 0, nz: 0, ax: ['x', 'z'], corner: true },
+  { nx: 0, ny: 0, nz: 1, ax: ['x', 'z'], corner: true },
+  { nx: 1, ny: 0, nz: 1, ax: ['x', 'z'], corner: true },
+  // ground edges (single axis)
+  { nx: 0.5, ny: 0, nz: 0, ax: ['z'], corner: false },
+  { nx: 0.5, ny: 0, nz: 1, ax: ['z'], corner: false },
+  { nx: 0, ny: 0, nz: 0.5, ax: ['x'], corner: false },
+  { nx: 1, ny: 0, nz: 0.5, ax: ['x'], corner: false },
+  // top (height)
+  { nx: 0.5, ny: 1, nz: 0.5, ax: ['y'], corner: false },
+];
 const HANDLE_GEO = new THREE.BoxGeometry(0.55, 0.55, 0.55);
 // invisible fat hit-sphere around every handle: click targets stay forgiving
 // even when the visible box is a few pixels at distance
@@ -225,6 +250,20 @@ export class Editor {
   } | null = null;
   private lastLiveRebuild = 0;
   private resizeHintShown = false;
+  private scaleProp = false; // group-size fields link all axes when ON
+  private gizmoHintShown = false;
+  // group-scale gizmo (multi-selection bounding-box handles)
+  private gizmoGroup: THREE.Group | null = null;
+  private gizmoHandles: { mesh: THREE.Mesh; hit: THREE.Mesh; def: GizmoHandle }[] = [];
+  private gizmoDrag: {
+    def: GizmoHandle;
+    anchor: THREE.Vector3;
+    ext0: THREE.Vector3; // grab-time box extents (max - min)
+    orig: Map<number, CustomComponent>; // snapshot of the selected components
+    plane: THREE.Plane;
+    grab: THREE.Vector3; // pointer position on the plane at grab
+    min0: THREE.Vector3; // grab-time box min
+  } | null = null;
 
   constructor(
     scene: THREE.Scene,
@@ -321,6 +360,8 @@ export class Editor {
     this.dragSel = [];
     this.spaceHeld = false;
     this.dom.style.cursor = '';
+    this.gizmoDrag = null;
+    this.teardownGizmo();
     this.setGhostsVisible(false);
     if (this.spawnMarker) {
       this.scene.remove(this.spawnMarker);
@@ -340,6 +381,12 @@ export class Editor {
       const hit = this.handleHits[i];
       if (hit) hit.scale.setScalar(base);
     });
+    // group-scale gizmo handles: steady on-screen size too
+    for (const h of this.gizmoHandles) {
+      const base = THREE.MathUtils.clamp(this.camera.position.distanceTo(h.mesh.position) * 0.024, 0.8, 3.4);
+      h.mesh.scale.setScalar(base);
+      h.hit.scale.setScalar(base * 1.6);
+    }
     // periodic camera save: a refresh mid-edit comes back to this exact view
     const now = performance.now();
     if (this.active && now - this.camSaveAt > 1500) {
@@ -435,6 +482,12 @@ export class Editor {
     if (this.targetCourse === 7) setCustomLevelData(this.data); // keep the sandbox cache fresh
     persistEditData(this.targetCourse, now); // routes to the sandbox or the level's override slot
     if (rebuild) this.hooks.rebuild();
+    // keep the selection outline + scale gizmo on the new geometry (field
+    // scaling changes the bounds without any pointer drag). Skipped mid-drag,
+    // where the live handlers own the visuals.
+    if (rebuild && this.sel.length > 0 && !this.gizmoDrag && !this.hdlDrag && !this.dragging) {
+      this.refreshSelectionBox();
+    }
   }
 
   // swap in a history state WITHOUT recording it as a new edit
@@ -769,6 +822,7 @@ export class Editor {
       this.scene.add(helper);
       this.selBoxes.push(helper);
     }
+    if (!this.gizmoDrag) this.refreshGizmo(); // scale handles follow the selection
   }
 
   // F: frame the selection (or the whole level) in the orbit view
@@ -792,6 +846,249 @@ export class Editor {
     if (dir.lengthSq() < 0.5) dir.set(0.45, 0.7, 0.55).normalize();
     this.controls.target.copy(cen);
     this.camera.position.copy(cen).addScaledVector(dir, dist);
+  }
+
+  // ---- GROUP SCALE (Figma-style) ------------------------------------------
+  // Scale a multi-selection about an anchor. Pieces that own a size resize
+  // proportionately; fixed-size pieces (crates, pickups, the gate...) keep
+  // their size but their POSITION scales, so the whole layout grows/shrinks
+  // as one and everything stays in rational proportion.
+
+  // world AABB of the current selection (unioned component footprints)
+  private selectionBounds(): THREE.Box3 | null {
+    this.getLevel().pickRoot.updateMatrixWorld(true); // footprints read world matrices
+    const box = new THREE.Box3();
+    let any = false;
+    for (const idx of this.sel) {
+      const b = this.boxFor(idx);
+      if (b) {
+        box.union(b);
+        any = true;
+      }
+    }
+    return any ? box : null;
+  }
+
+  // scale ONE component's intrinsic size fields (yaw-aware: a 90°/270° piece
+  // has its local X/Z swapped relative to the world scale axes). No-op for
+  // fixed-size types — they carry no size field.
+  private scaleComponentSize(c: CustomComponent, sx: number, sy: number, sz: number): void {
+    const yaw = (((c.yaw ?? 0) % 360) + 360) % 360;
+    const swap = (yaw >= 45 && yaw < 135) || (yaw >= 225 && yaw < 315);
+    const sLocX = swap ? sz : sx;
+    const sLocZ = swap ? sx : sz;
+    if (c.pts) {
+      // drawn nodes are authored in world XZ around p; radius + per-node height ride along
+      c.pts = c.pts.map((pt) => {
+        const q = [...pt] as number[];
+        q[0] = pt[0] * sx;
+        q[1] = pt[1] * sz;
+        if (q.length >= 3) q[2] = (pt as number[])[2] * ((sx + sz) / 2);
+        if (q.length >= 4) q[3] = (pt as number[])[3] * sy;
+        return q as (typeof pt);
+      });
+    }
+    if (c.s) c.s = [Math.max(0.2, c.s[0] * sLocX), Math.max(0.2, c.s[1] * sy), Math.max(0.2, c.s[2] * sLocZ)];
+    switch (c.t) {
+      case 'ramp':
+        if (c.len != null) c.len = Math.max(1, c.len * sLocZ);
+        if (c.rise != null) c.rise *= sy;
+        if (c.w != null) c.w = Math.max(1, c.w * sLocX);
+        break;
+      case 'pipe': {
+        const alongZ = (c.axis ?? 'z') === 'z';
+        if (c.len != null) c.len = Math.max(6, c.len * (alongZ ? sz : sx));
+        if (c.w != null) c.w = Math.max(1, c.w * (alongZ ? sx : sz));
+        if (c.rise != null) c.rise = Math.max(2, c.rise * sy);
+        break;
+      }
+      case 'rail':
+        if (!c.pts && c.len != null) c.len = Math.max(1, c.len * sLocZ);
+        break;
+      case 'rope':
+        if (c.len != null) c.len = Math.max(2, c.len * sLocZ);
+        if (c.amp != null) c.amp *= sy;
+        break;
+      case 'enemy':
+        if (c.range != null) c.range *= sLocX; // patrol span scales with the ground
+        break;
+      case 'pendulum':
+        if (c.len != null) c.len = Math.max(1, c.len * sy); // arm length is vertical
+        break;
+      case 'camnode':
+        if (c.radius != null) c.radius *= (sx + sz) / 2;
+        break;
+    }
+  }
+
+  // mutate the selection in place (no undo step) — the live-drag path
+  private applyScaleNoCommit(sx: number, sy: number, sz: number, anchor: THREE.Vector3): void {
+    const cl = (v: number): number => Math.min(40, Math.max(0.02, v));
+    sx = cl(sx);
+    sy = cl(sy);
+    sz = cl(sz);
+    for (const idx of this.sel) {
+      const c = this.data.components[idx];
+      if (!c) continue;
+      c.p = [
+        anchor.x + (c.p[0] - anchor.x) * sx,
+        anchor.y + (c.p[1] - anchor.y) * sy,
+        anchor.z + (c.p[2] - anchor.z) * sz,
+      ];
+      this.scaleComponentSize(c, sx, sy, sz);
+    }
+  }
+
+  // scale + commit (fields, one-shot). coalesce merges a spinner burst.
+  private scaleSelection(sx: number, sy: number, sz: number, anchor: THREE.Vector3, coalesce = ''): void {
+    this.applyScaleNoCommit(sx, sy, sz, anchor);
+    this.commit(true, coalesce);
+  }
+
+  // ---- group-scale gizmo (bounding-box handles) ----
+  // (re)build the gizmo: shown for a 2+ piece selection when not in
+  // single-resize or node mode. Handles ride the selection's bounding box.
+  private refreshGizmo(): void {
+    this.teardownGizmo();
+    if (!this.active || this.sel.length < 2 || this.resizeIdx >= 0 || this.selVtxs.size > 0) return;
+    const box = this.selectionBounds();
+    if (!box) return;
+    const g = new THREE.Group();
+    for (const def of GIZMO_HANDLES) {
+      const pos = this.gizmoPos(def, box);
+      const mesh = new THREE.Mesh(
+        HANDLE_GEO,
+        new THREE.MeshBasicMaterial({ color: def.corner ? 0x8fd4ff : 0x5aa9ff, depthTest: false, transparent: true }),
+      );
+      mesh.position.copy(pos);
+      mesh.renderOrder = 999;
+      g.add(mesh);
+      const hit = new THREE.Mesh(HANDLE_HIT_GEO, new THREE.MeshBasicMaterial({ visible: false }));
+      hit.position.copy(pos);
+      g.add(hit);
+      this.gizmoHandles.push({ mesh, hit, def });
+    }
+    this.scene.add(g);
+    this.gizmoGroup = g;
+    if (!this.gizmoHintShown) {
+      this.gizmoHintShown = true;
+      this.hooks.showMsg('GROUP SCALE', 'drag the blue box handles · or type group W/H/D · corner = proportional, Shift = free');
+    }
+  }
+
+  private teardownGizmo(): void {
+    if (this.gizmoGroup) {
+      this.scene.remove(this.gizmoGroup);
+      this.gizmoGroup = null;
+    }
+    this.gizmoHandles = [];
+  }
+
+  private gizmoPos(def: GizmoHandle, box: THREE.Box3): THREE.Vector3 {
+    return new THREE.Vector3(
+      THREE.MathUtils.lerp(box.min.x, box.max.x, def.nx),
+      THREE.MathUtils.lerp(box.min.y, box.max.y, def.ny),
+      THREE.MathUtils.lerp(box.min.z, box.max.z, def.nz),
+    );
+  }
+
+  // the fixed anchor while dragging a handle: the OPPOSITE side per scaled
+  // axis (a +X handle scales about the −X face), box.min for the rest.
+  private gizmoAnchor(def: GizmoHandle, box: THREE.Box3): THREE.Vector3 {
+    const a = box.min.clone();
+    for (const ax of def.ax) {
+      if (ax === 'x') a.x = def.nx >= 0.5 ? box.min.x : box.max.x;
+      else if (ax === 'z') a.z = def.nz >= 0.5 ? box.min.z : box.max.z;
+      else a.y = def.ny >= 0.5 ? box.min.y : box.max.y;
+    }
+    return a;
+  }
+
+  // begin a gizmo drag from a raycast hit; returns true if a handle was grabbed
+  private gizmoGrab(e: PointerEvent): boolean {
+    if (this.gizmoHandles.length === 0) return false;
+    this.setRay(e);
+    this.gizmoGroup?.updateMatrixWorld(true);
+    const targets = this.gizmoHandles.flatMap((h) => [h.mesh, h.hit]);
+    const hits = this.raycaster.intersectObjects(targets, false);
+    if (hits.length === 0) return false;
+    const obj = hits[0].object;
+    const entry = this.gizmoHandles.find((h) => h.mesh === obj || h.hit === obj);
+    if (!entry) return false;
+    const box = this.selectionBounds();
+    if (!box) return false;
+    const def = entry.def;
+    const anchor = this.gizmoAnchor(def, box);
+    const handlePos = this.gizmoPos(def, box);
+    // ground handles drag on a horizontal plane at the handle height; the top
+    // (Y) handle drags on a camera-facing vertical plane through it.
+    const plane = def.ax.includes('y')
+      ? new THREE.Plane().setFromNormalAndCoplanarPoint(
+          new THREE.Vector3().subVectors(this.camera.position, handlePos).setY(0).normalize(),
+          handlePos,
+        )
+      : new THREE.Plane(new THREE.Vector3(0, 1, 0), -handlePos.y);
+    const grab = new THREE.Vector3();
+    if (!this.groundPoint(e, plane, grab)) return false;
+    this.gizmoDrag = {
+      def,
+      anchor,
+      ext0: box.getSize(new THREE.Vector3()),
+      orig: new Map(this.sel.map((idx) => [idx, deepClone(this.data.components[idx])])),
+      plane,
+      grab,
+      min0: box.min.clone(),
+    };
+    if (this.controls) this.controls.enabled = false;
+    this.downAt = null;
+    return true;
+  }
+
+  // apply a live gizmo drag: derive scale factors from the pointer, restore the
+  // grab snapshot, and scale about the anchor (no commit — that lands on up).
+  private gizmoMove(e: PointerEvent, shift: boolean): void {
+    const d = this.gizmoDrag;
+    if (!d) return;
+    const hit = new THREE.Vector3();
+    if (!this.groundPoint(e, d.plane, hit)) return;
+    const clampF = (v: number): number => Math.max(0.05, v);
+    let sx = 1;
+    let sy = 1;
+    let sz = 1;
+    const ax = d.def.ax;
+    if (ax.includes('y')) {
+      sy = clampF(Math.abs(hit.y - d.anchor.y) / Math.max(0.01, d.ext0.y));
+    } else if (d.def.corner) {
+      // corner: proportional (uniform X+Z) by default, Shift = free per-axis
+      if (shift) {
+        sx = clampF(Math.abs(hit.x - d.anchor.x) / Math.max(0.01, d.ext0.x));
+        sz = clampF(Math.abs(hit.z - d.anchor.z) / Math.max(0.01, d.ext0.z));
+      } else {
+        const d0 = Math.hypot(d.grab.x - d.anchor.x, d.grab.z - d.anchor.z);
+        const dn = Math.hypot(hit.x - d.anchor.x, hit.z - d.anchor.z);
+        const f = clampF(dn / Math.max(0.01, d0));
+        sx = f;
+        sz = f;
+      }
+    } else if (ax.includes('x')) {
+      sx = clampF(Math.abs(hit.x - d.anchor.x) / Math.max(0.01, d.ext0.x));
+    } else if (ax.includes('z')) {
+      sz = clampF(Math.abs(hit.z - d.anchor.z) / Math.max(0.01, d.ext0.z));
+    }
+    if (this.snap) {
+      sx = Math.max(0.05, Math.round(sx * 20) / 20);
+      sy = Math.max(0.05, Math.round(sy * 20) / 20);
+      sz = Math.max(0.05, Math.round(sz * 20) / 20);
+    }
+    // restore the grab snapshot, then scale about the fixed anchor
+    for (const [idx, orig] of d.orig) this.data.components[idx] = deepClone(orig);
+    this.applyScaleNoCommit(sx, sy, sz, d.anchor);
+    this.renderProps();
+    const now = performance.now();
+    if (now - this.lastLiveRebuild > 90) {
+      this.lastLiveRebuild = now;
+      this.hooks.rebuild();
+    }
   }
 
   // arrow keys: nudge the selection one grid step, mapped to the camera view
@@ -1135,6 +1432,8 @@ export class Editor {
       this.updateDrawVis();
       return;
     }
+    // group-scale gizmo handles grab first when a multi-selection is up
+    if (this.gizmoHandles.length > 0 && this.gizmoGrab(e)) return;
     // resize handles grab first — they float over everything else
     if (this.resizeIdx >= 0 && this.handleMeshes.length > 0) {
       this.setRay(e);
@@ -1434,6 +1733,11 @@ export class Editor {
       }
       return;
     }
+    // group-scale gizmo drag: scale the whole selection from the grab snapshot
+    if (this.gizmoDrag) {
+      this.gizmoMove(e, e.shiftKey);
+      return;
+    }
     // resize-handle drag: re-apply from the grab snapshot at the new travel
     if (this.hdlDrag && this.resizeIdx >= 0) {
       // shape node: chase the pointer on the ground plane. Dragging a node
@@ -1573,6 +1877,12 @@ export class Editor {
     if (this.spaceHeld) {
       this.dom.style.cursor = 'grab';
       this.downAt = null;
+      return;
+    }
+    if (this.gizmoDrag) {
+      this.gizmoDrag = null;
+      if (this.controls) this.controls.enabled = true;
+      this.commit(); // one undo step for the whole group scale (also refreshes the gizmo)
       return;
     }
     if (this.hdlDrag) {
@@ -2355,6 +2665,50 @@ export class Editor {
       prow('x', 0);
       prow('y', 1);
       prow('z', 2);
+      // GROUP SIZE (Figma): the selection's overall bounding-box dimensions.
+      // Typing one SCALES the whole selection about the box's low corner —
+      // scalable pieces resize, fixed-size pieces (crates, pickups...) keep
+      // their size but reposition proportionally. "proportional" links axes.
+      const gb0 = this.selectionBounds();
+      if (gb0) {
+        const sizeHdr = document.createElement('div');
+        sizeHdr.className = 'ed-dim';
+        sizeHdr.textContent = 'group size — scales the whole selection:';
+        this.propsEl.appendChild(sizeHdr);
+        const propBtn = document.createElement('button');
+        propBtn.className = 'ed-btn';
+        propBtn.textContent = `proportional: ${this.scaleProp ? 'ON' : 'OFF'}`;
+        propBtn.addEventListener('click', () => {
+          this.scaleProp = !this.scaleProp;
+          this.renderProps();
+        });
+        this.propsEl.appendChild(propBtn);
+        const gdim = (label: string, comp: 0 | 1 | 2): void => {
+          const liveSize = (): number => {
+            const b = this.selectionBounds();
+            return b ? +b.getSize(new THREE.Vector3()).getComponent(comp).toFixed(2) : 0;
+          };
+          this.propsEl.appendChild(
+            this.numRow(
+              label,
+              liveSize,
+              (v) => {
+                const b = this.selectionBounds();
+                if (!b) return;
+                const cur = b.getSize(new THREE.Vector3()).getComponent(comp);
+                if (cur < 1e-3 || v <= 0) return;
+                const f = v / cur;
+                const anchor = b.min.clone();
+                if (this.scaleProp) this.scaleSelection(f, f, f, anchor, 'gsize');
+                else this.scaleSelection(comp === 0 ? f : 1, comp === 1 ? f : 1, comp === 2 ? f : 1, anchor, `gsize${comp}`);
+              },
+            ),
+          );
+        };
+        gdim('group width', 0);
+        gdim('group height', 1);
+        gdim('group depth', 2);
+      }
       // SHARED variables (Figma): a field that is genuinely one value across
       // the selection (size, spin) shows once and batch-writes to all.
       const shared = document.createElement('div');
