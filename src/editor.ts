@@ -252,6 +252,11 @@ export class Editor {
   private resizeHintShown = false;
   private scaleProp = false; // group-size fields link all axes when ON
   private gizmoHintShown = false;
+  // SURFACE SNAP: plain drags rest the grabbed piece on the real geometry
+  // under the cursor (raycast), resolving the 2D→3D depth ambiguity. Off =
+  // the old fixed-Y ground-plane drag. Persisted per browser.
+  private surfaceSnap = localStorage.getItem('protoEdSurfaceSnap') !== '0';
+  private dragBottomOffset = 0; // grab-time distance from the grabbed piece's origin down to its base
   // group-scale gizmo (multi-selection bounding-box handles)
   private gizmoGroup: THREE.Group | null = null;
   private gizmoHandles: { mesh: THREE.Mesh; hit: THREE.Mesh; def: GizmoHandle }[] = [];
@@ -783,6 +788,30 @@ export class Editor {
     const box = new THREE.Box3();
     for (const o of objs) box.expandByObject(o);
     return box;
+  }
+
+  // Cast the pointer into the real level geometry and return the nearest
+  // surface point — skipping the pieces being dragged (so it can't snap onto
+  // itself) and editor-only ghosts. This is how a 2D pointer resolves to a
+  // sensible 3D depth: land on the thing under the cursor.
+  private surfaceHitFor(e: PointerEvent): THREE.Vector3 | null {
+    this.setRay(e);
+    const hits = this.raycaster.intersectObject(this.getLevel().pickRoot, true);
+    const sel = new Set(this.sel);
+    for (const h of hits) {
+      let o: THREE.Object3D | null = h.object;
+      let idx: number | undefined;
+      let ghost = false;
+      while (o) {
+        if (o.userData.editorGhost) ghost = true;
+        if (idx === undefined && o.userData.editorIdx !== undefined) idx = o.userData.editorIdx as number;
+        o = o.parent;
+      }
+      if (ghost) continue; // zone slabs, arrows, other non-solid editor visuals
+      if (idx !== undefined && sel.has(idx)) continue; // never snap to what you're holding
+      return h.point.clone();
+    }
+    return null;
   }
 
   private refreshSelectionBox(): void {
@@ -1535,6 +1564,10 @@ export class Editor {
       if (this.groundPoint(e, this.dragPlane, this.dragStart)) {
         this.dragging = true;
         this.dragOrig = [...c.p] as [number, number, number];
+        // how far the grabbed piece's origin sits above its own base, so a
+        // surface-snap can rest it ON the target rather than half-buried
+        const gb = this.boxFor(grabbed);
+        this.dragBottomOffset = gb ? c.p[1] - gb.min.y : 0;
         // the grabbed one leads; every selected component keeps its offset
         this.dragSel = this.sel.map((idx) => ({
           idx,
@@ -1827,23 +1860,41 @@ export class Editor {
       }
     }
     if (!this.dragging || this.sel.length === 0) return;
-    const hit = new THREE.Vector3();
-    if (!this.groundPoint(e, this.dragPlane, hit)) return;
-    // the grabbed component's target snaps to the grid; the rest of the
-    // selection follows by the SAME delta so the group's layout never warps
+    // the grabbed component's target; the rest of the selection follows by the
+    // SAME delta so the group's layout never warps
     let nx = this.dragOrig[0];
     let ny = this.dragOrig[1];
     let nz = this.dragOrig[2];
     if (this.dragVertical) {
+      // shift-drag: precise height on a camera-facing vertical plane
+      const hit = new THREE.Vector3();
+      if (!this.groundPoint(e, this.dragPlane, hit)) return;
       ny = this.dragOrig[1] + (hit.y - this.dragStart.y);
+      if (this.snap) ny = snapHalf(ny);
     } else {
-      nx = this.dragOrig[0] + (hit.x - this.dragStart.x);
-      nz = this.dragOrig[2] + (hit.z - this.dragStart.z);
-    }
-    if (this.snap) {
-      nx = snapHalf(nx);
-      ny = snapHalf(ny);
-      nz = snapHalf(nz);
+      // SURFACE SNAP: rest the grabbed piece on the real geometry under the
+      // cursor — this resolves the 2D→3D depth so it lands where it looks,
+      // not hundreds of units away on a shallow-angle plane. Over empty space
+      // (or snap off), fall back to the fixed-Y ground plane.
+      const surf = this.surfaceSnap ? this.surfaceHitFor(e) : null;
+      if (surf) {
+        nx = surf.x;
+        nz = surf.z;
+        ny = surf.y + this.dragBottomOffset; // base sits on the surface
+        if (this.snap) {
+          nx = snapHalf(nx);
+          nz = snapHalf(nz); // grid the footprint, keep Y exactly on the surface
+        }
+      } else {
+        const hit = new THREE.Vector3();
+        if (!this.groundPoint(e, this.dragPlane, hit)) return;
+        nx = this.dragOrig[0] + (hit.x - this.dragStart.x);
+        nz = this.dragOrig[2] + (hit.z - this.dragStart.z);
+        if (this.snap) {
+          nx = snapHalf(nx);
+          nz = snapHalf(nz);
+        }
+      }
     }
     const gdx = nx - this.dragOrig[0];
     const gdy = ny - this.dragOrig[1];
@@ -2182,6 +2233,16 @@ export class Editor {
       snapBtn.blur();
     });
     lvl.appendChild(snapBtn);
+    // drop-on-surface: dragging rests a piece on the geometry under the cursor
+    const surfBtn = h(`<button class="ed-btn">drop on surface: ${this.surfaceSnap ? 'ON' : 'OFF'}</button>`) as HTMLButtonElement;
+    surfBtn.title = 'dragging rests the piece on whatever is under the cursor (fixes depth). OFF = flat ground-plane drag';
+    surfBtn.addEventListener('click', () => {
+      this.surfaceSnap = !this.surfaceSnap;
+      localStorage.setItem('protoEdSurfaceSnap', this.surfaceSnap ? '1' : '0');
+      surfBtn.textContent = `drop on surface: ${this.surfaceSnap ? 'ON' : 'OFF'}`;
+      surfBtn.blur();
+    });
+    lvl.appendChild(surfBtn);
     panel.appendChild(lvl);
 
     // file ops
