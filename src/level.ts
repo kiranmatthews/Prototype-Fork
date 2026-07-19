@@ -1643,6 +1643,10 @@ export class Level {
         for (const id of groupChainOf(c, data)) bangGroups.add(id);
     }
     for (const pass of [true, false]) {
+      // geometry built first (pass 1); before the entity pass, flush world
+      // matrices so build-time raycasts (crate seating) hit the real decks
+      // — freshly added meshes carry an identity matrixWorld until now.
+      if (!pass) this.root.updateMatrixWorld(true);
       data.components.forEach((c, i) => {
         if (geomPass.has(c.t) !== pass) return;
         buildTagged(i, () => {
@@ -3673,6 +3677,25 @@ export class Level {
     return Math.abs(hits[0].point.y - fallback) <= 1.1 ? hits[0].point.y : fallback;
   }
 
+  // Ground a captured crate should rest on. Capture flattens wavy jungle
+  // floors to a box at their PEAK, so a crate recorded at its lower wavy rest
+  // height must rise to sit on the flat top instead of sinking through it.
+  // floorY can't: its ±1.1 snap band gives up once the flat top is more than
+  // ~1 above the recorded base, and the crate stays buried. This returns the
+  // LOWEST ground within a band around the recorded base — raised up to ~4 for
+  // deep dips — so overhangs far above and any deliberate float below are
+  // ignored. Null when nothing sensible sits beneath/around it (keep base).
+  private crateRestSurface(x: number, z: number, deckY: number): number | null {
+    const ray = new THREE.Raycaster(new THREE.Vector3(x, deckY + 8, z), new THREE.Vector3(0, -1, 0), 0, 400);
+    const hits = ray.intersectObjects(this.groundMeshes, false);
+    let best: number | null = null;
+    for (const h of hits) {
+      const y = h.point.y;
+      if (y >= deckY - 0.6 && y <= deckY + 4 && (best === null || y < best)) best = y;
+    }
+    return best;
+  }
+
   // Wavy jungle floor strip: a heightfield with rolling bumps, optional
   // non-lethal dips to hop, and firm berm walls (with grindable lips) along
   // both sides so you can't fall off sideways. Deterministic per strip.
@@ -4651,7 +4674,15 @@ export class Level {
         }
       }
     }
-    if (!onStack) base = this.floorY(x, z, deckY);
+    if (!onStack) {
+      if (this.builtFromData) {
+        // captured/edited level: rest on the surface beneath (see crateRestSurface)
+        const surf = this.crateRestSurface(x, z, deckY);
+        base = surf !== null ? surf : deckY;
+      } else {
+        base = this.floorY(x, z, deckY);
+      }
+    }
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
