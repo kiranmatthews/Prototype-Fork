@@ -2328,11 +2328,35 @@ export class Editor {
       });
       mkBtn('delete', () => this.deleteSelected(), true);
       this.propsEl.appendChild(grid);
-      // SHARED variables (Figma): every field that applies to ALL selected
-      // pieces shows once — the value displayed is the primary's, typing
-      // batch-writes it to the whole selection.
       const all = this.sel.map((i) => this.data.components[i]);
       const prim = this.data.components[this.selected];
+      // POSITION is per-piece, NOT a shared value: the layout IS the
+      // relationship between pieces. Editing x/y/z MOVES the whole selection
+      // by the delta from the primary's coordinate — exactly like dragging —
+      // so relative offsets are preserved. (Setting them all to one absolute
+      // value would collapse the level; that's what "match height" is for, on
+      // purpose.) Each axis carries its OWN grouping key so a spinner burst on
+      // one axis doesn't coalesce with another.
+      const posHdr = document.createElement('div');
+      posHdr.className = 'ed-dim';
+      posHdr.textContent = `position — moves all ${this.sel.length} together:`;
+      this.propsEl.appendChild(posHdr);
+      const prow = (label: string, axis: 0 | 1 | 2): void =>
+        void this.propsEl.appendChild(
+          this.numRow(
+            label,
+            () => prim.p[axis],
+            (v) => {
+              const d = v - prim.p[axis];
+              if (d) for (const cc of all) cc.p[axis] += d;
+            },
+          ),
+        );
+      prow('x', 0);
+      prow('y', 1);
+      prow('z', 2);
+      // SHARED variables (Figma): a field that is genuinely one value across
+      // the selection (size, spin) shows once and batch-writes to all.
       const shared = document.createElement('div');
       shared.className = 'ed-dim';
       shared.textContent = `shared values (apply to all ${this.sel.length}):`;
@@ -2341,9 +2365,6 @@ export class Editor {
         void this.propsEl.appendChild(
           this.numRow(label, get, (v) => all.forEach((cc) => set(cc, v)), step),
         );
-      brow('x', () => prim.p[0], (cc, v) => (cc.p[0] = v));
-      brow('y', () => prim.p[1], (cc, v) => (cc.p[1] = v));
-      brow('z', () => prim.p[2], (cc, v) => (cc.p[2] = v));
       if (all.every((cc) => cc.s)) {
         brow('width', () => prim.s![0], (cc, v) => (cc.s![0] = Math.max(0.2, v)));
         brow('height', () => prim.s![1], (cc, v) => (cc.s![1] = Math.max(0.2, v)));

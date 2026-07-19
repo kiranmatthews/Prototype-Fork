@@ -1094,5 +1094,6 @@ frame();
   editor,
   openEditor,
   ui, // debug: drive menu/sync controls from the console/harness
+  setCustomLevelData, // debug: load level data into the custom slot from the harness
   GLTFLoader, // debug: inspect model files from the console/harness
 };
