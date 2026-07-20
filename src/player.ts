@@ -12,7 +12,7 @@ import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'dead' | 'gameover' | 'finished';
+export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'gameover' | 'finished';
 
 interface GroundHit {
   y: number;
@@ -250,11 +250,6 @@ export class Player {
   private wallTickT = 0; // THPS accrual while wallriding
   private readonly wallNormal = new THREE.Vector3(); // wall outward normal (horizontal, toward the skater)
   private wallBox: THREE.Box3 | null = null; // the wall we're riding (for glue + run-off)
-  // --- LEDGE GRAB: hang off the lip of a platform you hit head-on ---
-  private ledgeT = 0; // grip time left before it fails (state === 'hang')
-  private ledgeCoolT = 0; // re-grab lockout after a climb / hop / slip
-  private readonly ledgeNormal = new THREE.Vector3(); // outward from the wall, toward the hanger
-  private ledgeTopY = 0; // the grabbed lip's world Y (climb-up reference)
   private wallSpeed = 0; // along-wall speed (heading held in axisF)
   private wallrideT = 0; // remaining ride time
   private wallCoolT = 0; // brief no-restick window after leaving a wall
@@ -619,8 +614,6 @@ export class Player {
     this.wallCoolT = 0;
     this.wallrideLatched = false;
     this.wallChargeT = 0;
-    this.ledgeT = 0;
-    this.ledgeCoolT = 0;
     this.wallridePose = 0;
     this.deckPose = 0;
     this.wallChargePose = 0;
@@ -707,7 +700,6 @@ export class Player {
     }
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
-    this.ledgeCoolT = Math.max(0, this.ledgeCoolT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
     // is the depth sidestep (up = away from the camera), the exact same
@@ -715,15 +707,6 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
-    // LEDGE HANG owns the whole step: no movement/physics/collide runs while
-    // gripped. Climb up, hop off, or lose grip — see stepHang.
-    if (this.state === 'hang') {
-      this.stepHang(dt, input);
-      this.updateSparks(dt);
-      this.updateFruit(dt);
-      this.syncVisual(input, dt);
-      return;
-    }
     // MANUAL FLICK: watch the raw stick's vertical axis for the two-beat flick.
     // Up-then-down pops a manual (nose up), down-then-up a nose manual. On the
     // ground it fires immediately; mid-air it ARMS a land-into-manual for a
@@ -4160,7 +4143,6 @@ export class Player {
       for (const w of level.walls) {
         if (this.playerBox.intersectsBox(w)) {
           if (this.tryWallride(w)) break; // stuck to the wall — ride it
-          if (this.tryLedgeGrab(w)) break; // caught its top lip — hang
           this.pushOutOf(w);
         }
       }
@@ -4611,123 +4593,6 @@ export class Player {
     sfx.play('woosh2', 0.5);
     this.emitSparks(4, 0xffd0a0, 1);
     return true;
-  }
-
-  // LEDGE GRAB — catch the top lip of a solid you hit head-on (skating or on
-  // foot) and hang there. Reads the wall like tryWallride: the thin axis is the
-  // face normal, w.max.y the lip. Only a lip that sits around your hands counts
-  // (a real ledge — not a curb underfoot, not an out-of-reach wall). From the
-  // hang: X (or up + X) climbs up, X + down hops back off, and running out the
-  // grip timer drops you. See stepHang.
-  private tryLedgeGrab(w: THREE.Box3): boolean {
-    if (
-      (this.state !== 'ride' && this.state !== 'air') ||
-      this.wallriding ||
-      this.vertAir ||
-      this.slamActive ||
-      this.grabbing ||
-      this.sliding ||
-      this.ledgeCoolT > 0
-    )
-      return false;
-    const rise = w.max.y - this.pos.y; // lip height above the feet
-    if (rise < 1.1 || rise > TUNING.ledgeReach) return false;
-    // Which SIDE face did we hit? Platform colliders are the full footprint (not
-    // thin like wallride walls), so pick the face by least penetration — the
-    // shallow separating axis is the one the player just crossed — and point the
-    // normal out toward the player on that axis.
-    const cx = (w.min.x + w.max.x) / 2;
-    const cz = (w.min.z + w.max.z) / 2;
-    const penX = CONST.playerHalf.x + (w.max.x - w.min.x) / 2 - Math.abs(this.pos.x - cx);
-    const penZ = CONST.playerHalf.z + (w.max.z - w.min.z) / 2 - Math.abs(this.pos.z - cz);
-    const useX = penX < penZ;
-    const nx = useX ? Math.sign(this.pos.x - cx) || 1 : 0;
-    const nz = useX ? 0 : Math.sign(this.pos.z - cz) || 1;
-    // must be heading INTO the face (head-on) — a graze slides off as before
-    const into = -(this.axisF.x * nx + this.axisF.z * nz);
-    if (into < 0.4) return false;
-    // snap to the face, hang with the head just at the lip
-    this.ledgeNormal.set(nx, 0, nz);
-    if (useX) this.pos.x = (nx > 0 ? w.max.x : w.min.x) + nx * (CONST.playerHalf.x + 0.06);
-    else this.pos.z = (nz > 0 ? w.max.z : w.min.z) + nz * (CONST.playerHalf.z + 0.06);
-    this.pos.y = w.max.y + 0.15 - CONST.playerHalf.y * 2;
-    this.ledgeTopY = w.max.y;
-    this.axisF.set(-nx, 0, -nz); // face into the wall / toward the landing
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.speed = 0;
-    this.vVel = 0;
-    this.state = 'hang';
-    this.ledgeT = TUNING.ledgeGrabTime;
-    this.grounded = false;
-    this.charging = false;
-    this.chargeTimer = 0;
-    this.slamActive = false;
-    this.teetering = false;
-    if (this.manualing !== 0) this.endManual();
-    sfx.play('woosh', 0.4, 0.8);
-    this.emitSparks(3, 0xead9b0, 0.8);
-    return true;
-  }
-
-  // Hanging off a ledge: hold on, then X climbs up (or up + X), X + down hops
-  // back off, and the grip fails if you dawdle.
-  private stepHang(dt: number, input: Input): void {
-    this.speed = 0;
-    this.vVel = 0;
-    this.ledgeT -= dt;
-    const stickUp = this.rawInput.moveY < -0.35; // toward the upper landing
-    const stickDown = this.rawInput.moveY > 0.35; // away from the ledge
-    if (input.jumpPressed) {
-      if (stickDown && !stickUp) this.ledgeHopDown();
-      else this.ledgeClimbUp(); // plain X, or up + X
-      return;
-    }
-    if (this.ledgeT <= 0) this.ledgeLetGo(); // grip gave out
-  }
-
-  // Mantle up over the lip onto the landing.
-  private ledgeClimbUp(): void {
-    const n = this.ledgeNormal;
-    this.pos.x -= n.x * (CONST.playerHalf.x + 0.4); // step inward past the lip
-    this.pos.z -= n.z * (CONST.playerHalf.z + 0.4);
-    this.pos.y = this.ledgeTopY + 0.4;
-    this.state = 'air';
-    this.grounded = false;
-    this.vVel = TUNING.ledgeClimbPop;
-    this.speed = 2; // ease onto the landing
-    this.airFromSkate = false;
-    this.ledgeCoolT = 0.35;
-    sfx.play('railLand', 0.6);
-    this.emitDust(3);
-  }
-
-  // Kick back off the wall and drop away from the ledge.
-  private ledgeHopDown(): void {
-    const n = this.ledgeNormal;
-    this.pos.x += n.x * 0.35;
-    this.pos.z += n.z * 0.35;
-    this.state = 'air';
-    this.grounded = false;
-    this.vVel = 3.5; // small pop
-    this.axisF.set(n.x, 0, n.z); // face away; drift out as you fall
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.speed = 4;
-    this.airFromSkate = false;
-    this.ledgeCoolT = 0.4;
-    sfx.play('woosh', 0.4, 1.1);
-  }
-
-  // Grip failed — just let go and fall straight down.
-  private ledgeLetGo(): void {
-    const n = this.ledgeNormal;
-    this.pos.x += n.x * 0.08;
-    this.pos.z += n.z * 0.08;
-    this.state = 'air';
-    this.grounded = false;
-    this.vVel = 0;
-    this.speed = 0;
-    this.ledgeCoolT = 0.4;
-    sfx.play('woosh3', 0.35, 0.7);
   }
 
   // Ride the wall: gentle gravity, along-wall travel + bleed, glued to the face.
