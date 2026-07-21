@@ -5005,11 +5005,15 @@ export class Player {
       return b0 + (b1 - b0) * fr;
     };
     const c = clip.ch;
+    // The model's limb pivots are named mirror-image: with the character facing
+    // -z, armR/legR sit at world -x (the anatomical LEFT side) — measured, not
+    // assumed. The baked channels are anatomical, so swap sides here; without
+    // this every clip renders mirrored and the shimmies read backwards.
     return {
       w,
-      armXL: smp(c.armXL), armXR: smp(c.armXR), armZL: smp(c.armZL), armZR: smp(c.armZR),
-      elbL: smp(c.elbL), elbR: smp(c.elbR),
-      legL: smp(c.legL), legR: smp(c.legR), kneeL: smp(c.kneeL), kneeR: smp(c.kneeR),
+      armXL: smp(c.armXR), armXR: smp(c.armXL), armZL: smp(c.armZR), armZR: smp(c.armZL),
+      elbL: smp(c.elbR), elbR: smp(c.elbL),
+      legL: smp(c.legR), legR: smp(c.legL), kneeL: smp(c.kneeR), kneeR: smp(c.kneeL),
       spine: smp(c.spine), head: smp(c.head),
     };
   }
@@ -5670,7 +5674,7 @@ export class Player {
     if (this.armR) {
       this.armR.rotation.x =
         this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.06 * breathe * idleW + // lead hand reaches down the wall; breath sways the idle hang
-        (HS ? (HS.armXR * 0.7 + gripTrem) * HS.w : (0.3 + gripTrem + 0.55 * ck) * ledgeW + handOver); // hang arm swing: clip or authored
+        (HS ? (HS.armXR + gripTrem) * HS.w : (0.3 + gripTrem + 0.55 * ck) * ledgeW + handOver); // hang arm swing: clip or authored
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
@@ -5678,7 +5682,7 @@ export class Player {
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
-        (HS ? HS.armZR * HS.w : (2.5 - 2.0 * ck) * ledgeW) + // arm raise: clip or authored
+        (HS ? (HS.armZR - leanR) * HS.w : (2.5 - 2.0 * ck) * ledgeW) + // arm raise: clip is an absolute elevation, so the base lean blends out
         1.05 * this.wallridePose + // wallride: arm flung out for balance
         0.35 * this.skatePose; // loose skate arms
     }
@@ -5690,7 +5694,7 @@ export class Player {
         slideL -
         0.65 * this.wallridePose +
         0.06 * breathe * idleW + // trailing arm swept back; breath sways the idle hang
-        (HS ? (HS.armXL * 0.7 - gripTrem) * HS.w : (0.3 - gripTrem + 0.55 * ck) * ledgeW - handOver); // hang arm swing: clip or authored
+        (HS ? (HS.armXL - gripTrem) * HS.w : (0.3 - gripTrem + 0.55 * ck) * ledgeW - handOver); // hang arm swing: clip or authored
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
@@ -5698,7 +5702,7 @@ export class Player {
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
-        (HS ? HS.armZL * HS.w : (2.5 - 2.0 * ck) * ledgeW) - // arm raise: clip or authored
+        (HS ? (HS.armZL - leanL) * HS.w : (2.5 - 2.0 * ck) * ledgeW) - // arm raise: clip is an absolute elevation, so the base lean blends out
         1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
     }
