@@ -5,6 +5,7 @@
 
 import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
+import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
 import { Crate, Level } from './level';
 import { sfx } from './audio';
@@ -277,6 +278,13 @@ export class Player {
   private readonly ledgeClimbTo = new THREE.Vector3();
   private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
   private ledgeShimmy = 0; // live along-ledge slide input (-1..1) — drives the hand-over-hand
+  // baked Mixamo braced-hang clips: which one is playing, its clock, and the
+  // exit overlay weight (drop/fall clips bleed into the first beat of the air)
+  private hangClipName: keyof typeof HANG_ANIMS | null = null;
+  private hangClipT = 0;
+  private hangClipRate = 1;
+  private hangClipLoop = false;
+  private hangExitW = 0;
   private wallSpeed = 0; // along-wall speed (heading held in axisF)
   private wallrideT = 0; // remaining ride time
   private wallCoolT = 0; // brief no-restick window after leaving a wall
@@ -651,6 +659,8 @@ export class Player {
     this.ledgeClimbK = 0;
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
+    this.hangClipName = null;
+    this.hangExitW = 0;
     this.wallridePose = 0;
     this.deckPose = 0;
     this.wallChargePose = 0;
@@ -738,6 +748,11 @@ export class Player {
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
     this.ledgeCoolT = Math.max(0, this.ledgeCoolT - dt);
+    this.hangExitW = Math.max(0, this.hangExitW - dt * 2.6);
+    if (this.state !== 'hang' && this.hangClipName) {
+      if (this.hangExitW > 0) this.hangClipT += dt * this.hangClipRate;
+      else this.hangClipName = null; // overlay finished — release the clip
+    }
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
     // is the depth sidestep (up = away from the camera), the exact same
@@ -4754,6 +4769,7 @@ export class Player {
     this.teetering = false;
     this.airJumpUsed = false; // a grip is solid contact: the double jump re-arms
     this.wallrideLatched = false;
+    this.setHangClip('catch', 0.45); // the reach-and-grab plays over the settle
     if (this.manualing !== 0) this.endManual();
     this.bankCombo(); // a clean catch banks the pending string, like a landing
     sfx.play('railLand', 0.5, 0.9);
@@ -4776,6 +4792,7 @@ export class Player {
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
+    this.hangClipT += dt * this.hangClipRate;
     // the time-trial clock keeps running — hanging is not a pause button
     if (this.ttActive) {
       if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
@@ -4829,6 +4846,13 @@ export class Player {
       const shim = THREE.MathUtils.clamp(sx * tx + sz * tz, -1, 1);
       const away = sx * n.x + sz * n.z;
       this.ledgeShimmy += ((Math.abs(shim) > 0.25 ? shim : 0) - this.ledgeShimmy) * Math.min(1, 12 * dt);
+      // clip selection: the catch hands off to the idle loop; shimmying swaps
+      // in the hand-over-hand traverse for that direction
+      if (this.hangClipName === 'catch' && this.hangClipT >= HANG_ANIMS.catch.dur) this.setHangClip('idle', 0, true);
+      if (this.hangClipName !== 'catch') {
+        if (Math.abs(shim) > 0.25) this.setHangClip(shim > 0 ? 'shimmyR' : 'shimmyL', 0, true);
+        else this.setHangClip('idle', 0, true);
+      }
       if (Math.abs(shim) > 0.25 && this.ledgeEaseT >= LEDGE_EASE) {
         // sidle along the lip — never past the corners, and only where the
         // landing probe still finds a standable lip (re-probed as you move)
@@ -4892,6 +4916,7 @@ export class Player {
     this.ledgePhase = 'climb';
     this.ledgeClimbT = 0;
     this.ledgeClimbK = 0;
+    this.setHangClip('climb', Math.max(0.12, TUNING.ledgeClimbTime)); // clip time-fits the clamber
     sfx.play('ollie', 0.4, 1.15);
     this.emitDust(2);
   }
@@ -4909,6 +4934,8 @@ export class Player {
     this.vVel = 3.2;
     this.speed = 0;
     this.visualYaw = wrapAngle(Math.atan2(n.x, n.z) - Math.PI); // face away (visual only)
+    this.setHangClip('drop', 0.5);
+    this.hangExitW = 1; // the push-off pose bleeds into the first beat of the fall
     this.ledgeCoolT = 0.5;
     this.prevPos.copy(this.pos);
     sfx.play('woosh', 0.4, 1.1);
@@ -4948,6 +4975,45 @@ export class Player {
     return true;
   }
 
+  // Swap the active baked hang clip. `over` > 0 time-fits the whole clip into
+  // that many real seconds (the clamber matches ledgeClimbTime); a running
+  // loop is left alone when re-selected so it never stutters.
+  private setHangClip(name: keyof typeof HANG_ANIMS | null, over = 0, loop = false): void {
+    if (name === this.hangClipName && loop) return;
+    this.hangClipName = name;
+    this.hangClipT = 0;
+    this.hangClipLoop = loop;
+    this.hangClipRate = name && over > 0 ? HANG_ANIMS[name].dur / Math.max(0.08, over) : 1;
+  }
+
+  // Sample the active clip's anatomical channels at the current clock (linear
+  // interp). Null when no clip should show; `w` is the blend weight — full
+  // ledge pose while hanging, the fading exit overlay just after.
+  private hangPoseSample(ledgeW: number): { w: number; armXL: number; armXR: number; armZL: number; armZR: number; elbL: number; elbR: number; legL: number; legR: number; kneeL: number; kneeR: number; spine: number; head: number } | null {
+    const name = this.hangClipName;
+    if (!name) return null;
+    const w = this.state === 'hang' ? ledgeW : this.hangExitW * 0.7;
+    if (w < 0.02) return null;
+    const clip = HANG_ANIMS[name];
+    const t = this.hangClipLoop ? this.hangClipT % clip.dur : Math.min(clip.dur - 1e-4, this.hangClipT);
+    const f = Math.max(0, t * clip.fps);
+    const i = Math.floor(f);
+    const fr = f - i;
+    const smp = (a: number[]): number => {
+      const b0 = a[Math.min(i, a.length - 1)];
+      const b1 = a[Math.min(i + 1, a.length - 1)];
+      return b0 + (b1 - b0) * fr;
+    };
+    const c = clip.ch;
+    return {
+      w,
+      armXL: smp(c.armXL), armXR: smp(c.armXR), armZL: smp(c.armZL), armZR: smp(c.armZR),
+      elbL: smp(c.elbL), elbR: smp(c.elbR),
+      legL: smp(c.legL), legR: smp(c.legR), kneeL: smp(c.kneeL), kneeR: smp(c.kneeR),
+      spine: smp(c.spine), head: smp(c.head),
+    };
+  }
+
   // The grip gives out: peel off the wall and drop straight down.
   private ledgeLetGo(): void {
     const n = this.ledgeNormal;
@@ -4958,6 +5024,8 @@ export class Player {
     this.grounded = false;
     this.vVel = -0.5;
     this.speed = 0;
+    this.setHangClip('fall', 0.45);
+    this.hangExitW = 1; // the slip pose bleeds into the fall
     this.ledgeCoolT = 0.6;
     this.prevPos.copy(this.pos);
     sfx.play('woosh3', 0.35, 0.7);
@@ -5390,14 +5458,18 @@ export class Player {
     const mantle = Math.sin(Math.min(1, ck) * Math.PI) * ledgeW; // heave peaks mid-clamber
     const gripTrem = ledgeW * (1 - ck) * gripFade * gripFade * Math.sin(this.runTime * 26) * 0.12;
     const handOver = Math.sin(this.runTime * 9) * 0.3 * Math.abs(this.ledgeShimmy) * ledgeW * (1 - ck); // shimmy: hand-over-hand
+    // Baked Mixamo hang clips drive the limbs when one is playing (catch,
+    // idle loop, shimmies, clamber, drop/fall exits); the hand-authored pose
+    // below is the fallback. Channels are anatomical — see hangAnims.ts.
+    const HS = this.hangPoseSample(ledgeW);
     const dangle = ledgeW * Math.sin(this.runTime * 1.7) * 0.08; // idle leg sway
     if (this.legL && this.legR) {
       // baseball slide: lead leg kicked out ahead, trailing leg half-bent
       // crawl: hips COUNTER the 0.75 body pitch (negative = knee swings
       // forward) so the thighs stay under the body — knees at the ground,
       // never feet flung up behind the pitched-over torso.
-      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.16 + dangle) - 1.15 * mantle; // clamber: lead knee drives up over the lip
-      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.1 - dangle) - 0.5 * mantle;
+      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + (HS ? -HS.legL * 0.5 * HS.w : ledgeW * (0.16 + dangle) - 1.15 * mantle); // hang legs: clip or authored
+      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + (HS ? -HS.legR * 0.5 * HS.w : ledgeW * (0.1 - dangle) - 0.5 * mantle);
       // Crash-reference high knees: the swing-through leg lifts extra hard
       // (thigh toward horizontal), giving the run its cartoon prance.
       const liftL = Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
@@ -5448,8 +5520,8 @@ export class Player {
       const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk);
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
-      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + ledgeW * (0.5 - dangle) + 0.8 * mantle;
-      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + ledgeW * (0.62 + dangle) + 0.95 * mantle; // clamber: shins fold hard through the heave
+      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + (HS ? HS.kneeR * 0.65 * HS.w : ledgeW * (0.5 - dangle) + 0.8 * mantle);
+      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + (HS ? HS.kneeL * 0.65 * HS.w : ledgeW * (0.62 + dangle) + 0.95 * mantle); // hang shins: clip or authored
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
     }
@@ -5473,12 +5545,12 @@ export class Player {
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
       // Crash runs chest-out, almost leaning BACK — never hunched forward.
       // Hanging, the chest presses gently toward the wall instead.
-      this.upperG.rotation.x = -0.07 * this.walkAmp + 0.16 * ledgeW + 0.5 * mantle; // clamber: chest leans over the lip
+      this.upperG.rotation.x = -0.07 * this.walkAmp + (HS ? HS.spine * 0.7 * HS.w : 0.16 * ledgeW + 0.5 * mantle); // hang chest: clip or authored
     }
     if (this.headM) {
       const look =
         -0.45 * crawlMove - // crawl: the NECK counters the body pitch (negative = chin up) — eyes forward
-        0.35 * ledgeW * (1 - ck) - // hanging: eyes up at the landing (level out as she tops the clamber)
+        (HS ? -HS.head * 0.5 * HS.w : 0.35 * ledgeW * (1 - ck)) - // hang gaze: clip or authored (chin up = positive here)
         0.05 * crouchW -
         0.5 * this.dropPose -
         0.4 * this.slidePose -
@@ -5598,7 +5670,7 @@ export class Player {
     if (this.armR) {
       this.armR.rotation.x =
         this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.06 * breathe * idleW + // lead hand reaches down the wall; breath sways the idle hang
-        (0.3 + gripTrem + 0.55 * ck) * ledgeW + handOver; // hands on the lip; clamber presses down; shimmy alternates
+        (HS ? (HS.armXR * 0.7 + gripTrem) * HS.w : (0.3 + gripTrem + 0.55 * ck) * ledgeW + handOver); // hang arm swing: clip or authored
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
@@ -5606,7 +5678,7 @@ export class Player {
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
-        (2.5 - 2.0 * ck) * ledgeW + // arms overhead gripping; the clamber brings them down as she pushes over
+        (HS ? HS.armZR * HS.w : (2.5 - 2.0 * ck) * ledgeW) + // arm raise: clip or authored
         1.05 * this.wallridePose + // wallride: arm flung out for balance
         0.35 * this.skatePose; // loose skate arms
     }
@@ -5618,7 +5690,7 @@ export class Player {
         slideL -
         0.65 * this.wallridePose +
         0.06 * breathe * idleW + // trailing arm swept back; breath sways the idle hang
-        (0.3 - gripTrem + 0.55 * ck) * ledgeW - handOver; // hands on the lip; clamber presses down; shimmy alternates
+        (HS ? (HS.armXL * 0.7 - gripTrem) * HS.w : (0.3 - gripTrem + 0.55 * ck) * ledgeW - handOver); // hang arm swing: clip or authored
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
@@ -5626,7 +5698,7 @@ export class Player {
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
-        (2.5 - 2.0 * ck) * ledgeW - // arms overhead gripping; the clamber brings them down as she pushes over
+        (HS ? HS.armZL * HS.w : (2.5 - 2.0 * ck) * ledgeW) - // arm raise: clip or authored
         1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
     }
@@ -5644,7 +5716,7 @@ export class Player {
           0.25 * this.skatePose +
           0.45 * crawlMove +
           0.3 * crouchW +
-          0.25 * ledgeW + // gripping: elbows keep a strained bend
+          (HS ? HS.elbR * 0.8 * HS.w : 0.25 * ledgeW) + // grip elbows: clip or authored
           0.3 * this.slidePose) *
         straight;
       const bendL =
@@ -5655,7 +5727,7 @@ export class Player {
           0.3 * jp +
           0.25 * this.skatePose +
           0.45 * crawlMove +
-          0.25 * ledgeW + // gripping: elbows keep a strained bend
+          (HS ? HS.elbL * 0.8 * HS.w : 0.25 * ledgeW) + // grip elbows: clip or authored
           0.3 * crouchW) *
         straight;
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
