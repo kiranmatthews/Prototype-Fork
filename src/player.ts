@@ -20,6 +20,7 @@ export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'dead' | 'gameover' 
 const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
 const LEDGE_DOWN = new THREE.Vector3(0, -1, 0);
+const HANG_BOX = new THREE.Box3();
 
 interface GroundHit {
   y: number;
@@ -748,6 +749,11 @@ export class Player {
     // while gripped — climb up, hop off, or the grip gives out. stepHang ticks
     // the essential shared timers itself.
     if (this.state === 'hang') {
+      if (input.restartPressed) {
+        this.respawn(level, true);
+        this.syncVisual(input, dt);
+        return;
+      }
       this.stepHang(dt, input, level);
       this.updateSparks(dt);
       this.updateFruit(dt);
@@ -4668,6 +4674,8 @@ export class Player {
       this.crawling ||
       this.bailDownT > 0 ||
       this.ledgeCoolT > 0 ||
+      this.comboRun || // a run lives on its combo — an auto-catch would bank it and fail the run
+      this.flipTimer > 0 || // a somersault is committed; catching mid-flip would snap the rotation
       this.rawInput.grindHeld // grind/wallride intent owns the wall
     )
       return false;
@@ -4717,6 +4725,11 @@ export class Player {
       lip - LEDGE_HANG_DEPTH,
       useX ? THREE.MathUtils.clamp(this.pos.z, w.min.z + 0.3, w.max.z - 0.3) : face + nz * skin,
     );
+    // SEAM GUARD: on multi-box structures, a face can sit flush against a
+    // neighboring solid — never ease the body into the neighbor's interior
+    for (const other of level.walls) {
+      if (other !== w && other.containsPoint(this.ledgeAnchor)) return false;
+    }
     this.ledgeFrom.copy(this.pos);
     this.ledgeEaseT = 0;
     this.ledgePhase = 'grip';
@@ -4739,6 +4752,8 @@ export class Player {
     this.spinAngle = 0;
     this.flipTimer = 0;
     this.teetering = false;
+    this.airJumpUsed = false; // a grip is solid contact: the double jump re-arms
+    this.wallrideLatched = false;
     if (this.manualing !== 0) this.endManual();
     this.bankCombo(); // a clean catch banks the pending string, like a landing
     sfx.play('railLand', 0.5, 0.9);
@@ -4761,6 +4776,13 @@ export class Player {
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
+    // the time-trial clock keeps running — hanging is not a pause button
+    if (this.ttActive) {
+      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
+      else this.ttTime += dt;
+    }
+    // and the hang is NOT a damage shelter — lethal overlaps still land
+    if (this.hangHazards(level)) return;
     this.speed = 0;
     this.vVel = 0;
     // face the wall (the catch may have come out of a sideways carve)
@@ -4890,6 +4912,40 @@ export class Player {
     this.ledgeCoolT = 0.5;
     this.prevPos.copy(this.pos);
     sfx.play('woosh', 0.4, 1.1);
+  }
+
+  // The hang must not be a damage shelter: the boulder, blasts, crushers,
+  // foes, and sentry orbs still connect while you dangle (pits/killY cannot
+  // reach a hang). Uber/invuln shrug it off; a mask breaks the GRIP instead
+  // of you; bare-handed, it's a death like any other. Returns true if the
+  // hang ended (dead or knocked off).
+  private hangHazards(level: Level): boolean {
+    const cx = this.pos.x;
+    const cy = this.pos.y + CONST.playerHalf.y;
+    const cz = this.pos.z;
+    HANG_BOX.min.set(cx - CONST.playerHalf.x, this.pos.y, cz - CONST.playerHalf.z);
+    HANG_BOX.max.set(cx + CONST.playerHalf.x, this.pos.y + CONST.playerHalf.y * 2, cz + CONST.playerHalf.z);
+    let hit = false;
+    for (const st of level.stones) if (st.box.intersectsBox(HANG_BOX)) { hit = true; break; }
+    if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) { hit = true; break; }
+    if (!hit) for (const e of level.enemies) if (e.alive && e.touchHurt && e.box.intersectsBox(HANG_BOX)) { hit = true; break; }
+    if (!hit) for (const pr of level.projectiles) if (pr.box.intersectsBox(HANG_BOX)) { hit = true; break; }
+    if (!hit) {
+      for (const ex of level.explosions) {
+        if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
+        const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
+        const dx = cx - ex.center.x, dy = cy - ex.center.y, dz = cz - ex.center.z;
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) < r + 0.5) { hit = true; break; }
+      }
+    }
+    if (!hit) return false;
+    if (this.uberTimer > 0 || this.invulnTimer > 0) return false;
+    if (this.spendMask()) {
+      this.ledgeLetGo(); // the hit knocks you off the wall, not out
+      return true;
+    }
+    this.die();
+    return true;
   }
 
   // The grip gives out: peel off the wall and drop straight down.
