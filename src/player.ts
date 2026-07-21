@@ -12,7 +12,14 @@ import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-export type MoveState = 'ride' | 'air' | 'grind' | 'dead' | 'gameover' | 'finished';
+export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'dead' | 'gameover' | 'finished';
+
+// Ledge grab geometry: how far below the TRUE lip the body hangs (hands at the
+// lip, head just under it), and how long the catch takes to settle (a caught
+// grip eases in — never a teleport).
+const LEDGE_HANG_DEPTH = 1.25;
+const LEDGE_EASE = 0.12;
+const LEDGE_DOWN = new THREE.Vector3(0, -1, 0);
 
 interface GroundHit {
   y: number;
@@ -250,6 +257,16 @@ export class Player {
   private wallTickT = 0; // THPS accrual while wallriding
   private readonly wallNormal = new THREE.Vector3(); // wall outward normal (horizontal, toward the skater)
   private wallBox: THREE.Box3 | null = null; // the wall we're riding (for glue + run-off)
+  // --- LEDGE GRAB: hang off a lip you hit head-on; stepHang owns the state ---
+  private ledgeT = 0; // grip time left before the hands give out
+  private ledgeCoolT = 0; // re-grab lockout after a climb / hop / slip
+  private ledgeEaseT = 0; // catch ease clock: pos glides from ledgeFrom to ledgeAnchor
+  private readonly ledgeNormal = new THREE.Vector3(); // outward from the grabbed face
+  private readonly ledgeAnchor = new THREE.Vector3(); // hang position (hands at the lip)
+  private readonly ledgeFrom = new THREE.Vector3(); // where the catch started (ease origin)
+  private ledgeLip = 0; // TRUE landing height (probed walk surface, not the collider top)
+  private ledgeBox: THREE.Box3 | null = null; // the grabbed solid (climb clamps into its footprint)
+  private ledgePose = 0; // visual weight of the hanging pose
   private wallSpeed = 0; // along-wall speed (heading held in axisF)
   private wallrideT = 0; // remaining ride time
   private wallCoolT = 0; // brief no-restick window after leaving a wall
@@ -614,6 +631,11 @@ export class Player {
     this.wallCoolT = 0;
     this.wallrideLatched = false;
     this.wallChargeT = 0;
+    this.ledgeT = 0;
+    this.ledgeCoolT = 0;
+    this.ledgeEaseT = 0;
+    this.ledgeBox = null;
+    this.ledgePose = 0;
     this.wallridePose = 0;
     this.deckPose = 0;
     this.wallChargePose = 0;
@@ -700,6 +722,7 @@ export class Player {
     }
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
+    this.ledgeCoolT = Math.max(0, this.ledgeCoolT - dt);
     // Side-scroll levels: the camera sits off to the +X side, so screen right
     // = down-course. Remap the stick — left/right drives speed, and up/down
     // is the depth sidestep (up = away from the camera), the exact same
@@ -707,6 +730,16 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
+    // LEDGE HANG owns the whole step: no movement, physics, or collision runs
+    // while gripped — climb up, hop off, or the grip gives out. stepHang ticks
+    // the essential shared timers itself.
+    if (this.state === 'hang') {
+      this.stepHang(dt, input);
+      this.updateSparks(dt);
+      this.updateFruit(dt);
+      this.syncVisual(input, dt);
+      return;
+    }
     // MANUAL FLICK: watch the raw stick's vertical axis for the two-beat flick.
     // Up-then-down pops a manual (nose up), down-then-up a nose manual. On the
     // ground it fires immediately; mid-air it ARMS a land-into-manual for a
@@ -4143,6 +4176,7 @@ export class Player {
       for (const w of level.walls) {
         if (this.playerBox.intersectsBox(w)) {
           if (this.tryWallride(w)) break; // stuck to the wall — ride it
+          if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
           this.pushOutOf(w);
         }
       }
@@ -4595,6 +4629,196 @@ export class Player {
     return true;
   }
 
+  // LEDGE GRAB — catch the lip of a solid you hit head-on (on foot or
+  // skating) and hang from it. Three gates make a candidate a real ledge:
+  //  1. the lip sits in the hands' band above the feet — not a curb you'd
+  //     just step over, not out of reach (grounded grabs also need the feet
+  //     to clearly leave the floor, or the "hang" reads as standing);
+  //  2. you're genuinely heading INTO the face — a graze keeps sliding, and
+  //     holding grind keeps the wall for wallrides/rail snaps;
+  //  3. a LANDING probe finds standable ground just behind the face at lip
+  //     height. This one check is what rejects berms, logs, arena gates, and
+  //     bare barrier walls on every level (their tops aren't walkable), and
+  //     it returns the TRUE deck top — platform side colliders tuck their
+  //     top 0.25 under the walk surface, so the box lip alone lies.
+  // The catch EASES to the hang anchor over a beat (never a teleport);
+  // stepHang owns the state from there.
+  private tryLedgeGrab(w: THREE.Box3, level: Level): boolean {
+    if (
+      (this.state !== 'ride' && this.state !== 'air') ||
+      this.wallriding ||
+      this.vertAir ||
+      this.slamActive ||
+      this.grabbing ||
+      this.sliding ||
+      this.crawling ||
+      this.bailDownT > 0 ||
+      this.ledgeCoolT > 0 ||
+      this.rawInput.grindHeld // grind/wallride intent owns the wall
+    )
+      return false;
+    if (this.state === 'air' && this.vVel > 1.5) return false; // rising fast: let the jump finish
+    const lipRough = w.max.y;
+    const rise = lipRough - this.pos.y;
+    const minRise = this.state === 'ride' ? LEDGE_HANG_DEPTH + 0.2 : 1.2;
+    if (rise < minRise || rise > TUNING.ledgeReach) return false;
+    // Which side face was hit? Platform colliders are full footprints (not
+    // thin like wallride walls), so pick by least penetration — the shallow
+    // separating axis is the one just crossed — normal pointing back at us.
+    const cx = (w.min.x + w.max.x) / 2;
+    const cz = (w.min.z + w.max.z) / 2;
+    const penX = CONST.playerHalf.x + (w.max.x - w.min.x) / 2 - Math.abs(this.pos.x - cx);
+    const penZ = CONST.playerHalf.z + (w.max.z - w.min.z) / 2 - Math.abs(this.pos.z - cz);
+    const useX = penX < penZ;
+    const nx = useX ? Math.sign(this.pos.x - cx) || 1 : 0;
+    const nz = useX ? 0 : Math.sign(this.pos.z - cz) || 1;
+    const into = -(this.axisF.x * nx + this.axisF.z * nz);
+    if (into < (this.state === 'ride' ? 0.65 : 0.2)) return false;
+    // landing probe: standable ground just inside the face, near the lip
+    const face = useX ? (nx > 0 ? w.max.x : w.min.x) : nz > 0 ? w.max.z : w.min.z;
+    const px = useX
+      ? face - nx * 0.45
+      : THREE.MathUtils.clamp(this.pos.x, w.min.x + 0.1, w.max.x - 0.1);
+    const pz = useX
+      ? THREE.MathUtils.clamp(this.pos.z, w.min.z + 0.1, w.max.z - 0.1)
+      : face - nz * 0.45;
+    const ray = new THREE.Raycaster(new THREE.Vector3(px, lipRough + 1.6, pz), LEDGE_DOWN, 0, 2.6);
+    const hits = ray.intersectObjects(level.groundMeshes, false);
+    if (hits.length === 0) return false;
+    const lip = hits[0].point.y;
+    if (lip < lipRough - 0.05 || lip > lipRough + 0.75) return false; // no walkable top at the lip = not a ledge
+    // it's a ledge — commit the catch (position settles in stepHang's ease)
+    this.ledgeNormal.set(nx, 0, nz);
+    this.ledgeLip = lip;
+    this.ledgeBox = w;
+    const skin = (useX ? CONST.playerHalf.x : CONST.playerHalf.z) + 0.06;
+    this.ledgeAnchor.set(
+      useX ? face + nx * skin : THREE.MathUtils.clamp(this.pos.x, w.min.x + 0.3, w.max.x - 0.3),
+      lip - LEDGE_HANG_DEPTH,
+      useX ? THREE.MathUtils.clamp(this.pos.z, w.min.z + 0.3, w.max.z - 0.3) : face + nz * skin,
+    );
+    this.ledgeFrom.copy(this.pos);
+    this.ledgeEaseT = 0;
+    this.axisF.set(-nx, 0, -nz); // face the wall / the landing above
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.state = 'hang';
+    this.ledgeT = TUNING.ledgeGrabTime;
+    this.speed = 0;
+    this.vVel = 0;
+    this.grounded = false;
+    this.charging = false;
+    this.chargeTimer = 0;
+    this.freeSkate = false; // hands need the wall — the board goes away
+    this.airFromSkate = false;
+    this.spinTimer = 0;
+    this.spinAngle = 0;
+    this.flipTimer = 0;
+    this.teetering = false;
+    if (this.manualing !== 0) this.endManual();
+    this.bankCombo(); // a clean catch banks the pending string, like a landing
+    sfx.play('railLand', 0.5, 0.9);
+    this.emitDust(2);
+    return true;
+  }
+
+  // Hanging off a ledge. The hang owns the whole step (no physics/collide):
+  // ease into the grip, then X (or up + X) mantles up onto the landing,
+  // X + down (away from the ledge) hops back off, and the grip fails when
+  // the timer runs out. Stick reading: moveY +1 is screen-UP — toward the
+  // landing above you (same convention as the movement + manual-flick code).
+  private stepHang(dt: number, input: Input): void {
+    this.runTime += dt;
+    // essential shared timers (the hang early-outs before the main step body)
+    this.spinCd = Math.max(0, this.spinCd - dt);
+    this.invulnTimer = Math.max(0, this.invulnTimer - dt);
+    this.uberTimer = Math.max(0, this.uberTimer - dt);
+    this.slamSquash = Math.max(0, this.slamSquash - dt);
+    this.slamFlatT = Math.max(0, this.slamFlatT - dt);
+    this.speed = 0;
+    this.vVel = 0;
+    // settle into the grip over a beat — a catch, not a teleport
+    this.ledgeEaseT = Math.min(LEDGE_EASE, this.ledgeEaseT + dt);
+    const k = this.ledgeEaseT / LEDGE_EASE;
+    this.pos.lerpVectors(this.ledgeFrom, this.ledgeAnchor, k * k * (3 - 2 * k));
+    // face the wall (the catch may have come out of a sideways carve)
+    const n = this.ledgeNormal;
+    const wallYaw = wrapAngle(Math.atan2(-n.x, -n.z) - Math.PI);
+    this.visualYaw += wrapAngle(wallYaw - this.visualYaw) * Math.min(1, 12 * dt);
+    this.ledgeT -= dt;
+    const up = this.rawInput.moveY > 0.35; // toward the landing above
+    const down = this.rawInput.moveY < -0.35; // away from the ledge
+    if (input.jumpPressed) {
+      if (down && !up) this.ledgeHopDown();
+      else this.ledgeClimbUp(); // plain X, or up + X
+    } else if (this.ledgeT <= 0) {
+      this.ledgeLetGo(); // the grip gave out
+    }
+    // bookkeeping the main step normally does (velocity measure + prevPos)
+    this.lastVelX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-4);
+    this.lastVelZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
+    this.lastPlanar = Math.hypot(this.lastVelX, this.lastVelZ);
+    this.prevPos.copy(this.pos);
+  }
+
+  // Mantle up over the lip onto the landing: pop up + step inward, clamped
+  // into the solid's footprint so even a thin wall's top catches you.
+  private ledgeClimbUp(): void {
+    const n = this.ledgeNormal;
+    const w = this.ledgeBox;
+    this.pos.copy(this.ledgeAnchor);
+    const alongX = n.x !== 0;
+    const face = w ? (alongX ? (n.x > 0 ? w.max.x : w.min.x) : n.z > 0 ? w.max.z : w.min.z) : alongX ? this.pos.x : this.pos.z;
+    const depth = w ? (alongX ? w.max.x - w.min.x : w.max.z - w.min.z) : 2;
+    const inward = Math.min(0.4, Math.max(0.1, depth * 0.5 - 0.05)); // never past the far side
+    if (alongX) this.pos.x = face - n.x * inward;
+    else this.pos.z = face - n.z * inward;
+    this.pos.y = this.ledgeLip + 0.06;
+    this.state = 'air';
+    this.grounded = false;
+    this.vVel = TUNING.ledgeClimbPop;
+    this.axisF.set(-n.x, 0, -n.z);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    // the vault carries you onto the landing — but a NARROW ledge (thin wall
+    // top) gets a precise hop, or the carry rolls you straight off the far side
+    this.speed = depth < 1.5 ? 0.3 : 1.6;
+    this.ledgeCoolT = 0.35;
+    this.prevPos.copy(this.pos); // fresh sweep origin ON the deck — no back-clip
+    sfx.play('ollie', 0.5, 1.1);
+    this.emitDust(3);
+  }
+
+  // X + away: kick off the wall and drop back down where you came from.
+  private ledgeHopDown(): void {
+    const n = this.ledgeNormal;
+    this.pos.copy(this.ledgeAnchor);
+    this.pos.x += n.x * 0.3;
+    this.pos.z += n.z * 0.3;
+    this.state = 'air';
+    this.grounded = false;
+    this.vVel = 3.2;
+    this.axisF.set(n.x, 0, n.z); // face away as you push off
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.speed = 3.5;
+    this.ledgeCoolT = 0.5;
+    this.prevPos.copy(this.pos);
+    sfx.play('woosh', 0.4, 1.1);
+  }
+
+  // The grip gives out: peel off the wall and drop straight down.
+  private ledgeLetGo(): void {
+    const n = this.ledgeNormal;
+    this.pos.copy(this.ledgeAnchor);
+    this.pos.x += n.x * 0.12;
+    this.pos.z += n.z * 0.12;
+    this.state = 'air';
+    this.grounded = false;
+    this.vVel = -0.5;
+    this.speed = 0;
+    this.ledgeCoolT = 0.6;
+    this.prevPos.copy(this.pos);
+    sfx.play('woosh3', 0.35, 0.7);
+  }
+
   // Ride the wall: gentle gravity, along-wall travel + bleed, glued to the face.
   // PUMP X (hold) to load a spring, RELEASE to leap off — the longer the pump,
   // the bigger the pop. Else drop when it times out / stalls / runs off / you
@@ -5009,13 +5233,24 @@ export class Player {
     else this.starTimer = Math.max(0, this.starTimer - dt);
     this.starPose += ((this.starTimer > 0 ? 1 : 0) - this.starPose) * Math.min(1, 14 * dt);
     const star = this.starPose;
+    // Ledge hang: the rig hangs off its hands — arms straight up gripping the
+    // lip, legs dangling with a slow sway, chest to the wall — and the whole
+    // grip TREMBLES harder as the timer runs out (the tell before the drop).
+    this.ledgePose += ((this.state === 'hang' ? 1 : 0) - this.ledgePose) * Math.min(1, 14 * dt);
+    const ledgeW = this.ledgePose;
+    const gripFade =
+      this.state === 'hang'
+        ? THREE.MathUtils.clamp(1 - this.ledgeT / Math.max(TUNING.ledgeGrabTime, 0.01), 0, 1)
+        : 0;
+    const gripTrem = ledgeW * gripFade * gripFade * Math.sin(this.runTime * 26) * 0.12;
+    const dangle = ledgeW * Math.sin(this.runTime * 1.7) * 0.08; // idle leg sway
     if (this.legL && this.legR) {
       // baseball slide: lead leg kicked out ahead, trailing leg half-bent
       // crawl: hips COUNTER the 0.75 body pitch (negative = knee swings
       // forward) so the thighs stay under the body — knees at the ground,
       // never feet flung up behind the pitched-over torso.
-      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW;
-      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW;
+      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.16 + dangle);
+      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.1 - dangle);
       // Crash-reference high knees: the swing-through leg lifts extra hard
       // (thigh toward horizontal), giving the run its cartoon prance.
       const liftL = Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
@@ -5066,8 +5301,8 @@ export class Player {
       const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk);
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
-      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose);
-      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose);
+      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + ledgeW * (0.5 - dangle);
+      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + ledgeW * (0.62 + dangle);
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
     }
@@ -5090,11 +5325,13 @@ export class Player {
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
       // Crash runs chest-out, almost leaning BACK — never hunched forward.
-      this.upperG.rotation.x = -0.07 * this.walkAmp;
+      // Hanging, the chest presses gently toward the wall instead.
+      this.upperG.rotation.x = -0.07 * this.walkAmp + 0.16 * ledgeW;
     }
     if (this.headM) {
       const look =
         -0.45 * crawlMove - // crawl: the NECK counters the body pitch (negative = chin up) — eyes forward
+        0.35 * ledgeW - // hanging: eyes up at the landing
         0.05 * crouchW -
         0.5 * this.dropPose -
         0.4 * this.slidePose -
@@ -5117,7 +5354,8 @@ export class Player {
     // and tucks low on all fours; the ponytail bobs against the same beat.
     if (this.tailChain.length > 0) {
       const lift =
-        0.45 * this.hangPose +
+        0.45 * this.hangPose -
+        0.3 * ledgeW + // dangling: the tail hangs, no counterweight to hold
         0.5 * this.grabPose +
         0.3 * this.grindArmPose +
         0.3 * sk + // rolling: swing clear of the deck
@@ -5212,7 +5450,8 @@ export class Player {
     const leanL = (this.armL?.userData.lean as number | undefined) ?? 0.25;
     if (this.armR) {
       this.armR.rotation.x =
-        this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.06 * breathe * idleW; // lead hand reaches down the wall; breath sways the idle hang
+        this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.06 * breathe * idleW + // lead hand reaches down the wall; breath sways the idle hang
+        (0.3 + gripTrem) * ledgeW; // hanging: hands reach forward onto the lip
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
@@ -5220,6 +5459,7 @@ export class Player {
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
+        2.5 * ledgeW + // hanging: arms straight up, gripping the lip
         1.05 * this.wallridePose + // wallride: arm flung out for balance
         0.35 * this.skatePose; // loose skate arms
     }
@@ -5230,7 +5470,8 @@ export class Player {
         sym +
         slideL -
         0.65 * this.wallridePose +
-        0.06 * breathe * idleW; // trailing arm swept back; breath sways the idle hang
+        0.06 * breathe * idleW + // trailing arm swept back; breath sways the idle hang
+        (0.3 - gripTrem) * ledgeW; // hanging: hands reach forward onto the lip
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
@@ -5238,6 +5479,7 @@ export class Player {
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
+        2.5 * ledgeW - // hanging: arms straight up, gripping the lip
         1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
     }
@@ -5255,6 +5497,7 @@ export class Player {
           0.25 * this.skatePose +
           0.45 * crawlMove +
           0.3 * crouchW +
+          0.25 * ledgeW + // gripping: elbows keep a strained bend
           0.3 * this.slidePose) *
         straight;
       const bendL =
@@ -5265,6 +5508,7 @@ export class Player {
           0.3 * jp +
           0.25 * this.skatePose +
           0.45 * crawlMove +
+          0.25 * ledgeW + // gripping: elbows keep a strained bend
           0.3 * crouchW) *
         straight;
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);

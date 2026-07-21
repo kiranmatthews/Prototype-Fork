@@ -82,6 +82,9 @@ export const TUNING = {
   wallPumpBonus: 17, // extra vertical launch at FULL pump — hold X on the wall, release to spring off big
   wallChargeMax: 1.5, // seconds of pumping X to reach a full-power wall launch
   wallKickOut: 1.5, // push away from the wall when you kick off
+  ledgeGrabTime: 2.2, // seconds you can hang off a ledge before your grip fails
+  ledgeClimbPop: 4.5, // upward pop when you mantle UP over a grabbed ledge
+  ledgeReach: 2.3, // highest a lip can sit above your feet and still be caught
   airControl: 0, // forward/back speed adjustment in the air
   manualMinSpeed: 6, // must be rolling at least this fast to pop (or hold) a manual
   manualDrift: 1, // manual balance: how fast the pitch needle runs away
@@ -212,6 +215,9 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallPumpBonus: { min: 0, max: 40, step: 1 },
   wallChargeMax: { min: 0.05, max: 1.5, step: 0.05 },
   wallKickOut: { min: 0, max: 25, step: 0.5 },
+  ledgeGrabTime: { min: 0.4, max: 6, step: 0.1 },
+  ledgeClimbPop: { min: 0, max: 12, step: 0.5 },
+  ledgeReach: { min: 1.4, max: 3.5, step: 0.1 },
   airControl: { min: 0, max: 40, step: 1 },
   manualMinSpeed: { min: 0, max: 15, step: 0.5 },
   manualDrift: { min: 0.2, max: 3, step: 0.05 },
@@ -382,6 +388,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Extra vertical launch at a FULL pump. On the wall, HOLD X to load a spring then RELEASE to leap off — a quick tap gives the base pop (wallKickUp), a full pump adds this whole bonus on top for a big jump.',
   wallChargeMax: 'How long you have to hold (pump) X on the wall to reach a full-power launch. Shorter = the pump maxes out faster.',
   wallKickOut: 'How hard the kick-off shoves you AWAY from the wall (out into the level) when you jump off a wallride.',
+  ledgeGrabTime: 'How long you can hang off a grabbed ledge before your grip gives out and you drop. Longer = more time to decide climb up vs hop down.',
+  ledgeClimbPop: 'The upward pop when you mantle UP over a ledge (X, or up + X). Higher = a springier vault onto the landing.',
+  ledgeReach: 'The highest a ledge lip can sit above your feet and still be caught. Higher = you snag taller edges; lower = only chest-high lips grab.',
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   manualMinSpeed:
@@ -495,6 +504,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
   { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideMaxAngle', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallPumpBonus', 'wallChargeMax', 'wallKickOut'] },
+  { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
     keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
