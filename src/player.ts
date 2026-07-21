@@ -267,6 +267,15 @@ export class Player {
   private ledgeLip = 0; // TRUE landing height (probed walk surface, not the collider top)
   private ledgeBox: THREE.Box3 | null = null; // the grabbed solid (climb clamps into its footprint)
   private ledgePose = 0; // visual weight of the hanging pose
+  // the CLAMBER: a committed, animated pull-up-and-over (not a snap) — the
+  // body eases up the face then over the lip along a rounded corner path
+  private ledgePhase: 'grip' | 'climb' = 'grip';
+  private ledgeClimbT = 0; // clamber clock
+  private ledgeClimbK = 0; // clamber progress 0..1 (drives the mantle pose)
+  private readonly ledgeClimbFrom = new THREE.Vector3();
+  private readonly ledgeClimbTo = new THREE.Vector3();
+  private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
+  private ledgeShimmy = 0; // live along-ledge slide input (-1..1) — drives the hand-over-hand
   private wallSpeed = 0; // along-wall speed (heading held in axisF)
   private wallrideT = 0; // remaining ride time
   private wallCoolT = 0; // brief no-restick window after leaving a wall
@@ -636,6 +645,11 @@ export class Player {
     this.ledgeEaseT = 0;
     this.ledgeBox = null;
     this.ledgePose = 0;
+    this.ledgePhase = 'grip';
+    this.ledgeClimbT = 0;
+    this.ledgeClimbK = 0;
+    this.ledgeAwayT = 0;
+    this.ledgeShimmy = 0;
     this.wallridePose = 0;
     this.deckPose = 0;
     this.wallChargePose = 0;
@@ -734,7 +748,7 @@ export class Player {
     // while gripped — climb up, hop off, or the grip gives out. stepHang ticks
     // the essential shared timers itself.
     if (this.state === 'hang') {
-      this.stepHang(dt, input);
+      this.stepHang(dt, input, level);
       this.updateSparks(dt);
       this.updateFruit(dt);
       this.syncVisual(input, dt);
@@ -4705,6 +4719,11 @@ export class Player {
     );
     this.ledgeFrom.copy(this.pos);
     this.ledgeEaseT = 0;
+    this.ledgePhase = 'grip';
+    this.ledgeClimbT = 0;
+    this.ledgeClimbK = 0;
+    this.ledgeAwayT = 0;
+    this.ledgeShimmy = 0;
     // NOTE: axisF/axisL are the CONTROL FRAME (stick -> world), owned by the
     // zone/lane system — the hang must never rotate them (that scrambles the
     // controls after you let go). Facing the wall is visualYaw, in stepHang.
@@ -4727,12 +4746,14 @@ export class Player {
     return true;
   }
 
-  // Hanging off a ledge. The hang owns the whole step (no physics/collide):
-  // ease into the grip, then X (or up + X) mantles up onto the landing,
-  // X + down (away from the ledge) hops back off, and the grip fails when
-  // the timer runs out. Stick reading: moveY +1 is screen-UP — toward the
-  // landing above you (same convention as the movement + manual-flick code).
-  private stepHang(dt: number, input: Input): void {
+  // Hanging off a ledge. The hang owns the whole step (no physics/collide).
+  // GRIP phase: X (or up + X) starts the CLAMBER; holding the stick AWAY
+  // from the ledge for a beat lets go (hop down — no button needed); the
+  // grip fails when the timer runs out. CLIMB phase: a committed, animated
+  // pull-up-and-over — the body eases up the face, then over the lip along
+  // a rounded corner, ending stood on the landing. Stick reading: moveY +1
+  // is screen-UP (same convention as the movement + manual-flick code).
+  private stepHang(dt: number, input: Input, level: Level): void {
     this.runTime += dt;
     // essential shared timers (the hang early-outs before the main step body)
     this.spinCd = Math.max(0, this.spinCd - dt);
@@ -4742,22 +4763,87 @@ export class Player {
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.speed = 0;
     this.vVel = 0;
-    // settle into the grip over a beat — a catch, not a teleport
-    this.ledgeEaseT = Math.min(LEDGE_EASE, this.ledgeEaseT + dt);
-    const k = this.ledgeEaseT / LEDGE_EASE;
-    this.pos.lerpVectors(this.ledgeFrom, this.ledgeAnchor, k * k * (3 - 2 * k));
     // face the wall (the catch may have come out of a sideways carve)
     const n = this.ledgeNormal;
     const wallYaw = wrapAngle(Math.atan2(-n.x, -n.z) - Math.PI);
     this.visualYaw += wrapAngle(wallYaw - this.visualYaw) * Math.min(1, 12 * dt);
-    this.ledgeT -= dt;
-    const up = this.rawInput.moveY > 0.35; // toward the landing above
-    const down = this.rawInput.moveY < -0.35; // away from the ledge
-    if (input.jumpPressed) {
-      if (down && !up) this.ledgeHopDown();
-      else this.ledgeClimbUp(); // plain X, or up + X
-    } else if (this.ledgeT <= 0) {
-      this.ledgeLetGo(); // the grip gave out
+    if (this.ledgePhase === 'climb') {
+      // THE CLAMBER — committed (no timeout, no inputs): rise up the face
+      // first, the over-the-lip travel overlaps the tail of the rise, so the
+      // path rounds the corner instead of snapping between two points.
+      this.ledgeClimbT += dt;
+      const T = Math.max(0.12, TUNING.ledgeClimbTime);
+      const t = Math.min(1, this.ledgeClimbT / T);
+      const s = (v: number): number => v * v * (3 - 2 * v); // smoothstep
+      const yK = s(Math.min(1, t / 0.65));
+      const hK = s(Math.max(0, (t - 0.35) / 0.65));
+      this.pos.y = THREE.MathUtils.lerp(this.ledgeClimbFrom.y, this.ledgeClimbTo.y, yK);
+      this.pos.x = THREE.MathUtils.lerp(this.ledgeClimbFrom.x, this.ledgeClimbTo.x, hK);
+      this.pos.z = THREE.MathUtils.lerp(this.ledgeClimbFrom.z, this.ledgeClimbTo.z, hK);
+      this.ledgeClimbK = t;
+      if (t >= 1) {
+        // topped out: stand it up (a whisper of lift keeps the beat alive)
+        this.state = 'air';
+        this.grounded = false;
+        this.vVel = TUNING.ledgeClimbPop;
+        this.speed = 0;
+        this.ledgeCoolT = 0.35;
+        this.prevPos.copy(this.pos); // fresh sweep origin ON the deck — no back-clip
+        sfx.play('footstep2', 0.6, 1.05);
+        this.emitDust(3);
+      }
+    } else {
+      // GRIP — settle into the hands over a beat (a catch, not a teleport)
+      this.ledgeEaseT = Math.min(LEDGE_EASE, this.ledgeEaseT + dt);
+      const k = this.ledgeEaseT / LEDGE_EASE;
+      // The stick, read in WALL space (via the course frame, which the hang
+      // never rotates): the along-ledge component SHIMMIES you down the lip,
+      // the off-wall component held for a beat lets go — so "away" is stick-
+      // down for a ledge ahead but stick-left for a wall on your right.
+      const sx = -this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
+      const sz = -this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
+      const tx = n.z; // ledge tangent (horizontal, perpendicular to the normal)
+      const tz = -n.x;
+      const shim = THREE.MathUtils.clamp(sx * tx + sz * tz, -1, 1);
+      const away = sx * n.x + sz * n.z;
+      this.ledgeShimmy += ((Math.abs(shim) > 0.25 ? shim : 0) - this.ledgeShimmy) * Math.min(1, 12 * dt);
+      if (Math.abs(shim) > 0.25 && this.ledgeEaseT >= LEDGE_EASE) {
+        // sidle along the lip — never past the corners, and only where the
+        // landing probe still finds a standable lip (re-probed as you move)
+        const w = this.ledgeBox;
+        const step = shim * 2.4 * dt;
+        let ax = this.ledgeAnchor.x + tx * step;
+        let az = this.ledgeAnchor.z + tz * step;
+        if (w) {
+          if (tx !== 0) ax = THREE.MathUtils.clamp(ax, w.min.x + 0.3, w.max.x - 0.3);
+          else az = THREE.MathUtils.clamp(az, w.min.z + 0.3, w.max.z - 0.3);
+          const ppx = n.x !== 0 ? (n.x > 0 ? w.max.x : w.min.x) - n.x * 0.45 : ax;
+          const ppz = n.x !== 0 ? az : (n.z > 0 ? w.max.z : w.min.z) - n.z * 0.45;
+          const ray = new THREE.Raycaster(new THREE.Vector3(ppx, w.max.y + 1.6, ppz), LEDGE_DOWN, 0, 2.6);
+          const hits = ray.intersectObjects(level.groundMeshes, false);
+          const lip = hits.length > 0 ? hits[0].point.y : NaN;
+          if (lip >= w.max.y - 0.05 && lip <= w.max.y + 0.75) {
+            this.ledgeAnchor.x = ax;
+            this.ledgeAnchor.z = az;
+            this.ledgeLip = lip;
+            this.ledgeAnchor.y = lip - LEDGE_HANG_DEPTH; // hands track the surface
+          }
+        }
+      }
+      this.pos.lerpVectors(this.ledgeFrom, this.ledgeAnchor, k * k * (3 - 2 * k));
+      // actively shimmying holds the grip (you're re-setting your hands) —
+      // only an idle hang runs the timer out
+      if (Math.abs(shim) <= 0.25) this.ledgeT -= dt;
+      const pullingAway = away > 0.55;
+      this.ledgeAwayT = pullingAway ? this.ledgeAwayT + dt : 0;
+      if (input.jumpPressed) {
+        if (pullingAway) this.ledgeHopDown();
+        else this.startLedgeClimb(); // plain X, or toward/up + X
+      } else if (this.ledgeAwayT > 0.1) {
+        this.ledgeHopDown(); // held away: let go (the debounce eats stick noise at the catch)
+      } else if (this.ledgeT <= 0) {
+        this.ledgeLetGo(); // the grip gave out
+      }
     }
     // bookkeeping the main step normally does (velocity measure + prevPos)
     this.lastVelX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-4);
@@ -4766,30 +4852,26 @@ export class Player {
     this.prevPos.copy(this.pos);
   }
 
-  // Mantle up over the lip onto the landing: pop up + step inward, clamped
-  // into the solid's footprint so even a thin wall's top catches you.
-  private ledgeClimbUp(): void {
+  // Commit the clamber: aim the path at the landing spot — inward past the
+  // lip, clamped into the solid's footprint so even a thin wall's top works.
+  private startLedgeClimb(): void {
     const n = this.ledgeNormal;
     const w = this.ledgeBox;
-    this.pos.copy(this.ledgeAnchor);
     const alongX = n.x !== 0;
     const face = w ? (alongX ? (n.x > 0 ? w.max.x : w.min.x) : n.z > 0 ? w.max.z : w.min.z) : alongX ? this.pos.x : this.pos.z;
     const depth = w ? (alongX ? w.max.x - w.min.x : w.max.z - w.min.z) : 2;
     const inward = Math.min(0.4, Math.max(0.1, depth * 0.5 - 0.05)); // never past the far side
-    if (alongX) this.pos.x = face - n.x * inward;
-    else this.pos.z = face - n.z * inward;
-    this.pos.y = this.ledgeLip + 0.06;
-    this.state = 'air';
-    this.grounded = false;
-    this.vVel = TUNING.ledgeClimbPop;
-    // Jak-style mantle: the placement above already lands you ON the deck —
-    // no speed carry (speed runs along the control frame, which may point
-    // anywhere relative to this ledge; a carry would slide you off sideways).
-    this.speed = 0;
-    this.ledgeCoolT = 0.35;
-    this.prevPos.copy(this.pos); // fresh sweep origin ON the deck — no back-clip
-    sfx.play('ollie', 0.5, 1.1);
-    this.emitDust(3);
+    this.ledgeClimbFrom.copy(this.pos);
+    this.ledgeClimbTo.set(
+      alongX ? face - n.x * inward : this.pos.x,
+      this.ledgeLip + 0.06,
+      alongX ? this.pos.z : face - n.z * inward,
+    );
+    this.ledgePhase = 'climb';
+    this.ledgeClimbT = 0;
+    this.ledgeClimbK = 0;
+    sfx.play('ollie', 0.4, 1.15);
+    this.emitDust(2);
   }
 
   // X + away: kick off the wall and drop back down where you came from.
@@ -5248,15 +5330,18 @@ export class Player {
       this.state === 'hang'
         ? THREE.MathUtils.clamp(1 - this.ledgeT / Math.max(TUNING.ledgeGrabTime, 0.01), 0, 1)
         : 0;
-    const gripTrem = ledgeW * gripFade * gripFade * Math.sin(this.runTime * 26) * 0.12;
+    const ck = this.ledgeClimbK; // clamber progress (0 while gripping)
+    const mantle = Math.sin(Math.min(1, ck) * Math.PI) * ledgeW; // heave peaks mid-clamber
+    const gripTrem = ledgeW * (1 - ck) * gripFade * gripFade * Math.sin(this.runTime * 26) * 0.12;
+    const handOver = Math.sin(this.runTime * 9) * 0.3 * Math.abs(this.ledgeShimmy) * ledgeW * (1 - ck); // shimmy: hand-over-hand
     const dangle = ledgeW * Math.sin(this.runTime * 1.7) * 0.08; // idle leg sway
     if (this.legL && this.legR) {
       // baseball slide: lead leg kicked out ahead, trailing leg half-bent
       // crawl: hips COUNTER the 0.75 body pitch (negative = knee swings
       // forward) so the thighs stay under the body — knees at the ground,
       // never feet flung up behind the pitched-over torso.
-      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.16 + dangle);
-      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.1 - dangle);
+      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.16 + dangle) - 1.15 * mantle; // clamber: lead knee drives up over the lip
+      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + ledgeW * (0.1 - dangle) - 0.5 * mantle;
       // Crash-reference high knees: the swing-through leg lifts extra hard
       // (thigh toward horizontal), giving the run its cartoon prance.
       const liftL = Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
@@ -5307,8 +5392,8 @@ export class Player {
       const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk);
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
-      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + ledgeW * (0.5 - dangle);
-      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + ledgeW * (0.62 + dangle);
+      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + ledgeW * (0.5 - dangle) + 0.8 * mantle;
+      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + ledgeW * (0.62 + dangle) + 0.95 * mantle; // clamber: shins fold hard through the heave
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
     }
@@ -5332,12 +5417,12 @@ export class Player {
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
       // Crash runs chest-out, almost leaning BACK — never hunched forward.
       // Hanging, the chest presses gently toward the wall instead.
-      this.upperG.rotation.x = -0.07 * this.walkAmp + 0.16 * ledgeW;
+      this.upperG.rotation.x = -0.07 * this.walkAmp + 0.16 * ledgeW + 0.5 * mantle; // clamber: chest leans over the lip
     }
     if (this.headM) {
       const look =
         -0.45 * crawlMove - // crawl: the NECK counters the body pitch (negative = chin up) — eyes forward
-        0.35 * ledgeW - // hanging: eyes up at the landing
+        0.35 * ledgeW * (1 - ck) - // hanging: eyes up at the landing (level out as she tops the clamber)
         0.05 * crouchW -
         0.5 * this.dropPose -
         0.4 * this.slidePose -
@@ -5457,7 +5542,7 @@ export class Player {
     if (this.armR) {
       this.armR.rotation.x =
         this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.06 * breathe * idleW + // lead hand reaches down the wall; breath sways the idle hang
-        (0.3 + gripTrem) * ledgeW; // hanging: hands reach forward onto the lip
+        (0.3 + gripTrem + 0.55 * ck) * ledgeW + handOver; // hands on the lip; clamber presses down; shimmy alternates
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
@@ -5465,7 +5550,7 @@ export class Player {
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
-        2.5 * ledgeW + // hanging: arms straight up, gripping the lip
+        (2.5 - 2.0 * ck) * ledgeW + // arms overhead gripping; the clamber brings them down as she pushes over
         1.05 * this.wallridePose + // wallride: arm flung out for balance
         0.35 * this.skatePose; // loose skate arms
     }
@@ -5477,7 +5562,7 @@ export class Player {
         slideL -
         0.65 * this.wallridePose +
         0.06 * breathe * idleW + // trailing arm swept back; breath sways the idle hang
-        (0.3 - gripTrem) * ledgeW; // hanging: hands reach forward onto the lip
+        (0.3 - gripTrem + 0.55 * ck) * ledgeW - handOver; // hands on the lip; clamber presses down; shimmy alternates
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
@@ -5485,7 +5570,7 @@ export class Player {
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
-        2.5 * ledgeW - // hanging: arms straight up, gripping the lip
+        (2.5 - 2.0 * ck) * ledgeW - // arms overhead gripping; the clamber brings them down as she pushes over
         1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
     }
