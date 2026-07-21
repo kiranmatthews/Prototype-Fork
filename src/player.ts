@@ -4672,7 +4672,13 @@ export class Player {
     const useX = penX < penZ;
     const nx = useX ? Math.sign(this.pos.x - cx) || 1 : 0;
     const nz = useX ? 0 : Math.sign(this.pos.z - cz) || 1;
-    const into = -(this.axisF.x * nx + this.axisF.z * nz);
+    // "heading into the face" reads the MEASURED travel direction (on foot the
+    // course frame axisF is not the walk direction — a sideways walk would
+    // never register); axisF is only the fallback when barely moving.
+    const pl = Math.hypot(this.lastVelX, this.lastVelZ);
+    const hx = pl > 1.5 ? this.lastVelX / pl : this.axisF.x;
+    const hz = pl > 1.5 ? this.lastVelZ / pl : this.axisF.z;
+    const into = -(hx * nx + hz * nz);
     if (into < (this.state === 'ride' ? 0.65 : 0.2)) return false;
     // landing probe: standable ground just inside the face, near the lip
     const face = useX ? (nx > 0 ? w.max.x : w.min.x) : nz > 0 ? w.max.z : w.min.z;
@@ -4699,8 +4705,9 @@ export class Player {
     );
     this.ledgeFrom.copy(this.pos);
     this.ledgeEaseT = 0;
-    this.axisF.set(-nx, 0, -nz); // face the wall / the landing above
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    // NOTE: axisF/axisL are the CONTROL FRAME (stick -> world), owned by the
+    // zone/lane system — the hang must never rotate them (that scrambles the
+    // controls after you let go). Facing the wall is visualYaw, in stepHang.
     this.state = 'hang';
     this.ledgeT = TUNING.ledgeGrabTime;
     this.speed = 0;
@@ -4708,7 +4715,6 @@ export class Player {
     this.grounded = false;
     this.charging = false;
     this.chargeTimer = 0;
-    this.freeSkate = false; // hands need the wall — the board goes away
     this.airFromSkate = false;
     this.spinTimer = 0;
     this.spinAngle = 0;
@@ -4776,11 +4782,10 @@ export class Player {
     this.state = 'air';
     this.grounded = false;
     this.vVel = TUNING.ledgeClimbPop;
-    this.axisF.set(-n.x, 0, -n.z);
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    // the vault carries you onto the landing — but a NARROW ledge (thin wall
-    // top) gets a precise hop, or the carry rolls you straight off the far side
-    this.speed = depth < 1.5 ? 0.3 : 1.6;
+    // Jak-style mantle: the placement above already lands you ON the deck —
+    // no speed carry (speed runs along the control frame, which may point
+    // anywhere relative to this ledge; a carry would slide you off sideways).
+    this.speed = 0;
     this.ledgeCoolT = 0.35;
     this.prevPos.copy(this.pos); // fresh sweep origin ON the deck — no back-clip
     sfx.play('ollie', 0.5, 1.1);
@@ -4788,17 +4793,18 @@ export class Player {
   }
 
   // X + away: kick off the wall and drop back down where you came from.
+  // The push-off is a position offset + pop only — the control frame is
+  // untouched, so the stick keeps meaning what it meant before the grab.
   private ledgeHopDown(): void {
     const n = this.ledgeNormal;
     this.pos.copy(this.ledgeAnchor);
-    this.pos.x += n.x * 0.3;
-    this.pos.z += n.z * 0.3;
+    this.pos.x += n.x * 0.45;
+    this.pos.z += n.z * 0.45;
     this.state = 'air';
     this.grounded = false;
     this.vVel = 3.2;
-    this.axisF.set(n.x, 0, n.z); // face away as you push off
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.speed = 3.5;
+    this.speed = 0;
+    this.visualYaw = wrapAngle(Math.atan2(n.x, n.z) - Math.PI); // face away (visual only)
     this.ledgeCoolT = 0.5;
     this.prevPos.copy(this.pos);
     sfx.play('woosh', 0.4, 1.1);
@@ -5555,6 +5561,7 @@ export class Player {
       this.boardG.visible =
         this.slideTimer <= 0 &&
         this.starPose < 0.4 && // stowed through the star-jump beat
+        this.ledgePose < 0.3 && // stowed while hanging off a ledge (hands are busy)
         (this.state === 'grind' ||
           (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5) ||
           this.freeSkate ||
