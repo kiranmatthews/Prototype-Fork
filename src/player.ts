@@ -4839,8 +4839,15 @@ export class Player {
       // never rotates): the along-ledge component SHIMMIES you down the lip,
       // the off-wall component held for a beat lets go — so "away" is stick-
       // down for a ledge ahead but stick-left for a wall on your right.
-      const sx = -this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
-      const sz = -this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
+      // axisL's meaning is MODE-DEPENDENT: the course/on-foot frame stores the
+      // screen-right stick direction (setTravelDir — see the N zone, where it
+      // can't be derived from axisF), but the free-skate carve maintains
+      // heading-LEFT (its entry seed + negate keep that mirror). A fixed sign
+      // here inverted every on-foot shimmy on the course while the skate tests
+      // read fine — so pick stick-right by the frame's current owner.
+      const rSgn = this.freeSkate ? -1 : 1;
+      const sx = rSgn * this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
+      const sz = rSgn * this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
       const tx = n.z; // ledge tangent (horizontal, perpendicular to the normal)
       const tz = -n.x;
       const shim = THREE.MathUtils.clamp(sx * tx + sz * tz, -1, 1);
