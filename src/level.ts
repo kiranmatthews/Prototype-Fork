@@ -79,6 +79,13 @@ export interface Enemy {
 
 // A slow orb lobbed by a sentry. Straight-line flight; hitting the player
 // hurts (mask/die), same as any touch hazard.
+interface SlideRibbon {
+  curve: THREE.CatmullRomCurve3;
+  len: number;
+  width: number;
+  frame: (t: number, off: number, h: number) => THREE.Vector3;
+}
+
 interface Projectile {
   mesh: THREE.Mesh;
   vel: THREE.Vector3;
@@ -7444,16 +7451,37 @@ export class Level {
   // The deck is real curved geometry (a spline-swept ribbon in groundMeshes),
   // so the ordinary surface-tangent riding does all the work: dips feed
   // speed, crests pop airs, and the raised gutter lips carve like a slide.
+  // frame(t, off, h): a world point `off` across the banked deck and `h`
+  // above it — the exact surface the ribbon mesh was extruded from.
   private slideRibbon(
     pts: THREE.Vector3[],
     width = 12,
     color = 0x3ec8d8,
     bankFn?: (t: number, auto: number) => number, // override the lean (vert walls, corkscrews)
-  ): { curve: THREE.CatmullRomCurve3; len: number } {
+  ): SlideRibbon {
     const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal', 0.5);
     const len = curve.getLength();
     const steps = Math.max(24, Math.round(len / 1.6));
     const UP = new THREE.Vector3(0, 1, 0);
+    // The banked deck frame at parameter t: a point `off` across the deck and
+    // `h` above it, leaned by the same bank the mesh gets — the ONE source of
+    // truth, so edge rails and crates sit exactly on the surface they follow.
+    const frame = (t: number, off: number, h: number): THREE.Vector3 => {
+      const p = curve.getPointAt(t);
+      const tanA = curve.getTangentAt(t);
+      // signed turn rate ahead of this ring -> bank INTO the curve
+      const tanB = curve.getTangentAt(Math.min(1, t + 0.02));
+      const turn = Math.atan2(tanA.x * tanB.z - tanA.z * tanB.x, tanA.x * tanB.x + tanA.z * tanB.z);
+      const auto = THREE.MathUtils.clamp(turn * 7, -0.28, 0.28); // a lean, not a wall
+      const bank = bankFn ? bankFn(t, auto) : auto;
+      const right = new THREE.Vector3().crossVectors(tanA, UP);
+      if (right.lengthSq() < 1e-5) right.set(1, 0, 0);
+      right.normalize();
+      const upv = new THREE.Vector3().crossVectors(right, tanA).normalize();
+      return p
+        .addScaledVector(right.applyAxisAngle(tanA, bank), off)
+        .addScaledVector(upv.applyAxisAngle(tanA, bank), h);
+    };
     // gutter profile across the deck: raised lips keep the flow in the slide
     const prof: Array<[number, number]> = [
       [-width / 2, 1.25],
@@ -7464,25 +7492,10 @@ export class Level {
     const pos: number[] = [];
     const uv: number[] = [];
     const idx: number[] = [];
-    const tanA = new THREE.Vector3();
-    const tanB = new THREE.Vector3();
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
-      const p = curve.getPointAt(t);
-      curve.getTangentAt(t, tanA);
-      // signed turn rate ahead of this ring -> bank INTO the curve
-      curve.getTangentAt(Math.min(1, t + 0.02), tanB);
-      const turn = Math.atan2(tanA.x * tanB.z - tanA.z * tanB.x, tanA.x * tanB.x + tanA.z * tanB.z);
-      const auto = THREE.MathUtils.clamp(turn * 7, -0.28, 0.28); // a lean, not a wall
-      const bank = bankFn ? bankFn(t, auto) : auto;
-      const right = new THREE.Vector3().crossVectors(tanA, UP);
-      if (right.lengthSq() < 1e-5) right.set(1, 0, 0);
-      right.normalize();
-      const upv = new THREE.Vector3().crossVectors(right, tanA).normalize();
-      const rr = right.clone().applyAxisAngle(tanA, bank);
-      const uu = upv.clone().applyAxisAngle(tanA, bank);
       for (const [off, h] of prof) {
-        const v = p.clone().addScaledVector(rr, off).addScaledVector(uu, h);
+        const v = frame(t, off, h);
         pos.push(v.x, v.y, v.z);
         uv.push((off / width + 0.5) * 1.5, (t * len) / 9);
       }
@@ -7506,7 +7519,7 @@ export class Level {
     mesh.name = 'slipstream';
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-    return { curve, len };
+    return { curve, len, width, frame };
   }
 
   // fruit strung along a stretch of ribbon, floating just over the deck line
@@ -7608,13 +7621,6 @@ export class Level {
     this.ribbonFruit(r4.curve, 0.15, 0.5, 9);
     this.crate(-80, 43.6, -480);
     this.crate(-63, 38.9, -518, 'nitro'); // off the racing line — a hazard for sloppy lines, not an ambush
-    const r4rail = new Rail([
-      V(-56, 39.6, -510),
-      V(-38, 37, -540),
-      V(-22, 33.6, -572),
-    ]);
-    this.rails.push(r4rail);
-    this.root.add(r4rail.object);
     this.checkpoint(29.8, -612, -15);
 
     // R5 — THE RUN-UP: a straight, steep bomb into an up-kicked launch lip.
@@ -7635,6 +7641,54 @@ export class Level {
       V(6, 0.4, -790),
       V(2, 0.2, -816),
     ], 14);
+
+    // THE WEAVE: alternating edge rails all the way down the course — grind
+    // one, pop off, manual across the deck, catch the next on the other side.
+    // A crate trio seeds every crossing (the combo dress turns a third of
+    // them into balance windows), so the whole run reads as one combo line.
+    const edgeRail = (r: SlideRibbon, t0: number, t1: number, side: -1 | 1): void => {
+      const off = side * (r.width / 2 - 2.5); // just inside the gutter lip
+      const n = Math.max(2, Math.round(((t1 - t0) * r.len) / 6));
+      const rpts: THREE.Vector3[] = [];
+      for (let i = 0; i <= n; i++) rpts.push(r.frame(THREE.MathUtils.lerp(t0, t1, i / n), off, 0.72));
+      const rail = new Rail(rpts);
+      this.rails.push(rail);
+      this.root.add(rail.object);
+    };
+    const crossCrates = (r: SlideRibbon, t: number): void => {
+      // flank the line, never block it: cruise speed (12) is BELOW smash
+      // speed (12.5), so a crate on the centerline is a wall for anyone slow.
+      // Banked spots get no crates at all — a leaned deck drifts slow riders
+      // onto the flanks, and a crate there shoves them over the gutter.
+      const lo = r.frame(t, -2.1, 0);
+      const hi = r.frame(t, 2.1, 0);
+      if (Math.abs(hi.y - lo.y) > 1.0) return; // ~14°+ of lean: keep it clear
+      for (const p of [lo, hi]) this.crate(p.x, p.y + 0.6, p.z);
+    };
+    const weave = (r: SlideRibbon, first: -1 | 1, railLen: number, gap: number, t0: number, t1: number): -1 | 1 => {
+      let side = first;
+      let a = t0 * r.len; // arc-length cursor down the ribbon
+      const end = t1 * r.len;
+      while (a + railLen * 0.6 < end) {
+        const b = Math.min(a + railLen, end);
+        edgeRail(r, a / r.len, b / r.len, side);
+        if (b + gap < end) {
+          // two beats of crates through the crossing — smash line for the manual
+          crossCrates(r, (b + gap * 0.33) / r.len);
+          crossCrates(r, (b + gap * 0.67) / r.len);
+        }
+        a = b + gap;
+        side = side === 1 ? -1 : 1;
+      }
+      return side; // hand the alternation to the next ribbon
+    };
+    let wside: -1 | 1 = 1;
+    wside = weave(r1, wside, 42, 20, 0.05, 0.96);
+    wside = weave(r2, wside, 34, 18, 0.08, 0.92); // corkscrew: shorter bites
+    wside = weave(r3, wside, 30, 16, 0.06, 0.94); // one of these rides the vert wall
+    wside = weave(r4, wside, 42, 20, 0.04, 0.96);
+    wside = weave(r5, wside, 34, 18, 0.05, 0.8); // stops short of the lip — the gap stays honest
+    weave(r6, wside, 30, 14, 0.12, 0.85); // last cash-out line into the finish
 
     // finish flat: run it out through the gate
     this.slab('finish run', -810, -874, 0.2, 18, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
