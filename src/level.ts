@@ -7448,6 +7448,7 @@ export class Level {
     pts: THREE.Vector3[],
     width = 12,
     color = 0x3ec8d8,
+    bankFn?: (t: number, auto: number) => number, // override the lean (vert walls, corkscrews)
   ): { curve: THREE.CatmullRomCurve3; len: number } {
     const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal', 0.5);
     const len = curve.getLength();
@@ -7472,7 +7473,8 @@ export class Level {
       // signed turn rate ahead of this ring -> bank INTO the curve
       curve.getTangentAt(Math.min(1, t + 0.02), tanB);
       const turn = Math.atan2(tanA.x * tanB.z - tanA.z * tanB.x, tanA.x * tanB.x + tanA.z * tanB.z);
-      const bank = THREE.MathUtils.clamp(turn * 7, -0.28, 0.28); // a lean, not a wall
+      const auto = THREE.MathUtils.clamp(turn * 7, -0.28, 0.28); // a lean, not a wall
+      const bank = bankFn ? bankFn(t, auto) : auto;
       const right = new THREE.Vector3().crossVectors(tanA, UP);
       if (right.lengthSq() < 1e-5) right.set(1, 0, 0);
       right.normalize();
@@ -7525,7 +7527,7 @@ export class Level {
       stars: false,
       fog: 0xa8dfeb,
       fogNear: 60,
-      fogFar: 240,
+      fogFar: 260,
       hemiSky: 0xbfe8f2,
       hemiGround: 0x2a6a80,
       hemiI: 1.05,
@@ -7536,96 +7538,127 @@ export class Level {
     };
     const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 
-    // start plateau: a wide launch deck high in the sky
-    this.slab('launch deck', 26, -6, 100, 16, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
-    this.spawnPos.set(0, 100.1, 18);
+    // start plateau: a wide launch deck way up in the sky
+    this.slab('launch deck', 26, -6, 150, 16, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
+    this.spawnPos.set(0, 150.1, 18);
     this.currentSpawn.copy(this.spawnPos);
 
-    // RIBBON 1 — the big opening drop swinging right, then a long banked S
-    // back left with a crest bump for the first air (all monotonic -z, so the
-    // stock course camera reads it like a road)
+    // R1 — the opening mega-drop: a huge sweeping S out to x=55 and back
     const r1 = this.slideRibbon([
-      V(0, 100, -4),
-      V(0, 97, -26),
-      V(16, 88, -58),
-      V(38, 80, -96),
-      V(40, 76, -128),
-      V(22, 68, -164),
-      V(-8, 62, -198),
-      V(-30, 60, -226),
-      V(-34, 62, -252), // rising crest...
-      V(-30, 57, -276), // ...kicks the first gap air
-    ]);
-    this.ribbonFruit(r1.curve, 0.1, 0.34, 7);
-    this.ribbonFruit(r1.curve, 0.55, 0.8, 7);
-    this.crate(38, 76.6, -110);
-    this.crate(40, 76.3, -122, 'mystery');
-    this.crate(22, 68.5, -164, 'tnt');
+      V(0, 150, -4),
+      V(0, 146, -30),
+      V(24, 138, -64),
+      V(52, 128, -104),
+      V(55, 122, -140),
+      V(30, 114, -172),
+      V(-10, 108, -206),
+      V(-32, 104, -232),
+    ], 13);
+    this.ribbonFruit(r1.curve, 0.12, 0.4, 8);
+    this.ribbonFruit(r1.curve, 0.6, 0.86, 7);
+    this.crate(52, 128.6, -110);
+    this.crate(55, 122.4, -136, 'mystery');
+    this.crate(30, 114.5, -172, 'tnt');
 
-    // RIBBON 2 — catch the drop lower, sweep back right through a valley dip,
-    // then a tall crest launches the second gap
-    const r2s = this.slideRibbon([
-      V(-28, 50, -286), // catch deck just past the gap (short hop, honest drop)
-      V(-22, 48, -300),
-      V(-8, 43, -326),
-      V(14, 38, -360), // valley floor: max speed
-      V(30, 40, -396),
-      V(32, 45, -424), // long rising crest...
-      V(28, 41, -444),
-    ]);
-    this.ribbonFruit(r2s.curve, 0.15, 0.45, 8);
-    this.checkpoint(43.6, -330, -6);
-    this.crate(14, 38.6, -356);
-    this.crate(18, 38.5, -364, 'nitro');
-    const midRail = new Rail([
-      V(14, 39.6, -352),
-      V(24, 40.9, -388),
-      V(30, 43.4, -414),
-    ]);
-    this.rails.push(midRail);
-    this.root.add(midRail.object);
+    // R2 — THE CORKSCREW: a full 270° clockwise spiral, dropping the whole
+    // way round, then unwinding east into the course line again
+    const CX = -30;
+    const CZ = -300;
+    const CR = 26;
+    const spiralPts: THREE.Vector3[] = [V(-25, 105, -224)]; // starts ON R1's tail (true overlap, no seam crack)
+    for (let k = 0; k <= 6; k++) {
+      const th = (-k * 45 * Math.PI) / 180; // 0 .. -270°, clockwise from the east point
+      spiralPts.push(V(CX + CR * Math.cos(th), 98 - k * 3.2, CZ + CR * Math.sin(th)));
+    }
+    spiralPts.push(V(-2, 76, -278), V(16, 72, -306));
+    const r2 = this.slideRibbon(spiralPts, 12, 0x3ec8d8, (_t, auto) =>
+      THREE.MathUtils.clamp(auto * 2.4, -0.55, 0.55),
+    );
+    this.ribbonFruit(r2.curve, 0.2, 0.75, 10);
+    this.crystal(CX, 90.5, CZ - CR); // parked mid-spiral: hold the high line round to it
+    this.checkpoint(72.9, -310, 20);
 
-    // RIBBON 3 — the finale: a wide swooping left, a tight banked right, and
-    // a long straight bomb down to the finish flat
+    // R3 — THE VERT WALL: a hard right turn ridden up a near-vertical bank,
+    // velodrome style — the deck rolls to ~60° through the apex
     const r3 = this.slideRibbon([
-      V(26, 34, -454), // catch just past the second gap
-      V(20, 26, -470),
-      V(2, 22, -498),
-      V(-22, 18, -532),
-      V(-30, 14, -566),
-      V(-16, 10, -600),
-      V(4, 6, -632),
-      V(10, 2.6, -664),
-      V(8, 1.2, -692),
+      V(12, 73, -299), // starts ON the spiral's unwind (true overlap)
+      V(12, 67, -348),
+      V(-4, 64, -368),
+      V(-28, 62, -378),
+      V(-52, 61, -380),
+    ], 13, 0x46b8d0, (t, auto) => {
+      const peak = Math.exp(-(((t - 0.55) / 0.22) ** 2));
+      return THREE.MathUtils.clamp(auto + 1.05 * peak, -1.1, 1.1);
+    });
+    this.ribbonFruit(r3.curve, 0.3, 0.8, 6);
+
+    // R4 — unwind left and bomb a long wide S back down-course, with a crest
+    // air and a grind line down the middle
+    const r4 = this.slideRibbon([
+      V(-44, 62, -379), // starts ON the vert wall's exit (true overlap)
+      V(-94, 55, -394),
+      V(-100, 51, -420),
+      V(-94, 47, -450),
+      V(-80, 43, -480),
+      V(-56, 38, -514),
+      V(-30, 35, -548), // crest bump
+      V(-14, 31, -584),
+      V(-10, 29, -612),
+    ], 14);
+    this.ribbonFruit(r4.curve, 0.15, 0.5, 9);
+    this.crate(-80, 43.6, -480);
+    this.crate(-63, 38.9, -518, 'nitro'); // off the racing line — a hazard for sloppy lines, not an ambush
+    const r4rail = new Rail([
+      V(-56, 39.6, -510),
+      V(-38, 37, -540),
+      V(-22, 33.6, -572),
     ]);
-    this.ribbonFruit(r3.curve, 0.1, 0.5, 9);
-    this.crystal(-30, 15.6, -566); // parked on the tight bank: carve high to take it
-    this.crate(-16, 10.6, -600);
-    this.crate(-12, 10.4, -606, 'mask');
+    this.rails.push(r4rail);
+    this.root.add(r4rail.object);
+    this.checkpoint(29.8, -612, -15);
+
+    // R5 — THE RUN-UP: a straight, steep bomb into an up-kicked launch lip.
+    // The gap past it is sized for full speed AND a jump — one or the other
+    // alone drops you in the water.
+    const r5 = this.slideRibbon([
+      V(-11, 30, -604), // starts ON R4's tail — the ONLY real gap is past the lip
+      V(-6, 21, -662),
+      V(0, 11, -696),
+      V(4, 5.5, -722),
+      V(6, 7.5, -738), // the lip kicks up
+    ], 12);
+    this.ribbonFruit(r5.curve, 0.2, 0.7, 6);
+
+    // THE GAP: ~20 units of open water, then the landing ribbon
+    const r6 = this.slideRibbon([
+      V(7, 0.8, -756),
+      V(6, 0.4, -790),
+      V(2, 0.2, -816),
+    ], 14);
 
     // finish flat: run it out through the gate
-    this.slab('finish run', -684, -744, 1, 18, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 8, 'stone');
-    this.finishZ = -716;
-    this.endWallZ = -738;
-    this.finishGate(1, this.finishZ, 8);
-    this.endWall(1, 8);
+    this.slab('finish run', -810, -874, 0.2, 18, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
+    this.finishZ = -842;
+    this.endWallZ = -868;
+    this.finishGate(0.2, this.finishZ, 0);
+    this.endWall(0.2, 0);
 
     this.killY = -26;
-    this.pitPlane('water', -34, 0, -360, 1800);
+    this.pitPlane('water', -34, 0, -420, 2400);
 
     // CAMERA SPINE: the ribbons' own centerline is the camera lane — the rig
     // and the control frame ease along its tangent, so screen-up is always
     // "down the slide" and the road stays centered through every sweep (the
     // same machinery the editor's camnode chains drive).
     const lane: { x: number; z: number }[] = [{ x: 0, z: 20 }];
-    for (const r of [r1, r2s, r3]) {
-      const n = Math.max(2, Math.round(r.len / 8));
+    for (const r of [r1, r2, r3, r4, r5, r6]) {
+      const n = Math.max(2, Math.round(r.len / 7));
       for (let i = 0; i <= n; i++) {
         const p = r.curve.getPointAt(i / n);
         lane.push({ x: p.x, z: p.z });
       }
     }
-    lane.push({ x: 8, z: -740 });
+    lane.push({ x: 0, z: -874 });
     this.lanePts = lane;
   }
 
