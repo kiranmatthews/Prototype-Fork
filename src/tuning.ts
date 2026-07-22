@@ -49,6 +49,7 @@ export const TUNING = {
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
+  underRailCooldown: 1.5, // seconds between under-rail hang switches (Circle on a rail)
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
   turnaround: 35, // PULL-BACK BRAKE: bleed rate when yanking the stick against travel (the dismount)
@@ -180,6 +181,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   railTripSpeed: { min: 8, max: 30, step: 0.5 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
+  underRailCooldown: { min: 0.5, max: 4, step: 0.1 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   flipHoldTime: { min: 0, max: 0.6, step: 0.02 },
   doubleJump: { min: 0, max: 1, step: 1 },
@@ -335,6 +337,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   grindSpeed:
     'REFERENCE grind speed: you actually grind at whatever speed you arrive with, but slower than this wobbles the balance meter harder and faster than it steadies it.',
   grindJumpForce: 'Vertical pop of a fully-charged jump off a rail.',
+  underRailCooldown: 'Cooldown between Circle switches on a rail (grind top <-> hanging underneath).',
   spinDuration: 'How long the Square spin attack stays active per press.',
   spinAirCorrection:
     'Small upward stall from spinning in the air (capped, never a full rescue) — Crash-style ledge save.',
@@ -510,7 +513,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
+    keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
   },
   {
     title: 'MANUAL & LIP',

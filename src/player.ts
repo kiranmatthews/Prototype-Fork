@@ -22,6 +22,11 @@ const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
 const LEDGE_DOWN = new THREE.Vector3(0, -1, 0);
 const HANG_BOX = new THREE.Box3();
+// Under-rail hang: how far the FEET ride below the rail line while hanging
+// underneath (hands + crosswise board grip the rail overhead), and how long
+// the committed swing between top and under takes.
+const UNDER_RAIL_DEPTH = 1.65;
+const UNDER_RAIL_SWING = 0.32;
 
 interface GroundHit {
   y: number;
@@ -320,6 +325,11 @@ export class Player {
   private grindPoseX = 0; // nose-up / nose-down grind lean
   private grindYawPose = 0; // boardslide: body across the rail
   private grindArmPose = 0; // arms out wide for balance on the rail
+  private railUnder = false; // hanging BENEATH the rail (board crosswise in the hands)
+  private underK = 0; // 0 = on top, 1 = hanging under; eases through the committed swing
+  private underCoolT = 0; // switch cooldown: no rapid top/under spam
+  private underProbeT = 0; // periodic clearance re-check while hanging (terrain rises -> pop back up)
+  private boardSnapT = 0; // board snapped by an under-hang bail: hidden until this runs out
   private grindYawDir = 1;
   private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
   private grabTrickName = 'Grab'; // variant name for the combo readout
@@ -610,6 +620,10 @@ export class Player {
     this.slideRecoverT = 0;
     this.skateBlockT = 0;
     this.slideCrawlChain = false;
+    this.railUnder = false;
+    this.underK = 0;
+    this.underCoolT = 0;
+    this.boardSnapT = 0;
     this.brakeT = 0;
     this.brakeLockT = 0;
     this.brakeRampT = 0;
@@ -906,6 +920,8 @@ export class Player {
     // jump. Steering only after takeoff never rolls — this is read AT launch.
     this.dirHoldT = Math.hypot(input.moveX, input.moveY) > 0.5 ? this.dirHoldT + dt : 0;
     this.slideCd = Math.max(0, this.slideCd - dt);
+    this.underCoolT = Math.max(0, this.underCoolT - dt);
+    this.boardSnapT = Math.max(0, this.boardSnapT - dt);
     this.slideTimer = Math.max(0, this.slideTimer - dt);
     this.slideRecoverT = Math.max(0, this.slideRecoverT - dt);
     this.skateBlockT = Math.max(0, this.skateBlockT - dt);
@@ -3352,6 +3368,11 @@ export class Player {
           this.balance = 0;
           this.grindTime = 0;
           this.balanceCritT = 0;
+        } else if (this.railUnder) {
+          // hanging underneath, the grip is all there is: the board SNAPS and
+          // you drop straight off — ground below breaks the fall, a pit doesn't
+          this.snapBoardFall();
+          return;
         } else if (this.railFallSide(level) === 'vert') {
           // The needle threw us INTO the transition — that's not a crash,
           // it's the grind ending: drop in and keep riding the line.
@@ -3368,13 +3389,48 @@ export class Player {
       this.balanceCritT = 0;
     }
 
+    // UNDER-RAIL HANG: Circle swings you beneath the rail (board held
+    // crosswise in both hands) and back up — a committed swing each way, on a
+    // cooldown so it can't be spammed. Going under needs clear air below;
+    // while under, rising terrain pops you back on top before it clips.
+    if (input.grabPressed && this.underCoolT <= 0) {
+      if (this.railUnder) {
+        this.railUnder = false;
+        this.underCoolT = TUNING.underRailCooldown;
+        sfx.play('woosh', 0.5, 1.15);
+      } else if (this.underClearance(rail, level)) {
+        this.railUnder = true;
+        this.underCoolT = TUNING.underRailCooldown;
+        this.underProbeT = 0;
+        this.score(140, 'Under-Rail');
+        sfx.play('woosh2', 0.55, 0.9);
+      } else {
+        sfx.play('skateHalt', 0.2, 1.5); // no room below: the press just clicks off
+      }
+    }
+    this.underK = THREE.MathUtils.clamp(
+      this.underK + (this.railUnder ? 1 : -1) * (dt / UNDER_RAIL_SWING),
+      0,
+      1,
+    );
+    if (this.railUnder && this.underK >= 1) {
+      this.underProbeT += dt;
+      if (this.underProbeT >= 0.15) {
+        this.underProbeT = 0;
+        if (!this.underClearance(rail, level)) {
+          this.railUnder = false; // terrain rose to meet the feet: free auto-return
+          sfx.play('woosh', 0.4, 1.2);
+        }
+      }
+    }
+
     this.grindT += this.grindDir * this.grindVel * dt;
 
     if (this.grindT <= 0 || this.grindT >= rail.totalLength) {
       // Ran off the end of the rail: small pop, keep carrying grind speed.
       this.grindT = THREE.MathUtils.clamp(this.grindT, 0, rail.totalLength);
       this.placeOnRail(rail);
-      this.exitGrind(2.5);
+      this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5); // from under, no pop up through the rail
       return;
     }
 
@@ -3389,7 +3445,7 @@ export class Player {
       this.comboTimer = CONST.comboWindow;
     }
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
-    this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck
+    if (this.underK < 0.5) this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck (hands make no sparks)
 
     if (input.jumpHeld) {
       this.charging = true;
@@ -3399,9 +3455,15 @@ export class Player {
       const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
       this.charging = false;
       this.chargeTimer = 0;
-      this.lastJumpType = 'Grind Exit';
+      this.lastJumpType = this.underK > 0.5 ? 'Under-Rail Drop' : 'Grind Exit';
       sfx.play('ollie', 0.7);
-      this.exitGrind(THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t));
+      // from underneath, X lets go — a small drop away, never a pop up
+      // through the rail overhead
+      this.exitGrind(
+        this.underK > 0.5
+          ? 1.0
+          : THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t),
+      );
       // grind exits are board airs: no somersault
     }
   }
@@ -3479,6 +3541,9 @@ export class Player {
       rIn.moveY > 0.4 ? 'nose' : rIn.moveY < -0.4 ? 'five0' : Math.abs(rIn.moveX) > 0.4 ? 'board' : 'normal';
     this.grindYawDir = rIn.moveX >= 0 ? 1 : -1;
     this.grindTickT = 0;
+    this.railUnder = false; // every grind starts on top (the switch cooldown carries over)
+    this.underK = 0;
+    this.underProbeT = 0;
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     const styleMult =
@@ -3519,6 +3584,12 @@ export class Player {
   private placeOnRail(rail: Rail): void {
     const p = rail.pointAt(this.grindT);
     this.pos.set(p.x, p.y + CONST.railRideHeight, p.z);
+    // Under-rail hang: the body swings to hands-overhead beneath the line
+    // (underK eases through the committed switch, so this is the animation).
+    if (this.underK > 0) {
+      const k = this.underK * this.underK * (3 - 2 * this.underK); // smoothstep swing
+      this.pos.y -= k * (UNDER_RAIL_DEPTH + CONST.railRideHeight);
+    }
     // Glide onto the rail: the entry offset eases away over railSnapEase
     // seconds instead of yanking the body sideways in a single frame.
     if (this.snapEase < 1) {
@@ -3557,6 +3628,46 @@ export class Player {
     // Grind exits fly forward: the rail speed rides through the whole air,
     // even if it's below walking pace (footAir must not zero it).
     this.airMomentum = true;
+  }
+
+  // Room to hang beneath the rail here? The body needs UNDER_RAIL_DEPTH of
+  // clear air below the line — checked on the switch AND re-probed while
+  // hanging, so rising terrain pops you back on top instead of clipping.
+  private underClearance(rail: Rail, level: Level): boolean {
+    const p = rail.pointAt(this.grindT);
+    const ray = new THREE.Raycaster(
+      new THREE.Vector3(p.x, p.y - 0.35, p.z),
+      LEDGE_DOWN,
+      0,
+      UNDER_RAIL_DEPTH + 0.45,
+    );
+    return ray.intersectObjects(level.groundMeshes, false).length === 0;
+  }
+
+  // The needle pegged while hanging underneath: the board SNAPS (it was the
+  // grip), and you drop straight down on foot. Ground below breaks the fall
+  // into a tumble; over a pit there's nothing to break it at all.
+  private snapBoardFall(): void {
+    this.grindRail = null;
+    this.railUnder = false;
+    this.state = 'air';
+    this.airFromSkate = false;
+    this.freeSkate = false; // the board is in pieces — whatever comes next is on foot
+    this.speed = Math.max(1.5, this.grindVel * 0.4);
+    this.vVel = -1.5;
+    this.airMomentum = false;
+    this.bailDownT = 0.9; // the tumble pose owns the fall + the landing lock
+    this.boardSnapT = 1.7; // deck stays gone through the fall and the get-up
+    this.regrindCd = CONST.regrindCooldown * 2;
+    this.balance = 0;
+    this.balanceCritT = 0;
+    this.comboPoints = 0;
+    this.comboMult = 0;
+    this.comboTimer = 0;
+    this.comboLabels = [];
+    sfx.play('crunch', 0.9, 0.85); // the snap
+    sfx.play('takeDamage', 0.7);
+    this.emitSparks(10, 0xb08040, 2.2); // splinters off the broken deck
   }
 
   // Which way is the balance needle throwing us, and what's over there?
@@ -5494,6 +5605,10 @@ export class Player {
     // Baked Mixamo hang clips drive the limbs when one is playing (catch,
     // idle loop, shimmies, clamber, drop/fall exits); the hand-authored pose
     // below is the fallback. Channels are anatomical — see hangAnims.ts.
+    // Under-rail hang weight: underK eases through the committed swing while
+    // grinding; any exit (drop, snap, rail end) lets it bleed off in the air.
+    if (this.state !== 'grind') this.underK = Math.max(0, this.underK - dt * 4);
+    const underW = this.underK;
     const HS = this.hangPoseSample(ledgeW);
     const dangle = ledgeW * Math.sin(this.runTime * 1.7) * 0.08; // idle leg sway
     if (this.legL && this.legR) {
@@ -5501,8 +5616,8 @@ export class Player {
       // crawl: hips COUNTER the 0.75 body pitch (negative = knee swings
       // forward) so the thighs stay under the body — knees at the ground,
       // never feet flung up behind the pitched-over torso.
-      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + (HS ? -HS.legL * 0.5 * HS.w : ledgeW * (0.16 + dangle) - 1.15 * mantle); // hang legs: clip or authored
-      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + (HS ? -HS.legR * 0.5 * HS.w : ledgeW * (0.1 - dangle) - 0.5 * mantle);
+      this.legL.rotation.x = swing + 1.6 * flipTuck + 0.55 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + underW * (0.2 + 0.08 * Math.sin(this.runTime * 2.4)) + (HS ? -HS.legL * 0.5 * HS.w : ledgeW * (0.16 + dangle) - 1.15 * mantle); // hang legs: clip or authored
+      this.legR.rotation.x = -swing + 1.6 * flipTuck + 1.35 * this.slidePose - 0.9 * crawlMove - 1.2 * crouchW + underW * (0.2 - 0.08 * Math.sin(this.runTime * 2.4)) + (HS ? -HS.legR * 0.5 * HS.w : ledgeW * (0.1 - dangle) - 0.5 * mantle);
       // Crash-reference high knees: the swing-through leg lifts extra hard
       // (thigh toward horizontal), giving the run its cartoon prance.
       const liftL = Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp;
@@ -5553,8 +5668,8 @@ export class Player {
       const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk);
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
-      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + (HS ? HS.kneeR * 0.65 * HS.w : ledgeW * (0.5 - dangle) + 0.8 * mantle);
-      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + (HS ? HS.kneeL * 0.65 * HS.w : ledgeW * (0.62 + dangle) + 0.95 * mantle); // hang shins: clip or authored
+      this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + 0.38 * underW + (HS ? HS.kneeR * 0.65 * HS.w : ledgeW * (0.5 - dangle) + 0.8 * mantle);
+      this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + 0.38 * underW + (HS ? HS.kneeL * 0.65 * HS.w : ledgeW * (0.62 + dangle) + 0.95 * mantle); // hang shins: clip or authored
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
     }
@@ -5578,7 +5693,7 @@ export class Player {
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
       // Crash runs chest-out, almost leaning BACK — never hunched forward.
       // Hanging, the chest presses gently toward the wall instead.
-      this.upperG.rotation.x = -0.07 * this.walkAmp + (HS ? HS.spine * 0.7 * HS.w : 0.16 * ledgeW + 0.5 * mantle); // hang chest: clip or authored
+      this.upperG.rotation.x = -0.07 * this.walkAmp - 0.12 * underW + (HS ? HS.spine * 0.7 * HS.w : 0.16 * ledgeW + 0.5 * mantle); // hang chest: clip or authored
     }
     if (this.headM) {
       const look =
@@ -5703,7 +5818,7 @@ export class Player {
     if (this.armR) {
       this.armR.rotation.x =
         this.armRPose * this.grabPose + anti + sym + slideR + 0.4 * this.wallridePose + 0.06 * breathe * idleW + // lead hand reaches down the wall; breath sways the idle hang
-        (HS ? (HS.armXR + gripTrem) * HS.w : (0.3 + gripTrem + 0.55 * ck) * ledgeW + handOver); // hang arm swing: clip or authored
+        0.18 * underW + (HS ? (HS.armXR + gripTrem) * HS.w : (0.3 + gripTrem + 0.55 * ck) * ledgeW + handOver); // hang arm swing: clip or authored
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
@@ -5711,7 +5826,7 @@ export class Player {
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
-        (HS ? (HS.armZR - leanR) * HS.w : (2.5 - 2.0 * ck) * ledgeW) + // arm raise: clip is an absolute elevation, so the base lean blends out
+        2.45 * underW + (HS ? (HS.armZR - leanR) * HS.w : (2.5 - 2.0 * ck) * ledgeW) + // arm raise: clip is an absolute elevation, so the base lean blends out
         1.05 * this.wallridePose + // wallride: arm flung out for balance
         0.35 * this.skatePose; // loose skate arms
     }
@@ -5723,7 +5838,7 @@ export class Player {
         slideL -
         0.65 * this.wallridePose +
         0.06 * breathe * idleW + // trailing arm swept back; breath sways the idle hang
-        (HS ? (HS.armXL - gripTrem) * HS.w : (0.3 - gripTrem + 0.55 * ck) * ledgeW - handOver); // hang arm swing: clip or authored
+        0.18 * underW + (HS ? (HS.armXL - gripTrem) * HS.w : (0.3 - gripTrem + 0.55 * ck) * ledgeW - handOver); // hang arm swing: clip or authored
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
@@ -5731,6 +5846,7 @@ export class Player {
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
+        2.45 * underW - // under-rail: this whole chain subtracts, so the minus ahead of this term raises the arm
         (HS ? (HS.armZL - leanL) * HS.w : (2.5 - 2.0 * ck) * ledgeW) - // arm raise: clip is an absolute elevation, so the base lean blends out
         1.05 * this.wallridePose - // wallride: arm flung out for balance
         0.35 * this.skatePose;
@@ -5749,7 +5865,7 @@ export class Player {
           0.25 * this.skatePose +
           0.45 * crawlMove +
           0.3 * crouchW +
-          (HS ? HS.elbR * 0.8 * HS.w : 0.25 * ledgeW) + // grip elbows: clip or authored
+          0.3 * underW + (HS ? HS.elbR * 0.8 * HS.w : 0.25 * ledgeW) + // grip elbows: clip or authored
           0.3 * this.slidePose) *
         straight;
       const bendL =
@@ -5760,7 +5876,7 @@ export class Player {
           0.3 * jp +
           0.25 * this.skatePose +
           0.45 * crawlMove +
-          (HS ? HS.elbL * 0.8 * HS.w : 0.25 * ledgeW) + // grip elbows: clip or authored
+          0.3 * underW + (HS ? HS.elbL * 0.8 * HS.w : 0.25 * ledgeW) + // grip elbows: clip or authored
           0.3 * crouchW) *
         straight;
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
@@ -5837,6 +5953,17 @@ export class Player {
       this.boardG.rotation.z = this.wallridePose * -wallSide * (Math.PI / 2);
       this.boardG.position.x = this.wallridePose * wallSide * 0.62; // flush to the wall
       this.boardG.position.y += this.wallridePose * 0.34; // up to foot height
+      // UNDER-RAIL HANG: the deck leaves the feet and goes CROSSWISE overhead,
+      // gripped at both ends — riding just beneath the rail line.
+      if (underW > 0.001) {
+        this.boardG.rotation.x *= 1 - underW;
+        this.boardG.rotation.z *= 1 - underW;
+        this.boardG.rotation.y = this.boardG.rotation.y * (1 - underW) + (Math.PI / 2) * underW;
+        this.boardG.position.x *= 1 - underW;
+        this.boardG.position.y += underW * 1.05; // up into both hands, just beneath the line
+        this.boardG.visible = true; // the grip IS the board — always shown while under
+      }
+      if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
