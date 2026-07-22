@@ -4690,15 +4690,32 @@ export class Player {
       this.bailDownT > 0 ||
       this.ledgeCoolT > 0 ||
       this.comboRun || // a run lives on its combo — an auto-catch would bank it and fail the run
-      this.flipTimer > 0 || // a somersault is committed; catching mid-flip would snap the rotation
       this.rawInput.grindHeld // grind/wallride intent owns the wall
     )
       return false;
-    if (this.state === 'air' && this.vVel > 1.5) return false; // rising fast: let the jump finish
+    // NOTE: a somersault (double jump) is NOT a blocker — the catch clears the
+    // flip and the reach-and-grab clip owns the pose. Gating on it made every
+    // double-jump approach silently ungrabbable (the whole point of the double
+    // jump is reaching HIGHER ledges).
     const lipRough = w.max.y;
     const rise = lipRough - this.pos.y;
-    const minRise = this.state === 'ride' ? LEDGE_HANG_DEPTH + 0.2 : 1.2;
-    if (rise < minRise || rise > TUNING.ledgeReach) return false;
+    if (this.state === 'ride') {
+      // grounded: a chest-high-or-better step within reach
+      if (rise < LEDGE_HANG_DEPTH + 0.2 || rise > TUNING.ledgeReach) return false;
+    } else {
+      // air: PROXIMITY of the hands to the lip decides — not the jump phase.
+      // The hands ride ~LEDGE_HANG_DEPTH above the feet, so falling catches
+      // anywhere the lip sits from just-above-the-hands down to full reach,
+      // and a RISING jump catches the moment the hands come level with the
+      // lip — unless the jump is going to crest the deck anyway (predicted
+      // apex clears it), in which case let the vault land on top.
+      if (rise < 0.7 || rise > TUNING.ledgeReach) return false;
+      if (this.vVel > 1.5) {
+        if (rise > LEDGE_HANG_DEPTH + 0.55) return false; // hands not up to the lip yet
+        const apex = this.pos.y + (this.vVel * this.vVel) / (2 * Math.max(1, TUNING.riseGravity));
+        if (apex > lipRough + 0.25) return false; // clearing it — that's a landing, not a grab
+      }
+    }
     // Which side face was hit? Platform colliders are full footprints (not
     // thin like wallride walls), so pick by least penetration — the shallow
     // separating axis is the one just crossed — normal pointing back at us.
