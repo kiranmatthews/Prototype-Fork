@@ -21,6 +21,7 @@ const FILES: Record<string, string> = {
   woosh: 'woosh.wav',
   woosh2: 'woosh-2.wav',
   woosh3: 'woosh-3.wav',
+  ledgeGrab: 'ledge-grab.wav',
   crateBreak1: 'crate-break-1.wav',
   crateBreak2: 'crate-break-2.wav',
   crateBounce: 'crate-bounce.wav',

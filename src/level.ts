@@ -4478,6 +4478,16 @@ export class Level {
     mesh.name = name;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
+    // Deck edges are solid + ledge-grabbable: the collider is the slab's own
+    // volume (top tucked 0.2 under the walk surface so standing never shoves),
+    // so an undershot gap jump bonks the face and the hands can catch the lip
+    // instead of clipping through the 1u-thin edge into the pit.
+    this.walls.push(
+      new THREE.Box3(
+        new THREE.Vector3(cx - width / 2, topY - 1, Math.min(z0, z1)),
+        new THREE.Vector3(cx + width / 2, topY - 0.2, Math.max(z0, z1)),
+      ),
+    );
     this.curbs(z0, z1, topY, width, cx);
     if (grindEdges) this.edgeRails(z0, topY, z1, topY, width, cx);
     return mesh;
@@ -4517,6 +4527,13 @@ export class Level {
     mesh.name = name;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
+    // same solid, grabbable edge treatment as slab() (see there)
+    this.walls.push(
+      new THREE.Box3(
+        new THREE.Vector3(Math.min(x0, x1), topY - 1, cz - depth / 2),
+        new THREE.Vector3(Math.max(x0, x1), topY - 0.2, cz + depth / 2),
+      ),
+    );
     return mesh;
   }
 

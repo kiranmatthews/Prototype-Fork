@@ -4213,7 +4213,17 @@ export class Player {
           if (this.tryWallride(w)) break; // stuck to the wall — ride it
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
           this.pushOutOf(w);
-        }
+        } else if (
+          // NEAR-MISS CATCH: a wall bonk shoves the body just clear of the
+          // face and kills the arc's push (slide jumps steer-lock, so nothing
+          // re-presses) — falling a hair off the face must still offer the
+          // grab, or those jumps slide down 3cm out of reach forever.
+          this.state === 'air' &&
+          this.vVel <= 1.5 &&
+          HANG_BOX.copy(this.playerBox).expandByScalar(0.14).intersectsBox(w) &&
+          this.tryLedgeGrab(w, level)
+        )
+          break;
       }
     }
 
@@ -4784,7 +4794,7 @@ export class Player {
     this.setHangClip('catch', 0.45); // the reach-and-grab plays over the settle
     if (this.manualing !== 0) this.endManual();
     this.bankCombo(); // a clean catch banks the pending string, like a landing
-    sfx.play('railLand', 0.5, 0.9);
+    sfx.play('ledgeGrab', 0.7, 1);
     this.emitDust(2);
     return true;
   }
