@@ -7674,6 +7674,15 @@ export class Level {
       if (Math.abs(hi.y - lo.y) > 1.0) return; // ~14°+ of lean: keep it clear
       for (const p of [lo, hi]) this.crate(p.x, p.y + 0.6, p.z);
     };
+    // one crate on the FAR flank, level ground only — the manual line past a
+    // grinding rider runs right through it
+    const flankCrate = (r: SlideRibbon, t: number, off: number): void => {
+      const lo = r.frame(t, -2.1, 0);
+      const hi = r.frame(t, 2.1, 0);
+      if (Math.abs(hi.y - lo.y) > 1.0) return;
+      const p = r.frame(t, off, 0);
+      this.crate(p.x, p.y + 0.6, p.z);
+    };
     const weave = (r: SlideRibbon, first: -1 | 1, railLen: number, gap: number, t0: number, t1: number): -1 | 1 => {
       let side = first;
       let a = t0 * r.len; // arc-length cursor down the ribbon
@@ -7681,6 +7690,8 @@ export class Level {
       while (a + railLen * 0.6 < end) {
         const b = Math.min(a + railLen, end);
         edgeRail(r, a / r.len, b / r.len, side);
+        // opposite the rail's midpoint: a target you line up while grinding
+        flankCrate(r, (a + b) / 2 / r.len, -side * 2.1);
         if (b + gap < end) {
           // two beats of crates through the crossing — smash line for the manual
           crossCrates(r, (b + gap * 0.33) / r.len);
