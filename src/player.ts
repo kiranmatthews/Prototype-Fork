@@ -990,7 +990,16 @@ export class Player {
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
+    const bailWas = this.bailDownT;
     this.bailDownT = Math.max(0, this.bailDownT - dt);
+    // A bail's tumble steers axisF/axisL down the fall line (free-skate
+    // convention). If the get-up ends ON FOOT, restore the course control
+    // frame — otherwise you walk away with rotated/inverted controls until
+    // something else happens to reset them (the halfpipe-bail hijack).
+    if (bailWas > 0 && this.bailDownT === 0 && !this.freeSkate && (this.state === 'ride' || this.state === 'air')) {
+      const zn = level.zoneAt(this.pos.x, this.pos.z);
+      this.setTravelDir(zn ? zn.dir : 'S');
+    }
     if (this.state !== 'air') {
       this.vertAir = false;
       this.pipeHang = false;
@@ -4844,10 +4853,24 @@ export class Player {
     const nz = useX ? 0 : Math.sign(this.pos.z - cz) || 1;
     // "heading into the face" reads the MEASURED travel direction (on foot the
     // course frame axisF is not the walk direction — a sideways walk would
-    // never register); axisF is only the fallback when barely moving.
+    // never register). Pressed flush at the wall there IS no measured travel,
+    // so the fallback is the STICK's world direction (mode-aware, same read as
+    // the hang shimmy) — that's what makes side and backward approaches grab,
+    // not just walks toward stick-up. axisF only if the stick is idle too.
     const pl = Math.hypot(this.lastVelX, this.lastVelZ);
-    const hx = pl > 1.5 ? this.lastVelX / pl : this.axisF.x;
-    const hz = pl > 1.5 ? this.lastVelZ / pl : this.axisF.z;
+    let hx: number;
+    let hz: number;
+    if (pl > 1.5) {
+      hx = this.lastVelX / pl;
+      hz = this.lastVelZ / pl;
+    } else {
+      const rS = this.freeSkate ? -1 : 1;
+      const sx = rS * this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
+      const sz = rS * this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
+      const sl = Math.hypot(sx, sz);
+      hx = sl > 0.3 ? sx / sl : this.axisF.x;
+      hz = sl > 0.3 ? sz / sl : this.axisF.z;
+    }
     const into = -(hx * nx + hz * nz);
     if (into < (this.state === 'ride' ? 0.65 : 0.2)) return false;
     // landing probe: standable ground just inside the face, near the lip
