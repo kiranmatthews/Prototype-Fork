@@ -1676,9 +1676,20 @@ export class Editor {
 
   private drawPlanePoint(e: PointerEvent): THREE.Vector3 | null {
     const d = this.drawing!;
-    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -d.y);
+    // Where you CLICK is where it goes: the surface under the cursor supplies
+    // the point, and until the first node is dropped it also sets the draw
+    // plane's height — so drawing on real ground lands ON that ground, never
+    // on a stale orbit-target-height plane hundreds of units below and beyond
+    // the click. Only sky/void clicks fall back to the flat draw plane.
+    const surf = this.surfaceSnap ? this.surfaceHitFor(e) : null;
+    if (surf && d.pts.length === 0) d.y = snapHalf(surf.y);
     const out = new THREE.Vector3();
-    if (!this.groundPoint(e, plane, out)) return null;
+    if (surf) {
+      out.copy(surf);
+    } else {
+      const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -d.y);
+      if (!this.groundPoint(e, plane, out)) return null;
+    }
     if (this.snap) {
       out.x = snapHalf(out.x);
       out.z = snapHalf(out.z);
