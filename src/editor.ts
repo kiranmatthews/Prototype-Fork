@@ -11,6 +11,7 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { TUNING } from './tuning';
 import {
   Level,
   CustomComponent,
@@ -222,6 +223,11 @@ export class Editor {
   private tabProjBtn: HTMLButtonElement | null = null;
   private panelTab: 'sel' | 'proj' = 'sel';
   private raycaster = new THREE.Raycaster();
+  // 2D work views: X/Y/Z lock the camera flat down an axis (pan/zoom only)
+  // and drags move in the two visible axes; '3d' is the free orbit view.
+  private viewMode: '3d' | 'x' | 'y' | 'z' = '3d';
+  private saved3D: { p: THREE.Vector3; t: THREE.Vector3; fov: number } | null = null;
+  private viewBtns: Partial<Record<'x' | 'y' | 'z' | '3d', HTMLButtonElement>> = {};
   private pointer = new THREE.Vector2();
   private selBoxes: THREE.Box3Helper[] = [];
   private spawnMarker: THREE.Group | null = null;
@@ -378,6 +384,7 @@ export class Editor {
 
   exit(): void {
     if (!this.active) return;
+    this.to3D(); // a 2D work view must not leak its long-lens camera into play
     this.active = false;
     this.hooks.setView(false); // restore the level's fog + play draw distance
     this.saveCam();
@@ -437,8 +444,14 @@ export class Editor {
       localStorage.setItem(
         'protoEditorCam',
         JSON.stringify({
-          p: this.camera.position.toArray().map((v) => +v.toFixed(2)),
-          t: this.controls.target.toArray().map((v) => +v.toFixed(2)),
+          // while a 2D view is up, persist the saved FREE view — a refresh
+          // reopens in normal 3D, never stranded on the long 2D lens
+          p: (this.viewMode === '3d' ? this.camera.position : (this.saved3D?.p ?? this.camera.position))
+            .toArray()
+            .map((v) => +v.toFixed(2)),
+          t: (this.viewMode === '3d' ? this.controls.target : (this.saved3D?.t ?? this.controls.target))
+            .toArray()
+            .map((v) => +v.toFixed(2)),
         }),
       );
     } catch {
@@ -1592,7 +1605,14 @@ export class Editor {
             new THREE.Vector3().subVectors(this.camera.position, new THREE.Vector3(...c.p)).setY(0).normalize(),
             new THREE.Vector3(...c.p),
           )
-        : new THREE.Plane(new THREE.Vector3(0, 1, 0), -c.p[1]);
+        : this.viewMode !== '3d'
+          ? new THREE.Plane().setFromNormalAndCoplanarPoint(
+              // 2D view: drag ON the view plane through the piece — movement
+              // stays in the two visible axes, depth can't change
+              { x: new THREE.Vector3(1, 0, 0), y: new THREE.Vector3(0, 1, 0), z: new THREE.Vector3(0, 0, 1) }[this.viewMode],
+              new THREE.Vector3(...c.p),
+            )
+          : new THREE.Plane(new THREE.Vector3(0, 1, 0), -c.p[1]);
       if (this.groundPoint(e, this.dragPlane, this.dragStart)) {
         this.dragging = true;
         this.dragOrig = [...c.p] as [number, number, number];
@@ -1919,8 +1939,24 @@ export class Editor {
       // cursor — this resolves the 2D→3D depth so it lands where it looks,
       // not hundreds of units away on a shallow-angle plane. Over empty space
       // (or snap off), fall back to the fixed-Y ground plane.
-      const surf = this.surfaceSnap ? this.surfaceHitFor(e) : null;
-      if (surf) {
+      const surf = this.surfaceSnap && this.viewMode === '3d' ? this.surfaceHitFor(e) : null;
+      if (this.viewMode !== '3d') {
+        // 2D view: per-axis delta on the view plane, the depth axis pinned
+        const hit = new THREE.Vector3();
+        if (!this.groundPoint(e, this.dragPlane, hit)) return;
+        nx = this.dragOrig[0] + (hit.x - this.dragStart.x);
+        ny = this.dragOrig[1] + (hit.y - this.dragStart.y);
+        nz = this.dragOrig[2] + (hit.z - this.dragStart.z);
+        if (this.viewMode === 'x') nx = this.dragOrig[0];
+        if (this.viewMode === 'y') ny = this.dragOrig[1];
+        if (this.viewMode === 'z') nz = this.dragOrig[2];
+        if (this.snap) {
+          // only grid the axes the view can actually move
+          if (this.viewMode !== 'x') nx = snapHalf(nx);
+          if (this.viewMode !== 'y') ny = snapHalf(ny);
+          if (this.viewMode !== 'z') nz = snapHalf(nz);
+        }
+      } else if (surf) {
         nx = surf.x;
         nz = surf.z;
         ny = surf.y + this.dragBottomOffset; // base sits on the surface
@@ -2258,13 +2294,22 @@ export class Editor {
     const views = h('<div class="ed-views"></div>');
     for (const ax of ['x', 'y', 'z'] as const) {
       const vb = h(`<button class="ed-viewbtn">${ax.toUpperCase()}</button>`) as HTMLButtonElement;
-      vb.title = `snap view down ${ax.toUpperCase()} (again = other side)`;
+      vb.title = `2D work view down ${ax.toUpperCase()}: drags move in-plane only (again = other side)`;
       vb.addEventListener('click', () => {
         this.snapView(ax);
         vb.blur();
       });
+      this.viewBtns[ax] = vb;
       views.appendChild(vb);
     }
+    const v3 = h('<button class="ed-viewbtn ed-viewbtn-on">3D</button>') as HTMLButtonElement;
+    v3.title = 'back to the free 3D orbit view';
+    v3.addEventListener('click', () => {
+      this.to3D();
+      v3.blur();
+    });
+    this.viewBtns['3d'] = v3;
+    views.appendChild(v3);
     wrap.appendChild(views);
 
     document.body.appendChild(wrap);
@@ -2411,18 +2456,58 @@ export class Editor {
     if (!this.controls) return;
     const t = this.controls.target;
     const off = new THREE.Vector3().subVectors(this.camera.position, t);
-    const d = Math.max(6, off.length());
     const u = { x: new THREE.Vector3(1, 0, 0), y: new THREE.Vector3(0, 1, 0), z: new THREE.Vector3(0, 0, 1) }[
       axis
     ];
-    const along = off.dot(u) / d; // how aligned are we already?
-    const sign = along > 0.98 ? -1 : 1; // second press = other side
+    // keep the on-screen framing: how tall the current view is at the target
+    const halfView = Math.max(4, off.length()) * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+    const along = off.dot(u) / Math.max(1e-4, off.length());
+    // same-axis press again = look from the other side; entering = nearest side
+    const sign = this.viewMode === axis ? -(Math.sign(along) || 1) : Math.sign(along) || 1;
+    if (this.viewMode === '3d') {
+      // remember the free view (the 3D button restores it exactly)
+      this.saved3D = { p: this.camera.position.clone(), t: t.clone(), fov: this.camera.fov };
+    }
+    this.viewMode = axis;
+    // near-flat projection: a long lens from far away reads as a 2D plan view
+    this.camera.fov = 8;
+    this.camera.updateProjectionMatrix();
+    const d = halfView / Math.tan(THREE.MathUtils.degToRad(4));
     const pos = t.clone().addScaledVector(u, d * sign);
-    // a perfectly vertical view gimbal-locks OrbitControls: lean a hair
-    if (axis === 'y') pos.z += d * 0.02;
+    if (axis === 'y') pos.z += d * 0.01; // dead-vertical lookAt degenerates (up ∥ view)
     this.camera.position.copy(pos);
     this.camera.lookAt(t);
+    this.controls.enableRotate = false; // 2D: pan + zoom only, no orbiting out of plane
+    this.markViewButtons();
+    this.hooks.showMsg(
+      `${axis.toUpperCase()} VIEW · 2D`,
+      `drag moves in the ${axis === 'y' ? 'X/Z' : axis === 'x' ? 'Z/Y' : 'X/Y'} plane · ${axis.toUpperCase()} again = other side · 3D = back`,
+    );
     this.saveCam();
+  }
+
+  // the 3D button: back to the free orbit view saved when 2D was entered
+  to3D(): void {
+    if (!this.controls || this.viewMode === '3d') return;
+    this.viewMode = '3d';
+    if (this.saved3D) {
+      this.camera.fov = this.saved3D.fov;
+      this.camera.position.copy(this.saved3D.p);
+      this.controls.target.copy(this.saved3D.t);
+    } else {
+      this.camera.fov = TUNING.camFov;
+    }
+    this.camera.updateProjectionMatrix();
+    this.camera.lookAt(this.controls.target);
+    this.controls.enableRotate = true;
+    this.markViewButtons();
+    this.saveCam();
+  }
+
+  private markViewButtons(): void {
+    for (const [k, b] of Object.entries(this.viewBtns)) {
+      b.classList.toggle('ed-viewbtn-on', k === this.viewMode);
+    }
   }
 
   // ---- outliner (the layers pop-out): items + groups as a tree ----
@@ -3433,6 +3518,7 @@ export class Editor {
         width: 30px; height: 26px;
       }
       .ed-viewbtn:hover { background: #262e42; color: #58e08a; }
+      .ed-viewbtn-on { background: #58e08a !important; color: #0b0f1a !important; }
       .ed-layerrow {
         display: flex; align-items: center; gap: 4px; margin: 2px 0;
         padding: 2px 3px; border-radius: 5px;
