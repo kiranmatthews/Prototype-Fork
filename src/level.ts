@@ -897,6 +897,9 @@ export class Level {
   // --- visual pass ---
   // Default = Test Course: Sentinel-Beach morning. Brilliant turquoise zenith
   // over warm sand haze, high gold sun, jungle bounce light, drifting motes.
+  // combo-mode dress: true = EVERY convertible crate becomes a balance crate
+  // (levels built around one long grind line); false = every third
+  private allBalanceCrates = false;
   theme: Theme = {
     skyTop: '#0fa3c2',
     skyBottom: '#ffe6ae',
@@ -5749,7 +5752,12 @@ export class Level {
         c.ttOrigMap = mat.map;
         c.timeSecs = undefined;
         c.boost = undefined;
-        if (i % 3 === 2) {
+        if (!withTimeCrates && this.allBalanceCrates) {
+          // levels built around one long grind line (The Slipstream): EVERY
+          // crate is a stacking perfect-balance window in combo mode
+          c.boost = 'balance';
+          mat.map = this.boostTexture('balance');
+        } else if (i % 3 === 2) {
           if (withTimeCrates) {
             // time trial: numbered freeze crates
             c.timeSecs = secsPattern[Math.floor(i / 3) % secsPattern.length];
@@ -7531,6 +7539,7 @@ export class Level {
   }
 
   private buildSlipstream(): void {
+    this.allBalanceCrates = true; // one long combo line: every crate = balance
     this.theme = {
       skyTop: '#1d6fb8',
       skyBottom: '#bfeef4', // bright noon haze over open water
