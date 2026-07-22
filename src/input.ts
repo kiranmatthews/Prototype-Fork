@@ -33,7 +33,7 @@ export class Input {
   gamepadName = 'no controller';
 
   private keys = new Set<string>();
-  private touch = new TouchControls();
+  private touch: TouchControls | null = null;
   private prevJump = false;
   private prevGrind = false;
   private prevSpin = false;
@@ -42,7 +42,12 @@ export class Input {
   private prevRestart = false;
   private prevPause = false;
 
-  constructor() {
+  // padIndex: null = the normal merged input (keyboard + first pad + touch);
+  // a number = THAT gamepad slot only (player 2 in split-screen) — no
+  // keyboard, no touch overlay, no listeners.
+  constructor(private padIndex: number | null = null) {
+    if (this.padIndex !== null) return; // pad-only: polling does everything
+    this.touch = new TouchControls();
     window.addEventListener('keydown', (e) => {
       // typing in a panel field (tuner numbers, editor coordinates) must not
       // drive the game — 'p' in an input used to pause, 'r' restarted…
@@ -79,17 +84,18 @@ export class Input {
 
   // Poll once per render frame, before the fixed-step loop runs.
   update(): void {
+    const solo = this.padIndex !== null;
     const k = this.keys;
-    let moveX = (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0) - (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0);
-    let moveY = (k.has('ArrowUp') || k.has('KeyW') ? 1 : 0) - (k.has('ArrowDown') || k.has('KeyS') ? 1 : 0);
+    let moveX = solo ? 0 : (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0) - (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0);
+    let moveY = solo ? 0 : (k.has('ArrowUp') || k.has('KeyW') ? 1 : 0) - (k.has('ArrowDown') || k.has('KeyS') ? 1 : 0);
 
-    let jump = k.has('Space');
-    let grind = k.has('KeyE');
-    let spin = k.has('KeyF');
-    let grab = k.has('KeyQ');
-    let transfer = k.has('KeyT');
-    let restart = k.has('KeyR');
-    let pause = k.has('KeyP') || k.has('Escape');
+    let jump = !solo && k.has('Space');
+    let grind = !solo && k.has('KeyE');
+    let spin = !solo && k.has('KeyF');
+    let grab = !solo && k.has('KeyQ');
+    let transfer = !solo && k.has('KeyT');
+    let restart = !solo && k.has('KeyR');
+    let pause = !solo && (k.has('KeyP') || k.has('Escape'));
 
     const pad = this.pollGamepad();
     if (pad) {
@@ -122,7 +128,7 @@ export class Input {
     // Touch overlay merges like a second gamepad: the D-pad only speaks when
     // touched, and edge flags fall out of the shared prev* comparison below.
     const tc = this.touch;
-    if (tc.enabled) {
+    if (tc && tc.enabled) {
       if (tc.moveX !== 0 || tc.moveY !== 0) {
         moveX = tc.moveX;
         moveY = tc.moveY;
@@ -185,6 +191,14 @@ export class Input {
 
   private pollGamepad(): Gamepad | null {
     if (!navigator.getGamepads) return null;
+    if (this.padIndex !== null) {
+      const pad = navigator.getGamepads()[this.padIndex];
+      if (pad && pad.connected) {
+        this.gamepadName = pad.id;
+        return pad;
+      }
+      return null;
+    }
     for (const pad of navigator.getGamepads()) {
       if (pad && pad.connected) {
         this.gamepadName = pad.id;

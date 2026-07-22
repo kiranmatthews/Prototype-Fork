@@ -285,6 +285,13 @@ function applyTheme(): void {
 // crushing to a foreshortened sliver at the horizon.
 const BOULDER_FOV = 27;
 const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
+// 2P split state (functions live further down, past the player):
+let split2p = false;
+let p2: Player | null = null;
+const input2 = new Input(1); // gamepad slot 2 only — no keyboard, no touch
+const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
+const cam2F = new THREE.Vector3(0, 0, -1);
+const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 
 function resize(): void {
   const w = window.innerWidth;
@@ -301,8 +308,10 @@ function resize(): void {
   // Upscale sampling follows the scale: chunky pixels only when the slider is
   // pulled into PS1 territory; at 0.7+ the stretch stays smooth.
   renderer.domElement.style.imageRendering = TUNING.renderScale < 0.7 ? 'pixelated' : '';
-  camera.aspect = w / h;
+  camera.aspect = split2p ? w / (h / 2) : w / h;
   camera.updateProjectionMatrix();
+  camera2.aspect = camera.aspect;
+  camera2.updateProjectionMatrix();
 }
 window.addEventListener('resize', resize);
 // iOS standalone launches don't reliably fire 'resize' once the viewport
@@ -322,6 +331,183 @@ const replayer = new Replayer();
 let currentCourse = Math.min(LEVEL_NAMES.length - 1, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
+
+// ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
+// Two pads, two riders in the same world: top half = P1, bottom = P2. They
+// collide, stomp, and knock each other over. Time trial + combo runs are
+// parked while it's on, and a reset (Share/R on either side) resets both.
+// (the split2p/camera2 state lives up beside the main camera — resize() runs
+// at module init and reads both)
+
+function tintP2(): void {
+  if (!p2) return;
+  const apply = (): void =>
+    p2!.group.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      const mats = Array.isArray(mesh.material) ? mesh.material : mesh.material ? [mesh.material] : [];
+      for (const mat of mats as THREE.MeshLambertMaterial[]) {
+        if (!mat.color || mat.userData.p2Tint) continue;
+        mat.userData.p2Tint = true;
+        mat.color.lerp(new THREE.Color(0x508cff), 0.38); // P2 reads blue at a glance
+      }
+    });
+  apply();
+  // the GLB body streams in async — keep tinting until it has all arrived
+  setTimeout(apply, 1200);
+  setTimeout(apply, 3000);
+  setTimeout(apply, 6000);
+}
+
+function deactivate2pModes(): void {
+  level.setTimeTrial(false);
+  level.setComboRun(false);
+  if (level.clockPickup) {
+    level.clockPickup.collected = true;
+    level.clockPickup.group.visible = false;
+  }
+  if (level.comboOrb) {
+    level.comboOrb.collected = true;
+    level.comboOrb.group.visible = false;
+  }
+  player.ttActive = false;
+  player.comboRun = false;
+  if (p2) {
+    p2.ttActive = false;
+    p2.comboRun = false;
+  }
+}
+
+function set2P(on: boolean, force = false): void {
+  if (on === split2p) return;
+  if (on) {
+    const pads = navigator.getGamepads
+      ? Array.from(navigator.getGamepads()).filter((g) => g && g.connected)
+      : [];
+    if (!force && pads.length < 2) {
+      ui.showMessage('NEED 2 CONTROLLERS', `${pads.length} connected — wake pad 2 with a button press`, 2800);
+      return;
+    }
+    if (editor.active) editor.exit();
+    if (replayer.active) {
+      replayer.end();
+      ui.setReplayBadge(false);
+    }
+    if (!p2) {
+      p2 = new Player(scene);
+      tintP2();
+    }
+    p2.group.visible = true;
+    split2p = true;
+    player.respawn(level, true);
+    p2.respawn(level, true);
+    p2.pos.x += 1.6; // side by side at the start line
+    deactivate2pModes();
+    ui.set2P(true);
+    ui.showMessage('2-PLAYER SPLIT', 'top = P1 · bottom = P2 (blue) · Share/R resets both', 3200);
+  } else {
+    split2p = false;
+    if (p2) p2.group.visible = false;
+    ui.set2P(false);
+    ui.showMessage('1-PLAYER', '', 1200);
+  }
+  resize();
+}
+
+// PvP: stomps bounce the attacker and flatten the victim; spins, slides and
+// slams bowl the other rider over; bodies never share a spot. Playtest rules:
+// no damage, no score — the knockdown (bail tumble + a shove) IS the payoff.
+function pvpAttack(atk: Player, vic: Player): void {
+  const A = atk as unknown as Record<string, number & boolean>;
+  const V = vic as unknown as Record<string, number & boolean>;
+  if (vic.state === 'dead' || vic.state === 'gameover' || atk.state === 'dead') return;
+  const dx = vic.pos.x - atk.pos.x;
+  const dz = vic.pos.z - atk.pos.z;
+  const planar = Math.hypot(dx, dz);
+  const ux = planar > 1e-4 ? dx / planar : 1;
+  const uz = planar > 1e-4 ? dz / planar : 0;
+  const dy = vic.pos.y - atk.pos.y;
+  const knock = (kick: number, pop: number): void => {
+    if ((V.bailDownT as number) > 0 || (V.invulnTimer as number) > 0 || (V.uberTimer as number) > 0) return;
+    (V.bailDownT as number) = 0.9;
+    (V.invulnTimer as number) = 1.1; // no juggle-locking the loser
+    vic.state = 'air';
+    (V.grounded as boolean) = false;
+    (V.vVel as number) = pop;
+    (V.speed as number) = (V.speed as number) * 0.3;
+    pvpKicks.set(vic, { x: ux * kick, z: uz * kick, t: 0.3 });
+    sfx.play('takeDamage', 0.55);
+  };
+  if ((A.vVel as number) < -2 && dy < -0.9 && dy > -2.3 && planar < 0.9) {
+    // STOMP: bounce off their shoulders, they eat deck
+    knock(5, 2.5);
+    (A.vVel as number) = TUNING.crateBounce * 0.8;
+    atk.state = 'air';
+    (A.grounded as boolean) = false;
+    sfx.play('crateBounce', 0.6);
+    return;
+  }
+  if (Math.abs(dy) > 1.7) return;
+  if (A.spinning as boolean) {
+    if (planar < 1.8) knock(11, 4.5);
+  } else if (A.sliding as boolean) {
+    if (planar < 1.2) knock(9, 4);
+  } else if (A.slamActive as boolean) {
+    if (planar < TUNING.slamRadius) knock(10, 5);
+  }
+}
+
+function stepPvp(dt: number): void {
+  if (!p2) return;
+  pvpAttack(player, p2);
+  pvpAttack(p2, player);
+  const dx = p2.pos.x - player.pos.x;
+  const dz = p2.pos.z - player.pos.z;
+  const dy = Math.abs(p2.pos.y - player.pos.y);
+  const d = Math.hypot(dx, dz);
+  if (d > 1e-4 && d < 0.9 && dy < 1.7) {
+    const push = (0.9 - d) / 2;
+    player.pos.x -= (dx / d) * push;
+    player.pos.z -= (dz / d) * push;
+    p2.pos.x += (dx / d) * push;
+    p2.pos.z += (dz / d) * push;
+  }
+  for (const kick of pvpKicks.values()) {
+    if (kick.t <= 0) continue;
+    kick.t -= dt;
+  }
+  for (const [pl, kick] of pvpKicks) {
+    if (kick.t > 0) {
+      pl.pos.x += kick.x * dt;
+      pl.pos.z += kick.z * dt;
+    }
+  }
+}
+
+// P2's rig: a light follow cam (lane-aware forward, ground-agnostic) — the
+// full Crash rig belongs to P1; this one just keeps P2 framed and onward.
+function updateCamera2(dt: number): void {
+  if (!p2) return;
+  if (camera2.fov !== camera.fov || camera2.aspect !== camera.aspect) {
+    camera2.fov = camera.fov;
+    camera2.aspect = camera.aspect;
+    camera2.updateProjectionMatrix();
+  }
+  const lf = level.laneDirAt(p2.pos.x, p2.pos.z) ?? { x: 0, z: -1 };
+  cam2F.x += (lf.x - cam2F.x) * Math.min(1, 3.5 * dt);
+  cam2F.z += (lf.z - cam2F.z) * Math.min(1, 3.5 * dt);
+  cam2F.y = 0;
+  if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
+  cam2F.normalize();
+  const tx = p2.pos.x - cam2F.x * TUNING.camDist;
+  const tz = p2.pos.z - cam2F.z * TUNING.camDist;
+  const ty = p2.pos.y + TUNING.camHeight * 0.85;
+  const k = Math.min(1, 9 * dt);
+  camera2.position.x += (tx - camera2.position.x) * k;
+  camera2.position.y += (ty - camera2.position.y) * k;
+  camera2.position.z += (tz - camera2.position.z) * k;
+  camera2.lookAt(p2.pos.x + cam2F.x * 3, p2.pos.y + 1.2, p2.pos.z + cam2F.z * 3);
+  p2.camDir.set(cam2F.x, 0, cam2F.z);
+}
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
 player.respawn(level, true);
 applyTheme();
@@ -339,6 +525,11 @@ function switchLevel(id: number): void {
   level.dispose();
   level = new Level(scene, id);
   player.respawn(level, true);
+  if (split2p && p2) {
+    p2.respawn(level, true);
+    p2.pos.x += 1.6;
+    deactivate2pModes();
+  }
   applyTheme();
   ui.setLevel(id);
   ui.showMessage(LEVEL_NAMES[id].toUpperCase(), '', 1400);
@@ -384,6 +575,7 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
   setView: (editing) => setEditorView(editing),
 });
 function openEditor(target = 7): void {
+  if (split2p) set2P(false); // the editor is a one-player room
   if (editor.active) return;
   if (currentCourse !== target) switchLevel(target);
   // clear anything that could sit over/under the editor: a paused sim, a
@@ -606,6 +798,7 @@ window.addEventListener('drop', (e) => {
     });
 });
 ui.onLevelSelect = switchLevel;
+ui.onToggle2P = () => set2P(!split2p);
 player.onComboBank = (amount) => ui.comboBank(amount);
 player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.
@@ -974,6 +1167,7 @@ function frame(): void {
   }
   const dt = Math.min(clock.getDelta(), 0.1);
   input.update();
+  if (split2p) input2.update();
 
   // Controller-only players fire no keydown/pointer gesture, so the audio
   // context would stay suspended until they touched the keyboard. Nudge it from
@@ -1015,23 +1209,37 @@ function frame(): void {
   while (acc >= CONST.fixedStep) {
     // Playback: overwrite the live input with the recorded frame; when the
     // take runs out, reset to a clean level so the next live take is valid.
-    if (replayer.active && !replayer.feed(input)) {
+    if (!split2p && replayer.active && !replayer.feed(input)) {
       ui.setReplayBadge(false);
       ui.showMessage('REPLAY DONE', '', 1200);
       switchLevel(currentCourse);
       break;
     }
+    // 2P: a reset from EITHER side resets both riders to the start
+    if (split2p && (input.restartPressed || input2.restartPressed)) {
+      input.restartPressed = true;
+      input2.restartPressed = true;
+    }
     player.step(CONST.fixedStep, input, level);
+    if (split2p && p2) {
+      p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
+      stepPvp(CONST.fixedStep);
+      // any respawn's level.reset resurrects the clock/orb — keep them parked
+      if (level.clockPickup && level.clockPickup.group.visible) deactivate2pModes();
+      else if (level.comboOrb && level.comboOrb.group.visible) deactivate2pModes();
+    }
     level.update(CONST.fixedStep);
     // record exactly what the sim consumed (edges intact, pre-consume)
-    if (!replayer.active) recorder.record(input);
+    if (!replayer.active && !split2p) recorder.record(input);
     input.consumeEdges(); // one press = one step
+    if (split2p) input2.consumeEdges();
     acc -= CONST.fixedStep;
   }
 
   // hold the last shot through the death blackout — no drifting after the
   // corpse; the respawn teleport re-snaps the rig when play resumes
   if (player.state !== 'dead' && player.state !== 'gameover') updateCamera(dt);
+  if (split2p) updateCamera2(dt);
   updateAudio(dt);
   sky.position.copy(camera.position);
 
@@ -1070,7 +1278,21 @@ function frame(): void {
     time: player.runTime,
   });
 
-  renderer.render(scene, camera);
+  if (split2p && p2) {
+    const dw = renderer.domElement.width;
+    const dh = renderer.domElement.height;
+    renderer.setScissorTest(true);
+    renderer.setViewport(0, dh / 2, dw, dh / 2);
+    renderer.setScissor(0, dh / 2, dw, dh / 2);
+    renderer.render(scene, camera);
+    renderer.setViewport(0, 0, dw, dh / 2);
+    renderer.setScissor(0, 0, dw, dh / 2);
+    renderer.render(scene, camera2);
+    renderer.setScissorTest(false);
+    renderer.setViewport(0, 0, dw, dh);
+  } else {
+    renderer.render(scene, camera);
+  }
 }
 frame();
 
@@ -1091,6 +1313,8 @@ frame();
   toggleVideo,
   replayer,
   recorder,
+  set2P, // debug/harness: force past the 2-pad gate with set2P(true, true)
+  getP2: () => p2,
   editor,
   openEditor,
   ui, // debug: drive menu/sync controls from the console/harness

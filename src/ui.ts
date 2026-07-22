@@ -96,6 +96,7 @@ export class UI {
   onLoadReplay: ((text: string) => void) | null = null;
   onEditorOpen: (() => void) | null = null;
   onEditCopy: (() => void) | null = null;
+  onToggle2P: (() => void) | null = null;
   // direct-edit + phone sync (main.ts wires these)
   onEditThisLevel: (() => void) | null = null;
   onUnlockEditing: ((pass: string) => Promise<boolean>) | null = null;
@@ -109,7 +110,8 @@ export class UI {
   // hidden husk while the tools own the screen
   onSideTab: ((side: 'left' | 'right') => void) | null = null;
   private recBtn!: HTMLButtonElement;
-  private copyBtn!: HTMLButtonElement; // "edit a copy" — hidden on editable levels once unlocked
+  private copyBtn!: HTMLButtonElement;
+  private mpBtn!: HTMLButtonElement; // "edit a copy" — hidden on editable levels once unlocked
   private editThisBtn!: HTMLButtonElement; // "edit this level" — shown when unlocked
   private syncPanel!: HTMLElement;
   private tokenRow!: HTMLElement;
@@ -160,6 +162,18 @@ export class UI {
     });
     statsWrap.appendChild(copyBtn);
     this.copyBtn = copyBtn;
+
+    // 2-PLAYER SPLIT SCREEN (playtest sandbox): needs two connected pads.
+    const mpBtn = document.createElement('button');
+    mpBtn.className = 'hud-levelbtn hud-editbtn';
+    mpBtn.textContent = '⚔ 2-PLAYER SPLIT: OFF';
+    mpBtn.title = 'local split-screen — requires 2 controllers';
+    mpBtn.addEventListener('click', () => {
+      if (this.onToggle2P) this.onToggle2P();
+      mpBtn.blur();
+    });
+    statsWrap.appendChild(mpBtn);
+    this.mpBtn = mpBtn;
 
     // DIRECT EDIT (unlocked): edit the built-in level in place. Hidden until the
     // passcode is entered; then it replaces the copy button on editable levels.
@@ -671,6 +685,11 @@ export class UI {
         el.sync?.(); // checkboxes mirror the number
       }
     }
+  }
+
+  set2P(on: boolean): void {
+    this.mpBtn.textContent = on ? '⚔ 2-PLAYER SPLIT: ON' : '⚔ 2-PLAYER SPLIT: OFF';
+    this.mpBtn.style.color = on ? '#58e08a' : '';
   }
 
   setLevel(id: number): void {
