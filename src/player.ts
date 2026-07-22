@@ -234,6 +234,7 @@ export class Player {
   private flickDownT = 99;
   private manualArmed: 0 | 1 | -1 = 0; // flick completed mid-air: land into it
   private manualArmT = 0;
+  private manualCoyoteT = 0; // time the live manual has been off the deck (crest-hop grace)
   // LIP TRICKS: reach the coping slow holding Triangle -> stall on the lip
   // (Rock to Fakie / Axle Stall / Disaster from the air), points tick while
   // held, release/jump/timeout drops back in fakie.
@@ -645,6 +646,7 @@ export class Player {
     this.manualing = 0;
     this.manualArmed = 0;
     this.manualArmT = 0;
+    this.manualCoyoteT = 0;
     this.lipStallT = 0;
     this.lipPipe = null;
     this.lipCoolT = 0;
@@ -808,8 +810,28 @@ export class Player {
       }
       this.prevMoveY = my;
     }
-    // A manual only lives on rideable flat ground: any other state drops it.
-    if (this.manualing !== 0 && (this.state !== 'ride' || !this.grounded)) this.endManual();
+    // A manual lives on rideable ground — but courses ROLL: going light over
+    // a crest (a few airborne frames) must not drop it. A short coyote window
+    // carries the manual across bumps; real departures still end it. An ollie
+    // out is unaffected — the jump ends the manual explicitly before takeoff.
+    if (this.manualing !== 0) {
+      if (this.state !== 'ride' && this.state !== 'air') this.endManual();
+      else if (this.state !== 'ride' || !this.grounded) {
+        this.manualCoyoteT += dt;
+        if (this.manualCoyoteT > TUNING.manualCoyote) this.endManual();
+      } else this.manualCoyoteT = 0;
+    }
+    // ARMED LAND-INTO-MANUAL: retry every grounded frame while the window
+    // lasts — the touchdown frame itself can be inhospitable (a steep patch,
+    // a speed dip) and one bad frame must not eat the flick.
+    if (
+      this.manualing === 0 &&
+      this.manualArmed !== 0 &&
+      this.manualArmT > 0 &&
+      this.canManual()
+    ) {
+      this.enterManual(this.manualArmed);
+    }
     // ZONES (built-in levels): the path can right-angle into an X-running
     // stretch — there the camera holds its frame and the turned path IS the
     // side-scroll view, so axes flip the instant you cross a corner (no lock,
@@ -1279,7 +1301,9 @@ export class Player {
     if (inTrick) {
       this.comboPoints += base;
       this.comboMult += 1;
-      this.comboTimer = CONST.comboWindow;
+      // never SHORTEN the remaining window — a spin bonus scored right after
+      // touchdown must not eat the post-landing manual grace
+      this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
       if (label) {
         this.pushLabel(label);
         // Real tricks (grabs, grinds, wallride, slide, body slam) light up the
@@ -2019,7 +2043,10 @@ export class Player {
     // honest bail; rolling too slow / steep ground / leaving the deck simply
     // drops you back onto four wheels, combo timer still running.
     if (this.manualing !== 0) {
-      if (!this.canManual()) {
+      if (this.manualCoyoteT > 0 || !this.grounded) {
+        // light over a crest: the coyote window upstairs owns the drop —
+        // freeze the needle so airborne frames never punish the balance
+      } else if (!this.canHoldManual()) {
         this.endManual();
       } else {
         this.manualTime += dt;
@@ -2831,11 +2858,15 @@ export class Player {
       if (!wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
       // LAND INTO A MANUAL: the flick finished moments before touchdown — come
       // down balanced on two wheels and the combo string STAYS ALIVE (no bank).
-      if (this.manualArmT > 0 && this.manualArmed !== 0 && this.canManual()) {
+      if (this.manualing !== 0) {
+        // a coyote manual carried across the bump — still the live connector
+      } else if (this.manualArmT > 0 && this.manualArmed !== 0 && this.canManual()) {
         this.enterManual(this.manualArmed);
       } else {
-        // Safe landing = the combo is over: bank it on the spot.
-        this.bankCombo();
+        // Safe landing: not banked on the spot — leave a beat of grace to
+        // flick into a manual (or catch anything else). The plain-rolling
+        // combo clock banks it if nothing comes.
+        this.comboTimer = Math.max(this.comboTimer, TUNING.manualLandGrace);
       }
       this.landingScoring = false;
       return;
@@ -2996,7 +3027,24 @@ export class Player {
       !this.crawling &&
       this.lipStallT <= 0 &&
       Math.abs(this.speed) >= TUNING.manualMinSpeed &&
-      (this.groundHit === null || this.groundHit.normal.y >= TUNING.steepStand)
+      // banked bends + slope are fair manual ground — only true vert says no
+      // (steepStand is the on-foot limit and reads too strict on two wheels)
+      (this.groundHit === null || this.groundHit.normal.y >= 0.55)
+    );
+  }
+
+  // Continuing is more forgiving than starting: no steepness gate at all (if
+  // the wheels ride it, the manual rides it — course angles must not end a
+  // held manual), and the speed floor softens so a crest's dip doesn't drop
+  // you the frame before gravity gives the speed back.
+  private canHoldManual(): boolean {
+    return (
+      this.state === 'ride' &&
+      this.freeSkate &&
+      this.slideTimer <= 0 &&
+      !this.crawling &&
+      this.lipStallT <= 0 &&
+      Math.abs(this.speed) >= TUNING.manualMinSpeed * 0.7
     );
   }
 
@@ -3016,6 +3064,7 @@ export class Player {
   // riding its own window.
   private endManual(): void {
     this.manualing = 0;
+    this.manualCoyoteT = 0;
     this.balance = 0;
     this.balanceCritT = 0;
   }

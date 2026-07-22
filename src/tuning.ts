@@ -92,6 +92,8 @@ export const TUNING = {
   manualDrift: 1, // manual balance: how fast the pitch needle runs away
   manualControl: 3.2, // how hard up/down input fights the manual needle
   manualFlickWindow: 0.28, // max seconds between the two stick flicks (up-then-down = manual, down-then-up = nose)
+  manualLandGrace: 0.45, // seconds after a clean landing before the combo banks — time to flick into a manual
+  manualCoyote: 0.25, // seconds a manual survives with the wheels off the deck (crests, rollers) before it drops
   lipAngle: 10, // LIP TRICK: approach must be within this many degrees of dead-on (90 deg to the coping) — off-axis arrivals grind the coping instead
   lipMaxTime: 12, // longest a lip stall holds before you drop back in
   lipDrift: 0.95, // lip stall balance: how fast the needle runs away on its own
@@ -227,6 +229,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   manualDrift: { min: 0.2, max: 3, step: 0.05 },
   manualControl: { min: 0.5, max: 8, step: 0.1 },
   manualFlickWindow: { min: 0.1, max: 0.6, step: 0.02 },
+  manualLandGrace: { min: 0, max: 1.2, step: 0.05 },
+  manualCoyote: { min: 0, max: 0.6, step: 0.05 },
   lipAngle: { min: 5, max: 60, step: 1 },
   lipMaxTime: { min: 0.5, max: 12, step: 0.25 },
   lipDrift: { min: 0.1, max: 3, step: 0.05 },
@@ -403,6 +407,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Minimum rolling speed to pop a manual (flick the stick up-then-down) or nose manual (down-then-up), and the speed a held manual drops out at.',
   manualDrift: 'How fast the manual balance needle runs away on its own (fought with up/down on the stick). Pegging it = bail.',
   manualControl: 'How hard up/down input fights the manual needle.',
+  manualLandGrace:
+    'Seconds after a clean landing before the combo banks. Flick a manual (or catch a rail) inside this window and the string stays alive.',
+  manualCoyote:
+    'Seconds a live manual keeps balancing with the wheels briefly off the deck — carries it over crests and rollers instead of dropping. The needle freezes while airborne.',
   manualFlickWindow:
     'Max time between the two stick flicks that pop a manual. Finish the flick mid-air (within a beat of touchdown) and you LAND INTO the manual — the combo stays alive.',
   lipAngle:
@@ -517,7 +525,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   {
     title: 'MANUAL & LIP',
-    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
+    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
