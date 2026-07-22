@@ -4703,18 +4703,13 @@ export class Player {
       // grounded: a chest-high-or-better step within reach
       if (rise < LEDGE_HANG_DEPTH + 0.2 || rise > TUNING.ledgeReach) return false;
     } else {
-      // air: PROXIMITY of the hands to the lip decides — not the jump phase.
-      // The hands ride ~LEDGE_HANG_DEPTH above the feet, so falling catches
-      // anywhere the lip sits from just-above-the-hands down to full reach,
-      // and a RISING jump catches the moment the hands come level with the
-      // lip — unless the jump is going to crest the deck anyway (predicted
-      // apex clears it), in which case let the vault land on top.
+      // air: catches on DOWNWARD momentum only — the jump's rise always plays
+      // out (no snag on the way up); once falling (or cresting), PROXIMITY of
+      // the hands to the lip decides: anywhere from just-above-the-hands down
+      // to full reach. The somersault is no blocker — the fall out of a double
+      // jump is exactly when the higher ledges get caught.
+      if (this.vVel > 1.5) return false; // still rising: let the jump finish
       if (rise < 0.7 || rise > TUNING.ledgeReach) return false;
-      if (this.vVel > 1.5) {
-        if (rise > LEDGE_HANG_DEPTH + 0.55) return false; // hands not up to the lip yet
-        const apex = this.pos.y + (this.vVel * this.vVel) / (2 * Math.max(1, TUNING.riseGravity));
-        if (apex > lipRough + 0.25) return false; // clearing it — that's a landing, not a grab
-      }
     }
     // Which side face was hit? Platform colliders are full footprints (not
     // thin like wallride walls), so pick by least penetration — the shallow
