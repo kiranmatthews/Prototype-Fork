@@ -4060,6 +4060,14 @@ export class Player {
             level.lightFuse(c);
             this.vVel = -1;
           } else {
+            // Rolling into it on the board: a hard smash-speed hit pops it
+            // outright (deliberate, safe — same bar as smashing crates); a
+            // slower nudge just lights the 3-2-1 fuse and bumps like a wall.
+            if (this.freeSkate && Math.abs(this.speed) >= TUNING.smashSpeed) {
+              level.detonate(c, true);
+              continue;
+            }
+            if (this.freeSkate && Math.abs(this.speed) > 1.5) level.lightFuse(c);
             this.pushOutOf(c.box);
           }
         }
