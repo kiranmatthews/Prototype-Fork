@@ -1799,8 +1799,18 @@ export class Player {
         // side stick sits at 90° off the heading, well under the brake angle)
         if (rx !== 0 || ry !== 0) {
           const inv = 1 / Math.hypot(rx, ry);
-          const dx = rx * inv;
-          const dz = -ry * inv; // stick up = world -Z
+          // screen-up = the camera's forward: -Z normally, the LANE tangent on
+          // camera-spine levels, the live camera aim in chase mode — the same
+          // frame the stick decomposition uses. Reading the raw stick as
+          // world -Z here is what made "forward" stop meaning forward the
+          // moment the spine turned the course.
+          const cfc =
+            level.laneDirAt(this.pos.x, this.pos.z) ??
+            (TUNING.chaseCam > 0.5 && !level.boulder
+              ? { x: this.camDir.x, z: this.camDir.z }
+              : { x: 0, z: -1 });
+          const dx = (cfc.x * ry - cfc.z * rx) * inv;
+          const dz = (cfc.z * ry + cfc.x * rx) * inv;
           // signed angle from heading toward the stick, then turn (capped by
           // carveGrip) while KEEPING the speed — momentum survives the carve.
           const fwd = dx * this.axisF.x + dz * this.axisF.z;

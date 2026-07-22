@@ -7612,6 +7612,21 @@ export class Level {
 
     this.killY = -26;
     this.pitPlane('water', -34, 0, -360, 1800);
+
+    // CAMERA SPINE: the ribbons' own centerline is the camera lane — the rig
+    // and the control frame ease along its tangent, so screen-up is always
+    // "down the slide" and the road stays centered through every sweep (the
+    // same machinery the editor's camnode chains drive).
+    const lane: { x: number; z: number }[] = [{ x: 0, z: 20 }];
+    for (const r of [r1, r2s, r3]) {
+      const n = Math.max(2, Math.round(r.len / 8));
+      for (let i = 0; i <= n; i++) {
+        const p = r.curve.getPointAt(i / n);
+        lane.push({ x: p.x, z: p.z });
+      }
+    }
+    lane.push({ x: 8, z: -740 });
+    this.lanePts = lane;
   }
 
   private buildRandom(): void {
