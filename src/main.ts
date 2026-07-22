@@ -288,9 +288,10 @@ const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 // 2P split state (functions live further down, past the player):
 let split2p = false;
 let p2: Player | null = null;
-const input2 = new Input(1); // gamepad slot 2 only — no keyboard, no touch
+const input2 = new Input(true); // pad-only: claims its own gamepad, no keyboard/touch
 const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 const cam2F = new THREE.Vector3(0, 0, -1);
+let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
 const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 
 function resize(): void {
@@ -325,6 +326,11 @@ resize();
 let appliedScale = TUNING.renderScale;
 
 const input = new Input();
+// Each player's input refuses the other's claimed pad — and P2 additionally
+// rejects any slot that mirrors P1's pad (one DualShock on USB + Bluetooth
+// at once shows up as TWO slots streaming identical state).
+input.rival = input2;
+input2.rival = input;
 const ui = new UI();
 const recorder = new Recorder();
 const replayer = new Replayer();
@@ -398,15 +404,25 @@ function set2P(on: boolean, force = false): void {
     }
     p2.group.visible = true;
     split2p = true;
+    // P1 = lowest connected slot; P2 claims itself on its first press. Slot
+    // NUMBERS can't be trusted (a USB+Bluetooth pad registers twice), so the
+    // second rider waits for a provably-different device to speak up.
+    input.releaseClaim();
+    input.claimedSlot = pads.length ? pads[0]!.index : null;
+    input2.releaseClaim();
+    p2Linked = false;
     player.respawn(level, true);
     p2.respawn(level, true);
     p2.pos.x += 1.6; // side by side at the start line
     deactivate2pModes();
     ui.set2P(true);
-    ui.showMessage('2-PLAYER SPLIT', 'top = P1 · bottom = P2 (blue) · Share/R resets both', 3200);
+    ui.showMessage('2-PLAYER SPLIT', 'P2 (blue, bottom): press ✕ on the OTHER pad to join', 4200);
   } else {
     split2p = false;
     if (p2) p2.group.visible = false;
+    // release both so the 1P scan is free to take any pad again
+    input.releaseClaim();
+    input2.releaseClaim();
     ui.set2P(false);
     ui.showMessage('1-PLAYER', '', 1200);
   }
@@ -1167,7 +1183,17 @@ function frame(): void {
   }
   const dt = Math.min(clock.getDelta(), 0.1);
   input.update();
-  if (split2p) input2.update();
+  if (split2p) {
+    input2.update();
+    // join/loss toasts: P2's pad is claimed by activity, not slot number
+    if (!p2Linked && input2.claimedSlot !== null) {
+      p2Linked = true;
+      ui.showMessage('P2 JOINED', input2.gamepadName, 1800);
+    } else if (p2Linked && input2.claimedSlot === null) {
+      p2Linked = false;
+      ui.showMessage('P2 PAD LOST', 'press any button on it to rejoin', 3000);
+    }
+  }
 
   // Controller-only players fire no keydown/pointer gesture, so the audio
   // context would stay suspended until they touched the keyboard. Nudge it from
@@ -1301,6 +1327,7 @@ frame();
   player,
   level,
   input,
+  input2,
   TUNING,
   switchLevel,
   scene,

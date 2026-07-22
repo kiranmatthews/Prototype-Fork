@@ -32,6 +32,21 @@ export class Input {
 
   gamepadName = 'no controller';
 
+  // Pad routing is by CLAIMED SLOT, never by hardcoded slot number: one
+  // physical DualShock connected over USB while still paired via Bluetooth
+  // registers TWICE (two slots mirroring the same device), so "slot 1" can be
+  // a copy of pad 1 while the real second controller sits at slot 2.
+  // null = unclaimed. The merged (P1) input claims whatever its scan lands on;
+  // a pad-only (P2) input claims by activity — see pollGamepad.
+  claimedSlot: number | null = null;
+  // The other player's Input. Its claimed slot is off limits, and any slot
+  // mirroring that pad's live state is treated as the same physical device.
+  rival: Input | null = null;
+  // Claim-by-activity debounce: a mirror copy can lead/lag its twin by a
+  // frame around button transitions, so one differing frame proves nothing.
+  private claimStreak = 0;
+  private claimCandidate = -1;
+
   private keys = new Set<string>();
   private touch: TouchControls | null = null;
   private prevJump = false;
@@ -42,11 +57,10 @@ export class Input {
   private prevRestart = false;
   private prevPause = false;
 
-  // padIndex: null = the normal merged input (keyboard + first pad + touch);
-  // a number = THAT gamepad slot only (player 2 in split-screen) — no
+  // padOnly: the split-screen P2 input — one claimed gamepad only, no
   // keyboard, no touch overlay, no listeners.
-  constructor(private padIndex: number | null = null) {
-    if (this.padIndex !== null) return; // pad-only: polling does everything
+  constructor(private padOnly = false) {
+    if (this.padOnly) return; // pad-only: polling does everything
     this.touch = new TouchControls();
     window.addEventListener('keydown', (e) => {
       // typing in a panel field (tuner numbers, editor coordinates) must not
@@ -84,7 +98,7 @@ export class Input {
 
   // Poll once per render frame, before the fixed-step loop runs.
   update(): void {
-    const solo = this.padIndex !== null;
+    const solo = this.padOnly;
     const k = this.keys;
     let moveX = solo ? 0 : (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0) - (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0);
     let moveY = solo ? 0 : (k.has('ArrowUp') || k.has('KeyW') ? 1 : 0) - (k.has('ArrowDown') || k.has('KeyS') ? 1 : 0);
@@ -176,6 +190,13 @@ export class Input {
     this.prevPause = pause;
   }
 
+  // Drop the claimed pad and restart the audition from scratch (2P toggles).
+  releaseClaim(): void {
+    this.claimedSlot = null;
+    this.claimCandidate = -1;
+    this.claimStreak = 0;
+  }
+
   // Called after the first fixed step of each frame so a single press only
   // fires once.
   consumeEdges(): void {
@@ -191,20 +212,70 @@ export class Input {
 
   private pollGamepad(): Gamepad | null {
     if (!navigator.getGamepads) return null;
-    if (this.padIndex !== null) {
-      const pad = navigator.getGamepads()[this.padIndex];
+    const pads = navigator.getGamepads();
+    if (this.claimedSlot !== null) {
+      const pad = pads[this.claimedSlot];
       if (pad && pad.connected) {
+        this.gamepadName = pad.id;
+        return pad;
+      }
+      this.claimedSlot = null; // pad went away — fall through and re-claim
+    }
+    const rivalSlot = this.rival ? this.rival.claimedSlot : null;
+    if (!this.padOnly) {
+      // Merged (P1) input: first connected pad that isn't the other player's.
+      // The scan result is claimed so the rival's exclusion check sees it.
+      for (const pad of pads) {
+        if (!pad || !pad.connected || pad.index === rivalSlot) continue;
+        this.claimedSlot = pad.index;
         this.gamepadName = pad.id;
         return pad;
       }
       return null;
     }
-    for (const pad of navigator.getGamepads()) {
-      if (pad && pad.connected) {
+    // Pad-only (P2) input: claim the first slot showing deliberate input that
+    // is provably NOT the rival's device — its state must differ from the
+    // rival pad's for a few consecutive polls, because a USB+Bluetooth mirror
+    // matches its twin except for one-frame leads around transitions.
+    const rivalPad = rivalSlot !== null ? pads[rivalSlot] : null;
+    for (const pad of pads) {
+      if (!pad || !pad.connected || pad.index === rivalSlot) continue;
+      if (!padActive(pad) || (rivalPad && sameState(pad, rivalPad))) continue;
+      if (pad.index !== this.claimCandidate) {
+        this.claimCandidate = pad.index;
+        this.claimStreak = 0;
+      }
+      if (++this.claimStreak >= 4) {
+        this.claimedSlot = pad.index;
         this.gamepadName = pad.id;
         return pad;
       }
+      return null; // still auditioning this slot
     }
+    this.claimCandidate = -1;
+    this.claimStreak = 0;
     return null;
   }
+}
+
+// Any deliberate input: a button down or the stick clearly off center.
+function padActive(pad: Gamepad): boolean {
+  if (pad.buttons.some((b) => b.pressed)) return true;
+  return Math.hypot(pad.axes[0] ?? 0, pad.axes[1] ?? 0) > 0.35;
+}
+
+// Same physical device test for a mirror copy (same id, same live state).
+// The axis tolerance is wide because the two HID streams sample the stick at
+// slightly different times — a fast whip can put them ~0.3 apart for a frame.
+function sameState(a: Gamepad, b: Gamepad): boolean {
+  if (a.id !== b.id) return false;
+  const nb = Math.max(a.buttons.length, b.buttons.length);
+  for (let i = 0; i < nb; i++) {
+    if (!!a.buttons[i]?.pressed !== !!b.buttons[i]?.pressed) return false;
+  }
+  const na = Math.max(a.axes.length, b.axes.length);
+  for (let i = 0; i < na; i++) {
+    if (Math.abs((a.axes[i] ?? 0) - (b.axes[i] ?? 0)) > 0.35) return false;
+  }
+  return true;
 }
