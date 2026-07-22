@@ -217,6 +217,7 @@ export const LEVEL_NAMES = [
   'Sky Bridge',
   'Custom', // built from CUSTOM_LEVEL data (the in-game level editor owns it)
   'The Overgrowth', // authored jungle corridor, built through the component pipeline
+  'The Slipstream', // elevated ribbon slide: sweeping banked curves high over the sea
 ];
 
 // ---- CUSTOM LEVEL: a data-driven course the in-game editor builds ----------
@@ -1318,6 +1319,7 @@ export class Level {
     else if (courseId === 6) this.buildSkyBridge();
     else if (courseId === 7) this.buildCustom();
     else if (courseId === 8) this.buildCustom(overgrownLevel(), true);
+    else if (courseId === 9) this.buildSlipstream();
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.dressRails(); // every builder is done adding rails by now
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
@@ -7437,6 +7439,181 @@ export class Level {
   // Crude seedless random course: flats with random furniture, gaps, slopes,
   // rails over pits, kickers, step blocks — and the camera occasionally
   // swings sideways for a stretch. Re-select "Random" to reroll.
+  // ---- THE SLIPSTREAM: an endless-waterslide skyway — one huge ribbon of
+  // banked, sweeping, mostly-downhill road curving high over open water.
+  // The deck is real curved geometry (a spline-swept ribbon in groundMeshes),
+  // so the ordinary surface-tangent riding does all the work: dips feed
+  // speed, crests pop airs, and the raised gutter lips carve like a slide.
+  private slideRibbon(
+    pts: THREE.Vector3[],
+    width = 12,
+    color = 0x3ec8d8,
+  ): { curve: THREE.CatmullRomCurve3; len: number } {
+    const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal', 0.5);
+    const len = curve.getLength();
+    const steps = Math.max(24, Math.round(len / 1.6));
+    const UP = new THREE.Vector3(0, 1, 0);
+    // gutter profile across the deck: raised lips keep the flow in the slide
+    const prof: Array<[number, number]> = [
+      [-width / 2, 1.25],
+      [-width / 2 + 2.4, 0],
+      [width / 2 - 2.4, 0],
+      [width / 2, 1.25],
+    ];
+    const pos: number[] = [];
+    const uv: number[] = [];
+    const idx: number[] = [];
+    const tanA = new THREE.Vector3();
+    const tanB = new THREE.Vector3();
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const p = curve.getPointAt(t);
+      curve.getTangentAt(t, tanA);
+      // signed turn rate ahead of this ring -> bank INTO the curve
+      curve.getTangentAt(Math.min(1, t + 0.02), tanB);
+      const turn = Math.atan2(tanA.x * tanB.z - tanA.z * tanB.x, tanA.x * tanB.x + tanA.z * tanB.z);
+      const bank = THREE.MathUtils.clamp(turn * 7, -0.28, 0.28); // a lean, not a wall
+      const right = new THREE.Vector3().crossVectors(tanA, UP);
+      if (right.lengthSq() < 1e-5) right.set(1, 0, 0);
+      right.normalize();
+      const upv = new THREE.Vector3().crossVectors(right, tanA).normalize();
+      const rr = right.clone().applyAxisAngle(tanA, bank);
+      const uu = upv.clone().applyAxisAngle(tanA, bank);
+      for (const [off, h] of prof) {
+        const v = p.clone().addScaledVector(rr, off).addScaledVector(uu, h);
+        pos.push(v.x, v.y, v.z);
+        uv.push((off / width + 0.5) * 1.5, (t * len) / 9);
+      }
+      if (i > 0) {
+        const a = (i - 1) * 4;
+        const b = i * 4;
+        for (let q = 0; q < 3; q++) {
+          idx.push(a + q, a + q + 1, b + q, a + q + 1, b + q + 1, b + q);
+        }
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    const mesh = new THREE.Mesh(
+      geo,
+      this.patterned(new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide }), 10, 10, 'stone'),
+    );
+    mesh.name = 'slipstream';
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+    return { curve, len };
+  }
+
+  // fruit strung along a stretch of ribbon, floating just over the deck line
+  private ribbonFruit(curve: THREE.CatmullRomCurve3, t0: number, t1: number, n: number): void {
+    for (let i = 0; i < n; i++) {
+      const p = curve.getPointAt(THREE.MathUtils.lerp(t0, t1, n === 1 ? 0 : i / (n - 1)));
+      this.pickup(p.x, p.y + 1.3, p.z);
+    }
+  }
+
+  private buildSlipstream(): void {
+    this.theme = {
+      skyTop: '#1d6fb8',
+      skyBottom: '#bfeef4', // bright noon haze over open water
+      sunColorHex: '#fff6d8',
+      sunU: 0.68,
+      sunV: 0.24,
+      stars: false,
+      fog: 0xa8dfeb,
+      fogNear: 60,
+      fogFar: 240,
+      hemiSky: 0xbfe8f2,
+      hemiGround: 0x2a6a80,
+      hemiI: 1.05,
+      sunColor: 0xfff2c8,
+      sunI: 1.1,
+      particleColor: 0xffffff, // spray motes drifting off the slide
+      particleWind: [0.5, 0.1, 0.3],
+    };
+    const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+
+    // start plateau: a wide launch deck high in the sky
+    this.slab('launch deck', 26, -6, 100, 16, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
+    this.spawnPos.set(0, 100.1, 18);
+    this.currentSpawn.copy(this.spawnPos);
+
+    // RIBBON 1 — the big opening drop swinging right, then a long banked S
+    // back left with a crest bump for the first air (all monotonic -z, so the
+    // stock course camera reads it like a road)
+    const r1 = this.slideRibbon([
+      V(0, 100, -4),
+      V(0, 97, -26),
+      V(16, 88, -58),
+      V(38, 80, -96),
+      V(40, 76, -128),
+      V(22, 68, -164),
+      V(-8, 62, -198),
+      V(-30, 60, -226),
+      V(-34, 62, -252), // rising crest...
+      V(-30, 57, -276), // ...kicks the first gap air
+    ]);
+    this.ribbonFruit(r1.curve, 0.1, 0.34, 7);
+    this.ribbonFruit(r1.curve, 0.55, 0.8, 7);
+    this.crate(38, 76.6, -110);
+    this.crate(40, 76.3, -122, 'mystery');
+    this.crate(22, 68.5, -164, 'tnt');
+
+    // RIBBON 2 — catch the drop lower, sweep back right through a valley dip,
+    // then a tall crest launches the second gap
+    const r2s = this.slideRibbon([
+      V(-28, 50, -286), // catch deck just past the gap (short hop, honest drop)
+      V(-22, 48, -300),
+      V(-8, 43, -326),
+      V(14, 38, -360), // valley floor: max speed
+      V(30, 40, -396),
+      V(32, 45, -424), // long rising crest...
+      V(28, 41, -444),
+    ]);
+    this.ribbonFruit(r2s.curve, 0.15, 0.45, 8);
+    this.checkpoint(43.6, -330, -6);
+    this.crate(14, 38.6, -356);
+    this.crate(18, 38.5, -364, 'nitro');
+    const midRail = new Rail([
+      V(14, 39.6, -352),
+      V(24, 40.9, -388),
+      V(30, 43.4, -414),
+    ]);
+    this.rails.push(midRail);
+    this.root.add(midRail.object);
+
+    // RIBBON 3 — the finale: a wide swooping left, a tight banked right, and
+    // a long straight bomb down to the finish flat
+    const r3 = this.slideRibbon([
+      V(26, 34, -454), // catch just past the second gap
+      V(20, 26, -470),
+      V(2, 22, -498),
+      V(-22, 18, -532),
+      V(-30, 14, -566),
+      V(-16, 10, -600),
+      V(4, 6, -632),
+      V(10, 2.6, -664),
+      V(8, 1.2, -692),
+    ]);
+    this.ribbonFruit(r3.curve, 0.1, 0.5, 9);
+    this.crystal(-30, 15.6, -566); // parked on the tight bank: carve high to take it
+    this.crate(-16, 10.6, -600);
+    this.crate(-12, 10.4, -606, 'mask');
+
+    // finish flat: run it out through the gate
+    this.slab('finish run', -684, -744, 1, 18, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 8, 'stone');
+    this.finishZ = -716;
+    this.endWallZ = -738;
+    this.finishGate(1, this.finishZ, 8);
+    this.endWall(1, 8);
+
+    this.killY = -26;
+    this.pitPlane('water', -34, 0, -360, 1800);
+  }
+
   private buildRandom(): void {
     const mats = [0x87939a, 0x74838a, 0x7a99a0, 0x7f9884].map(
       (c) => new THREE.MeshLambertMaterial({ color: c }),
