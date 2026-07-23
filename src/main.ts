@@ -77,18 +77,29 @@ sky.frustumCulled = false;
 sky.visible = !LITE;
 scene.add(sky);
 
-// Photographic skybox: a panoramic sunset wraps the whole dome. Once it loads
-// it replaces the procedural per-theme gradient (applyTheme keeps it in place).
+// Photographic skybox: a painted sunset backdrop mapped onto the dome. It is
+// NOT a full 360 wrap — it's scaled down so a good slice of the composition
+// sits above the horizon, the image's own horizon (600px of 887) is pinned to
+// the world horizon (the dome's equator), and its alpha-faded bottom melts
+// into the retinted fog. Repeats horizontally, clamps top/bottom.
+const SKY_K = 2.15; // uniform scale: >1 shrinks the image so more of it shows
+const SKY_HORIZON_V = 1 - 600 / 887; // the painting's horizon as a texture-V coord
+const SKY_FOG = new THREE.Color(0xd08a7e); // warm sunset haze, to match the horizon band
 let skyboxTex: THREE.Texture | null = null;
-new THREE.TextureLoader().load(import.meta.env.BASE_URL + 'skybox.jpg', (tex) => {
+new THREE.TextureLoader().load(import.meta.env.BASE_URL + 'skybox.png', (tex) => {
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapS = THREE.RepeatWrapping; // tile around the sides
+  tex.wrapT = THREE.ClampToEdgeWrapping; // clamp sky above / faded clouds below
+  tex.repeat.set(SKY_K, SKY_K);
+  tex.offset.set(0, SKY_HORIZON_V - 0.5 * SKY_K); // horizon -> dome equator
   skyboxTex = tex;
   const m = sky.material as THREE.MeshBasicMaterial;
+  m.transparent = true; // the alpha-faded bottom shows the fog behind it
   const old = m.map;
   m.map = tex;
   m.needsUpdate = true;
   if (old && old !== tex) old.dispose();
+  applyTheme(); // re-tint the fog to the sunset now that the sky is live
 });
 
 // --- sky painting ------------------------------------------------------------
@@ -272,9 +283,12 @@ function setEditorView(editing: boolean): void {
 
 function applyTheme(): void {
   const t = level.theme;
+  // the photographic skybox retints every level's haze to the sunset so the
+  // painting's alpha-faded base melts seamlessly into the far distance
+  const fogHex = skyboxTex ? SKY_FOG.getHex() : t.fog;
   // editor view: no fog at all, so distant geometry stays crisp and visible
-  scene.fog = editorViewActive ? null : new THREE.Fog(t.fog, t.fogNear, t.fogFar);
-  scene.background = new THREE.Color(t.fog);
+  scene.fog = editorViewActive ? null : new THREE.Fog(fogHex, t.fogNear, t.fogFar);
+  scene.background = new THREE.Color(fogHex);
   hemi.color.set(t.hemiSky);
   // ground bounce leans toward warm sand: every theme reads a touch tropical
   hemi.groundColor.set(t.hemiGround).lerp(new THREE.Color(0xc79a62), 0.3);
