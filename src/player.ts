@@ -6017,6 +6017,13 @@ export class Player {
         (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
+    // Standing on-foot charge (jump crouch at a standstill): the running-charge
+    // knee fold below swings the shoes forward through the floor and the crouch
+    // drops the hips — with no board deck to telescope into, the feet clip
+    // through flat ground. This weight shallows the fold, shortens the legs, and
+    // eases the drop so a planted charge stays a compact, feet-flat squat. The
+    // charging RUN (not planted) keeps its deep cycling fold — the feet lift.
+    const standCharge = this.chargePlanted ? this.chargePose * (1 - sk) : 0;
     // Standing still on foot: the reference idle is SUBTLE — slow weight-shift
     // sway, breathing, a lazy head wander. Builds on the eased idleAmp and
     // fades the moment any pose takes over.
@@ -6132,7 +6139,7 @@ export class Player {
       // the deep running-charge knee fold swings the shoes forward THROUGH
       // the deck — on the board it eases down to a shallow athletic bend
       // (the matching legs.scale term keeps the soles pinned to the grip)
-      const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk);
+      const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk) - 0.62 * standCharge; // planted: shallow the forward fold so shoes don't swing through the floor
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
       this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + 0.38 * underW + (HS ? HS.kneeR * 0.65 * HS.w : ledgeW * (0.5 - dangle) + 0.8 * mantle);
@@ -6370,6 +6377,7 @@ export class Player {
         1 -
           0.22 * this.deckPose * (1 - this.wallridePose) - // stand ON the deck top, not through it (wallride keeps its own tuck)
           0.1 * this.chargePose * this.skatePose - // absorbs the pump's shallow knee bend so the feet stay planted
+          0.2 * standCharge - // planted on-foot charge: telescope the legs so the crouch keeps the soles down
           0.5 * this.grabPose -
           0.4 * flipTuck -
           0.45 * this.crawlPose -
@@ -6660,7 +6668,8 @@ export class Player {
       this.grabPose * -0.5 -
       this.slidePose * 0.38 -
       (crawlMove * 0.2 + crouchW * 0.36) - // crawl: shallow drop — the pitch already lays her out; deeper buries the knees
-      this.chargePose * (0.26 - 0.14 * this.skatePose) - // board pump: shallower — a full drop telescopes the torso through the deck
+      this.chargePose * (0.26 - 0.14 * this.skatePose) + // board pump: shallower — a full drop telescopes the torso through the deck
+      standCharge * 0.12 - // planted on-foot: ease the crouch drop (no deck to sink into)
       this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * this.dropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.075 * this.walkAmp + // reference bounce: each step hops
