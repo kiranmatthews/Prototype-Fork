@@ -4065,6 +4065,145 @@ export class Level {
     this.pendulums.push({ pivot, len, amp, speed, phase, yaw, box: new THREE.Box3(), lastSign: 1 });
   }
 
+  // ROUNDED-RECTANGLE BOWL: a quarter-pipe profile swept around a rounded-rect
+  // path — four straight vert walls joined by curved corners, THPS pool
+  // style. Built as MESH geometry: the transition is ridden by the ordinary
+  // surface-tangent physics and airs off the lip use the tracked vert hang,
+  // which is exactly what lets hang time follow the corners. An entry CHANNEL
+  // (a smooth dip of the wall to floor level) on the +Z side lets riders roll
+  // in; a coping rail runs the rest of the rim.
+  private roundedBowl(
+    cx: number,
+    cz: number,
+    hw: number, // inner floor half-width (X) at the transition base
+    hd: number, // inner floor half-depth (Z)
+    corner: number, // corner radius of the rounded-rect path
+    R = 5, // transition radius (quarter-pipe profile)
+    arcDeg = 60, // where the transition stops (90 = full vertical). Sub-vert
+    // lips are still vert launches AND still crestable at this game's real
+    // speeds — full vertical walls are dead ends under the mesh slope physics
+    channelW = 6, // entry channel width on the +Z straight (0 = none)
+    mat?: THREE.MeshLambertMaterial,
+  ): void {
+    const material = this.patterned(
+      mat ?? new THREE.MeshLambertMaterial({ color: 0xaab4ba }),
+      8,
+      8,
+      'pavement',
+    );
+    material.side = THREE.DoubleSide;
+    // --- path: rounded rect, sampled clockwise, with outward normals -------
+    const pts: { x: number; z: number; ox: number; oz: number; s: number }[] = [];
+    let arc = 0;
+    const push = (x: number, z: number, ox: number, oz: number): void => {
+      const last = pts[pts.length - 1];
+      if (last) arc += Math.hypot(x - last.x, z - last.z);
+      pts.push({ x, z, ox, oz, s: arc });
+    };
+    const sw = hw - corner; // straight half-spans
+    const sd = hd - corner;
+    const STEP = 1.1;
+    // +Z straight (west→east), then corners/straights clockwise
+    const straight = (x0: number, z0: number, x1: number, z1: number, ox: number, oz: number): void => {
+      const len = Math.hypot(x1 - x0, z1 - z0);
+      const n = Math.max(1, Math.round(len / STEP));
+      for (let i = 0; i <= n; i++) {
+        push(x0 + ((x1 - x0) * i) / n, z0 + ((z1 - z0) * i) / n, ox, oz);
+      }
+    };
+    const cornerArc = (ccx: number, ccz: number, a0: number, a1: number): void => {
+      const n = Math.max(3, Math.round((Math.abs(a1 - a0) * corner) / STEP));
+      for (let i = 1; i <= n; i++) {
+        const a = a0 + ((a1 - a0) * i) / n;
+        const ox = Math.cos(a);
+        const oz = Math.sin(a);
+        push(ccx + ox * corner, ccz + oz * corner, ox, oz);
+      }
+    };
+    straight(-sw, hd, sw, hd, 0, 1); // +Z edge (the channel edge)
+    cornerArc(sw, sd, Math.PI / 2, 0); // NE corner
+    straight(hw, sd, hw, -sd, 1, 0); // +X edge
+    cornerArc(sw, -sd, 0, -Math.PI / 2); // SE corner
+    straight(sw, -hd, -sw, -hd, 0, -1); // -Z edge
+    cornerArc(-sw, -sd, -Math.PI / 2, -Math.PI); // SW corner
+    straight(-hw, -sd, -hw, sd, -1, 0); // -X edge
+    cornerArc(-sw, sd, Math.PI, Math.PI / 2); // NW corner
+    // --- profile: floor edge → quarter circle → vert lip → outer skirt ----
+    const prof: [number, number][] = [];
+    const arcRad = (Math.PI / 180) * arcDeg;
+    for (let a = 0; a <= 6; a++) {
+      const th = (a / 6) * arcRad;
+      prof.push([R * Math.sin(th), R * (1 - Math.cos(th))]);
+    }
+    const uTop = R * Math.sin(arcRad);
+    const yTop = R * (1 - Math.cos(arcRad));
+    // DECK RING at lip height, THPS pool rules: roll over the lip un-popped
+    // and you land ON the deck; pop X at the lip and the vert ollie throws
+    // you into the tracked hang. (A bare knife edge fails both ways here —
+    // the short drop behind it sits inside the ground-snap window, so
+    // cresting just glues you down the outside.)
+    prof.push([uTop + 2.3, yTop]);
+    prof.push([uTop + 2.38, yTop]);
+    prof.push([uTop + 2.38, 0]); // outer skirt down to the ground
+    // --- channel taper: wall height eases to 0 across the entry gap -------
+    const taperAt = (p: { x: number; z: number }): number => {
+      if (channelW <= 0) return 1;
+      if (p.z < hd - corner * 0.5) return 1; // only the +Z edge dips
+      const d = Math.abs(p.x) - channelW / 2;
+      if (d <= 0) return 0;
+      const t = Math.min(1, d / 2.5);
+      return t * t * (3 - 2 * t); // smoothstep shoulder
+    };
+    // --- sweep + triangulate (rings around the closed loop) ---------------
+    const pos: number[] = [];
+    const uv: number[] = [];
+    const idx: number[] = [];
+    const NP = prof.length;
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      const k = taperAt(p);
+      for (const [u, y] of prof) {
+        pos.push(cx + p.x + p.ox * u, y * k + 0.01, cz + p.z + p.oz * u);
+        uv.push(u / 3, p.s / 6);
+      }
+      if (i > 0) {
+        const a = (i - 1) * NP;
+        const b = i * NP;
+        for (let q = 0; q < NP - 1; q++) {
+          idx.push(a + q, a + q + 1, b + q, a + q + 1, b + q + 1, b + q);
+        }
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    const mesh = new THREE.Mesh(geo, material);
+    mesh.name = 'bowl';
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+    // --- coping rail around the rim, skipping the channel -----------------
+    const railPts: THREE.Vector3[] = [];
+    const flushRail = (): void => {
+      if (railPts.length >= 2) {
+        const r = new Rail([...railPts]);
+        this.rails.push(r);
+        this.root.add(r.object);
+      }
+      railPts.length = 0;
+    };
+    for (let i = 0; i < pts.length; i += 2) {
+      const p = pts[i];
+      if (taperAt(p) >= 0.999) {
+        railPts.push(new THREE.Vector3(cx + p.x + p.ox * (uTop + 0.1), yTop + 0.06, cz + p.z + p.oz * (uTop + 0.1)));
+      } else {
+        flushRail();
+      }
+    }
+    flushRail();
+  }
+
   // Swinging grab-rope: a driven pendulum the player can hang from. speed 0 =
   // natural pendulum frequency for the length (long ropes swing slow).
   private ropeSwing(x: number, anchorY: number, z: number, len = 6, amp = 0.85, speed = 0, phase = 0, yawDeg = 0): void {
@@ -7257,6 +7396,20 @@ export class Level {
     this.enemy(26, 44, 0, -10, 4, 'x', 'grunt'); // patrols the east flat
     this.enemy(-44, -26, 0, -30, 3.5, 'x', 'floater'); // drifts the west flat
     this.enemy(38, 38, 0, -47, 0, 'x', 'spinner'); // blades parked off the ridge
+
+    // --- THE POOL: a rounded-rectangle bowl at the south end — four vert
+    // walls joined by curved corners. Airs here ride the TRACKED vert hang
+    // around the bends (the analytic pipes can't corner; this mesh can).
+    // Roll in through the channel on the north rim, carve the loop, grind
+    // the coping around the whole rim.
+    // R 5 to 60 degrees (lip ~2.5): crestable from a full-speed run-up — mesh
+    // transitions ride the honest slope physics, not the pipes' pump loop, so
+    // a full-vertical wall would be a dead end at this game's maxSpeed
+    this.roundedBowl(0, -88, 13, 9, 5, 5.0, 60, 6);
+    for (let a = 0; a < 8; a++) {
+      const th = (a / 8) * Math.PI * 2;
+      this.pickup(Math.cos(th) * 7, 0.4, -88 + Math.sin(th) * 4.5);
+    }
 
     this.finishGate(0, this.finishZ); // run the pipes, cross the line at the south wall
   }

@@ -1448,14 +1448,19 @@ export class Player {
       this.freeSkate &&
       !fromSlide &&
       this.groundHit !== null &&
-      this.groundHit.halfpipe !== undefined &&
-      this.groundHit.normal.y < 0.9
+      this.groundHit.normal.y < 0.9 &&
+      // analytic pipe wall, OR any steep MESH transition (bowls, banked
+      // walls) — the pop is a vert launch on both; mesh faces skip the
+      // pipe-hang rules and take the TRACKED hang instead
+      (this.groundHit.halfpipe !== undefined || this.groundHit.normal.y < TUNING.steepStand)
     ) {
       const pop = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
       const climb = Math.max(0, this.speed * Math.max(this.lastTy, 0));
       this.vVel = Math.min(pop + climb, CONST.maxFallSpeed);
-      this.hangPipe = this.groundHit.halfpipe;
-      this.pipeRideT = Math.max(this.pipeRideT, 0.05); // enterVertAir: pipe-hang rules
+      if (this.groundHit.halfpipe) {
+        this.hangPipe = this.groundHit.halfpipe;
+        this.pipeRideT = Math.max(this.pipeRideT, 0.05); // enterVertAir: pipe-hang rules
+      }
       this.lastJumpType = 'Board Ollie';
       this.state = 'air';
       this.grounded = false;
@@ -2626,11 +2631,12 @@ export class Player {
       }
     } else {
       // Asymmetric fake gravity: heavier on the way down for a snappy arc.
-      // EXCEPT a halfpipe hang: SYMMETRIC gravity so you drop back in at the
-      // speed you launched — the asymmetric fall (119 vs 33) would slam you down
-      // at 2x the launch speed, converting into a huge down-wall speed on landing
+      // EXCEPT vert air — ANY vert air, pipes and tracked walls alike:
+      // SYMMETRIC gravity (THPS rules) so you drop back in at the speed you
+      // launched — the asymmetric fall (119 vs 33) would slam you down at 2x
+      // the launch speed, converting into a huge down-wall speed on landing
       // that pings you across the pipe. Symmetric keeps the vert energy honest.
-      const g = this.pipeHang
+      const g = this.vertAir || this.pipeHang
         ? TUNING.pipeAirGravity
         : this.vVel > 0
           ? TUNING.riseGravity

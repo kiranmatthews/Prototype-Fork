@@ -32,7 +32,7 @@ export const TUNING = {
   pipePumpGain: 24, // HALFPIPE: EXTRA speed added per second holding X up a wall — the THPS skill loop: a first swing barely clears the lip, each well-timed pump grows the air toward the cap
   pipeFriction: 0.1, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
   pipePop: 6, // HALFPIPE: extra vertical launch popped over the coping into the hang (the earned climb speed dominates; this is just the over-the-lip garnish)
-  pipeAirGravity: 33, // HALFPIPE: SYMMETRIC gravity for the air above the coping (same up + down) so you drop back at the speed you left — matches riseGravity so hangs feel like the rest of the game. Lower = floatier.
+  pipeAirGravity: 33, // VERT AIR (pipes AND tracked walls): SYMMETRIC gravity above the coping (same up + down) so you drop back at the speed you left — THPS rules. Lower = floatier hangs.
   pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
   footGrip: 0.3, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
   steepStand: 0.76, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
@@ -311,7 +311,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   pipePop:
     'HALFPIPE: extra vertical launch popped over the coping — an ollie-out into hang time on top of the speed you carried up. Bigger = higher airs off the lip.',
   pipeAirGravity:
-    'HALFPIPE hang gravity ABOVE the coping. SYMMETRIC (same rising and falling) so you drop back in at the speed you launched — no asymmetric-fall surge that pings you across the pipe on landing. Lower = floatier, longer hang.',
+    'VERT AIR gravity above the coping — halfpipes AND tracked vert walls (bowls, banked walls). SYMMETRIC (same rising and falling) so you drop back in at the speed you launched — no asymmetric-fall surge that pings you across the pipe on landing. Lower = floatier, longer hang.',
   pipeSmooth:
     'How fast the board’s ride plane eases across segmented transitions. Lower = surfy and smooth, higher = snappy and reactive.',
   footGrip:
@@ -579,7 +579,7 @@ export const CONST = {
   ptsLipTick: 6, // accrues every quarter second stalled on the lip
   ptsSpine: 250, // spine transfer: carried over the ridge, landed the far side
   hangLatMax: 8, // pipe hang: cap on the off-axis lateral carry (locked-in vert, no launching down the pipe)
-  hangLatDamp: 1.8, // pipe hang: how fast the lateral carry bleeds off (drift early, come down locked)
+  hangLatDamp: 0.55, // vert hang: how fast the lateral carry bleeds off. THPS rules: an angled entry keeps travelling down the pipe through most of the hang (was 1.8 = parked over one spot)
   manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
   ropeGrabRadius: 1.1, // jump within this of a swing rope's line to catch it
   ropeClimbSpeed: 2.4, // up/down on the stick walks the grip along the rope (u/s)
