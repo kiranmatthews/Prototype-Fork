@@ -4,6 +4,7 @@
 // The course runs along -Z, roughly 860 units, ~1-2 minutes of play.
 
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Rail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { CONST, TUNING } from './tuning';
@@ -19,6 +20,7 @@ export interface Crate {
   tnt?: boolean; // red TNT: solid box; stomp lights the 3-2-1 fuse, spin/slam detonates
   fuse?: number; // seconds left on a lit TNT
   mask?: boolean; // Aku crate: breaking it grants a protective mask
+  skull?: THREE.Object3D; // mask crate's floating/rotating spiked-skull visual (replaces the box)
   mystery?: boolean; // ? crate: random reward (wumpa burst, mask, or a life)
   bang?: boolean; // metal '!' SWITCH: hitting it materializes its group's outline crates; never breaks, uncounted
   bangUsed?: boolean; // the switch fires once, then dims
@@ -945,6 +947,10 @@ export class Level {
   private root = new THREE.Group(); // everything the level owns, for disposal
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
+  // Floating spiked-skull that stands in for the boxy mask crate. Loaded once,
+  // geometry centered on its own bbox so rotation.y is a true in-place spin.
+  private skullProto: THREE.Mesh | null = null;
+  private pendingSkullCrates: Crate[] = []; // mask crates awaiting the async load
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
   private maskTex: THREE.CanvasTexture | null = null;
@@ -1332,6 +1338,7 @@ export class Level {
   constructor(scene: THREE.Scene, courseId = 0) {
     this.scene = scene;
     scene.add(this.root);
+    this.installSkull(); // kick off the async skull load before builders place mask crates
     this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
     // DIRECT EDIT: a built-in level with a saved override builds from that
     // data (through the component pipeline) instead of its hand-coded builder.
@@ -2812,6 +2819,13 @@ export class Level {
       if (!c.nitro) continue;
       c.mesh.position.y =
         (c.mesh.userData.baseY as number) + Math.sin(this.time * 4 + c.mesh.position.z) * 0.12;
+    }
+    // Mask skulls float in place and rotate — the collision box never moves, so
+    // the bob/spin lives on the skull child, local to the crate's fixed center.
+    for (const c of this.crates) {
+      if (!c.skull || !c.alive) continue;
+      c.skull.position.y = Math.sin(this.time * 2 + c.mesh.position.x) * 0.14;
+      c.skull.rotation.y += dt * 1.1;
     }
     // Lit TNT fuses: pulse faster and faster, then blow.
     for (const c of this.crates) {
@@ -5016,6 +5030,13 @@ export class Level {
       entry.ghostEdges = edges;
     }
     this.crates.push(entry);
+    // Mask crate: the boxy visual is replaced by a floating, spinning spiked
+    // skull. Collision box + break rules stay exactly as a normal crate — only
+    // the look changes. Hide the box face and bolt the skull on (async load).
+    if (kind === 'mask' && !opts?.outline) {
+      (mesh.material as THREE.Material).visible = false;
+      this.attachSkull(entry);
+    }
     // Classic Crash formation: every arrow crate carries a breakable fruit
     // crate floating above it — bounce off the arrow, headbutt the reward.
     if (kind === 'bouncy' && !opts?.outline) {
@@ -5239,6 +5260,67 @@ export class Level {
         ctx.fillRect(17, 23, 2, 1);
       });
     return this.maskTex;
+  }
+
+  // ——— Floating spiked-skull mask (models/skull.glb) ————————————————————————
+  // Loads the sculpted skull once, centers its geometry on its own bounding-box
+  // center (so a plain rotation.y is a true spin-in-place, no wobble), and sizes
+  // it to read a touch bigger than a crate. Every mask crate placed before the
+  // load finishes waits in pendingSkullCrates and gets its skull on arrival.
+  private installSkull(): void {
+    const src =
+      (window as { __SKULL_GLB?: string }).__SKULL_GLB ||
+      import.meta.env.BASE_URL + 'models/skull.glb';
+    new GLTFLoader().load(
+      src,
+      (gltf) => {
+        let source: THREE.Mesh | null = null;
+        gltf.scene.traverse((o) => {
+          if (!source && (o as THREE.Mesh).isMesh) source = o as THREE.Mesh;
+        });
+        if (!source) return;
+        const src = source as THREE.Mesh;
+        // Re-center: shift geometry so its bbox center sits at the local origin.
+        const geo = (src.geometry as THREE.BufferGeometry).clone();
+        geo.computeBoundingBox();
+        const bb = geo.boundingBox!;
+        const cx = (bb.min.x + bb.max.x) / 2;
+        const cy = (bb.min.y + bb.max.y) / 2;
+        const cz = (bb.min.z + bb.max.z) / 2;
+        geo.translate(-cx, -cy, -cz);
+        const proto = new THREE.Mesh(
+          geo,
+          new THREE.MeshLambertMaterial({
+            map: (src.material as THREE.MeshStandardMaterial).map ?? null,
+            side: THREE.DoubleSide,
+          }),
+        );
+        // Scale so the tallest dimension spans ~1.4 units — a little larger than
+        // the 0.96 crate it replaces, so it floats and reads as a reward.
+        const span = Math.max(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
+        proto.scale.setScalar(span > 0 ? 1.4 / span : 1);
+        this.skullProto = proto;
+        for (const c of this.pendingSkullCrates) if (c.alive) this.attachSkull(c);
+        this.pendingSkullCrates.length = 0;
+      },
+      undefined,
+      (e) => console.warn('skull model failed to load (mask stays a box):', e),
+    );
+  }
+
+  // Give a mask crate its floating skull. The skull is a CHILD of the crate mesh
+  // so the crate's break-pop (which scales/hides the mesh) carries it along, and
+  // the static collision box stays put while the skull bobs + spins locally.
+  private attachSkull(crate: Crate): void {
+    if (!this.skullProto) {
+      this.pendingSkullCrates.push(crate);
+      return;
+    }
+    const skull = this.skullProto.clone();
+    skull.rotation.y = crate.mesh.position.z; // vary the starting facing per crate
+    skull.raycast = () => {}; // purely decorative — collision is the crate's Box3
+    crate.mesh.add(skull);
+    crate.skull = skull;
   }
 
   // Classic red TNT face; lit fuses swap it for big 3 / 2 / 1 digits.
