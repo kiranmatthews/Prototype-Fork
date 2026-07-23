@@ -88,6 +88,7 @@ const SKY_HORIZON_PX = 600; // the painting's own horizon, in image pixels
 const SKY_HORIZON_V = 1 - SKY_HORIZON_PX / SKY_IMG_H; // ...as a texture-V coord
 const SKY_FOG = new THREE.Color(0xd08a7e); // warm sunset haze, to match the horizon band
 let skyboxTex: THREE.Texture | null = null;
+let skyMist: THREE.Mesh | null = null; // foreground horizon mist (follows the camera)
 const cfgSkyTex = (t: THREE.Texture): void => {
   t.colorSpace = THREE.SRGBColorSpace;
   t.wrapS = THREE.RepeatWrapping; // tile around the sides
@@ -140,20 +141,25 @@ skyImg.onload = () => {
   const fgTex = new THREE.CanvasTexture(cFg);
   cfgSkyTex(fgTex);
   const mist = new THREE.Mesh(
-    sky.geometry,
+    sky.geometry, // radius 370; the mesh follows the camera (see frame())
     new THREE.MeshBasicMaterial({
       map: fgTex,
       side: THREE.BackSide,
       transparent: true,
-      depthTest: false, // THE HACK: always draw over the far geometry
+      depthTest: true, // occluded by the near/mid level + character...
       depthWrite: false,
       fog: false,
     }),
   );
-  mist.renderOrder = 6; // after the opaque world, so it sits in front of it
+  // ...so ONLY geometry farther than the dome radius (the far horizon, many
+  // hundreds of units out) gets the mist; the walkable level and skater, all
+  // closer than the radius, sit in front of it. renderOrder after the world.
+  mist.renderOrder = 6;
   mist.frustumCulled = false;
   mist.visible = !LITE;
+  mist.position.copy(camera.position);
   scene.add(mist);
+  skyMist = mist;
   applyTheme(); // re-tint the fog to the sunset now that the sky is live
 };
 skyImg.src = import.meta.env.BASE_URL + 'skybox.png';
@@ -342,10 +348,11 @@ function applyTheme(): void {
   // the photographic skybox retints every level's haze to the sunset so the
   // painting's alpha-faded base melts seamlessly into the far distance
   const fogHex = skyboxTex ? SKY_FOG.getHex() : t.fog;
-  // ...and pulls the haze IN so the far level horizon dissolves into that same
-  // sunset base instead of ending on a hard edge against the sky.
-  const fogNear = skyboxTex ? Math.min(t.fogNear, 42) : t.fogNear;
-  const fogFar = skyboxTex ? Math.min(t.fogFar, 150) : t.fogFar;
+  // ...with a gentle far cap so the deep distance still warms into the sunset
+  // behind the mist, without fogging the walkable level (the mist owns the
+  // horizon now).
+  const fogNear = t.fogNear;
+  const fogFar = skyboxTex ? Math.min(t.fogFar, 260) : t.fogFar;
   // editor view: no fog at all, so distant geometry stays crisp and visible
   scene.fog = editorViewActive ? null : new THREE.Fog(fogHex, fogNear, fogFar);
   scene.background = new THREE.Color(fogHex);
@@ -1325,6 +1332,7 @@ function frame(): void {
     input.consumeEdges();
     acc = 0;
     sky.position.copy(camera.position);
+    if (skyMist) skyMist.position.copy(camera.position);
     renderer.render(scene, camera);
     return;
   }
@@ -1385,6 +1393,7 @@ function frame(): void {
   if (split2p) updateCamera2(dt);
   updateAudio(dt);
   sky.position.copy(camera.position);
+  if (skyMist) skyMist.position.copy(camera.position);
 
   ui.updateBalance(player.balanceMeter);
   ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
