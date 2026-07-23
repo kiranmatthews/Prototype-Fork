@@ -77,6 +77,20 @@ sky.frustumCulled = false;
 sky.visible = !LITE;
 scene.add(sky);
 
+// Photographic skybox: a panoramic sunset wraps the whole dome. Once it loads
+// it replaces the procedural per-theme gradient (applyTheme keeps it in place).
+let skyboxTex: THREE.Texture | null = null;
+new THREE.TextureLoader().load(import.meta.env.BASE_URL + 'skybox.jpg', (tex) => {
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  skyboxTex = tex;
+  const m = sky.material as THREE.MeshBasicMaterial;
+  const old = m.map;
+  m.map = tex;
+  m.needsUpdate = true;
+  if (old && old !== tex) old.dispose();
+});
+
 // --- sky painting ------------------------------------------------------------
 // Theme colors arrive as both '#rrggbb' strings and 0xrrggbb numbers; the
 // painter mixes everything in plain [r, g, b] so it works for every level
@@ -272,6 +286,16 @@ function applyTheme(): void {
   fill.color.set(t.hemiSky);
   fill.intensity = t.hemiI * 0.22;
   const mat = sky.material as THREE.MeshBasicMaterial;
+  // the photographic skybox (once loaded) wins over the procedural gradient
+  if (skyboxTex) {
+    if (mat.map !== skyboxTex) {
+      const old = mat.map;
+      mat.map = skyboxTex;
+      mat.needsUpdate = true;
+      if (old) old.dispose();
+    }
+    return;
+  }
   const old = mat.map;
   mat.map = makeSkyTexture(t);
   mat.needsUpdate = true;
