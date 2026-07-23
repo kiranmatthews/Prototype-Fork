@@ -367,6 +367,8 @@ export class Player {
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
+  private maskGlowDark: THREE.Sprite | null = null; // black halo hugging the mask
+  private maskGlowPink: THREE.Sprite | null = null; // vibrant fiery-pink aura behind that
   private smearG: THREE.Group | null = null; // whirlwind stand-in shown while spinning
   private floorX!: THREE.Group; // landing X pinned to the floor under the skater
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
@@ -508,6 +510,54 @@ export class Player {
     scene.add(mask);
     this.maskMesh = mask;
     this.installSkullMask(); // swap the box mask for the sculpted spiked skull once it loads
+
+    // Layered aura behind the floating mask: a black glow hugging it, then a
+    // vibrant fiery-pink glow behind that. Camera-facing sprites, drawn before
+    // the mask (renderOrder < 0, depthTest off) so the mask always sits on top.
+    const radial = (stops: [number, string][]): THREE.CanvasTexture => {
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = 128;
+      const c = cv.getContext('2d')!;
+      const g = c.createRadialGradient(64, 64, 0, 64, 64, 64);
+      for (const [o, col] of stops) g.addColorStop(o, col);
+      c.fillStyle = g;
+      c.fillRect(0, 0, 128, 128);
+      const t = new THREE.CanvasTexture(cv);
+      t.needsUpdate = true;
+      return t;
+    };
+    const pink = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: radial([
+          [0.0, 'rgba(255,150,210,0.95)'],
+          [0.28, 'rgba(255,45,150,0.85)'],
+          [0.6, 'rgba(220,20,120,0.4)'],
+          [1.0, 'rgba(190,10,90,0)'],
+        ]),
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false, // soft halo — never occludes, but IS occluded by the mask
+      }),
+    );
+    pink.renderOrder = -2;
+    pink.visible = false;
+    scene.add(pink);
+    this.maskGlowPink = pink;
+    const dark = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: radial([
+          [0.0, 'rgba(0,0,0,0.92)'],
+          [0.5, 'rgba(0,0,0,0.72)'],
+          [1.0, 'rgba(0,0,0,0)'],
+        ]),
+        transparent: true,
+        depthWrite: false,
+      }),
+    );
+    dark.renderOrder = -1;
+    dark.visible = false;
+    scene.add(dark);
+    this.maskGlowDark = dark;
 
     // Chunky PS1 spark pool for grinds and grab-boost landings.
     const sparkGeo = new THREE.BoxGeometry(0.09, 0.09, 0.09);
@@ -6390,6 +6440,25 @@ export class Player {
         this.maskMesh.rotation.y += 1.6 * dt;
         this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
       }
+      // Aura layers ride with the mask: black halo hugging it, fiery-pink glow
+      // behind that. Sprites billboard on their own; the pink breathes/pulses.
+      if (this.maskGlowDark && this.maskGlowPink) {
+        const on = this.maskMesh.visible;
+        this.maskGlowDark.visible = on;
+        this.maskGlowPink.visible = on;
+        if (on) {
+          const s = this.maskMesh.scale.x;
+          const flame = 1 + Math.sin(this.runTime * 7) * 0.08;
+          const hot = this.uberTimer > 0 ? 1.25 : 1;
+          const mp = this.maskMesh.position;
+          // sit the halos a touch behind the mask (toward the scene, away from
+          // the follow-cam) so the mask's own depth carves out their centers
+          this.maskGlowDark.position.set(mp.x, mp.y, mp.z - 0.25);
+          this.maskGlowPink.position.set(mp.x, mp.y, mp.z - 0.4);
+          this.maskGlowDark.scale.setScalar(s * 1.7);
+          this.maskGlowPink.scale.setScalar(s * 2.9 * flame * hot);
+        }
+      }
     }
 
     // Grab tuck + Crash front-flip + slide/crawl crouch + slam poses,
@@ -6926,8 +6995,17 @@ export class Player {
         for (const c of [...this.maskMesh.children]) this.maskMesh.remove(c);
         (this.maskMesh.geometry as THREE.BufferGeometry).dispose();
         this.maskMesh.geometry = geo;
+        // A floating magical mask should read like the bright, evenly-lit
+        // reference render regardless of which way it has spun into the scene
+        // light. Plain Lambert goes muddy on its shadowed side, so light it
+        // partly from itself: the same texture as an emissive map keeps the
+        // cream bone bright and consistent while direct light still adds form.
+        const tex = (src.material as THREE.MeshStandardMaterial).map ?? null;
         this.maskMesh.material = new THREE.MeshLambertMaterial({
-          map: (src.material as THREE.MeshStandardMaterial).map ?? null,
+          map: tex,
+          emissive: 0xffffff,
+          emissiveMap: tex,
+          emissiveIntensity: 0.6,
           side: THREE.DoubleSide,
         });
       },
