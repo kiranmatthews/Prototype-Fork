@@ -383,6 +383,11 @@ export class Player {
   // Kangaroo appendages — jointed for follow-through animation.
   private tailRoot: THREE.Group | null = null;
   private tailChain: THREE.Group[] = []; // all tail joints root→tip (3 procedural, 5 authored)
+  // hip anchor half-widths (rig space) — the placeholder + roo use ±0.115/z0;
+  // a skinned model (fox) sets these from its actual hip bones so syncVisual's
+  // leg-position formula plants the feet under the real hips
+  private hipBaseR = { x: 0.115, z: 0 };
+  private hipBaseL = { x: -0.115, z: 0 };
   private ponyA: THREE.Group | null = null; // ponytail: scrunchie+puff, then the tip
   private ponyB: THREE.Group | null = null;
   private walkPhase = 0; // procedural run cycle
@@ -442,7 +447,10 @@ export class Player {
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
-    this.installRoo(); // swap the placeholder body for the authored model when it lands
+    // swap the placeholder body for the authored model when it lands. The fox
+    // is the hero; the roo stays reachable via a window flag for comparison.
+    if ((window as { __USE_ROO?: boolean }).__USE_ROO) this.installRoo();
+    else this.installFox();
     this.installSmear(); // whirlwind smear model shown during the spin attack
 
     // Crash-reference shadow: a TIGHT dark ellipse under the feet (~0.75 of
@@ -6009,8 +6017,8 @@ export class Player {
       const fw = 1 - sp; // forward-frame weight
       const deck = Math.max(sk, this.grindArmPose); // feet planted on a deck
       // forward frame keeps the old modest fore-aft split along local Z
-      this.legR.position.set(0.115 + 0.02 * sk * fw + 0.16 * deck * sp, 0, 0.24 * sk * stz * fw);
-      this.legL.position.set(-0.115 - 0.02 * sk * fw - 0.16 * deck * sp, 0, -0.2 * sk * stz * fw);
+      this.legR.position.set(this.hipBaseR.x + 0.02 * sk * fw + 0.16 * deck * sp, 0, this.hipBaseR.z + 0.24 * sk * stz * fw);
+      this.legL.position.set(this.hipBaseL.x - 0.02 * sk * fw - 0.16 * deck * sp, 0, this.hipBaseL.z - 0.2 * sk * stz * fw);
       this.legR.rotation.y = 0.12 * sk * stz * fw - 0.12 * stz * sp;
       this.legL.rotation.y = -0.09 * sk * stz * fw - 0.12 * stz * sp;
       this.legR.rotation.z = -1.05 * star; // straddle split
@@ -6603,6 +6611,250 @@ export class Player {
       undefined,
       (e) => console.warn('roo model failed to load (procedural body stays):', e),
     );
+  }
+
+  // ——— The neon-punk fox (models/fox.glb, made in Meshy) ————————————————
+  // Unlike the roo, this model ships with a real 24-bone skeleton + skin
+  // weights. We do NOT skeletal-animate it — the game's whole trick
+  // vocabulary is procedural pose-rig driven. Instead we exploit the
+  // skeleton to segment the mesh CLEANLY: each triangle joins the rig part
+  // its dominant bone maps to, pivoted at the bone's rest position, so the
+  // PS1 chunks bolt onto the same pose rig the roo used. The tail has NO
+  // bones (rigged "but the tail"), so it's carved from geometry into its own
+  // procedural sway chain, roo-style.
+  private installFox(): void {
+    const src =
+      (window as { __FOX_GLB?: string }).__FOX_GLB || import.meta.env.BASE_URL + 'models/fox.glb';
+    new GLTFLoader().load(
+      src,
+      (gltf) => {
+        let mesh: THREE.SkinnedMesh | null = null;
+        gltf.scene.updateMatrixWorld(true);
+        gltf.scene.traverse((o) => {
+          if (!mesh && (o as THREE.SkinnedMesh).isSkinnedMesh) mesh = o as THREE.SkinnedMesh;
+        });
+        if (!mesh) return;
+        try {
+          this.segmentFox(mesh);
+        } catch (e) {
+          console.warn('fox segmentation failed (procedural body stays):', e);
+        }
+      },
+      undefined,
+      (e) => console.warn('fox model failed to load (procedural body stays):', e),
+    );
+  }
+
+  private segmentFox(mesh: THREE.SkinnedMesh): void {
+    mesh.updateMatrixWorld(true);
+    const skel = mesh.skeleton;
+    const boneW: Record<string, THREE.Vector3> = {};
+    const tw = new THREE.Vector3();
+    for (const bn of skel.bones) {
+      bn.getWorldPosition(tw);
+      boneW[bn.name] = tw.clone();
+    }
+    const boneNames = skel.bones.map((b) => b.name);
+    let geo = mesh.geometry as THREE.BufferGeometry;
+    if (geo.index) geo = geo.toNonIndexed();
+    const P = geo.getAttribute('position');
+    const N = geo.getAttribute('normal');
+    const UV = geo.getAttribute('uv');
+    const JI = geo.getAttribute('skinIndex');
+    const JW = geo.getAttribute('skinWeight');
+    const mat = new THREE.MeshLambertMaterial({
+      map: (mesh.material as THREE.MeshStandardMaterial).map ?? null,
+      side: THREE.DoubleSide, // chunk interiors show at joint gaps — the PS1 look
+    });
+    if (mat.map) mat.map.colorSpace = (mesh.material as THREE.MeshStandardMaterial).map!.colorSpace;
+
+    // bind-pose bounds → uniform scale to HEIGHT (bodyGroup applies 1.18/1.36/
+    // 1.18, so pre-scale x/z by the extra 1.36/1.18 to cancel it in world),
+    // recenter XZ so the mesh stands centred on the board, feet at 0.
+    let minx = 1e9, miny = 1e9, minz = 1e9, maxx = -1e9, maxy = -1e9, maxz = -1e9;
+    for (let i = 0; i < P.count; i++) {
+      const x = P.getX(i), y = P.getY(i), z = P.getZ(i);
+      if (x < minx) minx = x; if (y < miny) miny = y; if (z < minz) minz = z;
+      if (x > maxx) maxx = x; if (y > maxy) maxy = y; if (z > maxz) maxz = z;
+    }
+    const HEIGHT = 2.0;
+    const SY = HEIGHT / 1.36 / (maxy - miny);
+    const SXZ = SY * (1.36 / 1.18);
+    const cx = (minx + maxx) / 2, cz = (minz + maxz) / 2;
+    const mapP = (x: number, y: number, z: number): THREE.Vector3 =>
+      new THREE.Vector3((x - cx) * SXZ, (y - miny) * SY, (z - cz) * SXZ);
+    const mapB = (nm: string): THREE.Vector3 => {
+      const b = boneW[nm];
+      return mapP(b.x, b.y, b.z);
+    };
+    const DOWN = new THREE.Vector3(0, -1, 0);
+    const qDown = (from: THREE.Vector3, to: THREE.Vector3): THREE.Quaternion =>
+      new THREE.Quaternion().setFromUnitVectors(to.clone().sub(from).normalize(), DOWN);
+
+    // Map by X SIGN, not by name: this rig calls the +X leg "R" (legR at
+    // +0.115), so the fox's Left bones (+X) drive our R groups. Keeping it
+    // sign-based avoids any left/right confusion.
+    const arm = {
+      R: { sh: mapB('LeftArm'), el: mapB('LeftForeArm'), wr: mapB('LeftHand') },
+      L: { sh: mapB('RightArm'), el: mapB('RightForeArm'), wr: mapB('RightHand') },
+    };
+    const leg = {
+      R: { hip: mapB('LeftUpLeg'), knee: mapB('LeftLeg'), foot: mapB('LeftFoot') },
+      L: { hip: mapB('RightUpLeg'), knee: mapB('RightLeg'), foot: mapB('RightFoot') },
+    };
+    const jNeck = mapB('neck');
+    const jHips = mapB('Hips');
+    const hipY = (leg.R.hip.y + leg.L.hip.y) / 2;
+
+    // dominant bone per vertex → part key
+    const boneToPart: Record<string, string> = {
+      Head: 'head', neck: 'head', head_end: 'head', headfront: 'head',
+      Spine: 'torso', Spine01: 'torso', Spine02: 'torso',
+      LeftShoulder: 'torso', RightShoulder: 'torso',
+      LeftArm: 'upperArmR', LeftForeArm: 'foreArmR', LeftHand: 'foreArmR',
+      RightArm: 'upperArmL', RightForeArm: 'foreArmL', RightHand: 'foreArmL',
+      LeftUpLeg: 'thighR', LeftLeg: 'shinR', LeftFoot: 'shinR', LeftToeBase: 'shinR',
+      RightUpLeg: 'thighL', RightLeg: 'shinL', RightFoot: 'shinL', RightToeBase: 'shinL',
+      Hips: 'pelvis',
+    };
+    const domBone = (vi: number): string => {
+      let bw = -1, bj = 0;
+      for (let k = 0; k < 4; k++) {
+        const w = JW.getComponent(vi, k);
+        if (w > bw) { bw = w; bj = JI.getComponent(vi, k); }
+      }
+      return boneNames[bj] || 'Hips';
+    };
+    // Verts collected per part. The tail is Hips-dominant geometry BEHIND the
+    // body (fox z well behind the hips) — carved out and banded into a chain.
+    const TAIL_Z = cz - 0.12 * ((maxz - minz) / 1.0); // behind the hips
+    const bucket: Record<string, number[]> = {};
+    for (const k of ['head', 'torso', 'pelvis', 'upperArmR', 'upperArmL', 'foreArmR', 'foreArmL', 'thighR', 'thighL', 'shinR', 'shinL', 'tail'])
+      bucket[k] = [];
+    for (let t = 0; t < P.count; t += 3) {
+      const votes: Record<string, number> = {};
+      let best = 'torso', bestN = 0;
+      for (let k = 0; k < 3; k++) {
+        const part = boneToPart[domBone(t + k)] || 'torso';
+        votes[part] = (votes[part] || 0) + 1;
+        if (votes[part] > bestN) { bestN = votes[part]; best = part; }
+      }
+      // tail override: pelvis triangles sitting behind the hips are the brush
+      if (best === 'pelvis') {
+        const czf = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
+        if (czf < TAIL_Z) best = 'tail';
+      }
+      bucket[best].push(t, t + 1, t + 2);
+    }
+
+    // Build a chunk: map each vert to rig space, subtract the pivot, optional
+    // rotation onto -Y (limbs), matching normal transform.
+    const build = (verts: number[], pivot: THREE.Vector3, q?: THREE.Quaternion): THREE.Mesh => {
+      const p: number[] = [], nn: number[] = [], uu: number[] = [];
+      const v = new THREE.Vector3(), nv = new THREE.Vector3();
+      for (const vi of verts) {
+        v.set((P.getX(vi) - cx) * SXZ - pivot.x, (P.getY(vi) - miny) * SY - pivot.y, (P.getZ(vi) - cz) * SXZ - pivot.z);
+        nv.set(N.getX(vi) / SXZ, N.getY(vi) / SY, N.getZ(vi) / SXZ);
+        if (q) { v.applyQuaternion(q); nv.applyQuaternion(q); }
+        nv.normalize();
+        p.push(v.x, v.y, v.z);
+        nn.push(nv.x, nv.y, nv.z);
+        uu.push(UV.getX(vi), UV.getY(vi));
+      }
+      const cg = new THREE.BufferGeometry();
+      cg.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
+      cg.setAttribute('normal', new THREE.Float32BufferAttribute(nn, 3));
+      cg.setAttribute('uv', new THREE.Float32BufferAttribute(uu, 2));
+      return new THREE.Mesh(cg, mat);
+    };
+    const strip = (grp: THREE.Object3D | null): void => {
+      if (!grp) return;
+      for (const c of [...grp.children]) if ((c as THREE.Mesh).isMesh) grp.remove(c);
+    };
+    if (!this.headM || !this.armR || !this.armL || !this.legs || !this.legR || !this.legL || !this.kneeR || !this.kneeL) return;
+
+    // HEAD — pivot at the neck (look-at hinges at the seam); the fox ears +
+    // hair tuft ride along.
+    for (const c of [...this.headM.children]) this.headM.remove(c);
+    this.ponyA = null;
+    this.ponyB = null;
+    this.headM.position.copy(jNeck);
+    this.headM.add(build(bucket.head, jNeck));
+
+    // TORSO — pivot at origin, absolute rig positions (upperG sits at 0).
+    strip(this.upperG);
+    this.upperG!.add(build(bucket.torso, new THREE.Vector3(0, 0, 0)));
+
+    // ARMS — shoulder group at the arm bone, forearm rotated straight down
+    // from the elbow. armR/L position is NOT overwritten by syncVisual, so it
+    // sticks; the trick poses rotate these groups from an arms-down rest.
+    for (const s of ['R', 'L'] as const) {
+      const a = arm[s];
+      const armG = s === 'R' ? this.armR! : this.armL!;
+      const elG = s === 'R' ? (this.elbowR = new THREE.Group()) : (this.elbowL = new THREE.Group());
+      for (const c of [...armG.children]) armG.remove(c);
+      armG.position.copy(a.sh);
+      armG.userData.lean = 0.1;
+      armG.add(build(bucket[s === 'R' ? 'upperArmR' : 'upperArmL'], a.sh, qDown(a.sh, a.el)));
+      elG.position.set(0, -a.el.distanceTo(a.sh), 0);
+      armG.add(elG);
+      elG.add(build(bucket[s === 'R' ? 'foreArmR' : 'foreArmL'], a.el, qDown(a.el, a.wr)));
+    }
+
+    // PELVIS — pivot at (0, hipY, 0) so the chunk renders at true position
+    // when added to the legs group (which sits at that hip line).
+    strip(this.legs);
+    this.legs.position.set(0, hipY, 0);
+    this.legs.add(build(bucket.pelvis, new THREE.Vector3(0, hipY, 0)));
+
+    // LEGS — hip-base fields feed syncVisual's leg-position formula so the
+    // feet plant under the ACTUAL hips (wider than the placeholder's 0.115).
+    this.hipBaseR = { x: leg.R.hip.x, z: leg.R.hip.z };
+    this.hipBaseL = { x: leg.L.hip.x, z: leg.L.hip.z };
+    for (const s of ['R', 'L'] as const) {
+      const l = leg[s];
+      const legG = s === 'R' ? this.legR! : this.legL!;
+      const kneeG = s === 'R' ? this.kneeR! : this.kneeL!;
+      strip(legG);
+      strip(kneeG);
+      legG.add(build(bucket[s === 'R' ? 'thighR' : 'thighL'], l.hip, qDown(l.hip, l.knee)));
+      kneeG.position.set(0, -l.knee.distanceTo(l.hip), 0);
+      kneeG.add(build(bucket[s === 'R' ? 'shinR' : 'shinL'], l.knee, qDown(l.knee, l.foot)));
+    }
+
+    // TAIL — the unrigged brush. Band the carved geometry by height into a
+    // 3-joint chain seated on the mesh; the chunks carry the curl, the sway
+    // driver flexes deltas down the chain (rest 0).
+    if (this.tailRoot && bucket.tail.length >= 9) {
+      const ys: number[] = [];
+      for (const vi of bucket.tail) ys.push((P.getY(vi) - miny) * SY);
+      const tMax = Math.max(...ys), tMin = Math.min(...ys);
+      const span = Math.max(0.01, tMax - tMin);
+      const bandOf = (yr: number): number => Math.min(2, Math.floor(((tMax - yr) / span) * 3));
+      const bands: number[][] = [[], [], []];
+      for (let i = 0; i < bucket.tail.length; i += 3) {
+        const yc = ((P.getY(bucket.tail[i]) + P.getY(bucket.tail[i + 1]) + P.getY(bucket.tail[i + 2])) / 3 - miny) * SY;
+        const b = bandOf(yc);
+        bands[b].push(bucket.tail[i], bucket.tail[i + 1], bucket.tail[i + 2]);
+      }
+      // joint Y positions: top of each band, walking down from the attach
+      const attach = new THREE.Vector3(0, tMax, jHips.z - 0.05);
+      const jointY = [tMax, tMax - span / 3, tMax - (2 * span) / 3];
+      for (const c of [...this.tailRoot.children]) this.tailRoot.remove(c);
+      this.tailRoot.position.copy(attach);
+      this.tailChain = [];
+      let parent: THREE.Object3D = this.tailRoot;
+      for (let k = 0; k < 3; k++) {
+        const joint = new THREE.Group();
+        const pivot = new THREE.Vector3(0, jointY[k], attach.z);
+        joint.position.copy(k === 0 ? new THREE.Vector3(0, 0, 0) : new THREE.Vector3(0, jointY[k] - jointY[k - 1], 0));
+        joint.userData.rest = 0;
+        parent.add(joint);
+        if (bands[k].length) joint.add(build(bands[k], pivot));
+        this.tailChain.push(joint);
+        parent = joint;
+      }
+    }
   }
 
   // ——— Spin smear (models/smear.glb) ————————————————————————————————————
