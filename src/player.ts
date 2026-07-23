@@ -2015,8 +2015,13 @@ export class Player {
       // for momentum — no X needed. This is the "carving pumps you" feel: hold
       // toward the wall and you drive up it and build speed. Scaled by steepness,
       // so the flat bottom gives no free speed and the wall carves hardest.
+      // Mesh transitions (bowls, banked walls) count as pipe walls here —
+      // the carve pump is THE speed loop of THPS and it must work everywhere
+      // there is a transition to work.
+      const onTransition =
+        this.groundHit !== null && this.groundHit.normal.y < TUNING.steepStand;
       if (
-        onPipe &&
+        (onPipe || onTransition) &&
         this.groundHit &&
         (input.moveX !== 0 || input.moveY !== 0) &&
         this.groundHit.normal.y < TUNING.steepStand
@@ -2029,8 +2034,8 @@ export class Player {
       // successive swings to clear the coping); on general steep banks it's the
       // gentler crouch pipePump. Both scale with steepness (hardest below the coping).
       if (this.charging && this.groundHit && this.groundHit.normal.y < TUNING.steepStand) {
-        const gain = onPipe ? TUNING.pipePumpGain : TUNING.pipePump;
-        this.speed += gain * (1 - this.groundHit.normal.y) * dt;
+        // full pump on ANY transition face — analytic pipe or mesh bowl wall
+        this.speed += TUNING.pipePumpGain * (1 - this.groundHit.normal.y) * dt;
       }
       // HALFPIPE near-frictionless: the general idle friction (7) bleeds a swing
       // dead in a couple of seconds; on the pipe a tiny bleed lets momentum
@@ -2764,7 +2769,11 @@ export class Player {
       // drop-ins flow. On flat ground the vertical is normal to the surface, so
       // it simply falls away and horizontal speed is untouched (a no-op); only
       // steep faces convert. landingFlow scales how much of the fall survives.
-      if (this.airFromSkate && hit.normal.y < TUNING.steepStand) {
+      // THUG rules: the rotation happens on EVERY landing, not only true-vert
+      // faces — a drop onto the LOW part of a transition (35 degrees) must
+      // still become down-the-wall roll, or you park dead mid-face. Near-flat
+      // ground makes it a natural no-op, so the only gate is "some slope".
+      if (this.airFromSkate && hit.normal.y < 0.97) {
         const n = hit.normal;
         const vvx = this.speed * this.axisF.x;
         const vvz = this.speed * this.axisF.z;
