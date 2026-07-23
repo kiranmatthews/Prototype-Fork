@@ -257,6 +257,7 @@ export class Player {
   private ropeD = 0; // grip distance down the rope from the anchor
   private ropeCoolT = 0; // re-grab cooldown after leaping off
   private ropeJumpArm = false; // X must come UP once on the rope before hold-to-charge arms
+  private ropeFaceYaw = 0; // body faces the swing's travel line, not the flip-flopping velocity
   // LIP TRICKS: reach the coping slow holding Triangle -> stall on the lip
   // (Rock to Fakie / Axle Stall / Disaster from the air), points tick while
   // held, release/jump/timeout drops back in fakie.
@@ -3253,6 +3254,14 @@ export class Player {
       // tuck releases too — hands are on the rope.
       this.flipTimer = 0;
       this.bailSpin = 0;
+      // Face down the swing's TRAVEL line, not the velocity (which flip-flops
+      // every half-swing). The line is the rope's swing-plane axis; sign it by
+      // the heading you came in on so you face the way you're going.
+      const axX = Math.cos(rs.yaw);
+      const axZ = -Math.sin(rs.yaw);
+      const sgn = axX * this.axisF.x + axZ * this.axisF.z < 0 ? -1 : 1;
+      this.ropeFaceYaw = Math.atan2(-axX * sgn, -axZ * sgn);
+      this.visualYaw = this.ropeFaceYaw; // snap on grab, no turn-in jitter
       sfx.play('ledgeGrab', 0.6, 0.85);
       this.emitDust(2);
       return true;
@@ -5928,10 +5937,16 @@ export class Player {
     // sidestepping, and mid-air drift all turn the model, Crash-style.
     // Movement itself never leaves the course axes; this is purely visual.
     let targetYaw = this.visualYaw; // stationary: keep facing the last direction
-    const vx = this.pos.x - this.prevPos.x;
-    const vz = this.pos.z - this.prevPos.z;
-    if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
-      targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
+    if (this.state === 'rope') {
+      // On the swing rope, hold the travel-line facing (set at grab) — don't
+      // let the back-and-forth swing velocity spin the body around.
+      targetYaw = this.ropeFaceYaw;
+    } else {
+      const vx = this.pos.x - this.prevPos.x;
+      const vz = this.pos.z - this.prevPos.z;
+      if (vx * vx + vz * vz > (1.5 * dt) * (1.5 * dt)) {
+        targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
+      }
     }
     this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
     // Stance is a 90° body turn: regular faces one side of the board,
@@ -6333,6 +6348,15 @@ export class Player {
         straight;
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
       if (this.elbowL) this.elbowL.rotation.x = -Math.max(0.05, bendL);
+    }
+    // ROPE: both hands meet on the line overhead. The under-rail grip spreads
+    // the hands to two rail-ends; on a rope they grip the same point, so raise
+    // both arms straight up and twist them inward until the hands come together.
+    if (this.state === 'rope' && this.armR && this.armL) {
+      this.armR.rotation.set(0, -0.5, 2.72);
+      this.armL.rotation.set(0, 0.5, -2.72);
+      if (this.elbowR) this.elbowR.rotation.x = -0.22;
+      if (this.elbowL) this.elbowL.rotation.x = -0.22;
     }
     // Knees up: legs shorten toward the hips while the body crouches deep,
     // and the board comes up with them, into the grabbing hand.
