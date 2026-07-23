@@ -84,6 +84,8 @@ export class Player {
   // debug readouts
   railCandidateDist = Infinity;
   balance = 0; // THPS grind balance needle, -1..1
+  balanceVel = 0; // needle VELOCITY — second-order momentum (THUG's mManualLeanDir); 0 at neutral inertia keeps the model exactly first-order
+  private noisePhase = 0; // deterministic 'sketch' phase (rad), reseeded once per trick entry
 
   // wired up by main.ts
   onDeath: () => void = () => {};
@@ -810,6 +812,7 @@ export class Player {
     this.visualYaw = 0;
     this.flipTimer = 0;
     this.balance = 0;
+    this.balanceVel = 0;
     this.balanceCritT = 0;
     this.lastTy = 0;
     this.rideNormal.set(0, 1, 0);
@@ -1150,6 +1153,7 @@ export class Player {
     // to agree, so enforce it centrally).
     if (this.state !== 'grind' && this.manualing === 0 && this.lipStallT <= 0) {
       this.balanceCritT = 0;
+      this.balanceVel = 0; // no needle momentum survives a gap between balance tricks
     }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
@@ -1645,14 +1649,21 @@ export class Player {
         Math.max(0, TUNING.balanceRampMax - 1),
         stallAge * TUNING.balanceRamp * 2,
       );
-      this.balance += Math.sign(this.balance || 1) * TUNING.lipDrift * (1 + lipRamp) * dt;
+      const instability = TUNING.lipDrift * (1 + lipRamp);
+      const runSign = Math.sign(this.balance || 1); // + drifts INTO the pipe (forgiving)
       // fight along the SCREEN axis the tip reads on (see lipAim)
       const lipSgn = this.lipAim(false);
       const fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
-      this.balance += fightStick * lipSgn * TUNING.lipControl * dt;
-      if (this.uberTimer > 0 || this.balanceBoostT > 0) this.balance = 0;
+      let control = fightStick * lipSgn * TUNING.lipControl;
+      control *= this.safeGain(stallAge, control, runSign);
+      this.stepBalanceCore(dt, runSign, instability, control, lipRamp);
+      if (this.uberTimer > 0 || this.balanceBoostT > 0) {
+        this.balance = 0;
+        this.balanceVel = 0;
+      }
       if (Math.abs(this.balance) >= 1) {
         this.balance = Math.sign(this.balance);
+        if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0;
         this.balanceCritT += dt;
         if (this.balanceCritT > TUNING.bailGrace) {
           if (this.balance > 0) this.lipDrop(false); // fell into the pipe: ride it out
@@ -2189,12 +2200,18 @@ export class Player {
           Math.max(0, TUNING.balanceRampMax - 1),
           Math.max(0, this.manualTime - TUNING.balanceGrace * 0.5) * TUNING.balanceRamp * 1.5,
         );
-        this.balance +=
-          Math.sign(this.balance || this.manualing) * TUNING.manualDrift * (1 + ramp) * dt;
-        this.balance -= this.rawInput.moveY * TUNING.manualControl * dt;
-        if (this.uberTimer > 0 || this.balanceBoostT > 0) this.balance = 0;
+        const instability = TUNING.manualDrift * (1 + ramp);
+        const runSign = Math.sign(this.balance || this.manualing);
+        let control = -this.rawInput.moveY * TUNING.manualControl; // up/down fights the pitch needle
+        control *= this.safeGain(this.manualTime, control, runSign);
+        this.stepBalanceCore(dt, runSign, instability, control, ramp);
+        if (this.uberTimer > 0 || this.balanceBoostT > 0) {
+          this.balance = 0;
+          this.balanceVel = 0;
+        }
         if (Math.abs(this.balance) >= 1) {
           this.balance = Math.sign(this.balance);
+          if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0;
           this.balanceCritT += dt;
           if (this.balanceCritT > TUNING.bailGrace) {
             this.endManual();
@@ -3423,7 +3440,9 @@ export class Player {
     this.manualTime = 0;
     this.manualTickT = 0;
     this.balance = 0; // the manual needle reuses the grind balance field + visuals
+    this.balanceVel = 0;
     this.balanceCritT = 0;
+    this.noisePhase = Math.random() * Math.PI * 2;
     this.manualArmed = 0;
     this.manualArmT = 0;
     this.score(CONST.ptsManualBase, type === 1 ? 'Manual' : 'Nose Manual');
@@ -3454,6 +3473,63 @@ export class Player {
       };
     if (this.manualing !== 0) return { mode: 'manual', bal: this.balance, crit: this.balanceCritT > 0 };
     return null;
+  }
+
+  // ---- authentic THPS/THUG balance core (shared by grind, manual & lip) ------
+  // Neversoft ran ONE CManual per balance trick: a needle POSITION plus a
+  // VELOCITY — an inverted pendulum that runs away from center, nudged by taps
+  // and a little noise. We fold that onto our single this.balance ([-1,1]) as
+  // additive layers, each gated by a slider whose 0 is the classic first-order
+  // needle. So neutral (inertia/gravity/noise = 0) is byte-for-byte the old
+  // feel, and every dial toward "authentic" is opt-in and live-tunable.
+  private stepBalanceCore(
+    dt: number,
+    runSign: number, // which way the constant drift runs (sign of the needle)
+    drift: number, // per-mode instability: balanceDrift*(1+ramp)*speed*style, etc.
+    control: number, // already-signed, already safe-gained player fight
+    ramp: number, // the capped difficulty ramp (also scales the sketch)
+  ): void {
+    // constant runaway — kept so the neutral model equals the classic one
+    let force = runSign * drift;
+    // inverted-pendulum "gravity": zero at center, harder the further off you
+    // are (the edge cliff — react too late and no tap saves it)
+    force += this.balance * TUNING.balanceGravity * drift;
+    // the player's tap/hold fight
+    force += control;
+    // the "sketch": a smoothed, deterministic wander so the tip is never
+    // memorizable; it quiets as corrective speed builds (a committed counter-tap
+    // stills it) and rides the same capped ramp as the drift
+    this.noisePhase += TUNING.balanceNoiseFreq * dt;
+    if (TUNING.balanceNoise > 0) {
+      const quiet = Math.max(0, 1 - Math.abs(this.balanceVel) / CONST.balanceNoiseGate);
+      if (quiet > 0) {
+        const n = Math.sin(this.noisePhase) * 0.6 + Math.sin(this.noisePhase * 2.3 + 1.7) * 0.4;
+        force += n * TUNING.balanceNoise * (1 + ramp) * quiet;
+      }
+    }
+    // momentum: the velocity LAGS toward the force. At inertia 0 it snaps to the
+    // force every frame (follow = 1) so the needle is exactly first-order; dial
+    // up and the needle carries speed, overshoots center, and demands feathered
+    // taps — the real Tony Hawk slosh.
+    if (TUNING.balanceInertia <= 0) {
+      this.balanceVel = force;
+    } else {
+      const respRate =
+        CONST.balanceRespSnap +
+        (CONST.balanceRespFloat - CONST.balanceRespSnap) * TUNING.balanceInertia;
+      this.balanceVel += (force - this.balanceVel) * Math.min(1, respRate * dt);
+    }
+    this.balance += this.balanceVel * dt;
+  }
+
+  // Neversoft "safe_period": for the first balanceSafePeriod seconds of a trick,
+  // INWARD (corrective) input authority ramps up from 0, so an eager first tap
+  // can't fling the fresh needle. Outward input keeps full authority. Identity
+  // (returns 1) when the slider is 0.
+  private safeGain(t: number, control: number, runSign: number): number {
+    if (TUNING.balanceSafePeriod <= 0) return 1;
+    if (Math.sign(control) === runSign) return 1; // pushing further out: unrestrained
+    return Math.min(1, t / TUNING.balanceSafePeriod);
   }
 
   // --------------------------------------------------------------- lip stall --
@@ -3525,7 +3601,9 @@ export class Player {
     this.grabSpinTotal = 0;
     this.endManual();
     this.balance = 0; // needle: + tips INTO the pipe (forgiving), − out the back (bail)
+    this.balanceVel = 0;
     this.balanceCritT = 0;
+    this.noisePhase = Math.random() * Math.PI * 2;
     this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.rideNormal.set(0, 1, 0);
     this.score(CONST.ptsLip, 'Axle Stall');
@@ -3794,18 +3872,26 @@ export class Player {
       Math.max(0, this.grindTime - TUNING.balanceGrace) * TUNING.balanceRamp,
     );
     const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
-    this.balance += Math.sign(this.balance || 1) * instability * dt;
-    this.balance += this.rawInput.moveX * TUNING.balanceControl * dt;
-    if (this.uberTimer > 0 || this.balanceBoostT > 0) this.balance = 0; // perfect balance
+    const runSign = Math.sign(this.balance || 1);
+    let control = this.rawInput.moveX * TUNING.balanceControl; // left/right fights the needle
+    control *= this.safeGain(this.grindTime, control, runSign);
+    this.stepBalanceCore(dt, runSign, instability, control, ramp);
+    if (this.uberTimer > 0 || this.balanceBoostT > 0) {
+      this.balance = 0;
+      this.balanceVel = 0;
+    } // perfect balance
     if (Math.abs(this.balance) >= 1) {
       this.balance = Math.sign(this.balance); // pinned at the edge, flailing
+      if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0; // kill outward momentum: a counter-tap can still save it
       this.balanceCritT += dt;
       if (this.balanceCritT > TUNING.bailGrace) {
         // A mask absorbs the bail: the needle resets and the grind continues.
         if (this.spendMask()) {
           this.balance = 0;
+          this.balanceVel = 0;
           this.grindTime = 0;
           this.balanceCritT = 0;
+          this.noisePhase = Math.random() * Math.PI * 2;
         } else if (this.railUnder) {
           // hanging underneath, the grip is all there is: the board SNAPS and
           // you drop straight off — ground below breaks the fall, a pit doesn't
@@ -3995,9 +4081,12 @@ export class Player {
             ? '5-0'
             : 'Boardslide';
     this.score(Math.round(CONST.ptsGrindBase * styleMult), styleName);
-    // Start the needle slightly off-center in a random direction.
+    // Start the needle slightly off-center in a random direction, at rest, with
+    // a fresh sketch phase so the wander never repeats across attempts.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
+    this.balanceVel = 0;
     this.balanceCritT = 0;
+    this.noisePhase = Math.random() * Math.PI * 2;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     sfx.play('railLand', 0.8);
     // The rail keeps the speed you carried ALONG it — hit it fast and aligned

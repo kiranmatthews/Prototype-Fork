@@ -109,6 +109,15 @@ export const TUNING = {
   balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
   balanceRampMax: 6, // difficulty CEILING: drift never exceeds this multiple of balanceDrift
   bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
+  // AUTHENTIC THPS/THUG balance dynamics (Neversoft's CManual is an unstable
+  // inverted pendulum: needle position + velocity, nudged by taps and noise).
+  // Each layer is ADDITIVE — at 0 the meter is exactly the classic first-order
+  // needle, so neutral reproduces today; dial up for the real Tony Hawk feel.
+  balanceInertia: 0.4, // needle MOMENTUM: 0 = snappy instant correction, 1 = heavy lag — input feeds velocity so the needle overshoots and you must lead your taps
+  balanceGravity: 1.4, // EDGE CLIFF: extra runaway proportional to how far off-center you are — 0 = flat, higher = calm middle but the edges bolt away (react late = no save)
+  balanceNoise: 0.08, // SKETCH: smoothed random wander so the tip direction can't be memorized (rides the same capped ramp as the drift; a committed counter-tap quiets it)
+  balanceNoiseFreq: 6, // how fast the sketch sways (rad/s) — low = a lazy roll, high = a nervous jitter
+  balanceSafePeriod: 0.25, // entry ease-in: corrective input fades in over this many seconds so an eager first tap can't fling the fresh needle (Neversoft safe_period)
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
@@ -242,6 +251,11 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   balanceRamp: { min: 0, max: 1.5, step: 0.05 },
   balanceRampMax: { min: 1, max: 6, step: 0.25 },
   bailGrace: { min: 0, max: 1.2, step: 0.05 },
+  balanceInertia: { min: 0, max: 1, step: 0.05 },
+  balanceGravity: { min: 0, max: 6, step: 0.1 },
+  balanceNoise: { min: 0, max: 0.6, step: 0.02 },
+  balanceNoiseFreq: { min: 0.5, max: 20, step: 0.5 },
+  balanceSafePeriod: { min: 0, max: 1.5, step: 0.05 },
   crawlSpeed: { min: 2, max: 10, step: 0.5 },
   smashSpeed: { min: 8, max: 40, step: 0.5 },
   arrowBounce: { min: 10, max: 60, step: 1 },
@@ -431,6 +445,16 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'The difficulty ceiling: drift never exceeds this multiple of balanceDrift, so marathon grinds stay hard but never impossible.',
   bailGrace:
     'Rail forgiveness buffer: once the balance needle pegs, you have this many seconds to slam the stick the other way before the bail actually fires. 0 = pegging is instant death for the grind.',
+  balanceInertia:
+    'AUTHENTIC THPS momentum. 0 = the classic snappy needle (corrections are instant). Higher makes the needle carry velocity — input accelerates it instead of moving it directly, so it overshoots center and you must feather taps and lead the drift, the real Tony Hawk slosh. Applies to grinds, manuals AND lip stalls.',
+  balanceGravity:
+    'The inverted-pendulum edge cliff. 0 = the needle runs away at the same rate everywhere (classic). Higher keeps the CENTER calm and makes the EDGES bolt away — drift too far and no counter-tap saves it, so you fight to stay near the middle. Shares the grind/manual/lip drift scaling (speed, style, ramp).',
+  balanceNoise:
+    "The 'sketch'. 0 = a perfectly predictable needle. Above 0 adds a smoothed random wander so which way you start tipping is never the same twice (a committed counter-tap quiets it). Amplitude rides the same capped ramp as the drift, so long tricks fluctuate wilder but stay bounded.",
+  balanceNoiseFreq:
+    'How fast the sketch wander sways, in radians/sec (~6 ≈ a one-second sway). Low = a slow lazy roll that is easy to read; high = a nervous jitter. Does nothing while Balance Noise is 0.',
+  balanceSafePeriod:
+    "Entry ease-in (Neversoft's safe_period). 0 = full corrective authority the instant a trick starts. Above 0, inward (toward-center) taps fade in over this many seconds so an over-eager first tap can't fling the fresh needle straight off; pushing further OUT always keeps full authority.",
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
   smashSpeed:
     'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
@@ -521,7 +545,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace'],
+    keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',
@@ -603,6 +627,9 @@ export const CONST = {
   fruitPerCrate: 3, // wumpa spawned per broken box
   balanceStart: 0.15, // initial needle kick when a grind starts
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
+  balanceRespSnap: 60, // needle-velocity follow rate at inertia 0 (== fixedStep hz, so follow==1 and the needle stays exactly first-order)
+  balanceRespFloat: 5, // needle-velocity follow rate at inertia 1 (heavy lag / overshoot)
+  balanceNoiseGate: 1.5, // above this |needle velocity| the sketch quiets to 0 — a committed counter-tap stills the wander
   airBrakeFactor: 2, // holding down in the air brakes this much harder than airControl
   tntFuse: 3, // Crash-style TNT countdown (stomp lights it)
   blastGrow: 0.35, // seconds for the blast sphere to reach full size
