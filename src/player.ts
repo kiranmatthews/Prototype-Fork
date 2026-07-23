@@ -367,8 +367,9 @@ export class Player {
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
-  private maskGlowDark: THREE.Sprite | null = null; // black halo hugging the mask
-  private maskGlowPink: THREE.Sprite | null = null; // vibrant fiery-pink aura behind that
+  private maskGlowPink: THREE.Sprite | null = null; // vibrant fiery-pink aura behind the mask
+  private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
+  private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
   private smearG: THREE.Group | null = null; // whirlwind stand-in shown while spinning
   private floorX!: THREE.Group; // landing X pinned to the floor under the skater
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
@@ -511,9 +512,9 @@ export class Player {
     this.maskMesh = mask;
     this.installSkullMask(); // swap the box mask for the sculpted spiked skull once it loads
 
-    // Layered aura behind the floating mask: a black glow hugging it, then a
-    // vibrant fiery-pink glow behind that. Camera-facing sprites, drawn before
-    // the mask (renderOrder < 0, depthTest off) so the mask always sits on top.
+    // Vibrant fiery-pink glow behind the mask (the black rim is a stroke on the
+    // skull itself — see installSkullMask). Camera-facing sprite, drawn before
+    // the mask (renderOrder < 0, depthWrite off) so the mask always sits on top.
     const radial = (stops: [number, string][]): THREE.CanvasTexture => {
       const cv = document.createElement('canvas');
       cv.width = cv.height = 128;
@@ -529,10 +530,11 @@ export class Player {
     const pink = new THREE.Sprite(
       new THREE.SpriteMaterial({
         map: radial([
-          [0.0, 'rgba(255,150,210,0.95)'],
-          [0.28, 'rgba(255,45,150,0.85)'],
-          [0.6, 'rgba(220,20,120,0.4)'],
-          [1.0, 'rgba(190,10,90,0)'],
+          [0.0, 'rgba(255,40,150,1.0)'],
+          [0.3, 'rgba(255,20,130,0.85)'],
+          [0.55, 'rgba(235,10,110,0.35)'],
+          [0.78, 'rgba(210,0,95,0)'],
+          [1.0, 'rgba(210,0,95,0)'],
         ]),
         blending: THREE.AdditiveBlending,
         transparent: true,
@@ -543,21 +545,27 @@ export class Player {
     pink.visible = false;
     scene.add(pink);
     this.maskGlowPink = pink;
-    const dark = new THREE.Sprite(
-      new THREE.SpriteMaterial({
-        map: radial([
-          [0.0, 'rgba(0,0,0,0.92)'],
-          [0.5, 'rgba(0,0,0,0.72)'],
-          [1.0, 'rgba(0,0,0,0)'],
-        ]),
-        transparent: true,
-        depthWrite: false,
-      }),
-    );
-    dark.renderOrder = -1;
-    dark.visible = false;
-    scene.add(dark);
-    this.maskGlowDark = dark;
+    // Pink spark pool: a comet-tail of embers streaming off the mask on the 2nd
+    // mask and off the skater on the 3rd. Reused round-robin.
+    const sparkTex = radial([
+      [0.0, 'rgba(255,190,225,1.0)'],
+      [0.4, 'rgba(255,45,150,0.9)'],
+      [1.0, 'rgba(230,0,110,0)'],
+    ]);
+    for (let i = 0; i < 28; i++) {
+      const sp = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: sparkTex,
+          blending: THREE.AdditiveBlending,
+          transparent: true,
+          depthWrite: false,
+          opacity: 0,
+        }),
+      );
+      sp.visible = false;
+      scene.add(sp);
+      this.maskSparks.push({ sprite: sp, vel: new THREE.Vector3(), life: 0, maxLife: 1 });
+    }
 
     // Chunky PS1 spark pool for grinds and grab-boost landings.
     const sparkGeo = new THREE.BoxGeometry(0.09, 0.09, 0.09);
@@ -6424,41 +6432,98 @@ export class Player {
         this.smearG.scale.set(1.84 * pulse, 1.52 * (2 - pulse), 1.84 * pulse); // opposing squash
       }
     }
-    if (this.maskMesh) {
-      this.maskMesh.visible = (this.masks > 0 || this.uberTimer > 0) && this.state !== 'dead';
-      this.maskMesh.position.set(
-        this.pos.x + 1.0,
-        this.pos.y + 1.7 + Math.sin(this.runTime * (this.uberTimer > 0 ? 9 : 3)) * 0.09,
-        this.pos.z + 0.2,
-      );
-      if (this.uberTimer > 0) {
-        // third-mask frenzy: the skull spins fast and pulses for the whole ride
-        this.maskMesh.rotation.y += 8 * dt;
-        this.maskMesh.scale.setScalar(1.35 + Math.sin(this.runTime * 10) * 0.15);
+    if (this.maskMesh && this.maskGlowPink) {
+      const uber = this.uberTimer > 0; // third mask
+      const two = !uber && this.masks >= 2; // second mask held
+      const vis = (this.masks > 0 || uber) && this.state !== 'dead';
+      this.maskMesh.visible = vis;
+      // Front (local -Z) points at the camera at yaw = atan2(camDir.x, camDir.z);
+      // it rocks around that instead of spinning through — never the back.
+      const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
+      const flame = 1 + Math.sin(this.runTime * 7) * 0.08;
+      if (uber) {
+        // third mask: worn on the skater's face, riding the head, camera-facing.
+        const tc = -0.24; // sit it at the head, just off the face
+        this.maskMesh.position.set(
+          this.pos.x - this.camDir.x * tc,
+          this.pos.y + 1.5 + Math.sin(this.runTime * 9) * 0.04,
+          this.pos.z - this.camDir.z * tc,
+        );
+        this.maskMesh.rotation.y = faceYaw + Math.sin(this.runTime * 5) * 0.12;
+        this.maskMesh.scale.setScalar(0.62);
       } else {
-        // held mask: floats at your side, always turning slowly in place
-        this.maskMesh.rotation.y += 1.6 * dt;
-        this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
+        // held mask: floats at the side, rocks front-facing, FIXED size — the
+        // 2nd mask does not grow, it just glows harder and throws sparks.
+        this.maskMesh.position.set(
+          this.pos.x + 1.0,
+          this.pos.y + 1.7 + Math.sin(this.runTime * 3) * 0.09,
+          this.pos.z + 0.2,
+        );
+        this.maskMesh.rotation.y = faceYaw + Math.sin(this.runTime * 2.4) * 0.32;
+        this.maskMesh.scale.setScalar(1);
       }
-      // Aura layers ride with the mask: black halo hugging it, fiery-pink glow
-      // behind that. Sprites billboard on their own; the pink breathes/pulses.
-      if (this.maskGlowDark && this.maskGlowPink) {
-        const on = this.maskMesh.visible;
-        this.maskGlowDark.visible = on;
-        this.maskGlowPink.visible = on;
-        if (on) {
-          const s = this.maskMesh.scale.x;
-          const flame = 1 + Math.sin(this.runTime * 7) * 0.08;
-          const hot = this.uberTimer > 0 ? 1.25 : 1;
+      // Pink glow: tight behind the floating mask (brighter on the 2nd), or a
+      // big body-enveloping bloom around the skater on the 3rd.
+      const pink = this.maskGlowPink;
+      pink.visible = vis;
+      if (vis) {
+        const pm = pink.material as THREE.SpriteMaterial;
+        if (uber) {
+          pink.position.set(this.pos.x, this.pos.y + 1.0, this.pos.z);
+          pink.scale.setScalar(3.9 * flame);
+          pm.opacity = 1;
+        } else {
           const mp = this.maskMesh.position;
-          // sit the halos a touch behind the mask (toward the scene, away from
-          // the follow-cam) so the mask's own depth carves out their centers
-          this.maskGlowDark.position.set(mp.x, mp.y, mp.z - 0.25);
-          this.maskGlowPink.position.set(mp.x, mp.y, mp.z - 0.4);
-          this.maskGlowDark.scale.setScalar(s * 1.7);
-          this.maskGlowPink.scale.setScalar(s * 2.9 * flame * hot);
+          pink.position.set(mp.x, mp.y, mp.z - 0.3);
+          pink.scale.setScalar((two ? 1.95 : 1.5) * flame);
+          pm.opacity = two ? 1 : 0.9;
         }
       }
+      // Pink spark comet-tail on the 2nd + 3rd mask: streams off the mask (2nd)
+      // or the skater (3rd), trailing opposite to how the skater is moving.
+      if ((two || uber) && vis) {
+        this.maskSparkT += dt;
+        const interval = uber ? 0.022 : 0.032;
+        const ex = uber ? this.pos.x : this.maskMesh.position.x;
+        const ey = uber ? this.pos.y + 1.1 : this.maskMesh.position.y;
+        const ez = uber ? this.pos.z : this.maskMesh.position.z;
+        const spread = uber ? 0.7 : 0.4;
+        while (this.maskSparkT >= interval) {
+          this.maskSparkT -= interval;
+          const s = this.maskSparks.find((k) => k.life <= 0);
+          if (!s) break;
+          s.sprite.position.set(
+            ex + (Math.random() - 0.5) * spread,
+            ey + (Math.random() - 0.5) * spread,
+            ez + (Math.random() - 0.5) * spread,
+          );
+          s.vel.set(
+            -this.lastVelX * 0.35 + (Math.random() - 0.5) * 1.2,
+            Math.random() * 0.8 + 0.3,
+            -this.lastVelZ * 0.35 + (Math.random() - 0.5) * 1.2,
+          );
+          s.maxLife = 0.4 + Math.random() * 0.3;
+          s.life = s.maxLife;
+        }
+      }
+    }
+    // Advance every live pink spark (runs even after the mask is spent so a
+    // trailing ember finishes fading instead of snapping off).
+    for (const s of this.maskSparks) {
+      if (s.life <= 0) continue;
+      s.life -= dt;
+      if (s.life <= 0) {
+        s.sprite.visible = false;
+        continue;
+      }
+      s.vel.y -= 1.6 * dt; // gentle sag
+      s.sprite.position.x += s.vel.x * dt;
+      s.sprite.position.y += s.vel.y * dt;
+      s.sprite.position.z += s.vel.z * dt;
+      const f = s.life / s.maxLife;
+      s.sprite.visible = true;
+      (s.sprite.material as THREE.SpriteMaterial).opacity = f;
+      s.sprite.scale.setScalar(0.28 * (0.35 + 0.65 * f));
     }
 
     // Grab tuck + Crash front-flip + slide/crawl crouch + slam poses,
@@ -7008,6 +7073,16 @@ export class Player {
           emissiveIntensity: 0.6,
           side: THREE.DoubleSide,
         });
+        // Black stroke around the skull: an inverted-hull outline — the same
+        // geometry, a hair larger, rendered back-faces-only in flat black, so a
+        // crisp black rim shows around the silhouette (and through the eyes).
+        const outline = new THREE.Mesh(
+          geo,
+          new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide }),
+        );
+        outline.scale.setScalar(1.05);
+        outline.raycast = () => {};
+        this.maskMesh.add(outline);
       },
       undefined,
       (e) => console.warn('skull mask failed to load (mask stays a box):', e),
