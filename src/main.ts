@@ -286,8 +286,12 @@ function applyTheme(): void {
   // the photographic skybox retints every level's haze to the sunset so the
   // painting's alpha-faded base melts seamlessly into the far distance
   const fogHex = skyboxTex ? SKY_FOG.getHex() : t.fog;
+  // ...and pulls the haze IN so the far level horizon dissolves into that same
+  // sunset base instead of ending on a hard edge against the sky.
+  const fogNear = skyboxTex ? Math.min(t.fogNear, 42) : t.fogNear;
+  const fogFar = skyboxTex ? Math.min(t.fogFar, 150) : t.fogFar;
   // editor view: no fog at all, so distant geometry stays crisp and visible
-  scene.fog = editorViewActive ? null : new THREE.Fog(fogHex, t.fogNear, t.fogFar);
+  scene.fog = editorViewActive ? null : new THREE.Fog(fogHex, fogNear, fogFar);
   scene.background = new THREE.Color(fogHex);
   hemi.color.set(t.hemiSky);
   // ground bounce leans toward warm sand: every theme reads a touch tropical
