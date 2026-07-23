@@ -222,6 +222,7 @@ export class Player {
   // wall each frame so the hang follows CURVED walls and bowl corners.
   private vertTracked = false; // the feeler has seen a real vert face this hang
   private vertLossT = 0; // time since a tracked hang last saw its wall
+  private vertLandGraceT = 0; // just landed from a vert air: coping rails yield
   private vertLaunchT = 0; // X released while climbing a vert wall: arm a lip launch
   // HALFPIPE stall-flip cooldown: after the pendulum flips your heading down the
   // fall line at the top of a wall, a brief lockout stops it re-flipping while
@@ -836,6 +837,7 @@ export class Player {
     this.flickDownT += dt;
     this.manualArmT = Math.max(0, this.manualArmT - dt);
     this.ropeCoolT = Math.max(0, this.ropeCoolT - dt);
+    this.vertLandGraceT = Math.max(0, this.vertLandGraceT - dt);
     {
       const my = this.rawInput.moveY;
       const win = TUNING.manualFlickWindow;
@@ -2553,8 +2555,11 @@ export class Player {
     if (this.vertAir) {
       // A halfpipe hang locks HARD to the launch axis (near 100%) so you rise
       // and fall on the same vertical line and drop back onto your take-off spot
-      // — no drift into the pipe. General vert crests keep the softer vertGlue.
-      const g = this.pipeHang ? 1 : Math.min(1, TUNING.vertGlue * dt);
+      // — no drift into the pipe. A TRACKED wall hang locks just as hard: the
+      // feeler hands us the exact wall line every frame (THUG snaps position
+      // to the track point outright). Only untracked legacy crests keep the
+      // soft vertGlue ease.
+      const g = this.pipeHang || this.vertTracked ? 1 : Math.min(1, TUNING.vertGlue * dt);
       const dx = this.pos.x - this.vertAnchor.x;
       const dz = this.pos.z - this.vertAnchor.z;
       const d = dx * this.vertNormal.x + dz * this.vertNormal.z;
@@ -2749,6 +2754,10 @@ export class Player {
       this.slideJumpAir = false;
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
       const wasPipeHang = this.pipeHang; // (cleared next step; needed for drop-in rules below)
+      // THPS coping rules: a vert-air landing comes down AT the lip line —
+      // give the coping rails a beat of yield so the touchdown can never
+      // curb-stop or trip on the very rail it is meant to land beside.
+      if (this.vertAir) this.vertLandGraceT = 0.6;
       const preFx = this.axisF.x; // heading BEFORE the landing projection — a
       const preFz = this.axisF.z; // reversal against it = landed riding fakie
       // Landing out of a lateral hang: keep the sideways momentum so a gap
@@ -3004,7 +3013,11 @@ export class Player {
       if (!h || !h.face) continue;
       if (h.object.userData.halfpipe) continue; // analytic pipes keep their own hang rules
       const wn = h.face.normal.clone().transformDirection(h.object.matrixWorld);
-      if (Math.abs(wn.y) >= 0.71) continue; // not a vert face (THUG's transfer filter)
+      // Steep-face filter for TRACKING: looser than THUG's 0.707 transfer
+      // trigger — their tracking ran on artist-flagged polys covering the
+      // whole transition, and our bowls' rideable band sits right at 0.71,
+      // where a strict filter silently rejects the wall mid-hang (no glue).
+      if (Math.abs(wn.y) >= 0.88) continue;
       const fl = Math.hypot(wn.x, wn.z);
       if (fl < 1e-4) continue;
       // sharp corner: the wall turned away too hard to keep riding it
@@ -3014,8 +3027,11 @@ export class Player {
       // lip memory: climb with a rising coping, never slip down a sloped one —
       // but a DOWN-step hit is the recovery case and may lower it
       this.vertAnchor.y = dy < 0 ? h.point.y : Math.max(this.vertAnchor.y, h.point.y);
-      this.vertAnchor.x = h.point.x + this.vertNormal.x * 1.2;
-      this.vertAnchor.z = h.point.z + this.vertNormal.z * 1.2;
+      // THUG pushes out an INCH, not a body length: the hang rides ON the
+      // wall line, so the drop lands high on the face and rolls, instead of
+      // hovering a body-width inside and plopping onto the low transition
+      this.vertAnchor.x = h.point.x + this.vertNormal.x * 0.15;
+      this.vertAnchor.z = h.point.z + this.vertNormal.z * 0.15;
       this.vertTracked = true;
       this.vertLossT = 0;
       found = true;
@@ -5620,6 +5636,11 @@ export class Player {
     for (const rail of level.rails) {
       const s = rail.closestXZ(this.pos);
       if (s.distXZ > reach) continue;
+      // THPS coping rules: the rail along a lip never fences the transition.
+      // Riding the wall beneath it — or landing fresh out of a vert air —
+      // passes under/over freely; the rail is a grind target, not a barrier.
+      if (this.vertLandGraceT > 0) continue;
+      if (this.groundHit && this.groundHit.normal.y < TUNING.steepStand) continue;
       // Vertical overlap: the rail line must sit within the body column (from a
       // shade below the feet up to a shade over the head) to count — a rail well
       // overhead is walk-under, one below the deck you're on is ignored.
