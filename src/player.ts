@@ -5938,8 +5938,10 @@ export class Player {
     // Movement itself never leaves the course axes; this is purely visual.
     let targetYaw = this.visualYaw; // stationary: keep facing the last direction
     if (this.state === 'rope') {
-      // On the swing rope, hold the travel-line facing (set at grab) — don't
-      // let the back-and-forth swing velocity spin the body around.
+      // On the swing rope you STEER your facing: up/down climbs, so left/right
+      // turns the body. Hold to rotate, release to hold the heading — the swing
+      // itself never spins you around.
+      this.ropeFaceYaw = wrapAngle(this.ropeFaceYaw - this.rawInput.moveX * 2.6 * dt);
       targetYaw = this.ropeFaceYaw;
     } else {
       const vx = this.pos.x - this.prevPos.x;
