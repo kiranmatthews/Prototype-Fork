@@ -3254,13 +3254,17 @@ export class Player {
       // tuck releases too — hands are on the rope.
       this.flipTimer = 0;
       this.bailSpin = 0;
-      // Face down the swing's TRAVEL line, not the velocity (which flip-flops
-      // every half-swing). The line is the rope's swing-plane axis; sign it by
-      // the heading you came in on so you face the way you're going.
-      const axX = Math.cos(rs.yaw);
-      const axZ = -Math.sin(rs.yaw);
-      const sgn = axX * this.axisF.x + axZ * this.axisF.z < 0 ? -1 : 1;
-      this.ropeFaceYaw = Math.atan2(-axX * sgn, -axZ * sgn);
+      // Face the direction you were actually travelling when you grabbed, and
+      // hold it for the whole swing. Prefer the real displacement; fall back to
+      // the heading when nearly still.
+      let fx = this.axisF.x;
+      let fz = this.axisF.z;
+      const vlen = Math.hypot(this.lastVelX, this.lastVelZ);
+      if (vlen > 1) {
+        fx = this.lastVelX / vlen;
+        fz = this.lastVelZ / vlen;
+      }
+      this.ropeFaceYaw = Math.atan2(-fx, -fz);
       this.visualYaw = this.ropeFaceYaw; // snap on grab, no turn-in jitter
       sfx.play('ledgeGrab', 0.6, 0.85);
       this.emitDust(2);
@@ -5938,10 +5942,9 @@ export class Player {
     // Movement itself never leaves the course axes; this is purely visual.
     let targetYaw = this.visualYaw; // stationary: keep facing the last direction
     if (this.state === 'rope') {
-      // On the swing rope you STEER your facing: up/down climbs, so left/right
-      // turns the body. Hold to rotate, release to hold the heading — the swing
-      // itself never spins you around.
-      this.ropeFaceYaw = wrapAngle(this.ropeFaceYaw - this.rawInput.moveX * 2.6 * dt);
+      // On the swing rope, face the direction you were travelling when you
+      // grabbed (captured in tryRopeGrab) and hold it — the swing never turns
+      // you, and climbing up/down never turns you.
       targetYaw = this.ropeFaceYaw;
     } else {
       const vx = this.pos.x - this.prevPos.x;
