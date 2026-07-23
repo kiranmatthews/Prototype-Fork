@@ -25,6 +25,12 @@ const HANG_BOX = new THREE.Box3();
 const ROPE_P = new THREE.Vector3();
 const ROPE_DIR = new THREE.Vector3();
 const ROPE_V = new THREE.Vector3();
+const VERT_RAY_O = new THREE.Vector3();
+const VERT_RAY_D = new THREE.Vector3();
+// feeler height ladder relative to the remembered lip: slightly above first
+// (a rising lip pulls the hang up), then at, then a short scan below (a
+// dipping lip is re-caught instead of lost)
+const VERT_TRACK_STEPS = [0.15, 0.05, 0, -0.12, -0.26, -0.45, -0.7];
 // Under-rail hang: how far the FEET ride below the rail line while hanging
 // underneath (hands + crosswise board grip the rail overhead), and how long
 // the committed swing between top and under takes.
@@ -212,6 +218,10 @@ export class Player {
   readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
   vertLatVel = 0; // hang-time lateral drift along the coping (from the approach angle)
+  // THUG-style wall tracking (non-pipe vert airs): the feeler re-finds the
+  // wall each frame so the hang follows CURVED walls and bowl corners.
+  private vertTracked = false; // the feeler has seen a real vert face this hang
+  private vertLossT = 0; // time since a tracked hang last saw its wall
   private vertLaunchT = 0; // X released while climbing a vert wall: arm a lip launch
   // HALFPIPE stall-flip cooldown: after the pendulum flips your heading down the
   // fall line at the top of a wall, a brief lockout stops it re-flipping while
@@ -2527,6 +2537,9 @@ export class Player {
     // VERT HANG TIME: glued to the wall. The planar position eases back to
     // the launch plane (gravity brings you down INTO the transition), while
     // the stick drifts you along the coping — never away from the wall.
+    // Non-pipe hangs first RE-AIM that plane at whatever the wall feeler
+    // finds, so curved walls and bowl corners carry the hang around with them.
+    if (this.vertAir && !this.hangPipe) this.trackVertWall(level, dt);
     if (this.vertAir) {
       // A halfpipe hang locks HARD to the launch axis (near 100%) so you rise
       // and fall on the same vertical line and drop back onto your take-off spot
@@ -2953,9 +2966,62 @@ export class Player {
   //    a pure vertical hang; steeper angles carry SIDEWAYS momentum along the
   //    coping (hangLateral) so you can drift across a gap / transfer walls.
   // (vVel — the base launch height — is already set by the caller.)
+  // THUG-style vert tracking: while hanging over a NON-pipe vert wall,
+  // re-find the wall every frame with a horizontal feeler at the remembered
+  // lip height, and re-aim the glue plane at whatever it hits. That is what
+  // carries a hang around CURVED walls and bowl corners (the lateral drift
+  // slides you along the wall; the feeler keeps re-bending the plane to
+  // match), and it is why the drop still lands in the transition. The lip
+  // memory climbs with a rising coping and steps down to re-catch a dipping
+  // one. Losing the wall for a beat — off the end, past a sharp corner —
+  // hands the air back to plain gravity. Hangs that never found a wall
+  // (authored kicker lips in open air) keep the fixed launch plane.
+  private trackVertWall(level: Level, dt: number): void {
+    const n = this.vertNormal; // horizontal, pointing off the face into the ramp's air
+    let found = false;
+    for (const dy of VERT_TRACK_STEPS) {
+      VERT_RAY_O.set(this.pos.x + n.x * 2.6, this.vertAnchor.y + dy, this.pos.z + n.z * 2.6);
+      VERT_RAY_D.set(-n.x, 0, -n.z);
+      this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
+      this.raycaster.far = 5.2;
+      const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+      const h = hits[0];
+      if (!h || !h.face) continue;
+      if (h.object.userData.halfpipe) continue; // analytic pipes keep their own hang rules
+      const wn = h.face.normal.clone().transformDirection(h.object.matrixWorld);
+      if (Math.abs(wn.y) >= 0.71) continue; // not a vert face (THUG's transfer filter)
+      const fl = Math.hypot(wn.x, wn.z);
+      if (fl < 1e-4) continue;
+      // sharp corner: the wall turned away too hard to keep riding it
+      if ((wn.x * n.x + wn.z * n.z) / fl < 0.05) break;
+      // re-aim the glue plane at the tracked face
+      this.vertNormal.set(wn.x / fl, 0, wn.z / fl);
+      // lip memory: climb with a rising coping, never slip down a sloped one —
+      // but a DOWN-step hit is the recovery case and may lower it
+      this.vertAnchor.y = dy < 0 ? h.point.y : Math.max(this.vertAnchor.y, h.point.y);
+      this.vertAnchor.x = h.point.x + this.vertNormal.x * 1.2;
+      this.vertAnchor.z = h.point.z + this.vertNormal.z * 1.2;
+      this.vertTracked = true;
+      this.vertLossT = 0;
+      found = true;
+      break;
+    }
+    if (!found && this.vertTracked) {
+      this.vertLossT += dt;
+      if (this.vertLossT > 0.3) {
+        // off the end of the wall — nothing left to land on, so stop being
+        // vert and let gravity + the normal air pose take it from here
+        this.vertAir = false;
+        this.vertLatVel = 0;
+      }
+    }
+  }
+
   private enterVertAir(launch: boolean): void {
     this.vertLaunchT = 0;
     this.jumpBufferT = 0;
+    this.vertTracked = false;
+    this.vertLossT = 0;
     // Launched off a halfpipe (via ANY crest path — the fast pump can take the
     // general one): suppress the hang-time stick-spin so the climb-hold doesn't
     // spin you into a phantom bail. Deliberate spins use the Square button.
