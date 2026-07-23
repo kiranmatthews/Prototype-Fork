@@ -7402,13 +7402,15 @@ export class Level {
     // around the bends (the analytic pipes can't corner; this mesh can).
     // Roll in through the channel on the north rim, carve the loop, grind
     // the coping around the whole rim.
-    // R 5 to 60 degrees (lip ~2.5): crestable from a full-speed run-up — mesh
-    // transitions ride the honest slope physics, not the pipes' pump loop, so
-    // a full-vertical wall would be a dead end at this game's maxSpeed
-    this.roundedBowl(0, -88, 13, 9, 5, 5.0, 60, 6);
+    // R 10 to 60 degrees (lip ~5): a DEEP pool — twice the height and twice
+    // the transition depth. Cresting from a flat run-up is out of reach; the
+    // loop is pump the walls, pop X at the lip for the tracked hang, land
+    // rolling, pump again. (Center nudged north-south so the deck ring
+    // clears pipe pair 2 on one side and the finish gate on the other.)
+    this.roundedBowl(0, -87, 13, 8, 5, 10.0, 60, 6);
     for (let a = 0; a < 8; a++) {
       const th = (a / 8) * Math.PI * 2;
-      this.pickup(Math.cos(th) * 7, 0.4, -88 + Math.sin(th) * 4.5);
+      this.pickup(Math.cos(th) * 7, 0.4, -87 + Math.sin(th) * 4.5);
     }
 
     this.finishGate(0, this.finishZ); // run the pipes, cross the line at the south wall
