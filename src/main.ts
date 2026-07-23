@@ -87,11 +87,18 @@ const SKY_IMG_H = 887;
 const SKY_HORIZON_PX = 600; // the painting's own horizon, in image pixels
 const SKY_HORIZON_V = 1 - SKY_HORIZON_PX / SKY_IMG_H; // ...as a texture-V coord
 const SKY_FOG = new THREE.Color(0xd08a7e); // warm sunset haze, to match the horizon band
+// The foreground mist lives BELOW the dome equator, so flat-ground levels (0-4)
+// occlude it entirely — you only saw it on the elevated/open levels. Lift its
+// band up so the cloud-sea detail straddles the world horizon and shows over
+// flat ground too, while depth-test still hides it behind the near level.
+const SKY_MIST_LIFT = 0.32;
 let skyboxTex: THREE.Texture | null = null;
 let skyMist: THREE.Mesh | null = null; // foreground horizon mist (follows the camera)
 const cfgSkyTex = (t: THREE.Texture): void => {
   t.colorSpace = THREE.SRGBColorSpace;
-  t.wrapS = THREE.RepeatWrapping; // tile around the sides
+  // MIRRORED so every other horizontal tile flips — the image's left and right
+  // edges always meet their own reflection, so the wrap seam disappears.
+  t.wrapS = THREE.MirroredRepeatWrapping;
   t.wrapT = THREE.ClampToEdgeWrapping; // clamp sky above / faded clouds below
   t.repeat.set(SKY_K, SKY_K);
   t.offset.set(0, SKY_HORIZON_V - 0.5 * SKY_K); // horizon -> dome equator
@@ -140,6 +147,7 @@ skyImg.onload = () => {
   fx.globalCompositeOperation = 'source-over';
   const fgTex = new THREE.CanvasTexture(cFg);
   cfgSkyTex(fgTex);
+  fgTex.offset.y -= SKY_MIST_LIFT; // raise the cloud band to sit ON the horizon
   const mist = new THREE.Mesh(
     sky.geometry, // radius 370; the mesh follows the camera (see frame())
     new THREE.MeshBasicMaterial({
