@@ -3297,8 +3297,11 @@ export class Player {
       1.0,
       rs.len - 0.1,
     );
-    // hands at the grip; the body dangles on the same line below them
-    level.ropePointAt(rs, this.ropeD + 1.85, ROPE_P);
+    // Hands pinned to the grip; the body hangs straight DOWN below them (world
+    // vertical, gravity-true) — NOT further along a swung rope, which would
+    // slide the hips off the line and leave the model pivoting off its feet.
+    level.ropePointAt(rs, this.ropeD, ROPE_P);
+    ROPE_P.y -= 1.85; // rig origin is at the feet; the hands reach ~1.85 overhead
     this.pos.copy(ROPE_P);
     this.grounded = false;
     this.vVel = 0;
