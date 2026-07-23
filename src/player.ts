@@ -6459,7 +6459,7 @@ export class Player {
           this.pos.y + 1.7 + Math.sin(this.runTime * 3) * 0.09,
           this.pos.z + 0.2,
         );
-        this.maskMesh.rotation.y = faceYaw + Math.sin(this.runTime * 2.4) * 0.32;
+        this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
         this.maskMesh.scale.setScalar(1);
       }
       // Pink glow: tight behind the floating mask (brighter on the 2nd), or a
