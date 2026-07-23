@@ -3247,6 +3247,12 @@ export class Player {
       if (this.manualing !== 0) this.endManual();
       this.grabPhase = 'none';
       this.grabT = 0;
+      // Grab the rope with a clean hang: kill any in-progress roll-jump flip
+      // (stepRope skips the airborne flip decay, so a mid-flip grab would freeze
+      // the body upside-down). grabPhase/grabT were just cleared, so the grab
+      // tuck releases too — hands are on the rope.
+      this.flipTimer = 0;
+      this.bailSpin = 0;
       sfx.play('ledgeGrab', 0.6, 0.85);
       this.emitDust(2);
       return true;
@@ -6370,6 +6376,7 @@ export class Player {
         this.slideTimer <= 0 &&
         this.starPose < 0.4 && // stowed through the star-jump beat
         this.ledgePose < 0.3 && // stowed while hanging off a ledge (hands are busy)
+        this.state !== 'rope' && // stowed on the swing rope: both hands grip it
         (this.state === 'grind' ||
           (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5) ||
           this.freeSkate ||
@@ -6407,7 +6414,9 @@ export class Player {
         this.boardG.rotation.y = this.boardG.rotation.y * (1 - underW) + (Math.PI / 2) * underW;
         this.boardG.position.x *= 1 - underW;
         this.boardG.position.y += underW * 1.05; // up into both hands, just beneath the line
-        this.boardG.visible = true; // the grip IS the board — always shown while under
+        // the grip IS the board under a RAIL — but on the swing rope the hands
+        // hold the rope itself, so no deck.
+        this.boardG.visible = this.state !== 'rope';
       }
       if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
