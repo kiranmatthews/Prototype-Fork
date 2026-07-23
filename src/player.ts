@@ -6442,15 +6442,20 @@ export class Player {
       const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
       const flame = 1 + Math.sin(this.runTime * 7) * 0.08;
       if (uber) {
-        // third mask: worn on the skater's face, riding the head, camera-facing.
-        const tc = -0.24; // sit it at the head, just off the face
+        // third mask: worn over the skater's face. It rides the skater's OWN
+        // facing (visualYaw, forward = -sin/-cos), pushed out in front of the
+        // face so it covers it — so it only turns toward you when the skater
+        // runs at the camera, exactly like a worn mask.
+        const fwdX = -Math.sin(this.visualYaw);
+        const fwdZ = -Math.cos(this.visualYaw);
+        const d = 0.4; // stand it out in front of the face
         this.maskMesh.position.set(
-          this.pos.x - this.camDir.x * tc,
-          this.pos.y + 1.5 + Math.sin(this.runTime * 9) * 0.04,
-          this.pos.z - this.camDir.z * tc,
+          this.pos.x + fwdX * d,
+          this.pos.y + 1.62 + Math.sin(this.runTime * 9) * 0.03,
+          this.pos.z + fwdZ * d,
         );
-        this.maskMesh.rotation.y = faceYaw + Math.sin(this.runTime * 5) * 0.12;
-        this.maskMesh.scale.setScalar(0.62);
+        this.maskMesh.rotation.y = this.visualYaw + Math.sin(this.runTime * 5) * 0.05;
+        this.maskMesh.scale.setScalar(0.82);
       } else {
         // held mask: floats at the side, rocks front-facing, FIXED size — the
         // 2nd mask does not grow, it just glows harder and throws sparks.
