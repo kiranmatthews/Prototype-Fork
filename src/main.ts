@@ -83,24 +83,80 @@ scene.add(sky);
 // the world horizon (the dome's equator), and its alpha-faded bottom melts
 // into the retinted fog. Repeats horizontally, clamps top/bottom.
 const SKY_K = 2.15; // uniform scale: >1 shrinks the image so more of it shows
-const SKY_HORIZON_V = 1 - 600 / 887; // the painting's horizon as a texture-V coord
+const SKY_IMG_H = 887;
+const SKY_HORIZON_PX = 600; // the painting's own horizon, in image pixels
+const SKY_HORIZON_V = 1 - SKY_HORIZON_PX / SKY_IMG_H; // ...as a texture-V coord
 const SKY_FOG = new THREE.Color(0xd08a7e); // warm sunset haze, to match the horizon band
 let skyboxTex: THREE.Texture | null = null;
-new THREE.TextureLoader().load(import.meta.env.BASE_URL + 'skybox.png', (tex) => {
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = THREE.RepeatWrapping; // tile around the sides
-  tex.wrapT = THREE.ClampToEdgeWrapping; // clamp sky above / faded clouds below
-  tex.repeat.set(SKY_K, SKY_K);
-  tex.offset.set(0, SKY_HORIZON_V - 0.5 * SKY_K); // horizon -> dome equator
-  skyboxTex = tex;
+const cfgSkyTex = (t: THREE.Texture): void => {
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = THREE.RepeatWrapping; // tile around the sides
+  t.wrapT = THREE.ClampToEdgeWrapping; // clamp sky above / faded clouds below
+  t.repeat.set(SKY_K, SKY_K);
+  t.offset.set(0, SKY_HORIZON_V - 0.5 * SKY_K); // horizon -> dome equator
+};
+// Load the painting once, then build TWO layers from it:
+//  1) the dome backdrop (behind the level) — mountains + sky.
+//  2) a foreground MIST layer — only the rich stuff BELOW the 600px horizon
+//     (cloud sea, lower islands), drawn OVER the level with depth-test off so
+//     it actually shows in front of the far horizon, fading out toward your
+//     feet via the painting's own alpha so it never buries anything close.
+const skyImg = new Image();
+skyImg.crossOrigin = 'anonymous';
+skyImg.onload = () => {
+  const W = skyImg.naturalWidth,
+    H = skyImg.naturalHeight;
+  // (1) backdrop — the full painting
+  const cBg = document.createElement('canvas');
+  cBg.width = W;
+  cBg.height = H;
+  cBg.getContext('2d')!.drawImage(skyImg, 0, 0);
+  const bgTex = new THREE.CanvasTexture(cBg);
+  cfgSkyTex(bgTex);
   const m = sky.material as THREE.MeshBasicMaterial;
-  m.transparent = true; // the alpha-faded bottom shows the fog behind it
+  m.transparent = true;
   const old = m.map;
-  m.map = tex;
+  m.map = bgTex;
   m.needsUpdate = true;
-  if (old && old !== tex) old.dispose();
+  if (old && old !== bgTex) old.dispose();
+  skyboxTex = bgTex;
+
+  // (2) foreground mist — erase everything ABOVE the horizon so only the
+  // below-horizon detail survives (soft ramp across the horizon line)
+  const cFg = document.createElement('canvas');
+  cFg.width = W;
+  cFg.height = H;
+  const fx = cFg.getContext('2d')!;
+  fx.drawImage(skyImg, 0, 0);
+  const ramp = fx.createLinearGradient(0, 0, 0, H);
+  ramp.addColorStop(0, 'rgba(0,0,0,1)'); // erase the sky
+  ramp.addColorStop((SKY_HORIZON_PX - 30) / H, 'rgba(0,0,0,1)');
+  ramp.addColorStop((SKY_HORIZON_PX + 40) / H, 'rgba(0,0,0,0)'); // keep the clouds
+  ramp.addColorStop(1, 'rgba(0,0,0,0)');
+  fx.globalCompositeOperation = 'destination-out';
+  fx.fillStyle = ramp;
+  fx.fillRect(0, 0, W, H);
+  fx.globalCompositeOperation = 'source-over';
+  const fgTex = new THREE.CanvasTexture(cFg);
+  cfgSkyTex(fgTex);
+  const mist = new THREE.Mesh(
+    sky.geometry,
+    new THREE.MeshBasicMaterial({
+      map: fgTex,
+      side: THREE.BackSide,
+      transparent: true,
+      depthTest: false, // THE HACK: always draw over the far geometry
+      depthWrite: false,
+      fog: false,
+    }),
+  );
+  mist.renderOrder = 6; // after the opaque world, so it sits in front of it
+  mist.frustumCulled = false;
+  mist.visible = !LITE;
+  scene.add(mist);
   applyTheme(); // re-tint the fog to the sunset now that the sky is live
-});
+};
+skyImg.src = import.meta.env.BASE_URL + 'skybox.png';
 
 // --- sky painting ------------------------------------------------------------
 // Theme colors arrive as both '#rrggbb' strings and 0xrrggbb numbers; the
