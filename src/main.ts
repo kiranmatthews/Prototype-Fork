@@ -815,6 +815,25 @@ window.addEventListener('drop', (e) => {
 });
 ui.onLevelSelect = switchLevel;
 ui.onToggle2P = () => set2P(!split2p);
+// Character pick: swap the hero model live and remember it. P2 (if present)
+// gets the same body — the tint is what tells the two apart.
+ui.onCharSelect = (id) => {
+  player.setCharacter(id);
+  if (p2) {
+    p2.setCharacter(id);
+    tintP2(); // fresh chunks arrive untinted — re-apply the blue (has its own retries)
+  }
+  try {
+    localStorage.setItem('protoChar', id);
+  } catch {
+    /* private mode: choice just won't persist */
+  }
+};
+try {
+  ui.setChar(localStorage.getItem('protoChar') || 'fox');
+} catch {
+  ui.setChar('fox');
+}
 player.onComboBank = (amount) => ui.comboBank(amount);
 player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.

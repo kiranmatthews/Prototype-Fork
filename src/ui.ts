@@ -97,6 +97,8 @@ export class UI {
   onEditorOpen: (() => void) | null = null;
   onEditCopy: (() => void) | null = null;
   onToggle2P: (() => void) | null = null;
+  onCharSelect: ((id: string) => void) | null = null;
+  private charButtons = new Map<string, HTMLButtonElement>();
   // direct-edit + phone sync (main.ts wires these)
   onEditThisLevel: (() => void) | null = null;
   onUnlockEditing: ((pass: string) => Promise<boolean>) | null = null;
@@ -139,6 +141,29 @@ export class UI {
       this.levelButtons.push(btn);
     });
     statsWrap.appendChild(levelRow);
+
+    // CHARACTER pick: swap the hero model (persists across sessions). Both are
+    // Meshy fox-girls; the choice is cosmetic — all animation is shared.
+    const charRow = div('hud-levelrow hud-charrow');
+    const CHARS: { id: string; label: string }[] = [
+      { id: 'fox', label: '🦊 FOX' },
+      { id: 'roxy', label: '🎀 ROXY' },
+    ];
+    CHARS.forEach((c) => {
+      const btn = document.createElement('button');
+      btn.className = 'hud-levelbtn hud-charbtn';
+      btn.textContent = c.label;
+      btn.title = 'change skater';
+      btn.addEventListener('click', () => {
+        if (this.onCharSelect) this.onCharSelect(c.id);
+        this.setChar(c.id);
+        btn.blur();
+      });
+      charRow.appendChild(btn);
+      this.charButtons.set(c.id, btn);
+    });
+    statsWrap.appendChild(charRow);
+
     // The level EDITOR lives on the Custom level (8): build/arrange your own
     // course, then hit TEST in the editor panel to play it.
     const editBtn = document.createElement('button');
@@ -697,6 +722,10 @@ export class UI {
     this.refreshEditControls();
   }
 
+  setChar(id: string): void {
+    this.charButtons.forEach((b, key) => b.classList.toggle('active', key === id));
+  }
+
   // ---- direct-edit + phone sync controls ----
   setEditUnlocked(on: boolean): void {
     this.editUnlocked = on;
@@ -1007,6 +1036,8 @@ export class UI {
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
       .hud-levelrow { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
       .hud-levelrow .hud-levelbtn { flex: 1 1 auto; }
+      .hud-charrow { border-top: 1px solid #2a3647; padding-top: 6px; }
+      .hud-charbtn.active { background: #3a2b44; color: #f0cce8; border-color: #d48fce; }
       .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-capbadge {
         position: fixed; top: 10px; left: 50%; transform: translateX(-50%);

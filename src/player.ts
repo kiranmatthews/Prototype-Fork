@@ -447,10 +447,18 @@ export class Player {
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
-    // swap the placeholder body for the authored model when it lands. The fox
-    // is the hero; the roo stays reachable via a window flag for comparison.
+    // swap the placeholder body for the chosen authored model when it lands.
+    // Character pick persists in localStorage; roo stays reachable via a flag.
     if ((window as { __USE_ROO?: boolean }).__USE_ROO) this.installRoo();
-    else this.installFox();
+    else {
+      let saved = 'fox';
+      try {
+        saved = localStorage.getItem('protoChar') || 'fox';
+      } catch {
+        /* private mode: default fox */
+      }
+      this.setCharacter(saved);
+    }
     this.installSmear(); // whirlwind smear model shown during the spin attack
 
     // Crash-reference shadow: a TIGHT dark ellipse under the feet (~0.75 of
@@ -6613,18 +6621,31 @@ export class Player {
     );
   }
 
-  // ——— The neon-punk fox (models/fox.glb, made in Meshy) ————————————————
-  // Unlike the roo, this model ships with a real 24-bone skeleton + skin
-  // weights. We do NOT skeletal-animate it — the game's whole trick
-  // vocabulary is procedural pose-rig driven. Instead we exploit the
-  // skeleton to segment the mesh CLEANLY: each triangle joins the rig part
-  // its dominant bone maps to, pivoted at the bone's rest position, so the
-  // PS1 chunks bolt onto the same pose rig the roo used. The tail has NO
-  // bones (rigged "but the tail"), so it's carved from geometry into its own
-  // procedural sway chain, roo-style.
-  private installFox(): void {
-    const src =
-      (window as { __FOX_GLB?: string }).__FOX_GLB || import.meta.env.BASE_URL + 'models/fox.glb';
+  // ——— Skinned Meshy bipeds (fox, roxy, …) ——————————————————————————————
+  // These ship a real 24-bone biped skeleton + skin weights. We do NOT
+  // skeletal-animate them — the game's whole trick vocabulary is procedural
+  // pose-rig driven. Instead we exploit the skeleton to segment the mesh
+  // CLEANLY: each triangle joins the rig part its dominant bone maps to,
+  // pivoted at the bone's rest position, so the PS1 chunks bolt onto the same
+  // pose rig the roo used. A tail (if the model has one — fox does, roxy
+  // doesn't) has NO bones, so it's carved from geometry behind the hips into
+  // a procedural sway chain, roo-style.
+  // The pickable roster (id → glb + whether it has a brush tail). 'roo' uses
+  // the legacy static-mesh segmentation instead.
+  static readonly CHARACTERS: { id: string; name: string }[] = [
+    { id: 'fox', name: 'Fox' },
+    { id: 'roxy', name: 'Roxy' },
+  ];
+
+  // Swap the visible character live (menu pick). Re-segmentation cleanly
+  // replaces the chunks in the rig groups, so no rebuild/reload is needed.
+  setCharacter(id: string): void {
+    if (id === 'roo') { this.installRoo(); return; }
+    const c = Player.CHARACTERS.find((x) => x.id === id) ?? Player.CHARACTERS[0];
+    this.installBiped(import.meta.env.BASE_URL + `models/${c.id}.glb`);
+  }
+
+  private installBiped(src: string): void {
     new GLTFLoader().load(
       src,
       (gltf) => {
@@ -6635,17 +6656,17 @@ export class Player {
         });
         if (!mesh) return;
         try {
-          this.segmentFox(mesh);
+          this.segmentBiped(mesh);
         } catch (e) {
-          console.warn('fox segmentation failed (procedural body stays):', e);
+          console.warn('biped segmentation failed (procedural body stays):', e);
         }
       },
       undefined,
-      (e) => console.warn('fox model failed to load (procedural body stays):', e),
+      (e) => console.warn('biped model failed to load (procedural body stays):', e),
     );
   }
 
-  private segmentFox(mesh: THREE.SkinnedMesh): void {
+  private segmentBiped(mesh: THREE.SkinnedMesh): void {
     mesh.updateMatrixWorld(true);
     const skel = mesh.skeleton;
     const boneW: Record<string, THREE.Vector3> = {};
@@ -6725,24 +6746,30 @@ export class Player {
       }
       return boneNames[bj] || 'Hips';
     };
-    // Verts collected per part. The tail is Hips-dominant geometry BEHIND the
-    // body (fox z well behind the hips) — carved out and banded into a chain.
-    const TAIL_Z = cz - 0.12 * ((maxz - minz) / 1.0); // behind the hips
+    // Verts collected per part. The TAIL is carved GEOMETRICALLY, not by
+    // bone: it's any triangle sitting behind the body and below mid-height.
+    // Meshy rigs the tail inconsistently (the fox weights it to Hips, roxy to
+    // a thigh bone), so a bone-based carve is fragile — a geometric one
+    // catches the brush wherever the rigger stashed its skin weights, and
+    // returns empty (→ no tail) for a genuinely tailless model.
+    const midY = (miny + maxy) / 2;
+    const backZ = cz - 0.12 * (maxz - minz); // behind the hips
     const bucket: Record<string, number[]> = {};
     for (const k of ['head', 'torso', 'pelvis', 'upperArmR', 'upperArmL', 'foreArmR', 'foreArmL', 'thighR', 'thighL', 'shinR', 'shinL', 'tail'])
       bucket[k] = [];
     for (let t = 0; t < P.count; t += 3) {
+      const czf = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
+      const cyf = (P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3;
+      if (czf < backZ && cyf < midY) {
+        bucket.tail.push(t, t + 1, t + 2);
+        continue;
+      }
       const votes: Record<string, number> = {};
       let best = 'torso', bestN = 0;
       for (let k = 0; k < 3; k++) {
         const part = boneToPart[domBone(t + k)] || 'torso';
         votes[part] = (votes[part] || 0) + 1;
         if (votes[part] > bestN) { bestN = votes[part]; best = part; }
-      }
-      // tail override: pelvis triangles sitting behind the hips are the brush
-      if (best === 'pelvis') {
-        const czf = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
-        if (czf < TAIL_Z) best = 'tail';
       }
       bucket[best].push(t, t + 1, t + 2);
     }
@@ -6824,8 +6851,12 @@ export class Player {
 
     // TAIL — the unrigged brush. Band the carved geometry by height into a
     // 3-joint chain seated on the mesh; the chunks carry the curl, the sway
-    // driver flexes deltas down the chain (rest 0).
-    if (this.tailRoot && bucket.tail.length >= 9) {
+    // driver flexes deltas down the chain (rest 0). A genuinely tailless model
+    // carves nothing here, so the placeholder tail is stripped (no phantom).
+    if (bucket.tail.length < 9) {
+      if (this.tailRoot) for (const c of [...this.tailRoot.children]) this.tailRoot.remove(c);
+      this.tailChain = [];
+    } else if (this.tailRoot) {
       const ys: number[] = [];
       for (const vi of bucket.tail) ys.push((P.getY(vi) - miny) * SY);
       const tMax = Math.max(...ys), tMin = Math.min(...ys);
