@@ -507,6 +507,7 @@ export class Player {
     mask.visible = false;
     scene.add(mask);
     this.maskMesh = mask;
+    this.installSkullMask(); // swap the box mask for the sculpted spiked skull once it loads
 
     // Chunky PS1 spark pool for grinds and grab-boost landings.
     const sparkGeo = new THREE.BoxGeometry(0.09, 0.09, 0.09);
@@ -6381,11 +6382,12 @@ export class Player {
         this.pos.z + 0.2,
       );
       if (this.uberTimer > 0) {
-        // third-mask frenzy: the mask spins and pulses for the whole ride
+        // third-mask frenzy: the skull spins fast and pulses for the whole ride
         this.maskMesh.rotation.y += 8 * dt;
         this.maskMesh.scale.setScalar(1.35 + Math.sin(this.runTime * 10) * 0.15);
       } else {
-        this.maskMesh.rotation.y = 0;
+        // held mask: floats at your side, always turning slowly in place
+        this.maskMesh.rotation.y += 1.6 * dt;
         this.maskMesh.scale.setScalar(this.masks >= 2 ? 1.25 : 1);
       }
     }
@@ -6886,6 +6888,52 @@ export class Player {
         parent = joint;
       }
     }
+  }
+
+  // ——— Aku mask reward (models/skull.glb) ———————————————————————————————
+  // The floating mask you carry after smashing a mask crate is a sculpted
+  // spiked skull. Loaded once, its geometry is re-centered on its own bbox
+  // center and baked to size, so the maskMesh's frame-driven scale/rotation
+  // still work and rotation.y is a true spin-in-place (correct central axis).
+  private installSkullMask(): void {
+    const src =
+      (window as { __SKULL_GLB?: string }).__SKULL_GLB ||
+      import.meta.env.BASE_URL + 'models/skull.glb';
+    new GLTFLoader().load(
+      src,
+      (gltf) => {
+        if (!this.maskMesh) return;
+        let source: THREE.Mesh | null = null;
+        gltf.scene.traverse((o) => {
+          if (!source && (o as THREE.Mesh).isMesh) source = o as THREE.Mesh;
+        });
+        if (!source) return;
+        const src = source as THREE.Mesh;
+        // Re-center on the bbox center and bake a fit-scale into the geometry so
+        // the tallest dimension spans ~0.9 units (about the old box's reach).
+        const geo = (src.geometry as THREE.BufferGeometry).clone();
+        geo.computeBoundingBox();
+        const bb = geo.boundingBox!;
+        geo.translate(
+          -(bb.min.x + bb.max.x) / 2,
+          -(bb.min.y + bb.max.y) / 2,
+          -(bb.min.z + bb.max.z) / 2,
+        );
+        const span = Math.max(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
+        const k = span > 0 ? 0.9 / span : 1;
+        geo.scale(k, k, k);
+        // Swap the box face + eyes for the skull.
+        for (const c of [...this.maskMesh.children]) this.maskMesh.remove(c);
+        (this.maskMesh.geometry as THREE.BufferGeometry).dispose();
+        this.maskMesh.geometry = geo;
+        this.maskMesh.material = new THREE.MeshLambertMaterial({
+          map: (src.material as THREE.MeshStandardMaterial).map ?? null,
+          side: THREE.DoubleSide,
+        });
+      },
+      undefined,
+      (e) => console.warn('skull mask failed to load (mask stays a box):', e),
+    );
   }
 
   // ——— Spin smear (models/smear.glb) ————————————————————————————————————
