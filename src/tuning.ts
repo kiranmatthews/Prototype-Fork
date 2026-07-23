@@ -563,6 +563,7 @@ export const CONST = {
   ptsBouncy: 25,
   ptsSlide: 30,
   ptsSlam: 75,
+  ptsRopeSwing: 60, // leaping off a swing rope
   ptsGrab: 150,
   ptsSpin: 80, // per 180 degrees of air rotation landed — a rotation is its own trick
   ptsGrabTick: 4, // accrues every quarter second a grab is held (THPS-style)
@@ -580,6 +581,10 @@ export const CONST = {
   hangLatMax: 8, // pipe hang: cap on the off-axis lateral carry (locked-in vert, no launching down the pipe)
   hangLatDamp: 1.8, // pipe hang: how fast the lateral carry bleeds off (drift early, come down locked)
   manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
+  ropeGrabRadius: 1.1, // jump within this of a swing rope's line to catch it
+  ropeClimbSpeed: 2.4, // up/down on the stick walks the grip along the rope (u/s)
+  ropeRegrabCool: 0.5, // after leaping off, the rope won't re-catch you for this long
+  ropeSpinReach: 1.9, // spin-on-the-rope smash radius (mid-air crates, enemies)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
   grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release

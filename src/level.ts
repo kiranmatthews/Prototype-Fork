@@ -148,6 +148,21 @@ interface Crusher {
   slammed: boolean; // edge flag for the impact thud
 }
 
+// Swinging grab-rope: jump at it to hang on, climb its length, leap off with
+// the swing's momentum. Pure driven pendulum — the player rides it, never
+// bends it.
+export interface RopeSwing {
+  pivot: THREE.Group; // at the anchor; rotation.y = yaw, rotation.z = the swing
+  anchor: THREE.Vector3;
+  len: number;
+  amp: number; // max swing angle (radians)
+  speed: number; // drive frequency (rad/s)
+  phase: number;
+  yaw: number; // radians: spins the swing plane
+  theta: number; // current angle (animated)
+  thetaV: number; // current angular velocity (jump-off momentum)
+}
+
 // Swinging pendulum blade across the corridor.
 interface Pendulum {
   pivot: THREE.Group;
@@ -249,6 +264,7 @@ export interface CustomComponent {
     | 'enemy' // patrols along X around p, range each way
     | 'crusher' // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | 'pendulum' // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
+    | 'ropeswing' // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane
     | 'gate' // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
     | 'clock' // time-trial activator: the gold stopwatch near the start; p = [x, deckY, z]. One per level.
     | 'comboorb' // combo-run activator: the green plus near the start; p = [x, deckY, z]. One per level.
@@ -864,6 +880,7 @@ export class Level {
   ropes: SkyRope[] = [];
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
+  ropeSwings: RopeSwing[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
 
@@ -1587,6 +1604,17 @@ export class Level {
         yaw: pe.yaw ? Math.round(THREE.MathUtils.radToDeg(pe.yaw)) : undefined,
       });
     }
+    for (const rs of this.ropeSwings) {
+      C.push({
+        t: 'ropeswing',
+        p: [r2(rs.anchor.x), r2(rs.anchor.y), r2(rs.anchor.z)],
+        len: r2(rs.len),
+        amp: r2(rs.amp),
+        speed: r2(rs.speed),
+        phase: r2(rs.phase),
+        yaw: rs.yaw ? Math.round(THREE.MathUtils.radToDeg(rs.yaw)) : undefined,
+      });
+    }
     // sagging ropes: endpoints off the taut rest nodes
     for (const rope of this.ropes) {
       const a = rope.rest[0];
@@ -2212,6 +2240,8 @@ export class Level {
           } else if (c.t === 'crusher') {
             const s = c.s ?? [4, 3, 3];
             this.crusher(c.p[0], c.p[1], c.p[2], s[0], s[2], c.cycle ?? 3.2, c.phase ?? 0);
+          } else if (c.t === 'ropeswing') {
+            this.ropeSwing(c.p[0], c.p[1], c.p[2], c.len ?? 6, c.amp ?? 0.85, c.speed ?? 0, c.phase ?? 0, c.yaw ?? 0);
           } else if (c.t === 'pendulum') {
             this.pendulum(c.p[0], c.p[1], c.p[2], c.len ?? 5, c.amp ?? 1.0, c.speed ?? 1.6, c.phase ?? 0, c.yaw ?? 0);
           } else if (c.t === 'wumpa') {
@@ -2635,6 +2665,14 @@ export class Level {
         const dx = Math.abs(pd.pivot.position.x - this.playerPos.x);
         if (dz < 26 && dx < 26) sfx.play('woosh', 0.28, 1.25);
       }
+    }
+
+    // Swing ropes: driven pendulums (the player attaches via player code —
+    // here they just keep swinging).
+    for (const rs of this.ropeSwings) {
+      rs.theta = Math.sin(this.time * rs.speed + rs.phase) * rs.amp;
+      rs.thetaV = Math.cos(this.time * rs.speed + rs.phase) * rs.amp * rs.speed;
+      rs.pivot.rotation.z = rs.theta;
     }
 
     // Arena lock: gates up, waves in, gates down when the pit is clear.
@@ -3179,6 +3217,9 @@ export class Level {
     this.ramp('funnel slope', -40, 0, -80, -5, 14, matRamp);
     this.jungle('corridor A', -80, -153, -5, 12, matA, { dips: [-112] });
     // gap 1: -153 .. -162 (rebalanced for the slower feel)
+    // rope swing over the gap, just off the main line: jump at it, climb,
+    // ride the arc across (or keep taking the gap straight — your call)
+    this.ropeSwing(4, 3.5, -157.5, 6.5, 0.85, 0, 0, 90);
     this.jungle('corridor B', -162, -235, -5.5, 12, matB, { dips: [-222] });
     this.ramp('big slope', -235, -5.5, -275, -13, 12, matRamp);
     // gap 2: -275 .. -288 (carry speed)
@@ -4022,6 +4063,69 @@ export class Level {
     beam.rotation.y = yaw;
     this.root.add(beam);
     this.pendulums.push({ pivot, len, amp, speed, phase, yaw, box: new THREE.Box3(), lastSign: 1 });
+  }
+
+  // Swinging grab-rope: a driven pendulum the player can hang from. speed 0 =
+  // natural pendulum frequency for the length (long ropes swing slow).
+  private ropeSwing(x: number, anchorY: number, z: number, len = 6, amp = 0.85, speed = 0, phase = 0, yawDeg = 0): void {
+    const yaw = THREE.MathUtils.degToRad(yawDeg);
+    const pivot = new THREE.Group();
+    pivot.position.set(x, anchorY, z);
+    pivot.rotation.order = 'YZX'; // yaw FIRST, the animated z-swing lives in the spun frame
+    pivot.rotation.y = yaw;
+    const ropeMat = new THREE.MeshLambertMaterial({ color: 0xa8845a });
+    const bandMat = new THREE.MeshLambertMaterial({ color: 0x7a5c3a });
+    const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, len, 5), ropeMat);
+    rope.position.y = -len / 2;
+    pivot.add(rope);
+    // knot bands down the line sell "rope" at PS1 fidelity — and mark the grips
+    for (let d = 1.2; d < len - 0.3; d += 1.2) {
+      const band = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.14, 6), bandMat);
+      band.position.y = -d;
+      pivot.add(band);
+    }
+    const knot = new THREE.Mesh(new THREE.SphereGeometry(0.2, 6, 5), bandMat);
+    knot.position.y = -len;
+    pivot.add(knot);
+    // anchor mount so a floating anchor still reads attached to SOMETHING
+    const mount = new THREE.Mesh(
+      new THREE.BoxGeometry(0.8, 0.35, 0.8),
+      new THREE.MeshLambertMaterial({ color: 0x6a5138 }),
+    );
+    mount.position.y = 0.18;
+    pivot.add(mount);
+    this.root.add(pivot);
+    this.ropeSwings.push({
+      pivot,
+      anchor: new THREE.Vector3(x, anchorY, z),
+      len,
+      amp,
+      speed: speed > 0 ? speed : Math.sqrt(11 / Math.max(1, len)),
+      phase,
+      yaw,
+      theta: 0,
+      thetaV: 0,
+    });
+  }
+
+  // World position `d` meters down a swing rope (d may exceed len — the body
+  // dangles on the same line below the hands).
+  ropePointAt(rs: RopeSwing, d: number, out: THREE.Vector3): THREE.Vector3 {
+    const swing = Math.sin(rs.theta) * d;
+    const cos = Math.cos(rs.yaw);
+    const sin = Math.sin(rs.yaw);
+    out.set(rs.anchor.x + swing * cos, rs.anchor.y - Math.cos(rs.theta) * d, rs.anchor.z - swing * sin);
+    return out;
+  }
+
+  // Velocity of that point — the momentum a jump-off inherits.
+  ropeVelAt(rs: RopeSwing, d: number, out: THREE.Vector3): THREE.Vector3 {
+    const tang = d * rs.thetaV; // speed along the swing arc
+    const cos = Math.cos(rs.yaw);
+    const sin = Math.sin(rs.yaw);
+    const planar = tang * Math.cos(rs.theta);
+    out.set(planar * cos, tang * Math.sin(rs.theta), -planar * sin);
+    return out;
   }
 
   // ---------------------------------------------------------- visual kit --
@@ -7643,6 +7747,11 @@ export class Level {
       V(6, 7.5, -738), // the lip kicks up
     ], 12);
     this.ribbonFruit(r5.curve, 0.2, 0.7, 6);
+
+    // rope swing over the gap, WEST of the racing line: the flight line stays
+    // honest (speed + jump), but a leap toward the rope opens a slower, showier
+    // crossing — catch, ride the arc, release onto the landing
+    this.ropeSwing(-3, 19, -747, 9.5, 0.8, 0, 0, 90);
 
     // THE GAP: ~20 units of open water, then the landing ribbon
     const r6 = this.slideRibbon([

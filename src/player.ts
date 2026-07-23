@@ -7,13 +7,13 @@ import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
-import { Crate, Level } from './level';
+import { Crate, Level, RopeSwing } from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'dead' | 'gameover' | 'finished';
+export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
 
 // Ledge grab geometry: how far below the TRUE lip the body hangs (hands at the
 // lip, head just under it), and how long the catch takes to settle (a caught
@@ -22,6 +22,9 @@ const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
 const LEDGE_DOWN = new THREE.Vector3(0, -1, 0);
 const HANG_BOX = new THREE.Box3();
+const ROPE_P = new THREE.Vector3();
+const ROPE_DIR = new THREE.Vector3();
+const ROPE_V = new THREE.Vector3();
 // Under-rail hang: how far the FEET ride below the rail line while hanging
 // underneath (hands + crosswise board grip the rail overhead), and how long
 // the committed swing between top and under takes.
@@ -235,6 +238,14 @@ export class Player {
   private manualArmed: 0 | 1 | -1 = 0; // flick completed mid-air: land into it
   private manualArmT = 0;
   private manualCoyoteT = 0; // time the live manual has been off the deck (crest-hop grace)
+
+  // ROPE SWING: jump at a swinging rope to hang on. Up/down climbs the rope,
+  // hold/release X leaps off with the swing's momentum, Square spins to smash
+  // mid-air crates and enemies. stepRope owns the state.
+  private ropeObj: RopeSwing | null = null;
+  private ropeD = 0; // grip distance down the rope from the anchor
+  private ropeCoolT = 0; // re-grab cooldown after leaping off
+  private ropeJumpArm = false; // X must come UP once on the rope before hold-to-charge arms
   // LIP TRICKS: reach the coping slow holding Triangle -> stall on the lip
   // (Rock to Fakie / Axle Stall / Disaster from the air), points tick while
   // held, release/jump/timeout drops back in fakie.
@@ -647,6 +658,9 @@ export class Player {
     this.manualArmed = 0;
     this.manualArmT = 0;
     this.manualCoyoteT = 0;
+    this.ropeObj = null;
+    this.ropeCoolT = 0;
+    this.ropeJumpArm = false;
     this.lipStallT = 0;
     this.lipPipe = null;
     this.lipCoolT = 0;
@@ -779,6 +793,19 @@ export class Player {
     // LEDGE HANG owns the whole step: no movement, physics, or collision runs
     // while gripped — climb up, hop off, or the grip gives out. stepHang ticks
     // the essential shared timers itself.
+    if (this.state === 'rope') {
+      if (input.restartPressed) {
+        this.respawn(level, true);
+        this.syncVisual(input, dt);
+        return;
+      }
+      this.stepRope(dt, input, level);
+      this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
+      this.updateSparks(dt);
+      this.updateFruit(dt);
+      this.syncVisual(input, dt);
+      return;
+    }
     if (this.state === 'hang') {
       if (input.restartPressed) {
         this.respawn(level, true);
@@ -798,6 +825,7 @@ export class Player {
     this.flickUpT += dt;
     this.flickDownT += dt;
     this.manualArmT = Math.max(0, this.manualArmT - dt);
+    this.ropeCoolT = Math.max(0, this.ropeCoolT - dt);
     {
       const my = this.rawInput.moveY;
       const win = TUNING.manualFlickWindow;
@@ -1213,7 +1241,15 @@ export class Player {
         // lip drops you back in (or snaps a coping grind like any rail if
         // Triangle is held). Getting parked on the coping out of a big hang
         // killed the flow.
-        if (!this.wallriding && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
+        if (
+          this.ropeCoolT <= 0 &&
+          !this.wallriding &&
+          !this.slamActive &&
+          this.bailDownT <= 0 &&
+          this.tryRopeGrab(level)
+        ) {
+          // hands on the swing rope
+        } else if (!this.wallriding && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
           // grabbed the rail
         } else {
           this.stepAir(dt, input, level);
@@ -1295,6 +1331,7 @@ export class Player {
       this.landingScoring ||
       this.state === 'air' ||
       this.state === 'grind' ||
+      this.state === 'rope' || // hanging on the swing: airborne in spirit
       this.sliding ||
       this.manualing !== 0 || // balanced on two wheels: the combo connector
       this.lipStallT > 0; // parked on the coping: same deal
@@ -3002,6 +3039,145 @@ export class Player {
     this.speed -= Math.sign(this.speed) * Math.min(bleed, s);
   }
 
+  // -------------------------------------------------------------- rope swing --
+
+  // Airborne near a swing rope's line: catch it. The grip lands wherever your
+  // chest met the rope, so a low pass grabs low — deeper reach, bigger arc.
+  private tryRopeGrab(level: Level): boolean {
+    if (level.ropeSwings.length === 0) return false;
+    const chestY = this.pos.y + 1.0;
+    for (const rs of level.ropeSwings) {
+      // rope direction (anchor -> knot) at its CURRENT swing angle
+      level.ropePointAt(rs, 1, ROPE_DIR).sub(rs.anchor);
+      const px = this.pos.x - rs.anchor.x;
+      const py = chestY - rs.anchor.y;
+      const pz = this.pos.z - rs.anchor.z;
+      const d = THREE.MathUtils.clamp(
+        px * ROPE_DIR.x + py * ROPE_DIR.y + pz * ROPE_DIR.z,
+        1.0,
+        rs.len - 0.1,
+      );
+      level.ropePointAt(rs, d, ROPE_P);
+      const dx = ROPE_P.x - this.pos.x;
+      const dy = ROPE_P.y - chestY;
+      const dz = ROPE_P.z - this.pos.z;
+      if (dx * dx + dy * dy + dz * dz > CONST.ropeGrabRadius * CONST.ropeGrabRadius) continue;
+      this.state = 'rope';
+      this.ropeObj = rs;
+      this.ropeD = d;
+      this.ropeJumpArm = false; // the held X that jumped you here must come up first
+      this.vVel = 0;
+      this.speed = 0;
+      this.charging = false;
+      this.chargeTimer = 0;
+      this.airJumpUsed = false; // a solid grip re-arms the double jump
+      this.wallrideLatched = false;
+      if (this.manualing !== 0) this.endManual();
+      this.grabPhase = 'none';
+      this.grabT = 0;
+      sfx.play('ledgeGrab', 0.6, 0.85);
+      this.emitDust(2);
+      return true;
+    }
+    return false;
+  }
+
+  // Hanging on: follow the swing, climb with up/down, leap with X, spin to
+  // smash. The rope is driven — your weight never bends it.
+  private stepRope(dt: number, input: Input, level: Level): void {
+    this.runTime += dt;
+    // essential shared timers (the rope early-outs before the main step body)
+    this.spinCd = Math.max(0, this.spinCd - dt);
+    this.invulnTimer = Math.max(0, this.invulnTimer - dt);
+    this.uberTimer = Math.max(0, this.uberTimer - dt);
+    if (this.ttActive) {
+      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
+      else this.ttTime += dt;
+    }
+    const rs = this.ropeObj;
+    if (!rs) {
+      this.state = 'air';
+      return;
+    }
+    // climb: stick/arrows up walks the grip toward the anchor, down toward
+    // the knot — while the whole rope keeps swinging
+    this.ropeD = THREE.MathUtils.clamp(
+      this.ropeD - input.moveY * CONST.ropeClimbSpeed * dt,
+      1.0,
+      rs.len - 0.1,
+    );
+    // hands at the grip; the body dangles on the same line below them
+    level.ropePointAt(rs, this.ropeD + 1.85, ROPE_P);
+    this.pos.copy(ROPE_P);
+    this.grounded = false;
+    this.vVel = 0;
+    // spinning up here is the point: mid-air crates and enemies in reach
+    if (this.spinTimer > 0) this.ropeSpinSmash(level);
+    // hold/release X = the normal charged jump, fired with the swing's
+    // momentum. Arm only after X has been UP once on the rope, so the press
+    // that jumped you INTO it can't fire the leap the moment you catch —
+    // and the arm is set at the END of the frame, so the very release that
+    // un-holds X can't arm itself.
+    if (this.ropeJumpArm && input.jumpReleased) {
+      this.ropeLeap(level, rs);
+      return;
+    }
+    if (this.ropeJumpArm && input.jumpHeld) {
+      this.charging = true;
+      this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+    }
+    if (!input.jumpHeld) this.ropeJumpArm = true;
+    // the rope never shelters you from the kill floor (long ropes over pits)
+    if (this.pos.y < level.killY) this.die();
+  }
+
+  private ropeLeap(level: Level, rs: RopeSwing): void {
+    const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
+    const jumpV = TUNING.jumpMinVelocity + (TUNING.jumpVelocity - TUNING.jumpMinVelocity) * t;
+    level.ropeVelAt(rs, this.ropeD, ROPE_V);
+    this.state = 'air';
+    this.ropeObj = null;
+    this.ropeCoolT = CONST.ropeRegrabCool;
+    this.charging = false;
+    this.chargeTimer = 0;
+    this.airFromSkate = this.freeSkate; // the landing can flow into a manual
+    this.vVel = jumpV + Math.max(0, ROPE_V.y * 0.9);
+    // skating: the swing's planar momentum carries into the flight. On-foot
+    // air is direct-drive, and the course frame is not ours to overwrite.
+    const planar = Math.hypot(ROPE_V.x, ROPE_V.z);
+    if (this.freeSkate && planar > 1.5) {
+      this.axisF.set(ROPE_V.x / planar, 0, ROPE_V.z / planar);
+      this.speed = Math.min(planar * 1.15, TUNING.downhillMax);
+    }
+    this.score(CONST.ptsRopeSwing, 'Rope Swing');
+    sfx.play('woosh', 0.5, 1.1);
+  }
+
+  // One spin = one wrecking pass: crates and enemies within arm's reach of
+  // the hanging body get smashed; TNT and nitro answer in their own voice.
+  private ropeSpinSmash(level: Level): void {
+    const cy = this.pos.y + 0.9;
+    const reach = CONST.ropeSpinReach;
+    for (const c of level.crates) {
+      if (!c.alive || c.pending || c.bouncy || c.metalBounce) continue;
+      const p = c.mesh.position;
+      const dx = p.x - this.pos.x;
+      const dy = p.y - cy;
+      const dz = p.z - this.pos.z;
+      if (dx * dx + dy * dy + dz * dz > reach * reach) continue;
+      if (c.tnt) level.detonate(c, true);
+      else if (c.nitro) level.detonate(c);
+      else if (c.bang) level.triggerBang(c);
+      else this.smashCrate(level, c);
+    }
+    for (const e of level.enemies) {
+      if (e.alive && e.meleeKill && e.group.position.distanceTo(this.pos) < reach + 0.4) {
+        level.killEnemy(e);
+        this.score(CONST.ptsEnemy, 'Takedown');
+      }
+    }
+  }
+
   // ------------------------------------------------------------------ manual --
 
   // The stick flick landed: pop a manual now (on the ground) or, mid-air, arm
@@ -3826,7 +4002,8 @@ export class Player {
   // ------------------------------------------------------------------ spin --
 
   private updateSpin(dt: number, input: Input): void {
-    const canSpin = this.state === 'ride' || this.state === 'air' || this.state === 'grind';
+    const canSpin =
+      this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope';
     if (input.spinPressed && !this.spinning && this.spinCd <= 0 && canSpin) {
       this.spinTimer = TUNING.spinDuration;
       sfx.play(['spin1', 'spin2', 'spin3'][Math.floor(Math.random() * 3)], 0.5);
@@ -5698,7 +5875,9 @@ export class Player {
     // Under-rail hang weight: underK eases through the committed swing while
     // grinding; any exit (drop, snap, rail end) lets it bleed off in the air.
     if (this.state !== 'grind') this.underK = Math.max(0, this.underK - dt * 4);
-    const underW = this.underK;
+    // the rope hang borrows the under-rail body: both arms up gripping a line
+    // overhead, legs dangling (the board rides up into the hands too)
+    const underW = Math.max(this.underK, this.state === 'rope' ? 1 : 0);
     const HS = this.hangPoseSample(ledgeW);
     const dangle = ledgeW * Math.sin(this.runTime * 1.7) * 0.08; // idle leg sway
     if (this.legL && this.legR) {

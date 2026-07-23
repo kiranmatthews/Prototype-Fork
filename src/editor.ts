@@ -129,6 +129,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
     items: [
       { label: 'crusher', icon: (x) => { x.fillStyle = '#8f8f98'; x.fillRect(3, 2, 12, 7); glyph(x, '↓', '#2a2a30'); }, make: (at) => ({ t: 'crusher', p: [at.x, at.y, at.z], s: [4, 3, 3], cycle: 3.2, phase: 0 }) },
       { label: 'pendulum', icon: (x) => { x.strokeStyle = '#6a7078'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 11); x.stroke(); x.fillStyle = '#565c66'; x.beginPath(); x.arc(13.5, 13, 3, 0, 7); x.fill(); }, make: (at) => ({ t: 'pendulum', p: [at.x, at.y + 7, at.z], len: 5, amp: 1.0, speed: 1.6, phase: 0 }) },
+      { label: 'rope swing', icon: (x) => { x.strokeStyle = '#a8845a'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(8, 2); x.quadraticCurveTo(9, 8, 12, 13); x.stroke(); x.fillStyle = '#7a5c3a'; x.fillRect(11, 6, 2.4, 1.6); x.beginPath(); x.arc(12.2, 13.5, 1.8, 0, 7); x.fill(); }, make: (at) => ({ t: 'ropeswing', p: [at.x, at.y + 8, at.z], len: 6, amp: 0.85, speed: 0, phase: 0 }) },
       { label: 'wumpa', icon: (x) => { x.fillStyle = '#ff9028'; x.beginPath(); x.arc(9, 10, 5, 0, 7); x.fill(); x.fillStyle = '#3a9a4a'; x.fillRect(8, 3, 2, 3); }, make: (at) => ({ t: 'wumpa', p: [at.x, at.y + 1.2, at.z] }) },
       { label: 'crystal', icon: (x) => { x.fillStyle = '#c83af0'; x.beginPath(); x.moveTo(9, 2); x.lineTo(14, 9); x.lineTo(9, 16); x.lineTo(4, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'crystal', p: [at.x, at.y + 0.5, at.z] }) },
       { label: 'finish gate', icon: (x) => { x.fillStyle = '#d8d8d8'; x.fillRect(3, 4, 2, 12); x.fillRect(13, 4, 2, 12); for (let i = 0; i < 4; i++) { x.fillStyle = i % 2 === 0 ? '#e8e8e8' : '#20242c'; x.fillRect(5 + i * 2, 4, 2, 3); } }, make: (at) => ({ t: 'gate', p: [at.x, at.y, at.z] }) },
@@ -153,7 +154,7 @@ const FOE_KINDS: { k: EnemyKind; label: string }[] = [
 ];
 
 // components that grow draggable resize handles on double-click
-const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'pipe', 'enemy', 'pendulum']);
+const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'pipe', 'enemy', 'pendulum', 'ropeswing']);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
 // and `apply` rewrites the component from its grab-time snapshot given the
@@ -989,6 +990,9 @@ export class Editor {
       case 'pendulum':
         if (c.len != null) c.len = Math.max(1, c.len * sy); // arm length is vertical
         break;
+      case 'ropeswing':
+        if (c.len != null) c.len = Math.max(2, c.len * sy); // rope length is vertical
+        break;
       case 'camnode':
         if (c.radius != null) c.radius *= (sx + sz) / 2;
         break;
@@ -1245,6 +1249,7 @@ export class Editor {
     else if (c.t === 'pipe') c.len = c.len ?? 36;
     else if (c.t === 'enemy') c.range = c.range ?? 5;
     else if (c.t === 'pendulum') c.len = c.len ?? 5;
+    else if (c.t === 'ropeswing') c.len = c.len ?? 6;
   }
 
   private handleDefsFor(c: CustomComponent): HandleDef[] {
@@ -1373,12 +1378,12 @@ export class Editor {
       const r = c.range!;
       span(new THREE.Vector3(1, 0, 0), new THREE.Vector3(P.x + r, P.y + 0.4, P.z), 'range', 0.5, false);
       span(new THREE.Vector3(-1, 0, 0), new THREE.Vector3(P.x - r, P.y + 0.4, P.z), 'range', 0.5, false);
-    } else if (c.t === 'pendulum') {
+    } else if (c.t === 'pendulum' || c.t === 'ropeswing') {
       defs.push({
         pos: P.clone().setY(P.y - c.len!),
         dir: new THREE.Vector3(0, -1, 0),
         apply: (orig, cc, d) => {
-          cc.len = Math.max(1, orig.len! + d);
+          cc.len = Math.max(c.t === 'ropeswing' ? 2 : 1, orig.len! + d);
         },
       });
     }
@@ -2762,7 +2767,7 @@ export class Editor {
     // per-item yaw stay in perfect agreement.
     const rot = (x: number, z: number): [number, number] =>
       deg === 90 ? [z, -x] : [-z, x];
-    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'pit', 'gate']);
+    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'ropeswing', 'pit', 'gate']);
     for (const c of comps) {
       const [rx, rz] = rot(c.p[0] - cx, c.p[2] - cz);
       c.p = [Math.round((cx + rx) * 100) / 100, c.p[1], Math.round((cz + rz) * 100) / 100];
@@ -3011,7 +3016,7 @@ export class Editor {
         brow('height', () => prim.s![1], (cc, v) => (cc.s![1] = Math.max(0.2, v)));
         brow('depth', () => prim.s![2], (cc, v) => (cc.s![2] = Math.max(0.2, v)));
       }
-      const yawable = new Set(['platform', 'ramp', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy', 'rail', 'gate']);
+      const yawable = new Set(['platform', 'ramp', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'ropeswing', 'enemy', 'rail', 'gate']);
       if (all.every((cc) => yawable.has(cc.t) && !cc.pts)) {
         brow('yaw °', () => prim.yaw ?? 0, (cc, v) => (cc.yaw = v), 15);
       }
@@ -3398,13 +3403,19 @@ export class Editor {
       num('speed', () => c.speed ?? 1.6, (v) => (c.speed = Math.max(0.2, v)), 0.1);
       num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
       num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15); // spins the whole gallows + swing plane
+    } else if (c.t === 'ropeswing') {
+      num('rope len', () => c.len ?? 6, (v) => (c.len = Math.max(2, v)));
+      num('swing amp', () => c.amp ?? 0.85, (v) => (c.amp = Math.max(0.1, v)), 0.05);
+      num('speed', () => c.speed ?? 0, (v) => (c.speed = Math.max(0, v)), 0.1); // 0 = natural pendulum for the length
+      num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
+      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15); // spins the swing plane
     }
     const row = document.createElement('div');
     row.className = 'ed-grid';
     // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
     // (drawn polygons keep their authored outline — no 90° tricks)
     const rotatable =
-      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'enemy', 'gate'].includes(c.t) && !c.pts;
+      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'ropeswing', 'enemy', 'gate'].includes(c.t) && !c.pts;
     const swappable = ['crusher'].includes(c.t) && !c.pts;
     if (rotatable || swappable || c.t === 'pipe') {
       const rot = document.createElement('button');
