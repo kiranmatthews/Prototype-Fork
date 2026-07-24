@@ -108,7 +108,13 @@ scene.add(sky);
 // sits above the horizon, the image's own horizon (600px of 887) is pinned to
 // the world horizon (the dome's equator), and its alpha-faded bottom melts
 // into the retinted fog. Repeats horizontally, clamps top/bottom.
-const SKY_K = 2.15; // uniform scale: >1 shrinks the image so more of it shows
+const SKY_K = 2.15; // vertical scale: >1 shrinks the image so more of it shows
+// Horizontal wrap count MUST be an integer. The dome is a sphere with a UV seam
+// at one longitude; a non-integer repeat (e.g. 2.15) makes the texture coord jump
+// by its fractional part (0.15) across that seam — a hard vertical seam locked to
+// a fixed world direction, no matter how seamless the image itself is. An integer
+// count wraps the (made-seamless) image continuously across the geometry seam.
+const SKY_WRAP = 2;
 const SKY_IMG_H = 887;
 const SKY_HORIZON_PX = 600; // the painting's own horizon, in image pixels
 const SKY_HORIZON_V = 1 - SKY_HORIZON_PX / SKY_IMG_H; // ...as a texture-V coord
@@ -121,7 +127,7 @@ const cfgSkyTex = (t: THREE.Texture): void => {
   // with no hard seam AND — unlike a mirrored wrap — no bilateral fold axis.
   t.wrapS = THREE.RepeatWrapping;
   t.wrapT = THREE.ClampToEdgeWrapping; // clamp sky above / faded clouds below
-  t.repeat.set(SKY_K, SKY_K);
+  t.repeat.set(SKY_WRAP, SKY_K); // x: integer wrap (seam-free at the dome UV seam); y: vertical framing
   t.offset.set(0, SKY_HORIZON_V - 0.5 * SKY_K); // horizon -> dome equator
 };
 // The panorama's left and right edges don't match, so tiling it shows a seam.

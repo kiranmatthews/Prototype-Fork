@@ -3251,7 +3251,8 @@ export class Level {
     this.jungle('finish run', -1013, -1085, -22, 12, matFinish);
 
     // --- death pit floor (visual only, below killY) ---
-    this.pitPlane('lava', -60, 0, -420, 360);
+    // (no pit-floor plane — the sunset cloud sea IS the floor of the world here,
+    // so nothing solid occludes the PNG in the distance; falls still die at killY)
 
     // --- grind rails ---
     const rail1 = new Rail([
@@ -3639,7 +3640,7 @@ export class Level {
     );
     cliff.position.set(88, 8, -64);
     this.root.add(cliff);
-    this.pitPlane('void', -24, 80, -60, 300);
+    // (no void pit-floor plane — the cloud sea is the floor; falls die at killY)
 
     // corridor intro heading down -Z
     this.slab('start', 16, -12, 0, 10, matA, false);
@@ -6830,7 +6831,7 @@ export class Level {
     };
 
     // river far below everything
-    this.pitPlane('water', -44, 70, -620, 460);
+    // (no pit-floor plane — cloud sea is the floor; falls die at killY)
 
     // --- A: walled start + jungle approach ---------------------------------
     this.slab('start', 14, -30, 0, 20, matSand, false, 0, 'sand');
@@ -8134,7 +8135,7 @@ export class Level {
     this.finishGate(y, this.finishZ, xc);
     this.endWall(y, xc);
     this.killY = minY - 26;
-    this.pitPlane('void', minY - 34, 0, z / 2, 380);
+    // (no void pit-floor plane — the cloud sea is the floor; falls die at killY)
   }
 
   private endWall(deckY: number, cx = 0): void {
