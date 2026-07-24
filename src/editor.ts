@@ -215,6 +215,14 @@ export class Editor {
   private getLevel: () => Level;
   private hooks: Hooks;
   private controls: OrbitControls | null = null;
+  // double-click a layer row -> glide the camera to that piece (see focusOnBox)
+  private focusAnim: {
+    fromP: THREE.Vector3;
+    toP: THREE.Vector3;
+    fromT: THREE.Vector3;
+    toT: THREE.Vector3;
+    start: number;
+  } | null = null;
   private panel!: HTMLElement;
   private propsEl!: HTMLElement;
   // right-panel tabs: selection vs project (level/file/help)
@@ -326,6 +334,10 @@ export class Editor {
     dom.addEventListener('pointermove', this.onMove);
     dom.addEventListener('pointerup', this.onUp);
     dom.addEventListener('dblclick', this.onDbl);
+    // any manual camera move (orbit/pan on any button, or wheel zoom) cancels a
+    // running layer-focus glide so the user is never fighting it
+    dom.addEventListener('pointerdown', () => (this.focusAnim = null));
+    dom.addEventListener('wheel', () => (this.focusAnim = null), { passive: true });
     window.addEventListener('keydown', this.onKey);
     window.addEventListener('keyup', this.onKeyUp);
   }
@@ -414,6 +426,16 @@ export class Editor {
   }
 
   update(): void {
+    // layer-focus glide: ease the camera + orbit target toward the framed piece.
+    // Set both before controls.update() so OrbitControls keeps the new pose.
+    if (this.focusAnim && this.controls) {
+      const a = this.focusAnim;
+      const t = Math.min(1, (performance.now() - a.start) / 340);
+      const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2; // easeInOutQuad
+      this.camera.position.lerpVectors(a.fromP, a.toP, e);
+      this.controls.target.lerpVectors(a.fromT, a.toT, e);
+      if (t >= 1) this.focusAnim = null;
+    }
     this.controls?.update();
     // keep resize handles a steady on-screen size at any zoom; selected
     // nodes read a step bigger, and the invisible hit targets track along
@@ -921,6 +943,43 @@ export class Editor {
     if (dir.lengthSq() < 0.5) dir.set(0.45, 0.7, 0.55).normalize();
     this.controls.target.copy(cen);
     this.camera.position.copy(cen).addScaledVector(dir, dist);
+  }
+
+  // Glide the camera to look at a world box, reasonably close. Keeps the current
+  // view angle (just travels in), and eases over ~0.34s (driven in update()).
+  private focusOnBox(box: THREE.Box3): void {
+    if (!this.controls) return;
+    const cen = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3()).length();
+    const dist = THREE.MathUtils.clamp(size * 0.85 + 4, 6, 60); // close-up, but never inside a big piece
+    const dir = new THREE.Vector3().subVectors(this.camera.position, this.controls.target).normalize();
+    if (dir.lengthSq() < 0.5) dir.set(0.45, 0.6, 0.55).normalize();
+    this.focusAnim = {
+      fromP: this.camera.position.clone(),
+      toP: cen.clone().addScaledVector(dir, dist),
+      fromT: this.controls.target.clone(),
+      toT: cen,
+      start: performance.now(),
+    };
+  }
+
+  // Double-click a layer row: fly the camera to that piece (or whole group).
+  private focusOnItem(idx: number): void {
+    const b = this.boxFor(idx);
+    if (b) this.focusOnBox(b);
+  }
+
+  private focusOnGroup(gid: number): void {
+    const box = new THREE.Box3();
+    let any = false;
+    for (const m of this.groupMembers(gid)) {
+      const b = this.boxFor(m);
+      if (b) {
+        box.union(b);
+        any = true;
+      }
+    }
+    if (any) this.focusOnBox(box);
   }
 
   // ---- GROUP SCALE (Figma-style) ------------------------------------------
@@ -2416,7 +2475,7 @@ export class Editor {
     projPane2.appendChild(file);
 
     projPane2.appendChild(
-      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a name to rename<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
+      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
     );
 
     // play — always visible under the tabs
@@ -2604,14 +2663,14 @@ export class Editor {
         const name = document.createElement('button');
         name.className = 'ed-layername';
         name.textContent = this.itemLabel(idx);
-        name.title = 'click: select · double-click: rename';
+        name.title = 'click: select · double-click: fly to it (✎ to rename)';
         name.addEventListener('click', () => {
           if (!this.isLockedIdx(idx)) this.setSelection([idx]);
         });
         name.addEventListener('dblclick', (ev) => {
           ev.stopPropagation();
-          this.renaming = { kind: 'item', id: idx };
-          this.renderLayers();
+          if (!this.isLockedIdx(idx)) this.setSelection([idx]);
+          this.focusOnItem(idx); // navigate the camera to this piece
         });
         row.appendChild(name);
       }
@@ -2680,14 +2739,14 @@ export class Editor {
         const name = document.createElement('button');
         name.className = 'ed-layername ed-groupname';
         name.textContent = this.groupLabel(gid);
-        name.title = 'click: select the whole group · double-click: rename';
+        name.title = 'click: select the whole group · double-click: fly to it (✎ to rename)';
         name.addEventListener('click', () => {
           this.setSelection(members.filter((m) => !this.isLockedIdx(m)));
         });
         name.addEventListener('dblclick', (ev) => {
           ev.stopPropagation();
-          this.renaming = { kind: 'group', id: gid };
-          this.renderLayers();
+          this.setSelection(members.filter((m) => !this.isLockedIdx(m)));
+          this.focusOnGroup(gid); // navigate the camera to the whole group
         });
         row.appendChild(name);
       }
