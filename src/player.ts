@@ -413,7 +413,7 @@ export class Player {
   // read as one continuous curve instead of a stack of facets.
   private rideNormal = new THREE.Vector3(0, 1, 0);
   private shadowGroundY: number | null = null; // long-range floor probe for the blob shadow
-  private landTarget: THREE.Vector3 | null = null; // ballistic landing prediction for the X over a pit
+  private lastGroundY = 0; // most recent real floor level — the landing X hovers here over a pit
   private groundHit: GroundHit | null = null;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
   private lean = 0;
@@ -1045,10 +1045,11 @@ export class Player {
     // The blob shadow is a landing indicator: probe far down for the floor
     // every step, independent of the short gameplay ground-follow ray.
     this.shadowGroundY = this.queryShadowGround(level);
-    // The landing X wants to stay useful over a pit, where the straight-down
-    // probe finds nothing: while airborne, trace the arc to the far lip instead.
-    this.landTarget =
-      this.state === 'air' && this.shadowGroundY === null ? this.predictLanding(level) : null;
+    // Remember the last real floor level. Over a pit the straight-down probe
+    // finds nothing, but the landing X should keep hovering directly under the
+    // player at that ground/landing level — a live "where am I over the gap"
+    // read, NOT a prediction of where the arc ends (that's the player's call).
+    if (this.shadowGroundY !== null) this.lastGroundY = this.shadowGroundY;
 
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
@@ -5978,47 +5979,6 @@ export class Player {
     return hits.length > 0 ? hits[0].point.y : null;
   }
 
-  // Ballistic landing prediction: trace the current jump arc forward under
-  // gravity and return the first solid ground it descends onto. Unlike the
-  // straight-down shadow probe, this still finds the FAR lip when you're sailing
-  // over a pit — which is exactly when the "where am I gonna land" X matters
-  // most. Returns null only when the arc truly dead-ends in the void (no landing
-  // before killY), which is honest feedback that you won't make the gap.
-  private predictLanding(level: Level): THREE.Vector3 | null {
-    const vx = this.lastVelX;
-    const vz = this.lastVelZ;
-    // Almost no horizontal travel? The straight-down probe already covers this;
-    // a forward trace would just land under our feet. Let the caller fall back.
-    if (Math.hypot(vx, vz) < 0.5) return null;
-    let vy = this.vVel;
-    let x = this.pos.x;
-    let y = this.pos.y;
-    let z = this.pos.z;
-    const step = 1 / 30; // coarse integration — a marker, not the physics sim
-    for (let t = 0; t < 4; t += step) {
-      const g = vy > 0 ? TUNING.riseGravity : TUNING.fallGravity;
-      vy = Math.max(vy - g * step, -CONST.maxFallSpeed);
-      const nx = x + vx * step;
-      const nz = z + vz * step;
-      const ny = y + vy * step;
-      // Only look for a landing while descending — probe the arc segment [ny, y]
-      // for a surface it crosses this step (short ray from the higher point down).
-      if (vy <= 0) {
-        this.raycaster.set(new THREE.Vector3(nx, y + 0.5, nz), DOWN);
-        this.raycaster.far = y - ny + 1.0;
-        const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
-        if (hits.length > 0 && hits[0].point.y <= y + 0.5 && hits[0].point.y >= ny - 0.5) {
-          return hits[0].point.clone();
-        }
-      }
-      if (ny < level.killY) return null; // dives into the pit: no landing to mark
-      x = nx;
-      y = ny;
-      z = nz;
-    }
-    return null;
-  }
-
   private syncVisual(input: Input, dt: number): void {
     this.group.position.copy(this.pos);
 
@@ -6887,14 +6847,17 @@ export class Player {
       this.floorX.visible = true;
       this.floorX.position.set(this.pos.x, this.shadowGroundY + 0.05, this.pos.z);
       this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
-    } else if (this.landTarget !== null && this.state !== 'dead' && this.state !== 'gameover') {
-      // Over a pit: no floor straight down, but the arc lands on the far lip.
-      // Keep the X pinned there (at the target platform's Y) so it stays visible
-      // exactly when you're judging a gap. No shadow — you ARE over the pit.
+    } else if (this.state === 'air' && this.pos.y >= this.lastGroundY - 0.3) {
+      // Over a pit: no floor straight down, so hover the X directly UNDER the
+      // player at the last real ground/landing level. It marks where you ARE
+      // over the gap right now (your live x/z) — a "where am I in the jump" read,
+      // not a prediction of where the arc ends (that's the player's call). It
+      // drops away once you sink below the landing plane (missed / plummeting).
+      // No shadow — you ARE over the pit.
       this.shadow.visible = false;
-      const h = Math.max(0, this.pos.y - this.landTarget.y);
+      const h = Math.max(0, this.pos.y - this.lastGroundY);
       this.floorX.visible = true;
-      this.floorX.position.set(this.landTarget.x, this.landTarget.y + 0.05, this.landTarget.z);
+      this.floorX.position.set(this.pos.x, this.lastGroundY + 0.05, this.pos.z);
       this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
     } else {
       this.shadow.visible = false; // no shadow = you are over the pit
