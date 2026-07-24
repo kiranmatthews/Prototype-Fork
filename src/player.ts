@@ -6636,13 +6636,14 @@ export class Player {
         this.maskMesh.rotation.y = this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05;
         this.maskMesh.scale.setScalar(0.82);
       } else {
-        // held mask: floats up and to the screen-side of the head, tipped a touch
-        // toward the lens so it always reads clear of the face. FIXED size — the
-        // 2nd mask does not grow, it just glows harder and throws sparks.
+        // held mask (states 1 & 2): floats up and to the screen-side of the head,
+        // pushed out ~1/3 of a skater-width further right so it isn't fighting the
+        // skater for space, tipped a touch toward the lens so it reads clear of the
+        // face. FIXED size — the 2nd mask doesn't grow, it just glows harder.
         this.maskMesh.position.set(
-          hx + rx * 0.62 - cfx * 0.18,
+          hx + rx * 0.95 - cfx * 0.18,
           hy + 0.34 + Math.sin(this.runTime * 3) * 0.09,
-          hz + rz * 0.62 - cfz * 0.18,
+          hz + rz * 0.95 - cfz * 0.18,
         );
         this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
         this.maskMesh.scale.setScalar(1);

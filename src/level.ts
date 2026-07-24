@@ -5217,27 +5217,43 @@ export class Level {
     return this.mysteryTex;
   }
 
-  // Aku mask on wood: orange face, feathered headdress band, heavy brows.
+  // Mask crate: crossed bones on wood — cream bone with a hot-pink rim, echoing
+  // the mask's pink invincibility glow.
   private maskTexture(): THREE.CanvasTexture {
     if (!this.maskTex)
       this.maskTex = this.makeTex((ctx) => {
         this.crateWood(ctx, false);
-        // feathers
-        for (const [fx, fc] of [[8, '#c03a2a'], [13, '#3a9a4a'], [18, '#c03a2a']] as const) {
-          ctx.fillStyle = fc;
-          ctx.fillRect(fx, 3, 4, 5);
-        }
-        // face
-        ctx.fillStyle = '#e89040';
-        ctx.fillRect(8, 7, 16, 20);
-        ctx.fillStyle = '#5a2d12';
-        ctx.fillRect(8, 7, 16, 3); // brow band
-        ctx.fillRect(10, 13, 4, 5); // eyes
-        ctx.fillRect(18, 13, 4, 5);
-        ctx.fillRect(11, 22, 10, 3); // grin
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(12, 23, 2, 1); // teeth glints
-        ctx.fillRect(17, 23, 2, 1);
+        // one bone laid along the local X axis (drawn under a rotate transform):
+        // a slim shaft with a pair of round lobes at each end (the femur look)
+        const bone = (thick: number, knob: number, color: string): void => {
+          ctx.fillStyle = color;
+          ctx.strokeStyle = color;
+          ctx.lineWidth = thick;
+          ctx.lineCap = 'round';
+          ctx.beginPath(); // shaft
+          ctx.moveTo(-9.5, 0);
+          ctx.lineTo(9.5, 0);
+          ctx.stroke();
+          for (const ex of [-9.5, 9.5]) {
+            for (const ey of [-3, 3]) {
+              ctx.beginPath();
+              ctx.arc(ex, ey, knob, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        };
+        const cross = (thick: number, knob: number, color: string): void => {
+          for (const ang of [Math.PI / 4, -Math.PI / 4]) {
+            ctx.save();
+            ctx.translate(16, 16.5);
+            ctx.rotate(ang);
+            bone(thick, knob, color);
+            ctx.restore();
+          }
+        };
+        cross(4.6, 2.9, '#ff79c8'); // hot-pink rim glow
+        cross(2.8, 2.0, '#efe6cf'); // cream bone body
+        cross(1.0, 0.7, '#fffaf0'); // bright highlight down the shafts
       });
     return this.maskTex;
   }
