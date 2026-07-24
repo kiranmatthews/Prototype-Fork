@@ -623,6 +623,7 @@ export const CONST = {
   slamHang: 0.32, // Wile E. Coyote beat: freeze in the air before the drop
   slamFlat: 0.5, // lie pancaked on the ground this long after impact
   crouchJumpMult: 1.35, // crouch (crawl) jumps launch this much higher
+  crouchJumpGrace: 0.16, // ...and a jump still gets that boost for this long after a static crouch ends (coyote time)
   slamSquashTime: 0.3, // pancake squash pose on impact
   fruitPerCrate: 3, // wumpa spawned per broken box
   balanceStart: 0.15, // initial needle kick when a grind starts
