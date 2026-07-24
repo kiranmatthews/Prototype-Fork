@@ -6673,7 +6673,7 @@ export class Player {
           hy + 0.03 + Math.sin(this.runTime * 9) * 0.03,
           hz + ffz * 0.42,
         );
-        this.maskMesh.rotation.y = this.visualYaw + Math.sin(this.runTime * 5) * 0.05;
+        this.maskMesh.rotation.y = this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05;
         this.maskMesh.scale.setScalar(0.82);
       } else {
         // held mask: floats up and to the screen-side of the head, tipped a touch
