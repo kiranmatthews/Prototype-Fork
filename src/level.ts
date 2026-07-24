@@ -3251,7 +3251,7 @@ export class Level {
     this.jungle('finish run', -1013, -1085, -22, 12, matFinish);
 
     // --- death pit floor (visual only, below killY) ---
-    this.pitPlane('lava', -60, 0, -420);
+    this.pitPlane('lava', -60, 0, -420, 360);
 
     // --- grind rails ---
     const rail1 = new Rail([
@@ -3639,7 +3639,7 @@ export class Level {
     );
     cliff.position.set(88, 8, -64);
     this.root.add(cliff);
-    this.pitPlane('void', -24, 80, -60, 900);
+    this.pitPlane('void', -24, 80, -60, 300);
 
     // corridor intro heading down -Z
     this.slab('start', 16, -12, 0, 10, matA, false);
@@ -6830,7 +6830,7 @@ export class Level {
     };
 
     // river far below everything
-    this.pitPlane('water', -44, 70, -620, 1900);
+    this.pitPlane('water', -44, 70, -620, 460);
 
     // --- A: walled start + jungle approach ---------------------------------
     this.slab('start', 14, -30, 0, 20, matSand, false, 0, 'sand');
@@ -7554,7 +7554,7 @@ export class Level {
     };
 
     // the floor of the world is lava — very motivating
-    this.pitPlane('lava', -40, 0, -220, 1200);
+    this.pitPlane('lava', -40, 0, -220, 320);
 
     // spawn deck — open behind, so you can SEE the thing waiting for you
     this.slab('chase start', -440, -458, 0, 14, matSand, false, 0, 'sand');
@@ -8134,7 +8134,7 @@ export class Level {
     this.finishGate(y, this.finishZ, xc);
     this.endWall(y, xc);
     this.killY = minY - 26;
-    this.pitPlane('void', minY - 34, 0, z / 2, 1400);
+    this.pitPlane('void', minY - 34, 0, z / 2, 380);
   }
 
   private endWall(deckY: number, cx = 0): void {
