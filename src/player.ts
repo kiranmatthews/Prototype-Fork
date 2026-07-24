@@ -371,6 +371,7 @@ export class Player {
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
+  private maskAnchor = new THREE.Vector3(); // scratch: head world position for the floating mask
   private maskGlowPink: THREE.Sprite | null = null; // vibrant fiery-pink aura behind the mask
   private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
   private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
@@ -6639,28 +6640,44 @@ export class Player {
       // it rocks around that instead of spinning through — never the back.
       const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
       const flame = 1 + Math.sin(this.runTime * 7) * 0.08;
+      // Anchor to the ACTUAL head (so it tracks every pose — crouch, air, lean),
+      // and lay the mask out in CAMERA space: pulled toward the lens and offset
+      // by the viewer's screen axes. A fixed WORLD offset used to bury the mask
+      // in the face whenever the skater travelled toward +X (the Sideways stretch
+      // faces that way the whole time) or turned to face the camera. Camera-space
+      // keeps it floating clear IN FRONT of the face no matter the heading.
+      if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
+      else this.maskAnchor.set(this.pos.x, this.pos.y + 1.42, this.pos.z);
+      const hx = this.maskAnchor.x;
+      const hy = this.maskAnchor.y;
+      const hz = this.maskAnchor.z;
+      // horizontal camera-forward (lens -> scene) and the viewer's screen-right
+      let cfx = this.camDir.x;
+      let cfz = this.camDir.z;
+      const clen = Math.hypot(cfx, cfz) || 1;
+      cfx /= clen;
+      cfz /= clen;
+      const rx = -cfz; // screen-right = camera-forward rotated -90 about Y
+      const rz = cfx;
       if (uber) {
-        // third mask: worn over the skater's face. It rides the skater's OWN
-        // facing (visualYaw, forward = -sin/-cos), pushed out in front of the
-        // face so it covers it — so it only turns toward you when the skater
-        // runs at the camera, exactly like a worn mask.
-        const fwdX = -Math.sin(this.visualYaw);
-        const fwdZ = -Math.cos(this.visualYaw);
-        const d = 0.4; // stand it out in front of the face
+        // third mask: worn over the face. Pull it toward the camera so it sits
+        // clearly IN FRONT of the muzzle (never embedded) and always presents its
+        // face to the viewer, covering the head like a worn Aku-Aku.
         this.maskMesh.position.set(
-          this.pos.x + fwdX * d,
-          this.pos.y + 1.62 + Math.sin(this.runTime * 9) * 0.03,
-          this.pos.z + fwdZ * d,
+          hx - cfx * 0.34,
+          hy + 0.02 + Math.sin(this.runTime * 9) * 0.03,
+          hz - cfz * 0.34,
         );
-        this.maskMesh.rotation.y = this.visualYaw + Math.sin(this.runTime * 5) * 0.05;
+        this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05;
         this.maskMesh.scale.setScalar(0.82);
       } else {
-        // held mask: floats at the side, rocks front-facing, FIXED size — the
+        // held mask: floats up and to the screen-side of the head, tipped a touch
+        // toward the lens so it always reads clear of the face. FIXED size — the
         // 2nd mask does not grow, it just glows harder and throws sparks.
         this.maskMesh.position.set(
-          this.pos.x + 1.0,
-          this.pos.y + 1.7 + Math.sin(this.runTime * 3) * 0.09,
-          this.pos.z + 0.2,
+          hx + rx * 0.62 - cfx * 0.18,
+          hy + 0.34 + Math.sin(this.runTime * 3) * 0.09,
+          hz + rz * 0.62 - cfz * 0.18,
         );
         this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
         this.maskMesh.scale.setScalar(1);
