@@ -44,11 +44,14 @@ export const TUNING = {
   hangLateral: 0.7, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
   landingFlow: 1, // how much fall speed converts into riding speed when you land on a ramp/wall
   vertGlue: 20, // hang time: how hard a vert air is pulled back onto the wall plane
+  vertLaunchConserve: 1, // how much of the entry speed a vert launch conserves into vVel (1 = full; an angled carve stops being taxed twice)
+  vertGravityBlend: 0.35, // seconds to ease from vert gravity back to street gravity when a tracked wall runs out (0 = the old single-frame 33->119 cliff)
   vertDrift: 4.5, // hang time: stick drift speed ALONG the coping during a vert air
   wallStick: 5, // ground-snap window on steep transitions (how hard the wall holds the board)
   landGive: 0.35, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
+  railSpeedBoost: 3.5, // speed handed to you on a clean rail entry — without it a fast line LOSES speed on every rail, so the optimal play was to skip them
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
   underRailCooldown: 1.5, // seconds between under-rail hang switches (Circle on a rail)
@@ -194,11 +197,14 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   hangLateral: { min: 0, max: 2, step: 0.05 },
   landingFlow: { min: 0, max: 1, step: 0.05 },
   vertGlue: { min: 0, max: 20, step: 0.5 },
+  vertLaunchConserve: { min: 0, max: 1, step: 0.05 },
+  vertGravityBlend: { min: 0, max: 1, step: 0.05 },
   vertDrift: { min: 0, max: 15, step: 0.5 },
   wallStick: { min: 0.8, max: 5, step: 0.1 },
   landGive: { min: 0.35, max: 3, step: 0.05 },
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
   railTripSpeed: { min: 8, max: 30, step: 0.5 },
+  railSpeedBoost: { min: 0, max: 10, step: 0.5 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   underRailCooldown: { min: 0.5, max: 4, step: 0.1 },
@@ -364,6 +370,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How much of your FALL speed becomes riding speed when you land on a ramp or wall (0 = dead stop like before, 1 = keep it all). This is what makes dropping in from hang time flow instead of stalling. Test: drop into a pipe, raise it, you rocket out the far wall.',
   vertGlue:
     'THPS2 hang time: how hard a vert air is pulled back onto the wall plane so you drop into the same transition. 0 = free air, high = riveted. Test: hang time, raise it, you always drop back down the same face.',
+  vertLaunchConserve:
+    'How much of the speed you carried into a vert launch is conserved as HEIGHT. An angled carve up a wall used to be taxed twice — once for going off-axis, again because the shallower angle shrank the vertical term. 1 = fully conserved (head-on is unchanged either way).',
+  vertGravityBlend:
+    'How long vert gravity eases back to street gravity when a tracked wall runs out from under a hang. 0 = the old single-frame jump from 33 to 119, a visible hitch mid-arc.',
   vertDrift:
     'During a NON-PIPE vert crest the stick moves you along the lip at this speed. Pipe hangs ignore it — there the stick spins you (left/right, any wall) and never translates you: locked-in vert.',
   wallStick: 'Ground-snap window on steep transitions — how hard the wall holds the board through fast climbs.',
@@ -372,6 +382,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How close (in units) a rail must be for Triangle to snap you onto it. Bigger = more forgiving grind grabs.',
   railTripSpeed:
     'Running/skating STRAIGHT INTO a rail from the side (no jump, no grind): below this speed the rail simply BLOCKS you like a curb; at or above it you catch the rail and TRIP (bail/stumble). Jump over it or grind it to pass cleanly.',
+  railSpeedBoost:
+    'Speed granted when you land a grind. A fast approach loses its cross component to the rail line and then bleeds on top, so without this a rail is a speed PENALTY and the fastest line skips every rail in the park. Higher = rails are a gear change.',
   grindSpeed:
     'REFERENCE grind speed: you actually grind at whatever speed you arrive with, but slower than this wobbles the balance meter harder and faster than it steadies it.',
   grindJumpForce: 'Vertical pop of a fully-charged jump off a rail.',
@@ -566,6 +578,8 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'hangLateral',
       'landingFlow',
       'vertGlue',
+      'vertLaunchConserve',
+      'vertGravityBlend',
       'vertDrift',
       'wallStick',
       'landGive',
@@ -620,6 +634,7 @@ export const CONST = {
   ptsSlam: 75,
   ptsRopeSwing: 60, // leaping off a swing rope
   ptsGrab: 150,
+  vertSpinMin: 2, // halves needed to SCORE a spin out of a pipe hang (2 = a full 360; a vert 180 is too easy to be worth points)
   ptsSpin: 80, // per 180 degrees of air rotation landed — a rotation is its own trick
   ptsGrabTick: 4, // accrues every quarter second a grab is held (THPS-style)
   ptsCrystal: 500, // the level crystal pickup

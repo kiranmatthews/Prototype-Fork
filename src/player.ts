@@ -179,6 +179,7 @@ export class Player {
   private bailDownT = 0;
   private bailMash = 0; // button mashing shortens the knockdown (THUG's bash factor)
   private bailRush = 1; // 1..1+bailMashMax — also speeds the get-up pose so the mash READS
+  private vertGravT = 0; // easing back from vert gravity to street gravity after a hang drops
   // ONE capability mask for "is the skater currently wiping out". Everything a
   // downed body must not be able to start reads this. It used to be safe by
   // ACCIDENT — a bail parked speed at 0, so no crest/grind/wallride test could
@@ -1067,6 +1068,7 @@ export class Player {
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
     this.crouchGraceT = Math.max(0, this.crouchGraceT - dt);
+    this.vertGravT = Math.max(0, this.vertGravT - dt);
     // touching down mid-somersault cuts it — Crash lands upright, no carry-over tumble
     this.flipTimer = this.grounded ? 0 : Math.max(0, this.flipTimer - dt);
     if (this.grounded || this.state === 'grind') {
@@ -1586,8 +1588,15 @@ export class Player {
       // pipe-hang rules and take the TRACKED hang instead
       (this.groundHit.halfpipe !== undefined || this.groundHit.normal.y < TUNING.steepStand)
     ) {
-      const pop = THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t);
-      const climb = Math.max(0, this.speed * Math.max(this.lastTy, 0));
+      // The pop off a wall used to run the on-foot 10..13 scale — roughly TWICE
+      // what cresting the same wall at the same speed paid (pipePop 6). That's a
+      // shortcut: the pop alone carried the air, so pump quality stopped
+      // mattering and pipePumpGain/pipeCarve lost the risk/reward they exist to
+      // build. Scale it off pipePop instead (THPS's own floor ratio ~0.36), and
+      // give the climb the same lastTy floor the crest path uses so popping from
+      // a shallow part of the wall is never strictly worse than cresting it.
+      const pop = THREE.MathUtils.lerp(TUNING.pipePop * 0.4, TUNING.pipePop, t);
+      const climb = Math.max(0, this.speed * Math.max(this.lastTy, 0.6));
       this.vVel = Math.min(pop + climb, CONST.maxFallSpeed);
       if (this.groundHit.halfpipe) {
         this.hangPipe = this.groundHit.halfpipe;
@@ -2819,11 +2828,23 @@ export class Player {
       // launched — the asymmetric fall (119 vs 33) would slam you down at 2x
       // the launch speed, converting into a huge down-wall speed on landing
       // that pings you across the pipe. Symmetric keeps the vert energy honest.
-      const g = this.vertAir || this.pipeHang
-        ? TUNING.pipeAirGravity
-        : this.vVel > 0
-          ? TUNING.riseGravity
-          : TUNING.fallGravity;
+      // ...and leaving vert must not be a CLIFF. trackVertWall gives up after
+      // 0.3s with no wall and drops vertAir outright, which flipped gravity 33
+      // -> 119 in a single frame — a 3.6x step in the middle of an arc the
+      // player is reading. Blend back to street gravity over vertGravityBlend
+      // instead. (This is the one place the deliberate Crash asymmetry was
+      // leaking somewhere it was never meant to apply.)
+      const flatG = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
+      const g =
+        this.vertAir || this.pipeHang
+          ? TUNING.pipeAirGravity
+          : this.vertGravT > 0 && TUNING.vertGravityBlend > 0
+            ? THREE.MathUtils.lerp(
+                flatG,
+                TUNING.pipeAirGravity,
+                this.vertGravT / TUNING.vertGravityBlend,
+              )
+            : flatG;
       this.vVel -= g * dt;
       // Terminal velocity: cap the fall so one step can never drop farther
       // than the ground ray can reach up (2.5u) — otherwise a fast fall
@@ -3083,7 +3104,12 @@ export class Player {
           this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
           landedTrick = true;
         }
-        if (halves > 0) {
+        // A 180 out of a PIPE HANG is nearly free — the glue pins you to the
+        // wall plane and the drop-in auto-corrects on-axis, so you'd score a
+        // trick for holding a direction. THUG refuses it explicitly ("if in
+        // vert air, only count the spin if it is at least 360, because getting
+        // 180 is too easy"). Street airs still pay from the first 180.
+        if (halves >= (wasPipeHang ? CONST.vertSpinMin : 1)) {
           const deg = halves * 180;
           this.score(halves * CONST.ptsSpin, isSwitch ? `Switch ${deg}°` : `${deg}°`);
           landedTrick = true;
@@ -3220,6 +3246,7 @@ export class Player {
         // vert and let gravity + the normal air pose take it from here
         this.vertAir = false;
         this.vertLatVel = 0;
+        this.vertGravT = TUNING.vertGravityBlend; // ease back to street gravity
       }
     }
   }
@@ -3266,6 +3293,22 @@ export class Player {
       // pipe — or fly clean off the side of a ramp).
       this.vertLatVel = THREE.MathUtils.clamp(this.vertLatVel, -CONST.hangLatMax, CONST.hangLatMax);
     }
+    // CONSERVE THE LAUNCH MAGNITUDE. The crest paths convert with `lastTy *
+    // speed`, so an ANGLED carve up a wall got taxed twice — once for being
+    // off-axis (vertLatVel takes a share) and again because a shallower lastTy
+    // shrinks the vertical term. Take whatever is left after the lateral share
+    // and make sure vVel is at least that: head-on this is a no-op, and the
+    // steeper the carve angle the more it hands back.
+    // Deliberately conserve into vVel ONLY — vertLatVel keeps hangLatMax and
+    // hangLatDamp untouched, because those are the guarantee that an angled
+    // entry can't out-run the pipe or fly off the side of a ramp.
+    const conserved = Math.sqrt(
+      Math.max(0, entrySpeed * entrySpeed - this.vertLatVel * this.vertLatVel),
+    );
+    this.vVel = Math.min(
+      Math.max(this.vVel, conserved * TUNING.vertLaunchConserve),
+      CONST.maxFallSpeed,
+    );
     this.speed = 0; // the energy is in vVel (up) + vertLatVel (across) now
     // Glue plane. A general vert crest sits it a hair INSIDE (1.2) so the drop
     // lands on the transition face. A HALFPIPE hang glues right on the launch
@@ -4192,8 +4235,13 @@ export class Player {
     sfx.play('railLand', 0.8);
     // The rail keeps the speed you carried ALONG it — hit it fast and aligned
     // to cross fast; clip it sideways and you just barely creep across.
+    // ...plus an entry boost, because for a FAST approach a rail was strictly
+    // lossy: you give up the cross component to the projection and then bleed
+    // grindBleed on top, so the optimal fast line was to SKIP rails — which
+    // inverts how you're meant to read a park. The boost makes "ollie to rail"
+    // a gear change instead of a stumble.
     this.grindVel = THREE.MathUtils.clamp(
-      Math.abs(alongVel),
+      Math.abs(alongVel) + TUNING.railSpeedBoost,
       CONST.grindMinSpeed,
       TUNING.downhillMax,
     );
