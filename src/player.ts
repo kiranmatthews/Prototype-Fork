@@ -6648,7 +6648,7 @@ export class Player {
           hz + rz * 0.95 - cfz * 0.18,
         );
         this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
-        this.maskMesh.scale.setScalar(1);
+        this.maskMesh.scale.setScalar(0.85); // states 1 & 2: 15% smaller than before
       }
       // Crossbones ride under the skull only on the 2nd mask (state 2).
       if (this.maskBones) this.maskBones.visible = two;
