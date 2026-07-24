@@ -37,6 +37,32 @@ const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 renderer.setPixelRatio(1); // internal res is the renderScale knob, not the DPR
 app.appendChild(renderer.domElement);
 
+// --- auto-update: beat the 10-minute GitHub Pages HTML cache ----------------
+// Pages caches index.html for up to 10 min, so a device keeps loading the OLD
+// hashed JS bundle after a new push. On load, fetch the live index.html (cache
+// bypassed) and, if it points at a newer bundle than the one running, reload
+// ONCE to a cache-busting URL — so the freshest deploy always wins within a few
+// seconds, no manual refresh. Guarded so it can never loop.
+if (import.meta.env.PROD) {
+  void (async (): Promise<void> => {
+    try {
+      const running = import.meta.url.match(/index-([\w-]+)\.js/)?.[1];
+      if (!running) return;
+      const res = await fetch(`./index.html?_=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) return;
+      const fresh = (await res.text()).match(/index-([\w-]+)\.js/)?.[1];
+      if (!fresh || fresh === running) return; // already on the latest build
+      if (sessionStorage.getItem('protoAutoUpdate') === fresh) return; // tried this one already
+      sessionStorage.setItem('protoAutoUpdate', fresh);
+      const url = new URL(window.location.href);
+      url.searchParams.set('v', fresh);
+      window.location.replace(url.toString());
+    } catch {
+      /* offline or blocked — just run whatever's loaded */
+    }
+  })();
+}
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x232634);
 scene.fog = new THREE.Fog(0x232634, 30, 170);
