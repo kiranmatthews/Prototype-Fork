@@ -6,7 +6,7 @@ export const TUNING = {
   maxSpeed: 23, // top skate speed
   walkSpeed: 8.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
   walkRampTime: 0.15, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
-  friction: 7, // idle roll-out: NO input at all bleeds speed to a stop (0 = frictionless)
+  friction: 7, // bleed on STEEP ground (transitions) — deliberately linear so a sideways crawl on a wall dies and the stall-flip can fire. FLAT roll-out is rollFriction + windDrag.
   // Jump ballistics: the playtested hand-tuned feel. (A Crash-3-matched fit
   // — rise 22 / fall 62 / v 10.4 / min 8.7 — was tried and felt worse in
   // THIS game's speed and level scale; the reference timing already matched.)
@@ -22,7 +22,7 @@ export const TUNING = {
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
-  chargeDecay: 10, // rate speed settles back to cruiseSpeed after releasing X
+  chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill (charge still tops at maxSpeed)
   vertMax: 38, // higher ceiling on TRANSITIONS — vert is where the big speed is meant to live
   heavyDrag: 0.005, // quadratic bleed above maxSpeed, every surface: 2.7 u/s^2 at 23, 7.2 at 38, so the top end has texture instead of a linear countdown
@@ -34,7 +34,7 @@ export const TUNING = {
   pipePumpGain: 24, // HALFPIPE: EXTRA speed added per second holding X up a wall — the THPS skill loop: a first swing barely clears the lip, each well-timed pump grows the air toward the cap
   pipeFriction: 0.1, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
   pipePop: 6, // HALFPIPE: extra vertical launch popped over the coping into the hang (the earned climb speed dominates; this is just the over-the-lip garnish)
-  pipeAirGravity: 33, // VERT AIR (pipes AND tracked walls): SYMMETRIC gravity above the coping (same up + down) so you drop back at the speed you left — THPS rules. Lower = floatier hangs.
+  pipeAirGravity: 30, // VERT AIR (pipes AND tracked walls): SYMMETRIC gravity above the coping (same up + down) so you drop back at the speed you left — THPS rules. 30 vs riseGravity 33 keeps THPS's ~9% floatier-than-street vert (their Vert_Hang stat); at 33 the branch bought nothing because both sides were the same number. Lower = floatier hangs.
   pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
   footGrip: 0.3, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
   steepStand: 0.76, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
@@ -590,7 +590,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'railTripSpeed', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',
@@ -607,7 +607,6 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
 export const CONST = {
   carveBrakeAngle: 2.7, // rad (~155 deg): stick pulled this far from the heading = brake/dismount, not a carve
   fixedStep: 1 / 60, // deterministic chunky update rate
-  overspeedDecay: 3, // bleed rate when above maxSpeed on flat ground
   bailDownTime: 1.1, // knocked-down beat after a mask-less bail before getting up
   killY: -48, // fall below this = instant death
   respawnDelay: 0.7, // quick Crash-style respawn
