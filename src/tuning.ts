@@ -61,7 +61,7 @@ export const TUNING = {
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
   grabSpinRate: 9, // rad/s of the directional grab-spin (~515°/s — 540s reachable on medium airs; the pre-land auto-correct keeps landings clean)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
-  spinTolerance: 10, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail
+  spinTolerance: 30, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail. 30 still leaves 240 of the circle bailing — it's a net under the auto-correct, not a removal
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
@@ -110,6 +110,11 @@ export const TUNING = {
   balanceGrace: 2, // seconds of flat difficulty at the start of every grind
   balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
   balanceRampMax: 6, // difficulty CEILING: drift never exceeds this multiple of balanceDrift
+  bailSpeedKeep: 0.5, // fraction of speed a bail KEEPS — crashing at 23 should carry you further than crashing at a walk (0 = the old dead stop)
+  bailFriction: 14, // how fast the downed body scrubs that speed off (2x normal friction)
+  bailMashWindow: 0.4, // button-edge accumulator half-life while knocked down
+  bailMashGain: 0.2, // knockdown clock speed-up per accumulated edge
+  bailMashMax: 1, // cap on that speed-up: 1 = a saturated mash HALVES the lockout (THUG's 1.0-2.0x bash factor)
   bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
   // AUTHENTIC THPS/THUG balance dynamics (Neversoft's CManual is an unstable
   // inverted pendulum: needle position + velocity, nudged by taps and noise).
@@ -254,6 +259,11 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   balanceGrace: { min: 0, max: 6, step: 0.25 },
   balanceRamp: { min: 0, max: 1.5, step: 0.05 },
   balanceRampMax: { min: 1, max: 6, step: 0.25 },
+  bailSpeedKeep: { min: 0, max: 1, step: 0.05 },
+  bailFriction: { min: 0, max: 40, step: 1 },
+  bailMashWindow: { min: 0.1, max: 1, step: 0.05 },
+  bailMashGain: { min: 0, max: 0.5, step: 0.05 },
+  bailMashMax: { min: 0, max: 2, step: 0.1 },
   bailGrace: { min: 0, max: 1.2, step: 0.05 },
   balanceInertia: { min: 0, max: 1, step: 0.05 },
   balanceGravity: { min: 0, max: 6, step: 0.1 },
@@ -381,6 +391,15 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   grabSpinRate: 'Rotation speed of the directional grab-spin (left arrow = spin left).',
   grabRelease:
     'How long the grab pose takes to animate back to neutral after RELEASING Circle. Land any time before it finishes (or while still holding) = bail; pose back at neutral = clean, spin permitting.',
+  bailSpeedKeep:
+    'How much speed survives a wipeout. A bail used to zero your momentum, so a 23 u/s crash and a walking-pace crash were the same event; now you slide out of it in proportion to how fast you were going. 0 = the old dead stop.',
+  bailFriction:
+    'How fast the downed body scrubs off the speed bailSpeedKeep let it keep. Higher = shorter slide.',
+  bailMashWindow:
+    'How long a mashed button keeps counting toward getting up. Shorter = you must mash faster to hold the bonus.',
+  bailMashGain: 'How much each mashed button speeds up the knockdown clock (and the get-up animation with it).',
+  bailMashMax:
+    'Ceiling on the mash speed-up. 1 = mashing flat out HALVES the time you lie there. 0 = mashing does nothing and the lockout is fixed.',
   spinTolerance:
     'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
@@ -563,7 +582,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'MANUAL & LIP',
     keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
-  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius'] },
+  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift'] },
   { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
@@ -581,7 +600,7 @@ export const CONST = {
   playerHalf: { x: 0.5, y: 0.46, z: 0.5 }, // capsule-ish AABB: full height 0.92, just shy of one crate (0.96)
   spinReach: 0.8, // extra horizontal hit reach while spinning (arm+board span)
   spinCooldown: 0.15,
-  maskInvuln: 1.0, // grace after a mask absorbs a hit or bail
+  maskInvuln: 1.15, // grace after a mask absorbs a hit or bail — must OUTLAST bailDownTime (1.1), or the last beat of a now-MOVING downed body is unprotected and can slide into a nitro
   uberTime: 12, // third mask = Crash-style invincibility for this long
   coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter

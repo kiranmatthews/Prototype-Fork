@@ -177,6 +177,16 @@ export class Player {
   // Knocked down after a mask-less bail: flat on the ground, input dead,
   // back up in place when it runs out. Non-lethal — pits stay the killers.
   private bailDownT = 0;
+  private bailMash = 0; // button mashing shortens the knockdown (THUG's bash factor)
+  private bailRush = 1; // 1..1+bailMashMax — also speeds the get-up pose so the mash READS
+  // ONE capability mask for "is the skater currently wiping out". Everything a
+  // downed body must not be able to start reads this. It used to be safe by
+  // ACCIDENT — a bail parked speed at 0, so no crest/grind/wallride test could
+  // ever fire — but now that bails carry momentum a tumbling body would sail up
+  // a pipe wall and get thrown into a hang mid-wipeout.
+  private get isBailing(): boolean {
+    return this.bailDownT > 0;
+  }
   // Whether the current airtime started from SKATING (ollie, slide/grind
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
   // Crash hop never offers them (the slam stays available from any air).
@@ -1144,7 +1154,25 @@ export class Player {
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     const bailWas = this.bailDownT;
-    this.bailDownT = Math.max(0, this.bailDownT - dt);
+    // MASH OUT OF IT. A guaranteed second of dead input the instant you lose a
+    // combo is how failure comes to feel like the game confiscating the pad.
+    // THUG's answer isn't a smaller punishment, it's something to DO inside it:
+    // button edges accumulate and scale the knockdown clock (up to 2x, so a
+    // saturated mash halves it). The accumulator decays, and it resets on
+    // stand-up so nothing carries into the next wipeout.
+    if (this.bailDownT > 0) {
+      const edges =
+        (input.jumpPressed ? 1 : 0) +
+        (input.spinPressed ? 1 : 0) +
+        (input.grabPressed ? 1 : 0) +
+        (input.grindPressed ? 1 : 0);
+      this.bailMash = Math.max(0, this.bailMash - dt / TUNING.bailMashWindow) + edges;
+      this.bailRush = 1 + Math.min(this.bailMash * TUNING.bailMashGain, TUNING.bailMashMax);
+    } else {
+      this.bailMash = 0;
+      this.bailRush = 1;
+    }
+    this.bailDownT = Math.max(0, this.bailDownT - dt * this.bailRush);
     // A bail's tumble steers axisF/axisL down the fall line (free-skate
     // convention). If the get-up ends ON FOOT, restore the course control
     // frame — otherwise you walk away with rotated/inverted controls until
@@ -1349,7 +1377,7 @@ export class Player {
           this.ropeCoolT <= 0 &&
           !this.wallriding &&
           !this.slamActive &&
-          this.bailDownT <= 0 &&
+          !this.isBailing &&
           this.tryRopeGrab(level)
         ) {
           // hands on the swing rope
@@ -1918,8 +1946,22 @@ export class Player {
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
         this.speed = Math.min(this.speed + TUNING.groundGravity * 0.6 * dt, 12);
         this.emitDust(1);
+      } else if (this.slamFlatT > 0) {
+        this.speed = 0; // the pancake slam is AUTHORED as a dead stop
       } else {
-        this.speed = 0;
+        // A bail keeps its momentum and SCRUBS it: crashing at 23 should carry
+        // you further than crashing at walking pace. Zeroing made every wipeout
+        // the same event regardless of how fast you were going.
+        this.speed -=
+          Math.sign(this.speed) * Math.min(TUNING.bailFriction * dt, Math.abs(this.speed));
+        // ...but we're a platformer with LETHAL pits and THPS is not. A downed
+        // body with no control must never slide off a brink and cost a life, so
+        // the tumble stops dead at the lip of a death drop.
+        if (Math.abs(this.speed) > 0.1) {
+          const ahead = this.queryGround(level, this.axisF.x * 0.9, this.axisF.z * 0.9);
+          if (ahead === null || ahead.y <= level.killY) this.speed = 0;
+          else this.emitDust(1);
+        }
       }
       this.lastTy = 0;
     } else if (this.crawling) {
@@ -2417,6 +2459,7 @@ export class Player {
     const hpNow = this.freeSkate && hit ? hit.halfpipe : undefined;
     if (
       hpNow &&
+      !this.isBailing && // a tumbling body must never be thrown into a hang
       this.lastTy > 0.15 && // heading is still climbing (not dropping back down)
       this.rideNormal.y <= 0.25 && // at the near-vertical coping stretch
       this.pos.y > hpNow.lipY - 1.2 // and up near the lip
@@ -2450,6 +2493,7 @@ export class Player {
       this.coyoteTimer = 0;
     } else if (
       hit &&
+      !this.isBailing && // ...same for the general crest
       this.speed > 0.5 &&
       (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY) &&
       hit.normal.y >= CONST.steepSnapNormal
@@ -3000,7 +3044,10 @@ export class Player {
       // A halfpipe hang never bails or switches you on any residual rotation —
       // you were CLIMBING (holding a direction), not doing a trick spin, so the
       // drop-back-in is always a clean neutral landing.
-      const funny = spun && dev0 > tol && devPi > tol && !this.pipeHang;
+      // Any vert air (analytic pipe OR tracked mesh wall) is a CLIMB, not a trick
+      // spin, so its drop-back-in is always a clean neutral landing — same rule
+      // the auto-correct above now uses. Keep the two consistent.
+      const funny = spun && dev0 > tol && devPi > tol && !(this.pipeHang || this.vertAir);
       if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
@@ -3449,6 +3496,7 @@ export class Player {
 
   private canManual(): boolean {
     return (
+      !this.isBailing &&
       this.state === 'ride' &&
       this.grounded &&
       this.freeSkate &&
@@ -3848,20 +3896,31 @@ export class Player {
     }
   }
 
-  // Botched a grab landing: no death — you eat the floor, the pending combo
-  // is gone, and you lie flat for a beat before getting up right where you
-  // fell. (A mask upstream absorbs the bail entirely, same as before.)
-  private bail(): void {
-    this.bailDownT = CONST.bailDownTime;
-    this.speed = 0;
-    this.vVel = 0;
-    this.invulnTimer = CONST.maskInvuln; // nothing chews you while you're down
+  // THE one combo-loss path. There are four ways to wipe out and two of them
+  // (bailFromRail — the ONLY bail a grind can produce — and snapBoardFall) used
+  // to drop the combo in total silence, so losing a twelve-trick rail line read
+  // exactly like losing a bare hop.
+  private loseCombo(): void {
     if (this.comboHasTrick && this.comboMult > 0) this.onComboBail(); // red shake + drop
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;
     this.comboLabels = [];
     this.comboHasTrick = false;
+  }
+
+  // Botched a grab landing: no death — you eat the floor, the pending combo
+  // is gone, and you lie flat for a beat before getting up right where you
+  // fell. (A mask upstream absorbs the bail entirely, same as before.)
+  private bail(): void {
+    this.bailDownT = CONST.bailDownTime;
+    this.bailMash = 0;
+    // Keep (a fraction of) the momentum instead of zeroing it: a 23 u/s crash
+    // and a walking-pace crash should not be the same event. vVel is left alone
+    // so the fall completes naturally rather than freeze-framing in the air.
+    this.speed *= TUNING.bailSpeedKeep;
+    this.invulnTimer = CONST.maskInvuln; // nothing chews you while you're down
+    this.loseCombo();
     this.grabPhase = 'none';
     this.grabT = 0;
     this.grabGraceTimer = 0;
@@ -4065,7 +4124,7 @@ export class Player {
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
     // punishment into a free 50-50.
-    if (this.regrindCd > 0 || this.bailDownT > 0 || !this.railCand) return false;
+    if (this.regrindCd > 0 || this.isBailing || !this.railCand) return false;
     // railCand was sampled at the START of this step; re-close on the CURRENT
     // position so a fast step snaps onto the point actually under our feet,
     // not where we were 1-2 units ago.
@@ -4230,10 +4289,9 @@ export class Player {
     this.regrindCd = CONST.regrindCooldown * 2;
     this.balance = 0;
     this.balanceCritT = 0;
-    this.comboPoints = 0;
-    this.comboMult = 0;
-    this.comboTimer = 0;
-    this.comboLabels = [];
+    this.bailMash = 0;
+    this.invulnTimer = CONST.maskInvuln; // consistent with every other wipeout
+    this.loseCombo();
     sfx.play('crunch', 0.9, 0.85); // the snap
     sfx.play('takeDamage', 0.7);
     this.emitSparks(10, 0xb08040, 2.2); // splinters off the broken deck
@@ -4317,10 +4375,9 @@ export class Player {
     this.balance = 0;
     this.balanceCritT = 0;
     sfx.play('takeDamage', 0.8);
-    this.comboPoints = 0;
-    this.comboMult = 0;
-    this.comboTimer = 0;
-    this.comboLabels = [];
+    this.bailMash = 0;
+    this.invulnTimer = CONST.maskInvuln; // consistent with every other wipeout
+    this.loseCombo();
     this.emitSparks(8, 0xffb545, 2);
   }
 
@@ -4387,8 +4444,13 @@ export class Player {
       // rotation COMMITS — it completes to the nearest 180 before the wheels
       // touch, at whatever rate the time left demands (grabbing or not, stick
       // held or not). Where you visibly rotate to IS where you land.
+      // ...and it must cover EVERY vert air, not just analytic pipes. A tracked
+      // mesh wall (bowl, banked wall) sets vertAir without pipeHang, and that is
+      // the one place the stick keeps writing rotation with no snap running — so
+      // a bowl air with the stick still held had a ~39ms window to be on-axis or
+      // bail. The vert loop was punishing you for doing what the vert loop is for.
       const committing =
-        this.pipeHang &&
+        (this.pipeHang || this.vertAir) &&
         this.vVel < 0 &&
         this.grabSpinAngle !== 0 &&
         (this.pos.y - this.vertAnchor.y) / Math.max(1, -this.vVel) < 0.25;
@@ -4929,7 +4991,7 @@ export class Player {
       this.grounded &&
       !this.sliding &&
       !onPipeSurface &&
-      this.bailDownT <= 0 &&
+      !this.isBailing &&
       this.regrindCd <= 0
     ) {
       this.railBlock(level);
@@ -5306,6 +5368,7 @@ export class Player {
   private tryWallride(w: THREE.Box3): boolean {
     if (
       this.state !== 'air' ||
+      this.isBailing ||
       this.wallCoolT > 0 ||
       this.wallrideLatched || // already used a wallride this air-time — land or grind to re-arm
       this.vertAir ||
@@ -5386,7 +5449,7 @@ export class Player {
       this.grabbing ||
       this.sliding ||
       this.crawling ||
-      this.bailDownT > 0 ||
+      this.isBailing ||
       this.ledgeCoolT > 0 ||
       this.comboRun || // a run lives on its combo — an auto-catch would bank it and fail the run
       this.rawInput.grindHeld // grind/wallride intent owns the wall
@@ -6784,7 +6847,10 @@ export class Player {
     const dropping =
       (this.slamActive && this.slamHangT <= 0) || this.slamFlatT > 0 || this.bailDownT > 0;
     this.hangPose += ((hanging ? 1 : 0) - this.hangPose) * Math.min(1, 16 * dt);
-    this.dropPose += ((dropping ? 1 : 0) - this.dropPose) * Math.min(1, 20 * dt);
+    // The get-up eases at the SAME rush the mash is applying to the clock — the
+    // visible speed-up is what sells the mash; without it nothing reads.
+    this.dropPose +=
+      ((dropping ? 1 : 0) - this.dropPose) * Math.min(1, 20 * (dropping ? 1 : this.bailRush) * dt);
     // smoothstep: the roll accelerates into the tuck and eases out upright
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     if (this.state === 'dead' && this.bailing) {
