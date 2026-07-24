@@ -6660,15 +6660,20 @@ export class Player {
       const rx = -cfz; // screen-right = camera-forward rotated -90 about Y
       const rz = cfx;
       if (uber) {
-        // third mask: worn over the face. Pull it toward the camera so it sits
-        // clearly IN FRONT of the muzzle (never embedded) and always presents its
-        // face to the viewer, covering the head like a worn Aku-Aku.
+        // third mask: WORN on the face. It sits in front of the muzzle and turns
+        // WITH the skater's own facing — so it tracks the head in every direction
+        // (running away, left or right included), showing its side/back just like
+        // a real worn mask when the skater turns from the camera. (The old
+        // camera-relative placement only lined up with the face when you ran
+        // toward the lens.) Head-anchored and pushed out enough to clear the muzzle.
+        const ffx = -Math.sin(this.visualYaw); // the skater's forward (face) axis
+        const ffz = -Math.cos(this.visualYaw);
         this.maskMesh.position.set(
-          hx - cfx * 0.34,
-          hy + 0.02 + Math.sin(this.runTime * 9) * 0.03,
-          hz - cfz * 0.34,
+          hx + ffx * 0.42,
+          hy + 0.03 + Math.sin(this.runTime * 9) * 0.03,
+          hz + ffz * 0.42,
         );
-        this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05;
+        this.maskMesh.rotation.y = this.visualYaw + Math.sin(this.runTime * 5) * 0.05;
         this.maskMesh.scale.setScalar(0.82);
       } else {
         // held mask: floats up and to the screen-side of the head, tipped a touch
