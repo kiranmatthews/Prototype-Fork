@@ -253,6 +253,7 @@ export interface CustomComponent {
     | 'wall' // solid barrier: p = base center, s = [w,h,d]; invisible = collider only (ghost in the editor)
     | 'rail' // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z)
     | 'pipe' // halfpipe: p = trough center at ground, len along its axis, axis 'z'|'x'
+    | 'vertramp' // AUTHORED VERT: swept transition (quarter or half pipe). Straight along `len`/`yaw`, or pen-drawn along `pts` (same node convention as rails: [x, z, cornerRadius, yOffset]). rise = transition radius, w = flat half-width. Every face carries userData.vert, so the physics treats it as vert regardless of the angle heuristics.
     | 'crumble' // breakaway pad: p = top center, s = [w,-,d], shake = fall delay in seconds (0.02 = instant), speed = fall accel (default 30)
     | 'pit' // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d]
     | 'crate' // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
@@ -279,6 +280,7 @@ export interface CustomComponent {
   w?: number;
   yaw?: number;
   axis?: 'z' | 'x';
+  vkind?: 'quarter' | 'half'; // vertramp: one wall, or two facing each other with a flat between
   shake?: number;
   kind?: 'wood' | 'bouncy' | 'metalbounce' | 'nitro' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang';
   outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
@@ -608,6 +610,100 @@ export function starterCustomLevel(): CustomLevelData {
 
 // The four corners of a w×d rectangle spun by yaw degrees (relative offsets)
 // — matches mesh.rotation.y = yaw applied to a BoxGeometry footprint.
+
+// ---------------------------------------------------------------- vert ramp --
+// Sweep a skatepark transition profile along a spine. This is the AUTHORED vert
+// primitive: unlike the analytic Halfpipe (which is axis-aligned and owns its
+// own ride physics), this is plain geometry that carries userData.vert, so it
+// can follow any path and the tracked-wall physics handles it.
+//
+//   cross-section, lateral to the right:
+//        y=R  ___                      lip (surface vertical)
+//            /
+//           |   quarter arc, radius R
+//    y=0 ___|________                  flat half-width F
+//         F      F+R
+//
+// phi runs 0 (flat, tangent horizontal) -> PI/2 (lip, tangent vertical):
+//   lateral = F + R*sin(phi)      y = R*(1 - cos(phi))
+// so the concave side faces the flat — you ride INTO it, exactly like a real
+// quarter pipe. 'half' mirrors it across the spine with the flat between.
+export interface VertRampResult {
+  geometry: THREE.BufferGeometry;
+  copings: THREE.Vector3[][]; // lip polylines (one per wall) — grindable
+}
+export function buildVertRampGeometry(
+  spine: readonly { x: number; y: number; z: number }[],
+  radius: number,
+  flatHalf: number,
+  kind: 'quarter' | 'half',
+  arcSteps = 8,
+): VertRampResult {
+  // Cross-section, as lateral/height pairs ordered across the profile.
+  const prof: { lat: number; y: number }[] = [];
+  const wall = (sign: number, reverse: boolean): void => {
+    const pts: { lat: number; y: number }[] = [];
+    for (let j = 0; j <= arcSteps; j++) {
+      const phi = (j / arcSteps) * (Math.PI / 2);
+      pts.push({ lat: sign * (flatHalf + radius * Math.sin(phi)), y: radius * (1 - Math.cos(phi)) });
+    }
+    if (reverse) pts.reverse();
+    prof.push(...pts);
+  };
+  if (kind === 'half') {
+    wall(-1, true); // left lip down to the flat
+    prof.push({ lat: flatHalf, y: 0 }); // across the flat
+    wall(1, false); // and up the right wall
+  } else {
+    prof.push({ lat: 0, y: 0 }); // flat run-up from the spine
+    wall(1, false);
+  }
+
+  const pos: number[] = [];
+  const copingL: THREE.Vector3[] = [];
+  const copingR: THREE.Vector3[] = [];
+  const P = spine;
+  // Per-sample frame: tangent along the spine, lateral = tangent rotated -90.
+  const frame = (i: number): { lx: number; lz: number } => {
+    const a = P[Math.max(0, i - 1)];
+    const b = P[Math.min(P.length - 1, i + 1)];
+    let tx = b.x - a.x;
+    let tz = b.z - a.z;
+    const tl = Math.hypot(tx, tz) || 1;
+    tx /= tl;
+    tz /= tl;
+    return { lx: tz, lz: -tx };
+  };
+  const world = (i: number, k: number): THREE.Vector3 => {
+    const f = frame(i);
+    return new THREE.Vector3(
+      P[i].x + f.lx * prof[k].lat,
+      P[i].y + prof[k].y,
+      P[i].z + f.lz * prof[k].lat,
+    );
+  };
+  for (let i = 0; i < P.length - 1; i++) {
+    for (let k = 0; k < prof.length - 1; k++) {
+      const a = world(i, k);
+      const b = world(i, k + 1);
+      const c = world(i + 1, k + 1);
+      const d = world(i + 1, k);
+      // two triangles, wound so the normal faces the concave (rideable) side
+      pos.push(a.x, a.y, a.z, c.x, c.y, c.z, b.x, b.y, b.z);
+      pos.push(a.x, a.y, a.z, d.x, d.y, d.z, c.x, c.y, c.z);
+    }
+  }
+  for (let i = 0; i < P.length; i++) {
+    copingR.push(world(i, prof.length - 1));
+    if (kind === 'half') copingL.push(world(i, 0));
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geometry.computeVertexNormals();
+  const copings = kind === 'half' ? [copingR, copingL] : [copingR];
+  return { geometry, copings };
+}
+
 // Fillet the corners of a polyline/polygon (Figma corner radius). Each
 // vertex is [x, z, radius?, y?]; a radiused corner is replaced by a
 // quadratic fillet trimmed to just under half of the shorter adjacent edge.
@@ -1715,7 +1811,7 @@ export class Level {
         this.root.children[c].userData.editorIdx = idx;
       }
     };
-    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'rail', 'rope', 'crumble', 'pit', 'metal', 'rock', 'gate']);
+    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'vertramp', 'rail', 'rope', 'crumble', 'pit', 'metal', 'rock', 'gate']);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
     // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
@@ -2083,6 +2179,50 @@ export class Level {
                 ],
                 !c.invisible,
               );
+              this.rails.push(rail);
+              this.root.add(rail.object);
+            }
+          } else if (c.t === 'vertramp') {
+            // AUTHORED VERT. Straight (len/yaw) or pen-drawn along `pts` —
+            // the node convention is exactly the rails': [x, z, cornerRadius,
+            // yOffset], so corner radii round the bends and per-node heights
+            // let the coping climb and dive along the spine.
+            const R = Math.max(0.5, c.rise ?? 6);
+            const F = Math.max(0, c.w ?? 3);
+            const vkind = c.vkind ?? 'quarter';
+            let spine: { x: number; y: number; z: number }[];
+            if (c.pts && c.pts.length >= 2) {
+              spine = roundCorners(c.pts, false).map((q) => ({
+                x: c.p[0] + q.x,
+                y: c.p[1] + q.y,
+                z: c.p[2] + q.z,
+              }));
+            } else {
+              const len = c.len ?? 30;
+              const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
+              const dx = (Math.sin(a) * len) / 2;
+              const dz = (Math.cos(a) * len) / 2;
+              spine = [
+                { x: c.p[0] - dx, y: c.p[1], z: c.p[2] - dz },
+                { x: c.p[0] + dx, y: c.p[1], z: c.p[2] + dz },
+              ];
+            }
+            const vr = buildVertRampGeometry(spine, R, F, vkind);
+            const mesh = new THREE.Mesh(
+              vr.geometry,
+              new THREE.MeshLambertMaterial({ color: 0xaab4ba, side: THREE.DoubleSide }),
+            );
+            mesh.name = 'vertramp';
+            // THE POINT OF ALL THIS: the level DECLARES this is vert, so the
+            // physics stops guessing from normal.y.
+            mesh.userData.vert = true;
+            this.root.add(mesh);
+            this.groundMeshes.push(mesh);
+            this.pickRoot.add(mesh);
+            // every lip is grindable, like the analytic pipe's copings
+            for (const cop of vr.copings) {
+              if (cop.length < 2) continue;
+              const rail = new Rail(cop.map((q) => new THREE.Vector3(q.x, q.y + 0.05, q.z)));
               this.rails.push(rail);
               this.root.add(rail.object);
             }

@@ -43,7 +43,7 @@ interface PalItem {
   label: string;
   icon: Draw;
   make?: (at: THREE.Vector3) => CustomComponent;
-  penDraw?: 'platform' | 'pit' | 'wall' | 'rail'; // pen tool: click-to-draw a polygon (or rail path) of this type
+  penDraw?: 'platform' | 'pit' | 'wall' | 'rail' | 'vertramp'; // pen tool: click-to-draw a polygon (or open path) of this type
 }
 
 const box = (x: CanvasRenderingContext2D, fill: string, frame: string): void => {
@@ -71,6 +71,8 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'invis wall', icon: (x) => { x.strokeStyle = '#64d8ff'; x.lineWidth = 1.5; x.setLineDash([3, 2]); x.strokeRect(3, 3, 12, 12); x.setLineDash([]); }, make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1], invisible: true }) },
       { label: 'rail', icon: (x) => { x.strokeStyle = '#c8d4e2'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 6); x.lineTo(16, 6); x.stroke(); x.lineWidth = 1.5; x.beginPath(); x.moveTo(5, 6); x.lineTo(5, 14); x.moveTo(13, 6); x.lineTo(13, 14); x.stroke(); }, make: (at) => ({ t: 'rail', p: [at.x, at.y + 1, at.z], len: 12, yaw: 0 }) },
       { label: 'halfpipe', icon: (x) => { x.strokeStyle = '#aab4ba'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'pipe', p: [at.x, at.y, at.z], len: 36, axis: 'z' }) },
+      { label: 'quarter vert', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 15); x.lineTo(8, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 30, rise: 6, w: 3, vkind: 'quarter' }) },
+      { label: 'half vert', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 30, rise: 6, w: 3, vkind: 'half' }) },
       { label: 'crumble', icon: (x) => { x.fillStyle = '#cf6a48'; x.fillRect(2, 7, 14, 5); x.strokeStyle = '#7a3520'; x.lineWidth = 1; x.beginPath(); x.moveTo(6, 7); x.lineTo(8, 12); x.moveTo(11, 7); x.lineTo(10, 12); x.stroke(); }, make: (at) => ({ t: 'crumble', p: [at.x, at.y + 1, at.z], s: [3, 1, 3], shake: 0.7 }) },
       { label: 'death pit', icon: (x) => { x.fillStyle = '#b0402a'; x.fillRect(2, 6, 14, 7); x.fillStyle = '#0a0a10'; x.fillRect(3.5, 7.5, 11, 4); }, make: (at) => ({ t: 'pit', p: [at.x, at.y, at.z], s: [6, 1, 6] }) },
       { label: 'rock', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.moveTo(4, 14); x.lineTo(2, 9); x.lineTo(7, 4); x.lineTo(13, 5); x.lineTo(16, 10); x.lineTo(13, 14); x.closePath(); x.fill(); x.fillStyle = '#a49c8c'; x.beginPath(); x.moveTo(7, 4); x.lineTo(13, 5); x.lineTo(10, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 1, at.z], s: [3, 2, 3], seed: Math.floor(Math.random() * 1e6) }) },
@@ -101,6 +103,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'death pit', icon: (x) => { x.strokeStyle = '#b0402a'; x.fillStyle = '#0a0a10'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 11); x.lineTo(8, 3); x.lineTo(16, 7); x.lineTo(12, 15); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ff8a5e'; for (const [px, py] of [[3, 11], [8, 3], [16, 7], [12, 15]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'pit' },
       { label: 'wall', icon: (x) => { x.strokeStyle = '#9a8a7a'; x.fillStyle = 'rgba(154,138,122,0.4)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 13); x.lineTo(6, 4); x.lineTo(14, 3); x.lineTo(15, 12); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ffd75e'; for (const [px, py] of [[3, 13], [6, 4], [14, 3], [15, 12]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'wall' },
       { label: 'rail path', icon: (x) => { x.strokeStyle = '#b8a2ff'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 14); x.lineTo(7, 12); x.lineTo(11, 6); x.lineTo(16, 4); x.stroke(); x.fillStyle = '#d7c8ff'; for (const [px, py] of [[2, 14], [7, 12], [11, 6], [16, 4]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'rail' },
+      { label: 'vert spine', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 13); x.quadraticCurveTo(8, 12, 11, 7); x.quadraticCurveTo(13, 3, 16, 3); x.stroke(); x.fillStyle = '#cdf1fa'; for (const [px, py] of [[2, 13], [11, 7], [16, 3]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'vertramp' },
       { label: 'rope', icon: (x) => { x.strokeStyle = '#c2a878'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 5); x.quadraticCurveTo(9, 13, 16, 5); x.stroke(); x.fillStyle = '#6b4a2a'; x.fillRect(1, 4, 2, 8); x.fillRect(15, 4, 2, 8); }, make: (at) => ({ t: 'rope', p: [at.x, at.y + 2.5, at.z], len: 12, amp: 1.2, shake: 3 }) },
     ],
   },
@@ -154,7 +157,7 @@ const FOE_KINDS: { k: EnemyKind; label: string }[] = [
 ];
 
 // components that grow draggable resize handles on double-click
-const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'pipe', 'enemy', 'pendulum', 'ropeswing']);
+const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'pipe', 'vertramp', 'enemy', 'pendulum', 'ropeswing']);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
 // and `apply` rewrites the component from its grab-time snapshot given the
@@ -269,7 +272,7 @@ export class Editor {
   private marqueeNodes = false; // node mode: the sweep selects NODES of the edited shape
   private camSaveAt = 0;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
-  private drawing: { t: 'platform' | 'pit' | 'wall' | 'rail'; y: number; pts: THREE.Vector3[] } | null = null;
+  private drawing: { t: 'platform' | 'pit' | 'wall' | 'rail' | 'vertramp'; y: number; pts: THREE.Vector3[] } | null = null;
   private selVtxs = new Set<number>(); // nodes picked in resize mode (shift/cmd adds, marquee sweeps) — props batch-edit their shared values
   private drawVis: THREE.Group | null = null;
   // pop-out side panels (item picker / layers) + view cluster + space-pan
@@ -1029,6 +1032,11 @@ export class Editor {
         if (c.rise != null) c.rise *= sy;
         if (c.w != null) c.w = Math.max(1, c.w * sLocX);
         break;
+      case 'vertramp':
+        if (!c.pts && c.len != null) c.len = Math.max(4, c.len * sLocZ);
+        if (c.w != null) c.w = Math.max(0, c.w * sLocX);
+        if (c.rise != null) c.rise = Math.max(0.5, c.rise * sy);
+        break;
       case 'pipe': {
         const alongZ = (c.axis ?? 'z') === 'z';
         if (c.len != null) c.len = Math.max(6, c.len * (alongZ ? sz : sx));
@@ -1701,7 +1709,7 @@ export class Editor {
 
   // ---- pen tool (draw polygon platforms / pits / walls) ----
 
-  startDraw(t: 'platform' | 'pit' | 'wall' | 'rail'): void {
+  startDraw(t: 'platform' | 'pit' | 'wall' | 'rail' | 'vertramp'): void {
     this.cancelDraw();
     this.select(-1);
     const y = this.controls ? snapHalf(this.controls.target.y) : 0;
@@ -1789,7 +1797,8 @@ export class Editor {
     const pts = d.pts.filter(
       (pt, i) => i === 0 || pt.distanceToSquared(d.pts[i - 1]) > 0.01,
     );
-    const minPts = d.t === 'rail' ? 2 : 3;
+    const openPath = d.t === 'rail' || d.t === 'vertramp';
+    const minPts = openPath ? 2 : 3;
     if (pts.length < minPts) {
       this.hooks.showMsg(`NEED ${minPts}+ POINTS`, 'shape cancelled');
       this.cancelDraw();
@@ -1807,6 +1816,10 @@ export class Editor {
     if (d.t === 'rail') {
       // open path — no closing, no box dims; grind height is the draw plane
       this.addComponent({ t: 'rail', p: [cx, d.y + 1, cz], pts: rel });
+    } else if (d.t === 'vertramp') {
+      // the transition sweeps along the drawn spine; the draw plane is the
+      // FLAT it rises from, so the wall climbs out of the floor you drew on
+      this.addComponent({ t: 'vertramp', p: [cx, d.y, cz], pts: rel, rise: 6, w: 3, vkind: 'quarter' });
     } else {
       const s: [number, number, number] = [1, d.t === 'wall' ? 4 : 1, 1];
       this.addComponent({ t: d.t, p: [cx, d.y, cz], s, pts: rel });
@@ -3312,6 +3325,25 @@ export class Editor {
       note.textContent =
         'a grindable rope strung between posts: it sags under a grind, snaps after the break time, and restrings itself';
       this.propsEl.appendChild(note);
+    } else if (c.t === 'vertramp') {
+      if (!c.pts) num('length', () => c.len ?? 30, (v) => (c.len = Math.max(4, v)), 2);
+      num('flat half', () => c.w ?? 3, (v) => (c.w = Math.max(0, v)));
+      num('wall radius', () => c.rise ?? 6, (v) => (c.rise = Math.max(0.5, v)));
+      const kindBtn = document.createElement('button');
+      kindBtn.className = 'ed-btn';
+      kindBtn.textContent = `shape: ${c.vkind ?? 'quarter'}`;
+      kindBtn.addEventListener('click', () => {
+        c.vkind = (c.vkind ?? 'quarter') === 'quarter' ? 'half' : 'quarter';
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(kindBtn);
+      const vnote = document.createElement('div');
+      vnote.className = 'ed-dim';
+      vnote.textContent = c.pts
+        ? 'drawn along a spine — drag its nodes to steer the transition, corner radii round the bends, node heights make the coping climb'
+        : 'an AUTHORED vert face: the physics rides it as vert regardless of its angle. Use the pen tool to draw one along a spine.';
+      this.propsEl.appendChild(vnote);
     } else if (c.t === 'pipe') {
       num('length', () => c.len ?? 36, (v) => (c.len = Math.max(6, v)), 2);
       num('flat half', () => c.w ?? 3, (v) => (c.w = Math.max(1, v)));

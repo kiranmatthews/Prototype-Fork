@@ -44,6 +44,7 @@ interface GroundHit {
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
+  vert?: boolean; // AUTHORED transition face: the level says "this is vert", overriding the normal.y guesswork
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
   pipeCross?: number; // analytic pipe hit: exact cross-axis coordinate of the surface point
 }
@@ -187,6 +188,17 @@ export class Player {
   // a pipe wall and get thrown into a hang mid-wipeout.
   private get isBailing(): boolean {
     return this.bailDownT > 0;
+  }
+
+  // "Is the surface under me a TRANSITION?" — the authored flag OR the angle
+  // heuristic, never the flag alone. An unflagged steep face still behaves
+  // exactly as it always did; a flagged face is vert even where the angle is
+  // too shallow to guess (a mellow bank the designer wants ridden as vert).
+  private get onTransition(): boolean {
+    return (
+      this.groundHit !== null &&
+      (this.groundHit.vert === true || this.groundHit.normal.y < TUNING.steepStand)
+    );
   }
   // Whether the current airtime started from SKATING (ollie, slide/grind
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
@@ -1586,7 +1598,7 @@ export class Player {
       // analytic pipe wall, OR any steep MESH transition (bowls, banked
       // walls) — the pop is a vert launch on both; mesh faces skip the
       // pipe-hang rules and take the TRACKED hang instead
-      (this.groundHit.halfpipe !== undefined || this.groundHit.normal.y < TUNING.steepStand)
+      (this.groundHit.halfpipe !== undefined || this.onTransition)
     ) {
       // The pop off a wall used to run the on-foot 10..13 scale — roughly TWICE
       // what cresting the same wall at the same speed paid (pipePop 6). That's a
@@ -1943,11 +1955,7 @@ export class Player {
       // TUMBLES down the face instead of sticking to a near-vertical wall:
       // the body swings down the fall line and slides into the flat (the
       // lying-flat pose riding downhill with dust IS the tumble).
-      const steepBail =
-        this.bailDownT > 0 &&
-        this.grounded &&
-        this.groundHit !== null &&
-        this.groundHit.normal.y < TUNING.steepStand;
+      const steepBail = this.bailDownT > 0 && this.grounded && this.onTransition;
       if (steepBail) {
         const n = this.groundHit!.normal;
         const l = Math.hypot(n.x, n.z) || 1;
@@ -2188,24 +2196,27 @@ export class Player {
       // Mesh transitions (bowls, banked walls) count as pipe walls here —
       // the carve pump is THE speed loop of THPS and it must work everywhere
       // there is a transition to work.
-      const onTransition =
-        this.groundHit !== null && this.groundHit.normal.y < TUNING.steepStand;
-      if (
-        (onPipe || onTransition) &&
-        this.groundHit &&
-        (input.moveX !== 0 || input.moveY !== 0) &&
-        this.groundHit.normal.y < TUNING.steepStand
-      ) {
-        this.speed += TUNING.pipeCarve * (1 - this.groundHit.normal.y) * dt;
+      // Steepness weight for carve/pump. A FLAGGED face gets a floor: the level
+      // said "ride this as vert", so a mellow authored bank must still pump
+      // meaningfully instead of paying ~0 because (1 - normal.y) is tiny.
+      const transWeight = this.groundHit
+        ? Math.max(
+            1 - this.groundHit.normal.y,
+            this.groundHit.vert ? 1 - TUNING.steepStand : 0,
+          )
+        : 0;
+      if ((onPipe || this.onTransition) && (input.moveX !== 0 || input.moveY !== 0)) {
+        this.speed += TUNING.pipeCarve * transWeight * dt;
       }
       // PUMP: hold X to work the transition for EXTRA speed — the hard pump on
       // top of the carve, the honest way to build vert height. On the halfpipe
       // this is the strong pipePumpGain (it has to out-build gravity+friction over
       // successive swings to clear the coping); on general steep banks it's the
       // gentler crouch pipePump. Both scale with steepness (hardest below the coping).
-      if (this.charging && this.groundHit && this.groundHit.normal.y < TUNING.steepStand) {
-        // full pump on ANY transition face — analytic pipe or mesh bowl wall
-        this.speed += TUNING.pipePumpGain * (1 - this.groundHit.normal.y) * dt;
+      if (this.charging && this.onTransition) {
+        // full pump on ANY transition face — analytic pipe, mesh bowl wall, or
+        // anything the level flagged as vert
+        this.speed += TUNING.pipePumpGain * transWeight * dt;
       }
       // HALFPIPE near-frictionless: the general idle friction (7) bleeds a swing
       // dead in a couple of seconds; on the pipe a tiny bleed lets momentum
@@ -2224,7 +2235,7 @@ export class Player {
       // ~2.7x harder at 38 than at 23, so there's a wall to press against rather
       // than a linear countdown. Transitions get their own, higher ceiling —
       // vert is where the big speed is supposed to live.
-      const onTrans = this.groundHit !== null && this.groundHit.normal.y < TUNING.steepStand;
+      const onTrans = this.onTransition;
       const hardCap = onTrans ? TUNING.vertMax : TUNING.downhillMax;
       const over = Math.abs(this.speed);
       if (over > TUNING.maxSpeed) {
@@ -3219,7 +3230,10 @@ export class Player {
       // trigger — their tracking ran on artist-flagged polys covering the
       // whole transition, and our bowls' rideable band sits right at 0.71,
       // where a strict filter silently rejects the wall mid-hang (no glue).
-      if (Math.abs(wn.y) >= 0.88) continue;
+      // A face the level FLAGGED as vert is tracked whatever its angle — the
+      // 0.88 number below is a heuristic whose own comment admits it is fighting
+      // our bowls, and an authored flag is exactly the answer to that.
+      if (!h.object.userData.vert && Math.abs(wn.y) >= 0.88) continue;
       const fl = Math.hypot(wn.x, wn.z);
       if (fl < 1e-4) continue;
       // sharp corner: the wall turned away too hard to keep riding it
@@ -6098,6 +6112,7 @@ export class Player {
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,
+      vert: hit.object.userData.vert as boolean | undefined,
       halfpipe: hp,
     };
   }
