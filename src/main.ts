@@ -96,12 +96,36 @@ let skyboxTex: THREE.Texture | null = null;
 let skyMist: THREE.Mesh | null = null; // foreground horizon mist (follows the camera)
 const cfgSkyTex = (t: THREE.Texture): void => {
   t.colorSpace = THREE.SRGBColorSpace;
-  // MIRRORED so every other horizontal tile flips — the image's left and right
-  // edges always meet their own reflection, so the wrap seam disappears.
-  t.wrapS = THREE.MirroredRepeatWrapping;
+  // Plain repeat on a made-seamless image (see makeSeamless): a continuous wrap
+  // with no hard seam AND — unlike a mirrored wrap — no bilateral fold axis.
+  t.wrapS = THREE.RepeatWrapping;
   t.wrapT = THREE.ClampToEdgeWrapping; // clamp sky above / faded clouds below
   t.repeat.set(SKY_K, SKY_K);
   t.offset.set(0, SKY_HORIZON_V - 0.5 * SKY_K); // horizon -> dome equator
+};
+// The panorama's left and right edges don't match, so tiling it shows a seam.
+// A mirrored wrap hides the jump but leaves an obvious reflection axis. Instead
+// make the image genuinely tileable: cross-blend a band straddling the wrap so
+// both edges converge to the same average at the seam. Plain repeat is then
+// continuous with no fold. (Runs once, on load.)
+const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
+  const W = img.naturalWidth;
+  const H = img.naturalHeight;
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const x = c.getContext('2d')!;
+  x.drawImage(img, 0, 0);
+  const bw = Math.max(1, Math.round(W * 0.09)); // blend band width each side of the seam
+  for (let d = 0; d < bw; d++) {
+    x.globalAlpha = 0.5 * (1 - d / bw); // 0.5 at the seam, easing to 0 inward
+    // pull each edge column toward its partner on the far edge (read from the
+    // untouched source, so at the seam both sides become the same average)
+    x.drawImage(img, d, 0, 1, H, W - 1 - d, 0, 1, H); // left col -> right band
+    x.drawImage(img, W - 1 - d, 0, 1, H, d, 0, 1, H); // right col -> left band
+  }
+  x.globalAlpha = 1;
+  return c;
 };
 // Load the painting once, then build TWO layers from it:
 //  1) the dome backdrop (behind the level) — mountains + sky.
@@ -114,12 +138,11 @@ skyImg.crossOrigin = 'anonymous';
 skyImg.onload = () => {
   const W = skyImg.naturalWidth,
     H = skyImg.naturalHeight;
-  // (1) backdrop — the full painting
-  const cBg = document.createElement('canvas');
-  cBg.width = W;
-  cBg.height = H;
-  cBg.getContext('2d')!.drawImage(skyImg, 0, 0);
-  const bgTex = new THREE.CanvasTexture(cBg);
+  // Make the painting horizontally tileable ONCE, then build both layers from
+  // it so the wrap is seamless (no hard seam, no mirror fold).
+  const base = makeSeamless(skyImg);
+  // (1) backdrop — the full (seamless) painting
+  const bgTex = new THREE.CanvasTexture(base);
   cfgSkyTex(bgTex);
   const m = sky.material as THREE.MeshBasicMaterial;
   m.transparent = true;
@@ -135,7 +158,7 @@ skyImg.onload = () => {
   cFg.width = W;
   cFg.height = H;
   const fx = cFg.getContext('2d')!;
-  fx.drawImage(skyImg, 0, 0);
+  fx.drawImage(base, 0, 0);
   const ramp = fx.createLinearGradient(0, 0, 0, H);
   ramp.addColorStop(0, 'rgba(0,0,0,1)'); // erase the sky
   ramp.addColorStop((SKY_HORIZON_PX - 30) / H, 'rgba(0,0,0,1)');
