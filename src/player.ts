@@ -1531,6 +1531,14 @@ export class Player {
     this.airFromSkate =
       this.freeSkate || fromSlide || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
     this.slideGraceT = 0;
+    // THE RAMP CLIMB. Rolling off a lip with NO input converts the climb into
+    // height (see the crest paths: `lastTy * speed`). The board ollie below used
+    // to OVERWRITE vVel with its own pop, so pressing X at a 30 degree kicker at
+    // speed 23 launched you at ollieMinVelocity instead of the 11.5 you'd have
+    // got for free — pressing jump made you jump LOWER. Stack the pop on the
+    // climb instead, exactly like the vert branch already does. lastTy is 0
+    // while walking and while airborne, so this is self-gating.
+    const rampClimb = this.grounded && this.lastTy > 0 ? Math.max(0, this.speed * this.lastTy) : 0;
     // VERT OLLIE: X popped while riding a halfpipe TRANSITION face. The flat
     // ollie below would carry the whole climb speed as HORIZONTAL velocity —
     // an unglued air that sails clean across the pipe (THE "float out of
@@ -1616,7 +1624,10 @@ export class Player {
       // the skate accelerator, so riding the charge scale up to jumpVelocity
       // made every accelerating jump a moon jump. Cruising on direction keys
       // and tapping X gives the small pop; a held charge earns the big one.
-      this.vVel = THREE.MathUtils.lerp(TUNING.ollieMinVelocity, TUNING.ollieVelocity, t);
+      this.vVel = Math.min(
+        rampClimb + THREE.MathUtils.lerp(TUNING.ollieMinVelocity, TUNING.ollieVelocity, t),
+        CONST.maxFallSpeed,
+      );
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
@@ -1808,7 +1819,7 @@ export class Player {
     // symmetric wall gravity, near-frictionless, and a stall-flip that turns you
     // down the fall line at the top of the wall no matter your heading — so you
     // whip wall-to-wall and pump up over the coping instead of freezing on the
-    // face (which is exactly what the asymmetric slopeBoost/uphillSlowdown did).
+    // face (which is exactly what the old asymmetric ramp physics did).
     const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
     if (onPipe) this.pipeRideT = 0.2; // any vert launch off this becomes a pipeHang (no phantom spin)
     // ON FOOT the ONE authority is footGrip: a walker (no board momentum, no
@@ -1905,7 +1916,7 @@ export class Player {
         const l = Math.hypot(n.x, n.z) || 1;
         this.axisF.set(n.x / l, 0, n.z / l); // the fall line (normal leans toward the flat)
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-        this.speed = Math.min(this.speed + TUNING.slopeBoost * 0.6 * dt, 12);
+        this.speed = Math.min(this.speed + TUNING.groundGravity * 0.6 * dt, 12);
         this.emitDust(1);
       } else {
         this.speed = 0;
@@ -2108,20 +2119,16 @@ export class Player {
         const tl = Math.hypot(tx, tyRaw, tz);
         if (tl > 1e-4) ty = tyRaw / tl; // > 0 climbing, < 0 descending
       }
-      if (onPipe) {
-        // HALFPIPE: one SYMMETRIC gravity both ways (climb decelerates,
-        // descent accelerates at the same rate) = a clean, energy-conserving
-        // pendulum that whips you wall-to-wall instead of the asymmetric ramp
-        // physics that bled you to a dead stop on the face.
-        if (Math.abs(ty) > 0.02) this.speed += -TUNING.pipeGravity * ty * dt;
-      } else if (Math.abs(ty) > 0.02 && !(braking && ty < 0)) {
-        // While actively braking, the DOWNHILL boost yields — otherwise a low
-        // turnaround rate can never out-decelerate gravity and you can't come to
-        // a full stop on a slope. Uphill slowdown still applies (it only helps
-        // you stop). Not braking: normal slope physics.
-        // X held = attack the ramp: MORE boost downhill, LESS bleed uphill.
-        const attack = ty < 0 ? (this.charging ? 1.3 : 0.8) : this.charging ? 0.55 : 0.8;
-        this.speed += (ty < 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * -ty * attack * dt;
+      // ONE SYMMETRIC GRAVITY, every surface. Downhill used to accelerate you
+      // 1.4x harder than uphill decelerated (3.3x with X held), so every dip-and-
+      // rise handed back MORE than it took and a bowl was a free-speed dispenser
+      // that pinned you at the cap in two swings — which also made the pump
+      // sliders unreadable, because geometry alone saturated them. The analytic
+      // halfpipe was already fixed this way (a clean energy-conserving pendulum);
+      // this just generalises it past the `name.startsWith('halfpipe')` check.
+      // The braking guard stays: it's what lets the brake beat gravity on a hill.
+      if (Math.abs(ty) > 0.02 && !(braking && ty < 0)) {
+        this.speed += -TUNING.groundGravity * ty * dt;
       }
       // HALFPIPE CARVE: just HOLDING a direction on the transition works the wall
       // for momentum — no X needed. This is the "carving pumps you" feel: hold
@@ -2158,15 +2165,21 @@ export class Player {
       }
       this.lastTy = ty;
 
-      // Downhill may exceed maxSpeed up to a hard cap; on the flat the excess
-      // bleeds back off. Same caps in both directions.
-      const hardCap = TUNING.downhillMax;
-      this.speed = THREE.MathUtils.clamp(this.speed, -hardCap, hardCap);
-      if (Math.abs(this.speed) > TUNING.maxSpeed && Math.abs(ty) <= 0.02) {
-        this.speed =
-          Math.sign(this.speed) *
-          Math.max(TUNING.maxSpeed, Math.abs(this.speed) - CONST.overspeedDecay * dt);
+      // OVERSPEED: anything above maxSpeed bleeds off through a QUADRATIC drag,
+      // always, on every surface. The old flat bleed only fired on level ground
+      // (|ty| <= 0.02), so earned speed was immortal on a slope and then got
+      // confiscated the instant the ground flattened — an unpredictable step the
+      // player can't read. Quadratic also gives the top end texture: it bites
+      // ~2.7x harder at 38 than at 23, so there's a wall to press against rather
+      // than a linear countdown. Transitions get their own, higher ceiling —
+      // vert is where the big speed is supposed to live.
+      const onTrans = this.groundHit !== null && this.groundHit.normal.y < TUNING.steepStand;
+      const hardCap = onTrans ? TUNING.vertMax : TUNING.downhillMax;
+      const over = Math.abs(this.speed);
+      if (over > TUNING.maxSpeed) {
+        this.speed -= Math.sign(this.speed) * Math.min(TUNING.heavyDrag * over * over * dt, over);
       }
+      this.speed = THREE.MathUtils.clamp(this.speed, -hardCap, hardCap);
       // A free heading never reverses through zero — stalling on a hill just
       // stops you. On ground too steep to stand, you can't hover: whenever the
       // board is SLOW and pointed roughly along the coping (|ty| small — not
@@ -3223,29 +3236,35 @@ export class Player {
   // and the pull-back brake still cuts straight through to the dismount.
   private cruiseEase(dt: number, steep: boolean): void {
     const cruise = Math.min(TUNING.cruiseSpeed, TUNING.maxSpeed);
-    if (this.speed > cruise) {
-      this.speed = Math.max(cruise, this.speed - TUNING.chargeDecay * dt);
-    } else if (!steep && this.grounded) {
-      this.speed = Math.min(cruise, this.speed + TUNING.chargeDecay * dt);
-    } else if (steep) {
-      // No assist on transitions — and the old friction bleed stays, so a
-      // sideways crawl on a wall dies out and the stall-flip can roll you
-      // back into the pipe instead of parking you mid-face.
+    // No assist on transitions — and the old friction bleed stays, so a
+    // sideways crawl on a wall dies out and the stall-flip can roll you
+    // back into the pipe instead of parking you mid-face.
+    if (steep) {
       this.frictionBleed(dt, steep);
+      return;
     }
+    // ABOVE cruise, hold a direction and you used to lose speed at chargeDecay
+    // (10/s) — HARDER than letting go of the stick entirely (friction, 7/s). So
+    // steering was punished and the only way not to be robbed of a hard-won hill
+    // was to hold X forever. Overspeed now bleeds through the same friction
+    // model whether you steer or coast; only the pick-up rate stays chargeDecay.
+    if (Math.abs(this.speed) > cruise) this.frictionBleed(dt, steep);
+    else if (this.grounded) this.speed = Math.min(cruise, this.speed + TUNING.chargeDecay * dt);
   }
 
-  // FRICTION to a full stop, ease-out curve. Fires only when there is NO
-  // input at all — the board coasts, then rolls to rest below cruise. The
-  // bleed scales with current speed (fast up top, gentle as you settle) plus
-  // a small floor so it actually reaches zero. friction 0 = frictionless.
+  // ROLL-OUT friction, THPS-shaped: a CONSTANT rolling term (so the board stops
+  // decisively instead of oozing through the last unit of speed) plus a v^2 wind
+  // term that only bites up top. The old curve was exactly backwards — it scaled
+  // WITH speed, so hard-won top speed evaporated fastest and the final 1 u/s
+  // took forever. friction 0 = frictionless.
   private frictionBleed(dt: number, steep: boolean): void {
     const s = Math.abs(this.speed);
     if (s < 1e-4) return;
-    // steep ground keeps the flat linear bleed so the stall-flip fires cleanly
+    // Steep ground keeps the old linear bleed: it decelerates harder than the
+    // constant term, which is what lets the stall-flip (needs speed < 2) fire.
     let bleed = steep
       ? TUNING.friction * dt
-      : TUNING.friction * dt * (0.35 + 0.65 * Math.min(1, s / Math.max(TUNING.maxSpeed, 1)));
+      : (TUNING.rollFriction + TUNING.windDrag * s * s) * dt;
     // Slick planks (icy sky-bridge boards): almost no friction, so you keep
     // sliding and can't stop short of the gap — the precision hazard.
     if (this.groundHit && this.groundHit.slippy) bleed *= CONST.slippyFriction;
@@ -3866,7 +3885,7 @@ export class Player {
     // any earned downhill. tangent.y IS sin(slope) on a unit tangent.
     const railSlope = rail.tangentAt(this.grindT).y * this.grindDir; // + = climbing
     if (Math.abs(railSlope) > 1e-3) {
-      this.grindVel -= railSlope * (railSlope < 0 ? TUNING.slopeBoost : TUNING.uphillSlowdown) * dt;
+      this.grindVel -= railSlope * TUNING.groundGravity * dt;
       this.grindVel = THREE.MathUtils.clamp(this.grindVel, CONST.grindMinSpeed, TUNING.downhillMax);
     }
 

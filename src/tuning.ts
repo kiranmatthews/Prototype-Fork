@@ -15,7 +15,7 @@ export const TUNING = {
   jumpVelocity: 13, // fully-charged jump (hold X)
   jumpMinVelocity: 10, // quick-tap jump
   ollieVelocity: 12.5, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
-  ollieMinVelocity: 4, // quick-tap board ollie — the small pop when skating on direction keys and flicking X
+  ollieMinVelocity: 8, // quick-tap board ollie — sqrt(2*riseGravity*0.96)=7.96, i.e. the smallest pop that clears exactly ONE crate. The ramp climb now stacks on top of this (see chargedJump), so a lip pays out instead of robbing you
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
@@ -23,11 +23,13 @@ export const TUNING = {
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate speed settles back to cruiseSpeed after releasing X
-  downhillMax: 30.5, // hard ceiling for speed EARNED downhill / in pipes (charge still tops at maxSpeed)
-  slopeBoost: 38, // downhill acceleration, scaled by sin(slope along travel)
-  uphillSlowdown: 27, // uphill deceleration, scaled by sin(slope along travel)
+  downhillMax: 30.5, // hard ceiling for speed EARNED downhill (charge still tops at maxSpeed)
+  vertMax: 38, // higher ceiling on TRANSITIONS — vert is where the big speed is meant to live
+  heavyDrag: 0.005, // quadratic bleed above maxSpeed, every surface: 2.7 u/s^2 at 23, 7.2 at 38, so the top end has texture instead of a linear countdown
+  rollFriction: 3.5, // CONSTANT rolling friction: the crisp part of the stop (replaces the old speed-scaled curve that made the last 1 u/s ooze)
+  windDrag: 0.0015, // v^2 wind resistance: only bites up top, so you coast a long way fast then stop decisively
+  groundGravity: 32, // ONE symmetric slope gravity, all surfaces: climbing decelerates exactly as fast as descending accelerates. Asymmetric ramp physics made every dip-and-rise hand back more than it took, so bowls dispensed free speed and the pump sliders were unreadable
   pipePump: 1.5, // crouch-pump gain: X held on ground too steep to stand
-  pipeGravity: 34, // HALFPIPE: symmetric pendulum gravity on the transition walls — matches riseGravity so wall climbs decelerate like jumps do (reads physically consistent)
   pipeCarve: 16, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
   pipePumpGain: 24, // HALFPIPE: EXTRA speed added per second holding X up a wall — the THPS skill loop: a first swing barely clears the lip, each well-timed pump grows the air toward the cap
   pipeFriction: 0.1, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
@@ -148,7 +150,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 8; // v8: playtest bake — pops 13/10, ollies 12.5/4, grind pop 12.5, carve 135, anchored cam (airLift 0, fov 53, height 5.1, tilt 1.7, offset 1)
+export const TUNING_VERSION = 9; // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
@@ -161,16 +163,18 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   jumpVelocity: { min: 4, max: 30, step: 0.5 },
   jumpMinVelocity: { min: 6, max: 25, step: 0.5 },
   ollieVelocity: { min: 6, max: 20, step: 0.5 },
-  ollieMinVelocity: { min: 4, max: 18, step: 0.5 },
+  ollieMinVelocity: { min: 6, max: 18, step: 0.5 }, // floor at 6: below this a tap ollie can't clear a crate
   jumpChargeTime: { min: 0.2, max: 1.5, step: 0.05 },
   chargeBoost: { min: 0, max: 40, step: 1 },
   cruiseSpeed: { min: 6, max: 20, step: 0.5 },
   chargeDecay: { min: 0.5, max: 20, step: 0.5 },
   downhillMax: { min: 10, max: 45, step: 0.5 },
-  slopeBoost: { min: 0, max: 120, step: 1 },
-  uphillSlowdown: { min: 0, max: 120, step: 1 },
+  vertMax: { min: 20, max: 50, step: 0.5 },
+  heavyDrag: { min: 0, max: 0.02, step: 0.0005 },
+  rollFriction: { min: 0, max: 15, step: 0.25 },
+  windDrag: { min: 0, max: 0.01, step: 0.0005 },
+  groundGravity: { min: 0, max: 90, step: 1 },
   pipePump: { min: 0, max: 40, step: 0.5 },
-  pipeGravity: { min: 10, max: 90, step: 1 },
   pipeCarve: { min: 0, max: 80, step: 1 },
   pipePumpGain: { min: 0, max: 80, step: 1 },
   pipeFriction: { min: 0, max: 6, step: 0.1 },
@@ -310,12 +314,18 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How fast speed settles back to cruiseSpeed after releasing X — and how fast it recovers up to cruise after a hill scrubs you below it.',
   downhillMax:
     'Hard ceiling for speed EARNED from downhill and pipe riding. Charging alone still tops out at maxSpeed; slopes carry you up to this, and the excess bleeds off on the flat.',
-  slopeBoost: 'Downhill acceleration while skating, scaled by the sine of the slope along travel (bounded — vert never explodes).',
-  uphillSlowdown: 'Uphill drag while skating, same sine scaling; stalling on a ramp rolls you back down it.',
+  vertMax:
+    'Speed ceiling on TRANSITIONS (bowls, banks, pipe walls) — vert is where the big speed is meant to live, so it caps higher than downhillMax. Above maxSpeed the quadratic drag is always pulling back.',
+  heavyDrag:
+    'Quadratic bleed applied whenever you are above maxSpeed, on EVERY surface. Higher = the top of the speed range gets a harder wall to press against. (The old flat bleed only fired on level ground, so earned speed was immortal on a hill and then vanished the instant it flattened.)',
+  rollFriction:
+    'Constant rolling friction on the roll-out — the part that makes the board STOP instead of oozing through the last unit of speed.',
+  windDrag:
+    'v-squared wind resistance on the roll-out: near-nothing at walking pace, real up top. Together with rollFriction: coast a long way fast, then settle decisively.',
+  groundGravity:
+    'ONE symmetric slope gravity for every surface — a climb decelerates exactly as hard as a descent accelerates, so a bowl conserves energy instead of manufacturing it. This is what makes PUMPING the way you gain speed rather than just riding geometry. Higher = hills bite harder both ways.',
   pipePump:
     'Crouch-pump: speed gained per second holding X on ground too steep to stand — the honest way to build vert height. Steeper wall = stronger pump.',
-  pipeGravity:
-    'HALFPIPE swing punch: SYMMETRIC gravity on the transition walls (decelerates the climb and accelerates the drop at the same rate = a conserving pendulum). Higher = you whip wall-to-wall faster and snappier; lower = floaty and mellow.',
   pipeCarve:
     'HALFPIPE carve: momentum built just by HOLDING a direction on the transition — no X needed. This is the "carving pumps you" feel; higher = holding toward the wall drives you up harder and builds speed faster. Scaled by wall steepness, so the flat bottom gives no free speed.',
   pipePumpGain:
@@ -500,6 +510,9 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'chargeBoost',
       'chargeDecay',
       'friction',
+      'rollFriction',
+      'windDrag',
+      'heavyDrag',
       'turnaround',
       'brakeRampTime',
       'brakeLockTime',
@@ -517,10 +530,9 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'SLOPES & PIPES',
     keys: [
       'downhillMax',
-      'slopeBoost',
-      'uphillSlowdown',
+      'groundGravity',
+      'vertMax',
       'pipePump',
-      'pipeGravity',
       'pipeCarve',
       'pipePumpGain',
       'pipeFriction',
