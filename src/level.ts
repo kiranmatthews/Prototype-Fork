@@ -5217,45 +5217,32 @@ export class Level {
     return this.mysteryTex;
   }
 
-  // Mask crate: crossed bones on wood — cream bone with a hot-pink rim, echoing
-  // the mask's pink invincibility glow.
+  // Mask crate: the authored crossbones sticker (public/crossbones.png, alpha)
+  // composited over a wood crate face. Higher-res than the 32px PSX faces so the
+  // painted bones read; the sticker loads async and repaints when ready.
   private maskTexture(): THREE.CanvasTexture {
-    if (!this.maskTex)
-      this.maskTex = this.makeTex((ctx) => {
-        this.crateWood(ctx, false);
-        // one bone laid along the local X axis (drawn under a rotate transform):
-        // a slim shaft with a pair of round lobes at each end (the femur look)
-        const bone = (thick: number, knob: number, color: string): void => {
-          ctx.fillStyle = color;
-          ctx.strokeStyle = color;
-          ctx.lineWidth = thick;
-          ctx.lineCap = 'round';
-          ctx.beginPath(); // shaft
-          ctx.moveTo(-9.5, 0);
-          ctx.lineTo(9.5, 0);
-          ctx.stroke();
-          for (const ex of [-9.5, 9.5]) {
-            for (const ey of [-3, 3]) {
-              ctx.beginPath();
-              ctx.arc(ex, ey, knob, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-        };
-        const cross = (thick: number, knob: number, color: string): void => {
-          for (const ang of [Math.PI / 4, -Math.PI / 4]) {
-            ctx.save();
-            ctx.translate(16, 16.5);
-            ctx.rotate(ang);
-            bone(thick, knob, color);
-            ctx.restore();
-          }
-        };
-        cross(4.6, 2.9, '#ff79c8'); // hot-pink rim glow
-        cross(2.8, 2.0, '#efe6cf'); // cream bone body
-        cross(1.0, 0.7, '#fffaf0'); // bright highlight down the shafts
-      });
-    return this.maskTex;
+    if (this.maskTex) return this.maskTex;
+    const S = 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = S;
+    canvas.height = S;
+    const ctx = canvas.getContext('2d')!;
+    ctx.imageSmoothingEnabled = false;
+    ctx.save();
+    ctx.scale(S / 32, S / 32); // crateWood authors in 32-space
+    this.crateWood(ctx, false);
+    ctx.restore();
+    const tex = new THREE.CanvasTexture(canvas);
+    this.maskTex = tex;
+    const img = new Image();
+    img.onload = () => {
+      const pad = Math.round(S * 0.11); // sit the sticker inside the crate's beveled frame
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(img, pad, pad, S - pad * 2, S - pad * 2);
+      tex.needsUpdate = true;
+    };
+    img.src = import.meta.env.BASE_URL + 'crossbones.png';
+    return tex;
   }
 
   // Classic red TNT face; lit fuses swap it for big 3 / 2 / 1 digits.

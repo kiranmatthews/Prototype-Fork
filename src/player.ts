@@ -371,6 +371,7 @@ export class Player {
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
   private maskMesh: THREE.Mesh | null = null;
+  private maskBones: THREE.Object3D | null = null; // 3D crossbones under the skull on the 2nd mask
   private maskAnchor = new THREE.Vector3(); // scratch: head world position for the floating mask
   private maskGlowPink: THREE.Sprite | null = null; // vibrant fiery-pink aura behind the mask
   private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
@@ -517,6 +518,7 @@ export class Player {
     scene.add(mask);
     this.maskMesh = mask;
     this.installSkullMask(); // swap the box mask for the sculpted spiked skull once it loads
+    this.installMaskBones(); // 3D crossbones under the skull, shown only on the 2nd mask
 
     // Vibrant fiery-pink glow behind the mask (the black rim is a stroke on the
     // skull itself — see installSkullMask). Camera-facing sprite, drawn before
@@ -6648,8 +6650,11 @@ export class Player {
         this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
         this.maskMesh.scale.setScalar(1);
       }
-      // Pink glow: tight behind the floating mask (brighter on the 2nd), or a
-      // big body-enveloping bloom around the skater on the 3rd.
+      // Crossbones ride under the skull only on the 2nd mask (state 2).
+      if (this.maskBones) this.maskBones.visible = two;
+      // Pink glow: tight behind the floating mask (brighter on the 2nd, and
+      // dropped + grown to wrap the crossbones), or a big body-enveloping bloom
+      // around the skater on the 3rd.
       const pink = this.maskGlowPink;
       pink.visible = vis;
       if (vis) {
@@ -6660,8 +6665,8 @@ export class Player {
           pm.opacity = 1;
         } else {
           const mp = this.maskMesh.position;
-          pink.position.set(mp.x, mp.y, mp.z - 0.3);
-          pink.scale.setScalar((two ? 1.95 : 1.5) * flame);
+          pink.position.set(mp.x, mp.y - (two ? 0.4 : 0), mp.z - 0.3);
+          pink.scale.setScalar((two ? 2.6 : 1.5) * flame);
           pm.opacity = two ? 1 : 0.9;
         }
       }
@@ -7255,8 +7260,11 @@ export class Player {
         const span = Math.max(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
         const k = span > 0 ? 0.9 / span : 1;
         geo.scale(k, k, k);
-        // Swap the box face + eyes for the skull.
-        for (const c of [...this.maskMesh.children]) this.maskMesh.remove(c);
+        // Swap the box face + eyes for the skull (keep the crossbones child).
+        for (const c of [...this.maskMesh.children]) {
+          if (c.userData.maskBones) continue;
+          this.maskMesh.remove(c);
+        }
         (this.maskMesh.geometry as THREE.BufferGeometry).dispose();
         this.maskMesh.geometry = geo;
         // A floating magical mask should read like the bright, evenly-lit
@@ -7285,6 +7293,67 @@ export class Player {
       },
       undefined,
       (e) => console.warn('skull mask failed to load (mask stays a box):', e),
+    );
+  }
+
+  // ——— Crossbones under the 2nd mask (models/crossbones.glb) ————————————————
+  // A sculpted bone X that hangs beneath the skull to make the classic
+  // skull-and-crossbones — shown ONLY on the 2nd held mask (state 2). It rides
+  // the mask as a child, so it shares the mask's stroke+glow treatment: its own
+  // inverted-hull black outline, sitting inside the mask's pink aura.
+  private installMaskBones(): void {
+    const src =
+      (window as { __BONES_GLB?: string }).__BONES_GLB ||
+      import.meta.env.BASE_URL + 'models/crossbones.glb';
+    new GLTFLoader().load(
+      src,
+      (gltf) => {
+        if (!this.maskMesh) return;
+        let found: THREE.Mesh | null = null;
+        gltf.scene.traverse((o) => {
+          if (!found && (o as THREE.Mesh).isMesh) found = o as THREE.Mesh;
+        });
+        if (!found) return;
+        const m = found as THREE.Mesh;
+        // Re-center on the bbox and bake a fit-scale (span ~0.9, matching the skull).
+        const geo = (m.geometry as THREE.BufferGeometry).clone();
+        geo.computeBoundingBox();
+        const bb = geo.boundingBox!;
+        geo.translate(
+          -(bb.min.x + bb.max.x) / 2,
+          -(bb.min.y + bb.max.y) / 2,
+          -(bb.min.z + bb.max.z) / 2,
+        );
+        const span = Math.max(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
+        const k = span > 0 ? 0.92 / span : 1;
+        geo.scale(k, k, k);
+        const tex = (m.material as THREE.MeshStandardMaterial).map ?? null;
+        const bones = new THREE.Mesh(
+          geo,
+          new THREE.MeshLambertMaterial({
+            map: tex,
+            emissive: 0xffffff,
+            emissiveMap: tex,
+            emissiveIntensity: 0.6,
+            side: THREE.DoubleSide,
+          }),
+        );
+        const outline = new THREE.Mesh(
+          geo,
+          new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide }),
+        );
+        outline.scale.setScalar(1.05);
+        outline.raycast = () => {};
+        bones.add(outline);
+        bones.raycast = () => {};
+        bones.userData.maskBones = true; // installSkullMask preserves this child
+        bones.position.set(0, -0.52, -0.02); // hang beneath the skull's jaw
+        bones.visible = false; // only the 2nd mask shows it (toggled in syncVisual)
+        this.maskBones = bones;
+        this.maskMesh.add(bones);
+      },
+      undefined,
+      (e) => console.warn('crossbones failed to load (2nd mask stays skull-only):', e),
     );
   }
 
