@@ -14,6 +14,7 @@ import {
   getLevelOverride,
   clearLevelOverride,
   pruneRetiredOverrides,
+  clearAllLevelOverrides,
   allLevelOverrides,
   applyRemoteLevels,
   markLevelDirty,
@@ -796,6 +797,10 @@ function applyShadowFlags(): void {
 }
 
 function switchLevel(id: number): void {
+  // Clamp: replay files and saved editor targets carry level ids recorded by
+  // older builds, and levels have been merged away since. An out-of-range id
+  // took the whole game down on LEVEL_NAMES[id].toUpperCase().
+  id = Math.min(LEVEL_NAMES.length - 1, Math.max(0, id | 0));
   currentCourse = id;
   localStorage.setItem("protoLevel", String(id));
   if (replayer.active) {
@@ -969,6 +974,42 @@ ui.onSyncPush = async (): Promise<void> => {
     void dirtyBefore;
     ui.setSyncStatus(res.msg, "err");
   }
+};
+// FORCE RE-SYNC: drop this device's saved levels and re-read the deployed
+// file. The load-time sync skips any level with unpushed edits forever (so a
+// fetch can't eat your work), which is right on the Mac and wrong on a phone
+// that once opened the editor — that device pins itself to a world nobody
+// else has. Fetch FIRST and only wipe if it lands: an offline tap has to leave
+// the levels it already had.
+ui.onForceResync = async (): Promise<void> => {
+  ui.setSyncStatus("re-reading the published levels…", "busy");
+  const remote = await fetchRemoteLevels();
+  if (!remote) {
+    const msg = "couldn't reach the published levels — nothing changed";
+    ui.setSyncStatus(msg, "err");
+    ui.showMessage("RE-SYNC FAILED", msg, 2600);
+    return;
+  }
+  const dropped = clearAllLevelOverrides();
+  applyRemoteLevels(remote as Record<string, CustomLevelData>, new Set());
+  // rebuild unconditionally: a slot we just wiped that isn't in the published
+  // file reports "unchanged" (null === null) while the live level is still the
+  // old local one
+  if (!editor.active) {
+    switchLevel(currentCourse);
+    player.respawn(level, true);
+  }
+  ui.refreshEditControls();
+  const copies = `${dropped} local cop${dropped === 1 ? "y" : "ies"}`;
+  ui.setSyncStatus(
+    `re-synced from the published file — ${copies} dropped`,
+    "ok",
+  );
+  ui.showMessage(
+    "LEVELS RE-SYNCED",
+    dropped ? `${copies} discarded` : "this device was already up to date",
+    2400,
+  );
 };
 ui.onTokenSet = (t: string) => {
   setToken(t);

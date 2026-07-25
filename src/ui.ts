@@ -130,6 +130,9 @@ export class UI {
   // toggles — main.ts uses it to close the editor so the panel isn't a
   // hidden husk while the tools own the screen
   onSideTab: ((side: "left" | "right") => void) | null = null;
+  // fired by the ungated RE-SYNC button: re-read the published levels and
+  // throw away whatever this device had saved
+  onForceResync: (() => Promise<void>) | null = null;
   private recBtn!: HTMLButtonElement;
   private copyBtn!: HTMLButtonElement;
   private mpBtn!: HTMLButtonElement; // "edit a copy" — hidden on editable levels once unlocked
@@ -197,6 +200,45 @@ export class UI {
     });
     statsWrap.appendChild(mpBtn);
     this.mpBtn = mpBtn;
+
+    // FORCE RE-SYNC (deliberately NOT behind the passcode — the phone is the
+    // device that needs it and is never unlocked). A level with unpushed edits
+    // is skipped by the load-time sync forever, by design, so a fetch can't eat
+    // your work; but a device that once opened the editor then quietly plays a
+    // world nobody else has. This drops the local copies and re-reads the
+    // published file. Two taps, because it discards edits and a fat-fingered
+    // scroll on a phone must not be enough.
+    const RESYNC_LABEL = "⟲ RE-SYNC LEVELS FROM CLOUD";
+    const resyncBtn = document.createElement("button");
+    resyncBtn.className = "hud-levelbtn hud-editbtn";
+    resyncBtn.textContent = RESYNC_LABEL;
+    resyncBtn.title =
+      "discard this device's saved levels and re-read the published ones";
+    let armed = 0; // pending confirm timer; 0 = not armed
+    const disarm = (): void => {
+      if (armed) clearTimeout(armed);
+      armed = 0;
+      resyncBtn.textContent = RESYNC_LABEL;
+      resyncBtn.style.color = "";
+    };
+    resyncBtn.addEventListener("click", () => {
+      resyncBtn.blur();
+      if (!this.onForceResync) return;
+      if (!armed) {
+        resyncBtn.textContent = "⟲ TAP AGAIN — DISCARDS LOCAL EDITS";
+        resyncBtn.style.color = "#ffd23f";
+        armed = window.setTimeout(disarm, 4000);
+        return;
+      }
+      disarm();
+      resyncBtn.disabled = true;
+      resyncBtn.textContent = "⟲ RE-SYNCING…";
+      void this.onForceResync().finally(() => {
+        resyncBtn.disabled = false;
+        resyncBtn.textContent = RESYNC_LABEL;
+      });
+    });
+    statsWrap.appendChild(resyncBtn);
 
     // DIRECT EDIT (unlocked): edit the built-in level in place. Hidden until the
     // passcode is entered; then it replaces the copy button on editable levels.

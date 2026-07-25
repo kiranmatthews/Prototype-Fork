@@ -1098,6 +1098,29 @@ export function getDirtyIds(): Set<number> {
   }
   return new Set();
 }
+// Wipe every locally-saved level and the dirty list with it: the device goes
+// back to being a pure reader of the deployed file. This is the escape hatch
+// for a device that has pinned itself — a level marked dirty is skipped by the
+// sync FOREVER (by design, so a fetch can't eat your edits), which on a phone
+// that once opened the editor means it silently plays a world nobody else has.
+// Returns how many slots it dropped.
+export function clearAllLevelOverrides(): number {
+  let n = 0;
+  try {
+    const dead: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("protoLevelEdit:")) dead.push(k);
+    }
+    for (const k of dead) localStorage.removeItem(k);
+    n = dead.length;
+    localStorage.removeItem("protoLevelDirty");
+  } catch {
+    /* private mode: nothing persisted, nothing to clear */
+  }
+  return n;
+}
+
 // A RETIRED level — one dropped from EDITABLE_IDS, as the Overgrowth was —
 // leaves its saved slot behind on every device that ever synced it, and
 // applyRemoteLevels only walks the live ids, so nothing would ever clear it.
@@ -1129,9 +1152,9 @@ export function clearDirty(ids: number[]): void {
 }
 
 // The editor's working data for a given course: an existing override, else the
-// live custom sandbox (course 7). Always migrated so the gate/activators exist.
+// live custom sandbox. Always migrated so the gate/activators exist.
 export function getEditData(id: number): CustomLevelData {
-  if (id !== 7) {
+  if (id !== CUSTOM_LEVEL_ID) {
     const ov = getLevelOverride(id);
     if (ov)
       return migrateCustomLevel(
