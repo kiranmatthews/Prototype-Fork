@@ -70,9 +70,13 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       { label: 'wall', icon: (x) => { x.fillStyle = '#9a8a7a'; x.fillRect(3, 3, 12, 12); x.strokeStyle = '#6a5d50'; x.lineWidth = 1; for (let r = 0; r < 3; r++) { x.strokeRect(3, 3 + r * 4, 6, 4); x.strokeRect(9, 3 + r * 4, 6, 4); } }, make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1] }) },
       { label: 'invis wall', icon: (x) => { x.strokeStyle = '#64d8ff'; x.lineWidth = 1.5; x.setLineDash([3, 2]); x.strokeRect(3, 3, 12, 12); x.setLineDash([]); }, make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1], invisible: true }) },
       { label: 'rail', icon: (x) => { x.strokeStyle = '#c8d4e2'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 6); x.lineTo(16, 6); x.stroke(); x.lineWidth = 1.5; x.beginPath(); x.moveTo(5, 6); x.lineTo(5, 14); x.moveTo(13, 6); x.lineTo(13, 14); x.stroke(); }, make: (at) => ({ t: 'rail', p: [at.x, at.y + 1, at.z], len: 12, yaw: 0 }) },
-      { label: 'halfpipe', icon: (x) => { x.strokeStyle = '#aab4ba'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'pipe', p: [at.x, at.y, at.z], len: 36, axis: 'z' }) },
+      { label: 'halfpipe', icon: (x) => { x.strokeStyle = '#aab4ba'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 36, rise: 6, w: 3, vkind: 'half' }) },
       { label: 'quarter vert', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 15); x.lineTo(8, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 30, rise: 6, w: 3, vkind: 'quarter' }) },
       { label: 'half vert', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 30, rise: 6, w: 3, vkind: 'half' }) },
+      // bowl parts: a quarter swept round a filleted corner, and a whole pool.
+      // Both stop short of vertical (arc 60) and carry a deck — pool rules.
+      { label: 'bowl corner', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.arc(3, 3, 12, 0, Math.PI / 2); x.stroke(); x.strokeStyle = '#3d6b78'; x.lineWidth = 1.5; x.beginPath(); x.arc(3, 3, 6, 0, Math.PI / 2); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], pts: [[-12, -12, 0, 0], [12, -12, 10, 0], [12, 12, 0, 0]], rise: 6, w: 2, vkind: 'quarter', arc: 60, deck: 2.3 }) },
+      { label: 'bowl', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.ellipse(9, 9, 7, 5.5, 0, 0, 7); x.stroke(); x.strokeStyle = '#3d6b78'; x.lineWidth = 1.5; x.beginPath(); x.ellipse(9, 9, 3.4, 2.6, 0, 0, 7); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], pts: [[-13, -8, 5, 0], [13, -8, 5, 0], [13, 8, 5, 0], [-13, 8, 5, 0]], rise: 6, w: 2, vkind: 'quarter', arc: 60, deck: 2.3, closed: true }) },
       { label: 'crumble', icon: (x) => { x.fillStyle = '#cf6a48'; x.fillRect(2, 7, 14, 5); x.strokeStyle = '#7a3520'; x.lineWidth = 1; x.beginPath(); x.moveTo(6, 7); x.lineTo(8, 12); x.moveTo(11, 7); x.lineTo(10, 12); x.stroke(); }, make: (at) => ({ t: 'crumble', p: [at.x, at.y + 1, at.z], s: [3, 1, 3], shake: 0.7 }) },
       { label: 'death pit', icon: (x) => { x.fillStyle = '#b0402a'; x.fillRect(2, 6, 14, 7); x.fillStyle = '#0a0a10'; x.fillRect(3.5, 7.5, 11, 4); }, make: (at) => ({ t: 'pit', p: [at.x, at.y, at.z], s: [6, 1, 6] }) },
       { label: 'rock', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.moveTo(4, 14); x.lineTo(2, 9); x.lineTo(7, 4); x.lineTo(13, 5); x.lineTo(16, 10); x.lineTo(13, 14); x.closePath(); x.fill(); x.fillStyle = '#a49c8c'; x.beginPath(); x.moveTo(7, 4); x.lineTo(13, 5); x.lineTo(10, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 1, at.z], s: [3, 2, 3], seed: Math.floor(Math.random() * 1e6) }) },
@@ -157,7 +161,7 @@ const FOE_KINDS: { k: EnemyKind; label: string }[] = [
 ];
 
 // components that grow draggable resize handles on double-click
-const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'pipe', 'vertramp', 'enemy', 'pendulum', 'ropeswing']);
+const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'vertramp', 'enemy', 'pendulum', 'ropeswing']);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
 // and `apply` rewrites the component from its grab-time snapshot given the
@@ -1036,14 +1040,8 @@ export class Editor {
         if (!c.pts && c.len != null) c.len = Math.max(4, c.len * sLocZ);
         if (c.w != null) c.w = Math.max(0, c.w * sLocX);
         if (c.rise != null) c.rise = Math.max(0.5, c.rise * sy);
+        if (c.deck != null) c.deck = Math.max(0, c.deck * ((sLocX + sLocZ) / 2));
         break;
-      case 'pipe': {
-        const alongZ = (c.axis ?? 'z') === 'z';
-        if (c.len != null) c.len = Math.max(6, c.len * (alongZ ? sz : sx));
-        if (c.w != null) c.w = Math.max(1, c.w * (alongZ ? sx : sz));
-        if (c.rise != null) c.rise = Math.max(2, c.rise * sy);
-        break;
-      }
       case 'rail':
         if (!c.pts && c.len != null) c.len = Math.max(1, c.len * sLocZ);
         break;
@@ -1312,8 +1310,11 @@ export class Editor {
       c.len = c.len ?? 10;
       c.rise = c.rise ?? 4;
       c.w = c.w ?? 8;
+    } else if (c.t === 'vertramp') {
+      c.rise = c.rise ?? 6;
+      c.w = c.w ?? 3;
+      if (!c.pts) c.len = c.len ?? 30;
     } else if (c.t === 'rail') c.len = c.len ?? 12;
-    else if (c.t === 'pipe') c.len = c.len ?? 36;
     else if (c.t === 'enemy') c.range = c.range ?? 5;
     else if (c.t === 'pendulum') c.len = c.len ?? 5;
     else if (c.t === 'ropeswing') c.len = c.len ?? 6;
@@ -1436,11 +1437,33 @@ export class Editor {
       const len = c.len ?? 12;
       span(u, P.clone().addScaledVector(u, len / 2), 'len', 1, true);
       span(u.clone().negate(), P.clone().addScaledVector(u, -len / 2), 'len', 1, true);
-    } else if (c.t === 'pipe') {
-      const u = (c.axis ?? 'z') === 'z' ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(1, 0, 0);
-      const len = c.len!;
-      span(u, P.clone().addScaledVector(u, len / 2).setY(P.y + 1.2), 'len', 6, true);
-      span(u.clone().negate(), P.clone().addScaledVector(u, -len / 2).setY(P.y + 1.2), 'len', 6, true);
+    } else if (c.t === 'vertramp') {
+      // A drawn spine is sized by its nodes; a straight part gets a length
+      // handle each end. Both get the two that matter everywhere: how wide
+      // the flat is, and how big the transition is.
+      const R = c.rise ?? 6;
+      const F = c.w ?? 3;
+      const lipLat = F + R * Math.sin(THREE.MathUtils.degToRad(c.arc ?? 90));
+      const lipY = R * (1 - Math.cos(THREE.MathUtils.degToRad(c.arc ?? 90)));
+      const xl = loc(1, 0, 0);
+      if (!c.pts) {
+        const zl = loc(0, 0, 1);
+        const len = c.len ?? 30;
+        span(zl, P.clone().addScaledVector(zl, len / 2).setY(P.y + 0.2), 'len', 2, true);
+        span(zl.clone().negate(), P.clone().addScaledVector(zl, -len / 2).setY(P.y + 0.2), 'len', 2, true);
+        span(xl, P.clone().addScaledVector(xl, F).setY(P.y + 0.2), 'w', 1, true);
+        if ((c.vkind ?? 'quarter') === 'half') {
+          span(xl.clone().negate(), P.clone().addScaledVector(xl, -F).setY(P.y + 0.2), 'w', 1, true);
+        }
+      }
+      // the coping itself: drag it out and up, and the transition grows
+      defs.push({
+        pos: P.clone().addScaledVector(xl, lipLat).setY(P.y + lipY),
+        dir: new THREE.Vector3(0, 1, 0),
+        apply: (orig, cc, d) => {
+          cc.rise = Math.max(0.5, orig.rise! + d);
+        },
+      });
     } else if (c.t === 'enemy') {
       const r = c.range!;
       span(new THREE.Vector3(1, 0, 0), new THREE.Vector3(P.x + r, P.y + 0.4, P.z), 'range', 0.5, false);
@@ -2821,8 +2844,8 @@ export class Editor {
   // Rotate the whole selection 90° about its center — the way you turn a
   // stretch of course sideways for a side-scroll zone. Positions orbit the
   // pivot; yaw-capable items add the turn; drawn shapes rotate their node
-  // coordinates; pipes flip axis; zones swap footprint AND remap their
-  // travel direction so the side-scroll follows the rotated geometry.
+  // coordinates; zones swap footprint AND remap their travel direction so the
+  // side-scroll follows the rotated geometry.
   private rotateSelection(deg: 90 | -90): void {
     const comps = this.sel.map((i) => this.data.components[i]);
     if (comps.length === 0) return;
@@ -2839,7 +2862,7 @@ export class Editor {
     // per-item yaw stay in perfect agreement.
     const rot = (x: number, z: number): [number, number] =>
       deg === 90 ? [z, -x] : [-z, x];
-    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'ropeswing', 'pit', 'gate']);
+    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'ropeswing', 'pit', 'gate', 'vertramp']);
     for (const c of comps) {
       const [rx, rz] = rot(c.p[0] - cx, c.p[2] - cz);
       c.p = [Math.round((cx + rx) * 100) / 100, c.p[1], Math.round((cz + rz) * 100) / 100];
@@ -2851,8 +2874,6 @@ export class Editor {
           out[1] = Math.round(nz * 100) / 100;
           return out;
         });
-      } else if (c.t === 'pipe') {
-        c.axis = (c.axis ?? 'z') === 'z' ? 'x' : 'z';
       } else if (c.t === 'zone') {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
         const map: Record<'E' | 'W' | 'N' | 'S', 'E' | 'W' | 'N' | 'S'> =
@@ -3329,34 +3350,44 @@ export class Editor {
       if (!c.pts) num('length', () => c.len ?? 30, (v) => (c.len = Math.max(4, v)), 2);
       num('flat half', () => c.w ?? 3, (v) => (c.w = Math.max(0, v)));
       num('wall radius', () => c.rise ?? 6, (v) => (c.rise = Math.max(0.5, v)));
-      const kindBtn = document.createElement('button');
-      kindBtn.className = 'ed-btn';
-      kindBtn.textContent = `shape: ${c.vkind ?? 'quarter'}`;
-      kindBtn.addEventListener('click', () => {
-        c.vkind = (c.vkind ?? 'quarter') === 'quarter' ? 'half' : 'quarter';
-        this.commit();
-        this.renderProps();
-      });
-      this.propsEl.appendChild(kindBtn);
+      num('arc °', () => c.arc ?? 90, (v) => (c.arc = Math.max(5, Math.min(90, v))), 5);
+      num('deck', () => c.deck ?? 0, (v) => (c.deck = Math.max(0, v)));
+      if (c.pts) num('auto bank', () => c.bank ?? 0, (v) => (c.bank = Math.max(0, v)), 5);
+      const toggle = (label: () => string, onClick: () => void): void => {
+        const b = document.createElement('button');
+        b.className = 'ed-btn';
+        b.textContent = label();
+        b.addEventListener('click', () => {
+          onClick();
+          this.commit();
+          this.renderProps();
+        });
+        this.propsEl.appendChild(b);
+      };
+      toggle(
+        () => `shape: ${c.vkind ?? 'quarter'}`,
+        () => (c.vkind = (c.vkind ?? 'quarter') === 'quarter' ? 'half' : 'quarter'),
+      );
+      if (c.pts && c.pts.length > 2) {
+        toggle(
+          () => `path: ${c.closed ? 'closed loop' : 'open'}`,
+          () => (c.closed = !c.closed),
+        );
+        toggle(
+          () => `bends: ${c.curve === 'spline' ? 'spline' : 'filleted corners'}`,
+          () => (c.curve = c.curve === 'spline' ? 'corner' : 'spline'),
+        );
+      }
+      toggle(
+        () => `surface: ${c.vert === false ? 'banked road' : 'VERT'}`,
+        () => (c.vert = c.vert === false ? undefined : false),
+      );
       const vnote = document.createElement('div');
       vnote.className = 'ed-dim';
       vnote.textContent = c.pts
-        ? 'drawn along a spine — drag its nodes to steer the transition, corner radii round the bends, node heights make the coping climb'
-        : 'an AUTHORED vert face: the physics rides it as vert regardless of its angle. Use the pen tool to draw one along a spine.';
+        ? 'drawn along a spine — drag its nodes to steer it, corner radii round the bends, node heights make the coping climb. Closed loops make pools; a 5th node number banks the deck.'
+        : 'the vert part: quarter or half, any size. Straight 90° halves get the full lip-trick physics; arc, deck and drawn spines make bowls, corners and roads.';
       this.propsEl.appendChild(vnote);
-    } else if (c.t === 'pipe') {
-      num('length', () => c.len ?? 36, (v) => (c.len = Math.max(6, v)), 2);
-      num('flat half', () => c.w ?? 3, (v) => (c.w = Math.max(1, v)));
-      num('wall radius', () => c.rise ?? 6, (v) => (c.rise = Math.max(2, v)));
-      const axisBtn = document.createElement('button');
-      axisBtn.className = 'ed-btn';
-      axisBtn.textContent = `axis: along ${c.axis ?? 'z'}`;
-      axisBtn.addEventListener('click', () => {
-        c.axis = (c.axis ?? 'z') === 'z' ? 'x' : 'z';
-        this.commit();
-        this.renderProps();
-      });
-      this.propsEl.appendChild(axisBtn);
     } else if (c.t === 'crate') {
       const sel = document.createElement('select');
       sel.className = 'ed-select';
@@ -3506,15 +3537,14 @@ export class Editor {
     // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
     // (drawn polygons keep their authored outline — no 90° tricks)
     const rotatable =
-      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'ropeswing', 'enemy', 'gate'].includes(c.t) && !c.pts;
+      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'ropeswing', 'enemy', 'gate', 'vertramp'].includes(c.t) && !c.pts;
     const swappable = ['crusher'].includes(c.t) && !c.pts;
-    if (rotatable || swappable || c.t === 'pipe') {
+    if (rotatable || swappable) {
       const rot = document.createElement('button');
       rot.className = 'ed-btn';
       rot.textContent = 'rotate 90°';
       rot.addEventListener('click', () => {
         if (rotatable) c.yaw = ((c.yaw ?? 0) + 90) % 360;
-        else if (c.t === 'pipe') c.axis = (c.axis ?? 'z') === 'z' ? 'x' : 'z';
         else if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
         else c.s = [8, 1, 8];
         this.commit();

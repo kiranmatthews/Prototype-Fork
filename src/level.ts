@@ -80,8 +80,7 @@ export interface Enemy {
 // A slow orb lobbed by a sentry. Straight-line flight; hitting the player
 // hurts (mask/die), same as any touch hazard.
 interface SlideRibbon {
-  curve: THREE.CatmullRomCurve3;
-  len: number;
+  len: number; // arc length of the spine
   width: number;
   frame: (t: number, off: number, h: number) => THREE.Vector3;
 }
@@ -252,8 +251,8 @@ export interface CustomComponent {
     | 'ramp' // slope along Z (low end at +Z): p = center of the base line, len along z, rise = height gained, w = width, yaw
     | 'wall' // solid barrier: p = base center, s = [w,h,d]; invisible = collider only (ghost in the editor)
     | 'rail' // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z)
-    | 'pipe' // halfpipe: p = trough center at ground, len along its axis, axis 'z'|'x'
-    | 'vertramp' // AUTHORED VERT: swept transition (quarter or half pipe). Straight along `len`/`yaw`, or pen-drawn along `pts` (same node convention as rails: [x, z, cornerRadius, yOffset]). rise = transition radius, w = flat half-width. Every face carries userData.vert, so the physics treats it as vert regardless of the angle heuristics.
+    | 'pipe' // LEGACY straight halfpipe (old saves) — migration folds it into 'vertramp'
+    | 'vertramp' // THE VERT PART: one swept transition profile that covers quarter pipes, half pipes, bowl corners, whole pools and banked slide troughs. Straight along `len`/`yaw`, or drawn along `pts` (rail node convention, plus an optional 5th number = bank degrees). rise = transition radius, w = flat half-width, arc = degrees round the transition, deck = platform past the lip, closed = loop the spine, curve picks filleted corners or a spline, bank auto-leans into turns. Faces carry userData.vert unless `vert` is false.
     | 'crumble' // breakaway pad: p = top center, s = [w,-,d], shake = fall delay in seconds (0.02 = instant), speed = fall accel (default 30)
     | 'pit' // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d]
     | 'crate' // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
@@ -281,6 +280,12 @@ export interface CustomComponent {
   yaw?: number;
   axis?: 'z' | 'x';
   vkind?: 'quarter' | 'half'; // vertramp: one wall, or two facing each other with a flat between
+  arc?: number; // vertramp: degrees round the transition (90 = vertical lip, ~60 = a crestable bowl wall)
+  deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
+  closed?: boolean; // vertramp: loop the spine end to end — a rounded-rect path becomes a pool
+  bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
+  curve?: 'corner' | 'spline'; // vertramp: filleted corners (parks) or one flowing Catmull-Rom (slides)
+  vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
   shake?: number;
   kind?: 'wood' | 'bouncy' | 'metalbounce' | 'nitro' | 'tnt' | 'mask' | 'mystery' | 'bang' | 'nitrobang';
   outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
@@ -300,7 +305,12 @@ export interface CustomComponent {
   // optional 4th number is a HEIGHT OFFSET from p[1] — rails only (grind
   // lines climb and dive node to node; polygons stay planar, their
   // collision model depends on it).
-  pts?: ([number, number] | [number, number, number] | [number, number, number, number])[];
+  pts?: (
+    | [number, number]
+    | [number, number, number]
+    | [number, number, number, number]
+    | [number, number, number, number, number]
+  )[];
   radius?: number; // camnode: corner radius where the camera lane turns at this node
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   tex?: string; // surface texture kind (see TEX_KINDS) for platform / ramp / wall / crumble / rock — tinted by color
@@ -385,9 +395,18 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // wood crate flagged outline so the new '!' wiring applies uniformly. Named
 // layer containers fold into per-component locks (the outliner replaced them).
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
-  d.components = d.components.map((c) =>
-    c.t === 'outline' ? { ...c, t: 'crate' as const, kind: 'wood' as const, outline: true } : c,
-  );
+  d.components = d.components.map((c) => {
+    if (c.t === 'outline') return { ...c, t: 'crate' as const, kind: 'wood' as const, outline: true };
+    // ONE VERT COMPONENT. The old 'pipe' was a straight axis-aligned halfpipe,
+    // which is exactly what a straight 90° 'vertramp' half is — and the build
+    // still puts it on the same analytic backing, so nothing about the ride
+    // changes. Old saves fold into the new part on load.
+    if (c.t === 'pipe') {
+      const { axis, ...rest } = c;
+      return { ...rest, t: 'vertramp' as const, vkind: 'half' as const, yaw: axis === 'x' ? 90 : (c.yaw ?? 0) };
+    }
+    return c;
+  });
   if (d.layers && d.layers.length > 0) {
     const locked = new Set(d.layers.filter((l) => l.locked).map((l) => l.id));
     for (const c of d.components) {
@@ -595,7 +614,7 @@ export function starterCustomLevel(): CustomLevelData {
       { t: 'platform', p: [0, 0, 12], s: [26, 1, 32] }, // home deck
       { t: 'platform', p: [0, 0, -18], s: [26, 1, 20] }, // across the first pit
       { t: 'rail', p: [6, 1.0, -2], len: 16, yaw: 0 },
-      { t: 'pipe', p: [-24, -0.5, -8], len: 36, axis: 'z' },
+      { t: 'vertramp', p: [-24, -0.5, -8], len: 36, w: 3, rise: 6, vkind: 'half' },
       { t: 'crate', p: [-4, 0.5, 4], kind: 'wood' },
       { t: 'crate', p: [-4, 0.5, 0], kind: 'bouncy' },
       { t: 'wumpa', p: [0, 1.2, 4] },
@@ -624,84 +643,348 @@ export function starterCustomLevel(): CustomLevelData {
 //    y=0 ___|________                  flat half-width F
 //         F      F+R
 //
-// phi runs 0 (flat, tangent horizontal) -> PI/2 (lip, tangent vertical):
+// phi runs 0 (flat, tangent horizontal) -> arc (the lip; 90 = surface vertical):
 //   lateral = F + R*sin(phi)      y = R*(1 - cos(phi))
 // so the concave side faces the flat — you ride INTO it, exactly like a real
 // quarter pipe. 'half' mirrors it across the spine with the flat between.
+//
+// Four knobs turn that one profile into the whole skatepark vocabulary:
+//   arc     how far round the transition goes. 90 = vertical lip; the bowls
+//           use ~60, because a wall that goes past vertical is a dead end at
+//           this game's speeds (you can never crest it).
+//   deck    a flat platform past the lip plus a thin outer skirt to the floor.
+//           THPS pool rules: roll over the lip un-popped and you land ON the
+//           deck. A bare knife edge fails both ways — the short drop behind it
+//           sits inside the ground-snap window, so cresting glues you down the
+//           outside instead of letting you ride the deck.
+//   closed  loop the spine, so a rounded-rect or circular path becomes a pool.
+//   roll    per-sample bank about the spine tangent. Zero for park transitions;
+//           the slide ribbons lean on it hard (a corkscrew is just roll).
+export interface VertRampNode {
+  x: number;
+  y: number;
+  z: number;
+  roll?: number; // radians, banked about the spine tangent
+}
+export interface VertRampOpts {
+  radius: number; // transition radius
+  flatHalf: number; // half-width of the flat (a quarter's run-up, a half's trough)
+  kind: 'quarter' | 'half';
+  arcDeg?: number; // default 90
+  deck?: number; // flat deck past the lip (0 = bare coping edge)
+  closed?: boolean; // loop the spine end-to-end
+  arcSteps?: number;
+}
 export interface VertRampResult {
   geometry: THREE.BufferGeometry;
   copings: THREE.Vector3[][]; // lip polylines (one per wall) — grindable
+  lipY: number; // coping height above the spine
+  lipLat: number; // coping distance from the spine, laterally
+}
+
+export interface VertRampFrame {
+  rx: number; // lateral (across the profile)
+  ry: number;
+  rz: number;
+  ux: number; // surface up
+  uy: number;
+  uz: number;
+}
+
+// Per-sample orthonormal frame along a spine. The tangent is TRUE 3D — a
+// ribbon diving down a hillside stays perpendicular to its own slope, not to
+// the ground plane — and `roll` spins the frame about that tangent.
+export function vertRampFrames(
+  P: readonly VertRampNode[],
+  closed: boolean,
+): VertRampFrame[] {
+  const N = P.length;
+  const wrap = (i: number): number => (closed ? ((i % N) + N) % N : THREE.MathUtils.clamp(i, 0, N - 1));
+  return P.map((_, i) => {
+    const a = P[wrap(i - 1)];
+    const b = P[wrap(i + 1)];
+    let tx = b.x - a.x;
+    let ty = b.y - a.y;
+    let tz = b.z - a.z;
+    let tl = Math.hypot(tx, ty, tz);
+    if (tl < 1e-6) {
+      tx = 0;
+      ty = 0;
+      tz = 1;
+      tl = 1;
+    }
+    tx /= tl;
+    ty /= tl;
+    tz /= tl;
+    // lateral: the tangent's ground heading turned -90
+    let rx = tz;
+    let rz = -tx;
+    const rl = Math.hypot(rx, rz) || 1;
+    rx /= rl;
+    rz /= rl;
+    // up = tangent x lateral (right-handed, so it points skyward on the flat)
+    let ux = ty * rz;
+    let uy = tz * rx - tx * rz;
+    let uz = -ty * rx;
+    const ul = Math.hypot(ux, uy, uz) || 1;
+    ux /= ul;
+    uy /= ul;
+    uz /= ul;
+    const th = P[i].roll ?? 0;
+    if (th === 0) return { rx, ry: 0, rz, ux, uy, uz };
+    // Rodrigues about the tangent: both axes are already perpendicular to it,
+    // and tangent x lateral = up, so the rotation collapses to a 2D spin.
+    const co = Math.cos(th);
+    const si = Math.sin(th);
+    return {
+      rx: rx * co + ux * si,
+      ry: uy * si,
+      rz: rz * co + uz * si,
+      ux: ux * co - rx * si,
+      uy: uy * co,
+      uz: uz * co - rz * si,
+    };
+  });
+}
+
+// A sampler over a finished spine: `frame(t, lat, h)` is the world point `lat`
+// across the swept surface and `h` above it, at arc-length fraction t. This is
+// the ONE source of truth a level uses to hang things on a swept part — edge
+// rails, crates, fruit all sit exactly on the surface the mesh was built from.
+export interface VertRampPath {
+  spine: VertRampNode[];
+  len: number;
+  frame(t: number, lat: number, h: number): THREE.Vector3;
+}
+export function vertRampPath(spine: VertRampNode[], closed = false): VertRampPath {
+  const F = vertRampFrames(spine, closed);
+  const s: number[] = [0];
+  for (let i = 1; i < spine.length; i++) {
+    s.push(
+      s[i - 1] +
+        Math.hypot(
+          spine[i].x - spine[i - 1].x,
+          spine[i].y - spine[i - 1].y,
+          spine[i].z - spine[i - 1].z,
+        ),
+    );
+  }
+  const len = s[s.length - 1] || 1;
+  return {
+    spine,
+    len,
+    frame(t: number, lat: number, h: number): THREE.Vector3 {
+      const target = THREE.MathUtils.clamp(t, 0, 1) * len;
+      let i = 0;
+      while (i < s.length - 2 && s[i + 1] < target) i++;
+      const span = s[i + 1] - s[i];
+      const u = span > 1e-6 ? (target - s[i]) / span : 0;
+      const a = spine[i];
+      const b = spine[i + 1];
+      const fa = F[i];
+      const fb = F[i + 1];
+      const L = (p: number, q: number): number => p + (q - p) * u;
+      return new THREE.Vector3(
+        L(a.x, b.x) + L(fa.rx, fb.rx) * lat + L(fa.ux, fb.ux) * h,
+        L(a.y, b.y) + L(fa.ry, fb.ry) * lat + L(fa.uy, fb.uy) * h,
+        L(a.z, b.z) + L(fa.rz, fb.rz) * lat + L(fa.uz, fb.uz) * h,
+      );
+    },
+  };
 }
 export function buildVertRampGeometry(
-  spine: readonly { x: number; y: number; z: number }[],
-  radius: number,
-  flatHalf: number,
-  kind: 'quarter' | 'half',
-  arcSteps = 8,
+  spine: readonly VertRampNode[],
+  o: VertRampOpts,
 ): VertRampResult {
-  // Cross-section, as lateral/height pairs ordered across the profile.
-  const prof: { lat: number; y: number }[] = [];
-  const wall = (sign: number, reverse: boolean): void => {
-    const pts: { lat: number; y: number }[] = [];
-    for (let j = 0; j <= arcSteps; j++) {
-      const phi = (j / arcSteps) * (Math.PI / 2);
-      pts.push({ lat: sign * (flatHalf + radius * Math.sin(phi)), y: radius * (1 - Math.cos(phi)) });
-    }
-    if (reverse) pts.reverse();
-    prof.push(...pts);
-  };
+  const { radius, flatHalf, kind } = o;
+  const arcSteps = o.arcSteps ?? 8;
+  const deck = Math.max(0, o.deck ?? 0);
+  const closed = o.closed === true && spine.length > 2;
+  const arcRad = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(o.arcDeg ?? 90, 5, 90));
+  const lipLat = flatHalf + radius * Math.sin(arcRad);
+  const lipY = radius * (1 - Math.cos(arcRad));
+
+  // Half the cross-section, centre outward: transition arc, then deck + skirt.
+  const half: { lat: number; y: number }[] = [];
+  for (let j = 0; j <= arcSteps; j++) {
+    const phi = (j / arcSteps) * arcRad;
+    half.push({ lat: flatHalf + radius * Math.sin(phi), y: radius * (1 - Math.cos(phi)) });
+  }
+  const lipK = half.length - 1; // the coping, within `half`
+  if (deck > 0) {
+    half.push({ lat: lipLat + deck, y: lipY }); // deck out to its edge
+    half.push({ lat: lipLat + deck + 0.1, y: lipY }); // knife the edge
+    half.push({ lat: lipLat + deck + 0.1, y: 0 }); // skirt down to the floor
+  }
+  let prof: { lat: number; y: number }[];
+  let copK: number[]; // profile indices that are copings
   if (kind === 'half') {
-    wall(-1, true); // left lip down to the flat
-    prof.push({ lat: flatHalf, y: 0 }); // across the flat
-    wall(1, false); // and up the right wall
+    const left = half.map((p) => ({ lat: -p.lat, y: p.y })).reverse();
+    prof = [...left, ...half];
+    copK = [left.length - 1 - lipK, left.length + lipK];
   } else {
-    prof.push({ lat: 0, y: 0 }); // flat run-up from the spine
-    wall(1, false);
+    prof = [{ lat: 0, y: 0 }, ...half]; // flat run-up from the spine out
+    copK = [1 + lipK];
   }
 
-  const pos: number[] = [];
-  const copingL: THREE.Vector3[] = [];
-  const copingR: THREE.Vector3[] = [];
   const P = spine;
-  // Per-sample frame: tangent along the spine, lateral = tangent rotated -90.
-  const frame = (i: number): { lx: number; lz: number } => {
-    const a = P[Math.max(0, i - 1)];
-    const b = P[Math.min(P.length - 1, i + 1)];
-    let tx = b.x - a.x;
-    let tz = b.z - a.z;
-    const tl = Math.hypot(tx, tz) || 1;
-    tx /= tl;
-    tz /= tl;
-    return { lx: tz, lz: -tx };
-  };
+  const N = P.length;
+  const wrap = (i: number): number => (closed ? ((i % N) + N) % N : THREE.MathUtils.clamp(i, 0, N - 1));
+  const frames = vertRampFrames(P, closed);
   const world = (i: number, k: number): THREE.Vector3 => {
-    const f = frame(i);
+    const f = frames[i];
+    const lat = prof[k].lat;
+    const h = prof[k].y;
     return new THREE.Vector3(
-      P[i].x + f.lx * prof[k].lat,
-      P[i].y + prof[k].y,
-      P[i].z + f.lz * prof[k].lat,
+      P[i].x + f.rx * lat + f.ux * h,
+      P[i].y + f.ry * lat + f.uy * h,
+      P[i].z + f.rz * lat + f.uz * h,
     );
   };
-  for (let i = 0; i < P.length - 1; i++) {
+
+  const pos: number[] = [];
+  const uv: number[] = [];
+  // arc length along the spine, so a repeating texture doesn't stretch on bends
+  let s = 0;
+  const sAt: number[] = [0];
+  for (let i = 1; i < N; i++) {
+    s += Math.hypot(P[i].x - P[i - 1].x, P[i].y - P[i - 1].y, P[i].z - P[i - 1].z);
+    sAt.push(s);
+  }
+  const segs = closed ? N : N - 1;
+  for (let i = 0; i < segs; i++) {
+    const j = wrap(i + 1);
+    const s0 = sAt[i];
+    const s1 = j === 0 ? s + 1 : sAt[j];
     for (let k = 0; k < prof.length - 1; k++) {
       const a = world(i, k);
       const b = world(i, k + 1);
-      const c = world(i + 1, k + 1);
-      const d = world(i + 1, k);
+      const c = world(j, k + 1);
+      const d = world(j, k);
       // two triangles, wound so the normal faces the concave (rideable) side
       pos.push(a.x, a.y, a.z, c.x, c.y, c.z, b.x, b.y, b.z);
       pos.push(a.x, a.y, a.z, d.x, d.y, d.z, c.x, c.y, c.z);
+      const u0 = prof[k].lat / 6;
+      const u1 = prof[k + 1].lat / 6;
+      const v0 = s0 / 6;
+      const v1 = s1 / 6;
+      uv.push(u0, v0, u1, v1, u1, v0);
+      uv.push(u0, v0, u0, v1, u1, v1);
     }
   }
-  for (let i = 0; i < P.length; i++) {
-    copingR.push(world(i, prof.length - 1));
-    if (kind === 'half') copingL.push(world(i, 0));
-  }
+  const copings = copK.map((k) => {
+    const line: THREE.Vector3[] = [];
+    for (let i = 0; i < N; i++) line.push(world(i, k));
+    if (closed) line.push(world(0, k));
+    return line;
+  });
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
   geometry.computeVertexNormals();
-  const copings = kind === 'half' ? [copingR, copingL] : [copingR];
-  return { geometry, copings };
+  return { geometry, copings, lipY, lipLat };
+}
+
+// The dense world-space spine a vertramp sweeps along, built from its editor
+// nodes. Nodes are the rail convention — [x, z, cornerRadius, yOffset, bankDeg]
+// relative to p — turned by `yaw` like every other component's footprint. Two
+// path modes: 'corner' fillets the bends (parks want straight runs and crisp
+// corners), 'spline' runs one Catmull-Rom through the lot (a slide is a single
+// flowing curve). Bank comes from the per-node value plus an optional automatic
+// lean into the turn, and is interpolated so the roll never steps.
+export function vertRampSpine(c: CustomComponent): VertRampNode[] {
+  const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+  const cs = Math.cos(yaw);
+  const sn = Math.sin(yaw);
+  const place = (x: number, y: number, z: number, roll: number): VertRampNode => ({
+    x: c.p[0] + x * cs + z * sn,
+    y: c.p[1] + y,
+    z: c.p[2] - x * sn + z * cs,
+    roll,
+  });
+  // node list: explicit path, or the two ends of a straight run along +Z
+  let nodes: number[][];
+  if (c.pts && c.pts.length >= 2) {
+    nodes = c.pts.map((q) => [...q]);
+  } else {
+    const len = c.len ?? 30;
+    nodes = [
+      [0, -len / 2],
+      [0, len / 2],
+    ];
+  }
+  const closed = c.closed === true && nodes.length > 2;
+  const roll = nodes.map((q) => THREE.MathUtils.degToRad(q[4] ?? 0));
+  const out: VertRampNode[] = [];
+
+  if (c.curve === 'spline') {
+    const N = nodes.length;
+    const pts3 = nodes.map((q) => new THREE.Vector3(q[0], q[3] ?? 0, q[1]));
+    const cv = new THREE.CatmullRomCurve3(pts3, closed, 'centripetal', 0.5);
+    const steps = Math.max(8, Math.round(cv.getLength() / 1.6));
+    const span = closed ? N : N - 1;
+    for (let i = 0; i <= steps; i++) {
+      if (closed && i === steps) break; // the loop closes itself
+      const u = i / steps;
+      const p = cv.getPointAt(u);
+      // getUtoTmapping undoes the arc-length reparametrisation, so the node
+      // index (and its bank) tracks the SAME point the position came from
+      const t = cv.getUtoTmapping(u, 0); // 0 is falsy inside, so `u` still drives it
+      const f = t * span;
+      const k = Math.min(span - 1, Math.floor(f));
+      const r = THREE.MathUtils.lerp(roll[k % N], roll[(k + 1) % N], f - k);
+      out.push(place(p.x, p.y, p.z, r));
+    }
+  } else {
+    const dense = roundCorners(nodes, closed);
+    if (dense.length === 0) return [];
+    // Bank anchors at the MIDDLE of each node's run of samples, then a straight
+    // lerp between anchors — a filleted corner banks in and out of its turn
+    // instead of snapping to the node's value the instant the fillet starts.
+    const anchor: { at: number; roll: number }[] = [];
+    for (let i = 0, run = 0; i <= dense.length; i++) {
+      if (i === dense.length || dense[i].i !== dense[run].i) {
+        anchor.push({ at: (run + i - 1) / 2, roll: roll[dense[run].i] ?? 0 });
+        run = i;
+      }
+    }
+    let a = 0;
+    for (let i = 0; i < dense.length; i++) {
+      while (a < anchor.length - 2 && anchor[a + 1].at < i) a++;
+      const lo = anchor[a];
+      const hi = anchor[Math.min(anchor.length - 1, a + 1)];
+      const t = hi.at > lo.at ? THREE.MathUtils.clamp((i - lo.at) / (hi.at - lo.at), 0, 1) : 0;
+      out.push(place(dense[i].x, dense[i].y, dense[i].z, THREE.MathUtils.lerp(lo.roll, hi.roll, t)));
+    }
+  }
+
+  // AUTO LEAN: signed curvature of the finished spine, smoothed, added on top.
+  // This is what makes a sweeping road feel like a road — the deck rolls into
+  // the bend without anyone authoring a number for it.
+  const gain = c.bank ?? 0;
+  if (gain !== 0 && out.length > 2) {
+    const n = out.length;
+    const wrap = (i: number): number => (closed ? ((i % n) + n) % n : THREE.MathUtils.clamp(i, 0, n - 1));
+    const auto = out.map((_, i) => {
+      const a = out[wrap(i - 1)];
+      const b = out[i];
+      const d = out[wrap(i + 1)];
+      const ax = b.x - a.x;
+      const az = b.z - a.z;
+      const bx = d.x - b.x;
+      const bz = d.z - b.z;
+      const la = Math.hypot(ax, az);
+      const lb = Math.hypot(bx, bz);
+      if (la < 1e-5 || lb < 1e-5) return 0;
+      const turn = Math.atan2(ax * bz - az * bx, ax * bx + az * bz); // signed
+      return THREE.MathUtils.clamp((gain * turn) / ((la + lb) / 2), -0.28, 0.28);
+    });
+    for (let pass = 0; pass < 6; pass++) {
+      for (let i = 0; i < n; i++) auto[i] = (auto[wrap(i - 1)] + 2 * auto[i] + auto[wrap(i + 1)]) / 4;
+    }
+    for (let i = 0; i < n; i++) out[i].roll = (out[i].roll ?? 0) + auto[i];
+  }
+  return out;
 }
 
 // Fillet the corners of a polyline/polygon (Figma corner radius). Each
@@ -1444,10 +1727,48 @@ export class Level {
     else if (courseId === 8) this.buildCustom(overgrownLevel(), true);
     else if (courseId === 9) this.buildSlipstream();
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
+    this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
     this.placeComboOrb(); // combo-run orb, the other side of the racing line
     this.buildAmbient(); // theme is set by the builder above
+  }
+
+  // SOLID BACKS. A transition is a one-sided sheet: from behind you'd ride up
+  // its convex face, or drop straight through into the pipe. A thin collision
+  // slab just outside each coping line stops that, ending 0.4 short of the lip
+  // so lip play stays clear. Skipped where ANOTHER pipe's mouth opens across
+  // that line — that's a shared ridge, and the spine transfer plus the
+  // ride-through both need it open. Runs once, after every builder is done, so
+  // it can see all the pipes at the time it decides.
+  private sealVertBacks(): void {
+    for (const hp of this.halfpipes) {
+      const along = (hp.l0 + hp.l1) / 2;
+      const len = Math.abs(hp.l1 - hp.l0);
+      for (const side of [-1, 1]) {
+        const lipC = hp.cross + side * hp.lipX;
+        const probe = lipC + side * 1.0;
+        const shared = this.halfpipes.some((o) => {
+          if (o === hp || o.axis !== hp.axis) return false;
+          const oAlong = (o.l0 + o.l1) / 2;
+          if (Math.abs(oAlong - along) > (Math.abs(o.l1 - o.l0) + len) / 2) return false;
+          return Math.abs(probe - o.cross) <= o.lipX - 0.3; // inside its mouth
+        });
+        if (shared) continue;
+        const h = hp.lipY - hp.yBottom - 0.4;
+        const cy = hp.yBottom + h / 2;
+        // 1.45 clear of the lip line: a rider hugging the INSIDE face at the
+        // coping reaches within a player-half of it, and the back slab must
+        // never clip that climb
+        const bc = lipC + side * 1.45;
+        this.walls.push(
+          new THREE.Box3().setFromCenterAndSize(
+            hp.axis === 'z' ? new THREE.Vector3(bc, cy, along) : new THREE.Vector3(along, cy, bc),
+            hp.axis === 'z' ? new THREE.Vector3(1.3, h, len) : new THREE.Vector3(len, h, 1.3),
+          ),
+        );
+      }
+    }
   }
 
   // The editor raycasts level geometry for picking; everything a component
@@ -1556,20 +1877,32 @@ export class Level {
         ...matInfo(m),
       });
     });
-    // halfpipes, with their true profile (flat half + radius)
+    // halfpipes, with their true profile (flat half + radius). They come back
+    // as the vert part, straight and 90°, which rebuilds on the same backing.
     for (const hp of this.halfpipes) {
       const along = (hp.l0 + hp.l1) / 2;
       C.push({
-        t: 'pipe',
+        t: 'vertramp',
         p: hp.axis === 'z' ? [r2(hp.cross), r2(hp.yBottom), r2(along)] : [r2(along), r2(hp.yBottom), r2(hp.cross)],
         len: r2(Math.abs(hp.l1 - hp.l0)),
-        axis: hp.axis,
+        yaw: hp.axis === 'x' ? 90 : 0,
         w: r2(hp.flatHalf),
         rise: r2(hp.radius),
+        vkind: 'half',
       });
     }
-    // rails — skipping halfpipe coping lines (the pipe component regrows them)
+    // swept vert parts (bowls, corners, spines, banked troughs) come back as
+    // the component that drew them — they carry it on the mesh
+    const sweptCopings: THREE.Vector3[][] = [];
+    for (const o of this.root.children) {
+      const vc = o.userData.vertComp as CustomComponent | undefined;
+      if (!vc) continue;
+      C.push(JSON.parse(JSON.stringify(vc)) as CustomComponent);
+      for (const line of (o.userData.vertCopings as THREE.Vector3[][] | undefined) ?? []) sweptCopings.push(line);
+    }
+    // rails — skipping coping lines, which the vert parts regrow themselves
     const isCoping = (pts: THREE.Vector3[]): boolean =>
+      sweptCopings.some((line) => line.length === pts.length && line.every((q, i) => q.distanceToSquared(pts[i]) < 0.05)) ||
       this.halfpipes.some((hp) => {
         const y = hp.lipY + 0.05;
         return pts.every((p) => {
@@ -1801,7 +2134,6 @@ export class Level {
     this.currentSpawn.copy(this.spawnPos);
 
     const deck = new THREE.MeshLambertMaterial({ color: 0xffffff });
-    const matPipe = new THREE.MeshLambertMaterial({ color: 0xaab4ba });
     // tag every root child a component adds with that component's index
     const buildTagged = (idx: number, fn: () => void): void => {
       const before = this.root.children.length;
@@ -1811,7 +2143,7 @@ export class Level {
         this.root.children[c].userData.editorIdx = idx;
       }
     };
-    const geomPass = new Set(['platform', 'ramp', 'wall', 'pipe', 'vertramp', 'rail', 'rope', 'crumble', 'pit', 'metal', 'rock', 'gate']);
+    const geomPass = new Set(['platform', 'ramp', 'wall', 'vertramp', 'rail', 'rope', 'crumble', 'pit', 'metal', 'rock', 'gate']);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
     // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
@@ -2183,99 +2515,7 @@ export class Level {
               this.root.add(rail.object);
             }
           } else if (c.t === 'vertramp') {
-            // AUTHORED VERT. Straight (len/yaw) or pen-drawn along `pts` —
-            // the node convention is exactly the rails': [x, z, cornerRadius,
-            // yOffset], so corner radii round the bends and per-node heights
-            // let the coping climb and dive along the spine.
-            const R = Math.max(0.5, c.rise ?? 6);
-            const F = Math.max(0, c.w ?? 3);
-            const vkind = c.vkind ?? 'quarter';
-            let spine: { x: number; y: number; z: number }[];
-            if (c.pts && c.pts.length >= 2) {
-              spine = roundCorners(c.pts, false).map((q) => ({
-                x: c.p[0] + q.x,
-                y: c.p[1] + q.y,
-                z: c.p[2] + q.z,
-              }));
-            } else {
-              const len = c.len ?? 30;
-              const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
-              const dx = (Math.sin(a) * len) / 2;
-              const dz = (Math.cos(a) * len) / 2;
-              spine = [
-                { x: c.p[0] - dx, y: c.p[1], z: c.p[2] - dz },
-                { x: c.p[0] + dx, y: c.p[1], z: c.p[2] + dz },
-              ];
-            }
-            const vr = buildVertRampGeometry(spine, R, F, vkind);
-            const mesh = new THREE.Mesh(
-              vr.geometry,
-              new THREE.MeshLambertMaterial({ color: 0xaab4ba, side: THREE.DoubleSide }),
-            );
-            mesh.name = 'vertramp';
-            // THE POINT OF ALL THIS: the level DECLARES this is vert, so the
-            // physics stops guessing from normal.y.
-            mesh.userData.vert = true;
-            this.root.add(mesh);
-            this.groundMeshes.push(mesh);
-            this.pickRoot.add(mesh);
-            // every lip is grindable, like the analytic pipe's copings
-            for (const cop of vr.copings) {
-              if (cop.length < 2) continue;
-              const rail = new Rail(cop.map((q) => new THREE.Vector3(q.x, q.y + 0.05, q.z)));
-              this.rails.push(rail);
-              this.root.add(rail.object);
-            }
-          } else if (c.t === 'pipe') {
-            const len = c.len ?? 36;
-            const axis = c.axis ?? 'z';
-            const along = axis === 'z' ? c.p[2] : c.p[0];
-            const cross = axis === 'z' ? c.p[0] : c.p[2];
-            // captured levels carry the source pipe's true profile in w/rise
-            const hp = new Halfpipe(along + len / 2, along - len / 2, c.p[1], c.w ?? 3, c.rise ?? 6, matPipe, cross, axis);
-            this.halfpipes.push(hp);
-            this.root.add(hp.object);
-            for (const wm of hp.walls) this.groundMeshes.push(wm);
-            // both copings are grindable, like the authored pipes
-            for (const side of [-1, 1]) {
-              const lipC = cross + side * hp.lipX;
-              const y = hp.lipY + 0.05;
-              const rail =
-                axis === 'z'
-                  ? new Rail([new THREE.Vector3(lipC, y, along + len / 2), new THREE.Vector3(lipC, y, along - len / 2)])
-                  : new Rail([new THREE.Vector3(along + len / 2, y, lipC), new THREE.Vector3(along - len / 2, y, lipC)]);
-              this.rails.push(rail);
-              this.root.add(rail.object);
-              // SOLID BACK: the transition is a one-sided sheet — from behind
-              // you'd walk (or fall) straight through into the pipe. A box
-              // just outside each wall blocks that, stopping under the coping
-              // so lip play stays clear. Skipped when another pipe's mouth is
-              // right across this lip line (a shared ridge — the spine
-              // transfer and ride-through must stay open).
-              const probe = lipC + side * 1.0;
-              const covered = data.components.some((o) => {
-                if (o === c || o.t !== 'pipe' || (o.axis ?? 'z') !== axis) return false;
-                const oCross = axis === 'z' ? o.p[0] : o.p[2];
-                const oAlong = axis === 'z' ? o.p[2] : o.p[0];
-                const oLen = o.len ?? 36;
-                if (Math.abs(oAlong - along) > (oLen + len) / 2) return false;
-                return Math.abs(probe - oCross) <= 9 - 0.3; // inside its mouth (lipX = 9)
-              });
-              if (!covered) {
-                const h = hp.lipY - hp.yBottom - 0.4;
-                const cy = hp.yBottom + h / 2;
-                // offset 0.8 clear of the lip line: a rider hugging the
-                // INSIDE face at the coping reaches within a player-half of
-                // it, and the back box must never clip the climb
-                const bc = lipC + side * 1.45;
-                this.walls.push(
-                  new THREE.Box3().setFromCenterAndSize(
-                    axis === 'z' ? new THREE.Vector3(bc, cy, along) : new THREE.Vector3(along, cy, bc),
-                    axis === 'z' ? new THREE.Vector3(1.3, h, len) : new THREE.Vector3(len, h, 1.3),
-                  ),
-                );
-              }
-            }
+            this.buildVertRamp(c);
           } else if (c.t === 'rope') {
             // sagging grindable rope strung between two posts: len along yaw
             const len = c.len ?? 12;
@@ -3372,15 +3612,15 @@ export class Level {
     this.crystal(0, -12.4, -530); // the level crystal, dead on the main route
     // rail 2 pit: -575 .. -655
     this.jungle('rail 2 landing', -655, -710, -13.5, 12, matB);
-    // Halfpipe: a dedicated SMOOTH transition ridden by the pipe rail-physics
-    // (see player.stepPipe). Carve up either wall, pump on the way up to build
-    // height, pop off the coping for hang-time air, drop back in. The flat
-    // bottom is a normal ground slab; the walls are the analytic Halfpipe.
+    // Halfpipe: the vert part, straight and 90°, so it comes up on the analytic
+    // backing and rides the pipe rail-physics (see player.stepPipe). Carve up
+    // either wall, pump on the way up to build height, pop off the coping for
+    // hang-time air, drop back in. The flat bottom is a normal ground slab.
     this.slab('halfpipe floor', -710, -830, -13.5, 6, matRamp, false, 0, 'pavement');
-    const hp = new Halfpipe(-710, -830, -13.5, 3, 7, matRamp); // F=3, R=7 → lip x±10, y-6.5 (twice as long)
-    this.halfpipes.push(hp);
-    this.root.add(hp.object);
-    for (const w of hp.walls) this.groundMeshes.push(w); // SOLID walls (no more clip-through-and-die)
+    this.buildVertRamp({
+      t: 'vertramp', p: [0, -13.5, -770], len: 120, w: 3, rise: 7, vkind: 'half', // lip x±10, y -6.5
+      color: '#d0a86e', tex: 'pavement',
+    });
     // rail yard entry deck, then a pit crossed by three parallel rails
     this.slab('rail yard entry', -830, -838, -13.5, 14, matPlaza, true, 0, 'stone');
     // pit: -838 .. -910
@@ -3407,9 +3647,7 @@ export class Level {
       new THREE.Vector3(-2.5, -10.5, -620),
       new THREE.Vector3(0, -11.5, -659),
     ]);
-    // Halfpipe lip rails along both top edges (full doubled length).
-    const lipL = new Rail([new THREE.Vector3(-10.1, -6.4, -710), new THREE.Vector3(-10.1, -6.4, -830)]);
-    const lipR = new Rail([new THREE.Vector3(10.1, -6.4, -710), new THREE.Vector3(10.1, -6.4, -830)]);
+    // (the halfpipe's own lip rails come with the vert part, both copings)
     // Rail yard: three parallel rails over the pit — jump between them.
     const yardL = new Rail([new THREE.Vector3(-3.5, -12.6, -836), new THREE.Vector3(-3.5, -12.6, -912)]);
     const yardC = new Rail([new THREE.Vector3(0, -12.6, -836), new THREE.Vector3(0, -12.6, -912)]);
@@ -3424,7 +3662,7 @@ export class Level {
     ]);
     const penHigh = new Rail([new THREE.Vector3(35, 2.8, -4), new THREE.Vector3(35, 2.8, -30)]);
 
-    for (const rail of [rail1, rail2, lipL, lipR, yardL, yardC, yardR, penStraight, penZigzag, penHigh]) {
+    for (const rail of [rail1, rail2, yardL, yardC, yardR, penStraight, penZigzag, penHigh]) {
       this.rails.push(rail);
       this.root.add(rail.object);
     }
@@ -4213,136 +4451,110 @@ export class Level {
   // which is exactly what lets hang time follow the corners. An entry CHANNEL
   // (a smooth dip of the wall to floor level) on the +Z side lets riders roll
   // in; a coping rail runs the rest of the rim.
-  private roundedBowl(
-    cx: number,
-    cz: number,
-    hw: number, // inner floor half-width (X) at the transition base
-    hd: number, // inner floor half-depth (Z)
-    corner: number, // corner radius of the rounded-rect path
-    R = 5, // transition radius (quarter-pipe profile)
-    arcDeg = 60, // where the transition stops (90 = full vertical). Sub-vert
-    // lips are still vert launches AND still crestable at this game's real
-    // speeds — full vertical walls are dead ends under the mesh slope physics
-    channelW = 6, // entry channel width on the +Z straight (0 = none)
-    mat?: THREE.MeshLambertMaterial,
-  ): void {
-    const material = this.patterned(
-      mat ?? new THREE.MeshLambertMaterial({ color: 0xaab4ba }),
-      8,
-      8,
-      'pavement',
+  // A grindable lip, unless that exact lip is already there. Two pipes butted
+  // together SHARE a ridge — that's the classic park shape, and each of them
+  // wants a coping rail on it. Two rails on one line make the grind attach
+  // flicker between them, so the second one is dropped.
+  private copingRail(pts: THREE.Vector3[]): void {
+    const same = (a: THREE.Vector3[], b: THREE.Vector3[]): boolean => {
+      if (a.length !== b.length) return false;
+      const fwd = a.every((p, i) => p.distanceToSquared(b[i]) < 0.04);
+      const rev = a.every((p, i) => p.distanceToSquared(b[b.length - 1 - i]) < 0.04);
+      return fwd || rev;
+    };
+    for (const r of this.rails) if (same(r.points, pts)) return;
+    const rail = new Rail(pts);
+    this.rails.push(rail);
+    this.root.add(rail.object);
+  }
+
+  // THE VERT PART. Every transition in the game comes through here: straight
+  // quarter and half pipes, bowl corners, whole pools, and the slide troughs.
+  //
+  // One special case, and it earns its keep. A straight, axis-aligned, 90°
+  // half pipe with no deck is backed by the analytic Halfpipe instead of a
+  // swept mesh, because that class owns the mature ride physics — the arc-length
+  // pendulum, coping launches, lip stalls and spine transfers all key off a
+  // Halfpipe instance. Everything the swept mesh can't be axis-aligned about
+  // (corners, spines, banks, sub-vertical walls) rides the tracked-wall
+  // physics, exactly as the hand-built pool always did. Same component, same
+  // fields, same editor handles either way. Returns the dense spine (null on
+  // the analytic path) so a hand-built level can hang rails and crates on the
+  // exact surface it just swept.
+  buildVertRamp(c: CustomComponent): VertRampNode[] | null {
+    const R = Math.max(0.5, c.rise ?? 6);
+    const F = Math.max(0, c.w ?? 3);
+    const vkind = c.vkind ?? 'quarter';
+    const arc = THREE.MathUtils.clamp(c.arc ?? 90, 5, 90);
+    const deck = Math.max(0, c.deck ?? 0);
+    const closed = c.closed === true;
+    const yawQ = ((c.yaw ?? 0) % 360 + 360) % 360;
+    const straight = !c.pts || c.pts.length < 2;
+    const col = c.color ? new THREE.Color(c.color).getHex() : 0xaab4ba;
+    const mat = this.patterned(
+      new THREE.MeshLambertMaterial({ color: col, side: THREE.DoubleSide }),
+      6,
+      6,
+      c.tex ?? 'pavement',
     );
-    material.side = THREE.DoubleSide;
-    // --- path: rounded rect, sampled clockwise, with outward normals -------
-    const pts: { x: number; z: number; ox: number; oz: number; s: number }[] = [];
-    let arc = 0;
-    const push = (x: number, z: number, ox: number, oz: number): void => {
-      const last = pts[pts.length - 1];
-      if (last) arc += Math.hypot(x - last.x, z - last.z);
-      pts.push({ x, z, ox, oz, s: arc });
-    };
-    const sw = hw - corner; // straight half-spans
-    const sd = hd - corner;
-    const STEP = 1.1;
-    // +Z straight (west→east), then corners/straights clockwise
-    const straight = (x0: number, z0: number, x1: number, z1: number, ox: number, oz: number): void => {
-      const len = Math.hypot(x1 - x0, z1 - z0);
-      const n = Math.max(1, Math.round(len / STEP));
-      for (let i = 0; i <= n; i++) {
-        push(x0 + ((x1 - x0) * i) / n, z0 + ((z1 - z0) * i) / n, ox, oz);
+
+    if (straight && vkind === 'half' && arc === 90 && deck === 0 && yawQ % 90 === 0) {
+      // ---- analytic backing: full lip-trick / pendulum / transfer physics ----
+      const len = c.len ?? 30;
+      const axis: 'z' | 'x' = yawQ === 90 || yawQ === 270 ? 'x' : 'z';
+      const along = axis === 'z' ? c.p[2] : c.p[0];
+      const cross = axis === 'z' ? c.p[0] : c.p[2];
+      const hp = new Halfpipe(along + len / 2, along - len / 2, c.p[1], F, R, mat, cross, axis);
+      this.halfpipes.push(hp);
+      this.root.add(hp.object);
+      for (const wm of hp.walls) {
+        wm.userData.vert = c.vert !== false; // the flag rides the analytic path too
+        this.groundMeshes.push(wm);
       }
-    };
-    const cornerArc = (ccx: number, ccz: number, a0: number, a1: number): void => {
-      const n = Math.max(3, Math.round((Math.abs(a1 - a0) * corner) / STEP));
-      for (let i = 1; i <= n; i++) {
-        const a = a0 + ((a1 - a0) * i) / n;
-        const ox = Math.cos(a);
-        const oz = Math.sin(a);
-        push(ccx + ox * corner, ccz + oz * corner, ox, oz);
+      for (const side of [-1, 1]) {
+        const lipC = cross + side * hp.lipX;
+        const y = hp.lipY + 0.05;
+        const a = axis === 'z' ? new THREE.Vector3(lipC, y, along + len / 2) : new THREE.Vector3(along + len / 2, y, lipC);
+        const b = axis === 'z' ? new THREE.Vector3(lipC, y, along - len / 2) : new THREE.Vector3(along - len / 2, y, lipC);
+        this.copingRail([a, b]);
       }
-    };
-    straight(-sw, hd, sw, hd, 0, 1); // +Z edge (the channel edge)
-    cornerArc(sw, sd, Math.PI / 2, 0); // NE corner
-    straight(hw, sd, hw, -sd, 1, 0); // +X edge
-    cornerArc(sw, -sd, 0, -Math.PI / 2); // SE corner
-    straight(sw, -hd, -sw, -hd, 0, -1); // -Z edge
-    cornerArc(-sw, -sd, -Math.PI / 2, -Math.PI); // SW corner
-    straight(-hw, -sd, -hw, sd, -1, 0); // -X edge
-    cornerArc(-sw, sd, Math.PI, Math.PI / 2); // NW corner
-    // --- profile: floor edge → quarter circle → vert lip → outer skirt ----
-    const prof: [number, number][] = [];
-    const arcRad = (Math.PI / 180) * arcDeg;
-    for (let a = 0; a <= 6; a++) {
-      const th = (a / 6) * arcRad;
-      prof.push([R * Math.sin(th), R * (1 - Math.cos(th))]);
+      return null;
     }
-    const uTop = R * Math.sin(arcRad);
-    const yTop = R * (1 - Math.cos(arcRad));
-    // DECK RING at lip height, THPS pool rules: roll over the lip un-popped
-    // and you land ON the deck; pop X at the lip and the vert ollie throws
-    // you into the tracked hang. (A bare knife edge fails both ways here —
-    // the short drop behind it sits inside the ground-snap window, so
-    // cresting just glues you down the outside.)
-    prof.push([uTop + 2.3, yTop]);
-    prof.push([uTop + 2.38, yTop]);
-    prof.push([uTop + 2.38, 0]); // outer skirt down to the ground
-    // --- channel taper: wall height eases to 0 across the entry gap -------
-    const taperAt = (p: { x: number; z: number }): number => {
-      if (channelW <= 0) return 1;
-      if (p.z < hd - corner * 0.5) return 1; // only the +Z edge dips
-      const d = Math.abs(p.x) - channelW / 2;
-      if (d <= 0) return 0;
-      const t = Math.min(1, d / 2.5);
-      return t * t * (3 - 2 * t); // smoothstep shoulder
-    };
-    // --- sweep + triangulate (rings around the closed loop) ---------------
-    const pos: number[] = [];
-    const uv: number[] = [];
-    const idx: number[] = [];
-    const NP = prof.length;
-    for (let i = 0; i < pts.length; i++) {
-      const p = pts[i];
-      const k = taperAt(p);
-      for (const [u, y] of prof) {
-        pos.push(cx + p.x + p.ox * u, y * k + 0.01, cz + p.z + p.oz * u);
-        uv.push(u / 3, p.s / 6);
-      }
-      if (i > 0) {
-        const a = (i - 1) * NP;
-        const b = i * NP;
-        for (let q = 0; q < NP - 1; q++) {
-          idx.push(a + q, a + q + 1, b + q, a + q + 1, b + q + 1, b + q);
-        }
-      }
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-    geo.setIndex(idx);
-    geo.computeVertexNormals();
-    const mesh = new THREE.Mesh(geo, material);
-    mesh.name = 'bowl';
-    this.root.add(mesh);
+
+    // ---- swept mesh: any path, any bank, any arc ----
+    const spine = vertRampSpine(c);
+    if (spine.length < 2) return null;
+    const vr = buildVertRampGeometry(spine, {
+      radius: R,
+      flatHalf: F,
+      kind: vkind,
+      arcDeg: arc,
+      deck,
+      closed,
+    });
+    const mesh = new THREE.Mesh(vr.geometry, mat);
+    mesh.name = c.vert === false ? 'slide deck' : 'vertramp';
+    // THE POINT OF ALL THIS: the level DECLARES this is vert, so the physics
+    // stops guessing from normal.y. A banked road opts out — its flat middle
+    // is a road, not a trough, and pumping it would be nonsense.
+    if (c.vert !== false) mesh.userData.vert = true;
+    // the component that drew this, so CAPTURE can hand it straight back
+    mesh.userData.vertComp = JSON.parse(JSON.stringify(c)) as CustomComponent;
+    mesh.userData.vertCopings = vr.copings.map((cop) =>
+      cop.map((q) => new THREE.Vector3(q.x, q.y + 0.05, q.z)),
+    );
+    this.root.add(mesh); // = pickRoot, so the editor can select and box it
     this.groundMeshes.push(mesh);
-    // --- coping rail around the rim, skipping the channel -----------------
-    const railPts: THREE.Vector3[] = [];
-    const flushRail = (): void => {
-      if (railPts.length >= 2) {
-        const r = new Rail([...railPts]);
-        this.rails.push(r);
-        this.root.add(r.object);
-      }
-      railPts.length = 0;
-    };
-    for (let i = 0; i < pts.length; i += 2) {
-      const p = pts[i];
-      if (taperAt(p) >= 0.999) {
-        railPts.push(new THREE.Vector3(cx + p.x + p.ox * (uTop + 0.1), yTop + 0.06, cz + p.z + p.oz * (uTop + 0.1)));
-      } else {
-        flushRail();
+    // Copings are grindable — but only on a real transition. A banked road's
+    // gutter lip is a kerb, not a coping; auto-railing every slide edge would
+    // hijack the whole course.
+    if (c.vert !== false) {
+      for (const cop of vr.copings) {
+        if (cop.length < 2) continue;
+        this.copingRail(cop.map((q) => new THREE.Vector3(q.x, q.y + 0.05, q.z)));
       }
     }
-    flushRail();
+    return spine;
   }
 
   // Swinging grab-rope: a driven pendulum the player can hang from. speed 0 =
@@ -7452,7 +7664,6 @@ export class Level {
   // 90° so you can transfer between the two orientations.
   private buildHalfpipePark(): void {
     const ground = new THREE.MeshLambertMaterial({ color: 0xffffff }); // full-colour asphalt
-    const matPipe = new THREE.MeshLambertMaterial({ color: 0xaab4ba }); // skatepark concrete
     this.killY = -60;
     this.finishZ = -110; // gate at the park's south end, past both pipe pairs
     this.endWallZ = -2100;
@@ -7487,39 +7698,36 @@ export class Level {
 
     const F = 3;
     const R = 6; // lipX = 9, coping at y = 6, each pipe 18 wide
-    const lipX = F + R;
     const lipY = R;
-    const addPipe = (l0: number, l1: number, cross: number, axis: 'z' | 'x'): Halfpipe => {
-      const hp = new Halfpipe(l0, l1, 0, F, R, matPipe, cross, axis);
-      this.halfpipes.push(hp);
-      this.root.add(hp.object);
-      for (const w of hp.walls) this.groundMeshes.push(w); // SOLID transitions
-      return hp;
-    };
-    const V = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
-    const copingRail = (a: THREE.Vector3, b: THREE.Vector3): void => {
-      const r = new Rail([a, b]);
-      this.rails.push(r);
-      this.root.add(r.object);
+    // Every transition in the park is the same editor component. A straight,
+    // axis-aligned, 90° half comes up on the analytic backing — full lip-trick,
+    // pendulum and spine-transfer physics — and brings its own coping rails.
+    const addPipe = (len: number, cross: number, alongZ: boolean, mid = 0): void => {
+      this.buildVertRamp({
+        t: 'vertramp',
+        p: alongZ ? [cross, 0, mid] : [mid, 0, cross],
+        len,
+        w: F,
+        rise: R,
+        vkind: 'half',
+        yaw: alongZ ? 0 : 90,
+        color: '#aab4ba',
+      });
     };
 
     // --- PAIR 1: two pipes running along Z, right up against each other -------
     // A centred at x -9, B at x +9 → their inner copings meet at x 0 (a shared
     // ridge). Troughs at x -9 and x +9, length z 20 → -20.
-    addPipe(20, -20, -9, 'z');
-    addPipe(20, -20, 9, 'z');
-    for (const x of [-9 - lipX, 0, 9 + lipX]) copingRail(V(x, lipY + 0.05, 20), V(x, lipY + 0.05, -20));
+    addPipe(40, -9, true);
+    addPipe(40, 9, true);
     // fruit lines down each trough, a crystal on the shared ridge
     for (const cx of [-9, 9]) for (let z = 14; z >= -14; z -= 7) this.pickup(cx, 0.4, z);
     this.crystal(0, lipY + 0.6, 0);
 
     // --- PAIR 2: two more pipes rotated 90° (running along X), neighbouring ----
     // C centred at z -38, D at z -56 → shared ridge at z -47. Length x -18 → 18.
-    addPipe(18, -18, -38, 'x');
-    addPipe(18, -18, -56, 'x');
-    // outer copings at -29 and -65, shared ridge at -47 (the old signs put
-    // all three rails ON the ridge and left the outer lips bare)
-    for (const z of [-38 + lipX, -47, -56 - lipX]) copingRail(V(-18, lipY + 0.05, z), V(18, lipY + 0.05, z));
+    addPipe(36, -38, false);
+    addPipe(36, -56, false);
     for (const cz of [-38, -56]) for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
 
     // --- a few foes on the SIDE flats, clear of the spawn sprint + the pipe
@@ -7528,17 +7736,28 @@ export class Level {
     this.enemy(-44, -26, 0, -30, 3.5, 'x', 'floater'); // drifts the west flat
     this.enemy(38, 38, 0, -47, 0, 'x', 'spinner'); // blades parked off the ridge
 
-    // --- THE POOL: a rounded-rectangle bowl at the south end — four vert
-    // walls joined by curved corners. Airs here ride the TRACKED vert hang
-    // around the bends (the analytic pipes can't corner; this mesh can).
-    // Roll in through the channel on the north rim, carve the loop, grind
-    // the coping around the whole rim.
-    // R 10 to 60 degrees (lip ~5): a DEEP pool — twice the height and twice
-    // the transition depth. Cresting from a flat run-up is out of reach; the
-    // loop is pump the walls, pop X at the lip for the tracked hang, land
-    // rolling, pump again. (Center nudged north-south so the deck ring
-    // clears pipe pair 2 on one side and the finish gate on the other.)
-    this.roundedBowl(0, -87, 13, 8, 5, 10.0, 60, 6);
+    // --- THE POOL: the same vert part, drawn as one spine round a rounded
+    // rectangle — four walls joined by curved corners, which is what "bowl
+    // parts like corners" means here: a corner is just a quarter swept along a
+    // filleted bend. Airs ride the TRACKED vert hang around the bends (the
+    // analytic pipes can't corner; a swept spine can). The path stops 3 units
+    // either side of x=0 on the north rim, and THAT GAP IS THE CHANNEL you
+    // roll in through — no special-case taper, just where the spine ends.
+    // R 10 to 60 degrees (lip ~5): a DEEP pool. Cresting from a flat run-up is
+    // out of reach; the loop is pump the walls, pop X at the lip for the
+    // tracked hang, land rolling, pump again.
+    this.buildVertRamp({
+      t: 'vertramp',
+      p: [0, 0.01, -87],
+      // ordered so the sweep's lateral points OUT of the bowl
+      pts: [[-3, 8], [-13, 8, 5], [-13, -8, 5], [13, -8, 5], [13, 8, 5], [3, 8]],
+      w: 0, // the transition starts right at the floor edge
+      rise: 10,
+      arc: 60,
+      deck: 2.3, // pool rules: crest un-popped and you land ON the rim
+      vkind: 'quarter',
+      color: '#aab4ba',
+    });
     for (let a = 0; a < 8; a++) {
       const th = (a / 8) * Math.PI * 2;
       this.pickup(Math.cos(th) * 7, 0.4, -87 + Math.sin(th) * 4.5);
@@ -7846,85 +8065,54 @@ export class Level {
   // swings sideways for a stretch. Re-select "Random" to reroll.
   // ---- THE SLIPSTREAM: an endless-waterslide skyway — one huge ribbon of
   // banked, sweeping, mostly-downhill road curving high over open water.
-  // The deck is real curved geometry (a spline-swept ribbon in groundMeshes),
-  // so the ordinary surface-tangent riding does all the work: dips feed
-  // speed, crests pop airs, and the raised gutter lips carve like a slide.
+  //
+  // Every ribbon is the SAME vert part the skateparks are built from, drawn
+  // along a spline of xyz nodes: a shallow half section (radius 3 through 53°)
+  // whose two lips are the slide's gutters, banked by the auto-lean plus a
+  // per-node roll where the course wants a corkscrew or a velodrome wall.
+  // It opts OUT of the vert flag — the deck between the gutters is a road, not
+  // a trough — so the ordinary surface-tangent riding does all the work: dips
+  // feed speed, crests pop airs, and the gutter lips carve like a slide.
+  //
   // frame(t, off, h): a world point `off` across the banked deck and `h`
-  // above it — the exact surface the ribbon mesh was extruded from.
+  // above it — the exact surface the mesh was swept from, so edge rails,
+  // crates and fruit all sit on the geometry rather than near it.
   private slideRibbon(
     pts: THREE.Vector3[],
     width = 12,
     color = 0x3ec8d8,
-    bankFn?: (t: number, auto: number) => number, // override the lean (vert walls, corkscrews)
+    roll?: number[], // per-node bank in DEGREES, one per point (0 where omitted)
+    bank = 42, // auto-lean gain: how hard the deck rolls into its own turns
   ): SlideRibbon {
-    const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal', 0.5);
-    const len = curve.getLength();
-    const steps = Math.max(24, Math.round(len / 1.6));
-    const UP = new THREE.Vector3(0, 1, 0);
-    // The banked deck frame at parameter t: a point `off` across the deck and
-    // `h` above it, leaned by the same bank the mesh gets — the ONE source of
-    // truth, so edge rails and crates sit exactly on the surface they follow.
-    const frame = (t: number, off: number, h: number): THREE.Vector3 => {
-      const p = curve.getPointAt(t);
-      const tanA = curve.getTangentAt(t);
-      // signed turn rate ahead of this ring -> bank INTO the curve
-      const tanB = curve.getTangentAt(Math.min(1, t + 0.02));
-      const turn = Math.atan2(tanA.x * tanB.z - tanA.z * tanB.x, tanA.x * tanB.x + tanA.z * tanB.z);
-      const auto = THREE.MathUtils.clamp(turn * 7, -0.28, 0.28); // a lean, not a wall
-      const bank = bankFn ? bankFn(t, auto) : auto;
-      const right = new THREE.Vector3().crossVectors(tanA, UP);
-      if (right.lengthSq() < 1e-5) right.set(1, 0, 0);
-      right.normalize();
-      const upv = new THREE.Vector3().crossVectors(right, tanA).normalize();
-      return p
-        .addScaledVector(right.applyAxisAngle(tanA, bank), off)
-        .addScaledVector(upv.applyAxisAngle(tanA, bank), h);
+    const r2v = (n: number): number => Math.round(n * 100) / 100;
+    const o = pts[0];
+    const comp: CustomComponent = {
+      t: 'vertramp',
+      p: [r2v(o.x), r2v(o.y), r2v(o.z)],
+      // rail node convention, plus the 5th number: bank degrees
+      pts: pts.map((v, i) => [r2v(v.x - o.x), r2v(v.z - o.z), 0, r2v(v.y - o.y), roll?.[i] ?? 0]),
+      curve: 'spline', // one flowing road, not filleted corners
+      vkind: 'half',
+      w: r2v(width / 2 - 2.4), // flat deck between the gutters
+      rise: 3,
+      arc: 53, // R 3 at 53 degrees = a 2.4-wide lip rising 1.25: the slide gutter
+      bank,
+      vert: false, // a banked ROAD, not a trough — no pumping, no auto-copings
+      color: '#' + color.toString(16).padStart(6, '0'),
+      tex: 'stone',
     };
-    // gutter profile across the deck: raised lips keep the flow in the slide
-    const prof: Array<[number, number]> = [
-      [-width / 2, 1.25],
-      [-width / 2 + 2.4, 0],
-      [width / 2 - 2.4, 0],
-      [width / 2, 1.25],
-    ];
-    const pos: number[] = [];
-    const uv: number[] = [];
-    const idx: number[] = [];
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      for (const [off, h] of prof) {
-        const v = frame(t, off, h);
-        pos.push(v.x, v.y, v.z);
-        uv.push((off / width + 0.5) * 1.5, (t * len) / 9);
-      }
-      if (i > 0) {
-        const a = (i - 1) * 4;
-        const b = i * 4;
-        for (let q = 0; q < 3; q++) {
-          idx.push(a + q, a + q + 1, b + q, a + q + 1, b + q + 1, b + q);
-        }
-      }
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-    geo.setIndex(idx);
-    geo.computeVertexNormals();
-    const mesh = new THREE.Mesh(
-      geo,
-      this.patterned(new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide }), 10, 10, 'stone'),
-    );
-    mesh.name = 'slipstream';
-    this.root.add(mesh);
-    this.groundMeshes.push(mesh);
-    return { curve, len, width, frame };
+    const spine = this.buildVertRamp(comp);
+    const path = vertRampPath(spine ?? [], false);
+    // `off` keeps its old sense (+ = the deck's right looking down-course), so
+    // every crate and edge rail placed against it lands where it always did.
+    return { len: path.len, width, frame: (t, off, h) => path.frame(t, -off, h) };
   }
 
   // fruit strung along a stretch of ribbon, floating just over the deck line
-  private ribbonFruit(curve: THREE.CatmullRomCurve3, t0: number, t1: number, n: number): void {
+  private ribbonFruit(r: SlideRibbon, t0: number, t1: number, n: number): void {
     for (let i = 0; i < n; i++) {
-      const p = curve.getPointAt(THREE.MathUtils.lerp(t0, t1, n === 1 ? 0 : i / (n - 1)));
-      this.pickup(p.x, p.y + 1.3, p.z);
+      const p = r.frame(THREE.MathUtils.lerp(t0, t1, n === 1 ? 0 : i / (n - 1)), 0, 1.3);
+      this.pickup(p.x, p.y, p.z);
     }
   }
 
@@ -7966,8 +8154,8 @@ export class Level {
       V(-10, 108, -206),
       V(-32, 104, -232),
     ], 13);
-    this.ribbonFruit(r1.curve, 0.12, 0.4, 8);
-    this.ribbonFruit(r1.curve, 0.6, 0.86, 7);
+    this.ribbonFruit(r1, 0.12, 0.4, 8);
+    this.ribbonFruit(r1, 0.6, 0.86, 7);
     this.crate(52, 128.6, -110);
     this.crate(55, 122.4, -136, 'mystery');
     this.crate(30, 114.5, -172, 'tnt');
@@ -7983,10 +8171,11 @@ export class Level {
       spiralPts.push(V(CX + CR * Math.cos(th), 98 - k * 3.2, CZ + CR * Math.sin(th)));
     }
     spiralPts.push(V(-2, 76, -278), V(16, 72, -306));
-    const r2 = this.slideRibbon(spiralPts, 12, 0x3ec8d8, (_t, auto) =>
-      THREE.MathUtils.clamp(auto * 2.4, -0.55, 0.55),
-    );
-    this.ribbonFruit(r2.curve, 0.2, 0.75, 10);
+    // banks hard NEGATIVE (deck's right side up) all the way round the spiral,
+    // easing in off R1's tail and out into the unwind
+    const r2 = this.slideRibbon(spiralPts, 12, 0x3ec8d8,
+      [0, -12, -26, -31, -31, -31, -31, -26, -12, 0]);
+    this.ribbonFruit(r2, 0.2, 0.75, 10);
     this.crystal(CX, 90.5, CZ - CR); // parked mid-spiral: hold the high line round to it
     this.checkpoint(72.9, -310, 20);
 
@@ -7998,11 +8187,8 @@ export class Level {
       V(-4, 64, -368),
       V(-28, 62, -378),
       V(-52, 61, -380),
-    ], 13, 0x46b8d0, (t, auto) => {
-      const peak = Math.exp(-(((t - 0.55) / 0.22) ** 2));
-      return THREE.MathUtils.clamp(auto + 1.05 * peak, -1.1, 1.1);
-    });
-    this.ribbonFruit(r3.curve, 0.3, 0.8, 6);
+    ], 13, 0x46b8d0, [0, 26, 60, 44, 4]);
+    this.ribbonFruit(r3, 0.3, 0.8, 6);
 
     // R4 — unwind left and bomb a long wide S back down-course, with a crest
     // air and a grind line down the middle
@@ -8017,7 +8203,7 @@ export class Level {
       V(-14, 31, -584),
       V(-10, 29, -612),
     ], 14);
-    this.ribbonFruit(r4.curve, 0.15, 0.5, 9);
+    this.ribbonFruit(r4, 0.15, 0.5, 9);
     this.crate(-80, 43.6, -480);
     this.crate(-63, 38.9, -518, 'nitro'); // off the racing line — a hazard for sloppy lines, not an ambush
     this.checkpoint(29.8, -612, -15);
@@ -8032,7 +8218,7 @@ export class Level {
       V(4, 5.5, -722),
       V(6, 7.5, -738), // the lip kicks up
     ], 12);
-    this.ribbonFruit(r5.curve, 0.2, 0.7, 6);
+    this.ribbonFruit(r5, 0.2, 0.7, 6);
 
     // rope swing over the gap, WEST of the racing line: the flight line stays
     // honest (speed + jump), but a leap toward the rope opens a slower, showier
@@ -8123,7 +8309,7 @@ export class Level {
     for (const r of [r1, r2, r3, r4, r5, r6]) {
       const n = Math.max(2, Math.round(r.len / 7));
       for (let i = 0; i <= n; i++) {
-        const p = r.curve.getPointAt(i / n);
+        const p = r.frame(i / n, 0, 0);
         lane.push({ x: p.x, z: p.z });
       }
     }
