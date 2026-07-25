@@ -36,6 +36,37 @@ const VERT_TRACK_STEPS = [0.15, 0.05, 0, -0.12, -0.26, -0.45, -0.7];
 // the committed swing between top and under takes.
 const UNDER_RAIL_DEPTH = 1.65;
 const UNDER_RAIL_SWING = 0.32;
+// Deck-plant scratch (see plantOnDeck). The grip tape sits 0.205 up the
+// board group's own space: the deck box is 0.09 thick, centred at 0.16.
+const PLANT_DECK_TOP = 0.205;
+// How far up from a foot's lowest vertex still counts as "the sole".
+const SOLE_BAND = 0.03;
+/** Convex hull of a point cloud in the XZ plane; each point keeps its own Y. */
+function convexHullXZ(pts: THREE.Vector3[]): THREE.Vector3[] {
+  if (pts.length < 4) return pts.slice();
+  const sorted = pts.slice().sort((a, b) => a.x - b.x || a.z - b.z);
+  const turn = (o: THREE.Vector3, a: THREE.Vector3, b: THREE.Vector3): number =>
+    (a.x - o.x) * (b.z - o.z) - (a.z - o.z) * (b.x - o.x);
+  const half = (src: THREE.Vector3[]): THREE.Vector3[] => {
+    const out: THREE.Vector3[] = [];
+    for (const p of src) {
+      while (out.length >= 2 && turn(out[out.length - 2], out[out.length - 1], p) <= 0) out.pop();
+      out.push(p);
+    }
+    out.pop(); // shared endpoint — the other half picks it up
+    return out;
+  };
+  const lower = half(sorted);
+  const upper = half(sorted.slice().reverse());
+  const hull = lower.concat(upper);
+  return hull.length > 0 ? hull : pts.slice();
+}
+const _plantInv = new THREE.Matrix4();
+const _plantMR = new THREE.Matrix4();
+const _plantML = new THREE.Matrix4();
+const _plantV = new THREE.Vector3();
+const _plantO = new THREE.Vector3();
+const _plantC = new THREE.Vector3();
 
 interface GroundHit {
   y: number;
@@ -432,8 +463,14 @@ export class Player {
   private boardG: THREE.Group | null = null; // board + wheels: pulled up during grabs
   // Everything that is HER (legs, tail, torso) under one group, so the rider
   // can be shifted as a unit relative to the board without disturbing a single
-  // pose write — see the stance offset in syncVisual.
+  // pose write — see plantOnDeck().
   private riderG: THREE.Group | null = null;
+  // Sole footprint: the bottom corners of each foot, in that knee joint's own
+  // local space. Constant for a given rig (the flesh below the knee never
+  // moves), so they're measured once and re-measured when a model is swapped
+  // in. plantOnDeck() pushes them through the live joint chain each frame.
+  private soleR: THREE.Vector3[] | null = null;
+  private soleL: THREE.Vector3[] | null = null;
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
@@ -6185,6 +6222,173 @@ export class Player {
     return hits.length > 0 ? hits[0].point.y : null;
   }
 
+  /**
+   * The outline of one foot's SOLE, in that knee joint's own local space.
+   *
+   * Real vertices, not bounding boxes. On the authored rig the sole is its own
+   * little slab and a box would do, but a loaded model arrives as one merged
+   * shin-and-foot chunk whose box is centred on the whole leg — using it put
+   * the reference a whole shoe-width behind the actual sole. So: take every
+   * vertex below the knee, keep the bottom band, and box THAT. Everything
+   * below the knee is rigid, so the answer only has to be found once per model.
+   */
+  private soleFootprint(knee: THREE.Object3D): THREE.Vector3[] {
+    const verts: THREE.Vector3[] = [];
+    const m = new THREE.Matrix4();
+    const chain: THREE.Object3D[] = [];
+    const v = new THREE.Vector3();
+    knee.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh || !mesh.geometry) return;
+      const pos = (mesh.geometry as THREE.BufferGeometry).attributes.position as
+        | THREE.BufferAttribute
+        | undefined;
+      if (!pos) return;
+      // compose this mesh's transform back up to the knee (nothing above it)
+      chain.length = 0;
+      let p: THREE.Object3D | null = mesh;
+      while (p && p !== knee) {
+        chain.push(p);
+        p = p.parent;
+      }
+      m.identity();
+      for (let i = chain.length - 1; i >= 0; i--) {
+        chain[i].updateMatrix();
+        m.multiply(chain[i].matrix);
+      }
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i).applyMatrix4(m);
+        verts.push(v.clone());
+      }
+    });
+    if (verts.length === 0) return verts;
+    let low = Infinity;
+    for (const p of verts) low = Math.min(low, p.y);
+    // The bottom band IS the sole. Anything higher is shin, and shins are not
+    // what stands on a skateboard.
+    const band = verts.filter((p) => p.y < low + SOLE_BAND);
+    // Reduce it to the outline. A bounding box will NOT do: a carved model's
+    // foot sits at whatever angle it was authored at inside the knee's frame,
+    // and a box drawn round a diagonal sole is half again too wide — measured
+    // on this rig it stretched the two-foot footprint from 0.48 to 0.74 and
+    // put the centre a whole shoe off. The hull is the real outline, and it's
+    // a dozen points however dense the mesh is.
+    const outline = convexHullXZ(band);
+    let lowest = band[0];
+    for (const p of band) if (p.y < lowest.y) lowest = p;
+    if (!outline.includes(lowest)) outline.push(lowest); // the deepest point may sit inside the outline
+    return outline;
+  }
+
+  /**
+   * PLANT: put the soles ON the deck — in every pose, and all the way through
+   * the blends between them.
+   *
+   * The old fix was two constants: shorten the legs by 0.22 to stand on the
+   * deck's height, and shove the rider 0.347 across to stand on its width.
+   * Neither can hold, because neither is a constant of the problem.
+   *
+   * The 0.22 is a fraction of leg length, and `legs.scale.y` is a fold-
+   * dependent lever — scaling a chain already folded at the knee barely moves
+   * the foot. It is also model-dependent: the same 0.22 left the soles 0.124
+   * inside the deck on one character and 0.063 on another. The 0.347 was
+   * gated on `skatePose`, which collapses the moment she leaves the ground
+   * while the hip offset it was cancelling does not — so every ollie, grind
+   * and vert air put a shoe 0.30–0.33 past a deck edge 0.236 out.
+   *
+   * So stop guessing and measure. Every joint that moves a foot has been
+   * written by the time this runs, so push the sole outline through the live
+   * chain (legs → hip → knee), read it in the DECK's own frame, and solve for
+   * the offset that lands it: deepest point onto the grip, the two feet
+   * centred across the width. Whatever the pose and the model did to the legs
+   * is already in the answer.
+   *
+   * The board is pinned to the physics point and must stay there — shadow,
+   * landing X and collision all live at it — so the RIDER takes the offset.
+   * Only local matrices are touched, and the correction is applied to the
+   * PARENT of everything measured, so there is no feedback and no jitter.
+   */
+  private plantOnDeck(underW: number): void {
+    const rg = this.riderG;
+    if (!rg) return;
+    const legs = this.legs;
+    const bg = this.boardG;
+    const { legR, legL, kneeR, kneeL } = this;
+    // Weight: only while the deck is genuinely flat under her feet. A wallride
+    // has it on its edge against the wall, an under-rail hang has it overhead
+    // in both hands, a grab has it in one — solving "soles onto the grip" in
+    // any of those would drag her off the board. (The wallride was tried and
+    // rejected on the picture: with the deck rolled a quarter turn, "out of
+    // the deck" is sideways, and it pushed her behind the board instead of
+    // onto its face. It gets most of the win anyway — dropping the old fixed
+    // stance offset took its worst sole from −0.585 to −0.176.)
+    //
+    // deckPose is used as a SWITCH, not as a dial: it takes ~0.2s to blend,
+    // and scaling the offset by it means that for the first frames of every
+    // mount the feet are only partly on a deck that is already fully under
+    // them and fully drawn. Ramping to full by the time it is half-blended
+    // costs nothing at the ends and cuts the walk→skate worst case by 3×.
+    const w =
+      THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5) *
+      (1 - this.wallridePose) *
+      (1 - underW) *
+      (1 - this.grabPose) *
+      (1 - this.slidePose) *
+      (1 - this.ledgePose);
+    if (!legs || !bg || !legR || !legL || !kneeR || !kneeL || w <= 0.002) {
+      rg.position.set(0, 0, 0);
+      return;
+    }
+    if (!this.soleR || !this.soleL) {
+      this.soleR = this.soleFootprint(kneeR);
+      this.soleL = this.soleFootprint(kneeL);
+    }
+    if (this.soleR.length === 0 || this.soleL.length === 0) {
+      rg.position.set(0, 0, 0);
+      return;
+    }
+    legs.updateMatrix();
+    legR.updateMatrix();
+    legL.updateMatrix();
+    kneeR.updateMatrix();
+    kneeL.updateMatrix();
+    bg.updateMatrix();
+    // knee-local → rider-local → deck-geometry-local, in one matrix per foot.
+    // (riderG carries no rotation, so its parent's frame IS the rider frame.)
+    const toDeck = _plantInv.copy(bg.matrix).invert();
+    const mR = _plantMR.multiplyMatrices(legs.matrix, legR.matrix).multiply(kneeR.matrix).premultiply(toDeck);
+    const mL = _plantML.multiplyMatrices(legs.matrix, legL.matrix).multiply(kneeL.matrix).premultiply(toDeck);
+    const v = _plantV;
+    let minY = Infinity;
+    let lo = Infinity;
+    let hi = -Infinity;
+    for (const p of this.soleR) {
+      v.copy(p).applyMatrix4(mR);
+      if (v.y < minY) minY = v.y;
+      if (v.x < lo) lo = v.x;
+      if (v.x > hi) hi = v.x;
+    }
+    for (const p of this.soleL) {
+      v.copy(p).applyMatrix4(mL);
+      if (v.y < minY) minY = v.y;
+      if (v.x < lo) lo = v.x;
+      if (v.x > hi) hi = v.x;
+    }
+    // Deck box: 0.09 thick, centred 0.16 up its own group — so the grip tape
+    // is 0.205 in deck-geometry units, whatever the board is doing in world.
+    // Vertical: lift until the DEEPEST corner rests on the grip, so nothing
+    // clips. Lateral: centre the whole two-foot footprint across the width
+    // rather than its average, which is what actually minimises the overhang
+    // when the two feet sit at different points across the deck.
+    const dy = PLANT_DECK_TOP - minY;
+    const dx = -0.5 * (lo + hi);
+    // Back out of the deck frame: rotation and scale only, never its position
+    // (that's the board's own animation, not ours to cancel).
+    const o = _plantO.set(0, 0, 0).applyMatrix4(bg.matrix);
+    const corr = _plantC.set(dx * w, dy * w, 0).applyMatrix4(bg.matrix).sub(o);
+    rg.position.copy(corr);
+  }
+
   private syncVisual(input: Input, dt: number): void {
     this.group.position.copy(this.pos);
 
@@ -6699,7 +6903,7 @@ export class Player {
       this.legs.scale.y = Math.max(
         0.15,
         1 -
-          0.22 * this.deckPose * (1 - this.wallridePose) - // stand ON the deck top, not through it (wallride keeps its own tuck)
+          0.22 * this.deckPose * (1 - this.wallridePose) - // skate crouch: knees bent over the deck (plantOnDeck owns where the soles land)
           0.1 * this.chargePose * this.skatePose - // absorbs the pump's shallow knee bend so the feet stay planted
           0.2 * standCharge - // planted on-foot charge: telescope the legs so the crouch keeps the soles down
           0.5 * this.grabPose -
@@ -6709,25 +6913,6 @@ export class Player {
           0.28 * this.wallridePose - // knees bent tucking the board onto the wall
           0.4 * this.wallChargePose, // sink deeper the more you pump the launch
       );
-    }
-    // STANCE OFFSET: plant her ON the deck, not beside it.
-    //
-    // The skate crouch folds the knees FORWARD, which walks the soles out
-    // along the body's local +Z. In the forward-facing frame that is along the
-    // board and harmless — the feet just slide fore and aft on a deck that is
-    // 1.3 long. But side-on the body is turned 90°, so the same fold pushes
-    // the soles ACROSS a deck only 0.47 wide, and measured on the rig it put
-    // both soles at 0.41 from the centreline — past the 0.236 edge, with her
-    // standing next to her own board.
-    //
-    // The board is pinned to the physics point and must stay there (the
-    // shadow, the landing X and the collision all live there), so the RIDER
-    // takes the correction. Scaled by the same side-on weight that causes it,
-    // so walking and the forward frame are untouched. The constant is in the
-    // rider's LOCAL units — inside the 1.18 body scale — so 0.347 here is the
-    // 0.41 of world offset that was actually measured off the deck.
-    if (this.riderG) {
-      this.riderG.position.z = -0.347 * this.skatePose * this.sidePose;
     }
     if (this.boardG) {
       // The charge crouch drops the whole bodyGroup 0.26 (world) — the board
@@ -6795,6 +6980,10 @@ export class Player {
       }
       if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
+    // Every joint that moves a foot has now been written, and the board has
+    // its final transform — so this is the one moment the two can be measured
+    // against each other. Do it, and put the soles where they belong.
+    this.plantOnDeck(underW);
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace.
@@ -7412,6 +7601,9 @@ export class Player {
       kneeG.position.set(0, -l.knee.distanceTo(l.hip), 0);
       kneeG.add(build(bucket[s === 'R' ? 'shinR' : 'shinL'], l.knee, qDown(l.knee, l.foot)));
     }
+    // new feet: the cached sole footprint belonged to the previous rig
+    this.soleR = null;
+    this.soleL = null;
 
     // TAIL — the unrigged brush. Band the carved geometry by height into a
     // 3-joint chain seated on the mesh; the chunks carry the curl, the sway
@@ -7860,6 +8052,9 @@ export class Player {
     this.kneeL!.position.y = KNEE - HIP;
     this.kneeR!.add(build(parts.shinR));
     this.kneeL!.add(build(parts.shinL));
+    // new feet: the cached sole footprint belonged to the placeholder's shoes
+    this.soleR = null;
+    this.soleL = null;
     // tail: rebuild the joint chain — FIVE joints seated on the authored
     // curve. The chunks carry the shape, so every joint's rest is 0 and the
     // sway driver only flexes deltas down the chain.
