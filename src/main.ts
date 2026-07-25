@@ -36,9 +36,8 @@ const LITE_RENDER = window.location.search.includes('lite');
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 // NATIVE RESOLUTION. The device pixel ratio is the baseline — on a Retina
 // panel that is 2x the CSS grid, and rendering below it was the single biggest
-// thing making the game look cheap. renderScale rides ON TOP as a pure
-// performance knob (see resize), not an era knob. Capped at 2: past that the
-// pixels are far too small to see and it is pure fill-rate.
+// thing making the game look cheap. Capped at 2: past that the pixels are far
+// too small to see and it is pure fill-rate.
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 // No tone curve. Every colour in this game was authored by eye against a raw
 // output, and ACES/AgX/Neutral all pull the saturation out of it — the sky
@@ -505,10 +504,10 @@ function resize(): void {
   const standalone = (navigator as unknown as { standalone?: boolean }).standalone === true;
   if (standalone && h > w && window.screen.height > h) h = window.screen.height;
   document.documentElement.style.setProperty('--vh', h + 'px');
-  const rs = LITE_RENDER ? Math.min(TUNING.renderScale, 0.5) : TUNING.renderScale;
+  // Native resolution, always. The headless smoke mode is the one exception:
+  // it renders at half size purely to keep the software rasteriser quick.
+  const rs = LITE_RENDER ? 0.5 : 1;
   renderer.setSize(Math.round(w * rs), Math.round(h * rs), false);
-  // Always smooth. Dropping the scale is a frame-rate trade, and a soft
-  // upscale is what that should look like — never a deliberate mosaic.
   renderer.domElement.style.imageRendering = '';
   camera.aspect = split2p ? w / (h / 2) : w / h;
   camera.updateProjectionMatrix();
@@ -523,8 +522,6 @@ window.addEventListener('orientationchange', () => setTimeout(resize, 250));
 setTimeout(resize, 400);
 setTimeout(resize, 1200);
 resize();
-// renderScale is a live tuner slider; the frame loop re-resizes when it moves.
-let appliedScale = TUNING.renderScale;
 
 const input = new Input();
 // Each player's input refuses the other's claimed pad — and P2 additionally
@@ -1084,7 +1081,7 @@ window.addEventListener('keydown', (e) => {
     if (e.code === 'Digit6') switchLevel(5);
     if (e.code === 'Digit7') switchLevel(6);
     if (e.code === 'Digit8') switchLevel(7); // Custom (the editor's level)
-    if (e.code === 'Digit9') switchLevel(8); // The Overgrowth
+    if (e.code === 'Digit9') switchLevel(8); // The Slipstream
   }
   if (e.code === 'F8') saveReplay(); // playtest capture: input take -> .json
   if (e.code === 'F9') toggleVideo(); // playtest capture: canvas -> .webm
@@ -1422,10 +1419,6 @@ let paused = false;
 
 function frame(): void {
   requestAnimationFrame(frame);
-  if (TUNING.renderScale !== appliedScale) {
-    appliedScale = TUNING.renderScale;
-    resize(); // chunk knob moved: rebuild the internal buffer at the new res
-  }
   const dt = Math.min(clock.getDelta(), 0.1);
   input.update();
   if (split2p) {

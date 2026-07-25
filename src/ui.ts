@@ -142,12 +142,11 @@ export class UI {
     });
     statsWrap.appendChild(levelRow);
 
-    // CHARACTER pick: swap the hero model (persists across sessions). Both are
-    // Meshy fox-girls; the choice is cosmetic — all animation is shared.
+    // CHARACTER pick: swap the hero model (persists across sessions). The
+    // choice is cosmetic — all animation is shared.
     const charRow = div('hud-levelrow hud-charrow');
     const CHARS: { id: string; label: string }[] = [
       { id: 'fox', label: '🦊 FOX' },
-      { id: 'roxy', label: '🎀 ROXY' },
     ];
     CHARS.forEach((c) => {
       const btn = document.createElement('button');

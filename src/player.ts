@@ -157,7 +157,13 @@ export class Player {
 
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
-  private shadow: THREE.Mesh;
+  // The procedural body underneath is the SKELETON plus a placeholder skin.
+  // The skeleton is load-bearing — every model bolts its chunks onto it — but
+  // the placeholder skin used to flash on screen for the second or so the GLB
+  // took to arrive. So the rig stays hidden until a model has landed. It also
+  // flips true on a load FAILURE, deliberately: a visible placeholder beats an
+  // invisible skater if the network drops the model.
+  private modelReady = false;
 
   private spinTimer = 0;
   private spinCd = 0;
@@ -539,26 +545,12 @@ export class Player {
     }
     this.installSmear(); // whirlwind smear model shown during the spin attack
 
-    // Contact patch under the feet. This used to be the ONLY shadow in the
-    // game, so it was drawn dark and hard to anchor the character. There is a
-    // real cast shadow now, and at the old strength the two stacked into a
-    // black smudge — so it drops back to what it should always have been: a
-    // soft occlusion patch that keeps the feet planted (and doubles as the
-    // landing indicator over a pit, where nothing is there to catch a real
-    // shadow at all).
-    const shadowGeo = new THREE.CircleGeometry(0.42, 20);
-    shadowGeo.scale(1, 0.85, 1); // slightly wider than deep once laid flat
-    this.shadow = new THREE.Mesh(
-      shadowGeo,
-      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3 }),
-    );
-    this.shadow.rotation.x = -Math.PI / 2;
-    scene.add(this.shadow);
-
     // Landing X: a small cross pinned to the floor under the skater — the
-    // precise "you land HERE" mark the soft shadow blob can't give. Rides
-    // the same floor probe as the shadow, growing a touch with height so it
-    // stays readable from big airs.
+    // precise "you land HERE" mark. There used to be a soft dark blob under it
+    // too, from back when that was the only shadow in the game; the real cast
+    // shadow does that job now, so the blob was just a second smudge stacked
+    // on the first. The X rides a long-range floor probe, growing a touch with
+    // height so it stays readable from big airs.
     const xMat = new THREE.MeshBasicMaterial({
       color: 0xffe36e,
       transparent: true,
@@ -6988,7 +6980,8 @@ export class Player {
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace.
     this.bodyGroup.visible =
-      this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead';
+      this.modelReady &&
+      (this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead');
     // Spin smear: swap the skater for the whirlwind while the attack runs.
     // Held poses, not a smooth turn: a new angle every 2 frames (30Hz), each
     // step ~137° so consecutive holds never look alike — reads as a strobing
@@ -7256,15 +7249,11 @@ export class Player {
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
 
-    // Blob shadow: persistent landing indicator, snapped to whatever floor is
-    // below no matter how high the air. Shrinks with height but never fades.
+    // Landing X: persistent landing indicator, snapped to whatever floor is
+    // below no matter how high the air, growing a touch with height so it
+    // reads from the top of a big one.
     if (this.shadowGroundY !== null && this.state !== 'dead' && this.state !== 'gameover') {
       const h = Math.max(0, this.pos.y - this.shadowGroundY);
-      this.shadow.visible = true;
-      this.shadow.position.set(this.pos.x, this.shadowGroundY + 0.03, this.pos.z);
-      this.shadow.scale.setScalar(THREE.MathUtils.clamp(0.9 - h * 0.04, 0.35, 0.9));
-      // the landing X rides the same probe, growing a touch with height so
-      // it reads from the top of a big air
       this.floorX.visible = true;
       this.floorX.position.set(this.pos.x, this.shadowGroundY + 0.05, this.pos.z);
       this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
@@ -7274,14 +7263,11 @@ export class Player {
       // over the gap right now (your live x/z) — a "where am I in the jump" read,
       // not a prediction of where the arc ends (that's the player's call). It
       // drops away once you sink below the landing plane (missed / plummeting).
-      // No shadow — you ARE over the pit.
-      this.shadow.visible = false;
       const h = Math.max(0, this.pos.y - this.lastGroundY);
       this.floorX.visible = true;
       this.floorX.position.set(this.pos.x, this.lastGroundY + 0.05, this.pos.z);
       this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
     } else {
-      this.shadow.visible = false; // no shadow = you are over the pit
       this.floorX.visible = false;
     }
 
@@ -7362,32 +7348,38 @@ export class Player {
         gltf.scene.traverse((o) => {
           if (!source && (o as THREE.Mesh).isMesh) source = o as THREE.Mesh;
         });
-        if (!source) return;
+        if (!source) {
+          this.modelReady = true; // nothing usable in the file: show the placeholder
+          return;
+        }
         try {
           this.segmentRoo(source);
         } catch (e) {
           console.warn('roo segmentation failed (procedural body stays):', e);
         }
+        this.modelReady = true;
       },
       undefined,
-      (e) => console.warn('roo model failed to load (procedural body stays):', e),
+      (e) => {
+        console.warn('roo model failed to load (procedural body stays):', e);
+        this.modelReady = true;
+      },
     );
   }
 
-  // ——— Skinned Meshy bipeds (fox, roxy, …) ——————————————————————————————
+  // ——— Skinned Meshy bipeds ————————————————————————————————————————————
   // These ship a real 24-bone biped skeleton + skin weights. We do NOT
   // skeletal-animate them — the game's whole trick vocabulary is procedural
   // pose-rig driven. Instead we exploit the skeleton to segment the mesh
   // CLEANLY: each triangle joins the rig part its dominant bone maps to,
   // pivoted at the bone's rest position, so the PS1 chunks bolt onto the same
-  // pose rig the roo used. A tail (if the model has one — fox does, roxy
-  // doesn't) has NO bones, so it's carved from geometry behind the hips into
-  // a procedural sway chain, roo-style.
-  // The pickable roster (id → glb + whether it has a brush tail). 'roo' uses
-  // the legacy static-mesh segmentation instead.
+  // pose rig the roo used. A tail (if the model has one) has NO bones, so it's
+  // carved from geometry behind the hips into a procedural sway chain,
+  // roo-style.
+  // The pickable roster (id → glb). 'roo' uses the legacy static-mesh
+  // segmentation instead.
   static readonly CHARACTERS: { id: string; name: string }[] = [
     { id: 'fox', name: 'Fox' },
-    { id: 'roxy', name: 'Roxy' },
   ];
 
   // Swap the visible character live (menu pick). Re-segmentation cleanly
@@ -7407,15 +7399,22 @@ export class Player {
         gltf.scene.traverse((o) => {
           if (!mesh && (o as THREE.SkinnedMesh).isSkinnedMesh) mesh = o as THREE.SkinnedMesh;
         });
-        if (!mesh) return;
+        if (!mesh) {
+          this.modelReady = true; // nothing usable in the file: show the placeholder
+          return;
+        }
         try {
           this.segmentBiped(mesh);
         } catch (e) {
           console.warn('biped segmentation failed (procedural body stays):', e);
         }
+        this.modelReady = true;
       },
       undefined,
-      (e) => console.warn('biped model failed to load (procedural body stays):', e),
+      (e) => {
+        console.warn('biped model failed to load (procedural body stays):', e);
+        this.modelReady = true;
+      },
     );
   }
 
@@ -7501,7 +7500,7 @@ export class Player {
     };
     // Verts collected per part. The TAIL is carved GEOMETRICALLY, not by
     // bone: it's any triangle sitting behind the body and below mid-height.
-    // Meshy rigs the tail inconsistently (the fox weights it to Hips, roxy to
+    // Meshy rigs the tail inconsistently (the fox weights it to Hips, others to
     // a thigh bone), so a bone-based carve is fragile — a geometric one
     // catches the brush wherever the rigger stashed its skin weights, and
     // returns empty (→ no tail) for a genuinely tailless model.

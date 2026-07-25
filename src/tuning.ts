@@ -137,7 +137,6 @@ export const TUNING = {
   nitroRadius: 2.75, // nitro explosion kill/break radius
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
-  renderScale: 1, // internal resolution as a fraction of NATIVE (device pixels) — a perf knob
   // CAMERA defaults (the long-standing hand-tuned chase framing).
   // camTilt aims AT the character (2.1 ≈ just over her head — this exactly
   // reproduces the old 21° down-pitch); camOffset TRANSLATES the whole rig
@@ -285,7 +284,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   nitroRadius: { min: 2, max: 12, step: 0.25 },
   tntRadius: { min: 1.5, max: 10, step: 0.25 },
   boulderSpeed: { min: 10, max: 45, step: 1 },
-  renderScale: { min: 0.5, max: 1, step: 0.05 },
   camFov: { min: 30, max: 100, step: 1 },
   chaseCam: { min: 0, max: 1, step: 1 },
   camDist: { min: 2, max: 14, step: 0.1 },
@@ -509,8 +507,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   tntRadius: 'TNT explosion radius once the 3-2-1 fuse runs out (or it is spun/slammed).',
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
-  renderScale:
-    'Internal render resolution, as a fraction of the display\'s NATIVE pixels (so 1 is fully sharp on a Retina panel, not half of it). This is a performance knob and nothing else — drop it if a device struggles, and the upscale stays smooth the whole way down.',
   camFov:
     'ZOOM (focal length): the camera lens angle. Lower = telephoto punch-in (tighter, flatter, more cinematic); higher = wide angle (more of the world, more distortion). Side-scroll zones and the boulder chase still add their own push.',
   camTilt:
@@ -599,7 +595,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift'] },
-  { title: 'WORLD', keys: ['boulderSpeed', 'renderScale'] },
+  { title: 'WORLD', keys: ['boulderSpeed'] },
 ];
 
 // Fixed authored constants that are part of the feel but stay off the sliders
@@ -683,5 +679,4 @@ export const CONST = {
   // landingFlow/wallStick/landGive sliders); only the structural facet
   // threshold stays fixed here.
   steepSnapNormal: 0.85, // below this, ground-follow + landing windows widen for transitions
-  renderScale: 1, // ship at native resolution (live knob: TUNING.renderScale)
 };
