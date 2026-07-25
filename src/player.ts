@@ -194,11 +194,15 @@ export class Player {
   // heuristic, never the flag alone. An unflagged steep face still behaves
   // exactly as it always did; a flagged face is vert even where the angle is
   // too shallow to guess (a mellow bank the designer wants ridden as vert).
+  // The vert flag is a TRI-STATE and all three states matter. `true` is "ride
+  // this as vert whatever its angle"; `false` is "this is a ROAD, never vert,
+  // however steeply it banks" — a banked slide deck is not a transition just
+  // because it leans; and `undefined` is unflagged geometry, where the angle
+  // heuristic is all we have. Reading `false` as "unflagged" is what let the
+  // Slipstream's gutters get tracked as walls and glue riders to them.
   private get onTransition(): boolean {
-    return (
-      this.groundHit !== null &&
-      (this.groundHit.vert === true || this.groundHit.normal.y < TUNING.steepStand)
-    );
+    if (this.groundHit === null || this.groundHit.vert === false) return false;
+    return this.groundHit.vert === true || this.groundHit.normal.y < TUNING.steepStand;
   }
   // Whether the current airtime started from SKATING (ollie, slide/grind
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
@@ -2199,12 +2203,14 @@ export class Player {
       // Steepness weight for carve/pump. A FLAGGED face gets a floor: the level
       // said "ride this as vert", so a mellow authored bank must still pump
       // meaningfully instead of paying ~0 because (1 - normal.y) is tiny.
-      const transWeight = this.groundHit
-        ? Math.max(
-            1 - this.groundHit.normal.y,
-            this.groundHit.vert ? 1 - TUNING.steepStand : 0,
-          )
-        : 0;
+      // (a face flagged as a ROAD pays nothing, however hard it banks)
+      const transWeight =
+        this.groundHit && this.groundHit.vert !== false
+          ? Math.max(
+              1 - this.groundHit.normal.y,
+              this.groundHit.vert ? 1 - TUNING.steepStand : 0,
+            )
+          : 0;
       if ((onPipe || this.onTransition) && (input.moveX !== 0 || input.moveY !== 0)) {
         this.speed += TUNING.pipeCarve * transWeight * dt;
       }
@@ -2470,6 +2476,10 @@ export class Player {
     // into hang time (with lateral), instead of failing because the projected
     // slope dropped below vertLip. vertLip maps to the wall-normal threshold.
     const vertWallY = Math.sqrt(Math.max(0, 1 - TUNING.vertLip * TUNING.vertLip));
+    // ...but a face the level flagged as a ROAD never launches a hang, however
+    // hard it banks. A slide's gutter lip is a kerb that holds you in the
+    // course, not a coping that throws you off it.
+    const vertFace = (h: GroundHit | null): boolean => h !== null && h.vert !== false;
     // HALFPIPE COPING LAUNCH: climbing a transition and reaching the near-vert
     // top (rideNormal.y <= 0.25, up near the lip height) pops you over into the
     // EXISTING vert hang-time — a big air if you rocketed up with speed, a small
@@ -2515,6 +2525,7 @@ export class Player {
       hit &&
       !this.isBailing && // ...same for the general crest
       this.speed > 0.5 &&
+      vertFace(hit) &&
       (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY) &&
       hit.normal.y >= CONST.steepSnapNormal
     ) {
@@ -2605,7 +2616,7 @@ export class Player {
           : 0;
       // A near-vertical lip (halfpipe coping) is hang time; releasing X launches.
       // Same head-on-OR-vert-wall test as the grounded crest (angled entries too).
-      if (this.vVel > 0.5 && (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY)) {
+      if (this.vVel > 0.5 && vertFace(hit) && (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY)) {
         this.enterVertAir(
           input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || this.vertLaunchT > 0,
         );
@@ -2659,8 +2670,10 @@ export class Player {
         // Climbing a near-vert wall: DON'T ollie into the wall — reserve the
         // release as the lip LAUNCH (the imminent crest reads vertLaunchT and
         // flies you higher into hang time). If no crest comes, it just fizzles.
+        // (onTransition, not bare steepness — swallowing the ollie on a banked
+        // ROAD would just eat the jump, since no vert crest is ever coming)
         const climbingVert =
-          steepGround && this.speed > 0.5 && this.lastTy > TUNING.vertLip * 0.5;
+          steepGround && this.onTransition && this.speed > 0.5 && this.lastTy > TUNING.vertLip * 0.5;
         if (climbingVert) this.vertLaunchT = 0.25;
         else this.chargedJump(dt);
       }
@@ -3233,6 +3246,7 @@ export class Player {
       // A face the level FLAGGED as vert is tracked whatever its angle — the
       // 0.88 number below is a heuristic whose own comment admits it is fighting
       // our bowls, and an authored flag is exactly the answer to that.
+      if (h.object.userData.vert === false) continue; // authored ROAD: never a wall
       if (!h.object.userData.vert && Math.abs(wn.y) >= 0.88) continue;
       const fl = Math.hypot(wn.x, wn.z);
       if (fl < 1e-4) continue;

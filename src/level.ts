@@ -4534,10 +4534,12 @@ export class Level {
     });
     const mesh = new THREE.Mesh(vr.geometry, mat);
     mesh.name = c.vert === false ? 'slide deck' : 'vertramp';
-    // THE POINT OF ALL THIS: the level DECLARES this is vert, so the physics
-    // stops guessing from normal.y. A banked road opts out — its flat middle
-    // is a road, not a trough, and pumping it would be nonsense.
-    if (c.vert !== false) mesh.userData.vert = true;
+    // THE POINT OF ALL THIS: the level DECLARES what this is, so the physics
+    // stops guessing from normal.y. And it declares it BOTH ways — `false` is
+    // not "unflagged", it is "this is a ROAD", which is what keeps a slide's
+    // banked gutters from being tracked as vert walls and gluing riders to
+    // them. The player reads all three states (see Player.onTransition).
+    mesh.userData.vert = c.vert !== false;
     // the component that drew this, so CAPTURE can hand it straight back
     mesh.userData.vertComp = JSON.parse(JSON.stringify(c)) as CustomComponent;
     mesh.userData.vertCopings = vr.copings.map((cop) =>
@@ -8136,108 +8138,95 @@ export class Level {
       particleColor: 0xffffff, // spray motes drifting off the slide
       particleWind: [0.5, 0.1, 0.3],
     };
-    const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+    const V = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
     // start plateau: a wide launch deck way up in the sky
-    this.slab('launch deck', 26, -6, 150, 16, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
+    this.slab('launch deck', 26, -6, 150, 22, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
     this.spawnPos.set(0, 150.1, 18);
     this.currentSpawn.copy(this.spawnPos);
 
-    // R1 — the opening mega-drop: a huge sweeping S out to x=55 and back
-    const r1 = this.slideRibbon([
-      V(0, 150, -4),
-      V(0, 146, -30),
-      V(24, 138, -64),
-      V(52, 128, -104),
-      V(55, 122, -140),
-      V(30, 114, -172),
-      V(-10, 108, -206),
-      V(-32, 104, -232),
-    ], 13);
-    this.ribbonFruit(r1, 0.12, 0.4, 8);
-    this.ribbonFruit(r1, 0.6, 0.86, 7);
-    this.crate(52, 128.6, -110);
-    this.crate(55, 122.4, -136, 'mystery');
-    this.crate(30, 114.5, -172, 'tnt');
-
-    // R2 — THE CORKSCREW: a full 270° clockwise spiral, dropping the whole
-    // way round, then unwinding east into the course line again
-    const CX = -30;
-    const CZ = -300;
-    const CR = 26;
-    const spiralPts: THREE.Vector3[] = [V(-25, 105, -224)]; // starts ON R1's tail (true overlap, no seam crack)
+    // ---- THE RUN: ONE spine, start to kicker ------------------------------
+    // The old course was six ribbons abutted end to end, each guessing at its
+    // neighbour's tangent; every join was a seam you could catch a wheel on.
+    // This is a single node list, so there are no joins to get wrong — the
+    // spline is continuous by construction and the whole descent is one sweep.
+    // The only real break in the level is the water gap, and that one is
+    // deliberate.
+    const CX = -32; // corkscrew centre
+    const CZ = -302;
+    const CR = 30; // wide enough that the fat trough never eats its own inside
+    const spiral: THREE.Vector3[] = [];
     for (let k = 0; k <= 6; k++) {
       const th = (-k * 45 * Math.PI) / 180; // 0 .. -270°, clockwise from the east point
-      spiralPts.push(V(CX + CR * Math.cos(th), 98 - k * 3.2, CZ + CR * Math.sin(th)));
+      spiral.push(V(CX + CR * Math.cos(th), 98 - k * 3.6, CZ + CR * Math.sin(th)));
     }
-    spiralPts.push(V(-2, 76, -278), V(16, 72, -306));
-    // banks hard NEGATIVE (deck's right side up) all the way round the spiral,
-    // easing in off R1's tail and out into the unwind
-    const r2 = this.slideRibbon(spiralPts, 12, 0x3ec8d8,
-      [0, -12, -26, -31, -31, -31, -31, -26, -12, 0]);
-    this.ribbonFruit(r2, 0.2, 0.75, 10);
-    this.crystal(CX, 90.5, CZ - CR); // parked mid-spiral: hold the high line round to it
-    this.checkpoint(72.9, -310, 20);
+    const run: THREE.Vector3[] = [
+      // the opening mega-drop: a huge sweeping S out east and back
+      V(0, 150, -4), V(0, 146, -30), V(24, 138, -64), V(52, 128, -104),
+      V(55, 122, -140), V(30, 114, -172), V(-10, 108, -206), V(-30, 104, -234),
+      ...spiral, // THE CORKSCREW: a full 270° clockwise spiral, dropping all the way round
+      V(-6, 73, -286), V(14, 70, -310), // unwind east, back onto the course line
+      // the big banked right-hander — leaned hard, but the trough walls do the
+      // containing now instead of a wall-of-death you could get stranded on
+      V(12, 66, -348), V(-6, 63, -370), V(-34, 61, -380), V(-64, 58, -392),
+      // the long S bomb back down-course, with a crest to pop
+      V(-94, 54, -404), V(-102, 50, -430), V(-96, 46, -458), V(-80, 42, -486),
+      V(-56, 38, -518), V(-30, 35, -550), V(-14, 31, -584), V(-10, 29, -612),
+      // THE RUN-UP: straight, steep, into an up-kicked lip. The gap past it is
+      // sized for full speed AND a jump — one alone drops you in the water.
+      V(-8, 25, -640), V(-6, 19, -668), V(-1, 11, -698), V(3, 5.5, -722),
+      V(6, 7.5, -738),
+    ];
+    // Extra lean where the course wants to feel banked, on top of the automatic
+    // turn-in. Negative = the deck's right side comes up. The corkscrew holds a
+    // steady lean the whole way round; the right-hander leans through its apex.
+    const roll = new Array<number>(run.length).fill(0);
+    const spiral0 = 8; // index of the first spiral node
+    for (const [i, r] of [[-1, -8], [0, -18], [1, -24], [2, -24], [3, -24], [4, -24], [5, -18], [6, -10], [7, -4]] as const) {
+      roll[spiral0 + i] = r;
+    }
+    for (const [i, r] of [[18, -6], [19, -12], [20, -10], [21, -4]] as const) roll[i] = r;
 
-    // R3 — THE VERT WALL: a hard right turn ridden up a near-vertical bank,
-    // velodrome style — the deck rolls to ~60° through the apex
-    const r3 = this.slideRibbon([
-      V(12, 73, -299), // starts ON the spiral's unwind (true overlap)
-      V(12, 67, -348),
-      V(-4, 64, -368),
-      V(-28, 62, -378),
-      V(-52, 61, -380),
-    ], 13, 0x46b8d0, [0, 26, 60, 44, 4]);
-    this.ribbonFruit(r3, 0.3, 0.8, 6);
+    const main = this.slideRibbon(run, 16, 0x3ec8d8, roll, 46);
+    // THE GAP: ~18 units of open water, then the landing ribbon
+    const land = this.slideRibbon([V(7, 0.8, -756), V(6, 0.4, -790), V(2, 0.2, -816)], 16, 0x46b8d0);
 
-    // R4 — unwind left and bomb a long wide S back down-course, with a crest
-    // air and a grind line down the middle
-    const r4 = this.slideRibbon([
-      V(-44, 62, -379), // starts ON the vert wall's exit (true overlap)
-      V(-94, 55, -394),
-      V(-100, 51, -420),
-      V(-94, 47, -450),
-      V(-80, 43, -480),
-      V(-56, 38, -514),
-      V(-30, 35, -548), // crest bump
-      V(-14, 31, -584),
-      V(-10, 29, -612),
-    ], 14);
-    this.ribbonFruit(r4, 0.15, 0.5, 9);
-    this.crate(-80, 43.6, -480);
-    this.crate(-63, 38.9, -518, 'nitro'); // off the racing line — a hazard for sloppy lines, not an ambush
-    this.checkpoint(29.8, -612, -15);
-
-    // R5 — THE RUN-UP: a straight, steep bomb into an up-kicked launch lip.
-    // The gap past it is sized for full speed AND a jump — one or the other
-    // alone drops you in the water.
-    const r5 = this.slideRibbon([
-      V(-11, 30, -604), // starts ON R4's tail — the ONLY real gap is past the lip
-      V(-6, 21, -662),
-      V(0, 11, -696),
-      V(4, 5.5, -722),
-      V(6, 7.5, -738), // the lip kicks up
-    ], 12);
-    this.ribbonFruit(r5, 0.2, 0.7, 6);
+    // ---- furniture, hung off the ribbon's own frame ------------------------
+    // Everything sits at (t, off) on the surface, so nothing floats or sinks
+    // when the line is re-tuned.
+    const onDeck = (r: SlideRibbon, t: number, off: number, kind?: 'nitro' | 'tnt' | 'mystery'): void => {
+      const p = r.frame(t, off, 0);
+      this.crate(p.x, p.y + 0.6, p.z, kind);
+    };
+    this.ribbonFruit(main, 0.03, 0.11, 8); // the drop
+    this.ribbonFruit(main, 0.16, 0.24, 7);
+    this.ribbonFruit(main, 0.33, 0.46, 10); // round the corkscrew
+    this.ribbonFruit(main, 0.56, 0.63, 6); // the right-hander
+    this.ribbonFruit(main, 0.70, 0.80, 8); // the S bomb
+    this.ribbonFruit(main, 0.90, 0.96, 6); // the run-up
+    onDeck(main, 0.075, -5);
+    onDeck(main, 0.13, 5, 'mystery');
+    onDeck(main, 0.19, -5, 'tnt');
+    onDeck(main, 0.73, 5);
+    onDeck(main, 0.78, -5.5, 'nitro'); // off the racing line: a hazard for sloppy lines, not an ambush
+    const gem = main.frame(0.40, 0, 2.2); // parked mid-spiral: hold the line round to it
+    this.crystal(gem.x, gem.y, gem.z);
+    for (const t of [0.5, 0.86]) {
+      const p = main.frame(t, 0, 0);
+      this.checkpoint(p.y, p.z, p.x);
+    }
 
     // rope swing over the gap, WEST of the racing line: the flight line stays
     // honest (speed + jump), but a leap toward the rope opens a slower, showier
     // crossing — catch, ride the arc, release onto the landing
     this.ropeSwing(-3, 19, -747, 9.5, 0.8, 0, 0, 90);
 
-    // THE GAP: ~20 units of open water, then the landing ribbon
-    const r6 = this.slideRibbon([
-      V(7, 0.8, -756),
-      V(6, 0.4, -790),
-      V(2, 0.2, -816),
-    ], 14);
-
     // THE WEAVE: alternating edge rails all the way down the course — grind
     // one, pop off, manual across the deck, catch the next on the other side.
     // A crate trio seeds every crossing (the combo dress turns a third of
     // them into balance windows), so the whole run reads as one combo line.
     const edgeRail = (r: SlideRibbon, t0: number, t1: number, side: -1 | 1): void => {
-      const off = side * (r.width / 2 - 2.5); // just inside the gutter lip
+      const off = side * (r.width / 2 - 2.2); // just inside the trough wall
       const n = Math.max(2, Math.round(((t1 - t0) * r.len) / 6));
       const rpts: THREE.Vector3[] = [];
       for (let i = 0; i <= n; i++) rpts.push(r.frame(THREE.MathUtils.lerp(t0, t1, i / n), off, 0.72));
@@ -8249,18 +8238,18 @@ export class Level {
       // flank the line, never block it: cruise speed (12) is BELOW smash
       // speed (12.5), so a crate on the centerline is a wall for anyone slow.
       // Banked spots get no crates at all — a leaned deck drifts slow riders
-      // onto the flanks, and a crate there shoves them over the gutter.
-      const lo = r.frame(t, -2.1, 0);
-      const hi = r.frame(t, 2.1, 0);
-      if (Math.abs(hi.y - lo.y) > 1.0) return; // ~14°+ of lean: keep it clear
+      // onto the flanks, and a crate there shoves them into the wall.
+      const lo = r.frame(t, -2.4, 0);
+      const hi = r.frame(t, 2.4, 0);
+      if (Math.abs(hi.y - lo.y) > 1.1) return; // ~13°+ of lean: keep it clear
       for (const p of [lo, hi]) this.crate(p.x, p.y + 0.6, p.z);
     };
     // one crate on the FAR flank, level ground only — the manual line past a
     // grinding rider runs right through it
     const flankCrate = (r: SlideRibbon, t: number, off: number): void => {
-      const lo = r.frame(t, -2.1, 0);
-      const hi = r.frame(t, 2.1, 0);
-      if (Math.abs(hi.y - lo.y) > 1.0) return;
+      const lo = r.frame(t, -2.4, 0);
+      const hi = r.frame(t, 2.4, 0);
+      if (Math.abs(hi.y - lo.y) > 1.1) return;
       const p = r.frame(t, off, 0);
       this.crate(p.x, p.y + 0.6, p.z);
     };
@@ -8272,7 +8261,7 @@ export class Level {
         const b = Math.min(a + railLen, end);
         edgeRail(r, a / r.len, b / r.len, side);
         // opposite the rail's midpoint: a target you line up while grinding
-        flankCrate(r, (a + b) / 2 / r.len, -side * 2.1);
+        flankCrate(r, (a + b) / 2 / r.len, -side * 2.4);
         if (b + gap < end) {
           // two beats of crates through the crossing — smash line for the manual
           crossCrates(r, (b + gap * 0.33) / r.len);
@@ -8283,16 +8272,13 @@ export class Level {
       }
       return side; // hand the alternation to the next ribbon
     };
-    let wside: -1 | 1 = 1;
-    wside = weave(r1, wside, 42, 20, 0.05, 0.96);
-    wside = weave(r2, wside, 34, 18, 0.08, 0.92); // corkscrew: shorter bites
-    wside = weave(r3, wside, 30, 16, 0.06, 0.94); // one of these rides the vert wall
-    wside = weave(r4, wside, 42, 20, 0.04, 0.96);
-    wside = weave(r5, wside, 34, 18, 0.05, 0.8); // stops short of the lip — the gap stays honest
-    weave(r6, wside, 30, 14, 0.12, 0.85); // last cash-out line into the finish
+    // one uninterrupted weave the length of the run, stopping short of the lip
+    // so the gap stays an honest speed-and-jump test
+    const wside = weave(main, 1, 46, 22, 0.02, 0.955);
+    weave(land, wside, 30, 14, 0.12, 0.85); // last cash-out line into the finish
 
     // finish flat: run it out through the gate
-    this.slab('finish run', -810, -874, 0.2, 18, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
+    this.slab('finish run', -810, -874, 0.2, 22, new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }), true, 0, 'stone');
     this.finishZ = -842;
     this.endWallZ = -868;
     this.finishGate(0.2, this.finishZ, 0);
@@ -8301,12 +8287,12 @@ export class Level {
     this.killY = -26;
     this.pitPlane('water', -34, 0, -420, 2400);
 
-    // CAMERA SPINE: the ribbons' own centerline is the camera lane — the rig
+    // CAMERA SPINE: the ribbon's own centerline is the camera lane — the rig
     // and the control frame ease along its tangent, so screen-up is always
     // "down the slide" and the road stays centered through every sweep (the
     // same machinery the editor's camnode chains drive).
     const lane: { x: number; z: number }[] = [{ x: 0, z: 20 }];
-    for (const r of [r1, r2, r3, r4, r5, r6]) {
+    for (const r of [main, land]) {
       const n = Math.max(2, Math.round(r.len / 7));
       for (let i = 0; i <= n; i++) {
         const p = r.frame(i / n, 0, 0);
