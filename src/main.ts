@@ -1,11 +1,12 @@
 // Entry point: renderer, Crash-style corridor camera, and the deterministic
 // fixed-step game loop.
 
-import * as THREE from 'three';
-import { Input } from './input';
+import * as THREE from "three";
+import { Input } from "./input";
 import {
   Level,
   LEVEL_NAMES,
+  CUSTOM_LEVEL_ID,
   CustomLevelData,
   setCustomLevelData,
   EDITABLE_IDS,
@@ -20,20 +21,20 @@ import {
   clearDirty,
   isEditUnlocked,
   checkEditPass,
-} from './level';
-import { pushLevels, fetchRemoteLevels, getToken, setToken } from './sync';
-import { Player } from './player';
-import { UI } from './ui';
-import { TUNING, CONST } from './tuning';
-import { sfx } from './audio';
-import { Recorder, Replayer, ReplayFile } from './replay';
-import { Editor } from './editor';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+} from "./level";
+import { pushLevels, fetchRemoteLevels, getToken, setToken } from "./sync";
+import { Player } from "./player";
+import { UI } from "./ui";
+import { TUNING, CONST } from "./tuning";
+import { sfx } from "./audio";
+import { Recorder, Replayer, ReplayFile } from "./replay";
+import { Editor } from "./editor";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-const app = document.getElementById('app')!;
+const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
 // internal resolution — slow frames desync the suite's wall-clock scripting.
-const LITE_RENDER = window.location.search.includes('lite');
+const LITE_RENDER = window.location.search.includes("lite");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 // NATIVE RESOLUTION. The device pixel ratio is the baseline — on a Retina
 // panel that is 2x the CSS grid, and rendering below it was the single biggest
@@ -61,14 +62,16 @@ if (import.meta.env.PROD) {
     try {
       const running = import.meta.url.match(/index-([\w-]+)\.js/)?.[1];
       if (!running) return;
-      const res = await fetch(`./index.html?_=${Date.now()}`, { cache: 'no-store' });
+      const res = await fetch(`./index.html?_=${Date.now()}`, {
+        cache: "no-store",
+      });
       if (!res.ok) return;
       const fresh = (await res.text()).match(/index-([\w-]+)\.js/)?.[1];
       if (!fresh || fresh === running) return; // already on the latest build
-      if (sessionStorage.getItem('protoAutoUpdate') === fresh) return; // tried this one already
-      sessionStorage.setItem('protoAutoUpdate', fresh);
+      if (sessionStorage.getItem("protoAutoUpdate") === fresh) return; // tried this one already
+      sessionStorage.setItem("protoAutoUpdate", fresh);
       const url = new URL(window.location.href);
-      url.searchParams.set('v', fresh);
+      url.searchParams.set("v", fresh);
       window.location.replace(url.toString());
     } catch {
       /* offline or blocked — just run whatever's loaded */
@@ -108,7 +111,11 @@ const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
-  sun.position.set(focusX + SUN_OFFSET.x, focusY + SUN_OFFSET.y, focusZ + SUN_OFFSET.z);
+  sun.position.set(
+    focusX + SUN_OFFSET.x,
+    focusY + SUN_OFFSET.y,
+    focusZ + SUN_OFFSET.z,
+  );
   sun.shadow.camera.updateProjectionMatrix();
 }
 // Cool fill from opposite the sun: faint sky-colored bounce so the faces the
@@ -120,14 +127,14 @@ scene.add(fill);
 // '?lite' strips the pure-visual layers (sky dome, ambient particles) — used
 // by the headless smoke autopilot, where software rendering can't afford the
 // fill rate and slow frames desync its wall-clock input scripting.
-const LITE = window.location.search.includes('lite');
+const LITE = window.location.search.includes("lite");
 
 // Screen dressing: barely-there scanline texture + gentle vignette (styles
 // live in index.html). Pure DOM, zero GPU cost — skipped in lite along with
 // the rest of the presentation.
 if (!LITE) {
-  const crt = document.createElement('div');
-  crt.className = 'crt-overlay';
+  const crt = document.createElement("div");
+  crt.className = "crt-overlay";
   document.body.appendChild(crt);
 }
 
@@ -135,7 +142,11 @@ if (!LITE) {
 // each level's gradient + sun + stars. Sits behind everything, ignores fog.
 const sky = new THREE.Mesh(
   new THREE.SphereGeometry(370, 24, 12),
-  new THREE.MeshBasicMaterial({ side: THREE.BackSide, fog: false, depthWrite: false }),
+  new THREE.MeshBasicMaterial({
+    side: THREE.BackSide,
+    fog: false,
+    depthWrite: false,
+  }),
 );
 sky.renderOrder = -1;
 sky.frustumCulled = false;
@@ -177,10 +188,10 @@ const cfgSkyTex = (t: THREE.Texture): void => {
 const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
   const W = img.naturalWidth;
   const H = img.naturalHeight;
-  const c = document.createElement('canvas');
+  const c = document.createElement("canvas");
   c.width = W;
   c.height = H;
-  const x = c.getContext('2d')!;
+  const x = c.getContext("2d")!;
   x.drawImage(img, 0, 0);
   const bw = Math.max(1, Math.round(W * 0.09)); // blend band width each side of the seam
   for (let d = 0; d < bw; d++) {
@@ -200,7 +211,7 @@ const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
 //     it actually shows in front of the far horizon, fading out toward your
 //     feet via the painting's own alpha so it never buries anything close.
 const skyImg = new Image();
-skyImg.crossOrigin = 'anonymous';
+skyImg.crossOrigin = "anonymous";
 skyImg.onload = () => {
   const W = skyImg.naturalWidth,
     H = skyImg.naturalHeight;
@@ -220,20 +231,20 @@ skyImg.onload = () => {
 
   // (2) foreground mist — erase everything ABOVE the horizon so only the
   // below-horizon detail survives (soft ramp across the horizon line)
-  const cFg = document.createElement('canvas');
+  const cFg = document.createElement("canvas");
   cFg.width = W;
   cFg.height = H;
-  const fx = cFg.getContext('2d')!;
+  const fx = cFg.getContext("2d")!;
   fx.drawImage(base, 0, 0);
   const ramp = fx.createLinearGradient(0, 0, 0, H);
-  ramp.addColorStop(0, 'rgba(0,0,0,1)'); // erase the sky
-  ramp.addColorStop((SKY_HORIZON_PX - 30) / H, 'rgba(0,0,0,1)');
-  ramp.addColorStop((SKY_HORIZON_PX + 40) / H, 'rgba(0,0,0,0)'); // keep the clouds
-  ramp.addColorStop(1, 'rgba(0,0,0,0)');
-  fx.globalCompositeOperation = 'destination-out';
+  ramp.addColorStop(0, "rgba(0,0,0,1)"); // erase the sky
+  ramp.addColorStop((SKY_HORIZON_PX - 30) / H, "rgba(0,0,0,1)");
+  ramp.addColorStop((SKY_HORIZON_PX + 40) / H, "rgba(0,0,0,0)"); // keep the clouds
+  ramp.addColorStop(1, "rgba(0,0,0,0)");
+  fx.globalCompositeOperation = "destination-out";
   fx.fillStyle = ramp;
   fx.fillRect(0, 0, W, H);
-  fx.globalCompositeOperation = 'source-over';
+  fx.globalCompositeOperation = "source-over";
   const fgTex = new THREE.CanvasTexture(cFg);
   cfgSkyTex(fgTex); // mist sits at its natural below-horizon position (no lift)
   const mist = new THREE.Mesh(
@@ -258,7 +269,7 @@ skyImg.onload = () => {
   skyMist = mist;
   applyTheme(); // re-tint the fog to the sunset now that the sky is live
 };
-skyImg.src = import.meta.env.BASE_URL + 'skybox.png';
+skyImg.src = import.meta.env.BASE_URL + "skybox.png";
 
 // --- sky painting ------------------------------------------------------------
 // Theme colors arrive as both '#rrggbb' strings and 0xrrggbb numbers; the
@@ -266,7 +277,7 @@ skyImg.src = import.meta.env.BASE_URL + 'skybox.png';
 // without touching the theme shape.
 type RGB = [number, number, number];
 function rgbOf(c: string | number): RGB {
-  const n = typeof c === 'number' ? c : parseInt(c.slice(1), 16);
+  const n = typeof c === "number" ? c : parseInt(c.slice(1), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 function mixRGB(a: RGB, b: RGB, k: number): RGB {
@@ -289,13 +300,13 @@ function ridge(u: number, seed: number): number {
   );
 }
 
-function makeSkyTexture(t: Level['theme']): THREE.CanvasTexture {
+function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
   const W = 512;
   const H = 512; // taller than the old 256: the horizon band needs the rows
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext("2d")!;
   const top = rgbOf(t.skyTop);
   const bottom = rgbOf(t.skyBottom);
   const fog = rgbOf(t.fog);
@@ -317,7 +328,12 @@ function makeSkyTexture(t: Level['theme']): THREE.CanvasTexture {
   ctx.globalAlpha = 0.045;
   for (let i = 0; i < BANDS; i++) {
     ctx.fillStyle = css(mixRGB(top, bottom, i / (BANDS - 1)));
-    ctx.fillRect(0, Math.round((i / BANDS) * skyH), W, Math.round(skyH / BANDS));
+    ctx.fillRect(
+      0,
+      Math.round((i / BANDS) * skyH),
+      W,
+      Math.round(skyH / BANDS),
+    );
   }
   ctx.globalAlpha = 1;
   // below the horizon it's all fog — that's what you see going off a cliff
@@ -502,24 +518,25 @@ function resize(): void {
   // home indicator and that strip never gets painted — a permanent black bar.
   // The screen knows the true height, so size the page past the viewport to
   // the physical edge (portrait only; --vh feeds the html/body/#app CSS).
-  const standalone = (navigator as unknown as { standalone?: boolean }).standalone === true;
+  const standalone =
+    (navigator as unknown as { standalone?: boolean }).standalone === true;
   if (standalone && h > w && window.screen.height > h) h = window.screen.height;
-  document.documentElement.style.setProperty('--vh', h + 'px');
+  document.documentElement.style.setProperty("--vh", h + "px");
   // Native resolution, always. The headless smoke mode is the one exception:
   // it renders at half size purely to keep the software rasteriser quick.
   const rs = LITE_RENDER ? 0.5 : 1;
   renderer.setSize(Math.round(w * rs), Math.round(h * rs), false);
-  renderer.domElement.style.imageRendering = '';
+  renderer.domElement.style.imageRendering = "";
   camera.aspect = split2p ? w / (h / 2) : w / h;
   camera.updateProjectionMatrix();
   camera2.aspect = camera.aspect;
   camera2.updateProjectionMatrix();
 }
-window.addEventListener('resize', resize);
+window.addEventListener("resize", resize);
 // iOS standalone launches don't reliably fire 'resize' once the viewport
 // settles behind the Dynamic Island / home indicator — catch the stragglers.
-window.visualViewport?.addEventListener('resize', resize);
-window.addEventListener('orientationchange', () => setTimeout(resize, 250));
+window.visualViewport?.addEventListener("resize", resize);
+window.addEventListener("orientationchange", () => setTimeout(resize, 250));
 setTimeout(resize, 400);
 setTimeout(resize, 1200);
 resize();
@@ -533,7 +550,10 @@ input2.rival = input;
 const ui = new UI();
 const recorder = new Recorder();
 const replayer = new Replayer();
-let currentCourse = Math.min(LEVEL_NAMES.length - 1, Math.max(0, Number(localStorage.getItem('protoLevel')) || 0));
+let currentCourse = Math.min(
+  LEVEL_NAMES.length - 1,
+  Math.max(0, Number(localStorage.getItem("protoLevel")) || 0),
+);
 let level = new Level(scene, currentCourse);
 const player = new Player(scene);
 
@@ -549,7 +569,11 @@ function tintP2(): void {
   const apply = (): void =>
     p2!.group.traverse((o) => {
       const mesh = o as THREE.Mesh;
-      const mats = Array.isArray(mesh.material) ? mesh.material : mesh.material ? [mesh.material] : [];
+      const mats = Array.isArray(mesh.material)
+        ? mesh.material
+        : mesh.material
+          ? [mesh.material]
+          : [];
       for (const mat of mats as THREE.MeshLambertMaterial[]) {
         if (!mat.color || mat.userData.p2Tint) continue;
         mat.userData.p2Tint = true;
@@ -589,7 +613,11 @@ function set2P(on: boolean, force = false): void {
       ? Array.from(navigator.getGamepads()).filter((g) => g && g.connected)
       : [];
     if (!force && pads.length < 2) {
-      ui.showMessage('NEED 2 CONTROLLERS', `${pads.length} connected — wake pad 2 with a button press`, 2800);
+      ui.showMessage(
+        "NEED 2 CONTROLLERS",
+        `${pads.length} connected — wake pad 2 with a button press`,
+        2800,
+      );
       return;
     }
     if (editor.active) editor.exit();
@@ -615,7 +643,11 @@ function set2P(on: boolean, force = false): void {
     p2.pos.x += 1.6; // side by side at the start line
     deactivate2pModes();
     ui.set2P(true);
-    ui.showMessage('2-PLAYER SPLIT', 'P2 (blue, bottom): press ✕ on the OTHER pad to join', 4200);
+    ui.showMessage(
+      "2-PLAYER SPLIT",
+      "P2 (blue, bottom): press ✕ on the OTHER pad to join",
+      4200,
+    );
   } else {
     split2p = false;
     if (p2) p2.group.visible = false;
@@ -623,7 +655,7 @@ function set2P(on: boolean, force = false): void {
     input.releaseClaim();
     input2.releaseClaim();
     ui.set2P(false);
-    ui.showMessage('1-PLAYER', '', 1200);
+    ui.showMessage("1-PLAYER", "", 1200);
   }
   resize();
 }
@@ -634,7 +666,8 @@ function set2P(on: boolean, force = false): void {
 function pvpAttack(atk: Player, vic: Player): void {
   const A = atk as unknown as Record<string, number & boolean>;
   const V = vic as unknown as Record<string, number & boolean>;
-  if (vic.state === 'dead' || vic.state === 'gameover' || atk.state === 'dead') return;
+  if (vic.state === "dead" || vic.state === "gameover" || atk.state === "dead")
+    return;
   const dx = vic.pos.x - atk.pos.x;
   const dz = vic.pos.z - atk.pos.z;
   const planar = Math.hypot(dx, dz);
@@ -642,23 +675,28 @@ function pvpAttack(atk: Player, vic: Player): void {
   const uz = planar > 1e-4 ? dz / planar : 0;
   const dy = vic.pos.y - atk.pos.y;
   const knock = (kick: number, pop: number): void => {
-    if ((V.bailDownT as number) > 0 || (V.invulnTimer as number) > 0 || (V.uberTimer as number) > 0) return;
+    if (
+      (V.bailDownT as number) > 0 ||
+      (V.invulnTimer as number) > 0 ||
+      (V.uberTimer as number) > 0
+    )
+      return;
     (V.bailDownT as number) = 0.9;
     (V.invulnTimer as number) = 1.1; // no juggle-locking the loser
-    vic.state = 'air';
+    vic.state = "air";
     (V.grounded as boolean) = false;
     (V.vVel as number) = pop;
     (V.speed as number) = (V.speed as number) * 0.3;
     pvpKicks.set(vic, { x: ux * kick, z: uz * kick, t: 0.3 });
-    sfx.play('takeDamage', 0.55);
+    sfx.play("takeDamage", 0.55);
   };
   if ((A.vVel as number) < -2 && dy < -0.9 && dy > -2.3 && planar < 0.9) {
     // STOMP: bounce off their shoulders, they eat deck
     knock(5, 2.5);
     (A.vVel as number) = TUNING.crateBounce * 0.8;
-    atk.state = 'air';
+    atk.state = "air";
     (A.grounded as boolean) = false;
-    sfx.play('crateBounce', 0.6);
+    sfx.play("crateBounce", 0.6);
     return;
   }
   if (Math.abs(dy) > 1.7) return;
@@ -720,7 +758,11 @@ function updateCamera2(dt: number): void {
   camera2.position.x += (tx - camera2.position.x) * k;
   camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
-  camera2.lookAt(p2.pos.x + cam2F.x * 3, p2.pos.y + 1.2, p2.pos.z + cam2F.z * 3);
+  camera2.lookAt(
+    p2.pos.x + cam2F.x * 3,
+    p2.pos.y + 1.2,
+    p2.pos.z + cam2F.z * 3,
+  );
   p2.camDir.set(cam2F.x, 0, cam2F.z);
 }
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
@@ -746,7 +788,8 @@ function applyShadowFlags(): void {
     const mat = m.material as THREE.Material | THREE.Material[];
     const one = Array.isArray(mat) ? mat[0] : mat;
     // Unlit basic materials are effects (glows, markers, sky), not surfaces.
-    if (one && (one as THREE.MeshBasicMaterial).isMeshBasicMaterial) skip = true;
+    if (one && (one as THREE.MeshBasicMaterial).isMeshBasicMaterial)
+      skip = true;
     m.castShadow = !skip;
     m.receiveShadow = !skip;
   });
@@ -754,13 +797,13 @@ function applyShadowFlags(): void {
 
 function switchLevel(id: number): void {
   currentCourse = id;
-  localStorage.setItem('protoLevel', String(id));
+  localStorage.setItem("protoLevel", String(id));
   if (replayer.active) {
     // a manual level switch cancels a running replay (and restores tuning)
     replayer.end();
     ui.setReplayBadge(false);
   }
-  if (editor.active && id !== 7) editor.exit(); // leaving Custom closes the editor
+  if (editor.active && id !== CUSTOM_LEVEL_ID) editor.exit(); // leaving Custom closes the editor
   level.dispose();
   level = new Level(scene, id);
   player.respawn(level, true);
@@ -772,10 +815,15 @@ function switchLevel(id: number): void {
   applyTheme();
   applyShadowFlags();
   ui.setLevel(id);
-  ui.showMessage(LEVEL_NAMES[id].toUpperCase(), '', 1400);
+  ui.showMessage(LEVEL_NAMES[id].toUpperCase(), "", 1400);
   recorder.start(id); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
-    (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
+    ((
+      (window as unknown as Record<string, unknown>).__game as Record<
+        string,
+        unknown
+      >
+    ).level = level);
 }
 
 // ---- level editor (Custom level, slot 8) -----------------------------------
@@ -790,31 +838,40 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
     applyTheme();
     recorder.start(currentCourse);
     (window as unknown as Record<string, unknown>).__game &&
-      (((window as unknown as Record<string, unknown>).__game as Record<string, unknown>).level = level);
+      ((
+        (window as unknown as Record<string, unknown>).__game as Record<
+          string,
+          unknown
+        >
+      ).level = level);
     editor.onLevelRebuilt();
   },
   // "restore original" on a built-in: drop the override, rebuild the hand-coded
   // level, and mark it dirty so the RESET syncs to the phone too.
   restoreOriginal: () => {
     const id = editor.targetCourse;
-    if (id === 7) return;
+    if (id === CUSTOM_LEVEL_ID) return;
     clearLevelOverride(id);
     markLevelDirty(id);
     editor.exit();
     switchLevel(id);
     player.respawn(level, true);
-    ui.showMessage('ORIGINAL RESTORED', `${LEVEL_NAMES[id]} — SYNC to push the reset to your phone`, 2600);
+    ui.showMessage(
+      "ORIGINAL RESTORED",
+      `${LEVEL_NAMES[id]} — SYNC to push the reset to your phone`,
+      2600,
+    );
   },
   exitToPlay: () => {
     editor.exit();
     player.respawn(level, true);
-    ui.showMessage('TEST RUN', 'press ✎ LEVEL EDITOR to keep editing', 1600);
+    ui.showMessage("TEST RUN", "press ✎ LEVEL EDITOR to keep editing", 1600);
   },
-  showMsg: (t, s) => ui.showMessage(t, s ?? '', 1800),
+  showMsg: (t, s) => ui.showMessage(t, s ?? "", 1800),
   // drop fog + extend the far plane on enter, restore on every exit path
   setView: (editing) => setEditorView(editing),
 });
-function openEditor(target = 7): void {
+function openEditor(target = CUSTOM_LEVEL_ID): void {
   if (split2p) set2P(false); // the editor is a one-player room
   if (editor.active) return;
   if (currentCourse !== target) switchLevel(target);
@@ -826,7 +883,7 @@ function openEditor(target = 7): void {
   ui.showDeathScreen(false);
   editor.enter(target);
 }
-ui.onEditorOpen = () => openEditor(7); // the ✎ button opens the custom sandbox
+ui.onEditorOpen = () => openEditor(CUSTOM_LEVEL_ID); // the ✎ button opens the custom sandbox
 // MENU / TUNER while the editor owns the screen: the play panels are hidden
 // under the tools, so a tab tap first CLOSES the editor (edits are already
 // saved live) and drops back to play — then the panel opens normally.
@@ -834,7 +891,7 @@ ui.onSideTab = () => {
   if (!editor.active) return;
   editor.exit();
   player.respawn(level, true);
-  ui.showMessage('EDITOR CLOSED', 'press ✎ LEVEL EDITOR to keep editing', 1600);
+  ui.showMessage("EDITOR CLOSED", "press ✎ LEVEL EDITOR to keep editing", 1600);
 };
 // EDIT A COPY: capture whatever level is loaded into editor components and
 // open the editor on it. The previous custom level is backed up so nothing
@@ -842,17 +899,21 @@ ui.onSideTab = () => {
 // (boulder chase, side-scroll zones, sky-ropes, decor foliage) don't come
 // through — the copy is the editable geometry.
 ui.onEditCopy = () => {
-  const wasBuiltIn = currentCourse !== 7;
+  const wasBuiltIn = currentCourse !== CUSTOM_LEVEL_ID;
   if (wasBuiltIn) {
     const data = level.captureData();
-    const prev = localStorage.getItem('protoCustomLevel');
-    if (prev) localStorage.setItem('protoCustomLevelBackup', prev);
-    localStorage.setItem('protoCustomLevel', JSON.stringify(data));
+    const prev = localStorage.getItem("protoCustomLevel");
+    if (prev) localStorage.setItem("protoCustomLevelBackup", prev);
+    localStorage.setItem("protoCustomLevel", JSON.stringify(data));
     setCustomLevelData(data);
   }
   openEditor(7);
   if (wasBuiltIn) {
-    ui.showMessage('EDITING A COPY', `${level.name} → custom slot (previous custom backed up)`, 2600);
+    ui.showMessage(
+      "EDITING A COPY",
+      `${level.name} → custom slot (previous custom backed up)`,
+      2600,
+    );
   }
 };
 // EDIT THIS LEVEL (unlocked): edit the built-in level IN PLACE. First time on a
@@ -862,7 +923,7 @@ ui.onEditCopy = () => {
 // -trip — but "restore original" always brings the hand-coded design back.
 ui.onEditThisLevel = () => {
   const id = currentCourse;
-  if (id === 7 || !EDITABLE_IDS.includes(id)) {
+  if (id === CUSTOM_LEVEL_ID || !EDITABLE_IDS.includes(id)) {
     openEditor(7);
     return;
   }
@@ -877,7 +938,7 @@ ui.onEditThisLevel = () => {
   openEditor(id);
   ui.showMessage(
     `EDITING ${LEVEL_NAMES[id].toUpperCase()}`,
-    fresh ? 'edits save to this level — SYNC to push to your phone' : '',
+    fresh ? "edits save to this level — SYNC to push to your phone" : "",
     2400,
   );
 };
@@ -886,28 +947,35 @@ ui.onUnlockEditing = async (pass: string): Promise<boolean> => {
   const ok = await checkEditPass(pass);
   if (ok) {
     ui.setEditUnlocked(true);
-    ui.showMessage('DIRECT EDITING UNLOCKED', 'EDIT THIS LEVEL + SYNC are on', 2200);
+    ui.showMessage(
+      "DIRECT EDITING UNLOCKED",
+      "EDIT THIS LEVEL + SYNC are on",
+      2200,
+    );
   }
   return ok;
 };
 // SYNC: push every locally-edited level to the repo file the phone reads.
 ui.onSyncPush = async (): Promise<void> => {
   const dirtyBefore = [...getDirtyIds()];
-  ui.setSyncStatus('pushing to your phone…', 'busy');
+  ui.setSyncStatus("pushing to your phone…", "busy");
   const res = await pushLevels(allLevelOverrides());
   if (res.ok) {
     clearDirty(EDITABLE_IDS); // everything we just pushed is now clean
-    ui.setSyncStatus(res.msg, 'ok');
+    ui.setSyncStatus(res.msg, "ok");
     ui.refreshEditControls();
   } else {
     // a failed push must keep the dirty flags so the edits aren't lost
     void dirtyBefore;
-    ui.setSyncStatus(res.msg, 'err');
+    ui.setSyncStatus(res.msg, "err");
   }
 };
 ui.onTokenSet = (t: string) => {
   setToken(t);
-  ui.setSyncStatus(getToken() ? 'token saved on this device' : 'token cleared', getToken() ? 'ok' : 'busy');
+  ui.setSyncStatus(
+    getToken() ? "token saved on this device" : "token cleared",
+    getToken() ? "ok" : "busy",
+  );
   ui.refreshEditControls();
 };
 // Prime the UI with the current unlock/token/dirty state (state provider first,
@@ -917,14 +985,16 @@ ui.provideEditState = () => ({
   hasToken: !!getToken(),
   dirtyCount: getDirtyIds().size,
   editable: EDITABLE_IDS.includes(currentCourse), // built-in editable levels (custom edits via ✎)
-  isOverride: currentCourse !== 7 && !!getLevelOverride(currentCourse),
+  isOverride:
+    currentCourse !== CUSTOM_LEVEL_ID && !!getLevelOverride(currentCourse),
 });
 ui.setEditUnlocked(isEditUnlocked());
 // Refresh-proof editing: if the page reloads mid-edit, walk straight back into
 // the editor on the SAME level (camera pose restored by Editor.enter()).
 // Deferred past module init — openEditor touches state declared further down.
-if (localStorage.getItem('protoEditorOpen') === '1') {
-  const t = Number(localStorage.getItem('protoEditorTarget')) || 7;
+if (localStorage.getItem("protoEditorOpen") === "1") {
+  const t =
+    Number(localStorage.getItem("protoEditorTarget")) || CUSTOM_LEVEL_ID;
   setTimeout(() => openEditor(t), 0);
 }
 
@@ -938,7 +1008,10 @@ void (async () => {
   pruneRetiredOverrides(); // drop saved slots for levels that no longer exist
   const remote = await fetchRemoteLevels();
   if (!remote) return;
-  const changed = applyRemoteLevels(remote as Record<string, CustomLevelData>, getDirtyIds());
+  const changed = applyRemoteLevels(
+    remote as Record<string, CustomLevelData>,
+    getDirtyIds(),
+  );
   if (changed.includes(currentCourse) && !editor.active) {
     switchLevel(currentCourse);
     player.respawn(level, true);
@@ -956,22 +1029,31 @@ function exportReplay(): ReplayFile {
 }
 function saveReplay(): void {
   const data = exportReplay();
-  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-  const a = document.createElement('a');
+  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `replay-${LEVEL_NAMES[data.level].replace(/\s+/g, '')}-${data.date.replace(/[:.]/g, '-').slice(0, 19)}.json`;
+  a.download = `replay-${LEVEL_NAMES[data.level].replace(/\s+/g, "")}-${data.date.replace(/[:.]/g, "-").slice(0, 19)}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   const secs = (data.frames / 60).toFixed(0);
-  ui.showMessage('REPLAY SAVED', `${secs}s of input — drop the file into the chat`, 2200);
+  ui.showMessage(
+    "REPLAY SAVED",
+    `${secs}s of input — drop the file into the chat`,
+    2200,
+  );
 }
 
 function loadReplay(data: ReplayFile): void {
   switchLevel(data.level); // clean slate: replay assumes a fresh level load
   replayer.begin(data);
   ui.setReplayBadge(true);
-  if (data.level === 2) ui.showMessage('REPLAY', 'random level: layout may differ from the take', 2000);
-  else ui.showMessage('REPLAY', `${(data.frames / 60).toFixed(0)}s take`, 1400);
+  if (data.level === 2)
+    ui.showMessage(
+      "REPLAY",
+      "random level: layout may differ from the take",
+      2000,
+    );
+  else ui.showMessage("REPLAY", `${(data.frames / 60).toFixed(0)}s take`, 1400);
 }
 
 // Gameplay video: records the canvas, downloads a .webm on stop.
@@ -983,26 +1065,31 @@ function toggleVideo(): void {
     return;
   }
   const stream = renderer.domElement.captureStream(60);
-  const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
-  videoRec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8_000_000 });
+  const mime = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
+    ? "video/webm;codecs=vp9"
+    : "video/webm";
+  videoRec = new MediaRecorder(stream, {
+    mimeType: mime,
+    videoBitsPerSecond: 8_000_000,
+  });
   videoChunks = [];
   videoRec.ondataavailable = (e) => {
     if (e.data.size > 0) videoChunks.push(e.data);
   };
   videoRec.onstop = () => {
-    const blob = new Blob(videoChunks, { type: 'video/webm' });
-    const a = document.createElement('a');
+    const blob = new Blob(videoChunks, { type: "video/webm" });
+    const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `gameplay-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}.webm`;
+    a.download = `gameplay-${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}.webm`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     videoRec = null;
     ui.setRecBadge(false);
-    ui.showMessage('VIDEO SAVED', 'drop the .webm into the chat', 2000);
+    ui.showMessage("VIDEO SAVED", "drop the .webm into the chat", 2000);
   };
   videoRec.start(1000);
   ui.setRecBadge(true);
-  ui.showMessage('RECORDING VIDEO', 'press rec again to stop + save', 1800);
+  ui.showMessage("RECORDING VIDEO", "press rec again to stop + save", 1800);
 }
 
 ui.onSaveReplay = saveReplay;
@@ -1011,12 +1098,12 @@ ui.onLoadReplay = (text) => {
   try {
     loadReplay(JSON.parse(text) as ReplayFile);
   } catch {
-    ui.showMessage('BAD REPLAY FILE', '', 1400);
+    ui.showMessage("BAD REPLAY FILE", "", 1400);
   }
 };
 // drag a .json anywhere onto the game: replays play back, levels import
-window.addEventListener('dragover', (e) => e.preventDefault());
-window.addEventListener('drop', (e) => {
+window.addEventListener("dragover", (e) => e.preventDefault());
+window.addEventListener("drop", (e) => {
   e.preventDefault();
   const f = e.dataTransfer?.files?.[0];
   if (f)
@@ -1025,68 +1112,50 @@ window.addEventListener('drop', (e) => {
         const obj = JSON.parse(txt) as { components?: unknown; b?: unknown };
         if (Array.isArray(obj.components)) {
           // a custom LEVEL file: adopt it and go there
-          if (currentCourse !== 7) switchLevel(7);
+          if (currentCourse !== CUSTOM_LEVEL_ID) switchLevel(CUSTOM_LEVEL_ID);
           editor.importLevel(obj as never);
-          ui.showMessage('LEVEL IMPORTED', '', 1600);
+          ui.showMessage("LEVEL IMPORTED", "", 1600);
         } else if (Array.isArray(obj.b)) {
           loadReplay(obj as ReplayFile);
         } else {
-          ui.showMessage('UNRECOGNIZED FILE', '', 1400);
+          ui.showMessage("UNRECOGNIZED FILE", "", 1400);
         }
       } catch {
-        ui.showMessage('BAD FILE', '', 1400);
+        ui.showMessage("BAD FILE", "", 1400);
       }
     });
 });
 ui.onLevelSelect = switchLevel;
 ui.onToggle2P = () => set2P(!split2p);
-// Character pick: swap the hero model live and remember it. P2 (if present)
-// gets the same body — the tint is what tells the two apart.
-ui.onCharSelect = (id) => {
-  player.setCharacter(id);
-  if (p2) {
-    p2.setCharacter(id);
-    tintP2(); // fresh chunks arrive untinted — re-apply the blue (has its own retries)
-  }
-  try {
-    localStorage.setItem('protoChar', id);
-  } catch {
-    /* private mode: choice just won't persist */
-  }
-};
-try {
-  ui.setChar(localStorage.getItem('protoChar') || 'fox');
-} catch {
-  ui.setChar('fox');
-}
 player.onComboBank = (amount) => ui.comboBank(amount);
 player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
   player.lives++;
-  sfx.play('lifeGet', 0.8);
+  sfx.play("lifeGet", 0.8);
 };
 ui.setLevel(currentCourse);
-window.addEventListener('keydown', (e) => {
+window.addEventListener("keydown", (e) => {
   // typing in a panel field (editor coordinates, tuner values) must not
   // switch levels or fire capture hotkeys
   const t = e.target as HTMLElement | null;
-  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
+  if (
+    t &&
+    (t.tagName === "INPUT" ||
+      t.tagName === "TEXTAREA" ||
+      t.tagName === "SELECT")
+  )
+    return;
   if (!editor.active) {
     // level hotkeys are gameplay-only — inside the editor they'd yank the
     // level out from under you
-    if (e.code === 'Digit1') switchLevel(0);
-    if (e.code === 'Digit2') switchLevel(1);
-    if (e.code === 'Digit3') switchLevel(2);
-    if (e.code === 'Digit4') switchLevel(3);
-    if (e.code === 'Digit5') switchLevel(4);
-    if (e.code === 'Digit6') switchLevel(5);
-    if (e.code === 'Digit7') switchLevel(6);
-    if (e.code === 'Digit8') switchLevel(7); // Custom (the editor's level)
-    if (e.code === 'Digit9') switchLevel(8); // The Slipstream
+    // number row -> level, in menu order (7 levels: Digit1..Digit7)
+    for (let i = 0; i < LEVEL_NAMES.length; i++) {
+      if (e.code === `Digit${i + 1}`) switchLevel(i);
+    }
   }
-  if (e.code === 'F8') saveReplay(); // playtest capture: input take -> .json
-  if (e.code === 'F9') toggleVideo(); // playtest capture: canvas -> .webm
+  if (e.code === "F8") saveReplay(); // playtest capture: input take -> .json
+  if (e.code === "F9") toggleVideo(); // playtest capture: canvas -> .webm
 });
 
 player.onDeath = () => ui.deathFade(true);
@@ -1094,11 +1163,11 @@ player.onRelic = (title, sub) => ui.showMessage(title, sub, 1400);
 player.onFinish = (time) => {
   // the gate tallies the collectathon haul alongside the clear time
   const gem = player.gemEarned
-    ? 'gem ✓'
+    ? "gem ✓"
     : `gem ✗ (${player.cratesBroken}/${level.totalCrates} boxes)`;
-  const crystal = player.hasCrystal ? 'crystal ✓' : 'crystal ✗';
+  const crystal = player.hasCrystal ? "crystal ✓" : "crystal ✗";
   ui.showMessage(
-    'COURSE CLEAR!',
+    "COURSE CLEAR!",
     `time ${time.toFixed(2)}s — ${crystal} · ${gem} — press R / Options to go again`,
     0,
   );
@@ -1111,10 +1180,17 @@ player.onRespawn = () => {
 };
 
 // ---- time trial: ranked times per level, kept in this browser --------------
-function recordTT(levelId: number, time: number): { list: number[]; rank: number } {
+function recordTT(
+  levelId: number,
+  time: number,
+): { list: number[]; rank: number } {
   let all: Record<string, number[]> = {};
   try {
-    all = (JSON.parse(localStorage.getItem('protoTTtimes') ?? '{}') as Record<string, number[]>) ?? {};
+    all =
+      (JSON.parse(localStorage.getItem("protoTTtimes") ?? "{}") as Record<
+        string,
+        number[]
+      >) ?? {};
   } catch {
     all = {};
   }
@@ -1122,34 +1198,42 @@ function recordTT(levelId: number, time: number): { list: number[]; rank: number
   list.push(time);
   list.sort((a, b) => a - b);
   all[levelId] = list.slice(0, 8);
-  localStorage.setItem('protoTTtimes', JSON.stringify(all));
+  localStorage.setItem("protoTTtimes", JSON.stringify(all));
   return { list: all[levelId], rank: all[levelId].indexOf(time) };
 }
 
 player.onTTStart = () => {
   ui.setTimeTrial(true);
-  ui.showMessage('TIME TRIAL!', 'race to the gate — numbered crates freeze the clock', 1800);
+  ui.showMessage(
+    "TIME TRIAL!",
+    "race to the gate — numbered crates freeze the clock",
+    1800,
+  );
 };
 player.onTTEnd = () => ui.setTimeTrial(false);
 
 // ---- combo run: green orb -> one combo to the green gem at the gate --------
 player.onComboRunStart = () => {
   ui.setRunRows(true);
-  ui.comboHalo('on');
-  ui.showMessage('COMBO RUN!', 'start a combo NOW — one chain, all the way to the gem', 2000);
+  ui.comboHalo("on");
+  ui.showMessage(
+    "COMBO RUN!",
+    "start a combo NOW — one chain, all the way to the gem",
+    2000,
+  );
 };
-player.onComboGraceLow = () => ui.showMessage('START A COMBO!', '', 700);
+player.onComboGraceLow = () => ui.showMessage("START A COMBO!", "", 700);
 player.onComboRunFail = () => {
-  ui.comboHalo('dissipate');
-  ui.showMessage('COMBO BROKEN', '', 1100);
+  ui.comboHalo("dissipate");
+  ui.showMessage("COMBO BROKEN", "", 1100);
 };
 player.onComboRunWin = () => {
-  ui.comboHalo('dissipate');
+  ui.comboHalo("dissipate");
   ui.setRunRows(false);
-  ui.showMessage('COMBO GEM!', 'the green gem is yours', 2200);
+  ui.showMessage("COMBO GEM!", "the green gem is yours", 2200);
 };
 player.onComboRunEnd = () => {
-  ui.comboHalo('off');
+  ui.comboHalo("off");
   ui.setRunRows(false);
 };
 player.onTTFinish = (time) => {
@@ -1157,7 +1241,7 @@ player.onTTFinish = (time) => {
   ui.setTimeTrial(false);
   ui.showTTResults(time, list, rank);
 };
-player.onCheckpoint = () => ui.showMessage('CHECKPOINT', '', 900);
+player.onCheckpoint = () => ui.showMessage("CHECKPOINT", "", 900);
 player.onGameOver = () => ui.showDeathScreen(true);
 
 // --- Crash-style corridor camera -------------------------------------------
@@ -1200,7 +1284,8 @@ function updateCamera(dt: number): void {
   // side framing only on E/W stretches — a run-at-camera ('N') zone keeps the
   // normal corridor shot: the fixed lens IS the chase framing there
   const znHere = level.zoneAt(player.pos.x, player.pos.z);
-  const inTurn = !chaseOn && znHere !== null && (znHere.dir === 'E' || znHere.dir === 'W');
+  const inTurn =
+    !chaseOn && znHere !== null && (znHere.dir === "E" || znHere.dir === "W");
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
 
   // Boulder-chase framing is a proper cinematographic shot, not just a further
@@ -1253,19 +1338,27 @@ function updateCamera(dt: number): void {
 
   const vAlong =
     dt > 0
-      ? ((player.pos.x - prevPlayerPos.x) * camF.x + (player.pos.z - prevPlayerPos.z) * camF.z) / dt
+      ? ((player.pos.x - prevPlayerPos.x) * camF.x +
+          (player.pos.z - prevPlayerPos.z) * camF.z) /
+        dt
       : 0;
   prevPlayerPos.copy(player.pos);
   // chase mode swings around behind instead of dollying back
-  const movingBack = !chaseOn && (vAlong < -2.5 || (player.grounded && player.speed < -1.5));
+  const movingBack =
+    !chaseOn && (vAlong < -2.5 || (player.grounded && player.speed < -1.5));
   camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
   // side-scroll stretches scale off the sliders (9.2/5.2 and 3.7/4.1 were the
   // authored ratios) so a re-tuned base carries its feel into the turns
-  const dist = THREE.MathUtils.lerp(TUNING.camDist, TUNING.camDist * 1.77, sideF) + back * 3.8 + boulderF * 18.8;
+  const dist =
+    THREE.MathUtils.lerp(TUNING.camDist, TUNING.camDist * 1.77, sideF) +
+    back * 3.8 +
+    boulderF * 18.8;
   const height =
-    THREE.MathUtils.lerp(TUNING.camHeight, TUNING.camHeight * 0.9, sideF) + back * 1.1 + boulderF * 1.7;
+    THREE.MathUtils.lerp(TUNING.camHeight, TUNING.camHeight * 0.9, sideF) +
+    back * 1.1 +
+    boulderF * 1.7;
   // camOffset TRANSLATES the whole rig down-course — camera AND aim move
   // together, so the skater's resting spot in frame shifts while the tilt
   // stays put. The boulder shot authors its own framing; fade the knob out.
@@ -1286,7 +1379,9 @@ function updateCamera(dt: number): void {
   // A rising jump over the gap can still lift it via the maxRise term.
   const floorY = player.groundBelowY;
   const anchorGoal =
-    floorY !== null ? Math.max(floorY, player.pos.y - maxRise) : Math.max(camAnchorY, player.pos.y - maxRise);
+    floorY !== null
+      ? Math.max(floorY, player.pos.y - maxRise)
+      : Math.max(camAnchorY, player.pos.y - maxRise);
   camAnchorY += (anchorGoal - camAnchorY) * Math.min(1, 4.5 * dt);
   // camAirLift: how much the rig rides UP with airborne height. 1 = classic
   // full-follow (the camera rises with the jump, so airs read small and snappy
@@ -1321,7 +1416,9 @@ function updateCamera(dt: number): void {
     const along = dx * camF.x + dz * camF.z;
     const lat = dx * perpX + dz * perpZ;
     const kAlong = 1 - Math.exp(-9 * dt);
-    const kLat = 1 - Math.exp(-THREE.MathUtils.lerp(3.2, 9, Math.max(sideF, boulderF)) * dt);
+    const kLat =
+      1 -
+      Math.exp(-THREE.MathUtils.lerp(3.2, 9, Math.max(sideF, boulderF)) * dt);
     // full air-lift also restores the classic stiffer vertical chase — a soft
     // y-spring on a followed jump reads as extra float
     const kY = 1 - Math.exp(-THREE.MathUtils.lerp(6, 9, airLift) * dt);
@@ -1335,7 +1432,11 @@ function updateCamera(dt: number): void {
   // aims, converted from the old look-ahead shots so defaults are identical.
   // Vertically the aim tracks a jump at 35% — the gentle Crash tilt — while
   // the XZ pan follows through a light smoothing.
-  const aimY = THREE.MathUtils.lerp(TUNING.camTilt, TUNING.camTilt - 0.2, sideF);
+  const aimY = THREE.MathUtils.lerp(
+    TUNING.camTilt,
+    TUNING.camTilt - 0.2,
+    sideF,
+  );
   const aimK = THREE.MathUtils.lerp(
     THREE.MathUtils.lerp(-off, 3.5, back), // reversing: aim swings behind you
     12, // boulder: aim well down-course, hero floats high with lead room below
@@ -1362,7 +1463,9 @@ function updateCamera(dt: number): void {
   camera.lookAt(aimSmooth);
 }
 
-camera.position.copy(player.pos).addScaledVector(new THREE.Vector3(0, 0, 1), TUNING.camDist);
+camera.position
+  .copy(player.pos)
+  .addScaledVector(new THREE.Vector3(0, 0, 1), TUNING.camDist);
 camera.position.y += TUNING.camHeight;
 
 // --- fixed-step loop --------------------------------------------------------
@@ -1375,7 +1478,7 @@ let stepIdx = 0;
 // pace gets footsteps.
 function updateAudio(dt: number): void {
   const speedAbs = Math.abs(player.speed);
-  const onGround = player.state === 'ride' && player.grounded;
+  const onGround = player.state === "ride" && player.grounded;
   // Board rolling loop: above the boardSpeed slider, or any real momentum-
   // skate roll (slow carves up a transition still sound like wheels).
   // Slides are body slides — no board, no board noise.
@@ -1386,23 +1489,23 @@ function updateAudio(dt: number): void {
     !player.sliding &&
     (speedAbs > TUNING.boardSpeed || (player.boardRolling && speedAbs > 0.3));
   sfx.setLoop(
-    'skate',
-    'skateLoop',
+    "skate",
+    "skateLoop",
     skatingNow,
     Math.min(0.55, 0.15 + speedAbs / 90),
     0.85 + speedAbs / 120,
   );
-  sfx.setLoop('grind', 'grindLoop', player.state === 'grind', 0.55, 1);
+  sfx.setLoop("grind", "grindLoop", player.state === "grind", 0.55, 1);
   // Wallride: the skating loop while stuck to a wall, pitched up a touch.
-  sfx.setLoop('wallride', 'wallrideLoop', player.wallriding, 0.5, 1.15);
+  sfx.setLoop("wallride", "wallrideLoop", player.wallriding, 0.5, 1.15);
   // Triple-mask invincibility gets its theme music for the whole ride.
-  sfx.setLoop('uber', 'uberMusic', player.uberTimer > 0, 0.65, 1);
+  sfx.setLoop("uber", "uberMusic", player.uberTimer > 0, 0.65, 1);
   // Boulder rumble: the grind loop pitched way down, louder as it closes in.
   const bo = level.boulder;
   const bDist = bo ? Math.abs(bo.st.mesh.position.z - player.pos.z) : 999;
   sfx.setLoop(
-    'boulder',
-    'grindLoop',
+    "boulder",
+    "grindLoop",
     !!bo && bo.active,
     Math.max(0.12, Math.min(0.85, 1.05 - bDist / 55)),
     0.3,
@@ -1410,9 +1513,13 @@ function updateAudio(dt: number): void {
 
   stepTimer -= dt;
   const walking =
-    onGround && !player.sliding && !player.boardRolling && speedAbs > 2 && speedAbs <= TUNING.walkSpeed + 0.5;
+    onGround &&
+    !player.sliding &&
+    !player.boardRolling &&
+    speedAbs > 2 &&
+    speedAbs <= TUNING.walkSpeed + 0.5;
   if (walking && stepTimer <= 0) {
-    sfx.play('footstep' + (1 + (stepIdx++ % 3)), 0.35);
+    sfx.play("footstep" + (1 + (stepIdx++ % 3)), 0.35);
     stepTimer = 0.26;
   }
 }
@@ -1428,17 +1535,24 @@ function frame(): void {
     // join/loss toasts: P2's pad is claimed by activity, not slot number
     if (!p2Linked && input2.claimedSlot !== null) {
       p2Linked = true;
-      ui.showMessage('P2 JOINED', input2.gamepadName, 1800);
+      ui.showMessage("P2 JOINED", input2.gamepadName, 1800);
     } else if (p2Linked && input2.claimedSlot === null) {
       p2Linked = false;
-      ui.showMessage('P2 PAD LOST', 'press any button on it to rejoin', 3000);
+      ui.showMessage("P2 PAD LOST", "press any button on it to rejoin", 3000);
     }
   }
 
   // Controller-only players fire no keydown/pointer gesture, so the audio
   // context would stay suspended until they touched the keyboard. Nudge it from
   // the poll whenever there's any input (a cheap no-op once it's running).
-  if (input.moveX || input.moveY || input.jumpHeld || input.grindHeld || input.spinHeld || input.grabHeld)
+  if (
+    input.moveX ||
+    input.moveY ||
+    input.jumpHeld ||
+    input.grindHeld ||
+    input.spinHeld ||
+    input.grabHeld
+  )
     sfx.unlock();
 
   // EDITOR MODE owns the frame outright (it supersedes pause — the sim is
@@ -1456,7 +1570,7 @@ function frame(): void {
   // Options / P toggles pause: the sim stops dead, the frame still renders.
   if (input.pausePressed) {
     paused = !paused;
-    if (paused) ui.showMessage('PAUSED', 'Options / P to resume', 0);
+    if (paused) ui.showMessage("PAUSED", "Options / P to resume", 0);
     else ui.hideMessage();
   }
   if (paused) {
@@ -1478,7 +1592,7 @@ function frame(): void {
     // take runs out, reset to a clean level so the next live take is valid.
     if (!split2p && replayer.active && !replayer.feed(input)) {
       ui.setReplayBadge(false);
-      ui.showMessage('REPLAY DONE', '', 1200);
+      ui.showMessage("REPLAY DONE", "", 1200);
       switchLevel(currentCourse);
       break;
     }
@@ -1492,8 +1606,10 @@ function frame(): void {
       p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
       stepPvp(CONST.fixedStep);
       // any respawn's level.reset resurrects the clock/orb — keep them parked
-      if (level.clockPickup && level.clockPickup.group.visible) deactivate2pModes();
-      else if (level.comboOrb && level.comboOrb.group.visible) deactivate2pModes();
+      if (level.clockPickup && level.clockPickup.group.visible)
+        deactivate2pModes();
+      else if (level.comboOrb && level.comboOrb.group.visible)
+        deactivate2pModes();
     }
     level.update(CONST.fixedStep);
     // record exactly what the sim consumed (edges intact, pre-consume)
@@ -1505,7 +1621,7 @@ function frame(): void {
 
   // hold the last shot through the death blackout — no drifting after the
   // corpse; the respawn teleport re-snaps the rig when play resumes
-  if (player.state !== 'dead' && player.state !== 'gameover') updateCamera(dt);
+  if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
   if (split2p) updateCamera2(dt);
   updateAudio(dt);
   sky.position.copy(camera.position);
@@ -1520,7 +1636,7 @@ function frame(): void {
     comboPoints: player.comboPoints,
     comboMult: player.comboMult,
     comboHasTrick: player.comboHasTrick,
-    tricks: (tricks.length > 6 ? '… + ' : '') + tricks.slice(-6).join(' + '),
+    tricks: (tricks.length > 6 ? "… + " : "") + tricks.slice(-6).join(" + "),
     fruit: player.fruit,
     lives: Math.max(0, player.lives),
     crates: `${player.cratesBroken}/${level.totalCrates}`,
@@ -1538,11 +1654,14 @@ function frame(): void {
     jump:
       `${player.lastJumpType} · hold ${player.xHoldT.toFixed(2)}s` +
       ` · skate ${player.skateChargeT.toFixed(2)}/${TUNING.skateHoldTime.toFixed(2)}` +
-      (player.skateOn ? ' ✓' : ''),
+      (player.skateOn ? " ✓" : ""),
     railDist: player.railCandidateDist,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     fruit: player.fruit,
-    masks: player.uberTimer > 0 ? `INVINCIBLE ${player.uberTimer.toFixed(1)}s` : String(player.masks),
+    masks:
+      player.uberTimer > 0
+        ? `INVINCIBLE ${player.uberTimer.toFixed(1)}s`
+        : String(player.masks),
     time: player.runTime,
   });
 

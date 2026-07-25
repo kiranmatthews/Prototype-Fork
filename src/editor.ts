@@ -9,9 +9,9 @@
 //
 // Everything autosaves to this browser; EXPORT shares the level as a file.
 
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { TUNING } from './tuning';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { TUNING } from "./tuning";
 import {
   Level,
   CustomComponent,
@@ -24,9 +24,10 @@ import {
   groupChainOf,
   TEX_KINDS,
   LEVEL_NAMES,
+  CUSTOM_LEVEL_ID,
   getEditData,
   persistEditData,
-} from './level';
+} from "./level";
 
 interface Hooks {
   rebuild: () => void; // dispose + reconstruct the target level from data
@@ -43,125 +44,1047 @@ interface PalItem {
   label: string;
   icon: Draw;
   make?: (at: THREE.Vector3) => CustomComponent;
-  penDraw?: 'platform' | 'pit' | 'wall' | 'rail' | 'vertramp'; // pen tool: click-to-draw a polygon (or open path) of this type
+  penDraw?: "platform" | "pit" | "wall" | "rail" | "vertramp"; // pen tool: click-to-draw a polygon (or open path) of this type
 }
 
-const box = (x: CanvasRenderingContext2D, fill: string, frame: string): void => {
+const box = (
+  x: CanvasRenderingContext2D,
+  fill: string,
+  frame: string,
+): void => {
   x.fillStyle = fill;
   x.fillRect(2, 2, 14, 14);
   x.strokeStyle = frame;
   x.lineWidth = 2;
   x.strokeRect(3, 3, 12, 12);
 };
-const glyph = (x: CanvasRenderingContext2D, ch: string, color: string): void => {
+const glyph = (
+  x: CanvasRenderingContext2D,
+  ch: string,
+  color: string,
+): void => {
   x.fillStyle = color;
-  x.font = 'bold 11px monospace';
-  x.textAlign = 'center';
-  x.textBaseline = 'middle';
+  x.font = "bold 11px monospace";
+  x.textAlign = "center";
+  x.textBaseline = "middle";
   x.fillText(ch, 9, 10);
 };
 
 const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
   {
-    title: 'TERRAIN',
+    title: "TERRAIN",
     items: [
-      { label: 'platform', icon: (x) => { x.fillStyle = '#cfd4cf'; x.fillRect(1, 7, 16, 5); x.fillStyle = '#aeb4ae'; for (let i = 0; i < 4; i++) x.fillRect(1 + i * 4, 7 + (i % 2) * 2.5, 4, 2.5); }, make: (at) => ({ t: 'platform', p: [at.x, at.y, at.z], s: [10, 1, 10] }) },
-      { label: 'ramp', icon: (x) => { x.fillStyle = '#c8b088'; x.beginPath(); x.moveTo(1, 15); x.lineTo(17, 15); x.lineTo(17, 3); x.closePath(); x.fill(); }, make: (at) => ({ t: 'ramp', p: [at.x, at.y, at.z], len: 10, rise: 4, w: 8 }) },
-      { label: 'wall', icon: (x) => { x.fillStyle = '#9a8a7a'; x.fillRect(3, 3, 12, 12); x.strokeStyle = '#6a5d50'; x.lineWidth = 1; for (let r = 0; r < 3; r++) { x.strokeRect(3, 3 + r * 4, 6, 4); x.strokeRect(9, 3 + r * 4, 6, 4); } }, make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1] }) },
-      { label: 'invis wall', icon: (x) => { x.strokeStyle = '#64d8ff'; x.lineWidth = 1.5; x.setLineDash([3, 2]); x.strokeRect(3, 3, 12, 12); x.setLineDash([]); }, make: (at) => ({ t: 'wall', p: [at.x, at.y, at.z], s: [8, 4, 1], invisible: true }) },
-      { label: 'rail', icon: (x) => { x.strokeStyle = '#c8d4e2'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 6); x.lineTo(16, 6); x.stroke(); x.lineWidth = 1.5; x.beginPath(); x.moveTo(5, 6); x.lineTo(5, 14); x.moveTo(13, 6); x.lineTo(13, 14); x.stroke(); }, make: (at) => ({ t: 'rail', p: [at.x, at.y + 1, at.z], len: 12, yaw: 0 }) },
-      { label: 'halfpipe', icon: (x) => { x.strokeStyle = '#aab4ba'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 36, rise: 6, w: 3, vkind: 'half' }) },
-      { label: 'quarter vert', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 15); x.lineTo(8, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 30, rise: 6, w: 3, vkind: 'quarter' }) },
-      { label: 'half vert', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(2, 4); x.quadraticCurveTo(2, 15, 9, 15); x.quadraticCurveTo(16, 15, 16, 4); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], len: 30, rise: 6, w: 3, vkind: 'half' }) },
+      {
+        label: "platform",
+        icon: (x) => {
+          x.fillStyle = "#cfd4cf";
+          x.fillRect(1, 7, 16, 5);
+          x.fillStyle = "#aeb4ae";
+          for (let i = 0; i < 4; i++)
+            x.fillRect(1 + i * 4, 7 + (i % 2) * 2.5, 4, 2.5);
+        },
+        make: (at) => ({
+          t: "platform",
+          p: [at.x, at.y, at.z],
+          s: [10, 1, 10],
+        }),
+      },
+      {
+        label: "ramp",
+        icon: (x) => {
+          x.fillStyle = "#c8b088";
+          x.beginPath();
+          x.moveTo(1, 15);
+          x.lineTo(17, 15);
+          x.lineTo(17, 3);
+          x.closePath();
+          x.fill();
+        },
+        make: (at) => ({
+          t: "ramp",
+          p: [at.x, at.y, at.z],
+          len: 10,
+          rise: 4,
+          w: 8,
+        }),
+      },
+      {
+        label: "wall",
+        icon: (x) => {
+          x.fillStyle = "#9a8a7a";
+          x.fillRect(3, 3, 12, 12);
+          x.strokeStyle = "#6a5d50";
+          x.lineWidth = 1;
+          for (let r = 0; r < 3; r++) {
+            x.strokeRect(3, 3 + r * 4, 6, 4);
+            x.strokeRect(9, 3 + r * 4, 6, 4);
+          }
+        },
+        make: (at) => ({ t: "wall", p: [at.x, at.y, at.z], s: [8, 4, 1] }),
+      },
+      {
+        label: "invis wall",
+        icon: (x) => {
+          x.strokeStyle = "#64d8ff";
+          x.lineWidth = 1.5;
+          x.setLineDash([3, 2]);
+          x.strokeRect(3, 3, 12, 12);
+          x.setLineDash([]);
+        },
+        make: (at) => ({
+          t: "wall",
+          p: [at.x, at.y, at.z],
+          s: [8, 4, 1],
+          invisible: true,
+        }),
+      },
+      {
+        label: "rail",
+        icon: (x) => {
+          x.strokeStyle = "#c8d4e2";
+          x.lineWidth = 2;
+          x.beginPath();
+          x.moveTo(2, 6);
+          x.lineTo(16, 6);
+          x.stroke();
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(5, 6);
+          x.lineTo(5, 14);
+          x.moveTo(13, 6);
+          x.lineTo(13, 14);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "rail",
+          p: [at.x, at.y + 1, at.z],
+          len: 12,
+          yaw: 0,
+        }),
+      },
+      {
+        label: "halfpipe",
+        icon: (x) => {
+          x.strokeStyle = "#aab4ba";
+          x.lineWidth = 2.5;
+          x.beginPath();
+          x.moveTo(2, 4);
+          x.quadraticCurveTo(2, 15, 9, 15);
+          x.quadraticCurveTo(16, 15, 16, 4);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "vertramp",
+          p: [at.x, at.y, at.z],
+          len: 36,
+          rise: 6,
+          w: 3,
+          vkind: "half",
+        }),
+      },
+      {
+        label: "quarter vert",
+        icon: (x) => {
+          x.strokeStyle = "#7fd4e8";
+          x.lineWidth = 2.5;
+          x.beginPath();
+          x.moveTo(2, 15);
+          x.lineTo(8, 15);
+          x.quadraticCurveTo(16, 15, 16, 4);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "vertramp",
+          p: [at.x, at.y, at.z],
+          len: 30,
+          rise: 6,
+          w: 3,
+          vkind: "quarter",
+        }),
+      },
+      {
+        label: "half vert",
+        icon: (x) => {
+          x.strokeStyle = "#7fd4e8";
+          x.lineWidth = 2.5;
+          x.beginPath();
+          x.moveTo(2, 4);
+          x.quadraticCurveTo(2, 15, 9, 15);
+          x.quadraticCurveTo(16, 15, 16, 4);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "vertramp",
+          p: [at.x, at.y, at.z],
+          len: 30,
+          rise: 6,
+          w: 3,
+          vkind: "half",
+        }),
+      },
       // bowl parts: a quarter swept round a filleted corner, and a whole pool.
       // Both stop short of vertical (arc 60) and carry a deck — pool rules.
-      { label: 'bowl corner', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.arc(3, 3, 12, 0, Math.PI / 2); x.stroke(); x.strokeStyle = '#3d6b78'; x.lineWidth = 1.5; x.beginPath(); x.arc(3, 3, 6, 0, Math.PI / 2); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], pts: [[-12, -12, 0, 0], [12, -12, 10, 0], [12, 12, 0, 0]], rise: 6, w: 2, vkind: 'quarter', arc: 60, deck: 2.3 }) },
-      { label: 'bowl', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2.5; x.beginPath(); x.ellipse(9, 9, 7, 5.5, 0, 0, 7); x.stroke(); x.strokeStyle = '#3d6b78'; x.lineWidth = 1.5; x.beginPath(); x.ellipse(9, 9, 3.4, 2.6, 0, 0, 7); x.stroke(); }, make: (at) => ({ t: 'vertramp', p: [at.x, at.y, at.z], pts: [[-13, -8, 5, 0], [13, -8, 5, 0], [13, 8, 5, 0], [-13, 8, 5, 0]], rise: 6, w: 2, vkind: 'quarter', arc: 60, deck: 2.3, closed: true }) },
-      { label: 'crumble', icon: (x) => { x.fillStyle = '#cf6a48'; x.fillRect(2, 7, 14, 5); x.strokeStyle = '#7a3520'; x.lineWidth = 1; x.beginPath(); x.moveTo(6, 7); x.lineTo(8, 12); x.moveTo(11, 7); x.lineTo(10, 12); x.stroke(); }, make: (at) => ({ t: 'crumble', p: [at.x, at.y + 1, at.z], s: [3, 1, 3], shake: 0.7 }) },
-      { label: 'death pit', icon: (x) => { x.fillStyle = '#b0402a'; x.fillRect(2, 6, 14, 7); x.fillStyle = '#0a0a10'; x.fillRect(3.5, 7.5, 11, 4); }, make: (at) => ({ t: 'pit', p: [at.x, at.y, at.z], s: [6, 1, 6] }) },
-      { label: 'rock', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.moveTo(4, 14); x.lineTo(2, 9); x.lineTo(7, 4); x.lineTo(13, 5); x.lineTo(16, 10); x.lineTo(13, 14); x.closePath(); x.fill(); x.fillStyle = '#a49c8c'; x.beginPath(); x.moveTo(7, 4); x.lineTo(13, 5); x.lineTo(10, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 1, at.z], s: [3, 2, 3], seed: Math.floor(Math.random() * 1e6) }) },
-      { label: 'boulder', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.arc(9, 10, 7, 0, 7); x.fill(); x.fillStyle = '#a49c8c'; x.beginPath(); x.moveTo(5, 6); x.lineTo(12, 4); x.lineTo(13, 9); x.lineTo(6, 10); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 2, at.z], s: [5.5, 4, 5.5], seed: Math.floor(Math.random() * 1e6) }) },
-      { label: 'spire', icon: (x) => { x.fillStyle = '#8d8678'; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 12); x.lineTo(12, 16); x.lineTo(6, 16); x.lineTo(5, 11); x.closePath(); x.fill(); x.fillStyle = '#6e685c'; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 12); x.lineTo(10, 14); x.closePath(); x.fill(); }, make: (at) => ({ t: 'rock', p: [at.x, at.y + 3, at.z], s: [2.5, 6, 2.5], seed: Math.floor(Math.random() * 1e6) }) },
+      {
+        label: "bowl corner",
+        icon: (x) => {
+          x.strokeStyle = "#7fd4e8";
+          x.lineWidth = 2.5;
+          x.beginPath();
+          x.arc(3, 3, 12, 0, Math.PI / 2);
+          x.stroke();
+          x.strokeStyle = "#3d6b78";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.arc(3, 3, 6, 0, Math.PI / 2);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "vertramp",
+          p: [at.x, at.y, at.z],
+          pts: [
+            [-12, -12, 0, 0],
+            [12, -12, 10, 0],
+            [12, 12, 0, 0],
+          ],
+          rise: 6,
+          w: 2,
+          vkind: "quarter",
+          arc: 60,
+          deck: 2.3,
+        }),
+      },
+      {
+        label: "bowl",
+        icon: (x) => {
+          x.strokeStyle = "#7fd4e8";
+          x.lineWidth = 2.5;
+          x.beginPath();
+          x.ellipse(9, 9, 7, 5.5, 0, 0, 7);
+          x.stroke();
+          x.strokeStyle = "#3d6b78";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.ellipse(9, 9, 3.4, 2.6, 0, 0, 7);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "vertramp",
+          p: [at.x, at.y, at.z],
+          pts: [
+            [-13, -8, 5, 0],
+            [13, -8, 5, 0],
+            [13, 8, 5, 0],
+            [-13, 8, 5, 0],
+          ],
+          rise: 6,
+          w: 2,
+          vkind: "quarter",
+          arc: 60,
+          deck: 2.3,
+          closed: true,
+        }),
+      },
+      {
+        label: "crumble",
+        icon: (x) => {
+          x.fillStyle = "#cf6a48";
+          x.fillRect(2, 7, 14, 5);
+          x.strokeStyle = "#7a3520";
+          x.lineWidth = 1;
+          x.beginPath();
+          x.moveTo(6, 7);
+          x.lineTo(8, 12);
+          x.moveTo(11, 7);
+          x.lineTo(10, 12);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "crumble",
+          p: [at.x, at.y + 1, at.z],
+          s: [3, 1, 3],
+          shake: 0.7,
+        }),
+      },
+      {
+        label: "death pit",
+        icon: (x) => {
+          x.fillStyle = "#b0402a";
+          x.fillRect(2, 6, 14, 7);
+          x.fillStyle = "#0a0a10";
+          x.fillRect(3.5, 7.5, 11, 4);
+        },
+        make: (at) => ({ t: "pit", p: [at.x, at.y, at.z], s: [6, 1, 6] }),
+      },
+      {
+        label: "rock",
+        icon: (x) => {
+          x.fillStyle = "#8d8678";
+          x.beginPath();
+          x.moveTo(4, 14);
+          x.lineTo(2, 9);
+          x.lineTo(7, 4);
+          x.lineTo(13, 5);
+          x.lineTo(16, 10);
+          x.lineTo(13, 14);
+          x.closePath();
+          x.fill();
+          x.fillStyle = "#a49c8c";
+          x.beginPath();
+          x.moveTo(7, 4);
+          x.lineTo(13, 5);
+          x.lineTo(10, 9);
+          x.closePath();
+          x.fill();
+        },
+        make: (at) => ({
+          t: "rock",
+          p: [at.x, at.y + 1, at.z],
+          s: [3, 2, 3],
+          seed: Math.floor(Math.random() * 1e6),
+        }),
+      },
+      {
+        label: "boulder",
+        icon: (x) => {
+          x.fillStyle = "#8d8678";
+          x.beginPath();
+          x.arc(9, 10, 7, 0, 7);
+          x.fill();
+          x.fillStyle = "#a49c8c";
+          x.beginPath();
+          x.moveTo(5, 6);
+          x.lineTo(12, 4);
+          x.lineTo(13, 9);
+          x.lineTo(6, 10);
+          x.closePath();
+          x.fill();
+        },
+        make: (at) => ({
+          t: "rock",
+          p: [at.x, at.y + 2, at.z],
+          s: [5.5, 4, 5.5],
+          seed: Math.floor(Math.random() * 1e6),
+        }),
+      },
+      {
+        label: "spire",
+        icon: (x) => {
+          x.fillStyle = "#8d8678";
+          x.beginPath();
+          x.moveTo(9, 2);
+          x.lineTo(13, 12);
+          x.lineTo(12, 16);
+          x.lineTo(6, 16);
+          x.lineTo(5, 11);
+          x.closePath();
+          x.fill();
+          x.fillStyle = "#6e685c";
+          x.beginPath();
+          x.moveTo(9, 2);
+          x.lineTo(13, 12);
+          x.lineTo(10, 14);
+          x.closePath();
+          x.fill();
+        },
+        make: (at) => ({
+          t: "rock",
+          p: [at.x, at.y + 3, at.z],
+          s: [2.5, 6, 2.5],
+          seed: Math.floor(Math.random() * 1e6),
+        }),
+      },
     ],
   },
   {
-    title: 'CRATES',
+    title: "CRATES",
     items: [
-      { label: 'wood', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '▦', '#8a5a22'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'wood' }) },
-      { label: 'arrow', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '↑', '#3a9a4a'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'bouncy' }) },
-      { label: 'arrow metal', icon: (x) => { box(x, '#9aa2ac', '#666e78'); glyph(x, '↑', '#3a9a4a'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'metalbounce' }) },
-      { label: 'TNT', icon: (x) => { box(x, '#c03a2a', '#6a180e'); glyph(x, 'T', '#ffe9d8'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'tnt' }) },
-      { label: 'nitro', icon: (x) => { box(x, '#2fae44', '#0e4a18'); glyph(x, 'N', '#eafff0'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'nitro' }) },
-      { label: 'mask', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '☻', '#e89040'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'mask' }) },
-      { label: '? crate', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '?', '#ff8c1a'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'mystery' }) },
-      { label: '! crate', icon: (x) => { box(x, '#b5762f', '#7a4a18'); glyph(x, '!', '#ffd934'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'bang' }) },
-      { label: 'nitro !', icon: (x) => { box(x, '#2fae44', '#0e4a18'); glyph(x, '!', '#eafff0'); }, make: (at) => ({ t: 'crate', p: [at.x, at.y + 0.5, at.z], kind: 'nitrobang' }) },
-      { label: 'metal', icon: (x) => { box(x, '#9aa2ac', '#666e78'); x.fillStyle = '#666e78'; for (const [rx, ry] of [[5, 5], [12, 5], [5, 12], [12, 12]]) x.fillRect(rx, ry, 2, 2); }, make: (at) => ({ t: 'metal', p: [at.x, at.y, at.z] }) },
-      { label: 'checkpoint', icon: (x) => { box(x, '#2a5a8a', '#123049'); glyph(x, 'C', '#cfe8ff'); }, make: (at) => ({ t: 'checkpoint', p: [at.x, at.y + 0.5, at.z] }) },
+      {
+        label: "wood",
+        icon: (x) => {
+          box(x, "#b5762f", "#7a4a18");
+          glyph(x, "▦", "#8a5a22");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "wood",
+        }),
+      },
+      {
+        label: "arrow",
+        icon: (x) => {
+          box(x, "#b5762f", "#7a4a18");
+          glyph(x, "↑", "#3a9a4a");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "bouncy",
+        }),
+      },
+      {
+        label: "arrow metal",
+        icon: (x) => {
+          box(x, "#9aa2ac", "#666e78");
+          glyph(x, "↑", "#3a9a4a");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "metalbounce",
+        }),
+      },
+      {
+        label: "TNT",
+        icon: (x) => {
+          box(x, "#c03a2a", "#6a180e");
+          glyph(x, "T", "#ffe9d8");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "tnt",
+        }),
+      },
+      {
+        label: "nitro",
+        icon: (x) => {
+          box(x, "#2fae44", "#0e4a18");
+          glyph(x, "N", "#eafff0");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "nitro",
+        }),
+      },
+      {
+        label: "mask",
+        icon: (x) => {
+          box(x, "#b5762f", "#7a4a18");
+          glyph(x, "☻", "#e89040");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "mask",
+        }),
+      },
+      {
+        label: "? crate",
+        icon: (x) => {
+          box(x, "#b5762f", "#7a4a18");
+          glyph(x, "?", "#ff8c1a");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "mystery",
+        }),
+      },
+      {
+        label: "! crate",
+        icon: (x) => {
+          box(x, "#b5762f", "#7a4a18");
+          glyph(x, "!", "#ffd934");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "bang",
+        }),
+      },
+      {
+        label: "nitro !",
+        icon: (x) => {
+          box(x, "#2fae44", "#0e4a18");
+          glyph(x, "!", "#eafff0");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "nitrobang",
+        }),
+      },
+      {
+        label: "metal",
+        icon: (x) => {
+          box(x, "#9aa2ac", "#666e78");
+          x.fillStyle = "#666e78";
+          for (const [rx, ry] of [
+            [5, 5],
+            [12, 5],
+            [5, 12],
+            [12, 12],
+          ])
+            x.fillRect(rx, ry, 2, 2);
+        },
+        make: (at) => ({ t: "metal", p: [at.x, at.y, at.z] }),
+      },
+      {
+        label: "checkpoint",
+        icon: (x) => {
+          box(x, "#2a5a8a", "#123049");
+          glyph(x, "C", "#cfe8ff");
+        },
+        make: (at) => ({ t: "checkpoint", p: [at.x, at.y + 0.5, at.z] }),
+      },
     ],
   },
   {
-    title: 'DRAW (pen tool)',
+    title: "DRAW (pen tool)",
     items: [
-      { label: 'platform', icon: (x) => { x.strokeStyle = '#cfd4cf'; x.fillStyle = 'rgba(207,212,207,0.35)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 12); x.lineTo(7, 3); x.lineTo(15, 5); x.lineTo(13, 14); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#58e08a'; for (const [px, py] of [[3, 12], [7, 3], [15, 5], [13, 14]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'platform' },
-      { label: 'death pit', icon: (x) => { x.strokeStyle = '#b0402a'; x.fillStyle = '#0a0a10'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 11); x.lineTo(8, 3); x.lineTo(16, 7); x.lineTo(12, 15); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ff8a5e'; for (const [px, py] of [[3, 11], [8, 3], [16, 7], [12, 15]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'pit' },
-      { label: 'wall', icon: (x) => { x.strokeStyle = '#9a8a7a'; x.fillStyle = 'rgba(154,138,122,0.4)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(3, 13); x.lineTo(6, 4); x.lineTo(14, 3); x.lineTo(15, 12); x.closePath(); x.fill(); x.stroke(); x.fillStyle = '#ffd75e'; for (const [px, py] of [[3, 13], [6, 4], [14, 3], [15, 12]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'wall' },
-      { label: 'rail path', icon: (x) => { x.strokeStyle = '#b8a2ff'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 14); x.lineTo(7, 12); x.lineTo(11, 6); x.lineTo(16, 4); x.stroke(); x.fillStyle = '#d7c8ff'; for (const [px, py] of [[2, 14], [7, 12], [11, 6], [16, 4]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'rail' },
-      { label: 'vert spine', icon: (x) => { x.strokeStyle = '#7fd4e8'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 13); x.quadraticCurveTo(8, 12, 11, 7); x.quadraticCurveTo(13, 3, 16, 3); x.stroke(); x.fillStyle = '#cdf1fa'; for (const [px, py] of [[2, 13], [11, 7], [16, 3]]) x.fillRect(px - 1.5, py - 1.5, 3, 3); }, penDraw: 'vertramp' },
-      { label: 'rope', icon: (x) => { x.strokeStyle = '#c2a878'; x.lineWidth = 2; x.beginPath(); x.moveTo(2, 5); x.quadraticCurveTo(9, 13, 16, 5); x.stroke(); x.fillStyle = '#6b4a2a'; x.fillRect(1, 4, 2, 8); x.fillRect(15, 4, 2, 8); }, make: (at) => ({ t: 'rope', p: [at.x, at.y + 2.5, at.z], len: 12, amp: 1.2, shake: 3 }) },
+      {
+        label: "platform",
+        icon: (x) => {
+          x.strokeStyle = "#cfd4cf";
+          x.fillStyle = "rgba(207,212,207,0.35)";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(3, 12);
+          x.lineTo(7, 3);
+          x.lineTo(15, 5);
+          x.lineTo(13, 14);
+          x.closePath();
+          x.fill();
+          x.stroke();
+          x.fillStyle = "#58e08a";
+          for (const [px, py] of [
+            [3, 12],
+            [7, 3],
+            [15, 5],
+            [13, 14],
+          ])
+            x.fillRect(px - 1.5, py - 1.5, 3, 3);
+        },
+        penDraw: "platform",
+      },
+      {
+        label: "death pit",
+        icon: (x) => {
+          x.strokeStyle = "#b0402a";
+          x.fillStyle = "#0a0a10";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(3, 11);
+          x.lineTo(8, 3);
+          x.lineTo(16, 7);
+          x.lineTo(12, 15);
+          x.closePath();
+          x.fill();
+          x.stroke();
+          x.fillStyle = "#ff8a5e";
+          for (const [px, py] of [
+            [3, 11],
+            [8, 3],
+            [16, 7],
+            [12, 15],
+          ])
+            x.fillRect(px - 1.5, py - 1.5, 3, 3);
+        },
+        penDraw: "pit",
+      },
+      {
+        label: "wall",
+        icon: (x) => {
+          x.strokeStyle = "#9a8a7a";
+          x.fillStyle = "rgba(154,138,122,0.4)";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(3, 13);
+          x.lineTo(6, 4);
+          x.lineTo(14, 3);
+          x.lineTo(15, 12);
+          x.closePath();
+          x.fill();
+          x.stroke();
+          x.fillStyle = "#ffd75e";
+          for (const [px, py] of [
+            [3, 13],
+            [6, 4],
+            [14, 3],
+            [15, 12],
+          ])
+            x.fillRect(px - 1.5, py - 1.5, 3, 3);
+        },
+        penDraw: "wall",
+      },
+      {
+        label: "rail path",
+        icon: (x) => {
+          x.strokeStyle = "#b8a2ff";
+          x.lineWidth = 2;
+          x.beginPath();
+          x.moveTo(2, 14);
+          x.lineTo(7, 12);
+          x.lineTo(11, 6);
+          x.lineTo(16, 4);
+          x.stroke();
+          x.fillStyle = "#d7c8ff";
+          for (const [px, py] of [
+            [2, 14],
+            [7, 12],
+            [11, 6],
+            [16, 4],
+          ])
+            x.fillRect(px - 1.5, py - 1.5, 3, 3);
+        },
+        penDraw: "rail",
+      },
+      {
+        label: "vert spine",
+        icon: (x) => {
+          x.strokeStyle = "#7fd4e8";
+          x.lineWidth = 2;
+          x.beginPath();
+          x.moveTo(2, 13);
+          x.quadraticCurveTo(8, 12, 11, 7);
+          x.quadraticCurveTo(13, 3, 16, 3);
+          x.stroke();
+          x.fillStyle = "#cdf1fa";
+          for (const [px, py] of [
+            [2, 13],
+            [11, 7],
+            [16, 3],
+          ])
+            x.fillRect(px - 1.5, py - 1.5, 3, 3);
+        },
+        penDraw: "vertramp",
+      },
+      {
+        label: "rope",
+        icon: (x) => {
+          x.strokeStyle = "#c2a878";
+          x.lineWidth = 2;
+          x.beginPath();
+          x.moveTo(2, 5);
+          x.quadraticCurveTo(9, 13, 16, 5);
+          x.stroke();
+          x.fillStyle = "#6b4a2a";
+          x.fillRect(1, 4, 2, 8);
+          x.fillRect(15, 4, 2, 8);
+        },
+        make: (at) => ({
+          t: "rope",
+          p: [at.x, at.y + 2.5, at.z],
+          len: 12,
+          amp: 1.2,
+          shake: 3,
+        }),
+      },
     ],
   },
   {
-    title: 'CAMERA',
+    title: "CAMERA",
     items: [
-      { label: 'cam node', icon: (x) => { x.fillStyle = '#ff5ad2'; x.beginPath(); x.moveTo(9, 2); x.lineTo(15, 9); x.lineTo(9, 16); x.lineTo(3, 9); x.closePath(); x.fill(); x.strokeStyle = '#ff8ae0'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 9); x.lineTo(17, 9); x.stroke(); }, make: (at) => ({ t: 'camnode', p: [at.x, at.y + 1.5, at.z] }) },
-      { label: 'travel zone', icon: (x) => { x.strokeStyle = '#9a6cff'; x.fillStyle = 'rgba(154,108,255,0.25)'; x.lineWidth = 1.5; x.fillRect(2, 5, 14, 9); x.strokeRect(2, 5, 14, 9); glyph(x, '→', '#c9b2ff'); }, make: (at) => ({ t: 'zone', p: [at.x, at.y, at.z], s: [14, 1, 10], dir: 'E' }) },
+      {
+        label: "cam node",
+        icon: (x) => {
+          x.fillStyle = "#ff5ad2";
+          x.beginPath();
+          x.moveTo(9, 2);
+          x.lineTo(15, 9);
+          x.lineTo(9, 16);
+          x.lineTo(3, 9);
+          x.closePath();
+          x.fill();
+          x.strokeStyle = "#ff8ae0";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(9, 9);
+          x.lineTo(17, 9);
+          x.stroke();
+        },
+        make: (at) => ({ t: "camnode", p: [at.x, at.y + 1.5, at.z] }),
+      },
+      {
+        label: "travel zone",
+        icon: (x) => {
+          x.strokeStyle = "#9a6cff";
+          x.fillStyle = "rgba(154,108,255,0.25)";
+          x.lineWidth = 1.5;
+          x.fillRect(2, 5, 14, 9);
+          x.strokeRect(2, 5, 14, 9);
+          glyph(x, "→", "#c9b2ff");
+        },
+        make: (at) => ({
+          t: "zone",
+          p: [at.x, at.y, at.z],
+          s: [14, 1, 10],
+          dir: "E",
+        }),
+      },
     ],
   },
   {
-    title: 'FOES',
+    title: "FOES",
     items: [
-      { label: 'grunt', icon: (x) => { x.fillStyle = '#c03a2a'; x.fillRect(4, 7, 10, 8); x.fillStyle = '#fff'; x.fillRect(6, 9, 2, 2); x.fillRect(10, 9, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3, foe: 'grunt' }) },
-      { label: 'spiker (spin)', icon: (x) => { x.fillStyle = '#7a3a8a'; x.fillRect(4, 9, 10, 6); x.fillStyle = '#e8e0f0'; for (let i = 0; i < 4; i++) { x.beginPath(); x.moveTo(4 + i * 3, 9); x.lineTo(5.5 + i * 3, 3); x.lineTo(7 + i * 3, 9); x.fill(); } }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3, foe: 'spiker' }) },
-      { label: 'turtle (jump)', icon: (x) => { x.fillStyle = '#2f7a44'; x.beginPath(); x.arc(9, 12, 6, Math.PI, 0); x.fill(); x.fillStyle = '#8a6a2a'; x.fillRect(2, 11, 2, 3); x.fillRect(14, 11, 2, 3); x.fillStyle = '#6cae5a'; x.fillRect(12, 8, 4, 3); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 4, speed: 2.4, foe: 'turtle' }) },
-      { label: 'charger', icon: (x) => { x.fillStyle = '#8a4a26'; x.fillRect(3, 7, 11, 8); x.fillStyle = '#f0e6d0'; x.beginPath(); x.moveTo(14, 8); x.lineTo(18, 6); x.lineTo(15, 10); x.fill(); x.beginPath(); x.moveTo(14, 12); x.lineTo(18, 13); x.lineTo(15, 14); x.fill(); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 9, speed: 4.5, foe: 'charger' }) },
-      { label: 'hopper', icon: (x) => { x.fillStyle = '#46a83a'; x.beginPath(); x.arc(9, 11, 5, 0, 7); x.fill(); x.fillStyle = '#fff'; x.beginPath(); x.arc(6.5, 7, 2, 0, 7); x.arc(11.5, 7, 2, 0, 7); x.fill(); x.fillStyle = '#101010'; x.fillRect(6, 6.5, 1.4, 1.4); x.fillRect(11, 6.5, 1.4, 1.4); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3.4, foe: 'hopper' }) },
-      { label: 'floater (spin)', icon: (x) => { x.strokeStyle = '#6c4ad0'; x.lineWidth = 1.5; x.beginPath(); x.ellipse(9, 9, 7, 3, 0, 0, 7); x.stroke(); x.fillStyle = '#9a6cff'; x.beginPath(); x.moveTo(9, 5); x.lineTo(12, 9); x.lineTo(9, 13); x.lineTo(6, 9); x.fill(); x.fillStyle = '#ffe27a'; x.fillRect(8, 8, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 5, speed: 3, foe: 'floater' }) },
-      { label: 'sentry', icon: (x) => { x.fillStyle = '#4c525e'; x.fillRect(5, 12, 8, 4); x.fillStyle = '#8a3a3a'; x.fillRect(6, 6, 6, 6); x.fillStyle = '#33373f'; x.fillRect(11, 8, 5, 2); x.fillStyle = '#ff6a3a'; x.fillRect(8, 8, 2, 2); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 0, speed: 0, foe: 'sentry' }) },
-      { label: 'spinner', icon: (x) => { x.strokeStyle = '#d8dde2'; x.lineWidth = 2; for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + 0.4; x.beginPath(); x.moveTo(9, 9); x.lineTo(9 + Math.cos(a) * 7, 9 + Math.sin(a) * 7); x.stroke(); } x.fillStyle = '#b08a2a'; x.beginPath(); x.arc(9, 9, 2.5, 0, 7); x.fill(); }, make: (at) => ({ t: 'enemy', p: [at.x, at.y + 0.5, at.z], range: 0, speed: 0, foe: 'spinner' }) },
+      {
+        label: "grunt",
+        icon: (x) => {
+          x.fillStyle = "#c03a2a";
+          x.fillRect(4, 7, 10, 8);
+          x.fillStyle = "#fff";
+          x.fillRect(6, 9, 2, 2);
+          x.fillRect(10, 9, 2, 2);
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 5,
+          speed: 3,
+          foe: "grunt",
+        }),
+      },
+      {
+        label: "spiker (spin)",
+        icon: (x) => {
+          x.fillStyle = "#7a3a8a";
+          x.fillRect(4, 9, 10, 6);
+          x.fillStyle = "#e8e0f0";
+          for (let i = 0; i < 4; i++) {
+            x.beginPath();
+            x.moveTo(4 + i * 3, 9);
+            x.lineTo(5.5 + i * 3, 3);
+            x.lineTo(7 + i * 3, 9);
+            x.fill();
+          }
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 5,
+          speed: 3,
+          foe: "spiker",
+        }),
+      },
+      {
+        label: "turtle (jump)",
+        icon: (x) => {
+          x.fillStyle = "#2f7a44";
+          x.beginPath();
+          x.arc(9, 12, 6, Math.PI, 0);
+          x.fill();
+          x.fillStyle = "#8a6a2a";
+          x.fillRect(2, 11, 2, 3);
+          x.fillRect(14, 11, 2, 3);
+          x.fillStyle = "#6cae5a";
+          x.fillRect(12, 8, 4, 3);
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 4,
+          speed: 2.4,
+          foe: "turtle",
+        }),
+      },
+      {
+        label: "charger",
+        icon: (x) => {
+          x.fillStyle = "#8a4a26";
+          x.fillRect(3, 7, 11, 8);
+          x.fillStyle = "#f0e6d0";
+          x.beginPath();
+          x.moveTo(14, 8);
+          x.lineTo(18, 6);
+          x.lineTo(15, 10);
+          x.fill();
+          x.beginPath();
+          x.moveTo(14, 12);
+          x.lineTo(18, 13);
+          x.lineTo(15, 14);
+          x.fill();
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 9,
+          speed: 4.5,
+          foe: "charger",
+        }),
+      },
+      {
+        label: "hopper",
+        icon: (x) => {
+          x.fillStyle = "#46a83a";
+          x.beginPath();
+          x.arc(9, 11, 5, 0, 7);
+          x.fill();
+          x.fillStyle = "#fff";
+          x.beginPath();
+          x.arc(6.5, 7, 2, 0, 7);
+          x.arc(11.5, 7, 2, 0, 7);
+          x.fill();
+          x.fillStyle = "#101010";
+          x.fillRect(6, 6.5, 1.4, 1.4);
+          x.fillRect(11, 6.5, 1.4, 1.4);
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 5,
+          speed: 3.4,
+          foe: "hopper",
+        }),
+      },
+      {
+        label: "floater (spin)",
+        icon: (x) => {
+          x.strokeStyle = "#6c4ad0";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.ellipse(9, 9, 7, 3, 0, 0, 7);
+          x.stroke();
+          x.fillStyle = "#9a6cff";
+          x.beginPath();
+          x.moveTo(9, 5);
+          x.lineTo(12, 9);
+          x.lineTo(9, 13);
+          x.lineTo(6, 9);
+          x.fill();
+          x.fillStyle = "#ffe27a";
+          x.fillRect(8, 8, 2, 2);
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 5,
+          speed: 3,
+          foe: "floater",
+        }),
+      },
+      {
+        label: "sentry",
+        icon: (x) => {
+          x.fillStyle = "#4c525e";
+          x.fillRect(5, 12, 8, 4);
+          x.fillStyle = "#8a3a3a";
+          x.fillRect(6, 6, 6, 6);
+          x.fillStyle = "#33373f";
+          x.fillRect(11, 8, 5, 2);
+          x.fillStyle = "#ff6a3a";
+          x.fillRect(8, 8, 2, 2);
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 0,
+          speed: 0,
+          foe: "sentry",
+        }),
+      },
+      {
+        label: "spinner",
+        icon: (x) => {
+          x.strokeStyle = "#d8dde2";
+          x.lineWidth = 2;
+          for (let i = 0; i < 4; i++) {
+            const a = (i * Math.PI) / 2 + 0.4;
+            x.beginPath();
+            x.moveTo(9, 9);
+            x.lineTo(9 + Math.cos(a) * 7, 9 + Math.sin(a) * 7);
+            x.stroke();
+          }
+          x.fillStyle = "#b08a2a";
+          x.beginPath();
+          x.arc(9, 9, 2.5, 0, 7);
+          x.fill();
+        },
+        make: (at) => ({
+          t: "enemy",
+          p: [at.x, at.y + 0.5, at.z],
+          range: 0,
+          speed: 0,
+          foe: "spinner",
+        }),
+      },
     ],
   },
   {
-    title: 'HAZARDS & THINGS',
+    title: "HAZARDS & THINGS",
     items: [
-      { label: 'crusher', icon: (x) => { x.fillStyle = '#8f8f98'; x.fillRect(3, 2, 12, 7); glyph(x, '↓', '#2a2a30'); }, make: (at) => ({ t: 'crusher', p: [at.x, at.y, at.z], s: [4, 3, 3], cycle: 3.2, phase: 0 }) },
-      { label: 'pendulum', icon: (x) => { x.strokeStyle = '#6a7078'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 2); x.lineTo(13, 11); x.stroke(); x.fillStyle = '#565c66'; x.beginPath(); x.arc(13.5, 13, 3, 0, 7); x.fill(); }, make: (at) => ({ t: 'pendulum', p: [at.x, at.y + 7, at.z], len: 5, amp: 1.0, speed: 1.6, phase: 0 }) },
-      { label: 'rope swing', icon: (x) => { x.strokeStyle = '#a8845a'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(8, 2); x.quadraticCurveTo(9, 8, 12, 13); x.stroke(); x.fillStyle = '#7a5c3a'; x.fillRect(11, 6, 2.4, 1.6); x.beginPath(); x.arc(12.2, 13.5, 1.8, 0, 7); x.fill(); }, make: (at) => ({ t: 'ropeswing', p: [at.x, at.y + 8, at.z], len: 6, amp: 0.85, speed: 0, phase: 0 }) },
-      { label: 'wumpa', icon: (x) => { x.fillStyle = '#ff9028'; x.beginPath(); x.arc(9, 10, 5, 0, 7); x.fill(); x.fillStyle = '#3a9a4a'; x.fillRect(8, 3, 2, 3); }, make: (at) => ({ t: 'wumpa', p: [at.x, at.y + 1.2, at.z] }) },
-      { label: 'crystal', icon: (x) => { x.fillStyle = '#c83af0'; x.beginPath(); x.moveTo(9, 2); x.lineTo(14, 9); x.lineTo(9, 16); x.lineTo(4, 9); x.closePath(); x.fill(); }, make: (at) => ({ t: 'crystal', p: [at.x, at.y + 0.5, at.z] }) },
-      { label: 'finish gate', icon: (x) => { x.fillStyle = '#d8d8d8'; x.fillRect(3, 4, 2, 12); x.fillRect(13, 4, 2, 12); for (let i = 0; i < 4; i++) { x.fillStyle = i % 2 === 0 ? '#e8e8e8' : '#20242c'; x.fillRect(5 + i * 2, 4, 2, 3); } }, make: (at) => ({ t: 'gate', p: [at.x, at.y, at.z] }) },
-      { label: 'tt clock', icon: (x) => { x.fillStyle = '#e8b53a'; x.fillRect(8, 2, 2, 3); x.beginPath(); x.arc(9, 10, 6, 0, 7); x.fill(); x.fillStyle = '#f4efdf'; x.beginPath(); x.arc(9, 10, 4.2, 0, 7); x.fill(); x.strokeStyle = '#3a3020'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(9, 10); x.lineTo(9, 7); x.moveTo(9, 10); x.lineTo(12, 10); x.stroke(); }, make: (at) => ({ t: 'clock', p: [at.x, at.y, at.z] }) },
-      { label: 'combo orb', icon: (x) => { x.fillStyle = 'rgba(70,232,130,0.4)'; x.fillRect(6, 2, 6, 15); x.fillRect(2, 7, 15, 6); x.fillStyle = '#46e882'; x.fillRect(7, 3, 4, 13); x.fillRect(3, 8, 13, 4); }, make: (at) => ({ t: 'comboorb', p: [at.x, at.y, at.z] }) },
+      {
+        label: "crusher",
+        icon: (x) => {
+          x.fillStyle = "#8f8f98";
+          x.fillRect(3, 2, 12, 7);
+          glyph(x, "↓", "#2a2a30");
+        },
+        make: (at) => ({
+          t: "crusher",
+          p: [at.x, at.y, at.z],
+          s: [4, 3, 3],
+          cycle: 3.2,
+          phase: 0,
+        }),
+      },
+      {
+        label: "pendulum",
+        icon: (x) => {
+          x.strokeStyle = "#6a7078";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(9, 2);
+          x.lineTo(13, 11);
+          x.stroke();
+          x.fillStyle = "#565c66";
+          x.beginPath();
+          x.arc(13.5, 13, 3, 0, 7);
+          x.fill();
+        },
+        make: (at) => ({
+          t: "pendulum",
+          p: [at.x, at.y + 7, at.z],
+          len: 5,
+          amp: 1.0,
+          speed: 1.6,
+          phase: 0,
+        }),
+      },
+      {
+        label: "rope swing",
+        icon: (x) => {
+          x.strokeStyle = "#a8845a";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(8, 2);
+          x.quadraticCurveTo(9, 8, 12, 13);
+          x.stroke();
+          x.fillStyle = "#7a5c3a";
+          x.fillRect(11, 6, 2.4, 1.6);
+          x.beginPath();
+          x.arc(12.2, 13.5, 1.8, 0, 7);
+          x.fill();
+        },
+        make: (at) => ({
+          t: "ropeswing",
+          p: [at.x, at.y + 8, at.z],
+          len: 6,
+          amp: 0.85,
+          speed: 0,
+          phase: 0,
+        }),
+      },
+      {
+        label: "wumpa",
+        icon: (x) => {
+          x.fillStyle = "#ff9028";
+          x.beginPath();
+          x.arc(9, 10, 5, 0, 7);
+          x.fill();
+          x.fillStyle = "#3a9a4a";
+          x.fillRect(8, 3, 2, 3);
+        },
+        make: (at) => ({ t: "wumpa", p: [at.x, at.y + 1.2, at.z] }),
+      },
+      {
+        label: "crystal",
+        icon: (x) => {
+          x.fillStyle = "#c83af0";
+          x.beginPath();
+          x.moveTo(9, 2);
+          x.lineTo(14, 9);
+          x.lineTo(9, 16);
+          x.lineTo(4, 9);
+          x.closePath();
+          x.fill();
+        },
+        make: (at) => ({ t: "crystal", p: [at.x, at.y + 0.5, at.z] }),
+      },
+      {
+        label: "finish gate",
+        icon: (x) => {
+          x.fillStyle = "#d8d8d8";
+          x.fillRect(3, 4, 2, 12);
+          x.fillRect(13, 4, 2, 12);
+          for (let i = 0; i < 4; i++) {
+            x.fillStyle = i % 2 === 0 ? "#e8e8e8" : "#20242c";
+            x.fillRect(5 + i * 2, 4, 2, 3);
+          }
+        },
+        make: (at) => ({ t: "gate", p: [at.x, at.y, at.z] }),
+      },
+      {
+        label: "tt clock",
+        icon: (x) => {
+          x.fillStyle = "#e8b53a";
+          x.fillRect(8, 2, 2, 3);
+          x.beginPath();
+          x.arc(9, 10, 6, 0, 7);
+          x.fill();
+          x.fillStyle = "#f4efdf";
+          x.beginPath();
+          x.arc(9, 10, 4.2, 0, 7);
+          x.fill();
+          x.strokeStyle = "#3a3020";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(9, 10);
+          x.lineTo(9, 7);
+          x.moveTo(9, 10);
+          x.lineTo(12, 10);
+          x.stroke();
+        },
+        make: (at) => ({ t: "clock", p: [at.x, at.y, at.z] }),
+      },
+      {
+        label: "combo orb",
+        icon: (x) => {
+          x.fillStyle = "rgba(70,232,130,0.4)";
+          x.fillRect(6, 2, 6, 15);
+          x.fillRect(2, 7, 15, 6);
+          x.fillStyle = "#46e882";
+          x.fillRect(7, 3, 4, 13);
+          x.fillRect(3, 8, 13, 4);
+        },
+        make: (at) => ({ t: "comboorb", p: [at.x, at.y, at.z] }),
+      },
     ],
   },
 ];
 
-const CRATE_KINDS = ['wood', 'bouncy', 'metalbounce', 'nitro', 'tnt', 'mask', 'mystery', 'bang', 'nitrobang'] as const;
+const CRATE_KINDS = [
+  "wood",
+  "bouncy",
+  "metalbounce",
+  "nitro",
+  "tnt",
+  "mask",
+  "mystery",
+  "bang",
+  "nitrobang",
+] as const;
 
 // enemy variants + a one-line hint on how each is beaten, shown in the dropdown
 const FOE_KINDS: { k: EnemyKind; label: string }[] = [
-  { k: 'grunt', label: 'grunt — any attack' },
-  { k: 'spiker', label: 'spiker — SPIN only (spikes)' },
-  { k: 'turtle', label: 'turtle — STOMP only (shell)' },
-  { k: 'charger', label: 'charger — bull, invincible mid-dash' },
-  { k: 'hopper', label: 'hopper — leaps; stomp when grounded' },
-  { k: 'floater', label: 'floater — flies; SPIN it down' },
-  { k: 'sentry', label: 'sentry — turret, fires orbs' },
-  { k: 'spinner', label: 'spinner — hit it when blades retract' },
+  { k: "grunt", label: "grunt — any attack" },
+  { k: "spiker", label: "spiker — SPIN only (spikes)" },
+  { k: "turtle", label: "turtle — STOMP only (shell)" },
+  { k: "charger", label: "charger — bull, invincible mid-dash" },
+  { k: "hopper", label: "hopper — leaps; stomp when grounded" },
+  { k: "floater", label: "floater — flies; SPIN it down" },
+  { k: "sentry", label: "sentry — turret, fires orbs" },
+  { k: "spinner", label: "spinner — hit it when blades retract" },
 ];
 
 // components that grow draggable resize handles on double-click
-const RESIZABLE = new Set(['platform', 'rock', 'wall', 'pit', 'crumble', 'crusher', 'ramp', 'rail', 'rope', 'zone', 'vertramp', 'enemy', 'pendulum', 'ropeswing']);
+const RESIZABLE = new Set([
+  "platform",
+  "rock",
+  "wall",
+  "pit",
+  "crumble",
+  "crusher",
+  "ramp",
+  "rail",
+  "rope",
+  "zone",
+  "vertramp",
+  "enemy",
+  "pendulum",
+  "ropeswing",
+]);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
 // and `apply` rewrites the component from its grab-time snapshot given the
@@ -180,22 +1103,22 @@ interface GizmoHandle {
   nx: number;
   ny: number;
   nz: number;
-  ax: ('x' | 'y' | 'z')[];
+  ax: ("x" | "y" | "z")[];
   corner: boolean;
 }
 const GIZMO_HANDLES: GizmoHandle[] = [
   // ground corners (scale width + depth)
-  { nx: 0, ny: 0, nz: 0, ax: ['x', 'z'], corner: true },
-  { nx: 1, ny: 0, nz: 0, ax: ['x', 'z'], corner: true },
-  { nx: 0, ny: 0, nz: 1, ax: ['x', 'z'], corner: true },
-  { nx: 1, ny: 0, nz: 1, ax: ['x', 'z'], corner: true },
+  { nx: 0, ny: 0, nz: 0, ax: ["x", "z"], corner: true },
+  { nx: 1, ny: 0, nz: 0, ax: ["x", "z"], corner: true },
+  { nx: 0, ny: 0, nz: 1, ax: ["x", "z"], corner: true },
+  { nx: 1, ny: 0, nz: 1, ax: ["x", "z"], corner: true },
   // ground edges (single axis)
-  { nx: 0.5, ny: 0, nz: 0, ax: ['z'], corner: false },
-  { nx: 0.5, ny: 0, nz: 1, ax: ['z'], corner: false },
-  { nx: 0, ny: 0, nz: 0.5, ax: ['x'], corner: false },
-  { nx: 1, ny: 0, nz: 0.5, ax: ['x'], corner: false },
+  { nx: 0.5, ny: 0, nz: 0, ax: ["z"], corner: false },
+  { nx: 0.5, ny: 0, nz: 1, ax: ["z"], corner: false },
+  { nx: 0, ny: 0, nz: 0.5, ax: ["x"], corner: false },
+  { nx: 1, ny: 0, nz: 0.5, ax: ["x"], corner: false },
   // top (height)
-  { nx: 0.5, ny: 1, nz: 0.5, ax: ['y'], corner: false },
+  { nx: 0.5, ny: 1, nz: 0.5, ax: ["y"], corner: false },
 ];
 const HANDLE_GEO = new THREE.BoxGeometry(0.55, 0.55, 0.55);
 // invisible fat hit-sphere around every handle: click targets stay forgiving
@@ -210,7 +1133,7 @@ const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 
 export class Editor {
   active = false;
-  targetCourse = 7; // which level this session edits: 7 = custom sandbox, else a built-in's override
+  targetCourse = CUSTOM_LEVEL_ID; // which level this session edits: the sandbox, else a built-in's override
   private resetBtn: HTMLButtonElement | null = null; // "start over" / "restore original" — label swaps by target
   data: CustomLevelData;
   // SELECTION is an ordered set of component indices; the LAST one is the
@@ -237,13 +1160,15 @@ export class Editor {
   private projPane: HTMLElement | null = null;
   private tabSelBtn: HTMLButtonElement | null = null;
   private tabProjBtn: HTMLButtonElement | null = null;
-  private panelTab: 'sel' | 'proj' = 'sel';
+  private panelTab: "sel" | "proj" = "sel";
   private raycaster = new THREE.Raycaster();
   // 2D work views: X/Y/Z lock the camera flat down an axis (pan/zoom only)
   // and drags move in the two visible axes; '3d' is the free orbit view.
-  private viewMode: '3d' | 'x' | 'y' | 'z' = '3d';
-  private saved3D: { p: THREE.Vector3; t: THREE.Vector3; fov: number } | null = null;
-  private viewBtns: Partial<Record<'x' | 'y' | 'z' | '3d', HTMLButtonElement>> = {};
+  private viewMode: "3d" | "x" | "y" | "z" = "3d";
+  private saved3D: { p: THREE.Vector3; t: THREE.Vector3; fov: number } | null =
+    null;
+  private viewBtns: Partial<Record<"x" | "y" | "z" | "3d", HTMLButtonElement>> =
+    {};
   private pointer = new THREE.Vector2();
   private selBoxes: THREE.Box3Helper[] = [];
   private spawnMarker: THREE.Group | null = null;
@@ -257,26 +1182,31 @@ export class Editor {
   private dragVertical = false;
   private downAt: { x: number; y: number } | null = null;
   // marquee (shift-drag on empty space): screen-space rubber band
-  private marquee: { x0: number; y0: number; x1: number; y1: number } | null = null;
+  private marquee: { x0: number; y0: number; x1: number; y1: number } | null =
+    null;
   private marqueeEl: HTMLDivElement | null = null;
   // copy/paste — survives entering/leaving the editor within a session
   private clipboard: CustomComponent[] = [];
   private pasteBump = 0;
-  private lastPasteKey = '';
+  private lastPasteKey = "";
   private hoverAt = 0;
   // nudge coalescing: a burst of arrow taps is ONE undo step
-  private lastCoalesce = '';
+  private lastCoalesce = "";
   private lastCommitT = 0;
   // outliner (the layers pop-out): every component is a row, groups are
   // expandable nodes. Locks live per component (lk) — locked = untouchable.
   private layersEl: HTMLElement | null = null;
   private closedGroups = new Set<number>(); // collapsed outliner nodes
-  private renaming: { kind: 'group' | 'item'; id: number } | null = null;
+  private renaming: { kind: "group" | "item"; id: number } | null = null;
   private marqueeAdd = false; // shift-marquee adds; plain marquee replaces
   private marqueeNodes = false; // node mode: the sweep selects NODES of the edited shape
   private camSaveAt = 0;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
-  private drawing: { t: 'platform' | 'pit' | 'wall' | 'rail' | 'vertramp'; y: number; pts: THREE.Vector3[] } | null = null;
+  private drawing: {
+    t: "platform" | "pit" | "wall" | "rail" | "vertramp";
+    y: number;
+    pts: THREE.Vector3[];
+  } | null = null;
   private selVtxs = new Set<number>(); // nodes picked in resize mode (shift/cmd adds, marquee sweeps) — props batch-edit their shared values
   private drawVis: THREE.Group | null = null;
   // pop-out side panels (item picker / layers) + view cluster + space-pan
@@ -308,11 +1238,15 @@ export class Editor {
   // SURFACE SNAP: plain drags rest the grabbed piece on the real geometry
   // under the cursor (raycast), resolving the 2D→3D depth ambiguity. Off =
   // the old fixed-Y ground-plane drag. Persisted per browser.
-  private surfaceSnap = localStorage.getItem('protoEdSurfaceSnap') !== '0';
+  private surfaceSnap = localStorage.getItem("protoEdSurfaceSnap") !== "0";
   private dragBottomOffset = 0; // grab-time distance from the grabbed piece's origin down to its base
   // group-scale gizmo (multi-selection bounding-box handles)
   private gizmoGroup: THREE.Group | null = null;
-  private gizmoHandles: { mesh: THREE.Mesh; hit: THREE.Mesh; def: GizmoHandle }[] = [];
+  private gizmoHandles: {
+    mesh: THREE.Mesh;
+    hit: THREE.Mesh;
+    def: GizmoHandle;
+  }[] = [];
   private gizmoDrag: {
     def: GizmoHandle;
     anchor: THREE.Vector3;
@@ -337,23 +1271,25 @@ export class Editor {
     this.hooks = hooks;
     this.data = getCustomLevelData();
     this.buildPanel();
-    dom.addEventListener('pointerdown', this.onDown);
-    dom.addEventListener('pointermove', this.onMove);
-    dom.addEventListener('pointerup', this.onUp);
-    dom.addEventListener('dblclick', this.onDbl);
+    dom.addEventListener("pointerdown", this.onDown);
+    dom.addEventListener("pointermove", this.onMove);
+    dom.addEventListener("pointerup", this.onUp);
+    dom.addEventListener("dblclick", this.onDbl);
     // any manual camera move (orbit/pan on any button, or wheel zoom) cancels a
     // running layer-focus glide so the user is never fighting it
-    dom.addEventListener('pointerdown', () => (this.focusAnim = null));
-    dom.addEventListener('wheel', () => (this.focusAnim = null), { passive: true });
-    window.addEventListener('keydown', this.onKey);
-    window.addEventListener('keyup', this.onKeyUp);
+    dom.addEventListener("pointerdown", () => (this.focusAnim = null));
+    dom.addEventListener("wheel", () => (this.focusAnim = null), {
+      passive: true,
+    });
+    window.addEventListener("keydown", this.onKey);
+    window.addEventListener("keyup", this.onKeyUp);
   }
 
-  enter(target = 7): void {
+  enter(target = CUSTOM_LEVEL_ID): void {
     if (this.active) return;
     this.active = true;
     this.targetCourse = target;
-    localStorage.setItem('protoEditorTarget', String(target)); // refresh lands on the same level
+    localStorage.setItem("protoEditorTarget", String(target)); // refresh lands on the same level
     this.data = migrateCustomLevel(getEditData(target));
     // fresh history per target: switching levels must not undo across them
     this.lastCommitted = JSON.stringify(this.data);
@@ -371,7 +1307,9 @@ export class Editor {
     // refresh-proof: come back exactly where you were looking
     let restored = false;
     try {
-      const cam = JSON.parse(localStorage.getItem('protoEditorCam') ?? 'null') as {
+      const cam = JSON.parse(
+        localStorage.getItem("protoEditorCam") ?? "null",
+      ) as {
         p: number[];
         t: number[];
       } | null;
@@ -384,22 +1322,41 @@ export class Editor {
       /* fresh view below */
     }
     if (!restored) {
-      this.controls.target.set(this.data.spawn[0], this.data.spawn[1], this.data.spawn[2] - 6);
-      this.camera.position.set(this.data.spawn[0] + 16, this.data.spawn[1] + 26, this.data.spawn[2] + 26);
+      this.controls.target.set(
+        this.data.spawn[0],
+        this.data.spawn[1],
+        this.data.spawn[2] - 6,
+      );
+      this.camera.position.set(
+        this.data.spawn[0] + 16,
+        this.data.spawn[1] + 26,
+        this.data.spawn[2] + 26,
+      );
     }
-    localStorage.setItem('protoEditorOpen', '1'); // refresh lands back in the editor
-    if (this.resetBtn) this.resetBtn.textContent = target === 7 ? 'start over' : 'restore original';
-    document.body.classList.add('ed-active'); // hides the play HUD under the tools
-    this.panel.style.display = 'block';
-    if (this.popWrap) this.popWrap.style.display = 'block';
-    this.setPop((localStorage.getItem('protoEditorPop') as 'add' | 'layers' | '') ?? 'add');
+    localStorage.setItem("protoEditorOpen", "1"); // refresh lands back in the editor
+    if (this.resetBtn)
+      this.resetBtn.textContent =
+        target === CUSTOM_LEVEL_ID ? "start over" : "restore original";
+    document.body.classList.add("ed-active"); // hides the play HUD under the tools
+    this.panel.style.display = "block";
+    if (this.popWrap) this.popWrap.style.display = "block";
+    this.setPop(
+      (localStorage.getItem("protoEditorPop") as "add" | "layers" | "") ??
+        "add",
+    );
     this.select(-1);
     this.renderLayers();
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
     this.hooks.setView(true); // no fog, far plane pushed out — see the whole level
-    const editing = target === 7 ? 'CUSTOM SANDBOX' : `EDITING: ${LEVEL_NAMES[target].toUpperCase()}`;
-    this.hooks.showMsg(editing, 'drag = select & move · RIGHT-drag = orbit · space = pan');
+    const editing =
+      target === CUSTOM_LEVEL_ID
+        ? "CUSTOM SANDBOX"
+        : `EDITING: ${LEVEL_NAMES[target].toUpperCase()}`;
+    this.hooks.showMsg(
+      editing,
+      "drag = select & move · RIGHT-drag = orbit · space = pan",
+    );
   }
 
   exit(): void {
@@ -408,13 +1365,13 @@ export class Editor {
     this.active = false;
     this.hooks.setView(false); // restore the level's fog + play draw distance
     this.saveCam();
-    localStorage.removeItem('protoEditorOpen');
-    localStorage.removeItem('protoEditorTarget');
+    localStorage.removeItem("protoEditorOpen");
+    localStorage.removeItem("protoEditorTarget");
     this.controls?.dispose();
     this.controls = null;
-    document.body.classList.remove('ed-active');
-    this.panel.style.display = 'none';
-    if (this.popWrap) this.popWrap.style.display = 'none';
+    document.body.classList.remove("ed-active");
+    this.panel.style.display = "none";
+    if (this.popWrap) this.popWrap.style.display = "none";
     this.select(-1);
     this.cancelDraw();
     this.marquee = null;
@@ -422,7 +1379,7 @@ export class Editor {
     this.dragging = false;
     this.dragSel = [];
     this.spaceHeld = false;
-    this.dom.style.cursor = '';
+    this.dom.style.cursor = "";
     this.gizmoDrag = null;
     this.teardownGizmo();
     this.setGhostsVisible(false);
@@ -447,7 +1404,11 @@ export class Editor {
     // keep resize handles a steady on-screen size at any zoom; selected
     // nodes read a step bigger, and the invisible hit targets track along
     this.handleMeshes.forEach((m, i) => {
-      const base = THREE.MathUtils.clamp(this.camera.position.distanceTo(m.position) * 0.022, 0.7, 3);
+      const base = THREE.MathUtils.clamp(
+        this.camera.position.distanceTo(m.position) * 0.022,
+        0.7,
+        3,
+      );
       const def = this.hdlDefs[i];
       const selected = def?.vtx !== undefined && this.selVtxs.has(def.vtx);
       m.scale.setScalar(base * (selected ? 1.35 : 1));
@@ -456,7 +1417,11 @@ export class Editor {
     });
     // group-scale gizmo handles: steady on-screen size too
     for (const h of this.gizmoHandles) {
-      const base = THREE.MathUtils.clamp(this.camera.position.distanceTo(h.mesh.position) * 0.024, 0.8, 3.4);
+      const base = THREE.MathUtils.clamp(
+        this.camera.position.distanceTo(h.mesh.position) * 0.024,
+        0.8,
+        3.4,
+      );
       h.mesh.scale.setScalar(base);
       h.hit.scale.setScalar(base * 1.6);
     }
@@ -472,14 +1437,20 @@ export class Editor {
     if (!this.controls) return;
     try {
       localStorage.setItem(
-        'protoEditorCam',
+        "protoEditorCam",
         JSON.stringify({
           // while a 2D view is up, persist the saved FREE view — a refresh
           // reopens in normal 3D, never stranded on the long 2D lens
-          p: (this.viewMode === '3d' ? this.camera.position : (this.saved3D?.p ?? this.camera.position))
+          p: (this.viewMode === "3d"
+            ? this.camera.position
+            : (this.saved3D?.p ?? this.camera.position)
+          )
             .toArray()
             .map((v) => +v.toFixed(2)),
-          t: (this.viewMode === '3d' ? this.controls.target : (this.saved3D?.t ?? this.controls.target))
+          t: (this.viewMode === "3d"
+            ? this.controls.target
+            : (this.saved3D?.t ?? this.controls.target)
+          )
             .toArray()
             .map((v) => +v.toFixed(2)),
         }),
@@ -510,8 +1481,10 @@ export class Editor {
   // Adopt a full level (drag-dropped file / shared JSON) as the working data.
   importLevel(d: CustomLevelData): void {
     // enforce the one-crystal rule on imported files too (keep the last)
-    const lastCrystal = d.components.map((c) => c.t).lastIndexOf('crystal');
-    d.components = d.components.filter((c, i) => c.t !== 'crystal' || i === lastCrystal);
+    const lastCrystal = d.components.map((c) => c.t).lastIndexOf("crystal");
+    d.components = d.components.filter(
+      (c, i) => c.t !== "crystal" || i === lastCrystal,
+    );
     this.data = migrateCustomLevel(d);
     this.select(-1);
     this.commit();
@@ -540,14 +1513,17 @@ export class Editor {
 
   private undoStack: string[] = [];
   private redoStack: string[] = [];
-  private lastCommitted = '';
+  private lastCommitted = "";
 
   // `coalesce`: edits sharing a key within a second merge into ONE undo step
   // (arrow-key nudge bursts, held number spinners)
-  private commit(rebuild = true, coalesce = ''): void {
+  private commit(rebuild = true, coalesce = ""): void {
     const now = JSON.stringify(this.data);
     const t = performance.now();
-    const chained = coalesce !== '' && coalesce === this.lastCoalesce && t - this.lastCommitT < 1000;
+    const chained =
+      coalesce !== "" &&
+      coalesce === this.lastCoalesce &&
+      t - this.lastCommitT < 1000;
     if (this.lastCommitted && now !== this.lastCommitted && !chained) {
       this.undoStack.push(this.lastCommitted);
       if (this.undoStack.length > 100) this.undoStack.shift();
@@ -558,13 +1534,19 @@ export class Editor {
     this.lastCommitted = now;
     this.pruneGroups();
     this.renderLayers();
-    if (this.targetCourse === 7) setCustomLevelData(this.data); // keep the sandbox cache fresh
+    if (this.targetCourse === CUSTOM_LEVEL_ID) setCustomLevelData(this.data); // keep the sandbox cache fresh
     persistEditData(this.targetCourse, now); // routes to the sandbox or the level's override slot
     if (rebuild) this.hooks.rebuild();
     // keep the selection outline + scale gizmo on the new geometry (field
     // scaling changes the bounds without any pointer drag). Skipped mid-drag,
     // where the live handlers own the visuals.
-    if (rebuild && this.sel.length > 0 && !this.gizmoDrag && !this.hdlDrag && !this.dragging) {
+    if (
+      rebuild &&
+      this.sel.length > 0 &&
+      !this.gizmoDrag &&
+      !this.hdlDrag &&
+      !this.dragging
+    ) {
       this.refreshSelectionBox();
     }
   }
@@ -573,7 +1555,7 @@ export class Editor {
   private applyState(json: string): void {
     this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
     this.lastCommitted = json;
-    if (this.targetCourse === 7) setCustomLevelData(this.data);
+    if (this.targetCourse === CUSTOM_LEVEL_ID) setCustomLevelData(this.data);
     persistEditData(this.targetCourse, json);
     this.select(-1);
     this.hooks.rebuild();
@@ -595,7 +1577,12 @@ export class Editor {
 
   private addComponent(c: CustomComponent): void {
     // ONE crystal / gate / clock / combo orb per level: a new one replaces the old
-    if (c.t === 'crystal' || c.t === 'gate' || c.t === 'clock' || c.t === 'comboorb') {
+    if (
+      c.t === "crystal" ||
+      c.t === "gate" ||
+      c.t === "clock" ||
+      c.t === "comboorb"
+    ) {
       this.data.components = this.data.components.filter((o) => o.t !== c.t);
     }
     this.data.components.push(c);
@@ -608,7 +1595,7 @@ export class Editor {
   private addBatch(batch: CustomComponent[]): void {
     if (batch.length === 0) return;
     let clean = batch;
-    for (const t of ['crystal', 'gate', 'clock', 'comboorb'] as const) {
+    for (const t of ["crystal", "gate", "clock", "comboorb"] as const) {
       const last = clean.map((c) => c.t).lastIndexOf(t);
       if (last >= 0) {
         clean = clean.filter((c, i) => c.t !== t || i === last);
@@ -626,10 +1613,15 @@ export class Editor {
     if (this.sel.length === 0) return;
     // the gate + run-mode activators are level furniture like the spawn
     // point — move them, never delete them (a load would regrow them anyway)
-    const KEEP = new Set(['gate', 'clock', 'comboorb']);
-    const dying = [...this.sel].filter((i) => !KEEP.has(this.data.components[i].t)).sort((a, b) => b - a);
+    const KEEP = new Set(["gate", "clock", "comboorb"]);
+    const dying = [...this.sel]
+      .filter((i) => !KEEP.has(this.data.components[i].t))
+      .sort((a, b) => b - a);
     if (dying.length < this.sel.length)
-      this.hooks.showMsg('GATE & ACTIVATORS STAY', 'every level keeps its gate, stopwatch and combo orb — move them instead');
+      this.hooks.showMsg(
+        "GATE & ACTIVATORS STAY",
+        "every level keeps its gate, stopwatch and combo orb — move them instead",
+      );
     if (dying.length === 0) return;
     for (const i of dying) this.data.components.splice(i, 1);
     this.select(-1);
@@ -651,12 +1643,13 @@ export class Editor {
 
   copySelected(): void {
     if (this.sel.length === 0) return;
-    this.clipboard = this.sel.map(
-      (i) => deepClone(this.data.components[i]),
-    );
+    this.clipboard = this.sel.map((i) => deepClone(this.data.components[i]));
     this.pasteBump = 0;
-    this.lastPasteKey = '';
-    this.hooks.showMsg(`COPIED ${this.clipboard.length}`, 'paste with ⌘V — lands at the camera focus');
+    this.lastPasteKey = "";
+    this.hooks.showMsg(
+      `COPIED ${this.clipboard.length}`,
+      "paste with ⌘V — lands at the camera focus",
+    );
   }
 
   cutSelected(): void {
@@ -765,7 +1758,8 @@ export class Editor {
     // fully-selected groups nest whole; everything else joins directly
     for (const idx of this.sel) {
       const r = rootOf.get(idx);
-      if (r === undefined || !fullRoots.has(r)) this.data.components[idx].grp = G;
+      if (r === undefined || !fullRoots.has(r))
+        this.data.components[idx].grp = G;
     }
     for (const r of fullRoots) {
       const g = this.data.groups.find((x) => x.id === r);
@@ -773,7 +1767,10 @@ export class Editor {
     }
     this.data.groups.push({ id: G });
     this.commit();
-    this.hooks.showMsg(`GROUPED ${this.sel.length}`, 'a "!" crate in a group wires its outline crates');
+    this.hooks.showMsg(
+      `GROUPED ${this.sel.length}`,
+      'a "!" crate in a group wires its outline crates',
+    );
   }
 
   // ⌘⇧G: dissolve the selection's outermost group(s) one level
@@ -787,11 +1784,12 @@ export class Editor {
     if (roots.size === 0) return;
     for (const r of roots) {
       for (const c of this.data.components) if (c.grp === r) c.grp = undefined;
-      for (const g of this.data.groups) if (g.parent === r) g.parent = undefined;
+      for (const g of this.data.groups)
+        if (g.parent === r) g.parent = undefined;
       this.data.groups = this.data.groups.filter((g) => g.id !== r);
     }
     this.commit();
-    this.hooks.showMsg('UNGROUPED');
+    this.hooks.showMsg("UNGROUPED");
   }
 
   // drop group entries no component chain references (post delete/ungroup)
@@ -809,15 +1807,23 @@ export class Editor {
   private remapGroups(copies: CustomComponent[]): void {
     if (!this.data.groups) return;
     const referenced = new Set<number>();
-    for (const c of copies) for (const id of groupChainOf(c, this.data)) referenced.add(id);
+    for (const c of copies)
+      for (const id of groupChainOf(c, this.data)) referenced.add(id);
     if (referenced.size === 0) return;
     const map = new Map<number, number>();
     let next = this.nextGroupId();
     for (const id of referenced) map.set(id, next++);
     for (const id of referenced) {
       const src = this.data.groups.find((g) => g.id === id);
-      const parent = src?.parent !== undefined && map.has(src.parent) ? map.get(src.parent) : undefined;
-      this.data.groups.push(parent !== undefined ? { id: map.get(id)!, parent } : { id: map.get(id)! });
+      const parent =
+        src?.parent !== undefined && map.has(src.parent)
+          ? map.get(src.parent)
+          : undefined;
+      this.data.groups.push(
+        parent !== undefined
+          ? { id: map.get(id)!, parent }
+          : { id: map.get(id)! },
+      );
     }
     for (const c of copies) {
       if (c.grp !== undefined && map.has(c.grp)) c.grp = map.get(c.grp);
@@ -846,7 +1852,7 @@ export class Editor {
     this.refreshSelectionBox();
     this.renderProps();
     this.renderLayers(); // outliner rows highlight the live selection
-    if (valid.length > 0 && this.panelTab !== 'sel') this.setPanelTab('sel'); // jump to the fields you just picked
+    if (valid.length > 0 && this.panelTab !== "sel") this.setPanelTab("sel"); // jump to the fields you just picked
   }
 
   private objectsFor(idx: number): THREE.Object3D[] {
@@ -879,7 +1885,8 @@ export class Editor {
       let ghost = false;
       while (o) {
         if (o.userData.editorGhost) ghost = true;
-        if (idx === undefined && o.userData.editorIdx !== undefined) idx = o.userData.editorIdx as number;
+        if (idx === undefined && o.userData.editorIdx !== undefined)
+          idx = o.userData.editorIdx as number;
         o = o.parent;
       }
       if (ghost) continue; // zone slabs, arrows, other non-solid editor visuals
@@ -898,7 +1905,10 @@ export class Editor {
       box.expandByScalar(0.15);
       // primary pops bright green; the rest of the selection reads softer
       const primary = idx === this.selected;
-      const helper = new THREE.Box3Helper(box, new THREE.Color(primary ? 0x58e08a : 0x2f9a86));
+      const helper = new THREE.Box3Helper(
+        box,
+        new THREE.Color(primary ? 0x58e08a : 0x2f9a86),
+      );
       this.scene.add(helper);
       this.selBoxes.push(helper);
     }
@@ -910,7 +1920,8 @@ export class Editor {
     }
     for (const r of roots) {
       const members = this.groupMembers(r);
-      if (!members.every((m) => this.sel.includes(m) || this.isLockedIdx(m))) continue;
+      if (!members.every((m) => this.sel.includes(m) || this.isLockedIdx(m)))
+        continue;
       const hull = new THREE.Box3();
       let any = false;
       for (const m of members) {
@@ -934,7 +1945,9 @@ export class Editor {
     if (!this.controls) return;
     const box = new THREE.Box3();
     let any = false;
-    const idxs = this.sel.length ? this.sel : this.data.components.map((_, i) => i);
+    const idxs = this.sel.length
+      ? this.sel
+      : this.data.components.map((_, i) => i);
     for (const idx of idxs) {
       const b = this.boxFor(idx);
       if (b) {
@@ -946,7 +1959,9 @@ export class Editor {
     const cen = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3()).length();
     const dist = THREE.MathUtils.clamp(size * 1.1 + 6, 10, 120);
-    const dir = new THREE.Vector3().subVectors(this.camera.position, this.controls.target).normalize();
+    const dir = new THREE.Vector3()
+      .subVectors(this.camera.position, this.controls.target)
+      .normalize();
     if (dir.lengthSq() < 0.5) dir.set(0.45, 0.7, 0.55).normalize();
     this.controls.target.copy(cen);
     this.camera.position.copy(cen).addScaledVector(dir, dist);
@@ -959,7 +1974,9 @@ export class Editor {
     const cen = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3()).length();
     const dist = THREE.MathUtils.clamp(size * 0.85 + 4, 6, 60); // close-up, but never inside a big piece
-    const dir = new THREE.Vector3().subVectors(this.camera.position, this.controls.target).normalize();
+    const dir = new THREE.Vector3()
+      .subVectors(this.camera.position, this.controls.target)
+      .normalize();
     if (dir.lengthSq() < 0.5) dir.set(0.45, 0.6, 0.55).normalize();
     this.focusAnim = {
       fromP: this.camera.position.clone(),
@@ -1013,7 +2030,12 @@ export class Editor {
   // scale ONE component's intrinsic size fields (yaw-aware: a 90°/270° piece
   // has its local X/Z swapped relative to the world scale axes). No-op for
   // fixed-size types — they carry no size field.
-  private scaleComponentSize(c: CustomComponent, sx: number, sy: number, sz: number): void {
+  private scaleComponentSize(
+    c: CustomComponent,
+    sx: number,
+    sy: number,
+    sz: number,
+  ): void {
     const yaw = (((c.yaw ?? 0) % 360) + 360) % 360;
     const swap = (yaw >= 45 && yaw < 135) || (yaw >= 225 && yaw < 315);
     const sLocX = swap ? sz : sx;
@@ -1026,46 +2048,57 @@ export class Editor {
         q[1] = pt[1] * sz;
         if (q.length >= 3) q[2] = (pt as number[])[2] * ((sx + sz) / 2);
         if (q.length >= 4) q[3] = (pt as number[])[3] * sy;
-        return q as (typeof pt);
+        return q as typeof pt;
       });
     }
-    if (c.s) c.s = [Math.max(0.2, c.s[0] * sLocX), Math.max(0.2, c.s[1] * sy), Math.max(0.2, c.s[2] * sLocZ)];
+    if (c.s)
+      c.s = [
+        Math.max(0.2, c.s[0] * sLocX),
+        Math.max(0.2, c.s[1] * sy),
+        Math.max(0.2, c.s[2] * sLocZ),
+      ];
     switch (c.t) {
-      case 'ramp':
+      case "ramp":
         if (c.len != null) c.len = Math.max(1, c.len * sLocZ);
         if (c.rise != null) c.rise *= sy;
         if (c.w != null) c.w = Math.max(1, c.w * sLocX);
         break;
-      case 'vertramp':
+      case "vertramp":
         if (!c.pts && c.len != null) c.len = Math.max(4, c.len * sLocZ);
         if (c.w != null) c.w = Math.max(0, c.w * sLocX);
         if (c.rise != null) c.rise = Math.max(0.5, c.rise * sy);
-        if (c.deck != null) c.deck = Math.max(0, c.deck * ((sLocX + sLocZ) / 2));
+        if (c.deck != null)
+          c.deck = Math.max(0, c.deck * ((sLocX + sLocZ) / 2));
         break;
-      case 'rail':
+      case "rail":
         if (!c.pts && c.len != null) c.len = Math.max(1, c.len * sLocZ);
         break;
-      case 'rope':
+      case "rope":
         if (c.len != null) c.len = Math.max(2, c.len * sLocZ);
         if (c.amp != null) c.amp *= sy;
         break;
-      case 'enemy':
+      case "enemy":
         if (c.range != null) c.range *= sLocX; // patrol span scales with the ground
         break;
-      case 'pendulum':
+      case "pendulum":
         if (c.len != null) c.len = Math.max(1, c.len * sy); // arm length is vertical
         break;
-      case 'ropeswing':
+      case "ropeswing":
         if (c.len != null) c.len = Math.max(2, c.len * sy); // rope length is vertical
         break;
-      case 'camnode':
+      case "camnode":
         if (c.radius != null) c.radius *= (sx + sz) / 2;
         break;
     }
   }
 
   // mutate the selection in place (no undo step) — the live-drag path
-  private applyScaleNoCommit(sx: number, sy: number, sz: number, anchor: THREE.Vector3): void {
+  private applyScaleNoCommit(
+    sx: number,
+    sy: number,
+    sz: number,
+    anchor: THREE.Vector3,
+  ): void {
     const cl = (v: number): number => Math.min(40, Math.max(0.02, v));
     sx = cl(sx);
     sy = cl(sy);
@@ -1083,7 +2116,13 @@ export class Editor {
   }
 
   // scale + commit (fields, one-shot). coalesce merges a spinner burst.
-  private scaleSelection(sx: number, sy: number, sz: number, anchor: THREE.Vector3, coalesce = ''): void {
+  private scaleSelection(
+    sx: number,
+    sy: number,
+    sz: number,
+    anchor: THREE.Vector3,
+    coalesce = "",
+  ): void {
     this.applyScaleNoCommit(sx, sy, sz, anchor);
     this.commit(true, coalesce);
   }
@@ -1093,7 +2132,13 @@ export class Editor {
   // single-resize or node mode. Handles ride the selection's bounding box.
   private refreshGizmo(): void {
     this.teardownGizmo();
-    if (!this.active || this.sel.length < 2 || this.resizeIdx >= 0 || this.selVtxs.size > 0) return;
+    if (
+      !this.active ||
+      this.sel.length < 2 ||
+      this.resizeIdx >= 0 ||
+      this.selVtxs.size > 0
+    )
+      return;
     const box = this.selectionBounds();
     if (!box) return;
     const g = new THREE.Group();
@@ -1101,12 +2146,19 @@ export class Editor {
       const pos = this.gizmoPos(def, box);
       const mesh = new THREE.Mesh(
         HANDLE_GEO,
-        new THREE.MeshBasicMaterial({ color: def.corner ? 0x8fd4ff : 0x5aa9ff, depthTest: false, transparent: true }),
+        new THREE.MeshBasicMaterial({
+          color: def.corner ? 0x8fd4ff : 0x5aa9ff,
+          depthTest: false,
+          transparent: true,
+        }),
       );
       mesh.position.copy(pos);
       mesh.renderOrder = 999;
       g.add(mesh);
-      const hit = new THREE.Mesh(HANDLE_HIT_GEO, new THREE.MeshBasicMaterial({ visible: false }));
+      const hit = new THREE.Mesh(
+        HANDLE_HIT_GEO,
+        new THREE.MeshBasicMaterial({ visible: false }),
+      );
       hit.position.copy(pos);
       g.add(hit);
       this.gizmoHandles.push({ mesh, hit, def });
@@ -1115,7 +2167,10 @@ export class Editor {
     this.gizmoGroup = g;
     if (!this.gizmoHintShown) {
       this.gizmoHintShown = true;
-      this.hooks.showMsg('GROUP SCALE', 'drag the blue box handles · or type group W/H/D · corner = proportional, Shift = free');
+      this.hooks.showMsg(
+        "GROUP SCALE",
+        "drag the blue box handles · or type group W/H/D · corner = proportional, Shift = free",
+      );
     }
   }
 
@@ -1140,8 +2195,8 @@ export class Editor {
   private gizmoAnchor(def: GizmoHandle, box: THREE.Box3): THREE.Vector3 {
     const a = box.min.clone();
     for (const ax of def.ax) {
-      if (ax === 'x') a.x = def.nx >= 0.5 ? box.min.x : box.max.x;
-      else if (ax === 'z') a.z = def.nz >= 0.5 ? box.min.z : box.max.z;
+      if (ax === "x") a.x = def.nx >= 0.5 ? box.min.x : box.max.x;
+      else if (ax === "z") a.z = def.nz >= 0.5 ? box.min.z : box.max.z;
       else a.y = def.ny >= 0.5 ? box.min.y : box.max.y;
     }
     return a;
@@ -1156,7 +2211,9 @@ export class Editor {
     const hits = this.raycaster.intersectObjects(targets, false);
     if (hits.length === 0) return false;
     const obj = hits[0].object;
-    const entry = this.gizmoHandles.find((h) => h.mesh === obj || h.hit === obj);
+    const entry = this.gizmoHandles.find(
+      (h) => h.mesh === obj || h.hit === obj,
+    );
     if (!entry) return false;
     const box = this.selectionBounds();
     if (!box) return false;
@@ -1165,9 +2222,12 @@ export class Editor {
     const handlePos = this.gizmoPos(def, box);
     // ground handles drag on a horizontal plane at the handle height; the top
     // (Y) handle drags on a camera-facing vertical plane through it.
-    const plane = def.ax.includes('y')
+    const plane = def.ax.includes("y")
       ? new THREE.Plane().setFromNormalAndCoplanarPoint(
-          new THREE.Vector3().subVectors(this.camera.position, handlePos).setY(0).normalize(),
+          new THREE.Vector3()
+            .subVectors(this.camera.position, handlePos)
+            .setY(0)
+            .normalize(),
           handlePos,
         )
       : new THREE.Plane(new THREE.Vector3(0, 1, 0), -handlePos.y);
@@ -1177,7 +2237,9 @@ export class Editor {
       def,
       anchor,
       ext0: box.getSize(new THREE.Vector3()),
-      orig: new Map(this.sel.map((idx) => [idx, deepClone(this.data.components[idx])])),
+      orig: new Map(
+        this.sel.map((idx) => [idx, deepClone(this.data.components[idx])]),
+      ),
       plane,
       grab,
       min0: box.min.clone(),
@@ -1199,7 +2261,7 @@ export class Editor {
     let sy = 1;
     let sz = 1;
     const ax = d.def.ax;
-    if (ax.includes('y')) {
+    if (ax.includes("y")) {
       sy = clampF(Math.abs(hit.y - d.anchor.y) / Math.max(0.01, d.ext0.y));
     } else if (d.def.corner) {
       // corner: proportional (uniform X+Z) by default, Shift = free per-axis
@@ -1213,9 +2275,9 @@ export class Editor {
         sx = f;
         sz = f;
       }
-    } else if (ax.includes('x')) {
+    } else if (ax.includes("x")) {
       sx = clampF(Math.abs(hit.x - d.anchor.x) / Math.max(0.01, d.ext0.x));
-    } else if (ax.includes('z')) {
+    } else if (ax.includes("z")) {
       sz = clampF(Math.abs(hit.z - d.anchor.z) / Math.max(0.01, d.ext0.z));
     }
     if (this.snap) {
@@ -1224,7 +2286,8 @@ export class Editor {
       sz = Math.max(0.05, Math.round(sz * 20) / 20);
     }
     // restore the grab snapshot, then scale about the fixed anchor
-    for (const [idx, orig] of d.orig) this.data.components[idx] = deepClone(orig);
+    for (const [idx, orig] of d.orig)
+      this.data.components[idx] = deepClone(orig);
     this.applyScaleNoCommit(sx, sy, sz, d.anchor);
     this.renderProps();
     const now = performance.now();
@@ -1239,7 +2302,10 @@ export class Editor {
   private nudge(fwd: number, right: number, up: number): void {
     if (this.sel.length === 0 || !this.controls) return;
     const step = this.snap ? 0.5 : 0.25;
-    const f = new THREE.Vector3().subVectors(this.controls.target, this.camera.position);
+    const f = new THREE.Vector3().subVectors(
+      this.controls.target,
+      this.camera.position,
+    );
     f.y = 0;
     if (f.lengthSq() < 1e-6) f.set(0, 0, -1);
     f.normalize();
@@ -1255,12 +2321,15 @@ export class Editor {
       const c = this.data.components[idx];
       c.p = [c.p[0] + d.x, c.p[1] + d.y, c.p[2] + d.z];
     }
-    this.commit(true, 'nudge');
+    this.commit(true, "nudge");
   }
 
   private pick(e: PointerEvent): number {
     const r = this.dom.getBoundingClientRect();
-    this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    this.pointer.set(
+      ((e.clientX - r.left) / r.width) * 2 - 1,
+      -((e.clientY - r.top) / r.height) * 2 + 1,
+    );
     this.raycaster.setFromCamera(this.pointer, this.camera);
     // A commit rebuilds the level synchronously; a click landing before the
     // next render (the 2nd half of a double-click) would raycast fresh meshes
@@ -1283,9 +2352,16 @@ export class Editor {
     return -1;
   }
 
-  private groundPoint(e: PointerEvent, plane: THREE.Plane, out: THREE.Vector3): boolean {
+  private groundPoint(
+    e: PointerEvent,
+    plane: THREE.Plane,
+    out: THREE.Vector3,
+  ): boolean {
     const r = this.dom.getBoundingClientRect();
-    this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    this.pointer.set(
+      ((e.clientX - r.left) / r.width) * 2 - 1,
+      -((e.clientY - r.top) / r.height) * 2 + 1,
+    );
     this.raycaster.setFromCamera(this.pointer, this.camera);
     return this.raycaster.ray.intersectPlane(plane, out) !== null;
   }
@@ -1300,44 +2376,47 @@ export class Editor {
 
   // fill defaulted dimensions in, so handle math (and its grab snapshot) is concrete
   private materializeDims(c: CustomComponent): void {
-    if (c.t === 'platform') c.s = c.s ?? [8, 1, 8];
-    else if (c.t === 'rock') c.s = c.s ?? [3, 2, 3];
-    else if (c.t === 'wall') c.s = c.s ?? [8, 4, 1];
-    else if (c.t === 'pit') c.s = c.s ?? [6, 1, 6];
-    else if (c.t === 'crumble') c.s = c.s ?? [3, 1, 3];
-    else if (c.t === 'crusher') c.s = c.s ?? [4, 3, 3];
-    else if (c.t === 'ramp') {
+    if (c.t === "platform") c.s = c.s ?? [8, 1, 8];
+    else if (c.t === "rock") c.s = c.s ?? [3, 2, 3];
+    else if (c.t === "wall") c.s = c.s ?? [8, 4, 1];
+    else if (c.t === "pit") c.s = c.s ?? [6, 1, 6];
+    else if (c.t === "crumble") c.s = c.s ?? [3, 1, 3];
+    else if (c.t === "crusher") c.s = c.s ?? [4, 3, 3];
+    else if (c.t === "ramp") {
       c.len = c.len ?? 10;
       c.rise = c.rise ?? 4;
       c.w = c.w ?? 8;
-    } else if (c.t === 'vertramp') {
+    } else if (c.t === "vertramp") {
       c.rise = c.rise ?? 6;
       c.w = c.w ?? 3;
       if (!c.pts) c.len = c.len ?? 30;
-    } else if (c.t === 'rail') c.len = c.len ?? 12;
-    else if (c.t === 'enemy') c.range = c.range ?? 5;
-    else if (c.t === 'pendulum') c.len = c.len ?? 5;
-    else if (c.t === 'ropeswing') c.len = c.len ?? 6;
+    } else if (c.t === "rail") c.len = c.len ?? 12;
+    else if (c.t === "enemy") c.range = c.range ?? 5;
+    else if (c.t === "pendulum") c.len = c.len ?? 5;
+    else if (c.t === "ropeswing") c.len = c.len ?? 6;
   }
 
   private handleDefsFor(c: CustomComponent): HandleDef[] {
     // drawn shapes: every node is a handle, dragged freely on the ground
     // plane (the axis machinery below is for box faces). Rails are open
     // 2+ node paths; polygons need 3+.
-    const isPoly = c.pts && c.pts.length >= 3 && (c.t === 'platform' || c.t === 'wall' || c.t === 'pit');
-    const isPath = c.pts && c.pts.length >= 2 && c.t === 'rail';
+    const isPoly =
+      c.pts &&
+      c.pts.length >= 3 &&
+      (c.t === "platform" || c.t === "wall" || c.t === "pit");
+    const isPath = c.pts && c.pts.length >= 2 && c.t === "rail";
     if (c.pts && (isPoly || isPath)) {
       const y =
-        c.t === 'wall'
+        c.t === "wall"
           ? c.p[1] + (c.s?.[1] ?? 4)
-          : c.t === 'platform'
+          : c.t === "platform"
             ? c.p[1] + (c.s?.[1] ?? 1) / 2
             : c.p[1] + 0.15;
       // rail nodes ride their own height offsets (climbing grind lines)
       return c.pts.map((pt, i) => ({
         pos: new THREE.Vector3(
           c.p[0] + pt[0],
-          c.t === 'rail' ? c.p[1] + (pt[3] ?? 0) + 0.1 : y,
+          c.t === "rail" ? c.p[1] + (pt[3] ?? 0) + 0.1 : y,
           c.p[2] + pt[1],
         ),
         dir: new THREE.Vector3(0, 1, 0),
@@ -1352,7 +2431,13 @@ export class Editor {
       new THREE.Vector3(x, y, z).applyAxisAngle(UP, yaw);
     // drag a box face outward: s[idx] grows and (if anchored) the component
     // center shifts by half, so the OPPOSITE face stays where it was
-    const face = (u: THREE.Vector3, at: THREE.Vector3, idx: number, min: number, anchor = true): void => {
+    const face = (
+      u: THREE.Vector3,
+      at: THREE.Vector3,
+      idx: number,
+      min: number,
+      anchor = true,
+    ): void => {
       defs.push({
         pos: at,
         dir: u,
@@ -1363,7 +2448,11 @@ export class Editor {
           ns[idx] = v;
           cc.s = ns;
           const g = anchor ? (v - os[idx]) / 2 : 0;
-          cc.p = [orig.p[0] + u.x * g, orig.p[1] + u.y * g, orig.p[2] + u.z * g];
+          cc.p = [
+            orig.p[0] + u.x * g,
+            orig.p[1] + u.y * g,
+            orig.p[2] + u.z * g,
+          ];
         },
       });
     };
@@ -1372,7 +2461,7 @@ export class Editor {
     const span = (
       u: THREE.Vector3,
       at: THREE.Vector3,
-      key: 'len' | 'w' | 'range',
+      key: "len" | "w" | "range",
       min: number,
       recenter: boolean,
     ): void => {
@@ -1383,61 +2472,157 @@ export class Editor {
           const v = Math.max(min, (orig[key] as number) + d);
           cc[key] = v;
           const g = recenter ? (v - (orig[key] as number)) / 2 : 0;
-          cc.p = [orig.p[0] + u.x * g, orig.p[1] + u.y * g, orig.p[2] + u.z * g];
+          cc.p = [
+            orig.p[0] + u.x * g,
+            orig.p[1] + u.y * g,
+            orig.p[2] + u.z * g,
+          ];
         },
       });
     };
-    if (c.t === 'platform' || c.t === 'rock') {
+    if (c.t === "platform" || c.t === "rock") {
       const s = c.s!;
-      face(loc(1, 0, 0), P.clone().addScaledVector(loc(1, 0, 0), s[0] / 2), 0, 0.5);
-      face(loc(-1, 0, 0), P.clone().addScaledVector(loc(-1, 0, 0), s[0] / 2), 0, 0.5);
-      face(loc(0, 0, 1), P.clone().addScaledVector(loc(0, 0, 1), s[2] / 2), 2, 0.5);
-      face(loc(0, 0, -1), P.clone().addScaledVector(loc(0, 0, -1), s[2] / 2), 2, 0.5);
+      face(
+        loc(1, 0, 0),
+        P.clone().addScaledVector(loc(1, 0, 0), s[0] / 2),
+        0,
+        0.5,
+      );
+      face(
+        loc(-1, 0, 0),
+        P.clone().addScaledVector(loc(-1, 0, 0), s[0] / 2),
+        0,
+        0.5,
+      );
+      face(
+        loc(0, 0, 1),
+        P.clone().addScaledVector(loc(0, 0, 1), s[2] / 2),
+        2,
+        0.5,
+      );
+      face(
+        loc(0, 0, -1),
+        P.clone().addScaledVector(loc(0, 0, -1), s[2] / 2),
+        2,
+        0.5,
+      );
       face(new THREE.Vector3(0, 1, 0), P.clone().setY(P.y + s[1] / 2), 1, 0.5);
       face(new THREE.Vector3(0, -1, 0), P.clone().setY(P.y - s[1] / 2), 1, 0.5);
-    } else if (c.t === 'wall') {
+    } else if (c.t === "wall") {
       const s = c.s!;
       const mid = P.clone().setY(P.y + s[1] / 2); // p is the BASE center
       const ux = loc(1, 0, 0); // handles ride the SPUN faces
       const uz = loc(0, 0, 1);
       face(ux, mid.clone().addScaledVector(ux, s[0] / 2), 0, 0.5);
-      face(ux.clone().negate(), mid.clone().addScaledVector(ux, -s[0] / 2), 0, 0.5);
+      face(
+        ux.clone().negate(),
+        mid.clone().addScaledVector(ux, -s[0] / 2),
+        0,
+        0.5,
+      );
       face(uz, mid.clone().addScaledVector(uz, s[2] / 2), 2, 0.5);
-      face(uz.clone().negate(), mid.clone().addScaledVector(uz, -s[2] / 2), 2, 0.5);
-      face(new THREE.Vector3(0, 1, 0), P.clone().setY(P.y + s[1]), 1, 0.5, false); // grows up from the base
-    } else if (c.t === 'pit' || c.t === 'crumble' || c.t === 'crusher' || c.t === 'zone') {
+      face(
+        uz.clone().negate(),
+        mid.clone().addScaledVector(uz, -s[2] / 2),
+        2,
+        0.5,
+      );
+      face(
+        new THREE.Vector3(0, 1, 0),
+        P.clone().setY(P.y + s[1]),
+        1,
+        0.5,
+        false,
+      ); // grows up from the base
+    } else if (
+      c.t === "pit" ||
+      c.t === "crumble" ||
+      c.t === "crusher" ||
+      c.t === "zone"
+    ) {
       const s = c.s ?? [14, 1, 10];
-      const y = c.t === 'crusher' ? P.y + 1.2 : c.t === 'zone' ? P.y + 0.5 : P.y;
+      const y =
+        c.t === "crusher" ? P.y + 1.2 : c.t === "zone" ? P.y + 0.5 : P.y;
       const mid = P.clone().setY(y);
       const ux = loc(1, 0, 0); // spun pits/crumbles keep handles on their faces (crusher/zone yaw = 0)
       const uz = loc(0, 0, 1);
       face(ux, mid.clone().addScaledVector(ux, s[0] / 2), 0, 1);
-      face(ux.clone().negate(), mid.clone().addScaledVector(ux, -s[0] / 2), 0, 1);
+      face(
+        ux.clone().negate(),
+        mid.clone().addScaledVector(ux, -s[0] / 2),
+        0,
+        1,
+      );
       face(uz, mid.clone().addScaledVector(uz, s[2] / 2), 2, 1);
-      face(uz.clone().negate(), mid.clone().addScaledVector(uz, -s[2] / 2), 2, 1);
-    } else if (c.t === 'ramp') {
+      face(
+        uz.clone().negate(),
+        mid.clone().addScaledVector(uz, -s[2] / 2),
+        2,
+        1,
+      );
+    } else if (c.t === "ramp") {
       const len = c.len!;
       const rise = c.rise!;
       const w = c.w!;
       const zl = loc(0, 0, 1); // toward the LOW end
       const xl = loc(1, 0, 0);
-      span(zl, P.clone().addScaledVector(zl, len / 2).setY(P.y + 0.2), 'len', 1, true);
-      span(zl.clone().negate(), P.clone().addScaledVector(zl, -len / 2).setY(P.y + rise), 'len', 1, true);
-      span(xl, P.clone().addScaledVector(xl, w / 2).setY(P.y + rise / 2), 'w', 1, true);
-      span(xl.clone().negate(), P.clone().addScaledVector(xl, -w / 2).setY(P.y + rise / 2), 'w', 1, true);
+      span(
+        zl,
+        P.clone()
+          .addScaledVector(zl, len / 2)
+          .setY(P.y + 0.2),
+        "len",
+        1,
+        true,
+      );
+      span(
+        zl.clone().negate(),
+        P.clone()
+          .addScaledVector(zl, -len / 2)
+          .setY(P.y + rise),
+        "len",
+        1,
+        true,
+      );
+      span(
+        xl,
+        P.clone()
+          .addScaledVector(xl, w / 2)
+          .setY(P.y + rise / 2),
+        "w",
+        1,
+        true,
+      );
+      span(
+        xl.clone().negate(),
+        P.clone()
+          .addScaledVector(xl, -w / 2)
+          .setY(P.y + rise / 2),
+        "w",
+        1,
+        true,
+      );
       defs.push({
-        pos: P.clone().addScaledVector(zl, -len / 2).setY(P.y + rise + 0.4),
+        pos: P.clone()
+          .addScaledVector(zl, -len / 2)
+          .setY(P.y + rise + 0.4),
         dir: new THREE.Vector3(0, 1, 0),
         apply: (orig, cc, d) => {
           cc.rise = orig.rise! + d;
         },
       });
-    } else if (c.t === 'rail' || c.t === 'rope') {
+    } else if (c.t === "rail" || c.t === "rope") {
       const u = loc(0, 0, 1); // (sin yaw, 0, cos yaw): the run of the line
       const len = c.len ?? 12;
-      span(u, P.clone().addScaledVector(u, len / 2), 'len', 1, true);
-      span(u.clone().negate(), P.clone().addScaledVector(u, -len / 2), 'len', 1, true);
-    } else if (c.t === 'vertramp') {
+      span(u, P.clone().addScaledVector(u, len / 2), "len", 1, true);
+      span(
+        u.clone().negate(),
+        P.clone().addScaledVector(u, -len / 2),
+        "len",
+        1,
+        true,
+      );
+    } else if (c.t === "vertramp") {
       // A drawn spine is sized by its nodes; a straight part gets a length
       // handle each end. Both get the two that matter everywhere: how wide
       // the flat is, and how big the transition is.
@@ -1449,31 +2634,77 @@ export class Editor {
       if (!c.pts) {
         const zl = loc(0, 0, 1);
         const len = c.len ?? 30;
-        span(zl, P.clone().addScaledVector(zl, len / 2).setY(P.y + 0.2), 'len', 2, true);
-        span(zl.clone().negate(), P.clone().addScaledVector(zl, -len / 2).setY(P.y + 0.2), 'len', 2, true);
-        span(xl, P.clone().addScaledVector(xl, F).setY(P.y + 0.2), 'w', 1, true);
-        if ((c.vkind ?? 'quarter') === 'half') {
-          span(xl.clone().negate(), P.clone().addScaledVector(xl, -F).setY(P.y + 0.2), 'w', 1, true);
+        span(
+          zl,
+          P.clone()
+            .addScaledVector(zl, len / 2)
+            .setY(P.y + 0.2),
+          "len",
+          2,
+          true,
+        );
+        span(
+          zl.clone().negate(),
+          P.clone()
+            .addScaledVector(zl, -len / 2)
+            .setY(P.y + 0.2),
+          "len",
+          2,
+          true,
+        );
+        span(
+          xl,
+          P.clone()
+            .addScaledVector(xl, F)
+            .setY(P.y + 0.2),
+          "w",
+          1,
+          true,
+        );
+        if ((c.vkind ?? "quarter") === "half") {
+          span(
+            xl.clone().negate(),
+            P.clone()
+              .addScaledVector(xl, -F)
+              .setY(P.y + 0.2),
+            "w",
+            1,
+            true,
+          );
         }
       }
       // the coping itself: drag it out and up, and the transition grows
       defs.push({
-        pos: P.clone().addScaledVector(xl, lipLat).setY(P.y + lipY),
+        pos: P.clone()
+          .addScaledVector(xl, lipLat)
+          .setY(P.y + lipY),
         dir: new THREE.Vector3(0, 1, 0),
         apply: (orig, cc, d) => {
           cc.rise = Math.max(0.5, orig.rise! + d);
         },
       });
-    } else if (c.t === 'enemy') {
+    } else if (c.t === "enemy") {
       const r = c.range!;
-      span(new THREE.Vector3(1, 0, 0), new THREE.Vector3(P.x + r, P.y + 0.4, P.z), 'range', 0.5, false);
-      span(new THREE.Vector3(-1, 0, 0), new THREE.Vector3(P.x - r, P.y + 0.4, P.z), 'range', 0.5, false);
-    } else if (c.t === 'pendulum' || c.t === 'ropeswing') {
+      span(
+        new THREE.Vector3(1, 0, 0),
+        new THREE.Vector3(P.x + r, P.y + 0.4, P.z),
+        "range",
+        0.5,
+        false,
+      );
+      span(
+        new THREE.Vector3(-1, 0, 0),
+        new THREE.Vector3(P.x - r, P.y + 0.4, P.z),
+        "range",
+        0.5,
+        false,
+      );
+    } else if (c.t === "pendulum" || c.t === "ropeswing") {
       defs.push({
         pos: P.clone().setY(P.y - c.len!),
         dir: new THREE.Vector3(0, -1, 0),
         apply: (orig, cc, d) => {
-          cc.len = Math.max(c.t === 'ropeswing' ? 2 : 1, orig.len! + d);
+          cc.len = Math.max(c.t === "ropeswing" ? 2 : 1, orig.len! + d);
         },
       });
     }
@@ -1503,7 +2734,12 @@ export class Editor {
     this.hdlDefs.forEach((def, i) => {
       const m = new THREE.Mesh(
         HANDLE_GEO,
-        new THREE.MeshBasicMaterial({ color: NODE_COLOR, depthTest: false, transparent: true, opacity: 0.92 }),
+        new THREE.MeshBasicMaterial({
+          color: NODE_COLOR,
+          depthTest: false,
+          transparent: true,
+          opacity: 0.92,
+        }),
       );
       m.renderOrder = 999; // draw on top: grabbable even inside geometry
       m.position.copy(def.pos);
@@ -1513,7 +2749,12 @@ export class Editor {
       // fat invisible twin: the actual click target (forgiving at any zoom)
       const hit = new THREE.Mesh(
         HANDLE_HIT_GEO,
-        new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthTest: false, depthWrite: false }),
+        new THREE.MeshBasicMaterial({
+          transparent: true,
+          opacity: 0,
+          depthTest: false,
+          depthWrite: false,
+        }),
       );
       hit.position.copy(def.pos);
       hit.userData.hdl = i;
@@ -1531,13 +2772,18 @@ export class Editor {
     this.handleMeshes.forEach((m, i) => {
       const isNode = this.hdlDefs[i]?.vtx !== undefined;
       const selected = isNode && this.selVtxs.has(this.hdlDefs[i].vtx!);
-      (m.material as THREE.MeshBasicMaterial).color.setHex(selected ? NODE_SEL_COLOR : NODE_COLOR);
+      (m.material as THREE.MeshBasicMaterial).color.setHex(
+        selected ? NODE_SEL_COLOR : NODE_COLOR,
+      );
     });
   }
 
   private setRay(e: { clientX: number; clientY: number }): void {
     const r = this.dom.getBoundingClientRect();
-    this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    this.pointer.set(
+      ((e.clientX - r.left) / r.width) * 2 - 1,
+      -((e.clientY - r.top) / r.height) * 2 + 1,
+    );
     this.raycaster.setFromCamera(this.pointer, this.camera);
   }
 
@@ -1565,11 +2811,18 @@ export class Editor {
       this.setResize(hit);
       if (!this.resizeHintShown) {
         this.resizeHintShown = true;
-        this.hooks.showMsg('RESIZE MODE', 'drag the gold handles · esc or click away = done');
+        this.hooks.showMsg(
+          "RESIZE MODE",
+          "drag the gold handles · esc or click away = done",
+        );
       }
     } else {
       this.setResize(-1);
-      if (hit >= 0) this.hooks.showMsg('FIXED SIZE', `a ${this.data.components[hit].t} can't be resized`);
+      if (hit >= 0)
+        this.hooks.showMsg(
+          "FIXED SIZE",
+          `a ${this.data.components[hit].t} can't be resized`,
+        );
     }
   };
 
@@ -1580,7 +2833,7 @@ export class Editor {
     // space-hand: the pointer belongs to the pan — no picking, no marquee
     if (this.spaceHeld) {
       this.downAt = null;
-      this.dom.style.cursor = 'grabbing';
+      this.dom.style.cursor = "grabbing";
       return;
     }
     // PEN TOOL: every click drops a vertex; clicking the first point closes
@@ -1590,7 +2843,7 @@ export class Editor {
       const pt = this.drawPlanePoint(e);
       if (!pt) return;
       if (
-        this.drawing.t !== 'rail' &&
+        this.drawing.t !== "rail" &&
         this.drawing.pts.length >= 3 &&
         pt.distanceTo(this.drawing.pts[0]) < 1.0
       ) {
@@ -1607,7 +2860,10 @@ export class Editor {
     if (this.resizeIdx >= 0 && this.handleMeshes.length > 0) {
       this.setRay(e);
       this.handleGroup?.updateMatrixWorld(true); // may not have rendered yet
-      const hits = this.raycaster.intersectObjects([...this.handleMeshes, ...this.handleHits], false);
+      const hits = this.raycaster.intersectObjects(
+        [...this.handleMeshes, ...this.handleHits],
+        false,
+      );
       if (hits.length > 0) {
         const i = hits[0].object.userData.hdl as number;
         const def = this.hdlDefs[i];
@@ -1664,7 +2920,12 @@ export class Editor {
     // right/middle buttons and space-drag now.) In NODE mode the marquee
     // sweeps the shape's nodes instead of components.
     if (hit < 0) {
-      this.marquee = { x0: e.clientX, y0: e.clientY, x1: e.clientX, y1: e.clientY };
+      this.marquee = {
+        x0: e.clientX,
+        y0: e.clientY,
+        x1: e.clientX,
+        y1: e.clientY,
+      };
       this.marqueeAdd = e.shiftKey;
       this.marqueeNodes =
         this.resizeIdx >= 0 && !!this.data.components[this.resizeIdx]?.pts;
@@ -1685,9 +2946,7 @@ export class Editor {
       if (e.altKey) {
         const order = [...this.sel];
         const start = this.data.components.length;
-        const copies = order.map(
-          (i) => deepClone(this.data.components[i]),
-        );
+        const copies = order.map((i) => deepClone(this.data.components[i]));
         this.remapGroups(copies); // clones get their own group wiring
         grabbed = start + order.indexOf(hit);
         this.addBatch(copies); // selects the clones (one undo step)
@@ -1697,14 +2956,21 @@ export class Editor {
       this.dragVertical = e.shiftKey;
       this.dragPlane = this.dragVertical
         ? new THREE.Plane().setFromNormalAndCoplanarPoint(
-            new THREE.Vector3().subVectors(this.camera.position, new THREE.Vector3(...c.p)).setY(0).normalize(),
+            new THREE.Vector3()
+              .subVectors(this.camera.position, new THREE.Vector3(...c.p))
+              .setY(0)
+              .normalize(),
             new THREE.Vector3(...c.p),
           )
-        : this.viewMode !== '3d'
+        : this.viewMode !== "3d"
           ? new THREE.Plane().setFromNormalAndCoplanarPoint(
               // 2D view: drag ON the view plane through the piece — movement
               // stays in the two visible axes, depth can't change
-              { x: new THREE.Vector3(1, 0, 0), y: new THREE.Vector3(0, 1, 0), z: new THREE.Vector3(0, 0, 1) }[this.viewMode],
+              {
+                x: new THREE.Vector3(1, 0, 0),
+                y: new THREE.Vector3(0, 1, 0),
+                z: new THREE.Vector3(0, 0, 1),
+              }[this.viewMode],
               new THREE.Vector3(...c.p),
             )
           : new THREE.Plane(new THREE.Vector3(0, 1, 0), -c.p[1]);
@@ -1732,17 +2998,17 @@ export class Editor {
 
   // ---- pen tool (draw polygon platforms / pits / walls) ----
 
-  startDraw(t: 'platform' | 'pit' | 'wall' | 'rail' | 'vertramp'): void {
+  startDraw(t: "platform" | "pit" | "wall" | "rail" | "vertramp"): void {
     this.cancelDraw();
     this.select(-1);
     const y = this.controls ? snapHalf(this.controls.target.y) : 0;
     this.drawing = { t, y, pts: [] };
-    this.dom.style.cursor = 'crosshair';
+    this.dom.style.cursor = "crosshair";
     this.hooks.showMsg(
       `DRAW ${t.toUpperCase()}`,
-      t === 'rail'
-        ? 'click to drop nodes · Enter or double-click to finish · esc = cancel'
-        : 'click to drop points · click the FIRST point (or Enter) to close · esc = cancel',
+      t === "rail"
+        ? "click to drop nodes · Enter or double-click to finish · esc = cancel"
+        : "click to drop points · click the FIRST point (or Enter) to close · esc = cancel",
     );
   }
 
@@ -1752,7 +3018,7 @@ export class Editor {
       this.scene.remove(this.drawVis);
       this.drawVis = null;
     }
-    if (this.active) this.dom.style.cursor = '';
+    if (this.active) this.dom.style.cursor = "";
   }
 
   // preview: the outline so far, vertex dots, a rubber segment to the cursor,
@@ -1765,7 +3031,8 @@ export class Editor {
     const d = this.drawing;
     if (!d || (d.pts.length === 0 && !cursor)) return;
     const g = new THREE.Group();
-    const color = d.t === 'pit' ? 0xff6a3a : d.t === 'wall' ? 0xffd75e : 0x58e08a;
+    const color =
+      d.t === "pit" ? 0xff6a3a : d.t === "wall" ? 0xffd75e : 0x58e08a;
     const linePts = [...d.pts];
     if (cursor) linePts.push(cursor);
     if (linePts.length >= 2) {
@@ -1779,7 +3046,10 @@ export class Editor {
     d.pts.forEach((pt, i) => {
       const dot = new THREE.Mesh(
         new THREE.SphereGeometry(i === 0 ? 0.42 : 0.28, 8, 6),
-        new THREE.MeshBasicMaterial({ color: i === 0 ? 0x58e08a : color, depthTest: false }),
+        new THREE.MeshBasicMaterial({
+          color: i === 0 ? 0x58e08a : color,
+          depthTest: false,
+        }),
       );
       dot.renderOrder = 998;
       dot.position.copy(pt);
@@ -1820,10 +3090,10 @@ export class Editor {
     const pts = d.pts.filter(
       (pt, i) => i === 0 || pt.distanceToSquared(d.pts[i - 1]) > 0.01,
     );
-    const openPath = d.t === 'rail' || d.t === 'vertramp';
+    const openPath = d.t === "rail" || d.t === "vertramp";
     const minPts = openPath ? 2 : 3;
     if (pts.length < minPts) {
-      this.hooks.showMsg(`NEED ${minPts}+ POINTS`, 'shape cancelled');
+      this.hooks.showMsg(`NEED ${minPts}+ POINTS`, "shape cancelled");
       this.cancelDraw();
       return;
     }
@@ -1835,16 +3105,25 @@ export class Editor {
     }
     cx = snapHalf(cx / pts.length);
     cz = snapHalf(cz / pts.length);
-    const rel = pts.map((pt) => [snapHalf(pt.x - cx), snapHalf(pt.z - cz)] as [number, number]);
-    if (d.t === 'rail') {
+    const rel = pts.map(
+      (pt) => [snapHalf(pt.x - cx), snapHalf(pt.z - cz)] as [number, number],
+    );
+    if (d.t === "rail") {
       // open path — no closing, no box dims; grind height is the draw plane
-      this.addComponent({ t: 'rail', p: [cx, d.y + 1, cz], pts: rel });
-    } else if (d.t === 'vertramp') {
+      this.addComponent({ t: "rail", p: [cx, d.y + 1, cz], pts: rel });
+    } else if (d.t === "vertramp") {
       // the transition sweeps along the drawn spine; the draw plane is the
       // FLAT it rises from, so the wall climbs out of the floor you drew on
-      this.addComponent({ t: 'vertramp', p: [cx, d.y, cz], pts: rel, rise: 6, w: 3, vkind: 'quarter' });
+      this.addComponent({
+        t: "vertramp",
+        p: [cx, d.y, cz],
+        pts: rel,
+        rise: 6,
+        w: 3,
+        vkind: "quarter",
+      });
     } else {
-      const s: [number, number, number] = [1, d.t === 'wall' ? 4 : 1, 1];
+      const s: [number, number, number] = [1, d.t === "wall" ? 4 : 1, 1];
       this.addComponent({ t: d.t, p: [cx, d.y, cz], s, pts: rel });
     }
     this.cancelDraw();
@@ -1854,8 +3133,8 @@ export class Editor {
 
   private showMarquee(): void {
     if (!this.marqueeEl) {
-      const el = document.createElement('div');
-      el.className = 'ed-marquee';
+      const el = document.createElement("div");
+      el.className = "ed-marquee";
       document.body.appendChild(el);
       this.marqueeEl = el;
     }
@@ -1863,7 +3142,7 @@ export class Editor {
     if (!m) return;
     const x = Math.min(m.x0, m.x1);
     const y = Math.min(m.y0, m.y1);
-    this.marqueeEl.style.display = 'block';
+    this.marqueeEl.style.display = "block";
     this.marqueeEl.style.left = `${x}px`;
     this.marqueeEl.style.top = `${y}px`;
     this.marqueeEl.style.width = `${Math.abs(m.x1 - m.x0)}px`;
@@ -1871,11 +3150,16 @@ export class Editor {
   }
 
   private hideMarquee(): void {
-    if (this.marqueeEl) this.marqueeEl.style.display = 'none';
+    if (this.marqueeEl) this.marqueeEl.style.display = "none";
   }
 
   // every component whose screen-projected bounds touch the marquee rect
-  private marqueePick(m: { x0: number; y0: number; x1: number; y1: number }): number[] {
+  private marqueePick(m: {
+    x0: number;
+    y0: number;
+    x1: number;
+    y1: number;
+  }): number[] {
     const rx0 = Math.min(m.x0, m.x1);
     const ry0 = Math.min(m.y0, m.y1);
     const rx1 = Math.max(m.x0, m.x1);
@@ -1889,7 +3173,13 @@ export class Editor {
       const box = this.boxFor(idx);
       if (!box) continue;
       // skip anything behind the camera — projection would mirror it
-      if (v.copy(box.getCenter(new THREE.Vector3())).sub(this.camera.position).dot(camDir) < 0) continue;
+      if (
+        v
+          .copy(box.getCenter(new THREE.Vector3()))
+          .sub(this.camera.position)
+          .dot(camDir) < 0
+      )
+        continue;
       let sx0 = Infinity;
       let sy0 = Infinity;
       let sx1 = -Infinity;
@@ -2007,9 +3297,12 @@ export class Editor {
     if (this.resizeIdx >= 0 && !this.dragging && this.handleMeshes.length > 0) {
       this.setRay(e);
       const over =
-        this.raycaster.intersectObjects([...this.handleMeshes, ...this.handleHits], false).length > 0;
+        this.raycaster.intersectObjects(
+          [...this.handleMeshes, ...this.handleHits],
+          false,
+        ).length > 0;
       if (over) {
-        this.dom.style.cursor = 'grab';
+        this.dom.style.cursor = "grab";
         return;
       }
     }
@@ -2019,7 +3312,8 @@ export class Editor {
       if (now - this.hoverAt > 80) {
         this.hoverAt = now;
         const over = this.pick(e);
-        this.dom.style.cursor = over >= 0 ? (this.sel.includes(over) ? 'move' : 'pointer') : '';
+        this.dom.style.cursor =
+          over >= 0 ? (this.sel.includes(over) ? "move" : "pointer") : "";
       }
     }
     if (!this.dragging || this.sel.length === 0) return;
@@ -2039,22 +3333,25 @@ export class Editor {
       // cursor — this resolves the 2D→3D depth so it lands where it looks,
       // not hundreds of units away on a shallow-angle plane. Over empty space
       // (or snap off), fall back to the fixed-Y ground plane.
-      const surf = this.surfaceSnap && this.viewMode === '3d' ? this.surfaceHitFor(e) : null;
-      if (this.viewMode !== '3d') {
+      const surf =
+        this.surfaceSnap && this.viewMode === "3d"
+          ? this.surfaceHitFor(e)
+          : null;
+      if (this.viewMode !== "3d") {
         // 2D view: per-axis delta on the view plane, the depth axis pinned
         const hit = new THREE.Vector3();
         if (!this.groundPoint(e, this.dragPlane, hit)) return;
         nx = this.dragOrig[0] + (hit.x - this.dragStart.x);
         ny = this.dragOrig[1] + (hit.y - this.dragStart.y);
         nz = this.dragOrig[2] + (hit.z - this.dragStart.z);
-        if (this.viewMode === 'x') nx = this.dragOrig[0];
-        if (this.viewMode === 'y') ny = this.dragOrig[1];
-        if (this.viewMode === 'z') nz = this.dragOrig[2];
+        if (this.viewMode === "x") nx = this.dragOrig[0];
+        if (this.viewMode === "y") ny = this.dragOrig[1];
+        if (this.viewMode === "z") nz = this.dragOrig[2];
         if (this.snap) {
           // only grid the axes the view can actually move
-          if (this.viewMode !== 'x') nx = snapHalf(nx);
-          if (this.viewMode !== 'y') ny = snapHalf(ny);
-          if (this.viewMode !== 'z') nz = snapHalf(nz);
+          if (this.viewMode !== "x") nx = snapHalf(nx);
+          if (this.viewMode !== "y") ny = snapHalf(ny);
+          if (this.viewMode !== "z") nz = snapHalf(nz);
         }
       } else if (surf) {
         nx = surf.x;
@@ -2090,7 +3387,8 @@ export class Editor {
       const dz = tz - c.p[2];
       if (dx || dy || dz) {
         // live-preview: shift the tagged visuals; physics catches up on release
-        for (const o of this.objectsFor(entry.idx)) o.position.add(new THREE.Vector3(dx, dy, dz));
+        for (const o of this.objectsFor(entry.idx))
+          o.position.add(new THREE.Vector3(dx, dy, dz));
         c.p = [tx, ty, tz];
         moved = true;
       }
@@ -2105,7 +3403,7 @@ export class Editor {
     if (!this.active) return;
     if (this.drawing) return; // pen tool owns the pointer (vertices drop on down)
     if (this.spaceHeld) {
-      this.dom.style.cursor = 'grab';
+      this.dom.style.cursor = "grab";
       this.downAt = null;
       return;
     }
@@ -2148,7 +3446,8 @@ export class Editor {
             const s = def.pos.clone().project(this.camera);
             const sx = r.left + ((s.x + 1) / 2) * r.width;
             const sy = r.top + ((1 - s.y) / 2) * r.height;
-            if (sx >= x0 && sx <= x1 && sy >= y0 && sy <= y1) picked.add(def.vtx);
+            if (sx >= x0 && sx <= x1 && sy >= y0 && sy <= y1)
+              picked.add(def.vtx);
           }
           this.selVtxs = picked;
           this.tintHandles();
@@ -2181,7 +3480,8 @@ export class Editor {
       if (e.shiftKey || e.metaKey || e.ctrlKey) {
         if (hit >= 0) {
           const allIn = unit.every((i) => this.sel.includes(i));
-          if (allIn) this.setSelection(this.sel.filter((i) => !unit.includes(i)));
+          if (allIn)
+            this.setSelection(this.sel.filter((i) => !unit.includes(i)));
           else this.setSelection([...this.sel, ...unit]);
         }
       } else {
@@ -2193,67 +3493,75 @@ export class Editor {
 
   private onKey = (e: KeyboardEvent): void => {
     if (!this.active) return;
-    const typing = (e.target as HTMLElement)?.tagName === 'INPUT' || (e.target as HTMLElement)?.tagName === 'SELECT';
+    const typing =
+      (e.target as HTMLElement)?.tagName === "INPUT" ||
+      (e.target as HTMLElement)?.tagName === "SELECT";
     if (typing) return;
     // HOLD SPACE: grabby hand — left-drag pans the canvas (Figma rules)
-    if (e.code === 'Space') {
+    if (e.code === "Space") {
       e.preventDefault();
       if (!this.spaceHeld && !this.dragging && !this.hdlDrag) {
         this.spaceHeld = true;
         if (this.controls) this.controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
-        this.dom.style.cursor = 'grab';
+        this.dom.style.cursor = "grab";
       }
       return;
     }
     const cmd = e.metaKey || e.ctrlKey;
     // pen tool: Enter closes the shape, Escape abandons it
     if (this.drawing) {
-      if (e.code === 'Enter') this.finishDraw();
-      else if (e.code === 'Escape') this.cancelDraw();
+      if (e.code === "Enter") this.finishDraw();
+      else if (e.code === "Escape") this.cancelDraw();
       return;
     }
-    if (e.code === 'Escape') {
+    if (e.code === "Escape") {
       // step out: resize mode first, then the selection itself
       if (this.resizeIdx >= 0) this.setResize(-1);
       else this.select(-1);
     }
-    if (e.code === 'Delete' || e.code === 'Backspace') this.deleteSelected();
-    if (e.code === 'KeyD' && cmd) {
+    if (e.code === "Delete" || e.code === "Backspace") this.deleteSelected();
+    if (e.code === "KeyD" && cmd) {
       e.preventDefault();
       this.duplicateSelected();
     }
-    if (e.code === 'KeyC' && cmd) {
+    if (e.code === "KeyC" && cmd) {
       e.preventDefault();
       this.copySelected();
     }
-    if (e.code === 'KeyX' && cmd) {
+    if (e.code === "KeyX" && cmd) {
       e.preventDefault();
       this.cutSelected();
     }
-    if (e.code === 'KeyV' && cmd) {
+    if (e.code === "KeyV" && cmd) {
       e.preventDefault();
       this.paste();
     }
-    if (e.code === 'KeyA' && cmd) {
+    if (e.code === "KeyA" && cmd) {
       e.preventDefault();
-      this.setSelection(this.data.components.map((_, i) => i).filter((i) => !this.isLockedIdx(i)));
+      this.setSelection(
+        this.data.components
+          .map((_, i) => i)
+          .filter((i) => !this.isLockedIdx(i)),
+      );
     }
-    if (e.code === 'KeyG' && cmd) {
+    if (e.code === "KeyG" && cmd) {
       e.preventDefault();
       if (e.shiftKey) this.ungroupSelection();
       else this.groupSelection();
     }
-    if (e.code === 'KeyF' && !cmd) this.frameSelection();
+    if (e.code === "KeyF" && !cmd) this.frameSelection();
     // arrows nudge the selection a grid step (shift+up/down = height)
-    if (e.code.startsWith('Arrow') && this.sel.length > 0) {
+    if (e.code.startsWith("Arrow") && this.sel.length > 0) {
       e.preventDefault();
-      if (e.code === 'ArrowUp') this.nudge(e.shiftKey ? 0 : 1, 0, e.shiftKey ? 1 : 0);
-      else if (e.code === 'ArrowDown') this.nudge(e.shiftKey ? 0 : -1, 0, e.shiftKey ? -1 : 0);
-      else if (e.code === 'ArrowLeft') this.nudge(0, -1, 0);
-      else if (e.code === 'ArrowRight') this.nudge(0, 1, 0);
+      if (e.code === "ArrowUp")
+        this.nudge(e.shiftKey ? 0 : 1, 0, e.shiftKey ? 1 : 0);
+      else if (e.code === "ArrowDown")
+        this.nudge(e.shiftKey ? 0 : -1, 0, e.shiftKey ? -1 : 0);
+      else if (e.code === "ArrowLeft") this.nudge(0, -1, 0);
+      else if (e.code === "ArrowRight") this.nudge(0, 1, 0);
     }
     // Cmd+Z / Cmd+Shift+Z (mac) — Ctrl works too
-    if (e.code === 'KeyZ' && cmd) {
+    if (e.code === "KeyZ" && cmd) {
       e.preventDefault();
       if (e.shiftKey) this.redo();
       else this.undo();
@@ -2261,11 +3569,12 @@ export class Editor {
   };
 
   private onKeyUp = (e: KeyboardEvent): void => {
-    if (e.code === 'Space' && this.spaceHeld) {
+    if (e.code === "Space" && this.spaceHeld) {
       this.spaceHeld = false;
       // left goes back to being the SELECT button (disabled on the camera)
-      if (this.controls) this.controls.mouseButtons.LEFT = -1 as unknown as THREE.MOUSE;
-      if (this.active) this.dom.style.cursor = '';
+      if (this.controls)
+        this.controls.mouseButtons.LEFT = -1 as unknown as THREE.MOUSE;
+      if (this.active) this.dom.style.cursor = "";
     }
   };
 
@@ -2289,17 +3598,21 @@ export class Editor {
       this.spawnMarker = g;
       this.scene.add(g);
     }
-    this.spawnMarker.position.set(this.data.spawn[0], this.data.spawn[1], this.data.spawn[2]);
+    this.spawnMarker.position.set(
+      this.data.spawn[0],
+      this.data.spawn[1],
+      this.data.spawn[2],
+    );
   }
 
   // ---- panel ----
 
   private buildPanel(): void {
-    const panel = document.createElement('div');
-    panel.className = 'ed-panel';
-    panel.style.display = 'none';
+    const panel = document.createElement("div");
+    panel.className = "ed-panel";
+    panel.style.display = "none";
     const h = (html: string): HTMLElement => {
-      const d = document.createElement('div');
+      const d = document.createElement("div");
       d.innerHTML = html;
       return d.firstElementChild as HTMLElement;
     };
@@ -2308,10 +3621,14 @@ export class Editor {
     // TWO TABS: the current selection vs the project (level + file + help).
     // TEST lives below the tabs, always one click away.
     const ptabs = h('<div class="ed-ptabs"></div>');
-    this.tabSelBtn = h('<button class="ed-ptab ed-ptab-on">SELECTION</button>') as HTMLButtonElement;
-    this.tabProjBtn = h('<button class="ed-ptab">PROJECT</button>') as HTMLButtonElement;
-    this.tabSelBtn.addEventListener('click', () => this.setPanelTab('sel'));
-    this.tabProjBtn.addEventListener('click', () => this.setPanelTab('proj'));
+    this.tabSelBtn = h(
+      '<button class="ed-ptab ed-ptab-on">SELECTION</button>',
+    ) as HTMLButtonElement;
+    this.tabProjBtn = h(
+      '<button class="ed-ptab">PROJECT</button>',
+    ) as HTMLButtonElement;
+    this.tabSelBtn.addEventListener("click", () => this.setPanelTab("sel"));
+    this.tabProjBtn.addEventListener("click", () => this.setPanelTab("proj"));
     ptabs.appendChild(this.tabSelBtn);
     ptabs.appendChild(this.tabProjBtn);
     panel.appendChild(ptabs);
@@ -2322,7 +3639,9 @@ export class Editor {
 
     // selection properties FIRST — what you just clicked is always in view
     selPane.appendChild(h('<div class="ed-sect">SELECTION</div>'));
-    this.propsEl = h('<div class="ed-props"><div class="ed-dim">click a component…</div></div>');
+    this.propsEl = h(
+      '<div class="ed-props"><div class="ed-dim">click a component…</div></div>',
+    );
     selPane.appendChild(this.propsEl);
     panel.appendChild(selPane);
     panel.appendChild(projPane);
@@ -2331,11 +3650,17 @@ export class Editor {
     // their own tabs so the inspector stays short ----
     const wrap = h('<div class="ed-popwrap" style="display:none"></div>');
     const tabs = h('<div class="ed-tabs"></div>');
-    this.tabAdd = h('<button class="ed-tab">▦<span>ADD</span></button>') as HTMLButtonElement;
-    this.tabLayers = h('<button class="ed-tab">≡<span>LAYERS</span></button>') as HTMLButtonElement;
-    this.tabAdd.addEventListener('click', () => this.setPop(this.popAdd?.style.display === 'block' ? '' : 'add'));
-    this.tabLayers.addEventListener('click', () =>
-      this.setPop(this.popLayers?.style.display === 'block' ? '' : 'layers'),
+    this.tabAdd = h(
+      '<button class="ed-tab">▦<span>ADD</span></button>',
+    ) as HTMLButtonElement;
+    this.tabLayers = h(
+      '<button class="ed-tab">≡<span>LAYERS</span></button>',
+    ) as HTMLButtonElement;
+    this.tabAdd.addEventListener("click", () =>
+      this.setPop(this.popAdd?.style.display === "block" ? "" : "add"),
+    );
+    this.tabLayers.addEventListener("click", () =>
+      this.setPop(this.popLayers?.style.display === "block" ? "" : "layers"),
     );
     tabs.appendChild(this.tabAdd);
     tabs.appendChild(this.tabLayers);
@@ -2348,23 +3673,27 @@ export class Editor {
       popAdd.appendChild(h(`<div class="ed-sect">${sect.title}</div>`));
       const pal = h('<div class="ed-grid"></div>');
       for (const p of sect.items) {
-        const b = h('<button class="ed-btn ed-palbtn"></button>') as HTMLButtonElement;
-        const cv = document.createElement('canvas');
+        const b = h(
+          '<button class="ed-btn ed-palbtn"></button>',
+        ) as HTMLButtonElement;
+        const cv = document.createElement("canvas");
         cv.width = 18;
         cv.height = 18;
-        const ctx = cv.getContext('2d');
+        const ctx = cv.getContext("2d");
         if (ctx) p.icon(ctx);
         b.appendChild(cv);
-        const lab = document.createElement('span');
+        const lab = document.createElement("span");
         lab.textContent = p.label;
         b.appendChild(lab);
-        b.addEventListener('click', () => {
+        b.addEventListener("click", () => {
           if (p.penDraw) {
             this.startDraw(p.penDraw);
             b.blur();
             return;
           }
-          const at = this.controls ? this.controls.target.clone() : new THREE.Vector3();
+          const at = this.controls
+            ? this.controls.target.clone()
+            : new THREE.Vector3();
           if (this.snap) {
             at.set(snapHalf(at.x), snapHalf(at.y), snapHalf(at.z));
           }
@@ -2384,7 +3713,9 @@ export class Editor {
     this.layersEl = h('<div class="ed-layers"></div>');
     popLayers.appendChild(this.layersEl);
     popLayers.appendChild(
-      h('<div class="ed-dim">every piece is a row · groups expand with ▸<br>click a name to select it in the world<br>🔒 = click-through (safe from edits)<br>⌘G groups the selection · ✎ renames</div>'),
+      h(
+        '<div class="ed-dim">every piece is a row · groups expand with ▸<br>click a name to select it in the world<br>🔒 = click-through (safe from edits)<br>⌘G groups the selection · ✎ renames</div>',
+      ),
     );
     this.popLayers = popLayers;
     wrap.appendChild(popLayers);
@@ -2392,23 +3723,27 @@ export class Editor {
     // hard view snaps, bottom-left: X/Y/Z aim the orbit camera straight down
     // that axis (click again = the opposite side)
     const views = h('<div class="ed-views"></div>');
-    for (const ax of ['x', 'y', 'z'] as const) {
-      const vb = h(`<button class="ed-viewbtn">${ax.toUpperCase()}</button>`) as HTMLButtonElement;
+    for (const ax of ["x", "y", "z"] as const) {
+      const vb = h(
+        `<button class="ed-viewbtn">${ax.toUpperCase()}</button>`,
+      ) as HTMLButtonElement;
       vb.title = `2D work view down ${ax.toUpperCase()}: drags move in-plane only (again = other side)`;
-      vb.addEventListener('click', () => {
+      vb.addEventListener("click", () => {
         this.snapView(ax);
         vb.blur();
       });
       this.viewBtns[ax] = vb;
       views.appendChild(vb);
     }
-    const v3 = h('<button class="ed-viewbtn ed-viewbtn-on">3D</button>') as HTMLButtonElement;
-    v3.title = 'back to the free 3D orbit view';
-    v3.addEventListener('click', () => {
+    const v3 = h(
+      '<button class="ed-viewbtn ed-viewbtn-on">3D</button>',
+    ) as HTMLButtonElement;
+    v3.title = "back to the free 3D orbit view";
+    v3.addEventListener("click", () => {
       this.to3D();
       v3.blur();
     });
-    this.viewBtns['3d'] = v3;
+    this.viewBtns["3d"] = v3;
     views.appendChild(v3);
     wrap.appendChild(views);
 
@@ -2419,12 +3754,38 @@ export class Editor {
     const projPane2 = this.projPane!;
     projPane2.appendChild(h('<div class="ed-sect">LEVEL</div>'));
     const lvl = h('<div class="ed-props"></div>');
-    lvl.appendChild(this.numRow('spawn x', () => this.data.spawn[0], (v) => (this.data.spawn[0] = v)));
-    lvl.appendChild(this.numRow('spawn y', () => this.data.spawn[1], (v) => (this.data.spawn[1] = v)));
-    lvl.appendChild(this.numRow('spawn z', () => this.data.spawn[2], (v) => (this.data.spawn[2] = v)));
-    lvl.appendChild(this.numRow('kill y', () => this.data.killY, (v) => (this.data.killY = v)));
-    const spawnHere = h('<button class="ed-btn">spawn = camera focus</button>') as HTMLButtonElement;
-    spawnHere.addEventListener('click', () => {
+    lvl.appendChild(
+      this.numRow(
+        "spawn x",
+        () => this.data.spawn[0],
+        (v) => (this.data.spawn[0] = v),
+      ),
+    );
+    lvl.appendChild(
+      this.numRow(
+        "spawn y",
+        () => this.data.spawn[1],
+        (v) => (this.data.spawn[1] = v),
+      ),
+    );
+    lvl.appendChild(
+      this.numRow(
+        "spawn z",
+        () => this.data.spawn[2],
+        (v) => (this.data.spawn[2] = v),
+      ),
+    );
+    lvl.appendChild(
+      this.numRow(
+        "kill y",
+        () => this.data.killY,
+        (v) => (this.data.killY = v),
+      ),
+    );
+    const spawnHere = h(
+      '<button class="ed-btn">spawn = camera focus</button>',
+    ) as HTMLButtonElement;
+    spawnHere.addEventListener("click", () => {
       if (!this.controls) return;
       const t = this.controls.target;
       this.data.spawn = [snapHalf(t.x), snapHalf(t.y) + 0.6, snapHalf(t.z)];
@@ -2432,20 +3793,25 @@ export class Editor {
       spawnHere.blur();
     });
     lvl.appendChild(spawnHere);
-    const snapBtn = h('<button class="ed-btn">grid snap: ON</button>') as HTMLButtonElement;
-    snapBtn.addEventListener('click', () => {
+    const snapBtn = h(
+      '<button class="ed-btn">grid snap: ON</button>',
+    ) as HTMLButtonElement;
+    snapBtn.addEventListener("click", () => {
       this.snap = !this.snap;
-      snapBtn.textContent = `grid snap: ${this.snap ? 'ON' : 'OFF'}`;
+      snapBtn.textContent = `grid snap: ${this.snap ? "ON" : "OFF"}`;
       snapBtn.blur();
     });
     lvl.appendChild(snapBtn);
     // drop-on-surface: dragging rests a piece on the geometry under the cursor
-    const surfBtn = h(`<button class="ed-btn">drop on surface: ${this.surfaceSnap ? 'ON' : 'OFF'}</button>`) as HTMLButtonElement;
-    surfBtn.title = 'dragging rests the piece on whatever is under the cursor (fixes depth). OFF = flat ground-plane drag';
-    surfBtn.addEventListener('click', () => {
+    const surfBtn = h(
+      `<button class="ed-btn">drop on surface: ${this.surfaceSnap ? "ON" : "OFF"}</button>`,
+    ) as HTMLButtonElement;
+    surfBtn.title =
+      "dragging rests the piece on whatever is under the cursor (fixes depth). OFF = flat ground-plane drag";
+    surfBtn.addEventListener("click", () => {
       this.surfaceSnap = !this.surfaceSnap;
-      localStorage.setItem('protoEdSurfaceSnap', this.surfaceSnap ? '1' : '0');
-      surfBtn.textContent = `drop on surface: ${this.surfaceSnap ? 'ON' : 'OFF'}`;
+      localStorage.setItem("protoEdSurfaceSnap", this.surfaceSnap ? "1" : "0");
+      surfBtn.textContent = `drop on surface: ${this.surfaceSnap ? "ON" : "OFF"}`;
       surfBtn.blur();
     });
     lvl.appendChild(surfBtn);
@@ -2455,50 +3821,58 @@ export class Editor {
     projPane2.appendChild(h('<div class="ed-sect">FILE</div>'));
     const file = h('<div class="ed-grid"></div>');
     const mk = (label: string, fn: () => void): HTMLButtonElement => {
-      const b = h(`<button class="ed-btn">${label}</button>`) as HTMLButtonElement;
-      b.addEventListener('click', () => {
+      const b = h(
+        `<button class="ed-btn">${label}</button>`,
+      ) as HTMLButtonElement;
+      b.addEventListener("click", () => {
         fn();
         b.blur();
       });
       file.appendChild(b);
       return b;
     };
-    mk('export', () => {
-      const blob = new Blob([JSON.stringify(this.data, null, 1)], { type: 'application/json' });
-      const a = document.createElement('a');
+    mk("export", () => {
+      const blob = new Blob([JSON.stringify(this.data, null, 1)], {
+        type: "application/json",
+      });
+      const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `level-${this.data.name.replace(/\s+/g, '')}.json`;
+      a.download = `level-${this.data.name.replace(/\s+/g, "")}.json`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-      this.hooks.showMsg('LEVEL EXPORTED', 'drop the file into the chat to share it');
+      this.hooks.showMsg(
+        "LEVEL EXPORTED",
+        "drop the file into the chat to share it",
+      );
     });
-    const filePick = document.createElement('input');
-    filePick.type = 'file';
-    filePick.accept = '.json,application/json';
-    filePick.style.display = 'none';
-    filePick.addEventListener('change', () => {
+    const filePick = document.createElement("input");
+    filePick.type = "file";
+    filePick.accept = ".json,application/json";
+    filePick.style.display = "none";
+    filePick.addEventListener("change", () => {
       const f = filePick.files && filePick.files[0];
       if (f)
         f.text().then((txt) => {
           try {
             const d = JSON.parse(txt) as CustomLevelData;
-            if (d.v !== 1 || !Array.isArray(d.components)) throw new Error('bad');
+            if (d.v !== 1 || !Array.isArray(d.components))
+              throw new Error("bad");
             this.data = d;
             this.select(-1);
             this.commit();
-            this.hooks.showMsg('LEVEL IMPORTED', d.name);
+            this.hooks.showMsg("LEVEL IMPORTED", d.name);
           } catch {
-            this.hooks.showMsg('BAD LEVEL FILE');
+            this.hooks.showMsg("BAD LEVEL FILE");
           }
         });
-      filePick.value = '';
+      filePick.value = "";
     });
     file.appendChild(filePick);
-    mk('import', () => filePick.click());
+    mk("import", () => filePick.click());
     // Sandbox: blank slate. Built-in override: hand back the original design
     // (clears the override, which syncs as a reset). Label swaps in enter().
-    this.resetBtn = mk('start over', () => {
-      if (this.targetCourse === 7) {
+    this.resetBtn = mk("start over", () => {
+      if (this.targetCourse === CUSTOM_LEVEL_ID) {
         this.data = starterCustomLevel();
         this.select(-1);
         this.commit();
@@ -2506,17 +3880,21 @@ export class Editor {
         this.hooks.restoreOriginal();
       }
     });
-    mk('undo ⌘Z', () => this.undo());
-    mk('redo ⌘⇧Z', () => this.redo());
+    mk("undo ⌘Z", () => this.undo());
+    mk("redo ⌘⇧Z", () => this.redo());
     projPane2.appendChild(file);
 
     projPane2.appendChild(
-      h('<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>'),
+      h(
+        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
+      ),
     );
 
     // play — always visible under the tabs
-    const test = h('<button class="ed-btn ed-test">▶ TEST (play it)</button>') as HTMLButtonElement;
-    test.addEventListener('click', () => {
+    const test = h(
+      '<button class="ed-btn ed-test">▶ TEST (play it)</button>',
+    ) as HTMLButtonElement;
+    test.addEventListener("click", () => {
       this.hooks.exitToPlay();
       test.blur();
     });
@@ -2528,45 +3906,58 @@ export class Editor {
   }
 
   // one pop-out at a time (photoshop-dock rules); '' closes both
-  private setPop(which: 'add' | 'layers' | ''): void {
-    if (this.popAdd) this.popAdd.style.display = which === 'add' ? 'block' : 'none';
-    if (this.popLayers) this.popLayers.style.display = which === 'layers' ? 'block' : 'none';
-    this.tabAdd?.classList.toggle('ed-tab-on', which === 'add');
-    this.tabLayers?.classList.toggle('ed-tab-on', which === 'layers');
+  private setPop(which: "add" | "layers" | ""): void {
+    if (this.popAdd)
+      this.popAdd.style.display = which === "add" ? "block" : "none";
+    if (this.popLayers)
+      this.popLayers.style.display = which === "layers" ? "block" : "none";
+    this.tabAdd?.classList.toggle("ed-tab-on", which === "add");
+    this.tabLayers?.classList.toggle("ed-tab-on", which === "layers");
     try {
-      localStorage.setItem('protoEditorPop', which);
+      localStorage.setItem("protoEditorPop", which);
     } catch {
       /* ignore */
     }
-    if (which === 'layers') this.renderLayers();
+    if (which === "layers") this.renderLayers();
   }
 
   // right-panel tab: selection fields vs project (level/file/help)
-  private setPanelTab(which: 'sel' | 'proj'): void {
+  private setPanelTab(which: "sel" | "proj"): void {
     this.panelTab = which;
-    if (this.selPane) this.selPane.style.display = which === 'sel' ? '' : 'none';
-    if (this.projPane) this.projPane.style.display = which === 'proj' ? '' : 'none';
-    this.tabSelBtn?.classList.toggle('ed-ptab-on', which === 'sel');
-    this.tabProjBtn?.classList.toggle('ed-ptab-on', which === 'proj');
+    if (this.selPane)
+      this.selPane.style.display = which === "sel" ? "" : "none";
+    if (this.projPane)
+      this.projPane.style.display = which === "proj" ? "" : "none";
+    this.tabSelBtn?.classList.toggle("ed-ptab-on", which === "sel");
+    this.tabProjBtn?.classList.toggle("ed-ptab-on", which === "proj");
   }
 
   // aim the orbit camera straight down a world axis at the current focus,
   // keeping the zoom. Already on that axis? Flip to the opposite side.
-  snapView(axis: 'x' | 'y' | 'z'): void {
+  snapView(axis: "x" | "y" | "z"): void {
     if (!this.controls) return;
     const t = this.controls.target;
     const off = new THREE.Vector3().subVectors(this.camera.position, t);
-    const u = { x: new THREE.Vector3(1, 0, 0), y: new THREE.Vector3(0, 1, 0), z: new THREE.Vector3(0, 0, 1) }[
-      axis
-    ];
+    const u = {
+      x: new THREE.Vector3(1, 0, 0),
+      y: new THREE.Vector3(0, 1, 0),
+      z: new THREE.Vector3(0, 0, 1),
+    }[axis];
     // keep the on-screen framing: how tall the current view is at the target
-    const halfView = Math.max(4, off.length()) * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+    const halfView =
+      Math.max(4, off.length()) *
+      Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
     const along = off.dot(u) / Math.max(1e-4, off.length());
     // same-axis press again = look from the other side; entering = nearest side
-    const sign = this.viewMode === axis ? -(Math.sign(along) || 1) : Math.sign(along) || 1;
-    if (this.viewMode === '3d') {
+    const sign =
+      this.viewMode === axis ? -(Math.sign(along) || 1) : Math.sign(along) || 1;
+    if (this.viewMode === "3d") {
       // remember the free view (the 3D button restores it exactly)
-      this.saved3D = { p: this.camera.position.clone(), t: t.clone(), fov: this.camera.fov };
+      this.saved3D = {
+        p: this.camera.position.clone(),
+        t: t.clone(),
+        fov: this.camera.fov,
+      };
     }
     this.viewMode = axis;
     // near-flat projection: a long lens from far away reads as a 2D plan view
@@ -2574,22 +3965,22 @@ export class Editor {
     this.camera.updateProjectionMatrix();
     const d = halfView / Math.tan(THREE.MathUtils.degToRad(4));
     const pos = t.clone().addScaledVector(u, d * sign);
-    if (axis === 'y') pos.z += d * 0.01; // dead-vertical lookAt degenerates (up ∥ view)
+    if (axis === "y") pos.z += d * 0.01; // dead-vertical lookAt degenerates (up ∥ view)
     this.camera.position.copy(pos);
     this.camera.lookAt(t);
     this.controls.enableRotate = false; // 2D: pan + zoom only, no orbiting out of plane
     this.markViewButtons();
     this.hooks.showMsg(
       `${axis.toUpperCase()} VIEW · 2D`,
-      `drag moves in the ${axis === 'y' ? 'X/Z' : axis === 'x' ? 'Z/Y' : 'X/Y'} plane · ${axis.toUpperCase()} again = other side · 3D = back`,
+      `drag moves in the ${axis === "y" ? "X/Z" : axis === "x" ? "Z/Y" : "X/Y"} plane · ${axis.toUpperCase()} again = other side · 3D = back`,
     );
     this.saveCam();
   }
 
   // the 3D button: back to the free orbit view saved when 2D was entered
   to3D(): void {
-    if (!this.controls || this.viewMode === '3d') return;
-    this.viewMode = '3d';
+    if (!this.controls || this.viewMode === "3d") return;
+    this.viewMode = "3d";
     if (this.saved3D) {
       this.camera.fov = this.saved3D.fov;
       this.camera.position.copy(this.saved3D.p);
@@ -2606,7 +3997,7 @@ export class Editor {
 
   private markViewButtons(): void {
     for (const [k, b] of Object.entries(this.viewBtns)) {
-      b.classList.toggle('ed-viewbtn-on', k === this.viewMode);
+      b.classList.toggle("ed-viewbtn-on", k === this.viewMode);
     }
   }
 
@@ -2614,17 +4005,18 @@ export class Editor {
 
   private itemLabel(idx: number): string {
     const c = this.data.components[idx];
-    if (!c) return '?';
+    if (!c) return "?";
     if (c.nm) return c.nm;
     if (c.pts && c.pts.length >= 3) return `${c.t} · drawn`;
-    if (c.t === 'crate') return `crate · ${c.kind ?? 'wood'}${c.outline ? ' (outline)' : ''}`;
-    if (c.t === 'enemy') return `foe · ${c.foe ?? 'grunt'}`;
-    if (c.t === 'wall' && c.invisible) return 'invis wall';
-    if (c.t === 'clock') return 'tt clock';
-    if (c.t === 'comboorb') return 'combo orb';
-    if (c.t === 'camnode') {
+    if (c.t === "crate")
+      return `crate · ${c.kind ?? "wood"}${c.outline ? " (outline)" : ""}`;
+    if (c.t === "enemy") return `foe · ${c.foe ?? "grunt"}`;
+    if (c.t === "wall" && c.invisible) return "invis wall";
+    if (c.t === "clock") return "tt clock";
+    if (c.t === "comboorb") return "combo orb";
+    if (c.t === "camnode") {
       // show the node's position in the chain: "cam node 2/5"
-      const nodes = this.data.components.filter((o) => o.t === 'camnode');
+      const nodes = this.data.components.filter((o) => o.t === "camnode");
       return `cam node ${nodes.indexOf(c) + 1}/${nodes.length}`;
     }
     return c.t;
@@ -2635,15 +4027,18 @@ export class Editor {
   }
 
   // inline rename input, shared by group and item rows
-  private renameField(current: string, done: (v: string) => void): HTMLInputElement {
-    const input = document.createElement('input');
-    input.className = 'ed-layername-input';
+  private renameField(
+    current: string,
+    done: (v: string) => void,
+  ): HTMLInputElement {
+    const input = document.createElement("input");
+    input.className = "ed-layername-input";
     input.value = current;
-    input.addEventListener('keydown', (ev) => {
-      if (ev.code === 'Enter') input.blur();
+    input.addEventListener("keydown", (ev) => {
+      if (ev.code === "Enter") input.blur();
       ev.stopPropagation(); // typing guard: editor hotkeys stay out
     });
-    input.addEventListener('blur', () => {
+    input.addEventListener("blur", () => {
       this.renaming = null;
       done(input.value.trim());
       this.commit(false);
@@ -2658,7 +4053,7 @@ export class Editor {
 
   private renderLayers(): void {
     if (!this.layersEl) return;
-    this.layersEl.innerHTML = '';
+    this.layersEl.innerHTML = "";
     const groups = this.data.groups ?? [];
     const childGroups = (parent: number | undefined): number[] =>
       groups.filter((g) => g.parent === parent).map((g) => g.id);
@@ -2672,15 +4067,16 @@ export class Editor {
 
     const itemRow = (idx: number, depth: number): HTMLElement => {
       const c = this.data.components[idx];
-      const row = document.createElement('div');
-      row.className = 'ed-layerrow' + (this.sel.includes(idx) ? ' ed-layer-sel' : '');
+      const row = document.createElement("div");
+      row.className =
+        "ed-layerrow" + (this.sel.includes(idx) ? " ed-layer-sel" : "");
       row.style.paddingLeft = `${4 + depth * 12}px`;
-      const lock = document.createElement('button');
-      lock.className = 'ed-lbtn' + (c.lk ? ' ed-lockon' : '');
-      lock.textContent = '🔒'; // same padlock always; opacity tells the state apart
-      lock.style.opacity = c.lk ? '1' : '0.2';
-      lock.title = c.lk ? 'unlock' : 'lock (click-through, edit-proof)';
-      lock.addEventListener('click', (ev) => {
+      const lock = document.createElement("button");
+      lock.className = "ed-lbtn" + (c.lk ? " ed-lockon" : "");
+      lock.textContent = "🔒"; // same padlock always; opacity tells the state apart
+      lock.style.opacity = c.lk ? "1" : "0.2";
+      lock.title = c.lk ? "unlock" : "lock (click-through, edit-proof)";
+      lock.addEventListener("click", (ev) => {
         ev.stopPropagation();
         if (c.lk) delete c.lk;
         else c.lk = true;
@@ -2688,7 +4084,7 @@ export class Editor {
         this.commit(false);
       });
       row.appendChild(lock);
-      if (this.renaming?.kind === 'item' && this.renaming.id === idx) {
+      if (this.renaming?.kind === "item" && this.renaming.id === idx) {
         row.appendChild(
           this.renameField(this.itemLabel(idx), (v) => {
             if (v) c.nm = v;
@@ -2696,31 +4092,31 @@ export class Editor {
           }),
         );
       } else {
-        const name = document.createElement('button');
-        name.className = 'ed-layername';
+        const name = document.createElement("button");
+        name.className = "ed-layername";
         name.textContent = this.itemLabel(idx);
-        name.title = 'click: select · double-click: fly to it (✎ to rename)';
-        name.addEventListener('click', () => {
+        name.title = "click: select · double-click: fly to it (✎ to rename)";
+        name.addEventListener("click", () => {
           if (!this.isLockedIdx(idx)) this.setSelection([idx]);
         });
-        name.addEventListener('dblclick', (ev) => {
+        name.addEventListener("dblclick", (ev) => {
           ev.stopPropagation();
           if (!this.isLockedIdx(idx)) this.setSelection([idx]);
           this.focusOnItem(idx); // navigate the camera to this piece
         });
         row.appendChild(name);
       }
-      const tag = document.createElement('span');
-      tag.className = 'ed-layercount';
+      const tag = document.createElement("span");
+      tag.className = "ed-layercount";
       tag.textContent = `#${idx}`;
       row.appendChild(tag);
-      const ren = document.createElement('button');
-      ren.className = 'ed-lbtn';
-      ren.textContent = '✎';
-      ren.title = 'rename';
-      ren.addEventListener('click', (ev) => {
+      const ren = document.createElement("button");
+      ren.className = "ed-lbtn";
+      ren.textContent = "✎";
+      ren.title = "rename";
+      ren.addEventListener("click", (ev) => {
         ev.stopPropagation();
-        this.renaming = { kind: 'item', id: idx };
+        this.renaming = { kind: "item", id: idx };
         this.renderLayers();
       });
       row.appendChild(ren);
@@ -2730,38 +4126,43 @@ export class Editor {
     const groupNode = (gid: number, depth: number, host: HTMLElement): void => {
       const members = this.groupMembers(gid);
       const open = !this.closedGroups.has(gid);
-      const row = document.createElement('div');
-      const allSel = members.length > 0 && members.every((m) => this.sel.includes(m) || this.isLockedIdx(m));
-      row.className = 'ed-layerrow ed-grouprow' + (allSel ? ' ed-layer-sel' : '');
+      const row = document.createElement("div");
+      const allSel =
+        members.length > 0 &&
+        members.every((m) => this.sel.includes(m) || this.isLockedIdx(m));
+      row.className =
+        "ed-layerrow ed-grouprow" + (allSel ? " ed-layer-sel" : "");
       row.style.paddingLeft = `${4 + depth * 12}px`;
-      const caret = document.createElement('button');
-      caret.className = 'ed-lbtn ed-caret';
-      caret.textContent = open ? '▾' : '▸';
-      caret.title = open ? 'collapse' : 'expand';
-      caret.addEventListener('click', (ev) => {
+      const caret = document.createElement("button");
+      caret.className = "ed-lbtn ed-caret";
+      caret.textContent = open ? "▾" : "▸";
+      caret.title = open ? "collapse" : "expand";
+      caret.addEventListener("click", (ev) => {
         ev.stopPropagation();
         if (open) this.closedGroups.add(gid);
         else this.closedGroups.delete(gid);
         this.renderLayers();
       });
       row.appendChild(caret);
-      const allLocked = members.length > 0 && members.every((m) => this.isLockedIdx(m));
-      const lock = document.createElement('button');
-      lock.className = 'ed-lbtn' + (allLocked ? ' ed-lockon' : '');
-      lock.textContent = '🔒';
-      lock.style.opacity = allLocked ? '1' : '0.2';
-      lock.title = allLocked ? 'unlock group' : 'lock whole group';
-      lock.addEventListener('click', (ev) => {
+      const allLocked =
+        members.length > 0 && members.every((m) => this.isLockedIdx(m));
+      const lock = document.createElement("button");
+      lock.className = "ed-lbtn" + (allLocked ? " ed-lockon" : "");
+      lock.textContent = "🔒";
+      lock.style.opacity = allLocked ? "1" : "0.2";
+      lock.title = allLocked ? "unlock group" : "lock whole group";
+      lock.addEventListener("click", (ev) => {
         ev.stopPropagation();
         for (const m of members) {
           if (allLocked) delete this.data.components[m].lk;
           else this.data.components[m].lk = true;
         }
-        if (!allLocked) this.setSelection(this.sel.filter((i) => !members.includes(i)));
+        if (!allLocked)
+          this.setSelection(this.sel.filter((i) => !members.includes(i)));
         this.commit(false);
       });
       row.appendChild(lock);
-      if (this.renaming?.kind === 'group' && this.renaming.id === gid) {
+      if (this.renaming?.kind === "group" && this.renaming.id === gid) {
         row.appendChild(
           this.renameField(this.groupLabel(gid), (v) => {
             const g = this.data.groups?.find((x) => x.id === gid);
@@ -2772,68 +4173,74 @@ export class Editor {
           }),
         );
       } else {
-        const name = document.createElement('button');
-        name.className = 'ed-layername ed-groupname';
+        const name = document.createElement("button");
+        name.className = "ed-layername ed-groupname";
         name.textContent = this.groupLabel(gid);
-        name.title = 'click: select the whole group · double-click: fly to it (✎ to rename)';
-        name.addEventListener('click', () => {
+        name.title =
+          "click: select the whole group · double-click: fly to it (✎ to rename)";
+        name.addEventListener("click", () => {
           this.setSelection(members.filter((m) => !this.isLockedIdx(m)));
         });
-        name.addEventListener('dblclick', (ev) => {
+        name.addEventListener("dblclick", (ev) => {
           ev.stopPropagation();
           this.setSelection(members.filter((m) => !this.isLockedIdx(m)));
           this.focusOnGroup(gid); // navigate the camera to the whole group
         });
         row.appendChild(name);
       }
-      const n = document.createElement('span');
-      n.className = 'ed-layercount';
+      const n = document.createElement("span");
+      n.className = "ed-layercount";
       n.textContent = String(members.length);
       row.appendChild(n);
-      const ren = document.createElement('button');
-      ren.className = 'ed-lbtn';
-      ren.textContent = '✎';
-      ren.title = 'rename group';
-      ren.addEventListener('click', (ev) => {
+      const ren = document.createElement("button");
+      ren.className = "ed-lbtn";
+      ren.textContent = "✎";
+      ren.title = "rename group";
+      ren.addEventListener("click", (ev) => {
         ev.stopPropagation();
-        this.renaming = { kind: 'group', id: gid };
+        this.renaming = { kind: "group", id: gid };
         this.renderLayers();
       });
       row.appendChild(ren);
       host.appendChild(row);
       if (!open) return;
       for (const sub of childGroups(gid)) groupNode(sub, depth + 1, host);
-      for (const idx of directItems(gid)) host.appendChild(itemRow(idx, depth + 1));
+      for (const idx of directItems(gid))
+        host.appendChild(itemRow(idx, depth + 1));
     };
 
     // root groups first, then loose items — every piece is a row somewhere
     for (const gid of childGroups(undefined)) groupNode(gid, 0, this.layersEl);
-    for (const idx of directItems(undefined)) this.layersEl.appendChild(itemRow(idx, 0));
+    for (const idx of directItems(undefined))
+      this.layersEl.appendChild(itemRow(idx, 0));
     if (this.data.components.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'ed-dim';
-      empty.textContent = 'nothing yet — add pieces from the ▦ ADD tab';
+      const empty = document.createElement("div");
+      empty.className = "ed-dim";
+      empty.textContent = "nothing yet — add pieces from the ▦ ADD tab";
       this.layersEl.appendChild(empty);
     }
   }
 
   // a labelled number field that commits on change
   // texture dropdown: the surface-kind list shared with the game builder
-  private texRow(get: () => string | undefined, set: (v: string | undefined) => void): HTMLElement {
-    const row = document.createElement('div');
-    row.className = 'ed-row';
-    const lab = document.createElement('label');
-    lab.textContent = 'texture';
-    const sel = document.createElement('select');
+  private texRow(
+    get: () => string | undefined,
+    set: (v: string | undefined) => void,
+  ): HTMLElement {
+    const row = document.createElement("div");
+    row.className = "ed-row";
+    const lab = document.createElement("label");
+    lab.textContent = "texture";
+    const sel = document.createElement("select");
     for (const k of TEX_KINDS) {
-      const opt = document.createElement('option');
+      const opt = document.createElement("option");
       opt.value = k;
       opt.textContent = k;
       sel.appendChild(opt);
     }
-    sel.value = get() ?? 'checker';
-    sel.addEventListener('change', () => {
-      set(sel.value === 'checker' ? undefined : sel.value);
+    sel.value = get() ?? "checker";
+    sel.addEventListener("change", () => {
+      set(sel.value === "checker" ? undefined : sel.value);
       this.commit();
     });
     row.appendChild(lab);
@@ -2862,10 +4269,28 @@ export class Editor {
     // per-item yaw stay in perfect agreement.
     const rot = (x: number, z: number): [number, number] =>
       deg === 90 ? [z, -x] : [-z, x];
-    const yawable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock', 'rail', 'rope', 'enemy', 'pendulum', 'ropeswing', 'pit', 'gate', 'vertramp']);
+    const yawable = new Set([
+      "platform",
+      "ramp",
+      "wall",
+      "crumble",
+      "rock",
+      "rail",
+      "rope",
+      "enemy",
+      "pendulum",
+      "ropeswing",
+      "pit",
+      "gate",
+      "vertramp",
+    ]);
     for (const c of comps) {
       const [rx, rz] = rot(c.p[0] - cx, c.p[2] - cz);
-      c.p = [Math.round((cx + rx) * 100) / 100, c.p[1], Math.round((cz + rz) * 100) / 100];
+      c.p = [
+        Math.round((cx + rx) * 100) / 100,
+        c.p[1],
+        Math.round((cz + rz) * 100) / 100,
+      ];
       if (c.pts) {
         c.pts = c.pts.map((pt) => {
           const [nx, nz] = rot(pt[0], pt[1]);
@@ -2874,12 +4299,14 @@ export class Editor {
           out[1] = Math.round(nz * 100) / 100;
           return out;
         });
-      } else if (c.t === 'zone') {
+      } else if (c.t === "zone") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
-        const map: Record<'E' | 'W' | 'N' | 'S', 'E' | 'W' | 'N' | 'S'> =
-          deg === 90 ? { W: 'N', N: 'E', E: 'S', S: 'W' } : { E: 'N', N: 'W', W: 'S', S: 'E' };
-        c.dir = map[c.dir ?? 'E'];
-      } else if (c.t === 'crusher') {
+        const map: Record<"E" | "W" | "N" | "S", "E" | "W" | "N" | "S"> =
+          deg === 90
+            ? { W: "N", N: "E", E: "S", S: "W" }
+            : { E: "N", N: "W", W: "S", S: "E" };
+        c.dir = map[c.dir ?? "E"];
+      } else if (c.t === "crusher") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (yawable.has(c.t)) {
         c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
@@ -2889,16 +4316,21 @@ export class Editor {
     this.renderProps();
   }
 
-  private numRow(label: string, get: () => number, set: (v: number) => void, step = 0.5): HTMLElement {
-    const row = document.createElement('div');
-    row.className = 'ed-row';
-    const lab = document.createElement('label');
+  private numRow(
+    label: string,
+    get: () => number,
+    set: (v: number) => void,
+    step = 0.5,
+  ): HTMLElement {
+    const row = document.createElement("div");
+    row.className = "ed-row";
+    const lab = document.createElement("label");
     lab.textContent = label;
-    const input = document.createElement('input');
-    input.type = 'number';
+    const input = document.createElement("input");
+    input.type = "number";
     input.step = String(step);
     input.value = String(get());
-    input.title = 'shift+↑/↓ = ±10 · drag up/down to scrub';
+    input.title = "shift+↑/↓ = ±10 · drag up/down to scrub";
     // read the field, apply it, coalesce bursts into one undo step, resync
     const apply = (): void => {
       const v = parseFloat(input.value);
@@ -2908,26 +4340,34 @@ export class Editor {
       }
       input.value = String(get());
     };
-    input.addEventListener('change', apply);
+    input.addEventListener("change", apply);
     // SHIFT+ARROW = coarse ±10 steps (plain arrows keep the field's fine step)
-    input.addEventListener('keydown', (e) => {
-      if (e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+    input.addEventListener("keydown", (e) => {
+      if (e.shiftKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
         e.preventDefault();
         const cur = parseFloat(input.value) || 0;
-        input.value = String(+(cur + (e.key === 'ArrowUp' ? 10 : -10)).toFixed(4));
+        input.value = String(
+          +(cur + (e.key === "ArrowUp" ? 10 : -10)).toFixed(4),
+        );
         apply();
       }
     });
     // DRAG-SCRUB: press and drag up/down on the field to slide the value
     // (Blender/Figma style). Shift while scrubbing = coarse. A plain click
     // (no drag) still focuses the field for typing.
-    let scrub: { y: number; val: number; moved: boolean; id: number } | null = null;
+    let scrub: { y: number; val: number; moved: boolean; id: number } | null =
+      null;
     let lastScrub = 0;
-    input.addEventListener('pointerdown', (e) => {
+    input.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
-      scrub = { y: e.clientY, val: parseFloat(input.value) || 0, moved: false, id: e.pointerId };
+      scrub = {
+        y: e.clientY,
+        val: parseFloat(input.value) || 0,
+        moved: false,
+        id: e.pointerId,
+      };
     });
-    input.addEventListener('pointermove', (e) => {
+    input.addEventListener("pointermove", (e) => {
       if (!scrub) return;
       const dy = scrub.y - e.clientY; // up = increase
       if (!scrub.moved) {
@@ -2938,7 +4378,7 @@ export class Editor {
         } catch {
           /* capture optional */
         }
-        input.style.cursor = 'ns-resize';
+        input.style.cursor = "ns-resize";
         input.blur(); // no text caret while scrubbing
       }
       e.preventDefault();
@@ -2957,13 +4397,13 @@ export class Editor {
         } catch {
           /* ignore */
         }
-        input.style.cursor = '';
+        input.style.cursor = "";
         apply(); // land the final value
       }
       scrub = null;
     };
-    input.addEventListener('pointerup', endScrub);
-    input.addEventListener('pointercancel', endScrub);
+    input.addEventListener("pointerup", endScrub);
+    input.addEventListener("pointercancel", endScrub);
     row.appendChild(lab);
     row.appendChild(input);
     return row;
@@ -2971,7 +4411,7 @@ export class Editor {
 
   // properties for the current selection, generated per component type
   private renderProps(): void {
-    this.propsEl.innerHTML = '';
+    this.propsEl.innerHTML = "";
     if (this.sel.length === 0 || !this.data.components[this.selected]) {
       this.propsEl.innerHTML =
         '<div class="ed-dim">click a component…<br>shift-click adds · shift-drag empty space = box select</div>';
@@ -2986,42 +4426,42 @@ export class Editor {
       }
       const parts = [...counts.entries()]
         .map(([t, n]) => (n > 1 ? `${t} ×${n}` : t))
-        .join(' · ');
-      const head = document.createElement('div');
-      head.className = 'ed-selhead';
+        .join(" · ");
+      const head = document.createElement("div");
+      head.className = "ed-selhead";
       head.textContent = `${this.sel.length} selected`;
       this.propsEl.appendChild(head);
-      const list = document.createElement('div');
-      list.className = 'ed-dim ed-sellist';
+      const list = document.createElement("div");
+      list.className = "ed-dim ed-sellist";
       list.textContent = parts;
       this.propsEl.appendChild(list);
-      const grid = document.createElement('div');
-      grid.className = 'ed-grid';
+      const grid = document.createElement("div");
+      grid.className = "ed-grid";
       const mkBtn = (label: string, fn: () => void, danger = false): void => {
-        const b = document.createElement('button');
-        b.className = danger ? 'ed-btn ed-danger' : 'ed-btn';
+        const b = document.createElement("button");
+        b.className = danger ? "ed-btn ed-danger" : "ed-btn";
         b.textContent = label;
-        b.addEventListener('click', () => {
+        b.addEventListener("click", () => {
           fn();
           b.blur();
         });
         grid.appendChild(b);
       };
-      mkBtn('copy ⌘C', () => this.copySelected());
-      mkBtn('duplicate ⌘D', () => this.duplicateSelected());
-      mkBtn('rotate ⟲ 90°', () => this.rotateSelection(90));
-      mkBtn('rotate ⟳ 90°', () => this.rotateSelection(-90));
-      mkBtn('group ⌘G', () => this.groupSelection());
+      mkBtn("copy ⌘C", () => this.copySelected());
+      mkBtn("duplicate ⌘D", () => this.duplicateSelected());
+      mkBtn("rotate ⟲ 90°", () => this.rotateSelection(90));
+      mkBtn("rotate ⟳ 90°", () => this.rotateSelection(-90));
+      mkBtn("group ⌘G", () => this.groupSelection());
       if (this.sel.some((i) => this.chainOf(i).length > 0)) {
-        mkBtn('ungroup ⌘⇧G', () => this.ungroupSelection());
+        mkBtn("ungroup ⌘⇧G", () => this.ungroupSelection());
       }
-      mkBtn('match height', () => {
+      mkBtn("match height", () => {
         // align the group to the PRIMARY's y — the fast way to level a row
         const y = this.data.components[this.selected].p[1];
         for (const i of this.sel) this.data.components[i].p[1] = y;
         this.commit();
       });
-      mkBtn('delete', () => this.deleteSelected(), true);
+      mkBtn("delete", () => this.deleteSelected(), true);
       this.propsEl.appendChild(grid);
       const all = this.sel.map((i) => this.data.components[i]);
       const prim = this.data.components[this.selected];
@@ -3032,8 +4472,8 @@ export class Editor {
       // value would collapse the level; that's what "match height" is for, on
       // purpose.) Each axis carries its OWN grouping key so a spinner burst on
       // one axis doesn't coalesce with another.
-      const posHdr = document.createElement('div');
-      posHdr.className = 'ed-dim';
+      const posHdr = document.createElement("div");
+      posHdr.className = "ed-dim";
       posHdr.textContent = `position — moves all ${this.sel.length} together:`;
       this.propsEl.appendChild(posHdr);
       const prow = (label: string, axis: 0 | 1 | 2): void =>
@@ -3047,23 +4487,23 @@ export class Editor {
             },
           ),
         );
-      prow('x', 0);
-      prow('y', 1);
-      prow('z', 2);
+      prow("x", 0);
+      prow("y", 1);
+      prow("z", 2);
       // GROUP SIZE (Figma): the selection's overall bounding-box dimensions.
       // Typing one SCALES the whole selection about the box's low corner —
       // scalable pieces resize, fixed-size pieces (crates, pickups...) keep
       // their size but reposition proportionally. "proportional" links axes.
       const gb0 = this.selectionBounds();
       if (gb0) {
-        const sizeHdr = document.createElement('div');
-        sizeHdr.className = 'ed-dim';
-        sizeHdr.textContent = 'group size — scales the whole selection:';
+        const sizeHdr = document.createElement("div");
+        sizeHdr.className = "ed-dim";
+        sizeHdr.textContent = "group size — scales the whole selection:";
         this.propsEl.appendChild(sizeHdr);
-        const propBtn = document.createElement('button');
-        propBtn.className = 'ed-btn';
-        propBtn.textContent = `proportional: ${this.scaleProp ? 'ON' : 'OFF'}`;
-        propBtn.addEventListener('click', () => {
+        const propBtn = document.createElement("button");
+        propBtn.className = "ed-btn";
+        propBtn.textContent = `proportional: ${this.scaleProp ? "ON" : "OFF"}`;
+        propBtn.addEventListener("click", () => {
           this.scaleProp = !this.scaleProp;
           this.renderProps();
         });
@@ -3071,68 +4511,129 @@ export class Editor {
         const gdim = (label: string, comp: 0 | 1 | 2): void => {
           const liveSize = (): number => {
             const b = this.selectionBounds();
-            return b ? +b.getSize(new THREE.Vector3()).getComponent(comp).toFixed(2) : 0;
+            return b
+              ? +b.getSize(new THREE.Vector3()).getComponent(comp).toFixed(2)
+              : 0;
           };
           this.propsEl.appendChild(
-            this.numRow(
-              label,
-              liveSize,
-              (v) => {
-                const b = this.selectionBounds();
-                if (!b) return;
-                const cur = b.getSize(new THREE.Vector3()).getComponent(comp);
-                if (cur < 1e-3 || v <= 0) return;
-                const f = v / cur;
-                const anchor = b.min.clone();
-                if (this.scaleProp) this.scaleSelection(f, f, f, anchor, 'gsize');
-                else this.scaleSelection(comp === 0 ? f : 1, comp === 1 ? f : 1, comp === 2 ? f : 1, anchor, `gsize${comp}`);
-              },
-            ),
+            this.numRow(label, liveSize, (v) => {
+              const b = this.selectionBounds();
+              if (!b) return;
+              const cur = b.getSize(new THREE.Vector3()).getComponent(comp);
+              if (cur < 1e-3 || v <= 0) return;
+              const f = v / cur;
+              const anchor = b.min.clone();
+              if (this.scaleProp) this.scaleSelection(f, f, f, anchor, "gsize");
+              else
+                this.scaleSelection(
+                  comp === 0 ? f : 1,
+                  comp === 1 ? f : 1,
+                  comp === 2 ? f : 1,
+                  anchor,
+                  `gsize${comp}`,
+                );
+            }),
           );
         };
-        gdim('group width', 0);
-        gdim('group height', 1);
-        gdim('group depth', 2);
+        gdim("group width", 0);
+        gdim("group height", 1);
+        gdim("group depth", 2);
       }
       // SHARED variables (Figma): a field that is genuinely one value across
       // the selection (size, spin) shows once and batch-writes to all.
-      const shared = document.createElement('div');
-      shared.className = 'ed-dim';
+      const shared = document.createElement("div");
+      shared.className = "ed-dim";
       shared.textContent = `shared values (apply to all ${this.sel.length}):`;
       this.propsEl.appendChild(shared);
-      const brow = (label: string, get: () => number, set: (cc: CustomComponent, v: number) => void, step = 0.5): void =>
+      const brow = (
+        label: string,
+        get: () => number,
+        set: (cc: CustomComponent, v: number) => void,
+        step = 0.5,
+      ): void =>
         void this.propsEl.appendChild(
           this.numRow(label, get, (v) => all.forEach((cc) => set(cc, v)), step),
         );
       if (all.every((cc) => cc.s)) {
-        brow('width', () => prim.s![0], (cc, v) => (cc.s![0] = Math.max(0.2, v)));
-        brow('height', () => prim.s![1], (cc, v) => (cc.s![1] = Math.max(0.2, v)));
-        brow('depth', () => prim.s![2], (cc, v) => (cc.s![2] = Math.max(0.2, v)));
+        brow(
+          "width",
+          () => prim.s![0],
+          (cc, v) => (cc.s![0] = Math.max(0.2, v)),
+        );
+        brow(
+          "height",
+          () => prim.s![1],
+          (cc, v) => (cc.s![1] = Math.max(0.2, v)),
+        );
+        brow(
+          "depth",
+          () => prim.s![2],
+          (cc, v) => (cc.s![2] = Math.max(0.2, v)),
+        );
       }
-      const yawable = new Set(['platform', 'ramp', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'ropeswing', 'enemy', 'rail', 'gate']);
+      const yawable = new Set([
+        "platform",
+        "ramp",
+        "wall",
+        "pit",
+        "crumble",
+        "rock",
+        "pendulum",
+        "ropeswing",
+        "enemy",
+        "rail",
+        "gate",
+      ]);
       if (all.every((cc) => yawable.has(cc.t) && !cc.pts)) {
-        brow('yaw °', () => prim.yaw ?? 0, (cc, v) => (cc.yaw = v), 15);
+        brow(
+          "yaw °",
+          () => prim.yaw ?? 0,
+          (cc, v) => (cc.yaw = v),
+          15,
+        );
       }
       if (all.every((cc) => cc.len !== undefined)) {
-        brow('length', () => prim.len!, (cc, v) => (cc.len = Math.max(1, v)));
+        brow(
+          "length",
+          () => prim.len!,
+          (cc, v) => (cc.len = Math.max(1, v)),
+        );
       }
-      if (all.every((cc) => cc.t === 'enemy')) {
-        brow('speed', () => prim.speed ?? 3, (cc, v) => (cc.speed = Math.max(0.5, v)));
-        brow('patrol range', () => prim.range ?? 5, (cc, v) => (cc.range = Math.max(0.5, v)));
+      if (all.every((cc) => cc.t === "enemy")) {
+        brow(
+          "speed",
+          () => prim.speed ?? 3,
+          (cc, v) => (cc.speed = Math.max(0.5, v)),
+        );
+        brow(
+          "patrol range",
+          () => prim.range ?? 5,
+          (cc, v) => (cc.range = Math.max(0.5, v)),
+        );
       }
-      if (all.every((cc) => cc.t === 'camnode')) {
-        brow('corner radius', () => prim.radius ?? 0, (cc, v) => (cc.radius = Math.max(0, v)));
+      if (all.every((cc) => cc.t === "camnode")) {
+        brow(
+          "corner radius",
+          () => prim.radius ?? 0,
+          (cc, v) => (cc.radius = Math.max(0, v)),
+        );
       }
-      const colorable = new Set(['platform', 'ramp', 'wall', 'crumble', 'rock']);
+      const colorable = new Set([
+        "platform",
+        "ramp",
+        "wall",
+        "crumble",
+        "rock",
+      ]);
       if (all.every((cc) => colorable.has(cc.t))) {
-        const row = document.createElement('div');
-        row.className = 'ed-row';
-        const lab = document.createElement('label');
-        lab.textContent = 'color';
-        const input = document.createElement('input');
-        input.type = 'color';
-        input.value = prim.color ?? '#ffffff';
-        input.addEventListener('change', () => {
+        const row = document.createElement("div");
+        row.className = "ed-row";
+        const lab = document.createElement("label");
+        lab.textContent = "color";
+        const input = document.createElement("input");
+        input.type = "color";
+        input.value = prim.color ?? "#ffffff";
+        input.addEventListener("change", () => {
           for (const cc of all) cc.color = input.value;
           this.commit();
         });
@@ -3149,37 +4650,58 @@ export class Editor {
           ),
         );
       }
-      const hint = document.createElement('div');
-      hint.className = 'ed-dim';
+      const hint = document.createElement("div");
+      hint.className = "ed-dim";
       hint.textContent =
         'drag any selected piece to move the group · arrows nudge · a "!" crate grouped with outline crates becomes their switch';
       this.propsEl.appendChild(hint);
       return;
     }
     const c = this.data.components[this.selected];
-    const head = document.createElement('div');
-    head.className = 'ed-selhead';
+    const head = document.createElement("div");
+    head.className = "ed-selhead";
     const inGroup = this.chainOf(this.selected).length > 0;
-    head.textContent = `#${this.selected} · ${c.t}${inGroup ? ' · in group' : ''}`;
+    head.textContent = `#${this.selected} · ${c.t}${inGroup ? " · in group" : ""}`;
     this.propsEl.appendChild(head);
-    const num = (label: string, get: () => number, set: (v: number) => void, step = 0.5): void =>
+    const num = (
+      label: string,
+      get: () => number,
+      set: (v: number) => void,
+      step = 0.5,
+    ): void =>
       void this.propsEl.appendChild(this.numRow(label, get, set, step));
-    num('x', () => c.p[0], (v) => (c.p[0] = v));
-    num('y', () => c.p[1], (v) => (c.p[1] = v));
-    num('z', () => c.p[2], (v) => (c.p[2] = v));
+    num(
+      "x",
+      () => c.p[0],
+      (v) => (c.p[0] = v),
+    );
+    num(
+      "y",
+      () => c.p[1],
+      (v) => (c.p[1] = v),
+    );
+    num(
+      "z",
+      () => c.p[2],
+      (v) => (c.p[2] = v),
+    );
     const sizeRow = (idx: number, label: string): void => {
       if (!c.s) c.s = [8, 1, 8];
-      num(label, () => c.s![idx], (v) => (c.s![idx] = Math.max(0.2, v)));
+      num(
+        label,
+        () => c.s![idx],
+        (v) => (c.s![idx] = Math.max(0.2, v)),
+      );
     };
     const colorRow = (): void => {
-      const row = document.createElement('div');
-      row.className = 'ed-row';
-      const lab = document.createElement('label');
-      lab.textContent = 'color';
-      const input = document.createElement('input');
-      input.type = 'color';
-      input.value = c.color ?? '#ffffff';
-      input.addEventListener('change', () => {
+      const row = document.createElement("div");
+      row.className = "ed-row";
+      const lab = document.createElement("label");
+      lab.textContent = "color";
+      const input = document.createElement("input");
+      input.type = "color";
+      input.value = c.color ?? "#ffffff";
+      input.addEventListener("change", () => {
         c.color = input.value;
         this.commit();
       });
@@ -3200,51 +4722,76 @@ export class Editor {
     // the collision, the kill footprint, and the grind line alike.
     const nodeRows = (): void => {
       if (!c.pts) return;
-      const picked = [...this.selVtxs].filter((i) => i >= 0 && i < c.pts!.length);
+      const picked = [...this.selVtxs].filter(
+        (i) => i >= 0 && i < c.pts!.length,
+      );
       if (this.resizeIdx === this.selected && picked.length > 0) {
         // one field batch-edits every selected node (Figma). Values shown are
         // WORLD coordinates; writing x/z to a multi-selection aligns the
         // nodes onto that line. Rails also expose per-node height — grind
         // lines climb and dive; polygons stay planar (collision needs it).
-        const tag = picked.length > 1 ? `${picked.length} nodes` : `node ${picked[0] + 1}`;
-        const mutate = (vi: number, mut: (nt: [number, number, number, number]) => void): void => {
+        const tag =
+          picked.length > 1
+            ? `${picked.length} nodes`
+            : `node ${picked[0] + 1}`;
+        const mutate = (
+          vi: number,
+          mut: (nt: [number, number, number, number]) => void,
+        ): void => {
           const nt = [...c.pts![vi]] as [number, number, number, number];
           if (nt[2] === undefined) nt[2] = 0; // radius slot (0 = square corner)
           mut(nt);
           c.pts![vi] = nt;
         };
-        num(`${tag} · x`, () => c.p[0] + c.pts![picked[0]][0], (v) => {
-          for (const vi of picked) mutate(vi, (nt) => (nt[0] = v - c.p[0]));
-        });
-        if (c.t === 'rail') {
-          num(`${tag} · y`, () => c.p[1] + (c.pts![picked[0]][3] ?? 0), (v) => {
-            for (const vi of picked) mutate(vi, (nt) => (nt[3] = v - c.p[1]));
-          });
+        num(
+          `${tag} · x`,
+          () => c.p[0] + c.pts![picked[0]][0],
+          (v) => {
+            for (const vi of picked) mutate(vi, (nt) => (nt[0] = v - c.p[0]));
+          },
+        );
+        if (c.t === "rail") {
+          num(
+            `${tag} · y`,
+            () => c.p[1] + (c.pts![picked[0]][3] ?? 0),
+            (v) => {
+              for (const vi of picked) mutate(vi, (nt) => (nt[3] = v - c.p[1]));
+            },
+          );
         }
-        num(`${tag} · z`, () => c.p[2] + c.pts![picked[0]][1], (v) => {
-          for (const vi of picked) mutate(vi, (nt) => (nt[1] = v - c.p[2]));
-        });
-        num(`${tag} · radius`, () => c.pts![picked[0]][2] ?? 0, (v) => {
-          for (const vi of picked) mutate(vi, (nt) => (nt[2] = Math.max(0, v)));
-        });
+        num(
+          `${tag} · z`,
+          () => c.p[2] + c.pts![picked[0]][1],
+          (v) => {
+            for (const vi of picked) mutate(vi, (nt) => (nt[1] = v - c.p[2]));
+          },
+        );
+        num(
+          `${tag} · radius`,
+          () => c.pts![picked[0]][2] ?? 0,
+          (v) => {
+            for (const vi of picked)
+              mutate(vi, (nt) => (nt[2] = Math.max(0, v)));
+          },
+        );
       } else {
-        const tip = document.createElement('div');
-        tip.className = 'ed-dim';
+        const tip = document.createElement("div");
+        tip.className = "ed-dim";
         tip.textContent =
-          'double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit its position + corner radius here';
+          "double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit its position + corner radius here";
         this.propsEl.appendChild(tip);
       }
     };
-    if (c.pts && c.pts.length >= 3 && c.t !== 'rail') {
+    if (c.pts && c.pts.length >= 3 && c.t !== "rail") {
       // drawn polygon: the outline is edited with the vertex handles
-      const note = document.createElement('div');
-      note.className = 'ed-dim';
+      const note = document.createElement("div");
+      note.className = "ed-dim";
       note.textContent = `drawn polygon · ${c.pts.length} points — double-click to drag the corners`;
       this.propsEl.appendChild(note);
-      if (c.t !== 'pit') {
+      if (c.t !== "pit") {
         num(
-          c.t === 'wall' ? 'height' : 'thickness',
-          () => c.s?.[1] ?? (c.t === 'wall' ? 4 : 1),
+          c.t === "wall" ? "height" : "thickness",
+          () => c.s?.[1] ?? (c.t === "wall" ? 4 : 1),
           (v) => {
             if (!c.s) c.s = [1, 1, 1];
             c.s[1] = Math.max(0.2, v);
@@ -3253,111 +4800,223 @@ export class Editor {
         colorRow();
       }
       nodeRows();
-    } else if (c.t === 'platform' || c.t === 'wall') {
-      sizeRow(0, 'width');
-      sizeRow(1, 'height');
-      sizeRow(2, 'depth');
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15); // platforms AND walls spin freely now
-      if (c.t === 'wall' && c.invisible) {
-        const note = document.createElement('div');
-        note.className = 'ed-dim';
-        note.textContent = 'invisible in play (ghost here)';
+    } else if (c.t === "platform" || c.t === "wall") {
+      sizeRow(0, "width");
+      sizeRow(1, "height");
+      sizeRow(2, "depth");
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      ); // platforms AND walls spin freely now
+      if (c.t === "wall" && c.invisible) {
+        const note = document.createElement("div");
+        note.className = "ed-dim";
+        note.textContent = "invisible in play (ghost here)";
         this.propsEl.appendChild(note);
       } else {
         colorRow();
       }
-    } else if (c.t === 'pit') {
-      sizeRow(0, 'width');
-      sizeRow(2, 'depth');
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
-    } else if (c.t === 'crumble') {
-      sizeRow(0, 'width');
-      sizeRow(2, 'depth');
-      num('fall delay', () => c.shake ?? 0.7, (v) => (c.shake = Math.max(0, v)), 0.1);
-      num('fall speed', () => c.speed ?? 30, (v) => (c.speed = Math.max(2, v)), 5);
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+    } else if (c.t === "pit") {
+      sizeRow(0, "width");
+      sizeRow(2, "depth");
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      );
+    } else if (c.t === "crumble") {
+      sizeRow(0, "width");
+      sizeRow(2, "depth");
+      num(
+        "fall delay",
+        () => c.shake ?? 0.7,
+        (v) => (c.shake = Math.max(0, v)),
+        0.1,
+      );
+      num(
+        "fall speed",
+        () => c.speed ?? 30,
+        (v) => (c.speed = Math.max(2, v)),
+        5,
+      );
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      );
       colorRow();
-    } else if (c.t === 'ramp') {
-      num('length', () => c.len ?? 10, (v) => (c.len = Math.max(1, v)));
-      num('rise', () => c.rise ?? 4, (v) => (c.rise = v));
-      num('width', () => c.w ?? 8, (v) => (c.w = Math.max(1, v)));
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+    } else if (c.t === "ramp") {
+      num(
+        "length",
+        () => c.len ?? 10,
+        (v) => (c.len = Math.max(1, v)),
+      );
+      num(
+        "rise",
+        () => c.rise ?? 4,
+        (v) => (c.rise = v),
+      );
+      num(
+        "width",
+        () => c.w ?? 8,
+        (v) => (c.w = Math.max(1, v)),
+      );
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      );
       colorRow();
-    } else if (c.t === 'rail') {
+    } else if (c.t === "rail") {
       if (c.pts && c.pts.length >= 2) {
-        const note = document.createElement('div');
-        note.className = 'ed-dim';
+        const note = document.createElement("div");
+        note.className = "ed-dim";
         note.textContent = `rail path · ${c.pts.length} nodes — double-click to drag them`;
         this.propsEl.appendChild(note);
         nodeRows();
       } else {
-        num('length', () => c.len ?? 12, (v) => (c.len = Math.max(1, v)));
-        num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+        num(
+          "length",
+          () => c.len ?? 12,
+          (v) => (c.len = Math.max(1, v)),
+        );
+        num(
+          "yaw °",
+          () => c.yaw ?? 0,
+          (v) => (c.yaw = v),
+          15,
+        );
       }
-    } else if (c.t === 'gate') {
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
-      const note = document.createElement('div');
-      note.className = 'ed-dim';
-      note.textContent = 'finish gate — crossing its plane ends the run (one per level; yaw turns it with the course)';
+    } else if (c.t === "gate") {
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      );
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent =
+        "finish gate — crossing its plane ends the run (one per level; yaw turns it with the course)";
       this.propsEl.appendChild(note);
-    } else if (c.t === 'clock') {
-      const note = document.createElement('div');
-      note.className = 'ed-dim';
-      note.textContent = 'time-trial activator — skating through the stopwatch starts a timed run to the gate (one per level, lives near spawn)';
+    } else if (c.t === "clock") {
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent =
+        "time-trial activator — skating through the stopwatch starts a timed run to the gate (one per level, lives near spawn)";
       this.propsEl.appendChild(note);
-    } else if (c.t === 'comboorb') {
-      const note = document.createElement('div');
-      note.className = 'ed-dim';
-      note.textContent = 'combo-run activator — skating through the green plus starts a one-combo run to the gem at the gate (one per level, lives near spawn)';
+    } else if (c.t === "comboorb") {
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent =
+        "combo-run activator — skating through the green plus starts a one-combo run to the gem at the gate (one per level, lives near spawn)";
       this.propsEl.appendChild(note);
-    } else if (c.t === 'zone') {
-      sizeRow(0, 'width');
-      sizeRow(2, 'depth');
-      const dirBtn = document.createElement('button');
-      dirBtn.className = 'ed-btn';
+    } else if (c.t === "zone") {
+      sizeRow(0, "width");
+      sizeRow(2, "depth");
+      const dirBtn = document.createElement("button");
+      dirBtn.className = "ed-btn";
       const dirLabel = (d: string): string =>
-        d === 'E'
-          ? 'side-scroll → (east)'
-          : d === 'W'
-            ? 'side-scroll ← (west)'
-            : d === 'N'
-              ? 'run AT the camera'
-              : 'normal corridor (south)';
-      dirBtn.textContent = dirLabel(c.dir ?? 'E');
-      dirBtn.addEventListener('click', () => {
-        const cycle: Record<string, 'E' | 'W' | 'N' | 'S'> = { E: 'W', W: 'N', N: 'S', S: 'E' };
-        c.dir = cycle[c.dir ?? 'E'];
+        d === "E"
+          ? "side-scroll → (east)"
+          : d === "W"
+            ? "side-scroll ← (west)"
+            : d === "N"
+              ? "run AT the camera"
+              : "normal corridor (south)";
+      dirBtn.textContent = dirLabel(c.dir ?? "E");
+      dirBtn.addEventListener("click", () => {
+        const cycle: Record<string, "E" | "W" | "N" | "S"> = {
+          E: "W",
+          W: "N",
+          N: "S",
+          S: "E",
+        };
+        c.dir = cycle[c.dir ?? "E"];
         this.commit();
         this.renderProps();
       });
       this.propsEl.appendChild(dirBtn);
-      const note = document.createElement('div');
-      note.className = 'ed-dim';
+      const note = document.createElement("div");
+      note.className = "ed-dim";
       note.textContent =
-        'inside this region the course TURNS: east/west = classic side-scroll, camera holds its corridor view · run-at-camera = boulder-chase framing, forward charges the lens';
+        "inside this region the course TURNS: east/west = classic side-scroll, camera holds its corridor view · run-at-camera = boulder-chase framing, forward charges the lens";
       this.propsEl.appendChild(note);
-    } else if (c.t === 'rope') {
-      num('length', () => c.len ?? 12, (v) => (c.len = Math.max(2, v)));
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
-      num('sag', () => c.amp ?? 1.2, (v) => (c.amp = Math.max(0.1, v)), 0.1);
-      num('break secs', () => c.shake ?? 3, (v) => (c.shake = Math.max(0.2, v)), 0.2);
-      const note = document.createElement('div');
-      note.className = 'ed-dim';
+    } else if (c.t === "rope") {
+      num(
+        "length",
+        () => c.len ?? 12,
+        (v) => (c.len = Math.max(2, v)),
+      );
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      );
+      num(
+        "sag",
+        () => c.amp ?? 1.2,
+        (v) => (c.amp = Math.max(0.1, v)),
+        0.1,
+      );
+      num(
+        "break secs",
+        () => c.shake ?? 3,
+        (v) => (c.shake = Math.max(0.2, v)),
+        0.2,
+      );
+      const note = document.createElement("div");
+      note.className = "ed-dim";
       note.textContent =
-        'a grindable rope strung between posts: it sags under a grind, snaps after the break time, and restrings itself';
+        "a grindable rope strung between posts: it sags under a grind, snaps after the break time, and restrings itself";
       this.propsEl.appendChild(note);
-    } else if (c.t === 'vertramp') {
-      if (!c.pts) num('length', () => c.len ?? 30, (v) => (c.len = Math.max(4, v)), 2);
-      num('flat half', () => c.w ?? 3, (v) => (c.w = Math.max(0, v)));
-      num('wall radius', () => c.rise ?? 6, (v) => (c.rise = Math.max(0.5, v)));
-      num('arc °', () => c.arc ?? 90, (v) => (c.arc = Math.max(5, Math.min(90, v))), 5);
-      num('deck', () => c.deck ?? 0, (v) => (c.deck = Math.max(0, v)));
-      if (c.pts) num('auto bank', () => c.bank ?? 0, (v) => (c.bank = Math.max(0, v)), 5);
+    } else if (c.t === "vertramp") {
+      if (!c.pts)
+        num(
+          "length",
+          () => c.len ?? 30,
+          (v) => (c.len = Math.max(4, v)),
+          2,
+        );
+      num(
+        "flat half",
+        () => c.w ?? 3,
+        (v) => (c.w = Math.max(0, v)),
+      );
+      num(
+        "wall radius",
+        () => c.rise ?? 6,
+        (v) => (c.rise = Math.max(0.5, v)),
+      );
+      num(
+        "arc °",
+        () => c.arc ?? 90,
+        (v) => (c.arc = Math.max(5, Math.min(90, v))),
+        5,
+      );
+      num(
+        "deck",
+        () => c.deck ?? 0,
+        (v) => (c.deck = Math.max(0, v)),
+      );
+      if (c.pts)
+        num(
+          "auto bank",
+          () => c.bank ?? 0,
+          (v) => (c.bank = Math.max(0, v)),
+          5,
+        );
       const toggle = (label: () => string, onClick: () => void): void => {
-        const b = document.createElement('button');
-        b.className = 'ed-btn';
+        const b = document.createElement("button");
+        b.className = "ed-btn";
         b.textContent = label();
-        b.addEventListener('click', () => {
+        b.addEventListener("click", () => {
           onClick();
           this.commit();
           this.renderProps();
@@ -3365,61 +5024,68 @@ export class Editor {
         this.propsEl.appendChild(b);
       };
       toggle(
-        () => `shape: ${c.vkind ?? 'quarter'}`,
-        () => (c.vkind = (c.vkind ?? 'quarter') === 'quarter' ? 'half' : 'quarter'),
+        () => `shape: ${c.vkind ?? "quarter"}`,
+        () =>
+          (c.vkind = (c.vkind ?? "quarter") === "quarter" ? "half" : "quarter"),
       );
       if (c.pts && c.pts.length > 2) {
         toggle(
-          () => `path: ${c.closed ? 'closed loop' : 'open'}`,
+          () => `path: ${c.closed ? "closed loop" : "open"}`,
           () => (c.closed = !c.closed),
         );
         toggle(
-          () => `bends: ${c.curve === 'spline' ? 'spline' : 'filleted corners'}`,
-          () => (c.curve = c.curve === 'spline' ? 'corner' : 'spline'),
+          () =>
+            `bends: ${c.curve === "spline" ? "spline" : "filleted corners"}`,
+          () => (c.curve = c.curve === "spline" ? "corner" : "spline"),
         );
       }
       toggle(
-        () => `surface: ${c.vert === false ? 'banked road' : 'VERT'}`,
+        () => `surface: ${c.vert === false ? "banked road" : "VERT"}`,
         () => (c.vert = c.vert === false ? undefined : false),
       );
-      const vnote = document.createElement('div');
-      vnote.className = 'ed-dim';
+      const vnote = document.createElement("div");
+      vnote.className = "ed-dim";
       vnote.textContent = c.pts
-        ? 'drawn along a spine — drag its nodes to steer it, corner radii round the bends, node heights make the coping climb. Closed loops make pools; a 5th node number banks the deck.'
-        : 'the vert part: quarter or half, any size. Straight 90° halves get the full lip-trick physics; arc, deck and drawn spines make bowls, corners and roads.';
+        ? "drawn along a spine — drag its nodes to steer it, corner radii round the bends, node heights make the coping climb. Closed loops make pools; a 5th node number banks the deck."
+        : "the vert part: quarter or half, any size. Straight 90° halves get the full lip-trick physics; arc, deck and drawn spines make bowls, corners and roads.";
       this.propsEl.appendChild(vnote);
-    } else if (c.t === 'crate') {
-      const sel = document.createElement('select');
-      sel.className = 'ed-select';
+    } else if (c.t === "crate") {
+      const sel = document.createElement("select");
+      sel.className = "ed-select";
       for (const k of CRATE_KINDS) {
-        const o = document.createElement('option');
+        const o = document.createElement("option");
         o.value = k;
-        o.textContent = k === 'metalbounce' ? 'arrow (metal)' : k === 'bouncy' ? 'arrow (wood)' : k;
-        if ((c.kind ?? 'wood') === k) o.selected = true;
+        o.textContent =
+          k === "metalbounce"
+            ? "arrow (metal)"
+            : k === "bouncy"
+              ? "arrow (wood)"
+              : k;
+        if ((c.kind ?? "wood") === k) o.selected = true;
         sel.appendChild(o);
       }
-      sel.addEventListener('change', () => {
-        c.kind = sel.value as CustomComponent['kind'];
+      sel.addEventListener("change", () => {
+        c.kind = sel.value as CustomComponent["kind"];
         this.commit();
         this.renderProps();
       });
       this.propsEl.appendChild(sel);
-      if (c.kind === 'bang') {
-        const note = document.createElement('div');
-        note.className = 'ed-dim';
+      if (c.kind === "bang") {
+        const note = document.createElement("div");
+        note.className = "ed-dim";
         note.textContent =
-          'metal switch: hit it in play to materialize the OUTLINE crates in its group (⌘G). ungrouped = fires all ungrouped outlines. never breaks, not counted';
+          "metal switch: hit it in play to materialize the OUTLINE crates in its group (⌘G). ungrouped = fires all ungrouped outlines. never breaks, not counted";
         this.propsEl.appendChild(note);
       } else {
         // outline state: any crate can start as a pass-through ghost
-        const row = document.createElement('div');
-        row.className = 'ed-row';
-        const lab = document.createElement('label');
-        lab.textContent = 'outline';
-        const chk = document.createElement('input');
-        chk.type = 'checkbox';
+        const row = document.createElement("div");
+        row.className = "ed-row";
+        const lab = document.createElement("label");
+        lab.textContent = "outline";
+        const chk = document.createElement("input");
+        chk.type = "checkbox";
         chk.checked = !!c.outline;
-        chk.addEventListener('change', () => {
+        chk.addEventListener("change", () => {
           if (chk.checked) c.outline = true;
           else delete c.outline;
           this.commit();
@@ -3428,122 +5094,220 @@ export class Editor {
         row.appendChild(chk);
         this.propsEl.appendChild(row);
         if (c.outline) {
-          const note = document.createElement('div');
-          note.className = 'ed-dim';
-          note.textContent = 'ghost (no collision) until a "!" crate in its group is hit';
+          const note = document.createElement("div");
+          note.className = "ed-dim";
+          note.textContent =
+            'ghost (no collision) until a "!" crate in its group is hit';
           this.propsEl.appendChild(note);
         }
       }
-    } else if (c.t === 'rock') {
+    } else if (c.t === "rock") {
       this.materializeDims(c); // rocks default 3×2×3, not the platform 8×1×8
-      sizeRow(0, 'width');
-      sizeRow(1, 'height');
-      sizeRow(2, 'depth');
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
-      const shuffle = document.createElement('button');
-      shuffle.className = 'ed-btn';
-      shuffle.textContent = 'reshuffle shape';
-      shuffle.addEventListener('click', () => {
+      sizeRow(0, "width");
+      sizeRow(1, "height");
+      sizeRow(2, "depth");
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      );
+      const shuffle = document.createElement("button");
+      shuffle.className = "ed-btn";
+      shuffle.textContent = "reshuffle shape";
+      shuffle.addEventListener("click", () => {
         c.seed = Math.floor(Math.random() * 1e6);
         this.commit();
         shuffle.blur();
       });
       this.propsEl.appendChild(shuffle);
       colorRow();
-    } else if (c.t === 'camnode') {
-      num('corner radius', () => c.radius ?? 0, (v) => (c.radius = Math.max(0, v)));
-      const note = document.createElement('div');
-      note.className = 'ed-dim';
+    } else if (c.t === "camnode") {
+      num(
+        "corner radius",
+        () => c.radius ?? 0,
+        (v) => (c.radius = Math.max(0, v)),
+      );
+      const note = document.createElement("div");
+      note.className = "ed-dim";
       note.textContent =
-        'camera lane: nodes chain in order (see LAYERS). In play, the camera and the controls steer along the line — hold forward through winding corridors, Crash 3 style. 2+ nodes = live. Corner radius rounds the turn AT this node.';
+        "camera lane: nodes chain in order (see LAYERS). In play, the camera and the controls steer along the line — hold forward through winding corridors, Crash 3 style. 2+ nodes = live. Corner radius rounds the turn AT this node.";
       this.propsEl.appendChild(note);
-      const chain = document.createElement('button');
-      chain.className = 'ed-btn';
-      chain.textContent = '+ chain next node';
-      chain.addEventListener('click', () => {
+      const chain = document.createElement("button");
+      chain.className = "ed-btn";
+      chain.textContent = "+ chain next node";
+      chain.addEventListener("click", () => {
         // continue the lane: step onward along the last segment's direction
         const nodes: number[] = [];
         this.data.components.forEach((o, i) => {
-          if (o.t === 'camnode') nodes.push(i);
+          if (o.t === "camnode") nodes.push(i);
         });
         const lastIdx = nodes[nodes.length - 1];
         const last = this.data.components[lastIdx];
-        const prev = nodes.length > 1 ? this.data.components[nodes[nodes.length - 2]] : null;
+        const prev =
+          nodes.length > 1
+            ? this.data.components[nodes[nodes.length - 2]]
+            : null;
         let dx = 0;
         let dz = -6;
         if (prev) {
-          const l = Math.hypot(last.p[0] - prev.p[0], last.p[2] - prev.p[2]) || 1;
+          const l =
+            Math.hypot(last.p[0] - prev.p[0], last.p[2] - prev.p[2]) || 1;
           dx = ((last.p[0] - prev.p[0]) / l) * 6;
           dz = ((last.p[2] - prev.p[2]) / l) * 6;
         }
-        this.addComponent({ t: 'camnode', p: [last.p[0] + dx, last.p[1], last.p[2] + dz] });
+        this.addComponent({
+          t: "camnode",
+          p: [last.p[0] + dx, last.p[1], last.p[2] + dz],
+        });
         chain.blur();
       });
       this.propsEl.appendChild(chain);
-    } else if (c.t === 'enemy') {
-      const sel = document.createElement('select');
-      sel.className = 'ed-select';
+    } else if (c.t === "enemy") {
+      const sel = document.createElement("select");
+      sel.className = "ed-select";
       for (const f of FOE_KINDS) {
-        const o = document.createElement('option');
+        const o = document.createElement("option");
         o.value = f.k;
         o.textContent = f.label;
-        if ((c.foe ?? 'grunt') === f.k) o.selected = true;
+        if ((c.foe ?? "grunt") === f.k) o.selected = true;
         sel.appendChild(o);
       }
-      sel.addEventListener('change', () => {
+      sel.addEventListener("change", () => {
         c.foe = sel.value as EnemyKind;
         this.commit();
         this.renderProps();
       });
       this.propsEl.appendChild(sel);
-      const stationary = c.foe === 'sentry' || c.foe === 'spinner';
-      const alongZ = (((c.yaw ?? 0) % 180) + 180) % 180 >= 45 && (((c.yaw ?? 0) % 180) + 180) % 180 < 135;
+      const stationary = c.foe === "sentry" || c.foe === "spinner";
+      const alongZ =
+        (((c.yaw ?? 0) % 180) + 180) % 180 >= 45 &&
+        (((c.yaw ?? 0) % 180) + 180) % 180 < 135;
       if (!stationary) {
-        num(alongZ ? 'patrol ±z' : 'patrol ±x', () => c.range ?? 5, (v) => (c.range = Math.max(0.5, v)));
-        num('speed', () => c.speed ?? 3, (v) => (c.speed = Math.max(0.5, v)));
+        num(
+          alongZ ? "patrol ±z" : "patrol ±x",
+          () => c.range ?? 5,
+          (v) => (c.range = Math.max(0.5, v)),
+        );
+        num(
+          "speed",
+          () => c.speed ?? 3,
+          (v) => (c.speed = Math.max(0.5, v)),
+        );
       }
       if (!stationary) {
-        const axisBtn = document.createElement('button');
-        axisBtn.className = 'ed-btn';
-        axisBtn.textContent = `patrol: along ${alongZ ? 'Z' : 'X'}`;
-        axisBtn.title = 'the walk is axis-bound — rotation comes in 90° steps';
-        axisBtn.addEventListener('click', () => {
+        const axisBtn = document.createElement("button");
+        axisBtn.className = "ed-btn";
+        axisBtn.textContent = `patrol: along ${alongZ ? "Z" : "X"}`;
+        axisBtn.title = "the walk is axis-bound — rotation comes in 90° steps";
+        axisBtn.addEventListener("click", () => {
           c.yaw = alongZ ? 0 : 90;
           this.commit();
           this.renderProps();
         });
         this.propsEl.appendChild(axisBtn);
       }
-    } else if (c.t === 'crusher') {
-      sizeRow(0, 'width');
-      sizeRow(2, 'depth');
-      num('cycle s', () => c.cycle ?? 3.2, (v) => (c.cycle = Math.max(0.5, v)), 0.2);
-      num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
-    } else if (c.t === 'pendulum') {
-      num('arm len', () => c.len ?? 5, (v) => (c.len = Math.max(1, v)));
-      num('swing amp', () => c.amp ?? 1.0, (v) => (c.amp = Math.max(0.1, v)), 0.1);
-      num('speed', () => c.speed ?? 1.6, (v) => (c.speed = Math.max(0.2, v)), 0.1);
-      num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15); // spins the whole gallows + swing plane
-    } else if (c.t === 'ropeswing') {
-      num('rope len', () => c.len ?? 6, (v) => (c.len = Math.max(2, v)));
-      num('swing amp', () => c.amp ?? 0.85, (v) => (c.amp = Math.max(0.1, v)), 0.05);
-      num('speed', () => c.speed ?? 0, (v) => (c.speed = Math.max(0, v)), 0.1); // 0 = natural pendulum for the length
-      num('phase', () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
-      num('yaw °', () => c.yaw ?? 0, (v) => (c.yaw = v), 15); // spins the swing plane
+    } else if (c.t === "crusher") {
+      sizeRow(0, "width");
+      sizeRow(2, "depth");
+      num(
+        "cycle s",
+        () => c.cycle ?? 3.2,
+        (v) => (c.cycle = Math.max(0.5, v)),
+        0.2,
+      );
+      num(
+        "phase",
+        () => c.phase ?? 0,
+        (v) => (c.phase = v),
+        0.2,
+      );
+    } else if (c.t === "pendulum") {
+      num(
+        "arm len",
+        () => c.len ?? 5,
+        (v) => (c.len = Math.max(1, v)),
+      );
+      num(
+        "swing amp",
+        () => c.amp ?? 1.0,
+        (v) => (c.amp = Math.max(0.1, v)),
+        0.1,
+      );
+      num(
+        "speed",
+        () => c.speed ?? 1.6,
+        (v) => (c.speed = Math.max(0.2, v)),
+        0.1,
+      );
+      num(
+        "phase",
+        () => c.phase ?? 0,
+        (v) => (c.phase = v),
+        0.2,
+      );
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      ); // spins the whole gallows + swing plane
+    } else if (c.t === "ropeswing") {
+      num(
+        "rope len",
+        () => c.len ?? 6,
+        (v) => (c.len = Math.max(2, v)),
+      );
+      num(
+        "swing amp",
+        () => c.amp ?? 0.85,
+        (v) => (c.amp = Math.max(0.1, v)),
+        0.05,
+      );
+      num(
+        "speed",
+        () => c.speed ?? 0,
+        (v) => (c.speed = Math.max(0, v)),
+        0.1,
+      ); // 0 = natural pendulum for the length
+      num(
+        "phase",
+        () => c.phase ?? 0,
+        (v) => (c.phase = v),
+        0.2,
+      );
+      num(
+        "yaw °",
+        () => c.yaw ?? 0,
+        (v) => (c.yaw = v),
+        15,
+      ); // spins the swing plane
     }
-    const row = document.createElement('div');
-    row.className = 'ed-grid';
+    const row = document.createElement("div");
+    row.className = "ed-grid";
     // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
     // (drawn polygons keep their authored outline — no 90° tricks)
     const rotatable =
-      ['platform', 'ramp', 'rail', 'wall', 'pit', 'crumble', 'rock', 'pendulum', 'ropeswing', 'enemy', 'gate', 'vertramp'].includes(c.t) && !c.pts;
-    const swappable = ['crusher'].includes(c.t) && !c.pts;
+      [
+        "platform",
+        "ramp",
+        "rail",
+        "wall",
+        "pit",
+        "crumble",
+        "rock",
+        "pendulum",
+        "ropeswing",
+        "enemy",
+        "gate",
+        "vertramp",
+      ].includes(c.t) && !c.pts;
+    const swappable = ["crusher"].includes(c.t) && !c.pts;
     if (rotatable || swappable) {
-      const rot = document.createElement('button');
-      rot.className = 'ed-btn';
-      rot.textContent = 'rotate 90°';
-      rot.addEventListener('click', () => {
+      const rot = document.createElement("button");
+      rot.className = "ed-btn";
+      rot.textContent = "rotate 90°";
+      rot.addEventListener("click", () => {
         if (rotatable) c.yaw = ((c.yaw ?? 0) + 90) % 360;
         else if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
         else c.s = [8, 1, 8];
@@ -3552,18 +5316,18 @@ export class Editor {
       });
       row.appendChild(rot);
     }
-    const dup = document.createElement('button');
-    dup.className = 'ed-btn';
-    dup.textContent = 'duplicate';
-    dup.addEventListener('click', () => this.duplicateSelected());
-    const cpy = document.createElement('button');
-    cpy.className = 'ed-btn';
-    cpy.textContent = 'copy ⌘C';
-    cpy.addEventListener('click', () => this.copySelected());
-    const del = document.createElement('button');
-    del.className = 'ed-btn ed-danger';
-    del.textContent = 'delete';
-    del.addEventListener('click', () => this.deleteSelected());
+    const dup = document.createElement("button");
+    dup.className = "ed-btn";
+    dup.textContent = "duplicate";
+    dup.addEventListener("click", () => this.duplicateSelected());
+    const cpy = document.createElement("button");
+    cpy.className = "ed-btn";
+    cpy.textContent = "copy ⌘C";
+    cpy.addEventListener("click", () => this.copySelected());
+    const del = document.createElement("button");
+    del.className = "ed-btn ed-danger";
+    del.textContent = "delete";
+    del.addEventListener("click", () => this.deleteSelected());
     row.appendChild(dup);
     row.appendChild(cpy);
     row.appendChild(del);
@@ -3571,7 +5335,7 @@ export class Editor {
   }
 
   private injectStyle(): void {
-    const css = document.createElement('style');
+    const css = document.createElement("style");
     css.textContent = `
       .ed-panel {
         position: fixed; right: 10px; top: 10px; bottom: 10px; width: 228px;

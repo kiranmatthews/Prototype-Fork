@@ -1,8 +1,15 @@
 // DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
-import { LEVEL_NAMES } from './level';
-import { TUNING, TUNING_RANGES, TUNING_INFO, TUNING_SECTIONS, TUNING_VERSION, TuningKey } from './tuning';
+import { LEVEL_NAMES } from "./level";
+import {
+  TUNING,
+  TUNING_RANGES,
+  TUNING_INFO,
+  TUNING_SECTIONS,
+  TUNING_VERSION,
+  TuningKey,
+} from "./tuning";
 
 export interface Stats {
   speed: number;
@@ -68,11 +75,19 @@ export class UI {
   private trickTotalEl!: HTMLElement;
   private crystalIcon!: HTMLElement;
   private gemIcon!: HTMLElement;
-  private prevHud = { points: -1, fruit: -1, lives: -1, crates: '', crystal: false, gem: false, comboGem: false };
+  private prevHud = {
+    points: -1,
+    fruit: -1,
+    lives: -1,
+    crates: "",
+    crystal: false,
+    gem: false,
+    comboGem: false,
+  };
   // Score/combo tickers: displayed numbers chase the real ones fast (arcade feel).
   private dispScore = 0;
   private dispCombo = 0;
-  private comboState: 'none' | 'active' | 'cashin' | 'bail' = 'none';
+  private comboState: "none" | "active" | "cashin" | "bail" = "none";
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private msgTimer: number | undefined;
   private levelButtons: HTMLElement[] = [];
@@ -82,7 +97,7 @@ export class UI {
   >();
   // Bookmarked slider names (green) — persisted attention markers, no effect.
   private tunerMarks = new Set<string>(
-    JSON.parse(localStorage.getItem('protoTunerMarks') ?? '[]') as string[],
+    JSON.parse(localStorage.getItem("protoTunerMarks") ?? "[]") as string[],
   );
   // Build defaults, captured before any saved tuning is applied — so a new
   // build's numbers are always recoverable under the "defaults" button.
@@ -97,20 +112,24 @@ export class UI {
   onEditorOpen: (() => void) | null = null;
   onEditCopy: (() => void) | null = null;
   onToggle2P: (() => void) | null = null;
-  onCharSelect: ((id: string) => void) | null = null;
-  private charButtons = new Map<string, HTMLButtonElement>();
   // direct-edit + phone sync (main.ts wires these)
   onEditThisLevel: (() => void) | null = null;
   onUnlockEditing: ((pass: string) => Promise<boolean>) | null = null;
   onSyncPush: (() => Promise<void>) | null = null;
   onTokenSet: ((token: string) => void) | null = null;
   provideEditState:
-    | (() => { unlocked: boolean; hasToken: boolean; dirtyCount: number; editable: boolean; isOverride: boolean })
+    | (() => {
+        unlocked: boolean;
+        hasToken: boolean;
+        dirtyCount: number;
+        editable: boolean;
+        isOverride: boolean;
+      })
     | null = null;
   // fired when a side tab (MENU / TUNER) is clicked, BEFORE the panel
   // toggles — main.ts uses it to close the editor so the panel isn't a
   // hidden husk while the tools own the screen
-  onSideTab: ((side: 'left' | 'right') => void) | null = null;
+  onSideTab: ((side: "left" | "right") => void) | null = null;
   private recBtn!: HTMLButtonElement;
   private copyBtn!: HTMLButtonElement;
   private mpBtn!: HTMLButtonElement; // "edit a copy" — hidden on editable levels once unlocked
@@ -127,13 +146,13 @@ export class UI {
     this.injectStyle();
 
     // ---- LEFT side panel (level menu + debug), behind a collapsible tab ----
-    const statsWrap = div('hud-stats');
-    const levelRow = div('hud-levelrow');
+    const statsWrap = div("hud-stats");
+    const levelRow = div("hud-levelrow");
     LEVEL_NAMES.forEach((name, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'hud-levelbtn';
+      const btn = document.createElement("button");
+      btn.className = "hud-levelbtn";
       btn.textContent = `${i + 1}· ${name}`;
-      btn.addEventListener('click', () => {
+      btn.addEventListener("click", () => {
         this.onLevelSelect(i);
         btn.blur(); // give the keyboard back to the game
       });
@@ -142,33 +161,12 @@ export class UI {
     });
     statsWrap.appendChild(levelRow);
 
-    // CHARACTER pick: swap the hero model (persists across sessions). The
-    // choice is cosmetic — all animation is shared.
-    const charRow = div('hud-levelrow hud-charrow');
-    const CHARS: { id: string; label: string }[] = [
-      { id: 'fox', label: '🦊 FOX' },
-    ];
-    CHARS.forEach((c) => {
-      const btn = document.createElement('button');
-      btn.className = 'hud-levelbtn hud-charbtn';
-      btn.textContent = c.label;
-      btn.title = 'change skater';
-      btn.addEventListener('click', () => {
-        if (this.onCharSelect) this.onCharSelect(c.id);
-        this.setChar(c.id);
-        btn.blur();
-      });
-      charRow.appendChild(btn);
-      this.charButtons.set(c.id, btn);
-    });
-    statsWrap.appendChild(charRow);
-
     // The level EDITOR lives on the Custom level (8): build/arrange your own
     // course, then hit TEST in the editor panel to play it.
-    const editBtn = document.createElement('button');
-    editBtn.className = 'hud-levelbtn hud-editbtn';
-    editBtn.textContent = '✎ LEVEL EDITOR';
-    editBtn.addEventListener('click', () => {
+    const editBtn = document.createElement("button");
+    editBtn.className = "hud-levelbtn hud-editbtn";
+    editBtn.textContent = "✎ LEVEL EDITOR";
+    editBtn.addEventListener("click", () => {
       if (this.onEditorOpen) this.onEditorOpen();
       editBtn.blur();
     });
@@ -176,11 +174,12 @@ export class UI {
     // Any built-in level can be CAPTURED into the editor as a component copy:
     // the current level's geometry loads into the Custom slot for editing
     // (the previous custom level is backed up first).
-    const copyBtn = document.createElement('button');
-    copyBtn.className = 'hud-levelbtn hud-editbtn';
-    copyBtn.textContent = '⧉ EDIT A COPY OF THIS LEVEL';
-    copyBtn.title = 'capture the current level into the editor (custom slot is backed up)';
-    copyBtn.addEventListener('click', () => {
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "hud-levelbtn hud-editbtn";
+    copyBtn.textContent = "⧉ EDIT A COPY OF THIS LEVEL";
+    copyBtn.title =
+      "capture the current level into the editor (custom slot is backed up)";
+    copyBtn.addEventListener("click", () => {
       if (this.onEditCopy) this.onEditCopy();
       copyBtn.blur();
     });
@@ -188,11 +187,11 @@ export class UI {
     this.copyBtn = copyBtn;
 
     // 2-PLAYER SPLIT SCREEN (playtest sandbox): needs two connected pads.
-    const mpBtn = document.createElement('button');
-    mpBtn.className = 'hud-levelbtn hud-editbtn';
-    mpBtn.textContent = '⚔ 2-PLAYER SPLIT: OFF';
-    mpBtn.title = 'local split-screen — requires 2 controllers';
-    mpBtn.addEventListener('click', () => {
+    const mpBtn = document.createElement("button");
+    mpBtn.className = "hud-levelbtn hud-editbtn";
+    mpBtn.textContent = "⚔ 2-PLAYER SPLIT: OFF";
+    mpBtn.title = "local split-screen — requires 2 controllers";
+    mpBtn.addEventListener("click", () => {
       if (this.onToggle2P) this.onToggle2P();
       mpBtn.blur();
     });
@@ -201,12 +200,13 @@ export class UI {
 
     // DIRECT EDIT (unlocked): edit the built-in level in place. Hidden until the
     // passcode is entered; then it replaces the copy button on editable levels.
-    const editThisBtn = document.createElement('button');
-    editThisBtn.className = 'hud-levelbtn hud-editbtn hud-editthis';
-    editThisBtn.textContent = '✎ EDIT THIS LEVEL';
-    editThisBtn.title = 'edit this built-in level directly (syncs to your phone)';
-    editThisBtn.style.display = 'none';
-    editThisBtn.addEventListener('click', () => {
+    const editThisBtn = document.createElement("button");
+    editThisBtn.className = "hud-levelbtn hud-editbtn hud-editthis";
+    editThisBtn.textContent = "✎ EDIT THIS LEVEL";
+    editThisBtn.title =
+      "edit this built-in level directly (syncs to your phone)";
+    editThisBtn.style.display = "none";
+    editThisBtn.addEventListener("click", () => {
       if (this.onEditThisLevel) this.onEditThisLevel();
       editThisBtn.blur();
     });
@@ -215,24 +215,24 @@ export class UI {
 
     // UNLOCK / SYNC panel: a passcode row that expands into the phone-sync
     // controls (GitHub token + push button + status) once unlocked.
-    const sync = div('hud-sync');
-    const unlockRow = div('hud-syncrow');
-    const passIn = document.createElement('input');
-    passIn.type = 'password';
-    passIn.className = 'hud-syncinput';
-    passIn.placeholder = 'passcode to unlock direct editing';
-    const unlockBtn = document.createElement('button');
-    unlockBtn.className = 'hud-syncbtn';
-    unlockBtn.textContent = 'unlock';
+    const sync = div("hud-sync");
+    const unlockRow = div("hud-syncrow");
+    const passIn = document.createElement("input");
+    passIn.type = "password";
+    passIn.className = "hud-syncinput";
+    passIn.placeholder = "passcode to unlock direct editing";
+    const unlockBtn = document.createElement("button");
+    unlockBtn.className = "hud-syncbtn";
+    unlockBtn.textContent = "unlock";
     const tryUnlock = async (): Promise<void> => {
       if (!this.onUnlockEditing) return;
       const ok = await this.onUnlockEditing(passIn.value);
-      passIn.value = '';
-      if (!ok) this.setSyncStatus('wrong passcode', 'err');
+      passIn.value = "";
+      if (!ok) this.setSyncStatus("wrong passcode", "err");
     };
-    unlockBtn.addEventListener('click', () => void tryUnlock());
-    passIn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') void tryUnlock();
+    unlockBtn.addEventListener("click", () => void tryUnlock());
+    passIn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") void tryUnlock();
       e.stopPropagation(); // don't let level hotkeys eat the typing
     });
     unlockRow.appendChild(passIn);
@@ -240,29 +240,29 @@ export class UI {
     sync.appendChild(unlockRow);
 
     // token + push (shown only when unlocked)
-    const tokenRow = div('hud-syncrow hud-synctoken');
-    const tokIn = document.createElement('input');
-    tokIn.type = 'password';
-    tokIn.className = 'hud-syncinput';
-    tokIn.placeholder = 'GitHub token (Contents: write)';
-    tokIn.addEventListener('keydown', (e) => e.stopPropagation());
-    const tokBtn = document.createElement('button');
-    tokBtn.className = 'hud-syncbtn';
-    tokBtn.textContent = 'save';
-    tokBtn.addEventListener('click', () => {
+    const tokenRow = div("hud-syncrow hud-synctoken");
+    const tokIn = document.createElement("input");
+    tokIn.type = "password";
+    tokIn.className = "hud-syncinput";
+    tokIn.placeholder = "GitHub token (Contents: write)";
+    tokIn.addEventListener("keydown", (e) => e.stopPropagation());
+    const tokBtn = document.createElement("button");
+    tokBtn.className = "hud-syncbtn";
+    tokBtn.textContent = "save";
+    tokBtn.addEventListener("click", () => {
       if (this.onTokenSet) this.onTokenSet(tokIn.value);
-      tokIn.value = '';
+      tokIn.value = "";
     });
     tokenRow.appendChild(tokIn);
     tokenRow.appendChild(tokBtn);
     sync.appendChild(tokenRow);
     this.tokenRow = tokenRow;
 
-    const pushRow = div('hud-syncrow hud-syncpush');
-    const pushBtn = document.createElement('button');
-    pushBtn.className = 'hud-syncbtn hud-syncpushbtn';
-    pushBtn.textContent = '☁ SYNC LEVELS TO PHONE';
-    pushBtn.addEventListener('click', () => {
+    const pushRow = div("hud-syncrow hud-syncpush");
+    const pushBtn = document.createElement("button");
+    pushBtn.className = "hud-syncbtn hud-syncpushbtn";
+    pushBtn.textContent = "☁ SYNC LEVELS TO PHONE";
+    pushBtn.addEventListener("click", () => {
       if (this.onSyncPush) void this.onSyncPush();
       pushBtn.blur();
     });
@@ -270,14 +270,13 @@ export class UI {
     sync.appendChild(pushRow);
     this.pushRow = pushRow;
 
-    const status = div('hud-syncstatus');
+    const status = div("hud-syncstatus");
     sync.appendChild(status);
     this.syncStatusEl = status;
     statsWrap.appendChild(sync);
     this.syncPanel = sync;
 
-
-    const stats = div('hud-statlines');
+    const stats = div("hud-statlines");
     statsWrap.appendChild(stats);
     this.statsEl = stats;
 
@@ -286,48 +285,55 @@ export class UI {
     const saved = this.readSaved();
     if (saved) this.applyTuning(saved);
 
-    const panel = div('hud-tuning');
+    const panel = div("hud-tuning");
     panel.innerHTML = '<div class="hud-title">TUNING</div>';
     // save = snapshot to this browser (survives new builds); reset = back to
     // that snapshot; defaults = forget the snapshot, use the build's numbers.
-    const btnRow = div('hud-tunebtns');
+    const btnRow = div("hud-tunebtns");
     const mkBtn = (label: string, fn: () => void): void => {
-      const b = document.createElement('button');
-      b.className = 'hud-levelbtn';
+      const b = document.createElement("button");
+      b.className = "hud-levelbtn";
       b.textContent = label;
-      b.addEventListener('click', () => {
+      b.addEventListener("click", () => {
         fn();
         b.blur();
       });
       btnRow.appendChild(b);
     };
-    mkBtn('save', () => {
+    mkBtn("save", () => {
       // store the defaults alongside, so a future build can tell which keys
       // were DELIBERATE tweaks (only those survive across default changes)
       localStorage.setItem(
-        'protoTuning',
-        JSON.stringify({ __v: TUNING_VERSION, tuning: TUNING, defaults: this.defaults }),
+        "protoTuning",
+        JSON.stringify({
+          __v: TUNING_VERSION,
+          tuning: TUNING,
+          defaults: this.defaults,
+        }),
       );
-      this.showMessage('TUNING SAVED', '', 800);
+      this.showMessage("TUNING SAVED", "", 800);
     });
-    mkBtn('reset', () => {
+    mkBtn("reset", () => {
       this.applyTuning(this.readSaved() ?? this.defaults);
-      this.showMessage('TUNING RESET', '', 800);
+      this.showMessage("TUNING RESET", "", 800);
     });
-    mkBtn('defaults', () => {
-      localStorage.removeItem('protoTuning');
+    mkBtn("defaults", () => {
+      localStorage.removeItem("protoTuning");
       this.applyTuning(this.defaults);
-      this.showMessage('BUILD DEFAULTS', '', 800);
+      this.showMessage("BUILD DEFAULTS", "", 800);
     });
     // Export the live values: paste the JSON into chat and they can be baked
     // in as the next build's defaults.
-    mkBtn('copy', () => {
+    mkBtn("copy", () => {
       const json = JSON.stringify(TUNING, null, 1);
-      const done = (): void => this.showMessage('TUNING COPIED', 'paste it into the chat', 1600);
+      const done = (): void =>
+        this.showMessage("TUNING COPIED", "paste it into the chat", 1600);
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(json).then(done, () => window.prompt('copy your tuning:', json));
+        navigator.clipboard
+          .writeText(json)
+          .then(done, () => window.prompt("copy your tuning:", json));
       } else {
-        window.prompt('copy your tuning:', json);
+        window.prompt("copy your tuning:", json);
       }
     });
     panel.appendChild(btnRow);
@@ -335,37 +341,41 @@ export class UI {
     // 'save replay' downloads the input take since the last level load as a
     // .json (F8). 'load replay' / dragging the file onto the game plays it
     // back. 'rec video' toggles a .webm recording of the canvas (F9).
-    const capRow = div('hud-tunebtns');
+    const capRow = div("hud-tunebtns");
     const mkCapBtn = (label: string, fn: () => void): HTMLButtonElement => {
-      const b = document.createElement('button');
-      b.className = 'hud-levelbtn';
+      const b = document.createElement("button");
+      b.className = "hud-levelbtn";
       b.textContent = label;
-      b.addEventListener('click', () => {
+      b.addEventListener("click", () => {
         fn();
         b.blur();
       });
       capRow.appendChild(b);
       return b;
     };
-    mkCapBtn('save replay', () => this.onSaveReplay && this.onSaveReplay());
-    const filePick = document.createElement('input');
-    filePick.type = 'file';
-    filePick.accept = '.json,application/json';
-    filePick.style.display = 'none';
-    filePick.addEventListener('change', () => {
+    mkCapBtn("save replay", () => this.onSaveReplay && this.onSaveReplay());
+    const filePick = document.createElement("input");
+    filePick.type = "file";
+    filePick.accept = ".json,application/json";
+    filePick.style.display = "none";
+    filePick.addEventListener("change", () => {
       const f = filePick.files && filePick.files[0];
-      if (f) f.text().then((txt) => this.onLoadReplay && this.onLoadReplay(txt));
-      filePick.value = '';
+      if (f)
+        f.text().then((txt) => this.onLoadReplay && this.onLoadReplay(txt));
+      filePick.value = "";
     });
     capRow.appendChild(filePick);
-    mkCapBtn('load replay', () => filePick.click());
-    this.recBtn = mkCapBtn('rec video', () => this.onToggleVideo && this.onToggleVideo());
+    mkCapBtn("load replay", () => filePick.click());
+    this.recBtn = mkCapBtn(
+      "rec video",
+      () => this.onToggleVideo && this.onToggleVideo(),
+    );
     panel.appendChild(capRow);
     // Sliders grouped under labelled section headers (walking, skating, ...).
     const placed = new Set<TuningKey>();
     const addSection = (title: string, keys: TuningKey[]): void => {
       if (keys.length === 0) return;
-      const head = div('hud-secttitle');
+      const head = div("hud-secttitle");
       head.textContent = title;
       panel.appendChild(head);
       for (const key of keys) {
@@ -374,181 +384,211 @@ export class UI {
       }
     };
     for (const sect of TUNING_SECTIONS) {
-      addSection(sect.title, sect.keys.filter((k) => TUNING_RANGES[k] !== undefined));
+      addSection(
+        sect.title,
+        sect.keys.filter((k) => TUNING_RANGES[k] !== undefined),
+      );
     }
     // Anything new that hasn't been assigned a section yet still shows up.
-    const leftovers = (Object.keys(TUNING_RANGES) as TuningKey[]).filter((k) => !placed.has(k));
-    addSection('OTHER', leftovers);
+    const leftovers = (Object.keys(TUNING_RANGES) as TuningKey[]).filter(
+      (k) => !placed.has(k),
+    );
+    addSection("OTHER", leftovers);
 
-    document.body.appendChild(this.sidePanel('left', 'MENU', statsWrap));
-    document.body.appendChild(this.sidePanel('right', 'TUNER', panel));
+    document.body.appendChild(this.sidePanel("left", "MENU", statsWrap));
+    document.body.appendChild(this.sidePanel("right", "TUNER", panel));
 
     // ---- center messages / flash ----
-    this.msgWrap = div('hud-msg');
-    this.msgTitle = div('hud-msg-title');
-    this.msgSub = div('hud-msg-sub');
+    this.msgWrap = div("hud-msg");
+    this.msgTitle = div("hud-msg-title");
+    this.msgSub = div("hud-msg-sub");
     this.msgWrap.appendChild(this.msgTitle);
     this.msgWrap.appendChild(this.msgSub);
-    this.msgWrap.style.display = 'none';
-    this.flashEl = div('hud-flash');
-    this.fadeEl = div('hud-fade'); // death blackout curtain
-    this.haloEl = div('hud-halo'); // combo-run green edge glow
+    this.msgWrap.style.display = "none";
+    this.flashEl = div("hud-flash");
+    this.fadeEl = div("hud-fade"); // death blackout curtain
+    this.haloEl = div("hud-halo"); // combo-run green edge glow
 
     // Build stamp: baked at compile time. If a playtest doesn't show a
     // change, check this first — it answers "which build am I running?".
-    const stamp = div('hud-build');
-    stamp.textContent = 'build ' + __BUILD_TAG__;
+    const stamp = div("hud-build");
+    stamp.textContent = "build " + __BUILD_TAG__;
     document.body.appendChild(stamp);
 
     // ---- game HUD: Crash-style counters + THPS trick plate ----
     // top-left: crate + wumpa counters
-    const tl = div('hud-tl');
-    const crateRow = div('hud-counter');
-    crateRow.appendChild(div('hud-icon hud-icon-crate'));
-    this.cratesEl = div('hud-num');
+    const tl = div("hud-tl");
+    const crateRow = div("hud-counter");
+    crateRow.appendChild(div("hud-icon hud-icon-crate"));
+    this.cratesEl = div("hud-num");
     crateRow.appendChild(this.cratesEl);
-    const wumpaRow = div('hud-counter');
-    wumpaRow.appendChild(div('hud-icon hud-icon-wumpa'));
-    this.wumpaEl = div('hud-num');
+    const wumpaRow = div("hud-counter");
+    wumpaRow.appendChild(div("hud-icon hud-icon-wumpa"));
+    this.wumpaEl = div("hud-num");
     wumpaRow.appendChild(this.wumpaEl);
     this.wumpaRowEl = wumpaRow;
     tl.appendChild(crateRow);
     tl.appendChild(wumpaRow);
     // relic haul: crystal + gem, ghosted until earned
-    const relicRow = div('hud-counter hud-relics');
-    this.crystalIcon = div('hud-icon hud-icon-crystal hud-relic-off');
-    this.gemIcon = div('hud-icon hud-icon-gem hud-relic-off');
-    this.comboGemIcon = div('hud-icon hud-icon-gem hud-icon-combogem hud-relic-off');
+    const relicRow = div("hud-counter hud-relics");
+    this.crystalIcon = div("hud-icon hud-icon-crystal hud-relic-off");
+    this.gemIcon = div("hud-icon hud-icon-gem hud-relic-off");
+    this.comboGemIcon = div(
+      "hud-icon hud-icon-gem hud-icon-combogem hud-relic-off",
+    );
     relicRow.appendChild(this.crystalIcon);
     relicRow.appendChild(this.gemIcon);
     relicRow.appendChild(this.comboGemIcon);
     tl.appendChild(relicRow);
 
     // top-center: score plate
-    const scorePlate = div('hud-scoreplate');
-    const scoreLabel = div('hud-scorelabel');
-    scoreLabel.textContent = 'SCORE';
-    this.scoreEl = div('hud-scorenum');
+    const scorePlate = div("hud-scoreplate");
+    const scoreLabel = div("hud-scorelabel");
+    scoreLabel.textContent = "SCORE";
+    this.scoreEl = div("hud-scorenum");
     scorePlate.appendChild(scoreLabel);
     scorePlate.appendChild(this.scoreEl);
 
     // top-right: lives
-    const tr = div('hud-tr');
-    const livesRow = div('hud-counter');
-    livesRow.appendChild(div('hud-icon hud-icon-face'));
-    this.livesEl = div('hud-num');
+    const tr = div("hud-tr");
+    const livesRow = div("hud-counter");
+    livesRow.appendChild(div("hud-icon hud-icon-face"));
+    this.livesEl = div("hud-num");
     livesRow.appendChild(this.livesEl);
     tr.appendChild(livesRow);
     this.livesRowEl = livesRow;
 
     // TIME TRIAL: the big top-center clock (per-frame, centisecond digits)
     // and the ranked-times card shown at the gate.
-    this.ttClockEl = div('hud-ttclock');
-    const ttTime = div('hud-tttime');
+    this.ttClockEl = div("hud-ttclock");
+    const ttTime = div("hud-tttime");
     this.ttClockEl.appendChild(ttTime);
-    this.ttFreezeEl = div('hud-ttfreeze');
+    this.ttFreezeEl = div("hud-ttfreeze");
     this.ttClockEl.appendChild(this.ttFreezeEl);
-    this.ttClockEl.style.display = 'none';
-    this.ttResultsEl = div('hud-ttresults');
-    this.ttResultsEl.style.display = 'none';
+    this.ttClockEl.style.display = "none";
+    this.ttResultsEl = div("hud-ttresults");
+    this.ttResultsEl.style.display = "none";
 
     // balance-boost ring: a green radial meter that laps over itself as
     // crate windows stack
-    const boosts = div('hud-boosts');
-    this.boostRing = div('hud-boostring');
+    const boosts = div("hud-boosts");
+    this.boostRing = div("hud-boostring");
     boosts.appendChild(this.boostRing);
-    const boostLab = div('hud-boostlabel');
-    boostLab.textContent = 'BALANCE';
+    const boostLab = div("hud-boostlabel");
+    boostLab.textContent = "BALANCE";
     boosts.appendChild(boostLab);
-    boosts.style.display = 'none';
+    boosts.style.display = "none";
     this.boostRingWrap = boosts;
     document.body.appendChild(boosts);
     // Debug cheat: clicking the face banks an extra life. The HUD layer is
     // pointer-transparent, so this row opts back in.
-    livesRow.style.cursor = 'pointer';
-    livesRow.style.pointerEvents = 'auto';
-    livesRow.title = 'click: +1 life';
-    livesRow.addEventListener('click', () => {
+    livesRow.style.cursor = "pointer";
+    livesRow.style.pointerEvents = "auto";
+    livesRow.title = "click: +1 life";
+    livesRow.addEventListener("click", () => {
       this.onLifeCheat();
     });
 
     // bottom-center: THPS trick plate
-    this.trickPlate = div('hud-trickplate');
-    this.trickLineEl = div('hud-trickline');
-    this.trickTotalEl = div('hud-tricktotal');
+    this.trickPlate = div("hud-trickplate");
+    this.trickLineEl = div("hud-trickline");
+    this.trickTotalEl = div("hud-tricktotal");
     this.trickPlate.appendChild(this.trickLineEl);
     this.trickPlate.appendChild(this.trickTotalEl);
-    this.trickPlate.style.display = 'none';
+    this.trickPlate.style.display = "none";
 
     // black game-over screen: any button restarts
-    this.deathEl = div('hud-death');
+    this.deathEl = div("hud-death");
     this.deathEl.innerHTML =
       '<div class="hud-death-title">GAME OVER</div>' +
       '<div class="hud-death-sub">press any button</div>';
-    this.deathEl.style.display = 'none';
+    this.deathEl.style.display = "none";
 
     // THPS-style grind balance meter (visible only while grinding).
-    this.balanceWrap = div('hud-balance');
-    this.balanceNeedle = div('hud-balance-needle');
-    const balanceCenter = div('hud-balance-center');
+    this.balanceWrap = div("hud-balance");
+    this.balanceNeedle = div("hud-balance-needle");
+    const balanceCenter = div("hud-balance-center");
     this.balanceWrap.appendChild(balanceCenter);
     this.balanceWrap.appendChild(this.balanceNeedle);
-    this.balanceWrap.style.display = 'none';
+    this.balanceWrap.style.display = "none";
 
     // VERTICAL balance meter for MANUALS: up/down on the stick fights the
     // needle (nose at the top, tail at the bottom); left/right stays steering.
-    this.vBalanceWrap = div('hud-vbalance');
-    this.vBalanceNeedle = div('hud-vbalance-needle');
-    const vCenter = div('hud-vbalance-center');
-    const noseTick = div('hud-vbalance-cap');
-    noseTick.style.top = '2px';
-    const tailTick = div('hud-vbalance-cap');
-    tailTick.style.bottom = '2px';
+    this.vBalanceWrap = div("hud-vbalance");
+    this.vBalanceNeedle = div("hud-vbalance-needle");
+    const vCenter = div("hud-vbalance-center");
+    const noseTick = div("hud-vbalance-cap");
+    noseTick.style.top = "2px";
+    const tailTick = div("hud-vbalance-cap");
+    tailTick.style.bottom = "2px";
     this.vBalanceWrap.appendChild(vCenter);
     this.vBalanceWrap.appendChild(noseTick);
     this.vBalanceWrap.appendChild(tailTick);
     this.vBalanceWrap.appendChild(this.vBalanceNeedle);
-    this.vBalanceWrap.style.display = 'none';
+    this.vBalanceWrap.style.display = "none";
 
     // Playtest capture badges: ▶ REPLAY while a take plays back, ● REC while
     // the canvas is being recorded to video.
-    this.replayBadge = div('hud-capbadge');
-    this.replayBadge.textContent = '▶ REPLAY';
-    this.replayBadge.style.display = 'none';
-    this.recBadge = div('hud-capbadge hud-recbadge');
-    this.recBadge.textContent = '● REC';
-    this.recBadge.style.display = 'none';
+    this.replayBadge = div("hud-capbadge");
+    this.replayBadge.textContent = "▶ REPLAY";
+    this.replayBadge.style.display = "none";
+    this.recBadge = div("hud-capbadge hud-recbadge");
+    this.recBadge.textContent = "● REC";
+    this.recBadge.style.display = "none";
 
-    for (const el of [this.msgWrap, this.flashEl, this.fadeEl, this.haloEl, tl, scorePlate, tr, this.ttClockEl, this.ttResultsEl, this.trickPlate, this.balanceWrap, this.vBalanceWrap, this.deathEl, this.replayBadge, this.recBadge]) {
+    for (const el of [
+      this.msgWrap,
+      this.flashEl,
+      this.fadeEl,
+      this.haloEl,
+      tl,
+      scorePlate,
+      tr,
+      this.ttClockEl,
+      this.ttResultsEl,
+      this.trickPlate,
+      this.balanceWrap,
+      this.vBalanceWrap,
+      this.deathEl,
+      this.replayBadge,
+      this.recBadge,
+    ]) {
       document.body.appendChild(el);
     }
   }
 
   setReplayBadge(on: boolean): void {
-    this.replayBadge.style.display = on ? 'block' : 'none';
+    this.replayBadge.style.display = on ? "block" : "none";
   }
 
   setRecBadge(on: boolean): void {
-    this.recBadge.style.display = on ? 'block' : 'none';
-    this.recBtn.textContent = on ? 'stop + save' : 'rec video';
+    this.recBadge.style.display = on ? "block" : "none";
+    this.recBtn.textContent = on ? "stop + save" : "rec video";
   }
 
   // A fixed side wrapper with a vertical tab that slides the content off-screen.
   // Collapsed by default (game view); state persists per side.
-  private sidePanel(side: 'left' | 'right', label: string, content: HTMLElement): HTMLElement {
+  private sidePanel(
+    side: "left" | "right",
+    label: string,
+    content: HTMLElement,
+  ): HTMLElement {
     const wrap = div(`side-wrap ${side}`);
-    const tab = document.createElement('button');
-    tab.className = 'side-tab';
+    const tab = document.createElement("button");
+    tab.className = "side-tab";
     tab.textContent = label;
-    const key = 'protoPanel_' + side;
-    if (localStorage.getItem(key) !== 'open') wrap.classList.add('collapsed');
-    tab.addEventListener('click', () => {
+    const key = "protoPanel_" + side;
+    if (localStorage.getItem(key) !== "open") wrap.classList.add("collapsed");
+    tab.addEventListener("click", () => {
       if (this.onSideTab) this.onSideTab(side);
-      wrap.classList.toggle('collapsed');
-      localStorage.setItem(key, wrap.classList.contains('collapsed') ? 'closed' : 'open');
+      wrap.classList.toggle("collapsed");
+      localStorage.setItem(
+        key,
+        wrap.classList.contains("collapsed") ? "closed" : "open",
+      );
       tab.blur();
     });
-    if (side === 'left') {
+    if (side === "left") {
       wrap.appendChild(content);
       wrap.appendChild(tab);
     } else {
@@ -559,7 +599,7 @@ export class UI {
   }
 
   showDeathScreen(visible: boolean): void {
-    this.deathEl.style.display = visible ? 'flex' : 'none';
+    this.deathEl.style.display = visible ? "flex" : "none";
   }
 
   // Arcade ticker: step the shown number toward the target, landing exactly on
@@ -569,21 +609,24 @@ export class UI {
   private ticker(cur: number, target: number): number {
     const d = target - cur;
     if (d === 0) return cur;
-    const step = Math.min(Math.abs(d), Math.max(1, Math.ceil(Math.abs(d) * 0.09)));
+    const step = Math.min(
+      Math.abs(d),
+      Math.max(1, Math.ceil(Math.abs(d) * 0.09)),
+    );
     return cur + Math.sign(d) * step;
   }
 
   private startCombo(s: HudState): void {
-    this.comboState = 'active';
-    this.trickPlate.style.display = 'block';
-    this.trickPlate.classList.remove('hud-trick-bail');
+    this.comboState = "active";
+    this.trickPlate.style.display = "block";
+    this.trickPlate.classList.remove("hud-trick-bail");
     this.trickLineEl.textContent = s.tricks.toUpperCase();
   }
 
   private endCombo(): void {
-    this.comboState = 'none';
-    this.trickPlate.style.display = 'none';
-    this.trickPlate.classList.remove('hud-trick-bail');
+    this.comboState = "none";
+    this.trickPlate.style.display = "none";
+    this.trickPlate.classList.remove("hud-trick-bail");
     this.dispCombo = 0;
   }
 
@@ -591,26 +634,27 @@ export class UI {
   // the score ticks up to match.
   comboBank(amount: number): void {
     this.dispCombo = amount;
-    this.comboState = 'cashin';
-    this.trickPlate.style.display = 'block';
-    this.trickPlate.classList.remove('hud-trick-bail');
+    this.comboState = "cashin";
+    this.trickPlate.style.display = "block";
+    this.trickPlate.classList.remove("hud-trick-bail");
     pop(this.scoreEl);
   }
 
   // Combo lost on a bail: red, shake, drop away.
   comboBail(): void {
-    this.comboState = 'bail';
+    this.comboState = "bail";
     this.comboBailEnd = performance.now() + 700;
-    this.trickPlate.style.display = 'block';
-    this.trickPlate.classList.add('hud-trick-bail');
-    this.trickLineEl.textContent = 'BAILED!';
-    this.trickTotalEl.textContent = 'NO';
+    this.trickPlate.style.display = "block";
+    this.trickPlate.classList.add("hud-trick-bail");
+    this.trickLineEl.textContent = "BAILED!";
+    this.trickTotalEl.textContent = "NO";
   }
 
   setHUD(s: HudState): void {
     // SCORE ticker: the shown number chases the real score fast.
     if (this.prevHud.points < 0) this.dispScore = s.points; // snap on first frame
-    if (s.points > this.prevHud.points && this.prevHud.points >= 0) pop(this.scoreEl);
+    if (s.points > this.prevHud.points && this.prevHud.points >= 0)
+      pop(this.scoreEl);
     this.dispScore = this.ticker(this.dispScore, s.points);
     this.scoreEl.textContent = String(Math.round(this.dispScore));
     this.prevHud.points = s.points;
@@ -625,17 +669,17 @@ export class UI {
       this.prevHud.fruit = s.fruit;
     }
     if (s.hasCrystal !== this.prevHud.crystal) {
-      this.crystalIcon.classList.toggle('hud-relic-off', !s.hasCrystal);
+      this.crystalIcon.classList.toggle("hud-relic-off", !s.hasCrystal);
       if (s.hasCrystal) pop(this.crystalIcon);
       this.prevHud.crystal = s.hasCrystal;
     }
     if (s.hasComboGem !== this.prevHud.comboGem) {
-      this.comboGemIcon.classList.toggle('hud-relic-off', !s.hasComboGem);
+      this.comboGemIcon.classList.toggle("hud-relic-off", !s.hasComboGem);
       if (s.hasComboGem) pop(this.comboGemIcon);
       this.prevHud.comboGem = s.hasComboGem;
     }
     if (s.hasGem !== this.prevHud.gem) {
-      this.gemIcon.classList.toggle('hud-relic-off', !s.hasGem);
+      this.gemIcon.classList.toggle("hud-relic-off", !s.hasGem);
       if (s.hasGem) pop(this.gemIcon);
       this.prevHud.gem = s.hasGem;
     }
@@ -649,7 +693,7 @@ export class UI {
     // pops). The total tickers up while chaining; on a clean bank it drains to
     // zero as the score climbs to match; on a bail it red-shakes and drops away.
     const show = s.comboHasTrick && s.comboMult > 0;
-    if (this.comboState === 'cashin') {
+    if (this.comboState === "cashin") {
       if (show) {
         this.startCombo(s); // a fresh combo interrupts the cash-in
       } else {
@@ -657,14 +701,14 @@ export class UI {
         this.trickTotalEl.textContent = String(Math.round(this.dispCombo));
         if (this.dispCombo <= 0) this.endCombo();
       }
-    } else if (this.comboState === 'bail') {
+    } else if (this.comboState === "bail") {
       if (show) this.startCombo(s);
       else if (performance.now() >= this.comboBailEnd) this.endCombo();
     } else if (show) {
       this.startCombo(s);
       this.dispCombo = this.ticker(this.dispCombo, s.comboPoints * s.comboMult);
       this.trickTotalEl.textContent = `${Math.round(this.dispCombo)}  ×${s.comboMult}`;
-    } else if (this.comboState === 'active') {
+    } else if (this.comboState === "active") {
       this.endCombo(); // combo fizzled with no bank/bail signal
     }
   }
@@ -676,20 +720,21 @@ export class UI {
   // kept a retired mechanic alive for days — so it is dropped outright.)
   private readSaved(): Partial<Record<TuningKey, number>> | null {
     try {
-      const raw = JSON.parse(localStorage.getItem('protoTuning') ?? 'null') as {
+      const raw = JSON.parse(localStorage.getItem("protoTuning") ?? "null") as {
         __v?: number;
         tuning?: Record<string, number>;
         defaults?: Record<string, number>;
       } | null;
       if (!raw) return null;
       if (raw.__v === undefined || !raw.tuning || !raw.defaults) {
-        localStorage.removeItem('protoTuning'); // pre-versioning save: retire it
+        localStorage.removeItem("protoTuning"); // pre-versioning save: retire it
         return null;
       }
       const merged: Partial<Record<TuningKey, number>> = { ...this.defaults };
       for (const key of Object.keys(TUNING_RANGES) as TuningKey[]) {
         const v = raw.tuning[key];
-        if (typeof v === 'number' && isFinite(v) && v !== raw.defaults[key]) merged[key] = v;
+        if (typeof v === "number" && isFinite(v) && v !== raw.defaults[key])
+          merged[key] = v;
       }
       return merged;
     } catch {
@@ -700,7 +745,7 @@ export class UI {
   private applyTuning(vals: Partial<Record<TuningKey, number>>): void {
     for (const key of Object.keys(TUNING_RANGES) as TuningKey[]) {
       const v = vals[key];
-      if (typeof v !== 'number' || !isFinite(v)) continue;
+      if (typeof v !== "number" || !isFinite(v)) continue;
       TUNING[key] = v;
       const el = this.sliderEls.get(key);
       if (el) {
@@ -712,17 +757,15 @@ export class UI {
   }
 
   set2P(on: boolean): void {
-    this.mpBtn.textContent = on ? '⚔ 2-PLAYER SPLIT: ON' : '⚔ 2-PLAYER SPLIT: OFF';
-    this.mpBtn.style.color = on ? '#58e08a' : '';
+    this.mpBtn.textContent = on
+      ? "⚔ 2-PLAYER SPLIT: ON"
+      : "⚔ 2-PLAYER SPLIT: OFF";
+    this.mpBtn.style.color = on ? "#58e08a" : "";
   }
 
   setLevel(id: number): void {
-    this.levelButtons.forEach((b, i) => b.classList.toggle('active', i === id));
+    this.levelButtons.forEach((b, i) => b.classList.toggle("active", i === id));
     this.refreshEditControls();
-  }
-
-  setChar(id: string): void {
-    this.charButtons.forEach((b, key) => b.classList.toggle('active', key === id));
   }
 
   // ---- direct-edit + phone sync controls ----
@@ -731,7 +774,7 @@ export class UI {
     this.refreshEditControls();
   }
 
-  setSyncStatus(msg: string, kind: 'ok' | 'err' | 'busy' = 'busy'): void {
+  setSyncStatus(msg: string, kind: "ok" | "err" | "busy" = "busy"): void {
     if (!this.syncStatusEl) return;
     this.syncStatusEl.textContent = msg;
     this.syncStatusEl.className = `hud-syncstatus hud-sync-${kind}`;
@@ -748,19 +791,21 @@ export class UI {
     // built-in editable level + unlocked → "edit this level"; otherwise the
     // classic "edit a copy" (also the only option on the custom sandbox).
     const direct = unlocked && !!st && st.editable;
-    this.editThisBtn.style.display = direct ? '' : 'none';
-    this.copyBtn.style.display = direct ? 'none' : '';
+    this.editThisBtn.style.display = direct ? "" : "none";
+    this.copyBtn.style.display = direct ? "none" : "";
     // sync rows + push appear only when unlocked; the passcode prompt hides.
-    this.tokenRow.style.display = unlocked ? '' : 'none';
-    this.pushRow.style.display = unlocked ? '' : 'none';
+    this.tokenRow.style.display = unlocked ? "" : "none";
+    this.pushRow.style.display = unlocked ? "" : "none";
     const unlockRow = this.syncPanel.firstElementChild as HTMLElement | null;
-    if (unlockRow) unlockRow.style.display = unlocked ? 'none' : '';
+    if (unlockRow) unlockRow.style.display = unlocked ? "none" : "";
     if (unlocked && st) {
       const dirty = st.dirtyCount;
-      this.pushRow.querySelector('button')!.textContent =
-        dirty > 0 ? `☁ SYNC ${dirty} EDITED LEVEL${dirty > 1 ? 'S' : ''} TO PHONE` : '☁ SYNC LEVELS TO PHONE';
+      this.pushRow.querySelector("button")!.textContent =
+        dirty > 0
+          ? `☁ SYNC ${dirty} EDITED LEVEL${dirty > 1 ? "S" : ""} TO PHONE`
+          : "☁ SYNC LEVELS TO PHONE";
       if (!st.hasToken && !this.syncStatusEl.textContent)
-        this.setSyncStatus('paste a GitHub token to enable sync', 'busy');
+        this.setSyncStatus("paste a GitHub token to enable sync", "busy");
     }
   }
 
@@ -769,53 +814,55 @@ export class UI {
   // back, rises toward the nose tipping forward — push the stick up/down
   // AGAINST it). bal in [-1, 1]; pegging either end is the bail. crit = the
   // last-chance beat: the needle flashes.
-  updateBalance(meter: { mode: 'grind' | 'manual'; bal: number; crit: boolean } | null): void {
-    const grind = meter !== null && meter.mode === 'grind';
-    const manual = meter !== null && meter.mode === 'manual';
-    this.balanceWrap.style.display = grind ? 'block' : 'none';
-    this.vBalanceWrap.style.display = manual ? 'block' : 'none';
+  updateBalance(
+    meter: { mode: "grind" | "manual"; bal: number; crit: boolean } | null,
+  ): void {
+    const grind = meter !== null && meter.mode === "grind";
+    const manual = meter !== null && meter.mode === "manual";
+    this.balanceWrap.style.display = grind ? "block" : "none";
+    this.vBalanceWrap.style.display = manual ? "block" : "none";
     if (!meter) return;
     const hot = meter.crit || Math.abs(meter.bal) > 0.7;
     const color = meter.crit
       ? Math.sin(performance.now() * 0.045) > 0
-        ? '#ff2d1e'
-        : '#ffd23f'
+        ? "#ff2d1e"
+        : "#ffd23f"
       : hot
-        ? '#e2483d'
-        : '#8fd4a8';
+        ? "#e2483d"
+        : "#8fd4a8";
     if (grind) {
-      this.balanceNeedle.style.left = 50 + meter.bal * 46 + '%';
+      this.balanceNeedle.style.left = 50 + meter.bal * 46 + "%";
       this.balanceNeedle.style.background = color;
     } else {
       // balance + = tipping BACK onto the tail -> needle drops to the bottom
-      this.vBalanceNeedle.style.top = 50 + meter.bal * 44 + '%';
+      this.vBalanceNeedle.style.top = 50 + meter.bal * 44 + "%";
       this.vBalanceNeedle.style.background = color;
     }
   }
 
   setStats(s: Stats): void {
-    const railDist = isFinite(s.railDist) ? s.railDist.toFixed(2) + 'm' : '-';
+    const railDist = isFinite(s.railDist) ? s.railDist.toFixed(2) + "m" : "-";
     this.statsEl.innerHTML =
       `<div class="hud-title">DEBUG</div>` +
-      row('speed', s.speed.toFixed(1)) +
-      row('state', s.state) +
-      row('grounded', String(s.grounded)) +
-      row('vVel', s.vVel.toFixed(1)) +
-      row('surface', s.surface) +
-      row('controller', s.controller) +
-      row('jump', s.jump) +
-      row('rail dist', railDist) +
-      row('crates', s.crates) +
-      row('wumpa', String(s.fruit)) +
-      row('mask', s.masks) +
-      row('time', s.time.toFixed(2) + 's');
+      row("speed", s.speed.toFixed(1)) +
+      row("state", s.state) +
+      row("grounded", String(s.grounded)) +
+      row("vVel", s.vVel.toFixed(1)) +
+      row("surface", s.surface) +
+      row("controller", s.controller) +
+      row("jump", s.jump) +
+      row("rail dist", railDist) +
+      row("crates", s.crates) +
+      row("wumpa", String(s.fruit)) +
+      row("mask", s.masks) +
+      row("time", s.time.toFixed(2) + "s");
   }
 
   // durationMs = 0 keeps the message up until the next showMessage/hide.
   showMessage(title: string, sub: string, durationMs: number): void {
     this.msgTitle.textContent = title;
     this.msgSub.textContent = sub;
-    this.msgWrap.style.display = 'block';
+    this.msgWrap.style.display = "block";
     if (this.msgTimer !== undefined) window.clearTimeout(this.msgTimer);
     if (durationMs > 0) {
       this.msgTimer = window.setTimeout(() => this.hideMessage(), durationMs);
@@ -823,15 +870,15 @@ export class UI {
   }
 
   hideMessage(): void {
-    this.msgWrap.style.display = 'none';
+    this.msgWrap.style.display = "none";
   }
 
   flash(): void {
-    this.flashEl.style.transition = 'none';
-    this.flashEl.style.opacity = '0.55';
+    this.flashEl.style.transition = "none";
+    this.flashEl.style.opacity = "0.55";
     requestAnimationFrame(() => {
-      this.flashEl.style.transition = 'opacity 0.45s';
-      this.flashEl.style.opacity = '0';
+      this.flashEl.style.transition = "opacity 0.45s";
+      this.flashEl.style.opacity = "0";
     });
   }
 
@@ -840,16 +887,16 @@ export class UI {
   // Trial dress on/off: the big clock appears, fruit + lives counters hide.
   setTimeTrial(on: boolean): void {
     this.ttOn = on;
-    this.ttClockEl.style.display = on ? 'block' : 'none';
+    this.ttClockEl.style.display = on ? "block" : "none";
     this.setRunRows(on);
-    if (!on) this.ttResultsEl.style.display = 'none';
+    if (!on) this.ttResultsEl.style.display = "none";
   }
 
   // Run-mode HUD: the fruit + lives counters sit out (shared by time trials
   // and combo runs).
   setRunRows(on: boolean): void {
-    this.wumpaRowEl.style.display = on ? 'none' : '';
-    this.livesRowEl.style.display = on ? 'none' : '';
+    this.wumpaRowEl.style.display = on ? "none" : "";
+    this.livesRowEl.style.display = on ? "none" : "";
   }
 
   // Balance-boost ring: each full turn is one crate window; stacked windows
@@ -857,30 +904,33 @@ export class UI {
   // underneath the live arc. Flashes when the last second is running out.
   updateBalanceBoost(t: number, per: number): void {
     const on = t > 0;
-    this.boostRingWrap.style.display = on ? 'flex' : 'none';
+    this.boostRingWrap.style.display = on ? "flex" : "none";
     if (!on) return;
     const laps = Math.floor(t / per);
     const frac = (t / per) % 1;
-    const shades = ['#1c6e3c', '#2fae5c', '#46e882', '#a4ffc8'];
-    const track = 'rgba(10, 30, 18, 0.75)';
-    const under = laps === 0 ? track : shades[Math.min(laps - 1, shades.length - 1)];
+    const shades = ["#1c6e3c", "#2fae5c", "#46e882", "#a4ffc8"];
+    const track = "rgba(10, 30, 18, 0.75)";
+    const under =
+      laps === 0 ? track : shades[Math.min(laps - 1, shades.length - 1)];
     const over = shades[Math.min(laps, shades.length - 1)];
     this.boostRing.style.background =
-      frac <= 0 ? under : `conic-gradient(${over} 0turn ${frac}turn, ${under} ${frac}turn 1turn)`;
-    this.boostRingWrap.classList.toggle('hud-boost-low', t < 1);
+      frac <= 0
+        ? under
+        : `conic-gradient(${over} 0turn ${frac}turn, ${under} ${frac}turn 1turn)`;
+    this.boostRingWrap.classList.toggle("hud-boost-low", t < 1);
   }
 
   // Combo-run viewport halo: 'on' = green glow breathing at the edges,
   // 'dissipate' = the despair beat (slow fade to nothing), 'off' = gone now.
-  comboHalo(state: 'on' | 'dissipate' | 'off'): void {
-    this.haloEl.classList.toggle('on', state === 'on');
-    this.haloEl.classList.toggle('dissipate', state === 'dissipate');
+  comboHalo(state: "on" | "dissipate" | "off"): void {
+    this.haloEl.classList.toggle("on", state === "on");
+    this.haloEl.classList.toggle("dissipate", state === "dissipate");
   }
 
   private static fmtTime(t: number): string {
     const m = Math.floor(t / 60);
     const s = t - m * 60;
-    return `${m}:${s < 10 ? '0' : ''}${s.toFixed(2)}`;
+    return `${m}:${s < 10 ? "0" : ""}${s.toFixed(2)}`;
   }
 
   // Called every frame while a trial runs — centisecond digits, and the whole
@@ -889,8 +939,8 @@ export class UI {
     if (!this.ttOn) return;
     (this.ttClockEl.firstChild as HTMLElement).textContent = UI.fmtTime(t);
     const frozen = freeze > 0;
-    this.ttClockEl.classList.toggle('hud-tt-frozen', frozen);
-    this.ttFreezeEl.textContent = frozen ? `FROZEN ${freeze.toFixed(1)}s` : '';
+    this.ttClockEl.classList.toggle("hud-tt-frozen", frozen);
+    this.ttFreezeEl.textContent = frozen ? `FROZEN ${freeze.toFixed(1)}s` : "";
   }
 
   // Ranked times at the gate: this run slots into the level's best list.
@@ -899,19 +949,19 @@ export class UI {
       .slice(0, 5)
       .map((v, i) => {
         const isNew = i === rank;
-        return `<div class="hud-ttrow${isNew ? ' hud-ttrow-new' : ''}"><span>${i + 1}.</span><span>${UI.fmtTime(v)}</span></div>`;
+        return `<div class="hud-ttrow${isNew ? " hud-ttrow-new" : ""}"><span>${i + 1}.</span><span>${UI.fmtTime(v)}</span></div>`;
       })
-      .join('');
+      .join("");
     this.ttResultsEl.innerHTML =
-      `<div class="hud-ttres-title">${rank === 0 ? 'NEW RECORD!' : 'RUN COMPLETE'}</div>` +
+      `<div class="hud-ttres-title">${rank === 0 ? "NEW RECORD!" : "RUN COMPLETE"}</div>` +
       `<div class="hud-ttres-time">${UI.fmtTime(time)}</div>` +
       `<div class="hud-ttres-list">${rows}</div>` +
       `<div class="hud-ttres-sub">press R / Options to go again</div>`;
-    this.ttResultsEl.style.display = 'block';
+    this.ttResultsEl.style.display = "block";
   }
 
   hideTTResults(): void {
-    this.ttResultsEl.style.display = 'none';
+    this.ttResultsEl.style.display = "none";
   }
 
   // Death curtain: fade to black on the way out; on respawn hold the black a
@@ -922,75 +972,78 @@ export class UI {
       this.fadeTimer = null;
     }
     if (out) {
-      this.fadeEl.style.transition = 'opacity 0.4s ease';
-      this.fadeEl.style.opacity = '1';
+      this.fadeEl.style.transition = "opacity 0.4s ease";
+      this.fadeEl.style.opacity = "1";
     } else {
       this.fadeTimer = window.setTimeout(() => {
         this.fadeTimer = null;
-        this.fadeEl.style.transition = 'opacity 0.55s ease';
-        this.fadeEl.style.opacity = '0';
+        this.fadeEl.style.transition = "opacity 0.55s ease";
+        this.fadeEl.style.opacity = "0";
       }, 280);
     }
   }
 
   private sliderRow(key: TuningKey): HTMLElement {
     const range = TUNING_RANGES[key];
-    const wrap = div('hud-slider');
+    const wrap = div("hud-slider");
     wrap.title = TUNING_INFO[key]; // hover for what this number does in play
-    const label = document.createElement('label');
+    const label = document.createElement("label");
     label.textContent = key;
     // Click the name to bookmark it (green) — pure attention bookkeeping for
     // tuning sessions, remembered like the values are, zero gameplay effect.
-    if (this.tunerMarks.has(key)) label.classList.add('hud-marked');
-    label.style.cursor = 'pointer';
-    label.addEventListener('click', () => {
+    if (this.tunerMarks.has(key)) label.classList.add("hud-marked");
+    label.style.cursor = "pointer";
+    label.addEventListener("click", () => {
       if (this.tunerMarks.has(key)) this.tunerMarks.delete(key);
       else this.tunerMarks.add(key);
-      label.classList.toggle('hud-marked');
-      localStorage.setItem('protoTunerMarks', JSON.stringify([...this.tunerMarks]));
+      label.classList.toggle("hud-marked");
+      localStorage.setItem(
+        "protoTunerMarks",
+        JSON.stringify([...this.tunerMarks]),
+      );
     });
     // 0/1 toggles render as a CHECKBOX, not a two-notch slider. The unused
     // input/value pair keeps the shared applyTuning refresh path happy;
     // sync() mirrors save/reset/defaults into the box.
     if (range.min === 0 && range.max === 1 && range.step === 1) {
-      const box = document.createElement('input');
-      box.type = 'checkbox';
-      box.className = 'hud-tunercheck';
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.className = "hud-tunercheck";
       box.checked = TUNING[key] > 0.5;
-      box.addEventListener('change', () => {
+      box.addEventListener("change", () => {
         TUNING[key] = box.checked ? 1 : 0;
       });
       wrap.appendChild(label);
       wrap.appendChild(box);
       this.sliderEls.set(key, {
-        input: document.createElement('input'),
-        value: document.createElement('input'),
+        input: document.createElement("input"),
+        value: document.createElement("input"),
         sync: () => (box.checked = TUNING[key] > 0.5),
       });
       return wrap;
     }
     // Editable number box: click and type an exact value (or use the arrows).
     // It accepts anything and clamps to the slider's range on commit.
-    const value = document.createElement('input');
-    value.type = 'number';
-    value.className = 'hud-tunernum';
+    const value = document.createElement("input");
+    value.type = "number";
+    value.className = "hud-tunernum";
     value.min = String(range.min);
     value.max = String(range.max);
-    value.step = 'any'; // typing isn't bound to the drag step
+    value.step = "any"; // typing isn't bound to the drag step
     value.value = String(TUNING[key]);
-    const input = document.createElement('input');
-    input.type = 'range';
+    const input = document.createElement("input");
+    input.type = "range";
     input.min = String(range.min);
     input.max = String(range.max);
     input.step = String(range.step);
     input.value = String(TUNING[key]);
-    input.addEventListener('input', () => {
+    input.addEventListener("input", () => {
       TUNING[key] = Number(input.value);
       value.value = input.value;
     });
     // Typing commits live; clamp to range only on blur/Enter so an in-progress
     // number (e.g. "1" before "12") isn't yanked to the min mid-keystroke.
-    value.addEventListener('input', () => {
+    value.addEventListener("input", () => {
       const v = Number(value.value);
       if (Number.isFinite(v)) {
         TUNING[key] = v;
@@ -1005,13 +1058,13 @@ export class UI {
       input.value = String(v);
       value.value = String(v);
     };
-    value.addEventListener('change', commit);
+    value.addEventListener("change", commit);
     // Keep field keystrokes (digits, WASD, arrows) out of the game's global key
     // handlers, and slider drags from stealing focus.
-    for (const ev of ['keydown', 'keyup', 'keypress'])
+    for (const ev of ["keydown", "keyup", "keypress"])
       value.addEventListener(ev, (e) => e.stopPropagation());
-    value.addEventListener('blur', commit);
-    input.addEventListener('change', () => input.blur());
+    value.addEventListener("blur", commit);
+    input.addEventListener("change", () => input.blur());
     wrap.appendChild(label);
     wrap.appendChild(input);
     wrap.appendChild(value);
@@ -1020,7 +1073,7 @@ export class UI {
   }
 
   private injectStyle(): void {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .hud-stats, .hud-tuning {
         color: #cfe3d8;
@@ -1035,8 +1088,6 @@ export class UI {
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
       .hud-levelrow { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
       .hud-levelrow .hud-levelbtn { flex: 1 1 auto; }
-      .hud-charrow { border-top: 1px solid #2a3647; padding-top: 6px; }
-      .hud-charbtn.active { background: #3a2b44; color: #f0cce8; border-color: #d48fce; }
       .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-capbadge {
         position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
@@ -1411,13 +1462,13 @@ export class UI {
 
 // Restartable pop animation for counters that just changed.
 function pop(el: HTMLElement): void {
-  el.classList.remove('hud-pop');
+  el.classList.remove("hud-pop");
   void el.offsetWidth; // reflow restarts the animation
-  el.classList.add('hud-pop');
+  el.classList.add("hud-pop");
 }
 
 function div(cls: string): HTMLElement {
-  const el = document.createElement('div');
+  const el = document.createElement("div");
   el.className = cls;
   return el;
 }
@@ -1428,5 +1479,5 @@ function row(label: string, value: string): string {
 
 // Values like the gamepad name are arbitrary strings going into innerHTML.
 function esc(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }

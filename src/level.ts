@@ -228,13 +228,16 @@ export interface Checkpoint {
   savedPoints: number;
 }
 
+// The editor's own sandbox slot. Named because it is an INDEX into
+// LEVEL_NAMES, and indices shift every time a level is added or removed —
+// which has now broken twice as a bare literal 7 scattered across two files.
+export const CUSTOM_LEVEL_ID = 5;
+
 export const LEVEL_NAMES = [
   "Test Course", // the test course flows straight into the gauntlet (combined)
-  "Sideways",
   "Random",
   "Boulder Dash",
-  "The Flats",
-  "Half Pipes",
+  "Flats & Pipes", // sky-deck runway that opens out into the transition yard
   "Sky Bridge",
   "Custom", // built from CUSTOM_LEVEL data (the in-game level editor owns it)
   "The Slipstream", // elevated ribbon slide: sweeping banked curves high over the sea
@@ -1029,7 +1032,7 @@ export function getCustomLevelData(): CustomLevelData {
 // component pipeline as Custom) instead of its hand-coded builder. Clearing
 // the slot brings the original back — the builders are never touched. These
 // slots double as the offline cache for the GitHub-synced levels file.
-export const EDITABLE_IDS = [0, 1, 2, 3, 4, 5, 6]; // every level except Custom and the Slipstream
+export const EDITABLE_IDS = [0, 1, 2, 3, 4]; // every level except Custom and the Slipstream
 export function levelOverrideKey(id: number): string {
   return `protoLevelEdit:${id}`;
 }
@@ -1106,13 +1109,14 @@ export function pruneRetiredOverrides(): void {
     const dead: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (!k || !k.startsWith('protoLevelEdit:')) continue;
-      if (!EDITABLE_IDS.includes(Number(k.slice('protoLevelEdit:'.length)))) dead.push(k);
+      if (!k || !k.startsWith("protoLevelEdit:")) continue;
+      if (!EDITABLE_IDS.includes(Number(k.slice("protoLevelEdit:".length))))
+        dead.push(k);
     }
     for (const k of dead) localStorage.removeItem(k);
     // and stop a retired id riding the dirty list into the next push
     const live = [...getDirtyIds()].filter((id) => EDITABLE_IDS.includes(id));
-    localStorage.setItem('protoLevelDirty', JSON.stringify(live));
+    localStorage.setItem("protoLevelDirty", JSON.stringify(live));
   } catch {
     /* private mode: nothing persisted, nothing to prune */
   }
@@ -1140,7 +1144,7 @@ export function getEditData(id: number): CustomLevelData {
 // (the custom sandbox, or a built-in level's override — which marks it dirty).
 export function persistEditData(id: number, json: string): void {
   try {
-    if (id === 7) {
+    if (id === CUSTOM_LEVEL_ID) {
       localStorage.setItem("protoCustomLevel", json);
     } else {
       localStorage.setItem(levelOverrideKey(id), json);
@@ -1973,14 +1977,12 @@ export class Level {
       ? getLevelOverride(courseId)
       : null;
     if (override) this.buildCustom(migrateCustomLevel(override));
-    else if (courseId === 1) this.buildSideways();
-    else if (courseId === 2) this.buildRandom();
-    else if (courseId === 3) this.buildBoulderDash();
-    else if (courseId === 4) this.buildFlats();
-    else if (courseId === 5) this.buildHalfpipePark();
-    else if (courseId === 6) this.buildSkyBridge();
-    else if (courseId === 7) this.buildCustom();
-    else if (courseId === 8) this.buildSlipstream();
+    else if (courseId === 1) this.buildRandom();
+    else if (courseId === 2) this.buildBoulderDash();
+    else if (courseId === 3) this.buildFlats();
+    else if (courseId === 4) this.buildSkyBridge();
+    else if (courseId === 5) this.buildCustom();
+    else if (courseId === 6) this.buildSlipstream();
     else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
@@ -4631,161 +4633,6 @@ export class Level {
     return THREE.MathUtils.mapLinear(z, -945, -1000, -13.5, -22);
   }
 
-  // The "Sideways" level is an L-shaped course now: a corridor intro heading
-  // down -Z, a right-angle turn onto a stretch that runs along +X — which the
-  // fixed camera therefore sees side-on (real side-scroll platforming, no
-  // camera move) — then a second corner back onto -Z for the finish.
-  private buildSideways(): void {
-    // Coral dusk: vaporwave warmed toward the tropics — lavender concrete,
-    // lush turf, hot-pink platforms under a coral horizon band.
-    this.wallTint = 0x7a5a9a;
-    this.blockTint = 0x8a6aa8;
-    this.curbTint = 0xff79c8;
-    const matA = new THREE.MeshLambertMaterial({ color: 0xa898c8 });
-    const matGround = new THREE.MeshLambertMaterial({ color: 0x62a878 });
-    const matPlat = new THREE.MeshLambertMaterial({ color: 0xc87ab0 });
-    const matStone = new THREE.MeshLambertMaterial({ color: 0x8a7ab8 });
-
-    this.killY = -20;
-    this.finishZ = -104;
-    this.endWallZ = -116;
-    this.theme = {
-      skyTop: "#2a1650",
-      skyBottom: "#ff8a70",
-      sunColorHex: "#ffc0a0",
-      sunU: 0.35,
-      sunV: 0.3,
-      stars: true, // first stars over a coral horizon
-      fog: 0x9a5464, // rose haze to match the coral band
-      fogNear: 20,
-      fogFar: 120,
-      hemiSky: 0xd8a8c0,
-      hemiGround: 0x3a2840,
-      hemiI: 1.05,
-      sunColor: 0xffa888,
-      sunI: 1.2,
-      particleColor: 0xffc8a8,
-      particleWind: [0.8, -0.3, 0.3],
-    };
-
-    // the turned stretch: path runs +X between the two corner decks
-    this.zones = [{ xMin: 9, xMax: 146, zMin: -62, zMax: -38, dir: "E" }];
-
-    // cliff backdrop behind the sideways stretch, and the pit below it —
-    // a giant stone-block silhouette going violet into the dusk
-    const cliff = new THREE.Mesh(
-      new THREE.BoxGeometry(200, 60, 1.5),
-      this.patterned(
-        new THREE.MeshLambertMaterial({ color: 0x3a2a5c }),
-        200,
-        60,
-        "stone",
-      ),
-    );
-    cliff.position.set(88, 8, -64);
-    this.root.add(cliff);
-    // (no void pit-floor plane — the cloud sea is the floor; falls die at killY)
-
-    // corridor intro heading down -Z
-    this.slab("start", 16, -12, 0, 10, matA, false);
-    this.wall(0, 17, 12, 1, 0, 5, 0.7); // behind spawn: low curb, full-height collider
-    this.crate(0, 0, -3, "mask");
-    this.fruitRow(-16, -22, 1.3, 4);
-    this.slab("approach", -12, -38, 0, 10, matGround, true, 0, "grass");
-    this.crate(0, 0, -24);
-    this.crate(0, 1.2, -24); // stack: spin, bounce, or headbutt
-    this.enemy(-3, 3, 0, -31, 4, "x", "hopper");
-
-    // CORNER 1: the path right-angles east; a wall dead ahead sells the turn
-    this.slab("corner", -38, -56, 0, 18, matA, false, 4);
-    this.wall(4, -57.5, 18, 1.5, 0);
-    this.rock(11.5, 0, -54, 1.8); // tucked corner dressing, off the racing line
-    this.rock(-3.8, 0, -55, 1.2);
-    this.crystal(70, 0.4, -47); // mid east-stretch, on the main line
-
-    // the sideways stretch: everything below runs along +X at the z band -47
-    const CZ = -47;
-    this.slabX("ruin walk", 13, 34, 0, 9, matGround, CZ, "grass");
-    this.crate(24, 0, CZ);
-    this.crate(24, 1.2, CZ);
-    this.crate(24, 2.4, CZ, "mask"); // crown the stack
-    this.fruitRowX(15, 21, 1.3, 4, CZ);
-    // ascending floating platforms over the pit
-    this.slabX("plat A", 40, 50, 1.5, 9, matPlat, CZ);
-    this.crate(45, 1.5, CZ, "tnt");
-    this.slabX("plat B", 56, 66, 3, 9, matPlat, CZ);
-    this.crate(58, 3, CZ, "mystery");
-    this.checkpoint(3, CZ, 61);
-    // big pit: grind the rail across (fruit lines it), or hop the pads
-    const pitRail = new Rail([
-      new THREE.Vector3(66, 3.9, CZ),
-      new THREE.Vector3(90, 3.3, CZ),
-    ]);
-    this.rails.push(pitRail);
-    this.root.add(pitRail.object);
-    this.fruitRowX(70, 86, 5.2, 5, CZ);
-    this.slabX("pit pad", 74, 80, 3, 9, matPlat, CZ);
-    // landing shelf: nitro squats the lane, crab patrols the screen
-    this.slabX("mid shelf", 90, 108, 3.2, 9, matGround, CZ, "grass");
-    this.crate(98, 3.2, CZ, "nitro");
-    this.enemy(94, 106, 3.2, CZ, 5, "x", "spiker");
-    // split: bounce the arrow crate up to the high ledge, or run the TNT road
-    this.crate(107, 3.2, CZ, "bouncy");
-    this.slabX("high ledge", 110, 128, 8.4, 9, matPlat, CZ);
-    this.crate(118, 8.4, CZ, "mask");
-    this.fruitRowX(112, 126, 9.7, 6, CZ);
-    this.slabX("low road", 110, 132, 2.8, 9, matStone, CZ, "stone");
-    this.crate(117, 2.8, CZ, "tnt");
-    this.crate(124, 2.8, CZ, "tnt");
-    // rejoin before the second corner
-    this.slabX("rejoin", 136, 146, 3.6, 9, matGround, CZ, "grass");
-    this.checkpoint(3.6, CZ, 141);
-
-    // CORNER 2: the path turns back south toward the gate
-    this.slab("corner 2", -38, -56, 3.6, 18, matA, false, 152);
-    this.wall(161.5, -47, 1.5, 18, 3.6);
-    this.rock(158.5, 3.6, -54.5, 1.6);
-    this.wall(152, -37, 18, 1.5, 3.6); // north lip of the corner
-
-    // corridor finish at the far end of the L
-    this.slab("descent", -56, -70, 3.6, 10, matPlat, true, 152);
-    this.slab("step down", -74, -84, 1.6, 10, matPlat, true, 152);
-    this.slab("final run", -88, -120, 0, 12, matStone, true, 152, "stone");
-    this.crate(149, 0, -91, "mask");
-    this.crate(152, 0, -94);
-    this.crate(152, 1.2, -94);
-    this.crate(152, 2.4, -94); // tower: spin through or bounce up
-    this.enemy(148, 156, 0, -99, 5, "x", "charger");
-    this.fruitRow(-90, -96, 1.4, 4, 149);
-    this.finishGate(0, this.finishZ, 152);
-    this.endWall(0, 152);
-
-    // --- dressing: hanging gardens off the floating decks (visual only) ---
-    const VZ = CZ + 4.4; // south lip of the sideways decks, facing the camera
-    this.vine(16, -0.05, VZ, 2.4);
-    this.vine(30, -0.05, VZ, 3.0);
-    this.vine(43, 1.45, VZ, 2.2);
-    this.vine(60, 2.95, VZ, 2.6);
-    this.vine(77, 2.95, VZ, 2.0);
-    this.vine(94, 3.15, VZ, 3.2);
-    this.vine(104, 3.15, VZ, 2.4);
-    this.vine(114, 8.35, VZ, 3.4);
-    this.vine(124, 8.35, VZ, 2.8);
-    this.vine(128, 2.75, VZ, 2.2);
-    this.vine(140, 3.55, VZ, 2.6);
-    // corner decks: planters + blooms tucked against the turn walls
-    this.planter(0.5, 0, -54.6);
-    this.planter(8.5, 0, -55);
-    this.flowers(4.5, 0, -54.8);
-    this.fern(-3.6, 0, -54.9, 1.1);
-    this.planter(147.5, 3.6, -54.6);
-    this.planter(158, 3.6, -52.5);
-    this.flowers(154, 3.6, -54.6);
-    // finish stretch: dusk palms behind the gate
-    this.palm(147.6, 0, -110, 4.9, 0.1);
-    this.palm(156.4, 0, -112, 5.3, -0.1);
-  }
-
   // Build-time ground probe: what the terrain actually is at (x, z). Used to
   // seat crates/enemies/checkpoints on wavy floors. Falls back to the given y.
   private floorY(x: number, z: number, fallback: number): number {
@@ -5990,38 +5837,6 @@ export class Level {
     m.scale.setScalar(s);
     m.rotation.y = x * 1.9 + z * 0.8;
     m.position.set(x, y + 0.02, z);
-    this.root.add(m);
-  }
-
-  // Hanging vine spill: nine down-turned blades in one buffer; len scales it.
-  private static vineGeoCache: THREE.BufferGeometry | null = null;
-  private vine(x: number, y: number, z: number, len = 2.6): void {
-    if (this.liteDecor) return;
-    if (!Level.vineGeoCache) {
-      const blade = Level.bladeGeo(1.0, 0.3, 0.85);
-      const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
-      const q = new THREE.Quaternion();
-      for (let i = 0; i < 9; i++) {
-        q.setFromEuler(new THREE.Euler(0, i * 2.4, -0.95 - (i % 3) * 0.3));
-        parts.push({
-          geo: blade,
-          m: new THREE.Matrix4().compose(
-            new THREE.Vector3(0, -i * 0.34, 0),
-            q.clone(),
-            new THREE.Vector3().setScalar(1 - i * 0.05),
-          ),
-        });
-      }
-      Level.vineGeoCache = Level.mergeGeos(parts);
-      blade.dispose();
-    }
-    const m = new THREE.Mesh(
-      Level.vineGeoCache,
-      this.decorMat("vine", 0x55a848, "leaf", true),
-    );
-    m.scale.set(0.9, len / 3.4, 0.9);
-    m.rotation.y = x * 1.3 + z;
-    m.position.set(x, y, z);
     this.root.add(m);
   }
 
@@ -9174,8 +8989,10 @@ export class Level {
     const E = 90; // deck elevation over the sea
     this.spawnPos.set(0, E + 0.1, 40);
     this.killY = E - 28; // below the deck: skate off the edge and you splash in
-    this.finishZ = -200; // gate past the rail garden: the lot's time-trial line
-    this.endWallZ = -260;
+    // The run does not stop at the rail garden any more: the deck opens out
+    // into the pipe park at its far end, and the line is drawn past THAT.
+    this.finishZ = -420;
+    this.endWallZ = -450;
     this.theme = {
       skyTop: "#159ecd",
       skyBottom: "#c9f0e4",
@@ -9184,8 +9001,11 @@ export class Level {
       sunV: 0.14,
       stars: false,
       fog: 0xbee8dd, // turquoise haze
-      fogNear: 70,
-      fogFar: 320,
+      // The run is 460 units end to end now, so the haze has to reach: at the
+      // old 320 the pipe park was a ghost from halfway down the runway. 400 is
+      // the play draw distance, so this fades things out exactly as they clip.
+      fogNear: 110,
+      fogFar: 400,
       hemiSky: 0xeafcff,
       hemiGround: 0x94a294,
       hemiI: 1.2,
@@ -9237,7 +9057,6 @@ export class Level {
     // a TNT and a nitro for blast testing, well apart
     this.crate(16, E, -60, "tnt");
     this.crate(20, E, -75, "nitro");
-    this.crystal(0, E + 0.4, -45); // test crystal between the lanes
 
     // --- ramp staircase: seven ramps of increasing steepness ---------------
     // grades 0.15 (8.5 deg) up to 1.9 (62 deg): walk, roll, and pump tests.
@@ -9278,8 +9097,6 @@ export class Level {
     this.enemy(-8, 8, E, -196, 3.5, "x", "floater");
     this.enemy(0, 0, E, -175, 0, "x", "sentry"); // turret watching the lane
     this.enemy(0, 0, E, -187, 0, "x", "spinner");
-    // finish gate: a straight sprint down the deck past the rail garden
-    this.finishGate(E, this.finishZ);
     // planter islands, tucked at the deck corners (elevated with the lot)
     for (const [ix, iz] of [
       [-36, -30],
@@ -9293,45 +9110,35 @@ export class Level {
       this.flowers(ix - 1.5, E, iz + 2.2);
       this.planter(ix + 4, E, iz - 1);
     }
+    // ...and the runway opens out into the pipe park, flush with the deck end.
+    this.pipePark(E, -310);
   }
 
-  // HALF PIPES: a flats-style blacktop with nothing but transition. Two
-  // halfpipes sit right up against each other (a shared coping ridge — a "W"
-  // you can pump one side and drop the other), then a neighbouring pair rotated
-  // 90° so you can transfer between the two orientations.
-  private buildHalfpipePark(): void {
+  // THE PIPE PARK: the far end of the runway opens out into a transition yard —
+  // two halfpipes right up against each other (a shared coping ridge, a "W" you
+  // can pump one side and drop the other), a neighbouring pair rotated 90° so
+  // you can transfer between orientations, and a deep pool.
+  //
+  // This used to be its own level at ground height. It is the same yard, lifted
+  // onto the sky-deck (baseY) and pushed down-course (dz) so it sits flush with
+  // the end of the flats runway — one place instead of two. Its north perimeter
+  // wall is gone: that edge is now the doorway you skate in through.
+  private pipePark(baseY: number, dz: number): void {
     const ground = new THREE.MeshLambertMaterial({ color: 0xffffff }); // full-colour asphalt
-    this.killY = -60;
-    this.finishZ = -110; // gate at the park's south end, past both pipe pairs
-    this.endWallZ = -2100;
-    this.theme = {
-      skyTop: "#159ecd",
-      skyBottom: "#c9f0e4",
-      sunColorHex: "#fff8dc",
-      sunU: 0.68,
-      sunV: 0.14,
-      stars: false,
-      fog: 0xbee8dd,
-      fogNear: 80,
-      fogFar: 340,
-      hemiSky: 0xeafcff,
-      hemiGround: 0x94a294,
-      hemiI: 1.2,
-      sunColor: 0xfff6dc,
-      sunI: 1.55,
-      particleColor: 0xffffff,
-      particleWind: [0.5, -0.3, 0.2],
-    };
-    this.spawnPos.set(0, 0.1, 32);
-    this.currentSpawn.copy(this.spawnPos);
-
-    // The whole lot is one flat slab at y=0; the pipe troughs ARE this floor and
-    // the transition walls climb up out of it.
-    this.slab("park floor", 60, -120, 0, 130, ground, false, 0, "asphalt");
-    this.wall(0, 58, 130, 4, 0, 6); // perimeter
-    this.wall(0, -118, 130, 4, 0, 6);
-    this.wall(64, -30, 4, 180, 0, 6);
-    this.wall(-64, -30, 4, 180, 0, 6);
+    this.slab(
+      "pipe park floor",
+      60 + dz,
+      -120 + dz,
+      baseY,
+      130,
+      ground,
+      false,
+      0,
+      "asphalt",
+    );
+    this.wall(0, -118 + dz, 130, 4, baseY, 6); // south backstop
+    this.wall(64, -30 + dz, 4, 180, baseY, 6); // side rails keep you out of the sea
+    this.wall(-64, -30 + dz, 4, 180, baseY, 6);
 
     const F = 3;
     const R = 6; // lipX = 9, coping at y = 6, each pipe 18 wide
@@ -9347,7 +9154,7 @@ export class Level {
     ): void => {
       this.buildVertRamp({
         t: "vertramp",
-        p: alongZ ? [cross, 0, mid] : [mid, 0, cross],
+        p: alongZ ? [cross, baseY, mid + dz] : [mid, baseY, cross + dz],
         len,
         w: F,
         rise: R,
@@ -9359,26 +9166,25 @@ export class Level {
 
     // --- PAIR 1: two pipes running along Z, right up against each other -------
     // A centred at x -9, B at x +9 → their inner copings meet at x 0 (a shared
-    // ridge). Troughs at x -9 and x +9, length z 20 → -20.
+    // ridge). Troughs at x -9 and x +9.
     addPipe(40, -9, true);
     addPipe(40, 9, true);
-    // fruit lines down each trough, a crystal on the shared ridge
+    // fruit lines down each trough, and the level's crystal on the shared ridge
     for (const cx of [-9, 9])
-      for (let z = 14; z >= -14; z -= 7) this.pickup(cx, 0.4, z);
-    this.crystal(0, lipY + 0.6, 0);
+      for (let z = 14; z >= -14; z -= 7) this.pickup(cx, baseY + 0.4, z + dz);
+    this.crystal(0, baseY + lipY + 0.6, dz);
 
     // --- PAIR 2: two more pipes rotated 90° (running along X), neighbouring ----
     // C centred at z -38, D at z -56 → shared ridge at z -47. Length x -18 → 18.
     addPipe(36, -38, false);
     addPipe(36, -56, false);
     for (const cz of [-38, -56])
-      for (let x = -14; x <= 14; x += 7) this.pickup(x, 0.4, cz);
+      for (let x = -14; x <= 14; x += 7) this.pickup(x, baseY + 0.4, cz + dz);
 
-    // --- a few foes on the SIDE flats, clear of the spawn sprint + the pipe
-    // runs (pipes sit within |x|<18; spawn is dead-centre) ------------------
-    this.enemy(26, 44, 0, -10, 4, "x", "grunt"); // patrols the east flat
-    this.enemy(-44, -26, 0, -30, 3.5, "x", "floater"); // drifts the west flat
-    this.enemy(38, 38, 0, -47, 0, "x", "spinner"); // blades parked off the ridge
+    // --- a few foes on the SIDE flats, clear of the pipe runs (|x| < 18) ------
+    this.enemy(26, 44, baseY, -10 + dz, 4, "x", "grunt"); // patrols the east flat
+    this.enemy(-44, -26, baseY, -30 + dz, 3.5, "x", "floater"); // drifts the west flat
+    this.enemy(38, 38, baseY, -47 + dz, 0, "x", "spinner"); // blades parked off the ridge
 
     // --- THE POOL: the same vert part, drawn as one spine round a rounded
     // rectangle — four walls joined by curved corners, which is what "bowl
@@ -9392,7 +9198,7 @@ export class Level {
     // tracked hang, land rolling, pump again.
     this.buildVertRamp({
       t: "vertramp",
-      p: [0, 0.01, -87],
+      p: [0, baseY + 0.01, -87 + dz],
       // ordered so the sweep's lateral points OUT of the bowl
       pts: [
         [-3, 8],
@@ -9411,10 +9217,10 @@ export class Level {
     });
     for (let a = 0; a < 8; a++) {
       const th = (a / 8) * Math.PI * 2;
-      this.pickup(Math.cos(th) * 7, 0.4, -87 + Math.sin(th) * 4.5);
+      this.pickup(Math.cos(th) * 7, baseY + 0.4, -87 + dz + Math.sin(th) * 4.5);
     }
 
-    this.finishGate(0, this.finishZ); // run the pipes, cross the line at the south wall
+    this.finishGate(baseY, this.finishZ); // the line, past the pool at the south wall
   }
 
   // SKY BRIDGE: a long, narrow plank bridge strung across an open sky with rope
