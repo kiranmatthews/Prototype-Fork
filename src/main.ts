@@ -12,6 +12,7 @@ import {
   levelOverrideKey,
   getLevelOverride,
   clearLevelOverride,
+  pruneRetiredOverrides,
   allLevelOverrides,
   applyRemoteLevels,
   markLevelDirty,
@@ -934,6 +935,7 @@ if (localStorage.getItem('protoEditorOpen') === '1') {
 // so the change shows without a manual reload. This is how the phone picks up
 // what the Mac pushed.
 void (async () => {
+  pruneRetiredOverrides(); // drop saved slots for levels that no longer exist
   const remote = await fetchRemoteLevels();
   if (!remote) return;
   const changed = applyRemoteLevels(remote as Record<string, CustomLevelData>, getDirtyIds());

@@ -1095,6 +1095,29 @@ export function getDirtyIds(): Set<number> {
   }
   return new Set();
 }
+// A RETIRED level — one dropped from EDITABLE_IDS, as the Overgrowth was —
+// leaves its saved slot behind on every device that ever synced it, and
+// applyRemoteLevels only walks the live ids, so nothing would ever clear it.
+// That matters more than the wasted bytes: the slot is keyed by NUMBER, and
+// numbers get reused when a level is removed from the middle of the list, so
+// a stale slot is a future level wearing a dead level's data. Sweep on load.
+export function pruneRetiredOverrides(): void {
+  try {
+    const dead: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k || !k.startsWith('protoLevelEdit:')) continue;
+      if (!EDITABLE_IDS.includes(Number(k.slice('protoLevelEdit:'.length)))) dead.push(k);
+    }
+    for (const k of dead) localStorage.removeItem(k);
+    // and stop a retired id riding the dirty list into the next push
+    const live = [...getDirtyIds()].filter((id) => EDITABLE_IDS.includes(id));
+    localStorage.setItem('protoLevelDirty', JSON.stringify(live));
+  } catch {
+    /* private mode: nothing persisted, nothing to prune */
+  }
+}
+
 export function clearDirty(ids: number[]): void {
   const s = getDirtyIds();
   for (const id of ids) s.delete(id);
