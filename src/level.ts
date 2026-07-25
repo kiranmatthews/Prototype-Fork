@@ -1315,6 +1315,7 @@ export class Level {
     particleWind: [0.8, -0.4, 0.3],
   };
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] = [];
+  private seaMats: THREE.ShaderMaterial[] = []; // open water: uTime is the only thing that moves
   private ambient: { points: THREE.Points; drift: Float32Array } | null = null;
 
   // safe = triggered by the player's own spin/slam: breaks the world, not them
@@ -3252,11 +3253,14 @@ export class Level {
       }
     }
 
-    // Scrolling pit textures (water/lava) drift forever.
+    // Scrolling pit textures (lava/void) drift forever.
     for (const s of this.scrollTexes) {
       s.tex.offset.x = (s.tex.offset.x + s.su * dt) % 1;
       s.tex.offset.y = (s.tex.offset.y + s.sv * dt) % 1;
     }
+    // The sea moves by advancing one clock. Wrapped at 1000s: the swells all
+    // have irrational-ish periods, so nothing snaps, and a float stays precise.
+    for (const m of this.seaMats) m.uniforms.uTime.value = (m.uniforms.uTime.value + dt) % 1000;
 
     // Ambient weather: leaves/embers/dust drifting in a box around the player.
     if (this.ambient) {
@@ -4736,48 +4740,146 @@ export class Level {
 
   // ---------------------------------------------------------- visual kit --
 
-  // Animated pit floor: scrolling water, lava, or drifting void haze. Water
-  // paints soft at 128 (lagoon two-tone + caustics); lava/void stay crisp.
+  // ---- THE SEA -----------------------------------------------------------
+  //
+  // Open water, drawn by arithmetic instead of by a bitmap.
+  //
+  // It used to be a 128px canvas tiled 171 times across a 2400-unit plane. One
+  // texel covered about 11cm of sea, so anywhere near the surface the whole
+  // thing turned to soft mush — the magnified-bitmap look, which is NOT the
+  // look this is after. The machines being imitated never had that problem:
+  // their water was maths evaluated at the corners and smeared smooth across
+  // the polygon by the rasteriser, so it stayed clean however close you got.
+  //
+  // Same idea, one step finer — three crossing swells summed per PIXEL. No
+  // texture, no tiling, no resolution: exact at any distance, from eleven
+  // sines on two triangles. It uploads nothing and it never needs a mipmap.
+  //
+  // The trick worth knowing is fwidth(). The bright crests are the contour
+  // where the swell field crosses a level, and the contour's width is taken
+  // from that field's own screen-space gradient — hair-thin up close, and as
+  // the sea tilts away toward the horizon and one pixel starts spanning whole
+  // waves, the line widens to exactly the average it ought to be. So it
+  // neither blocks up near nor boils into moiré far. That is the part a
+  // stretched bitmap cannot do at any price.
+  private seaSurface(y: number, cx: number, cz: number, size: number): void {
+    const uniforms = THREE.UniformsUtils.merge([
+      THREE.UniformsLib.fog,
+      {
+        uTime: { value: 0 },
+        uDeep: { value: new THREE.Color('#07376e') }, // trough: open-ocean navy
+        uMid: { value: new THREE.Color('#1276b8') },
+        uBright: { value: new THREE.Color('#54d2e2') }, // sunlit face of a swell
+        uFoam: { value: new THREE.Color('#e8fdff') }, // crest glint
+      },
+    ]);
+    const mat = new THREE.ShaderMaterial({
+      uniforms,
+      fog: true, // the horizon haze is the level's own fog, same as everything else
+      vertexShader: /* glsl */ `
+        varying vec2 vSea;
+        #include <fog_pars_vertex>
+        void main() {
+          vec4 wp = modelMatrix * vec4(position, 1.0);
+          vSea = wp.xz;                       // world metres: the pattern is pinned to the world, not to UVs
+          vec4 mvPosition = viewMatrix * wp;
+          gl_Position = projectionMatrix * mvPosition;
+          #include <fog_vertex>
+        }`,
+      fragmentShader: /* glsl */ `
+        uniform float uTime;
+        uniform vec3 uDeep, uMid, uBright, uFoam;
+        varying vec2 vSea;
+        #include <fog_pars_fragment>
+
+        // Three swells crossing at angles, wavelengths and speeds that never
+        // line back up, so the sea has no period you can catch.
+        float swell(vec2 p, float t) {
+          float h = sin(dot(p, vec2( 0.42,  0.91)) * 0.075 + t * 0.55);
+          h += sin(dot(p, vec2(-0.83,  0.56)) * 0.113 - t * 0.41) * 0.80;
+          h += sin(dot(p, vec2( 0.97, -0.24)) * 0.181 + t * 0.83) * 0.55;
+          return h * 0.4255;                  // back into roughly -1..1
+        }
+
+        void main() {
+          float t = uTime;
+          // Drag the field through a slow copy of itself. Plain crossed sines
+          // read as corrugated iron; warped ones read as water.
+          vec2 warp = vec2(swell(vSea * 0.6 + 11.0, t * 0.50),
+                           swell(vSea * 0.6 - 23.0, t * 0.43)) * 6.0;
+          float h = swell(vSea + warp, t);
+
+          // Body of the water: deep in the troughs, lifting through mid to a
+          // sunlit turquoise on the faces that tilt toward the light.
+          float lit = h * 0.5 + 0.5;
+          vec3 col = mix(uDeep, uMid, smoothstep(0.04, 0.62, lit));
+          col = mix(col, uBright, smoothstep(0.48, 1.0, lit) * 0.85);
+
+          // The light RIBBONS. Contours of a 2D field close into rings, which
+          // read as an oil slick; real water runs its light in long strips
+          // along the wave fronts. So take the phase along one dominant
+          // direction and let the big swell bend it — the level set of that is
+          // a set of long, snaking, roughly-parallel ribbons.
+          //
+          // Width floors do the shaping; fwidth only adds what the pixel needs
+          // on top, which is what keeps them from boiling into moiré as the
+          // surface tilts away.
+          float front = dot(vSea, vec2(0.93, 0.37)) * 0.075 + warp.x * 0.5 + t * 0.55;
+          float ribbon = sin(front);
+          float wRib = fwidth(ribbon) * 1.5 + 0.55;
+          float band = 1.0 - smoothstep(0.0, wRib, abs(ribbon - 0.10));
+
+          // A finer set crossing the first. Deliberately NOT a contour: two
+          // sets of lines crossing weave into a net, and a net reads as fabric.
+          // Take the top of this wave as a soft swell of light instead.
+          float chop = dot(vSea, vec2(0.88, -0.47)) * 0.33 + warp.y * 0.7 - t * 0.95;
+          float ripple = sin(chop);
+          float streak = smoothstep(0.40, 1.0, ripple);
+
+          // DETAIL FALLOFF. fwidth of the PHASE is radians of wave per pixel —
+          // a free measure of how much of this pattern the pixel can actually
+          // resolve. Past about half a radian the ribbons stop being features
+          // and start being clutter, so fade each set out on its own gradient.
+          // Without this the middle distance packs into bright spaghetti; with
+          // it, detail arrives as you come down to the water and dissolves
+          // into flat tone beyond, which is what the eye expects of a sea.
+          float detBand = 1.0 - smoothstep(0.35, 1.30, fwidth(front));
+          float detRip = 1.0 - smoothstep(0.30, 1.10, fwidth(chop));
+
+          col = mix(col, uBright, band * 0.45 * detBand);
+          // glitter only where light already falls — sparkle in a trough reads
+          // as static rather than as water
+          col = mix(col, uFoam, streak * 0.20 * detRip * smoothstep(0.2, 0.85, lit));
+
+          gl_FragColor = vec4(col, 1.0);
+          #include <fog_fragment>
+        }`,
+    });
+    // Two triangles. Every bit of the detail is in the pixel maths, so there
+    // is nothing to gain from subdividing it.
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.set(cx, y, cz);
+    mesh.userData.noShadow = true; // an effect, not a surface — and it is 2400 units wide
+    this.root.add(mesh);
+    this.seaMats.push(mat);
+  }
+
+  // Animated pit floor: scrolling lava or drifting void haze (water goes to
+  // seaSurface, which needs no texture at all).
   private pitPlane(kind: 'water' | 'lava' | 'void', y: number, cx: number, cz: number, size = 1400): void {
+    if (kind === 'water') {
+      this.seaSurface(y, cx, cz, size);
+      return;
+    }
     const canvas = document.createElement('canvas');
-    const S = kind === 'water' ? 128 : 64;
+    const S = 64;
     canvas.width = S;
     canvas.height = S;
     const ctx = canvas.getContext('2d')!;
     let su = 0.004;
     let sv = 0.002;
-    if (kind === 'water') {
-      ctx.fillStyle = '#2b8a96';
-      ctx.fillRect(0, 0, S, S);
-      const pool = (px: number, py: number, r: number, color: string): void => {
-        for (const ox of [-S, 0, S]) {
-          for (const oy of [-S, 0, S]) {
-            const bx = px + ox;
-            const by = py + oy;
-            if (bx < -r || bx > S + r || by < -r || by > S + r) continue;
-            const g = ctx.createRadialGradient(bx, by, r * 0.2, bx, by, r);
-            g.addColorStop(0, color);
-            g.addColorStop(1, 'rgba(255,255,255,0)');
-            ctx.fillStyle = g;
-            ctx.fillRect(bx - r, by - r, r * 2, r * 2);
-          }
-        }
-      };
-      for (let i = 0; i < 12; i++) pool(Math.random() * S, Math.random() * S, 16 + Math.random() * 20, 'rgba(23,105,128,0.5)'); // deep pools
-      for (let i = 0; i < 10; i++) pool(Math.random() * S, Math.random() * S, 10 + Math.random() * 16, 'rgba(94,196,196,0.45)'); // shallows
-      ctx.strokeStyle = 'rgba(214,246,240,0.4)'; // caustic arcs
-      ctx.lineWidth = 2.5;
-      for (let i = 0; i < 6; i++) {
-        ctx.beginPath();
-        const yy = 10 + i * 20;
-        ctx.moveTo(0, yy);
-        ctx.bezierCurveTo(S * 0.28, yy + 8, S * 0.72, yy - 8, S, yy);
-        ctx.stroke();
-      }
-      for (let i = 0; i < 8; i++) pool(Math.random() * S, Math.random() * S, 3 + Math.random() * 4, 'rgba(232,255,250,0.5)'); // sparkle
-      su = 0.008;
-      sv = 0.004;
-    } else if (kind === 'lava') {
+    if (kind === 'lava') {
       ctx.fillStyle = '#1c0a08';
       ctx.fillRect(0, 0, 64, 64);
       // sparse thin veins at partial alpha: the chase cam fills the frame
