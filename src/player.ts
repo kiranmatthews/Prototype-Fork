@@ -1028,6 +1028,29 @@ export class Player {
       this.speed =
         Math.abs(alongNew) > 0.3 ? Math.sign(alongNew) * Math.abs(oldSpeed) * 0.7 : 0;
     }
+    // ...and the COURSE AXES have to MATCH that travel direction, every frame
+    // plain walking is what's happening. Walking is course-relative by
+    // definition — stick-up is screen-up — but several canned moves rewrite
+    // axisF while you are on your feet: stepping off a lip stall aims you out
+    // across the coping, a rail drop-off aims you at the drop, a bail tumbles
+    // you down the fall line. The ONLY place that ever put the axes back was
+    // the board dismount, so coming out of one of those already on foot left
+    // the walking frame rotated for the rest of the run — "up" kept driving
+    // you along a heading you set minutes ago. Re-assert it here; the states
+    // that legitimately own the heading on foot are excluded.
+    if (
+      !laneDir &&
+      !chaseMode &&
+      !this.freeSkate &&
+      this.state === 'ride' &&
+      this.slideTimer <= 0 &&
+      !this.isBailing &&
+      !this.teetering &&
+      this.lipPipe === null &&
+      !this.wallriding
+    ) {
+      this.setTravelDir(this.travelDir);
+    }
     let ctl =
       this.travelDir === 'S' || this.travelDir === 'N' || (level.laneActive && !zone)
         ? input
@@ -2273,11 +2296,24 @@ export class Player {
             this.speed = Math.max(this.speed, 1.5);
             this.pipeFlipCd = 0.3; // don't re-flip until gravity has pulled you away
           }
-        } else if (steepGround && this.speed < 2 && Math.abs(this.lastTy) < 0.15) {
+        } else if (steepGround && this.speed < 2 && this.lastTy > -0.15) {
+          // GENERAL STALL FLIP, for every transition the analytic pipes don't
+          // cover — bowls, corners, banked mesh walls.
+          //
+          // This used to read |lastTy| < 0.15: it only rescued you when you
+          // were pointing ACROSS the fall line, and did nothing when you were
+          // pointing UP it. But pointing up the fall line is the MOST stalled
+          // you can be, and the free-skate clamp below floors speed at 0 — so
+          // gravity would push it negative, the clamp would erase it, and you
+          // were welded to the wall at exactly zero forever. Worse than stuck:
+          // the carve steers by turning the HEADING, which needs speed, so the
+          // frozen heading became the control frame and "up" stopped meaning
+          // up the screen. The gate is now "not already heading down the fall
+          // line" — descending (ty < 0) needs no rescue, everything else does.
           const n = this.groundHit!.normal;
           const len = Math.hypot(n.x, n.z);
           if (len > 1e-4) {
-            this.axisF.set(n.x / len, 0, n.z / len);
+            this.axisF.set(n.x / len, 0, n.z / len); // the normal leans toward the flat
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
             this.speed = Math.max(this.speed, 1.5);
           }
