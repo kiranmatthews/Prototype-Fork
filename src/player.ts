@@ -1279,10 +1279,7 @@ export class Player {
     // Actual planar speed from last step's displacement (any direction) —
     // the skate-entry gate uses this so sideways motion counts, not just the
     // forward-axis `speed` scalar. Computed before prevPos is overwritten.
-    this.lastVelX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-4);
-    this.lastVelZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
-    this.lastPlanar = Math.hypot(this.lastVelX, this.lastVelZ);
-    this.prevPos.copy(this.pos);
+    this.measurePlanar(dt);
     if (this.slideLandClamp) {
       // first full frame after a walk-slide touchdown: the measurement above
       // still holds the landing step's air speed — keep it at walking pace so
@@ -5837,10 +5834,7 @@ export class Player {
       }
     }
     // bookkeeping the main step normally does (velocity measure + prevPos)
-    this.lastVelX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-4);
-    this.lastVelZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
-    this.lastPlanar = Math.hypot(this.lastVelX, this.lastVelZ);
-    this.prevPos.copy(this.pos);
+    this.measurePlanar(dt);
   }
 
   // Commit the clamber: aim the path at the landing spot — inward past the
@@ -6203,6 +6197,38 @@ export class Player {
       vert: hit.object.userData.vert as boolean | undefined,
       halfpipe: hp,
     };
+  }
+
+  /**
+   * Measure last step's planar movement — and refuse to believe the impossible.
+   *
+   * lastPlanar exists because the `speed` scalar is forward-only, so a pure
+   * sideways walk reads as 0 and the skate-entry gate would miss it. It is
+   * derived from actual displacement, which is the problem: displacement is
+   * not always LOCOMOTION. A collision push-out, a step-up snap, a respawn or
+   * a moving platform can shift the player metres in one frame, and at 60Hz a
+   * 1.7-unit shove reads as 102 u/s.
+   *
+   * The gate believes it, pops the board out on its own, and the entry seeds
+   * `speed` from it — so walking from one surface to another and catching the
+   * seam launched the player at the speed cap. Three separate clamps had
+   * already been bolted on for three known false sources (a slide landing, a
+   * slither down a steep face, a slide taken from the feet); this is the same
+   * bug arriving by a fourth road, so fix the measurement instead.
+   *
+   * Nothing the player can DRIVE ever exceeds their own speed — or a walk,
+   * which is exactly the case the forward-only scalar misses. So that is the
+   * ceiling. Direction (lastVelX/Z) stays raw: it is still correct, and only
+   * the magnitude was ever the lie.
+   */
+  private measurePlanar(dt: number): void {
+    this.lastVelX = (this.pos.x - this.prevPos.x) / Math.max(dt, 1e-4);
+    this.lastVelZ = (this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
+    this.lastPlanar = Math.min(
+      Math.hypot(this.lastVelX, this.lastVelZ),
+      Math.max(Math.abs(this.speed), TUNING.walkSpeed),
+    );
+    this.prevPos.copy(this.pos);
   }
 
   // Long-range floor probe under the player — shadow/landing indicator only,
