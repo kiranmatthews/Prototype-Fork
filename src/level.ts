@@ -4807,49 +4807,53 @@ export class Level {
           // read as corrugated iron; warped ones read as water.
           vec2 warp = vec2(swell(vSea * 0.6 + 11.0, t * 0.50),
                            swell(vSea * 0.6 - 23.0, t * 0.43)) * 6.0;
-          float h = swell(vSea + warp, t);
+          vec2 q = vSea + warp;
+
+          // THE RADIAL HALF — the part that makes it read as plasma rather
+          // than as swell. Plane waves alone give parallel ribbons; adding
+          // sin(distance-to-a-point) bends the level sets closed, and closed
+          // level sets are the lava-lamp pools.
+          //
+          // The centres crawl round slow Lissajous loops, so no ring ever sits
+          // still long enough to read as a stone dropped in the water. Far
+          // from a centre the term flattens into just another plane wave, so
+          // it degrades gracefully across a 2400-unit plane instead of leaving
+          // a bullseye at the origin and nothing anywhere else.
+          vec2 c1 = vec2(sin(t * 0.11), cos(t * 0.13)) * 130.0;
+          vec2 c2 = vec2(cos(t * 0.07), sin(t * 0.10)) * 210.0 + vec2(160.0, -95.0);
+          float f = swell(q, t);
+          f += sin(length(q - c1) * 0.125 - t * 0.55) * 0.85;
+          f += sin(length(q - c2) * 0.098 + t * 0.42) * 0.70;
+          f *= 0.42;                          // back to roughly -1..1
 
           // Body of the water: deep in the troughs, lifting through mid to a
-          // sunlit turquoise on the faces that tilt toward the light.
-          float lit = h * 0.5 + 0.5;
-          vec3 col = mix(uDeep, uMid, smoothstep(0.04, 0.62, lit));
-          col = mix(col, uBright, smoothstep(0.48, 1.0, lit) * 0.85);
+          // sunlit turquoise where the interference piles up.
+          float lit = f * 0.5 + 0.5;
+          vec3 col = mix(uDeep, uMid, smoothstep(0.04, 0.60, lit));
+          col = mix(col, uBright, smoothstep(0.46, 0.98, lit) * 0.85);
 
-          // The light RIBBONS. Contours of a 2D field close into rings, which
-          // read as an oil slick; real water runs its light in long strips
-          // along the wave fronts. So take the phase along one dominant
-          // direction and let the big swell bend it — the level set of that is
-          // a set of long, snaking, roughly-parallel ribbons.
-          //
-          // Width floors do the shaping; fwidth only adds what the pixel needs
-          // on top, which is what keeps them from boiling into moiré as the
-          // surface tilts away.
-          float front = dot(vSea, vec2(0.93, 0.37)) * 0.075 + warp.x * 0.5 + t * 0.55;
-          float ribbon = sin(front);
-          float wRib = fwidth(ribbon) * 1.5 + 0.55;
-          float band = 1.0 - smoothstep(0.0, wRib, abs(ribbon - 0.10));
+          // THE POOLS. These are level sets of the 2D field, so they close
+          // into blobs — which is exactly the look wanted. The whole trick is
+          // WIDTH: at hairline width a closed contour reads as an oil slick,
+          // at pool width it reads as light gathering on the surface. So the
+          // floor is large and does the shaping, and fwidth only adds what the
+          // pixel needs on top to stay clean.
+          float wPool = fwidth(f) * 1.5 + 0.30;
+          float pool = 1.0 - smoothstep(0.0, wPool, abs(f - 0.36));
+          // A second, tighter ring just inside it — plasma's banding, and what
+          // gives each pool a lit rim instead of a flat fill.
+          float wRim = fwidth(f) * 1.5 + 0.10;
+          float rim = 1.0 - smoothstep(0.0, wRim, abs(f - 0.66));
 
-          // A finer set crossing the first. Deliberately NOT a contour: two
-          // sets of lines crossing weave into a net, and a net reads as fabric.
-          // Take the top of this wave as a soft swell of light instead.
-          float chop = dot(vSea, vec2(0.88, -0.47)) * 0.33 + warp.y * 0.7 - t * 0.95;
-          float ripple = sin(chop);
-          float streak = smoothstep(0.40, 1.0, ripple);
+          // DETAIL FALLOFF. fwidth of the field is how much of the pattern a
+          // pixel can actually resolve. Past a point the bands stop being
+          // features and start being clutter, so fade them out — detail
+          // arrives as you come down to the water and dissolves into flat tone
+          // beyond, which is what the eye expects of a sea.
+          float det = 1.0 - smoothstep(0.25, 0.95, fwidth(f));
 
-          // DETAIL FALLOFF. fwidth of the PHASE is radians of wave per pixel —
-          // a free measure of how much of this pattern the pixel can actually
-          // resolve. Past about half a radian the ribbons stop being features
-          // and start being clutter, so fade each set out on its own gradient.
-          // Without this the middle distance packs into bright spaghetti; with
-          // it, detail arrives as you come down to the water and dissolves
-          // into flat tone beyond, which is what the eye expects of a sea.
-          float detBand = 1.0 - smoothstep(0.35, 1.30, fwidth(front));
-          float detRip = 1.0 - smoothstep(0.30, 1.10, fwidth(chop));
-
-          col = mix(col, uBright, band * 0.45 * detBand);
-          // glitter only where light already falls — sparkle in a trough reads
-          // as static rather than as water
-          col = mix(col, uFoam, streak * 0.20 * detRip * smoothstep(0.2, 0.85, lit));
+          col = mix(col, uBright, pool * 0.45 * det);
+          col = mix(col, uFoam, rim * 0.22 * det);
 
           gl_FragColor = vec4(col, 1.0);
           #include <fog_fragment>
