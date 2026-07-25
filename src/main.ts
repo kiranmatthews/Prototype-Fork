@@ -34,7 +34,20 @@ const app = document.getElementById('app')!;
 // internal resolution — slow frames desync the suite's wall-clock scripting.
 const LITE_RENDER = window.location.search.includes('lite');
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
-renderer.setPixelRatio(1); // internal res is the renderScale knob, not the DPR
+// NATIVE RESOLUTION. The device pixel ratio is the baseline — on a Retina
+// panel that is 2x the CSS grid, and rendering below it was the single biggest
+// thing making the game look cheap. renderScale rides ON TOP as a pure
+// performance knob (see resize), not an era knob. Capped at 2: past that the
+// pixels are far too small to see and it is pure fill-rate.
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+// No tone curve. Every colour in this game was authored by eye against a raw
+// output, and ACES/AgX/Neutral all pull the saturation out of it — the sky
+// goes milky and the greens go grey. Shot side by side, untouched wins.
+// Soft shadows. This is what stops everything reading as a lit grey box:
+// contact between the skater, the props and the ground.
+renderer.shadowMap.enabled = !LITE_RENDER;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+Level.setMaxAnisotropy(renderer.capabilities.getMaxAnisotropy());
 app.appendChild(renderer.domElement);
 
 // --- auto-update: beat the 10-minute GitHub Pages HTML cache ----------------
@@ -72,6 +85,32 @@ scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xffe4ae, 1.55);
 sun.position.set(30, 60, 20);
 scene.add(sun);
+scene.add(sun.target);
+// SHADOWS. A directional light shadows the whole world through one ortho
+// frustum, so the frustum has to be small enough to hold detail and therefore
+// has to FOLLOW the skater (see updateSunShadow). 46 units square at 2048 is
+// ~22 texels per unit — enough that a crate edge reads sharp — and the bias
+// pair is tuned for the shallow angles the low sun throws across a deck.
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+const SHADOW_HALF = 23;
+sun.shadow.camera.left = -SHADOW_HALF;
+sun.shadow.camera.right = SHADOW_HALF;
+sun.shadow.camera.top = SHADOW_HALF;
+sun.shadow.camera.bottom = -SHADOW_HALF;
+sun.shadow.camera.near = 1;
+sun.shadow.camera.far = 190;
+sun.shadow.bias = -0.0006;
+sun.shadow.normalBias = 0.035;
+// The sun rides a fixed offset from whatever it is lighting, so the frustum
+// travels with play and the light direction never changes.
+const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
+function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
+  sun.target.position.set(focusX, focusY, focusZ);
+  sun.target.updateMatrixWorld();
+  sun.position.set(focusX + SUN_OFFSET.x, focusY + SUN_OFFSET.y, focusZ + SUN_OFFSET.z);
+  sun.shadow.camera.updateProjectionMatrix();
+}
 // Cool fill from opposite the sun: faint sky-colored bounce so the faces the
 // key misses keep a hint of shape instead of going dead flat. No shadows.
 const fill = new THREE.DirectionalLight(0xbfd4ff, 0.25);
@@ -468,9 +507,9 @@ function resize(): void {
   document.documentElement.style.setProperty('--vh', h + 'px');
   const rs = LITE_RENDER ? Math.min(TUNING.renderScale, 0.5) : TUNING.renderScale;
   renderer.setSize(Math.round(w * rs), Math.round(h * rs), false);
-  // Upscale sampling follows the scale: chunky pixels only when the slider is
-  // pulled into PS1 territory; at 0.7+ the stretch stays smooth.
-  renderer.domElement.style.imageRendering = TUNING.renderScale < 0.7 ? 'pixelated' : '';
+  // Always smooth. Dropping the scale is a frame-rate trade, and a soft
+  // upscale is what that should look like — never a deliberate mosaic.
+  renderer.domElement.style.imageRendering = '';
   camera.aspect = split2p ? w / (h / 2) : w / h;
   camera.updateProjectionMatrix();
   camera2.aspect = camera.aspect;
@@ -691,6 +730,30 @@ player.respawn(level, true);
 applyTheme();
 recorder.start(currentCourse); // the take always runs: level load -> now
 
+// Every solid mesh in the world both casts and receives. It's a whole-scene
+// traverse rather than per-builder flags because the builders are hundreds of
+// call sites and a missed one reads as a hole in the lighting. Things that are
+// not surfaces opt out with userData.noShadow: the sky dome, the water/lava
+// planes, the blob shadow and landing X, particle sprites, editor ghosts.
+function applyShadowFlags(): void {
+  scene.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (!m.isMesh) return;
+    let skip = false;
+    let n: THREE.Object3D | null = m;
+    while (n) {
+      if (n.userData.noShadow || n.userData.editorGhost) skip = true;
+      n = n.parent;
+    }
+    const mat = m.material as THREE.Material | THREE.Material[];
+    const one = Array.isArray(mat) ? mat[0] : mat;
+    // Unlit basic materials are effects (glows, markers, sky), not surfaces.
+    if (one && (one as THREE.MeshBasicMaterial).isMeshBasicMaterial) skip = true;
+    m.castShadow = !skip;
+    m.receiveShadow = !skip;
+  });
+}
+
 function switchLevel(id: number): void {
   currentCourse = id;
   localStorage.setItem('protoLevel', String(id));
@@ -709,6 +772,7 @@ function switchLevel(id: number): void {
     deactivate2pModes();
   }
   applyTheme();
+  applyShadowFlags();
   ui.setLevel(id);
   ui.showMessage(LEVEL_NAMES[id].toUpperCase(), '', 1400);
   recorder.start(id); // fresh take from this load
@@ -1486,6 +1550,10 @@ function frame(): void {
     masks: player.uberTimer > 0 ? `INVINCIBLE ${player.uberTimer.toFixed(1)}s` : String(player.masks),
     time: player.runTime,
   });
+
+  // Walk the shadow frustum onto the skater before drawing — it's small enough
+  // to stay sharp, so it has to travel with them.
+  updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
 
   if (split2p && p2) {
     const dw = renderer.domElement.width;

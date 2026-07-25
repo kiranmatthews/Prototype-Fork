@@ -137,7 +137,7 @@ export const TUNING = {
   nitroRadius: 2.75, // nitro explosion kill/break radius
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
-  renderScale: 1, // internal render resolution as a fraction of the window — the era knob
+  renderScale: 1, // internal resolution as a fraction of NATIVE (device pixels) — a perf knob
   // CAMERA defaults (the long-standing hand-tuned chase framing).
   // camTilt aims AT the character (2.1 ≈ just over her head — this exactly
   // reproduces the old 21° down-pitch); camOffset TRANSLATES the whole rig
@@ -285,7 +285,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   nitroRadius: { min: 2, max: 12, step: 0.25 },
   tntRadius: { min: 1.5, max: 10, step: 0.25 },
   boulderSpeed: { min: 10, max: 45, step: 1 },
-  renderScale: { min: 0.25, max: 1, step: 0.05 },
+  renderScale: { min: 0.5, max: 1, step: 0.05 },
   camFov: { min: 30, max: 100, step: 1 },
   chaseCam: { min: 0, max: 1, step: 1 },
   camDist: { min: 2, max: 14, step: 0.1 },
@@ -510,7 +510,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
   renderScale:
-    'Internal render resolution as a fraction of the window. 0.75-1 = full-smooth PS2 look (linear upscale); below 0.7 the upscale goes pixelated, and below 0.5 it is full PS1 crunch. Purely visual.',
+    'Internal render resolution, as a fraction of the display\'s NATIVE pixels (so 1 is fully sharp on a Retina panel, not half of it). This is a performance knob and nothing else — drop it if a device struggles, and the upscale stays smooth the whole way down.',
   camFov:
     'ZOOM (focal length): the camera lens angle. Lower = telephoto punch-in (tighter, flatter, more cinematic); higher = wide angle (more of the world, more distortion). Side-scroll zones and the boulder chase still add their own push.',
   camTilt:
@@ -683,5 +683,5 @@ export const CONST = {
   // landingFlow/wallStick/landGive sliders); only the structural facet
   // threshold stays fixed here.
   steepSnapNormal: 0.85, // below this, ground-follow + landing windows widen for transitions
-  renderScale: 0.75, // build default for the internal resolution (live knob: TUNING.renderScale)
+  renderScale: 1, // ship at native resolution (live knob: TUNING.renderScale)
 };

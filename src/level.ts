@@ -1388,34 +1388,78 @@ export class Level {
   private static pickupGeo = new THREE.SphereGeometry(0.24, 8, 6);
   private checkerTex: THREE.CanvasTexture | null = null;
 
-  // Subtle checker tiles (tinted by each deck's color) so ground movement
-  // reads even without landmarks — crucial on the side-scroll camera.
+  // THE DEFAULT SURFACE. This used to be a literal white/grey checkerboard with
+  // a black outline round every tile — the universal "this is placeholder"
+  // texture, and the loudest grey-box tell left in the game. It is now sealed
+  // panel: fine tonal grain, a soft seam every panel, and a light wear pass.
+  // It keeps the job the checker was actually there for (ground movement has
+  // to read even with no landmarks, which the side-scroll camera depends on)
+  // without announcing itself as a placeholder. Near-white, so each deck's
+  // colour still tints it. The 'checker' KEY stays — saved levels reference it.
   private checkerTexture(): THREE.CanvasTexture {
     if (this.checkerTex) return this.checkerTex;
+    const SS = Level.TEX_SS;
     const canvas = document.createElement('canvas');
-    canvas.width = 64;
-    canvas.height = 64;
+    canvas.width = 64 * SS;
+    canvas.height = 64 * SS;
     const ctx = canvas.getContext('2d')!;
-    for (let y = 0; y < 2; y++) {
-      for (let x = 0; x < 2; x++) {
-        ctx.fillStyle = (x + y) % 2 === 0 ? '#ffffff' : '#cfcfcf';
-        ctx.fillRect(x * 32, y * 32, 32, 32);
-      }
+    ctx.scale(SS, SS);
+    ctx.fillStyle = '#f2f1ee';
+    ctx.fillRect(0, 0, 64, 64);
+    // tonal drift: broad soft pools so a big deck never reads as dead flat
+    for (let i = 0; i < 14; i++) {
+      const x = Math.random() * 64;
+      const y = Math.random() * 64;
+      const r = 9 + Math.random() * 15;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      const v = Math.random() < 0.5 ? '226,224,218' : '255,255,252';
+      g.addColorStop(0, `rgba(${v},0.5)`);
+      g.addColorStop(1, `rgba(${v},0)`);
+      ctx.fillStyle = g;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
     }
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.22)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(1, 1, 62, 62);
-    this.checkerTex = new THREE.CanvasTexture(canvas);
-    this.checkerTex.magFilter = THREE.NearestFilter;
-    this.checkerTex.wrapS = THREE.RepeatWrapping;
-    this.checkerTex.wrapT = THREE.RepeatWrapping;
+    // panel seams: one soft groove each way, with a hairline highlight on the
+    // far side so the joint reads cut rather than drawn on
+    ctx.strokeStyle = 'rgba(150,146,138,0.5)';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(0, 0.35);
+    ctx.lineTo(64, 0.35);
+    ctx.moveTo(0.35, 0);
+    ctx.lineTo(0.35, 64);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(0, 1.1);
+    ctx.lineTo(64, 1.1);
+    ctx.moveTo(1.1, 0);
+    ctx.lineTo(1.1, 64);
+    ctx.stroke();
+    // wear: faint scuffs, denser toward the seams where feet land
+    ctx.strokeStyle = 'rgba(168,164,155,0.20)';
+    ctx.lineWidth = 0.45;
+    for (let i = 0; i < 22; i++) {
+      const x = Math.random() * 64;
+      const y = Math.random() * 64;
+      const a = Math.random() * Math.PI;
+      const l = 2 + Math.random() * 7;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l);
+      ctx.stroke();
+    }
+    this.checkerTex = Level.finishTex(new THREE.CanvasTexture(canvas));
     return this.checkerTex;
   }
 
   // Light-toned surface textures — near-white so each deck's material color
-  // tints them. Organic kinds (grass/jungle/dirt/sand/wood) paint at 128px
-  // with layered soft radial blobs and keep the default LinearFilter — the
-  // smooth PS2 read. Man-made kinds stay 64px pixel-crisp. Cached per kind.
+  // tints them. Every kind is PAINTED in a 64/128 unit coordinate space, which
+  // is what all the blob radii and stripe widths below are written against,
+  // but the canvas underneath is SS times bigger and the context is scaled to
+  // match. Same art, four times the texels: the pattern keeps its designed
+  // scale on the surface while the edges resolve instead of staircasing.
+  private static readonly TEX_SS = 4;
   private surfTexCache = new Map<string, THREE.CanvasTexture>();
   private surfaceTexture(kind: string): THREE.CanvasTexture {
     if (kind === 'checker') return this.checkerTexture();
@@ -1424,10 +1468,12 @@ export class Level {
     const soft =
       kind === 'grass' || kind === 'jungle' || kind === 'dirt' || kind === 'sand' || kind === 'wood' || kind === 'moss';
     const S = soft ? 128 : 64;
+    const SS = Level.TEX_SS;
     const canvas = document.createElement('canvas');
-    canvas.width = S;
-    canvas.height = S;
+    canvas.width = S * SS;
+    canvas.height = S * SS;
     const ctx = canvas.getContext('2d')!;
+    ctx.scale(SS, SS);
     // Soft gradient blob, stamped at every wrapped position so tiles seam.
     const blob = (x: number, y: number, r: number, color: string): void => {
       for (const ox of [-S, 0, S]) {
@@ -1629,17 +1675,82 @@ export class Level {
         ctx.stroke();
       }
     }
-    const tex = new THREE.CanvasTexture(canvas);
-    if (!soft) tex.magFilter = THREE.NearestFilter; // crisp = man-made only
-    tex.wrapS = THREE.RepeatWrapping;
-    tex.wrapT = THREE.RepeatWrapping;
+    const tex = Level.finishTex(new THREE.CanvasTexture(canvas));
     this.surfTexCache.set(kind, tex);
     return tex;
   }
 
-  // Per-deck clone of a base material with a surface texture tiled on it.
-  private patterned(mat: THREE.Material, w: number, d: number, kind = 'checker'): THREE.MeshLambertMaterial {
-    const m = (mat as THREE.MeshLambertMaterial).clone();
+  // ONE place that finishes a painted texture, so no surface in the game is
+  // accidentally left raw. Three things matter and all three were missing:
+  //   colorSpace  — a canvas holds sRGB values. Left unset, three samples them
+  //                 as if they were already linear and the output pass
+  //                 brightens them again, which is why every deck read washed
+  //                 out and chalky no matter what colour it was tinted.
+  //   anisotropy  — floors are viewed at grazing angles almost all the time,
+  //                 which is exactly where isotropic mipmaps smear to mush.
+  //   filtering   — trilinear both ways. Nearest was a deliberate era choice.
+  private static maxAniso = 8;
+  static finishTex<T extends THREE.Texture>(tex: T, repeatWrap = true): T {
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = Level.maxAniso;
+    tex.magFilter = THREE.LinearFilter;
+    tex.minFilter = THREE.LinearMipmapLinearFilter;
+    tex.generateMipmaps = true;
+    if (repeatWrap) {
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+    }
+    tex.needsUpdate = true;
+    return tex;
+  }
+  // The renderer knows the real cap; main calls this once at boot.
+  static setMaxAnisotropy(n: number): void {
+    Level.maxAniso = Math.max(1, Math.min(16, Math.floor(n)));
+  }
+
+  // How a surface catches the light. Lambert has no specular term at all,
+  // which is why every deck read like matte paper no matter what it was made
+  // of. These are deliberately restrained — a sealed concrete floor has a
+  // sheen, it is not a mirror — but it is the difference between a shape and
+  // a silhouette when the sun is low.
+  private static readonly SHEEN: Record<string, { spec: number; shine: number }> = {
+    metal: { spec: 0x6e7784, shine: 60 },
+    pavement: { spec: 0x2e3238, shine: 22 },
+    asphalt: { spec: 0x24262a, shine: 14 },
+    stone: { spec: 0x2a2c30, shine: 18 },
+    checker: { spec: 0x34383e, shine: 26 },
+    plank: { spec: 0x22201c, shine: 12 },
+    wood: { spec: 0x1e1c18, shine: 10 },
+    sand: { spec: 0x141414, shine: 4 },
+    dirt: { spec: 0x121212, shine: 3 },
+    grass: { spec: 0x101410, shine: 3 },
+    jungle: { spec: 0x101410, shine: 3 },
+    moss: { spec: 0x0e120e, shine: 3 },
+  };
+  // Rebuild a source material as a lit surface with a tiled texture on it,
+  // keeping whatever the caller had set (tint, emissive, side, transparency).
+  private surfaceMat(src: THREE.Material, kind: string): THREE.MeshPhongMaterial {
+    const l = src as THREE.MeshLambertMaterial;
+    const sheen = Level.SHEEN[kind] ?? { spec: 0x1a1c20, shine: 12 };
+    const m = new THREE.MeshPhongMaterial({
+      color: l.color ? l.color.clone() : new THREE.Color(0xffffff),
+      emissive: l.emissive ? l.emissive.clone() : new THREE.Color(0x000000),
+      specular: new THREE.Color(sheen.spec),
+      shininess: sheen.shine,
+      side: src.side,
+      transparent: src.transparent,
+      opacity: src.opacity,
+      depthWrite: src.depthWrite,
+      alphaTest: src.alphaTest,
+      flatShading: (l as unknown as { flatShading?: boolean }).flatShading ?? false,
+    });
+    m.userData = { ...src.userData };
+    return m;
+  }
+
+  // Per-deck copy of a base material with a surface texture tiled on it.
+  private patterned(mat: THREE.Material, w: number, d: number, kind = 'checker'): THREE.MeshPhongMaterial {
+    const m = this.surfaceMat(mat, kind);
     const tex = this.surfaceTexture(kind).clone();
     const density =
       kind === 'grass' ? 8.5 // soft 128px kinds tile larger so blobs read
@@ -1665,11 +1776,12 @@ export class Level {
   // so texel size breathes with mesh size: very PS1, very cheap. kind '' = no
   // map (flat painted accents). Builders re-tint via the *Tint fields below
   // BEFORE placing geometry.
-  private baseMats = new Map<string, THREE.MeshLambertMaterial>();
-  private baseMat(key: string, color: number, kind = '', rx = 2, ry = 2): THREE.MeshLambertMaterial {
+  private baseMats = new Map<string, THREE.MeshPhongMaterial>();
+  private baseMat(key: string, color: number, kind = '', rx = 2, ry = 2): THREE.MeshPhongMaterial {
     let m = this.baseMats.get(key);
     if (m) return m;
-    m = new THREE.MeshLambertMaterial({ color });
+    const sheen = Level.SHEEN[kind] ?? { spec: 0x1a1c20, shine: 12 };
+    m = new THREE.MeshPhongMaterial({ color, specular: sheen.spec, shininess: sheen.shine });
     if (kind !== '') {
       const tex = this.surfaceTexture(kind).clone();
       tex.repeat.set(rx, ry);
@@ -4704,10 +4816,7 @@ export class Level {
       su = 0.0016;
       sv = 0.001;
     }
-    const tex = new THREE.CanvasTexture(canvas);
-    if (kind !== 'water') tex.magFilter = THREE.NearestFilter; // water blends
-    tex.wrapS = THREE.RepeatWrapping;
-    tex.wrapT = THREE.RepeatWrapping;
+    const tex = Level.finishTex(new THREE.CanvasTexture(canvas));
     // one tile per ~14u: veins/waves read as surface detail, not spaghetti,
     // even when the tilted boulder-chase camera fills the frame with the pit
     tex.repeat.set(size / 14, size / 14);
@@ -5484,14 +5593,18 @@ export class Level {
     ctx.fillText(text, x, y);
   }
 
+  // Painted in a 32-unit space (every draw call below is written against it)
+  // onto an 8x canvas, so the crate faces keep their layout and lose their
+  // staircase.
   private makeTex(draw: (ctx: CanvasRenderingContext2D) => void): THREE.CanvasTexture {
+    const SS = 8;
     const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    draw(canvas.getContext('2d')!);
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter;
-    return tex;
+    canvas.width = 32 * SS;
+    canvas.height = 32 * SS;
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(SS, SS);
+    draw(ctx);
+    return Level.finishTex(new THREE.CanvasTexture(canvas), false);
   }
 
   // Plain wooden crate: planks + X brace, nothing else.
@@ -5722,10 +5835,7 @@ export class Level {
         ctx.fillRect(x, y, 1, 1);
       }
     }
-    this.chromeTex = new THREE.CanvasTexture(canvas);
-    this.chromeTex.magFilter = THREE.NearestFilter;
-    this.chromeTex.wrapS = THREE.RepeatWrapping;
-    this.chromeTex.wrapT = THREE.RepeatWrapping;
+    this.chromeTex = Level.finishTex(new THREE.CanvasTexture(canvas));
     return this.chromeTex;
   }
 
@@ -5764,8 +5874,7 @@ export class Level {
     cg.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = cg;
     ctx.fillRect(20, 20, 24, 24);
-    this.glintTex = new THREE.CanvasTexture(canvas);
-    this.glintTex.magFilter = THREE.NearestFilter;
+    this.glintTex = Level.finishTex(new THREE.CanvasTexture(canvas), false);
     return this.glintTex;
   }
 
@@ -5870,9 +5979,7 @@ export class Level {
       blob(c + 28, c + 8, 18, 'rgba(255,255,255,0.9)');
       blob(c - 32, c + 32, 13, 'rgba(225,238,250,0.8)');
     }
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter; // chunky PS1 texels
-    tex.minFilter = THREE.NearestFilter;
+    const tex = Level.finishTex(new THREE.CanvasTexture(canvas), false);
     this.matcapTex[kind] = tex;
     return tex;
   }
@@ -6514,7 +6621,10 @@ export class Level {
     this.plasmaCtx = canvas.getContext('2d')!;
     this.plasmaData = this.plasmaCtx.createImageData(48, 48);
     this.plasmaTex = new THREE.CanvasTexture(canvas);
-    this.plasmaTex.magFilter = THREE.NearestFilter; // chunky PS1 texels
+    this.plasmaTex.colorSpace = THREE.SRGBColorSpace;
+    this.plasmaTex.magFilter = THREE.LinearFilter;
+    this.plasmaTex.minFilter = THREE.LinearFilter;
+    this.plasmaTex.generateMipmaps = false; // repainted every frame
   }
 
   // Classic demoscene plasma: three drifting sine bands + one radial ripple,
@@ -8495,8 +8605,7 @@ export class Level {
         ctx.fillRect(x * 8, y * 8, 8, 8);
       }
     }
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter;
+    const tex = Level.finishTex(new THREE.CanvasTexture(canvas), false);
     const banner = new THREE.Mesh(
       new THREE.BoxGeometry(11.5, 1.2, 0.2),
       new THREE.MeshBasicMaterial({ map: tex }),

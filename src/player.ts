@@ -498,13 +498,18 @@ export class Player {
     }
     this.installSmear(); // whirlwind smear model shown during the spin attack
 
-    // Crash-reference shadow: a TIGHT dark ellipse under the feet (~0.75 of
-    // a crate wide), not a faint pancake — it anchors the character hard.
-    const shadowGeo = new THREE.CircleGeometry(0.42, 12);
+    // Contact patch under the feet. This used to be the ONLY shadow in the
+    // game, so it was drawn dark and hard to anchor the character. There is a
+    // real cast shadow now, and at the old strength the two stacked into a
+    // black smudge — so it drops back to what it should always have been: a
+    // soft occlusion patch that keeps the feet planted (and doubles as the
+    // landing indicator over a pit, where nothing is there to catch a real
+    // shadow at all).
+    const shadowGeo = new THREE.CircleGeometry(0.42, 20);
     shadowGeo.scale(1, 0.85, 1); // slightly wider than deep once laid flat
     this.shadow = new THREE.Mesh(
       shadowGeo,
-      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.55 }),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3 }),
     );
     this.shadow.rotation.x = -Math.PI / 2;
     scene.add(this.shadow);
@@ -7070,22 +7075,20 @@ export class Player {
 
   }
 
-  // Character/board skins: painted canvases, up to 128px. Organic surfaces
-  // keep the default LinearFilter so gradients shade smooth — the PS2 read;
-  // `crisp` opts back into NearestFilter only where hard texels still sell
-  // (grip grit). minFilter stays default like every CanvasTexture in the game.
-  private paintTex(
-    size: number,
-    draw: (ctx: CanvasRenderingContext2D) => void,
-    crisp = false,
-  ): THREE.CanvasTexture {
+  // Character/board skins: painted in a `size`-unit space onto a 4x canvas, so
+  // the artwork keeps its designed proportions at four times the texels. The
+  // old `crisp` flag pinned some of these to NearestFilter for hard grip-tape
+  // grit; that was an era choice, and the grit now comes from the speckle pass
+  // resolving properly instead of from a blocky magnifier.
+  private paintTex(size: number, draw: (ctx: CanvasRenderingContext2D) => void): THREE.CanvasTexture {
+    const SS = 4;
     const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    draw(canvas.getContext('2d')!);
-    const tex = new THREE.CanvasTexture(canvas);
-    if (crisp) tex.magFilter = THREE.NearestFilter;
-    return tex;
+    canvas.width = size * SS;
+    canvas.height = size * SS;
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(SS, SS);
+    draw(ctx);
+    return Level.finishTex(new THREE.CanvasTexture(canvas), false);
   }
 
   // 1px noise pass — grip-tape grit only now; fabric and skin get airbrush.
@@ -7880,7 +7883,7 @@ export class Player {
       ctx.fill();
       ctx.fillStyle = 'rgba(23,24,28,0.6)';
       for (let i = 0; i < 30; i++) ctx.fillRect(20 + Math.random() * 22, 20 + Math.random() * 22, 2, 1);
-    }, true));
+    }));
     const artM = lam(this.paintTex(128, (ctx) => {
       // underside art: magenta dusk gradient, curling flames off the tail,
       // star sparkles — airbrushed, no hard bands
