@@ -430,6 +430,10 @@ export class Player {
   private walkAmp = 0;
   private idleAmp = 0;
   private boardG: THREE.Group | null = null; // board + wheels: pulled up during grabs
+  // Everything that is HER (legs, tail, torso) under one group, so the rider
+  // can be shifted as a unit relative to the board without disturbing a single
+  // pose write — see the stance offset in syncVisual.
+  private riderG: THREE.Group | null = null;
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
@@ -6706,6 +6710,25 @@ export class Player {
           0.4 * this.wallChargePose, // sink deeper the more you pump the launch
       );
     }
+    // STANCE OFFSET: plant her ON the deck, not beside it.
+    //
+    // The skate crouch folds the knees FORWARD, which walks the soles out
+    // along the body's local +Z. In the forward-facing frame that is along the
+    // board and harmless — the feet just slide fore and aft on a deck that is
+    // 1.3 long. But side-on the body is turned 90°, so the same fold pushes
+    // the soles ACROSS a deck only 0.47 wide, and measured on the rig it put
+    // both soles at 0.41 from the centreline — past the 0.236 edge, with her
+    // standing next to her own board.
+    //
+    // The board is pinned to the physics point and must stay there (the
+    // shadow, the landing X and the collision all live there), so the RIDER
+    // takes the correction. Scaled by the same side-on weight that causes it,
+    // so walking and the forward frame are untouched. The constant is in the
+    // rider's LOCAL units — inside the 1.18 body scale — so 0.347 here is the
+    // 0.41 of world offset that was actually measured off the deck.
+    if (this.riderG) {
+      this.riderG.position.z = -0.347 * this.skatePose * this.sidePose;
+    }
     if (this.boardG) {
       // The charge crouch drops the whole bodyGroup 0.26 (world) — the board
       // rides that group, so push it back up (0.26 / the 1.18 body scale) to
@@ -7957,6 +7980,12 @@ export class Player {
     g.add(boardG);
     this.boardG = boardG;
 
+    // The rider rides in her own group (see riderG): the board is pinned to
+    // the physics point, and SHE gets to move relative to it.
+    const riderG = new THREE.Group();
+    g.add(riderG);
+    this.riderG = riderG;
+
     // ——— The rider: a Crash-era kangaroo girl. Same skeleton as ever —
     // hip pivots at ±0.115 under legs@0.71, knees at −0.26, shoulders at
     // (±0.33, 1.22), hands at −0.48, head pivot at 1.42 — syncVisual owns
@@ -8093,7 +8122,7 @@ export class Player {
         this.kneeL = knee;
       }
     }
-    g.add(legs);
+    riderG.add(legs);
     this.legs = legs;
 
     // Tail: the kangaroo signature — three chained joints drooping off the
@@ -8101,7 +8130,7 @@ export class Player {
     // group) so leg squashes don't pancake it; syncVisual drives the sway.
     const tailRoot = new THREE.Group();
     tailRoot.position.set(0, 0.68, -0.14);
-    g.add(tailRoot);
+    riderG.add(tailRoot);
     const tailBase = new THREE.Group();
     tailRoot.add(tailBase);
     const tailBaseGeo = new THREE.CapsuleGeometry(0.082, 0.2, 3, 8);
@@ -8378,7 +8407,7 @@ export class Player {
         this.armL = arm;
       }
     }
-    g.add(upper);
+    riderG.add(upper);
     this.upperG = upper;
 
     return g;
