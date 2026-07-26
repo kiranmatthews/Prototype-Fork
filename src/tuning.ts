@@ -10,8 +10,18 @@ export const TUNING = {
   // Jump ballistics: the playtested hand-tuned feel. (A Crash-3-matched fit
   // — rise 22 / fall 62 / v 10.4 / min 8.7 — was tried and felt worse in
   // THIS game's speed and level scale; the reference timing already matched.)
-  riseGravity: 33, // gravity while moving up (lighter = floatier jump arc)
-  fallGravity: 119, // gravity while falling (heavier = snappy PS1 landing)
+  riseGravity: 33, // ON FOOT: gravity while moving up (lighter = floatier jump arc). Platforming only now — a board air flies under the board pair below
+  fallGravity: 119, // ON FOOT: gravity while falling (heavier = snappy PS1 landing). Platforming only now — see boardFallGravity
+  // BOARD AIR gravity. A skater's air and a platformer's hop were sharing one
+  // arc, and the Crash arc won: 119 down against 33 up spikes you back into the
+  // floor at nearly terminal velocity, which is the whole reason ollies and
+  // kicker launches read as "short". These are the same two numbers for airs
+  // that START ON THE BOARD, so the platforming jump can be reworked on its own
+  // without retiming every ollie in the game (and vice versa).
+  boardRiseGravity: 33, // BOARD: gravity on the way up. Deliberately identical to riseGravity out of the box, so a board air peaks at exactly the height it always did — anything you could clear, you still clear
+  boardFallGravity: 70, // BOARD: gravity on the way down (vs 119 on foot). THIS is the one that makes a board air float: same peak, longer glide down, and you land at 18 u/s instead of 24 instead of being spiked
+  boardApexFloat: 0.35, // BOARD: how much gravity is bled out at the very top of the arc, where the trick reads. Buys hang time exactly where you can see it, and barely lengthens a huge kicker air — so authored gaps stay honest. 0 = off, plain two-value gravity
+  boardApexBand: 4.5, // BOARD: how wide the float window is, in up/down speed. The float fades in as you slow toward the peak and fades out as you pick up fall speed, so there is no step anywhere in the arc
   jumpVelocity: 13, // fully-charged jump (hold X)
   jumpMinVelocity: 10, // quick-tap jump
   ollieVelocity: 12.5, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
@@ -157,7 +167,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 9; // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
+export const TUNING_VERSION = 10; // v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
+// v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
@@ -167,6 +178,13 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   friction: { min: 0, max: 30, step: 0.5 },
   riseGravity: { min: 10, max: 120, step: 1 },
   fallGravity: { min: 10, max: 160, step: 1 },
+  // Floor at 30, not 10: pipeAirGravity is 30 and is deliberately the floatiest
+  // air in the game (THPS's vert-hang bonus). Let a board slider under it and a
+  // street ollie out-floats a vert hang, which inverts the whole contrast.
+  boardRiseGravity: { min: 30, max: 120, step: 1 },
+  boardFallGravity: { min: 30, max: 160, step: 1 },
+  boardApexFloat: { min: 0, max: 0.8, step: 0.05 }, // above ~0.8 the top of the arc stops falling at all
+  boardApexBand: { min: 0.5, max: 12, step: 0.5 },
   jumpVelocity: { min: 4, max: 30, step: 0.5 },
   jumpMinVelocity: { min: 6, max: 25, step: 0.5 },
   ollieVelocity: { min: 6, max: 20, step: 0.5 },
@@ -304,9 +322,17 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   friction:
     'Idle roll-out: with NO input at all, speed bleeds to a full stop on an ease-out curve (fast up top, gentle near rest). Holding a direction coasts at cruiseSpeed instead; 0 = frictionless forever-glide.',
   riseGravity:
-    'Gravity on the way UP in a jump. Lower = floatier, longer hang time for tricks.',
+    'ON FOOT ONLY: gravity on the way UP in a platforming jump. Lower = floatier. Airs that start on the board ignore this and use boardRiseGravity, so you can retune the Crash jump without touching a single ollie.',
   fallGravity:
-    'Gravity on the way DOWN. Higher = snappier PS1 landings and shorter overall airtime.',
+    'ON FOOT ONLY: gravity on the way DOWN in a platforming jump. Higher = snappier PS1 landings. Board airs use boardFallGravity instead.',
+  boardRiseGravity:
+    'BOARD AIRS: gravity on the way UP out of an ollie, a kicker, a rail or a wall. Ships identical to the on-foot number on purpose — a board air peaks exactly as high as it always did, so nothing you used to clear becomes unclearable. Lower it for a floatier, higher pop.',
+  boardFallGravity:
+    'BOARD AIRS: gravity on the way DOWN — the knob that actually makes the board float. On foot the fall is 3.6x heavier than the rise (a deliberate PS1 snap); on the board that same slam is what made ollies and ramp launches feel short and punishing. Lower = longer glide down and a softer landing; raise it back toward the on-foot number for the old spiked arc.',
+  boardApexFloat:
+    'BOARD AIRS: bleeds gravity out of the moment at the TOP of the arc, where the trick actually reads, then hands it straight back as you fall. This buys hang time you can see without stretching the whole jump — a little ollie gains proportionally much more than a huge kicker air does, which is what keeps authored gaps from turning trivial. 0 = off.',
+  boardApexBand:
+    'How wide the apex float window is, measured in up/down speed. Small = a brief kiss of float right at the peak; large = the whole top of the arc hangs. The float eases in and out across this band, so there is never a step in the arc.',
   jumpVelocity: 'Launch speed of a FULLY charged jump (X held for jumpChargeTime).',
   jumpMinVelocity: 'Launch speed of a quick X tap — the smallest hop.',
   ollieVelocity:
@@ -527,7 +553,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
   },
   {
     title: 'SKATING',
@@ -651,7 +677,7 @@ export const CONST = {
   ropeRegrabCool: 0.5, // after leaping off, the rope won't re-catch you for this long
   ropeSpinReach: 1.9, // spin-on-the-rope smash radius (mid-air crates, enemies)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
-  grabGrace: 0.45, // landing this soon after COMPLETING a grab still pays out
+  grabGrace: 0.55, // landing this soon after COMPLETING a grab still pays out. Raised from 0.45 with the board-air split: the paying release window is [airtime - grabGrace, airtime - grabRelease], so a LONGER board air was silently pushing an early grab-and-release out of the payout with no bail and no tell. 0.55 keeps a press-at-launch release paying all the way to a 0.70s air
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
   frontFlip: true, // running-jump somersault animation (triggered by TUNING.flipHoldTime)
   flipDuration: 0.75, // full somersault clock — matches the reference full-hold jump arc; rotation lives in the 15..80% window (visual only)

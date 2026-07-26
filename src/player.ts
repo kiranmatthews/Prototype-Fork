@@ -245,6 +245,20 @@ export class Player {
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
   // Crash hop never offers them (the slam stays available from any air).
   private airFromSkate = false;
+  // WHICH GRAVITY THIS AIRTIME FLIES UNDER. A skate air and a platforming hop
+  // are different arcs now, so the choice has to be a property of the LAUNCH,
+  // declared once and never re-read from live state:
+  //  - airFromSkate can't be it. It's a trick-window token, and it disagrees
+  //    with the branch that actually picks the launch velocity — coast the
+  //    board under walkSpeed and chargedJump takes the ON-FOOT scale (and can
+  //    fire the Crash somersault) while airFromSkate is still true.
+  //  - reading any live flag per frame means gravity can flip mid-arc (a rail
+  //    bail clears airFromSkate half a second into a jump; catching a wall
+  //    sets it) — the same single-frame cliff vertGravityBlend exists to kill.
+  // Defaults to 'foot' and resets to 'foot' on every touchdown, so a launch
+  // site that forgets to declare gets the old behaviour instead of silently
+  // inheriting the last air's.
+  private airGrav: 'foot' | 'board' = 'foot';
   private grabSpinAngle = 0; // directional grab-spin; land off-axis = bail
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
@@ -805,6 +819,7 @@ export class Player {
     this.slamHangT = 0;
     this.bailDownT = 0;
     this.airFromSkate = false;
+    this.airGrav = 'foot';
     this.stepOff = false;
     this.stance = 1;
     this.vertAir = false;
@@ -1634,6 +1649,12 @@ export class Player {
     // Grabs are board tricks: only airs that START from skating offer them.
     this.airFromSkate =
       this.freeSkate || fromSlide || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
+    // Gravity is declared by the branch that actually picks the launch, NOT by
+    // airFromSkate — the two disagree. Coast the board below walkSpeed and the
+    // on-foot branch below fires (Crash pop, Crash somersault) while
+    // airFromSkate is still true; that jump IS a platforming hop and gets the
+    // platforming arc. Start at 'foot' and let the board branches claim it.
+    this.airGrav = 'foot';
     this.slideGraceT = 0;
     // THE RAMP CLIMB. Rolling off a lip with NO input converts the climb into
     // height (see the crest paths: `lastTy * speed`). The board ollie below used
@@ -1679,6 +1700,7 @@ export class Player {
       this.lastJumpType = 'Board Ollie';
       this.state = 'air';
       this.grounded = false;
+      this.airGrav = 'board'; // (vert owns the gravity while glued; this is what the blend eases back TO)
       this.coyoteTimer = 0;
       this.charging = false;
       this.chargeTimer = 0;
@@ -1740,6 +1762,7 @@ export class Player {
         CONST.maxFallSpeed,
       );
       this.lastJumpType = 'Board Ollie';
+      this.airGrav = 'board'; // the one branch that is unambiguously a skate air
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
       // On foot with real run speed. The Crash rule from the reference: a
@@ -2577,6 +2600,7 @@ export class Player {
       this.grounded = false;
       this.groundHit = hit;
       this.airFromSkate = true;
+      this.airGrav = 'board';
       this.pipeHang = true; // climb-hold must not read as a trick-spin (no phantom bail)
       this.hangPipe = hpNow; // remember which pipe launched this hang (spine transfers)
       this.grabSpinAngle = 0;
@@ -2604,6 +2628,7 @@ export class Player {
       this.grounded = false;
       this.groundHit = hit;
       this.airFromSkate = true; // vert launches only happen from riding
+      this.airGrav = 'board';
       this.hangPipe = ridingPipe ?? hit.halfpipe ?? null; // spine-transfer bookkeeping
       this.vVel = Math.min(this.lastTy * this.speed, CONST.maxFallSpeed);
       // ALWAYS hang time. Releasing X (or a fresh tap) at the lip LAUNCHES you
@@ -2679,6 +2704,9 @@ export class Player {
       this.groundHit = hit;
       this.crawling = false;
       this.airFromSkate = this.freeSkate; // rolling off on the board keeps tricks live
+      // Left the ground without jumping: rolling off a kicker on the board is a
+      // board air; stepping off a ledge on foot is a platforming fall.
+      this.airGrav = this.freeSkate ? 'board' : 'foot';
       // Authored kicker launch: leaving an uphill lip converts the climb to
       // lift (forward travel only — backing off an edge just drops).
       this.vVel =
@@ -2929,7 +2957,33 @@ export class Player {
       // player is reading. Blend back to street gravity over vertGravityBlend
       // instead. (This is the one place the deliberate Crash asymmetry was
       // leaking somewhere it was never meant to apply.)
-      const flatG = this.vVel > 0 ? TUNING.riseGravity : TUNING.fallGravity;
+      // ...and that asymmetry is a PLATFORMING choice, so it now applies to
+      // platforming airs only. A board air — ollie, kicker, roll-off, rail or
+      // wall exit — flies under its own pair. On foot the fall is 3.6x the
+      // rise, which is the Crash snap and is right for a jump you aim at a
+      // crate; on the board that same slam is what made every ollie and every
+      // ramp launch read as short, spitting you at the floor at 24-46 u/s.
+      // The mode was decided at LAUNCH (see airGrav), never re-derived here,
+      // or gravity would flip mid-arc.
+      const board = this.airGrav === 'board';
+      let flatG =
+        this.vVel > 0
+          ? board
+            ? TUNING.boardRiseGravity
+            : TUNING.riseGravity
+          : board
+            ? TUNING.boardFallGravity
+            : TUNING.fallGravity;
+      // APEX FLOAT (board only): bleed a slice of gravity out of the top of the
+      // arc and hand it straight back on the way down. The hang lands where the
+      // player is actually reading the trick, and because the window is a fixed
+      // band of vertical speed it costs a big kicker air proportionally far
+      // less than a little ollie — which is what stops authored gaps going
+      // trivial. At boardApexFloat 0 this is exactly the plain two-value model.
+      if (board && TUNING.boardApexFloat > 0 && TUNING.boardApexBand > 0) {
+        const nearApex = 1 - Math.min(1, Math.abs(this.vVel) / TUNING.boardApexBand);
+        flatG *= 1 - TUNING.boardApexFloat * nearApex;
+      }
       const g =
         this.vertAir || this.pipeHang
           ? TUNING.pipeAirGravity
@@ -3039,6 +3093,7 @@ export class Player {
       this.surfaceName = hit.name;
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
+      this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
       this.slideAirLat = 0; // slide-jump arc is done
       this.slideJumpAir = false;
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
@@ -3583,6 +3638,7 @@ export class Player {
     this.charging = false;
     this.chargeTimer = 0;
     this.airFromSkate = this.freeSkate; // the landing can flow into a manual
+    this.airGrav = this.freeSkate ? 'board' : 'foot'; // leaping off a rope: board under you or not
     this.vVel = jumpV + Math.max(0, ROPE_V.y * 0.9);
     // skating: the swing's planar momentum carries into the flight. On-foot
     // air is direct-drive, and the course frame is not ours to overwrite.
@@ -3921,6 +3977,7 @@ export class Player {
     this.state = 'air';
     this.grounded = false;
     this.airFromSkate = true;
+    this.airGrav = 'board';
     this.pipeLandGraceT = 0.35; // a stale held direction must not brake the exit
     this.transferCoolT = 0.3;
     sfx.play('woosh2', 0.55);
@@ -3967,6 +4024,7 @@ export class Player {
     this.state = 'air';
     this.grounded = false;
     this.airFromSkate = true;
+    this.airGrav = 'board';
     this.speed = 4;
     this.vVel = 2.5;
     this.pipeLandGraceT = 0.35;
@@ -4031,6 +4089,7 @@ export class Player {
       this.state = 'air';
       this.grounded = false;
       this.airFromSkate = true;
+      this.airGrav = 'board';
       this.vVel = TUNING.grindJumpForce * 0.6;
       sfx.play('ollie', 0.6);
     } else {
@@ -4375,6 +4434,7 @@ export class Player {
 
   private exitGrind(vVel: number): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
+    this.airGrav = 'board';
 
     if (this.grindRail) {
       // Exit ALONG the rail: the tangent becomes the free-skate heading, so
@@ -4427,6 +4487,7 @@ export class Player {
     this.railUnder = false;
     this.state = 'air';
     this.airFromSkate = false;
+    this.airGrav = 'foot'; // the board is in pieces: fall like a platformer
     this.freeSkate = false; // the board is in pieces — whatever comes next is on foot
     this.speed = Math.max(1.5, this.grindVel * 0.4);
     this.vVel = -1.5;
@@ -4484,6 +4545,7 @@ export class Player {
     this.grindRail = null;
     this.state = 'air';
     this.airFromSkate = true; // still a board air: tricks live
+    this.airGrav = 'board';
     this.freeSkate = true;
     this.speed = Math.max(this.grindVel * 0.85, 3);
     this.vVel = 1.2;
@@ -4515,6 +4577,7 @@ export class Player {
     this.grindRail = null;
     this.state = 'air';
     this.airFromSkate = false; // a stumble is not a trick window
+    this.airGrav = 'foot'; // ...and a stumble drops, it doesn't float
     this.vVel = 3;
     this.airMomentum = false; // a bail is a stumble, not a launch
     this.speed *= CONST.balanceBailSpeedKeep;
@@ -5016,6 +5079,7 @@ export class Player {
           sfx.play('crateBounce', 0.7);
             this.state = 'air';
             this.grounded = false;
+            this.airGrav = 'foot'; // same rule as bounceRefresh: a crate pop is a Crash arc
             this.charging = false;
             this.chargeTimer = 0;
           }
@@ -5276,6 +5340,13 @@ export class Player {
     this.airJumpUsed = false;
     this.airborneT = 0;
     this.bounceJump = true;
+    // A bounce is a fresh launch, so it re-declares its own gravity — and a
+    // crate bounce is Crash vocabulary, not skate vocabulary. crateBounce 14
+    // and arrowBounce 16 are documented as tuned for chaining crate to crate
+    // under the platforming arc, so pin every bounce to 'foot' whatever the
+    // air that landed on the lid was. Otherwise stomping a crate mid-ollie
+    // would quietly retime every chain in the game.
+    this.airGrav = 'foot';
   }
 
   private smashCrate(level: Level, c: Crate): void {
@@ -5567,6 +5638,7 @@ export class Player {
     this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
     this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall (ollie OUT with jump — the wallie)
     this.airFromSkate = true;
+    this.airGrav = 'board'; // riding a wall puts you on the board, however you arrived
     this.charging = false;
     sfx.play('woosh2', 0.5);
     this.emitSparks(4, 0xffd0a0, 1);
@@ -5698,6 +5770,7 @@ export class Player {
     this.charging = false;
     this.chargeTimer = 0;
     this.airFromSkate = false;
+    this.airGrav = 'foot'; // hanging by the hands: every exit off this ledge is on foot
     this.spinTimer = 0;
     this.spinAngle = 0;
     this.flipTimer = 0;
@@ -5997,6 +6070,7 @@ export class Player {
       this.wallCoolT = 0.35;
       this.state = 'air';
       this.airFromSkate = true;
+      this.airGrav = 'board';
       sfx.play('ollie', 0.6 + 0.4 * charge, 1 - 0.15 * charge); // deeper/louder the more you loaded it
       sfx.play('woosh2', 0.7);
       this.emitSparks(6 + Math.round(charge * 8), 0xffd0a0, 1.2);
@@ -6055,6 +6129,7 @@ export class Player {
       this.wallCoolT = 0.35;
       this.state = 'air';
       this.airFromSkate = true;
+      this.airGrav = 'board';
     }
   }
 
