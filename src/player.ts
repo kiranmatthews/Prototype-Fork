@@ -936,7 +936,6 @@ export class Player {
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
-    level.setRelics(this.hasCrystal, this.gemEarned); // gate icons mirror the haul
     // Fresh X presses feed the perfect-bounce timing window.
     if (input.jumpPressed) this.jumpPressT = TUNING.arrowBoostWindow;
     else this.jumpPressT = Math.max(0, this.jumpPressT - dt);

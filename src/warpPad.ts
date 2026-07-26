@@ -40,9 +40,6 @@ const H_RIM = 0.5 * S;
 export const WARP_PAD_TOP = H_BODY + H_RIM; // 0.73 — the surface you ride onto
 export const WARP_PAD_RADIUS = R_RIM;
 const COL_TOP = 7.5 * S; // plume tip — 2.5, about two and a half crates up
-// Exported so the gate's relic icons can ride the plasma tip instead of a
-// hardcoded height that only held at the pad's original scale.
-export const WARP_PAD_COLUMN_TOP = COL_TOP;
 const FACETS = 14; // 7-8 visible across the front arc, mirrored round the axis
 const TONGUES = 18;
 const RINGS = 6;

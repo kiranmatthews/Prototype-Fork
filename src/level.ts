@@ -6,12 +6,7 @@
 import * as THREE from "three";
 import { Rail } from "./rails";
 import { Halfpipe } from "./halfpipe";
-import {
-  createWarpPad,
-  WarpPad,
-  WARP_PAD_COLUMN_TOP,
-  WARP_PAD_RADIUS,
-} from "./warpPad";
+import { createWarpPad, WarpPad } from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 
@@ -1375,7 +1370,6 @@ export class Level {
   private crystalPlaced = false; // Random level: drop it on one mid-course deck
   private gemG: THREE.Group | null = null; // materializes when every box breaks
   private vfxT = 0; // animation clock for all the procedural magic
-  private chromeTex: THREE.CanvasTexture | null = null; // UV-scrolled fake chrome
   private glintTex: THREE.CanvasTexture | null = null;
   private flareTex: THREE.CanvasTexture | null = null; // big collection starburst
   private glowTex: THREE.CanvasTexture | null = null; // soft radial halo
@@ -1393,9 +1387,6 @@ export class Level {
     pop: boolean;
   }[] = [];
   private glintT = 0;
-  private gateCrystalIcon: THREE.Mesh | null = null;
-  private gateGemIcon: THREE.Mesh | null = null;
-  private relics = { crystal: false, gem: false };
   private blastMeshes: {
     outer: THREE.Mesh;
     inner: THREE.Mesh;
@@ -4011,8 +4002,6 @@ export class Level {
         this.root.remove(this.gemG);
         this.gemG = null;
       }
-      this.relics = { crystal: true, gem: true };
-      this.setRelics(false, false);
     }
     this.pops.length = 0;
     this.explosions.length = 0;
@@ -6718,31 +6707,7 @@ export class Level {
     return this.cpTex;
   }
 
-  // -------------------------------------------- warp-room VFX + relics --
-
-  // Diagonal magenta/white bands; scrolled through the crystal's UVs every
-  // frame = cheap fake chrome (texture-coordinate animation, no reflections).
-  private chromeTexture(): THREE.CanvasTexture {
-    if (this.chromeTex) return this.chromeTex;
-    const canvas = document.createElement("canvas");
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext("2d")!;
-    for (let y = 0; y < 32; y++) {
-      for (let x = 0; x < 32; x++) {
-        const band =
-          (Math.sin((x + y * 2) * 0.55) + Math.sin((x - y) * 0.23)) * 0.5;
-        const t = band * 0.5 + 0.5;
-        const r = Math.floor(150 + 105 * t);
-        const g = Math.floor(40 + 160 * t * t);
-        const b = Math.floor(200 + 55 * t);
-        ctx.fillStyle = `rgb(${r},${g},${b})`;
-        ctx.fillRect(x, y, 1, 1);
-      }
-    }
-    this.chromeTex = Level.finishTex(new THREE.CanvasTexture(canvas));
-    return this.chromeTex;
-  }
+  // -------------------------------------------------- warp-room VFX --
 
   // Sharp 4-point twinkle for the additive sparkle billboards. Drawn WHITE so
   // a per-sprite material colour tints it (purple crystal glints, cyan gem).
@@ -7534,45 +7499,9 @@ export class Level {
     this.glimmerBurst(g.position, 0x9fe0ff);
   }
 
-  // The finish gate mirrors your relic haul: earned icons light up and spin.
-  setRelics(crystal: boolean, gem: boolean): void {
-    if (crystal === this.relics.crystal && gem === this.relics.gem) return;
-    this.relics = { crystal, gem };
-    const style = (
-      icon: THREE.Mesh | null,
-      earned: boolean,
-      emissive: number,
-    ): void => {
-      if (!icon) return;
-      const m = icon.material as THREE.MeshLambertMaterial;
-      if (earned) {
-        m.color.set(0xffffff);
-        m.emissive.set(emissive);
-        m.emissiveIntensity = 0.85;
-        m.opacity = 1;
-      } else {
-        m.color.set(0x2a2f3a);
-        m.emissive.set(0x000000);
-        m.opacity = 0.4;
-      }
-    };
-    style(this.gateCrystalIcon, crystal, 0xc03fe0);
-    style(this.gateGemIcon, gem, 0x20c8e0);
-  }
-
-
-
-  // Per-frame VFX tick: chrome scroll, bobs, spins, glints.
+  // Per-frame VFX tick: bobs, spins, glints.
   private updateVfx(dt: number): void {
     this.vfxT += dt;
-    // fake chrome = UV scroll + a sine wobble (texture-coordinate distortion),
-    // so the bands swim liquidly across the facets instead of gliding straight
-    if (this.chromeTex) {
-      this.chromeTex.offset.x =
-        (this.vfxT * 0.34 + Math.sin(this.vfxT * 2.7) * 0.08) % 1;
-      this.chromeTex.offset.y =
-        (this.vfxT * 0.11 + Math.cos(this.vfxT * 1.9) * 0.06) % 1;
-    }
     const pulse = 0.75 + 0.25 * Math.sin(this.vfxT * 3.3); // shared glow breathe
     const bobSpin = (g: THREE.Group | null, rate: number): void => {
       if (!g || !g.visible) return;
@@ -7595,11 +7524,6 @@ export class Level {
       bobSpin(this.comboOrb.group, 1.6);
     if (this.comboGem) bobSpin(this.comboGem.group, 2.0);
     bobSpin(this.gemG, 2.4);
-    // gate relic icons: earned ones spin and bob, ghosts sit still
-    if (this.gateCrystalIcon && this.relics.crystal)
-      this.gateCrystalIcon.rotation.y += 2.2 * dt;
-    if (this.gateGemIcon && this.relics.gem)
-      this.gateGemIcon.rotation.y += 2.2 * dt;
     // ambient glints drip off whatever magic is live (tinted to the pickup)
     this.glintT -= dt;
     if (this.glintT <= 0) {
@@ -7612,10 +7536,6 @@ export class Level {
       )
         anchors.push({ p: this.crystalPickup.group.position, c: 0xd863f2 });
       if (this.gemG) anchors.push({ p: this.gemG.position, c: 0xaee6ff });
-      if (this.gateCrystalIcon && this.relics.crystal)
-        anchors.push({ p: this.gateCrystalIcon.position, c: 0xd863f2 });
-      if (this.gateGemIcon && this.relics.gem)
-        anchors.push({ p: this.gateGemIcon.position, c: 0xaee6ff });
       if (anchors.length > 0) {
         const a = anchors[Math.floor(Math.random() * anchors.length)];
         this.spawnGlint(
@@ -10049,36 +9969,8 @@ export class Level {
       m.userData.vert = false; // masonry, never a transition
       this.groundMeshes.push(m);
     }
-
-    // Relic scoreboard: crystal + gem icons over the gate — dark ghosts until
-    // earned, then they light up and spin (see setRelics).
-    const iconMat = (): THREE.MeshLambertMaterial =>
-      new THREE.MeshLambertMaterial({
-        map: this.chromeTexture(),
-        color: 0x2a2f3a,
-        transparent: true,
-        opacity: 0.4,
-        flatShading: true,
-      });
-    // Anchored to the plasma tip, NOT at a fixed height: the icons used to sit
-    // at 8.6 because the pad's column crested at 7.5. The pad is a third of
-    // that now, so a hardcoded 8.6 would strand them six units up in clear sky
-    // with nothing beneath. Reading the pad's own top keeps the pair riding the
-    // column at any scale; +0.75 lands the crystal's lower point (0.55 × 1.5
-    // tall) ON the tip rather than a gap above it.
-    const iconY = WARP_PAD_COLUMN_TOP + 0.75;
-    const iconX = WARP_PAD_RADIUS * 0.7; // inside the rim, framing the plasma
-    const cIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
-    cIcon.scale.y = 1.5;
-    cIcon.position.set(-iconX, iconY, 0);
-    gate.add(cIcon);
-    this.gateCrystalIcon = cIcon;
-    const gIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
-    gIcon.scale.set(1.25, 0.7, 1.25);
-    gIcon.position.set(iconX, iconY, 0);
-    gate.add(gIcon);
-    this.gateGemIcon = gIcon;
-    this.relics = { crystal: true, gem: true }; // force the ghost restyle below
-    this.setRelics(false, false);
+    // No relic scoreboard here. The floating crystal/gem pair belonged to the
+    // old checkered gate — they hung off its crossbar. The warp pad is the
+    // whole marker now, and the haul is already read off the HUD counters.
   }
 }
