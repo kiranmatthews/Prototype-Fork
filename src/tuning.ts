@@ -677,6 +677,7 @@ export const CONST = {
   ropeRegrabCool: 0.5, // after leaping off, the rope won't re-catch you for this long
   ropeSpinReach: 1.9, // spin-on-the-rope smash radius (mid-air crates, enemies)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
+  liftMemory: 0.12, // how long a kicker's climb is remembered for the takeoff. The ground ray flattens a frame or two before the wheels actually leave a lip, and without this the launch converts the flat instead of the ramp
   grabGrace: 0.62, // landing this soon after COMPLETING a grab still pays out. Raised from 0.45 with the board-air split: the paying release window is [airtime - grabGrace, airtime - grabRelease], so a LONGER board air was silently pushing an early grab-and-release out of the payout with no bail and no tell. 0.62 keeps a press-at-launch release paying across the WHOLE boardFallGravity slider, down to a fully symmetric 0.75s air
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
   frontFlip: true, // running-jump somersault animation (triggered by TUNING.flipHoldTime)

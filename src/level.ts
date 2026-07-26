@@ -6085,6 +6085,13 @@ export class Level {
       .set(cx, (y0 + y1) / 2, (z0 + z1) / 2)
       .addScaledVector(normal, -0.5);
     mesh.name = name;
+    // An authored ramp is a KICKER, never a transition, however steep it is.
+    // Without this the angle test alone decides, so anything past steepStand
+    // (40.5 degrees) got the halfpipe treatment: the board popped out and
+    // pipeCarve + pipePumpGain handed back the entire climb, so a 62-degree
+    // ramp cost nothing to go up. Transitions are authored deliberately, as
+    // vertramp components or the analytic Halfpipe — not by a slope being steep.
+    mesh.userData.vert = false;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
   }

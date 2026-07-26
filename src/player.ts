@@ -241,6 +241,12 @@ export class Player {
     if (this.groundHit === null || this.groundHit.vert === false) return false;
     return this.groundHit.vert === true || this.groundHit.normal.y < TUNING.steepStand;
   }
+  // The slope a launch should convert: the steepest climb still in memory,
+  // falling back to the live one. Never lower than lastTy, so nothing that
+  // launches correctly today launches lower.
+  private get takeoffTy(): number {
+    return this.liftTyT > 0 ? Math.max(this.lastTy, this.liftTy) : this.lastTy;
+  }
   // Whether the current airtime started from SKATING (ollie, slide/grind
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
   // Crash hop never offers them (the slam stays available from any air).
@@ -498,6 +504,15 @@ export class Player {
   // > 0 climbing, < 0 descending. Bounded ±1 by construction, so vert walls
   // pull hard but never explode the way the old tan-based grade did.
   private lastTy = 0;
+  // TAKEOFF LIFT MEMORY. lastTy is read from the ride plane on the CURRENT
+  // frame, and on the frame you actually cross a kicker's lip the ground ray
+  // has already slid onto the flat beyond it — measured on the Flats 45-degree
+  // ramp, ty collapses 0.707 -> 0.164 one frame before the wheels leave, so
+  // the launch converted a sixth of the climb and you rolled off the edge with
+  // no lift at all. Peak-hold the climbing slope for a beat so the takeoff
+  // converts the ramp you were RIDING, not the frame you left it on.
+  private liftTy = 0;
+  private liftTyT = 0;
   // The ride plane: ground normal eased over time, so segmented transitions
   // read as one continuous curve instead of a stack of facets.
   private rideNormal = new THREE.Vector3(0, 1, 0);
@@ -1156,6 +1171,8 @@ export class Player {
     // read, NOT a prediction of where the arc ends (that's the player's call).
     if (this.shadowGroundY !== null) this.lastGroundY = this.shadowGroundY;
 
+    this.liftTyT = Math.max(0, this.liftTyT - dt);
+    if (this.liftTyT === 0) this.liftTy = 0;
     this.regrindCd = Math.max(0, this.regrindCd - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
@@ -1663,7 +1680,8 @@ export class Player {
     // got for free — pressing jump made you jump LOWER. Stack the pop on the
     // climb instead, exactly like the vert branch already does. lastTy is 0
     // while walking and while airborne, so this is self-gating.
-    const rampClimb = this.grounded && this.lastTy > 0 ? Math.max(0, this.speed * this.lastTy) : 0;
+    const rampClimb =
+      this.grounded && this.takeoffTy > 0 ? Math.max(0, this.speed * this.takeoffTy) : 0;
     // VERT OLLIE: X popped while riding a halfpipe TRANSITION face. The flat
     // ollie below would carry the whole climb speed as HORIZONTAL velocity —
     // an unglued air that sails clean across the pipe (THE "float out of
@@ -2159,10 +2177,18 @@ export class Player {
           const fwd = dx * this.axisF.x + dz * this.axisF.z;
           const side = dx * this.axisF.z - dz * this.axisF.x;
           const ang = Math.atan2(side, fwd);
-          if (Math.abs(ang) > CONST.carveBrakeAngle && this.pipeLandGraceT > 0) {
+          if (
+            Math.abs(ang) > CONST.carveBrakeAngle &&
+            (this.pipeLandGraceT > 0 || (steepGround && Math.abs(this.speed) < 4))
+          ) {
             // Fresh off a pipe drop-in: the stick is still held the way you were
             // CLIMBING, which is now behind you. That's stale intent, not a
             // brake — ignore it and let the transition carry the swing.
+            // Same for a near-stalled body on ground too steep to STAND on: you
+            // cannot skid to a halt on a wall. Letting the brake bite there
+            // clamps speed to 0 and (via `braking && ty < 0`) cancels slope
+            // gravity too, so a held stick welded you to a 62-degree kicker face
+            // and nothing could move you off it.
           } else if (Math.abs(ang) > CONST.carveBrakeAngle) {
             // Pulling (nearly) opposite your travel = the brake: speed bleeds to
             // a FULL stop and then steps off at ~0. It EASES OUT near rest (rate
@@ -2313,6 +2339,11 @@ export class Player {
         this.speed -= Math.sign(this.speed) * fr;
       }
       this.lastTy = ty;
+      // peak-hold the climb for the takeoff (see liftTy)
+      if (ty > this.liftTy) {
+        this.liftTy = ty;
+        this.liftTyT = CONST.liftMemory;
+      }
 
       // OVERSPEED: anything above maxSpeed bleeds off through a QUADRATIC drag,
       // always, on every surface. The old flat bleed only fired on level ground
@@ -2353,6 +2384,7 @@ export class Player {
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
             this.speed = Math.max(this.speed, 1.5);
             this.pipeFlipCd = 0.3; // don't re-flip until gravity has pulled you away
+            this.pipeLandGraceT = 0.35; // the flip turned you around: a still-held stick is stale intent, not a brake
           }
         } else if (steepGround && this.speed < 2 && this.lastTy > -0.15) {
           // GENERAL STALL FLIP, for every transition the analytic pipes don't
@@ -2374,6 +2406,13 @@ export class Player {
             this.axisF.set(n.x / len, 0, n.z / len); // the normal leans toward the flat
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
             this.speed = Math.max(this.speed, 1.5);
+            // The flip just spun the heading 180 degrees under a stick that is
+            // still held the way you were CLIMBING. Without this the pull-back
+            // brake fires on the very next frame, clamps speed to 0 AND cancels
+            // slope gravity (the `braking && ty < 0` guard) — so you weld to the
+            // face at exactly zero and nothing can move you. Same stale-intent
+            // grace the pipe drop-in already uses.
+            this.pipeLandGraceT = 0.35;
           }
         }
         this.speed = Math.max(0, this.speed);
@@ -2630,7 +2669,7 @@ export class Player {
       this.airFromSkate = true; // vert launches only happen from riding
       this.airGrav = 'board';
       this.hangPipe = ridingPipe ?? hit.halfpipe ?? null; // spine-transfer bookkeeping
-      this.vVel = Math.min(this.lastTy * this.speed, CONST.maxFallSpeed);
+      this.vVel = Math.min(this.takeoffTy * this.speed, CONST.maxFallSpeed);
       // ALWAYS hang time. Releasing X (or a fresh tap) at the lip LAUNCHES you
       // higher into the hang (the intuitive pop); holding X = a mellow hang.
       // Approach angle decides straight-in vs a sideways gap (see enterVertAir).
@@ -2709,9 +2748,10 @@ export class Player {
       this.airGrav = this.freeSkate ? 'board' : 'foot';
       // Authored kicker launch: leaving an uphill lip converts the climb to
       // lift (forward travel only — backing off an edge just drops).
+      const liftTy = this.takeoffTy;
       this.vVel =
-        this.speed > 0 && this.lastTy > 0.05
-          ? Math.min(this.lastTy * this.speed, CONST.maxFallSpeed)
+        this.speed > 0 && liftTy > 0.05
+          ? Math.min(liftTy * this.speed, CONST.maxFallSpeed)
           : 0;
       // A near-vertical lip (halfpipe coping) is hang time; releasing X launches.
       // Same head-on-OR-vert-wall test as the grounded crest (angled entries too).
@@ -3094,6 +3134,8 @@ export class Player {
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
+      this.liftTy = 0; // this landing's ramp memory belongs to this landing
+      this.liftTyT = 0;
       this.slideAirLat = 0; // slide-jump arc is done
       this.slideJumpAir = false;
       this.rideNormal.copy(hit.normal); // fresh landing: ride plane snaps, no stale blend
