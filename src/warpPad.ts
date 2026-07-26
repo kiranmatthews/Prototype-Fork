@@ -40,6 +40,14 @@ const H_RIM = 0.5 * S;
 export const WARP_PAD_TOP = H_BODY + H_RIM; // 0.73 — the surface you ride onto
 export const WARP_PAD_RADIUS = R_RIM;
 const COL_TOP = 7.5 * S; // plume tip — 2.5, about two and a half crates up
+// THE GLOW YOU CAN JUMP INTO — the plasma column as a trigger volume, in
+// gate-local units. The BASE is the load-bearing number: a player standing on
+// the deck beside the pad has a box topping out at 0.92, so a base of 1.23
+// means brushing past at ground level is still not a finish. You have to be up
+// IN the column, which is the whole point of jumping into it.
+export const WARP_PAD_GLOW_RADIUS = 1.25;
+export const WARP_PAD_GLOW_BASE = H_BODY + H_RIM + 0.5;
+export const WARP_PAD_GLOW_TOP = COL_TOP + 0.8;
 const FACETS = 14; // 7-8 visible across the front arc, mirrored round the axis
 const TONGUES = 18;
 const RINGS = 6;

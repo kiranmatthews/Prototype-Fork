@@ -6,7 +6,13 @@
 import * as THREE from "three";
 import { Rail } from "./rails";
 import { Halfpipe } from "./halfpipe";
-import { createWarpPad, WarpPad } from "./warpPad";
+import {
+  createWarpPad,
+  WarpPad,
+  WARP_PAD_GLOW_RADIUS,
+  WARP_PAD_GLOW_BASE,
+  WARP_PAD_GLOW_TOP,
+} from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 
@@ -1224,6 +1230,9 @@ export class Level {
     dir: "E" | "W" | "N" | "S";
   }[] = [];
   finishBox = new THREE.Box3();
+  // The pad's plasma column. Jumping through this ends the run too — you do
+  // not have to touch down on the masonry.
+  finishGlow = new THREE.Box3();
   finishZ = -1005;
   gateYaw = 0; // finish-gate turn in degrees — sideways courses spin the whole gate
   endWallZ = -1021; // authored hard stop after the finish gate
@@ -4639,6 +4648,7 @@ export class Level {
     if (this.crystalPickup && this.crystalPickup !== preCrystal)
       this.crystalPickup.box.translate(off);
     this.finishBox.translate(off);
+    this.finishGlow.translate(off);
   }
 
   // Deck height along the final downhill ramp (for crate placement).
@@ -9967,6 +9977,19 @@ export class Level {
     // from a video reference through the img2threejs sculpt pipeline). The
     // trigger box above is unchanged, so every level still finishes at exactly
     // the same place and no call site moves.
+    // the column, as a volume you can fly through
+    this.finishGlow.setFromCenterAndSize(
+      new THREE.Vector3(
+        cx,
+        deckY + (WARP_PAD_GLOW_BASE + WARP_PAD_GLOW_TOP) / 2,
+        z,
+      ),
+      new THREE.Vector3(
+        WARP_PAD_GLOW_RADIUS * 2,
+        WARP_PAD_GLOW_TOP - WARP_PAD_GLOW_BASE,
+        WARP_PAD_GLOW_RADIUS * 2,
+      ),
+    );
     const pad = createWarpPad();
     gate.add(pad.group);
     this.warpPads.push(pad);

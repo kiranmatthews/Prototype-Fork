@@ -975,15 +975,14 @@ export class UI {
     return `${m}:${s < 10 ? "0" : ""}${s.toFixed(2)}`;
   }
 
-  // Called every frame while a trial runs — centisecond digits, the running
-  // total the number crates have taken off the clock, and an ice-blue flash on
-  // the beat a crate lands. `saved` only ever grows, so the readout is proof
-  // the crates are stacking rather than a countdown you have to catch.
-  updateTTClock(t: number, saved: number, flash: number): void {
+  // Called every frame while a trial runs — centisecond digits, and the whole
+  // clock goes ice-blue while a time crate's freeze is counting down.
+  updateTTClock(t: number, freeze: number): void {
     if (!this.ttOn) return;
     (this.ttClockEl.firstChild as HTMLElement).textContent = UI.fmtTime(t);
-    this.ttClockEl.classList.toggle("hud-tt-frozen", flash > 0);
-    this.ttFreezeEl.textContent = saved > 0 ? `-${saved.toFixed(0)}s` : "";
+    const frozen = freeze > 0;
+    this.ttClockEl.classList.toggle("hud-tt-frozen", frozen);
+    this.ttFreezeEl.textContent = frozen ? `FROZEN ${freeze.toFixed(1)}s` : "";
   }
 
   // Ranked times at the gate: this run slots into the level's best list.

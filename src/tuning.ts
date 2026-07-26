@@ -62,7 +62,7 @@ export const TUNING = {
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
   railSpeedBoost: 3.5, // speed handed to you on a clean rail entry — without it a fast line LOSES speed on every rail, so the optimal play was to skip them
-  perfectGrindSpeed: 35, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — above vertMax's 38 ceiling only in spirit, but well past downhillMax, so it is the fastest the board ever goes
+  perfectGrindSpeed: 42, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — above vertMax's 38 ceiling only in spirit, but well past downhillMax, so it is the fastest the board ever goes
   perfectGrindHold: 2.4, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
@@ -224,7 +224,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
   railTripSpeed: { min: 8, max: 30, step: 0.5 },
   railSpeedBoost: { min: 0, max: 10, step: 0.5 },
-  perfectGrindSpeed: { min: 23, max: 45, step: 0.5 },
+  perfectGrindSpeed: { min: 23, max: 55, step: 0.5 },
   perfectGrindHold: { min: 0, max: 6, step: 0.1 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },

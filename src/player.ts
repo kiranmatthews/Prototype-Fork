@@ -132,8 +132,7 @@ export class Player {
   // the level with the trial OFF (grab the clock again to retry).
   ttActive = false;
   ttTime = 0; // the running trial clock
-  ttSaved = 0; // TIME TRIAL: seconds the number crates have taken off the clock, all run
-  ttFlash = 0; // purely visual: the clock flashes ice-blue for a beat after a crate lands
+  ttFreeze = 0; // banked freeze seconds still counting down
   private ttDied = false; // a trial death: the respawn goes to the very start
   // COMBO RUN: grab the green orb, then reach the green gem at the gate in
   // ONE combo. The gem lives exactly as long as the combo does.
@@ -432,6 +431,7 @@ export class Player {
   private grindRail: Rail | null = null;
   private grindEntryT = 0; // where on the rail this grind STARTED, for the end-to-end check
   private grindBoostT = 0; // a perfect grind is briefly allowed past the normal speed ceiling
+  private boostGlow!: THREE.Sprite; // pink bloom worn for the length of that window
   private grindT = 0;
   private grindDir = 1;
   private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
@@ -651,6 +651,34 @@ export class Player {
     pink.visible = false;
     scene.add(pink);
     this.maskGlowPink = pink;
+    // A second bloom of the same make for the perfect-grind boost. Its own
+    // sprite rather than sharing the mask's: both can be live at once (uber
+    // AND a perfect grind), and one would otherwise be overwriting the
+    // other's position and scale every frame.
+    const boostGlow = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        // A HALO, not a fireball. The first build peaked white-hot at the
+        // centre and additive-blended the skater clean out of the picture —
+        // you could see the boost but not who was having it. The ramp now
+        // dips in the middle and peaks in a ring outside the body, so the
+        // character reads through it.
+        map: radial([
+          [0.0, 'rgba(255,150,220,0.16)'],
+          [0.3, 'rgba(255,90,205,0.30)'],
+          [0.5, 'rgba(255,45,180,0.52)'],
+          [0.72, 'rgba(235,10,150,0.26)'],
+          [0.9, 'rgba(210,0,130,0)'],
+          [1.0, 'rgba(210,0,130,0)'],
+        ]),
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false,
+      }),
+    );
+    boostGlow.renderOrder = -2;
+    boostGlow.visible = false;
+    scene.add(boostGlow);
+    this.boostGlow = boostGlow;
     // Pink spark pool: a comet-tail of embers streaming off the mask on the 2nd
     // mask and off the skater on the 3rd. Reused round-robin.
     const sparkTex = radial([
@@ -774,8 +802,7 @@ export class Player {
       this.onComboRunEnd();
     }
     this.ttTime = 0;
-    this.ttSaved = 0;
-    this.ttFlash = 0;
+    this.ttFreeze = 0;
     this.grindBoostT = 0; // a leftover over-ceiling window must not survive a respawn
     this.ttDied = false;
     this.comboFailT = 0;
@@ -1222,8 +1249,8 @@ export class Player {
     // broken time crate's freeze is counting down, and never once you're
     // dead or across the line.
     if (this.ttActive && this.state !== 'dead' && this.state !== 'gameover' && this.state !== 'finished') {
-      this.ttTime += dt;
-      if (this.ttFlash > 0) this.ttFlash = Math.max(0, this.ttFlash - dt);
+      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
+      else this.ttTime += dt;
     }
     // Perfect-balance boost window (combo-run crates): green sparkle cue.
     this.balanceBoostT = Math.max(0, this.balanceBoostT - dt);
@@ -1314,6 +1341,7 @@ export class Player {
     }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
+    if (this.grindBoostT > 0 && Math.random() < 0.7) this.emitSparks(1, 0xff4fd8, 1.6);
     // Actual planar speed from last step's displacement (any direction) —
     // the skate-entry gate uses this so sideways motion counts, not just the
     // forward-axis `speed` scalar. Computed before prevPos is overwritten.
@@ -3638,8 +3666,8 @@ export class Player {
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.ttActive) {
-      this.ttTime += dt;
-      if (this.ttFlash > 0) this.ttFlash = Math.max(0, this.ttFlash - dt);
+      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
+      else this.ttTime += dt;
     }
     const rs = this.ropeObj;
     if (!rs) {
@@ -5353,8 +5381,7 @@ export class Player {
       level.setTimeTrial(true);
       this.ttActive = true;
       this.ttTime = 0;
-      this.ttSaved = 0;
-      this.ttFlash = 0;
+      this.ttFreeze = 0;
       sfx.play('crystalGet', 0.9);
       this.onTTStart();
     }
@@ -5395,14 +5422,19 @@ export class Player {
     // three storeys up. The pad is the goal now, so the goal is its actual
     // surface — every mesh in it is flagged finishPad, and you have to be
     // standing on one. (finishBox stays: the outro still clamps across it.)
-    if (this.grounded && this.groundHit?.finishPad) {
-      this.bankCombo(); // whatever is pending counts as you touch down
+    // Two ways in, and neither is the old plane-crossing. Stand on the pad, or
+    // fly through the plasma column — an ollie straight into the glow counts,
+    // no touchdown required. The column's box starts above head height for
+    // someone on the deck, so rolling past its shoulder still does nothing.
+    const onPad = this.grounded && !!this.groundHit?.finishPad;
+    if (onPad || this.playerBox.intersectsBox(level.finishGlow)) {
+      this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
-      // Planted, not coasting. stepFinished rolls you on along the travel axis,
-      // which was right when you skated THROUGH a gate — off a 3-unit drum it
-      // just tips you back onto the deck the moment you've arrived.
-      this.speed = 0;
+      // Planted, not coasting — but only when you actually landed on it.
+      // Killing the speed of someone who jumped THROUGH the glow would stop
+      // them dead in mid-air.
+      if (onPad) this.speed = 0;
       if (this.ttActive) {
         this.ttActive = false; // the clock stops dead on the line
         this.onTTFinish(this.ttTime);
@@ -5453,15 +5485,7 @@ export class Player {
     // work — everything else is an empty box. No fruit, no lives.
     if (this.ttActive || this.comboRun || c.timeSecs || c.boost) {
       if (c.timeSecs) {
-        // STACKS, and keeps stacking. This used to bank a freeze that then
-        // drained a second per second of play, so crates broken a few seconds
-        // apart had already burnt off before the next one landed and the pot
-        // could never climb past the biggest single crate (4s). The seconds
-        // now come straight off the clock and stay off, so eight crates is
-        // eight crates' worth however far apart you break them.
-        this.ttSaved += c.timeSecs;
-        this.ttTime = Math.max(0, this.ttTime - c.timeSecs);
-        this.ttFlash = 1.1;
+        this.ttFreeze += c.timeSecs;
         this.emitSparks(8, 0xffd75e, 2);
         sfx.play('crystalGet', 0.55, 1.4);
       } else if (c.boost === 'balance') {
@@ -5899,8 +5923,8 @@ export class Player {
     this.hangClipT += dt * this.hangClipRate;
     // the time-trial clock keeps running — hanging is not a pause button
     if (this.ttActive) {
-      this.ttTime += dt;
-      if (this.ttFlash > 0) this.ttFlash = Math.max(0, this.ttFlash - dt);
+      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
+      else this.ttTime += dt;
     }
     // and the hang is NOT a damage shelter — lethal overlaps still land
     if (this.hangHazards(level)) return;
@@ -7194,6 +7218,19 @@ export class Player {
         this.smearG.rotation.y = step * 2.399; // golden angle
         const pulse = 1 + 0.09 * Math.sin(step * 1.7);
         this.smearG.scale.set(1.84 * pulse, 1.52 * (2 - pulse), 1.84 * pulse); // opposing squash
+      }
+    }
+    // Perfect-grind bloom: pink, body-enveloping, fading out over the last
+    // half second so the boost ENDING is as readable as it starting.
+    if (this.boostGlow) {
+      const lit = this.grindBoostT > 0 && this.state !== 'dead';
+      this.boostGlow.visible = lit;
+      if (lit) {
+        const fade = Math.min(1, this.grindBoostT / 0.5);
+        const flare = 1 + Math.sin(this.runTime * 11) * 0.11;
+        this.boostGlow.position.set(this.pos.x, this.pos.y + 1.0, this.pos.z);
+        this.boostGlow.scale.setScalar(3.5 * flare);
+        (this.boostGlow.material as THREE.SpriteMaterial).opacity = 0.9 * fade;
       }
     }
     if (this.maskMesh && this.maskGlowPink) {
