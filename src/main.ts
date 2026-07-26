@@ -1669,7 +1669,7 @@ function frame(): void {
   if (skyMist) skyMist.position.copy(camera.position);
 
   ui.updateBalance(player.balanceMeter);
-  ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
+  ui.updateTTClock(player.ttTime, player.ttSaved, player.ttFlash); // every frame: the trial clock is the whole show
   ui.updateBalanceBoost(player.balanceBoostT, 6);
   const tricks = player.comboLabels;
   ui.setHUD({

@@ -62,6 +62,8 @@ export const TUNING = {
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
   railSpeedBoost: 3.5, // speed handed to you on a clean rail entry — without it a fast line LOSES speed on every rail, so the optimal play was to skip them
+  perfectGrindSpeed: 35, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — above vertMax's 38 ceiling only in spirit, but well past downhillMax, so it is the fastest the board ever goes
+  perfectGrindHold: 2.4, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
   underRailCooldown: 1.5, // seconds between under-rail hang switches (Circle on a rail)
@@ -222,6 +224,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
   railTripSpeed: { min: 8, max: 30, step: 0.5 },
   railSpeedBoost: { min: 0, max: 10, step: 0.5 },
+  perfectGrindSpeed: { min: 23, max: 45, step: 0.5 },
+  perfectGrindHold: { min: 0, max: 6, step: 0.1 },
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   underRailCooldown: { min: 0.5, max: 4, step: 0.1 },
@@ -408,6 +412,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Running/skating STRAIGHT INTO a rail from the side (no jump, no grind): below this speed the rail simply BLOCKS you like a curb; at or above it you catch the rail and TRIP (bail/stumble). Jump over it or grind it to pass cleanly.',
   railSpeedBoost:
     'Speed granted when you land a grind. A fast approach loses its cross component to the rail line and then bleeds on top, so without this a rail is a speed PENALTY and the fastest line skips every rail in the park. Higher = rails are a gear change.',
+  perfectGrindSpeed:
+    'THE SLIPSTREAM only. Ride a rail its WHOLE length — on at one end, off at the other, no bail — and you leave the rail at this speed. It sits above downhillMax on purpose: a perfect grind is meant to be the fastest the board ever moves, so the level built around one long rail line rewards committing to it.',
+  perfectGrindHold:
+    'How long a perfect-grind launch is allowed to stay above the normal downhillMax ceiling. The quadratic heavyDrag is pulling it down the whole time; when this runs out the usual clamp takes back whatever is left.',
   grindSpeed:
     'REFERENCE grind speed: you actually grind at whatever speed you arrive with, but slower than this wobbles the balance meter harder and faster than it steadies it.',
   grindJumpForce: 'Vertical pop of a fully-charged jump off a rail.',
@@ -612,7 +620,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',

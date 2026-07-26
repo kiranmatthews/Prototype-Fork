@@ -132,7 +132,8 @@ export class Player {
   // the level with the trial OFF (grab the clock again to retry).
   ttActive = false;
   ttTime = 0; // the running trial clock
-  ttFreeze = 0; // banked freeze seconds still counting down
+  ttSaved = 0; // TIME TRIAL: seconds the number crates have taken off the clock, all run
+  ttFlash = 0; // purely visual: the clock flashes ice-blue for a beat after a crate lands
   private ttDied = false; // a trial death: the respawn goes to the very start
   // COMBO RUN: grab the green orb, then reach the green gem at the gate in
   // ONE combo. The gem lives exactly as long as the combo does.
@@ -429,6 +430,8 @@ export class Player {
   private snapEase = 1; // 0 -> 1 over railSnapEase seconds after a grind starts
   private prevPos = new THREE.Vector3(); // for travel-direction facing
   private grindRail: Rail | null = null;
+  private grindEntryT = 0; // where on the rail this grind STARTED, for the end-to-end check
+  private grindBoostT = 0; // a perfect grind is briefly allowed past the normal speed ceiling
   private grindT = 0;
   private grindDir = 1;
   private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
@@ -771,7 +774,9 @@ export class Player {
       this.onComboRunEnd();
     }
     this.ttTime = 0;
-    this.ttFreeze = 0;
+    this.ttSaved = 0;
+    this.ttFlash = 0;
+    this.grindBoostT = 0; // a leftover over-ceiling window must not survive a respawn
     this.ttDied = false;
     this.comboFailT = 0;
     this.comboGraceT = 0;
@@ -1174,6 +1179,7 @@ export class Player {
     this.liftTyT = Math.max(0, this.liftTyT - dt);
     if (this.liftTyT === 0) this.liftTy = 0;
     this.regrindCd = Math.max(0, this.regrindCd - dt);
+    this.grindBoostT = Math.max(0, this.grindBoostT - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
     this.crouchGraceT = Math.max(0, this.crouchGraceT - dt);
@@ -1216,8 +1222,8 @@ export class Player {
     // broken time crate's freeze is counting down, and never once you're
     // dead or across the line.
     if (this.ttActive && this.state !== 'dead' && this.state !== 'gameover' && this.state !== 'finished') {
-      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
-      else this.ttTime += dt;
+      this.ttTime += dt;
+      if (this.ttFlash > 0) this.ttFlash = Math.max(0, this.ttFlash - dt);
     }
     // Perfect-balance boost window (combo-run crates): green sparkle cue.
     this.balanceBoostT = Math.max(0, this.balanceBoostT - dt);
@@ -2354,7 +2360,12 @@ export class Player {
       // than a linear countdown. Transitions get their own, higher ceiling —
       // vert is where the big speed is supposed to live.
       const onTrans = this.onTransition;
-      const hardCap = onTrans ? TUNING.vertMax : TUNING.downhillMax;
+      let hardCap = onTrans ? TUNING.vertMax : TUNING.downhillMax;
+      // A perfect grind pays out ABOVE the normal ceiling, so for a moment the
+      // clamp has to let it through — otherwise the launch would be confiscated
+      // on the very next frame and the reward would be invisible. heavyDrag is
+      // still pulling it down the whole time; this only stops the hard clamp.
+      if (this.grindBoostT > 0) hardCap = Math.max(hardCap, TUNING.perfectGrindSpeed);
       const over = Math.abs(this.speed);
       if (over > TUNING.maxSpeed) {
         this.speed -= Math.sign(this.speed) * Math.min(TUNING.heavyDrag * over * over * dt, over);
@@ -3627,8 +3638,8 @@ export class Player {
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.ttActive) {
-      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
-      else this.ttTime += dt;
+      this.ttTime += dt;
+      if (this.ttFlash > 0) this.ttFlash = Math.max(0, this.ttFlash - dt);
     }
     const rs = this.ropeObj;
     if (!rs) {
@@ -4298,7 +4309,9 @@ export class Player {
       // Ran off the end of the rail: small pop, keep carrying grind speed.
       this.grindT = THREE.MathUtils.clamp(this.grindT, 0, rail.totalLength);
       this.placeOnRail(rail);
+      const perfect = this.perfectGrindRun(rail, level);
       this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5); // from under, no pop up through the rail
+      if (perfect) this.applyPerfectGrind();
       return;
     }
 
@@ -4325,6 +4338,7 @@ export class Player {
       this.chargeTimer = 0;
       this.lastJumpType = this.underK > 0.5 ? 'Under-Rail Drop' : 'Grind Exit';
       sfx.play('ollie', 0.7);
+      const perfect = this.perfectGrindRun(rail, level);
       // from underneath, X lets go — a small drop away, never a pop up
       // through the rail overhead
       this.exitGrind(
@@ -4332,6 +4346,7 @@ export class Player {
           ? 1.0
           : THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t),
       );
+      if (perfect) this.applyPerfectGrind();
       // grind exits are board airs: no somersault
     }
   }
@@ -4383,6 +4398,7 @@ export class Player {
   private enterGrind(rail: Rail, sample: RailSample): void {
     this.grindRail = rail;
     this.grindT = sample.t;
+    this.grindEntryT = sample.t;
     // How much of our actual velocity runs ALONG the rail. Free-heading skate
     // lets you meet a rail at any angle — a perpendicular clip should give a
     // gentle grind, never rocket you down the rail at full cross-speed.
@@ -4472,6 +4488,25 @@ export class Player {
       const k = 1 - this.snapEase;
       this.pos.addScaledVector(this.snapOffset, k * k); // ease-out
     }
+  }
+
+  // A PERFECT GRIND: on at one end of the rail, off at the other, no bail.
+  // Measured as ground covered rather than "did you touch both tips", so a
+  // curved or sloped rail counts the same and the snap-on tolerance at entry
+  // doesn't rob you of the reward you actually earned.
+  private perfectGrindRun(rail: Rail, level: Level): boolean {
+    if (!level.perfectGrindBoost) return false;
+    if (rail.totalLength <= 0) return false;
+    return Math.abs(this.grindT - this.grindEntryT) >= rail.totalLength * 0.9;
+  }
+
+  // Pay it out. Must run AFTER exitGrind, which resets speed to the grind
+  // velocity on its way off the rail and would otherwise eat this.
+  private applyPerfectGrind(): void {
+    this.speed = TUNING.perfectGrindSpeed;
+    this.grindBoostT = TUNING.perfectGrindHold;
+    this.emitSparks(16, 0x8ce8ff, 3);
+    sfx.play('crystalGet', 0.7, 1.5);
   }
 
   private exitGrind(vVel: number): void {
@@ -5318,7 +5353,8 @@ export class Player {
       level.setTimeTrial(true);
       this.ttActive = true;
       this.ttTime = 0;
-      this.ttFreeze = 0;
+      this.ttSaved = 0;
+      this.ttFlash = 0;
       sfx.play('crystalGet', 0.9);
       this.onTTStart();
     }
@@ -5417,7 +5453,15 @@ export class Player {
     // work — everything else is an empty box. No fruit, no lives.
     if (this.ttActive || this.comboRun || c.timeSecs || c.boost) {
       if (c.timeSecs) {
-        this.ttFreeze += c.timeSecs;
+        // STACKS, and keeps stacking. This used to bank a freeze that then
+        // drained a second per second of play, so crates broken a few seconds
+        // apart had already burnt off before the next one landed and the pot
+        // could never climb past the biggest single crate (4s). The seconds
+        // now come straight off the clock and stay off, so eight crates is
+        // eight crates' worth however far apart you break them.
+        this.ttSaved += c.timeSecs;
+        this.ttTime = Math.max(0, this.ttTime - c.timeSecs);
+        this.ttFlash = 1.1;
         this.emitSparks(8, 0xffd75e, 2);
         sfx.play('crystalGet', 0.55, 1.4);
       } else if (c.boost === 'balance') {
@@ -5855,8 +5899,8 @@ export class Player {
     this.hangClipT += dt * this.hangClipRate;
     // the time-trial clock keeps running — hanging is not a pause button
     if (this.ttActive) {
-      if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
-      else this.ttTime += dt;
+      this.ttTime += dt;
+      if (this.ttFlash > 0) this.ttFlash = Math.max(0, this.ttFlash - dt);
     }
     // and the hang is NOT a damage shelter — lethal overlaps still land
     if (this.hangHazards(level)) return;

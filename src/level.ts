@@ -1292,6 +1292,10 @@ export class Level {
   // combo-mode dress: true = EVERY convertible crate becomes a balance crate
   // (levels built around one long grind line); false = every third
   private allBalanceCrates = false;
+  // Ride a rail end to end here and popping off launches you past every normal
+  // speed ceiling. Only set on the level built around one long grind line —
+  // elsewhere it would quietly rewrite the speed balance of the whole park.
+  perfectGrindBoost = false;
   theme: Theme = {
     skyTop: "#0fa3c2",
     skyBottom: "#ffe6ae",
@@ -9457,6 +9461,7 @@ export class Level {
 
   private buildSlipstream(): void {
     this.allBalanceCrates = true; // one long combo line: every crate = balance
+    this.perfectGrindBoost = true; // ...and riding a whole rail pays out in speed
     this.theme = {
       skyTop: "#1d6fb8",
       skyBottom: "#bfeef4", // bright noon haze over open water
