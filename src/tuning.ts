@@ -19,13 +19,13 @@ export const TUNING = {
   // that START ON THE BOARD, so the platforming jump can be reworked on its own
   // without retiming every ollie in the game (and vice versa).
   boardRiseGravity: 33, // BOARD: gravity on the way up. Deliberately identical to riseGravity out of the box, so a board air peaks at exactly the height it always did — anything you could clear, you still clear
-  boardFallGravity: 70, // BOARD: gravity on the way down (vs 119 on foot). THIS is the one that makes a board air float: same peak, longer glide down, and you land at 18 u/s instead of 24 instead of being spiked
+  boardFallGravity: 70, // BOARD: gravity on the way down (vs 119 on foot). THIS is the one that makes a board air float: same peak, longer glide down, and you land at 18 u/s instead of 24 instead of being spiked. NOTE the reference: THPS/THUG air gravity is a single SYMMETRIC number (Physics_Air_Gravity -1350, no up/down branch), which converts to ~34.5 in our units — so the authentic value here is ~36, one rung heavier than boardRiseGravity, matching the reference's own 1.1x ladder (vert 30 / rise 33 / fall 36). 70 is a deliberately conservative half-step that leaves the authored gaps alone; drag it to 36 for the real THPS arc
   boardApexFloat: 0.35, // BOARD: how much gravity is bled out at the very top of the arc, where the trick reads. Buys hang time exactly where you can see it, and barely lengthens a huge kicker air — so authored gaps stay honest. 0 = off, plain two-value gravity
   boardApexBand: 4.5, // BOARD: how wide the float window is, in up/down speed. The float fades in as you slow toward the peak and fades out as you pick up fall speed, so there is no step anywhere in the arc
   jumpVelocity: 13, // fully-charged jump (hold X)
   jumpMinVelocity: 10, // quick-tap jump
   ollieVelocity: 12.5, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
-  ollieMinVelocity: 8, // quick-tap board ollie — sqrt(2*riseGravity*0.96)=7.96, i.e. the smallest pop that clears exactly ONE crate. The ramp climb now stacks on top of this (see chargedJump), so a lip pays out instead of robbing you
+  ollieMinVelocity: 8.25, // quick-tap board ollie: the smallest pop that clears exactly ONE crate. Was 8, derived as sqrt(2*riseGravity*0.96)=7.96 — but that is the CONTINUOUS answer, and the sim integrates velocity-first at 1/60, which undershoots the analytic apex by ~7%. Measured, 8 peaked at 0.904 and never actually cleared the 0.96 crate; 8.25 peaks at 0.962. The ramp climb stacks on top of this (see chargedJump), so a lip pays out instead of robbing you
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
@@ -328,7 +328,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   boardRiseGravity:
     'BOARD AIRS: gravity on the way UP out of an ollie, a kicker, a rail or a wall. Ships identical to the on-foot number on purpose — a board air peaks exactly as high as it always did, so nothing you used to clear becomes unclearable. Lower it for a floatier, higher pop.',
   boardFallGravity:
-    'BOARD AIRS: gravity on the way DOWN — the knob that actually makes the board float. On foot the fall is 3.6x heavier than the rise (a deliberate PS1 snap); on the board that same slam is what made ollies and ramp launches feel short and punishing. Lower = longer glide down and a softer landing; raise it back toward the on-foot number for the old spiked arc.',
+    'BOARD AIRS: gravity on the way DOWN — the knob that actually makes the board float. On foot the fall is 3.6x heavier than the rise (a deliberate PS1 snap); on the board that same slam is what made ollies and ramp launches feel short and punishing. Lower = longer glide down and a softer landing; raise it back toward the on-foot number for the old spiked arc. THPS itself uses ONE symmetric gravity up and down, which converts to about 36 in our units — try 36 for the authentic arc where you land at the speed you launched. Expect every gap to get noticeably easier at that setting.',
   boardApexFloat:
     'BOARD AIRS: bleeds gravity out of the moment at the TOP of the arc, where the trick actually reads, then hands it straight back as you fall. This buys hang time you can see without stretching the whole jump — a little ollie gains proportionally much more than a huge kicker air does, which is what keeps authored gaps from turning trivial. 0 = off.',
   boardApexBand:
@@ -464,7 +464,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   slideRecover:
     'Get-up beat after a PLAIN slide: for this long the skater is picking themselves off the ground and CANNOT run — movement input is dead and leftover speed bleeds to a stop, then control returns. Stops slide-spam for constant free speed. A slide JUMP is exempt (it launches straight out of the slide).',
   wallrideGravity:
-    'THPS wallride sink rate: jump into a wall while HOLDING GRIND (E) and you ride along its face. This is the gentle gravity while stuck to the wall (0 = ride dead level, higher = sink faster). Normal air gravity is 33 up / 119 down for reference.',
+    'THPS wallride sink rate: jump into a wall while HOLDING GRIND (E) and you ride along its face. This is the gentle gravity while stuck to the wall (0 = ride dead level, higher = sink faster). A board air is 33 up / 70 down for reference, and a platforming jump is 33 up / 119 down.',
   wallrideFriction: 'How fast your along-the-wall speed bleeds off during a wallride (higher = shorter rides).',
   wallrideMinSpeed:
     'Minimum horizontal speed needed (airborne, grind held, moving into the wall) to stick to a wall instead of bonking off it.',
@@ -677,7 +677,7 @@ export const CONST = {
   ropeRegrabCool: 0.5, // after leaping off, the rope won't re-catch you for this long
   ropeSpinReach: 1.9, // spin-on-the-rope smash radius (mid-air crates, enemies)
   grabTransition: 0.15, // reach into / out of the grab pose; land mid-motion = bail
-  grabGrace: 0.55, // landing this soon after COMPLETING a grab still pays out. Raised from 0.45 with the board-air split: the paying release window is [airtime - grabGrace, airtime - grabRelease], so a LONGER board air was silently pushing an early grab-and-release out of the payout with no bail and no tell. 0.55 keeps a press-at-launch release paying all the way to a 0.70s air
+  grabGrace: 0.62, // landing this soon after COMPLETING a grab still pays out. Raised from 0.45 with the board-air split: the paying release window is [airtime - grabGrace, airtime - grabRelease], so a LONGER board air was silently pushing an early grab-and-release out of the payout with no bail and no tell. 0.62 keeps a press-at-launch release paying across the WHOLE boardFallGravity slider, down to a fully symmetric 0.75s air
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
   frontFlip: true, // running-jump somersault animation (triggered by TUNING.flipHoldTime)
   flipDuration: 0.75, // full somersault clock — matches the reference full-hold jump arc; rotation lives in the 15..80% window (visual only)
