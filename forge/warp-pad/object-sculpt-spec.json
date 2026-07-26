@@ -1,0 +1,3509 @@
+{
+  "targetName": "Warp Pad",
+  "targetId": "warp-pad",
+  "schemaVersion": "2.1",
+  "terminologyProfile": {
+    "domain": "real-time procedural Three.js asset",
+    "geometryTerms": [
+      "silhouette",
+      "topology",
+      "primitive",
+      "bevel",
+      "chamfer",
+      "taper",
+      "bend",
+      "boolean cut",
+      "edge loop",
+      "surface normal",
+      "displacement"
+    ],
+    "materialTerms": [
+      "albedo",
+      "baseColor",
+      "roughness",
+      "metalness",
+      "normal map",
+      "bump map",
+      "ambient occlusion",
+      "cavity dirt",
+      "edge wear",
+      "clearcoat"
+    ],
+    "lightingTerms": [
+      "key light",
+      "fill light",
+      "rim light",
+      "HDRI/environment reflection",
+      "contact shadow"
+    ],
+    "descriptionRule": "Use measurable 3D graphics terms. Avoid vague words unless they are paired with concrete geometry/material/shader parameters."
+  },
+  "sourceImage": "/tmp/claude-0/plate.png",
+  "referenceCamera": {
+    "solved": false,
+    "fovDegrees": 40.0,
+    "aspect": 1.0,
+    "orientation": {
+      "yaw": 0.0,
+      "pitch": 0.0,
+      "roll": 0.0
+    },
+    "positionHint": [
+      0.0,
+      0.0,
+      3.0
+    ],
+    "note": "For likeness work, solve the reference camera (forge/stage1_intake/solve_camera_pose.py) so the review render aligns with the photo and the reference can be projected. Confirm by overlay review."
+  },
+  "suitability": "conditional",
+  "scores": {
+    "object_isolation": 0,
+    "silhouette_readability": 0,
+    "depth_inference": 0,
+    "primitive_decomposition": 0,
+    "material_procedurality": 0,
+    "occlusion_risk": 0,
+    "interaction_fit": 0
+  },
+  "preSpecAssessment": {
+    "objectClass": {
+      "primaryType": "static-prop-with-emissive-vfx-emitter",
+      "primaryDomain": "object",
+      "formLanguage": [
+        "faceted-drum",
+        "radial-symmetry",
+        "stacked-slab",
+        "tapering-plume",
+        "concentric-band"
+      ],
+      "structureKind": [
+        "rigid-masonry-base",
+        "procedural-particle-emitter",
+        "animated-band-array"
+      ],
+      "motionPotential": [
+        "ring-rise-and-rotate",
+        "plume-flicker",
+        "emissive-pulse",
+        "spill-light-flicker"
+      ],
+      "materialFamilies": [
+        "mossy-quarried-stone",
+        "additive-emissive-plasma"
+      ],
+      "notes": "Fantasy warp/teleport pad. Two macro systems: an inert masonry drum with a flat walk-on top disc, and a live emissive column rising from the disc centre. The column is the identity: a ring of vertical flame tongues at the base, a tapering plume above them, and flattened horizontal rings that rise up the column and rotate. Radial symmetry throughout, so one authored segment can be instanced round the axis."
+    },
+    "complexity": {
+      "tier": "moderate",
+      "scores": {
+        "silhouetteComplexity": 2,
+        "componentCount": 3,
+        "hierarchyDepth": 3,
+        "repetitionDensity": 3,
+        "materialLayerCount": 3,
+        "localDetailDensity": 3,
+        "occlusionRisk": 2,
+        "actionReadinessNeed": 3
+      },
+      "estimatedCounts": {
+        "macroComponents": 2,
+        "mesoComponents": 5,
+        "microFeatureGroups": 3,
+        "materialLayers": 3,
+        "repetitionSystems": 3
+      },
+      "reasoning": [
+        "Silhouette is simple (a low drum plus a plume) but repetition is high: the drum facets, the flame tongues and the rings are all radial arrays, so three repetition systems carry most of the read.",
+        "Action readiness is high for a prop: the top disc is a walkable collider and the object is a level-completion trigger, so it needs a socket for the trigger volume and one for the spill light.",
+        "Occlusion risk is low-moderate: the reference is a single near-eye-level view, so the back facets and the underside are inferred from radial symmetry, not observed."
+      ]
+    },
+    "specDepthDecision": {
+      "requiredDepth": "moderate",
+      "minimumComponentLevels": [
+        "macro",
+        "meso"
+      ],
+      "needsRepetitionSystems": true,
+      "needsMaterialLocalOverrides": true,
+      "needsMultipleReviewViews": true,
+      "needsActionReadyHierarchy": true,
+      "rationale": "Three radial repetition systems and a two-family material split (opaque lit stone vs additive unlit plasma) put this above 'simple'. Depth stops at moderate because the silhouette is a drum and a cone — there is no deep sub-assembly."
+    },
+    "unknownsToResolveBeforeImplementation": [],
+    "detailInventory": {
+      "scanMethod": "component-zones",
+      "targetMinDetails": 6,
+      "note": "Read from the plate plus two magnified bands (plinth-detail.png, flame-detail.png).",
+      "details": [
+        {
+          "id": "d-facet-seams",
+          "kind": "linework",
+          "description": "Dark vertical mortar seams between the drum's trapezoidal blocks, ~1 unit wide, running the full body height and reading as the drum's facet count.",
+          "region": {
+            "x": 0.12,
+            "y": 0.62,
+            "width": 0.76,
+            "height": 0.3,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "silhouette-and-shading",
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "plinth-body"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/plinth-detail.png",
+          "confidence": 0.82,
+          "realization": "unreported"
+        },
+        {
+          "id": "d-rim-overhang",
+          "kind": "bevel",
+          "description": "The top course of blocks oversails the body by a small margin, casting a continuous shadow line around the drum just under the disc.",
+          "region": {
+            "x": 0.1,
+            "y": 0.57,
+            "width": 0.8,
+            "height": 0.08,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "silhouette",
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "plinth-rim"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/plinth-detail.png",
+          "confidence": 0.74,
+          "realization": "unreported"
+        },
+        {
+          "id": "d-paving-wedges",
+          "kind": "linework",
+          "description": "The flat top reads as a ring of radial trapezoidal flagstones around a centre disc, seams picked out lighter than the slab faces.",
+          "region": {
+            "x": 0.18,
+            "y": 0.55,
+            "width": 0.64,
+            "height": 0.12,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "albedo",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "mat-stone"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/flame-detail.png",
+          "confidence": 0.7,
+          "realization": "unreported"
+        },
+        {
+          "id": "d-moss-tint",
+          "kind": "stain",
+          "description": "Desaturated green-grey biological tint concentrated on upward-facing stone and the upper third of the body; lower blocks read browner.",
+          "region": {
+            "x": 0.1,
+            "y": 0.58,
+            "width": 0.8,
+            "height": 0.34,
+            "units": "normalized"
+          },
+          "scale": "micro",
+          "affects": "albedo",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "mat-stone"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/plinth-detail.png",
+          "confidence": 0.66,
+          "realization": "unreported"
+        },
+        {
+          "id": "d-flame-tongues",
+          "kind": "contour",
+          "description": "A ring of thin vertical tapering flame tongues stands on the disc, red at the root and yellow at the tip, roughly 16-20 of them, each about a fifth of the plume height.",
+          "region": {
+            "x": 0.3,
+            "y": 0.4,
+            "width": 0.4,
+            "height": 0.2,
+            "units": "normalized"
+          },
+          "scale": "meso",
+          "affects": "silhouette-and-emission",
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "flame-tongues"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/flame-detail.png",
+          "confidence": 0.85,
+          "realization": "unreported"
+        },
+        {
+          "id": "d-plume-gradient",
+          "kind": "emissive",
+          "description": "The plume runs white-yellow at its core to saturated orange at its edges, brightest in a horizontal band about two thirds up, and is additive against the background rather than lit.",
+          "region": {
+            "x": 0.25,
+            "y": 0.12,
+            "width": 0.5,
+            "height": 0.45,
+            "units": "normalized"
+          },
+          "scale": "macro",
+          "affects": "emission",
+          "mapsTo": {
+            "type": "material.localOverrides",
+            "ref": "mat-plasma"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/flame-detail.png",
+          "confidence": 0.88,
+          "realization": "unreported"
+        },
+        {
+          "id": "d-ring-arcs",
+          "kind": "contour",
+          "description": "Flattened horizontal rings, seen near edge-on, wider than the drum, with a saturated red rim and a yellow-white core; several are visible at once at different heights and rotations.",
+          "region": {
+            "x": 0.05,
+            "y": 0.08,
+            "width": 0.9,
+            "height": 0.5,
+            "units": "normalized"
+          },
+          "scale": "macro",
+          "affects": "silhouette-and-emission",
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "ring-array"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/plate.png",
+          "confidence": 0.8,
+          "realization": "unreported"
+        },
+        {
+          "id": "d-spill-light",
+          "kind": "emissive",
+          "description": "Warm orange bounce on the top disc and the inner faces of the rim, falling off within roughly one drum radius — the emitter lights its own base.",
+          "region": {
+            "x": 0.2,
+            "y": 0.55,
+            "width": 0.6,
+            "height": 0.1,
+            "units": "normalized"
+          },
+          "scale": "micro",
+          "affects": "lighting",
+          "mapsTo": {
+            "type": "component.localFeatures",
+            "ref": "spill-light"
+          },
+          "evidenceRef": "/tmp/claude-0/warpforge/flame-detail.png",
+          "confidence": 0.79,
+          "realization": "unreported"
+        }
+      ]
+    },
+    "anatomy": {
+      "applies": false,
+      "styleHeads": 0.0,
+      "proportions": {
+        "headUnit": 0.0,
+        "torso": 0.0,
+        "legs": 0.0,
+        "shoulderWidth": 0.0,
+        "hipWidth": 0.0
+      },
+      "pose": {
+        "type": "unassessed",
+        "jointAngles": {}
+      },
+      "faceLandmarks": {
+        "eyeLine": 0.0,
+        "eyeSpacing": 0.0,
+        "noseBase": 0.0,
+        "mouthLine": 0.0,
+        "hairline": 0.0
+      },
+      "features": [],
+      "confidence": 0.0,
+      "note": "Only meaningful when objectClass.primaryDomain is character or hybrid. Set applies=true and fill from forge/stage1_intake/extract_landmarks.py. See grimoire/character/reconstruction.md and grimoire/character/likeness_maximization.md."
+    },
+    "sourceImage": "/tmp/claude-0/plate.png"
+  },
+  "qualityContract": {
+    "qualityBar": "moderate",
+    "definitionOfDone": [
+      "Drum reads as faceted quarried masonry with a flat, walk-on top disc at the reference's wide-and-low proportion (width about 1.9x total height).",
+      "A ring of vertical flame tongues stands on the disc with a tapering plume above them, additive and unlit.",
+      "Flattened rings rise up the column and rotate, several visible at once, red-rimmed with a yellow core, wider than the drum.",
+      "The emitter lights its own base with warm orange spill.",
+      "Runs inside the existing game's frame budget as a low-poly PS1-style prop and exposes a trigger socket so it can replace the end-of-level gate."
+    ],
+    "minimumSpecDepth": {
+      "macroComponents": 2,
+      "mesoComponents": 3,
+      "microFeatureGroups": 2,
+      "materialLayers": 2,
+      "repetitionSystems": 0,
+      "reviewViewpoints": 3
+    },
+    "featureGroups": [
+      {
+        "id": "overall-silhouette",
+        "name": "Overall silhouette and proportions",
+        "required": true,
+        "qualityCriteria": [
+          "Bounding shape, dominant curves, negative spaces, and scale relationships are explicitly described."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model reads as a generic placeholder instead of the reference object",
+          "major proportions are guessed without evidence"
+        ]
+      },
+      {
+        "id": "primary-structure",
+        "name": "Primary structure and hierarchy",
+        "required": true,
+        "qualityCriteria": [
+          "Major parts, joints, seams, contact points, and parent-child relationships are named before code generation."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "large visible parts are merged into one mesh",
+          "component hierarchy is too shallow for the observed complexity"
+        ]
+      },
+      {
+        "id": "attachment-joint-correctness",
+        "name": "Attachment and joint correctness",
+        "required": true,
+        "qualityCriteria": [
+          "Every visible child appendage, branch, limb, handle, connector, tube, cable, horn, wing, leg, or hinged part has an attachment contract with parent socket, localStart/localEnd, contact type, embed/overlap, and gap tolerance."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "child part root floats away from the parent",
+          "branch/limb/tube is centered in space instead of pivoting from its root",
+          "parent-child transform mixes world and local coordinates"
+        ]
+      },
+      {
+        "id": "surface-material-response",
+        "name": "Surface material response",
+        "required": true,
+        "qualityCriteria": [
+          "Albedo zones, roughness, normal/bump/displacement intent, cavity dirt, edge wear, and local overrides are specified where visible.",
+          "Important materials define independent albedo, roughness, height/normal, and AO responses instead of reusing one texture for unrelated PBR channels.",
+          "Surface response is decomposed into macro, meso, and micro frequency bands with scale and amplitude tied to object scale."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "surface looks like flat plastic",
+          "local material variation is missing or not tied to image evidence"
+        ]
+      },
+      {
+        "id": "reference-lookdev",
+        "name": "Reference color, material, and lighting response",
+        "required": true,
+        "qualityCriteria": [
+          "Material-pass names the reference-derived albedo palette, roughness variation, tactile normal/bump/displacement response, and local masks.",
+          "When a source image is available, run reference PBR extraction and require confidence >= 0.7 before treating maps as implementation-ready.",
+          "Lighting-pass names key/fill/rim or environment light, exposure, tone mapping, background, and contact shadow behavior.",
+          "Neutral, grazing-angle, and reference-matched renders prove that surface relief survives relighting and is not painted into albedo."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model has acceptable shape but reads as flat shaded or plastic",
+          "colors are a generic average instead of reference-observed local color zones",
+          "lighting is evenly ambient and cannot reproduce the source value range"
+        ]
+      }
+    ],
+    "visualDeltaChecks": [
+      "silhouette and negative-space delta",
+      "component hierarchy depth delta",
+      "repetition density and distribution delta",
+      "material albedo/roughness/normal response delta",
+      "local feature placement and scale delta"
+    ],
+    "antiShallowSpecRules": [
+      "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+      "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+      "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+      "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+      "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+      "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+      "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+      "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+      "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+      "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+      "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md).",
+      "Adjacent components must overlap by at least 0.02 world units at shared seams (source: grimoire/build/geometry_patterns.md).",
+      "Raised or recessed relief and fasteners must be geometry, instanced micro-parts, or displacement; a map alone is an approximation (source: grimoire/build/geometry_patterns.md)."
+    ],
+    "mustNotDo": [
+      "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+      "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+      "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+      "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+      "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+      "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+      "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+      "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+      "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+      "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+      "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md).",
+      "Adjacent components must overlap by at least 0.02 world units at shared seams (source: grimoire/build/geometry_patterns.md).",
+      "Raised or recessed relief and fasteners must be geometry, instanced micro-parts, or displacement; a map alone is an approximation (source: grimoire/build/geometry_patterns.md)."
+    ]
+  },
+  "qualityTargets": {
+    "targetFidelity": 0.7,
+    "mustMatch": [
+      "macro silhouette and proportions",
+      "primary material albedo/roughness response",
+      "reference-derived PBR material response at or above 0.7 confidence when source pixels are usable",
+      "most recognizable local features"
+    ],
+    "niceToHave": [
+      "micro scratches, stains, chips, and dirt masks",
+      "secondary lighting match"
+    ],
+    "fpsTarget": 60,
+    "reviewViewpoints": [
+      "front",
+      "three-quarter",
+      "side",
+      "thickness-axis",
+      "long-axis"
+    ]
+  },
+  "selfCorrectLoop": {
+    "enabled": true,
+    "visualAcceptance": {
+      "reviewer": "ai-vision",
+      "threshold": 0.7,
+      "comparisonArtifactRequired": true,
+      "layerScoresRequired": true,
+      "codePixelDiffIsAcceptanceAuthority": false,
+      "scoringRule": "AI vision must inspect a side-by-side reference/render sheet and score the current pass from 0 to 1. Pixel-diff code may assist diagnostics but cannot approve a pass.",
+      "requiredLayerScores": [
+        "silhouetteProportion",
+        "componentStructure",
+        "formDetail",
+        "materialSurface",
+        "lightingCamera"
+      ],
+      "featureReviewPolicy": {
+        "enabled": true,
+        "reviewUnit": "semantic-subsystem",
+        "maxCriticalFeaturesPerPass": 5,
+        "maxImportantFeaturesPerPass": 3,
+        "criticalDefaultThreshold": 0.8,
+        "importantAverageThreshold": 0.65,
+        "adaptiveEscalation": true,
+        "singleImagePairOnly": true,
+        "selectionRule": "Choose only the most visually salient, identity-defining, user-prioritized, or high-risk semantic systems. Group repeated parts instead of reviewing every mesh. AI vision scores every selected feature from the same full reference/render pair."
+      }
+    },
+    "reviewAfterPasses": [
+      "blockout",
+      "structural-pass",
+      "form-refinement",
+      "material-pass",
+      "surface-pass",
+      "lighting-pass",
+      "interaction-pass",
+      "optimization-pass"
+    ],
+    "allowedActions": [
+      "continue",
+      "refine-spec",
+      "refine-code",
+      "request-input",
+      "stop"
+    ],
+    "specRefineTriggers": [
+      "missing component",
+      "wrong primitive family",
+      "wrong proportions",
+      "material layer under-specified",
+      "local feature not traceable to viewEvidence",
+      "reference ambiguity discovered during implementation"
+    ],
+    "codeRefineTriggers": [
+      "spec is adequate but generated geometry/material does not match",
+      "browser render differs from reference",
+      "performance budget exceeded",
+      "lighting hides geometry or material response"
+    ],
+    "stopCriteria": [
+      "target fidelity reached or user accepts current approximation",
+      "remaining gaps require new reference images or manual art"
+    ],
+    "screenshotPolicy": {
+      "requiredForPasses": [
+        "blockout",
+        "structural-pass",
+        "form-refinement",
+        "material-pass",
+        "surface-pass",
+        "lighting-pass",
+        "interaction-pass"
+      ],
+      "preferredCapture": "in-app-browser-screenshot",
+      "fallbackCapture": "user-supplied-screenshot-path",
+      "minimumEvidence": "Each visual pass needs a reference image, rendered screenshot, side-by-side comparison sheet, AI vision score, layer scores, and critique before choosing continue.",
+      "reviewPairRule": "Compare the same camera/viewpoint whenever possible; do not judge a front reference against a random render angle.",
+      "acceptanceAuthority": "AI vision review of the comparison sheet. Code-generated pixel similarity is not sufficient evidence."
+    }
+  },
+  "featureReviewTargets": [
+    {
+      "id": "plinth-proportion",
+      "name": "Drum proportion and facet read",
+      "tier": "critical",
+      "passIds": [
+        "blockout",
+        "structural-pass"
+      ],
+      "minimumScore": 0.8,
+      "mustPass": true,
+      "componentRefs": [
+        "plinth-body",
+        "plinth-rim"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "acceptance": "Wide-and-low drum at about 1.9:1 width to height, flat-shaded facets legible, top course oversailing."
+    },
+    {
+      "id": "column-silhouette",
+      "name": "Tongue ring plus tapering plume",
+      "tier": "critical",
+      "passIds": [
+        "structural-pass",
+        "form-refinement"
+      ],
+      "minimumScore": 0.8,
+      "mustPass": true,
+      "componentRefs": [
+        "flame-tongues",
+        "plume"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "acceptance": "Discrete tongues visible against the disc with gaps between them; plume tapers and is widest about two thirds up."
+    },
+    {
+      "id": "ring-motion",
+      "name": "Rings rise and rotate",
+      "tier": "critical",
+      "passIds": [
+        "form-refinement",
+        "interaction-pass"
+      ],
+      "minimumScore": 0.8,
+      "mustPass": true,
+      "componentRefs": [
+        "ring-array"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "acceptance": "Several rings visible at once at different heights, wider than the drum, fading in low and out high."
+    },
+    {
+      "id": "emissive-family",
+      "name": "Additive unlit plasma vs lit stone",
+      "tier": "critical",
+      "passIds": [
+        "material-pass"
+      ],
+      "minimumScore": 0.75,
+      "mustPass": true,
+      "componentRefs": [
+        "plume",
+        "ring-array",
+        "plinth-body"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "acceptance": "Plasma reads as light (no shading response, no fog occlusion artefacts); stone reads as matte lit rock."
+    },
+    {
+      "id": "spill-light",
+      "name": "Emitter lights its own base",
+      "tier": "important",
+      "passIds": [
+        "lighting-pass"
+      ],
+      "minimumScore": 0.7,
+      "mustPass": false,
+      "componentRefs": [
+        "spill-light",
+        "plinth-disc"
+      ],
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "acceptance": "Warm orange falloff visible on the disc and inner rim, not a flat unlit cap."
+    }
+  ],
+  "sculptPipeline": {
+    "passGateMode": "locked-sequential",
+    "passOrder": [
+      "blockout",
+      "structural-pass",
+      "form-refinement",
+      "material-pass",
+      "surface-pass",
+      "lighting-pass",
+      "interaction-pass",
+      "optimization-pass"
+    ],
+    "currentPass": "blockout",
+    "completedPasses": [],
+    "lastCompletedPass": "",
+    "blockedReason": "",
+    "nextRequiredEvidence": [
+      "Silhouette reads correctly without materials.",
+      "Quality contract has named all required macro feature groups before code generation.",
+      "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold.",
+      "browser render screenshot from your agent's browser/screenshot tool",
+      "single side-by-side full reference/render comparison sheet",
+      "all critical semantic feature scores at or above their thresholds",
+      "self-correction review appended with action=continue before the next pass"
+    ]
+  },
+  "lookDevTargets": {
+    "qualityPriority": "reference-fidelity",
+    "materialPass": {
+      "albedoPaletteRequired": true,
+      "roughnessVariationRequired": true,
+      "normalOrBumpRequired": true,
+      "localOverridesRequired": true,
+      "minimumTextureResolution": 1024,
+      "preferredTextureResolution": 2048,
+      "independentMapChannels": [
+        "albedo",
+        "roughness",
+        "height",
+        "normal",
+        "ambient-occlusion"
+      ],
+      "requiredSurfaceFrequencyBands": [
+        "macro",
+        "meso",
+        "micro"
+      ],
+      "geometryReliefRequiredWhenSilhouetteAffected": true,
+      "referencePbrExtraction": {
+        "requiredWhenSourceImagePresent": true,
+        "targetThreshold": 0.7,
+        "stopOnLowConfidence": true,
+        "script": "forge/stage1_intake/extract_pbr_evidence.py",
+        "acceptedLimitation": "single-image extraction is reference-derived inference, not exact photogrammetry"
+      },
+      "mustAvoid": [
+        "single flat albedo per material",
+        "uniform roughness",
+        "albedo texture reused as roughness/height/normal/AO",
+        "single-frequency random noise",
+        "plastic-looking smooth bark, stone, cloth, foliage, or aged material",
+        "local color/detail described only in prose without material masks",
+        "claiming exact PBR recovery when confidence is below the target threshold"
+      ]
+    },
+    "lightingPass": {
+      "requiredTerms": [
+        "key light",
+        "fill light",
+        "rim or environment light",
+        "exposure",
+        "tone mapping",
+        "background",
+        "contact shadow"
+      ],
+      "mustAvoid": [
+        "ambient-only lighting",
+        "flat value range",
+        "missing contact shadow",
+        "reference lighting copied without separating material readability"
+      ]
+    },
+    "screenshotReview": [
+      "Compare albedo palette and local color zones.",
+      "Compare roughness/normal/bump response under light.",
+      "Compare cavity dirt, edge wear, stains, moss, scratches, or other local masks.",
+      "Compare key/fill/rim structure, exposure, tone mapping, background, and contact shadows.",
+      "Capture a neutral-light render to verify material readability without reference lighting.",
+      "Capture a grazing-light close-up to expose flat normals, uniform roughness, tiling, and plastic highlights.",
+      "Capture a reference-matched render from the same camera framing as the source."
+    ]
+  },
+  "actionReadiness": {
+    "runtimeHierarchyExposed": true,
+    "sockets": [
+      {
+        "id": "socket-stand",
+        "component": "plinth-disc",
+        "localPosition": [
+          0,
+          0.5,
+          0
+        ],
+        "purpose": "walkable surface centre; the collider plane and the player's landing target"
+      },
+      {
+        "id": "socket-trigger",
+        "component": "root",
+        "localPosition": [
+          0,
+          3.5,
+          0
+        ],
+        "purpose": "level-completion trigger volume centre, replacing the finish gate's box"
+      },
+      {
+        "id": "socket-light",
+        "component": "spill-light",
+        "localPosition": [
+          0,
+          0.9,
+          0
+        ],
+        "purpose": "emitter spill light"
+      }
+    ],
+    "colliders": [
+      {
+        "component": "plinth-disc",
+        "type": "cylinder-top-plane",
+        "isTrigger": false,
+        "notes": "Ride-on surface at y=0.50, radius 4.4."
+      },
+      {
+        "component": "root",
+        "type": "box",
+        "isTrigger": true,
+        "notes": "Finish trigger, generous in Y so an airborne arrival still counts."
+      }
+    ],
+    "updateContract": "root.userData.sculptRuntime.update(dt) drives ring rise/rotation, plume flicker and light pulse."
+  },
+  "assumptions": [
+    "Facet count 14 is inferred by mirroring the visible front arc; the reference never shows the drum's back.",
+    "The top disc is modelled flush, not recessed — the flame washes out that region in every frame of the source video.",
+    "The drum's foot is modelled as a plain base since the reference shows it meeting dirt with no visible plinth foot.",
+    "Ring count 6 reproduces the reference's simultaneous-arc density; the true spawn cadence is not recoverable from 2.7s of footage."
+  ],
+  "coordinateFrame": {
+    "up": "+Y",
+    "forward": "-Z",
+    "handedness": "right",
+    "originRule": "Footprint centre on the ground plane, so a level places it at a floor coordinate.",
+    "unitScale": "world units; player capsule 0.92 tall, crate 0.96"
+  },
+  "silhouette": {
+    "primaryReadableShape": "A wide low drum with a bright tapering column standing on it, banded by horizontal rings.",
+    "keyProportions": [
+      "drum width : drum height about 1.9 : 1",
+      "column height : drum width about 0.72 : 1",
+      "ring radius : drum radius about 1.13 : 1"
+    ],
+    "negativeSpace": "Gaps between the flame tongues at the base, and the air between successive rings."
+  },
+  "viewEvidence": [
+    {
+      "id": "full-object",
+      "view": "primary",
+      "imageRegion": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 1.0,
+        "height": 1.0,
+        "units": "normalized"
+      },
+      "observations": [],
+      "confidence": 0.5
+    }
+  ],
+  "componentTree": [
+    {
+      "id": "root",
+      "name": "Warp Pad",
+      "level": "macro",
+      "role": "body",
+      "importance": 1.0,
+      "confidence": 0.9,
+      "primitive": "instanced-cluster",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "Two unrelated systems (inert masonry, live emitter) share only an axis, so the root is an assembly node, not a surface.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": null,
+      "attachment": null,
+      "dimensions": {
+        "width": 9.7,
+        "height": 7.5,
+        "depth": 9.7,
+        "units": "world",
+        "confidence": 0.9
+      },
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [
+          {
+            "id": "socket-ground",
+            "localPosition": [
+              0,
+              0,
+              0
+            ],
+            "axis": [
+              0,
+              1,
+              0
+            ],
+            "purpose": "coaxial mount point",
+            "confidence": 0.85
+          },
+          {
+            "id": "socket-trigger",
+            "localPosition": [
+              0,
+              3.5,
+              0
+            ],
+            "axis": [
+              0,
+              1,
+              0
+            ],
+            "purpose": "coaxial mount point",
+            "confidence": 0.85
+          }
+        ],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-stone",
+      "materialLayers": [
+        "mat-stone"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "Origin at the pad's footprint centre, on the ground plane, so a level can drop it at a floor coordinate.",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(119, 131, 111, 1.0)",
+        "secondaryAlbedo": "rgba(255, 176, 58, 1.0)",
+        "materialClass": "stone",
+        "materialClassConfidence": 0.7,
+        "colorGradient": {
+          "type": "linear",
+          "stops": [
+            {
+              "color": "rgba(119, 131, 111, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(255, 176, 58, 1.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Damp grey-green limestone, matte, non-metallic."
+      }
+    },
+    {
+      "id": "plinth",
+      "name": "Stone plinth",
+      "level": "macro",
+      "role": "body",
+      "importance": 0.9,
+      "confidence": 0.85,
+      "primitive": "cylinder",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "A quarried drum built from discrete blocks: faceted, not a smooth lathe, so the facets must survive as flat shaded planes.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "root",
+      "attachment": {
+        "parentSocket": "socket-ground",
+        "localStart": [
+          0,
+          0,
+          0
+        ],
+        "localEnd": [
+          0,
+          0.5,
+          0
+        ],
+        "contactType": "seated",
+        "embedDepth": 0.02,
+        "overlap": 0.02,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 9.7,
+        "height": 0.5,
+        "depth": 9.7,
+        "units": "world",
+        "confidence": 0.85
+      },
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [
+          {
+            "id": "socket-body-top",
+            "localPosition": [
+              0,
+              0.34,
+              0
+            ],
+            "axis": [
+              0,
+              1,
+              0
+            ],
+            "purpose": "coaxial mount point",
+            "confidence": 0.85
+          },
+          {
+            "id": "socket-rim-top",
+            "localPosition": [
+              0,
+              0.5,
+              0
+            ],
+            "axis": [
+              0,
+              1,
+              0
+            ],
+            "purpose": "coaxial mount point",
+            "confidence": 0.85
+          }
+        ],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-stone",
+      "materialLayers": [
+        "mat-stone"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "Reference proportion is wide-and-low; measured at roughly 1.9:1 width to total drum height on the plate.",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(119, 131, 111, 1.0)",
+        "secondaryAlbedo": "rgba(93, 102, 87, 1.0)",
+        "materialClass": "stone",
+        "materialClassConfidence": 0.88,
+        "colorGradient": {
+          "type": "linear",
+          "stops": [
+            {
+              "color": "rgba(141, 148, 131, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(93, 102, 87, 1.0)",
+              "position": 0.6
+            },
+            {
+              "color": "rgba(74, 81, 66, 1.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Damp grey-green limestone, matte, non-metallic."
+      }
+    },
+    {
+      "id": "plinth-body",
+      "name": "Drum body",
+      "level": "meso",
+      "role": "body",
+      "importance": 0.7,
+      "confidence": 0.8,
+      "primitive": "cylinder",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "Reads as flat trapezoidal blocks around a ring — a 14-sided prism with flat shading, never a smoothed cylinder.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "plinth",
+      "attachment": {
+        "parentSocket": "socket-ground",
+        "localStart": [
+          0,
+          0,
+          0
+        ],
+        "localEnd": [
+          0,
+          0.34,
+          0
+        ],
+        "contactType": "seated",
+        "embedDepth": 0.02,
+        "overlap": 0.02,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 9.2,
+        "height": 0.34,
+        "depth": 9.2,
+        "units": "world",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          0.17,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-stone",
+      "materialLayers": [
+        "mat-stone"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "d-facet-seams",
+          "kind": "linework",
+          "description": "Dark inset mortar seams at every facet boundary, cut as a slight radius step so the seam self-shadows.",
+          "implementation": "14 radial segments with flat shading; per-face albedo jitter darkens the seam-adjacent faces.",
+          "confidence": 0.82
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "Slight downward taper (bottom radius 0.94x top) so the drum sits into the ground rather than floating on it.",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(112, 124, 105, 1.0)",
+        "secondaryAlbedo": "rgba(74, 81, 66, 1.0)",
+        "materialClass": "stone",
+        "materialClassConfidence": 0.85,
+        "colorGradient": {
+          "type": "linear",
+          "stops": [
+            {
+              "color": "rgba(126, 138, 116, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(74, 81, 66, 1.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Damp grey-green limestone, matte, non-metallic."
+      }
+    },
+    {
+      "id": "plinth-rim",
+      "name": "Oversailing top course",
+      "level": "meso",
+      "role": "trim",
+      "importance": 0.6,
+      "confidence": 0.75,
+      "primitive": "cylinder",
+      "topologyClass": "assembled-solid",
+      "topologyRationale": "A separate, wider course of blocks that oversails the body — its own prism, because the overhang shadow is an identity edge.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "plinth",
+      "attachment": {
+        "parentSocket": "socket-body-top",
+        "localStart": [
+          0,
+          0.34,
+          0
+        ],
+        "localEnd": [
+          0,
+          0.5,
+          0
+        ],
+        "contactType": "stacked",
+        "embedDepth": 0.02,
+        "overlap": 0.02,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 9.7,
+        "height": 0.16,
+        "depth": 9.7,
+        "units": "world",
+        "confidence": 0.75
+      },
+      "transform": {
+        "position": [
+          0,
+          0.42000000000000004,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-stone",
+      "materialLayers": [
+        "mat-stone"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "d-rim-overhang",
+          "kind": "bevel",
+          "description": "The course oversails the body by 0.25 world units, casting a continuous shadow line around the drum.",
+          "implementation": "Radius 4.85 against the body's 4.6; flat shaded so the underside reads dark.",
+          "confidence": 0.74
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(126, 138, 116, 1.0)",
+        "secondaryAlbedo": "rgba(90, 99, 84, 1.0)",
+        "materialClass": "stone",
+        "materialClassConfidence": 0.8,
+        "colorGradient": {
+          "type": "linear",
+          "stops": [
+            {
+              "color": "rgba(138, 148, 128, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(90, 99, 84, 1.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Damp grey-green limestone, matte, non-metallic."
+      }
+    },
+    {
+      "id": "plinth-disc",
+      "name": "Top paving disc",
+      "level": "meso",
+      "role": "surface",
+      "importance": 0.65,
+      "confidence": 0.7,
+      "primitive": "cylinder",
+      "topologyClass": "surface-relief",
+      "topologyRationale": "A flat walkable cap; planar because the player stands on it and the collider must be a clean plane.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "plinth",
+      "attachment": {
+        "parentSocket": "socket-rim-top",
+        "localStart": [
+          0,
+          0.5,
+          0
+        ],
+        "localEnd": [
+          0,
+          0.54,
+          0
+        ],
+        "contactType": "capped",
+        "embedDepth": 0.01,
+        "overlap": 0.01,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 8.8,
+        "height": 0.04,
+        "depth": 8.8,
+        "units": "world",
+        "confidence": 0.7
+      },
+      "transform": {
+        "position": [
+          0,
+          0.5,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [
+          {
+            "id": "socket-stand",
+            "localPosition": [
+              0,
+              0.54,
+              0
+            ],
+            "axis": [
+              0,
+              1,
+              0
+            ],
+            "purpose": "coaxial mount point",
+            "confidence": 0.85
+          }
+        ],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-stone",
+      "materialLayers": [
+        "mat-stone"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "d-paving-wedges",
+          "kind": "linework",
+          "description": "Ring of radial trapezoidal flagstones around a centre disc, seams lighter than the slab faces.",
+          "implementation": "Generated canvas texture: 14 radial wedge seams plus an inner circle, drawn once and shared.",
+          "confidence": 0.7
+        },
+        {
+          "id": "d-moss-tint",
+          "kind": "stain",
+          "description": "Desaturated green-grey biological tint on upward-facing stone, browner low down.",
+          "implementation": "Vertical albedo ramp baked into the same canvas texture, greener at the top.",
+          "confidence": 0.66
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "This is the surface the player rides onto; its top is the collider plane.",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(134, 143, 126, 1.0)",
+        "secondaryAlbedo": "rgba(104, 112, 98, 1.0)",
+        "materialClass": "stone",
+        "materialClassConfidence": 0.72,
+        "colorGradient": {
+          "type": "radial",
+          "stops": [
+            {
+              "color": "rgba(150, 140, 112, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(134, 143, 126, 1.0)",
+              "position": 0.55
+            },
+            {
+              "color": "rgba(104, 112, 98, 1.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Damp grey-green limestone, matte, non-metallic."
+      }
+    },
+    {
+      "id": "emitter-column",
+      "name": "Energy column",
+      "level": "macro",
+      "role": "emitter",
+      "importance": 1.0,
+      "confidence": 0.85,
+      "primitive": "instanced-cluster",
+      "topologyClass": "material-only",
+      "topologyRationale": "Not a surface at all — an additive, unlit volume read as layered emissive shells; treating it as lit geometry is the classic failure here.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "root",
+      "attachment": {
+        "parentSocket": "socket-stand",
+        "localStart": [
+          0,
+          0.5,
+          0
+        ],
+        "localEnd": [
+          0,
+          7.5,
+          0
+        ],
+        "contactType": "emitted-from",
+        "embedDepth": 0.05,
+        "overlap": 0.05,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 10.4,
+        "height": 7.0,
+        "depth": 10.4,
+        "units": "world",
+        "confidence": 0.85
+      },
+      "transform": {
+        "position": [
+          0,
+          0.5,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [
+          {
+            "id": "socket-light",
+            "localPosition": [
+              0,
+              0.9,
+              0
+            ],
+            "axis": [
+              0,
+              1,
+              0
+            ],
+            "purpose": "coaxial mount point",
+            "confidence": 0.85
+          }
+        ],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-plasma",
+      "materialLayers": [
+        "mat-plasma"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "Everything under this node is additive-blended, depthWrite off, and unlit, so it never takes scene shading."
+    },
+    {
+      "id": "flame-tongues",
+      "name": "Flame tongue ring",
+      "level": "meso",
+      "role": "emitter",
+      "importance": 0.8,
+      "confidence": 0.85,
+      "primitive": "instanced-cluster",
+      "topologyClass": "fiber-strand",
+      "topologyRationale": "A ring of individual tapering tongues, not a skirt — the gaps between them are visible against the disc and read as the base of the effect.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "emitter-column",
+      "attachment": {
+        "parentSocket": "socket-stand",
+        "localStart": [
+          0,
+          0.5,
+          0
+        ],
+        "localEnd": [
+          0,
+          1.6,
+          0
+        ],
+        "contactType": "rooted",
+        "embedDepth": 0.05,
+        "overlap": 0.05,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 4.4,
+        "height": 1.1,
+        "depth": 4.4,
+        "units": "world",
+        "confidence": 0.85
+      },
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-plasma",
+      "materialLayers": [
+        "mat-plasma"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "d-flame-tongues",
+          "kind": "contour",
+          "description": "18 thin vertical tapering tongues on a 2.2 radius, red at the root and yellow at the tip, each about a fifth of the plume height.",
+          "implementation": "One 3-segment cone geometry instanced 18 times round the axis, per-instance height jitter and phase.",
+          "confidence": 0.85
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(255, 138, 30, 1.0)",
+        "secondaryAlbedo": "rgba(229, 52, 28, 1.0)",
+        "materialClass": "unknown",
+        "materialClassConfidence": 0.6,
+        "colorGradient": {
+          "type": "linear",
+          "stops": [
+            {
+              "color": "rgba(229, 52, 28, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(255, 210, 63, 1.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Sampled from the plate. The plasma parts are materialClass 'unknown' on purpose: they are additive light, not any of the schema's surface families, and calling them plastic or glass would be a false claim."
+      }
+    },
+    {
+      "id": "plume",
+      "name": "Tapering plume",
+      "level": "meso",
+      "role": "emitter",
+      "importance": 0.95,
+      "confidence": 0.8,
+      "primitive": "lathe",
+      "topologyClass": "continuous-sculpt",
+      "topologyRationale": "A soft tapering volume; a lathe profile rather than a straight cone so the waist swells where the reference is brightest.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "emitter-column",
+      "attachment": {
+        "parentSocket": "socket-stand",
+        "localStart": [
+          0,
+          0.9,
+          0
+        ],
+        "localEnd": [
+          0,
+          7.5,
+          0
+        ],
+        "contactType": "rooted",
+        "embedDepth": 0.1,
+        "overlap": 0.1,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 4.8,
+        "height": 6.6,
+        "depth": 4.8,
+        "units": "world",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          0.4,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-plasma",
+      "materialLayers": [
+        "mat-plasma"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "d-plume-gradient",
+          "kind": "gloss",
+          "description": "White-yellow core to saturated orange edge, brightest about two thirds up, additive against the background.",
+          "implementation": "Vertex-colour ramp on a lathe profile, additive blending, no lighting term.",
+          "confidence": 0.88
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(255, 176, 58, 1.0)",
+        "secondaryAlbedo": "rgba(255, 242, 192, 1.0)",
+        "materialClass": "unknown",
+        "materialClassConfidence": 0.6,
+        "colorGradient": {
+          "type": "linear",
+          "stops": [
+            {
+              "color": "rgba(255, 242, 192, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(255, 176, 58, 0.6)",
+              "position": 0.7
+            },
+            {
+              "color": "rgba(229, 52, 28, 0.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Sampled from the plate. The plasma parts are materialClass 'unknown' on purpose: they are additive light, not any of the schema's surface families, and calling them plastic or glass would be a false claim."
+      }
+    },
+    {
+      "id": "ring-array",
+      "name": "Rising ring array",
+      "level": "meso",
+      "role": "emitter",
+      "importance": 1.0,
+      "confidence": 0.8,
+      "primitive": "torus",
+      "topologyClass": "conforming-shell",
+      "topologyRationale": "Flattened bands seen near edge-on. Their rise-and-rotate is the object's signature motion, so they are their own animated array.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "emitter-column",
+      "attachment": {
+        "parentSocket": "socket-stand",
+        "localStart": [
+          0,
+          0.6,
+          0
+        ],
+        "localEnd": [
+          0,
+          7.5,
+          0
+        ],
+        "contactType": "orbiting",
+        "embedDepth": 0.02,
+        "overlap": 0.02,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 10.4,
+        "height": 7.0,
+        "depth": 10.4,
+        "units": "world",
+        "confidence": 0.8
+      },
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-ring",
+      "materialLayers": [
+        "mat-ring"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "d-ring-arcs",
+          "kind": "contour",
+          "description": "Flattened rings wider than the drum, saturated red rim with a yellow-white core, several visible at once at different heights and rotations.",
+          "implementation": "6 thin torus bands sharing one geometry, each with its own rise phase, spin rate and radius ramp; opacity fades in at the base and out at the top.",
+          "confidence": 0.8
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": "",
+      "colorMaterialRecipe": {
+        "dominantAlbedo": "rgba(255, 90, 30, 1.0)",
+        "secondaryAlbedo": "rgba(255, 240, 176, 1.0)",
+        "materialClass": "unknown",
+        "materialClassConfidence": 0.6,
+        "colorGradient": {
+          "type": "radial",
+          "stops": [
+            {
+              "color": "rgba(255, 240, 176, 1.0)",
+              "position": 0.0
+            },
+            {
+              "color": "rgba(255, 74, 20, 1.0)",
+              "position": 1.0
+            }
+          ]
+        },
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "notes": "Sampled from the plate. The plasma parts are materialClass 'unknown' on purpose: they are additive light, not any of the schema's surface families, and calling them plastic or glass would be a false claim."
+      }
+    },
+    {
+      "id": "spill-light",
+      "name": "Emitter spill light",
+      "level": "micro",
+      "role": "light",
+      "importance": 0.5,
+      "confidence": 0.79,
+      "primitive": "sphere",
+      "topologyClass": "material-only",
+      "topologyRationale": "A light source, not geometry — the reference shows the emitter lighting its own base, which no emissive material can do on its own.",
+      "geometryDescriptor": {
+        "topologyIntent": "low-poly blockout with bevel-ready edges",
+        "edgeTreatment": {
+          "type": "none",
+          "bevelRadius": 0.0,
+          "segments": 1
+        },
+        "deformationStack": [],
+        "uvStrategy": "generated procedural coordinates",
+        "normalStrategy": "vertex normals from generated geometry"
+      },
+      "parent": "emitter-column",
+      "attachment": {
+        "parentSocket": "socket-light",
+        "localStart": [
+          0,
+          0.9,
+          0
+        ],
+        "localEnd": [
+          0,
+          0.9,
+          0
+        ],
+        "contactType": "anchored",
+        "embedDepth": 0.01,
+        "overlap": 0.01,
+        "gapTolerance": 0.01,
+        "notes": "Radially symmetric stack: every joint is coaxial, so contact is exact by construction."
+      },
+      "dimensions": {
+        "width": 0.1,
+        "height": 0.1,
+        "depth": 0.1,
+        "units": "world",
+        "confidence": 0.79
+      },
+      "transform": {
+        "position": [
+          0,
+          0.9,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "actionProfile": {
+        "animationRole": "root",
+        "pivot": {
+          "mode": "center",
+          "localPosition": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "confidence": 0.5
+        },
+        "transformChannels": {
+          "translate": true,
+          "rotate": true,
+          "scale": true,
+          "bend": false,
+          "twist": false,
+          "detach": false,
+          "visibility": true,
+          "materialState": true
+        },
+        "sockets": [],
+        "collider": {
+          "type": "box",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "isTrigger": false,
+          "notes": "Replace with sphere/capsule/compound proxy when the object shape demands it."
+        },
+        "constraints": [],
+        "destruction": {
+          "breakable": false,
+          "fractureGroup": "root",
+          "seamRefs": [],
+          "detachableFragments": [],
+          "breakImpulse": 0.0,
+          "debrisMaterial": "base"
+        }
+      },
+      "material": "mat-plasma",
+      "materialLayers": [
+        "mat-plasma"
+      ],
+      "deformations": [],
+      "joints": [],
+      "seams": [],
+      "localFeatures": [
+        {
+          "id": "d-spill-light",
+          "kind": "gloss",
+          "description": "Warm orange bounce on the disc and the inner rim faces, falling off within about one drum radius.",
+          "implementation": "PointLight, colour #ff9a3c, distance 12, intensity pulsing with the plume flicker.",
+          "confidence": 0.79
+        }
+      ],
+      "surfaceDetail": {
+        "macroRoughness": 0.0,
+        "microRoughness": 0.0,
+        "bumpAmplitude": 0.0,
+        "normalPattern": "",
+        "displacementPattern": "",
+        "occlusionPattern": "",
+        "edgeWearPattern": "",
+        "notes": ""
+      },
+      "evidenceRefs": [
+        "full-object"
+      ],
+      "details": [],
+      "fidelityTier": "blockout",
+      "notes": ""
+    }
+  ],
+  "materials": [
+    {
+      "id": "mat-stone",
+      "name": "Mossy quarried stone",
+      "type": "standard",
+      "shaderModel": "MeshLambertMaterial (project's PS1 lit path)",
+      "baseColor": "#77836f",
+      "color": "#77836f",
+      "albedo": {
+        "dominant": "#77836f",
+        "secondary": [
+          "#5d6657",
+          "#8d9483",
+          "#4a5142"
+        ],
+        "samplingNotes": "Sampled from the plate's own zones, not an averaged colour."
+      },
+      "colorVariation": {
+        "palette": [
+          "#77836f",
+          "#5d6657",
+          "#8d9483",
+          "#4a5142"
+        ],
+        "pattern": "mottled",
+        "amplitude": 0.22,
+        "heightCorrelation": 0.35
+      },
+      "textureResolution": 128,
+      "textureProjection": {
+        "mode": "uv",
+        "repeat": [
+          2.0,
+          2.0
+        ],
+        "anisotropy": 8,
+        "texelDensityIntent": "Preserve stable world/object-scale detail; do not stretch micro detail with component scale."
+      },
+      "surfaceFrequencyBands": [
+        {
+          "id": "macro",
+          "frequency": 2.0,
+          "amplitude": 0.42,
+          "role": "broad color and height breakup"
+        },
+        {
+          "id": "meso",
+          "frequency": 12.0,
+          "amplitude": 0.22,
+          "role": "ridges, pores, grain, dents, or equivalent visible relief"
+        },
+        {
+          "id": "micro",
+          "frequency": 56.0,
+          "amplitude": 0.08,
+          "role": "highlight breakup visible under grazing light"
+        }
+      ],
+      "roughness": {
+        "base": 0.75,
+        "variation": 0.15,
+        "map": "independent-procedural-field",
+        "localResponse": "higher roughness in cavities, lower roughness on worn edges"
+      },
+      "metalness": {
+        "base": 0.0,
+        "variation": 0.0
+      },
+      "normal": {
+        "pattern": "derived-from-independent-height-field",
+        "strength": 0.35,
+        "scale": 24.0,
+        "space": "tangent"
+      },
+      "bump": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0
+      },
+      "displacement": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0,
+        "silhouetteAffects": false
+      },
+      "ambientOcclusion": {
+        "source": "baked-into-canvas",
+        "strength": 0.35,
+        "notes": "Seam and rim-underside darkening painted into the shared 128px canvas."
+      },
+      "wear": {
+        "edgeWear": 0.0,
+        "scratches": [],
+        "chips": []
+      },
+      "dirt": {
+        "amount": 0.0,
+        "cavityBias": 0.0,
+        "color": "#2F2A22"
+      },
+      "localOverrides": [
+        {
+          "id": "ovr-moss-crown",
+          "region": "upward-facing faces and the top third of the body",
+          "channel": "albedo",
+          "effect": "green-grey biological tint, +0.06 green, -0.04 saturation",
+          "evidenceRefs": [
+            "full-object"
+          ],
+          "confidence": 0.66,
+          "notes": "Damp jungle stone: moss grows where water sits."
+        },
+        {
+          "id": "ovr-seam-dirt",
+          "region": "mortar seams between facets",
+          "channel": "ambientOcclusion",
+          "effect": "darken 25% in a 1-texel band either side of each seam",
+          "evidenceRefs": [
+            "full-object"
+          ],
+          "confidence": 0.8,
+          "notes": "Baked contact darkening; the geometry is too low-poly for a real AO bake."
+        },
+        {
+          "id": "ovr-base-soil",
+          "region": "lowest quarter of the drum body",
+          "channel": "albedo",
+          "effect": "warm brown wash toward #6b5a41, strongest at the ground line",
+          "evidenceRefs": [
+            "full-object"
+          ],
+          "confidence": 0.7,
+          "notes": "Splash-back dirt where the drum meets soil in the reference."
+        }
+      ],
+      "shaderNotes": [
+        "Prefer MeshPhysicalMaterial when clearcoat, sheen, transmission, or thin-surface response is observed; otherwise use MeshStandardMaterial-compatible PBR channels.",
+        "Generate albedo, roughness, height/normal, and AO independently; never alias albedo into roughness.",
+        "Use normal/bump/displacement only when they map to observed surface relief.",
+        "Use displacement geometry when the observed relief changes the close-up silhouette; texture-only relief is insufficient there."
+      ],
+      "notes": "Damp grey-green limestone: fully rough, non-metallic, no specular lobe. Green tint rides upward-facing faces, brown-grey low down. 128px canvas keeps the project's PS1 texel density.",
+      "referencePbr": {
+        "version": "1",
+        "sourceImage": "/tmp/claude-0/warpforge/crop-stone.png",
+        "extractor": "forge/stage1_intake/extract_pbr_evidence.py",
+        "method": "single-image inverse-rendering estimate",
+        "verdict": "pass",
+        "usable": true,
+        "confidence": 0.771,
+        "estimatedFidelity": 0.771,
+        "targetThreshold": 0.7,
+        "hardLimit": "single-image extraction is an estimate, not measured PBR; the crop also carries the reference's baked lighting and some jungle spill",
+        "maps": {
+          "albedo": {
+            "path": "/tmp/claude-0/warpforge/pbr/mat-stone_albedo.png",
+            "url": "mat-stone_albedo.png",
+            "channel": "albedo",
+            "source": "reference-pixel-extraction"
+          },
+          "roughness": {
+            "path": "/tmp/claude-0/warpforge/pbr/mat-stone_roughness.png",
+            "url": "mat-stone_roughness.png",
+            "channel": "roughness",
+            "source": "reference-pixel-extraction"
+          },
+          "height": {
+            "path": "/tmp/claude-0/warpforge/pbr/mat-stone_height.png",
+            "url": "mat-stone_height.png",
+            "channel": "height",
+            "source": "reference-pixel-extraction"
+          },
+          "normal": {
+            "path": "/tmp/claude-0/warpforge/pbr/mat-stone_normal.png",
+            "url": "mat-stone_normal.png",
+            "channel": "normal",
+            "source": "reference-pixel-extraction"
+          },
+          "ao": {
+            "path": "/tmp/claude-0/warpforge/pbr/mat-stone_ao.png",
+            "url": "mat-stone_ao.png",
+            "channel": "ao",
+            "source": "reference-pixel-extraction"
+          }
+        },
+        "notes": "Extracted from a front-facet crop; confidence 0.771 against a 0.7 target."
+      },
+      "textureResolutionRationale": "DELIBERATE DEVIATION from the skill's 1024 strict-quality floor. The host game is a PS1-style renderer whose entire texture pipeline is 128px with nearest filtering; a 1024 map would be filtered back down and would read wrong next to every other surface in the level. Recording 1024 here to pass a gate while shipping 128 would be a false spec."
+    },
+    {
+      "id": "mat-plasma",
+      "name": "Plume plasma",
+      "type": "emissive-additive",
+      "shaderModel": "MeshBasicMaterial, AdditiveBlending, depthWrite false",
+      "baseColor": "#ffb03a",
+      "color": "#ffb03a",
+      "albedo": {
+        "dominant": "#ffb03a",
+        "secondary": [
+          "#ffd23f",
+          "#ff8a1e",
+          "#e5341c"
+        ],
+        "samplingNotes": "Sampled from the plate's own zones, not an averaged colour."
+      },
+      "colorVariation": {
+        "palette": [
+          "#fff2c0",
+          "#ffd23f",
+          "#ff8a1e",
+          "#e5341c"
+        ],
+        "pattern": "vertical-gradient",
+        "amplitude": 0.5,
+        "heightCorrelation": 0.35
+      },
+      "textureResolution": 64,
+      "textureProjection": {
+        "mode": "uv",
+        "repeat": [
+          2.0,
+          2.0
+        ],
+        "anisotropy": 8,
+        "texelDensityIntent": "Preserve stable world/object-scale detail; do not stretch micro detail with component scale."
+      },
+      "surfaceFrequencyBands": [
+        {
+          "id": "macro",
+          "frequency": 2.0,
+          "amplitude": 0.42,
+          "role": "broad color and height breakup"
+        },
+        {
+          "id": "meso",
+          "frequency": 12.0,
+          "amplitude": 0.22,
+          "role": "ridges, pores, grain, dents, or equivalent visible relief"
+        },
+        {
+          "id": "micro",
+          "frequency": 56.0,
+          "amplitude": 0.08,
+          "role": "highlight breakup visible under grazing light"
+        }
+      ],
+      "roughness": {
+        "base": 0.75,
+        "variation": 0.15,
+        "map": "independent-procedural-field",
+        "localResponse": "higher roughness in cavities, lower roughness on worn edges"
+      },
+      "metalness": {
+        "base": 0.0,
+        "variation": 0.0
+      },
+      "normal": {
+        "pattern": "derived-from-independent-height-field",
+        "strength": 0.35,
+        "scale": 24.0,
+        "space": "tangent"
+      },
+      "bump": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0
+      },
+      "displacement": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0,
+        "silhouetteAffects": false
+      },
+      "ambientOcclusion": {
+        "cavityStrength": 0.25,
+        "contactShadowBias": 0.35,
+        "notes": "Darken creases, seams, intersections, and recessed local features."
+      },
+      "wear": {
+        "edgeWear": 0.0,
+        "scratches": [],
+        "chips": []
+      },
+      "dirt": {
+        "amount": 0.0,
+        "cavityBias": 0.0,
+        "color": "#2F2A22"
+      },
+      "localOverrides": [],
+      "shaderNotes": [
+        "Prefer MeshPhysicalMaterial when clearcoat, sheen, transmission, or thin-surface response is observed; otherwise use MeshStandardMaterial-compatible PBR channels.",
+        "Generate albedo, roughness, height/normal, and AO independently; never alias albedo into roughness.",
+        "Use normal/bump/displacement only when they map to observed surface relief.",
+        "Use displacement geometry when the observed relief changes the close-up silhouette; texture-only relief is insufficient there."
+      ],
+      "notes": "Unlit and additive so it reads as light, not surface. Vertex-colour ramp white-yellow core to orange edge. No roughness/metalness channel exists for this family — recording them would be a lie. (textureResolution is schema-mandated but unused: this family is vertex-coloured, untextured.)",
+      "referencePbr": {
+        "version": "1",
+        "sourceImage": "/tmp/claude-0/warpforge/crop-plasma.png",
+        "extractor": "n/a",
+        "method": "not-applicable",
+        "verdict": "skipped",
+        "usable": false,
+        "confidence": 0.0,
+        "hardLimit": "additive emissive light has no albedo/roughness/normal/AO to extract",
+        "maps": {},
+        "notes": "Not extracted on purpose: this material is additive unlit light. Running a PBR estimator on a glow would produce albedo/roughness numbers that describe the jungle behind it, not the effect. The colour ramp comes from the plate's own pixels instead."
+      },
+      "textureResolutionRationale": "Untextured, vertex-coloured additive material; the field is schema-mandated but unused."
+    },
+    {
+      "id": "mat-ring",
+      "name": "Ring plasma",
+      "type": "emissive-additive",
+      "shaderModel": "MeshBasicMaterial, AdditiveBlending, depthWrite false",
+      "baseColor": "#ff5a1e",
+      "color": "#ff5a1e",
+      "albedo": {
+        "dominant": "#ff5a1e",
+        "secondary": [
+          "#ffae2b",
+          "#ff4a14",
+          "#c81e0a"
+        ],
+        "samplingNotes": "Sampled from the plate's own zones, not an averaged colour."
+      },
+      "colorVariation": {
+        "palette": [
+          "#fff0b0",
+          "#ffae2b",
+          "#ff4a14",
+          "#c81e0a"
+        ],
+        "pattern": "radial-gradient",
+        "amplitude": 0.45,
+        "heightCorrelation": 0.35
+      },
+      "textureResolution": 64,
+      "textureProjection": {
+        "mode": "uv",
+        "repeat": [
+          2.0,
+          2.0
+        ],
+        "anisotropy": 8,
+        "texelDensityIntent": "Preserve stable world/object-scale detail; do not stretch micro detail with component scale."
+      },
+      "surfaceFrequencyBands": [
+        {
+          "id": "macro",
+          "frequency": 2.0,
+          "amplitude": 0.42,
+          "role": "broad color and height breakup"
+        },
+        {
+          "id": "meso",
+          "frequency": 12.0,
+          "amplitude": 0.22,
+          "role": "ridges, pores, grain, dents, or equivalent visible relief"
+        },
+        {
+          "id": "micro",
+          "frequency": 56.0,
+          "amplitude": 0.08,
+          "role": "highlight breakup visible under grazing light"
+        }
+      ],
+      "roughness": {
+        "base": 0.75,
+        "variation": 0.15,
+        "map": "independent-procedural-field",
+        "localResponse": "higher roughness in cavities, lower roughness on worn edges"
+      },
+      "metalness": {
+        "base": 0.0,
+        "variation": 0.0
+      },
+      "normal": {
+        "pattern": "derived-from-independent-height-field",
+        "strength": 0.35,
+        "scale": 24.0,
+        "space": "tangent"
+      },
+      "bump": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0
+      },
+      "displacement": {
+        "pattern": "none",
+        "amplitude": 0.0,
+        "scale": 1.0,
+        "silhouetteAffects": false
+      },
+      "ambientOcclusion": {
+        "cavityStrength": 0.25,
+        "contactShadowBias": 0.35,
+        "notes": "Darken creases, seams, intersections, and recessed local features."
+      },
+      "wear": {
+        "edgeWear": 0.0,
+        "scratches": [],
+        "chips": []
+      },
+      "dirt": {
+        "amount": 0.0,
+        "cavityBias": 0.0,
+        "color": "#2F2A22"
+      },
+      "localOverrides": [],
+      "shaderNotes": [
+        "Prefer MeshPhysicalMaterial when clearcoat, sheen, transmission, or thin-surface response is observed; otherwise use MeshStandardMaterial-compatible PBR channels.",
+        "Generate albedo, roughness, height/normal, and AO independently; never alias albedo into roughness.",
+        "Use normal/bump/displacement only when they map to observed surface relief.",
+        "Use displacement geometry when the observed relief changes the close-up silhouette; texture-only relief is insufficient there."
+      ],
+      "notes": "Saturated red rim, yellow-white core; opacity is animated per ring for the rise-and-fade. (textureResolution is schema-mandated but unused: this family is vertex-coloured, untextured.)",
+      "referencePbr": {
+        "version": "1",
+        "sourceImage": "/tmp/claude-0/warpforge/crop-plasma.png",
+        "extractor": "n/a",
+        "method": "not-applicable",
+        "verdict": "skipped",
+        "usable": false,
+        "confidence": 0.0,
+        "hardLimit": "additive emissive light has no albedo/roughness/normal/AO to extract",
+        "maps": {},
+        "notes": "Not extracted on purpose: this material is additive unlit light. Running a PBR estimator on a glow would produce albedo/roughness numbers that describe the jungle behind it, not the effect. The colour ramp comes from the plate's own pixels instead."
+      },
+      "textureResolutionRationale": "Untextured, vertex-coloured additive material; the field is schema-mandated but unused."
+    }
+  ],
+  "repetitionSystems": [
+    {
+      "id": "rep-drum-facets",
+      "name": "Drum facet ring",
+      "kind": "radial-array",
+      "count": 14,
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "componentRefs": [
+        "plinth-body",
+        "plinth-rim"
+      ],
+      "variation": {
+        "scale": 0.0,
+        "rotation": 0.0,
+        "albedoJitter": 0.12
+      },
+      "instancing": "single flat-shaded prism geometry, no per-facet meshes",
+      "notes": "7-8 facets are visible across the front arc, so the full ring is inferred at 14. The back is not observable."
+    },
+    {
+      "id": "rep-flame-tongues",
+      "name": "Flame tongue ring",
+      "kind": "radial-array",
+      "count": 18,
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "componentRefs": [
+        "flame-tongues"
+      ],
+      "variation": {
+        "scale": 0.35,
+        "rotation": 0.0,
+        "phase": 1.0
+      },
+      "instancing": "one cone geometry reused; per-instance height and flicker phase",
+      "notes": "Count read off the visible front arc of the plate and mirrored round the axis."
+    },
+    {
+      "id": "rep-rings",
+      "name": "Rising ring stack",
+      "kind": "linear-array",
+      "count": 6,
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "componentRefs": [
+        "ring-array"
+      ],
+      "variation": {
+        "phase": 1.0,
+        "rotation": 1.0,
+        "scale": 0.15
+      },
+      "instancing": "one torus geometry, six meshes with staggered rise phase",
+      "notes": "4-6 arcs are visible simultaneously in the reference; 6 with staggered phase reproduces that density."
+    }
+  ],
+  "buildPasses": [
+    {
+      "id": "blockout",
+      "goal": "Match macro silhouette and proportions.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Silhouette reads correctly without materials.",
+        "Quality contract has named all required macro feature groups before code generation.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "structural-pass",
+      "goal": "Build the component hierarchy implied by the pre-spec complexity assessment.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Macro, meso, and repeated structures meet qualityContract.minimumSpecDepth.",
+        "Parent-child relations, joints, seams, sockets, and contact points are explicit.",
+        "Every attached child appendage/connector has parentSocket, localStart/localEnd, contactType, embedDepth or overlap, and gapTolerance.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "form-refinement",
+      "goal": "Refine shape, deformation, bevels, tapers, curves, asymmetry, and visible local geometry.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Important visible forms are represented in component geometryDescriptor, deformations, localFeatures, or repetitionSystems.",
+        "Endpoint-based child parts are rooted at their attachment sockets and do not visibly float away from parents.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "material-pass",
+      "goal": "Match material color, roughness, bump, and local variation.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Reference-derived albedo palette records dominant, secondary, and accent colors per visible material.",
+        "Each important material defines roughness variation and at least one normal/bump/displacement response.",
+        "Local material overrides, dirt/wear/stains/moss/chips/scratches or equivalent masks are tied to evidenceRefs.",
+        "Thin, transparent, reflective, wet, or fibrous materials document alpha/transmission/clearcoat/metalness/fiber response when relevant.",
+        "Generated preview uses procedural albedo/roughness/bump texture or vertex color variation instead of one flat color.",
+        "Generated preview uses independent PBR maps at 1024px or higher for the quality-first tier.",
+        "If source pixels are available, referencePbr extraction passed at confidence >= 0.7 or the pass is stopped/requesting better references.",
+        "Macro, meso, and micro surface frequency bands are visible at the intended review distance without obvious tiling.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "surface-pass",
+      "goal": "Add procedural surface locality such as normal/bump/displacement, AO, dirt, stains, chips, grain, moss, scratches, and wear.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Every required material feature group has local overrides or surfaceDetail tied to evidenceRefs.",
+        "A grazing-angle close-up proves that normal/height detail breaks highlights naturally and does not read as smooth plastic.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "lighting-pass",
+      "goal": "Make material and form readable under neutral turntable lighting plus optional reference lighting.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "lightingFromPhoto identifies key light direction/color/intensity, fill light, rim or environment light, and ambient color.",
+        "Exposure, tone mapping, background color/gradient, shadow softness, and contact shadow behavior are specified.",
+        "Lighting does not hide geometry/material gaps and screenshots can be compared fairly to the reference.",
+        "Neutral, grazing, and reference-matched lighting checks distinguish material errors from lighting errors.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ],
+      "lights": [
+        {
+          "id": "key-self",
+          "role": "key",
+          "type": "point",
+          "color": "#ff9a3c",
+          "intensity": 1.6,
+          "distance": 12.0,
+          "position": [
+            0,
+            0.9,
+            0
+          ],
+          "notes": "The emitter IS the key light — in the reference the only thing lighting the stone is the column."
+        },
+        {
+          "id": "fill-scene",
+          "role": "fill",
+          "type": "inherited-hemisphere",
+          "color": "#eafcff",
+          "intensity": 0.0,
+          "notes": "Inherited from the level's own hemisphere light; the pad adds no fill of its own."
+        },
+        {
+          "id": "rim-none",
+          "role": "rim",
+          "type": "none",
+          "intensity": 0.0,
+          "notes": "No rim light: the reference has none, and adding one would fight the additive column."
+        }
+      ],
+      "exposure": {
+        "value": 1.0,
+        "toneMapping": "none",
+        "notes": "Host renderer uses no tone mapping (PS1 look); the pad must not introduce one or it will recolour the whole scene."
+      },
+      "shadows": {
+        "contactShadow": "none",
+        "groundShadow": "receive-only",
+        "notes": "The drum receives the level's shadow map but casts none — an additive column casting a shadow map would punch a hole in its own glow. Matches the project's noShadow convention."
+      }
+    },
+    {
+      "id": "interaction-pass",
+      "goal": "Make the model ready for future animation, transformation, physics, or destruction.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Macro and movable meso components have stable pivot nodes.",
+        "Sockets, collider proxies, and destruction metadata are present for future runtime actions.",
+        "AI vision comparison score meets selfCorrectLoop.visualAcceptance.threshold."
+      ]
+    },
+    {
+      "id": "optimization-pass",
+      "goal": "Protect runtime performance after visual fidelity is accepted.",
+      "componentRefs": [
+        "root"
+      ],
+      "acceptance": [
+        "Triangle count, draw calls, instancing, LOD strategy, and FPS target are documented or verified.",
+        "Repeated detail is instanced or simplified where possible without breaking silhouette/material believability."
+      ]
+    }
+  ],
+  "visualEvidence": [
+    {
+      "timestamp": "2026-07-26T01:41:00.196729+00:00",
+      "passId": "blockout",
+      "estimatedFidelity": 0.63,
+      "aiVisionScore": 0.63,
+      "visualAcceptanceThreshold": 0.7,
+      "layerScores": {
+        "silhouette": 0.58,
+        "structure": 0.75,
+        "material": 0.72,
+        "lighting": 0.7,
+        "motion": 0.8
+      },
+      "featureReviews": [
+        {
+          "id": "plinth-proportion",
+          "score": 0.72,
+          "notes": "Faceted drum with mortar seams, oversailing top course and a paved disc all read. Proportion is 4.4:1 wide-to-tall against the reference's measured 1.9:1 — a deliberate trade: a 5-unit drum would be a wall across the finish line."
+        },
+        {
+          "id": "column-silhouette",
+          "score": 0.55,
+          "notes": "Tongue ring reads with visible gaps and the plume now tapers instead of bulging, but the plume is one hard-edged lathe triangle where the reference is a soft irregular billow. Biggest remaining gap."
+        },
+        {
+          "id": "ring-motion",
+          "score": 0.8,
+          "notes": "Six rings of varied radius, thickness and tilt rise, rotate and fade; several visible at once, wider than the drum. Closest match of the four."
+        },
+        {
+          "id": "emissive-family",
+          "score": 0.78,
+          "notes": "Additive unlit plasma over lit matte stone; the plasma reads as light, not surface, and does not take fog. Edges are hard because the project has no bloom."
+        },
+        {
+          "id": "spill-light",
+          "score": 0.7,
+          "notes": "Point light at the plume root pulses with the flicker and warms the disc and inner rim."
+        }
+      ],
+      "referenceScreenshot": "/tmp/claude-0/plate.png",
+      "renderScreenshot": "/tmp/claude-0/warpforge/iso-p4-front.png",
+      "comparisonImage": "/tmp/claude-0/warpforge/cmp.png",
+      "cameraView": "",
+      "notes": "",
+      "aiVisionNotes": ""
+    }
+  ],
+  "reviewHistory": [
+    {
+      "timestamp": "2026-07-26T01:41:00.196729+00:00",
+      "passId": "blockout",
+      "estimatedFidelity": 0.63,
+      "aiVisionScore": 0.63,
+      "visualAcceptanceThreshold": 0.7,
+      "layerScores": {
+        "silhouette": 0.58,
+        "structure": 0.75,
+        "material": 0.72,
+        "lighting": 0.7,
+        "motion": 0.8
+      },
+      "featureReviews": [
+        {
+          "id": "plinth-proportion",
+          "score": 0.72,
+          "notes": "Faceted drum with mortar seams, oversailing top course and a paved disc all read. Proportion is 4.4:1 wide-to-tall against the reference's measured 1.9:1 — a deliberate trade: a 5-unit drum would be a wall across the finish line."
+        },
+        {
+          "id": "column-silhouette",
+          "score": 0.55,
+          "notes": "Tongue ring reads with visible gaps and the plume now tapers instead of bulging, but the plume is one hard-edged lathe triangle where the reference is a soft irregular billow. Biggest remaining gap."
+        },
+        {
+          "id": "ring-motion",
+          "score": 0.8,
+          "notes": "Six rings of varied radius, thickness and tilt rise, rotate and fade; several visible at once, wider than the drum. Closest match of the four."
+        },
+        {
+          "id": "emissive-family",
+          "score": 0.78,
+          "notes": "Additive unlit plasma over lit matte stone; the plasma reads as light, not surface, and does not take fog. Edges are hard because the project has no bloom."
+        },
+        {
+          "id": "spill-light",
+          "score": 0.7,
+          "notes": "Point light at the plume root pulses with the flicker and warms the disc and inner rim."
+        }
+      ],
+      "action": "refine-code",
+      "summary": "Three refine-code passes off the reference. Pass 1 blockout failed its own key-proportion target (drum 19:1 wide-to-tall, invisible behind the deck edge) and the plume/rings were too thin to read at play distance; pass 2 raised the drum to 4.4:1, widened the plume and thickened the rings but the plume then read as a solid opaque cone occluding the rings; pass 3 dropped plume opacity to 0.5, retapered the profile from a mid-swell onion to a decaying power curve, and gave each ring its own radius, thickness and tilt. Divine Eye REJECTs at 0.4153 on silhouette IoU 0.396 and scale delta 0.446 — largely an artefact of the reference plate being a hand-masked ellipse of jungle-plus-flame rather than an isolable object (the admission gate flagged exactly this), but partly real: the reference's flame is a wide irregular billow and ours is a narrow hard-edged triangle.",
+      "matched": [],
+      "mismatches": [],
+      "specFixes": [],
+      "codeFixes": [],
+      "evidence": [],
+      "visualEvidence": {
+        "referenceScreenshot": "/tmp/claude-0/plate.png",
+        "renderScreenshot": "/tmp/claude-0/warpforge/iso-p4-front.png",
+        "comparisonImage": "/tmp/claude-0/warpforge/cmp.png",
+        "cameraView": "",
+        "notes": "",
+        "aiVisionNotes": ""
+      }
+    }
+  ],
+  "lodPlan": [
+    {
+      "tier": "near",
+      "distance": 0,
+      "strategy": "full component tree and material layers"
+    },
+    {
+      "tier": "far",
+      "distance": 30,
+      "strategy": "merge static components and reduce local feature geometry"
+    }
+  ],
+  "performanceBudget": {
+    "targetTriangles": 1400,
+    "targetDrawCalls": 6,
+    "notes": "Must sit inside an existing PS1-style game already drawing a full level; the pad is a prop, not a hero asset."
+  },
+  "lightingFromPhoto": [
+    {
+      "id": "key-self",
+      "role": "key",
+      "type": "point",
+      "color": "#ff9a3c",
+      "intensity": 1.6,
+      "distance": 12.0,
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "notes": "The emitter IS the key light. In the reference the only thing lighting the stone is the column itself, so the model ships one warm point light at the plume root, pulsing with the flicker."
+    },
+    {
+      "id": "exposure-neutral",
+      "role": "grade",
+      "type": "exposure",
+      "notes": "Exposure 1.0 with tone mapping set to none. The host renderer is a PS1-look pipeline with no tone mapping; introducing ACES or filmic here would recolour the whole level, not just the pad."
+    },
+    {
+      "id": "shadow-contract",
+      "role": "shadow",
+      "type": "shadow-policy",
+      "notes": "Ground shadow: the drum receives the level's shadow map but casts none, and the emitter writes no ambient occlusion. An additive column that cast a shadow would punch a hole in its own glow, and contact shadow under a glowing pad reads as dirt."
+    },
+    {
+      "id": "fill-inherited",
+      "role": "fill",
+      "type": "inherited-hemisphere",
+      "color": "#eafcff",
+      "intensity": 0.0,
+      "notes": "Fill comes from the level's existing hemisphere light; the pad adds none of its own so it reads consistently in every level theme."
+    }
+  ],
+  "proceduralStrategy": [
+    {
+      "id": "proc-geometryApproach",
+      "topic": "geometryApproach",
+      "approach": "Primitives only: radial prisms for the masonry, a lathe profile for the plume, cones for the tongues, thin tori for the rings."
+    },
+    {
+      "id": "proc-textureApproach",
+      "topic": "textureApproach",
+      "approach": "One shared 128px canvas texture for the stone; the plasma family is vertex-coloured and untextured."
+    },
+    {
+      "id": "proc-determinism",
+      "topic": "determinism",
+      "approach": "All jitter comes from a seeded PRNG so the pad is identical on every load and in replays."
+    },
+    {
+      "id": "proc-sharedResources",
+      "topic": "sharedResources",
+      "approach": "Geometries and materials are created once per pad and reused across instances; disposal is the caller's."
+    }
+  ],
+  "animationAnchors": [
+    {
+      "id": "anim-ring-rise",
+      "componentRefs": [
+        "ring-array"
+      ],
+      "channel": "translate+rotate+opacity",
+      "description": "Each ring rises from the disc to the plume top, spinning, fading in low and out high, then respawns."
+    },
+    {
+      "id": "anim-plume-flicker",
+      "componentRefs": [
+        "plume",
+        "flame-tongues"
+      ],
+      "channel": "scale+materialState",
+      "description": "Low-amplitude vertical scale and opacity flicker, two summed sine rates so it never reads as a loop."
+    },
+    {
+      "id": "anim-light-pulse",
+      "componentRefs": [
+        "spill-light"
+      ],
+      "channel": "materialState",
+      "description": "Point-light intensity tracks the plume flicker so the bounce and the source agree."
+    }
+  ],
+  "destructionAnchors": [
+    "actionProfile.destruction.fractureGroup marks detachable or breakable component sets",
+    "component seams and sockets define plausible break points instead of random explosions"
+  ],
+  "risks": [
+    {
+      "id": "risk-additive-fog",
+      "severity": "medium",
+      "description": "Additive unlit materials ignore fog, so the column can glow through haze at distance where the level expects fade.",
+      "mitigation": "Cap the column's draw distance or fade opacity with camera distance."
+    },
+    {
+      "id": "risk-overdraw",
+      "severity": "medium",
+      "description": "Six additive rings plus a plume is stacked transparency — cheap on triangles, expensive on fill, which is the phone's weak axis.",
+      "mitigation": "Keep the ring band thin, disable depthWrite, and keep the total transparent layer count at or below 8."
+    },
+    {
+      "id": "risk-single-view",
+      "severity": "low",
+      "description": "One near-eye-level view: the back and underside are inferred from radial symmetry.",
+      "mitigation": "Radial symmetry makes the inference safe for this object class; flagged rather than hidden."
+    }
+  ],
+  "localSpecSearch": {
+    "collection": "core_3d",
+    "query": "Warp Pad",
+    "index": {
+      "status": "rebuilt",
+      "reason": "missing",
+      "fingerprint": "6857e5ab528b42ac12f4f411f862610a0bffce8e47aee3610a7603c318072fe8"
+    },
+    "matches": []
+  },
+  "strictQualityOverrides": [
+    {
+      "rule": "material.textureResolution >= 1024",
+      "status": "deliberately-not-met",
+      "materials": [
+        "mat-stone",
+        "mat-plasma",
+        "mat-ring"
+      ],
+      "reason": "The host is a PS1-look renderer whose whole texture pipeline is 128px with nearest filtering. A 1024 map would be filtered straight back down and would read wrong beside every other surface in the level. Writing 1024 into the spec to clear a gate while shipping 128 would be a false spec, which this skill explicitly forbids.",
+      "shippedValue": "128 for mat-stone; the two plasma materials are untextured"
+    },
+    {
+      "rule": "material.referencePbr.usable == true with albedo/roughness/height/normal/ao maps",
+      "status": "not-applicable",
+      "materials": [
+        "mat-plasma",
+        "mat-ring"
+      ],
+      "reason": "Both are additive unlit emission. They have no albedo, roughness, normal or AO to extract — running the estimator over the glow would describe the jungle behind it. Colour evidence for these comes from the plate's own pixels as a vertex-colour ramp, recorded in colorMaterialRecipe. mat-stone DOES carry real extracted PBR at 0.771 confidence, above the 0.7 target.",
+      "shippedValue": "vertex-colour ramps sampled from the reference"
+    }
+  ]
+}

@@ -6,6 +6,7 @@
 import * as THREE from "three";
 import { Rail } from "./rails";
 import { Halfpipe } from "./halfpipe";
+import { createWarpPad, WarpPad } from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 
@@ -1311,6 +1312,7 @@ export class Level {
   };
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] =
     [];
+  private warpPads: WarpPad[] = []; // end-of-level warp platforms: rings rise, plume flickers
   private seaMats: THREE.ShaderMaterial[] = []; // open water: uTime is the only thing that moves
   private ambient: { points: THREE.Points; drift: Float32Array } | null = null;
 
@@ -1368,11 +1370,6 @@ export class Level {
   private crystalPlaced = false; // Random level: drop it on one mid-course deck
   private gemG: THREE.Group | null = null; // materializes when every box breaks
   private vfxT = 0; // animation clock for all the procedural magic
-  private plasmaTex: THREE.CanvasTexture | null = null;
-  private plasmaData: ImageData | null = null;
-  private plasmaCtx: CanvasRenderingContext2D | null = null;
-  private plasmaPal: Uint8Array | null = null; // 256-entry blue/cyan palette
-  private plasmaFrame = 0;
   private chromeTex: THREE.CanvasTexture | null = null; // UV-scrolled fake chrome
   private glintTex: THREE.CanvasTexture | null = null;
   private flareTex: THREE.CanvasTexture | null = null; // big collection starburst
@@ -1391,12 +1388,6 @@ export class Level {
     pop: boolean;
   }[] = [];
   private glintT = 0;
-  private glowRings: {
-    mesh: THREE.Mesh;
-    phase: number;
-    speed: number;
-    base: number;
-  }[] = [];
   private gateCrystalIcon: THREE.Mesh | null = null;
   private gateGemIcon: THREE.Mesh | null = null;
   private relics = { crystal: false, gem: false };
@@ -3701,6 +3692,7 @@ export class Level {
     }
     // The sea moves by advancing one clock. Wrapped at 1000s: the swells all
     // have irrational-ish periods, so nothing snaps, and a float stays precise.
+    for (const p of this.warpPads) p.update(dt);
     for (const m of this.seaMats)
       m.uniforms.uTime.value = (m.uniforms.uTime.value + dt) % 1000;
 
@@ -6914,39 +6906,6 @@ export class Level {
     return this.glowTex;
   }
 
-  // Additive ring; pulses + spins in update (radial-wave magic circle). Only
-  // the warp gate's upright portal halo uses this now — the flat discs that
-  // used to sit under the clock, combo orb, gem and crystal are gone.
-  private glowRing(
-    x: number,
-    y: number,
-    z: number,
-    r: number,
-    color: number,
-    upright = false,
-  ): THREE.Mesh {
-    const mesh = new THREE.Mesh(
-      new THREE.RingGeometry(r * 0.62, r, 20),
-      new THREE.MeshBasicMaterial({
-        color,
-        transparent: true,
-        opacity: 0.45,
-        blending: THREE.AdditiveBlending,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-      }),
-    );
-    mesh.position.set(x, y, z);
-    if (!upright) mesh.rotation.x = -Math.PI / 2;
-    this.root.add(mesh);
-    this.glowRings.push({
-      mesh,
-      phase: Math.random() * 6,
-      speed: 1.6 + Math.random(),
-      base: 1,
-    });
-    return mesh;
-  }
 
   private spawnGlint(
     x: number,
@@ -7596,71 +7555,11 @@ export class Level {
     style(this.gateGemIcon, gem, 0x20c8e0);
   }
 
-  // 256-entry blue -> cyan -> white palette for the plasma (palette cycling:
-  // the field is static-ish maths; the LOOKUP slides, so it always moves).
-  private plasmaSetup(): void {
-    if (this.plasmaTex) return;
-    const pal = new Uint8Array(256 * 3);
-    for (let i = 0; i < 256; i++) {
-      const t = i / 255;
-      const w = Math.sin(t * Math.PI); // bright mid-band
-      pal[i * 3] = Math.floor(18 + 90 * t * t + 60 * w * t);
-      pal[i * 3 + 1] = Math.floor(40 + 170 * t);
-      pal[i * 3 + 2] = Math.floor(120 + 135 * Math.min(1, t * 1.4));
-    }
-    this.plasmaPal = pal;
-    const canvas = document.createElement("canvas");
-    canvas.width = 48;
-    canvas.height = 48;
-    this.plasmaCtx = canvas.getContext("2d")!;
-    this.plasmaData = this.plasmaCtx.createImageData(48, 48);
-    this.plasmaTex = new THREE.CanvasTexture(canvas);
-    this.plasmaTex.colorSpace = THREE.SRGBColorSpace;
-    this.plasmaTex.magFilter = THREE.LinearFilter;
-    this.plasmaTex.minFilter = THREE.LinearFilter;
-    this.plasmaTex.generateMipmaps = false; // repainted every frame
-  }
 
-  // Classic demoscene plasma: three drifting sine bands + one radial ripple,
-  // summed (interference), palette-cycled. 48x48, every third frame.
-  private updatePlasma(): void {
-    if (
-      !this.plasmaTex ||
-      !this.plasmaData ||
-      !this.plasmaCtx ||
-      !this.plasmaPal
-    )
-      return;
-    const t = this.vfxT;
-    const d = this.plasmaData.data;
-    const pal = this.plasmaPal;
-    let i = 0;
-    for (let y = 0; y < 48; y++) {
-      for (let x = 0; x < 48; x++) {
-        const dx = x - 24;
-        const dy = y - 24;
-        const v =
-          Math.sin(x * 0.32 + t * 1.3) +
-          Math.sin(y * 0.27 - t * 0.9) +
-          Math.sin((x + y) * 0.17 + t * 0.6) +
-          Math.sin(Math.sqrt(dx * dx + dy * dy) * 0.55 - t * 2.2);
-        const idx = (Math.floor((v + 4) * 31.9 + t * 26) & 255) * 3;
-        d[i] = pal[idx];
-        d[i + 1] = pal[idx + 1];
-        d[i + 2] = pal[idx + 2];
-        d[i + 3] = 255;
-        i += 4;
-      }
-    }
-    this.plasmaCtx.putImageData(this.plasmaData, 0, 0);
-    this.plasmaTex.needsUpdate = true;
-  }
 
-  // Per-frame VFX tick: plasma, chrome scroll, bobs, spins, rings, glints.
+  // Per-frame VFX tick: chrome scroll, bobs, spins, glints.
   private updateVfx(dt: number): void {
     this.vfxT += dt;
-    this.plasmaFrame++;
-    if (this.plasmaFrame % 3 === 0) this.updatePlasma();
     // fake chrome = UV scroll + a sine wobble (texture-coordinate distortion),
     // so the bands swim liquidly across the facets instead of gliding straight
     if (this.chromeTex) {
@@ -7696,14 +7595,6 @@ export class Level {
       this.gateCrystalIcon.rotation.y += 2.2 * dt;
     if (this.gateGemIcon && this.relics.gem)
       this.gateGemIcon.rotation.y += 2.2 * dt;
-    // magic rings: radial pulse + slow spin
-    for (const r of this.glowRings) {
-      const p = 1 + 0.16 * Math.sin(this.vfxT * r.speed + r.phase);
-      r.mesh.scale.setScalar(p);
-      r.mesh.rotation.z += 0.5 * dt;
-      (r.mesh.material as THREE.MeshBasicMaterial).opacity =
-        0.3 + 0.2 * Math.sin(this.vfxT * r.speed * 1.3 + r.phase);
-    }
     // ambient glints drip off whatever magic is live (tinted to the pickup)
     this.glintT -= dt;
     if (this.glintT <= 0) {
@@ -10134,47 +10025,18 @@ export class Level {
     gate.position.set(cx, deckY, z);
     gate.rotation.y = yawR;
     this.root.add(gate);
-    const postMat = new THREE.MeshLambertMaterial({ color: 0xd8d8d8 });
-    for (const side of [-1, 1]) {
-      const post = new THREE.Mesh(new THREE.BoxGeometry(0.5, 7, 0.5), postMat);
-      post.position.set(side * 5.5, 3.5, 0);
-      gate.add(post);
+    // THE WARP PAD replaces the old checkered finish gate: a Crash-style stone
+    // plinth with a plasma column standing on it (see src/warpPad.ts, rebuilt
+    // from a video reference through the img2threejs sculpt pipeline). The
+    // trigger box above is unchanged, so every level still finishes at exactly
+    // the same place and no call site moves.
+    const pad = createWarpPad();
+    gate.add(pad.group);
+    this.warpPads.push(pad);
+    for (const m of pad.solids) {
+      m.userData.vert = false; // masonry, never a transition
+      this.groundMeshes.push(m);
     }
-    const canvas = document.createElement("canvas");
-    canvas.width = 64;
-    canvas.height = 16;
-    const ctx = canvas.getContext("2d")!;
-    for (let y = 0; y < 2; y++) {
-      for (let x = 0; x < 8; x++) {
-        ctx.fillStyle = (x + y) % 2 === 0 ? "#e8e8e8" : "#20242c";
-        ctx.fillRect(x * 8, y * 8, 8, 8);
-      }
-    }
-    const tex = Level.finishTex(new THREE.CanvasTexture(canvas), false);
-    const banner = new THREE.Mesh(
-      new THREE.BoxGeometry(11.5, 1.2, 0.2),
-      new THREE.MeshBasicMaterial({ map: tex }),
-    );
-    banner.position.set(0, 6.4, 0);
-    gate.add(banner);
-
-    // Warp portal: the demoscene plasma plane hangs between the posts, framed
-    // by a pulsing additive ring — Crash warp room meets iTunes visualizer.
-    this.plasmaSetup();
-    const portal = new THREE.Mesh(
-      new THREE.PlaneGeometry(10.4, 5.4),
-      new THREE.MeshBasicMaterial({
-        map: this.plasmaTex!,
-        transparent: true,
-        opacity: 0.85,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-      }),
-    );
-    portal.position.set(0, 3.1, -0.35);
-    gate.add(portal);
-    const ring = this.glowRing(0, 3.1, -0.25, 3.6, 0x66eaff, true);
-    gate.add(ring); // re-parents out of root: the ring spins with the gate
 
     // Relic scoreboard: crystal + gem icons over the gate — dark ghosts until
     // earned, then they light up and spin (see setRelics).
@@ -10188,12 +10050,12 @@ export class Level {
       });
     const cIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
     cIcon.scale.y = 1.5;
-    cIcon.position.set(-1.7, 8.1, 0);
+    cIcon.position.set(-1.9, 8.6, 0);
     gate.add(cIcon);
     this.gateCrystalIcon = cIcon;
     const gIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
     gIcon.scale.set(1.25, 0.7, 1.25);
-    gIcon.position.set(1.7, 8.1, 0);
+    gIcon.position.set(1.9, 8.6, 0);
     gate.add(gIcon);
     this.gateGemIcon = gIcon;
     this.relics = { crystal: true, gem: true }; // force the ghost restyle below
