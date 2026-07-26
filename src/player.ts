@@ -76,6 +76,7 @@ interface GroundHit {
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
   vert?: boolean; // AUTHORED transition face: the level says "this is vert", overriding the normal.y guesswork
+  finishPad?: boolean; // the warp pad's masonry: standing on it ends the run
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
   pipeCross?: number; // analytic pipe hit: exact cross-axis coordinate of the surface point
 }
@@ -5352,10 +5353,20 @@ export class Player {
       this.onComboRunWin();
     }
 
-    if (this.playerBox.intersectsBox(level.finishBox)) {
-      this.bankCombo(); // whatever is pending counts at the line
+    // LAND ON THE PAD. This used to be playerBox vs level.finishBox — a 14-wide,
+    // 30-tall slab spanning the whole gate, so anything that broke the plane
+    // finished the run: rolling past the pad's shoulder, or sailing over it
+    // three storeys up. The pad is the goal now, so the goal is its actual
+    // surface — every mesh in it is flagged finishPad, and you have to be
+    // standing on one. (finishBox stays: the outro still clamps across it.)
+    if (this.grounded && this.groundHit?.finishPad) {
+      this.bankCombo(); // whatever is pending counts as you touch down
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
+      // Planted, not coasting. stepFinished rolls you on along the travel axis,
+      // which was right when you skated THROUGH a gate — off a 3-unit drum it
+      // just tips you back onto the deck the moment you've arrived.
+      this.speed = 0;
       if (this.ttActive) {
         this.ttActive = false; // the clock stops dead on the line
         this.onTTFinish(this.ttTime);
@@ -6311,6 +6322,7 @@ export class Player {
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,
       vert: hit.object.userData.vert as boolean | undefined,
+      finishPad: hit.object.userData.finishPad as boolean | undefined,
       halfpipe: hp,
     };
   }

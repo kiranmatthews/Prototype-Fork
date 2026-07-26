@@ -9967,6 +9967,7 @@ export class Level {
     this.warpPads.push(pad);
     for (const m of pad.solids) {
       m.userData.vert = false; // masonry, never a transition
+      m.userData.finishPad = true; // standing on THIS is what ends the run
       this.groundMeshes.push(m);
     }
     // No relic scoreboard here. The floating crystal/gem pair belonged to the
