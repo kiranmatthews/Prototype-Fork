@@ -6,7 +6,12 @@
 import * as THREE from "three";
 import { Rail } from "./rails";
 import { Halfpipe } from "./halfpipe";
-import { createWarpPad, WarpPad } from "./warpPad";
+import {
+  createWarpPad,
+  WarpPad,
+  WARP_PAD_COLUMN_TOP,
+  WARP_PAD_RADIUS,
+} from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 
@@ -9141,7 +9146,14 @@ export class Level {
       this.pickup(Math.cos(th) * 7, baseY + 0.4, -87 + dz + Math.sin(th) * 4.5);
     }
 
-    this.finishGate(baseY, this.finishZ); // the line, past the pool at the south wall
+    // x 36, not 0. The line still lands past the pool at the south wall, but
+    // NOT on the centre line: the pool's south rim stands 5 proud of the deck
+    // and the backstop wall is only 10 further on, so a centred pad sat in a
+    // slot too tight to even get a camera into — you met it with a wall in your
+    // face. The old gate got away with it by being tall enough to see over the
+    // rim; a pad a third that height cannot. 36 is on the open asphalt outside
+    // the pool's ±24 footprint, with a clear sightline the length of the park.
+    this.finishGate(baseY, this.finishZ, 36);
   }
 
   // SKY BRIDGE: a long, narrow plank bridge strung across an open sky with rope
@@ -10048,14 +10060,22 @@ export class Level {
         opacity: 0.4,
         flatShading: true,
       });
+    // Anchored to the plasma tip, NOT at a fixed height: the icons used to sit
+    // at 8.6 because the pad's column crested at 7.5. The pad is a third of
+    // that now, so a hardcoded 8.6 would strand them six units up in clear sky
+    // with nothing beneath. Reading the pad's own top keeps the pair riding the
+    // column at any scale; +0.75 lands the crystal's lower point (0.55 × 1.5
+    // tall) ON the tip rather than a gap above it.
+    const iconY = WARP_PAD_COLUMN_TOP + 0.75;
+    const iconX = WARP_PAD_RADIUS * 0.7; // inside the rim, framing the plasma
     const cIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
     cIcon.scale.y = 1.5;
-    cIcon.position.set(-1.9, 8.6, 0);
+    cIcon.position.set(-iconX, iconY, 0);
     gate.add(cIcon);
     this.gateCrystalIcon = cIcon;
     const gIcon = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), iconMat());
     gIcon.scale.set(1.25, 0.7, 1.25);
-    gIcon.position.set(1.9, 8.6, 0);
+    gIcon.position.set(iconX, iconY, 0);
     gate.add(gIcon);
     this.gateGemIcon = gIcon;
     this.relics = { crystal: true, gem: true }; // force the ghost restyle below

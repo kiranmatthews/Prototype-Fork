@@ -19,25 +19,34 @@
 
 import * as THREE from 'three';
 
+// ONE SCALE KNOB. The first build was authored at gate scale (9.7 across) and
+// read as a monument; a third of that is a prop you skate up to. Everything
+// below is a spec dimension multiplied by S, rather than a Group.scale, so the
+// derived numbers stay true — a Group.scale would leave the point light's
+// distance and the exported collider radius describing the old size.
+const S = 1 / 3;
+
 // Spec dimensions, in world units (player capsule 0.92 tall, crate 0.96).
-const R_BODY = 4.6; // drum body radius
-const R_RIM = 4.85; // top course oversails the body by 0.25
-const R_DISC = 4.4; // walkable paving disc
+const R_BODY = 4.6 * S; // drum body radius — 1.53
+const R_RIM = 4.85 * S; // top course oversails the body — 1.62
+const R_DISC = 4.4 * S; // walkable paving disc — 1.47
 // Blockout review failed here first: at 0.34 + 0.16 the drum was 19:1 wide to
 // tall and vanished behind the deck edge, nothing like the reference's stocky
-// plinth. Raised to 1.70 + 0.50. That is 4.4:1, still not the reference's
-// measured 1.9:1 — a 5-unit drum would be a wall across the finish line — so
-// this is a deliberate trade of proportion for playability, recorded in the
-// spec's assumptions rather than hidden.
-const H_BODY = 1.7;
-const H_RIM = 0.5;
-export const WARP_PAD_TOP = H_BODY + H_RIM; // 2.20 — the surface you ride onto
+// plinth. The ratio that survived review is 4.4:1 — still not the reference's
+// measured 1.9:1, because a drum that deep would be a wall across the finish
+// line — and S preserves that ratio while shrinking the whole prop.
+const H_BODY = 1.7 * S;
+const H_RIM = 0.5 * S;
+export const WARP_PAD_TOP = H_BODY + H_RIM; // 0.73 — the surface you ride onto
 export const WARP_PAD_RADIUS = R_RIM;
-const COL_TOP = 7.5; // plume tip, roughly where the old gate's posts ended
+const COL_TOP = 7.5 * S; // plume tip — 2.5, about two and a half crates up
+// Exported so the gate's relic icons can ride the plasma tip instead of a
+// hardcoded height that only held at the pad's original scale.
+export const WARP_PAD_COLUMN_TOP = COL_TOP;
 const FACETS = 14; // 7-8 visible across the front arc, mirrored round the axis
 const TONGUES = 18;
 const RINGS = 6;
-const R_RING = 5.2; // rings read wider than the drum in the reference
+const R_RING = 5.2 * S; // rings read wider than the drum in the reference
 
 // Deterministic jitter: the pad must look identical on every load and in replays.
 function rng(seed: number): () => number {
@@ -153,8 +162,9 @@ function plumeGeometry(height: number): THREE.BufferGeometry {
     // Review pass 3: a mid-height swell read as an onion/light-bulb. A flame is
     // widest LOW and tapers the whole way up, so the profile is now a decaying
     // power curve with only a slight shoulder near the base.
-    const r = 3.1 * (1 - t) ** 1.5 * (1 + 0.35 * Math.sin(Math.PI * t * 0.9)) + 0.08;
-    pts.push(new THREE.Vector2(Math.max(0.05, r), t * height));
+    const r =
+      3.1 * S * (1 - t) ** 1.5 * (1 + 0.35 * Math.sin(Math.PI * t * 0.9)) + 0.08 * S;
+    pts.push(new THREE.Vector2(Math.max(0.05 * S, r), t * height));
   }
   const geo = new THREE.LatheGeometry(pts, 12);
   const pos = geo.attributes.position;
@@ -222,15 +232,15 @@ export function createWarpPad(): WarpPad {
     keep(new THREE.CylinderGeometry(R_RIM, R_RIM, H_RIM, FACETS, 1)),
     stoneMat,
   );
-  rim.position.y = H_BODY + H_RIM / 2 - 0.02; // 0.02 overlap: no z-fighting seam
+  rim.position.y = H_BODY + H_RIM / 2 - 0.02 * S; // small overlap: no z-fighting seam
   rim.name = 'warp plinth rim';
   group.add(rim);
 
   const disc = new THREE.Mesh(
-    keep(new THREE.CylinderGeometry(R_DISC, R_DISC, 0.06, FACETS, 1)),
+    keep(new THREE.CylinderGeometry(R_DISC, R_DISC, 0.06 * S, FACETS, 1)),
     discMat,
   );
-  disc.position.y = WARP_PAD_TOP - 0.02;
+  disc.position.y = WARP_PAD_TOP - 0.02 * S;
   disc.name = 'warp pad';
   group.add(disc);
 
@@ -254,14 +264,14 @@ export function createWarpPad(): WarpPad {
       fog: false,
     }),
   );
-  const plume = new THREE.Mesh(keep(plumeGeometry(COL_TOP - WARP_PAD_TOP - 0.4)), plasmaMat);
-  plume.position.y = 0.4;
+  const plume = new THREE.Mesh(keep(plumeGeometry(COL_TOP - WARP_PAD_TOP - 0.4 * S)), plasmaMat);
+  plume.position.y = 0.4 * S;
   plume.renderOrder = 3;
   column.add(plume);
 
   // A ring of individual tongues, NOT a skirt — the gaps between them against
   // the disc are what sells the base of the effect.
-  const tongueGeo = keep(new THREE.ConeGeometry(0.34, 1.0, 4, 1, true));
+  const tongueGeo = keep(new THREE.ConeGeometry(0.34 * S, 1.0 * S, 4, 1, true));
   const tongueMat = keep(
     new THREE.MeshBasicMaterial({
       color: '#ff7a1e',
@@ -278,9 +288,9 @@ export function createWarpPad(): WarpPad {
   for (let i = 0; i < TONGUES; i++) {
     const a = (i / TONGUES) * Math.PI * 2;
     const m = new THREE.Mesh(tongueGeo, tongueMat);
-    const h = 1.3 + rand() * 1.1;
+    const h = 1.3 + rand() * 1.1; // multiplies the already-scaled cone
     m.scale.set(1, h, 1);
-    m.position.set(Math.cos(a) * 2.4, 0.5 * h, Math.sin(a) * 2.4);
+    m.position.set(Math.cos(a) * 2.4 * S, 0.5 * h * S, Math.sin(a) * 2.4 * S);
     m.renderOrder = 3;
     column.add(m);
     tongues.push(m);
@@ -300,7 +310,7 @@ export function createWarpPad(): WarpPad {
   const ringMats: THREE.MeshBasicMaterial[] = [];
   for (let i = 0; i < RINGS; i++) {
     const wob = 0.62 + rand() * 0.66; // 0.62..1.28 of the nominal radius
-    ringGeos.push(keep(new THREE.TorusGeometry(R_RING * wob, 0.13 + rand() * 0.2, 4, 20)));
+    ringGeos.push(keep(new THREE.TorusGeometry(R_RING * wob, (0.13 + rand() * 0.2) * S, 4, 20)));
     ringTilt.push((rand() - 0.5) * 0.22);
     const mat = keep(
       new THREE.MeshBasicMaterial({
@@ -323,8 +333,10 @@ export function createWarpPad(): WarpPad {
 
   // The emitter is its own key light — in the reference the only thing lighting
   // the stone is the column.
-  const light = new THREE.PointLight(0xff9a3c, 1.6, 12);
-  light.position.set(0, 0.9, 0);
+  // distance is world units and is NOT affected by object scale, so it has to
+  // shrink by hand or a 1/3-size pad would light a full-size area
+  const light = new THREE.PointLight(0xff9a3c, 1.6, 12 * S);
+  light.position.set(0, 0.9 * S, 0);
   column.add(light);
 
   let t = 0;
@@ -339,7 +351,7 @@ export function createWarpPad(): WarpPad {
         // uneven phase offsets: evenly spaced rings marched in lockstep
         const k = (t * 0.42 + (i / RINGS) + 0.07 * Math.sin(i * 2.4)) % 1;
         const m = rings[i];
-        m.position.y = 0.25 + k * RISE;
+        m.position.y = 0.25 * S + k * RISE;
         m.rotation.z = t * (0.9 + i * 0.17) + i;
         // wider as they climb, matching the plume's flare
         const s = 0.55 + k * 0.55;
@@ -367,8 +379,8 @@ export function createWarpPad(): WarpPad {
   group.userData.sculptRuntime = {
     sockets: {
       stand: new THREE.Vector3(0, WARP_PAD_TOP, 0),
-      trigger: new THREE.Vector3(0, 3.5, 0),
-      light: new THREE.Vector3(0, WARP_PAD_TOP + 0.9, 0),
+      trigger: new THREE.Vector3(0, 3.5 * S, 0),
+      light: new THREE.Vector3(0, WARP_PAD_TOP + 0.9 * S, 0),
     },
     colliders: { stand: { type: 'cylinder-top-plane', y: WARP_PAD_TOP, radius: R_DISC } },
     update: (dt: number) => pad.update(dt),
