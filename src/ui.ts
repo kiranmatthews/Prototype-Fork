@@ -11,6 +11,11 @@ import {
   TuningKey,
 } from "./tuning";
 
+// The life icon is real artwork (public/roo.png), not something drawn in code
+// — so it goes through BASE_URL, the same as the sky paintings, or it 404s on
+// the project-path GitHub Pages build.
+const LIFE_FACE_URL = `url("${import.meta.env.BASE_URL}roo.png")`;
+
 export interface Stats {
   speed: number;
   state: string;
@@ -1290,19 +1295,16 @@ export class UI {
       }
       .hud-relic-off { opacity: 0.22; filter: grayscale(1) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)); }
       .hud-icon-face {
-        border-radius: 40%;
-        background: radial-gradient(circle at 40% 35%, #f4b56a, #c96f28 75%);
-        border: 3px solid rgba(0, 0, 0, 0.65);
-        box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.3), 0 4px 9px rgba(0, 0, 0, 0.55);
-        position: relative;
-      }
-      .hud-icon-face::before {
-        content: ''; position: absolute; left: 24%; top: 28%; width: 12%; height: 20%;
-        background: #35200c;
-      }
-      .hud-icon-face::after {
-        content: ''; position: absolute; left: 60%; top: 28%; width: 12%; height: 20%;
-        background: #35200c;
+        background-image: ${LIFE_FACE_URL};
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        /* the art carries its own black outline, so the shadow only has to
+           lift it off whatever the world is doing behind it */
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+        /* .hud-icon pixelates by default for the blocky CSS icons; this one is
+           a painting and wants the smooth downscale */
+        image-rendering: auto;
       }
       .hud-pop { animation: hudpop 0.22s ease-out; }
       @keyframes hudpop {
