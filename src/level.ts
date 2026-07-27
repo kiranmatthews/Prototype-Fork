@@ -1,7 +1,8 @@
-// A long linear test course structured like Crash 1's N. Sanity Beach: a wide
-// "beach" intro, a funnel into corridor sections with crate/enemy rhythm,
-// gaps, two grind rails over pits, checkpoints, and a fast downhill finish.
-// The course runs along -Z, roughly 860 units, ~1-2 minutes of play.
+// Every level in the game, plus the toolkit they are all assembled from.
+// Built-ins are hand-coded builders picked by id; user levels carry component
+// data and build through the same pipeline the editor writes. Courses run
+// along -Z: a corridor of decks, gaps, rails, crates and set pieces, with a
+// finish gate at the far end.
 
 import * as THREE from "three";
 import { Rail } from "./rails";
@@ -66,8 +67,6 @@ export interface Enemy {
   // Spun enemies ping away ballistically and can smash what they hit.
   flungVel?: THREE.Vector3;
   flungT?: number;
-  // Arena-fight enemies stay hidden until their wave is called.
-  arenaWave?: number;
   // ---- typed foes ----
   kind: EnemyKind;
   state: string; // per-kind FSM state
@@ -86,6 +85,14 @@ export interface Enemy {
 
 // A slow orb lobbed by a sentry. Straight-line flight; hitting the player
 // hurts (mask/die), same as any touch hazard.
+/**
+ * A corridor centreline: how far the path has drifted sideways and risen or
+ * fallen by a given world z. One function drives the floor mesh, the kerbs
+ * along it, the dressing on both banks and the camera lane, so they can never
+ * disagree about where the path actually goes.
+ */
+type Spine = (wz: number) => { dx: number; dy: number };
+
 interface SlideRibbon {
   len: number; // arc length of the spine
   width: number;
@@ -1110,18 +1117,18 @@ export function pointInPoly(
 // or deleting a level can no longer silently re-point a saved best time, a
 // replay, or a saved editor target at somebody else's course.
 export interface LevelEntry {
-  id: string; // "test"/"flats"/... for built-ins, "uN" for user levels
+  id: string; // "jungle"/"flats"/... for built-ins, "uN" for user levels
   name: string; // what the menu row shows; user levels can rename it
   data?: CustomLevelData; // user levels only — built-ins have none
 }
 
 export const BUILTIN_LEVELS: LevelEntry[] = [
-  { id: "test", name: "Test Course" }, // test course flows straight into the gauntlet
+  { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
 ];
-export const DEFAULT_LEVEL_ID = "test";
+export const DEFAULT_LEVEL_ID = "jungle";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
 export function isBuiltin(id: string): boolean {
   return BUILTIN_IDS.has(id);
@@ -1176,8 +1183,8 @@ export function setUserLevels(list: LevelEntry[]): void {
 /**
  * Built-ins first (in their fixed order), then user levels in the order they
  * were added. A built-in that has been EDITED is stored under its own id, and
- * replaces itself in place — same row, same slot, so editing Test Course gives
- * you back Test Course and not a second thing beside it. The hand-coded
+ * replaces itself in place — same row, same slot, so editing Jungle Ruins
+ * gives you back Jungle Ruins and not a second thing beside it. The hand-coded
  * builder is still there underneath: drop the entry and the original returns.
  */
 export function levelList(): LevelEntry[] {
@@ -1299,9 +1306,11 @@ const LEGACY_NAMES: Record<string, string> = {
   "4": "Sky Bridge",
   "6": "The Slipstream",
 };
-// which old list index was which surviving level (1/2/5 are the deleted ones)
+// Which old list index was which SURVIVING level. 0 (the test course) is
+// deliberately absent now that it is gone: re-keying its best times onto the
+// jungle would credit an unrelated course with a time nobody set on it. The
+// old slot-0 EDIT still adopts, as a named user level (see LEGACY_NAMES).
 const LEGACY_SLUGS: Record<string, string> = {
-  "0": "test",
   "3": "flats",
   "4": "sky",
   "6": "slip",
@@ -1430,14 +1439,14 @@ export class Level {
   // The pad's plasma column. Jumping through this ends the run too — you do
   // not have to touch down on the masonry.
   finishGlow = new THREE.Box3();
-  finishZ = -1005;
+  finishZ = -1005; // fallback: every builder authors its own
   gateYaw = 0; // finish-gate turn in degrees — sideways courses spin the whole gate
   endWallZ = -1021; // authored hard stop after the finish gate
   spawnPos = new THREE.Vector3(0, 0.1, 0);
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
-  killY = -48; // per-level death height
+  killY = -48; // per-level death height (every builder authors its own)
   name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
   // here each step so the chase can trigger, rubber-band, and reset fairly.
@@ -1465,36 +1474,7 @@ export class Level {
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
 
-  // --- set pieces ---
-  // Arena lock: enter the zone, gates slam shut, survive the waves. The
-  // gates BREATHE on a cycle while the fight is on — up long enough to
-  // matter, down long enough to slip through — so a run is never hard-stuck.
-  arena: {
-    zone: THREE.Box3;
-    state: "idle" | "active" | "done";
-    wave: number;
-    waveT: number;
-    cycleT: number; // gate breathing clock while active
-    up: boolean; // gates currently raised (walls live)
-    waves: Enemy[][];
-    gates: { mesh: THREE.Mesh; upY: number; downY: number; box: THREE.Box3 }[];
-  } | null = null;
-  // Collapse wave: cross the trigger and the bridge falls away behind you.
-  collapse: {
-    planks: Crumble[];
-    xMin: number;
-    xMax: number;
-    triggerZ: number;
-    endZ: number;
-    startZ: number;
-    frontZ: number;
-    speed: number;
-    active: boolean;
-  } | null = null;
-
   // --- visual pass ---
-  // Default = Test Course: Sentinel-Beach morning. Brilliant turquoise zenith
-  // over warm sand haze, high gold sun, jungle bounce light, drifting motes.
   // combo-mode dress: true = EVERY convertible crate becomes a balance crate
   // (levels built around one long grind line); false = every third
   private allBalanceCrates = false;
@@ -1505,6 +1485,9 @@ export class Level {
   // Time of day for THIS level. Hand-coded levels are all sunset (the look the
   // game shipped with); a data-built level takes it from its authored data.
   skyPreset: SkyPreset = DEFAULT_SKY;
+  // Fallback look only — every hand-coded builder assigns its own theme, and a
+  // data-built level inherits whichever one its builder set. Kept as a sane
+  // lagoon default so a level that forgets still renders like a place.
   theme: Theme = {
     skyTop: "#0fa3c2",
     skyBottom: "#ffe6ae",
@@ -2158,7 +2141,7 @@ export class Level {
     return m;
   }
 
-  // Per-level structural palette (defaults suit the Test Course beach).
+  // Per-level structural palette. Builders re-tint these before placing.
   private wallTint = 0xb89a70; // perimeter walls / end wall
   private blockTint = 0xc0a878; // step blocks, stair climbs
   private curbTint = 0xe8a84e; // painted deck-edge strips
@@ -2204,11 +2187,12 @@ export class Level {
     else if (entry.id === "flats") this.buildFlats();
     else if (entry.id === "sky") this.buildSkyBridge();
     else if (entry.id === "slip") this.buildSlipstream();
-    else this.buildTestGauntlet(); // "test": test course + gauntlet combined
+    else this.buildJungle(); // "jungle": the enclosed corridor course
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
     this.placeComboOrb(); // combo-run orb, the other side of the racing line
+    this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.buildAmbient(); // theme is set by the builder above
   }
 
@@ -2263,8 +2247,8 @@ export class Level {
   // ---- CAPTURE: any level -> editor components -----------------------------
   // Levels built from data return their own data verbatim. Hand-coded levels
   // are HARVESTED from the live scene after building — positions are read off
-  // the final meshes/entities, so authored shifts (the gauntlet offset) come
-  // through correct by construction. Bespoke set pieces with no component
+  // the final meshes/entities, so anything a builder moved after creating it
+  // comes through correct by construction. Bespoke set pieces with no component
   // language (boulder chase, movers, decor foliage, finish gates) are
   // skipped: the copy is the editable geometry. Travel zones and sagging
   // ropes DO come through — they have components now.
@@ -3992,95 +3976,6 @@ export class Level {
       rs.pivot.rotation.z = rs.theta;
     }
 
-    // Arena lock: gates up, waves in, gates down when the pit is clear.
-    const ar = this.arena;
-    if (ar) {
-      if (ar.state === "idle" && ar.zone.containsPoint(this.playerPos)) {
-        ar.state = "active";
-        ar.wave = 0;
-        ar.waveT = 0.4;
-        ar.cycleT = 0;
-        ar.up = true;
-        for (const g of ar.gates) this.walls.push(g.box);
-        sfx.play("railLand", 0.9, 0.6);
-      }
-      if (ar.state === "active") {
-        // gate breathing: 2.4s raised, 1.2s sunk, repeat — timing a dash
-        // through the down-beat is always an option
-        ar.cycleT += dt;
-        const upNow = ar.cycleT % 3.6 < 2.4;
-        if (upNow !== ar.up) {
-          ar.up = upNow;
-          if (upNow) sfx.play("railLand", 0.5, 0.7);
-          for (const g of ar.gates) {
-            const i = this.walls.indexOf(g.box);
-            if (upNow && i < 0) this.walls.push(g.box);
-            else if (!upNow && i >= 0) this.walls.splice(i, 1);
-          }
-        }
-        if (ar.waveT > 0) {
-          // countdown, then the wave drops in
-          ar.waveT -= dt;
-          if (ar.waveT <= 0) {
-            for (const e of ar.waves[ar.wave]) {
-              e.alive = true;
-              e.group.visible = true;
-              e.group.scale.setScalar(1);
-            }
-            sfx.play("enemyDown", 0.6, 1.2);
-            ar.waveT = 0;
-          }
-        } else if (!ar.waves[ar.wave].some((e) => e.alive)) {
-          ar.wave++;
-          if (ar.wave >= ar.waves.length) {
-            ar.state = "done";
-            for (const g of ar.gates) {
-              const i = this.walls.indexOf(g.box);
-              if (i >= 0) this.walls.splice(i, 1);
-            }
-            sfx.play("lifeGet", 0.9);
-          } else {
-            ar.waveT = 0.7; // breather before the next wave
-          }
-        }
-      }
-      // gate meshes chase their target height
-      for (const g of ar.gates) {
-        const target = ar.state === "active" && ar.up ? g.upY : g.downY;
-        g.mesh.position.y += THREE.MathUtils.clamp(
-          target - g.mesh.position.y,
-          -9 * dt,
-          9 * dt,
-        );
-      }
-    }
-
-    // Collapse wave: once triggered, the bridge falls away toward the exit —
-    // slightly slower than a committed sprint, so hesitation is what kills.
-    const cw = this.collapse;
-    if (cw) {
-      if (
-        !cw.active &&
-        this.playerPos.z < cw.triggerZ &&
-        this.playerPos.z > cw.endZ &&
-        this.playerPos.x > cw.xMin &&
-        this.playerPos.x < cw.xMax
-      ) {
-        cw.active = true;
-        cw.frontZ = cw.startZ;
-      }
-      if (cw.active) {
-        cw.frontZ -= cw.speed * dt;
-        for (const p of cw.planks) {
-          if (p.state === "idle" && p.base.z > cw.frontZ) {
-            p.state = "shake";
-            p.t = 0;
-          }
-        }
-        if (cw.frontZ < cw.endZ - 10) cw.active = false; // spent
-      }
-    }
-
     // Scrolling pit textures (lava/void) drift forever.
     for (const s of this.scrollTexes) {
       s.tex.offset.x = (s.tex.offset.x + s.su * dt) % 1;
@@ -4451,7 +4346,7 @@ export class Level {
     }
 
     for (const e of this.enemies) {
-      e.alive = e.arenaWave === undefined; // arena waves wait to be called
+      e.alive = true;
       e.group.visible = e.alive;
       e.flungT = undefined;
       e.flungVel = undefined;
@@ -4489,7 +4384,7 @@ export class Level {
       this.currentSpawn.copy(this.spawnPos);
     }
 
-    // Crumble pads grow back whole; the collapse wave re-arms.
+    // Crumble pads grow back whole.
     for (const c of this.crumbles) {
       c.state = "idle";
       c.t = 0;
@@ -4505,25 +4400,6 @@ export class Level {
       for (let i = 0; i < r.rest.length; i++) r.rail.points[i].copy(r.rest[i]);
       for (const s of r.segs) s.visible = true;
       this.syncRope(r);
-    }
-    if (this.collapse) {
-      this.collapse.active = false;
-      this.collapse.frontZ = this.collapse.startZ;
-    }
-
-    // Arena: unlock, sink the gates, waves back on standby.
-    if (this.arena) {
-      const ar = this.arena;
-      ar.state = "idle";
-      ar.wave = 0;
-      ar.waveT = 0;
-      ar.cycleT = 0;
-      ar.up = false;
-      for (const g of ar.gates) {
-        const i = this.walls.indexOf(g.box);
-        if (i >= 0) this.walls.splice(i, 1);
-        g.mesh.position.y = g.downY;
-      }
     }
 
     // Boulder: back to its mark a fair headstart behind wherever you respawn,
@@ -4544,514 +4420,549 @@ export class Level {
 
   // ---------------------------------------------------------------- build --
 
-  private buildTestCourse(asPrefix = false): void {
-    // Sentinel-Beach morning: saturated jungle greens, sandstone banks, warm
-    // gold sand. Textures are near-white, so these tints carry the look.
-    // asPrefix: this course flows straight into another (the combined
-    // Test+Gauntlet level), so skip the finish gate + end wall at the far end.
-    const matA = new THREE.MeshLambertMaterial({ color: 0x5da84e });
-    const matB = new THREE.MeshLambertMaterial({ color: 0x4c9a44 });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0xd0a86e });
-    const matBeach = new THREE.MeshLambertMaterial({ color: 0xf0d092 });
-    const matPlaza = new THREE.MeshLambertMaterial({ color: 0xb0a08a }); // rail-yard stonework
-    const matFinish = new THREE.MeshLambertMaterial({ color: 0xd0b070 });
-
-    // --- decks (N. Sanity flow: beach -> funnel -> corridors -> finish) ---
-    this.slab("beach", 14, -40, 0, 20, matBeach, false, 0, "sand");
-
-    // --- practice pen: walled rail playground east of the beach ---
-    const penMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(30, 1, 54),
-      this.patterned(
-        new THREE.MeshLambertMaterial({ color: 0x7cb45a }),
-        30,
-        54,
-        "grass",
-      ),
-    );
-    penMesh.position.set(25, -0.5, -13);
-    penMesh.name = "practice pen";
-    this.root.add(penMesh);
-    this.groundMeshes.push(penMesh);
-    // Perimeter walls (also backstop the beach so you can't fall off the start).
-    this.wall(15, 15, 52, 1, 0, 5, 0.7); // north, behind spawn: curb-high so the camera sees out
-    this.wall(-10.5, -13, 1, 54, 0); // west edge of the beach
-    this.wall(40.5, -13, 1, 54, 0); // east edge of the pen
-    this.wall(25, -40.5, 30, 1, 0); // south edge of the pen
-    this.ramp("funnel slope", -40, 0, -80, -5, 14, matRamp);
-    this.jungle("corridor A", -80, -153, -5, 12, matA, { dips: [-112] });
-    // gap 1: -153 .. -162 (rebalanced for the slower feel)
-    // rope swing over the gap, just off the main line: jump at it, climb,
-    // ride the arc across (or keep taking the gap straight — your call)
-    this.ropeSwing(4, 3.5, -157.5, 6.5, 0.85, 0, 0, 90);
-    this.jungle("corridor B", -162, -235, -5.5, 12, matB, { dips: [-222] });
-    this.ramp("big slope", -235, -5.5, -275, -13, 12, matRamp);
-    // gap 2: -275 .. -288 (carry speed)
-    this.jungle("corridor C", -288, -350, -13, 12, matA);
-    // rail 1 pit: -350 .. -410
-    this.jungle("rail 1 landing", -410, -465, -13, 12, matB, { dips: [-445] });
-    this.ramp("kicker", -465, -13, -475, -10.2, 12, matRamp);
-    // gap 3: -475 .. -488 (kicker lip + drop to the landing)
-    this.jungle("corridor D", -488, -575, -13, 12, matA);
-    this.crystal(0, -12.4, -530); // the level crystal, dead on the main route
-    // rail 2 pit: -575 .. -655
-    this.jungle("rail 2 landing", -655, -710, -13.5, 12, matB);
-    // Halfpipe: the vert part, straight and 90°, so it comes up on the analytic
-    // backing and rides the pipe rail-physics (see player.stepPipe). Carve up
-    // either wall, pump on the way up to build height, pop off the coping for
-    // hang-time air, drop back in. The flat bottom is a normal ground slab.
-    this.slab(
-      "halfpipe floor",
-      -710,
-      -830,
-      -13.5,
-      6,
-      matRamp,
-      false,
-      0,
-      "pavement",
-    );
-    this.buildVertRamp({
-      t: "vertramp",
-      p: [0, -13.5, -770],
-      len: 120,
-      w: 3,
-      rise: 7,
-      vkind: "half", // lip x±10, y -6.5
-      color: "#d0a86e",
-      tex: "pavement",
-    });
-    // rail yard entry deck, then a pit crossed by three parallel rails
-    this.slab(
-      "rail yard entry",
-      -830,
-      -838,
-      -13.5,
-      14,
-      matPlaza,
-      true,
-      0,
-      "stone",
-    );
-    // pit: -838 .. -910
-    this.slab(
-      "rail yard landing",
-      -910,
-      -945,
-      -13.5,
-      14,
-      matPlaza,
-      true,
-      0,
-      "stone",
-    );
-    this.berms(-910, -945, -13.5, 14);
-    this.ramp("final downhill", -945, -13.5, -1000, -22, 12, matRamp);
-    // gap 4: -1000 .. -1013 (fast, downhill speed carries you)
-    this.jungle("finish run", -1013, -1085, -22, 12, matFinish);
-
-    // --- death pit floor (visual only, below killY) ---
-    // (no pit-floor plane — the sunset cloud sea IS the floor of the world here,
-    // so nothing solid occludes the PNG in the distance; falls still die at killY)
-
-    // --- grind rails ---
-    const rail1 = new Rail([
-      new THREE.Vector3(0, -12, -346),
-      new THREE.Vector3(0, -11, -380),
-      new THREE.Vector3(0, -11.8, -414),
-    ]);
-    // S-curve rail: the balance test.
-    const rail2 = new Rail([
-      new THREE.Vector3(0, -11.8, -571),
-      new THREE.Vector3(2.5, -11, -595),
-      new THREE.Vector3(-2.5, -10.5, -620),
-      new THREE.Vector3(0, -11.5, -659),
-    ]);
-    // (the halfpipe's own lip rails come with the vert part, both copings)
-    // Rail yard: three parallel rails over the pit — jump between them.
-    const yardL = new Rail([
-      new THREE.Vector3(-3.5, -12.6, -836),
-      new THREE.Vector3(-3.5, -12.6, -912),
-    ]);
-    const yardC = new Rail([
-      new THREE.Vector3(0, -12.6, -836),
-      new THREE.Vector3(0, -12.6, -912),
-    ]);
-    const yardR = new Rail([
-      new THREE.Vector3(3.5, -12.6, -836),
-      new THREE.Vector3(3.5, -12.6, -912),
-    ]);
-    // Practice pen rails: straight, zigzag, and a high line.
-    const penStraight = new Rail([
-      new THREE.Vector3(18, 1, -2),
-      new THREE.Vector3(18, 1, -32),
-    ]);
-    const penZigzag = new Rail([
-      new THREE.Vector3(26, 1.2, 2),
-      new THREE.Vector3(30, 1.6, -10),
-      new THREE.Vector3(24, 1.4, -22),
-      new THREE.Vector3(28, 1.2, -34),
-    ]);
-    const penHigh = new Rail([
-      new THREE.Vector3(35, 2.8, -4),
-      new THREE.Vector3(35, 2.8, -30),
-    ]);
-
-    for (const rail of [
-      rail1,
-      rail2,
-      yardL,
-      yardC,
-      yardR,
-      penStraight,
-      penZigzag,
-      penHigh,
-    ]) {
-      this.rails.push(rail);
-      this.root.add(rail.object);
-    }
-
-    // --- crates ---
-    // Beach: one dead-ahead (bump = full stop now: spin it or hop on it).
-    this.crate(0, 0, -25);
-    this.crate(-3, -5, -95, "mask");
-    this.crate(2.5, -13.5, -932, "mask");
-    this.crate(5, 0, -32);
-    this.crate(6.5, 0, -32);
-    // Corridor A: full-width wall — spin through, or jump on top to bounce.
-    for (let i = 0; i < 9; i++) this.crate(-5.2 + i * 1.3, -5, -100);
-    this.crate(-4.5, -5, -132);
-    this.crate(-4.5, -3.8, -132); // stack
-    this.crate(4.5, -5, -145);
-    this.crate(4.5, -3.8, -145); // stack
-    // Corridor B: a 4-story step string on the right with crate rewards.
-    this.stepBlock(4, -192, 4, 6, -5.5, -3.3);
-    this.crate(4, -3.3, -192);
-    this.stepBlock(4, -199, 4, 6, -5.5, -1.1);
-    this.crate(4, -1.1, -199);
-    this.stepBlock(4, -206, 4, 6, -3, 1.1);
-    this.crate(4, 1.1, -206);
-    this.stepBlock(4, -213, 4, 6, -1, 3.3);
-    this.crate(4, 3.3, -213);
-    // Corridor B: risky edge lines between the enemies.
-    this.crate(5, -5.5, -205);
-    this.crate(5, -5.5, -208);
-    this.crate(-5, -5.5, -222);
-    this.crate(-5, -5.5, -195, "mask");
-    // Corridor C: center cluster + risky pair before the first rail.
-    this.crate(-1.5, -13, -315);
-    this.crate(0, -13, -315);
-    this.crate(1.5, -13, -315);
-    this.crate(0, -11.8, -315); // stack
-    this.crate(5.2, -13, -330);
-    this.crate(5.2, -13, -333);
-    this.crate(-5, -13, -322, "mask");
-    // Rail 1 entry flanks.
-    this.crate(-2.4, -13, -342);
-    this.crate(2.4, -13, -342);
-    // Corridor D: second full-width wall + edge stacks.
-    for (let i = 0; i < 9; i++) this.crate(-5.2 + i * 1.3, -13, -520);
-    this.crate(-4.8, -13, -565);
-    this.crate(-4.8, -11.8, -565); // stack
-    this.crate(4.8, -13, -565);
-    this.crate(4.8, -11.8, -565); // stack
-    this.crate(4.8, -13, -545, "mask");
-    // Rail 2 entry flanks.
-    this.crate(-2.4, -13, -567);
-    this.crate(2.4, -13, -567);
-    // Practice pen toys — including a mask row for testing triple-mask mode.
-    this.crate(22, 0, -6, "mask");
-    this.crate(25, 0, -6, "mask");
-    this.crate(28, 0, -6, "mask");
-    this.crate(14, 0, -20);
-    this.crate(31, 0, -28);
-    this.crate(37, 0, -12, "bouncy");
-    this.towerClimb(-8, 0, 4, 34); // staggered tower: four stories, crates up top
-    this.stairClimb(10, 0, 7, 13, 7); // flush guarded stair: seven stories, hard to fall off
-    // Motion-toolkit sandbox: ride the mover, hop the crumble pads, time the
-    // crusher, duck the pendulum guarding the beach-pen doorway.
-    this.mover(20, 1.2, -36, 3.2, 3.2, "x", 3.2, 0.9);
-    this.crumblePad(26, 1.2, -30, 3, 3);
-    this.crumblePad(26, 1.2, -26, 3, 3);
-    this.crusher(24, 0, 8, 4.5, 3, 3.4, 0);
-    this.pendulum(14, 7, 8, 5.2, 1.0, 1.7);
-    // Halfpipe is kept clear — no crates or obstacles in the transition, so the
-    // carve/pump/air line is pure. (Pickups live on the approach and the exit.)
-    // Rail yard: crates and nitro at grind height above the rails.
-    // Center rail: two smashables, then a nitro you must jump, then a snack.
-    this.crate(0, -12.8, -850);
-    this.crate(0, -12.8, -860);
-    this.crate(0, -12.8, -875, "nitro");
-    this.crate(0, -12.8, -895);
-    // Left rail: nitro early, then safe smashables.
-    this.crate(-3.5, -12.8, -855, "nitro");
-    this.crate(-3.5, -12.8, -880);
-    this.crate(-3.5, -12.8, -888);
-    // Right rail: smashable, nitro, smashable.
-    this.crate(3.5, -12.8, -848);
-    this.crate(3.5, -12.8, -882, "nitro");
-    this.crate(3.5, -12.8, -900);
-    // Corridor D: a big mixed explosive block off the left lane — spin the
-    // TNT to pop it (your own pop is safe, the chained nitro blast is NOT).
-    this.crate(-2.6, -13, -530, "tnt");
-    this.crate(-2.6, -11.8, -530, "nitro");
-    this.crate(-1.3, -13, -530, "tnt");
-    this.crate(-3.9, -13, -530);
-    // Rail yard landing: a bouncy crate off the racing line, and a 2x2 nitro
-    // block guarding the left side.
-    this.crate(2.5, -13.5, -928, "bouncy");
-    this.crate(-3, -13.5, -926, "nitro");
-    this.crate(-4.3, -13.5, -926, "nitro");
-    this.crate(-3, -12.3, -926, "nitro");
-    this.crate(-4.3, -12.3, -926, "nitro");
-    // Final downhill: offset dodge crates (thread between them at speed).
-    this.crate(-2.2, this.downhillY(-965), -965);
-    this.crate(2.2, this.downhillY(-985), -985);
-
-    // --- jungle furniture: fallen logs (hop them) + rolling stones ---
-    this.log(-6, 1.2, -5, -145); // corridor A, cleared by the gap-1 flight
-    this.log(2.0, 5.8, -5.5, -228); // corridor B, right half
-    this.log(-5.8, -2.0, -13, -430); // rail 1 landing, left half
-    this.log(2.0, 5.8, -13, -560); // corridor D, right half
-    this.stone(32, 0, -6, -34, 7); // practice pen patroller
-    this.stone(4, -5.5, -200, -230, 6); // corridor B, off the racing line
-
-    // --- ? crates ---
-    this.crate(24, 0, -18, "mystery");
-    this.crate(4, -5, -118, "mystery");
-    this.crate(-4, -13, -345, "mystery");
-    this.crate(-3, -13, -558, "mystery");
-    this.crate(5, -13.5, -934, "mystery");
-
-    // --- enemies (a teaching order of the foe roster) ---
-    this.enemy(-3.5, 3.5, -5, -120, 5, "x", "grunt"); // meet the baseline first
-    this.enemy(-4, 4, -5, -138, 7, "x", "spiker"); // SPIN this one — don't land on it
-    this.enemy(-4, 4, -5.5, -200, 6, "x", "turtle"); // STOMP this one — a spin bounces off
-    this.enemy(-3, 3, -5.5, -228, 5, "x", "hopper"); // time the leaps
-    this.enemy(0, 0, -252, 4, 0, "x", "sentry"); // turret watching the choke
-    this.enemy(-4.5, 4.5, -13, -340, 9, "x", "charger"); // long straight = a bull's runway
-    this.enemy(-4, 4, -13, -445, 7, "x", "grunt");
-    this.enemy(-4.5, 4.5, -13, -540, 8, "x", "floater"); // spin it out of the air
-    this.enemy(0, 0, -556, 5, 0, "x", "spinner"); // blades gate the corridor
-    this.enemy(-4, 4, -13, -562, 6, "x", "grunt");
-    // (no enemy at the halfpipe mouth — the run into the pipe stays clean)
-
-    // --- checkpoints ---
-    this.checkpoint(-5.5, -185);
-    this.checkpoint(-13, -425);
-    this.checkpoint(-13.5, -670);
-    this.checkpoint(-13.5, -922);
-
-    // --- extra enemy guarding the rail yard landing ---
-    this.enemy(-4, 4, -13.5, -936, 6, "x", "turtle");
-
-    // --- dressing: tropical fringe off the play space (visual only) ---
-    // west beach edge + spawn surrounds
-    this.palm(-13, 0, -4, 5.6, 0.14);
-    this.palm(-15, 0, -19, 4.6, -0.09);
-    this.palm(-12.6, 0, -33, 5.9, 0.1);
-    this.palm(-14, 0, 9, 4.3, 0.05);
-    this.fern(-8.6, 0, 5, 1.2);
-    this.fern(-8.9, 0, -13);
-    this.broadleaf(-8.3, 0, -34, 1.2);
-    this.flowers(-7.6, 0, 12);
-    this.flowers(-8.2, 0, -20);
-    this.rock(-8.6, 0, 13, 1.4);
-    // east of the practice pen
-    this.palm(43.5, 0, -2, 5.4, -0.12);
-    this.palm(45, 0, -21, 4.6, 0.08);
-    this.palm(43.2, 0, -37, 5.7, -0.06);
-    this.fern(38.9, 0, 3, 1.1);
-    this.flowers(39.4, 0, -37);
-    // halfpipe surrounds (lips at x ±10.3 — everything sits outside them); the
-    // pipe is now twice as long (z −710..−830), so the fringe spans further.
-    this.palm(13.6, -13.5, -716, 5.4, -0.1);
-    this.palm(14.6, -13.5, -748, 4.7, 0.12);
-    this.palm(13.4, -13.5, -782, 5.8, -0.07);
-    this.palm(14.2, -13.5, -816, 5.1, 0.09);
-    this.palm(-13.8, -13.5, -722, 5.2, 0.1);
-    this.palm(-14.6, -13.5, -756, 4.5, -0.1);
-    this.palm(-13.4, -13.5, -790, 5.6, 0.06);
-    this.palm(-14.0, -13.5, -824, 5.0, -0.08);
-    this.fern(-12.2, -13.5, -735, 1.3);
-    this.fern(12.4, -13.5, -800, 1.2);
-    this.rock(12.8, -13.5, -710, 1.6);
-    this.rock(-12.6, -13.5, -828, 1.9);
-    this.flowers(-12.4, -13.5, -770);
-    // rail-yard landing fringe
-    this.palm(9.4, -13.5, -918, 4.9, -0.1);
-    this.palm(-9.6, -13.5, -936, 5.3, 0.1);
-    this.fern(-8.9, -13.5, -916, 1.2);
-    // finish deck, behind the gate
-    this.palm(4.6, -22, -1074, 4.8, -0.12);
-    this.palm(-4.6, -22, -1077, 5.2, 0.1);
-    this.broadleaf(7.4, -22, -1068, 1.3);
-    this.broadleaf(-7.6, -22, -1070, 1.1);
-    this.flowers(6.8, -22, -1073);
-
-    // --- finish gate + end wall ---
-    if (!asPrefix) {
-      this.finishGate(-22, this.finishZ);
-      this.endWall(-22);
-    }
-  }
-
-  // Combined "Test Course": the whole test course flows straight into the
-  // whole Gauntlet, the gauntlet shifted down-course so the two never overlap
-  // (no crates clipping each other or the wall obstacles at the seam).
-  private buildTestGauntlet(): void {
-    this.buildTestCourse(true); // prefix mode: no finish gate, flows onward
-    const savedSpawn = this.spawnPos.clone();
-    const savedTheme = this.theme;
-    const preArena = this.arena;
-    const preCollapse = this.collapse;
-    const preCrystal = this.crystalPickup;
-    const snap = {
-      root: this.root.children.length,
-      crates: this.crates.length,
-      enemies: this.enemies.length,
-      stones: this.stones.length,
-      checkpoints: this.checkpoints.length,
-      pickups: this.pickups.length,
-      rails: this.rails.length,
-      walls: this.walls.length,
-      movers: this.movers.length,
-      crumbles: this.crumbles.length,
-      crushers: this.crushers.length,
-      zones: this.zones.length,
-      gate: this.gateSpec,
+  // ---- "JUNGLE RUINS" ------------------------------------------------------
+  // The corridor level, and the one every other level's furniture came from.
+  // One route, walled the whole way: mossy berms at the path edge, a solid
+  // earth bank behind them, a standing wall of canopy above that. You can see
+  // out; you can never leave.
+  //
+  // The floor is never flat and never straight. Every walkable strip is a
+  // displaced plane riding a SPINE — one shared centreline that drifts left and
+  // right and rolls up and down across the whole level, with faster local bumps
+  // on top of it. Strips, berms, earth bank, planting, and the camera lane all
+  // read that same spine, so they bend together and every join stays flush.
+  // Through the temple the spine relaxes to dead straight, because built
+  // masonry takes over from ground, and again at the finish landing.
+  //
+  // Three beats, in the order the reference art suggests: undergrowth pit hops,
+  // a fallen trunk grind over a ravine, then a stepped temple climb onto a ruin
+  // terrace and back down. About a third the length of the course it replaces.
+  private buildJungle(): void {
+    this.wallTint = 0xa79f7e; // ruin masonry, sandstone rather than slate
+    this.blockTint = 0xb3ab89; // temple courses
+    this.curbTint = 0xd8b45c; // painted lips
+    this.bermTint = 0x3d7a2c; // mossy path shoulders
+    this.batchDecor = true; // hundreds of plants, baked one stretch at a time
+    // Full daylight. Under the sunset dome the corridor's greens fought a pink
+    // horizon and the canopy read as silhouette; the day painting puts the
+    // light where a jungle floor wants it.
+    this.skyPreset = "day";
+    this.killY = -12; // well under the lowest strip, well over the ravine floor
+    this.finishZ = -694;
+    this.endWallZ = -714;
+    // Late morning under a closed canopy: green humid haze, warm shafts.
+    this.theme = {
+      skyTop: "#1f6f86",
+      skyBottom: "#ffe0a4",
+      sunColorHex: "#fff2c4",
+      sunU: 0.36,
+      sunV: 0.34,
+      stars: false,
+      fog: 0x6fae7e, // the jungle closes the distance, so the haze is green
+      fogNear: 26,
+      fogFar: 155,
+      hemiSky: 0xa6e2b4,
+      hemiGround: 0x54401e,
+      hemiI: 1.2,
+      sunColor: 0xffeab0,
+      sunI: 1.5,
+      particleColor: 0xdaf0a0, // leaf motes on a slow downdraft
+      particleWind: [0.65, -0.35, 0.2],
     };
-    this.buildGauntlet(true); // continuation: no behind-spawn wall at the seam
-    // The test course's finish-run corridor ends at z≈−1025, y=−22. Drop the
-    // gauntlet in so its start slab OVERLAPS that corridor end at the same
-    // height (its +Z edge lands at z≈−1021), so you skate straight across.
-    const DZ = -1095; // test course is 60u longer now (doubled halfpipe) — seam the gauntlet on after it
-    const DY = -22;
-    this.shiftBuilt(snap, 0, DY, DZ, preArena, preCollapse, preCrystal);
-    this.finishZ += DZ; // gauntlet −1200 → −2240 becomes the combined finish
-    this.endWallZ += DZ; // −1212 → −2252
-    this.killY = -48; // below every floor in either half
-    this.spawnPos.copy(savedSpawn); // keep the beach spawn
-    this.currentSpawn.copy(savedSpawn);
-    this.theme = savedTheme; // and the Test Course beach look throughout
-  }
 
-  // Translate everything created since `snap` by (dx,dy,dz). Visual meshes and
-  // the groundMeshes that reference them all live in root, so one pass moves
-  // the geometry plus each object's bob/ground-snap baseY; the rest is the
-  // logic/collision state that isn't re-derived from a mesh each frame (static
-  // boxes, patrol/roll ranges, rail points, zones, and the set-pieces).
-  private shiftBuilt(
-    snap: {
-      root: number;
-      crates: number;
-      enemies: number;
-      stones: number;
-      checkpoints: number;
-      pickups: number;
-      rails: number;
-      walls: number;
-      movers: number;
-      crumbles: number;
-      crushers: number;
-      zones: number;
-      gate: Level["gateSpec"];
-    },
-    dx: number,
-    dy: number,
-    dz: number,
-    preArena: Level["arena"],
-    preCollapse: Level["collapse"],
-    preCrystal: Level["crystalPickup"],
-  ): void {
-    const off = new THREE.Vector3(dx, dy, dz);
-    // The finish gate's authored spot moves with everything else. Missing this
-    // left gateSpec on the pre-shift value, which put the combo gem 1000 units
-    // short of the actual gate and made a CAPTURE of this level place its gate
-    // there too — the one number shiftBuilt has to carry that isn't a mesh.
-    if (this.gateSpec && this.gateSpec !== snap.gate) {
-      this.gateSpec.x += dx;
-      this.gateSpec.y += dy;
-      this.gateSpec.z += dz;
-    }
-    const kids = this.root.children;
-    for (let i = snap.root; i < kids.length; i++) {
-      kids[i].position.add(off);
-      const b = kids[i].userData.baseY;
-      if (typeof b === "number") kids[i].userData.baseY = b + dy;
-    }
-    for (let i = snap.crates; i < this.crates.length; i++)
-      this.crates[i].box.translate(off);
-    for (let i = snap.walls; i < this.walls.length; i++)
-      this.walls[i].translate(off);
-    for (let i = snap.rails; i < this.rails.length; i++)
-      for (const p of this.rails[i].points) p.add(off);
-    for (let i = snap.enemies; i < this.enemies.length; i++) {
-      const e = this.enemies[i];
-      // box rebuilds each update from the (shifted) group; only side-scroll
-      // patrols store world-Z bounds that must move with it.
-      if (e.axis === "z") {
-        e.x0 += dz;
-        e.x1 += dz;
-      }
-    }
-    for (let i = snap.stones; i < this.stones.length; i++) {
-      const s = this.stones[i];
-      s.x += dx;
-      s.z0 += dz;
-      s.z1 += dz;
-    }
-    for (let i = snap.checkpoints; i < this.checkpoints.length; i++) {
-      this.checkpoints[i].box.translate(off);
-      this.checkpoints[i].spawnPos.add(off);
-    }
-    for (let i = snap.pickups; i < this.pickups.length; i++)
-      this.pickups[i].box.translate(off);
-    for (let i = snap.movers; i < this.movers.length; i++)
-      this.movers[i].base.add(off);
-    for (let i = snap.crumbles; i < this.crumbles.length; i++)
-      this.crumbles[i].base.add(off);
-    for (let i = snap.crushers; i < this.crushers.length; i++) {
-      const c = this.crushers[i];
-      c.x += dx;
-      c.z += dz;
-      c.restY += dy;
-      c.box.translate(off);
-    }
-    // pendulum boxes re-derive from their (shifted) pivot group each update.
-    for (let i = snap.zones; i < this.zones.length; i++) {
-      const z = this.zones[i];
-      z.xMin += dx;
-      z.xMax += dx;
-      z.zMin += dz;
-      z.zMax += dz;
-    }
-    if (this.arena && this.arena !== preArena) {
-      this.arena.zone.translate(off);
-      for (const g of this.arena.gates) {
-        g.box.translate(off);
-        g.upY += dy;
-        g.downY += dy;
-      }
-    }
-    if (this.collapse && this.collapse !== preCollapse) {
-      const c = this.collapse;
-      c.xMin += dx;
-      c.xMax += dx;
-      c.triggerZ += dz;
-      c.endZ += dz;
-      c.startZ += dz;
-      c.frontZ += dz;
-    }
-    if (this.crystalPickup && this.crystalPickup !== preCrystal)
-      this.crystalPickup.box.translate(off);
-    this.finishBox.translate(off);
-    this.finishGlow.translate(off);
-  }
+    const matA = new THREE.MeshLambertMaterial({ color: 0x4f9a42 });
+    const matB = new THREE.MeshLambertMaterial({ color: 0x5cab4c });
+    const matStone = new THREE.MeshLambertMaterial({ color: 0xaea684 });
+    const matRamp = new THREE.MeshLambertMaterial({ color: 0x9e9678 });
+    const matFinish = new THREE.MeshLambertMaterial({ color: 0xa9b072 });
 
-  // Deck height along the final downhill ramp (for crate placement).
-  private downhillY(z: number): number {
-    return THREE.MathUtils.mapLinear(z, -945, -1000, -13.5, -22);
+    // ---- THE SPINE ---------------------------------------------------------
+    // straight() is how much WIND is allowed at this z: 1 out in the jungle, 0
+    // where a built structure takes over. Because it multiplies both the drift
+    // and the roll, a strip that ends inside a straight zone ends at exactly
+    // x 0, y 0 — which is how the corridors meet the temple and the finish
+    // landing flush without a single hand-tuned offset.
+    const straight = (z: number): number =>
+      1 -
+      THREE.MathUtils.smoothstep(-z, 276, 300) + // into the temple
+      THREE.MathUtils.smoothstep(-z, 486, 510) - // back out of it
+      THREE.MathUtils.smoothstep(-z, 640, 664); // into the finish landing
+    // Two beats each, long against short, so the path never repeats visibly.
+    // Peak drift ~8u sideways over ~150u of course (about 8 degrees off axis)
+    // and ~3u of roll (about 3.5 degrees) — gentle enough that it reads as
+    // terrain rather than as a slalom, steep enough to see from the deck.
+    const gx = (z: number): number =>
+      (Math.sin(z * 0.021) * 5.4 + Math.sin(z * 0.0083 + 1.7) * 3.1) *
+      straight(z);
+    // Hollows in the jungle floor: shallow dished bowls you run down into and
+    // back out of. They live in the SPINE rather than in jungle()'s own `dips`
+    // option, because a dip that only moves the walking surface leaves the
+    // berms, the earth bank and the camera lane hanging in the air above it —
+    // a hole in the corridor wall you can walk out through. In the spine the
+    // whole cross-section drops together.
+    const DIPS = [-74, -148, -268, -618, -652];
+    const dip = (z: number): number => {
+      let d = 0;
+      for (const c of DIPS) {
+        const t = z - c;
+        d -= 2.2 * Math.exp(-(t * t) / (2 * 3.2 * 3.2));
+      }
+      return d;
+    };
+    const gy = (z: number): number =>
+      (Math.sin(z * 0.0155 + 0.6) * 2.2 + Math.sin(z * 0.034 + 2.4) * 0.8) *
+        straight(z) +
+      dip(z);
+    const spine: Spine = (z) => ({ dx: gx(z), dy: gy(z) });
+    // deterministic jitter: the jungle must plant itself the same way every
+    // load, or a captured copy would not match what you were just looking at
+    const rnd = (i: number): number => {
+      const s = Math.sin(i * 12.9898 + 4.1414) * 43758.5453;
+      return s - Math.floor(s);
+    };
+
+    // ---- THE EARTH BANK ----------------------------------------------------
+    // Solid ground either side of the path and under it, so a gap reads as a
+    // cut THROUGH the jungle instead of a hole in the sky, and so the wall of
+    // trees has something to stand on. Chunked to follow the spine, then baked
+    // into ONE mesh: pure scenery, never a groundMesh, never a collider.
+    const bankParts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
+    const BANK_H = 14;
+    const bank = (
+      zNear: number,
+      zFar: number,
+      base = 0,
+      inset = 5.1, // inner face — sits flush behind the berm, so no daylight
+      underW = 10.4, // 0 = the structure below is solid already (the temple)
+    ): void => {
+      const depth = Math.abs(zNear - zFar);
+      const n = Math.max(2, Math.round(depth / 7));
+      const d = depth / n;
+      for (let i = 0; i < n; i++) {
+        const zm = zNear - d * (i + 0.5);
+        const cy = base + gy(zm);
+        const push = (w: number, ox: number, top: number): void => {
+          bankParts.push({
+            geo: new THREE.BoxGeometry(w, BANK_H, d + 0.15),
+            m: new THREE.Matrix4().makeTranslation(
+              gx(zm) + ox,
+              top - BANK_H / 2,
+              zm,
+            ),
+          });
+        };
+        // shoulders: tops tucked up INSIDE the berm's own height so the seam
+        // between path and jungle floor never opens from a low camera
+        push(20, -(inset + 10), cy + 0.35);
+        push(20, inset + 10, cy + 0.35);
+        // and the mass under the path, capped below its deepest bump
+        if (underW > 0) push(underW, 0, cy - 0.62);
+      }
+    };
+
+    // ---- THE WALL OF JUNGLE ------------------------------------------------
+    // Undergrowth crowding the berm line, canopy standing behind it on the
+    // bank, vines dropping through. Planted along the spine, so the greenery
+    // bends with the path; '?lite' drops all of it (each helper self-skips).
+    let slot = 0;
+    const thicket = (
+      zNear: number,
+      zFar: number,
+      base = 0,
+      inset = 6.3, // where the undergrowth starts, just outside the berm
+    ): void => {
+      const depth = Math.abs(zNear - zFar);
+      const n = Math.max(2, Math.round(depth / 4.2));
+      for (let i = 0; i < n; i++) {
+        const z = zNear - (depth * (i + 0.5)) / n;
+        const cx = gx(z);
+        const y = base + gy(z) + 0.35;
+        for (const side of [-1, 1]) {
+          const k = slot++;
+          const a = rnd(k);
+          const b = rnd(k + 101);
+          const c = rnd(k + 211);
+          const d = rnd(k + 331);
+          const jz = z + c * 3.4 - 1.7;
+          // ROW 1 — undergrowth crowding the kerb, one of three characters
+          if (a < 0.44)
+            this.broadleaf(cx + side * (inset + b * 1.6), y, jz, 1 + b * 0.9);
+          else if (a < 0.74)
+            this.fern(cx + side * (inset + b * 1.4), y, jz, 1.2 + b * 1);
+          else
+            this.toadstools(
+              cx + side * (inset + 0.3 + b * 1.5),
+              y,
+              jz,
+              0.7 + b * 0.6,
+            );
+          // ...and a second plant behind it, so the floor is never bare dirt
+          if (d < 0.62)
+            this.fern(cx + side * (inset + 1.9 + d * 2.6), y, z + d * 4 - 2, 0.9 + d);
+          else if (d < 0.86)
+            this.broadleaf(cx + side * (inset + 2.2 + c * 2.4), y, z - d * 3, 1.1 + c * 0.8);
+          // ROW 2 — the canopy that closes the corridor overhead
+          if (b < 0.66)
+            this.jungleTree(
+              cx + side * (inset + 3.2 + c * 6),
+              y,
+              z + a * 4 - 2,
+              8 + c * 5,
+              side * (0.03 + a * 0.08),
+            );
+          // ROW 3 — a taller, deeper rank: without it the greenery reads as a
+          // painted fringe with sky behind it instead of as a jungle
+          if (a > 0.3)
+            this.jungleTree(
+              cx + side * (inset + 9.4 + b * 8),
+              y - 0.35,
+              z + c * 6 - 3,
+              11 + a * 7,
+              side * (0.02 + c * 0.06),
+            );
+          if (c > 0.62)
+            this.vines(
+              cx + side * (inset + 1.1 + a * 2),
+              y + 7.4 + b * 2.4,
+              z + b * 3 - 1.5,
+              3 + a * 3.4,
+              3,
+            );
+          if (b > 0.8)
+            this.rock(cx + side * (inset + a * 1.8), y - 0.25, jz, 1 + a * 1.1);
+          if (a > 0.86) this.flowers(cx + side * (inset + c * 1.2), y, jz);
+        }
+      }
+      // one mesh per shape for THIS stretch, so the jungle still frustum-culls
+      this.bakeDecor();
+    };
+
+    // ---- GROUND ------------------------------------------------------------
+    // A. the clearing you wake up in — wide, soft, nothing to fall off
+    this.jungle("clearing", 14, -34, 0, 14, matB, {
+      amp: 0.3,
+      spine,
+      tex: "grass",
+    });
+    bank(14, -34);
+    this.spawnPos.set(gx(6), gy(6) + 0.2, 6);
+    this.currentSpawn.copy(this.spawnPos);
+
+    // B. undergrowth corridors, split by two hops over cuts in the jungle
+    //    floor (5.5 and 6.0 — clearable at a walk, comfortable at a cruise)
+    this.jungle("corridor A", -39.5, -104, 0, 12, matA, {
+      amp: 0.45,
+      spine,
+    });
+    bank(-39.5, -104);
+    this.jungle("corridor B", -110, -176, 0, 12, matB, {
+      amp: 0.45,
+      spine,
+    });
+    bank(-110, -176);
+
+    // C. THE RAVINE: 60 units of nothing, one fallen trunk laid across it
+    // the ravine keeps its SIDES — the walls of the cut are what make it read
+    // as 60 units of missing jungle floor rather than a hole in the world
+    bank(-176, -236, 0, 5.1, 0);
+    this.jungle("corridor C", -236, -300, 0, 12, matA, {
+      amp: 0.45,
+      spine,
+    });
+    bank(-236, -300);
+
+    // D. THE TEMPLE: the spine is straight here, so everything below is
+    //    plain masonry at x 0 and the corridors meet it dead flush
+    this.slab("temple floor", -300, -390, 0, 16, matStone, true, 0, "stone");
+    const TIER = 2.3; // one course under the 2.97 jump apex, so each is a hop
+    const tierX = [-2.6, 2.6, -2.6, 2.6, 0];
+    for (let i = 0; i < 5; i++) {
+      const top = TIER * (i + 1);
+      const z = -332 - i * 12;
+      const d = i === 4 ? 14 : 10; // the last course runs into the terrace
+      this.stepBlock(tierX[i], z, 8, d, Math.max(-0.8, top - 5), top);
+    }
+    this.slab("ruin terrace", -386, -444, 11.5, 16, matStone, true, 0, "stone");
+    this.ramp("temple descent", -444, 11.5, -486, 0.4, 14, matRamp, 0, "stone");
+    // ruin walls hold the whole temple in — 16 tall, so the terrace has a
+    // parapet you cannot hop
+    for (let z = -300; z > -486; z -= 26) {
+      const d = Math.min(26, z + 486);
+      this.wall(-9, z - d / 2, 1.2, d, 0, 16);
+      this.wall(9, z - d / 2, 1.2, d, 0, 16);
+    }
+    // Behind the walls the jungle floor stands HIGH — the temple is a cutting
+    // through it, which is why the climb exists. Planting up there is also the
+    // only way the canopy clears a 16-tall parapet; at ground level you look
+    // off the terrace into blank sky.
+    bank(-300, -486, 5, 9.6, 0); // no under-mass: the temple floor is solid
+
+    // E. back into the jungle, two more cuts, then the landing
+    this.jungle("corridor D", -492.5, -566, 0, 12, matB, { amp: 0.45, spine });
+    bank(-492.5, -566);
+    this.jungle("corridor E", -572, -676, 0, 12, matA, {
+      amp: 0.45,
+      spine,
+    });
+    bank(-572, -676);
+    this.slab("finish landing", -676, -718, 0, 14, matFinish, true, 0, "stone");
+    bank(-676, -718);
+    // the landing is straight masonry, so it gets masonry sides rather than
+    // berms — but it still has to be closed, same as everywhere else
+    for (let z = -676; z > -718; z -= 21) {
+      this.wall(-7.6, z - 10.5, 1.2, 21, 0, 6);
+      this.wall(7.6, z - 10.5, 1.2, 21, 0, 6);
+    }
+
+    // the bank is one mesh once every chunk is in
+    const bankMesh = new THREE.Mesh(
+      Level.mergeGeos(bankParts),
+      this.baseMat("bank", 0x6b5232, "dirt", 3, 3),
+    );
+    for (const p of bankParts) p.geo.dispose();
+    bankMesh.name = "earth bank";
+    this.root.add(bankMesh);
+
+    // the ravine floor, far enough down to be scenery: killY catches you 1.2
+    // above it, so it is something to look into and never something to land on
+    const ravine = new THREE.Mesh(
+      new THREE.PlaneGeometry(140, 940),
+      this.baseMat("ravineFloor", 0x1e3521, "moss", 14, 94),
+    );
+    ravine.rotation.x = -Math.PI / 2;
+    ravine.position.set(0, -13.2, -352);
+    this.root.add(ravine);
+
+    // ---- THE FALLEN TRUNK --------------------------------------------------
+    // The ravine crossing. The trunk IS the rail: the grind line is sampled
+    // off the spine and the bark segments are hung underneath it, so the ride
+    // follows the corridor's own bend instead of cutting the corner. Visual
+    // only — no collider on the wood, so nothing can snag you mid-grind.
+    {
+      const N = 6;
+      const pts: THREE.Vector3[] = [];
+      for (let i = 0; i <= N; i++) {
+        const z = THREE.MathUtils.lerp(-172, -240, i / N);
+        pts.push(new THREE.Vector3(gx(z), gy(z) + 0.62, z));
+      }
+      const barkMat = this.baseMat("fallenLog", 0x7a5533, "wood", 1, 6);
+      const up = new THREE.Vector3(0, 1, 0);
+      for (let i = 0; i < N; i++) {
+        const a = pts[i];
+        const b = pts[i + 1];
+        const seg = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.62, 0.62, a.distanceTo(b) + 0.12, 8),
+          barkMat,
+        );
+        seg.position.copy(a).lerp(b, 0.5).setY(seg.position.y - 0.62);
+        seg.quaternion.setFromUnitVectors(
+          up,
+          b.clone().sub(a).normalize(),
+        );
+        this.root.add(seg);
+      }
+      this.rails.push(new Rail(pts, false)); // the trunk is the visual
+      // the stump it fell from, and the root plate at the far side
+      this.jungleTree(gx(-168) - 7.4, 0.35, -168, 5.2, 0.06);
+      this.rock(gx(-244) + 6.6, 0.1, -244, 2.1);
+    }
+
+    // a grind line down the temple descent, for anyone who would rather ride
+    // the ramp than run it
+    const rampRail = new Rail([
+      new THREE.Vector3(3.7, 11.7, -444),
+      new THREE.Vector3(3.7, 0.6, -486),
+    ]);
+    this.rails.push(rampRail);
+    this.root.add(rampRail.object);
+
+    // ---- DRESSING THE RUIN -------------------------------------------------
+    // Idols frame the temple mouth (they are solid, so they narrow the way in),
+    // mossy masonry stacks against the walls, vines pour off the parapet.
+    this.idol(-6.1, 0, -306, 1.5, 0.22);
+    this.idol(6.1, 0, -306, 1.5, -0.22);
+    this.idol(-5.4, 11.5, -436, 1.3, 0.5);
+    this.idol(5.4, 11.5, -436, 1.3, -0.5);
+    for (let i = 0; i < 9; i++) {
+      const z = -304 - i * 20;
+      const h = 1.4 + rnd(i * 7) * 2.6;
+      this.ruinBlock(-7.4, 0, z, 2.4, h, 3.4, rnd(i) * 0.2 - 0.1);
+      this.ruinBlock(7.4, 0, z - 9, 2.4, 1.2 + rnd(i * 3) * 2.4, 3.4, 0.08);
+      this.vines(-8.2, 15.4, z - 4, 5 + rnd(i * 11) * 4, 3);
+      this.vines(8.2, 15.4, z - 13, 5 + rnd(i * 13) * 4, 3);
+    }
+    // the jungle taking the ruin back: growth out of every wall base, moss and
+    // creepers down the faces, caps in the damp corners
+    for (let i = 0; i < 14; i++) {
+      const z = -302 - i * 13;
+      const e = rnd(i * 5 + 3);
+      const f = rnd(i * 9 + 17);
+      const onTerrace = z < -386 && z > -444;
+      const y = onTerrace ? 11.5 : z < -444 ? 11.5 - ((-444 - z) / 42) * 11.1 : 0;
+      this.fern(-7.2 + e * 0.9, y, z, 1.1 + e * 0.8);
+      this.fern(7.2 - f * 0.9, y, z - 6, 1 + f * 0.9);
+      if (e > 0.45) this.broadleaf(-6.9, y, z - 3, 1.1 + f * 0.7);
+      if (f > 0.5) this.broadleaf(6.9, y, z - 9, 1 + e * 0.8);
+      if (e > 0.68) this.toadstools(-6.6, y, z - 10, 0.75 + f * 0.5);
+      if (f > 0.72) this.toadstools(6.6, y, z - 2, 0.7 + e * 0.5);
+      this.vines(-7.9, y + 9.5 + (onTerrace ? 3 : 0), z - 5, 3.5 + e * 4, 3);
+      this.vines(7.9, y + 9.5 + (onTerrace ? 3 : 0), z - 11, 3.5 + f * 4, 3);
+    }
+
+    // toppled courses lying on the temple floor and the terrace
+    this.ruinBlock(-4.6, 0, -318, 3.2, 0.9, 2.2, 0.34);
+    this.ruinBlock(4.9, 0, -368, 2.6, 0.7, 2.6, -0.22);
+    this.ruinBlock(-5.8, 11.5, -400, 3.4, 1.1, 2.4, 0.16);
+    this.ruinBlock(5.6, 11.5, -418, 2.8, 1.6, 2.8, -0.3);
+    this.toadstools(-6.4, 11.5, -408, 1.1);
+    this.toadstools(6.2, 0, -344, 0.95);
+    this.broadleaf(-6.6, 11.5, -428, 1.4);
+    this.broadleaf(6.7, 11.5, -394, 1.2);
+    this.fern(-6.8, 0, -382, 1.3);
+    this.fern(6.5, 0, -310, 1.2);
+
+    // ---- PLANTING ----------------------------------------------------------
+    thicket(14, -34);
+    thicket(-39.5, -104);
+    thicket(-110, -176);
+    thicket(-176, -236); // the ravine gets a canopy too — it is a cut, not a void
+    thicket(-236, -300);
+    thicket(-300, -486, 5, 10.2); // on the high ground outside the ruin walls
+    thicket(-492.5, -566);
+    thicket(-572, -676);
+    thicket(-676, -718);
+
+    // ---- FURNITURE ---------------------------------------------------------
+    // Every seat below raycasts the terrain through floorY, and a mesh built
+    // this frame still carries an identity world matrix until something asks
+    // for one. Without this every crate would sit at its nominal height and
+    // hover over (or sink into) the bumps.
+    this.root.updateMatrixWorld(true);
+    // `up` stacks: crate() only auto-stacks when the deck height it is handed
+    // is within 0.9 of the crate below, and on a rolling floor that test can
+    // just miss — which silently drops the second crate INSIDE the first
+    // instead of on top of it. Handing it the stacked height is exact.
+    const crateAt = (
+      z: number,
+      off: number,
+      kind?: Parameters<Level["crate"]>[3],
+      up = 0,
+    ): void => this.crate(gx(z) + off, gy(z) + up * 0.96, z, kind);
+    const fruitAt = (z: number, off = 0, h = 1.25): void =>
+      this.pickup(gx(z) + off, gy(z) + h, z);
+
+    // A. the clearing: a crate line to learn the spin on, one arrow crate
+    crateAt(-8, -1.5);
+    crateAt(-8, 0);
+    crateAt(-8, 1.5);
+    crateAt(-18, -2.2);
+    crateAt(-18, 2.2);
+    crateAt(-24, 0, "bouncy");
+    fruitAt(-13, -1.5);
+    fruitAt(-13, 1.5);
+    this.log(gx(-28) - 6.5, gx(-28) + 6.5, gy(-28), -28); // first thing to hop
+
+    // B. corridors: fruit strung over both cuts, crates around the dip
+    for (let i = 0; i < 5; i++) fruitAt(-33 - i * 2.6, 0, 1.6);
+    crateAt(-52, -1.4);
+    crateAt(-52, 1.4);
+    crateAt(-52, -1.4, undefined, 1); // stacked on the one below
+    this.enemy(gx(-64) - 3.6, gx(-64) + 3.6, gy(-64), -64, 3, "x", "grunt");
+    for (let i = 0; i < 4; i++) fruitAt(-70 - i * 2.4, 0, 1.5); // over the dip
+    crateAt(-88, 0, "tnt");
+    crateAt(-88, -1.6);
+    crateAt(-88, 1.6);
+    this.log(gx(-96) - 6.5, gx(-96) + 6.5, gy(-96), -96);
+    for (let i = 0; i < 5; i++) fruitAt(-103 - i * 2.4, 0, 1.6);
+
+    this.checkpoint(gy(-116), -116, gx(-116));
+    crateAt(-124, -2.4);
+    crateAt(-124, 2.4);
+    crateAt(-131, 0, "nitro");
+    this.enemy(gx(-140) - 3.4, gx(-140) + 3.4, gy(-140), -140, 2.6, "x", "turtle");
+    for (let i = 0; i < 4; i++) fruitAt(-146 - i * 2.4, 0, 1.5);
+    crateAt(-160, -1.5);
+    crateAt(-160, 1.5);
+    crateAt(-168, 0, "mystery");
+
+    // C. the trunk: fruit strung along it, so the grind pays
+    for (let i = 0; i < 9; i++) {
+      const z = -178 - i * 7;
+      this.pickup(gx(z), gy(z) + 1.5, z);
+    }
+    this.checkpoint(gy(-246), -246, gx(-246));
+    crateAt(-254, -1.6);
+    crateAt(-254, 1.6);
+    this.enemy(gx(-266) - 3.8, gx(-266) + 3.8, gy(-266), -266, 4.4, "x", "charger");
+    crateAt(-282, 0, "bouncy");
+    crateAt(-290, -2);
+    crateAt(-290, 2);
+
+    // D. the temple: a hopper guarding the mouth, crates on the courses, a
+    //    sentry holding the terrace, and the crystal off the racing line
+    this.enemy(-4, 4, 0, -314, 3.4, "x", "hopper");
+    this.crate(-2.6, 2.3, -330);
+    this.crate(2.6, 4.6, -342);
+    this.crate(-2.6, 6.9, -354, "mask");
+    this.crate(2.6, 9.2, -366);
+    this.pickup(-2.6, 3.6, -334);
+    this.pickup(2.6, 5.9, -346);
+    this.pickup(-2.6, 8.2, -358);
+    this.pickup(2.6, 10.5, -370);
+    this.enemy(-3, 3, 11.5, -404, 0, "x", "sentry");
+    this.fruitRow(-394, -424, 12.8, 7, 0);
+    this.crate(-3.4, 11.5, -414);
+    this.crate(3.4, 11.5, -414);
+    this.crate(0, 11.5, -428, "tnt");
+    this.crystal(5.6, 11.5, -430);
+    this.checkpoint(11.5, -396, 0);
+
+    // E. the run home: a spinner on the last straight, then the landing
+    this.enemy(0, 0, 0.4, -470, 0, "x", "spinner");
+    crateAt(-500, -1.8);
+    crateAt(-500, 1.8);
+    for (let i = 0; i < 5; i++) fruitAt(-508 - i * 2.6, 0, 1.5);
+    this.enemy(gx(-528) - 4, gx(-528) + 4, gy(-528), -528, 3.2, "x", "floater");
+    crateAt(-542, 0, "bouncy");
+    crateAt(-556, -1.5);
+    crateAt(-556, 1.5);
+    for (let i = 0; i < 5; i++) fruitAt(-565 - i * 2.4, 0, 1.6);
+    this.checkpoint(gy(-580), -580, gx(-580));
+    this.log(gx(-592) - 6.5, gx(-592) + 6.5, gy(-592), -592);
+    crateAt(-604, -2.2);
+    crateAt(-604, 2.2);
+    crateAt(-604, -2.2, undefined, 1);
+    crateAt(-604, 2.2, undefined, 1);
+    this.enemy(gx(-616) - 3.6, gx(-616) + 3.6, gy(-616), -616, 3, "x", "spiker");
+    for (let i = 0; i < 4; i++) fruitAt(-622 - i * 2.4, 0, 1.5);
+    crateAt(-636, 0, "nitro");
+    crateAt(-644, -1.6);
+    crateAt(-644, 1.6);
+    for (let i = 0; i < 4; i++) fruitAt(-656 - i * 2.4, 0, 1.6);
+    crateAt(-668, 0, "mystery");
+
+    this.finishGate(0, this.finishZ);
+    this.endWall(0);
+
+    // ---- CAMERA LANE -------------------------------------------------------
+    // The spine again. Without it the frame would keep facing down -z while
+    // the path bent out from under it; with it, screen-up is always "onward"
+    // and the corridor stays centred through every bend. Height is authored
+    // too, so the climb tilts the frame up instead of losing the player behind
+    // the courses.
+    const laneY = (z: number): number => {
+      if (z > -300 || z < -486) return gy(z);
+      if (z > -324) return 0; // temple approach
+      if (z > -386)
+        return THREE.MathUtils.clamp((-324 - z) / 62, 0, 1) * 11.5; // the climb
+      if (z > -444) return 11.5; // terrace
+      return THREE.MathUtils.mapLinear(z, -444, -486, 11.5, 0.4); // descent
+    };
+    const lane: { x: number; y: number; z: number }[] = [];
+    for (let z = 20; z >= -718; z -= 6)
+      lane.push({ x: gx(z), y: laneY(z), z });
+    this.lanePts = lane;
+    this.measureLane();
   }
 
   // Build-time ground probe: what the terrain actually is at (x, z). Used to
@@ -5095,9 +5006,11 @@ export class Level {
     return best;
   }
 
-  // Wavy jungle floor strip: a heightfield with rolling bumps, optional
-  // non-lethal dips to hop, and firm berm walls (with grindable lips) along
-  // both sides so you can't fall off sideways. Deterministic per strip.
+  // Wavy jungle floor strip: a heightfield with rolling bumps, and firm berm
+  // walls (with grindable lips) along both sides so you can't fall off
+  // sideways. Deterministic per strip. Anything that has to move the whole
+  // cross-section — a bend, a climb, a hollow — belongs in the SPINE, not
+  // here, so the berms and the bank move with it.
   private jungle(
     name: string,
     z0: number,
@@ -5105,7 +5018,12 @@ export class Level {
     baseY: number,
     width: number,
     mat: THREE.Material,
-    opts: { amp?: number; dips?: number[]; berms?: boolean; tex?: string } = {},
+    opts: {
+      amp?: number;
+      berms?: boolean;
+      tex?: string;
+      spine?: Spine;
+    } = {},
     cx = 0,
   ): void {
     const depth = Math.abs(z1 - z0);
@@ -5129,11 +5047,13 @@ export class Level {
         (Math.sin(wz * 0.55 + phase) * 0.55 +
           Math.sin(wz * 0.21 + lx * 0.45 + phase * 1.7) * 0.45 +
           Math.sin(lx * 0.9 + wz * 0.13 + phase * 0.6) * 0.3);
-      if (opts.dips) {
-        for (const dz of opts.dips) {
-          const d = wz - dz;
-          h -= 2.4 * Math.exp(-(d * d) / (2 * 2.2 * 2.2)) * edge;
-        }
+      // The SPINE bends and rolls the whole strip. Unlike the surface noise it
+      // is NOT faded at the ends — neighbouring strips have to meet flush, and
+      // they only do that if both evaluate the same centreline at the join.
+      if (opts.spine) {
+        const sp = opts.spine(wz);
+        pos.setX(i, lx + sp.dx);
+        h += sp.dy;
       }
       pos.setY(i, h);
     }
@@ -5146,19 +5066,88 @@ export class Level {
     mesh.name = name;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
-    if (opts.berms !== false) this.berms(z0, z1, baseY, width, cx);
+    if (opts.berms !== false)
+      this.berms(z0, z1, baseY, width, cx, opts.spine);
   }
 
   // Firm raised edges: visible ridge + solid collider + a grindable lip rail.
+  // Along a SPINE the ridge is cut into short chunks that follow the bend —
+  // one long box cannot curve, and a straight kerb beside a winding path
+  // reads instantly as a mistake.
   private berms(
     z0: number,
     z1: number,
     baseY: number,
     width: number,
     cx = 0,
+    spine?: Spine,
   ): void {
     const depth = Math.abs(z1 - z0);
     const mat = this.baseMat("berm", this.bermTint, "jungle", 1, 8);
+    if (spine) {
+      const zNear = Math.max(z0, z1);
+      const CHUNK = 4; // short enough that the kerb reads as a curve
+      const n = Math.max(2, Math.round(depth / CHUNK));
+      const segD = depth / n + 0.25;
+      for (const side of [-1, 1]) {
+        const pts: THREE.Vector3[] = [];
+        // one chunk per box, but ONE draw call for the whole kerb: a winding
+        // corridor needs dozens of chunks a side, and dozens of one-box meshes
+        // is the single most expensive thing in a level like this
+        const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
+        for (let i = 0; i < n; i++) {
+          const za = zNear - (depth * i) / n;
+          const zb = zNear - (depth * (i + 1)) / n;
+          const zm = (za + zb) / 2;
+          const sp = spine(zm);
+          const x = cx + sp.dx + side * (width / 2 - 0.45);
+          const y = baseY + sp.dy + 0.55;
+          parts.push({
+            geo: new THREE.BoxGeometry(0.9, 1.5, segD),
+            m: new THREE.Matrix4().makeTranslation(x, y, zm),
+          });
+          this.walls.push(
+            new THREE.Box3().setFromCenterAndSize(
+              new THREE.Vector3(x, y, zm),
+              new THREE.Vector3(0.9, 1.5, segD),
+            ),
+          );
+          // CAPTURE HOOK. captureData harvests walls off any object carrying a
+          // wallSpec, and the merged kerb above is a single mesh with no place
+          // to hang one per chunk. A bare Object3D renders nothing, costs
+          // nothing, and hands the editor a real wall component per chunk —
+          // without it, editing this level would hand you back an open trench.
+          const tag = new THREE.Object3D();
+          tag.position.set(x, y, zm);
+          tag.userData.wallSpec = { w: 0.9, d: segD, h: 1.5, visH: 1.5 };
+          this.root.add(tag);
+          if (i === 0) {
+            const s0 = spine(zNear);
+            pts.push(
+              new THREE.Vector3(
+                cx + s0.dx + side * (width / 2 - 0.45),
+                baseY + s0.dy + 1.35,
+                zNear,
+              ),
+            );
+          }
+          const s1 = spine(zb);
+          pts.push(
+            new THREE.Vector3(
+              cx + s1.dx + side * (width / 2 - 0.45),
+              baseY + s1.dy + 1.35,
+              zb,
+            ),
+          );
+        }
+        const kerb = new THREE.Mesh(Level.mergeGeos(parts), mat);
+        for (const p of parts) p.geo.dispose();
+        kerb.name = "berm";
+        this.root.add(kerb);
+        this.rails.push(new Rail(pts, false)); // the grindable lip, bent to match
+      }
+      return;
+    }
     for (const side of [-1, 1]) {
       const x = cx + side * (width / 2 - 0.45);
       const berm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.5, depth), mat);
@@ -6151,6 +6140,71 @@ export class Level {
   // desync the suite's wall-clock input scripting.
   private readonly liteDecor = window.location.search.includes("lite");
 
+  // ---- DECOR BATCHING ------------------------------------------------------
+  // A wall of jungle is hundreds of copies of a handful of shapes, and hundreds
+  // of one-shape meshes is the most expensive thing a level can do — on a phone
+  // the draw calls ARE the frame budget. So every scattered plant registers a
+  // TRANSFORM here instead of a mesh, and each (shape, material) pair bakes
+  // into one mesh when the section is done. The baked vertices land exactly
+  // where the loose meshes would have, and nothing in the game ever looked up
+  // a decor mesh, so this is invisible to everything but the profiler.
+  //
+  // OPT-IN, and per SECTION. One merged mesh spanning a whole level would have
+  // a level-sized bounding sphere and never cull, so a course that plants
+  // heavily flushes every stretch (see buildJungle's thicket), and a course
+  // with a dozen palms leaves the flag off and keeps per-instance culling.
+  private batchDecor = false;
+  private decorParts = new Map<
+    string,
+    { mat: THREE.Material; parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] }
+  >();
+  private putDecor(
+    key: string,
+    geo: THREE.BufferGeometry,
+    mat: THREE.Material,
+    m: THREE.Matrix4,
+  ): void {
+    if (!this.batchDecor) {
+      const mesh = new THREE.Mesh(geo, mat);
+      m.decompose(mesh.position, mesh.quaternion, mesh.scale);
+      this.root.add(mesh);
+      return;
+    }
+    let b = this.decorParts.get(key);
+    if (!b) {
+      b = { mat, parts: [] };
+      this.decorParts.set(key, b);
+    }
+    b.parts.push({ geo, m });
+  }
+  /** Bake everything scattered since the last call into one mesh per shape. */
+  private bakeDecor(): void {
+    for (const [key, b] of this.decorParts) {
+      if (b.parts.length === 0) continue;
+      const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);
+      mesh.name = key;
+      this.root.add(mesh);
+    }
+    this.decorParts.clear();
+  }
+  /** The transform a loose decor mesh would have had (three's XYZ euler). */
+  private static trs(
+    px: number,
+    py: number,
+    pz: number,
+    ry = 0,
+    s = 1,
+    rz = 0,
+    sy = s,
+    sz = s,
+  ): THREE.Matrix4 {
+    return new THREE.Matrix4().compose(
+      new THREE.Vector3(px, py, pz),
+      new THREE.Quaternion().setFromEuler(new THREE.Euler(0, ry, rz)),
+      new THREE.Vector3(s, sy, sz),
+    );
+  }
+
   // Jak-era palm: bowed trunk, merged frond crown, coconut cluster — three
   // meshes on shared geometry. h scales the whole tree; lean > 0 tips the
   // top toward -x (the trunk's baked bow runs +x, so leans read as S-curves).
@@ -6229,14 +6283,12 @@ export class Level {
         6,
         0.7,
       );
-    const m = new THREE.Mesh(
+    this.putDecor(
+      "fern",
       Level.fernGeoCache,
       this.decorMat("fern", 0x4a9a40, "leaf", true),
+      Level.trs(x, y + 0.02, z, x * 2.1 + z * 0.6, s),
     );
-    m.scale.setScalar(s);
-    m.rotation.y = x * 2.1 + z * 0.6;
-    m.position.set(x, y + 0.02, z);
-    this.root.add(m);
   }
 
   // Broadleaf plant: five wide paddles. Key/color per role (jungle, succulent).
@@ -6252,14 +6304,12 @@ export class Level {
     if (this.liteDecor) return;
     if (!Level.leafGeoCache)
       Level.leafGeoCache = Level.fanGeo(Level.bladeGeo(1.5, 0.95, 0.5), 5, 0.5);
-    const m = new THREE.Mesh(
+    this.putDecor(
+      key,
       Level.leafGeoCache,
       this.decorMat(key, color, "leaf", true),
+      Level.trs(x, y + 0.02, z, x * 1.9 + z * 0.8, s),
     );
-    m.scale.setScalar(s);
-    m.rotation.y = x * 1.9 + z * 0.8;
-    m.position.set(x, y + 0.02, z);
-    this.root.add(m);
   }
 
   // Flower dots: a bright six-berry cluster, one buffer, coral/orange/pink.
@@ -6289,9 +6339,12 @@ export class Level {
       ["bloomC", 0xf84a8e],
     ] as const;
     const [key, color] = keys[Math.abs(Math.round(x * 3 + z * 5)) % 3];
-    const m = new THREE.Mesh(Level.flowerGeoCache, this.decorMat(key, color));
-    m.position.set(x, y, z);
-    this.root.add(m);
+    this.putDecor(
+      key,
+      Level.flowerGeoCache!,
+      this.decorMat(key, color),
+      Level.trs(x, y, z),
+    );
   }
 
   // Deck planter: terracotta pot with a fern spilling out.
@@ -6310,14 +6363,234 @@ export class Level {
   private static rockGeo: THREE.SphereGeometry | null = null;
   private rock(x: number, y: number, z: number, s = 1.6): void {
     if (!Level.rockGeo) Level.rockGeo = new THREE.SphereGeometry(1, 10, 8);
-    const m = new THREE.Mesh(
+    this.putDecor(
+      "mossRock",
       Level.rockGeo,
       this.decorMat("mossRock", 0xa8b090, "moss"),
+      // deterministic tumble, then squashed on two axes
+      Level.trs(x, y + s * 0.4, z, x * 1.3 + z * 0.7, s, 0, s * 0.6, s * 0.82),
     );
-    m.scale.set(s, s * 0.6, s * 0.82);
-    m.rotation.y = x * 1.3 + z * 0.7; // deterministic tumble
-    m.position.set(x, y + s * 0.4, z);
+  }
+
+  // ------------------------------------------------------ jungle dressing --
+  // The pieces the corridor jungle needs that the tropical set didn't have:
+  // spotted toadstools, canopy trees with vines, carved idols and mossy ruin
+  // masonry. Same rules as the rest of the decor — geometry cached on the
+  // class, materials shared through decorMat, added to root only, so none of
+  // it can touch physics or a floorY probe. '?lite' skips the lot.
+
+  // Spotted toadstool: cream stem, domed red cap, white blobs sunk into it.
+  // The single most recognisable thing in the reference art, so it gets its
+  // own cluster helper below rather than being sprinkled one at a time.
+  private static toadStemGeo: THREE.BufferGeometry | null = null;
+  private static toadCapGeo: THREE.BufferGeometry | null = null;
+  private static toadSpotGeo: THREE.BufferGeometry | null = null;
+  private toadstool(x: number, y: number, z: number, s = 1): void {
+    if (this.liteDecor) return;
+    if (!Level.toadStemGeo) {
+      const g = new THREE.CylinderGeometry(0.13, 0.19, 0.62, 7);
+      g.translate(0, 0.31, 0);
+      Level.toadStemGeo = g;
+      // cap: a squashed hemisphere with a slight lip, flat underneath
+      const cap = new THREE.SphereGeometry(0.46, 10, 6, 0, Math.PI * 2, 0, 1.35);
+      cap.scale(1, 0.72, 1);
+      cap.translate(0, 0.6, 0);
+      Level.toadCapGeo = cap;
+      // spots ride ON the dome, so each one is placed by spherical angle
+      const dot = new THREE.SphereGeometry(0.085, 6, 5);
+      const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
+      for (let i = 0; i < 7; i++) {
+        const th = (i / 7) * Math.PI * 2 + 0.6;
+        const ph = 0.35 + (i % 3) * 0.33; // ring them down the dome
+        const r = 0.44;
+        parts.push({
+          geo: dot,
+          m: new THREE.Matrix4()
+            .makeTranslation(
+              Math.sin(ph) * Math.cos(th) * r,
+              0.6 + Math.cos(ph) * r * 0.72,
+              Math.sin(ph) * Math.sin(th) * r,
+            )
+            .scale(new THREE.Vector3(1, 0.6, 1)),
+        });
+      }
+      Level.toadSpotGeo = Level.mergeGeos(parts);
+      dot.dispose();
+    }
+    // stem, cap and spots share one transform, so they go in as three parts
+    const t = Level.trs(x, y, z, x * 2.7 + z * 1.3, s);
+    this.putDecor("toadStem", Level.toadStemGeo!, this.decorMat("toadStem", 0xf0e4c8), t);
+    this.putDecor("toadCap", Level.toadCapGeo!, this.decorMat("toadCap", 0xd2402f), t);
+    this.putDecor("toadSpot", Level.toadSpotGeo!, this.decorMat("toadSpot", 0xfff4e2), t);
+  }
+
+  // Toadstools grow in families in the reference, never alone: one big cap
+  // with two or three smaller ones leaning around its foot.
+  private toadstools(x: number, y: number, z: number, s = 1): void {
+    if (this.liteDecor) return;
+    this.toadstool(x, y, z, s);
+    const n = 2 + (Math.abs(Math.round(x * 3 + z)) % 2);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + x * 0.7;
+      const r = 0.55 * s + (i % 2) * 0.3 * s;
+      this.toadstool(
+        x + Math.cos(a) * r,
+        y,
+        z + Math.sin(a) * r,
+        s * (0.42 + (i % 3) * 0.13),
+      );
+    }
+  }
+
+  // Canopy tree: straight dark trunk with a buttressed foot and a broad
+  // drooping crown, sized to close the corridor overhead. Nothing like the
+  // beach palm — this is the wall-of-jungle tree.
+  private static jTrunkGeo: THREE.BufferGeometry | null = null;
+  private static jCrownGeo: THREE.BufferGeometry | null = null;
+  private jungleTree(x: number, y: number, z: number, h = 9, lean = 0): void {
+    if (this.liteDecor) return;
+    if (!Level.jTrunkGeo) {
+      // taper hard at the base so it reads as a buttress root flare
+      const g = new THREE.CylinderGeometry(0.34, 0.95, 9, 8, 5);
+      g.translate(0, 4.5, 0);
+      const p = g.attributes.position as THREE.BufferAttribute;
+      for (let i = 0; i < p.count; i++) {
+        const t = p.getY(i) / 9;
+        // a lazy S so a stand of them never looks like a row of posts
+        p.setX(i, p.getX(i) + Math.sin(t * 2.3) * 0.5 * t);
+      }
+      g.computeVertexNormals();
+      Level.jTrunkGeo = g;
+    }
+    if (!Level.jCrownGeo) {
+      // two stacked fans of long drooping paddles = a closed canopy blob
+      const lower = Level.fanGeo(Level.bladeGeo(3.4, 1.5, 1.15), 9, 0.34);
+      const upper = Level.fanGeo(Level.bladeGeo(2.5, 1.2, 0.9), 7, 0.62);
+      Level.jCrownGeo = Level.mergeGeos([
+        { geo: lower, m: new THREE.Matrix4() },
+        { geo: upper, m: new THREE.Matrix4().makeTranslation(0, 0.85, 0) },
+      ]);
+      lower.dispose();
+      upper.dispose();
+    }
+    // the tree's own frame: h/9 tall, leaning by `lean`
+    const g = Level.trs(x, y, z, 0, h / 9, lean);
+    this.putDecor(
+      "jTrunk",
+      Level.jTrunkGeo!,
+      this.baseMat("jTrunk", 0x6b4a2f, "wood", 1, 4),
+      g,
+    );
+    this.putDecor(
+      "jCanopy",
+      Level.jCrownGeo!,
+      this.decorMat("jCanopy", 0x2f7a38, "leaf", true),
+      // crown sits at the top of the trunk, twisted so no two stands match
+      g.clone().multiply(Level.trs(0, 8.6, 0, x * 1.3 + z * 0.9)),
+    );
+  }
+
+  // Hanging vines: a few tapered strands dropping out of the canopy. Read as
+  // depth cues across the top of frame in an enclosed corridor.
+  private static vineGeo: THREE.BufferGeometry | null = null;
+  private vines(x: number, y: number, z: number, drop = 4, n = 3): void {
+    if (this.liteDecor) return;
+    if (!Level.vineGeo) {
+      const g = new THREE.CylinderGeometry(0.045, 0.09, 1, 5);
+      g.translate(0, -0.5, 0); // hangs DOWN from its anchor
+      Level.vineGeo = g;
+    }
+    const mat = this.decorMat("vine", 0x3d7a33);
+    for (let i = 0; i < n; i++) {
+      const a = x * 1.7 + z * 0.9 + i * 2.1;
+      const len = drop * (0.6 + ((i * 37) % 40) / 100);
+      this.putDecor(
+        "vine",
+        Level.vineGeo,
+        mat,
+        // a lazy sway, baked
+        Level.trs(
+          x + Math.cos(a) * 0.7,
+          y,
+          z + Math.sin(a) * 0.7,
+          0,
+          1,
+          Math.sin(a) * 0.1,
+          len,
+          1,
+        ),
+      );
+    }
+  }
+
+  // Carved idol: the stacked tiki head from the reference. Stone blocks with
+  // sunken eyes and a mouth slot — dark recesses do all the work at this
+  // poly count. Solid: it blocks, so it can frame a doorway.
+  private idol(x: number, y: number, z: number, s = 1, yaw = 0): void {
+    const stone = this.baseMat("idolStone", 0x9aa093, "stone", 1, 1);
+    const dark = this.decorMat("idolCut", 0x2b2f2c);
+    const g = new THREE.Group();
+    const box = (
+      w: number,
+      hh: number,
+      d: number,
+      px: number,
+      py: number,
+      pz: number,
+      mat: THREE.Material,
+    ): void => {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, hh, d), mat);
+      m.position.set(px, py, pz);
+      g.add(m);
+    };
+    box(2.2, 0.5, 1.9, 0, 0.25, 0, stone); // plinth
+    box(1.8, 2.0, 1.6, 0, 1.5, 0, stone); // head
+    box(2.05, 0.34, 1.75, 0, 2.05, 0, stone); // brow ridge
+    box(0.42, 0.3, 0.2, -0.42, 1.72, 0.82, dark); // eyes
+    box(0.42, 0.3, 0.2, 0.42, 1.72, 0.82, dark);
+    box(1.15, 0.34, 0.2, 0, 1.0, 0.82, dark); // mouth slot
+    box(0.3, 0.9, 0.5, -0.98, 1.45, 0, stone); // ears
+    box(0.3, 0.9, 0.5, 0.98, 1.45, 0, stone);
+    g.scale.setScalar(s);
+    g.rotation.y = yaw;
+    g.position.set(x, y, z);
+    this.root.add(g);
+    this.walls.push(
+      new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(x, y + 1.3 * s, z),
+        new THREE.Vector3(2.2 * s, 2.6 * s, 1.9 * s),
+      ),
+    );
+  }
+
+  // Mossy ruin block: masonry the temple is dressed with. Visual only by
+  // default — the climb's collision comes from real slabs underneath, so a
+  // decorative block can overhang without becoming a snag.
+  private ruinBlock(
+    x: number,
+    y: number,
+    z: number,
+    w: number,
+    h: number,
+    d: number,
+    yaw = 0,
+  ): void {
+    if (this.liteDecor) return;
+    const m = new THREE.Mesh(
+      new THREE.BoxGeometry(w, h, d),
+      this.baseMat("ruin", 0x8f9488, "stone", Math.max(1, w / 3), Math.max(1, h / 3)),
+    );
+    m.position.set(x, y + h / 2, z);
+    m.rotation.y = yaw;
     this.root.add(m);
+    // a moss cap on top: the reference's ruins are all green-shouldered
+    const cap = new THREE.Mesh(
+      new THREE.BoxGeometry(w * 0.98, 0.12, d * 0.98),
+      this.decorMat("ruinMoss", 0x4e7a3e, "moss"),
+    );
+    cap.position.set(x, y + h + 0.05, z);
+    cap.rotation.y = yaw;
+    this.root.add(cap);
   }
 
   // Rolling stone hazard patrolling the course between z0 (near) and z1 (far).
@@ -6404,53 +6677,6 @@ export class Level {
         false,
       );
       this.rails.push(rail);
-    }
-  }
-
-  // Flat deck running along X (for turned, side-scrolling stretches).
-  // x0 < x1; depth is the deck's size along z, centered on cz.
-  private slabX(
-    name: string,
-    x0: number,
-    x1: number,
-    topY: number,
-    depth: number,
-    mat: THREE.Material,
-    cz: number,
-    tex = "checker",
-  ): THREE.Mesh {
-    const len = Math.abs(x1 - x0);
-    const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(len, 1, depth),
-      this.patterned(mat, len, depth, tex),
-    );
-    mesh.position.set((x0 + x1) / 2, topY - 0.5, cz);
-    mesh.name = name;
-    this.root.add(mesh);
-    this.groundMeshes.push(mesh);
-    // same solid, grabbable edge treatment as slab() (see there)
-    this.walls.push(
-      new THREE.Box3(
-        new THREE.Vector3(Math.min(x0, x1), topY - 1, cz - depth / 2),
-        new THREE.Vector3(Math.max(x0, x1), topY - 0.2, cz + depth / 2),
-      ),
-    );
-    return mesh;
-  }
-
-  private fruitRowX(
-    x0: number,
-    x1: number,
-    y: number,
-    n: number,
-    z: number,
-  ): void {
-    for (let i = 0; i < n; i++) {
-      this.pickup(
-        THREE.MathUtils.lerp(x0, x1, n === 1 ? 0 : i / (n - 1)),
-        y,
-        z,
-      );
     }
   }
 
@@ -6548,60 +6774,6 @@ export class Level {
         new THREE.Vector3(x + w / 2, topY - 0.2, z + d / 2),
       ),
     );
-  }
-
-  // Crash-style temple stair: staggered solid columns strung into a real
-  // multi-story climb (each step ~2.6 up, small hop between). Returns where
-  // the top block ends so the course can continue at height.
-  private towerClimb(
-    zStart: number,
-    baseY: number,
-    stories: number,
-    xCenter = 0,
-  ): { endZ: number; topY: number } {
-    let y = baseY;
-    let z = zStart;
-    for (let i = 0; i < stories; i++) {
-      y += 2.6;
-      const x = xCenter + (i % 2 === 0 ? -2.2 : 2.2);
-      this.stepBlock(x, z - 2.5, 5, 5, y - 9, y);
-      if (i % 2 === 1 || i === stories - 1) this.crate(x, y, z - 2.5);
-      z -= 7;
-    }
-    return { endZ: z, topY: y };
-  }
-
-  // Flush staircase: steps butt directly against each other (no gap to fall
-  // through) with guard rails along both sides — the safe way to gain real
-  // height. Bonk the riser, hop up, repeat.
-  private stairClimb(
-    zStart: number,
-    baseY: number,
-    stories: number,
-    xCenter = 0,
-    width = 8,
-  ): { endZ: number; topY: number } {
-    const depth = 5;
-    let y = baseY;
-    let z = zStart;
-    for (let i = 0; i < stories; i++) {
-      y += 2.6;
-      this.stepBlock(xCenter, z - depth / 2, width, depth, y - 10, y);
-      // guard rails so you can't slip off the sides
-      for (const side of [-1, 1]) {
-        this.wall(
-          xCenter + side * (width / 2 + 0.3),
-          z - depth / 2,
-          0.6,
-          depth,
-          y,
-          1.6,
-        );
-      }
-      if (i % 2 === 1) this.crate(xCenter, y, z - depth / 2);
-      z -= depth;
-    }
-    return { endZ: z, topY: y };
   }
 
   // Painted edge strips so deck borders read at speed. Visual only — the
@@ -8715,529 +8887,6 @@ export class Level {
     });
   }
 
-  // Level 4, "The Gauntlet": everything the toolkit can do in one long run —
-  // jungle approach, terraced climb with a scaffold-rail bypass, a high ridge
-  // with real gaps, a kicker launch, a halfpipe alley, a right-angle turn
-  // across floating ruins, a downhill slalom, a rail canyon, a crate maze,
-  // vine bridges, and a rolling-stone finale. Roughly 1.5x the Test Course.
-  private buildGauntlet(asContinuation = false): void {
-    // asContinuation: spliced onto the end of another course (the combined
-    // Test+Gauntlet level), so skip the behind-spawn wall that would otherwise
-    // block the seam you skate in through.
-    // Terracotta canyon dusk: scrub greens against warm clay rock.
-    this.wallTint = 0xa86048;
-    this.blockTint = 0xb07050;
-    this.curbTint = 0xe89a4a;
-    this.bermTint = 0x6a5a34;
-    const matSand = new THREE.MeshLambertMaterial({ color: 0xd8b276 });
-    const matJungle = new THREE.MeshLambertMaterial({ color: 0x71a048 });
-    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x62933f });
-    const matStone = new THREE.MeshLambertMaterial({ color: 0xa87a5c });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0xba8a56 });
-    const matPlat = new THREE.MeshLambertMaterial({ color: 0xb09a6e });
-    const matWood = new THREE.MeshLambertMaterial({ color: 0xa87848 });
-    const matFinish = new THREE.MeshLambertMaterial({ color: 0xc9a86a });
-
-    this.killY = -34;
-    this.finishZ = -1200;
-    this.endWallZ = -1212;
-    this.theme = {
-      skyTop: "#4a1c22",
-      skyBottom: "#ffa060",
-      sunColorHex: "#ffd890",
-      sunU: 0.72,
-      sunV: 0.3,
-      stars: false,
-      fog: 0xc06a40, // canyon dust — distance goes to warm terracotta
-      fogNear: 25,
-      fogFar: 155,
-      hemiSky: 0xf0b088,
-      hemiGround: 0x50241a,
-      hemiI: 1.0,
-      sunColor: 0xffb868,
-      sunI: 1.5,
-      particleColor: 0xffd0a0,
-      particleWind: [1.1, -0.5, 0.3],
-    };
-
-    // river far below everything
-    // (no pit-floor plane — cloud sea is the floor; falls die at killY)
-
-    // --- A: walled start + jungle approach ---------------------------------
-    this.slab("start", 14, -30, 0, 20, matSand, false, 0, "sand");
-    if (!asContinuation) this.wall(0, 15, 22, 1, 0, 5, 0.7); // behind spawn: low curb, full-height collider
-    this.wall(-10.5, -8, 1, 46, 0);
-    this.wall(10.5, -8, 1, 46, 0);
-    this.crate(3, 0, -12);
-    this.crate(4.5, 0, -12);
-    this.crate(3.75, 1.2, -12); // little pyramid
-    this.crate(-4, 0, -20, "mask");
-    this.fruitRow(-6, -24, 1.3, 5, -1);
-    this.jungle("approach A", -30, -95, 0, 12, matJungle, { dips: [-60] });
-    this.log(1.5, 5.5, 0, -70);
-    this.crate(-3, 0, -48);
-    this.crate(2, 0, -82, "mystery");
-    this.enemy(-3.5, 3.5, 0, -55, 5, "x", "spiker");
-    this.enemy(-4, 4, 0, -85, 6, "x", "hopper");
-    this.jungle("approach B", -95, -150, 0, 12, matJungle2, { dips: [-130] });
-    for (let i = 0; i < 8; i++) this.crate(-4.6 + i * 1.3, 0, -115); // crate fence
-    this.crate(4.8, 0, -115, "tnt"); // pop the fence from the flank
-    this.stone(-3, 0, -100, -145, 6);
-    this.crate(-4, 0, -140, "bouncy");
-    this.checkpoint(0, -143);
-
-    // --- B: terraced climb (0 -> +9) with a scaffold-rail bypass ------------
-    this.ramp("terrace ramp 1", -150, 0, -175, 3, 12, matRamp);
-    this.jungle("terrace 1", -175, -215, 3, 12, matJungle);
-    this.crate(0, 3, -190);
-    this.crate(0, 4.2, -190); // stack
-    this.crate(-4.5, 3, -205, "nitro");
-    this.log(2, 5.8, 3, -183);
-    this.enemy(-4, 4, 3, -198, 6, "x", "turtle");
-    this.ramp("terrace ramp 2", -215, 3, -240, 6, 12, matRamp);
-    this.jungle("terrace 2", -240, -280, 6, 12, matJungle2, { dips: [-262] });
-    this.crate(2.6, 6, -256);
-    this.crate(3.9, 6, -256, "tnt");
-    this.crate(5.2, 6, -256);
-    this.crate(-5, 6, -268, "mask");
-    this.enemy(-4, 4, 6, -250, 5, "x", "floater");
-    this.enemy(-3.5, 3.5, 6, -270, 7, "x", "grunt");
-    this.checkpoint(6, -276);
-    this.ramp("terrace ramp 3", -280, 6, -300, 9, 10, matRamp);
-    const scaffold = new Rail([
-      new THREE.Vector3(5, 1.4, -152),
-      new THREE.Vector3(5, 4.6, -215),
-      new THREE.Vector3(5, 7.6, -280),
-      new THREE.Vector3(5, 10.4, -302),
-    ]);
-    this.rails.push(scaffold);
-    this.root.add(scaffold.object);
-
-    // --- C: high ridge with two gaps and a bypass rail ----------------------
-    this.jungle("ridge A", -300, -347, 9, 11, matJungle);
-    this.checkpoint(9, -308);
-    this.crate(-3, 9, -320);
-    this.crate(-3, 10.2, -320); // stack
-    this.fruitRow(-315, -338, 10.3, 5);
-    // gap: -347 .. -355 (rebalanced)
-    this.jungle("ridge B", -355, -400, 9, 11, matJungle2, { dips: [-380] });
-    this.stone(3.2, 9, -362, -396, 8);
-    this.crate(-4, 9, -370, "mystery");
-    this.log(-5.4, -2, 9, -388);
-    const bypass = new Rail([
-      new THREE.Vector3(-4, 10.2, -396),
-      new THREE.Vector3(-4, 10.4, -421),
-    ]);
-    this.rails.push(bypass);
-    this.root.add(bypass.object);
-    // gap: -400 .. -416 (long: carry speed, grind the bypass line, or trust
-    // the crumble pads — they won't hold long)
-    this.crumblePad(1.5, 9, -404, 4, 4.6);
-    this.crumblePad(-1.5, 9, -410.5, 4, 4.6);
-    this.jungle("ridge C", -416, -450, 9, 11, matJungle);
-    this.enemy(-4, 4, 9, -432, 7, "x", "charger");
-    this.crate(4.5, 9, -440, "mask");
-    this.crate(-2, 9, -425);
-    this.crate(2, 9, -425);
-    this.checkpoint(9, -445, -3.5);
-
-    // --- D: kicker launch off the ridge, 8 units down to the pipe deck ------
-    this.ramp("ridge kicker", -450, 9, -460, 11, 10, matRamp);
-    // flight gap: -460 .. -470 (rebalanced — kicker + 8u drop still clears it)
-    this.fruitRow(-464, -469, 13.5, 3);
-    this.jungle("drop landing", -470, -540, 3, 13, matJungle2, {
-      dips: [-518],
-    });
-    this.crate(-5, 3, -500, "mystery");
-    this.crate(5, 3, -520, "bouncy");
-    this.stepBlock(5, -527, 4, 6, 3, 8.2);
-    this.crate(5, 8.2, -527, "mask"); // bounce up for it
-    this.enemy(-4, 4, 3, -510, 6, "x", "spinner");
-    this.checkpoint(3, -534, -4);
-    // elevator up to a lookout shelf — drop onto the halfpipe lip from it
-    this.mover(-5, 8.5, -528, 3.4, 3.4, "y", 4.6, 0.55);
-    this.slab("lookout", -534, -539, 13, 5, matPlat, false, -5, "stone");
-    this.crate(-5, 13, -537, "mystery");
-    this.fruitRow(-535, -538, 14.3, 2, -5);
-
-    // --- E: open alley (was a faceted "halfpipe" — removed; the good halfpipe
-    // is the dedicated one back on the beach stretch) ------------------------
-    const hpBase = 3;
-    this.slab(
-      "gauntlet alley",
-      -540,
-      -595,
-      hpBase,
-      22,
-      matStone,
-      true,
-      0,
-      "stone",
-    );
-    this.crate(-2.2, hpBase, -560, "bouncy");
-    this.crate(2.2, hpBase, -575);
-    this.crystal(0, hpBase + 0.4, -567); // pipe-alley centre: ride through it
-    this.pickup(-7, hpBase + 3.4, -555);
-    this.pickup(7, hpBase + 3.4, -580);
-    this.slab("pipe exit", -595, -615, hpBase, 14, matStone, true, 0, "stone");
-
-    // --- F: the turn — floating ruins running east ---------------------------
-    this.slab("corner east", -615, -635, 3, 20, matPlat, false, 4, "stone");
-    this.wall(4, -636.5, 20, 1.5, 3);
-    this.wall(-6.5, -625, 1.5, 20, 3);
-    this.zones.push({ xMin: 9, xMax: 141, zMin: -635, zMax: -615, dir: "E" });
-    const CZ = -625;
-    this.slabX("ruin walk", 13, 36, 3, 9, matPlat, CZ);
-    this.crate(24, 3, CZ);
-    this.crate(24, 4.2, CZ); // stack
-    this.fruitRowX(15, 33, 4.3, 5, CZ);
-    this.slabX("ruin pad A", 44, 56, 4.5, 9, matPlat, CZ);
-    this.crate(50, 4.5, CZ, "tnt");
-    this.slabX("ruin pad B", 62, 74, 6, 9, matPlat, CZ);
-    this.crate(64, 6, CZ, "mystery");
-    this.checkpoint(6, CZ, 69);
-    const pitRail = new Rail([
-      new THREE.Vector3(74, 6.9, CZ),
-      new THREE.Vector3(100, 6.3, CZ),
-    ]);
-    this.rails.push(pitRail);
-    this.root.add(pitRail.object);
-    this.fruitRowX(78, 96, 8.2, 5, CZ);
-    this.mover(84, 5.4, CZ, 6, 7, "x", 6, 0.55); // ferry pad under the rail
-    this.slabX("ruin shelf", 100, 118, 6, 9, matJungle, CZ);
-    this.crate(108, 6, CZ, "nitro");
-    this.enemy(103, 115, 6, CZ, 5, "x", "sentry");
-    // split: bounce up to the high fruit ledge, or run the TNT low road
-    this.crate(117, 6, CZ, "bouncy");
-    this.slabX("high ledge", 120, 134, 10.5, 9, matPlat, CZ);
-    this.crate(127, 10.5, CZ, "mask");
-    this.fruitRowX(122, 132, 11.8, 5, CZ);
-    this.slabX("low road", 120, 134, 5.4, 9, matStone, CZ);
-    this.crate(126, 5.4, CZ, "tnt");
-    this.crate(131, 5.4, CZ, "tnt");
-    this.slabX("rejoin", 136, 141.5, 6, 9, matPlat, CZ);
-
-    // --- G: corner back south, then the downhill slalom ----------------------
-    this.slab("corner south", -615, -635, 6, 20, matPlat, false, 152, "stone");
-    this.wall(162.5, -625, 1.5, 20, 6);
-    this.wall(152, -613.5, 20, 1.5, 6);
-    const dhY = (z: number): number =>
-      THREE.MathUtils.mapLinear(z, -635, -705, 6, -4);
-    this.ramp("gauntlet downhill", -635, 6, -705, -4, 12, matRamp, 152);
-    this.crate(149, dhY(-655), -655);
-    this.crate(155, dhY(-668), -668);
-    this.crate(149.5, dhY(-681), -681, "nitro");
-    this.crate(154.5, dhY(-692), -692, "nitro");
-    this.fruitRow(-648, -662, dhY(-655) + 1.3, 4, 152);
-    this.fruitRow(-676, -690, dhY(-683) + 1.3, 4, 152);
-    this.jungle("runout", -705, -760, -4, 12, matJungle, { dips: [-730] }, 152);
-    // twin crushers guard the runout, alternating: read the rhythm, pick a side
-    this.crusher(149.3, -4, -718, 5.6, 3, 3.4, 0);
-    this.crusher(154.7, -4, -736, 5.6, 3, 3.4, 1.7);
-    this.crate(152, -4, -748);
-    this.crate(152, -2.8, -748); // stack
-    this.enemy(148, 156, -4, -752, 6, "x", "hopper");
-    this.checkpoint(-4, -757, 152);
-
-    // --- H: rail canyon — S-curve line left, rail-hop chain right ------------
-    this.slab("canyon ledge", -760, -775, -4, 14, matStone, true, 152, "stone");
-    // pit: -775 .. -860
-    const sCurve = new Rail([
-      new THREE.Vector3(149, -3, -772),
-      new THREE.Vector3(147, -2.2, -800),
-      new THREE.Vector3(151.5, -2.6, -830),
-      new THREE.Vector3(149.5, -3.4, -858),
-    ]);
-    const chainA = new Rail([
-      new THREE.Vector3(155.5, -3, -772),
-      new THREE.Vector3(155.5, -3.4, -814),
-    ]);
-    const chainB = new Rail([
-      new THREE.Vector3(158, -3.1, -822),
-      new THREE.Vector3(158, -3.6, -858),
-    ]);
-    for (const r of [sCurve, chainA, chainB]) {
-      this.rails.push(r);
-      this.root.add(r.object);
-    }
-    this.crate(155.5, -2.6, -795); // smash it or get knocked into the pit
-    this.crate(149.5, -2.9, -850, "mask"); // floats at grind height on the S-curve
-    this.fruitRow(-782, -808, -1.4, 4, 147.5);
-    this.fruitRow(-826, -852, -1.8, 4, 158);
-    this.slab(
-      "canyon landing",
-      -860,
-      -885,
-      -4,
-      14,
-      matStone,
-      true,
-      152,
-      "stone",
-    );
-    this.berms(-860, -885, -4, 14, 152);
-    // ARENA: land off the rails and the gates slam shut — two waves to clear
-    this.buildArena(152, -4, -861, -884, 14);
-    this.checkpoint(-4, -890, 152);
-
-    // --- I: crate maze --------------------------------------------------------
-    this.slab("crate maze", -885, -960, -4, 18, matSand, false, 152, "sand");
-    this.wall(142.9, -922.5, 1.2, 75, -4);
-    this.wall(161.1, -922.5, 1.2, 75, -4);
-    // row 1: pass on the right (or spin the TNT)
-    for (let i = 0; i < 9; i++)
-      this.crate(144 + i * 1.3, -4, -900, i === 3 ? "tnt" : undefined);
-    this.crate(159, -4, -895, "mystery");
-    this.enemy(155.5, 160, -4, -907, 4, "x", "spiker");
-    // row 2: pass on the left (nitro in the wall — no spinning through blind)
-    for (let i = 0; i < 9; i++)
-      this.crate(149.7 + i * 1.3, -4, -915, i === 5 ? "nitro" : undefined);
-    this.enemy(144, 148.5, -4, -922, 4, "x", "turtle");
-    // row 3: full width — bounce over it, or blow the TNT posts
-    this.crate(152, -4, -925, "bouncy");
-    for (let i = 0; i < 14; i++) {
-      this.crate(
-        143.6 + i * 1.3,
-        -4,
-        -930,
-        i === 4 || i === 9 ? "tnt" : undefined,
-      );
-    }
-    this.crate(145, -4, -940, "mystery");
-    this.crate(152, -4, -950, "mask");
-    this.fruitRow(-892, -898, -2.7, 3, 158);
-    this.fruitRow(-908, -914, -2.7, 3, 145.5);
-    this.checkpoint(-4, -955, 152);
-
-    // --- J: vine bridges — pick a lane over the long pit ----------------------
-    // left is broken mid-span, center is mined, right is logged. Edges grind.
-    // pit: -960 .. -1050
-    this.slab(
-      "bridge left A",
-      -960,
-      -998,
-      -4,
-      3.2,
-      matWood,
-      true,
-      146.5,
-      "wood",
-    );
-    this.slab(
-      "bridge left B",
-      -1010,
-      -1050,
-      -4,
-      3.2,
-      matWood,
-      true,
-      146.5,
-      "wood",
-    );
-    // center bridge: planks that collapse in a wave behind you once you
-    // commit past the trigger — sprint, don't sightsee
-    const planks: Crumble[] = [];
-    for (let i = 0; i < 12; i++) {
-      planks.push(this.crumblePad(152, -4, -963.7 - i * 7.5, 3.2, 7.3, null));
-    }
-    this.collapse = {
-      planks,
-      xMin: 149.6,
-      xMax: 154.4,
-      triggerZ: -974,
-      endZ: -1050,
-      startZ: -958,
-      frontZ: -958,
-      speed: 15,
-      active: false,
-    };
-    this.slab(
-      "bridge right",
-      -960,
-      -1050,
-      -4,
-      3.2,
-      matWood,
-      true,
-      157.5,
-      "wood",
-    );
-    this.log(155.9, 159.1, -4, -980);
-    this.log(155.9, 159.1, -4, -1022);
-    this.fruitRow(-966, -1044, -2.7, 8, 146.5);
-    this.fruitRow(-970, -1040, -2.7, 6, 157.5);
-    this.slab(
-      "bridge landing",
-      -1050,
-      -1075,
-      -4,
-      14,
-      matStone,
-      true,
-      152,
-      "stone",
-    );
-    this.checkpoint(-4, -1070, 152);
-
-    // --- K: stone gauntlet + finish -------------------------------------------
-    this.jungle(
-      "gauntlet A",
-      -1075,
-      -1133,
-      -4,
-      11,
-      matJungle2,
-      { dips: [-1102] },
-      152,
-    );
-    this.stone(149.5, -4, -1080, -1102, 10);
-    this.stone(154.5, -4, -1080, -1102, 13);
-    // twin pendulum blades close out the stretch, out of phase
-    this.pendulum(152, 2.0, -1112, 4.6, 1.15, 1.8);
-    this.pendulum(152, 2.0, -1122, 4.6, 1.15, 1.5, Math.PI);
-    // gap: -1133 .. -1139 (rebalanced)
-    this.jungle("gauntlet B", -1139, -1185, -4, 11, matJungle, {}, 152);
-    this.enemy(148.5, 155.5, -4, -1160, 7, "x", "charger");
-    this.enemy(149, 155, -4, -1175, 9, "x", "floater");
-    this.fruitRow(-1148, -1180, -2.6, 6, 152);
-    this.slab(
-      "finish run",
-      -1185,
-      -1215,
-      -4,
-      14,
-      matFinish,
-      true,
-      152,
-      "stone",
-    );
-    this.finishGate(-4, this.finishZ, 152);
-    this.endWall(-4, 152);
-
-    // --- dressing: hardy palms + succulents on the fringes (visual only) ---
-    this.palm(-13, 0, 2, 4.6, 0.18);
-    this.palm(13.5, 0, -6, 5.2, -0.12);
-    this.palm(-8.2, 0, -58, 4.4, 0.1);
-    this.palm(8.4, 0, -104, 4.8, -0.08);
-    this.palm(-8.2, 3, -196, 4.3, 0.12);
-    this.palm(8.2, 6, -252, 4.9, -0.1);
-    this.palm(-8, 9, -318, 4.4, 0.1);
-    this.palm(8, 9, -430, 4.6, -0.12);
-    this.broadleaf(-4.9, 0, -40, 1.1, "succulent", 0x9ab060);
-    this.broadleaf(4.9, 0, -92, 1.0, "succulent", 0x9ab060);
-    this.broadleaf(-4.9, 3, -180, 1.2, "succulent", 0x9ab060);
-    this.broadleaf(4.9, 6, -246, 1.0, "succulent", 0x9ab060);
-    this.broadleaf(-4.8, 9, -312, 1.1, "succulent", 0x9ab060);
-    this.broadleaf(4.8, 3, -488, 1.2, "succulent", 0x9ab060);
-    this.fern(-5.9, 3, -498, 1.1);
-    this.fern(4.9, 0, -68, 1.2);
-    this.rock(-8.4, 0, -20, 1.7);
-    this.rock(13, 0, -14, 1.3);
-    this.flowers(-4.4, 0, -32);
-    // crate-maze rim + finish
-    this.palm(140.4, -4, -898, 4.7, 0.1);
-    this.palm(163.6, -4, -912, 5.1, -0.1);
-    this.palm(140.6, -4, -934, 4.4, 0.08);
-    this.palm(163.4, -4, -948, 4.9, -0.08);
-    this.rock(140.8, -4, -952, 1.5);
-    this.palm(146.4, -4, -1206, 4.8, 0.1);
-    this.palm(157.6, -4, -1209, 5.2, -0.1);
-    this.broadleaf(147, -4, -1191, 1.1, "succulent", 0x9ab060);
-    this.flowers(157, -4, -1192);
-  }
-
-  // Arena lock: two gates and two waves of critters on an enclosed deck.
-  // Trigger zone sits well inside the gates so nobody gets pinched at entry.
-  private buildArena(
-    cx: number,
-    deckY: number,
-    zNear: number,
-    zFar: number,
-    width: number,
-  ): void {
-    const gates: {
-      mesh: THREE.Mesh;
-      upY: number;
-      downY: number;
-      box: THREE.Box3;
-    }[] = [];
-    for (const gz of [zNear, zFar]) {
-      const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(width, 3.6, 1),
-        this.patterned(
-          new THREE.MeshLambertMaterial({ color: 0x8a6034 }),
-          width,
-          3.6,
-          "wood",
-        ),
-      );
-      const upY = deckY + 1.7;
-      const downY = deckY - 2.7;
-      mesh.position.set(cx, downY, gz);
-      this.root.add(mesh);
-      gates.push({
-        mesh,
-        upY,
-        downY,
-        box: new THREE.Box3().setFromCenterAndSize(
-          new THREE.Vector3(cx, deckY + 1.8, gz),
-          new THREE.Vector3(width, 4.2, 1.3),
-        ),
-      });
-    }
-    // each wave leans on a different foe so the fight escalates in skill demand
-    const waveKinds: EnemyKind[] = [
-      "grunt",
-      "spiker",
-      "turtle",
-      "charger",
-      "hopper",
-    ];
-    const mkWave = (
-      idx: number,
-      defs: [number, number, number, number][],
-    ): Enemy[] =>
-      defs.map(([x0, x1, z, speed], i) => {
-        // one odd foe per wave keeps you honest (mix a floater/spinner in)
-        const kind =
-          i === 0 && idx >= 2
-            ? idx % 2
-              ? "floater"
-              : "spinner"
-            : waveKinds[idx % waveKinds.length];
-        this.enemy(x0, x1, deckY, z, speed, "x", kind);
-        const e = this.enemies[this.enemies.length - 1];
-        e.arenaWave = idx;
-        e.alive = false;
-        e.group.visible = false;
-        return e;
-      });
-    const zm = (zNear + zFar) / 2;
-    this.arena = {
-      zone: new THREE.Box3(
-        new THREE.Vector3(cx - width / 2, deckY - 2, zFar + 5),
-        new THREE.Vector3(cx + width / 2, deckY + 4, zNear - 5),
-      ),
-      state: "idle",
-      wave: 0,
-      waveT: 0,
-      cycleT: 0,
-      up: false,
-      waves: [
-        mkWave(0, [
-          [cx - 5, cx + 5, zm + 4, 6],
-          [cx - 4, cx + 4, zm - 5, 5],
-        ]),
-        mkWave(1, [
-          [cx - 5, cx + 5, zm + 6, 8],
-          [cx - 5, cx + 5, zm, 7],
-          [cx - 4, cx + 4, zm - 6, 9],
-        ]),
-      ],
-      gates,
-    };
-  }
-
   // Level 6, "The Flats": a gigantic featureless slab for movement testing.
   // No gaps, no hazards, no finish — walls only at the far perimeter, so
   // there is nothing to fall off. Marker posts along the axes give bearings.
@@ -9293,7 +8942,7 @@ export class Level {
     const V = (x: number, y: number, z: number): THREE.Vector3 =>
       new THREE.Vector3(x, y, z);
     // flat starter rail (0.9 above the deck: crates on the line DO clip a
-    // grinder, same as the Test Course rail yard)
+    // grinder)
     const flatRail = new Rail([V(5, E + 0.9, -25), V(5, E + 0.9, -85)]);
     // sloped rail: grind it up to a high dismount (or bomb it back down)
     const slopeRail = new Rail([V(12, E + 0.9, -25), V(12, E + 6.5, -95)]);

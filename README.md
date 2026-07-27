@@ -40,6 +40,6 @@ kicker ramp with a gap (carry speed!) → finish gate.
 - `src/input.ts` — Gamepad API (DualShock 4 mapping) + keyboard
 - `src/player.ts` — authored movement: heading/speed/fake gravity/spin
 - `src/rails.ts` — polyline grind rails; the rail owns the player
-- `src/level.ts` — the greybox test course
+- `src/level.ts` — every level, plus the toolkit they are built from
 - `src/tuning.ts` — every feel number in the game
 - `src/ui.ts` — debug stats + live tuning sliders
