@@ -3092,6 +3092,7 @@ export class Level {
               {
                 outline: c.outline || wiredToBang,
                 groupIds: gids,
+                noAuto: true, // the data already carries the fruit crate
               },
             );
           } else if (c.t === "outline") {
@@ -6262,7 +6263,7 @@ export class Level {
       | "mystery"
       | "bang"
       | "nitrobang",
-    opts?: { outline?: boolean; groupIds?: number[] },
+    opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean },
   ): void {
     const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
     let mat: THREE.MeshLambertMaterial;
@@ -6383,7 +6384,12 @@ export class Level {
     this.crates.push(entry);
     // Classic Crash formation: every arrow crate carries a breakable fruit
     // crate floating above it — bounce off the arrow, headbutt the reward.
-    if (kind === "bouncy" && !opts?.outline) {
+    // AUTHORING ONLY. Data-built levels pass noAuto, because their partner is
+    // already an explicit crate in the data: capture recorded it, so spawning
+    // another here stacked a second fruit crate on every arrow crate, one more
+    // per edit. It also has to stay explicit so the editor obeys you when you
+    // move or delete that crate.
+    if (kind === "bouncy" && !opts?.outline && !opts?.noAuto) {
       this.crate(x, base + size + 3.2, z);
     }
   }
