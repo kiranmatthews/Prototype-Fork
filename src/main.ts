@@ -10,11 +10,11 @@ import {
   DEFAULT_LEVEL_ID,
   levelList,
   findLevel,
-  isBuiltin,
   saveUserLevel,
   setUserLevels,
   getUserLevels,
   deleteUserLevel,
+  restoreBuiltin,
   adoptLegacyLevels,
   starterCustomLevel,
   isEditUnlocked,
@@ -211,7 +211,7 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
   // Bright and open: neutral key, cool skylight, air you can see a long way
   // through. The haze is the pale blue-white of the cloud sea at noon.
   day: {
-    file: "skybox-day.png",
+    file: "sky-day.png",
     label: "day",
     fog: 0xdfe9f2,
     fogFarCap: 340,
@@ -264,7 +264,7 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
   // brighter than a pure-ambient scene would allow so cast shadows survive:
   // without them the world goes flat and edges stop reading at all.
   night: {
-    file: "skybox-night.png",
+    file: "sky-night.png",
     label: "night",
     fog: 0x1b2540,
     fogFarCap: 200,
@@ -398,7 +398,16 @@ function loadSky(p: SkyPreset): void {
   img.onerror = () => {
     skyPending.delete(p);
     skyMissing.add(p);
-    if (activeSky === p) applyTheme(); // repaint with the gradient fallback
+    if (activeSky !== p) return;
+    applyTheme(); // repaint with the gradient fallback
+    // Silently swapping in a gradient reads as "the feature is broken". Say
+    // which file is missing instead — once per preset, since loadSky won't
+    // retry one it has already given up on.
+    ui.showMessage(
+      `${p.toUpperCase()} SKY ART MISSING`,
+      `add public/${SKY_PRESETS[p].file} — using the painted gradient for now`,
+      3600,
+    );
   };
   img.src = import.meta.env.BASE_URL + SKY_PRESETS[p].file;
 }
@@ -1048,15 +1057,15 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
   // drop fog + extend the far plane on enter, restore on every exit path
   setView: (editing) => setEditorView(editing),
 });
-// Open the editor on a level (default: whatever is loaded). A built-in can't
-// be bound directly — the editor autosaves, and built-ins are pristine — so it
-// routes through editLevel, which forks a copy first.
+// Open the editor on a level (default: whatever is loaded). A level that has
+// never been edited has no data to bind to, so it goes through editLevel,
+// which captures it first.
 function openEditor(target: string = current.id): void {
   if (split2p) set2P(false); // the editor is a one-player room
   if (editor.active) return;
   const entry = findLevel(target);
   if (!entry) return;
-  if (isBuiltin(entry.id)) {
+  if (!entry.data) {
     editLevel(entry.id);
     return;
   }
@@ -1078,28 +1087,34 @@ ui.onSideTab = () => {
   player.respawn(level, true);
   ui.showMessage("EDITOR CLOSED", "press ✎ LEVEL EDITOR to keep editing", 1600);
 };
-// EDIT THIS LEVEL. A user level opens straight in the editor. A BUILT-IN is
-// never edited in place — it is captured into components and saved as a new
-// user level, which then joins the menu; the built-in stays pristine forever.
+// EDIT THIS LEVEL — the level itself, not a copy of it. A level that already
+// builds from data opens straight in the editor. A BUILT-IN has no data yet,
+// so the first edit captures its geometry into components and stores that
+// under the SAME id: it keeps its name, its place in the menu and its best
+// times, and from then on it IS the edited version. The hand-coded builder is
+// still underneath — "restore original" in the editor drops the edits and
+// hands the shipped design back.
+//
 // Bespoke set pieces without a component language (side-scroll zones,
-// sky-ropes, decor foliage) don't come through — the copy is the geometry.
+// sky-ropes, decor foliage) don't survive the capture — what you get is the
+// editable geometry.
 function editLevel(id: string): void {
   const entry = findLevel(id);
   if (!entry) return;
-  if (!isBuiltin(id)) {
+  if (entry.data) {
     openEditor(id);
     return;
   }
   if (current.id !== id) switchLevel(id); // capture reads the LIVE level
   const data = level.captureData();
-  data.name = `${entry.name} copy`;
-  const newId = saveUserLevel({ id: "", name: data.name, data });
-  switchLevel(newId);
-  ui.refreshLevels(newId);
-  openEditor(newId);
+  data.name = entry.name; // in place — not "(copy)"
+  saveUserLevel({ id: entry.id, name: entry.name, data });
+  switchLevel(entry.id); // rebuild: the level now IS its captured data
+  ui.refreshLevels(entry.id);
+  openEditor(entry.id);
   ui.showMessage(
-    "EDITING A COPY",
-    `${entry.name} → ${data.name} (the original stays put)`,
+    `EDITING ${entry.name.toUpperCase()}`,
+    "edits save to this level — restore original is in the PROJECT tab",
     2600,
   );
 }
@@ -1947,6 +1962,7 @@ frame();
   findLevel,
   saveUserLevel,
   deleteUserLevel,
+  restoreBuiltin,
   getCurrentLevel: () => current,
   GLTFLoader, // debug: inspect model files from the console/harness
 };

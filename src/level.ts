@@ -1067,9 +1067,10 @@ export function getUserLevels(): LevelEntry[] {
   } catch {
     /* corrupt store reads as "no user levels" rather than breaking boot */
   }
-  // A user level must never shadow a built-in row, and duplicate ids would
-  // make findLevel ambiguous — drop the later of any clash.
-  const seen = new Set(BUILTIN_IDS);
+  // An entry under a BUILT-IN's id is that level's edited version — it takes
+  // the built-in's place in the menu (see levelList). Duplicate ids would make
+  // findLevel ambiguous, so drop the later of any clash.
+  const seen = new Set<string>();
   list = list.filter((l) => !seen.has(l.id) && (seen.add(l.id), true));
   USER_CACHE = list;
   return list;
@@ -1084,9 +1085,24 @@ export function setUserLevels(list: LevelEntry[]): void {
   }
 }
 
-/** Built-ins first, then user levels in the order they were added. */
+/**
+ * Built-ins first (in their fixed order), then user levels in the order they
+ * were added. A built-in that has been EDITED is stored under its own id, and
+ * replaces itself in place — same row, same slot, so editing Test Course gives
+ * you back Test Course and not a second thing beside it. The hand-coded
+ * builder is still there underneath: drop the entry and the original returns.
+ */
 export function levelList(): LevelEntry[] {
-  return [...BUILTIN_LEVELS, ...getUserLevels()];
+  const user = getUserLevels();
+  const edited = new Map(user.map((l) => [l.id, l]));
+  const out = BUILTIN_LEVELS.map((b) => edited.get(b.id) ?? b);
+  for (const u of user) if (!isBuiltin(u.id)) out.push(u);
+  return out;
+}
+
+/** True when this built-in has been edited and is building from data. */
+export function isOverridden(id: string): boolean {
+  return isBuiltin(id) && getUserLevels().some((l) => l.id === id);
 }
 
 export function findLevel(id: string): LevelEntry | null {
@@ -1112,7 +1128,9 @@ export function cleanLevelName(name: string): string {
 export function saveUserLevel(entry: LevelEntry): string {
   const list = [...getUserLevels()];
   const e: LevelEntry = {
-    id: !entry.id || isBuiltin(entry.id) ? newLevelId() : entry.id,
+    // only a BLANK id mints a new one; a built-in's id is kept, which is what
+    // makes editing one edit the level itself instead of forking a copy
+    id: entry.id || newLevelId(),
     name: cleanLevelName(entry.name),
     data: entry.data,
   };
@@ -1123,7 +1141,18 @@ export function saveUserLevel(entry: LevelEntry): string {
   return e.id;
 }
 
+/**
+ * Drop a built-in's edits and hand the hand-coded design back. The level does
+ * not leave the menu — it just stops building from data. Best times are kept:
+ * it is the same course either way.
+ */
+export function restoreBuiltin(id: string): void {
+  if (!isBuiltin(id)) return;
+  setUserLevels(getUserLevels().filter((l) => l.id !== id));
+}
+
 export function deleteUserLevel(id: string): void {
+  if (isBuiltin(id)) return restoreBuiltin(id); // a built-in can't leave the menu
   setUserLevels(getUserLevels().filter((l) => l.id !== id));
   try {
     // the level is gone, so its best times are unreachable — drop them with it
@@ -1161,7 +1190,7 @@ export function getEditData(id: string): CustomLevelData {
 /** Editor save: write the working JSON back into the level's list entry. */
 export function persistEditData(id: string, json: string): void {
   const e = findLevel(id);
-  if (!e || isBuiltin(id)) return; // built-ins are pristine by construction
+  if (!e) return;
   try {
     saveUserLevel({ ...e, data: JSON.parse(json) as CustomLevelData });
   } catch {

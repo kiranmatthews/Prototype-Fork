@@ -27,11 +27,13 @@ import {
   DEFAULT_LEVEL_ID,
   SKY_PRESETS,
   asSkyPreset,
+  isBuiltin,
   getEditData,
   persistEditData,
   saveUserLevel,
   renameUserLevel,
   deleteUserLevel,
+  restoreBuiltin,
   findLevel,
 } from "./level";
 
@@ -1186,6 +1188,8 @@ export class Editor {
   private targetName = ""; // its menu name — what the rename field shows
   private nameInput: HTMLInputElement | null = null;
   private skySelect: HTMLSelectElement | null = null;
+  private resetBtn: HTMLButtonElement | null = null;
+  private delBtn: HTMLButtonElement | null = null;
   data: CustomLevelData;
   // SELECTION is an ordered set of component indices; the LAST one is the
   // primary (it drives the props panel, snapping, and align actions).
@@ -1345,6 +1349,7 @@ export class Editor {
     localStorage.setItem("protoEditorTarget", target.id); // refresh lands on the same level
     this.data = migrateCustomLevel(getEditData(target.id));
     this.syncSkySelect();
+    this.syncFileButtons();
     // fresh history per target: switching levels must not undo across them
     this.lastCommitted = JSON.stringify(this.data);
     this.undoStack.length = 0;
@@ -1545,6 +1550,26 @@ export class Editor {
     if (this.skySelect) this.skySelect.value = asSkyPreset(this.data.sky);
   }
 
+  /** Reset/delete read differently on a built-in than on a level you made. */
+  private syncFileButtons(): void {
+    const builtin = isBuiltin(this.targetId);
+    if (this.resetBtn) {
+      this.resetBtn.dataset.label = builtin ? "restore original" : "start over";
+      this.resetBtn.textContent = this.resetBtn.dataset.label;
+      this.resetBtn.style.color = "";
+      this.resetBtn.title = builtin
+        ? "drop your edits and hand back the design the game shipped with"
+        : "wipe this level back to a blank slate";
+    }
+    if (this.delBtn) {
+      // a built-in is part of the game — it can't be removed from the menu
+      this.delBtn.style.display = builtin ? "none" : "";
+      this.delBtn.dataset.label = "delete level";
+      this.delBtn.textContent = "delete level";
+      this.delBtn.style.color = "";
+    }
+  }
+
   // Re-bind this editor session to another user level (import / duplicate).
   private retarget(id: string): void {
     const e = findLevel(id);
@@ -1555,6 +1580,7 @@ export class Editor {
     localStorage.setItem("protoEditorTarget", e.id);
     this.data = migrateCustomLevel(getEditData(e.id));
     this.syncSkySelect();
+    this.syncFileButtons();
     this.lastCommitted = JSON.stringify(this.data);
     this.undoStack.length = 0; // history belongs to the level, not the session
     this.redoStack.length = 0;
@@ -4002,8 +4028,45 @@ export class Editor {
     });
     file.appendChild(filePick);
     mk("import", () => filePick.click());
-    // Blank slate on the level under edit. The level itself stays in the menu.
-    mk("start over", () => {
+    // Two-tap confirm, shared by the pair below: neither has an undo.
+    const arm = (
+      b: HTMLButtonElement,
+      confirmText: string,
+      go: () => void,
+    ): void => {
+      let t = 0;
+      const disarm = (): void => {
+        if (t) clearTimeout(t);
+        t = 0;
+        b.textContent = b.dataset.label ?? "";
+        b.style.color = "";
+      };
+      b.addEventListener("click", () => {
+        if (!t) {
+          b.textContent = confirmText;
+          b.style.color = "#ff9a6b";
+          t = window.setTimeout(disarm, 4000);
+          return;
+        }
+        disarm();
+        go();
+      });
+    };
+
+    // RESET. On a level you made: back to a blank slate. On a BUILT-IN you
+    // have edited: hand back the design the game shipped with. Label and
+    // behaviour swap per target in syncFileButtons().
+    const resetBtn = mk("start over", () => {});
+    this.resetBtn = resetBtn;
+    arm(resetBtn, "tap again to reset", () => {
+      if (isBuiltin(this.targetId)) {
+        const name = this.targetName;
+        restoreBuiltin(this.targetId);
+        this.hooks.levelsChanged(this.targetId);
+        this.hooks.exitToPlay();
+        this.hooks.showMsg("ORIGINAL RESTORED", name);
+        return;
+      }
       this.data = starterCustomLevel();
       this.data.name = this.targetName;
       this.select(-1);
@@ -4021,24 +4084,12 @@ export class Editor {
       this.hooks.levelsChanged(id);
       this.hooks.showMsg("DUPLICATED", findLevel(id)?.name ?? "");
     });
-    // DELETE: drop it from the menu and leave the editor. Two taps, because
-    // there is no undo across levels.
-    let armed = 0;
-    const delBtn = mk("delete level", () => {
-      if (!armed) {
-        delBtn.textContent = "tap again to delete";
-        delBtn.style.color = "#ff9a6b";
-        armed = window.setTimeout(() => {
-          armed = 0;
-          delBtn.textContent = "delete level";
-          delBtn.style.color = "";
-        }, 4000);
-        return;
-      }
-      clearTimeout(armed);
-      armed = 0;
-      delBtn.textContent = "delete level";
-      delBtn.style.color = "";
+    // DELETE: drop it from the menu and leave the editor. Built-in levels
+    // can't be deleted — they are part of the game — so this hides for them,
+    // and "restore original" above is the way back instead.
+    const delBtn = mk("delete level", () => {});
+    this.delBtn = delBtn;
+    arm(delBtn, "tap again to delete", () => {
       const gone = this.targetName;
       deleteUserLevel(this.targetId);
       localStorage.removeItem("protoEditorOpen");
@@ -4053,7 +4104,7 @@ export class Editor {
 
     projPane2.appendChild(
       h(
-        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · <b>time of day</b> swaps skybox + fog + lighting · duplicate / delete / import add + remove menu rows<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
+        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · <b>time of day</b> swaps skybox + fog + lighting<br>editing a built-in level edits THAT level — <b>restore original</b> hands the shipped design back<br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
       ),
     );
 
