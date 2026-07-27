@@ -273,6 +273,7 @@ export interface CustomComponent {
     | "comboorb" // combo-run activator: the green plus near the start; p = [x, deckY, z]. One per level.
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
+    | "terrain" // DISPLACED GROUND STRIP: a rolling, winding, bumpy floor. p = the near end (highest z), pts = centreline nodes in the rail convention ([dx, dz, corner radius, dy]) relative to p, w = width across, amp = bump height, berms = mossy kerbs + grindable lips down both sides. The one component that is not a flat box.
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
@@ -303,6 +304,7 @@ export interface CustomComponent {
     | "bang"
     | "nitrobang";
   dkind?: DecorKind; // decor: which prop (see DECOR_KINDS)
+  berms?: boolean; // terrain: kerbs + grindable lips down both edges
   n?: number; // decor: strand/piece count (hanging vines)
   outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
   range?: number;
@@ -2347,6 +2349,14 @@ export class Level {
         moverMeshes.has(m)
       )
         continue;
+      // A displaced ground strip carries its own component (see jungle()).
+      // Without this it fell through to the bounding-box branch below and an
+      // edited level traded its rolling floor for a slab.
+      const tc = m.userData.terrainComp as CustomComponent | undefined;
+      if (tc) {
+        C.push(JSON.parse(JSON.stringify(tc)) as CustomComponent);
+        continue;
+      }
       // Transition surfaces belong to their vertramp component, which rebuilds
       // them. hpWalls only covers the ANALYTIC pipes; a swept one is a plain
       // mesh, so it used to be captured as a bounding-box platform AND rebuilt
@@ -2499,7 +2509,13 @@ export class Level {
     const ropeRails = new Set(this.ropes.map((r) => r.rail));
     for (const rail of this.rails) {
       const pts = rail.points;
-      if (pts.length < 2 || isCoping(pts) || ropeRails.has(rail)) continue;
+      if (
+        pts.length < 2 ||
+        isCoping(pts) ||
+        ropeRails.has(rail) ||
+        this.terrainRails.has(rail)
+      )
+        continue;
       const p0 = pts[0];
       C.push({
         t: "rail",
@@ -2811,6 +2827,7 @@ export class Level {
       }
     };
     const geomPass = new Set([
+      "terrain",
       "platform",
       "ramp",
       "wall",
@@ -3525,6 +3542,8 @@ export class Level {
             this.crystal(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "decor") {
             this.decorProp(c);
+          } else if (c.t === "terrain") {
+            this.buildTerrain(c);
           }
         });
       });
@@ -5118,10 +5137,96 @@ export class Level {
     );
     mesh.position.set(cx, baseY, cz);
     mesh.name = name;
+    // THE STRIP IS ITS OWN COMPONENT. Capture used to flatten a displaced
+    // plane to its bounding box, so editing a level traded every roll, bend
+    // and bump for one dead-level slab. The centreline is sampled off the
+    // spine here and rides on the mesh; captureData ships it instead of the
+    // box, and buildTerrain plays it back through this same function.
+    //
+    // BERMS BELONG TO THE STRIP. They used to capture separately, as chunk
+    // walls plus lip rails, which round-tripped but came back grey and
+    // straight-edged — a generic wall has no idea it was a mossy kerb bending
+    // along a path. As a property of the strip they rebuild from the same
+    // spine, in the same material, and a level sheds ~330 components.
+    const nearZ = Math.max(z0, z1);
+    const r2 = (n: number): number => Math.round(n * 100) / 100;
+    const nodes: [number, number, number, number][] = [];
+    const steps = Math.max(2, Math.round(depth / 6));
+    for (let i = 0; i <= steps; i++) {
+      const wz = nearZ - (depth * i) / steps;
+      const sp = opts.spine ? opts.spine(wz) : { dx: 0, dy: 0 };
+      nodes.push([r2(sp.dx), r2(wz - nearZ), 0, r2(sp.dy)]);
+    }
+    mesh.userData.terrainComp = {
+      t: "terrain",
+      p: [r2(cx), r2(baseY), r2(nearZ)],
+      w: r2(width),
+      amp: r2(amp),
+      berms: opts.berms !== false,
+      tex: opts.tex ?? "jungle",
+      color:
+        "#" +
+        (mat as THREE.MeshLambertMaterial).color.getHexString(),
+      pts: nodes,
+      nm: name,
+    } as CustomComponent;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     if (opts.berms !== false)
       this.berms(z0, z1, baseY, width, cx, opts.spine);
+  }
+
+  /** Build one terrain component — the other half of the stamp in jungle(). */
+  private buildTerrain(c: CustomComponent): void {
+    // nodes are [dx, dz, corner radius, dy] from p, the rail convention, so
+    // the pen tool and the per-node fields work on a floor the same way they
+    // work on a grind line. Sorted near-to-far, because a dragged node can
+    // cross its neighbour and the strip must not turn inside out.
+    const raw = (c.pts && c.pts.length >= 2 ? c.pts : [[0, 0], [0, -40]]) as (
+      | [number, number]
+      | [number, number, number]
+      | [number, number, number, number]
+    )[];
+    const nodes = raw
+      .map((q) => ({ dx: q[0] ?? 0, z: c.p[2] + (q[1] ?? 0), dy: q[3] ?? 0 }))
+      .sort((a, b) => b.z - a.z);
+    const spine: Spine = (wz) => {
+      if (wz >= nodes[0].z) return { dx: nodes[0].dx, dy: nodes[0].dy };
+      const last = nodes[nodes.length - 1];
+      if (wz <= last.z) return { dx: last.dx, dy: last.dy };
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const a = nodes[i];
+        const b = nodes[i + 1];
+        if (wz <= a.z && wz >= b.z) {
+          const t = a.z === b.z ? 0 : (a.z - wz) / (a.z - b.z);
+          return {
+            dx: a.dx + (b.dx - a.dx) * t,
+            dy: a.dy + (b.dy - a.dy) * t,
+          };
+        }
+      }
+      return { dx: 0, dy: 0 };
+    };
+    const z0 = nodes[0].z;
+    const z1 = nodes[nodes.length - 1].z;
+    if (Math.abs(z0 - z1) < 1) return; // degenerate: nothing to sweep
+    this.jungle(
+      c.nm ?? "terrain",
+      z0,
+      z1,
+      c.p[1],
+      Math.max(1, c.w ?? 12),
+      new THREE.MeshLambertMaterial({
+        color: c.color ? new THREE.Color(c.color) : 0x4f9a42,
+      }),
+      {
+        amp: c.amp ?? 0.45,
+        tex: c.tex ?? "jungle",
+        spine,
+        berms: c.berms === true,
+      },
+      c.p[0],
+    );
   }
 
   // Firm raised edges: visible ridge + solid collider + a grindable lip rail.
@@ -5166,15 +5271,6 @@ export class Level {
               new THREE.Vector3(0.9, 1.5, segD),
             ),
           );
-          // CAPTURE HOOK. captureData harvests walls off any object carrying a
-          // wallSpec, and the merged kerb above is a single mesh with no place
-          // to hang one per chunk. A bare Object3D renders nothing, costs
-          // nothing, and hands the editor a real wall component per chunk —
-          // without it, editing this level would hand you back an open trench.
-          const tag = new THREE.Object3D();
-          tag.position.set(x, y, zm);
-          tag.userData.wallSpec = { w: 0.9, d: segD, h: 1.5, visH: 1.5 };
-          this.root.add(tag);
           if (i === 0) {
             const s0 = spine(zNear);
             pts.push(
@@ -5198,7 +5294,9 @@ export class Level {
         for (const p of parts) p.geo.dispose();
         kerb.name = "berm";
         this.root.add(kerb);
-        this.rails.push(new Rail(pts, false)); // the grindable lip, bent to match
+        const lip = new Rail(pts, false); // the grindable lip, bent to match
+        this.rails.push(lip);
+        this.terrainRails.add(lip); // the strip regrows it; capture must not
       }
       return;
     }
@@ -5224,6 +5322,7 @@ export class Level {
         false,
       );
       this.rails.push(lip);
+      this.terrainRails.add(lip); // ...same for a straight strip's lip
     }
   }
 
@@ -6197,6 +6296,10 @@ export class Level {
   // still carries the foliage it is deliberately not drawing. Skipped when the
   // level was built FROM data — that capture returns its own components.
   private decorLog: CustomComponent[] = [];
+  // Grind lips that a terrain strip grows itself. They are real rails to
+  // play against, but capturing them would hand the rebuild a second set on
+  // top of the ones the strip regrows.
+  private terrainRails = new Set<Rail>();
   // Set while a COMPOSITE prop draws its members (a toadstool family, a
   // planter's fern): the members belong to the parent component and must not
   // log themselves, or a captured cluster comes back as four loose props.

@@ -58,7 +58,7 @@ interface PalItem {
   label: string;
   icon: Draw;
   make?: (at: THREE.Vector3) => CustomComponent;
-  penDraw?: "platform" | "pit" | "wall" | "rail" | "vertramp"; // pen tool: click-to-draw a polygon (or open path) of this type
+  penDraw?: "platform" | "pit" | "wall" | "rail" | "vertramp" | "terrain"; // pen tool: click-to-draw a polygon (or open path) of this type
 }
 
 const box = (
@@ -295,6 +295,68 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           p: [at.x, at.y, at.z],
           s: [10, 1, 10],
         }),
+      },
+      {
+        // The one component that is not a flat box. Six default nodes so a
+        // dropped strip already rolls and bends a little — a dead-flat one
+        // would just look like a wide platform and nobody would find the
+        // node handles.
+        label: "ground strip",
+        icon: (x) => {
+          x.fillStyle = "#4f9a42";
+          x.beginPath();
+          x.moveTo(1, 13);
+          x.bezierCurveTo(5, 9, 8, 15, 12, 10);
+          x.lineTo(17, 7);
+          x.lineTo(17, 13);
+          x.bezierCurveTo(12, 16, 6, 13, 1, 17);
+          x.closePath();
+          x.fill();
+          x.strokeStyle = "#3d7a2c";
+          x.lineWidth = 1.6;
+          x.beginPath();
+          x.moveTo(1, 12);
+          x.bezierCurveTo(5, 8, 8, 14, 12, 9);
+          x.lineTo(17, 6);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "terrain",
+          p: [at.x, at.y, at.z],
+          w: 12,
+          amp: 0.45,
+          berms: true,
+          pts: [
+            [0, 0],
+            [2.5, -14],
+            [1, -28],
+            [-2, -42],
+            [-2.5, -56],
+            [0, -70],
+          ] as [number, number][],
+        }),
+      },
+      {
+        label: "draw ground",
+        icon: (x) => {
+          x.strokeStyle = "#4f9a42";
+          x.lineWidth = 3;
+          x.lineCap = "round";
+          x.beginPath();
+          x.moveTo(2, 15);
+          x.bezierCurveTo(7, 11, 9, 16, 16, 5);
+          x.stroke();
+          x.fillStyle = "#e8e8e8";
+          for (const [px, py] of [
+            [2, 15],
+            [16, 5],
+          ] as const) {
+            x.beginPath();
+            x.arc(px, py, 2, 0, 7);
+            x.fill();
+          }
+        },
+        penDraw: "terrain",
       },
       {
         label: "ramp",
@@ -1471,7 +1533,7 @@ export class Editor {
   private camSaveAt = 0;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
   private drawing: {
-    t: "platform" | "pit" | "wall" | "rail" | "vertramp";
+    t: "platform" | "pit" | "wall" | "rail" | "vertramp" | "terrain";
     y: number;
     pts: THREE.Vector3[];
   } | null = null;
@@ -2722,7 +2784,8 @@ export class Editor {
       c.pts &&
       c.pts.length >= 3 &&
       (c.t === "platform" || c.t === "wall" || c.t === "pit");
-    const isPath = c.pts && c.pts.length >= 2 && c.t === "rail";
+    const isPath =
+      c.pts && c.pts.length >= 2 && (c.t === "rail" || c.t === "terrain");
     if (c.pts && (isPoly || isPath)) {
       const y =
         c.t === "wall"
@@ -2734,7 +2797,7 @@ export class Editor {
       return c.pts.map((pt, i) => ({
         pos: new THREE.Vector3(
           c.p[0] + pt[0],
-          c.t === "rail" ? c.p[1] + (pt[3] ?? 0) + 0.1 : y,
+          c.t === "rail" || c.t === "terrain" ? c.p[1] + (pt[3] ?? 0) + 0.1 : y,
           c.p[2] + pt[1],
         ),
         dir: new THREE.Vector3(0, 1, 0),
@@ -3317,7 +3380,9 @@ export class Editor {
 
   // ---- pen tool (draw polygon platforms / pits / walls) ----
 
-  startDraw(t: "platform" | "pit" | "wall" | "rail" | "vertramp"): void {
+  startDraw(
+    t: "platform" | "pit" | "wall" | "rail" | "vertramp" | "terrain",
+  ): void {
     this.cancelDraw();
     this.select(-1);
     const y = this.controls ? snapHalf(this.controls.target.y) : 0;
@@ -3325,7 +3390,7 @@ export class Editor {
     this.dom.style.cursor = "crosshair";
     this.hooks.showMsg(
       `DRAW ${t.toUpperCase()}`,
-      t === "rail"
+      t === "rail" || t === "terrain"
         ? "click to drop nodes · Enter or double-click to finish · esc = cancel"
         : "click to drop points · click the FIRST point (or Enter) to close · esc = cancel",
     );
@@ -3409,7 +3474,7 @@ export class Editor {
     const pts = d.pts.filter(
       (pt, i) => i === 0 || pt.distanceToSquared(d.pts[i - 1]) > 0.01,
     );
-    const openPath = d.t === "rail" || d.t === "vertramp";
+    const openPath = d.t === "rail" || d.t === "vertramp" || d.t === "terrain";
     const minPts = openPath ? 2 : 3;
     if (pts.length < minPts) {
       this.hooks.showMsg(`NEED ${minPts}+ POINTS`, "shape cancelled");
@@ -3430,6 +3495,16 @@ export class Editor {
     if (d.t === "rail") {
       // open path — no closing, no box dims; grind height is the draw plane
       this.addComponent({ t: "rail", p: [cx, d.y + 1, cz], pts: rel });
+    } else if (d.t === "terrain") {
+      // a drawn floor: the nodes are its centreline, the draw plane its base
+      this.addComponent({
+        t: "terrain",
+        p: [cx, d.y, cz],
+        pts: rel,
+        w: 12,
+        amp: 0.45,
+        berms: true,
+      });
     } else if (d.t === "vertramp") {
       // the transition sweeps along the drawn spine; the draw plane is the
       // FLAT it rises from, so the wall climbs out of the floor you drew on
@@ -4448,6 +4523,7 @@ export class Editor {
     if (c.t === "crate")
       return `crate · ${c.kind ?? "wood"}${c.outline ? " (outline)" : ""}`;
     if (c.t === "enemy") return `foe · ${c.foe ?? "grunt"}`;
+    if (c.t === "terrain") return `ground · ${c.pts?.length ?? 0} nodes`;
     if (c.t === "decor")
       return DECOR_LABELS[(c.dkind ?? "fern") as DecorKind] ?? "decor";
     if (c.t === "wall" && c.invisible) return "invis wall";
@@ -5606,6 +5682,41 @@ export class Editor {
         chain.blur();
       });
       this.propsEl.appendChild(chain);
+    } else if (c.t === "terrain") {
+      num(
+        "width",
+        () => c.w ?? 12,
+        (v) => (c.w = Math.max(1, v)),
+      );
+      num(
+        "bumpiness",
+        () => c.amp ?? 0.45,
+        (v) => (c.amp = Math.max(0, v)),
+        0.05,
+      );
+      const row = document.createElement("div");
+      row.className = "ed-row";
+      const lab = document.createElement("label");
+      lab.textContent = "berms";
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = c.berms === true;
+      chk.addEventListener("change", () => {
+        if (chk.checked) c.berms = true;
+        else delete c.berms;
+        this.commit();
+      });
+      row.appendChild(lab);
+      row.appendChild(chk);
+      this.propsEl.appendChild(row);
+      colorRow();
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent =
+        "the nodes are its CENTRELINE: drag one sideways to bend the path, " +
+        "up or down to roll it. They are read in z order, so it runs " +
+        "down-course and cannot fold back on itself.";
+      this.propsEl.appendChild(note);
     } else if (c.t === "decor") {
       // One panel for every prop, showing only the knobs that prop has. The
       // kind dropdown is a live swap: change your mind about a fern without
