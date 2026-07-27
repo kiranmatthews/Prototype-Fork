@@ -90,6 +90,7 @@ function wrapAngle(a: number): number {
 // scratch objects for the hang-time body tilt (no per-frame allocation)
 // Landing-X strength at full height (it fades in from nothing as you rise).
 const X_ALPHA = 0.85;
+const BLAST_AT = new THREE.Vector3(); // scratch for the blast test
 const VERT_UP = new THREE.Vector3(0, 1, 0);
 const VERT_Q = new THREE.Quaternion();
 const VERT_Q2 = new THREE.Quaternion();
@@ -1036,6 +1037,7 @@ export class Player {
         return;
       }
       this.stepRope(dt, input, level);
+      this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
       this.updateSparks(dt);
       this.updateFruit(dt);
@@ -1049,6 +1051,7 @@ export class Player {
         return;
       }
       this.stepHang(dt, input, level);
+      this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSparks(dt);
       this.updateFruit(dt);
       this.syncVisual(input, dt);
@@ -1584,21 +1587,10 @@ export class Player {
         this.score(CONST.ptsCrate, 'Box');
         this.crateReward(c);
       }
-      // collide() above may have killed us; TS can't see that mutation.
-      // Uber and masks (and the flicker after spending one) block blasts.
-      if ((this.state as MoveState) !== 'dead' && this.invulnTimer <= 0 && this.uberTimer <= 0) {
-        const center = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
-        for (const ex of level.explosions) {
-          if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
-          const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
-          if (center.distanceTo(ex.center) < r + 0.5) {
-            if (!this.spendMask()) this.die();
-            break;
-          }
-        }
-      }
       if (this.pos.y < level.killY) this.die();
     }
+
+    this.blastCheck(level);
 
     // Re-arm the wallride once you've touched the ground or caught a rail grind
     // (you get one wallride per air-time — no wall-to-wall chaining).
@@ -1687,6 +1679,26 @@ export class Player {
   }
 
   // Spend a mask to survive something. Returns true if one was available.
+  // A BLAST DOESN'T CARE WHAT YOU WERE DOING. This used to live inside the
+  // ride/air/grind block of step(), which meant a bomb going off in your face
+  // while you hung off a ledge or rode a rope did nothing at all — and the
+  // rope spin can set off a TNT itself. Called from every live path now.
+  // Uber, masks, and the flicker after spending one still block it.
+  private blastCheck(level: Level): void {
+    const st = this.state as MoveState;
+    if (st === 'dead' || st === 'gameover' || st === 'finished') return;
+    if (this.invulnTimer > 0 || this.uberTimer > 0) return;
+    const center = BLAST_AT.set(this.pos.x, this.pos.y + 0.9, this.pos.z);
+    for (const ex of level.explosions) {
+      if (ex.safe || ex.t > CONST.blastGrow + 0.05) continue;
+      const r = ex.radius * Math.min(1, ex.t / CONST.blastGrow);
+      if (center.distanceTo(ex.center) < r + 0.5) {
+        if (!this.spendMask()) this.die();
+        return;
+      }
+    }
+  }
+
   private spendMask(): boolean {
     if (this.masks <= 0) return false;
     this.masks--;
@@ -3415,7 +3427,7 @@ export class Player {
       const dz = p.z - this.pos.z;
       if (dx * dx + dz * dz > TUNING.slamRadius * TUNING.slamRadius) continue;
       if (Math.abs(p.y - this.pos.y) > 1.8) continue;
-      if (c.tnt) level.detonate(c, true);
+      if (c.tnt) level.detonate(c);
       else if (c.nitro) level.detonate(c);
       else if (c.bang) level.triggerBang(c); // shockwave flips the switch
       else this.smashCrate(level, c);
@@ -3759,7 +3771,7 @@ export class Player {
       const dy = p.y - cy;
       const dz = p.z - this.pos.z;
       if (dx * dx + dy * dy + dz * dz > reach * reach) continue;
-      if (c.tnt) level.detonate(c, true);
+      if (c.tnt) level.detonate(c);
       else if (c.nitro) level.detonate(c);
       else if (c.bang) level.triggerBang(c);
       else this.smashCrate(level, c);
@@ -4983,21 +4995,29 @@ export class Player {
       }
       if (c.tnt) {
         // TNT is a solid box, Crash rules: spinning (or slamming/sliding
-        // through it) pops it instantly — safely, it was on purpose. Stomping
-        // lights the 3-2-1 fuse and bounces you; a headbutt from below lights
-        // it too. Grinding into one unspun knocks you off the rail. Bumping
-        // it is just a wall.
+        // through it) pops it instantly. Stomping lights the 3-2-1 fuse and
+        // bounces you; a headbutt from below lights it too. Grinding into one
+        // unspun knocks you off the rail. Bumping it is just a wall.
+        //
+        // NONE of those pops is safe any more. A TNT used to spare whoever set
+        // it off, which meant you could stand on top of one, spin, and stroll
+        // away — the box was scenery with a countdown. The blast is lethal now
+        // however it started, so the only question is whether you are clear of
+        // it: light the fuse and run, or pop it at speed and outrun the sphere.
+        // Uber, a mask, and the flicker after spending one still cover you
+        // (the blast test player-side reads those), so nothing that used to
+        // protect you stopped protecting you.
         if (this.spinning && this.spinBox.intersectsBox(c.box)) {
-          level.detonate(c, true);
+          level.detonate(c);
         } else if (this.playerBox.intersectsBox(c.box)) {
           if (this.uberTimer > 0 || this.sliding) {
-            level.detonate(c, true);
+            level.detonate(c);
           } else if (this.state === 'grind') {
-            if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c, true);
+            if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c);
             else this.bailFromRail();
           } else if (this.isStomping(c.box)) {
             if (this.slamActive) {
-              level.detonate(c, true);
+              level.detonate(c);
             } else {
               level.lightFuse(c);
               this.vVel = TUNING.crateBounce;
@@ -5013,14 +5033,17 @@ export class Player {
             level.lightFuse(c);
             this.vVel = -1;
           } else {
-            // Rolling into it on the board: a hard smash-speed hit pops it
-            // outright (deliberate, safe — same bar as smashing crates); a
-            // slower nudge just lights the 3-2-1 fuse and bumps like a wall.
+            // Walking or rolling into it: a hard smash-speed hit pops it
+            // outright (same bar as smashing a crate); anything slower lights
+            // the 3-2-1 fuse and bumps like a wall. Only the smash-speed pop
+            // is board-only, because only the board ever reaches that speed —
+            // the fuse lights ON FOOT TOO. It used to be board-only, so you
+            // could stroll into a TNT all day and it just sat there.
             if (this.freeSkate && Math.abs(this.speed) >= TUNING.smashSpeed) {
-              level.detonate(c, true);
+              level.detonate(c);
               continue;
             }
-            if (this.freeSkate && Math.abs(this.speed) > 1.5) level.lightFuse(c);
+            if (Math.abs(this.speed) > 1.5) level.lightFuse(c);
             this.pushOutOf(c.box);
           }
         }
