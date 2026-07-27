@@ -273,6 +273,7 @@ export interface CustomComponent {
     | "comboorb" // combo-run activator: the green plus near the start; p = [x, deckY, z]. One per level.
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
+    | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
   p: [number, number, number];
@@ -301,6 +302,8 @@ export interface CustomComponent {
     | "mystery"
     | "bang"
     | "nitrobang";
+  dkind?: DecorKind; // decor: which prop (see DECOR_KINDS)
+  n?: number; // decor: strand/piece count (hanging vines)
   outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
   range?: number;
   speed?: number;
@@ -333,6 +336,58 @@ export interface CustomComponent {
   lk?: boolean; // editor lock: click-through, marquee-proof, edit-proof
   nm?: string; // editor display name (outliner rename)
 }
+
+// EDITOR BUILD MODE. Scenery batches into one mesh per shape for play, which
+// is what keeps a jungle inside a phone's draw-call budget — but a batch has
+// no per-plant object, so nothing in it can be clicked. The editor flips this
+// on and rebuilds, trading the batching back for a pickable mesh per prop; on
+// exit it flips off and rebuilds again. Set by main.ts, which can see both.
+let EDITOR_BUILD = false;
+export function setEditorBuild(on: boolean): boolean {
+  const changed = EDITOR_BUILD !== on;
+  EDITOR_BUILD = on;
+  return changed;
+}
+
+// EVERY PIECE OF SCENERY IS A COMPONENT. Decor used to be drawn straight into
+// the scene and recorded nowhere, so capturing a level threw all of it away —
+// edit the jungle and the jungle vanished. These are the placeable props; the
+// editor builds its FOLIAGE palette straight off this list, so a new one shows
+// up in the add panel the moment it is added here and wired in decorProp().
+export const DECOR_KINDS = [
+  "fern",
+  "broadleaf",
+  "flowers",
+  "toadstool",
+  "toadstools",
+  "mossrock",
+  "jungletree",
+  "palm",
+  "vines",
+  "planter",
+  "idol",
+  "ruinblock",
+  "log",
+  "block", // plain textured box, visual only: earth banks, backdrops, massing
+] as const;
+export type DecorKind = (typeof DECOR_KINDS)[number];
+/** Human labels for the palette + the props dropdown. */
+export const DECOR_LABELS: Record<DecorKind, string> = {
+  fern: "fern",
+  broadleaf: "broadleaf",
+  flowers: "flowers",
+  toadstool: "toadstool",
+  toadstools: "toadstool cluster",
+  mossrock: "mossy rock",
+  jungletree: "canopy tree",
+  palm: "palm",
+  vines: "hanging vines",
+  planter: "planter",
+  idol: "carved idol",
+  ruinblock: "ruin block",
+  log: "fallen log",
+  block: "scenery block",
+};
 
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
@@ -2370,6 +2425,10 @@ export class Level {
         });
       }
     }
+    // SCENERY. Logged by the decor helpers as they draw (see noteDecor), so
+    // capturing a hand-coded level keeps its foliage instead of stripping the
+    // world back to grey boxes.
+    for (const d of this.decorLog) C.push(JSON.parse(JSON.stringify(d)) as CustomComponent);
     // visible walls (built by wall(); positions live off the meshes)
     this.root.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -2736,6 +2795,10 @@ export class Level {
     };
     this.spawnPos.set(data.spawn[0], data.spawn[1], data.spawn[2]);
     this.currentSpawn.copy(this.spawnPos);
+    // Bake the scenery for PLAY (hundreds of one-plant meshes is the whole
+    // frame budget on a phone); leave it loose for the EDITOR, which has to
+    // be able to click an individual fern.
+    this.batchDecor = !EDITOR_BUILD;
 
     const deck = new THREE.MeshLambertMaterial({ color: 0xffffff });
     // tag every root child a component adds with that component's index
@@ -3460,9 +3523,12 @@ export class Level {
             this.root.add(marker);
           } else if (c.t === "crystal") {
             this.crystal(c.p[0], c.p[1], c.p[2]);
+          } else if (c.t === "decor") {
+            this.decorProp(c);
           }
         });
       });
+      this.bakeDecor(); // one mesh per shape per pass, when batching is on
       // the lane itself: a ghost line with direction cones, editor-only and
       // unpickable (no editorIdx — the NODES are the editable things).
       // Corner radii round the STEERING path — the camera and controls sweep
@@ -4526,7 +4592,6 @@ export class Level {
     // cut THROUGH the jungle instead of a hole in the sky, and so the wall of
     // trees has something to stand on. Chunked to follow the spine, then baked
     // into ONE mesh: pure scenery, never a groundMesh, never a collider.
-    const bankParts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
     const BANK_H = 14;
     const bank = (
       zNear: number,
@@ -4541,16 +4606,20 @@ export class Level {
       for (let i = 0; i < n; i++) {
         const zm = zNear - d * (i + 0.5);
         const cy = base + gy(zm);
-        const push = (w: number, ox: number, top: number): void => {
-          bankParts.push({
-            geo: new THREE.BoxGeometry(w, BANK_H, d + 0.15),
-            m: new THREE.Matrix4().makeTranslation(
-              gx(zm) + ox,
-              top - BANK_H / 2,
-              zm,
-            ),
-          });
-        };
+        // Scenery BLOCKS, not a bespoke merged mesh. It used to be one baked
+        // mesh, which meant capturing the level dropped the whole bank on the
+        // floor — you edited the jungle and the ground it stood in vanished.
+        // As components they survive a capture, and the decor batcher merges
+        // them right back into one draw call for play.
+        const push = (w: number, ox: number, top: number): void =>
+          this.decorBlock(
+            gx(zm) + ox,
+            top - BANK_H / 2,
+            zm,
+            w,
+            BANK_H,
+            d + 0.15,
+          );
         // shoulders: tops tucked up INSIDE the berm's own height so the seam
         // between path and jungle floor never opens from a low camera
         push(20, -(inset + 10), cy + 0.35);
@@ -4714,24 +4783,9 @@ export class Level {
       this.wall(7.6, z - 10.5, 1.2, 21, 0, 6);
     }
 
-    // the bank is one mesh once every chunk is in
-    const bankMesh = new THREE.Mesh(
-      Level.mergeGeos(bankParts),
-      this.baseMat("bank", 0x6b5232, "dirt", 3, 3),
-    );
-    for (const p of bankParts) p.geo.dispose();
-    bankMesh.name = "earth bank";
-    this.root.add(bankMesh);
-
     // the ravine floor, far enough down to be scenery: killY catches you 1.2
     // above it, so it is something to look into and never something to land on
-    const ravine = new THREE.Mesh(
-      new THREE.PlaneGeometry(140, 940),
-      this.baseMat("ravineFloor", 0x1e3521, "moss", 14, 94),
-    );
-    ravine.rotation.x = -Math.PI / 2;
-    ravine.position.set(0, -13.2, -352);
-    this.root.add(ravine);
+    this.decorBlock(0, -13.7, -352, 140, 1, 940, 0x1e3521, "moss");
 
     // ---- THE FALLEN TRUNK --------------------------------------------------
     // The ravine crossing. The trunk IS the rail: the grind line is sampled
@@ -5942,6 +5996,7 @@ export class Level {
 
   // A fallen log across (part of) the path: hop it. Solid, never breaks.
   private log(x0: number, x1: number, y: number, z: number): void {
+    this.noteDecor("log", (x0 + x1) / 2, y, z, { len: Math.abs(x1 - x0) });
     const len = Math.abs(x1 - x0);
     const geo = new THREE.CylinderGeometry(0.55, 0.55, len, 8);
     geo.rotateZ(Math.PI / 2);
@@ -6135,6 +6190,125 @@ export class Level {
     return m;
   }
 
+  // ---- DECOR AS DATA -------------------------------------------------------
+  // Every scenery helper logs its own placement here, captureData ships the
+  // log, and buildCustom feeds it back through the same helper. Logged at the
+  // TOP of each helper, before the '?lite' early-outs, so a headless capture
+  // still carries the foliage it is deliberately not drawing. Skipped when the
+  // level was built FROM data — that capture returns its own components.
+  private decorLog: CustomComponent[] = [];
+  // Set while a COMPOSITE prop draws its members (a toadstool family, a
+  // planter's fern): the members belong to the parent component and must not
+  // log themselves, or a captured cluster comes back as four loose props.
+  private decorQuiet = false;
+  private noteDecor(
+    dkind: DecorKind,
+    x: number,
+    y: number,
+    z: number,
+    extra: Partial<CustomComponent> = {},
+  ): void {
+    if (this.builtFromData || this.decorQuiet) return;
+    const r = (n: number): number => Math.round(n * 100) / 100;
+    const c: CustomComponent = {
+      t: "decor",
+      dkind,
+      p: [r(x), r(y), r(z)],
+      ...extra,
+    };
+    for (const k of ["w", "rise", "amp", "yaw", "len"] as const)
+      if (c[k] !== undefined) c[k] = r(c[k] as number);
+    if (c.s) c.s = [r(c.s[0]), r(c.s[1]), r(c.s[2])];
+    this.decorLog.push(c);
+  }
+
+  // Plain scenery box: massing that must LOOK solid without being solid —
+  // the earth banks either side of a corridor, a backdrop cliff, a ravine
+  // floor. Never a groundMesh, never a collider, so it cannot change how a
+  // level plays; it only changes what you can see. Batches with everything
+  // else, so a hundred of them is still one draw call in play.
+  private decorBlock(
+    x: number,
+    y: number,
+    z: number,
+    w: number,
+    h: number,
+    d: number,
+    color = 0x6b5232,
+    tex = "dirt",
+    yaw = 0,
+  ): void {
+    this.noteDecor("block", x, y, z, {
+      s: [w, h, d],
+      yaw: THREE.MathUtils.radToDeg(yaw),
+      color: "#" + color.toString(16).padStart(6, "0"),
+      tex,
+    });
+    if (this.liteDecor) return;
+    this.putDecor(
+      `block:${color.toString(16)}:${tex}`,
+      new THREE.BoxGeometry(w, h, d),
+      this.baseMat(`block:${color.toString(16)}:${tex}`, color, tex, 3, 3),
+      Level.trs(x, y, z, yaw),
+    );
+  }
+
+  /** Build one decor component — the other half of noteDecor. */
+  private decorProp(c: CustomComponent): void {
+    const [x, y, z] = c.p;
+    const s = c.w ?? 1;
+    switch (c.dkind) {
+      case "fern":
+        return this.fern(x, y, z, s);
+      case "broadleaf":
+        return this.broadleaf(x, y, z, s);
+      case "flowers":
+        return this.flowers(x, y, z);
+      case "toadstool":
+        return this.toadstool(x, y, z, s);
+      case "toadstools":
+        return this.toadstools(x, y, z, s);
+      case "mossrock":
+        return this.rock(x, y, z, c.w ?? 1.6);
+      case "jungletree":
+        return this.jungleTree(x, y, z, c.rise ?? 9, c.amp ?? 0);
+      case "palm":
+        return this.palm(x, y, z, c.rise ?? 4.8, c.amp ?? 0.12);
+      case "vines":
+        return this.vines(x, y, z, c.rise ?? 4, Math.max(1, Math.round(c.n ?? 3)));
+      case "planter":
+        return this.planter(x, y, z);
+      case "idol":
+        return this.idol(x, y, z, s, THREE.MathUtils.degToRad(c.yaw ?? 0));
+      case "ruinblock":
+        return this.ruinBlock(
+          x,
+          y,
+          z,
+          c.s?.[0] ?? 2.4,
+          c.s?.[1] ?? 1.6,
+          c.s?.[2] ?? 2.4,
+          THREE.MathUtils.degToRad(c.yaw ?? 0),
+        );
+      case "log": {
+        const half = (c.len ?? 13) / 2;
+        return this.log(x - half, x + half, y, z);
+      }
+      case "block":
+        return this.decorBlock(
+          x,
+          y,
+          z,
+          c.s?.[0] ?? 6,
+          c.s?.[1] ?? 6,
+          c.s?.[2] ?? 6,
+          c.color ? new THREE.Color(c.color).getHex() : 0x6b5232,
+          c.tex ?? "dirt",
+          THREE.MathUtils.degToRad(c.yaw ?? 0),
+        );
+    }
+  }
+
   // Tropical dressing is pure garnish: '?lite' (headless smoke) skips ALL of
   // it — software rendering can't afford the fill rate, and slow frames
   // desync the suite's wall-clock input scripting.
@@ -6212,6 +6386,7 @@ export class Level {
   private static palmCrownGeo: THREE.BufferGeometry | null = null;
   private static coconutGeo: THREE.BufferGeometry | null = null;
   private palm(x: number, y: number, z: number, h = 4.8, lean = 0.12): void {
+    this.noteDecor("palm", x, y, z, { rise: h, amp: lean });
     if (this.liteDecor) return;
     if (!Level.palmTrunkGeo) {
       const g = new THREE.CylinderGeometry(0.13, 0.3, 4.8, 7, 6);
@@ -6276,6 +6451,7 @@ export class Level {
   // Fern tuft: six arcing blades in one buffer.
   private static fernGeoCache: THREE.BufferGeometry | null = null;
   private fern(x: number, y: number, z: number, s = 1): void {
+    this.noteDecor("fern", x, y, z, { w: s });
     if (this.liteDecor) return;
     if (!Level.fernGeoCache)
       Level.fernGeoCache = Level.fanGeo(
@@ -6301,6 +6477,7 @@ export class Level {
     key = "leafy",
     color = 0x3e8e46,
   ): void {
+    this.noteDecor("broadleaf", x, y, z, { w: s });
     if (this.liteDecor) return;
     if (!Level.leafGeoCache)
       Level.leafGeoCache = Level.fanGeo(Level.bladeGeo(1.5, 0.95, 0.5), 5, 0.5);
@@ -6315,6 +6492,7 @@ export class Level {
   // Flower dots: a bright six-berry cluster, one buffer, coral/orange/pink.
   private static flowerGeoCache: THREE.BufferGeometry | null = null;
   private flowers(x: number, y: number, z: number): void {
+    this.noteDecor("flowers", x, y, z);
     if (this.liteDecor) return;
     if (!Level.flowerGeoCache) {
       const bud = new THREE.SphereGeometry(0.09, 6, 5);
@@ -6350,18 +6528,22 @@ export class Level {
   // Deck planter: terracotta pot with a fern spilling out.
   private static potGeo: THREE.CylinderGeometry | null = null;
   private planter(x: number, y: number, z: number): void {
+    this.noteDecor("planter", x, y, z);
     if (this.liteDecor) return;
+    this.decorQuiet = true; // the fern spilling out is part of the pot
     if (!Level.potGeo)
       Level.potGeo = new THREE.CylinderGeometry(0.52, 0.38, 0.6, 9);
     const pot = new THREE.Mesh(Level.potGeo, this.decorMat("pot", 0xc86a42));
     pot.position.set(x, y + 0.3, z);
     this.root.add(pot);
     this.fern(x, y + 0.55, z, 0.9);
+    this.decorQuiet = false;
   }
 
   // Rounded mossy boulder: squashed sphere, soft shading. Visual only.
   private static rockGeo: THREE.SphereGeometry | null = null;
   private rock(x: number, y: number, z: number, s = 1.6): void {
+    this.noteDecor("mossrock", x, y, z, { w: s });
     if (!Level.rockGeo) Level.rockGeo = new THREE.SphereGeometry(1, 10, 8);
     this.putDecor(
       "mossRock",
@@ -6386,6 +6568,7 @@ export class Level {
   private static toadCapGeo: THREE.BufferGeometry | null = null;
   private static toadSpotGeo: THREE.BufferGeometry | null = null;
   private toadstool(x: number, y: number, z: number, s = 1): void {
+    this.noteDecor("toadstool", x, y, z, { w: s });
     if (this.liteDecor) return;
     if (!Level.toadStemGeo) {
       const g = new THREE.CylinderGeometry(0.13, 0.19, 0.62, 7);
@@ -6427,7 +6610,9 @@ export class Level {
   // Toadstools grow in families in the reference, never alone: one big cap
   // with two or three smaller ones leaning around its foot.
   private toadstools(x: number, y: number, z: number, s = 1): void {
+    this.noteDecor("toadstools", x, y, z, { w: s });
     if (this.liteDecor) return;
+    this.decorQuiet = true; // the family is one component, not four
     this.toadstool(x, y, z, s);
     const n = 2 + (Math.abs(Math.round(x * 3 + z)) % 2);
     for (let i = 0; i < n; i++) {
@@ -6440,6 +6625,7 @@ export class Level {
         s * (0.42 + (i % 3) * 0.13),
       );
     }
+    this.decorQuiet = false;
   }
 
   // Canopy tree: straight dark trunk with a buttressed foot and a broad
@@ -6448,6 +6634,7 @@ export class Level {
   private static jTrunkGeo: THREE.BufferGeometry | null = null;
   private static jCrownGeo: THREE.BufferGeometry | null = null;
   private jungleTree(x: number, y: number, z: number, h = 9, lean = 0): void {
+    this.noteDecor("jungletree", x, y, z, { rise: h, amp: lean });
     if (this.liteDecor) return;
     if (!Level.jTrunkGeo) {
       // taper hard at the base so it reads as a buttress root flare
@@ -6494,6 +6681,7 @@ export class Level {
   // depth cues across the top of frame in an enclosed corridor.
   private static vineGeo: THREE.BufferGeometry | null = null;
   private vines(x: number, y: number, z: number, drop = 4, n = 3): void {
+    this.noteDecor("vines", x, y, z, { rise: drop, n });
     if (this.liteDecor) return;
     if (!Level.vineGeo) {
       const g = new THREE.CylinderGeometry(0.045, 0.09, 1, 5);
@@ -6527,6 +6715,7 @@ export class Level {
   // sunken eyes and a mouth slot — dark recesses do all the work at this
   // poly count. Solid: it blocks, so it can frame a doorway.
   private idol(x: number, y: number, z: number, s = 1, yaw = 0): void {
+    this.noteDecor("idol", x, y, z, { w: s, yaw: THREE.MathUtils.radToDeg(yaw) });
     const stone = this.baseMat("idolStone", 0x9aa093, "stone", 1, 1);
     const dark = this.decorMat("idolCut", 0x2b2f2c);
     const g = new THREE.Group();
@@ -6575,6 +6764,10 @@ export class Level {
     d: number,
     yaw = 0,
   ): void {
+    this.noteDecor("ruinblock", x, y, z, {
+      s: [w, h, d],
+      yaw: THREE.MathUtils.radToDeg(yaw),
+    });
     if (this.liteDecor) return;
     const m = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),

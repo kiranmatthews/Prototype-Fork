@@ -8,6 +8,7 @@ import {
   LevelEntry,
   CustomLevelData,
   DEFAULT_LEVEL_ID,
+  setEditorBuild,
   levelList,
   findLevel,
   saveUserLevel,
@@ -1019,26 +1020,29 @@ function switchLevel(id: string): void {
 }
 
 // ---- level editor ----------------------------------------------------------
+// Every edit rebuilds the level under edit from its data, so edit = play
+// truth. The editor only ever binds to a USER level, and openEditor has
+// already switched to it — so `current` is the level being edited. Named,
+// because entering and leaving the editor rebuild too (scenery is baked for
+// play and loose for editing — see setEditorBuild).
+function rebuildLevel(): void {
+  current = findLevel(current.id) ?? current; // pick up the just-saved data/name
+  level.dispose();
+  level = new Level(scene, current);
+  player.respawn(level, true);
+  applyTheme();
+  recorder.start(current.id);
+  (window as unknown as Record<string, unknown>).__game &&
+    ((
+      (window as unknown as Record<string, unknown>).__game as Record<
+        string,
+        unknown
+      >
+    ).level = level);
+  editor.onLevelRebuilt();
+}
 const editor = new Editor(scene, camera, renderer.domElement, () => level, {
-  // Every edit rebuilds the level under edit from its data, so edit = play
-  // truth. The editor only ever binds to a USER level, and openEditor has
-  // already switched to it — so `current` is the level being edited.
-  rebuild: () => {
-    current = findLevel(current.id) ?? current; // pick up the just-saved data/name
-    level.dispose();
-    level = new Level(scene, current);
-    player.respawn(level, true);
-    applyTheme();
-    recorder.start(current.id);
-    (window as unknown as Record<string, unknown>).__game &&
-      ((
-        (window as unknown as Record<string, unknown>).__game as Record<
-          string,
-          unknown
-        >
-      ).level = level);
-    editor.onLevelRebuilt();
-  },
+  rebuild: () => rebuildLevel(),
   // The editor renamed / duplicated / deleted a level: the menu is stale.
   levelsChanged: (goTo?: string) => {
     if (goTo && goTo !== current.id) switchLevel(goTo);
@@ -1049,7 +1053,8 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
     ui.refreshLevels(current.id);
   },
   exitToPlay: () => {
-    editor.exit();
+    editor.exit(); // clears the editor build mode
+    rebuildLevel(); // ...and this bakes the scenery back down for play
     player.respawn(level, true);
     ui.showMessage("TEST RUN", "press ✎ LEVEL EDITOR to keep editing", 1600);
   },
@@ -1076,6 +1081,10 @@ function openEditor(target: string = current.id): void {
   ui.hideMessage();
   player.respawn(level, true);
   ui.showDeathScreen(false);
+  // Scenery is baked into shared meshes for play and cannot be clicked in
+  // that form, so opening the editor rebuilds it loose. Only when the flag
+  // actually flips — reopening the editor twice must not rebuild twice.
+  if (setEditorBuild(true)) rebuildLevel();
   editor.enter(entry);
 }
 // MENU / TUNER while the editor owns the screen: the play panels are hidden
@@ -1083,7 +1092,8 @@ function openEditor(target: string = current.id): void {
 // saved live) and drops back to play — then the panel opens normally.
 ui.onSideTab = () => {
   if (!editor.active) return;
-  editor.exit();
+  editor.exit(); // clears the editor build mode
+  rebuildLevel(); // ...and this bakes the scenery back down for play
   player.respawn(level, true);
   ui.showMessage("EDITOR CLOSED", "press ✎ LEVEL EDITOR to keep editing", 1600);
 };

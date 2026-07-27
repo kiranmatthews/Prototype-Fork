@@ -24,6 +24,9 @@ import {
   migrateCustomLevel,
   groupChainOf,
   TEX_KINDS,
+  DECOR_KINDS,
+  DECOR_LABELS,
+  DecorKind,
   DEFAULT_LEVEL_ID,
   SKY_PRESETS,
   asSkyPreset,
@@ -35,6 +38,7 @@ import {
   deleteUserLevel,
   restoreBuiltin,
   findLevel,
+  setEditorBuild,
 } from "./level";
 
 interface Hooks {
@@ -78,6 +82,199 @@ const glyph = (
   x.textAlign = "center";
   x.textBaseline = "middle";
   x.fillText(ch, 9, 10);
+};
+
+// ---- SCENERY -------------------------------------------------------------
+// 18px palette thumbnails. Read as silhouettes, not portraits: at this size
+// the shape and the two or three colours are the whole message.
+const leafSpray = (
+  x: CanvasRenderingContext2D,
+  color: string,
+  n: number,
+  len: number,
+  wide: number,
+): void => {
+  x.strokeStyle = color;
+  x.lineWidth = wide;
+  x.lineCap = "round";
+  for (let i = 0; i < n; i++) {
+    const a = Math.PI + (i / (n - 1)) * Math.PI;
+    x.beginPath();
+    x.moveTo(9, 16);
+    x.quadraticCurveTo(
+      9 + Math.cos(a) * len * 0.6,
+      16 - len * 0.8,
+      9 + Math.cos(a) * len,
+      16 - len * 0.55,
+    );
+    x.stroke();
+  }
+};
+const capMushroom = (
+  x: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  r: number,
+): void => {
+  x.fillStyle = "#f0e4c8";
+  x.fillRect(cx - r * 0.22, cy, r * 0.44, r * 0.9);
+  x.fillStyle = "#d2402f";
+  x.beginPath();
+  x.ellipse(cx, cy, r, r * 0.72, 0, Math.PI, 0);
+  x.fill();
+  x.fillStyle = "#fff4e2";
+  x.beginPath();
+  x.arc(cx - r * 0.35, cy - r * 0.28, r * 0.18, 0, 7);
+  x.arc(cx + r * 0.38, cy - r * 0.18, r * 0.15, 0, 7);
+  x.fill();
+};
+const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  fern: (x) => leafSpray(x, "#4a9a40", 6, 12, 1.6),
+  broadleaf: (x) => leafSpray(x, "#3e8e46", 4, 13, 3.2),
+  flowers: (x) => {
+    x.strokeStyle = "#3e8e46";
+    x.lineWidth = 1.2;
+    x.beginPath();
+    x.moveTo(9, 16);
+    x.lineTo(9, 9);
+    x.stroke();
+    for (const [cx, cy, c] of [
+      [6, 7, "#ff5a48"],
+      [12, 8, "#ff9a2e"],
+      [9, 4, "#f84a8e"],
+    ] as const) {
+      x.fillStyle = c;
+      x.beginPath();
+      x.arc(cx, cy, 2.4, 0, 7);
+      x.fill();
+    }
+  },
+  toadstool: (x) => capMushroom(x, 9, 10, 6),
+  toadstools: (x) => {
+    capMushroom(x, 5, 13, 3.4);
+    capMushroom(x, 13, 12, 3);
+    capMushroom(x, 9, 8, 5);
+  },
+  mossrock: (x) => {
+    x.fillStyle = "#a8b090";
+    x.beginPath();
+    x.ellipse(9, 12, 7, 4.6, 0, 0, 7);
+    x.fill();
+    x.fillStyle = "#6f9a52";
+    x.beginPath();
+    x.ellipse(7, 9.5, 3.4, 1.6, -0.3, 0, 7);
+    x.fill();
+  },
+  jungletree: (x) => {
+    x.fillStyle = "#6b4a2f";
+    x.fillRect(8, 7, 2.4, 10);
+    x.fillStyle = "#2f7a38";
+    x.beginPath();
+    x.ellipse(9, 6, 8, 4.4, 0, 0, 7);
+    x.fill();
+  },
+  palm: (x) => {
+    x.strokeStyle = "#b08556";
+    x.lineWidth = 2;
+    x.beginPath();
+    x.moveTo(7, 17);
+    x.quadraticCurveTo(9, 11, 11, 6);
+    x.stroke();
+    leafSpray(x, "#3fa04a", 5, 8, 1.8);
+    x.save();
+    x.translate(2, -10);
+    x.restore();
+  },
+  vines: (x) => {
+    x.strokeStyle = "#3d7a33";
+    x.lineWidth = 1.6;
+    for (const sx of [5, 9, 13]) {
+      x.beginPath();
+      x.moveTo(sx, 1);
+      x.quadraticCurveTo(sx + (sx - 9) * 0.4, 8, sx + (sx - 9) * 0.2, 15);
+      x.stroke();
+    }
+  },
+  planter: (x) => {
+    leafSpray(x, "#4a9a40", 5, 8, 1.5);
+    x.fillStyle = "#c86a42";
+    x.beginPath();
+    x.moveTo(5, 11);
+    x.lineTo(13, 11);
+    x.lineTo(11.5, 17);
+    x.lineTo(6.5, 17);
+    x.closePath();
+    x.fill();
+  },
+  idol: (x) => {
+    x.fillStyle = "#9aa093";
+    x.fillRect(4, 4, 10, 11);
+    x.fillRect(3, 15, 12, 2.5);
+    x.fillStyle = "#2b2f2c";
+    x.fillRect(5.5, 7, 2.5, 2);
+    x.fillRect(10, 7, 2.5, 2);
+    x.fillRect(6, 11.5, 6, 2);
+  },
+  ruinblock: (x) => {
+    x.fillStyle = "#8f9488";
+    x.fillRect(2, 6, 14, 10);
+    x.strokeStyle = "#6a6f66";
+    x.lineWidth = 1;
+    x.strokeRect(2, 6, 7, 5);
+    x.strokeRect(9, 6, 7, 5);
+    x.strokeRect(2, 11, 14, 5);
+    x.fillStyle = "#4e7a3e";
+    x.fillRect(2, 4.5, 14, 2);
+  },
+  block: (x) => {
+    x.fillStyle = "#6b5232";
+    x.fillRect(2, 4, 14, 12);
+    x.fillStyle = "#7d6140";
+    x.fillRect(2, 4, 14, 2.5);
+    x.fillStyle = "#5a4429";
+    for (const [bx, by] of [
+      [4, 8],
+      [10, 7],
+      [7, 12],
+      [12, 12],
+    ] as const) {
+      x.beginPath();
+      x.arc(bx, by, 1.1, 0, 7);
+      x.fill();
+    }
+  },
+  log: (x) => {
+    x.fillStyle = "#96683c";
+    x.fillRect(1, 7, 16, 5);
+    x.fillStyle = "#7a5533";
+    x.beginPath();
+    x.ellipse(2, 9.5, 1.4, 2.5, 0, 0, 7);
+    x.fill();
+    x.strokeStyle = "#7a5533";
+    x.lineWidth = 0.8;
+    x.beginPath();
+    x.moveTo(6, 7);
+    x.lineTo(6.5, 12);
+    x.stroke();
+  },
+};
+// What a freshly dropped prop looks like: the same numbers the hand-coded
+// levels plant with, so a new one matches the ones already standing there.
+const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  fern: { w: 1.2 },
+  broadleaf: { w: 1.2 },
+  flowers: {},
+  toadstool: { w: 1 },
+  toadstools: { w: 1 },
+  mossrock: { w: 1.6 },
+  jungletree: { rise: 10, amp: 0 },
+  palm: { rise: 4.8, amp: 0.12 },
+  vines: { rise: 4, n: 3 },
+  planter: {},
+  idol: { w: 1.4, yaw: 0 },
+  ruinblock: { s: [2.4, 1.6, 2.4], yaw: 0 },
+  log: { len: 13 },
+  block: { s: [10, 8, 10], yaw: 0, color: "#6b5232", tex: "dirt" },
 };
 
 const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
@@ -1092,6 +1289,22 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
       },
     ],
   },
+  {
+    title: "SCENERY",
+    // Built straight off DECOR_KINDS, so a prop added to the game shows up in
+    // the add panel the same day. Defaults match what the hand-coded levels
+    // plant, so dropping one in looks like the ones already there.
+    items: DECOR_KINDS.map((k) => ({
+      label: DECOR_LABELS[k],
+      icon: DECOR_ICONS[k],
+      make: (at: { x: number; y: number; z: number }) => ({
+        t: "decor" as const,
+        dkind: k,
+        p: [at.x, at.y, at.z] as [number, number, number],
+        ...DECOR_DEFAULTS[k],
+      }),
+    })),
+  },
 ];
 
 const CRATE_KINDS = [
@@ -1413,6 +1626,10 @@ export class Editor {
 
   exit(): void {
     if (!this.active) return;
+    // Never leave the build mode stuck on: whoever closes the editor, the
+    // next level built goes back to baked scenery. The paths that stay on
+    // THIS level rebuild it themselves (see main.ts).
+    setEditorBuild(false);
     this.to3D(); // a 2D work view must not leak its long-lens camera into play
     this.active = false;
     this.hooks.setView(false); // restore the level's fog + play draw distance
@@ -2475,6 +2692,8 @@ export class Editor {
   // fill defaulted dimensions in, so handle math (and its grab snapshot) is concrete
   private materializeDims(c: CustomComponent): void {
     if (c.t === "platform") c.s = c.s ?? [8, 1, 8];
+    else if (c.t === "decor")
+      c.s = c.s ?? (c.dkind === "block" ? [10, 8, 10] : [2.4, 1.6, 2.4]);
     else if (c.t === "rock") c.s = c.s ?? [3, 2, 3];
     else if (c.t === "wall") c.s = c.s ?? [8, 4, 1];
     else if (c.t === "pit") c.s = c.s ?? [6, 1, 6];
@@ -4229,6 +4448,8 @@ export class Editor {
     if (c.t === "crate")
       return `crate · ${c.kind ?? "wood"}${c.outline ? " (outline)" : ""}`;
     if (c.t === "enemy") return `foe · ${c.foe ?? "grunt"}`;
+    if (c.t === "decor")
+      return DECOR_LABELS[(c.dkind ?? "fern") as DecorKind] ?? "decor";
     if (c.t === "wall" && c.invisible) return "invis wall";
     if (c.t === "clock") return "tt clock";
     if (c.t === "comboorb") return "combo orb";
@@ -5385,6 +5606,104 @@ export class Editor {
         chain.blur();
       });
       this.propsEl.appendChild(chain);
+    } else if (c.t === "decor") {
+      // One panel for every prop, showing only the knobs that prop has. The
+      // kind dropdown is a live swap: change your mind about a fern without
+      // deleting it and placing a broadleaf in the same spot.
+      const kindSel = document.createElement("select");
+      kindSel.className = "ed-select";
+      for (const k of DECOR_KINDS) {
+        const o = document.createElement("option");
+        o.value = k;
+        o.textContent = DECOR_LABELS[k];
+        if ((c.dkind ?? "fern") === k) o.selected = true;
+        kindSel.appendChild(o);
+      }
+      kindSel.addEventListener("change", () => {
+        c.dkind = kindSel.value as DecorKind;
+        // carry over the new prop's defaults for anything it needs and the
+        // old one never had (a fern has no height; a tree does)
+        const bag = c as unknown as Record<string, unknown>;
+        for (const [k, v] of Object.entries(DECOR_DEFAULTS[c.dkind]))
+          if (bag[k] === undefined) bag[k] = v;
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(kindSel);
+      const dk = (c.dkind ?? "fern") as DecorKind;
+      const SCALED: DecorKind[] = [
+        "fern",
+        "broadleaf",
+        "toadstool",
+        "toadstools",
+        "mossrock",
+        "idol",
+      ];
+      const TALL: Record<string, string> = {
+        jungletree: "height",
+        palm: "height",
+        vines: "drop",
+      };
+      if (SCALED.includes(dk))
+        num(
+          "scale",
+          () => c.w ?? 1,
+          (v) => (c.w = Math.max(0.1, v)),
+          0.1,
+        );
+      if (TALL[dk])
+        num(
+          TALL[dk],
+          () => c.rise ?? 4,
+          (v) => (c.rise = Math.max(0.5, v)),
+          0.5,
+        );
+      if (dk === "jungletree" || dk === "palm")
+        num(
+          "lean",
+          () => c.amp ?? 0,
+          (v) => (c.amp = v),
+          0.02,
+        );
+      if (dk === "vines")
+        num(
+          "strands",
+          () => c.n ?? 3,
+          (v) => (c.n = Math.max(1, Math.round(v))),
+          1,
+        );
+      if (dk === "log")
+        num(
+          "length",
+          () => c.len ?? 13,
+          (v) => (c.len = Math.max(1, v)),
+          1,
+        );
+      if (dk === "ruinblock" || dk === "block") {
+        this.materializeDims(c);
+        sizeRow(0, "width");
+        sizeRow(1, "height");
+        sizeRow(2, "depth");
+      }
+      if (dk === "block") colorRow();
+      if (dk === "idol" || dk === "ruinblock" || dk === "block")
+        num(
+          "yaw °",
+          () => c.yaw ?? 0,
+          (v) => (c.yaw = v),
+          15,
+        );
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent =
+        dk === "idol"
+          ? "scenery — solid: it blocks, so it can frame a doorway"
+          : dk === "log"
+            ? "scenery — solid: a hop-over obstacle across the path"
+            : dk === "block"
+              ? "massing — looks solid, is not: you fall straight through it"
+              : "scenery — visual only, never a floor and never a wall";
+      this.propsEl.appendChild(note);
     } else if (c.t === "enemy") {
       const sel = document.createElement("select");
       sel.className = "ed-select";
