@@ -5,21 +5,18 @@ import * as THREE from "three";
 import { Input } from "./input";
 import {
   Level,
-  LEVEL_NAMES,
-  CUSTOM_LEVEL_ID,
+  LevelEntry,
   CustomLevelData,
-  setCustomLevelData,
-  EDITABLE_IDS,
-  levelOverrideKey,
-  getLevelOverride,
-  clearLevelOverride,
-  pruneRetiredOverrides,
-  clearAllLevelOverrides,
-  allLevelOverrides,
-  applyRemoteLevels,
-  markLevelDirty,
-  getDirtyIds,
-  clearDirty,
+  DEFAULT_LEVEL_ID,
+  levelList,
+  findLevel,
+  isBuiltin,
+  saveUserLevel,
+  setUserLevels,
+  getUserLevels,
+  deleteUserLevel,
+  adoptLegacyLevels,
+  starterCustomLevel,
   isEditUnlocked,
   checkEditPass,
 } from "./level";
@@ -551,11 +548,11 @@ input2.rival = input;
 const ui = new UI();
 const recorder = new Recorder();
 const replayer = new Replayer();
-let currentCourse = Math.min(
-  LEVEL_NAMES.length - 1,
-  Math.max(0, Number(localStorage.getItem("protoLevel")) || 0),
-);
-let level = new Level(scene, currentCourse);
+adoptLegacyLevels(); // one-shot: old single-slot edits become real user levels
+let current: LevelEntry =
+  findLevel(localStorage.getItem("protoLevelId") ?? "") ??
+  findLevel(DEFAULT_LEVEL_ID)!;
+let level = new Level(scene, current);
 const player = new Player(scene);
 
 // ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
@@ -769,7 +766,7 @@ function updateCamera2(dt: number): void {
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
 player.respawn(level, true);
 applyTheme();
-recorder.start(currentCourse); // the take always runs: level load -> now
+recorder.start(current.id); // the take always runs: level load -> now
 
 // Every solid mesh in the world both casts and receives. It's a whole-scene
 // traverse rather than per-builder flags because the builders are hundreds of
@@ -796,21 +793,21 @@ function applyShadowFlags(): void {
   });
 }
 
-function switchLevel(id: number): void {
-  // Clamp: replay files and saved editor targets carry level ids recorded by
-  // older builds, and levels have been merged away since. An out-of-range id
-  // took the whole game down on LEVEL_NAMES[id].toUpperCase().
-  id = Math.min(LEVEL_NAMES.length - 1, Math.max(0, id | 0));
-  currentCourse = id;
-  localStorage.setItem("protoLevel", String(id));
+function switchLevel(id: string): void {
+  // An id that no longer exists — a deleted user level, a replay or saved
+  // editor target from an older list — resolves to the default course rather
+  // than taking the whole game down on entry.name.toUpperCase().
+  const entry = findLevel(id) ?? findLevel(DEFAULT_LEVEL_ID)!;
+  current = entry;
+  localStorage.setItem("protoLevelId", entry.id);
   if (replayer.active) {
     // a manual level switch cancels a running replay (and restores tuning)
     replayer.end();
     ui.setReplayBadge(false);
   }
-  if (editor.active && id !== CUSTOM_LEVEL_ID) editor.exit(); // leaving Custom closes the editor
+  if (editor.active && editor.targetId !== entry.id) editor.exit(); // leaving the level under edit closes it
   level.dispose();
-  level = new Level(scene, id);
+  level = new Level(scene, entry);
   player.respawn(level, true);
   if (split2p && p2) {
     p2.respawn(level, true);
@@ -819,9 +816,9 @@ function switchLevel(id: number): void {
   }
   applyTheme();
   applyShadowFlags();
-  ui.setLevel(id);
-  ui.showMessage(LEVEL_NAMES[id].toUpperCase(), "", 1400);
-  recorder.start(id); // fresh take from this load
+  ui.setLevel(entry.id);
+  ui.showMessage(entry.name.toUpperCase(), "", 1400);
+  recorder.start(entry.id); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
     ((
       (window as unknown as Record<string, unknown>).__game as Record<
@@ -831,17 +828,18 @@ function switchLevel(id: number): void {
     ).level = level);
 }
 
-// ---- level editor (Custom level, slot 8) -----------------------------------
+// ---- level editor ----------------------------------------------------------
 const editor = new Editor(scene, camera, renderer.domElement, () => level, {
-  // every edit rebuilds the level under edit from data, so edit = play truth.
-  // The target course is whatever the editor is bound to (custom sandbox, or a
-  // built-in level's override) — currentCourse tracks it (openEditor switched).
+  // Every edit rebuilds the level under edit from its data, so edit = play
+  // truth. The editor only ever binds to a USER level, and openEditor has
+  // already switched to it — so `current` is the level being edited.
   rebuild: () => {
+    current = findLevel(current.id) ?? current; // pick up the just-saved data/name
     level.dispose();
-    level = new Level(scene, currentCourse);
+    level = new Level(scene, current);
     player.respawn(level, true);
     applyTheme();
-    recorder.start(currentCourse);
+    recorder.start(current.id);
     (window as unknown as Record<string, unknown>).__game &&
       ((
         (window as unknown as Record<string, unknown>).__game as Record<
@@ -851,21 +849,14 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
       ).level = level);
     editor.onLevelRebuilt();
   },
-  // "restore original" on a built-in: drop the override, rebuild the hand-coded
-  // level, and mark it dirty so the RESET syncs to the phone too.
-  restoreOriginal: () => {
-    const id = editor.targetCourse;
-    if (id === CUSTOM_LEVEL_ID) return;
-    clearLevelOverride(id);
-    markLevelDirty(id);
-    editor.exit();
-    switchLevel(id);
-    player.respawn(level, true);
-    ui.showMessage(
-      "ORIGINAL RESTORED",
-      `${LEVEL_NAMES[id]} — SYNC to push the reset to your phone`,
-      2600,
-    );
+  // The editor renamed / duplicated / deleted a level: the menu is stale.
+  levelsChanged: (goTo?: string) => {
+    if (goTo && goTo !== current.id) switchLevel(goTo);
+    else {
+      current = findLevel(current.id) ?? current;
+      level.name = current.name; // a rename is live, without a rebuild
+    }
+    ui.refreshLevels(current.id);
   },
   exitToPlay: () => {
     editor.exit();
@@ -876,19 +867,27 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
   // drop fog + extend the far plane on enter, restore on every exit path
   setView: (editing) => setEditorView(editing),
 });
-function openEditor(target = CUSTOM_LEVEL_ID): void {
+// Open the editor on a level (default: whatever is loaded). A built-in can't
+// be bound directly — the editor autosaves, and built-ins are pristine — so it
+// routes through editLevel, which forks a copy first.
+function openEditor(target: string = current.id): void {
   if (split2p) set2P(false); // the editor is a one-player room
   if (editor.active) return;
-  if (currentCourse !== target) switchLevel(target);
+  const entry = findLevel(target);
+  if (!entry) return;
+  if (isBuiltin(entry.id)) {
+    editLevel(entry.id);
+    return;
+  }
+  if (current.id !== entry.id) switchLevel(entry.id);
   // clear anything that could sit over/under the editor: a paused sim, a
   // dead/game-over player, the death overlay
   paused = false;
   ui.hideMessage();
   player.respawn(level, true);
   ui.showDeathScreen(false);
-  editor.enter(target);
+  editor.enter(entry);
 }
-ui.onEditorOpen = () => openEditor(CUSTOM_LEVEL_ID); // the ✎ button opens the custom sandbox
 // MENU / TUNER while the editor owns the screen: the play panels are hidden
 // under the tools, so a tab tap first CLOSES the editor (edits are already
 // saved live) and drops back to play — then the panel opens normally.
@@ -898,54 +897,69 @@ ui.onSideTab = () => {
   player.respawn(level, true);
   ui.showMessage("EDITOR CLOSED", "press ✎ LEVEL EDITOR to keep editing", 1600);
 };
-// EDIT A COPY: capture whatever level is loaded into editor components and
-// open the editor on it. The previous custom level is backed up so nothing
-// is silently lost. Bespoke set pieces without a component language
-// (boulder chase, side-scroll zones, sky-ropes, decor foliage) don't come
-// through — the copy is the editable geometry.
-ui.onEditCopy = () => {
-  const wasBuiltIn = currentCourse !== CUSTOM_LEVEL_ID;
-  if (wasBuiltIn) {
-    const data = level.captureData();
-    const prev = localStorage.getItem("protoCustomLevel");
-    if (prev) localStorage.setItem("protoCustomLevelBackup", prev);
-    localStorage.setItem("protoCustomLevel", JSON.stringify(data));
-    setCustomLevelData(data);
-  }
-  openEditor(7);
-  if (wasBuiltIn) {
-    ui.showMessage(
-      "EDITING A COPY",
-      `${level.name} → custom slot (previous custom backed up)`,
-      2600,
-    );
-  }
-};
-// EDIT THIS LEVEL (unlocked): edit the built-in level IN PLACE. First time on a
-// level, capture its geometry into that level's own override slot (named as the
-// level itself, not a "copy"); after that the override IS the level, so the
-// editor just reopens it. Bespoke set pieces (boulder chase, decor) don't round
-// -trip — but "restore original" always brings the hand-coded design back.
-ui.onEditThisLevel = () => {
-  const id = currentCourse;
-  if (id === CUSTOM_LEVEL_ID || !EDITABLE_IDS.includes(id)) {
-    openEditor(7);
+// EDIT THIS LEVEL. A user level opens straight in the editor. A BUILT-IN is
+// never edited in place — it is captured into components and saved as a new
+// user level, which then joins the menu; the built-in stays pristine forever.
+// Bespoke set pieces without a component language (side-scroll zones,
+// sky-ropes, decor foliage) don't come through — the copy is the geometry.
+function editLevel(id: string): void {
+  const entry = findLevel(id);
+  if (!entry) return;
+  if (!isBuiltin(id)) {
+    openEditor(id);
     return;
   }
-  const fresh = !getLevelOverride(id);
-  if (fresh) {
-    const data = level.captureData();
-    data.name = LEVEL_NAMES[id]; // in place — not "(copy)"
-    localStorage.setItem(levelOverrideKey(id), JSON.stringify(data));
-    markLevelDirty(id);
-    switchLevel(id); // rebuild so the live level now IS its override
-  }
-  openEditor(id);
+  if (current.id !== id) switchLevel(id); // capture reads the LIVE level
+  const data = level.captureData();
+  data.name = `${entry.name} copy`;
+  const newId = saveUserLevel({ id: "", name: data.name, data });
+  switchLevel(newId);
+  ui.refreshLevels(newId);
+  openEditor(newId);
   ui.showMessage(
-    `EDITING ${LEVEL_NAMES[id].toUpperCase()}`,
-    fresh ? "edits save to this level — SYNC to push to your phone" : "",
-    2400,
+    "EDITING A COPY",
+    `${entry.name} → ${data.name} (the original stays put)`,
+    2600,
   );
+}
+ui.onLevelEdit = (id: string) => editLevel(id);
+// NEW: a blank slate that joins the menu immediately.
+ui.onLevelNew = () => {
+  const data = starterCustomLevel();
+  data.name = "New Level";
+  const id = saveUserLevel({ id: "", name: data.name, data });
+  switchLevel(id);
+  ui.refreshLevels(id);
+  openEditor(id);
+  ui.showMessage("NEW LEVEL", "rename it in the editor's PROJECT tab", 2400);
+};
+// IMPORT: a downloaded level file becomes a new menu row. Accepts both the
+// bare component data the editor exports and a whole {id,name,data} entry.
+function importLevelFile(txt: string, fallbackName: string): boolean {
+  let data: CustomLevelData | null = null;
+  let name = fallbackName.replace(/\.json$/i, "");
+  try {
+    const obj = JSON.parse(txt) as {
+      components?: unknown;
+      name?: string;
+      data?: CustomLevelData;
+    };
+    if (Array.isArray(obj.components)) data = obj as unknown as CustomLevelData;
+    else if (obj.data && Array.isArray(obj.data.components)) data = obj.data;
+    if (data) name = obj.name ?? data.name ?? name;
+  } catch {
+    return false;
+  }
+  if (!data) return false;
+  const id = saveUserLevel({ id: "", name, data });
+  switchLevel(id);
+  ui.refreshLevels(id);
+  ui.showMessage("LEVEL IMPORTED", `${findLevel(id)?.name ?? name}`, 2000);
+  return true;
+}
+ui.onLevelImport = (txt: string, filename: string) => {
+  if (!importLevelFile(txt, filename))
+    ui.showMessage("BAD LEVEL FILE", "", 1600);
 };
 // UNLOCK: the passcode gate for direct editing + phone sync.
 ui.onUnlockEditing = async (pass: string): Promise<boolean> => {
@@ -960,54 +974,45 @@ ui.onUnlockEditing = async (pass: string): Promise<boolean> => {
   }
   return ok;
 };
-// SYNC: push every locally-edited level to the repo file the phone reads.
+// SYNC UP: publish this session's whole level list to the repo file the phone
+// reads. The payload IS the list — what you see is what you push.
 ui.onSyncPush = async (): Promise<void> => {
-  const dirtyBefore = [...getDirtyIds()];
-  ui.setSyncStatus("pushing to your phone…", "busy");
-  const res = await pushLevels(allLevelOverrides());
-  if (res.ok) {
-    clearDirty(EDITABLE_IDS); // everything we just pushed is now clean
-    ui.setSyncStatus(res.msg, "ok");
-    ui.refreshEditControls();
-  } else {
-    // a failed push must keep the dirty flags so the edits aren't lost
-    void dirtyBefore;
-    ui.setSyncStatus(res.msg, "err");
-  }
+  const levels = getUserLevels();
+  ui.setSyncStatus(`pushing ${levels.length} level(s)…`, "busy");
+  const res = await pushLevels({ v: 2, levels });
+  ui.setSyncStatus(res.msg, res.ok ? "ok" : "err");
+  ui.refreshEditControls();
 };
-// FORCE RE-SYNC: drop this device's saved levels and re-read the deployed
-// file. The load-time sync skips any level with unpushed edits forever (so a
-// fetch can't eat your work), which is right on the Mac and wrong on a phone
-// that once opened the editor — that device pins itself to a world nobody
-// else has. Fetch FIRST and only wipe if it lands: an offline tap has to leave
-// the levels it already had.
+// RESTORE FROM CLOUD: replace this device's list with the published one. This
+// is the escape hatch for a device that has drifted — and the one-tap setup
+// for a phone that has never seen the levels. It DISCARDS local levels, so the
+// button is two-tap armed; and it fetches first, so an offline tap changes
+// nothing.
 ui.onForceResync = async (): Promise<void> => {
-  ui.setSyncStatus("re-reading the published levels…", "busy");
-  const remote = await fetchRemoteLevels();
-  if (!remote) {
+  ui.setSyncStatus("reading the published levels…", "busy");
+  const remote = (await fetchRemoteLevels()) as {
+    v?: number;
+    levels?: LevelEntry[];
+  } | null;
+  if (!remote || !Array.isArray(remote.levels)) {
     const msg = "couldn't reach the published levels — nothing changed";
     ui.setSyncStatus(msg, "err");
-    ui.showMessage("RE-SYNC FAILED", msg, 2600);
+    ui.showMessage("RESTORE FAILED", msg, 2600);
     return;
   }
-  const dropped = clearAllLevelOverrides();
-  applyRemoteLevels(remote as Record<string, CustomLevelData>, new Set());
-  // rebuild unconditionally: a slot we just wiped that isn't in the published
-  // file reports "unchanged" (null === null) while the live level is still the
-  // old local one
-  if (!editor.active) {
-    switchLevel(currentCourse);
-    player.respawn(level, true);
-  }
+  const before = getUserLevels().length;
+  setUserLevels(remote.levels);
+  localStorage.setItem("protoCloudPulled", "1");
+  const after = getUserLevels().length;
+  if (editor.active) editor.exit();
+  switchLevel(findLevel(current.id) ? current.id : DEFAULT_LEVEL_ID);
+  player.respawn(level, true);
+  ui.refreshLevels(current.id);
   ui.refreshEditControls();
-  const copies = `${dropped} local cop${dropped === 1 ? "y" : "ies"}`;
-  ui.setSyncStatus(
-    `re-synced from the published file — ${copies} dropped`,
-    "ok",
-  );
+  ui.setSyncStatus(`restored ${after} level(s) from the cloud`, "ok");
   ui.showMessage(
-    "LEVELS RE-SYNCED",
-    dropped ? `${copies} discarded` : "this device was already up to date",
+    "LEVELS RESTORED",
+    `${before} local → ${after} published`,
     2400,
   );
 };
@@ -1024,39 +1029,40 @@ ui.onTokenSet = (t: string) => {
 ui.provideEditState = () => ({
   unlocked: isEditUnlocked(),
   hasToken: !!getToken(),
-  dirtyCount: getDirtyIds().size,
-  editable: EDITABLE_IDS.includes(currentCourse), // built-in editable levels (custom edits via ✎)
-  isOverride:
-    currentCourse !== CUSTOM_LEVEL_ID && !!getLevelOverride(currentCourse),
+  userCount: getUserLevels().length,
 });
 ui.setEditUnlocked(isEditUnlocked());
 // Refresh-proof editing: if the page reloads mid-edit, walk straight back into
 // the editor on the SAME level (camera pose restored by Editor.enter()).
 // Deferred past module init — openEditor touches state declared further down.
 if (localStorage.getItem("protoEditorOpen") === "1") {
-  const t =
-    Number(localStorage.getItem("protoEditorTarget")) || CUSTOM_LEVEL_ID;
-  setTimeout(() => openEditor(t), 0);
+  const t = localStorage.getItem("protoEditorTarget") ?? "";
+  // a stale target (older build, deleted level) must not reopen on the wrong
+  // level — the editor autosaves, so that would overwrite it
+  if (findLevel(t)) setTimeout(() => openEditor(t), 0);
+  else {
+    localStorage.removeItem("protoEditorOpen");
+    localStorage.removeItem("protoEditorTarget");
+  }
 }
 
-// ---- CROSS-DEVICE SYNC: pull the published levels on load ------------------
-// Every device fetches the deployed levels.json and adopts it — EXCEPT levels
-// with unpushed local edits (those win until the next push). If a fetched
-// level differs from what's live right now (and we're not editing), rebuild it
-// so the change shows without a manual reload. This is how the phone picks up
-// what the Mac pushed.
+// ---- CROSS-DEVICE SYNC: first-run pull ------------------------------------
+// A device that has never pulled and has no levels of its own adopts the
+// published list, so a phone picks up everything the Mac pushed with zero
+// setup. After that the list is yours: RESTORE FROM CLOUD is the only thing
+// that overwrites it, so a fetch can never eat your edits and a level you
+// deleted stays deleted.
 void (async () => {
-  pruneRetiredOverrides(); // drop saved slots for levels that no longer exist
-  const remote = await fetchRemoteLevels();
-  if (!remote) return;
-  const changed = applyRemoteLevels(
-    remote as Record<string, CustomLevelData>,
-    getDirtyIds(),
-  );
-  if (changed.includes(currentCourse) && !editor.active) {
-    switchLevel(currentCourse);
-    player.respawn(level, true);
+  if (localStorage.getItem("protoCloudPulled") === "1") return;
+  if (getUserLevels().length) {
+    localStorage.setItem("protoCloudPulled", "1"); // this device authored its own
+    return;
   }
+  const remote = (await fetchRemoteLevels()) as { levels?: LevelEntry[] } | null;
+  if (!remote || !Array.isArray(remote.levels)) return;
+  setUserLevels(remote.levels);
+  localStorage.setItem("protoCloudPulled", "1");
+  ui.refreshLevels(current.id);
   ui.refreshEditControls();
 })();
 
@@ -1073,7 +1079,8 @@ function saveReplay(): void {
   const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `replay-${LEVEL_NAMES[data.level].replace(/\s+/g, "")}-${data.date.replace(/[:.]/g, "-").slice(0, 19)}.json`;
+  const lvlName = findLevel(data.level)?.name ?? data.level;
+  a.download = `replay-${lvlName.replace(/\s+/g, "")}-${data.date.replace(/[:.]/g, "-").slice(0, 19)}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   const secs = (data.frames / 60).toFixed(0);
@@ -1085,16 +1092,14 @@ function saveReplay(): void {
 }
 
 function loadReplay(data: ReplayFile): void {
+  if (!findLevel(data.level)) {
+    ui.showMessage("REPLAY LEVEL MISSING", String(data.level), 2200);
+    return;
+  }
   switchLevel(data.level); // clean slate: replay assumes a fresh level load
   replayer.begin(data);
   ui.setReplayBadge(true);
-  if (data.level === 2)
-    ui.showMessage(
-      "REPLAY",
-      "random level: layout may differ from the take",
-      2000,
-    );
-  else ui.showMessage("REPLAY", `${(data.frames / 60).toFixed(0)}s take`, 1400);
+  ui.showMessage("REPLAY", `${(data.frames / 60).toFixed(0)}s take`, 1400);
 }
 
 // Gameplay video: records the canvas, downloads a .webm on stop.
@@ -1150,12 +1155,14 @@ window.addEventListener("drop", (e) => {
   if (f)
     f.text().then((txt) => {
       try {
-        const obj = JSON.parse(txt) as { components?: unknown; b?: unknown };
-        if (Array.isArray(obj.components)) {
-          // a custom LEVEL file: adopt it and go there
-          if (currentCourse !== CUSTOM_LEVEL_ID) switchLevel(CUSTOM_LEVEL_ID);
-          editor.importLevel(obj as never);
-          ui.showMessage("LEVEL IMPORTED", "", 1600);
+        const obj = JSON.parse(txt) as {
+          components?: unknown;
+          data?: { components?: unknown };
+          b?: unknown;
+        };
+        if (Array.isArray(obj.components) || Array.isArray(obj.data?.components)) {
+          // a LEVEL file: it joins the menu as its own level
+          importLevelFile(txt, f.name);
         } else if (Array.isArray(obj.b)) {
           loadReplay(obj as ReplayFile);
         } else {
@@ -1175,7 +1182,7 @@ ui.onLifeCheat = () => {
   player.lives++;
   sfx.play("lifeGet", 0.8);
 };
-ui.setLevel(currentCourse);
+ui.refreshLevels(current.id); // adoption/first-run pull may have grown the list
 window.addEventListener("keydown", (e) => {
   // typing in a panel field (editor coordinates, tuner values) must not
   // switch levels or fire capture hotkeys
@@ -1190,9 +1197,10 @@ window.addEventListener("keydown", (e) => {
   if (!editor.active) {
     // level hotkeys are gameplay-only — inside the editor they'd yank the
     // level out from under you
-    // number row -> level, in menu order (7 levels: Digit1..Digit7)
-    for (let i = 0; i < LEVEL_NAMES.length; i++) {
-      if (e.code === `Digit${i + 1}`) switchLevel(i);
+    // number row -> level, in menu order; the list is unbounded, keys are 1-9
+    const rows = levelList();
+    for (let i = 0; i < Math.min(9, rows.length); i++) {
+      if (e.code === `Digit${i + 1}`) switchLevel(rows[i].id);
     }
   }
   if (e.code === "F8") saveReplay(); // playtest capture: input take -> .json
@@ -1222,7 +1230,7 @@ player.onRespawn = () => {
 
 // ---- time trial: ranked times per level, kept in this browser --------------
 function recordTT(
-  levelId: number,
+  levelId: string,
   time: number,
 ): { list: number[]; rank: number } {
   let all: Record<string, number[]> = {};
@@ -1278,7 +1286,7 @@ player.onComboRunEnd = () => {
   ui.setRunRows(false);
 };
 player.onTTFinish = (time) => {
-  const { list, rank } = recordTT(currentCourse, time);
+  const { list, rank } = recordTT(current.id, time);
   ui.setTimeTrial(false);
   ui.showTTResults(time, list, rank);
 };
@@ -1636,7 +1644,7 @@ function frame(): void {
     if (!split2p && replayer.active && !replayer.feed(input)) {
       ui.setReplayBadge(false);
       ui.showMessage("REPLAY DONE", "", 1200);
-      switchLevel(currentCourse);
+      switchLevel(current.id);
       break;
     }
     // 2P: a reset from EITHER side resets both riders to the start
@@ -1753,6 +1761,11 @@ frame();
   editor,
   openEditor,
   ui, // debug: drive menu/sync controls from the console/harness
-  setCustomLevelData, // debug: load level data into the custom slot from the harness
+  // debug: build/inspect the level list straight from the harness
+  levelList,
+  findLevel,
+  saveUserLevel,
+  deleteUserLevel,
+  getCurrentLevel: () => current,
   GLTFLoader, // debug: inspect model files from the console/harness
 };

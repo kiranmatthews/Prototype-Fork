@@ -1,6 +1,8 @@
-// LEVEL EDITOR: an in-game mode over the Custom level (slot 8). The level is
-// pure data (CustomLevelData) — the editor mutates that data and rebuilds the
-// live level after every change, so what you edit is exactly what you play.
+// LEVEL EDITOR: an in-game mode over a USER level. The level is pure data
+// (CustomLevelData) — the editor mutates that data and rebuilds the live level
+// after every change, so what you edit is exactly what you play. Built-in
+// levels are never edited in place: main.ts captures one into a new user level
+// first, so the editor only ever binds to something it is safe to overwrite.
 //
 //   orbit: left-drag rotate · wheel zoom · right-drag pan
 //   select: click a component · drag it to move (Shift = up/down)
@@ -17,23 +19,27 @@ import {
   CustomComponent,
   EnemyKind,
   CustomLevelData,
-  getCustomLevelData,
-  setCustomLevelData,
+  LevelEntry,
   starterCustomLevel,
   migrateCustomLevel,
   groupChainOf,
   TEX_KINDS,
-  LEVEL_NAMES,
-  CUSTOM_LEVEL_ID,
+  DEFAULT_LEVEL_ID,
   getEditData,
   persistEditData,
+  saveUserLevel,
+  renameUserLevel,
+  deleteUserLevel,
+  findLevel,
 } from "./level";
 
 interface Hooks {
   rebuild: () => void; // dispose + reconstruct the target level from data
   exitToPlay: () => void; // leave the editor and hand control back to the game
   showMsg: (title: string, sub?: string) => void;
-  restoreOriginal: () => void; // built-in override: clear it, rebuild the hand-coded level
+  // the level LIST changed (rename / duplicate / delete / import): refresh the
+  // menu, and switch to `goTo` if this editor session should follow it there
+  levelsChanged: (goTo?: string) => void;
   setView: (editing: boolean) => void; // toggle the fog-free, far-plane-extended editor view
 }
 
@@ -920,6 +926,46 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
+        label: "mover",
+        icon: (x) => {
+          x.fillStyle = "#8a96c8";
+          x.fillRect(3, 8, 12, 3);
+          x.strokeStyle = "#c8d4ff";
+          x.lineWidth = 1.2;
+          x.beginPath();
+          x.moveTo(2, 5);
+          x.lineTo(16, 5);
+          x.stroke();
+          glyph(x, "↔", "#c8d4ff");
+        },
+        make: (at) => ({
+          t: "mover",
+          p: [at.x, at.y, at.z],
+          s: [6, 0.8, 6],
+          axis: "x",
+          amp: 4,
+          speed: 0.6,
+          phase: 0,
+        }),
+      },
+      {
+        label: "boulder",
+        icon: (x) => {
+          x.fillStyle = "#a08a70";
+          x.beginPath();
+          x.arc(9, 8, 5, 0, Math.PI * 2);
+          x.fill();
+          glyph(x, "↕", "#3a2f26");
+        },
+        make: (at) => ({
+          t: "stone",
+          p: [at.x, at.y, at.z],
+          range: 20,
+          speed: 6,
+          radius: 0.9,
+        }),
+      },
+      {
         label: "pendulum",
         icon: (x) => {
           x.strokeStyle = "#6a7078";
@@ -1076,6 +1122,7 @@ const RESIZABLE = new Set([
   "pit",
   "crumble",
   "crusher",
+  "mover",
   "ramp",
   "rail",
   "rope",
@@ -1133,8 +1180,9 @@ const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 
 export class Editor {
   active = false;
-  targetCourse = CUSTOM_LEVEL_ID; // which level this session edits: the sandbox, else a built-in's override
-  private resetBtn: HTMLButtonElement | null = null; // "start over" / "restore original" — label swaps by target
+  targetId = DEFAULT_LEVEL_ID; // the user level this session edits
+  private targetName = ""; // its menu name — what the rename field shows
+  private nameInput: HTMLInputElement | null = null;
   data: CustomLevelData;
   // SELECTION is an ordered set of component indices; the LAST one is the
   // primary (it drives the props panel, snapping, and align actions).
@@ -1269,7 +1317,7 @@ export class Editor {
     this.dom = dom;
     this.getLevel = getLevel;
     this.hooks = hooks;
-    this.data = getCustomLevelData();
+    this.data = starterCustomLevel(); // placeholder; enter() loads the real one
     this.buildPanel();
     dom.addEventListener("pointerdown", this.onDown);
     dom.addEventListener("pointermove", this.onMove);
@@ -1285,12 +1333,14 @@ export class Editor {
     window.addEventListener("keyup", this.onKeyUp);
   }
 
-  enter(target = CUSTOM_LEVEL_ID): void {
+  enter(target: LevelEntry): void {
     if (this.active) return;
     this.active = true;
-    this.targetCourse = target;
-    localStorage.setItem("protoEditorTarget", String(target)); // refresh lands on the same level
-    this.data = migrateCustomLevel(getEditData(target));
+    this.targetId = target.id;
+    this.targetName = target.name;
+    if (this.nameInput) this.nameInput.value = target.name;
+    localStorage.setItem("protoEditorTarget", target.id); // refresh lands on the same level
+    this.data = migrateCustomLevel(getEditData(target.id));
     // fresh history per target: switching levels must not undo across them
     this.lastCommitted = JSON.stringify(this.data);
     this.undoStack.length = 0;
@@ -1334,9 +1384,6 @@ export class Editor {
       );
     }
     localStorage.setItem("protoEditorOpen", "1"); // refresh lands back in the editor
-    if (this.resetBtn)
-      this.resetBtn.textContent =
-        target === CUSTOM_LEVEL_ID ? "start over" : "restore original";
     document.body.classList.add("ed-active"); // hides the play HUD under the tools
     this.panel.style.display = "block";
     if (this.popWrap) this.popWrap.style.display = "block";
@@ -1349,12 +1396,8 @@ export class Editor {
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
     this.hooks.setView(true); // no fog, far plane pushed out — see the whole level
-    const editing =
-      target === CUSTOM_LEVEL_ID
-        ? "CUSTOM SANDBOX"
-        : `EDITING: ${LEVEL_NAMES[target].toUpperCase()}`;
     this.hooks.showMsg(
-      editing,
+      `EDITING: ${target.name.toUpperCase()}`,
       "drag = select & move · RIGHT-drag = orbit · space = pan",
     );
   }
@@ -1478,16 +1521,36 @@ export class Editor {
     return this.pick({ clientX, clientY } as PointerEvent);
   }
 
-  // Adopt a full level (drag-dropped file / shared JSON) as the working data.
-  importLevel(d: CustomLevelData): void {
+  // Adopt a level file as a NEW level in the menu, then edit it. Never
+  // overwrites the level that happens to be open.
+  importLevel(d: CustomLevelData, name?: string): void {
     // enforce the one-crystal rule on imported files too (keep the last)
     const lastCrystal = d.components.map((c) => c.t).lastIndexOf("crystal");
     d.components = d.components.filter(
       (c, i) => c.t !== "crystal" || i === lastCrystal,
     );
-    this.data = migrateCustomLevel(d);
+    const data = migrateCustomLevel(d);
+    const id = saveUserLevel({ id: "", name: name ?? data.name, data });
+    this.retarget(id);
+    this.hooks.levelsChanged(id);
+    this.hooks.showMsg("LEVEL IMPORTED", findLevel(id)?.name ?? "");
+  }
+
+  // Re-bind this editor session to another user level (import / duplicate).
+  private retarget(id: string): void {
+    const e = findLevel(id);
+    if (!e) return;
+    this.targetId = e.id;
+    this.targetName = e.name;
+    if (this.nameInput) this.nameInput.value = e.name;
+    localStorage.setItem("protoEditorTarget", e.id);
+    this.data = migrateCustomLevel(getEditData(e.id));
+    this.lastCommitted = JSON.stringify(this.data);
+    this.undoStack.length = 0; // history belongs to the level, not the session
+    this.redoStack.length = 0;
     this.select(-1);
-    this.commit();
+    this.renderLayers();
+    this.refreshSpawnMarker();
   }
 
   // main calls this after every rebuild so the highlight tracks fresh meshes
@@ -1534,8 +1597,7 @@ export class Editor {
     this.lastCommitted = now;
     this.pruneGroups();
     this.renderLayers();
-    if (this.targetCourse === CUSTOM_LEVEL_ID) setCustomLevelData(this.data); // keep the sandbox cache fresh
-    persistEditData(this.targetCourse, now); // routes to the sandbox or the level's override slot
+    persistEditData(this.targetId, now); // autosave straight into the level list
     if (rebuild) this.hooks.rebuild();
     // keep the selection outline + scale gizmo on the new geometry (field
     // scaling changes the bounds without any pointer drag). Skipped mid-drag,
@@ -1555,8 +1617,7 @@ export class Editor {
   private applyState(json: string): void {
     this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
     this.lastCommitted = json;
-    if (this.targetCourse === CUSTOM_LEVEL_ID) setCustomLevelData(this.data);
-    persistEditData(this.targetCourse, json);
+    persistEditData(this.targetId, json);
     this.select(-1);
     this.hooks.rebuild();
   }
@@ -2382,6 +2443,7 @@ export class Editor {
     else if (c.t === "pit") c.s = c.s ?? [6, 1, 6];
     else if (c.t === "crumble") c.s = c.s ?? [3, 1, 3];
     else if (c.t === "crusher") c.s = c.s ?? [4, 3, 3];
+    else if (c.t === "mover") c.s = c.s ?? [6, 0.8, 6];
     else if (c.t === "ramp") {
       c.len = c.len ?? 10;
       c.rise = c.rise ?? 4;
@@ -2538,6 +2600,7 @@ export class Editor {
       c.t === "pit" ||
       c.t === "crumble" ||
       c.t === "crusher" ||
+      c.t === "mover" ||
       c.t === "zone"
     ) {
       const s = c.s ?? [14, 1, 10];
@@ -3754,6 +3817,38 @@ export class Editor {
     const projPane2 = this.projPane!;
     projPane2.appendChild(h('<div class="ed-sect">LEVEL</div>'));
     const lvl = h('<div class="ed-props"></div>');
+    // NAME: what the menu row says. A real <input>, so the editor's typing
+    // guard (onKey) keeps Delete/⌘D/space-pan out of the text.
+    const nameRow = document.createElement("div");
+    nameRow.className = "ed-row";
+    const nameLab = document.createElement("label");
+    nameLab.textContent = "name";
+    const nameIn = document.createElement("input");
+    nameIn.type = "text";
+    nameIn.title = "the name this level shows in the menu";
+    nameIn.addEventListener("keydown", (ev) => {
+      if (ev.code === "Enter") nameIn.blur();
+      ev.stopPropagation(); // typing guard: editor hotkeys stay out
+    });
+    const applyName = (): void => {
+      const v = nameIn.value.trim();
+      if (!v || v === this.targetName) {
+        nameIn.value = this.targetName;
+        return;
+      }
+      renameUserLevel(this.targetId, v);
+      this.data.name = v; // keep the exported file's name in step with the menu
+      this.targetName = findLevel(this.targetId)?.name ?? v;
+      nameIn.value = this.targetName;
+      this.commit(false);
+      this.hooks.levelsChanged();
+    };
+    nameIn.addEventListener("change", applyName);
+    nameIn.addEventListener("blur", applyName);
+    nameRow.appendChild(nameLab);
+    nameRow.appendChild(nameIn);
+    lvl.appendChild(nameRow);
+    this.nameInput = nameIn;
     lvl.appendChild(
       this.numRow(
         "spawn x",
@@ -3837,7 +3932,7 @@ export class Editor {
       });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `level-${this.data.name.replace(/\s+/g, "")}.json`;
+      a.download = `level-${this.targetName.replace(/\s+/g, "")}.json`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 5000);
       this.hooks.showMsg(
@@ -3852,15 +3947,20 @@ export class Editor {
     filePick.addEventListener("change", () => {
       const f = filePick.files && filePick.files[0];
       if (f)
-        f.text().then((txt) => {
+        void f.text().then((txt) => {
           try {
-            const d = JSON.parse(txt) as CustomLevelData;
-            if (d.v !== 1 || !Array.isArray(d.components))
+            // accepts the bare component data AND a whole {name,data} entry
+            const o = JSON.parse(txt) as CustomLevelData & {
+              data?: CustomLevelData;
+            };
+            const d = Array.isArray(o.components) ? o : o.data;
+            if (!d || d.v !== 1 || !Array.isArray(d.components))
               throw new Error("bad");
-            this.data = d;
-            this.select(-1);
-            this.commit();
-            this.hooks.showMsg("LEVEL IMPORTED", d.name);
+            // an imported file becomes its OWN level, never an overwrite
+            this.importLevel(
+              d,
+              o.name ?? d.name ?? f.name.replace(/\.json$/i, ""),
+            );
           } catch {
             this.hooks.showMsg("BAD LEVEL FILE");
           }
@@ -3869,16 +3969,50 @@ export class Editor {
     });
     file.appendChild(filePick);
     mk("import", () => filePick.click());
-    // Sandbox: blank slate. Built-in override: hand back the original design
-    // (clears the override, which syncs as a reset). Label swaps in enter().
-    this.resetBtn = mk("start over", () => {
-      if (this.targetCourse === CUSTOM_LEVEL_ID) {
-        this.data = starterCustomLevel();
-        this.select(-1);
-        this.commit();
-      } else {
-        this.hooks.restoreOriginal();
+    // Blank slate on the level under edit. The level itself stays in the menu.
+    mk("start over", () => {
+      this.data = starterCustomLevel();
+      this.data.name = this.targetName;
+      this.select(-1);
+      this.commit();
+    });
+    // DUPLICATE: fork the open level into a new menu row and edit that one, so
+    // a risky change never costs you the version that worked.
+    mk("duplicate", () => {
+      const id = saveUserLevel({
+        id: "",
+        name: `${this.targetName} copy`,
+        data: JSON.parse(JSON.stringify(this.data)) as CustomLevelData,
+      });
+      this.retarget(id);
+      this.hooks.levelsChanged(id);
+      this.hooks.showMsg("DUPLICATED", findLevel(id)?.name ?? "");
+    });
+    // DELETE: drop it from the menu and leave the editor. Two taps, because
+    // there is no undo across levels.
+    let armed = 0;
+    const delBtn = mk("delete level", () => {
+      if (!armed) {
+        delBtn.textContent = "tap again to delete";
+        delBtn.style.color = "#ff9a6b";
+        armed = window.setTimeout(() => {
+          armed = 0;
+          delBtn.textContent = "delete level";
+          delBtn.style.color = "";
+        }, 4000);
+        return;
       }
+      clearTimeout(armed);
+      armed = 0;
+      delBtn.textContent = "delete level";
+      delBtn.style.color = "";
+      const gone = this.targetName;
+      deleteUserLevel(this.targetId);
+      localStorage.removeItem("protoEditorOpen");
+      localStorage.removeItem("protoEditorTarget");
+      this.hooks.levelsChanged(DEFAULT_LEVEL_ID);
+      this.hooks.exitToPlay();
+      this.hooks.showMsg("LEVEL DELETED", gone);
     });
     mk("undo ⌘Z", () => this.undo());
     mk("redo ⌘⇧Z", () => this.redo());
@@ -3886,7 +4020,7 @@ export class Editor {
 
     projPane2.appendChild(
       h(
-        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
+        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · duplicate / delete / import add + remove menu rows<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
       ),
     );
 
@@ -4308,6 +4442,10 @@ export class Editor {
         c.dir = map[c.dir ?? "E"];
       } else if (c.t === "crusher") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
+      } else if (c.t === "mover") {
+        if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
+        if (c.axis === "x") c.axis = "z";
+        else if (c.axis === "z") c.axis = "x"; // a lift ("y") stays a lift
       } else if (yawable.has(c.t)) {
         c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
       }
@@ -5222,6 +5360,57 @@ export class Editor {
         (v) => (c.phase = v),
         0.2,
       );
+    } else if (c.t === "mover") {
+      sizeRow(0, "width");
+      sizeRow(2, "depth");
+      const axisBtn = document.createElement("button");
+      axisBtn.className = "ed-btn";
+      const axLabel = (): string =>
+        `travel: ${(c.axis ?? "x").toUpperCase()}${c.axis === "y" ? " (lift)" : ""}`;
+      axisBtn.textContent = axLabel();
+      axisBtn.title = "which way the platform slides — X / Z slide, Y lifts";
+      axisBtn.addEventListener("click", () => {
+        c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(axisBtn);
+      num(
+        "travel",
+        () => c.amp ?? 4,
+        (v) => (c.amp = Math.max(0, v)),
+      );
+      num(
+        "speed",
+        () => c.speed ?? 0.6,
+        (v) => (c.speed = Math.max(0, v)),
+        0.1,
+      );
+      num(
+        "phase",
+        () => c.phase ?? 0,
+        (v) => (c.phase = v),
+        0.2,
+      );
+    } else if (c.t === "stone") {
+      num(
+        "patrol ±z",
+        () => c.range ?? 20,
+        (v) => (c.range = Math.max(1, v)),
+        1,
+      );
+      num(
+        "speed",
+        () => c.speed ?? 6,
+        (v) => (c.speed = Math.max(0, v)),
+        0.5,
+      );
+      num(
+        "radius",
+        () => c.radius ?? 0.9,
+        (v) => (c.radius = Math.max(0.2, v)),
+        0.1,
+      );
     } else if (c.t === "pendulum") {
       num(
         "arm len",
@@ -5302,15 +5491,20 @@ export class Editor {
         "gate",
         "vertramp",
       ].includes(c.t) && !c.pts;
-    const swappable = ["crusher"].includes(c.t) && !c.pts;
+    const swappable = ["crusher", "mover"].includes(c.t) && !c.pts;
     if (rotatable || swappable) {
       const rot = document.createElement("button");
       rot.className = "ed-btn";
       rot.textContent = "rotate 90°";
       rot.addEventListener("click", () => {
         if (rotatable) c.yaw = ((c.yaw ?? 0) + 90) % 360;
-        else if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
-        else c.s = [8, 1, 8];
+        else if (c.s) {
+          c.s = [c.s[2], c.s[1], c.s[0]];
+          if (c.t === "mover") {
+            if (c.axis === "x") c.axis = "z";
+            else if (c.axis === "z") c.axis = "x";
+          }
+        } else c.s = [8, 1, 8];
         this.commit();
         this.renderProps();
       });

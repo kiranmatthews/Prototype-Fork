@@ -1,7 +1,7 @@
 // DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
-import { LEVEL_NAMES } from "./level";
+import { levelList } from "./level";
 import {
   TUNING,
   TUNING_RANGES,
@@ -90,7 +90,9 @@ export class UI {
   private comboState: "none" | "active" | "cashin" | "bail" = "none";
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private msgTimer: number | undefined;
-  private levelButtons: HTMLElement[] = [];
+  private levelRowEl!: HTMLElement; // the re-rendered list container
+  private levelRows = new Map<string, HTMLButtonElement>(); // id -> PLAY button
+  private currentLevelId = ""; // survives a re-render so .active can be restored
   private sliderEls = new Map<
     TuningKey,
     { input: HTMLInputElement; value: HTMLInputElement; sync?: () => void }
@@ -104,16 +106,17 @@ export class UI {
   private defaults = { ...TUNING };
 
   // wired up by main.ts
-  onLevelSelect: (id: number) => void = () => {};
+  onLevelSelect: (id: string) => void = () => {};
   onLifeCheat: () => void = () => {};
   onSaveReplay: (() => void) | null = null;
   onToggleVideo: (() => void) | null = null;
   onLoadReplay: ((text: string) => void) | null = null;
-  onEditorOpen: (() => void) | null = null;
-  onEditCopy: (() => void) | null = null;
   onToggle2P: (() => void) | null = null;
-  // direct-edit + phone sync (main.ts wires these)
-  onEditThisLevel: (() => void) | null = null;
+  // level-list verbs (main.ts wires these)
+  onLevelEdit: ((id: string) => void) | null = null;
+  onLevelNew: (() => void) | null = null;
+  onLevelImport: ((text: string, filename: string) => void) | null = null;
+  // phone sync (main.ts wires these)
   onUnlockEditing: ((pass: string) => Promise<boolean>) | null = null;
   onSyncPush: (() => Promise<void>) | null = null;
   onTokenSet: ((token: string) => void) | null = null;
@@ -121,9 +124,7 @@ export class UI {
     | (() => {
         unlocked: boolean;
         hasToken: boolean;
-        dirtyCount: number;
-        editable: boolean;
-        isOverride: boolean;
+        userCount: number;
       })
     | null = null;
   // fired when a side tab (MENU / TUNER) is clicked, BEFORE the panel
@@ -134,10 +135,9 @@ export class UI {
   // throw away whatever this device had saved
   onForceResync: (() => Promise<void>) | null = null;
   private recBtn!: HTMLButtonElement;
-  private copyBtn!: HTMLButtonElement;
-  private mpBtn!: HTMLButtonElement; // "edit a copy" — hidden on editable levels once unlocked
-  private editThisBtn!: HTMLButtonElement; // "edit this level" — shown when unlocked
+  private mpBtn!: HTMLButtonElement; // 2-player split toggle
   private syncPanel!: HTMLElement;
+  private unlockRow!: HTMLElement;
   private tokenRow!: HTMLElement;
   private pushRow!: HTMLElement;
   private syncStatusEl!: HTMLElement;
@@ -150,44 +150,54 @@ export class UI {
 
     // ---- LEFT side panel (level menu + debug), behind a collapsible tab ----
     const statsWrap = div("hud-stats");
-    const levelRow = div("hud-levelrow");
-    LEVEL_NAMES.forEach((name, i) => {
-      const btn = document.createElement("button");
-      btn.className = "hud-levelbtn";
-      btn.textContent = `${i + 1}· ${name}`;
-      btn.addEventListener("click", () => {
-        this.onLevelSelect(i);
-        btn.blur(); // give the keyboard back to the game
-      });
-      levelRow.appendChild(btn);
-      this.levelButtons.push(btn);
-    });
-    statsWrap.appendChild(levelRow);
 
-    // The level EDITOR lives on the Custom level (8): build/arrange your own
-    // course, then hit TEST in the editor panel to play it.
-    const editBtn = document.createElement("button");
-    editBtn.className = "hud-levelbtn hud-editbtn";
-    editBtn.textContent = "✎ LEVEL EDITOR";
-    editBtn.addEventListener("click", () => {
-      if (this.onEditorOpen) this.onEditorOpen();
-      editBtn.blur();
+    // LEVEL LIST. Re-rendered (not built once) because the list grows at
+    // runtime: NEW, IMPORT, editing a built-in copy, and RESTORE FROM CLOUD
+    // all change it. Each row is PLAY + ✎ EDIT — every level is editable, and
+    // editing a built-in forks a copy rather than touching the original.
+    const levelRow = div("hud-levelrow");
+    statsWrap.appendChild(levelRow);
+    this.levelRowEl = levelRow;
+
+    // NEW / IMPORT sit under the list: the two ways a row gets added by hand.
+    const actions = div("hud-levelactions");
+    const mkAction = (
+      label: string,
+      title: string,
+      fn: () => void,
+    ): HTMLButtonElement => {
+      const b = document.createElement("button");
+      b.className = "hud-levelbtn hud-leveledit";
+      b.textContent = label;
+      b.title = title;
+      b.addEventListener("click", () => {
+        fn();
+        b.blur();
+      });
+      actions.appendChild(b);
+      return b;
+    };
+    mkAction("+ NEW LEVEL", "start a blank level and open the editor", () => {
+      if (this.onLevelNew) this.onLevelNew();
     });
-    statsWrap.appendChild(editBtn);
-    // Any built-in level can be CAPTURED into the editor as a component copy:
-    // the current level's geometry loads into the Custom slot for editing
-    // (the previous custom level is backed up first).
-    const copyBtn = document.createElement("button");
-    copyBtn.className = "hud-levelbtn hud-editbtn";
-    copyBtn.textContent = "⧉ EDIT A COPY OF THIS LEVEL";
-    copyBtn.title =
-      "capture the current level into the editor (custom slot is backed up)";
-    copyBtn.addEventListener("click", () => {
-      if (this.onEditCopy) this.onEditCopy();
-      copyBtn.blur();
+    const lvlPick = document.createElement("input");
+    lvlPick.type = "file";
+    lvlPick.accept = ".json,application/json";
+    lvlPick.style.display = "none";
+    lvlPick.addEventListener("change", () => {
+      const f = lvlPick.files?.[0];
+      if (f)
+        void f.text().then((txt) => {
+          if (this.onLevelImport) this.onLevelImport(txt, f.name);
+        });
+      lvlPick.value = ""; // same file twice in a row still fires
     });
-    statsWrap.appendChild(copyBtn);
-    this.copyBtn = copyBtn;
+    actions.appendChild(lvlPick);
+    mkAction("⤓ IMPORT LEVEL", "add a downloaded level file to this menu", () =>
+      lvlPick.click(),
+    );
+    statsWrap.appendChild(actions);
+    this.renderLevels();
 
     // 2-PLAYER SPLIT SCREEN (playtest sandbox): needs two connected pads.
     const mpBtn = document.createElement("button");
@@ -201,19 +211,16 @@ export class UI {
     statsWrap.appendChild(mpBtn);
     this.mpBtn = mpBtn;
 
-    // FORCE RE-SYNC (deliberately NOT behind the passcode — the phone is the
-    // device that needs it and is never unlocked). A level with unpushed edits
-    // is skipped by the load-time sync forever, by design, so a fetch can't eat
-    // your work; but a device that once opened the editor then quietly plays a
-    // world nobody else has. This drops the local copies and re-reads the
-    // published file. Two taps, because it discards edits and a fat-fingered
-    // scroll on a phone must not be enough.
-    const RESYNC_LABEL = "⟲ RE-SYNC LEVELS FROM CLOUD";
+    // RESTORE FROM CLOUD (deliberately NOT behind the passcode — the phone is
+    // the device that needs it and is never unlocked). Replaces this device's
+    // whole level list with the published one: the setup tap for a new phone,
+    // and the escape hatch for a device that has drifted. Two taps, because it
+    // discards local levels and a fat-fingered scroll must not be enough.
+    const RESYNC_LABEL = "⟲ RESTORE LEVELS FROM CLOUD";
     const resyncBtn = document.createElement("button");
     resyncBtn.className = "hud-levelbtn hud-editbtn";
     resyncBtn.textContent = RESYNC_LABEL;
-    resyncBtn.title =
-      "discard this device's saved levels and re-read the published ones";
+    resyncBtn.title = "replace this device's levels with the published ones";
     let armed = 0; // pending confirm timer; 0 = not armed
     const disarm = (): void => {
       if (armed) clearTimeout(armed);
@@ -225,35 +232,20 @@ export class UI {
       resyncBtn.blur();
       if (!this.onForceResync) return;
       if (!armed) {
-        resyncBtn.textContent = "⟲ TAP AGAIN — DISCARDS LOCAL EDITS";
+        resyncBtn.textContent = "⟲ TAP AGAIN — REPLACES YOUR LEVELS";
         resyncBtn.style.color = "#ffd23f";
         armed = window.setTimeout(disarm, 4000);
         return;
       }
       disarm();
       resyncBtn.disabled = true;
-      resyncBtn.textContent = "⟲ RE-SYNCING…";
+      resyncBtn.textContent = "⟲ RESTORING…";
       void this.onForceResync().finally(() => {
         resyncBtn.disabled = false;
         resyncBtn.textContent = RESYNC_LABEL;
       });
     });
     statsWrap.appendChild(resyncBtn);
-
-    // DIRECT EDIT (unlocked): edit the built-in level in place. Hidden until the
-    // passcode is entered; then it replaces the copy button on editable levels.
-    const editThisBtn = document.createElement("button");
-    editThisBtn.className = "hud-levelbtn hud-editbtn hud-editthis";
-    editThisBtn.textContent = "✎ EDIT THIS LEVEL";
-    editThisBtn.title =
-      "edit this built-in level directly (syncs to your phone)";
-    editThisBtn.style.display = "none";
-    editThisBtn.addEventListener("click", () => {
-      if (this.onEditThisLevel) this.onEditThisLevel();
-      editThisBtn.blur();
-    });
-    statsWrap.appendChild(editThisBtn);
-    this.editThisBtn = editThisBtn;
 
     // UNLOCK / SYNC panel: a passcode row that expands into the phone-sync
     // controls (GitHub token + push button + status) once unlocked.
@@ -280,6 +272,7 @@ export class UI {
     unlockRow.appendChild(passIn);
     unlockRow.appendChild(unlockBtn);
     sync.appendChild(unlockRow);
+    this.unlockRow = unlockRow;
 
     // token + push (shown only when unlocked)
     const tokenRow = div("hud-syncrow hud-synctoken");
@@ -303,7 +296,7 @@ export class UI {
     const pushRow = div("hud-syncrow hud-syncpush");
     const pushBtn = document.createElement("button");
     pushBtn.className = "hud-syncbtn hud-syncpushbtn";
-    pushBtn.textContent = "☁ SYNC LEVELS TO PHONE";
+    pushBtn.textContent = "☁ SYNC MY LEVELS UP";
     pushBtn.addEventListener("click", () => {
       if (this.onSyncPush) void this.onSyncPush();
       pushBtn.blur();
@@ -805,9 +798,48 @@ export class UI {
     this.mpBtn.style.color = on ? "#58e08a" : "";
   }
 
-  setLevel(id: number): void {
-    this.levelButtons.forEach((b, i) => b.classList.toggle("active", i === id));
+  setLevel(id: string): void {
+    this.currentLevelId = id;
+    this.levelRows.forEach((b, key) =>
+      b.classList.toggle("active", key === id),
+    );
     this.refreshEditControls();
+  }
+
+  /** Rebuild the level list from the registry. Call whenever it changes. */
+  refreshLevels(activeId?: string): void {
+    if (activeId !== undefined) this.currentLevelId = activeId;
+    this.renderLevels();
+    this.refreshEditControls();
+  }
+
+  private renderLevels(): void {
+    this.levelRowEl.replaceChildren();
+    this.levelRows.clear();
+    levelList().forEach((entry, i) => {
+      const item = div("hud-levelitem");
+      const play = document.createElement("button");
+      play.className = "hud-levelbtn hud-levelplay";
+      play.textContent = i < 9 ? `${i + 1}· ${entry.name}` : entry.name;
+      play.title = entry.name;
+      play.classList.toggle("active", entry.id === this.currentLevelId);
+      play.addEventListener("click", () => {
+        this.onLevelSelect(entry.id);
+        play.blur(); // give the keyboard back to the game
+      });
+      const edit = document.createElement("button");
+      edit.className = "hud-levelbtn hud-leveledit hud-leveleditbtn";
+      edit.textContent = "✎";
+      edit.title = `edit ${entry.name}`;
+      edit.addEventListener("click", () => {
+        if (this.onLevelEdit) this.onLevelEdit(entry.id);
+        edit.blur();
+      });
+      item.appendChild(play);
+      item.appendChild(edit);
+      this.levelRowEl.appendChild(item);
+      this.levelRows.set(entry.id, play);
+    });
   }
 
   // ---- direct-edit + phone sync controls ----
@@ -822,30 +854,21 @@ export class UI {
     this.syncStatusEl.className = `hud-syncstatus hud-sync-${kind}`;
   }
 
-  // Reflect the unlock/token/dirty state into the menu: locked = just the
-  // passcode row + "edit a copy"; unlocked = token/push rows, and "edit this
-  // level" replaces "edit a copy" on levels that support in-place editing.
+  // Reflect the unlock/token state into the sync panel. Editing itself is
+  // never gated — every row has a ✎ — the passcode only guards PUBLISHING,
+  // whose real credential is the GitHub token behind it.
   refreshEditControls(): void {
     if (!this.syncPanel) return;
     const st = this.provideEditState ? this.provideEditState() : null;
     const unlocked = st ? st.unlocked : this.editUnlocked;
     this.editUnlocked = unlocked;
-    // built-in editable level + unlocked → "edit this level"; otherwise the
-    // classic "edit a copy" (also the only option on the custom sandbox).
-    const direct = unlocked && !!st && st.editable;
-    this.editThisBtn.style.display = direct ? "" : "none";
-    this.copyBtn.style.display = direct ? "none" : "";
-    // sync rows + push appear only when unlocked; the passcode prompt hides.
     this.tokenRow.style.display = unlocked ? "" : "none";
     this.pushRow.style.display = unlocked ? "" : "none";
-    const unlockRow = this.syncPanel.firstElementChild as HTMLElement | null;
-    if (unlockRow) unlockRow.style.display = unlocked ? "none" : "";
+    this.unlockRow.style.display = unlocked ? "none" : "";
     if (unlocked && st) {
-      const dirty = st.dirtyCount;
+      const n = st.userCount;
       this.pushRow.querySelector("button")!.textContent =
-        dirty > 0
-          ? `☁ SYNC ${dirty} EDITED LEVEL${dirty > 1 ? "S" : ""} TO PHONE`
-          : "☁ SYNC LEVELS TO PHONE";
+        `☁ SYNC MY ${n} LEVEL${n === 1 ? "" : "S"} UP`;
       if (!st.hasToken && !this.syncStatusEl.textContent)
         this.setSyncStatus("paste a GitHub token to enable sync", "busy");
     }
@@ -1125,11 +1148,22 @@ export class UI {
         padding: 8px 10px; border-radius: 8px;
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.45);
       }
-      .hud-stats { min-width: 230px; max-width: 330px; }
+      /* the level list is unbounded now — the panel has to be able to scroll */
+      .hud-stats { min-width: 230px; max-width: 330px; max-height: calc(100vh - 40px); overflow-y: auto; }
       .hud-tuning { width: 250px; max-height: calc(100vh - 60px); overflow-y: auto; }
       .hud-title { color: #8fd4a8; letter-spacing: 2px; margin-bottom: 4px; }
-      .hud-levelrow { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
-      .hud-levelrow .hud-levelbtn { flex: 1 1 auto; }
+      /* one row per level: PLAY takes the width, ✎ is a fixed square */
+      .hud-levelrow { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
+      .hud-levelitem { display: flex; gap: 3px; }
+      .hud-levelitem .hud-levelplay {
+        flex: 1 1 auto; min-width: 0; text-align: left; padding-left: 5px;
+        overflow: hidden; text-overflow: ellipsis;
+      }
+      .hud-levelitem .hud-leveleditbtn { flex: 0 0 24px; padding: 3px 0; font-size: 12px; line-height: 1; }
+      /* standalone menu buttons (2-player, restore) are their own full rows */
+      .hud-stats > .hud-levelbtn { display: block; width: 100%; margin-bottom: 4px; }
+      .hud-levelactions { display: flex; gap: 4px; margin-bottom: 6px; }
+      .hud-levelactions .hud-levelbtn { flex: 1 1 0; }
       .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-capbadge {
         position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
@@ -1146,8 +1180,9 @@ export class UI {
       }
       .hud-levelbtn:hover { background: #243044; color: #cfe3d8; }
       .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
-      .hud-editthis { background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
-      .hud-editthis:hover { background: #2b4c38; color: #c8ffe0; }
+      /* editing is green, everywhere: per-row ✎, NEW, IMPORT, SYNC UP */
+      .hud-leveledit { background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
+      .hud-leveledit:hover { background: #2b4c38; color: #c8ffe0; }
       /* direct-edit unlock + phone sync */
       .hud-sync {
         margin-top: 8px; padding: 8px; border: 1px solid #33405a; border-radius: 8px;

@@ -419,8 +419,10 @@ export class TouchControls {
       /* standalone (home-screen) mode renders behind the Dynamic Island:
          drop the side tabs below it */
       body.tc-on .side-wrap { top: max(10px, env(safe-area-inset-top)); }
-      body.tc-on .hud-levelrow { flex-wrap: wrap; }
-      body.tc-on .hud-levelbtn { flex: 1 1 46%; font-size: 12px; padding: 10px 4px; }
+      /* the level list is one row per level: keep it a column, just fatter */
+      body.tc-on .hud-levelrow { gap: 6px; }
+      body.tc-on .hud-levelbtn { font-size: 12px; padding: 10px 4px; }
+      body.tc-on .hud-levelitem .hud-leveleditbtn { flex: 0 0 40px; }
       body.tc-on .hud-tuning { width: min(78vw, 320px); max-height: calc(100dvh - 16px); }
       body.tc-on .hud-slider { grid-template-columns: 84px 1fr 46px; }
       body.tc-on .hud-slider input[type=range] { height: 30px; }

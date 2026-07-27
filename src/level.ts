@@ -235,21 +235,6 @@ export interface Checkpoint {
   savedPoints: number;
 }
 
-// The editor's own sandbox slot. Named because it is an INDEX into
-// LEVEL_NAMES, and indices shift every time a level is added or removed —
-// which has now broken twice as a bare literal 7 scattered across two files.
-export const CUSTOM_LEVEL_ID = 5;
-
-export const LEVEL_NAMES = [
-  "Test Course", // the test course flows straight into the gauntlet (combined)
-  "Random",
-  "Boulder Dash",
-  "Flats & Pipes", // sky-deck runway that opens out into the transition yard
-  "Sky Bridge",
-  "Custom", // built from CUSTOM_LEVEL data (the in-game level editor owns it)
-  "The Slipstream", // elevated ribbon slide: sweeping banked curves high over the sea
-];
-
 // ---- CUSTOM LEVEL: a data-driven course the in-game editor builds ----------
 // Every component maps onto an existing primitive. Positions are centers
 // (except where noted); pits are simply where you DON'T put floor — anything
@@ -272,6 +257,8 @@ export interface CustomComponent {
     | "checkpoint"
     | "enemy" // patrols along X around p, range each way
     | "crusher" // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
+    | "mover" // moving platform: p = [x, topY, z], s = [w,-,d], axis x/y/z, amp = travel each way, speed, phase
+    | "stone" // rolling boulder: p = [x, floorY, z] (patrol center), range = half the travel along Z, speed, radius
     | "pendulum" // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
     | "ropeswing" // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane
     | "gate" // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
@@ -288,7 +275,7 @@ export interface CustomComponent {
   rise?: number;
   w?: number;
   yaw?: number;
-  axis?: "z" | "x";
+  axis?: "z" | "x" | "y"; // mover: which way it slides ("y" = a lift)
   vkind?: "quarter" | "half"; // vertramp: one wall, or two facing each other with a flat between
   arc?: number; // vertramp: degrees round the transition (90 = vertical lip, ~60 = a crestable bowl wall)
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
@@ -330,7 +317,7 @@ export interface CustomComponent {
     | [number, number, number, number]
     | [number, number, number, number, number]
   )[];
-  radius?: number; // camnode: corner radius where the camera lane turns at this node
+  radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   tex?: string; // surface texture kind (see TEX_KINDS) for platform / ramp / wall / crumble / rock — tinted by color
   dir?: "E" | "W" | "N" | "S"; // zone: travel direction — E/W turn the course sideways (side-scroll), N runs it INTO the camera, S = the normal corridor (still overrides a camera lane)
@@ -1011,179 +998,255 @@ export function pointInPoly(
   return inside;
 }
 
-// The working custom level, set by the editor / loaded from storage before a
-// Level with courseId 7 is constructed.
-let CUSTOM_LEVEL: CustomLevelData | null = null;
-export function setCustomLevelData(d: CustomLevelData): void {
-  CUSTOM_LEVEL = d;
+// ---- LEVEL REGISTRY -------------------------------------------------------
+// Every level the menu offers is an entry here. Built-ins run a hand-coded
+// builder chosen by their id; user levels carry `data` and build through the
+// component pipeline — the same pipeline the editor writes, so anything in the
+// list is directly editable. Ids are stable SLUGS, never list indices: adding
+// or deleting a level can no longer silently re-point a saved best time, a
+// replay, or a saved editor target at somebody else's course.
+export interface LevelEntry {
+  id: string; // "test"/"flats"/... for built-ins, "uN" for user levels
+  name: string; // what the menu row shows; user levels can rename it
+  data?: CustomLevelData; // user levels only — built-ins have none
 }
-export function getCustomLevelData(): CustomLevelData {
-  if (!CUSTOM_LEVEL) {
-    try {
-      const raw = JSON.parse(
-        localStorage.getItem("protoCustomLevel") ?? "null",
-      ) as CustomLevelData | null;
-      if (raw && raw.v === 1 && Array.isArray(raw.components))
-        CUSTOM_LEVEL = raw;
-    } catch {
-      /* fall through to starter */
+
+export const BUILTIN_LEVELS: LevelEntry[] = [
+  { id: "test", name: "Test Course" }, // test course flows straight into the gauntlet
+  { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
+  { id: "sky", name: "Sky Bridge" },
+  { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
+];
+export const DEFAULT_LEVEL_ID = "test";
+const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
+export function isBuiltin(id: string): boolean {
+  return BUILTIN_IDS.has(id);
+}
+
+// ---- USER LEVELS: the editable, syncable half of the list ------------------
+// One localStorage key holds the whole list, in menu order, data and all. It
+// is also exactly the payload the cloud sync pushes and restores, so "what I
+// see" and "what I publish" can never drift apart.
+const USER_KEY = "protoUserLevels";
+let USER_CACHE: LevelEntry[] | null = null;
+
+function sane(e: unknown): e is LevelEntry {
+  const l = e as LevelEntry | null;
+  return (
+    !!l &&
+    typeof l.id === "string" &&
+    l.id.length > 0 &&
+    typeof l.name === "string" &&
+    !!l.data &&
+    Array.isArray(l.data.components)
+  );
+}
+
+export function getUserLevels(): LevelEntry[] {
+  if (USER_CACHE) return USER_CACHE;
+  let list: LevelEntry[] = [];
+  try {
+    const raw = JSON.parse(localStorage.getItem(USER_KEY) ?? "[]") as unknown;
+    if (Array.isArray(raw)) list = raw.filter(sane);
+  } catch {
+    /* corrupt store reads as "no user levels" rather than breaking boot */
+  }
+  // A user level must never shadow a built-in row, and duplicate ids would
+  // make findLevel ambiguous — drop the later of any clash.
+  const seen = new Set(BUILTIN_IDS);
+  list = list.filter((l) => !seen.has(l.id) && (seen.add(l.id), true));
+  USER_CACHE = list;
+  return list;
+}
+
+export function setUserLevels(list: LevelEntry[]): void {
+  USER_CACHE = list.filter(sane);
+  try {
+    localStorage.setItem(USER_KEY, JSON.stringify(USER_CACHE));
+  } catch {
+    /* storage full: the session still has the list in memory */
+  }
+}
+
+/** Built-ins first, then user levels in the order they were added. */
+export function levelList(): LevelEntry[] {
+  return [...BUILTIN_LEVELS, ...getUserLevels()];
+}
+
+export function findLevel(id: string): LevelEntry | null {
+  return levelList().find((l) => l.id === id) ?? null;
+}
+
+/** Lowest free "uN" — stable across sessions, never reuses a live id. */
+export function newLevelId(): string {
+  const taken = new Set(levelList().map((l) => l.id));
+  for (let n = 1; ; n++) if (!taken.has(`u${n}`)) return `u${n}`;
+}
+
+/** A menu-safe name: non-empty, whitespace-collapsed, length-capped. */
+export function cleanLevelName(name: string): string {
+  const t = String(name ?? "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 28);
+  return t || "Untitled";
+}
+
+/** Insert or replace a user level. Returns the id actually stored. */
+export function saveUserLevel(entry: LevelEntry): string {
+  const list = [...getUserLevels()];
+  const e: LevelEntry = {
+    id: !entry.id || isBuiltin(entry.id) ? newLevelId() : entry.id,
+    name: cleanLevelName(entry.name),
+    data: entry.data,
+  };
+  const at = list.findIndex((l) => l.id === e.id);
+  if (at >= 0) list[at] = e;
+  else list.push(e);
+  setUserLevels(list);
+  return e.id;
+}
+
+export function deleteUserLevel(id: string): void {
+  setUserLevels(getUserLevels().filter((l) => l.id !== id));
+  try {
+    // the level is gone, so its best times are unreachable — drop them with it
+    const all = JSON.parse(
+      localStorage.getItem("protoTTtimes") ?? "{}",
+    ) as Record<string, number[]>;
+    if (all && typeof all === "object" && id in all) {
+      delete all[id];
+      localStorage.setItem("protoTTtimes", JSON.stringify(all));
     }
-    if (!CUSTOM_LEVEL) CUSTOM_LEVEL = starterCustomLevel();
-    CUSTOM_LEVEL = migrateCustomLevel(CUSTOM_LEVEL);
+  } catch {
+    /* nothing persisted, nothing to drop */
   }
-  return CUSTOM_LEVEL;
 }
 
-// ---- DIRECT LEVEL EDITING: per-level override slots ------------------------
-// A synced editor writes a built-in level's edits to that level's own storage
-// slot; when a slot holds data, the level builds from it (through the same
-// component pipeline as Custom) instead of its hand-coded builder. Clearing
-// the slot brings the original back — the builders are never touched. These
-// slots double as the offline cache for the GitHub-synced levels file.
-export const EDITABLE_IDS = [0, 1, 2, 3, 4]; // every level except Custom and the Slipstream
-export function levelOverrideKey(id: number): string {
-  return `protoLevelEdit:${id}`;
-}
-export function getLevelOverride(id: number): CustomLevelData | null {
-  try {
-    const raw = JSON.parse(
-      localStorage.getItem(levelOverrideKey(id)) ?? "null",
-    ) as CustomLevelData | null;
-    if (raw && raw.v === 1 && Array.isArray(raw.components)) return raw;
-  } catch {
-    /* corrupt slot reads as pristine */
-  }
-  return null;
-}
-export function clearLevelOverride(id: number): void {
-  localStorage.removeItem(levelOverrideKey(id));
-}
-export function allLevelOverrides(): Record<string, CustomLevelData> {
-  const out: Record<string, CustomLevelData> = {};
-  for (const id of EDITABLE_IDS) {
-    const d = getLevelOverride(id);
-    if (d) out[String(id)] = d;
-  }
-  return out;
-}
-// Bring the local slots in line with the synced file. `skip` protects levels
-// with unpushed local edits (local wins until the push lands). Returns the
-// ids whose local data actually changed.
-export function applyRemoteLevels(
-  remote: Record<string, CustomLevelData>,
-  skip: Set<number>,
-): number[] {
-  const changed: number[] = [];
-  for (const id of EDITABLE_IDS) {
-    if (skip.has(id)) continue;
-    const key = levelOverrideKey(id);
-    const local = localStorage.getItem(key);
-    const rem = remote[String(id)] ? JSON.stringify(remote[String(id)]) : null;
-    if (rem === local) continue;
-    if (rem) localStorage.setItem(key, rem);
-    else localStorage.removeItem(key);
-    changed.push(id);
-  }
-  return changed;
+export function renameUserLevel(id: string, name: string): boolean {
+  const list = [...getUserLevels()];
+  const at = list.findIndex((l) => l.id === id);
+  if (at < 0) return false;
+  list[at] = { ...list[at], name: cleanLevelName(name) };
+  setUserLevels(list);
+  return true;
 }
 
-// DIRTY = edited locally since the last successful push. Dirty levels win over
-// the synced file (so a fetch never clobbers edits mid-session) and are the
-// payload a push sends.
-export function markLevelDirty(id: number): void {
-  const s = getDirtyIds();
-  s.add(id);
-  localStorage.setItem("protoLevelDirty", JSON.stringify([...s]));
+/** The editor's working copy for a level: its own data, else a blank slate. */
+export function getEditData(id: string): CustomLevelData {
+  const e = findLevel(id);
+  if (e?.data)
+    return migrateCustomLevel(
+      JSON.parse(JSON.stringify(e.data)) as CustomLevelData,
+    );
+  return migrateCustomLevel(starterCustomLevel());
 }
-export function getDirtyIds(): Set<number> {
+
+/** Editor save: write the working JSON back into the level's list entry. */
+export function persistEditData(id: string, json: string): void {
+  const e = findLevel(id);
+  if (!e || isBuiltin(id)) return; // built-ins are pristine by construction
   try {
-    const raw = JSON.parse(
-      localStorage.getItem("protoLevelDirty") ?? "[]",
-    ) as number[];
-    if (Array.isArray(raw)) return new Set(raw);
+    saveUserLevel({ ...e, data: JSON.parse(json) as CustomLevelData });
   } catch {
-    /* reset below */
+    /* unparseable: keep the last good copy on disk */
   }
-  return new Set();
 }
-// Wipe every locally-saved level and the dirty list with it: the device goes
-// back to being a pure reader of the deployed file. This is the escape hatch
-// for a device that has pinned itself — a level marked dirty is skipped by the
-// sync FOREVER (by design, so a fetch can't eat your edits), which on a phone
-// that once opened the editor means it silently plays a world nobody else has.
-// Returns how many slots it dropped.
-export function clearAllLevelOverrides(): number {
+
+// ---- ONE-TIME ADOPTION of the old single-slot storage ----------------------
+// Before the registry there was one "Custom" sandbox plus a per-level override
+// slot keyed by the level's INDEX. Both are gone, but a device that used them
+// still holds real work, so on first boot each surviving slot becomes a proper
+// named user level. Runs once; the marker means a later delete stays deleted.
+const LEGACY_NAMES: Record<string, string> = {
+  "0": "Test Course",
+  "1": "Random",
+  "2": "Boulder Dash",
+  "3": "Flats & Pipes",
+  "4": "Sky Bridge",
+  "6": "The Slipstream",
+};
+// which old list index was which surviving level (1/2/5 are the deleted ones)
+const LEGACY_SLUGS: Record<string, string> = {
+  "0": "test",
+  "3": "flats",
+  "4": "sky",
+  "6": "slip",
+};
+export function adoptLegacyLevels(): number {
   let n = 0;
   try {
-    const dead: string[] = [];
+    if (localStorage.getItem("protoLevelsAdopted") === "1") return 0;
+    const read = (k: string): CustomLevelData | null => {
+      try {
+        const raw = JSON.parse(
+          localStorage.getItem(k) ?? "null",
+        ) as CustomLevelData | null;
+        return raw && Array.isArray(raw.components) ? raw : null;
+      } catch {
+        return null;
+      }
+    };
+    const legacy: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith("protoLevelEdit:")) dead.push(k);
+      if (k && k.startsWith("protoLevelEdit:")) legacy.push(k);
     }
-    for (const k of dead) localStorage.removeItem(k);
-    n = dead.length;
+    legacy.sort();
+    for (const k of legacy) {
+      const d = read(k);
+      const old = k.slice("protoLevelEdit:".length);
+      if (d) {
+        saveUserLevel({
+          id: "",
+          name: `${LEGACY_NAMES[old] ?? `Level ${old}`} (saved)`,
+          data: migrateCustomLevel(d),
+        });
+        n++;
+      }
+      localStorage.removeItem(k);
+    }
+    const sandbox = read("protoCustomLevel");
+    if (sandbox) {
+      saveUserLevel({
+        id: "",
+        name: "Custom (saved)",
+        data: migrateCustomLevel(sandbox),
+      });
+      n++;
+    }
+    localStorage.removeItem("protoCustomLevel");
+    localStorage.removeItem("protoCustomLevelBackup");
     localStorage.removeItem("protoLevelDirty");
+    // Best times were keyed by list INDEX. Re-key the ones whose level still
+    // exists; without this every recorded time is silently unreachable.
+    try {
+      const times = JSON.parse(
+        localStorage.getItem("protoTTtimes") ?? "{}",
+      ) as Record<string, number[]>;
+      const out: Record<string, number[]> = {};
+      let moved = false;
+      for (const [k, v] of Object.entries(times ?? {})) {
+        const slug = LEGACY_SLUGS[k];
+        if (slug) {
+          out[slug] = v;
+          moved = true;
+        } else if (!/^\d+$/.test(k)) out[k] = v; // already a slug: keep
+      }
+      if (moved) localStorage.setItem("protoTTtimes", JSON.stringify(out));
+    } catch {
+      /* unreadable times: not worth failing the adoption over */
+    }
+    // and the numeric last-played becomes its slug
+    const lastNum = localStorage.getItem("protoLevel");
+    if (lastNum && LEGACY_SLUGS[lastNum])
+      localStorage.setItem("protoLevelId", LEGACY_SLUGS[lastNum]);
+    localStorage.removeItem("protoLevel");
+    localStorage.setItem("protoLevelsAdopted", "1");
   } catch {
-    /* private mode: nothing persisted, nothing to clear */
+    /* private mode: nothing persisted, nothing to adopt */
   }
   return n;
-}
-
-// A RETIRED level — one dropped from EDITABLE_IDS, as the Overgrowth was —
-// leaves its saved slot behind on every device that ever synced it, and
-// applyRemoteLevels only walks the live ids, so nothing would ever clear it.
-// That matters more than the wasted bytes: the slot is keyed by NUMBER, and
-// numbers get reused when a level is removed from the middle of the list, so
-// a stale slot is a future level wearing a dead level's data. Sweep on load.
-export function pruneRetiredOverrides(): void {
-  try {
-    const dead: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (!k || !k.startsWith("protoLevelEdit:")) continue;
-      if (!EDITABLE_IDS.includes(Number(k.slice("protoLevelEdit:".length))))
-        dead.push(k);
-    }
-    for (const k of dead) localStorage.removeItem(k);
-    // and stop a retired id riding the dirty list into the next push
-    const live = [...getDirtyIds()].filter((id) => EDITABLE_IDS.includes(id));
-    localStorage.setItem("protoLevelDirty", JSON.stringify(live));
-  } catch {
-    /* private mode: nothing persisted, nothing to prune */
-  }
-}
-
-export function clearDirty(ids: number[]): void {
-  const s = getDirtyIds();
-  for (const id of ids) s.delete(id);
-  localStorage.setItem("protoLevelDirty", JSON.stringify([...s]));
-}
-
-// The editor's working data for a given course: an existing override, else the
-// live custom sandbox. Always migrated so the gate/activators exist.
-export function getEditData(id: number): CustomLevelData {
-  if (id !== CUSTOM_LEVEL_ID) {
-    const ov = getLevelOverride(id);
-    if (ov)
-      return migrateCustomLevel(
-        JSON.parse(JSON.stringify(ov)) as CustomLevelData,
-      );
-  }
-  return getCustomLevelData();
-}
-// Persist the editor's working data to the right slot for its target course
-// (the custom sandbox, or a built-in level's override — which marks it dirty).
-export function persistEditData(id: number, json: string): void {
-  try {
-    if (id === CUSTOM_LEVEL_ID) {
-      localStorage.setItem("protoCustomLevel", json);
-    } else {
-      localStorage.setItem(levelOverrideKey(id), json);
-      markLevelDirty(id);
-    }
-  } catch {
-    /* storage full: the working copy still lives in memory */
-  }
 }
 
 // ---- DIRECT-EDIT UNLOCK: a client-side passcode gate ----------------------
@@ -1242,7 +1305,7 @@ export class Level {
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
   killY = -48; // per-level death height
-  name = LEVEL_NAMES[0];
+  name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
   // here each step so the chase can trigger, rubber-band, and reset fairly.
   playerPos = new THREE.Vector3(0, 0, -1e9);
@@ -1381,7 +1444,6 @@ export class Level {
   get runMode(): boolean {
     return this.timeTrial || this.comboRun;
   }
-  private crystalPlaced = false; // Random level: drop it on one mid-course deck
   private gemG: THREE.Group | null = null; // materializes when every box breaks
   private vfxT = 0; // animation clock for all the procedural magic
   private glintTex: THREE.CanvasTexture | null = null;
@@ -1990,24 +2052,23 @@ export class Level {
     }
   }
 
-  constructor(scene: THREE.Scene, courseId = 0) {
+  constructor(scene: THREE.Scene, entry: LevelEntry = BUILTIN_LEVELS[0]) {
     this.scene = scene;
     scene.add(this.root);
-    this.name = LEVEL_NAMES[courseId] ?? LEVEL_NAMES[0];
-    // DIRECT EDIT: a built-in level with a saved override builds from that
-    // data (through the component pipeline) instead of its hand-coded builder.
-    // Clearing the override brings the original straight back.
-    const override = EDITABLE_IDS.includes(courseId)
-      ? getLevelOverride(courseId)
-      : null;
-    if (override) this.buildCustom(migrateCustomLevel(override));
-    else if (courseId === 1) this.buildRandom();
-    else if (courseId === 2) this.buildBoulderDash();
-    else if (courseId === 3) this.buildFlats();
-    else if (courseId === 4) this.buildSkyBridge();
-    else if (courseId === 5) this.buildCustom();
-    else if (courseId === 6) this.buildSlipstream();
-    else this.buildTestGauntlet(); // courseId 0: test course + gauntlet combined
+    this.name = entry.name;
+    // A user level carries its own component data and builds through the same
+    // pipeline the editor writes. A built-in has none, so its id picks the
+    // hand-coded builder — built-ins stay pristine, editing one forks a copy.
+    if (entry.data)
+      this.buildCustom(
+        migrateCustomLevel(
+          JSON.parse(JSON.stringify(entry.data)) as CustomLevelData,
+        ),
+      );
+    else if (entry.id === "flats") this.buildFlats();
+    else if (entry.id === "sky") this.buildSkyBridge();
+    else if (entry.id === "slip") this.buildSlipstream();
+    else this.buildTestGauntlet(); // "test": test course + gauntlet combined
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
@@ -2099,15 +2160,25 @@ export class Level {
     // built a real pad on top of them: three phantom slabs at the finish, and
     // three more with every further edit.
     const padSolids = new Set(this.warpPads.flatMap((w) => w.solids));
+    // a moving platform IS a groundMesh, but its own 'mover' component rebuilds
+    // it — capturing it here too would leave a static slab at its rest spot
+    const moverMeshes = new Set(this.movers.map((mv) => mv.mesh));
     // decks, ramps, step blocks, metal crates — everything standable
     for (const m of this.groundMeshes) {
-      if (hpWalls.has(m) || crumbleMeshes.has(m) || padSolids.has(m)) continue;
+      if (
+        hpWalls.has(m) ||
+        crumbleMeshes.has(m) ||
+        padSolids.has(m) ||
+        moverMeshes.has(m)
+      )
+        continue;
       // Transition surfaces belong to their vertramp component, which rebuilds
-      // them. hpWalls only covers the ANALYTIC pipes; a swept one (the Flats
-      // pool) is a plain mesh named 'vertramp', so it used to be captured as a
-      // bounding-box platform AND rebuilt by its component — a flat slab
-      // buried in the bowl, one more per edit.
-      if (m.name === "vertramp" || m.name === "halfpipe") continue;
+      // them. hpWalls only covers the ANALYTIC pipes; a swept one is a plain
+      // mesh, so it used to be captured as a bounding-box platform AND rebuilt
+      // by its component — a flat slab buried in the bowl, one more per edit.
+      // The flag catches every sweep, including the non-vert 'slide deck'
+      // variant the Slipstream is made of, which the name check missed.
+      if (m.userData.vertRampMesh || m.name === "halfpipe") continue;
       if (m.userData.metalCrate) {
         C.push({
           t: "metal",
@@ -2383,6 +2454,38 @@ export class Level {
         p: [r2(pk.mesh.position.x), r2(y), r2(pk.mesh.position.z)],
       });
     }
+    for (const mv of this.movers) {
+      const par = (mv.mesh.geometry as THREE.BoxGeometry).parameters;
+      C.push({
+        t: "mover",
+        p: [r2(mv.base.x), r2(mv.base.y + 0.4), r2(mv.base.z)], // base is the deck CENTER; p is its top
+        s: [r2(par.width), r2(par.height), r2(par.depth)],
+        axis:
+          Math.abs(mv.axisV.x) > 0.5
+            ? "x"
+            : Math.abs(mv.axisV.y) > 0.5
+              ? "y"
+              : "z",
+        amp: r2(mv.amp),
+        speed: r2(mv.speed),
+        phase: r2(mv.phase),
+      });
+    }
+    for (const st of this.stones) {
+      C.push({
+        t: "stone",
+        // the mesh sits r above the floor it found; hand that floor back as
+        // the y hint so a rebuild lands the boulder on the same deck
+        p: [
+          r2(st.x),
+          r2(st.mesh.position.y - st.r),
+          r2((st.z0 + st.z1) / 2),
+        ],
+        range: r2((st.z0 - st.z1) / 2),
+        speed: r2(st.speed),
+        radius: r2(st.r),
+      });
+    }
     for (const cu of this.crushers) {
       C.push({
         t: "crusher",
@@ -2462,7 +2565,7 @@ export class Level {
   // seat themselves on the ground (crates, enemies, checkpoints) see the
   // geometry pass's floors. Every scene object a component creates gets
   // tagged with its component index for editor picking.
-  private buildCustom(data: CustomLevelData = getCustomLevelData()): void {
+  private buildCustom(data: CustomLevelData): void {
     this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.killY = data.killY;
     this.finishZ = -1e9; // endless playground: no finish gate
@@ -2510,6 +2613,7 @@ export class Level {
       "metal",
       "rock",
       "gate",
+      "mover", // a moving platform is terrain: crates seat on it
     ]);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
@@ -3130,6 +3234,29 @@ export class Level {
                 foe,
               );
             }
+          } else if (c.t === "mover") {
+            const s = c.s ?? [6, 0.8, 6];
+            this.mover(
+              c.p[0],
+              c.p[1],
+              c.p[2],
+              s[0],
+              s[2],
+              c.axis ?? "x",
+              c.amp ?? 4,
+              c.speed ?? 0.6,
+              c.phase ?? 0,
+            );
+          } else if (c.t === "stone") {
+            const half = Math.abs(c.range ?? 20);
+            this.stone(
+              c.p[0],
+              c.p[1],
+              c.p[2] + half,
+              c.p[2] - half,
+              c.speed ?? 6,
+              c.radius ?? 0.9,
+            );
           } else if (c.t === "crusher") {
             const s = c.s ?? [4, 3, 3];
             this.crusher(
@@ -4552,6 +4679,7 @@ export class Level {
       crumbles: this.crumbles.length,
       crushers: this.crushers.length,
       zones: this.zones.length,
+      gate: this.gateSpec,
     };
     this.buildGauntlet(true); // continuation: no behind-spawn wall at the seam
     // The test course's finish-run corridor ends at z≈−1025, y=−22. Drop the
@@ -4587,6 +4715,7 @@ export class Level {
       crumbles: number;
       crushers: number;
       zones: number;
+      gate: Level["gateSpec"];
     },
     dx: number,
     dy: number,
@@ -4596,6 +4725,15 @@ export class Level {
     preCrystal: Level["crystalPickup"],
   ): void {
     const off = new THREE.Vector3(dx, dy, dz);
+    // The finish gate's authored spot moves with everything else. Missing this
+    // left gateSpec on the pre-shift value, which put the combo gem 1000 units
+    // short of the actual gate and made a CAPTURE of this level place its gate
+    // there too — the one number shiftBuilt has to carry that isn't a mesh.
+    if (this.gateSpec && this.gateSpec !== snap.gate) {
+      this.gateSpec.x += dx;
+      this.gateSpec.y += dy;
+      this.gateSpec.z += dz;
+    }
     const kids = this.root.children;
     for (let i = snap.root; i < kids.length; i++) {
       kids[i].position.add(off);
@@ -5213,6 +5351,7 @@ export class Level {
     });
     const mesh = new THREE.Mesh(vr.geometry, mat);
     mesh.name = c.vert === false ? "slide deck" : "vertramp";
+    mesh.userData.vertRampMesh = true; // capture: its vertramp component rebuilds it
     // THE POINT OF ALL THIS: the level DECLARES what this is, so the physics
     // stops guessing from normal.y. And it declares it BOTH ways — `false` is
     // not "unflagged", it is "this is a ROAD", which is what keeps a slide's
@@ -7172,7 +7311,6 @@ export class Level {
       ),
       collected: false,
     };
-    this.crystalPlaced = true;
   }
 
   collectCrystal(): void {
@@ -9239,182 +9377,6 @@ export class Level {
     }
   }
 
-  private buildBoulderDash(): void {
-    // Deep jungle under a lava sky: rich greens lit warm amber, so the
-    // corridor reads lush even while everything behind you is on fire.
-    const matJungle = new THREE.MeshLambertMaterial({ color: 0x4f9440 });
-    const matJungle2 = new THREE.MeshLambertMaterial({ color: 0x5aa048 });
-    const matSand = new THREE.MeshLambertMaterial({ color: 0xd2bc7e });
-    const matRamp = new THREE.MeshLambertMaterial({ color: 0x6f9a50 });
-
-    this.chaseCam = true;
-    this.killY = -30;
-    this.finishZ = 8;
-    this.endWallZ = -470; // the far-end clamp doubles as the wall behind spawn
-    this.spawnPos.set(0, 0.1, -448);
-    this.currentSpawn.copy(this.spawnPos);
-    this.theme = {
-      skyTop: "#14322a",
-      skyBottom: "#c85f28",
-      sunColorHex: "#ff8a4a",
-      sunU: 0.5,
-      sunV: 0.42,
-      stars: false,
-      fog: 0x4c3c22, // amber-green murk under the canopy
-      fogNear: 21,
-      fogFar: 130,
-      hemiSky: 0xd8b878, // warm amber sky light keeps the greens green
-      hemiGround: 0x22381e,
-      hemiI: 1.0,
-      sunColor: 0xffa055,
-      sunI: 1.25,
-      particleColor: 0xff9a52,
-      particleWind: [0.3, 1.4, 0.2], // rising embers
-    };
-
-    // the floor of the world is lava — very motivating
-    this.pitPlane("lava", -40, 0, -220, 320);
-
-    // spawn deck — open behind, so you can SEE the thing waiting for you
-    this.slab("chase start", -440, -458, 0, 14, matSand, false, 0, "sand");
-    this.wall(-7.5, -449, 1, 18, 0);
-    this.wall(7.5, -449, 1, 18, 0);
-
-    this.jungle("chase A", -377, -440, 0, 12, matJungle, { dips: [-410] });
-    this.fruitRow(-434, -390, 1.3, 8);
-    this.log(0.5, 5.5, 0, -396);
-    this.crate(-4.5, 0, -420, "nitro");
-    // gap 1: -371 .. -377 (rebalanced — clearable mid-chase)
-    this.jungle("chase B", -300, -371, 0, 12, matJungle2, { dips: [-330] });
-    this.crate(-1.3, 0, -350, "tnt");
-    this.crate(1.3, 0, -350, "tnt"); // swerve or hop the pair
-    this.log(-5.5, -0.5, 0, -318);
-    this.fruitRow(-362, -306, 1.3, 8);
-    this.checkpoint(0, -308, -3.5);
-    this.ramp("chase rise", -285, 2, -300, 0, 12, matRamp);
-    this.jungle("chase C", -212, -285, 2, 12, matJungle, { dips: [-240] });
-    this.crate(-3.2, 2, -260, "nitro");
-    this.crate(3.2, 2, -260, "nitro"); // thread the middle
-    this.crystal(0, 2.4, -250); // grab it WHILE fleeing — right up the middle
-    this.log(-5.5, -1.5, 2, -228);
-    this.fruitRow(-278, -222, 3.3, 8);
-    // gap 2: -207 .. -212 (rebalanced)
-    this.jungle("chase D", -130, -207, 2, 12, matJungle2, { dips: [-160] });
-    this.crate(0, 2, -182, "tnt");
-    this.crate(-2.6, 2, -176, "tnt");
-    this.crate(2.6, 2, -170, "tnt"); // staggered minefield: weave it
-    this.enemy(-4, 4, 2, -150, 6, "x", "hopper");
-    this.fruitRow(-198, -140, 3.3, 8);
-    this.checkpoint(2, -138, 3.5);
-    this.ramp("chase drop", -112, 0, -130, 2, 12, matRamp);
-    this.jungle("chase E", -42, -112, 0, 13, matJungle, { dips: [-75] });
-    this.log(0.5, 6, 0, -95);
-    this.crate(-4.8, 0, -60, "nitro");
-    this.fruitRow(-106, -52, 1.3, 8);
-    // the boulder pit: -35 .. -42 — you jump it; the boulder tips in
-    this.slab("escape", 14, -35, 0, 14, matSand, true, 0, "sand");
-    this.wall(-7.5, -9, 1, 46, 0);
-    this.wall(7.5, -9, 1, 46, 0);
-    this.crate(-3, 0, -20, "mask");
-    this.crate(3, 0, -16, "mystery");
-    this.crate(0, 0, -24);
-    this.fruitRow(-28, -12, 1.3, 5);
-    this.finishGate(0, this.finishZ);
-    // no end-wall mesh — the far clamp sits invisibly behind the spawn deck
-
-    this.buildChaseBoulder(-487, -44);
-
-    // --- dressing: jungle walls tight outside the 12u corridor (visual only,
-    // x ±7.5 clears the ±6 deck edge) + canopy palms bowing over the lane ---
-    const strips: [number, number, number][] = [
-      [0, -388, -434],
-      [0, -306, -366],
-      [2, -218, -280],
-      [2, -136, -202],
-      [0, -48, -108],
-    ];
-    let k = 0;
-    for (const [sy, zn, zf] of strips) {
-      for (let z = zn; z >= zf; z -= 16) {
-        const side = k % 2 === 0 ? 1 : -1;
-        if (k % 3 === 2) this.broadleaf(side * 7.6, sy, z, 1.35);
-        else this.fern(side * 7.5, sy, z, 1.45);
-        if (k % 4 === 1) this.fern(-side * 7.7, sy, z - 5, 1.25);
-        k++;
-      }
-    }
-    this.palm(7.9, 0, -400, 7.4, 0.45);
-    this.palm(-7.9, 0, -330, 7.2, -0.45);
-    this.palm(7.9, 2, -250, 7.6, 0.42);
-    this.palm(-7.9, 2, -168, 7.3, -0.42);
-    this.palm(7.9, 0, -84, 7.5, 0.44);
-    this.palm(-7.9, 0, -60, 7.1, -0.4);
-    // escape deck: the beach you were sprinting for
-    this.palm(-6.4, 0, -1, 5.4, 0.1);
-    this.palm(6.4, 0, -3, 5.8, -0.1);
-    this.flowers(-6.4, 0, -28);
-    this.fern(6.6, 0, -30, 1.2);
-  }
-
-  // The chase boulder: a boulder-sized Stone that rolls +Z after the player.
-  private buildChaseBoulder(startZ: number, endZ: number): void {
-    const r = 4.3;
-    const geo = new THREE.SphereGeometry(r, 16, 12);
-    const posAttr = geo.attributes.position as THREE.BufferAttribute;
-    const v = new THREE.Vector3();
-    for (let i = 0; i < posAttr.count; i++) {
-      v.fromBufferAttribute(posAttr, i);
-      const lump =
-        1 +
-        0.07 *
-          Math.sin(v.x * 2.1) *
-          Math.sin(v.y * 2.7 + 1.3) *
-          Math.sin(v.z * 1.9 + 2.6);
-      v.multiplyScalar(lump);
-      posAttr.setXYZ(i, v.x, v.y, v.z);
-    }
-    geo.computeVertexNormals();
-    const mesh = new THREE.Mesh(
-      geo,
-      this.baseMat("boulder", 0x8a7660, "dirt", 3, 2),
-    );
-    this.root.add(mesh);
-    const st: Stone = {
-      mesh,
-      box: new THREE.Box3(),
-      x: 0,
-      z0: startZ,
-      z1: startZ,
-      dir: 1,
-      speed: 25,
-      r,
-      chase: true,
-    };
-    this.stones.push(st);
-    // Ground profile sampled once at build time; gaps carry the last height,
-    // so the big fella rolls right over them.
-    const h0 = startZ - 12;
-    const hStep = 3;
-    const heights: number[] = [];
-    let prev = 0;
-    for (let z = h0; z <= 20; z += hStep) {
-      prev = this.floorY(0, z, prev);
-      heights.push(prev);
-    }
-    this.boulder = {
-      st,
-      active: false,
-      falling: false,
-      fallV: 0,
-      endZ,
-      triggerZ: this.spawnPos.z + 5,
-      h0,
-      hStep,
-      heights,
-    };
-    mesh.position.set(0, this.boulderGroundY(startZ) + r * 0.92, startZ);
-  }
-
   private boulderGroundY(z: number): number {
     const b = this.boulder;
     if (!b) return 0;
@@ -9758,217 +9720,6 @@ export class Level {
     }
     lane.push({ x: 0, z: -874 });
     this.lanePts = lane;
-  }
-
-  private buildRandom(): void {
-    const mats = [0x87939a, 0x74838a, 0x7a99a0, 0x7f9884].map(
-      (c) => new THREE.MeshLambertMaterial({ color: c }),
-    );
-    const mat = () => mats[Math.floor(Math.random() * mats.length)];
-    // Jungle night: deep teal dark, moonlit decks, warm fireflies adrift.
-    this.theme = {
-      skyTop: "#0a2a34",
-      skyBottom: "#1e6a5e",
-      sunColorHex: "#c8f2dc", // low moon
-      sunU: 0.25,
-      sunV: 0.48,
-      stars: true,
-      fog: 0x16403e,
-      fogNear: 24,
-      fogFar: 132,
-      hemiSky: 0x64b0a4,
-      hemiGround: 0x18302a,
-      hemiI: 1.0,
-      sunColor: 0x9ae8cc,
-      sunI: 1.15,
-      particleColor: 0xffd86e, // fireflies
-      particleWind: [0.3, 0.25, 0.2],
-    };
-    let z = 14;
-    let y = 0;
-    let minY = 0;
-    let dist = 0;
-    let lastGap = false;
-    let cpDue = 170;
-    let xc = 0; // course centerline: a sideways jog shifts everything after it
-    let jogDone = false;
-    this.slab("start", z, z - 30, y, 14, mat(), true, xc);
-    z -= 30;
-    while (dist < 800) {
-      const roll = Math.random();
-      if (!jogDone && !lastGap && dist > 150 && dist < 600 && roll < 0.12) {
-        // SIDEWAYS JOG: the path right-angles east across floating pads, then
-        // turns south again — the fixed camera sees the stretch side-on.
-        const JOG = 70;
-        this.slab("corner", z, z - 16, y, 16, mat(), false, xc + 3);
-        this.wall(xc + 3, z - 17.5, 16, 1.5, y);
-        this.zones.push({
-          xMin: xc + 9,
-          xMax: xc + JOG - 9,
-          zMin: z - 16,
-          zMax: z,
-          dir: "E",
-        });
-        const cz = z - 8;
-        for (let px = xc + 11; px + 9 <= xc + JOG - 8; px += 14) {
-          this.slabX("side pad", px, px + 9, y, 9, mat(), cz);
-          if (Math.random() < 0.4) this.crate(px + 4.5, y, cz);
-          if (Math.random() < 0.5)
-            this.fruitRowX(px + 2, px + 7, y + 1.3, 3, cz);
-        }
-        this.slab("corner", z, z - 16, y, 16, mat(), false, xc + JOG - 3);
-        this.wall(xc + JOG + 6.5, z - 8, 1.5, 16, y);
-        xc += JOG - 3;
-        z -= 16;
-        dist += 50;
-        cpDue -= 16;
-        lastGap = false;
-        jogDone = true;
-      } else if (roll < 0.34 || lastGap) {
-        // flat deck with random furniture
-        const len = 28 + Math.random() * 22;
-        const w = 10 + Math.random() * 4;
-        this.slab("deck", z, z - len, y, w, mat(), true, xc);
-        if (!this.crystalPlaced && dist > 300)
-          this.crystal(xc, y + 0.4, z - len * 0.5);
-        const crates = Math.floor(Math.random() * 3);
-        for (let i = 0; i < crates; i++) {
-          this.crate(
-            xc + Math.round(Math.random() * 8 - 4),
-            y,
-            z - 6 - Math.random() * (len - 12),
-          );
-        }
-        if (Math.random() < 0.5) {
-          const roster: EnemyKind[] = [
-            "grunt",
-            "spiker",
-            "turtle",
-            "charger",
-            "hopper",
-            "floater",
-            "sentry",
-            "spinner",
-          ];
-          const foe = roster[Math.floor(Math.random() * roster.length)];
-          this.enemy(
-            xc - 3.5,
-            xc + 3.5,
-            y,
-            z - len / 2,
-            3 + Math.random() * 5,
-            "x",
-            foe,
-          );
-        }
-        if (Math.random() < 0.35)
-          this.crate(
-            xc + (Math.random() < 0.5 ? -4 : 4),
-            y,
-            z - len * 0.7,
-            "nitro",
-          );
-        if (Math.random() < 0.22)
-          this.crate(
-            xc + (Math.random() < 0.5 ? -3 : 3),
-            y,
-            z - len * 0.4,
-            "tnt",
-          );
-        if (Math.random() < 0.22)
-          this.crate(
-            xc + (Math.random() < 0.5 ? -2 : 2),
-            y,
-            z - len * 0.3,
-            "mask",
-          );
-        if (Math.random() < 0.15)
-          this.crate(
-            xc + (Math.random() < 0.5 ? -3 : 3),
-            y,
-            z - len * 0.55,
-            "mystery",
-          );
-        if (Math.random() < 0.25)
-          this.fruitRow(z - 8, z - len + 8, y + 1.4, 4, xc);
-        if (Math.random() < 0.3) {
-          const bx = xc + (Math.random() < 0.5 ? -2.5 : 2.5);
-          this.stepBlock(bx, z - len * 0.5, 4, 5, y, y + 2.2);
-          this.crate(bx, y + 2.2, z - len * 0.5);
-        }
-        if (cpDue <= 0) {
-          this.checkpoint(y, z - len + 6, xc);
-          cpDue = 200 + Math.random() * 80;
-        }
-        z -= len;
-        dist += len;
-        cpDue -= len;
-        lastGap = false;
-      } else if (roll < 0.49) {
-        // gap over the void (rebalanced for the slower feel: 7-11u)
-        const len = 7 + Math.random() * 4;
-        z -= len;
-        dist += len;
-        lastGap = true;
-      } else if (roll < 0.64) {
-        // slope (downhill-biased)
-        const len = 28 + Math.random() * 12;
-        const dy =
-          Math.random() < 0.65
-            ? -(3 + Math.random() * 5)
-            : 2 + Math.random() * 2.5;
-        this.ramp("slope", z, y, z - len, y + dy, 10, mat(), xc);
-        z -= len;
-        y += dy;
-        minY = Math.min(minY, y);
-        dist += len;
-        cpDue -= len;
-        lastGap = false;
-      } else if (roll < 0.82) {
-        // rail over a pit (always follows solid ground)
-        const len = 36 + Math.random() * 20;
-        const rail = new Rail([
-          new THREE.Vector3(xc, y + 0.9, z + 4),
-          new THREE.Vector3(
-            xc + Math.round(Math.random() * 5 - 2.5),
-            y + 1.1,
-            z - len / 2,
-          ),
-          new THREE.Vector3(xc, y + 0.9, z - len - 4),
-        ]);
-        this.rails.push(rail);
-        this.root.add(rail.object);
-        z -= len;
-        dist += len;
-        lastGap = true;
-      } else if (roll < 0.9) {
-        // flush temple stair over the void
-        const t = this.stairClimb(z - 2, y, 4, xc);
-        dist += z - t.endZ + 4;
-        z = t.endZ - 4;
-        y = t.topY;
-        lastGap = true; // force a solid deck right after the top block
-      } else {
-        // kicker lip into a gap (rebalanced: 7-10u gap after the lip)
-        this.ramp("kicker", z, y, z - 10, y + 2.4, 10, mat(), xc);
-        z -= 10 + 7 + Math.random() * 3;
-        dist += 20;
-        minY = Math.min(minY, y);
-        lastGap = true;
-      }
-    }
-    if (lastGap) {
-      this.slab("landing", z, z - 30, y, 12, mat(), true, xc);
-      z -= 30;
-    }
-    this.slab("finish run", z, z - 45, y, 14, mat(), true, xc);
-    if (!this.crystalPlaced) this.crystal(xc, y + 0.4, z - 10); // fallback: pre-gate
-    this.finishZ = z - 30;
-    this.endWallZ = z - 42;
-    this.finishGate(y, this.finishZ, xc);
-    this.endWall(y, xc);
-    this.killY = minY - 26;
-    // (no void pit-floor plane — the cloud sea is the floor; falls die at killY)
   }
 
   private endWall(deckY: number, cx = 0): void {

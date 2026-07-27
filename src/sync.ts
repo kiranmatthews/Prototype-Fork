@@ -1,9 +1,13 @@
 // CROSS-DEVICE LEVEL SYNC
-// Edited levels live in one JSON file committed to the repo and served by
-// GitHub Pages (public/levels.json -> ./levels.json in the build). The editor
-// PUSHES all overrides there with a GitHub token (Contents: write); every
-// device FETCHES the deployed file on load. The phone needs no token — it just
-// reads the public Pages file, so a synced level shows up with zero setup.
+// Your level list lives in one JSON file committed to the repo and served by
+// GitHub Pages (public/levels.json -> ./levels.json in the build). SYNC UP
+// PUSHES the whole list there with a GitHub token (Contents: write); a device
+// that has none of its own FETCHES it on load, and RESTORE FROM CLOUD re-reads
+// it on demand. The phone needs no token — it just reads the public Pages
+// file, so a published level shows up with zero setup.
+//
+// Payload shape: { v: 2, levels: LevelEntry[] }. (v1 was a map of per-level
+// overrides keyed by list index; that scheme is gone with the index ids.)
 //
 // The token is the real write credential; it lives only in the editing
 // browser's localStorage. A ~30s Pages rebuild is the propagation delay.

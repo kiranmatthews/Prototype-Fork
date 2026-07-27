@@ -31,8 +31,8 @@ const CHANNELS = [
 type InputLike = { moveX: number; moveY: number } & Record<(typeof CHANNELS)[number], boolean>;
 
 export interface ReplayFile {
-  v: 1;
-  level: number;
+  v: 2;
+  level: string; // the level's stable slug id
   date: string;
   tuning: Record<string, number>;
   tuningChanges: Array<[number, string, number]>; // [frame, key, newValue]
@@ -49,13 +49,13 @@ export class Recorder {
   private mx: number[] = [];
   private my: number[] = [];
   private b: number[] = [];
-  private level = 0;
+  private level = '';
   private tuning0: Record<string, number> = {};
   private tuningPrev: Record<string, number> = {};
   private tuningChanges: Array<[number, string, number]> = [];
   private truncated = false;
 
-  start(level: number): void {
+  start(level: string): void {
     this.level = level;
     this.mx = [];
     this.my = [];
@@ -93,7 +93,7 @@ export class Recorder {
 
   export(): ReplayFile {
     return {
-      v: 1,
+      v: 2,
       level: this.level,
       date: new Date().toISOString(),
       tuning: { ...this.tuning0 },
@@ -123,7 +123,7 @@ export class Replayer {
 
   // Call AFTER the level has been (re)loaded to the replay's level.
   begin(data: ReplayFile): void {
-    if (!data || data.v !== 1 || !Array.isArray(data.b)) throw new Error('bad replay file');
+    if (!data || data.v !== 2 || !Array.isArray(data.b)) throw new Error('bad replay file');
     this.data = data;
     this.frame = 0;
     this.nextChange = 0;
