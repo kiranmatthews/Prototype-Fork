@@ -6748,15 +6748,16 @@ export class Player {
     // Skate stance: while actually rolling on the board, plant the feet on the
     // deck — spread fore-aft (front foot toward the nose, back toward the tail)
     // and angled out — instead of hanging together at the plank's centre.
+    // Same rule as the deck's own visibility: the riding STANCE follows the
+    // skate state, not the speedometer. If these two ever disagree you get a
+    // skate pose with no board under it, or a board under a walk pose.
     const onBoard =
       this.grounded &&
       this.state === 'ride' &&
       this.grabPose < 0.05 &&
       this.slideTimer <= 0 &&
       !this.crawling &&
-      (this.freeSkate ||
-        Math.abs(this.speed) > TUNING.boardSpeed ||
-        (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5));
+      this.freeSkate;
     this.skatePose += ((onBoard ? 1 : 0) - this.skatePose) * Math.min(1, 10 * dt);
     const sk = this.skatePose;
     // Standing on-foot charge (jump crouch at a standstill): the running-charge
@@ -7138,24 +7139,30 @@ export class Player {
       // stance yaw so the board stays along the line of travel (spins and
       // boardslides still carry it — those live in the body yaw terms).
       this.boardG.rotation.y = -this.stance * (Math.PI / 2) * this.sidePose;
-      // On foot the board is stowed — it only comes out for real skating:
-      // grinding, momentum-skate mode, grabs, speed above the boardSpeed
-      // slider, or a charge that's actually propelling past walking pace. A
-      // stationary jump crouch or a walk-hop tap never flashes the board.
-      // A walk-slide air (slideFromWalk) NEVER shows the board: it lands
-      // back on feet, and the slide-jump burst can carry past boardSpeed for
-      // seconds on a long drop — the board popping out mid-fall reads as
-      // "my slide turned into skating".
+      // THE BOARD IS OUT WHEN YOU ARE SKATING. Nothing else. freeSkate is the
+      // skate state — the same flag the movement model uses to decide you are
+      // riding rather than walking — so the deck now says exactly what the
+      // game already believes about you.
+      //
+      // It used to ALSO appear on `|speed| > boardSpeed`, and that clause sat
+      // outside every state gate: anything that moved you fast while the state
+      // said on-foot (a skate-blocked run, a crawl carrying momentum, a slide
+      // burst) put a board under you that you were not riding. Speed is a
+      // consequence of skating, not the definition of it, and the movement
+      // model had already worked that out — "skating is a STATE, not a speed
+      // threshold" is written over the freeSkate branch. The visual just never
+      // got the message.
+      //
+      // grind and grabPose stay because both ARE the board: a grind is riding
+      // the deck along a rail, and a grab holds it in your hands. The old
+      // charge clause is gone as redundant — a charge that is propelling you
+      // past walking pace has already set freeSkate through pushingOff.
       this.boardG.visible =
         this.slideTimer <= 0 &&
         this.starPose < 0.4 && // stowed through the star-jump beat
         this.ledgePose < 0.3 && // stowed while hanging off a ledge (hands are busy)
         this.state !== 'rope' && // stowed on the swing rope: both hands grip it
-        (this.state === 'grind' ||
-          (this.charging && Math.abs(this.speed) > TUNING.walkSpeed + 0.5) ||
-          this.freeSkate ||
-          this.grabPose > 0.05 ||
-          (Math.abs(this.speed) > TUNING.boardSpeed && !this.slideFromWalk));
+        (this.state === 'grind' || this.freeSkate || this.grabPose > 0.05);
     }
     // WALLRIDE: the deck tips onto its SIDE against the wall (all four wheels to
     // the face) while the RIDER stays upright — head on top — hanging off it,
@@ -8320,6 +8327,7 @@ export class Player {
     // camera actually sees through grabs and flips, so the flames go there.
     // Grip stays crisp — texel grit IS grip tape; the art shades smooth.
     const boardG = new THREE.Group();
+    boardG.name = 'board'; // findable from the scene graph (probes, debugging)
     const gripM = lam(this.paintTex(64, (ctx) => {
       ctx.fillStyle = '#17181c';
       ctx.fillRect(0, 0, 64, 64);

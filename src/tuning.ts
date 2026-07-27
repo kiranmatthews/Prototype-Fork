@@ -78,7 +78,7 @@ export const TUNING = {
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
   spinTolerance: 30, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail. 30 still leaves 240 of the circle bailing — it's a net under the auto-correct, not a removal
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
-  boardSpeed: 8.5, // the board (visual + sound) only comes out above this speed
+  boardSpeed: 8.5, // speed gate on the transition-carve SFX only — the board VISUAL and the rolling loop follow the skate state, not a speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
@@ -448,7 +448,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
   boardSpeed:
-    'The board (visual + rolling sound) only appears above this speed. Raise it if the board flickers in during normal platforming; the walk/skate physics boundary is walkSpeed, not this.',
+    'Speed gate on the transition-carve sound effect. It NO LONGER controls whether the board is drawn or whether the wheels roll — both of those follow the skate state (freeSkate), so the deck is out exactly when you are skating and stowed exactly when you are not. The walk/skate physics boundary is walkSpeed.',
   skateHoldTime:
     "Skate commit meter: X must be HELD this long (while pushing a direction) before the charge becomes the skate accelerator. Quick taps stay pure Crash hops.",
   skateEntrySpeed:
