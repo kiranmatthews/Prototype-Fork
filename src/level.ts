@@ -358,11 +358,27 @@ export interface CustomGroup {
   nm?: string; // editor display name (outliner rename)
 }
 
+// ---- TIME OF DAY ----------------------------------------------------------
+// One authored knob that swings the whole atmosphere: which painted skybox is
+// on the dome, what colour the world fades into, and how the lights are tinted
+// and scaled. The three presets share the same painting geometry (the images
+// are the same size with their horizon on the same row), so a switch is pure
+// colour — see SKY_PRESETS in main.ts, which owns the actual values.
+export const SKY_PRESETS = ["day", "sunset", "night"] as const;
+export type SkyPreset = (typeof SKY_PRESETS)[number];
+export const DEFAULT_SKY: SkyPreset = "sunset";
+export function asSkyPreset(v: unknown): SkyPreset {
+  return (SKY_PRESETS as readonly string[]).includes(v as string)
+    ? (v as SkyPreset)
+    : DEFAULT_SKY;
+}
+
 export interface CustomLevelData {
   v: 1;
   name: string;
   spawn: [number, number, number];
   killY: number;
+  sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
   components: CustomComponent[];
   layers?: CustomLayer[];
   groups?: CustomGroup[];
@@ -1369,6 +1385,9 @@ export class Level {
   // speed ceiling. Only set on the level built around one long grind line —
   // elsewhere it would quietly rewrite the speed balance of the whole park.
   perfectGrindBoost = false;
+  // Time of day for THIS level. Hand-coded levels are all sunset (the look the
+  // game shipped with); a data-built level takes it from its authored data.
+  skyPreset: SkyPreset = DEFAULT_SKY;
   theme: Theme = {
     skyTop: "#0fa3c2",
     skyBottom: "#ffe6ae",
@@ -2556,6 +2575,8 @@ export class Level {
       name: `${this.name} (copy)`,
       spawn: [r2(this.spawnPos.x), r2(this.spawnPos.y), r2(this.spawnPos.z)],
       killY: r2(this.killY),
+      // only when it isn't the default, so the saved JSON stays quiet
+      sky: this.skyPreset === DEFAULT_SKY ? undefined : this.skyPreset,
       components: C,
       groups,
     };
@@ -2567,6 +2588,7 @@ export class Level {
   // tagged with its component index for editor picking.
   private buildCustom(data: CustomLevelData): void {
     this.builtFromData = data; // captureData: a data-built level IS its own capture
+    this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.killY = data.killY;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;

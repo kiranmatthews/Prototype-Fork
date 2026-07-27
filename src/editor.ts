@@ -25,6 +25,8 @@ import {
   groupChainOf,
   TEX_KINDS,
   DEFAULT_LEVEL_ID,
+  SKY_PRESETS,
+  asSkyPreset,
   getEditData,
   persistEditData,
   saveUserLevel,
@@ -1183,6 +1185,7 @@ export class Editor {
   targetId = DEFAULT_LEVEL_ID; // the user level this session edits
   private targetName = ""; // its menu name — what the rename field shows
   private nameInput: HTMLInputElement | null = null;
+  private skySelect: HTMLSelectElement | null = null;
   data: CustomLevelData;
   // SELECTION is an ordered set of component indices; the LAST one is the
   // primary (it drives the props panel, snapping, and align actions).
@@ -1341,6 +1344,7 @@ export class Editor {
     if (this.nameInput) this.nameInput.value = target.name;
     localStorage.setItem("protoEditorTarget", target.id); // refresh lands on the same level
     this.data = migrateCustomLevel(getEditData(target.id));
+    this.syncSkySelect();
     // fresh history per target: switching levels must not undo across them
     this.lastCommitted = JSON.stringify(this.data);
     this.undoStack.length = 0;
@@ -1536,6 +1540,11 @@ export class Editor {
     this.hooks.showMsg("LEVEL IMPORTED", findLevel(id)?.name ?? "");
   }
 
+  /** Point the time-of-day dropdown at whatever this.data now says. */
+  private syncSkySelect(): void {
+    if (this.skySelect) this.skySelect.value = asSkyPreset(this.data.sky);
+  }
+
   // Re-bind this editor session to another user level (import / duplicate).
   private retarget(id: string): void {
     const e = findLevel(id);
@@ -1545,6 +1554,7 @@ export class Editor {
     if (this.nameInput) this.nameInput.value = e.name;
     localStorage.setItem("protoEditorTarget", e.id);
     this.data = migrateCustomLevel(getEditData(e.id));
+    this.syncSkySelect();
     this.lastCommitted = JSON.stringify(this.data);
     this.undoStack.length = 0; // history belongs to the level, not the session
     this.redoStack.length = 0;
@@ -1616,6 +1626,7 @@ export class Editor {
   // swap in a history state WITHOUT recording it as a new edit
   private applyState(json: string): void {
     this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
+    this.syncSkySelect(); // undo/redo can change the time of day
     this.lastCommitted = json;
     persistEditData(this.targetId, json);
     this.select(-1);
@@ -3849,6 +3860,28 @@ export class Editor {
     nameRow.appendChild(nameIn);
     lvl.appendChild(nameRow);
     this.nameInput = nameIn;
+    // TIME OF DAY: swaps the painted skybox, the fog colour and the lighting
+    // in one move. Saved with the level, so it exports and syncs with it.
+    const skyRow = document.createElement("div");
+    skyRow.className = "ed-row";
+    const skyLab = document.createElement("label");
+    skyLab.textContent = "time of day";
+    const skySel = document.createElement("select");
+    skySel.title = "skybox + fog + lighting preset for this level";
+    for (const k of SKY_PRESETS) {
+      const o = document.createElement("option");
+      o.value = k;
+      o.textContent = k;
+      skySel.appendChild(o);
+    }
+    skySel.addEventListener("change", () => {
+      this.data.sky = asSkyPreset(skySel.value);
+      this.commit(); // rebuild: applyTheme reads the new preset off the level
+    });
+    skyRow.appendChild(skyLab);
+    skyRow.appendChild(skySel);
+    lvl.appendChild(skyRow);
+    this.skySelect = skySel;
     lvl.appendChild(
       this.numRow(
         "spawn x",
@@ -4020,7 +4053,7 @@ export class Editor {
 
     projPane2.appendChild(
       h(
-        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · duplicate / delete / import add + remove menu rows<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
+        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · <b>time of day</b> swaps skybox + fog + lighting · duplicate / delete / import add + remove menu rows<br><br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
       ),
     );
 

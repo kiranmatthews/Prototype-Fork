@@ -19,6 +19,8 @@ import {
   starterCustomLevel,
   isEditUnlocked,
   checkEditPass,
+  DEFAULT_SKY,
+  type SkyPreset,
 } from "./level";
 import { pushLevels, fetchRemoteLevels, getToken, setToken } from "./sync";
 import { Player } from "./player";
@@ -151,11 +153,15 @@ sky.frustumCulled = false;
 sky.visible = !LITE;
 scene.add(sky);
 
-// Photographic skybox: a painted sunset backdrop mapped onto the dome. It is
-// NOT a full 360 wrap — it's scaled down so a good slice of the composition
-// sits above the horizon, the image's own horizon (600px of 887) is pinned to
-// the world horizon (the dome's equator), and its alpha-faded bottom melts
-// into the retinted fog. Repeats horizontally, clamps top/bottom.
+// Photographic skybox: a painted backdrop mapped onto the dome. It is NOT a
+// full 360 wrap — it's scaled down so a good slice of the composition sits
+// above the horizon, the image's own horizon (600px of 887) is pinned to the
+// world horizon (the dome's equator), and its alpha-faded bottom melts into
+// the retinted fog. Repeats horizontally, clamps top/bottom.
+//
+// THREE paintings share this geometry — day, sunset, night — same size, same
+// horizon row, so switching between them is a texture swap plus colour. Which
+// one is on the dome is authored per level (Level.skyPreset).
 const SKY_K = 2.15; // vertical scale: >1 shrinks the image so more of it shows
 // Horizontal wrap count MUST be an integer. The dome is a sphere with a UV seam
 // at one longitude; a non-integer repeat (e.g. 2.15) makes the texture coord jump
@@ -166,9 +172,150 @@ const SKY_WRAP = 2;
 const SKY_IMG_H = 887;
 const SKY_HORIZON_PX = 600; // the painting's own horizon, in image pixels
 const SKY_HORIZON_V = 1 - SKY_HORIZON_PX / SKY_IMG_H; // ...as a texture-V coord
-const SKY_FOG = new THREE.Color(0xd08a7e); // warm sunset haze, to match the horizon band
-let skyboxTex: THREE.Texture | null = null;
-let skyMist: THREE.Mesh | null = null; // foreground horizon mist (follows the camera)
+
+// ---- TIME OF DAY -----------------------------------------------------------
+// Everything that made the world read as a sunset used to be hardcoded here.
+// It is now one row of a table, so day and night are the same code with
+// different numbers. The tints are pulls toward a colour (lerp amount `k`),
+// not replacements, so each level's own theme still shows through — a jungle
+// stays greener than a beach at every time of day.
+//
+// `top`/`bottom` only matter when the painting is missing: the procedural
+// gradient sky is the fallback, and it has to read as the right time of day
+// on its own (see applyTheme).
+interface SkyPresetDef {
+  file: string; // painted backdrop in public/
+  label: string; // what the editor dropdown shows
+  fog: number; // the colour the world fades into
+  fogFarCap: number; // clamp on the level's own fogFar — how far you can see
+  sunTint: number;
+  sunK: number; // key light pulled this far toward sunTint
+  sunMul: number; // ...then scaled
+  groundTint: number;
+  groundK: number; // hemisphere bounce off the ground
+  hemiTint: number;
+  hemiK: number; // hemisphere sky colour
+  hemiMul: number;
+  fillTint: number;
+  fillK: number; // the cool counter-light opposite the key
+  fillMul: number; // as a fraction of the hemisphere intensity
+  top: string;
+  bottom: string; // procedural fallback gradient
+  stars: boolean; // fallback only: scatter a starfield
+  // fallback only: the disc in the sky. A hex overrides the level's own sun,
+  // undefined keeps it, null paints NONE — the disc drags a 185px halo behind
+  // it, which is exactly what a night sky must not have.
+  sunHex: string | null | undefined;
+}
+const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  // Bright and open: neutral key, cool skylight, air you can see a long way
+  // through. The haze is the pale blue-white of the cloud sea at noon.
+  day: {
+    file: "skybox-day.png",
+    label: "day",
+    fog: 0xdfe9f2,
+    fogFarCap: 340,
+    sunTint: 0xfff4e0,
+    sunK: 0.25,
+    sunMul: 1.15,
+    groundTint: 0xb9c2c8,
+    groundK: 0.25,
+    hemiTint: 0xdcebff,
+    hemiK: 0.45,
+    hemiMul: 1.15,
+    fillTint: 0xcfe2ff,
+    fillK: 0.5,
+    fillMul: 0.26,
+    top: "#3f8fd8",
+    bottom: "#e9f0f4",
+    stars: false,
+    sunHex: "#fffdf2", // high white noon sun
+  },
+  // EXACTLY the look the game shipped with — these numbers are the constants
+  // that used to sit inline in applyTheme, moved not changed. Switching to
+  // sunset must be pixel-identical to the old build.
+  sunset: {
+    file: "skybox.png",
+    label: "sunset",
+    fog: 0xd08a7e,
+    fogFarCap: 260,
+    sunTint: 0xffc46a,
+    sunK: 0.15,
+    sunMul: 1.1,
+    groundTint: 0xc79a62,
+    groundK: 0.3,
+    hemiTint: 0xffffff,
+    hemiK: 0, // sunset left the sky colour to the level's own theme
+    hemiMul: 1,
+    fillTint: 0xffffff,
+    fillK: 0,
+    fillMul: 0.22,
+    top: "#0fa3c2",
+    bottom: "#ffe6ae",
+    stars: false,
+    sunHex: undefined, // sunset keeps the level theme's own sun, as it always did
+  },
+  // Moonlight. The trap here is making it pretty and unplayable: this is a
+  // platformer, so a deck edge and a crate face still have to read. Measured
+  // against the sunset build, a lit deck lands near half its brightness — dark
+  // enough to be unmistakably night, bright enough to platform on. Most of the
+  // work is done by COLOUR (deep navy haze, hard blue tints on every light)
+  // rather than by darkness, which is what keeps it readable. The key stays
+  // brighter than a pure-ambient scene would allow so cast shadows survive:
+  // without them the world goes flat and edges stop reading at all.
+  night: {
+    file: "skybox-night.png",
+    label: "night",
+    fog: 0x1b2540,
+    fogFarCap: 200,
+    sunTint: 0x9dbcff,
+    sunK: 0.85,
+    sunMul: 0.26,
+    groundTint: 0x1b2540,
+    groundK: 0.8,
+    hemiTint: 0x40598c,
+    hemiK: 0.85,
+    hemiMul: 0.5,
+    fillTint: 0x5f7fc4,
+    fillK: 0.8,
+    fillMul: 0.34,
+    top: "#080f28",
+    bottom: "#22345c",
+    stars: true,
+    sunHex: null, // no disc: its halo washes the whole sky out, and the
+    // painted night reference has no moon in it either
+  },
+};
+
+// Both layers built from one painting (see the loader below).
+interface SkyLayers {
+  bg: THREE.CanvasTexture; // the dome backdrop
+  mist: THREE.CanvasTexture; // the below-horizon cloud sea, drawn in front
+}
+const skyCache = new Map<SkyPreset, SkyLayers>(); // built once, kept for the session
+const skyPending = new Set<SkyPreset>();
+const skyMissing = new Set<SkyPreset>(); // 404 / decode failure — use the gradient
+let activeSky: SkyPreset = DEFAULT_SKY;
+
+// Foreground horizon mist: created up front (empty), textured by applyTheme.
+// Drawn OVER the level with depth-test ON, so only geometry farther than the
+// dome radius — the far horizon — sits behind it; the walkable level and the
+// skater are closer, so they stay in front.
+const skyMist = new THREE.Mesh(
+  sky.geometry, // radius 370; the mesh follows the camera (see frame())
+  new THREE.MeshBasicMaterial({
+    side: THREE.BackSide,
+    transparent: true,
+    depthTest: true,
+    depthWrite: false,
+    fog: false,
+  }),
+);
+skyMist.renderOrder = 6; // after the world
+skyMist.frustumCulled = false;
+skyMist.visible = false; // until a painting is actually on it
+scene.add(skyMist);
+
 const cfgSkyTex = (t: THREE.Texture): void => {
   t.colorSpace = THREE.SRGBColorSpace;
   // Plain repeat on a made-seamless image (see makeSeamless): a continuous wrap
@@ -182,7 +329,7 @@ const cfgSkyTex = (t: THREE.Texture): void => {
 // A mirrored wrap hides the jump but leaves an obvious reflection axis. Instead
 // make the image genuinely tileable: cross-blend a band straddling the wrap so
 // both edges converge to the same average at the seam. Plain repeat is then
-// continuous with no fold. (Runs once, on load.)
+// continuous with no fold. (Runs once per painting, on load.)
 const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
   const W = img.naturalWidth;
   const H = img.naturalHeight;
@@ -202,33 +349,18 @@ const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
   x.globalAlpha = 1;
   return c;
 };
-// Load the painting once, then build TWO layers from it:
+// Build BOTH layers from one painting:
 //  1) the dome backdrop (behind the level) — mountains + sky.
 //  2) a foreground MIST layer — only the rich stuff BELOW the 600px horizon
-//     (cloud sea, lower islands), drawn OVER the level with depth-test off so
-//     it actually shows in front of the far horizon, fading out toward your
-//     feet via the painting's own alpha so it never buries anything close.
-const skyImg = new Image();
-skyImg.crossOrigin = "anonymous";
-skyImg.onload = () => {
-  const W = skyImg.naturalWidth,
-    H = skyImg.naturalHeight;
-  // Make the painting horizontally tileable ONCE, then build both layers from
-  // it so the wrap is seamless (no hard seam, no mirror fold).
-  const base = makeSeamless(skyImg);
-  // (1) backdrop — the full (seamless) painting
-  const bgTex = new THREE.CanvasTexture(base);
-  cfgSkyTex(bgTex);
-  const m = sky.material as THREE.MeshBasicMaterial;
-  m.transparent = true;
-  const old = m.map;
-  m.map = bgTex;
-  m.needsUpdate = true;
-  if (old && old !== bgTex) old.dispose();
-  skyboxTex = bgTex;
+//     (cloud sea, lower islands), fading out toward your feet via the
+//     painting's own alpha so it never buries anything close.
+function buildSkyLayers(img: HTMLImageElement): SkyLayers {
+  const W = img.naturalWidth,
+    H = img.naturalHeight;
+  const base = makeSeamless(img); // tileable ONCE, both layers share it
+  const bg = new THREE.CanvasTexture(base);
+  cfgSkyTex(bg);
 
-  // (2) foreground mist — erase everything ABOVE the horizon so only the
-  // below-horizon detail survives (soft ramp across the horizon line)
   const cFg = document.createElement("canvas");
   cFg.width = W;
   cFg.height = H;
@@ -243,31 +375,34 @@ skyImg.onload = () => {
   fx.fillStyle = ramp;
   fx.fillRect(0, 0, W, H);
   fx.globalCompositeOperation = "source-over";
-  const fgTex = new THREE.CanvasTexture(cFg);
-  cfgSkyTex(fgTex); // mist sits at its natural below-horizon position (no lift)
-  const mist = new THREE.Mesh(
-    sky.geometry, // radius 370; the mesh follows the camera (see frame())
-    new THREE.MeshBasicMaterial({
-      map: fgTex,
-      side: THREE.BackSide,
-      transparent: true,
-      depthTest: true, // occluded by the near/mid level + character...
-      depthWrite: false,
-      fog: false,
-    }),
-  );
-  // ...so ONLY geometry farther than the dome radius (the far horizon, many
-  // hundreds of units out) gets the mist; the walkable level and skater, all
-  // closer than the radius, sit in front of it. renderOrder after the world.
-  mist.renderOrder = 6;
-  mist.frustumCulled = false;
-  mist.visible = !LITE;
-  mist.position.copy(camera.position);
-  scene.add(mist);
-  skyMist = mist;
-  applyTheme(); // re-tint the fog to the sunset now that the sky is live
-};
-skyImg.src = import.meta.env.BASE_URL + "skybox.png";
+  const mist = new THREE.CanvasTexture(cFg);
+  cfgSkyTex(mist); // mist sits at its natural below-horizon position (no lift)
+  return { bg, mist };
+}
+
+// Fetch a preset's painting once and cache it. Missing files are remembered as
+// missing, so a level authored for a time of day whose art hasn't landed yet
+// falls back to the procedural gradient instead of retrying every rebuild.
+function loadSky(p: SkyPreset): void {
+  if (skyCache.has(p) || skyPending.has(p) || skyMissing.has(p)) return;
+  skyPending.add(p);
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    skyPending.delete(p);
+    skyCache.set(p, buildSkyLayers(img));
+    // A slow load that lands after the player moved on must not yank the sky
+    // out from under the level they're actually looking at.
+    if (activeSky === p) applyTheme();
+  };
+  img.onerror = () => {
+    skyPending.delete(p);
+    skyMissing.add(p);
+    if (activeSky === p) applyTheme(); // repaint with the gradient fallback
+  };
+  img.src = import.meta.env.BASE_URL + SKY_PRESETS[p].file;
+}
+loadSky(DEFAULT_SKY);
 
 // --- sky painting ------------------------------------------------------------
 // Theme colors arrive as both '#rrggbb' strings and 0xrrggbb numbers; the
@@ -438,7 +573,13 @@ function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
   ctx.fillRect(0, Math.round(H * 0.56), W, H - Math.round(H * 0.56));
 
   // default LinearFilter: the dome samples smooth, no crisped-up texels
-  return new THREE.CanvasTexture(canvas);
+  const tex = new THREE.CanvasTexture(canvas);
+  // The canvas is painted in sRGB hex, so it has to be DECODED as sRGB — the
+  // paintings already do this via cfgSkyTex. Without it the darks render about
+  // three times too bright, which barely showed when this was only the
+  // pre-load flash but makes a night sky come out pale grey.
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
 }
 
 // The editor wants to SEE the whole level — no fog swallowing the far end, no
@@ -453,44 +594,84 @@ function setEditorView(editing: boolean): void {
   applyTheme(); // re-applies (or clears) fog for the new mode
 }
 
+let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
+
 function applyTheme(): void {
   const t = level.theme;
-  // the photographic skybox retints every level's haze to the sunset so the
-  // painting's alpha-faded base melts seamlessly into the far distance
-  const fogHex = skyboxTex ? SKY_FOG.getHex() : t.fog;
-  // ...with a gentle far cap so the deep distance still warms into the sunset
-  // behind the mist, without fogging the walkable level (the mist owns the
-  // horizon now).
+  const P = SKY_PRESETS[level.skyPreset] ?? SKY_PRESETS[DEFAULT_SKY];
+  activeSky = level.skyPreset;
+  loadSky(activeSky); // no-op once cached or known missing
+
+  // TIME OF DAY drives the atmosphere; the level's theme still colours it.
+  // The haze is the preset's, not the level's: the painting's alpha-faded base
+  // has to melt into the far distance, and that only works if the world fades
+  // to the same colour the horizon band is painted in.
   const fogNear = t.fogNear;
-  const fogFar = skyboxTex ? Math.min(t.fogFar, 260) : t.fogFar;
+  // ...with a far cap so the deep distance warms into the sky behind the mist
+  // without fogging the walkable level (the mist owns the horizon).
+  const fogFar = Math.min(t.fogFar, P.fogFarCap);
   // editor view: no fog at all, so distant geometry stays crisp and visible
-  scene.fog = editorViewActive ? null : new THREE.Fog(fogHex, fogNear, fogFar);
-  scene.background = new THREE.Color(fogHex);
+  scene.fog = editorViewActive ? null : new THREE.Fog(P.fog, fogNear, fogFar);
+  scene.background = new THREE.Color(P.fog);
+
+  const tint = (c: THREE.Color, hex: number, k: number): THREE.Color =>
+    k > 0 ? c.lerp(new THREE.Color(hex), k) : c;
+  // sky light + the ground bounce under it
   hemi.color.set(t.hemiSky);
-  // ground bounce leans toward warm sand: every theme reads a touch tropical
-  hemi.groundColor.set(t.hemiGround).lerp(new THREE.Color(0xc79a62), 0.3);
-  hemi.intensity = t.hemiI;
-  // key light nudged warmer and brighter than the theme asks — golden-hour key
-  sun.color.set(t.sunColor).lerp(new THREE.Color(0xffc46a), 0.15);
-  sun.intensity = t.sunI * 1.1;
+  tint(hemi.color, P.hemiTint, P.hemiK);
+  hemi.groundColor.set(t.hemiGround);
+  tint(hemi.groundColor, P.groundTint, P.groundK);
+  hemi.intensity = t.hemiI * P.hemiMul;
+  // key light: pulled toward the preset's own light colour, then scaled
+  sun.color.set(t.sunColor);
+  tint(sun.color, P.sunTint, P.sunK);
+  sun.intensity = t.sunI * P.sunMul;
   // the counter-light stays a fraction of the sky light so it never competes
   fill.color.set(t.hemiSky);
-  fill.intensity = t.hemiI * 0.22;
+  tint(fill.color, P.fillTint, P.fillK);
+  fill.intensity = hemi.intensity * P.fillMul;
+
+  // THE DOME. A loaded painting wins; otherwise the procedural gradient, painted
+  // in the preset's colours so day and night still read right without the art.
   const mat = sky.material as THREE.MeshBasicMaterial;
-  // the photographic skybox (once loaded) wins over the procedural gradient
-  if (skyboxTex) {
-    if (mat.map !== skyboxTex) {
-      const old = mat.map;
-      mat.map = skyboxTex;
+  const mistMat = skyMist.material as THREE.MeshBasicMaterial;
+  const layers = skyCache.get(activeSky);
+  if (layers) {
+    mat.transparent = true;
+    if (mat.map !== layers.bg) {
+      mat.map = layers.bg;
       mat.needsUpdate = true;
-      if (old) old.dispose();
+    }
+    if (mistMat.map !== layers.mist) {
+      mistMat.map = layers.mist;
+      mistMat.needsUpdate = true;
+    }
+    skyMist.visible = !LITE;
+    // cached textures are shared across levels — never dispose them here; only
+    // the gradient we painted ourselves is ours to free
+    if (proceduralSky) {
+      proceduralSky.dispose();
+      proceduralSky = null;
     }
     return;
   }
-  const old = mat.map;
-  mat.map = makeSkyTexture(t);
+  mat.transparent = false;
+  skyMist.visible = false; // no painting, no cloud sea to hang in front
+  const grad = makeSkyTexture({
+    ...t,
+    skyTop: P.top,
+    skyBottom: P.bottom,
+    fog: P.fog,
+    stars: P.stars,
+    // sunset keeps the level's own sun; day swaps in a white noon one; night
+    // has none, or the sky ends up with a noon sun blazing in it
+    // "" reads falsy in makeSkyTexture, which is its "no disc" test
+    sunColorHex: P.sunHex === null ? "" : (P.sunHex ?? t.sunColorHex),
+  });
+  mat.map = grad;
   mat.needsUpdate = true;
-  if (old) old.dispose();
+  if (proceduralSky) proceduralSky.dispose();
+  proceduralSky = grad;
 }
 
 // Slightly wide lens: exaggerates depth so corridors read longer, while the
@@ -1613,7 +1794,7 @@ function frame(): void {
     input.consumeEdges();
     acc = 0;
     sky.position.copy(camera.position);
-    if (skyMist) skyMist.position.copy(camera.position);
+    skyMist.position.copy(camera.position);
     renderer.render(scene, camera);
     return;
   }
@@ -1676,7 +1857,7 @@ function frame(): void {
   if (split2p) updateCamera2(dt);
   updateAudio(dt);
   sky.position.copy(camera.position);
-  if (skyMist) skyMist.position.copy(camera.position);
+  skyMist.position.copy(camera.position);
 
   ui.updateBalance(player.balanceMeter);
   ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
