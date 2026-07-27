@@ -2356,10 +2356,12 @@ export class Player {
         this.speed += TUNING.pipeCarve * transWeight * dt;
       }
       // PUMP: hold X to work the transition for EXTRA speed — the hard pump on
-      // top of the carve, the honest way to build vert height. On the halfpipe
-      // this is the strong pipePumpGain (it has to out-build gravity+friction over
-      // successive swings to clear the coping); on general steep banks it's the
-      // gentler crouch pipePump. Both scale with steepness (hardest below the coping).
+      // top of the carve, the honest way to build vert height. ONE gain now
+      // (pipePumpGain) on every transition face: it has to out-build gravity
+      // and friction over successive swings to clear the coping. There used to
+      // be a second, gentler pipePump for general steep banks; the single gain
+      // replaced it and the slider was retired. Scales with steepness, so the
+      // pump is hardest below the coping.
       if (this.charging && this.onTransition) {
         // full pump on ANY transition face — analytic pipe, mesh bowl wall, or
         // anything the level flagged as vert
@@ -2404,7 +2406,7 @@ export class Player {
       // board is SLOW and pointed roughly along the coping (|ty| small — not
       // already committed up or down the wall), swing it down the fall line and
       // roll back into the transition. The |ty| gate lets a fast descent/climb
-      // pass untouched, and beating the pipePump lift (which fires just above)
+      // pass untouched, and beating the pump lift (which fires just above)
       // is why this can't be a `speed <= 0` check — it would never trigger.
       if (this.freeSkate) {
         if (onPipe && steepGround && this.rideNormal.y > 0.25 && this.speed < 2 && this.pipeFlipCd <= 0) {

@@ -39,7 +39,6 @@ export const TUNING = {
   rollFriction: 3.5, // CONSTANT rolling friction: the crisp part of the stop (replaces the old speed-scaled curve that made the last 1 u/s ooze)
   windDrag: 0.0015, // v^2 wind resistance: only bites up top, so you coast a long way fast then stop decisively
   groundGravity: 32, // ONE symmetric slope gravity, all surfaces: climbing decelerates exactly as fast as descending accelerates. Asymmetric ramp physics made every dip-and-rise hand back more than it took, so bowls dispensed free speed and the pump sliders were unreadable
-  pipePump: 1.5, // crouch-pump gain: X held on ground too steep to stand
   pipeCarve: 16, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
   pipePumpGain: 24, // HALFPIPE: EXTRA speed added per second holding X up a wall — the THPS skill loop: a first swing barely clears the lip, each well-timed pump grows the air toward the cap
   pipeFriction: 0.1, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
@@ -91,7 +90,7 @@ export const TUNING = {
   slideJumpTravel: 0.65, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
   slideRecover: 0.5, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
-  wallrideGravity: 16, // THPS wallride: gentle sink while riding a wall (vs 33 rise / 119 fall)
+  wallrideGravity: 16, // THPS wallride: gentle sink while riding a wall (vs the board pair 33/70, or 33/119 on foot)
   wallrideFriction: 1, // along-wall speed bleed per second on a wallride
   wallrideMinSpeed: 7.5, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
   wallrideMaxAngle: 76, // max approach angle OFF PARALLEL (deg) to stick — steeper/more head-on and you bonk off
@@ -169,7 +168,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 10; // v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
+export const TUNING_VERSION = 11; // v11: pipePump retired — pipePumpGain superseded it and applies on every transition
+// v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
 // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
 
 // Slider metadata for the debug panel.
@@ -201,7 +201,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   rollFriction: { min: 0, max: 15, step: 0.25 },
   windDrag: { min: 0, max: 0.01, step: 0.0005 },
   groundGravity: { min: 0, max: 90, step: 1 },
-  pipePump: { min: 0, max: 40, step: 0.5 },
   pipeCarve: { min: 0, max: 80, step: 1 },
   pipePumpGain: { min: 0, max: 80, step: 1 },
   pipeFriction: { min: 0, max: 6, step: 0.1 },
@@ -324,7 +323,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   walkRampTime:
     'Soft-start for on-foot walking: a fresh push eases from a standstill up to full walkSpeed over this many seconds (applies to sidesteps too). 0 = the instant Crash snap; higher = a gentler pick-up. The STOP stays instant, and it resets every time you let go so each start ramps fresh.',
   friction:
-    'Idle roll-out: with NO input at all, speed bleeds to a full stop on an ease-out curve (fast up top, gentle near rest). Holding a direction coasts at cruiseSpeed instead; 0 = frictionless forever-glide.',
+    'Speed bleed on STEEP ground, plus the on-foot coast — NOT the flat skate roll-out. Two places read it: riding a transition, where a deliberately LINEAR bleed decelerates harder than the flat model (that is what lets a sideways crawl on a wall die out so the stall-flip can roll you back in); and coasting on foot while neither skating nor charging (a third as strong while you still hold a direction, full strength with the stick released). The flat roll-out on the board is rollFriction + windDrag. 0 = no bleed.',
   riseGravity:
     'ON FOOT ONLY: gravity on the way UP in a platforming jump. Lower = floatier. Airs that start on the board ignore this and use boardRiseGravity, so you can retune the Crash jump without touching a single ollie.',
   fallGravity:
@@ -355,7 +354,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   cruiseSpeed:
     'Baseline skate speed: the board holds this on its own, no input needed. The ladder: cruiseSpeed -> hold X toward maxSpeed -> release decays back at chargeDecay -> downhill/pipes exceed everything up to downhillMax.',
   chargeDecay:
-    'How fast speed settles back to cruiseSpeed after releasing X — and how fast it recovers up to cruise after a hill scrubs you below it.',
+    'The PICK-UP rate only: how fast the board eases UP to cruiseSpeed when you are below it — coasting back up to cruise, or recovering after a hill scrubbed you. It no longer drags you DOWN to cruise from above. Bleeding at this rate while you held a direction was HARSHER than letting go of the stick entirely, so steering was punished and holding X forever was the only way to keep a hard-won hill; overspeed now goes through the normal friction model whether you steer or coast.',
   downhillMax:
     'Hard ceiling for speed EARNED from downhill and pipe riding. Charging alone still tops out at maxSpeed; slopes carry you up to this, and the excess bleeds off on the flat.',
   vertMax:
@@ -368,8 +367,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'v-squared wind resistance on the roll-out: near-nothing at walking pace, real up top. Together with rollFriction: coast a long way fast, then settle decisively.',
   groundGravity:
     'ONE symmetric slope gravity for every surface — a climb decelerates exactly as hard as a descent accelerates, so a bowl conserves energy instead of manufacturing it. This is what makes PUMPING the way you gain speed rather than just riding geometry. Higher = hills bite harder both ways.',
-  pipePump:
-    'Crouch-pump: speed gained per second holding X on ground too steep to stand — the honest way to build vert height. Steeper wall = stronger pump.',
   pipeCarve:
     'HALFPIPE carve: momentum built just by HOLDING a direction on the transition — no X needed. This is the "carving pumps you" feel; higher = holding toward the wall drives you up harder and builds speed faster. Scaled by wall steepness, so the flat bottom gives no free speed.',
   pipePumpGain:
@@ -401,11 +398,12 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   vertLaunchConserve:
     'How much of the speed you carried into a vert launch is conserved as HEIGHT. An angled carve up a wall used to be taxed twice — once for going off-axis, again because the shallower angle shrank the vertical term. 1 = fully conserved (head-on is unchanged either way).',
   vertGravityBlend:
-    'How long vert gravity eases back to street gravity when a tracked wall runs out from under a hang. 0 = the old single-frame jump from 33 to 119, a visible hitch mid-arc.',
+    'How long vert gravity eases back to normal gravity when a tracked wall runs out from under a hang. It eases into whichever pair THAT air was launched under — the board pair for a board air, the on-foot pair for a platforming one — so how big the step is depends on how you got there. 0 = the change lands in a single frame, a visible hitch mid-arc.',
   vertDrift:
     'During a NON-PIPE vert crest the stick moves you along the lip at this speed. Pipe hangs ignore it — there the stick spins you (left/right, any wall) and never translates you: locked-in vert.',
   wallStick: 'Ground-snap window on steep transitions — how hard the wall holds the board through fast climbs.',
-  landGive: 'Landing forgiveness on steep transition faces (flat decks stay strict).',
+  landGive:
+    'Landing forgiveness on steep transition faces. Flat decks ignore this and always use a fixed strict window. A HALFPIPE wall also enforces a deep floor of its own however low you set this — its face is near-vertical at the coping, so a fast drifting descent has to LAND on it rather than punch through into the pit below.',
   railSnapDistance:
     'How close (in units) a rail must be for Triangle to snap you onto it. Bigger = more forgiving grind grabs.',
   railTripSpeed:
@@ -531,7 +529,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
   smashSpeed:
     'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
-  arrowBounce: 'Launch velocity of the yellow arrow-crate super bounce (a normal crate stomp is ~18).',
+  arrowBounce:
+    'Launch velocity of the yellow arrow-crate super bounce. Compare it against the crateBounce slider, which is what a plain crate stomp gives you.',
   arrowBoostMult:
     'PERFECT BOUNCE: press X right as you hit an arrow crate and the launch is multiplied by this (1 = feature off).',
   arrowBoostWindow:
@@ -593,7 +592,6 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'downhillMax',
       'groundGravity',
       'vertMax',
-      'pipePump',
       'pipeCarve',
       'pipePumpGain',
       'pipeFriction',
