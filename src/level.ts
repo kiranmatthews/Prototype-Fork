@@ -256,7 +256,7 @@ export const LEVEL_NAMES = [
 // falling below killY dies.
 export interface CustomComponent {
   t:
-    | "platform" // solid box: p = center, s = [w,h,d], yaw degrees
+    | "platform" // solid box: p = center, s = [w,h,d], yaw degrees, slip = icy
     | "ramp" // slope along Z (low end at +Z): p = center of the base line, len along z, rise = height gained, w = width, yaw
     | "wall" // solid barrier: p = base center, s = [w,h,d]; invisible = collider only (ghost in the editor)
     | "rail" // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z)
@@ -283,6 +283,7 @@ export interface CustomComponent {
     | "crystal"; // one per level (the editor enforces it)
   p: [number, number, number];
   s?: [number, number, number];
+  slip?: boolean; // platform only: an icy/slick deck (friction cut, you can't stop short)
   len?: number;
   rise?: number;
   w?: number;
@@ -2091,9 +2092,22 @@ export class Level {
     };
     const hpWalls = new Set(this.halfpipes.flatMap((hp) => hp.walls));
     const crumbleMeshes = new Set(this.crumbles.map((c) => c.mesh));
+    // The warp pad's masonry stands in groundMeshes so you can ride onto it,
+    // but it is NOT level geometry — the gate component rebuilds it. Without
+    // this the drum's cylinders fell through to the exotic-standable branch
+    // below, were captured as three bounding-box platforms, and the gate then
+    // built a real pad on top of them: three phantom slabs at the finish, and
+    // three more with every further edit.
+    const padSolids = new Set(this.warpPads.flatMap((w) => w.solids));
     // decks, ramps, step blocks, metal crates — everything standable
     for (const m of this.groundMeshes) {
-      if (hpWalls.has(m) || crumbleMeshes.has(m)) continue;
+      if (hpWalls.has(m) || crumbleMeshes.has(m) || padSolids.has(m)) continue;
+      // Transition surfaces belong to their vertramp component, which rebuilds
+      // them. hpWalls only covers the ANALYTIC pipes; a swept one (the Flats
+      // pool) is a plain mesh named 'vertramp', so it used to be captured as a
+      // bounding-box platform AND rebuilt by its component — a flat slab
+      // buried in the bowl, one more per edit.
+      if (m.name === "vertramp" || m.name === "halfpipe") continue;
       if (m.userData.metalCrate) {
         C.push({
           t: "metal",
@@ -2139,6 +2153,10 @@ export class Level {
             yaw: yaw !== 0 ? yaw : undefined,
             color,
             tex,
+            // the Sky Bridge's icy planks are a HAZARD, not a colour: without
+            // this a captured copy of that level turned every slippy plank
+            // into ordinary wood and the level lost its whole point
+            slip: m.userData.slippy === true ? true : undefined,
           });
         }
       } else {
@@ -2643,7 +2661,8 @@ export class Level {
             );
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
             mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0); // ride surface is raycast: free spin is fine
-            mesh.name = "platform";
+            mesh.name = c.slip ? "slippy plank" : "platform";
+            if (c.slip) mesh.userData.slippy = true; // friction cut: can't stop short
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
             // SIDE COLLISION: without it you clip into a thick platform's
