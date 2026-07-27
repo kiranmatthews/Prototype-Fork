@@ -4,8 +4,8 @@
 
 export const TUNING = {
   maxSpeed: 23, // top skate speed
-  walkSpeed: 8.5, // Crash walk: direct drive, instant stop; also the skate/walk boundary
-  walkRampTime: 0.15, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
+  walkSpeed: 9, // Crash walk: direct drive, instant stop; also the skate/walk boundary
+  walkRampTime: 0.3, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
   friction: 7, // bleed on STEEP ground (transitions) — deliberately linear so a sideways crawl on a wall dies and the stall-flip can fire. FLAT roll-out is rollFriction + windDrag.
   // Jump ballistics: the playtested hand-tuned feel. (A Crash-3-matched fit
   // — rise 22 / fall 62 / v 10.4 / min 8.7 — was tried and felt worse in
@@ -22,10 +22,10 @@ export const TUNING = {
   boardFallGravity: 70, // BOARD: gravity on the way down (vs 119 on foot). THIS is the one that makes a board air float: same peak, longer glide down, and you land at 18 u/s instead of 24 instead of being spiked. NOTE the reference: THPS/THUG air gravity is a single SYMMETRIC number (Physics_Air_Gravity -1350, no up/down branch), which converts to ~34.5 in our units — so the authentic value here is ~36, one rung heavier than boardRiseGravity, matching the reference's own 1.1x ladder (vert 30 / rise 33 / fall 36). 70 is a deliberately conservative half-step that leaves the authored gaps alone; drag it to 36 for the real THPS arc
   boardApexFloat: 0.35, // BOARD: how much gravity is bled out at the very top of the arc, where the trick reads. Buys hang time exactly where you can see it, and barely lengthens a huge kicker air — so authored gaps stay honest. 0 = off, plain two-value gravity
   boardApexBand: 4.5, // BOARD: how wide the float window is, in up/down speed. The float fades in as you slow toward the peak and fades out as you pick up fall speed, so there is no step anywhere in the arc
-  jumpVelocity: 13, // fully-charged jump (hold X)
-  jumpMinVelocity: 10, // quick-tap jump
-  ollieVelocity: 12.5, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
-  ollieMinVelocity: 8.25, // quick-tap board ollie: the smallest pop that clears exactly ONE crate. Was 8, derived as sqrt(2*riseGravity*0.96)=7.96 — but that is the CONTINUOUS answer, and the sim integrates velocity-first at 1/60, which undershoots the analytic apex by ~7%. Measured, 8 peaked at 0.904 and never actually cleared the 0.96 crate; 8.25 peaks at 0.962. The ramp climb stacks on top of this (see chargedJump), so a lip pays out instead of robbing you
+  jumpVelocity: 14, // fully-charged jump (hold X)
+  jumpMinVelocity: 12, // quick-tap jump
+  ollieVelocity: 11, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
+  ollieMinVelocity: 6.5, // quick-tap board ollie. NOTE this no longer clears a crate on its own: measured, a tap now peaks at 0.559 against a 0.96 crate (it was 8.25, tuned to peak at exactly 0.962 for that reason). Clearing a crate on the board is a CHARGED ollie now — hold X and the full pop peaks at 1.679. The ramp climb still stacks on top (see chargedJump), so a lip pays out instead of robbing you
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
@@ -34,35 +34,35 @@ export const TUNING = {
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill (charge still tops at maxSpeed)
-  vertMax: 38, // higher ceiling on TRANSITIONS — vert is where the big speed is meant to live
+  vertMax: 20, // speed ceiling on TRANSITIONS. At 20 this sits BELOW both maxSpeed (23) and downhillMax (30.5), so a transition is now the slowest surface in the game rather than the fastest: arrive on one carrying 29.8 and you are clamped to 20.0 in a single frame (measured). Raise it above downhillMax to put the big speed back in vert
   heavyDrag: 0.005, // quadratic bleed above maxSpeed, every surface: 2.7 u/s^2 at 23, 7.2 at 38, so the top end has texture instead of a linear countdown
   rollFriction: 3.5, // CONSTANT rolling friction: the crisp part of the stop (replaces the old speed-scaled curve that made the last 1 u/s ooze)
   windDrag: 0.0015, // v^2 wind resistance: only bites up top, so you coast a long way fast then stop decisively
-  groundGravity: 32, // ONE symmetric slope gravity, all surfaces: climbing decelerates exactly as fast as descending accelerates. Asymmetric ramp physics made every dip-and-rise hand back more than it took, so bowls dispensed free speed and the pump sliders were unreadable
+  groundGravity: 45, // ONE symmetric slope gravity, all surfaces: climbing decelerates exactly as fast as descending accelerates. Asymmetric ramp physics made every dip-and-rise hand back more than it took, so bowls dispensed free speed and the pump sliders were unreadable
   pipeCarve: 16, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
   pipePumpGain: 24, // HALFPIPE: EXTRA speed added per second holding X up a wall — the THPS skill loop: a first swing barely clears the lip, each well-timed pump grows the air toward the cap
   pipeFriction: 0.1, // HALFPIPE: tiny speed bleed per second on the transition (keep low; too much and the swing dies at the bottom)
-  pipePop: 6, // HALFPIPE: extra vertical launch popped over the coping into the hang (the earned climb speed dominates; this is just the over-the-lip garnish)
-  pipeAirGravity: 30, // VERT AIR (pipes AND tracked walls): SYMMETRIC gravity above the coping (same up + down) so you drop back at the speed you left — THPS rules. 30 vs riseGravity 33 keeps THPS's ~9% floatier-than-street vert (their Vert_Hang stat); at 33 the branch bought nothing because both sides were the same number. Lower = floatier hangs.
+  pipePop: 2.5, // HALFPIPE: extra vertical launch popped over the coping into the hang (the earned climb speed dominates; this is just the over-the-lip garnish)
+  pipeAirGravity: 31, // VERT AIR (pipes AND tracked walls): SYMMETRIC gravity above the coping (same up + down) so you drop back at the speed you left — THPS rules. Sitting just under the 33 rise keeps vert a touch floatier than street, which is what THPS's own Vert_Hang stat does; match it to 33 exactly and the branch buys nothing. Lower = floatier hangs.
   pipeSmooth: 25, // per-second easing of the ride plane across segmented transitions
   footGrip: 0.3, // ON FOOT: ground normal.y below this and feet can't grip — you slither down
   steepStand: 0.76, // WITH MOMENTUM: normal.y below this pops the board out to ride the transition
   vertLip: 0.59, // slope (sine along travel) that counts as vert coping at the lip
   hangLaunch: 2.5, // extra UP pop when you release X right at the lip to fly into hang time
   hangSnapAngle: 6, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
-  hangLateral: 0.7, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
+  hangLateral: 0.8, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
   landingFlow: 1, // how much fall speed converts into riding speed when you land on a ramp/wall
   vertGlue: 20, // hang time: how hard a vert air is pulled back onto the wall plane
-  vertLaunchConserve: 1, // how much of the entry speed a vert launch conserves into vVel (1 = full; an angled carve stops being taxed twice)
+  vertLaunchConserve: 0.55, // how much of the entry speed a vert launch conserves into vVel (1 = full; an angled carve stops being taxed twice)
   vertGravityBlend: 0.35, // seconds to ease from vert gravity back to street gravity when a tracked wall runs out (0 = the old single-frame 33->119 cliff)
   vertDrift: 4.5, // hang time: stick drift speed ALONG the coping during a vert air
   wallStick: 5, // ground-snap window on steep transitions (how hard the wall holds the board)
   landGive: 0.35, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
-  railSpeedBoost: 3.5, // speed handed to you on a clean rail entry — without it a fast line LOSES speed on every rail, so the optimal play was to skip them
-  perfectGrindSpeed: 42, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — above vertMax's 38 ceiling only in spirit, but well past downhillMax, so it is the fastest the board ever goes
-  perfectGrindHold: 2.4, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
+  railSpeedBoost: 6.5, // speed handed to you on a clean rail entry — without it a fast line LOSES speed on every rail, so the optimal play was to skip them
+  perfectGrindSpeed: 48, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — well past downhillMax (30.5), so it is comfortably the fastest the board ever goes. It gets its own temporary ceiling while perfectGrindHold runs, so the usual clamps do not eat it
+  perfectGrindHold: 3.9, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
   underRailCooldown: 1.5, // seconds between under-rail hang switches (Circle on a rail)
@@ -86,8 +86,8 @@ export const TUNING = {
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 37, // the slide bursts to at least this speed, direction locked
-  slideJumpHeight: 1.2, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
-  slideJumpTravel: 0.65, // horizontal launch speed scale out of a slide-jump (independent of height)
+  slideJumpHeight: 1.3, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
+  slideJumpTravel: 0.2, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
   slideRecover: 0.5, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
   wallrideGravity: 16, // THPS wallride: gentle sink while riding a wall (vs the board pair 33/70, or 33/119 on foot)
@@ -99,17 +99,17 @@ export const TUNING = {
   wallPumpBonus: 17, // extra vertical launch at FULL pump — hold X on the wall, release to spring off big
   wallChargeMax: 1.5, // seconds of pumping X to reach a full-power wall launch
   wallKickOut: 1.5, // push away from the wall when you kick off
-  ledgeGrabTime: 2.2, // seconds you can hang off a ledge before your grip fails
+  ledgeGrabTime: 6, // seconds you can hang off a ledge before your grip fails
   ledgeClimbTime: 0.38, // seconds the animated clamber-up takes (pull up, then over the lip)
   ledgeClimbPop: 1, // extra lift as you top out of the clamber (0 = plant flat)
-  ledgeReach: 2.3, // highest a lip can sit above your feet and still be caught
+  ledgeReach: 1.8, // highest a lip can sit above your feet and still be caught
   airControl: 0, // forward/back speed adjustment in the air
-  manualMinSpeed: 6, // must be rolling at least this fast to pop (or hold) a manual
-  manualDrift: 1, // manual balance: how fast the pitch needle runs away
-  manualControl: 3.2, // how hard up/down input fights the manual needle
+  manualMinSpeed: 3.5, // must be rolling at least this fast to pop (or hold) a manual
+  manualDrift: 0.65, // manual balance: how fast the pitch needle runs away
+  manualControl: 3.8, // how hard up/down input fights the manual needle
   manualFlickWindow: 0.28, // max seconds between the two stick flicks (up-then-down = manual, down-then-up = nose)
-  manualLandGrace: 0.45, // seconds after a clean landing before the combo banks — time to flick into a manual
-  manualCoyote: 0.25, // seconds a manual survives with the wheels off the deck (crests, rollers) before it drops
+  manualLandGrace: 0.65, // seconds after a clean landing before the combo banks — time to flick into a manual
+  manualCoyote: 0.45, // seconds a manual survives with the wheels off the deck (crests, rollers) before it drops
   lipAngle: 10, // LIP TRICK: approach must be within this many degrees of dead-on (90 deg to the coping) — off-axis arrivals grind the coping instead
   lipMaxTime: 12, // longest a lip stall holds before you drop back in
   lipDrift: 0.95, // lip stall balance: how fast the needle runs away on its own
@@ -134,11 +134,11 @@ export const TUNING = {
   // inverted pendulum: needle position + velocity, nudged by taps and noise).
   // Each layer is ADDITIVE — at 0 the meter is exactly the classic first-order
   // needle, so neutral reproduces today; dial up for the real Tony Hawk feel.
-  balanceInertia: 0.4, // needle MOMENTUM: 0 = snappy instant correction, 1 = heavy lag — input feeds velocity so the needle overshoots and you must lead your taps
-  balanceGravity: 1.4, // EDGE CLIFF: extra runaway proportional to how far off-center you are — 0 = flat, higher = calm middle but the edges bolt away (react late = no save)
-  balanceNoise: 0.08, // SKETCH: smoothed random wander so the tip direction can't be memorized (rides the same capped ramp as the drift; a committed counter-tap quiets it)
+  balanceInertia: 0, // needle MOMENTUM: 0 = snappy instant correction, 1 = heavy lag — input feeds velocity so the needle overshoots and you must lead your taps
+  balanceGravity: 2, // EDGE CLIFF: extra runaway proportional to how far off-center you are — 0 = flat, higher = calm middle but the edges bolt away (react late = no save)
+  balanceNoise: 0.18, // SKETCH: smoothed random wander so the tip direction can't be memorized (rides the same capped ramp as the drift; a committed counter-tap quiets it)
   balanceNoiseFreq: 6, // how fast the sketch sways (rad/s) — low = a lazy roll, high = a nervous jitter
-  balanceSafePeriod: 0.25, // entry ease-in: corrective input fades in over this many seconds so an eager first tap can't fling the fresh needle (Neversoft safe_period)
+  balanceSafePeriod: 0.15, // entry ease-in: corrective input fades in over this many seconds so an eager first tap can't fling the fresh needle (Neversoft safe_period)
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
@@ -152,12 +152,12 @@ export const TUNING = {
   // camTilt aims AT the character (2.1 ≈ just over her head — this exactly
   // reproduces the old 21° down-pitch); camOffset TRANSLATES the whole rig
   // down-course, so framing moves without the tilt changing. Decoupled knobs.
-  camFov: 53, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
+  camFov: 57, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
   chaseCam: 0, // 1 = third-person follow: camera swings behind the travel direction, skater always faces forward
-  camDist: 5.2, // trailing distance behind the character
+  camDist: 5.9, // trailing distance behind the character
   camHeight: 5.1, // camera elevation above the character
   camAirLift: 0, // how much the rig rises WITH an airborne jump: 1 = classic full-follow (jumps read small/snappy on screen), 0 = ground-anchored Crash rig (skater does all the rising on screen). Default 0: with the small playtested jump pops the anchored rig reads clean and keeps the landing framed
-  camTilt: 1.7, // aim height on the character: higher = camera tilts UP (sees more sky)
+  camTilt: 2.4, // aim height on the character: higher = camera tilts UP (sees more sky)
   camOffset: 1, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
 };
 
@@ -358,7 +358,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   downhillMax:
     'Hard ceiling for speed EARNED from downhill and pipe riding. Charging alone still tops out at maxSpeed; slopes carry you up to this, and the excess bleeds off on the flat.',
   vertMax:
-    'Speed ceiling on TRANSITIONS (bowls, banks, pipe walls) — vert is where the big speed is meant to live, so it caps higher than downhillMax. Above maxSpeed the quadratic drag is always pulling back.',
+    'Speed ceiling on TRANSITIONS (bowls, banks, pipe walls), applied the instant you touch one. Set it ABOVE downhillMax and vert is where the big speed lives, which is the design it was built for. Set it BELOW — as it currently is — and a transition becomes the slowest surface you can be on: any speed you carry in above this is confiscated in a single frame, so a fast approach into a bowl stops being a way to go faster. Above maxSpeed the quadratic drag is always pulling back regardless.',
   heavyDrag:
     'Quadratic bleed applied whenever you are above maxSpeed, on EVERY surface. Higher = the top of the speed range gets a harder wall to press against. (The old flat bleed only fired on level ground, so earned speed was immortal on a hill and then vanished the instant it flattened.)',
   rollFriction:
@@ -543,7 +543,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   camFov:
     'ZOOM (focal length): the camera lens angle. Lower = telephoto punch-in (tighter, flatter, more cinematic); higher = wide angle (more of the world, more distortion). Side-scroll zones and the boulder chase still add their own push.',
   camTilt:
-    'TILT: the height on the character the camera aims at (2.1 = just over her head). Higher tilts the view UP toward the horizon/sky; lower buries the view into the ground. Pure angle — the framing position knob is camOffset.',
+    'TILT: the height on the character the camera aims at — around 2.1 is just over her head, so the current 2.4 aims slightly above it. Higher tilts the view UP toward the horizon/sky; lower buries it into the ground. Pure angle — the framing position knob is camOffset.',
   camDist: 'DISTANCE: how far the camera trails behind the character. Side-scroll zones scale with it.',
   camOffset:
     'OFFSET: slides the WHOLE rig (camera + aim together) down-course — moves where the skater rests in the frame WITHOUT changing the tilt. Positive = she sits lower in frame with more road ahead; negative = she rides higher/closer.',
