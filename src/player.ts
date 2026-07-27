@@ -88,6 +88,8 @@ function wrapAngle(a: number): number {
 }
 
 // scratch objects for the hang-time body tilt (no per-frame allocation)
+// Landing-X strength at full height (it fades in from nothing as you rise).
+const X_ALPHA = 0.85;
 const VERT_UP = new THREE.Vector3(0, 1, 0);
 const VERT_Q = new THREE.Quaternion();
 const VERT_Q2 = new THREE.Quaternion();
@@ -469,6 +471,7 @@ export class Player {
   private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
   private smearG: THREE.Group | null = null; // whirlwind stand-in shown while spinning
   private floorX!: THREE.Group; // landing X pinned to the floor under the skater
+  private floorXMat!: THREE.MeshBasicMaterial; // shared by both bars — one opacity
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
   private armL: THREE.Group | null = null;
   private elbowR: THREE.Group | null = null; // forearm pivots inside each arm (authored model only)
@@ -586,11 +589,13 @@ export class Player {
     // too, from back when that was the only shadow in the game; the real cast
     // shadow does that job now, so the blob was just a second smudge stacked
     // on the first. The X rides a long-range floor probe, growing a touch with
-    // height so it stays readable from big airs.
+    // height so it stays readable from big airs, and FADING with that height
+    // so it is gone while you are stood on the floor (where it marks nothing
+    // you can't already see) and reads back in as you leave the ground.
     const xMat = new THREE.MeshBasicMaterial({
       color: 0xffe36e,
       transparent: true,
-      opacity: 0.85,
+      opacity: X_ALPHA,
       depthWrite: false,
     });
     const xGroup = new THREE.Group();
@@ -603,6 +608,7 @@ export class Player {
     xGroup.rotation.x = -Math.PI / 2;
     scene.add(xGroup);
     this.floorX = xGroup;
+    this.floorXMat = xMat;
 
     // Floating Aku mask, visible while you hold one.
     const mask = new THREE.Mesh(
@@ -7503,21 +7509,29 @@ export class Player {
     // Landing X: persistent landing indicator, snapped to whatever floor is
     // below no matter how high the air, growing a touch with height so it
     // reads from the top of a big one.
-    if (this.shadowGroundY !== null && this.state !== 'dead' && this.state !== 'gameover') {
-      const h = Math.max(0, this.pos.y - this.shadowGroundY);
-      this.floorX.visible = true;
-      this.floorX.position.set(this.pos.x, this.shadowGroundY + 0.05, this.pos.z);
+    // Opacity by height above whatever floor is under you: nothing at all
+    // under your feet, full strength by about two thirds of a jump. The 0.3
+    // dead zone keeps it off while you roll over bumps and up kerbs. Airborne
+    // it never fades below half — over a pit the X is the only thing telling
+    // you where you are, and that is exactly when h is small.
+    const xFade = (h: number): number => THREE.MathUtils.clamp((h - 0.3) / 1.5, 0, 1);
+    const showX = (h: number, floorY: number): void => {
+      const a =
+        X_ALPHA * (this.state === 'air' ? Math.max(0.5, xFade(h)) : xFade(h));
+      this.floorXMat.opacity = a;
+      this.floorX.visible = a > 0.02;
+      this.floorX.position.set(this.pos.x, floorY + 0.05, this.pos.z);
       this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
+    };
+    if (this.shadowGroundY !== null && this.state !== 'dead' && this.state !== 'gameover') {
+      showX(Math.max(0, this.pos.y - this.shadowGroundY), this.shadowGroundY);
     } else if (this.state === 'air' && this.pos.y >= this.lastGroundY - 0.3) {
       // Over a pit: no floor straight down, so hover the X directly UNDER the
       // player at the last real ground/landing level. It marks where you ARE
       // over the gap right now (your live x/z) — a "where am I in the jump" read,
       // not a prediction of where the arc ends (that's the player's call). It
       // drops away once you sink below the landing plane (missed / plummeting).
-      const h = Math.max(0, this.pos.y - this.lastGroundY);
-      this.floorX.visible = true;
-      this.floorX.position.set(this.pos.x, this.lastGroundY + 0.05, this.pos.z);
-      this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
+      showX(Math.max(0, this.pos.y - this.lastGroundY), this.lastGroundY);
     } else {
       this.floorX.visible = false;
     }
