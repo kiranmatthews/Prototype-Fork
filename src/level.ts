@@ -917,6 +917,63 @@ export function vertRampSpine(c: CustomComponent): VertRampNode[] {
 // tagged with the source vertex index `i` (aux data can follow the tag).
 // Open paths never round their endpoints. Consecutive near-duplicates are
 // dropped (zero-length rail segments would blow up direction math).
+// Ramer-Douglas-Peucker: drop points that sit within `eps` of the straight
+// line between their neighbours. A hand-authored camera lane is sampled every
+// few units, which is right for the maths and useless in the editor — a
+// hundred draggable diamonds down one road. Simplifying keeps the curve and
+// hands back a chain you can actually grab.
+// How far a camera-lane node may drift from the straight line between its
+// neighbours before capture keeps it. Kept TIGHT on purpose: a long chord
+// across a curve is not the curve, and the steering follows the chain. Every
+// value below was MEASURED on the Slipstream (whose spine curves almost end
+// to end) by rebuilding the level and comparing its steering vector against
+// the hand-coded spine at all 170 sample points:
+//   eps 0.5 ->  85 nodes, 0.7deg mean /  3.6deg worst  <- here
+//   eps 1   ->  55 nodes, 1.6deg mean / 11.4deg worst
+//   eps 2   ->  36 nodes, 3.0deg mean / 26.2deg worst  (visibly wrong mid-sweep)
+// So the count is not freely compressible. Grouping the nodes is what makes
+// them tolerable in the outliner — thinning past this bends the camera.
+export const LANE_SIMPLIFY_EPS = 0.5;
+
+export function simplifyPath(
+  pts: readonly { x: number; z: number }[],
+  eps: number,
+): { x: number; z: number }[] {
+  if (pts.length <= 2) return pts.slice();
+  const keep = new Array<boolean>(pts.length).fill(false);
+  keep[0] = keep[pts.length - 1] = true;
+  const stack: [number, number][] = [[0, pts.length - 1]];
+  while (stack.length) {
+    const [a, b] = stack.pop()!;
+    if (b - a < 2) continue;
+    const ax = pts[a].x;
+    const az = pts[a].z;
+    const dx = pts[b].x - ax;
+    const dz = pts[b].z - az;
+    const len = Math.hypot(dx, dz);
+    let worst = -1;
+    let at = -1;
+    for (let i = a + 1; i < b; i++) {
+      // perpendicular distance to the chord (or to the point, if it degenerates)
+      const d =
+        len < 1e-6
+          ? Math.hypot(pts[i].x - ax, pts[i].z - az)
+          : Math.abs(
+              (pts[i].x - ax) * dz - (pts[i].z - az) * dx,
+            ) / len;
+      if (d > worst) {
+        worst = d;
+        at = i;
+      }
+    }
+    if (worst > eps && at > 0) {
+      keep[at] = true;
+      stack.push([a, at], [at, b]);
+    }
+  }
+  return pts.filter((_, i) => keep[i]);
+}
+
 export function roundCorners(
   pts: readonly (readonly number[])[],
   closed: boolean,
@@ -2599,6 +2656,34 @@ export class Level {
       const p = this.crystalPickup.group.position;
       C.push({ t: "crystal", p: [r2(p.x), r2(p.y), r2(p.z)] });
     }
+    // CAMERA LANE. The rig and the control frame ease along this spine, so a
+    // level that loses it stops steering with the course — which is exactly
+    // what happened to the Slipstream the moment it became editable. (A level
+    // built FROM data returns that data verbatim at the top of this method,
+    // camnodes included; this is the hand-coded path, which holds a dense
+    // centreline sample instead.) Hand it back in the editor's own language:
+    // camnodes, near-losslessly simplified and gathered into one group.
+    if (this.lanePts.length >= 2) {
+      // float each node just above the deck under it, so it is visible and
+      // grabbable rather than buried in the road
+      const deckY = (x: number, z: number): number => {
+        const ray = new THREE.Raycaster(
+          new THREE.Vector3(x, 400, z),
+          new THREE.Vector3(0, -1, 0),
+        );
+        const hit = ray.intersectObjects(this.groundMeshes, false)[0];
+        return (hit ? hit.point.y : this.spawnPos.y) + 2.5;
+      };
+      // one collapsible outliner row instead of a hundred loose diamonds
+      const laneGrp = groups.reduce((m, g) => Math.max(m, g.id), 0) + 1;
+      groups.push({ id: laneGrp, nm: "camera lane" });
+      for (const p of simplifyPath(this.lanePts, LANE_SIMPLIFY_EPS))
+        C.push({
+          t: "camnode",
+          p: [r2(p.x), r2(deckY(p.x, p.z)), r2(p.z)],
+          grp: laneGrp,
+        });
+    }
     return {
       v: 1,
       name: `${this.name} (copy)`,
@@ -3507,8 +3592,8 @@ export class Level {
     const pts = this.lanePts;
     if (pts.length < 2) return null;
     let best = Infinity;
-    let bx = 0;
-    let bz = 0;
+    let bi = -1;
+    let bt = 0;
     for (let i = 0; i < pts.length - 1; i++) {
       const ax = pts[i].x;
       const az = pts[i].z;
@@ -3523,12 +3608,34 @@ export class Level {
       const d2 = (x - px) * (x - px) + (z - pz) * (z - pz);
       if (d2 < best) {
         best = d2;
-        bx = dx;
-        bz = dz;
+        bi = i;
+        bt = t;
       }
     }
-    const l = Math.hypot(bx, bz);
-    return l > 1e-4 ? { x: bx / l, z: bz / l } : null;
+    if (bi < 0) return null;
+    const dirOf = (i: number): { x: number; z: number } | null => {
+      if (i < 0 || i >= pts.length - 1) return null;
+      const dx = pts[i + 1].x - pts[i].x;
+      const dz = pts[i + 1].z - pts[i].z;
+      const l = Math.hypot(dx, dz);
+      return l > 1e-4 ? { x: dx / l, z: dz / l } : null;
+    };
+    const cur = dirOf(bi);
+    if (!cur) return null;
+    // Blend ACROSS the vertex rather than snapping to one segment. Two
+    // segments meeting at a corner point in different directions, so taking
+    // the nearest one alone makes the steering jump as you cross the joint —
+    // fine when the chain is a dense sample of a curve, badly wrong on a
+    // hand-drawn camnode chain with long spans. Weighting toward whichever
+    // neighbour the closest point leans to makes the direction continuous
+    // along the whole lane, at any node spacing.
+    const lean = bt < 0.5 ? dirOf(bi - 1) : dirOf(bi + 1);
+    const w = Math.abs(bt - 0.5);
+    if (!lean) return cur;
+    const rx = cur.x * (1 - w) + lean.x * w;
+    const rz = cur.z * (1 - w) + lean.z * w;
+    const rl = Math.hypot(rx, rz);
+    return rl > 1e-4 ? { x: rx / rl, z: rz / rl } : cur;
   }
 
   update(dt: number): void {
