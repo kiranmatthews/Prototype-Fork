@@ -933,7 +933,7 @@ function updateCamera2(dt: number): void {
     camera2.aspect = camera.aspect;
     camera2.updateProjectionMatrix();
   }
-  const lf = level.laneDirAt(p2.pos.x, p2.pos.z) ?? { x: 0, z: -1 };
+  const lf = level.laneDirAt(p2.pos.x, p2.pos.y, p2.pos.z, p2.laneCursor) ?? { x: 0, z: -1 };
   cam2F.x += (lf.x - cam2F.x) * Math.min(1, 3.5 * dt);
   cam2F.z += (lf.z - cam2F.z) * Math.min(1, 3.5 * dt);
   cam2F.y = 0;
@@ -1573,7 +1573,7 @@ function updateCamera(dt: number): void {
   // The turn rate sets the carve radius (radius ≈ speed / rate, since the
   // frame chases its own tail while you hold a side) — keep it LAZY: a held
   // side is a wide arc, not a spin-top.
-  const lf = chaseOn ? chaseF : level.laneDirAt(player.pos.x, player.pos.z);
+  const lf = chaseOn ? chaseF : level.laneDirAt(player.pos.x, player.pos.y, player.pos.z, player.laneCursor);
   const turnK = Math.min(1, (chaseOn ? 1.6 : 3.5) * dt);
   camF.x += ((lf ? lf.x : 0) - camF.x) * turnK;
   camF.z += ((lf ? lf.z : -1) - camF.z) * turnK;

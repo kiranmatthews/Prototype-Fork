@@ -935,10 +935,33 @@ export function vertRampSpine(c: CustomComponent): VertRampNode[] {
 // them tolerable in the outliner — thinning past this bends the camera.
 export const LANE_SIMPLIFY_EPS = 0.5;
 
-export function simplifyPath(
-  pts: readonly { x: number; z: number }[],
+/**
+ * Where a rider was on the camera lane last frame, in metres along the spine.
+ * `s < 0` means "no history — take the global best and adopt it", which is
+ * what a respawn or a level change wants. One of these per rider; sharing it
+ * between two players in split-screen would have them yanking each other's
+ * camera around.
+ */
+export interface LaneCursor {
+  s: number;
+}
+export function newLaneCursor(): LaneCursor {
+  return { s: -1 };
+}
+// How far along the spine the match may travel between queries for free. A
+// rider covers under a metre per frame even at full tilt; the slack is for
+// frames dropped to a level load or a pause.
+const LANE_FREE_TRAVEL = 40;
+// What a bigger leap costs, per metre squared. The Slipstream's loop sits 26m
+// from the deck below it and 188m away along the spine: (188-40)^2 * 0.25 is
+// worth ~74m of distance, so the lower deck can never win — while a real
+// relocation, which lands hundreds of metres from the cursor, still does.
+const LANE_LEAP_COST = 0.25;
+
+export function simplifyPath<T extends { x: number; y: number; z: number }>(
+  pts: readonly T[],
   eps: number,
-): { x: number; z: number }[] {
+): T[] {
   if (pts.length <= 2) return pts.slice();
   const keep = new Array<boolean>(pts.length).fill(false);
   keep[0] = keep[pts.length - 1] = true;
@@ -947,19 +970,27 @@ export function simplifyPath(
     const [a, b] = stack.pop()!;
     if (b - a < 2) continue;
     const ax = pts[a].x;
+    const ay = pts[a].y;
     const az = pts[a].z;
     const dx = pts[b].x - ax;
+    const dy = pts[b].y - ay;
     const dz = pts[b].z - az;
-    const len = Math.hypot(dx, dz);
+    const len = Math.hypot(dx, dy, dz);
     let worst = -1;
     let at = -1;
     for (let i = a + 1; i < b; i++) {
-      // perpendicular distance to the chord (or to the point, if it degenerates)
+      // perpendicular distance to the chord in 3D (cross product / |chord|),
+      // or to the point itself if the chord degenerates
+      const vx = pts[i].x - ax;
+      const vy = pts[i].y - ay;
+      const vz = pts[i].z - az;
       const d =
         len < 1e-6
-          ? Math.hypot(pts[i].x - ax, pts[i].z - az)
-          : Math.abs(
-              (pts[i].x - ax) * dz - (pts[i].z - az) * dx,
+          ? Math.hypot(vx, vy, vz)
+          : Math.hypot(
+              vy * dz - vz * dy,
+              vz * dx - vx * dz,
+              vx * dy - vy * dx,
             ) / len;
       if (d > worst) {
         worst = d;
@@ -2664,23 +2695,18 @@ export class Level {
     // centreline sample instead.) Hand it back in the editor's own language:
     // camnodes, near-losslessly simplified and gathered into one group.
     if (this.lanePts.length >= 2) {
-      // float each node just above the deck under it, so it is visible and
-      // grabbable rather than buried in the road
-      const deckY = (x: number, z: number): number => {
-        const ray = new THREE.Raycaster(
-          new THREE.Vector3(x, 400, z),
-          new THREE.Vector3(0, -1, 0),
-        );
-        const hit = ray.intersectObjects(this.groundMeshes, false)[0];
-        return (hit ? hit.point.y : this.spawnPos.y) + 2.5;
-      };
+      // A node's HEIGHT is load-bearing, not decoration: laneDirAt picks the
+      // nearest segment in 3D so a course that passes over itself steers by
+      // the deck you are actually on. Emit the spine's own y — lifting the
+      // nodes to make them prettier in the editor would move the lane off the
+      // road and hand the steering back to the wrong deck.
       // one collapsible outliner row instead of a hundred loose diamonds
       const laneGrp = groups.reduce((m, g) => Math.max(m, g.id), 0) + 1;
       groups.push({ id: laneGrp, nm: "camera lane" });
       for (const p of simplifyPath(this.lanePts, LANE_SIMPLIFY_EPS))
         C.push({
           t: "camnode",
-          p: [r2(p.x), r2(deckY(p.x, p.z)), r2(p.z)],
+          p: [r2(p.x), r2(p.y), r2(p.z)],
           grp: laneGrp,
         });
     }
@@ -3459,7 +3485,8 @@ export class Level {
       // through the bend instead of pivoting at the node.
       if (laneVis.length >= 2) {
         const laneRound = roundCorners(laneRaw, false);
-        this.lanePts = laneRound.map((q) => ({ x: q.x, z: q.z }));
+        this.lanePts = laneRound.map((q) => ({ x: q.x, y: q.y, z: q.z }));
+        this.measureLane();
         const line = new THREE.Line(
           new THREE.BufferGeometry().setFromPoints(
             laneRound.map((q) => new THREE.Vector3(q.x, q.y, q.z)),
@@ -3579,12 +3606,49 @@ export class Level {
   // CAMERA LANE (Crash 3 camera rails): camnode components chain into a
   // polyline; the tangent of the nearest segment is the local "down-course"
   // direction the camera and the controls steer along.
-  private lanePts: { x: number; z: number }[] = [];
+  private lanePts: { x: number; y: number; z: number }[] = [];
+  // arc length to each lane point, so "how far along the course" is metres
+  private laneArc: number[] = [];
   get laneActive(): boolean {
     return this.lanePts.length >= 2;
   }
 
-  laneDirAt(x: number, z: number): { x: number; z: number } | null {
+  /** Rebuild the arc-length table. Called wherever lanePts is assigned. */
+  private measureLane(): void {
+    this.laneArc = [0];
+    for (let i = 1; i < this.lanePts.length; i++) {
+      const a = this.lanePts[i - 1];
+      const b = this.lanePts[i];
+      this.laneArc.push(
+        this.laneArc[i - 1] + Math.hypot(b.x - a.x, b.y - a.y, b.z - a.z),
+      );
+    }
+  }
+
+  /**
+   * Local "down-course" direction at a world position.
+   *
+   * Two things stop this handing back the wrong stretch of a course that
+   * passes over itself, which the Slipstream's ribbon does with 26m of
+   * clearance between the loop and the deck beneath it:
+   *
+   *  1. the search is in FULL 3D. A plan-view lookup cannot tell those two
+   *     decks apart at all — they sit within 3m of each other in x/z.
+   *  2. it prefers to stay WHERE IT WAS along the spine. 3D alone is enough
+   *     while you are on the road, but a big air puts you far from every
+   *     segment, and then the branch below can win on raw distance and point
+   *     "forward" across the gap — turning the loop into a shortcut the game
+   *     steers you into. `cursor` carries the last match's arc position; a
+   *     candidate far from it has to be dramatically closer to take over, so
+   *     the frame follows the road you are actually riding. Pass a cursor per
+   *     player; omit it for one-off queries that have no history.
+   */
+  laneDirAt(
+    x: number,
+    y: number,
+    z: number,
+    cursor?: LaneCursor,
+  ): { x: number; z: number } | null {
     // a travel ZONE is a deliberate LOCAL override of the camera spine:
     // inside its rectangle the zone owns the course frame (side-scroll /
     // run-at-camera), and the lane resumes where the zone ends
@@ -3597,15 +3661,30 @@ export class Level {
     for (let i = 0; i < pts.length - 1; i++) {
       const ax = pts[i].x;
       const az = pts[i].z;
+      const ay = pts[i].y;
       const dx = pts[i + 1].x - ax;
+      const dy = pts[i + 1].y - ay;
       const dz = pts[i + 1].z - az;
-      const len2 = dx * dx + dz * dz;
+      const len2 = dx * dx + dy * dy + dz * dz;
       if (len2 < 1e-6) continue;
-      let t = ((x - ax) * dx + (z - az) * dz) / len2;
+      let t = ((x - ax) * dx + (y - ay) * dy + (z - az) * dz) / len2;
       t = Math.max(0, Math.min(1, t));
       const px = ax + dx * t;
+      const py = ay + dy * t;
       const pz = az + dz * t;
-      const d2 = (x - px) * (x - px) + (z - pz) * (z - pz);
+      let d2 =
+        (x - px) * (x - px) + (y - py) * (y - py) + (z - pz) * (z - pz);
+      // continuity: leaving the stretch you were on costs, and the cost grows
+      // with the size of the leap. Sized against the measured geometry — the
+      // loop's two decks are 26m apart and 188m apart along the spine, so the
+      // near branch can never buy its way past this; a genuine relocation
+      // (checkpoint respawn hundreds of metres on) still wins easily.
+      if (cursor && cursor.s >= 0) {
+        const at =
+          this.laneArc[i] + t * (this.laneArc[i + 1] - this.laneArc[i]);
+        const leap = Math.abs(at - cursor.s) - LANE_FREE_TRAVEL;
+        if (leap > 0) d2 += leap * leap * LANE_LEAP_COST;
+      }
       if (d2 < best) {
         best = d2;
         bi = i;
@@ -3613,6 +3692,9 @@ export class Level {
       }
     }
     if (bi < 0) return null;
+    if (cursor) cursor.s = this.laneArc[bi] + bt * (this.laneArc[bi + 1] - this.laneArc[bi]);
+    // the heading itself is flattened to the ground plane — the camera yaws,
+    // it does not pitch with the road
     const dirOf = (i: number): { x: number; z: number } | null => {
       if (i < 0 || i >= pts.length - 1) return null;
       const dx = pts[i + 1].x - pts[i].x;
@@ -9868,16 +9950,24 @@ export class Level {
     // and the control frame ease along its tangent, so screen-up is always
     // "down the slide" and the road stays centered through every sweep (the
     // same machinery the editor's camnode chains drive).
-    const lane: { x: number; z: number }[] = [{ x: 0, z: 20 }];
+    // HEIGHT MATTERS HERE: this ribbon drops 150 units and passes over itself,
+    // so two stretches can sit almost on top of each other in plan view. A
+    // spine without y would let the steering lock onto the deck below and
+    // walk you straight off the loop.
+    const lane: { x: number; y: number; z: number }[] = [];
     for (const r of [main, land]) {
       const n = Math.max(2, Math.round(r.len / 7));
       for (let i = 0; i <= n; i++) {
         const p = r.frame(i / n, 0, 0);
-        lane.push({ x: p.x, z: p.z });
+        lane.push({ x: p.x, y: p.y, z: p.z });
       }
     }
-    lane.push({ x: 0, z: -874 });
+    // lead-in from the spawn deck and run-out past the finish, both held at
+    // the height of the ribbon end they attach to
+    lane.unshift({ x: 0, y: lane[0].y, z: 20 });
+    lane.push({ x: 0, y: lane[lane.length - 1].y, z: -874 });
     this.lanePts = lane;
+    this.measureLane();
   }
 
   private endWall(deckY: number, cx = 0): void {

@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
-import { Crate, Level, RopeSwing } from './level';
+import { Crate, LaneCursor, Level, RopeSwing, newLaneCursor } from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
@@ -94,6 +94,9 @@ const VERT_Q2 = new THREE.Quaternion();
 
 export class Player {
   pos = new THREE.Vector3(); // feet position
+  // this rider's place on the camera lane — private, so split-screen players
+  // don't drag each other's frame around (see Level.laneDirAt)
+  readonly laneCursor: LaneCursor = newLaneCursor();
   speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
   vVel = 0;
   state: MoveState = 'ride';
@@ -790,6 +793,10 @@ export class Player {
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
   respawn(level: Level, hard = false): void {
+    // A respawn teleports you: the camera lane must forget where it thought
+    // you were, or the continuity bias pins the frame to the stretch you just
+    // left. -1 means "take the global best next query".
+    this.laneCursor.s = -1;
     // any respawn drops a live trial or combo run: back to normal dress
     if (this.ttActive || level.timeTrial) {
       this.ttActive = false;
@@ -926,7 +933,7 @@ export class Player {
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     // a camera lane owns the course frame: spawn facing straight down it
-    const lf0 = level.laneDirAt(this.pos.x, this.pos.z);
+    const lf0 = level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor);
     if (lf0) {
       this.axisF.set(lf0.x, 0, lf0.z);
       this.axisL.set(-this.axisF.z, 0, this.axisF.x);
@@ -1100,7 +1107,7 @@ export class Player {
     const chaseMode = TUNING.chaseCam > 0.5 && !level.boulder;
     const laneDir =
       this.state !== 'grind' && !this.freeSkate
-        ? (level.laneDirAt(this.pos.x, this.pos.z) ??
+        ? (level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
           (chaseMode ? { x: this.camDir.x, z: this.camDir.z } : null))
         : null;
     if (laneDir) {
@@ -1168,7 +1175,7 @@ export class Player {
         // lane levels, the live camera aim in chase mode (the rig turns to
         // match all three). screen-right is its perpendicular (-f.z, f.x).
         const cf =
-          level.laneDirAt(this.pos.x, this.pos.z) ??
+          level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
           (chaseMode ? { x: this.camDir.x, z: this.camDir.z } : { x: 0, z: -1 });
         const inv = 1 / Math.hypot(rx, ry);
         const wx = (cf.x * ry - cf.z * rx) * inv;
@@ -2200,7 +2207,7 @@ export class Player {
           // world -Z here is what made "forward" stop meaning forward the
           // moment the spine turned the course.
           const cfc =
-            level.laneDirAt(this.pos.x, this.pos.z) ??
+            level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
             (TUNING.chaseCam > 0.5 && !level.boulder
               ? { x: this.camDir.x, z: this.camDir.z }
               : { x: 0, z: -1 });
