@@ -1651,6 +1651,12 @@ export class Level {
     return this.timeTrial || this.comboRun;
   }
   private gemG: THREE.Group | null = null; // materializes when every box breaks
+  // ...and it is a PICKUP, not an award: it hangs there until you touch it
+  gemPickup: {
+    group: THREE.Group;
+    box: THREE.Box3;
+    collected: boolean;
+  } | null = null;
   private vfxT = 0; // animation clock for all the procedural magic
   private glintTex: THREE.CanvasTexture | null = null;
   private flareTex: THREE.CanvasTexture | null = null; // big collection starburst
@@ -2281,6 +2287,30 @@ export class Level {
     this.placeComboOrb(); // combo-run orb, the other side of the racing line
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.buildAmbient(); // theme is set by the builder above
+    this.clearPlayFog(); // ...and the course you run on comes back out of it
+  }
+
+  // FOG OFF THE COURSE ITSELF.
+  //
+  // The haze is there to make distance read and to hide where the world ends,
+  // and it does that job on the scenery and the backdrop. On the surfaces you
+  // are actually playing — the path under your feet, the platform you are
+  // aiming at, the wall you are about to ride — it just washes them out and
+  // takes the edges off the things you need to judge. So the fog flag comes
+  // off every ground mesh and every structural material, and stays on for
+  // everything else. Same scene fog, applied where it helps and not where it
+  // hurts.
+  private clearPlayFog(): void {
+    const off = (m: THREE.Material | THREE.Material[]): void => {
+      for (const one of Array.isArray(m) ? m : [m]) {
+        const f = one as THREE.Material & { fog?: boolean };
+        if (f.fog === false) continue;
+        f.fog = false;
+        f.needsUpdate = true; // the flag is compiled into the shader
+      }
+    };
+    for (const g of this.groundMeshes) off(g.material);
+    for (const m of this.baseMats.values()) off(m); // walls, blocks, ramps
   }
 
   // SOLID BACKS. A transition is a one-sided sheet: from behind you'd ride up
@@ -4411,6 +4441,7 @@ export class Level {
       if (this.gemG) {
         this.root.remove(this.gemG);
         this.gemG = null;
+        this.gemPickup = null;
       }
     }
     this.pops.length = 0;
@@ -8488,7 +8519,10 @@ export class Level {
     this.root.updateMatrixWorld(true); // floorY raycasts — fresh builder meshes still hold identity matrices
     const spot = this.clockSpot; // authored spot (custom levels) beats the spawn-side default
     const dir = this.chaseCam ? 1 : -1; // boulder chases run AT +z; everything else runs -z
-    const x = spot ? spot.x : this.spawnPos.x + 2;
+    // 3 out, not 2. Both activators sat close enough to the spawn line that
+    // running straight off the start tripped one of them by accident, and a
+    // time trial you did not mean to begin is a run you have to restart.
+    const x = spot ? spot.x : this.spawnPos.x + 3;
     const z = spot ? spot.z : this.spawnPos.z + dir * 5;
     const y = this.floorY(x, z, spot ? spot.y : this.spawnPos.y);
     const before = this.root.children.length;
@@ -8578,7 +8612,7 @@ export class Level {
     this.root.updateMatrixWorld(true);
     const spot = this.orbSpot;
     const dir = this.chaseCam ? 1 : -1;
-    const x = spot ? spot.x : this.spawnPos.x - 2;
+    const x = spot ? spot.x : this.spawnPos.x - 3; // the far side, same reason
     const z = spot ? spot.z : this.spawnPos.z + dir * 5;
     const y = this.floorY(x, z, spot ? spot.y : this.spawnPos.y);
     const before = this.root.children.length;
@@ -8813,16 +8847,44 @@ export class Level {
     return tex;
   }
 
-  // All boxes broken: the gem materializes over the player, THPS-photo style.
+  // All boxes broken: the gem MATERIALIZES. It used to appear three metres
+  // over your head and be yours the same instant, which made it a trophy that
+  // announced itself rather than a thing you got — you never actually touched
+  // it. Now it drops in at body height and waits to be collected, so breaking
+  // the last box is the moment it appears and picking it up is the reward.
   awardGem(pos: THREE.Vector3): void {
-    if (this.gemG) return;
+    if (this.gemPickup) return;
     const g = this.gemMesh(1);
-    g.position.set(pos.x, pos.y + 3.2, pos.z);
-    g.userData.baseY = pos.y + 3.2;
+    // Seat it on the FLOOR under you, not at your own height. It only had to
+    // appear before, so where did not matter; now it has to be reachable, and
+    // the last box can perfectly well break while you are airborne over a pit.
+    // No floor under there (the pit case) = leave it where you were.
+    const ground = this.floorY(pos.x, pos.z, NaN);
+    const y = (Number.isNaN(ground) ? pos.y : Math.min(pos.y, ground)) + 1.5;
+    g.position.set(pos.x, y, pos.z);
+    g.userData.baseY = y;
     this.root.add(g);
     this.gemG = g;
+    this.gemPickup = {
+      group: g,
+      // generous: it can materialize mid-air off a ramp, and chasing your own
+      // gem back down a corridor is not the game
+      box: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(pos.x, y, pos.z),
+        new THREE.Vector3(2.4, 3.0, 2.4),
+      ),
+      collected: false,
+    };
     // no magic ring on the gem — the reference is a clean spinning diamond
     this.glimmerBurst(g.position, 0x9fe0ff);
+  }
+
+  /** Touched the materialized gem: it's yours. */
+  collectGem(): void {
+    if (!this.gemPickup) return;
+    this.gemPickup.collected = true;
+    this.gemPickup.group.visible = false;
+    this.glimmerBurst(this.gemPickup.group.position, 0xaee6ff);
   }
 
   // Per-frame VFX tick: bobs, spins, glints.

@@ -160,7 +160,8 @@ export class Player {
   onTTEnd: () => void = () => {}; // trial dropped without finishing (death / restart)
   onTTFinish: (time: number) => void = () => {};
   hasCrystal = false; // Crash collectathon: the level crystal
-  gemEarned = false; // ...and the all-boxes gem
+  gemSpawned = false; // every box broken: the gem has MATERIALIZED
+  gemEarned = false; // ...and you have since touched it. The HUD reads this.
 
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
@@ -828,6 +829,7 @@ export class Player {
     if (hard) {
       this.lives = 3;
       this.hasCrystal = false;
+      this.gemSpawned = false;
       this.gemEarned = false;
       this.comboGemEarned = false;
     }
@@ -1568,17 +1570,18 @@ export class Player {
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
       // All boxes broken -> the gem materializes on the spot, Crash rules.
+      // Breaking the last box no longer HANDS you the gem — it makes the gem
+      // exist. Picking it up is below, and that is where the points are.
       if (
-        !this.gemEarned &&
+        !this.gemSpawned &&
         level.totalCrates > 0 &&
         this.cratesBroken >= level.totalCrates &&
         (this.state as MoveState) !== 'dead'
       ) {
-        this.gemEarned = true;
+        this.gemSpawned = true;
         level.awardGem(this.pos);
         sfx.play('lifeGet', 0.9);
-        this.score(CONST.ptsGem, 'Gem');
-        this.onRelic('ALL BOXES!', 'gem earned');
+        this.onRelic('ALL BOXES!', 'grab the gem');
       }
       // Blast aftermath: tally crates the explosions broke, and die if we're
       // inside an expanding blast sphere.
@@ -5431,7 +5434,17 @@ export class Player {
       level.collectCrystal();
       sfx.play('crystalGet', 0.9);
       this.score(CONST.ptsCrystal, 'Crystal');
-      this.onRelic('CRYSTAL GET!', '');
+      // no toast: the sound, the burst and the HUD relic lighting up say it
+    }
+
+    // The all-boxes gem, once it has materialized. Silent on purpose — same
+    // reason as the crystal above.
+    const gp = level.gemPickup;
+    if (gp && !gp.collected && !level.runMode && this.playerBox.intersectsBox(gp.box)) {
+      level.collectGem();
+      this.gemEarned = true;
+      sfx.play('crystalGet', 0.9);
+      this.score(CONST.ptsGem, 'Gem');
     }
 
     // The trial stopwatch: touch it and the clock starts NOW.
