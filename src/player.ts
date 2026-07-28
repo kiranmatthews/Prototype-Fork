@@ -4295,14 +4295,12 @@ export class Player {
       if (Math.sign(this.balanceVel) === this.balance) this.balanceVel = 0; // kill outward momentum: a counter-tap can still save it
       this.balanceCritT += dt;
       if (this.balanceCritT > TUNING.bailGrace) {
-        // A mask absorbs the bail: the needle resets and the grind continues.
-        if (this.spendMask()) {
-          this.balance = 0;
-          this.balanceVel = 0;
-          this.grindTime = 0;
-          this.balanceCritT = 0;
-          this.noisePhase = Math.random() * Math.PI * 2;
-        } else if (this.railUnder) {
+        // NO MASK SAVE. A mask is armour against things that hit you; falling
+        // off a rail is a skill you did not execute, and letting a mask undo
+        // it meant the balance meter had no teeth while you were holding one.
+        // The third-mask invincibility (uberTimer) still pins the needle at
+        // zero further up, so being genuinely invincible still can't bail.
+        if (this.railUnder) {
           // hanging underneath, the grip is all there is: the board SNAPS and
           // you drop straight off — ground below breaks the fall, a pit doesn't
           this.snapBoardFall();
@@ -4637,24 +4635,44 @@ export class Player {
     this.emitSparks(10, 0xb08040, 2.2); // splinters off the broken deck
   }
 
+  // THE ONE PLACE the needle becomes a direction in the world.
+  //
+  // The HUD draws a positive needle to the RIGHT of the meter (ui.ts:
+  // left = 50 + bal * 46), so a positive needle has to mean the rider is
+  // going over their right shoulder — and has to put them down on the right.
+  // It did not: every site here built its offset out of (tangent.z, -tangent.x),
+  // which is the same construction as axisL and therefore the rider's LEFT.
+  // Measured, a pegged +1 needle landed her 5.7 units to the LEFT of the line
+  // while the meter said right. Hence the minus: (-hz, hx) is screen-right of
+  // travel, and everything downstream now agrees with the picture.
+  private railSide(out: { x: number; z: number }): number {
+    const rail = this.grindRail;
+    const side = Math.sign(this.balance || 1);
+    if (!rail) {
+      out.x = 0;
+      out.z = 0;
+      return side;
+    }
+    const t = rail.tangentAt(this.grindT);
+    const hx = t.x * this.grindDir;
+    const hz = t.z * this.grindDir;
+    const hl = Math.hypot(hx, hz) || 1;
+    out.x = (-hz / hl) * side;
+    out.z = (hx / hl) * side;
+    return side;
+  }
+  private static readonly RAIL_SIDE = { x: 0, z: 0 };
+
   // Which way is the balance needle throwing us, and what's over there?
   // Steep ground or a real drop on the fall side = the transition ('vert'):
   // falling that way reads as dropping in, not crashing. Flat ground near
   // rail height = the deck/uphill side, where a fall is still a bail.
   private railFallSide(level: Level): 'vert' | 'deck' {
-    const rail = this.grindRail;
-    if (!rail) return 'deck';
-    const t = rail.tangentAt(this.grindT);
-    const hx = t.x * this.grindDir;
-    const hz = t.z * this.grindDir;
-    const hl = Math.hypot(hx, hz);
-    if (hl < 1e-4) return 'deck';
-    // screen-right of travel (same construction as axisL from axisF), flipped
-    // to whichever side the needle pegged toward
-    const side = Math.sign(this.balance || 1);
-    const ox = (hz / hl) * side * 2.2;
-    const oz = (-hx / hl) * side * 2.2;
-    const probe = this.queryGround(level, ox, oz);
+    if (!this.grindRail) return 'deck';
+    const s = Player.RAIL_SIDE;
+    this.railSide(s);
+    if (s.x === 0 && s.z === 0) return 'deck';
+    const probe = this.queryGround(level, s.x * 2.2, s.z * 2.2);
     if (!probe) return 'vert'; // open air: riding the drop out beats a face-plant
     if (probe.normal.y < TUNING.steepStand) return 'vert'; // transition face
     return this.pos.y - probe.y > 1.6 ? 'vert' : 'deck';
@@ -4668,9 +4686,10 @@ export class Player {
     const hx = t.x * this.grindDir;
     const hz = t.z * this.grindDir;
     const hl = Math.hypot(hx, hz) || 1;
-    const side = Math.sign(this.balance || 1);
-    const fx = hx / hl + (hz / hl) * side * 0.9;
-    const fz = hz / hl + (-hx / hl) * side * 0.9;
+    const s = Player.RAIL_SIDE;
+    this.railSide(s);
+    const fx = hx / hl + s.x * 0.9;
+    const fz = hz / hl + s.z * 0.9;
     const fl = Math.hypot(fx, fz) || 1;
     this.axisF.set(fx / fl, 0, fz / fl);
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
@@ -4699,8 +4718,11 @@ export class Player {
       const hx = t.x * this.grindDir;
       const hz = t.z * this.grindDir;
       const hl = Math.hypot(hx, hz) || 1;
-      const fx = hx / hl + (hz / hl) * sideSign * 1.4;
-      const fz = hz / hl + (-hx / hl) * sideSign * 1.4;
+      // screen-right of travel, times the side asked for — the same
+      // construction railSide() uses, so a crate hit and a pegged needle
+      // throw you the same way
+      const fx = hx / hl + (-hz / hl) * sideSign * 1.4;
+      const fz = hz / hl + (hx / hl) * sideSign * 1.4;
       const fl = Math.hypot(fx, fz) || 1;
       this.axisF.set(fx / fl, 0, fz / fl);
       this.axisL.set(this.axisF.z, 0, -this.axisF.x);
@@ -7047,10 +7069,17 @@ export class Player {
     // wind-up (arms swept back, loading the spring), flip tuck wrap, teeter
     // windmill, pegged-needle flail, bail flail.
     const windmill = this.teeterPose * Math.sin(this.teeterPhase * 13) * 1.3;
-    const critFlail = this.balanceCritT > 0 ? Math.sin(this.runTime * 22) * 0.8 : 0;
     // Only GRINDS tip the spread arms sideways with the needle — a manual's
     // needle is fought in pitch (see manualPitch), so its arms stay symmetric.
     const railBal = this.state === 'grind' ? this.balance : 0;
+    // The flail used to switch on only at the peg, which made the last moment
+    // before a bail arrive with no warning at all. It now RAMPS with how far
+    // out the needle is, so the arms start working well before the edge, and
+    // goes faster and wider once it is actually pegged.
+    const offBal = Math.abs(railBal);
+    const critFlail =
+      (this.balanceCritT > 0 ? Math.sin(this.runTime * 22) * 0.8 : 0) +
+      Math.sin(this.runTime * (9 + 9 * offBal)) * 0.42 * offBal * offBal;
     const bailFlail = this.bailing ? Math.sin(this.bailSpin * 2.7) * 1.1 : 0;
     const anti = -swing * 1.35 * (1 - this.grabPose); // reference arm pump: big, from the shoulder
     const sym =
@@ -7077,7 +7106,7 @@ export class Player {
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
-        1.15 * this.grindArmPose * (1 + 0.6 * railBal) + // balance arms out wide (grinds tip them sideways; manual balance lives in the PITCH instead)
+        1.15 * this.grindArmPose * (1 + 0.85 * railBal) + // balance arms out wide; on a grind they SWING WITH the roll — see the left arm
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
@@ -7097,7 +7126,12 @@ export class Player {
       this.armL.rotation.z =
         -leanL +
         this.grabPose * 0.45 -
-        1.15 * this.grindArmPose * (1 - 0.6 * railBal) -
+        // The spread goes ASYMMETRIC with the needle, in the same direction as
+        // the body roll: going over her right, the right arm sweeps up and over
+        // and the left drops. A true counterweight (left arm up) was tried and
+        // is worse here — it half-cancels the roll, and the roll is the cue
+        // that has to read in a fifth of a second from six metres back.
+        1.15 * this.grindArmPose * (1 - 0.85 * railBal) -
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
@@ -7218,11 +7252,30 @@ export class Player {
       wallSide = Math.sign(this.axisF.z * this.wallNormal.x - this.axisF.x * this.wallNormal.z) || 1;
       wallRoll = this.wallridePose * -wallSide * 0.32; // body hangs slightly OUT, torso upright, head up (~18°)
     }
-    this.bodyGroup.rotation.z = this.slopeRoll + wallRoll;
+    // OFF BALANCE. The needle is a number on the HUD; this is the same number
+    // on the rider. The whole body tips toward the side the meter is showing —
+    // Signs here are MEASURED, not derived: a needle held at +0.85 and one
+    // held at -0.85 are rendered and the rider's spine is projected onto her
+    // own left axis, so the whole transform chain has its say. That says a
+    // positive needle — which the HUD draws to the RIGHT — needs this roll
+    // positive. It tips further once the needle is pegged and she is genuinely
+    // going over; squared, so the first half of the meter is a lean and the
+    // last quarter is a crisis.
+    const balRoll =
+      railBal *
+      Math.abs(railBal) *
+      (0.42 + 0.22 * (this.balanceCritT > 0 ? 1 : 0)) *
+      this.grindArmPose;
+    this.bodyGroup.rotation.z = this.slopeRoll + wallRoll + balRoll;
+    // the head stays up and fights it — the last thing to give
+    if (this.headM) this.headM.rotation.z = -balRoll * 0.55;
     if (this.boardG) {
       // Roll the deck a quarter-turn onto its edge so the WHEELS meet the wall
       // (deck faces out), and press it against the face up at the rider's feet.
-      this.boardG.rotation.z = this.wallridePose * -wallSide * (Math.PI / 2);
+      // the deck edges up under her as she goes over — the board is on the
+      // rail, so it rolls about a third as far as the body does
+      this.boardG.rotation.z =
+        this.wallridePose * -wallSide * (Math.PI / 2) + balRoll * 0.34;
       this.boardG.position.x = this.wallridePose * wallSide * 0.62; // flush to the wall
       this.boardG.position.y += this.wallridePose * 0.34; // up to foot height
       // UNDER-RAIL HANG: the deck leaves the feet and goes CROSSWISE overhead,
