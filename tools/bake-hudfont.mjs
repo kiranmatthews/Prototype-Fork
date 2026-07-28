@@ -1,6 +1,6 @@
 // Bake the two hand-drawn alphabet sheets into one HUD font atlas.
 //
-//   node tools/bake-hudfont.mjs art/hudfont-sheet1.png art/hudfont-sheet2.png
+//   node tools/bake-hudfont.mjs art/hudfont-sheet{1,2,3}.png
 //     -> public/hudfont.png       the packed atlas
 //     -> src/hudfont-data.ts      per-glyph rects
 //
@@ -18,10 +18,12 @@
 //     punctuation row is wide and evenly inked, and a whole-row valley search
 //     splits it down the middle.
 //
-//  2. The sheets carry DUPLICATES and gaps: sheet 1 repeats F, G, I, L and R,
-//     and neither sheet has a Y. PICK below names the one cell to keep for
-//     each character; the Y is grafted from this face's own V and I (see
-//     drawY) so its weight and its navy/white/red banding match the rest.
+//  2. The sheets carry DUPLICATES and overlap: sheet 1 repeats F, G, I, L and
+//     R, sheet 3 redraws the whole alphabet, and only sheet 2 has punctuation.
+//     PICK below names the one cell to keep for each character. Sheet 1 is the
+//     wider cut and supplies the letters; sheet 3 supplies the Y, which is the
+//     only letter sheet 1 doesn't draw. The + is still built here, from
+//     crossed copies of the face's own dash, because no sheet has one.
 //
 //  3. Each row was drawn at its own size. Every glyph is normalised against
 //     its OWN ROW's cap box — the MEDIAN top and bottom of that row, so that
@@ -32,11 +34,19 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright-core');
 
-const [S1, S2] = process.argv.slice(2);
-if (!S1 || !S2) {
-  console.error('usage: node tools/bake-hudfont.mjs <sheet1.png> <sheet2.png>');
+const [S1, S2, S3] = process.argv.slice(2);
+if (!S1 || !S2 || !S3) {
+  console.error(
+    'usage: node tools/bake-hudfont.mjs <sheet1.png> <sheet2.png> <sheet3.png>',
+  );
   process.exit(1);
 }
+
+// Sheets 1 and 2 are scans on a transparent background, so their alpha channel
+// IS the ink mask. Sheet 3 is a flat render on cream paper with no alpha at
+// all, so its mask has to be keyed — see keyPaper below for why that can't be
+// a plain colour threshold.
+const OPAQUE = { sheet3: true };
 
 // Glyphs per ink blob, per row, top to bottom, as drawn on the sheets.
 // Each inner array must have one entry per zero-gap blob in that row; the
@@ -55,6 +65,14 @@ const PLAN = {
     [9], // 1-8, 0
     [4, 1, 1, 3], // !?/, ' - ...
   ],
+  // The complete sheet. Nothing on it touches anything else, so every glyph is
+  // already its own blob and no valley cutting runs here at all.
+  sheet3: [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1], // A-I
+    [1, 1, 1, 1, 1, 1, 1, 1, 1], // J-R
+    [1, 1, 1, 1, 1, 1, 1, 1], // S-Z
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // 0-9
+  ],
 };
 
 // character -> [sheet, row, index]. Sheet 1 carries the whole alphabet bar Y
@@ -68,6 +86,7 @@ const PICK = {};
 }
 'MNOPQR'.split('').forEach((c, i) => (PICK[c] = ['sheet1', 2, i]));
 'STUVWXZ'.split('').forEach((c, i) => (PICK[c] = ['sheet1', 3, i]));
+PICK.Y = ['sheet3', 2, 6]; // the only letter sheet 1 doesn't have
 '123456789'.split('').forEach((c, i) => (PICK[c] = ['sheet2', 2, i]));
 PICK['0'] = ['sheet2', 3, 8];
 PICK['!'] = ['sheet2', 4, 0];
@@ -90,15 +109,74 @@ const dataURL = (f) =>
   'data:image/png;base64,' + readFileSync(f).toString('base64');
 
 const out = await page.evaluate(
-  async ([srcs, PLAN, PICK, CAP, PAD, MAXW, TH]) => {
+  async ([srcs, PLAN, PICK, CAP, PAD, MAXW, TH, OPAQUE]) => {
     const load = (s) =>
       new Promise((r) => {
         const i = new Image();
         i.onload = () => r(i);
         i.src = s;
       });
+    // A sheet drawn on opaque paper needs an alpha channel before anything
+    // else can treat it like the scans. A plain colour threshold will NOT do
+    // it: the cream paper and the white inline INSIDE each letter are only a
+    // few levels apart, so thresholding hollows every glyph out. Flood the
+    // paper inward from the border instead — the inline is enclosed by the
+    // navy outline, so the flood can never reach it. Alpha then comes from the
+    // colour distance, but only where the flood actually got, which keeps the
+    // outer edge anti-aliased and the inline solid.
+    const keyPaper = (im) => {
+      const c = document.createElement('canvas');
+      c.width = im.width;
+      c.height = im.height;
+      const cx = c.getContext('2d');
+      cx.drawImage(im, 0, 0);
+      const img = cx.getImageData(0, 0, c.width, c.height);
+      const D = img.data;
+      const W = c.width,
+        H = c.height;
+      const bg = [D[0], D[1], D[2]];
+      const dist = (i) =>
+        Math.abs(D[i] - bg[0]) + Math.abs(D[i + 1] - bg[1]) + Math.abs(D[i + 2] - bg[2]);
+      const NEAR = 60; // still paper
+      const seen = new Uint8Array(W * H);
+      const stack = [];
+      for (let x = 0; x < W; x++) {
+        stack.push(x, x + (H - 1) * W);
+      }
+      for (let y = 0; y < H; y++) {
+        stack.push(y * W, y * W + W - 1);
+      }
+      while (stack.length) {
+        const p = stack.pop();
+        if (seen[p]) continue;
+        if (dist(p * 4) > NEAR) continue;
+        seen[p] = 1;
+        const x = p % W,
+          y = (p / W) | 0;
+        if (x > 0) stack.push(p - 1);
+        if (x < W - 1) stack.push(p + 1);
+        if (y > 0) stack.push(p - W);
+        if (y < H - 1) stack.push(p + W);
+      }
+      // one more pass so the flood's own boundary keeps a soft edge
+      for (let p = 0; p < W * H; p++) {
+        const i = p * 4;
+        if (!seen[p]) {
+          D[i + 3] = 255;
+          continue;
+        }
+        const d = dist(i);
+        D[i + 3] = d <= 20 ? 0 : Math.min(255, Math.round(((d - 20) / 40) * 255));
+      }
+      cx.putImageData(img, 0, 0);
+      return c;
+    };
+
     const imgs = {};
-    for (const [k, v] of Object.entries(srcs)) imgs[k] = await load(v);
+    for (const [k, v] of Object.entries(srcs)) {
+      const im = await load(v);
+      imgs[k] = OPAQUE[k] ? keyPaper(im) : im;
+    }
 
     // ---- cut every sheet into rows of glyph rects -------------------------
     const cells = {};
@@ -236,29 +314,6 @@ const out = await page.evaluate(
       });
     }
 
-    // Y: this face has none. Graft one from its own V and I — the whole V,
-    // squashed into the top of the cap box (never cropped, so no cut edge),
-    // over a stem taken from the I's lower half. The V is drawn last so its
-    // vertex outline closes over the stem's top.
-    const vSrc = cells.sheet1[3][3]; // V
-    const iSrc = cells.sheet1[1][2]; // I
-    const kV = CAP / capBox['sheet1/3'].h;
-    const yW = Math.round(vSrc.w * kV);
-    items.push({
-      ch: 'Y',
-      w: yW,
-      h: CAP,
-      top: 0,
-      graft: {
-        v: { sh: 'sheet1', ...vSrc },
-        i: { sh: 'sheet1', ...iSrc },
-        vFrac: 0.6, // the V fills the top 60% of the cap box
-        iFrom: 0.4, // stem is the I below 40% of its own height
-        stemW: 0.34, // ...at 34% of the V's width
-        lap: 0.1, // stem starts 10% of cap above the V's vertex
-      },
-    });
-
     // ':' — two of this face's own dots, stacked in the cap box.
     const dot = cells.sheet2[4][6];
     const kD = CAP / capBox['sheet2/4'].h;
@@ -309,20 +364,6 @@ const out = await page.evaluate(
       if (it.draw) {
         const s = it.draw;
         cx.drawImage(imgs[s.sh], s.x, s.y, s.w, s.h, it.ax, it.ay, it.w, it.h);
-      } else if (it.graft) {
-        const G = it.graft;
-        const vH = Math.round(CAP * G.vFrac);
-        const sw = Math.round(it.w * G.stemW);
-        const sTop = vH - Math.round(CAP * G.lap);
-        const iy = Math.round(G.i.h * G.iFrom);
-        cx.drawImage(
-          imgs[G.i.sh], G.i.x, G.i.y + iy, G.i.w, G.i.h - iy,
-          it.ax + Math.round((it.w - sw) / 2), it.ay + sTop, sw, CAP - sTop,
-        );
-        cx.drawImage(
-          imgs[G.v.sh], G.v.x, G.v.y, G.v.w, G.v.h,
-          it.ax, it.ay, it.w, vH,
-        );
       } else if (it.colon) {
         const D = it.colon;
         const dh = Math.round(D.h * D.k);
@@ -389,7 +430,10 @@ const out = await page.evaluate(
         .sort((a, b) => a.c.localeCompare(b.c)),
     };
   },
-  [{ sheet1: dataURL(S1), sheet2: dataURL(S2) }, PLAN, PICK, CAP, PAD, MAXW, TH],
+  [
+    { sheet1: dataURL(S1), sheet2: dataURL(S2), sheet3: dataURL(S3) },
+    PLAN, PICK, CAP, PAD, MAXW, TH, OPAQUE,
+  ],
 );
 await b.close();
 
