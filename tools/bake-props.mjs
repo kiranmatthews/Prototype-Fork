@@ -159,15 +159,36 @@ const ROLE = {
   rock: "stone",
   dirt: "dirt",
   sand: "dirt",
+  // Quaternius' modular ruins kit names its masonry Main/Main2/Highlights and
+  // keeps the greenery growing over it on its own materials, so an overgrown
+  // wall still splits cleanly into stone and leaf.
+  Main: "stone",
+  Main2: "stone",
+  Highlights: "stone",
+  Grey: "stone",
+  Green: "leaf",
+  Leaf_Texture: "leaf",
+  Texture_Leaves: "leaf",
+  Bark: "bark",
+  DarkWood: "bark",
+  // Everything below points at a swatch atlas we are not using; the family
+  // fallback is right for all of them.
   _defaultMat: null,
   default: null,
   colormap: null,
+  Atlas: null,
+  tiny_treats_1: null,
+  HalloweenBits: null,
 };
 
 // ---- extraction ------------------------------------------------------------
 
-/** All triangles of one model, in world space, grouped by surface role. */
-function extract(file, fallbackRole) {
+/**
+ * All triangles of one model, in world space, grouped by surface role.
+ * `only` names a single node to pull out — a modular kit ships as one file
+ * with ninety-odd pieces in it, and we want six of them.
+ */
+function extract(file, fallbackRole, only) {
   const { g, bin } = readGLB(file);
   const byRole = new Map();
   const scene = g.scenes[g.scene || 0];
@@ -206,7 +227,11 @@ function extract(file, fallbackRole) {
     }
     for (const c of n.children || []) walk(c, m);
   };
-  for (const r of scene.nodes) walk(r, ident());
+  if (only) {
+    const i = g.nodes.findIndex((n) => n.name === only);
+    if (i < 0) throw new Error(`${file}: no node named ${only}`);
+    walk(i, ident());
+  } else for (const r of scene.nodes) walk(r, ident());
   return byRole;
 }
 
@@ -308,6 +333,9 @@ const ROSTER = {
       ["grass_large", "tall grass"],
       ["crops_bambooStageA", "bamboo"],
       ["hanging_moss", "hanging moss"],
+      // The one tropical shape Kenney's temperate kit has no answer for.
+      // Authored six units tall, so it needs bringing down to Kenney's scale.
+      ["bigleaf", "elephant ear", 0.09], // reyshapes, CC0
     ],
   },
   boulder: {
@@ -367,6 +395,17 @@ const ROSTER = {
       ["altar-stone", "carved altar"],
       ["stone-wall-damaged", "broken wall"],
       ["debris", "rubble pile"],
+      // Quaternius' modular ruins kit (CC0): masonry that is broken on
+      // purpose, which is a note nothing else here hits. Pulled piece by piece
+      // out of one 95-node file, and built on a four-unit grid, so every one
+      // needs scaling down into Kenney's register. Four pieces only — the rest
+      // of the kit is either redundant with the statues above or too heavy to
+      // scatter (an overgrown wall is fourteen hundred triangles on its own).
+      ["ruins#Wall_Broken", "collapsed wall", 0.4],
+      ["ruins#Column_Round_Short", "stub column", 0.4],
+      ["ruins#Bricks", "loose bricks", 0.4],
+      ["ruins#Floor_Diamond", "inlaid floor", 0.45],
+      ["cobble", "cobbled path", 0.45], // Kay Lousberg, CC0
     ],
   },
 };
@@ -388,17 +427,25 @@ const report = [];
 let bytes = 0;
 for (const [family, spec] of Object.entries(ROSTER)) {
   out[family] = [];
-  for (const [file, label] of spec.items) {
-    const p = found.get(`${file}.glb`);
+  for (const [file, label, k] of spec.items) {
+    // "kit#Piece" pulls one node out of a modular kit file
+    const [stem, node] = file.split("#");
+    const p = found.get(`${stem}.glb`);
     if (!p) {
       report.push(`  MISSING  ${family}/${file}`);
       continue;
     }
-    const byRole = extract(p, spec.fallback);
+    const byRole = extract(p, spec.fallback, node);
     if (!byRole.size) {
       report.push(`  EMPTY    ${family}/${file}`);
       continue;
     }
+    // Different authors work at different scales. Bring the outliers into the
+    // family's register HERE rather than at runtime, so the recorded height
+    // and footprint are the truth about the prop as it will stand.
+    if (k && k !== 1)
+      for (const b of byRole.values())
+        for (let i = 0; i < b.pos.length; i++) b.pos[i] *= k;
     const box = normalise(byRole);
     const roles = encode(byRole, box);
     const size = roles.reduce((n, r) => n + r.pos.length + r.nrm.length, 0);

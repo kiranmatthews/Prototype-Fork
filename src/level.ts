@@ -5004,7 +5004,10 @@ export class Level {
     thicket(-39.5, -104);
     thicket(-110, -176);
     thicket(-176, -236); // the ravine gets a canopy too — it is a cut, not a void
-    thicket(-236, -300);
+    // the approach: masonry starts showing up in the undergrowth BEFORE the
+    // temple, because once you are inside the climb its own walls are all you
+    // can see and the ruins on the high ground outside never read
+    thicket(-236, -300, 0, 6.3, true);
     // on the high ground outside the ruin walls — and the only stretch that
     // gets the temple masonry lying in it
     thicket(-300, -486, 5, 10.2, true);
