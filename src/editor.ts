@@ -40,6 +40,14 @@ import {
   findLevel,
   setEditorBuild,
 } from "./level";
+import {
+  PROP_FAMILIES,
+  PROP_TINTS,
+  PropFamily,
+  propModels,
+  propRoll,
+  propSize,
+} from "./props";
 
 interface Hooks {
   rebuild: () => void; // dispose + reconstruct the target level from data
@@ -127,6 +135,16 @@ const capMushroom = (
   x.arc(cx - r * 0.35, cy - r * 0.28, r * 0.18, 0, 7);
   x.arc(cx + r * 0.38, cy - r * 0.18, r * 0.15, 0, 7);
   x.fill();
+};
+// The badge on a LIBRARY family: this button is a whole set of models, not
+// one shape, and what you drop is rolled from the seed until you pick.
+const manyDots = (x: CanvasRenderingContext2D): void => {
+  x.fillStyle = "#ffc65a";
+  for (let i = 0; i < 3; i++) {
+    x.beginPath();
+    x.arc(11.5 + i * 2.5, 16.5, 0.85, 0, 7);
+    x.fill();
+  }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
   fern: (x) => leafSpray(x, "#4a9a40", 6, 12, 1.6),
@@ -257,6 +275,97 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
     x.lineTo(6.5, 12);
     x.stroke();
   },
+  tree: (x) => {
+    x.fillStyle = "#8a6b47";
+    x.fillRect(8, 9, 2.4, 8);
+    x.fillStyle = "#4e9c3a";
+    x.beginPath();
+    x.moveTo(9, 1);
+    x.lineTo(16, 7.5);
+    x.lineTo(12.5, 10.5);
+    x.lineTo(5.5, 10.5);
+    x.lineTo(2, 7.5);
+    x.closePath();
+    x.fill();
+    manyDots(x);
+  },
+  plants: (x) => {
+    leafSpray(x, "#5db63f", 5, 12, 2.6);
+    x.strokeStyle = "#2f7a34";
+    x.lineWidth = 1.6;
+    x.beginPath();
+    x.moveTo(9, 17);
+    x.lineTo(9, 10);
+    x.stroke();
+    manyDots(x);
+  },
+  boulder: (x) => {
+    x.fillStyle = "#9aa39c";
+    x.beginPath();
+    x.moveTo(1, 16);
+    x.lineTo(3, 7);
+    x.lineTo(8, 3);
+    x.lineTo(15, 6);
+    x.lineTo(17, 16);
+    x.closePath();
+    x.fill();
+    x.fillStyle = "#548b3e"; // the moss cap the kit models carry
+    x.beginPath();
+    x.moveTo(3, 7);
+    x.lineTo(8, 3);
+    x.lineTo(15, 6);
+    x.lineTo(13, 8);
+    x.lineTo(6, 8);
+    x.closePath();
+    x.fill();
+    manyDots(x);
+  },
+  rocks: (x) => {
+    x.fillStyle = "#9aa39c";
+    for (const [cx, cy, r] of [
+      [5, 13, 3.6],
+      [12, 14, 2.8],
+      [9.5, 9, 2.2],
+    ] as const) {
+      x.beginPath();
+      x.moveTo(cx - r, cy + r * 0.6);
+      x.lineTo(cx - r * 0.5, cy - r * 0.7);
+      x.lineTo(cx + r * 0.6, cy - r * 0.5);
+      x.lineTo(cx + r, cy + r * 0.6);
+      x.closePath();
+      x.fill();
+    }
+    manyDots(x);
+  },
+  trunk: (x) => {
+    x.save();
+    x.translate(9, 9);
+    x.rotate(-0.3);
+    x.fillStyle = "#7a5c3c";
+    x.fillRect(-8, -2.6, 16, 5.2);
+    x.fillStyle = "#c7a074"; // sawn end
+    x.beginPath();
+    x.ellipse(-8, 0, 1.5, 2.6, 0, 0, 7);
+    x.fill();
+    x.restore();
+    manyDots(x);
+  },
+  slab: (x) => {
+    x.fillStyle = "#bdb9a8";
+    x.fillRect(6, 4, 6, 11);
+    x.fillRect(4, 14, 10, 3);
+    x.fillStyle = "#8f8b7c"; // the broken-off top
+    x.beginPath();
+    x.moveTo(6, 4);
+    x.lineTo(8, 2);
+    x.lineTo(10, 5);
+    x.lineTo(12, 3);
+    x.lineTo(12, 5);
+    x.lineTo(6, 5);
+    x.closePath();
+    x.fill();
+    manyDots(x);
+  },
 };
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
@@ -275,6 +384,16 @@ const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
   ruinblock: { s: [2.4, 1.6, 2.4], yaw: 0 },
   log: { len: 13 },
   block: { s: [10, 8, 10], yaw: 0, color: "#6b5232", tex: "dirt" },
+  // The library families arrive with NOTHING chosen on purpose: leave vr/tn
+  // off and every copy rolls its own model, colour, size, spin and lean from
+  // where it stands, which is what makes a scattered handful look planted
+  // rather than stamped. Pick one in the panel and it locks.
+  tree: { w: 1 },
+  plants: { w: 1 },
+  boulder: { w: 1 },
+  rocks: { w: 1 },
+  trunk: { w: 1 },
+  slab: { w: 1 },
 };
 
 const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
@@ -4738,6 +4857,44 @@ export class Editor {
 
   // a labelled number field that commits on change
   // texture dropdown: the surface-kind list shared with the game builder
+  /**
+   * A labelled dropdown over an explicit option list, with a first entry that
+   * means "leave it unset". The library props lean on that: an unset model or
+   * colour is not a missing value, it is the prop rolling its own from where
+   * it stands, and the empty option says so out loud.
+   */
+  private pickRow(
+    label: string,
+    options: [string, string][],
+    get: () => string,
+    set: (v: string) => void,
+    anyLabel: string,
+  ): HTMLElement {
+    const row = document.createElement("div");
+    row.className = "ed-row";
+    const lab = document.createElement("label");
+    lab.textContent = label;
+    const sel = document.createElement("select");
+    for (const [value, text] of [
+      ["", anyLabel] as [string, string],
+      ...options,
+    ]) {
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = text;
+      sel.appendChild(opt);
+    }
+    sel.value = get();
+    sel.addEventListener("change", () => {
+      set(sel.value);
+      this.commit();
+      this.renderProps();
+    });
+    row.appendChild(lab);
+    row.appendChild(sel);
+    return row;
+  }
+
   private texRow(
     get: () => string | undefined,
     set: (v: string | undefined) => void,
@@ -5742,6 +5899,61 @@ export class Editor {
       });
       this.propsEl.appendChild(kindSel);
       const dk = (c.dkind ?? "fern") as DecorKind;
+      // LIBRARY FAMILIES. One kind, many models: the panel gets a model picker
+      // and a colour picker, plus the size/spin/lean every one of them takes.
+      // 'any' on both means the prop keeps rolling its own from where it
+      // stands — drag it somewhere else and it becomes a different plant.
+      if (PROP_FAMILIES.includes(dk as PropFamily)) {
+        const fam = dk as PropFamily;
+        const roll = propRoll(fam, Math.round(c.p[0] * 71 + c.p[2] * 131));
+        this.propsEl.appendChild(
+          this.pickRow(
+            "model",
+            propModels(fam).map((m, i) => [String(i), m.label]),
+            () => (c.vr === undefined ? "" : String(c.vr)),
+            (v) => (c.vr = v === "" ? undefined : Number(v)),
+            `any (now: ${propModels(fam)[roll.variant]?.label ?? "-"})`,
+          ),
+        );
+        this.propsEl.appendChild(
+          this.pickRow(
+            "colour",
+            (PROP_TINTS[fam] ?? []).map((t, i) => [String(i), t.name]),
+            () => (c.tn === undefined ? "" : String(c.tn)),
+            (v) => (c.tn = v === "" ? undefined : Number(v)),
+            `any (now: ${PROP_TINTS[fam]?.[roll.tint]?.name ?? "-"})`,
+          ),
+        );
+        num(
+          "scale",
+          () => c.w ?? 1,
+          (v) => (c.w = Math.max(0.05, v)),
+          0.1,
+        );
+        num(
+          "yaw °",
+          () => c.yaw ?? 0,
+          (v) => (c.yaw = v),
+          15,
+        );
+        num(
+          "lean °",
+          () => c.amp ?? 0,
+          (v) => (c.amp = Math.max(-40, Math.min(40, v))),
+          2,
+        );
+        const size = propSize(fam, c.vr ?? roll.variant, c.w ?? 1);
+        const note = document.createElement("div");
+        note.className = "ed-dim";
+        note.textContent =
+          `${propModels(fam).length} models, ${(PROP_TINTS[fam] ?? []).length} colours` +
+          ` — this one stands ${size.height.toFixed(1)}u tall.` +
+          " Scenery: visual only, never a floor and never a wall.";
+        this.propsEl.appendChild(note);
+      }
+      // ...and none of the hand-built props' knobs below match a library kind,
+      // so they simply render nothing for one. Only the closing note has to
+      // know, or a library prop would carry two.
       const SCALED: DecorKind[] = [
         "fern",
         "broadleaf",
@@ -5814,7 +6026,8 @@ export class Editor {
             : dk === "block"
               ? "massing — looks solid, is not: you fall straight through it"
               : "scenery — visual only, never a floor and never a wall";
-      this.propsEl.appendChild(note);
+      if (!PROP_FAMILIES.includes(dk as PropFamily))
+        this.propsEl.appendChild(note);
     } else if (c.t === "enemy") {
       const sel = document.createElement("select");
       sel.className = "ed-select";

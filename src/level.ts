@@ -7,6 +7,14 @@
 import * as THREE from "three";
 import { Rail } from "./rails";
 import { onRefined, paintTexture, PROCEDURAL } from "./textures";
+import {
+  PROP_SCALE,
+  PropFamily,
+  PropRoleName,
+  propRoll,
+  propSurfaces,
+  propTint,
+} from "./props";
 import { Halfpipe } from "./halfpipe";
 import {
   createWarpPad,
@@ -305,6 +313,12 @@ export interface CustomComponent {
     | "bang"
     | "nitrobang";
   dkind?: DecorKind; // decor: which prop (see DECOR_KINDS)
+  // The library families (tree/plants/boulder/rocks/trunk/slab) are one kind
+  // holding many models: `vr` picks the model, `tn` picks the colour set. Both
+  // wrap, so a stale index from an old save still draws something.
+  vr?: number; // decor: which model within the family (see props.ts)
+  tn?: number; // decor: which tint within the family
+
   berms?: boolean; // terrain: kerbs + grindable lips down both edges
   n?: number; // decor: strand/piece count (hanging vines)
   outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
@@ -372,6 +386,15 @@ export const DECOR_KINDS = [
   "ruinblock",
   "log",
   "block", // plain textured box, visual only: earth banks, backdrops, massing
+  // THE LIBRARY FAMILIES. Six kinds backed by fifty-six external meshes (see
+  // props.ts). Each one is a whole species rather than a single shape: pick a
+  // model, a tint, a size, a spin and a lean and no two placings match.
+  "tree",
+  "plants",
+  "boulder",
+  "rocks",
+  "trunk",
+  "slab",
 ] as const;
 export type DecorKind = (typeof DECOR_KINDS)[number];
 /** Human labels for the palette + the props dropdown. */
@@ -390,6 +413,12 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   ruinblock: "ruin block",
   log: "fallen log",
   block: "scenery block",
+  tree: "tree (library)",
+  plants: "plant (library)",
+  boulder: "boulder (library)",
+  rocks: "rocks (library)",
+  trunk: "trunk (library)",
+  slab: "temple slab (library)",
 };
 
 // Every paintable surface kind the texture system offers. The editor's
@@ -4673,6 +4702,7 @@ export class Level {
       zFar: number,
       base = 0,
       inset = 6.3, // where the undergrowth starts, just outside the berm
+      ruins = false, // the temple stretch: masonry among the trees
     ): void => {
       const depth = Math.abs(zNear - zFar);
       const n = Math.max(2, Math.round(depth / 4.2));
@@ -4734,6 +4764,66 @@ export class Level {
           if (b > 0.8)
             this.rock(cx + side * (inset + a * 1.8), y - 0.25, jz, 1 + a * 1.1);
           if (a > 0.86) this.flowers(cx + side * (inset + c * 1.2), y, jz);
+          // ---- THE LIBRARY LAYER ----------------------------------------
+          // The same stretch again, drawn from the external kit. A hand-built
+          // fern is always the same fern; these roll a model, a colour, a
+          // size, a spin and a lean out of where they stand, so the second
+          // pass never repeats the first — that is the whole point of it.
+          if (d > 0.28)
+            this.propAt(
+              "plants",
+              cx + side * (inset + 0.4 + b * 3.4),
+              y,
+              jz + 0.9,
+              k * 977 + 11,
+              0.85 + c * 0.6,
+            );
+          if (a > 0.52)
+            this.propAt(
+              "tree",
+              cx + side * (inset + 6.5 + c * 9),
+              y - 0.3,
+              z + b * 5 - 2.5,
+              k * 977 + 23,
+              0.85 + b * 0.45,
+            );
+          if (c > 0.82)
+            this.propAt(
+              "boulder",
+              cx + side * (inset + 2.6 + a * 3.2),
+              y - 0.25,
+              z - c * 3,
+              k * 977 + 37,
+              0.8 + b * 0.5,
+            );
+          if (b > 0.7)
+            this.propAt(
+              "rocks",
+              cx + side * (inset + 1.2 + c * 2.8),
+              y - 0.1,
+              jz - 1.3,
+              k * 977 + 53,
+            );
+          if (a > 0.88)
+            this.propAt(
+              "trunk",
+              cx + side * (inset + 3 + b * 2.6),
+              y - 0.1,
+              z + c * 4 - 2,
+              k * 977 + 71,
+              0.9 + a * 0.5,
+            );
+          // ...and where the temple stands, its masonry lying about in the
+          // undergrowth: columns, stelae, broken wall, rubble
+          if (ruins && d > 0.42)
+            this.propAt(
+              "slab",
+              cx + side * (inset + 1.4 + a * 6),
+              y - 0.15,
+              z + d * 5 - 2.5,
+              k * 977 + 97,
+              0.75 + c * 0.55,
+            );
         }
       }
       // one mesh per shape for THIS stretch, so the jungle still frustum-culls
@@ -4915,7 +5005,9 @@ export class Level {
     thicket(-110, -176);
     thicket(-176, -236); // the ravine gets a canopy too — it is a cut, not a void
     thicket(-236, -300);
-    thicket(-300, -486, 5, 10.2); // on the high ground outside the ruin walls
+    // on the high ground outside the ruin walls — and the only stretch that
+    // gets the temple masonry lying in it
+    thicket(-300, -486, 5, 10.2, true);
     thicket(-492.5, -566);
     thicket(-572, -676);
     thicket(-676, -718);
@@ -6135,12 +6227,19 @@ export class Level {
   // and clusters bake into one buffer each — a whole palm is three meshes.
 
   // Bake transformed copies of a geometry into one smooth-shaded buffer.
+  // A part may carry a TINT, which is baked in as a vertex colour rather than
+  // set on a material. That is what makes the library props' colour variety
+  // free: six shades of the same plant still merge into one mesh, where six
+  // materials would have been six draw calls. Parts without a tint get white,
+  // so a batch can mix tinted and untinted geometry.
   private static mergeGeos(
-    parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[],
+    parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4; tint?: THREE.Color }[],
   ): THREE.BufferGeometry {
     const pos: number[] = [];
     const norm: number[] = [];
     const uv: number[] = [];
+    const col: number[] = [];
+    const tinted = parts.some((p) => p.tint);
     const v = new THREE.Vector3();
     const nm = new THREE.Matrix3();
     for (const part of parts) {
@@ -6149,12 +6248,14 @@ export class Level {
       const p = g.attributes.position as THREE.BufferAttribute;
       const n = g.attributes.normal as THREE.BufferAttribute;
       const u = g.attributes.uv as THREE.BufferAttribute;
+      const t = part.tint;
       for (let i = 0; i < p.count; i++) {
         v.fromBufferAttribute(p, i).applyMatrix4(part.m);
         pos.push(v.x, v.y, v.z);
         v.fromBufferAttribute(n, i).applyNormalMatrix(nm).normalize();
         norm.push(v.x, v.y, v.z);
         uv.push(u.getX(i), u.getY(i));
+        if (tinted) col.push(t ? t.r : 1, t ? t.g : 1, t ? t.b : 1);
       }
       if (g !== part.geo) g.dispose();
     }
@@ -6162,6 +6263,8 @@ export class Level {
     out.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
     out.setAttribute("normal", new THREE.Float32BufferAttribute(norm, 3));
     out.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+    if (tinted)
+      out.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
     return out;
   }
 
@@ -6380,6 +6483,117 @@ export class Level {
     );
   }
 
+  // ---- THE PROP LIBRARY ----------------------------------------------------
+  // Six families of external mesh (see props.ts) placed through the same decor
+  // pipeline as everything else, so they capture, round-trip and batch exactly
+  // like a hand-built fern does.
+  //
+  // One material per SURFACE, not per prop and not per colour: every tree in
+  // the level shares the bark material and the leaf material, and the colour
+  // that makes one tree olive and the next one emerald rides in as a vertex
+  // attribute. Fifty-six models across six tint palettes still costs five
+  // draw calls a section.
+  private propMats = new Map<string, THREE.MeshLambertMaterial>();
+  private propMat(role: PropRoleName): THREE.MeshLambertMaterial {
+    let m = this.propMats.get(role);
+    if (m) return m;
+    m = new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true });
+    const kind =
+      role === "leaf"
+        ? "leaf"
+        : role === "bark"
+          ? "wood"
+          : role === "sawn"
+            ? "plank"
+            : role === "stone"
+              ? "stone"
+              : "dirt";
+    const tex =
+      role === "leaf" ? this.decorTexture("leaf") : this.surfaceTexture(kind);
+    // the box projection in props.ts already put the UVs in world scale, so
+    // the shared texture is used at repeat 1 and never cloned
+    m.map = tex;
+    // fronds and blade planes are single-sided in the source meshes
+    if (role === "leaf") m.side = THREE.DoubleSide;
+    this.propMats.set(role, m);
+    return m;
+  }
+
+  private static PROP_TINT = new THREE.Color();
+  /**
+   * Plant one library prop. Everything that makes it look unlike its
+   * neighbours — model, colour, size, spin, lean — comes in through the
+   * component, and anything left out is rolled from the seed.
+   */
+  private prop(family: PropFamily, c: CustomComponent): void {
+    const [x, y, z] = c.p;
+    const roll = propRoll(family, c.seed ?? Math.round(x * 71 + z * 131));
+    const vr = c.vr ?? roll.variant;
+    const tn = c.tn ?? roll.tint;
+    const w = c.w ?? 1;
+    const yaw = c.yaw ?? 0;
+    const tilt = c.amp ?? 0;
+    this.noteDecor(family, x, y, z, { vr, tn, w, yaw, amp: tilt, seed: c.seed });
+    if (this.liteDecor) return;
+    const surfaces = propSurfaces(family, vr);
+    if (!surfaces.length) return;
+    const tint = propTint(family, tn);
+    const s = (PROP_SCALE[family] ?? 1) * w;
+    // lean about the axis at right angles to the yaw, so a tilted plant leans
+    // away from the camera rather than always toward +x
+    const e = new THREE.Euler(
+      THREE.MathUtils.degToRad(tilt),
+      THREE.MathUtils.degToRad(yaw),
+      0,
+      "YXZ",
+    );
+    const m = new THREE.Matrix4().compose(
+      new THREE.Vector3(x, y, z),
+      new THREE.Quaternion().setFromEuler(e),
+      new THREE.Vector3(s, s, s),
+    );
+    for (const surf of surfaces) {
+      const hex = tint?.roles[surf.role];
+      this.putDecor(
+        `prop:${surf.role}`,
+        surf.geo,
+        this.propMat(surf.role),
+        m,
+        hex === undefined
+          ? undefined
+          : Level.PROP_TINT.setHex(hex, THREE.SRGBColorSpace).clone(),
+      );
+    }
+  }
+
+  /**
+   * Plant one library prop at (x, y, z) with everything else rolled from a
+   * seed. Builders call this rather than prop() directly: it is the whole
+   * point of the library that a scatter does not have to choose a model, a
+   * colour, a size, a spin and a lean for every single plant.
+   */
+  private propAt(
+    family: PropFamily,
+    x: number,
+    y: number,
+    z: number,
+    seed: number,
+    scale = 1,
+  ): void {
+    const roll = propRoll(family, seed);
+    const r = (n: number): number => Math.round(n * 100) / 100;
+    this.prop(family, {
+      t: "decor",
+      dkind: family,
+      p: [r(x), r(y), r(z)],
+      vr: roll.variant,
+      tn: roll.tint,
+      w: r(roll.w * scale),
+      yaw: Math.round(roll.yaw),
+      amp: Math.round(roll.tilt * 10) / 10,
+    });
+  }
+
   /** Build one decor component — the other half of noteDecor. */
   private decorProp(c: CustomComponent): void {
     const [x, y, z] = c.p;
@@ -6421,6 +6635,13 @@ export class Level {
         const half = (c.len ?? 13) / 2;
         return this.log(x - half, x + half, y, z);
       }
+      case "tree":
+      case "plants":
+      case "boulder":
+      case "rocks":
+      case "trunk":
+      case "slab":
+        return this.prop(c.dkind, c);
       case "block":
         return this.decorBlock(
           x,
@@ -6457,16 +6678,35 @@ export class Level {
   private batchDecor = false;
   private decorParts = new Map<
     string,
-    { mat: THREE.Material; parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] }
+    {
+      mat: THREE.Material;
+      parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4; tint?: THREE.Color }[];
+    }
   >();
   private putDecor(
     key: string,
     geo: THREE.BufferGeometry,
     mat: THREE.Material,
     m: THREE.Matrix4,
+    tint?: THREE.Color,
   ): void {
     if (!this.batchDecor) {
-      const mesh = new THREE.Mesh(geo, mat);
+      // Unbatched (the editor's pickable-mesh mode): the shared geometry has
+      // no room for this copy's tint, so give this one its own colour attribute
+      // over a clone. One prop, one mesh — the cost is already being paid.
+      let g = geo;
+      if (tint) {
+        g = geo.clone();
+        const n = g.attributes.position.count;
+        const col = new Float32Array(n * 3);
+        for (let i = 0; i < n; i++) {
+          col[i * 3] = tint.r;
+          col[i * 3 + 1] = tint.g;
+          col[i * 3 + 2] = tint.b;
+        }
+        g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+      }
+      const mesh = new THREE.Mesh(g, mat);
       m.decompose(mesh.position, mesh.quaternion, mesh.scale);
       this.root.add(mesh);
       return;
@@ -6476,7 +6716,7 @@ export class Level {
       b = { mat, parts: [] };
       this.decorParts.set(key, b);
     }
-    b.parts.push({ geo, m });
+    b.parts.push({ geo, m, tint });
   }
   /** Bake everything scattered since the last call into one mesh per shape. */
   private bakeDecor(): void {
