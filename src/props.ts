@@ -5,9 +5,9 @@
 // tools/bake-props.mjs. They were chosen because they suit this game
 // unusually well: eighty to four hundred triangles, and NO TEXTURES —
 // each surface is just a named material like 'woodBark' or 'leafsGreen'.
-// That means every one of them can wear the procedural textures from
-// textures.ts and take any colour we like, instead of dragging somebody
-// else's art direction into the level.
+// That means every one of them can wear this game's own surface textures and
+// take any colour we like, instead of dragging somebody else's art direction
+// into the level.
 //
 // What this module adds on top of the raw meshes is the VARIETY. A model on
 // its own is one silhouette; the same model with a family scale, a size
@@ -197,9 +197,9 @@ const GEO = new Map<string, PropSurface[]>();
 /**
  * BOX PROJECTION. The kits ship UVs pointing into a swatch atlas we are not
  * using, so they are regenerated: each vertex is projected down whichever axis
- * its normal leans hardest along. On a hundred-triangle model under a noisy
- * procedural texture the seams that costs are invisible, and it means one
- * texture tiles correctly over a boulder, a column and a palm trunk alike.
+ * its normal leans hardest along. On a hundred-triangle model at corridor
+ * range the seams that costs are invisible, and it means one texture tiles
+ * correctly over a boulder, a column and a palm trunk alike.
  */
 function project(
   pos: Float32Array,
