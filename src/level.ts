@@ -4852,25 +4852,40 @@ export class Level {
             this.fern(cx + side * (inset + 1.9 + d * 2.6), y, z + d * 4 - 2, 0.9 + d);
           else if (d < 0.86)
             this.broadleaf(cx + side * (inset + 2.2 + c * 2.4), y, z - d * 3, 1.1 + c * 0.8);
-          // ROW 2 — the canopy that closes the corridor overhead
-          if (b < 0.66)
-            this.jungleTree(
-              cx + side * (inset + 3.2 + c * 6),
-              y,
-              z + a * 4 - 2,
-              8 + c * 5,
-              side * (0.03 + a * 0.08),
-            );
+          // ROW 2 — the canopy that closes the corridor overhead.
           // ROW 3 — a taller, deeper rank: without it the greenery reads as a
-          // painted fringe with sky behind it instead of as a jungle
-          if (a > 0.3)
-            this.jungleTree(
-              cx + side * (inset + 9.4 + b * 8),
-              y - 0.35,
-              z + c * 6 - 3,
-              11 + a * 7,
-              side * (0.02 + c * 0.06),
-            );
+          // painted fringe with sky behind it instead of as a jungle.
+          //
+          // Both ranks used to be the hand-built jungleTree and nothing else,
+          // which is four hundred and forty-one copies of ONE silhouette
+          // standing in a row — and no amount of scale jitter hides that. They
+          // now come out of the library nine times in twelve, so the canopy is
+          // palms and figs and flat-tops and slender trunks, and the original
+          // tree is one voice in it rather than the whole choir.
+          const libTree = (
+            ox: number,
+            oy: number,
+            oz: number,
+            h: number,
+            slot2: number,
+          ): void => {
+            if (rnd(k + slot2) < 0.25) {
+              this.jungleTree(cx + side * ox, y + oy, z + oz, h, side * (0.03 + a * 0.08));
+            } else {
+              this.propAt(
+                "tree",
+                cx + side * ox,
+                y + oy,
+                z + oz,
+                k * 977 + slot2,
+                h / 11, // the family stands ~11u tall at scale 1
+                undefined,
+                side * (1.5 + rnd(k + slot2 + 7) * 4), // canopies lean off the bank
+              );
+            }
+          };
+          if (b < 0.66) libTree(inset + 3.2 + c * 6, 0, a * 4 - 2, 8 + c * 5, 401);
+          if (a > 0.3) libTree(inset + 9.4 + b * 8, -0.35, c * 6 - 3, 11 + a * 7, 409);
           if (c > 0.62)
             this.vines(
               cx + side * (inset + 1.1 + a * 2),
@@ -4924,7 +4939,11 @@ export class Level {
               k * 977 + 23,
               0.85 + b * 0.45,
             );
-          if (c > 0.82)
+          // Boulders and fallen trunks were the two families barely getting
+          // used — fifty-four and thirty-two across six hundred metres of
+          // course, which is not a jungle floor, it is a garnish. A fallen
+          // trunk in particular is one of the shapes this level was asked for.
+          if (c > 0.68)
             this.propAt(
               "boulder",
               cx + side * (inset + 2.6 + a * 3.2),
@@ -4941,7 +4960,7 @@ export class Level {
               jz - 1.3,
               k * 977 + 53,
             );
-          if (a > 0.88)
+          if (a > 0.66)
             this.propAt(
               "trunk",
               cx + side * (inset + 3 + b * 2.6),
@@ -7100,7 +7119,12 @@ export class Level {
       cap.translate(0, 0.6, 0);
       Level.toadCapGeo = cap;
       // spots ride ON the dome, so each one is placed by spherical angle
-      const dot = new THREE.SphereGeometry(0.085, 6, 5);
+      // 4x3, not 6x5. This is an eight-centimetre dot on a mushroom cap seen
+      // from five metres, and at 6x5 the seven of them were forty-eight
+      // triangles each — a hundred and thirty THOUSAND triangles of mushroom
+      // spot across the jungle, more than every tree in the level put
+      // together. At 4x3 they are indistinguishable and cost a twentieth.
+      const dot = new THREE.SphereGeometry(0.085, 4, 3);
       const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
       for (let i = 0; i < 7; i++) {
         const th = (i / 7) * Math.PI * 2 + 0.6;
