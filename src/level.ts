@@ -6,6 +6,7 @@
 
 import * as THREE from "three";
 import { Rail } from "./rails";
+import { onRefined, paintTexture, PROCEDURAL } from "./textures";
 import { Halfpipe } from "./halfpipe";
 import {
   createWarpPad,
@@ -1726,6 +1727,20 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    // The rewritten materials (see textures.ts) are painted per pixel from
+    // tiling noise instead of stamped out of canvas blobs. 256 REAL texels
+    // beat the old 128 supersampled 4x: a quarter of the pixels to fill, and
+    // the detail is generated rather than blurred up out of smaller marks.
+    const proc = PROCEDURAL[kind] ? paintTexture(kind, 256) : null;
+    if (proc) {
+      const t = Level.finishTex(new THREE.CanvasTexture(proc));
+      // it comes back soft and sharpens a few frames later, off the build
+      onRefined(kind, 256, () => {
+        t.needsUpdate = true;
+      });
+      this.surfTexCache.set(kind, t);
+      return t;
+    }
     const soft =
       kind === "grass" ||
       kind === "jungle" ||
@@ -6203,6 +6218,15 @@ export class Level {
   private decorTexture(kind: "leaf" | "moss"): THREE.CanvasTexture {
     const cached = this.decorTexCache.get(kind);
     if (cached) return cached;
+    const proc = PROCEDURAL[kind] ? paintTexture(kind, 256) : null;
+    if (proc) {
+      const t = Level.finishTex(new THREE.CanvasTexture(proc));
+      onRefined(kind, 256, () => {
+        t.needsUpdate = true;
+      });
+      this.decorTexCache.set(kind, t);
+      return t;
+    }
     const S = 128;
     const canvas = document.createElement("canvas");
     canvas.width = S;
@@ -9478,7 +9502,7 @@ export class Level {
           new THREE.MeshLambertMaterial({ color: slippy ? iceCol : woodCol }),
           w,
           d,
-          "wood",
+          "plank", // 'wood' is bark now — a rope bridge wants sawn timber
         ),
       );
       mesh.position.set(0, -0.25, z);

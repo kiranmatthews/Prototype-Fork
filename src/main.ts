@@ -31,6 +31,7 @@ import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile } from "./replay";
 import { Editor } from "./editor";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { flushTextures } from "./textures";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -1975,4 +1976,7 @@ frame();
   restoreBuiltin,
   getCurrentLevel: () => current,
   GLTFLoader, // debug: inspect model files from the console/harness
+  // surface textures sharpen a few frames after a build; a screenshot harness
+  // that freezes the clock has to be able to ask for them finished
+  flushTextures,
 };
