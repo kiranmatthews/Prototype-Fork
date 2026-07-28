@@ -46,8 +46,11 @@ export const PROP_FAMILY_LABELS: Record<PropFamily, string> = {
  * as a whole keeps the artists' relative sizes intact.
  */
 export const PROP_SCALE: Record<PropFamily, number> = {
+  // A jungle plant in the reference art is not a shrub you walk past, it is a
+  // single leaf the size of the player crowding into frame. At 4 these read as
+  // garden bedding; at 7.5 one frond fills the bottom corner the way it should.
   tree: 8,
-  plants: 4,
+  plants: 7.5,
   boulder: 5,
   rocks: 5,
   trunk: 5,
@@ -83,22 +86,29 @@ const T = (
   roles: Partial<Record<PropRoleName, number>>,
 ): PropTint => ({ name, roles });
 
+// The reference is a SATURATED jungle: mid-greens that are properly green,
+// dropping to near-black in shadow, against warm ochre earth and pale grey
+// stone. The first pass had washed-out yellows in it — 'sun-bleached',
+// 'dry' — and a handful of those in a thicket greys the whole wall out. The
+// pale entries are still here for variation but they have been pulled back
+// toward green, and the darks have been pushed further down, because it is
+// the RANGE from lit to shadowed that makes a canopy read as deep.
 export const PROP_TINTS: Record<PropFamily, PropTint[]> = {
   tree: [
-    T("jungle green", { leaf: 0x5aa83c, bark: 0x8a6b47 }),
-    T("deep canopy", { leaf: 0x2f6f31, bark: 0x6d5238 }),
-    T("olive", { leaf: 0x7d9a3c, bark: 0x9b7a52 }),
-    T("emerald", { leaf: 0x2fa05c, bark: 0x7a5f40 }),
-    T("sun-bleached", { leaf: 0xa8c46a, bark: 0xc0a077 }),
-    T("dark rot", { leaf: 0x35502c, bark: 0x4f4030 }),
+    T("jungle green", { leaf: 0x4fae33, bark: 0x8a6b47 }),
+    T("deep canopy", { leaf: 0x256b26, bark: 0x6a4f34 }),
+    T("olive", { leaf: 0x6f9c2e, bark: 0x9b7a52 }),
+    T("emerald", { leaf: 0x22a054, bark: 0x74593b }),
+    T("sunlit", { leaf: 0x8ac93f, bark: 0xb59468 }),
+    T("deep shade", { leaf: 0x1d4423, bark: 0x453824 }),
   ],
   plants: [
-    T("fresh green", { leaf: 0x62b845 }),
-    T("deep frond", { leaf: 0x35803a }),
-    T("lime", { leaf: 0x93cc4a }),
-    T("blue-green", { leaf: 0x36a37c }),
-    T("dry", { leaf: 0xb4b04e }),
-    T("shade", { leaf: 0x2c6640 }),
+    T("fresh green", { leaf: 0x5cc23f }),
+    T("deep frond", { leaf: 0x2b7d31 }),
+    T("lime", { leaf: 0x8fd63c }),
+    T("blue-green", { leaf: 0x24a072 }),
+    T("olive frond", { leaf: 0x86a634 }),
+    T("shade", { leaf: 0x1f5c33 }),
   ],
   boulder: [
     T("mossy granite", { stone: 0x9aa39c, dirt: 0x8a8175, leaf: 0x548b3e }),
@@ -121,13 +131,17 @@ export const PROP_TINTS: Record<PropFamily, PropTint[]> = {
     T("mossed over", { bark: 0x6e7a4a, sawn: 0xa8a06e }),
     T("red cedar", { bark: 0x8e563a, sawn: 0xd0a279 }),
   ],
+  // The temple's own walls are sandstone (wallTint 0xa79f7e), and cool grey
+  // masonry standing next to them reads as a different building. So the slab
+  // palette runs warm — sand, ochre, bone — with two mossed entries for the
+  // pieces the forest has taken back, and nothing neutral-grey left in it.
   slab: [
-    T("weathered stone", { stone: 0xbdb9a8 }),
-    T("mossy masonry", { stone: 0x94a189 }),
-    T("sun-warmed", { stone: 0xd2c4a0 }),
-    T("dark basalt", { stone: 0x7e7a74 }),
+    T("weathered sandstone", { stone: 0xc4b795 }),
+    T("mossy masonry", { stone: 0x93a276 }),
+    T("sun-warmed", { stone: 0xd6c49a }),
+    T("deep moss", { stone: 0x6f8055 }),
     T("ochre", { stone: 0xc09a63 }),
-    T("bone pale", { stone: 0xe0dbcb }),
+    T("bone pale", { stone: 0xe2dac2 }),
   ],
 };
 
@@ -142,6 +156,17 @@ export function propModel(family: string, variant: number): PropModel | null {
   if (!list.length) return null;
   const i = Math.floor(variant);
   return list[((i % list.length) + list.length) % list.length];
+}
+
+/**
+ * Which slot a named model sits in. Builders that want a SPECIFIC shape — a
+ * colonnade wants uprights, not rubble — name it rather than hardcoding an
+ * index, so reordering the roster cannot silently turn a row of columns into
+ * a row of flagstones.
+ */
+export function propVariant(family: string, id: string): number {
+  const i = propModels(family).findIndex((m) => m.id === id);
+  return i < 0 ? 0 : i;
 }
 
 export function propTint(family: string, tint: number): PropTint | null {

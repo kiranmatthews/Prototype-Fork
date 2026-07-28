@@ -12,6 +12,7 @@ import {
   PropFamily,
   PropRoleName,
   propRoll,
+  propVariant,
   propSurfaces,
   propTint,
 } from "./props";
@@ -4684,11 +4685,143 @@ export class Level {
             d + 0.15,
           );
         // shoulders: tops tucked up INSIDE the berm's own height so the seam
-        // between path and jungle floor never opens from a low camera
-        push(20, -(inset + 10), cy + 0.35);
-        push(20, inset + 10, cy + 0.35);
+        // between path and jungle floor never opens from a low camera.
+        // 34 wide, not 20 — the far treeline stands on the outer end of this,
+        // and a rank of trunks with nothing under it shows daylight below the
+        // trunks, which is the level's own edge in frame.
+        push(34, -(inset + 17), cy + 0.35);
+        push(34, inset + 17, cy + 0.35);
         // and the mass under the path, capped below its deepest bump
         if (underW > 0) push(underW, 0, cy - 0.62);
+      }
+    };
+
+    // ---- THE FAR TREELINE --------------------------------------------------
+    // Past the last rank of trunks the jungle used to stop, and from a low
+    // camera you could see straight out of the world at knee height — 17 of
+    // 108 sampled sightlines did. What closes it is not more trees: it is a
+    // band of deep-green massing standing behind them, which under this
+    // level's green haze reads as jungle going on forever and costs twelve
+    // triangles a chunk where another three hundred trees would have cost
+    // sixty thousand.
+    //
+    // The TOP EDGE is the whole trick. A band of even height is a wall; this
+    // one steps every chunk and overlaps its neighbours, so what you see over
+    // the canopy is a ragged treeline against the sky. Two ranks, the further
+    // one taller and darker, because one flat silhouette has no depth in it.
+    const treeline = (
+      zNear: number,
+      zFar: number,
+      base = 0,
+      inset = 27,
+    ): void => {
+      const depth = Math.abs(zNear - zFar);
+      const n = Math.max(2, Math.round(depth / 8));
+      const d = depth / n;
+      for (let i = 0; i < n; i++) {
+        const zm = zNear - d * (i + 0.5);
+        const cy = base + gy(zm);
+        for (const side of [-1, 1]) {
+          const k = (i * 2 + (side > 0 ? 1 : 0)) * 13;
+          // near rank: broken, mid green, tops between 15 and 23
+          const h1 = 15 + rnd(k) * 8;
+          this.decorBlock(
+            gx(zm) + side * (inset + rnd(k + 3) * 3),
+            cy + h1 / 2 - 2,
+            zm,
+            9 + rnd(k + 7) * 4,
+            h1,
+            d * 1.25,
+            0x2f6b2c,
+            "jungle",
+          );
+          // far rank: taller, darker, set back — the depth cue that stops the
+          // near one reading as a painted flat
+          const h2 = 22 + rnd(k + 11) * 10;
+          this.decorBlock(
+            gx(zm) + side * (inset + 11 + rnd(k + 17) * 4),
+            cy + h2 / 2 - 2,
+            zm + (rnd(k + 23) - 0.5) * d,
+            12 + rnd(k + 29) * 6,
+            h2,
+            d * 1.4,
+            0x1d4a26,
+            "jungle",
+          );
+        }
+      }
+    };
+
+    // ---- THE COLONNADE -----------------------------------------------------
+    // An avenue of masonry the forest has grown up through, standing just
+    // outside the undergrowth on both flanks. The point is RHYTHM: scattered
+    // stones read as debris, but a repeating beat reads as something that was
+    // BUILT here and then lost, which is the story the level is telling. So
+    // the uprights land on a fixed interval, every third pair squares off
+    // directly opposite to make a gateway, and the beat is dressed with
+    // fallen pieces at the feet so it never looks like fenceposts.
+    const UPRIGHT = [
+      "statue_column",
+      "statue_columnDamaged",
+      "pillar-square",
+      "pillar-obelisk",
+      "ruins#Column_Round_Short",
+      "statue_obelisk",
+    ].map((id) => propVariant("slab", id));
+    // the plants with mass in them, for anything that has to hang over the path
+    const ARCHING = [
+      "plant_bushDetailed",
+      "plant_bushLargeTriangle",
+      "plant_bushLarge",
+      "grass_leafsLarge",
+      "bigleaf",
+    ].map((id) => propVariant("plants", id));
+    const FALLEN = [
+      "debris",
+      "ruins#Bricks",
+      "ruins#Floor_Diamond",
+      "cobble",
+      "platform_stone",
+      "path_stoneCircle",
+    ].map((id) => propVariant("slab", id));
+    const colonnade = (
+      zNear: number,
+      zFar: number,
+      base = 0,
+      inset = 12.5,
+      step = 16,
+    ): void => {
+      const n = Math.max(1, Math.round(Math.abs(zNear - zFar) / step));
+      for (let i = 0; i < n; i++) {
+        const z = zNear - (Math.abs(zNear - zFar) * (i + 0.5)) / n;
+        const cy = base + gy(z) + 0.2;
+        const paired = i % 3 === 0; // every third beat is a gateway
+        for (const side of [-1, 1]) {
+          const k = i * 197 + (side > 0 ? 61 : 0);
+          if (!paired && (i + (side > 0 ? 1 : 0)) % 2 === 0) continue;
+          const off = inset + rnd(k) * 2.2;
+          this.propAt(
+            "slab",
+            gx(z) + side * off,
+            cy,
+            z + (rnd(k + 5) - 0.5) * 3,
+            k,
+            0.85 + rnd(k + 9) * 0.5,
+            UPRIGHT,
+            side * (rnd(k + 13) * 7 - 2), // most lean out, a few lean in
+          );
+          // something down at its foot, so the upright has a story
+          if (rnd(k + 17) > 0.35)
+            this.propAt(
+              "slab",
+              gx(z) + side * (off - 1.6 - rnd(k + 21) * 2.4),
+              cy - 0.15,
+              z + (rnd(k + 25) - 0.5) * 5,
+              k + 3,
+              0.8 + rnd(k + 29) * 0.6,
+              FALLEN,
+            );
+        }
       }
     };
 
@@ -4777,6 +4910,25 @@ export class Level {
               jz + 0.9,
               k * 977 + 11,
               0.85 + c * 0.6,
+            );
+          // FOREGROUND OVERHANG. A big frond up on the bank, leaning IN over
+          // the path. This is what frames the corridor top-left and top-right
+          // the way the reference does — without it the greenery is a wall you
+          // run between rather than a canopy you run under, however dense it
+          // gets. Leans toward -x on the right flank and +x on the left, so
+          // both sides reach across.
+          // Only the BUSHY models: a couple of these plants are flat fans, and
+          // a flat fan tipped forty degrees is a signboard, not a frond.
+          if (c > 0.5)
+            this.propAt(
+              "plants",
+              cx + side * (inset + 0.9 + a * 1.9),
+              y + 3.0 + b * 2.2,
+              jz - 1.1,
+              k * 977 + 131,
+              0.95 + a * 0.45,
+              ARCHING,
+              side * (15 + b * 15),
             );
           if (a > 0.52)
             this.propAt(
@@ -5000,20 +5152,36 @@ export class Level {
     this.fern(6.5, 0, -310, 1.2);
 
     // ---- PLANTING ----------------------------------------------------------
-    thicket(14, -34);
-    thicket(-39.5, -104);
-    thicket(-110, -176);
-    thicket(-176, -236); // the ravine gets a canopy too — it is a cut, not a void
-    // the approach: masonry starts showing up in the undergrowth BEFORE the
-    // temple, because once you are inside the climb its own walls are all you
-    // can see and the ruins on the high ground outside never read
-    thicket(-236, -300, 0, 6.3, true);
-    // on the high ground outside the ruin walls — and the only stretch that
-    // gets the temple masonry lying in it
-    thicket(-300, -486, 5, 10.2, true);
-    thicket(-492.5, -566);
-    thicket(-572, -676);
-    thicket(-676, -718);
+    // Four depths, every stretch, and they are four different jobs. UNDERGROWTH
+    // and canopy crowd the kerb; the COLONNADE stands behind that and gives the
+    // corridor its architecture; the TREELINE closes every sightline that gets
+    // past both. Read outward from the path: leaves, trunks, stone, forest.
+    const stretches: [number, number, number, number, boolean][] = [
+      // zNear, zFar, base, inset, ruins lying in the undergrowth
+      [14, -34, 0, 6.3, false],
+      [-39.5, -104, 0, 6.3, false],
+      [-110, -176, 0, 6.3, false],
+      // the ravine gets a canopy too — it is a cut, not a void
+      [-176, -236, 0, 6.3, false],
+      // the approach: masonry starts showing up in the undergrowth BEFORE the
+      // temple, because once you are inside the climb its own walls are all you
+      // can see and the ruins on the high ground outside never read
+      [-236, -300, 0, 6.3, true],
+      // on the high ground outside the ruin walls
+      [-300, -486, 5, 10.2, true],
+      [-492.5, -566, 0, 6.3, false],
+      [-572, -676, 0, 6.3, false],
+      [-676, -718, 0, 6.3, false],
+    ];
+    for (const [zn, zf, base, inset, ruins] of stretches) {
+      // the treeline OVERLAPS its neighbours by 9 units. Butt-joined, the seam
+      // between two stretches opened a slot you could see straight through —
+      // and the worst of them was exactly where the temple steps back down to
+      // the run home, because there the two bands are at different heights too
+      treeline(zn + 9, zf - 9, base, inset + 21);
+      colonnade(zn, zf, base, inset + 6.2);
+      thicket(zn, zf, base, inset, ruins); // flushes the batch for the stretch
+    }
 
     // ---- FURNITURE ---------------------------------------------------------
     // Every seat below raycasts the terrain through floorY, and a mesh built
@@ -6542,13 +6710,17 @@ export class Level {
     if (!surfaces.length) return;
     const tint = propTint(family, tn);
     const s = (PROP_SCALE[family] ?? 1) * w;
-    // lean about the axis at right angles to the yaw, so a tilted plant leans
-    // away from the camera rather than always toward +x
+    // ZXY, so the yaw spins the model about its OWN axis and the lean is then
+    // applied about world Z — a fixed direction across the course. Under the
+    // old order the lean axis rode along with a random yaw, which is fine for
+    // a wobble but useless for the thing that actually dresses a corridor:
+    // a frond up on the bank hanging IN over the path. Positive leans toward
+    // -x, so a prop on the right flank wants a positive lean to reach in.
     const e = new THREE.Euler(
-      THREE.MathUtils.degToRad(tilt),
-      THREE.MathUtils.degToRad(yaw),
       0,
-      "YXZ",
+      THREE.MathUtils.degToRad(yaw),
+      THREE.MathUtils.degToRad(tilt),
+      "ZXY",
     );
     const m = new THREE.Matrix4().compose(
       new THREE.Vector3(x, y, z),
@@ -6582,6 +6754,8 @@ export class Level {
     z: number,
     seed: number,
     scale = 1,
+    pick?: number[], // choose only from these models, e.g. the columns
+    lean = 0, // extra tilt, for foliage that hangs IN over the path
   ): void {
     const roll = propRoll(family, seed);
     const r = (n: number): number => Math.round(n * 100) / 100;
@@ -6589,11 +6763,11 @@ export class Level {
       t: "decor",
       dkind: family,
       p: [r(x), r(y), r(z)],
-      vr: roll.variant,
+      vr: pick ? pick[roll.variant % pick.length] : roll.variant,
       tn: roll.tint,
       w: r(roll.w * scale),
       yaw: Math.round(roll.yaw),
-      amp: Math.round(roll.tilt * 10) / 10,
+      amp: Math.round((roll.tilt + lean) * 10) / 10,
     });
   }
 
