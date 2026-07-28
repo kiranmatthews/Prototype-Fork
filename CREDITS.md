@@ -33,6 +33,23 @@ To rebuild it, download the kits and run:
 node tools/bake-props.mjs <dir-of-glbs>... > src/prop-data.ts
 ```
 
+## HUD display face
+
+Not third-party either, but worth recording where it came from. The HUD
+lettering is cut from two hand-drawn alphabet sheets, kept at full resolution
+in `art/hudfont-sheet1.png` and `art/hudfont-sheet2.png`. They are the only
+copy of that artwork, which is why the source sits in the repository rather
+than just the atlas built from it.
+
+```
+node tools/bake-hudfont.mjs art/hudfont-sheet1.png art/hudfont-sheet2.png
+```
+
+That writes `public/hudfont.png` and `src/hudfont-data.ts`. The sheets carry
+duplicates (F, G, I, L and R are each drawn twice) and two gaps: there is no Y
+and no `+`, both of which the baker grafts from the face's own strokes — the Y
+from its V over its I, the `+` from crossed copies of its dash.
+
 ## Everything else
 
 Levels, physics, the character rig, the surface textures, the editor and the

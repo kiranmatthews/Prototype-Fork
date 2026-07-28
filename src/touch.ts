@@ -408,6 +408,18 @@ export class TouchControls {
       body.tc-on .hud-balance { width: 170px; bottom: 31%; }
       body.tc-on .hud-vbalance { left: calc(50% + 72px); bottom: 29%; height: 110px; }
       body.tc-on .hud-death { font-size: 34px; }
+      /* The HUD readouts are drawn glyphs now (hudfont.ts), not text: an
+         outline, an inline and a fill inside each letter. The sizes above were
+         picked for flat type and turn those into smudges on a phone, so the
+         small ones step up — and GAME OVER, which the desktop rule sets to
+         76px, has to come back down to fit a portrait screen. */
+      body.tc-on .hud-scorelabel { font-size: 13px; }
+      body.tc-on .hud-scorenum { font-size: 21px; }
+      body.tc-on .hud-ttfreeze { font-size: 14px; }
+      body.tc-on .hud-trickline { font-size: 20px; }
+      body.tc-on .hud-tricktotal { font-size: 26px; }
+      body.tc-on .hud-boostlabel { font-size: 13px; }
+      body.tc-on .hud-death-title { font-size: 40px; }
 
       /* ---------- panels that actually fit a phone ---------- */
       body.tc-on .hud-stats {

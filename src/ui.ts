@@ -2,6 +2,7 @@
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import { levelList } from "./level";
+import { setRasterText } from "./hudfont";
 import {
   TUNING,
   TUNING_RANGES,
@@ -484,7 +485,7 @@ export class UI {
     // top-center: score plate
     const scorePlate = div("hud-scoreplate");
     const scoreLabel = div("hud-scorelabel");
-    scoreLabel.textContent = "SCORE";
+    setRasterText(scoreLabel, "SCORE");
     this.scoreEl = div("hud-scorenum");
     scorePlate.appendChild(scoreLabel);
     scorePlate.appendChild(this.scoreEl);
@@ -515,7 +516,7 @@ export class UI {
     this.boostRing = div("hud-boostring");
     boosts.appendChild(this.boostRing);
     const boostLab = div("hud-boostlabel");
-    boostLab.textContent = "BALANCE";
+    setRasterText(boostLab, "BALANCE");
     boosts.appendChild(boostLab);
     boosts.style.display = "none";
     this.boostRingWrap = boosts;
@@ -539,9 +540,12 @@ export class UI {
 
     // black game-over screen: any button restarts
     this.deathEl = div("hud-death");
-    this.deathEl.innerHTML =
-      '<div class="hud-death-title">GAME OVER</div>' +
-      '<div class="hud-death-sub">press any button</div>';
+    const deathTitle = div("hud-death-title");
+    setRasterText(deathTitle, "GAME OVER");
+    const deathSub = div("hud-death-sub");
+    deathSub.textContent = "press any button";
+    this.deathEl.appendChild(deathTitle);
+    this.deathEl.appendChild(deathSub);
     this.deathEl.style.display = "none";
 
     // THPS-style grind balance meter (visible only while grinding).
@@ -660,7 +664,7 @@ export class UI {
     this.comboState = "active";
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.remove("hud-trick-bail");
-    this.trickLineEl.textContent = s.tricks.toUpperCase();
+    setRasterText(this.trickLineEl, s.tricks);
   }
 
   private endCombo(): void {
@@ -686,8 +690,8 @@ export class UI {
     this.comboBailEnd = performance.now() + 700;
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.add("hud-trick-bail");
-    this.trickLineEl.textContent = "BAILED!";
-    this.trickTotalEl.textContent = "NO";
+    setRasterText(this.trickLineEl, "BAILED!");
+    setRasterText(this.trickTotalEl, "NO");
   }
 
   setHUD(s: HudState): void {
@@ -696,15 +700,15 @@ export class UI {
     if (s.points > this.prevHud.points && this.prevHud.points >= 0)
       pop(this.scoreEl);
     this.dispScore = this.ticker(this.dispScore, s.points);
-    this.scoreEl.textContent = String(Math.round(this.dispScore));
+    setRasterText(this.scoreEl, String(Math.round(this.dispScore)));
     this.prevHud.points = s.points;
     if (s.crates !== this.prevHud.crates) {
-      this.cratesEl.textContent = s.crates;
+      setRasterText(this.cratesEl, s.crates);
       pop(this.cratesEl);
       this.prevHud.crates = s.crates;
     }
     if (s.fruit !== this.prevHud.fruit) {
-      this.wumpaEl.textContent = String(s.fruit);
+      setRasterText(this.wumpaEl, String(s.fruit));
       pop(this.wumpaEl);
       this.prevHud.fruit = s.fruit;
     }
@@ -724,7 +728,7 @@ export class UI {
       this.prevHud.gem = s.hasGem;
     }
     if (s.lives !== this.prevHud.lives) {
-      this.livesEl.textContent = String(s.lives);
+      setRasterText(this.livesEl, String(s.lives));
       pop(this.livesEl);
       this.prevHud.lives = s.lives;
     }
@@ -738,7 +742,7 @@ export class UI {
         this.startCombo(s); // a fresh combo interrupts the cash-in
       } else {
         this.dispCombo = this.ticker(this.dispCombo, 0);
-        this.trickTotalEl.textContent = String(Math.round(this.dispCombo));
+        setRasterText(this.trickTotalEl, String(Math.round(this.dispCombo)));
         if (this.dispCombo <= 0) this.endCombo();
       }
     } else if (this.comboState === "bail") {
@@ -747,7 +751,10 @@ export class UI {
     } else if (show) {
       this.startCombo(s);
       this.dispCombo = this.ticker(this.dispCombo, s.comboPoints * s.comboMult);
-      this.trickTotalEl.textContent = `${Math.round(this.dispCombo)}  ×${s.comboMult}`;
+      setRasterText(
+        this.trickTotalEl,
+        `${Math.round(this.dispCombo)}  ×${s.comboMult}`,
+      );
     } else if (this.comboState === "active") {
       this.endCombo(); // combo fizzled with no bank/bail signal
     }
@@ -930,7 +937,7 @@ export class UI {
 
   // durationMs = 0 keeps the message up until the next showMessage/hide.
   showMessage(title: string, sub: string, durationMs: number): void {
-    this.msgTitle.textContent = title;
+    setRasterText(this.msgTitle, title);
     this.msgSub.textContent = sub;
     this.msgWrap.style.display = "block";
     if (this.msgTimer !== undefined) window.clearTimeout(this.msgTimer);
@@ -1007,10 +1014,13 @@ export class UI {
   // clock goes ice-blue while a time crate's freeze is counting down.
   updateTTClock(t: number, freeze: number): void {
     if (!this.ttOn) return;
-    (this.ttClockEl.firstChild as HTMLElement).textContent = UI.fmtTime(t);
+    setRasterText(this.ttClockEl.firstChild as HTMLElement, UI.fmtTime(t));
     const frozen = freeze > 0;
     this.ttClockEl.classList.toggle("hud-tt-frozen", frozen);
-    this.ttFreezeEl.textContent = frozen ? `FROZEN ${freeze.toFixed(1)}s` : "";
+    setRasterText(
+      this.ttFreezeEl,
+      frozen ? `FROZEN ${freeze.toFixed(1)}S` : "",
+    );
   }
 
   // Ranked times at the gate: this run slots into the level's best list.
@@ -1496,6 +1506,55 @@ export class UI {
         text-shadow: 1px 0 0 #101820, -1px 0 0 #101820, 0 1px 0 #101820, 0 -1px 0 #101820;
       }
       .hud-boost-low { animation: boostblink 0.3s steps(2, start) infinite; }
+
+      /* ---- raster display face ------------------------------------------
+         The readouts above are drawn glyph-by-glyph from public/hudfont.png
+         (see hudfont.ts), so the rules that shape TEXT no longer bite: a
+         text-shadow can't reach a background image, and colour/letter-spacing
+         have nothing to act on. The size still comes from each rule's own
+         font-size, which keeps every clamp() above driving the layout. What's
+         left to restate here is the shadow, as a filter, the two state colours
+         the face can't carry itself, and a zero line-height — with no text in
+         the box the font's own leading is dead space that would otherwise push
+         the counter rows apart. */
+      .hud-num, .hud-scorenum, .hud-scorelabel, .hud-tttime, .hud-ttfreeze,
+      .hud-trickline, .hud-tricktotal, .hud-msg-title, .hud-death-title,
+      .hud-boostlabel {
+        line-height: 0;
+      }
+      /* Both plates are centred with left:50% and no width, so their
+         shrink-to-fit space is only HALF the viewport — which a wrapping glyph
+         row obeys, folding a title in two long before it needed to. Give them
+         the real width to lay out against; the transform still centres them. */
+      .hud-msg, .hud-trickplate { width: 94vw; max-width: 94vw; }
+      .hud-death-title { max-width: 94vw; }
+      .hud-trickline { overflow: visible; }
+      .hud-num, .hud-scorenum, .hud-tttime, .hud-tricktotal,
+      .hud-trickline, .hud-msg-title, .hud-death-title {
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.75))
+                drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
+      }
+      .hud-scorelabel, .hud-ttfreeze, .hud-boostlabel {
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.8));
+      }
+      /* The small labels were sized for flat text. A drawn glyph carries an
+         outline, an inline and a fill, so it needs more pixels than that
+         before it reads as a letter at all. */
+      .hud-scorelabel { font-size: clamp(15px, 2.4vh, 21px); }
+      .hud-ttfreeze { font-size: clamp(16px, 2.4vh, 22px); margin-top: 1px; }
+      .hud-boostlabel { font-size: 16px; }
+      /* Same reason, one step up: the trick line and the GAME OVER card both
+         sat at a size the drawn face reads as thin at. */
+      .hud-trickline { font-size: clamp(23px, 4vh, 36px); }
+      .hud-death-title { font-size: 76px; }
+      /* Frozen clock and bailed combo used to recolour the text. The drawn
+         face has its own colours, so the state reads as a glow instead. */
+      .hud-tt-frozen .hud-tttime {
+        filter: drop-shadow(0 0 9px #6ee6ff) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.7));
+      }
+      .hud-trick-bail .hud-trickline, .hud-trick-bail .hud-tricktotal {
+        filter: drop-shadow(0 0 10px #ff3b30) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+      }
       @keyframes boostblink { to { opacity: 0.35; } }
 
       .hud-balance {
