@@ -1264,8 +1264,6 @@ export class UI {
       .hud-num {
         font: italic 900 clamp(44px, 8.5vh, 78px) Impact, 'Arial Black', sans-serif;
         color: #ffb43a; letter-spacing: 2px; transform: skewX(-6deg);
-        text-shadow: 3px 0 0 #3a1c05, -3px 0 0 #3a1c05, 0 3px 0 #3a1c05,
-          0 -3px 0 #3a1c05, 0 5px 10px rgba(0, 0, 0, 0.65);
       }
       .hud-icon {
         width: clamp(52px, 9.5vh, 84px); height: clamp(52px, 9.5vh, 84px);
@@ -1332,14 +1330,12 @@ export class UI {
       .hud-scorelabel {
         font: italic bold clamp(10px, 1.7vh, 14px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px;
-        color: #ffd24a; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.75);
+        color: #ffd24a;
       }
       .hud-scorenum {
         font: italic 900 clamp(20px, 3.6vh, 32px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 2px;
         color: #ffe9b0;
-        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 0 4px 8px rgba(0, 0, 0, 0.6);
       }
 
       /* TIME TRIAL: big top-center clock — bare gold digits like the score,
@@ -1352,14 +1348,11 @@ export class UI {
       .hud-tttime {
         font: italic 900 clamp(40px, 7.5vh, 66px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px; color: #f2f7ff;
-        text-shadow: 3px 0 0 #101820, -3px 0 0 #101820, 0 3px 0 #101820,
-          0 -3px 0 #101820, 0 5px 12px rgba(0, 0, 0, 0.6);
       }
       .hud-tt-frozen .hud-tttime { color: #6ee6ff; }
       .hud-ttfreeze {
         font: italic bold clamp(13px, 2vh, 18px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 3px; color: #6ee6ff; margin-top: -4px;
-        text-shadow: 2px 0 0 #06222c, -2px 0 0 #06222c, 0 2px 0 #06222c, 0 -2px 0 #06222c;
       }
       /* ranked times card at the gate */
       .hud-ttresults {
@@ -1404,15 +1397,11 @@ export class UI {
       .hud-trickline {
         font: italic bold clamp(18px, 3.2vh, 30px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 2px; color: #ffe08a;
-        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 0 3px 7px rgba(0, 0, 0, 0.6);
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .hud-tricktotal {
         font: italic 900 clamp(28px, 5vh, 46px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px; color: #ffb43a; transform: skewX(-6deg); margin-top: 2px;
-        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 0 4px 8px rgba(0, 0, 0, 0.6);
         animation: combopulse 0.5s ease-in-out infinite alternate;
       }
       @keyframes combopulse {
@@ -1423,8 +1412,6 @@ export class UI {
       .hud-trick-bail .hud-trickline,
       .hud-trick-bail .hud-tricktotal {
         color: #ff3b30 !important;
-        text-shadow: 2px 0 0 #4a0000, -2px 0 0 #4a0000, 0 2px 0 #4a0000,
-          0 -2px 0 #4a0000, 0 3px 8px rgba(0, 0, 0, 0.75);
         animation: none;
       }
       .hud-trick-bail { animation: trickbail 0.7s ease-in forwards; }
@@ -1442,14 +1429,17 @@ export class UI {
       .hud-msg {
         position: fixed; z-index: 11; top: 34%; left: 50%; transform: translate(-50%, -50%);
         text-align: center; color: #fff; pointer-events: none;
-        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
       }
       .hud-msg-title {
         font: bold 52px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 4px;
-        text-shadow: 3px 0 0 #000, -3px 0 0 #000, 0 3px 0 #000, 0 -3px 0 #000,
-          0 5px 12px rgba(0, 0, 0, 0.75);
       }
-      .hud-msg-sub { font: 16px ui-monospace, Menlo, Consolas, monospace; margin-top: 8px; color: #cfe3d8; }
+      /* The sub-line is still real text, and small — it keeps the shadow the
+         wrapper used to hand down, now that the title above it is drawn glyphs
+         that carry their own outline and want none. */
+      .hud-msg-sub {
+        font: 16px ui-monospace, Menlo, Consolas, monospace; margin-top: 8px;
+        color: #cfe3d8; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+      }
       .hud-flash {
         position: fixed; z-index: 12; inset: 0; background: #a3202a;
         opacity: 0; pointer-events: none;
@@ -1503,7 +1493,6 @@ export class UI {
       .hud-boostlabel {
         font: italic bold 12px Impact, 'Arial Black', sans-serif; letter-spacing: 2px;
         color: #46e882;
-        text-shadow: 1px 0 0 #101820, -1px 0 0 #101820, 0 1px 0 #101820, 0 -1px 0 #101820;
       }
       .hud-boost-low { animation: boostblink 0.3s steps(2, start) infinite; }
 
@@ -1513,10 +1502,11 @@ export class UI {
          text-shadow can't reach a background image, and colour/letter-spacing
          have nothing to act on. The size still comes from each rule's own
          font-size, which keeps every clamp() above driving the layout. What's
-         left to restate here is the shadow, as a filter, the two state colours
-         the face can't carry itself, and a zero line-height — with no text in
-         the box the font's own leading is dead space that would otherwise push
-         the counter rows apart. */
+         left to restate here is the two state colours the face can't carry
+         itself, and a zero line-height — with no text in the box the font's
+         own leading is dead space that would otherwise push the counter rows
+         apart. The face carries its own navy outline, so it needs no shadow to
+         separate it from the level behind. */
       .hud-num, .hud-scorenum, .hud-scorelabel, .hud-tttime, .hud-ttfreeze,
       .hud-trickline, .hud-tricktotal, .hud-msg-title, .hud-death-title,
       .hud-boostlabel {
@@ -1529,14 +1519,6 @@ export class UI {
       .hud-msg, .hud-trickplate { width: 94vw; max-width: 94vw; }
       .hud-death-title { max-width: 94vw; }
       .hud-trickline { overflow: visible; }
-      .hud-num, .hud-scorenum, .hud-tttime, .hud-tricktotal,
-      .hud-trickline, .hud-msg-title, .hud-death-title {
-        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.75))
-                drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
-      }
-      .hud-scorelabel, .hud-ttfreeze, .hud-boostlabel {
-        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.8));
-      }
       /* The small labels were sized for flat text. A drawn glyph carries an
          outline, an inline and a fill, so it needs more pixels than that
          before it reads as a letter at all. */
@@ -1548,12 +1530,11 @@ export class UI {
       .hud-trickline { font-size: clamp(23px, 4vh, 36px); }
       .hud-death-title { font-size: 76px; }
       /* Frozen clock and bailed combo used to recolour the text. The drawn
-         face has its own colours, so the state reads as a glow instead. */
-      .hud-tt-frozen .hud-tttime {
-        filter: drop-shadow(0 0 9px #6ee6ff) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.7));
-      }
+         face has its own colours, so the state reads as a glow instead — a
+         coloured one that says something, not a black shadow. */
+      .hud-tt-frozen .hud-tttime { filter: drop-shadow(0 0 9px #6ee6ff); }
       .hud-trick-bail .hud-trickline, .hud-trick-bail .hud-tricktotal {
-        filter: drop-shadow(0 0 10px #ff3b30) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7));
+        filter: drop-shadow(0 0 10px #ff3b30);
       }
       @keyframes boostblink { to { opacity: 0.35; } }
 

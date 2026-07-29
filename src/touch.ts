@@ -379,11 +379,7 @@ export class TouchControls {
       body.tc-on .hud-tl { top: max(8px, env(safe-area-inset-top)); left: 42px; }
       body.tc-on .hud-tr { top: max(8px, env(safe-area-inset-top)); right: 42px; }
       body.tc-on .hud-counter { gap: 7px; margin-bottom: 4px; }
-      body.tc-on .hud-num {
-        font-size: 26px; letter-spacing: 1px;
-        text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05,
-          0 -2px 0 #3a1c05, 0 3px 6px rgba(0, 0, 0, 0.65);
-      }
+      body.tc-on .hud-num { font-size: 26px; letter-spacing: 1px; }
       body.tc-on .hud-icon { width: 30px; height: 30px; }
       body.tc-on .hud-icon-crate { border-width: 3px; border-radius: 4px; }
       body.tc-on .hud-icon-crystal { width: 17px; height: 25px; }
