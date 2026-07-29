@@ -6272,7 +6272,6 @@ export class Editor {
         background: #141a26; color: #7c8aa6; border: 1px solid #2a3142;
         border-radius: 6px; padding: 5px 4px; cursor: pointer;
       }
-      .ed-ptab:hover { color: #cdd6e4; }
       .ed-ptab-on { background: #1c2a22; color: #58e08a; border-color: #2f6a48; }
       .ed-sect { color: #8fa2c0; letter-spacing: 1px; font-size: 10px; margin: 10px 0 4px; border-bottom: 1px solid #2a3142; padding-bottom: 2px; }
       .ed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
@@ -6281,7 +6280,6 @@ export class Editor {
         background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152;
         border-radius: 6px; padding: 5px 4px; cursor: pointer;
       }
-      .ed-btn:hover { background: #262e42; color: #d5e0f0; }
       .ed-palbtn {
         display: flex; align-items: center; gap: 6px; text-align: left;
         padding: 3px 6px;
@@ -6315,7 +6313,6 @@ export class Editor {
         align-items: center; gap: 3px; width: 44px;
       }
       .ed-tab span { letter-spacing: 1px; font-size: 8px; }
-      .ed-tab:hover { background: #262e42; color: #d5e0f0; }
       .ed-tab-on { background: #1c2a22; color: #58e08a; border-color: #2f6a48; }
       .ed-pop {
         position: fixed; left: 62px; top: 120px; z-index: 60; width: 212px;
@@ -6334,7 +6331,6 @@ export class Editor {
         border: 1px solid #3a4152; border-radius: 7px; cursor: pointer;
         width: 30px; height: 26px;
       }
-      .ed-viewbtn:hover { background: #262e42; color: #58e08a; }
       .ed-viewbtn-on { background: #58e08a !important; color: #0b0f1a !important; }
       .ed-layerrow {
         display: flex; align-items: center; gap: 4px; margin: 2px 0;
@@ -6350,7 +6346,6 @@ export class Editor {
         background: none; border: none; color: #9fb0c8; cursor: pointer;
         padding: 1px 2px;
       }
-      .ed-lbtn:hover { color: #d5e0f0; }
       .ed-layername {
         flex: 1; text-align: left; font: 11px ui-monospace, Menlo, Consolas, monospace;
         background: none; border: none; color: #cdd6e4; cursor: pointer; padding: 2px;
@@ -6367,6 +6362,16 @@ export class Editor {
         position: fixed; display: none; z-index: 55; pointer-events: none;
         border: 1px dashed #58e08a; background: rgba(88, 224, 138, 0.10);
         border-radius: 2px;
+      }
+      /* ---- mouse-only states ---------------------------------------------
+         Gated for the same reason as the HUD's: a tap on iOS leaves a faked
+         hover behind, which read as every button in here staying selected. */
+      @media (hover: hover) {
+        .ed-ptab:hover { color: #cdd6e4; }
+        .ed-btn:hover { background: #262e42; color: #d5e0f0; }
+        .ed-tab:hover { background: #262e42; color: #d5e0f0; }
+        .ed-viewbtn:hover { background: #262e42; color: #58e08a; }
+        .ed-lbtn:hover { color: #d5e0f0; }
       }
     `;
     document.head.appendChild(css);

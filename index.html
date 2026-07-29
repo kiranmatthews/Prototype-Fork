@@ -23,6 +23,25 @@
       /* touch-action: manipulation kills iOS double-tap-to-zoom everywhere
          while leaving panel scrolling alone (game surfaces opt into 'none') */
       html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1c24; overscroll-behavior: none; touch-action: manipulation; }
+      /* This is a GAME, not a document. On iOS a long thumb-press anywhere
+         starts a text selection and raises the Copy / Look Up / Translate /
+         Search Web callout over the top of play, and a tap leaves a grey
+         highlight box behind. Nothing here is meant to be selected, so the
+         whole page opts out — set here rather than in a JS-injected sheet so
+         it holds from the very first frame, before the HUD or the touch pad
+         exist. The controls repeat it locally; this is what covers the rest. */
+      * {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Typing still needs a caret and a selection: the level-name field, the
+         passcode and sync-token boxes, every numeric prop in the editor. */
+      input, textarea, select, [contenteditable="true"] {
+        -webkit-user-select: text;
+        user-select: text;
+      }
       /* sized by main.ts resize(): --vh carries the REAL device height. iOS
          standalone underreports the viewport by the home-indicator strip and
          never paints it (the black bar) — so the page deliberately sizes past

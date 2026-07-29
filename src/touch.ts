@@ -102,10 +102,6 @@ export class TouchControls {
     const pad = document.createElement('div');
     pad.className = 'tc-pad';
     this.padEl = pad;
-    // faint centre hub ties the four arms into one visibly-centred plus
-    const hub = document.createElement('div');
-    hub.className = 'tc-hub';
-    pad.appendChild(hub);
     const arrows = {} as Record<'up' | 'down' | 'left' | 'right', HTMLElement>;
     const glyphs = { up: '▲', down: '▼', left: '◀', right: '▶' } as const;
     for (const dir of ['up', 'down', 'left', 'right'] as const) {
@@ -331,7 +327,7 @@ export class TouchControls {
       .tc-pad { left: 14px; }
       .tc-cluster { right: 14px; }
       /* shared glass finish: frosted fill, hairline light edge, soft drop */
-      .tc-arrow, .tc-btn, .tc-hub {
+      .tc-arrow, .tc-btn {
         box-sizing: border-box;
         background: rgba(244, 238, 218, 0.30);
         border: 1px solid rgba(255, 255, 255, 0.38);
@@ -339,11 +335,6 @@ export class TouchControls {
         backdrop-filter: blur(6px) saturate(1.15);
         box-shadow: 0 2px 6px rgba(20, 14, 4, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         transition: background 0.06s, transform 0.06s, color 0.06s;
-      }
-      .tc-hub {
-        position: absolute; left: 34%; top: 34%; width: 32%; height: 32%;
-        border-radius: 20%; background: rgba(244, 238, 218, 0.18);
-        box-shadow: none;
       }
       .tc-arrow {
         position: absolute; width: 34%; height: 34%;

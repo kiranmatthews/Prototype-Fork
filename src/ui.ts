@@ -1193,11 +1193,9 @@ export class UI {
         background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152;
         border-radius: 6px; padding: 3px 2px; cursor: pointer; white-space: nowrap;
       }
-      .hud-levelbtn:hover { background: #243044; color: #cfe3d8; }
       .hud-levelbtn.active { background: #2b4436; color: #b6f0cc; border-color: #8fd4a8; }
       /* editing is green, everywhere: per-row ✎, NEW, IMPORT, SYNC UP */
       .hud-leveledit { background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
-      .hud-leveledit:hover { background: #2b4c38; color: #c8ffe0; }
       /* direct-edit unlock + phone sync */
       .hud-sync {
         margin-top: 8px; padding: 8px; border: 1px solid #33405a; border-radius: 8px;
@@ -1214,9 +1212,7 @@ export class UI {
         font: 10px ui-monospace, Menlo, Consolas, monospace; cursor: pointer; white-space: nowrap;
         background: #1c2230; color: #9fb0c8; border: 1px solid #3a4152; border-radius: 6px; padding: 4px 8px;
       }
-      .hud-syncbtn:hover { background: #243044; color: #cfe3d8; }
       .hud-syncpushbtn { width: 100%; background: #223a2b; color: #9ff0c0; border-color: #4f8f68; }
-      .hud-syncpushbtn:hover { background: #2b4c38; }
       .hud-syncstatus { font-size: 10px; min-height: 12px; color: #9fb0c8; }
       .hud-sync-ok { color: #6fe0a0; }
       .hud-sync-err { color: #ff9a7a; }
@@ -1573,6 +1569,16 @@ export class UI {
         position: absolute; left: -4px; height: 8px; width: 22px;
         margin-top: -4px; border-radius: 4px; background: #8fd4a8;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      }
+      /* ---- mouse-only states ---------------------------------------------
+         iOS fakes a hover on tap and then LEAVES IT ON until something else is
+         touched, so a tapped row or button stayed lit as though it were still
+         selected. Gated behind a real pointer, which phones do not report. */
+      @media (hover: hover) {
+        .hud-levelbtn:hover { background: #243044; color: #cfe3d8; }
+        .hud-leveledit:hover { background: #2b4c38; color: #c8ffe0; }
+        .hud-syncbtn:hover { background: #243044; color: #cfe3d8; }
+        .hud-syncpushbtn:hover { background: #2b4c38; }
       }
     `;
     document.head.appendChild(style);
