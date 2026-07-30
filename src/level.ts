@@ -1029,6 +1029,10 @@ export function vertRampSpine(c: CustomComponent): VertRampNode[] {
 // them tolerable in the outliner — thinning past this bends the camera.
 export const LANE_SIMPLIFY_EPS = 0.5;
 
+/** The combo prize is the same gem cut, run through green glass. Shared so the
+ *  HUD's copy of it can't drift from the one standing at the gate. */
+export const COMBO_GEM_TINT = 0x46e882;
+
 /**
  * Where a rider was on the camera lane last frame, in metres along the spine.
  * `s < 0` means "no history — take the global best and adopt it", which is
@@ -1660,7 +1664,7 @@ export class Level {
   private vfxT = 0; // animation clock for all the procedural magic
   private glintTex: THREE.CanvasTexture | null = null;
   private flareTex: THREE.CanvasTexture | null = null; // big collection starburst
-  private glowTex: THREE.CanvasTexture | null = null; // soft radial halo
+  private static glowTex: THREE.CanvasTexture | null = null; // soft radial halo
   // sparkle/burst billboards: outward drift (vx/vz), spin, per-sprite tint, and
   // an optional grow-then-shrink pop for the big collection flare.
   private glints: {
@@ -8151,12 +8155,14 @@ export class Level {
   // INTO the surface and sweeps across the facets as the crystal/gem spins,
   // with zero dependence on the scene's real lights (the PS1 studio-reflection
   // look). kind picks the purple crystal vs the silver gem palette.
-  private matcapTex: {
+  private static matcapTex: {
     crystal?: THREE.CanvasTexture;
     gem?: THREE.CanvasTexture;
   } = {};
-  private matcapTexture(kind: "crystal" | "gem"): THREE.CanvasTexture {
-    const cached = this.matcapTex[kind];
+  private static matcapTexture(
+    kind: "crystal" | "gem",
+  ): THREE.CanvasTexture {
+    const cached = Level.matcapTex[kind];
     if (cached) return cached;
     const S = 128;
     const canvas = document.createElement("canvas");
@@ -8211,14 +8217,14 @@ export class Level {
       blob(c - 32, c + 32, 13, "rgba(225,238,250,0.8)");
     }
     const tex = Level.finishTex(new THREE.CanvasTexture(canvas), false);
-    this.matcapTex[kind] = tex;
+    Level.matcapTex[kind] = tex;
     return tex;
   }
 
   // Soft round halo — the pink/cyan glow that hangs around the pickups. White,
   // tinted by the sprite material.
-  private glowTexture(): THREE.CanvasTexture {
-    if (this.glowTex) return this.glowTex;
+  private static glowTexture(): THREE.CanvasTexture {
+    if (Level.glowTex) return Level.glowTex;
     const canvas = document.createElement("canvas");
     canvas.width = 64;
     canvas.height = 64;
@@ -8229,9 +8235,9 @@ export class Level {
     g.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 64, 64);
-    this.glowTex = new THREE.CanvasTexture(canvas);
-    this.glowTex.magFilter = THREE.LinearFilter;
-    return this.glowTex;
+    Level.glowTex = new THREE.CanvasTexture(canvas);
+    Level.glowTex.magFilter = THREE.LinearFilter;
+    return Level.glowTex;
   }
 
 
@@ -8337,7 +8343,7 @@ export class Level {
   // Tall white-lavender crystal shard: an ASYMMETRIC bipyramid — a short blunt
   // top over a long tapering bottom point (matches the ref proportions) — with
   // a canned matcap sweep and a pink glow that blazes at the bottom tip.
-  private crystalMesh(scale = 1): THREE.Group {
+  static crystalMesh(scale = 1): THREE.Group {
     const g = new THREE.Group();
     const R = 0.52 * scale;
     const HTOP = 0.72 * scale; // short upper pyramid
@@ -8346,7 +8352,7 @@ export class Level {
     // the painted highlight by its normal, so the bright face sweeps as the
     // crystal spins — independent of the world's real lights.
     const shellMat = new THREE.MeshMatcapMaterial({
-      matcap: this.matcapTexture("crystal"),
+      matcap: Level.matcapTexture("crystal"),
       flatShading: true,
       transparent: true,
       opacity: 0.96,
@@ -8390,7 +8396,7 @@ export class Level {
     // long bottom tip like the reference
     const halo = new THREE.Sprite(
       new THREE.SpriteMaterial({
-        map: this.glowTexture(),
+        map: Level.glowTexture(),
         transparent: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
@@ -8404,7 +8410,7 @@ export class Level {
     // a second hot pink glow concentrated at the bottom point
     const tipGlow = new THREE.Sprite(
       new THREE.SpriteMaterial({
-        map: this.glowTexture(),
+        map: Level.glowTexture(),
         transparent: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
@@ -8420,7 +8426,7 @@ export class Level {
 
   // Clear brilliant-cut diamond: octagonal table + crown facets over a pointed
   // pavilion, silvery-white with a cool glow (Crash clear-gem look).
-  private gemMesh(scale = 1): THREE.Group {
+  static gemMesh(scale = 1, tint?: number): THREE.Group {
     const g = new THREE.Group();
     const girdle = 0.72 * scale;
     const table = 0.4 * scale;
@@ -8429,11 +8435,14 @@ export class Level {
     // canned reflection (matcap) so the silver glints sweep the crown facets
     // as the gem spins, no scene lighting
     const mat = new THREE.MeshMatcapMaterial({
-      matcap: this.matcapTexture("gem"),
+      matcap: Level.matcapTexture("gem"),
       flatShading: true,
       transparent: true,
       opacity: 0.9,
     });
+    // tint runs the clear gem through coloured glass — the combo prize is the
+    // same cut in green
+    if (tint !== undefined) mat.color.setHex(tint);
     // crown: 8-sided frustum, wide girdle at the bottom, narrow table on top
     const crown = new THREE.Mesh(
       new THREE.CylinderGeometry(table, girdle, crownH, 8),
@@ -8461,7 +8470,7 @@ export class Level {
     g.add(core);
     const halo = new THREE.Sprite(
       new THREE.SpriteMaterial({
-        map: this.glowTexture(),
+        map: Level.glowTexture(),
         transparent: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
@@ -8477,7 +8486,7 @@ export class Level {
   // The crystal: Crash 2/3 style pickup on the main route. Faceted octahedron
   // wearing the scrolling chrome, magic ring at its base, glints in update.
   private crystal(x: number, y: number, z: number): void {
-    const g = this.crystalMesh(1);
+    const g = Level.crystalMesh(1);
     // belt sits at the group origin; the long bottom point reaches ~1.5 below,
     // so float the group up to keep the tip hovering just above the ground
     g.position.set(x, y + 1.75, z);
@@ -8667,14 +8676,7 @@ export class Level {
     const yawR = THREE.MathUtils.degToRad(this.gateYaw);
     const gx = x + Math.sin(yawR) * dir * 2.5;
     const gz = z + Math.cos(yawR) * dir * 2.5;
-    const g = this.gemMesh(1.1);
-    g.traverse((o) => {
-      const mesh = o as THREE.Mesh;
-      if (mesh.isMesh) {
-        const m = mesh.material as THREE.MeshMatcapMaterial;
-        if (m && m.color) m.color.set(0x46e882); // the clear gem, run through green glass
-      }
-    });
+    const g = Level.gemMesh(1.1, COMBO_GEM_TINT);
     g.position.set(gx, y + 1.7, gz);
     g.userData.baseY = y + 1.7;
     this.root.add(g);
@@ -8854,7 +8856,7 @@ export class Level {
   // the last box is the moment it appears and picking it up is the reward.
   awardGem(pos: THREE.Vector3): void {
     if (this.gemPickup) return;
-    const g = this.gemMesh(1);
+    const g = Level.gemMesh(1);
     // Seat it on the FLOOR under you, not at your own height. It only had to
     // appear before, so where did not matter; now it has to be reachable, and
     // the last box can perfectly well break while you are airborne over a pit.

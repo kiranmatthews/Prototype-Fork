@@ -163,6 +163,62 @@ export class Player {
   gemSpawned = false; // every box broken: the gem has MATERIALIZED
   gemEarned = false; // ...and you have since touched it. The HUD reads this.
 
+  // ---- relic vault -------------------------------------------------------
+  // A relic, once earned, is EARNED. Resetting the level (R, a death, a
+  // game over) is how you retry a run — it must not confiscate the trophies
+  // already on the shelf, which is what wiping the three flags above used to
+  // do. So they are banked here on the way out of a run and handed back on the
+  // way in.
+  //
+  // Deliberately a plain in-memory Map and NOT localStorage: the whole point
+  // is that an IN-GAME reset keeps them while a page reload starts clean, and
+  // localStorage would survive the reload too. Keyed by level, so the row
+  // shows what you earned HERE rather than a running total from somewhere else.
+  private static relicVault = new Map<
+    string,
+    { crystal: boolean; gem: boolean; combo: boolean }
+  >();
+  /** Which level's shelf to read and write. main.ts sets it on every switch. */
+  relicKey = '';
+
+  private relicSlot(): { crystal: boolean; gem: boolean; combo: boolean } {
+    let v = Player.relicVault.get(this.relicKey);
+    if (!v) {
+      v = { crystal: false, gem: false, combo: false };
+      Player.relicVault.set(this.relicKey, v);
+    }
+    return v;
+  }
+
+  /** Whatever this run earned goes onto the current level's shelf. */
+  private bankRelics(): void {
+    const v = this.relicSlot();
+    v.crystal = v.crystal || this.hasCrystal;
+    v.gem = v.gem || this.gemEarned;
+    v.combo = v.combo || this.comboGemEarned;
+  }
+
+  /** Take the shelf as it stands. ADOPTS, never merges — see enterLevel. */
+  private restoreRelics(): void {
+    const v = this.relicSlot();
+    this.hasCrystal = v.crystal;
+    this.gemEarned = v.gem;
+    this.comboGemEarned = v.combo;
+  }
+
+  /**
+   * Moving to another level: bank what this one earned under the OLD key, then
+   * adopt the target's shelf. Two things matter here. The key can only change
+   * AFTER banking, or this level's relics get filed against the next one. And
+   * the restore has to ADOPT rather than merge — merging would carry the
+   * relics you're holding into a level you have never collected anything in.
+   */
+  enterLevel(id: string): void {
+    if (this.relicKey) this.bankRelics();
+    this.relicKey = id;
+    this.restoreRelics();
+  }
+
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   // The procedural body underneath is the SKELETON plus a placeholder skin.
@@ -828,10 +884,11 @@ export class Player {
     this.balanceBoostT = 0;
     if (hard) {
       this.lives = 3;
-      this.hasCrystal = false;
+      // The boxes are all back, so the gem has to be able to MATERIALIZE
+      // again — but whether it was already earned is the vault's business.
       this.gemSpawned = false;
-      this.gemEarned = false;
-      this.comboGemEarned = false;
+      this.bankRelics();
+      this.restoreRelics();
     }
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);

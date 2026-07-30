@@ -955,6 +955,7 @@ function updateCamera2(dt: number): void {
   p2.camDir.set(cam2F.x, 0, cam2F.z);
 }
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
+player.enterLevel(current.id);
 player.respawn(level, true);
 applyTheme();
 recorder.start(current.id); // the take always runs: level load -> now
@@ -999,8 +1000,12 @@ function switchLevel(id: string): void {
   if (editor.active && editor.targetId !== entry.id) editor.exit(); // leaving the level under edit closes it
   level.dispose();
   level = new Level(scene, entry);
+  // Adopt the target level's relic shelf BEFORE respawning, so the run just
+  // left banks its crystal and gems against the level they were earned in.
+  player.enterLevel(entry.id);
   player.respawn(level, true);
   if (split2p && p2) {
+    p2.enterLevel(entry.id);
     p2.respawn(level, true);
     p2.pos.x += 1.6;
     deactivate2pModes();
@@ -1941,6 +1946,8 @@ function frame(): void {
   } else {
     renderer.render(scene, camera);
   }
+  // Earned relics spin in the HUD row, drawn over the finished frame.
+  ui.drawRelics(renderer, dt);
 }
 frame();
 

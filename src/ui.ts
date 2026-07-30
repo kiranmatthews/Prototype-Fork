@@ -1,7 +1,8 @@
 // DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
-import { levelList } from "./level";
+import * as THREE from "three";
+import { COMBO_GEM_TINT, Level, levelList } from "./level";
 import { setRasterText } from "./hudfont";
 import {
   TUNING,
@@ -16,6 +17,10 @@ import {
 // — so it goes through BASE_URL, the same as the sky paintings, or it 404s on
 // the project-path GitHub Pages build.
 const LIFE_FACE_URL = `url("${import.meta.env.BASE_URL}roo.png")`;
+
+// Scratch for the relic pass, so a per-frame draw allocates nothing.
+const RELIC_SIZE = new THREE.Vector2();
+const RELIC_PREV = new THREE.Vector4();
 
 export interface Stats {
   speed: number;
@@ -64,6 +69,18 @@ export class UI {
   private ttOn = false;
   private haloEl!: HTMLElement; // combo-run green viewport halo
   private comboGemIcon!: HTMLElement;
+  private relicRowEl!: HTMLElement;
+  // built on the first earned relic, not at boot: three matcap meshes and a
+  // canvas texture each is real work for a row that often stays empty
+  private relicScene: THREE.Scene | null = null;
+  private relicCam: THREE.OrthographicCamera | null = null;
+  private relicSlots: {
+    ghost: HTMLElement;
+    pivot: THREE.Group;
+    spin: THREE.Group;
+  }[] = [];
+  /** Slot boxes in row-local CSS px, re-measured only when the layout moves. */
+  private relicLayout: { w: number; h: number } | null = null;
   private boostRingWrap!: HTMLElement; // balance-boost ring: laps over itself as windows stack
   private boostRing!: HTMLElement;
   private balanceWrap: HTMLElement;
@@ -470,8 +487,13 @@ export class UI {
     this.wumpaRowEl = wumpaRow;
     tl.appendChild(crateRow);
     tl.appendChild(wumpaRow);
-    // relic haul: crystal + gem, ghosted until earned
+    // Relic haul: crystal, gem, combo gem. Each is a flat ghosted cutout until
+    // it's earned, at which point a real spinning 3D relic is drawn into its
+    // box instead (see drawRelics). The ghost is never removed from the layout
+    // — it goes `visibility: hidden` — because the three boxes are what the 3D
+    // pass measures its slots from, and a reflow would move them.
     const relicRow = div("hud-counter hud-relics");
+    this.relicRowEl = relicRow;
     this.crystalIcon = div("hud-icon hud-icon-crystal hud-relic-off");
     this.gemIcon = div("hud-icon hud-icon-gem hud-relic-off");
     this.comboGemIcon = div(
@@ -481,6 +503,7 @@ export class UI {
     relicRow.appendChild(this.gemIcon);
     relicRow.appendChild(this.comboGemIcon);
     tl.appendChild(relicRow);
+    addEventListener("resize", () => (this.relicLayout = null));
 
     // top-center: score plate
     const scorePlate = div("hud-scoreplate");
@@ -694,6 +717,136 @@ export class UI {
     setRasterText(this.trickTotalEl, "NO");
   }
 
+  // ---- earned relics, as real spinning 3D --------------------------------
+  //
+  // Drawn with the GAME's renderer in a second pass over the relic row's
+  // rectangle, not into a canvas of its own. A second WebGL context is a real
+  // risk on iOS Safari, which is stingy with them and would leave the relics
+  // silently missing on the device this is actually played on. The relics are
+  // matcap-lit — their highlights are painted into the material and sampled by
+  // surface normal — so they need no lights at all and look right in a bare
+  // scene.
+  private buildRelics(): void {
+    if (this.relicScene) return;
+    this.relicScene = new THREE.Scene();
+    // Camera frustum is set per-frame in CSS PIXELS of the row, so a slot can
+    // be placed at the measured centre of its ghost box and scaled to its
+    // height — no guessing at aspect ratios.
+    this.relicCam = new THREE.OrthographicCamera(0, 1, 0, -1, -500, 500);
+    const art: [HTMLElement, () => THREE.Group][] = [
+      [this.crystalIcon, () => Level.crystalMesh(1)],
+      [this.gemIcon, () => Level.gemMesh(1)],
+      [this.comboGemIcon, () => Level.gemMesh(1, COMBO_GEM_TINT)],
+    ];
+    for (const [ghost, make] of art) {
+      const relic = make();
+      // Strip the world halo. It's a camera-facing additive sprite sized for a
+      // pickup standing in a level; at HUD scale, over bright scenery, it reads
+      // as a pale RECTANGLE around the relic rather than a glow.
+      for (const o of relic.children.slice())
+        if ((o as THREE.Sprite).isSprite) relic.remove(o);
+      // Centre the art on its own MESH bounds.
+      const box = new THREE.Box3();
+      relic.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (m.isMesh && m.geometry) box.expandByObject(m);
+      });
+      const c = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      relic.position.y -= c.y; // its middle now sits on the spin axis origin
+      const spin = new THREE.Group();
+      spin.add(relic);
+      const pivot = new THREE.Group();
+      // a slight lean forward, so the facets read as solid rather than as a
+      // flat silhouette turning on the spot
+      pivot.rotation.x = -0.2;
+      pivot.add(spin);
+      pivot.userData.unit = size.y || 1; // art height, for the px scale
+      pivot.visible = false;
+      this.relicScene.add(pivot);
+      this.relicSlots.push({ ghost, pivot, spin });
+    }
+  }
+
+  /**
+   * Spin and draw whatever relics are earned. Called from the frame loop after
+   * the world is drawn, with the renderer the game already owns.
+   */
+  drawRelics(renderer: THREE.WebGLRenderer, dt: number): void {
+    const scene = this.relicScene;
+    const cam = this.relicCam;
+    if (!scene || !cam) return;
+    if (!this.relicSlots.some((s) => s.pivot.visible)) return;
+
+    const canvas = renderer.domElement;
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
+    if (!cw || !ch) return;
+    const row = this.relicRowEl.getBoundingClientRect();
+    if (row.width < 4 || row.height < 4) return;
+
+    // Re-measure only when something moved the row: getBoundingClientRect on
+    // four elements every frame is a layout read the frame loop doesn't need.
+    if (!this.relicLayout) {
+      for (const slot of this.relicSlots) {
+        const g = slot.ghost.getBoundingClientRect();
+        const unit = slot.pivot.userData.unit as number;
+        slot.pivot.position.set(
+          g.left - row.left + g.width / 2,
+          -(g.top - row.top + g.height / 2),
+          0,
+        );
+        // Fit the art's height into the ghost's box with air to spare: a
+        // spinning relic sweeps wider than it stands, and the forward lean
+        // projects it taller than its own height.
+        slot.pivot.scale.setScalar((g.height * 0.82) / unit);
+      }
+      this.relicLayout = { w: row.width, h: row.height };
+      cam.left = 0;
+      cam.right = row.width;
+      cam.top = 0;
+      cam.bottom = -row.height;
+      cam.updateProjectionMatrix();
+    }
+
+    for (const slot of this.relicSlots)
+      if (slot.pivot.visible) slot.spin.rotation.y += dt * 1.5;
+
+    // setViewport/setScissor take the renderer's OWN size units and multiply by
+    // pixelRatio internally — they are not drawing-buffer pixels. Passing
+    // buffer pixels looks right at ratio 1 and is off by the ratio anywhere
+    // else, which on a phone put this pass off-screen entirely AND left a
+    // double-size viewport behind that zoomed the next frame's world.
+    // So: CSS px -> renderer units, and restore whatever was set before.
+    const size = renderer.getSize(RELIC_SIZE);
+    const kx = size.x / cw;
+    const ky = size.y / ch;
+    renderer.getViewport(RELIC_PREV);
+    renderer.autoClear = false;
+    // GL's origin is bottom-left, hence measuring down from the canvas bottom
+    const vx = row.left * kx;
+    const vy = (ch - row.bottom) * ky;
+    const vw = row.width * kx;
+    const vh = row.height * ky;
+    renderer.setViewport(vx, vy, vw, vh);
+    renderer.setScissor(vx, vy, vw, vh);
+    renderer.setScissorTest(true);
+    renderer.clearDepth(); // sit on top of the world, not inside it
+    renderer.render(scene, cam);
+    renderer.setScissorTest(false);
+    renderer.setViewport(RELIC_PREV);
+    renderer.autoClear = true;
+  }
+
+  /** Earned: hide the flat ghost (keeping its box) and light the 3D relic. */
+  private setRelic(i: number, ghost: HTMLElement, earned: boolean): void {
+    if (earned) this.buildRelics();
+    const slot = this.relicSlots[i];
+    if (slot) slot.pivot.visible = earned;
+    ghost.classList.toggle("hud-relic-off", !earned);
+    ghost.style.visibility = earned && slot ? "hidden" : "visible";
+  }
+
   setHUD(s: HudState): void {
     // SCORE ticker: the shown number chases the real score fast.
     if (this.prevHud.points < 0) this.dispScore = s.points; // snap on first frame
@@ -713,17 +866,17 @@ export class UI {
       this.prevHud.fruit = s.fruit;
     }
     if (s.hasCrystal !== this.prevHud.crystal) {
-      this.crystalIcon.classList.toggle("hud-relic-off", !s.hasCrystal);
+      this.setRelic(0, this.crystalIcon, s.hasCrystal);
       if (s.hasCrystal) pop(this.crystalIcon);
       this.prevHud.crystal = s.hasCrystal;
     }
     if (s.hasComboGem !== this.prevHud.comboGem) {
-      this.comboGemIcon.classList.toggle("hud-relic-off", !s.hasComboGem);
+      this.setRelic(2, this.comboGemIcon, s.hasComboGem);
       if (s.hasComboGem) pop(this.comboGemIcon);
       this.prevHud.comboGem = s.hasComboGem;
     }
     if (s.hasGem !== this.prevHud.gem) {
-      this.gemIcon.classList.toggle("hud-relic-off", !s.hasGem);
+      this.setRelic(1, this.gemIcon, s.hasGem);
       if (s.hasGem) pop(this.gemIcon);
       this.prevHud.gem = s.hasGem;
     }
