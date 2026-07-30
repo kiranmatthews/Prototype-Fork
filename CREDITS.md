@@ -67,20 +67,33 @@ to join tricks and no sheet draws: crossed copies of the face's own dash.
 
 ## HUD icons
 
-Same story: the crate and fruit counters are drawn artwork, kept at full
-resolution in `art/hud-crate.png` and `art/hud-apple.png`.
+Same story: the crate and fruit counters, the life face and the mask crate's
+crossbones sticker are all drawn artwork, kept at full resolution in
+`art/hud-*.png`.
 
 ```
 node tools/bake-hudicons.mjs
 ```
 
-That writes `public/crate.png` and `public/apple.png`. The originals are
-1024px renders sitting in a wide empty margin, and the crate carries a faint
-wash of low-alpha pixels across its whole canvas that draws as a dim grey
-square over bright scenery. The baker floors the alpha to clear that, trims to
-the artwork's own edges so the icon fills its slot, and fits the longest side
-to 192px — twice the largest size the HUD ever draws them, and a twentieth of
-the bytes.
+That writes `public/{crate,apple,roo,crossbones}.png`. The sources are 640–1024px
+renders of things the game draws at 30–100px, so the baker floors each one's
+alpha, trims to the artwork's own edges where a crop is safe, and fits the
+longest side to the size that's actually used. Together that takes the four from
+1.49MB to 226KB.
+
+Two of the passes are deliberately selective. The crate arrives with a faint
+wash of low-alpha pixels across its whole canvas — its corner sits at alpha 27 —
+which draws as a dim grey square over bright scenery, so its floor is high;
+the apple's faint edge is genuine feather and keeps a low one. And the
+crossbones is NOT trimmed: its ink is 552x473 but the crate face stretches it
+into a square box, so cropping to the ink would stretch the bones 17% taller.
+
+The sky paintings are left at full size on purpose. They are not oversized —
+each is wrapped twice around the sky dome, so a 90-degree view already upscales
+about 1.4x to a 1280px screen, and halving them would visibly soften the
+largest thing on screen. They also carry the horizon as an absolute pixel
+constant (`SKY_HORIZON_PX` against `SKY_IMG_H`), so a resize would move the mist
+band as well as blur it.
 
 ## Everything else
 

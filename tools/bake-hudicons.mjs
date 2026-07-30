@@ -1,36 +1,50 @@
 // Turn the hand-supplied HUD artwork into icons the game can actually ship.
 //
 //   node tools/bake-hudicons.mjs
-//     art/hud-apple.png -> public/apple.png
-//     art/hud-crate.png -> public/crate.png
+//     art/hud-apple.png      -> public/apple.png
+//     art/hud-crate.png      -> public/crate.png
+//     art/hud-roo.png        -> public/roo.png
+//     art/hud-crossbones.png -> public/crossbones.png
 //
-// The originals are 1024x1024 renders. Three things have to happen to each:
+// The sources are 640-1024px renders of things the game draws at 30-100px, so
+// each gets up to three passes:
 //
 //  1. FLOOR the alpha. The crate arrives with a faint wash of low-alpha pixels
 //     over the WHOLE canvas — its corner sits at alpha 27 — which would draw as
 //     a dim grey square around the icon over bright scenery. Only above alpha
 //     ~128 is it actually the crate. Anything under the floor is cleared.
-//  2. TRIM to the artwork. Both sit in a wide empty margin (the apple's is a
-//     third of the canvas), so untrimmed they render two-thirds the size of
-//     their box and refuse to line up with anything.
-//  3. DOWNSCALE. The largest these are ever drawn is the HUD's 84px icon at a
-//     2x device ratio — 168 device px. Shipping 1024px of apple for that is
-//     1.2MB of the two of them for detail no screen will ever resolve.
+//  2. TRIM to the artwork, where that's safe. The apple and crate sit in a wide
+//     empty margin (a third of the canvas for the apple), so untrimmed they
+//     render two-thirds the size of their slot and line up with nothing.
+//  3. DOWNSCALE, always. These were 1.5MB between them for detail no screen
+//     resolves: the biggest is the HUD's 84px icon at a 2x device ratio.
 import { readFileSync, writeFileSync } from 'fs';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright-core');
 
-// Longest side of the emitted icon. The HUD's biggest slot is clamp(52, 9.5vh,
-// 84)px; at a 2x device pixel ratio that is 168, so 192 leaves headroom without
-// paying for detail nobody sees.
-const OUT = 192;
-
+// size:  longest side of the emitted image. The HUD's biggest slot is
+//        clamp(52, 9.5vh, 84)px, so 192 covers it at a 2x device ratio with
+//        headroom; the mask sticker is only ever drawn ~100px on a crate face.
+// floor: alpha below this is cleared. Per-file, because one file's faint edge
+//        is genuine feather and another's is cruft.
+// trim:  crop to the artwork. OFF where a crop would change the aspect the game
+//        already draws the art at — see crossbones.
 const JOBS = [
-  // alphaFloor is per-file: the apple's edge feather is genuine and worth
-  // keeping soft, the crate's is cruft that has to go.
-  { src: 'art/hud-apple.png', out: 'public/apple.png', floor: 40 },
-  { src: 'art/hud-crate.png', out: 'public/crate.png', floor: 128 },
+  { src: 'art/hud-apple.png', dst: 'public/apple.png', size: 192, floor: 40, trim: true },
+  { src: 'art/hud-crate.png', dst: 'public/crate.png', size: 192, floor: 128, trim: true },
+  // The life icon fills its frame edge to edge — nothing to crop, just oversized.
+  { src: 'art/hud-roo.png', dst: 'public/roo.png', size: 192, floor: 8, trim: false },
+  // The mask crate's sticker is stretched into a SQUARE box on the crate face
+  // (see maskTexture). Its ink is 552x473, so trimming to that and then drawing
+  // it square would stretch the bones 17% taller. Scale only.
+  {
+    src: 'art/hud-crossbones.png',
+    dst: 'public/crossbones.png',
+    size: 128,
+    floor: 8,
+    trim: false,
+  },
 ];
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
@@ -39,7 +53,7 @@ await page.goto('data:text/html,<body>');
 
 for (const job of JOBS) {
   const res = await page.evaluate(
-    async ([src, floor, OUT]) => {
+    async ([src, floor, OUT, trim]) => {
       const im = await new Promise((r) => {
         const i = new Image();
         i.onload = () => r(i);
@@ -72,6 +86,12 @@ for (const job of JOBS) {
         }
       if (x1 < 0) throw new Error('nothing left above the alpha floor');
       cx.putImageData(img, 0, 0);
+      if (!trim) {
+        x0 = 0;
+        y0 = 0;
+        x1 = c.width - 1;
+        y1 = c.height - 1;
+      }
 
       // 2 + 3. trim and fit the longest side to OUT, keeping the aspect
       const tw = x1 - x0 + 1,
@@ -94,13 +114,14 @@ for (const job of JOBS) {
     [
       'data:image/png;base64,' + readFileSync(job.src).toString('base64'),
       job.floor,
-      OUT,
+      job.size,
+      job.trim,
     ],
   );
   const buf = Buffer.from(res.png.split(',')[1], 'base64');
-  writeFileSync(job.out, buf);
+  writeFileSync(job.dst, buf);
   console.log(
-    `${job.out.padEnd(18)} ${res.from} -> trim ${res.trimmed} -> ${res.to}` +
+    `${job.dst.padEnd(22)} ${res.from} -> trim ${res.trimmed} -> ${res.to}` +
       `  ${(readFileSync(job.src).length / 1024).toFixed(0)}KB -> ${(buf.length / 1024).toFixed(0)}KB`,
   );
 }
