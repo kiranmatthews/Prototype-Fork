@@ -543,7 +543,11 @@ export class Player {
   private kneeR: THREE.Group | null = null;
   // Kangaroo appendages — jointed for follow-through animation.
   private tailRoot: THREE.Group | null = null;
-  private tailChain: THREE.Group[] = []; // all tail joints root→tip (3 procedural, 5 authored)
+  // all tail joints root→tip: Groups on the procedural placeholder, real Bones
+  // on a carved tail (see skinTail). The sway driver only needs rotation, so it
+  // does not care which.
+  private tailChain: THREE.Object3D[] = [];
+  private tailShare: { n: number; lift: number[]; wag: number[] } | null = null;
   // hip anchor half-widths (rig space) — the placeholder + roo use ±0.115/z0;
   // a skinned model (fox) sets these from its actual hip bones so syncVisual's
   // leg-position formula plants the feet under the real hips
@@ -7078,18 +7082,20 @@ export class Player {
         0.25 * this.walkAmp + // running: the tail streams out behind, counterweight up
         0.35 * jp; // jumping: the tail flares as the counterweight
       const wag = 0.16 * breathe + 0.5 * swing;
-      // Each joint carries its rest angle in userData (authored chunks bake
-      // the curve, so theirs is 0) plus a share of the flex — decaying lift
-      // toward the tip, and a wag that travels down the chain slightly
-      // delayed, so sways whip instead of rotating rigidly.
-      const liftW = [0.5, 0.3, 0.2, 0.14, 0.1];
-      const wagW = [0.35, 0.3, 0.25, 0.2, 0.16];
       const lag = Math.sin(this.walkPhase - 0.9) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
       const wagLag = 0.16 * breathe + 0.5 * lag;
+      // Each joint carries its rest angle in userData (a carved tail bakes the
+      // curve into the mesh, so theirs is 0) plus a share of the flex, decaying
+      // toward the tip so the chain forms one arc instead of hinging. The wag
+      // it reads slides from NOW at the root to a beat behind at the tip, so a
+      // sway whips out along the tail instead of swinging it rigidly.
+      const n = this.tailChain.length;
+      const share = this.tailShares(n);
       this.tailChain.forEach((j, i) => {
         const rest = (j.userData.rest as number | undefined) ?? 0;
-        const w = i < 2 ? wag : wagLag; // tip half follows a beat behind
-        j.rotation.set(rest + lift * (liftW[i] ?? 0.1), w * (wagW[i] ?? 0.15), i === 0 ? 0.05 * breathe : 0);
+        const t = n > 1 ? i / (n - 1) : 0;
+        const w = wag + (wagLag - wag) * t;
+        j.rotation.set(rest + lift * share.lift[i], w * share.wag[i], i === 0 ? 0.05 * breathe : 0);
       });
     }
     if (this.ponyA && this.ponyB) {
@@ -7887,7 +7893,6 @@ export class Player {
       L: { hip: mapB('RightUpLeg'), knee: mapB('RightLeg'), foot: mapB('RightFoot') },
     };
     const jNeck = mapB('neck');
-    const jHips = mapB('Hips');
     const hipY = (leg.R.hip.y + leg.L.hip.y) / 2;
 
     // dominant bone per vertex → part key
@@ -8015,43 +8020,390 @@ export class Player {
     this.soleR = null;
     this.soleL = null;
 
-    // TAIL — the unrigged brush. Band the carved geometry by height into a
-    // 3-joint chain seated on the mesh; the chunks carry the curl, the sway
-    // driver flexes deltas down the chain (rest 0). A genuinely tailless model
-    // carves nothing here, so the placeholder tail is stripped (no phantom).
-    if (bucket.tail.length < 9) {
-      if (this.tailRoot) for (const c of [...this.tailRoot.children]) this.tailRoot.remove(c);
-      this.tailChain = [];
-    } else if (this.tailRoot) {
-      const ys: number[] = [];
-      for (const vi of bucket.tail) ys.push((P.getY(vi) - miny) * SY);
-      const tMax = Math.max(...ys), tMin = Math.min(...ys);
-      const span = Math.max(0.01, tMax - tMin);
-      const bandOf = (yr: number): number => Math.min(2, Math.floor(((tMax - yr) / span) * 3));
-      const bands: number[][] = [[], [], []];
-      for (let i = 0; i < bucket.tail.length; i += 3) {
-        const yc = ((P.getY(bucket.tail[i]) + P.getY(bucket.tail[i + 1]) + P.getY(bucket.tail[i + 2])) / 3 - miny) * SY;
-        const b = bandOf(yc);
-        bands[b].push(bucket.tail[i], bucket.tail[i + 1], bucket.tail[i + 2]);
+    // TAIL — the unrigged brush, skinned (see skinTail). A genuinely tailless
+    // model carves nothing here, so the placeholder tail is stripped instead.
+    this.skinTail(
+      bucket.tail,
+      (vi, v) => v.set((P.getX(vi) - cx) * SXZ, (P.getY(vi) - miny) * SY, (P.getZ(vi) - cz) * SXZ),
+      (vi, v) => v.set(N.getX(vi) / SXZ, N.getY(vi) / SY, N.getZ(vi) / SXZ).normalize(),
+      (vi) => [UV.getX(vi), UV.getY(vi)],
+      mat,
+    );
+  }
+
+  // Per-joint share of the tail flex, cached by chain length. The chain used to
+  // be five joints with hand-set shares (lift .5/.3/.2/.14/.1, wag
+  // .35/.3/.25/.2/.16); those are exp(-1.6t) and exp(-0.78t) over the joint's
+  // normalized position to within a few percent, so the curve is evaluated
+  // instead. Same feel, at ANY joint count — which the skinned tail needs, as
+  // it runs eight bones where the carved chunks ran three or five. The totals
+  // are held fixed so the whole tail bends by the same amount however finely
+  // it is jointed.
+  private tailShares(n: number): { n: number; lift: number[]; wag: number[] } {
+    if (this.tailShare && this.tailShare.n === n) return this.tailShare;
+    const curve = (decay: number, total: number): number[] => {
+      const w: number[] = [];
+      let sum = 0;
+      for (let i = 0; i < n; i++) {
+        const v = Math.exp((-decay * i) / Math.max(1, n - 1));
+        w.push(v);
+        sum += v;
       }
-      // joint Y positions: top of each band, walking down from the attach
-      const attach = new THREE.Vector3(0, tMax, jHips.z - 0.05);
-      const jointY = [tMax, tMax - span / 3, tMax - (2 * span) / 3];
-      for (const c of [...this.tailRoot.children]) this.tailRoot.remove(c);
-      this.tailRoot.position.copy(attach);
-      this.tailChain = [];
-      let parent: THREE.Object3D = this.tailRoot;
-      for (let k = 0; k < 3; k++) {
-        const joint = new THREE.Group();
-        const pivot = new THREE.Vector3(0, jointY[k], attach.z);
-        joint.position.copy(k === 0 ? new THREE.Vector3(0, 0, 0) : new THREE.Vector3(0, jointY[k] - jointY[k - 1], 0));
-        joint.userData.rest = 0;
-        parent.add(joint);
-        if (bands[k].length) joint.add(build(bands[k], pivot));
-        this.tailChain.push(joint);
-        parent = joint;
+      return w.map((v) => (v / sum) * total);
+    };
+    this.tailShare = { n, lift: curve(1.6, 1.24), wag: curve(0.78, 1.26) };
+    return this.tailShare;
+  }
+
+  // ——— The tail is really skinned ————————————————————————————————————————
+  // A tail is the one part of the body a rigid PS1 carve cannot fake. Chunked
+  // into bands and bolted onto separate joints, every sway pulled the bands
+  // apart — each chunk swings about a different pivot, so the surface tore into
+  // steps and gaps and the tail read as a jointed insect rather than one curvy
+  // limb. Banding by HEIGHT made it far worse, because that assumes the tail
+  // hangs: the fox's trails BACKWARD, so its three bands all overlapped along Z
+  // (each spanning most of the tail's length) while their pivots stacked
+  // vertically a quarter of a unit off the tail's own axis. A small wag threw
+  // them right out of each other.
+  //
+  // So this builds ONE continuous skinned mesh instead:
+  //
+  //   centreline  the tail cloud's principal axis (power iteration on its
+  //               covariance), then a cubic least-squares fit of the cloud's
+  //               offset from that axis, resampled by arc length. So the chain
+  //               lies ON the tail wherever the modeller drew it — hanging,
+  //               trailing or curled — instead of on a guessed vertical.
+  //   density     a coarse tail cannot bend smoothly however good the rig is
+  //               (the fox's brush is 34 triangles), so triangles are 4-way
+  //               subdivided until an edge is shorter than half a bone segment.
+  //               Uniform subdivision, and midpoints are plain averages, so
+  //               both copies of a shared edge stay bit-identical.
+  //   weights     linear two-bone, from a vertex's distance ALONG the
+  //               centreline. Purely a function of position, so the duplicated
+  //               vertices of this non-indexed geometry always agree exactly:
+  //               the surface cannot open a crack in any pose. The base ring
+  //               lands at parameter 0, i.e. wholly on the first bone, so it
+  //               stays welded to the hips; past the last joint the tip is
+  //               wholly on the last bone, which is the only rigid part left.
+  //
+  // The bones ARE the sway driver's chain, exactly as the joint groups were.
+  private skinTail(
+    verts: number[],
+    at: (vi: number, out: THREE.Vector3) => void,
+    normAt: (vi: number, out: THREE.Vector3) => void,
+    uvAt: (vi: number) => [number, number],
+    material: THREE.Material,
+    bones = 8,
+  ): void {
+    const root = this.tailRoot;
+    if (!root) return;
+    bones = Math.max(3, Math.min(24, Math.round(bones))); // the tip weight needs 2+
+    for (const c of [...root.children]) root.remove(c);
+    this.tailChain = [];
+    if (verts.length < 9) return; // no tail on this model: no phantom either
+    let pos: number[] = [];
+    let nrm: number[] = [];
+    let uv: number[] = [];
+    const t3 = new THREE.Vector3();
+    for (const vi of verts) {
+      at(vi, t3);
+      pos.push(t3.x, t3.y, t3.z);
+      normAt(vi, t3);
+      nrm.push(t3.x, t3.y, t3.z);
+      const q = uvAt(vi);
+      uv.push(q[0], q[1]);
+    }
+    const N0 = pos.length / 3;
+
+    // 1. principal axis: 40 rounds of power iteration on the covariance,
+    //    seeded down-and-back where a tail generally points.
+    let mx = 0, my = 0, mz = 0;
+    for (let i = 0; i < N0; i++) {
+      mx += pos[i * 3];
+      my += pos[i * 3 + 1];
+      mz += pos[i * 3 + 2];
+    }
+    mx /= N0;
+    my /= N0;
+    mz /= N0;
+    let cxx = 0, cxy = 0, cxz = 0, cyy = 0, cyz = 0, czz = 0;
+    for (let i = 0; i < N0; i++) {
+      const dx = pos[i * 3] - mx, dy = pos[i * 3 + 1] - my, dz = pos[i * 3 + 2] - mz;
+      cxx += dx * dx;
+      cxy += dx * dy;
+      cxz += dx * dz;
+      cyy += dy * dy;
+      cyz += dy * dz;
+      czz += dz * dz;
+    }
+    let ax = 0.2, ay = -0.7, az = -0.68;
+    for (let it = 0; it < 40; it++) {
+      const nx = cxx * ax + cxy * ay + cxz * az;
+      const ny = cxy * ax + cyy * ay + cyz * az;
+      const nz = cxz * ax + cyz * ay + czz * az;
+      const L = Math.hypot(nx, ny, nz);
+      if (L < 1e-12) break;
+      ax = nx / L;
+      ay = ny / L;
+      az = nz / L;
+    }
+    // Which end is the BASE? The one nearer the body's centre column: a tail
+    // leaves the hips and travels away, so the tip is always the far end. This
+    // is measured rather than assumed — the old code guessed a vertical hang
+    // and an attach point 0.24 off the fox's actual tail root.
+    const proj = (i: number): number =>
+      (pos[i * 3] - mx) * ax + (pos[i * 3 + 1] - my) * ay + (pos[i * 3 + 2] - mz) * az;
+    let tLo = Infinity, tHi = -Infinity;
+    for (let i = 0; i < N0; i++) {
+      const t = proj(i);
+      if (t < tLo) tLo = t;
+      if (t > tHi) tHi = t;
+    }
+    const span = tHi - tLo;
+    if (!(span > 1e-5)) return;
+    const endRadius = (lo: number, hi: number): number => {
+      let r = 0, n = 0;
+      for (let i = 0; i < N0; i++) {
+        const t = proj(i);
+        if (t < lo || t > hi) continue;
+        r += Math.hypot(pos[i * 3], pos[i * 3 + 2]);
+        n++;
+      }
+      return n > 0 ? r / n : 1e9;
+    };
+    if (endRadius(tHi - span * 0.15, tHi) < endRadius(tLo, tLo + span * 0.15)) {
+      ax = -ax;
+      ay = -ay;
+      az = -az;
+      const s = tLo;
+      tLo = -tHi;
+      tHi = -s;
+    }
+
+    // How far along a polyline a point lies, as a fractional index. Continuous
+    // in the point, which is what makes the skin weights below crack-proof.
+    const paramOn = (poly: THREE.Vector3[], x: number, y: number, z: number): number => {
+      let best = Infinity;
+      let u = 0;
+      for (let k = 0; k + 1 < poly.length; k++) {
+        const a = poly[k];
+        const ex = poly[k + 1].x - a.x, ey = poly[k + 1].y - a.y, ez = poly[k + 1].z - a.z;
+        const el = ex * ex + ey * ey + ez * ez;
+        let f = el > 1e-12 ? ((x - a.x) * ex + (y - a.y) * ey + (z - a.z) * ez) / el : 0;
+        f = f < 0 ? 0 : f > 1 ? 1 : f;
+        const dx = a.x + ex * f - x, dy = a.y + ey * f - y, dz = a.z + ez * f - z;
+        const d = dx * dx + dy * dy + dz * dz;
+        if (d < best) {
+          best = d;
+          u = k + f;
+        }
+      }
+      return u;
+    };
+    // Re-space a polyline evenly by arc length, keeping both ends.
+    const respace = (poly: THREE.Vector3[], count: number): THREE.Vector3[] => {
+      const cum = [0];
+      for (let i = 1; i < poly.length; i++) cum.push(cum[i - 1] + poly[i].distanceTo(poly[i - 1]));
+      const total = cum[cum.length - 1];
+      const out: THREE.Vector3[] = [];
+      for (let i = 0; i < count; i++) {
+        const s = (i / (count - 1)) * total;
+        let k = 1;
+        while (k < cum.length - 1 && cum[k] < s) k++;
+        const seg = cum[k] - cum[k - 1];
+        const f = seg > 1e-9 ? Math.min(1, Math.max(0, (s - cum[k - 1]) / seg)) : 0;
+        out.push(poly[k - 1].clone().lerp(poly[k], f));
+      }
+      return out;
+    };
+
+    // 2. centreline: a CUBIC fitted through the cloud, not a piecewise medial
+    //    axis. A tail is one gentle arc, and this geometry is often very coarse
+    //    — the fox's whole brush is 34 triangles — so a per-station fit only
+    //    interpolates noise: nine stations through twenty-odd vertices came out
+    //    as a 44-to-76-degree zig-zag, and bones that zig-zag shear the surface
+    //    wherever they turn. Two cubics in the axis parameter (one per
+    //    cross-axis, least squares over the whole cloud) CANNOT zig-zag, and a
+    //    cubic still describes a hang, a straight trail or an S-curl.
+    const A = new THREE.Vector3(ax, ay, az);
+    const U = new THREE.Vector3(1, 0, 0).cross(A);
+    if (U.lengthSq() < 1e-6) U.set(0, 1, 0).cross(A);
+    U.normalize();
+    const W = A.clone().cross(U).normalize();
+    const M = 4; // cubic
+    const ata = new Array<number>(M * M).fill(0);
+    const rhs = [new Array<number>(M).fill(0), new Array<number>(M).fill(0)];
+    const basis = new Array<number>(M).fill(0);
+    for (let i = 0; i < N0; i++) {
+      const dx = pos[i * 3] - mx, dy = pos[i * 3 + 1] - my, dz = pos[i * 3 + 2] - mz;
+      const s = (2 * (dx * ax + dy * ay + dz * az - tLo)) / span - 1; // [-1, 1]
+      let p = 1;
+      for (let k = 0; k < M; k++) {
+        basis[k] = p;
+        p *= s;
+      }
+      const ou = dx * U.x + dy * U.y + dz * U.z;
+      const ow = dx * W.x + dy * W.y + dz * W.z;
+      for (let r = 0; r < M; r++) {
+        rhs[0][r] += basis[r] * ou;
+        rhs[1][r] += basis[r] * ow;
+        for (let c = 0; c < M; c++) ata[r * M + c] += basis[r] * basis[c];
       }
     }
+    // Gauss-Jordan on the 4x4 normal equations, both cross-axes at once. A
+    // singular system (a cloud with no length) falls back to the bare chord.
+    for (let col = 0; col < M; col++) {
+      let piv = col;
+      for (let r = col + 1; r < M; r++)
+        if (Math.abs(ata[r * M + col]) > Math.abs(ata[piv * M + col])) piv = r;
+      if (Math.abs(ata[piv * M + col]) < 1e-14) {
+        rhs[0].fill(0);
+        rhs[1].fill(0);
+        break;
+      }
+      if (piv !== col) {
+        for (let c = 0; c < M; c++) {
+          const t = ata[col * M + c];
+          ata[col * M + c] = ata[piv * M + c];
+          ata[piv * M + c] = t;
+        }
+        for (const b of rhs) {
+          const t = b[col];
+          b[col] = b[piv];
+          b[piv] = t;
+        }
+      }
+      const d = ata[col * M + col];
+      for (let c = 0; c < M; c++) ata[col * M + c] /= d;
+      for (const b of rhs) b[col] /= d;
+      for (let r = 0; r < M; r++) {
+        if (r === col) continue;
+        const f = ata[r * M + col];
+        if (f === 0) continue;
+        for (let c = 0; c < M; c++) ata[r * M + c] -= f * ata[col * M + c];
+        for (const b of rhs) b[r] -= f * b[col];
+      }
+    }
+    const K = bones + 1;
+    const fine: THREE.Vector3[] = [];
+    for (let i = 0; i < K * 6; i++) {
+      const f = i / (K * 6 - 1);
+      const t = tLo + span * f;
+      const s = 2 * f - 1;
+      let ou = 0, ow = 0, p = 1;
+      for (let k = 0; k < M; k++) {
+        ou += rhs[0][k] * p;
+        ow += rhs[1][k] * p;
+        p *= s;
+      }
+      fine.push(
+        new THREE.Vector3(
+          mx + ax * t + U.x * ou + W.x * ow,
+          my + ay * t + U.y * ou + W.y * ow,
+          mz + az * t + U.z * ou + W.z * ow,
+        ),
+      );
+    }
+    const line = respace(fine, K);
+
+    // 3. the bone stations: K-1 of them, the last control point closing the tip.
+    //    Bones sit at the START of their segment, so the last bone owns the tip
+    //    and none is wasted past the end of the geometry.
+    const way = line;
+    const st = way.slice(0, bones);
+    let L = 0;
+    for (let i = 1; i < way.length; i++) L += way[i].distanceTo(way[i - 1]);
+    if (!(L > 1e-5)) return;
+
+    // 4. subdivide until an edge is shorter than half a bone segment, so the
+    //    surface has somewhere to bend. Uniform 4-way, capped so a dense tail
+    //    is left alone and a sparse one cannot blow up.
+    const LIM = L / bones / 2;
+    for (let lvl = 0; lvl < 3; lvl++) {
+      let worst = 0;
+      for (let t = 0; t < pos.length; t += 9)
+        for (const [a, b] of [[0, 3], [3, 6], [6, 0]])
+          worst = Math.max(worst, Math.hypot(pos[t + a] - pos[t + b], pos[t + a + 1] - pos[t + b + 1], pos[t + a + 2] - pos[t + b + 2]));
+      if (worst <= LIM || pos.length / 9 > 1500) break;
+      const P2: number[] = [], N2: number[] = [], U2: number[] = [];
+      const corner = (c: number): number[] => [pos[c * 3], pos[c * 3 + 1], pos[c * 3 + 2], nrm[c * 3], nrm[c * 3 + 1], nrm[c * 3 + 2], uv[c * 2], uv[c * 2 + 1]];
+      // plain averages: two triangles sharing an edge write the same midpoint
+      // bit for bit, whichever way round they store it, so no crack can open
+      const mid = (a: number[], b: number[]): number[] => {
+        const m = a.map((v, i) => (v + b[i]) / 2);
+        const l = Math.hypot(m[3], m[4], m[5]) || 1;
+        m[3] /= l;
+        m[4] /= l;
+        m[5] /= l;
+        return m;
+      };
+      const emit = (...vs: number[][]): void => {
+        for (const v of vs) {
+          P2.push(v[0], v[1], v[2]);
+          N2.push(v[3], v[4], v[5]);
+          U2.push(v[6], v[7]);
+        }
+      };
+      for (let c = 0; c < pos.length / 3; c += 3) {
+        const a = corner(c), b = corner(c + 1), d = corner(c + 2);
+        const ab = mid(a, b), bd = mid(b, d), da = mid(d, a);
+        emit(a, ab, da);
+        emit(ab, b, bd);
+        emit(da, bd, d);
+        emit(ab, bd, da);
+      }
+      pos = P2;
+      nrm = N2;
+      uv = U2;
+    }
+
+    // 5. weights from distance along the centreline (nearest point on the
+    //    station polyline — continuous in position, hence identical for every
+    //    copy of a shared vertex).
+    const NV = pos.length / 3;
+    const si = new Uint16Array(NV * 4);
+    const sw = new Float32Array(NV * 4);
+    for (let i = 0; i < NV; i++) {
+      const u = paramOn(way, pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]);
+      const k0 = u >= bones - 1 ? bones - 2 : Math.floor(u);
+      const w1 = u >= bones - 1 ? 1 : u - k0;
+      si[i * 4] = k0;
+      si[i * 4 + 1] = k0 + 1;
+      sw[i * 4] = 1 - w1;
+      sw[i * 4 + 1] = w1;
+    }
+
+    // 6. the bone chain, and the mesh bound to it. Geometry and bone rests are
+    //    authored in tailRoot's own space, so the bind matrix is the identity
+    //    and each bone's inverse is just its offset from the root — no reliance
+    //    on world matrices being up to date at build time.
+    root.position.copy(st[0]);
+    for (let i = 0; i < pos.length; i += 3) {
+      pos[i] -= st[0].x;
+      pos[i + 1] -= st[0].y;
+      pos[i + 2] -= st[0].z;
+    }
+    const chain: THREE.Bone[] = [];
+    const inverses: THREE.Matrix4[] = [];
+    for (let i = 0; i < bones; i++) {
+      const bone = new THREE.Bone();
+      if (i > 0) bone.position.copy(st[i]).sub(st[i - 1]);
+      bone.userData.rest = 0;
+      (i === 0 ? root : chain[i - 1]).add(bone);
+      chain.push(bone);
+      inverses.push(new THREE.Matrix4().makeTranslation(st[0].x - st[i].x, st[0].y - st[i].y, st[0].z - st[i].z));
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    geo.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(si, 4));
+    geo.setAttribute('skinWeight', new THREE.Float32BufferAttribute(sw, 4));
+    const skinned = new THREE.SkinnedMesh(geo, material);
+    skinned.frustumCulled = false; // the bind-pose bounds do not cover a wag
+    root.add(skinned);
+    skinned.bind(new THREE.Skeleton(chain, inverses), new THREE.Matrix4());
+    this.tailChain = chain;
   }
 
   // ——— Aku mask reward (models/skull.glb) ———————————————————————————————
@@ -8261,40 +8613,8 @@ export class Player {
       const dz = z - 0.076;
       return dy * dy + dz * dz < 0.0036; // within 0.06 of the arm axis
     };
-    // Tail joints come from the mesh itself: 5 bands along the tail's curve,
-    // joints at the midpoints between neighbouring band centroids — so the
-    // chain sits ON the authored S-curve wherever Meshy put it.
-    const yB = [-0.14, -0.22, -0.3, -0.36];
-    const bandOf = (y: number): number => {
-      for (let k = 0; k < yB.length; k++) if (y > yB[k]) return k;
-      return yB.length;
-    };
-    const cents = Array.from({ length: 5 }, () => new THREE.Vector3());
-    const counts = new Array(5).fill(0) as number[];
-    for (let i = 0; i < P.count; i++) {
-      const x = P.getX(i);
-      const y = P.getY(i);
-      const z = P.getZ(i);
-      if (!isTail(x, y, z)) continue;
-      const b = bandOf(y);
-      cents[b].x += x;
-      cents[b].y += y;
-      cents[b].z += z;
-      counts[b]++;
-    }
-    for (let b = 0; b < 5; b++) if (counts[b] > 0) cents[b].multiplyScalar(1 / counts[b]);
     const mapV = (v: THREE.Vector3): THREE.Vector3 =>
       new THREE.Vector3(v.x * SXZ, (v.y + 0.5) * SY, v.z * SXZ);
-    const TJ: THREE.Vector3[] = [new THREE.Vector3(0, (-0.055 + 0.5) * SY, -0.105 * SXZ)]; // attach at the seat
-    for (let k = 1; k < 5; k++) {
-      const a = counts[k - 1] > 0 ? cents[k - 1] : null;
-      const b = counts[k] > 0 ? cents[k] : null;
-      const m =
-        a && b
-          ? a.clone().add(b).multiplyScalar(0.5)
-          : (b ?? a ?? new THREE.Vector3(0.1 * k, yB[Math.min(k - 1, 3)], -0.15));
-      TJ[k] = mapV(m);
-    }
     // Arm joints come from the mesh too: centroid "stations" along each
     // T-pose arm give the true shoulder→elbow→wrist axis (Meshy's arms droop
     // and sweep forward), and each chunk rotates its OWN axis exactly onto
@@ -8343,11 +8663,9 @@ export class Player {
       foreArmL: { test: (x, y, z) => isArm(x, y, z) && x < -0.285, pivot: [armJ.L.el.x, armJ.L.el.y, armJ.L.el.z], q: armJ.L.qFo, verts: [] },
       upperArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [armJ.R.sh.x, armJ.R.sh.y, armJ.R.sh.z], q: armJ.R.qUp, verts: [] },
       upperArmL: { test: (x, y, z) => isArm(x, y, z) && x < 0, pivot: [armJ.L.sh.x, armJ.L.sh.y, armJ.L.sh.z], q: armJ.L.qUp, verts: [] },
-      tail0: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 0, pivot: [TJ[0].x, TJ[0].y, TJ[0].z], verts: [] },
-      tail1: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 1, pivot: [TJ[1].x, TJ[1].y, TJ[1].z], verts: [] },
-      tail2: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 2, pivot: [TJ[2].x, TJ[2].y, TJ[2].z], verts: [] },
-      tail3: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 3, pivot: [TJ[3].x, TJ[3].y, TJ[3].z], verts: [] },
-      tail4: { test: (x, y, z) => isTail(x, y, z) && bandOf(y) === 4, pivot: [TJ[4].x, TJ[4].y, TJ[4].z], verts: [] },
+      // one part, skinned rather than banded (see skinTail) — its pivot is
+      // unused, the chain comes off the tail's own centreline
+      tail: { test: isTail, pivot: [0, 0, 0], verts: [] },
       // cut BELOW the baggy cuff + knee pad (leg pinches at -0.28): the sock
       // and shoe fold from inside the cuff, pads ride the thigh chunk
       shinR: { test: (x, y) => y <= -0.27 && x >= 0, pivot: [0.115, KNEE, 0], verts: [] },
@@ -8465,25 +8783,14 @@ export class Player {
     // new feet: the cached sole footprint belonged to the placeholder's shoes
     this.soleR = null;
     this.soleL = null;
-    // tail: rebuild the joint chain — FIVE joints seated on the authored
-    // curve. The chunks carry the shape, so every joint's rest is 0 and the
-    // sway driver only flexes deltas down the chain.
-    if (this.tailRoot) {
-      for (const child of [...this.tailRoot.children]) this.tailRoot.remove(child);
-      this.tailRoot.position.copy(TJ[0]);
-      this.tailChain = [];
-      let parent: THREE.Object3D = this.tailRoot;
-      for (let k = 0; k < 5; k++) {
-        const joint = new THREE.Group();
-        if (k === 0) joint.position.set(0, 0, 0);
-        else joint.position.copy(TJ[k]).sub(TJ[k - 1]);
-        joint.userData.rest = 0;
-        parent.add(joint);
-        joint.add(build(parts['tail' + k]));
-        this.tailChain.push(joint);
-        parent = joint;
-      }
-    }
+    // tail: one skinned mesh on a chain laid along its own curve (see skinTail)
+    this.skinTail(
+      parts.tail.verts,
+      (vi, v) => v.set(P.getX(vi) * SXZ, (P.getY(vi) + 0.5) * SY, P.getZ(vi) * SXZ),
+      (vi, v) => v.set(N.getX(vi) / SXZ, N.getY(vi) / SY, N.getZ(vi) / SXZ).normalize(),
+      (vi) => [UV.getX(vi), UV.getY(vi)],
+      mat,
+    );
   }
 
   private buildVisual(): THREE.Group {
