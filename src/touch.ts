@@ -372,7 +372,6 @@ export class TouchControls {
       body.tc-on .hud-counter { gap: 7px; margin-bottom: 4px; }
       body.tc-on .hud-num { font-size: 26px; letter-spacing: 1px; }
       body.tc-on .hud-icon { width: 30px; height: 30px; }
-      body.tc-on .hud-icon-crate { border-width: 3px; border-radius: 4px; }
       body.tc-on .hud-icon-crystal { width: 17px; height: 25px; }
       body.tc-on .hud-icon-gem { width: 21px; height: 16px; }
       body.tc-on .hud-relics { gap: 6px; }

@@ -65,6 +65,23 @@ enclosed by the navy outline, so the flood can never reach it.
 The only mark still built rather than cut is `+`, which the trick plate needs
 to join tricks and no sheet draws: crossed copies of the face's own dash.
 
+## HUD icons
+
+Same story: the crate and fruit counters are drawn artwork, kept at full
+resolution in `art/hud-crate.png` and `art/hud-apple.png`.
+
+```
+node tools/bake-hudicons.mjs
+```
+
+That writes `public/crate.png` and `public/apple.png`. The originals are
+1024px renders sitting in a wide empty margin, and the crate carries a faint
+wash of low-alpha pixels across its whole canvas that draws as a dim grey
+square over bright scenery. The baker floors the alpha to clear that, trims to
+the artwork's own edges so the icon fills its slot, and fits the longest side
+to 192px — twice the largest size the HUD ever draws them, and a twentieth of
+the bytes.
+
 ## Everything else
 
 Levels, physics, the character rig, the surface textures, the editor and the

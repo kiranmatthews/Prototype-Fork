@@ -13,10 +13,13 @@ import {
   TuningKey,
 } from "./tuning";
 
-// The life icon is real artwork (public/roo.png), not something drawn in code
-// — so it goes through BASE_URL, the same as the sky paintings, or it 404s on
-// the project-path GitHub Pages build.
-const LIFE_FACE_URL = `url("${import.meta.env.BASE_URL}roo.png")`;
+// Real artwork, not shapes drawn in code — so these go through BASE_URL, the
+// same as the sky paintings, or they 404 on the project-path GitHub Pages build.
+// Baked from the 1024px originals in art/ by tools/bake-hudicons.mjs.
+const art = (f: string): string => `url("${import.meta.env.BASE_URL}${f}")`;
+const LIFE_FACE_URL = art("roo.png");
+const CRATE_URL = art("crate.png");
+const APPLE_URL = art("apple.png");
 
 // Scratch for the relic pass, so a per-frame draw allocates nothing.
 const RELIC_SIZE = new THREE.Vector2();
@@ -1418,19 +1421,18 @@ export class UI {
         width: clamp(52px, 9.5vh, 84px); height: clamp(52px, 9.5vh, 84px);
         image-rendering: pixelated; flex-shrink: 0;
       }
-      .hud-icon-crate {
-        background:
-          linear-gradient(45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
-          linear-gradient(-45deg, transparent 44%, #6e4f24 44%, #6e4f24 56%, transparent 56%),
-          #b08a4a;
-        border: 5px solid #6e4f24; box-shadow: 0 4px 9px rgba(0, 0, 0, 0.55);
-        border-radius: 6px;
+      /* Both were CSS stand-ins — crossed gradients for the crate, a radial for
+         the fruit — for artwork that now exists. The PNGs are pre-trimmed to
+         their own edges, so 'contain' fills the slot without a stray margin,
+         and the drop shadow is a filter because there is no box to cast one. */
+      .hud-icon-crate, .hud-icon-wumpa {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.5));
       }
-      .hud-icon-wumpa {
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 30%, #ffd24a, #e2521e 70%);
-        box-shadow: 0 4px 9px rgba(0, 0, 0, 0.55);
-      }
+      .hud-icon-crate { background-image: ${CRATE_URL}; }
+      .hud-icon-wumpa { background-image: ${APPLE_URL}; }
       .hud-relics { gap: 10px; }
       .hud-icon-crystal {
         width: clamp(30px, 5.5vh, 48px); height: clamp(42px, 7.5vh, 66px);
