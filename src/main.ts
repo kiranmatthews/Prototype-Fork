@@ -1520,6 +1520,7 @@ const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
 const camAimTmp = new THREE.Vector3();
 let camAnchorY = 0; // the rig's vertical anchor: the ground under the skater, eased
+let camRoll = 0; // eased dutch roll tracking the grind balance needle (radians)
 const aimSmooth = new THREE.Vector3(NaN, 0, 0); // lightly-damped look target (NaN = seed on first frame)
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
@@ -1721,6 +1722,22 @@ function updateCamera(dt: number): void {
   aimSmooth.y += (lookPoint.y - aimSmooth.y) * kAimY;
 
   camera.lookAt(aimSmooth);
+
+  // GRIND BALANCE ROLLS THE SHOT. The needle is a horizontal lean, so the
+  // horizon leans with it: a rail you are losing shows up in the frame itself
+  // and not only in the meter, and catching it rights the world back up. Only
+  // the horizontal meters do this — a manual's needle is nose-to-tail, and a
+  // roll would say nothing about it. Applied AFTER lookAt, which rewrites the
+  // orientation from scratch each frame, so the roll is about the view axis and
+  // never accumulates.
+  const meter = player.balanceMeter;
+  const rollGoal =
+    meter && meter.mode === "grind"
+      ? -meter.bal * THREE.MathUtils.degToRad(TUNING.camBalanceRoll)
+      : 0;
+  // eased in and out, so stepping onto and off a rail is a lean rather than a snap
+  camRoll += (rollGoal - camRoll) * (1 - Math.exp(-7 * dt));
+  if (Math.abs(camRoll) > 1e-4) camera.rotateZ(camRoll);
 }
 
 camera.position
@@ -1915,8 +1932,8 @@ function frame(): void {
     controller: input.gamepadName,
     jump:
       `${player.lastJumpType} · hold ${player.xHoldT.toFixed(2)}s` +
-      ` · skate ${player.skateChargeT.toFixed(2)}/${TUNING.skateHoldTime.toFixed(2)}` +
-      (player.skateOn ? " ✓" : ""),
+      ` · board ${player.skateOn ? "ON" : "off"}` +
+      ` · shoulders ${player.shoulderBrakeT.toFixed(2)}s`,
     railDist: player.railCandidateDist,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     fruit: player.fruit,
