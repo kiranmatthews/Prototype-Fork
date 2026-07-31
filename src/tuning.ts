@@ -35,7 +35,7 @@ export const TUNING = {
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill (charge still tops at maxSpeed)
-  vertMax: 20, // speed ceiling on TRANSITIONS. At 20 this sits BELOW both maxSpeed (23) and downhillMax (30.5), so a transition is now the slowest surface in the game rather than the fastest: arrive on one carrying 29.8 and you are clamped to 20.0 in a single frame (measured). Raise it above downhillMax to put the big speed back in vert
+  vertMax: 32, // speed ceiling on TRANSITIONS. Above downhillMax (30.5) so vert is the FASTEST surface in the game, the way THPS reads — and the ceiling is enforced as a bleed now, not a one-frame chop, so arriving hot keeps its momentum readable
   heavyDrag: 0.005, // quadratic bleed above maxSpeed, every surface: 2.7 u/s^2 at 23, 7.2 at 38, so the top end has texture instead of a linear countdown
   rollFriction: 3.5, // CONSTANT rolling friction: the crisp part of the stop (replaces the old speed-scaled curve that made the last 1 u/s ooze)
   windDrag: 0.0015, // v^2 wind resistance: only bites up top, so you coast a long way fast then stop decisively
@@ -53,7 +53,7 @@ export const TUNING = {
   hangSnapAngle: 6, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
   hangLateral: 0.8, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
   landingFlow: 1, // how much fall speed converts into riding speed when you land on a ramp/wall
-  vertGlue: 20, // hang time: how hard a vert air is pulled back onto the wall plane
+  vertGlue: 20, // RETIRED (kept for saved-tuning compat, no slider): vert airs are ballistic now — nothing pulls the flight back onto a wall plane
   vertLaunchConserve: 0.55, // how much of the entry speed a vert launch conserves into vVel (1 = full; an angled carve stops being taxed twice)
   vertGravityBlend: 0.35, // seconds to ease from vert gravity back to street gravity when a tracked wall runs out (0 = the old single-frame 33->119 cliff)
   vertDrift: 4.5, // hang time: stick drift speed ALONG the coping during a vert air
@@ -180,7 +180,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 11; // v11: pipePump retired — pipePumpGain superseded it and applies on every transition
+export const TUNING_VERSION = 12; // v12: THPS pass — ballistic vert (vertMax 32 above downhillMax, drift conserved), rails keep entry speed (railSpeedBoost 0)
+// v11: pipePump retired — pipePumpGain superseded it and applies on every transition
 // v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
 // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
 
@@ -381,7 +382,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   downhillMax:
     'Hard ceiling for speed EARNED from downhill and pipe riding. Charging alone still tops out at maxSpeed; slopes carry you up to this, and the excess bleeds off on the flat.',
   vertMax:
-    'Speed ceiling on TRANSITIONS (bowls, banks, pipe walls), applied the instant you touch one. Set it ABOVE downhillMax and vert is where the big speed lives, which is the design it was built for. Set it BELOW — as it currently is — and a transition becomes the slowest surface you can be on: any speed you carry in above this is confiscated in a single frame, so a fast approach into a bowl stops being a way to go faster. Above maxSpeed the quadratic drag is always pulling back regardless.',
+    'Speed ceiling on TRANSITIONS (bowls, banks, pipe walls). Ships ABOVE downhillMax now, so vert is where the big speed lives — the THPS hierarchy — and the ceiling is enforced as a quick BLEED rather than a one-frame chop, so carrying downhill speed onto a bank no longer hitches. Above maxSpeed the quadratic drag is always pulling back regardless.',
   heavyDrag:
     'Quadratic bleed applied whenever you are above maxSpeed, on EVERY surface. Higher = the top of the speed range gets a harder wall to press against. (The old flat bleed only fired on level ground, so earned speed was immortal on a hill and then vanished the instant it flattened.)',
   rollFriction:
@@ -644,7 +645,6 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'hangSnapAngle',
       'hangLateral',
       'landingFlow',
-      'vertGlue',
       'vertLaunchConserve',
       'vertGravityBlend',
       'vertDrift',
@@ -718,9 +718,10 @@ export const CONST = {
   repeatDecay: [1, 0.75, 0.5, 0.25], // THPS4/THUG: the Nth use of the SAME trick in one combo pays this share of its base (last entry is the floor). World rewards — crates, fruit, enemies — never decay
   flipTime: 0.42, // how long a flip trick takes the deck to complete — finish it in the air or the landing goes sketchy and pays nothing
   ptsFlip: 110, // base for a flip trick (kickflip family), scored the moment the deck completes mid-air
+  ptsRevert: 100, // R2 within the beat after a transition touchdown: the pivot that keeps a vert combo alive into the manual (THPS3+/THUG's bridge)
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
-  hangLatMax: 8, // pipe hang: cap on the off-axis lateral carry (locked-in vert, no launching down the pipe)
-  hangLatDamp: 0.55, // vert hang: how fast the lateral carry bleeds off. THPS rules: an angled entry keeps travelling down the pipe through most of the hang (was 1.8 = parked over one spot)
+  hangLatMax: 40, // pipe hang: cap on the off-axis lateral carry. Effectively uncapped now (THPS conserves coping drift — a hard angled carve genuinely flies you down the pipe); out-running the pipe is the hang-end bail's job, not a clamp's
+  hangLatDamp: 0, // vert hang: how fast the lateral carry bleeds off. 0 = THPS: air has no friction — the drift you launched with is the drift you land with
   manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
   ropeGrabRadius: 1.1, // jump within this of a swing rope's line to catch it
   ropeClimbSpeed: 2.4, // up/down on the stick walks the grip along the rope (u/s)

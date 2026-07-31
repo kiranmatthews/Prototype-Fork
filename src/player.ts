@@ -578,6 +578,7 @@ export class Player {
   private flipKind: 'kick' | 'heel' | 'shove' | 'imposs' | 'varial' = 'kick';
   private flipName = 'Kickflip';
   private flipDeck: THREE.Object3D | null = null; // scene-level deck stand-in: performs the flip while the spin smear hides the rig
+  private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindTickT = 0; // THPS accrual while grinding
@@ -1524,6 +1525,30 @@ export class Player {
       this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
       this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
       this.slideFromWalk = false;
+    }
+
+    // REVERT (THPS3+/THUG): R2 in the beat after a transition touchdown
+    // pivots the board 180 — stance flips, a little speed pays for it, and
+    // the combo string stays alive into the manual window instead of
+    // banking. This is THE bridge that turns a vert air into a street line.
+    if (this.revertT > 0) {
+      this.revertT -= dt;
+      // (no freeSkate gate: a dead-vertical pop can land at ~0 speed and step
+      // you off the deck the same frame — the window itself is only ever
+      // opened by a vert-air touchdown, so R2 here is always the revert)
+      if (input.transferPressed && this.grounded && this.state === 'ride' && !this.isBailing) {
+        this.revertT = 0;
+        const oldStance = this.stance;
+        this.stance = -this.stance as 1 | -1;
+        this.visualYaw = wrapAngle(this.visualYaw + oldStance * Math.PI * this.sidePose);
+        this.speed *= 0.88; // the pivot scrubs a little — THPS's revert tax
+        this.landingScoring = true; // the revert IS part of the landing's trick window
+        this.score(CONST.ptsRevert, 'Revert');
+        this.landingScoring = false;
+        this.comboTimer = Math.max(this.comboTimer, TUNING.manualLandGrace);
+        this.emitSparks(6, 0xa0e8ff, 1.4);
+        sfx.play('skateTransition', 0.55, 1.3);
+      }
     }
 
     // The combo clock only runs while plain-rolling — airs, grinds, and
@@ -2613,7 +2638,14 @@ export class Player {
       if (over > TUNING.maxSpeed) {
         this.speed -= Math.sign(this.speed) * Math.min(TUNING.heavyDrag * over * over * dt, over);
       }
-      this.speed = THREE.MathUtils.clamp(this.speed, -hardCap, hardCap);
+      // The ceiling is a fast BLEED, not a one-frame chop: arriving on a
+      // transition carrying downhill speed eases to the cap over a few frames
+      // so the touchdown never hitches (measured: the old clamp confiscated
+      // ~10 u/s in a single step at the bank's foot).
+      const capOver = Math.abs(this.speed) - hardCap;
+      if (capOver > 0) {
+        this.speed -= Math.sign(this.speed) * Math.min(capOver, (10 + capOver * 3) * dt);
+      }
       // A free heading never reverses through zero — stalling on a hill just
       // stops you. On ground too steep to stand, you can't hover: whenever the
       // board is SLOW and pointed roughly along the coping (|ty| small — not
@@ -3176,29 +3208,22 @@ export class Player {
     // finds, so curved walls and bowl corners carry the hang around with them.
     if (this.vertAir && !this.hangPipe) this.trackVertWall(level, dt);
     if (this.vertAir) {
-      // A halfpipe hang locks HARD to the launch axis (near 100%) so you rise
-      // and fall on the same vertical line and drop back onto your take-off spot
-      // — no drift into the pipe. A TRACKED wall hang locks just as hard: the
-      // feeler hands us the exact wall line every frame (THUG snaps position
-      // to the track point outright). Only untracked legacy crests keep the
-      // soft vertGlue ease.
-      const g = this.pipeHang || this.vertTracked ? 1 : Math.min(1, TUNING.vertGlue * dt);
-      const dx = this.pos.x - this.vertAnchor.x;
-      const dz = this.pos.z - this.vertAnchor.z;
-      const d = dx * this.vertNormal.x + dz * this.vertNormal.z;
-      this.pos.x -= this.vertNormal.x * d * g;
-      this.pos.z -= this.vertNormal.z * d * g;
+      // BALLISTIC VERT (THPS): the air is free flight. The launch already did
+      // the assist work — enterVertAir zeroes the into-ramp component, so with
+      // nothing pushing you across the wall normal you rise and fall on the
+      // launch line by plain physics, no per-frame plane glue pulling the
+      // position back. (The old glue also bent flights around bowl corners
+      // mid-air; trackVertWall still watches the wall, but only to know when
+      // the vert ended — the flight itself is gravity's.)
       const tx = -this.vertNormal.z; // wall tangent (along the coping)
       const tz = this.vertNormal.x;
-      // carried lateral momentum from an off-axis entry: this is what flies you
-      // across a gap / transfers you to the far wall (glue only pins the normal)
+      // carried lateral momentum from an off-axis entry: conserved for the
+      // WHOLE hang (air has no friction) — a hard angled carve genuinely
+      // flies you down the pipe, lines up transfers, covers ground. Running
+      // out of pipe is the hang-end bail's problem, not a damper's.
       if (this.vertLatVel !== 0) {
         this.pos.x += tx * this.vertLatVel * dt;
         this.pos.z += tz * this.vertLatVel * dt;
-        // ...but it bleeds off through the hang: drift down the pipe early,
-        // come down LOCKED over one spot (the THPS contract — pipes, ramp
-        // crests, all of it).
-        this.vertLatVel *= Math.exp(-CONST.hangLatDamp * dt);
       }
       // Stick steering along the coping — OFF during a pipe hang (locked-in
       // vert: the stick SPINS you, it never translates you; this slide is
@@ -3502,6 +3527,9 @@ export class Player {
       // give the coping rails a beat of yield so the touchdown can never
       // curb-stop or trip on the very rail it is meant to land beside.
       if (this.vertAir) this.vertLandGraceT = 0.6;
+      // REVERT window: touching down out of a vert air opens a beat where R2
+      // pivots the landing into a live combo link (see the handler in step).
+      if (wasPipeHang || this.vertAir || hit.halfpipe !== undefined) this.revertT = 0.3;
       const preFx = this.axisF.x; // heading BEFORE the landing projection — a
       const preFz = this.axisF.z; // reversal against it = landed riding fakie
       // Landing out of a lateral hang: keep the sideways momentum so a gap
@@ -3612,14 +3640,13 @@ export class Player {
       const devPi = Math.abs(a2 - Math.PI);
       const tol = THREE.MathUtils.degToRad(TUNING.spinTolerance);
       const spun = Math.abs(this.grabSpinAngle) > 0.02;
-      // A halfpipe hang never bails or switches you on any residual rotation —
-      // you were CLIMBING (holding a direction), not doing a trick spin, so the
-      // drop-back-in is always a clean neutral landing.
-      // Any vert air (analytic pipe OR tracked mesh wall) is a CLIMB, not a trick
-      // spin, so its drop-back-in is always a clean neutral landing — same rule
-      // the auto-correct above now uses. Keep the two consistent.
-      // THPS's three-tier judgment: on-line = clean, inside the sketchy net =
-      // kept-but-taxed (wobble, speed scrub, half points), past the net = bail.
+      // THPS's three-tier judgment, VERT AIRS INCLUDED now: on-line = clean,
+      // inside the sketchy net = kept-but-taxed (wobble, speed scrub, half
+      // points), past the net = bail. Off-axis vert landings are THE
+      // risk/reward of vert — the old force-complete made every 900 free.
+      // (A bare pipe-hang drop-in stays safe on its own: hangs start un-spun
+      // and the climb hold never writes rotation, so spun is false unless you
+      // actually threw one.)
       const offLine = Math.min(dev0, devPi);
       const sketchNet = Math.max(tol, THREE.MathUtils.degToRad(TUNING.sketchyTolerance));
       // Touching down while the deck is still mid-flip: the trick is eaten and
@@ -3627,10 +3654,8 @@ export class Player {
       // loop leans on quick spin-attacks, so a late flip stings, not flattens).
       const flipLate = this.flipT > 0;
       if (flipLate) this.flipT = 0;
-      const funny = spun && offLine > sketchNet && !(this.pipeHang || this.vertAir);
-      const sketchy =
-        (spun && !funny && offLine > tol && !(this.pipeHang || this.vertAir)) ||
-        (flipLate && !funny);
+      const funny = spun && offLine > sketchNet;
+      const sketchy = (spun && !funny && offLine > tol) || (flipLate && !funny);
       if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
@@ -3893,10 +3918,10 @@ export class Player {
       this.vertLatVel = 0; // snapped to a pure vertical hang
     } else {
       this.vertLatVel = entrySpeed * along * TUNING.hangLateral;
-      // Locked-in THPS vert, EVERY vert air (pipes and ramp crests): an
-      // angled entry drifts you down the coping a few feet, never launches
-      // you down its length (a hard carve at top speed used to out-run the
-      // pipe — or fly clean off the side of a ramp).
+      // THPS conserves coping drift: a hard angled carve at speed genuinely
+      // launches you down the pipe's length — that's how transfers and
+      // lip-to-lip gaps get lined up. hangLatMax is only a sanity ceiling
+      // now; drifting off the END of the pipe is the hang-end bail.
       this.vertLatVel = THREE.MathUtils.clamp(this.vertLatVel, -CONST.hangLatMax, CONST.hangLatMax);
     }
     // CONSERVE THE LAUNCH MAGNITUDE. The crest paths convert with `lastTy *
@@ -3905,9 +3930,8 @@ export class Player {
     // shrinks the vertical term. Take whatever is left after the lateral share
     // and make sure vVel is at least that: head-on this is a no-op, and the
     // steeper the carve angle the more it hands back.
-    // Deliberately conserve into vVel ONLY — vertLatVel keeps hangLatMax and
-    // hangLatDamp untouched, because those are the guarantee that an angled
-    // entry can't out-run the pipe or fly off the side of a ramp.
+    // Deliberately conserve into vVel ONLY — the lateral share already lives
+    // in vertLatVel and is carried (undamped) through the whole hang.
     const conserved = Math.sqrt(
       Math.max(0, entrySpeed * entrySpeed - this.vertLatVel * this.vertLatVel),
     );
@@ -5439,28 +5463,12 @@ export class Player {
       // if you re-center the stick.
       const grabActive = this.grabPhase === 'enter' || this.grabPhase === 'held';
       const grabDir = Math.abs(this.rawInput.moveX) > 0.3 || Math.abs(this.rawInput.moveY) > 0.3;
-      // THPS AUTO-CORRECT: in the FINAL beat of a pipe-hang descent any live
-      // rotation COMMITS — it completes to the nearest 180 before the wheels
-      // touch, at whatever rate the time left demands (grabbing or not, stick
-      // held or not). Where you visibly rotate to IS where you land.
-      // ...and it must cover EVERY vert air, not just analytic pipes. A tracked
-      // mesh wall (bowl, banked wall) sets vertAir without pipeHang, and that is
-      // the one place the stick keeps writing rotation with no snap running — so
-      // a bowl air with the stick still held had a ~39ms window to be on-axis or
-      // bail. The vert loop was punishing you for doing what the vert loop is for.
-      const committing =
-        (this.pipeHang || this.vertAir) &&
-        this.vVel < 0 &&
-        this.grabSpinAngle !== 0 &&
-        (this.pos.y - this.vertAnchor.y) / Math.max(1, -this.vVel) < 0.25;
-      const commitSpin = (dtc: number): void => {
-        const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
-        const d = target - this.grabSpinAngle;
-        const tLeft = Math.max(0.06, (this.pos.y - this.vertAnchor.y) / Math.max(1, -this.vVel));
-        const rate = Math.max(CONST.grabSnapRate, Math.abs(d) / (tLeft * 0.7));
-        const step = rate * dtc;
-        this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
-      };
+      // (The old vert AUTO-CORRECT — force-completing any live rotation to the
+      // nearest 180 in the final beat of a descent — is gone. No THPS game
+      // finishes your spin for you at unbounded angular rate: the assist is
+      // the release-snap below plus the landing tolerance, and coming down
+      // mid-rotation is now judged clean / sketchy / bail on VERT airs the
+      // same as street ones. Big spins are earned again.)
       // Grabs are a VERT trick now: a pipe hang or a tracked wall air, where
       // there is height and time to hold a pose and come back down on the
       // transition. A street ollie, a kicker, a rail exit — the airs you spend
@@ -5488,13 +5496,10 @@ export class Player {
           if (this.grabT >= CONST.grabTransition) this.grabPhase = 'held';
         }
         // Circle + left/right = grab-spin THAT way (left arrow spins left).
-        // The trajectory is locked either way — but land mid-pose or off-axis
-        // and you bail. In a pipe hang the final descent auto-corrects the
-        // rotation so the grab lands on-axis.
+        // The trajectory is locked either way — but land mid-pose or too far
+        // off-axis and you bail (a near miss is a sketchy landing now).
         const gsp = this.spinStick();
-        if (committing) {
-          commitSpin(dt);
-        } else if (gsp !== 0) {
+        if (gsp !== 0) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(gsp) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         }
@@ -5537,11 +5542,10 @@ export class Player {
             this.grabGraceTimer = CONST.grabGrace;
           }
         }
-        // HANG-TIME SPIN: glued to the wall, the stick alone spins you — no grab
+        // HANG-TIME SPIN: the stick alone spins you in a vert air — no grab
         // needed. HOLD toward either end of the coping (even the direction you
         // carved up with) to keep rotating; release to snap to the nearest 180
-        // and land. A pipe hang never bails on this, and the final descent
-        // auto-corrects (committing) so where you rotate to is where you land.
+        // and land, or ride it to the wheels and take the judgment.
         // STREET AIRS SPIN TOO (THPS: holding left/right rotates EVERY air
         // from the moment the wheels leave the ground — spinning a gap ollie
         // is the core air verb): any board air takes the same stick-spin, and
@@ -5550,9 +5554,7 @@ export class Player {
         const hsp = this.spinStick();
         const streetSpin =
           this.airFromSkate && this.airGrav === 'board' && !this.wallriding && !this.isBailing;
-        if (committing) {
-          commitSpin(dt);
-        } else if ((this.vertAir || streetSpin) && !this.slamActive && hsp !== 0) {
+        if ((this.vertAir || streetSpin) && !this.slamActive && hsp !== 0) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(hsp) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
