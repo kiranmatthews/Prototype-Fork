@@ -354,23 +354,9 @@ export class Player {
   // the travel axes ARE the board's heading and the stick carves them around
   // — no more axis-locked "brake if you turn too far".
   private freeSkate = false;
-  // Deliberate dismount (shoulder brake bled under dismountSpeed, or a slide
-  // jump): drop the skate persistence THIS frame so the feet take the stick
-  // immediately.
+  // Deliberate dismount (pull-back brake bled to walking pace): drop the
+  // skate persistence THIS frame so the feet take the stick immediately.
   private stepOff = false;
-  // The board was DELIBERATELY dropped (both shoulders, on the ground) and
-  // stays out until it is deliberately taken away again. Distinct from
-  // freeSkate, which also covers momentum you never asked for — a rail exit, a
-  // downhill roll, a slide.
-  private mounted = false;
-  // the shoulder pair must come back UP before it can flip the board again
-  private shoulderArmed = true;
-  // PRESS-AND-HOLD JUMP HEIGHT: >= 0 while the window from an on-foot press is
-  // still open; the launch endpoints it interpolates between.
-  private holdT = -1;
-  private holdLo = 0;
-  private holdHi = 0;
-  private holdY0 = 0; // launch height, so the window can match a launch's ENERGY
   // SWITCH STANCE: 1 = regular, -1 = switch (landed a 180 — the body faces
   // opposite the travel direction until the next 180 or stepping off).
   private stance: 1 | -1 = 1;
@@ -837,11 +823,11 @@ export class Player {
     return this.grabPhase === 'enter' || this.grabPhase === 'held';
   }
 
-  // debug readouts for the jump + board-on/off system
+  // debug readouts for the jump/skate-commit system
   get xHoldT(): number {
-    return this.holdT >= 0 ? this.holdT : this.chargeTimer;
+    return this.chargeTimer;
   }
-  get shoulderBrakeT(): number {
+  get skateChargeT(): number {
     return this.skateCharge;
   }
 
@@ -960,9 +946,6 @@ export class Player {
     this.airFromSkate = false;
     this.airGrav = 'foot';
     this.stepOff = false;
-    this.mounted = false; // respawn puts you back on your feet
-    this.shoulderArmed = true;
-    this.holdT = -1;
     this.stance = 1;
     this.vertAir = false;
     this.vertLatVel = 0;
@@ -1873,13 +1856,10 @@ export class Player {
     const planar =
       Math.hypot(this.pos.x - this.prevPos.x, this.pos.z - this.prevPos.z) / Math.max(dt, 1e-4);
     this.crawling = false;
-    // The two ends of THIS jump's height scale, remembered so the press-and-hold
-    // window in the air can walk the launch up between them (see holdT).
-    const hScale =
-      (fromSlide ? TUNING.slideJumpHeight : 1) * (wasCrawling ? CONST.crouchJumpMult : 1);
-    this.holdLo = TUNING.jumpMinVelocity * hScale;
-    this.holdHi = TUNING.jumpVelocity * hScale;
-    this.vVel = THREE.MathUtils.lerp(this.holdLo, this.holdHi, t);
+    this.vVel =
+      THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t) *
+      (fromSlide ? TUNING.slideJumpHeight : 1);
+    if (wasCrawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
     const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
     // Crouch and slide jumps strike the classic Crash star pose in the air.
     if (fromSlide || wasCrawling) this.starTimer = 0.6;
@@ -1904,7 +1884,6 @@ export class Player {
       this.airFromSkate = false; // a platforming hop, not a board air (no grabs, no skate carry)
       this.slideFromWalk = true; // force the on-foot touchdown clamp: no skate takeover on landing
       this.freeSkate = false; // DROP the board — a slide jump is on-foot even if you slid out of a skate
-      this.mounted = false; // …and it is a real dismount: the shoulders own putting it back
       this.stepOff = true;
       this.slideTimer = 0;
       this.slideEndPending = false; // consumed by a slide JUMP: no plain-slide scrub
@@ -2075,47 +2054,35 @@ export class Player {
       this.crouchGraceT = CONST.crouchJumpGrace;
     }
 
-    // Walk vs skate: on foot by default (Crash direct drive); THE SHOULDERS put
-    // the board down and take it away again, and any carried momentum —
-    // downhill, rail exits, slides, boosts — keeps you skating regardless.
-    //
-    // BOTH SHOULDERS (L2+L2) is the board switch, and it is ground-only: you
-    // cannot step on or off in mid-air. Mounting hands you mountSpeed for free,
-    // so the board is never dropped stalled. Dismounting is a BRAKE first — it
-    // bleeds speed and only hands you back to your feet once you are under
-    // dismountSpeed, so a squeeze you let go of early is just a brake and never
-    // commits you. EITHER shoulder alone brakes too, but only down to
-    // brakeFloor: a half-squeeze is a brake you can lean on through a corner
-    // without it deciding to end your run.
-    //
-    // (X used to be the commit meter — hold it with a direction long enough and
-    // the board appeared. It is now purely the accelerator on the board, and a
-    // press-to-jump button on foot; see chargedJump.)
+    // Walk vs skate: on foot by default (Crash direct drive); holding X puts
+    // the board down and builds speed, and any carried momentum — downhill,
+    // rail exits, slides, boosts — keeps you skating until it bleeds back to
+    // walking pace.
+    // X is release-to-jump; HOLDING it is the commit meter. Skate drive only
+    // engages after skateHoldTime of X + a held direction AND skateEntrySpeed
+    // of real movement — quick taps and stationary crouches stay pure Crash.
+    // ANY held direction commits (digital), and the entry speed gate reads
+    // actual movement in any direction — so pushing sideways skates exactly
+    // like pushing forward, never stuck in second-class walk.
+    const stickHeld = input.moveX !== 0 || input.moveY !== 0;
+    if (this.charging && stickHeld) this.skateCharge += dt;
+    else this.skateCharge = 0;
     const planarSpeed = Math.max(Math.abs(this.speed), this.lastPlanar);
-    // ONE BOARD SWITCH PER SQUEEZE. The pair has to come back up before it can
-    // flip the board again, and the squeeze that mounts does not also brake —
-    // otherwise a single squeeze would drop the board, immediately bleed the
-    // mount's own push away and step you straight back off, and a dismount would
-    // be followed by an instant re-mount from the fingers still holding.
-    // ONE shoulder never disarms: it is a brake you lean on, not a switch.
-    const bothShoulders = input.shoulderL && input.shoulderR;
-    const anyShoulder = input.shoulderL || input.shoulderR;
-    if (!anyShoulder) this.shoulderArmed = true;
-    const boardable = this.grounded && this.slideTimer <= 0 && !slamFlat && !this.crawling;
-    if (boardable && bothShoulders && this.shoulderArmed && !this.mounted && !this.freeSkate) {
-      this.mounted = true;
-      this.shoulderArmed = false;
-      // the mount IS a push: enough to roll away on, keeping more if you had it
-      const dir = this.speed < -0.01 ? -1 : 1;
-      if (Math.abs(this.speed) < TUNING.mountSpeed) this.speed = TUNING.mountSpeed * dir;
-      sfx.play('ollie', 0.5);
-    }
-    const shoulderBraking =
-      anyShoulder && this.shoulderArmed && this.freeSkate && this.grounded && this.slideTimer <= 0;
-    // Airborne, or off the board: the switch is inert and the state can't stick.
-    if (!this.freeSkate && !this.mounted) this.skateCharge = 0;
-    else this.skateCharge = anyShoulder && this.grounded ? this.skateCharge + dt : 0;
-    const pushingOff = this.mounted;
+    // Standstill launch: a charge planted from a dead stop keeps the feet pinned
+    // the whole time (no slide), then pops STRAIGHT onto the board the instant
+    // it's held long enough with a direction — no entry-speed gate, because the
+    // feet never moved to build one. The seed below gives it its first roll.
+    const plantedPush =
+      this.charging &&
+      this.chargePlanted &&
+      stickHeld &&
+      this.skateCharge >= TUNING.skateHoldTime;
+    const pushingOff =
+      plantedPush ||
+      (this.charging &&
+        stickHeld &&
+        this.skateCharge >= TUNING.skateHoldTime &&
+        planarSpeed >= TUNING.skateEntrySpeed);
     this.skateOn = pushingOff;
     // Ground too steep to RIDE (halfpipe transitions, steep banks): with real
     // momentum the board pops out here. Steepness reads the SMOOTHED ride plane,
@@ -2177,10 +2144,9 @@ export class Player {
         this.axisF.set(rx * inv, 0, -ry * inv);
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
         this.speed = Math.max(Math.abs(this.speed), this.lastPlanar);
-        // Dropped straight onto the board from a standstill: the mount's own
-        // push is its first roll, so it skates off instead of revving up from a
-        // dead stop.
-        if (this.mounted) this.speed = Math.max(this.speed, TUNING.mountSpeed);
+        // Popped straight onto the board from a standstill: hand it a first roll
+        // so it skates off immediately instead of revving up from a dead stop.
+        if (plantedPush) this.speed = Math.max(this.speed, TUNING.skateEntrySpeed);
       } else if (this.speed < 0) {
         // coasting in on backward momentum: flip to a positive heading
         this.axisF.negate();
@@ -2270,12 +2236,7 @@ export class Player {
       // against travel brakes hard (turnaround); input with travel coasts
       // easy; no input bleeds friction back toward walking pace. A slide is
       // canned: it ignores the stick entirely and keeps its momentum.
-      // set by ANY brake, so the downhill boost yields to it. The shoulder brake
-      // declares itself here, up front, because the slope-gravity guard below
-      // reads the flag — its actual bleed lands at the end of the block, after
-      // the carve and the pump, so nothing can out-accelerate it.
-      let braking =
-        shoulderBraking && Math.abs(this.speed) > (bothShoulders ? 0 : TUNING.brakeFloor);
+      let braking = false; // set by either brake, so the downhill boost yields to it
       if (this.slideTimer > 0) {
         // canned 8-axis slide: the along-course component lives in `speed`,
         // the cross component is applied in the lateral block below
@@ -2529,33 +2490,6 @@ export class Player {
         this.speed -= Math.sign(this.speed) * Math.min(TUNING.heavyDrag * over * over * dt, over);
       }
       this.speed = THREE.MathUtils.clamp(this.speed, -hardCap, hardCap);
-      // SHOULDER BRAKE, last word on the frame's speed so it beats the carve,
-      // the pump and slope gravity alike. Both shoulders bleed all the way down
-      // and hand you back to your feet under dismountSpeed; one alone stops at
-      // brakeFloor, so a half-squeeze is a brake you steer with and nothing
-      // more. Ground only — squeezing in mid-air does nothing.
-      if (shoulderBraking) {
-        const floor = bothShoulders ? 0 : TUNING.brakeFloor;
-        const s = Math.abs(this.speed);
-        if (s > floor) {
-          const next = Math.max(floor, s - TUNING.shoulderBrake * dt);
-          this.speed = Math.sign(this.speed) * next;
-          if (s > 12 && this.haltCd <= 0) {
-            sfx.play('skateHalt', 0.6);
-            this.haltCd = 0.6;
-          }
-        }
-        // ONE shoulder also HOLDS you at its floor: with no direction held the
-        // ordinary roll-out would bleed you straight through it, which is the
-        // same as having no floor at all.
-        if (!bothShoulders) this.speed = Math.sign(this.speed || 1) * Math.max(Math.abs(this.speed), floor);
-        if (bothShoulders && Math.abs(this.speed) <= TUNING.dismountSpeed) {
-          this.mounted = false;
-          this.shoulderArmed = false; // this squeeze is spent: let go before re-mounting
-          this.stepOff = true; // the feet take the stick THIS frame
-          this.speed = 0;
-        }
-      }
       // A free heading never reverses through zero — stalling on a hill just
       // stops you. On ground too steep to stand, you can't hover: whenever the
       // board is SLOW and pointed roughly along the coping (|ty| small — not
@@ -2965,31 +2899,19 @@ export class Player {
     // press during the slide arms a high leap, fired on release.
     if (this.slideTimer > 0) {
       this.jumpBufferT = 0;
-      // A slide jump is a PLATFORMING leap, so it fires on the press like every
-      // other on-foot jump; the hold that follows sets its height.
-      if (input.jumpPressed) {
-        this.chargeTimer = 0;
-        this.charging = true;
+      if (input.jumpPressed) this.charging = true;
+      if (this.charging && input.jumpHeld) {
+        this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      }
+      if (input.jumpReleased && this.charging) {
         this.chargedJump(dt);
-        this.holdT = 0;
-        this.holdY0 = this.pos.y;
         return;
       }
     } else {
-      // Buffered pre-landing input: fire it now that we're down. On foot the
-      // buffer holds a PRESS, so it fires whether or not X is still down and
-      // hands the height window straight over — a buffered hop can still be held
-      // tall. On the board it holds a release, and a fresh charge beats it.
+      // Buffered pre-landing release: fire it now that we're down. If X is
+      // already held again, the fresh charge wins and the buffer is dropped.
       if (this.jumpBufferT > 0 && !slamFlat && this.state === 'ride') {
         this.jumpBufferT = 0;
-        if (!this.freeSkate) {
-          this.chargeTimer = 0;
-          this.charging = true;
-          this.chargedJump(dt);
-          this.holdT = 0;
-          this.holdY0 = this.pos.y;
-          return;
-        }
         if (!input.jumpHeld) {
           this.chargeTimer = this.jumpBufferCharge;
           this.chargedJump(dt);
@@ -2997,115 +2919,54 @@ export class Player {
         }
       }
 
-      // X is TWO buttons depending on what is under you.
-      //
-      // ON FOOT it is a jump button: it fires on the PRESS, at the smallest hop,
-      // and keeps building height for as long as you keep it down (the top-up
-      // lives in stepAir — this only opens the window). No wind-up, no waiting
-      // on a release to find out whether you jumped.
-      //
-      // ON THE BOARD it is still the accelerator, so it cannot fire on the press
-      // — every push would launch you. There it stays release-to-ollie, which is
-      // also what makes a long speed-pump earn the big ollie.
-      // Climbing a near-vert wall on either: DON'T jump into the wall — reserve
-      // the input as the lip LAUNCH (the imminent crest reads vertLaunchT and
-      // flies you higher into hang time). If no crest comes, it just fizzles.
-      // (onTransition, not bare steepness — swallowing the jump on a banked ROAD
-      // would just eat it, since no vert crest is ever coming)
-      const climbingVert =
-        steepGround && this.onTransition && this.speed > 0.5 && this.lastTy > TUNING.vertLip * 0.5;
-      if (this.freeSkate) {
-        if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
-          if (!this.charging) this.chargePlanted = false; // the board is rolling: nothing to plant
-          this.charging = true;
-          this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      // Charge jump: holding X drops the board, crouches, builds jump power,
+      // and skates (the speed build lives in the skate branch above); releasing
+      // fires the jump (coyote grace applies at ledges). A quick tap still
+      // gives a serviceable hop.
+      if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
+        if (!this.charging) {
+          // A charge begun at a STANDSTILL plants the feet: holding a
+          // direction won't slide you around or trip the skate — it aims the
+          // jump, playing out as air movement the moment you release.
+          // (lastPlanar = PREVIOUS frame's measured movement — the walk drive
+          // above may have already set this frame's speed before we arm.)
+          this.chargePlanted = this.lastPlanar < 1 && this.slideTimer <= 0;
         }
-        if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
-          if (climbingVert) this.vertLaunchT = 0.25;
-          else this.chargedJump(dt);
-        }
-      } else if (input.jumpPressed && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
+        this.charging = true;
+        this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      }
+      if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
+        // Climbing a near-vert wall: DON'T ollie into the wall — reserve the
+        // release as the lip LAUNCH (the imminent crest reads vertLaunchT and
+        // flies you higher into hang time). If no crest comes, it just fizzles.
+        // (onTransition, not bare steepness — swallowing the ollie on a banked
+        // ROAD would just eat the jump, since no vert crest is ever coming)
+        const climbingVert =
+          steepGround && this.onTransition && this.speed > 0.5 && this.lastTy > TUNING.vertLip * 0.5;
         if (climbingVert) this.vertLaunchT = 0.25;
-        else {
-          this.chargeTimer = 0; // the press buys the floor; the hold buys the rest
-          this.charging = true;
-          this.chargedJump(dt);
-          this.holdT = 0;
-          this.holdY0 = this.pos.y;
-        }
+        else this.chargedJump(dt);
       }
     }
   }
 
   private stepAir(dt: number, input: Input, level: Level): void {
-    // PRESS-AND-HOLD JUMP HEIGHT. The on-foot jump already launched, at its
-    // smallest; keeping X down walks the launch up toward jumpVelocity over
-    // jumpChargeTime, and letting go stops it there. Raising vVel a frame or two
-    // into the rise is indistinguishable from launching higher, and it means the
-    // jump answers the button instantly instead of waiting on the release to
-    // find out how high you meant it.
-    // The window is deliberately much shorter than the smallest hop's own rise
-    // (jumpMinVelocity / riseGravity), so the height is always settled while you
-    // are still going up — you never see the hop finish and then grow.
-    if (this.holdT >= 0) {
-      if (input.jumpHeld && this.holdT < TUNING.jumpChargeTime && this.vVel > 0) {
-        this.holdT += dt;
-        const f = Math.min(1, this.holdT / Math.max(TUNING.jumpChargeTime, 1e-4));
-        // Match the ENERGY of a launch at lerp(min, max, f), rather than just
-        // shoving vVel up to it: v² = want² - 2·g·(height already gained). That
-        // makes the arc exactly the one that velocity would have flown, so the
-        // height envelope stays the one that was tuned.
-        //   Clamping vVel up to `want` instead would ALSO be cancelling gravity
-        //   for the length of the window — a full hold measured 2.4x a tap where
-        //   the velocity scale only says 1.36x, quietly putting every ledge in
-        //   every level in reach. Adding a flat delta undershoots the other way
-        //   (the late impulse loses ~10% of the peak). This is neither.
-        const want = THREE.MathUtils.lerp(this.holdLo, this.holdHi, f);
-        const dy = Math.max(0, this.pos.y - this.holdY0);
-        this.vVel = Math.max(
-          this.vVel,
-          Math.sqrt(Math.max(0, want * want - 2 * TUNING.riseGravity * dy)),
-        );
-        this.launchVy = Math.max(this.launchVy, want); // the double-jump window scales off it
-      } else {
-        this.holdT = -1;
-      }
-    }
     if (this.wallriding) {
       this.stepWallride(dt, input, level);
       return;
     }
-    // Coyote grace at a ledge you already rolled off — the same two buttons X is
-    // on the ground: a press on foot, a release on the board.
-    let pressSpent = false;
+    // Coyote release: letting go of a charge just after rolling off a ledge
+    // still jumps. A press-then-release fully in the air (tap) works too.
     if (this.coyoteTimer > 0) {
-      if (this.airFromSkate) {
-        if (input.jumpHeld && !this.charging) this.charging = true; // tap started mid-air
-        if (input.jumpReleased && this.charging) this.chargedJump(dt);
-      } else if (input.jumpPressed) {
-        this.chargeTimer = 0;
-        this.charging = true;
+      if (input.jumpHeld && !this.charging) this.charging = true; // tap started mid-air
+      if (input.jumpReleased && this.charging) {
         this.chargedJump(dt);
-        this.holdT = 0;
-        this.holdY0 = this.pos.y;
-        // the coyote jump ATE this press — the double jump below must not arm off
-        // it as well, or one button at a ledge would buy two jumps
-        pressSpent = true;
       }
     } else {
-      // A jump input a hair before touchdown is buffered for a beat so it hops on
-      // landing instead of being eaten. ON FOOT the thing worth buffering is the
-      // PRESS (the press IS the jump there); on the board the release still
-      // fires, so that is what gets held. The on-foot buffer stands down while a
-      // double jump is available — that press belongs to the double.
-      if (this.airFromSkate) {
-        if (input.jumpReleased) {
-          this.jumpBufferT = 0.14;
-          this.jumpBufferCharge = this.charging ? this.chargeTimer : 0;
-        }
-      } else if (input.jumpPressed && (this.airJumpUsed || TUNING.doubleJump <= 0.5)) {
+      if (input.jumpReleased) {
+        // X let go in the air: buffer a landing jump for a beat, so a release
+        // a hair before touchdown still hops (it only fires if landing soon).
         this.jumpBufferT = 0.14;
-        this.jumpBufferCharge = 0;
+        this.jumpBufferCharge = this.charging ? this.chargeTimer : 0;
       }
       if (this.charging) {
         // grace expired: the charge fizzles
@@ -3139,7 +3000,7 @@ export class Player {
       !this.slamActive &&
       !this.grabbing
     ) {
-      if (input.jumpPressed && !pressSpent && !this.airJumpUsed) this.airTapT = 1e-4; // arm the tap
+      if (input.jumpPressed && !this.airJumpUsed) this.airTapT = 1e-4; // arm the tap
       else if (this.airTapT > 0 && input.jumpHeld) this.airTapT += dt;
       if (this.airTapT > 0.2) this.airTapT = 0; // held past a tap: it's a charge
       if (input.jumpReleased && this.airTapT > 0 && !this.airJumpUsed) {
@@ -4824,7 +4685,6 @@ export class Player {
     this.airFromSkate = false;
     this.airGrav = 'foot'; // the board is in pieces: fall like a platformer
     this.freeSkate = false; // the board is in pieces — whatever comes next is on foot
-    this.mounted = false;
     this.speed = Math.max(1.5, this.grindVel * 0.4);
     this.vVel = -1.5;
     this.airMomentum = false;

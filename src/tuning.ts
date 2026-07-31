@@ -26,7 +26,7 @@ export const TUNING = {
   jumpMinVelocity: 12, // quick-tap jump
   ollieVelocity: 11, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
   ollieMinVelocity: 6.5, // quick-tap board ollie. NOTE this no longer clears a crate on its own: measured, a tap now peaks at 0.559 against a 0.96 crate (it was 8.25, tuned to peak at exactly 0.962 for that reason). Clearing a crate on the board is a CHARGED ollie now — hold X and the full pop peaks at 1.679. The ramp climb still stacks on top (see chargedJump), so a lip pays out instead of robbing you
-  jumpChargeTime: 0.18, // ON FOOT the jump fires on the PRESS and keeps building while X stays down: hold this long for full height. Deliberately well inside the smallest hop's own rise (jumpMinVelocity / riseGravity ~= 0.36s), so the height is settled before the hop is over. On the BOARD X is the accelerator and the ollie still charges to this on release
+  jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
@@ -78,11 +78,8 @@ export const TUNING = {
   spinTolerance: 30, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail. 30 still leaves 240 of the circle bailing — it's a net under the auto-correct, not a removal
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // speed gate on the transition-carve SFX only — the board VISUAL and the rolling loop follow the skate state, not a speed
-  // BOARD ON / OFF lives on the shoulders (L2+R2 together), ground only.
-  mountSpeed: 9, // the push you get for free when you drop the board — never mount stalled
-  shoulderBrake: 30, // how hard a held shoulder bleeds speed on the board
-  dismountSpeed: 3.5, // BOTH shoulders: brake past this and you step off onto your feet
-  brakeFloor: 8, // ONE shoulder alone will not take you below this — it brakes, it never commits you
+  skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
+  skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
   carveGrip: 135, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
   carveGripRatio: 0.05, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
@@ -172,8 +169,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 12; // v12: board on/off moved to the shoulders (skateHoldTime/skateEntrySpeed retired for mountSpeed/shoulderBrake/dismountSpeed/brakeFloor), and the on-foot jump fires on the press (jumpChargeTime is now the short hold-for-height window)
-// v11: pipePump retired — pipePumpGain superseded it and applies on every transition
+export const TUNING_VERSION = 11; // v11: pipePump retired — pipePumpGain superseded it and applies on every transition
 // v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
 // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
 
@@ -196,7 +192,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   jumpMinVelocity: { min: 6, max: 25, step: 0.5 },
   ollieVelocity: { min: 6, max: 20, step: 0.5 },
   ollieMinVelocity: { min: 6, max: 18, step: 0.5 }, // floor at 6: below this a tap ollie can't clear a crate
-  jumpChargeTime: { min: 0.04, max: 0.34, step: 0.02 },
+  jumpChargeTime: { min: 0.2, max: 1.5, step: 0.05 },
   chargeBoost: { min: 0, max: 40, step: 1 },
   cruiseSpeed: { min: 6, max: 20, step: 0.5 },
   chargeDecay: { min: 0.5, max: 20, step: 0.5 },
@@ -248,10 +244,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinTolerance: { min: 10, max: 90, step: 5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   boardSpeed: { min: 8, max: 30, step: 0.5 },
-  mountSpeed: { min: 0, max: 25, step: 0.5 },
-  shoulderBrake: { min: 5, max: 200, step: 1 },
-  dismountSpeed: { min: 0.5, max: 15, step: 0.5 },
-  brakeFloor: { min: 0, max: 30, step: 0.5 },
+  skateHoldTime: { min: 0, max: 1, step: 0.05 },
+  skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
   teeterCatchSpeed: { min: 0, max: 15, step: 0.5 },
   carveGrip: { min: 90, max: 720, step: 15 },
   carveGripRatio: { min: 0, max: 1.5, step: 0.05 },
@@ -455,14 +449,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
   boardSpeed:
     'Speed gate on the transition-carve sound effect. It NO LONGER controls whether the board is drawn or whether the wheels roll — both of those follow the skate state (freeSkate), so the deck is out exactly when you are skating and stowed exactly when you are not. The walk/skate physics boundary is walkSpeed.',
-  mountSpeed:
-    'The free push you get the instant you drop the board (BOTH shoulders on the ground). Enough to roll away on, so a mount never leaves you stalled on the deck. Carried speed above this is kept.',
-  shoulderBrake:
-    'How hard a HELD shoulder bleeds board speed. Both shoulders brake all the way down and step you off at dismountSpeed; either one alone brakes only to brakeFloor.',
-  dismountSpeed:
-    'Hold BOTH shoulders on the board and the brake bleeds you down to this, then hands you back to your feet. Higher = the dismount commits sooner; lower = you have to come almost to a stop first.',
-  brakeFloor:
-    'The floor for ONE shoulder held alone: it brakes you down to here and no further, so a half-squeeze is a brake you can lean on through a corner without ever committing you to the dismount. Keep it above dismountSpeed or one shoulder becomes a dismount too.',
+  skateHoldTime:
+    "Skate commit meter: X must be HELD this long (while pushing a direction) before the charge becomes the skate accelerator. Quick taps stay pure Crash hops.",
+  skateEntrySpeed:
+    "Second gate on the skate transition: you must already be moving this fast (walking counts) when the hold meter fills. Roughly 40% of walk speed feels right.",
   teeterCatchSpeed:
     "Ledge forgiveness: roll or skate off a LETHAL edge (a pit, not a step-down) slower than this and you're caught at the brink in a teeter wobble instead of yeeting off to your death. Above it you commit and fall. 0 = no catch, always fall.",
   carveGrip:
@@ -592,10 +582,8 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'brakeLockTime',
       'brakeLockRamp',
       'boardSpeed',
-      'mountSpeed',
-      'shoulderBrake',
-      'dismountSpeed',
-      'brakeFloor',
+      'skateHoldTime',
+      'skateEntrySpeed',
       'teeterCatchSpeed',
       'carveGrip',
       'carveGripRatio',

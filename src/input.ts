@@ -18,12 +18,6 @@ export class Input {
   spinHeld = false;
   grabHeld = false;
   transferHeld = false; // R2: spine transfer during a pipe hang
-  // The shoulders. BOTH together step on and off the board; EITHER one alone is
-  // a brake that will not take you slow enough to dismount. R2 doubles as the
-  // spine transfer above — that only exists in a pipe hang, and stepping on or
-  // off the board is ground-only, so the two never meet.
-  shoulderL = false; // L2
-  shoulderR = false; // R2
 
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.
@@ -114,9 +108,6 @@ export class Input {
     let spin = !solo && k.has('KeyF');
     let grab = !solo && k.has('KeyQ');
     let transfer = !solo && k.has('KeyT');
-    // keyboard shoulders: G and T, side by side, T being the R2 it already was
-    let shL = !solo && k.has('KeyG');
-    let shR = !solo && k.has('KeyT');
     let restart = !solo && k.has('KeyR');
     let pause = !solo && (k.has('KeyP') || k.has('Escape'));
 
@@ -144,8 +135,6 @@ export class Input {
       spin = spin || !!pad.buttons[2]?.pressed; // Square
       grind = grind || !!pad.buttons[3]?.pressed; // Triangle
       transfer = transfer || !!pad.buttons[7]?.pressed; // R2 = spine transfer
-      shL = shL || !!pad.buttons[6]?.pressed; // L2
-      shR = shR || !!pad.buttons[7]?.pressed; // R2
       restart = restart || !!pad.buttons[8]?.pressed; // Share = reset
       pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
     }
@@ -163,10 +152,6 @@ export class Input {
       spin = spin || tc.spinHeld;
       grind = grind || tc.grindHeld;
       transfer = transfer || tc.transferActive(); // R2 = the upward swipe
-      // one touch pad for both shoulders: the phone has no pair to squeeze, and
-      // there is nothing a single shoulder does that both together don't
-      shL = shL || tc.shoulderHeld;
-      shR = shR || tc.shoulderHeld;
       if (this.gamepadName === 'no controller') this.gamepadName = 'touch';
     }
 
@@ -186,8 +171,6 @@ export class Input {
     this.spinHeld = spin;
     this.grabHeld = grab;
     this.transferHeld = transfer;
-    this.shoulderL = shL;
-    this.shoulderR = shR;
 
     this.jumpPressed = this.jumpPressed || (jump && !this.prevJump);
     this.jumpReleased = this.jumpReleased || (!jump && this.prevJump);

@@ -58,10 +58,6 @@ export class TouchControls {
   grabHeld = false;
   spinHeld = false;
   grindHeld = false;
-  // BOTH shoulders at once. A phone has no pair of triggers to squeeze, and
-  // nothing a single shoulder does that both together don't, so one pad drives
-  // both: step on the board, and brake/step off.
-  shoulderHeld = false;
 
   private transferUntil = 0;
   private dirIdx = -1; // active D-pad sector, -1 = neutral (hysteresis state)
@@ -85,7 +81,6 @@ export class TouchControls {
     this.injectStyle();
     this.buildDpad();
     this.buildButtons();
-    this.buildShoulder();
     // iOS zoom killers: pinch (gesture*) and double-tap (dblclick) must never
     // scale the game. touch-action handles modern Safari; these catch the rest.
     const kill = (e: Event): void => e.preventDefault();
@@ -270,36 +265,6 @@ export class TouchControls {
     zone.addEventListener('contextmenu', (e) => e.preventDefault());
   }
 
-  // ---------- BOARD pad (both shoulders) ----------
-  // Deliberately NOT inside the right zone: that zone owns the upward flick for
-  // R2, and a thumb pressing this would otherwise read as a swipe candidate.
-  // As a sibling of the zone it never reaches those listeners at all.
-  private buildShoulder(): void {
-    const el = document.createElement('div');
-    el.className = 'tc-shoulder';
-    el.textContent = 'BOARD';
-    document.body.appendChild(el);
-    const set = (on: boolean) => (e: PointerEvent): void => {
-      e.preventDefault();
-      e.stopPropagation();
-      this.shoulderHeld = on;
-      el.classList.toggle('on', on);
-      if (on) sfx.play('footstep1', 0.28, 1.4);
-    };
-    el.addEventListener('pointerdown', (e) => {
-      set(true)(e);
-      // capture: the brake is a HOLD, so it must survive the thumb drifting off
-      try {
-        el.setPointerCapture(e.pointerId);
-      } catch {
-        /* synthetic test events carry ids the browser doesn't know */
-      }
-    });
-    el.addEventListener('pointerup', set(false));
-    el.addEventListener('pointercancel', set(false));
-    el.addEventListener('contextmenu', (e) => e.preventDefault());
-  }
-
   // nearest face button within `reach` button-radii (generous invisible area)
   private nearestBtn(x: number, y: number, reach: number): BtnDef['key'] | null {
     let best: BtnDef['key'] | null = null;
@@ -361,24 +326,8 @@ export class TouchControls {
       }
       .tc-pad { left: 14px; }
       .tc-cluster { right: 14px; }
-      /* BOARD: a pill sitting directly on top of the face diamond, same width
-         and same right edge, so the right thumb reaches it without hunting */
-      .tc-shoulder {
-        position: fixed; z-index: 15; right: 14px;
-        bottom: calc(max(8px, calc(env(safe-area-inset-bottom) - 20px)) + min(39vw, 195px) + 10px);
-        width: min(39vw, 195px); height: 46px; border-radius: 23px;
-        display: flex; align-items: center; justify-content: center;
-        font: 700 15px/1 ui-monospace, monospace; letter-spacing: 2px;
-        color: rgba(46, 32, 12, 0.62);
-        touch-action: none; -webkit-user-select: none; user-select: none;
-        -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
-      }
-      .tc-shoulder.on {
-        background: rgba(255, 246, 208, 0.68); transform: scale(0.97);
-        color: rgba(40, 36, 26, 0.9);
-      }
       /* shared glass finish: frosted fill, hairline light edge, soft drop */
-      .tc-arrow, .tc-btn, .tc-shoulder {
+      .tc-arrow, .tc-btn {
         box-sizing: border-box;
         background: rgba(244, 238, 218, 0.30);
         border: 1px solid rgba(255, 255, 255, 0.38);

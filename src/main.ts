@@ -1932,8 +1932,8 @@ function frame(): void {
     controller: input.gamepadName,
     jump:
       `${player.lastJumpType} · hold ${player.xHoldT.toFixed(2)}s` +
-      ` · board ${player.skateOn ? "ON" : "off"}` +
-      ` · shoulders ${player.shoulderBrakeT.toFixed(2)}s`,
+      ` · skate ${player.skateChargeT.toFixed(2)}/${TUNING.skateHoldTime.toFixed(2)}` +
+      (player.skateOn ? " ✓" : ""),
     railDist: player.railCandidateDist,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     fruit: player.fruit,
