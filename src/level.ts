@@ -39,6 +39,7 @@ export interface Crate {
   mystery?: boolean; // ? crate: random reward (wumpa burst, mask, or a life)
   bang?: boolean; // metal '!' SWITCH: hitting it materializes its group's outline crates; never breaks, uncounted
   bangUsed?: boolean; // the switch fires once, then dims
+  fallVel?: number; // >0 while the crate is settling down a smashed stack
   nitroBang?: boolean; // green '!' crate: breaking it detonates every nitro on the map
   pending?: boolean; // OUTLINE state: ghost visual, no collision, no interactions — until a '!' fires
   wasOutline?: boolean; // authored as an outline: resets re-ghost it
@@ -4184,6 +4185,7 @@ export class Level {
     for (const c of this.checkpoints) {
       if (!c.active) c.mesh.rotation.y += dt * 1.2;
     }
+    this.settleCrates(dt);
     // Nitro crates bob menacingly.
     this.time += dt;
     for (const c of this.crates) {
@@ -4270,6 +4272,69 @@ export class Level {
     }
   }
 
+  // ---- stacks settle ----
+  // Smash the bottom of a tower and the boxes above it have nothing under them.
+  // Leaving them hanging in the air is the read that a stack is scenery; they
+  // should come down. Each unsupported crate falls under gravity onto whatever
+  // is now the top of its column (another crate, or the floor the column was
+  // built on), so a tower you eat from the bottom repacks itself downward.
+  // Nitros are exempt — they bob on their own baseY and touching one is death,
+  // so a nitro dropping on your head is not a fair thing to build.
+  private settleLiveCrates = -1;
+  private settleFalling = 0;
+  private settleCrates(dt: number): void {
+    const SIZE = 0.96;
+    // Nothing can START falling unless a crate has just left the stack, so the
+    // footprint scan below (every crate against every other) only runs on the
+    // frames that can matter: the count changed, or something is still on its
+    // way down. A level with a few hundred crates would otherwise pay for the
+    // whole n^2 sweep every frame to discover that nothing moved.
+    let live = 0;
+    for (const c of this.crates) if (c.alive && !c.pending) live++;
+    const changed = live !== this.settleLiveCrates;
+    this.settleLiveCrates = live;
+    if (!changed && this.settleFalling === 0) return;
+    let falling = 0;
+    for (const c of this.crates) {
+      if (!c.alive || c.pending || c.nitro) continue;
+      const p = c.mesh.position;
+      const myBase = p.y - SIZE / 2;
+      // the highest thing under this crate's footprint
+      let rest = (c.mesh.userData.groundBaseY as number | undefined) ?? myBase;
+      for (const o of this.crates) {
+        if (o === c || !o.alive || o.pending) continue;
+        const q = o.mesh.position;
+        if (Math.abs(q.x - p.x) > 0.6 || Math.abs(q.z - p.z) > 0.6) continue;
+        const top = q.y + SIZE / 2;
+        if (top <= myBase + 0.02 && top > rest) rest = top;
+      }
+      if (myBase <= rest + 0.01) {
+        if (c.fallVel !== undefined) {
+          // touchdown: seat it exactly, and let the tally know it moved
+          c.fallVel = undefined;
+          p.y = rest + SIZE / 2;
+          c.mesh.userData.baseY = p.y;
+          c.box.setFromCenterAndSize(
+            p.clone(),
+            new THREE.Vector3(SIZE, SIZE, SIZE),
+          );
+          sfx.play("crateBounce", 0.35, 1.15);
+        }
+        continue;
+      }
+      // in the air with a gap under it: fall
+      falling++;
+      c.fallVel = (c.fallVel ?? 0) + 42 * dt;
+      p.y = Math.max(rest + SIZE / 2, p.y - c.fallVel * dt);
+      c.mesh.userData.baseY = p.y;
+      c.box.setFromCenterAndSize(
+        p.clone(),
+        new THREE.Vector3(SIZE, SIZE, SIZE),
+      );
+    }
+    this.settleFalling = falling;
+  }
+
   breakCrate(crate: Crate): void {
     // metal-family crates never break: the '!' switch fires instead, the
     // metal arrow crate just shrugs it off. Outline ghosts aren't there yet.
@@ -4277,29 +4342,53 @@ export class Level {
       this.triggerBang(crate);
       return;
     }
+    if (crate.nitroBang) {
+      this.triggerBang(crate);
+      return;
+    }
     if (crate.metalBounce || crate.pending) return;
     crate.alive = false;
     this.pops.push({ obj: crate.mesh, t: 0.12 });
     sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
-    // green '!': detonates every nitro on the map (safely — classic rules)
-    if (crate.nitroBang) {
-      for (const c of this.crates) {
-        if (c.alive && c.nitro) this.detonate(c, true);
-      }
+  }
+
+  // Repaint a crate's face in place (both '!' switches when they go spent).
+  // Handles the per-face material list the arrow crates carry.
+  private setCrateFace(
+    crate: Crate,
+    map: THREE.CanvasTexture,
+    shade: number,
+  ): void {
+    const mats = Array.isArray(crate.mesh.material)
+      ? crate.mesh.material
+      : [crate.mesh.material];
+    for (const m of mats as THREE.MeshLambertMaterial[]) {
+      m.map = map;
+      m.emissive?.setScalar(0);
+      m.color.setScalar(shade);
+      m.needsUpdate = true;
     }
   }
 
-  // '!' SWITCH: one-shot. Materializes outline crates wired to it — those
-  // sharing an editor group anywhere up its chain — then dims. A switch with
-  // no group fires every ungrouped outline (and legacy imports).
+  // '!' SWITCH — either colour, one-shot. The METAL one materializes the
+  // outline crates wired to it (those sharing an editor group anywhere up its
+  // chain; a switch with no group fires every ungrouped outline). The GREEN one
+  // sets off every nitro on the map, safely, classic rules.
+  //
+  // Neither one BREAKS. The box stays where it is, still solid, still something
+  // you can land on, and its face goes blank metal so a spent switch reads as
+  // spent at a glance. The green one used to pop like a wooden crate, which
+  // meant using it also deleted whatever you were standing on.
   triggerBang(crate: Crate): void {
     if (!crate.alive || crate.bangUsed || crate.pending) return;
+    if (!crate.bang && !crate.nitroBang) return;
     crate.bangUsed = true;
-    // spent switch: the '!' face comes OFF — it's just a plain metal box now
-    const m = crate.mesh.material as THREE.MeshLambertMaterial;
-    m.map = this.spentBangTexture();
-    m.color.setScalar(0.8);
-    m.needsUpdate = true;
+    this.setCrateFace(crate, this.metalPlainTexture(), 0.8);
+    if (crate.nitroBang) {
+      for (const c of this.crates) if (c.alive && c.nitro) this.detonate(c, true);
+      sfx.play("crateBreak1", 0.6, 1.2);
+      return;
+    }
     this.activateOutlines(
       crate.groupIds && crate.groupIds.length > 0 ? crate.groupIds : null,
     );
@@ -4416,6 +4505,26 @@ export class Level {
     sfx.play("lifeGet", 0.8);
   }
 
+  // A '!' switch's face follows its bangUsed flag — both colours of switch, and
+  // the green one carries an emissive glow that has to come back with it.
+  private restoreBangFace(c: Crate): void {
+    if (!c.bang && !c.nitroBang) return;
+    if (c.bangUsed) {
+      this.setCrateFace(c, this.metalPlainTexture(), 0.8);
+      return;
+    }
+    this.setCrateFace(
+      c,
+      c.bang ? this.bangTexture() : this.nitroBangTexture(),
+      1,
+    );
+    if (c.nitroBang)
+      for (const m of (
+        Array.isArray(c.mesh.material) ? c.mesh.material : [c.mesh.material]
+      ) as THREE.MeshLambertMaterial[])
+        m.emissive?.setHex(0x0c3a16);
+  }
+
   private restoreTntFace(c: Crate): void {
     if (c.tnt && c.mesh.userData.digit !== undefined) {
       c.mesh.userData.digit = undefined;
@@ -4473,12 +4582,7 @@ export class Level {
         this.restoreTntFace(c);
         this.setCratePending(c, cpSnap.savedPending?.[i] ?? !!c.pending);
         c.bangUsed = cpSnap.savedBangUsed?.[i] ?? c.bangUsed;
-        if (c.bang) {
-          const m = c.mesh.material as THREE.MeshLambertMaterial;
-          m.map = c.bangUsed ? this.spentBangTexture() : this.bangTexture();
-          m.color.setScalar(c.bangUsed ? 0.8 : 1);
-          m.needsUpdate = true;
-        }
+        this.restoreBangFace(c);
       });
     } else {
       for (const c of this.crates) {
@@ -4490,12 +4594,7 @@ export class Level {
         // outlines return to ghosts, switches re-arm
         this.setCratePending(c, !!c.wasOutline);
         c.bangUsed = false;
-        if (c.bang) {
-          const m = c.mesh.material as THREE.MeshLambertMaterial;
-          m.map = this.bangTexture();
-          m.color.setScalar(1);
-          m.needsUpdate = true;
-        }
+        this.restoreBangFace(c);
       }
     }
 
@@ -7593,22 +7692,28 @@ export class Level {
     opts?: { outline?: boolean; groupIds?: number[]; noAuto?: boolean },
   ): void {
     const size = 0.96; // uniform crate size (was 1.2; checkpoints matched at 1.4)
-    let mat: THREE.MeshLambertMaterial;
-    if (kind === "nitro") {
+    // ARROW CRATES get a per-face material list: the arrow reads on the four
+    // SIDES and the lid/floor stay blank. An arrow drawn on the top face is
+    // pointing at the player who is already standing on it, and the one on the
+    // bottom is never seen at all. BoxGeometry group order is +X, -X, +Y, -Y,
+    // +Z, -Z, so indices 2 and 3 are the two that lose it.
+    let mat: THREE.MeshLambertMaterial | THREE.MeshLambertMaterial[];
+    if (kind === "bouncy" || kind === "metalbounce") {
+      const wood = kind === "bouncy";
+      const side = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        map: wood ? this.arrowTexture() : this.metalArrowTexture(),
+      });
+      const lid = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        map: wood ? this.woodPlainTexture() : this.metalPlainTexture(),
+      });
+      mat = [side, side, lid, lid, side, side];
+    } else if (kind === "nitro") {
       mat = new THREE.MeshLambertMaterial({
         color: 0xffffff,
         emissive: 0x0c3a16,
         map: this.nitroTexture(),
-      });
-    } else if (kind === "bouncy") {
-      mat = new THREE.MeshLambertMaterial({
-        color: 0xffffff,
-        map: this.arrowTexture(),
-      });
-    } else if (kind === "metalbounce") {
-      mat = new THREE.MeshLambertMaterial({
-        color: 0xffffff,
-        map: this.metalArrowTexture(),
       });
     } else if (kind === "tnt") {
       mat = new THREE.MeshLambertMaterial({
@@ -7656,6 +7761,7 @@ export class Level {
         }
       }
     }
+    let groundBase = base;
     if (!onStack) {
       if (this.builtFromData) {
         // captured/edited level: rest on the surface beneath (see crateRestSurface)
@@ -7664,10 +7770,18 @@ export class Level {
       } else {
         base = this.floorY(x, z, deckY);
       }
+      groundBase = base;
+    } else {
+      // stacked: remember the FLOOR under the column too, so that if everything
+      // below is smashed this crate knows where it is finally going to land
+      groundBase = this.builtFromData
+        ? (this.crateRestSurface(x, z, deckY) ?? deckY)
+        : this.floorY(x, z, deckY);
     }
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
+    mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
     if (!kind) mesh.rotation.y = 0.15;
     this.root.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
@@ -7877,12 +7991,23 @@ export class Level {
     return this.bangTex;
   }
 
-  // A fired '!' switch: same metal box, mark gone.
+  // A BLANK metal face. Three jobs: a fired '!' switch (metal or nitro) keeps
+  // its box and loses its mark, and the arrow crates wear it on their lid and
+  // floor — an arrow you can only see from above tells you nothing, since the
+  // bounce is a thing you land ON.
   private spentBangTex: THREE.CanvasTexture | null = null;
-  private spentBangTexture(): THREE.CanvasTexture {
+  private metalPlainTexture(): THREE.CanvasTexture {
     if (!this.spentBangTex)
       this.spentBangTex = this.makeTex((ctx) => this.crateMetalBase(ctx));
     return this.spentBangTex;
+  }
+
+  // ...and the same for wood: the arrow crate's own plank base, no arrow.
+  private woodPlainTex: THREE.CanvasTexture | null = null;
+  private woodPlainTexture(): THREE.CanvasTexture {
+    if (!this.woodPlainTex)
+      this.woodPlainTex = this.makeTex((ctx) => this.crateWood(ctx, false));
+    return this.woodPlainTex;
   }
 
   // White '!' on nitro green: breaking it detonates every nitro on the map.

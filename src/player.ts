@@ -174,6 +174,9 @@ export class Player {
   // is that an IN-GAME reset keeps them while a page reload starts clean, and
   // localStorage would survive the reload too. Keyed by level, so the row
   // shows what you earned HERE rather than a running total from somewhere else.
+  // scratch for the wallride deck roll (see syncVisual)
+  private static readonly BOARD_AXIS = new THREE.Vector3();
+  private static readonly BOARD_ROLL = new THREE.Quaternion();
   private static relicVault = new Map<
     string,
     { crystal: boolean; gem: boolean; combo: boolean }
@@ -528,7 +531,6 @@ export class Player {
   private maskMesh: THREE.Mesh | null = null;
   private maskBones: THREE.Object3D | null = null; // 3D crossbones under the skull on the 2nd mask
   private maskAnchor = new THREE.Vector3(); // scratch: head world position for the floating mask
-  private maskGlowPink: THREE.Sprite | null = null; // vibrant fiery-pink aura behind the mask
   private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
   private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
   private smearG: THREE.Group | null = null; // whirlwind stand-in shown while spinning
@@ -693,9 +695,10 @@ export class Player {
     this.installSkullMask(); // swap the box mask for the sculpted spiked skull once it loads
     this.installMaskBones(); // 3D crossbones under the skull, shown only on the 2nd mask
 
-    // Vibrant fiery-pink glow behind the mask (the black rim is a stroke on the
-    // skull itself — see installSkullMask). Camera-facing sprite, drawn before
-    // the mask (renderOrder < 0, depthWrite off) so the mask always sits on top.
+    // (The mask used to wear a big fiery-pink aura sprite behind it. It read as
+    // a bloom smeared over the skull rather than light coming off it, and it
+    // fought the black rim the skull already carries, so it is gone. The radial
+    // helper below still builds the perfect-grind halo.)
     const radial = (stops: [number, string][]): THREE.CanvasTexture => {
       const cv = document.createElement('canvas');
       cv.width = cv.height = 128;
@@ -708,24 +711,6 @@ export class Player {
       t.needsUpdate = true;
       return t;
     };
-    const pink = new THREE.Sprite(
-      new THREE.SpriteMaterial({
-        map: radial([
-          [0.0, 'rgba(255,40,150,1.0)'],
-          [0.3, 'rgba(255,20,130,0.85)'],
-          [0.55, 'rgba(235,10,110,0.35)'],
-          [0.78, 'rgba(210,0,95,0)'],
-          [1.0, 'rgba(210,0,95,0)'],
-        ]),
-        blending: THREE.AdditiveBlending,
-        transparent: true,
-        depthWrite: false, // soft halo — never occludes, but IS occluded by the mask
-      }),
-    );
-    pink.renderOrder = -2;
-    pink.visible = false;
-    scene.add(pink);
-    this.maskGlowPink = pink;
     // A second bloom of the same make for the perfect-grind boost. Its own
     // sprite rather than sharing the mask's: both can be live at once (uber
     // AND a perfect grind), and one would otherwise be overwriting the
@@ -3100,11 +3085,31 @@ export class Player {
       }
     }
 
-    // Pancake slam is an ON-FOOT move: Circle ALONE from a platforming jump.
-    // It used to want Circle+down, which is a lot of ceremony for the move you
-    // reach for mid-air over a crate — and a board/skate air is already where
-    // Circle means grab, so there is nothing left for the down to disambiguate.
-    if (!this.slamActive && !this.airFromSkate && input.grabHeld) {
+    // PANCAKE SLAM. On foot it is Circle ALONE — that is the move you reach for
+    // mid-air over a crate and it should not want a direction as well. On the
+    // BOARD it is Circle + DOWN, because there Circle on its own has to stay
+    // free for the grab. Either way it is a platforming move, so a board slam
+    // also STOWS THE BOARD: you plummet, land on your feet, and carry on
+    // running (exactly like a slide jump, which is the other way off the deck).
+    // Vert air is the one place it never fires — a pipe/wall air belongs to the
+    // grab and the spin, and a slam there would eat the drop back in.
+    const vertTrick = this.vertAir || this.pipeHang;
+    const slamNow =
+      !this.slamActive &&
+      !vertTrick &&
+      input.grabHeld &&
+      (!this.airFromSkate || this.rawInput.moveY < -0.5);
+    if (slamNow) {
+      if (this.airFromSkate) {
+        // off the deck: the rest of this air, the landing and everything after
+        // it are on foot
+        this.airFromSkate = false;
+        this.airGrav = 'foot';
+        this.freeSkate = false;
+        this.slideFromWalk = true; // on-foot touchdown clamp: no skate takeover on landing
+        this.stepOff = true;
+        this.airMomentum = false;
+      }
       this.slamActive = true;
       this.vertAir = false; // the slam plummets straight down, no wall glue
       this.vertLatVel = 0;
@@ -4925,7 +4930,18 @@ export class Player {
         const step = rate * dtc;
         this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
       };
-      if (input.grabHeld && !this.slamActive && this.airFromSkate && (grabActive || grabDir)) {
+      // Grabs are a VERT trick now: a pipe hang or a tracked wall air, where
+      // there is height and time to hold a pose and come back down on the
+      // transition. A street ollie, a kicker, a rail exit — the airs you spend
+      // most of a run in — are far too short for one to read as anything but a
+      // flicker, and Circle down there is the body slam instead.
+      if (
+        input.grabHeld &&
+        !this.slamActive &&
+        this.airFromSkate &&
+        (this.vertAir || this.pipeHang) &&
+        (grabActive || grabDir)
+      ) {
         // Reach into the pose over grabTransition, then hold it.
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
           this.grabPhase = 'enter';
@@ -5154,17 +5170,19 @@ export class Player {
             level.lightFuse(c);
             this.vVel = -1;
           } else {
-            // Walking or rolling into it: a hard smash-speed hit pops it
-            // outright (same bar as smashing a crate); anything slower lights
-            // the 3-2-1 fuse and bumps like a wall. Only the smash-speed pop
-            // is board-only, because only the board ever reaches that speed —
-            // the fuse lights ON FOOT TOO. It used to be board-only, so you
-            // could stroll into a TNT all day and it just sat there.
-            if (this.freeSkate && Math.abs(this.speed) >= TUNING.smashSpeed) {
-              level.detonate(c);
-              continue;
+            // Rolling into it ON THE BOARD: a smash-speed hit pops it outright
+            // (same bar as smashing a crate), anything slower lights the fuse.
+            // ON FOOT it is a wall and nothing else — running into a TNT must
+            // not start the countdown, or every corridor with one in it turns
+            // into a timer you started by accident. The fuse is lit by JUMPING
+            // on it (the stomp above), which is a thing you have to mean.
+            if (this.freeSkate) {
+              if (Math.abs(this.speed) >= TUNING.smashSpeed) {
+                level.detonate(c);
+                continue;
+              }
+              if (Math.abs(this.speed) > 1.5) level.lightFuse(c);
             }
-            if (Math.abs(this.speed) > 1.5) level.lightFuse(c);
             this.pushOutOf(c.box);
           }
         }
@@ -5223,10 +5241,12 @@ export class Player {
         }
         continue;
       }
-      if (c.bang) {
-        // Metal '!' SWITCH: any real hit fires it — spin, stomp, headbutt,
-        // slide, or a grind-through. It stays solid (bounce off the lid like
-        // a box that refuses to break) and never counts toward the tally.
+      if (c.bang || c.nitroBang) {
+        // '!' SWITCH, either colour: any real hit fires it — spin, stomp,
+        // headbutt, slide, or a grind-through. It stays solid (bounce off the
+        // lid like a box that refuses to break) and never counts toward the
+        // tally. The green one is the same box with a different charge: it
+        // sets off every nitro instead of materializing outlines.
         if (this.spinning && this.spinBox.intersectsBox(c.box)) {
           level.triggerBang(c);
         } else if (this.playerBox.intersectsBox(c.box)) {
@@ -7381,12 +7401,9 @@ export class Player {
     // the head stays up and fights it — the last thing to give
     if (this.headM) this.headM.rotation.z = -balRoll * 0.55;
     if (this.boardG) {
-      // Roll the deck a quarter-turn onto its edge so the WHEELS meet the wall
-      // (deck faces out), and press it against the face up at the rider's feet.
       // the deck edges up under her as she goes over — the board is on the
       // rail, so it rolls about a third as far as the body does
-      this.boardG.rotation.z =
-        this.wallridePose * -wallSide * (Math.PI / 2) + balRoll * 0.34;
+      this.boardG.rotation.z = balRoll * 0.34;
       this.boardG.position.x = this.wallridePose * wallSide * 0.62; // flush to the wall
       this.boardG.position.y += this.wallridePose * 0.34; // up to foot height
       // UNDER-RAIL HANG: the deck leaves the feet and goes CROSSWISE overhead,
@@ -7400,6 +7417,25 @@ export class Player {
         // the grip IS the board under a RAIL — but on the swing rope the hands
         // hold the rope itself, so no deck.
         this.boardG.visible = this.state !== 'rope';
+      }
+      // WALLRIDE ROLL, applied LAST and about the deck's OWN LENGTH — which,
+      // measured on the built board, is its local X once the stance yaw has had
+      // its say (rotation.y swings the deck up to a quarter turn for the
+      // sideways skating stance).
+      // It used to be a rotation.z term folded in with the others, i.e. a roll
+      // about the SHORT axis in the unyawed frame, which stood the deck up on
+      // its tail instead of laying it on its edge. Deriving the axis from the
+      // live yaw is stance-proof: whichever way the board is pointing, the
+      // wheels end up facing the wall.
+      if (this.wallridePose > 0.001) {
+        const ry = this.boardG.rotation.y;
+        Player.BOARD_AXIS.set(Math.cos(ry), 0, -Math.sin(ry));
+        this.boardG.quaternion.premultiply(
+          Player.BOARD_ROLL.setFromAxisAngle(
+            Player.BOARD_AXIS,
+            this.wallridePose * -wallSide * (Math.PI / 2),
+          ),
+        );
       }
       if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
@@ -7442,7 +7478,7 @@ export class Player {
         (this.boostGlow.material as THREE.SpriteMaterial).opacity = 0.9 * fade;
       }
     }
-    if (this.maskMesh && this.maskGlowPink) {
+    if (this.maskMesh) {
       const uber = this.uberTimer > 0; // third mask
       const two = !uber && this.masks >= 2; // second mask held
       const vis = (this.masks > 0 || uber) && this.state !== 'dead';
@@ -7450,7 +7486,6 @@ export class Player {
       // Front (local -Z) points at the camera at yaw = atan2(camDir.x, camDir.z);
       // it rocks around that instead of spinning through — never the back.
       const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
-      const flame = 1 + Math.sin(this.runTime * 7) * 0.08;
       // Anchor to the ACTUAL head (so it tracks every pose — crouch, air, lean),
       // and lay the mask out in CAMERA space: pulled toward the lens and offset
       // by the viewer's screen axes. A fixed WORLD offset used to bury the mask
@@ -7501,24 +7536,6 @@ export class Player {
       }
       // Crossbones ride under the skull only on the 2nd mask (state 2).
       if (this.maskBones) this.maskBones.visible = two;
-      // Pink glow: tight behind the floating mask (brighter on the 2nd, and
-      // dropped + grown to wrap the crossbones), or a big body-enveloping bloom
-      // around the skater on the 3rd.
-      const pink = this.maskGlowPink;
-      pink.visible = vis;
-      if (vis) {
-        const pm = pink.material as THREE.SpriteMaterial;
-        if (uber) {
-          pink.position.set(this.pos.x, this.pos.y + 1.0, this.pos.z);
-          pink.scale.setScalar(3.9 * flame);
-          pm.opacity = 1;
-        } else {
-          const mp = this.maskMesh.position;
-          pink.position.set(mp.x, mp.y - (two ? 0.4 : 0), mp.z - 0.3);
-          pink.scale.setScalar((two ? 2.6 : 1.5) * flame);
-          pm.opacity = two ? 1 : 0.9;
-        }
-      }
       // Pink spark comet-tail on the 2nd + 3rd mask: streams off the mask (2nd)
       // or the skater (3rd), trailing opposite to how the skater is moving.
       if ((two || uber) && vis) {

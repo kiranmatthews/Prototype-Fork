@@ -1572,6 +1572,25 @@ const HANDLE_HIT_GEO = new THREE.SphereGeometry(1.0, 8, 6);
 const NODE_COLOR = 0xffd75e; // resting node
 const NODE_SEL_COLOR = 0x4da6ff; // selected node (Figma blue)
 
+// MOVE GIZMO (Maya-style translate manipulator): one arrow per world axis plus
+// a centre box for free movement. Drag an arrow and the piece travels on that
+// axis and nothing else, which is the only way to nudge depth in a 3D view
+// without the camera fighting you. Held Shift snaps to whole units.
+const MOVE_AXES = [
+  { ax: "x" as const, dir: new THREE.Vector3(1, 0, 0), color: 0xff5566 },
+  { ax: "y" as const, dir: new THREE.Vector3(0, 1, 0), color: 0x62dd62 },
+  { ax: "z" as const, dir: new THREE.Vector3(0, 0, 1), color: 0x4d95ff },
+];
+const MOVE_SHAFT_GEO = new THREE.CylinderGeometry(0.035, 0.035, 1, 8);
+MOVE_SHAFT_GEO.translate(0, 0.5, 0); // grow from the origin, not about it
+const MOVE_TIP_GEO = new THREE.ConeGeometry(0.11, 0.3, 12);
+MOVE_TIP_GEO.translate(0, 1.15, 0);
+const MOVE_HIT_GEO = new THREE.CylinderGeometry(0.19, 0.19, 1.3, 6);
+MOVE_HIT_GEO.translate(0, 0.65, 0);
+const MOVE_CENTRE_GEO = new THREE.BoxGeometry(0.17, 0.17, 0.17);
+const MOVE_CENTRE_HIT_GEO = new THREE.BoxGeometry(0.34, 0.34, 0.34);
+const MOVE_GIZMO_PX = 96; // on-screen length of an arrow, held constant with distance
+
 // grid rounding + structural copies, used all over the editor
 const snapHalf = (v: number): number => Math.round(v * 2) / 2;
 const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
@@ -1628,7 +1647,6 @@ export class Editor {
   private dragStart = new THREE.Vector3(); // plane hit at drag start
   private dragOrig: [number, number, number] = [0, 0, 0]; // grabbed comp at drag start
   private dragSel: { idx: number; p: [number, number, number] }[] = [];
-  private dragVertical = false;
   private downAt: { x: number; y: number } | null = null;
   // marquee (shift-drag on empty space): screen-space rubber band
   private marquee: { x0: number; y0: number; x1: number; y1: number } | null =
@@ -1690,6 +1708,16 @@ export class Editor {
   private surfaceSnap = localStorage.getItem("protoEdSurfaceSnap") !== "0";
   private dragBottomOffset = 0; // grab-time distance from the grabbed piece's origin down to its base
   // group-scale gizmo (multi-selection bounding-box handles)
+  // ---- move gizmo ----
+  private moveGroup: THREE.Group | null = null;
+  private moveParts: { hit: THREE.Mesh; ax: "x" | "y" | "z" | "c" }[] = [];
+  private moveDrag: {
+    ax: "x" | "y" | "z" | "c";
+    plane: THREE.Plane;
+    grab: THREE.Vector3;
+    dir: THREE.Vector3;
+    orig: { idx: number; p: [number, number, number] }[];
+  } | null = null;
   private gizmoGroup: THREE.Group | null = null;
   private gizmoHandles: {
     mesh: THREE.Mesh;
@@ -1851,6 +1879,7 @@ export class Editor {
       if (t >= 1) this.focusAnim = null;
     }
     this.controls?.update();
+    this.scaleMoveGizmo(); // arrows hold their on-screen size at any zoom
     // keep resize handles a steady on-screen size at any zoom; selected
     // nodes read a step bigger, and the invisible hit targets track along
     this.handleMeshes.forEach((m, i) => {
@@ -2434,6 +2463,7 @@ export class Editor {
       this.selBoxes.push(helper);
     }
     if (!this.gizmoDrag) this.refreshGizmo(); // scale handles follow the selection
+    if (!this.moveDrag) this.refreshMoveGizmo(); // ...and so does the move gizmo
   }
 
   // F: frame the selection (or the whole level) in the orbit view
@@ -2621,6 +2651,248 @@ export class Editor {
   ): void {
     this.applyScaleNoCommit(sx, sy, sz, anchor);
     this.commit(true, coalesce);
+  }
+
+  // ---- move gizmo (Maya-style translate manipulator) ----
+  // Shown for any selection: three axis arrows and a centre box, parked at the
+  // selection's middle. Free dragging the body still works — this is the
+  // precision path, and in a 3D view it is the ONLY way to move along the axis
+  // pointing into the screen, which a ground-plane drag cannot express at all.
+  private refreshMoveGizmo(): void {
+    this.teardownMoveGizmo();
+    if (!this.active || this.sel.length === 0 || this.selVtxs.size > 0) return;
+    const box = this.selectionBounds();
+    if (!box) return;
+    const g = new THREE.Group();
+    g.position.copy(box.getCenter(new THREE.Vector3()));
+    for (const a of MOVE_AXES) {
+      const mat = new THREE.MeshBasicMaterial({
+        color: a.color,
+        depthTest: false,
+        transparent: true,
+      });
+      const shaft = new THREE.Mesh(MOVE_SHAFT_GEO, mat);
+      const tip = new THREE.Mesh(MOVE_TIP_GEO, mat);
+      const hit = new THREE.Mesh(
+        MOVE_HIT_GEO,
+        new THREE.MeshBasicMaterial({ visible: false }),
+      );
+      // the geometry is built up +Y; aim it down this axis
+      for (const m of [shaft, tip, hit]) {
+        m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), a.dir);
+        m.renderOrder = 1000;
+        g.add(m);
+      }
+      this.moveParts.push({ hit, ax: a.ax });
+    }
+    const cMat = new THREE.MeshBasicMaterial({
+      color: 0xffe36e,
+      depthTest: false,
+      transparent: true,
+    });
+    const centre = new THREE.Mesh(MOVE_CENTRE_GEO, cMat);
+    centre.renderOrder = 1000;
+    g.add(centre);
+    const cHit = new THREE.Mesh(
+      MOVE_CENTRE_HIT_GEO,
+      new THREE.MeshBasicMaterial({ visible: false }),
+    );
+    g.add(cHit);
+    this.moveParts.push({ hit: cHit, ax: "c" });
+    this.scene.add(g);
+    this.moveGroup = g;
+    this.scaleMoveGizmo();
+  }
+
+  private teardownMoveGizmo(): void {
+    if (this.moveGroup) {
+      this.scene.remove(this.moveGroup);
+      this.moveGroup = null;
+    }
+    this.moveParts = [];
+  }
+
+  // Constant on-screen size: without this an arrow is a speck across the level
+  // and a wall up close. Distance x the camera's vertical FOV per pixel.
+  private scaleMoveGizmo(): void {
+    const g = this.moveGroup;
+    if (!g) return;
+    const dist = this.camera.position.distanceTo(g.position);
+    const perPx =
+      (2 * Math.tan(THREE.MathUtils.degToRad(this.camera.fov) / 2)) /
+      Math.max(1, this.dom.clientHeight);
+    g.scale.setScalar(Math.max(0.05, dist * perPx * MOVE_GIZMO_PX));
+  }
+
+  // Grab an arrow. Returns true if one was hit (the body drag then stands down).
+  private moveGrab(e: PointerEvent): boolean {
+    if (this.moveParts.length === 0) return false;
+    this.setRay(e);
+    this.moveGroup?.updateMatrixWorld(true);
+    const hits = this.raycaster.intersectObjects(
+      this.moveParts.map((p) => p.hit),
+      false,
+    );
+    if (hits.length === 0) return false;
+    const part = this.moveParts.find((p) => p.hit === hits[0].object);
+    if (!part || !this.moveGroup) return false;
+    const origin = this.moveGroup.position.clone();
+    const dir =
+      part.ax === "c"
+        ? new THREE.Vector3(0, 1, 0)
+        : (MOVE_AXES.find(
+            (a) => a.ax === part.ax,
+          )!.dir.clone() as THREE.Vector3);
+    // Drag plane: contains the axis and faces the camera as squarely as it can,
+    // so pointer travel maps to axis travel without blowing up at grazing
+    // angles. The centre handle and the Y arrow use the classic pair instead.
+    let plane: THREE.Plane;
+    if (part.ax === "c") {
+      plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -origin.y);
+    } else {
+      const toCam = new THREE.Vector3()
+        .subVectors(this.camera.position, origin)
+        .normalize();
+      const n = new THREE.Vector3()
+        .crossVectors(dir, new THREE.Vector3().crossVectors(toCam, dir))
+        .normalize();
+      if (n.lengthSq() < 1e-6) n.copy(toCam);
+      plane = new THREE.Plane().setFromNormalAndCoplanarPoint(n, origin);
+    }
+    const grab = new THREE.Vector3();
+    if (!this.groundPoint(e, plane, grab)) return false;
+    this.moveDrag = {
+      ax: part.ax,
+      plane,
+      grab,
+      dir,
+      orig: this.sel.map((idx) => ({
+        idx,
+        p: [...this.data.components[idx].p] as [number, number, number],
+      })),
+    };
+    if (this.controls) this.controls.enabled = false;
+    this.downAt = null;
+    return true;
+  }
+
+  // Live axis drag. Shift snaps the moving coordinate to WHOLE units.
+  private moveGizmoMove(e: PointerEvent, shift: boolean): void {
+    const d = this.moveDrag;
+    if (!d) return;
+    const hit = new THREE.Vector3();
+    if (!this.groundPoint(e, d.plane, hit)) return;
+    const delta = new THREE.Vector3().subVectors(hit, d.grab);
+    let mv: THREE.Vector3;
+    if (d.ax === "c") {
+      mv = new THREE.Vector3(delta.x, 0, delta.z); // centre box: the ground plane
+    } else {
+      mv = d.dir.clone().multiplyScalar(delta.dot(d.dir)); // project onto the axis
+    }
+    const lead = d.orig[d.orig.length - 1] ?? d.orig[0];
+    if (lead) {
+      // snap the LEAD piece's destination, then everything keeps its offset —
+      // so a snapped group lands on the grid without warping its own spacing
+      const round = shift
+        ? (v: number): number => Math.round(v)
+        : this.snap
+          ? snapHalf
+          : (v: number): number => v;
+      if (d.ax === "x" || d.ax === "c")
+        mv.x = round(lead.p[0] + mv.x) - lead.p[0];
+      if (d.ax === "y") mv.y = round(lead.p[1] + mv.y) - lead.p[1];
+      if (d.ax === "z" || d.ax === "c")
+        mv.z = round(lead.p[2] + mv.z) - lead.p[2];
+    }
+    for (const o of d.orig) {
+      const c = this.data.components[o.idx];
+      if (!c) continue;
+      const t: [number, number, number] = [
+        o.p[0] + mv.x,
+        o.p[1] + mv.y,
+        o.p[2] + mv.z,
+      ];
+      const dx = t[0] - c.p[0];
+      const dy = t[1] - c.p[1];
+      const dz = t[2] - c.p[2];
+      if (!dx && !dy && !dz) continue;
+      for (const ob of this.objectsFor(o.idx))
+        ob.position.add(new THREE.Vector3(dx, dy, dz));
+      c.p = t;
+    }
+    this.separateCrates(d.orig.map((o) => o.idx));
+    this.refreshSelectionBox();
+    this.renderProps();
+    if (this.moveGroup) {
+      const box = this.selectionBounds();
+      if (box) this.moveGroup.position.copy(box.getCenter(new THREE.Vector3()));
+    }
+  }
+
+  // ---- crates are solid to each other ----
+  // Two boxes in the same space read as one broken box in play, so a move that
+  // would bury a crate in another is pushed back out along whichever axis it
+  // entered by least — it stacks or butts up against its neighbour instead of
+  // sinking in. The whole moved set shares one correction so a dragged group
+  // keeps its own spacing. With grid snap on the push rounds UP to the next
+  // grid step, so separated crates still land on the grid.
+  private separateCrates(moved: number[]): void {
+    const movers = moved.filter(
+      (i) => this.data.components[i]?.t === "crate" && this.boxFor(i),
+    );
+    if (movers.length === 0) return;
+    const others: THREE.Box3[] = [];
+    this.data.components.forEach((c, i) => {
+      if (c.t !== "crate" || moved.includes(i)) return;
+      const b = this.boxFor(i);
+      if (b) others.push(b);
+    });
+    if (others.length === 0) return;
+    const push = new THREE.Vector3();
+    for (let pass = 0; pass < 3; pass++) {
+      let best: THREE.Vector3 | null = null;
+      let bestLen = Infinity;
+      for (const i of movers) {
+        const a = this.boxFor(i);
+        if (!a) continue;
+        a.translate(push);
+        for (const b of others) {
+          if (!a.intersectsBox(b)) continue;
+          // shortest way out of b, per axis, signed
+          const cand: [number, number, number][] = [
+            [b.max.x - a.min.x, 0, 0],
+            [b.min.x - a.max.x, 0, 0],
+            [0, b.max.y - a.min.y, 0],
+            [0, b.min.y - a.max.y, 0],
+            [0, 0, b.max.z - a.min.z],
+            [0, 0, b.min.z - a.max.z],
+          ];
+          for (const [cx, cy, cz] of cand) {
+            const len = Math.abs(cx) + Math.abs(cy) + Math.abs(cz);
+            if (len < bestLen) {
+              bestLen = len;
+              best = new THREE.Vector3(cx, cy, cz);
+            }
+          }
+        }
+      }
+      if (!best || bestLen < 1e-4) break;
+      if (this.snap) {
+        // round the push AWAY from the neighbour to the next grid step
+        const up = (v: number): number =>
+          v === 0 ? 0 : Math.sign(v) * Math.ceil(Math.abs(v) / 0.5) * 0.5;
+        best.set(up(best.x), up(best.y), up(best.z));
+      }
+      push.add(best);
+      bestLen = Infinity;
+    }
+    if (push.lengthSq() < 1e-8) return;
+    for (const i of moved) {
+      const c = this.data.components[i];
+      if (!c) continue;
+      c.p = [c.p[0] + push.x, c.p[1] + push.y, c.p[2] + push.z];
+      for (const ob of this.objectsFor(i)) ob.position.add(push);
+    }
   }
 
   // ---- group-scale gizmo (bounding-box handles) ----
@@ -3356,6 +3628,9 @@ export class Editor {
       return;
     }
     // group-scale gizmo handles grab first when a multi-selection is up
+    // the move gizmo is asked FIRST: its arrows sit over the piece, and a grab
+    // on one must never fall through to the free body drag underneath
+    if (this.moveParts.length > 0 && this.moveGrab(e)) return;
     if (this.gizmoHandles.length > 0 && this.gizmoGrab(e)) return;
     // resize handles grab first — they float over everything else
     if (this.resizeIdx >= 0 && this.handleMeshes.length > 0) {
@@ -3454,16 +3729,8 @@ export class Editor {
         if (grabbed >= this.data.components.length) grabbed = this.selected; // crystal filtered
       }
       const c = this.data.components[grabbed];
-      this.dragVertical = e.shiftKey;
-      this.dragPlane = this.dragVertical
-        ? new THREE.Plane().setFromNormalAndCoplanarPoint(
-            new THREE.Vector3()
-              .subVectors(this.camera.position, new THREE.Vector3(...c.p))
-              .setY(0)
-              .normalize(),
-            new THREE.Vector3(...c.p),
-          )
-        : this.viewMode !== "3d"
+      this.dragPlane =
+        this.viewMode !== "3d"
           ? new THREE.Plane().setFromNormalAndCoplanarPoint(
               // 2D view: drag ON the view plane through the piece — movement
               // stays in the two visible axes, depth can't change
@@ -3732,6 +3999,11 @@ export class Editor {
       }
       return;
     }
+    // move-gizmo drag: travel on the grabbed axis only
+    if (this.moveDrag) {
+      this.moveGizmoMove(e, e.shiftKey);
+      return;
+    }
     // group-scale gizmo drag: scale the whole selection from the grab snapshot
     if (this.gizmoDrag) {
       this.gizmoMove(e, e.shiftKey);
@@ -3835,13 +4107,16 @@ export class Editor {
     let nx = this.dragOrig[0];
     let ny = this.dragOrig[1];
     let nz = this.dragOrig[2];
-    if (this.dragVertical) {
-      // shift-drag: precise height on a camera-facing vertical plane
-      const hit = new THREE.Vector3();
-      if (!this.groundPoint(e, this.dragPlane, hit)) return;
-      ny = this.dragOrig[1] + (hit.y - this.dragStart.y);
-      if (this.snap) ny = snapHalf(ny);
-    } else {
+    // SHIFT = whole units, on every axis this drag can move. (It used to mean
+    // "drag vertically"; the move gizmo's green arrow does that properly now,
+    // on its own axis, so the modifier is free to be the coarse grid — which
+    // is what it is everywhere else people edit.)
+    const grid = e.shiftKey
+      ? (v: number): number => Math.round(v)
+      : this.snap
+        ? snapHalf
+        : null;
+    {
       // SURFACE SNAP: rest the grabbed piece on the real geometry under the
       // cursor — this resolves the 2D→3D depth so it lands where it looks,
       // not hundreds of units away on a shallow-angle plane. Over empty space
@@ -3860,28 +4135,28 @@ export class Editor {
         if (this.viewMode === "x") nx = this.dragOrig[0];
         if (this.viewMode === "y") ny = this.dragOrig[1];
         if (this.viewMode === "z") nz = this.dragOrig[2];
-        if (this.snap) {
+        if (grid) {
           // only grid the axes the view can actually move
-          if (this.viewMode !== "x") nx = snapHalf(nx);
-          if (this.viewMode !== "y") ny = snapHalf(ny);
-          if (this.viewMode !== "z") nz = snapHalf(nz);
+          if (this.viewMode !== "x") nx = grid(nx);
+          if (this.viewMode !== "y") ny = grid(ny);
+          if (this.viewMode !== "z") nz = grid(nz);
         }
       } else if (surf) {
         nx = surf.x;
         nz = surf.z;
         ny = surf.y + this.dragBottomOffset; // base sits on the surface
-        if (this.snap) {
-          nx = snapHalf(nx);
-          nz = snapHalf(nz); // grid the footprint, keep Y exactly on the surface
+        if (grid) {
+          nx = grid(nx);
+          nz = grid(nz); // grid the footprint, keep Y exactly on the surface
         }
       } else {
         const hit = new THREE.Vector3();
         if (!this.groundPoint(e, this.dragPlane, hit)) return;
         nx = this.dragOrig[0] + (hit.x - this.dragStart.x);
         nz = this.dragOrig[2] + (hit.z - this.dragStart.z);
-        if (this.snap) {
-          nx = snapHalf(nx);
-          nz = snapHalf(nz);
+        if (grid) {
+          nx = grid(nx);
+          nz = grid(nz);
         }
       }
     }
@@ -3907,6 +4182,7 @@ export class Editor {
       }
     }
     if (moved) {
+      this.separateCrates(this.dragSel.map((entry) => entry.idx));
       this.refreshSelectionBox();
       this.renderProps();
     }
@@ -3918,6 +4194,12 @@ export class Editor {
     if (this.spaceHeld) {
       this.dom.style.cursor = "grab";
       this.downAt = null;
+      return;
+    }
+    if (this.moveDrag) {
+      this.moveDrag = null;
+      if (this.controls) this.controls.enabled = true;
+      this.commit(); // one undo step for the whole axis move
       return;
     }
     if (this.gizmoDrag) {
