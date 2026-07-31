@@ -61,6 +61,30 @@ function convexHullXZ(pts: THREE.Vector3[]): THREE.Vector3[] {
   const hull = lower.concat(upper);
   return hull.length > 0 ? hull : pts.slice();
 }
+// Grind trick table (THPS3+ vocabulary): the stick at snap — or at a fresh
+// Triangle press MID-grind — picks the trick. Names/scores per style; the
+// lipslide is the sideways catch where you came over the TOP of the rail.
+type GrindStyle = 'normal' | 'nose' | 'five0' | 'board' | 'lip' | 'smith' | 'feeble' | 'crook';
+const GRIND_NAMES: Record<GrindStyle, string> = {
+  normal: '50-50',
+  nose: 'Nosegrind',
+  five0: '5-0',
+  board: 'Boardslide',
+  lip: 'Lipslide',
+  smith: 'Smith Grind',
+  feeble: 'Feeble Grind',
+  crook: 'Crooked Grind',
+};
+const GRIND_MULTS: Record<GrindStyle, number> = {
+  normal: 1,
+  nose: 1.25,
+  five0: 1.25,
+  board: 1.5,
+  lip: 1.6,
+  smith: 1.4,
+  feeble: 1.4,
+  crook: 1.35,
+};
 const _plantInv = new THREE.Matrix4();
 const _plantMR = new THREE.Matrix4();
 const _plantML = new THREE.Matrix4();
@@ -535,7 +559,7 @@ export class Player {
   private grindT = 0;
   private grindDir = 1;
   private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
-  private grindStyle: 'normal' | 'nose' | 'five0' | 'board' = 'normal'; // held dir at entry
+  private grindStyle: GrindStyle = 'normal'; // held dir at entry (or last mid-grind switch)
   private grindPoseX = 0; // nose-up / nose-down grind lean
   private grindYawPose = 0; // boardslide: body across the rail
   private grindArmPose = 0; // arms out wide for balance on the rail
@@ -4322,7 +4346,21 @@ export class Player {
     this.noisePhase = Math.random() * Math.PI * 2;
     this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.rideNormal.set(0, 1, 0);
-    this.score(CONST.ptsLip, 'Axle Stall');
+    // THPS lip variety: the stick at the catch picks the trick. The climb
+    // hold (up) is the neutral case on purpose — Axle Stall is the default,
+    // not a trick you have to avoid; sideways leans and a pull-back rock pay
+    // more. (Same balance game either way; the name and the payout differ.)
+    const rIn = this.rawInput;
+    const lipName =
+      rIn.moveY < -0.4
+        ? 'Rock to Fakie'
+        : rIn.moveX < -0.4
+          ? 'Nose Stall'
+          : rIn.moveX > 0.4
+            ? 'Tail Stall'
+            : 'Axle Stall';
+    const lipMult = lipName === 'Axle Stall' ? 1 : lipName === 'Rock to Fakie' ? 1.15 : 1.25;
+    this.score(Math.round(CONST.ptsLip * lipMult), lipName);
     sfx.play('railLand', 0.7);
     this.emitSparks(5, 0xffe08a, 1.2);
   }
@@ -4693,9 +4731,33 @@ export class Player {
     this.grindTime += dt;
     level.grindRope(rail); // sky-bridge ropes: grinding one makes it sag, wobble, and eventually snap
     this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
+    // THPS3+ TRICK SWITCHING: a fresh Triangle press mid-grind re-reads the
+    // stick and swaps the trick in place — a new plate entry (repeat decay
+    // keeps it honest), a jolt through the needle, and the pose follows.
+    if (input.grindPressed && this.grindTime > 0.2 && this.lipStallT <= 0) {
+      const prev = this.grindStyle;
+      this.pickGrindStyle(false);
+      if (this.grindStyle !== prev) {
+        this.score(
+          Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
+          GRIND_NAMES[this.grindStyle],
+        );
+        this.surfaceName = 'rail (' + GRIND_NAMES[this.grindStyle] + ')';
+        this.balanceVel += (Math.random() < 0.5 ? -1 : 1) * 0.3; // the swap rocks the needle
+        this.emitSparks(4, 0xffb545, 1.2);
+        sfx.play('railLand', 0.45, 1.25);
+      } else {
+        this.grindStyle = prev;
+      }
+    }
     // Grinds ride at the speed you brought and bleed a little on the rail
-    // (nosegrinds hold their speed better).
-    const bleed = this.grindStyle === 'nose' ? CONST.grindBleed * 0.4 : CONST.grindBleed;
+    // (nose and crooked grinds hold their speed better).
+    const bleed =
+      this.grindStyle === 'nose'
+        ? CONST.grindBleed * 0.4
+        : this.grindStyle === 'crook'
+          ? CONST.grindBleed * 0.55
+          : CONST.grindBleed;
     this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - bleed * dt);
     // SLOPED RAILS: gravity works the grind line — descending segments feed
     // speed, climbs bleed it (the same knobs as ground slopes), capped like
@@ -4721,8 +4783,16 @@ export class Player {
     // How much grind speed matters to the needle at all (slider): 0 = not at
     // all, 1 = slow grinds wobble the full amount, higher = exaggerated.
     const speedFactor = 1 + (rawSpeedFactor - 1) * TUNING.balanceSpeedEffect;
-    // boardslides look coolest and wobble hardest
-    const styleWobble = this.grindStyle === 'board' ? 1.25 : 1;
+    // the crosswise slides look coolest and wobble hardest; the truck-balanced
+    // diagonals (Smith/Feeble) sit in between
+    const styleWobble =
+      this.grindStyle === 'lip'
+        ? 1.35
+        : this.grindStyle === 'board'
+          ? 1.25
+          : this.grindStyle === 'smith' || this.grindStyle === 'feeble'
+            ? 1.15
+            : 1;
     // Difficulty ramps with grind length: flat for balanceGrace seconds,
     // then grows at balanceRamp per second up to the balanceRampMax ceiling —
     // marathon grinds get dicey, never impossible.
@@ -4819,7 +4889,7 @@ export class Player {
 
     this.placeOnRail(rail);
     this.speed = this.grindVel;
-    this.surfaceName = this.grindStyle === 'normal' ? 'rail (50-50)' : 'rail (' + this.grindStyle + ')';
+    this.surfaceName = 'rail (' + GRIND_NAMES[this.grindStyle] + ')';
     // THPS accrual: the longer the grind, the more the combo is worth.
     this.grindTickT += dt;
     while (this.grindTickT >= 0.25) {
@@ -4914,6 +4984,21 @@ export class Player {
     return true;
   }
 
+  // The 8-way stick read shared by grind ENTRY and the mid-grind trick
+  // switch. overTop only means something at entry (a sideways catch after
+  // crossing the line is a Lipslide); a mid-grind sideways switch is always
+  // the Boardslide.
+  private pickGrindStyle(overTop: boolean): void {
+    const rIn = this.rawInput;
+    const mxA = Math.abs(rIn.moveX) > 0.4;
+    if (rIn.moveY > 0.4) this.grindStyle = mxA ? 'crook' : 'nose';
+    else if (rIn.moveY < -0.4)
+      this.grindStyle = mxA ? (rIn.moveX < 0 ? 'smith' : 'feeble') : 'five0';
+    else if (mxA) this.grindStyle = overTop ? 'lip' : 'board';
+    else this.grindStyle = 'normal';
+    this.grindYawDir = rIn.moveX >= 0 ? 1 : -1;
+  }
+
   private enterGrind(rail: Rail, sample: RailSample): void {
     this.grindRail = rail;
     this.grindT = sample.t;
@@ -4937,29 +5022,29 @@ export class Player {
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
     this.grindTime = 0;
-    // Grind style from the direction held at entry (THPS flavor):
-    // up = nosegrind, down = 5-0, left/right = boardslide, none = 50-50.
-    const rIn = this.rawInput;
-    this.grindStyle =
-      rIn.moveY > 0.4 ? 'nose' : rIn.moveY < -0.4 ? 'five0' : Math.abs(rIn.moveX) > 0.4 ? 'board' : 'normal';
-    this.grindYawDir = rIn.moveX >= 0 ? 1 : -1;
+    // Grind trick from the stick at entry (THPS3+ vocabulary):
+    // up = Nosegrind, down = 5-0, up-diagonal = Crooked, down-left = Smith,
+    // down-right = Feeble, sideways = Boardslide — or LIPSLIDE when you came
+    // over the TOP of the rail (already crossed the line when you caught it),
+    // neutral = 50-50.
+    const perpX = sample.tangent.z;
+    const perpZ = -sample.tangent.x;
+    const sideNow = (this.pos.x - sample.point.x) * perpX + (this.pos.z - sample.point.z) * perpZ;
+    const crossVel = worldVx * perpX + worldVz * perpZ;
+    // still travelling toward the line from your own side = boardslide;
+    // caught it moving AWAY from the line = you crossed over it = lipslide
+    const overTop = sideNow * crossVel > 0.01;
+    this.pickGrindStyle(overTop);
     this.grindTickT = 0;
     this.railUnder = false; // every grind starts on top (the switch cooldown carries over)
     this.underK = 0;
     this.underProbeT = 0;
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
-    const styleMult =
-      this.grindStyle === 'normal' ? 1 : this.grindStyle === 'board' ? 1.5 : 1.25;
-    const styleName =
-      this.grindStyle === 'normal'
-        ? '50-50'
-        : this.grindStyle === 'nose'
-          ? 'Nosegrind'
-          : this.grindStyle === 'five0'
-            ? '5-0'
-            : 'Boardslide';
-    this.score(Math.round(CONST.ptsGrindBase * styleMult), styleName);
+    this.score(
+      Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
+      GRIND_NAMES[this.grindStyle],
+    );
     // Start the needle slightly off-center in a random direction, at rest, with
     // a fresh sketch phase so the wander never repeats across attempts.
     this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
@@ -4968,15 +5053,17 @@ export class Player {
     this.noisePhase = Math.random() * Math.PI * 2;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     sfx.play('railLand', 0.8);
-    // The rail keeps the speed you carried ALONG it — hit it fast and aligned
-    // to cross fast; clip it sideways and you just barely creep across.
-    // ...plus an entry boost, because for a FAST approach a rail was strictly
-    // lossy: you give up the cross component to the projection and then bleed
-    // grindBleed on top, so the optimal fast line was to SKIP rails — which
-    // inverts how you're meant to read a park. The boost makes "ollie to rail"
-    // a gear change instead of a stumble.
+    // THPS SPEED-KEEP: the rail REDIRECTS the speed you brought instead of
+    // dispensing its own. A clean aligned hit keeps everything; a hard
+    // sideways clip is blended down toward the along component (a boardslide
+    // still slides at real pace, it doesn't rocket) — but slow entry = slow
+    // grind, and only DOWNHILL rails add speed (slope gravity in stepGrind).
+    // railSpeedBoost survives as a 0-default slider for anyone who wants the
+    // old gear-change gift back.
+    const planarIn = Math.abs(this.speed);
+    const alongFrac = planarIn > 0.01 ? Math.min(1, Math.abs(alongVel) / planarIn) : 1;
     this.grindVel = THREE.MathUtils.clamp(
-      Math.abs(alongVel) + TUNING.railSpeedBoost,
+      planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost,
       CONST.grindMinSpeed,
       TUNING.downhillMax,
     );
@@ -7586,11 +7673,29 @@ export class Player {
     // actually moves.
     const crawlMove = this.crawlPose * Math.min(1, planar / 1.2);
     const crouchW = Math.max(0, this.crawlPose - crawlMove);
-    // Grind style lean: nose down, tail down, or body across the rail.
+    // Grind style lean: nose down, tail down, the diagonal truck balances, or
+    // the body across the rail (boardslide/lipslide — the lipslide faces the
+    // other way, having come over the top).
     const gp =
-      this.state === 'grind' ? (this.grindStyle === 'nose' ? 0.4 : this.grindStyle === 'five0' ? -0.45 : 0) : 0;
+      this.state === 'grind'
+        ? this.grindStyle === 'nose'
+          ? 0.4
+          : this.grindStyle === 'crook'
+            ? 0.3
+            : this.grindStyle === 'five0'
+              ? -0.45
+              : this.grindStyle === 'smith'
+                ? -0.3
+                : this.grindStyle === 'feeble'
+                  ? -0.24
+                  : 0
+        : 0;
     this.grindPoseX += (gp - this.grindPoseX) * Math.min(1, 12 * dt);
-    const gy = this.state === 'grind' && this.grindStyle === 'board' ? this.grindYawDir * (Math.PI / 2) : 0;
+    const crossRail = this.grindStyle === 'board' || this.grindStyle === 'lip';
+    const gy =
+      this.state === 'grind' && crossRail
+        ? this.grindYawDir * (Math.PI / 2) * (this.grindStyle === 'lip' ? -1 : 1)
+        : 0;
     this.grindYawPose += (gy - this.grindYawPose) * Math.min(1, 12 * dt);
     const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
     const breathe = Math.sin(this.runTime * 2.3);
@@ -7647,7 +7752,7 @@ export class Player {
     // grindYawPose owns that body turn). The yaw itself is applied above.
     const sideOn =
       onBoard ||
-      (this.state === 'grind' && this.grindStyle !== 'board') ||
+      (this.state === 'grind' && this.grindStyle !== 'board' && this.grindStyle !== 'lip') ||
       (this.state === 'air' && this.airFromSkate && !this.grabbing && !this.slamActive && this.grabPose < 0.3);
     this.sidePose += ((sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
     // Deck-stand: any time the board is glued under the feet — rolling, plain
@@ -7759,7 +7864,9 @@ export class Player {
       const fwS = 1 - this.sidePose;
       const stance =
         (0.55 * sk * this.stance +
-          (this.state === 'grind' && this.grindStyle !== 'board' ? 0.45 * this.stance : 0)) *
+          (this.state === 'grind' && this.grindStyle !== 'board' && this.grindStyle !== 'lip'
+            ? 0.45 * this.stance
+            : 0)) *
           fwS -
         0.35 * this.stance * this.sidePose;
       const counter = -swing * 0.22 + 0.1 * Math.sin(this.runTime * 0.7) * idleW; // idle: lazy shoulder wander

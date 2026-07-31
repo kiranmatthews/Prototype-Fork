@@ -61,7 +61,7 @@ export const TUNING = {
   landGive: 0.35, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
-  railSpeedBoost: 6.5, // speed handed to you on a clean rail entry — without it a fast line LOSES speed on every rail, so the optimal play was to skip them
+  railSpeedBoost: 0, // flat speed handed to you on a rail entry. 0 = THPS speed-keep: a grind now KEEPS the speed you carried in (redirected along the rail, whatever the angle), so the rail no longer needs a consolation gift — only DOWNHILL rails add speed (slope gravity works the grind line)
   perfectGrindSpeed: 48, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — well past downhillMax (30.5), so it is comfortably the fastest the board ever goes. It gets its own temporary ceiling while perfectGrindHold runs, so the usual clamps do not eat it
   perfectGrindHold: 3.9, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
@@ -432,7 +432,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   railTripSpeed:
     'Running/skating STRAIGHT INTO a rail from the side (no jump, no grind): below this speed the rail simply BLOCKS you like a curb; at or above it you catch the rail and TRIP (bail/stumble). Jump over it or grind it to pass cleanly.',
   railSpeedBoost:
-    'Speed granted when you land a grind. A fast approach loses its cross component to the rail line and then bleeds on top, so without this a rail is a speed PENALTY and the fastest line skips every rail in the park. Higher = rails are a gear change.',
+    'EXTRA flat speed granted on top when you land a grind. Grinds now KEEP the speed you carried in (THPS speed-keep — redirected along the rail whatever the angle you hit it at), so this ships at 0: slow entry = slow grind, fast entry = fast grind, and only DOWNHILL rails add speed. Raise it if you want every rail to be a gear change again.',
   perfectGrindSpeed:
     'THE SLIPSTREAM only. Ride a rail its WHOLE length — on at one end, off at the other, no bail — and you leave the rail at this speed. It sits above downhillMax on purpose: a perfect grind is meant to be the fastest the board ever moves, so the level built around one long rail line rewards committing to it.',
   perfectGrindHold:
@@ -689,7 +689,7 @@ export const CONST = {
   railBlockRadius: 0.2, // on-foot rail block/trip: horizontal contact skin around the rail line (added to player half)
   railSnapEase: 0.12, // seconds to glide onto a grabbed rail (no one-frame zap)
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
-  grindMinSpeed: 8, // slowest a grind can crawl (and the floor for speed bleed)
+  grindMinSpeed: 3.5, // slowest a grind can crawl (and the floor for speed bleed). Dropped from 8 with THPS speed-keep: a deliberate slow creep onto a rail is a slow, deliberate grind now, not a free 8 u/s dispenser
   grindBleed: 2, // grind speed lost per second on the rail
   comboWindow: 0.15, // near-zero: combos live in the air/on rails, not on the ground
   // Base point values — combo total = sum of bases x number of actions.
