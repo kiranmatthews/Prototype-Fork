@@ -174,9 +174,15 @@ export class Player {
   // is that an IN-GAME reset keeps them while a page reload starts clean, and
   // localStorage would survive the reload too. Keyed by level, so the row
   // shows what you earned HERE rather than a running total from somewhere else.
-  // scratch for the wallride deck roll (see syncVisual)
-  private static readonly BOARD_AXIS = new THREE.Vector3();
-  private static readonly BOARD_ROLL = new THREE.Quaternion();
+  // scratch for the wallride deck pose (see the wallride block in the boardG
+  // section): world-space target frame, parent world rotation, flush offset
+  private static readonly WALL_X = new THREE.Vector3();
+  private static readonly WALL_Y = new THREE.Vector3();
+  private static readonly WALL_Z = new THREE.Vector3();
+  private static readonly WALL_OFF = new THREE.Vector3();
+  private static readonly WALL_M = new THREE.Matrix4();
+  private static readonly WALL_QT = new THREE.Quaternion();
+  private static readonly WALL_QP = new THREE.Quaternion();
   private static relicVault = new Map<
     string,
     { crystal: boolean; gem: boolean; combo: boolean }
@@ -7404,38 +7410,52 @@ export class Player {
       // the deck edges up under her as she goes over — the board is on the
       // rail, so it rolls about a third as far as the body does
       this.boardG.rotation.z = balRoll * 0.34;
-      this.boardG.position.x = this.wallridePose * wallSide * 0.62; // flush to the wall
-      this.boardG.position.y += this.wallridePose * 0.34; // up to foot height
+      // x and z are wallride-only offsets, rebuilt from scratch below when a
+      // wallride is live — zero them EVERY frame or the .add() accumulates
+      this.boardG.position.x = 0;
+      this.boardG.position.z = 0;
       // UNDER-RAIL HANG: the deck leaves the feet and goes CROSSWISE overhead,
       // gripped at both ends — riding just beneath the rail line.
       if (underW > 0.001) {
         this.boardG.rotation.x *= 1 - underW;
         this.boardG.rotation.z *= 1 - underW;
         this.boardG.rotation.y = this.boardG.rotation.y * (1 - underW) + (Math.PI / 2) * underW;
-        this.boardG.position.x *= 1 - underW;
         this.boardG.position.y += underW * 1.05; // up into both hands, just beneath the line
         // the grip IS the board under a RAIL — but on the swing rope the hands
         // hold the rope itself, so no deck.
         this.boardG.visible = this.state !== 'rope';
       }
-      // WALLRIDE ROLL, applied LAST and about the deck's OWN LENGTH — which,
-      // measured on the built board, is its local X once the stance yaw has had
-      // its say (rotation.y swings the deck up to a quarter turn for the
-      // sideways skating stance).
-      // It used to be a rotation.z term folded in with the others, i.e. a roll
-      // about the SHORT axis in the unyawed frame, which stood the deck up on
-      // its tail instead of laying it on its edge. Deriving the axis from the
-      // live yaw is stance-proof: whichever way the board is pointing, the
-      // wheels end up facing the wall.
+      // WALLRIDE: the deck's wall pose is authored in WORLD space — griptape
+      // out along the wall normal (toward the rider), length down the ride
+      // line, wheels pressed into the face — then pulled back through the
+      // parent's live world rotation. Every parent-frame attempt at this has
+      // been wrong at least once (the roll sign was flipped in a9eb463, the
+      // axis re-derived in 254f31a), because the rig above the board keeps
+      // its own counsel: a stance yaw here, a 180° flip on the outer group
+      // there, and yesterday's correct sign quietly inverts. Stating the
+      // answer in world coordinates is stance-proof and rig-refactor-proof:
+      // whatever the chain does, the wheels face the wall.
       if (this.wallridePose > 0.001) {
-        const ry = this.boardG.rotation.y;
-        Player.BOARD_AXIS.set(Math.cos(ry), 0, -Math.sin(ry));
-        this.boardG.quaternion.premultiply(
-          Player.BOARD_ROLL.setFromAxisAngle(
-            Player.BOARD_AXIS,
-            this.wallridePose * -wallSide * (Math.PI / 2),
-          ),
-        );
+        const t = this.wallridePose;
+        Player.WALL_Y.copy(this.wallNormal); // griptape faces the rider
+        Player.WALL_Z.set(this.axisF.x, 0, this.axisF.z).normalize(); // deck along the ride
+        Player.WALL_X.crossVectors(Player.WALL_Y, Player.WALL_Z);
+        Player.WALL_M.makeBasis(Player.WALL_X, Player.WALL_Y, Player.WALL_Z);
+        Player.WALL_QT.setFromRotationMatrix(Player.WALL_M);
+        this.bodyGroup.getWorldQuaternion(Player.WALL_QP);
+        Player.WALL_QT.premultiply(Player.WALL_QP.invert());
+        this.boardG.quaternion.slerp(Player.WALL_QT, t);
+        // flush to the face (the wall plane sits playerHalf + the glue gap
+        // off the physics point) and up to foot height — world-space, pulled
+        // into the parent frame the same way
+        Player.WALL_OFF.set(
+          -this.wallNormal.x * 0.55 * t,
+          0.34 * t,
+          -this.wallNormal.z * 0.55 * t,
+        )
+          .applyQuaternion(Player.WALL_QP)
+          .divide(this.bodyGroup.scale); // parent units, not world units
+        this.boardG.position.add(Player.WALL_OFF);
       }
       if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
