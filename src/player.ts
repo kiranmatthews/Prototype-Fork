@@ -6201,9 +6201,15 @@ export class Player {
     if (this.isBailing || this.slamActive) return false;
     if (input.grindHeld || input.grindPressed) return false;
     if (this.regrindCd > 0 || this.vertLandGraceT > 0 || this.vertAir || this.pipeHang) return false;
+    // Same contact skin the on-foot rail block uses (playerHalf + blockRadius,
+    // 0.7): the bar is as wide to FALL onto as it is to skate into. The first
+    // cut used a tight 0.45 and a flats replay showed a landing 0.59 off the
+    // line sailing through — visually ON the bar (the body itself is 0.5
+    // wide), called a miss by the code.
+    const smackReach = CONST.playerHalf.x + CONST.railBlockRadius;
     for (const rail of level.rails) {
       const s = rail.closestXZ(this.pos);
-      if (s.distXZ > 0.45) continue; // a graze past the bar is a graze
+      if (s.distXZ > smackReach) continue; // past the skin is a genuine graze
       // the fall must cross the rail line THIS step
       if (!(this.prevPos.y > s.point.y + 0.02 && this.pos.y <= s.point.y + 0.02)) continue;
       let isRope = false;
