@@ -130,6 +130,14 @@ export const TUNING = {
   bailMashGain: 0.2, // knockdown clock speed-up per accumulated edge
   bailMashMax: 1, // cap on that speed-up: 1 = a saturated mash HALVES the lockout (THUG's 1.0-2.0x bash factor)
   bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
+  // RAGDOLL WIPEOUTS: every knockdown becomes a tumbling body — it bounces off
+  // the ground, the limbs windmill, the deck flies off on its own, and the
+  // whole thing settles into the existing sprawl + mash-out get-up.
+  ragBounce: 0.42, // restitution of a tumbling body: how much of each fall the bounce keeps
+  ragSpin: 1, // tumble rotation speed scale (0 = the old rigid sprawl, ~3 = washing machine)
+  ragFlail: 1, // limb windmill amplitude while airborne in a wipeout
+  wallBailSpeed: 16, // frontal skate into a solid wall/box at or above this = wipeout (below: the old dead stop). MUST sit above cruiseSpeed (12) or every casual no-input wall bump — boundary walls included — becomes a knockdown; 16 means only EARNED speed (a charge or a downhill) crashes
+  crateTripSpeed: 6, // skate into a wood crate at or above this (but below smashSpeed) = trip and tumble OVER it
   // AUTHENTIC THPS/THUG balance dynamics (Neversoft's CManual is an unstable
   // inverted pendulum: needle position + velocity, nudged by taps and noise).
   // Each layer is ADDITIVE — at 0 the meter is exactly the classic first-order
@@ -291,6 +299,11 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   bailMashWindow: { min: 0.1, max: 1, step: 0.05 },
   bailMashGain: { min: 0, max: 0.5, step: 0.05 },
   bailMashMax: { min: 0, max: 2, step: 0.1 },
+  ragBounce: { min: 0, max: 0.8, step: 0.02 },
+  ragSpin: { min: 0, max: 3, step: 0.1 },
+  ragFlail: { min: 0, max: 2, step: 0.1 },
+  wallBailSpeed: { min: 4, max: 30, step: 0.5 },
+  crateTripSpeed: { min: 1, max: 15, step: 0.5 },
   bailGrace: { min: 0, max: 1.2, step: 0.05 },
   balanceInertia: { min: 0, max: 1, step: 0.05 },
   balanceGravity: { min: 0, max: 6, step: 0.1 },
@@ -528,6 +541,16 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How fast the sketch wander sways, in radians/sec (~6 ≈ a one-second sway). Low = a slow lazy roll that is easy to read; high = a nervous jitter. Does nothing while Balance Noise is 0.',
   balanceSafePeriod:
     "Entry ease-in (Neversoft's safe_period). 0 = full corrective authority the instant a trick starts. Above 0, inward (toward-center) taps fade in over this many seconds so an over-eager first tap can't fling the fresh needle straight off; pushing further OUT always keeps full authority.",
+  ragBounce:
+    'Wipeout restitution: how much of each fall a tumbling body keeps when it hits the ground. 0 = flops dead on first contact (the old bail); higher = bouncier, more chaotic crashes.',
+  ragSpin:
+    'How fast a wiped-out body cartwheels/pitches while airborne. 0 = the old rigid sprawl with no rotation; around 1 reads like THPS; 3 = washing machine.',
+  ragFlail:
+    'Limb windmill amplitude while a wipeout is airborne. The arms and legs thrash between bounces and settle once the body is sliding.',
+  wallBailSpeed:
+    'Skate head-on into a solid wall, metal box, or spent switch at or above this speed and you wipe out — bounce off backwards, tumble, drop the deck. Below it, the old dead stop. Keep it above cruiseSpeed or every casual wall bump becomes a crash.',
+  crateTripSpeed:
+    'Skate into a plain wood crate or checkpoint at or above this (but below smashSpeed, which plows through) and you trip OVER the box and tumble down the far side. Below it, the crate is a wall.',
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
   smashSpeed:
     'Skating or grinding at or above this speed plows straight through plain wooden crates and checkpoints (TNT and nitro stay dangerous). Below it, a crate is a wall.',
@@ -629,6 +652,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
+  { title: 'WIPEOUTS', keys: ['ragBounce', 'ragSpin', 'ragFlail', 'wallBailSpeed', 'crateTripSpeed'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift', 'camBalanceRoll'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },

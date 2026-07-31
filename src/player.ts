@@ -291,6 +291,32 @@ export class Player {
   private bailMash = 0; // button mashing shortens the knockdown (THUG's bash factor)
   private bailRush = 1; // 1..1+bailMashMax — also speeds the get-up pose so the mash READS
   private vertGravT = 0; // easing back from vert gravity to street gravity after a hang drops
+  // RAGDOLL WIPEOUT. Not articulated physics — an animated ragdoll, the THPS
+  // way: the ROOT does the real work (ballistic arc + restitution bounces off
+  // the same ground query everything else uses) while the BODY tumbles with an
+  // angular velocity seeded by whatever went wrong (a trip pitches you forward,
+  // a wall hit slams you backward, a rail bail rolls you off sideways) and the
+  // limbs windmill on per-wipeout random phases. Once the body is down and
+  // sliding, the tumble blends out into the existing sprawl + mash-out get-up,
+  // so all the recovery rules (pit guard, invuln, control lockout) are
+  // unchanged. bailDownT is the lifetime: ragActive can only be true inside it.
+  private ragActive = false;
+  private ragAngVel = new THREE.Vector3(); // tumble rates: x pitch (over axisL), y yaw, z roll (over axisF)
+  private ragQ = new THREE.Quaternion(); // accumulated tumble orientation, WORLD space
+  private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
+  private ragBounces = 0; // ground hits so far this wipeout (capped)
+  private ragSeedA = 0; // per-wipeout flail phases so no two crashes thrash alike
+  private ragSeedB = 0;
+  private ragRollAcc = 0; // accumulated slope-roll angle: a thud every half turn
+  private flyBoard: THREE.Group | null = null; // the deck, mid-flight after a skate wipeout
+  private flyBoardVel = new THREE.Vector3();
+  private flyBoardAng = new THREE.Vector3(); // its own tumble rates (euler rates, cheap and chaotic)
+  private flyBoardT = 0;
+  private flyBoardRest = false; // landed and lying still
+  private static readonly RAG_DQ = new THREE.Quaternion();
+  private static readonly RAG_AXIS = new THREE.Vector3();
+  private static readonly RAG_QP = new THREE.Quaternion();
+  private static readonly RAG_QT = new THREE.Quaternion();
   // ONE capability mask for "is the skater currently wiping out". Everything a
   // downed body must not be able to start reads this. It used to be safe by
   // ACCIDENT — a bail parked speed at 0, so no crest/grind/wallride test could
@@ -940,6 +966,10 @@ export class Player {
     this.slamActive = false;
     this.slamHangT = 0;
     this.bailDownT = 0;
+    this.ragActive = false;
+    this.ragBlend = 0;
+    this.ragAngVel.set(0, 0, 0);
+    if (this.flyBoard) this.flyBoard.visible = false;
     this.airFromSkate = false;
     this.airGrav = 'foot';
     this.stepOff = false;
@@ -1100,6 +1130,7 @@ export class Player {
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
       this.updateSparks(dt);
+      this.updateFlyBoard(dt, level);
       this.updateFruit(dt);
       this.syncVisual(input, dt);
       return;
@@ -1113,6 +1144,7 @@ export class Player {
       this.stepHang(dt, input, level);
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSparks(dt);
+      this.updateFlyBoard(dt, level);
       this.updateFruit(dt);
       this.syncVisual(input, dt);
       return;
@@ -1395,6 +1427,7 @@ export class Player {
       this.bailRush = 1;
     }
     this.bailDownT = Math.max(0, this.bailDownT - dt * this.bailRush);
+    if (this.bailDownT === 0) this.ragActive = false; // the get-up owns the body again
     // A bail's tumble steers axisF/axisL down the fall line (free-skate
     // convention). If the get-up ends ON FOOT, restore the course control
     // frame — otherwise you walk away with rotated/inverted controls until
@@ -1629,6 +1662,7 @@ export class Player {
       }
     }
     this.updateSparks(dt);
+    this.updateFlyBoard(dt, level);
     this.updateFruit(dt);
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
@@ -2586,6 +2620,7 @@ export class Player {
           if (this.balanceCritT > TUNING.bailGrace) {
             this.endManual();
             this.bail();
+            this.startRagdoll('forward'); // a lost manual digs the nose in
             return;
           }
         } else {
@@ -3275,13 +3310,40 @@ export class Player {
         : hit && hit.normal.y < CONST.steepSnapNormal
           ? TUNING.landGive
           : 0.35;
-    if (
-      hit &&
+    const landNow =
+      hit !== null &&
       (pipeCatch !== null || // the analytic catch already resolved the contact exactly
         (this.vVel <= 0 &&
           this.pos.y <= hit.y + 0.05 &&
-          (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - landGive)))
+          (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - landGive)));
+    // RAGDOLL BOUNCE: a wiping-out body doesn't settle on first contact — it
+    // HITS, keeps a slice of the fall (ragBounce), loses a slice of its slide,
+    // takes a fresh random kick of spin, and goes airborne again. Two or three
+    // hits from a big one, none from a soft flop; then the normal landing
+    // below takes it and the sprawl slide + get-up run as they always have.
+    // Steep faces are exempt — there the slide-down-the-fall-line tumble IS
+    // the crash, and bouncing off a wall face reads as a pinball, not a body.
+    if (
+      landNow &&
+      hit &&
+      this.isBailing &&
+      this.ragActive &&
+      this.ragBounces < 3 &&
+      this.vVel < -3.2 &&
+      hit.normal.y > 0.6
     ) {
+      this.pos.y = hit.y;
+      this.vVel = -this.vVel * TUNING.ragBounce;
+      this.speed *= 0.72;
+      this.ragBounces++;
+      this.ragAngVel.multiplyScalar(0.68);
+      this.ragAngVel.x += (Math.random() - 0.5) * 7 * TUNING.ragSpin;
+      this.ragAngVel.y += (Math.random() - 0.5) * 6 * TUNING.ragSpin;
+      this.ragAngVel.z += (Math.random() - 0.5) * 4 * TUNING.ragSpin;
+      sfx.play('crunch', 0.45, 1.1 + Math.random() * 0.35); // meaty thud, pitch-varied
+      this.emitDust(4);
+      this.emitSparks(3, 0xffb545, 1.2);
+    } else if (landNow && hit) {
       this.pos.y = hit.y;
       this.state = 'ride';
       this.grounded = true;
@@ -3427,6 +3489,15 @@ export class Player {
         } else {
           this.landingScoring = false;
           this.bail();
+          // A botched landing SLAPS the transition and the body kicks back up
+          // off it — that rebound is what puts the ragdoll on show (grounded,
+          // the sprawl would eat the whole crash in one frame).
+          this.vVel = 3.4 + Math.min(2.2, Math.abs(this.speed) * 0.12);
+          this.state = 'air';
+          this.grounded = false;
+          this.airFromSkate = false;
+          this.airGrav = 'foot';
+          this.airMomentum = true; // the crash speed rides through the rebound
           return;
         }
       } else {
@@ -4311,6 +4382,9 @@ export class Player {
   // is gone, and you lie flat for a beat before getting up right where you
   // fell. (A mask upstream absorbs the bail entirely, same as before.)
   private bail(): void {
+    // capture BEFORE the flags change hands: a bail out of skating throws the
+    // deck; the same crash on foot has no deck to throw
+    const hadBoard = this.freeSkate || this.airFromSkate;
     this.bailDownT = CONST.bailDownTime;
     this.bailMash = 0;
     // Keep (a fraction of) the momentum instead of zeroing it: a 23 u/s crash
@@ -4326,6 +4400,109 @@ export class Player {
     this.grabSpinTotal = 0;
     sfx.play('takeDamage', 0.8);
     this.emitSparks(8, 0xffb545, 2);
+    // Default tumble: chaotic, no preferred direction. Callers that know WHAT
+    // went wrong re-seed right after with the flavor that sells it (a trip is
+    // head-over-heels forward, a wall hit is backward, a rail bail rolls).
+    this.startRagdoll('air');
+    if (hadBoard) this.throwBoard();
+  }
+
+  // Seed the tumble. `kind` picks which axis dominates — the crash should
+  // visibly happen in the direction of the mistake — and everything gets a
+  // random jitter on the other axes so no two wipeouts read the same.
+  private startRagdoll(kind: 'forward' | 'back' | 'side' | 'air', sideSign = 0): void {
+    this.ragActive = true;
+    this.ragBounces = 0;
+    this.ragRollAcc = 0;
+    this.ragSeedA = Math.random() * Math.PI * 2;
+    this.ragSeedB = Math.random() * Math.PI * 2;
+    // start the tumble exactly where the pose left the body — no snap
+    this.bodyGroup.getWorldQuaternion(this.ragQ);
+    const s = TUNING.ragSpin;
+    // faster crash = faster tumble, saturating so a hyper-speed wreck stays readable
+    const spd = 0.55 + Math.min(1.05, Math.abs(this.speed) * 0.045);
+    const jit = (k: number): number => (Math.random() - 0.5) * k * s;
+    if (kind === 'forward') this.ragAngVel.set(9 * spd * s, jit(2.5), jit(1.5));
+    else if (kind === 'back') this.ragAngVel.set(-7.5 * spd * s, jit(2.5), jit(1.5));
+    else if (kind === 'side')
+      this.ragAngVel.set(jit(2), jit(2.5), 8 * spd * s * (sideSign || (Math.random() < 0.5 ? -1 : 1)));
+    else
+      this.ragAngVel.set(
+        (Math.random() < 0.5 ? -1 : 1) * 7 * spd * s,
+        jit(4),
+        jit(3),
+      );
+  }
+
+  // The deck leaves her feet and goes bouncing off on its own — the single
+  // best "that went wrong" read a skate wipeout has. A lazy world-space clone
+  // of the real board (shared geometry + materials); the real one hides behind
+  // boardSnapT, exactly like the under-rail snap always did, and comes back in
+  // hand when the get-up ends.
+  private throwBoard(): void {
+    if (!this.boardG) return;
+    if (!this.flyBoard) {
+      this.flyBoard = this.boardG.clone(true);
+      this.flyBoard.name = 'flyboard';
+      (this.group.parent ?? this.group).add(this.flyBoard);
+    }
+    const fb = this.flyBoard;
+    this.boardG.getWorldPosition(fb.position);
+    this.boardG.getWorldQuaternion(fb.quaternion);
+    this.boardG.getWorldScale(fb.scale);
+    fb.scale.y = fb.scale.x; // uniform: a spinning deck must not squash
+    fb.visible = true;
+    const dir = Math.sign(this.speed || 1);
+    this.flyBoardVel.set(
+      this.axisF.x * this.speed * 0.8 + (Math.random() - 0.5) * 2,
+      Math.max(this.vVel * 0.4, 0) + 4.2 + Math.random() * 1.6,
+      this.axisF.z * this.speed * 0.8 + (Math.random() - 0.5) * 2,
+    );
+    this.flyBoardAng.set(
+      (Math.random() - 0.5) * 18,
+      dir * (10 + Math.random() * 8), // helicopter spin reads best
+      (Math.random() - 0.5) * 18,
+    );
+    this.flyBoardT = CONST.bailDownTime + 0.9;
+    this.flyBoardRest = false;
+    this.boardSnapT = Math.max(this.boardSnapT, CONST.bailDownTime + 0.5); // real deck hides meanwhile
+  }
+
+  // Ballistic deck: gravity, a couple of restitution bounces off the same
+  // ground query the player uses, then it lies where it fell until the get-up
+  // calls it back. Runs even while the player is dead — a board mid-air when
+  // the body hits a pit should still finish its arc.
+  private updateFlyBoard(dt: number, level: Level): void {
+    const fb = this.flyBoard;
+    if (!fb || !fb.visible) return;
+    this.flyBoardT -= dt;
+    if (this.flyBoardT <= 0 || this.boardSnapT <= 0) {
+      fb.visible = false; // the real one is back in hand
+      return;
+    }
+    if (this.flyBoardRest) return;
+    this.flyBoardVel.y -= 24 * dt;
+    fb.position.addScaledVector(this.flyBoardVel, dt);
+    fb.rotation.x += this.flyBoardAng.x * dt;
+    fb.rotation.y += this.flyBoardAng.y * dt;
+    fb.rotation.z += this.flyBoardAng.z * dt;
+    const g = this.queryGround(level, fb.position.x - this.pos.x, fb.position.z - this.pos.z);
+    if (g !== null && this.flyBoardVel.y < 0 && fb.position.y <= g.y + 0.06) {
+      fb.position.y = g.y + 0.06;
+      if (-this.flyBoardVel.y > 2.2) {
+        this.flyBoardVel.y = -this.flyBoardVel.y * 0.45;
+        this.flyBoardVel.x *= 0.6;
+        this.flyBoardVel.z *= 0.6;
+        this.flyBoardAng.multiplyScalar(0.55);
+        sfx.play('skateHalt', 0.25, 1.3 + Math.random() * 0.3); // clatter
+      } else {
+        // done: lie flat where it stopped
+        this.flyBoardRest = true;
+        fb.rotation.x = 0;
+        fb.rotation.z = 0;
+        sfx.play('skateHalt', 0.18, 1.5);
+      }
+    }
   }
 
   private stepGrind(dt: number, input: Input, level: Level): void {
@@ -4741,6 +4918,7 @@ export class Player {
     sfx.play('crunch', 0.9, 0.85); // the snap
     sfx.play('takeDamage', 0.7);
     this.emitSparks(10, 0xb08040, 2.2); // splinters off the broken deck
+    this.startRagdoll('air'); // no thrown deck — this one snapped to pieces
   }
 
   // THE ONE PLACE the needle becomes a direction in the world.
@@ -4853,6 +5031,12 @@ export class Player {
     this.invulnTimer = CONST.maskInvuln; // consistent with every other wipeout
     this.loseCombo();
     this.emitSparks(8, 0xffb545, 2);
+    // Falling off a rail is a WIPEOUT now, not a stumble you jog away from:
+    // the body rolls off the side the needle said, the deck goes flying, and
+    // the knockdown clock (mashable) runs like every other crash.
+    this.bailDownT = CONST.bailDownTime;
+    this.startRagdoll('side', sideSign);
+    this.throwBoard();
   }
 
   // ------------------------------------------------------------------ spin --
@@ -5242,7 +5426,11 @@ export class Player {
           } else if (this.isBonking(c.box)) {
             this.vVel = -1; // head bonk on the underside
           } else {
+            const bx = this.pos.x;
+            const bz = this.pos.z;
+            const bs = this.speed;
             this.pushOutOf(c.box);
+            this.wallSmack(bx, bz, bs); // metal never smashes: at speed it's a wall crash
           }
         }
         continue;
@@ -5256,7 +5444,10 @@ export class Player {
         if (this.spinning && this.spinBox.intersectsBox(c.box)) {
           level.triggerBang(c);
         } else if (this.playerBox.intersectsBox(c.box)) {
-          if (this.isStomping(c.box)) {
+          if (this.isBailing) {
+            // tumbling body: the switch is scenery (no mid-ragdoll bounce)
+            if (this.grounded) this.pushOutOf(c.box);
+          } else if (this.isStomping(c.box)) {
             level.triggerBang(c);
             this.slamActive = false; // same anti-relock rule as the metal arrow
             this.vVel = TUNING.crateBounce;
@@ -5276,7 +5467,11 @@ export class Player {
             level.triggerBang(c);
             this.pushOutOf(c.box);
           } else {
+            const bx = this.pos.x;
+            const bz = this.pos.z;
+            const bs = this.speed;
             this.pushOutOf(c.box);
+            this.wallSmack(bx, bz, bs); // a '!' box never breaks: at speed it's a wall crash
           }
         }
         continue;
@@ -5284,7 +5479,14 @@ export class Player {
       if (this.spinning && this.spinBox.intersectsBox(c.box)) {
         this.smashCrate(level, c);
       } else if (this.playerBox.intersectsBox(c.box)) {
-        if (this.uberTimer > 0 && !this.isStomping(c.box)) {
+        if (this.isBailing) {
+          // A TUMBLING BODY neither smashes nor stomps — the box is scenery.
+          // (Measured: the trip-over arc used to re-enter here as a STOMP,
+          // smash the very crate that tripped it and crateBounce 14 back into
+          // the sky.) Airborne it arcs clean over with no shove — a push here
+          // pins the arc against the near face; down and sliding it's a wall.
+          if (this.grounded) this.pushOutOf(c.box);
+        } else if (this.uberTimer > 0 && !this.isStomping(c.box)) {
           // Uber: boxes shatter on touch (stomps below still bounce).
           this.smashCrate(level, c);
         } else if (this.sliding) {
@@ -5319,6 +5521,10 @@ export class Player {
           // the everyday wood.
           this.smashCrate(level, c);
           this.speed *= 0.92;
+        } else if (this.crateTrip(c.box)) {
+          // Too slow to smash, too fast to stop: shins catch the box and the
+          // body pitches OVER it, tumbling down the far side (crateTrip did
+          // the launch). The crate doesn't care.
         } else {
           // Bumping does nothing to the crate — it's a wall. Full stop.
           this.pushOutOf(c.box);
@@ -5464,7 +5670,11 @@ export class Player {
         if (this.playerBox.intersectsBox(w)) {
           if (this.tryWallride(w)) break; // stuck to the wall — ride it
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
+          const bx = this.pos.x;
+          const bz = this.pos.z;
+          const bs = this.speed; // pushOutOf full-stops; keep the crash speed
           this.pushOutOf(w);
+          this.wallSmack(bx, bz, bs); // face-first at speed: that's a wipeout
         } else if (
           // NEAR-MISS CATCH: a wall bonk shoves the body just clear of the
           // face and kills the arc's push (slide jumps steer-lock, so nothing
@@ -5505,7 +5715,10 @@ export class Player {
         level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
         this.onCheckpoint();
       } else if (this.playerBox.intersectsBox(cp.box)) {
-        if (this.sliding) {
+        if (this.isBailing) {
+          // tumbling body: no banking, no bounce — scenery
+          if (this.grounded) this.pushOutOf(cp.box);
+        } else if (this.sliding) {
           level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
         } else if (this.isStomping(cp.box)) {
@@ -5526,6 +5739,8 @@ export class Player {
           level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
           this.onCheckpoint();
           this.speed *= 0.92;
+        } else if (this.crateTrip(cp.box)) {
+          // tripped clean over the checkpoint — it does NOT bank; earn it properly
         } else {
           // Slow bump = wall, like a normal box. Spin, slide, or stomp to bank it.
           this.pushOutOf(cp.box);
@@ -5841,6 +6056,68 @@ export class Player {
   //    never a warp across the level.
   // 3. Only a head-on hit kills speed (Crash full stop + skid); scraping
   //    along a wall at an angle slides and keeps your momentum.
+  // Skated face-first into something that doesn't give. Called right AFTER a
+  // pushOutOf with the pre-push position: the push the resolver applied says
+  // how square the hit was — straight back against travel means the face of
+  // the wall, and at speed that's a wipeout: bounce off backwards, deck gone,
+  // body tumbling. A skim along the face pushes sideways and stays a skim.
+  // NOTE the third arg: pushOutOf is a FULL STOP — it zeroes the speed itself
+  // (the setter trap pointed straight at it) — so the crash speed has to be
+  // captured BEFORE the push and passed in, or this always reads a standstill.
+  private wallSmack(beforeX: number, beforeZ: number, s0: number): void {
+    if (this.isBailing || this.state === 'dead') return;
+    if (!this.freeSkate) return; // on foot you can't reach wall-crash speed
+    if (Math.abs(s0) < TUNING.wallBailSpeed) return;
+    const pushX = this.pos.x - beforeX;
+    const pushZ = this.pos.z - beforeZ;
+    const pl = Math.hypot(pushX, pushZ);
+    if (pl < 1e-5) return; // nothing was actually resolved
+    const dir = Math.sign(s0 || 1);
+    const frontal = -(pushX * this.axisF.x * dir + pushZ * this.axisF.z * dir) / pl;
+    if (frontal < 0.7) return;
+    this.bail();
+    this.startRagdoll('back');
+    this.speed = -dir * Math.abs(s0) * 0.32; // bounce OFF the wall, flat on your back
+    this.vVel = Math.max(this.vVel, 3.6);
+    this.state = 'air';
+    this.grounded = false;
+    this.airFromSkate = false;
+    this.airGrav = 'foot';
+    this.airMomentum = true; // the rebound CARRIES — foot-air must not park it
+    sfx.play('crunch', 0.85, 0.7);
+    this.emitSparks(10, 0xffd166, 2.4);
+    this.emitDust(3);
+  }
+
+  // Skated into a box too slow to smash but fast enough to catch the shins:
+  // the body pitches OVER the top and comes down tumbling on the far side.
+  // Returns true if the trip fired (the caller then skips the wall shove).
+  private crateTrip(box: THREE.Box3): boolean {
+    if (this.isBailing || this.state !== 'ride' || !this.grounded) return false;
+    if (!this.freeSkate) return false;
+    const s0 = this.speed;
+    if (Math.abs(s0) < TUNING.crateTripSpeed) return false;
+    // the box has to be AHEAD — a graze along its side is a wall, not a trip
+    const dir = Math.sign(s0 || 1);
+    const cx = (box.min.x + box.max.x) / 2 - this.pos.x;
+    const cz = (box.min.z + box.max.z) / 2 - this.pos.z;
+    const cl = Math.hypot(cx, cz) || 1;
+    if ((cx * this.axisF.x * dir + cz * this.axisF.z * dir) / cl < 0.55) return false;
+    this.bail(); // combo gone, deck thrown, invuln on (keeps ~half the speed)
+    this.startRagdoll('forward');
+    // measured on the foot-air arc: 7.2 peaked the feet at 0.81, UNDER the
+    // 0.96 lid — 8.6 clears it with ~0.2 to spare
+    this.vVel = Math.max(this.vVel, 8.6);
+    this.state = 'air';
+    this.grounded = false;
+    this.airFromSkate = false;
+    this.airGrav = 'foot';
+    this.airMomentum = true; // the arc must CARRY over the box, not park at its face
+    sfx.play('woosh3', 0.7);
+    this.emitSparks(5, 0xffd166, 1.5);
+    return true;
+  }
+
   private pushOutOf(box: THREE.Box3): void {
     const hx = CONST.playerHalf.x + 0.02;
     const hz = CONST.playerHalf.z + 0.02;
@@ -6488,7 +6765,26 @@ export class Player {
       this.pos.z = s.point.z + perpZ * side * (reach + 0.02);
       const skating = this.freeSkate || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
       if (skating && Math.abs(this.speed) >= TUNING.railTripSpeed) {
-        this.bail(); // caught a truck: go down (non-lethal), speed killed, knocked flat
+        this.bail(); // caught a truck: go down (non-lethal)
+        // TRIP, don't bonk: the shins catch the rail and the body pitches
+        // clean OVER it, head first, landing on the far side — the classic
+        // clothesline. Only when there's ground over there to land on; over a
+        // pit the old near-side knockdown stands (a downed body must never be
+        // thrown somewhere lethal by its own trip).
+        const overX = s.point.x - perpX * side * (reach + 0.25);
+        const overZ = s.point.z - perpZ * side * (reach + 0.25);
+        const far = this.queryGround(level, overX - this.pos.x, overZ - this.pos.z);
+        if (far !== null && far.y > level.killY) {
+          this.pos.x = overX;
+          this.pos.z = overZ;
+          this.state = 'air';
+          this.grounded = false;
+          this.vVel = Math.max(this.vVel, 3.8);
+          this.airFromSkate = false;
+          this.airGrav = 'foot';
+          this.airMomentum = true; // the trip THROWS you — momentum rides the arc
+          this.startRagdoll('forward'); // re-seed: head-over-heels along travel
+        }
         this.emitSparks(6, 0xffd166, 1.6);
       } else if (Math.abs(this.speed) > 0.1) {
         // Curb stop: kill the into-rail component of travel.
@@ -7726,6 +8022,80 @@ export class Player {
     // the whole body sits low and compact instead of floating pitched-over.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
     this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash) * (1 - 0.22 * this.crawlPose);
+
+    // RAGDOLL TUMBLE — the last word on the body while a wipeout is airborne.
+    // The orientation is INTEGRATED, not posed: an angular velocity seeded by
+    // whatever went wrong spins the body about the live crash axes (pitch over
+    // travel-left, roll along travel, yaw about up — they follow axisF as the
+    // crash steers, which is where the chaos comes from), built in WORLD space
+    // and pulled back through the parent exactly like the wallride deck, so
+    // rig refactors above can't flip it. Grounded and slowing, the blend hands
+    // the body back to the authored sprawl + mash-out get-up unchanged.
+    if (this.ragActive || this.ragBlend > 0.001) {
+      const slopeTumble =
+        this.grounded && this.onTransition && this.isBailing && Math.abs(this.speed) > 3;
+      const wantRag =
+        this.ragActive && (!this.grounded || slopeTumble || this.ragAngVel.lengthSq() > 6);
+      this.ragBlend += ((wantRag ? 1 : 0) - this.ragBlend) * Math.min(1, (wantRag ? 14 : 7) * dt);
+      if (this.grounded && !slopeTumble) {
+        // down and sliding: the spin dies fast, the sprawl takes over
+        this.ragAngVel.multiplyScalar(Math.exp(-7 * dt));
+      }
+      if (slopeTumble) {
+        // TUMBLING DOWN A SLOPE: the body log-rolls head-over-heels down the
+        // fall line at slide speed, with a dusty thud every half turn.
+        this.ragAngVel.x +=
+          (Math.abs(this.speed) * 1.15 * TUNING.ragSpin - this.ragAngVel.x) * Math.min(1, 6 * dt);
+        this.ragRollAcc += Math.abs(this.ragAngVel.x) * dt;
+        if (this.ragRollAcc > Math.PI) {
+          this.ragRollAcc -= Math.PI;
+          sfx.play('crunch', 0.3, 1.25 + Math.random() * 0.3);
+          this.emitDust(2);
+        }
+      }
+      const dirS = Math.sign(this.speed || 1);
+      Player.RAG_AXIS.set(this.axisL.x * dirS, 0, this.axisL.z * dirS);
+      this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, this.ragAngVel.x * dt));
+      Player.RAG_AXIS.set(0, 1, 0);
+      this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, this.ragAngVel.y * dt));
+      Player.RAG_AXIS.set(this.axisF.x * dirS, 0, this.axisF.z * dirS);
+      this.ragQ.premultiply(Player.RAG_DQ.setFromAxisAngle(Player.RAG_AXIS, this.ragAngVel.z * dt));
+      if (this.ragBlend > 0.001 && this.bodyGroup.parent) {
+        this.bodyGroup.parent.getWorldQuaternion(Player.RAG_QP);
+        Player.RAG_QT.copy(Player.RAG_QP.invert()).multiply(this.ragQ);
+        this.bodyGroup.quaternion.slerp(Player.RAG_QT, this.ragBlend);
+        // The tumble wheels about the WAIST, not the rig origin at the feet —
+        // same counter-translate as the somersault, generalized to the full
+        // quaternion: keep the waist point pinned while the body turns.
+        const waistH = 0.95;
+        Player.RAG_AXIS.set(0, waistH, 0).applyQuaternion(this.bodyGroup.quaternion);
+        this.bodyGroup.position.x += (0 - Player.RAG_AXIS.x) * this.ragBlend;
+        this.bodyGroup.position.y += (waistH - Player.RAG_AXIS.y) * this.ragBlend;
+        this.bodyGroup.position.z += (0 - Player.RAG_AXIS.z) * this.ragBlend;
+      }
+      // LIMB FLAIL: arms windmill, legs kick, the head whips — sinusoids on
+      // per-wipeout random phases, amplitude riding how fast the body is
+      // actually spinning, dying off as the sprawl takes over. ADDED after
+      // every authored joint write, so it layers on whatever pose is fading.
+      if (this.ragBlend > 0.02 && TUNING.ragFlail > 0) {
+        const f =
+          TUNING.ragFlail * this.ragBlend * (0.35 + Math.min(1, this.ragAngVel.length() * 0.12));
+        const t = this.runTime;
+        const wA = 11 + 3 * Math.sin(this.ragSeedA);
+        const wB = 13 + 4 * Math.sin(this.ragSeedB);
+        if (this.armR) {
+          this.armR.rotation.x += Math.sin(t * wA + this.ragSeedA) * 1.7 * f;
+          this.armR.rotation.z += Math.cos(t * wB + this.ragSeedB) * 0.9 * f;
+        }
+        if (this.armL) {
+          this.armL.rotation.x += Math.sin(t * wB + this.ragSeedB + 2.1) * 1.7 * f;
+          this.armL.rotation.z -= Math.cos(t * wA + this.ragSeedA + 1.3) * 0.9 * f;
+        }
+        if (this.legR) this.legR.rotation.x += Math.sin(t * wA * 0.8 + this.ragSeedB) * 1.1 * f;
+        if (this.legL) this.legL.rotation.x += Math.sin(t * wB * 0.8 + this.ragSeedA + 1.7) * 1.1 * f;
+        if (this.headM) this.headM.rotation.x += Math.sin(t * wA + 0.6) * 0.35 * f;
+      }
+    }
 
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
