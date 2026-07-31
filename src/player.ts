@@ -546,6 +546,9 @@ export class Player {
   private grindYawDir = 1;
   private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
   private grabTrickName = 'Grab'; // variant name for the combo readout
+  private airGrabShown: string | null = null; // exact plate label this air's grab was pushed under (renamed live; merged with a landed spin)
+  private comboUses = new Map<string, number>(); // per-combo trick use counts — repeats pay a declining share (THPS4/THUG)
+  private sketchyT = 0; // off-balance shimmy after a SKETCHY landing (kept it, barely)
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindTickT = 0; // THPS accrual while grinding
   private regrindCd = 0;
@@ -948,6 +951,9 @@ export class Player {
     this.comboLabels = [];
     this.comboHasTrick = false;
     this.comboTimer = 0;
+    this.comboUses.clear();
+    this.airGrabShown = null;
+    this.sketchyT = 0;
     this.invulnTimer = 0;
     this.invulnSilent = false;
     this.slideTimer = 0;
@@ -1458,6 +1464,7 @@ export class Player {
       this.balanceVel = 0; // no needle momentum survives a gap between balance tricks
     }
     this.uberTimer = Math.max(0, this.uberTimer - dt);
+    this.sketchyT = Math.max(0, this.sketchyT - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     if (this.grindBoostT > 0 && Math.random() < 0.7) this.emitSparks(1, 0xff4fd8, 1.6);
     // Actual planar speed from last step's displacement (any direction) —
@@ -1713,7 +1720,7 @@ export class Player {
   // actions stack base + multiplier, THPS-style, and bank on a clean landing.
   // Plain ground actions (spinning a box while standing there) just pay flat
   // points — they never start or feed a combo. Bail or die = the combo dies.
-  private score(base: number, label?: string): void {
+  private score(base: number, label?: string): string | undefined {
     const inTrick =
       this.landingScoring ||
       this.state === 'air' ||
@@ -1722,22 +1729,60 @@ export class Player {
       this.sliding ||
       this.manualing !== 0 || // balanced on two wheels: the combo connector
       this.lipStallT > 0; // parked on the coping: same deal
+    // World rewards (crates, fruit, enemies, pickups) always pay face value.
+    // Actual TRICKS are subject to the two THPS score rules below.
+    const isTrick = !!label && !/Boing|Flattened|Takedown|Bonk|^Box$|Slam Smash|Crystal|Gem/.test(label);
+    let pay = base;
+    let shown = label;
+    if (inTrick && isTrick && label) {
+      // THPS4/THUG anti-farming: the Nth use of the same trick in ONE combo
+      // pays a declining share of its base (the plate still shows it).
+      const uses = this.comboUses.get(label) ?? 0;
+      this.comboUses.set(label, uses + 1);
+      const curve = CONST.repeatDecay;
+      pay = Math.round(base * curve[Math.min(uses, curve.length - 1)]);
+    }
+    // Three masks banked = the special state: every trick is renamed on the
+    // plate and pays extra — the THPS special-meter payoff, earned Crash-style.
+    if (isTrick && this.uberTimer > 0 && label) {
+      pay *= CONST.uberScoreMult;
+      shown = 'Tiki ' + label;
+    }
     if (inTrick) {
-      this.comboPoints += base;
+      this.comboPoints += pay;
       this.comboMult += 1;
       // never SHORTEN the remaining window — a spin bonus scored right after
       // touchdown must not eat the post-landing manual grace
       this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
-      if (label) {
-        this.pushLabel(label);
+      if (shown) {
+        this.pushLabel(shown);
         // Real tricks (grabs, grinds, wallride, slide, body slam) light up the
         // combo plate; bare platforming — spins (…°), crate bounces (Boing),
         // enemy pops (Flattened/Takedown/Bonk), box smashes — do not on their own.
-        if (!/°$|Boing|Flattened|Takedown|Bonk|^Box$|Slam Smash|Crystal|Gem/.test(label))
+        if (!/°$|Boing|Flattened|Takedown|Bonk|^Box$|Slam Smash|Crystal|Gem/.test(shown))
           this.comboHasTrick = true;
       }
     } else {
-      this.points += base;
+      this.points += pay;
+    }
+    return shown;
+  }
+
+  // The plate follows a trick whose name resolves after it scored (grab
+  // variants, a spin folding into its grab): rewrite the entry in place,
+  // keeping any "xN" collapse it picked up.
+  private renameLabel(from: string, to: string): void {
+    for (let i = this.comboLabels.length - 1; i >= 0; i--) {
+      const l = this.comboLabels[i];
+      if (l === from) {
+        this.comboLabels[i] = to;
+        return;
+      }
+      const m = l.match(/^(.*) x(\d+)$/);
+      if (m && m[1] === from) {
+        this.comboLabels[i] = `${to} x${m[2]}`;
+        return;
+      }
     }
   }
 
@@ -1770,6 +1815,7 @@ export class Player {
     this.comboTimer = 0;
     this.comboLabels = [];
     this.comboHasTrick = false;
+    this.comboUses.clear();
   }
 
   // Crash mask rules: masks come from mask crates only. The first two are
@@ -3531,7 +3577,12 @@ export class Player {
       // Any vert air (analytic pipe OR tracked mesh wall) is a CLIMB, not a trick
       // spin, so its drop-back-in is always a clean neutral landing — same rule
       // the auto-correct above now uses. Keep the two consistent.
-      const funny = spun && dev0 > tol && devPi > tol && !(this.pipeHang || this.vertAir);
+      // THPS's three-tier judgment: on-line = clean, inside the sketchy net =
+      // kept-but-taxed (wobble, speed scrub, half points), past the net = bail.
+      const offLine = Math.min(dev0, devPi);
+      const sketchNet = Math.max(tol, THREE.MathUtils.degToRad(TUNING.sketchyTolerance));
+      const funny = spun && offLine > sketchNet && !(this.pipeHang || this.vertAir);
+      const sketchy = spun && !funny && offLine > tol && !(this.pipeHang || this.vertAir);
       if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
@@ -3539,6 +3590,7 @@ export class Player {
           this.grabGraceTimer = 0;
           this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle); // no unwind
           this.grabSpinAngle = 0;
+          this.airGrabShown = null;
           if (this.uberTimer <= 0) this.speed *= 0.6;
         } else {
           this.landingScoring = false;
@@ -3558,8 +3610,17 @@ export class Player {
         // pose is neutral and the spin lines up with 0 or 180: a landed 180 rides
         // away switch. (A pipe hang can't reach here off the climb hold unless you
         // actually held a rotation — the snap-on-release lands sub-90 spins at 0.)
-        const isSwitch = spun && devPi <= tol;
+        // A sketchy landing reads its stance off the NEAREST line instead.
+        const isSwitch = spun && (sketchy ? devPi < dev0 : devPi <= tol);
         if (isSwitch) this.stance = -this.stance as 1 | -1; // landed backward: swap feet
+        if (sketchy) {
+          // Kept it — barely. The wobble scrubs speed and shakes the body for
+          // a beat; the spin below pays half. Riding away is the reward.
+          this.speed *= 0.78;
+          this.sketchyT = 0.6;
+          sfx.play('crunch', 0.3, 1.35);
+          this.emitSparks(5, 0xffc24a, 1.5);
+        }
         // A ROTATION IS A TRICK: any landed 180+ scores its own combo entry,
         // grab or no grab — so grab + rotation strings TWO tricks together
         // (a real combo), and a bare hang-time spin still pays on its own.
@@ -3583,7 +3644,20 @@ export class Player {
         // 180 is too easy"). Street airs still pay from the first 180.
         if (halves >= (wasPipeHang ? CONST.vertSpinMin : 1)) {
           const deg = halves * 180;
-          this.score(halves * CONST.ptsSpin, isSwitch ? `Switch ${deg}°` : `${deg}°`);
+          const spinBase = Math.round(halves * CONST.ptsSpin * (sketchy ? 0.5 : 1));
+          const spinName = `${sketchy ? 'Sketchy ' : ''}${isSwitch ? 'Switch ' : ''}${deg}°`;
+          if (this.airGrabShown) {
+            // Spin + grab in ONE air is ONE trick (THPS: "360 Judo", not
+            // "360" and "Judo"): fold the rotation into the grab's plate
+            // entry — its name gains the degrees, its points gain the spin,
+            // and no second multiplier is minted.
+            const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
+            this.renameLabel(this.airGrabShown, `${pfx}${spinName} ${this.grabTrickName}`);
+            this.comboPoints += this.uberTimer > 0 ? spinBase * CONST.uberScoreMult : spinBase;
+            this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
+          } else {
+            this.score(spinBase, spinName);
+          }
           landedTrick = true;
         }
         if (landedTrick) this.emitSparks(10, 0xfff3d0, 2.2);
@@ -3599,6 +3673,14 @@ export class Player {
         );
         this.grabSpinAngle = 0;
         this.grabSpinTotal = 0;
+        this.airGrabShown = null; // this air's grab entry is settled
+        // THPS landing pump: wheels down with X already held (a crouched
+        // landing) pays a small speed burst — re-crouch through every
+        // touchdown and the line stays fast.
+        if (input.jumpHeld && this.airFromSkate && Math.abs(this.speed) > 0.5) {
+          this.speed += TUNING.landPumpBoost * (this.speed >= 0 ? 1 : -1);
+          this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.downhillMax, TUNING.downhillMax);
+        }
       }
       // A pipe drop-in doesn't announce itself — the wheels just meet the
       // transition and roll (THPS: the landing IS the flow). Ordinary fast
@@ -4430,6 +4512,8 @@ export class Player {
     this.comboTimer = 0;
     this.comboLabels = [];
     this.comboHasTrick = false;
+    this.comboUses.clear();
+    this.airGrabShown = null;
   }
 
   // Botched a grab landing: no death — you eat the floor, the pending combo
@@ -4458,6 +4542,7 @@ export class Player {
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
     this.grabSpinTotal = 0;
+    this.sketchyT = 0; // a full bail owns the body — no leftover shimmy
     sfx.play('takeDamage', 0.8);
     this.emitSparks(8, 0xffb545, 2);
     // Default tumble: chaotic, no preferred direction. Callers that know WHAT
@@ -5238,7 +5323,7 @@ export class Player {
           this.grabTickT = 0;
           // Timed trick: register it NOW so the combo plate shows straight away
           // and ticks up while held (a botched landing bails the whole thing).
-          this.score(CONST.ptsGrab, this.grabTrickName);
+          this.airGrabShown = this.score(CONST.ptsGrab, this.grabTrickName) ?? null;
           sfx.play('woosh2', 0.4);
         } else if (this.grabPhase === 'enter') {
           this.grabT += dt;
@@ -5255,8 +5340,10 @@ export class Player {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(gsp) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         }
-        // variant name for the combo readout
-        this.grabTrickName =
+        // variant name for the combo readout — and the PLATE follows it: the
+        // entry pushed at grab start is renamed in place, so holding a
+        // direction turns "Grab" into the trick you're actually doing.
+        const vName =
           this.rawInput.moveY > 0.4
             ? 'Nosegrab'
             : this.rawInput.moveX < -0.4
@@ -5264,6 +5351,14 @@ export class Player {
               : this.rawInput.moveX > 0.4
                 ? 'Indy'
                 : this.grabTrickName;
+        if (vName !== this.grabTrickName) {
+          if (this.airGrabShown) {
+            const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
+            this.renameLabel(this.airGrabShown, pfx + vName);
+            this.airGrabShown = pfx + vName;
+          }
+          this.grabTrickName = vName;
+        }
         // THPS accrual: held grabs are worth more
         this.grabTickT += dt;
         while (this.grabTickT >= 0.25) {
@@ -5310,6 +5405,7 @@ export class Player {
       this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle);
       this.grabSpinAngle = 0;
       this.grabSpinTotal = 0;
+      this.airGrabShown = null;
     }
   }
 
@@ -7002,6 +7098,8 @@ export class Player {
     this.comboMult = 0;
     this.comboTimer = 0;
     this.comboLabels = [];
+    this.comboUses.clear();
+    this.airGrabShown = null;
     this.onDeath();
   }
 
@@ -8216,6 +8314,13 @@ export class Player {
     // the whole body sits low and compact instead of floating pitched-over.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
     this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash) * (1 - 0.22 * this.crawlPose);
+
+    // SKETCHY landing: a fading side-to-side shimmy — you kept it, barely.
+    if (this.sketchyT > 0 && !this.ragActive) {
+      const w = this.sketchyT / 0.6;
+      this.bodyGroup.rotation.z += Math.sin(this.runTime * 26) * 0.16 * w;
+      this.bodyGroup.rotation.x += Math.sin(this.runTime * 19) * 0.07 * w;
+    }
 
     // RAGDOLL TUMBLE — the last word on the body while a wipeout is airborne.
     // The orientation is INTEGRATED, not posed: an angular velocity seeded by

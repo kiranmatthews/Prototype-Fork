@@ -73,9 +73,11 @@ export const TUNING = {
   brakeLockTime: 0.6, // after a brake (Circle or pull-back) stops you, movement stays LOCKED this long (measured from when you release the brake) — no instant reverse-run / insta-crouch
   brakeLockRamp: 0.55, // after the lock, how long walk/crawl movement takes to ease from zero back to full (0 = snap straight to full)
   grabBoost: 2.5, // speed burst on landing a clean Circle/Q air grab
+  landPumpBoost: 2.2, // THPS landing pump: X held through touchdown pays this speed burst — re-crouching for every landing is the rhythm that keeps lines fast
   grabSpinRate: 9, // rad/s of the directional grab-spin (~515°/s — 540s reachable on medium airs; the pre-land auto-correct keeps landings clean)
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
   spinTolerance: 30, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail. 30 still leaves 240 of the circle bailing — it's a net under the auto-correct, not a removal
+  sketchyTolerance: 55, // degrees off-line before a SKETCHY landing becomes a full bail — between spinTolerance and this you ride away wobbling with a speed tax and half the spin points (THPS's middle tier)
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   boardSpeed: 8.5, // speed gate on the transition-carve SFX only — the board VISUAL and the rolling loop follow the skate state, not a speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
@@ -247,9 +249,11 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   brakeLockTime: { min: 0, max: 2, step: 0.05 },
   brakeLockRamp: { min: 0, max: 2, step: 0.05 },
   grabBoost: { min: 0, max: 20, step: 0.5 },
+  landPumpBoost: { min: 0, max: 8, step: 0.2 },
   grabSpinRate: { min: 3, max: 20, step: 0.5 },
   grabRelease: { min: 0.05, max: 0.6, step: 0.05 },
   spinTolerance: { min: 10, max: 90, step: 5 },
+  sketchyTolerance: { min: 20, max: 120, step: 5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
@@ -445,6 +449,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   brakeLockRamp:
     'How gradually walk / crawl movement eases from a standstill back to full AFTER the lock ends — the recovery ramp. Higher = a slower, smoother pick-up; 0 = movement snaps straight back to full.',
   grabBoost: 'Speed burst paid out when a grab is completed cleanly before landing.',
+  landPumpBoost:
+    'THPS landing pump: touch down on the board with X already held (crouched landing) and you get this speed burst. Re-crouching through every landing is the rhythm that keeps a line fast. 0 = off.',
   grabSpinRate: 'Rotation speed of the directional grab-spin (left arrow = spin left).',
   grabRelease:
     'How long the grab pose takes to animate back to neutral after RELEASING Circle. Land any time before it finishes (or while still holding) = bail; pose back at neutral = clean, spin permitting.',
@@ -459,6 +465,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Ceiling on the mash speed-up. 1 = mashing flat out HALVES the time you lie there. 0 = mashing does nothing and the lockout is fixed.',
   spinTolerance:
     'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
+  sketchyTolerance:
+    'The SKETCHY net under spinTolerance: land off-line beyond spinTolerance but inside this and you keep it — with a wobble, a speed tax, and half the spin points. Past this = the full bail. Must be above spinTolerance to matter.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
   boardSpeed:
     'Speed gate on the transition-carve sound effect. It NO LONGER controls whether the board is drawn or whether the wheels roll — both of those follow the skate state (freeSkate), so the deck is out exactly when you are skating and stowed exactly when you are not. The walk/skate physics boundary is walkSpeed.',
@@ -651,7 +659,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     title: 'MANUAL & LIP',
     keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
-  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
+  { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'landPumpBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
   { title: 'WIPEOUTS', keys: ['ragBounce', 'ragSpin', 'ragFlail', 'wallBailSpeed', 'crateTripSpeed'] },
   { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift', 'camBalanceRoll'] },
@@ -703,6 +711,8 @@ export const CONST = {
   ptsLip: 125, // catching a lip stall on the coping
   ptsLipTick: 6, // accrues every quarter second stalled on the lip
   ptsSpine: 250, // spine transfer: carried over the ridge, landed the far side
+  repeatDecay: [1, 0.75, 0.5, 0.25], // THPS4/THUG: the Nth use of the SAME trick in one combo pays this share of its base (last entry is the floor). World rewards — crates, fruit, enemies — never decay
+  uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 8, // pipe hang: cap on the off-axis lateral carry (locked-in vert, no launching down the pipe)
   hangLatDamp: 0.55, // vert hang: how fast the lateral carry bleeds off. THPS rules: an angled entry keeps travelling down the pipe through most of the hang (was 1.8 = parked over one spot)
   manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
