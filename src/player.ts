@@ -301,6 +301,7 @@ export class Player {
   // so all the recovery rules (pit guard, invuln, control lockout) are
   // unchanged. bailDownT is the lifetime: ragActive can only be true inside it.
   private ragActive = false;
+  private airRose = false; // this air had an upward phase (a jump, a bounce) — see railLandSmack
   private ragAngVel = new THREE.Vector3(); // tumble rates: x pitch (over axisL), y yaw, z roll (over axisF)
   private ragQ = new THREE.Quaternion(); // accumulated tumble orientation, WORLD space
   private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
@@ -1442,6 +1443,7 @@ export class Player {
       this.setTravelDir(zn ? zn.dir : 'S');
     }
     if (this.state !== 'air') {
+      this.airRose = false; // each new air re-earns its "this was a jump" flag
       this.vertAir = false;
       this.pipeHang = false;
       this.vertLatVel = 0;
@@ -3012,6 +3014,12 @@ export class Player {
       this.stepWallride(dt, input, level);
       return;
     }
+    // Did this air ever actually GO UP? A jump did; rolling off an edge (a
+    // drop-in across its own coping) never does. The rail smack reads this to
+    // tell the two apart — fall speed alone can't: an ollie ONTO a deck-height
+    // rail crosses the line near the apex, falling barely faster than a
+    // drop-in crossing its lip.
+    if (this.vVel > 1) this.airRose = true;
     // Coyote release: letting go of a charge just after rolling off a ledge
     // still jumps. A press-then-release fully in the air (tap) works too.
     if (this.coyoteTimer > 0) {
@@ -6180,7 +6188,15 @@ export class Player {
   //    slams, and bodies already down are all exempt, same as the rail block.
   //  - ropes are exempt: a sagging line is soft, not a bar.
   private railLandSmack(input: Input, level: Level): boolean {
-    if (this.vVel > -1.5) return false;
+    if (this.vVel > -0.4) return false; // must actually be coming down
+    // Drop-in protection, done right: a body rolling off a deck across its
+    // coping never ROSE this air and crosses the lip in a shallow fall — that
+    // stays free. A JUMP rose first, so ANY descent onto a rail counts (the
+    // old flat -1.5 fall-speed gate also exempted every ollie that came down
+    // on a deck-height rail near its apex — the exact "jumped on the rail,
+    // no grind, nothing happened" case). A jumpless fall from real height
+    // still smacks once it's properly plummeting.
+    if (!this.airRose && this.vVel > -3) return false;
     if (!this.airFromSkate && !this.freeSkate) return false;
     if (this.isBailing || this.slamActive) return false;
     if (input.grindHeld || input.grindPressed) return false;
