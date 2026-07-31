@@ -2625,8 +2625,22 @@ export class Player {
           this.balanceCritT += dt;
           if (this.balanceCritT > TUNING.bailGrace) {
             this.endManual();
+            const spd = Math.abs(this.speed);
+            const dir = Math.sign(this.speed || 1);
             this.bail();
             this.startRagdoll('forward'); // a lost manual digs the nose in
+            // THE BOARD SQUIRTS OUT from under you — low, fast, ahead of the
+            // body, spinning flat like a plate. bail() already threw it with
+            // the generic arc, which flew WITH the body and read as nothing;
+            // a manual bail is specifically the deck leaving without you.
+            if (this.flyBoard && this.flyBoard.visible) {
+              this.flyBoardVel.set(
+                this.axisF.x * dir * (9 + spd * 0.6),
+                2.1,
+                this.axisF.z * dir * (9 + spd * 0.6),
+              );
+              this.flyBoardAng.set((Math.random() - 0.5) * 6, dir * 24, (Math.random() - 0.5) * 6);
+            }
             return;
           }
         } else {
@@ -4437,8 +4451,11 @@ export class Player {
     // faster crash = faster tumble, saturating so a hyper-speed wreck stays readable
     const spd = 0.55 + Math.min(1.05, Math.abs(this.speed) * 0.045);
     const jit = (k: number): number => (Math.random() - 0.5) * k * s;
-    if (kind === 'forward') this.ragAngVel.set(9 * spd * s, jit(2.5), jit(1.5));
-    else if (kind === 'back') this.ragAngVel.set(-7.5 * spd * s, jit(2.5), jit(1.5));
+    // the pitch rate itself rolls dice — a fixed 9 made every forward trip
+    // the same somersault; now some are lazy head-over-heels, some are violent
+    // double-flips, and the widened yaw/roll jitter corkscrews a few of them
+    if (kind === 'forward') this.ragAngVel.set((6.5 + Math.random() * 5) * spd * s, jit(5), jit(3.5));
+    else if (kind === 'back') this.ragAngVel.set(-(5.5 + Math.random() * 4) * spd * s, jit(4), jit(2.5));
     else if (kind === 'side')
       this.ragAngVel.set(jit(2), jit(2.5), 8 * spd * s * (sideSign || (Math.random() < 0.5 ? -1 : 1)));
     else
@@ -4594,7 +4611,7 @@ export class Player {
         } else {
           // thrown toward the deck / uphill side: the honest bail — and the
           // tumble goes to the SIDE the needle pegged, not down the rail
-          this.bailFromRail(Math.sign(this.balance || 1));
+          this.bailFromRail(Math.sign(this.balance || 1), level);
           return;
         }
       }
@@ -5014,7 +5031,7 @@ export class Player {
   // speed gone and the pending combo lost. Over a pit that means a drop.
   // sideSign ±1 = the needle pegged that way: the stumble EJECTS toward that
   // side (heading tips hard off the rail), so you fall where you failed.
-  private bailFromRail(sideSign = 0): void {
+  private bailFromRail(sideSign = 0, level: Level | null = null): void {
     const rail = this.grindRail;
     if (sideSign !== 0 && rail) {
       const t = rail.tangentAt(this.grindT);
@@ -5034,10 +5051,7 @@ export class Player {
     this.railLeft();
     this.grindRail = null;
     this.state = 'air';
-    this.airFromSkate = false; // a stumble is not a trick window
-    this.airGrav = 'foot'; // ...and a stumble drops, it doesn't float
     this.vVel = 3;
-    this.airMomentum = false; // a bail is a stumble, not a launch
     this.speed *= CONST.balanceBailSpeedKeep;
     this.regrindCd = CONST.regrindCooldown * 2;
     this.balance = 0;
@@ -5048,9 +5062,31 @@ export class Player {
     this.invulnSilent = true; // the tumble is the tell, not the flicker
     this.loseCombo();
     this.emitSparks(8, 0xffb545, 2);
-    // Falling off a rail is a WIPEOUT now, not a stumble you jog away from:
-    // the body rolls off the side the needle said, the deck goes flying, and
-    // the knockdown clock (mashable) runs like every other crash.
+    // DROPPING INTO A VERT: the needle pegged on a coping/lip line and threw
+    // you toward the TRANSITION — that's a drop-in, not a wipeout. Stay on the
+    // board, no knockdown, and ride out whatever the fall gives you (the
+    // energy-conserving landing turns the drop into speed down the face).
+    if (level !== null) {
+      const into = this.queryGround(level, this.axisF.x * 1.6, this.axisF.z * 1.6);
+      if (
+        into !== null &&
+        (into.halfpipe !== undefined || into.vert === true || into.normal.y < TUNING.steepStand)
+      ) {
+        this.airFromSkate = true; // the landing projection needs the board air
+        this.airGrav = 'board';
+        this.airMomentum = true;
+        return;
+      }
+    }
+    // Falling off a rail anywhere ELSE is a WIPEOUT: the body rolls off the
+    // side the needle said, the deck goes flying, and the knockdown clock
+    // (mashable) runs like every other crash. Board gravity + carried
+    // momentum, or the old foot fall-rate (119) put her down before the roll
+    // could read and every rail bail looked like the same quick flop.
+    this.airFromSkate = false; // a stumble is not a trick window
+    this.airGrav = 'board';
+    this.airMomentum = true; // the side-throw carries the tumble off the line
+    this.vVel = 4.2;
     this.bailDownT = CONST.bailDownTime;
     this.startRagdoll('side', sideSign);
     this.throwBoard();
@@ -5358,7 +5394,7 @@ export class Player {
             level.detonate(c);
           } else if (this.state === 'grind') {
             if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c);
-            else this.bailFromRail();
+            else this.bailFromRail(0, level);
           } else if (this.isStomping(c.box)) {
             if (this.slamActive) {
               level.detonate(c);
@@ -5516,7 +5552,7 @@ export class Player {
           // exception: grinding through one always pops it (it's a reward,
           // not a trap).
           if (c.mask || this.grindVel >= TUNING.smashSpeed || this.spendMask()) this.smashCrate(level, c);
-          else this.bailFromRail();
+          else this.bailFromRail(0, level);
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
           // enough to chain crate to crate. A slam punches straight through.
@@ -5684,6 +5720,9 @@ export class Player {
     // the rail line (berm lips!) must not wrestle you off it.
     if (this.state !== 'grind' && !this.wallriding) {
       for (const w of level.walls) {
+        // A tumbling airborne body flung over a LOW solid (the log it just
+        // tripped on) must pass over the top, not get pinned at the face.
+        if (this.isBailing && !this.grounded && w.max.y < this.pos.y + 0.35) continue;
         if (this.playerBox.intersectsBox(w)) {
           if (this.tryWallride(w)) break; // stuck to the wall — ride it
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
@@ -5691,7 +5730,7 @@ export class Player {
           const bz = this.pos.z;
           const bs = this.speed; // pushOutOf full-stops; keep the crash speed
           this.pushOutOf(w);
-          this.wallSmack(bx, bz, bs); // face-first at speed: that's a wipeout
+          this.wallSmack(bx, bz, bs, w); // face-first at speed: that's a wipeout — or a fling over a low one
         } else if (
           // NEAR-MISS CATCH: a wall bonk shoves the body just clear of the
           // face and kills the arc's push (slide jumps steer-lock, so nothing
@@ -6081,7 +6120,7 @@ export class Player {
   // NOTE the third arg: pushOutOf is a FULL STOP — it zeroes the speed itself
   // (the setter trap pointed straight at it) — so the crash speed has to be
   // captured BEFORE the push and passed in, or this always reads a standstill.
-  private wallSmack(beforeX: number, beforeZ: number, s0: number): void {
+  private wallSmack(beforeX: number, beforeZ: number, s0: number, box?: THREE.Box3): void {
     if (this.isBailing || this.state === 'dead') return;
     if (!this.freeSkate) return; // on foot you can't reach wall-crash speed
     if (Math.abs(s0) < TUNING.wallBailSpeed) return;
@@ -6092,6 +6131,28 @@ export class Player {
     const dir = Math.sign(s0 || 1);
     const frontal = -(pushX * this.axisF.x * dir + pushZ * this.axisF.z * dir) / pl;
     if (frontal < 0.7) return;
+    // A LOW solid — the jungle log's body, a curb, a ledge lip — catches the
+    // SHINS: you fly forward OVER it, not backwards off it. (This is the fall
+    // the replay was hunting for: the log is a wall collider as well as a
+    // rail, so the backward wall-splat was stealing every over-the-handlebars
+    // attempt and playing the same fixed bounce each time.) Same speed-scaled
+    // randomized launch as the rail trip; the walls loop lets a tumbling
+    // airborne body pass over anything below its feet, so the arc carries.
+    if (box !== undefined && box.max.y < this.pos.y + 0.8) {
+      const launch = (4.2 + Math.abs(s0) * 0.16) * (0.85 + Math.random() * 0.3);
+      this.bail();
+      this.startRagdoll('forward');
+      this.vVel = Math.max(this.vVel, Math.min(9.5, launch));
+      this.speed = dir * Math.abs(s0) * (0.52 + Math.random() * 0.16);
+      this.state = 'air';
+      this.grounded = false;
+      this.airFromSkate = false;
+      this.airGrav = 'board'; // floaty crash arc — the flight gets read
+      this.airMomentum = true;
+      sfx.play('woosh3', 0.8);
+      this.emitSparks(8, 0xffd166, 2);
+      return;
+    }
     this.bail();
     this.startRagdoll('back');
     this.speed = -dir * Math.abs(s0) * 0.32; // bounce OFF the wall, flat on your back
@@ -6839,9 +6900,17 @@ export class Player {
           this.pos.z = s.point.z - perpZ * side * (reach + 0.25);
           this.state = 'air';
           this.grounded = false;
-          this.vVel = Math.max(this.vVel, Math.min(7, 3 + spd * 0.12));
+          // OVER THE HANDLEBARS. A real launch: the pop scales hard with entry
+          // speed and rolls a ±15% dice, the carry keeps ~60% of the run (not
+          // the generic bail's half-of-half), and the flight falls on BOARD
+          // gravity — the foot fall-rate (119) slammed every trip down in a
+          // third of a second, which is why they all looked identical. Now a
+          // full-charge trip flies well past the log, and no two arcs match.
+          const launch = (4.2 + spd * 0.16) * (0.85 + Math.random() * 0.3);
+          this.vVel = Math.max(this.vVel, Math.min(9.5, launch));
+          this.speed = Math.sign(this.speed || 1) * spd * (0.52 + Math.random() * 0.16);
           this.airFromSkate = false;
-          this.airGrav = 'foot';
+          this.airGrav = 'board'; // floaty crash arc — the flight gets read
           this.airMomentum = true; // the trip THROWS you — momentum rides the arc
           this.startRagdoll('forward'); // re-seed: head-over-heels along travel
         } else {
