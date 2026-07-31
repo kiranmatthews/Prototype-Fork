@@ -2842,7 +2842,8 @@ export class Player {
       this.enterVertAir(
         input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || !input.jumpHeld,
       );
-      sfx.play('woosh2', 0.6);
+      // (no woosh here: this fires on EVERY vert-air entry, so pumping a pipe
+      // spammed it into a wind tunnel. The sparks carry the moment.)
       this.emitSparks(5, 0xfff3d0, 1.2);
       this.coyoteTimer = 0;
     } else if (
@@ -2866,7 +2867,7 @@ export class Player {
       this.enterVertAir(
         input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || this.vertLaunchT > 0,
       );
-      sfx.play('woosh2', 0.6);
+      // (same spam rule as the crest pop: no per-entry woosh)
       this.emitSparks(5, 0xfff3d0, 1.2);
       this.coyoteTimer = 0;
     } else if (hit && hit.y >= this.pos.y - downWindow && hit.y <= this.pos.y + upWindow) {
@@ -2949,7 +2950,7 @@ export class Player {
         this.enterVertAir(
           input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || this.vertLaunchT > 0,
         );
-        sfx.play('woosh2', 0.6);
+        // (same spam rule: vert-air entries are silent, the ride is the sound)
       }
       this.coyoteTimer = CONST.coyoteTime;
     }
@@ -3136,20 +3137,36 @@ export class Player {
       // the wall at spineDrift u/s and dumping glued hangs onto the deck
       // floor. That WAS the "float out of hangtime". Spine transfers return
       // as a deliberate mechanic in the redesign.)
-      // THPS LOCK-IN, the hard guarantee: a hang over a pipe can never float
-      // past the END of the pipe — past the end there is no wall to catch
-      // you, and drifting there dumped you out of the hang onto the flat.
-      // Clamp to the trough span; hitting the clamp kills the carry.
+      // THPS RULES at the END of the pipe: drift past it during hang time and
+      // there is no wall to catch you — you LEFT the vert, and that's a bail.
+      // The old clamp levelled you out and parked you on the line like a
+      // guardian angel; now the angel lets go: the hang breaks, the lateral
+      // carry rides off the end, and the body ragdolls down whatever's there.
       if (this.hangPipe) {
         const hp = this.hangPipe;
         const lo = Math.min(hp.l0, hp.l1) + 0.4;
         const hi = Math.max(hp.l0, hp.l1) - 0.4;
         const along = hp.alongCoord(this.pos.x, this.pos.z);
-        const clamped = THREE.MathUtils.clamp(along, lo, hi);
-        if (clamped !== along) {
-          if (hp.axis === 'z') this.pos.z = clamped;
-          else this.pos.x = clamped;
+        if (along < lo || along > hi) {
+          const lat = this.vertLatVel;
+          this.vertAir = false;
+          this.pipeHang = false;
+          this.hangPipe = null;
+          this.bail();
+          this.startRagdoll('side', Math.sign(lat) || 1);
+          this.airGrav = 'board';
+          this.airMomentum = true;
+          // the drift that carried you off the end keeps carrying you: heading
+          // turns down the pipe axis at the lateral speed you brought
+          if (Math.abs(lat) > 0.5) {
+            const tx = hp.axis === 'z' ? 0 : Math.sign(lat);
+            const tz = hp.axis === 'z' ? Math.sign(lat) : 0;
+            this.axisF.set(tx, 0, tz);
+            this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+            this.speed = Math.abs(lat);
+          }
           this.vertLatVel = 0;
+          sfx.play('crunch', 0.6, 0.8); // clipped the end of the coping
         }
       }
     }
@@ -3165,6 +3182,7 @@ export class Player {
     const vertTrick = this.vertAir || this.pipeHang;
     const slamNow =
       !this.slamActive &&
+      !this.isBailing && // a ragdolling body can't slam (Circle may still be held from the crash)
       !vertTrick &&
       input.grabHeld &&
       (!this.airFromSkate || this.rawInput.moveY < -0.5);
@@ -4421,13 +4439,18 @@ export class Player {
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
     const hadBoard = this.freeSkate || this.airFromSkate;
-    this.bailDownT = CONST.bailDownTime;
+    // The knockdown scales with the crash: a walking-pace flop is the old
+    // beat, a full-charge wreck stays down nearly a second longer (mash still
+    // shortens it). The invuln grace is pinned to OUTLAST whatever we rolled —
+    // its old fixed value only covered the fixed clock, and the last beat of
+    // a longer, still-moving knockdown must not slide unprotected into a nitro.
+    this.bailDownT = CONST.bailDownTime + Math.min(0.9, Math.abs(this.speed) * 0.035);
+    this.invulnTimer = Math.max(CONST.maskInvuln, this.bailDownT + 0.1);
     this.bailMash = 0;
     // Keep (a fraction of) the momentum instead of zeroing it: a 23 u/s crash
     // and a walking-pace crash should not be the same event. vVel is left alone
     // so the fall completes naturally rather than freeze-framing in the air.
     this.speed *= TUNING.bailSpeedKeep;
-    this.invulnTimer = CONST.maskInvuln; // nothing chews you while you're down
     this.invulnSilent = true; // the ragdoll IS the indicator — no alpha flash
     this.loseCombo();
     this.grabPhase = 'none';
@@ -4441,7 +4464,14 @@ export class Player {
     // went wrong re-seed right after with the flavor that sells it (a trip is
     // head-over-heels forward, a wall hit is backward, a rail bail rolls).
     this.startRagdoll('air');
-    if (hadBoard) this.throwBoard();
+    if (hadBoard) {
+      this.throwBoard();
+      // The deck is over THERE. You get up on your feet and walk (or hold X
+      // to call it back under you) — no silent auto-remount after a wreck.
+      this.freeSkate = false;
+      this.stepOff = true;
+      this.slideFromWalk = true; // on-foot touchdown clamp: no skate takeover
+    }
   }
 
   // Seed the tumble. `kind` picks which axis dominates — the crash should
@@ -4503,9 +4533,9 @@ export class Player {
       dir * (10 + Math.random() * 8), // helicopter spin reads best
       (Math.random() - 0.5) * 18,
     );
-    this.flyBoardT = CONST.bailDownTime + 0.9;
+    this.flyBoardT = 30; // generous cap: the deck LIES THERE until you remount
     this.flyBoardRest = false;
-    this.boardSnapT = Math.max(this.boardSnapT, CONST.bailDownTime + 0.5); // real deck hides meanwhile
+    this.boardSnapT = Math.max(this.boardSnapT, this.bailDownT + 0.5); // real deck hides meanwhile
   }
 
   // Ballistic deck: gravity, a couple of restitution bounces off the same
@@ -4516,8 +4546,11 @@ export class Player {
     const fb = this.flyBoard;
     if (!fb || !fb.visible) return;
     this.flyBoardT -= dt;
-    if (this.flyBoardT <= 0 || this.boardSnapT <= 0) {
-      fb.visible = false; // the real one is back in hand
+    // The deck lies where it fell until you're back ON a board — the get-up
+    // is on foot now, so remounting (hold X) is what calls it back to your
+    // feet. A long cap tidies up a deck abandoned far away.
+    if (this.freeSkate || this.state === 'grind' || this.flyBoardT <= 0) {
+      fb.visible = false; // the real one is back underfoot
       return;
     }
     if (this.flyBoardRest) return;
@@ -5095,9 +5128,13 @@ export class Player {
     this.airGrav = 'board';
     this.airMomentum = true; // the side-throw carries the tumble off the line
     this.vVel = 4.2;
-    this.bailDownT = CONST.bailDownTime;
+    this.bailDownT = CONST.bailDownTime + Math.min(0.9, Math.abs(this.speed) * 0.035);
+    this.invulnTimer = Math.max(this.invulnTimer, this.bailDownT + 0.1);
     this.startRagdoll('side', sideSign);
     this.throwBoard();
+    this.freeSkate = false; // the deck flew — the get-up is on foot
+    this.stepOff = true;
+    this.slideFromWalk = true;
   }
 
   // ------------------------------------------------------------------ spin --
