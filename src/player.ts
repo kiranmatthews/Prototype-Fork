@@ -560,6 +560,10 @@ export class Player {
   private chargePlanted = false; // charge began at a standstill: feet pinned
   private chargePose = 0;
   private invulnTimer = 0; // grace after a mask absorbs a hit
+  // The alpha flicker used to double as the bail indicator. Now the RAGDOLL is
+  // the indicator, so wipeout-origin grace runs silent — the flicker is only
+  // for a mask absorbing a hit, where the body isn't tumbling to tell you.
+  private invulnSilent = false;
   private maskMesh: THREE.Mesh | null = null;
   private maskBones: THREE.Object3D | null = null; // 3D crossbones under the skull on the 2nd mask
   private maskAnchor = new THREE.Vector3(); // scratch: head world position for the floating mask
@@ -944,6 +948,7 @@ export class Player {
     this.comboHasTrick = false;
     this.comboTimer = 0;
     this.invulnTimer = 0;
+    this.invulnSilent = false;
     this.slideTimer = 0;
     this.slideCd = 0;
     this.slideGraceT = 0;
@@ -1804,6 +1809,7 @@ export class Player {
     if (this.masks <= 0) return false;
     this.masks--;
     this.invulnTimer = CONST.maskInvuln;
+    this.invulnSilent = false; // a mask absorb DOES flicker — no tumble to read
     sfx.play('maskLoss', 0.9);
     this.emitSparks(8, 0xffd27a, 2);
     return true;
@@ -4392,6 +4398,7 @@ export class Player {
     // so the fall completes naturally rather than freeze-framing in the air.
     this.speed *= TUNING.bailSpeedKeep;
     this.invulnTimer = CONST.maskInvuln; // nothing chews you while you're down
+    this.invulnSilent = true; // the ragdoll IS the indicator — no alpha flash
     this.loseCombo();
     this.grabPhase = 'none';
     this.grabT = 0;
@@ -4914,6 +4921,7 @@ export class Player {
     this.balanceCritT = 0;
     this.bailMash = 0;
     this.invulnTimer = CONST.maskInvuln; // consistent with every other wipeout
+    this.invulnSilent = true; // the tumble is the tell, not the flicker
     this.loseCombo();
     sfx.play('crunch', 0.9, 0.85); // the snap
     sfx.play('takeDamage', 0.7);
@@ -5029,6 +5037,7 @@ export class Player {
     sfx.play('takeDamage', 0.8);
     this.bailMash = 0;
     this.invulnTimer = CONST.maskInvuln; // consistent with every other wipeout
+    this.invulnSilent = true; // the tumble is the tell, not the flicker
     this.loseCombo();
     this.emitSparks(8, 0xffb545, 2);
     // Falling off a rail is a WIPEOUT now, not a stumble you jog away from:
@@ -6765,25 +6774,28 @@ export class Player {
       this.pos.z = s.point.z + perpZ * side * (reach + 0.02);
       const skating = this.freeSkate || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
       if (skating && Math.abs(this.speed) >= TUNING.railTripSpeed) {
+        const spd = Math.abs(this.speed); // entry speed, BEFORE bail() halves it
         this.bail(); // caught a truck: go down (non-lethal)
-        // TRIP, don't bonk: the shins catch the rail and the body pitches
-        // clean OVER it, head first, landing on the far side — the classic
-        // clothesline. Only when there's ground over there to land on; over a
-        // pit the old near-side knockdown stands (a downed body must never be
-        // thrown somewhere lethal by its own trip).
-        const overX = s.point.x - perpX * side * (reach + 0.25);
-        const overZ = s.point.z - perpZ * side * (reach + 0.25);
-        const far = this.queryGround(level, overX - this.pos.x, overZ - this.pos.z);
-        if (far !== null && far.y > level.killY) {
-          this.pos.x = overX;
-          this.pos.z = overZ;
+        // A LOW line (shin/knee height — the jungle ruins log) TRIPS you: the
+        // body pitches clean OVER it, head first, and the launch scales with
+        // how fast you were going — a full-charge trip flings you well past
+        // the far side, and if a pit is what's over there, that's where you
+        // land: the trip commits you, the throw is the punishment. A rail up
+        // at chest height can't be tumbled over — that one's a clothesline,
+        // the old near-side knockdown, whipped backward.
+        const low = s.point.y < this.pos.y + 0.6;
+        if (low) {
+          this.pos.x = s.point.x - perpX * side * (reach + 0.25);
+          this.pos.z = s.point.z - perpZ * side * (reach + 0.25);
           this.state = 'air';
           this.grounded = false;
-          this.vVel = Math.max(this.vVel, 3.8);
+          this.vVel = Math.max(this.vVel, Math.min(7, 3 + spd * 0.12));
           this.airFromSkate = false;
           this.airGrav = 'foot';
           this.airMomentum = true; // the trip THROWS you — momentum rides the arc
           this.startRagdoll('forward'); // re-seed: head-over-heels along travel
+        } else {
+          this.startRagdoll('back'); // clotheslined: head snaps back, body drops
         }
         this.emitSparks(6, 0xffd166, 1.6);
       } else if (Math.abs(this.speed) > 0.1) {
@@ -7761,10 +7773,14 @@ export class Player {
     this.plantOnDeck(underW);
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
-    // mask-invulnerability grace.
+    // mask-invulnerability grace — but NOT during a wipeout's own grace:
+    // the ragdoll already says everything the flash used to.
     this.bodyGroup.visible =
       this.modelReady &&
-      (this.invulnTimer <= 0 || Math.sin(this.runTime * 45) > -0.2 || this.state === 'dead');
+      (this.invulnTimer <= 0 ||
+        this.invulnSilent ||
+        Math.sin(this.runTime * 45) > -0.2 ||
+        this.state === 'dead');
     // Spin smear: swap the skater for the whirlwind while the attack runs.
     // Held poses, not a smooth turn: a new angle every 2 frames (30Hz), each
     // step ~137° so consecutive holds never look alike — reads as a strobing
