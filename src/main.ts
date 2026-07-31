@@ -776,23 +776,30 @@ function tintP2(): void {
   setTimeout(apply, 6000);
 }
 
-function deactivate2pModes(): void {
+// RUN MODES: the time trial and the combo run. Both start by walking into a
+// pickup that sits near the spawn, which is exactly wrong when you are testing
+// plain platforming — hence the MENU switch. Split-screen forces them off too:
+// they are single-player modes.
+// Called on every level load and whenever either input to it changes, so the
+// world, the player and the button label can never disagree.
+let runModesOn = localStorage.getItem("protoRunModes") !== "off";
+function applyRunModes(): void {
+  const on = runModesOn && !split2p;
+  level.setRunModesEnabled(on);
+  ui.setRunModes(runModesOn);
+  if (on) return;
+  // switching off mid-run cancels it rather than freezing a live clock on screen
   level.setTimeTrial(false);
   level.setComboRun(false);
-  if (level.clockPickup) {
-    level.clockPickup.collected = true;
-    level.clockPickup.group.visible = false;
-  }
-  if (level.comboOrb) {
-    level.comboOrb.collected = true;
-    level.comboOrb.group.visible = false;
-  }
   player.ttActive = false;
   player.comboRun = false;
   if (p2) {
     p2.ttActive = false;
     p2.comboRun = false;
   }
+  ui.setTimeTrial(false);
+  ui.comboHalo("off");
+  ui.setRunRows(false);
 }
 
 function set2P(on: boolean, force = false): void {
@@ -830,7 +837,7 @@ function set2P(on: boolean, force = false): void {
     player.respawn(level, true);
     p2.respawn(level, true);
     p2.pos.x += 1.6; // side by side at the start line
-    deactivate2pModes();
+    applyRunModes();
     ui.set2P(true);
     ui.showMessage(
       "2-PLAYER SPLIT",
@@ -957,6 +964,7 @@ function updateCamera2(dt: number): void {
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
 player.enterLevel(current.id);
 player.respawn(level, true);
+applyRunModes(); // the saved MENU switch decides whether the pickups are there
 applyTheme();
 recorder.start(current.id); // the take always runs: level load -> now
 
@@ -1008,8 +1016,8 @@ function switchLevel(id: string): void {
     p2.enterLevel(entry.id);
     p2.respawn(level, true);
     p2.pos.x += 1.6;
-    deactivate2pModes();
   }
+  applyRunModes(); // the new level's pickups obey the switch too
   applyTheme();
   applyShadowFlags();
   ui.setLevel(entry.id);
@@ -1035,6 +1043,7 @@ function rebuildLevel(): void {
   level.dispose();
   level = new Level(scene, current);
   player.respawn(level, true);
+  applyRunModes();
   applyTheme();
   recorder.start(current.id);
   (window as unknown as Record<string, unknown>).__game &&
@@ -1386,6 +1395,16 @@ window.addEventListener("drop", (e) => {
 });
 ui.onLevelSelect = switchLevel;
 ui.onToggle2P = () => set2P(!split2p);
+ui.onToggleRunModes = () => {
+  runModesOn = !runModesOn;
+  localStorage.setItem("protoRunModes", runModesOn ? "on" : "off");
+  applyRunModes();
+  ui.showMessage(
+    runModesOn ? "TIME TRIAL + COMBO ON" : "TIME TRIAL + COMBO OFF",
+    runModesOn ? "the stopwatch and the orb are back" : "plain platforming",
+    1400,
+  );
+};
 player.onComboBank = (amount) => ui.comboBank(amount);
 player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.
@@ -1884,11 +1903,6 @@ function frame(): void {
     if (split2p && p2) {
       p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
       stepPvp(CONST.fixedStep);
-      // any respawn's level.reset resurrects the clock/orb — keep them parked
-      if (level.clockPickup && level.clockPickup.group.visible)
-        deactivate2pModes();
-      else if (level.comboOrb && level.comboOrb.group.visible)
-        deactivate2pModes();
     }
     level.update(CONST.fixedStep);
     // record exactly what the sim consumed (edges intact, pre-consume)

@@ -1638,6 +1638,10 @@ export class Level {
   timeTrial = false; // trial live: checkpoints/fruit dormant, time crates active
   // COMBO RUN: the green orb near spawn — touch it and the green gem appears
   // at the finish gate; reach it in ONE combo and it's yours.
+  // PLAYTEST SWITCH (see setRunModesEnabled): with this off, the trial
+  // stopwatch and the combo orb are hidden and cannot be picked up, so a plain
+  // platforming pass is never interrupted by a mode starting.
+  runModesOn = true;
   comboOrb: { group: THREE.Group; box: THREE.Box3; collected: boolean } | null =
     null;
   comboRun = false;
@@ -4435,12 +4439,12 @@ export class Level {
       // the trial stopwatch reappears — a fresh run can opt in again
       if (this.clockPickup && !this.timeTrial) {
         this.clockPickup.collected = false;
-        this.clockPickup.group.visible = true;
+        this.clockPickup.group.visible = this.runModesOn;
       }
       // ...and so does the combo orb
       if (this.comboOrb && !this.comboRun) {
         this.comboOrb.collected = false;
-        this.comboOrb.group.visible = true;
+        this.comboOrb.group.visible = this.runModesOn;
       }
       if (this.gemG) {
         this.root.remove(this.gemG);
@@ -8603,6 +8607,18 @@ export class Level {
       ),
       collected: false,
     };
+  }
+
+  // Show or hide the two run-mode activators. The pickups keep their boxes and
+  // their collected flags either way — the player's touch checks read
+  // runModesOn — so flipping this back on mid-level restores them exactly as
+  // they were rather than handing out a second stopwatch.
+  setRunModesEnabled(on: boolean): void {
+    this.runModesOn = on;
+    if (this.clockPickup)
+      this.clockPickup.group.visible = on && !this.clockPickup.collected;
+    if (this.comboOrb)
+      this.comboOrb.group.visible = on && !this.comboOrb.collected;
   }
 
   collectClock(): void {

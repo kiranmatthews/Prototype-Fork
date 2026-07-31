@@ -138,6 +138,7 @@ export class UI {
   onToggleVideo: (() => void) | null = null;
   onLoadReplay: ((text: string) => void) | null = null;
   onToggle2P: (() => void) | null = null;
+  onToggleRunModes: (() => void) | null = null;
   // level-list verbs (main.ts wires these)
   onLevelEdit: ((id: string) => void) | null = null;
   onLevelNew: (() => void) | null = null;
@@ -162,6 +163,7 @@ export class UI {
   onForceResync: (() => Promise<void>) | null = null;
   private recBtn!: HTMLButtonElement;
   private mpBtn!: HTMLButtonElement; // 2-player split toggle
+  private runBtn!: HTMLButtonElement; // time trial + combo run toggle
   private syncPanel!: HTMLElement;
   private unlockRow!: HTMLElement;
   private tokenRow!: HTMLElement;
@@ -236,6 +238,21 @@ export class UI {
     });
     statsWrap.appendChild(mpBtn);
     this.mpBtn = mpBtn;
+
+    // RUN MODES (playtest): the trial stopwatch and the combo orb sit near
+    // every spawn and start their mode the moment you walk into one, which is
+    // exactly wrong when you are testing plain platforming. Off hides both and
+    // cancels anything already running; the setting sticks across reloads.
+    const runBtn = document.createElement("button");
+    runBtn.className = "hud-levelbtn hud-editbtn";
+    runBtn.title = "hide the trial stopwatch and the combo orb";
+    runBtn.addEventListener("click", () => {
+      if (this.onToggleRunModes) this.onToggleRunModes();
+      runBtn.blur();
+    });
+    statsWrap.appendChild(runBtn);
+    this.runBtn = runBtn;
+    this.setRunModes(true);
 
     // RESTORE FROM CLOUD (deliberately NOT behind the passcode — the phone is
     // the device that needs it and is never unlocked). Replaces this device's
@@ -964,6 +981,13 @@ export class UI {
       ? "⚔ 2-PLAYER SPLIT: ON"
       : "⚔ 2-PLAYER SPLIT: OFF";
     this.mpBtn.style.color = on ? "#58e08a" : "";
+  }
+
+  setRunModes(on: boolean): void {
+    this.runBtn.textContent = on
+      ? "⏱ TIME TRIAL + COMBO: ON"
+      : "⏱ TIME TRIAL + COMBO: OFF";
+    this.runBtn.style.color = on ? "" : "#e0705a";
   }
 
   setLevel(id: string): void {

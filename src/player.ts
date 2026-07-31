@@ -513,6 +513,10 @@ export class Player {
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindTickT = 0; // THPS accrual while grinding
   private regrindCd = 0;
+  // The rail we most recently left, and whether Triangle has been held down
+  // continuously since. See tryGrind: a held button must not re-grab it.
+  private lastRail: Rail | null = null;
+  private grindLatched = false;
   private respawnTimer = 0;
   private coyoteTimer = 0; // jump grace after running off a ledge
   private crouchGraceT = 0; // crouch-jump grace: a static crouch that just ended still boosts a jump this long after
@@ -906,6 +910,8 @@ export class Player {
     this.bodyGroup.rotation.y = 0;
     this.grindRail = null;
     this.regrindCd = 0;
+    this.lastRail = null;
+    this.grindLatched = false;
     if (hard) this.runTime = 0;
     // Respawning at a checkpoint restores the counters it banked; a hard
     // reset (reset() cleared activeCheckpoint) starts from zero.
@@ -1285,6 +1291,8 @@ export class Player {
     this.liftTyT = Math.max(0, this.liftTyT - dt);
     if (this.liftTyT === 0) this.liftTy = 0;
     this.regrindCd = Math.max(0, this.regrindCd - dt);
+    // Letting Triangle go re-arms it: the rail you left is grabbable again.
+    if (!input.grindHeld) this.grindLatched = false;
     this.grindBoostT = Math.max(0, this.grindBoostT - dt);
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
@@ -1575,7 +1583,7 @@ export class Player {
           this.lipStallT <= 0 &&
           !stallApproach &&
           (input.grindPressed || input.grindHeld) &&
-          this.tryGrind()
+          this.tryGrind(input.grindPressed)
         ) {
           // snapped straight onto the rail this tick
         } else {
@@ -1602,7 +1610,11 @@ export class Player {
           this.tryRopeGrab(level)
         ) {
           // hands on the swing rope
-        } else if (!this.wallriding && (input.grindPressed || input.grindHeld) && this.tryGrind()) {
+        } else if (
+          !this.wallriding &&
+          (input.grindPressed || input.grindHeld) &&
+          this.tryGrind(input.grindPressed)
+        ) {
           // grabbed the rail
         } else {
           this.stepAir(dt, input, level);
@@ -4497,11 +4509,28 @@ export class Player {
 
   // ----------------------------------------------------------------- grind --
 
-  private tryGrind(): boolean {
+  // Record the rail we are leaving, and latch the grind button so a Triangle
+  // that is still down cannot immediately put us back on it. Called from every
+  // exit (clean, drop-off, board snap, bail) before grindRail is cleared.
+  private railLeft(): void {
+    this.lastRail = this.grindRail;
+    this.grindLatched = true;
+  }
+
+  private tryGrind(pressed: boolean): boolean {
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
     // punishment into a free 50-50.
     if (this.regrindCd > 0 || this.isBailing || !this.railCand) return false;
+    // A HELD Triangle catches rails on approach — you should not have to time
+    // the press — but it must not re-catch the rail you just came OFF. Running
+    // off the end of a short rail (the jungle log) leaves you inside that
+    // rail's own snap radius with the button still down: it snapped straight
+    // back on, ran off the end again, and snapped back, over and over, and you
+    // could not fall off it at all. A fresh PRESS still re-grabs immediately;
+    // a hold has to let go once. Only the rail you left is blocked, so holding
+    // Triangle through a rail-to-rail transfer is untouched.
+    if (!pressed && this.grindLatched && this.railCand.rail === this.lastRail) return false;
     // railCand was sampled at the START of this step; re-close on the CURRENT
     // position so a fast step snaps onto the point actually under our feet,
     // not where we were 1-2 units ago.
@@ -4650,6 +4679,7 @@ export class Player {
         this.speed = along * this.grindVel;
       }
     }
+    this.railLeft();
     this.grindRail = null;
     this.state = 'air';
     this.vVel = vVel;
@@ -4679,6 +4709,7 @@ export class Player {
   // grip), and you drop straight down on foot. Ground below breaks the fall
   // into a tumble; over a pit there's nothing to break it at all.
   private snapBoardFall(): void {
+    this.railLeft();
     this.grindRail = null;
     this.railUnder = false;
     this.state = 'air';
@@ -4759,6 +4790,7 @@ export class Player {
     const fl = Math.hypot(fx, fz) || 1;
     this.axisF.set(fx / fl, 0, fz / fl);
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.railLeft();
     this.grindRail = null;
     this.state = 'air';
     this.airFromSkate = true; // still a board air: tricks live
@@ -4794,6 +4826,7 @@ export class Player {
       this.axisL.set(this.axisF.z, 0, -this.axisF.x);
       this.speed = Math.abs(this.speed); // the new heading carries the fall
     }
+    this.railLeft();
     this.grindRail = null;
     this.state = 'air';
     this.airFromSkate = false; // a stumble is not a trick window
@@ -5512,7 +5545,7 @@ export class Player {
 
     // The trial stopwatch: touch it and the clock starts NOW.
     const ck = level.clockPickup;
-    if (ck && !ck.collected && !this.ttActive && !this.comboRun && this.playerBox.intersectsBox(ck.box)) {
+    if (level.runModesOn && ck && !ck.collected && !this.ttActive && !this.comboRun && this.playerBox.intersectsBox(ck.box)) {
       level.collectClock();
       level.setTimeTrial(true);
       this.ttActive = true;
@@ -5525,7 +5558,7 @@ export class Player {
     // The green orb: touch it and the combo run begins — the green gem
     // materializes at the finish gate, yours if you get there in ONE combo.
     const orb = level.comboOrb;
-    if (orb && !orb.collected && !this.comboRun && !this.ttActive && this.playerBox.intersectsBox(orb.box)) {
+    if (level.runModesOn && orb && !orb.collected && !this.comboRun && !this.ttActive && this.playerBox.intersectsBox(orb.box)) {
       level.collectComboOrb();
       level.setComboRun(true);
       level.spawnComboGem();
