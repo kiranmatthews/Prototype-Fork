@@ -3302,6 +3302,14 @@ export class Player {
       }
     }
 
+    // RAIL SMACK: come down ON a rail without asking for the grind and you
+    // don't ghost through it — you fold over the bar and get wrecked. Holding
+    // or pressing Triangle is the ask (tryGrind owns that path, hit or miss);
+    // everything else that lands on the line eats it. The pop it fires makes
+    // vVel positive, so the landing check below naturally sits this frame out.
+    if (this.railLandSmack(input, level)) {
+      // folded over the bar — the ragdoll owns everything from here
+    }
     // Land only on surfaces we were actually ABOVE last step (with a small
     // ledge forgiveness) — a surface overhead must never teleport us onto it.
     // Steep transitions get a much deeper forgiveness: falling with sideways
@@ -6096,6 +6104,48 @@ export class Player {
     sfx.play('crunch', 0.85, 0.7);
     this.emitSparks(10, 0xffd166, 2.4);
     this.emitDust(3);
+  }
+
+  // Fell onto a rail without asking for the grind: the body folds over the
+  // bar and ragdolls off it — the classic THPS coping-crotch bail. Fires only
+  // on a real skate-air DESCENT that crosses the rail line square-on:
+  //  - vVel < -1.5 keeps drop-ins honest: rolling off a deck edge across its
+  //    coping has barely started falling at the crossing moment, so the lip
+  //    line never smacks a drop-in — but a jump that comes DOWN on the coping
+  //    without Triangle eats it, which is exactly the THPS rule.
+  //  - on-foot airs are exempt: hopping over the jungle log on foot is basic
+  //    platforming and must keep sailing over.
+  //  - vert airs, fresh dismounts (regrindCd), the landing grace at a lip,
+  //    slams, and bodies already down are all exempt, same as the rail block.
+  //  - ropes are exempt: a sagging line is soft, not a bar.
+  private railLandSmack(input: Input, level: Level): boolean {
+    if (this.vVel > -1.5) return false;
+    if (!this.airFromSkate && !this.freeSkate) return false;
+    if (this.isBailing || this.slamActive) return false;
+    if (input.grindHeld || input.grindPressed) return false;
+    if (this.regrindCd > 0 || this.vertLandGraceT > 0 || this.vertAir || this.pipeHang) return false;
+    for (const rail of level.rails) {
+      const s = rail.closestXZ(this.pos);
+      if (s.distXZ > 0.45) continue; // a graze past the bar is a graze
+      // the fall must cross the rail line THIS step
+      if (!(this.prevPos.y > s.point.y + 0.02 && this.pos.y <= s.point.y + 0.02)) continue;
+      let isRope = false;
+      for (const r of level.ropes) if (r.rail === rail) isRope = true;
+      if (isRope) continue;
+      this.pos.y = s.point.y + 0.02; // folded over the bar
+      this.bail(); // combo gone, deck thrown, invuln (silent), speed halved...
+      this.speed *= 0.5; // ...and the bar eats half of what's left
+      this.vVel = 2.3; // a small pained pop up off the line
+      this.airFromSkate = false;
+      this.airGrav = 'foot';
+      this.airMomentum = true; // what little momentum survives rides the tumble
+      this.startRagdoll('air');
+      this.regrindCd = Math.max(this.regrindCd, 0.5); // no snap offers while folded
+      sfx.play('crunch', 0.9, 0.55); // the deep thunk — skateboarding's worst sound
+      this.emitSparks(9, 0xffd166, 2);
+      return true;
+    }
+    return false;
   }
 
   // Skated into a box too slow to smash but fast enough to catch the shins:
