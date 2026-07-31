@@ -20,6 +20,7 @@ export const TUNING = {
   // without retiming every ollie in the game (and vice versa).
   boardRiseGravity: 33, // BOARD: gravity on the way up. Deliberately identical to riseGravity out of the box, so a board air peaks at exactly the height it always did — anything you could clear, you still clear
   boardFallGravity: 70, // BOARD: gravity on the way down (vs 119 on foot). THIS is the one that makes a board air float: same peak, longer glide down, and you land at 18 u/s instead of 24 instead of being spiked. NOTE the reference: THPS/THUG air gravity is a single SYMMETRIC number (Physics_Air_Gravity -1350, no up/down branch), which converts to ~34.5 in our units — so the authentic value here is ~36, one rung heavier than boardRiseGravity, matching the reference's own 1.1x ladder (vert 30 / rise 33 / fall 36). 70 is a deliberately conservative half-step that leaves the authored gaps alone; drag it to 36 for the real THPS arc
+  rampFallGravity: 40, // BOARD, RAMP/DOWNHILL LAUNCHES ONLY: fall gravity for an air that left the ground off a ramp, kicker, or sloped face. Near-symmetric with boardRiseGravity (the THPS ballistic arc) so launched airs glide down instead of being spiked — flat-ground ollies keep boardFallGravity and their tuned snap
   boardApexFloat: 0.35, // BOARD: how much gravity is bled out at the very top of the arc, where the trick reads. Buys hang time exactly where you can see it, and barely lengthens a huge kicker air — so authored gaps stay honest. 0 = off, plain two-value gravity
   boardApexBand: 4.5, // BOARD: how wide the float window is, in up/down speed. The float fades in as you slow toward the peak and fades out as you pick up fall speed, so there is no step anywhere in the arc
   jumpVelocity: 14, // fully-charged jump (hold X)
@@ -196,6 +197,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   // street ollie out-floats a vert hang, which inverts the whole contrast.
   boardRiseGravity: { min: 30, max: 120, step: 1 },
   boardFallGravity: { min: 30, max: 160, step: 1 },
+  rampFallGravity: { min: 25, max: 160, step: 1 },
   boardApexFloat: { min: 0, max: 0.8, step: 0.05 }, // above ~0.8 the top of the arc stops falling at all
   boardApexBand: { min: 0.5, max: 12, step: 0.5 },
   jumpVelocity: { min: 4, max: 30, step: 0.5 },
@@ -351,6 +353,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'BOARD AIRS: gravity on the way UP out of an ollie, a kicker, a rail or a wall. Ships identical to the on-foot number on purpose — a board air peaks exactly as high as it always did, so nothing you used to clear becomes unclearable. Lower it for a floatier, higher pop.',
   boardFallGravity:
     'BOARD AIRS: gravity on the way DOWN — the knob that actually makes the board float. On foot the fall is 3.6x heavier than the rise (a deliberate PS1 snap); on the board that same slam is what made ollies and ramp launches feel short and punishing. Lower = longer glide down and a softer landing; raise it back toward the on-foot number for the old spiked arc. THPS itself uses ONE symmetric gravity up and down, which converts to about 36 in our units — try 36 for the authentic arc where you land at the speed you launched. Expect every gap to get noticeably easier at that setting.',
+  rampFallGravity:
+    'RAMP AND DOWNHILL LAUNCHES ONLY: fall gravity for a board air that left the ground off a ramp, kicker, or sloped face — the airs that should fly ballistic, THPS-style. Near boardRiseGravity = you glide down at the speed you launched; flat-ground ollies are untouched (they keep boardFallGravity and the tuned snap).',
   boardApexFloat:
     'BOARD AIRS: bleeds gravity out of the moment at the TOP of the arc, where the trick actually reads, then hands it straight back as you fall. This buys hang time you can see without stretching the whole jump — a little ollie gains proportionally much more than a huge kicker air does, which is what keeps authored gaps from turning trivial. 0 = off.',
   boardApexBand:
@@ -595,7 +599,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
   },
   {
     title: 'SKATING',
@@ -712,6 +716,8 @@ export const CONST = {
   ptsLipTick: 6, // accrues every quarter second stalled on the lip
   ptsSpine: 250, // spine transfer: carried over the ridge, landed the far side
   repeatDecay: [1, 0.75, 0.5, 0.25], // THPS4/THUG: the Nth use of the SAME trick in one combo pays this share of its base (last entry is the floor). World rewards — crates, fruit, enemies — never decay
+  flipTime: 0.42, // how long a flip trick takes the deck to complete — finish it in the air or the landing goes sketchy and pays nothing
+  ptsFlip: 110, // base for a flip trick (kickflip family), scored the moment the deck completes mid-air
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 8, // pipe hang: cap on the off-axis lateral carry (locked-in vert, no launching down the pipe)
   hangLatDamp: 0.55, // vert hang: how fast the lateral carry bleeds off. THPS rules: an angled entry keeps travelling down the pipe through most of the hang (was 1.8 = parked over one spot)

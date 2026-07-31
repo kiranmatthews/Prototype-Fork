@@ -181,6 +181,7 @@ export class Player {
   private static readonly WALL_Z = new THREE.Vector3();
   private static readonly WALL_OFF = new THREE.Vector3();
   private static readonly WALL_M = new THREE.Matrix4();
+  private static readonly FLIP_M = new THREE.Matrix4(); // flip-deck stand-in: board world transform pulled into group space
   private static readonly WALL_QT = new THREE.Quaternion();
   private static readonly WALL_QP = new THREE.Quaternion();
   private static relicVault = new Map<
@@ -549,6 +550,11 @@ export class Player {
   private airGrabShown: string | null = null; // exact plate label this air's grab was pushed under (renamed live; merged with a landed spin)
   private comboUses = new Map<string, number>(); // per-combo trick use counts — repeats pay a declining share (THPS4/THUG)
   private sketchyT = 0; // off-balance shimmy after a SKETCHY landing (kept it, barely)
+  private flipT = 0; // deck flip trick in progress: time left of CONST.flipTime
+  private flipKind: 'kick' | 'heel' | 'shove' | 'imposs' | 'varial' = 'kick';
+  private flipName = 'Kickflip';
+  private flipDeck: THREE.Object3D | null = null; // scene-level deck stand-in: performs the flip while the spin smear hides the rig
+  private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindTickT = 0; // THPS accrual while grinding
   private regrindCd = 0;
@@ -1995,6 +2001,9 @@ export class Player {
       );
       this.lastJumpType = 'Board Ollie';
       this.airGrav = 'board'; // the one branch that is unambiguously a skate air
+      // Launched off a ramp or a sloped face (up- OR downhill): the air flies
+      // ballistic (rampFallGravity) instead of taking the flat-ollie snap.
+      this.floatAir = rampClimb > 0.5 || this.rideNormal.y < 0.985;
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
       // On foot with real run speed. The Crash rule from the reference: a
@@ -2983,6 +2992,8 @@ export class Player {
       // Left the ground without jumping: rolling off a kicker on the board is a
       // board air; stepping off a ledge on foot is a platforming fall.
       this.airGrav = this.freeSkate ? 'board' : 'foot';
+      // Off a kicker lip or a sloped run-out (Slipstream downhill): ballistic.
+      this.floatAir = this.freeSkate && (this.takeoffTy > 0.05 || this.rideNormal.y < 0.985);
       // Authored kicker launch: leaving an uphill lip converts the climb to
       // lift (forward travel only — backing off an edge just drops).
       const liftTy = this.takeoffTy;
@@ -3294,7 +3305,9 @@ export class Player {
             ? TUNING.boardRiseGravity
             : TUNING.riseGravity
           : board
-            ? TUNING.boardFallGravity
+            ? this.floatAir
+              ? TUNING.rampFallGravity // ramp/downhill launch: ballistic fall, THPS-style
+              : TUNING.boardFallGravity
             : TUNING.fallGravity;
       // APEX FLOAT (board only): bleed a slice of gravity out of the top of the
       // arc and hand it straight back on the way down. The hang lands where the
@@ -3347,7 +3360,10 @@ export class Player {
         const cap = TUNING.downhillMax;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
-      if (Math.abs(input.moveX) > 0.05) {
+      // The lateral sidestep is a FOOT-AIR move only now (precision hops).
+      // On the board that stick axis is the THPS spin — a board air flies
+      // ballistic and left/right rotates the body instead (see updateGrab).
+      if (footAir && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * diag * dt);
       }
     }
@@ -3451,6 +3467,7 @@ export class Player {
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
+      this.floatAir = false; // the ballistic tag belongs to the air that just ended
       this.liftTy = 0; // this landing's ramp memory belongs to this landing
       this.liftTyT = 0;
       this.slideAirLat = 0; // slide-jump arc is done
@@ -3581,8 +3598,15 @@ export class Player {
       // kept-but-taxed (wobble, speed scrub, half points), past the net = bail.
       const offLine = Math.min(dev0, devPi);
       const sketchNet = Math.max(tol, THREE.MathUtils.degToRad(TUNING.sketchyTolerance));
+      // Touching down while the deck is still mid-flip: the trick is eaten and
+      // the landing goes sketchy (forgiving where THPS would bail — the crate
+      // loop leans on quick spin-attacks, so a late flip stings, not flattens).
+      const flipLate = this.flipT > 0;
+      if (flipLate) this.flipT = 0;
       const funny = spun && offLine > sketchNet && !(this.pipeHang || this.vertAir);
-      const sketchy = spun && !funny && offLine > tol && !(this.pipeHang || this.vertAir);
+      const sketchy =
+        (spun && !funny && offLine > tol && !(this.pipeHang || this.vertAir)) ||
+        (flipLate && !funny);
       if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0 || this.spendMask()) {
           this.grabPhase = 'none';
@@ -4543,6 +4567,7 @@ export class Player {
     this.grabSpinAngle = 0;
     this.grabSpinTotal = 0;
     this.sketchyT = 0; // a full bail owns the body — no leftover shimmy
+    this.flipT = 0; // the deck stops performing when you're eating dirt
     sfx.play('takeDamage', 0.8);
     this.emitSparks(8, 0xffb545, 2);
     // Default tumble: chaotic, no preferred direction. Callers that know WHAT
@@ -5234,6 +5259,41 @@ export class Player {
         // Tiny Crash-style stall. Never boosts an already-rising jump.
         this.vVel = Math.min(this.vVel + TUNING.spinAirCorrection, 7);
       }
+      // FLIP TRICKS: the same press in a BOARD air also throws the deck — the
+      // body does the Crash spin attack it always did (animation + hitbox
+      // untouched), while the board flips underneath it, picked by the stick
+      // at the press, THPS-style. Finish the flip in the air and it scores;
+      // land while the deck is still turning and the landing goes sketchy.
+      if (
+        this.state === 'air' &&
+        this.airFromSkate &&
+        this.airGrav === 'board' &&
+        !this.slamActive &&
+        !this.wallriding &&
+        !this.isBailing &&
+        this.grabPhase === 'none' &&
+        this.flipT <= 0
+      ) {
+        const mx = this.rawInput.moveX;
+        const my = this.rawInput.moveY;
+        if (my > 0.4) {
+          this.flipKind = 'imposs';
+          this.flipName = 'Impossible';
+        } else if (my < -0.4) {
+          this.flipKind = 'varial';
+          this.flipName = 'Varial Flip';
+        } else if (mx < -0.3) {
+          this.flipKind = 'heel';
+          this.flipName = 'Heelflip';
+        } else if (mx > 0.3) {
+          this.flipKind = 'shove';
+          this.flipName = 'Pop Shove-It';
+        } else {
+          this.flipKind = 'kick';
+          this.flipName = 'Kickflip';
+        }
+        this.flipT = CONST.flipTime;
+      }
       // SLIDE-SPIN CANCEL (Crash 4 rules): a spin timed to the slide's END —
       // its last beat, or the unresolved grace/get-up right after — wipes the
       // re-fire blockers, so slide -> spin -> slide chains on timing instead
@@ -5256,6 +5316,17 @@ export class Player {
       if (this.spinTimer <= 0) {
         this.spinAngle = 0;
         this.spinCd = CONST.spinCooldown;
+      }
+    }
+    // The deck completes its flip: still airborne = the trick is THROWN and
+    // scores now (a later bail wipes the combo, same as a started grab).
+    // Any other exit — grind catch, wall, slam — quietly fizzles it.
+    if (this.flipT > 0) {
+      this.flipT -= dt;
+      if (this.flipT <= 0) {
+        this.flipT = 0;
+        if (this.state === 'air' && !this.grounded && !this.isBailing && !this.wallriding)
+          this.score(CONST.ptsFlip, this.flipName);
       }
     }
   }
@@ -5384,10 +5455,17 @@ export class Player {
         // carved up with) to keep rotating; release to snap to the nearest 180
         // and land. A pipe hang never bails on this, and the final descent
         // auto-corrects (committing) so where you rotate to is where you land.
+        // STREET AIRS SPIN TOO (THPS: holding left/right rotates EVERY air
+        // from the moment the wheels leave the ground — spinning a gap ollie
+        // is the core air verb): any board air takes the same stick-spin, and
+        // the landing is then judged clean / sketchy / bail. Release early and
+        // the snap eases you onto the nearest 180 line.
         const hsp = this.spinStick();
+        const streetSpin =
+          this.airFromSkate && this.airGrav === 'board' && !this.wallriding && !this.isBailing;
         if (committing) {
           commitSpin(dt);
-        } else if (this.vertAir && !this.slamActive && hsp !== 0) {
+        } else if ((this.vertAir || streetSpin) && !this.slamActive && hsp !== 0) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(hsp) * dt;
           this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
@@ -8041,6 +8119,23 @@ export class Player {
           .divide(this.bodyGroup.scale); // parent units, not world units
         this.boardG.position.add(Player.WALL_OFF);
       }
+      // FLIP TRICK: the deck turns underneath the rider — compounded onto the
+      // pose set above (which is authored fresh every frame, so a total-angle
+      // rotation here is stable). Board-local axes per the wall basis: +Z nose,
+      // +Y griptape, +X width.
+      if (this.flipT > 0) {
+        const fprog = 1 - this.flipT / CONST.flipTime;
+        const fang = fprog * Math.PI * 2;
+        if (this.flipKind === 'kick') this.boardG.rotateZ(fang);
+        else if (this.flipKind === 'heel') this.boardG.rotateZ(-fang);
+        else if (this.flipKind === 'shove') this.boardG.rotateY(fang);
+        else if (this.flipKind === 'imposs') this.boardG.rotateX(fang);
+        else {
+          // varial: roll + shove together
+          this.boardG.rotateZ(fang);
+          this.boardG.rotateY(fang);
+        }
+      }
       if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
     // Every joint that moves a foot has now been written, and the board has
@@ -8071,6 +8166,32 @@ export class Player {
         this.smearG.rotation.y = step * 2.399; // golden angle
         const pulse = 1 + 0.09 * Math.sin(step * 1.7);
         this.smearG.scale.set(1.84 * pulse, 1.52 * (2 - pulse), 1.84 * pulse); // opposing squash
+      }
+      // SPIN + FLIP: the whirlwind swallows the whole rig — deck included, it
+      // rides inside bodyGroup — but the flipping deck IS the trick, so a
+      // scene-level stand-in wears the board's exact world transform (the
+      // hidden rig still updates its matrices) and performs beneath the blur.
+      if (this.boardG) {
+        const showFD = smearOn && this.flipT > 0;
+        if (showFD && !this.flipDeck) {
+          this.flipDeck = this.boardG.clone(true);
+          this.group.add(this.flipDeck);
+        }
+        if (this.flipDeck) {
+          this.flipDeck.visible = showFD;
+          if (showFD) {
+            this.boardG.updateWorldMatrix(true, false);
+            this.group.updateWorldMatrix(true, false);
+            Player.FLIP_M.copy(this.group.matrixWorld)
+              .invert()
+              .multiply(this.boardG.matrixWorld);
+            Player.FLIP_M.decompose(
+              this.flipDeck.position,
+              this.flipDeck.quaternion,
+              this.flipDeck.scale,
+            );
+          }
+        }
       }
     }
     // Perfect-grind bloom: pink, body-enveloping, fading out over the last
