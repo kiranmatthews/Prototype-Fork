@@ -1651,6 +1651,9 @@ export class Level {
   // Time of day for THIS level. Hand-coded levels are all sunset (the look the
   // game shipped with); a data-built level takes it from its authored data.
   skyPreset: SkyPreset = DEFAULT_SKY;
+  // Keep the fog ON the course surfaces (see clearPlayFog): the dark level's
+  // sightline discipline depends on the haze eating its own geometry.
+  private keepPlayFog = false;
   // Fallback look only — every hand-coded builder assigns its own theme, and a
   // data-built level inherits whichever one its builder set. Kept as a sane
   // lagoon default so a level that forgets still renders like a place.
@@ -2386,6 +2389,11 @@ export class Level {
   // everything else. Same scene fog, applied where it helps and not where it
   // hurts.
   private clearPlayFog(): void {
+    // A DARK level opts out: there the haze is a design tool — the course
+    // ahead is supposed to vanish into the black and arrive as firelight,
+    // not sit fully readable across the void. Everywhere else the course
+    // stays fog-free so it never washes out at distance.
+    if (this.keepPlayFog) return;
     const off = (m: THREE.Material | THREE.Material[]): void => {
       for (const one of Array.isArray(m) ? m : [m]) {
         const f = one as THREE.Material & { fog?: boolean };
@@ -6277,7 +6285,9 @@ export class Level {
           transparent: true,
           opacity: i === 0 ? 1 : 0.55 - i * 0.12,
           depthWrite: i === 0,
-          fog: false, // a fire down the hall must not be eaten by the haze
+          // fires DO fog: a flame two sections over dims into the black
+          // instead of drawing a torch-line to the horizon. Near fires (the
+          // ones you play by) sit inside fogNear and stay bright.
         }),
       );
       f.position.y = h + 0.2 * scale + fh * 0.42;
@@ -6337,7 +6347,8 @@ export class Level {
       opacity: 0.16,
       depthWrite: false,
       wireframe: true,
-      fog: false, // the ghost is the TELL for where to stand next — never hazed out
+      // fogs like everything else: the ghost only needs to read up close,
+      // where you're judging the next stand — not from across the works
     });
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 0.6, d), litMat);
     mesh.position.set(x, topY - 0.3, z);
@@ -10748,22 +10759,29 @@ export class Level {
   // reading a rhythm, taught the classic way: one idea per section, on its
   // own, then two at once, then everything.
   //
-  //   A  cycling platforms, side to side        (ride it across)
-  //   B  lifts — the ground changes height      (hop at the top of the beat)
-  //   C  phase pads: solid and lit, then gone   (cross while it's burning)
-  //   D  travelling rails                       (grind aboard, ride, hop off)
-  //   E  travelling swing ropes                 (the ferry over the long dark)
-  //   F  all of it at once, into the goal
+  // The course is an S — it turns HARD six times, and a camera lane swings
+  // the frame (and the controls) around every bend, so "onward" is always
+  // screen-up and you never see more than one stretch of the works ahead of
+  // you. The dark does the rest: with the fog pulled in, the next section is
+  // a glow around a corner, not a line of torches to the horizon.
+  //
+  //   A  cycling platforms, side to side        heading OUT   (-z)
+  //   B  lifts — the ground changes height      turn LEFT     (-x)
+  //   C  phase pads: solid and lit, then gone   turn RIGHT    (-z)
+  //   D  travelling rails                       SWITCHBACK    (+x)
+  //   E  travelling swing ropes                 turn RIGHT    (-z)
+  //   F  all of it at once                      turn LEFT     (-x)
+  //   G  one last swing into the goal           turn RIGHT    (-z)
   //
   // The darkness is doing design work, not decoration: torches mark the safe
   // stone and every moving thing carries its own fire, so "where the light is"
-  // and "where you can stand" are the same sentence. Fog pulls in tight so the
-  // next island arrives as a glow before it arrives as geometry.
+  // and "where you can stand" are the same sentence.
   private buildNightworks(): void {
     this.skyPreset = "night";
+    this.keepPlayFog = true; // the dark eats the course: no seeing three sections over
     this.killY = -26; // a long, quiet drop off any edge
-    this.finishZ = -300;
-    this.endWallZ = -330;
+    this.finishZ = -172;
+    this.endWallZ = -196;
     this.wallTint = 0x2a2f3c;
     this.blockTint = 0x333a48;
     this.theme = {
@@ -10775,7 +10793,7 @@ export class Level {
       stars: true,
       fog: 0x05070f, // near-black: an island is a glow before it is a shape
       fogNear: 12,
-      fogFar: 74,
+      fogFar: 58, // the parallel stretch across the void is a rumour, not a view
       hemiSky: 0x1a2440,
       hemiGround: 0x0a0d16,
       hemiI: 0.34, // just enough bounce to keep an unlit edge from vanishing
@@ -10803,7 +10821,7 @@ export class Level {
     // A GANTRY PAD: the small fixed footing that keeps the rail and rope
     // sections honest. Every one carries a fire, because in this level a
     // light IS the promise that there's something to land on.
-    const ledge = (x: number, z: number, y = 3, s = 4): void => {
+    const ledge = (x: number, z: number, y = 3, s = 4.5): void => {
       this.slab("platform", z + s / 2, z - s / 2, y, s, stoneMat, false, x, "stone");
       // fire at the BACK corner: it marks the pad from a distance without
       // standing in the middle of the only place you have to land
@@ -10817,95 +10835,129 @@ export class Level {
     this.torch(-4.4, 0, 7.2, 2.6);
     this.torch(4.4, 0, 7.2, 2.6);
 
-    // --- A: cycling platforms, side to side ---------------------------------
+    // --- A (heading -z): cycling platforms, side to side --------------------
     // Wide, slow and forgiving: the whole job is to step on and wait.
-    this.mover(0, 0, -9, 5, 5, "x", 5.5, 0.5, 0);
-    this.mover(0, 0, -18, 5, 5, "x", 6, 0.55, Math.PI); // counter-swinging pair
-    this.mover(0, 0, -27, 4.5, 4.5, "x", 6, 0.6, Math.PI / 2);
-    this.pickup(0, 1.3, -18);
-    isle(-36, 10, 8);
-    this.checkpoint(0, -36);
+    this.mover(0, 0, -10, 5, 5, "x", 5.5, 0.5, 0);
+    this.mover(0, 0, -19, 5, 5, "x", 6, 0.55, Math.PI); // counter-swinging pair
+    this.mover(0, 0, -28, 4.5, 4.5, "x", 6, 0.6, Math.PI / 2);
+    this.pickup(0, 1.3, -19);
+    // the first CORNER: a long L-slab, room to land and turn left
+    isle(-42, 10, 20, 0, 0, 2.6);
+    this.checkpoint(0, -44);
 
-    // --- B: lifts — the ground changes height -------------------------------
-    // Same idea turned 90°: ride up, hop across at the top of the beat.
-    this.mover(-3, 0.5, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
-    this.mover(3, 2.5, -53, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
-    this.mover(-3, 4.5, -61, 4.5, 4.5, "y", 3.0, 0.75, Math.PI / 2);
-    this.mover(3, 3.0, -69, 4.5, 4.5, "y", 3.6, 0.65, 0);
-    this.pickup(-3, 5.6, -61);
-    isle(-78, 10, 8, 0, 3);
-    this.checkpoint(3, -78);
+    // --- B (turn LEFT, heading -x): lifts — the ground changes height -------
+    // Same idea turned on its side: ride up, hop onward at the top of the
+    // beat, climbing to the works' upper deck as you go.
+    this.mover(-11, 0.5, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
+    this.mover(-19, 2.5, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
+    this.mover(-27, 4.5, -45, 4.5, 4.5, "y", 3.0, 0.75, Math.PI / 2);
+    this.mover(-35, 3.0, -51, 4.5, 4.5, "y", 3.6, 0.65, 0);
+    this.pickup(-27, 5.6, -45);
+    // corner isle: land the last lift, turn right into the pad run
+    this.slab("platform", -43, -53, 3, 14, stoneMat, false, -46, "stone");
+    this.torch(-52.3, 3, -43.7, 2.2);
+    this.torch(-39.7, 3, -52.3, 2.2);
+    this.checkpoint(3, -48, -46);
 
-    // --- C: phase pads — here, then not -------------------------------------
+    // --- C (turn RIGHT, heading -z): phase pads — here, then not ------------
     // Introduced one at a time on a long, honest cycle: the fire on a pad IS
     // its timer. Torches gutter for the last beat before it drops away.
-    this.phasePad(0, 3, -87, 5, 5, 4.4, 0, 0.62);
-    this.phasePad(0, 3, -95, 5, 5, 4.4, 0.34, 0.62);
-    this.phasePad(0, 3, -103, 5, 5, 4.4, 0.68, 0.62);
-    this.pickup(0, 4.3, -95);
-    isle(-112, 9, 7, 0, 3);
-    // ...then two lines of them, alternating: one row is always the way.
-    this.phasePad(-3.2, 3, -121, 4.4, 4.4, 3.6, 0, 0.55);
-    this.phasePad(3.2, 3, -121, 4.4, 4.4, 3.6, 0.5, 0.55);
-    this.phasePad(3.2, 3, -129, 4.4, 4.4, 3.6, 0.25, 0.55);
-    this.phasePad(-3.2, 3, -137, 4.4, 4.4, 3.6, 0.75, 0.55);
-    isle(-146, 10, 8, 0, 3);
-    this.checkpoint(0, -146);
+    this.phasePad(-46, 3, -58, 5, 5, 4.4, 0, 0.62);
+    this.phasePad(-46, 3, -66, 5, 5, 4.4, 0.34, 0.62);
+    this.phasePad(-46, 3, -74, 5, 5, 4.4, 0.68, 0.62);
+    this.pickup(-46, 4.3, -66);
+    ledge(-46, -82, 3, 5);
+    // ...then pairs of them, alternating: one side is always the way.
+    this.phasePad(-49.2, 3, -90, 4.4, 4.4, 3.6, 0, 0.55);
+    this.phasePad(-42.8, 3, -90, 4.4, 4.4, 3.6, 0.5, 0.55);
+    this.phasePad(-49.2, 3, -98, 4.4, 4.4, 3.6, 0.75, 0.55);
+    this.phasePad(-42.8, 3, -98, 4.4, 4.4, 3.6, 0.25, 0.55);
+    // corner isle: the switchback — the course turns BACK on itself
+    isle(-108, 10, 12, -46, 3);
+    this.checkpoint(3, -108, -46);
 
-    // --- D: travelling rails ------------------------------------------------
-    // TWO ROUTES, and that is the point. The gantry pads zigzag left-right, so
-    // the careful way is a string of short hops; the rails run dead straight
-    // above them, so catching one is genuinely faster — and the fakie rule
+    // --- D (SWITCHBACK, heading +x): travelling rails -----------------------
+    // TWO ROUTES, and that is the point. The gantry pads zigzag, so the
+    // careful way is a string of short hops; the rails bridge straight down
+    // the stretch, so catching one is genuinely faster — and the fakie rule
     // means a 180 between two of them reads as the trick it is.
-    ledge(-3, -157);
-    ledge(3, -165);
-    ledge(-3, -173);
-    ledge(3, -181);
-    this.movingRail(0, 4.7, -161, 11, 0, "x", 4.5, 0.5, 0);
-    this.movingRail(0, 4.7, -173, 11, 0, "x", 5, 0.55, Math.PI);
-    this.movingRail(0, 4.7, -184, 9, 0, "x", 4, 0.6, Math.PI / 2);
-    this.pickup(0, 6, -173);
-    isle(-190, 10, 8, 0, 3);
-    this.checkpoint(0, -190);
+    ledge(-38, -105);
+    ledge(-31, -111);
+    ledge(-24, -105);
+    ledge(-17, -111);
+    ledge(-11, -105);
+    this.movingRail(-34, 4.7, -108, 11, 90, "z", 4.5, 0.5, 0);
+    this.movingRail(-23, 4.7, -108, 11, 90, "z", 5, 0.55, Math.PI);
+    this.movingRail(-12, 4.7, -108, 9, 90, "z", 4, 0.6, Math.PI / 2);
+    this.pickup(-23, 6, -108);
+    isle(-108, 12, 12, 0, 3);
+    this.checkpoint(3, -108, 0);
 
-    // --- E: travelling ropes — the ferry ------------------------------------
+    // --- E (turn RIGHT, heading -z): travelling ropes — the ferry -----------
     // Same deal: pads for the patient, ropes for the bold. These anchors
-    // SLIDE, so a rope carries you sideways while you swing — the fastest way
-    // through the longest dark in the level.
-    ledge(-3, -200);
-    ledge(3, -208);
-    ledge(-3, -216);
-    ledge(3, -224);
-    this.ropeSwing(-4, 11, -204, 6.4, 0.7, 0, 0, 0, "x", 5, 0.45, 0);
-    this.ropeSwing(4, 11, -212, 6.4, 0.7, 0, Math.PI, 0, "x", 5, 0.45, Math.PI);
-    this.ropeSwing(-4, 11, -220, 6.4, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
+    // SLIDE, so a rope carries you sideways while you swing — the fastest
+    // way through the longest dark in the level.
+    ledge(-3, -120);
+    ledge(3, -127);
+    ledge(-3, -134);
+    ledge(3, -141);
+    this.ropeSwing(-4, 11, -123.5, 6.4, 0.7, 0, 0, 0, "x", 5, 0.45, 0);
+    this.ropeSwing(4, 11, -130.5, 6.4, 0.7, 0, Math.PI, 0, "x", 5, 0.45, Math.PI);
+    this.ropeSwing(-4, 11, -137.5, 6.4, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
     // fires on the anchor beams: you can see where the next rope will be
-    this.torch(-8.5, 8.6, -204, 1.2, 0.9);
-    this.torch(8.5, 8.6, -212, 1.2, 0.9);
-    this.torch(-8.5, 8.6, -220, 1.2, 0.9);
-    this.pickup(0, 4.3, -212);
-    isle(-234, 11, 9, 0, 3);
-    this.checkpoint(0, -234);
+    this.torch(-8.5, 8.6, -123.5, 1.2, 0.9);
+    this.torch(8.5, 8.6, -130.5, 1.2, 0.9);
+    this.torch(-8.5, 8.6, -137.5, 1.2, 0.9);
+    this.pickup(0, 4.3, -130.5);
+    // corner isle: turn left into the gauntlet
+    isle(-150, 12, 10, 0, 3);
+    this.checkpoint(3, -150, 0);
 
-    // --- F: everything at once ----------------------------------------------
-    this.mover(0, 3, -244, 4.5, 4.5, "x", 5.5, 0.65, 0);
-    this.phasePad(0, 3, -253, 4.6, 4.6, 3.4, 0.2, 0.55);
-    ledge(-3, -259);
-    this.movingRail(0, 4.7, -263, 9, 0, "x", 5, 0.6, Math.PI / 2);
-    ledge(3, -267);
-    this.phasePad(0, 3, -274, 4.6, 4.6, 3.4, 0.6, 0.55);
-    this.mover(0, 3, -281, 4.5, 4.5, "y", 3.0, 0.7, Math.PI);
-    ledge(-3, -288);
-    this.ropeSwing(3, 11, -288, 6.4, 0.7, 0, 0, 0, "x", 4.5, 0.5, 0);
-    this.pickup(0, 4.3, -253);
-    this.pickup(0, 4.3, -274);
+    // --- F (turn LEFT, heading -x): everything at once ----------------------
+    this.mover(-11, 3, -150, 4.5, 4.5, "z", 5, 0.65, 0);
+    this.phasePad(-19, 3, -150, 4.6, 4.6, 3.4, 0.2, 0.55);
+    ledge(-24, -153);
+    this.movingRail(-27.5, 4.7, -150, 10, 90, "z", 4.5, 0.6, Math.PI / 2);
+    ledge(-31, -147);
+    this.mover(-36, 3, -150, 4.5, 4.5, "y", 3.0, 0.7, Math.PI);
+    this.pickup(-19, 4.3, -150);
+    // corner isle: one turn left in the dark. Reaches a step toward the goal
+    // so the finale rope's inbound arc swings right over the lip — the catch
+    // is a hop, not a leap of faith.
+    isle(-151, 8, 12, -44, 3);
+    this.checkpoint(3, -150, -44);
+
+    // --- G (turn RIGHT, heading -z): one last swing into the goal -----------
+    // Hung low enough that a hop off the isle edge catches it mid-arc.
+    this.ropeSwing(-44, 11.6, -161, 7.4, 0.8, 0, 0, 90); // classic pendulum, swings down-course
+    this.torch(-48.5, 9.2, -161, 1.2, 0.9);
 
     // --- goal: the works lit up ---------------------------------------------
-    isle(-297, 13, 11, 0, 3, 3.2);
-    this.torch(-5, 3, -300, 3.2);
-    this.torch(5, 3, -300, 3.2);
-    this.crystal(0, 3.6, -297);
-    this.finishGate(3, this.finishZ);
+    // ...and reaching back under the rope's far arc, so the release lands.
+    isle(-170.75, 13, 13.5, -44, 3, 3.2);
+    this.torch(-49, 3, -175, 3.2);
+    this.torch(-39, 3, -175, 3.2);
+    this.crystal(-44, 3.6, -168);
+    this.finishGate(3, this.finishZ, -44);
+
+    // --- THE CAMERA SPINE ----------------------------------------------------
+    // The whole point of the S: the lane swings the frame (and the stick's
+    // "up") around every corner, so each stretch fills the screen on its own
+    // and the next one is just a glow around the bend. Corner radii round the
+    // swing so the turn is a sweep, not a snap.
+    const laneNodes: [number, number, number, number][] = [
+      [0, 10, 0, 0], // behind spawn
+      [0, -48, 9, 0], // corner A->B: left
+      [-46, -48, 9, 3], // corner B->C: right (and up to the high deck)
+      [-46, -108, 9, 3], // corner C->D: the switchback
+      [0, -108, 9, 3], // corner D->E: right
+      [0, -150, 9, 3], // corner E->F: left
+      [-44, -150, 9, 3], // corner F->G: right
+      [-44, -182, 0, 3], // out through the gate
+    ];
+    const rp = roundCorners(laneNodes, false);
+    this.lanePts = rp.map((q) => ({ x: q.x, y: q.y, z: q.z }));
+    this.measureLane();
   }
 
   private boulderGroundY(z: number): number {
