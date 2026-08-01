@@ -1063,6 +1063,218 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
     ],
   },
   {
+    // everything that moves on a cycle or carries fire, in one place — the
+    // language The Nightworks is written in, near the top where you can
+    // find it
+    title: "MOVING & FIRE",
+    items: [
+      {
+        label: "mover",
+        icon: (x) => {
+          x.fillStyle = "#8a96c8";
+          x.fillRect(3, 8, 12, 3);
+          x.strokeStyle = "#c8d4ff";
+          x.lineWidth = 1.2;
+          x.beginPath();
+          x.moveTo(2, 5);
+          x.lineTo(16, 5);
+          x.stroke();
+          glyph(x, "↔", "#c8d4ff");
+        },
+        make: (at) => ({
+          t: "mover",
+          p: [at.x, at.y, at.z],
+          s: [6, 0.8, 6],
+          axis: "x",
+          amp: 4,
+          speed: 0.6,
+          phase: 0,
+        }),
+      },
+      {
+        label: "fire ferry",
+        icon: (x) => {
+          x.fillStyle = "#5a4632"; // warm iron deck
+          x.fillRect(3, 10, 12, 3);
+          x.fillStyle = "#ff9a2c"; // the brazier riding it
+          x.beginPath();
+          x.moveTo(9, 2);
+          x.lineTo(11.8, 9);
+          x.lineTo(6.2, 9);
+          x.closePath();
+          x.fill();
+          glyph(x, "↔", "#ffd08a");
+        },
+        make: (at) => ({
+          t: "mover",
+          p: [at.x, at.y, at.z],
+          s: [5, 0.8, 5],
+          axis: "x",
+          amp: 5.5,
+          speed: 0.5,
+          phase: 0,
+          lit: true,
+        }),
+      },
+      {
+        label: "fire lift",
+        icon: (x) => {
+          x.fillStyle = "#5a4632";
+          x.fillRect(3, 12, 12, 3);
+          x.fillStyle = "#ff9a2c";
+          x.beginPath();
+          x.moveTo(9, 4);
+          x.lineTo(11.8, 11);
+          x.lineTo(6.2, 11);
+          x.closePath();
+          x.fill();
+          glyph(x, "↕", "#ffd08a");
+        },
+        make: (at) => ({
+          t: "mover",
+          p: [at.x, at.y, at.z],
+          s: [4.5, 0.8, 4.5],
+          axis: "y",
+          amp: 3,
+          speed: 0.7,
+          phase: 0,
+          lit: true,
+        }),
+      },
+      {
+        label: "moving rail",
+        icon: (x) => {
+          x.strokeStyle = "#c8d4e2";
+          x.lineWidth = 2;
+          x.beginPath();
+          x.moveTo(2, 6);
+          x.lineTo(16, 6);
+          x.stroke();
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(5, 6);
+          x.lineTo(5, 12);
+          x.moveTo(13, 6);
+          x.lineTo(13, 12);
+          x.stroke();
+          glyph(x, "↔", "#8ac8ff");
+        },
+        make: (at) => ({
+          t: "rail",
+          p: [at.x, at.y + 1.7, at.z],
+          len: 14,
+          yaw: 0,
+          axis: "x",
+          amp: 5,
+          speed: 0.55,
+          phase: 0,
+        }),
+      },
+      {
+        label: "torch",
+        icon: (x) => {
+          x.fillStyle = "#3a3330"; // post
+          x.fillRect(8, 8, 2, 8);
+          x.fillStyle = "#ff9a2c"; // flame
+          x.beginPath();
+          x.moveTo(9, 1);
+          x.lineTo(12.5, 8);
+          x.lineTo(5.5, 8);
+          x.closePath();
+          x.fill();
+          x.fillStyle = "#fff0b0";
+          x.beginPath();
+          x.moveTo(9, 3.5);
+          x.lineTo(10.8, 8);
+          x.lineTo(7.2, 8);
+          x.closePath();
+          x.fill();
+        },
+        make: (at) => ({
+          t: "torch",
+          p: [at.x, at.y, at.z],
+          rise: 2.2,
+          w: 1,
+        }),
+      },
+      {
+        label: "phase pad",
+        icon: (x) => {
+          x.fillStyle = "#9a7f5c"; // the solid half
+          x.fillRect(1, 8, 8, 4);
+          x.strokeStyle = "#4a6a8c"; // the ghost half
+          x.lineWidth = 1;
+          x.strokeRect(9.5, 8.5, 7, 3);
+          glyph(x, "◐", "#ffd08a");
+        },
+        make: (at) => ({
+          t: "phasepad",
+          p: [at.x, at.y, at.z],
+          s: [5, 0.6, 5],
+          cycle: 4,
+          phase: 0,
+          amp: 0.5,
+        }),
+      },
+      {
+        label: "rope swing",
+        icon: (x) => {
+          x.strokeStyle = "#a8845a";
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(8, 2);
+          x.quadraticCurveTo(9, 8, 12, 13);
+          x.stroke();
+          x.fillStyle = "#7a5c3a";
+          x.fillRect(11, 6, 2.4, 1.6);
+          x.beginPath();
+          x.arc(12.2, 13.5, 1.8, 0, 7);
+          x.fill();
+        },
+        make: (at) => ({
+          t: "ropeswing",
+          p: [at.x, at.y + 8, at.z],
+          len: 6,
+          amp: 0.85,
+          speed: 0,
+          phase: 0,
+        }),
+      },
+      {
+        label: "ferry rope",
+        icon: (x) => {
+          x.strokeStyle = "#6a7078"; // the travelling anchor track
+          x.lineWidth = 1.5;
+          x.beginPath();
+          x.moveTo(2, 3);
+          x.lineTo(16, 3);
+          x.stroke();
+          x.strokeStyle = "#a8845a";
+          x.beginPath();
+          x.moveTo(9, 3);
+          x.quadraticCurveTo(10, 8, 12, 13);
+          x.stroke();
+          x.fillStyle = "#7a5c3a";
+          x.beginPath();
+          x.arc(12.2, 13.5, 1.8, 0, 7);
+          x.fill();
+          glyph(x, "↔", "#c8d4ff");
+        },
+        make: (at) => ({
+          t: "ropeswing",
+          p: [at.x, at.y + 8, at.z],
+          len: 7,
+          amp: 0.7,
+          speed: 0,
+          phase: 0,
+          range: 5.5,
+          axis: "x",
+          cycle: 0.45,
+        }),
+      },
+    ],
+  },
+  {
     title: "CAMERA",
     items: [
       {
@@ -1308,75 +1520,6 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
-        label: "mover",
-        icon: (x) => {
-          x.fillStyle = "#8a96c8";
-          x.fillRect(3, 8, 12, 3);
-          x.strokeStyle = "#c8d4ff";
-          x.lineWidth = 1.2;
-          x.beginPath();
-          x.moveTo(2, 5);
-          x.lineTo(16, 5);
-          x.stroke();
-          glyph(x, "↔", "#c8d4ff");
-        },
-        make: (at) => ({
-          t: "mover",
-          p: [at.x, at.y, at.z],
-          s: [6, 0.8, 6],
-          axis: "x",
-          amp: 4,
-          speed: 0.6,
-          phase: 0,
-        }),
-      },
-      {
-        label: "torch",
-        icon: (x) => {
-          x.fillStyle = "#3a3330"; // post
-          x.fillRect(8, 8, 2, 8);
-          x.fillStyle = "#ff9a2c"; // flame
-          x.beginPath();
-          x.moveTo(9, 1);
-          x.lineTo(12.5, 8);
-          x.lineTo(5.5, 8);
-          x.closePath();
-          x.fill();
-          x.fillStyle = "#fff0b0";
-          x.beginPath();
-          x.moveTo(9, 3.5);
-          x.lineTo(10.8, 8);
-          x.lineTo(7.2, 8);
-          x.closePath();
-          x.fill();
-        },
-        make: (at) => ({
-          t: "torch",
-          p: [at.x, at.y, at.z],
-          rise: 2.2,
-          w: 1,
-        }),
-      },
-      {
-        label: "phase pad",
-        icon: (x) => {
-          x.fillStyle = "#9a7f5c"; // the solid half
-          x.fillRect(1, 8, 8, 4);
-          x.strokeStyle = "#4a6a8c"; // the ghost half
-          x.lineWidth = 1;
-          x.strokeRect(9.5, 8.5, 7, 3);
-          glyph(x, "◐", "#ffd08a");
-        },
-        make: (at) => ({
-          t: "phasepad",
-          p: [at.x, at.y, at.z],
-          s: [5, 0.6, 5],
-          cycle: 4,
-          phase: 0,
-          amp: 0.5,
-        }),
-      },
-      {
         label: "boulder",
         icon: (x) => {
           x.fillStyle = "#a08a70";
@@ -1413,30 +1556,6 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           len: 5,
           amp: 1.0,
           speed: 1.6,
-          phase: 0,
-        }),
-      },
-      {
-        label: "rope swing",
-        icon: (x) => {
-          x.strokeStyle = "#a8845a";
-          x.lineWidth = 1.5;
-          x.beginPath();
-          x.moveTo(8, 2);
-          x.quadraticCurveTo(9, 8, 12, 13);
-          x.stroke();
-          x.fillStyle = "#7a5c3a";
-          x.fillRect(11, 6, 2.4, 1.6);
-          x.beginPath();
-          x.arc(12.2, 13.5, 1.8, 0, 7);
-          x.fill();
-        },
-        make: (at) => ({
-          t: "ropeswing",
-          p: [at.x, at.y + 8, at.z],
-          len: 6,
-          amp: 0.85,
-          speed: 0,
           phase: 0,
         }),
       },
@@ -5900,6 +6019,36 @@ export class Editor {
           (v) => (c.yaw = v),
           15,
         );
+        // travel > 0 sends the whole line ferrying on a cycle — a moving rail
+        const axisBtn = document.createElement("button");
+        axisBtn.className = "ed-btn";
+        axisBtn.textContent = `travel: ${(c.axis ?? "x").toUpperCase()}${c.axis === "y" ? " (lift)" : ""}`;
+        axisBtn.title =
+          "which way the whole rail slides — X / Z slide, Y lifts (travel 0 = a fixed rail)";
+        axisBtn.addEventListener("click", () => {
+          c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
+          this.commit();
+          this.renderProps();
+        });
+        this.propsEl.appendChild(axisBtn);
+        num(
+          "travel",
+          () => c.amp ?? 0,
+          (v) => (c.amp = Math.max(0, v)),
+          0.5,
+        );
+        num(
+          "speed",
+          () => c.speed ?? 0.6,
+          (v) => (c.speed = Math.max(0, v)),
+          0.1,
+        );
+        num(
+          "phase",
+          () => c.phase ?? 0,
+          (v) => (c.phase = v),
+          0.2,
+        );
       }
     } else if (c.t === "gate") {
       num(
@@ -6452,6 +6601,18 @@ export class Editor {
         (v) => (c.phase = v),
         0.2,
       );
+      const litBtn = document.createElement("button");
+      litBtn.className = "ed-btn";
+      litBtn.textContent = c.lit ? "burning: ON" : "burning: off";
+      litBtn.title =
+        "warm iron deck with a brazier riding it — the platform carries its own light through a dark level";
+      litBtn.addEventListener("click", () => {
+        if (c.lit) delete c.lit;
+        else c.lit = true;
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(litBtn);
     } else if (c.t === "torch") {
       num(
         "post height",
@@ -6565,6 +6726,31 @@ export class Editor {
         (v) => (c.yaw = v),
         15,
       ); // spins the swing plane
+      // ferry range > 0 sends the whole anchor TRAVELLING on its own cycle —
+      // a swing that also carries you across a gap
+      const ferryBtn = document.createElement("button");
+      ferryBtn.className = "ed-btn";
+      ferryBtn.textContent = `ferry: ${(c.axis ?? "x").toUpperCase()}`;
+      ferryBtn.title =
+        "which way the anchor travels (ferry range 0 = a fixed swing)";
+      ferryBtn.addEventListener("click", () => {
+        c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(ferryBtn);
+      num(
+        "ferry range",
+        () => c.range ?? 0,
+        (v) => (c.range = Math.max(0, v)),
+        0.5,
+      );
+      num(
+        "ferry speed",
+        () => c.cycle ?? 0.45,
+        (v) => (c.cycle = Math.max(0, v)),
+        0.05,
+      );
     }
     const row = document.createElement("div");
     row.className = "ed-grid";

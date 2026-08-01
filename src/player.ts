@@ -583,6 +583,7 @@ export class Player {
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
   private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
+  private zoneDirNow: 'E' | 'W' | 'N' | 'S' | null = null; // the travel zone under our feet this step (side-scroll spin/balance axes read it)
   private grindExitAir = false; // this air left a RAIL: the lateral strafe stays live (rail-to-rail hops), unlike plain ollies
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
@@ -1125,6 +1126,9 @@ export class Player {
       if (this.groundHit.moverId !== undefined) this.pos.add(level.moverDelta(this.groundHit.moverId));
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
+    // which travel zone (if any) owns the course frame this step — the
+    // side-scroll spin/balance axes key off it
+    this.zoneDirNow = level.zoneAt(this.pos.x, this.pos.z)?.dir ?? null;
     level.playerPos.copy(this.pos); // the boulder chase reads this
     // Fresh X presses feed the perfect-bounce timing window.
     if (input.jumpPressed) this.jumpPressT = TUNING.arrowBoostWindow;
@@ -5007,7 +5011,18 @@ export class Player {
     );
     const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
     const runSign = Math.sign(this.balance || 1);
-    let control = this.rawInput.moveX * TUNING.balanceControl; // left/right fights the needle
+    // The needle is fought CROSS-RAIL on the screen, not with raw stick-X.
+    // On a down-course bar the cross axis IS stick-X (byte-identical to the
+    // old feel) — but on a SIDE-SCROLL bar the travel intent is stick-X, and
+    // reading it as a correction slammed the needle the moment you held
+    // "onward". Decompose the bar into the camera frame and take the stick
+    // component perpendicular to it: travel never touches the needle.
+    const gT = this.grindRail!.tangentAt(this.grindT);
+    const gTL = Math.hypot(gT.x, gT.z) || 1; // slopes keep full authority
+    const railUp = Math.abs(gT.x * this.camDir.x + gT.z * this.camDir.z) / gTL;
+    const railRt = Math.abs(gT.x * -this.camDir.z + gT.z * this.camDir.x) / gTL;
+    const stickCross = this.rawInput.moveX * railUp - this.rawInput.moveY * railRt;
+    let control = stickCross * TUNING.balanceControl;
     control *= this.safeGain(this.grindTime, control, runSign);
     this.stepBalanceCore(dt, runSign, instability, control, ramp);
     if (this.uberTimer > 0 || this.balanceBoostT > 0) {
@@ -5669,8 +5684,14 @@ export class Player {
   // broken" — while the axis that did respond doubled as a positional slide
   // down the pipe. One stick meaning everywhere: left/right = rotate.)
   private spinStick(): number {
-    const rx = this.rawInput.moveX;
-    return Math.abs(rx) > 0.3 ? rx : 0;
+    // The spin axis is CROSS-course. Down-course travel is screen-up, so
+    // left/right spins — the classic. In a SIDE-SCROLL travel zone the
+    // course runs along screen-X, and reading raw X there meant "keep going"
+    // spun you through every hop between rails; the cross axis (stick
+    // up/down) owns the spin there instead, and travel intent never rotates.
+    const zn = this.zoneDirNow;
+    const v = zn === 'E' || zn === 'W' ? -this.rawInput.moveY : this.rawInput.moveX;
+    return Math.abs(v) > 0.3 ? v : 0;
   }
 
   private updateGrab(dt: number, input: Input): void {
