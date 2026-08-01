@@ -10921,7 +10921,10 @@ export class Level {
     this.checkpoint(0, -44);
 
     // --- B (LEFT, -x, SIDE-SCROLL): the lift bank, y0 -> y12 ----------------
-    sideScroll(-42, -5, -56, -41, "W");
+    // The zone swallows BOTH corner bends: side-scroll and forward stretches
+    // share the same default camera facing, so with the lane's arcs hidden
+    // inside the zone there is no swing at all from A through B into C.
+    sideScroll(-50, 6, -57, -40, "W");
     fmover(-11, 1, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
     fmover(-19, 4, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
     fmover(-27, 7, -45, 4.5, 4.5, "y", 3.2, 0.75, Math.PI / 2);
@@ -11006,7 +11009,7 @@ export class Level {
     // --- H (SWITCHBACK, +x, SIDE-SCROLL): the lift tower, y34 -> y56 --------
     // Eight burning lifts, each a step higher — the long climb, played flat
     // against the screen like the classic towers.
-    sideScroll(-44, 3, -286, -270, "E");
+    sideScroll(-55, 16, -287, -269, "E"); // swallows the G->H and H->I bends: no swing in or out
     fmover(-41, 36, -275, 4.5, 4.5, "y", 2.75, 0.7, 0);
     fmover(-35, 38.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
     fmover(-29, 41.5, -275, 4.5, 4.5, "y", 2.75, 0.75, Math.PI / 2);
@@ -11030,7 +11033,7 @@ export class Level {
     this.checkpoint(56, -324, 9);
 
     // --- J (LEFT, -x, SIDE-SCROLL): everything on the beat, y56 -> y64 ------
-    sideScroll(-37, 1, -331, -317, "W");
+    sideScroll(-49, 16, -332, -316, "W"); // swallows the I->J and J->K bends: no swing in or out
     padB(-2, 56, -324);
     fmover(-9.5, 56, -324, 4.5, 4.5, "x", 4, 0.6, 0);
     this.movingRail(-19, 57.7, -324, 10, 90, "z", 4, 0.6, Math.PI / 2);
@@ -11041,8 +11044,11 @@ export class Level {
     this.checkpoint(64, -324, -43);
 
     // --- K (RIGHT, -z): the last lift, one last swing, y64 -> y70 -----------
-    fmover(-43, 68, -334, 4.5, 4.5, "y", 2.5, 0.7, 0);
-    this.ropeSwing(-43, 78.6, -343, 7.4, 0.8, 0, 0, 90); // pendulum, swings down-course
+    fmover(-43, 68, -334, 4.5, 4.5, "y", 2.5, 1.0, 0); // quick cycle: the two rhythms align often
+    // A rope cannot be leapt TO on foot — it has to come to YOU. Hung so the
+    // pendulum's inbound tip sweeps right across the lift's column at hop
+    // height: ride the lift near its top, hop as the rope arrives, done.
+    this.ropeSwing(-43, 75.8, -338.5, 7.4, 0.8, 0, 0, 90); // swings down-course
 
     // --- goal: the summit of the works, lit up ------------------------------
     isle(-353, 14, 12, -43, 70, 3.2);
