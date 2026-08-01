@@ -582,6 +582,7 @@ export class Player {
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
+  private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
   private grindExitAir = false; // this air left a RAIL: the lateral strafe stays live (rail-to-rail hops), unlike plain ollies
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
@@ -993,6 +994,7 @@ export class Player {
     this.floatAir = false;
     this.revertT = 0;
     this.pipeEndFly = false;
+    this.rollOffT = 0;
     this.invulnTimer = 0;
     this.invulnSilent = false;
     this.slideTimer = 0;
@@ -1372,6 +1374,9 @@ export class Player {
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
     this.crouchGraceT = Math.max(0, this.crouchGraceT - dt);
     this.vertGravT = Math.max(0, this.vertGravT - dt);
+    // the pipe ride-out level-out clock only runs while that air lasts; the
+    // landing block reads it AT touchdown (still 'air' this step) to judge
+    if (this.state === 'air') this.rollOffT = Math.max(0, this.rollOffT - dt);
     // touching down mid-somersault cuts it — Crash lands upright, no carry-over tumble
     this.flipTimer = this.grounded ? 0 : Math.max(0, this.flipTimer - dt);
     if (this.grounded || this.state === 'grind') {
@@ -3322,9 +3327,12 @@ export class Player {
           this.airMomentum = true;
           // ...unless the "hang" tripped this check the instant it began: that
           // was never hang time — you RODE out the open end partway up the
-          // wall, and the exit is a plain roll-off air you can land like any
-          // other, not a judged sideways fly-off with a wipeout on the flat.
+          // wall. That exit is a roll-off air with homework: the body levels
+          // from the wall tilt to wheels-down over rollOffLevelTime, and
+          // touching down before it's level (off a saving surface) is still
+          // the bail you were carrying — just with a window to earn the ride.
           this.pipeEndFly = this.airborneT >= 0.2;
+          if (!this.pipeEndFly) this.rollOffT = CONST.rollOffLevelTime;
           if (Math.abs(lat) > 0.5) {
             // Heading comes from the WALL TANGENT the drift was measured in
             // (the same (-n.z, n.x) frame enterVertAir seeded lat with).
@@ -3356,6 +3364,12 @@ export class Player {
       !this.slamActive &&
       !this.isBailing && // a ragdolling body can't slam (Circle may still be held from the crash)
       !vertTrick &&
+      // a street grab already committed owns its air — rolling the stick to
+      // down mid-Melon must not detonate into a slam (updateGrab runs first
+      // each step, so a fresh Circle+down chord still slams: the hard-down
+      // guard there refuses the grab before this check ever sees it)
+      this.grabPhase !== 'enter' &&
+      this.grabPhase !== 'held' &&
       input.grabHeld &&
       (!this.airFromSkate || this.rawInput.moveY < -0.5);
     if (slamNow) {
@@ -3694,16 +3708,23 @@ export class Player {
       // Coming down on another transition face rides out (the projection
       // above already turned the fall into speed); coming down on the FLAT
       // with the board still crossways is the wipeout you had coming.
-      if (this.pipeEndFly) {
+      if (this.pipeEndFly || this.rollOffT > 0) {
+        // A RIDE-OUT that got the wheels down in time lands like any air;
+        // still tilted at touchdown (or the full judged fly-off, which holds
+        // its tilt on purpose) = the crash you were carrying.
+        const stillTilted = this.pipeEndFly || this.alignPose > 0.5;
         this.pipeEndFly = false;
+        this.rollOffT = 0;
         const saved =
           hit.halfpipe !== undefined || hit.vert === true || hit.normal.y < TUNING.steepStand;
-        if (!saved) {
-          if (this.uberTimer > 0 || this.spendMask()) {
-            if (this.uberTimer <= 0) this.speed *= 0.6;
+        if (stillTilted && !saved) {
+          if (this.uberTimer > 0) {
+            // uber shrugs the whole thing off — ride on
           } else {
             this.landingScoring = false;
-            this.bail();
+            // A mask softens the SAME crash now — the ragdoll still plays and
+            // the combo survives it — instead of the old alpha-flash absorb.
+            this.bail(this.masks > 0);
             this.startRagdoll('side', Math.sign(this.speed) || 1);
             this.vVel = 3.4 + Math.min(2.2, Math.abs(this.speed) * 0.12);
             this.state = 'air';
@@ -3760,17 +3781,19 @@ export class Player {
       const funny = spun && offLine > sketchNet;
       const sketchy = (spun && !funny && offLine > tol) || (flipLate && !funny);
       if (this.grabPhase !== 'none' || funny) {
-        if (this.uberTimer > 0 || this.spendMask()) {
+        if (this.uberTimer > 0) {
           this.grabPhase = 'none';
           this.grabT = 0;
           this.grabGraceTimer = 0;
           this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle); // no unwind
           this.grabSpinAngle = 0;
           this.airGrabShown = null;
-          if (this.uberTimer <= 0) this.speed *= 0.6;
         } else {
           this.landingScoring = false;
-          this.bail();
+          // A mask no longer buys the alpha-flash ride-on: the SAME crash
+          // plays (ragdoll and all) — the mask makes it cheap instead: a
+          // shorter knockdown, the deck stays with you, the combo survives.
+          this.bail(this.masks > 0);
           // A botched landing SLAPS the transition and the body kicks back up
           // off it — that rebound is what puts the ragdoll on show (grounded,
           // the sprawl would eat the whole crash in one frame).
@@ -4074,6 +4097,7 @@ export class Player {
     this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, inset);
     this.vertInDrift = this.pipeHang ? 0 : 1.8;
     this.pipeEndFly = false; // catching ANOTHER vert saves a pipe-end fly-off
+    this.rollOffT = 0; // ...and re-owns a levelling ride-out's pose
     this.vertAir = true;
   }
 
@@ -4146,6 +4170,7 @@ export class Player {
       this.floatAir = false; // the launch tag belongs to the air the rope just ended
       this.flipT = 0; // both hands on the rope — the deck stops performing
       this.pipeEndFly = false; // grabbing the rope saves a pipe-end fly-off
+      this.rollOffT = 0;
       this.ropeObj = rs;
       this.ropeD = d;
       this.ropeJumpArm = false; // the held X that jumped you here must come up first
@@ -4739,17 +4764,26 @@ export class Player {
 
   // Botched a grab landing: no death — you eat the floor, the pending combo
   // is gone, and you lie flat for a beat before getting up right where you
-  // fell. (A mask upstream absorbs the bail entirely, same as before.)
-  private bail(): void {
+  // fell. MASKED (a mask spent on a skating crash): the same wipeout at half
+  // severity — the ragdoll still plays (no more alpha-flash absorb), but the
+  // knockdown is short, the deck stays with you, and the combo survives the
+  // tumble. That's what the mask buys now: continuity, not invisibility.
+  private bail(masked = false): void {
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
     const hadBoard = this.freeSkate || this.airFromSkate;
+    if (masked) {
+      this.masks--;
+      sfx.play('maskLoss', 0.9);
+      this.emitSparks(8, 0xffd27a, 2);
+    }
     // The knockdown scales with the crash: a walking-pace flop is the old
     // beat, a full-charge wreck stays down nearly a second longer (mash still
     // shortens it). The invuln grace is pinned to OUTLAST whatever we rolled —
     // its old fixed value only covered the fixed clock, and the last beat of
     // a longer, still-moving knockdown must not slide unprotected into a nitro.
-    this.bailDownT = CONST.bailDownTime + Math.min(0.9, Math.abs(this.speed) * 0.035);
+    this.bailDownT =
+      (CONST.bailDownTime + Math.min(0.9, Math.abs(this.speed) * 0.035)) * (masked ? 0.55 : 1);
     this.invulnTimer = Math.max(CONST.maskInvuln, this.bailDownT + 0.1);
     this.bailMash = 0;
     // Keep (a fraction of) the momentum instead of zeroing it: a 23 u/s crash
@@ -4757,7 +4791,14 @@ export class Player {
     // so the fall completes naturally rather than freeze-framing in the air.
     this.speed *= TUNING.bailSpeedKeep;
     this.invulnSilent = true; // the ragdoll IS the indicator — no alpha flash
-    this.loseCombo();
+    if (masked) {
+      // the combo lives through the knockdown, with a beat past the get-up
+      // to continue the line
+      this.comboTimer = Math.max(this.comboTimer, this.bailDownT + 1.0);
+    } else {
+      this.loseCombo();
+    }
+    this.airGrabShown = null; // whatever this air's grab was, it's settled
     this.grabPhase = 'none';
     this.grabT = 0;
     this.grabGraceTimer = 0;
@@ -4766,13 +4807,15 @@ export class Player {
     this.sketchyT = 0; // a full bail owns the body — no leftover shimmy
     this.flipT = 0; // the deck stops performing when you're eating dirt
     this.pipeEndFly = false; // this bail settles any pending fly-off judgment
+    this.rollOffT = 0; // ...and any pending ride-out level-out
     sfx.play('takeDamage', 0.8);
     this.emitSparks(8, 0xffb545, 2);
     // Default tumble: chaotic, no preferred direction. Callers that know WHAT
     // went wrong re-seed right after with the flavor that sells it (a trip is
     // head-over-heels forward, a wall hit is backward, a rail bail rolls).
     this.startRagdoll('air');
-    if (hadBoard) {
+    // A MASKED crash keeps the deck with you — the quick get-up rides on.
+    if (hadBoard && !masked) {
       this.throwBoard();
       // The deck is over THERE. You get up on your feet and walk (or hold X
       // to call it back under you) — no silent auto-remount after a wreck.
@@ -5182,7 +5225,30 @@ export class Player {
     this.grabPhase = 'none';
     this.grabT = 0;
     this.grabGraceTimer = 0;
+    // A rotation carried INTO the rail is a landed trick, and the rail is
+    // ridden the way you arrive: nearest the 180 line = the stance flips
+    // (a fakie/switch grind) instead of snapping the body back to regular.
+    // Hopping rail-to-rail with a 180 has to LOOK — and score — like a 180;
+    // zeroing the spin silently erased the whole move.
+    if (Math.abs(this.grabSpinAngle) > 0.02) {
+      const TAU = Math.PI * 2;
+      const a2 = ((this.grabSpinAngle % TAU) + TAU) % TAU;
+      const isSwitch = Math.abs(a2 - Math.PI) < Math.min(a2, TAU - a2);
+      if (isSwitch) this.stance = -this.stance as 1 | -1; // caught the rail riding fakie
+      const halves = Math.round(Math.abs(this.grabSpinAngle) / Math.PI);
+      if (halves >= 1)
+        this.score(halves * CONST.ptsSpin, `${isSwitch ? 'Switch ' : ''}${halves * 180}°`);
+      // absorb the rotation into the facing yaw — zeroing the spin must not
+      // unwind the body (same fold as the ground landing, incl. the stance
+      // flip's ±90° side term)
+      this.visualYaw = wrapAngle(
+        this.visualYaw +
+          this.grabSpinAngle +
+          (isSwitch ? -this.stance * Math.PI * this.sidePose : 0),
+      );
+    }
     this.grabSpinAngle = 0;
+    this.grabSpinTotal = 0;
     this.grindTime = 0;
     // Grind trick from the stick at entry (THPS3+ vocabulary):
     // up = Nosegrind, down = 5-0, up-diagonal = Crooked, down-left = Smith,
@@ -5204,6 +5270,7 @@ export class Player {
     this.floatAir = false; // the ramp-launch tag dies here — a rail exit re-declares its own air
     this.flipT = 0; // a deck that caught a rail mid-flip is ON the rail — no corkscrew, no late score
     this.pipeEndFly = false; // a rail catch SAVES a pipe-end fly-off
+    this.rollOffT = 0;
     this.grindExitAir = false; // (re-set by the next exit — the hop window is per-air)
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
@@ -5621,17 +5688,25 @@ export class Player {
       // the release-snap below plus the landing tolerance, and coming down
       // mid-rotation is now judged clean / sketchy / bail on VERT airs the
       // same as street ones. Big spins are earned again.)
-      // Grabs are a VERT trick now: a pipe hang or a tracked wall air, where
-      // there is height and time to hold a pose and come back down on the
-      // transition. A street ollie, a kicker, a rail exit — the airs you spend
-      // most of a run in — are far too short for one to read as anything but a
-      // flicker, and Circle down there is the body slam instead.
+      // STREET GRABS ARE BACK: any board air takes Circle + a direction
+      // (up = Nosegrab, left = Melon, right = Indy), or a FRESH mid-air
+      // Circle press with no direction for the plain Grab. Two guards keep
+      // the chords honest: Circle carried over from the ground brake still
+      // needs a direction before it reads as a grab, and Circle + hard DOWN
+      // on the board stays the pancake slam — though a grab already
+      // committed holds through a down-roll instead of handing its air to
+      // the slam.
+      const streetGrabAir =
+        this.airGrav === 'board' &&
+        !this.wallriding &&
+        !this.isBailing &&
+        (grabActive || this.rawInput.moveY >= -0.5);
       if (
         input.grabHeld &&
         !this.slamActive &&
         this.airFromSkate &&
-        (this.vertAir || this.pipeHang) &&
-        (grabActive || grabDir)
+        (this.vertAir || this.pipeHang || streetGrabAir) &&
+        (grabActive || grabDir || input.grabPressed)
       ) {
         // Reach into the pose over grabTransition, then hold it.
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
@@ -6882,6 +6957,7 @@ export class Player {
     this.wallChargeT = 0; // pump loads fresh on each wall
     this.flipT = 0; // the wheels just pressed onto the wall — no mid-flip corkscrew
     this.pipeEndFly = false; // a wall catch SAVES a pipe-end fly-off
+    this.rollOffT = 0;
     this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
     this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall (ollie OUT with jump — the wallie)
     this.airFromSkate = true;
@@ -7131,6 +7207,8 @@ export class Player {
     this.chargeTimer = 0;
     this.airFromSkate = false;
     this.airGrav = 'foot'; // hanging by the hands: every exit off this ledge is on foot
+    this.pipeEndFly = false; // catching a ledge settles a pending fly-off — no stale bail later
+    this.rollOffT = 0;
     this.spinTimer = 0;
     this.spinAngle = 0;
     this.flipTimer = 0;
@@ -7919,11 +7997,14 @@ export class Player {
     if (this.vertAir) {
       alignT = 1; // hang time: fully on the wall plane
       targetN = this.vertNormal;
-    } else if (this.pipeEndFly && this.state === 'air') {
+    } else if ((this.pipeEndFly || this.rollOffT > 0) && this.state === 'air') {
       // Flew off the pipe's END mid-hang: STAY at the funny wall angle all the
       // way down. Landing tilted is exactly what the touchdown judges, so
       // levelling out wheels-down mid-flight lied about what was coming.
-      alignT = 1;
+      // A RIDE-OUT (rollOffT) levels gradually instead — the tilt eases to
+      // wheels-down across the window, and the touchdown judges whatever
+      // tilt is left.
+      alignT = this.pipeEndFly ? 1 : Math.min(1, this.rollOffT / CONST.rollOffLevelTime);
       targetN = this.vertNormal;
     } else if (this.grounded && this.state === 'ride' && this.groundHit) {
       // steepness-weighted: upright at/above steepStand, fully lying by ~vert.

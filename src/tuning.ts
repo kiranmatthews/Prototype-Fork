@@ -723,6 +723,7 @@ export const CONST = {
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 40, // pipe hang: cap on the off-axis lateral carry. Effectively uncapped now (THPS conserves coping drift — a hard angled carve genuinely flies you down the pipe); out-running the pipe is the hang-end bail's job, not a clamp's
   hangLatDamp: 0, // vert hang: how fast the lateral carry bleeds off. 0 = THPS: air has no friction — the drift you launched with is the drift you land with
+  rollOffLevelTime: 1.5, // riding out a pipe's open END partway up the wall: the body levels from the wall tilt to wheels-down over this many airborne seconds — touch down still tilted (off a saving surface) and it's the bail you were carrying
   manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
   ropeGrabRadius: 1.1, // jump within this of a swing rope's line to catch it
   ropeClimbSpeed: 2.4, // up/down on the stick walks the grip along the rope (u/s)
