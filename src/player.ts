@@ -6228,6 +6228,11 @@ export class Player {
         )
           break;
       }
+      // No wall box caught you — try the MESH edge. The jungle's pit lips,
+      // displaced strips and polygon platforms have no wall colliders at
+      // their gap faces, so falling past them was ungrabbable by the loop
+      // above no matter how clean the reach was.
+      if (this.state === 'air') this.tryLedgeGrabMesh(level);
     }
 
     // Rails are solid on foot: a side-on walk is curbed, a fast skate trips.
@@ -6965,6 +6970,119 @@ export class Player {
     for (const other of level.walls) {
       if (other !== w && other.containsPoint(this.ledgeAnchor)) return false;
     }
+    return this.commitLedgeCatch();
+  }
+
+  // MESH-EDGE LEDGE GRAB — the systemic net. tryLedgeGrab only ever sees AABB
+  // wall colliders, but most of the world's edges are MESH: the jungle strips
+  // over the pit hops, displaced ground, polygon platforms, slab lips. This
+  // variant needs no collider at all: falling past ANY walkable edge, it
+  // probes the ground just ahead of the fall line — standable ground up at
+  // hand height with open air at your own column IS a ledge, whatever
+  // geometry made it.
+  private tryLedgeGrabMesh(level: Level): boolean {
+    if (
+      this.state !== 'air' ||
+      this.wallriding ||
+      this.vertAir ||
+      this.pipeHang ||
+      this.slamActive ||
+      this.grabbing ||
+      this.sliding ||
+      this.crawling ||
+      this.isBailing ||
+      this.ledgeCoolT > 0 ||
+      this.comboRun ||
+      this.rawInput.grindHeld // grind/wallride intent owns the wall
+    )
+      return false;
+    if (this.vVel > 1.5) return false; // still rising: let the jump play out
+    // fall line's horizontal direction: measured travel, else the stick's
+    // world direction, else facing (same ladder as the AABB variant)
+    const pl = Math.hypot(this.lastVelX, this.lastVelZ);
+    let hx: number;
+    let hz: number;
+    if (pl > 1.5) {
+      hx = this.lastVelX / pl;
+      hz = this.lastVelZ / pl;
+    } else {
+      const rS = this.freeSkate ? -1 : 1;
+      const sx = rS * this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
+      const sz = rS * this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
+      const sl = Math.hypot(sx, sz);
+      hx = sl > 0.3 ? sx / sl : this.axisF.x;
+      hz = sl > 0.3 ? sz / sl : this.axisF.z;
+    }
+    // standable ground at horizontal offset t along the fall line, between
+    // grip height and full reach? (verts and pipes are never "ledges")
+    const top = this.pos.y + TUNING.ledgeReach + 0.9;
+    const probe = (t: number): number | null => {
+      const ray = new THREE.Raycaster(
+        new THREE.Vector3(this.pos.x + hx * t, top, this.pos.z + hz * t),
+        LEDGE_DOWN,
+        0,
+        top - (this.pos.y + 0.55),
+      );
+      const hits = ray.intersectObjects(level.groundMeshes, false);
+      for (const h of hits) {
+        const ud = h.object.userData as { halfpipe?: unknown; vert?: boolean };
+        if (ud.halfpipe || ud.vert === true) return null; // vert faces stay rideable
+        if (!h.face) continue;
+        const ny = h.face.normal.clone().transformDirection(h.object.matrixWorld).y;
+        if (Math.abs(ny) < 0.72) return null; // a wall face, not a walkable lip
+        return h.point.y;
+      }
+      return null;
+    };
+    const aheadLip = probe(0.62);
+    if (aheadLip === null) return false;
+    const rise = aheadLip - this.pos.y;
+    if (rise < 0.7 || rise > TUNING.ledgeReach) return false;
+    // an edge needs OPEN AIR on our side: ground at our own column near that
+    // same height means we're simply landing on top, not falling past a lip
+    const own = probe(0.06);
+    if (own !== null && own > aheadLip - 0.45) return false;
+    // walk the probe inward to locate the edge (first sample that sees the top)
+    let edgeT = 0.62;
+    for (let t = 0.14; t < 0.63; t += 0.12) {
+      const y = probe(t);
+      if (y !== null && Math.abs(y - aheadLip) <= 0.4) {
+        edgeT = t;
+        break;
+      }
+    }
+    const fx = this.pos.x + hx * Math.max(0.1, edgeT - 0.06);
+    const fz = this.pos.z + hz * Math.max(0.1, edgeT - 0.06);
+    this.ledgeNormal.set(-hx, 0, -hz);
+    this.ledgeLip = aheadLip;
+    // synthetic footprint: a shelf reaching inward from the face — the climb
+    // lands inside it (the probe just proved that ground real) and the shimmy
+    // stays within its short tangent span
+    const box = new THREE.Box3();
+    const tx = -hz;
+    const tz = hx;
+    for (const [a, b] of [
+      [-1.2, 0],
+      [1.2, 0],
+      [-1.2, 2.4],
+      [1.2, 2.4],
+    ] as const) {
+      box.expandByPoint(new THREE.Vector3(fx + tx * a + hx * b, aheadLip, fz + tz * a + hz * b));
+    }
+    box.min.y = aheadLip - 3;
+    this.ledgeBox = box;
+    const skin = CONST.playerHalf.x + 0.06;
+    this.ledgeAnchor.set(fx - hx * skin, aheadLip - LEDGE_HANG_DEPTH, fz - hz * skin);
+    // seam guard: never ease the body into a real solid
+    for (const other of level.walls) {
+      if (other.containsPoint(this.ledgeAnchor)) return false;
+    }
+    return this.commitLedgeCatch();
+  }
+
+  // The catch itself, shared by the AABB and mesh variants: the detection has
+  // set the anchor/normal/lip/box — this settles the body into the hang.
+  private commitLedgeCatch(): boolean {
     this.ledgeFrom.copy(this.pos);
     this.ledgeEaseT = 0;
     this.ledgePhase = 'grip';

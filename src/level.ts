@@ -7458,6 +7458,14 @@ export class Level {
     m.position.set(x, y + h / 2, z);
     m.rotation.y = yaw;
     this.root.add(m);
+    // SOLID. Masonry you can see at knee height is masonry you can stand on —
+    // these used to be scenery-only, so a hop onto a toppled course floated
+    // straight through to the floor. Walkable top for the ground ray, a wall
+    // box for pushes and ledge grabs. (The yawed AABB runs a little proud at
+    // the corners; at these sizes and small yaws that reads as forgiveness.)
+    m.updateWorldMatrix(true, false);
+    this.groundMeshes.push(m);
+    this.walls.push(new THREE.Box3().setFromObject(m));
     // a moss cap on top: the reference's ruins are all green-shouldered
     const cap = new THREE.Mesh(
       new THREE.BoxGeometry(w * 0.98, 0.12, d * 0.98),
