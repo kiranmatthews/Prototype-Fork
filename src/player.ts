@@ -986,6 +986,9 @@ export class Player {
     this.comboUses.clear();
     this.airGrabShown = null;
     this.sketchyT = 0;
+    this.flipT = 0;
+    this.floatAir = false;
+    this.revertT = 0;
     this.invulnTimer = 0;
     this.invulnSilent = false;
     this.slideTimer = 0;
@@ -3901,7 +3904,19 @@ export class Player {
       this.vertLossT += dt;
       if (this.vertLossT > 0.3) {
         // off the end of the wall — nothing left to land on, so stop being
-        // vert and let gravity + the normal air pose take it from here
+        // vert and let gravity + the normal air pose take it from here.
+        // The conserved drift is the ONLY horizontal momentum a ballistic
+        // vert air has (speed was zeroed at launch) — convert it into speed
+        // along the coping tangent instead of deleting it mid-air.
+        const lat = this.vertLatVel;
+        if (Math.abs(lat) > 0.5) {
+          const tx = -this.vertNormal.z * Math.sign(lat);
+          const tz = this.vertNormal.x * Math.sign(lat);
+          this.axisF.set(tx, 0, tz);
+          this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+          this.speed = Math.abs(lat);
+          this.airMomentum = true; // the carry flies on through the hand-off
+        }
         this.vertAir = false;
         this.vertLatVel = 0;
         this.vertGravT = TUNING.vertGravityBlend; // ease back to street gravity
@@ -4044,6 +4059,8 @@ export class Player {
       const dz = ROPE_P.z - this.pos.z;
       if (dx * dx + dy * dy + dz * dz > CONST.ropeGrabRadius * CONST.ropeGrabRadius) continue;
       this.state = 'rope';
+      this.floatAir = false; // the launch tag belongs to the air the rope just ended
+      this.flipT = 0; // both hands on the rope — the deck stops performing
       this.ropeObj = rs;
       this.ropeD = d;
       this.ropeJumpArm = false; // the held X that jumped you here must come up first
@@ -4469,6 +4486,10 @@ export class Player {
       this.vertAnchor.z = 2 * lipCross - anchorCross;
     }
     this.vertNormal.negate(); // the far pipe's wall faces the other way
+    // ...and the coping tangent is derived FROM the normal (tx=-n.z, tz=n.x),
+    // so the mirror flips it — negate the drift scalar too or the same
+    // along-the-ridge momentum reverses world direction on the far side.
+    this.vertLatVel = -this.vertLatVel;
     this.hangPipe = target;
     this.transferCoolT = 0.3;
     this.score(CONST.ptsSpine, 'Spine Transfer');
@@ -4789,6 +4810,7 @@ export class Player {
     // keeps it honest), a jolt through the needle, and the pose follows.
     if (input.grindPressed && this.grindTime > 0.2 && this.lipStallT <= 0) {
       const prev = this.grindStyle;
+      const prevYaw = this.grindYawDir;
       this.pickGrindStyle(false);
       if (this.grindStyle !== prev) {
         this.score(
@@ -4801,6 +4823,7 @@ export class Player {
         sfx.play('railLand', 0.45, 1.25);
       } else {
         this.grindStyle = prev;
+        this.grindYawDir = prevYaw; // a same-style re-press must not silently flip the crosswise pose
       }
     }
     // Grinds ride at the speed you brought and bleed a little on the rail
@@ -5093,6 +5116,7 @@ export class Player {
     this.underK = 0;
     this.underProbeT = 0;
     this.floatAir = false; // the ramp-launch tag dies here — a rail exit re-declares its own air
+    this.flipT = 0; // a deck that caught a rail mid-flip is ON the rail — no corkscrew, no late score
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     this.score(
@@ -6713,6 +6737,7 @@ export class Player {
     this.wallrideT = TUNING.wallrideMaxTime;
     this.wallTickT = 0;
     this.wallChargeT = 0; // pump loads fresh on each wall
+    this.flipT = 0; // the wheels just pressed onto the wall — no mid-flip corkscrew
     this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
     this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall (ollie OUT with jump — the wallie)
     this.airFromSkate = true;
