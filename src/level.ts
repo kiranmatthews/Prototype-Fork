@@ -10914,7 +10914,10 @@ export class Level {
     fmover(0, 0, -19, 5, 5, "x", 6, 0.55, Math.PI);
     fmover(0, 0, -28, 4.5, 4.5, "x", 6, 0.6, Math.PI / 2);
     this.pickup(0, 1.3, -19);
-    isle(-42, 10, 20, 0, 0, 2.6); // the first corner: room to land and turn left
+    isle(-36, 10, 10, 0, 0, 2.6); // the landing off the ferries...
+    // ...and the corner slab runs WEST — a real runway toward the lift bank,
+    // so the frame has finished its business before the first lift asks
+    isle(-46, 16, 10, 0, 0, 2.6);
     this.checkpoint(0, -44);
 
     // --- B (LEFT, -x, SIDE-SCROLL): the lift bank, y0 -> y12 ----------------
@@ -10941,6 +10944,12 @@ export class Level {
     padA(-43.8, 12, -103, 4.4);
     isle(-112, 16, 14, -47, 12);
     this.checkpoint(12, -112, -47);
+    // The switchback is the BIGGEST swing in the level, so its runway is the
+    // longest: a mount platform reaching east under the first rail's near
+    // end — walk it while the camera comes round, then ollie onto the bar
+    // anywhere along it.
+    this.slab("platform", -105, -119, 12, 8, stoneMat, false, -35, "stone");
+    this.torch(-31.8, 12, -105.8, 1.5, 0.8);
 
     // --- D (SWITCHBACK, +x): THE GRAND RAILS, y12 ---------------------------
     // Two 22u travelling rails over pure void, in strict antiphase: twice a
@@ -10966,7 +10975,7 @@ export class Level {
     fmover(10, 17.5, -185, 4.5, 4.5, "y", 3, 0.7, Math.PI);
     fmover(10, 21, -190, 4.5, 4.5, "y", 3, 0.75, Math.PI / 2);
     fmover(10, 24.5, -195, 4.5, 4.5, "y", 3, 0.65, 0);
-    isle(-202, 16, 10, 10, 26); // long west runway into the ropes
+    isle(-202, 20, 10, 8, 26); // a REAL west runway: the first rope's arc crosses its lip
     this.checkpoint(26, -202, 10);
 
     // --- F (LEFT, -x): rope ferries over pure void, y26 ---------------------
@@ -11028,7 +11037,7 @@ export class Level {
     this.pickup(-19, 59.4, -324);
     fmover(-29, 58, -324, 4.5, 4.5, "y", 2, 0.7, Math.PI);
     fmover(-35, 62, -324, 4.5, 4.5, "y", 2.5, 0.7, 0);
-    isle(-324, 10, 12, -43, 64);
+    isle(-324, 10, 14, -43, 64); // runs south toward the last lift: the swing out of the side-scroll happens on stone
     this.checkpoint(64, -324, -43);
 
     // --- K (RIGHT, -z): the last lift, one last swing, y64 -> y70 -----------
