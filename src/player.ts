@@ -1844,7 +1844,12 @@ export class Player {
     }
     if (inTrick) {
       this.comboPoints += pay;
-      this.comboMult += 1;
+      // THE MULTIPLIER COUNTS TRICKS, not scoring events. World rewards —
+      // fruit (label-less!), crates, bounces, enemies, pickups — bank their
+      // points INTO the combo but mint no X: the jungle log is strewn with
+      // wumpa, and grinding it was silently pumping one Lipslide to X10+,
+      // one invisible +1 per fruit swallowed.
+      if (isTrick) this.comboMult += 1;
       // never SHORTEN the remaining window — a spin bonus scored right after
       // touchdown must not eat the post-landing manual grace
       this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
@@ -1897,12 +1902,15 @@ export class Player {
   }
 
   private bankCombo(): void {
-    if (this.comboMult > 0) {
-      const amount = this.comboPoints * this.comboMult;
+    if (this.comboPoints > 0) {
+      // World rewards collected mid-air with no trick still land their points
+      // — multiplied by the TRICK count when there is one, at face value when
+      // there is not (mult floors at x1 here, it no longer counts pickups).
+      const amount = this.comboPoints * Math.max(1, this.comboMult);
       this.points += amount;
       // Cash-in ticker only when the plate was actually up (a real trick chained);
       // platforming-only points just land on the score.
-      if (this.comboHasTrick) this.onComboBank(amount);
+      if (this.comboHasTrick && this.comboMult > 0) this.onComboBank(amount);
     }
     this.comboPoints = 0;
     this.comboMult = 0;
