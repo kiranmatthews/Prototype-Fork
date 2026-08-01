@@ -4273,7 +4273,7 @@ export class Level {
         // flicker the pool too, or the fires dance over a dead-still pool of
         // light and the whole effect reads as a decal
         const flick = 0.85 + 0.15 * Math.sin(this.time * 13 + t.seed * 2.3);
-        light.intensity = 5.2 * t.burn * flick;
+        light.intensity = 7.2 * t.burn * flick;
       }
     }
 
@@ -6338,7 +6338,7 @@ export class Level {
     if (this.torches.length === 0) return;
     const n = Math.min(6, this.torches.length);
     for (let i = 0; i < n; i++) {
-      const l = new THREE.PointLight(0xffa542, 0, 17, 1.7);
+      const l = new THREE.PointLight(0xffa542, 0, 21, 1.6);
       this.root.add(l);
       this.torchLights.push(l);
     }
@@ -10789,30 +10789,27 @@ export class Level {
   // reading a rhythm, taught the classic way: one idea per section, on its
   // own, then two at once, then everything.
   //
-  // The course is a CLIMBING ZIGZAG — ten hard turns, y0 at the dock to y17
-  // at the gate — and a camera lane swings the frame (and the controls) round
-  // every bend, so "onward" is always screen-up and you never see more than
-  // one stretch of the works ahead. Every ferry and lift carries a burning
-  // brazier (a mover in the dark IS a moving light), and the phase pads run
-  // ONE metronome in two teams — AMBER lit while BLUE is dark, then they
-  // trade — so the rhythm reads like a drumbeat, not a dice roll.
+  // The course is a CLIMBING ZIGZAG — ten hard turns, y0 at the dock to y70
+  // at the summit gate. The -z stretches ride a camera lane (the frame and
+  // the controls swing round the bend, radius 14 so the swing leads you in);
+  // the CROSS-stretches are travel ZONES — classic side-scroll platforming
+  // where the camera never yaws at all — and every corner isle runs long in
+  // the outgoing direction so the frame has settled before the first
+  // obstacle asks for a jump. Every ferry and lift carries a burning brazier
+  // (a mover in the dark IS a moving light), and the phase pads run ONE
+  // metronome in two teams — AMBER lit while BLUE is dark, then they trade.
   //
-  //   A  fire-ferries out                                     (-z)
-  //   B  lift bank, climbing                    turn LEFT     (-x)  y0->5
-  //   C  the pad metronome                      turn RIGHT    (-z)
-  //   D  GRAND RAILS: two long travelling       SWITCHBACK    (+x)
-  //      rails over pure void — hop them
-  //      where their ends cross
-  //   E  the ferry line: ride, time the hop     turn RIGHT    (-z)  y5->9
-  //      to a crossing rail, ride again,
-  //      then a lift up to the high deck
-  //   F  rope ferries over pure void            turn LEFT     (-x)
-  //   G  metronome II with a ferry mid-line     turn RIGHT    (-z)
-  //   H  the lift tower, climbing hard          SWITCHBACK    (+x)  y9->15
-  //   I  one LONG travelling rail whose         turn RIGHT    (-z)
-  //      landing is itself a moving isle
-  //   J  everything on the beat                 turn LEFT     (-x)  y15->17
-  //   K  one last swing into the goal           turn RIGHT    (-z)
+  //   A  fire-ferries out                                       (-z)
+  //   B  the lift bank                SIDE-SCROLL LEFT   (-x)  y0->12
+  //   C  the pad metronome                  turn RIGHT   (-z)
+  //   D  GRAND RAILS over pure void          SWITCHBACK  (+x)
+  //   E  the ferry line + the lift stair     turn RIGHT  (-z)  y12->26
+  //   F  rope ferries over pure void         turn LEFT   (-x)
+  //   G  metronome II, a ferry, up again     turn RIGHT  (-z)  y26->34
+  //   H  the lift tower               SIDE-SCROLL RIGHT  (+x)  y34->56
+  //   I  the long rail, moving landing       turn RIGHT  (-z)
+  //   J  everything on the beat       SIDE-SCROLL LEFT   (-x)  y56->64
+  //   K  last lift, last swing, summit       turn RIGHT  (-z)  y64->70
   //
   // No safety floor under the rails or the ropes: they ARE the route, with a
   // checkpoint right before each crossing so the void costs seconds, not
@@ -10820,9 +10817,9 @@ export class Level {
   private buildNightworks(): void {
     this.skyPreset = "night";
     this.keepPlayFog = true; // the dark eats the course: no seeing three sections over
-    this.killY = -26; // a long, quiet drop off any edge — even from the high decks
-    this.finishZ = -313;
-    this.endWallZ = -335;
+    this.killY = -26; // a long, quiet drop off any edge — even from the summit
+    this.finishZ = -353;
+    this.endWallZ = -376;
     this.wallTint = 0x2a2f3c;
     this.blockTint = 0x333a48;
     this.theme = {
@@ -10835,16 +10832,19 @@ export class Level {
       fog: 0x05070f, // near-black: an island is a glow before it is a shape
       fogNear: 12,
       fogFar: 58, // the parallel stretch across the void is a rumour, not a view
-      hemiSky: 0x1a2440,
-      hemiGround: 0x0a0d16,
-      hemiI: 0.34, // just enough bounce to keep an unlit edge from vanishing
-      sunColor: 0x5f7cc4,
-      sunI: 0.42,
+      hemiSky: 0x24304e,
+      hemiGround: 0x12151f,
+      hemiI: 0.62, // dark, not blind: unlit stone still reads as stone
+      sunColor: 0x6f8cd4,
+      sunI: 0.68,
       particleColor: 0xff9a3c, // embers rising off the works
       particleWind: [0.12, 0.55, 0.05],
     };
 
-    const stoneMat = new THREE.MeshLambertMaterial({ color: 0x59606e });
+    const stoneMat = new THREE.MeshLambertMaterial({
+      color: 0x6d7484,
+      emissive: 0x10131c, // a whisper of self-light so unlit stone never goes full black
+    });
     // An island of solid stone, lit at its corners. Safe ground, and the only
     // place in the level you can stop and read what's coming.
     const isle = (
@@ -10888,6 +10888,19 @@ export class Level {
       speed: number,
       phase = 0,
     ): void => this.mover(x, y, z, w, d, axis, amp, speed, phase, true);
+    // SIDE-SCROLL STRETCHES: inside a travel zone the course itself runs
+    // along X and the camera never yaws — the cross-stretches become classic
+    // side-scroll platforming with NO swing to wait for. The lane handles the
+    // -z stretches; the zones handle the crossings.
+    const sideScroll = (
+      xMin: number,
+      xMax: number,
+      zMin: number,
+      zMax: number,
+      dir: "E" | "W",
+    ): void => {
+      this.zones.push({ xMin, xMax, zMin, zMax, dir });
+    };
 
     // --- start: a wide lit dock, and the dark ahead --------------------------
     isle(2, 11, 12, 0, 0, 2.6);
@@ -10904,135 +10917,149 @@ export class Level {
     isle(-42, 10, 20, 0, 0, 2.6); // the first corner: room to land and turn left
     this.checkpoint(0, -44);
 
-    // --- B (turn LEFT, -x): the lift bank, climbing y0 -> y5 ----------------
-    fmover(-11, 0.5, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
-    fmover(-19, 2.0, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
-    fmover(-27, 3.5, -45, 4.5, 4.5, "y", 3.2, 0.75, Math.PI / 2);
-    fmover(-35, 4.5, -51, 4.5, 4.5, "y", 3.0, 0.65, 0);
-    this.pickup(-27, 6.2, -45);
-    isle(-48, 12, 10, -47, 5);
-    this.checkpoint(5, -48, -47);
+    // --- B (LEFT, -x, SIDE-SCROLL): the lift bank, y0 -> y12 ----------------
+    sideScroll(-42, -5, -56, -41, "W");
+    fmover(-11, 1, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
+    fmover(-19, 4, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
+    fmover(-27, 7, -45, 4.5, 4.5, "y", 3.2, 0.75, Math.PI / 2);
+    fmover(-35, 10, -51, 4.5, 4.5, "y", 3.0, 0.65, 0);
+    this.pickup(-27, 9, -45);
+    // corner isle runs LONG down-course: the camera finishes its swing while
+    // you cross it, before the first pad ever asks for a jump
+    isle(-51, 16, 16, -47, 12);
+    this.checkpoint(12, -48, -47);
 
-    // --- C (turn RIGHT, -z): the pad metronome ------------------------------
-    // Singles first — amber, blue, amber, on the shared beat — then a
-    // checkerboard of pairs: one team is ALWAYS standing.
-    padA(-47, 5, -58);
-    padB(-47, 5, -66);
-    padA(-47, 5, -74);
-    this.pickup(-47, 6.3, -66);
-    ledge(-47, -81, 5, 5);
-    padA(-50.2, 5, -89, 4.4);
-    padB(-43.8, 5, -89, 4.4);
-    padB(-50.2, 5, -97, 4.4);
-    padA(-43.8, 5, -97, 4.4);
-    isle(-108, 12, 12, -47, 5);
-    this.checkpoint(5, -108, -47);
+    // --- C (RIGHT, -z): the pad metronome, y12 ------------------------------
+    padA(-47, 12, -64);
+    padB(-47, 12, -72);
+    padA(-47, 12, -80);
+    this.pickup(-47, 13.3, -72);
+    ledge(-47, -87, 12, 5);
+    padA(-50.2, 12, -95, 4.4);
+    padB(-43.8, 12, -95, 4.4);
+    padB(-50.2, 12, -103, 4.4);
+    padA(-43.8, 12, -103, 4.4);
+    isle(-112, 16, 14, -47, 12);
+    this.checkpoint(12, -112, -47);
 
-    // --- D (SWITCHBACK, +x): THE GRAND RAILS --------------------------------
+    // --- D (SWITCHBACK, +x): THE GRAND RAILS, y12 ---------------------------
     // Two 22u travelling rails over pure void, in strict antiphase: twice a
     // cycle their inner ends sweep past each other at the centre line — THAT
     // is the hop. Miss it and you ride your rail back out over the dark.
-    this.movingRail(-29, 6.7, -108, 22, 90, "z", 6.5, 0.6, 0);
-    this.movingRail(-7, 6.7, -108, 22, 90, "z", 6.5, 0.6, Math.PI);
-    this.pickup(-18, 8.4, -108); // hangs exactly over the crossing point
-    isle(-108, 12, 16, 10, 5);
-    this.checkpoint(5, -108, 10);
+    this.movingRail(-29, 13.7, -112, 22, 90, "z", 6.5, 0.6, 0);
+    this.movingRail(-7, 13.7, -112, 22, 90, "z", 6.5, 0.6, Math.PI);
+    this.pickup(-18, 15.4, -112); // hangs exactly over the crossing point
+    isle(-112, 12, 20, 10, 12); // long landing: settle before the ferry line
+    this.checkpoint(12, -112, 10);
 
-    // --- E (turn RIGHT, -z): the ferry line, climbing y5 -> y9 --------------
+    // --- E (RIGHT, -z): the ferry line, then the lift stair, y12 -> y26 -----
     // Sit the ferry out over the void, TIME the hop onto the rail sweeping
-    // crosswise, ride it down the dark, drop to the second ferry, and take
-    // the lift up to the high deck.
-    fmover(10, 5, -124, 5, 5, "z", 6, 0.55, 0);
-    this.movingRail(10, 6.7, -141, 14, 0, "x", 5, 0.55, Math.PI / 2);
-    this.pickup(10, 8.4, -141);
-    fmover(10, 5, -153, 5, 5, "z", 4.5, 0.5, Math.PI);
-    isle(-164, 12, 10, 10, 5);
-    this.checkpoint(5, -164, 10);
-    fmover(10, 6.5, -174, 4.5, 4.5, "y", 3, 0.7, 0); // the lift to the high deck
-    isle(-184, 12, 10, 10, 9);
-    this.checkpoint(9, -184, 10);
+    // crosswise, ride it down the dark, drop to the second ferry — then climb
+    // a staircase of burning lifts to the high deck.
+    fmover(10, 12, -130, 5, 5, "z", 6, 0.55, 0);
+    this.movingRail(10, 13.7, -147, 14, 0, "x", 5, 0.55, Math.PI / 2);
+    this.pickup(10, 15.4, -147);
+    fmover(10, 12, -159, 5, 5, "z", 4.5, 0.5, Math.PI);
+    isle(-170, 12, 10, 10, 12);
+    this.checkpoint(12, -170, 10);
+    fmover(10, 14, -180, 4.5, 4.5, "y", 3, 0.7, 0);
+    fmover(10, 17.5, -185, 4.5, 4.5, "y", 3, 0.7, Math.PI);
+    fmover(10, 21, -190, 4.5, 4.5, "y", 3, 0.75, Math.PI / 2);
+    fmover(10, 24.5, -195, 4.5, 4.5, "y", 3, 0.65, 0);
+    isle(-202, 16, 10, 10, 26); // long west runway into the ropes
+    this.checkpoint(26, -202, 10);
 
-    // --- F (turn LEFT, -x): rope ferries over pure void ---------------------
-    // Three travelling anchors, no floor. The checkpoint is right behind you;
-    // the void costs seconds, not progress.
-    this.ropeSwing(-6, 17.6, -184, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
-    this.ropeSwing(-20, 17.6, -184, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
-    this.ropeSwing(-34, 17.6, -184, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
-    this.torch(-6, 15.2, -186.6, 1.0, 0.8); // beacons under the anchor line
-    this.torch(-20, 15.2, -186.6, 1.0, 0.8);
-    this.torch(-34, 15.2, -186.6, 1.0, 0.8);
-    this.pickup(-20, 12.5, -184);
-    isle(-184, 12, 10, -46, 9);
-    this.checkpoint(9, -184, -46);
+    // --- F (LEFT, -x): rope ferries over pure void, y26 ---------------------
+    this.ropeSwing(-8, 34.6, -202, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
+    this.ropeSwing(-22, 34.6, -202, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
+    this.ropeSwing(-36, 34.6, -202, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
+    this.torch(-8, 32.2, -204.6, 1.0, 0.8); // beacons under the anchor line
+    this.torch(-22, 32.2, -204.6, 1.0, 0.8);
+    this.torch(-36, 32.2, -204.6, 1.0, 0.8);
+    this.pickup(-22, 29.5, -202);
+    isle(-202, 12, 16, -48, 26); // long south runway into metronome II
+    this.checkpoint(26, -202, -48);
 
-    // --- G (turn RIGHT, -z): metronome II, with a ferry mid-line ------------
-    padA(-46, 9, -195);
-    padB(-46, 9, -203);
-    this.pickup(-46, 10.3, -203);
-    fmover(-46, 9, -212, 4.5, 4.5, "z", 5, 0.5, 0);
-    padA(-49.2, 9, -225, 4.4);
-    padB(-42.8, 9, -225, 4.4);
-    padB(-49.2, 9, -233, 4.4);
-    padA(-42.8, 9, -233, 4.4);
-    isle(-243, 12, 12, -46, 9);
-    this.checkpoint(9, -243, -46);
+    // --- G (RIGHT, -z): metronome II, a ferry, then up again, y26 -> y34 ----
+    padA(-48, 26, -216);
+    padB(-48, 26, -224);
+    this.pickup(-48, 27.3, -224);
+    fmover(-48, 26, -233, 4.5, 4.5, "z", 5, 0.5, 0);
+    padA(-51.2, 26, -246, 4.4);
+    padB(-44.8, 26, -246, 4.4);
+    padB(-51.2, 26, -254, 4.4);
+    padA(-44.8, 26, -254, 4.4);
+    fmover(-48, 28, -262, 4.5, 4.5, "y", 3, 0.7, 0);
+    fmover(-48, 32.5, -268, 4.5, 4.5, "y", 3, 0.7, Math.PI);
+    isle(-278, 12, 12, -48, 34);
+    this.checkpoint(34, -278, -48);
 
-    // --- H (SWITCHBACK, +x): the lift tower, climbing y9 -> y15 -------------
-    fmover(-39, 10, -240, 4.5, 4.5, "y", 2.5, 0.7, 0);
-    fmover(-32, 11.5, -246, 4.5, 4.5, "y", 2.5, 0.7, Math.PI);
-    fmover(-25, 13, -240, 4.5, 4.5, "y", 2.5, 0.75, Math.PI / 2);
-    fmover(-18, 14.5, -246, 4.5, 4.5, "y", 2.5, 0.65, 0);
-    this.pickup(-25, 16.5, -240);
-    isle(-243, 12, 12, -10, 15);
-    this.checkpoint(15, -243, -10);
+    // --- H (SWITCHBACK, +x, SIDE-SCROLL): the lift tower, y34 -> y56 --------
+    // Eight burning lifts, each a step higher — the long climb, played flat
+    // against the screen like the classic towers.
+    sideScroll(-44, 3, -286, -270, "E");
+    fmover(-41, 36, -275, 4.5, 4.5, "y", 2.75, 0.7, 0);
+    fmover(-35, 38.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
+    fmover(-29, 41.5, -275, 4.5, 4.5, "y", 2.75, 0.75, Math.PI / 2);
+    fmover(-23, 44.25, -281, 4.5, 4.5, "y", 2.75, 0.65, 0);
+    fmover(-17, 47, -275, 4.5, 4.5, "y", 2.75, 0.7, Math.PI / 2);
+    fmover(-11, 49.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
+    fmover(-5, 52.5, -275, 4.5, 4.5, "y", 2.75, 0.75, 0);
+    fmover(1, 55.25, -281, 4.5, 4.5, "y", 2.75, 0.65, Math.PI / 2);
+    this.pickup(-17, 51, -275);
+    isle(-278, 12, 16, 9, 56); // long south runway into the long rail
+    this.checkpoint(56, -278, 9);
 
-    // --- I (turn RIGHT, -z): the long rail with a MOVING destination --------
+    // --- I (RIGHT, -z): the long rail with a MOVING destination, y56 --------
     // 24 units of grind over nothing, sweeping side to side — and the landing
     // is a big fire-lit isle that is ITSELF a mover. Time the dismount for
     // when it swings under the rail's end, or scramble mid-air for it.
-    this.movingRail(-10, 16.7, -263, 24, 0, "x", 6, 0.5, 0);
-    this.pickup(-10, 18.4, -263);
-    fmover(-10, 15, -281, 6, 6, "x", 7, 0.4, Math.PI / 2);
-    isle(-291, 12, 10, -10, 15);
-    this.checkpoint(15, -291, -10);
+    this.movingRail(9, 57.7, -296, 24, 0, "x", 6, 0.5, 0);
+    this.pickup(9, 59.4, -296);
+    fmover(9, 56, -314, 6, 6, "x", 7, 0.4, Math.PI / 2);
+    isle(-324, 12, 10, 9, 56);
+    this.checkpoint(56, -324, 9);
 
-    // --- J (turn LEFT, -x): everything on the beat, y15 -> y17 --------------
-    padB(-21, 15, -291);
-    fmover(-28.5, 15, -291, 4.5, 4.5, "x", 4, 0.6, 0);
-    this.movingRail(-38, 16.7, -291, 10, 90, "z", 4, 0.6, Math.PI / 2);
-    this.pickup(-38, 18.4, -291);
-    fmover(-48, 16, -291, 4.5, 4.5, "y", 2, 0.7, Math.PI);
-    isle(-291, 10, 12, -56, 17);
-    this.checkpoint(17, -291, -56);
+    // --- J (LEFT, -x, SIDE-SCROLL): everything on the beat, y56 -> y64 ------
+    sideScroll(-37, 1, -331, -317, "W");
+    padB(-2, 56, -324);
+    fmover(-9.5, 56, -324, 4.5, 4.5, "x", 4, 0.6, 0);
+    this.movingRail(-19, 57.7, -324, 10, 90, "z", 4, 0.6, Math.PI / 2);
+    this.pickup(-19, 59.4, -324);
+    fmover(-29, 58, -324, 4.5, 4.5, "y", 2, 0.7, Math.PI);
+    fmover(-35, 62, -324, 4.5, 4.5, "y", 2.5, 0.7, 0);
+    isle(-324, 10, 12, -43, 64);
+    this.checkpoint(64, -324, -43);
 
-    // --- K (turn RIGHT, -z): one last swing into the goal -------------------
-    this.ropeSwing(-56, 25.2, -302, 7.4, 0.8, 0, 0, 90); // classic pendulum, swings down-course
+    // --- K (RIGHT, -z): the last lift, one last swing, y64 -> y70 -----------
+    fmover(-43, 68, -334, 4.5, 4.5, "y", 2.5, 0.7, 0);
+    this.ropeSwing(-43, 78.6, -343, 7.4, 0.8, 0, 0, 90); // pendulum, swings down-course
 
-    // --- goal: the works lit up ---------------------------------------------
-    isle(-313, 14, 12, -56, 17, 3.2);
-    this.torch(-61, 17, -316, 3.2);
-    this.torch(-51, 17, -316, 3.2);
-    this.crystal(-56, 17.6, -310);
-    this.finishGate(17, this.finishZ, -56);
+    // --- goal: the summit of the works, lit up ------------------------------
+    isle(-353, 14, 12, -43, 70, 3.2);
+    this.torch(-48, 70, -356, 3.2);
+    this.torch(-38, 70, -356, 3.2);
+    this.crystal(-43, 70.6, -350);
+    this.finishGate(70, this.finishZ, -43);
 
     // --- THE CAMERA SPINE ----------------------------------------------------
-    // Ten bends, and the lane swings the frame (and the stick's "up") round
-    // every one. Radius 14 — big on purpose: the swing STARTS well before the
-    // corner, so the camera leads you into the next stretch instead of
-    // catching up after you've already jumped into it.
+    // The -z stretches ride the lane (radius 14, so the swing starts well
+    // before each bend); the cross-stretches are ZONES and never swing at
+    // all. Every corner isle runs long in the outgoing direction, so the
+    // frame has settled before the first obstacle asks for a jump.
     const laneNodes: [number, number, number, number][] = [
       [0, 10, 0, 0], // behind spawn
-      [0, -48, 14, 0], // A->B: left
-      [-47, -48, 14, 5], // B->C: right, up to the mid deck
-      [-47, -108, 14, 5], // C->D: the first switchback
-      [10, -108, 14, 5], // D->E: right
-      [10, -184, 14, 9], // E->F: left, up to the high deck
-      [-46, -184, 14, 9], // F->G: right
-      [-46, -243, 14, 9], // G->H: the second switchback
-      [-10, -243, 14, 15], // H->I: right, up the tower
-      [-10, -291, 14, 15], // I->J: left
-      [-56, -291, 14, 17], // J->K: right
-      [-56, -323, 0, 17], // out through the gate
+      [0, -48, 14, 0], // A->B: left into the side-scroll
+      [-47, -48, 14, 12], // B->C: right, onto the mid deck
+      [-47, -112, 14, 12], // C->D: the first switchback
+      [10, -112, 14, 12], // D->E: right
+      [10, -202, 14, 26], // E->F: left, up the lift stair
+      [-48, -202, 14, 26], // F->G: right
+      [-48, -278, 14, 34], // G->H: the tower switchback
+      [9, -278, 14, 56], // H->I: right, off the tower
+      [9, -324, 14, 56], // I->J: left into the last side-scroll
+      [-43, -324, 14, 64], // J->K: right
+      [-43, -363, 0, 70], // out through the gate at the summit
     ];
     const rp = roundCorners(laneNodes, false);
     this.lanePts = rp.map((q) => ({ x: q.x, y: q.y, z: q.z }));
