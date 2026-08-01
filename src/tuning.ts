@@ -719,6 +719,7 @@ export const CONST = {
   flipTime: 0.42, // how long a flip trick takes the deck to complete — finish it in the air or the landing goes sketchy and pays nothing
   ptsFlip: 110, // base for a flip trick (kickflip family), scored the moment the deck completes mid-air
   ptsRevert: 100, // R2 within the beat after a transition touchdown: the pivot that keeps a vert combo alive into the manual (THPS3+/THUG's bridge)
+  boardPickupRadius: 1.2, // walk this close to a thrown deck lying on the floor and you scoop it up and hop straight back on
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 40, // pipe hang: cap on the off-axis lateral carry. Effectively uncapped now (THPS conserves coping drift — a hard angled carve genuinely flies you down the pipe); out-running the pipe is the hang-end bail's job, not a clamp's
   hangLatDamp: 0, // vert hang: how fast the lateral carry bleeds off. 0 = THPS: air has no friction — the drift you launched with is the drift you land with

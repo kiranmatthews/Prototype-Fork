@@ -572,6 +572,7 @@ export class Player {
   private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
   private grabTrickName = 'Grab'; // variant name for the combo readout
   private airGrabShown: string | null = null; // exact plate label this air's grab was pushed under (renamed live; merged with a landed spin)
+  private grabPaid = 0; // what this air's grab actually paid — repriced when the variant resolves to a different trick's decay pool
   private comboUses = new Map<string, number>(); // per-combo trick use counts — repeats pay a declining share (THPS4/THUG)
   private sketchyT = 0; // off-balance shimmy after a SKETCHY landing (kept it, barely)
   private flipT = 0; // deck flip trick in progress: time left of CONST.flipTime
@@ -580,6 +581,8 @@ export class Player {
   private flipDeck: THREE.Object3D | null = null; // scene-level deck stand-in: performs the flip while the spin smear hides the rig
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
+  private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
+  private grindExitAir = false; // this air left a RAIL: the lateral strafe stays live (rail-to-rail hops), unlike plain ollies
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindTickT = 0; // THPS accrual while grinding
@@ -989,6 +992,7 @@ export class Player {
     this.flipT = 0;
     this.floatAir = false;
     this.revertT = 0;
+    this.pipeEndFly = false;
     this.invulnTimer = 0;
     this.invulnSilent = false;
     this.slideTimer = 0;
@@ -1555,6 +1559,37 @@ export class Player {
       }
     }
 
+    // LOST DECK PICKUP: after a deck-throwing bail the board lies where it
+    // stopped. Run over it on foot and you scoop it up and hop straight on —
+    // no hold-X ceremony, it was yours. (Hold-X remount still works from
+    // anywhere; this is the "I can SEE it over there" route.)
+    if (
+      !this.freeSkate &&
+      this.state === 'ride' &&
+      this.grounded &&
+      !this.isBailing &&
+      this.flyBoard &&
+      this.flyBoard.visible &&
+      this.flyBoardRest
+    ) {
+      const fb = this.flyBoard;
+      const pdx = fb.position.x - this.pos.x;
+      const pdz = fb.position.z - this.pos.z;
+      if (
+        pdx * pdx + pdz * pdz < CONST.boardPickupRadius * CONST.boardPickupRadius &&
+        Math.abs(fb.position.y - this.pos.y) < 1.2
+      ) {
+        this.freeSkate = true;
+        this.stepOff = false;
+        this.skateBlockT = 0;
+        // hop on ROLLING the way you were running (updateFlyBoard recalls
+        // the lying deck the moment freeSkate flips)
+        this.speed = Math.max(Math.abs(this.speed), TUNING.skateEntrySpeed + 1.5);
+        this.emitSparks(6, 0xfff3d0, 1.6);
+        sfx.play('railLand', 0.55, 1.1); // wheels down
+      }
+    }
+
     // The combo clock only runs while plain-rolling — airs, grinds, and
     // slides keep the string alive. Roll clean for the window and it banks.
     // Plain rolling runs the combo window out — but a live MANUAL or LIP STALL
@@ -1779,7 +1814,7 @@ export class Player {
   // actions stack base + multiplier, THPS-style, and bank on a clean landing.
   // Plain ground actions (spinning a box while standing there) just pay flat
   // points — they never start or feed a combo. Bail or die = the combo dies.
-  private score(base: number, label?: string): string | undefined {
+  private score(base: number, label?: string): { shown: string | undefined; pay: number } {
     const inTrick =
       this.landingScoring ||
       this.state === 'air' ||
@@ -1824,7 +1859,7 @@ export class Player {
     } else {
       this.points += pay;
     }
-    return shown;
+    return { shown, pay };
   }
 
   // The plate follows a trick whose name resolves after it scored (grab
@@ -3266,16 +3301,18 @@ export class Player {
         const hi = Math.max(hp.l0, hp.l1) - 0.4;
         const along = hp.alongCoord(this.pos.x, this.pos.z);
         if (along < lo || along > hi) {
+          // OFF THE END: the hang breaks into plain flight carrying the drift
+          // — sideways to your facing, board not really under you. What you
+          // hit next decides it: another vert, a rail, a wall = saved and you
+          // ride on; the FLAT ground = the bail you had coming (judged at
+          // touchdown via pipeEndFly).
           const lat = this.vertLatVel;
           this.vertAir = false;
           this.pipeHang = false;
           this.hangPipe = null;
-          this.bail();
-          this.startRagdoll('side', Math.sign(lat) || 1);
           this.airGrav = 'board';
           this.airMomentum = true;
-          // the drift that carried you off the end keeps carrying you: heading
-          // turns down the pipe axis at the lateral speed you brought
+          this.pipeEndFly = true;
           if (Math.abs(lat) > 0.5) {
             const tx = hp.axis === 'z' ? 0 : Math.sign(lat);
             const tz = hp.axis === 'z' ? Math.sign(lat) : 0;
@@ -3284,7 +3321,7 @@ export class Player {
             this.speed = Math.abs(lat);
           }
           this.vertLatVel = 0;
-          sfx.play('crunch', 0.6, 0.8); // clipped the end of the coping
+          sfx.play('woosh2', 0.5, 0.8); // clipped past the end of the coping
         }
       }
     }
@@ -3425,7 +3462,9 @@ export class Player {
       // The lateral sidestep is a FOOT-AIR move only now (precision hops).
       // On the board that stick axis is the THPS spin — a board air flies
       // ballistic and left/right rotates the body instead (see updateGrab).
-      if (footAir && Math.abs(input.moveX) > 0.05) {
+      // EXCEPT airs off a RAIL: those keep the strafe (alongside the spin)
+      // so rail-to-rail hops stay possible — that's how grind combos link.
+      if ((footAir || (this.grindExitAir && !this.isBailing)) && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(this.axisL, input.moveX * TUNING.walkSpeed * diag * dt);
       }
     }
@@ -3530,6 +3569,7 @@ export class Player {
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
       this.floatAir = false; // the ballistic tag belongs to the air that just ended
+      this.grindExitAir = false; // the rail-hop strafe window closes at the wheels
       this.liftTy = 0; // this landing's ramp memory belongs to this landing
       this.liftTyT = 0;
       this.slideAirLat = 0; // slide-jump arc is done
@@ -3632,6 +3672,32 @@ export class Player {
       // Landing-tick payouts (grab, slam impact) are still air tricks
       // for combo purposes even though the state just flipped to 'ride'.
       this.landingScoring = true;
+
+      // PIPE-END FLY-OFF, judged: you left the vert sideways off the coping.
+      // Coming down on another transition face rides out (the projection
+      // above already turned the fall into speed); coming down on the FLAT
+      // with the board still crossways is the wipeout you had coming.
+      if (this.pipeEndFly) {
+        this.pipeEndFly = false;
+        const saved =
+          hit.halfpipe !== undefined || hit.vert === true || hit.normal.y < TUNING.steepStand;
+        if (!saved) {
+          if (this.uberTimer > 0 || this.spendMask()) {
+            if (this.uberTimer <= 0) this.speed *= 0.6;
+          } else {
+            this.landingScoring = false;
+            this.bail();
+            this.startRagdoll('side', Math.sign(this.speed) || 1);
+            this.vVel = 3.4 + Math.min(2.2, Math.abs(this.speed) * 0.12);
+            this.state = 'air';
+            this.grounded = false;
+            this.airFromSkate = false;
+            this.airGrav = 'foot';
+            this.airMomentum = true; // the crash speed rides through the rebound
+            return;
+          }
+        }
+      }
 
       // SPINE TRANSFER: this hang crested one pipe and came down on a
       // DIFFERENT one — you carried it over the ridge.
@@ -3990,6 +4056,7 @@ export class Player {
     const inset = this.pipeHang ? 0.25 : 1.2;
     this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, inset);
     this.vertInDrift = this.pipeHang ? 0 : 1.8;
+    this.pipeEndFly = false; // catching ANOTHER vert saves a pipe-end fly-off
     this.vertAir = true;
   }
 
@@ -4061,6 +4128,7 @@ export class Player {
       this.state = 'rope';
       this.floatAir = false; // the launch tag belongs to the air the rope just ended
       this.flipT = 0; // both hands on the rope — the deck stops performing
+      this.pipeEndFly = false; // grabbing the rope saves a pipe-end fly-off
       this.ropeObj = rs;
       this.ropeD = d;
       this.ropeJumpArm = false; // the held X that jumped you here must come up first
@@ -4680,6 +4748,7 @@ export class Player {
     this.grabSpinTotal = 0;
     this.sketchyT = 0; // a full bail owns the body — no leftover shimmy
     this.flipT = 0; // the deck stops performing when you're eating dirt
+    this.pipeEndFly = false; // this bail settles any pending fly-off judgment
     sfx.play('takeDamage', 0.8);
     this.emitSparks(8, 0xffb545, 2);
     // Default tumble: chaotic, no preferred direction. Callers that know WHAT
@@ -5117,6 +5186,8 @@ export class Player {
     this.underProbeT = 0;
     this.floatAir = false; // the ramp-launch tag dies here — a rail exit re-declares its own air
     this.flipT = 0; // a deck that caught a rail mid-flip is ON the rail — no corkscrew, no late score
+    this.pipeEndFly = false; // a rail catch SAVES a pipe-end fly-off
+    this.grindExitAir = false; // (re-set by the next exit — the hop window is per-air)
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     this.score(
@@ -5196,6 +5267,10 @@ export class Player {
   private exitGrind(vVel: number): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
+    // RAIL-HOP window: airs off a rail keep the lateral stick strafe (on top
+    // of the spin) so you can jump BETWEEN rails for grind combos — plain
+    // ollies stay ballistic, the approach angle is their steering.
+    this.grindExitAir = true;
 
     if (this.grindRail) {
       // Exit ALONG the rail: the tangent becomes the free-skate heading, so
@@ -5545,11 +5620,24 @@ export class Player {
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
           this.grabPhase = 'enter';
           this.grabT = 0;
-          this.grabTrickName = 'Grab';
+          // A grab needs a direction to start, so the VARIANT is usually
+          // knowable right here — score under its own name from the first
+          // frame (each variant is its own trick with its own decay pool).
+          const rIn0 = this.rawInput;
+          this.grabTrickName =
+            rIn0.moveY > 0.4
+              ? 'Nosegrab'
+              : rIn0.moveX < -0.4
+                ? 'Melon'
+                : rIn0.moveX > 0.4
+                  ? 'Indy'
+                  : 'Grab';
           this.grabTickT = 0;
           // Timed trick: register it NOW so the combo plate shows straight away
           // and ticks up while held (a botched landing bails the whole thing).
-          this.airGrabShown = this.score(CONST.ptsGrab, this.grabTrickName) ?? null;
+          const sr = this.score(CONST.ptsGrab, this.grabTrickName);
+          this.airGrabShown = sr.shown ?? null;
+          this.grabPaid = sr.pay;
           sfx.play('woosh2', 0.4);
         } else if (this.grabPhase === 'enter') {
           this.grabT += dt;
@@ -5575,6 +5663,19 @@ export class Player {
                 ? 'Indy'
                 : this.grabTrickName;
         if (vName !== this.grabTrickName) {
+          // The trick this air turns out to be is the RESOLVED variant: move
+          // the decay count off the old name and reprice the points already
+          // paid at the new name's own pool — an Indy after a Melon is a
+          // fresh trick, only repeating the SAME grab decays.
+          const oc = this.comboUses.get(this.grabTrickName) ?? 0;
+          if (oc > 0) this.comboUses.set(this.grabTrickName, oc - 1);
+          const nUses = this.comboUses.get(vName) ?? 0;
+          this.comboUses.set(vName, nUses + 1);
+          const curve = CONST.repeatDecay;
+          let newPay = Math.round(CONST.ptsGrab * curve[Math.min(nUses, curve.length - 1)]);
+          if (this.uberTimer > 0) newPay *= CONST.uberScoreMult;
+          this.comboPoints += newPay - this.grabPaid;
+          this.grabPaid = newPay;
           if (this.airGrabShown) {
             const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
             this.renameLabel(this.airGrabShown, pfx + vName);
@@ -6738,6 +6839,7 @@ export class Player {
     this.wallTickT = 0;
     this.wallChargeT = 0; // pump loads fresh on each wall
     this.flipT = 0; // the wheels just pressed onto the wall — no mid-flip corkscrew
+    this.pipeEndFly = false; // a wall catch SAVES a pipe-end fly-off
     this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
     this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall (ollie OUT with jump — the wallie)
     this.airFromSkate = true;
