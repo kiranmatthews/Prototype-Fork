@@ -5205,6 +5205,39 @@ export class Level {
     // above it, so it is something to look into and never something to land on
     this.decorBlock(0, -13.7, -352, 140, 1, 940, 0x1e3521, "moss");
 
+    // ---- HARD PIT INTERIORS ------------------------------------------------
+    // Every cut used to be open air between two displaced planes: nothing to
+    // hit, nothing to bounce off, and a short jump just vanished under the
+    // lip. The gaps are lined with MASONRY now — real wall() components
+    // (captured to the editor like any other), faces flush with the strip
+    // ends and bodies tucked UNDER the strips so the pit mouth stays fully
+    // open. Collider tops sit 0.5 under the wavy floor (no phantom curb);
+    // the visual runs a little higher and reads as a stone pit edging.
+    // Smack into them, wallride them, ledge-grab their lips — the inside of
+    // a pit is a place now, not an absence.
+    const pitWalls = (
+      z0: number, // near strip's END (less negative z)
+      z1: number, // far strip's START
+      sideX: number, // half-width of the visible cut (the scenery walls' line)
+      lip0 = gy(z0),
+      lip1 = gy(z1),
+    ): void => {
+      const base = -12.5;
+      const hN = lip0 - 0.5 - base;
+      const hF = lip1 - 0.5 - base;
+      this.wall(gx(z0), z0 + 0.6, 15, 1.2, base, hN, hN + 0.45);
+      this.wall(gx(z1), z1 - 0.6, 15, 1.2, base, hF, hF + 0.45);
+      const zm = (z0 + z1) / 2;
+      const d = Math.abs(z0 - z1);
+      const hS = Math.min(hN, hF);
+      this.wall(gx(zm) - sideX - 0.6, zm, 1.2, d, base, hS, hS + 0.45);
+      this.wall(gx(zm) + sideX + 0.6, zm, 1.2, d, base, hS, hS + 0.45);
+    };
+    pitWalls(-104, -110, 5.2); // hop 1
+    pitWalls(-176, -236, 5.1); // THE RAVINE: 60 units of pit with real walls
+    pitWalls(-486, -492.5, 5.2, 0.4); // below the temple descent (ramp ends at y 0.4)
+    pitWalls(-566, -572, 5.2); // hop 2 on the run home
+
     // ---- THE FALLEN TRUNK --------------------------------------------------
     // The ravine crossing. The trunk IS the rail: the grind line is sampled
     // off the spine and the bark segments are hung underneath it, so the ride
