@@ -49,13 +49,25 @@ interface LoopChannel {
   name: string;
 }
 
-// ~50ms of silence as a playable <audio> src. Playing an HTML MEDIA element
-// once (inside a gesture) flips iOS's audio session from "ambient" to
-// "playback" — without this, Web Audio obeys the ringer/silent switch and an
-// iPhone with the mute switch on hears NOTHING, ever. Desktop ignores it.
-const SILENT_WAV =
-  'data:audio/wav;base64,UklGRnQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
-  'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==';
+// iOS AUDIO SESSION: this game is a polite guest. The old build played a
+// silent <audio> element once to flip the session to "playback" so the game
+// stayed audible with the mute switch on — but "playback" also STOPS whatever
+// the phone was already playing (a podcast, a YouTube video) the moment the
+// first sound fires. That trade is backwards for a pick-up-and-play game:
+// we now ask for the "ambient" session instead (Audio Session API, iOS 17+),
+// which MIXES game audio over the user's own listening and never interrupts
+// it. The flip side — and it is inherent, iOS offers no mix-without-switch
+// category — is that the ambient session obeys the ringer/mute switch, so a
+// muted iPhone plays a silent game. That is how native mobile games behave.
+// Desktop browsers have no audio session and ignore all of this.
+function requestAmbientSession(): void {
+  try {
+    const sess = (navigator as unknown as { audioSession?: { type: string } }).audioSession;
+    if (sess && sess.type !== 'ambient') sess.type = 'ambient';
+  } catch {
+    /* older Safari / other browsers: no session control, nothing to do */
+  }
+}
 
 class SfxEngine {
   volume = 0.5; // master
@@ -66,7 +78,6 @@ class SfxEngine {
   private loops = new Map<string, LoopChannel>();
   private lastPlay = new Map<string, number>();
   private loading = false;
-  private sessionKicked = false;
 
   constructor() {
     // Warm up at PAGE LOAD: create the (suspended) context and start decoding
@@ -90,15 +101,10 @@ class SfxEngine {
   // it inside a user gesture, but the extra attempts are harmless.
   unlock(): void {
     try {
-      if (!this.sessionKicked) {
-        // iOS mute-switch bypass: one silent media-element play inside the
-        // first gesture reclassifies the audio session to "playback".
-        this.sessionKicked = true;
-        const a = new Audio(SILENT_WAV);
-        a.setAttribute('playsinline', '');
-        const p = a.play();
-        if (p) p.catch(() => {});
-      }
+      // Mix with the user's own audio, never interrupt it — re-asserted at
+      // every resume because iOS re-activates the session then (cheap no-op
+      // once set; see requestAmbientSession above for the mute-switch trade).
+      requestAmbientSession();
       if (!this.ctx) {
         void this.init();
         return;
@@ -112,6 +118,9 @@ class SfxEngine {
   private async init(): Promise<void> {
     try {
       if (!this.ctx) {
+        // declare the polite session BEFORE the context exists, so its very
+        // first activation is already "mix with others"
+        requestAmbientSession();
         this.ctx = new AudioContext();
         this.master = this.ctx.createGain();
         this.master.gain.value = this.volume;
