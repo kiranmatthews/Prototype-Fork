@@ -5928,7 +5928,17 @@ export class Player {
           continue;
         }
         if (this.playerBox.intersectsBox(c.box)) {
-          if (this.isStomping(c.box) && this.slamActive) {
+          if (this.isBailing) {
+            // tumbling body: the trampoline is scenery (no mid-ragdoll Boing)
+            if (this.grounded) this.pushOutOf(c.box);
+          } else if (this.state === 'grind') {
+            // rail-line obstacle rules, same as plain crates: WOOD smashes at
+            // speed (or a mask pays and breaks it); METAL can't break — a
+            // mask lets you pass, otherwise it knocks you off the rail.
+            if (c.bouncy && (this.grindVel >= TUNING.smashSpeed || this.spendMask()))
+              this.smashCrate(level, c);
+            else if (c.bouncy || !this.spendMask()) this.bailFromRail(0, level);
+          } else if (this.isStomping(c.box) && this.slamActive) {
             // Slam on WOOD breaks it. Slam on METAL cancels into a plain
             // bounce — clearing slamActive is load-bearing: without it the
             // slam's down-force re-stomps the trampoline every frame
@@ -5963,12 +5973,22 @@ export class Player {
             if (perfect) this.emitSparks(6, 0xfff3d0, 1.4);
           } else if (this.isBonking(c.box)) {
             this.vVel = -1; // head bonk on the underside
+          } else if (
+            c.bouncy &&
+            (this.uberTimer > 0 || (this.freeSkate && Math.abs(this.speed) >= TUNING.smashSpeed))
+          ) {
+            // WOOD arrows are still WOOD: fast skating plows straight through
+            // them like any plain box. (They only ever got the metal branch's
+            // wall treatment below, which made them unsmashable on the board
+            // at any speed — a full-tilt line into one was a wall crash.)
+            this.smashCrate(level, c);
+            this.speed *= 0.92;
           } else {
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
             this.pushOutOf(c.box);
-            this.wallSmack(bx, bz, bs); // metal never smashes: at speed it's a wall crash
+            this.wallSmack(bx, bz, bs); // METAL never smashes: at speed it's a wall crash
           }
         }
         continue;
