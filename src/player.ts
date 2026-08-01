@@ -3320,16 +3320,25 @@ export class Player {
           this.hangPipe = null;
           this.airGrav = 'board';
           this.airMomentum = true;
-          this.pipeEndFly = true;
+          // ...unless the "hang" tripped this check the instant it began: that
+          // was never hang time — you RODE out the open end partway up the
+          // wall, and the exit is a plain roll-off air you can land like any
+          // other, not a judged sideways fly-off with a wipeout on the flat.
+          this.pipeEndFly = this.airborneT >= 0.2;
           if (Math.abs(lat) > 0.5) {
-            const tx = hp.axis === 'z' ? 0 : Math.sign(lat);
-            const tz = hp.axis === 'z' ? Math.sign(lat) : 0;
-            this.axisF.set(tx, 0, tz);
+            // Heading comes from the WALL TANGENT the drift was measured in
+            // (the same (-n.z, n.x) frame enterVertAir seeded lat with).
+            // sign(lat) on the raw world axis is backwards on one wall of
+            // every pipe — THE "flung me back the other way" exit.
+            const fx = -this.vertNormal.z * Math.sign(lat);
+            const fz = this.vertNormal.x * Math.sign(lat);
+            const fl = Math.hypot(fx, fz) || 1;
+            this.axisF.set(fx / fl, 0, fz / fl);
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
             this.speed = Math.abs(lat);
           }
           this.vertLatVel = 0;
-          sfx.play('woosh2', 0.5, 0.8); // clipped past the end of the coping
+          // (no woosh: it made slipping past the coping sound like a boost)
         }
       }
     }
@@ -7909,6 +7918,12 @@ export class Player {
     const onPipeVis = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
     if (this.vertAir) {
       alignT = 1; // hang time: fully on the wall plane
+      targetN = this.vertNormal;
+    } else if (this.pipeEndFly && this.state === 'air') {
+      // Flew off the pipe's END mid-hang: STAY at the funny wall angle all the
+      // way down. Landing tilted is exactly what the touchdown judges, so
+      // levelling out wheels-down mid-flight lied about what was coming.
+      alignT = 1;
       targetN = this.vertNormal;
     } else if (this.grounded && this.state === 'ride' && this.groundHit) {
       // steepness-weighted: upright at/above steepStand, fully lying by ~vert.
