@@ -579,6 +579,7 @@ export class Player {
   private flipName = 'Kickflip';
   private flipDeck: THREE.Object3D | null = null; // scene-level deck stand-in: performs the flip while the spin smear hides the rig
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
+  private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindTickT = 0; // THPS accrual while grinding
@@ -3225,6 +3226,14 @@ export class Player {
         this.pos.x += tx * this.vertLatVel * dt;
         this.pos.z += tz * this.vertLatVel * dt;
       }
+      // NON-pipe verts (bowls, mesh walls): the crest detection fires a beat
+      // PAST the lip, over the deck — so a touch of into-the-ramp drift puts
+      // the arc back over the transition face, the job the old 1.2-inset glue
+      // anchor used to do. Analytic pipes launch on the face and stay pure.
+      if (!this.pipeHang && this.vertInDrift !== 0) {
+        this.pos.x += this.vertNormal.x * this.vertInDrift * dt;
+        this.pos.z += this.vertNormal.z * this.vertInDrift * dt;
+      }
       // Stick steering along the coping — OFF during a pipe hang (locked-in
       // vert: the stick SPINS you, it never translates you; this slide is
       // exactly why spin attempts floated you down the pipe). vertDrift
@@ -3311,6 +3320,7 @@ export class Player {
       this.grabT = 0;
       this.grabGraceTimer = 0;
       this.grabSpinAngle = 0;
+      this.flipT = 0; // the deck is stowed — a mid-flip must not score under the slam
       this.charging = false;
       this.chargeTimer = 0;
       this.flipTimer = 0;
@@ -3529,7 +3539,14 @@ export class Player {
       if (this.vertAir) this.vertLandGraceT = 0.6;
       // REVERT window: touching down out of a vert air opens a beat where R2
       // pivots the landing into a live combo link (see the handler in step).
-      if (wasPipeHang || this.vertAir || hit.halfpipe !== undefined) this.revertT = 0.3;
+      // The landing must be ON a transition face — the pipe's FLAT bottom is
+      // tagged with the halfpipe too, and without the slope gate a plain hop
+      // on the flat opened a riskless hop+R2 combo farm.
+      if (
+        (wasPipeHang || this.vertAir || hit.halfpipe !== undefined) &&
+        hit.normal.y < 0.985
+      )
+        this.revertT = 0.3;
       const preFx = this.axisF.x; // heading BEFORE the landing projection — a
       const preFz = this.axisF.z; // reversal against it = landed riding fakie
       // Landing out of a lateral hang: keep the sideways momentum so a gap
@@ -3723,10 +3740,17 @@ export class Player {
             // Spin + grab in ONE air is ONE trick (THPS: "360 Judo", not
             // "360" and "Judo"): fold the rotation into the grab's plate
             // entry — its name gains the degrees, its points gain the spin,
-            // and no second multiplier is minted.
+            // and no second multiplier is minted. The spin share still pays
+            // the repeat-decay rule, though — folding it must not exempt the
+            // biggest air trick from the anti-farming curve.
+            const uses = this.comboUses.get(spinName) ?? 0;
+            this.comboUses.set(spinName, uses + 1);
+            const curve = CONST.repeatDecay;
+            let fold = Math.round(spinBase * curve[Math.min(uses, curve.length - 1)]);
+            if (this.uberTimer > 0) fold *= CONST.uberScoreMult;
             const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
             this.renameLabel(this.airGrabShown, `${pfx}${spinName} ${this.grabTrickName}`);
-            this.comboPoints += this.uberTimer > 0 ? spinBase * CONST.uberScoreMult : spinBase;
+            this.comboPoints += fold;
             this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
           } else {
             this.score(spinBase, spinName);
@@ -3749,10 +3773,13 @@ export class Player {
         this.airGrabShown = null; // this air's grab entry is settled
         // THPS landing pump: wheels down with X already held (a crouched
         // landing) pays a small speed burst — re-crouch through every
-        // touchdown and the line stays fast.
+        // touchdown and the line stays fast. The clamp never CONFISCATES:
+        // a perfect-grind payout lands above downhillMax on purpose, and the
+        // pump must not chop it back to the ceiling.
         if (input.jumpHeld && this.airFromSkate && Math.abs(this.speed) > 0.5) {
+          const pumpCap = Math.max(TUNING.downhillMax, Math.abs(this.speed));
           this.speed += TUNING.landPumpBoost * (this.speed >= 0 ? 1 : -1);
-          this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.downhillMax, TUNING.downhillMax);
+          this.speed = THREE.MathUtils.clamp(this.speed, -pumpCap, pumpCap);
         }
       }
       // A pipe drop-in doesn't announce itself — the wheels just meet the
@@ -3940,12 +3967,14 @@ export class Player {
       CONST.maxFallSpeed,
     );
     this.speed = 0; // the energy is in vVel (up) + vertLatVel (across) now
-    // Glue plane. A general vert crest sits it a hair INSIDE (1.2) so the drop
-    // lands on the transition face. A HALFPIPE hang glues right on the launch
-    // line (tiny inset) so you go straight up the vert axis and drop back onto
-    // the SAME spot — no inward drift into the pipe, no funny landing.
+    // Launch reference (NOT a glue plane any more — the flight is ballistic).
+    // The anchor's Y feeds the wall-tracking ray ladder; the small inset keeps
+    // it just off the face. Non-pipe crests also take a gentle into-the-ramp
+    // drift so the arc lands on the transition instead of the deck behind it
+    // (the crest detection fires a beat past the lip).
     const inset = this.pipeHang ? 0.25 : 1.2;
     this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, inset);
+    this.vertInDrift = this.pipeHang ? 0 : 1.8;
     this.vertAir = true;
   }
 
@@ -5063,6 +5092,7 @@ export class Player {
     this.railUnder = false; // every grind starts on top (the switch cooldown carries over)
     this.underK = 0;
     this.underProbeT = 0;
+    this.floatAir = false; // the ramp-launch tag dies here — a rail exit re-declares its own air
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     this.score(
@@ -5436,7 +5466,13 @@ export class Player {
       this.flipT -= dt;
       if (this.flipT <= 0) {
         this.flipT = 0;
-        if (this.state === 'air' && !this.grounded && !this.isBailing && !this.wallriding)
+        if (
+          this.state === 'air' &&
+          !this.grounded &&
+          !this.isBailing &&
+          !this.wallriding &&
+          !this.slamActive
+        )
           this.score(CONST.ptsFlip, this.flipName);
       }
     }
@@ -5564,7 +5600,15 @@ export class Player {
           this.grabSpinAngle = Math.abs(d) <= step ? target : this.grabSpinAngle + Math.sign(d) * step;
         }
       }
-    } else if (this.grabPhase !== 'none' || this.grabSpinAngle !== 0) {
+    } else if (
+      this.grabPhase !== 'none' ||
+      this.grabSpinAngle !== 0 ||
+      this.airGrabShown !== null
+    ) {
+      // (airGrabShown gets its own disjunct: a grind catch or a slam zeroes
+      // the grab fields ITSELF before we run, and a stale label here made a
+      // spin landed in a LATER air merge into the settled entry — or, after a
+      // slam's bank, pay into an empty combo and vanish.)
       this.grabPhase = 'none';
       this.grabT = 0;
       // leaving the air by any other door (grind entry, slam): keep the
