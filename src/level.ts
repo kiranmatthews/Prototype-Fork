@@ -127,6 +127,60 @@ interface Mover {
   lastDelta: THREE.Vector3;
 }
 
+// A CYCLE: the sine every moving thing in a dark level runs on. Shared by the
+// travelling rails and the travelling rope anchors so "moves like that platform
+// over there" is one set of numbers everywhere.
+interface Cycle {
+  base: THREE.Vector3;
+  axisV: THREE.Vector3;
+  amp: number;
+  speed: number;
+  phase: number;
+}
+function cycleOffset(c: Cycle, time: number): number {
+  return Math.sin(time * c.speed + c.phase) * c.amp;
+}
+
+// FIRE. The light source of a dark level: a post, a bowl, and a flame that
+// never stops moving. The flame meshes are UNLIT (basic material), so a torch
+// reads as bright no matter how black the scene lighting is; the real
+// illumination it throws comes from the shared light pool (see torchLights),
+// which is a fixed set of point lights re-aimed at whichever torches are
+// nearest the player. Fixed count = no per-frame shader recompiles.
+interface Torch {
+  group: THREE.Group; // post + bowl + flame, parked at the torch's base
+  flames: THREE.Mesh[]; // the licking cones, scaled + spun on their own phase
+  lightAt: THREE.Vector3; // world point the pooled light sits at (the flame's heart)
+  seed: number; // per-torch offset so no two flicker in step
+  burn: number; // 0..1 — eased; a phase pad's torch dies as the pad goes ghost
+  wantBurn: number; // what it's easing TOWARD (1 lit, 0 out)
+}
+
+// A platform that FLIPS between real and not. Active: solid, lit, its torch
+// burning. Inactive: a dark ghost you fall straight through. The flip is a
+// membership change in groundMeshes — three.js raycasts do NOT skip invisible
+// meshes, so hiding one would leave an invisible floor in mid-air.
+interface PhasePad {
+  mesh: THREE.Mesh;
+  torches: Torch[];
+  cycle: number; // seconds for one full on->off->on round
+  phase: number; // 0..1 offset into that round
+  duty: number; // share of the round spent SOLID (0.5 = half the time)
+  on: boolean;
+  litMat: THREE.Material;
+  ghostMat: THREE.Material;
+}
+
+// A grind line that travels. Rail geometry (segment directions, lengths, arc
+// length) is baked at construction and never recomputed, so the ONE motion
+// that stays correct is a rigid translation: every node moves by the same
+// delta, which leaves directions and lengths untouched. Rotating or stretching
+// a rail would desync the grind from the bar.
+interface MovingRail extends Cycle {
+  rail: Rail;
+  object: THREE.Group; // the visual, whose children are baked at world coords
+}
+
 // Crumble pad: stand on it and it shakes, drops away, and (maybe) regrows.
 interface Crumble {
   mesh: THREE.Mesh;
@@ -184,6 +238,11 @@ export interface RopeSwing {
   yaw: number; // radians: spins the swing plane
   theta: number; // current angle (animated)
   thetaV: number; // current angular velocity (jump-off momentum)
+  // Optional TRAVELLING anchor: the whole rope slides along a cycle, so a
+  // swing can ferry you across a gap as well as across its own arc. Both
+  // `anchor` and `pivot.position` are moved in lockstep — everything
+  // downstream (grab, ride, jump-off) is computed off `anchor`.
+  travel?: Cycle;
 }
 
 // Swinging pendulum blade across the corridor.
@@ -261,7 +320,7 @@ export interface CustomComponent {
     | "platform" // solid box: p = center, s = [w,h,d], yaw degrees, slip = icy
     | "ramp" // slope along Z (low end at +Z): p = center of the base line, len along z, rise = height gained, w = width, yaw
     | "wall" // solid barrier: p = base center, s = [w,h,d]; invisible = collider only (ghost in the editor)
-    | "rail" // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z)
+    | "rail" // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z). Give it amp/speed/axis and the whole line TRAVELS on that cycle — a grind that ferries you across a gap
     | "pipe" // LEGACY straight halfpipe (old saves) — migration folds it into 'vertramp'
     | "vertramp" // THE VERT PART: one swept transition profile that covers quarter pipes, half pipes, bowl corners, whole pools and banked slide troughs. Straight along `len`/`yaw`, or drawn along `pts` (rail node convention, plus an optional 5th number = bank degrees). rise = transition radius, w = flat half-width, arc = degrees round the transition, deck = platform past the lip, closed = loop the spine, curve picks filleted corners or a spline, bank auto-leans into turns. Faces carry userData.vert unless `vert` is false.
     | "crumble" // breakaway pad: p = top center, s = [w,-,d], shake = fall delay in seconds (0.02 = instant), speed = fall accel (default 30)
@@ -275,9 +334,11 @@ export interface CustomComponent {
     | "enemy" // patrols along X around p, range each way
     | "crusher" // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | "mover" // moving platform: p = [x, topY, z], s = [w,-,d], axis x/y/z, amp = travel each way, speed, phase
+    | "torch" // fire on a bracket: p = base of the post, rise = post height, w = flame scale. THE light source in a dark level — it burns, flickers, throws embers and lights what's around it
+    | "phasepad" // platform that FLIPS between solid+burning and ghost+dark: p = top center, s = [w,-,d], cycle = seconds for a full on/off round, phase offsets it, amp = the on-share of that round (0.5 = half lit). Runs a warning pulse before it goes
     | "stone" // rolling boulder: p = [x, floorY, z] (patrol center), range = half the travel along Z, speed, radius
     | "pendulum" // swinging bob: p = [x, pivotY, z], len arm, amp radians, speed
-    | "ropeswing" // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane
+    | "ropeswing" // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane. `range` + `cycle` send the whole anchor TRAVELLING along `axis` — a swing that also ferries
     | "gate" // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
     | "clock" // time-trial activator: the gold stopwatch near the start; p = [x, deckY, z]. One per level.
     | "comboorb" // combo-run activator: the green plus near the start; p = [x, deckY, z]. One per level.
@@ -1050,6 +1111,9 @@ export function newLaneCursor(): LaneCursor {
 // How far along the spine the match may travel between queries for free. A
 // rider covers under a metre per frame even at full tilt; the slack is for
 // frames dropped to a level load or a pause.
+// scratch for the per-frame translation of travelling rails and rope anchors
+// (update runs every frame — allocating a Vector3 in there is garbage churn)
+const MR_DELTA = new THREE.Vector3();
 const LANE_FREE_TRAVEL = 40;
 // What a bigger leap costs, per metre squared. The Slipstream's loop sits 26m
 // from the deck below it and 188m away along the spine: (188-40)^2 * 0.25 is
@@ -1219,6 +1283,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
+  { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
 ];
 export const DEFAULT_LEVEL_ID = "jungle";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
@@ -1563,6 +1628,15 @@ export class Level {
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
   ropeSwings: RopeSwing[] = [];
+  torches: Torch[] = [];
+  phasePads: PhasePad[] = [];
+  movingRails: MovingRail[] = [];
+  // Point lights are EXPENSIVE here: every world material is Lambert/Phong
+  // forward-lit, so each light multiplies shader cost across the whole scene
+  // and adding one recompiles materials. So the pool is built ONCE at a fixed
+  // size and re-aimed at the nearest torches every frame — dozens of fires,
+  // a handful of lights, no recompiles.
+  private torchLights: THREE.PointLight[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
 
@@ -2289,12 +2363,14 @@ export class Level {
     else if (entry.id === "flats") this.buildFlats();
     else if (entry.id === "sky") this.buildSkyBridge();
     else if (entry.id === "slip") this.buildSlipstream();
+    else if (entry.id === "dark") this.buildNightworks();
     else this.buildJungle(); // "jungle": the enclosed corridor course
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
     this.placeComboOrb(); // combo-run orb, the other side of the racing line
     this.bakeDecor(); // any batched decor the builder didn't flush itself
+    this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.buildAmbient(); // theme is set by the builder above
     this.clearPlayFog(); // ...and the course you run on comes back out of it
   }
@@ -2576,12 +2652,40 @@ export class Level {
         });
       });
     const ropeRails = new Set(this.ropes.map((r) => r.rail));
+    // A TRAVELLING rail is captured from its BUILD position (the live nodes
+    // are wherever the cycle has carried them this frame) plus its motion.
+    const movingRailSet = new Set(this.movingRails.map((m) => m.rail));
+    for (const mr of this.movingRails) {
+      const off = mr.object.position;
+      const a = mr.rail.points[0];
+      const b = mr.rail.points[mr.rail.points.length - 1];
+      C.push({
+        t: "rail",
+        p: [
+          r2((a.x + b.x) / 2 - off.x),
+          r2((a.y + b.y) / 2 - off.y),
+          r2((a.z + b.z) / 2 - off.z),
+        ],
+        len: r2(Math.hypot(b.x - a.x, b.z - a.z)),
+        yaw: r2(THREE.MathUtils.radToDeg(Math.atan2(b.x - a.x, b.z - a.z))),
+        axis:
+          Math.abs(mr.axisV.x) > 0.5
+            ? "x"
+            : Math.abs(mr.axisV.y) > 0.5
+              ? "y"
+              : "z",
+        amp: r2(mr.amp),
+        speed: r2(mr.speed),
+        phase: r2(mr.phase),
+      });
+    }
     for (const rail of this.rails) {
       const pts = rail.points;
       if (
         pts.length < 2 ||
         isCoping(pts) ||
         ropeRails.has(rail) ||
+        movingRailSet.has(rail) ||
         this.terrainRails.has(rail)
       )
         continue;
@@ -2735,6 +2839,36 @@ export class Level {
         phase: r2(mv.phase),
       });
     }
+    // Torches carried BY a phase pad are that pad's own dressing — the pad
+    // component rebuilds them, so capturing them again would double them up.
+    const padTorches = new Set(this.phasePads.flatMap((p) => p.torches));
+    for (const t of this.torches) {
+      if (padTorches.has(t)) continue;
+      const spec = t.group.userData.torchSpec as
+        | { h: number; scale: number }
+        | undefined;
+      C.push({
+        t: "torch",
+        p: [r2(t.group.position.x), r2(t.group.position.y), r2(t.group.position.z)],
+        rise: spec ? r2(spec.h) : undefined,
+        w: spec ? r2(spec.scale) : undefined,
+      });
+    }
+    for (const pad of this.phasePads) {
+      const par = (pad.mesh.geometry as THREE.BoxGeometry).parameters;
+      C.push({
+        t: "phasepad",
+        p: [
+          r2(pad.mesh.position.x),
+          r2(pad.mesh.position.y + 0.3), // mesh centre -> the top surface p means
+          r2(pad.mesh.position.z),
+        ],
+        s: [r2(par.width), r2(par.height), r2(par.depth)],
+        cycle: r2(pad.cycle),
+        phase: r2(pad.phase),
+        amp: r2(pad.duty),
+      });
+    }
     for (const st of this.stones) {
       C.push({
         t: "stone",
@@ -2777,12 +2911,26 @@ export class Level {
     for (const rs of this.ropeSwings) {
       C.push({
         t: "ropeswing",
-        p: [r2(rs.anchor.x), r2(rs.anchor.y), r2(rs.anchor.z)],
+        // a TRAVELLING rope is captured at the base of its run, not wherever
+        // the cycle has carried the anchor this frame
+        p: rs.travel
+          ? [r2(rs.travel.base.x), r2(rs.travel.base.y), r2(rs.travel.base.z)]
+          : [r2(rs.anchor.x), r2(rs.anchor.y), r2(rs.anchor.z)],
         len: r2(rs.len),
         amp: r2(rs.amp),
         speed: r2(rs.speed),
         phase: r2(rs.phase),
         yaw: rs.yaw ? Math.round(THREE.MathUtils.radToDeg(rs.yaw)) : undefined,
+        // `range` + `axis` + `cycle` are the anchor's own travel
+        range: rs.travel ? r2(rs.travel.amp) : undefined,
+        axis: rs.travel
+          ? Math.abs(rs.travel.axisV.x) > 0.5
+            ? "x"
+            : Math.abs(rs.travel.axisV.y) > 0.5
+              ? "y"
+              : "z"
+          : undefined,
+        cycle: rs.travel ? r2(rs.travel.speed) : undefined,
       });
     }
     // sagging ropes: endpoints off the taut rest nodes
@@ -3373,6 +3521,19 @@ export class Level {
               );
               this.rails.push(rail);
               this.root.add(rail.object);
+            } else if (c.amp) {
+              // amp on a straight rail = the whole line TRAVELS on a cycle
+              this.movingRail(
+                c.p[0],
+                c.p[1],
+                c.p[2],
+                c.len ?? 12,
+                c.yaw ?? 0,
+                c.axis ?? "x",
+                c.amp,
+                c.speed ?? 0.6,
+                c.phase ?? 0,
+              );
             } else {
               const len = c.len ?? 12;
               const a = THREE.MathUtils.degToRad(c.yaw ?? 0);
@@ -3542,6 +3703,20 @@ export class Level {
               c.speed ?? 0.6,
               c.phase ?? 0,
             );
+          } else if (c.t === "torch") {
+            this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
+          } else if (c.t === "phasepad") {
+            const s = c.s ?? [5, 0.6, 5];
+            this.phasePad(
+              c.p[0],
+              c.p[1],
+              c.p[2],
+              s[0],
+              s[2],
+              c.cycle ?? 4,
+              c.phase ?? 0,
+              c.amp ?? 0.5,
+            );
           } else if (c.t === "stone") {
             const half = Math.abs(c.range ?? 20);
             this.stone(
@@ -3573,6 +3748,11 @@ export class Level {
               c.speed ?? 0,
               c.phase ?? 0,
               c.yaw ?? 0,
+              // `range` travels the anchor along `axis` on its own `cycle`
+              c.range ? (c.axis ?? "x") : null,
+              c.range ?? 0,
+              c.cycle ?? 0.5,
+              c.phase ?? 0,
             );
           } else if (c.t === "pendulum") {
             this.pendulum(
@@ -3970,6 +4150,110 @@ export class Level {
       const s = Math.sin(this.time * m.speed + m.phase) * m.amp;
       m.lastDelta.copy(m.base).addScaledVector(m.axisV, s).sub(m.mesh.position);
       m.mesh.position.add(m.lastDelta);
+    }
+
+    // TRAVELLING RAILS: rigid translation only. The rail baked its segment
+    // directions and arc length at construction, and translation leaves both
+    // untouched — so nodes and visual move by the SAME delta and the grind
+    // line stays exactly under the bar.
+    for (const mr of this.movingRails) {
+      const s = cycleOffset(mr, this.time);
+      MR_DELTA.copy(mr.axisV)
+        .multiplyScalar(s)
+        .sub(mr.object.position); // object.position IS the accumulated offset
+      if (MR_DELTA.lengthSq() < 1e-12) continue;
+      mr.object.position.add(MR_DELTA);
+      for (const p of mr.rail.points) p.add(MR_DELTA);
+    }
+
+    // TRAVELLING SWING ROPES: anchor and pivot move together.
+    for (const rs of this.ropeSwings) {
+      if (!rs.travel) continue;
+      const s = cycleOffset(rs.travel, this.time);
+      MR_DELTA.copy(rs.travel.base)
+        .addScaledVector(rs.travel.axisV, s)
+        .sub(rs.anchor);
+      rs.anchor.add(MR_DELTA);
+      rs.pivot.position.add(MR_DELTA);
+    }
+
+    // PHASE PADS: solid + burning, then ghost + dark, on their own round.
+    for (const pad of this.phasePads) {
+      const k = (this.time / pad.cycle + pad.phase) % 1;
+      const on = k < pad.duty;
+      // The last beat before it goes is a WARNING, not a surprise: the deck
+      // strobes and the fire gutters, so a fair player can read the flip.
+      const untilOff = on ? (pad.duty - k) * pad.cycle : Infinity;
+      const warn = on && untilOff < 0.9;
+      if (on !== pad.on) {
+        pad.on = on;
+        pad.mesh.material = on ? pad.litMat : pad.ghostMat;
+        const at = this.groundMeshes.indexOf(pad.mesh);
+        if (on) {
+          if (at === -1) this.groundMeshes.push(pad.mesh);
+        } else if (at !== -1) {
+          this.groundMeshes.splice(at, 1);
+        }
+        for (const t of pad.torches) t.wantBurn = on ? 1 : 0;
+        if (Math.abs(pad.mesh.position.z - this.playerPos.z) < 40)
+          sfx.play(on ? "woosh2" : "crunch", 0.32, on ? 1.5 : 1.2);
+      }
+      if (warn) {
+        // strobe the fire down and back up ~4 times over the last beat
+        const s = 0.45 + 0.55 * Math.abs(Math.sin(untilOff * 12));
+        for (const t of pad.torches) t.wantBurn = s;
+      }
+    }
+
+    // TORCHES: flicker every fire, then aim the small pool of real lights at
+    // whichever ones are nearest the skater.
+    for (const t of this.torches) {
+      t.burn += (t.wantBurn - t.burn) * Math.min(1, 9 * dt);
+      const lick = 0.82 + 0.18 * Math.sin(this.time * 11 + t.seed * 3.1);
+      const sway = Math.sin(this.time * 7 + t.seed) * 0.12;
+      for (let i = 0; i < t.flames.length; i++) {
+        const f = t.flames[i];
+        const k = t.burn * (lick + i * 0.04);
+        f.scale.set(0.85 + 0.15 * k, Math.max(0.02, k), 0.85 + 0.15 * k);
+        f.rotation.z = sway * (i + 1) * 0.5;
+        f.visible = t.burn > 0.03;
+      }
+    }
+    if (this.torchLights.length > 0) {
+      // nearest-N by squared distance: a partial selection sort over a handful
+      // of slots, cheap enough to run every frame with dozens of fires
+      const px = this.playerPos.x;
+      const py = this.playerPos.y;
+      const pz = this.playerPos.z;
+      const taken = new Set<number>();
+      for (const light of this.torchLights) {
+        let best = -1;
+        let bestD = Infinity;
+        for (let i = 0; i < this.torches.length; i++) {
+          if (taken.has(i)) continue;
+          const t = this.torches[i];
+          if (t.burn <= 0.03) continue;
+          const dx = t.lightAt.x - px;
+          const dy = t.lightAt.y - py;
+          const dz = t.lightAt.z - pz;
+          const d2 = dx * dx + dy * dy + dz * dz;
+          if (d2 < bestD) {
+            bestD = d2;
+            best = i;
+          }
+        }
+        if (best === -1) {
+          light.intensity = 0;
+          continue;
+        }
+        taken.add(best);
+        const t = this.torches[best];
+        light.position.copy(t.lightAt);
+        // flicker the pool too, or the fires dance over a dead-still pool of
+        // light and the whole effect reads as a decal
+        const flick = 0.85 + 0.15 * Math.sin(this.time * 13 + t.seed * 2.3);
+        light.intensity = 5.2 * t.burn * flick;
+      }
     }
 
     // Crumble pads: shake, drop, (maybe) regrow.
@@ -4645,6 +4929,31 @@ export class Level {
       c.mesh.position.copy(c.base);
       c.mesh.rotation.set(0, c.yaw, 0);
     }
+    // Phase pads come back solid and lit; their cycle is driven off level
+    // time, which the reset rewinds, so they re-sync on their own from here.
+    for (const pad of this.phasePads) {
+      pad.on = true;
+      pad.mesh.material = pad.litMat;
+      if (this.groundMeshes.indexOf(pad.mesh) === -1)
+        this.groundMeshes.push(pad.mesh);
+      for (const t of pad.torches) t.wantBurn = 1;
+    }
+    // Travelling rails back to their build position (nodes AND visual).
+    for (const mr of this.movingRails) {
+      MR_DELTA.copy(mr.object.position).negate();
+      if (MR_DELTA.lengthSq() > 1e-12) {
+        mr.object.position.set(0, 0, 0);
+        for (const p of mr.rail.points) p.add(MR_DELTA);
+      }
+    }
+    // ...and travelling rope anchors.
+    for (const rs of this.ropeSwings) {
+      if (!rs.travel) continue;
+      MR_DELTA.copy(rs.travel.base).sub(rs.anchor);
+      rs.anchor.add(MR_DELTA);
+      rs.pivot.position.add(MR_DELTA);
+    }
+
     // Sky-bridge ropes restring taut.
     for (const r of this.ropes) {
       r.state = "idle";
@@ -5930,6 +6239,167 @@ export class Level {
     });
   }
 
+  // ------------------------------------------------------- fire and phase --
+
+  // A TORCH. Post, iron bowl, and three licking flames. The flames are
+  // MeshBasic — unlit — so a fire stays the brightest thing on screen however
+  // black the level's lighting is; the warm pool it casts on the deck around
+  // it comes from the shared point-light pool. `h` is post height, `scale`
+  // sizes the fire. Returns it so a phase pad can douse its own.
+  private torch(x: number, baseY: number, z: number, h = 2.2, scale = 1): Torch {
+    const group = new THREE.Group();
+    group.position.set(x, baseY, z);
+    if (h > 0.05) {
+      const post = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.08, 0.13, h, 6),
+        new THREE.MeshLambertMaterial({ color: 0x2e2a26, emissive: 0x140d08 }),
+      );
+      post.position.y = h / 2;
+      group.add(post);
+      const bowl = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.3 * scale, 0.16 * scale, 0.26 * scale, 7),
+        new THREE.MeshLambertMaterial({ color: 0x4a4038, emissive: 0x2a1206 }),
+      );
+      bowl.position.y = h + 0.1 * scale;
+      group.add(bowl);
+    }
+    // Three nested cones, hot core outward to a smoky tip. Basic material: a
+    // fire is not lit BY the scene, it IS the light in it.
+    const coneCols = [0xfff0b0, 0xffa32c, 0xd8410e];
+    const flames: THREE.Mesh[] = [];
+    for (let i = 0; i < 3; i++) {
+      const r = (0.3 - i * 0.07) * scale;
+      const fh = (0.55 + i * 0.42) * scale;
+      const f = new THREE.Mesh(
+        new THREE.ConeGeometry(r, fh, 6),
+        new THREE.MeshBasicMaterial({
+          color: coneCols[i],
+          transparent: true,
+          opacity: i === 0 ? 1 : 0.55 - i * 0.12,
+          depthWrite: i === 0,
+          fog: false, // a fire down the hall must not be eaten by the haze
+        }),
+      );
+      f.position.y = h + 0.2 * scale + fh * 0.42;
+      f.renderOrder = 4 + i;
+      group.add(f);
+      flames.push(f);
+    }
+    group.userData.torchSpec = { h, scale }; // capture: position is read live off the group
+    this.root.add(group);
+    const t: Torch = {
+      group,
+      flames,
+      lightAt: new THREE.Vector3(x, baseY + h + 0.55 * scale, z),
+      seed: this.torches.length * 1.7,
+      burn: 1,
+      wantBurn: 1,
+    };
+    this.torches.push(t);
+    return t;
+  }
+
+  // The light pool. Built once, at a fixed size, AFTER the builder has placed
+  // every torch — adding a light later would recompile every material in the
+  // scene. Aimed each frame at whichever fires are nearest the skater.
+  private buildTorchLights(): void {
+    if (this.torches.length === 0) return;
+    const n = Math.min(6, this.torches.length);
+    for (let i = 0; i < n; i++) {
+      const l = new THREE.PointLight(0xffa542, 0, 17, 1.7);
+      this.root.add(l);
+      this.torchLights.push(l);
+    }
+  }
+
+  // A PHASE PAD: solid and burning for `duty` of its cycle, a dark ghost you
+  // drop through for the rest. Collision is membership in groundMeshes —
+  // three.js raycasts ignore `visible`, so a hidden pad would still be a floor.
+  private phasePad(
+    x: number,
+    topY: number,
+    z: number,
+    w: number,
+    d: number,
+    cycle = 4,
+    phase = 0,
+    duty = 0.5,
+  ): void {
+    const litMat = this.patterned(
+      new THREE.MeshLambertMaterial({ color: 0x9a7f5c, emissive: 0x3a2008 }),
+      w,
+      d,
+      "wood",
+    );
+    const ghostMat = new THREE.MeshBasicMaterial({
+      color: 0x4a6a8c,
+      transparent: true,
+      opacity: 0.16,
+      depthWrite: false,
+      wireframe: true,
+      fog: false, // the ghost is the TELL for where to stand next — never hazed out
+    });
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 0.6, d), litMat);
+    mesh.position.set(x, topY - 0.3, z);
+    mesh.name = "phase pad";
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh); // starts solid; update() flips membership
+    const pad: PhasePad = {
+      mesh,
+      torches: [
+        // corner braziers, low so they light the deck rather than the eyes
+        this.torch(x - w / 2 + 0.45, topY, z - d / 2 + 0.45, 0.5, 0.72),
+        this.torch(x + w / 2 - 0.45, topY, z + d / 2 - 0.45, 0.5, 0.72),
+      ],
+      cycle: Math.max(0.5, cycle),
+      phase,
+      duty: THREE.MathUtils.clamp(duty, 0.1, 0.9),
+      on: true,
+      litMat,
+      ghostMat,
+    };
+    this.phasePads.push(pad);
+  }
+
+  // A grind line that TRAVELS. Only a rigid translation is safe (the rail
+  // bakes its segment directions and arc length at construction), so every
+  // node and the whole visual move by the same delta.
+  private movingRail(
+    x: number,
+    y: number,
+    z: number,
+    len: number,
+    yawDeg: number,
+    axis: "x" | "y" | "z",
+    amp: number,
+    speed: number,
+    phase = 0,
+  ): void {
+    const a = THREE.MathUtils.degToRad(yawDeg);
+    const dx = (Math.sin(a) * len) / 2;
+    const dz = (Math.cos(a) * len) / 2;
+    const rail = new Rail([
+      new THREE.Vector3(x - dx, y, z - dz),
+      new THREE.Vector3(x + dx, y, z + dz),
+    ]);
+    this.rails.push(rail);
+    this.root.add(rail.object);
+    this.movingRails.push({
+      rail,
+      object: rail.object,
+      base: new THREE.Vector3(0, 0, 0), // offsets are tracked from zero
+      axisV:
+        axis === "x"
+          ? new THREE.Vector3(1, 0, 0)
+          : axis === "y"
+            ? new THREE.Vector3(0, 1, 0)
+            : new THREE.Vector3(0, 0, 1),
+      amp,
+      speed,
+      phase,
+    });
+  }
+
   // Crumble pad: plank that shakes and drops when stood on. shakeTime near 0
   // breaks on landing; a longer shakeTime gives you a beat before it goes.
   private crumblePad(
@@ -6225,6 +6695,12 @@ export class Level {
     speed = 0,
     phase = 0,
     yawDeg = 0,
+    // optional TRAVEL: the anchor itself slides on this cycle, so the swing
+    // ferries you across as well as swinging you
+    travelAxis: "x" | "y" | "z" | null = null,
+    travelAmp = 0,
+    travelSpeed = 0.5,
+    travelPhase = 0,
   ): void {
     const yaw = THREE.MathUtils.degToRad(yawDeg);
     const pivot = new THREE.Group();
@@ -6269,6 +6745,21 @@ export class Level {
       yaw,
       theta: 0,
       thetaV: 0,
+      travel:
+        travelAxis && travelAmp !== 0
+          ? {
+              base: new THREE.Vector3(x, anchorY, z),
+              axisV:
+                travelAxis === "x"
+                  ? new THREE.Vector3(1, 0, 0)
+                  : travelAxis === "y"
+                    ? new THREE.Vector3(0, 1, 0)
+                    : new THREE.Vector3(0, 0, 1),
+              amp: travelAmp,
+              speed: travelSpeed,
+              phase: travelPhase,
+            }
+          : undefined,
     });
   }
 
@@ -10247,6 +10738,174 @@ export class Level {
         this.skyRope(rx, zEdges[s], rx, zEdges[s + 1], ropeY, 3.0, 1.15, 4);
       }
     }
+  }
+
+  // ---- THE NIGHTWORKS: platforming in the dark ---------------------------
+  //
+  // No skating course, no lines to carve — a machine hall at night where the
+  // only ground is machinery on a cycle and the only light is fire. Every
+  // hazard is a TIMING hazard, so the level is really one long lesson in
+  // reading a rhythm, taught the classic way: one idea per section, on its
+  // own, then two at once, then everything.
+  //
+  //   A  cycling platforms, side to side        (ride it across)
+  //   B  lifts — the ground changes height      (hop at the top of the beat)
+  //   C  phase pads: solid and lit, then gone   (cross while it's burning)
+  //   D  travelling rails                       (grind aboard, ride, hop off)
+  //   E  travelling swing ropes                 (the ferry over the long dark)
+  //   F  all of it at once, into the goal
+  //
+  // The darkness is doing design work, not decoration: torches mark the safe
+  // stone and every moving thing carries its own fire, so "where the light is"
+  // and "where you can stand" are the same sentence. Fog pulls in tight so the
+  // next island arrives as a glow before it arrives as geometry.
+  private buildNightworks(): void {
+    this.skyPreset = "night";
+    this.killY = -26; // a long, quiet drop off any edge
+    this.finishZ = -300;
+    this.endWallZ = -330;
+    this.wallTint = 0x2a2f3c;
+    this.blockTint = 0x333a48;
+    this.theme = {
+      skyTop: "#03060f",
+      skyBottom: "#0b1226",
+      sunColorHex: "", // no disc: the only light in this place is on fire
+      sunU: 0.5,
+      sunV: 0.5,
+      stars: true,
+      fog: 0x05070f, // near-black: an island is a glow before it is a shape
+      fogNear: 12,
+      fogFar: 74,
+      hemiSky: 0x1a2440,
+      hemiGround: 0x0a0d16,
+      hemiI: 0.34, // just enough bounce to keep an unlit edge from vanishing
+      sunColor: 0x5f7cc4,
+      sunI: 0.42,
+      particleColor: 0xff9a3c, // embers rising off the works
+      particleWind: [0.12, 0.55, 0.05],
+    };
+
+    const stoneMat = new THREE.MeshLambertMaterial({ color: 0x59606e });
+    // An island of solid stone, lit at its corners. Safe ground, and the only
+    // place in the level you can stop and read what's coming.
+    const isle = (
+      z: number,
+      w: number,
+      d: number,
+      x = 0,
+      y = 0,
+      torchH = 2.2,
+    ): void => {
+      this.slab("platform", z + d / 2, z - d / 2, y, w, stoneMat, false, x, "stone");
+      this.torch(x - w / 2 + 0.7, y, z + d / 2 - 0.7, torchH);
+      this.torch(x + w / 2 - 0.7, y, z - d / 2 + 0.7, torchH);
+    };
+    // A GANTRY PAD: the small fixed footing that keeps the rail and rope
+    // sections honest. Every one carries a fire, because in this level a
+    // light IS the promise that there's something to land on.
+    const ledge = (x: number, z: number, y = 3, s = 4): void => {
+      this.slab("platform", z + s / 2, z - s / 2, y, s, stoneMat, false, x, "stone");
+      // fire at the BACK corner: it marks the pad from a distance without
+      // standing in the middle of the only place you have to land
+      this.torch(x + s / 2 - 0.6, y, z + s / 2 - 0.6, 1.5, 0.8);
+    };
+
+    // --- start: a wide lit dock, and the dark ahead --------------------------
+    isle(2, 11, 12, 0, 0, 2.6);
+    this.spawnPos.set(0, 0.1, 4);
+    this.currentSpawn.copy(this.spawnPos);
+    this.torch(-4.4, 0, 7.2, 2.6);
+    this.torch(4.4, 0, 7.2, 2.6);
+
+    // --- A: cycling platforms, side to side ---------------------------------
+    // Wide, slow and forgiving: the whole job is to step on and wait.
+    this.mover(0, 0, -9, 5, 5, "x", 5.5, 0.5, 0);
+    this.mover(0, 0, -18, 5, 5, "x", 6, 0.55, Math.PI); // counter-swinging pair
+    this.mover(0, 0, -27, 4.5, 4.5, "x", 6, 0.6, Math.PI / 2);
+    this.pickup(0, 1.3, -18);
+    isle(-36, 10, 8);
+    this.checkpoint(0, -36);
+
+    // --- B: lifts — the ground changes height -------------------------------
+    // Same idea turned 90°: ride up, hop across at the top of the beat.
+    this.mover(-3, 0.5, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
+    this.mover(3, 2.5, -53, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
+    this.mover(-3, 4.5, -61, 4.5, 4.5, "y", 3.0, 0.75, Math.PI / 2);
+    this.mover(3, 3.0, -69, 4.5, 4.5, "y", 3.6, 0.65, 0);
+    this.pickup(-3, 5.6, -61);
+    isle(-78, 10, 8, 0, 3);
+    this.checkpoint(3, -78);
+
+    // --- C: phase pads — here, then not -------------------------------------
+    // Introduced one at a time on a long, honest cycle: the fire on a pad IS
+    // its timer. Torches gutter for the last beat before it drops away.
+    this.phasePad(0, 3, -87, 5, 5, 4.4, 0, 0.62);
+    this.phasePad(0, 3, -95, 5, 5, 4.4, 0.34, 0.62);
+    this.phasePad(0, 3, -103, 5, 5, 4.4, 0.68, 0.62);
+    this.pickup(0, 4.3, -95);
+    isle(-112, 9, 7, 0, 3);
+    // ...then two lines of them, alternating: one row is always the way.
+    this.phasePad(-3.2, 3, -121, 4.4, 4.4, 3.6, 0, 0.55);
+    this.phasePad(3.2, 3, -121, 4.4, 4.4, 3.6, 0.5, 0.55);
+    this.phasePad(3.2, 3, -129, 4.4, 4.4, 3.6, 0.25, 0.55);
+    this.phasePad(-3.2, 3, -137, 4.4, 4.4, 3.6, 0.75, 0.55);
+    isle(-146, 10, 8, 0, 3);
+    this.checkpoint(0, -146);
+
+    // --- D: travelling rails ------------------------------------------------
+    // TWO ROUTES, and that is the point. The gantry pads zigzag left-right, so
+    // the careful way is a string of short hops; the rails run dead straight
+    // above them, so catching one is genuinely faster — and the fakie rule
+    // means a 180 between two of them reads as the trick it is.
+    ledge(-3, -157);
+    ledge(3, -165);
+    ledge(-3, -173);
+    ledge(3, -181);
+    this.movingRail(0, 4.7, -161, 11, 0, "x", 4.5, 0.5, 0);
+    this.movingRail(0, 4.7, -173, 11, 0, "x", 5, 0.55, Math.PI);
+    this.movingRail(0, 4.7, -184, 9, 0, "x", 4, 0.6, Math.PI / 2);
+    this.pickup(0, 6, -173);
+    isle(-190, 10, 8, 0, 3);
+    this.checkpoint(0, -190);
+
+    // --- E: travelling ropes — the ferry ------------------------------------
+    // Same deal: pads for the patient, ropes for the bold. These anchors
+    // SLIDE, so a rope carries you sideways while you swing — the fastest way
+    // through the longest dark in the level.
+    ledge(-3, -200);
+    ledge(3, -208);
+    ledge(-3, -216);
+    ledge(3, -224);
+    this.ropeSwing(-4, 11, -204, 6.4, 0.7, 0, 0, 0, "x", 5, 0.45, 0);
+    this.ropeSwing(4, 11, -212, 6.4, 0.7, 0, Math.PI, 0, "x", 5, 0.45, Math.PI);
+    this.ropeSwing(-4, 11, -220, 6.4, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
+    // fires on the anchor beams: you can see where the next rope will be
+    this.torch(-8.5, 8.6, -204, 1.2, 0.9);
+    this.torch(8.5, 8.6, -212, 1.2, 0.9);
+    this.torch(-8.5, 8.6, -220, 1.2, 0.9);
+    this.pickup(0, 4.3, -212);
+    isle(-234, 11, 9, 0, 3);
+    this.checkpoint(0, -234);
+
+    // --- F: everything at once ----------------------------------------------
+    this.mover(0, 3, -244, 4.5, 4.5, "x", 5.5, 0.65, 0);
+    this.phasePad(0, 3, -253, 4.6, 4.6, 3.4, 0.2, 0.55);
+    ledge(-3, -259);
+    this.movingRail(0, 4.7, -263, 9, 0, "x", 5, 0.6, Math.PI / 2);
+    ledge(3, -267);
+    this.phasePad(0, 3, -274, 4.6, 4.6, 3.4, 0.6, 0.55);
+    this.mover(0, 3, -281, 4.5, 4.5, "y", 3.0, 0.7, Math.PI);
+    ledge(-3, -288);
+    this.ropeSwing(3, 11, -288, 6.4, 0.7, 0, 0, 0, "x", 4.5, 0.5, 0);
+    this.pickup(0, 4.3, -253);
+    this.pickup(0, 4.3, -274);
+
+    // --- goal: the works lit up ---------------------------------------------
+    isle(-297, 13, 11, 0, 3, 3.2);
+    this.torch(-5, 3, -300, 3.2);
+    this.torch(5, 3, -300, 3.2);
+    this.crystal(0, 3.6, -297);
+    this.finishGate(3, this.finishZ);
   }
 
   private boulderGroundY(z: number): number {

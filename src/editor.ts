@@ -1331,6 +1331,52 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
+        label: "torch",
+        icon: (x) => {
+          x.fillStyle = "#3a3330"; // post
+          x.fillRect(8, 8, 2, 8);
+          x.fillStyle = "#ff9a2c"; // flame
+          x.beginPath();
+          x.moveTo(9, 1);
+          x.lineTo(12.5, 8);
+          x.lineTo(5.5, 8);
+          x.closePath();
+          x.fill();
+          x.fillStyle = "#fff0b0";
+          x.beginPath();
+          x.moveTo(9, 3.5);
+          x.lineTo(10.8, 8);
+          x.lineTo(7.2, 8);
+          x.closePath();
+          x.fill();
+        },
+        make: (at) => ({
+          t: "torch",
+          p: [at.x, at.y, at.z],
+          rise: 2.2,
+          w: 1,
+        }),
+      },
+      {
+        label: "phase pad",
+        icon: (x) => {
+          x.fillStyle = "#9a7f5c"; // the solid half
+          x.fillRect(1, 8, 8, 4);
+          x.strokeStyle = "#4a6a8c"; // the ghost half
+          x.lineWidth = 1;
+          x.strokeRect(9.5, 8.5, 7, 3);
+          glyph(x, "◐", "#ffd08a");
+        },
+        make: (at) => ({
+          t: "phasepad",
+          p: [at.x, at.y, at.z],
+          s: [5, 0.6, 5],
+          cycle: 4,
+          phase: 0,
+          amp: 0.5,
+        }),
+      },
+      {
         label: "boulder",
         icon: (x) => {
           x.fillStyle = "#a08a70";
@@ -1521,6 +1567,7 @@ const RESIZABLE = new Set([
   "crumble",
   "crusher",
   "mover",
+  "phasepad",
   "ramp",
   "rail",
   "rope",
@@ -3153,6 +3200,7 @@ export class Editor {
     else if (c.t === "crumble") c.s = c.s ?? [3, 1, 3];
     else if (c.t === "crusher") c.s = c.s ?? [4, 3, 3];
     else if (c.t === "mover") c.s = c.s ?? [6, 0.8, 6];
+    else if (c.t === "phasepad") c.s = c.s ?? [5, 0.6, 5];
     else if (c.t === "ramp") {
       c.len = c.len ?? 10;
       c.rise = c.rise ?? 4;
@@ -3311,6 +3359,7 @@ export class Editor {
       c.t === "crumble" ||
       c.t === "crusher" ||
       c.t === "mover" ||
+      c.t === "phasepad" ||
       c.t === "zone"
     ) {
       const s = c.s ?? [14, 1, 10];
@@ -5266,6 +5315,8 @@ export class Editor {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
         if (c.axis === "x") c.axis = "z";
         else if (c.axis === "z") c.axis = "x"; // a lift ("y") stays a lift
+      } else if (c.t === "phasepad") {
+        if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (yawable.has(c.t)) {
         c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
       }
@@ -6400,6 +6451,40 @@ export class Editor {
         () => c.phase ?? 0,
         (v) => (c.phase = v),
         0.2,
+      );
+    } else if (c.t === "torch") {
+      num(
+        "post height",
+        () => c.rise ?? 2.2,
+        (v) => (c.rise = Math.max(0, v)),
+        0.2,
+      );
+      num(
+        "flame size",
+        () => c.w ?? 1,
+        (v) => (c.w = Math.max(0.2, v)),
+        0.1,
+      );
+    } else if (c.t === "phasepad") {
+      sizeRow(0, "width");
+      sizeRow(2, "depth");
+      num(
+        "cycle (s)",
+        () => c.cycle ?? 4,
+        (v) => (c.cycle = Math.max(0.5, v)),
+        0.2,
+      );
+      num(
+        "lit share",
+        () => c.amp ?? 0.5,
+        (v) => (c.amp = Math.min(0.9, Math.max(0.1, v))),
+        0.05,
+      );
+      num(
+        "phase",
+        () => c.phase ?? 0,
+        (v) => (c.phase = ((v % 1) + 1) % 1),
+        0.05,
       );
     } else if (c.t === "stone") {
       num(
