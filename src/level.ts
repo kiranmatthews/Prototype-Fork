@@ -6276,7 +6276,14 @@ export class Level {
   // black the level's lighting is; the warm pool it casts on the deck around
   // it comes from the shared point-light pool. `h` is post height, `scale`
   // sizes the fire. Returns it so a phase pad can douse its own.
-  private torch(x: number, baseY: number, z: number, h = 2.2, scale = 1): Torch {
+  private torch(
+    x: number,
+    baseY: number,
+    z: number,
+    h = 2.2,
+    scale = 1,
+    cool = false, // burns cold blue instead of orange (the metronome's other team)
+  ): Torch {
     const group = new THREE.Group();
     group.position.set(x, baseY, z);
     if (h > 0.05) {
@@ -6295,7 +6302,9 @@ export class Level {
     }
     // Three nested cones, hot core outward to a smoky tip. Basic material: a
     // fire is not lit BY the scene, it IS the light in it.
-    const coneCols = [0xfff0b0, 0xffa32c, 0xd8410e];
+    const coneCols = cool
+      ? [0xe4f4ff, 0x5cc8ff, 0x1a63d8] // cold-burning: the metronome's blue team
+      : [0xfff0b0, 0xffa32c, 0xd8410e];
     const flames: THREE.Mesh[] = [];
     for (let i = 0; i < 3; i++) {
       const r = (0.3 - i * 0.07) * scale;
@@ -6363,10 +6372,15 @@ export class Level {
     // (not authored separately) so it survives capture/rebuild for free.
     const k = ((phase % 1) + 1) % 1;
     const coolFam = k >= 0.25 && k < 0.75;
+    // ONE lit look for every pad, both teams: solid warm stone means STAND
+    // HERE, full stop. Giving the teams different SLAB colours made a trade
+    // read as "the platform turned a different colour" rather than "that one
+    // went away" — the flip stopped looking like a disappearance at all
+    // (playtest). The team you belong to lives in the FIRE instead: this
+    // metronome's other half burns cold blue, so you can still see the two
+    // sets at a glance without either of them looking less solid.
     const litMat = this.patterned(
-      coolFam
-        ? new THREE.MeshLambertMaterial({ color: 0x5c7f9a, emissive: 0x0a2c42 })
-        : new THREE.MeshLambertMaterial({ color: 0x9a7f5c, emissive: 0x3a2008 }),
+      new THREE.MeshLambertMaterial({ color: 0x9a7f5c, emissive: 0x3a2008 }),
       w,
       d,
       "wood",
@@ -6388,9 +6402,10 @@ export class Level {
     const pad: PhasePad = {
       mesh,
       torches: [
-        // corner braziers, low so they light the deck rather than the eyes
-        this.torch(x - w / 2 + 0.45, topY, z - d / 2 + 0.45, 0.5, 0.72),
-        this.torch(x + w / 2 - 0.45, topY, z + d / 2 - 0.45, 0.5, 0.72),
+        // corner braziers, low so they light the deck rather than the eyes —
+        // and these carry the team colour now, warm or cold
+        this.torch(x - w / 2 + 0.45, topY, z - d / 2 + 0.45, 0.5, 0.72, coolFam),
+        this.torch(x + w / 2 - 0.45, topY, z + d / 2 - 0.45, 0.5, 0.72, coolFam),
       ],
       cycle: Math.max(0.5, cycle),
       phase,
@@ -10872,10 +10887,15 @@ export class Level {
     // The two pad teams, one metronome: same clock, half a turn apart, with
     // a beat of overlap where both stand. AMBER = phase 0, BLUE = phase 0.5
     // (the pad derives its colour from its phase, so the teams read on sight).
+    // Duty EXACTLY half: the teams hand over cleanly, so at every instant one
+    // set is solid and the other is genuinely gone. (At 0.55 they overlapped
+    // for a fifth of a second and every pad in the row stood at once — which
+    // is what "half of them don't disappear" was: the trade never looked like
+    // anything left.) The 0.9s warning strobe is the fairness, not an overlap.
     const padA = (x: number, y: number, z: number, s = 5): void =>
-      this.phasePad(x, y, z, s, s, 4.4, 0, 0.55);
+      this.phasePad(x, y, z, s, s, 4.4, 0, 0.5);
     const padB = (x: number, y: number, z: number, s = 5): void =>
-      this.phasePad(x, y, z, s, s, 4.4, 0.5, 0.55);
+      this.phasePad(x, y, z, s, s, 4.4, 0.5, 0.5);
     // Every mover in this level burns: warm iron deck + a brazier riding it.
     const fmover = (
       x: number,
