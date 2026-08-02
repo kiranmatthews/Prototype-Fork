@@ -123,6 +123,7 @@ export const TUNING = {
   // return as a deliberate mechanic in the redesign.)
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
+  grindCalm: 0.45, // entry calm: a full-speed catch steadies the needle for up to this many seconds (momentum plants you; slow creeps get less)
   balanceSpeedEffect: 1.4, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
   balanceGrace: 2, // seconds of flat difficulty at the start of every grind
   balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
@@ -297,6 +298,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   lipControl: { min: 0.5, max: 8, step: 0.1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
+  grindCalm: { min: 0, max: 1.2, step: 0.05 },
   balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
   balanceGrace: { min: 0, max: 6, step: 0.25 },
   balanceRamp: { min: 0, max: 1.5, step: 0.05 },
@@ -534,6 +536,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   lipControl: 'How hard stick input fights the lip stall needle (along whichever screen axis the meter shows).',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
+  grindCalm:
+    'Momentum steadies the catch: landing on a rail at speed keeps the needle quiet for up to this many seconds (scaled by how fast you got on — slow creeps get a shorter beat). The direction you were still holding at the catch never shoves the needle; let go once and left/right fight as normal. 0 = off.',
   balanceSpeedEffect:
     'Baseline for how much grind speed sways the needle. 0 = speed is ignored; 1 = slow grinds wobble up to 1.5x, fast grinds less; 2 = that effect doubled.',
   balanceGrace:
@@ -657,7 +661,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',

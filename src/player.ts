@@ -548,6 +548,8 @@ export class Player {
   private jumpPressT = 0; // time left since the last fresh X press (perfect-bounce timing)
   private slideGraceT = 0; // window after a slide ends where a jump still slide-boosts
   private grindTime = 0; // how long this grind has lasted (balance ramps up)
+  private grindCalmT = 0; // entry calm beat: seconds of steadied needle, bought by momentum carried ALONG the bar at the catch
+  private grindStickStale = 0; // SIGN of the stick direction already held when the rail was caught (a side-scroll travel hold, not a lean): it can never push the needle outward, only steady it — until released or flipped once (0 = none)
   private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
   private snapOffset = new THREE.Vector3(); // entry offset, eased away on the rail
   private snapEase = 1; // 0 -> 1 over railSnapEase seconds after a grind starts
@@ -583,7 +585,6 @@ export class Player {
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
   private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
-  private zoneDirNow: 'E' | 'W' | 'N' | 'S' | null = null; // the travel zone under our feet this step (side-scroll spin/balance axes read it)
   private grindExitAir = false; // this air left a RAIL: the lateral strafe stays live (rail-to-rail hops), unlike plain ollies
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
@@ -1126,9 +1127,6 @@ export class Player {
       if (this.groundHit.moverId !== undefined) this.pos.add(level.moverDelta(this.groundHit.moverId));
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
-    // which travel zone (if any) owns the course frame this step — the
-    // side-scroll spin/balance axes key off it
-    this.zoneDirNow = level.zoneAt(this.pos.x, this.pos.z)?.dir ?? null;
     level.playerPos.copy(this.pos); // the boulder chase reads this
     // Fresh X presses feed the perfect-bounce timing window.
     if (input.jumpPressed) this.jumpPressT = TUNING.arrowBoostWindow;
@@ -5011,20 +5009,29 @@ export class Player {
     );
     const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
     const runSign = Math.sign(this.balance || 1);
-    // The needle is fought CROSS-RAIL on the screen, not with raw stick-X.
-    // On a down-course bar the cross axis IS stick-X (byte-identical to the
-    // old feel) — but on a SIDE-SCROLL bar the travel intent is stick-X, and
-    // reading it as a correction slammed the needle the moment you held
-    // "onward". Decompose the bar into the camera frame and take the stick
-    // component perpendicular to it: travel never touches the needle.
-    const gT = this.grindRail!.tangentAt(this.grindT);
-    const gTL = Math.hypot(gT.x, gT.z) || 1; // slopes keep full authority
-    const railUp = Math.abs(gT.x * this.camDir.x + gT.z * this.camDir.z) / gTL;
-    const railRt = Math.abs(gT.x * -this.camDir.z + gT.z * this.camDir.x) / gTL;
-    const stickCross = this.rawInput.moveX * railUp - this.rawInput.moveY * railRt;
-    let control = stickCross * TUNING.balanceControl;
+    // Left/right fights the needle — everywhere, the classic. Two guards
+    // keep a MOMENTUM entry honest (side-scroll rails: you necessarily hold
+    // the travel direction to make the hop, and that same direction used to
+    // shove the needle at full force the frame you caught the bar):
+    //  * the STALE HOLD — the direction already down at the catch — never
+    //    pushes OUTWARD: it can steady you back toward center but can't
+    //    fling you past it. Let go once (or flip) and it's a live
+    //    correction with full authority, like any fresh press.
+    //  * the entry calm beat (grindCalmT, bought by speed carried along the
+    //    bar) wakes the drift up gradually instead of at full boil.
+    const mx = this.rawInput.moveX;
+    if (
+      this.grindStickStale !== 0 &&
+      (Math.abs(mx) < 0.3 || Math.sign(mx) !== this.grindStickStale)
+    )
+      this.grindStickStale = 0; // released or flipped: the stick is yours again
+    const staleOut =
+      this.grindStickStale !== 0 && Math.sign(mx) === Math.sign(this.balance || mx);
+    const calm =
+      this.grindCalmT > 0 ? Math.min(1, this.grindTime / this.grindCalmT) : 1;
+    let control = (staleOut ? 0 : mx) * TUNING.balanceControl;
     control *= this.safeGain(this.grindTime, control, runSign);
-    this.stepBalanceCore(dt, runSign, instability, control, ramp);
+    this.stepBalanceCore(dt, runSign, instability * calm, control, ramp);
     if (this.uberTimer > 0 || this.balanceBoostT > 0) {
       this.balance = 0;
       this.balanceVel = 0;
@@ -5299,6 +5306,18 @@ export class Player {
     this.balanceVel = 0;
     this.balanceCritT = 0;
     this.noisePhase = Math.random() * Math.PI * 2;
+    // MOMENTUM STEADIES THE CATCH: speed carried along the bar buys a calm
+    // beat where the needle stays quiet, so a committed fast entry starts
+    // planted instead of instantly tipping. And the direction you were
+    // ALREADY holding on the way in (on a side-scroll stretch you hold
+    // toward the rail just to make the hop) never counts as a lean — it
+    // goes dead until it comes back to neutral once.
+    this.grindCalmT =
+      TUNING.grindCalm > 0
+        ? Math.max(0.12, Math.min(1, Math.abs(alongVel) / 10) * TUNING.grindCalm)
+        : 0;
+    this.grindStickStale =
+      Math.abs(this.rawInput.moveX) > 0.3 ? Math.sign(this.rawInput.moveX) : 0;
     this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
     sfx.play('railLand', 0.8);
     // THPS SPEED-KEEP: the rail REDIRECTS the speed you brought instead of
@@ -5684,14 +5703,8 @@ export class Player {
   // broken" — while the axis that did respond doubled as a positional slide
   // down the pipe. One stick meaning everywhere: left/right = rotate.)
   private spinStick(): number {
-    // The spin axis is CROSS-course. Down-course travel is screen-up, so
-    // left/right spins — the classic. In a SIDE-SCROLL travel zone the
-    // course runs along screen-X, and reading raw X there meant "keep going"
-    // spun you through every hop between rails; the cross axis (stick
-    // up/down) owns the spin there instead, and travel intent never rotates.
-    const zn = this.zoneDirNow;
-    const v = zn === 'E' || zn === 'W' ? -this.rawInput.moveY : this.rawInput.moveX;
-    return Math.abs(v) > 0.3 ? v : 0;
+    const rx = this.rawInput.moveX;
+    return Math.abs(rx) > 0.3 ? rx : 0;
   }
 
   private updateGrab(dt: number, input: Input): void {
