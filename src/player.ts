@@ -4957,15 +4957,24 @@ export class Player {
         this.grindYawDir = prevYaw; // a same-style re-press must not silently flip the crosswise pose
       }
     }
-    // Grinds ride at the speed you brought and bleed a little on the rail
-    // (nose and crooked grinds hold their speed better).
-    const bleed =
-      this.grindStyle === 'nose'
-        ? CONST.grindBleed * 0.4
-        : this.grindStyle === 'crook'
-          ? CONST.grindBleed * 0.55
-          : CONST.grindBleed;
-    this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - bleed * dt);
+    // A RAIL HOLDS THE SPEED YOU BROUGHT. Flat bar, no cost — only the slope
+    // below can take speed off you. (It used to scrub a flat second-by-second
+    // whatever you did, which quietly made long rails unridable: the bleed
+    // dragged you toward the floor speed, and a slow grind wobbles HARDER
+    // (see speedFactor), so a long crossing spiralled into a bail no matter
+    // how well it was balanced. The jungle's fallen trunk needed a near-top-
+    // speed entry to survive at all.) grindDrag puts that friction back for
+    // anyone who wants it — 0 by default, and still weighted per style so a
+    // crosswise slide scrubs more than a nose.
+    if (TUNING.grindDrag > 0) {
+      const drag =
+        this.grindStyle === 'nose'
+          ? TUNING.grindDrag * 0.4
+          : this.grindStyle === 'crook'
+            ? TUNING.grindDrag * 0.55
+            : TUNING.grindDrag;
+      this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - drag * dt);
+    }
     // SLOPED RAILS: gravity works the grind line — descending segments feed
     // speed, climbs bleed it (the same knobs as ground slopes), capped like
     // any earned downhill. tangent.y IS sin(slope) on a unit tangent.

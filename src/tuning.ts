@@ -61,6 +61,7 @@ export const TUNING = {
   landGive: 0.35, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
   railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
+  grindDrag: 0, // friction a FLAT rail scrubs per second. 0 = a rail holds the speed you brought and only climbs cost you
   railSpeedBoost: 0, // flat speed handed to you on a rail entry. 0 = THPS speed-keep: a grind now KEEPS the speed you carried in (redirected along the rail, whatever the angle), so the rail no longer needs a consolation gift — only DOWNHILL rails add speed (slope gravity works the grind line)
   perfectGrindSpeed: 48, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — well past downhillMax (30.5), so it is comfortably the fastest the board ever goes. It gets its own temporary ceiling while perfectGrindHold runs, so the usual clamps do not eat it
   perfectGrindHold: 3.9, // how long that over-ceiling speed is allowed to survive before the normal downhillMax clamp takes it back (heavyDrag is bleeding it the whole time)
@@ -238,6 +239,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
   railTripSpeed: { min: 8, max: 30, step: 0.5 },
   railSpeedBoost: { min: 0, max: 10, step: 0.5 },
+  grindDrag: { min: 0, max: 4, step: 0.1 },
   perfectGrindSpeed: { min: 23, max: 55, step: 0.5 },
   perfectGrindHold: { min: 0, max: 6, step: 0.1 },
   grindSpeed: { min: 5, max: 50, step: 1 },
@@ -434,6 +436,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How close (in units) a rail must be for Triangle to snap you onto it. Bigger = more forgiving grind grabs.',
   railTripSpeed:
     'Running/skating STRAIGHT INTO a rail from the side (no jump, no grind): below this speed the rail simply BLOCKS you like a curb; at or above it you catch the rail and TRIP (bail/stumble). Jump over it or grind it to pass cleanly.',
+  grindDrag:
+    'Friction a FLAT rail scrubs off per second. 0 (default) = a rail HOLDS the speed you brought it, and only a climb costs you — the slope works the grind line either way, so downhill rails still feed speed. Dial it up to make long grinds a speed decision again; a crosswise slide scrubs the full amount, a crooked grind about half, a nosegrind least.',
   railSpeedBoost:
     'EXTRA flat speed granted on top when you land a grind. Grinds now KEEP the speed you carried in (THPS speed-keep — redirected along the rail whatever the angle you hit it at), so this ships at 0: slow entry = slow grind, fast entry = fast grind, and only DOWNHILL rails add speed. Raise it if you want every rail to be a gear change again.',
   perfectGrindSpeed:
@@ -661,7 +665,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',
@@ -693,8 +697,7 @@ export const CONST = {
   railBlockRadius: 0.2, // on-foot rail block/trip: horizontal contact skin around the rail line (added to player half)
   railSnapEase: 0.12, // seconds to glide onto a grabbed rail (no one-frame zap)
   regrindCooldown: 0.3, // stops instant re-snap right after leaving a rail
-  grindMinSpeed: 3.5, // slowest a grind can crawl (and the floor for speed bleed). Dropped from 8 with THPS speed-keep: a deliberate slow creep onto a rail is a slow, deliberate grind now, not a free 8 u/s dispenser
-  grindBleed: 2, // grind speed lost per second on the rail
+  grindMinSpeed: 3.5, // slowest a grind can crawl (and the floor for grindDrag). Dropped from 8 with THPS speed-keep: a deliberate slow creep onto a rail is a slow, deliberate grind now, not a free 8 u/s dispenser
   comboWindow: 0.15, // near-zero: combos live in the air/on rails, not on the ground
   // Base point values — combo total = sum of bases x number of actions.
   ptsCrate: 25,
