@@ -3,7 +3,6 @@
 
 import * as THREE from "three";
 import { COMBO_GEM_TINT, Level, levelList } from "./level";
-import { setRasterText } from "./hudfont";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import {
   TUNING,
@@ -106,6 +105,14 @@ export class UI {
   private rooLives!: RooLabel;
   private rooTTTime!: RooLabel;
   private rooTTBest!: RooLabel;
+  private rooTTFreeze!: RooLabel;
+  private rooTTResTitle!: RooLabel;
+  private rooTrickLine!: RooLabel;
+  private rooTrickTotal!: RooLabel;
+  private rooMsgTitle!: RooLabel;
+  private scoreLabelEl!: HTMLElement;
+  private boostLabelEl!: HTMLElement;
+  private deathTitleEl!: HTMLElement;
   private ttTimeEl!: HTMLElement;
   private ttResTitleEl!: HTMLElement;
   private ttResTimeEl!: HTMLElement;
@@ -542,7 +549,7 @@ export class UI {
     // top-center: score plate
     const scorePlate = div("hud-scoreplate");
     const scoreLabel = div("hud-scorelabel");
-    setRasterText(scoreLabel, "SCORE");
+    this.scoreLabelEl = scoreLabel;
     this.scoreEl = div("hud-scorenum");
     scorePlate.appendChild(scoreLabel);
     scorePlate.appendChild(this.scoreEl);
@@ -585,7 +592,7 @@ export class UI {
     this.boostRing = div("hud-boostring");
     boosts.appendChild(this.boostRing);
     const boostLab = div("hud-boostlabel");
-    setRasterText(boostLab, "BALANCE");
+    this.boostLabelEl = boostLab;
     boosts.appendChild(boostLab);
     boosts.style.display = "none";
     this.boostRingWrap = boosts;
@@ -610,7 +617,7 @@ export class UI {
     // black game-over screen: any button restarts
     this.deathEl = div("hud-death");
     const deathTitle = div("hud-death-title");
-    setRasterText(deathTitle, "GAME OVER");
+    this.deathTitleEl = deathTitle;
     const deathSub = div("hud-death-sub");
     deathSub.textContent = "press any button";
     this.deathEl.appendChild(deathTitle);
@@ -685,6 +692,19 @@ export class UI {
       palette: ROO_TT,
       tracking: -2,
     });
+    this.rooTTFreeze = new RooLabel(this.ttFreezeEl, { palette: ROO_TT });
+    this.rooTTResTitle = new RooLabel(this.ttResTitleEl, { palette: ROO_TT });
+    // The trick plate and every centre-screen message are HUD furniture, so
+    // they wear the orange face with the counters.
+    this.rooTrickLine = new RooLabel(this.trickLineEl, { palette: ROO_HUD });
+    this.rooTrickTotal = new RooLabel(this.trickTotalEl, { palette: ROO_HUD });
+    this.rooMsgTitle = new RooLabel(this.msgTitle, { palette: ROO_HUD });
+    // Fixed captions: set once, then they never change again.
+    new RooLabel(this.scoreLabelEl, { palette: ROO_HUD }).set("SCORE");
+    new RooLabel(this.boostLabelEl, { palette: ROO_HUD }).set("BALANCE");
+    new RooLabel(this.deathTitleEl, { palette: ROO_HUD, extrusionSteps: 16 }).set(
+      "GAME OVER",
+    );
   }
 
   setReplayBadge(on: boolean): void {
@@ -750,7 +770,7 @@ export class UI {
     this.comboState = "active";
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.remove("hud-trick-bail");
-    setRasterText(this.trickLineEl, s.tricks);
+    this.rooTrickLine.set(s.tricks);
   }
 
   private endCombo(): void {
@@ -776,8 +796,8 @@ export class UI {
     this.comboBailEnd = performance.now() + 700;
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.add("hud-trick-bail");
-    setRasterText(this.trickLineEl, "BAILED!");
-    setRasterText(this.trickTotalEl, "NO");
+    this.rooTrickLine.set("BAILED!");
+    this.rooTrickTotal.set("NO");
   }
 
   // ---- earned relics, as real spinning 3D --------------------------------
@@ -958,7 +978,7 @@ export class UI {
         this.startCombo(s); // a fresh combo interrupts the cash-in
       } else {
         this.dispCombo = this.ticker(this.dispCombo, 0);
-        setRasterText(this.trickTotalEl, String(Math.round(this.dispCombo)));
+        this.rooTrickTotal.set(String(Math.round(this.dispCombo)));
         if (this.dispCombo <= 0) this.endCombo();
       }
     } else if (this.comboState === "bail") {
@@ -967,8 +987,7 @@ export class UI {
     } else if (show) {
       this.startCombo(s);
       this.dispCombo = this.ticker(this.dispCombo, s.comboPoints * s.comboMult);
-      setRasterText(
-        this.trickTotalEl,
+      this.rooTrickTotal.set(
         `${Math.round(this.dispCombo)}  ×${s.comboMult}`,
       );
     } else if (this.comboState === "active") {
@@ -1160,7 +1179,7 @@ export class UI {
 
   // durationMs = 0 keeps the message up until the next showMessage/hide.
   showMessage(title: string, sub: string, durationMs: number): void {
-    setRasterText(this.msgTitle, title);
+    this.rooMsgTitle.set(title);
     this.msgSub.textContent = sub;
     this.msgWrap.style.display = "block";
     if (this.msgTimer !== undefined) window.clearTimeout(this.msgTimer);
@@ -1240,10 +1259,7 @@ export class UI {
     this.rooTTTime.set(UI.fmtTime(t));
     const frozen = freeze > 0;
     this.ttClockEl.classList.toggle("hud-tt-frozen", frozen);
-    setRasterText(
-      this.ttFreezeEl,
-      frozen ? `FROZEN ${freeze.toFixed(1)}S` : "",
-    );
+    this.rooTTFreeze.set(frozen ? `FROZEN ${freeze.toFixed(1)}S` : "");
   }
 
   // Ranked times at the gate: this run slots into the level's best list.
@@ -1255,7 +1271,7 @@ export class UI {
         return `<div class="hud-ttrow${isNew ? " hud-ttrow-new" : ""}"><span>${i + 1}.</span><span>${UI.fmtTime(v)}</span></div>`;
       })
       .join("");
-    this.ttResTitleEl.textContent = rank === 0 ? "NEW RECORD!" : "RUN COMPLETE";
+    this.rooTTResTitle.set(rank === 0 ? "NEW RECORD!" : "RUN COMPLETE");
     this.ttResListEl.innerHTML = rows;
     // Show the card BEFORE handing the headline time to its Roo label: the
     // renderer measures a real bounding box, and a box inside a display:none
@@ -1715,17 +1731,15 @@ export class UI {
       }
       .hud-boost-low { animation: boostblink 0.3s steps(2, start) infinite; }
 
-      /* ---- raster display face ------------------------------------------
-         The readouts above are drawn glyph-by-glyph from public/hudfont.png
-         (see hudfont.ts), so the rules that shape TEXT no longer bite: a
-         text-shadow can't reach a background image, and colour/letter-spacing
-         have nothing to act on. The size still comes from each rule's own
-         font-size, which keeps every clamp() above driving the layout. What's
-         left to restate here is the two state colours the face can't carry
-         itself, and a zero line-height — with no text in the box the font's
-         own leading is dead space that would otherwise push the counter rows
-         apart. The face carries its own navy outline, so it needs no shadow to
-         separate it from the level behind. */
+      /* ---- Roo display face ----------------------------------------------
+         Every readout above is an SVG Roo label (src/rootext.ts), so the
+         rules that shape TEXT no longer bite: a text-shadow can't reach an
+         <svg>, and colour/letter-spacing have nothing to act on. The size
+         still comes from each rule's own font-size, which keeps every
+         clamp() above driving the layout. What's left is a zero line-height
+         — with no text in the box the font's own leading is dead space that
+         would push the counter rows apart. The face carries its own keyline,
+         so it needs no shadow to separate it from the level behind. */
       .hud-num, .hud-scorenum, .hud-scorelabel, .hud-tttime, .hud-ttfreeze,
       .hud-trickline, .hud-tricktotal, .hud-msg-title, .hud-death-title,
       .hud-boostlabel {
@@ -1760,8 +1774,20 @@ export class UI {
          glyph height in padding (keyline, extrusion, drop shadow), so a box
          of 1.8em lands the letters near the 0.78em cap the raster face used
          and the counters keep their old optical size. */
-      .roo-line { line-height: 0; display: flex; align-items: center; }
+      .roo-line {
+        line-height: 0; display: flex; align-items: center;
+        /* default box: 1.8em lands the letters near the cap height each of
+           these rules was originally sized for, so every existing clamp()
+           keeps driving the layout */
+        height: 1.8em;
+      }
       .roo-line > .roo-text-svg { width: auto; height: 100%; }
+      /* Centred plates centre their glyphs; the corner readouts hang right. */
+      .hud-msg-title.roo-line, .hud-death-title.roo-line,
+      .hud-trickline.roo-line, .hud-tricktotal.roo-line,
+      .hud-ttres-title.roo-line, .hud-boostlabel.roo-line {
+        justify-content: center;
+      }
       .hud-num.roo-line { height: 1.8em; }
       .hud-scorenum.roo-line { height: 1.9em; }
       .hud-tttime.roo-line { height: 1.75em; }

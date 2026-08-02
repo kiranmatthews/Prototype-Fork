@@ -25,6 +25,7 @@ import {
 } from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
+import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
 
 export interface Crate {
   mesh: THREE.Mesh;
@@ -8518,7 +8519,11 @@ export class Level {
     }
   }
 
-  // Outlined icon text, chunky PSX style.
+  // Outlined icon text, chunky PSX style — the Roo face, painted flat. The
+  // HUD's gradient / bevel / extrusion chrome is deliberately NOT here: a
+  // crate stencil is read at a glance from across a room, so it stays a
+  // solid fill with a hard keyline. (Roo is loaded before the first texture
+  // is baked and every canvas is re-painted if it lands late — see makeTex.)
   private crateLabel(
     ctx: CanvasRenderingContext2D,
     text: string,
@@ -8528,7 +8533,9 @@ export class Level {
     x = 16,
     y = 18,
   ): void {
-    ctx.font = `bold ${px}px monospace`;
+    // Family LIST, not two shorthands: `24px Roo, bold 24px monospace` is not
+    // valid CSS font and the canvas silently keeps 10px sans-serif.
+    ctx.font = `${px}px "Roo", monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = outline;
@@ -8557,7 +8564,19 @@ export class Level {
     const ctx = canvas.getContext("2d")!;
     ctx.scale(SS, SS);
     draw(ctx);
-    return Level.finishTex(new THREE.CanvasTexture(canvas), false);
+    const tex = Level.finishTex(new THREE.CanvasTexture(canvas), false);
+    // A level can be built before Roo finishes loading (the first one always
+    // is — it is constructed at module scope). Rather than bake a fallback
+    // font into the atlas, every face keeps its draw call and paints itself
+    // again the moment the real face arrives.
+    if (!rooLoaded) {
+      void rooReady.then(() => {
+        ctx.clearRect(0, 0, 32, 32);
+        draw(ctx);
+        tex.needsUpdate = true;
+      });
+    }
+    return tex;
   }
 
   // Plain wooden crate: planks + X brace, nothing else.

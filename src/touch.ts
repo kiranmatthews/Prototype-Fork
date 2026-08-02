@@ -394,8 +394,8 @@ export class TouchControls {
       body.tc-on .hud-balance { width: 170px; bottom: 31%; }
       body.tc-on .hud-vbalance { left: calc(50% + 72px); bottom: 29%; height: 110px; }
       body.tc-on .hud-death { font-size: 34px; }
-      /* The HUD readouts are drawn glyphs now (hudfont.ts), not text: an
-         outline, an inline and a fill inside each letter. The sizes above were
+      /* The HUD readouts are Roo labels now (rootext.ts), not text: each
+         letter carries a keyline, a rim and a bevel. The sizes above were
          picked for flat type and turn those into smudges on a phone, so the
          small ones step up — and GAME OVER, which the desktop rule sets to
          76px, has to come back down to fit a portrait screen. */

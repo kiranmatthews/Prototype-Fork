@@ -35,35 +35,18 @@ node tools/bake-props.mjs <dir-of-glbs>... > src/prop-data.ts
 
 ## HUD display face
 
-Not third-party either, but worth recording where it came from. The HUD
-lettering is cut from three hand-drawn alphabet sheets, kept at full resolution
-in `art/hudfont-sheet{1,2,3}.png`. They are the only copy of that artwork,
-which is why the source sits in the repository rather than just the atlas built
-from it.
+The HUD, the crate stencils and every plate on screen are set in **Roo**,
+shipped as `public/fonts/Roo.ttf` (`.otf` alongside it). On the HUD it is
+rendered by the roo-web SVG renderer (`src/roo-text.js`, vendored unchanged,
+wrapped by `src/rootext.ts`); on the crate faces it is painted flat into the
+texture canvas, keyline only, no gradient or bevel.
 
-```
-node tools/bake-hudfont.mjs art/hudfont-sheet{1,2,3}.png
-```
-
-That writes `public/hudfont.png` and `src/hudfont-data.ts`. The three sheets
-overlap rather than divide neatly, so the baker names one source cell per
-character:
-
-| Sheet | Holds | Used for |
-| --- | --- | --- |
-| 1 | A–X and Z, some drawn twice | every letter but Y — it is the widest cut |
-| 2 | a partial alphabet, digits, punctuation | the digits and all the punctuation |
-| 3 | the complete alphabet and digits | Y, the one letter sheet 1 never drew |
-
-Sheets 1 and 2 are scans on transparent backgrounds, so their alpha channel is
-already the ink mask. Sheet 3 is a flat render on cream paper with no alpha at
-all, and a colour threshold can't key it — the paper and the white inline
-inside each letter are only a few levels apart, so thresholding hollows every
-glyph out. The paper is flooded inward from the border instead; the inline is
-enclosed by the navy outline, so the flood can never reach it.
-
-The only mark still built rather than cut is `+`, which the trick plate needs
-to join tricks and no sheet draws: crossed copies of the face's own dash.
+An earlier HUD cut its lettering from three hand-drawn alphabet sheets, baked
+into a raster atlas. That path is gone — the atlas, its data table and the
+baker were removed when Roo took over. The original sheets are still kept at
+full resolution in `art/hudfont-sheet{1,2,3}.png` because they are the only
+copy of that artwork; nothing in the build reads them any more, so they can be
+deleted if that artwork is not wanted.
 
 ## HUD icons
 
