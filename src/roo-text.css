@@ -1,0 +1,33 @@
+/* roo-text.css — the Roo display face + the host/svg shell.
+ *
+ * Bundler layout (roo-web README): Roo.ttf lives in public/fonts, so the
+ * @font-face src is the site-absolute /fonts/Roo.ttf. Vite rewrites that
+ * against `base` at build time, which is what keeps it resolving on the
+ * project-path GitHub Pages deploy as well as at a domain root.
+ */
+
+@font-face {
+  font-family: "Roo";
+  src: url("/fonts/Roo.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.roo-text-host {
+  display: block;
+  position: relative;
+  pointer-events: none;
+}
+
+.roo-text-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  opacity: 0;
+}
+
+.roo-text-svg.is-ready {
+  opacity: 1;
+}

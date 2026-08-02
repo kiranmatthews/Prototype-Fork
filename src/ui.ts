@@ -4,6 +4,7 @@
 import * as THREE from "three";
 import { COMBO_GEM_TINT, Level, levelList } from "./level";
 import { setRasterText } from "./hudfont";
+import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import {
   TUNING,
   TUNING_RANGES,
@@ -96,6 +97,19 @@ export class UI {
   private cratesEl!: HTMLElement;
   private wumpaEl!: HTMLElement;
   private livesEl!: HTMLElement;
+  // Roo display text. The counters and the score wear the ORANGE treatment;
+  // everything the time trial owns wears the GREEN->BLUE one, so a glance at
+  // the top of the screen says which mode you are in before you read a digit.
+  private rooScore!: RooLabel;
+  private rooCrates!: RooLabel;
+  private rooWumpa!: RooLabel;
+  private rooLives!: RooLabel;
+  private rooTTTime!: RooLabel;
+  private rooTTBest!: RooLabel;
+  private ttTimeEl!: HTMLElement;
+  private ttResTitleEl!: HTMLElement;
+  private ttResTimeEl!: HTMLElement;
+  private ttResListEl!: HTMLElement;
   private trickPlate!: HTMLElement;
   private trickLineEl!: HTMLElement;
   private trickTotalEl!: HTMLElement;
@@ -545,12 +559,24 @@ export class UI {
     // TIME TRIAL: the big top-center clock (per-frame, centisecond digits)
     // and the ranked-times card shown at the gate.
     this.ttClockEl = div("hud-ttclock");
-    const ttTime = div("hud-tttime");
-    this.ttClockEl.appendChild(ttTime);
+    this.ttTimeEl = div("hud-tttime");
+    this.ttClockEl.appendChild(this.ttTimeEl);
     this.ttFreezeEl = div("hud-ttfreeze");
     this.ttClockEl.appendChild(this.ttFreezeEl);
     this.ttClockEl.style.display = "none";
+    // Results card: the headline time is a Roo label that lives across runs,
+    // so only the rows around it are rewritten (the label owns its own SVG
+    // and must not be blown away by an innerHTML pass).
     this.ttResultsEl = div("hud-ttresults");
+    this.ttResTitleEl = div("hud-ttres-title");
+    this.ttResTimeEl = div("hud-ttres-time");
+    this.ttResListEl = div("hud-ttres-list");
+    const ttResSub = div("hud-ttres-sub");
+    ttResSub.textContent = "press R / Options to go again";
+    this.ttResultsEl.appendChild(this.ttResTitleEl);
+    this.ttResultsEl.appendChild(this.ttResTimeEl);
+    this.ttResultsEl.appendChild(this.ttResListEl);
+    this.ttResultsEl.appendChild(ttResSub);
     this.ttResultsEl.style.display = "none";
 
     // balance-boost ring: a green radial meter that laps over itself as
@@ -642,6 +668,23 @@ export class UI {
     ]) {
       document.body.appendChild(el);
     }
+
+    // Roo display text, built once the boxes are in the document (the
+    // renderer measures a real bounding box, so the hosts have to be live).
+    // The counters read ORANGE; the trial clock and its result time read
+    // GREEN->BLUE.
+    this.rooCrates = new RooLabel(this.cratesEl, { palette: ROO_HUD });
+    this.rooWumpa = new RooLabel(this.wumpaEl, { palette: ROO_HUD });
+    this.rooLives = new RooLabel(this.livesEl, { palette: ROO_HUD });
+    this.rooScore = new RooLabel(this.scoreEl, { palette: ROO_HUD });
+    this.rooTTTime = new RooLabel(this.ttTimeEl, {
+      palette: ROO_TT,
+      tracking: -2,
+    });
+    this.rooTTBest = new RooLabel(this.ttResTimeEl, {
+      palette: ROO_TT,
+      tracking: -2,
+    });
   }
 
   setReplayBadge(on: boolean): void {
@@ -873,15 +916,15 @@ export class UI {
     if (s.points > this.prevHud.points && this.prevHud.points >= 0)
       pop(this.scoreEl);
     this.dispScore = this.ticker(this.dispScore, s.points);
-    setRasterText(this.scoreEl, String(Math.round(this.dispScore)));
+    this.rooScore.set(String(Math.round(this.dispScore)));
     this.prevHud.points = s.points;
     if (s.crates !== this.prevHud.crates) {
-      setRasterText(this.cratesEl, s.crates);
+      this.rooCrates.set(s.crates);
       pop(this.cratesEl);
       this.prevHud.crates = s.crates;
     }
     if (s.fruit !== this.prevHud.fruit) {
-      setRasterText(this.wumpaEl, String(s.fruit));
+      this.rooWumpa.set(String(s.fruit));
       pop(this.wumpaEl);
       this.prevHud.fruit = s.fruit;
     }
@@ -901,7 +944,7 @@ export class UI {
       this.prevHud.gem = s.hasGem;
     }
     if (s.lives !== this.prevHud.lives) {
-      setRasterText(this.livesEl, String(s.lives));
+      this.rooLives.set(String(s.lives));
       pop(this.livesEl);
       this.prevHud.lives = s.lives;
     }
@@ -1194,7 +1237,7 @@ export class UI {
   // clock goes ice-blue while a time crate's freeze is counting down.
   updateTTClock(t: number, freeze: number): void {
     if (!this.ttOn) return;
-    setRasterText(this.ttClockEl.firstChild as HTMLElement, UI.fmtTime(t));
+    this.rooTTTime.set(UI.fmtTime(t));
     const frozen = freeze > 0;
     this.ttClockEl.classList.toggle("hud-tt-frozen", frozen);
     setRasterText(
@@ -1212,12 +1255,13 @@ export class UI {
         return `<div class="hud-ttrow${isNew ? " hud-ttrow-new" : ""}"><span>${i + 1}.</span><span>${UI.fmtTime(v)}</span></div>`;
       })
       .join("");
-    this.ttResultsEl.innerHTML =
-      `<div class="hud-ttres-title">${rank === 0 ? "NEW RECORD!" : "RUN COMPLETE"}</div>` +
-      `<div class="hud-ttres-time">${UI.fmtTime(time)}</div>` +
-      `<div class="hud-ttres-list">${rows}</div>` +
-      `<div class="hud-ttres-sub">press R / Options to go again</div>`;
+    this.ttResTitleEl.textContent = rank === 0 ? "NEW RECORD!" : "RUN COMPLETE";
+    this.ttResListEl.innerHTML = rows;
+    // Show the card BEFORE handing the headline time to its Roo label: the
+    // renderer measures a real bounding box, and a box inside a display:none
+    // panel measures nothing.
     this.ttResultsEl.style.display = "block";
+    this.rooTTBest.set(UI.fmtTime(time));
   }
 
   hideTTResults(): void {
@@ -1704,6 +1748,30 @@ export class UI {
          sat at a size the drawn face reads as thin at. */
       .hud-trickline { font-size: clamp(23px, 4vh, 36px); }
       .hud-death-title { font-size: 76px; }
+      /* ---- Roo display text -------------------------------------------
+         The counters, the score and the trial clock are SVG Roo labels now
+         (src/rootext.ts). roo-web's own rule sizes a label by its host's
+         WIDTH, which is right for a centred title but wrong for a readout
+         that has to keep one cap height while the digit count changes. So
+         these hosts drive HEIGHT instead and let the width follow the
+         glyphs, exactly like a line of text.
+
+         The multiplier: the renderer's viewBox carries roughly 0.79 of a
+         glyph height in padding (keyline, extrusion, drop shadow), so a box
+         of 1.8em lands the letters near the 0.78em cap the raster face used
+         and the counters keep their old optical size. */
+      .roo-line { line-height: 0; display: flex; align-items: center; }
+      .roo-line > .roo-text-svg { width: auto; height: 100%; }
+      .hud-num.roo-line { height: 1.8em; }
+      .hud-scorenum.roo-line { height: 1.9em; }
+      .hud-tttime.roo-line { height: 1.75em; }
+      /* the results card is a fixed-size panel, so its time is a fixed box */
+      .hud-ttres-time.roo-line { height: 76px; margin-bottom: 10px; }
+      /* The box is only as wide as the glyphs, so each readout says which end
+         of its row it hangs from — the corner counters keep their old
+         right-aligned column, the results time centres in its card. */
+      .hud-scorenum.roo-line, .hud-tttime.roo-line { justify-content: flex-end; }
+      .hud-ttres-time.roo-line { justify-content: center; }
       /* Frozen clock and bailed combo used to recolour the text. The drawn
          face has its own colours, so the state reads as a glow instead — a
          coloured one that says something, not a black shadow. */
