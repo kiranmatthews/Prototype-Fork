@@ -10981,13 +10981,10 @@ export class Level {
     isle(-202, 20, 10, 8, 26); // a REAL west runway: the first rope's arc crosses its lip
     this.checkpoint(26, -202, 10);
 
-    // --- F (LEFT, -x, SIDE-SCROLL): rope ferries over pure void, y26 --------
-    // The ropes swing AND ferry along x — pure screen-plane motion, so the
-    // whole crossing plays flat against the camera like the lift banks. The
-    // zone swallows the E->F and F->G bends: no swing in or out, and the top
-    // of the lift stair (z=-195) stays just outside so the climb keeps its
-    // forward frame until you land on the runway.
-    sideScroll(-56, 20, -210, -196, "W");
+    // --- F (LEFT, -x): rope ferries over pure void, y26 ---------------------
+    // The camera SWINGS to face along this crossing — a side-scroll zone here
+    // framed the ropes edge-on and read as if the whole section had been
+    // taken away, so the lane keeps it (playtest, reverted).
     this.ropeSwing(-8, 34.6, -202, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
     this.ropeSwing(-22, 34.6, -202, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
     this.ropeSwing(-36, 34.6, -202, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
