@@ -1179,9 +1179,11 @@ export class UI {
 
   // durationMs = 0 keeps the message up until the next showMessage/hide.
   showMessage(title: string, sub: string, durationMs: number): void {
-    this.rooMsgTitle.set(title);
+    // Open the plate BEFORE handing over the title: the label measures a real
+    // glyph box, and a box inside a display:none plate measures nothing.
     this.msgSub.textContent = sub;
     this.msgWrap.style.display = "block";
+    this.rooMsgTitle.set(title);
     if (this.msgTimer !== undefined) window.clearTimeout(this.msgTimer);
     if (durationMs > 0) {
       this.msgTimer = window.setTimeout(() => this.hideMessage(), durationMs);
@@ -1498,8 +1500,8 @@ export class UI {
       .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
       .hud-counter { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
       .hud-num {
-        font: italic 900 clamp(44px, 8.5vh, 78px) Impact, 'Arial Black', sans-serif;
-        color: #ffb43a; letter-spacing: 2px; transform: skewX(-6deg);
+        font: 900 clamp(44px, 8.5vh, 78px) Impact, 'Arial Black', sans-serif;
+        color: #ffb43a; letter-spacing: 2px;
       }
       .hud-icon {
         width: clamp(52px, 9.5vh, 84px); height: clamp(52px, 9.5vh, 84px);
@@ -1551,8 +1553,8 @@ export class UI {
       }
       .hud-pop { animation: hudpop 0.22s ease-out; }
       @keyframes hudpop {
-        0% { transform: skewX(-6deg) scale(1.45); }
-        100% { transform: skewX(-6deg) scale(1); }
+        0% { transform: scale(1.45); }
+        100% { transform: scale(1); }
       }
 
       /* score: bare gold digits under the lives counter, top-right — the
@@ -1563,12 +1565,12 @@ export class UI {
         z-index: 10; pointer-events: none; text-align: right;
       }
       .hud-scorelabel {
-        font: italic bold clamp(10px, 1.7vh, 14px) Impact, 'Arial Black', sans-serif;
+        font: bold clamp(10px, 1.7vh, 14px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px;
         color: #ffd24a;
       }
       .hud-scorenum {
-        font: italic 900 clamp(20px, 3.6vh, 32px) Impact, 'Arial Black', sans-serif;
+        font: 900 clamp(20px, 3.6vh, 32px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 2px;
         color: #ffe9b0;
       }
@@ -1581,12 +1583,12 @@ export class UI {
         z-index: 10; pointer-events: none; text-align: right;
       }
       .hud-tttime {
-        font: italic 900 clamp(40px, 7.5vh, 66px) Impact, 'Arial Black', sans-serif;
+        font: 900 clamp(40px, 7.5vh, 66px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px; color: #f2f7ff;
       }
       .hud-tt-frozen .hud-tttime { color: #6ee6ff; }
       .hud-ttfreeze {
-        font: italic bold clamp(13px, 2vh, 18px) Impact, 'Arial Black', sans-serif;
+        font: bold clamp(13px, 2vh, 18px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 3px; color: #6ee6ff; margin-top: -4px;
       }
       /* ranked times card at the gate */
@@ -1600,12 +1602,12 @@ export class UI {
         font: 14px/1.6 ui-monospace, Menlo, Consolas, monospace;
       }
       .hud-ttres-title {
-        font: italic bold 26px Impact, 'Arial Black', sans-serif;
+        font: bold 26px Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px; color: #ffd24a; margin-bottom: 2px;
         text-shadow: 0 2px 5px rgba(0,0,0,0.7);
       }
       .hud-ttres-time {
-        font: italic 900 44px Impact, 'Arial Black', sans-serif;
+        font: 900 44px Impact, 'Arial Black', sans-serif;
         letter-spacing: 3px; color: #ffe9b0; margin-bottom: 10px;
         text-shadow: 2px 0 0 #3a1c05, -2px 0 0 #3a1c05, 0 2px 0 #3a1c05, 0 -2px 0 #3a1c05;
       }
@@ -1630,18 +1632,18 @@ export class UI {
         100% { transform: translateX(-50%) scale(1); opacity: 1; }
       }
       .hud-trickline {
-        font: italic bold clamp(18px, 3.2vh, 30px) Impact, 'Arial Black', sans-serif;
+        font: bold clamp(18px, 3.2vh, 30px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 2px; color: #ffe08a;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .hud-tricktotal {
-        font: italic 900 clamp(28px, 5vh, 46px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 4px; color: #ffb43a; transform: skewX(-6deg); margin-top: 2px;
+        font: 900 clamp(28px, 5vh, 46px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px; color: #ffb43a; margin-top: 2px;
         animation: combopulse 0.5s ease-in-out infinite alternate;
       }
       @keyframes combopulse {
-        from { transform: skewX(-6deg) scale(1); }
-        to { transform: skewX(-6deg) scale(1.05); }
+        from { transform: scale(1); }
+        to { transform: scale(1.05); }
       }
       /* BAILED combo: text goes red, shakes "no", then drops away. */
       .hud-trick-bail .hud-trickline,
@@ -1726,7 +1728,7 @@ export class UI {
         filter: drop-shadow(0 0 6px rgba(70, 232, 130, 0.45));
       }
       .hud-boostlabel {
-        font: italic bold 12px Impact, 'Arial Black', sans-serif; letter-spacing: 2px;
+        font: bold 12px Impact, 'Arial Black', sans-serif; letter-spacing: 2px;
         color: #46e882;
       }
       .hud-boost-low { animation: boostblink 0.3s steps(2, start) infinite; }
