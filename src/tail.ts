@@ -53,28 +53,58 @@ export interface TailPose {
 export interface TailCollider {
   c: THREE.Vector3;
   r: number;
-  /** First joint this applies to. The tail's root joints sit INSIDE her hips
-   *  by design, so the hip sphere has to start further out — but they must
-   *  still be pushed by everything else, or the base of the chain cannot
-   *  yield and the first free segment absorbs every correction on its own. */
-  from: number;
 }
 
-const BONES = 8;
-const RINGS = 19; // stations along the tube (>= BONES + 1 for a smooth bend),
-                  // packed toward the base to carry the neck — see buildSkin
-const SIDES = 9; // radial segments — PS1-chunky, matching the body's facets
-const LENGTH = 0.58; // rest length in rig units — long enough to read as a
-                     // kangaroo's counterweight, short enough not to trail
-                     // behind her like a boa
-/** How far the tube starts INSIDE the body, so the junction is never on screen. */
-const BURY = 0.075;
+/**
+ * Everything about the tail's SHAPE, in one object.
+ *
+ * These were module constants until the model studio (src/studio.ts) needed to
+ * drive them from sliders — judging a tail's proportions by reading numbers off
+ * a screenshot is exactly the kind of thing I am bad at and a human is instant
+ * at. Changing any of these means rebuilding the geometry and the bone chain;
+ * see reshape().
+ */
+export interface TailShape {
+  bones: number;
+  /** stations along the tube (>= bones + 1 for a smooth bend) */
+  rings: number;
+  /** radial segments — PS1-chunky, matching the body's facets */
+  sides: number;
+  /** rest length in rig units */
+  length: number;
+  /** how far the tube starts INSIDE the body, so the junction is never seen */
+  bury: number;
+  /** widest radius, at the base of the visible tail */
+  baseRadius: number;
+  /** the point it tapers to */
+  tipRadius: number;
+  /** how far the neck pinches in, as a fraction of full width (1 = no pinch) */
+  neck: number;
+  /** how much of the length the neck pinch is spread over */
+  neckSpan: number;
+  /** taller than wide, the way a real tail is */
+  squash: number;
+  /** radians below horizontal where it leaves the hips */
+  angleBase: number;
+  /** ...and above it at the tip */
+  angleTip: number;
+}
 
-// Rest shape: leaves the hips heading back and down, then flattens and lifts a
-// little at the tip. A kangaroo's tail is a counterweight, not a rope — it
-// carries itself.
-const REST_ANGLE_BASE = -0.60; // radians below horizontal at the root
-const REST_ANGLE_TIP = 0.12; // ...and above it at the tip
+/** A kangaroo's tail is a counterweight, not a rope — it carries itself. */
+export const DEFAULT_TAIL: TailShape = {
+  bones: 8,
+  rings: 19,
+  sides: 9,
+  length: 0.58,
+  bury: 0.075,
+  baseRadius: 0.072,
+  tipRadius: 0.009,
+  neck: 0.46,
+  neckSpan: 0.2,
+  squash: 1.12,
+  angleBase: -0.6,
+  angleTip: 0.12,
+};
 
 const _v = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
@@ -83,9 +113,9 @@ const _q2 = new THREE.Quaternion();
 const _m = new THREE.Matrix4();
 
 /** Rest direction at arc fraction u, in tail-root space (-Z is behind her). */
-function restDir(u: number, out: THREE.Vector3): THREE.Vector3 {
+function restDir(sh: TailShape, u: number, out: THREE.Vector3): THREE.Vector3 {
   const s = u * u * (3 - 2 * u); // smoothstep: most of the bend near the base
-  const a = REST_ANGLE_BASE + (REST_ANGLE_TIP - REST_ANGLE_BASE) * s;
+  const a = sh.angleBase + (sh.angleTip - sh.angleBase) * s;
   return out.set(0, Math.sin(a), -Math.cos(a));
 }
 
@@ -98,16 +128,18 @@ function restDir(u: number, out: THREE.Vector3): THREE.Vector3 {
  * slimmest where it joins the animal and swells just past that — butting a
  * full-width cylinder against her hip reads as a pipe stuck on the back.
  */
-function restRadius(u: number): number {
-  const body = 0.072 * Math.pow(1 - u, 0.62) + 0.009;
-  const neck = 0.46 + 0.54 * Math.min(1, Math.pow(Math.max(0, u) / 0.2, 0.75));
+function restRadius(sh: TailShape, u: number): number {
+  const body = sh.baseRadius * Math.pow(1 - u, 0.62) + sh.tipRadius;
+  const neck =
+    sh.neck + (1 - sh.neck) * Math.min(1, Math.pow(Math.max(0, u) / Math.max(1e-3, sh.neckSpan), 0.75));
   return body * neck;
 }
 
 export class Tail {
   /** Attach point. Parent this where the tail leaves the body. */
   readonly root = new THREE.Group();
-  /** Root→tip bones. Exposed so callers can read the chain if they need to. */
+  /** Root→tip bones. Exposed so callers can read the chain if they need to.
+   *  Replaced wholesale by reshape() — hold the Tail, not this array. */
   readonly bones: THREE.Bone[] = [];
 
   private geo: THREE.BufferGeometry | null = null;
@@ -136,10 +168,55 @@ export class Tail {
     flatShading: true, // match the body's PS1 facets
   });
 
-  constructor() {
+  private shape: TailShape;
+
+  constructor(shape: Partial<TailShape> = {}) {
+    this.shape = { ...DEFAULT_TAIL, ...shape };
+    this.build();
+  }
+
+  /** The shape it is currently built to (a copy — mutate via reshape). */
+  get form(): TailShape {
+    return { ...this.shape };
+  }
+
+  /**
+   * Rebuild to a new shape. Everything the geometry depends on is torn down
+   * and remade: an old SkinnedMesh keeps a Skeleton that keeps the old bones,
+   * so leaving either behind means the new mesh binds against a stale chain
+   * and the tail renders in the bind pose forever. The sim is re-seeded rather
+   * than carried over, because its particle count follows the bone count.
+   */
+  reshape(patch: Partial<TailShape>): void {
+    this.shape = { ...this.shape, ...patch };
+    this.teardown();
+    this.build();
+  }
+
+  private build(): void {
     this.buildRest();
     this.buildBones();
     this.buildSkin(this.mat);
+  }
+
+  private teardown(): void {
+    // The Skeleton owns a GPU bone texture and the SkinnedMesh owns the
+    // vertex buffers; neither is reachable from a field, so both have to be
+    // collected off the tree here. Skipping it leaks a bone texture and a full
+    // buffer set PER SLIDER TICK while stacking dead meshes on the root.
+    for (const child of [...this.root.children]) {
+      const sk = child as THREE.SkinnedMesh;
+      if (sk.isSkinnedMesh) sk.skeleton?.dispose();
+      this.root.remove(child);
+    }
+    this.geo?.dispose();
+    this.geo = null;
+    this.bones.length = 0;
+    // sim state is sized by the bone count, so it cannot survive a rebuild
+    this.p = [];
+    this.vel = [];
+    this.target = [];
+    this.seeded = false;
   }
 
   /** Rest polyline + the per-joint flex shares. */
@@ -147,15 +224,16 @@ export class Tail {
     // Walk the rest direction field to get the curve, then take BONES+1 joints
     // off it by arc length. Starting at -BURY puts the first joint inside the
     // body so the base ring is never visible.
+    const sh = this.shape;
     const FINE = 240;
     const fine: THREE.Vector3[] = [];
     const cur = new THREE.Vector3();
-    restDir(0, _v);
-    cur.copy(_v).multiplyScalar(-BURY);
+    restDir(sh, 0, _v);
+    cur.copy(_v).multiplyScalar(-sh.bury);
     fine.push(cur.clone());
     for (let i = 0; i < FINE; i++) {
-      restDir(i / (FINE - 1), _v);
-      cur.addScaledVector(_v, LENGTH / FINE);
+      restDir(sh, i / (FINE - 1), _v);
+      cur.addScaledVector(_v, sh.length / FINE);
       fine.push(cur.clone());
     }
     // resample evenly by arc length
@@ -169,7 +247,7 @@ export class Tail {
       return fine[k - 1].clone().lerp(fine[k], (s - cum[k - 1]) / seg);
     };
     this.rest = [];
-    for (let i = 0; i <= BONES; i++) this.rest.push(at((i / BONES) * total));
+    for (let i = 0; i <= sh.bones; i++) this.rest.push(at((i / sh.bones) * total));
 
     // Flex shares: an exponential decay toward the tip, normalised so the whole
     // tail bends by the same total amount whatever the joint count. This is the
@@ -177,8 +255,8 @@ export class Tail {
     const curve = (k: number, scale: number): number[] => {
       const w: number[] = [];
       let sum = 0;
-      for (let i = 0; i < BONES; i++) {
-        const t = BONES > 1 ? i / (BONES - 1) : 0;
+      for (let i = 0; i < sh.bones; i++) {
+        const t = sh.bones > 1 ? i / (sh.bones - 1) : 0;
         const e = Math.exp(-k * t);
         w.push(e);
         sum += e;
@@ -192,7 +270,7 @@ export class Tail {
    *  offsets, which makes the bind matrix trivial and the per-frame solve a
    *  plain "rotate this rest direction onto that world direction". */
   private buildBones(): void {
-    for (let i = 0; i < BONES; i++) {
+    for (let i = 0; i < this.shape.bones; i++) {
       const bone = new THREE.Bone();
       bone.position.copy(this.rest[i]);
       if (i > 0) bone.position.sub(this.rest[i - 1]);
@@ -201,8 +279,10 @@ export class Tail {
     }
   }
 
-  /** The tube: RINGS x SIDES indexed, closed at the tip. */
+  /** The tube: rings x sides indexed, closed at the tip. */
   private buildSkin(material: THREE.Material): void {
+    const sh = this.shape;
+    const { rings: RINGS, sides: SIDES, bones: BONES, bury: BURY } = sh;
     const pos: number[] = [];
     const nrm: number[] = [];
     const uv: number[] = [];
@@ -242,7 +322,7 @@ export class Tail {
       // Radius runs off the VISIBLE fraction: the buried part keeps the base
       // width so the collar stays fat inside the body.
       const vis = Math.max(0, (f * total - BURY) / (total - BURY));
-      const rad = restRadius(vis);
+      const rad = restRadius(sh, vis);
       // Two-bone linear weights, computed from the RING — every vertex around
       // a ring therefore gets bit-identical weights, including the duplicated
       // seam column, so the tube cannot tear however it is posed.
@@ -259,7 +339,7 @@ export class Tail {
         const a = ((s % SIDES) / SIDES) * Math.PI * 2;
         // slightly taller than wide, the way a real tail is
         const ox = Math.cos(a) * rad;
-        const oy = Math.sin(a) * rad * 1.12;
+        const oy = Math.sin(a) * rad * sh.squash;
         _v.copy(centre).addScaledVector(bx, ox).addScaledVector(by, oy);
         pos.push(_v.x, _v.y, _v.z);
         _v2.set(0, 0, 0).addScaledVector(bx, Math.cos(a)).addScaledVector(by, Math.sin(a)).normalize();
@@ -365,7 +445,7 @@ export class Tail {
     //    Each joint takes a share of the lift and wag and the rotations
     //    accumulate down the chain, so the tail forms one arc rather than
     //    hinging at a single joint.
-    const n = BONES;
+    const n = this.shape.bones;
     if (this.target.length === 0)
       for (let i = 0; i <= n; i++) this.target.push(new THREE.Vector3());
     _q2.identity();
@@ -498,18 +578,38 @@ export class Tail {
    * so a collision DISPLACES the tail instead of bending it, and the length
    * and bend passes are left with almost nothing to correct.
    */
+  /**
+   * Which joint does each collider start acting on? DERIVED, not configured.
+   *
+   * The tail's root joints sit inside her hips on purpose, so a collider
+   * covering the hips must not push them — but a hand-set cut-off is wrong the
+   * moment the tail moves, and the whole point of the studio is that the tail
+   * WILL move. So each collider is asked the only question that matters: which
+   * is the first joint that its own rest pose puts outside you? Everything
+   * before that is inside the body by design and is left alone; the push then
+   * fades in over the next two joints, because a hard edge dumps the entire
+   * correction into one segment and stretches it (measured at 1.5x).
+   */
+  private firstOutside(n: number, b: TailCollider): number {
+    for (let i = 1; i <= n; i++) if (this.target[i].distanceTo(b.c) > b.r) return i;
+    return n + 1; // wholly swallowed: do not fight it
+  }
+
   private pushOut(n: number, bodies: TailCollider[], scale: number): void {
     if (bodies.length === 0) return;
+    const from = bodies.map((b) => this.firstOutside(n, b));
     for (let i = 1; i <= n; i++) {
-      const skin = restRadius(i / n) * scale * 0.85;
-      for (const b of bodies) {
-        if (i < b.from) continue; // this joint lives inside that part
+      const skin = restRadius(this.shape, i / n) * scale * 0.85;
+      for (let bi = 0; bi < bodies.length; bi++) {
+        const b = bodies[bi];
+        const ramp = Math.min(1, Math.max(0, (i - from[bi] + 1) / 3));
+        if (ramp <= 0) continue; // this joint lives inside that part
         const need = b.r + skin;
         _v.copy(this.p[i]).sub(b.c);
         const d2 = _v.lengthSq();
         if (d2 >= need * need || d2 < 1e-12) continue;
-        // the correction this joint needs...
-        _v2.copy(b.c).addScaledVector(_v, need / Math.sqrt(d2)).sub(this.p[i]);
+        // the correction this joint needs, faded in near the base...
+        _v2.copy(b.c).addScaledVector(_v, need / Math.sqrt(d2)).sub(this.p[i]).multiplyScalar(ramp);
         // ...applied to it and every joint beyond it, capped so a pose that
         // buries the tail in a collider cannot fling it across the level
         const cap = 0.35 * scale;
@@ -520,7 +620,7 @@ export class Tail {
   }
 
   dispose(): void {
-    this.geo?.dispose();
+    this.teardown();
     this.root.removeFromParent();
   }
 }

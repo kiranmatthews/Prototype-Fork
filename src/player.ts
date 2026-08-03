@@ -14,6 +14,7 @@ import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { wumpaMesh } from './wumpa';
 import { Tail, type TailCollider } from './tail';
+import { cutsFor } from './modelcuts';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
@@ -635,6 +636,15 @@ export class Player {
   // rigged badly and a carved-and-reskinned brush can only ever be as smooth as
   // the 30-odd triangles it was carved from.
   private tail: Tail | null = null;
+  /** which authored model is installed — keys MODEL_CUTS and the studio */
+  modelSrc = '';
+  /** The model studio needs the tail and the body it hangs off. */
+  get tailRef(): Tail | null {
+    return this.tail;
+  }
+  get riderRef(): THREE.Group | null {
+    return this.riderG;
+  }
   private tailBodies: TailCollider[] = [];
   // hip anchor half-widths (rig space) — the placeholder + roo use ±0.115/z0;
   // a skinned model (fox) sets these from its actual hip bones so syncVisual's
@@ -9246,6 +9256,7 @@ export class Player {
           return;
         }
         try {
+          this.modelSrc = src;
           this.segmentBiped(mesh);
         } catch (e) {
           console.warn('biped segmentation failed (procedural body stays):', e);
@@ -9347,6 +9358,9 @@ export class Player {
     // returns empty (→ no tail) for a genuinely tailless model.
     const midY = (miny + maxy) / 2;
     const backZ = cz - 0.12 * (maxz - minz); // behind the hips
+    // Polygons a human pointed at in the studio. Checked FIRST, and it is the
+    // only cut that can reach outside the geometric band below.
+    const cuts = cutsFor(this.modelSrc, P.count);
     const bucket: Record<string, number[]> = {};
     for (const k of ['head', 'torso', 'pelvis', 'upperArmR', 'upperArmL', 'foreArmR', 'foreArmL', 'thighR', 'thighL', 'shinR', 'shinL', 'tail'])
       bucket[k] = [];
@@ -9357,36 +9371,19 @@ export class Player {
     // chunk — the legs and the torso front all sit forward of it). The first
     // cut below is the original fraction-of-depth test; this one is the
     // backstop that catches what it misses.
-    // Two backstops, both in RIG units so they can be checked against the rig's
-    // own geometry rather than a fraction of the model's depth:
-    //
-    //   BEHIND HER    nothing legitimate below the shoulders reaches past
-    //                 z -0.17; the tail leaves the hips at -0.05.
-    //   HANGING LOW   the brush drops from the hip to below the knee BEHIND
-    //                 her, and no leg geometry on this body goes back past
-    //                 z -0.01 (measured across every built chunk), so
-    //                 low-and-behind can only be tail.
-    const TAIL_Z = -0.17;
-    const TAIL_Y = 1.0; // below the shoulders (they sit at 1.22), so no ponytail
-    const HANG_Z = -0.05;
-    const HANG_Y = 0.58; // below the hip joints at 0.71, above the shorts hem
     for (let t = 0; t < P.count; t += 3) {
       const czf = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
       const cyf = (P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3;
-      // ...the same centroid, in the rig space the body is actually built in
-      const rz = (czf - cz) * SXZ;
-      const ry = (cyf - miny) * SY;
-      if (
-        (czf < backZ && cyf < midY) ||
-        (rz < TAIL_Z && ry < TAIL_Y) ||
-        (rz < HANG_Z && ry < HANG_Y)
-      ) {
-        // DISCARDED, not built (see src/tail.ts). The second test is what
-        // catches the rest of the brush: Meshy weights this model's tail to
-        // Hips, so whatever the geometric cut misses gets voted into the
-        // PELVIS chunk by bone weight and shipped as part of her body — which
-        // is exactly what left a fan of flat tail polygons hanging off her
-        // hip after the new tail was already drawn.
+      if (cuts?.has(t) || (czf < backZ && cyf < midY)) {
+        // Discarded, not built — the tail is drawn in code now (src/tail.ts).
+        //
+        // This ONE original test is all the geometry-based deleting that
+        // happens. Three more rules were tried on top of it to catch the rest
+        // of this model's tail brush, and the last of them reached up to the
+        // shoulder line and took a bite out of her ponytail. Guessing a shape
+        // rule for "which polygons are tail" from screenshots is the wrong
+        // tool; MODEL_CUTS below is a list of triangles picked by eye in the
+        // studio, which cannot over-reach by accident.
         bucket.tail.push(t, t + 1, t + 2);
         continue;
       }
@@ -9411,38 +9408,6 @@ export class Player {
     // caught by HEIGHT. The hip block's real geometry stops at the crotch,
     // around y 0.6; the fan hangs to y 0.12, which is ankle height. Nothing
     // that belongs to a pelvis goes there.
-    // Two rules, both measured against the built chunks rather than guessed:
-    //
-    //   HANGING   the hip block's real geometry stops at the crotch; the brush
-    //             hung to y 0.12, ankle height, on a rig whose hip joints are
-    //             at 0.71. Anything filed as pelvis below the hip is tail.
-    //   BEHIND    the legs and hips are built entirely forward of z -0.01 (the
-    //             two big leg chunks start at 0.03 and -0.01). The brush
-    //             reaches -0.14. Anything down there behind her back is tail.
-    //
-    // Both are applied AFTER the bone vote because that is where the problem
-    // is: what the geometric cut misses gets filed as body by bone weight.
-    const KNEE_Y = 0.63; // just under the hip joints at 0.71, so the hip
-                         // block survives and everything dangling off it does not
-    const BACK_Z = -0.02; // just behind every real leg and hip triangle
-    for (const part of ['pelvis', 'thighR', 'thighL', 'shinR', 'shinL'] as const) {
-      const kept: number[] = [];
-      for (let i = 0; i < bucket[part].length; i += 3) {
-        const t = bucket[part][i];
-        const ry = ((P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3 - miny) * SY;
-        // ANY vertex, not the centroid. The brush is flat blades: a blade
-        // reaching back to z -0.09 still has its centroid forward of the cut,
-        // so a centroid test removed two triangles out of a hundred and left
-        // the fan standing. The clean thigh's nearest vertex is at z 0.05, so
-        // a per-vertex test at -0.02 cannot reach real geometry.
-        let back = false;
-        for (let k = 0; k < 3; k++) if ((P.getZ(t + k) - cz) * SXZ < BACK_Z) back = true;
-        const brush = back || (part === 'pelvis' && ry < KNEE_Y);
-        (brush ? bucket.tail : kept).push(t, t + 1, t + 2);
-      }
-      bucket[part] = kept;
-    }
-
     // Build a chunk: map each vert to rig space, subtract the pivot, optional
     // rotation onto -Y (limbs), matching normal transform.
     const build = (verts: number[], pivot: THREE.Vector3, q?: THREE.Quaternion): THREE.Mesh => {
@@ -9461,7 +9426,20 @@ export class Player {
       cg.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
       cg.setAttribute('normal', new THREE.Float32BufferAttribute(nn, 3));
       cg.setAttribute('uv', new THREE.Float32BufferAttribute(uu, 2));
-      return new THREE.Mesh(cg, mat);
+      const chunk = new THREE.Mesh(cg, mat);
+      // PROVENANCE, so a click can be turned into "delete THAT polygon".
+      //
+      // Verts are emitted in bucket order, one per entry, three per triangle,
+      // and the chunk is non-indexed — so three.js reports faceIndex f for the
+      // triangle built from bucket entries [3f, 3f+1, 3f+2], and verts[3f] is
+      // its source VERTEX SLOT. The source geometry is de-indexed before any
+      // of this (geo.toNonIndexed above), so slot t belongs to triangle t/3
+      // and nothing else: the mapping is exact and stable across loads. The
+      // studio (src/studio.ts) records those slots and MODEL_CUTS replays
+      // them, which is a list of things a human pointed at rather than a
+      // shape rule of mine that can quietly over-reach.
+      chunk.userData.srcTris = verts;
+      return chunk;
     };
     const strip = (grp: THREE.Object3D | null): void => {
       if (!grp) return;
@@ -9540,26 +9518,18 @@ export class Player {
     const rider = this.riderG;
     if (!rider) return this.tailBodies;
     if (this.tailBodies.length === 0)
-      for (let i = 0; i < 4; i++) this.tailBodies.push({ c: new THREE.Vector3(), r: 0, from: 1 });
+      for (let i = 0; i < 4; i++) this.tailBodies.push({ c: new THREE.Vector3(), r: 0 });
     rider.updateWorldMatrix(true, false);
     const scale = TAIL_V.setFromMatrixColumn(rider.matrixWorld, 0).length() || 1;
-    // These are deliberately MODEST. They have to keep the tail off her
-    // without swallowing the root of it: the first joints sit inside the
-    // pelvis by design, and a sphere big enough to engulf them asks the
-    // solver for a pose that does not exist — the chain cannot both stay
-    // its own length from a pinned root AND get outside an obstacle that is
-    // already on top of that root, so one constraint has to lose. Measured:
-    // a thigh sphere reaching the tail base stretched the root segment to
-    // two and a half times its length. Keep them to the parts that are
-    // actually in the way and the conflict never arises.
+    // These stay MODEST — they only have to cover what can actually get in the
+    // tail's way. Which JOINTS each one acts on is worked out by the tail
+    // itself from its own rest pose (see firstOutside), so moving the tail
+    // cannot silently put a sphere on top of its root and ask the solver for a
+    // configuration that does not exist.
     this.tailBodies[0].c.set(0, 0.7, -0.02).applyMatrix4(rider.matrixWorld);
     this.tailBodies[0].r = 0.17 * scale; // hips
-    // ...and the tail's first joints are INSIDE those hips on purpose, so the
-    // hip sphere only starts applying once the tail has left her.
-    this.tailBodies[0].from = 3;
     this.tailBodies[1].c.set(0, 0.95, 0).applyMatrix4(rider.matrixWorld);
     this.tailBodies[1].r = 0.2 * scale; // belly
-    this.tailBodies[1].from = 1;
     // thighs: from the real leg groups, so a crouch or a crawl moves them.
     // Sampled well DOWN the thigh, clear of the hip socket the tail leaves from.
     const legs: (THREE.Object3D | null)[] = [this.legR, this.legL];
@@ -9573,7 +9543,6 @@ export class Player {
         b.c.set(i === 0 ? 0.115 : -0.115, 0.53, 0).applyMatrix4(rider.matrixWorld);
       }
       b.r = 0.1 * scale;
-      b.from = 1; // a thigh may shove the very base of the tail aside
     }
     return this.tailBodies;
   }
@@ -9900,7 +9869,20 @@ export class Player {
       cg.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
       cg.setAttribute('normal', new THREE.Float32BufferAttribute(nn, 3));
       cg.setAttribute('uv', new THREE.Float32BufferAttribute(uu, 2));
-      return new THREE.Mesh(cg, mat);
+      const chunk = new THREE.Mesh(cg, mat);
+      // PROVENANCE, so a click can be turned into "delete THAT polygon".
+      //
+      // Verts are emitted in bucket order, one per entry, three per triangle,
+      // and the chunk is non-indexed — so three.js reports faceIndex f for the
+      // triangle built from bucket entries [3f, 3f+1, 3f+2], and verts[3f] is
+      // its source VERTEX SLOT. The source geometry is de-indexed before any
+      // of this (geo.toNonIndexed above), so slot t belongs to triangle t/3
+      // and nothing else: the mapping is exact and stable across loads. The
+      // studio (src/studio.ts) records those slots and MODEL_CUTS replays
+      // them, which is a list of things a human pointed at rather than a
+      // shape rule of mine that can quietly over-reach.
+      chunk.userData.srcTris = part.verts;
+      return chunk;
     };
     // strip the procedural flesh, keep the joint groups
     const stripMeshes = (grp: THREE.Object3D | null): void => {

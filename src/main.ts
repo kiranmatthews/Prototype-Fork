@@ -1079,6 +1079,24 @@ const editor = new Editor(scene, camera, renderer.domElement, () => level, {
 // Open the editor on a level (default: whatever is loaded). A level that has
 // never been edited has no data to bind to, so it goes through editLevel,
 // which captures it first.
+// ── the model studio (src/studio.ts) ──────────────────────────────────────
+// A dev tool for the questions that are only answerable by eye — which
+// polygons of an authored model are junk, where the tail sits, what colour it
+// is. Lazy: nothing of it is fetched until somebody asks for it.
+let studio: { frame: () => void } | null = null;
+async function openStudioTool(): Promise<void> {
+  if (studio) return;
+  const mod = await import("./studio");
+  studio = mod.openStudio({ renderer, scene, camera, player, onClose: () => (studio = null) });
+}
+// Openable WITHOUT a console, because the person whose eyes this borrows is
+// playing the deployed build on a phone or a laptop, not sitting in devtools:
+// put #studio on the URL. Deferred so the character model is installed and
+// there is something to click before the panel appears.
+if (location.hash.toLowerCase().includes("studio")) {
+  setTimeout(() => void openStudioTool(), 2500);
+}
+
 function openEditor(target: string = current.id): void {
   if (split2p) set2P(false); // the editor is a one-player room
   if (editor.active) return;
@@ -1827,6 +1845,18 @@ let paused = false;
 function frame(): void {
   requestAnimationFrame(frame);
   const dt = Math.min(clock.getDelta(), 0.1);
+  // The model studio takes the stage: it owns the camera, the sim stands down,
+  // and the world is still drawn so there is something to point at. Everything
+  // else in this function is skipped, which is also what stops the game
+  // reading input while somebody is dragging sliders.
+  if (studio) {
+    // No sim: the tail sits in its REST pose, which is the pose you actually
+    // want to judge a shape against, and nothing moves under the cursor while
+    // you are trying to click a polygon.
+    studio.frame();
+    renderer.render(scene, camera);
+    return;
+  }
   input.update();
   if (split2p) {
     input2.update();
@@ -2014,4 +2044,5 @@ frame();
   restoreBuiltin,
   getCurrentLevel: () => current,
   GLTFLoader, // debug: inspect model files from the console/harness
+  openStudio: openStudioTool, // point-and-click answers: __game.openStudio()
 };
