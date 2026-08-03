@@ -42,10 +42,13 @@ interface Ctx {
 interface Piece {
   mesh: THREE.Mesh;
   src: number[]; // bucket: source vertex slot per emitted vertex
+  /** this chunk is geometry the carve ALREADY deletes, shown as a ghost */
+  ghost: boolean;
 }
 
-const HL_SELECTED = 0xff2d6f;
+const HL_SELECTED = 0xff2d6f; // marked for deletion
 const HL_HOVER = 0x3fe0ff;
+const HL_KEPT = 0x4dff9e; // rescued from deletion
 
 /** While this is alive it owns the camera and the frame loop skips the sim, so
  *  nothing fights the orbit control and nothing moves under the cursor. */
@@ -56,8 +59,13 @@ export function openStudio(ctx: Ctx): Studio {
 class Studio {
   private panel: HTMLElement;
   private pieces: Piece[] = [];
-  private selected = new Set<number>(); // source vertex slots
+  private selected = new Set<number>(); // marked for deletion
+  private kept = new Set<number>(); // rescued from what the carve already cuts
+  private showGhost = false;
   private hover: number[] = []; // slots under the cursor right now
+  private lastWasGhost = false;
+  private sig = ''; // which set of chunks the view was framed against
+  private steered = false; // has the user taken the camera? then leave it alone
   private ray = new THREE.Raycaster();
   private ndc = new THREE.Vector2();
 
@@ -73,6 +81,7 @@ class Studio {
 
   private selMesh: THREE.Mesh;
   private hovMesh: THREE.Mesh;
+  private keepMesh: THREE.Mesh;
   private shape: TailShape;
   private tailPos = new THREE.Vector3();
   private tint = '#f39133';
@@ -100,6 +109,7 @@ class Studio {
       return m;
     };
     this.selMesh = overlay(HL_SELECTED, 900);
+    this.keepMesh = overlay(HL_KEPT, 899);
     this.hovMesh = overlay(HL_HOVER, 901);
 
     // The game's own HUD is DOM over the canvas and would sit on top of the
@@ -115,7 +125,18 @@ class Studio {
   }
 
   // ── the body, as pickable pieces ─────────────────────────────────────────
+  /**
+   * Re-read the body's chunks.
+   *
+   * Called before every pick and every toggle, not once at open, because the
+   * character model loads ASYNCHRONOUSLY and installing it REPLACES every
+   * chunk on the rig. A list captured at open time can therefore be a set of
+   * detached meshes from the procedural stand-in — they still raycast, so the
+   * failure is silent: clicks land, highlights draw, and none of it refers to
+   * the body actually on screen. Thirteen meshes is nothing to re-walk.
+   */
   private collect(): void {
+    const before = this.sig;
     this.pieces = [];
     const rider = this.ctx.player.riderRef;
     if (!rider) return;
@@ -123,8 +144,15 @@ class Studio {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
       const src = m.userData.srcTris as number[] | undefined;
-      if (src) this.pieces.push({ mesh: m, src });
+      if (src) this.pieces.push({ mesh: m, src, ghost: !!m.userData.discarded });
     });
+    // The body CHANGED under us — almost always the GLB finishing its load and
+    // replacing every chunk. Re-frame, or the view stays pointed at where the
+    // stand-in used to be and the subject is off screen entirely.
+    this.sig = this.pieces.length + ':' + this.pieces.reduce((n, p) => n + p.src.length, 0);
+    // ...but only while nobody has taken the camera. Re-framing under someone
+    // who is lining up a click would move the target out from under them.
+    if (before !== '' && before !== this.sig && !this.steered) this.frameSubject();
   }
 
   /** Frame the BODY, not the tail — the tail is the thing being moved, and
@@ -143,18 +171,26 @@ class Studio {
   // ── picking ───────────────────────────────────────────────────────────────
   /** Every source slot of the triangle under the cursor, or []. */
   private pick(ev: PointerEvent, island: boolean): number[] {
+    this.collect();
+    for (const piece of this.pieces) if (piece.ghost) piece.mesh.visible = this.showGhost;
     const el = this.ctx.renderer.domElement;
     const r = el.getBoundingClientRect();
     this.ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
     this.ray.setFromCamera(this.ndc, this.ctx.camera);
     const hits = this.ray.intersectObjects(
-      this.pieces.map((p) => p.mesh),
+      this.pieces.filter((p) => !p.ghost || this.showGhost).map((p) => p.mesh),
       false,
     );
     if (hits.length === 0) return [];
-    const hit = hits[0];
+    // While rescue mode is on, a GHOST wins over anything in front of it.
+    // Deleted geometry is usually buried inside the body it was cut from — the
+    // nearest hit is the living surface covering it — so nearest-wins would
+    // make the ghosts visible but unclickable, which is the whole feature.
+    const hit =
+      (this.showGhost && hits.find((h) => this.pieces.find((p) => p.mesh === h.object)?.ghost)) || hits[0];
     const piece = this.pieces.find((p) => p.mesh === hit.object);
     if (!piece || hit.faceIndex == null) return [];
+    this.lastWasGhost = piece.ghost;
     const face = hit.faceIndex;
     if (!island) return [piece.src[face * 3]];
     return this.island(piece, face);
@@ -235,9 +271,14 @@ class Studio {
   }
 
   private refresh(): void {
+    this.collect();
     this.paint(this.selMesh, this.selected);
+    this.paint(this.keepMesh, this.kept);
     this.paint(this.hovMesh, this.hover);
-    this.countEl.textContent = `${this.selected.size} polygon${this.selected.size === 1 ? '' : 's'} marked`;
+    const d = this.selected.size;
+    const k = this.kept.size;
+    this.countEl.textContent =
+      `${d} to delete` + (k ? ` · ${k} rescued` : '') + (d + k === 0 ? ' — nothing marked yet' : '');
     this.save();
   }
 
@@ -259,6 +300,7 @@ class Studio {
       this.moved += Math.abs(dx) + Math.abs(dy);
       this.lastX = ev.clientX;
       this.lastY = ev.clientY;
+      this.steered = true;
       if (this.dragging === 'orbit') {
         this.yaw -= dx * 0.008;
         this.pitch = Math.max(-1.35, Math.min(1.35, this.pitch + dy * 0.006));
@@ -279,17 +321,22 @@ class Studio {
     this.dragging = null;
     if ((ev.target as HTMLElement).closest('.studio')) return;
     if (wasDragging && this.moved > 5) return; // a drag is a camera move, not a click
+    const hitGhost = this.lastWasGhost;
     const slots = this.pick(ev, !ev.altKey);
     if (slots.length === 0) return;
-    // plain click adds; ctrl/cmd click removes. alt restricts to one triangle.
-    const remove = ev.ctrlKey || ev.metaKey;
-    for (const s of slots) (remove ? this.selected.delete(s) : this.selected.add(s));
+    // What a click MEANS depends on what it landed on. On live geometry it
+    // marks for deletion; on a ghost — something the carve already removes —
+    // it rescues. Ctrl/cmd reverses either. alt restricts to one triangle.
+    const undo = ev.ctrlKey || ev.metaKey;
+    const set = hitGhost ? this.kept : this.selected;
+    for (const s of slots) (undo ? set.delete(s) : set.add(s));
     this.refresh();
   };
 
   private onWheel = (ev: WheelEvent): void => {
     if ((ev.target as HTMLElement).closest('.studio')) return;
     ev.preventDefault();
+    this.steered = true;
     this.dist = Math.max(0.4, Math.min(20, this.dist * (1 + Math.sign(ev.deltaY) * 0.12)));
   };
 
@@ -390,11 +437,32 @@ class Studio {
         this.selected.clear();
         this.refresh();
       }),
-      button('Hide marked', () => {
+      button('Hide marks', () => {
         this.selMesh.visible = !this.selMesh.visible;
+        this.keepMesh.visible = this.selMesh.visible;
       }),
     );
     p.appendChild(btns);
+    const gbtn = button('Show already-deleted', () => {
+      this.showGhost = !this.showGhost;
+      this.collect();
+      for (const piece of this.pieces) if (piece.ghost) piece.mesh.visible = this.showGhost;
+      gbtn.textContent = this.showGhost ? 'Hide already-deleted' : 'Show already-deleted';
+    });
+    p.appendChild(gbtn);
+    p.appendChild(
+      button('Re-frame view', () => {
+        this.steered = false;
+        this.frameSubject();
+      }),
+    );
+    p.appendChild(
+      note(
+        'Some geometry is already cut before you see it. Turn that on to check ' +
+          'nothing was taken by mistake — click a ghost polygon to put it BACK ' +
+          '(it turns green).',
+      ),
+    );
 
     // --- tail placement
     const tail = this.ctx.player.tailRef;
@@ -487,6 +555,7 @@ class Studio {
         // cuts rather than deleting whatever now sits at those indices.
         highestSlot: verts,
         deletePolygons: [...this.selected].sort((a, b) => a - b),
+        keepPolygons: [...this.kept].sort((a, b) => a - b),
         tail: {
           root: [round(this.tailPos.x), round(this.tailPos.y), round(this.tailPos.z)],
           colour: this.tint,
@@ -506,7 +575,13 @@ class Studio {
     try {
       localStorage.setItem(
         'studio.v1',
-        JSON.stringify({ sel: [...this.selected], pos: this.tailPos.toArray(), shape: this.shape, tint: this.tint }),
+        JSON.stringify({
+          sel: [...this.selected],
+          keep: [...this.kept],
+          pos: this.tailPos.toArray(),
+          shape: this.shape,
+          tint: this.tint,
+        }),
       );
     } catch {
       /* private mode: the session just is not resumable */
@@ -517,8 +592,9 @@ class Studio {
     try {
       const raw = localStorage.getItem('studio.v1');
       if (raw) {
-        const d = JSON.parse(raw) as { sel?: number[] };
+        const d = JSON.parse(raw) as { sel?: number[]; keep?: number[] };
         for (const s of d.sel ?? []) this.selected.add(s);
+        for (const s of d.keep ?? []) this.kept.add(s);
       }
     } catch {
       /* ignore */
@@ -530,7 +606,8 @@ class Studio {
     document.body.classList.remove('studio-on');
     this.unbind();
     this.panel.remove();
-    for (const m of [this.selMesh, this.hovMesh]) {
+    for (const piece of this.pieces) if (piece.ghost) piece.mesh.visible = false;
+    for (const m of [this.selMesh, this.hovMesh, this.keepMesh]) {
       m.geometry.dispose();
       (m.material as THREE.Material).dispose();
       m.removeFromParent();

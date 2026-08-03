@@ -1094,7 +1094,9 @@ async function openStudioTool(): Promise<void> {
 // put #studio on the URL. Deferred so the character model is installed and
 // there is something to click before the panel appears.
 if (location.hash.toLowerCase().includes("studio")) {
-  setTimeout(() => void openStudioTool(), 2500);
+  // Long enough for the character GLB to land. The studio re-reads the body on
+  // every interaction anyway, so this is only about what you see first.
+  setTimeout(() => void openStudioTool(), 5000);
 }
 
 function openEditor(target: string = current.id): void {

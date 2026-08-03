@@ -9374,7 +9374,9 @@ export class Player {
     for (let t = 0; t < P.count; t += 3) {
       const czf = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
       const cyf = (P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3;
-      if (cuts?.has(t) || (czf < backZ && cyf < midY)) {
+      // A rescue wins over everything: it is the only way to correct a
+      // geometric rule that reached too far, and it must outrank the rule.
+      if (!cuts?.keep.has(t) && (cuts?.cut.has(t) || (czf < backZ && cyf < midY))) {
         // Discarded, not built — the tail is drawn in code now (src/tail.ts).
         //
         // This ONE original test is all the geometry-based deleting that
@@ -9499,9 +9501,16 @@ export class Player {
     this.soleR = null;
     this.soleL = null;
 
-    // TAIL — the model's own tail triangles are collected only so they can be
-    // LEFT OUT of the body carve. Nothing is built from them: the drawn tail
-    // (src/tail.ts) stands in, wearing the rig's own fur colour.
+    // TAIL — the model's own tail triangles are LEFT OUT of the body carve;
+    // the drawn tail (src/tail.ts) stands in. They are still built, as a
+    // hidden ghost, so the studio can show you what has been deleted and let
+    // you put it back. Without that the tool is one-way, and one-way is how a
+    // bite went missing out of her ponytail for a whole build before anyone
+    // could see it had happened.
+    const ghost = build(bucket.tail, new THREE.Vector3(0, hipY, 0));
+    ghost.visible = false;
+    ghost.userData.discarded = true;
+    this.legs.add(ghost);
   }
 
   /**

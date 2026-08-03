@@ -29,14 +29,25 @@ export interface ModelCut {
   vertexCount: number;
   /** vertex-slot index of each deleted triangle (slot t => triangle t/3) */
   tris: number[];
+  /** ...and triangles RESCUED from the geometric cut, because it over-reached.
+   *  This is the half that was missing when a rule quietly took a bite out of
+   *  her ponytail: a cut you can only add to is a cut nobody can correct. */
+  keep?: number[];
 }
 
 export const MODEL_CUTS: Record<string, ModelCut> = {
   // filled in from the studio's export
 };
 
-/** The cut set for a model, or null if it has none / the file has changed. */
-export function cutsFor(src: string, vertexCount: number): Set<number> | null {
+export interface Verdict {
+  /** delete these, whatever the geometric rule thinks */
+  cut: Set<number>;
+  /** keep these, whatever the geometric rule thinks */
+  keep: Set<number>;
+}
+
+/** What a human decided about this model, or null if nothing / the file moved. */
+export function cutsFor(src: string, vertexCount: number): Verdict | null {
   const key = Object.keys(MODEL_CUTS).find((k) => src.endsWith(k));
   if (!key) return null;
   const cut = MODEL_CUTS[key];
@@ -47,5 +58,5 @@ export function cutsFor(src: string, vertexCount: number): Set<number> | null {
     );
     return null;
   }
-  return new Set(cut.tris);
+  return { cut: new Set(cut.tris), keep: new Set(cut.keep ?? []) };
 }
