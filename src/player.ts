@@ -9411,15 +9411,37 @@ export class Player {
     // caught by HEIGHT. The hip block's real geometry stops at the crotch,
     // around y 0.6; the fan hangs to y 0.12, which is ankle height. Nothing
     // that belongs to a pelvis goes there.
+    // Two rules, both measured against the built chunks rather than guessed:
+    //
+    //   HANGING   the hip block's real geometry stops at the crotch; the brush
+    //             hung to y 0.12, ankle height, on a rig whose hip joints are
+    //             at 0.71. Anything filed as pelvis below the hip is tail.
+    //   BEHIND    the legs and hips are built entirely forward of z -0.01 (the
+    //             two big leg chunks start at 0.03 and -0.01). The brush
+    //             reaches -0.14. Anything down there behind her back is tail.
+    //
+    // Both are applied AFTER the bone vote because that is where the problem
+    // is: what the geometric cut misses gets filed as body by bone weight.
     const KNEE_Y = 0.63; // just under the hip joints at 0.71, so the hip
                          // block survives and everything dangling off it does not
-    const kept: number[] = [];
-    for (let i = 0; i < bucket.pelvis.length; i += 3) {
-      const t = bucket.pelvis[i];
-      const ry = ((P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3 - miny) * SY;
-      (ry < KNEE_Y ? bucket.tail : kept).push(t, t + 1, t + 2);
+    const BACK_Z = -0.02; // just behind every real leg and hip triangle
+    for (const part of ['pelvis', 'thighR', 'thighL', 'shinR', 'shinL'] as const) {
+      const kept: number[] = [];
+      for (let i = 0; i < bucket[part].length; i += 3) {
+        const t = bucket[part][i];
+        const ry = ((P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3 - miny) * SY;
+        // ANY vertex, not the centroid. The brush is flat blades: a blade
+        // reaching back to z -0.09 still has its centroid forward of the cut,
+        // so a centroid test removed two triangles out of a hundred and left
+        // the fan standing. The clean thigh's nearest vertex is at z 0.05, so
+        // a per-vertex test at -0.02 cannot reach real geometry.
+        let back = false;
+        for (let k = 0; k < 3; k++) if ((P.getZ(t + k) - cz) * SXZ < BACK_Z) back = true;
+        const brush = back || (part === 'pelvis' && ry < KNEE_Y);
+        (brush ? bucket.tail : kept).push(t, t + 1, t + 2);
+      }
+      bucket[part] = kept;
     }
-    bucket.pelvis = kept;
 
     // Build a chunk: map each vert to rig space, subtract the pivot, optional
     // rotation onto -Y (limbs), matching normal transform.
@@ -10186,10 +10208,12 @@ export class Player {
     // late, under gravity, and stops short of her own body. Parented to the
     // body root (NOT the legs group) so leg squashes don't pancake it.
     const tail = new Tail();
-    // Tucked in against her back rather than standing off it: the attach point
-    // used to sit 0.14 behind the hip pivot, which left daylight between the
-    // body and the base of the tail from the side.
-    tail.root.position.set(0, 0.66, -0.05);
+    // Tucked right in against her back: the attach point used to sit 0.14
+    // behind the hip pivot, which left daylight between the body and the base
+    // of the tail from the side. The tube's own base tapers inward as well
+    // (see restRadius), so it meets her narrow rather than butting a full
+    // width cylinder against her hip.
+    tail.root.position.set(0, 0.67, -0.01);
     riderG.add(tail.root);
     this.tail = tail;
 

@@ -61,7 +61,8 @@ export interface TailCollider {
 }
 
 const BONES = 8;
-const RINGS = 15; // stations along the tube (>= BONES + 1 for a smooth bend)
+const RINGS = 19; // stations along the tube (>= BONES + 1 for a smooth bend),
+                  // packed toward the base to carry the neck — see buildSkin
 const SIDES = 9; // radial segments — PS1-chunky, matching the body's facets
 const LENGTH = 0.58; // rest length in rig units — long enough to read as a
                      // kangaroo's counterweight, short enough not to trail
@@ -88,10 +89,19 @@ function restDir(u: number, out: THREE.Vector3): THREE.Vector3 {
   return out.set(0, Math.sin(a), -Math.cos(a));
 }
 
-/** Tube radius at arc fraction u. Thick at the hips, a point at the tip —
- *  and thinner than a thigh, so it reads as a tail rather than a fifth limb. */
+/**
+ * Tube radius at arc fraction u. Thinner than a thigh throughout, so it reads
+ * as a tail rather than a fifth limb.
+ *
+ * Two curves multiplied. The body tapers from the hips to a point at the tip.
+ * The NECK pinches the first fifth back in again, because a tail is at its
+ * slimmest where it joins the animal and swells just past that — butting a
+ * full-width cylinder against her hip reads as a pipe stuck on the back.
+ */
 function restRadius(u: number): number {
-  return 0.072 * Math.pow(1 - u, 0.62) + 0.009;
+  const body = 0.072 * Math.pow(1 - u, 0.62) + 0.009;
+  const neck = 0.46 + 0.54 * Math.min(1, Math.pow(Math.max(0, u) / 0.2, 0.75));
+  return body * neck;
 }
 
 export class Tail {
@@ -224,7 +234,10 @@ export class Tail {
     };
 
     for (let r = 0; r < RINGS; r++) {
-      const f = r / (RINGS - 1);
+      // Rings are PACKED TOWARD THE BASE. Spaced evenly they cannot describe
+      // the neck — the pinch happens inside the first fifth of the length, and
+      // three evenly-spread stations across it turn a curve into a chamfer.
+      const f = Math.pow(r / (RINGS - 1), 1.45);
       const { centre, bx, by, u } = station(f);
       // Radius runs off the VISIBLE fraction: the buried part keeps the base
       // width so the collar stays fat inside the body.
