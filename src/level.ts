@@ -26,6 +26,7 @@ import {
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
+import { wumpaMesh } from "./wumpa";
 
 export interface Crate {
   mesh: THREE.Mesh;
@@ -294,7 +295,9 @@ export interface Stone {
 
 // Floating wumpa, Crash-style: touch to collect (side-scroll levels).
 export interface Pickup {
-  mesh: THREE.Mesh;
+  // A Group, not a Mesh: the fruit is an authored model handed out by
+  // src/wumpa.ts, which wraps it so the idle spin turns about its centre.
+  mesh: THREE.Object3D;
   box: THREE.Box3;
   alive: boolean;
 }
@@ -1771,7 +1774,6 @@ export class Level {
   }[] = [];
   private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
   private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
-  private static pickupGeo = new THREE.SphereGeometry(0.24, 8, 6);
   private checkerTex: THREE.CanvasTexture | null = null;
 
   // THE DEFAULT SURFACE. This used to be a literal white/grey checkerboard with
@@ -4479,13 +4481,17 @@ export class Level {
 
     this.updateEnemies(dt);
     this.updateProjectiles(dt);
-    // Floating wumpa bob in place.
+    // Floating wumpa bob and turn in place. The model is baked centred on its
+    // own origin (tools/bake-wumpa.mjs), so this is a turn rather than an
+    // orbit — and it is gentle, because the fruit is now readable art with a
+    // stem and a leaf rather than an orange ball that needed the speed to
+    // look like it was doing anything.
     for (const p of this.pickups) {
       if (!p.alive) continue;
       p.mesh.position.y =
         (p.mesh.userData.baseY as number) +
         Math.sin(this.time * 3 + p.mesh.position.z * 0.7) * 0.12;
-      p.mesh.rotation.y += dt * 2;
+      p.mesh.rotation.y += dt * 0.9;
     }
     // Unbroken checkpoint boxes idle-spin so they read as special.
     for (const c of this.checkpoints) {
@@ -8429,7 +8435,7 @@ export class Level {
   private metalArrowTex: THREE.CanvasTexture | null = null;
   private metalArrowTexture(): THREE.CanvasTexture {
     if (!this.metalArrowTex)
-      this.metalArrowTex = this.makeTex((ctx) => {
+      this.metalArrowTex = Level.makeTex((ctx) => {
         this.crateMetalBase(ctx);
         ctx.fillStyle = "#3a9a4a";
         ctx.beginPath();
@@ -8478,7 +8484,7 @@ export class Level {
   // Classic PSX crate face: light planked wood, beveled frame, corner studs.
   // Every crate variant draws its icon over this base (drawn per reference
   // rips of the original series' crate sheet, recreated by hand).
-  private crateWood(ctx: CanvasRenderingContext2D, brace: boolean): void {
+  private static crateWood(ctx: CanvasRenderingContext2D, brace: boolean): void {
     ctx.fillStyle = "#b5762f";
     ctx.fillRect(0, 0, 32, 32);
     // plank seams + grain flecks
@@ -8554,7 +8560,7 @@ export class Level {
   // Painted in a 32-unit space (every draw call below is written against it)
   // onto an 8x canvas, so the crate faces keep their layout and lose their
   // staircase.
-  private makeTex(
+  private static makeTex(
     draw: (ctx: CanvasRenderingContext2D) => void,
   ): THREE.CanvasTexture {
     const SS = 8;
@@ -8581,9 +8587,36 @@ export class Level {
 
   // Plain wooden crate: planks + X brace, nothing else.
   private plainTexture(): THREE.CanvasTexture {
-    if (!this.plainTex)
-      this.plainTex = this.makeTex((ctx) => this.crateWood(ctx, true));
+    if (!this.plainTex) this.plainTex = Level.plainCrateTexture();
     return this.plainTex;
+  }
+
+  /** The plain crate face, owned by the class so the HUD can have one too. */
+  private static plainCrateTex: THREE.CanvasTexture | null = null;
+  static plainCrateTexture(): THREE.CanvasTexture {
+    if (!Level.plainCrateTex)
+      Level.plainCrateTex = Level.makeTex((ctx) => Level.crateWood(ctx, true));
+    return Level.plainCrateTex;
+  }
+
+  /**
+   * A standalone plain crate, for the HUD counter icon — the SAME box and the
+   * SAME painted face the level builds, so the thing you are counting and the
+   * thing you are smashing are visibly one object. Centred on its own origin
+   * so it turns on the spot.
+   */
+  static crateMesh(size = 1): THREE.Group {
+    const g = new THREE.Group();
+    g.add(
+      new THREE.Mesh(
+        new THREE.BoxGeometry(size, size, size),
+        new THREE.MeshLambertMaterial({
+          color: 0xffffff,
+          map: Level.plainCrateTexture(),
+        }),
+      ),
+    );
+    return g;
   }
 
   // Yellow '!' on METAL: the switch that materializes its group's outline
@@ -8591,7 +8624,7 @@ export class Level {
   private bangTex: THREE.CanvasTexture | null = null;
   private bangTexture(): THREE.CanvasTexture {
     if (!this.bangTex)
-      this.bangTex = this.makeTex((ctx) => {
+      this.bangTex = Level.makeTex((ctx) => {
         this.crateMetalBase(ctx);
         this.crateLabel(ctx, "!", 24, "#ffd934", "#3a3f46", 16, 18);
       });
@@ -8605,7 +8638,7 @@ export class Level {
   private spentBangTex: THREE.CanvasTexture | null = null;
   private metalPlainTexture(): THREE.CanvasTexture {
     if (!this.spentBangTex)
-      this.spentBangTex = this.makeTex((ctx) => this.crateMetalBase(ctx));
+      this.spentBangTex = Level.makeTex((ctx) => this.crateMetalBase(ctx));
     return this.spentBangTex;
   }
 
@@ -8613,7 +8646,7 @@ export class Level {
   private woodPlainTex: THREE.CanvasTexture | null = null;
   private woodPlainTexture(): THREE.CanvasTexture {
     if (!this.woodPlainTex)
-      this.woodPlainTex = this.makeTex((ctx) => this.crateWood(ctx, false));
+      this.woodPlainTex = Level.makeTex((ctx) => Level.crateWood(ctx, false));
     return this.woodPlainTex;
   }
 
@@ -8621,7 +8654,7 @@ export class Level {
   private nitroBangTex: THREE.CanvasTexture | null = null;
   private nitroBangTexture(): THREE.CanvasTexture {
     if (!this.nitroBangTex)
-      this.nitroBangTex = this.makeTex((ctx) => {
+      this.nitroBangTex = Level.makeTex((ctx) => {
         ctx.fillStyle = "#2fae44";
         ctx.fillRect(0, 0, 32, 32);
         ctx.fillStyle = "#1c7a2c";
@@ -8638,7 +8671,7 @@ export class Level {
   private metalTex: THREE.CanvasTexture | null = null;
   private metalTexture(): THREE.CanvasTexture {
     if (!this.metalTex)
-      this.metalTex = this.makeTex((ctx) => {
+      this.metalTex = Level.makeTex((ctx) => {
         ctx.fillStyle = "#9aa2ac";
         ctx.fillRect(0, 0, 32, 32);
         ctx.fillStyle = "#7d8590";
@@ -8667,8 +8700,8 @@ export class Level {
   // Big orange '?' on plain wood.
   private mysteryTexture(): THREE.CanvasTexture {
     if (!this.mysteryTex)
-      this.mysteryTex = this.makeTex((ctx) => {
-        this.crateWood(ctx, false);
+      this.mysteryTex = Level.makeTex((ctx) => {
+        Level.crateWood(ctx, false);
         this.crateLabel(ctx, "?", 22, "#ff8c1a", "#5a2d08", 16, 17);
       });
     return this.mysteryTex;
@@ -8687,7 +8720,7 @@ export class Level {
     ctx.imageSmoothingEnabled = false;
     ctx.save();
     ctx.scale(S / 32, S / 32); // crateWood authors in 32-space
-    this.crateWood(ctx, false);
+    Level.crateWood(ctx, false);
     ctx.restore();
     const tex = new THREE.CanvasTexture(canvas);
     this.maskTex = tex;
@@ -8706,7 +8739,7 @@ export class Level {
   private tntTexture(label: string): THREE.CanvasTexture {
     const cached = this.tntTexCache.get(label);
     if (cached) return cached;
-    const tex = this.makeTex((ctx) => {
+    const tex = Level.makeTex((ctx) => {
       ctx.fillStyle = "#c23a30";
       ctx.fillRect(0, 0, 32, 32);
       ctx.fillStyle = "#8f2018";
@@ -8730,7 +8763,7 @@ export class Level {
   // Green NITRO: jittery goo crate, hazard-striped frame.
   private nitroTexture(): THREE.CanvasTexture {
     if (!this.nitroTex)
-      this.nitroTex = this.makeTex((ctx) => {
+      this.nitroTex = Level.makeTex((ctx) => {
         ctx.fillStyle = "#2fae44";
         ctx.fillRect(0, 0, 32, 32);
         ctx.fillStyle = "#1c7a2c";
@@ -8756,8 +8789,8 @@ export class Level {
   // Chunky green up-arrow on wood (the super-bounce crate).
   private arrowTexture(): THREE.CanvasTexture {
     if (!this.arrowTex)
-      this.arrowTex = this.makeTex((ctx) => {
-        this.crateWood(ctx, false);
+      this.arrowTex = Level.makeTex((ctx) => {
+        Level.crateWood(ctx, false);
         ctx.fillStyle = "#1c6a28";
         ctx.beginPath();
         ctx.moveTo(16, 4);
@@ -8787,7 +8820,7 @@ export class Level {
   // Blue checkpoint crate with the classic 'C'.
   private cpTexture(): THREE.CanvasTexture {
     if (!this.cpTex)
-      this.cpTex = this.makeTex((ctx) => {
+      this.cpTex = Level.makeTex((ctx) => {
         ctx.fillStyle = "#4aa0e0";
         ctx.fillRect(0, 0, 32, 32);
         ctx.fillStyle = "#2a6ba0";
@@ -9278,7 +9311,7 @@ export class Level {
       emissive: 0x40300a,
     });
     // face: white dial, gold rim, hands at ten-past-ten
-    const faceTex = this.makeTex((ctx) => {
+    const faceTex = Level.makeTex((ctx) => {
       ctx.fillStyle = "#f4efdf";
       ctx.fillRect(0, 0, 32, 32);
       ctx.strokeStyle = "#c79a2e";
@@ -9526,7 +9559,7 @@ export class Level {
   private timeTexture(n: number): THREE.CanvasTexture {
     const cached = this.timeTexCache.get(n);
     if (cached) return cached;
-    const tex = this.makeTex((ctx) => {
+    const tex = Level.makeTex((ctx) => {
       ctx.fillStyle = "#e8c33a";
       ctx.fillRect(0, 0, 32, 32);
       ctx.fillStyle = "#b08a1c";
@@ -9551,7 +9584,7 @@ export class Level {
   private boostTexture(kind: "speed" | "balance"): THREE.CanvasTexture {
     const cached = this.boostTexCache.get(kind);
     if (cached) return cached;
-    const tex = this.makeTex((ctx) => {
+    const tex = Level.makeTex((ctx) => {
       const base = kind === "speed" ? "#e8763a" : "#3ac2e8";
       const dark = kind === "speed" ? "#a8481c" : "#1c7ea8";
       const light = kind === "speed" ? "#ffb98a" : "#a8e8ff";
@@ -10374,10 +10407,9 @@ export class Level {
 
   // Floating collectable wumpa.
   private pickup(x: number, y: number, z: number): void {
-    const mesh = new THREE.Mesh(
-      Level.pickupGeo,
-      new THREE.MeshLambertMaterial({ color: 0xff9028, emissive: 0x4a2006 }),
-    );
+    // 0.48 across: the diameter of the sphere this replaced, so every level's
+    // spacing and every pickup box still reads the same.
+    const mesh = wumpaMesh(0.48);
     mesh.position.set(x, y, z);
     mesh.userData.baseY = y;
     this.root.add(mesh);

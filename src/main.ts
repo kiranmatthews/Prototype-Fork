@@ -1977,8 +1977,9 @@ function frame(): void {
   } else {
     renderer.render(scene, camera);
   }
-  // Earned relics spin in the HUD row, drawn over the finished frame.
-  ui.drawRelics(renderer, dt);
+  // The crate, fruit and relic HUD icons are real 3D, spun and drawn over the
+  // finished frame into each icon's own DOM box.
+  ui.drawIcons(renderer, dt);
 }
 frame();
 

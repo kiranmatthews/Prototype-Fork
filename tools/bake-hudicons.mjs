@@ -30,9 +30,12 @@ const { chromium } = require('playwright-core');
 //        is genuine feather and another's is cruft.
 // trim:  crop to the artwork. OFF where a crop would change the aspect the game
 //        already draws the art at — see crossbones.
+// The crate and the apple USED to be baked here too. Both HUD counters are
+// real 3D now — the level's own crate and the authored wumpa, turning slowly,
+// drawn straight into their icon boxes by UI.drawIcons — so a flat PNG for
+// either would only sit on top of the canvas and hide it. The source art is
+// still in art/hud-{apple,crate}.png if a flat version is ever wanted back.
 const JOBS = [
-  { src: 'art/hud-apple.png', dst: 'public/apple.png', size: 192, floor: 40, trim: true },
-  { src: 'art/hud-crate.png', dst: 'public/crate.png', size: 192, floor: 128, trim: true },
   // The life icon fills its frame edge to edge — nothing to crop, just oversized.
   { src: 'art/hud-roo.png', dst: 'public/roo.png', size: 192, floor: 8, trim: false },
   // The mask crate's sticker is stretched into a SQUARE box on the crate face

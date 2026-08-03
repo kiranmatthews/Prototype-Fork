@@ -4,6 +4,7 @@
 import * as THREE from "three";
 import { COMBO_GEM_TINT, Level, levelList } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
+import { wumpaMesh } from "./wumpa";
 import {
   TUNING,
   TUNING_RANGES,
@@ -18,12 +19,12 @@ import {
 // Baked from the 1024px originals in art/ by tools/bake-hudicons.mjs.
 const art = (f: string): string => `url("${import.meta.env.BASE_URL}${f}")`;
 const LIFE_FACE_URL = art("roo.png");
-const CRATE_URL = art("crate.png");
-const APPLE_URL = art("apple.png");
 
-// Scratch for the relic pass, so a per-frame draw allocates nothing.
-const RELIC_SIZE = new THREE.Vector2();
-const RELIC_PREV = new THREE.Vector4();
+// Scratch for the 3D icon pass, so a per-frame draw allocates nothing.
+const ICON_SIZE = new THREE.Vector2();
+const ICON_PREV = new THREE.Vector4();
+/** iconSlots order: crate, wumpa, then the three relics. */
+const RELIC_SLOT_0 = 2;
 
 export interface Stats {
   speed: number;
@@ -72,18 +73,21 @@ export class UI {
   private ttOn = false;
   private haloEl!: HTMLElement; // combo-run green viewport halo
   private comboGemIcon!: HTMLElement;
-  private relicRowEl!: HTMLElement;
-  // built on the first earned relic, not at boot: three matcap meshes and a
-  // canvas texture each is real work for a row that often stays empty
-  private relicScene: THREE.Scene | null = null;
-  private relicCam: THREE.OrthographicCamera | null = null;
-  private relicSlots: {
-    ghost: HTMLElement;
-    pivot: THREE.Group;
-    spin: THREE.Group;
+  private crateIcon!: HTMLElement;
+  private wumpaIcon!: HTMLElement;
+  // Every 3D HUD icon lives in ONE scene with ONE camera; each is drawn into
+  // its own host element's rectangle, one slot visible at a time. See
+  // buildIcons/drawIcons.
+  private iconScene: THREE.Scene | null = null;
+  private iconCam: THREE.OrthographicCamera | null = null;
+  private iconSlots: {
+    host: HTMLElement; // the DOM box this is drawn into
+    pivot: THREE.Group; // holds the lean; scaled to fit the box
+    spin: THREE.Group; // turns
+    unit: number; // art height in world units, for the fit
+    rate: number; // idle turn, rad/s
+    on: boolean; // relics are off until earned; the counters are always on
   }[] = [];
-  /** Slot boxes in row-local CSS px, re-measured only when the layout moves. */
-  private relicLayout: { w: number; h: number } | null = null;
   private boostRingWrap!: HTMLElement; // balance-boost ring: laps over itself as windows stack
   private boostRing!: HTMLElement;
   private balanceWrap: HTMLElement;
@@ -516,13 +520,17 @@ export class UI {
 
     // ---- game HUD: Crash-style counters + THPS trick plate ----
     // top-left: crate + wumpa counters
+    // The crate and the fruit are 3D, drawn into these boxes by drawIcons —
+    // the divs are empty and exist only to be measured and laid out.
     const tl = div("hud-tl");
     const crateRow = div("hud-counter");
-    crateRow.appendChild(div("hud-icon hud-icon-crate"));
+    this.crateIcon = div("hud-icon hud-icon-crate");
+    crateRow.appendChild(this.crateIcon);
     this.cratesEl = div("hud-num");
     crateRow.appendChild(this.cratesEl);
     const wumpaRow = div("hud-counter");
-    wumpaRow.appendChild(div("hud-icon hud-icon-wumpa"));
+    this.wumpaIcon = div("hud-icon hud-icon-wumpa");
+    wumpaRow.appendChild(this.wumpaIcon);
     this.wumpaEl = div("hud-num");
     wumpaRow.appendChild(this.wumpaEl);
     this.wumpaRowEl = wumpaRow;
@@ -530,11 +538,10 @@ export class UI {
     tl.appendChild(wumpaRow);
     // Relic haul: crystal, gem, combo gem. Each is a flat ghosted cutout until
     // it's earned, at which point a real spinning 3D relic is drawn into its
-    // box instead (see drawRelics). The ghost is never removed from the layout
+    // box instead (see drawIcons). The ghost is never removed from the layout
     // — it goes `visibility: hidden` — because the three boxes are what the 3D
     // pass measures its slots from, and a reflow would move them.
     const relicRow = div("hud-counter hud-relics");
-    this.relicRowEl = relicRow;
     this.crystalIcon = div("hud-icon hud-icon-crystal hud-relic-off");
     this.gemIcon = div("hud-icon hud-icon-gem hud-relic-off");
     this.comboGemIcon = div(
@@ -544,7 +551,6 @@ export class UI {
     relicRow.appendChild(this.gemIcon);
     relicRow.appendChild(this.comboGemIcon);
     tl.appendChild(relicRow);
-    addEventListener("resize", () => (this.relicLayout = null));
 
     // top-right: lives, then the score directly under them.
     //
@@ -806,100 +812,110 @@ export class UI {
     this.rooTrickTotal.set("NO");
   }
 
-  // ---- earned relics, as real spinning 3D --------------------------------
+  // ---- HUD icons, as real spinning 3D ------------------------------------
   //
-  // Drawn with the GAME's renderer in a second pass over the relic row's
-  // rectangle, not into a canvas of its own. A second WebGL context is a real
-  // risk on iOS Safari, which is stingy with them and would leave the relics
-  // silently missing on the device this is actually played on. The relics are
-  // matcap-lit — their highlights are painted into the material and sampled by
-  // surface normal — so they need no lights at all and look right in a bare
-  // scene.
-  private buildRelics(): void {
-    if (this.relicScene) return;
-    this.relicScene = new THREE.Scene();
-    // Camera frustum is set per-frame in CSS PIXELS of the row, so a slot can
-    // be placed at the measured centre of its ghost box and scaled to its
-    // height — no guessing at aspect ratios.
-    this.relicCam = new THREE.OrthographicCamera(0, 1, 0, -1, -500, 500);
-    const art: [HTMLElement, () => THREE.Group][] = [
-      [this.crystalIcon, () => Level.crystalMesh(1)],
-      [this.gemIcon, () => Level.gemMesh(1)],
-      [this.comboGemIcon, () => Level.gemMesh(1, COMBO_GEM_TINT)],
+  // The crate counter, the fruit counter and the three relics are all drawn
+  // with the GAME's renderer in a second pass over each icon's own DOM
+  // rectangle, not into canvases of their own. A second WebGL context is a
+  // real risk on iOS Safari, which is stingy with them and would leave the
+  // icons silently missing on the device this is actually played on.
+  //
+  // ONE scene, ONE camera, N rectangles. Every slot sits at the origin and
+  // only one is made visible at a time, so a slot's screen position comes
+  // entirely from the viewport it is rendered into — which is just its host
+  // element's box, whatever the layout does to it. (The relics previously
+  // shared a single viewport over their row and were positioned inside it in
+  // row-local pixels; that only worked because they happened to be siblings.)
+  private buildIcons(): void {
+    if (this.iconScene) return;
+    const scene = new THREE.Scene();
+    this.iconScene = scene;
+    // Unit frustum: the camera spans 1.0 world unit vertically and the host's
+    // aspect horizontally, so fitting art to a box is one scale factor.
+    this.iconCam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -500, 500);
+    // The relics are matcap-lit — their highlights are painted into the
+    // material and sampled by surface normal — and ignore these entirely. The
+    // crate and the fruit are Lambert, like everything in the world, so they
+    // need lighting or they would render as silhouettes.
+    //
+    // Lit HOTTER than the world, deliberately. These icons have no drop
+    // shadow to sit on any more — a CSS filter can't reach into the canvas —
+    // so what separates them from a bright jungle behind them is their own
+    // brightness. A key over one shoulder for the form, a dimmer fill over
+    // the other so the away side never goes to a flat silhouette.
+    scene.add(new THREE.AmbientLight(0xffffff, 2));
+    const key = new THREE.DirectionalLight(0xffffff, 2.1);
+    key.position.set(0.5, 0.9, 1);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.7);
+    fill.position.set(-0.8, -0.2, 0.5);
+    scene.add(fill);
+
+    // lean: tip toward the camera so a box reads as a box and a facet catches
+    // the light, rather than turning as a flat silhouette.
+    // rate: the idle turn. The counters are ambient decoration and stay slow;
+    // a relic is a trophy and may show off.
+    const art: {
+      host: HTMLElement;
+      make: () => THREE.Group;
+      lean: number;
+      rate: number;
+      fill: number;
+      relic: boolean;
+    }[] = [
+      // the crate shows its top face: you look DOWN on crates in this game
+      { host: this.crateIcon, make: () => Level.crateMesh(1), lean: -0.42, rate: 0.6, fill: 0.66, relic: false },
+      { host: this.wumpaIcon, make: () => wumpaMesh(1), lean: -0.12, rate: 0.9, fill: 0.86, relic: false },
+      { host: this.crystalIcon, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
+      { host: this.gemIcon, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
+      { host: this.comboGemIcon, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
     ];
-    for (const [ghost, make] of art) {
-      const relic = make();
+    for (const { host, make, lean, rate, fill, relic } of art) {
+      const model = make();
       // Strip the world halo. It's a camera-facing additive sprite sized for a
       // pickup standing in a level; at HUD scale, over bright scenery, it reads
       // as a pale RECTANGLE around the relic rather than a glow.
-      for (const o of relic.children.slice())
-        if ((o as THREE.Sprite).isSprite) relic.remove(o);
-      // Centre the art on its own MESH bounds.
+      for (const o of model.children.slice())
+        if ((o as THREE.Sprite).isSprite) model.remove(o);
+      // Centre the art on its own MESH bounds, so it turns about its middle
+      // rather than orbiting whatever the model's origin happened to be.
       const box = new THREE.Box3();
-      relic.traverse((o) => {
+      model.traverse((o) => {
         const m = o as THREE.Mesh;
         if (m.isMesh && m.geometry) box.expandByObject(m);
       });
       const c = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
-      relic.position.y -= c.y; // its middle now sits on the spin axis origin
+      model.position.sub(c);
       const spin = new THREE.Group();
-      spin.add(relic);
+      spin.add(model);
       const pivot = new THREE.Group();
-      // a slight lean forward, so the facets read as solid rather than as a
-      // flat silhouette turning on the spot
-      pivot.rotation.x = -0.2;
+      pivot.rotation.x = lean;
       pivot.add(spin);
-      pivot.userData.unit = size.y || 1; // art height, for the px scale
-      pivot.visible = false;
-      this.relicScene.add(pivot);
-      this.relicSlots.push({ ghost, pivot, spin });
+      scene.add(pivot);
+      // The art has to fit its box THROUGH A WHOLE TURN: a crate presents its
+      // diagonal at 45 degrees, and the lean projects it taller than it
+      // stands. `fill` is that headroom — tightest for the box, loosest for
+      // the round fruit, which sweeps almost nothing.
+      // relics stay dark until earned; the two counters are always live
+      this.iconSlots.push({ host, pivot, spin, unit: (size.y || 1) / fill, rate, on: !relic });
     }
   }
 
   /**
-   * Spin and draw whatever relics are earned. Called from the frame loop after
-   * the world is drawn, with the renderer the game already owns.
+   * Spin and draw the 3D HUD icons. Called from the frame loop after the world
+   * is drawn, with the renderer the game already owns.
    */
-  drawRelics(renderer: THREE.WebGLRenderer, dt: number): void {
-    const scene = this.relicScene;
-    const cam = this.relicCam;
+  drawIcons(renderer: THREE.WebGLRenderer, dt: number): void {
+    this.buildIcons();
+    const scene = this.iconScene;
+    const cam = this.iconCam;
     if (!scene || !cam) return;
-    if (!this.relicSlots.some((s) => s.pivot.visible)) return;
 
     const canvas = renderer.domElement;
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
     if (!cw || !ch) return;
-    const row = this.relicRowEl.getBoundingClientRect();
-    if (row.width < 4 || row.height < 4) return;
-
-    // Re-measure only when something moved the row: getBoundingClientRect on
-    // four elements every frame is a layout read the frame loop doesn't need.
-    if (!this.relicLayout) {
-      for (const slot of this.relicSlots) {
-        const g = slot.ghost.getBoundingClientRect();
-        const unit = slot.pivot.userData.unit as number;
-        slot.pivot.position.set(
-          g.left - row.left + g.width / 2,
-          -(g.top - row.top + g.height / 2),
-          0,
-        );
-        // Fit the art's height into the ghost's box with air to spare: a
-        // spinning relic sweeps wider than it stands, and the forward lean
-        // projects it taller than its own height.
-        slot.pivot.scale.setScalar((g.height * 0.82) / unit);
-      }
-      this.relicLayout = { w: row.width, h: row.height };
-      cam.left = 0;
-      cam.right = row.width;
-      cam.top = 0;
-      cam.bottom = -row.height;
-      cam.updateProjectionMatrix();
-    }
-
-    for (const slot of this.relicSlots)
-      if (slot.pivot.visible) slot.spin.rotation.y += dt * 1.5;
 
     // setViewport/setScissor take the renderer's OWN size units and multiply by
     // pixelRatio internally — they are not drawing-buffer pixels. Passing
@@ -907,31 +923,64 @@ export class UI {
     // else, which on a phone put this pass off-screen entirely AND left a
     // double-size viewport behind that zoomed the next frame's world.
     // So: CSS px -> renderer units, and restore whatever was set before.
-    const size = renderer.getSize(RELIC_SIZE);
+    const size = renderer.getSize(ICON_SIZE);
     const kx = size.x / cw;
     const ky = size.y / ch;
-    renderer.getViewport(RELIC_PREV);
-    renderer.autoClear = false;
-    // GL's origin is bottom-left, hence measuring down from the canvas bottom
-    const vx = row.left * kx;
-    const vy = (ch - row.bottom) * ky;
-    const vw = row.width * kx;
-    const vh = row.height * ky;
-    renderer.setViewport(vx, vy, vw, vh);
-    renderer.setScissor(vx, vy, vw, vh);
-    renderer.setScissorTest(true);
-    renderer.clearDepth(); // sit on top of the world, not inside it
-    renderer.render(scene, cam);
-    renderer.setScissorTest(false);
-    renderer.setViewport(RELIC_PREV);
-    renderer.autoClear = true;
+
+    let drew = false;
+    for (const slot of this.iconSlots) {
+      if (!slot.on) continue;
+      slot.spin.rotation.y += dt * slot.rate;
+      const r = slot.host.getBoundingClientRect();
+      // A hidden HUD (menus, the editor, a closed panel) measures zero, and a
+      // scrolled-off icon would scissor to nothing: skip rather than draw.
+      if (r.width < 4 || r.height < 4) continue;
+      if (r.right <= 0 || r.bottom <= 0 || r.left >= cw || r.top >= ch) continue;
+
+      if (!drew) {
+        renderer.getViewport(ICON_PREV);
+        renderer.autoClear = false;
+        renderer.setScissorTest(true);
+        drew = true;
+      }
+      // Only this slot is in shot; the shared scene holds all of them.
+      // `visible` rather than layers: layers are per-object and do NOT
+      // propagate to children, so a hidden pivot would still draw its art.
+      for (const other of this.iconSlots) other.pivot.visible = other === slot;
+      // The frustum is 1 unit tall and `aspect` wide, so the art fits the box
+      // in BOTH axes for any icon shape (the crystal's slot is far from
+      // square) with one scale factor.
+      const aspect = r.width / r.height;
+      cam.left = -aspect / 2;
+      cam.right = aspect / 2;
+      cam.updateProjectionMatrix();
+      slot.pivot.scale.setScalar(Math.min(1, aspect) / slot.unit);
+
+      // GL's origin is bottom-left, hence measuring down from the canvas bottom
+      const vx = r.left * kx;
+      const vy = (ch - r.bottom) * ky;
+      const vw = r.width * kx;
+      const vh = r.height * ky;
+      renderer.setViewport(vx, vy, vw, vh);
+      renderer.setScissor(vx, vy, vw, vh);
+      renderer.clearDepth(); // sit on top of the world, not inside it
+      renderer.render(scene, cam);
+    }
+
+    if (drew) {
+      for (const slot of this.iconSlots) slot.pivot.visible = false;
+      renderer.setScissorTest(false);
+      renderer.setViewport(ICON_PREV);
+      renderer.autoClear = true;
+    }
   }
 
-  /** Earned: hide the flat ghost (keeping its box) and light the 3D relic. */
+  /** Earned: hide the flat ghost (keeping its box) and light the 3D relic.
+   *  The relic slots follow the two counter slots, hence the offset. */
   private setRelic(i: number, ghost: HTMLElement, earned: boolean): void {
-    if (earned) this.buildRelics();
-    const slot = this.relicSlots[i];
-    if (slot) slot.pivot.visible = earned;
+    this.buildIcons();
+    const slot = this.iconSlots[RELIC_SLOT_0 + i];
+    if (slot) slot.on = earned;
     ghost.classList.toggle("hud-relic-off", !earned);
     ghost.style.visibility = earned && slot ? "hidden" : "visible";
   }
@@ -1515,18 +1564,11 @@ export class UI {
         width: clamp(42px, 6.4vh, 69px); height: clamp(42px, 6.4vh, 69px);
         image-rendering: pixelated; flex-shrink: 0;
       }
-      /* Both were CSS stand-ins — crossed gradients for the crate, a radial for
-         the fruit — for artwork that now exists. The PNGs are pre-trimmed to
-         their own edges, so 'contain' fills the slot without a stray margin,
-         and the drop shadow is a filter because there is no box to cast one. */
-      .hud-icon-crate, .hud-icon-wumpa {
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
-        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.5));
-      }
-      .hud-icon-crate { background-image: ${CRATE_URL}; }
-      .hud-icon-wumpa { background-image: ${APPLE_URL}; }
+      /* These two are EMPTY BOXES on purpose. They were a flat PNG each; the
+         crate and the fruit are now the real 3D models, turning slowly, drawn
+         straight into these rectangles by drawIcons(). A background image
+         here would sit on top of the canvas and hide them — the HUD is DOM
+         over WebGL, so an icon that is 3D has to be nothing in the DOM. */
       /* The relic haul is a footnote under the counters, not a third counter:
          each stone reads at roughly two-thirds the crate icon so the row
          doesn't out-weigh what it's summarising. */

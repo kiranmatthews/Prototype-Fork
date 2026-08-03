@@ -12,6 +12,7 @@ import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { wumpaMesh } from './wumpa';
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
 
@@ -698,7 +699,8 @@ export class Player {
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; dust?: boolean }[] = [];
   private runStepSign = 1; // footfall edge detector for the run dust trail
   private jumpPose = 0; // on-foot jump: overhead arm throw + leg tuck (Crash reference)
-  private fruits: { mesh: THREE.Mesh; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
+  // mesh is a Group: the fruit is an authored model wrapped by src/wumpa.ts
+  private fruits: { mesh: THREE.Object3D; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
   cam: THREE.PerspectiveCamera | null = null; // set by main: wumpa fly to the HUD counter, which lives on the lens
 
   constructor(scene: THREE.Scene) {
@@ -849,10 +851,9 @@ export class Player {
     }
 
     // Wumpa pool: fruit bursts out of broken boxes, then homes to the player.
-    const fruitGeo = new THREE.SphereGeometry(0.17, 6, 5);
-    const fruitMat = new THREE.MeshLambertMaterial({ color: 0xff9028, emissive: 0x3a1c05 });
+    // 0.34 across — the diameter of the sphere the authored model replaced.
     for (let i = 0; i < 24; i++) {
-      const mesh = new THREE.Mesh(fruitGeo, fruitMat);
+      const mesh = wumpaMesh(0.34);
       mesh.visible = false;
       scene.add(mesh);
       this.fruits.push({ mesh, vel: new THREE.Vector3(), age: -1 });
