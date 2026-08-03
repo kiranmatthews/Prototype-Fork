@@ -96,23 +96,29 @@ export interface TailShape {
  * These numbers were DIALLED IN BY HAND in the model studio, not derived. Every
  * one of them is a proportion judgement, which is the kind of call I am bad at
  * from a screenshot and a person makes in seconds with a slider: it wants to be
- * nearly twice as long as I had guessed, a third thicker, drooping much harder
- * where it leaves the hips and lifting more at the tip, with a tighter pinch
- * spread over more of its length.
+ * nearly twice as long as I had guessed, a third thicker, and drooping much
+ * harder where it leaves the hips than I had it.
+ *
+ * BURY is 0, which was the surprise. It exists to sink the base ring inside the
+ * body so the open end can't be seen — but the answer that looked right instead
+ * pinched the NECK down to 0.15, which makes the first ring 0.016 across. A
+ * hole that small has nothing to hide, so the tail can start exactly at its
+ * attach point and grow out of a near-point rather than being shoved into her.
+ * A tighter pinch beats a deeper burial; I would not have guessed that.
  */
 export const DEFAULT_TAIL: TailShape = {
   bones: 8,
   rings: 19,
   sides: 9,
   length: 1.08,
-  bury: 0.095,
+  bury: 0,
   baseRadius: 0.096,
   tipRadius: 0.009,
-  neck: 0.28,
-  neckSpan: 0.29,
+  neck: 0.15,
+  neckSpan: 0.27,
   squash: 1.12,
   angleBase: -1.04,
-  angleTip: 0.3,
+  angleTip: 0.32,
 };
 
 const _v = new THREE.Vector3();
@@ -172,7 +178,7 @@ export class Tail {
 
   /** Its own material, so the tint can change with the installed body. */
   private mat = new THREE.MeshLambertMaterial({
-    color: 0xf06c00, // picked in the studio against the fox's own fur
+    color: 0xf39133, // picked in the studio against the fox's own fur
     vertexColors: true, // the baked base->tip shading
     flatShading: true, // match the body's PS1 facets
   });

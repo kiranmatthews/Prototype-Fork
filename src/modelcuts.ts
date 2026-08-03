@@ -37,21 +37,25 @@ export interface ModelCut {
 
 export const MODEL_CUTS: Record<string, ModelCut> = {
   // Picked in the studio, 2026-08-03: the leftover tail brush on the fox, the
-  // blades of it the geometric cut never reached. 56 triangles of 2130.
+  // blades of it the geometric cut never reached. 72 triangles of 2130, over
+  // two sittings — 56 in the first, then the model was rebuilt without them
+  // and 16 more became visible that the first pass had been hiding behind.
+  // That second look is the whole argument for doing this by eye: you cannot
+  // see the polygons underneath until the ones on top are gone.
   //
   // vertexCount is the file's DE-INDEXED vertex count (fox.glb is indexed with
-  // 6390 indices, so 6390 slots / 2130 triangles), read from the GLB rather
-  // than taken from the export's highestSlot — that field is a lower bound,
-  // because slots belonging to already-discarded geometry are in no chunk for
-  // the studio to see.
+  // 6390 indices, so 6390 slots / 2130 triangles). The studio's own highestSlot
+  // agrees with it now that the discarded geometry is kept around as a hidden
+  // ghost chunk for the studio to count.
   'models/fox.glb': {
     vertexCount: 6390,
     tris: [
       213, 216, 219, 222, 225, 561, 567, 573, 576, 1311, 1314, 1317, 1320,
       1323, 2343, 2346, 2349, 2352, 2355, 2358, 2457, 2460, 2463, 2466, 2937,
       2940, 2943, 2946, 3270, 3273, 3276, 3279, 3372, 3378, 3387, 3390, 3393,
-      3396, 4278, 4473, 4476, 4479, 4482, 4755, 4815, 4818, 5022, 5025, 5028,
-      5031, 5241, 5313, 5316, 5409, 5502, 5553,
+      3396, 3549, 3552, 3555, 3963, 3966, 3969, 4101, 4104, 4107, 4278, 4473,
+      4476, 4479, 4482, 4755, 4815, 4818, 5022, 5025, 5028, 5031, 5130, 5133,
+      5241, 5313, 5316, 5409, 5502, 5553, 5697, 6048, 6051, 6054, 6057,
     ],
   },
 };

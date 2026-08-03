@@ -10200,10 +10200,11 @@ export class Player {
     // body root (NOT the legs group) so leg squashes don't pancake it.
     const tail = new Tail();
     // Attach point placed by hand in the studio. It sits FORWARD of the hip
-    // pivot and lower than I had it — the tail grows from inside her, not off
-    // her back, and the extra bury plus the base taper (see restRadius) mean
-    // the junction is covered by her own body from every angle.
-    tail.root.position.set(0, 0.57, 0.09);
+    // pivot, inside her rather than off her back. With bury at 0 this point is
+    // where the tube actually starts, so it has to be under the skin on its
+    // own — which it is, and the neck pinch (see restRadius) makes the opening
+    // small enough that nothing shows through from any angle.
+    tail.root.position.set(0, 0.65, 0.11);
     riderG.add(tail.root);
     this.tail = tail;
 
