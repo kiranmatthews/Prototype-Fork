@@ -3,9 +3,15 @@
  * Live, resolution-independent Roo display text for a game HUD.
  *
  * One real <text> object holds the glyph geometry; every visible layer
- * (shadow / extrusion / outline / face / bevel / inner rim / gloss) is a
- * <use> that references it, so the coloured letter keeps Roo's exact
- * silhouette at any size.
+ * (soft shadow / gradient face + bevel / lit inner rim / gloss) is a <use>
+ * that references it, so the coloured letter keeps Roo's exact silhouette at
+ * any size.
+ *
+ * MODIFIED from the roo-web drop to match this game's reference art: the
+ * keyline, the hard offset copy and the layered extrusion are gone, one soft
+ * shadow at half strength stands in for all of it, and layout is driven by a
+ * fixed cap band instead of each string's own ink box so every readout shares
+ * a size and a baseline. Not a clean drop-in target any more.
  *
  * Hardening vs. the original concept: the face / rim / gloss gradients use
  * gradientUnits="userSpaceOnUse" with coordinates set from the measured
@@ -15,52 +21,51 @@
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
+// Tuned against the Crash reference plates: a saturated vertical gradient
+// face, ONE soft drop shadow, and a bright inner rim that is opaque along the
+// top of each glyph and fades out toward the base. No keyline, no extrusion
+// stack, no hard offset copy — the reference has none of those, and stacking
+// them under a HUD readout only muddied it.
 export const PALETTES = {
   bonus: {
     faceStops: [
-      [0.0, "#dcff26"],
-      [0.13, "#75ff0a"],
-      [0.37, "#18e34f"],
-      [0.57, "#06d390"],
-      [0.73, "#00b5ee"],
-      [1.0, "#2045d9"],
+      [0.0, "#d8ff4a"],
+      [0.16, "#6dfb1e"],
+      [0.4, "#12e05a"],
+      [0.62, "#06c9a0"],
+      [0.8, "#00a8f0"],
+      [1.0, "#1436c8"],
     ],
+    // third value is stop-opacity: the rim is a lit top edge, not a full
+    // outline, so it fades as it comes down the glyph
     rimStops: [
-      [0.0, "#f5ff82"],
-      [0.28, "#b9ff25"],
-      [0.58, "#47f5a1"],
-      [0.82, "#37cfff"],
-      [1.0, "#6780ff"],
+      [0.0, "#f6ffc2", 1],
+      [0.26, "#c4ff4a", 0.9],
+      [0.55, "#48ffd0", 0.55],
+      [0.8, "#5ad2ff", 0.3],
+      [1.0, "#7fa8ff", 0.12],
     ],
-    outline: "#01030a",
-    extrusionNear: "#0873c7",
-    extrusionFar: "#00102e",
     bevelHighlight: "#f1ff9a",
-    bevelShadow: "#003283",
+    bevelShadow: "#00307d",
     shadow: "#000108",
-    hardShadow: "#000106",
   },
   counter: {
     faceStops: [
-      [0.0, "#fff65c"],
-      [0.18, "#ffdc12"],
-      [0.43, "#ffa20b"],
-      [0.72, "#f35b13"],
-      [1.0, "#bd1813"],
+      [0.0, "#fff3a0"],
+      [0.18, "#ffd91f"],
+      [0.45, "#ff9a08"],
+      [0.72, "#f04b12"],
+      [1.0, "#a81208"],
     ],
     rimStops: [
-      [0.0, "#ffffc4"],
-      [0.34, "#fff164"],
-      [0.66, "#ffb530"],
-      [1.0, "#ff7543"],
+      [0.0, "#fffde0", 1],
+      [0.28, "#ffef7a", 0.9],
+      [0.6, "#ffb63c", 0.5],
+      [1.0, "#ff8a45", 0.14],
     ],
-    outline: "#090101",
-    extrusionNear: "#df4813",
-    extrusionFar: "#4b0807",
-    bevelHighlight: "#ffffb5",
-    bevelShadow: "#8b1009",
-    shadow: "#080000",
-    hardShadow: "#030000",
+    bevelHighlight: "#fffcc8",
+    bevelShadow: "#7d1206",
+    shadow: "#0a0300",
   },
 };
 
@@ -105,30 +110,25 @@ function createGradient(id, stops) {
   return gradient;
 }
 
-function parseHex(hex) {
-  const value = hex.replace("#", "");
-  if (!/^[0-9a-f]{6}$/i.test(value)) {
-    throw new Error(`Invalid six-digit colour: ${hex}`);
-  }
-  return {
-    r: Number.parseInt(value.slice(0, 2), 16),
-    g: Number.parseInt(value.slice(2, 4), 16),
-    b: Number.parseInt(value.slice(4, 6), 16),
-  };
-}
-
-function interpolateColour(start, end, amount) {
-  const a = parseHex(start);
-  const b = parseHex(end);
-  const channel = (from, to) =>
-    Math.round(from + (to - from) * amount)
-      .toString(16)
-      .padStart(2, "0");
-  return `#${channel(a.r, b.r)}${channel(a.g, b.g)}${channel(a.b, b.b)}`;
-}
-
 function nextFrame() {
   return new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+/* The face's own cap band at font-size 200, measured ONCE from a reference
+ * string and shared by every label. Layout keys off this rather than the ink
+ * box of whatever string a label happens to be showing, so "0" and "0/23" and
+ * "BOARDSLIDE" all render at the same cap height and sit on one baseline. */
+let BAND = null;
+function measureBand(glyph, probe) {
+  if (BAND) return BAND;
+  const previous = glyph.textContent;
+  glyph.textContent = "HXO0AWM8"; // caps + digits: the tallest ordinary run
+  const b = probe.getBBox();
+  glyph.textContent = previous;
+  if (Number.isFinite(b.height) && b.height > 0) {
+    BAND = { top: b.y, height: b.height };
+  }
+  return BAND ?? { top: -150, height: 150 };
 }
 
 /**
@@ -138,10 +138,7 @@ function nextFrame() {
  * @param {{
  *   text?: string,
  *   palette?: "bonus" | "counter",
- *   tracking?: number,
- *   extrusionSteps?: number,
- *   depthX?: number,
- *   depthY?: number
+ *   tracking?: number
  * }} [options]
  * @returns {Promise<{ element: SVGSVGElement, setText(v: string): Promise<void>, destroy(): void }>}
  */
@@ -155,10 +152,6 @@ export async function createRooText(host, options = {}) {
     paletteName: options.palette ?? host.dataset.rooPalette ?? "bonus",
     // SVG units relative to a 200-unit font size.
     tracking: options.tracking ?? -2.5,
-    extrusionSteps: options.extrusionSteps ?? 14,
-    // Multiplied by measured glyph height.
-    depthX: options.depthX ?? 0.038,
-    depthY: options.depthY ?? 0.078,
   };
 
   const palette = PALETTES[state.paletteName];
@@ -245,7 +238,7 @@ export async function createRooText(host, options = {}) {
   });
   const shadowColour = svgElement("feFlood", {
     "flood-color": palette.shadow,
-    "flood-opacity": "0.9",
+    "flood-opacity": "0.45",
     result: "shadow-colour",
   });
   shadowFilter.append(
@@ -380,38 +373,10 @@ export async function createRooText(host, options = {}) {
 
   svg.append(defs);
 
-  // All visible layers share one soft shadow via the stage filter.
+  // Three layers, and one soft shadow over the lot: gradient face, lit inner
+  // rim, gloss. (The keyline, the hard offset copy and the extrusion stack
+  // that used to sit under these are gone — see PALETTES.)
   const stage = svgElement("g", { filter: `url(#${ids.shadowFilter})` });
-
-  const hardShadow = useElement(ids.glyph, {
-    fill: palette.hardShadow,
-    stroke: palette.hardShadow,
-    "stroke-linejoin": "round",
-    opacity: "0.88",
-  });
-  stage.append(hardShadow);
-
-  const extrusionGroup = svgElement("g");
-  const extrusionLayers = [];
-  for (let index = state.extrusionSteps; index >= 1; index -= 1) {
-    const amount = index / state.extrusionSteps;
-    const layer = useElement(ids.glyph, {
-      fill: interpolateColour(palette.extrusionNear, palette.extrusionFar, amount),
-    });
-    extrusionLayers.push({ element: layer, amount });
-    extrusionGroup.append(layer);
-  }
-  stage.append(extrusionGroup);
-
-  // Outer outline sits behind the face; the face covers the inner half of
-  // the stroke so the coloured letter keeps Roo's exact silhouette.
-  const outline = useElement(ids.glyph, {
-    fill: palette.outline,
-    stroke: palette.outline,
-    "stroke-linejoin": "round",
-    "stroke-miterlimit": "2",
-  });
-  stage.append(outline);
 
   const face = useElement(ids.glyph, {
     fill: `url(#${ids.faceGradient})`,
@@ -459,42 +424,35 @@ export async function createRooText(host, options = {}) {
       );
     }
 
-    const height = box.height;
+    // THE BAND, NOT THE INK. Every effect and the whole viewBox are sized
+    // from a FIXED cap band measured once from a reference string, never
+    // from this particular string's ink box. Two labels of different content
+    // therefore scale identically and share a baseline — sizing off the ink
+    // is what gave the HUD its randomly different letter sizes and the big
+    // uneven gaps above each readout, because a string with no descender
+    // measured shorter and got blown up to fill the same box.
+    const band = measureBand(glyph, face);
+    const height = band.height;
+    const top = band.top;
 
-    // Vertical gradients follow the measured glyph band.
+    // Vertical gradients follow that same fixed band.
     for (const g of [faceGradient, rimGradient, glossGradient]) {
       g.setAttribute("x1", box.x);
       g.setAttribute("x2", box.x);
-      g.setAttribute("y1", box.y);
-      g.setAttribute("y2", box.y + height);
+      g.setAttribute("y1", top);
+      g.setAttribute("y2", top + height);
     }
 
-    // Every effect is proportional to actual glyph height.
-    const outlineWidth = height * 0.105;
-    const innerRimWidth = height * 0.03;
-    const depthX = height * state.depthX;
-    const depthY = height * state.depthY;
-    const hardShadowX = height * 0.027;
-    const hardShadowY = height * 0.039;
-    const bevelSize = height * 0.012;
-    const bevelBlur = height * 0.0018;
+    // Every effect is proportional to the band.
+    const innerRimWidth = height * 0.035;
+    const bevelSize = height * 0.013;
+    const bevelBlur = height * 0.002;
     const ambientSize = height * 0.01;
-    const softShadowX = height * 0.045;
-    const softShadowY = height * 0.085;
-    const softShadowBlur = height * 0.026;
+    const softShadowX = height * 0.04;
+    const softShadowY = height * 0.075;
+    const softShadowBlur = height * 0.03;
 
-    outline.setAttribute("stroke-width", outlineWidth);
     innerRim.setAttribute("stroke-width", innerRimWidth);
-
-    hardShadow.setAttribute(
-      "transform",
-      `translate(${depthX + hardShadowX} ${depthY + hardShadowY})`,
-    );
-    hardShadow.setAttribute("stroke-width", outlineWidth * 1.08);
-
-    for (const { element, amount } of extrusionLayers) {
-      element.setAttribute("transform", `translate(${depthX * amount} ${depthY * amount})`);
-    }
 
     bevelHighlightOffset.setAttribute("dx", bevelSize);
     bevelHighlightOffset.setAttribute("dy", bevelSize);
@@ -508,16 +466,19 @@ export async function createRooText(host, options = {}) {
     shadowOffset.setAttribute("dy", softShadowY);
     shadowBlur.setAttribute("stdDeviation", softShadowBlur);
 
-    // Filter regions must be large enough that nothing is clipped.
-    const leftPadding = height * 0.24;
-    const topPadding = height * 0.25;
-    const rightPadding = height * 0.28 + depthX + softShadowX + softShadowBlur * 3;
-    const bottomPadding = height * 0.3 + depthY + softShadowY + softShadowBlur * 3;
+    // Padding only has to clear the rim and the one soft shadow now, so the
+    // letters fill far more of the box than they used to — the same host
+    // height renders noticeably larger type.
+    const leftPadding = height * 0.06;
+    const topPadding = height * 0.06;
+    const rightPadding = height * 0.06 + softShadowX + softShadowBlur * 3;
+    const bottomPadding = height * 0.06 + softShadowY + softShadowBlur * 3;
 
+    // Height comes from the fixed band; width still follows the real ink.
     const viewX = box.x - leftPadding;
-    const viewY = box.y - topPadding;
+    const viewY = top - topPadding;
     const viewWidth = box.width + leftPadding + rightPadding;
-    const viewHeight = box.height + topPadding + bottomPadding;
+    const viewHeight = height + topPadding + bottomPadding;
 
     for (const filter of [shadowFilter, bevelFilter]) {
       filter.setAttribute("x", viewX);

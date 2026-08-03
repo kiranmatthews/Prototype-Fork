@@ -37,8 +37,9 @@ node tools/bake-props.mjs <dir-of-glbs>... > src/prop-data.ts
 
 The HUD, the crate stencils and every plate on screen are set in **Roo**,
 shipped as `public/fonts/Roo.ttf` (`.otf` alongside it). On the HUD it is
-rendered by the roo-web SVG renderer (`src/roo-text.js`, vendored unchanged,
-wrapped by `src/rootext.ts`); on the crate faces it is painted flat into the
+rendered by the roo-web SVG renderer (`src/roo-text.js`, MODIFIED from the
+drop to match this game's reference art — see its header — wrapped by
+`src/rootext.ts`); on the crate faces it is painted flat into the
 texture canvas, keyline only, no gradient or bevel.
 
 An earlier HUD cut its lettering from three hand-drawn alphabet sheets, baked

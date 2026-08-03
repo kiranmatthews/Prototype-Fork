@@ -1778,10 +1778,11 @@ export class UI {
          and the counters keep their old optical size. */
       .roo-line {
         line-height: 0; display: flex; align-items: center;
-        /* default box: 1.8em lands the letters near the cap height each of
-           these rules was originally sized for, so every existing clamp()
-           keeps driving the layout */
-        height: 1.8em;
+        /* Default box. With only a rim and one soft shadow left in the
+           viewBox the glyphs fill nearly all of it, so this is both the
+           alignment box AND the size knob — every existing clamp() still
+           drives it, just bigger than the flat type it replaced. */
+        height: 2.1em;
       }
       .roo-line > .roo-text-svg { width: auto; height: 100%; }
       /* Centred plates centre their glyphs; the corner readouts hang right. */
@@ -1790,11 +1791,11 @@ export class UI {
       .hud-ttres-title.roo-line, .hud-boostlabel.roo-line {
         justify-content: center;
       }
-      .hud-num.roo-line { height: 1.8em; }
-      .hud-scorenum.roo-line { height: 1.9em; }
-      .hud-tttime.roo-line { height: 1.75em; }
+      .hud-num.roo-line { height: 2.15em; }
+      .hud-scorenum.roo-line { height: 2.35em; }
+      .hud-tttime.roo-line { height: 2.1em; }
       /* the results card is a fixed-size panel, so its time is a fixed box */
-      .hud-ttres-time.roo-line { height: 76px; margin-bottom: 10px; }
+      .hud-ttres-time.roo-line { height: 92px; margin-bottom: 10px; }
       /* The box is only as wide as the glyphs, so each readout says which end
          of its row it hangs from — the corner counters keep their old
          right-aligned column, the results time centres in its card. */
