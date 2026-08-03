@@ -369,42 +369,35 @@ export class TouchControls {
       body.tc-on #app { touch-action: none; }
       body.tc-on .hud-tl { top: max(8px, env(safe-area-inset-top)); left: 42px; }
       body.tc-on .hud-tr { top: max(8px, env(safe-area-inset-top)); right: 42px; }
-      body.tc-on .hud-counter { gap: 7px; margin-bottom: 4px; }
-      body.tc-on .hud-num { font-size: 26px; letter-spacing: 1px; }
-      body.tc-on .hud-icon { width: 30px; height: 30px; }
-      body.tc-on .hud-icon-crystal { width: 17px; height: 25px; }
+      body.tc-on .hud-counter { gap: 7px; margin-bottom: 5px; }
+      body.tc-on .hud-icon { width: 34px; height: 34px; }
+      body.tc-on .hud-icon-crystal { width: 17px; height: 24px; }
       body.tc-on .hud-icon-gem { width: 21px; height: 16px; }
       body.tc-on .hud-relics { gap: 6px; }
-      body.tc-on .hud-scoreplate {
-        right: 42px; top: calc(max(8px, env(safe-area-inset-top)) + 38px);
-      }
-      body.tc-on .hud-scorelabel { font-size: 9px; letter-spacing: 3px; }
-      body.tc-on .hud-scorenum { font-size: 17px; letter-spacing: 2px; }
       body.tc-on .hud-ttclock { top: max(8px, env(safe-area-inset-top)); right: 42px; }
-      body.tc-on .hud-tttime { font-size: 30px; letter-spacing: 2px; }
-      body.tc-on .hud-ttfreeze { font-size: 11px; }
       body.tc-on .hud-ttresults { min-width: 0; width: 78vw; padding: 12px 14px 10px; }
-      body.tc-on .hud-ttres-time { font-size: 32px; }
       body.tc-on .hud-boosts { bottom: 44%; }
       body.tc-on .hud-trickplate { bottom: 35%; }
-      body.tc-on .hud-trickline { font-size: 15px; letter-spacing: 1px; }
-      body.tc-on .hud-tricktotal { font-size: 23px; letter-spacing: 2px; }
-      body.tc-on .hud-msg-title { font-size: 30px; letter-spacing: 3px; }
       body.tc-on .hud-msg-sub { font-size: 12px; }
       body.tc-on .hud-balance { width: 170px; bottom: 31%; }
       body.tc-on .hud-vbalance { left: calc(50% + 72px); bottom: 29%; height: 110px; }
       body.tc-on .hud-death { font-size: 34px; }
-      /* The HUD readouts are Roo labels now (rootext.ts), not text: each
-         letter carries a keyline, a rim and a bevel. The sizes above were
-         picked for flat type and turn those into smudges on a phone, so the
-         small ones step up — and GAME OVER, which the desktop rule sets to
-         76px, has to come back down to fit a portrait screen. */
-      body.tc-on .hud-scorelabel { font-size: 13px; }
-      body.tc-on .hud-scorenum { font-size: 21px; }
-      body.tc-on .hud-ttfreeze { font-size: 14px; }
-      body.tc-on .hud-trickline { font-size: 20px; }
-      body.tc-on .hud-tricktotal { font-size: 26px; }
-      body.tc-on .hud-boostlabel { font-size: 13px; }
+      /* Phone sizes for the Roo readouts. Like the desktop rules these are
+         CAP HEIGHTS in px — the label's box is one viewBox tall, so the
+         font-size IS the drawn letter (see the .roo-line note in ui.ts).
+         Everything is a portrait-sized step down from the desktop scale,
+         holding the same order: counters lead, trial clock matches, trick
+         total under, score and captions under that. */
+      body.tc-on .hud-num { font-size: 28px; letter-spacing: 1px; }
+      body.tc-on .hud-scorelabel { font-size: 11px; letter-spacing: 3px; }
+      body.tc-on .hud-scorenum { font-size: 18px; letter-spacing: 2px; }
+      body.tc-on .hud-tttime { font-size: 30px; letter-spacing: 2px; }
+      body.tc-on .hud-ttfreeze { font-size: 11px; }
+      body.tc-on .hud-ttres-time { font-size: 34px; }
+      body.tc-on .hud-trickline { font-size: 15px; letter-spacing: 1px; }
+      body.tc-on .hud-tricktotal { font-size: 22px; letter-spacing: 2px; }
+      body.tc-on .hud-msg-title { font-size: 30px; letter-spacing: 3px; }
+      body.tc-on .hud-boostlabel { font-size: 12px; }
       body.tc-on .hud-death-title { font-size: 40px; }
 
       /* ---------- panels that actually fit a phone ---------- */

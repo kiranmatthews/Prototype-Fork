@@ -546,15 +546,14 @@ export class UI {
     tl.appendChild(relicRow);
     addEventListener("resize", () => (this.relicLayout = null));
 
-    // top-center: score plate
-    const scorePlate = div("hud-scoreplate");
-    const scoreLabel = div("hud-scorelabel");
-    this.scoreLabelEl = scoreLabel;
-    this.scoreEl = div("hud-scorenum");
-    scorePlate.appendChild(scoreLabel);
-    scorePlate.appendChild(this.scoreEl);
-
-    // top-right: lives
+    // top-right: lives, then the score directly under them.
+    //
+    // The score plate SITS IN THIS COLUMN rather than being positioned on its
+    // own. It used to be fixed at `top: 16px + <icon height> + 4px`, which
+    // silently assumed the lives row was as tall as the face icon — true of
+    // flat text, false the moment the readout became a drawn glyph box, and
+    // the score ended up printed across the lives counter. Stacking them means
+    // the offset is whatever the row above actually measures, at every size.
     const tr = div("hud-tr");
     const livesRow = div("hud-counter");
     livesRow.appendChild(div("hud-icon hud-icon-face"));
@@ -562,6 +561,14 @@ export class UI {
     livesRow.appendChild(this.livesEl);
     tr.appendChild(livesRow);
     this.livesRowEl = livesRow;
+
+    const scorePlate = div("hud-scoreplate");
+    const scoreLabel = div("hud-scorelabel");
+    this.scoreLabelEl = scoreLabel;
+    this.scoreEl = div("hud-scorenum");
+    scorePlate.appendChild(scoreLabel);
+    scorePlate.appendChild(this.scoreEl);
+    tr.appendChild(scorePlate);
 
     // TIME TRIAL: the big top-center clock (per-frame, centisecond digits)
     // and the ranked-times card shown at the gate.
@@ -662,7 +669,6 @@ export class UI {
       this.fadeEl,
       this.haloEl,
       tl,
-      scorePlate,
       tr,
       this.ttClockEl,
       this.ttResultsEl,
@@ -1498,13 +1504,15 @@ export class UI {
         text-shadow: 0 1px 2px rgba(0,0,0,0.6);
       }
       .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
-      .hud-counter { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+      .hud-counter { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+      /* Sized as CAP HEIGHT — see the .roo-line note below. The icon leads the
+         digits slightly, the way the crate and the fruit do in Crash. */
       .hud-num {
-        font: 900 clamp(44px, 8.5vh, 78px) Impact, 'Arial Black', sans-serif;
+        font: 900 clamp(34px, 5.2vh, 56px) Impact, 'Arial Black', sans-serif;
         color: #ffb43a; letter-spacing: 2px;
       }
       .hud-icon {
-        width: clamp(52px, 9.5vh, 84px); height: clamp(52px, 9.5vh, 84px);
+        width: clamp(42px, 6.4vh, 69px); height: clamp(42px, 6.4vh, 69px);
         image-rendering: pixelated; flex-shrink: 0;
       }
       /* Both were CSS stand-ins — crossed gradients for the crate, a radial for
@@ -1519,15 +1527,18 @@ export class UI {
       }
       .hud-icon-crate { background-image: ${CRATE_URL}; }
       .hud-icon-wumpa { background-image: ${APPLE_URL}; }
-      .hud-relics { gap: 10px; }
+      /* The relic haul is a footnote under the counters, not a third counter:
+         each stone reads at roughly two-thirds the crate icon so the row
+         doesn't out-weigh what it's summarising. */
+      .hud-relics { gap: 9px; }
       .hud-icon-crystal {
-        width: clamp(30px, 5.5vh, 48px); height: clamp(42px, 7.5vh, 66px);
+        width: clamp(22px, 3.8vh, 33px); height: clamp(30px, 5.2vh, 46px);
         background: linear-gradient(160deg, #ffd4f8 8%, #ff9af0 22%, #c03fe0 55%, #7a1898 90%);
         clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
         filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(255, 120, 240, 0.6));
       }
       .hud-icon-gem {
-        width: clamp(38px, 7vh, 60px); height: clamp(28px, 5vh, 44px);
+        width: clamp(27px, 4.8vh, 42px); height: clamp(20px, 3.5vh, 31px);
         background: linear-gradient(160deg, #eaffff 8%, #bfffff 22%, #35cfe4 55%, #147a90 90%);
         clip-path: polygon(25% 0%, 75% 0%, 100% 35%, 50% 100%, 0% 35%);
         filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(80, 220, 255, 0.6));
@@ -1559,11 +1570,9 @@ export class UI {
 
       /* score: bare gold digits under the lives counter, top-right — the
          heavy text outline reads on any background, no plate needed */
-      .hud-scoreplate {
-        /* tucked right under the lives face, whatever size the vh clamp gives it */
-        position: fixed; top: calc(16px + clamp(52px, 9.5vh, 84px) + 4px); right: 40px;
-        z-index: 10; pointer-events: none; text-align: right;
-      }
+      /* In the .hud-tr column, directly under the lives row — no guessed
+         offset to fall out of step with the row above it. */
+      .hud-scoreplate { text-align: right; }
       .hud-scorelabel {
         font: bold clamp(10px, 1.7vh, 14px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px;
@@ -1578,8 +1587,10 @@ export class UI {
       /* TIME TRIAL: big top-center clock — bare gold digits like the score,
          ice blue while a time crate's freeze holds it still */
       .hud-ttclock {
-        /* top right, in the lives counter's spot (lives hide during trials) */
-        position: fixed; top: 10px; right: 36px;
+        /* top right, in the lives counter's spot (lives hide during trials) —
+           same inset as .hud-tr so the clock lands exactly where the lives
+           row was rather than a few px off it */
+        position: fixed; top: 16px; right: 40px;
         z-index: 10; pointer-events: none; text-align: right;
       }
       .hud-tttime {
@@ -1754,16 +1765,26 @@ export class UI {
       .hud-msg, .hud-trickplate { width: 94vw; max-width: 94vw; }
       .hud-death-title { max-width: 94vw; }
       .hud-trickline { overflow: visible; }
-      /* The small labels were sized for flat text. A drawn glyph carries an
-         outline, an inline and a fill, so it needs more pixels than that
-         before it reads as a letter at all. */
-      .hud-scorelabel { font-size: clamp(15px, 2.4vh, 21px); }
-      .hud-ttfreeze { font-size: clamp(16px, 2.4vh, 22px); margin-top: 1px; }
-      .hud-boostlabel { font-size: 16px; }
-      /* Same reason, one step up: the trick line and the GAME OVER card both
-         sat at a size the drawn face reads as thin at. */
-      .hud-trickline { font-size: clamp(23px, 4vh, 36px); }
-      .hud-death-title { font-size: 76px; }
+      /* Every Roo size in one place, and every one of them a CAP HEIGHT in
+         px (the .roo-line note below explains why font-size and cap height
+         are now the same number). The rules further up still carry the
+         family and colour those readouts were born with; the size is settled
+         here so a readout can't be sized twice with two different answers.
+
+         The hierarchy: crate/fruit/lives counters lead, the trial clock
+         matches them, the trick total sits a step under, and the score,
+         trick name and small captions sit under that. */
+      .hud-scorelabel { font-size: clamp(12px, 1.9vh, 17px); letter-spacing: 3px; }
+      .hud-scorenum { font-size: clamp(19px, 3.2vh, 28px); }
+      .hud-ttfreeze { font-size: clamp(12px, 1.8vh, 17px); margin-top: 1px; }
+      .hud-boostlabel { font-size: 15px; }
+      .hud-tttime { font-size: clamp(30px, 5vh, 54px); }
+      .hud-trickline { font-size: clamp(18px, 2.9vh, 28px); }
+      .hud-tricktotal { font-size: clamp(25px, 4.1vh, 40px); margin-top: 4px; }
+      .hud-ttres-title { font-size: 30px; }
+      .hud-ttres-time { font-size: 46px; }
+      .hud-msg-title { font-size: 56px; }
+      .hud-death-title { font-size: 72px; }
       /* ---- Roo display text -------------------------------------------
          The counters, the score and the trial clock are SVG Roo labels now
          (src/rootext.ts). roo-web's own rule sizes a label by its host's
@@ -1772,17 +1793,24 @@ export class UI {
          these hosts drive HEIGHT instead and let the width follow the
          glyphs, exactly like a line of text.
 
-         The multiplier: the renderer's viewBox carries roughly 0.79 of a
-         glyph height in padding (keyline, extrusion, drop shadow), so a box
-         of 1.8em lands the letters near the 0.78em cap the raster face used
-         and the counters keep their old optical size. */
+         THE BOX IS EXACTLY ONE VIEWBOX TALL, so font-size means cap height.
+         The renderer pads its viewBox to 1.285 band heights (0.06 above, and
+         0.06 + the drop shadow's 0.075 offset + 3 blur radii below — see the
+         padding block in roo-text.js), and the svg is drawn at the box
+         height, so a box of 1.285em renders a glyph of exactly 1em.
+
+         That equivalence is the whole point. These hosts previously carried
+         hand-picked 1.8-2.35em heights inherited from the era when the
+         viewBox also held a keyline, a hard offset copy and an eleven-step
+         extrusion — about 1.79 band heights of padding. Stripping those
+         layers for the reference treatment cut the padding to 1.285 without
+         the boxes changing, so every readout silently grew by ~40%: .hud-num
+         asked for 78px type and drew 130px glyphs. One ratio, stated once,
+         means each clamp() below can be read as the pixel cap height it
+         actually produces. */
       .roo-line {
         line-height: 0; display: flex; align-items: center;
-        /* Default box. With only a rim and one soft shadow left in the
-           viewBox the glyphs fill nearly all of it, so this is both the
-           alignment box AND the size knob — every existing clamp() still
-           drives it, just bigger than the flat type it replaced. */
-        height: 2.1em;
+        height: 1.285em;
       }
       .roo-line > .roo-text-svg { width: auto; height: 100%; }
       /* Centred plates centre their glyphs; the corner readouts hang right. */
@@ -1791,15 +1819,19 @@ export class UI {
       .hud-ttres-title.roo-line, .hud-boostlabel.roo-line {
         justify-content: center;
       }
-      .hud-num.roo-line { height: 2.15em; }
-      .hud-scorenum.roo-line { height: 2.35em; }
-      .hud-tttime.roo-line { height: 2.1em; }
-      /* the results card is a fixed-size panel, so its time is a fixed box */
-      .hud-ttres-time.roo-line { height: 92px; margin-bottom: 10px; }
+      .hud-ttres-time.roo-line { margin-bottom: 10px; }
       /* The box is only as wide as the glyphs, so each readout says which end
          of its row it hangs from — the corner counters keep their old
-         right-aligned column, the results time centres in its card. */
-      .hud-scorenum.roo-line, .hud-tttime.roo-line { justify-content: flex-end; }
+         right-aligned column, the results time centres in its card.
+         The SCORE caption belongs to that column too: its host is as wide as
+         the lives row above it, and left alone a flex box starts its child at
+         the LEFT, which stranded the word mid-air over a right-aligned
+         number. text-align can't reach it — the glyphs are an <svg> child,
+         not text. */
+      .hud-scorenum.roo-line, .hud-scorelabel.roo-line,
+      .hud-tttime.roo-line, .hud-ttfreeze.roo-line {
+        justify-content: flex-end;
+      }
       .hud-ttres-time.roo-line { justify-content: center; }
       /* Frozen clock and bailed combo used to recolour the text. The drawn
          face has its own colours, so the state reads as a glow instead — a
