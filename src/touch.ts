@@ -369,12 +369,13 @@ export class TouchControls {
       body.tc-on #app { touch-action: none; }
       body.tc-on .hud-tl { top: max(8px, env(safe-area-inset-top)); left: 42px; }
       body.tc-on .hud-tr { top: max(8px, env(safe-area-inset-top)); right: 42px; }
-      body.tc-on .hud-counter { gap: 7px; margin-bottom: 5px; }
-      body.tc-on .hud-icon { width: 34px; height: 34px; }
-      body.tc-on .hud-icon-crystal { width: 17px; height: 24px; }
-      body.tc-on .hud-icon-gem { width: 21px; height: 16px; }
-      body.tc-on .hud-relics { gap: 6px; }
-      body.tc-on .hud-ttclock { top: max(8px, env(safe-area-inset-top)); right: 42px; }
+      body.tc-on .hud-counter { gap: 9px; margin-bottom: 5px; }
+      body.tc-on .hud-icon { width: 55px; height: 55px; }
+      body.tc-on .hud-icon-crystal { width: 27px; height: 39px; }
+      body.tc-on .hud-icon-gem { width: 34px; height: 26px; }
+      body.tc-on .hud-relics { gap: 9px; }
+      /* no inset: the clock is a row of the .hud-tr column now, not a fixed
+         element pinned to the same corner the score is in */
       body.tc-on .hud-ttresults { min-width: 0; width: 78vw; padding: 12px 14px 10px; }
       body.tc-on .hud-boosts { bottom: 44%; }
       body.tc-on .hud-trickplate { bottom: 35%; }
@@ -387,18 +388,23 @@ export class TouchControls {
          font-size IS the drawn letter (see the .roo-line note in ui.ts).
          Everything is a portrait-sized step down from the desktop scale,
          holding the same order: counters lead, trial clock matches, trick
-         total under, score and captions under that. */
-      body.tc-on .hud-num { font-size: 28px; letter-spacing: 1px; }
-      body.tc-on .hud-scorelabel { font-size: 11px; letter-spacing: 3px; }
-      body.tc-on .hud-scorenum { font-size: 18px; letter-spacing: 2px; }
-      body.tc-on .hud-tttime { font-size: 30px; letter-spacing: 2px; }
-      body.tc-on .hud-ttfreeze { font-size: 11px; }
-      body.tc-on .hud-ttres-time { font-size: 34px; }
-      body.tc-on .hud-trickline { font-size: 15px; letter-spacing: 1px; }
-      body.tc-on .hud-tricktotal { font-size: 22px; letter-spacing: 2px; }
-      body.tc-on .hud-msg-title { font-size: 30px; letter-spacing: 3px; }
-      body.tc-on .hud-boostlabel { font-size: 12px; }
-      body.tc-on .hud-death-title { font-size: 40px; }
+         total under, score and captions under that.
+
+         Raised alongside the desktop scale, each by its own ratio, because
+         the same too-timid pass shrank both. The phone is where a small
+         readout hurts most — it's a 6" screen at arm's length with a thumb
+         over one corner of it — so this tracks the desktop step for step. */
+      body.tc-on .hud-num { font-size: 45px; letter-spacing: 1px; }
+      body.tc-on .hud-scorelabel { font-size: 14px; letter-spacing: 3px; }
+      body.tc-on .hud-scorenum { font-size: 23px; letter-spacing: 2px; }
+      body.tc-on .hud-tttime { font-size: 50px; letter-spacing: 2px; }
+      body.tc-on .hud-ttfreeze { font-size: 14px; }
+      body.tc-on .hud-ttres-time { font-size: 49px; }
+      body.tc-on .hud-trickline { font-size: 19px; letter-spacing: 1px; }
+      body.tc-on .hud-tricktotal { font-size: 33px; letter-spacing: 2px; }
+      body.tc-on .hud-msg-title { font-size: 45px; letter-spacing: 3px; }
+      body.tc-on .hud-boostlabel { font-size: 16px; }
+      body.tc-on .hud-death-title { font-size: 58px; }
 
       /* ---------- panels that actually fit a phone ---------- */
       body.tc-on .hud-stats {

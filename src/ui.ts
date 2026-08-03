@@ -568,6 +568,25 @@ export class UI {
     tr.appendChild(livesRow);
     this.livesRowEl = livesRow;
 
+    // TIME TRIAL: the big clock, IN THIS COLUMN, in the slot the lives row
+    // vacates when a trial starts.
+    //
+    // It used to be `position: fixed` at the same top/right inset as .hud-tr,
+    // on the theory that "lives hide during a trial, so the corner is free".
+    // Only the LIVES hide — the score stays — so the clock was painted
+    // straight over the SCORE caption. Two elements pinned to one coordinate
+    // can only agree by luck, and this pair never did. Stacked in the column,
+    // the clock takes the space it needs and the score follows underneath it,
+    // which is the same fix the score itself got when it stopped guessing its
+    // own offset from the lives row.
+    this.ttClockEl = div("hud-ttclock");
+    this.ttTimeEl = div("hud-tttime");
+    this.ttClockEl.appendChild(this.ttTimeEl);
+    this.ttFreezeEl = div("hud-ttfreeze");
+    this.ttClockEl.appendChild(this.ttFreezeEl);
+    this.ttClockEl.style.display = "none";
+    tr.appendChild(this.ttClockEl);
+
     const scorePlate = div("hud-scoreplate");
     const scoreLabel = div("hud-scorelabel");
     this.scoreLabelEl = scoreLabel;
@@ -576,14 +595,6 @@ export class UI {
     scorePlate.appendChild(this.scoreEl);
     tr.appendChild(scorePlate);
 
-    // TIME TRIAL: the big top-center clock (per-frame, centisecond digits)
-    // and the ranked-times card shown at the gate.
-    this.ttClockEl = div("hud-ttclock");
-    this.ttTimeEl = div("hud-tttime");
-    this.ttClockEl.appendChild(this.ttTimeEl);
-    this.ttFreezeEl = div("hud-ttfreeze");
-    this.ttClockEl.appendChild(this.ttFreezeEl);
-    this.ttClockEl.style.display = "none";
     // Results card: the headline time is a Roo label that lives across runs,
     // so only the rows around it are rewritten (the label owns its own SVG
     // and must not be blown away by an innerHTML pass).
@@ -676,7 +687,6 @@ export class UI {
       this.haloEl,
       tl,
       tr,
-      this.ttClockEl,
       this.ttResultsEl,
       this.trickPlate,
       this.balanceWrap,
@@ -1557,11 +1567,11 @@ export class UI {
       /* Sized as CAP HEIGHT — see the .roo-line note below. The icon leads the
          digits slightly, the way the crate and the fruit do in Crash. */
       .hud-num {
-        font: 900 clamp(34px, 5.2vh, 56px) Impact, 'Arial Black', sans-serif;
+        font: 900 clamp(55px, 8.7vh, 90px) Impact, 'Arial Black', sans-serif;
         color: #ffb43a; letter-spacing: 2px;
       }
       .hud-icon {
-        width: clamp(42px, 6.4vh, 69px); height: clamp(42px, 6.4vh, 69px);
+        width: clamp(68px, 10.7vh, 111px); height: clamp(68px, 10.7vh, 111px);
         image-rendering: pixelated; flex-shrink: 0;
       }
       /* These two are EMPTY BOXES on purpose. They were a flat PNG each; the
@@ -1572,15 +1582,15 @@ export class UI {
       /* The relic haul is a footnote under the counters, not a third counter:
          each stone reads at roughly two-thirds the crate icon so the row
          doesn't out-weigh what it's summarising. */
-      .hud-relics { gap: 9px; }
+      .hud-relics { gap: 14px; }
       .hud-icon-crystal {
-        width: clamp(22px, 3.8vh, 33px); height: clamp(30px, 5.2vh, 46px);
+        width: clamp(35px, 6.1vh, 53px); height: clamp(48px, 8.4vh, 74px);
         background: linear-gradient(160deg, #ffd4f8 8%, #ff9af0 22%, #c03fe0 55%, #7a1898 90%);
         clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
         filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(255, 120, 240, 0.6));
       }
       .hud-icon-gem {
-        width: clamp(27px, 4.8vh, 42px); height: clamp(20px, 3.5vh, 31px);
+        width: clamp(43px, 7.7vh, 67px); height: clamp(32px, 5.6vh, 50px);
         background: linear-gradient(160deg, #eaffff 8%, #bfffff 22%, #35cfe4 55%, #147a90 90%);
         clip-path: polygon(25% 0%, 75% 0%, 100% 35%, 50% 100%, 0% 35%);
         filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(80, 220, 255, 0.6));
@@ -1628,13 +1638,12 @@ export class UI {
 
       /* TIME TRIAL: big top-center clock — bare gold digits like the score,
          ice blue while a time crate's freeze holds it still */
-      .hud-ttclock {
-        /* top right, in the lives counter's spot (lives hide during trials) —
-           same inset as .hud-tr so the clock lands exactly where the lives
-           row was rather than a few px off it */
-        position: fixed; top: 16px; right: 40px;
-        z-index: 10; pointer-events: none; text-align: right;
-      }
+      /* No inset of its own: it is a row of the .hud-tr column now, sitting
+         where the lives row was. Pinning it to .hud-tr's own coordinates put
+         it on top of the score — see the note where it's built. */
+      /* same bottom margin the counter rows carry, so the score sits the same
+         distance under the clock as it does under the lives */
+      .hud-ttclock { text-align: right; margin-bottom: 8px; }
       .hud-tttime {
         font: 900 clamp(40px, 7.5vh, 66px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px; color: #f2f7ff;
@@ -1815,18 +1824,28 @@ export class UI {
 
          The hierarchy: crate/fruit/lives counters lead, the trial clock
          matches them, the trick total sits a step under, and the score,
-         trick name and small captions sit under that. */
-      .hud-scorelabel { font-size: clamp(12px, 1.9vh, 17px); letter-spacing: 3px; }
-      .hud-scorenum { font-size: clamp(19px, 3.2vh, 28px); }
-      .hud-ttfreeze { font-size: clamp(12px, 1.8vh, 17px); margin-top: 1px; }
-      .hud-boostlabel { font-size: 15px; }
-      .hud-tttime { font-size: clamp(30px, 5vh, 54px); }
-      .hud-trickline { font-size: clamp(18px, 2.9vh, 28px); }
-      .hud-tricktotal { font-size: clamp(25px, 4.1vh, 40px); margin-top: 4px; }
-      .hud-ttres-title { font-size: 30px; }
-      .hud-ttres-time { font-size: 46px; }
-      .hud-msg-title { font-size: 56px; }
-      .hud-death-title { font-size: 72px; }
+         trick name and small captions sit under that.
+
+         THESE ARE HAND-PICKED, and the first pass at them was too timid.
+         Making font-size mean cap height fixed a real bug — every readout was
+         drawing 1.67x the type it asked for — but I then re-picked the numbers
+         against nothing except the fact that they now fit, and a HUD that
+         merely fits is not the same as a HUD you can read at a glance while
+         you are busy playing. These came back up off a screenshot: counters
+         56 -> 90, trial clock 54 -> 90, trick total 40 -> 60, trick name
+         28 -> 36. The score column follows the trick name's tier so it doesn't
+         strand under a counter half again its size. */
+      .hud-scorelabel { font-size: clamp(15px, 2.4vh, 22px); letter-spacing: 3px; }
+      .hud-scorenum { font-size: clamp(24px, 4vh, 36px); }
+      .hud-ttfreeze { font-size: clamp(15px, 2.3vh, 22px); margin-top: 1px; }
+      .hud-boostlabel { font-size: 20px; }
+      .hud-tttime { font-size: clamp(50px, 8.7vh, 90px); }
+      .hud-trickline { font-size: clamp(23px, 3.7vh, 36px); }
+      .hud-tricktotal { font-size: clamp(38px, 6.2vh, 60px); margin-top: 4px; }
+      .hud-ttres-title { font-size: 42px; }
+      .hud-ttres-time { font-size: 66px; }
+      .hud-msg-title { font-size: 84px; }
+      .hud-death-title { font-size: 104px; }
       /* ---- Roo display text -------------------------------------------
          The counters, the score and the trial clock are SVG Roo labels now
          (src/rootext.ts). roo-web's own rule sizes a label by its host's
