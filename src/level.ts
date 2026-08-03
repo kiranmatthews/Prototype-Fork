@@ -4483,15 +4483,16 @@ export class Level {
     this.updateProjectiles(dt);
     // Floating wumpa bob and turn in place. The model is baked centred on its
     // own origin (tools/bake-wumpa.mjs), so this is a turn rather than an
-    // orbit — and it is gentle, because the fruit is now readable art with a
-    // stem and a leaf rather than an orange ball that needed the speed to
-    // look like it was doing anything.
+    // orbit. Twice the speed it was: the gentle rate came from an argument
+    // that the fruit is readable art now and no longer needs speed to look
+    // alive, which is true of a still frame and wrong in motion — a slow turn
+    // reads as scenery, and a collectable wants to catch the eye.
     for (const p of this.pickups) {
       if (!p.alive) continue;
       p.mesh.position.y =
         (p.mesh.userData.baseY as number) +
         Math.sin(this.time * 3 + p.mesh.position.z * 0.7) * 0.12;
-      p.mesh.rotation.y += dt * 0.9;
+      p.mesh.rotation.y += dt * 1.8;
     }
     // Unbroken checkpoint boxes idle-spin so they read as special.
     for (const c of this.checkpoints) {
@@ -10407,9 +10408,13 @@ export class Level {
 
   // Floating collectable wumpa.
   private pickup(x: number, y: number, z: number): void {
-    // 0.48 across: the diameter of the sphere this replaced, so every level's
-    // spacing and every pickup box still reads the same.
-    const mesh = wumpaMesh(0.48);
+    // 0.62 across. It was 0.48 — the diameter of the sphere this replaced,
+    // kept so every level's spacing still read the same — but matching the old
+    // placeholder's size was never a reason for the fruit to be that size, and
+    // at 0.48 the authored apple is a speck you have to hunt for. 30% up. The
+    // pickup box below is untouched: how big the fruit LOOKS and how generous
+    // it is to grab are separate questions, and only the first was asked.
+    const mesh = wumpaMesh(0.62);
     mesh.position.set(x, y, z);
     mesh.userData.baseY = y;
     this.root.add(mesh);

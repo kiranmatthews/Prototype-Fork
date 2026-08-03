@@ -962,6 +962,10 @@ function updateCamera2(dt: number): void {
   p2.camDir.set(cam2F.x, 0, cam2F.z);
 }
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
+// ...and it needs to know where the counter IS. Read live off the icon's own
+// box rather than a guessed corner: the HUD is sized in vh and the counter
+// hides entirely during a run mode.
+player.hudFruitAt = () => ui.fruitIconAt();
 player.enterLevel(current.id);
 player.respawn(level, true);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
@@ -2009,6 +2013,9 @@ function frame(): void {
   } else {
     renderer.render(scene, camera);
   }
+  // Collected fruit sails to the counter on its own flat layer, over the
+  // finished world and under the HUD icons it is flying to.
+  player.drawFlyingFruit(renderer);
   // The crate, fruit and relic HUD icons are real 3D, spun and drawn over the
   // finished frame into each icon's own DOM box.
   ui.drawIcons(renderer, dt);

@@ -18,6 +18,21 @@ import { cutsFor } from './modelcuts';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
+// WUMPA. Crate fruit is a shade smaller than the fruit a level places by hand
+// (0.62 in Level.pickup) — a burst of them lands in a heap, and a heap of
+// full-size fruit reads as clutter.
+const FRUIT_WORLD = 0.44;
+// ...and once collected, this fraction of the SCREEN HEIGHT, held for the
+// whole flight. No perspective, no shrink into the counter: uniform is the
+// point. Roughly the size of the HUD icon it is flying to, so it arrives
+// looking like the thing it is about to become.
+const FRUIT_SCREEN = 0.085;
+const FRUIT_DOWN = new THREE.Vector3(0, -1, 0); // landing probe
+const FRUIT_P = new THREE.Vector3(); // scratch: fruit world position -> screen
+const FRUIT_RAY = new THREE.Raycaster();
+const FRUIT_BOX = new THREE.Box3(); // scratch: the grab box around resting fruit
+const FRUIT_GRAB = new THREE.Vector3(1.2, 1.5, 1.2); // same reach a level pickup has
+
 export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
 
 // Ledge grab geometry: how far below the TRUE lip the body hangs (hands at the
@@ -712,9 +727,45 @@ export class Player {
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; dust?: boolean }[] = [];
   private runStepSign = 1; // footfall edge detector for the run dust trail
   private jumpPose = 0; // on-foot jump: overhead arm throw + leg tuck (Crash reference)
-  // mesh is a Group: the fruit is an authored model wrapped by src/wumpa.ts
-  private fruits: { mesh: THREE.Object3D; vel: THREE.Vector3; age: number; flung?: boolean }[] = [];
+  // One wumpa out of a smashed crate, through its whole life.
+  //
+  //   arc   ballistic out of the box, in the world
+  //   rest  landed, bobbing and turning, WAITING TO BE PICKED UP
+  //   fly   collected: on the flat overlay layer, sailing to the HUD counter
+  //   flung spun away instead of collected, ballistic then gone
+  //
+  // `rest` is the phase this pool didn't used to have. Fruit arced for a third
+  // of a second and then homed to the counter on its own, which meant breaking
+  // a box WAS collecting its fruit — the burst was decoration over a number
+  // that had already gone up. Now the box gives you fruit and picking it up is
+  // still a thing you do.
+  //
+  // `mesh` is a holder Group, NOT the wumpaMesh itself: the fruit is an
+  // authored model that arrives async and rescales its own group when it
+  // lands (src/wumpa.ts), so anything that resizes the fruit — the overlay
+  // does, every frame — has to own a wrapper the loader will not touch.
+  private fruits: {
+    mesh: THREE.Group;
+    vel: THREE.Vector3;
+    phase: 'off' | 'arc' | 'rest' | 'fly' | 'flung';
+    t: number; // seconds in the current phase
+    restY: number; // bob baseline once landed
+    sx: number; // overlay position, screen fractions (0..1)
+    sy: number;
+  }[] = [];
   cam: THREE.PerspectiveCamera | null = null; // set by main: wumpa fly to the HUD counter, which lives on the lens
+  /** Set by main: where the HUD fruit counter is, in 0..1 screen fractions. */
+  hudFruitAt: (() => { x: number; y: number } | null) | null = null;
+  // The collected-fruit layer: a flat scene with an orthographic camera whose
+  // frustum is one unit tall, so a fruit placed in it is a FIXED FRACTION OF
+  // THE SCREEN however far the world position it came from happened to be.
+  // That is the whole reason it exists — a fruit flying through world space
+  // toward the lens swells as it comes, and the flight is a UI gesture, not an
+  // object moving through the level.
+  private fruitLayer: THREE.Scene | null = null;
+  private fruitLayerCam: THREE.OrthographicCamera | null = null;
+  /** The world scene, kept so a retired fruit can be put back on it. */
+  private worldScene!: THREE.Scene;
 
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
@@ -863,14 +914,41 @@ export class Player {
       this.sparks.push({ mesh, vel: new THREE.Vector3(), life: 0, maxLife: 1 });
     }
 
-    // Wumpa pool: fruit bursts out of broken boxes, then homes to the player.
-    // 0.34 across — the diameter of the sphere the authored model replaced.
+    // Wumpa pool: fruit bursts out of broken boxes, lands, and waits.
+    //
+    // The art is built at ONE unit tall and sized by the holder, so the same
+    // body can be a 0.62-wide fruit lying in the level one frame and a fixed
+    // slice of the screen the next without ever fighting the loader, which
+    // rescales the art's own group when the model arrives.
+    this.worldScene = scene;
     for (let i = 0; i < 24; i++) {
-      const mesh = wumpaMesh(0.34);
+      const mesh = new THREE.Group();
+      mesh.add(wumpaMesh(1));
+      mesh.scale.setScalar(FRUIT_WORLD);
       mesh.visible = false;
       scene.add(mesh);
-      this.fruits.push({ mesh, vel: new THREE.Vector3(), age: -1 });
+      this.fruits.push({
+        mesh,
+        vel: new THREE.Vector3(),
+        phase: 'off',
+        t: 0,
+        restY: 0,
+        sx: 0,
+        sy: 0,
+      });
     }
+
+    // The collected-fruit overlay. Its own lights, because a scene draws with
+    // the lights it holds and this one holds nothing else.
+    const layer = new THREE.Scene();
+    layer.add(new THREE.AmbientLight(0xffffff, 0.75));
+    const key = new THREE.DirectionalLight(0xffffff, 1.05);
+    key.position.set(0.4, 0.8, 1);
+    layer.add(key);
+    this.fruitLayer = layer;
+    // 1 unit tall, width set per frame from the aspect. Depth range is roomy
+    // because nothing in here has depth to speak of.
+    this.fruitLayerCam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -10, 10);
   }
 
   get spinning(): boolean {
@@ -1064,10 +1142,7 @@ export class Player {
     this.bailing = false;
     this.bailSpin = 0;
     this.bodyGroup.rotation.x = 0;
-    for (const f of this.fruits) {
-      f.age = -1;
-      f.mesh.visible = false;
-    }
+    for (const f of this.fruits) this.retireFruit(f);
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.crouchGraceT = 0;
@@ -1200,7 +1275,7 @@ export class Player {
       this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
       this.updateSparks(dt);
       this.updateFlyBoard(dt, level);
-      this.updateFruit(dt);
+      this.updateFruit(dt, level);
       this.syncVisual(input, dt);
       return;
     }
@@ -1214,7 +1289,7 @@ export class Player {
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSparks(dt);
       this.updateFlyBoard(dt, level);
-      this.updateFruit(dt);
+      this.updateFruit(dt, level);
       this.syncVisual(input, dt);
       return;
     }
@@ -1792,7 +1867,7 @@ export class Player {
     }
     this.updateSparks(dt);
     this.updateFlyBoard(dt, level);
-    this.updateFruit(dt);
+    this.updateFruit(dt, level);
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
@@ -6644,100 +6719,223 @@ export class Player {
     }
   }
 
-  // Wumpa burst: fruit pops out of the box, arcs, then homes to the player.
+  // A free slot, or the longest-resting fruit if there are none.
+  //
+  // Fruit lies around waiting to be picked up now, so the pool can genuinely
+  // fill up — smash four crates in a corner and walk away. Rather than drop
+  // the new fruit on the floor, the oldest RESTING fruit is cashed in: its
+  // tally goes up, it vanishes, and its slot carries the new one.
+  //
+  // Null means every slot is mid-arc, so there's nothing on the ground to cash
+  // in either. The caller owes the player that fruit — see spawnFruit.
+  private freeFruit(): (typeof this.fruits)[number] | null {
+    for (const f of this.fruits) if (f.phase === 'off') return f;
+    let oldest: (typeof this.fruits)[number] | null = null;
+    for (const f of this.fruits)
+      if (f.phase === 'rest' && (!oldest || f.t > oldest.t)) oldest = f;
+    if (oldest) {
+      this.collectFruit();
+      return oldest;
+    }
+    return null;
+  }
+
+  // Wumpa burst: fruit pops out of the box, arcs, and LANDS. Picking it up is
+  // a separate act — see the phase note on the pool.
   private spawnFruit(box: THREE.Box3, n = CONST.fruitPerCrate): void {
-    let count = n;
     const cx = (box.min.x + box.max.x) / 2;
     const cy = (box.min.y + box.max.y) / 2;
     const cz = (box.min.z + box.max.z) / 2;
-    for (const f of this.fruits) {
-      if (count <= 0) break;
-      if (f.age >= 0) continue;
-      count--;
-      f.age = 0;
-      f.flung = false;
+    for (let i = 0; i < n; i++) {
+      const f = this.freeFruit();
+      // No body to give it and nothing on the ground to reclaim: the fruit is
+      // still owed, so bank it rather than drop it. A player who smashes a
+      // wall of crates at once should never be charged for our pool size.
+      if (!f) {
+        this.collectFruit();
+        continue;
+      }
+      f.phase = 'arc';
+      f.t = 0;
       f.mesh.visible = true;
-      f.mesh.scale.setScalar(1);
+      f.mesh.scale.setScalar(FRUIT_WORLD);
       f.mesh.position.set(cx, cy + 0.3, cz);
       f.vel.set((Math.random() - 0.5) * 5, 6 + Math.random() * 4, (Math.random() - 0.5) * 5);
     }
   }
 
-  // One already-earned wumpa (a touched ground pickup) launches from `pos`
-  // and flies straight to the HUD counter — no crate-burst arc first.
+  // One already-earned wumpa (a touched pickup, or fruit just walked into)
+  // leaves `pos` for the HUD counter on the flat overlay layer.
   private flyFruit(pos: THREE.Vector3): void {
-    for (const f of this.fruits) {
-      if (f.age >= 0) continue;
-      f.age = 0.36; // skip the arc, go straight to homing
-      f.flung = false;
-      f.mesh.visible = true;
-      f.mesh.scale.setScalar(1);
-      f.mesh.position.copy(pos);
-      f.vel.set(0, 0, 0);
+    const f = this.freeFruit();
+    if (!f) {
+      this.collectFruit(); // pool exhausted: count it rather than lose it
       return;
     }
-    this.collectFruit(); // pool exhausted: count it instantly rather than lose it
+    this.beginFruitFlight(f, pos);
   }
 
-  private updateFruit(dt: number): void {
+  // Hand a fruit to the overlay: work out where it is ON SCREEN right now, so
+  // the flight starts exactly where the world body was and the swap between
+  // layers is invisible.
+  private beginFruitFlight(f: (typeof this.fruits)[number], pos: THREE.Vector3): void {
+    f.phase = 'fly';
+    f.t = 0;
+    f.mesh.visible = true;
+    f.vel.set(0, 0, 0);
+    f.sx = 0.5;
+    f.sy = 0.5;
+    if (this.cam) {
+      FRUIT_P.copy(pos).project(this.cam);
+      // Behind the lens, unproject flips the sign — a fruit collected behind
+      // the camera would fly in from the wrong corner. Clamp it into frame
+      // instead and let it set off from the nearest edge.
+      f.sx = THREE.MathUtils.clamp((FRUIT_P.x + 1) / 2, 0, 1);
+      f.sy = THREE.MathUtils.clamp((1 - FRUIT_P.y) / 2, 0, 1);
+    }
+    // No pickup sound here: collectFruit still owns it, and it fires when the
+    // counter ticks at the end of the flight. Playing one at both ends would
+    // just double it.
+    this.fruitLayer?.add(f.mesh);
+  }
+
+  private updateFruit(dt: number, level: Level): void {
     for (const f of this.fruits) {
-      if (f.age < 0) continue;
-      f.age += dt;
-      if (f.flung) {
+      if (f.phase === 'off') continue;
+      f.t += dt;
+
+      if (f.phase === 'flung') {
         // smacked away by a spin: pure ballistic, then gone
         f.vel.y -= 26 * dt;
         f.mesh.position.addScaledVector(f.vel, dt);
-        if (f.age > 0.9) {
-          f.age = -1;
-          f.mesh.visible = false;
+        if (f.t > 0.9) this.retireFruit(f);
+        continue;
+      }
+
+      if (f.phase === 'fly') {
+        // Screen-space glide to the HUD counter. Ease out so it leaves fast
+        // and settles into the icon rather than arriving at full tilt. The
+        // scale never changes — see FRUIT_SCREEN.
+        const hud = this.hudFruitAt?.() ?? null;
+        // No HUD to aim at (a menu, the editor, a hidden counter): the
+        // top-left corner is where it lives, so head there anyway.
+        const tx = hud ? hud.x : 0.06;
+        const ty = hud ? hud.y : 0.06;
+        const k = Math.min(1, dt * 7);
+        f.sx += (tx - f.sx) * k;
+        f.sy += (ty - f.sy) * k;
+        if ((Math.abs(tx - f.sx) < 0.006 && Math.abs(ty - f.sy) < 0.006) || f.t > 2) {
+          this.collectFruit(); // earned either way — a timeout never eats the fruit
+          this.retireFruit(f);
         }
         continue;
       }
-      if (f.age < 0.35) {
-        // free arc out of the box
+
+      // --- world phases: arc and rest ---
+      // A spin smacks loose fruit away, exactly as it does a level's pickups.
+      // Fruit already in flight is exempt: it is off the world layer and, as
+      // far as the player is concerned, already collected.
+      if (this.spinning && this.spinBox.containsPoint(f.mesh.position)) {
+        f.phase = 'flung';
+        f.t = 0;
+        f.vel.set((Math.random() - 0.5) * 16, 8, (Math.random() - 0.5) * 16);
+        sfx.play('fruitSpun', 0.7);
+        continue;
+      }
+
+      if (f.phase === 'arc') {
         f.vel.y -= 26 * dt;
         f.mesh.position.addScaledVector(f.vel, dt);
-      } else {
-        // home to the WUMPA COUNTER: the HUD icon sits top-left, so chase the
-        // point that projects there — a few units out from the lens. The
-        // fruit swells as it flies at the camera, shrinks into the counter,
-        // and the tally ticks on ARRIVAL. (No camera = old skater homing.)
-        const target = new THREE.Vector3(this.pos.x, this.pos.y + 0.9, this.pos.z);
-        if (this.cam) {
-          target
-            .set(-0.85, 0.68, 0.5)
-            .unproject(this.cam)
-            .sub(this.cam.position)
-            .normalize()
-            .multiplyScalar(3.5)
-            .add(this.cam.position);
+        // Look for the floor only on the way down, and only a couple of
+        // metres ahead — a burst throws a handful of these at once and a
+        // full-length ray each, every frame, is a lot of raycasting for a
+        // decoration.
+        if (f.vel.y < 0) {
+          FRUIT_P.copy(f.mesh.position);
+          FRUIT_P.y += 0.3;
+          FRUIT_RAY.set(FRUIT_P, FRUIT_DOWN);
+          FRUIT_RAY.far = 2.2;
+          const hit = FRUIT_RAY.intersectObjects(level.groundMeshes, false)[0];
+          if (hit && hit.point.y >= f.mesh.position.y - FRUIT_WORLD * 0.5) {
+            f.phase = 'rest';
+            f.t = 0;
+            f.restY = hit.point.y + FRUIT_WORLD * 0.55;
+            f.mesh.position.y = f.restY;
+            f.vel.set(0, 0, 0);
+          }
         }
-        // a spin still smacks fruit out of the air if it swings past the body
-        if (this.spinning && this.spinBox.containsPoint(f.mesh.position)) {
-          f.flung = true;
-          f.age = 0;
-          f.mesh.scale.setScalar(1);
-          f.vel.set((Math.random() - 0.5) * 16, 8, (Math.random() - 0.5) * 16);
-          sfx.play('fruitSpun', 0.7);
+        // Fell off the world: gone, the same as anything else down a pit.
+        if (f.mesh.position.y < -60) {
+          this.retireFruit(f);
           continue;
         }
-        const d = target.sub(f.mesh.position);
-        const dist = d.length();
-        if (dist < 0.55 || f.age > 2.5) {
-          this.collectFruit(); // earned either way — a timeout never eats the fruit
-          f.age = -1;
-          f.mesh.visible = false;
-          f.mesh.scale.setScalar(1);
-          continue;
+        // Still airborne after four seconds means the landing probe never
+        // found anything under it, which is OUR failure and not the player's.
+        // Bank it rather than quietly deleting fruit a crate already gave.
+        if (f.t > 4) {
+          this.collectFruit();
+          this.retireFruit(f);
         }
-        // shrink into the counter over the last stretch
-        f.mesh.scale.setScalar(Math.min(1, dist / 1.4));
-        // Home faster than the camera can flee (it rides the skater) — the
-        // skater's own speed plus a margin, or a hard pull from far behind.
-        const chase = Math.max(dist * 6, Math.abs(this.speed) + 14);
-        f.mesh.position.addScaledVector(d.normalize(), chase * dt);
+        continue;
+      }
+
+      // rest: idle like a level pickup, and wait to be walked into.
+      // The grab box matches the one a level's own fruit carries (1.2 x 1.5 x
+      // 1.2 in Level.pickup) rather than testing the fruit's centre point
+      // against the body — a collectable you have to stand exactly on top of
+      // is a collectable you walk past.
+      f.mesh.position.y = f.restY + Math.sin(f.t * 3 + f.sx) * 0.07;
+      f.mesh.rotation.y += dt * 1.8;
+      FRUIT_BOX.setFromCenterAndSize(f.mesh.position, FRUIT_GRAB);
+      if (this.playerBox.intersectsBox(FRUIT_BOX)) {
+        this.beginFruitFlight(f, f.mesh.position);
       }
     }
+  }
+
+  /** Back to the pool, off whichever layer it was on. */
+  private retireFruit(f: (typeof this.fruits)[number]): void {
+    f.phase = 'off';
+    f.mesh.visible = false;
+    f.mesh.scale.setScalar(FRUIT_WORLD);
+    f.mesh.rotation.set(0, 0, 0);
+    if (f.mesh.parent !== this.worldScene) this.worldScene?.add(f.mesh);
+  }
+
+  /**
+   * Draw the collected fruit. Called from the frame loop after the world and
+   * before the HUD icons, with the renderer the game already owns.
+   *
+   * One pass for every fruit in flight, over the finished frame, with the
+   * depth buffer cleared so nothing in the level can occlude it.
+   */
+  drawFlyingFruit(renderer: THREE.WebGLRenderer): void {
+    const layer = this.fruitLayer;
+    const cam = this.fruitLayerCam;
+    if (!layer || !cam) return;
+    let any = false;
+    const canvas = renderer.domElement;
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
+    if (!cw || !ch) return;
+    const aspect = cw / ch;
+    for (const f of this.fruits) {
+      if (f.phase !== 'fly') continue;
+      any = true;
+      // The frustum is 1 unit tall and `aspect` wide, centred on the middle
+      // of the screen, so a screen fraction maps straight onto it.
+      f.mesh.position.set((f.sx - 0.5) * aspect, 0.5 - f.sy, 0);
+      f.mesh.scale.setScalar(FRUIT_SCREEN);
+      f.mesh.rotation.y += 0.09;
+    }
+    if (!any) return;
+    cam.left = -aspect / 2;
+    cam.right = aspect / 2;
+    cam.updateProjectionMatrix();
+    renderer.autoClear = false;
+    renderer.clearDepth();
+    renderer.render(layer, cam);
+    renderer.autoClear = true;
   }
 
   // Falling and our feet are near the target's top face = a stomp. The window

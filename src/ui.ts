@@ -985,6 +985,27 @@ export class UI {
     }
   }
 
+  /**
+   * Where the fruit counter's icon is, in 0..1 screen fractions — the target
+   * collected wumpa fly to.
+   *
+   * Read from the live box rather than guessed, because the counter moves: it
+   * is sized in vh, it hides entirely during a run mode, and the HUD scale has
+   * changed twice. Null when there's nothing on screen to aim at, and the
+   * flight falls back to the corner it lives in.
+   */
+  fruitIconAt(): { x: number; y: number } | null {
+    const el = this.wumpaIcon;
+    if (!el || !el.isConnected) return null;
+    const cs = getComputedStyle(el);
+    if (cs.display === "none" || cs.visibility === "hidden") return null;
+    const r = el.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return null;
+    const w = window.innerWidth || 1;
+    const h = window.innerHeight || 1;
+    return { x: (r.left + r.width / 2) / w, y: (r.top + r.height / 2) / h };
+  }
+
   /** Earned: hide the flat ghost (keeping its box) and light the 3D relic.
    *  The relic slots follow the two counter slots, hence the offset. */
   private setRelic(i: number, ghost: HTMLElement, earned: boolean): void {
