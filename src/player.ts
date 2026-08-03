@@ -9350,10 +9350,43 @@ export class Player {
     const bucket: Record<string, number[]> = {};
     for (const k of ['head', 'torso', 'pelvis', 'upperArmR', 'upperArmL', 'foreArmR', 'foreArmL', 'thighR', 'thighL', 'shinR', 'shinL', 'tail'])
       bucket[k] = [];
+    // How far behind her a triangle has to sit before it can only be tail,
+    // measured in RIG units so it can be reasoned about against the rig's own
+    // geometry: the tail leaves the hips at z -0.14, and nothing legitimate on
+    // this body reaches past -0.17 below the shoulders (measured across every
+    // chunk — the legs and the torso front all sit forward of it). The first
+    // cut below is the original fraction-of-depth test; this one is the
+    // backstop that catches what it misses.
+    // Two backstops, both in RIG units so they can be checked against the rig's
+    // own geometry rather than a fraction of the model's depth:
+    //
+    //   BEHIND HER    nothing legitimate below the shoulders reaches past
+    //                 z -0.17; the tail leaves the hips at -0.05.
+    //   HANGING LOW   the brush drops from the hip to below the knee BEHIND
+    //                 her, and no leg geometry on this body goes back past
+    //                 z -0.01 (measured across every built chunk), so
+    //                 low-and-behind can only be tail.
+    const TAIL_Z = -0.17;
+    const TAIL_Y = 1.0; // below the shoulders (they sit at 1.22), so no ponytail
+    const HANG_Z = -0.05;
+    const HANG_Y = 0.58; // below the hip joints at 0.71, above the shorts hem
     for (let t = 0; t < P.count; t += 3) {
       const czf = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
       const cyf = (P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3;
-      if (czf < backZ && cyf < midY) {
+      // ...the same centroid, in the rig space the body is actually built in
+      const rz = (czf - cz) * SXZ;
+      const ry = (cyf - miny) * SY;
+      if (
+        (czf < backZ && cyf < midY) ||
+        (rz < TAIL_Z && ry < TAIL_Y) ||
+        (rz < HANG_Z && ry < HANG_Y)
+      ) {
+        // DISCARDED, not built (see src/tail.ts). The second test is what
+        // catches the rest of the brush: Meshy weights this model's tail to
+        // Hips, so whatever the geometric cut misses gets voted into the
+        // PELVIS chunk by bone weight and shipped as part of her body — which
+        // is exactly what left a fan of flat tail polygons hanging off her
+        // hip after the new tail was already drawn.
         bucket.tail.push(t, t + 1, t + 2);
         continue;
       }
@@ -9366,6 +9399,27 @@ export class Player {
       }
       bucket[best].push(t, t + 1, t + 2);
     }
+
+    // LAST CUT, and the one that actually gets this model's tail: anything the
+    // bone vote filed as PELVIS that hangs below the knee.
+    //
+    // Meshy weights this tail to Hips, so every triangle the geometric cuts
+    // above miss is voted into the hip block and shipped as part of her body
+    // — which is what left a fan of flat tail polygons swinging off her hip
+    // after the new tail was already drawn. It is not caught by depth: the
+    // brush only reaches z -0.14, no further back than her own backside. It is
+    // caught by HEIGHT. The hip block's real geometry stops at the crotch,
+    // around y 0.6; the fan hangs to y 0.12, which is ankle height. Nothing
+    // that belongs to a pelvis goes there.
+    const KNEE_Y = 0.63; // just under the hip joints at 0.71, so the hip
+                         // block survives and everything dangling off it does not
+    const kept: number[] = [];
+    for (let i = 0; i < bucket.pelvis.length; i += 3) {
+      const t = bucket.pelvis[i];
+      const ry = ((P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3 - miny) * SY;
+      (ry < KNEE_Y ? bucket.tail : kept).push(t, t + 1, t + 2);
+    }
+    bucket.pelvis = kept;
 
     // Build a chunk: map each vert to rig space, subtract the pivot, optional
     // rotation onto -Y (limbs), matching normal transform.
@@ -10132,7 +10186,10 @@ export class Player {
     // late, under gravity, and stops short of her own body. Parented to the
     // body root (NOT the legs group) so leg squashes don't pancake it.
     const tail = new Tail();
-    tail.root.position.set(0, 0.68, -0.14);
+    // Tucked in against her back rather than standing off it: the attach point
+    // used to sit 0.14 behind the hip pivot, which left daylight between the
+    // body and the base of the tail from the side.
+    tail.root.position.set(0, 0.66, -0.05);
     riderG.add(tail.root);
     this.tail = tail;
 
