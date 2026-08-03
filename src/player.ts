@@ -10204,7 +10204,7 @@ export class Player {
     // where the tube actually starts, so it has to be under the skin on its
     // own — which it is, and the neck pinch (see restRadius) makes the opening
     // small enough that nothing shows through from any angle.
-    tail.root.position.set(0, 0.65, 0.11);
+    tail.root.position.set(0, 0.65, 0.075);
     riderG.add(tail.root);
     this.tail = tail;
 

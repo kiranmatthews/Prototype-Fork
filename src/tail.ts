@@ -178,7 +178,7 @@ export class Tail {
 
   /** Its own material, so the tint can change with the installed body. */
   private mat = new THREE.MeshLambertMaterial({
-    color: 0xf39133, // picked in the studio against the fox's own fur
+    color: 0xff7300, // picked in the studio against the fox's own fur
     vertexColors: true, // the baked base->tip shading
     flatShading: true, // match the body's PS1 facets
   });
