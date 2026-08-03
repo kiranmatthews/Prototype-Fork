@@ -90,20 +90,29 @@ export interface TailShape {
   angleTip: number;
 }
 
-/** A kangaroo's tail is a counterweight, not a rope — it carries itself. */
+/**
+ * A kangaroo's tail is a counterweight, not a rope — it carries itself.
+ *
+ * These numbers were DIALLED IN BY HAND in the model studio, not derived. Every
+ * one of them is a proportion judgement, which is the kind of call I am bad at
+ * from a screenshot and a person makes in seconds with a slider: it wants to be
+ * nearly twice as long as I had guessed, a third thicker, drooping much harder
+ * where it leaves the hips and lifting more at the tip, with a tighter pinch
+ * spread over more of its length.
+ */
 export const DEFAULT_TAIL: TailShape = {
   bones: 8,
   rings: 19,
   sides: 9,
-  length: 0.58,
-  bury: 0.075,
-  baseRadius: 0.072,
+  length: 1.08,
+  bury: 0.095,
+  baseRadius: 0.096,
   tipRadius: 0.009,
-  neck: 0.46,
-  neckSpan: 0.2,
+  neck: 0.28,
+  neckSpan: 0.29,
   squash: 1.12,
-  angleBase: -0.6,
-  angleTip: 0.12,
+  angleBase: -1.04,
+  angleTip: 0.3,
 };
 
 const _v = new THREE.Vector3();
@@ -163,7 +172,7 @@ export class Tail {
 
   /** Its own material, so the tint can change with the installed body. */
   private mat = new THREE.MeshLambertMaterial({
-    color: 0xf39133, // the rig's own kangaroo orange, until a model says otherwise
+    color: 0xf06c00, // picked in the studio against the fox's own fur
     vertexColors: true, // the baked base->tip shading
     flatShading: true, // match the body's PS1 facets
   });

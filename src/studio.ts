@@ -540,19 +540,26 @@ class Studio {
   }
 
   private exportText(): string {
+    // The highest source slot any chunk refers to. The `+ 1` goes OUTSIDE the
+    // loop: inside, it incremented once per mesh and reported a count higher
+    // than the model actually has (6395 against a real 6390), which would have
+    // made the guard in modelcuts.ts reject a perfectly good cut list.
     const rider = this.ctx.player.riderRef;
-    let verts = 0;
+    let top = -1;
     rider?.traverse((o) => {
       const m = o as THREE.Mesh;
-      if (m.isMesh && m.userData.srcTris) verts = Math.max(verts, ...(m.userData.srcTris as number[])) + 1;
+      const src = m.userData.srcTris as number[] | undefined;
+      if (m.isMesh && src) for (const t of src) if (t > top) top = t;
     });
+    const verts = top + 1;
     return JSON.stringify(
       {
         studio: 1,
         model: this.ctx.player.modelSrc,
-        // NOT the true source count — the highest slot any surviving chunk
-        // refers to, plus one. Recorded so a re-exported model invalidates the
-        // cuts rather than deleting whatever now sits at those indices.
+        // The highest slot any chunk refers to, plus one. For a model whose
+        // every triangle survives into some chunk this equals the de-indexed
+        // vertex count; where the carve already drops geometry it is a lower
+        // bound, so check it against the file before using it as the guard.
         highestSlot: verts,
         deletePolygons: [...this.selected].sort((a, b) => a - b),
         keepPolygons: [...this.kept].sort((a, b) => a - b),

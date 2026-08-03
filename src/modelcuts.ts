@@ -36,7 +36,24 @@ export interface ModelCut {
 }
 
 export const MODEL_CUTS: Record<string, ModelCut> = {
-  // filled in from the studio's export
+  // Picked in the studio, 2026-08-03: the leftover tail brush on the fox, the
+  // blades of it the geometric cut never reached. 56 triangles of 2130.
+  //
+  // vertexCount is the file's DE-INDEXED vertex count (fox.glb is indexed with
+  // 6390 indices, so 6390 slots / 2130 triangles), read from the GLB rather
+  // than taken from the export's highestSlot — that field is a lower bound,
+  // because slots belonging to already-discarded geometry are in no chunk for
+  // the studio to see.
+  'models/fox.glb': {
+    vertexCount: 6390,
+    tris: [
+      213, 216, 219, 222, 225, 561, 567, 573, 576, 1311, 1314, 1317, 1320,
+      1323, 2343, 2346, 2349, 2352, 2355, 2358, 2457, 2460, 2463, 2466, 2937,
+      2940, 2943, 2946, 3270, 3273, 3276, 3279, 3372, 3378, 3387, 3390, 3393,
+      3396, 4278, 4473, 4476, 4479, 4482, 4755, 4815, 4818, 5022, 5025, 5028,
+      5031, 5241, 5313, 5316, 5409, 5502, 5553,
+    ],
+  },
 };
 
 export interface Verdict {

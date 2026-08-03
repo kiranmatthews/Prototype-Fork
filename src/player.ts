@@ -10199,12 +10199,11 @@ export class Player {
     // late, under gravity, and stops short of her own body. Parented to the
     // body root (NOT the legs group) so leg squashes don't pancake it.
     const tail = new Tail();
-    // Tucked right in against her back: the attach point used to sit 0.14
-    // behind the hip pivot, which left daylight between the body and the base
-    // of the tail from the side. The tube's own base tapers inward as well
-    // (see restRadius), so it meets her narrow rather than butting a full
-    // width cylinder against her hip.
-    tail.root.position.set(0, 0.67, -0.01);
+    // Attach point placed by hand in the studio. It sits FORWARD of the hip
+    // pivot and lower than I had it — the tail grows from inside her, not off
+    // her back, and the extra bury plus the base taper (see restRadius) mean
+    // the junction is covered by her own body from every angle.
+    tail.root.position.set(0, 0.57, 0.09);
     riderG.add(tail.root);
     this.tail = tail;
 
