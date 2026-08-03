@@ -1,14 +1,18 @@
 /* roo-text.css — the Roo display face + the host/svg shell.
  *
- * Bundler layout (roo-web README): Roo.ttf lives in public/fonts, so the
- * @font-face src is the site-absolute /fonts/Roo.ttf. Vite rewrites that
- * against `base` at build time, which is what keeps it resolving on the
- * project-path GitHub Pages deploy as well as at a domain root.
+ * Bundler layout (roo-web README): the face lives in public/fonts, so the
+ * @font-face src is site-absolute. Vite rewrites that against `base` at build
+ * time, which is what keeps it resolving on the project-path GitHub Pages
+ * deploy as well as at a domain root.
+ *
+ * The FILENAME carries the version. Vite copies public/ verbatim — no content
+ * hash — so a font revised in place would keep serving from a phone's cache
+ * long after the deploy. Ship a new cut under a new name instead.
  */
 
 @font-face {
   font-family: "Roo";
-  src: url("/fonts/Roo.ttf") format("truetype");
+  src: url("/fonts/RooRegular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;

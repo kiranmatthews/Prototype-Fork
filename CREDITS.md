@@ -36,7 +36,10 @@ node tools/bake-props.mjs <dir-of-glbs>... > src/prop-data.ts
 ## HUD display face
 
 The HUD, the crate stencils and every plate on screen are set in **Roo**,
-shipped as `public/fonts/Roo.ttf` (`.otf` alongside it). On the HUD it is
+shipped as `public/fonts/RooRegular.ttf` (`.otf` alongside it). The filename
+carries the version — Vite copies `public/` verbatim with no content hash, so a
+revised cut ships under a new name rather than overwriting one a phone has
+already cached. On the HUD it is
 rendered by the roo-web SVG renderer (`src/roo-text.js`, MODIFIED from the
 drop to match this game's reference art — see its header — wrapped by
 `src/rootext.ts`); on the crate faces it is painted flat into the
