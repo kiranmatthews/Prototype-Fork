@@ -178,207 +178,286 @@ const SURFACES: Record<SurfaceKind, SurfaceProfile> = {
 // Everything the game asks for, expressed as parameter sets over the one
 // technique. A new effect is a new entry here, not new code.
 export const PUFF_PRESETS: Record<string, PuffPreset> = {
-  // --- smoke ---------------------------------------------------------------
+  // ── THE HOUSE STYLE ────────────────────────────────────────────────────
+  // Every preset here is written in the language of the one that was tuned
+  // BY HAND (torchSmoke, below), because every pass I authored by guesswork
+  // came out overwrought. What the hand-tuned one does, everything does:
+  //
+  //   * ONE ring, NO lobes, NO centre drift, heavy neighbour smoothing,
+  //     SLOW wobble — a plain rounded lump, not a jagged shard.
+  //   * Sized against the thing that MADE it: a footstep, a wheel, a crate.
+  //     Crash 2/3 dust is a handful of small pale pops gone in half a
+  //     second; nothing here should be mistakable for weather.
+  //   * A wide lifetime band where raggedness is wanted — some puffs die at
+  //     the source, some carry — instead of extra geometry.
+  //
+  // The halo/plateau ring still exists as a capability (the studio exposes
+  // it) but no stock preset uses it: the hand-tuned reference didn't.
+
+  // --- smoke -------------------------------------------------------------
   smokeLight: {
     blend: 'alpha', orient: 'billboardY',
-    ring: [6, 8], multiCentre: 0.25, size: [0.35, 0.6], aspect: [0.9, 1.15],
-    grow: [2.6, 3.4], growCurve: 0.55, wobble: [0.16, 0.26], swirl: [0.1, 0.2],
-    wobbleRate: [0.7, 1.3], neighbour: 0.4, centreDrift: 0.22, spin: [-0.5, 0.5],
-    speed: [0.3, 0.7], spread: 0.5, up: [0.5, 1.1], gravity: [-0.2, -0.05],
-    buoyancy: [0.9, 1.6], drag: [0.7, 1.1], wind: 0.8, turbulence: [0.25, 0.5],
-    turbRate: [0.5, 1.1], life: [1.6, 2.6],
-    centre: 0xb9b4ab, inner: 0x8c8880, outer: 0x2a2926, alpha: [0.3, 0.42],
-    fadeIn: 0.12, outerAlpha: 0.0, count: [1, 2], rate: [7, 11], jitter: 0.6,
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.12, 0.3], aspect: [0.7, 0.9],
+    grow: [1.8, 2.5], growY: [2.4, 3.4], growCurve: 0.42,
+    wobble: [0.18, 0.3], swirl: [0.06, 0.15], wobbleRate: [0.2, 0.4],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.6, 0.6],
+    speed: [0, 0.2], spread: 0.3, up: [0.7, 1.3], gravity: [-0.12, -0.04],
+    buoyancy: [0.6, 1.6], drag: [0.7, 1.4], wind: 0.9,
+    turbulence: [0.3, 0.5], turbRate: [0.7, 1.1],
+    life: [1.2, 2.6],
+    centre: 0xb9b4ab, inner: 0x8c8880, outer: 0x2a2926,
+    alpha: [0.28, 0.4], fadeIn: 0.18, outerAlpha: 0,
+    count: [1, 2], rate: [4, 7], jitter: 0.6,
   },
   smokeDark: {
     blend: 'alpha', orient: 'billboardY',
-    ring: [6, 8], multiCentre: 0.35, size: [0.45, 0.8], aspect: [0.95, 1.2],
-    grow: [3.0, 4.0], growCurve: 0.5, wobble: [0.2, 0.32], swirl: [0.12, 0.24],
-    wobbleRate: [0.6, 1.2], neighbour: 0.45, centreDrift: 0.28, spin: [-0.4, 0.4],
-    speed: [0.4, 0.9], spread: 0.55, up: [0.7, 1.5], gravity: [-0.25, -0.08],
-    buoyancy: [1.1, 2.0], drag: [0.6, 1.0], wind: 0.85, turbulence: [0.3, 0.6],
-    turbRate: [0.4, 0.9], life: [2.0, 3.2],
-    centre: 0x2e2b28, inner: 0x1a1917, outer: 0x0b0b0a, alpha: [0.5, 0.68],
-    fadeIn: 0.1, outerAlpha: 0.0, count: [1, 2], rate: [8, 13], jitter: 0.55,
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.16, 0.36], aspect: [0.7, 0.9],
+    grow: [1.9, 2.6], growY: [2.6, 3.6], growCurve: 0.42,
+    wobble: [0.18, 0.3], swirl: [0.06, 0.15], wobbleRate: [0.2, 0.4],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.5, 0.5],
+    speed: [0, 0.25], spread: 0.3, up: [0.8, 1.5], gravity: [-0.15, -0.05],
+    buoyancy: [0.8, 1.9], drag: [0.7, 1.3], wind: 0.9,
+    turbulence: [0.3, 0.55], turbRate: [0.6, 1.0],
+    life: [1.6, 3.0],
+    centre: 0x35322e, inner: 0x201e1b, outer: 0x0c0b0a,
+    alpha: [0.45, 0.6], fadeIn: 0.15, outerAlpha: 0,
+    count: [1, 2], rate: [5, 8], jitter: 0.55,
   },
+  // The Crash 3 vortex colour, at prop scale rather than boss-intro scale.
   smokeColour: {
-    blend: 'softAdd', orient: 'billboardY',
-    ring: [5, 7], multiCentre: 0.3, size: [0.4, 0.7], aspect: [0.9, 1.1],
-    grow: [2.4, 3.2], growCurve: 0.5, wobble: [0.22, 0.34], swirl: [0.16, 0.3],
-    wobbleRate: [0.9, 1.6], neighbour: 0.35, centreDrift: 0.3, spin: [-0.9, 0.9],
-    speed: [0.5, 1.0], spread: 0.6, up: [0.8, 1.6], gravity: [-0.3, -0.1],
-    buoyancy: [1.2, 2.2], drag: [0.7, 1.2], wind: 0.7, turbulence: [0.35, 0.7],
-    turbRate: [0.7, 1.4], life: [1.4, 2.2],
-    centre: 0xff5ad8, inner: 0x8a2ad0, outer: 0x140424, alpha: [0.5, 0.72],
-    fadeIn: 0.08, outerAlpha: 0.0, bright: [1.0, 1.35],
-    count: [1, 2], rate: [10, 15], jitter: 0.6,
+    blend: 'softAdd', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.15, 0.35], aspect: [0.8, 1.0],
+    grow: [1.8, 2.5], growY: [2.0, 2.8], growCurve: 0.45,
+    wobble: [0.2, 0.32], swirl: [0.08, 0.18], wobbleRate: [0.25, 0.45],
+    neighbour: 0.9, centreDrift: 0, spin: [-1.0, 1.0],
+    speed: [0.1, 0.4], spread: 0.5, up: [0.6, 1.2], gravity: [-0.2, -0.08],
+    buoyancy: [0.7, 1.6], drag: [0.8, 1.5], wind: 0.7,
+    turbulence: [0.3, 0.55], turbRate: [0.7, 1.2],
+    life: [0.9, 1.8],
+    centre: 0xd85fd8, inner: 0x7d3c8c, outer: 0x2a1c46,
+    alpha: [0.4, 0.55], fadeIn: 0.12, outerAlpha: 0, bright: [1.0, 1.3],
+    count: [1, 2], rate: [8, 13], jitter: 0.6,
   },
   steam: {
     blend: 'alpha', orient: 'billboardY',
-    ring: [6, 8], multiCentre: 0.2, size: [0.25, 0.45], aspect: [0.85, 1.05],
-    grow: [3.4, 4.6], growCurve: 0.42, wobble: [0.14, 0.24], swirl: [0.08, 0.18],
-    wobbleRate: [1.1, 1.9], neighbour: 0.5, centreDrift: 0.18, spin: [-0.7, 0.7],
-    speed: [1.6, 3.0], spread: 0.22, up: [1.4, 2.6], gravity: [-0.5, -0.2],
-    buoyancy: [1.8, 3.0], drag: [1.4, 2.2], wind: 0.9, turbulence: [0.2, 0.45],
-    turbRate: [1.0, 1.8], life: [0.9, 1.5],
-    centre: 0xf2f6fa, inner: 0xb9c8d6, outer: 0x38424c, alpha: [0.32, 0.46],
-    fadeIn: 0.06, outerAlpha: 0.0, count: [1, 2], rate: [16, 24], jitter: 0.45,
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.1, 0.2], aspect: [0.75, 0.95],
+    grow: [2.2, 3.0], growY: [2.6, 3.6], growCurve: 0.4,
+    wobble: [0.16, 0.26], swirl: [0.05, 0.13], wobbleRate: [0.3, 0.55],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.7, 0.7],
+    speed: [0.2, 0.5], spread: 0.2, up: [1.2, 2.2], gravity: [-0.3, -0.12],
+    buoyancy: [1.2, 2.4], drag: [1.3, 2.1], wind: 0.9,
+    turbulence: [0.2, 0.4], turbRate: [0.9, 1.4],
+    life: [0.6, 1.2],
+    centre: 0xf2f6fa, inner: 0xc2cfd9, outer: 0x3a444e,
+    alpha: [0.3, 0.42], fadeIn: 0.1, outerAlpha: 0,
+    count: [1, 2], rate: [10, 16], jitter: 0.45,
   },
   vapourMagic: {
     blend: 'add', orient: 'billboard',
-    ring: [5, 7], multiCentre: 0.4, size: [0.28, 0.5], aspect: [0.9, 1.15],
-    grow: [2.2, 3.0], growCurve: 0.6, wobble: [0.26, 0.4], swirl: [0.2, 0.4],
-    wobbleRate: [1.2, 2.2], neighbour: 0.3, centreDrift: 0.34, spin: [-1.4, 1.4],
-    speed: [0.4, 0.9], spread: 0.9, up: [0.6, 1.4], gravity: [-0.35, -0.12],
-    buoyancy: [1.0, 1.9], drag: [0.9, 1.5], wind: 0.5, turbulence: [0.4, 0.85],
-    turbRate: [1.0, 2.0], life: [0.9, 1.6],
-    centre: 0x9cffe8, inner: 0x2ac0a8, outer: 0x04201c, alpha: [0.42, 0.6],
-    fadeIn: 0.1, outerAlpha: 0.0, bright: [1.1, 1.6],
-    count: [1, 3], rate: [12, 20], jitter: 0.7,
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.1, 0.2], aspect: [0.85, 1.05],
+    grow: [1.6, 2.2], growY: [1.8, 2.4], growCurve: 0.5,
+    wobble: [0.22, 0.34], swirl: [0.1, 0.2], wobbleRate: [0.35, 0.6],
+    neighbour: 0.85, centreDrift: 0, spin: [-1.2, 1.2],
+    speed: [0.2, 0.6], spread: 0.8, up: [0.4, 0.9], gravity: [-0.25, -0.1],
+    buoyancy: [0.6, 1.3], drag: [0.9, 1.6], wind: 0.5,
+    turbulence: [0.35, 0.6], turbRate: [0.9, 1.5],
+    life: [0.7, 1.3],
+    centre: 0x9cffe8, inner: 0x2ac0a8, outer: 0x062a24,
+    alpha: [0.4, 0.55], fadeIn: 0.1, outerAlpha: 0, bright: [1.0, 1.5],
+    count: [1, 2], rate: [8, 14], jitter: 0.7,
   },
+  // Ambient haze earns its size — it IS a room-scale effect — but at an
+  // opacity where it reads as air, not as an object.
   hazeRoom: {
     blend: 'alpha', orient: 'billboard',
-    ring: [6, 8], multiCentre: 0.5, size: [1.6, 2.8], aspect: [1.2, 1.8],
-    grow: [1.4, 1.9], growCurve: 0.8, wobble: [0.1, 0.18], swirl: [0.06, 0.14],
-    wobbleRate: [0.25, 0.5], neighbour: 0.6, centreDrift: 0.3, spin: [-0.12, 0.12],
-    speed: [0.05, 0.2], spread: 1.4, up: [0.0, 0.15], gravity: [-0.03, 0.02],
-    buoyancy: [0.1, 0.3], drag: [0.25, 0.5], wind: 1.0, turbulence: [0.1, 0.25],
-    turbRate: [0.15, 0.35], life: [5.0, 8.0],
-    centre: 0x8e93a2, inner: 0x60657a, outer: 0x1a1c26, alpha: [0.07, 0.13],
-    fadeIn: 0.25, outerAlpha: 0.0, count: [1, 1], rate: [1.2, 2.2], jitter: 0.8,
+    ring: [6, 8], multiCentre: 0, halo: 0,
+    size: [0.9, 1.6], aspect: [1.2, 1.6],
+    grow: [1.3, 1.7], growCurve: 0.8,
+    wobble: [0.1, 0.16], swirl: [0.04, 0.1], wobbleRate: [0.15, 0.3],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.1, 0.1],
+    speed: [0.05, 0.15], spread: 1.4, up: [0, 0.1], gravity: [-0.02, 0.02],
+    buoyancy: [0.05, 0.2], drag: [0.3, 0.5], wind: 1,
+    turbulence: [0.08, 0.18], turbRate: [0.15, 0.3],
+    life: [4, 7],
+    centre: 0x8e93a2, inner: 0x60657a, outer: 0x1a1c26,
+    alpha: [0.05, 0.1], fadeIn: 0.3, outerAlpha: 0,
+    count: [1, 1], rate: [1, 2], jitter: 0.8,
   },
 
   // --- dust ----------------------------------------------------------------
+  // Crash dust: small, pale, earthy, quick. It pops, spreads a hand's width,
+  // and is gone. Alpha blend — dust is MATTER in front of the world, and only
+  // fire and magic get to be light.
+  dustStep: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.07, 0.13], aspect: [0.9, 1.1],
+    grow: [1.6, 2.2], growY: [1.4, 1.9], growCurve: 0.35,
+    wobble: [0.15, 0.25], swirl: [0.05, 0.12], wobbleRate: [0.3, 0.6],
+    neighbour: 0.9, centreDrift: 0, spin: [-0.8, 0.8],
+    speed: [0.4, 0.9], spread: 1.2, up: [0.15, 0.4], gravity: [1.2, 2.0],
+    drag: [3.5, 5.0], wind: 0.3, turbulence: [0.08, 0.18], turbRate: [0.8, 1.4],
+    ground: true, flatten: 0.5, spreadOnGround: 0.3, friction: 4,
+    life: [0.25, 0.45],
+    centre: 0xe8dcc4, inner: 0xc9bda6, outer: 0x4a4238,
+    alpha: [0.3, 0.42], fadeIn: 0.06, outerAlpha: 0,
+    count: [1, 2], surfaceTint: 0.8, spacing: [0.8, 1.2],
+  },
+  dustWheel: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.09, 0.16], aspect: [0.9, 1.15],
+    grow: [1.8, 2.4], growY: [1.5, 2.0], growCurve: 0.4, stretch: 0.02,
+    wobble: [0.16, 0.26], swirl: [0.05, 0.13], wobbleRate: [0.3, 0.6],
+    neighbour: 0.9, centreDrift: 0, spin: [-0.6, 0.6],
+    speed: [0.3, 0.7], spread: 1.0, up: [0.2, 0.5], gravity: [0.9, 1.6],
+    inherit: 0.15, drag: [3.0, 4.5], wind: 0.3,
+    turbulence: [0.08, 0.18], turbRate: [0.8, 1.4],
+    ground: true, flatten: 0.5, spreadOnGround: 0.3, friction: 4,
+    life: [0.3, 0.55],
+    centre: 0xe4d8c0, inner: 0xbfb39c, outer: 0x453e34,
+    alpha: [0.26, 0.38], fadeIn: 0.08, outerAlpha: 0,
+    count: [1, 1], surfaceTint: 0.85, spacing: [0.6, 0.95],
+  },
+  dustSkid: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.13, 0.22], aspect: [1.0, 1.25],
+    grow: [1.9, 2.6], growY: [1.5, 2.0], growCurve: 0.38, stretch: 0.03,
+    wobble: [0.18, 0.28], swirl: [0.06, 0.14], wobbleRate: [0.3, 0.6],
+    neighbour: 0.9, centreDrift: 0, spin: [-0.5, 0.5],
+    speed: [0.5, 1.1], spread: 1.1, up: [0.25, 0.6], gravity: [0.8, 1.5],
+    inherit: 0.25, drag: [2.8, 4.2], wind: 0.4,
+    turbulence: [0.1, 0.22], turbRate: [0.7, 1.2],
+    ground: true, flatten: 0.5, spreadOnGround: 0.4, friction: 3.8,
+    life: [0.4, 0.7],
+    centre: 0xe0d4bc, inner: 0xb8ac95, outer: 0x423b31,
+    alpha: [0.34, 0.48], fadeIn: 0.06, outerAlpha: 0,
+    count: [1, 2], surfaceTint: 0.85, spacing: [0.4, 0.65],
+  },
   dustLand: {
     blend: 'alpha', orient: 'billboard',
-    ring: [6, 8], multiCentre: 0.2, size: [0.3, 0.5], aspect: [1.25, 1.6],
-    grow: [2.2, 3.0], growY: [1.2, 1.7], growCurve: 0.35,
-    wobble: [0.2, 0.32], swirl: [0.12, 0.26], wobbleRate: [1.4, 2.4],
-    neighbour: 0.4, centreDrift: 0.24, spin: [-1.0, 1.0],
-    speed: [1.6, 3.2], spread: 1.45, up: [0.3, 0.9], gravity: [1.6, 2.6],
-    drag: [3.4, 5.0], wind: 0.35, turbulence: [0.15, 0.35], turbRate: [1.2, 2.2],
-    ground: true, flatten: 0.75, spreadOnGround: 0.7, friction: 4.5,
-    life: [0.45, 0.75],
-    centre: 0xd6cbb4, inner: 0xa79c88, outer: 0x2b2822, alpha: [0.4, 0.58],
-    fadeIn: 0.05, outerAlpha: 0.0, count: [4, 7], surfaceTint: 0.85,
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.12, 0.22], aspect: [1.0, 1.25],
+    grow: [1.9, 2.6], growY: [1.5, 2.0], growCurve: 0.35,
+    wobble: [0.18, 0.28], swirl: [0.06, 0.14], wobbleRate: [0.35, 0.65],
+    neighbour: 0.9, centreDrift: 0, spin: [-0.8, 0.8],
+    speed: [1.2, 2.4], spread: 1.45, up: [0.25, 0.6], gravity: [1.4, 2.2],
+    drag: [3.2, 4.6], wind: 0.3, turbulence: [0.08, 0.2], turbRate: [0.9, 1.5],
+    ground: true, flatten: 0.6, spreadOnGround: 0.4, friction: 4.2,
+    life: [0.35, 0.6],
+    centre: 0xe2d6be, inner: 0xb8ae97, outer: 0x453e34,
+    alpha: [0.35, 0.5], fadeIn: 0.05, outerAlpha: 0,
+    count: [4, 6], surfaceTint: 0.85,
   },
   dustLandHeavy: {
     blend: 'alpha', orient: 'billboard',
-    ring: [6, 8], multiCentre: 0.35, size: [0.55, 0.95], aspect: [1.4, 1.9],
-    grow: [2.8, 3.8], growY: [1.3, 1.9], growCurve: 0.3,
-    wobble: [0.24, 0.38], swirl: [0.14, 0.3], wobbleRate: [1.1, 2.0],
-    neighbour: 0.45, centreDrift: 0.3, spin: [-0.8, 0.8],
-    speed: [3.0, 5.5], spread: 1.5, up: [0.5, 1.4], gravity: [1.2, 2.2],
-    drag: [3.0, 4.4], wind: 0.4, turbulence: [0.2, 0.45], turbRate: [1.0, 1.9],
-    ground: true, flatten: 0.8, spreadOnGround: 0.9, friction: 4.0,
-    life: [0.7, 1.15],
-    centre: 0xd6cbb4, inner: 0xa79c88, outer: 0x2b2822, alpha: [0.45, 0.65],
-    fadeIn: 0.04, outerAlpha: 0.0, count: [8, 13], surfaceTint: 0.85,
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.18, 0.32], aspect: [1.05, 1.3],
+    grow: [2.2, 3.0], growY: [1.6, 2.1], growCurve: 0.32,
+    wobble: [0.2, 0.3], swirl: [0.07, 0.15], wobbleRate: [0.3, 0.6],
+    neighbour: 0.9, centreDrift: 0, spin: [-0.7, 0.7],
+    speed: [2.0, 3.6], spread: 1.5, up: [0.4, 0.9], gravity: [1.2, 2.0],
+    drag: [3.0, 4.4], wind: 0.35, turbulence: [0.1, 0.24], turbRate: [0.8, 1.4],
+    ground: true, flatten: 0.65, spreadOnGround: 0.5, friction: 4,
+    life: [0.5, 0.85],
+    centre: 0xe2d6be, inner: 0xb5ab94, outer: 0x453e34,
+    alpha: [0.4, 0.55], fadeIn: 0.04, outerAlpha: 0,
+    count: [7, 10], surfaceTint: 0.85,
     children: ['dustRing', 'dustRise'],
   },
   dustRing: {
     blend: 'alpha', orient: 'surface',
-    ring: [7, 8], multiCentre: 0.15, size: [0.7, 1.0], aspect: [1.0, 1.0],
-    grow: [3.6, 4.8], growCurve: 0.25, wobble: [0.18, 0.3], swirl: [0.1, 0.2],
-    wobbleRate: [1.0, 1.8], neighbour: 0.6, centreDrift: 0.16, spin: [-0.4, 0.4],
-    speed: [0.2, 0.5], spread: 3.14, up: [0, 0], gravity: [0, 0.1],
-    drag: [3.5, 5.0], wind: 0.2, turbulence: [0.05, 0.15], turbRate: [0.8, 1.4],
-    ground: true, flatten: 1.0, friction: 5.0, life: [0.4, 0.65],
-    centre: 0xcfc4ad, inner: 0x9c9280, outer: 0x25231e, alpha: [0.3, 0.44],
-    fadeIn: 0.04, outerAlpha: 0.0, count: [1, 2], surfaceTint: 0.9,
+    ring: [6, 8], multiCentre: 0, halo: 0,
+    size: [0.3, 0.45], aspect: [1.0, 1.0],
+    grow: [2.6, 3.4], growCurve: 0.25,
+    wobble: [0.14, 0.24], swirl: [0.05, 0.12], wobbleRate: [0.4, 0.7],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.3, 0.3],
+    speed: [0.15, 0.4], spread: 3.14, up: [0, 0], gravity: [0, 0.1],
+    drag: [3.5, 5.0], wind: 0.2, turbulence: [0.04, 0.1], turbRate: [0.6, 1.0],
+    ground: true, flatten: 1, friction: 5,
+    life: [0.35, 0.55],
+    centre: 0xd9cdb4, inner: 0xa89d87, outer: 0x3b352c,
+    alpha: [0.28, 0.4], fadeIn: 0.04, outerAlpha: 0,
+    count: [1, 1], surfaceTint: 0.9,
   },
   dustRise: {
     blend: 'alpha', orient: 'billboardY',
-    ring: [5, 7], multiCentre: 0.2, size: [0.3, 0.5], aspect: [0.9, 1.1],
-    grow: [2.0, 2.8], growCurve: 0.5, wobble: [0.2, 0.32], swirl: [0.12, 0.26],
-    wobbleRate: [0.9, 1.6], neighbour: 0.4, centreDrift: 0.24, spin: [-0.6, 0.6],
-    speed: [0.4, 1.0], spread: 0.9, up: [1.0, 2.0], gravity: [0.1, 0.5],
-    buoyancy: [0.4, 0.9], drag: [1.6, 2.6], wind: 0.6, turbulence: [0.2, 0.5],
-    turbRate: [0.8, 1.5], life: [0.7, 1.2],
-    centre: 0xc9bfa9, inner: 0x958b79, outer: 0x232019, alpha: [0.22, 0.34],
-    fadeIn: 0.12, outerAlpha: 0.0, count: [2, 4], surfaceTint: 0.8,
-  },
-  dustStep: {
-    blend: 'alpha', orient: 'billboard',
-    ring: [5, 7], multiCentre: 0.1, size: [0.16, 0.26], aspect: [1.2, 1.5],
-    grow: [2.0, 2.8], growY: [1.1, 1.5], growCurve: 0.4,
-    wobble: [0.22, 0.34], swirl: [0.14, 0.28], wobbleRate: [1.6, 2.6],
-    neighbour: 0.35, centreDrift: 0.2, spin: [-1.2, 1.2],
-    speed: [0.7, 1.5], spread: 1.35, up: [0.2, 0.6], gravity: [1.8, 2.8],
-    drag: [4.0, 5.6], wind: 0.3, turbulence: [0.1, 0.25], turbRate: [1.4, 2.4],
-    ground: true, flatten: 0.7, spreadOnGround: 0.5, friction: 5.0,
-    life: [0.28, 0.45],
-    centre: 0xd2c7b0, inner: 0xa39985, outer: 0x282520, alpha: [0.3, 0.44],
-    fadeIn: 0.05, outerAlpha: 0.0, count: [1, 2], surfaceTint: 0.85,
-    spacing: [0.9, 1.4],
-  },
-  // THE TRAIL. This is the Crash 3 look, measured off the intro footage rather
-  // than guessed: the smoke there is a SMALL HOT CORE inside a broad plateau of
-  // saturated colour with a long dark tail, big and slow and heavily
-  // overlapping. Sampled, the hot spot reads rgb(216,95,216), the plateau
-  // rgb(125,60,140) holding out to about a quarter of the radius, and the tail
-  // rgb(64,41,106). Those three are the centre/inner/outer here, `halo` puts
-  // the plateau where the footage has it, and softAdd makes them stack into
-  // light instead of into mud.
-  dustWheel: {
-    blend: 'softAdd', orient: 'billboard',
-    // FACETS ARE THE POINT. Multi-centre lobes give each puff its own plateau
-    // heights, and the creases where those meet are visible hard triangles —
-    // which is what a PS1 Gouraud puff looks like and is wanted here, not
-    // something to smooth away. What the halo ring buys is the FALLOFF, not
-    // smoothness: hot core, broad plateau, long tail, exactly as measured off
-    // the footage.
-    ring: [7, 8], multiCentre: 0.3, halo: 0.32, haloAlpha: 0.62,
-    size: [0.22, 0.34], aspect: [1.0, 1.15],
-    grow: [2.0, 2.7], growY: [1.7, 2.2], growCurve: 0.45, stretch: 0.012,
-    wobble: [0.22, 0.34], swirl: [0.16, 0.3], wobbleRate: [0.9, 1.6],
-    neighbour: 0.45, centreDrift: 0.26, spin: [-0.5, 0.5],
-    speed: [0.3, 0.8], spread: 1.0, up: [0.35, 0.9], gravity: [-0.15, 0.1],
-    buoyancy: [0.5, 1.1], inherit: 0.12, drag: [1.6, 2.4], wind: 0.5,
-    turbulence: [0.2, 0.45], turbRate: [0.5, 1.1],
-    ground: true, flatten: 0.45, spreadOnGround: 0.5, friction: 2.2,
-    life: [0.85, 1.4],
-    centre: 0xd85fd8, inner: 0x7d3c8c, outer: 0x40296a,
-    alpha: [0.32, 0.46], fadeIn: 0.1, outerAlpha: 0.0, bright: [1.0, 1.35],
-    count: [1, 1], spacing: [0.32, 0.55],
-  },
-  dustSkid: {
-    blend: 'softAdd', orient: 'billboard',
-    ring: [7, 8], multiCentre: 0.35, halo: 0.3, haloAlpha: 0.64,
-    size: [0.3, 0.46], aspect: [1.05, 1.25],
-    grow: [2.2, 3.0], growY: [1.8, 2.4], growCurve: 0.4, stretch: 0.02,
-    wobble: [0.24, 0.38], swirl: [0.18, 0.34], wobbleRate: [0.8, 1.5],
-    neighbour: 0.45, centreDrift: 0.3, spin: [-0.45, 0.45],
-    speed: [0.6, 1.4], spread: 1.1, up: [0.5, 1.2], gravity: [-0.2, 0.05],
-    buoyancy: [0.7, 1.4], inherit: 0.22, drag: [1.4, 2.2], wind: 0.6,
-    turbulence: [0.25, 0.55], turbRate: [0.5, 1.0],
-    ground: true, flatten: 0.45, spreadOnGround: 0.6, friction: 2.0,
-    life: [1.1, 1.8],
-    centre: 0xe07ce0, inner: 0x7d3c8c, outer: 0x40296a,
-    alpha: [0.38, 0.54], fadeIn: 0.08, outerAlpha: 0.0, bright: [1.05, 1.45],
-    count: [1, 2], spacing: [0.26, 0.45],
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.12, 0.2], aspect: [0.85, 1.05],
+    grow: [1.7, 2.3], growY: [2.0, 2.7], growCurve: 0.45,
+    wobble: [0.16, 0.26], swirl: [0.06, 0.13], wobbleRate: [0.3, 0.55],
+    neighbour: 0.9, centreDrift: 0, spin: [-0.5, 0.5],
+    speed: [0.2, 0.6], spread: 0.9, up: [0.6, 1.2], gravity: [0.1, 0.4],
+    buoyancy: [0.3, 0.7], drag: [1.6, 2.6], wind: 0.6,
+    turbulence: [0.15, 0.3], turbRate: [0.6, 1.1],
+    life: [0.5, 0.9],
+    centre: 0xd6cab2, inner: 0xa59b85, outer: 0x3b352c,
+    alpha: [0.2, 0.3], fadeIn: 0.12, outerAlpha: 0,
+    count: [2, 3], surfaceTint: 0.8,
   },
 
-  // THE TORCHES. Same structure, lit from underneath by the flame it is
-  // leaving: an ember-white core, a deep amber body, and the footage's own
-  // indigo for the tail, so a plume climbing out of the light cools into the
-  // dark of the hall instead of staying orange all the way up.
-  // THE TORCHES. Authored in the smoke studio rather than guessed at — these
-  // are somebody's slider positions, converted to hex and dropped in whole.
-  //
-  // What the choices amount to: a pure ADDITIVE plume, so it reads as light
-  // leaving a fire rather than as grey matter in front of one. A single ring
-  // (halo 0) with full neighbour smoothing and no centre drift, so the puff is
-  // a plain rounded lump instead of a lobed one. Narrow and tall — aspect
-  // under 1 with growY well above grow — so it climbs and thins the way a
-  // column of hot gas does. Almost no launch speed and no cone; all the rise
-  // is buoyancy, all the wander is turbulence, and full `wind` lets the plume
-  // lean. A very wide lifetime band (0.35 to 3.45s) is what makes the column
-  // ragged: some puffs die at the flame, some make it right to the ceiling.
+  // --- events --------------------------------------------------------------
+  crateSmash: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.12, 0.22], aspect: [1.0, 1.25],
+    grow: [2.0, 2.8], growCurve: 0.3,
+    wobble: [0.2, 0.3], swirl: [0.08, 0.16], wobbleRate: [0.4, 0.7],
+    neighbour: 0.9, centreDrift: 0, spin: [-1.2, 1.2],
+    speed: [1.8, 3.4], spread: 3.14, up: [0.4, 1.0], gravity: [1.8, 2.8],
+    drag: [3.0, 4.4], wind: 0.3, turbulence: [0.1, 0.24], turbRate: [0.9, 1.5],
+    ground: true, flatten: 0.55, spreadOnGround: 0.4, friction: 4,
+    life: [0.35, 0.6],
+    centre: 0xd9b98a, inner: 0xa98a62, outer: 0x3a2f22,
+    alpha: [0.38, 0.52], fadeIn: 0.04, outerAlpha: 0,
+    count: [6, 9], surfaceTint: 0.4,
+    children: ['dustRing', 'hazeLinger'],
+  },
+  hazeLinger: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.35, 0.6], aspect: [1.1, 1.4],
+    grow: [1.5, 2.0], growCurve: 0.7,
+    wobble: [0.1, 0.18], swirl: [0.05, 0.11], wobbleRate: [0.25, 0.45],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.15, 0.15],
+    speed: [0.1, 0.3], spread: 1.6, up: [0.1, 0.3], gravity: [0.05, 0.25],
+    buoyancy: [0.15, 0.4], drag: [1.0, 1.7], wind: 0.9,
+    turbulence: [0.08, 0.18], turbRate: [0.25, 0.5],
+    life: [0.9, 1.5],
+    centre: 0xa89e8c, inner: 0x746c5f, outer: 0x2a271f,
+    alpha: [0.1, 0.16], fadeIn: 0.25, outerAlpha: 0,
+    count: [1, 2], surfaceTint: 0.6,
+  },
+  groundPound: {
+    blend: 'alpha', orient: 'surface',
+    ring: [6, 8], multiCentre: 0, halo: 0,
+    size: [0.45, 0.65], aspect: [1.0, 1.0],
+    grow: [3.2, 4.2], growCurve: 0.2,
+    wobble: [0.12, 0.22], swirl: [0.05, 0.11], wobbleRate: [0.5, 0.8],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.25, 0.25],
+    speed: [0.2, 0.5], spread: 3.14, up: [0, 0], gravity: [0, 0.1],
+    drag: [3.8, 5.2], wind: 0.15, turbulence: [0.03, 0.08], turbRate: [0.6, 1.0],
+    ground: true, flatten: 1, friction: 5.5,
+    life: [0.4, 0.65],
+    centre: 0xe4d9c0, inner: 0xafa48c, outer: 0x3b352c,
+    alpha: [0.32, 0.44], fadeIn: 0.03, outerAlpha: 0,
+    count: [2, 3], surfaceTint: 0.9,
+    children: ['dustLandHeavy'],
+  },
+
   torchSmoke: {
     blend: 'add', orient: 'billboard',
     ring: [5, 8], multiCentre: 0, halo: 0, haloAlpha: 1,
-    size: [0.14, 0.45], aspect: [0.6, 0.75],
+    // size is the authored [0.14, 0.45] times 1.25: the old strength coupling
+    // silently drew 1.25x, so this keeps the approved look pixel-identical
+    // under the corrected one.
+    size: [0.18, 0.56], aspect: [0.6, 0.75],
     grow: [1.65, 2.35], growY: [2.8, 3.8], growCurve: 0.42, stretch: 0.255,
     wobble: [0.2, 0.32], swirl: [0.06, 0.17], wobbleRate: [0.2, 0.35],
     neighbour: 1, centreDrift: 0, spin: [-1.45, 0.3],
@@ -392,43 +471,6 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
     count: [3, 19], rate: [13.5, 24.5], jitter: 0.3, spacing: [0.1, 0.1],
   },
 
-  // --- events --------------------------------------------------------------
-  crateSmash: {
-    blend: 'alpha', orient: 'billboard',
-    ring: [6, 8], multiCentre: 0.35, size: [0.28, 0.5], aspect: [1.1, 1.4],
-    grow: [2.6, 3.6], growCurve: 0.3, wobble: [0.26, 0.4], swirl: [0.16, 0.32],
-    wobbleRate: [1.5, 2.6], neighbour: 0.35, centreDrift: 0.3, spin: [-1.5, 1.5],
-    speed: [2.4, 5.0], spread: 3.14, up: [0.6, 1.8], gravity: [2.0, 3.4],
-    drag: [3.2, 4.6], wind: 0.4, turbulence: [0.2, 0.5], turbRate: [1.2, 2.2],
-    ground: true, flatten: 0.6, spreadOnGround: 0.5, friction: 4.0,
-    life: [0.4, 0.75],
-    centre: 0xc9a878, inner: 0x8f7450, outer: 0x241c12, alpha: [0.42, 0.6],
-    fadeIn: 0.04, outerAlpha: 0.0, count: [7, 11], surfaceTint: 0.5,
-    children: ['dustRing', 'hazeLinger'],
-  },
-  hazeLinger: {
-    blend: 'alpha', orient: 'billboard',
-    ring: [6, 8], multiCentre: 0.4, size: [0.7, 1.2], aspect: [1.2, 1.6],
-    grow: [1.8, 2.4], growCurve: 0.7, wobble: [0.12, 0.22], swirl: [0.08, 0.16],
-    wobbleRate: [0.4, 0.8], neighbour: 0.55, centreDrift: 0.24, spin: [-0.2, 0.2],
-    speed: [0.15, 0.4], spread: 1.6, up: [0.1, 0.4], gravity: [0.05, 0.3],
-    buoyancy: [0.2, 0.5], drag: [1.0, 1.7], wind: 0.9,
-    turbulence: [0.1, 0.25], turbRate: [0.3, 0.6], life: [1.2, 2.0],
-    centre: 0xa89e8c, inner: 0x746c5f, outer: 0x1e1c17, alpha: [0.12, 0.2],
-    fadeIn: 0.25, outerAlpha: 0.0, count: [2, 3], surfaceTint: 0.6,
-  },
-  groundPound: {
-    blend: 'alpha', orient: 'surface',
-    ring: [7, 8], multiCentre: 0.2, size: [0.9, 1.3], aspect: [1.0, 1.0],
-    grow: [4.5, 6.0], growCurve: 0.2, wobble: [0.16, 0.28], swirl: [0.08, 0.18],
-    wobbleRate: [1.2, 2.0], neighbour: 0.65, centreDrift: 0.14, spin: [-0.3, 0.3],
-    speed: [0.3, 0.7], spread: 3.14, up: [0, 0], gravity: [0, 0.1],
-    drag: [3.8, 5.2], wind: 0.15, turbulence: [0.05, 0.12], turbRate: [0.8, 1.4],
-    ground: true, flatten: 1.0, friction: 5.5, life: [0.5, 0.8],
-    centre: 0xded3bb, inner: 0xa89d88, outer: 0x2a271f, alpha: [0.36, 0.52],
-    fadeIn: 0.03, outerAlpha: 0.0, count: [2, 3], surfaceTint: 0.9,
-    children: ['dustLandHeavy'],
-  },
 };
 
 // -------------------------------------------------------------- plumbing ----
@@ -842,7 +884,12 @@ export class PuffSystem {
     p.halo = preset.halo ?? 0;
     p.centreDriftAmt = (preset.centreDrift ?? 0.2) * defK;
 
-    p.size = rr(rng, preset.size, 0.4) * sf.size * (0.75 + 0.5 * str);
+    // Strength barely touches SIZE. It used to be 0.75 + 0.5*str, which drew
+    // everything 1.25x its authored size at normal strength and 1.85x on a
+    // heavy landing — no preset ever rendered at the size its own numbers
+    // said, which is half of how "walking dust" became weather. A bigger hit
+    // now reads as MORE puffs (burst count still scales), not bigger ones.
+    p.size = rr(rng, preset.size, 0.4) * sf.size * (0.85 + 0.15 * Math.min(2.5, str));
     p.aspect = rr(rng, preset.aspect, 1);
     p.grow = rr(rng, preset.grow, 2);
     p.growY = preset.growY !== undefined ? rr(rng, preset.growY, p.grow) : p.grow;
