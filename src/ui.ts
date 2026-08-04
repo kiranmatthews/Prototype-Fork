@@ -1634,6 +1634,20 @@ export class UI {
         /* .hud-icon pixelates by default for the blocky CSS icons; this one is
            a painting and wants the smooth downscale */
         image-rendering: auto;
+        /* OPTICAL, not geometric, centring — two separate things were pushing
+           the same way. The ears and the ponytail run from the top of the art
+           down to 43/181 and read as spikes off the head rather than part of
+           the blob, so the face the eye actually centres on has its centroid
+           well below the box's middle. And the digit beside it is a Roo SVG
+           whose glyph hangs HIGH in its own box, because the padded viewBox
+           leaves room under it for the drop shadow. Together that left the
+           head sitting ~12px low against an 86px digit. Measured face
+           centroid against measured glyph centre asks for ~8%; -9% is what
+           actually reads level in a render, and past about -12% the head
+           starts reading high instead. Nothing else animates this element's
+           transform — hudpop only ever runs on the digits — so this is safe
+           to own outright. */
+        transform: translateY(-9%);
       }
       .hud-pop { animation: hudpop 0.22s ease-out; }
       @keyframes hudpop {

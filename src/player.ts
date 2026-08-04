@@ -33,6 +33,12 @@ const FRUIT_SCREEN = 0.085;
 // even start is the frame the hop ends.
 const FRUIT_HOP_TIME = 0.45;
 const FRUIT_HOP_RISE = 0.9;
+// ...and the WHOLE hop is lifted by this much, so the clump comes to rest at
+// the height a level's own loose wumpa floats at rather than down at the
+// crate's centre. The hand-placed fruit hangs 1.2-1.3 above the deck; a crate
+// is 0.96 tall and sits on the ground, putting its centre at 0.48, so +0.8
+// lands the payload at 1.28 — level with the fruit already lying around it.
+const FRUIT_REST_LIFT = 0.8;
 // ...and it crosses the screen at this many screen-heights per second, flat.
 // A 16:9 screen is 2.04 of those units corner to corner, so a worst-case trip
 // takes about 0.9s and a typical mid-screen pickup reaches the counter in 0.4s.
@@ -6863,7 +6869,11 @@ export class Player {
       f.mesh.visible = true;
       f.mesh.scale.setScalar(WUMPA_SIZE);
       f.mesh.rotation.set(0, a, 0);
-      f.mesh.position.set(cx + Math.cos(a) * r, cy + ((i % 3) - 1) * 0.16, cz + Math.sin(a) * r);
+      f.mesh.position.set(
+        cx + Math.cos(a) * r,
+        cy + FRUIT_REST_LIFT + ((i % 3) - 1) * 0.16,
+        cz + Math.sin(a) * r,
+      );
       f.home.copy(f.mesh.position);
       f.vel.set(0, 0, 0);
     }
