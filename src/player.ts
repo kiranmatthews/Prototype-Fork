@@ -13,6 +13,7 @@ import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { wumpaMesh, WUMPA_SIZE } from './wumpa';
+import { puffs, surfaceFromName } from './puffs';
 import { Tail, type TailCollider } from './tail';
 import { cutsFor } from './modelcuts';
 
@@ -31,6 +32,12 @@ const FRUIT_SCREEN = 0.085;
 // spinDuration + spinCooldown, so the swing that opened the crate is always
 // spent before the fruit is fair game again — the earliest a second spin can
 // even start is the frame the hop ends.
+// Scratch for the puff calls: these run every step, and a `new Vector3()` per
+// frame in the hot path is exactly the allocation churn the pooled particle
+// system exists to avoid.
+const PUFF_UP = new THREE.Vector3(0, 1, 0);
+const PUFF_VEL = new THREE.Vector3();
+const PUFF_C = new THREE.Vector3();
 const FRUIT_HOP_TIME = 0.45;
 const FRUIT_HOP_RISE = 0.9;
 // ...and the WHOLE hop is lifted by this much, so the clump comes to rest at
@@ -747,6 +754,12 @@ export class Player {
   private spinBox = new THREE.Box3();
   private enemyTouch = new THREE.Box3(); // scratch: shrunken enemy touch box
   private sparks: { mesh: THREE.Mesh; vel: THREE.Vector3; life: number; maxLife: number; dust?: boolean }[] = [];
+  // PS1 puff bookkeeping. The landing burst needs the descent speed from the
+  // step BEFORE touchdown — by the time `grounded` flips, vVel has been zeroed
+  // by the landing itself, so it has to be carried forward a tick.
+  private pfWasGrounded = true;
+  private pfPrevVVel = 0;
+  private pfWasSlamming = false;
   private runStepSign = 1; // footfall edge detector for the run dust trail
   private jumpPose = 0; // on-foot jump: overhead arm throw + leg tuck (Crash reference)
   // One wumpa out of a smashed crate, through its whole life.
@@ -1336,6 +1349,7 @@ export class Player {
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
       this.updateSparks(dt);
+      this.updatePuffs();
       this.updateFlyBoard(dt, level);
       this.updateFruit(dt);
       this.syncVisual(input, dt);
@@ -1350,6 +1364,7 @@ export class Player {
       this.stepHang(dt, input, level);
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSparks(dt);
+      this.updatePuffs();
       this.updateFlyBoard(dt, level);
       this.updateFruit(dt);
       this.syncVisual(input, dt);
@@ -1937,6 +1952,7 @@ export class Player {
       }
     }
     this.updateSparks(dt);
+    this.updatePuffs();
     this.updateFlyBoard(dt, level);
     this.updateFruit(dt);
 
@@ -6064,28 +6080,83 @@ export class Player {
     }
   }
 
-  // Ground dust/smoke kicked up by the baseball slide: pale, low, drifting out
-  // behind the plant — floats and drags instead of arcing like a spark.
+  // Ground dust kicked up under the feet: slides, run steps, scrubs. One call
+  // into the shared PS1 puff system, which owns what dust actually looks like
+  // — this only says WHERE and HOW MUCH. The surface under the board picks the
+  // colour and the spread, so the same call reads as sand, grit or nothing
+  // much on grass without the caller knowing which it is standing on.
   private emitDust(count: number): void {
-    const back = this.axisF.clone().multiplyScalar(-Math.sign(this.speed || 1));
-    for (const s of this.sparks) {
-      if (count <= 0) break;
-      if (s.life > 0) continue;
-      count--;
-      s.dust = true;
-      s.maxLife = 0.4 + Math.random() * 0.35;
-      s.life = s.maxLife;
-      (s.mesh.material as THREE.MeshBasicMaterial).color.setHex(0xd8cdb6); // pale dust
-      s.mesh.visible = true;
-      s.mesh.position.set(
-        this.pos.x + (Math.random() - 0.5) * 0.7,
-        this.pos.y + 0.06,
-        this.pos.z + (Math.random() - 0.5) * 0.7,
-      );
-      s.vel
-        .set((Math.random() - 0.5) * 1.4, 0.5 + Math.random() * 0.9, (Math.random() - 0.5) * 1.4)
-        .addScaledVector(back, 0.8 + Math.random() * 1.6);
+    puffs.burst('dustStep', this.pos.x, this.pos.y + 0.05, this.pos.z, {
+      count,
+      dir: PUFF_UP,
+      surface: surfaceFromName(this.surfaceName),
+      groundY: this.pos.y,
+      parentVel: this.vel3(PUFF_VEL),
+      strength: Math.min(1.6, 0.6 + Math.abs(this.speed) / 18),
+    });
+  }
+
+  /** Planar travel as a vector — what the puffs inherit from a moving skater. */
+  private vel3(out: THREE.Vector3): THREE.Vector3 {
+    return out.set(this.axisF.x * this.speed, 0, this.axisF.z * this.speed);
+  }
+
+  // Everything the puff system needs from a step: the landing burst, the
+  // rolling trail, and the skid. Called from every path that ticks the sparks,
+  // so a rope or a ledge grab cannot silently stop the bookkeeping and leave a
+  // stale "was grounded" behind.
+  private updatePuffs(): void {
+    const surf = surfaceFromName(this.surfaceName);
+    const landed = this.grounded && !this.pfWasGrounded;
+    if (landed) {
+      // Impact strength IS the descent speed. Everything downstream — puff
+      // count, size, how far the cloud spreads on the deck — scales off it, so
+      // a drop off a kerb and a drop off the tower are the same effect at two
+      // strengths rather than two effects.
+      const fall = Math.max(0, -this.pfPrevVVel);
+      if (fall > 3.5) {
+        const str = Math.min(2.2, 0.3 + (fall - 3.5) / 9);
+        const heavy = this.pfWasSlamming || fall > 17;
+        puffs.burst(
+          this.pfWasSlamming ? 'groundPound' : heavy ? 'dustLandHeavy' : 'dustLand',
+          this.pos.x,
+          this.pos.y + 0.04,
+          this.pos.z,
+          { dir: PUFF_UP, surface: surf, groundY: this.pos.y, strength: str },
+        );
+      }
+      // A landing restarts the rolling line: without this the trail would draw
+      // a stripe from wherever the wheels last touched down.
+      puffs.cutTrail('wheel');
+      puffs.cutTrail('skid');
     }
+    this.pfWasGrounded = this.grounded;
+    this.pfPrevVVel = this.vVel;
+    this.pfWasSlamming = this.slamActive;
+
+    // Rolling and skidding are DISTANCE-driven, so the line is even at any
+    // speed and identical at any frame rate.
+    const rolling =
+      this.grounded && this.state === 'ride' && !this.sliding && Math.abs(this.speed) > 7;
+    if (rolling)
+      puffs.trail('wheel', 'dustWheel', this.pos.x, this.pos.y + 0.04, this.pos.z, {
+        dir: PUFF_UP,
+        surface: surf,
+        groundY: this.pos.y,
+        parentVel: this.vel3(PUFF_VEL),
+        strength: Math.min(1.5, Math.abs(this.speed) / 16),
+      });
+    else puffs.cutTrail('wheel');
+
+    if (this.grounded && this.sliding)
+      puffs.trail('skid', 'dustSkid', this.pos.x, this.pos.y + 0.04, this.pos.z, {
+        dir: PUFF_UP,
+        surface: surf,
+        groundY: this.pos.y,
+        parentVel: this.vel3(PUFF_VEL),
+        strength: Math.min(1.6, 0.7 + Math.abs(this.speed) / 20),
+      });
+    else puffs.cutTrail('skid');
   }
 
   private updateSparks(dt: number): void {
@@ -6733,10 +6804,23 @@ export class Player {
   }
 
   private smashCrate(level: Level, c: Crate): void {
+    const wasAlive = c.alive;
+    PUFF_C.copy(c.box.getCenter(PUFF_C));
+    const crateFloor = c.box.min.y;
     level.breakCrate(c);
     // switches and metal never actually broke — no tally, no reward
     if (c.alive) return;
     if (!c.nitroBang) this.cratesBroken++; // green '!' sits outside the gem tally
+    // The box going is a DUST event, not a wood-chip event: a burst at the
+    // crate's own centre, its flat ring on the deck under it, and the haze it
+    // leaves behind — all three are children of the one preset, fired off one
+    // seed so the whole cloud replays identically.
+    if (wasAlive)
+      puffs.burst('crateSmash', PUFF_C.x, PUFF_C.y, PUFF_C.z, {
+        surface: 'wood',
+        groundY: crateFloor,
+        strength: 1,
+      });
     this.score(CONST.ptsCrate, 'Box');
     this.crateReward(c);
   }

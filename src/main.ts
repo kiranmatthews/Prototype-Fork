@@ -31,6 +31,7 @@ import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile } from "./replay";
 import { Editor } from "./editor";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { puffs, PUFF_PRESETS } from "./puffs";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -744,6 +745,13 @@ let current: LevelEntry =
   findLevel(localStorage.getItem("protoLevelId") ?? "") ??
   findLevel(DEFAULT_LEVEL_ID)!;
 let level = new Level(scene, current);
+// PS1 smoke and dust. One system for every soft effect; it owns its own pooled
+// buffers and adds a handful of meshes to the scene that outlive level swaps
+// (they carry userData.shared, so Level.dispose() leaves them alone).
+puffs.attach(scene);
+// ?lite is the low-end path everywhere else in this file, so it is here too:
+// fewer puffs, simpler rings, no child layers.
+puffs.setQuality(LITE_RENDER ? "low" : "high");
 const player = new Player(scene);
 
 // ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
@@ -1016,7 +1024,9 @@ function switchLevel(id: string): void {
   }
   if (editor.active && editor.targetId !== entry.id) editor.exit(); // leaving the level under edit closes it
   level.dispose();
+  puffs.clear(); // no cloud from the level you just left hanging over the new one
   level = new Level(scene, entry);
+  puffs.attach(scene);
   // Adopt the target level's relic shelf BEFORE respawning, so the run just
   // left banks its crystal and gems against the level they were earned in.
   player.enterLevel(entry.id);
@@ -1050,7 +1060,9 @@ function switchLevel(id: string): void {
 function rebuildLevel(): void {
   current = findLevel(current.id) ?? current; // pick up the just-saved data/name
   level.dispose();
+  puffs.clear();
   level = new Level(scene, current);
+  puffs.attach(scene);
   player.respawn(level, true);
   applyRunModes();
   applyTheme();
@@ -1963,6 +1975,10 @@ function frame(): void {
   // corpse; the respawn teleport re-snaps the rig when play resumes
   if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
   if (split2p) updateCamera2(dt);
+  // Puffs integrate on the RENDER clock, not the fixed step: they are pure
+  // decoration with no gameplay authority, and they must billboard against the
+  // camera basis that was settled a line ago or they lag the shot by a frame.
+  puffs.update(dt, camera);
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
@@ -2041,6 +2057,8 @@ frame();
 
 // Smoke-test / console-poking hook.
 (window as unknown as Record<string, unknown>).__game = {
+  puffs,
+  PUFF_PRESETS,
   player,
   level,
   input,
