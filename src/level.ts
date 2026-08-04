@@ -1774,13 +1774,7 @@ export class Level {
     pop: boolean;
   }[] = [];
   private glintT = 0;
-  private blastMeshes: {
-    outer: THREE.Mesh;
-    inner: THREE.Mesh;
-    ex: { center: THREE.Vector3; t: number; radius: number };
-  }[] = [];
   private blastBroken: Crate[] = []; // crates broken by blasts, for the player to tally
-  private static blastGeo = new THREE.SphereGeometry(1, 10, 8);
   private checkerTex: THREE.CanvasTexture | null = null;
 
   // THE DEFAULT SURFACE. This used to be a literal white/grey checkerboard with
@@ -4562,25 +4556,6 @@ export class Level {
         }
       }
     }
-    for (let i = this.blastMeshes.length - 1; i >= 0; i--) {
-      const b = this.blastMeshes[i];
-      const r = Math.max(
-        0.01,
-        b.ex.radius * Math.min(1, b.ex.t / CONST.blastGrow),
-      );
-      b.outer.scale.setScalar(r);
-      b.inner.scale.setScalar(r * 0.55);
-      const fade = Math.max(0, 1 - b.ex.t / 0.6);
-      (b.outer.material as THREE.MeshBasicMaterial).opacity = 0.55 * fade;
-      (b.inner.material as THREE.MeshBasicMaterial).opacity = 0.9 * fade;
-      if (b.ex.t > 0.6) {
-        this.root.remove(b.outer);
-        this.root.remove(b.inner);
-        (b.outer.material as THREE.Material).dispose();
-        (b.inner.material as THREE.Material).dispose();
-        this.blastMeshes.splice(i, 1);
-      }
-    }
     for (let i = this.explosions.length - 1; i >= 0; i--) {
       if (this.explosions[i].t > 0.7) this.explosions.splice(i, 1);
     }
@@ -4773,29 +4748,6 @@ export class Level {
       center.z,
       { strength: 1.2 },
     );
-    const outer = new THREE.Mesh(
-      Level.blastGeo,
-      new THREE.MeshBasicMaterial({
-        color: 0xff7a28,
-        transparent: true,
-        opacity: 0.55,
-      }),
-    );
-    const inner = new THREE.Mesh(
-      Level.blastGeo,
-      new THREE.MeshBasicMaterial({
-        color: 0xfff2c8,
-        transparent: true,
-        opacity: 0.9,
-      }),
-    );
-    outer.position.copy(center);
-    inner.position.copy(center);
-    outer.scale.setScalar(0.01);
-    inner.scale.setScalar(0.01);
-    this.root.add(outer);
-    this.root.add(inner);
-    this.blastMeshes.push({ outer, inner, ex });
   }
 
   consumeBlastBroken(): Crate[] {
@@ -4905,13 +4857,6 @@ export class Level {
     this.pops.length = 0;
     this.explosions.length = 0;
     this.blastBroken.length = 0;
-    for (const b of this.blastMeshes) {
-      this.root.remove(b.outer);
-      this.root.remove(b.inner);
-      (b.outer.material as THREE.Material).dispose();
-      (b.inner.material as THREE.Material).dispose();
-    }
-    this.blastMeshes.length = 0;
 
     if (!hard && this.activeCheckpoint) {
       const cpSnap = this.activeCheckpoint;
