@@ -36,6 +36,7 @@ const FRUIT_SCREEN = 0.085;
 // frame in the hot path is exactly the allocation churn the pooled particle
 // system exists to avoid.
 const PUFF_UP = new THREE.Vector3(0, 1, 0);
+const PUFF_DIR = new THREE.Vector3();
 const PUFF_VEL = new THREE.Vector3();
 const PUFF_C = new THREE.Vector3();
 const FRUIT_HOP_TIME = 0.45;
@@ -5310,7 +5311,8 @@ export class Player {
       this.comboTimer = CONST.comboWindow;
     }
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
-    if (this.underK < 0.5) this.emitSparks(1, 0xffb545, 1); // grind sparks off the truck (hands make no sparks)
+    // (grind sparks now stream from the puff system's distance trail — see
+    // updatePuffs — so nothing is emitted per-frame here)
 
     if (input.jumpHeld) {
       this.charging = true;
@@ -5503,7 +5505,13 @@ export class Player {
         : 0;
     this.grindStickStale =
       Math.abs(this.rawInput.moveX) > 0.3 ? Math.sign(this.rawInput.moveX) : 0;
-    this.emitSparks(6, 0xffb545, 1.6); // landing-on-the-rail burst
+    // landing-on-the-rail burst: one bright spray of the same sparks the
+    // grind itself will now stream
+    PUFF_DIR.set(-this.axisF.x * Math.sign(this.speed || 1), 0.5, -this.axisF.z * Math.sign(this.speed || 1));
+    puffs.burst('spark', this.pos.x, this.pos.y + 0.06, this.pos.z, {
+      dir: PUFF_DIR,
+      strength: Math.min(1.6, 0.8 + Math.abs(this.speed) / 20),
+    });
     sfx.play('railLand', 0.8);
     // THPS SPEED-KEEP: the rail REDIRECTS the speed you brought instead of
     // dispensing its own. A clean aligned hit keeps everything; a hard
@@ -6133,6 +6141,23 @@ export class Player {
     this.pfWasGrounded = this.grounded;
     this.pfPrevVVel = this.vVel;
     this.pfWasSlamming = this.slamActive;
+
+    // GRIND SPARKS: same distance-driven trail as the dust, on the spark
+    // preset. They leave the truck aimed backwards along the rail with a
+    // little lift, and the preset's cone fans them; speed feeds strength, so
+    // a fast grind throws a shower and a crawl barely spits. Not gated on
+    // `grounded` — a grind isn't — so it runs before the deck block below.
+    const grinding = this.state === 'grind' && Math.abs(this.speed) > 4;
+    if (grinding) {
+      const sgn = Math.sign(this.speed || 1);
+      PUFF_DIR.set(-this.axisF.x * sgn, 0.35, -this.axisF.z * sgn);
+      puffs.trail('grind', 'spark', this.pos.x, this.pos.y + 0.06, this.pos.z, {
+        emit: true,
+        dir: PUFF_DIR,
+        parentVel: this.vel3(PUFF_VEL),
+        strength: Math.min(1.6, Math.abs(this.speed) / 14),
+      });
+    } else puffs.cutTrail('grind');
 
     // Rolling and skidding are DISTANCE-driven, so the line is even at any
     // speed and identical at any frame rate. Both are told where we are EVERY

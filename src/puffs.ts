@@ -402,6 +402,28 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
     count: [2, 3], surfaceTint: 0.8,
   },
 
+  // GRIND SPARKS. The one preset that is allowed to be fast and sharp,
+  // because a spark IS fast and sharp: a tiny additive dart, stretched along
+  // its own velocity, that leaves the truck hot, arcs under heavy gravity and
+  // SHRINKS as it cools — grow below 1 — dying white-yellow through orange
+  // into ember red in under half a second. Laid down by DISTANCE along the
+  // rail like the other trails, so a fast grind throws a denser shower and a
+  // crawl barely spits.
+  spark: {
+    blend: 'add', orient: 'velocity',
+    ring: [5, 6], multiCentre: 0, halo: 0,
+    size: [0.025, 0.05], aspect: [1.2, 1.6],
+    grow: [0.5, 0.8], growCurve: 0.6, stretch: 0.12,
+    wobble: [0.06, 0.12], swirl: [0.03, 0.08], wobbleRate: [0.5, 1.0],
+    neighbour: 0.9, centreDrift: 0, spin: 0,
+    speed: [2.5, 5.5], spread: 0.55, up: [0.3, 1.2], gravity: [7, 11],
+    drag: [0.4, 1.0], wind: 0, turbulence: 0,
+    life: [0.15, 0.4],
+    centre: 0xfff2b8, inner: 0xffa235, outer: 0x932c08, fadeTo: 0x8a2408,
+    alpha: [0.7, 0.9], fadeIn: 0, outerAlpha: 0, bright: [1.2, 1.8],
+    count: [4, 8], spacing: [0.25, 0.45],
+  },
+
   // --- events --------------------------------------------------------------
   crateSmash: {
     blend: 'alpha', orient: 'billboard',
