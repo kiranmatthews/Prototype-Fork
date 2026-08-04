@@ -4763,6 +4763,16 @@ export class Level {
     const ex = { center, t: 0, radius, safe };
     this.explosions.push(ex);
     sfx.play("tntBoom", 0.9);
+    // The puff cloud carries the crate's temperament: TNT goes up fiery
+    // yellow-into-red, nitro in the same bang gone radioactive green. Chained
+    // crates each fire their own burst, so a stack reads as a rolling series.
+    puffs.burst(
+      c.tnt ? "boomTnt" : "boomNitro",
+      center.x,
+      center.y + 0.2,
+      center.z,
+      { strength: 1.2 },
+    );
     const outer = new THREE.Mesh(
       Level.blastGeo,
       new THREE.MeshBasicMaterial({
@@ -4802,6 +4812,11 @@ export class Level {
       enemy.flungT = 0;
       sfx.play("fruitSpun", 0.8); // the "spun away" zing
     } else {
+      // The squash pop gets a little cartoon poof where the body was — the
+      // stomp (and the slide/uber plough-through) reads as a puff of dust
+      // rather than a mesh blinking out.
+      const ep = enemy.group.position;
+      puffs.burst("enemyPoof", ep.x, ep.y + 0.35, ep.z, {});
       this.pops.push({ obj: enemy.group, t: 0.12 });
       sfx.play("enemyDown", 0.7);
     }

@@ -474,6 +474,91 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
     children: ['dustLandHeavy'],
   },
 
+  // EXPLOSIONS. One fireball recipe at two temperatures: a bright additive
+  // core thrown outward in every direction that cools along the ramp as it
+  // dies, with a slower alpha smoke child that hangs and rises after the
+  // flash is gone. TNT burns white-yellow through orange into ember red;
+  // nitro is the same bang gone radioactive — acid green down to a sickly
+  // bottle-glass glow.
+  boomTnt: {
+    blend: 'add', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0.5, halo: 0,
+    size: [0.28, 0.5], aspect: [0.95, 1.2],
+    grow: [2.4, 3.2], growCurve: 0.25,
+    wobble: [0.2, 0.3], swirl: [0.07, 0.15], wobbleRate: [0.4, 0.7],
+    neighbour: 0.9, centreDrift: 0.15, spin: [-1.4, 1.4],
+    speed: [3.0, 5.5], spread: 3.14, up: [0.4, 1.2], gravity: [0.2, 0.8],
+    drag: [3.2, 4.6], wind: 0.2, turbulence: [0.12, 0.26], turbRate: [0.8, 1.3],
+    life: [0.3, 0.55],
+    centre: 0xfff4c0, inner: 0xffb32e, outer: 0x8c2410, fadeTo: 0x481208,
+    alpha: [0.6, 0.8], fadeIn: 0, outerAlpha: 0, bright: [1.5, 2.0],
+    count: [8, 11],
+    children: ['boomSmoke'],
+  },
+  boomNitro: {
+    blend: 'add', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0.5, halo: 0,
+    size: [0.28, 0.5], aspect: [0.95, 1.2],
+    grow: [2.4, 3.2], growCurve: 0.25,
+    wobble: [0.2, 0.3], swirl: [0.07, 0.15], wobbleRate: [0.4, 0.7],
+    neighbour: 0.9, centreDrift: 0.15, spin: [-1.4, 1.4],
+    speed: [3.0, 5.5], spread: 3.14, up: [0.4, 1.2], gravity: [0.2, 0.8],
+    drag: [3.2, 4.6], wind: 0.2, turbulence: [0.12, 0.26], turbRate: [0.8, 1.3],
+    life: [0.3, 0.55],
+    centre: 0xeaffc8, inner: 0x7dff32, outer: 0x14501e, fadeTo: 0x0a2e14,
+    alpha: [0.6, 0.8], fadeIn: 0, outerAlpha: 0, bright: [1.5, 2.0],
+    count: [8, 11],
+    children: ['boomSmokeNitro'],
+  },
+  boomSmoke: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.3, 0.5], aspect: [1.0, 1.3],
+    grow: [1.8, 2.4], growY: [2.2, 2.9], growCurve: 0.55,
+    wobble: [0.16, 0.26], swirl: [0.06, 0.13], wobbleRate: [0.25, 0.45],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.4, 0.4],
+    speed: [0.5, 1.2], spread: 2.4, up: [0.5, 1.1], gravity: [0.1, 0.4],
+    buoyancy: [0.4, 0.9], drag: [1.4, 2.2], wind: 0.6,
+    turbulence: [0.14, 0.28], turbRate: [0.4, 0.7],
+    life: [0.7, 1.3],
+    centre: 0x6e6258, inner: 0x4a4139, outer: 0x1c1814,
+    alpha: [0.24, 0.34], fadeIn: 0.14, outerAlpha: 0,
+    count: [4, 6], surfaceTint: 0,
+  },
+  boomSmokeNitro: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0, halo: 0,
+    size: [0.3, 0.5], aspect: [1.0, 1.3],
+    grow: [1.8, 2.4], growY: [2.2, 2.9], growCurve: 0.55,
+    wobble: [0.16, 0.26], swirl: [0.06, 0.13], wobbleRate: [0.25, 0.45],
+    neighbour: 0.95, centreDrift: 0, spin: [-0.4, 0.4],
+    speed: [0.5, 1.2], spread: 2.4, up: [0.5, 1.1], gravity: [0.1, 0.4],
+    buoyancy: [0.4, 0.9], drag: [1.4, 2.2], wind: 0.6,
+    turbulence: [0.14, 0.28], turbRate: [0.4, 0.7],
+    life: [0.7, 1.3],
+    centre: 0x527a4a, inner: 0x35533a, outer: 0x121c14,
+    alpha: [0.24, 0.34], fadeIn: 0.14, outerAlpha: 0,
+    count: [4, 6], surfaceTint: 0,
+  },
+
+  // A squashed enemy pops in a small cartoon poof — pale, quick, thrown
+  // every way at once and gone in half a second, so the bounce reads and the
+  // body's disappearance has a where.
+  enemyPoof: {
+    blend: 'alpha', orient: 'billboard',
+    ring: [5, 7], multiCentre: 0, halo: 0,
+    size: [0.1, 0.18], aspect: [0.95, 1.2],
+    grow: [2.0, 2.8], growCurve: 0.3,
+    wobble: [0.18, 0.28], swirl: [0.06, 0.14], wobbleRate: [0.4, 0.7],
+    neighbour: 0.9, centreDrift: 0, spin: [-1.0, 1.0],
+    speed: [1.4, 2.6], spread: 3.14, up: [0.5, 1.1], gravity: [1.6, 2.6],
+    drag: [3.2, 4.6], wind: 0.2, turbulence: [0.08, 0.18], turbRate: [0.8, 1.3],
+    life: [0.3, 0.5],
+    centre: 0xf4eee2, inner: 0xd8cfbe, outer: 0x5a5348,
+    alpha: [0.4, 0.55], fadeIn: 0.03, outerAlpha: 0,
+    count: [5, 7], surfaceTint: 0,
+  },
+
   torchSmoke: {
     blend: 'add', orient: 'billboard',
     ring: [5, 8], multiCentre: 0, halo: 0, haloAlpha: 1,

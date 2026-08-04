@@ -3760,6 +3760,17 @@ export class Player {
       hit.normal.y > 0.6
     ) {
       this.pos.y = hit.y;
+      // Each thud kicks up a dust cloud sized by the PRE-bounce fall speed
+      // (read before the flip below), same scale rule as an ordinary landing —
+      // the final settle already gets its burst from the landed check in
+      // updatePuffs, so together the whole tumble is dusted.
+      const ragFall = -this.vVel;
+      puffs.burst('dustLand', this.pos.x, this.pos.y + 0.04, this.pos.z, {
+        dir: PUFF_UP,
+        surface: surfaceFromName(hit.name),
+        groundY: this.pos.y,
+        strength: Math.min(2.2, 0.3 + (ragFall - 3.2) / 9),
+      });
       this.vVel = -this.vVel * TUNING.ragBounce;
       this.speed *= 0.72;
       this.ragBounces++;
@@ -3768,7 +3779,6 @@ export class Player {
       this.ragAngVel.y += (Math.random() - 0.5) * 6 * TUNING.ragSpin;
       this.ragAngVel.z += (Math.random() - 0.5) * 4 * TUNING.ragSpin;
       sfx.play('crunch', 0.45, 1.1 + Math.random() * 0.35); // meaty thud, pitch-varied
-      this.emitDust(4);
       this.emitSparks(3, 0xffb545, 1.2);
     } else if (landNow && hit) {
       this.pos.y = hit.y;
