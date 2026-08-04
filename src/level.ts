@@ -11000,19 +11000,27 @@ export class Level {
     this.checkpoint(0, -44);
 
     // --- B (LEFT, -x, SIDE-SCROLL): the lift bank, y0 -> y12 ----------------
-    // The zone covers the SIDE-SCROLL STRETCH ONLY — it stops short of both
-    // corner bends, and that is not a detail.
+    // A ZONE SPANS NODE TO NODE IN X, AND IS TIGHT TO THE CROSS LEG IN Z.
+    // That rule is what keeps the spine and the zone from fighting, and it is
+    // worth stating once here because all four side-scroll zones follow it.
     //
-    // It used to swallow the bends, to spare the camera a swing-and-return at
-    // the corner. But a zone is not a camera hint: inside one the stick is
-    // SWAPPED (player.ts, `ctl`) so left/right becomes the throttle and
-    // up/down becomes the steer. Widened to x +6 it reached back onto the
-    // approach corridor, which runs at x 0 — so a player still running down
-    // -Z crossed the edge and, without touching the stick, had their held
-    // forward read as zero throttle and a full sideways steer. They stopped
-    // dead, or got walked off the side. Let the lane arc you round the bend
-    // first; the zone takes over once you are actually travelling west.
-    sideScroll(-42, -5, -56, -41, "W");
+    // The lane's corner arc and the zone both want to own the frame. The arc
+    // eases the camera toward the corner; the zone forces it back to facing
+    // down-course, because that IS the side-scroll shot. Measured at this
+    // corner, the lane was asking for -45 degrees and the zone snapped it back
+    // to 0 four units later — swing out, snap back, on every cross-stretch.
+    //
+    // The fix is not to shrink the arc (that only makes the snap sharper) or
+    // to swallow the bend (that reaches back onto the -Z approach and swaps
+    // the stick while you are still running forward). It is to start the zone
+    // AT THE CORNER NODE, where the arc has not begun yet and the lane is
+    // still pointing straight down-course — the same thing the zone forces.
+    // The handover is then continuous, and the whole arc lives inside the
+    // zone where nothing reads it.
+    //
+    // In z the zone hugs the cross leg only, so the -Z approach never enters
+    // it: this leg sits at z -48 and the approach corridor ends at z -41.
+    sideScroll(-47, 0, -54, -42, "W");
     fmover(-11, 1, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
     fmover(-19, 4, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
     fmover(-27, 7, -45, 4.5, 4.5, "y", 3.2, 0.75, Math.PI / 2);
@@ -11083,11 +11091,21 @@ export class Level {
     // section that has been deleted, which is what the playtest said, and it
     // is the same trap that was throwing you off the corridor at B, H and J.
     //
-    // So the zone owns the CROSSING and neither isle's far end: x -44..2
-    // leaves 16 units of runway to land on and turn west in, and stops 2 units
-    // into the landing so the lane can take the corner into G. You cross the
-    // edge already heading west, which is the direction the zone is about.
-    sideScroll(-44, 2, -208, -196, "W");
+    // F IS THE ONE THAT CANNOT HAVE IT BOTH WAYS, so this zone breaks the
+    // node-to-node rule on purpose.
+    //
+    // At B, H and J the corner node is a place you ARRIVE travelling -Z and
+    // then turn, so starting the zone there is free. Here the lift stair drops
+    // you onto the runway AT the node (x 10) — the corner and the landing are
+    // the same point. Start the zone there and your stick swaps the instant
+    // you touch down, which is exactly what made this section read as deleted.
+    //
+    // So the zone starts at the runway's west lip instead: you land at x 10
+    // with your own frame, turn west across 12 units of runway, and the
+    // crossing takes over as you leave it. The cost is a small camera swing
+    // over those 12 units, where the lane's arc is still visible to the rig
+    // before the zone flattens it. Landing beats framing.
+    sideScroll(-48, -2, -208, -196, "W");
     this.ropeSwing(-8, 34.6, -202, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
     this.ropeSwing(-22, 34.6, -202, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
     this.ropeSwing(-36, 34.6, -202, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
@@ -11115,7 +11133,7 @@ export class Level {
     // --- H (SWITCHBACK, +x, SIDE-SCROLL): the lift tower, y34 -> y56 --------
     // Eight burning lifts, each a step higher — the long climb, played flat
     // against the screen like the classic towers.
-    sideScroll(-44, 3, -286, -270, "E"); // stops short of the G->H and H->I bends — see the note on B
+    sideScroll(-48, 9, -284, -272, "E"); // node to node (x -48..9), tight to the leg — see the note on B
     fmover(-41, 36, -275, 4.5, 4.5, "y", 2.75, 0.7, 0);
     fmover(-35, 38.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
     fmover(-29, 41.5, -275, 4.5, 4.5, "y", 2.75, 0.75, Math.PI / 2);
@@ -11139,7 +11157,7 @@ export class Level {
     this.checkpoint(56, -324, 9);
 
     // --- J (LEFT, -x, SIDE-SCROLL): everything on the beat, y56 -> y64 ------
-    sideScroll(-37, 1, -331, -317, "W"); // stops short of the I->J and J->K bends — see the note on B
+    sideScroll(-43, 9, -330, -318, "W"); // node to node (x -43..9), tight to the leg — see the note on B
     padB(-2, 56, -324);
     fmover(-9.5, 56, -324, 4.5, 4.5, "x", 4, 0.6, 0);
     this.movingRail(-19, 57.7, -324, 10, 90, "z", 4, 0.6, Math.PI / 2);
