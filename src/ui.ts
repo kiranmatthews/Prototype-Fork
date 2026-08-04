@@ -1650,6 +1650,47 @@ export class UI {
         transform: translateY(-14%);
       }
       .hud-pop { animation: hudpop 0.22s ease-out; }
+      /* IDLE BOB. Every persistent readout floats gently, so the corners
+         feel alive rather than pasted on. It rides on the ROW, never on the
+         digits or the icons themselves: the pop animation already owns the
+         children's transform (and the face icon owns its own optical offset),
+         and two animations on one property just fight. A row is also the only
+         thing that moves the flat digits and the 3D icon TOGETHER — the crate,
+         fruit and relic art is drawn straight into these boxes by drawIcons(),
+         which re-measures every frame, so the models follow the DOM for free.
+         The same is true of the flying-fruit target, which reads the wumpa
+         icon's live rect and so lands on it wherever the bob has it.
+
+         Slow and small on purpose: a ~3px sway over 5.5s.
+
+         ONE PERIOD FOR EVERYTHING, with a small cascading NEGATIVE delay down
+         each stack. The delays are negative so the rows start already spread
+         across the cycle instead of swinging up together on the first frame,
+         and they are SMALL — an eighth of a cycle between neighbours — because
+         the counter rows are only 8px apart. Give them separate periods and
+         they eventually drift into antiphase and close most of that gap, which
+         reads as the HUD collapsing on itself. An eighth of a cycle moves two
+         neighbours barely 1.5px relative to each other, so the spacing holds
+         and the stack reads as one thing breathing with a slight wave down it.
+         Transform only, so nothing reflows. */
+      @keyframes hudbob {
+        0%, 100% { transform: translateY(calc(var(--bob) * -1)); }
+        50% { transform: translateY(var(--bob)); }
+      }
+      .hud-counter, .hud-scoreplate, .hud-ttclock {
+        --bob: clamp(1.5px, 0.3vh, 3px);
+        animation: hudbob 5.5s ease-in-out infinite;
+        will-change: transform;
+      }
+      .hud-tl .hud-counter:nth-child(2) { animation-delay: -0.45s; }
+      .hud-tl .hud-counter:nth-child(3) { animation-delay: -0.9s; }
+      .hud-tr .hud-counter { animation-delay: -0.25s; }
+      .hud-scoreplate { animation-delay: -0.7s; }
+      .hud-ttclock { animation-delay: -0.25s; }
+      /* A player who has asked the OS for less motion gets none of it. */
+      @media (prefers-reduced-motion: reduce) {
+        .hud-counter, .hud-scoreplate, .hud-ttclock { animation: none; }
+      }
       @keyframes hudpop {
         0% { transform: scale(1.45); }
         100% { transform: scale(1); }
