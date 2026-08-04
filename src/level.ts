@@ -11164,22 +11164,38 @@ export class Level {
     this.finishGate(70, this.finishZ, -43);
 
     // --- THE CAMERA SPINE ----------------------------------------------------
-    // The -z stretches ride the lane (radius 14, so the swing starts well
-    // before each bend); the cross-stretches are ZONES and never swing at
-    // all. Every corner isle runs long in the outgoing direction, so the
-    // frame has settled before the first obstacle asks for a jump.
+    // The -z stretches ride the lane; the cross-stretches are ZONES and never
+    // swing at all. Every corner isle runs long in the outgoing direction, so
+    // the frame has settled before the first obstacle asks for a jump.
+    //
+    // CORNER RADIUS 5, and the number matters more than it looks. The lane's
+    // tangent is not just the camera — the CONTROL FRAME eases onto it too
+    // (player.ts, axisF), so screen-up is whatever the spine says. A corner
+    // radius is therefore how far back up the straight the steering starts
+    // turning, and these corner isles are only 10-20 units across.
+    //
+    // It was 9, and I raised it to 14 "so the swing starts well before the
+    // corner, leading you into the next stretch" — thinking about the camera
+    // and forgetting the stick rides the same tangent. Measured, that put the
+    // A->B lane 17 degrees off straight at z -40 and 31 at z -44, on a
+    // corridor slab that runs dead straight to z -41. You hold forward on a
+    // visibly straight platform and get walked sideways off it. At I->J the
+    // two 14s ate a 46-unit leg from both ends and left almost no straight at
+    // all. Five keeps the arc inside the corner isle where the turn actually
+    // happens; the camera still eases (camF lerps at 3.5/s in main.ts), it
+    // just no longer starts turning you a bus-length early.
     const laneNodes: [number, number, number, number][] = [
       [0, 10, 0, 0], // behind spawn
-      [0, -48, 14, 0], // A->B: left into the side-scroll
-      [-47, -48, 14, 12], // B->C: right, onto the mid deck
-      [-47, -112, 14, 12], // C->D: the first switchback
-      [10, -112, 14, 12], // D->E: right
-      [10, -202, 14, 26], // E->F: left, up the lift stair
-      [-48, -202, 14, 26], // F->G: right
-      [-48, -278, 14, 34], // G->H: the tower switchback
-      [9, -278, 14, 56], // H->I: right, off the tower
-      [9, -324, 14, 56], // I->J: left into the last side-scroll
-      [-43, -324, 14, 64], // J->K: right
+      [0, -48, 5, 0], // A->B: left into the side-scroll
+      [-47, -48, 5, 12], // B->C: right, onto the mid deck
+      [-47, -112, 5, 12], // C->D: the first switchback
+      [10, -112, 5, 12], // D->E: right
+      [10, -202, 5, 26], // E->F: left, up the lift stair
+      [-48, -202, 5, 26], // F->G: right
+      [-48, -278, 5, 34], // G->H: the tower switchback
+      [9, -278, 5, 56], // H->I: right, off the tower
+      [9, -324, 5, 56], // I->J: left into the last side-scroll
+      [-43, -324, 5, 64], // J->K: right
       [-43, -363, 0, 70], // out through the gate at the summit
     ];
     const rp = roundCorners(laneNodes, false);
