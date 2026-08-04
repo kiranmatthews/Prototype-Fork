@@ -563,7 +563,7 @@ export class UI {
     const tr = div("hud-tr");
     const livesRow = div("hud-counter");
     livesRow.appendChild(div("hud-icon hud-icon-face"));
-    this.livesEl = div("hud-num");
+    this.livesEl = div("hud-num hud-lives");
     livesRow.appendChild(this.livesEl);
     tr.appendChild(livesRow);
     this.livesRowEl = livesRow;
@@ -1861,6 +1861,11 @@ export class UI {
       .hud-ttfreeze { font-size: clamp(15px, 2.3vh, 22px); margin-top: 1px; }
       .hud-boostlabel { font-size: 20px; }
       .hud-tttime { font-size: clamp(50px, 8.7vh, 90px); }
+      /* The lives digit reads against a PAINTING, not a blocky icon, and at
+         the shared .hud-num cap height it sat visibly short of the face
+         beside it. Same clamp as .hud-icon, so the digit is exactly as tall
+         as the portrait. */
+      .hud-lives { font-size: clamp(68px, 10.7vh, 111px); }
       .hud-trickline { font-size: clamp(23px, 3.7vh, 36px); }
       .hud-tricktotal { font-size: clamp(38px, 6.2vh, 60px); margin-top: 4px; }
       .hud-ttres-title { font-size: 42px; }

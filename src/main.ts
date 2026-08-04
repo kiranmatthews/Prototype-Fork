@@ -1462,6 +1462,12 @@ window.addEventListener("keydown", (e) => {
       if (e.code === `Digit${i + 1}`) switchLevel(rows[i].id);
     }
   }
+  if (!editor.active && (e.code === "KeyK" || e.code === "KeyL")) {
+    // playtest warp: skip up and down the course by checkpoint so a section
+    // halfway in doesn't cost a full run to reach
+    if (player.warpCheckpoint(level, e.code === "KeyL" ? 1 : -1))
+      ui.showMessage(e.code === "KeyL" ? "WARP →" : "← WARP", "", 700);
+  }
   if (e.code === "F8") saveReplay(); // playtest capture: input take -> .json
   if (e.code === "F9") toggleVideo(); // playtest capture: canvas -> .webm
 });

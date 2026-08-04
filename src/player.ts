@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
-import { Crate, LaneCursor, Level, RopeSwing, newLaneCursor } from './level';
+import { Checkpoint, Crate, LaneCursor, Level, RopeSwing, newLaneCursor } from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
@@ -24,6 +24,15 @@ const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 // shrink into the counter. Roughly the size of the HUD icon it is flying to,
 // so it arrives looking like the thing it is about to become.
 const FRUIT_SCREEN = 0.085;
+// THE HOP. Crate fruit does one small canned bounce as the box breaks — up
+// about a crate height and back down — and is UNTOUCHABLE by a spin while it
+// does it. Straight off the Crash 3 footage: the box goes, the clump pops, it
+// settles, and the spin that broke the box does not blow it away. 0.45s is
+// spinDuration + spinCooldown, so the swing that opened the crate is always
+// spent before the fruit is fair game again — the earliest a second spin can
+// even start is the frame the hop ends.
+const FRUIT_HOP_TIME = 0.45;
+const FRUIT_HOP_RISE = 0.9;
 // ...and it crosses the screen at this many screen-heights per second, flat.
 // A 16:9 screen is 2.04 of those units corner to corner, so a worst-case trip
 // takes about 0.9s and a typical mid-screen pickup reaches the counter in 0.4s.
@@ -760,6 +769,7 @@ export class Player {
     vel: THREE.Vector3;
     phase: 'off' | 'idle' | 'fly' | 'flung';
     t: number; // seconds in the current phase
+    hop: number; // seconds left of the canned spawn bounce (spin-proof while > 0)
     home: THREE.Vector3; // where it hangs, before the idle bob
     sx: number; // overlay position, screen fractions (0..1)
     sy: number;
@@ -1054,6 +1064,23 @@ export class Player {
     level.reset(hard);
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
     level.playerPos.copy(this.pos); // keep the boulder trigger honest across respawns
+    if (hard) this.runTime = 0;
+    // Respawning at a checkpoint restores the counters it banked; a hard
+    // reset (reset() cleared activeCheckpoint) starts from zero.
+    this.cratesBroken = level.activeCheckpoint ? level.activeCheckpoint.savedCratesBroken : 0;
+    this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
+    this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
+    this.points = level.activeCheckpoint ? level.activeCheckpoint.savedPoints : 0;
+    this.settle(level);
+    this.onRespawn();
+  }
+
+  // Everything a body has to LET GO OF when it is put down somewhere new:
+  // every timer, every latch, every hold on a rail/rope/ledge, and the frame
+  // it faces. Shared by the death respawn and the checkpoint warp, because a
+  // warp that skipped any of this would arrive still grinding a rail that is
+  // now four hundred units behind you.
+  private settle(level: Level): void {
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -1065,13 +1092,6 @@ export class Player {
     this.regrindCd = 0;
     this.lastRail = null;
     this.grindLatched = false;
-    if (hard) this.runTime = 0;
-    // Respawning at a checkpoint restores the counters it banked; a hard
-    // reset (reset() cleared activeCheckpoint) starts from zero.
-    this.cratesBroken = level.activeCheckpoint ? level.activeCheckpoint.savedCratesBroken : 0;
-    this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
-    this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
-    this.points = level.activeCheckpoint ? level.activeCheckpoint.savedPoints : 0;
     this.uberTimer = 0;
     this.slideFromWalk = false;
     this.comboPoints = 0;
@@ -1201,7 +1221,45 @@ export class Player {
       s.life = 0;
       s.mesh.visible = false;
     }
-    this.onRespawn();
+  }
+
+  // Playtest warp: K steps back a checkpoint, L forward. `dir` is -1 or +1.
+  //
+  // The stops are the level's own start plus every checkpoint IN AUTHORING
+  // ORDER, which for every hand-built course is course order. Which one you
+  // are "at" is resolved fresh on each press from whichever stop is nearest,
+  // so it keeps working after you have skated, died or warped — there is no
+  // index to fall out of step with where you actually are.
+  //
+  // Arriving BANKS the checkpoint exactly as smashing it would: you are now
+  // at that point in the course, so a death should return you there, and the
+  // crate snapshot it takes is the honest one for having got here without
+  // breaking anything on the way.
+  warpCheckpoint(level: Level, dir: number): boolean {
+    if (level.runMode) return false; // no checkpoints in a trial/combo run
+    const stops = [{ cp: null as Checkpoint | null, at: level.spawnPos }];
+    for (const cp of level.checkpoints) stops.push({ cp, at: cp.spawnPos });
+    if (stops.length < 2) return false;
+    let near = 0;
+    let best = Infinity;
+    for (let i = 0; i < stops.length; i++) {
+      const d = this.pos.distanceToSquared(stops[i].at);
+      if (d < best) {
+        best = d;
+        near = i;
+      }
+    }
+    const i = near + (dir < 0 ? -1 : 1);
+    if (i < 0 || i >= stops.length) return false;
+    const stop = stops[i];
+    this.laneCursor.s = -1; // a teleport invalidates the lane's continuity bias
+    this.pos.copy(stop.at);
+    level.playerPos.copy(this.pos);
+    this.settle(level);
+    if (stop.cp && !stop.cp.active)
+      level.activateCheckpoint(stop.cp, this.cratesBroken, this.fruit, this.masks, this.points);
+    else if (stop.cp) level.currentSpawn.copy(stop.cp.spawnPos);
+    return true;
   }
 
   // One deterministic fixed step.
@@ -6760,6 +6818,7 @@ export class Player {
       vel: new THREE.Vector3(),
       phase: 'off' as const as (typeof this.fruits)[number]['phase'],
       t: 0,
+      hop: 0,
       home: new THREE.Vector3(),
       sx: 0,
       sy: 0,
@@ -6798,6 +6857,9 @@ export class Player {
       const r = 0.3 * Math.sqrt(i);
       f.phase = 'idle';
       f.t = i * 0.7; // stagger the bob so the clump breathes, not pulses
+      // A HAIR of stagger across the clump so it pops like a handful rather
+      // than one rigid object, but nowhere near enough to read as scatter.
+      f.hop = FRUIT_HOP_TIME + i * 0.02;
       f.mesh.visible = true;
       f.mesh.scale.setScalar(WUMPA_SIZE);
       f.mesh.rotation.set(0, a, 0);
@@ -6925,7 +6987,32 @@ export class Player {
       }
 
       // --- idle: floating in the world, waiting to be picked up ---
-      // Bob and turn on the spot, like a level pickup. It hangs where the
+      // THE SPAWN HOP first: one canned bounce, straight up and back, no
+      // horizontal throw at all. A parabola rather than real gravity, because
+      // it has to land exactly back on `home` every time — this is a flourish
+      // on a collectable, not a physics object, and it must not drift.
+      if (f.hop > 0) {
+        f.hop -= dt;
+        // Clamped BOTH ends, and both ends bite: the per-fruit stagger starts
+        // `hop` above the hop length, so an unclamped u goes negative there
+        // and sinks the fruit into the crate before it ever rises; and the
+        // last step of the timer overshoots zero by up to a frame, so an
+        // unclamped u passes 1 and drives the parabola back down through the
+        // floor — a 0.14-unit dip on the very frame it was supposed to land.
+        const u = Math.min(1, Math.max(0, 1 - f.hop / FRUIT_HOP_TIME));
+        f.mesh.position.y = f.home.y + FRUIT_HOP_RISE * 4 * u * (1 - u);
+        f.mesh.rotation.y += dt * 3.2; // spins a little livelier on the way up
+        // ...and NOTHING can spin it away mid-hop. The spin that broke the
+        // box is still swinging when its fruit appears, so without this the
+        // reward from a spun crate is instantly batted through the floor,
+        // which is the bug this whole hop is here to fix.
+        if (this.reach(0).intersectsBox(
+          FRUIT_BOX.setFromCenterAndSize(f.mesh.position, FRUIT_GRAB),
+        ))
+          this.beginFruitFlight(f, f.mesh.position);
+        continue;
+      }
+      // Then bob and turn on the spot, like a level pickup. It hangs where the
       // crate was — no gravity, nothing to land on, nothing to roll away.
       f.mesh.position.y = f.home.y + Math.sin(f.t * 3) * 0.09;
       f.mesh.rotation.y += dt * 1.8;
@@ -6951,6 +7038,7 @@ export class Player {
   /** Back to the pool, off whichever layer it was on. */
   private retireFruit(f: (typeof this.fruits)[number]): void {
     f.phase = 'off';
+    f.hop = 0;
     f.mesh.visible = false;
     f.mesh.scale.setScalar(WUMPA_SIZE);
     f.mesh.rotation.set(0, 0, 0);
