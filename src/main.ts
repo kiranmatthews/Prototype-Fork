@@ -1114,7 +1114,20 @@ async function openStudioTool(): Promise<void> {
 // playing the deployed build on a phone or a laptop, not sitting in devtools:
 // put #studio on the URL. Deferred so the character model is installed and
 // there is something to click before the panel appears.
-if (location.hash.toLowerCase().includes("studio")) {
+// The SMOKE studio: same idea, different subject. #puffstudio on the URL.
+let puffStudio: { frame: (dt: number) => void } | null = null;
+async function openPuffStudioTool(): Promise<void> {
+  if (puffStudio) return;
+  const mod = await import("./puffstudio");
+  puffStudio = mod.openPuffStudio({
+    camera,
+    scene,
+    onClose: () => (puffStudio = null),
+  });
+}
+if (location.hash.toLowerCase().includes("puffstudio")) {
+  setTimeout(() => void openPuffStudioTool(), 2500);
+} else if (location.hash.toLowerCase().includes("studio")) {
   // Long enough for the character GLB to land. The studio re-reads the body on
   // every interaction anyway, so this is only about what you see first.
   setTimeout(() => void openStudioTool(), 5000);
@@ -1978,6 +1991,7 @@ function frame(): void {
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
   // camera basis that was settled a line ago or they lag the shot by a frame.
+  puffStudio?.frame(dt); // spawns from the live preset before the system ticks
   puffs.update(dt, camera);
   updateAudio(dt);
   sky.position.copy(camera.position);

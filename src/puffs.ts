@@ -328,9 +328,9 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
     // something to smooth away. What the halo ring buys is the FALLOFF, not
     // smoothness: hot core, broad plateau, long tail, exactly as measured off
     // the footage.
-    ring: [7, 8], multiCentre: 0.35, halo: 0.3, haloAlpha: 0.62,
-    size: [0.4, 0.66], aspect: [1.05, 1.3],
-    grow: [3.2, 4.4], growY: [2.4, 3.2], growCurve: 0.45, stretch: 0.03,
+    ring: [7, 8], multiCentre: 0.3, halo: 0.32, haloAlpha: 0.62,
+    size: [0.22, 0.34], aspect: [1.0, 1.15],
+    grow: [2.0, 2.7], growY: [1.7, 2.2], growCurve: 0.45, stretch: 0.012,
     wobble: [0.22, 0.34], swirl: [0.16, 0.3], wobbleRate: [0.9, 1.6],
     neighbour: 0.45, centreDrift: 0.26, spin: [-0.5, 0.5],
     speed: [0.3, 0.8], spread: 1.0, up: [0.35, 0.9], gravity: [-0.15, 0.1],
@@ -344,9 +344,9 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
   },
   dustSkid: {
     blend: 'softAdd', orient: 'billboard',
-    ring: [7, 8], multiCentre: 0.4, halo: 0.28, haloAlpha: 0.64,
-    size: [0.55, 0.95], aspect: [1.15, 1.5],
-    grow: [3.4, 4.6], growY: [2.6, 3.4], growCurve: 0.4, stretch: 0.05,
+    ring: [7, 8], multiCentre: 0.35, halo: 0.3, haloAlpha: 0.64,
+    size: [0.3, 0.46], aspect: [1.05, 1.25],
+    grow: [2.2, 3.0], growY: [1.8, 2.4], growCurve: 0.4, stretch: 0.02,
     wobble: [0.24, 0.38], swirl: [0.18, 0.34], wobbleRate: [0.8, 1.5],
     neighbour: 0.45, centreDrift: 0.3, spin: [-0.45, 0.45],
     speed: [0.6, 1.4], spread: 1.1, up: [0.5, 1.2], gravity: [-0.2, 0.05],
@@ -365,9 +365,9 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
   // dark of the hall instead of staying orange all the way up.
   torchSmoke: {
     blend: 'softAdd', orient: 'billboardY',
-    ring: [7, 8], multiCentre: 0.35, halo: 0.26, haloAlpha: 0.6,
-    size: [0.34, 0.56], aspect: [0.85, 1.1],
-    grow: [3.6, 5.0], growY: [4.0, 5.6], growCurve: 0.42,
+    ring: [7, 8], multiCentre: 0.3, halo: 0.28, haloAlpha: 0.6,
+    size: [0.2, 0.32], aspect: [0.85, 1.05],
+    grow: [2.4, 3.2], growY: [2.8, 3.8], growCurve: 0.42,
     wobble: [0.2, 0.32], swirl: [0.14, 0.28], wobbleRate: [0.6, 1.1],
     neighbour: 0.48, centreDrift: 0.3, spin: [-0.3, 0.3],
     speed: [0.25, 0.6], spread: 0.45, up: [0.9, 1.7], gravity: [-0.3, -0.12],
@@ -791,7 +791,10 @@ export class PuffSystem {
     for (let i = 0; i < n; i++) {
       // Jitter BOTH the angle and the radius. Even spacing with jittered radii
       // still reads as a wheel; jittering the angle is what kills the polygon.
-      p.baseAng[i] = i * step + (rng() - 0.5) * step * 0.7;
+      // Base spacing jitter is capped for the same reason — half a step of
+      // jitter can put two vertices on top of each other before the swirl even
+      // starts.
+      p.baseAng[i] = i * step + (rng() - 0.5) * step * 0.44;
       p.baseRad[i] = 0.72 + rng() * 0.5;
       p.ampA[i] = rr(rng, preset.wobble, 0.2) * (0.6 + rng() * 0.8) * defK;
       p.ampB[i] = p.ampA[i] * (0.35 + rng() * 0.5);
@@ -799,7 +802,12 @@ export class PuffSystem {
       p.frqB[i] = p.frqA[i] * (1.7 + rng() * 1.1);
       p.phA[i] = rng() * Math.PI * 2;
       p.phB[i] = rng() * Math.PI * 2;
-      p.tanAmp[i] = rr(rng, preset.swirl, 0.15) * (0.5 + rng()) * defK;
+      // The swirl must never be able to push a vertex PAST its neighbour. Let
+      // it, and two ring points end up at nearly the same angle with very
+      // different radii — which draws as a long narrow spike, and a ring full
+      // of them draws as the jagged shards this used to make. A third of the
+      // spacing is plenty of wander and cannot reorder anything.
+      p.tanAmp[i] = Math.min(rr(rng, preset.swirl, 0.15) * (0.5 + rng()) * defK, step * 0.33);
       p.tanFrq[i] = rr(rng, preset.wobbleRate, 1.2) * (0.5 + rng() * 0.7);
       p.tanPh[i] = rng() * Math.PI * 2;
     }
@@ -1126,13 +1134,25 @@ export class PuffSystem {
       const spd = p.vel.length();
       sx *= 1 + p.stretch * spd;
     }
+    // A LAST BACKSTOP ON PROPORTION. aspect x grow x growY x ground-flatten x
+    // velocity-stretch all multiply, and four modest numbers make one absurd
+    // one — that is how a puff ends up a long thin slab. Nothing may be more
+    // than 1.9 times longer than it is tall, whatever the preset asked for.
+    const ratio = sx / (sy || 1e-4);
+    if (ratio > 1.9) sx = sy * 1.9;
+    else if (ratio < 1 / 1.9) sx = sy / 1.9;
 
     // --- deformed ring -----------------------------------------------------
     for (let i = 0; i < n; i++) {
-      RAD[i] =
+      // Clamped to a band. Two sines stacked on a base radius can otherwise
+      // put one vertex at three times its neighbour's reach, and the triangle
+      // between them is a splinter. The band still allows a very lumpy
+      // outline — it only stops a single point running away with the shape.
+      const r =
         p.baseRad[i] +
         Math.sin(p.age * p.frqA[i] + p.phA[i]) * p.ampA[i] +
         Math.sin(p.age * p.frqB[i] + p.phB[i]) * p.ampB[i];
+      RAD[i] = r < 0.5 ? 0.5 : r > 1.45 ? 1.45 : r;
       ANG[i] = p.baseAng[i] + Math.sin(p.age * p.tanFrq[i] + p.tanPh[i]) * p.tanAmp[i];
     }
     // Neighbour influence: without it every vertex wanders alone and the
