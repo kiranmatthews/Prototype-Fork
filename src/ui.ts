@@ -1641,13 +1641,13 @@ export class UI {
            well below the box's middle. And the digit beside it is a Roo SVG
            whose glyph hangs HIGH in its own box, because the padded viewBox
            leaves room under it for the drop shadow. Together that left the
-           head sitting ~12px low against an 86px digit. Measured face
-           centroid against measured glyph centre asks for ~8%; -9% is what
-           actually reads level in a render, and past about -12% the head
-           starts reading high instead. Nothing else animates this element's
-           transform — hudpop only ever runs on the digits — so this is safe
-           to own outright. */
-        transform: translateY(-9%);
+           head sitting ~12px low against an 86px digit. -14% is the eyeballed
+           pick off a render sheet: it is more than the face centroid alone
+           asks for (~8%), which lines the head's BOUNDING BOX up with the
+           digit rather than its centre of mass. Nothing else animates this
+           element's transform — hudpop only ever runs on the digits — so this
+           is safe to own outright. */
+        transform: translateY(-14%);
       }
       .hud-pop { animation: hudpop 0.22s ease-out; }
       @keyframes hudpop {
