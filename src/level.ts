@@ -26,6 +26,7 @@ import {
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
+import { puffs, PUFF_PRESETS } from "./puffs";
 import { wumpaMesh, WUMPA_SIZE } from "./wumpa";
 
 export interface Crate {
@@ -150,6 +151,8 @@ function cycleOffset(c: Cycle, time: number): number {
 // illumination it throws comes from the shared light pool (see torchLights),
 // which is a fixed set of point lights re-aimed at whichever torches are
 // nearest the player. Fixed count = no per-frame shader recompiles.
+const PUFF_TORCH = PUFF_PRESETS.torchSmoke;
+
 interface Torch {
   group: THREE.Group; // post + bowl + flame, parked at the torch's base
   flames: THREE.Mesh[]; // the licking cones, scaled + spun on their own phase
@@ -157,6 +160,7 @@ interface Torch {
   seed: number; // per-torch offset so no two flicker in step
   burn: number; // 0..1 — eased; a phase pad's torch dies as the pad goes ghost
   wantBurn: number; // what it's easing TOWARD (1 lit, 0 out)
+  smokeT: number; // countdown to this torch's next puff (its own irregular clock)
 }
 
 // A platform that FLIPS between real and not. Active: solid, lit, its torch
@@ -6349,6 +6353,9 @@ export class Level {
       seed: this.torches.length * 1.7,
       burn: 1,
       wantBurn: 1,
+      // Stagger the first puff across the pool so a room full of torches does
+      // not cough in unison the moment the level loads.
+      smokeT: (this.torches.length % 7) * 0.31,
     };
     this.torches.push(t);
     return t;
@@ -9678,8 +9685,37 @@ export class Level {
   }
 
   // Per-frame VFX tick: bobs, spins, glints.
+  // Every lit torch trails smoke. It is the same PS1 puff system the skater's
+  // trail uses, on the same two-ring falloff — an ember-white core cooling into
+  // the dark as the plume climbs, which is what gives the hall depth instead of
+  // a row of flames floating in black.
+  //
+  // A torch only smokes when it is BURNING and when the skater is near enough
+  // to see it: the level has dozens of fires and a plume each would spend the
+  // whole particle pool on scenery nobody is looking at, starving the effects
+  // that are actually about play.
+  private smokeTorches(dt: number): void {
+    const px = this.playerPos.x, py = this.playerPos.y, pz = this.playerPos.z;
+    for (const t of this.torches) {
+      if (t.burn < 0.35) continue; // a dying or dead fire stops smoking
+      const at = t.lightAt;
+      const dx = at.x - px, dy = at.y - py, dz = at.z - pz;
+      if (dx * dx + dy * dy + dz * dz > 46 * 46) continue;
+      t.smokeT -= dt * t.burn;
+      if (t.smokeT > 0) continue;
+      // Irregular by design: a fixed interval reads as a machine, and real
+      // smoke comes in uneven clumps with the odd pause and the odd double.
+      const r = Math.abs(Math.sin(this.vfxT * 12.9898 + t.seed * 78.233)) % 1;
+      t.smokeT = 0.1 + r * 0.2;
+      puffs.spawn(PUFF_TORCH, at.x, at.y + 0.35, at.z, {
+        strength: 0.8 + r * 0.5,
+      });
+    }
+  }
+
   private updateVfx(dt: number): void {
     this.vfxT += dt;
+    this.smokeTorches(dt);
     const pulse = 0.75 + 0.25 * Math.sin(this.vfxT * 3.3); // shared glow breathe
     const bobSpin = (g: THREE.Group | null, rate: number): void => {
       if (!g || !g.visible) return;

@@ -89,6 +89,7 @@ export interface PuffPreset {
   // --- shape ---
   ring?: [number, number]; // outer vertex count range (clamped 5..8)
   multiCentre?: number; // 0..1 chance of 2-3 internal centres (lopsided puffs)
+  halo?: number; // >0 adds a SECOND ring at this fraction of the radius — see below
   size?: Range; // starting radius
   aspect?: Range; // >1 wide, <1 tall
   grow?: Range; // radius multiplier reached at end of life
@@ -131,6 +132,7 @@ export interface PuffPreset {
   alpha?: Range; // peak opacity
   fadeIn?: number; // fraction of life spent ramping up
   outerAlpha?: number; // rim opacity as a fraction of the centre's
+  haloAlpha?: number; // mid-ring opacity as a fraction of the centre's
   bright?: Range; // multiplies the colours (additive styles mostly)
 
   // --- lifetime / count ---
@@ -310,35 +312,71 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
     fadeIn: 0.05, outerAlpha: 0.0, count: [1, 2], surfaceTint: 0.85,
     spacing: [0.9, 1.4],
   },
+  // THE TRAIL. This is the Crash 3 look, measured off the intro footage rather
+  // than guessed: the smoke there is a SMALL HOT CORE inside a broad plateau of
+  // saturated colour with a long dark tail, big and slow and heavily
+  // overlapping. Sampled, the hot spot reads rgb(216,95,216), the plateau
+  // rgb(125,60,140) holding out to about a quarter of the radius, and the tail
+  // rgb(64,41,106). Those three are the centre/inner/outer here, `halo` puts
+  // the plateau where the footage has it, and softAdd makes them stack into
+  // light instead of into mud.
   dustWheel: {
-    blend: 'alpha', orient: 'velocity',
-    ring: [5, 7], multiCentre: 0.15, size: [0.16, 0.28], aspect: [1.3, 1.7],
-    grow: [1.9, 2.6], growY: [1.1, 1.4], growCurve: 0.45, stretch: 0.05,
-    wobble: [0.2, 0.32], swirl: [0.12, 0.26], wobbleRate: [1.8, 2.8],
-    neighbour: 0.4, centreDrift: 0.2, spin: [-0.6, 0.6],
-    speed: [0.5, 1.2], spread: 1.1, up: [0.25, 0.7], gravity: [1.4, 2.4],
-    inherit: 0.18, drag: [3.6, 5.2], wind: 0.35,
-    turbulence: [0.12, 0.3], turbRate: [1.4, 2.4],
-    ground: true, flatten: 0.72, spreadOnGround: 0.45, friction: 4.8,
-    life: [0.3, 0.5],
-    centre: 0xcfc5b0, inner: 0x9e9482, outer: 0x24211c, alpha: [0.24, 0.36],
-    fadeIn: 0.05, outerAlpha: 0.0, count: [1, 1], surfaceTint: 0.85,
-    spacing: [0.5, 0.8],
+    blend: 'softAdd', orient: 'billboard',
+    // FACETS ARE THE POINT. Multi-centre lobes give each puff its own plateau
+    // heights, and the creases where those meet are visible hard triangles —
+    // which is what a PS1 Gouraud puff looks like and is wanted here, not
+    // something to smooth away. What the halo ring buys is the FALLOFF, not
+    // smoothness: hot core, broad plateau, long tail, exactly as measured off
+    // the footage.
+    ring: [7, 8], multiCentre: 0.35, halo: 0.3, haloAlpha: 0.62,
+    size: [0.4, 0.66], aspect: [1.05, 1.3],
+    grow: [3.2, 4.4], growY: [2.4, 3.2], growCurve: 0.45, stretch: 0.03,
+    wobble: [0.22, 0.34], swirl: [0.16, 0.3], wobbleRate: [0.9, 1.6],
+    neighbour: 0.45, centreDrift: 0.26, spin: [-0.5, 0.5],
+    speed: [0.3, 0.8], spread: 1.0, up: [0.35, 0.9], gravity: [-0.15, 0.1],
+    buoyancy: [0.5, 1.1], inherit: 0.12, drag: [1.6, 2.4], wind: 0.5,
+    turbulence: [0.2, 0.45], turbRate: [0.5, 1.1],
+    ground: true, flatten: 0.45, spreadOnGround: 0.5, friction: 2.2,
+    life: [0.85, 1.4],
+    centre: 0xd85fd8, inner: 0x7d3c8c, outer: 0x40296a,
+    alpha: [0.32, 0.46], fadeIn: 0.1, outerAlpha: 0.0, bright: [1.0, 1.35],
+    count: [1, 1], spacing: [0.32, 0.55],
   },
   dustSkid: {
-    blend: 'alpha', orient: 'velocity',
-    ring: [6, 8], multiCentre: 0.25, size: [0.3, 0.5], aspect: [1.5, 2.0],
-    grow: [2.4, 3.2], growY: [1.2, 1.6], growCurve: 0.35, stretch: 0.08,
-    wobble: [0.24, 0.36], swirl: [0.14, 0.3], wobbleRate: [1.4, 2.4],
-    neighbour: 0.4, centreDrift: 0.26, spin: [-0.5, 0.5],
-    speed: [1.0, 2.2], spread: 1.2, up: [0.4, 1.0], gravity: [1.0, 1.8],
-    inherit: 0.3, drag: [2.8, 4.2], wind: 0.45,
-    turbulence: [0.18, 0.4], turbRate: [1.1, 2.0],
-    ground: true, flatten: 0.7, spreadOnGround: 0.6, friction: 4.2,
-    life: [0.5, 0.85],
-    centre: 0xd4c9b2, inner: 0xa2977f, outer: 0x272420, alpha: [0.32, 0.48],
-    fadeIn: 0.05, outerAlpha: 0.0, count: [1, 2], surfaceTint: 0.85,
-    spacing: [0.35, 0.6],
+    blend: 'softAdd', orient: 'billboard',
+    ring: [7, 8], multiCentre: 0.4, halo: 0.28, haloAlpha: 0.64,
+    size: [0.55, 0.95], aspect: [1.15, 1.5],
+    grow: [3.4, 4.6], growY: [2.6, 3.4], growCurve: 0.4, stretch: 0.05,
+    wobble: [0.24, 0.38], swirl: [0.18, 0.34], wobbleRate: [0.8, 1.5],
+    neighbour: 0.45, centreDrift: 0.3, spin: [-0.45, 0.45],
+    speed: [0.6, 1.4], spread: 1.1, up: [0.5, 1.2], gravity: [-0.2, 0.05],
+    buoyancy: [0.7, 1.4], inherit: 0.22, drag: [1.4, 2.2], wind: 0.6,
+    turbulence: [0.25, 0.55], turbRate: [0.5, 1.0],
+    ground: true, flatten: 0.45, spreadOnGround: 0.6, friction: 2.0,
+    life: [1.1, 1.8],
+    centre: 0xe07ce0, inner: 0x7d3c8c, outer: 0x40296a,
+    alpha: [0.38, 0.54], fadeIn: 0.08, outerAlpha: 0.0, bright: [1.05, 1.45],
+    count: [1, 2], spacing: [0.26, 0.45],
+  },
+
+  // THE TORCHES. Same structure, lit from underneath by the flame it is
+  // leaving: an ember-white core, a deep amber body, and the footage's own
+  // indigo for the tail, so a plume climbing out of the light cools into the
+  // dark of the hall instead of staying orange all the way up.
+  torchSmoke: {
+    blend: 'softAdd', orient: 'billboardY',
+    ring: [7, 8], multiCentre: 0.35, halo: 0.26, haloAlpha: 0.6,
+    size: [0.34, 0.56], aspect: [0.85, 1.1],
+    grow: [3.6, 5.0], growY: [4.0, 5.6], growCurve: 0.42,
+    wobble: [0.2, 0.32], swirl: [0.14, 0.28], wobbleRate: [0.6, 1.1],
+    neighbour: 0.48, centreDrift: 0.3, spin: [-0.3, 0.3],
+    speed: [0.25, 0.6], spread: 0.45, up: [0.9, 1.7], gravity: [-0.3, -0.12],
+    buoyancy: [1.3, 2.2], drag: [0.7, 1.1], wind: 0.85,
+    turbulence: [0.3, 0.65], turbRate: [0.35, 0.8],
+    life: [2.2, 3.6],
+    centre: 0xffc477, inner: 0xa8481f, outer: 0x241a4e, fadeTo: 0x3a2a78,
+    alpha: [0.26, 0.4], fadeIn: 0.16, outerAlpha: 0.0, bright: [1.0, 1.3],
+    count: [1, 1], rate: [3.2, 5.0], jitter: 0.7,
   },
 
   // --- events --------------------------------------------------------------
@@ -385,9 +423,12 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
 const RING_MIN = 5;
 const RING_MAX = 8;
 const CENTRE_MAX = 3;
-const VERTS_MAX = RING_MAX + CENTRE_MAX; // 11
-const TRIS_MAX = RING_MAX + CENTRE_MAX; // n edge fans + k bridges
-const IDX_MAX = TRIS_MAX * 3; // 33
+// A haloed puff carries a SECOND ring, so the worst case is centres + two
+// rings. Plain puffs (dust, debris) never allocate the extra band — they still
+// draw 5-11 triangles; only the glow presets pay for it.
+const VERTS_MAX = RING_MAX * 2 + CENTRE_MAX; // 19
+const TRIS_MAX = RING_MAX + CENTRE_MAX + RING_MAX * 2; // fan + bridges + band
+const IDX_MAX = TRIS_MAX * 3; // 81
 const MAX_LIVE = 320; // hard ceiling across every style at once
 
 /** Deterministic per-puff generator. Same seed, same puff, always. */
@@ -450,6 +491,7 @@ interface Puff {
   cenFrq: Float32Array; // k drift rate
   cenPh: Float32Array; // k
   centreDriftAmt: number; // how far a centre may wander from its base spot
+  halo: number; // 0 = single ring; else the mid ring's radius fraction
   neighbour: number;
   size: number;
   aspect: number;
@@ -489,6 +531,7 @@ interface Puff {
   alpha: number;
   fadeIn: number;
   outerAlpha: number;
+  haloAlpha: number;
   bright: number;
 }
 
@@ -504,14 +547,14 @@ function blankPuff(): Puff {
     phA: f(RING_MAX), phB: f(RING_MAX),
     tanAmp: f(RING_MAX), tanFrq: f(RING_MAX), tanPh: f(RING_MAX),
     cenAng: f(CENTRE_MAX), cenRad: f(CENTRE_MAX), cenFrq: f(CENTRE_MAX), cenPh: f(CENTRE_MAX),
-    centreDriftAmt: 0.2, neighbour: 0.4, size: 0.5, aspect: 1, grow: 2, growY: 2, growCurve: 0.5,
+    centreDriftAmt: 0.2, halo: 0, neighbour: 0.4, size: 0.5, aspect: 1, grow: 2, growY: 2, growCurve: 0.5,
     stretch: 0, rot: 0, spin: 0,
     gravity: 0, buoy: 0, drag: 1, wind: 0, turbAmp: 0, turbFrq: 1,
     turbDir: new THREE.Vector3(), turbDir2: new THREE.Vector3(), turbPh: 0, turbPh2: 0,
     ground: false, groundY: -1e9, flatten: 0, spreadOnGround: 0, friction: 0,
     bounce: 0, contact: false,
     cCentre: new THREE.Color(), cInner: new THREE.Color(), cOuter: new THREE.Color(),
-    cFade: null, alpha: 0.5, fadeIn: 0.1, outerAlpha: 0, bright: 1,
+    cFade: null, alpha: 0.5, fadeIn: 0.1, outerAlpha: 0, haloAlpha: 0.55, bright: 1,
   };
 }
 
@@ -622,6 +665,7 @@ const V_R = new THREE.Vector3();
 const V_U = new THREE.Vector3();
 const V_F = new THREE.Vector3();
 const C_TMP = new THREE.Color();
+const C_MID = new THREE.Color();
 const RAD = new Float32Array(RING_MAX);
 const RAD2 = new Float32Array(RING_MAX);
 const ANG = new Float32Array(RING_MAX);
@@ -766,6 +810,7 @@ export class PuffSystem {
       p.cenPh[j] = rng() * Math.PI * 2;
     }
     p.neighbour = preset.neighbour ?? 0.4;
+    p.halo = preset.halo ?? 0;
     p.centreDriftAmt = (preset.centreDrift ?? 0.2) * defK;
 
     p.size = rr(rng, preset.size, 0.4) * sf.size * (0.75 + 0.5 * str);
@@ -846,6 +891,7 @@ export class PuffSystem {
     p.alpha = rr(rng, preset.alpha, 0.4);
     p.fadeIn = preset.fadeIn ?? 0.1;
     p.outerAlpha = preset.outerAlpha ?? 0;
+    p.haloAlpha = preset.haloAlpha ?? 0.55;
     p.bright = rr(rng, preset.bright, 1);
     return p;
   }
@@ -920,7 +966,7 @@ export class PuffSystem {
     x: number,
     y: number,
     z: number,
-    o: Parameters<PuffSystem['spawn']>[4] & { minSpeed?: number; teleport?: number } = {},
+    o: Parameters<PuffSystem['spawn']>[4] & { emit?: boolean; teleport?: number } = {},
   ): void {
     const preset = PUFF_PRESETS[name];
     if (!preset) return;
@@ -945,6 +991,16 @@ export class PuffSystem {
       return;
     }
     st.had = true;
+    // `emit: false` means "you are still here, just not laying anything down"
+    // — brake below the speed gate, stop, roll on again. CUTTING the trail
+    // instead would drop the accumulated distance AND re-seed with had=false,
+    // so the first call after every dip spawns nothing; a speed hovering near
+    // the gate then produced almost no trail at all. Cutting is for real
+    // discontinuities only: a landing, a warp, a respawn.
+    if (o.emit === false) {
+      st.x = x; st.y = y; st.z = z;
+      return;
+    }
     st.carry += d;
     let guard = 8; // never more than a handful of spawns in one frame
     while (st.carry >= st.gap && guard-- > 0) {
@@ -1050,7 +1106,8 @@ export class PuffSystem {
     const b = this.batch(p.blend);
     const n = p.n;
     const k = p.k;
-    const tris = k === 1 ? n : n + k;
+    const hasHalo = p.halo > 0;
+    const tris = (k === 1 ? n : n + k) + (hasHalo ? n * 2 : 0);
     if (b.vCount + n + k > this.cap * VERTS_MAX || b.iCount + tris * 3 > this.cap * IDX_MAX) return;
 
     const t = p.age / p.life;
@@ -1154,27 +1211,44 @@ export class PuffSystem {
       b.col[vc++] = cr * m; b.col[vc++] = cg * m; b.col[vc++] = cb * m; b.col[vc++] = a;
     }
 
-    // --- perimeter ---------------------------------------------------------
-    for (let i = 0; i < n; i++) {
-      const lx0 = Math.cos(ANG[i]) * RAD[i] * sx;
-      const ly0 = Math.sin(ANG[i]) * RAD[i] * sy;
-      const lx = lx0 * cs - ly0 * sn;
-      const ly = lx0 * sn + ly0 * cs;
-      b.pos[vp++] = p.pos.x + rx * lx + ux * ly;
-      b.pos[vp++] = p.pos.y + ry * lx + uy * ly;
-      b.pos[vp++] = p.pos.z + rz * lx + uz * ly;
-      // The rim is the dark/faint colour at a fraction of the centre's alpha —
-      // usually zero. Gouraud does the rest, and because the fade lives in the
-      // VERTICES there is no rectangle anywhere to give the billboard away.
-      const ao = a * p.outerAlpha;
-      const mo = b.premul ? ao : 1;
-      b.col[vc++] = p.cOuter.r * mo; b.col[vc++] = p.cOuter.g * mo; b.col[vc++] = p.cOuter.b * mo;
-      b.col[vc++] = ao;
+    // --- ring(s) -----------------------------------------------------------
+    // THE FALLOFF IS THE WHOLE LOOK. A single ring gives a straight cone from
+    // the centre to nothing, which reads as flat haze. Sampled off the Crash 3
+    // footage, the real thing is a SMALL HOT CORE, then a broad mid-tone
+    // plateau, then a long dark tail: brightness runs 131 -> 81 within about a
+    // twelfth of the radius, sits near 80 out to a quarter of it, and only then
+    // decays away. Two rings reproduce exactly that — an inner ring carrying
+    // the body colour at `haloAlpha`, and an outer ring at the full radius
+    // carrying the dark rim. Presets without `halo` keep the cheap single ring.
+    const emitRing = (frac: number, col: THREE.Color, alpha: number) => {
+      for (let i = 0; i < n; i++) {
+        const lx0 = Math.cos(ANG[i]) * RAD[i] * frac * sx;
+        const ly0 = Math.sin(ANG[i]) * RAD[i] * frac * sy;
+        const lx = lx0 * cs - ly0 * sn;
+        const ly = lx0 * sn + ly0 * cs;
+        b.pos[vp++] = p.pos.x + rx * lx + ux * ly;
+        b.pos[vp++] = p.pos.y + ry * lx + uy * ly;
+        b.pos[vp++] = p.pos.z + rz * lx + uz * ly;
+        const mm = b.premul ? alpha : 1;
+        b.col[vc++] = col.r * mm; b.col[vc++] = col.g * mm; b.col[vc++] = col.b * mm;
+        b.col[vc++] = alpha;
+      }
+    };
+    if (hasHalo) {
+      // the mid ring keeps the puff's BODY colour, which is what makes the
+      // plateau read as coloured light rather than as a fading edge
+      C_MID.setRGB(ir, ig, ib);
+      emitRing(p.halo, C_MID, a * p.haloAlpha);
     }
+    // The rim is the dark/faint colour at a fraction of the centre's alpha —
+    // usually zero. Because the fade lives in the VERTICES there is no
+    // rectangle anywhere to give the billboard away.
+    emitRing(1, p.cOuter, a * p.outerAlpha);
 
     // --- triangles ---------------------------------------------------------
     let ii = b.iCount;
-    const ring0 = base + k;
+    const ring0 = base + k; // the ring the centres fan out to
+    const ring1 = ring0 + n; // only present when haloed
     if (k === 1) {
       for (let i = 0; i < n; i++) {
         b.idx[ii++] = base;
@@ -1203,8 +1277,17 @@ export class PuffSystem {
       b.idx[ii++] = base;
       b.idx[ii++] = ring0;
     }
+    if (hasHalo) {
+      // The band between the two rings: this is the long tail, and it is where
+      // the puff stops being a shape and becomes light.
+      for (let i = 0; i < n; i++) {
+        const j = (i + 1) % n;
+        b.idx[ii++] = ring0 + i; b.idx[ii++] = ring1 + i; b.idx[ii++] = ring1 + j;
+        b.idx[ii++] = ring0 + i; b.idx[ii++] = ring1 + j; b.idx[ii++] = ring0 + j;
+      }
+    }
 
-    b.vCount += n + k;
+    b.vCount += k + n + (hasHalo ? n : 0);
     b.iCount = ii;
   }
 

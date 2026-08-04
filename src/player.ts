@@ -6135,28 +6135,35 @@ export class Player {
     this.pfWasSlamming = this.slamActive;
 
     // Rolling and skidding are DISTANCE-driven, so the line is even at any
-    // speed and identical at any frame rate.
-    const rolling =
-      this.grounded && this.state === 'ride' && !this.sliding && Math.abs(this.speed) > 7;
-    if (rolling)
-      puffs.trail('wheel', 'dustWheel', this.pos.x, this.pos.y + 0.04, this.pos.z, {
+    // speed and identical at any frame rate. Both are told where we are EVERY
+    // grounded step and only gated on whether to lay a puff down — a trail
+    // that is cut and re-seeded each time the speed crosses its gate never
+    // accumulates enough distance to spawn anything.
+    const onDeck = this.grounded && this.state !== 'dead' && this.state !== 'gameover';
+    if (onDeck) {
+      const rolling = this.state === 'ride' && !this.sliding && Math.abs(this.speed) > 5;
+      puffs.trail('wheel', 'dustWheel', this.pos.x, this.pos.y + 0.05, this.pos.z, {
+        emit: rolling,
         dir: PUFF_UP,
         surface: surf,
         groundY: this.pos.y,
         parentVel: this.vel3(PUFF_VEL),
-        strength: Math.min(1.5, Math.abs(this.speed) / 16),
+        strength: Math.min(1.5, 0.6 + Math.abs(this.speed) / 20),
       });
-    else puffs.cutTrail('wheel');
-
-    if (this.grounded && this.sliding)
-      puffs.trail('skid', 'dustSkid', this.pos.x, this.pos.y + 0.04, this.pos.z, {
+      puffs.trail('skid', 'dustSkid', this.pos.x, this.pos.y + 0.05, this.pos.z, {
+        emit: this.sliding,
         dir: PUFF_UP,
         surface: surf,
         groundY: this.pos.y,
         parentVel: this.vel3(PUFF_VEL),
         strength: Math.min(1.6, 0.7 + Math.abs(this.speed) / 20),
       });
-    else puffs.cutTrail('skid');
+    } else {
+      // Airborne: the next touchdown starts a fresh line rather than drawing
+      // one from wherever the wheels last were.
+      puffs.cutTrail('wheel');
+      puffs.cutTrail('skid');
+    }
   }
 
   private updateSparks(dt: number): void {
