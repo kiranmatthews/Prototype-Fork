@@ -11000,10 +11000,19 @@ export class Level {
     this.checkpoint(0, -44);
 
     // --- B (LEFT, -x, SIDE-SCROLL): the lift bank, y0 -> y12 ----------------
-    // The zone swallows BOTH corner bends: side-scroll and forward stretches
-    // share the same default camera facing, so with the lane's arcs hidden
-    // inside the zone there is no swing at all from A through B into C.
-    sideScroll(-50, 6, -57, -40, "W");
+    // The zone covers the SIDE-SCROLL STRETCH ONLY — it stops short of both
+    // corner bends, and that is not a detail.
+    //
+    // It used to swallow the bends, to spare the camera a swing-and-return at
+    // the corner. But a zone is not a camera hint: inside one the stick is
+    // SWAPPED (player.ts, `ctl`) so left/right becomes the throttle and
+    // up/down becomes the steer. Widened to x +6 it reached back onto the
+    // approach corridor, which runs at x 0 — so a player still running down
+    // -Z crossed the edge and, without touching the stick, had their held
+    // forward read as zero throttle and a full sideways steer. They stopped
+    // dead, or got walked off the side. Let the lane arc you round the bend
+    // first; the zone takes over once you are actually travelling west.
+    sideScroll(-42, -5, -56, -41, "W");
     fmover(-11, 1, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
     fmover(-19, 4, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
     fmover(-27, 7, -45, 4.5, 4.5, "y", 3.2, 0.75, Math.PI / 2);
@@ -11091,7 +11100,7 @@ export class Level {
     // --- H (SWITCHBACK, +x, SIDE-SCROLL): the lift tower, y34 -> y56 --------
     // Eight burning lifts, each a step higher — the long climb, played flat
     // against the screen like the classic towers.
-    sideScroll(-55, 16, -287, -269, "E"); // swallows the G->H and H->I bends: no swing in or out
+    sideScroll(-44, 3, -286, -270, "E"); // stops short of the G->H and H->I bends — see the note on B
     fmover(-41, 36, -275, 4.5, 4.5, "y", 2.75, 0.7, 0);
     fmover(-35, 38.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
     fmover(-29, 41.5, -275, 4.5, 4.5, "y", 2.75, 0.75, Math.PI / 2);
@@ -11115,7 +11124,7 @@ export class Level {
     this.checkpoint(56, -324, 9);
 
     // --- J (LEFT, -x, SIDE-SCROLL): everything on the beat, y56 -> y64 ------
-    sideScroll(-49, 16, -332, -316, "W"); // swallows the I->J and J->K bends: no swing in or out
+    sideScroll(-37, 1, -331, -317, "W"); // stops short of the I->J and J->K bends — see the note on B
     padB(-2, 56, -324);
     fmover(-9.5, 56, -324, 4.5, 4.5, "x", 4, 0.6, 0);
     this.movingRail(-19, 57.7, -324, 10, 90, "z", 4, 0.6, Math.PI / 2);
