@@ -26,7 +26,7 @@ import {
 import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
-import { wumpaMesh } from "./wumpa";
+import { wumpaMesh, WUMPA_SIZE } from "./wumpa";
 
 export interface Crate {
   mesh: THREE.Mesh;
@@ -3857,14 +3857,20 @@ export class Level {
   }
 
   dispose(): void {
+    // Anything flagged `shared` is a process-wide singleton that outlives this
+    // level — the one wumpa geometry/material/texture behind every apple in
+    // the game (see src/wumpa.ts), which the player's fruit pool and the HUD
+    // icon are still drawing after this level is gone. Freeing it here would
+    // yank the GPU buffers out from under them on every level switch.
     const disposeMat = (x: THREE.Material): void => {
+      if (x.userData.shared) return;
       const map = (x as THREE.MeshLambertMaterial).map;
       if (map) map.dispose();
       x.dispose();
     };
     this.root.traverse((o) => {
       const m = o as THREE.Mesh;
-      if (m.geometry) m.geometry.dispose();
+      if (m.geometry && !m.geometry.userData.shared) m.geometry.dispose();
       const mat = m.material as THREE.Material | THREE.Material[] | undefined;
       if (Array.isArray(mat)) mat.forEach(disposeMat);
       else if (mat) disposeMat(mat);
@@ -10408,13 +10414,10 @@ export class Level {
 
   // Floating collectable wumpa.
   private pickup(x: number, y: number, z: number): void {
-    // 0.62 across. It was 0.48 — the diameter of the sphere this replaced,
-    // kept so every level's spacing still read the same — but matching the old
-    // placeholder's size was never a reason for the fruit to be that size, and
-    // at 0.48 the authored apple is a speck you have to hunt for. 30% up. The
-    // pickup box below is untouched: how big the fruit LOOKS and how generous
-    // it is to grab are separate questions, and only the first was asked.
-    const mesh = wumpaMesh(0.62);
+    // WUMPA_SIZE, like every other wumpa in the game — see the note on it.
+    // The pickup box below is untouched: how big the fruit LOOKS and how
+    // generous it is to grab are separate questions.
+    const mesh = wumpaMesh(WUMPA_SIZE);
     mesh.position.set(x, y, z);
     mesh.userData.baseY = y;
     this.root.add(mesh);

@@ -33,16 +33,28 @@ const standInMat = new THREE.MeshLambertMaterial({
   color: 0xff9028,
   emissive: 0x4a2006,
 });
+standInGeo.userData.shared = true;
+standInMat.userData.shared = true;
 
 let started = false;
 let settled: (() => void) | null = null;
 /** Resolves once the model is in (or has failed) — for harnesses and tests. */
 export const wumpaReady = new Promise<void>((r) => (settled = r));
 
-function build(): THREE.Object3D {
-  return geometry && material
-    ? new THREE.Mesh(geometry, material)
-    : new THREE.Mesh(standInGeo, standInMat);
+function build(): THREE.Mesh {
+  const m =
+    geometry && material
+      ? new THREE.Mesh(geometry, material)
+      : new THREE.Mesh(standInGeo, standInMat);
+  // Shadow flags belong HERE, not on the one-shot scene traverse that sets
+  // them for everything else (applyShadowFlags in main.ts, called only from
+  // switchLevel). Fruit bodies are created during play now, and the model swap
+  // below throws the old mesh away, so a body made after that traverse — or
+  // upgraded after it — would otherwise be the only apple in a cluster not
+  // casting a shadow.
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
 }
 
 function load(): void {
@@ -58,6 +70,7 @@ function load(): void {
       });
       const mesh = found as THREE.Mesh | null;
       if (!mesh) {
+        pending.length = 0; // nothing to upgrade to — stop holding the groups
         settled?.();
         return;
       }
@@ -65,6 +78,12 @@ function load(): void {
       const bb = mesh.geometry.boundingBox!;
       unitHeight = bb.max.y - bb.min.y || 1;
       geometry = mesh.geometry;
+      // SHARED, and not the level's to free: every wumpa in the game draws
+      // this one geometry/material/texture — a level's pickups, the player's
+      // fruit pool, the HUD icon. Level.dispose() traverses its root and frees
+      // what it finds, which would pull the GPU buffers out from under all of
+      // them on a level switch. The flag tells it to leave these alone.
+      geometry.userData.shared = true;
       // The whole game is lit with Lambert; a PBR standard material here
       // would light differently from everything around it and cost more for
       // a fruit that is a few dozen pixels across. Keep the baked colour map,
@@ -77,6 +96,7 @@ function load(): void {
         emissive: 0x2a1505,
         side: THREE.DoubleSide, // the source is double-sided; the leaf is a plane
       });
+      material.userData.shared = true; // see the note on the geometry above
       for (const group of pending.splice(0)) {
         group.clear();
         group.add(build());
@@ -86,11 +106,28 @@ function load(): void {
     undefined,
     () => {
       // Missing or unparseable: everyone keeps the stand-in sphere rather
-      // than losing the fruit entirely.
+      // than losing the fruit entirely. Drop the waiting list, though —
+      // `pending` is only a list of groups to upgrade, and with no model
+      // coming it would pin every wumpa Group ever handed out for the life of
+      // the page, including the ones their levels have long since discarded.
+      pending.length = 0;
       settled?.();
     },
   );
 }
+
+/**
+ * How tall a wumpa stands in the world — ALL of them.
+ *
+ * There is one size because there is one fruit. It used to be three numbers in
+ * three files: 0.48 for a level's floating pickups, 0.34 for the burst out of
+ * a crate, and 1 for the HUD icon that gets rescaled anyway. Every one of them
+ * traced back to the diameter of the placeholder sphere the authored model
+ * replaced, which is a reason they ended up that way and not a reason to keep
+ * them — and it meant crate fruit read as a lesser, smaller thing than the
+ * fruit sitting on a ledge, when they are the same apple.
+ */
+export const WUMPA_SIZE = 0.7;
 
 /**
  * One wumpa, scaled so it stands `height` world units tall, centred on its

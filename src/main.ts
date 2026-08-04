@@ -823,6 +823,11 @@ function set2P(on: boolean, force = false): void {
     }
     if (!p2) {
       p2 = new Player(scene);
+      // The second rider's fruit needs the same two wires P1 got, or its
+      // collected wumpa are parked on a scene nothing renders and simply
+      // vanish. Its own lens; the one shared HUD counter.
+      p2.cam = camera2;
+      p2.hudFruitAt = () => ui.fruitIconAt();
       tintP2();
     }
     p2.group.visible = true;
@@ -2014,8 +2019,14 @@ function frame(): void {
     renderer.render(scene, camera);
   }
   // Collected fruit sails to the counter on its own flat layer, over the
-  // finished world and under the HUD icons it is flying to.
-  player.drawFlyingFruit(renderer);
+  // finished world and under the HUD icons it is flying to. In split screen
+  // each rider's flight is confined to that rider's half.
+  if (split2p && p2) {
+    player.drawFlyingFruit(renderer, 'top');
+    p2.drawFlyingFruit(renderer, 'bottom');
+  } else {
+    player.drawFlyingFruit(renderer);
+  }
   // The crate, fruit and relic HUD icons are real 3D, spun and drawn over the
   // finished frame into each icon's own DOM box.
   ui.drawIcons(renderer, dt);
