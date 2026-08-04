@@ -1664,15 +1664,20 @@ export class UI {
          Slow and small on purpose: a ~3px sway over 5.5s.
 
          ONE PERIOD FOR EVERYTHING, with a small cascading NEGATIVE delay down
-         each stack. The delays are negative so the rows start already spread
-         across the cycle instead of swinging up together on the first frame,
-         and they are SMALL — an eighth of a cycle between neighbours — because
-         the counter rows are only 8px apart. Give them separate periods and
+         each stack. Negative so the rows start already spread across the cycle
+         instead of swinging up together on the first frame, and SMALL because
+         the counter rows are only 8px apart: give them separate periods and
          they eventually drift into antiphase and close most of that gap, which
-         reads as the HUD collapsing on itself. An eighth of a cycle moves two
-         neighbours barely 1.5px relative to each other, so the spacing holds
-         and the stack reads as one thing breathing with a slight wave down it.
-         Transform only, so nothing reflows. */
+         reads as the HUD collapsing on itself.
+
+         The delay is 0.25s of a 5.5s cycle — a twentieth. An eighth was the
+         first guess, on the reasoning that two sinusoids that far apart differ
+         by only ~1.2px; measured, it moved neighbours 2.55px, because an
+         ease-in-out keyframe pair is much squarer than a sine and runs a lot
+         faster through the middle of each swing. At a twentieth the neighbours
+         move ~1.4px relative to each other, so an 8px gap stays an 8px gap and
+         the stack still reads as one thing breathing with a wave down it
+         rather than as a rigid slab. Transform only, so nothing reflows. */
       @keyframes hudbob {
         0%, 100% { transform: translateY(calc(var(--bob) * -1)); }
         50% { transform: translateY(var(--bob)); }
@@ -1682,11 +1687,11 @@ export class UI {
         animation: hudbob 5.5s ease-in-out infinite;
         will-change: transform;
       }
-      .hud-tl .hud-counter:nth-child(2) { animation-delay: -0.45s; }
-      .hud-tl .hud-counter:nth-child(3) { animation-delay: -0.9s; }
-      .hud-tr .hud-counter { animation-delay: -0.25s; }
-      .hud-scoreplate { animation-delay: -0.7s; }
-      .hud-ttclock { animation-delay: -0.25s; }
+      .hud-tl .hud-counter:nth-child(2) { animation-delay: -0.25s; }
+      .hud-tl .hud-counter:nth-child(3) { animation-delay: -0.5s; }
+      .hud-tr .hud-counter { animation-delay: -0.15s; }
+      .hud-scoreplate { animation-delay: -0.4s; }
+      .hud-ttclock { animation-delay: -0.15s; }
       /* A player who has asked the OS for less motion gets none of it. */
       @media (prefers-reduced-motion: reduce) {
         .hud-counter, .hud-scoreplate, .hud-ttclock { animation: none; }
