@@ -152,6 +152,9 @@ function cycleOffset(c: Cycle, time: number): number {
 // which is a fixed set of point lights re-aimed at whichever torches are
 // nearest the player. Fixed count = no per-frame shader recompiles.
 const PUFF_TORCH = PUFF_PRESETS.torchSmoke;
+const PUFF_TORCH_RATE: [number, number] = Array.isArray(PUFF_TORCH.rate)
+  ? PUFF_TORCH.rate
+  : [PUFF_TORCH.rate ?? 8, PUFF_TORCH.rate ?? 8];
 
 interface Torch {
   group: THREE.Group; // post + bowl + flame, parked at the torch's base
@@ -9703,12 +9706,18 @@ export class Level {
       if (dx * dx + dy * dy + dz * dz > 46 * 46) continue;
       t.smokeT -= dt * t.burn;
       if (t.smokeT > 0) continue;
-      // Irregular by design: a fixed interval reads as a machine, and real
-      // smoke comes in uneven clumps with the odd pause and the odd double.
       const r = Math.abs(Math.sin(this.vfxT * 12.9898 + t.seed * 78.233)) % 1;
-      t.smokeT = 0.1 + r * 0.2;
+      // The interval comes from the PRESET's own rate, so a rate dialled in
+      // the smoke studio is the rate the torches actually run at — a hardcoded
+      // clock here would silently ignore it. Irregular around that rate by
+      // design: a fixed interval reads as a machine, and real smoke comes in
+      // uneven clumps with the odd pause and the odd double.
+      const rate = PUFF_TORCH_RATE[0] + r * (PUFF_TORCH_RATE[1] - PUFF_TORCH_RATE[0]);
+      const j = PUFF_TORCH.jitter ?? 0.5;
+      t.smokeT = (1 / rate) * (1 - j * 0.5 + r * j);
       puffs.spawn(PUFF_TORCH, at.x, at.y + 0.35, at.z, {
         strength: 0.8 + r * 0.5,
+        ambient: true, // scenery: yields the pool to landings, crates and trails
       });
     }
   }

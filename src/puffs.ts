@@ -363,20 +363,33 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
   // leaving: an ember-white core, a deep amber body, and the footage's own
   // indigo for the tail, so a plume climbing out of the light cools into the
   // dark of the hall instead of staying orange all the way up.
+  // THE TORCHES. Authored in the smoke studio rather than guessed at — these
+  // are somebody's slider positions, converted to hex and dropped in whole.
+  //
+  // What the choices amount to: a pure ADDITIVE plume, so it reads as light
+  // leaving a fire rather than as grey matter in front of one. A single ring
+  // (halo 0) with full neighbour smoothing and no centre drift, so the puff is
+  // a plain rounded lump instead of a lobed one. Narrow and tall — aspect
+  // under 1 with growY well above grow — so it climbs and thins the way a
+  // column of hot gas does. Almost no launch speed and no cone; all the rise
+  // is buoyancy, all the wander is turbulence, and full `wind` lets the plume
+  // lean. A very wide lifetime band (0.35 to 3.45s) is what makes the column
+  // ragged: some puffs die at the flame, some make it right to the ceiling.
   torchSmoke: {
-    blend: 'softAdd', orient: 'billboardY',
-    ring: [7, 8], multiCentre: 0.3, halo: 0.28, haloAlpha: 0.6,
-    size: [0.2, 0.32], aspect: [0.85, 1.05],
-    grow: [2.4, 3.2], growY: [2.8, 3.8], growCurve: 0.42,
-    wobble: [0.2, 0.32], swirl: [0.14, 0.28], wobbleRate: [0.6, 1.1],
-    neighbour: 0.48, centreDrift: 0.3, spin: [-0.3, 0.3],
-    speed: [0.25, 0.6], spread: 0.45, up: [0.9, 1.7], gravity: [-0.3, -0.12],
-    buoyancy: [1.3, 2.2], drag: [0.7, 1.1], wind: 0.85,
-    turbulence: [0.3, 0.65], turbRate: [0.35, 0.8],
-    life: [2.2, 3.6],
-    centre: 0xffc477, inner: 0xa8481f, outer: 0x241a4e, fadeTo: 0x3a2a78,
-    alpha: [0.26, 0.4], fadeIn: 0.16, outerAlpha: 0.0, bright: [1.0, 1.3],
-    count: [1, 1], rate: [3.2, 5.0], jitter: 0.7,
+    blend: 'add', orient: 'billboard',
+    ring: [5, 8], multiCentre: 0, halo: 0, haloAlpha: 1,
+    size: [0.14, 0.45], aspect: [0.6, 0.75],
+    grow: [1.65, 2.35], growY: [2.8, 3.8], growCurve: 0.42, stretch: 0.255,
+    wobble: [0.2, 0.32], swirl: [0.06, 0.17], wobbleRate: [0.2, 0.35],
+    neighbour: 1, centreDrift: 0, spin: [-1.45, 0.3],
+    speed: [0, 0.2], spread: 0, up: [1.4, 2.3], inherit: 0,
+    gravity: [-0.15, -0.05], buoyancy: [0.75, 3], drag: [0.7, 1.7], wind: 1,
+    turbulence: [0.42, 0.65], turbRate: [0.95, 1.25],
+    spreadOnGround: 0, friction: 0, bounce: 0, surfaceTint: 0,
+    life: [0.35, 3.45],
+    centre: 0xff5e1a, inner: 0xa8481f, outer: 0x1e1835, fadeTo: 0x474356,
+    alpha: [0.47, 0.57], fadeIn: 0.22, outerAlpha: 0, bright: [0.9, 1.6],
+    count: [3, 19], rate: [13.5, 24.5], jitter: 0.3, spacing: [0.1, 0.1],
   },
 
   // --- events --------------------------------------------------------------
@@ -430,6 +443,8 @@ const VERTS_MAX = RING_MAX * 2 + CENTRE_MAX; // 19
 const TRIS_MAX = RING_MAX + CENTRE_MAX + RING_MAX * 2; // fan + bridges + band
 const IDX_MAX = TRIS_MAX * 3; // 81
 const MAX_LIVE = 320; // hard ceiling across every style at once
+/** Ambient/scenery puffs stop spawning past this much of the pool. */
+const AMBIENT_CAP = 0.6;
 
 /** Deterministic per-puff generator. Same seed, same puff, always. */
 function makeRng(seed: number): () => number {
@@ -762,9 +777,15 @@ export class PuffSystem {
       parentVel?: THREE.Vector3;
       strength?: number; // scales speed, size, count at the call site
       tint?: number; // overrides the surface colour outright
+      ambient?: boolean; // scenery, not play — may be refused to protect the pool
     } = {},
   ): Puff | null {
-    const p = this.free();
+    // SCENERY MUST NOT STARVE PLAY. Nightworks has 94 torches and the authored
+    // plume runs at 13-25 puffs a second each, which on its own filled three
+    // quarters of the pool — and a landing burst that finds no free puff is
+    // simply not drawn. So ambient emitters are refused above a reserve line,
+    // leaving the rest for the effects that are actually about what you did.
+    const p = o.ambient && this.usedFrac > AMBIENT_CAP ? null : this.free();
     if (!p) return null;
     const seed = o.seed ?? this.seedCounter++;
     const rng = makeRng(seed * 2654435761);
@@ -1309,6 +1330,11 @@ export class PuffSystem {
 
     b.vCount += k + n + (hasHalo ? n : 0);
     b.iCount = ii;
+  }
+
+  /** How full the pool is, 0..1. */
+  get usedFrac(): number {
+    return this.liveCount / this.cap;
   }
 
   /** Live puff count — for the debug readout and the tests. */
