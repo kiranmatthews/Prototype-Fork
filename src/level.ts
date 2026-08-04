@@ -11069,10 +11069,25 @@ export class Level {
     isle(-202, 20, 10, 8, 26); // a REAL west runway: the first rope's arc crosses its lip
     this.checkpoint(26, -202, 10);
 
-    // --- F (LEFT, -x): rope ferries over pure void, y26 ---------------------
-    // The camera SWINGS to face along this crossing — a side-scroll zone here
-    // framed the ropes edge-on and read as if the whole section had been
-    // taken away, so the lane keeps it (playtest, reverted).
+    // --- F (LEFT, -x, SIDE-SCROLL): rope ferries over pure void, y26 --------
+    // The ropes swing AND ferry along x, so the whole crossing plays flat
+    // against the screen like the lift banks — asked for, tried, withdrawn,
+    // and back. It is back because the reason it failed the first time was
+    // never the framing.
+    //
+    // That zone ran x -56..+20. The arrival runway is x -2..18 and the lift
+    // stair drops you onto it at x 10 still travelling -Z — so the ENTIRE
+    // runway was inside the zone, and the moment you landed the stick swapped
+    // (see player.ts `ctl`): forward became zero throttle and a full sideways
+    // steer. You touched down and could not move. That reads exactly like a
+    // section that has been deleted, which is what the playtest said, and it
+    // is the same trap that was throwing you off the corridor at B, H and J.
+    //
+    // So the zone owns the CROSSING and neither isle's far end: x -44..2
+    // leaves 16 units of runway to land on and turn west in, and stops 2 units
+    // into the landing so the lane can take the corner into G. You cross the
+    // edge already heading west, which is the direction the zone is about.
+    sideScroll(-44, 2, -208, -196, "W");
     this.ropeSwing(-8, 34.6, -202, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
     this.ropeSwing(-22, 34.6, -202, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
     this.ropeSwing(-36, 34.6, -202, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);

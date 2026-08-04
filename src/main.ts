@@ -1572,6 +1572,9 @@ let camRoll = 0; // eased dutch roll tracking the grind balance needle (radians)
 const aimSmooth = new THREE.Vector3(NaN, 0, 0); // lightly-damped look target (NaN = seed on first frame)
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
+// -1 on a WEST stretch, +1 on an EAST one, eased so the lateral lead never
+// snaps. See the sideLead note in updateCamera.
+let sideLeadF = 0;
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
 const prevPlayerPos = new THREE.Vector3();
 // The rig's "down-course" forward. Fixed at -Z normally; on levels with a
@@ -1596,6 +1599,10 @@ function updateCamera(dt: number): void {
   const inTurn =
     !chaseOn && znHere !== null && (znHere.dir === "E" || znHere.dir === "W");
   sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
+  // ...and WHICH WAY the stretch runs, eased on the same clock as sideF so the
+  // shift below arrives with the wider framing instead of jumping ahead of it.
+  const wantLead = inTurn ? (znHere.dir === "W" ? -1 : 1) : 0;
+  sideLeadF += (wantLead - sideLeadF) * Math.min(1, 3.5 * dt);
 
   // Boulder-chase framing is a proper cinematographic shot, not just a further
   // dolly-back. The skater runs TOWARD camera, so "ahead" is the foreground the
@@ -1702,8 +1709,18 @@ function updateCamera(dt: number): void {
   // kept small overall — the ground stays in shot, the skater does the rising
   const tiltTrack = 0.22 * Math.min(1, frameHalf / 4.5);
 
+  // SIDE-SCROLL LEAD. A side-on stretch runs ACROSS the screen, so centring
+  // the skater puts everything they are heading toward off one edge. That is
+  // not a nicety — it is why the rope ferries read as if the section had been
+  // deleted: standing on the lip, all three ropes sat past the left edge with
+  // nothing but void in frame. Shift the rig along the stretch so the skater
+  // rides toward the trailing edge and the crossing ahead fills the picture,
+  // which is what a side-scroller does. Only bites while sideF is up, so
+  // forward stretches are untouched.
+  const sideLead = sideLeadF * dist * 0.42;
+
   camTarget.set(
-    player.pos.x - camF.x * (dist - off),
+    player.pos.x - camF.x * (dist - off) + sideLead,
     effY + height,
     player.pos.z - camF.z * (dist - off),
   );
@@ -1753,8 +1770,13 @@ function updateCamera(dt: number): void {
   );
   // the tilt glances down at a body below the anchor but never dives after a
   // long kill-plane fall — past a couple units the aim just lets them drop out
+  // The lead moves the AIM as well as the rig — camOffset's trick. Shifting
+  // the camera alone does nothing: it just yaws to keep the skater centred and
+  // the parallax pushes the crossing further off frame, which is what the
+  // first attempt at this did. Move the point it LOOKS at and the skater slides
+  // to the trailing edge with the run ahead in front of them.
   lookPoint.set(
-    player.pos.x - camF.x * aimK,
+    player.pos.x - camF.x * aimK + sideLead,
     effY +
       Math.max(-2.5, (player.pos.y - effY) * tiltTrack) +
       THREE.MathUtils.lerp(aimY, 1.6, boulderF),
