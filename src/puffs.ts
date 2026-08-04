@@ -411,17 +411,18 @@ export const PUFF_PRESETS: Record<string, PuffPreset> = {
   // crawl barely spits.
   spark: {
     blend: 'add', orient: 'velocity',
-    ring: [5, 6], multiCentre: 0, halo: 0,
-    size: [0.025, 0.05], aspect: [1.2, 1.6],
+    ring: [5, 5], multiCentre: 0, halo: 0,
+    size: [0.05, 0.07], aspect: [0.9, 1.1],
     grow: [0.5, 0.8], growCurve: 0.6, stretch: 0.12,
     wobble: [0.06, 0.12], swirl: [0.03, 0.08], wobbleRate: [0.5, 1.0],
-    neighbour: 0.9, centreDrift: 0, spin: 0,
-    speed: [2.5, 5.5], spread: 0.55, up: [0.3, 1.2], gravity: [7, 11],
-    drag: [0.4, 1.0], wind: 0, turbulence: 0,
-    life: [0.15, 0.4],
-    centre: 0xfff2b8, inner: 0xffa235, outer: 0x932c08, fadeTo: 0x8a2408,
-    alpha: [0.7, 0.9], fadeIn: 0, outerAlpha: 0, bright: [1.2, 1.8],
-    count: [4, 8], spacing: [0.25, 0.45],
+    neighbour: 1, centreDrift: 0.18, spin: [0, 1.4],
+    speed: [3.8, 4.2], spread: 0, up: [0.3, 1.95], inherit: 0.24,
+    gravity: [7, 11], drag: [0.4, 1.0], wind: 0,
+    turbulence: [0.38, 0.7], turbRate: [0.1, 0.3],
+    life: [0.2, 0.5],
+    centre: 0xffeb94, inner: 0xffdd00, outer: 0x31380a, fadeTo: 0x084c8c,
+    alpha: [0.85, 1], fadeIn: 0, outerAlpha: 0, bright: [1.7, 2.2],
+    count: [17, 20], rate: [35.5, 40], jitter: 0.15, spacing: [0.1, 0.6],
   },
 
   // --- events --------------------------------------------------------------
