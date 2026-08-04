@@ -11079,33 +11079,26 @@ export class Level {
 
     // --- F (LEFT, -x, SIDE-SCROLL): rope ferries over pure void, y26 --------
     // The ropes swing AND ferry along x, so the whole crossing plays flat
-    // against the screen like the lift banks — asked for, tried, withdrawn,
-    // and back. It is back because the reason it failed the first time was
-    // never the framing.
+    // against the screen like the lift banks.
     //
-    // That zone ran x -56..+20. The arrival runway is x -2..18 and the lift
-    // stair drops you onto it at x 10 still travelling -Z — so the ENTIRE
-    // runway was inside the zone, and the moment you landed the stick swapped
-    // (see player.ts `ctl`): forward became zero throttle and a full sideways
-    // steer. You touched down and could not move. That reads exactly like a
-    // section that has been deleted, which is what the playtest said, and it
-    // is the same trap that was throwing you off the corridor at B, H and J.
+    // NODE TO NODE, like B, H and J: x -48..10 spans the cross leg's own two
+    // corner nodes, and z -208..-197 is exactly the runway isle. That is the
+    // rule, and F used to be the one exception to it — the zone stopped at the
+    // runway's west lip (x -2) so that the lift stair could drop you onto the
+    // runway at x 10 with your own frame instead of a swapped stick.
     //
-    // F IS THE ONE THAT CANNOT HAVE IT BOTH WAYS, so this zone breaks the
-    // node-to-node rule on purpose.
+    // The reason it had to be an exception is gone. The stair lands you at the
+    // corner node, so entering the zone meant flipping the travel frame WHILE
+    // AIRBORNE, and that flip zeroes your speed — it dropped you into the void
+    // short of the runway. The frame flip now waits for touchdown (player.ts),
+    // so you fly the last hop on the momentum you left the lift with, land on
+    // the runway, and the crossing's frame takes over under your feet.
     //
-    // At B, H and J the corner node is a place you ARRIVE travelling -Z and
-    // then turn, so starting the zone there is free. Here the lift stair drops
-    // you onto the runway AT the node (x 10) — the corner and the landing are
-    // the same point. Start the zone there and your stick swaps the instant
-    // you touch down, which is exactly what made this section read as deleted.
-    //
-    // So the zone starts at the runway's west lip instead: you land at x 10
-    // with your own frame, turn west across 12 units of runway, and the
-    // crossing takes over as you leave it. The cost is a small camera swing
-    // over those 12 units, where the lane's arc is still visible to the rig
-    // before the zone flattens it. Landing beats framing.
-    sideScroll(-48, -2, -208, -196, "W");
+    // Getting the exception back costs nothing and buys the framing: with the
+    // corner inside the zone, the spine's arc is never visible to the rig, so
+    // the camera holds straight down -Z across the whole crossing instead of
+    // swinging 81 degrees out and unwinding again over those 12 units.
+    sideScroll(-48, 10, -208, -197, "W");
     this.ropeSwing(-8, 34.6, -202, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
     this.ropeSwing(-22, 34.6, -202, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
     this.ropeSwing(-36, 34.6, -202, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);

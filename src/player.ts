@@ -1434,7 +1434,16 @@ export class Player {
     // owns the axes outright (continuous turns, no cardinal flips) — EXCEPT
     // inside a travel zone, which is a deliberate local override of the lane
     // (laneDirAt already returns null in there).
-    if (!laneDir && !(level.laneActive && !zone) && !chaseMode && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
+    //
+    // ON THE GROUND ONLY. The flip rescales `speed` from the stick, and speed
+    // is motion along the axis it just replaced — so firing it in mid-air
+    // deletes the momentum that was carrying you, because a stick held
+    // "forward" reads as zero throttle the instant forward becomes sideways.
+    // A zone whose edge you cross while airborne would drop you out of your
+    // own jump. Airborne you keep the frame you left the ground with (nothing
+    // is lost: air steering is lateral and doesn't care), and the frame flips
+    // on touchdown, which is the only moment the new axis means anything.
+    if (this.grounded && !laneDir && !(level.laneActive && !zone) && !chaseMode && wantDir !== this.travelDir && this.state !== 'grind' && !this.freeSkate) {
       const oldSpeed = this.speed;
       this.setTravelDir(wantDir);
       const alongNew =
