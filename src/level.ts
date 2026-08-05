@@ -5010,15 +5010,22 @@ export class Level {
   // terrace and back down. About a third the length of the course it replaces.
 
 // THE DESCENT. A two-lane mountain road out of the reference frame: very
-  // long, very curvy, mainly downhill with flats and one or two ultra-gentle
-  // rises, hemmed by tall hillsides and roadside pines that hide and reveal
-  // the course ahead, with far snow peaks over the valley. Oncoming cars run
-  // the left lane. The road itself is one slideRibbon spline — collision,
-  // banking and the frame() placement system all come with it — and the
-  // camera lane rides the same centreline, so the rig steers with the road.
+  // long, very curvy, mainly downhill with flats, gentle rises and a few
+  // outright -20%+ dives, hemmed by tall hillsides and roadside pines that
+  // hide and reveal the course, metal barriers down both edges, and far
+  // snow ranges over the valley. Oncoming cars run the left lane.
+  //
+  // Construction notes, learned the hard way:
+  //  - the road is one slideRibbon spline with lip=false: a FLAT deck edge
+  //    to edge (the up-curled sides were the slide trough's gutters);
+  //  - the y profile is smoothed after generation — Catmull-Rom through
+  //    kinked heights was where the random lumps came from;
+  //  - everything long (paint, barriers, hills, pines) is built in ~240m
+  //    CHUNKS so the far course frustum-culls; the single full-course meshes
+  //    of the first pass were why the opening seconds stuttered.
   private buildDescent(): void {
     this.batchDecor = true;
-    this.killY = -40;
+    this.killY = -50;
     this.theme = {
       skyTop: "#4a86c8",
       skyBottom: "#e2f0f8",
@@ -5027,43 +5034,40 @@ export class Level {
       sunV: 0.28,
       stars: false,
       fog: 0xc9dcea,
-      fogNear: 80,
-      fogFar: 320, // long alpine views: the hills do the hiding, not the haze
+      fogNear: 90,
+      fogFar: 360, // long alpine views: the hills do the hiding, not the haze
       hemiSky: 0xd8ecff,
       hemiGround: 0x4a5a44,
       hemiI: 1.15,
       sunColor: 0xffedc0,
       sunI: 1.35,
-      particleColor: 0xfff8e8, // pollen drifting through the morning light
+      particleColor: 0xfff8e8,
       particleWind: [0.4, 0.05, 0.2],
     };
 
-    // ---- the road line: a deterministic mountain meander ------------------
-    // Heading wanders around due south inside +-72 degrees (so z only ever
-    // decreases and the finish line stays honest); two sine bands give big
-    // sweepers with smaller kinks riding them. Slope is mostly -6..-13% with
-    // patches of flat and a couple of +2% breathers.
+    // ---- the road line ----------------------------------------------------
     const V = (x: number, y: number, z: number): THREE.Vector3 =>
       new THREE.Vector3(x, y, z);
-    const DS = 24; // metres between control nodes
-    const NODES = 92; // ~2.2km of road
+    const DS = 16; // dense control nodes: the spline has no room to invent
+    const NODES = 150; // ~2.4km
     const pts: THREE.Vector3[] = [];
     let px = 0;
-    let py = 168;
+    let py = 235;
     let pz = 0;
     for (let i = 0; i < NODES; i++) {
       const sArc = i * DS;
       let head =
         (Math.PI / 180) *
-        (58 * Math.sin((sArc * Math.PI * 2) / 520 + 0.8) +
-          26 * Math.sin((sArc * Math.PI * 2) / 173 + 2.6));
+        (58 * Math.sin((sArc * Math.PI * 2) / 560 + 0.8) +
+          24 * Math.sin((sArc * Math.PI * 2) / 187 + 2.6));
       head = THREE.MathUtils.clamp(head, -1.26, 1.26);
-      if (i > NODES - 5) head = 0; // the run-out straightens for the gate
+      if (i > NODES - 6) head = 0; // the run-out straightens for the gate
+      // mostly -6..-13%, punctuated by real -20%+ dives and short breathers
       const slope = THREE.MathUtils.clamp(
-        -0.08 +
-          0.05 * Math.sin(sArc * 0.011 + 1.7) +
-          0.035 * Math.sin(sArc * 0.0046 + 4.2),
-        -0.135,
+        -0.09 +
+          0.07 * Math.sin(sArc * 0.006 + 1.7) +
+          0.06 * Math.sin(sArc * 0.0023 + 4.2),
+        -0.24,
         0.02,
       );
       pts.push(V(px, py, pz));
@@ -5071,18 +5075,25 @@ export class Level {
       pz -= Math.cos(head) * DS;
       py += slope * DS;
     }
-    const W = 13; // two 3.5m lanes + shoulders between the gutter lips
-    const road = this.slideRibbon(pts, W, 0x565b61, undefined, 26, "asphalt");
+    // smooth the height profile: two binomial passes kill every spline lump
+    // while leaving the long dives and crests exactly where they were
+    for (let pass = 0; pass < 3; pass++)
+      for (let i = 1; i < NODES - 1; i++)
+        pts[i].y = (pts[i - 1].y + 2 * pts[i].y + pts[i + 1].y) / 4;
+
+    const W = 13;
+    const road = this.slideRibbon(pts, W, 0x565b61, undefined, 14, "asphalt", false);
     this.roadRibbon = road;
     const F = (t: number, off: number, h: number): THREE.Vector3 =>
       road.frame(THREE.MathUtils.clamp(t, 0.001, 0.999), off, h);
+    const CHUNK = 240; // metres of course per mesh — the culling grain
 
     // spawn in the right lane, looking down the hill
-    const sp = F(0.004, 1.9, 0.15);
+    const sp = F(0.004, 2.9, 0.15);
     this.spawnPos.set(sp.x, sp.y, sp.z);
     this.currentSpawn.copy(this.spawnPos);
 
-    // ---- camera lane: the road's own centreline ---------------------------
+    // ---- camera lane ------------------------------------------------------
     const lane: { x: number; y: number; z: number }[] = [];
     for (let sArc = 0; sArc <= road.len; sArc += 8) {
       const p = F(sArc / road.len, 0, 0);
@@ -5091,71 +5102,25 @@ export class Level {
     this.lanePts = lane;
     this.measureLane();
 
-    // ---- road paint: double yellow centre, white edge lines ---------------
-    const paint = (
-      off: number,
-      hw: number,
-      color: number,
-      emissive: number,
-    ): void => {
-      const posArr: number[] = [];
-      const idx: number[] = [];
-      const step = 7;
-      let n = 0;
-      for (let sArc = 4; sArc <= road.len - 4; sArc += step) {
-        const t = sArc / road.len;
-        const a = F(t, off - hw, 0.05);
-        const b = F(t, off + hw, 0.05);
-        posArr.push(a.x, a.y, a.z, b.x, b.y, b.z);
-        if (n > 0) {
-          const k = n * 2;
-          idx.push(k - 2, k - 1, k, k, k - 1, k + 1);
-        }
-        n++;
-      }
-      const g = new THREE.BufferGeometry();
-      g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(posArr), 3));
-      g.setIndex(idx);
-      g.computeVertexNormals();
-      const mesh = new THREE.Mesh(
-        g,
-        new THREE.MeshLambertMaterial({ color, emissive, side: THREE.DoubleSide }),
-      );
-      mesh.name = "road paint";
-      this.root.add(mesh);
-    };
-    paint(-0.24, 0.09, 0xd8a428, 0x3a2c08);
-    paint(0.24, 0.09, 0xd8a428, 0x3a2c08);
-    paint(-3.6, 0.08, 0xe8e8e0, 0x333330);
-    paint(3.6, 0.08, 0xe8e8e0, 0x333330);
-
-    // ---- hillsides + shoulders: the hide-and-reveal ----------------------
-    // Two strips a side: a grass shoulder off the gutter, then the hill face
-    // climbing away. Height breathes along the course, and every so often it
-    // drops to nearly nothing — a window onto the valley and the peaks —
-    // before the next wall of hillside closes the view again.
-    const hillH = (sArc: number, side: number): number => {
-      let h =
-        12 +
-        9 * Math.sin(sArc * 0.007 + side * 2.1) +
-        6 * Math.sin(sArc * 0.019 + side * 5.0);
-      if (Math.sin(sArc * 0.0045 + side * 1.3) < -0.62) h *= 0.12; // the vista window
-      return Math.max(1.2, h);
-    };
+    // ---- chunked ribbon-strip builder ------------------------------------
+    // One quad strip between two (off, h) profiles over [s0, s1]. Everything
+    // long on this course goes through here so it culls chunk by chunk.
     const strip = (
+      s0: number,
+      s1: number,
       offA: (s: number) => number,
       hA: (s: number) => number,
       offB: (s: number) => number,
       hB: (s: number) => number,
-      color: number,
+      mat: THREE.Material,
       ground: boolean,
       name: string,
+      step = 8,
     ): void => {
       const posArr: number[] = [];
       const idx: number[] = [];
-      const step = 12;
       let n = 0;
-      for (let sArc = 0; sArc <= road.len; sArc += step) {
+      for (let sArc = s0; sArc <= s1 + 0.01; sArc += step) {
         const t = sArc / road.len;
         const a = F(t, offA(sArc), hA(sArc));
         const b = F(t, offB(sArc), hB(sArc));
@@ -5170,36 +5135,116 @@ export class Level {
       g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(posArr), 3));
       g.setIndex(idx);
       g.computeVertexNormals();
-      const mesh = new THREE.Mesh(
-        g,
-        new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide }),
-      );
+      const mesh = new THREE.Mesh(g, mat);
       mesh.name = name;
       this.root.add(mesh);
       if (ground) this.groundMeshes.push(mesh);
     };
+    const chunks = (cb: (s0: number, s1: number) => void): void => {
+      for (let s0 = 0; s0 < road.len; s0 += CHUNK)
+        cb(s0, Math.min(road.len, s0 + CHUNK));
+    };
+
+    // ---- road paint: full-width markings ---------------------------------
+    // Double yellow on the crown, solid white edge lines right at the deck
+    // edges — the lane system spans the whole 13m of road.
+    const yellowMat = new THREE.MeshLambertMaterial({
+      color: 0xd8a428,
+      emissive: 0x3a2c08,
+      side: THREE.DoubleSide,
+    });
+    const whiteMat = new THREE.MeshLambertMaterial({
+      color: 0xe8e8e0,
+      emissive: 0x333330,
+      side: THREE.DoubleSide,
+    });
+    chunks((s0, s1) => {
+      for (const off of [-0.24, 0.24])
+        strip(s0, s1, () => off - 0.085, () => 0.05, () => off + 0.085, () => 0.05,
+          yellowMat, false, "centre line", 7);
+      for (const off of [-5.55, 5.55])
+        strip(s0, s1, () => off - 0.09, () => 0.05, () => off + 0.09, () => 0.05,
+          whiteMat, false, "edge line", 7);
+    });
+
+    // ---- the metal barriers ----------------------------------------------
+    // A continuous beam band down BOTH edges, posts every 9m, and a
+    // grindable rail running the barrier's whole top edge.
+    const beamMat = new THREE.MeshLambertMaterial({
+      color: 0x9aa2ac,
+      emissive: 0x1a1d22,
+      side: THREE.DoubleSide,
+    });
+    const postGeo = new THREE.BoxGeometry(0.16, 0.9, 0.32);
+    const postMat = new THREE.MeshLambertMaterial({ color: 0x5a616b });
+    const PQ = new THREE.Quaternion();
     for (const side of [-1, 1] as const) {
-      strip(
-        () => side * (W / 2 + 0.1),
-        () => 0.1,
-        () => side * (W / 2 + 6),
-        () => 0.9,
-        0x4e8a3c,
-        true,
-        "road shoulder",
-      );
-      strip(
-        () => side * (W / 2 + 6),
-        () => 0.9,
-        () => side * (W / 2 + 20),
-        (sArc) => hillH(sArc, side),
-        0x5a6b4a,
-        true,
-        "hillside",
-      );
+      const bOff = side * 6.05;
+      chunks((s0, s1) => {
+        strip(s0, s1, () => bOff, () => 0.45, () => bOff, () => 0.88,
+          beamMat, false, "barrier beam", 8);
+      });
+      for (let sArc = 6; sArc < road.len - 6; sArc += 9) {
+        const p = F(sArc / road.len, bOff, 0);
+        const m = new THREE.Matrix4().compose(
+          new THREE.Vector3(p.x, p.y + 0.45, p.z),
+          PQ,
+          new THREE.Vector3(1, 1, 1),
+        );
+        this.putDecor("barrier post", postGeo, postMat, m);
+      }
+      // the grind line along the barrier top, full course length
+      const rpts: THREE.Vector3[] = [];
+      for (let sArc = 4; sArc <= road.len - 4; sArc += 10)
+        rpts.push(F(sArc / road.len, bOff, 0.92));
+      const rail = new Rail(rpts);
+      this.rails.push(rail);
+      this.root.add(rail.object);
     }
 
-    // ---- pines along both shoulders --------------------------------------
+    // ---- hillsides + shoulders -------------------------------------------
+    const hillH = (sArc: number, side: number): number => {
+      let h =
+        18 +
+        13 * Math.sin(sArc * 0.007 + side * 2.1) +
+        8 * Math.sin(sArc * 0.019 + side * 5.0);
+      if (Math.sin(sArc * 0.0045 + side * 1.3) < -0.62) h *= 0.1; // vista window
+      return Math.max(1.4, h);
+    };
+    const shoulderMat = new THREE.MeshLambertMaterial({
+      color: 0x4e8a3c,
+      side: THREE.DoubleSide,
+    });
+    const hillMat = new THREE.MeshLambertMaterial({
+      color: 0x5a6b4a,
+      side: THREE.DoubleSide,
+    });
+    const cragMat = new THREE.MeshLambertMaterial({
+      color: 0x6a6a5e,
+      side: THREE.DoubleSide,
+    });
+    for (const side of [-1, 1] as const) {
+      chunks((s0, s1) => {
+        strip(s0, s1,
+          () => side * (W / 2 + 0.05), () => 0.05,
+          () => side * (W / 2 + 6), () => 0.8,
+          shoulderMat, true, "road shoulder", 12);
+        strip(s0, s1,
+          () => side * (W / 2 + 6), () => 0.8,
+          () => side * (W / 2 + 22),
+          (sArc) => hillH(sArc, side),
+          hillMat, true, "hillside", 12);
+        // the crag wall behind the hill: twice the height, hides the world
+        strip(s0, s1,
+          () => side * (W / 2 + 22),
+          (sArc) => hillH(sArc, side),
+          () => side * (W / 2 + 52),
+          (sArc) => hillH(sArc, side) * 2.3 + 6,
+          cragMat, false, "crag", 24);
+      });
+    }
+
+    // ---- pines, baked chunk by chunk -------------------------------------
     let rs = 7;
     const rnd = (): number => {
       rs = (rs * 16807) % 2147483647;
@@ -5228,66 +5273,50 @@ export class Level {
         this.putDecor("pine crown", coneGeo, pineMat, cm);
       }
     };
-    for (let sArc = 30; sArc < road.len - 40; sArc += 13) {
-      for (const side of [-1, 1] as const) {
-        if (rnd() < 0.35) continue; // gaps — a wall of trees reads as a fence
-        const off = side * (W / 2 + 2.2 + rnd() * 4.5);
-        const p = F(sArc / road.len, off, 0.35);
-        pine(p.x, p.y, p.z, 0.85 + rnd() * 0.9);
+    chunks((s0, s1) => {
+      for (let sArc = Math.max(30, s0); sArc < Math.min(s1, road.len - 40); sArc += 11) {
+        for (const side of [-1, 1] as const) {
+          if (rnd() < 0.32) continue;
+          const off = side * (W / 2 + 1.8 + rnd() * 4.2);
+          const p = F(sArc / road.len, off, 0.35);
+          pine(p.x, p.y, p.z, 0.9 + rnd() * 0.9);
+        }
       }
-    }
+      this.bakeDecor(); // one merged pine mesh per chunk: the far forest culls
+    });
 
-    // ---- far scenery: valley floor, mountain ring, one snow giant --------
+    // ---- far scenery: valley, TALL ranges, one colossus ------------------
     const valley = new THREE.Mesh(
-      new THREE.PlaneGeometry(2600, 3200),
+      new THREE.PlaneGeometry(4200, 5200),
       new THREE.MeshLambertMaterial({ color: 0x39543a }),
     );
     valley.rotation.x = -Math.PI / 2;
-    valley.position.set(0, -52, -900);
+    valley.position.set(0, -60, -1200);
     this.root.add(valley);
     const mtnMat = new THREE.MeshLambertMaterial({ color: 0x7a8ba0 });
     const snowMat = new THREE.MeshLambertMaterial({ color: 0xf4f8fc });
-    for (let i = 0; i < 12; i++) {
-      const a = (i / 12) * Math.PI * 2;
-      const dist = 620 + rnd() * 260;
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2;
+      const dist = 950 + rnd() * 450;
       const mx = Math.cos(a) * dist;
-      const mz = -900 + Math.sin(a) * dist;
-      const h = 140 + rnd() * 160;
-      const r = 90 + rnd() * 90;
+      const mz = -1200 + Math.sin(a) * dist;
+      const h = 380 + rnd() * 300;
+      const r = 180 + rnd() * 150;
       const mtn = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), mtnMat);
-      mtn.position.set(mx, -52 + h / 2, mz);
+      mtn.position.set(mx, -60 + h / 2, mz);
       this.root.add(mtn);
-      const cap = new THREE.Mesh(new THREE.ConeGeometry(r * 0.34, h * 0.3, 7), snowMat);
-      cap.position.set(mx, -52 + h - h * 0.14, mz);
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(r * 0.36, h * 0.32, 7), snowMat);
+      cap.position.set(mx, -60 + h - h * 0.15, mz);
       this.root.add(cap);
     }
-    // the reference's one huge snow mountain, dead ahead down the valley
-    const giant = new THREE.Mesh(new THREE.ConeGeometry(260, 420, 8), mtnMat);
-    giant.position.set(60, -52 + 210, -1750);
+    const giant = new THREE.Mesh(new THREE.ConeGeometry(380, 900, 8), mtnMat);
+    giant.position.set(90, -60 + 450, -2600);
     this.root.add(giant);
-    const giantCap = new THREE.Mesh(new THREE.ConeGeometry(120, 150, 8), snowMat);
-    giantCap.position.set(60, -52 + 420 - 68, -1750);
+    const giantCap = new THREE.Mesh(new THREE.ConeGeometry(180, 300, 8), snowMat);
+    giantCap.position.set(90, -60 + 900 - 135, -2600);
     this.root.add(giantCap);
 
-    // ---- guardrail grinds on the big outer curves -------------------------
-    const guard = (t0: number, t1: number, side: -1 | 1): void => {
-      const n = Math.max(3, Math.round(((t1 - t0) * road.len) / 7));
-      const rpts: THREE.Vector3[] = [];
-      for (let i = 0; i <= n; i++)
-        rpts.push(F(THREE.MathUtils.lerp(t0, t1, i / n), side * (W / 2 - 0.7), 0.72));
-      const rail = new Rail(rpts);
-      this.rails.push(rail);
-      this.root.add(rail.object);
-    };
-    guard(0.07, 0.13, 1);
-    guard(0.21, 0.27, -1);
-    guard(0.36, 0.42, 1);
-    guard(0.55, 0.62, -1);
-    guard(0.69, 0.76, 1);
-
     // ---- oncoming traffic -------------------------------------------------
-    // Eight cars strung down the course, driving up it in the LEFT lane.
-    // They wrap off the top back to the bottom, so traffic never runs dry.
     const carCols = [0xb03a2e, 0x3a62b0, 0xd8c090, 0x4a8a4a, 0x8a4a8a, 0xc07838];
     for (let i = 0; i < 8; i++) {
       const group = new THREE.Group();
@@ -5315,7 +5344,7 @@ export class Level {
       });
       for (const lx of [-0.6, 0.6]) {
         const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.22, 0.1), lampMat);
-        lamp.position.set(lx, 0.82, -2.12); // lookAt aims -z up-course: lamps forward
+        lamp.position.set(lx, 0.82, -2.12);
         group.add(lamp);
       }
       this.root.add(group);
@@ -5323,7 +5352,7 @@ export class Level {
         group,
         box: new THREE.Box3(),
         alive: true,
-        x0: 300 + i * 235,
+        x0: 300 + i * 260,
         x1: 0,
         dir: 1,
         speed: 9.5 + (i % 3) * 1.6,
@@ -5332,7 +5361,7 @@ export class Level {
         state: "drive",
         stateT: 0,
         baseY: 0,
-        cross: -2.05, // the left lane, seen down-course
+        cross: -2.9, // centre of the left lane
         body,
         vy: 0,
         spinKill: false,
@@ -5350,10 +5379,10 @@ export class Level {
     this.ribbonFruit(road, 0.5, 0.56, 8);
     this.ribbonFruit(road, 0.66, 0.72, 6);
     this.ribbonFruit(road, 0.85, 0.92, 8);
-    const gem = F(0.48, 2.2, 1.2);
+    const gem = F(0.48, 2.9, 1.2);
     this.crystal(gem.x, gem.y, gem.z);
     for (const t of [0.2, 0.4, 0.6, 0.8]) {
-      const p = F(t, 1.9, 0);
+      const p = F(t, 2.9, 0);
       this.checkpoint(p.y, p.z, p.x);
     }
     const end = F(0.985, 0, 0);
@@ -5361,7 +5390,7 @@ export class Level {
     this.finishGate(end.y, end.z, end.x);
   }
 
-    // THE WARP ROOM. Not a course — a chamber, straight out of the Crash 2
+  // THE WARP ROOM. Not a course — a chamber, straight out of the Crash 2
   // reference: five great circular stone gates stand in a ring around a gold
   // dais, each filled with the wormhole. The gate hardware is the trick that
   // completes the loop illusion: a deep stone collar overlaps the disc's
@@ -11771,6 +11800,7 @@ export class Level {
     roll?: number[], // per-node bank in DEGREES, one per point (0 where omitted)
     bank = 42, // auto-lean gain: how hard the deck rolls into its own turns
     tex = "stone", // surface texture kind — The Descent runs on asphalt
+    lip = true, // slide gutters at the edges; false = a flat ROAD deck
   ): SlideRibbon {
     const r2v = (n: number): number => Math.round(n * 100) / 100;
     const o = pts[0];
@@ -11787,9 +11817,12 @@ export class Level {
       ]),
       curve: "spline", // one flowing road, not filleted corners
       vkind: "half",
-      w: r2v(width / 2 - 2.4), // flat deck between the gutters
-      rise: 3,
-      arc: 53, // R 3 at 53 degrees = a 2.4-wide lip rising 1.25: the slide gutter
+      // lip=true: a slide trough with 2.4-wide gutters. lip=false: a ROAD —
+      // the transition shrinks to a 15cm kerb bevel and the deck runs flat
+      // right across.
+      w: r2v(width / 2 - (lip ? 2.4 : 0.16)),
+      rise: lip ? 3 : 0.45,
+      arc: lip ? 53 : 18,
       bank,
       vert: false, // a banked ROAD, not a trough — no pumping, no auto-copings
       color: "#" + color.toString(16).padStart(6, "0"),
