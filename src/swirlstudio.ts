@@ -68,7 +68,10 @@ const GROUPS: Group[] = [
   {
     name: 'PLASMA',
     fields: [
-      N('jag', 'jag', 0, 3, 0.01, 'high-frequency kinks in the line — the lightning quality'),
+      N('warp', 'shape warp', 0, 0.35, 0.005, 'deforms the RING GEOMETRY — irregular heaving shapes, not circles'),
+      N('warpScale', 'warp scale', 1, 10, 1, 'base harmonic; two more bands ride at ~2.3x and ~0.7x'),
+      N('warpRate', 'warp rate', 0, 5, 0.01, 'how fast the shape churns'),
+      N('jag', 'jag', 0, 3, 0.01, 'high-frequency kinks in the COLOUR field — needs segs ~4x the scale'),
       N('jagScale', 'jag scale', 1, 12, 1, 'kinks per circumference (5-9 = electric)'),
       N('jagRate', 'jag rate', 0, 8, 0.02, 'how fast the kinks seethe'),
       N('streak', 'streak', 0, 1, 0.01, 'brightness knots ALONG the line — energy coursing through'),
@@ -119,6 +122,7 @@ const GROUPS: Group[] = [
     name: 'MOTION',
     fields: [
       N('spin', 'spin', -3, 3, 0.01, 'whole-disc rotation on top of the flow'),
+      N('spinDiff', 'spin diff', -3, 3, 0.01, 'extra field swirl at the centre, fading to zero at the rim'),
       N('pulse', 'pulse', 0, 1, 0.01, 'brightness breathing'),
       N('pulseRate', 'pulse rate', 0, 6, 0.02),
     ],
