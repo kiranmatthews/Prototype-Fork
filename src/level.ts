@@ -4741,13 +4741,10 @@ export class Level {
     // The puff cloud carries the crate's temperament: TNT goes up fiery
     // yellow-into-red, nitro in the same bang gone radioactive green. Chained
     // crates each fire their own burst, so a stack reads as a rolling series.
-    puffs.burst(
-      c.tnt ? "boomTnt" : "boomNitro",
-      center.x,
-      center.y + 0.2,
-      center.z,
-      { strength: 1.2 },
-    );
+    // Strength 1 on purpose: the studio previews at 1, so the numbers that
+    // were dialled by eye are the numbers that play. Anything above it would
+    // quietly inflate the throw and the count past what was approved.
+    puffs.burst(c.tnt ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
   }
 
   consumeBlastBroken(): Crate[] {
