@@ -5025,21 +5025,21 @@ export class Level {
   //    of the first pass were why the opening seconds stuttered.
   private buildDescent(): void {
     this.batchDecor = true;
-    this.killY = -50;
+    this.killY = -10; // the bay is the pit: a few metres under the surface
     this.theme = {
-      skyTop: "#4a86c8",
-      skyBottom: "#e2f0f8",
-      sunColorHex: "#fff2cc",
-      sunU: 0.3,
-      sunV: 0.28,
+      skyTop: "#3f83c6",
+      skyBottom: "#f4e7cd", // warm marine haze sitting on the water
+      sunColorHex: "#ffe9b8",
+      sunU: 0.55,
+      sunV: 0.26,
       stars: false,
-      fog: 0xc9dcea,
-      fogNear: 90,
-      fogFar: 360, // long alpine views: the hills do the hiding, not the haze
-      hemiSky: 0xd8ecff,
-      hemiGround: 0x4a5a44,
+      fog: 0xb4d0dc,
+      fogNear: 100,
+      fogFar: 560, // aspirational: the sky preset caps this (~260 at sunset)
+      hemiSky: 0xd4ecfa,
+      hemiGround: 0x3e5a50,
       hemiI: 1.15,
-      sunColor: 0xffedc0,
+      sunColor: 0xffe8b4,
       sunI: 1.35,
       particleColor: 0xfff8e8,
       particleWind: [0.4, 0.05, 0.2],
@@ -5049,27 +5049,40 @@ export class Level {
     const V = (x: number, y: number, z: number): THREE.Vector3 =>
       new THREE.Vector3(x, y, z);
     const DS = 16; // dense control nodes: the spline has no room to invent
-    const NODES = 150; // ~2.4km
+    const NODES = 160; // ~2.55km around the bay
+    const LEN = DS * NODES;
     const pts: THREE.Vector3[] = [];
     let px = 0;
-    let py = 320;
+    let py = 430;
     let pz = 0;
+    // THE BAY. A slow, relentless right-hand drift bends the whole course
+    // around the water: you set off high on the coast and come off the last
+    // bend pointing along the far shore, right at the beach.
+    const drift = (sArc: number): number => 1.78 * Math.pow(sArc / LEN, 1.18);
     for (let i = 0; i < NODES; i++) {
       const sArc = i * DS;
       let head =
-        (Math.PI / 180) *
-        (58 * Math.sin((sArc * Math.PI * 2) / 560 + 0.8) +
-          24 * Math.sin((sArc * Math.PI * 2) / 187 + 2.6));
-      head = THREE.MathUtils.clamp(head, -1.26, 1.26);
-      if (i > NODES - 6) head = 0; // the run-out straightens for the gate
-      // mostly -6..-13%, punctuated by real -20%+ dives and short breathers
-      const slope = THREE.MathUtils.clamp(
-        -0.125 +
-          0.08 * Math.sin(sArc * 0.006 + 1.7) +
-          0.06 * Math.sin(sArc * 0.0023 + 4.2),
-        -0.28,
-        0.01,
+        drift(sArc) +
+        THREE.MathUtils.clamp(
+          (Math.PI / 180) *
+            (44 * Math.sin((sArc * Math.PI * 2) / 560 + 0.8) +
+              20 * Math.sin((sArc * Math.PI * 2) / 187 + 2.6)),
+          -1.05,
+          1.05,
+        );
+      head = THREE.MathUtils.clamp(head, -1.26, 2.35);
+      if (i > NODES - 8) head = drift(LEN - 8 * DS); // straight roll to the car park
+      // the coast road DIVES: -9..-19% most of the way, past -30% in the big
+      // plunges, and it only flattens for the final roll onto the beach flat
+      let slope = THREE.MathUtils.clamp(
+        -0.155 +
+          0.09 * Math.sin(sArc * 0.006 + 1.7) +
+          0.07 * Math.sin(sArc * 0.0023 + 4.2),
+        -0.34,
+        0.005,
       );
+      if (i > NODES - 14)
+        slope = THREE.MathUtils.lerp(slope, -0.015, (i - (NODES - 14)) / 13);
       pts.push(V(px, py, pz));
       px += Math.sin(head) * DS;
       pz -= Math.cos(head) * DS;
@@ -5080,8 +5093,12 @@ export class Level {
     for (let pass = 0; pass < 3; pass++)
       for (let i = 1; i < NODES - 1; i++)
         pts[i].y = (pts[i - 1].y + 2 * pts[i].y + pts[i + 1].y) / 4;
+    // pin the arrival: rescale every drop so the last node lands EXACTLY at
+    // beach height — all 430m of mountain get spent reaching the sea
+    const yScale = (430 - 3) / Math.max(1, 430 - pts[NODES - 1].y);
+    for (const p of pts) p.y = 430 - (430 - p.y) * yScale;
 
-    const W = 18.2; // 40% wider: two broad lanes
+    const W = 22.8; // wider again: a broad two-lane coast highway
     const groundBefore = this.groundMeshes.length;
     const road = this.slideRibbon(pts, W, 0x565b61, undefined, 14, "asphalt", false);
     this.roadRibbon = road;
@@ -5104,8 +5121,8 @@ export class Level {
       if (triCount < 10000) continue;
       const buckets = new Map<number, number[]>();
       for (let f = 0; f < triCount; f++) {
-        // bucket by the FIRST vertex's z — the course is z-monotonic, so z
-        // is as good as arc length for carving 80m stretches
+        // bucket by the FIRST vertex's z — plain spatial slabs. The bay curve
+        // can revisit a slab; that chunk just holds both pieces, still exact.
         const key = Math.floor(posA.getZ(f * 3) / 80);
         let arr = buckets.get(key);
         if (!arr) buckets.set(key, (arr = []));
@@ -5148,8 +5165,8 @@ export class Level {
       road.frame(THREE.MathUtils.clamp(t, 0.001, 0.999), off, h);
     const CHUNK = 240; // metres of course per mesh — the culling grain
 
-    // spawn in the right lane, looking down the hill
-    const sp = F(0.004, 4.2, 0.15);
+    // spawn in the right lane — the sea side — looking down the hill
+    const sp = F(0.004, 5.6, 0.15);
     this.spawnPos.set(sp.x, sp.y, sp.z);
     this.currentSpawn.copy(this.spawnPos);
 
@@ -5207,7 +5224,7 @@ export class Level {
 
     // ---- road paint: full-width markings ---------------------------------
     // Double yellow on the crown, solid white edge lines right at the deck
-    // edges — the lane system spans the whole 13m of road.
+    // edges — the lane system spans the full width of the road.
     const yellowMat = new THREE.MeshLambertMaterial({
       color: 0xd8a428,
       emissive: 0x3a2c08,
@@ -5222,7 +5239,7 @@ export class Level {
       for (const off of [-0.24, 0.24])
         strip(s0, s1, () => off - 0.085, () => 0.05, () => off + 0.085, () => 0.05,
           yellowMat, false, "centre line", 7);
-      for (const off of [-8.15, 8.15])
+      for (const off of [-10.45, 10.45])
         strip(s0, s1, () => off - 0.09, () => 0.05, () => off + 0.09, () => 0.05,
           whiteMat, false, "edge line", 7);
     });
@@ -5239,7 +5256,7 @@ export class Level {
     const postMat = new THREE.MeshLambertMaterial({ color: 0x5a616b });
     const PQ = new THREE.Quaternion();
     for (const side of [-1, 1] as const) {
-      const bOff = side * 8.65;
+      const bOff = side * 10.95;
       chunks((s0, s1) => {
         strip(s0, s1, () => bOff, () => 0.45, () => bOff, () => 0.88,
           beamMat, false, "barrier beam", 8);
@@ -5262,14 +5279,18 @@ export class Level {
       this.root.add(rail.object);
     }
 
-    // ---- hillsides + shoulders -------------------------------------------
-    const hillH = (sArc: number, side: number): number => {
+    // ---- the two sides of a COAST road -----------------------------------
+    // LEFT is the mountain: shoulder, hill wall, then a crag face that climbs
+    // a couple hundred metres and hides the inland world.
+    // RIGHT is the drop: a strip of scrub past the barrier, then bluffs that
+    // fall all the way into the bay.
+    const hillL = (sArc: number): number => {
       let h =
-        18 +
-        13 * Math.sin(sArc * 0.007 + side * 2.1) +
-        8 * Math.sin(sArc * 0.019 + side * 5.0);
-      if (Math.sin(sArc * 0.0045 + side * 1.3) < -0.62) h *= 0.1; // vista window
-      return Math.max(1.4, h);
+        30 +
+        18 * Math.sin(sArc * 0.007 + 2.1) +
+        10 * Math.sin(sArc * 0.019 + 5.0);
+      if (Math.sin(sArc * 0.0045 + 1.3) < -0.72) h *= 0.12; // rare vista gap
+      return Math.max(2.4, h);
     };
     const shoulderMat = new THREE.MeshLambertMaterial({
       color: 0x4e8a3c,
@@ -5283,26 +5304,65 @@ export class Level {
       color: 0x6a6a5e,
       side: THREE.DoubleSide,
     });
-    for (const side of [-1, 1] as const) {
-      chunks((s0, s1) => {
-        strip(s0, s1,
-          () => side * (W / 2 + 0.05), () => 0.05,
-          () => side * (W / 2 + 6), () => 0.8,
-          shoulderMat, true, "road shoulder", 12);
-        strip(s0, s1,
-          () => side * (W / 2 + 6), () => 0.8,
-          () => side * (W / 2 + 22),
-          (sArc) => hillH(sArc, side),
-          hillMat, true, "hillside", 12);
-        // the crag wall behind the hill: twice the height, hides the world
-        strip(s0, s1,
-          () => side * (W / 2 + 22),
-          (sArc) => hillH(sArc, side),
-          () => side * (W / 2 + 52),
-          (sArc) => hillH(sArc, side) * 2.3 + 6,
-          cragMat, false, "crag", 24);
-      });
-    }
+    const scrubMat = new THREE.MeshLambertMaterial({
+      color: 0x6e8248,
+      side: THREE.DoubleSide,
+    });
+    const bluffMat = new THREE.MeshLambertMaterial({
+      color: 0x7c6f58,
+      side: THREE.DoubleSide,
+    });
+    const mistMat = new THREE.MeshLambertMaterial({
+      color: 0x6e7a88,
+      side: THREE.DoubleSide,
+    });
+    const deckY = (sArc: number): number => F(sArc / road.len, 0, 0).y;
+    chunks((s0, s1) => {
+      // the mountain side
+      strip(s0, s1,
+        () => -(W / 2 + 0.05), () => 0.05,
+        () => -(W / 2 + 5), () => 0.9,
+        shoulderMat, true, "road shoulder", 12);
+      strip(s0, s1,
+        () => -(W / 2 + 5), () => 0.9,
+        () => -(W / 2 + 26),
+        (sArc) => hillL(sArc),
+        hillMat, true, "hillside", 12);
+      strip(s0, s1,
+        () => -(W / 2 + 26),
+        (sArc) => hillL(sArc),
+        () => -(W / 2 + 74),
+        (sArc) => hillL(sArc) * 2.8 + 40,
+        cragMat, false, "crag", 24);
+      // the sea side
+      strip(s0, s1,
+        () => W / 2 + 0.05, () => 0.05,
+        () => W / 2 + 2.4, () => 0.3,
+        scrubMat, true, "cliff shoulder", 12);
+      strip(s0, s1,
+        () => W / 2 + 2.4, () => 0.3,
+        () => W / 2 + 15, () => -34,
+        scrubMat, true, "bluff top", 12);
+      // the sea cliff proper: its foot is pinned below sea level in ABSOLUTE
+      // terms, so the rock always meets the water and the shoreline is simply
+      // where this face crosses y=0. It stays NARROW on purpose — the fog
+      // saturates at ~260m, so the water has to arrive well inside that or
+      // the bay never reads from the deck.
+      strip(s0, s1,
+        () => W / 2 + 15, () => -34,
+        () => W / 2 + 55,
+        (sArc) => -26 - deckY(sArc),
+        bluffMat, false, "sea cliff", 24);
+      // and behind the crag, a second ridge band climbs into the haze — at
+      // ~100-170m out it fogs to a towering misty wall, which is the only
+      // kind of tall that survives the 400m draw distance
+      strip(s0, s1,
+        () => -(W / 2 + 74),
+        (sArc) => hillL(sArc) * 2.8 + 40,
+        () => -(W / 2 + 170),
+        (sArc) => hillL(sArc) * 1.9 + 260,
+        mistMat, false, "high ridge", 24);
+    });
 
     // ---- pines, baked chunk by chunk -------------------------------------
     let rs = 7;
@@ -5335,46 +5395,58 @@ export class Level {
     };
     chunks((s0, s1) => {
       for (let sArc = Math.max(30, s0); sArc < Math.min(s1, road.len - 40); sArc += 11) {
-        for (const side of [-1, 1] as const) {
-          if (rnd() < 0.32) continue;
-          const off = side * (W / 2 + 1.8 + rnd() * 4.2);
+        // the mountain side wears a proper roadside forest...
+        if (rnd() > 0.3) {
+          const off = -(W / 2 + 1.8 + rnd() * 4.6);
           const p = F(sArc / road.len, off, 0.35);
           pine(p.x, p.y, p.z, 0.9 + rnd() * 0.9);
+        }
+        // ...the sea side only a thin scatter, high on the early cliffs, so
+        // the bay view opens right out as you come down
+        if (rnd() < 0.24 && sArc < road.len * 0.45) {
+          const p = F(sArc / road.len, W / 2 + 1.5 + rnd() * 0.9, 0.35);
+          pine(p.x, p.y, p.z, 0.65 + rnd() * 0.5);
         }
       }
       this.bakeDecor(); // one merged pine mesh per chunk: the far forest culls
     });
 
-    // ---- far scenery: valley, TALL ranges, one colossus ------------------
-    const valley = new THREE.Mesh(
-      new THREE.PlaneGeometry(4200, 5200),
-      new THREE.MeshLambertMaterial({ color: 0x39543a }),
+    // ---- the bay itself --------------------------------------------------
+    // One vast water plane at true sea level. Every sea-side terrain face is
+    // pinned below y=0, so the coastline draws itself where rock meets water.
+    const midO = F(0.5, 0, 0);
+    const ocean = new THREE.Mesh(
+      new THREE.PlaneGeometry(7000, 7000),
+      // the emissive floor keeps the water DEEP blue through 400m of haze —
+      // pure Lambert fogged out to grey and the bay stopped reading at all
+      new THREE.MeshLambertMaterial({ color: 0x2a6a8e, emissive: 0x123a52 }),
     );
-    valley.rotation.x = -Math.PI / 2;
-    valley.position.set(0, -60, -1200);
-    this.root.add(valley);
-    const mtnMat = new THREE.MeshLambertMaterial({ color: 0x7a8ba0 });
-    const snowMat = new THREE.MeshLambertMaterial({ color: 0xf4f8fc });
-    for (let i = 0; i < 16; i++) {
-      const a = (i / 16) * Math.PI * 2;
-      const dist = 950 + rnd() * 450;
-      const mx = Math.cos(a) * dist;
-      const mz = -1200 + Math.sin(a) * dist;
-      const h = 380 + rnd() * 300;
-      const r = 180 + rnd() * 150;
-      const mtn = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), mtnMat);
-      mtn.position.set(mx, -60 + h / 2, mz);
-      this.root.add(mtn);
-      const cap = new THREE.Mesh(new THREE.ConeGeometry(r * 0.36, h * 0.32, 7), snowMat);
-      cap.position.set(mx, -60 + h - h * 0.15, mz);
-      this.root.add(cap);
+    ocean.rotation.x = -Math.PI / 2;
+    ocean.position.set(midO.x + 600, 0, midO.z);
+    this.root.add(ocean);
+
+    // ---- islands in the bay ----------------------------------------------
+    // No far shore: the draw distance is 400m and the fog owns everything
+    // past ~260, so distant headlands are just the painted sky. What CAN
+    // read is rock standing in the water a couple hundred metres off the
+    // cliffs — small islands, half-dipped in haze, exactly the PS1 trick.
+    const lateral = (t: number, d: number): THREE.Vector3 => {
+      const c = F(t, 0, 0);
+      const u = F(t, 1, 0); // one metre toward the deck's right
+      return new THREE.Vector3(c.x + (u.x - c.x) * d, 0, c.z + (u.z - c.z) * d);
+    };
+    const isleMat = new THREE.MeshLambertMaterial({ color: 0x74836e });
+    for (const [tt, d, r, h] of [
+      [0.18, 210, 70, 85],
+      [0.45, 300, 110, 150],
+      [0.62, 170, 55, 60],
+      [0.88, 260, 90, 110],
+    ] as const) {
+      const c = lateral(tt, d);
+      const isle = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), isleMat);
+      isle.position.set(c.x, h / 2 - 6, c.z);
+      this.root.add(isle);
     }
-    const giant = new THREE.Mesh(new THREE.ConeGeometry(380, 900, 8), mtnMat);
-    giant.position.set(90, -60 + 450, -2600);
-    this.root.add(giant);
-    const giantCap = new THREE.Mesh(new THREE.ConeGeometry(180, 300, 8), snowMat);
-    giantCap.position.set(90, -60 + 900 - 135, -2600);
-    this.root.add(giantCap);
 
     // ---- oncoming traffic -------------------------------------------------
     const carCols = [0xb03a2e, 0x3a62b0, 0xd8c090, 0x4a8a4a, 0x8a4a8a, 0xc07838];
@@ -5382,15 +5454,11 @@ export class Level {
     // player's own lane, faster, each closing on a slower partner ahead of
     // it — the pass plays out right in front of you and YOUR lane is the
     // one that is briefly not yours.
-    const traffic: { s0: number; lane: number; speed: number }[] = [];
-    for (let i = 0; i < 8; i++)
-      traffic.push({ s0: 280 + i * 265, lane: -4.2, speed: 9.5 + (i % 3) * 1.6 });
-    for (const os of [700, 1350, 1950]) traffic.push({ s0: os + 16, lane: 4.2, speed: 14.5 });
-    for (let i = 0; i < traffic.length; i++) {
+    const makeCar = (col: number): { group: THREE.Group; body: THREE.Mesh } => {
       const group = new THREE.Group();
       const body = new THREE.Mesh(
         new THREE.BoxGeometry(2.1, 0.75, 4.2),
-        new THREE.MeshLambertMaterial({ color: carCols[i % carCols.length] }),
+        new THREE.MeshLambertMaterial({ color: col }),
       );
       body.position.y = 0.75;
       group.add(body);
@@ -5415,6 +5483,14 @@ export class Level {
         lamp.position.set(lx, 0.82, -2.12);
         group.add(lamp);
       }
+      return { group, body };
+    };
+    const traffic: { s0: number; lane: number; speed: number }[] = [];
+    for (let i = 0; i < 8; i++)
+      traffic.push({ s0: 280 + i * 280, lane: -5.6, speed: 9.5 + (i % 3) * 1.6 });
+    for (const os of [700, 1400, 2050]) traffic.push({ s0: os + 16, lane: 5.6, speed: 14.5 });
+    for (let i = 0; i < traffic.length; i++) {
+      const { group, body } = makeCar(carCols[i % carCols.length]);
       this.root.add(group);
       this.enemies.push({
         group,
@@ -5447,15 +5523,141 @@ export class Level {
     this.ribbonFruit(road, 0.5, 0.56, 8);
     this.ribbonFruit(road, 0.66, 0.72, 6);
     this.ribbonFruit(road, 0.85, 0.92, 8);
-    const gem = F(0.48, 4.2, 1.2);
+    const gem = F(0.48, 5.6, 1.2);
     this.crystal(gem.x, gem.y, gem.z);
     for (const t of [0.2, 0.4, 0.6, 0.8]) {
-      const p = F(t, 4.2, 0);
+      const p = F(t, 5.6, 0);
       this.checkpoint(p.y, p.z, p.x);
     }
-    const end = F(0.985, 0, 0);
+
+    // ---- THE ARRIVAL: the beach car park ---------------------------------
+    // The road empties onto a tarmac apron by the sand: painted bays, a kerb
+    // wall on the sea side, parked cars, palms — and the warp pad waiting at
+    // the entrance.
+    const end = F(0.997, 0, 0);
+    const back = F(0.985, 0, 0);
+    const D = new THREE.Vector3().subVectors(end, back).setY(0).normalize();
+    const Rv = new THREE.Vector3()
+      .subVectors(F(0.997, 1, 0), end)
+      .setY(0)
+      .normalize();
+    const yawEnd = Math.atan2(-Rv.z, Rv.x); // yawed local +x lands on deck-right
+    const lotAt = (a: number, b: number): THREE.Vector3 =>
+      new THREE.Vector3(
+        end.x + D.x * 20 + Rv.x * a + D.x * b,
+        0,
+        end.z + D.z * 20 + Rv.z * a + D.z * b,
+      );
+    const lotTop = end.y - 0.02;
+    const lotMat = new THREE.MeshLambertMaterial({ color: 0x4e5257 });
+    const lot = new THREE.Mesh(new THREE.BoxGeometry(66, 0.8, 44), lotMat);
+    const lc = lotAt(0, 0);
+    lot.position.set(lc.x, lotTop - 0.4, lc.z);
+    lot.rotation.y = yawEnd;
+    lot.name = "beach car park";
+    this.root.add(lot);
+    this.groundMeshes.push(lot);
+    // painted bay dividers along the seaward row
+    const bayGeo = new THREE.BoxGeometry(0.16, 0.06, 5.4);
+    const bayMat = new THREE.MeshLambertMaterial({
+      color: 0xe8e8e0,
+      emissive: 0x333330,
+    });
+    const yawQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yawEnd, 0));
+    for (let b = -4; b <= 4; b++) {
+      const p = lotAt(b * 3.4, 14);
+      this.putDecor("bay line", bayGeo, bayMat,
+        new THREE.Matrix4().compose(
+          new THREE.Vector3(p.x, lotTop + 0.03, p.z),
+          yawQ,
+          new THREE.Vector3(1, 1, 1),
+        ));
+    }
+    // low kerb wall so the lot does not just pour into the sea
+    const kerbGeo = new THREE.BoxGeometry(66, 0.5, 0.5);
+    const kerbMat = new THREE.MeshLambertMaterial({ color: 0xb8b4a8 });
+    const kp = lotAt(0, 21.6);
+    this.putDecor("sea kerb", kerbGeo, kerbMat,
+      new THREE.Matrix4().compose(
+        new THREE.Vector3(kp.x, lotTop + 0.25, kp.z),
+        yawQ,
+        new THREE.Vector3(1, 1, 1),
+      ));
+    // parked cars nosed into the bays (plain scenery, nobody home)
+    for (const [slot, ci] of [[-3.5, 1], [-1.5, 4], [0.5, 2], [2.5, 5], [3.5, 0]] as const) {
+      const { group } = makeCar(carCols[ci]);
+      const p = lotAt(slot * 3.4 + 1.7, 14);
+      group.position.set(p.x, lotTop, p.z);
+      group.rotation.y = yawEnd + (rnd() - 0.5) * 0.12;
+      this.root.add(group);
+    }
+    // the sand: a wide sheet tilted just enough to slip under the water line
+    const sandGeo = new THREE.PlaneGeometry(46, 120);
+    sandGeo.rotateX(-Math.PI / 2);
+    sandGeo.rotateZ(-0.08);
+    const sand = new THREE.Mesh(
+      sandGeo,
+      new THREE.MeshLambertMaterial({ color: 0xe2d0a4 }),
+    );
+    const sc = lotAt(51, 8);
+    sand.position.set(sc.x, 1.35, sc.z);
+    sand.rotation.y = yawEnd;
+    sand.name = "beach sand";
+    this.root.add(sand);
+    this.groundMeshes.push(sand);
+    // a line of surf where the sand crosses the surface
+    const foamGeo = new THREE.BoxGeometry(0.9, 0.06, 120);
+    const foamMat = new THREE.MeshLambertMaterial({
+      color: 0xf4f4ea,
+      emissive: 0x3a3a34,
+    });
+    const fp = lotAt(51 + 16.9, 8);
+    this.putDecor("surf line", foamGeo, foamMat,
+      new THREE.Matrix4().compose(
+        new THREE.Vector3(fp.x, 0.06, fp.z),
+        yawQ,
+        new THREE.Vector3(1, 1, 1),
+      ));
+    // palms: a lean trunk and a whorl of drooping fronds, PS1 cheap
+    const palmTrunkGeo = new THREE.CylinderGeometry(0.14, 0.26, 5.2, 5);
+    const palmTrunkMat = new THREE.MeshLambertMaterial({ color: 0x8a6a44 });
+    const frondGeo = new THREE.ConeGeometry(0.5, 3.2, 4);
+    frondGeo.scale(1, 1, 0.22);
+    const frondMat = new THREE.MeshLambertMaterial({ color: 0x3e8a3e });
+    const palm = (x: number, y: number, z: number, sc2: number): void => {
+      const leanE = new THREE.Euler(0.1 + rnd() * 0.12, rnd() * 6.28, 0);
+      const leanQ = new THREE.Quaternion().setFromEuler(leanE);
+      this.putDecor("palm trunk", palmTrunkGeo, palmTrunkMat,
+        new THREE.Matrix4().compose(
+          new THREE.Vector3(x, y + 2.6 * sc2, z),
+          leanQ,
+          new THREE.Vector3(sc2, sc2, sc2),
+        ));
+      for (let fr = 0; fr < 6; fr++) {
+        const a = (fr / 6) * Math.PI * 2 + rnd() * 0.5;
+        const fq = new THREE.Quaternion().setFromEuler(
+          new THREE.Euler(1.62 + rnd() * 0.25, a, 0, "YXZ"),
+        );
+        this.putDecor("palm frond", frondGeo, frondMat,
+          new THREE.Matrix4().compose(
+            new THREE.Vector3(
+              x + Math.sin(a) * 1.1 * sc2,
+              y + 5.2 * sc2,
+              z + Math.cos(a) * 1.1 * sc2,
+            ),
+            fq,
+            new THREE.Vector3(sc2, sc2, sc2),
+          ));
+      }
+    };
+    for (const [a, b] of [[-28, 3], [-25, 19], [28, 2], [25, 19], [-8, 23.5], [10, 23.5]] as const) {
+      const p = lotAt(a, b);
+      palm(p.x, lotTop, p.z, 0.85 + rnd() * 0.35);
+    }
+    this.bakeDecor(); // bay lines, kerb, surf + palms in one arrival batch
+
     this.finishZ = end.z;
-    this.finishGate(end.y, end.z, end.x);
+    this.finishGate(end.y, end.z, end.x, THREE.MathUtils.radToDeg(yawEnd));
   }
 
   // THE WARP ROOM. Not a course — a chamber, straight out of the Crash 2
