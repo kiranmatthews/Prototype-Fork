@@ -5059,48 +5059,81 @@ export class Level {
     // around the water: you set off high on the coast and come off the last
     // bend pointing along the far shore, right at the beach.
     const drift = (sArc: number): number => 1.78 * Math.pow(sArc / LEN, 1.18);
+    // SOFT limits everywhere. Hard clamps put corners into the heading and
+    // slope functions, corners put kinks in the spline, and kinks were the
+    // rattle you felt the whole way down. tanh bends instead of breaking.
+    const softc = (v: number, lim: number): number => lim * Math.tanh(v / lim);
+    const headAt = (sArc: number): number => {
+      const wig = softc(
+        (Math.PI / 180) *
+          (44 * Math.sin((sArc * Math.PI * 2) / 560 + 0.8) +
+            20 * Math.sin((sArc * Math.PI * 2) / 187 + 2.6)),
+        1.05,
+      );
+      // ease onto the fixed final heading — no snap at the run-out
+      const endBlend = THREE.MathUtils.smoothstep(sArc, LEN - 230, LEN - 90);
+      return THREE.MathUtils.lerp(
+        softc(drift(sArc) + wig, 2.3),
+        softc(drift(LEN - 140), 2.3),
+        endBlend,
+      );
+    };
     for (let i = 0; i < NODES; i++) {
       const sArc = i * DS;
-      let head =
-        drift(sArc) +
-        THREE.MathUtils.clamp(
-          (Math.PI / 180) *
-            (44 * Math.sin((sArc * Math.PI * 2) / 560 + 0.8) +
-              20 * Math.sin((sArc * Math.PI * 2) / 187 + 2.6)),
-          -1.05,
-          1.05,
-        );
-      head = THREE.MathUtils.clamp(head, -1.26, 2.35);
-      if (i > NODES - 8) head = drift(LEN - 8 * DS); // straight roll to the car park
       // the coast road DIVES: -9..-19% most of the way, past -30% in the big
       // plunges, and it only flattens for the final roll onto the beach flat
-      let slope = THREE.MathUtils.clamp(
+      let slope =
         -0.155 +
+        softc(
           0.09 * Math.sin(sArc * 0.006 + 1.7) +
-          0.07 * Math.sin(sArc * 0.0023 + 4.2),
-        -0.34,
-        0.005,
+            0.07 * Math.sin(sArc * 0.0023 + 4.2),
+          0.16,
+        );
+      slope = THREE.MathUtils.lerp(
+        slope,
+        -0.015,
+        THREE.MathUtils.smoothstep(i, NODES - 15, NODES - 4),
       );
-      if (i > NODES - 14)
-        slope = THREE.MathUtils.lerp(slope, -0.015, (i - (NODES - 14)) / 13);
       pts.push(V(px, py, pz));
+      const head = headAt(sArc);
       px += Math.sin(head) * DS;
       pz -= Math.cos(head) * DS;
       py += slope * DS;
     }
-    // smooth the height profile: two binomial passes kill every spline lump
-    // while leaving the long dives and crests exactly where they were
-    for (let pass = 0; pass < 3; pass++)
+    // smooth EVERY axis: binomial passes kill the spline lumps in the height
+    // profile AND the lateral jitter that banking amplifies into rattle
+    for (let pass = 0; pass < 5; pass++)
       for (let i = 1; i < NODES - 1; i++)
         pts[i].y = (pts[i - 1].y + 2 * pts[i].y + pts[i + 1].y) / 4;
+    for (let pass = 0; pass < 2; pass++)
+      for (let i = 1; i < NODES - 1; i++) {
+        pts[i].x = (pts[i - 1].x + 2 * pts[i].x + pts[i + 1].x) / 4;
+        pts[i].z = (pts[i - 1].z + 2 * pts[i].z + pts[i + 1].z) / 4;
+      }
     // pin the arrival: rescale every drop so the last node lands EXACTLY at
     // beach height — all 430m of mountain get spent reaching the sea
     const yScale = (430 - 3) / Math.max(1, 430 - pts[NODES - 1].y);
     for (const p of pts) p.y = 430 - (430 - p.y) * yScale;
 
     const W = 22.8; // wider again: a broad two-lane coast highway
+    // AUTHORED banking from the analytic heading. The kernel's auto-lean
+    // estimates curvature by finite differences over the finished spline —
+    // Catmull-Rom curvature oscillates inside every segment, so the deck
+    // wobbled its roll a few degrees every couple of metres. The closed-form
+    // derivative of headAt is glass, so the lean is too. bank=0 turns the
+    // noisy estimator OFF.
+    const rollDeg: number[] = [];
+    for (let i = 0; i < NODES; i++) {
+      const s = i * DS;
+      // sample INSIDE the course: drift uses pow(s/LEN, 1.18), and a negative
+      // argument turns the whole first node's bank into NaN
+      const s0 = Math.max(0, s - 9);
+      const s1 = Math.min(LEN, s + 9);
+      const kappa = (headAt(s1) - headAt(s0)) / (s1 - s0); // rad per metre
+      rollDeg.push(THREE.MathUtils.clamp(kappa * 620, -13, 13));
+    }
     const groundBefore = this.groundMeshes.length;
-    const road = this.slideRibbon(pts, W, 0x565b61, undefined, 14, "asphalt", false);
+    const road = this.slideRibbon(pts, W, 0x565b61, rollDeg, 0, "asphalt", false);
     this.roadRibbon = road;
     // THE LAG FIX. The ribbon arrives as ONE ~50k-triangle mesh, and three's
     // raycaster has no BVH: every ground ray brute-forced the whole 2.4km of
@@ -5285,12 +5318,13 @@ export class Level {
     // RIGHT is the drop: a strip of scrub past the barrier, then bluffs that
     // fall all the way into the bay.
     const hillL = (sArc: number): number => {
-      let h =
+      const h =
         30 +
         18 * Math.sin(sArc * 0.007 + 2.1) +
         10 * Math.sin(sArc * 0.019 + 5.0);
-      if (Math.sin(sArc * 0.0045 + 1.3) < -0.72) h *= 0.12; // rare vista gap
-      return Math.max(2.4, h);
+      // no vista gaps any more: the left is a WALL now, and a wall with
+      // windows is an invitation to ride through one
+      return Math.max(12, h);
     };
     const shoulderMat = new THREE.MeshLambertMaterial({
       color: 0x4e8a3c,
@@ -5318,30 +5352,35 @@ export class Level {
     });
     const deckY = (sArc: number): number => F(sArc / road.len, 0, 0).y;
     chunks((s0, s1) => {
-      // the mountain side
+      // the mountain side: a thin verge, then ROCK, straight up. The road is
+      // a shelf cut into the mountain and the cut face is the boundary.
       strip(s0, s1,
         () => -(W / 2 + 0.05), () => 0.05,
-        () => -(W / 2 + 5), () => 0.9,
-        shoulderMat, true, "road shoulder", 12);
+        () => -(W / 2 + 0.7), () => 0.35,
+        shoulderMat, true, "road verge", 12);
       strip(s0, s1,
-        () => -(W / 2 + 5), () => 0.9,
+        () => -(W / 2 + 0.7), () => 0.35,
+        () => -(W / 2 + 4.4), () => 9,
+        cragMat, false, "rock face", 12);
+      strip(s0, s1,
+        () => -(W / 2 + 4.4), () => 9,
         () => -(W / 2 + 26),
         (sArc) => hillL(sArc),
-        hillMat, true, "hillside", 12);
+        hillMat, false, "hillside", 12);
       strip(s0, s1,
         () => -(W / 2 + 26),
         (sArc) => hillL(sArc),
         () => -(W / 2 + 74),
         (sArc) => hillL(sArc) * 2.8 + 40,
         cragMat, false, "crag", 24);
-      // the sea side
+      // the sea side: a 1.2m lip of scrub is ALL the mercy there is
       strip(s0, s1,
         () => W / 2 + 0.05, () => 0.05,
-        () => W / 2 + 2.4, () => 0.3,
+        () => W / 2 + 1.2, () => 0.3,
         scrubMat, true, "cliff shoulder", 12);
       strip(s0, s1,
-        () => W / 2 + 2.4, () => 0.3,
-        () => W / 2 + 15, () => -34,
+        () => W / 2 + 1.2, () => 0.3,
+        () => W / 2 + 13, () => -36,
         scrubMat, true, "bluff top", 12);
       // the sea cliff proper: its foot is pinned below sea level in ABSOLUTE
       // terms, so the rock always meets the water and the shoreline is simply
@@ -5349,7 +5388,7 @@ export class Level {
       // saturates at ~260m, so the water has to arrive well inside that or
       // the bay never reads from the deck.
       strip(s0, s1,
-        () => W / 2 + 15, () => -34,
+        () => W / 2 + 13, () => -36,
         () => W / 2 + 55,
         (sArc) => -26 - deckY(sArc),
         bluffMat, false, "sea cliff", 24);
@@ -5363,6 +5402,43 @@ export class Level {
         (sArc) => hillL(sArc) * 1.9 + 260,
         mistMat, false, "high ridge", 24);
     });
+
+    // ---- the mountain PUSHES BACK ----------------------------------------
+    // Short overlapping AABBs down the whole rock face feed the same blocker
+    // engine as drawn walls: ride at the cut and it shrugs you back onto the
+    // road. Segments stay short so the boxes hug the curve instead of
+    // bulging across it.
+    for (let sArc = 0; sArc < road.len; sArc += 3) {
+      const t0 = sArc / road.len;
+      const t1 = Math.min(0.999, (sArc + 3.6) / road.len);
+      const a0 = F(t0, -(W / 2 + 0.8), 0);
+      const a1 = F(t1, -(W / 2 + 0.8), 0);
+      const b0 = F(t0, -(W / 2 + 4.6), 0);
+      const b1 = F(t1, -(W / 2 + 4.6), 0);
+      const box = new THREE.Box3();
+      for (const p of [a0, a1, b0, b1]) box.expandByPoint(p);
+      box.min.y = Math.min(a0.y, a1.y) - 2;
+      box.max.y = Math.max(a0.y, a1.y) + 8;
+      this.walls.push(box);
+    }
+    // ---- the cliff does NOT --------------------------------------------
+    // Touch-kill volumes hug the bluff face from just under the scrub lip
+    // down to the water: past the lip there is no riding it out, only the
+    // tumble. Their tops sit ~2m BELOW deck height, so airs over the
+    // barrier that come back are never clipped — only bodies that go down.
+    for (let sArc = 0; sArc < road.len; sArc += 11) {
+      const t0 = sArc / road.len;
+      const t1 = Math.min(0.999, (sArc + 12) / road.len);
+      const a0 = F(t0, W / 2 + 2.4, 0);
+      const a1 = F(t1, W / 2 + 2.4, 0);
+      const b0 = F(t0, W / 2 + 14.5, 0);
+      const b1 = F(t1, W / 2 + 14.5, 0);
+      const box = new THREE.Box3();
+      for (const p of [a0, a1, b0, b1]) box.expandByPoint(p);
+      box.max.y = Math.min(a0.y, a1.y) - 1.8;
+      box.min.y = box.max.y - 44;
+      this.pitBoxes.push(box);
+    }
 
     // ---- pines, baked chunk by chunk -------------------------------------
     let rs = 7;
@@ -5394,18 +5470,15 @@ export class Level {
       }
     };
     chunks((s0, s1) => {
-      for (let sArc = Math.max(30, s0); sArc < Math.min(s1, road.len - 40); sArc += 11) {
-        // the mountain side wears a proper roadside forest...
-        if (rnd() > 0.3) {
-          const off = -(W / 2 + 1.8 + rnd() * 4.6);
-          const p = F(sArc / road.len, off, 0.35);
+      for (let sArc = Math.max(30, s0); sArc < Math.min(s1, road.len - 40); sArc += 9) {
+        // a dense treeline STANDING ON the rock lip: the visible half of the
+        // barrier, thick enough to read as "the mountain starts here".
+        // The sea side gets nothing — the view is the point, and so is the
+        // drop.
+        if (rnd() > 0.22) {
+          const off = -(W / 2 + 3.4 + rnd() * 1.8);
+          const p = F(sArc / road.len, off, 8.8);
           pine(p.x, p.y, p.z, 0.9 + rnd() * 0.9);
-        }
-        // ...the sea side only a thin scatter, high on the early cliffs, so
-        // the bay view opens right out as you come down
-        if (rnd() < 0.24 && sArc < road.len * 0.45) {
-          const p = F(sArc / road.len, W / 2 + 1.5 + rnd() * 0.9, 0.35);
-          pine(p.x, p.y, p.z, 0.65 + rnd() * 0.5);
         }
       }
       this.bakeDecor(); // one merged pine mesh per chunk: the far forest culls
