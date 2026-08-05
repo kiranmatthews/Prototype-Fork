@@ -25,6 +25,10 @@ export interface SwirlPreset {
   radius?: number; // world units
   rings?: number; // polar grid rings (3..14)
   segs?: number; // segments around (8..48)
+  depth?: number; // ring-gap curve: displayed radius = r^depth. 1 = even
+  // spacing; 2-3 bunches the rings toward the centre like a tunnel receding
+  // to its vanishing point — and makes travelling rings decelerate as they
+  // near the core, which is what depth looks like.
   billboard?: boolean; // face the camera every frame
 
   // --- the spiral field ---
@@ -345,6 +349,7 @@ export class Swirl {
     const body = p.body ?? 0.35;
     const rim = p.rim ?? 0.55;
     const crin = p.edgeCrinkle ?? 0.06;
+    const depth = Math.max(0.2, p.depth ?? 1);
     const spin = (p.spin ?? 0) * t;
     const breathe = 1 + (p.pulse ?? 0) * Math.sin((p.pulseRate ?? 1.5) * t);
 
@@ -371,8 +376,13 @@ export class Swirl {
     const uShift = flr * cell;
 
     for (let k = 0; k < nV; k++) {
-      const r = k === 0 ? 0 : this.vr[k] - f; // current radius, slid inward
+      const rl = k === 0 ? 0 : this.vr[k] - f; // linear radius, slid inward
       const u = (k === 0 ? 0 : this.vr[k]) + uShift; // pattern-space radius
+      // DISPLAY radius: the depth curve bunches the ring gaps toward the
+      // centre (tunnel foreshortening). Everything the eye reads — position,
+      // ramps, fades — uses r; the travelling wave stays in linear space, so
+      // the swallow's snap continuity is untouched.
+      const r = depth === 1 ? rl : Math.pow(rl, depth);
       const th = this.va[k] + spin;
       // vertex position: flat disc, outer rings crinkled so the rim churns.
       // The crinkle phase lives in PATTERN space (u), so it rides the rings

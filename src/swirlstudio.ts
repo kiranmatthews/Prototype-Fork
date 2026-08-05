@@ -40,6 +40,7 @@ const GROUPS: Group[] = [
       N('radius', 'radius', 0.2, 20, 0.05, 'world units'),
       N('rings', 'rings', 3, 14, 1, 'polar grid rings — more = smoother radially'),
       N('segs', 'segments', 8, 48, 1, 'points around the circle'),
+      N('depth', 'depth', 0.2, 4, 0.01, 'ring gaps shrink toward the centre — tunnel illusion. 1 = even'),
       { key: 'billboard', label: 'face camera', kind: 'bool' },
     ],
   },
