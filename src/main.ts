@@ -32,6 +32,7 @@ import { Recorder, Replayer, ReplayFile } from "./replay";
 import { Editor } from "./editor";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { puffs, PUFF_PRESETS } from "./puffs";
+import { swirls } from "./swirls";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -752,6 +753,8 @@ puffs.attach(scene);
 // ?lite is the low-end path everywhere else in this file, so it is here too:
 // fewer puffs, simpler rings, no child layers.
 puffs.setQuality(LITE_RENDER ? "low" : "high");
+// Swirls: the polar-grid wormhole/scenery discs (see src/swirls.ts).
+swirls.attach(scene);
 const player = new Player(scene);
 
 // ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
@@ -1025,6 +1028,7 @@ function switchLevel(id: string): void {
   if (editor.active && editor.targetId !== entry.id) editor.exit(); // leaving the level under edit closes it
   level.dispose();
   puffs.clear(); // no cloud from the level you just left hanging over the new one
+  swirls.clear();
   level = new Level(scene, entry);
   puffs.attach(scene);
   // Adopt the target level's relic shelf BEFORE respawning, so the run just
@@ -1061,6 +1065,7 @@ function rebuildLevel(): void {
   current = findLevel(current.id) ?? current; // pick up the just-saved data/name
   level.dispose();
   puffs.clear();
+  swirls.clear();
   level = new Level(scene, current);
   puffs.attach(scene);
   player.respawn(level, true);
@@ -1128,8 +1133,22 @@ async function openPuffStudioTool(): Promise<void> {
   // frame() by hand — rAF (and with it the real loop) throttles headless.
   (window as unknown as { __game: Record<string, unknown> }).__game.puffStudio = puffStudio;
 }
+// The SWIRL studio: wormhole and scenery-swirl discs. #swirlstudio on the URL.
+let swirlStudio: { frame: (dt: number) => void } | null = null;
+async function openSwirlStudioTool(): Promise<void> {
+  if (swirlStudio) return;
+  const mod = await import("./swirlstudio");
+  swirlStudio = mod.openSwirlStudio({
+    camera,
+    scene,
+    onClose: () => (swirlStudio = null),
+  });
+  (window as unknown as { __game: Record<string, unknown> }).__game.swirlStudio = swirlStudio;
+}
 if (location.hash.toLowerCase().includes("puffstudio")) {
   setTimeout(() => void openPuffStudioTool(), 2500);
+} else if (location.hash.toLowerCase().includes("swirlstudio")) {
+  setTimeout(() => void openSwirlStudioTool(), 2500);
 } else if (location.hash.toLowerCase().includes("studio")) {
   // Long enough for the character GLB to land. The studio re-reads the body on
   // every interaction anyway, so this is only about what you see first.
@@ -1996,6 +2015,8 @@ function frame(): void {
   // camera basis that was settled a line ago or they lag the shot by a frame.
   puffStudio?.frame(dt); // spawns from the live preset before the system ticks
   puffs.update(dt, camera);
+  swirlStudio?.frame(dt); // parks the preview disc down the lens
+  swirls.update(dt, camera);
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
@@ -2076,6 +2097,7 @@ frame();
 (window as unknown as Record<string, unknown>).__game = {
   puffs,
   PUFF_PRESETS,
+  swirls,
   player,
   level,
   input,
