@@ -33,6 +33,7 @@ import { Editor } from "./editor";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls } from "./swirls";
+import { fieldSwirls } from "./swirlfield";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -753,8 +754,10 @@ puffs.attach(scene);
 // ?lite is the low-end path everywhere else in this file, so it is here too:
 // fewer puffs, simpler rings, no child layers.
 puffs.setQuality(LITE_RENDER ? "low" : "high");
-// Swirls: the polar-grid wormhole/scenery discs (see src/swirls.ts).
+// Swirls: the band-based wormhole discs (src/swirls.ts) and the preserved
+// sine-field visualizer discs (src/swirlfield.ts) — separate systems.
 swirls.attach(scene);
+fieldSwirls.attach(scene);
 const player = new Player(scene);
 
 // ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
@@ -1029,6 +1032,7 @@ function switchLevel(id: string): void {
   level.dispose();
   puffs.clear(); // no cloud from the level you just left hanging over the new one
   swirls.clear();
+  fieldSwirls.clear();
   level = new Level(scene, entry);
   puffs.attach(scene);
   // Adopt the target level's relic shelf BEFORE respawning, so the run just
@@ -1066,6 +1070,7 @@ function rebuildLevel(): void {
   level.dispose();
   puffs.clear();
   swirls.clear();
+  fieldSwirls.clear();
   level = new Level(scene, current);
   puffs.attach(scene);
   player.respawn(level, true);
@@ -1133,7 +1138,7 @@ async function openPuffStudioTool(): Promise<void> {
   // frame() by hand — rAF (and with it the real loop) throttles headless.
   (window as unknown as { __game: Record<string, unknown> }).__game.puffStudio = puffStudio;
 }
-// The SWIRL studio: wormhole and scenery-swirl discs. #swirlstudio on the URL.
+// The SWIRL studio: the band-based wormhole. #swirlstudio on the URL.
 let swirlStudio: { frame: (dt: number) => void } | null = null;
 async function openSwirlStudioTool(): Promise<void> {
   if (swirlStudio) return;
@@ -1145,10 +1150,24 @@ async function openSwirlStudioTool(): Promise<void> {
   });
   (window as unknown as { __game: Record<string, unknown> }).__game.swirlStudio = swirlStudio;
 }
+// The FIELD studio: the preserved sine-field disc. #fieldstudio on the URL.
+let fieldStudio: { frame: (dt: number) => void } | null = null;
+async function openFieldStudioTool(): Promise<void> {
+  if (fieldStudio) return;
+  const mod = await import("./fieldstudio");
+  fieldStudio = mod.openFieldStudio({
+    camera,
+    scene,
+    onClose: () => (fieldStudio = null),
+  });
+  (window as unknown as { __game: Record<string, unknown> }).__game.fieldStudio = fieldStudio;
+}
 if (location.hash.toLowerCase().includes("puffstudio")) {
   setTimeout(() => void openPuffStudioTool(), 2500);
 } else if (location.hash.toLowerCase().includes("swirlstudio")) {
   setTimeout(() => void openSwirlStudioTool(), 2500);
+} else if (location.hash.toLowerCase().includes("fieldstudio")) {
+  setTimeout(() => void openFieldStudioTool(), 2500);
 } else if (location.hash.toLowerCase().includes("studio")) {
   // Long enough for the character GLB to land. The studio re-reads the body on
   // every interaction anyway, so this is only about what you see first.
@@ -2017,6 +2036,8 @@ function frame(): void {
   puffs.update(dt, camera);
   swirlStudio?.frame(dt); // parks the preview disc down the lens
   swirls.update(dt, camera);
+  fieldStudio?.frame(dt);
+  fieldSwirls.update(dt, camera);
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
@@ -2098,6 +2119,7 @@ frame();
   puffs,
   PUFF_PRESETS,
   swirls,
+  fieldSwirls,
   player,
   level,
   input,

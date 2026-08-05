@@ -63,8 +63,22 @@ export interface SwirlPreset {
   // --- the cloudy backing (its own opaque polar mesh, NOT the ring geometry) ---
   backingAlpha?: number; // 1 = solid, occludes the room behind
   backingRim?: number; // where the fade-to-black begins, fraction of radius
+  backingFade?: number; // 1 = the rim also fades to TRANSPARENT (floats nicely
+  // in open scenes); 0 = solid near-black to the edge, the reference's own
+  // behaviour, for when foreground geometry covers the rim
   cloudAmp?: number; // how strongly the two slow fields mottle it
   cloudRate?: number;
+
+  // --- reintroduced motion (all default 0 — the reference portal is static) ---
+  spin?: number; // rad/s whole-portal rotation of geometry + contours
+  spinDiff?: number; // extra rad/s at the centre, fading to zero at the rim
+  swallow?: number; // radius-fractions/sec the ring BASES travel inward (+):
+  // a ring that reaches the core fades out and is reborn at the rim, cross-
+  // fading through a short envelope so there is no pop
+  current?: number; // 0..1 brightness wave pouring radially through the bands
+  currentRate?: number; // rad/s; + pours toward the core
+  pulse?: number; // whole-portal brightness breathing 0..1
+  pulseRate?: number;
 
   // --- palette: the WHOLE set lerps warm<->cool together, backing included ---
   warmCore?: number; warmLine?: number; warmGlow?: number;
@@ -152,6 +166,18 @@ const PAL_DEF_COOL = [0xffffff, 0xd8f4ff, 0x668dff, 0x83a6ad, 0x09184c, 0x050817
 const PAL = Array.from({ length: 6 }, () => new THREE.Color());
 const C = new THREE.Color();
 const SHARED: number[] = new Array(48).fill(0);
+// hot-loop scratch — the inner vertex loops must not allocate
+const RING_OFFR = [0, 0, 0, 0, 0];
+const HALO_OFFR = [0, 0, 0];
+const CORE_RR = [0, 0, 0];
+
+function setVert(
+  pa: Float32Array, ca: Float32Array, k: number, x: number, y: number,
+  cr: number, cg: number, cb: number, a: number,
+): void {
+  pa[k * 3] = x; pa[k * 3 + 1] = y; pa[k * 3 + 2] = 0;
+  ca[k * 4] = cr; ca[k * 4 + 1] = cg; ca[k * 4 + 2] = cb; ca[k * 4 + 3] = a;
+}
 
 // Fixed deterministic per-ring phases — decorrelated small irregularities,
 // stable across runs (reference matching needs repeatability).
@@ -196,8 +222,11 @@ const BACK_R = [0.18, 0.36, 0.54, 0.7, 0.85, 1.0];
 
 export class Swirl {
   group = new THREE.Group();
-  /** True freeze: update() returns immediately, the buffers hold the frame. */
+  /** True freeze: time stops and buffers hold, but billboarding stays live
+   * and preset edits still repaint once (dirty) — a frozen frame you can
+   * keep tuning against the reference overlay. */
   paused = false;
+  private dirty = true;
   private preset: SwirlPreset = {};
   private t: number;
   private segs = 0;
@@ -245,6 +274,7 @@ export class Swirl {
     const segs = Math.max(8, Math.min(48, Math.round(p.segs ?? 24)));
     if (segs !== this.segs) this.build(segs);
     this.preset = p;
+    this.dirty = true; // repaint once even while frozen — edits must show
     this.rings = [ringOf(p, 1), ringOf(p, 2), ringOf(p, 3)];
     for (let i = 0; i < 6; i++) {
       this.warm[i].setHex((p[`warm${PAL_KEYS[i]}` as keyof SwirlPreset] as number) ?? PAL_DEF_WARM[i]);
@@ -289,11 +319,14 @@ export class Swirl {
   }
 
   update(dt: number, camera: THREE.Camera): void {
-    if (this.paused) return; // a real freeze — the frame stays exactly put
     const p = this.preset;
-    this.t += dt;
-    const t = this.t;
+    // Billboarding lives OUTSIDE the freeze: the studio keeps repositioning
+    // the preview, and a frozen portal must keep facing the lens.
     if (p.billboard ?? true) this.group.quaternion.copy(camera.quaternion);
+    if (this.paused && !this.dirty) return; // frozen and clean: hold the frame
+    if (!this.paused) this.t += dt;
+    this.dirty = false;
+    const t = this.t;
 
     // --- the whole palette breathes warm<->cool together, in plain RGB ---
     const mix = 0.5 + 0.5 * Math.sin((p.cycleRate ?? 3.7) * t);
@@ -310,6 +343,16 @@ export class Swirl {
     const sMiR = p.sharedMidRate ?? 0.45;
     const brA = Math.min(0.02, p.breathe ?? 0.012); // capped: rings hold station
     const breath = 1 + brA * Math.sin(t * (p.breatheRate ?? 1.1));
+    const spin = p.spin ?? 0;
+    const spinDiff = p.spinDiff ?? 0;
+    const swallow = p.swallow ?? 0;
+    const curAmp = p.current ?? 0;
+    const curRate = p.currentRate ?? 2;
+    const pulseB = 1 + (p.pulse ?? 0) * 0.4 * Math.sin(t * (p.pulseRate ?? 2));
+    // brightness wave pouring through the bands; + rate runs toward the core
+    const cur = (rf: number): number =>
+      curAmp === 0 ? 1 : Math.max(0, 1 + curAmp * Math.sin(rf * TAU * 2 + t * curRate));
+    const bandAngle = (rf: number): number => t * (spin + spinDiff * (1 - rf));
 
     // the shared bulges, once per segment, reused by every band
     for (let j = 0; j < S; j++) {
@@ -325,6 +368,7 @@ export class Swirl {
       const ca = col.array as Float32Array;
       const bAlpha = p.backingAlpha ?? 1;
       const bRim = Math.min(0.95, p.backingRim ?? 0.6);
+      const bFade = p.backingFade ?? 1;
       const cAmp = p.cloudAmp ?? 0.5;
       const cRate = p.cloudRate ?? 0.5;
       pa[0] = 0; pa[1] = 0; pa[2] = 0;
@@ -332,9 +376,10 @@ export class Swirl {
       ca[0] = C.r; ca[1] = C.g; ca[2] = C.b; ca[3] = clamp01(bAlpha * alpha);
       for (let r = 0; r < BACK_ROWS; r++) {
         const rf = BACK_R[r];
+        const spinTh = bandAngle(rf);
         for (let j = 0; j < S; j++) {
           const k = 1 + r * S + j;
-          const th = (j / S) * TAU;
+          const th = (j / S) * TAU + spinTh;
           const rr = (rf + SHARED[j] * rf) * R;
           pa[k * 3] = Math.cos(th) * rr;
           pa[k * 3 + 1] = Math.sin(th) * rr;
@@ -351,7 +396,7 @@ export class Swirl {
           ca[k * 4] = C.r;
           ca[k * 4 + 1] = C.g;
           ca[k * 4 + 2] = C.b;
-          ca[k * 4 + 3] = clamp01(bAlpha * alpha * (1 - rimK * rimK));
+          ca[k * 4 + 3] = clamp01(bAlpha * alpha * (1 - rimK * rimK * bFade));
         }
       }
       pos.needsUpdate = true;
@@ -363,67 +408,81 @@ export class Swirl {
     const col = this.addGeo.getAttribute('color') as THREE.BufferAttribute;
     const pa = pos.array as Float32Array;
     const ca = col.array as Float32Array;
-    const setV = (
-      k: number, x: number, y: number,
-      cr: number, cg: number, cb: number, a: number,
-    ): void => {
-      pa[k * 3] = x; pa[k * 3 + 1] = y; pa[k * 3 + 2] = 0;
-      ca[k * 4] = cr; ca[k * 4 + 1] = cg; ca[k * 4 + 2] = cb; ca[k * 4 + 3] = a;
-    };
 
     // core: white centre + white edge + pale mid + additive-zero edge —
     // clearly visible, roughly a tenth of the portal, per the footage
     const coreR = Math.max(0.02, p.coreRadius ?? 0.1);
     const coreSoft = Math.max(coreR + 0.02, p.coreSoft ?? 0.17);
-    const coreB = p.coreBright ?? 1.2;
-    setV(0, 0, 0, pCore.r * coreB, pCore.g * coreB, pCore.b * coreB, alpha);
-    const CORE_R = [coreR * 0.55, coreR, coreSoft];
-    for (let r = 0; r < CORE_ROWS; r++)
+    const coreB = (p.coreBright ?? 1.2) * pulseB;
+    setVert(pa, ca, 0, 0, 0, pCore.r * coreB, pCore.g * coreB, pCore.b * coreB, alpha);
+    CORE_RR[0] = coreR * 0.55; CORE_RR[1] = coreR; CORE_RR[2] = coreSoft;
+    for (let r = 0; r < CORE_ROWS; r++) {
+      const spinTh = bandAngle(CORE_RR[r]);
       for (let j = 0; j < S; j++) {
         const k = 1 + r * S + j;
-        const th = (j / S) * TAU;
-        const rr = (CORE_R[r] + SHARED[j] * 0.5) * R * breath;
+        const th = (j / S) * TAU + spinTh;
+        const rr = (CORE_RR[r] + SHARED[j] * 0.5) * R * breath;
         const x = Math.cos(th) * rr;
         const y = Math.sin(th) * rr;
-        if (r === 0) setV(k, x, y, pCore.r * coreB, pCore.g * coreB, pCore.b * coreB, alpha);
+        if (r === 0) setVert(pa, ca, k, x, y, pCore.r * coreB, pCore.g * coreB, pCore.b * coreB, alpha);
         else if (r === 1) {
           C.copy(pLine).lerp(pGlow, 0.35).multiplyScalar(coreB * 0.8);
-          setV(k, x, y, C.r, C.g, C.b, alpha * 0.9);
-        } else setV(k, x, y, 0, 0, 0, 0);
+          setVert(pa, ca, k, x, y, C.r, C.g, C.b, alpha * 0.9);
+        } else setVert(pa, ca, k, x, y, 0, 0, 0, 0);
       }
+    }
 
     // the three rings: black / glow / LINE / glow / black. ONE displacement
     // per (ring, segment), shared by all five rows, so the band's thickness
     // stays coherent while its contour misshapes.
+    // swallow wrap range: rings die into the core band, reborn near the rim
+    const swLo = Math.max(0.05, coreR);
+    const swHi = Math.max(swLo + 0.1, Math.min(0.95, p.haloRadius ?? 0.69));
+    const swSpan = swHi - swLo;
     for (let s = 0; s < 3; s++) {
       const ring = this.rings[s];
       const base = 1 + CORE_ROWS * S + s * RING_ROWS * S;
       const on = ring.radius > 0.01;
+      // the swallow moves the BASE radius, cross-fading through the wrap
+      let baseR = ring.radius;
+      let env = 1;
+      if (on && swallow !== 0) {
+        let w = (ring.radius - swLo - t * swallow) % swSpan;
+        if (w < 0) w += swSpan;
+        baseR = swLo + w;
+        env = clamp01(Math.min(w, swSpan - w) / (swSpan * 0.12));
+      }
+      const bright = ring.bright * env * cur(baseR) * pulseB;
+      const spinTh = bandAngle(baseR);
+      // row offsets are loop-invariant per ring — hoisted, no per-vertex arrays
+      RING_OFFR[0] = -ring.glow * R;
+      RING_OFFR[1] = -ring.line * R;
+      RING_OFFR[2] = 0;
+      RING_OFFR[3] = ring.line * R;
+      RING_OFFR[4] = ring.glow * R;
       for (let j = 0; j < S; j++) {
-        const th = (j / S) * TAU;
+        const th = (j / S) * TAU + spinTh;
         const local = on
           ? ring.ampA * Math.sin(th * ring.freqA + RING_PHASE_A[s] + t * ring.rateA) +
             ring.ampB * Math.sin(th * ring.freqB + RING_PHASE_B[s] - t * ring.rateB)
           : 0;
-        const mid = (ring.radius * breath + SHARED[j] + local) * R;
+        const mid = (baseR * breath + SHARED[j] + local) * R;
         const cs = Math.cos(th);
         const sn = Math.sin(th);
         for (let r = 0; r < RING_ROWS; r++) {
           const k = base + r * S + j;
           if (!on) {
-            setV(k, cs * 0.01, sn * 0.01, 0, 0, 0, 0);
+            setVert(pa, ca, k, cs * 0.01, sn * 0.01, 0, 0, 0, 0);
             continue;
           }
-          // rows at -glow, -line, 0, +line, +glow (in portal-radius units)
-          const offR = [-ring.glow, -ring.line, 0, ring.line, ring.glow][r] * R;
-          const rr = Math.max(0.01, mid + offR);
+          const rr = Math.max(0.01, mid + RING_OFFR[r]);
           if (r === 2)
-            setV(k, cs * rr, sn * rr,
-              pLine.r * ring.bright, pLine.g * ring.bright, pLine.b * ring.bright, alpha);
+            setVert(pa, ca, k, cs * rr, sn * rr,
+              pLine.r * bright, pLine.g * bright, pLine.b * bright, alpha);
           else if (r === 1 || r === 3) {
-            C.copy(pGlow).multiplyScalar(ring.bright * 0.85);
-            setV(k, cs * rr, sn * rr, C.r, C.g, C.b, alpha * 0.85);
-          } else setV(k, cs * rr, sn * rr, 0, 0, 0, 0);
+            C.copy(pGlow).multiplyScalar(bright * 0.85);
+            setVert(pa, ca, k, cs * rr, sn * rr, C.r, C.g, C.b, alpha * 0.85);
+          } else setVert(pa, ca, k, cs * rr, sn * rr, 0, 0, 0, 0);
         }
       }
     }
@@ -433,18 +492,21 @@ export class Swirl {
       const base = 1 + CORE_ROWS * S + 3 * RING_ROWS * S;
       const hR = p.haloRadius ?? 0.69;
       const hW = p.haloWidth ?? 0.1;
-      const hA = (p.haloAlpha ?? 0.5) * alpha;
+      const hA = (p.haloAlpha ?? 0.5) * alpha * cur(hR);
+      const hB = pulseB;
+      const spinTh = bandAngle(hR);
+      HALO_OFFR[0] = -hW * R; HALO_OFFR[1] = 0; HALO_OFFR[2] = hW * R;
       for (let j = 0; j < S; j++) {
-        const th = (j / S) * TAU;
+        const th = (j / S) * TAU + spinTh;
         const wob = 0.02 * Math.sin(th * 4 + t * 0.5) + SHARED[j];
         const mid = (hR + wob) * R * breath;
         const cs = Math.cos(th);
         const sn = Math.sin(th);
         for (let r = 0; r < HALO_ROWS; r++) {
           const k = base + r * S + j;
-          const rr = Math.max(0.01, mid + [-hW, 0, hW][r] * R);
-          if (r === 1) setV(k, cs * rr, sn * rr, pHalo.r, pHalo.g, pHalo.b, hA);
-          else setV(k, cs * rr, sn * rr, 0, 0, 0, 0);
+          const rr = Math.max(0.01, mid + HALO_OFFR[r]);
+          if (r === 1) setVert(pa, ca, k, cs * rr, sn * rr, pHalo.r * hB, pHalo.g * hB, pHalo.b * hB, hA);
+          else setVert(pa, ca, k, cs * rr, sn * rr, 0, 0, 0, 0);
         }
       }
     }

@@ -98,8 +98,21 @@ const GROUPS: Group[] = [
     fields: [
       N('backingAlpha', 'opacity', 0, 1, 0.01, '1 = solid cloud, occludes the room behind'),
       N('backingRim', 'rim fade at', 0.2, 0.95, 0.005),
+      N('backingFade', 'edge fade', 0, 1, 0.01, '1 = rim melts to transparent; 0 = solid near-black to the edge, as the reference'),
       N('cloudAmp', 'cloud', 0, 1.5, 0.02, 'how strongly the slow fields mottle it'),
       N('cloudRate', 'cloud rate', 0, 4, 0.02),
+    ],
+  },
+  {
+    name: 'MOTION',
+    fields: [
+      N('spin', 'spin', -3, 3, 0.01, 'rad/s whole-portal rotation. The reference sits at 0'),
+      N('spinDiff', 'spin diff', -3, 3, 0.01, 'extra swirl at the centre, zero at the rim'),
+      N('swallow', 'swallow', -1, 1, 0.005, 'ring bases travel into the core (+), reborn at the rim, cross-fading'),
+      N('current', 'current', 0, 1, 0.01, 'brightness wave pouring through the bands'),
+      N('currentRate', 'current rate', -8, 8, 0.02, '+ pours toward the core'),
+      N('pulse', 'pulse', 0, 1, 0.01, 'whole-portal brightness breathing'),
+      N('pulseRate', 'pulse rate', 0, 8, 0.02),
     ],
   },
   {
@@ -181,8 +194,12 @@ class SwirlStudio {
   }
 
   private respawn(): void {
+    const frozen = this.live?.paused ?? false;
     if (this.live) swirls.remove(this.live);
     this.live = swirls.spawn(this.preset, 0, 0, 0, { seed: 1 });
+    // carry the freeze across preset loads — the new instance still paints
+    // its first frame (dirty), then holds, and the button stays truthful
+    this.live.paused = frozen;
   }
 
   /** Push edits into the live instance without recreating it. */
@@ -320,10 +337,11 @@ class SwirlStudio {
         b.textContent = this.live.paused ? 'Unfreeze' : 'Freeze';
       }),
       btn('Reset saved', () => {
-        localStorage.removeItem(STORE);
         this.preset = clone(SWIRL_PRESETS[sel.value] ?? SWIRL_PRESETS.warpPortal);
         this.respawn();
         this.rebuild();
+        // last, so the key stays genuinely empty until the next edit
+        localStorage.removeItem(STORE);
       }),
     );
     p.appendChild(stageBtns);
