@@ -694,8 +694,11 @@ function injectCss(): void {
     .pst-label { flex: 0 0 88px; color: #9fb0c8; }
     .pst-row input[type=range] { flex: 1; min-width: 0; accent-color: #ff7ae0; }
     .pst-num {
-      flex: 0 0 58px; background: #131722; color: #cfe3d8; text-align: right;
-      border: 1px solid #333a4a; padding: 2px 3px; font: inherit;
+      /* min-width 0 matters: a number input's intrinsic minimum is ~150px and
+         a flex item refuses to shrink below it, which squeezed the slider to
+         a pill and let this box eat the row. */
+      flex: 0 0 58px; min-width: 0; background: #131722; color: #cfe3d8;
+      text-align: right; border: 1px solid #333a4a; padding: 2px 3px; font: inherit;
     }
     .pst-num::-webkit-outer-spin-button, .pst-num::-webkit-inner-spin-button {
       -webkit-appearance: none; margin: 0;
