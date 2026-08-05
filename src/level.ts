@@ -27,6 +27,7 @@ import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
 import { puffs, PUFF_PRESETS } from "./puffs";
+import { swirls, SWIRL_PRESETS } from "./swirls";
 import { wumpaMesh, WUMPA_SIZE } from "./wumpa";
 
 export interface Crate {
@@ -1297,6 +1298,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
   { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
+  { id: "warproom", name: "The Warp Room" }, // five wormhole gates round a dais
 ];
 export const DEFAULT_LEVEL_ID = "jungle";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
@@ -2373,6 +2375,7 @@ export class Level {
     else if (entry.id === "sky") this.buildSkyBridge();
     else if (entry.id === "slip") this.buildSlipstream();
     else if (entry.id === "dark") this.buildNightworks();
+    else if (entry.id === "warproom") this.buildWarpRoom();
     else this.buildJungle(); // "jungle": the enclosed corridor course
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
@@ -4998,6 +5001,138 @@ export class Level {
   // Three beats, in the order the reference art suggests: undergrowth pit hops,
   // a fallen trunk grind over a ravine, then a stepped temple climb onto a ruin
   // terrace and back down. About a third the length of the course it replaces.
+
+  // THE WARP ROOM. Not a course — a chamber, straight out of the Crash 2
+  // reference: five great circular stone gates stand in a ring around a gold
+  // dais, each filled with the wormhole. The gate hardware is the trick that
+  // completes the loop illusion: a deep stone collar overlaps the disc's
+  // outer band on both faces, so newborn rings (born at 0.99 of the disc)
+  // fade in BEHIND the masonry and emerge already travelling — the endless
+  // swallow never shows its seam.
+  private buildWarpRoom(): void {
+    this.skyPreset = "night";
+    this.killY = -24;
+    this.theme = {
+      skyTop: "#060a1c",
+      skyBottom: "#101a38",
+      sunColorHex: "", // no sun down here — the gates are the light
+      sunU: 0.5,
+      sunV: 0.5,
+      stars: true,
+      fog: 0x070b1a,
+      fogNear: 26,
+      fogFar: 120,
+      hemiSky: 0x39466b,
+      hemiGround: 0x151a28,
+      hemiI: 0.85,
+      sunColor: 0x8fa8e8,
+      sunI: 0.6,
+      particleColor: 0x9fc4ff, // slow drifting motes, warp-room dust
+      particleWind: [0.08, 0.12, 0.08],
+    };
+
+    const stone = new THREE.MeshLambertMaterial({
+      color: 0x46536d,
+      emissive: 0x0c101c,
+    });
+    const frameMat = new THREE.MeshLambertMaterial({
+      color: 0x5b6478,
+      emissive: 0x0e1119,
+    });
+    const boltMat = new THREE.MeshLambertMaterial({
+      color: 0x8b93a8,
+      emissive: 0x14161e,
+    });
+    const collarMat = new THREE.MeshLambertMaterial({
+      color: 0x2a3040,
+      emissive: 0x080a12,
+      side: THREE.DoubleSide,
+    });
+
+    // the chamber: one broad stone drum, a raised rim lip, a gold dais
+    const floor = new THREE.Mesh(new THREE.CylinderGeometry(30, 31.5, 2, 24), stone);
+    floor.position.y = -1;
+    floor.name = "warp chamber floor";
+    this.root.add(floor);
+    this.groundMeshes.push(floor);
+    const lip = new THREE.Mesh(new THREE.CylinderGeometry(31.5, 31.8, 1.6, 24), frameMat);
+    lip.position.y = -0.2;
+    lip.name = "chamber rim";
+    this.root.add(lip);
+    this.groundMeshes.push(lip);
+    const wall = new THREE.Mesh(
+      new THREE.CylinderGeometry(31.8, 31.8, 16, 24, 1, true),
+      new THREE.MeshLambertMaterial({
+        color: 0x232c42,
+        emissive: 0x060810,
+        side: THREE.BackSide,
+      }),
+    );
+    wall.position.y = 8;
+    this.root.add(wall);
+    const dais = new THREE.Mesh(
+      new THREE.CylinderGeometry(5.4, 6, 0.7, 20),
+      new THREE.MeshLambertMaterial({ color: 0x8a6b3a, emissive: 0x1c1206 }),
+    );
+    dais.position.y = 0.35;
+    dais.name = "warp dais";
+    this.root.add(dais);
+    this.groundMeshes.push(dais);
+
+    // five gates in a pentagon, wormholes inside, faces turned to the dais
+    const RS = 4.4; // the warpPortal preset's world radius
+    const portalPreset = { ...SWIRL_PRESETS.warpPortal, billboard: false };
+    for (let i = 0; i < 5; i++) {
+      const a = -Math.PI / 2 + (i * Math.PI * 2) / 5;
+      const gx = Math.cos(a) * 21;
+      const gz = Math.sin(a) * 21;
+      const cy = 5.1; // portal centre height: disc bottom clears the floor
+      const gate = new THREE.Group();
+      gate.position.set(gx, 0, gz);
+      gate.lookAt(0, 0, 0);
+      this.root.add(gate);
+
+      // the collar that hides the seam: a deep annulus over the disc's outer
+      // band, one plate each side, plus masonry blocks with studs
+      const collarGeo = new THREE.RingGeometry(RS * 0.73, RS * 1.26, 24);
+      for (const zs of [0.55, -0.55]) {
+        const collar = new THREE.Mesh(collarGeo, collarMat);
+        collar.position.set(0, cy, zs);
+        gate.add(collar);
+      }
+      for (let b = 0; b < 10; b++) {
+        const sa = (b / 10) * Math.PI * 2 + (i % 2 === 0 ? 0 : 0.31);
+        const bx = Math.cos(sa) * RS * 1.06;
+        const by = cy + Math.sin(sa) * RS * 1.06;
+        const block = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.9, 1.5), frameMat);
+        block.position.set(bx, by, 0);
+        block.rotation.z = sa + Math.PI / 2;
+        gate.add(block);
+        if (b % 2 === 0) {
+          const bolt = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 2.1), boltMat);
+          bolt.position.set(bx, by, 0);
+          bolt.rotation.z = sa;
+          gate.add(bolt);
+        }
+      }
+      for (const fx of [-1, 1]) {
+        const foot = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.8, 2.6), frameMat);
+        foot.position.set(fx * RS * 0.98, 0.9, 0);
+        gate.add(foot);
+      }
+      const step = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.7, 3.2), stone);
+      step.position.set(0, 0.35, 2.2);
+      step.name = "gate step";
+      gate.add(step);
+      this.groundMeshes.push(step);
+
+      // the wormhole itself — fixed facing (no billboard), phase-offset per
+      // gate so the five swallows never sync up
+      const sw = swirls.spawn(portalPreset, gx, cy, gz, { seed: 11 + i * 7 });
+      sw.group.quaternion.copy(gate.quaternion);
+    }
+  }
+
   private buildJungle(): void {
     this.wallTint = 0xa79f7e; // ruin masonry, sandstone rather than slate
     this.blockTint = 0xb3ab89; // temple courses
