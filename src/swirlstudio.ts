@@ -1,7 +1,7 @@
-// The swirl studio — dial the wormholes by eye, same deal as the smoke studio
-// next door. Open with #swirlstudio on the URL. Every control the swirl field
-// reads is on the panel; Copy emits a block that pastes straight into
-// SWIRL_PRESETS in src/swirls.ts.
+// The swirl studio — dial the wormhole by eye. Open with #swirlstudio.
+// Controls mirror the band-based renderer: three independent rings, core,
+// halo, backing, warm/cool palettes. Copy emits a block that pastes straight
+// into SWIRL_PRESETS in src/swirls.ts.
 import * as THREE from 'three';
 import { swirls, SWIRL_PRESETS, type SwirlPreset, type Swirl } from './swirls';
 import { el, sec, note, btn, sliderRow, injectStudioCss } from './studiokit';
@@ -12,9 +12,9 @@ interface Ctx {
   onClose: () => void;
 }
 
-const STORE = 'swirlStudioV1';
+const STORE = 'swirlStudioV2'; // v2: the band schema — old saved drafts don't fit
 
-type Kind = 'num' | 'colour' | 'bool' | 'blend';
+type Kind = 'num' | 'colour' | 'bool';
 interface Field {
   key: keyof SwirlPreset;
   label: string;
@@ -23,7 +23,6 @@ interface Field {
   hi?: number;
   step?: number;
   hint?: string;
-  optional?: boolean; // colour with a use-me checkbox; unchecked deletes the key
 }
 interface Group {
   name: string;
@@ -32,114 +31,96 @@ interface Group {
 
 const N = (key: keyof SwirlPreset, label: string, lo: number, hi: number, step: number, hint?: string): Field =>
   ({ key, label, kind: 'num', lo, hi, step, hint });
+const COL = (key: keyof SwirlPreset, label: string): Field => ({ key, label, kind: 'colour' });
+
+/** One ring's control block — radius, widths, and its two private waves. */
+function ringGroup(n: 1 | 2 | 3): Group {
+  const k = (s: string): keyof SwirlPreset => `r${n}${s}` as keyof SwirlPreset;
+  return {
+    name: `RING ${n}`,
+    fields: [
+      N(k('Radius'), 'radius', 0, 0.95, 0.005, n === 1 ? '0 = ring off. Fraction of portal radius' : undefined),
+      N(k('Line'), 'line width', 0.002, 0.08, 0.001, 'half-width of the white-hot line'),
+      N(k('Glow'), 'glow width', 0.01, 0.3, 0.002, 'half-width to the black edge'),
+      N(k('Bright'), 'brightness', 0, 2.5, 0.02),
+      N(k('AmpA'), 'deform A', 0, 0.06, 0.001, 'its own 5-7 lobe misshaping'),
+      N(k('FreqA'), 'lobes A', 1, 14, 1),
+      N(k('RateA'), 'speed A', 0, 8, 0.02),
+      N(k('AmpB'), 'deform B', 0, 0.06, 0.001, 'its own 8-10 lobe irregularity, runs backwards'),
+      N(k('FreqB'), 'lobes B', 1, 14, 1),
+      N(k('RateB'), 'speed B', 0, 8, 0.02),
+    ],
+  };
+}
 
 const GROUPS: Group[] = [
   {
     name: 'SHAPE',
     fields: [
       N('radius', 'radius', 0.2, 20, 0.05, 'world units'),
-      N('rings', 'rings', 3, 14, 1, 'polar grid rings — more = smoother radially'),
-      N('segs', 'segments', 8, 48, 1, 'points around the circle'),
-      N('depth', 'depth', 0.2, 4, 0.01, 'ring gaps shrink toward the centre — tunnel illusion. 1 = even'),
+      N('segs', 'segments', 8, 48, 1, 'the reference budget is 24'),
       { key: 'billboard', label: 'face camera', kind: 'bool' },
-    ],
-  },
-  {
-    name: 'SPIRAL',
-    fields: [
-      N('arms', 'arms', 0, 6, 1, '0 = concentric rings, 1 = one spiral arm'),
-      N('twist', 'twist', -6, 6, 0.05, 'turns from centre to rim; sign flips the hand'),
-      N('flow', 'swallow', -3, 3, 0.01, 'radius/sec the rings THEMSELVES travel: + into the core, - out'),
-      N('current', 'current', -6, 6, 0.01, 'colour pulse pouring through the rings without moving them'),
-      N('sharp', 'sharpness', 0.5, 14, 0.05, '1 = broad band, 10 = hairline filament'),
-      N('filament', 'filament', 0, 2.5, 0.02, 'strength of the bright line. 0 = none'),
-      N('glowWidth', 'glow bleed', 0.05, 1, 0.02, 'how far colour bleeds around the line'),
-    ],
-  },
-  {
-    name: 'CHURN',
-    fields: [
-      N('wobble', 'wobble', 0, 3, 0.02, 'bends the spiral so it goes wispy'),
-      N('wobbleScale', 'wobble scale', 0, 8, 0.05),
-      N('wobbleRate', 'wobble rate', 0, 5, 0.02),
-      N('edgeCrinkle', 'edge crinkle', 0, 0.4, 0.005, 'the rim stops being a clean circle'),
-    ],
-  },
-  {
-    // The two plasma families, deliberately separate: SHAPE moves vertices,
-    // GHOST paints — the accidental colour-space deformations that were worth
-    // keeping when the geometry warp replaced them as the main act.
-    name: 'PLASMA · SHAPE',
-    fields: [
-      N('warpA', 'cloud', 0, 0.35, 0.005, 'band A: the big slow bulges (low frequency)'),
-      N('warpAScale', 'cloud scale', 1, 12, 1),
-      N('warpARate', 'cloud rate', 0, 12, 0.02),
-      N('warpB', 'electric', 0, 0.35, 0.005, 'band B: the lively jagged edge — high frequency, runs backwards'),
-      N('warpBScale', 'electric scale', 1, 12, 1, 'lobes per circumference; at ~segs/3 the polyline makes corners'),
-      N('warpBRate', 'electric rate', 0, 12, 0.02, 'the seethe. The reference runs this FAST'),
-      N('warpC', 'sway', 0, 0.35, 0.005, 'band C: very low frequency drift'),
-      N('warpCScale', 'sway scale', 1, 12, 1),
-      N('warpCRate', 'sway rate', 0, 12, 0.02),
-      N('couple', 'light follows', 0, 2, 0.01, 'bright bands ride the deformed shape. 0 = paint on a circle (jelly)'),
-    ],
-  },
-  {
-    name: 'PLASMA · GHOST',
-    fields: [
-      N('jag', 'colour jag', 0, 3, 0.01, 'kinks the painted line, geometry untouched — needs segs ~4x the scale'),
-      N('jagScale', 'jag scale', 1, 12, 1, 'kinks per circumference (5-9 = electric)'),
-      N('jagRate', 'jag rate', 0, 8, 0.02, 'how fast the kinks seethe'),
-      N('streak', 'streak', 0, 1, 0.01, 'brightness knots ALONG the line — energy coursing through'),
-      N('streakScale', 'streak scale', 1, 10, 1, 'knots per circumference'),
-      N('streakRate', 'streak rate', -8, 8, 0.02, 'rad/s the knots travel along the rings'),
-    ],
-  },
-  {
-    name: 'CORE + GROUND',
-    fields: [
-      N('core', 'core size', 0.02, 1, 0.01, 'hot blob in the middle, fraction of radius'),
-      N('coreGlow', 'core glow', 0, 4, 0.02),
-      N('mottle', 'mottle', 0, 1.5, 0.02, 'cloudiness of the backing'),
-      N('mottleScale', 'mottle scale', 0, 8, 0.05),
-      N('mottleRate', 'mottle rate', 0, 4, 0.02),
-    ],
-  },
-  {
-    name: 'COLOUR',
-    fields: [
-      { key: 'blend', label: 'body blend', kind: 'blend', hint: 'the ground pass: alpha occludes, add burns' },
-      { key: 'blendBright', label: 'bright blend', kind: 'blend', hint: 'the filament/glow/core pass' },
-      { key: 'colCore', label: 'hot core', kind: 'colour', hint: 'the white-hot line centre' },
-      { key: 'colFil', label: 'filament', kind: 'colour' },
-      { key: 'colGlow', label: 'glow', kind: 'colour', hint: 'the bleed around the filament' },
-      { key: 'colGround', label: 'backing', kind: 'colour', hint: 'the disc behind everything' },
-      { key: 'colGround2', label: 'mottle', kind: 'colour', optional: true, hint: 'what the cloud patches lift toward' },
-      { key: 'colRim', label: 'rim tint', kind: 'colour', optional: true, hint: 'the outer band before it dies' },
       N('alpha', 'opacity', 0, 1, 0.01),
-      N('body', 'body', 0, 1, 0.01, 'ground-pass opacity: 1 = solid cloudy disc, 0 = only the bright bits'),
-      N('rim', 'rim fade at', 0.1, 1, 0.01, 'where the edge starts dying'),
     ],
   },
   {
-    name: 'COLOUR CYCLE',
+    name: 'SHARED MOTION',
     fields: [
-      N('cycleRate', 'breath rate', 0, 4, 0.01, 'rad/s the palette breathes A→B→A, short hue arc, no rainbow detour'),
-      { key: 'colCoreB', label: 'core B', kind: 'colour', optional: true },
-      { key: 'colFilB', label: 'filament B', kind: 'colour', optional: true },
-      { key: 'colGlowB', label: 'glow B', kind: 'colour', optional: true },
-      { key: 'colGroundB', label: 'backing B', kind: 'colour', optional: true },
-      { key: 'colGround2B', label: 'mottle B', kind: 'colour', optional: true },
-      { key: 'colRimB', label: 'rim B', kind: 'colour', optional: true },
-      N('hueCycle', 'hue walk', -3, 3, 0.01, 'rad/s round the FULL wheel (Crash 1 style) — usually 0'),
+      N('sharedLow', 'bulge 2-lobe', 0, 0.05, 0.001, 'the big slow bulges every ring shares'),
+      N('sharedLowRate', 'bulge rate', 0, 4, 0.02),
+      N('sharedMid', 'bulge 3-lobe', 0, 0.05, 0.001),
+      N('sharedMidRate', '3-lobe rate', 0, 4, 0.02),
+      N('breathe', 'breathe', 0, 0.02, 0.001, 'whole-portal radius breath — capped at 2%, rings hold station'),
+      N('breatheRate', 'breathe rate', 0, 6, 0.02),
+    ],
+  },
+  ringGroup(1),
+  ringGroup(2),
+  ringGroup(3),
+  {
+    name: 'CORE',
+    fields: [
+      N('coreRadius', 'hot radius', 0.02, 0.4, 0.005, 'the clearly-hot centre — the footage sits near 0.1'),
+      N('coreSoft', 'soft edge', 0.05, 0.6, 0.005, 'where the core glow dies to nothing'),
+      N('coreBright', 'brightness', 0, 2.5, 0.02),
     ],
   },
   {
-    name: 'MOTION',
+    name: 'HALO',
     fields: [
-      N('spin', 'spin', -3, 3, 0.01, 'whole-disc rotation on top of the flow'),
-      N('spinDiff', 'spin diff', -3, 3, 0.01, 'extra field swirl at the centre, fading to zero at the rim'),
-      N('pulse', 'pulse', 0, 1, 0.01, 'brightness breathing'),
-      N('pulseRate', 'pulse rate', 0, 6, 0.02),
+      N('haloRadius', 'radius', 0.2, 1, 0.005, 'the loose pale outer ring'),
+      N('haloWidth', 'width', 0.01, 0.4, 0.005),
+      N('haloAlpha', 'strength', 0, 1, 0.01, '0 = no halo'),
+    ],
+  },
+  {
+    name: 'BACKING',
+    fields: [
+      N('backingAlpha', 'opacity', 0, 1, 0.01, '1 = solid cloud, occludes the room behind'),
+      N('backingRim', 'rim fade at', 0.2, 0.95, 0.005),
+      N('cloudAmp', 'cloud', 0, 1.5, 0.02, 'how strongly the slow fields mottle it'),
+      N('cloudRate', 'cloud rate', 0, 4, 0.02),
+    ],
+  },
+  {
+    name: 'PALETTE — WARM',
+    fields: [
+      COL('warmCore', 'core'), COL('warmLine', 'line'), COL('warmGlow', 'glow'),
+      COL('warmHalo', 'halo'), COL('warmGround', 'ground'), COL('warmRim', 'rim'),
+    ],
+  },
+  {
+    name: 'PALETTE — COOL',
+    fields: [
+      COL('coolCore', 'core'), COL('coolLine', 'line'), COL('coolGlow', 'glow'),
+      COL('coolHalo', 'halo'), COL('coolGround', 'ground'), COL('coolRim', 'rim'),
+    ],
+  },
+  {
+    name: 'PALETTE CYCLE',
+    fields: [
+      N('cycleRate', 'rate', 0, 8, 0.01,
+        'rad/s. The WHOLE palette lerps warm->cool->warm together — period 1.4-2s is ~3.1-4.5'),
     ],
   },
 ];
@@ -153,23 +134,14 @@ class SwirlStudio {
   private preset: SwirlPreset;
   private name = 'mySwirl';
   private live: Swirl | null = null;
-  private paused = false;
   private backdrop: THREE.Mesh | null = null;
   private dark = true;
   private out!: HTMLTextAreaElement;
-  private seed = 1;
+  private overlay: HTMLElement | null = null;
+  private overlayOpacity = 0.5;
 
   constructor(private ctx: Ctx) {
-    const saved = localStorage.getItem(STORE);
-    if (saved) {
-      try {
-        const j = JSON.parse(saved);
-        this.name = j.name ?? this.name;
-        this.preset = j.preset ?? clone(SWIRL_PRESETS.warpPortal);
-      } catch {
-        this.preset = clone(SWIRL_PRESETS.warpPortal);
-      }
-    } else this.preset = clone(SWIRL_PRESETS.warpPortal);
+    this.preset = this.load();
     this.panel = this.build();
     document.body.appendChild(this.panel);
     this.makeBackdrop();
@@ -177,8 +149,26 @@ class SwirlStudio {
     this.dump();
   }
 
+  /** Saved drafts are only trusted if they speak the band schema. */
+  private load(): SwirlPreset {
+    const saved = localStorage.getItem(STORE);
+    if (saved) {
+      try {
+        const j = JSON.parse(saved);
+        if (j.preset && typeof j.preset.r1Radius === 'number') {
+          this.name = j.name ?? this.name;
+          return j.preset as SwirlPreset;
+        }
+      } catch {
+        /* fall through to the shipped preset */
+      }
+    }
+    return clone(SWIRL_PRESETS.warpPortal);
+  }
+
   /** Called from the frame loop while the studio is open. */
   frame(dt: number): void {
+    void dt;
     const cam = this.ctx.camera;
     cam.getWorldDirection(FWD);
     if (this.live) this.live.group.position.copy(cam.position).addScaledVector(FWD, 9);
@@ -188,14 +178,11 @@ class SwirlStudio {
       this.backdrop.position.copy(cam.position).addScaledVector(FWD, 13);
       this.backdrop.quaternion.copy(cam.quaternion);
     }
-    // paused = the system just doesn't tick this one (system.update is driven
-    // by main, which updates every live swirl; pausing removes it instead)
-    void dt;
   }
 
   private respawn(): void {
     if (this.live) swirls.remove(this.live);
-    this.live = swirls.spawn(this.preset, 0, 0, 0, { seed: this.seed++ });
+    this.live = swirls.spawn(this.preset, 0, 0, 0, { seed: 1 });
   }
 
   /** Push edits into the live instance without recreating it. */
@@ -222,6 +209,41 @@ class SwirlStudio {
     );
   }
 
+  // -- reference overlay: an image or video floated over the viewport -------
+  private setOverlay(file: File): void {
+    this.clearOverlay();
+    const url = URL.createObjectURL(file);
+    let media: HTMLElement;
+    if (file.type.startsWith('video')) {
+      const v = document.createElement('video');
+      v.src = url;
+      v.loop = true;
+      v.muted = true;
+      v.autoplay = true;
+      void v.play();
+      media = v;
+    } else {
+      const img = document.createElement('img');
+      img.src = url;
+      media = img;
+    }
+    media.style.cssText =
+      'position:fixed;left:0;top:0;width:calc(100% - 320px);height:100%;' +
+      'object-fit:contain;pointer-events:none;z-index:40;';
+    media.style.opacity = String(this.overlayOpacity);
+    document.body.appendChild(media);
+    this.overlay = media;
+  }
+
+  private clearOverlay(): void {
+    if (this.overlay) {
+      const src = (this.overlay as HTMLImageElement | HTMLVideoElement).src;
+      this.overlay.remove();
+      this.overlay = null;
+      if (src.startsWith('blob:')) URL.revokeObjectURL(src);
+    }
+  }
+
   private build(): HTMLElement {
     injectStudioCss();
     const p = el('div', 'pst');
@@ -235,8 +257,8 @@ class SwirlStudio {
 
     p.appendChild(
       note(
-        'Wormholes and scenery swirls: a coarse polar grid of Gouraud triangles, ' +
-          'coloured by a cheap field of sines — visualizer maths, PS1 rules. ' +
+        'The Crash wormhole: three independent misshapen rings, a hot centre, ' +
+          'a cloudy backing and a pale halo — every band its own Gouraud strip. ' +
           'Dial it, then Copy: the block pastes into SWIRL_PRESETS in src/swirls.ts.',
       ),
     );
@@ -290,21 +312,43 @@ class SwirlStudio {
         this.backdrop.visible = !this.backdrop.visible;
         b.textContent = this.backdrop.visible ? 'Hide backdrop' : 'Show backdrop';
       }),
-      btn('Pause', (b) => {
-        // Pausing removes it from the ticking system; resuming re-adds it in
-        // place, deterministic from its seed.
-        this.paused = !this.paused;
-        b.textContent = this.paused ? 'Resume' : 'Pause';
-        if (this.paused) {
-          if (this.live) {
-            swirls.remove(this.live);
-            this.live = null;
-          }
-        } else this.respawn();
+      btn('Freeze', (b) => {
+        // A TRUE freeze: the swirl stays in the scene and its update becomes
+        // a no-op, holding the exact frame — nothing respawns, no phase moves.
+        if (!this.live) return;
+        this.live.paused = !this.live.paused;
+        b.textContent = this.live.paused ? 'Unfreeze' : 'Freeze';
       }),
-      btn('Reseed', () => this.respawn()),
+      btn('Reset saved', () => {
+        localStorage.removeItem(STORE);
+        this.preset = clone(SWIRL_PRESETS[sel.value] ?? SWIRL_PRESETS.warpPortal);
+        this.respawn();
+        this.rebuild();
+      }),
     );
     p.appendChild(stageBtns);
+
+    // reference overlay controls
+    const refBtns = el('div', 'pst-btns');
+    const fileIn = document.createElement('input');
+    fileIn.type = 'file';
+    fileIn.accept = 'image/*,video/*';
+    fileIn.style.display = 'none';
+    fileIn.addEventListener('change', () => {
+      if (fileIn.files && fileIn.files[0]) this.setOverlay(fileIn.files[0]);
+    });
+    refBtns.append(
+      btn('Reference…', () => fileIn.click()),
+      btn('Clear ref', () => this.clearOverlay()),
+      fileIn,
+    );
+    p.appendChild(refBtns);
+    p.appendChild(
+      sliderRow('ref opacity', this.overlayOpacity, 0, 1, 0.01, (v) => {
+        this.overlayOpacity = v;
+        if (this.overlay) this.overlay.style.opacity = String(v);
+      }),
+    );
 
     const body = el('div', 'pst-body');
     p.appendChild(body);
@@ -371,23 +415,11 @@ class SwirlStudio {
       inp.type = 'color';
       inp.className = 'pst-col';
       inp.value = '#' + (((cur as number) ?? 0xffffff) >>> 0).toString(16).padStart(6, '0');
-      let off: HTMLInputElement | null = null;
-      if (f.optional) {
-        off = document.createElement('input');
-        off.type = 'checkbox';
-        off.className = 'pst-chk';
-        off.checked = cur !== undefined;
-        off.title = 'use this colour';
-      }
-      const setIt = (): void => {
-        if (off && !off.checked) delete this.preset[f.key];
-        else (this.preset[f.key] as unknown) = parseInt(inp.value.slice(1), 16);
+      inp.addEventListener('input', () => {
+        (this.preset[f.key] as unknown) = parseInt(inp.value.slice(1), 16);
         this.apply();
-      };
-      inp.addEventListener('input', setIt);
-      off?.addEventListener('change', setIt);
+      });
       row.append(l, inp);
-      if (off) row.append(off);
       wrap.appendChild(row);
     } else if (f.kind === 'bool') {
       const row = el('div', 'pst-row');
@@ -402,25 +434,6 @@ class SwirlStudio {
         this.apply();
       });
       row.append(l, inp);
-      wrap.appendChild(row);
-    } else if (f.kind === 'blend') {
-      const row = el('div', 'pst-row');
-      const l = el('label', 'pst-label');
-      l.textContent = f.label;
-      const s = document.createElement('select');
-      s.className = 'pst-sel';
-      for (const v of ['add', 'alpha']) {
-        const o = document.createElement('option');
-        o.value = v;
-        o.textContent = v;
-        s.appendChild(o);
-      }
-      s.value = String(cur ?? (f.key === 'blend' ? 'alpha' : 'add'));
-      s.addEventListener('change', () => {
-        (this.preset[f.key] as unknown) = s.value;
-        this.apply();
-      });
-      row.append(l, s);
       wrap.appendChild(row);
     } else {
       wrap.appendChild(
@@ -455,6 +468,7 @@ class SwirlStudio {
   private close(): void {
     if (this.live) swirls.remove(this.live);
     this.live = null;
+    this.clearOverlay();
     this.panel.remove();
     if (this.backdrop) {
       this.ctx.scene.remove(this.backdrop);
