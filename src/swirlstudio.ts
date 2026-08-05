@@ -66,6 +66,17 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    name: 'PLASMA',
+    fields: [
+      N('jag', 'jag', 0, 3, 0.01, 'high-frequency kinks in the line — the lightning quality'),
+      N('jagScale', 'jag scale', 1, 12, 1, 'kinks per circumference (5-9 = electric)'),
+      N('jagRate', 'jag rate', 0, 8, 0.02, 'how fast the kinks seethe'),
+      N('streak', 'streak', 0, 1, 0.01, 'brightness knots ALONG the line — energy coursing through'),
+      N('streakScale', 'streak scale', 1, 10, 1, 'knots per circumference'),
+      N('streakRate', 'streak rate', -8, 8, 0.02, 'rad/s the knots travel along the rings'),
+    ],
+  },
+  {
     name: 'CORE + GROUND',
     fields: [
       N('core', 'core size', 0.02, 1, 0.01, 'hot blob in the middle, fraction of radius'),

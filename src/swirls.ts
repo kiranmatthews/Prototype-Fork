@@ -52,6 +52,20 @@ export interface SwirlPreset {
   wobbleRate?: number; // temporal speed of the churn
   edgeCrinkle?: number; // radial jitter of the outer rings, fraction of radius
 
+  // --- plasma (the electric quality of the reference filaments) ---
+  // The wobble above can only bend the line in 2-3 broad lobes — cloud, not
+  // lightning. Jag bends the filament PHASE with high angular harmonics
+  // (rounded to integers so the circle still closes), scaled up toward the
+  // rim so the core stays tight while the outer rings fray. Streak dims and
+  // brightens the line ALONG its arc with a travelling wave — the knots of
+  // energy coursing through the rings in the footage.
+  jag?: number; // radians of high-frequency phase bend. 0 = off
+  jagScale?: number; // angular harmonic of the jag (5-9 = electric)
+  jagRate?: number; // how fast the jag pattern seethes
+  streak?: number; // 0..1 brightness modulation along the filament
+  streakScale?: number; // knots per circumference (integer harmonic)
+  streakRate?: number; // rad/s the knots course along the rings
+
   // --- core + backing ---
   core?: number; // hot core blob size, fraction of radius
   coreGlow?: number; // core brightness 0..3
@@ -97,18 +111,25 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
   // things it was missing: rings visibly swallowed into the core (flow),
   // the bright pass additive over a solid body pass, and the palette
   // breathing pink<->blue down the short hue arc.
+  // The hand-tuned Crash 2 portal (uploaded), plus the plasma band that the
+  // footage's electric filaments needed: high-harmonic jag fraying the rings
+  // and streak knots coursing along them.
   warpPortal: {
     blend: 'alpha', blendBright: 'add',
-    radius: 1.8, rings: 13, segs: 33, billboard: true,
-    arms: 0, twist: 5.18, flow: 0.25, current: 0.35, sharp: 4.01, filament: 0.776, glowWidth: 0.88,
-    wobble: 0.664, wobbleScale: 8, wobbleRate: 5, edgeCrinkle: 0.047,
-    core: 0.101, coreGlow: 4,
+    radius: 4.35, rings: 14, segs: 48, depth: 1.8, billboard: true,
+    arms: 0, twist: 6, flow: 0.232, current: 0.015,
+    sharp: 1, filament: 0.961, glowWidth: 1,
+    wobble: 0, wobbleScale: 0, wobbleRate: 0, edgeCrinkle: 0,
+    jag: 0.9, jagScale: 7, jagRate: 2.2,
+    streak: 0.55, streakScale: 4, streakRate: 2,
+    core: 0.155, coreGlow: 4,
     mottle: 0, mottleScale: 0, mottleRate: 0,
-    colCore: 0xfff6ff, colFil: 0xff00aa, colGlow: 0xb300ff, colGround: 0x381a4e,
+    colCore: 0xffffff, colFil: 0x0062ff, colGlow: 0xff0000, colGround: 0x560094,
+    colGround2: 0x4dff00, colRim: 0xff0000,
     colCoreB: 0xeafcff, colFilB: 0x2fb4ff, colGlowB: 0x2a50e0,
-    cycleRate: 0.5,
-    hueCycle: 0, alpha: 1, body: 1, rim: 0.76,
-    spin: -0.598, pulse: 0, pulseRate: 0.306,
+    cycleRate: 0.003,
+    hueCycle: 0, alpha: 1, body: 1, rim: 0.609,
+    spin: -3, pulse: 0, pulseRate: 0,
   },
   // The invincibility-mask backdrop: no filament, big soft blue bands.
   akuHalo: {
@@ -349,6 +370,13 @@ export class Swirl {
     const body = p.body ?? 0.35;
     const rim = p.rim ?? 0.55;
     const crin = p.edgeCrinkle ?? 0.06;
+    const jag = p.jag ?? 0;
+    const jagS = Math.max(1, Math.round(p.jagScale ?? 7));
+    const jagS2 = Math.max(1, Math.round(jagS * 1.6) + 1);
+    const jagR = p.jagRate ?? 2;
+    const streak = clamp01(p.streak ?? 0);
+    const strS = Math.max(1, Math.round(p.streakScale ?? 5));
+    const strR = p.streakRate ?? 1.5;
     const depth = Math.max(0.2, p.depth ?? 1);
     const spin = (p.spin ?? 0) * t;
     const breathe = 1 + (p.pulse ?? 0) * Math.sin((p.pulseRate ?? 1.5) * t);
@@ -400,13 +428,27 @@ export class Swirl {
         wob *
         (Math.sin(r * wobS + t * wobR + th * 2) * 0.6 +
           Math.sin(th * 3 - t * wobR * 1.7 + r * wobS * 1.6) * 0.4);
+      // PLASMA: high-harmonic phase bend, light at the core and heavy at the
+      // rim, seething on its own clock. Lives in pattern space (u) so the
+      // kinks ride the rings through the swallow's snap.
+      const jagBend = jag
+        ? jag * (0.4 + 0.6 * r) *
+          (Math.sin(th * jagS + t * jagR + u * 53) * 0.6 +
+            Math.sin(th * jagS2 - t * jagR * 1.6 + u * 91) * 0.4)
+        : 0;
       // The spiral phase reads the PATTERN-space radius (u): between snaps
       // each ring keeps its colour and physically carries it inward.
       // `current` pours extra phase through on top — the ghost pulse.
-      const phase = th * arms + (u + t * current) * twist + bend;
+      const phase = th * arms + (u + t * current) * twist + bend + jagBend;
       const wave = 0.5 + 0.5 * Math.sin(phase);
-      const filament = Math.pow(wave, sharp) * filS;
-      const glow = Math.pow(wave, Math.max(1, sharp * glowW * 0.5));
+      let filament = Math.pow(wave, sharp) * filS;
+      let glow = Math.pow(wave, Math.max(1, sharp * glowW * 0.5));
+      if (streak) {
+        // knots of energy coursing along the line — never fully dark
+        const m = 0.5 + 0.5 * Math.sin(th * strS + u * 23 - t * strR);
+        filament *= 1 - streak * m;
+        glow *= 1 - streak * 0.6 * m;
+      }
       // Mottled backing: one slow sine field in (r, theta, t).
       const g =
         0.5 +
