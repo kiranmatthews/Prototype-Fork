@@ -5052,7 +5052,7 @@ export class Level {
     const NODES = 150; // ~2.4km
     const pts: THREE.Vector3[] = [];
     let px = 0;
-    let py = 235;
+    let py = 320;
     let pz = 0;
     for (let i = 0; i < NODES; i++) {
       const sArc = i * DS;
@@ -5064,11 +5064,11 @@ export class Level {
       if (i > NODES - 6) head = 0; // the run-out straightens for the gate
       // mostly -6..-13%, punctuated by real -20%+ dives and short breathers
       const slope = THREE.MathUtils.clamp(
-        -0.09 +
-          0.07 * Math.sin(sArc * 0.006 + 1.7) +
+        -0.125 +
+          0.08 * Math.sin(sArc * 0.006 + 1.7) +
           0.06 * Math.sin(sArc * 0.0023 + 4.2),
-        -0.24,
-        0.02,
+        -0.28,
+        0.01,
       );
       pts.push(V(px, py, pz));
       px += Math.sin(head) * DS;
@@ -5081,15 +5081,75 @@ export class Level {
       for (let i = 1; i < NODES - 1; i++)
         pts[i].y = (pts[i - 1].y + 2 * pts[i].y + pts[i + 1].y) / 4;
 
-    const W = 13;
+    const W = 18.2; // 40% wider: two broad lanes
+    const groundBefore = this.groundMeshes.length;
     const road = this.slideRibbon(pts, W, 0x565b61, undefined, 14, "asphalt", false);
     this.roadRibbon = road;
+    // THE LAG FIX. The ribbon arrives as ONE ~50k-triangle mesh, and three's
+    // raycaster has no BVH: every ground ray brute-forced the whole 2.4km of
+    // deck every frame (44.7ms a step, measured). Split its index by triangle
+    // position into ~240m meshes, each with compact re-packed vertices and
+    // its OWN bounds — the ray's bounding-sphere test now skips everything
+    // but the chunk underfoot, and the far deck frustum-culls too.
+    for (let gi = this.groundMeshes.length - 1; gi >= groundBefore; gi--) {
+      const big = this.groundMeshes[gi];
+      // buildVertRampGeometry emits an UNINDEXED soup — normalise to that
+      // form so every triangle owns 3 consecutive vertices and carving is a
+      // straight copy of triples, no index remapping
+      const soup = big.geometry.getIndex()
+        ? big.geometry.toNonIndexed()
+        : big.geometry;
+      const posA = soup.getAttribute("position") as THREE.BufferAttribute;
+      const triCount = posA.count / 3;
+      if (triCount < 10000) continue;
+      const buckets = new Map<number, number[]>();
+      for (let f = 0; f < triCount; f++) {
+        // bucket by the FIRST vertex's z — the course is z-monotonic, so z
+        // is as good as arc length for carving 80m stretches
+        const key = Math.floor(posA.getZ(f * 3) / 80);
+        let arr = buckets.get(key);
+        if (!arr) buckets.set(key, (arr = []));
+        arr.push(f);
+      }
+      const attrs = Object.entries(soup.attributes) as [string, THREE.BufferAttribute][];
+      for (const tris of buckets.values()) {
+        const g = new THREE.BufferGeometry();
+        for (const [name, attr] of attrs) {
+          const item = attr.itemSize;
+          const span = 3 * item; // floats per triangle in this attribute
+          const out = new Float32Array(tris.length * span);
+          const srcArr = attr.array as Float32Array;
+          let w = 0;
+          for (const f of tris) {
+            const base = f * span;
+            for (let c = 0; c < span; c++) out[w++] = srcArr[base + c];
+          }
+          g.setAttribute(name, new THREE.BufferAttribute(out, item));
+        }
+        // a precomputed box makes Mesh.raycast run its TIGHT AABB pre-test
+        // (it only does so when boundingBox is non-null) — a long ribbon
+        // chunk's sphere is fat with empty air, the box hugs the deck
+        g.computeBoundingSphere();
+        g.computeBoundingBox();
+        const m = new THREE.Mesh(g, big.material);
+        m.name = "road deck chunk";
+        m.userData = big.userData;
+        m.castShadow = big.castShadow;
+        m.receiveShadow = big.receiveShadow;
+        this.root.add(m);
+        this.groundMeshes.push(m);
+      }
+      this.root.remove(big);
+      if (soup !== big.geometry) soup.dispose();
+      big.geometry.dispose();
+      this.groundMeshes.splice(gi, 1);
+    }
     const F = (t: number, off: number, h: number): THREE.Vector3 =>
       road.frame(THREE.MathUtils.clamp(t, 0.001, 0.999), off, h);
     const CHUNK = 240; // metres of course per mesh — the culling grain
 
     // spawn in the right lane, looking down the hill
-    const sp = F(0.004, 2.9, 0.15);
+    const sp = F(0.004, 4.2, 0.15);
     this.spawnPos.set(sp.x, sp.y, sp.z);
     this.currentSpawn.copy(this.spawnPos);
 
@@ -5162,7 +5222,7 @@ export class Level {
       for (const off of [-0.24, 0.24])
         strip(s0, s1, () => off - 0.085, () => 0.05, () => off + 0.085, () => 0.05,
           yellowMat, false, "centre line", 7);
-      for (const off of [-5.55, 5.55])
+      for (const off of [-8.15, 8.15])
         strip(s0, s1, () => off - 0.09, () => 0.05, () => off + 0.09, () => 0.05,
           whiteMat, false, "edge line", 7);
     });
@@ -5179,7 +5239,7 @@ export class Level {
     const postMat = new THREE.MeshLambertMaterial({ color: 0x5a616b });
     const PQ = new THREE.Quaternion();
     for (const side of [-1, 1] as const) {
-      const bOff = side * 6.05;
+      const bOff = side * 8.65;
       chunks((s0, s1) => {
         strip(s0, s1, () => bOff, () => 0.45, () => bOff, () => 0.88,
           beamMat, false, "barrier beam", 8);
@@ -5318,7 +5378,15 @@ export class Level {
 
     // ---- oncoming traffic -------------------------------------------------
     const carCols = [0xb03a2e, 0x3a62b0, 0xd8c090, 0x4a8a4a, 0x8a4a8a, 0xc07838];
-    for (let i = 0; i < 8; i++) {
+    // Base traffic holds the left lane; three OVERTAKERS run head-on in the
+    // player's own lane, faster, each closing on a slower partner ahead of
+    // it — the pass plays out right in front of you and YOUR lane is the
+    // one that is briefly not yours.
+    const traffic: { s0: number; lane: number; speed: number }[] = [];
+    for (let i = 0; i < 8; i++)
+      traffic.push({ s0: 280 + i * 265, lane: -4.2, speed: 9.5 + (i % 3) * 1.6 });
+    for (const os of [700, 1350, 1950]) traffic.push({ s0: os + 16, lane: 4.2, speed: 14.5 });
+    for (let i = 0; i < traffic.length; i++) {
       const group = new THREE.Group();
       const body = new THREE.Mesh(
         new THREE.BoxGeometry(2.1, 0.75, 4.2),
@@ -5352,16 +5420,16 @@ export class Level {
         group,
         box: new THREE.Box3(),
         alive: true,
-        x0: 300 + i * 260,
+        x0: traffic[i].s0,
         x1: 0,
         dir: 1,
-        speed: 9.5 + (i % 3) * 1.6,
+        speed: traffic[i].speed,
         axis: "z",
         kind: "car",
         state: "drive",
         stateT: 0,
         baseY: 0,
-        cross: -2.9, // centre of the left lane
+        cross: traffic[i].lane,
         body,
         vy: 0,
         spinKill: false,
@@ -5379,10 +5447,10 @@ export class Level {
     this.ribbonFruit(road, 0.5, 0.56, 8);
     this.ribbonFruit(road, 0.66, 0.72, 6);
     this.ribbonFruit(road, 0.85, 0.92, 8);
-    const gem = F(0.48, 2.9, 1.2);
+    const gem = F(0.48, 4.2, 1.2);
     this.crystal(gem.x, gem.y, gem.z);
     for (const t of [0.2, 0.4, 0.6, 0.8]) {
-      const p = F(t, 2.9, 0);
+      const p = F(t, 4.2, 0);
       this.checkpoint(p.y, p.z, p.x);
     }
     const end = F(0.985, 0, 0);
