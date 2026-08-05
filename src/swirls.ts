@@ -59,14 +59,33 @@ export interface SwirlPreset {
   // rim so the core stays tight while the outer rings fray. Streak dims and
   // brightens the line ALONG its arc with a travelling wave — the knots of
   // energy coursing through the rings in the footage.
-  // Warp DEFORMS THE RING GEOMETRY: three angular waves at different
-  // frequencies and speeds displace each vertex's radius (per-ring phase
-  // offsets keep neighbours related but not identical), amplitude growing
-  // toward the rim. This is what makes the rings THEMSELVES irregular,
-  // wobbling shapes — jag/streak below only paint the colour field.
-  warp?: number; // radial displacement amplitude, fraction of radius. 0 = off
-  warpScale?: number; // base angular harmonic (the other two bands ride at ~2.3x and ~0.7x)
-  warpRate?: number; // how fast the three bands churn
+  // GEOMETRY WARP, per the reference construction: THREE INDEPENDENT angular
+  // waves displace each vertex's radius, each with its own amplitude,
+  // frequency and speed (the reference runs them at angle*3 + t*11,
+  // angle*7 - t*6, angle*2 + t*3 — note how FAST they seethe, and that the
+  // middle band runs backwards). Per-ring phase offsets keep neighbours
+  // related but not identical; amplitude grows toward the rim.
+  //   A = the cloudy bulges (low frequency)
+  //   B = the lively ELECTRIC edge (high frequency, fast, backwards)
+  //   C = the slow sway (very low frequency)
+  // `couple` is the spec's deformation-into-colour-phase term: the bright
+  // bands RIDE the deformed shape instead of being painted on a circle —
+  // without it the warp reads as jelly under smooth paint, with it the
+  // bright rings themselves go jagged. 1 = the band sits exactly at its
+  // displaced radius.
+  warpA?: number; // cloud amplitude, fraction of radius
+  warpAScale?: number;
+  warpARate?: number;
+  warpB?: number; // electric amplitude
+  warpBScale?: number;
+  warpBRate?: number;
+  warpC?: number; // sway amplitude
+  warpCScale?: number;
+  warpCRate?: number;
+  couple?: number; // 0..2 how much the light follows the deformed shape
+  warp?: number; // legacy single-band aliases (read as band A)
+  warpScale?: number;
+  warpRate?: number;
   jag?: number; // radians of high-frequency phase bend. 0 = off
   jagScale?: number; // angular harmonic of the jag (5-9 = electric)
   jagRate?: number; // how fast the jag pattern seethes
@@ -125,17 +144,21 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
   // The hand-tuned Crash 2 portal (uploaded), plus the plasma band that the
   // footage's electric filaments needed: high-harmonic jag fraying the rings
   // and streak knots coursing along them.
-  // The hand-tuned Crash 2 portal (upload 5) — with the piece the look was
-  // missing: geometry warp, so the rings are irregular heaving shapes, not
-  // circles with wavy paint. Segs back up to 48: the upload had 8, and eight
-  // vertices around a circle cannot draw eight kinks no matter the field.
+  // The hand-tuned Crash 2 portal (upload 5) + the reference construction in
+  // full: three independent geometry-warp bands (cloudy, electric, sway),
+  // the deformation coupled into the colour phase so the bright rings ride
+  // the jagged shape, at the reference's own 24-segment budget — coarse
+  // enough that the polyline itself makes corners, which IS the PS1 jag.
   warpPortal: {
     blend: 'alpha', blendBright: 'add',
-    radius: 4.37, rings: 14, segs: 48, depth: 1.92, billboard: true,
+    radius: 4.37, rings: 14, segs: 24, depth: 1.92, billboard: true,
     arms: 0, twist: 6, flow: 0.11, current: 0.006,
     sharp: 1, filament: 0.949, glowWidth: 1,
     wobble: 0, wobbleScale: 0, wobbleRate: 0, edgeCrinkle: 0,
-    warp: 0.08, warpScale: 3, warpRate: 0.55,
+    warpA: 0.045, warpAScale: 3, warpARate: 1.8,
+    warpB: 0.05, warpBScale: 8, warpBRate: 3.2,
+    warpC: 0.025, warpCScale: 2, warpCRate: 0.5,
+    couple: 1,
     jag: 3, jagScale: 8, jagRate: 0.006,
     streak: 0.386, streakScale: 8, streakRate: 5.2,
     core: 0.02, coreGlow: 4,
@@ -386,11 +409,16 @@ export class Swirl {
     const body = p.body ?? 0.35;
     const rim = p.rim ?? 0.55;
     const crin = p.edgeCrinkle ?? 0.06;
-    const warp = p.warp ?? 0;
-    const wpS = Math.max(1, Math.round(p.warpScale ?? 3));
-    const wpS2 = Math.max(1, Math.round(wpS * 2.3) + 1);
-    const wpS3 = Math.max(1, Math.round(wpS * 0.7));
-    const wpR = p.warpRate ?? 0.5;
+    const aAmp = p.warpA ?? p.warp ?? 0;
+    const aS = Math.max(1, Math.round(p.warpAScale ?? p.warpScale ?? 3));
+    const aR = p.warpARate ?? (p.warpRate !== undefined ? p.warpRate * 2.2 : 1.8);
+    const bAmp = p.warpB ?? 0;
+    const bS = Math.max(1, Math.round(p.warpBScale ?? 7));
+    const bR = p.warpBRate ?? 2.6;
+    const cAmp = p.warpC ?? 0;
+    const cS = Math.max(1, Math.round(p.warpCScale ?? 2));
+    const cR = p.warpCRate ?? 0.5;
+    const couple = p.couple ?? 1;
     const spinDiff = p.spinDiff ?? 0;
     const jag = p.jag ?? 0;
     const jagS = Math.max(1, Math.round(p.jagScale ?? 7));
@@ -437,17 +465,18 @@ export class Swirl {
       // The FIELD samples at thS: differential spin swirls the pattern faster
       // toward the centre without rotating the polygons like a wheel.
       const thS = spinDiff ? th + t * spinDiff * (1 - Math.min(1, u)) : th;
-      // GEOMETRY WARP — the rings themselves go irregular. Three angular
-      // waves at different frequencies and speeds, per-ring phase offsets in
+      // GEOMETRY WARP — three independent bands, per-ring phase offsets in
       // pattern space (u, so the shape rides the swallow through its snap),
-      // amplitude growing toward the rim: tight centre, heaving edge.
+      // amplitude growing toward the rim: tight centre, heaving edge. The
+      // electric band (B) runs BACKWARDS, per the reference — counter-motion
+      // between the bands is what makes the edge seethe instead of slosh.
       const warpVal =
-        warp === 0 || k === 0
+        k === 0
           ? 0
-          : warp * (0.25 + 0.75 * r) *
-            (Math.sin(thS * wpS + t * wpR * 2.2 + u * 10.7) * 0.5 +
-              Math.sin(thS * wpS2 - t * wpR * 1.2 + u * 16.3) * 0.3 +
-              Math.sin(thS * wpS3 + t * wpR * 0.6 - u * 6.9) * 0.2);
+          : (0.15 + 0.85 * r) *
+            ((aAmp ? aAmp * Math.sin(thS * aS + t * aR + u * 10.7) : 0) +
+              (bAmp ? bAmp * Math.sin(thS * bS - t * bR + u * 16.3) : 0) +
+              (cAmp ? cAmp * Math.sin(thS * cS + t * cR - u * 6.9) : 0));
       // vertex position: flat disc, outer rings crinkled so the rim churns.
       // The crinkle phase lives in PATTERN space (u), so it rides the rings
       // through the snap instead of popping to a new shape.
@@ -475,7 +504,10 @@ export class Swirl {
       // The spiral phase reads the PATTERN-space radius (u): between snaps
       // each ring keeps its colour and physically carries it inward.
       // `current` pours extra phase through on top — the ghost pulse.
-      const phase = thS * arms + (u + t * current) * twist + bend + jagBend;
+      // The spec's warpInfluence term: the band phase reads the DISPLACED
+      // radius, so the bright rings ride the jagged shape instead of being
+      // painted on a circle underneath it.
+      const phase = thS * arms + (u + warpVal * couple + t * current) * twist + bend + jagBend;
       const wave = 0.5 + 0.5 * Math.sin(phase);
       let filament = Math.pow(wave, sharp) * filS;
       let glow = Math.pow(wave, Math.max(1, sharp * glowW * 0.5));

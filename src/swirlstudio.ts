@@ -71,9 +71,16 @@ const GROUPS: Group[] = [
     // keeping when the geometry warp replaced them as the main act.
     name: 'PLASMA · SHAPE',
     fields: [
-      N('warp', 'warp', 0, 0.35, 0.005, 'deforms the RING GEOMETRY — irregular heaving shapes, not circles'),
-      N('warpScale', 'warp scale', 1, 10, 1, 'base harmonic; two more bands ride at ~2.3x and ~0.7x'),
-      N('warpRate', 'warp rate', 0, 5, 0.01, 'how fast the shape churns'),
+      N('warpA', 'cloud', 0, 0.35, 0.005, 'band A: the big slow bulges (low frequency)'),
+      N('warpAScale', 'cloud scale', 1, 12, 1),
+      N('warpARate', 'cloud rate', 0, 12, 0.02),
+      N('warpB', 'electric', 0, 0.35, 0.005, 'band B: the lively jagged edge — high frequency, runs backwards'),
+      N('warpBScale', 'electric scale', 1, 12, 1, 'lobes per circumference; at ~segs/3 the polyline makes corners'),
+      N('warpBRate', 'electric rate', 0, 12, 0.02, 'the seethe. The reference runs this FAST'),
+      N('warpC', 'sway', 0, 0.35, 0.005, 'band C: very low frequency drift'),
+      N('warpCScale', 'sway scale', 1, 12, 1),
+      N('warpCRate', 'sway rate', 0, 12, 0.02),
+      N('couple', 'light follows', 0, 2, 0.01, 'bright bands ride the deformed shape. 0 = paint on a circle (jelly)'),
     ],
   },
   {
