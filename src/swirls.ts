@@ -85,6 +85,11 @@ export interface SwirlPreset {
   swallow?: number; // radius-fractions/sec the ring BASES travel inward (+):
   // a ring that reaches the core fades out and is reborn at the rim, cross-
   // fading through a short envelope so there is no pop
+  swallowTo?: number; // how DEEP the conveyor runs: rings travel to this
+  // radius before dying — default 0.04, inside the hot core, so a ring is
+  // visibly swallowed all the way to the middle
+  swallowFrom?: number; // where newborn rings fade in — default 0.9, well
+  // OUTSIDE the outer lane slot, so they arrive early and travel in
   current?: number; // 0..1 brightness wave pouring radially through the bands
   currentRate?: number; // rad/s; + pours toward the core
   pulse?: number; // whole-portal brightness breathing 0..1
@@ -103,25 +108,29 @@ export interface SwirlPreset {
 export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
   // The Crash 2 wormhole per the reference: three independent irregular
   // rings, broad hot centre, cloudy backing, fast warm/cool palette breath.
+  // The hand-tuned Crash 2 wormhole (uploaded), on the extended swallow
+  // corridor: rings are born out at 0.9, cross every lane slot, and die at
+  // 0.04 — inside the hot core — so the loop reads as an endless swallow.
   warpPortal: {
-    radius: 4.4, segs: 24, billboard: true,
-    sharedLow: 0.007, sharedLowRate: 0.8, sharedMid: 0.005, sharedMidRate: 0.45,
-    breathe: 0.008, breatheRate: 1.1,
-    ringCount: 3, ringInner: 0.1, ringOuter: 0.56,
-    ringLine: 0.022, ringGlow: 0.082, ringBright: 1,
-    vary: 0.55, seed: 7,
-    wavyAmp: 0.01, wavyFreq: 5, wavyRate: 1.3,
-    jagAmp: 0.009, jagFreq: 9, jagRate: 2.4,
-    depth: 1,
-    coreRadius: 0.1, coreSoft: 0.17, coreBright: 1.2,
-    haloRadius: 0.69, haloWidth: 0.1, haloAlpha: 0.5,
-    backingAlpha: 1, backingRim: 0.6, cloudAmp: 0.5, cloudRate: 0.5,
+    radius: 4.4, segs: 48, billboard: true,
+    sharedLow: 0.007, sharedLowRate: 4, sharedMid: 0.008, sharedMidRate: 0.991,
+    breathe: 0.017, breatheRate: 1.1,
+    ringCount: 3, ringInner: 0.15, ringOuter: 0.56,
+    ringLine: 0.024, ringGlow: 0.081, ringBright: 1,
+    vary: 0.028, seed: 62,
+    wavyAmp: 0.012, wavyFreq: 5, wavyRate: 3.57,
+    jagAmp: 0.009, jagFreq: 16, jagRate: 4.66,
+    depth: 1.26, swallowTo: 0.04, swallowFrom: 0.9,
+    coreRadius: 0.035, coreSoft: 0.235, coreBright: 2.5,
+    haloRadius: 0.586, haloWidth: 0.303, haloAlpha: 0.118,
+    backingAlpha: 1, backingRim: 0.2, backingFade: 1, cloudAmp: 0.5, cloudRate: 0.5,
     warmCore: 0xffffff, warmLine: 0xfff1da, warmGlow: 0xff6260,
     warmHalo: 0xc06c67, warmGround: 0x35152c, warmRim: 0x080716,
     coolCore: 0xffffff, coolLine: 0xd8f4ff, coolGlow: 0x668dff,
     coolHalo: 0x83a6ad, coolGround: 0x09184c, coolRim: 0x050817,
-    cycleRate: 3.7,
-    alpha: 1,
+    cycleRate: 3.7, alpha: 1,
+    swallow: 0.207, spin: 0.15, spinDiff: 0,
+    current: 0, currentRate: -8, pulse: 0, pulseRate: 0,
   },
   // The invincibility-mask backdrop: one broad soft ring over deep blue,
   // near-static palette.
@@ -134,7 +143,7 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
     vary: 0, seed: 1,
     wavyAmp: 0.012, wavyFreq: 4, wavyRate: 0.6,
     jagAmp: 0.005, jagFreq: 7, jagRate: 1.0,
-    depth: 1,
+    depth: 1, swallowTo: 0.04, swallowFrom: 0.9,
     coreRadius: 0.2, coreSoft: 0.42, coreBright: 0.8,
     haloRadius: 0.75, haloWidth: 0.16, haloAlpha: 0.35,
     backingAlpha: 0.9, backingRim: 0.5, cloudAmp: 0.7, cloudRate: 0.35,
@@ -155,7 +164,7 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
     vary: 0.4, seed: 3,
     wavyAmp: 0.01, wavyFreq: 5, wavyRate: 0.8,
     jagAmp: 0.007, jagFreq: 8, jagRate: 1.2,
-    depth: 1,
+    depth: 1, swallowTo: 0.04, swallowFrom: 0.9,
     coreRadius: 0.09, coreSoft: 0.16, coreBright: 0.7,
     haloRadius: 0.8, haloWidth: 0.1, haloAlpha: 0,
     backingAlpha: 0.55, backingRim: 0.5, cloudAmp: 0.6, cloudRate: 0.4,
@@ -448,7 +457,6 @@ export class Swirl {
     const lane1 = Math.max(lane0, p.ringOuter ?? 0.56);
     const laneSpan = Math.max(0.02, lane1 - lane0);
     const step = laneSpan / nR;
-    const fadeW = Math.max(0.01, step * 0.35); // cross-fade band at each lane end
     const lineW0 = p.ringLine ?? 0.022;
     const glowW0 = p.ringGlow ?? 0.082;
     const bright0 = p.ringBright ?? 1;
@@ -476,14 +484,28 @@ export class Swirl {
       const rateB = jagR * (0.75 + 0.5 * ringHash(seed, s, 8));
       const lineW = lineW0 * (1 + 0.5 * v(9));
       const glowW = glowW0 * (1 + 0.5 * v(10));
-      // the conveyor: slide down the lane, wrap, cross-fade at both ends
+      // THE CONVEYOR. When the swallow runs, the travel corridor is WIDER
+      // than the resting lane: it starts outside the outermost slot
+      // (swallowFrom) and runs deep into the hot core (swallowTo), so a ring
+      // is born early out by the rim, crosses every lane position, and is
+      // visibly swallowed all the way to the middle — dying inside the core
+      // glow, which masks its fade. Uniform spacing over the whole corridor
+      // keeps the supply endless: one is always being born as one dies.
       let laneR = slot;
       let env = 1;
       if (swallow !== 0) {
-        let w = (slot - lane0 - t * swallow) % laneSpan;
-        if (w < 0) w += laneSpan;
-        laneR = lane0 + w;
-        env = clamp01(Math.min(w, laneSpan - w) / fadeW);
+        const swTo = Math.max(0.01, p.swallowTo ?? 0.04);
+        const swFrom = Math.max(lane1 + 0.1, Math.min(1.1, p.swallowFrom ?? 0.9));
+        const tSpan = swFrom - swTo;
+        const tStep = tSpan / nR;
+        const slotT = swTo + (s + 0.5) * tStep + v(12) * 0.25 * tStep;
+        let w = (slotT - swTo - t * swallow) % tSpan;
+        if (w < 0) w += tSpan;
+        laneR = swTo + w;
+        // asymmetric fades: birth out past the rim, death deep in the core
+        const birth = clamp01((tSpan - w) / (tStep * 0.35));
+        const death = clamp01(w / (tStep * 0.4));
+        env = Math.min(birth, death);
       }
       // tunnel depth: the DISPLAYED radius is laneR^depth, and widths scale
       // by the curve's local derivative so inner rings thin out as they

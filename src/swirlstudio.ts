@@ -111,6 +111,8 @@ const GROUPS: Group[] = [
       N('spin', 'spin', -3, 3, 0.01, 'rad/s whole-portal rotation. The reference sits at 0'),
       N('spinDiff', 'spin diff', -3, 3, 0.01, 'extra swirl at the centre, zero at the rim'),
       N('swallow', 'swallow', -1, 1, 0.005, 'rings ride the lane into the core (+), reborn at the rim — a seamless endless conveyor'),
+      N('swallowTo', 'swallow to', 0.01, 0.3, 0.005, 'how deep rings travel before dying — small = right into the core'),
+      N('swallowFrom', 'swallow from', 0.4, 1.1, 0.005, 'where newborns fade in — past the outer slot so they arrive early'),
       N('current', 'current', 0, 1, 0.01, 'brightness wave pouring through the bands'),
       N('currentRate', 'current rate', -8, 8, 0.02, '+ pours toward the core'),
       N('pulse', 'pulse', 0, 1, 0.01, 'whole-portal brightness breathing'),
