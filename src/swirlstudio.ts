@@ -23,6 +23,7 @@ interface Field {
   hi?: number;
   step?: number;
   hint?: string;
+  optional?: boolean; // colour with a use-me checkbox; unchecked deletes the key
 }
 interface Group {
   name: string;
@@ -45,9 +46,9 @@ const GROUPS: Group[] = [
   {
     name: 'SPIRAL',
     fields: [
-      N('arms', 'arms', 0, 6, 1, '0 = concentric rings, 1 = the Crash portal'),
+      N('arms', 'arms', 0, 6, 1, '0 = concentric rings, 1 = one spiral arm'),
       N('twist', 'twist', -6, 6, 0.05, 'turns from centre to rim; sign flips the hand'),
-      N('flow', 'flow', -6, 6, 0.05, '+ pours into the centre, - pours out'),
+      N('flow', 'swallow', -3, 3, 0.01, 'radius/sec the rings travel: + into the core, - emitted out'),
       N('sharp', 'sharpness', 0.5, 14, 0.05, '1 = broad band, 10 = hairline filament'),
       N('filament', 'filament', 0, 2.5, 0.02, 'strength of the bright line. 0 = none'),
       N('glowWidth', 'glow bleed', 0.05, 1, 0.02, 'how far colour bleeds around the line'),
@@ -75,15 +76,30 @@ const GROUPS: Group[] = [
   {
     name: 'COLOUR',
     fields: [
-      { key: 'blend', label: 'blend', kind: 'blend' },
+      { key: 'blend', label: 'body blend', kind: 'blend', hint: 'the ground pass: alpha occludes, add burns' },
+      { key: 'blendBright', label: 'bright blend', kind: 'blend', hint: 'the filament/glow/core pass' },
       { key: 'colCore', label: 'hot core', kind: 'colour', hint: 'the white-hot line centre' },
       { key: 'colFil', label: 'filament', kind: 'colour' },
       { key: 'colGlow', label: 'glow', kind: 'colour', hint: 'the bleed around the filament' },
       { key: 'colGround', label: 'backing', kind: 'colour', hint: 'the disc behind everything' },
-      N('hueCycle', 'hue cycle', -3, 3, 0.01, 'rad/s the whole palette walks the hue wheel'),
+      { key: 'colGround2', label: 'mottle', kind: 'colour', optional: true, hint: 'what the cloud patches lift toward' },
+      { key: 'colRim', label: 'rim tint', kind: 'colour', optional: true, hint: 'the outer band before it dies' },
       N('alpha', 'opacity', 0, 1, 0.01),
-      N('body', 'body', 0, 1, 0.01, 'interior floor: 1 = solid cloudy disc, 0 = only the bright bits'),
+      N('body', 'body', 0, 1, 0.01, 'ground-pass opacity: 1 = solid cloudy disc, 0 = only the bright bits'),
       N('rim', 'rim fade at', 0.1, 1, 0.01, 'where the edge starts dying'),
+    ],
+  },
+  {
+    name: 'COLOUR CYCLE',
+    fields: [
+      N('cycleRate', 'breath rate', 0, 4, 0.01, 'rad/s the palette breathes A→B→A, short hue arc, no rainbow detour'),
+      { key: 'colCoreB', label: 'core B', kind: 'colour', optional: true },
+      { key: 'colFilB', label: 'filament B', kind: 'colour', optional: true },
+      { key: 'colGlowB', label: 'glow B', kind: 'colour', optional: true },
+      { key: 'colGroundB', label: 'backing B', kind: 'colour', optional: true },
+      { key: 'colGround2B', label: 'mottle B', kind: 'colour', optional: true },
+      { key: 'colRimB', label: 'rim B', kind: 'colour', optional: true },
+      N('hueCycle', 'hue walk', -3, 3, 0.01, 'rad/s round the FULL wheel (Crash 1 style) — usually 0'),
     ],
   },
   {
@@ -92,15 +108,6 @@ const GROUPS: Group[] = [
       N('spin', 'spin', -3, 3, 0.01, 'whole-disc rotation on top of the flow'),
       N('pulse', 'pulse', 0, 1, 0.01, 'brightness breathing'),
       N('pulseRate', 'pulse rate', 0, 6, 0.02),
-    ],
-  },
-  {
-    name: 'SPARKLES',
-    fields: [
-      N('sparkCount', 'count', 0, 24, 1, 'the little drifting stars'),
-      { key: 'sparkColour', label: 'colour', kind: 'colour' },
-      N('sparkSize', 'size', 0.005, 0.2, 0.001),
-      N('sparkOrbit', 'orbit', -2, 2, 0.01, 'rad/s drift around the disc'),
     ],
   },
 ];
@@ -332,11 +339,23 @@ class SwirlStudio {
       inp.type = 'color';
       inp.className = 'pst-col';
       inp.value = '#' + (((cur as number) ?? 0xffffff) >>> 0).toString(16).padStart(6, '0');
-      inp.addEventListener('input', () => {
-        (this.preset[f.key] as unknown) = parseInt(inp.value.slice(1), 16);
+      let off: HTMLInputElement | null = null;
+      if (f.optional) {
+        off = document.createElement('input');
+        off.type = 'checkbox';
+        off.className = 'pst-chk';
+        off.checked = cur !== undefined;
+        off.title = 'use this colour';
+      }
+      const setIt = (): void => {
+        if (off && !off.checked) delete this.preset[f.key];
+        else (this.preset[f.key] as unknown) = parseInt(inp.value.slice(1), 16);
         this.apply();
-      });
+      };
+      inp.addEventListener('input', setIt);
+      off?.addEventListener('change', setIt);
       row.append(l, inp);
+      if (off) row.append(off);
       wrap.appendChild(row);
     } else if (f.kind === 'bool') {
       const row = el('div', 'pst-row');
@@ -364,7 +383,7 @@ class SwirlStudio {
         o.textContent = v;
         s.appendChild(o);
       }
-      s.value = String(cur ?? 'add');
+      s.value = String(cur ?? (f.key === 'blend' ? 'alpha' : 'add'));
       s.addEventListener('change', () => {
         (this.preset[f.key] as unknown) = s.value;
         this.apply();
