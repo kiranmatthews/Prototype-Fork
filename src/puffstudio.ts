@@ -47,6 +47,9 @@ const N = (key: keyof PuffPreset, label: string, lo: number, hi: number, step: n
 const R = (key: keyof PuffPreset, label: string, lo: number, hi: number, step: number, hint?: string): Field =>
   ({ key, label, kind: 'range', lo, hi, step, hint });
 
+// Slider ranges are WIDE and the track is curved (see toV/toT below): most of
+// the travel lives near zero, so tiny values are easy to hit by drag — and the
+// number box takes exact typed values, even past the slider's ends.
 const GROUPS: Group[] = [
   {
     name: 'LOOK',
@@ -60,8 +63,8 @@ const GROUPS: Group[] = [
       R('alpha', 'opacity', 0, 1, 0.01, 'per puff — density comes from OVERLAP, so keep it low'),
       N('outerAlpha', 'rim opacity', 0, 1, 0.01, '0 = the rim vanishes completely'),
       N('haloAlpha', 'body opacity', 0, 1, 0.01, 'the plateau, as a fraction of the core'),
-      R('bright', 'brightness', 0.2, 2.5, 0.05),
-      N('fadeIn', 'fade in', 0, 0.6, 0.01, 'fraction of life spent appearing'),
+      R('bright', 'brightness', 0, 4, 0.05),
+      N('fadeIn', 'fade in', 0, 1, 0.01, 'fraction of life spent appearing'),
     ],
   },
   {
@@ -69,39 +72,39 @@ const GROUPS: Group[] = [
     fields: [
       { key: 'ring', label: 'ring points', kind: 'int2', lo: 5, hi: 8, step: 1, hint: 'outer vertices' },
       N('multiCentre', 'lobes', 0, 1, 0.05, 'chance of 2-3 centres — lopsided, faceted puffs'),
-      N('halo', 'plateau at', 0, 0.8, 0.02, '0 = one ring (cheap). >0 adds the mid ring here'),
-      R('size', 'size', 0.05, 2, 0.01),
-      R('aspect', 'wide/tall', 0.4, 2, 0.05, '>1 wide. Capped at 1.9:1 when drawn'),
-      R('grow', 'growth', 1, 6, 0.05, 'radius multiplier by end of life'),
-      R('growY', 'growth (up)', 1, 6, 0.05),
-      N('growCurve', 'growth curve', 0.15, 2, 0.05, '<1 opens fast then creeps'),
-      N('stretch', 'speed stretch', 0, 0.3, 0.005),
+      N('halo', 'plateau at', 0, 0.9, 0.02, '0 = one ring (cheap). >0 adds the mid ring here'),
+      R('size', 'size', 0, 5, 0.01),
+      R('aspect', 'wide/tall', 0.2, 3, 0.05, '>1 wide. Capped at 1.9:1 when drawn'),
+      R('grow', 'growth', 0, 12, 0.05, 'radius multiplier by end of life'),
+      R('growY', 'growth (up)', 0, 12, 0.05),
+      N('growCurve', 'growth curve', 0.05, 3, 0.05, '<1 opens fast then creeps'),
+      N('stretch', 'speed stretch', 0, 1, 0.005),
     ],
   },
   {
     name: 'DEFORM',
     fields: [
-      R('wobble', 'wobble', 0, 0.6, 0.01, 'radial, as a fraction of radius'),
-      R('swirl', 'swirl', 0, 0.6, 0.01, 'tangential — auto-capped so points cannot cross'),
-      R('wobbleRate', 'wobble rate', 0.1, 4, 0.05),
+      R('wobble', 'wobble', 0, 1, 0.01, 'radial, as a fraction of radius'),
+      R('swirl', 'swirl', 0, 1, 0.01, 'tangential — auto-capped so points cannot cross'),
+      R('wobbleRate', 'wobble rate', 0, 8, 0.05),
       N('neighbour', 'smoothing', 0, 1, 0.02, 'how much a point borrows its neighbours'),
-      N('centreDrift', 'centre drift', 0, 0.8, 0.02),
-      R('spin', 'spin', -2.5, 2.5, 0.05),
+      N('centreDrift', 'centre drift', 0, 1.5, 0.02),
+      R('spin', 'spin', -6, 6, 0.05),
     ],
   },
   {
     name: 'MOTION',
     fields: [
-      R('speed', 'launch speed', 0, 8, 0.1),
+      R('speed', 'launch speed', 0, 16, 0.1),
       N('spread', 'cone', 0, 3.14, 0.05),
-      R('up', 'extra lift', 0, 4, 0.05),
+      R('up', 'extra lift', 0, 8, 0.05),
       N('inherit', 'inherit motion', 0, 1, 0.02),
-      R('gravity', 'gravity', -1.5, 5, 0.05, 'negative rises'),
-      R('buoyancy', 'buoyancy', 0, 4, 0.05, 'lift that fades as it cools'),
-      R('drag', 'drag', 0, 6, 0.05),
-      N('wind', 'wind', 0, 1, 0.02),
-      R('turbulence', 'turbulence', 0, 1.5, 0.02),
-      R('turbRate', 'turbulence rate', 0.1, 3, 0.05),
+      R('gravity', 'gravity', -6, 14, 0.05, 'negative rises'),
+      R('buoyancy', 'buoyancy', 0, 8, 0.05, 'lift that fades as it cools'),
+      R('drag', 'drag', 0, 12, 0.05),
+      N('wind', 'wind', 0, 2, 0.02),
+      R('turbulence', 'turbulence', 0, 3, 0.02),
+      R('turbRate', 'turbulence rate', 0, 6, 0.05),
     ],
   },
   {
@@ -109,8 +112,8 @@ const GROUPS: Group[] = [
     fields: [
       { key: 'ground', label: 'ground aware', kind: 'bool' },
       N('flatten', 'flatten', 0, 1, 0.02),
-      N('spreadOnGround', 'spread', 0, 2, 0.05),
-      N('friction', 'friction', 0, 8, 0.1),
+      N('spreadOnGround', 'spread', 0, 4, 0.05),
+      N('friction', 'friction', 0, 12, 0.1),
       N('bounce', 'bounce', 0, 1, 0.02),
       N('surfaceTint', 'surface tint', 0, 1, 0.02, 'how much the floor colours it'),
     ],
@@ -118,11 +121,11 @@ const GROUPS: Group[] = [
   {
     name: 'LIFE + RATE',
     fields: [
-      R('life', 'lifetime', 0.1, 8, 0.05),
-      R('count', 'burst count', 1, 20, 1),
-      R('rate', 'per second', 0.5, 40, 0.5, 'continuous emitters'),
+      R('life', 'lifetime', 0.02, 12, 0.05),
+      R('count', 'burst count', 1, 40, 1),
+      R('rate', 'per second', 0, 80, 0.5, 'continuous emitters'),
       N('jitter', 'timing jitter', 0, 1, 0.05),
-      R('spacing', 'trail spacing', 0.1, 3, 0.05, 'metres between trail puffs'),
+      R('spacing', 'trail spacing', 0.02, 6, 0.05, 'metres between trail puffs'),
     ],
   },
 ];
@@ -142,7 +145,8 @@ class PuffStudio {
   private preset: PuffPreset;
   private name = 'myPuff';
   private acc = 0;
-  private live = true;
+  private mode: 'play' | 'pulse' | 'pause' = 'play';
+  private pulseT = 0; // seconds the stage has been fully empty, in pulse mode
   private surface: SurfaceKind = 'generic';
   private backdrop: THREE.Mesh | null = null;
   private dark = true;
@@ -180,19 +184,44 @@ class PuffStudio {
       this.backdrop.position.copy(cam.position).addScaledVector(FWD, 16);
       this.backdrop.quaternion.copy(cam.quaternion);
     }
-    if (!this.live) return;
-    const rate = midOf(this.preset.rate, 8);
-    this.acc += dt * rate;
-    let guard = 12;
-    while (this.acc >= 1 && guard-- > 0) {
-      this.acc -= 1;
-      puffs.spawn(this.preset, this.anchor.x, this.anchor.y, this.anchor.z, {
-        seed: this.seed++,
-        surface: this.surface,
-        groundY: this.anchor.y - 0.05,
-      });
+    if (this.mode === 'play') {
+      const rate = midOf(this.preset.rate, 8);
+      this.acc += dt * rate;
+      let guard = 12;
+      while (this.acc >= 1 && guard-- > 0) {
+        this.acc -= 1;
+        puffs.spawn(this.preset, this.anchor.x, this.anchor.y, this.anchor.z, {
+          seed: this.seed++,
+          surface: this.surface,
+          groundY: this.anchor.y - 0.05,
+        });
+      }
+    } else if (this.mode === 'pulse') {
+      // One whole event at a time, like watching a TNT go off on repeat: fire
+      // a full burst (children and all), let the cloud play ALL the way out,
+      // hold an empty stage for a second, fire the next.
+      if (puffs.liveCount > 0) this.pulseT = 0;
+      else {
+        this.pulseT += dt;
+        if (this.pulseT >= 1) {
+          this.pulseT = 0;
+          this.fireBurst();
+        }
+      }
     }
     this.stat.textContent = `${puffs.liveCount} live · ${puffs.drawCalls} draw call(s)`;
+  }
+
+  // A full burst through the SAME path the game uses — puffs.burst on a
+  // temporary registration of the working preset — so count scaling and
+  // child presets (a boomTnt's smoke) behave exactly as they will in play.
+  private fireBurst(): void {
+    PUFF_PRESETS.__studio = this.preset;
+    puffs.burst('__studio', this.anchor.x, this.anchor.y, this.anchor.z, {
+      seed: this.seed++,
+      surface: this.surface,
+      groundY: this.anchor.y - 0.05,
+    });
   }
 
   // -- preview backdrop -----------------------------------------------------
@@ -261,6 +290,7 @@ class PuffStudio {
     const sel = document.createElement('select');
     sel.className = 'pst-sel';
     for (const k of Object.keys(PUFF_PRESETS)) {
+      if (k.startsWith('__')) continue; // the studio's own scratch registration
       const o = document.createElement('option');
       o.value = k;
       o.textContent = k;
@@ -289,22 +319,38 @@ class PuffStudio {
         this.backdrop.visible = !this.backdrop.visible;
         b.textContent = this.backdrop.visible ? 'Hide backdrop' : 'Show backdrop';
       }),
-      btn('Pause / play', (b) => {
-        this.live = !this.live;
-        b.textContent = this.live ? 'Pause' : 'Play';
-      }),
-      btn('One burst', () => {
-        puffs.clear();
-        for (let i = 0; i < Math.round(midOf(this.preset.count, 6)); i++)
-          puffs.spawn(this.preset, this.anchor.x, this.anchor.y, this.anchor.z, {
-            seed: this.seed++,
-            surface: this.surface,
-            groundY: this.anchor.y - 0.05,
-          });
-      }),
       btn('Clear', () => puffs.clear()),
     );
     p.appendChild(stageBtns);
+
+    // Mode row: Play streams at the preset's own rate; Pulse fires one whole
+    // burst, waits for the cloud to fully die plus a second, and fires again;
+    // Pause freezes spawning. One burst is a single manual Pulse shot.
+    const modeBtns = el('div', 'pst-btns');
+    const modeB: Record<string, HTMLElement> = {};
+    const setMode = (m: 'play' | 'pulse' | 'pause'): void => {
+      this.mode = m;
+      this.pulseT = 0;
+      for (const [k, b] of Object.entries(modeB)) b.classList.toggle('pst-on', k === m);
+      if (m === 'pulse') {
+        puffs.clear();
+        this.fireBurst();
+      }
+    };
+    modeB.play = btn('Play', () => setMode('play'));
+    modeB.pulse = btn('Pulse', () => setMode('pulse'));
+    modeB.pause = btn('Pause', () => setMode('pause'));
+    modeB.play.classList.add('pst-on');
+    modeBtns.append(
+      modeB.play,
+      modeB.pulse,
+      modeB.pause,
+      btn('One burst', () => {
+        puffs.clear();
+        this.fireBurst();
+      }),
+    );
+    p.appendChild(modeBtns);
 
     const surfRow = el('div', 'pst-row');
     const surfLbl = el('label', 'pst-label');
@@ -486,21 +532,37 @@ class PuffStudio {
     const row = el('div', 'pst-row');
     const l = el('label', 'pst-label');
     l.textContent = label;
-    const read = el('span', 'pst-val');
-    read.textContent = fmt(value);
+    // The track is 1000 abstract ticks pushed through a cubic curve (linear
+    // for whole-number fields), so most of the drag travel sits near zero —
+    // 0.02 and 0.05 are different slider positions, not the same pixel. The
+    // number box is the exact value: type anything, including past the ends.
+    const curve = step >= 1 ? 1 : 3;
     const inp = document.createElement('input');
     inp.type = 'range';
-    inp.min = String(lo);
-    inp.max = String(hi);
-    inp.step = String(step);
-    inp.value = String(value);
+    inp.min = '0';
+    inp.max = '1000';
+    inp.step = '1';
+    inp.value = String(toT(value, lo, hi, curve) * 1000);
+    const box = document.createElement('input');
+    box.type = 'number';
+    box.className = 'pst-num';
+    box.step = 'any';
+    box.value = String(value);
     inp.addEventListener('input', () => {
-      const v = parseFloat(inp.value);
-      read.textContent = fmt(v);
+      let v = snap(toV(parseInt(inp.value, 10) / 1000, lo, hi, curve));
+      if (step >= 1) v = Math.round(v);
+      box.value = String(v);
       onInput(v);
       this.dump();
     });
-    row.append(l, inp, read);
+    box.addEventListener('input', () => {
+      const v = parseFloat(box.value);
+      if (!Number.isFinite(v)) return;
+      inp.value = String(toT(v, lo, hi, curve) * 1000);
+      onInput(v);
+      this.dump();
+    });
+    row.append(l, inp, box);
     return row;
   }
 
@@ -520,6 +582,7 @@ class PuffStudio {
   }
 
   private close(): void {
+    delete PUFF_PRESETS.__studio;
     this.panel.remove();
     if (this.backdrop) {
       this.ctx.scene.remove(this.backdrop);
@@ -549,8 +612,36 @@ function midOf(v: unknown, dflt: number): number {
   if (Array.isArray(v) && v.length === 2) return ((v[0] as number) + (v[1] as number)) / 2;
   return dflt;
 }
-function fmt(v: number): string {
-  return Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2);
+/**
+ * Curved slider mapping. t in [0,1] -> value in [lo,hi], with |x|^curve
+ * spent near zero — and when the range straddles zero the curve is applied
+ * on EACH side of it, so fine control sits around 0 rather than around lo.
+ */
+function toV(t: number, lo: number, hi: number, curve: number): number {
+  t = Math.min(1, Math.max(0, t));
+  if (lo < 0 && hi > 0) {
+    const t0 = -lo / (hi - lo); // the tick where the value crosses zero
+    return t >= t0
+      ? hi * Math.pow((t - t0) / (1 - t0), curve)
+      : lo * Math.pow((t0 - t) / t0, curve);
+  }
+  return lo + (hi - lo) * Math.pow(t, curve);
+}
+function toT(v: number, lo: number, hi: number, curve: number): number {
+  if (lo < 0 && hi > 0) {
+    const t0 = -lo / (hi - lo);
+    const t =
+      v >= 0
+        ? t0 + (1 - t0) * Math.pow(Math.min(1, v / hi), 1 / curve)
+        : t0 - t0 * Math.pow(Math.min(1, v / lo), 1 / curve);
+    return Math.min(1, Math.max(0, t));
+  }
+  return Math.min(1, Math.max(0, Math.pow((v - lo) / (hi - lo), 1 / curve)));
+}
+/** Round a curved-track value to a sane precision for its magnitude. */
+function snap(v: number): number {
+  const a = Math.abs(v);
+  return +v.toFixed(a >= 100 ? 0 : a >= 10 ? 1 : a >= 1 ? 2 : 3);
 }
 function el(tag: string, cls: string): HTMLElement {
   const e = document.createElement(tag);
@@ -602,7 +693,14 @@ function injectCss(): void {
     .pst-row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
     .pst-label { flex: 0 0 88px; color: #9fb0c8; }
     .pst-row input[type=range] { flex: 1; min-width: 0; accent-color: #ff7ae0; }
-    .pst-val { flex: 0 0 42px; text-align: right; color: #cfe3d8; }
+    .pst-num {
+      flex: 0 0 58px; background: #131722; color: #cfe3d8; text-align: right;
+      border: 1px solid #333a4a; padding: 2px 3px; font: inherit;
+    }
+    .pst-num::-webkit-outer-spin-button, .pst-num::-webkit-inner-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    .pst-btn.pst-on { background: #3a2440; border-color: #ff7ae0; color: #ffd6f4; }
     .pst-col { flex: 1; height: 22px; background: none; border: 1px solid #333a4a; }
     .pst-chk { accent-color: #ff7ae0; }
     .pst-sel, .pst-text {

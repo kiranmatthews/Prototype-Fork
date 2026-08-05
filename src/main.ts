@@ -1124,6 +1124,9 @@ async function openPuffStudioTool(): Promise<void> {
     scene,
     onClose: () => (puffStudio = null),
   });
+  // Reachable from the console/harness so headless checks can drive its
+  // frame() by hand — rAF (and with it the real loop) throttles headless.
+  (window as unknown as { __game: Record<string, unknown> }).__game.puffStudio = puffStudio;
 }
 if (location.hash.toLowerCase().includes("puffstudio")) {
   setTimeout(() => void openPuffStudioTool(), 2500);
