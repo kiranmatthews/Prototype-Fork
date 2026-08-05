@@ -48,7 +48,8 @@ const GROUPS: Group[] = [
     fields: [
       N('arms', 'arms', 0, 6, 1, '0 = concentric rings, 1 = one spiral arm'),
       N('twist', 'twist', -6, 6, 0.05, 'turns from centre to rim; sign flips the hand'),
-      N('flow', 'swallow', -3, 3, 0.01, 'radius/sec the rings travel: + into the core, - emitted out'),
+      N('flow', 'swallow', -3, 3, 0.01, 'radius/sec the rings THEMSELVES travel: + into the core, - out'),
+      N('current', 'current', -6, 6, 0.01, 'colour pulse pouring through the rings without moving them'),
       N('sharp', 'sharpness', 0.5, 14, 0.05, '1 = broad band, 10 = hairline filament'),
       N('filament', 'filament', 0, 2.5, 0.02, 'strength of the bright line. 0 = none'),
       N('glowWidth', 'glow bleed', 0.05, 1, 0.02, 'how far colour bleeds around the line'),

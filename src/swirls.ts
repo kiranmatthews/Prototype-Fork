@@ -30,9 +30,14 @@ export interface SwirlPreset {
   // --- the spiral field ---
   arms?: number; // integer! spiral arm count; 0 = concentric rings only
   twist?: number; // how many full turns an arm makes centre -> rim (sign = handedness)
-  flow?: number; // radial travel of the pattern, in radius-fractions per
-  // second: +0.25 swallows the rings into the core in ~4s, negative emits
-  // them outward. Works for rings (arms 0) and spirals alike.
+  flow?: number; // TRUE radial travel, in radius-fractions per second:
+  // +0.25 swallows the rings into the core in ~4s, negative emits them out.
+  // This one MOVES THE MESH RINGS — the pattern is carried by geometry, so
+  // the motion is continuous. (A colour field alone, sampled at a dozen
+  // fixed rings, just pulses in place: that effect still exists as
+  // `current` below, because it was found by accident and liked.)
+  current?: number; // the pulse-through-the-rings effect: scrolls the COLOUR
+  // field without moving geometry. + runs toward the core.
   sharp?: number; // filament sharpness (power curve). 1 = broad band, 10 = hairline
   filament?: number; // filament strength 0..2 (0 = no bright line at all)
   glowWidth?: number; // how far the coloured glow bleeds around the filament 0..1
@@ -91,7 +96,7 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
   warpPortal: {
     blend: 'alpha', blendBright: 'add',
     radius: 1.8, rings: 13, segs: 33, billboard: true,
-    arms: 0, twist: 5.18, flow: 0.25, sharp: 4.01, filament: 0.776, glowWidth: 0.88,
+    arms: 0, twist: 5.18, flow: 0.25, current: 0.35, sharp: 4.01, filament: 0.776, glowWidth: 0.88,
     wobble: 0.664, wobbleScale: 8, wobbleRate: 5, edgeCrinkle: 0.047,
     core: 0.101, coreGlow: 4,
     mottle: 0, mottleScale: 0, mottleRate: 0,
@@ -195,7 +200,6 @@ export class Swirl {
   // per-vertex statics
   private vr!: Float32Array; // radius fraction 0..1
   private va!: Float32Array; // angle
-  private crinklePh!: Float32Array;
   private rng: () => number;
   private balA: THREE.Color[] = Array.from({ length: 6 }, () => new THREE.Color());
   private balB: (THREE.Color | null)[] = [null, null, null, null, null, null];
@@ -258,23 +262,25 @@ export class Swirl {
   private buildGrid(rings: number, segs: number): void {
     this.rings = rings;
     this.segs = segs;
-    const nVerts = 1 + rings * segs;
+    // rings + 1 SLIDING rings: they all drift radially with `flow` by up to
+    // one cell before snapping back (see update), so the outermost lives
+    // slightly PAST the rim — the disc edge never breathes as they slide.
+    const nRings = rings + 1;
+    const nVerts = 1 + nRings * segs;
     this.vr = new Float32Array(nVerts);
     this.va = new Float32Array(nVerts);
-    this.crinklePh = new Float32Array(nVerts);
     // centre vertex is index 0; ring i vertex j is 1 + i*segs + j
-    for (let i = 0; i < rings; i++) {
+    for (let i = 0; i < nRings; i++) {
       const rf = (i + 1) / rings;
       for (let j = 0; j < segs; j++) {
         const k = 1 + i * segs + j;
         this.vr[k] = rf;
         this.va[k] = (j / segs) * TAU;
-        this.crinklePh[k] = this.rng() * TAU;
       }
     }
     const idx: number[] = [];
     for (let j = 0; j < segs; j++) idx.push(0, 1 + j, 1 + ((j + 1) % segs));
-    for (let i = 0; i < rings - 1; i++)
+    for (let i = 0; i < nRings - 1; i++)
       for (let j = 0; j < segs; j++) {
         const a = 1 + i * segs + j;
         const b = 1 + i * segs + ((j + 1) % segs);
@@ -323,6 +329,7 @@ export class Swirl {
     const arms = Math.round(p.arms ?? 1);
     const twist = (p.twist ?? 2.5) * TAU;
     const flow = p.flow ?? 0;
+    const current = p.current ?? 0;
     const sharp = p.sharp ?? 5;
     const filS = p.filament ?? 1.2;
     const glowW = Math.max(0.05, p.glowWidth ?? 0.5);
@@ -347,14 +354,31 @@ export class Swirl {
     const pa = pos.array as Float32Array;
     const oa = bodyCol.array as Float32Array;
     const ba = brightCol.array as Float32Array;
-    const nV = 1 + this.rings * this.segs;
+    const nV = 1 + (this.rings + 1) * this.segs;
+
+    // THE SWALLOW. Every mesh ring slides inward together (f, the fraction
+    // of a cell travelled so far); when they have covered exactly one cell
+    // they snap back and the colour pattern's radial index (u) steps one ring
+    // inward at the same instant. The two cancel exactly — ring i lands on
+    // ring i+1's old radius carrying ring i+1's old colour — so the eye sees
+    // rings travelling continuously into the core. Negative flow runs the
+    // same machine outward. `current` scrolls only the colour field, the
+    // pulse-without-motion effect kept from v2.
+    const cell = 1 / this.rings;
+    const scroll = t * flow;
+    const flr = Math.floor(scroll / cell);
+    const f = scroll - flr * cell; // [0, cell)
+    const uShift = flr * cell;
 
     for (let k = 0; k < nV; k++) {
-      const r = this.vr[k]; // 0 at centre
+      const r = k === 0 ? 0 : this.vr[k] - f; // current radius, slid inward
+      const u = (k === 0 ? 0 : this.vr[k]) + uShift; // pattern-space radius
       const th = this.va[k] + spin;
-      // vertex position: flat disc, outer rings crinkled so the rim churns
+      // vertex position: flat disc, outer rings crinkled so the rim churns.
+      // The crinkle phase lives in PATTERN space (u), so it rides the rings
+      // through the snap instead of popping to a new shape.
       const crinkle =
-        k === 0 ? 0 : crin * r * r * Math.sin(th * 3 + t * (wobR * 1.3) + this.crinklePh[k]);
+        k === 0 ? 0 : crin * r * r * Math.sin(th * 3 + t * (wobR * 1.3) + u * 31);
       const rr = (r + crinkle) * R;
       pa[k * 3] = Math.cos(th) * rr;
       pa[k * 3 + 1] = Math.sin(th) * rr;
@@ -366,12 +390,10 @@ export class Swirl {
         wob *
         (Math.sin(r * wobS + t * wobR + th * 2) * 0.6 +
           Math.sin(th * 3 - t * wobR * 1.7 + r * wobS * 1.6) * 0.4);
-      // The spiral: angle*arms + radius*twist, and flow SLIDES the whole
-      // pattern radially — (r + t*flow) means +flow carries a crest from the
-      // rim into the core at `flow` radius-fractions per second. This is the
-      // swallow; negative emits. (The old form buried the travel inside the
-      // phase, which at high twist moved the rings imperceptibly slowly.)
-      const phase = th * arms + (r + t * flow) * twist + bend;
+      // The spiral phase reads the PATTERN-space radius (u): between snaps
+      // each ring keeps its colour and physically carries it inward.
+      // `current` pours extra phase through on top — the ghost pulse.
+      const phase = th * arms + (u + t * current) * twist + bend;
       const wave = 0.5 + 0.5 * Math.sin(phase);
       const filament = Math.pow(wave, sharp) * filS;
       const glow = Math.pow(wave, Math.max(1, sharp * glowW * 0.5));
