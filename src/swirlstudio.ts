@@ -12,7 +12,7 @@ interface Ctx {
   onClose: () => void;
 }
 
-const STORE = 'swirlStudioV2'; // v2: the band schema — old saved drafts don't fit
+const STORE = 'swirlStudioV3'; // v3: unified seeded rings — older drafts don't fit
 
 type Kind = 'num' | 'colour' | 'bool';
 interface Field {
@@ -33,32 +33,13 @@ const N = (key: keyof SwirlPreset, label: string, lo: number, hi: number, step: 
   ({ key, label, kind: 'num', lo, hi, step, hint });
 const COL = (key: keyof SwirlPreset, label: string): Field => ({ key, label, kind: 'colour' });
 
-/** One ring's control block — radius, widths, and its two private waves. */
-function ringGroup(n: 1 | 2 | 3): Group {
-  const k = (s: string): keyof SwirlPreset => `r${n}${s}` as keyof SwirlPreset;
-  return {
-    name: `RING ${n}`,
-    fields: [
-      N(k('Radius'), 'radius', 0, 0.95, 0.005, n === 1 ? '0 = ring off. Fraction of portal radius' : undefined),
-      N(k('Line'), 'line width', 0.002, 0.08, 0.001, 'half-width of the white-hot line'),
-      N(k('Glow'), 'glow width', 0.01, 0.3, 0.002, 'half-width to the black edge'),
-      N(k('Bright'), 'brightness', 0, 2.5, 0.02),
-      N(k('AmpA'), 'deform A', 0, 0.06, 0.001, 'its own 5-7 lobe misshaping'),
-      N(k('FreqA'), 'lobes A', 1, 14, 1),
-      N(k('RateA'), 'speed A', 0, 8, 0.02),
-      N(k('AmpB'), 'deform B', 0, 0.06, 0.001, 'its own 8-10 lobe irregularity, runs backwards'),
-      N(k('FreqB'), 'lobes B', 1, 14, 1),
-      N(k('RateB'), 'speed B', 0, 8, 0.02),
-    ],
-  };
-}
-
 const GROUPS: Group[] = [
   {
     name: 'SHAPE',
     fields: [
       N('radius', 'radius', 0.2, 20, 0.05, 'world units'),
       N('segs', 'segments', 8, 48, 1, 'the reference budget is 24'),
+      N('depth', 'depth', 0.2, 3, 0.01, 'ring lanes bunch toward the centre — tunnel foreshortening. 1 = even'),
       { key: 'billboard', label: 'face camera', kind: 'bool' },
       N('alpha', 'opacity', 0, 1, 0.01),
     ],
@@ -74,9 +55,30 @@ const GROUPS: Group[] = [
       N('breatheRate', 'breathe rate', 0, 6, 0.02),
     ],
   },
-  ringGroup(1),
-  ringGroup(2),
-  ringGroup(3),
+  {
+    name: 'RINGS',
+    fields: [
+      N('ringCount', 'rings', 1, 8, 1, 'how many — evenly laned, then scattered by vary'),
+      N('ringInner', 'inner lane', 0.05, 0.6, 0.005, 'centre of the innermost ring slot'),
+      N('ringOuter', 'outer lane', 0.15, 0.95, 0.005),
+      N('ringLine', 'line width', 0.002, 0.08, 0.001, 'base half-width of the white-hot line'),
+      N('ringGlow', 'glow width', 0.01, 0.3, 0.002, 'base half-width to the black edge'),
+      N('ringBright', 'brightness', 0, 2.5, 0.02),
+      N('vary', 'vary', 0, 1, 0.01, 'seeded per-ring spread: spacing, widths, brightness, wave character'),
+      N('seed', 'seed', 1, 99, 1, 'reroll the family — same seed, same family, every run'),
+    ],
+  },
+  {
+    name: 'SHAPE WAVES',
+    fields: [
+      N('wavyAmp', 'wavy', 0, 0.08, 0.001, 'low-frequency waviness of the ring contours'),
+      N('wavyFreq', 'wavy lobes', 1, 8, 1),
+      N('wavyRate', 'wavy rate', 0, 8, 0.02),
+      N('jagAmp', 'jag', 0, 0.06, 0.001, 'high-frequency jaggedness, runs backwards'),
+      N('jagFreq', 'jag lobes', 4, 16, 1, 'needs segs ~3x this to draw corners'),
+      N('jagRate', 'jag rate', 0, 8, 0.02),
+    ],
+  },
   {
     name: 'CORE',
     fields: [
@@ -108,7 +110,7 @@ const GROUPS: Group[] = [
     fields: [
       N('spin', 'spin', -3, 3, 0.01, 'rad/s whole-portal rotation. The reference sits at 0'),
       N('spinDiff', 'spin diff', -3, 3, 0.01, 'extra swirl at the centre, zero at the rim'),
-      N('swallow', 'swallow', -1, 1, 0.005, 'ring bases travel into the core (+), reborn at the rim, cross-fading'),
+      N('swallow', 'swallow', -1, 1, 0.005, 'rings ride the lane into the core (+), reborn at the rim — a seamless endless conveyor'),
       N('current', 'current', 0, 1, 0.01, 'brightness wave pouring through the bands'),
       N('currentRate', 'current rate', -8, 8, 0.02, '+ pours toward the core'),
       N('pulse', 'pulse', 0, 1, 0.01, 'whole-portal brightness breathing'),
@@ -168,7 +170,7 @@ class SwirlStudio {
     if (saved) {
       try {
         const j = JSON.parse(saved);
-        if (j.preset && typeof j.preset.r1Radius === 'number') {
+        if (j.preset && typeof j.preset.ringCount === 'number') {
           this.name = j.name ?? this.name;
           return j.preset as SwirlPreset;
         }

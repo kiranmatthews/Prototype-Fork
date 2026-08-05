@@ -37,18 +37,28 @@ export interface SwirlPreset {
   breathe?: number; // whole-ring radius breathing, capped at 2% — rings hold station
   breatheRate?: number;
 
-  // --- the three luminous rings (radius 0 = ring off) ---
-  // Each: base radius, line half-width, glow half-width (all fractions of
-  // portal radius), brightness, and two private deformation waves.
-  r1Radius?: number; r1Line?: number; r1Glow?: number; r1Bright?: number;
-  r1AmpA?: number; r1FreqA?: number; r1RateA?: number;
-  r1AmpB?: number; r1FreqB?: number; r1RateB?: number;
-  r2Radius?: number; r2Line?: number; r2Glow?: number; r2Bright?: number;
-  r2AmpA?: number; r2FreqA?: number; r2RateA?: number;
-  r2AmpB?: number; r2FreqB?: number; r2RateB?: number;
-  r3Radius?: number; r3Line?: number; r3Glow?: number; r3Bright?: number;
-  r3AmpA?: number; r3FreqA?: number; r3RateA?: number;
-  r3AmpB?: number; r3FreqB?: number; r3RateB?: number;
+  // --- the luminous rings: ONE set of controls, a variable count, and a
+  // seeded spread so every ring comes out different without per-ring sliders.
+  // Rings live evenly spaced in the lane [ringInner, ringOuter]; `vary`
+  // scatters their widths, brightness, spacing and wave character from
+  // `seed` — reroll the seed, get a new family.
+  ringCount?: number; // 1..8
+  ringInner?: number; // centre of the innermost ring's lane slot
+  ringOuter?: number; // centre of the outermost
+  ringLine?: number; // base line half-width (fraction of portal radius)
+  ringGlow?: number; // base glow half-width
+  ringBright?: number;
+  vary?: number; // 0..1 seeded per-ring differences
+  seed?: number; // reroll the family
+  // shape waves, applied per-ring with seeded variation:
+  wavyAmp?: number; // low-frequency waviness (3-6 lobes)
+  wavyFreq?: number;
+  wavyRate?: number;
+  jagAmp?: number; // high-frequency jaggedness (7-14 lobes), runs backwards
+  jagFreq?: number;
+  jagRate?: number;
+  depth?: number; // tunnel foreshortening: ring lane radius -> r^depth, so
+  // the gaps bunch toward the centre and swallowed rings decelerate into it
 
   // --- the hot centre: nested Gouraud discs, white -> pale -> nothing ---
   coreRadius?: number; // the clearly-hot region, ~0.08-0.12
@@ -97,12 +107,12 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
     radius: 4.4, segs: 24, billboard: true,
     sharedLow: 0.007, sharedLowRate: 0.8, sharedMid: 0.005, sharedMidRate: 0.45,
     breathe: 0.008, breatheRate: 1.1,
-    r1Radius: 0.16, r1Line: 0.018, r1Glow: 0.07, r1Bright: 1,
-    r1AmpA: 0.007, r1FreqA: 5, r1RateA: 1.6, r1AmpB: 0.005, r1FreqB: 9, r1RateB: 2.4,
-    r2Radius: 0.31, r2Line: 0.022, r2Glow: 0.08, r2Bright: 1,
-    r2AmpA: 0.011, r2FreqA: 6, r2RateA: 1.3, r2AmpB: 0.008, r2FreqB: 8, r2RateB: 2.8,
-    r3Radius: 0.49, r3Line: 0.026, r3Glow: 0.095, r3Bright: 1,
-    r3AmpA: 0.015, r3FreqA: 7, r3RateA: 1.1, r3AmpB: 0.012, r3FreqB: 10, r3RateB: 2.2,
+    ringCount: 3, ringInner: 0.1, ringOuter: 0.56,
+    ringLine: 0.022, ringGlow: 0.082, ringBright: 1,
+    vary: 0.55, seed: 7,
+    wavyAmp: 0.01, wavyFreq: 5, wavyRate: 1.3,
+    jagAmp: 0.009, jagFreq: 9, jagRate: 2.4,
+    depth: 1,
     coreRadius: 0.1, coreSoft: 0.17, coreBright: 1.2,
     haloRadius: 0.69, haloWidth: 0.1, haloAlpha: 0.5,
     backingAlpha: 1, backingRim: 0.6, cloudAmp: 0.5, cloudRate: 0.5,
@@ -119,9 +129,12 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
     radius: 4, segs: 24, billboard: true,
     sharedLow: 0.012, sharedLowRate: 0.4, sharedMid: 0.008, sharedMidRate: 0.25,
     breathe: 0.015, breatheRate: 0.7,
-    r1Radius: 0.42, r1Line: 0.05, r1Glow: 0.2, r1Bright: 0.7,
-    r1AmpA: 0.012, r1FreqA: 4, r1RateA: 0.6, r1AmpB: 0.008, r1FreqB: 7, r1RateB: 1.0,
-    r2Radius: 0, r3Radius: 0,
+    ringCount: 1, ringInner: 0.42, ringOuter: 0.42,
+    ringLine: 0.05, ringGlow: 0.2, ringBright: 0.7,
+    vary: 0, seed: 1,
+    wavyAmp: 0.012, wavyFreq: 4, wavyRate: 0.6,
+    jagAmp: 0.005, jagFreq: 7, jagRate: 1.0,
+    depth: 1,
     coreRadius: 0.2, coreSoft: 0.42, coreBright: 0.8,
     haloRadius: 0.75, haloWidth: 0.16, haloAlpha: 0.35,
     backingAlpha: 0.9, backingRim: 0.5, cloudAmp: 0.7, cloudRate: 0.35,
@@ -137,11 +150,12 @@ export const SWIRL_PRESETS: Record<string, SwirlPreset> = {
     radius: 2, segs: 24, billboard: false,
     sharedLow: 0.01, sharedLowRate: 0.5, sharedMid: 0.006, sharedMidRate: 0.3,
     breathe: 0.01, breatheRate: 0.9,
-    r1Radius: 0.28, r1Line: 0.014, r1Glow: 0.06, r1Bright: 0.8,
-    r1AmpA: 0.008, r1FreqA: 5, r1RateA: 0.9, r1AmpB: 0.006, r1FreqB: 8, r1RateB: 1.4,
-    r2Radius: 0.55, r2Line: 0.016, r2Glow: 0.07, r2Bright: 0.7,
-    r2AmpA: 0.012, r2FreqA: 6, r2RateA: 0.7, r2AmpB: 0.008, r2FreqB: 9, r2RateB: 1.1,
-    r3Radius: 0,
+    ringCount: 2, ringInner: 0.28, ringOuter: 0.55,
+    ringLine: 0.015, ringGlow: 0.065, ringBright: 0.75,
+    vary: 0.4, seed: 3,
+    wavyAmp: 0.01, wavyFreq: 5, wavyRate: 0.8,
+    jagAmp: 0.007, jagFreq: 8, jagRate: 1.2,
+    depth: 1,
     coreRadius: 0.09, coreSoft: 0.16, coreBright: 0.7,
     haloRadius: 0.8, haloWidth: 0.1, haloAlpha: 0,
     backingAlpha: 0.55, backingRim: 0.5, cloudAmp: 0.6, cloudRate: 0.4,
@@ -179,31 +193,17 @@ function setVert(
   ca[k * 4] = cr; ca[k * 4 + 1] = cg; ca[k * 4 + 2] = cb; ca[k * 4 + 3] = a;
 }
 
-// Fixed deterministic per-ring phases — decorrelated small irregularities,
-// stable across runs (reference matching needs repeatability).
-const RING_PHASE_A = [0.7, 2.8, 5.1];
-const RING_PHASE_B = [3.9, 1.2, 5.9];
-
-interface RingSpec {
-  radius: number;
-  line: number;
-  glow: number;
-  bright: number;
-  ampA: number; freqA: number; rateA: number;
-  ampB: number; freqB: number; rateB: number;
+// Deterministic per-ring variation: a tiny hash of (seed, ring, channel)
+// gives each ring stable private numbers — same seed, same family, every
+// run, which is what reference matching and a seamless loop both need.
+function ringHash(seed: number, i: number, k: number): number {
+  let h = (seed * 374761393 + i * 668265263 + k * 2246822519) >>> 0;
+  h ^= h >>> 13;
+  h = Math.imul(h, 1274126177) >>> 0;
+  h ^= h >>> 16;
+  return h / 4294967296;
 }
-
-function ringOf(p: SwirlPreset, i: 1 | 2 | 3): RingSpec {
-  const g = (k: string): number | undefined => p[`r${i}${k}` as keyof SwirlPreset] as number;
-  return {
-    radius: g('Radius') ?? 0,
-    line: g('Line') ?? 0.02,
-    glow: g('Glow') ?? 0.08,
-    bright: g('Bright') ?? 1,
-    ampA: g('AmpA') ?? 0.01, freqA: Math.round(g('FreqA') ?? 6), rateA: g('RateA') ?? 1.2,
-    ampB: g('AmpB') ?? 0.007, freqB: Math.round(g('FreqB') ?? 9), rateB: g('RateB') ?? 2,
-  };
-}
+const MAX_RINGCOUNT = 8;
 
 export interface SwirlOpts {
   seed?: number; // kept for API compatibility; only offsets the start time
@@ -230,6 +230,7 @@ export class Swirl {
   private preset: SwirlPreset = {};
   private t: number;
   private segs = 0;
+  private nRings = 0;
   private backGeo: THREE.BufferGeometry;
   private backMat: THREE.MeshBasicMaterial;
   private backMesh: THREE.Mesh;
@@ -238,7 +239,6 @@ export class Swirl {
   private addMesh: THREE.Mesh;
   private warm: THREE.Color[] = Array.from({ length: 6 }, () => new THREE.Color());
   private cool: THREE.Color[] = Array.from({ length: 6 }, () => new THREE.Color());
-  private rings: RingSpec[] = [];
 
   constructor(preset: SwirlPreset, opts: SwirlOpts = {}) {
     this.t = ((opts.seed ?? 1) % 97) * 0.37; // spread instances along the cycle
@@ -272,18 +272,19 @@ export class Swirl {
 
   setPreset(p: SwirlPreset): void {
     const segs = Math.max(8, Math.min(48, Math.round(p.segs ?? 24)));
-    if (segs !== this.segs) this.build(segs);
+    const nRings = Math.max(1, Math.min(MAX_RINGCOUNT, Math.round(p.ringCount ?? 3)));
+    if (segs !== this.segs || nRings !== this.nRings) this.build(segs, nRings);
     this.preset = p;
     this.dirty = true; // repaint once even while frozen — edits must show
-    this.rings = [ringOf(p, 1), ringOf(p, 2), ringOf(p, 3)];
     for (let i = 0; i < 6; i++) {
       this.warm[i].setHex((p[`warm${PAL_KEYS[i]}` as keyof SwirlPreset] as number) ?? PAL_DEF_WARM[i]);
       this.cool[i].setHex((p[`cool${PAL_KEYS[i]}` as keyof SwirlPreset] as number) ?? PAL_DEF_COOL[i]);
     }
   }
 
-  private build(segs: number): void {
+  private build(segs: number, nRings: number): void {
     this.segs = segs;
+    this.nRings = nRings;
     // --- backing: centre + rows ---
     const nBack = 1 + BACK_ROWS * segs;
     this.backGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nBack * 3), 3));
@@ -298,8 +299,8 @@ export class Swirl {
       }
     this.backGeo.setIndex(bIdx);
 
-    // --- additive: core + 3 ring strips + halo ---
-    const nAdd = 1 + (CORE_ROWS + 3 * RING_ROWS + HALO_ROWS) * segs;
+    // --- additive: core + ring strips + halo ---
+    const nAdd = 1 + (CORE_ROWS + nRings * RING_ROWS + HALO_ROWS) * segs;
     this.addGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nAdd * 3), 3));
     this.addGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(nAdd * 4), 4));
     const aIdx: number[] = [];
@@ -313,8 +314,8 @@ export class Swirl {
         }
     };
     band(1, CORE_ROWS);
-    for (let s = 0; s < 3; s++) band(1 + CORE_ROWS * segs + s * RING_ROWS * segs, RING_ROWS);
-    band(1 + CORE_ROWS * segs + 3 * RING_ROWS * segs, HALO_ROWS);
+    for (let s = 0; s < nRings; s++) band(1 + CORE_ROWS * segs + s * RING_ROWS * segs, RING_ROWS);
+    band(1 + CORE_ROWS * segs + nRings * RING_ROWS * segs, HALO_ROWS);
     this.addGeo.setIndex(aIdx);
   }
 
@@ -435,46 +436,77 @@ export class Swirl {
     // the three rings: black / glow / LINE / glow / black. ONE displacement
     // per (ring, segment), shared by all five rows, so the band's thickness
     // stays coherent while its contour misshapes.
-    // swallow wrap range: rings die into the core band, reborn near the rim
-    const swLo = Math.max(0.05, coreR);
-    const swHi = Math.max(swLo + 0.1, Math.min(0.95, p.haloRadius ?? 0.69));
-    const swSpan = swHi - swLo;
-    for (let s = 0; s < 3; s++) {
-      const ring = this.rings[s];
+    // -- THE RING LANE, a seamless conveyor -------------------------------
+    // Rings sit evenly spaced in [ringInner, ringOuter]; swallow slides them
+    // all down the lane together and wraps — a ring fading out at the inner
+    // edge is the SAME ring fading in at the outer edge, and because spacing
+    // is uniform the supply never bunches or gaps: the loop has no seam and
+    // no start. `vary` scatters spacing/width/brightness/waves per ring from
+    // the seed, and each ring KEEPS its character through the wrap.
+    const nR = this.nRings;
+    const lane0 = Math.max(0.03, p.ringInner ?? 0.1);
+    const lane1 = Math.max(lane0, p.ringOuter ?? 0.56);
+    const laneSpan = Math.max(0.02, lane1 - lane0);
+    const step = laneSpan / nR;
+    const fadeW = Math.max(0.01, step * 0.35); // cross-fade band at each lane end
+    const lineW0 = p.ringLine ?? 0.022;
+    const glowW0 = p.ringGlow ?? 0.082;
+    const bright0 = p.ringBright ?? 1;
+    const vary = p.vary ?? 0.5;
+    const seed = Math.round(p.seed ?? 1);
+    const wavyA = p.wavyAmp ?? 0.01;
+    const wavyF = p.wavyFreq ?? 5;
+    const wavyR = p.wavyRate ?? 1.3;
+    const jagA = p.jagAmp ?? 0.009;
+    const jagF = p.jagFreq ?? 9;
+    const jagR = p.jagRate ?? 2.4;
+    const depth = Math.max(0.2, p.depth ?? 1);
+    for (let s = 0; s < nR; s++) {
       const base = 1 + CORE_ROWS * S + s * RING_ROWS * S;
-      const on = ring.radius > 0.01;
-      // the swallow moves the BASE radius, cross-fading through the wrap
-      let baseR = ring.radius;
+      // seeded per-ring character (cheap: eight hashes per ring per frame)
+      const v = (k: number): number => (ringHash(seed, s, k) - 0.5) * 2 * vary;
+      const slot = nR === 1 ? (lane0 + lane1) / 2 : lane0 + (s + 0.5) * step + v(12) * 0.25 * step;
+      const freqA = Math.max(1, Math.round(wavyF * (1 + 0.4 * v(1))));
+      const freqB = Math.max(2, Math.round(jagF * (1 + 0.35 * v(2))));
+      const phA = ringHash(seed, s, 3) * TAU;
+      const phB = ringHash(seed, s, 4) * TAU;
+      const ampA = wavyA * (1 + 0.7 * v(5));
+      const ampB = jagA * (1 + 0.7 * v(6));
+      const rateA = wavyR * (0.75 + 0.5 * ringHash(seed, s, 7));
+      const rateB = jagR * (0.75 + 0.5 * ringHash(seed, s, 8));
+      const lineW = lineW0 * (1 + 0.5 * v(9));
+      const glowW = glowW0 * (1 + 0.5 * v(10));
+      // the conveyor: slide down the lane, wrap, cross-fade at both ends
+      let laneR = slot;
       let env = 1;
-      if (on && swallow !== 0) {
-        let w = (ring.radius - swLo - t * swallow) % swSpan;
-        if (w < 0) w += swSpan;
-        baseR = swLo + w;
-        env = clamp01(Math.min(w, swSpan - w) / (swSpan * 0.12));
+      if (swallow !== 0) {
+        let w = (slot - lane0 - t * swallow) % laneSpan;
+        if (w < 0) w += laneSpan;
+        laneR = lane0 + w;
+        env = clamp01(Math.min(w, laneSpan - w) / fadeW);
       }
-      const bright = ring.bright * env * cur(baseR) * pulseB;
-      const spinTh = bandAngle(baseR);
-      // row offsets are loop-invariant per ring — hoisted, no per-vertex arrays
-      RING_OFFR[0] = -ring.glow * R;
-      RING_OFFR[1] = -ring.line * R;
+      // tunnel depth: the DISPLAYED radius is laneR^depth, and widths scale
+      // by the curve's local derivative so inner rings thin out as they
+      // crowd — swallowed rings visibly decelerate into the hole
+      const dispR = depth === 1 ? laneR : Math.pow(laneR, depth);
+      const wScale = depth === 1 ? 1 : Math.min(1.8, Math.max(0.25, depth * Math.pow(laneR, depth - 1)));
+      const bright = bright0 * (1 + 0.4 * v(11)) * env * cur(dispR) * pulseB;
+      const spinTh = bandAngle(dispR);
+      RING_OFFR[0] = -glowW * wScale * R;
+      RING_OFFR[1] = -lineW * wScale * R;
       RING_OFFR[2] = 0;
-      RING_OFFR[3] = ring.line * R;
-      RING_OFFR[4] = ring.glow * R;
+      RING_OFFR[3] = lineW * wScale * R;
+      RING_OFFR[4] = glowW * wScale * R;
       for (let j = 0; j < S; j++) {
         const th = (j / S) * TAU + spinTh;
-        const local = on
-          ? ring.ampA * Math.sin(th * ring.freqA + RING_PHASE_A[s] + t * ring.rateA) +
-            ring.ampB * Math.sin(th * ring.freqB + RING_PHASE_B[s] - t * ring.rateB)
-          : 0;
-        const mid = (baseR * breath + SHARED[j] + local) * R;
+        const local =
+          ampA * Math.sin(th * freqA + phA + t * rateA) +
+          ampB * Math.sin(th * freqB + phB - t * rateB);
+        const mid = (dispR * breath + SHARED[j] + local) * R;
         const cs = Math.cos(th);
         const sn = Math.sin(th);
         for (let r = 0; r < RING_ROWS; r++) {
           const k = base + r * S + j;
-          if (!on) {
-            setVert(pa, ca, k, cs * 0.01, sn * 0.01, 0, 0, 0, 0);
-            continue;
-          }
           const rr = Math.max(0.01, mid + RING_OFFR[r]);
           if (r === 2)
             setVert(pa, ca, k, cs * rr, sn * rr,
@@ -489,7 +521,7 @@ export class Swirl {
 
     // halo: loose, pale, slow — black / halo colour / black
     {
-      const base = 1 + CORE_ROWS * S + 3 * RING_ROWS * S;
+      const base = 1 + CORE_ROWS * S + this.nRings * RING_ROWS * S;
       const hR = p.haloRadius ?? 0.69;
       const hW = p.haloWidth ?? 0.1;
       const hA = (p.haloAlpha ?? 0.5) * alpha * cur(hR);
