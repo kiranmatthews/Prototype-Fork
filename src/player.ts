@@ -2275,15 +2275,24 @@ export class Player {
       // the skate accelerator, so riding the charge scale up to jumpVelocity
       // made every accelerating jump a moon jump. Cruising on direction keys
       // and tapping X gives the small pop; a held charge earns the big one.
+      const pop = THREE.MathUtils.lerp(TUNING.ollieMinVelocity, TUNING.ollieVelocity, t);
+      // DOWNHILL OLLIE: the road keeps falling away under the arc, so a flat
+      // pop up there buys near-double the airtime and reads as floaty. Fold
+      // a tunable fraction of the descent rate (slope x speed, negative) back
+      // into the pop so the arc follows the hill — floored so a charged ollie
+      // is never robbed of its crate clearance.
+      const descent = Math.min(0, this.speed * this.takeoffTy);
       this.vVel = Math.min(
-        rampClimb + THREE.MathUtils.lerp(TUNING.ollieMinVelocity, TUNING.ollieVelocity, t),
+        rampClimb + Math.max(pop * 0.45, pop + descent * TUNING.ollieDownCouple),
         CONST.maxFallSpeed,
       );
       this.lastJumpType = 'Board Ollie';
       this.airGrav = 'board'; // the one branch that is unambiguously a skate air
-      // Launched off a ramp or a sloped face (up- OR downhill): the air flies
-      // ballistic (rampFallGravity) instead of taking the flat-ollie snap.
-      this.floatAir = rampClimb > 0.5 || this.rideNormal.y < 0.985;
+      // Launched off a ramp or an UPHILL face: ballistic (rampFallGravity)
+      // instead of the flat-ollie snap. A DOWNHILL launch keeps the snap —
+      // the ballistic glide on a descending road was the other half of the
+      // float.
+      this.floatAir = (rampClimb > 0.5 || this.rideNormal.y < 0.985) && descent >= -0.5;
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
       // On foot with real run speed. The Crash rule from the reference: a
@@ -6601,6 +6610,21 @@ export class Player {
         }
         this.die();
         return;
+      }
+    }
+
+    // Tumble zones (the coast bluffs): touching one doesn't kill on the
+    // spot — it throws the body into a full ragdoll bail, and the steep-bail
+    // slide carries it down the fall line with the dust flying. The water at
+    // the bottom is the actual kill. Re-arms after every get-up, so clawing
+    // upright halfway down the face just starts the next tumble.
+    if (!this.isBailing) {
+      for (const tz of level.tumbleBoxes) {
+        if (this.playerBox.intersectsBox(tz)) {
+          this.bail();
+          this.startRagdoll('side', 1); // re-seed: a cliff exit ROLLS off the edge
+          break;
+        }
       }
     }
 

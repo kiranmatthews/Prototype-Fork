@@ -27,6 +27,7 @@ export const TUNING = {
   jumpMinVelocity: 12, // quick-tap jump
   ollieVelocity: 11, // BOARD OLLIE at full charge — the ollie charges on its own min..max scale, decoupled from the on-foot jump (riding the jumpVelocity scale made accelerating ollies moon jumps)
   ollieMinVelocity: 6.5, // quick-tap board ollie. NOTE this no longer clears a crate on its own: measured, a tap now peaks at 0.559 against a 0.96 crate (it was 8.25, tuned to peak at exactly 0.962 for that reason). Clearing a crate on the board is a CHARGED ollie now — hold X and the full pop peaks at 1.679. The ramp climb still stacks on top (see chargedJump), so a lip pays out instead of robbing you
+  ollieDownCouple: 0.65, // DOWNHILL OLLIES ONLY: fraction of the slope's descent rate folded back into the pop, so the arc hugs the hill instead of hanging over it. 0 = old floaty behavior, 1 = airtime matches a flat-ground ollie
   jumpChargeTime: 0.4, // hold this long for full power
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
@@ -207,6 +208,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   jumpMinVelocity: { min: 6, max: 25, step: 0.5 },
   ollieVelocity: { min: 6, max: 20, step: 0.5 },
   ollieMinVelocity: { min: 6, max: 18, step: 0.5 }, // floor at 6: below this a tap ollie can't clear a crate
+  ollieDownCouple: { min: 0, max: 1, step: 0.05 },
   jumpChargeTime: { min: 0.2, max: 1.5, step: 0.05 },
   chargeBoost: { min: 0, max: 40, step: 1 },
   cruiseSpeed: { min: 6, max: 20, step: 0.5 },
@@ -370,6 +372,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'BOARD OLLIE at FULL charge. Skate jumps charge on their own min..max scale (ollieMinVelocity up to this), decoupled from the on-foot jump — because X doubles as the accelerator, an ollie released out of a long speed-pump lands here at the top of the scale. On-foot jumps keep their own jumpMinVelocity..jumpVelocity scale; vert/pipe ollies keep their earned climb.',
   ollieMinVelocity:
     'BOARD OLLIE from a quick tap — the small pop for real-play ollies where you cruise on direction keys (after pumping speed with X) and just flick X. Holding X longer charges the ollie up toward ollieVelocity.',
+  ollieDownCouple:
+    'DOWNHILL SKATE OLLIES ONLY. Ollieing on a descending road, the ground falls away under the arc — a flat pop up there buys near-double the airtime and feels floaty. This folds a fraction of the descent rate (slope times speed) back into the pop so the arc follows the hill down. 0 keeps the old float; 1 makes downhill airtime match flat ground. Uphill ollies, kickers, and vert launches are untouched.',
   jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
   flipHoldTime:
     'The roll-jump gate: a direction held at least this long GOING INTO an on-foot jump triggers the forward somersault (Crash rules). Jumping neutral and only steering mid-air never rolls. 0 = every moving jump rolls; raise it to demand a longer committed run-up.',
@@ -608,7 +612,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
   },
   {
     title: 'SKATING',

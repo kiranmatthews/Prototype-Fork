@@ -1658,6 +1658,7 @@ export class Level {
   private torchLights: THREE.PointLight[] = [];
   killBoxes: THREE.Box3[] = []; // touch-kill hazard volumes, rebuilt each update
   pitBoxes: THREE.Box3[] = []; // static death-pit volumes (custom levels), re-fed into killBoxes
+  tumbleBoxes: THREE.Box3[] = []; // ragdoll-on-touch volumes (the coast bluffs): bail + tumble down the face, not an instant kill
 
   // --- visual pass ---
   // combo-mode dress: true = EVERY convertible crate becomes a balance crate
@@ -5352,18 +5353,20 @@ export class Level {
     });
     const deckY = (sArc: number): number => F(sArc / road.len, 0, 0).y;
     chunks((s0, s1) => {
-      // the mountain side: a thin verge, then ROCK, straight up. The road is
-      // a shelf cut into the mountain and the cut face is the boundary.
+      // the mountain side: a green verge, then ROCK, straight up. The road
+      // is a shelf cut into the mountain and the cut face is the boundary —
+      // set back a couple of metres so the wall looms beside the lane, not
+      // over it.
       strip(s0, s1,
         () => -(W / 2 + 0.05), () => 0.05,
-        () => -(W / 2 + 0.7), () => 0.35,
+        () => -(W / 2 + 2.6), () => 0.5,
         shoulderMat, true, "road verge", 12);
       strip(s0, s1,
-        () => -(W / 2 + 0.7), () => 0.35,
-        () => -(W / 2 + 4.4), () => 9,
+        () => -(W / 2 + 2.6), () => 0.5,
+        () => -(W / 2 + 6.3), () => 9,
         cragMat, false, "rock face", 12);
       strip(s0, s1,
-        () => -(W / 2 + 4.4), () => 9,
+        () => -(W / 2 + 6.3), () => 9,
         () => -(W / 2 + 26),
         (sArc) => hillL(sArc),
         hillMat, false, "hillside", 12);
@@ -5411,10 +5414,10 @@ export class Level {
     for (let sArc = 0; sArc < road.len; sArc += 3) {
       const t0 = sArc / road.len;
       const t1 = Math.min(0.999, (sArc + 3.6) / road.len);
-      const a0 = F(t0, -(W / 2 + 0.8), 0);
-      const a1 = F(t1, -(W / 2 + 0.8), 0);
-      const b0 = F(t0, -(W / 2 + 4.6), 0);
-      const b1 = F(t1, -(W / 2 + 4.6), 0);
+      const a0 = F(t0, -(W / 2 + 2.7), 0);
+      const a1 = F(t1, -(W / 2 + 2.7), 0);
+      const b0 = F(t0, -(W / 2 + 6.5), 0);
+      const b1 = F(t1, -(W / 2 + 6.5), 0);
       const box = new THREE.Box3();
       for (const p of [a0, a1, b0, b1]) box.expandByPoint(p);
       box.min.y = Math.min(a0.y, a1.y) - 2;
@@ -5422,10 +5425,12 @@ export class Level {
       this.walls.push(box);
     }
     // ---- the cliff does NOT --------------------------------------------
-    // Touch-kill volumes hug the bluff face from just under the scrub lip
-    // down to the water: past the lip there is no riding it out, only the
-    // tumble. Their tops sit ~2m BELOW deck height, so airs over the
-    // barrier that come back are never clipped — only bodies that go down.
+    // Tumble volumes hug the bluff face from just under the scrub lip down
+    // to the water: past the lip you don't die on the spot — the body is
+    // thrown into a ragdoll bail and the steep-bail physics rides it down
+    // the fall line, dust and all, until the sea finishes the job (killY).
+    // Their tops sit ~2m BELOW deck height, so airs over the barrier that
+    // come back clean are never clipped — only bodies that go down.
     for (let sArc = 0; sArc < road.len; sArc += 11) {
       const t0 = sArc / road.len;
       const t1 = Math.min(0.999, (sArc + 12) / road.len);
@@ -5437,7 +5442,7 @@ export class Level {
       for (const p of [a0, a1, b0, b1]) box.expandByPoint(p);
       box.max.y = Math.min(a0.y, a1.y) - 1.8;
       box.min.y = box.max.y - 44;
-      this.pitBoxes.push(box);
+      this.tumbleBoxes.push(box);
     }
 
     // ---- pines, baked chunk by chunk -------------------------------------
@@ -5476,7 +5481,7 @@ export class Level {
         // The sea side gets nothing — the view is the point, and so is the
         // drop.
         if (rnd() > 0.22) {
-          const off = -(W / 2 + 3.4 + rnd() * 1.8);
+          const off = -(W / 2 + 5.3 + rnd() * 1.8);
           const p = F(sArc / road.len, off, 8.8);
           pine(p.x, p.y, p.z, 0.9 + rnd() * 0.9);
         }
