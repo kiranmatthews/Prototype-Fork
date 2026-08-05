@@ -66,12 +66,20 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    name: 'PLASMA',
+    // The two plasma families, deliberately separate: SHAPE moves vertices,
+    // GHOST paints — the accidental colour-space deformations that were worth
+    // keeping when the geometry warp replaced them as the main act.
+    name: 'PLASMA · SHAPE',
     fields: [
-      N('warp', 'shape warp', 0, 0.35, 0.005, 'deforms the RING GEOMETRY — irregular heaving shapes, not circles'),
+      N('warp', 'warp', 0, 0.35, 0.005, 'deforms the RING GEOMETRY — irregular heaving shapes, not circles'),
       N('warpScale', 'warp scale', 1, 10, 1, 'base harmonic; two more bands ride at ~2.3x and ~0.7x'),
       N('warpRate', 'warp rate', 0, 5, 0.01, 'how fast the shape churns'),
-      N('jag', 'jag', 0, 3, 0.01, 'high-frequency kinks in the COLOUR field — needs segs ~4x the scale'),
+    ],
+  },
+  {
+    name: 'PLASMA · GHOST',
+    fields: [
+      N('jag', 'colour jag', 0, 3, 0.01, 'kinks the painted line, geometry untouched — needs segs ~4x the scale'),
       N('jagScale', 'jag scale', 1, 12, 1, 'kinks per circumference (5-9 = electric)'),
       N('jagRate', 'jag rate', 0, 8, 0.02, 'how fast the kinks seethe'),
       N('streak', 'streak', 0, 1, 0.01, 'brightness knots ALONG the line — energy coursing through'),
