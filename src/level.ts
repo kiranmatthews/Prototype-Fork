@@ -28,6 +28,8 @@ import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS } from "./swirls";
+
+const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { wumpaMesh, WUMPA_SIZE } from "./wumpa";
 
 export interface Crate {
@@ -67,7 +69,8 @@ export type EnemyKind =
   | "hopper" // frog: leaps in arcs; stompable only while grounded
   | "floater" // drone: hovers above stomp range, swoops; spin it down
   | "sentry" // turret: stationary, tracks + fires slow orbs on a cycle
-  | "spinner"; // sawblade: blades OUT = untouchable touch-kill, IN = vulnerable
+  | "spinner" // sawblade: blades OUT = untouchable touch-kill, IN = vulnerable
+  | "car"; // oncoming traffic: follows the road ribbon, touch hurts, cannot be killed
 
 export interface Enemy {
   group: THREE.Group;
@@ -1299,6 +1302,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
   { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
   { id: "warproom", name: "The Warp Room" }, // five wormhole gates round a dais
+  { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
 ];
 export const DEFAULT_LEVEL_ID = "jungle";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
@@ -2376,6 +2380,7 @@ export class Level {
     else if (entry.id === "slip") this.buildSlipstream();
     else if (entry.id === "dark") this.buildNightworks();
     else if (entry.id === "warproom") this.buildWarpRoom();
+    else if (entry.id === "descent") this.buildDescent();
     else this.buildJungle(); // "jungle": the enclosed corridor course
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
@@ -3954,6 +3959,8 @@ export class Level {
   // polyline; the tangent of the nearest segment is the local "down-course"
   // direction the camera and the controls steer along.
   private lanePts: { x: number; y: number; z: number }[] = [];
+  // The Descent's road spine, kept for the oncoming cars to drive along.
+  private roadRibbon: SlideRibbon | null = null;
   // arc length to each lane point, so "how far along the course" is metres
   private laneArc: number[] = [];
   get laneActive(): boolean {
@@ -5002,7 +5009,359 @@ export class Level {
   // a fallen trunk grind over a ravine, then a stepped temple climb onto a ruin
   // terrace and back down. About a third the length of the course it replaces.
 
-  // THE WARP ROOM. Not a course — a chamber, straight out of the Crash 2
+// THE DESCENT. A two-lane mountain road out of the reference frame: very
+  // long, very curvy, mainly downhill with flats and one or two ultra-gentle
+  // rises, hemmed by tall hillsides and roadside pines that hide and reveal
+  // the course ahead, with far snow peaks over the valley. Oncoming cars run
+  // the left lane. The road itself is one slideRibbon spline — collision,
+  // banking and the frame() placement system all come with it — and the
+  // camera lane rides the same centreline, so the rig steers with the road.
+  private buildDescent(): void {
+    this.batchDecor = true;
+    this.killY = -40;
+    this.theme = {
+      skyTop: "#4a86c8",
+      skyBottom: "#e2f0f8",
+      sunColorHex: "#fff2cc",
+      sunU: 0.3,
+      sunV: 0.28,
+      stars: false,
+      fog: 0xc9dcea,
+      fogNear: 80,
+      fogFar: 320, // long alpine views: the hills do the hiding, not the haze
+      hemiSky: 0xd8ecff,
+      hemiGround: 0x4a5a44,
+      hemiI: 1.15,
+      sunColor: 0xffedc0,
+      sunI: 1.35,
+      particleColor: 0xfff8e8, // pollen drifting through the morning light
+      particleWind: [0.4, 0.05, 0.2],
+    };
+
+    // ---- the road line: a deterministic mountain meander ------------------
+    // Heading wanders around due south inside +-72 degrees (so z only ever
+    // decreases and the finish line stays honest); two sine bands give big
+    // sweepers with smaller kinks riding them. Slope is mostly -6..-13% with
+    // patches of flat and a couple of +2% breathers.
+    const V = (x: number, y: number, z: number): THREE.Vector3 =>
+      new THREE.Vector3(x, y, z);
+    const DS = 24; // metres between control nodes
+    const NODES = 92; // ~2.2km of road
+    const pts: THREE.Vector3[] = [];
+    let px = 0;
+    let py = 168;
+    let pz = 0;
+    for (let i = 0; i < NODES; i++) {
+      const sArc = i * DS;
+      let head =
+        (Math.PI / 180) *
+        (58 * Math.sin((sArc * Math.PI * 2) / 520 + 0.8) +
+          26 * Math.sin((sArc * Math.PI * 2) / 173 + 2.6));
+      head = THREE.MathUtils.clamp(head, -1.26, 1.26);
+      if (i > NODES - 5) head = 0; // the run-out straightens for the gate
+      const slope = THREE.MathUtils.clamp(
+        -0.08 +
+          0.05 * Math.sin(sArc * 0.011 + 1.7) +
+          0.035 * Math.sin(sArc * 0.0046 + 4.2),
+        -0.135,
+        0.02,
+      );
+      pts.push(V(px, py, pz));
+      px += Math.sin(head) * DS;
+      pz -= Math.cos(head) * DS;
+      py += slope * DS;
+    }
+    const W = 13; // two 3.5m lanes + shoulders between the gutter lips
+    const road = this.slideRibbon(pts, W, 0x565b61, undefined, 26, "asphalt");
+    this.roadRibbon = road;
+    const F = (t: number, off: number, h: number): THREE.Vector3 =>
+      road.frame(THREE.MathUtils.clamp(t, 0.001, 0.999), off, h);
+
+    // spawn in the right lane, looking down the hill
+    const sp = F(0.004, 1.9, 0.15);
+    this.spawnPos.set(sp.x, sp.y, sp.z);
+    this.currentSpawn.copy(this.spawnPos);
+
+    // ---- camera lane: the road's own centreline ---------------------------
+    const lane: { x: number; y: number; z: number }[] = [];
+    for (let sArc = 0; sArc <= road.len; sArc += 8) {
+      const p = F(sArc / road.len, 0, 0);
+      lane.push({ x: p.x, y: p.y, z: p.z });
+    }
+    this.lanePts = lane;
+    this.measureLane();
+
+    // ---- road paint: double yellow centre, white edge lines ---------------
+    const paint = (
+      off: number,
+      hw: number,
+      color: number,
+      emissive: number,
+    ): void => {
+      const posArr: number[] = [];
+      const idx: number[] = [];
+      const step = 7;
+      let n = 0;
+      for (let sArc = 4; sArc <= road.len - 4; sArc += step) {
+        const t = sArc / road.len;
+        const a = F(t, off - hw, 0.05);
+        const b = F(t, off + hw, 0.05);
+        posArr.push(a.x, a.y, a.z, b.x, b.y, b.z);
+        if (n > 0) {
+          const k = n * 2;
+          idx.push(k - 2, k - 1, k, k, k - 1, k + 1);
+        }
+        n++;
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(posArr), 3));
+      g.setIndex(idx);
+      g.computeVertexNormals();
+      const mesh = new THREE.Mesh(
+        g,
+        new THREE.MeshLambertMaterial({ color, emissive, side: THREE.DoubleSide }),
+      );
+      mesh.name = "road paint";
+      this.root.add(mesh);
+    };
+    paint(-0.24, 0.09, 0xd8a428, 0x3a2c08);
+    paint(0.24, 0.09, 0xd8a428, 0x3a2c08);
+    paint(-3.6, 0.08, 0xe8e8e0, 0x333330);
+    paint(3.6, 0.08, 0xe8e8e0, 0x333330);
+
+    // ---- hillsides + shoulders: the hide-and-reveal ----------------------
+    // Two strips a side: a grass shoulder off the gutter, then the hill face
+    // climbing away. Height breathes along the course, and every so often it
+    // drops to nearly nothing — a window onto the valley and the peaks —
+    // before the next wall of hillside closes the view again.
+    const hillH = (sArc: number, side: number): number => {
+      let h =
+        12 +
+        9 * Math.sin(sArc * 0.007 + side * 2.1) +
+        6 * Math.sin(sArc * 0.019 + side * 5.0);
+      if (Math.sin(sArc * 0.0045 + side * 1.3) < -0.62) h *= 0.12; // the vista window
+      return Math.max(1.2, h);
+    };
+    const strip = (
+      offA: (s: number) => number,
+      hA: (s: number) => number,
+      offB: (s: number) => number,
+      hB: (s: number) => number,
+      color: number,
+      ground: boolean,
+      name: string,
+    ): void => {
+      const posArr: number[] = [];
+      const idx: number[] = [];
+      const step = 12;
+      let n = 0;
+      for (let sArc = 0; sArc <= road.len; sArc += step) {
+        const t = sArc / road.len;
+        const a = F(t, offA(sArc), hA(sArc));
+        const b = F(t, offB(sArc), hB(sArc));
+        posArr.push(a.x, a.y, a.z, b.x, b.y, b.z);
+        if (n > 0) {
+          const k = n * 2;
+          idx.push(k - 2, k - 1, k, k, k - 1, k + 1);
+        }
+        n++;
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(posArr), 3));
+      g.setIndex(idx);
+      g.computeVertexNormals();
+      const mesh = new THREE.Mesh(
+        g,
+        new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide }),
+      );
+      mesh.name = name;
+      this.root.add(mesh);
+      if (ground) this.groundMeshes.push(mesh);
+    };
+    for (const side of [-1, 1] as const) {
+      strip(
+        () => side * (W / 2 + 0.1),
+        () => 0.1,
+        () => side * (W / 2 + 6),
+        () => 0.9,
+        0x4e8a3c,
+        true,
+        "road shoulder",
+      );
+      strip(
+        () => side * (W / 2 + 6),
+        () => 0.9,
+        () => side * (W / 2 + 20),
+        (sArc) => hillH(sArc, side),
+        0x5a6b4a,
+        true,
+        "hillside",
+      );
+    }
+
+    // ---- pines along both shoulders --------------------------------------
+    let rs = 7;
+    const rnd = (): number => {
+      rs = (rs * 16807) % 2147483647;
+      return rs / 2147483647;
+    };
+    const trunkGeo = new THREE.CylinderGeometry(0.22, 0.32, 2.6, 5);
+    const coneGeo = new THREE.ConeGeometry(1.7, 3.8, 6);
+    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x6b4a2e });
+    const pineMat = new THREE.MeshLambertMaterial({ color: 0x2e6b34 });
+    const Q = new THREE.Quaternion();
+    const E = new THREE.Euler();
+    const pine = (x: number, y: number, z: number, sc: number): void => {
+      Q.setFromEuler(E.set(0, rnd() * 6.28, 0));
+      const m = new THREE.Matrix4().compose(
+        new THREE.Vector3(x, y + 1.3 * sc, z),
+        Q,
+        new THREE.Vector3(sc, sc, sc),
+      );
+      this.putDecor("pine trunk", trunkGeo, trunkMat, m);
+      for (let c = 0; c < 2; c++) {
+        const cm = new THREE.Matrix4().compose(
+          new THREE.Vector3(x, y + (2.6 + c * 2.1) * sc, z),
+          Q,
+          new THREE.Vector3(sc * (1 - c * 0.28), sc, sc * (1 - c * 0.28)),
+        );
+        this.putDecor("pine crown", coneGeo, pineMat, cm);
+      }
+    };
+    for (let sArc = 30; sArc < road.len - 40; sArc += 13) {
+      for (const side of [-1, 1] as const) {
+        if (rnd() < 0.35) continue; // gaps — a wall of trees reads as a fence
+        const off = side * (W / 2 + 2.2 + rnd() * 4.5);
+        const p = F(sArc / road.len, off, 0.35);
+        pine(p.x, p.y, p.z, 0.85 + rnd() * 0.9);
+      }
+    }
+
+    // ---- far scenery: valley floor, mountain ring, one snow giant --------
+    const valley = new THREE.Mesh(
+      new THREE.PlaneGeometry(2600, 3200),
+      new THREE.MeshLambertMaterial({ color: 0x39543a }),
+    );
+    valley.rotation.x = -Math.PI / 2;
+    valley.position.set(0, -52, -900);
+    this.root.add(valley);
+    const mtnMat = new THREE.MeshLambertMaterial({ color: 0x7a8ba0 });
+    const snowMat = new THREE.MeshLambertMaterial({ color: 0xf4f8fc });
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2;
+      const dist = 620 + rnd() * 260;
+      const mx = Math.cos(a) * dist;
+      const mz = -900 + Math.sin(a) * dist;
+      const h = 140 + rnd() * 160;
+      const r = 90 + rnd() * 90;
+      const mtn = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), mtnMat);
+      mtn.position.set(mx, -52 + h / 2, mz);
+      this.root.add(mtn);
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(r * 0.34, h * 0.3, 7), snowMat);
+      cap.position.set(mx, -52 + h - h * 0.14, mz);
+      this.root.add(cap);
+    }
+    // the reference's one huge snow mountain, dead ahead down the valley
+    const giant = new THREE.Mesh(new THREE.ConeGeometry(260, 420, 8), mtnMat);
+    giant.position.set(60, -52 + 210, -1750);
+    this.root.add(giant);
+    const giantCap = new THREE.Mesh(new THREE.ConeGeometry(120, 150, 8), snowMat);
+    giantCap.position.set(60, -52 + 420 - 68, -1750);
+    this.root.add(giantCap);
+
+    // ---- guardrail grinds on the big outer curves -------------------------
+    const guard = (t0: number, t1: number, side: -1 | 1): void => {
+      const n = Math.max(3, Math.round(((t1 - t0) * road.len) / 7));
+      const rpts: THREE.Vector3[] = [];
+      for (let i = 0; i <= n; i++)
+        rpts.push(F(THREE.MathUtils.lerp(t0, t1, i / n), side * (W / 2 - 0.7), 0.72));
+      const rail = new Rail(rpts);
+      this.rails.push(rail);
+      this.root.add(rail.object);
+    };
+    guard(0.07, 0.13, 1);
+    guard(0.21, 0.27, -1);
+    guard(0.36, 0.42, 1);
+    guard(0.55, 0.62, -1);
+    guard(0.69, 0.76, 1);
+
+    // ---- oncoming traffic -------------------------------------------------
+    // Eight cars strung down the course, driving up it in the LEFT lane.
+    // They wrap off the top back to the bottom, so traffic never runs dry.
+    const carCols = [0xb03a2e, 0x3a62b0, 0xd8c090, 0x4a8a4a, 0x8a4a8a, 0xc07838];
+    for (let i = 0; i < 8; i++) {
+      const group = new THREE.Group();
+      const body = new THREE.Mesh(
+        new THREE.BoxGeometry(2.1, 0.75, 4.2),
+        new THREE.MeshLambertMaterial({ color: carCols[i % carCols.length] }),
+      );
+      body.position.y = 0.75;
+      group.add(body);
+      const cabin = new THREE.Mesh(
+        new THREE.BoxGeometry(1.7, 0.62, 2.0),
+        new THREE.MeshLambertMaterial({ color: 0xcfe0ea }),
+      );
+      cabin.position.set(0, 1.35, 0.25);
+      group.add(cabin);
+      const wheelMat = new THREE.MeshLambertMaterial({ color: 0x1c1c20 });
+      for (const [wx, wz] of [[-1, -1.35], [1, -1.35], [-1, 1.35], [1, 1.35]] as const) {
+        const wheel = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.62, 0.62), wheelMat);
+        wheel.position.set(wx * 1.02, 0.31, wz);
+        group.add(wheel);
+      }
+      const lampMat = new THREE.MeshLambertMaterial({
+        color: 0xfff4c0,
+        emissive: 0x8a7a30,
+      });
+      for (const lx of [-0.6, 0.6]) {
+        const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.22, 0.1), lampMat);
+        lamp.position.set(lx, 0.82, -2.12); // lookAt aims -z up-course: lamps forward
+        group.add(lamp);
+      }
+      this.root.add(group);
+      this.enemies.push({
+        group,
+        box: new THREE.Box3(),
+        alive: true,
+        x0: 300 + i * 235,
+        x1: 0,
+        dir: 1,
+        speed: 9.5 + (i % 3) * 1.6,
+        axis: "z",
+        kind: "car",
+        state: "drive",
+        stateT: 0,
+        baseY: 0,
+        cross: -2.05, // the left lane, seen down-course
+        body,
+        vy: 0,
+        spinKill: false,
+        stompKill: false,
+        meleeKill: false,
+        touchHurt: true,
+        spinRecoil: false,
+      });
+    }
+
+    // ---- pickups, checkpoints, the finish --------------------------------
+    this.ribbonFruit(road, 0.03, 0.09, 8);
+    this.ribbonFruit(road, 0.18, 0.24, 8);
+    this.ribbonFruit(road, 0.33, 0.38, 6);
+    this.ribbonFruit(road, 0.5, 0.56, 8);
+    this.ribbonFruit(road, 0.66, 0.72, 6);
+    this.ribbonFruit(road, 0.85, 0.92, 8);
+    const gem = F(0.48, 2.2, 1.2);
+    this.crystal(gem.x, gem.y, gem.z);
+    for (const t of [0.2, 0.4, 0.6, 0.8]) {
+      const p = F(t, 1.9, 0);
+      this.checkpoint(p.y, p.z, p.x);
+    }
+    const end = F(0.985, 0, 0);
+    this.finishZ = end.z;
+    this.finishGate(end.y, end.z, end.x);
+  }
+
+    // THE WARP ROOM. Not a course — a chamber, straight out of the Crash 2
   // reference: five great circular stone gates stand in a ring around a gold
   // dais, each filled with the wormhole. The gate hardware is the trick that
   // completes the loop illusion: a deep stone collar overlaps the disc's
@@ -10220,6 +10579,23 @@ export class Level {
 
   // Drive every foe's FSM + movement, and publish the per-frame combat flags
   // (spinKill/stompKill/meleeKill/touchHurt/spinRecoil) the player reads.
+  // ONCOMING TRAFFIC. A car owns an arc position (x0, in units) on the road
+  // ribbon and drives UP-course — toward the player — in the left lane
+  // (cross holds the lane offset). Off the far end it wraps back downhill,
+  // so the supply of traffic never runs out.
+  private carStep(e: Enemy, dt: number): void {
+    const r = this.roadRibbon;
+    if (!r) return;
+    e.x0 -= e.speed * dt;
+    if (e.x0 < 40) e.x0 += r.len - 90;
+    const t = e.x0 / r.len;
+    const p = r.frame(t, e.cross, 0);
+    const q = r.frame(Math.max(0, (e.x0 - 4) / r.len), e.cross, 0);
+    e.group.position.set(p.x, p.y + 0.08, p.z);
+    CAR_AIM.set(q.x, q.y + 0.08, q.z);
+    e.group.lookAt(CAR_AIM);
+  }
+
   private updateEnemies(dt: number): void {
     for (const e of this.enemies) {
       if (!e.alive) continue;
@@ -10269,6 +10645,17 @@ export class Level {
           this.spinnerStep(e, dt);
           boxW = e.state === "out" ? 2.1 : 0.8;
           cy = 0.55;
+          break;
+        case "car":
+          this.carStep(e, dt);
+          // a car is a car: nothing kills it, everything about it hurts
+          e.spinKill = false;
+          e.stompKill = false;
+          e.meleeKill = false;
+          e.touchHurt = true;
+          boxW = 2.7;
+          boxH = 1.5;
+          cy = 0.75;
           break;
       }
       e.box.setFromCenterAndSize(
@@ -11383,6 +11770,7 @@ export class Level {
     color = 0x3ec8d8,
     roll?: number[], // per-node bank in DEGREES, one per point (0 where omitted)
     bank = 42, // auto-lean gain: how hard the deck rolls into its own turns
+    tex = "stone", // surface texture kind — The Descent runs on asphalt
   ): SlideRibbon {
     const r2v = (n: number): number => Math.round(n * 100) / 100;
     const o = pts[0];
@@ -11405,7 +11793,7 @@ export class Level {
       bank,
       vert: false, // a banked ROAD, not a trough — no pumping, no auto-copings
       color: "#" + color.toString(16).padStart(6, "0"),
-      tex: "stone",
+      tex,
     };
     const spine = this.buildVertRamp(comp);
     const path = vertRampPath(spine ?? [], false);
