@@ -1162,7 +1162,20 @@ async function openFieldStudioTool(): Promise<void> {
   });
   (window as unknown as { __game: Record<string, unknown> }).__game.fieldStudio = fieldStudio;
 }
-if (location.hash.toLowerCase().includes("puffstudio")) {
+// The WATER studio: fine-tunes the coast water live. #waterstudio on the URL.
+let waterStudio: { frame: (dt: number) => void } | null = null;
+async function openWaterStudioTool(): Promise<void> {
+  if (waterStudio) return;
+  const mod = await import("./waterstudio");
+  waterStudio = mod.openWaterStudio({
+    getWater: () => level.water,
+    onClose: () => (waterStudio = null),
+  });
+  (window as unknown as { __game: Record<string, unknown> }).__game.waterStudio = waterStudio;
+}
+if (location.hash.toLowerCase().includes("waterstudio")) {
+  setTimeout(() => void openWaterStudioTool(), 2500);
+} else if (location.hash.toLowerCase().includes("puffstudio")) {
   setTimeout(() => void openPuffStudioTool(), 2500);
 } else if (location.hash.toLowerCase().includes("swirlstudio")) {
   setTimeout(() => void openSwirlStudioTool(), 2500);
@@ -2038,9 +2051,18 @@ function frame(): void {
   swirls.update(dt, camera);
   fieldStudio?.frame(dt);
   fieldSwirls.update(dt, camera);
-  // coast water is camera-fed like the swirls: the far-ocean fan re-centres
-  // on the lens and the reflected-sky UVs need the eye position
-  level.water?.update(dt, camera);
+  waterStudio?.frame(dt);
+  // coast water: the geometry is FIXED in world space — the camera only
+  // drives visibility and the reflection viewing direction. The reflection
+  // source is the ACTUAL level skybox, so hand it the active sky art (a
+  // string compare per frame; reloads only when the sky really changes).
+  if (level.water) {
+    level.water.setSkyUrl(
+      import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
+      SKY_PRESETS[activeSky].fog,
+    );
+    level.water.update(dt, camera);
+  }
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);

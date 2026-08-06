@@ -5723,12 +5723,29 @@ export class Level {
       this.root.add(sand);
       this.groundMeshes.push(sand);
     }
-    // the sea itself: far-ocean fan + nearshore ribbon + foam/swash/wet sand
+    // the sea itself: fixed world-space ocean chunks + the nearshore ribbon
+    // + foam/swash/wet sand. The beach height function is shared with the
+    // sand ribbon above, so clipping, swash and wet sand land EXACTLY on it.
+    const beachHeight = (x: number, z: number): number => {
+      const dx = x - lc.x;
+      const dz = z - lc.z;
+      const a = dx * Rv.x + dz * Rv.z;
+      const s = THREE.MathUtils.clamp(dx * D.x + dz * D.z, -95, 95);
+      const aSh = shoreA(s);
+      const dIn = aSh - a;
+      let h = 0.15 + (dIn > 0 ? dIn * 0.055 : dIn * 0.13);
+      const span = aSh - inlandA(s);
+      const f = span > 0 ? dIn / span : 0;
+      h = THREE.MathUtils.lerp(h, lotTop - 0.12, THREE.MathUtils.smoothstep(f, 0.55, 1));
+      return h;
+    };
     this.water = new CoastWater({
       shore,
       seaLevel: 0,
       shoreDirX: -Rv.x,
       shoreDirZ: -Rv.z,
+      course: this.lanePts.map((q) => ({ x: q.x, z: q.z })),
+      terrainHeight: beachHeight,
     });
     this.root.add(this.water.group);
     // palms: a lean trunk and a whorl of drooping fronds, PS1 cheap
