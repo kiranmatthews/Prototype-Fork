@@ -2384,6 +2384,7 @@ export class Level {
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
     this.placeComboOrb(); // combo-run orb, the other side of the racing line
     this.bakeDecor(); // any batched decor the builder didn't flush itself
+    if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.clearPlayFog(); // ...and the course you run on comes back out of it
   }
@@ -3956,6 +3957,7 @@ export class Level {
   // The Descent's road spine, kept for the oncoming cars to drive along.
   private roadRibbon: SlideRibbon | null = null;
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
+  private noFogLevel = false; // coast: fog is stripped from everything but the sea
   // arc length to each lane point, so "how far along the course" is metres
   private laneArc: number[] = [];
   get laneActive(): boolean {
@@ -4992,6 +4994,7 @@ export class Level {
     this.batchDecor = true;
     this.killY = -10; // the bay is the pit: a few metres under the surface
     this.skyPreset = "coast"; // the beach painting, horizon pinned to sea level
+    this.noFogLevel = true; // only the SEA fades — the world stays crisp (stripFog)
     this.theme = {
       skyTop: "#3f8fd8",
       skyBottom: "#eaf6fa", // bright noon haze over open water
@@ -5001,7 +5004,7 @@ export class Level {
       stars: false,
       fog: 0xdfeef2,
       fogNear: 110,
-      fogFar: 560, // aspirational: the sky preset caps this
+      fogFar: 950, // sea-only haze: the level itself is fog-exempt (see stripFog)
       hemiSky: 0xd8eef8,
       hemiGround: 0x7a9a88, // sand + sea bounce
       hemiI: 1.15,
@@ -5310,8 +5313,15 @@ export class Level {
       color: 0x7c6f58,
       side: THREE.DoubleSide,
     });
+    // FOG-EXEMPT LEVEL (see stripFog): the two backdrop bands that USED to be
+    // painted by fog now carry their haze in their own colours — mist is the
+    // ridge colour pulled 62% toward the fog tint, far-crag 35%.
     const mistMat = new THREE.MeshLambertMaterial({
-      color: 0x6e7a88,
+      color: 0xb4c2ca, // 0x6e7a88 hazed toward 0xdfeef2
+      side: THREE.DoubleSide,
+    });
+    const cragFarMat = new THREE.MeshLambertMaterial({
+      color: 0x939892, // 0x6a6a5e hazed toward 0xdfeef2
       side: THREE.DoubleSide,
     });
     const deckY = (sArc: number): number => F(sArc / road.len, 0, 0).y;
@@ -5338,7 +5348,7 @@ export class Level {
         (sArc) => hillL(sArc),
         () => -(W / 2 + 74),
         (sArc) => hillL(sArc) * 2.8 + 40,
-        cragMat, false, "crag", 24);
+        cragFarMat, false, "crag", 24);
       // the sea side: a 1.2m lip of scrub is ALL the mercy there is
       strip(s0, s1,
         () => W / 2 + 0.05, () => 0.05,
@@ -5745,25 +5755,43 @@ export class Level {
     // tarmac; the seaward rows dive under the sea so the shoreline is a
     // real geometric intersection.
     const shore: ShoreSample[] = [];
-    const NSHORE = 34;
-    const shoreA = (s: number): number => 44 + 12 * Math.pow(s / 95, 2);
+    // A ~330m sweep: tucked behind the car park on one side, running far out
+    // past the point on the other, with sine lobes so the waterline bows in
+    // and out like a real bay beach instead of one clean parabola.
+    const NSHORE = 48;
+    const BEACH_S0 = -120;
+    const BEACH_S1 = 210;
     const inlandA = (s: number): number =>
       17 + 14 * (1 - THREE.MathUtils.smoothstep(Math.abs(s), 26, 34)); // 31 beside the lot: tucks 2m UNDER its slab, no sliver of sea
+    const shoreA = (s: number): number => {
+      const open =
+        46 +
+        16 * Math.pow((s - 45) / 150, 2) +
+        7 * Math.sin(s * 0.045 + 0.8) +
+        4 * Math.sin(s * 0.021);
+      // the wings taper back to a sliver so the sand ends in a natural point
+      // dipping under the sea, not a straight cut
+      const pinch = Math.min(
+        THREE.MathUtils.smoothstep(s - BEACH_S0, 4, 42),
+        THREE.MathUtils.smoothstep(BEACH_S1 - s, 4, 42),
+      );
+      return THREE.MathUtils.lerp(inlandA(s) + 2.5, open, pinch);
+    };
     for (let i = 0; i < NSHORE; i++) {
-      const s = -95 + (190 * i) / (NSHORE - 1);
+      const s = BEACH_S0 + ((BEACH_S1 - BEACH_S0) * i) / (NSHORE - 1);
       const p = lotAt(shoreA(s), s);
       shore.push({ x: p.x, z: p.z, sx: Rv.x, sz: Rv.z, beachSlope: 0.055, bedSlope: 0.13 });
     }
     {
-      const rows = 7;
+      const rows = 9;
       const posArr: number[] = [];
       const idx: number[] = [];
       for (let i = 0; i < NSHORE; i++) {
-        const s = -95 + (190 * i) / (NSHORE - 1);
+        const s = BEACH_S0 + ((BEACH_S1 - BEACH_S0) * i) / (NSHORE - 1);
         const aSh = shoreA(s);
         const span = aSh - inlandA(s);
         for (let r = 0; r < rows; r++) {
-          const dIn = r < 5 ? span * (1 - r / 4.4) : r === 5 ? -4 : -9;
+          const dIn = r < 7 ? span * (1 - r / 6.4) : r === 7 ? -5 : -11;
           const p = lotAt(aSh - dIn, s);
           let h = 0.15 + (dIn > 0 ? dIn * 0.055 : dIn * 0.13);
           const f = span > 0 ? dIn / span : 0;
@@ -5805,7 +5833,7 @@ export class Level {
       const dx = x - lc.x;
       const dz = z - lc.z;
       const a = dx * Rv.x + dz * Rv.z;
-      const s = THREE.MathUtils.clamp(dx * D.x + dz * D.z, -95, 95);
+      const s = THREE.MathUtils.clamp(dx * D.x + dz * D.z, -120, 210);
       const aSh = shoreA(s);
       const dIn = aSh - a;
       let h = 0.15 + (dIn > 0 ? dIn * 0.055 : dIn * 0.13);
@@ -6795,6 +6823,29 @@ export class Level {
 
   // Build-time ground probe: what the terrain actually is at (x, z). Used to
   // seat crates/enemies/checkpoints on wavy floors. Falls back to the given y.
+  // COAST FOG POLICY: everything the player can reach or ride past stays
+  // crisp at any distance — only the sea (the water group) keeps scene fog
+  // and melts into the horizon. Runs after the final decor bake so batched
+  // meshes are covered too.
+  private stripFog(): void {
+    const keep = this.water ? this.water.group : null;
+    this.root.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!(mesh as unknown as { isMesh?: boolean }).isMesh) return;
+      for (let p: THREE.Object3D | null = o; p; p = p.parent)
+        if (p === keep) return; // the sea is exactly the part that SHOULD fog
+      const mats = Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material];
+      for (const m of mats) {
+        const fm = m as THREE.Material & { fog?: boolean };
+        if (fm.fog === false) continue;
+        fm.fog = false;
+        fm.needsUpdate = true;
+      }
+    });
+  }
+
   private floorY(x: number, z: number, fallback: number): number {
     const ray = new THREE.Raycaster(
       new THREE.Vector3(x, fallback + 6, z),

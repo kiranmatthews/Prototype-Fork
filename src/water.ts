@@ -526,7 +526,6 @@ export class CoastWater {
   private phaseLenMax = -1;
 
   constructor(opts: CoastWaterOpts) {
-    void opts.course;
     this.seaLevel = opts.seaLevel;
     this.dirX = opts.shoreDirX;
     this.dirZ = opts.shoreDirZ;
@@ -649,7 +648,107 @@ export class CoastWater {
       side: THREE.DoubleSide,
     });
     this.wet = gridMesh(NB, 2, wetMat, "wet sand", 4);
+    this.buildFiller(opts.course);
     this.group.add(this.mesh, this.foam, this.swash, this.wet);
+    if (this.filler) this.group.add(this.filler);
+  }
+
+  // THE BAY FLOOR: one coarse animated sheet 0.55m below sea level spanning
+  // the whole course + margin. A coastline-parameterized lattice cannot wrap
+  // a concave bay without folding onto itself, so everywhere it doesn't
+  // reach — under the road's sea cliffs, the far side of the bay, beyond the
+  // lattice's outer row — this sheet IS the sea. Its swell is clamped well
+  // under the 0.55m gap so it can never poke through the real surface, and
+  // it shares the water shader so the hue always matches. Anywhere it runs
+  // beneath terrain it is simply hidden by depth.
+  private filler: THREE.Mesh | null = null;
+  private buildFiller(course: { x: number; z: number }[]): void {
+    if (!course || course.length === 0) return;
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minZ = Infinity;
+    let maxZ = -Infinity;
+    for (const p of course) {
+      minX = Math.min(minX, p.x);
+      maxX = Math.max(maxX, p.x);
+      minZ = Math.min(minZ, p.z);
+      maxZ = Math.max(maxZ, p.z);
+    }
+    const M = 800; // reach: past the far plane from anywhere on the course
+    minX -= M;
+    maxX += M;
+    minZ -= M;
+    maxZ += M;
+    const CELL = 80;
+    const cols = Math.ceil((maxX - minX) / CELL) + 1;
+    const rows = Math.ceil((maxZ - minZ) / CELL) + 1;
+    const n = cols * rows;
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(n * 3);
+    const nrm = new Float32Array(n * 3);
+    const rfl = new Float32Array(n * 3);
+    const dat = new Float32Array(n * 3);
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++) {
+        const k = r * cols + c;
+        pos[k * 3] = minX + c * CELL;
+        pos[k * 3 + 1] = this.seaLevel - 0.55;
+        pos[k * 3 + 2] = minZ + r * CELL;
+        nrm[k * 3 + 1] = 1;
+        rfl[k * 3 + 1] = 1;
+        dat[k * 3] = 30; // deep: no shallow tint
+        dat[k * 3 + 2] = 500;
+      }
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("normal", new THREE.BufferAttribute(nrm, 3));
+    geo.setAttribute("aRefl", new THREE.BufferAttribute(rfl, 3));
+    geo.setAttribute("aData", new THREE.BufferAttribute(dat, 3));
+    const idx: number[] = [];
+    for (let r = 0; r < rows - 1; r++)
+      for (let c = 0; c < cols - 1; c++) {
+        const k = r * cols + c;
+        idx.push(k, k + cols, k + 1, k + 1, k + cols, k + cols + 1);
+      }
+    geo.setIndex(idx);
+    this.filler = new THREE.Mesh(geo, this.mat);
+    this.filler.name = "bay floor";
+    this.filler.frustumCulled = false;
+    this.stats.verts += n;
+    this.stats.tris += idx.length / 3;
+  }
+
+  // the bay floor rides the PRIMARY swell only, clamped under its 0.55m gap
+  private updateFiller(): void {
+    if (!this.filler) return;
+    const t = this.time;
+    const w = this.waves[0];
+    const amp = Math.min(w.a * 0.75, 0.5);
+    const geo = this.filler.geometry;
+    const pos = geo.getAttribute("position") as THREE.BufferAttribute;
+    const rfl = geo.getAttribute("aRefl") as THREE.BufferAttribute;
+    const dat = geo.getAttribute("aData") as THREE.BufferAttribute;
+    const pa = pos.array as Float32Array;
+    const ra = rfl.array as Float32Array;
+    const da = dat.array as Float32Array;
+    const n = pos.count;
+    for (let k = 0; k < n; k++) {
+      const x = pa[k * 3];
+      const z = pa[k * 3 + 2];
+      const ph = w.kx * x + w.kz * z - w.spd * t + w.ph;
+      const h = amp * tsin(ph);
+      pa[k * 3 + 1] = this.seaLevel - 0.55 + h;
+      const c = amp * tcos(ph) * 0.25; // hard-flattened: this sheet reads far away
+      const rdx = c * w.kx;
+      const rdz = c * w.kz;
+      const rl = Math.hypot(rdx, 1, rdz);
+      ra[k * 3] = -rdx / rl;
+      ra[k * 3 + 1] = 1 / rl;
+      ra[k * 3 + 2] = -rdz / rl;
+      da[k * 3 + 1] = h;
+    }
+    pos.needsUpdate = true;
+    rfl.needsUpdate = true;
+    dat.needsUpdate = true;
   }
 
   // Densify the authored beach spline (~1.7m alongshore), derive REAL local
@@ -1129,9 +1228,11 @@ export class CoastWater {
       this.sky.setNearest(wantNearest);
 
     this.mesh.visible = this.debug.water;
+    if (this.filler) this.filler.visible = this.debug.water;
     if (this.debug.water) {
       this.updateEdge(dt);
       this.updateLattice();
+      this.updateFiller();
     }
     this.foam.visible = this.debug.foam;
     this.swash.visible = this.debug.swash;

@@ -220,6 +220,11 @@ interface SkyPresetDef {
   // wall, so from 400m up you look DOWN at the sea line; at beach height the
   // drop vanishes and it behaves like every other sky.
   seaHorizon?: boolean;
+  // Play-mode draw distance override (default 400). The coast pushes it way
+  // out so the bay's water is actually DRAWN when you look down from the
+  // road 430m up — with fog stripped off the level itself (level.ts), only
+  // the sea fades, so the long view stays crisp.
+  farPlane?: number;
 }
 const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
   // Bright and open: neutral key, cool skylight, air you can see a long way
@@ -306,7 +311,7 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     file: "sky-coast.png",
     label: "coast",
     fog: 0xdfeef2,
-    fogFarCap: 340,
+    fogFarCap: 950, // only the SEA fogs on the coast — see the fog policy in level.ts
     sunTint: 0xfff4e0,
     sunK: 0.25,
     sunMul: 1.15,
@@ -325,6 +330,7 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     imgH: 941,
     horizonPx: 626, // the artist's own call for this painting
     seaHorizon: true,
+    farPlane: 1000,
   },
 };
 
@@ -690,6 +696,16 @@ function applyTheme(): void {
   // editor view: no fog at all, so distant geometry stays crisp and visible
   scene.fog = editorViewActive ? null : new THREE.Fog(P.fog, fogNear, fogFar);
   scene.background = new THREE.Color(P.fog);
+  // per-preset draw distance (the editor owns the far plane while editing)
+  if (!editorViewActive) {
+    const far = P.farPlane ?? 400;
+    if (camera.far !== far) {
+      camera.far = far;
+      camera.updateProjectionMatrix();
+      camera2.far = far;
+      camera2.updateProjectionMatrix();
+    }
+  }
 
   const tint = (c: THREE.Color, hex: number, k: number): THREE.Color =>
     k > 0 ? c.lerp(new THREE.Color(hex), k) : c;
@@ -723,7 +739,10 @@ function applyTheme(): void {
       mistMat.map = layers.mist;
       mistMat.needsUpdate = true;
     }
-    skyMist.visible = !LITE;
+    // seaHorizon presets skip the mist layer: it repaints the below-horizon
+    // band IN FRONT of everything past the dome radius, and the coast now
+    // draws REAL water out to 1000m that must not be painted over.
+    skyMist.visible = !LITE && !P.seaHorizon;
     // cached textures are shared across levels — never dispose them here; only
     // the gradient we painted ourselves is ours to free
     if (proceduralSky) {
