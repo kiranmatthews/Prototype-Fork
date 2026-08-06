@@ -28,6 +28,7 @@ import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS } from "./swirls";
+import { CoastWater, type ShoreSample } from "./water";
 
 const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { wumpaMesh, WUMPA_SIZE } from "./wumpa";
@@ -3962,6 +3963,7 @@ export class Level {
   private lanePts: { x: number; y: number; z: number }[] = [];
   // The Descent's road spine, kept for the oncoming cars to drive along.
   private roadRibbon: SlideRibbon | null = null;
+  water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
   // arc length to each lane point, so "how far along the course" is metres
   private laneArc: number[] = [];
   get laneActive(): boolean {
@@ -5490,18 +5492,10 @@ export class Level {
     });
 
     // ---- the bay itself --------------------------------------------------
-    // One vast water plane at true sea level. Every sea-side terrain face is
+    // No flat plane any more: the sea is the CoastWater system (src/water.ts)
+    // built at the arrival — a camera-following far-ocean fan plus the
+    // nearshore ribbon at the beach. Every sea-side terrain face is still
     // pinned below y=0, so the coastline draws itself where rock meets water.
-    const midO = F(0.5, 0, 0);
-    const ocean = new THREE.Mesh(
-      new THREE.PlaneGeometry(7000, 7000),
-      // the emissive floor keeps the water DEEP blue through 400m of haze —
-      // pure Lambert fogged out to grey and the bay stopped reading at all
-      new THREE.MeshLambertMaterial({ color: 0x2a6a8e, emissive: 0x123a52 }),
-    );
-    ocean.rotation.x = -Math.PI / 2;
-    ocean.position.set(midO.x + 600, 0, midO.z);
-    this.root.add(ocean);
 
     // ---- islands in the bay ----------------------------------------------
     // No far shore: the draw distance is 400m and the fog owns everything
@@ -5669,33 +5663,74 @@ export class Level {
       group.rotation.y = yawEnd + (rnd() - 0.5) * 0.12;
       this.root.add(group);
     }
-    // the sand: a wide sheet tilted just enough to slip under the water line
-    const sandGeo = new THREE.PlaneGeometry(46, 120);
-    sandGeo.rotateX(-Math.PI / 2);
-    sandGeo.rotateZ(-0.08);
-    const sand = new THREE.Mesh(
-      sandGeo,
-      new THREE.MeshLambertMaterial({ color: 0xe2d0a4 }),
-    );
-    const sc = lotAt(51, 8);
-    sand.position.set(sc.x, 1.35, sc.z);
-    sand.rotation.y = yawEnd;
-    sand.name = "beach sand";
-    this.root.add(sand);
-    this.groundMeshes.push(sand);
-    // a line of surf where the sand crosses the surface
-    const foamGeo = new THREE.BoxGeometry(0.9, 0.06, 120);
-    const foamMat = new THREE.MeshLambertMaterial({
-      color: 0xf4f4ea,
-      emissive: 0x3a3a34,
+    // ---- THE BEACH, expanded -------------------------------------------
+    // A ~190m crescent of sand built from the same shoreline spline the
+    // water system runs on, so the swash, wet sand and moving waterline all
+    // land exactly on this surface. The inland edge climbs to meet the
+    // tarmac; the seaward rows dive under the sea so the shoreline is a
+    // real geometric intersection.
+    const shore: ShoreSample[] = [];
+    const NSHORE = 34;
+    const shoreA = (s: number): number => 44 + 12 * Math.pow(s / 95, 2);
+    const inlandA = (s: number): number =>
+      17 + 14 * (1 - THREE.MathUtils.smoothstep(Math.abs(s), 26, 34)); // 31 beside the lot: tucks 2m UNDER its slab, no sliver of sea
+    for (let i = 0; i < NSHORE; i++) {
+      const s = -95 + (190 * i) / (NSHORE - 1);
+      const p = lotAt(shoreA(s), s);
+      shore.push({ x: p.x, z: p.z, sx: Rv.x, sz: Rv.z, beachSlope: 0.055, bedSlope: 0.13 });
+    }
+    {
+      const rows = 7;
+      const posArr: number[] = [];
+      const idx: number[] = [];
+      for (let i = 0; i < NSHORE; i++) {
+        const s = -95 + (190 * i) / (NSHORE - 1);
+        const aSh = shoreA(s);
+        const span = aSh - inlandA(s);
+        for (let r = 0; r < rows; r++) {
+          const dIn = r < 5 ? span * (1 - r / 4.4) : r === 5 ? -4 : -9;
+          const p = lotAt(aSh - dIn, s);
+          let h = 0.15 + (dIn > 0 ? dIn * 0.055 : dIn * 0.13);
+          const f = span > 0 ? dIn / span : 0;
+          h = THREE.MathUtils.lerp(h, lotTop - 0.12, THREE.MathUtils.smoothstep(f, 0.55, 1));
+          posArr.push(p.x, h, p.z);
+        }
+      }
+      for (let i = 0; i < NSHORE - 1; i++)
+        for (let r = 0; r < rows - 1; r++) {
+          const k = i * rows + r;
+          idx.push(k, k + rows, k + 1, k + 1, k + rows, k + rows + 1);
+        }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(posArr), 3));
+      g.setIndex(idx);
+      g.computeVertexNormals();
+      // winding depends on the lot frame's handedness — a down-facing beach
+      // is invisible to lighting AND to the ground raycast (you fall through)
+      const nrm = g.getAttribute("normal") as THREE.BufferAttribute;
+      if (nrm.getY(0) < 0) {
+        const ia = g.getIndex()!.array as Uint32Array;
+        for (let k = 0; k < ia.length; k += 3) {
+          const tmp = ia[k + 1];
+          ia[k + 1] = ia[k + 2];
+          ia[k + 2] = tmp;
+        }
+        g.getIndex()!.needsUpdate = true;
+        g.computeVertexNormals();
+      }
+      const sand = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: 0xe2d0a4 }));
+      sand.name = "beach sand";
+      this.root.add(sand);
+      this.groundMeshes.push(sand);
+    }
+    // the sea itself: far-ocean fan + nearshore ribbon + foam/swash/wet sand
+    this.water = new CoastWater({
+      shore,
+      seaLevel: 0,
+      shoreDirX: -Rv.x,
+      shoreDirZ: -Rv.z,
     });
-    const fp = lotAt(51 + 16.9, 8);
-    this.putDecor("surf line", foamGeo, foamMat,
-      new THREE.Matrix4().compose(
-        new THREE.Vector3(fp.x, 0.06, fp.z),
-        yawQ,
-        new THREE.Vector3(1, 1, 1),
-      ));
+    this.root.add(this.water.group);
     // palms: a lean trunk and a whorl of drooping fronds, PS1 cheap
     const palmTrunkGeo = new THREE.CylinderGeometry(0.14, 0.26, 5.2, 5);
     const palmTrunkMat = new THREE.MeshLambertMaterial({ color: 0x8a6a44 });

@@ -2038,6 +2038,9 @@ function frame(): void {
   swirls.update(dt, camera);
   fieldStudio?.frame(dt);
   fieldSwirls.update(dt, camera);
+  // coast water is camera-fed like the swirls: the far-ocean fan re-centres
+  // on the lens and the reflected-sky UVs need the eye position
+  level.water?.update(dt, camera);
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
