@@ -458,6 +458,11 @@ export class Player {
   // pattern as slideLandClamp) so the descent can't trip the skate gate.
   slipping = false;
   private slipClamp = false;
+  // GREASY WHEELS: touching an oil slick (or skating an icy plank) kills the
+  // contact patch — carve and brake barely bite while this runs down. The
+  // linger matters: a 3m patch crossed at 20 u/s is only a few frames of
+  // actual contact, so without it the slick would never register at speed.
+  private greaseT = 0;
   // Momentum exits (grind jumps, slide jumps) keep their speed in the air:
   // footAir's direct-drive zeroing never applies until the next touchdown.
   private airMomentum = false;
@@ -1209,6 +1214,7 @@ export class Player {
     this.alignNormal.set(0, 1, 0);
     this.slipping = false;
     this.slipClamp = false;
+    this.greaseT = 0;
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     // a camera lane owns the course frame: spawn facing straight down it
@@ -2665,6 +2671,10 @@ export class Player {
         // follow it — carrying your speed with it (a carve, not a brake), so
         // forward, sideways, and back are all first-class. X accelerates along
         // the heading; release everything and you coast down to your feet.
+        if (this.grounded && this.groundHit && this.groundHit.slippy)
+          this.greaseT = 0.35;
+        else this.greaseT = Math.max(0, this.greaseT - dt);
+        const slick = this.greaseT > 0 ? 0.22 : 1; // greasy wheels: see greaseT
         const rx = this.rawInput.moveX;
         const ry = this.manualing !== 0 ? 0 : this.rawInput.moveY;
         // (during a MANUAL, up/down is the balance pole ONLY — no accel, no
@@ -2713,7 +2723,7 @@ export class Player {
             }
             const s = Math.abs(this.speed);
             const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
-            this.speed = Math.max(0, this.speed - TUNING.turnaround * ease * dt);
+            this.speed = Math.max(0, this.speed - TUNING.turnaround * ease * slick * dt);
             braking = true;
             // The stick is still yanked BACKWARD, so once you're under walking
             // pace refresh the post-brake lock: walk/sidestep stay dead (no
@@ -2730,7 +2740,7 @@ export class Player {
             const grip =
               TUNING.carveGrip *
               THREE.MathUtils.clamp(1 + (speedFrac - 1) * TUNING.carveGripRatio, 0.5, 2);
-            const maxTurn = THREE.MathUtils.degToRad(grip) * dt;
+            const maxTurn = THREE.MathUtils.degToRad(grip) * slick * dt;
             const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
             const c = Math.cos(turn);
             const s = Math.sin(turn);
@@ -6538,6 +6548,16 @@ export class Player {
         // fall through and take the hit below.
       }
       if (this.playerBox.intersectsBox(e.box)) {
+        if (e.kind === 'car' && this.pos.y > e.box.max.y - 0.6) {
+          // ROOF GRAZE: the top of traffic is safe. A falling touch skips you
+          // off the roof with a little pop instead of killing you.
+          if (this.vVel < 0 && !this.grounded) {
+            this.vVel = Math.max(6, -this.vVel * 0.45);
+            this.pos.y = e.box.max.y + 0.02;
+            sfx.play('crateBounce', 0.5, 1.15);
+          }
+          continue;
+        }
         if ((this.uberTimer > 0 || this.sliding) && e.meleeKill) {
           // Uber plows through; Crash 3 rules: the slide takes out enemies too.
           level.killEnemy(e);

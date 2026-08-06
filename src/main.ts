@@ -300,7 +300,7 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     // painted night reference has no moon in it either
   },
   // The Descent's own painting: a daytime tropical bay (islands, cumulus,
-  // turquoise sea) with its horizon on row 626 of 949 — and the seaHorizon
+  // turquoise sea) with its horizon on row 626 — and the seaHorizon
   // treatment, so that painted horizon sits at the WATER, not at eye level.
   coast: {
     file: "sky-coast.png",
@@ -323,7 +323,7 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     stars: false,
     sunHex: "#fffdf2",
     imgH: 941,
-    horizonPx: 623, // measured off the delivered painting (island bases 614-625)
+    horizonPx: 626, // the artist's own call for this painting
     seaHorizon: true,
   },
 };
@@ -438,7 +438,12 @@ function updateSeaHorizon(): void {
   const P = SKY_PRESETS[activeSky];
   if (!P.seaHorizon) return;
   const hv = presetHorizonV(activeSky);
-  const drop = Math.atan2(Math.max(0, camera.position.y), 370) / Math.PI;
+  // Height is CLAMPED: the true angle from the mountain road (430m up) shoved
+  // the painting more than half a texture down and the backdrop fell apart.
+  // Near the water the formula still pins the painted waterline to the sea
+  // exactly; any higher just holds that beach-level framing.
+  const drop =
+    Math.atan2(Math.min(12, Math.max(0, camera.position.y)), 370) / Math.PI;
   const offY = hv - 0.5 * SKY_K + drop * SKY_K;
   const bg = (sky.material as THREE.MeshBasicMaterial).map;
   if (bg) bg.offset.y = offY;

@@ -5527,24 +5527,31 @@ export class Level {
     // player's own lane, faster, each closing on a slower partner ahead of
     // it — the pass plays out right in front of you and YOUR lane is the
     // one that is briefly not yours.
+    // Cars build 30% OVERSIZED, baked into the geometry — group scale would
+    // not survive resetEnemyVisual, which snaps every foe back to scale 1.
+    // The enemy box in updateEnemies ("car" case) matches this factor.
+    const CAR_S = 1.3;
     const makeCar = (col: number): { group: THREE.Group; body: THREE.Mesh } => {
       const group = new THREE.Group();
       const body = new THREE.Mesh(
-        new THREE.BoxGeometry(2.1, 0.75, 4.2),
+        new THREE.BoxGeometry(2.1 * CAR_S, 0.75 * CAR_S, 4.2 * CAR_S),
         new THREE.MeshLambertMaterial({ color: col }),
       );
-      body.position.y = 0.75;
+      body.position.y = 0.75 * CAR_S;
       group.add(body);
       const cabin = new THREE.Mesh(
-        new THREE.BoxGeometry(1.7, 0.62, 2.0),
+        new THREE.BoxGeometry(1.7 * CAR_S, 0.62 * CAR_S, 2.0 * CAR_S),
         new THREE.MeshLambertMaterial({ color: 0xcfe0ea }),
       );
-      cabin.position.set(0, 1.35, 0.25);
+      cabin.position.set(0, 1.35 * CAR_S, 0.25 * CAR_S);
       group.add(cabin);
       const wheelMat = new THREE.MeshLambertMaterial({ color: 0x1c1c20 });
       for (const [wx, wz] of [[-1, -1.35], [1, -1.35], [-1, 1.35], [1, 1.35]] as const) {
-        const wheel = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.62, 0.62), wheelMat);
-        wheel.position.set(wx * 1.02, 0.31, wz);
+        const wheel = new THREE.Mesh(
+          new THREE.BoxGeometry(0.34 * CAR_S, 0.62 * CAR_S, 0.62 * CAR_S),
+          wheelMat,
+        );
+        wheel.position.set(wx * 1.02 * CAR_S, 0.31 * CAR_S, wz * CAR_S);
         group.add(wheel);
       }
       const lampMat = new THREE.MeshLambertMaterial({
@@ -5552,8 +5559,11 @@ export class Level {
         emissive: 0x8a7a30,
       });
       for (const lx of [-0.6, 0.6]) {
-        const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.22, 0.1), lampMat);
-        lamp.position.set(lx, 0.82, -2.12);
+        const lamp = new THREE.Mesh(
+          new THREE.BoxGeometry(0.4 * CAR_S, 0.22 * CAR_S, 0.1 * CAR_S),
+          lampMat,
+        );
+        lamp.position.set(lx * CAR_S, 0.82 * CAR_S, -2.12 * CAR_S);
         group.add(lamp);
       }
       return { group, body };
@@ -5588,6 +5598,106 @@ export class Level {
         spinRecoil: false,
       });
     }
+
+    // ---- road furniture: crates, nitros, oil slicks ----------------------
+    // Everything smashable or lethal lives on the strips traffic never uses
+    // (the lanes run at cross ±5.6): the centre line and the two shoulders.
+    // Wood crates are the fun — a smash-speed roll pops straight through —
+    // and every nitro is avoidable on purpose: green means DON'T, and it is
+    // never parked where dodging a car would push you into one.
+    const put = (
+      t: number,
+      cross: number,
+      kind?: "nitro" | "bouncy",
+      stack = 1,
+    ): void => {
+      const p = F(t, cross, 0);
+      for (let i = 0; i < stack; i++) this.crate(p.x, p.y + i * 0.96, p.z, kind);
+    };
+    // wood: singles, pairs, walls-of-three, shoulder runs, little towers
+    put(0.05, -1.1); put(0.05, 0); put(0.05, 1.1); // opening wall: blast through it
+    put(0.09, -8.4);
+    put(0.12, 8.5, undefined, 2);
+    put(0.16, -0.6); put(0.16, 0.6);
+    put(0.2, -8.6); put(0.204, -8.6); put(0.208, -8.6); // shoulder run
+    put(0.24, 0.3);
+    put(0.275, 8.1); put(0.275, 9.2);
+    put(0.31, -8.3, "bouncy"); // arrow crate: launch clean over the next pass
+    put(0.34, 0, undefined, 2);
+    put(0.38, 8.3);
+    put(0.42, -1.1); put(0.42, 0); put(0.42, 1.1);
+    put(0.46, -8.5, undefined, 2);
+    put(0.52, 8.4, "bouncy");
+    put(0.55, -0.6); put(0.55, 0.6);
+    put(0.59, -8.3);
+    put(0.63, 0.5, undefined, 3); // the tower
+    put(0.67, 8.5); put(0.674, 8.5); put(0.678, 8.5);
+    put(0.71, -0.4);
+    put(0.75, -8.1); put(0.75, -9.2);
+    put(0.79, 0, "bouncy"); // centre-line arrow: big air down the home hill
+    put(0.83, 8.4, undefined, 2);
+    put(0.87, -1.1); put(0.87, 0); put(0.87, 1.1);
+    put(0.9, -8.4);
+    put(0.925, -0.6); put(0.925, 0.6);
+    // nitros: landmines with lots of warning, all on the safe strips
+    put(0.07, 1.8, "nitro");
+    put(0.11, -1.5, "nitro");
+    put(0.145, 8.7, "nitro");
+    put(0.19, 0.4, "nitro");
+    put(0.235, -8.5, "nitro");
+    put(0.29, 2, "nitro");
+    put(0.36, -1.8, "nitro");
+    put(0.44, 8.8, "nitro");
+    put(0.5, -0.6, "nitro");
+    put(0.57, 1.4, "nitro");
+    put(0.65, -8.6, "nitro");
+    put(0.73, 0.8, "nitro");
+    put(0.81, -1.9, "nitro");
+    put(0.885, 8.4, "nitro");
+    // oil slicks: dark rainbow-sheen blobs smeared down the tarmac — ride one
+    // and the wheels go greasy (steering and brakes cut, see the slippy
+    // handling player-side). Some sit in the traffic lanes: dodging a car
+    // through an oil patch is the intended chaos.
+    const oilMat = new THREE.MeshLambertMaterial({
+      color: 0x0d0f13,
+      emissive: 0x14202a, // cold blue-teal sheen: wet oil, not purple carpet
+    });
+    const slickAt = (t: number, cross: number, r: number): void => {
+      const c = F(t, cross, 0);
+      const lat = F(t, cross + 1.2, 0).sub(F(t, cross - 1.2, 0)).normalize();
+      const fwd = F(Math.min(0.999, t + 0.003), cross, 0)
+        .sub(F(Math.max(0, t - 0.003), cross, 0))
+        .normalize();
+      const nrm = new THREE.Vector3().crossVectors(fwd, lat);
+      if (nrm.y < 0) nrm.negate();
+      nrm.normalize();
+      const geo = new THREE.CircleGeometry(1, 16);
+      const posA = geo.getAttribute("position") as THREE.BufferAttribute;
+      let k1 = 1; // ring seam: first and last ring verts must jitter as one
+      for (let i = 1; i < posA.count; i++) {
+        const k = i === posA.count - 1 ? k1 : 0.72 + rnd() * 0.45;
+        if (i === 1) k1 = k;
+        posA.setXY(i, posA.getX(i) * k, posA.getY(i) * k);
+      }
+      geo.rotateX(-Math.PI / 2); // wobbly PS1 blob, facing up
+      const mesh = new THREE.Mesh(geo, oilMat);
+      const bz = new THREE.Vector3().crossVectors(lat, nrm).normalize();
+      mesh.quaternion.setFromRotationMatrix(
+        new THREE.Matrix4().makeBasis(lat, nrm, bz),
+      );
+      mesh.scale.set(r, 1, r * 1.9); // smeared along the direction of travel
+      mesh.position.copy(c).addScaledVector(nrm, 0.06);
+      mesh.name = "oil slick";
+      mesh.userData.slippy = true;
+      this.root.add(mesh);
+      this.groundMeshes.push(mesh);
+    };
+    const slicks: [number, number, number][] = [
+      [0.065, -5.6, 1.9], [0.13, 0, 2.1], [0.22, 5, 1.8], [0.3, -2.2, 2],
+      [0.415, 5.8, 2.2], [0.49, -5.2, 1.9], [0.61, 1.6, 2.1], [0.7, -5.8, 1.8],
+      [0.78, 3.4, 1.9], [0.86, -1.2, 2.1],
+    ];
+    for (const [st, sc, sr] of slicks) slickAt(st, sc, sr);
 
     // ---- pickups, checkpoints, the finish --------------------------------
     this.ribbonFruit(road, 0.03, 0.09, 8);
@@ -11078,14 +11188,16 @@ export class Level {
           break;
         case "car":
           this.carStep(e, dt);
-          // a car is a car: nothing kills it, everything about it hurts
+          // a car is a car: nothing kills it, everything about it hurts —
+          // except the roof (player.ts skims a top touch off with a pop).
+          // Dims match CAR_S in buildDescent's makeCar (30% oversized).
           e.spinKill = false;
           e.stompKill = false;
           e.meleeKill = false;
           e.touchHurt = true;
-          boxW = 2.7;
-          boxH = 1.5;
-          cy = 0.75;
+          boxW = 2.7 * 1.3;
+          boxH = 1.5 * 1.3;
+          cy = 0.75 * 1.3;
           break;
       }
       e.box.setFromCenterAndSize(
