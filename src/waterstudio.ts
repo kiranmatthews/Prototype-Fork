@@ -7,7 +7,7 @@
 import { CoastWater, WATER_DEFAULTS, type WaterParams } from "./water";
 import { el, sec, note, btn, sliderRow, injectStudioCss } from "./studiokit";
 
-const STORE = "waterStudioV2";
+const STORE = "waterStudioV3"; // v5 water: fresh spec defaults, old tunings retired
 
 interface Opts {
   getWater: () => CoastWater | null;
@@ -73,7 +73,13 @@ const GROUPS: { title: string; fields: Field[] }[] = [
     fields: [
       { key: "stableElev", label: "elevation", lo: 0.5, hi: 1, step: 0.005 },
       { key: "stableBias", label: "shore bias", lo: 0, hi: 1, step: 0.01 },
-      { key: "camInfluence", label: "camera pull", lo: 0, hi: 0.15, step: 0.005 },
+      {
+        key: "camInfluence",
+        label: "camera pull",
+        lo: 0,
+        hi: 0.15,
+        step: 0.005,
+      },
       { key: "uScale", label: "world U scale", lo: 0.05, hi: 2, step: 0.01 },
       { key: "vScale", label: "world V scale", lo: 0.1, hi: 2.5, step: 0.01 },
       { key: "distort", label: "distortion", lo: 0.3, hi: 4, step: 0.05 },
@@ -96,7 +102,13 @@ const GROUPS: { title: string; fields: Field[] }[] = [
     fields: [
       { key: "foamPhase", label: "foam phase", lo: 0, hi: 1, step: 0.01 },
       { key: "swashPhase", label: "swash phase", lo: 0, hi: 1, step: 0.01 },
-      { key: "swashRetreat", label: "retreat length", lo: 0.1, hi: 0.9, step: 0.01 },
+      {
+        key: "swashRetreat",
+        label: "retreat length",
+        lo: 0.1,
+        hi: 0.9,
+        step: 0.01,
+      },
       { key: "swashRunup", label: "run-up", lo: 0, hi: 10, step: 0.1 },
       { key: "wetDecay", label: "dry time", lo: 1, hi: 30, step: 0.5 },
       { key: "foamWidth", label: "foam width", lo: 0.2, hi: 2.5, step: 0.05 },
@@ -106,14 +118,19 @@ const GROUPS: { title: string; fields: Field[] }[] = [
   {
     title: "STRUCTURE (applies on level reload)",
     fields: [
-      { key: "alongDensity", label: "shore density", lo: 0.2, hi: 2, step: 0.05 },
+      {
+        key: "alongDensity",
+        label: "shore density",
+        lo: 0.2,
+        hi: 2,
+        step: 0.05,
+      },
     ],
   },
 ];
 
 const TOGGLES: { key: string; label: string; on: boolean }[] = [
-  { key: "far", label: "FAR", on: true },
-  { key: "near", label: "NEAR", on: true },
+  { key: "water", label: "WATER", on: true },
   { key: "foam", label: "FOAM", on: true },
   { key: "swash", label: "SWASH", on: true },
   { key: "wet", label: "WET", on: true },
@@ -209,7 +226,14 @@ export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
     w.debug.testAtlas = !w.debug.testAtlas;
     atlasBtn.classList.toggle("pst-on", w.debug.testAtlas);
   });
-  cmpRow.append(lockBtn, atlasBtn);
+  // §9: crunchy nearest-filtered reflection as an OPTION, not the default
+  const ps1Btn = btn("PS1 FILTER", () => {
+    const w = opts.getWater();
+    if (!w) return;
+    w.debug.nearest = !w.debug.nearest;
+    ps1Btn.classList.toggle("pst-on", w.debug.nearest);
+  });
+  cmpRow.append(lockBtn, atlasBtn, ps1Btn);
   panel.append(cmpRow);
 
   const stats = note("");
@@ -262,8 +286,8 @@ export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
       if (w && statT > 0.5) {
         statT = 0;
         stats.textContent =
-          `chunks ${w.stats.chunksVisible}/${w.stats.chunksTotal} · ` +
-          `near tris ${w.stats.nearTris} (${w.stats.clippedTris} clipped) · ` +
+          `one lattice: ${w.stats.verts} verts / ${w.stats.tris} tris (constant) · ` +
+          `edge d ${w.stats.edgeMin}..${w.stats.edgeMax}m · ` +
           `sky ${w.skyReady ? "proxy ready" : "loading"}`;
       }
     },
