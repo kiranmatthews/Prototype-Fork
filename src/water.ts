@@ -1,70 +1,82 @@
-// PS1-STYLE COAST WATER, v2 — FIXED WORLD-SPACE ARCHITECTURE.
+// PS1-STYLE COAST WATER, v3 — THE TEXTURED-REFLECTION ARCHITECTURE.
 //
-// The non-negotiable rule: the water, wave field, coastline and skybox
-// orientation are FIXED in level space. The camera only determines
-// visibility (frustum culling + LOD selection) and the physically correct
-// viewing direction used to sample the sky reflection.
+//   fixed world-space tessellation (density bands by distance from COAST)
+//   -> coherent procedural wave geometry (same set, every chunk, every frame)
+//   -> per-vertex reflection UVs (stable world-space nominal view direction)
+//   -> the ACTUAL skybox, palette-quantized, as a real texture sampled by the
+//      GPU ACROSS each polygon (the streaks live inside triangles, not at
+//      their corners)
+//   -> Gouraud vertex-colour modulation (troughs, shallows, grazing cyan)
+//   -> breaker foam + swash + wet sand as stages of ONE shore-wave event
 //
-//   fixed world-space ocean chunks
-//   -> absolute-coordinate directional waves
-//   -> authored world-space coastline
-//   -> coastline-relative shoaling waves (integrated phase, no sliding)
-//   -> terrain-clipped moving shoreline
-//   -> analytical procedural normals
-//   -> reflected camera-to-water direction
-//   -> fixed-orientation ACTUAL level skybox sample (quantized proxy)
-//   -> Gouraud-style vertex modulation
-//   -> separate breaker ribbons, terrain-following swash, wet-sand ribbon
+// The camera may frustum-cull fixed chunks and take the level's fog.
+// It must never change mesh resolution, wave count, update frequency,
+// reflection method or surface colour. The dominant reflection field is
+// anchored in WORLD space (camera influence defaults to zero) so walking
+// the beach never drags the pattern.
 //
-// Five independent renderable layers, each toggleable via `debug`:
-// FarOcean (chunks), Nearshore (ribbon), BreakerFoam, Swash, WetSand.
+// One deliberate deviation from the correction spec: reflection UVs come
+// from a LINEAR map of the reflected direction (u ~ R x skyRight, v ~ R.y)
+// instead of atan2/asin cylindrical coordinates. Near-vertical reflections
+// sit at the cylindrical map's pole, where azimuth (and so u) is unstable
+// and every triangle straddles the wrap seam the spec then has to patch by
+// duplicating vertices. The linear map is continuous everywhere — no seam,
+// no pole — and still samples the same actual-skybox texture across the
+// polygons with world-fixed offsets.
 import * as THREE from "three";
 
 const TAU = Math.PI * 2;
-// fixed sine table, PS1 style: every wave in the system reads this
 const SINE = new Float32Array(256);
 for (let i = 0; i < 256; i++) SINE[i] = Math.sin((i / 256) * TAU);
 const tsin = (p: number): number =>
   SINE[Math.floor((((p / TAU) % 1) + 1) * 256) & 255];
 const tcos = (p: number): number => tsin(p + Math.PI / 2);
+const clamp = THREE.MathUtils.clamp;
+const sstep = THREE.MathUtils.smoothstep;
+const lerp = THREE.MathUtils.lerp;
 
 // ---- tunables (the water studio drives this object live) -------------------
 export interface WaterParams {
-  // offshore wave set: one broad swell, a crossing swell, a medium wave and
-  // a small ripple. Directions are fixed offsets from the authored shore
-  // direction so the set stays coherent when a level rotates its coast.
   amp1: number; len1: number; spd1: number;
   amp2: number; len2: number; spd2: number;
   amp3: number; len3: number; spd3: number;
   amp4: number; len4: number; spd4: number;
-  // shore wave (coastline-relative)
   shoreAmp: number;
   shoreSpeed: number;
-  shoreLenMin: number; // wavelength at the beach...
-  shoreLenMax: number; // ...and out at the deep end of the shoaling table
-  shoalLift: number; // crest rise entering the shallows
-  shape2: number; // 2nd-harmonic weight: the slightly steeper PS1 crest
-  alongA: number; // alongshore phase variation amplitudes — the beach must
-  alongB: number; // never break all at once
-  // colour
-  quant: number; // posterize levels for the reflected sky sample
+  shoreLenMin: number;
+  shoreLenMax: number;
+  shoalLift: number;
+  shape2: number;
+  alongA: number;
+  alongB: number;
+  // reflection field
+  stableElev: number; // y of the fixed nominal view direction
+  stableBias: number; // how much the nominal view leans off the shore axis
+  camInfluence: number; // 0..0.15 — how much the REAL camera bends the field
+  uScale: number; // reflection-to-UV gains: the streak size
+  vScale: number;
+  distort: number; // extra normal exaggeration into the reflection
+  worldU: number; // fixed world-position UV drift (not time, not camera)
+  worldV: number;
+  palette: number; // global palette size of the sky proxy (PS1 indexed look)
+  // colour modulation
   brightness: number;
-  troughDark: number; // navy pull in the troughs
-  grazeCyan: number; // cyan lift at grazing angles
-  shallowMix: number; // sand-tinted lift over shallow terrain
-  // foam / swash / wet sand
+  troughDark: number;
+  grazeCyan: number;
+  shallowMix: number;
+  // shoreline event (one cycle drives foam + swash + wet sand)
   foamWidth: number;
-  foamDrift: number;
   foamStrength: number;
-  swashPeriod: number;
+  foamPhase: number; // cycle position where foam is born
+  swashPhase: number; // cycle position where the swash starts advancing
+  swashRetreat: number; // fraction of the cycle the retreat takes
   swashRunup: number;
-  wetDecay: number; // seconds for wet sand to dry
-  // structure
-  lod0Radius: number; // camera distance that earns the dense chunk mesh
+  wetDecay: number;
+  alongDensity: number; // nearshore samples per metre (applied on level load)
 }
 
 export const WATER_DEFAULTS: WaterParams = {
-  amp1: 0.38, len1: 15, spd1: 1.7,
+  amp1: 0.3, len1: 17, spd1: 1.7,
   amp2: 0.2, len2: 8.5, spd2: 1.25,
   amp3: 0.09, len3: 4.5, spd3: 2.2,
   amp4: 0.035, len4: 2.2, spd4: 2.8,
@@ -76,56 +88,63 @@ export const WATER_DEFAULTS: WaterParams = {
   shape2: 0.2,
   alongA: 0.25,
   alongB: 0.18,
-  quant: 15,
+  stableElev: 0.94,
+  stableBias: 0.3,
+  camInfluence: 0,
+  uScale: 0.24,
+  vScale: 0.6,
+  distort: 1,
+  worldU: 0.0015,
+  worldV: 0.00025,
+  palette: 24,
   brightness: 1,
   troughDark: 0.22,
-  grazeCyan: 0.4,
+  grazeCyan: 0.35,
   shallowMix: 0.55,
   foamWidth: 0.7,
-  foamDrift: 0.12,
   foamStrength: 1,
-  swashPeriod: 7,
+  foamPhase: 0.2,
+  swashPhase: 0.38,
+  swashRetreat: 0.45,
   swashRunup: 4.6,
   wetDecay: 9,
-  lod0Radius: 170,
+  alongDensity: 0.6, // ~1.7m between coastline samples
 };
 
 export interface ShoreSample {
-  x: number; // waterline point (world, on the still-water edge)
+  x: number;
   z: number;
-  sx: number; // seaward unit normal — must point consistently out to sea
+  sx: number; // seaward unit normal (recomputed locally after resampling)
   sz: number;
-  beachSlope: number; // beach rise per metre inland of the waterline
-  bedSlope: number; // seabed drop per metre seaward
+  beachSlope: number;
+  bedSlope: number;
 }
 
 export interface CoastWaterOpts {
-  shore: ShoreSample[];
+  shore: ShoreSample[]; // coarse authored spline; resampled + re-normalled here
   seaLevel: number;
-  shoreDirX: number; // unit direction the swell travels (sea toward beach)
+  shoreDirX: number;
   shoreDirZ: number;
-  course: { x: number; z: number }[]; // the level's spine, for chunk authoring
-  terrainHeight: (x: number, z: number) => number; // beach/bed height query
+  course: { x: number; z: number }[];
+  terrainHeight: (x: number, z: number) => number;
 }
 
-// ---- structure constants ---------------------------------------------------
-const CHUNK = 150; // metres per fixed world chunk
-const LOD0_V = 24; // verts per side near the player (6.5m cells)
-const LOD1_V = 12; // far chunks (13.6m cells)
-const SEA_MARGIN = 720; // how far the chunk field extends past the course
-const INLAND_KEEP = 60; // chunks up to this far inland survive (tuck under cliffs)
-const SHORE_ROWS = [0, 0.4, 0.9, 1.7, 3, 5, 8, 13, 21, 30]; // cross-shore (m)
-const RIBBON_MASK = 29.5; // far-chunk triangles inside this die (one surface per region)
-const BLEND_LO = 18; // nearshore -> offshore blend band...
-const BLEND_HI = 28; // ...per the spec
-
-// The game's sky dome mapping (mirrors main.ts): the painted panorama wraps
-// the dome twice horizontally and is scaled vertically so the painting's own
-// horizon row sits on the world horizon. The proxy sampler must agree with
-// these numbers or the reflection shows the wrong slice of sky.
-const SKY_WRAP = 2;
-const SKY_K = 2.15;
-const SKY_HORIZON_V = 1 - 600 / 887;
+// ---- fixed world-space density bands (distance from the COASTLINE) --------
+// Authored once at level build; never changed while playing.
+const BANDS = [
+  { max: 82, chunk: 48, verts: 21 }, // 0-80m offshore: 2.4m cells
+  { max: 205, chunk: 96, verts: 21 }, // 80-200m: 4.8m cells
+  { max: Infinity, chunk: 160, verts: 17 }, // beyond: 10m cells
+];
+const SEA_MARGIN = 720;
+const INLAND_KEEP = 60;
+const SHORE_ROWS = [
+  0, 0.25, 0.55, 0.9, 1.35, 1.9, 2.6, 3.5, 4.7, 6.1, 7.9, 10.2, 13, 16.5, 21,
+  27, 34, 42,
+];
+const RIBBON_MASK = 41.5; // chunk triangles inside this die: one surface per region
+const BLEND_LO = 26;
+const BLEND_HI = 40;
 
 interface Wave {
   a: number;
@@ -135,93 +154,145 @@ interface Wave {
   ph: number;
 }
 
-// ---- the reflection source: a quantized proxy of the ACTUAL level sky -----
-// Built once when the level's painted skybox arrives: downsample the
-// above-horizon slice into a small strip, posterize hard, sample by
-// direction only. Fixed level orientation — the camera never rotates this.
-class SkyProxy {
+export interface SurfaceSample {
+  height: number; // world y
+  nx: number;
+  ny: number;
+  nz: number;
+  depth: number;
+  shorePhase: number;
+  shoreInfluence: number;
+}
+
+// ---- the reflection source: the ACTUAL level skybox as a small indexed
+// texture. Downsampled once per sky, quantized to one shared global palette
+// (not per-channel), nearest-filtered — a PS1 indexed texture the GPU
+// samples across the water polygons.
+class SkyTexture {
   ready = false;
   url = "";
-  private w = 96;
-  private h = 40;
-  private data: Uint8ClampedArray | null = null;
-  fogR = 208; // below the horizon the painting melts into fog — reflections
-  fogG = 138; // of that region are just the haze colour
-  fogB = 126;
+  texture: THREE.CanvasTexture;
+  private canvas: HTMLCanvasElement;
+  private raw: ImageData | null = null; // pre-quantization, for re-paletting
+  private paletteSize = -1;
+  private labelled = false;
+  fogHex = 0xd08a7e;
 
+  constructor() {
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = 128;
+    this.canvas.height = 48;
+    const g = this.canvas.getContext("2d")!;
+    g.fillStyle = "#7f8fa8"; // placeholder until the real sky arrives
+    g.fillRect(0, 0, 128, 48);
+    this.texture = new THREE.CanvasTexture(this.canvas);
+    this.texture.wrapS = THREE.RepeatWrapping;
+    this.texture.wrapT = THREE.ClampToEdgeWrapping;
+    this.texture.magFilter = THREE.NearestFilter;
+    this.texture.minFilter = THREE.NearestFilter;
+    this.texture.colorSpace = THREE.SRGBColorSpace;
+  }
+
+  // mirror of main.ts's dome mapping: the painting's own horizon row sits on
+  // the world horizon and the panorama wraps the dome twice
   load(url: string, fogHex: number): void {
     this.url = url;
-    this.fogR = (fogHex >> 16) & 255;
-    this.fogG = (fogHex >> 8) & 255;
-    this.fogB = fogHex & 255;
+    this.fogHex = fogHex;
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => {
-      if (this.url !== url) return; // a later sky superseded this load
-      const c = document.createElement("canvas");
-      c.width = this.w;
-      c.height = this.h;
-      const g = c.getContext("2d")!;
-      // rows cover texture-V from the horizon row up to the zenith slice the
-      // dome actually shows; row 0 = horizon, row h-1 = highest visible sky
-      const vTop = Math.min(1, SKY_HORIZON_V + 0.5 * SKY_K * (1 - SKY_HORIZON_V));
-      for (let r = 0; r < this.h; r++) {
-        const v = SKY_HORIZON_V + (r / (this.h - 1)) * (vTop - SKY_HORIZON_V);
-        // texture V=0 is the image BOTTOM: image row = (1-v) * height
+      if (this.url !== url) return;
+      const w = this.canvas.width;
+      const h = this.canvas.height;
+      const g = this.canvas.getContext("2d")!;
+      const HORIZON_V = 1 - 600 / 887;
+      const K = 2.15;
+      const vTop = Math.min(1, HORIZON_V + 0.5 * K * (1 - HORIZON_V));
+      for (let r = 0; r < h; r++) {
+        // canvas row h-1 = horizon (texture v=0 with flipY), row 0 = zenith
+        const v = HORIZON_V + (r / (h - 1)) * (vTop - HORIZON_V);
         const sy = Math.max(0, Math.min(img.height - 1, (1 - v) * img.height));
-        g.drawImage(img, 0, sy, img.width, 1, 0, this.h - 1 - r, this.w, 1);
+        g.drawImage(img, 0, sy, img.width, 1, 0, h - 1 - r, w, 1);
       }
-      const px = g.getImageData(0, 0, this.w, this.h);
-      // heavy palette quantization: 4-bit per channel, PS1 style
-      for (let i = 0; i < px.data.length; i++)
-        px.data[i] = Math.round((Math.round((px.data[i] / 255) * 15) / 15) * 255);
-      this.data = px.data;
+      this.raw = g.getImageData(0, 0, w, h);
+      this.paletteSize = -1; // force re-palette
       this.ready = true;
-    };
-    img.onerror = () => {
-      // keep the previous proxy (or the built-in fallback palette)
     };
     img.src = url;
   }
 
-  // reflection direction (world, level-fixed orientation) -> rgb 0..255
-  sample(rx: number, ry: number, rz: number, out: number[]): void {
-    if (!this.ready || this.data === null || ry < 0.015) {
-      // below the horizon (or no art yet): the haze the sky melts into
-      out[0] = this.fogR;
-      out[1] = this.fogG;
-      out[2] = this.fogB;
-      return;
+  // quantize the whole proxy to ONE shared palette of n colours: build a
+  // histogram of coarsely-bucketed colours, keep the n most common, and
+  // nearest-map every pixel onto that palette
+  applyPalette(n: number): void {
+    if (!this.raw || (this.paletteSize === n && !this.labelled)) return;
+    this.labelled = false;
+    this.paletteSize = n;
+    const src = this.raw.data;
+    const hist = new Map<number, number>();
+    for (let i = 0; i < src.length; i += 4) {
+      const key =
+        ((src[i] >> 3) << 10) | ((src[i + 1] >> 3) << 5) | (src[i + 2] >> 3);
+      hist.set(key, (hist.get(key) ?? 0) + 1);
     }
-    // dome azimuth: the sphere's UV runs u = phi/2pi with x=-cos(phi),
-    // z=sin(phi), wrapped SKY_WRAP times around
-    const phi = Math.atan2(rz, -rx);
-    const u = ((phi / TAU) * SKY_WRAP) % 1;
-    const ui = Math.floor(((u + 1) % 1) * this.w) % this.w;
-    const e = Math.asin(Math.min(1, ry)); // elevation above horizon
-    const vTop = Math.min(1, SKY_HORIZON_V + 0.5 * SKY_K * (1 - SKY_HORIZON_V));
-    const v = SKY_HORIZON_V + (e / (Math.PI / 2)) * (vTop - SKY_HORIZON_V) * 1.9;
-    const r01 = Math.max(0, Math.min(1, (v - SKY_HORIZON_V) / (vTop - SKY_HORIZON_V)));
-    const vi = this.h - 1 - Math.min(this.h - 1, Math.floor(r01 * (this.h - 1)));
-    const k = (vi * this.w + ui) * 4;
-    out[0] = this.data[k];
-    out[1] = this.data[k + 1];
-    out[2] = this.data[k + 2];
+    const pal = [...hist.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, Math.max(4, n))
+      .map(([k]) => [
+        ((k >> 10) & 31) << 3,
+        ((k >> 5) & 31) << 3,
+        (k & 31) << 3,
+      ]);
+    const g = this.canvas.getContext("2d")!;
+    const out = g.createImageData(this.canvas.width, this.canvas.height);
+    for (let i = 0; i < src.length; i += 4) {
+      let bi = 0;
+      let bd = Infinity;
+      for (let p = 0; p < pal.length; p++) {
+        const d =
+          (src[i] - pal[p][0]) ** 2 +
+          (src[i + 1] - pal[p][1]) ** 2 +
+          (src[i + 2] - pal[p][2]) ** 2;
+        if (d < bd) {
+          bd = d;
+          bi = p;
+        }
+      }
+      out.data[i] = pal[bi][0];
+      out.data[i + 1] = pal[bi][1];
+      out.data[i + 2] = pal[bi][2];
+      out.data[i + 3] = 255;
+    }
+    g.putImageData(out, 0, 0);
+    this.texture.needsUpdate = true;
+  }
+
+  // debug: a labelled test atlas so mis-mapping is unmistakable
+  applyTestAtlas(): void {
+    this.labelled = true;
+    this.paletteSize = -2;
+    const g = this.canvas.getContext("2d")!;
+    const w = this.canvas.width;
+    const h = this.canvas.height;
+    const cols = ["#d33", "#3d3", "#33d", "#dd3", "#d3d", "#3dd"];
+    for (let c = 0; c < 6; c++) {
+      g.fillStyle = cols[c];
+      g.fillRect((c * w) / 6, 0, w / 6, h);
+    }
+    g.fillStyle = "#000";
+    g.font = "10px monospace";
+    const names = ["+X", "-X", "+Y", "-Y", "+Z", "-Z"];
+    for (let c = 0; c < 6; c++) g.fillText(names[c], (c * w) / 6 + 4, h / 2);
+    this.texture.needsUpdate = true;
   }
 }
 
 interface Chunk {
   bounds: THREE.Box3;
-  cx: number; // world origin (min corner)
-  cz: number;
-  lod0: THREE.Mesh;
-  lod1: THREE.Mesh;
-  distToShore: number; // rough, for choosing shading effort
-  stagger: number; // spreads far-chunk update frames
+  mesh: THREE.Mesh;
 }
 
 const V3 = new THREE.Vector3();
-const SKY_RGB = [0, 0, 0];
 const FRUSTUM = new THREE.Frustum();
 const PROJ = new THREE.Matrix4();
 
@@ -236,66 +307,57 @@ export class CoastWater {
     wet: true,
     freeze: false,
     wireframe: false,
-    reflection: true, // off = flat modulation colour (waves must still read)
-    modulation: true, // off = raw reflected sky
-    coast: false, // draw the coastline spline + sea normals + rows
+    texture: true, // off = GEOMETRY ONLY (swells read by modulation alone)
+    modulation: true, // off = RAW SKY TEXTURE
+    lockCam: false, // force camInfluence to 0 regardless of the slider
+    testAtlas: false, // labelled sky source
+    coast: false,
   };
   stats = { chunksVisible: 0, chunksTotal: 0, nearTris: 0, clippedTris: 0 };
 
   private time = 0;
-  private frameN = 0;
-  private shore: ShoreSample[];
+  private shore: ShoreSample[] = []; // RESAMPLED, with true local normals
+  private arc: number[] = [];
   private seaLevel: number;
   private dirX: number;
   private dirZ: number;
+  private skyRightX: number; // level-fixed axes for world UV drift
+  private skyRightZ: number;
   private terrain: (x: number, z: number) => number;
-  private sky = new SkyProxy();
+  private sky = new SkyTexture();
 
   private chunks: Chunk[] = [];
   private waterMat: THREE.MeshBasicMaterial;
-
-  private near: THREE.Mesh; // dynamic soup: terrain-clipped every frame
+  private near: THREE.Mesh;
   private nearMax = 0;
   private foam: THREE.Mesh;
   private swash: THREE.Mesh;
   private wet: THREE.Mesh;
   private coastDebug: THREE.LineSegments | null = null;
 
-  // per shore sample: alongshore arc length; per row: static world pos,
-  // terrain height and still depth (the coastline never moves)
-  private arc: number[] = [];
-  private rowPos: Float32Array; // [sample][row] xz
+  private rowPos: Float32Array;
   private rowTerrain: Float32Array;
   private rowDepth: Float32Array;
   private wetness: number[];
-  // shoaling: integrated cross-shore phase per row (rebuilt when params move)
   private phaseAt: number[] = [];
   private phaseLenMin = -1;
   private phaseLenMax = -1;
-  // scratch: per-grid-vertex samples for the soup emit (continuity: computed
-  // once per vertex, shared by every triangle that touches it)
-  private gh: Float32Array;
-  private gc: Float32Array;
+  private gh: Float32Array; // per-grid-vertex height
+  private gc: Float32Array; // colour
+  private guv: Float32Array; // reflection UV
 
   constructor(opts: CoastWaterOpts) {
-    this.shore = opts.shore;
     this.seaLevel = opts.seaLevel;
     this.dirX = opts.shoreDirX;
     this.dirZ = opts.shoreDirZ;
+    this.skyRightX = -this.dirZ; // perpendicular of the shore axis, level-fixed
+    this.skyRightZ = this.dirX;
     this.terrain = opts.terrainHeight;
+    this.resampleShore(opts.shore);
 
     const NS = this.shore.length;
-    this.wetness = new Array(NS).fill(0);
-    let acc = 0;
-    for (let i = 0; i < NS; i++) {
-      if (i > 0)
-        acc += Math.hypot(
-          this.shore[i].x - this.shore[i - 1].x,
-          this.shore[i].z - this.shore[i - 1].z,
-        );
-      this.arc.push(acc);
-    }
     const NR = SHORE_ROWS.length;
+    this.wetness = new Array(NS).fill(0);
     this.rowPos = new Float32Array(NS * NR * 2);
     this.rowTerrain = new Float32Array(NS * NR);
     this.rowDepth = new Float32Array(NS * NR);
@@ -314,15 +376,15 @@ export class CoastWater {
     }
     this.gh = new Float32Array(NS * NR);
     this.gc = new Float32Array(NS * NR * 3);
+    this.guv = new Float32Array(NS * NR * 2);
 
     this.waterMat = new THREE.MeshBasicMaterial({
+      map: this.sky.texture,
       vertexColors: true,
       side: THREE.DoubleSide,
     });
     this.buildChunks(opts.course);
 
-    // nearshore soup: preallocate the TRUE worst case — every cell's two
-    // triangles clipping into quads doubles the count (4 tris per cell)
     this.nearMax = (NS - 1) * (NR - 1) * 4 * 3;
     const ng = new THREE.BufferGeometry();
     ng.setAttribute(
@@ -332,6 +394,10 @@ export class CoastWater {
     ng.setAttribute(
       "color",
       new THREE.BufferAttribute(new Float32Array(this.nearMax * 3), 3),
+    );
+    ng.setAttribute(
+      "uv",
+      new THREE.BufferAttribute(new Float32Array(this.nearMax * 2), 2),
     );
     this.near = new THREE.Mesh(ng, this.waterMat);
     this.near.name = "nearshore water";
@@ -346,21 +412,110 @@ export class CoastWater {
       side: THREE.DoubleSide,
     });
     this.foam = gridMesh(NS, 2, foamMat, "breaker foam", 4);
-    const sheetMat = new THREE.MeshBasicMaterial({
+    const swashMat = new THREE.MeshBasicMaterial({
+      map: makeSwashTex(),
       vertexColors: true,
       transparent: true,
       depthWrite: false,
       side: THREE.DoubleSide,
     });
-    this.swash = gridMesh(NS, 3, sheetMat, "swash", 4);
-    this.wet = gridMesh(NS, 2, sheetMat.clone(), "wet sand", 4);
-    (this.wet.material as THREE.MeshBasicMaterial).blending =
-      THREE.MultiplyBlending;
-
+    this.swash = gridMesh(NS, 3, swashMat, "swash", 4);
+    const wetMat = new THREE.MeshBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.MultiplyBlending,
+      side: THREE.DoubleSide,
+    });
+    this.wet = gridMesh(NS, 2, wetMat, "wet sand", 4);
     this.group.add(this.near, this.foam, this.swash, this.wet);
   }
 
-  // ---- fixed world chunks (positions never change after this) -------------
+  // §5+§6: densify the authored spline (~1.7m alongshore) and compute REAL
+  // local sea normals from neighbour tangents — the crescent's rows, foam,
+  // swash and wet sand all follow the actual curve, not one shared Rv.
+  private resampleShore(coarse: ShoreSample[]): void {
+    let len = 0;
+    for (let i = 1; i < coarse.length; i++)
+      len += Math.hypot(
+        coarse[i].x - coarse[i - 1].x,
+        coarse[i].z - coarse[i - 1].z,
+      );
+    const NS = Math.max(
+      16,
+      Math.round(len * clamp(this.params.alongDensity, 0.2, 2)),
+    );
+    const pts: { x: number; z: number }[] = [];
+    for (let i = 0; i < NS; i++) {
+      const f = (i / (NS - 1)) * (coarse.length - 1);
+      const j = Math.min(coarse.length - 2, Math.floor(f));
+      const u = f - j;
+      pts.push({
+        x: lerp(coarse[j].x, coarse[j + 1].x, u),
+        z: lerp(coarse[j].z, coarse[j + 1].z, u),
+      });
+    }
+    // offshore reference: well out to sea of the spline's centroid — used to
+    // orient every local normal consistently seaward
+    let cx = 0;
+    let cz = 0;
+    for (const p of pts) {
+      cx += p.x / NS;
+      cz += p.z / NS;
+    }
+    const refX = cx + this.dirX * -300;
+    const refZ = cz + this.dirZ * -300;
+    const norms: { x: number; z: number }[] = [];
+    for (let i = 0; i < NS; i++) {
+      const a = pts[Math.max(0, i - 1)];
+      const b = pts[Math.min(NS - 1, i + 1)];
+      let tx = b.x - a.x;
+      let tz = b.z - a.z;
+      const tl = Math.hypot(tx, tz) || 1;
+      tx /= tl;
+      tz /= tl;
+      let nx = tz;
+      let nz = -tx;
+      if ((refX - pts[i].x) * nx + (refZ - pts[i].z) * nz < 0) {
+        nx = -nx;
+        nz = -nz;
+      }
+      norms.push({ x: nx, z: nz });
+    }
+    // smooth the normals over three samples, then renormalize
+    const sm: { x: number; z: number }[] = [];
+    for (let i = 0; i < NS; i++) {
+      const a = norms[Math.max(0, i - 1)];
+      const b = norms[i];
+      const c = norms[Math.min(NS - 1, i + 1)];
+      let nx = a.x + 2 * b.x + c.x;
+      let nz = a.z + 2 * b.z + c.z;
+      const l = Math.hypot(nx, nz) || 1;
+      sm.push({ x: nx / l, z: nz / l });
+    }
+    const slope = coarse[0];
+    this.shore = pts.map((p, i) => ({
+      x: p.x,
+      z: p.z,
+      sx: sm[i].x,
+      sz: sm[i].z,
+      beachSlope: slope.beachSlope,
+      bedSlope: slope.bedSlope,
+    }));
+    this.arc = [];
+    let acc = 0;
+    for (let i = 0; i < NS; i++) {
+      if (i > 0)
+        acc += Math.hypot(
+          this.shore[i].x - this.shore[i - 1].x,
+          this.shore[i].z - this.shore[i - 1].z,
+        );
+      this.arc.push(acc);
+    }
+  }
+
+  // §1: fixed chunk field in authored density bands (distance from the
+  // coastline, never the camera). Every chunk keeps ONE mesh forever.
   private buildChunks(course: { x: number; z: number }[]): void {
     let minX = Infinity;
     let maxX = -Infinity;
@@ -376,7 +531,6 @@ export class CoastWater {
     maxX += SEA_MARGIN;
     minZ -= SEA_MARGIN;
     maxZ += SEA_MARGIN;
-    // seaward test: right of the course tangent is out to sea on this coast
     const side = (x: number, z: number): number => {
       let best = Infinity;
       let bi = 0;
@@ -392,71 +546,71 @@ export class CoastWater {
       const tx = b.x - a.x;
       const tz = b.z - a.z;
       const tl = Math.hypot(tx, tz) || 1;
-      // right2D of the tangent = seaward
       return ((x - course[bi].x) * -tz + (z - course[bi].z) * tx) / tl;
     };
     const shoreDist = (x: number, z: number): number => {
       let best = Infinity;
-      for (const s of this.shore)
+      for (let i = 0; i < this.shore.length; i += 3) {
+        const s = this.shore[i];
         best = Math.min(best, Math.hypot(x - s.x, z - s.z));
+      }
       return best;
     };
-    let n = 0;
-    for (let gx = minX; gx < maxX; gx += CHUNK)
-      for (let gz = minZ; gz < maxZ; gz += CHUNK) {
-        const ccx = gx + CHUNK / 2;
-        const ccz = gz + CHUNK / 2;
-        if (side(ccx, ccz) < -INLAND_KEEP) continue; // solidly inland: no sea here
-        const bounds = new THREE.Box3(
-          new THREE.Vector3(gx, this.seaLevel - 2, gz),
-          new THREE.Vector3(gx + CHUNK, this.seaLevel + 2, gz + CHUNK),
-        );
-        const near = shoreDist(ccx, ccz);
-        const lod0 = this.chunkMesh(gx, gz, LOD0_V, near < CHUNK * 1.6);
-        const lod1 = this.chunkMesh(gx, gz, LOD1_V, near < CHUNK * 1.6);
-        lod0.visible = false;
-        lod1.visible = false;
-        this.group.add(lod0, lod1);
-        this.chunks.push({
-          bounds,
-          cx: gx,
-          cz: gz,
-          lod0,
-          lod1,
-          distToShore: near,
-          stagger: n++ % 4,
-        });
-      }
+    for (let b = 0; b < BANDS.length; b++) {
+      const band = BANDS[b];
+      const lo = b === 0 ? -Infinity : BANDS[b - 1].max;
+      for (let gx = minX; gx < maxX; gx += band.chunk)
+        for (let gz = minZ; gz < maxZ; gz += band.chunk) {
+          const ccx = gx + band.chunk / 2;
+          const ccz = gz + band.chunk / 2;
+          const d = shoreDist(ccx, ccz);
+          // the band owns the chunk if its CENTRE falls in the band's ring
+          if (d >= band.max || d < lo) continue;
+          if (side(ccx, ccz) < -INLAND_KEEP && d > 90) continue;
+          const mesh = this.chunkMesh(gx, gz, band.chunk, band.verts, d < 120);
+          mesh.visible = false;
+          this.group.add(mesh);
+          this.chunks.push({
+            bounds: new THREE.Box3(
+              new THREE.Vector3(gx, this.seaLevel - 2, gz),
+              new THREE.Vector3(gx + band.chunk, this.seaLevel + 2, gz + band.chunk),
+            ),
+            mesh,
+          });
+        }
+    }
     this.stats.chunksTotal = this.chunks.length;
   }
 
-  // one fixed chunk mesh: static world xz, dynamic y + colour. Triangles
-  // inside the nearshore ribbon band are dropped at BUILD time so exactly
-  // one surface owns each world region (no coplanar fighting, no seam).
-  private chunkMesh(gx: number, gz: number, nv: number, nearShore: boolean): THREE.Mesh {
+  private chunkMesh(
+    gx: number,
+    gz: number,
+    size: number,
+    nv: number,
+    nearShore: boolean,
+  ): THREE.Mesh {
     const g = new THREE.BufferGeometry();
     const n = nv * nv;
     const pos = new Float32Array(n * 3);
     const col = new Float32Array(n * 3);
+    const uv = new Float32Array(n * 2);
     const masked: boolean[] = new Array(n).fill(false);
     for (let r = 0; r < nv; r++)
       for (let c = 0; c < nv; c++) {
         const i = r * nv + c;
-        const x = gx + (c / (nv - 1)) * CHUNK;
-        const z = gz + (r / (nv - 1)) * CHUNK;
+        const x = gx + (c / (nv - 1)) * size;
+        const z = gz + (r / (nv - 1)) * size;
         pos[i * 3] = x;
         pos[i * 3 + 1] = this.seaLevel;
         pos[i * 3 + 2] = z;
         if (nearShore) {
-          for (const s of this.shore) {
+          for (let si = 0; si < this.shore.length; si += 2) {
+            const s = this.shore[si];
             const dx = x - s.x;
             const dz = z - s.z;
             if (dx * dx + dz * dz < RIBBON_MASK * RIBBON_MASK) {
-              // inland of the waterline, or inside the ribbon band: masked
-              if (dx * s.sx + dz * s.sz < RIBBON_MASK) {
-                masked[i] = true;
-                break;
-              }
+              masked[i] = true;
+              break;
             }
           }
         }
@@ -471,14 +625,15 @@ export class CoastWater {
       }
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
     g.setIndex(idx);
     const m = new THREE.Mesh(g, this.waterMat);
     m.name = "ocean chunk";
-    m.frustumCulled = false; // we cull whole chunks ourselves, by bounds
+    m.frustumCulled = false;
     return m;
   }
 
-  // ---- the ONE wave function (rendering, collision, floating objects) -----
+  // ---- waves ---------------------------------------------------------------
   private waveSet(): Wave[] {
     const p = this.params;
     const base = Math.atan2(this.dirZ, this.dirX);
@@ -504,23 +659,20 @@ export class CoastWater {
   private wavesDirty = true;
   markWavesDirty(): void {
     this.wavesDirty = true;
-    this.phaseLenMin = -1; // shoaling table depends on params too
+    this.phaseLenMin = -1;
   }
 
-  // world-space offshore sample: height + analytic slope. `nWaves` is the
-  // LOD of EVALUATION (far chunks skip the two smallest waves their cells
-  // cannot resolve) — every LOD shares the same underlying functions.
+  // EVERY surface evaluates all four waves — no camera-dependent wave count
   private sampleWaves(
     x: number,
     z: number,
     t: number,
-    nWaves: number,
     out: { h: number; dx: number; dz: number },
   ): void {
     let h = 0;
     let dx = 0;
     let dz = 0;
-    for (let i = 0; i < nWaves; i++) {
+    for (let i = 0; i < 4; i++) {
       const w = this.waves[i];
       const ph = w.kx * x + w.kz * z - w.spd * t + w.ph;
       h += w.a * tsin(ph);
@@ -533,35 +685,95 @@ export class CoastWater {
     out.dz = dz;
   }
 
-  heightAt(x: number, z: number, t = this.time): number {
+  // ---- §7: the ONE unified surface sampler --------------------------------
+  // rendering, foam, swash, floating objects and collision all come here
+  private scratch = { h: 0, dx: 0, dz: 0 };
+  sampleWaterSurface(x: number, z: number, t = this.time): SurfaceSample {
     if (this.wavesDirty) {
       this.waves = this.waveSet();
       this.wavesDirty = false;
     }
-    const o = { h: 0, dx: 0, dz: 0 };
-    this.sampleWaves(x, z, t, 4, o);
-    return this.seaLevel + o.h;
+    // nearest coastline sample -> (s, d) coordinates
+    let bi = 0;
+    let best = Infinity;
+    for (let i = 0; i < this.shore.length; i++) {
+      const s = this.shore[i];
+      const dd = (x - s.x) ** 2 + (z - s.z) ** 2;
+      if (dd < best) {
+        best = dd;
+        bi = i;
+      }
+    }
+    const S = this.shore[bi];
+    const d = (x - S.x) * S.sx + (z - S.z) * S.sz; // offshore distance
+    return this.sampleAt(x, z, bi, d, t);
   }
 
-  // ---- shoaling: continuously compressed shore phase ----------------------
+  private sampleAt(
+    x: number,
+    z: number,
+    si: number,
+    d: number,
+    t: number,
+  ): SurfaceSample {
+    const o = this.scratch;
+    this.sampleWaves(x, z, t, o);
+    const ty = this.terrain(x, z);
+    const depth = Math.max(0, this.seaLevel - ty);
+    const crossK = sstep(depth, 1.5, 5);
+    const smallK = sstep(depth, 0.8, 3);
+    // shallow suppression of crossing + small waves
+    let h = o.h;
+    for (let wi = 1; wi < 4; wi++) {
+      const sup = wi === 1 ? crossK : smallK;
+      const w = this.waves[wi];
+      const ph = w.kx * x + w.kz * z - w.spd * t + w.ph;
+      h -= w.a * tsin(ph) * (1 - sup);
+    }
+    const shorePhase = this.shorePhaseAtD(si, Math.max(0, d), t);
+    const shoreW = this.shoreShape(shorePhase) * this.shoreAmpAt(depth);
+    const blend = sstep(d, BLEND_LO, BLEND_HI);
+    const height =
+      this.seaLevel +
+      lerp(h * lerp(0.55, 1, crossK) + shoreW, o.h, blend);
+    const inf = 1 - blend;
+    // analytic offshore slope + a shore-wave slope estimate along the normal
+    const eps = 0.6;
+    const sp2 = this.shorePhaseAtD(si, Math.max(0, d + eps), t);
+    const shoreSlope =
+      ((this.shoreShape(sp2) - this.shoreShape(shorePhase)) *
+        this.shoreAmpAt(depth)) /
+      eps;
+    const nx = -(o.dx + shoreSlope * this.shore[si].sx * inf);
+    const nz = -(o.dz + shoreSlope * this.shore[si].sz * inf);
+    const nl = Math.hypot(nx, 1, nz);
+    return {
+      height,
+      nx: nx / nl,
+      ny: 1 / nl,
+      nz: nz / nl,
+      depth,
+      shorePhase,
+      shoreInfluence: inf,
+    };
+  }
+
+  heightAt(x: number, z: number, t = this.time): number {
+    return this.sampleWaterSurface(x, z, t).height;
+  }
+
+  // ---- shoaling ------------------------------------------------------------
   private rebuildPhaseTable(): void {
     const p = this.params;
     this.phaseAt = [0];
     let acc = 0;
     for (let j = 1; j < SHORE_ROWS.length; j++) {
       const mid = (SHORE_ROWS[j] + SHORE_ROWS[j - 1]) / 2;
-      // representative still depth at this offshore distance (bed slope of
-      // the first shore sample stands in for the whole beach — it is one
-      // authored beach)
       const depth = Math.max(
         0.12,
         mid * (this.shore[0]?.bedSlope ?? 0.13) + 0.1,
       );
-      const lam = THREE.MathUtils.lerp(
-        p.shoreLenMin,
-        p.shoreLenMax,
-        THREE.MathUtils.smoothstep(depth, 0.5, 5),
-      );
+      const lam = lerp(p.shoreLenMin, p.shoreLenMax, sstep(depth, 0.5, 5));
       acc += (TAU / lam) * (SHORE_ROWS[j] - SHORE_ROWS[j - 1]);
       this.phaseAt.push(acc);
     }
@@ -569,12 +781,22 @@ export class CoastWater {
     this.phaseLenMax = p.shoreLenMax;
   }
 
-  private shorePhase(si: number, j: number, t: number): number {
-    const p = this.params;
+  private phaseOfD(d: number): number {
+    let j = 1;
+    while (j < SHORE_ROWS.length - 1 && SHORE_ROWS[j] < d) j++;
+    const f = clamp(
+      (d - SHORE_ROWS[j - 1]) / (SHORE_ROWS[j] - SHORE_ROWS[j - 1] || 1),
+      0,
+      1,
+    );
+    return lerp(this.phaseAt[j - 1], this.phaseAt[j], f);
+  }
+
+  private shorePhaseAtD(si: number, d: number, t: number): number {
     return (
-      -this.phaseAt[j] +
+      -this.phaseOfD(Math.min(d, SHORE_ROWS[SHORE_ROWS.length - 1])) +
       this.alongshore(this.arc[si], t) -
-      t * p.shoreSpeed
+      t * this.params.shoreSpeed
     );
   }
 
@@ -585,21 +807,26 @@ export class CoastWater {
     );
   }
 
-  // slightly asymmetric crest: sin + a phase-locked 2nd harmonic
   private shoreShape(ph: number): number {
     return tsin(ph) + tsin(ph * 2 + 0.55) * this.params.shape2;
   }
 
-  private shoreAmp(depth: number): number {
+  private shoreAmpAt(depth: number): number {
     const p = this.params;
-    const shoaling = 1 - THREE.MathUtils.smoothstep(depth, 1.2, 5);
-    const collapse = THREE.MathUtils.smoothstep(depth, 0.15, 0.9);
-    return (
-      p.shoreAmp * THREE.MathUtils.lerp(0.75, p.shoalLift, shoaling) * collapse
-    );
+    const shoaling = 1 - sstep(depth, 1.2, 5);
+    const collapse = sstep(depth, 0.15, 0.9);
+    return p.shoreAmp * lerp(0.75, p.shoalLift, shoaling) * collapse;
   }
 
-  // ---- shading: reflect off the ACTUAL level sky, quantize, modulate ------
+  // the one shore-wave CYCLE at a coastline sample: foam, swash and wet sand
+  // are stages of this same number (§8) — no independent timers
+  private cycleAt(si: number, t: number): number {
+    const ph0 = this.alongshore(this.arc[si], t) - t * this.params.shoreSpeed;
+    const c = -ph0 / TAU;
+    return ((c % 1) + 1) % 1;
+  }
+
+  // ---- reflection UVs (§2-§4) ---------------------------------------------
   setSkyUrl(url: string, fogHex: number): void {
     if (this.sky.url === url) return;
     this.sky.load(url, fogHex);
@@ -611,6 +838,33 @@ export class CoastWater {
     return this.sky.ready;
   }
 
+  private camX = 0;
+  private camY = 0;
+  private camZ = 0;
+
+  // per-vertex: stable world-space reflection -> UV into the sky texture,
+  // plus Gouraud modulation colour. The GPU paints the actual sky texture
+  // ACROSS the polygon between these UVs — that is the whole trick.
+  // per-frame invariants hoisted out of the vertex loops (pure speed — the
+  // values themselves stay camera-independent unless camInfluence is dialed)
+  private fvx = 0;
+  private fvy = 1;
+  private fvz = 0;
+  private fInf = 0;
+  private fMod = true;
+  private prepFrame(): void {
+    const p = this.params;
+    let vx = -this.dirX * p.stableBias;
+    let vy = p.stableElev;
+    let vz = -this.dirZ * p.stableBias;
+    const vl = Math.hypot(vx, vy, vz) || 1;
+    this.fvx = vx / vl;
+    this.fvy = vy / vl;
+    this.fvz = vz / vl;
+    this.fInf = this.debug.lockCam ? 0 : clamp(p.camInfluence, 0, 0.15);
+    this.fMod = this.debug.modulation;
+  }
+
   private shadeVertex(
     px: number,
     py: number,
@@ -619,72 +873,85 @@ export class CoastWater {
     ny: number,
     nz: number,
     h: number,
-    depth: number, // still-water depth under the vertex (big = deep)
-    cam: THREE.Vector3,
-    out: Float32Array,
-    oi: number,
+    depth: number,
+    col: Float32Array,
+    ci: number,
+    uvA: Float32Array,
+    ui: number,
   ): void {
     const p = this.params;
-    // incident = water-to-... spec: view = normalize(cam - P); incident = -view
-    let ix = px - cam.x;
-    let iy = py - cam.y;
-    let iz = pz - cam.z;
-    const il = Math.hypot(ix, iy, iz) || 1;
-    ix /= il;
-    iy /= il;
-    iz /= il;
-    const nd = (ix * nx + iy * ny + iz * nz) * 2;
-    const rx = ix - nd * nx;
-    const ry = iy - nd * ny;
-    const rz = iz - nd * nz;
-    let sr = 190;
-    let sg = 190;
-    let sb = 200;
-    if (this.debug.reflection) {
-      this.sky.sample(rx, ry, rz, SKY_RGB);
-      sr = SKY_RGB[0];
-      sg = SKY_RGB[1];
-      sb = SKY_RGB[2];
-      // low-res quantization AFTER sampling: the PS1 posterize
-      const q = Math.max(2, p.quant);
-      sr = (Math.round((sr / 255) * q) / q) * 255;
-      sg = (Math.round((sg / 255) * q) / q) * 255;
-      sb = (Math.round((sb / 255) * q) / q) * 255;
+    // exaggerate the normal's tilt into the reflection (studio: distort)
+    const g = p.distort;
+    let mx = nx * g;
+    let mz = nz * g;
+    let my = ny;
+    const ml = Math.hypot(mx, my, mz) || 1;
+    mx /= ml;
+    my /= ml;
+    mz /= ml;
+    // fixed nominal view direction (level space, NOT the camera)
+    let vx = this.fvx;
+    let vy = this.fvy;
+    let vz = this.fvz;
+    // optional restrained camera influence (default 0; LOCK forces 0)
+    const inf = this.fInf;
+    if (inf > 0) {
+      let ax = this.camX - px;
+      let ay = this.camY - py;
+      let az = this.camZ - pz;
+      const al = Math.hypot(ax, ay, az) || 1;
+      vx = vx * (1 - inf) + (ax / al) * inf;
+      vy = vy * (1 - inf) + (ay / al) * inf;
+      vz = vz * (1 - inf) + (az / al) * inf;
     }
-    let mr = 105 / 255;
-    let mg = 135 / 255;
-    let mb = 185 / 255;
-    if (this.debug.modulation) {
-      // shallow water lightens and warms toward the sand — never solid cyan
-      const shal =
-        (1 - THREE.MathUtils.smoothstep(depth, 0.25, 3.5)) * p.shallowMix;
-      mr = THREE.MathUtils.lerp(105, 150, shal) / 255;
-      mg = THREE.MathUtils.lerp(135, 185, shal) / 255;
-      mb = THREE.MathUtils.lerp(185, 192, shal) / 255;
-      // troughs pull toward navy, crests brighten a touch
-      const k = THREE.MathUtils.clamp(h / (p.amp1 + 0.2), -1, 1);
+    // R = reflect(-V, N)
+    const dvn = (vx * mx + vy * my + vz * mz) * 2;
+    const rx = dvn * mx - vx;
+    const ry = dvn * my - vy;
+    const rz = dvn * mz - vz;
+    // linear reflection->UV (see header): continuous, seam-free
+    const along = px * this.skyRightX + pz * this.skyRightZ;
+    const outward = px * this.dirX + pz * this.dirZ;
+    const u =
+      0.5 +
+      (rx * this.skyRightX + rz * this.skyRightZ) * p.uScale +
+      along * p.worldU +
+      outward * 0.0003;
+    const v = clamp(
+      0.63 + (ry - vy) * 2.1 * p.vScale + outward * p.worldV,
+      0.02,
+      0.98,
+    );
+    uvA[ui] = u;
+    uvA[ui + 1] = v;
+    // Gouraud modulation only shapes the water — the texture is the pattern
+    let mr = 1;
+    let mg = 1;
+    let mb = 1;
+    if (this.fMod) {
+      const shal = (1 - sstep(depth, 0.25, 3.5)) * p.shallowMix;
+      mr = lerp(105, 128, shal) / 160;
+      mg = lerp(135, 205, shal) / 160;
+      mb = lerp(185, 200, shal) / 160;
+      const k = clamp(h / (p.amp1 + 0.2), -1, 1);
       const dark = 1 + k * p.troughDark;
       mr *= dark;
       mg *= dark;
       mb *= dark * 1.02;
-      // grazing angles pick up cyan
-      const g = (1 - Math.abs(ix * nx + iy * ny + iz * nz)) ** 2 * p.grazeCyan;
-      mr = mr * (1 - g) + g * 0.55;
-      mg = mg * (1 - g) + g * 0.85;
-      mb = mb * (1 - g) + g * 0.85;
-    } else {
-      mr = mg = mb = 1;
+      const graze = (1 - Math.abs(ny)) * 2.4 * p.grazeCyan;
+      mr = mr * (1 - graze) + graze * 0.62;
+      mg = mg * (1 - graze) + graze * 1.05;
+      mb = mb * (1 - graze) + graze * 1.05;
     }
     const B = p.brightness;
-    out[oi] = (sr / 255) * mr * B;
-    out[oi + 1] = (sg / 255) * mg * B;
-    out[oi + 2] = (sb / 255) * mb * B;
+    col[ci] = mr * B;
+    col[ci + 1] = mg * B;
+    col[ci + 2] = mb * B;
   }
 
   // ---- per-frame -----------------------------------------------------------
   update(dt: number, camera: THREE.Camera): void {
     if (!this.debug.freeze) this.time += dt;
-    this.frameN++;
     if (this.wavesDirty) {
       this.waves = this.waveSet();
       this.wavesDirty = false;
@@ -694,12 +961,23 @@ export class CoastWater {
       this.phaseLenMax !== this.params.shoreLenMax
     )
       this.rebuildPhaseTable();
+    if (this.debug.testAtlas) this.sky.applyTestAtlas();
+    else this.sky.applyPalette(Math.round(this.params.palette));
     const cam = camera.getWorldPosition(V3);
+    this.camX = cam.x;
+    this.camY = cam.y;
+    this.camZ = cam.z;
     this.waterMat.wireframe = this.debug.wireframe;
+    this.prepFrame();
+    const wantMap = this.debug.texture ? this.sky.texture : null;
+    if (this.waterMat.map !== wantMap) {
+      this.waterMat.map = wantMap;
+      this.waterMat.needsUpdate = true;
+    }
 
-    this.updateChunks(cam, camera);
+    this.updateChunks(camera);
     this.near.visible = this.debug.near;
-    if (this.debug.near) this.updateNearshore(cam);
+    if (this.debug.near) this.updateNearshore();
     this.foam.visible = this.debug.foam;
     this.swash.visible = this.debug.swash;
     this.wet.visible = this.debug.wet;
@@ -707,101 +985,78 @@ export class CoastWater {
     this.updateCoastDebug();
   }
 
-  private updateChunks(cam: THREE.Vector3, camera: THREE.Camera): void {
+  // §1: every visible chunk updates from the same wave function on every
+  // rendered frame — the camera only culls
+  private updateChunks(camera: THREE.Camera): void {
     PROJ.multiplyMatrices(
       (camera as THREE.PerspectiveCamera).projectionMatrix,
       (camera as THREE.PerspectiveCamera).matrixWorldInverse,
     );
     FRUSTUM.setFromProjectionMatrix(PROJ);
-    const o = { h: 0, dx: 0, dz: 0 };
+    const o = this.scratch;
     let visible = 0;
     for (const ch of this.chunks) {
       const inView = this.debug.far && FRUSTUM.intersectsBox(ch.bounds);
-      if (!inView) {
-        ch.lod0.visible = false;
-        ch.lod1.visible = false;
-        continue;
-      }
+      ch.mesh.visible = inView;
+      if (!inView) continue;
       visible++;
-      const dx = cam.x - (ch.cx + CHUNK / 2);
-      const dz = cam.z - (ch.cz + CHUNK / 2);
-      const dist = Math.hypot(dx, dz) - CHUNK * 0.7;
-      const lod0 = dist < this.params.lod0Radius;
-      ch.lod0.visible = lod0;
-      ch.lod1.visible = !lod0;
-      // far chunks refresh on a stagger — they are fog-dimmed and coarse,
-      // and this is visibility work, not a change to the wave field
-      if (dist > 320 && (this.frameN & 3) !== ch.stagger) continue;
-      const mesh = lod0 ? ch.lod0 : ch.lod1;
-      const nWaves = lod0 ? 4 : 2; // small ripples die below cell resolution
-      const pos = mesh.geometry.getAttribute("position") as THREE.BufferAttribute;
-      const col = mesh.geometry.getAttribute("color") as THREE.BufferAttribute;
+      const pos = ch.mesh.geometry.getAttribute("position") as THREE.BufferAttribute;
+      const col = ch.mesh.geometry.getAttribute("color") as THREE.BufferAttribute;
+      const uv = ch.mesh.geometry.getAttribute("uv") as THREE.BufferAttribute;
       const pa = pos.array as Float32Array;
       const ca = col.array as Float32Array;
+      const ua = uv.array as Float32Array;
       const n = pos.count;
-      const cheap = dist > 300; // fully fogged: skip the reflection math
       for (let i = 0; i < n; i++) {
         const x = pa[i * 3];
         const z = pa[i * 3 + 2];
-        this.sampleWaves(x, z, this.time, nWaves, o);
+        this.sampleWaves(x, z, this.time, o);
         const y = this.seaLevel + o.h;
         pa[i * 3 + 1] = y;
-        if (cheap) {
-          ca[i * 3] = 0.62;
-          ca[i * 3 + 1] = 0.62;
-          ca[i * 3 + 2] = 0.66;
-          continue;
-        }
         const nl = Math.hypot(o.dx, 1, o.dz);
         this.shadeVertex(
           x, y, z,
           -o.dx / nl, 1 / nl, -o.dz / nl,
-          o.h, 30, cam, ca, i * 3,
+          o.h, 30, ca, i * 3, ua, i * 2,
         );
       }
       pos.needsUpdate = true;
       col.needsUpdate = true;
+      uv.needsUpdate = true;
     }
     this.stats.chunksVisible = visible;
   }
 
-  // nearshore: evaluate the grid once (shared samples -> continuity), then
-  // emit terrain-clipped triangles — the actual moving shoreline
-  private updateNearshore(cam: THREE.Vector3): void {
+  private updateNearshore(): void {
     const NS = this.shore.length;
     const NR = SHORE_ROWS.length;
     const t = this.time;
-    const o = { h: 0, dx: 0, dz: 0 };
-    // pass 1: per-grid-vertex height
+    // pass 1: heights via the unified sampler math (fast path: si/d known)
     for (let i = 0; i < NS; i++) {
       for (let r = 0; r < NR; r++) {
         const k = i * NR + r;
         const x = this.rowPos[k * 2];
         const z = this.rowPos[k * 2 + 1];
         const depth = this.rowDepth[k];
-        const crossK = THREE.MathUtils.smoothstep(depth, 1.5, 5);
-        const smallK = THREE.MathUtils.smoothstep(depth, 0.8, 3);
-        this.sampleWaves(x, z, t, 4, o);
-        const w = this.waves;
-        // suppress the crossing + small waves in the shallows (subtract the
-        // suppressed share of each wave's contribution)
+        const o = this.scratch;
+        this.sampleWaves(x, z, t, o);
+        const crossK = sstep(depth, 1.5, 5);
+        const smallK = sstep(depth, 0.8, 3);
         let h = o.h;
         for (let wi = 1; wi < 4; wi++) {
           const sup = wi === 1 ? crossK : smallK;
-          const ph = w[wi].kx * x + w[wi].kz * z - w[wi].spd * t + w[wi].ph;
-          h -= w[wi].a * tsin(ph) * (1 - sup);
+          const w = this.waves[wi];
+          const ph = w.kx * x + w.kz * z - w.spd * t + w.ph;
+          h -= w.a * tsin(ph) * (1 - sup);
         }
         const shoreW =
-          this.shoreShape(this.shorePhase(i, r, t)) * this.shoreAmp(depth);
-        const blend = THREE.MathUtils.smoothstep(SHORE_ROWS[r], BLEND_LO, BLEND_HI);
-        this.gh[k] = THREE.MathUtils.lerp(
-          h * THREE.MathUtils.lerp(0.55, 1, crossK) + shoreW,
-          o.h,
-          blend,
-        );
+          this.shoreShape(this.shorePhaseAtD(i, SHORE_ROWS[r], t)) *
+          this.shoreAmpAt(depth);
+        const blend = sstep(SHORE_ROWS[r], BLEND_LO, BLEND_HI);
+        this.gh[k] = lerp(h * lerp(0.55, 1, crossK) + shoreW, o.h, blend);
       }
     }
-    // pass 2: per-grid-vertex colour (finite-difference normals off gh)
+    // pass 2: shared per-grid-vertex colour + UV (continuity across cells)
     for (let i = 0; i < NS; i++) {
       for (let r = 0; r < NR; r++) {
         const k = i * NR + r;
@@ -818,42 +1073,28 @@ export class CoastWater {
         const dzs = SHORE_ROWS[rN] - SHORE_ROWS[r] || 1;
         const sAlong = (this.gh[iN * NR + r] - this.gh[k]) / dxs;
         const sCross = (this.gh[i * NR + rN] - this.gh[k]) / dzs;
-        // build the normal from the two surface tangents (approx axes)
         const nx = -sAlong;
         const nz = -sCross;
         const nl = Math.hypot(nx, 1, nz);
         this.shadeVertex(
           x, y, z, nx / nl, 1 / nl, nz / nl,
-          this.gh[k], this.rowDepth[k], cam, this.gc, k * 3,
+          this.gh[k], this.rowDepth[k],
+          this.gc, k * 3, this.guv, k * 2,
         );
       }
     }
-    // pass 3: clip + emit. clearance = waterY - terrainY per corner.
+    // pass 3: terrain clip + emit (position, colour AND uv interpolate)
     const pos = this.near.geometry.getAttribute("position") as THREE.BufferAttribute;
     const col = this.near.geometry.getAttribute("color") as THREE.BufferAttribute;
+    const uv = this.near.geometry.getAttribute("uv") as THREE.BufferAttribute;
     const pa = pos.array as Float32Array;
     const ca = col.array as Float32Array;
+    const ua = uv.array as Float32Array;
     let vtx = 0;
     let clipped = 0;
-    const emit = (
-      ax: number, ay: number, az: number, ac: number[],
-      bx: number, by: number, bz: number, bc: number[],
-      cx2: number, cy2: number, cz2: number, cc: number[],
-    ): void => {
-      if (vtx + 3 > this.nearMax) return;
-      pa[vtx * 3] = ax; pa[vtx * 3 + 1] = ay; pa[vtx * 3 + 2] = az;
-      ca[vtx * 3] = ac[0]; ca[vtx * 3 + 1] = ac[1]; ca[vtx * 3 + 2] = ac[2];
-      vtx++;
-      pa[vtx * 3] = bx; pa[vtx * 3 + 1] = by; pa[vtx * 3 + 2] = bz;
-      ca[vtx * 3] = bc[0]; ca[vtx * 3 + 1] = bc[1]; ca[vtx * 3 + 2] = bc[2];
-      vtx++;
-      pa[vtx * 3] = cx2; pa[vtx * 3 + 1] = cy2; pa[vtx * 3 + 2] = cz2;
-      ca[vtx * 3] = cc[0]; ca[vtx * 3 + 1] = cc[1]; ca[vtx * 3 + 2] = cc[2];
-      vtx++;
-    };
-    // corner scratch
     const P: number[][] = [[], [], [], []];
     const C: number[][] = [[], [], [], []];
+    const U: number[][] = [[], [], [], []];
     const CL: number[] = [0, 0, 0, 0];
     const corner = (slot: number, i: number, r: number): void => {
       const k = i * NR + r;
@@ -864,66 +1105,70 @@ export class CoastWater {
       C[slot][0] = this.gc[k * 3];
       C[slot][1] = this.gc[k * 3 + 1];
       C[slot][2] = this.gc[k * 3 + 2];
+      U[slot][0] = this.guv[k * 2];
+      U[slot][1] = this.guv[k * 2 + 1];
       CL[slot] = y - this.rowTerrain[k];
     };
-    const lerpV = (a: number, b: number, f: number): number => a + (b - a) * f;
+    const emit1 = (p: number[], c: number[], u: number[]): void => {
+      pa[vtx * 3] = p[0];
+      pa[vtx * 3 + 1] = p[1];
+      pa[vtx * 3 + 2] = p[2];
+      ca[vtx * 3] = c[0];
+      ca[vtx * 3 + 1] = c[1];
+      ca[vtx * 3 + 2] = c[2];
+      ua[vtx * 2] = u[0];
+      ua[vtx * 2 + 1] = u[1];
+      vtx++;
+    };
+    const cutP: number[] = [0, 0, 0];
+    const cutC: number[] = [0, 0, 0];
+    const cutU: number[] = [0, 0];
+    const cut = (w: number, d: number): void => {
+      const f = CL[w] / (CL[w] - CL[d]);
+      for (let q = 0; q < 3; q++) {
+        cutP[q] = P[w][q] + (P[d][q] - P[w][q]) * f;
+        cutC[q] = C[w][q] + (C[d][q] - C[w][q]) * f;
+      }
+      cutU[0] = U[w][0] + (U[d][0] - U[w][0]) * f;
+      cutU[1] = U[w][1] + (U[d][1] - U[w][1]) * f;
+    };
     const clipTri = (ia: number, ib: number, ic: number): void => {
+      if (vtx + 12 > this.nearMax) return;
       const wet = [CL[ia] > 0, CL[ib] > 0, CL[ic] > 0];
       const nWet = (wet[0] ? 1 : 0) + (wet[1] ? 1 : 0) + (wet[2] ? 1 : 0);
       if (nWet === 0) return;
       if (nWet === 3) {
-        emit(
-          P[ia][0], P[ia][1], P[ia][2], C[ia],
-          P[ib][0], P[ib][1], P[ib][2], C[ib],
-          P[ic][0], P[ic][1], P[ic][2], C[ic],
-        );
+        emit1(P[ia], C[ia], U[ia]);
+        emit1(P[ib], C[ib], U[ib]);
+        emit1(P[ic], C[ic], U[ic]);
         return;
       }
       clipped++;
-      // order so the wet verts come first
       const order = [ia, ib, ic].sort(
         (a, b) => (CL[b] > 0 ? 1 : 0) - (CL[a] > 0 ? 1 : 0),
       );
-      const cut = (w: number, d: number): { p: number[]; c: number[] } => {
-        const f = CL[w] / (CL[w] - CL[d]);
-        return {
-          p: [
-            lerpV(P[w][0], P[d][0], f),
-            lerpV(P[w][1], P[d][1], f),
-            lerpV(P[w][2], P[d][2], f),
-          ],
-          c: [
-            lerpV(C[w][0], C[d][0], f),
-            lerpV(C[w][1], C[d][1], f),
-            lerpV(C[w][2], C[d][2], f),
-          ],
-        };
-      };
       if (nWet === 1) {
         const w = order[0];
-        const e1 = cut(w, order[1]);
-        const e2 = cut(w, order[2]);
-        emit(
-          P[w][0], P[w][1], P[w][2], C[w],
-          e1.p[0], e1.p[1], e1.p[2], e1.c,
-          e2.p[0], e2.p[1], e2.p[2], e2.c,
-        );
+        emit1(P[w], C[w], U[w]);
+        cut(w, order[1]);
+        emit1([...cutP], [...cutC], [...cutU]);
+        cut(w, order[2]);
+        emit1([...cutP], [...cutC], [...cutU]);
       } else {
         const w0 = order[0];
         const w1 = order[1];
         const d = order[2];
-        const e0 = cut(w0, d);
-        const e1 = cut(w1, d);
-        emit(
-          P[w0][0], P[w0][1], P[w0][2], C[w0],
-          P[w1][0], P[w1][1], P[w1][2], C[w1],
-          e0.p[0], e0.p[1], e0.p[2], e0.c,
-        );
-        emit(
-          P[w1][0], P[w1][1], P[w1][2], C[w1],
-          e1.p[0], e1.p[1], e1.p[2], e1.c,
-          e0.p[0], e0.p[1], e0.p[2], e0.c,
-        );
+        cut(w0, d);
+        const e0p = [...cutP];
+        const e0c = [...cutC];
+        const e0u = [...cutU];
+        cut(w1, d);
+        emit1(P[w0], C[w0], U[w0]);
+        emit1(P[w1], C[w1], U[w1]);
+        emit1(e0p, e0c, e0u);
+        emit1(P[w1], C[w1], U[w1]);
+        emit1([...cutP], [...cutC], [...cutU]);
+        emit1(e0p, e0c, e0u);
       }
     };
     for (let i = 0; i < NS - 1; i++)
@@ -932,33 +1177,47 @@ export class CoastWater {
         corner(1, i + 1, r);
         corner(2, i, r + 1);
         corner(3, i + 1, r + 1);
-        clipTri(0, 2, 1); // winding matches the chunk grids
+        clipTri(0, 2, 1);
         clipTri(1, 2, 3);
       }
     this.near.geometry.setDrawRange(0, vtx);
     pos.needsUpdate = true;
     col.needsUpdate = true;
+    uv.needsUpdate = true;
     this.stats.nearTris = Math.floor(vtx / 3);
     this.stats.clippedTris = clipped;
   }
 
-  // foam + swash + wet sand — the shoreline theatre
+  // §8: foam, swash and wet sand as stages of the SAME shore-wave cycle
   private updateShoreline(dt: number): void {
     const t = this.time;
     const NS = this.shore.length;
     const p = this.params;
 
-    // BREAKER FOAM: invert the integrated phase table for the moving crest
     const fGeo = this.foam.geometry;
     const fPos = fGeo.getAttribute("position") as THREE.BufferAttribute;
     const fUv = fGeo.getAttribute("uv") as THREE.BufferAttribute;
     const fCol = fGeo.getAttribute("color") as THREE.BufferAttribute;
+    const sGeo = this.swash.geometry;
+    const sPos = sGeo.getAttribute("position") as THREE.BufferAttribute;
+    const sUv = sGeo.getAttribute("uv") as THREE.BufferAttribute;
+    const sCol = sGeo.getAttribute("color") as THREE.BufferAttribute;
+    const wGeo = this.wet.geometry;
+    const wPos = wGeo.getAttribute("position") as THREE.BufferAttribute;
+    const wCol = wGeo.getAttribute("color") as THREE.BufferAttribute;
+    const easeOutCubic = (u: number): number => 1 - Math.pow(1 - u, 3);
+    const easeInOutQuad = (u: number): number =>
+      u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+
     for (let si = 0; si < NS; si++) {
       const S = this.shore[si];
+      const cycle = this.cycleAt(si, t);
+
+      // BREAKER: locate the physical crest via the integrated phase table
       const base = this.alongshore(this.arc[si], t) - t * p.shoreSpeed;
       let crossX = -1;
-      let strength = 0;
-      for (let j = 6; j >= 1; j--) {
+      let zone = 0;
+      for (let j = SHORE_ROWS.length - 5; j >= 1; j--) {
         const a0 = -this.phaseAt[j] + base;
         const a1 = -this.phaseAt[j - 1] + base;
         const lo = Math.min(a0, a1);
@@ -967,82 +1226,61 @@ export class CoastWater {
         const crest = Math.PI / 2 + n0 * TAU;
         if (crest <= hi) {
           const f = (crest - a0) / (a1 - a0 || 1);
-          crossX = THREE.MathUtils.lerp(SHORE_ROWS[j], SHORE_ROWS[j - 1], f);
-          const depth = Math.max(
-            0.1,
-            crossX * (S.bedSlope ?? 0.13) + 0.1,
-          );
-          const zone =
-            THREE.MathUtils.smoothstep(depth, 0.8, 1.6) === 1
-              ? 0
-              : (1 - THREE.MathUtils.smoothstep(depth, 0.8, 1.6)) *
-                THREE.MathUtils.smoothstep(depth, 0.15, 0.45);
-          strength = zone * p.foamStrength;
+          crossX = lerp(SHORE_ROWS[j], SHORE_ROWS[j - 1], f);
+          const depth = Math.max(0.1, crossX * S.bedSlope + 0.1);
+          zone =
+            (1 - sstep(depth, 0.8, 1.6)) * sstep(depth, 0.15, 0.45);
           break;
         }
       }
+      // the foam window rides the same cycle the swash uses
+      const fWin = winEnv(cycle, p.foamPhase, 0.4);
+      const strength = zone * p.foamStrength * (0.35 + 0.65 * fWin);
       const active = crossX > 0 && strength > 0.02;
       const cx = active ? crossX : 5;
       for (let r = 0; r < 2; r++) {
         const d = cx + (r === 0 ? p.foamWidth : -p.foamWidth);
         const px = S.x + S.sx * d;
         const pz = S.z + S.sz * d;
+        // §7: the foam sits on the UNIFIED surface — shore wave included
         const py = active
-          ? this.heightAt(px, pz, t) + 0.05
+          ? this.sampleAt(px, pz, si, d, t).height + 0.05
           : this.seaLevel;
         const vi = r * NS + si;
         fPos.setXYZ(vi, px, py, pz);
-        fUv.setXY(vi, this.arc[si] * 0.14 + t * p.foamDrift, r);
+        fUv.setXY(vi, this.arc[si] * 0.14, r);
         fCol.setXYZW(vi, 1, 1, 1, active ? strength * (r === 0 ? 0.75 : 0.4) : 0);
       }
-    }
-    fPos.needsUpdate = true;
-    fUv.needsUpdate = true;
-    fCol.needsUpdate = true;
 
-    // SWASH: fast advance (25% of the cycle), slow retreat (75%)
-    const sGeo = this.swash.geometry;
-    const sPos = sGeo.getAttribute("position") as THREE.BufferAttribute;
-    const sCol = sGeo.getAttribute("color") as THREE.BufferAttribute;
-    const easeOutCubic = (u: number): number => 1 - Math.pow(1 - u, 3);
-    const easeInOutQuad = (u: number): number =>
-      u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
-    for (let si = 0; si < NS; si++) {
-      const S = this.shore[si];
-      const cyc =
-        (((t / p.swashPeriod + this.arc[si] * 0.015 + si * 0.02) % 1) + 1) % 1;
-      const travel =
-        cyc < 0.25
-          ? easeOutCubic(cyc / 0.25)
-          : 1 - easeInOutQuad((cyc - 0.25) / 0.75);
+      // SWASH: phase windows of the SAME cycle (advance fast, retreat slow)
+      const advLen = Math.max(0.06, 0.17);
+      const retLen = clamp(p.swashRetreat, 0.1, 0.9);
+      let travel = 0;
+      const cRel = ((cycle - p.swashPhase) % 1 + 1) % 1;
+      if (cRel < advLen) travel = easeOutCubic(cRel / advLen);
+      else if (cRel < advLen + retLen)
+        travel = 1 - easeInOutQuad((cRel - advLen) / retLen);
       const local = 0.7 + 0.3 * tsin(this.arc[si] * 0.21 + t * 0.4);
       const runup = p.swashRunup * travel * local;
       this.wetness[si] = Math.max(
         this.wetness[si] * Math.exp(-dt / Math.max(0.5, p.wetDecay)),
         travel * local,
       );
-      const rows: [number, number, number, number, number][] = [
-        [runup, 1, 1, 1, 0.8], // narrow bright leading edge
-        [runup - 2.2, 0.6, 0.71, 0.78, 0.28], // dim blue-grey film
-        [-0.7, 0.55, 0.7, 0.75, 0.45], // back into the sea
+      const rows: [number, number, number, number, number, number][] = [
+        [runup, 1, 1, 1, 0.85, 0], // leading edge at texture v=0
+        [runup - 2.2, 0.75, 0.85, 0.9, 0.4, 0.55],
+        [-0.7, 0.6, 0.75, 0.8, 0.5, 1],
       ];
       for (let r = 0; r < 3; r++) {
-        const [dIn, cr, cg, cb, cal] = rows[r];
+        const [dIn, cr, cg, cb, cal, tv] = rows[r];
         const px = S.x - S.sx * dIn;
         const pz = S.z - S.sz * dIn;
         sPos.setXYZ(r * NS + si, px, this.terrain(px, pz) + 0.04, pz);
-        sCol.setXYZW(r * NS + si, cr, cg, cb, cal * (0.3 + 0.7 * travel));
+        sUv.setXY(r * NS + si, this.arc[si] * 0.2, tv);
+        sCol.setXYZW(r * NS + si, cr, cg, cb, cal * (0.25 + 0.75 * travel));
       }
-    }
-    sPos.needsUpdate = true;
-    sCol.needsUpdate = true;
 
-    // WET SAND: exponential drying behind the maximum recent run-up
-    const wGeo = this.wet.geometry;
-    const wPos = wGeo.getAttribute("position") as THREE.BufferAttribute;
-    const wCol = wGeo.getAttribute("color") as THREE.BufferAttribute;
-    for (let si = 0; si < NS; si++) {
-      const S = this.shore[si];
+      // WET SAND: remains after the connected swash event retreats
       const w = this.wetness[si];
       for (let r = 0; r < 2; r++) {
         const dIn = r === 0 ? p.swashRunup * w : -0.4;
@@ -1053,11 +1291,16 @@ export class CoastWater {
         wCol.setXYZW(r * NS + si, dark, dark, Math.min(1, dark * 1.04), 1);
       }
     }
+    fPos.needsUpdate = true;
+    fUv.needsUpdate = true;
+    fCol.needsUpdate = true;
+    sPos.needsUpdate = true;
+    sUv.needsUpdate = true;
+    sCol.needsUpdate = true;
     wPos.needsUpdate = true;
     wCol.needsUpdate = true;
   }
 
-  // debug: coastline points, tangents, sea normals + cross-shore rows
   private updateCoastDebug(): void {
     if (!this.debug.coast) {
       if (this.coastDebug) this.coastDebug.visible = false;
@@ -1071,14 +1314,10 @@ export class CoastWater {
         const y = this.seaLevel + 0.6;
         if (i < NS - 1) {
           const T = this.shore[i + 1];
-          pts.push(S.x, y, S.z, T.x, y, T.z); // the spline itself
+          pts.push(S.x, y, S.z, T.x, y, T.z);
         }
-        pts.push(S.x, y, S.z, S.x + S.sx * 4, y, S.z + S.sz * 4); // sea normal
-        for (const d of SHORE_ROWS)
-          pts.push(
-            S.x + S.sx * d, y - 0.3, S.z + S.sz * d,
-            S.x + S.sx * d, y + 0.3, S.z + S.sz * d,
-          );
+        if (i % 4 === 0)
+          pts.push(S.x, y, S.z, S.x + S.sx * 4, y, S.z + S.sz * 4);
       }
       const g = new THREE.BufferGeometry();
       g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(pts), 3));
@@ -1093,7 +1332,14 @@ export class CoastWater {
   }
 }
 
-// ---- shared small builders -------------------------------------------------
+// smooth 0..1 envelope over a cyclic window starting at `start`, `len` wide
+function winEnv(cycle: number, start: number, len: number): number {
+  const c = ((cycle - start) % 1 + 1) % 1;
+  if (c >= len) return 0;
+  const u = c / len;
+  return u < 0.3 ? u / 0.3 : 1 - (u - 0.3) / 0.7;
+}
+
 function gridMesh(
   cols: number,
   rows: number,
@@ -1122,18 +1368,72 @@ function gridMesh(
   return m;
 }
 
-// 64x32 breaker foam: broken white and pale-cyan streaks on nothing
+// §9: connected cellular foam streaks — long irregular body, branching thin
+// fingers, big transparent holes, one dense side, dithered fade, cyan under
+// white. Drawn once, indexed-look, nearest filtered.
 function makeFoamTex(): THREE.CanvasTexture {
   const c = document.createElement("canvas");
-  c.width = 64;
+  c.width = 128;
   c.height = 32;
   const g = c.getContext("2d")!;
-  g.clearRect(0, 0, 64, 32);
-  for (let i = 0; i < 26; i++) {
-    g.fillStyle =
-      i % 3 === 2 ? "rgba(190,240,240,0.85)" : "rgba(255,255,255,0.9)";
-    const w = 4 + ((i * 29) % 14);
-    g.fillRect((i * 19) % 62, (i * 11) % 30, w, 2);
+  g.clearRect(0, 0, 128, 32);
+  // cyan underlayer: a broad broken band hugging the dense side
+  g.fillStyle = "rgba(150,225,230,0.55)";
+  for (let x = 0; x < 128; x += 3) {
+    const wob = Math.sin(x * 0.22) * 3 + Math.sin(x * 0.07) * 4;
+    if (Math.sin(x * 0.4) > -0.6) g.fillRect(x, 10 + wob, 3, 12);
+  }
+  // main white body: connected wandering streak
+  g.fillStyle = "rgba(255,255,255,0.95)";
+  let y = 14;
+  for (let x = 0; x < 128; x += 2) {
+    y += Math.round(Math.sin(x * 0.3) + Math.sin(x * 0.11) * 1.4);
+    y = Math.max(4, Math.min(24, y));
+    const th = 2 + (Math.sin(x * 0.17) > 0.2 ? 2 : 0);
+    if (Math.sin(x * 0.09) > -0.75) g.fillRect(x, y, 2, th);
+    // branching fingers toward the sparse side
+    if (Math.sin(x * 0.53) > 0.82) g.fillRect(x, y - 5, 1, 5);
+  }
+  // dithered fade specks
+  g.fillStyle = "rgba(255,255,255,0.5)";
+  for (let i = 0; i < 90; i++) {
+    const x = (i * 37) % 128;
+    const yy = 4 + ((i * 13) % 24);
+    if ((x + yy) % 2 === 0) g.fillRect(x, yy, 1, 1);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.magFilter = THREE.NearestFilter;
+  tex.minFilter = THREE.NearestFilter;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+// §9: the swash sheet's own texture — narrow broken leading line (v=0),
+// patchy pale-cyan film, big gaps, faint retreat streaks toward v=1
+function makeSwashTex(): THREE.CanvasTexture {
+  const c = document.createElement("canvas");
+  c.width = 128;
+  c.height = 32;
+  const g = c.getContext("2d")!;
+  g.clearRect(0, 0, 128, 32);
+  // leading line: broken white dashes at the top edge
+  g.fillStyle = "rgba(255,255,255,0.95)";
+  for (let x = 0; x < 128; x += 2)
+    if (Math.sin(x * 0.31) > -0.5) g.fillRect(x, 0, 2, 2 + (x % 3 === 0 ? 1 : 0));
+  // patchy film
+  g.fillStyle = "rgba(190,230,235,0.4)";
+  for (let i = 0; i < 60; i++) {
+    const x = (i * 29) % 126;
+    const yy = 4 + ((i * 17) % 18);
+    g.fillRect(x, yy, 4 + ((i * 7) % 8), 2);
+  }
+  // faint retreat streaks running down-texture
+  g.fillStyle = "rgba(220,240,244,0.3)";
+  for (let i = 0; i < 14; i++) {
+    const x = (i * 43) % 128;
+    g.fillRect(x, 8 + ((i * 11) % 8), 1, 14);
   }
   const tex = new THREE.CanvasTexture(c);
   tex.wrapS = THREE.RepeatWrapping;

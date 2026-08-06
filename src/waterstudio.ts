@@ -1,13 +1,13 @@
 // THE WATER STUDIO — #waterstudio. Live fine-tuning for the coast water:
-// every WaterParams knob as a slider, plus the spec's debug toggles (layer
-// switches, freeze time, wireframe, reflection/modulation kills, coastline
-// debug). Settings persist to localStorage and re-apply to every rebuilt
-// water instance (level reloads included), same contract as the other
-// studios: tune, Copy JSON, hand it over to be baked.
+// every WaterParams knob as a slider, layer toggles, and the comparison
+// modes (geometry only / raw sky texture / texture+modulation / locked
+// camera influence / labelled sky atlas). Settings persist to localStorage
+// and re-apply to every rebuilt water instance; Copy JSON hands the tuning
+// back for baking.
 import { CoastWater, WATER_DEFAULTS, type WaterParams } from "./water";
 import { el, sec, note, btn, sliderRow, injectStudioCss } from "./studiokit";
 
-const STORE = "waterStudioV1";
+const STORE = "waterStudioV2";
 
 interface Opts {
   getWater: () => CoastWater | null;
@@ -69,9 +69,22 @@ const GROUPS: { title: string; fields: Field[] }[] = [
     ],
   },
   {
+    title: "REFLECTION FIELD",
+    fields: [
+      { key: "stableElev", label: "elevation", lo: 0.5, hi: 1, step: 0.005 },
+      { key: "stableBias", label: "shore bias", lo: 0, hi: 1, step: 0.01 },
+      { key: "camInfluence", label: "camera pull", lo: 0, hi: 0.15, step: 0.005 },
+      { key: "uScale", label: "world U scale", lo: 0.05, hi: 2, step: 0.01 },
+      { key: "vScale", label: "world V scale", lo: 0.1, hi: 2.5, step: 0.01 },
+      { key: "distort", label: "distortion", lo: 0.3, hi: 4, step: 0.05 },
+      { key: "worldU", label: "drift U", lo: 0, hi: 0.01, step: 0.0001 },
+      { key: "worldV", label: "drift V", lo: 0, hi: 0.005, step: 0.0001 },
+      { key: "palette", label: "palette size", lo: 4, hi: 64, step: 1 },
+    ],
+  },
+  {
     title: "COLOUR",
     fields: [
-      { key: "quant", label: "quantize", lo: 2, hi: 32, step: 1 },
       { key: "brightness", label: "brightness", lo: 0.4, hi: 1.7, step: 0.01 },
       { key: "troughDark", label: "trough navy", lo: 0, hi: 0.7, step: 0.01 },
       { key: "grazeCyan", label: "graze cyan", lo: 0, hi: 1, step: 0.01 },
@@ -79,40 +92,34 @@ const GROUPS: { title: string; fields: Field[] }[] = [
     ],
   },
   {
-    title: "BREAKER FOAM",
+    title: "SHORE EVENT (one cycle: breaker -> foam -> swash -> wet)",
     fields: [
-      { key: "foamWidth", label: "width", lo: 0.2, hi: 2.5, step: 0.05 },
-      { key: "foamDrift", label: "drift", lo: 0, hi: 0.8, step: 0.01 },
-      { key: "foamStrength", label: "strength", lo: 0, hi: 2, step: 0.02 },
-    ],
-  },
-  {
-    title: "SWASH + WET SAND",
-    fields: [
-      { key: "swashPeriod", label: "period", lo: 2, hi: 16, step: 0.1 },
+      { key: "foamPhase", label: "foam phase", lo: 0, hi: 1, step: 0.01 },
+      { key: "swashPhase", label: "swash phase", lo: 0, hi: 1, step: 0.01 },
+      { key: "swashRetreat", label: "retreat length", lo: 0.1, hi: 0.9, step: 0.01 },
       { key: "swashRunup", label: "run-up", lo: 0, hi: 10, step: 0.1 },
       { key: "wetDecay", label: "dry time", lo: 1, hi: 30, step: 0.5 },
+      { key: "foamWidth", label: "foam width", lo: 0.2, hi: 2.5, step: 0.05 },
+      { key: "foamStrength", label: "foam strength", lo: 0, hi: 2, step: 0.02 },
     ],
   },
   {
-    title: "STRUCTURE",
+    title: "STRUCTURE (applies on level reload)",
     fields: [
-      { key: "lod0Radius", label: "dense radius", lo: 60, hi: 420, step: 5 },
+      { key: "alongDensity", label: "shore density", lo: 0.2, hi: 2, step: 0.05 },
     ],
   },
 ];
 
-const TOGGLES: { key: string; label: string }[] = [
-  { key: "far", label: "FAR" },
-  { key: "near", label: "NEAR" },
-  { key: "foam", label: "FOAM" },
-  { key: "swash", label: "SWASH" },
-  { key: "wet", label: "WET" },
-  { key: "freeze", label: "FREEZE" },
-  { key: "wireframe", label: "WIRE" },
-  { key: "reflection", label: "REFL" },
-  { key: "modulation", label: "MOD" },
-  { key: "coast", label: "COAST" },
+const TOGGLES: { key: string; label: string; on: boolean }[] = [
+  { key: "far", label: "FAR", on: true },
+  { key: "near", label: "NEAR", on: true },
+  { key: "foam", label: "FOAM", on: true },
+  { key: "swash", label: "SWASH", on: true },
+  { key: "wet", label: "WET", on: true },
+  { key: "freeze", label: "FREEZE", on: false },
+  { key: "wireframe", label: "WIRE", on: false },
+  { key: "coast", label: "COAST", on: false },
 ];
 
 export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
@@ -152,12 +159,58 @@ export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
       d[tg.key] = !d[tg.key];
       b.classList.toggle("pst-on", d[tg.key]);
     });
-    b.classList.add("pst-on"); // everything starts enabled except coast/freeze/wire
-    if (tg.key === "coast" || tg.key === "freeze" || tg.key === "wireframe")
-      b.classList.remove("pst-on");
+    b.classList.toggle("pst-on", tg.on);
     togRow.append(b);
   }
   panel.append(togRow);
+
+  // the comparison modes from the correction spec
+  panel.append(sec("COMPARE"));
+  const cmpRow = el("div", "pst-btns");
+  const modes: [string, (w: CoastWater) => void][] = [
+    [
+      "GEOMETRY ONLY",
+      (w) => {
+        w.debug.texture = false;
+        w.debug.modulation = true;
+      },
+    ],
+    [
+      "RAW SKY TEXTURE",
+      (w) => {
+        w.debug.texture = true;
+        w.debug.modulation = false;
+      },
+    ],
+    [
+      "TEXTURE + MOD",
+      (w) => {
+        w.debug.texture = true;
+        w.debug.modulation = true;
+      },
+    ],
+  ];
+  for (const [label, fn] of modes)
+    cmpRow.append(
+      btn(label, () => {
+        const w = opts.getWater();
+        if (w) fn(w);
+      }),
+    );
+  const lockBtn = btn("LOCK CAM", () => {
+    const w = opts.getWater();
+    if (!w) return;
+    w.debug.lockCam = !w.debug.lockCam;
+    lockBtn.classList.toggle("pst-on", w.debug.lockCam);
+  });
+  const atlasBtn = btn("SKY ATLAS", () => {
+    const w = opts.getWater();
+    if (!w) return;
+    w.debug.testAtlas = !w.debug.testAtlas;
+    atlasBtn.classList.toggle("pst-on", w.debug.testAtlas);
+  });
+  cmpRow.append(lockBtn, atlasBtn);
+  panel.append(cmpRow);
 
   const stats = note("");
   panel.append(stats);
@@ -203,7 +256,7 @@ export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
         hint.textContent = w
           ? "live — every change saves; Copy JSON to bake"
           : "no water in this level — open The Descent";
-        if (w) apply(); // a rebuilt level gets the saved tuning back
+        if (w) apply();
       }
       statT += dt;
       if (w && statT > 0.5) {
