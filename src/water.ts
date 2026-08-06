@@ -434,7 +434,10 @@ void main() {
   vec3 m = vec3(1.0);
   if (uModOn > 0.5) {
     float shal = (1.0 - smoothstep(0.25, 3.5, vData.x)) * uShallowMix;
-    m = mix(vec3(0.656, 0.844, 1.156), vec3(0.800, 1.281, 1.250), shal);
+    // §14 DEEP/SHALLOW_MODULATION exactly: near-neutral filters, so the
+    // reflected sky itself carries the image (the old saturated blue-teal
+    // constants buried it and the water kept its pre-v5 look)
+    m = mix(vec3(0.72, 0.82, 1.0), vec3(0.82, 0.94, 0.96), shal);
     float k = clamp(vData.y / uAmpRef, -1.0, 1.0);
     m *= (1.0 + k * uTroughDark) * vec3(1.0, 1.0, 1.02);
     float graze = clamp((1.0 - abs(GN.y)) * 2.4 * uGraze, 0.0, 1.0);
@@ -1350,7 +1353,7 @@ export class CoastWater {
         const pz = S.z + S.sz * d;
         // §16: foam rides the UNIFIED surface — shore wave included
         const py = active
-          ? this.sampleAt(px, pz, si, d, t).height + 0.02
+          ? this.sampleAt(px, pz, si, d, t).height + 0.015
           : this.seaLevel;
         const vi = r * NB + b;
         fPos.setXYZ(vi, px, py, pz);
