@@ -5609,6 +5609,16 @@ export class Player {
       const hx = t.x * this.grindDir;
       const hz = t.z * this.grindDir;
       const len = Math.hypot(hx, hz);
+      // DOWNHILL RAIL HOP: the same float the downhill ollie had. The rail
+      // (and the road under it) keeps dropping away beneath a flat pop, so
+      // hops off a descending grind bought seconds of hangtime. Fold the
+      // descent rate into the pop (same knob, same floor) and keep the
+      // snappy gravity — flat and climbing rails are untouched.
+      const desc = Math.min(0, t.y * this.grindDir * this.grindVel);
+      if (desc < -0.5) {
+        vVel = Math.max(vVel * 0.45, vVel + desc * TUNING.ollieDownCouple);
+        this.floatAir = false;
+      }
       if (len > 0.05) {
         this.axisF.set(hx / len, 0, hz / len);
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
