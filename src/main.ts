@@ -322,8 +322,8 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     bottom: "#e9f0f4",
     stars: false,
     sunHex: "#fffdf2",
-    imgH: 949,
-    horizonPx: 626,
+    imgH: 941,
+    horizonPx: 623, // measured off the delivered painting (island bases 614-625)
     seaHorizon: true,
   },
 };
