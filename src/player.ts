@@ -6548,9 +6548,11 @@ export class Player {
         // fall through and take the hit below.
       }
       if (this.playerBox.intersectsBox(e.box)) {
-        if (e.kind === 'car' && this.pos.y > e.box.max.y - 0.6) {
+        if (e.kind === 'car' && this.pos.y > e.box.max.y - 0.8) {
           // ROOF GRAZE: the top of traffic is safe. A falling touch skips you
-          // off the roof with a little pop instead of killing you.
+          // off the roof with a little pop instead of killing you. The band
+          // is 0.8 so the HOOD (1.9 above the deck at 1.69x, box top 2.54)
+          // counts as "top" too — only body-height contact kills.
           if (this.vVel < 0 && !this.grounded) {
             this.vVel = Math.max(6, -this.vVel * 0.45);
             this.pos.y = e.box.max.y + 0.02;

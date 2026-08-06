@@ -5527,10 +5527,10 @@ export class Level {
     // player's own lane, faster, each closing on a slower partner ahead of
     // it — the pass plays out right in front of you and YOUR lane is the
     // one that is briefly not yours.
-    // Cars build 30% OVERSIZED, baked into the geometry — group scale would
-    // not survive resetEnemyVisual, which snaps every foe back to scale 1.
-    // The enemy box in updateEnemies ("car" case) matches this factor.
-    const CAR_S = 1.3;
+    // Cars build ~70% OVERSIZED (1.3 twice), baked into the geometry — group
+    // scale would not survive resetEnemyVisual, which snaps every foe back to
+    // scale 1. The enemy box in updateEnemies ("car" case) matches this factor.
+    const CAR_S = 1.69;
     const makeCar = (col: number): { group: THREE.Group; body: THREE.Mesh } => {
       const group = new THREE.Group();
       const body = new THREE.Mesh(
@@ -5640,20 +5640,22 @@ export class Level {
     put(0.9, -8.4);
     put(0.925, -0.6); put(0.925, 0.6);
     // nitros: landmines with lots of warning, all on the safe strips
+    // shoulder nitros sit at |cross| >= 9.1: the 1.69x car box reaches out to
+    // cross 7.9, and a shoulder dodge past a car must still clear the mine
     put(0.07, 1.8, "nitro");
     put(0.11, -1.5, "nitro");
-    put(0.145, 8.7, "nitro");
+    put(0.145, 9.2, "nitro");
     put(0.19, 0.4, "nitro");
-    put(0.235, -8.5, "nitro");
+    put(0.235, -9.1, "nitro");
     put(0.29, 2, "nitro");
     put(0.36, -1.8, "nitro");
-    put(0.44, 8.8, "nitro");
+    put(0.44, 9.2, "nitro");
     put(0.5, -0.6, "nitro");
     put(0.57, 1.4, "nitro");
-    put(0.65, -8.6, "nitro");
+    put(0.65, -9.2, "nitro");
     put(0.73, 0.8, "nitro");
     put(0.81, -1.9, "nitro");
-    put(0.885, 8.4, "nitro");
+    put(0.885, 9.1, "nitro");
     // oil slicks: dark rainbow-sheen blobs smeared down the tarmac — ride one
     // and the wheels go greasy (steering and brakes cut, see the slippy
     // handling player-side). Some sit in the traffic lanes: dodging a car
@@ -5767,7 +5769,9 @@ export class Level {
         new THREE.Vector3(1, 1, 1),
       ));
     // parked cars nosed into the bays (plain scenery, nobody home)
-    for (const [slot, ci] of [[-3.5, 1], [-1.5, 4], [0.5, 2], [2.5, 5], [3.5, 0]] as const) {
+    // slot 3.6 (not 3.5): at 1.69x a 3.55m-wide car needs more than one bay
+    // of spacing from its 2.5 neighbour or the two would clip
+    for (const [slot, ci] of [[-3.5, 1], [-1.5, 4], [0.5, 2], [2.5, 5], [3.6, 0]] as const) {
       const { group } = makeCar(carCols[ci]);
       const p = lotAt(slot * 3.4 + 1.7, 14);
       group.position.set(p.x, lotTop, p.z);
@@ -11195,9 +11199,9 @@ export class Level {
           e.stompKill = false;
           e.meleeKill = false;
           e.touchHurt = true;
-          boxW = 2.7 * 1.3;
-          boxH = 1.5 * 1.3;
-          cy = 0.75 * 1.3;
+          boxW = 2.7 * 1.69;
+          boxH = 1.5 * 1.69;
+          cy = 0.75 * 1.69;
           break;
       }
       e.box.setFromCenterAndSize(
