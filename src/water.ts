@@ -193,11 +193,14 @@ class SkyTexture {
     this.texture.colorSpace = THREE.SRGBColorSpace;
   }
 
+  horizonV = 1 - 600 / 887; // the painting's horizon row (per-preset, see main)
+
   // mirror of main.ts's dome mapping: the painting's own horizon row sits on
   // the world horizon and the panorama wraps the dome twice
-  load(url: string, fogHex: number): void {
+  load(url: string, fogHex: number, horizonV: number): void {
     this.url = url;
     this.fogHex = fogHex;
+    this.horizonV = horizonV;
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => {
@@ -205,7 +208,7 @@ class SkyTexture {
       const w = this.canvas.width;
       const h = this.canvas.height;
       const g = this.canvas.getContext("2d")!;
-      const HORIZON_V = 1 - 600 / 887;
+      const HORIZON_V = this.horizonV;
       const K = 2.15;
       const vTop = Math.min(1, HORIZON_V + 0.5 * K * (1 - HORIZON_V));
       for (let r = 0; r < h; r++) {
@@ -827,9 +830,9 @@ export class CoastWater {
   }
 
   // ---- reflection UVs (§2-§4) ---------------------------------------------
-  setSkyUrl(url: string, fogHex: number): void {
+  setSkyUrl(url: string, fogHex: number, horizonV = 1 - 600 / 887): void {
     if (this.sky.url === url) return;
-    this.sky.load(url, fogHex);
+    this.sky.load(url, fogHex, horizonV);
   }
   get skyUrl(): string {
     return this.sky.url;

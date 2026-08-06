@@ -538,7 +538,7 @@ export interface CustomGroup {
 // and scaled. The three presets share the same painting geometry (the images
 // are the same size with their horizon on the same row), so a switch is pure
 // colour — see SKY_PRESETS in main.ts, which owns the actual values.
-export const SKY_PRESETS = ["day", "sunset", "night"] as const;
+export const SKY_PRESETS = ["day", "sunset", "night", "coast"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -5029,22 +5029,23 @@ export class Level {
   private buildDescent(): void {
     this.batchDecor = true;
     this.killY = -10; // the bay is the pit: a few metres under the surface
+    this.skyPreset = "coast"; // the beach painting, horizon pinned to sea level
     this.theme = {
-      skyTop: "#3f83c6",
-      skyBottom: "#f4e7cd", // warm marine haze sitting on the water
-      sunColorHex: "#ffe9b8",
+      skyTop: "#3f8fd8",
+      skyBottom: "#eaf6fa", // bright noon haze over open water
+      sunColorHex: "#fff8e0",
       sunU: 0.55,
       sunV: 0.26,
       stars: false,
-      fog: 0xb4d0dc,
-      fogNear: 100,
-      fogFar: 560, // aspirational: the sky preset caps this (~260 at sunset)
-      hemiSky: 0xd4ecfa,
-      hemiGround: 0x3e5a50,
+      fog: 0xdfeef2,
+      fogNear: 110,
+      fogFar: 560, // aspirational: the sky preset caps this
+      hemiSky: 0xd8eef8,
+      hemiGround: 0x7a9a88, // sand + sea bounce
       hemiI: 1.15,
-      sunColor: 0xffe8b4,
-      sunI: 1.35,
-      particleColor: 0xfff8e8,
+      sunColor: 0xfff2d0,
+      sunI: 1.3,
+      particleColor: 0xffffff,
       particleWind: [0.4, 0.05, 0.2],
     };
 

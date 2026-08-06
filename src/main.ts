@@ -210,6 +210,16 @@ interface SkyPresetDef {
   // undefined keeps it, null paints NONE — the disc drags a 185px halo behind
   // it, which is exactly what a night sky must not have.
   sunHex: string | null | undefined;
+  // Paintings that DON'T share the classic 887px/600px geometry declare their
+  // own; absent = the shared constants.
+  imgH?: number;
+  horizonPx?: number;
+  // COAST TREATMENT: pin the painted horizon to the WORLD's sea level (y=0)
+  // instead of the camera's eye level. The dome still follows the camera —
+  // the horizon row is depressed by the angle down to the water at the dome
+  // wall, so from 400m up you look DOWN at the sea line; at beach height the
+  // drop vanishes and it behaves like every other sky.
+  seaHorizon?: boolean;
 }
 const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
   // Bright and open: neutral key, cool skylight, air you can see a long way
@@ -289,6 +299,39 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
     sunHex: null, // no disc: its halo washes the whole sky out, and the
     // painted night reference has no moon in it either
   },
+  // The Descent's own painting: a daytime tropical bay (islands, cumulus,
+  // turquoise sea) with its horizon on row 626 of 949 — and the seaHorizon
+  // treatment, so that painted horizon sits at the WATER, not at eye level.
+  coast: {
+    file: "sky-coast.png",
+    label: "coast",
+    fog: 0xdfeef2,
+    fogFarCap: 340,
+    sunTint: 0xfff4e0,
+    sunK: 0.25,
+    sunMul: 1.15,
+    groundTint: 0xb9c2c8,
+    groundK: 0.25,
+    hemiTint: 0xdcebff,
+    hemiK: 0.45,
+    hemiMul: 1.15,
+    fillTint: 0xcfe2ff,
+    fillK: 0.5,
+    fillMul: 0.26,
+    top: "#3f8fd8",
+    bottom: "#e9f0f4",
+    stars: false,
+    sunHex: "#fffdf2",
+    imgH: 949,
+    horizonPx: 626,
+    seaHorizon: true,
+  },
+};
+
+// a preset's painted-horizon row as a texture-V coordinate
+const presetHorizonV = (p: SkyPreset): number => {
+  const d = SKY_PRESETS[p];
+  return 1 - (d.horizonPx ?? SKY_HORIZON_PX) / (d.imgH ?? SKY_IMG_H);
 };
 
 // Both layers built from one painting (see the loader below).
@@ -320,14 +363,14 @@ skyMist.frustumCulled = false;
 skyMist.visible = false; // until a painting is actually on it
 scene.add(skyMist);
 
-const cfgSkyTex = (t: THREE.Texture): void => {
+const cfgSkyTex = (t: THREE.Texture, hv = SKY_HORIZON_V): void => {
   t.colorSpace = THREE.SRGBColorSpace;
   // Plain repeat on a made-seamless image (see makeSeamless): a continuous wrap
   // with no hard seam AND — unlike a mirrored wrap — no bilateral fold axis.
   t.wrapS = THREE.RepeatWrapping;
   t.wrapT = THREE.ClampToEdgeWrapping; // clamp sky above / faded clouds below
   t.repeat.set(SKY_WRAP, SKY_K); // x: integer wrap (seam-free at the dome UV seam); y: vertical framing
-  t.offset.set(0, SKY_HORIZON_V - 0.5 * SKY_K); // horizon -> dome equator
+  t.offset.set(0, hv - 0.5 * SKY_K); // horizon -> dome equator
 };
 // The panorama's left and right edges don't match, so tiling it shows a seam.
 // A mirrored wrap hides the jump but leaves an obvious reflection axis. Instead
@@ -358,12 +401,14 @@ const makeSeamless = (img: HTMLImageElement): HTMLCanvasElement => {
 //  2) a foreground MIST layer — only the rich stuff BELOW the 600px horizon
 //     (cloud sea, lower islands), fading out toward your feet via the
 //     painting's own alpha so it never buries anything close.
-function buildSkyLayers(img: HTMLImageElement): SkyLayers {
+function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
   const W = img.naturalWidth,
     H = img.naturalHeight;
+  const hv = presetHorizonV(p);
+  const hpx = SKY_PRESETS[p].horizonPx ?? SKY_HORIZON_PX;
   const base = makeSeamless(img); // tileable ONCE, both layers share it
   const bg = new THREE.CanvasTexture(base);
-  cfgSkyTex(bg);
+  cfgSkyTex(bg, hv);
 
   const cFg = document.createElement("canvas");
   cFg.width = W;
@@ -372,21 +417,35 @@ function buildSkyLayers(img: HTMLImageElement): SkyLayers {
   fx.drawImage(base, 0, 0);
   const ramp = fx.createLinearGradient(0, 0, 0, H);
   ramp.addColorStop(0, "rgba(0,0,0,1)"); // erase the sky
-  ramp.addColorStop((SKY_HORIZON_PX - 30) / H, "rgba(0,0,0,1)");
-  ramp.addColorStop((SKY_HORIZON_PX + 40) / H, "rgba(0,0,0,0)"); // keep the clouds
+  ramp.addColorStop((hpx - 30) / H, "rgba(0,0,0,1)");
+  ramp.addColorStop(Math.min(1, (hpx + 40) / H), "rgba(0,0,0,0)"); // keep the clouds
   ramp.addColorStop(1, "rgba(0,0,0,0)");
   fx.globalCompositeOperation = "destination-out";
   fx.fillStyle = ramp;
   fx.fillRect(0, 0, W, H);
   fx.globalCompositeOperation = "source-over";
   const mist = new THREE.CanvasTexture(cFg);
-  cfgSkyTex(mist); // mist sits at its natural below-horizon position (no lift)
+  cfgSkyTex(mist, hv); // mist sits at its natural below-horizon position (no lift)
   return { bg, mist };
 }
 
 // Fetch a preset's painting once and cache it. Missing files are remembered as
 // missing, so a level authored for a time of day whose art hasn't landed yet
 // falls back to the procedural gradient instead of retrying every rebuild.
+// seaHorizon presets: depress the painted horizon by the angle down to the
+// water at the dome wall, every frame. Both layers ride the same offset.
+function updateSeaHorizon(): void {
+  const P = SKY_PRESETS[activeSky];
+  if (!P.seaHorizon) return;
+  const hv = presetHorizonV(activeSky);
+  const drop = Math.atan2(Math.max(0, camera.position.y), 370) / Math.PI;
+  const offY = hv - 0.5 * SKY_K + drop * SKY_K;
+  const bg = (sky.material as THREE.MeshBasicMaterial).map;
+  if (bg) bg.offset.y = offY;
+  const mm = (skyMist.material as THREE.MeshBasicMaterial).map;
+  if (mm) mm.offset.y = offY;
+}
+
 function loadSky(p: SkyPreset): void {
   if (skyCache.has(p) || skyPending.has(p) || skyMissing.has(p)) return;
   skyPending.add(p);
@@ -394,7 +453,7 @@ function loadSky(p: SkyPreset): void {
   img.crossOrigin = "anonymous";
   img.onload = () => {
     skyPending.delete(p);
-    skyCache.set(p, buildSkyLayers(img));
+    skyCache.set(p, buildSkyLayers(img, p));
     // A slow load that lands after the player moved on must not yank the sky
     // out from under the level they're actually looking at.
     if (activeSky === p) applyTheme();
@@ -1987,6 +2046,7 @@ function frame(): void {
     acc = 0;
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
+    updateSeaHorizon();
     renderer.render(scene, camera);
     return;
   }
@@ -2060,12 +2120,14 @@ function frame(): void {
     level.water.setSkyUrl(
       import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
       SKY_PRESETS[activeSky].fog,
+      presetHorizonV(activeSky),
     );
     level.water.update(dt, camera);
   }
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
+  updateSeaHorizon();
 
   ui.updateBalance(player.balanceMeter);
   ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
