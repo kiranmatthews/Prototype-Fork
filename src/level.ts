@@ -272,7 +272,7 @@ interface Pendulum {
   lastSign: number;
 }
 
-// Per-level look: sky gradient, fog, lights, ambient particle weather.
+// Per-level look: sky gradient, fog, lights.
 export interface Theme {
   skyTop: string;
   skyBottom: string;
@@ -288,8 +288,6 @@ export interface Theme {
   hemiI: number;
   sunColor: number;
   sunI: number;
-  particleColor: number;
-  particleWind: [number, number, number]; // drift per second (y up = rising embers)
 }
 
 // Rolling stone hazard: patrols along the course, flattens careless riders.
@@ -1693,14 +1691,11 @@ export class Level {
     hemiI: 1.1,
     sunColor: 0xffe0a0,
     sunI: 1.45,
-    particleColor: 0xfff0c0,
-    particleWind: [0.8, -0.4, 0.3],
   };
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] =
     [];
   private warpPads: WarpPad[] = []; // end-of-level warp platforms: rings rise, plume flickers
   private seaMats: THREE.ShaderMaterial[] = []; // open water: uTime is the only thing that moves
-  private ambient: { points: THREE.Points; drift: Float32Array } | null = null;
 
   // safe = triggered by the player's own spin/slam: breaks the world, not them
   explosions: {
@@ -2390,7 +2385,6 @@ export class Level {
     this.placeComboOrb(); // combo-run orb, the other side of the racing line
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
-    this.buildAmbient(); // theme is set by the builder above
     this.clearPlayFog(); // ...and the course you run on comes back out of it
   }
 
@@ -3052,8 +3046,6 @@ export class Level {
       hemiI: 1.2,
       sunColor: 0xfff6dc,
       sunI: 1.55,
-      particleColor: 0xffffff,
-      particleWind: [0.5, -0.3, 0.2],
     };
     this.spawnPos.set(data.spawn[0], data.spawn[1], data.spawn[2]);
     this.currentSpawn.copy(this.spawnPos);
@@ -4469,36 +4461,6 @@ export class Level {
     for (const m of this.seaMats)
       m.uniforms.uTime.value = (m.uniforms.uTime.value + dt) % 1000;
 
-    // Ambient weather: leaves/embers/dust drifting in a box around the player.
-    if (this.ambient) {
-      const pts = this.ambient.points;
-      const attr = pts.geometry.attributes.position as THREE.BufferAttribute;
-      const drift = this.ambient.drift;
-      const [wx, wy, wz] = this.theme.particleWind;
-      const px = this.playerPos.x;
-      const py = this.playerPos.y;
-      const pz = this.playerPos.z;
-      const R = 34;
-      const RY = 18;
-      for (let i = 0; i < attr.count; i++) {
-        let x =
-          attr.getX(i) +
-          (wx + drift[i * 3]) * dt +
-          Math.sin(this.time * 0.9 + i) * 0.5 * dt;
-        let y = attr.getY(i) + (wy + drift[i * 3 + 1]) * dt;
-        let z = attr.getZ(i) + (wz + drift[i * 3 + 2]) * dt;
-        // wrap into the box around the player
-        if (x < px - R) x += R * 2;
-        else if (x > px + R) x -= R * 2;
-        if (y < py - 6) y += RY + 6;
-        else if (y > py + RY) y -= RY + 6;
-        if (z < pz - R) z += R * 2;
-        else if (z > pz + R) z -= R * 2;
-        attr.setXYZ(i, x, y, z);
-      }
-      attr.needsUpdate = true;
-    }
-
     this.updateEnemies(dt);
     this.updateProjectiles(dt);
     // Floating wumpa bob and turn in place. The model is baked centred on its
@@ -5045,8 +5007,6 @@ export class Level {
       hemiI: 1.15,
       sunColor: 0xfff2d0,
       sunI: 1.3,
-      particleColor: 0xffffff,
-      particleWind: [0.4, 0.05, 0.2],
     };
 
     // ---- the road line ----------------------------------------------------
@@ -5930,8 +5890,6 @@ export class Level {
       hemiI: 0.85,
       sunColor: 0x8fa8e8,
       sunI: 0.6,
-      particleColor: 0x9fc4ff, // slow drifting motes, warp-room dust
-      particleWind: [0.08, 0.12, 0.08],
     };
 
     const stone = new THREE.MeshLambertMaterial({
@@ -6065,8 +6023,6 @@ export class Level {
       hemiI: 1.2,
       sunColor: 0xffeab0,
       sunI: 1.5,
-      particleColor: 0xdaf0a0, // leaf motes on a slow downdraft
-      particleWind: [0.65, -0.35, 0.2],
     };
 
     const matA = new THREE.MeshLambertMaterial({ color: 0x4f9a42 });
@@ -8081,35 +8037,6 @@ export class Level {
     mesh.position.set(cx, y, cz);
     this.root.add(mesh);
     this.scrollTexes.push({ tex, su, sv });
-  }
-
-  // Ambient weather: a wrapping cloud of leaves/embers/dust near the player.
-  private buildAmbient(): void {
-    if (window.location.search.includes("lite")) return; // headless smoke mode
-    const N = 130;
-    const pos = new Float32Array(N * 3);
-    const drift = new Float32Array(N * 3);
-    for (let i = 0; i < N; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 68;
-      pos[i * 3 + 1] = Math.random() * 20 - 4;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 68;
-      drift[i * 3] = (Math.random() - 0.5) * 1.2;
-      drift[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
-      drift[i * 3 + 2] = (Math.random() - 0.5) * 1.2;
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    const mat = new THREE.PointsMaterial({
-      color: this.theme.particleColor,
-      size: 0.28,
-      transparent: true,
-      opacity: 0.6,
-      depthWrite: false,
-    });
-    const points = new THREE.Points(geo, mat);
-    points.frustumCulled = false;
-    this.root.add(points);
-    this.ambient = { points, drift };
   }
 
   // A fallen log across (part of) the path: hop it. Solid, never breaks.
@@ -11582,8 +11509,6 @@ export class Level {
       hemiI: 1.2,
       sunColor: 0xfff6dc,
       sunI: 1.55,
-      particleColor: 0xffffff,
-      particleWind: [0.5, -0.3, 0.2],
     };
     // a finite runway deck (was a 4km lot); no 2km perimeter walls — the edges
     // just drop away to the sea on both sides.
@@ -11826,8 +11751,6 @@ export class Level {
       hemiI: 1.25,
       sunColor: 0xfff2d4,
       sunI: 1.5,
-      particleColor: 0xffffff,
-      particleWind: [0.3, -0.15, 0.25],
     };
     const woodCol = 0xb98a52;
     const iceCol = 0x9fc7de;
@@ -11981,8 +11904,6 @@ export class Level {
       hemiI: 0.62, // dark, not blind: unlit stone still reads as stone
       sunColor: 0x6f8cd4,
       sunI: 0.68,
-      particleColor: 0xff9a3c, // embers rising off the works
-      particleWind: [0.12, 0.55, 0.05],
     };
 
     const stoneMat = new THREE.MeshLambertMaterial({
@@ -12386,8 +12307,6 @@ export class Level {
       hemiI: 1.05,
       sunColor: 0xfff2c8,
       sunI: 1.1,
-      particleColor: 0xffffff, // spray motes drifting off the slide
-      particleWind: [0.5, 0.1, 0.3],
     };
     const V = (x: number, y: number, z: number): THREE.Vector3 =>
       new THREE.Vector3(x, y, z);
