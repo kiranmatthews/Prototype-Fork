@@ -47,6 +47,7 @@ export interface Crate {
   bang?: boolean; // metal '!' SWITCH: hitting it materializes its group's outline crates; never breaks, uncounted
   bangUsed?: boolean; // the switch fires once, then dims
   fallVel?: number; // >0 while the crate is settling down a smashed stack
+  homeY?: number; // authored height, so a respawn can undo settleCrates
   nitroBang?: boolean; // green '!' crate: breaking it detonates every nitro on the map
   pending?: boolean; // OUTLINE state: ghost visual, no collision, no interactions — until a '!' fires
   wasOutline?: boolean; // authored as an outline: resets re-ghost it
@@ -85,6 +86,8 @@ export interface Enemy {
   // Spun enemies ping away ballistically and can smash what they hit.
   flungVel?: THREE.Vector3;
   flungT?: number;
+  homeX?: number; // authored world position, so a respawn can undo a fling
+  homeZ?: number; // (the patrol axis is re-derived from x0/x1 as before)
   // ---- typed foes ----
   kind: EnemyKind;
   state: string; // per-kind FSM state
@@ -2387,6 +2390,44 @@ export class Level {
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.clearPlayFog(); // ...and the course you run on comes back out of it
+    this.snapshotHome(); // last: reset() needs where everything actually started
+  }
+
+  // WHERE EVERYTHING STARTED.
+  //
+  // Two systems move authored objects at runtime and neither can be undone
+  // from the level data. settleCrates drops a crate whose support was smashed,
+  // rewriting mesh.position.y, userData.baseY and the collision box in place. A
+  // spin kill flings an enemy ballistically on ALL THREE axes for 1.4s before
+  // hiding it. reset() put back `alive`, the pose, and the enemy's PATROL axis
+  // — and nothing else. So a stack you collapsed came back collapsed, two live
+  // crates sharing one cube and z-fighting where a two-high tower used to
+  // stand; and a grunt you spun came back metres off its strip, at the wrong
+  // deck height, hovering over the drop with a live hit box on it.
+  //
+  // One snapshot, taken after every builder has run, is all reset() needs.
+  private snapshotHome(): void {
+    for (const c of this.crates) c.homeY = c.mesh.position.y;
+    for (const e of this.enemies) {
+      e.homeX = e.group.position.x;
+      e.homeZ = e.group.position.z;
+    }
+  }
+
+  // Undo settleCrates for one crate. The box is rebuilt from its own current
+  // extent so odd-sized crates keep their size.
+  private restoreCrateHome(c: Crate): void {
+    c.fallVel = undefined;
+    if (c.homeY === undefined || c.mesh.position.y === c.homeY) return;
+    c.mesh.position.y = c.homeY;
+    c.mesh.userData.baseY = c.homeY;
+    const sx = c.box.max.x - c.box.min.x || 0.96;
+    const sy = c.box.max.y - c.box.min.y || 0.96;
+    const sz = c.box.max.z - c.box.min.z || 0.96;
+    c.box.setFromCenterAndSize(
+      c.mesh.position.clone(),
+      new THREE.Vector3(sx, sy, sz),
+    );
   }
 
   // FOG OFF THE COURSE ITSELF.
@@ -4846,6 +4887,7 @@ export class Level {
         c.mesh.visible = cpSnap.savedAlive[i];
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        this.restoreCrateHome(c);
         this.restoreTntFace(c);
         this.setCratePending(c, cpSnap.savedPending?.[i] ?? !!c.pending);
         c.bangUsed = cpSnap.savedBangUsed?.[i] ?? c.bangUsed;
@@ -4857,6 +4899,7 @@ export class Level {
         c.mesh.visible = true;
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        this.restoreCrateHome(c);
         this.restoreTntFace(c);
         // outlines return to ghosts, switches re-arm
         this.setCratePending(c, !!c.wasOutline);
@@ -4865,11 +4908,21 @@ export class Level {
       }
     }
 
+    // the settle gate is a live COUNT — force the next scan so a restored
+    // stack is re-evaluated rather than compared against a stale tally
+    this.settleLiveCrates = -1;
+    this.settleFalling = 0;
+
     for (const e of this.enemies) {
       e.alive = true;
       e.group.visible = e.alive;
       e.flungT = undefined;
       e.flungVel = undefined;
+      // BOTH axes: a fling moves an enemy across its lane as well as along it,
+      // and only the along axis was ever put back. (Cars are driven straight
+      // off the road ribbon every update, so their home is simply overwritten.)
+      if (e.homeX !== undefined) e.group.position.x = e.homeX;
+      if (e.homeZ !== undefined) e.group.position.z = e.homeZ;
       if (e.axis === "z") e.group.position.z = (e.x0 + e.x1) / 2;
       else e.group.position.x = (e.x0 + e.x1) / 2;
       this.resetEnemyVisual(e); // pose + FSM back to start (handles y/rotation/scale)
