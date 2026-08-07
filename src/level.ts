@@ -4082,7 +4082,14 @@ export class Level {
       e.group.rotation.x += 9 * dt;
       e.group.rotation.y += 5 * dt;
       for (const c of this.crates) {
-        if (!c.alive || c.bouncy || c.metalBounce || c.bang || c.pending)
+        if (
+          !c.alive ||
+          c.bouncy ||
+          c.metalBounce ||
+          c.bang ||
+          c.nitroBang ||
+          c.pending
+        )
           continue;
         if (e.group.position.distanceTo(c.mesh.position) < 1.5) {
           if (c.nitro || c.tnt) this.detonate(c);
@@ -4519,8 +4526,8 @@ export class Level {
           if (!c.alive || c.bouncy || c.metalBounce || c.pending) continue;
           if (c.mesh.position.distanceTo(ex.center) < r + 0.6) {
             if (c.nitro || c.tnt) this.detonate(c);
-            else if (c.bang)
-              this.triggerBang(c); // a blast can flip the switch
+            else if (c.bang || c.nitroBang)
+              this.triggerBang(c); // a blast can flip either switch
             else {
               this.breakCrate(c);
               this.blastBroken.push(c);

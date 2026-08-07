@@ -4406,6 +4406,11 @@ export class Player {
       this.flipT = 0; // both hands on the rope — the deck stops performing
       this.pipeEndFly = false; // grabbing the rope saves a pipe-end fly-off
       this.rollOffT = 0;
+      // ...and the slide-jump arc's launch too. These only cleared on a
+      // WHEELS-DOWN landing, so catching a rope mid slide-jump carried the
+      // cross-heading drift and the air-steer lockout into the NEXT air.
+      this.slideAirLat = 0;
+      this.slideJumpAir = false;
       this.ropeObj = rs;
       this.ropeD = d;
       this.ropeJumpArm = false; // the held X that jumped you here must come up first
@@ -5471,6 +5476,13 @@ export class Player {
     this.grindRail = rail;
     this.grindT = sample.t;
     this.grindEntryT = sample.t;
+    // The air that ended on this rail is over: retire its slide-jump launch.
+    // These only cleared on a wheels-down landing, so grinding out of a
+    // slide-jump carried the cross-heading drift and the air-steer lockout
+    // into the air off the END of the rail — which also silently disabled the
+    // rail-hop strafe that exitGrind arms.
+    this.slideAirLat = 0;
+    this.slideJumpAir = false;
     // How much of our actual velocity runs ALONG the rail. Free-heading skate
     // lets you meet a rail at any angle — a perpendicular clip should give a
     // gentle grind, never rocket you down the rail at full cross-speed.

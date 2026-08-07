@@ -18,7 +18,7 @@ from the fixed-step loop.
 | System | Where | Consumes | Notes for the port |
 | --- | --- | --- | --- |
 | Fixed-step loop | `main.ts` `while (acc >= CONST.fixedStep)` | `CONST.fixedStep` = 1/60 | Straight to `FixedUpdate` at 0.01666667. |
-| State machine | `step()` switch on `this.state` | — | States: `ride`, `air`, `grind`, `rope`, `hang`, `dead`, `finished`. Rope and hang early-out **before** the switch and run their own timers. |
+| State machine | `step()` switch on `this.state` | — | `MoveState` = `ride \| air \| grind \| hang \| rope \| dead \| gameover \| finished` (player.ts:67). The `switch` only cases `ride`/`air`/`grind`/`finished`; `rope` and `hang` early-out **before** it and run their own timers; `dead`/`gameover` are driven by the respawn path. |
 | Walk / skate / carve | `stepRide` | `walkSpeed`, `cruiseSpeed`, `maxSpeed`, `carveGrip`, `carveGripRatio`, `turnaround`, `friction`, `rollFriction`, `windDrag`, `chargeBoost`, `chargeDecay` | Free-heading model: `axisF`/`axisL` **are** the board's heading; the stick carves them. There is no separate "rotation" — see §2. |
 | Ollie / charge jump | `tryJump`, `stepAir` | `jumpVelocity`, `jumpMinVelocity`, `ollieVelocity`, `ollieMinVelocity`, `ollieDownCouple`, `chargeMax` | Charge-on-hold, fire-on-release. Identity (ollie vs platform jump) is decided **at release** from state + speed. |
 | Air / gravity | `stepAir` | `riseGravity`/`fallGravity` (foot), `boardRiseGravity`/`boardFallGravity` (board), `rampFallGravity` (ramp launches), `pipeAirGravity` (vert), `wallrideGravity` | Four distinct gravity pairs selected by `airGrav` + launch origin. Port these as an enum-driven table, not `if`-chains. |

@@ -70,10 +70,25 @@ export class Rail {
       const a = this.points[i];
       const dir = this.segDirs[i];
       const len = this.segLengths[i];
-      // project (pos - a) onto the segment using XZ components only
+      // Project (pos - a) onto the segment's XZ SHADOW. dir is a 3D unit
+      // vector, so (dir.x, dir.z) is NOT unit length on a sloped rail — it is
+      // sqrt(1 - dir.y^2). Dotting against it raw (as this did) scales the
+      // parameter down, dragging the returned point back toward the segment
+      // start: distXZ came out too big and point.y too high, so on a steep
+      // rail the on-foot block and the high-speed trip both under-triggered.
+      // Divide by |xz|^2 for the true arc parameter; the clamp stays in 3D
+      // arc units because addScaledVector below walks the 3D direction.
       const ox = pos.x - a.x;
       const oz = pos.z - a.z;
-      const along = THREE.MathUtils.clamp(ox * dir.x + oz * dir.z, 0, len);
+      const dxz2 = dir.x * dir.x + dir.z * dir.z;
+      // A purely vertical segment has no XZ shadow: its whole length collapses
+      // to one point in plan view, so clamp to the start rather than skipping
+      // it (skipping could leave best null on an all-vertical rail, and both
+      // callers dereference the result).
+      const along =
+        dxz2 < 1e-9
+          ? 0
+          : THREE.MathUtils.clamp((ox * dir.x + oz * dir.z) / dxz2, 0, len);
       const point = a.clone().addScaledVector(dir, along); // carries the rail's Y here
       const dxz = Math.hypot(pos.x - point.x, pos.z - point.z);
       if (!best || dxz < best.distXZ) best = { point, tangent: dir.clone(), distXZ: dxz };
