@@ -7,6 +7,13 @@
 // level, apply the recorded tuning, feed the frames. Deaths, checkpoint
 // restarts, tuner drags mid-run — all inside the take. The one exception is
 // the 'Random' level, whose layout rolls fresh dice on every build.
+//
+// Determinism rests on Player.simRand (see player.ts): every random number
+// that reaches SIM state — the balance needle, trip launches, '?' crate
+// rewards — comes from a PRNG reseeded to a fixed constant on level load, so
+// the same inputs walk the same stream. Visual randomness stays on
+// Math.random() precisely so that skipping particles (headless/lite) cannot
+// shift the sim's draw order.
 
 import { TUNING } from './tuning';
 

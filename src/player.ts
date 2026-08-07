@@ -38,6 +38,7 @@ const FRUIT_SCREEN = 0.085;
 const PUFF_UP = new THREE.Vector3(0, 1, 0);
 const PUFF_DIR = new THREE.Vector3();
 const PUFF_VEL = new THREE.Vector3();
+const SIM_SEED0 = 0x9e3779b9; // level-load seed for the sim's PRNG (see simRand)
 const PUFF_C = new THREE.Vector3();
 const FRUIT_HOP_TIME = 0.45;
 const FRUIT_HOP_RISE = 0.9;
@@ -400,6 +401,28 @@ export class Player {
   // a pipe wall and get thrown into a hang mid-wipeout.
   private get isBailing(): boolean {
     return this.bailDownT > 0;
+  }
+
+  // ---- the SIM's own random stream -----------------------------------------
+  // replay.ts promises that replaying a file reproduces the run exactly. That
+  // is only true if every random number that reaches SIM STATE comes from a
+  // seeded stream which restarts identically on level load — Math.random()
+  // does not, so the balance needle, trip launches and '?' crate rewards used
+  // to make replays drift out of sync with the run they recorded.
+  //
+  // VISUAL randomness (sparks, dust, ragdoll flail, thrown-deck spin, canvas
+  // textures) deliberately stays on Math.random(). It never feeds sim state,
+  // and keeping it OFF this stream is what stops a headless/lite run that
+  // skips particle emission from consuming different draws and desyncing.
+  private simSeed = SIM_SEED0;
+  private simRand(): number {
+    // mulberry32: tiny, fast, good enough distribution, trivially portable
+    // (the Unity port needs the same generator to replay these files)
+    this.simSeed = (this.simSeed + 0x6d2b79f5) | 0;
+    let t = this.simSeed;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   }
 
   // "Is the surface under me a TRANSITION?" — the authored flag OR the angle
@@ -1078,6 +1101,7 @@ export class Player {
     this.comboWasLive = false;
     this.balanceBoostT = 0;
     if (hard) {
+      this.simSeed = SIM_SEED0; // a fresh run replays from the same stream
       this.lives = 3;
       // The boxes are all back, so the gem has to be able to MATERIALIZE
       // again — but whether it was already earned is the vault's business.
@@ -4571,7 +4595,7 @@ export class Player {
     this.balance = 0; // the manual needle reuses the grind balance field + visuals
     this.balanceVel = 0;
     this.balanceCritT = 0;
-    this.noisePhase = Math.random() * Math.PI * 2;
+    this.noisePhase = this.simRand() * Math.PI * 2;
     this.manualArmed = 0;
     this.manualArmT = 0;
     this.score(CONST.ptsManualBase, type === 1 ? 'Manual' : 'Nose Manual');
@@ -4731,7 +4755,7 @@ export class Player {
     this.balance = 0; // needle: + tips INTO the pipe (forgiving), − out the back (bail)
     this.balanceVel = 0;
     this.balanceCritT = 0;
-    this.noisePhase = Math.random() * Math.PI * 2;
+    this.noisePhase = this.simRand() * Math.PI * 2;
     this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.rideNormal.set(0, 1, 0);
     // THPS lip variety: the stick at the catch picks the trick. The climb
@@ -5154,7 +5178,7 @@ export class Player {
           GRIND_NAMES[this.grindStyle],
         );
         this.surfaceName = 'rail (' + GRIND_NAMES[this.grindStyle] + ')';
-        this.balanceVel += (Math.random() < 0.5 ? -1 : 1) * 0.3; // the swap rocks the needle
+        this.balanceVel += (this.simRand() < 0.5 ? -1 : 1) * 0.3; // the swap rocks the needle
         this.emitSparks(4, 0xffb545, 1.2);
         sfx.play('railLand', 0.45, 1.25);
       } else {
@@ -5516,10 +5540,10 @@ export class Player {
     );
     // Start the needle slightly off-center in a random direction, at rest, with
     // a fresh sketch phase so the wander never repeats across attempts.
-    this.balance = (Math.random() < 0.5 ? -1 : 1) * CONST.balanceStart;
+    this.balance = (this.simRand() < 0.5 ? -1 : 1) * CONST.balanceStart;
     this.balanceVel = 0;
     this.balanceCritT = 0;
-    this.noisePhase = Math.random() * Math.PI * 2;
+    this.noisePhase = this.simRand() * Math.PI * 2;
     // MOMENTUM STEADIES THE CATCH: speed carried along the bar buys a calm
     // beat where the needle stays quiet, so a committed fast entry starts
     // planted instead of instantly tipping. And the direction you were
@@ -6967,7 +6991,7 @@ export class Player {
     if (c.mask) {
       this.gainMask();
     } else if (c.mystery) {
-      const r = Math.random();
+      const r = this.simRand();
       if (r < 0.55) this.spawnFruit(c.box, 5);
       else if (r < 0.8) this.spawnFruit(c.box, 10);
       else if (r < 0.93) this.gainMask();
@@ -7374,11 +7398,11 @@ export class Player {
     // randomized launch as the rail trip; the walls loop lets a tumbling
     // airborne body pass over anything below its feet, so the arc carries.
     if (box !== undefined && box.max.y < this.pos.y + 0.8) {
-      const launch = (4.2 + Math.abs(s0) * 0.16) * (0.85 + Math.random() * 0.3);
+      const launch = (4.2 + Math.abs(s0) * 0.16) * (0.85 + this.simRand() * 0.3);
       this.bail();
       this.startRagdoll('forward');
       this.vVel = Math.max(this.vVel, Math.min(9.5, launch));
-      this.speed = dir * Math.abs(s0) * (0.52 + Math.random() * 0.16);
+      this.speed = dir * Math.abs(s0) * (0.52 + this.simRand() * 0.16);
       this.state = 'air';
       this.grounded = false;
       this.airFromSkate = false;
@@ -8273,9 +8297,9 @@ export class Player {
           // gravity — the foot fall-rate (119) slammed every trip down in a
           // third of a second, which is why they all looked identical. Now a
           // full-charge trip flies well past the log, and no two arcs match.
-          const launch = (4.2 + spd * 0.16) * (0.85 + Math.random() * 0.3);
+          const launch = (4.2 + spd * 0.16) * (0.85 + this.simRand() * 0.3);
           this.vVel = Math.max(this.vVel, Math.min(9.5, launch));
-          this.speed = Math.sign(this.speed || 1) * spd * (0.52 + Math.random() * 0.16);
+          this.speed = Math.sign(this.speed || 1) * spd * (0.52 + this.simRand() * 0.16);
           this.airFromSkate = false;
           this.airGrav = 'board'; // floaty crash arc — the flight gets read
           this.airMomentum = true; // the trip THROWS you — momentum rides the arc
