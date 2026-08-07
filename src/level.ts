@@ -3924,11 +3924,22 @@ export class Level {
   }
 
   get totalCrates(): number {
-    // the gem tally: real breakable boxes. Wood arrow crates count (they
-    // break now); explosives, switches, and the metal family never do.
-    return this.crates.filter(
-      (c) => !c.nitro && !c.tnt && !c.bang && !c.nitroBang && !c.metalBounce,
+    // THE GEM TALLY: every box you can actually clear off the level.
+    //
+    // Explosives are in it. A nitro or a TNT is a box you have to deal with —
+    // detonating one is clearing it, exactly as it is in Crash — so leaving
+    // them out meant a level could read 48/48 with live nitros still standing.
+    // Checkpoint crates are in it for the same reason: banking one is what
+    // breaks it, and it stays broken.
+    //
+    // Still out: the two '!' switches and the metal arrow crate, because they
+    // genuinely never break — counting them would put the gem out of reach.
+    // Run modes strip the checkpoints out of the level, so they leave the
+    // tally too or the gem could never be earned in a trial.
+    const boxes = this.crates.filter(
+      (c) => !c.bang && !c.nitroBang && !c.metalBounce,
     ).length;
+    return boxes + (this.runMode ? 0 : this.checkpoints.length);
   }
 
   zoneAt(x: number, z: number): { dir: "E" | "W" | "N" | "S" } | null {
@@ -4770,6 +4781,10 @@ export class Level {
     // were dialled by eye are the numbers that play. Anything above it would
     // quietly inflate the throw and the count past what was approved.
     puffs.burst(c.tnt ? "boomTnt" : "boomNitro", center.x, center.y + 0.2, center.z, {});
+    // It counts. The player drains this list every step and tallies it the
+    // same way it tallies blast debris (crateReward pays nothing for an
+    // explosive, so this is a count and a score, not a prize).
+    this.blastBroken.push(c);
   }
 
   consumeBlastBroken(): Crate[] {
@@ -10697,18 +10712,41 @@ export class Level {
   // All boxes broken: the gem MATERIALIZES. It used to appear three metres
   // over your head and be yours the same instant, which made it a trophy that
   // announced itself rather than a thing you got — you never actually touched
-  // it. Now it drops in at body height and waits to be collected, so breaking
-  // the last box is the moment it appears and picking it up is the reward.
-  awardGem(pos: THREE.Vector3): void {
-    if (this.gemPickup) return;
+  // it. Now it appears and waits to be collected, so breaking the last box is
+  // the moment it exists and picking it up is the reward.
+  //
+  // WHERE it appears is the finish platform, not wherever the last box
+  // happened to be. Dropping it on the spot parked it under the box you had
+  // just smashed — often mid-course, sometimes right under the wreckage —
+  // which made the prize something you tripped over rather than something you
+  // went to. It waits at the gate now, off to one side of the combo gem so the
+  // two can stand together. Levels with no finish gate keep the old on-the-
+  // spot behaviour, seated on the floor under you so it stays reachable.
+  //
+  // Returns where it went, so the caller can say so.
+  awardGem(pos: THREE.Vector3): "gate" | "here" {
+    if (this.gemPickup) return "here";
     const g = Level.gemMesh(1);
-    // Seat it on the FLOOR under you, not at your own height. It only had to
-    // appear before, so where did not matter; now it has to be reachable, and
-    // the last box can perfectly well break while you are airborne over a pit.
-    // No floor under there (the pit case) = leave it where you were.
-    const ground = this.floorY(pos.x, pos.z, NaN);
-    const y = (Number.isNaN(ground) ? pos.y : Math.min(pos.y, ground)) + 1.5;
-    g.position.set(pos.x, y, pos.z);
+    let x = pos.x;
+    let z = pos.z;
+    let y: number;
+    let placed: "gate" | "here" = "here";
+    if (this.gateSpec) {
+      // one gem-width along the gate's own tangent, so it stands beside the
+      // combo prize (which parks on the gate's normal) instead of inside it
+      const yawR = THREE.MathUtils.degToRad(this.gateYaw);
+      x = this.gateSpec.x + Math.cos(yawR) * 2.6;
+      z = this.gateSpec.z - Math.sin(yawR) * 2.6;
+      y = this.gateSpec.y + 1.5;
+      placed = "gate";
+    } else {
+      // Seat it on the FLOOR under you, not at your own height: the last box
+      // can perfectly well break while you are airborne over a pit. No floor
+      // under there = leave it where you were.
+      const ground = this.floorY(pos.x, pos.z, NaN);
+      y = (Number.isNaN(ground) ? pos.y : Math.min(pos.y, ground)) + 1.5;
+    }
+    g.position.set(x, y, z);
     g.userData.baseY = y;
     this.root.add(g);
     this.gemG = g;
@@ -10717,13 +10755,14 @@ export class Level {
       // generous: it can materialize mid-air off a ramp, and chasing your own
       // gem back down a corridor is not the game
       box: new THREE.Box3().setFromCenterAndSize(
-        new THREE.Vector3(pos.x, y, pos.z),
+        new THREE.Vector3(x, y, z),
         new THREE.Vector3(2.4, 3.0, 2.4),
       ),
       collected: false,
     };
     // no magic ring on the gem — the reference is a clean spinning diamond
     this.glimmerBurst(g.position, 0x9fe0ff);
+    return placed;
   }
 
   /** Touched the materialized gem: it's yours. */

@@ -169,6 +169,8 @@ const BLAST_AT = new THREE.Vector3(); // scratch for the blast test
 const VERT_UP = new THREE.Vector3(0, 1, 0);
 const VERT_Q = new THREE.Quaternion();
 const VERT_Q2 = new THREE.Quaternion();
+const LEAN_AXIS = new THREE.Vector3(); // heading, for the carve/balance roll
+const LEAN_Q = new THREE.Quaternion();
 
 export class Player {
   pos = new THREE.Vector3(); // feet position
@@ -641,6 +643,7 @@ export class Player {
   private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
   private grindStyle: GrindStyle = 'normal'; // held dir at entry (or last mid-grind switch)
   private grindPoseX = 0; // nose-up / nose-down grind lean
+  private grindPoseZ = 0; // which side the free end of the deck hangs off (smith/feeble/crook)
   private grindYawPose = 0; // boardslide: body across the rail
   private grindArmPose = 0; // arms out wide for balance on the rail
   private railUnder = false; // hanging BENEATH the rail (board crosswise in the hands)
@@ -1999,9 +2002,9 @@ export class Player {
         (this.state as MoveState) !== 'dead'
       ) {
         this.gemSpawned = true;
-        level.awardGem(this.pos);
+        const where = level.awardGem(this.pos);
         sfx.play('lifeGet', 0.9);
-        this.onRelic('ALL BOXES!', 'grab the gem');
+        this.onRelic('ALL BOXES!', where === 'gate' ? 'the gem is at the finish' : 'grab the gem');
       }
       // Blast aftermath: tally crates the explosions broke, and die if we're
       // inside an expanding blast sphere.
@@ -6828,18 +6831,15 @@ export class Player {
       if (level.runMode) break; // run modes have no checkpoints — the start IS the checkpoint
       if (cp.active) continue;
       if (this.spinning && this.spinBox.intersectsBox(cp.box)) {
-        level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
-        this.onCheckpoint();
+        this.bankCheckpoint(level, cp);
       } else if (this.playerBox.intersectsBox(cp.box)) {
         if (this.isBailing) {
           // tumbling body: no banking, no bounce — scenery
           if (this.grounded) this.pushOutOf(cp.box);
         } else if (this.sliding) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
-          this.onCheckpoint();
+          this.bankCheckpoint(level, cp);
         } else if (this.isStomping(cp.box)) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
-          this.onCheckpoint();
+          this.bankCheckpoint(level, cp);
           this.vVel = TUNING.crateBounce;
           this.pos.y = cp.box.max.y + 0.02; // bounce OFF the lid, no re-intersect
           sfx.play('crateBounce', 0.7);
@@ -6847,13 +6847,11 @@ export class Player {
           this.grounded = false;
           this.bounceRefresh();
         } else if (this.isBonking(cp.box)) {
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
-          this.onCheckpoint();
+          this.bankCheckpoint(level, cp);
           this.vVel = Math.min(this.vVel, 2);
         } else if (Math.abs(this.speed) >= TUNING.smashSpeed) {
           // Fast skating banks it on the way through, same as plain crates.
-          level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
-          this.onCheckpoint();
+          this.bankCheckpoint(level, cp);
           this.speed *= 0.92;
         } else if (this.crateTrip(cp.box)) {
           // tripped clean over the checkpoint — it does NOT bank; earn it properly
@@ -7018,6 +7016,20 @@ export class Player {
     this.chargeTimer = 0;
   }
 
+  // BANKING A CHECKPOINT is breaking a box. The checkpoint crate counts
+  // toward the gem tally the same way a plain box does, so the tally has to go
+  // up BEFORE activateCheckpoint snapshots it — otherwise a soft respawn at
+  // this very checkpoint would restore a count one short of itself, and the
+  // gem would be one box out of reach for the rest of the life.
+  private bankCheckpoint(level: Level, cp: Checkpoint): void {
+    if (!cp.active) {
+      this.cratesBroken++;
+      this.score(CONST.ptsCrate, 'Box');
+    }
+    level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
+    this.onCheckpoint();
+  }
+
   private smashCrate(level: Level, c: Crate): void {
     const wasAlive = c.alive;
     PUFF_C.copy(c.box.getCenter(PUFF_C));
@@ -7025,7 +7037,9 @@ export class Player {
     level.breakCrate(c);
     // switches and metal never actually broke — no tally, no reward
     if (c.alive) return;
-    if (!c.nitroBang) this.cratesBroken++; // green '!' sits outside the gem tally
+    // green '!' sits outside the gem tally; explosives ARE in it, but they
+    // tally when they detonate, so counting one here too would double it
+    if (!c.nitroBang && !c.nitro && !c.tnt) this.cratesBroken++;
     // The box going is a DUST event, not a wood-chip event: a burst at the
     // crate's own centre, its flat ring on the deck under it, and the haze it
     // leaves behind — all three are children of the one preset, fired off one
@@ -7042,6 +7056,9 @@ export class Player {
 
   // What falls out of a broken box. Mystery crates roll their contents.
   private crateReward(c: Crate): void {
+    // Explosives now count toward the box tally, but blowing one up is not a
+    // reward — no fruit falls out of a nitro.
+    if (c.nitro || c.tnt) return;
     // RUN-MODE rules (time trial / combo run): numbered crates freeze the
     // clock, boost crates pay out speed or perfect balance, masks still
     // work — everything else is an empty box. No fruit, no lives.
@@ -8723,7 +8740,26 @@ export class Player {
     // Full euler reset every frame (y=PI is the model's base facing): the
     // hang-time premultiply below syncs back into rotation.x/y, so writing
     // only .z would compound last frame's tilt forever.
-    this.group.rotation.set(0, Math.PI, this.lean + wobble);
+    //
+    // THE LEAN IS A ROLL ABOUT THE LINE OF TRAVEL, NOT ABOUT A WORLD AXIS.
+    // It used to be written straight into this euler's .z. The root group's
+    // yaw is pinned at PI — the rider's actual facing lives one level down, on
+    // bodyGroup — so that .z was a roll about world -Z no matter which way she
+    // was going. Travelling down -Z, which is most of most levels, world -Z IS
+    // the travel axis and it looked right. On a rail running across the world,
+    // like the bends at the bottom of the Descent, the same balance needle
+    // came out as a forward-and-backward teeter instead of a left-and-right
+    // tip. Rolling about the heading itself is right everywhere, and is
+    // numerically identical to the old code whenever the heading is -Z.
+    this.group.rotation.set(0, Math.PI, 0);
+    const roll = this.lean + wobble;
+    if (roll * roll > 1e-8) {
+      // visualYaw is updated below; a frame of lag on the AXIS is invisible
+      // (the yaw is eased at 14/s) and keeps the euler reset above intact.
+      LEAN_AXIS.set(-Math.sin(this.visualYaw), 0, -Math.cos(this.visualYaw));
+      LEAN_Q.setFromAxisAngle(LEAN_AXIS, roll);
+      this.group.quaternion.premultiply(LEAN_Q);
+    }
 
     // UNIFIED SURFACE ALIGNMENT: the wall is the new ground. The whole rig
     // lays onto the surface normal — gently on banks, flat-out (~90°) on vert
@@ -8827,29 +8863,42 @@ export class Player {
     // actually moves.
     const crawlMove = this.crawlPose * Math.min(1, planar / 1.2);
     const crouchW = Math.max(0, this.crawlPose - crawlMove);
-    // Grind style lean: nose down, tail down, the diagonal truck balances, or
-    // the body across the rail (boardslide/lipslide — the lipslide faces the
-    // other way, having come over the top).
-    const gp =
-      this.state === 'grind'
-        ? this.grindStyle === 'nose'
-          ? 0.4
-          : this.grindStyle === 'crook'
-            ? 0.3
-            : this.grindStyle === 'five0'
-              ? -0.45
-              : this.grindStyle === 'smith'
-                ? -0.3
-                : this.grindStyle === 'feeble'
-                  ? -0.24
-                  : 0
-        : 0;
+    // GRIND POSES, ONE PER TRICK NAME.
+    //
+    // Every style is a pitch (which truck is on the rail), a roll (which side
+    // the free end hangs off) and a yaw (how far the deck is kinked across the
+    // line). Positive pitch is nose DOWN — the same channel the manual uses,
+    // where a wheelie is negative — and positive roll tips to the RIDER'S
+    // RIGHT, the same sign the balance needle uses.
+    //
+    // Smith and Feeble were both authored NOSE UP, which is a 5-0 with a
+    // different label: both are back-truck grinds where the nose drops off one
+    // side of the rail, so both want the nose DOWN plus opposite roll — the
+    // roll is the whole difference between them. And a Crooked grind was a
+    // shallower Nosegrind with nothing crooked about it; the kink across the
+    // rail is what the trick is named for.
+    const GS: Record<string, [number, number, number]> = {
+      //          pitch  roll   yaw      (radians)
+      normal: [0, 0, 0], //            50-50: both trucks, deck level along the rail
+      nose: [0.4, 0, 0], //         Nosegrind: front truck only, tail up
+      five0: [-0.45, 0, 0], //              5-0: back truck only, nose up
+      crook: [0.34, -0.14, 0.3], //  Crooked: nose truck, deck kinked off the line
+      smith: [0.3, -0.34, 0], //       Smith: back truck, nose dropped off the left
+      feeble: [0.26, 0.34, 0], //     Feeble: back truck, nose dropped off the right
+      board: [0, 0, 0], //        Boardslide: deck square across (yaw is set below)
+      lip: [0, 0, 0], //          Lipslide: same, come over the top
+    };
+    const gs = this.state === 'grind' ? GS[this.grindStyle] : null;
+    const gp = gs ? gs[0] : 0;
     this.grindPoseX += (gp - this.grindPoseX) * Math.min(1, 12 * dt);
+    this.grindPoseZ += ((gs ? gs[1] : 0) - this.grindPoseZ) * Math.min(1, 12 * dt);
     const crossRail = this.grindStyle === 'board' || this.grindStyle === 'lip';
     const gy =
       this.state === 'grind' && crossRail
         ? this.grindYawDir * (Math.PI / 2) * (this.grindStyle === 'lip' ? -1 : 1)
-        : 0;
+        : gs
+          ? gs[2] * (this.grindYawDir || 1)
+          : 0;
     this.grindYawPose += (gy - this.grindYawPose) * Math.min(1, 12 * dt);
     const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
     const breathe = Math.sin(this.runTime * 2.3);
@@ -9320,13 +9369,15 @@ export class Player {
       Math.abs(railBal) *
       (0.42 + 0.22 * (this.balanceCritT > 0 ? 1 : 0)) *
       this.grindArmPose;
-    this.bodyGroup.rotation.z = this.slopeRoll + wallRoll + balRoll;
+    this.bodyGroup.rotation.z = this.slopeRoll + wallRoll + balRoll + this.grindPoseZ;
     // the head stays up and fights it — the last thing to give
     if (this.headM) this.headM.rotation.z = -balRoll * 0.55;
     if (this.boardG) {
       // the deck edges up under her as she goes over — the board is on the
       // rail, so it rolls about a third as far as the body does
-      this.boardG.rotation.z = balRoll * 0.34;
+      // the style roll is the DECK's, so the board takes more of it than the
+      // body does — the opposite split to the balance needle above
+      this.boardG.rotation.z = balRoll * 0.34 + this.grindPoseZ * 0.55;
       // x and z are wallride-only offsets, rebuilt from scratch below when a
       // wallride is live — zero them EVERY frame or the .add() accumulates
       this.boardG.position.x = 0;
