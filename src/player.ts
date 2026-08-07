@@ -642,6 +642,13 @@ export class Player {
   private grindDir = 1;
   private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
   private grindStyle: GrindStyle = 'normal'; // held dir at entry (or last mid-grind switch)
+  // The boxes of the crate run currently being ground. THE LEDGE IS NOT AN
+  // OBSTACLE: collide() reaches 0.35 below the feet on a grind so that crates
+  // sitting ON a rail still clip you, and that same reach dips into the tops
+  // of the very boxes you are riding. These are skipped for as long as the
+  // grind lasts, and only these — a crate stacked on the run, or the next run
+  // along, still hits you exactly as it should.
+  private grindRun: Set<Crate> | null = null;
   private grindPoseX = 0; // nose-up / nose-down grind lean
   private grindPoseZ = 0; // which side the free end of the deck hangs off (smith/feeble/crook)
   private grindYawPose = 0; // boardslide: body across the rail
@@ -1873,7 +1880,10 @@ export class Player {
 
     // Rail candidate is computed once per step: used for grind entry, the
     // assisted landing snap, and the debug panel.
-    this.railCand = nearestRail(level.rails, this.pos);
+    // grindRails = the authored bars PLUS the tops of any crate runs. The
+    // on-foot rail block and the fall-onto-a-bar smack keep reading
+    // level.rails, so a crate still behaves like a crate for both of those.
+    this.railCand = nearestRail(level.grindRails, this.pos);
     this.railCandidateDist = this.railCand ? this.railCand.sample.distance : Infinity;
 
     if (input.restartPressed) {
@@ -1931,7 +1941,7 @@ export class Player {
           this.lipStallT <= 0 &&
           !stallApproach &&
           (input.grindPressed || input.grindHeld) &&
-          this.tryGrind(input.grindPressed)
+          this.tryGrind(input.grindPressed, level)
         ) {
           // snapped straight onto the rail this tick
         } else {
@@ -1961,7 +1971,7 @@ export class Player {
         } else if (
           !this.wallriding &&
           (input.grindPressed || input.grindHeld) &&
-          this.tryGrind(input.grindPressed)
+          this.tryGrind(input.grindPressed, level)
         ) {
           // grabbed the rail
         } else {
@@ -5399,7 +5409,7 @@ export class Player {
       this.grindT = THREE.MathUtils.clamp(this.grindT, 0, rail.totalLength);
       this.placeOnRail(rail);
       const perfect = this.perfectGrindRun(rail, level);
-      this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5); // from under, no pop up through the rail
+      this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5, level); // from under, no pop up through the rail
       if (perfect) this.applyPerfectGrind();
       return;
     }
@@ -5435,6 +5445,7 @@ export class Player {
         this.underK > 0.5
           ? 1.0
           : THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t),
+        level,
       );
       if (perfect) this.applyPerfectGrind();
       // grind exits are board airs: no somersault
@@ -5472,11 +5483,12 @@ export class Player {
   // that is still down cannot immediately put us back on it. Called from every
   // exit (clean, drop-off, board snap, bail) before grindRail is cleared.
   private railLeft(): void {
+    this.grindRun = null; // the ledge is a solid box again
     this.lastRail = this.grindRail;
     this.grindLatched = true;
   }
 
-  private tryGrind(pressed: boolean): boolean {
+  private tryGrind(pressed: boolean, level: Level): boolean {
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
     // punishment into a free 50-50.
@@ -5498,7 +5510,7 @@ export class Player {
     // Deck-level grabs are the normal case (rails sit ~1u above the deck);
     // only block grabbing from far beneath the rail.
     if (this.pos.y < s.point.y - 2.0) return false;
-    this.enterGrind(this.railCand.rail, s);
+    this.enterGrind(this.railCand.rail, s, level);
     return true;
   }
 
@@ -5517,8 +5529,10 @@ export class Player {
     this.grindYawDir = rIn.moveX >= 0 ? 1 : -1;
   }
 
-  private enterGrind(rail: Rail, sample: RailSample): void {
+  private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
     this.grindRail = rail;
+    const run = level ? level.crateRunFor(rail) : null;
+    this.grindRun = run ? new Set(run) : null;
     this.grindT = sample.t;
     this.grindEntryT = sample.t;
     // The air that ended on this rail is over: retire its slide-jump launch.
@@ -5685,13 +5699,21 @@ export class Player {
     sfx.play('crystalGet', 0.7, 1.5);
   }
 
-  private exitGrind(vVel: number): void {
+  private exitGrind(vVel: number, level?: Level): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
     // RAIL-HOP window: airs off a rail keep the lateral stick strafe (on top
     // of the spin) so you can jump BETWEEN rails for grind combos — plain
     // ollies stay ballistic, the approach angle is their steering.
     this.grindExitAir = true;
+
+    // GRINDING A CRATE RUN BREAKS THE BOX YOU FINISH OVER. The ledge holds
+    // you all the way along; stepping off is what costs it a crate. Same for
+    // running out of rail as for popping off it — either way the manoeuvre is
+    // over. Level routes it through the normal smashed-box path, so it tallies
+    // and pays out exactly like one you spun.
+    if (level && this.grindRail && level.isCrateRail(this.grindRail))
+      level.smashCrateRunAt(this.grindRail, this.pos.x, this.pos.z);
 
     if (this.grindRail) {
       // Exit ALONG the rail: the tangent becomes the free-skate heading, so
@@ -6354,6 +6376,7 @@ export class Player {
 
     for (const c of level.crates) {
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
+      if (this.grindRun !== null && this.grindRun.has(c)) continue; // this box IS the rail
       if (c.nitro) {
         // Nitro: body contact detonates it — fatally, unless uber or a mask
         // (or the invuln flicker from one) absorbs the hit.

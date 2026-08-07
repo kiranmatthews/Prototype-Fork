@@ -2391,6 +2391,7 @@ export class Level {
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.clearPlayFog(); // ...and the course you run on comes back out of it
     this.snapshotHome(); // last: reset() needs where everything actually started
+    this.rebuildCrateRails(); // every crate is placed: derive the grind lines
   }
 
   // WHERE EVERYTHING STARTED.
@@ -2406,6 +2407,144 @@ export class Level {
   // deck height, hovering over the drop with a live hit box on it.
   //
   // One snapshot, taken after every builder has run, is all reset() needs.
+  // ==== CRATE RUNS ARE RAILS ================================================
+  //
+  // Two or more crates sitting side by side make a ledge, and a ledge is
+  // something you grind. Every maximal run of touching crates that share a top
+  // height gets a rail down the middle of that top surface, and grinding one
+  // smashes the box you step off over.
+  //
+  // The runs are DERIVED, never authored. Nothing asks a level to declare a
+  // grindable row and nothing enforces that crates line up: the scan simply
+  // reports whatever happens to be adjacent right now. A level that stacks its
+  // boxes on a grid — which is how they are laid out anyway — gets grind lines
+  // for free, and one that scatters them gets none, with no rule to obey
+  // either way. Crates that move (a stack settling after its support is
+  // smashed) or vanish re-run the scan, so the lines always match the boxes.
+  //
+  // These rails live OUTSIDE this.rails on purpose. That list is also what the
+  // on-foot rail block and the fall-onto-a-bar smack read, and a crate already
+  // has its own solid box for both jobs — a crate must not also fence you like
+  // a handrail or fold you over like a pole. Only the grind attach path, which
+  // reads grindRails, sees them.
+  crateRails: Rail[] = [];
+  private crateRunOf = new Map<Rail, Crate[]>();
+  private crateRailsDirty = true;
+  private grindRailList: Rail[] = [];
+
+  /** Every rail a grind may ATTACH to: the authored ones plus the crate runs. */
+  get grindRails(): Rail[] {
+    return this.grindRailList;
+  }
+
+  /** True if this rail is the top of a crate run rather than an authored bar. */
+  isCrateRail(rail: Rail): boolean {
+    return this.crateRunOf.has(rail);
+  }
+
+  /** The boxes that make up this rail's ledge, or null if it is an authored bar. */
+  crateRunFor(rail: Rail): readonly Crate[] | null {
+    return this.crateRunOf.get(rail) ?? null;
+  }
+
+  private rebuildCrateRails(): void {
+    this.crateRailsDirty = false;
+    // Orphan the old lines. A rider mid-grind keeps their reference and rides
+    // the same geometry out; they simply cannot be re-attached to.
+    for (const r of this.crateRails) r.grindable = false;
+    this.crateRails.length = 0;
+    this.crateRunOf.clear();
+
+    const S = 0.96; // uniform crate size
+    // Explosives are excluded: a grind line is an invitation, and inviting
+    // somebody onto a nitro is a different feature. Metal and switches stay in
+    // — they are solid, they read as a ledge, and they simply refuse to break
+    // when you step off them.
+    const live: Crate[] = [];
+    for (const c of this.crates)
+      if (c.alive && !c.pending && !c.nitro && !c.tnt) live.push(c);
+
+    // Group by the two coordinates that hold still along a run, quantised to
+    // 0.1 so a row seated on a wavy floor still counts as one row.
+    const q = (v: number): number => Math.round(v * 10);
+    for (const axis of ["x", "z"] as const) {
+      const groups = new Map<string, Crate[]>();
+      for (const c of live) {
+        const p = c.mesh.position;
+        const key =
+          axis === "x" ? q(p.y) + "|" + q(p.z) : q(p.y) + "|" + q(p.x);
+        const g = groups.get(key);
+        if (g) g.push(c);
+        else groups.set(key, [c]);
+      }
+      for (const g of groups.values()) {
+        if (g.length < 2) continue;
+        g.sort((a, b) => a.mesh.position[axis] - b.mesh.position[axis]);
+        let run: Crate[] = [g[0]];
+        for (let i = 1; i <= g.length; i++) {
+          const gap =
+            i < g.length
+              ? g[i].mesh.position[axis] - g[i - 1].mesh.position[axis]
+              : Infinity;
+          // touching = one crate apart. A wider gap ends the run; a much
+          // smaller one is two boxes in the same place, which is not a ledge.
+          if (Math.abs(gap - S) < 0.15) {
+            run.push(g[i]);
+            continue;
+          }
+          if (run.length >= 2) this.addCrateRail(run, axis, S);
+          run = i < g.length ? [g[i]] : [];
+        }
+      }
+    }
+    this.grindRailList = this.rails.concat(this.crateRails);
+  }
+
+  private addCrateRail(run: Crate[], axis: "x" | "z", S: number): void {
+    const a = run[0].mesh.position;
+    const b = run[run.length - 1].mesh.position;
+    const top = a.y + S / 2; // the surface you actually stand on
+    // Run the line the FULL length of the ledge, half a crate past each end
+    // centre, so the grind covers the whole top rather than stopping short.
+    const p0 =
+      axis === "x"
+        ? new THREE.Vector3(a.x - S / 2, top, a.z)
+        : new THREE.Vector3(a.x, top, a.z - S / 2);
+    const p1 =
+      axis === "x"
+        ? new THREE.Vector3(b.x + S / 2, top, b.z)
+        : new THREE.Vector3(b.x, top, b.z + S / 2);
+    const rail = new Rail([p0, p1], false); // no bar drawn: the boxes ARE the rail
+    this.crateRails.push(rail);
+    this.crateRunOf.set(rail, run.slice());
+  }
+
+  /**
+   * The grind is over: break the crate the rider stepped off above. Pushed
+   * through blastBroken so the player tallies, scores and rewards it exactly
+   * like any other smashed box. Metal and '!' switches survive, as always.
+   */
+  smashCrateRunAt(rail: Rail, x: number, z: number): void {
+    const run = this.crateRunOf.get(rail);
+    if (!run) return;
+    let best: Crate | null = null;
+    let bestD = Infinity;
+    for (const c of run) {
+      if (!c.alive || c.pending) continue;
+      const dx = c.mesh.position.x - x;
+      const dz = c.mesh.position.z - z;
+      const d = dx * dx + dz * dz;
+      if (d < bestD) {
+        bestD = d;
+        best = c;
+      }
+    }
+    if (!best) return;
+    this.breakCrate(best);
+    if (!best.alive) this.blastBroken.push(best);
+    this.crateRailsDirty = true;
+  }
+
   private snapshotHome(): void {
     for (const c of this.crates) c.homeY = c.mesh.position.y;
     for (const e of this.enemies) {
@@ -4125,6 +4264,10 @@ export class Level {
 
   update(dt: number): void {
     this.updateVfx(dt);
+    // Re-derive the crate grind lines only when the boxes actually changed —
+    // one broke, one finished settling somewhere new, or a respawn put them
+    // all back. Nothing recomputes this per frame.
+    if (this.crateRailsDirty) this.rebuildCrateRails();
     // Spun-away enemies: ballistic tumble; anything they hit, breaks.
     for (const e of this.enemies) {
       if (e.flungT === undefined || !e.flungVel) continue;
@@ -4671,6 +4814,7 @@ export class Level {
           c.fallVel = undefined;
           p.y = rest + SIZE / 2;
           c.mesh.userData.baseY = p.y;
+          this.crateRailsDirty = true; // a box that dropped is a ledge that moved
           c.box.setFromCenterAndSize(
             p.clone(),
             new THREE.Vector3(SIZE, SIZE, SIZE),
@@ -4693,6 +4837,7 @@ export class Level {
   }
 
   breakCrate(crate: Crate): void {
+    this.crateRailsDirty = true; // the ledge this box was part of just changed
     // metal-family crates never break: the '!' switch fires instead, the
     // metal arrow crate just shrugs it off. Outline ghosts aren't there yet.
     if (crate.bang) {
@@ -4786,6 +4931,7 @@ export class Level {
   // anything it CHAINS detonates unsafe, so popping a stack up close is a risk.
   detonate(c: Crate, safe = false): void {
     if (!c.alive) return;
+    this.crateRailsDirty = true;
     c.alive = false;
     c.fuse = undefined;
     c.mesh.visible = false;
@@ -4947,6 +5093,7 @@ export class Level {
     // stack is re-evaluated rather than compared against a stale tally
     this.settleLiveCrates = -1;
     this.settleFalling = 0;
+    this.crateRailsDirty = true; // every box is back where it started
 
     for (const e of this.enemies) {
       e.alive = true;
@@ -11737,6 +11884,21 @@ export class Level {
     // a TNT and a nitro for blast testing, well apart
     this.crate(16, E, -60, "tnt");
     this.crate(20, E, -75, "nitro");
+
+    // --- 6x6 CRATE WALL: the stacking and crate-grind test rig -------------
+    // Six wide by six high, one box deep, on the flat so nothing else is in
+    // the way. Smash anywhere along the bottom and the columns above collapse
+    // into the hole, which is the settle path end to end — including the
+    // third-box-up case that used to hang in the air. Every row of six is
+    // also a six-crate run, so the top edge (and every exposed row once you
+    // have chewed into it) is a grind line: ride it and the box you step off
+    // over breaks.
+    const WALL_X = 30; // clear of the rails, the ramps and the blast pair
+    const WALL_Z = -40;
+    const CS = 0.96;
+    for (let row = 0; row < 6; row++)
+      for (let col = 0; col < 6; col++)
+        this.crate(WALL_X + (col - 2.5) * CS, E + row * CS, WALL_Z);
 
     // --- ramp staircase: seven ramps of increasing steepness ---------------
     // grades 0.15 (8.5 deg) up to 1.9 (62 deg): walk, roll, and pump tests.
