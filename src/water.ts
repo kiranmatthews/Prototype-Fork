@@ -1436,13 +1436,21 @@ export class CoastWater {
         const hi = Math.max(a0, a1);
         const n0 = Math.ceil((lo - Math.PI / 2) / TAU);
         const crest = Math.PI / 2 + n0 * TAU;
-        if (crest <= hi) {
-          const f = (crest - a0) / (a1 - a0 || 1);
-          crossX = lerp(PHASE_D[j], PHASE_D[j - 1], f);
-          const depth = Math.max(0.1, crossX * this.bedSlope + 0.1);
-          zone = (1 - sstep(depth, 0.8, 1.6)) * sstep(depth, 0.15, 0.45);
-          break;
-        }
+        if (crest > hi) continue;
+        const f = (crest - a0) / (a1 - a0 || 1);
+        const cx = lerp(PHASE_D[j], PHASE_D[j - 1], f);
+        const depth = Math.max(0.1, cx * this.bedSlope + 0.1);
+        const z = (1 - sstep(depth, 0.8, 1.6)) * sstep(depth, 0.15, 0.45);
+        // Walk on past crests that are NOT breaking. The scan runs
+        // deep-water-first and used to stop dead at the first crest it met,
+        // which lands 13-21m out where the water is 1.8-2.8m deep — the zone
+        // window shuts at 1.6m, so `zone` came out 0 on literally every frame
+        // and the breaker foam has never once drawn. The crest we actually
+        // want is the outermost one standing inside the surf band.
+        if (z <= 0) continue;
+        crossX = cx;
+        zone = z;
+        break;
       }
       const fWin = winEnv(cycle, p.foamPhase, 0.4);
       const strength = zone * p.foamStrength * (0.35 + 0.65 * fWin);
