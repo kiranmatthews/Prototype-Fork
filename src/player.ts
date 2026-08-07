@@ -6945,6 +6945,19 @@ export class Player {
       // Killing the speed of someone who jumped THROUGH the glow would stop
       // them dead in mid-air.
       if (onPad) this.speed = 0;
+      // A COMBO RUN ends on the line too. bankCombo() above just closed the
+      // chain, so without this the watchdog below sees "comboRun live, combo
+      // just ended, gem still out there", calls failComboRun, and 1.2s after
+      // COURSE CLEAR kills you and restarts the level you had already beaten.
+      // The time trial has always been retired here; this is the same rule.
+      if (this.comboRun) {
+        this.comboRun = false;
+        level.setComboRun(false);
+        this.comboFailT = 0;
+        this.comboWasLive = false;
+        this.comboGraceT = 0;
+        this.onComboRunEnd();
+      }
       if (this.ttActive) {
         this.ttActive = false; // the clock stops dead on the line
         this.onTTFinish(this.ttTime);

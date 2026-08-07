@@ -184,6 +184,16 @@ Update-scoped and will double-fire or drop under a fixed step.
 10. **Comments in the vert/lip/grind regions have drifted** across many
     reworks. Trust the code, and re-verify any comment before porting the
     behaviour it describes.
+11. **One gameplay decision reads an animation value.** `stepAir`'s pipe-end
+    landing judgement gates on `alignPose > 0.5` — a smoothed board-alignment
+    blend weight written only by `syncVisual`, and eased at two different
+    rates (24/s on a pipe, 12/s elsewhere). Today this is safe *only* because
+    `syncVisual` is called from inside the fixed step, so the smoothing is
+    deterministic. **If the port puts pose smoothing on `Update` (render rate)
+    while physics stays on `FixedUpdate`, this crash/no-crash verdict silently
+    becomes frame-rate dependent.** Either keep the smoothing in
+    `FixedUpdate`, or replace the test with a sim-owned quantity (the board's
+    actual tilt against the landing normal) before porting.
 
 ---
 

@@ -2080,6 +2080,14 @@ function frame(): void {
     paused = !paused;
     if (paused) ui.showMessage("PAUSED", "Options / P to resume", 0);
     else ui.hideMessage();
+    // SPEND THE EDGE HERE. pausePressed is a latch cleared only by
+    // consumeEdges(), and on the UNPAUSE frame neither caller runs: the
+    // paused block is skipped (we just unpaused) and the fixed-step loop
+    // starts from acc = 0 + dt, which on any display faster than 60Hz is
+    // below fixedStep, so its body — and its consumeEdges — never executes.
+    // The latch then survived into the next frame and re-paused instantly,
+    // making the game impossible to resume on a 120Hz screen.
+    input.pausePressed = false;
   }
   if (paused) {
     input.consumeEdges(); // presses while paused must not fire on resume
