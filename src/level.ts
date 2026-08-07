@@ -4393,6 +4393,16 @@ export class Level {
       if (r.state === "break") {
         r.t += dt;
         for (let i = 1; i < N; i++) r.rail.points[i].y -= 34 * r.t * dt; // the span plunges — a grinder rides it into the void
+        // A FALLING/FALLEN ROPE IS NOT A RAIL. The Rail object stays in
+        // this.rails forever (nothing ever splices it out), and the plunge
+        // only moves nodes 1..N-1 — node 0 keeps its rest height, so segment 0
+        // survives as a taut stub hanging in mid-air at deck level. Within
+        // railSnapDistance of the near post you could grind that stub with
+        // nothing drawn there, ride it out onto the plunged nodes and be
+        // teleported below killY. Rebake so the line at least matches the
+        // nodes, and clear grindable so nothing can attach to it at all.
+        r.rail.rebake();
+        r.rail.grindable = false;
         this.syncRope(r);
         if (r.t > 1.2) {
           r.state = "gone";
@@ -4408,6 +4418,8 @@ export class Level {
           r.state = "idle";
           r.t = 0;
           for (let i = 0; i <= N; i++) r.rail.points[i].copy(r.rest[i]);
+          r.rail.rebake();
+          r.rail.grindable = true; // restrung: grindable again
           for (const s of r.segs) s.visible = true;
           this.syncRope(r);
         }
@@ -4424,6 +4436,7 @@ export class Level {
           r.state = "break";
           r.t = 0;
           r.active = false;
+          r.rail.grindable = false; // it is falling as of now, not next frame
           if (Math.abs(r.rest[0].z - this.playerPos.z) < 55)
             sfx.play("crunch", 0.5, 1.15);
           continue;
@@ -4438,6 +4451,13 @@ export class Level {
         const wob = Math.sin(this.time * 9 + i * 1.3) * 0.09 * shape * load;
         r.rail.points[i].y = r.rest[i].y - shape * r.sagAmt * load + wob;
       }
+      // The sag is a STRETCH, not the rigid translation a live rail is allowed
+      // (see the MovingRail note above). Without a re-bake the grind keeps
+      // running the taut line: a flat step across each 3u segment and a hard
+      // vertical pop of up to 0.44u at every node — three times the ride
+      // height — with the board floating above the drawn rope on the way in
+      // and sunk through it on the way out. Re-baking makes the path the rope.
+      r.rail.rebake();
       this.syncRope(r);
       r.active = false;
     }

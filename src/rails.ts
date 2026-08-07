@@ -13,8 +13,13 @@ export interface RailSample {
 
 export class Rail {
   readonly points: THREE.Vector3[];
-  readonly totalLength: number;
+  totalLength: number;
   readonly object: THREE.Group;
+  // A rail that is not there right now. The sky-bridge ropes snap and fall,
+  // and a fallen rope's Rail stays in level.rails with its nodes wherever the
+  // plunge left them — a grindable line hanging in empty air where nothing is
+  // drawn. Clearing this takes it out of every grind query until it restrings.
+  grindable = true;
   private hasVisual = true;
 
   private segDirs: THREE.Vector3[] = [];
@@ -38,6 +43,31 @@ export class Rail {
     this.totalLength = total;
 
     this.object = this.hasVisual ? this.buildVisual() : new THREE.Group();
+  }
+
+  // RE-BAKE after moving the nodes.
+  //
+  // Segment directions, lengths and arc offsets are computed once in the
+  // constructor, which is why the only motion a live rail may normally make is
+  // a rigid translation. A rope that SAGS is a stretch: its nodes drop but its
+  // baked directions stay horizontal, so closest()/pointAt() keep returning
+  // the taut line — a flat step per segment with a hard vertical pop at every
+  // node, up to a third of a metre off the rope you can see. Anything that
+  // deforms a rail non-rigidly must call this immediately afterwards so the
+  // grind path is the line that is actually drawn. Arc length changes with the
+  // shape, so a rider's grindT shifts slightly along the span; that is far
+  // smaller than the staircase it replaces.
+  rebake(): void {
+    let total = 0;
+    for (let i = 0; i < this.points.length - 1; i++) {
+      const dir = this.points[i + 1].clone().sub(this.points[i]);
+      const len = dir.length();
+      this.cumLengths[i] = total;
+      this.segLengths[i] = len;
+      this.segDirs[i] = len > 1e-9 ? dir.divideScalar(len) : dir.set(1, 0, 0);
+      total += len;
+    }
+    this.totalLength = total;
   }
 
   // Closest point on the polyline to `pos`, as arc length + tangent.
@@ -139,6 +169,7 @@ export class Rail {
 export function nearestRail(rails: Rail[], pos: THREE.Vector3): { rail: Rail; sample: RailSample } | null {
   let best: { rail: Rail; sample: RailSample } | null = null;
   for (const rail of rails) {
+    if (!rail.grindable) continue; // a snapped rope is not a rail right now
     const sample = rail.closest(pos);
     if (!best || sample.distance < best.sample.distance) {
       best = { rail, sample };

@@ -5059,6 +5059,14 @@ export class Player {
     // switches and banking checkpoints, straight through the "a tumbling
     // body is scenery" guards those branches otherwise honour.
     this.spinTimer = 0;
+    // ...and so does its VISUAL angle. updateSpin only zeroes spinAngle on the
+    // frame the timer runs out, inside `if (spinTimer > 0)` — zeroing the
+    // timer here skips that, leaving spinAngle frozen at wherever the spin had
+    // got to. syncVisual adds it to bodyGroup's yaw unconditionally, so a
+    // rider knocked down mid-spin got back up permanently turned, for the rest
+    // of the life (nothing clears it again short of a respawn). tryLedgeGrab,
+    // the other place that cancels a spin outright, has always cleared both.
+    this.spinAngle = 0;
     if (masked) {
       // the combo lives through the knockdown, with a beat past the get-up
       // to continue the line
