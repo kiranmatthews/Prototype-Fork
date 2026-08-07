@@ -163,8 +163,15 @@ export class Input {
       moveX /= m;
       moveY /= m;
     }
-    this.moveX = moveX;
-    this.moveY = moveY;
+    // Quantise to 2dp HERE, at the source. replay.ts records these axes
+    // rounded to 2dp; if the sim consumed the full-precision value instead,
+    // the recorded stream was not the stream the run actually used and any
+    // analog-stick take diverged on playback (keyboard, being exactly 0/±1
+    // and ±0.707, was unaffected — which is why it went unnoticed). Rounding
+    // before the sim sees it makes "recorded" and "consumed" identical by
+    // construction. 0.01 on a normalised axis is far below the deadzone.
+    this.moveX = Math.round(moveX * 100) / 100;
+    this.moveY = Math.round(moveY * 100) / 100;
 
     this.jumpHeld = jump;
     this.grindHeld = grind;

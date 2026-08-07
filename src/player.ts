@@ -5048,6 +5048,14 @@ export class Player {
     // so the fall completes naturally rather than freeze-framing in the air.
     this.speed *= TUNING.bailSpeedKeep;
     this.invulnSilent = true; // the ragdoll IS the indicator — no alpha flash
+    // A SPIN IN FLIGHT DIES WITH THE RIDER. updateSpin refuses to START one
+    // while bailing, but a spin already running kept ticking: spinning stays
+    // true, spinBox stays expanded, and every `this.spinning && ...` test in
+    // collide() kept firing for up to spinDuration INTO the wipeout — a
+    // ragdoll smashing crates, popping TNT with no risk, flipping '!'
+    // switches and banking checkpoints, straight through the "a tumbling
+    // body is scenery" guards those branches otherwise honour.
+    this.spinTimer = 0;
     if (masked) {
       // the combo lives through the knockdown, with a beat past the get-up
       // to continue the line
