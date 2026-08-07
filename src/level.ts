@@ -9396,6 +9396,7 @@ export class Level {
     // on the actual terrain (wavy jungle floors), else at the given height.
     let base = deckY;
     let onStack = false;
+    let stackGround: number | undefined; // column floor, inherited from below
     for (const other of this.crates) {
       const p = other.mesh.position;
       if (Math.abs(p.x - x) < 0.6 && Math.abs(p.z - z) < 0.6) {
@@ -9403,6 +9404,7 @@ export class Level {
         if (Math.abs(deckY - top) < 0.9) {
           base = top;
           onStack = true;
+          stackGround = other.mesh.userData.groundBaseY as number | undefined;
         }
       }
     }
@@ -9417,11 +9419,23 @@ export class Level {
       }
       groundBase = base;
     } else {
-      // stacked: remember the FLOOR under the column too, so that if everything
-      // below is smashed this crate knows where it is finally going to land
-      groundBase = this.builtFromData
-        ? (this.crateRestSurface(x, z, deckY) ?? deckY)
-        : this.floorY(x, z, deckY);
+      // Stacked: remember the FLOOR under the column too, so that if everything
+      // below is smashed this crate knows where it is finally going to land.
+      // INHERIT it from the crate underneath rather than probing again from
+      // this crate's own stacked height — that probe cannot succeed. floorY
+      // only accepts a hit within 1.1 of the height you hand it and
+      // crateRestSurface only accepts one at or above deckY - 0.6, so from the
+      // third box of a column (or the second, in a captured level) the real
+      // deck is out of band and both just hand the height straight back.
+      // groundBaseY then equalled the crate's own base, settleCrates read
+      // "already seated", and the box hung in the air when its support was
+      // smashed — the exact stack-is-scenery read settleCrates exists to fix.
+      // The crate below has already resolved the floor once; take its answer.
+      groundBase =
+        stackGround ??
+        (this.builtFromData
+          ? (this.crateRestSurface(x, z, deckY) ?? deckY)
+          : this.floorY(x, z, deckY));
     }
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
