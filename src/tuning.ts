@@ -406,7 +406,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   pipePop:
     'HALFPIPE: extra vertical launch popped over the coping — an ollie-out into hang time on top of the speed you carried up. Bigger = higher airs off the lip.',
   pipeAirGravity:
-    'VERT AIR gravity above the coping — halfpipes AND tracked vert walls (bowls, banked walls). SYMMETRIC (same rising and falling) so you drop back in at the speed you launched — no asymmetric-fall surge that pings you across the pipe on landing. Lower = floatier, longer hang.',
+    'VERT AIR gravity above the coping — halfpipes AND tracked vert walls (bowls, banked walls). SYMMETRIC (same rising and falling) so you drop back in at the speed you launched — no asymmetric-fall surge that pings you across the pipe on landing. Sits just under boardRiseGravity (31 vs 33) so vert hangs read a touch floatier than street airs. Lower = floatier, longer hang.',
   pipeSmooth:
     'How fast the board’s ride plane eases across segmented transitions. Lower = surfy and smooth, higher = snappy and reactive.',
   footGrip:
@@ -420,7 +420,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   hangSnapAngle:
     'Hit the coping within this many degrees of head-on and you snap to a PURE vertical hang (glued, drop straight back in). Steeper angles carry sideways momentum instead. Test: raise it and even angled approaches drop straight in.',
   hangLateral:
-    'Once your approach is past hangSnapAngle, how much of that off-axis speed becomes SIDEWAYS hang-time drift. LOCKED-IN rules: the drift is capped, bleeds off through the hang, and can never carry you past the end of a pipe — an angled entry moves you a few feet down the coping, then you come down glued. Test: hit the lip at an angle, raise it, you shift further before locking.',
+    'Once your approach is past hangSnapAngle, how much of that off-axis speed becomes SIDEWAYS hang-time drift. THPS rules: the drift is CONSERVED — air has no friction, so what you launch with is what you land with, and a hard angled carve genuinely flies you down the pipe. (The old capped-and-damped behaviour is gone: hangLatMax is effectively uncapped and there is no damping term. Out-running the pipe is the hang-end bail\'s job, not a clamp\'s.) Test: hit the lip at an angle, raise it, you travel further down the coping before coming down.',
   landingFlow:
     'How much of your FALL speed becomes riding speed when you land on a ramp or wall (0 = dead stop like before, 1 = keep it all). This is what makes dropping in from hang time flow instead of stalling. Test: drop into a pipe, raise it, you rocket out the far wall.',
   vertLaunchConserve:

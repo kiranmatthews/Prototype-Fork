@@ -3589,9 +3589,11 @@ export class Player {
       !this.isBailing && // a ragdolling body can't slam (Circle may still be held from the crash)
       !vertTrick &&
       // a street grab already committed owns its air — rolling the stick to
-      // down mid-Melon must not detonate into a slam (updateGrab runs first
-      // each step, so a fresh Circle+down chord still slams: the hard-down
-      // guard there refuses the grab before this check ever sees it)
+      // down mid-Melon must not detonate into a slam. A FRESH Circle+down
+      // chord still slams, because updateGrab runs AFTER the state step (see
+      // the call order in step()): this test reads the phase as it stood at
+      // the top of the frame, which for a brand-new chord is still 'none'.
+      // updateGrab's own hard-down guard then refuses to open the grab.
       this.grabPhase !== 'enter' &&
       this.grabPhase !== 'held' &&
       input.grabHeld &&
@@ -7429,10 +7431,13 @@ export class Player {
   // Fell onto a rail without asking for the grind: the body folds over the
   // bar and ragdolls off it — the classic THPS coping-crotch bail. Fires only
   // on a real skate-air DESCENT that crosses the rail line square-on:
-  //  - vVel < -1.5 keeps drop-ins honest: rolling off a deck edge across its
-  //    coping has barely started falling at the crossing moment, so the lip
-  //    line never smacks a drop-in — but a jump that comes DOWN on the coping
-  //    without Triangle eats it, which is exactly the THPS rule.
+  //  - the drop-in test is airRose, NOT a fall-speed floor. (It used to be
+  //    vVel < -1.5; that gated on how fast you were falling, which let a
+  //    fast drop-in eat a smack and a slow jump escape one.) A body rolling
+  //    off a deck across its coping never ROSE this air, so it stays free;
+  //    a jump rose first, so ANY descent onto the bar without Triangle eats
+  //    it — exactly the THPS rule. The vVel > -0.4 line below is only the
+  //    "actually descending" guard.
   //  - on-foot airs are exempt: hopping over the jungle log on foot is basic
   //    platforming and must keep sailing over.
   //  - vert airs, fresh dismounts (regrindCd), the landing grace at a lip,
