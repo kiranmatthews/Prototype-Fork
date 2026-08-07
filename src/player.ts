@@ -2562,7 +2562,25 @@ export class Player {
       const ry = this.rawInput.moveY;
       if (rx !== 0 || ry !== 0) {
         const inv = 1 / Math.hypot(rx, ry);
-        this.axisF.set(rx * inv, 0, -ry * inv);
+        // Resolve the stick through the SAME frame the carve block uses:
+        // screen-up is -Z only on straight courses, the LANE tangent on
+        // camera-spine levels, the live camera aim in chase mode. This seed
+        // used to read the raw stick as world -Z — the exact bug the carve
+        // block's own comment says was fixed — so on a lane-driven level the
+        // very first frame of skating snapped the heading (and the momentum
+        // it had just inherited) off-course, and on a stretch pointing near
+        // +Z the error exceeded carveBrakeAngle, so mounting the board fired
+        // the pull-back brake instead of a carve.
+        const cfc =
+          level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
+          (TUNING.chaseCam > 0.5 && !level.boulder
+            ? { x: this.camDir.x, z: this.camDir.z }
+            : { x: 0, z: -1 });
+        this.axisF.set(
+          (cfc.x * ry - cfc.z * rx) * inv,
+          0,
+          (cfc.z * ry + cfc.x * rx) * inv,
+        );
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
         this.speed = Math.max(Math.abs(this.speed), this.lastPlanar);
         // Popped straight onto the board from a standstill: hand it a first roll
@@ -6959,6 +6977,16 @@ export class Player {
     // air that landed on the lid was. Otherwise stomping a crate mid-ollie
     // would quietly retime every chain in the game.
     this.airGrav = 'foot';
+    // A fresh launch also RETIRES a held jump charge. This used to be copied
+    // out at each call site, and two of the seven — the plain crate and the
+    // checkpoint crate — never got the copy, so a charge held across those
+    // two bounce types survived into collide() inside the coyote window and
+    // converted the bounce into a chargedJump (suppressing footAir control),
+    // while every other crate type retired it. Centralised here so the next
+    // bounce handler cannot forget it either — which is exactly how the enemy
+    // stomp lost its double-jump re-arm.
+    this.charging = false;
+    this.chargeTimer = 0;
   }
 
   private smashCrate(level: Level, c: Crate): void {
