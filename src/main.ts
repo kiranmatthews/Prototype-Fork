@@ -28,7 +28,7 @@ import { Player } from "./player";
 import { UI } from "./ui";
 import { TUNING, CONST } from "./tuning";
 import { sfx } from "./audio";
-import { Recorder, Replayer, ReplayFile } from "./replay";
+import { Recorder, Replayer, ReplayFile, camYawOf } from "./replay";
 import { Editor } from "./editor";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { puffs, PUFF_PRESETS } from "./puffs";
@@ -2100,13 +2100,23 @@ function frame(): void {
   // its balance meter + stick axis with the screen using this.
   camera.getWorldDirection(camAimTmp);
   camAimTmp.y = 0;
-  if (camAimTmp.lengthSq() > 1e-6) player.camDir.copy(camAimTmp.normalize());
+  if (camAimTmp.lengthSq() > 1e-6) {
+    // SNAP TO THE REPLAY'S YAW GRID. camDir is sampled here, on the render
+    // clock, but it is consumed by the SIM — the lip stall picks its balance
+    // stick axis from it, and in chase-cam mode the whole travel frame is
+    // derived from it — so it has to ride in the take like any other input.
+    // Quantising it here, before the sim ever reads it, is what makes the
+    // number recorded and the number consumed the same by construction (the
+    // same trick input.ts plays on the analog axes). 1e-4 rad is 0.006deg.
+    const yaw = camYawOf(camAimTmp.normalize());
+    player.camDir.set(Math.sin(yaw), 0, Math.cos(yaw));
+  }
 
   acc += dt;
   while (acc >= CONST.fixedStep) {
     // Playback: overwrite the live input with the recorded frame; when the
     // take runs out, reset to a clean level so the next live take is valid.
-    if (!split2p && replayer.active && !replayer.feed(input)) {
+    if (!split2p && replayer.active && !replayer.feed(input, player.camDir)) {
       ui.setReplayBadge(false);
       ui.showMessage("REPLAY DONE", "", 1200);
       switchLevel(current.id);
@@ -2124,7 +2134,7 @@ function frame(): void {
     }
     level.update(CONST.fixedStep);
     // record exactly what the sim consumed (edges intact, pre-consume)
-    if (!replayer.active && !split2p) recorder.record(input);
+    if (!replayer.active && !split2p) recorder.record(input, player.camDir);
     input.consumeEdges(); // one press = one step
     if (split2p) input2.consumeEdges();
     acc -= CONST.fixedStep;

@@ -10,10 +10,21 @@
 //
 // Determinism rests on Player.simRand (see player.ts): every random number
 // that reaches SIM state — the balance needle, trip launches, '?' crate
-// rewards — comes from a PRNG reseeded to a fixed constant on level load, so
-// the same inputs walk the same stream. Visual randomness stays on
-// Math.random() precisely so that skipping particles (headless/lite) cannot
-// shift the sim's draw order.
+// rewards, the thrown deck's launch — comes from a PRNG reseeded to a fixed
+// constant on level load, so the same inputs walk the same stream. Visual
+// randomness stays on Math.random() precisely so that skipping particles
+// (headless/lite) cannot shift the sim's draw order.
+//
+// The pad is not the only thing the sim reads. player.camDir — where the
+// camera is aiming, flattened to XZ — is sampled on the RENDER clock and then
+// consumed by the sim: the lip stall picks its balance stick axis from it, and
+// in chase-cam mode the entire travel frame is derived from it. Sampled on the
+// render clock, it is a different number at 144Hz than at 60Hz, so a take
+// recorded on one display would not reproduce on another. It rides in the file
+// as one quantised yaw per frame (`cy`), which is also why main.ts snaps
+// camDir to that same 1e-4 rad grid before the sim ever sees it: recorded and
+// consumed are then the same value by construction. Files without `cy` are
+// older takes and simply keep using the live camera.
 
 import { TUNING } from './tuning';
 
@@ -36,6 +47,14 @@ const CHANNELS = [
 ] as const;
 
 type InputLike = { moveX: number; moveY: number } & Record<(typeof CHANNELS)[number], boolean>;
+// player.camDir, structurally — replay.ts stays free of a three.js import
+type AimLike = { x: number; z: number; set(x: number, y: number, z: number): unknown };
+
+// the yaw grid camDir is snapped to, shared by the recorder and main.ts so
+// that the value written to the file is bit-identical to the one the sim ran on
+export const CAM_YAW_Q = 1e4;
+export const camYawOf = (aim: { x: number; z: number }): number =>
+  Math.round(Math.atan2(aim.x, aim.z) * CAM_YAW_Q) / CAM_YAW_Q;
 
 export interface ReplayFile {
   v: 2;
@@ -46,6 +65,7 @@ export interface ReplayFile {
   mx: number[];
   my: number[];
   b: number[]; // button bitmask per frame
+  cy?: number[]; // camera yaw per frame — absent in takes recorded before it
   frames: number;
   truncated: boolean;
 }
@@ -56,6 +76,7 @@ export class Recorder {
   private mx: number[] = [];
   private my: number[] = [];
   private b: number[] = [];
+  private cy: number[] = [];
   private level = '';
   private tuning0: Record<string, number> = {};
   private tuningPrev: Record<string, number> = {};
@@ -67,14 +88,16 @@ export class Recorder {
     this.mx = [];
     this.my = [];
     this.b = [];
+    this.cy = [];
     this.tuningChanges = [];
     this.truncated = false;
     this.tuning0 = { ...(TUNING as unknown as Record<string, number>) };
     this.tuningPrev = { ...this.tuning0 };
   }
 
-  // Call once per fixed step, BEFORE consumeEdges, with the input the sim saw.
-  record(input: InputLike): void {
+  // Call once per fixed step, BEFORE consumeEdges, with the input the sim saw
+  // (and the camera aim it saw, which the lip stall and chase cam both read).
+  record(input: InputLike, aim?: { x: number; z: number }): void {
     if (this.b.length >= MAX_FRAMES) {
       this.truncated = true;
       return;
@@ -92,6 +115,7 @@ export class Recorder {
     this.mx.push(Math.round(input.moveX * 100) / 100);
     this.my.push(Math.round(input.moveY * 100) / 100);
     this.b.push(mask);
+    if (aim) this.cy.push(camYawOf(aim));
   }
 
   get frames(): number {
@@ -108,6 +132,7 @@ export class Recorder {
       mx: this.mx.slice(),
       my: this.my.slice(),
       b: this.b.slice(),
+      cy: this.cy.slice(),
       frames: this.b.length,
       truncated: this.truncated,
     };
@@ -140,7 +165,7 @@ export class Replayer {
 
   // Overwrite the live Input with the recorded frame. false = take is over
   // (tuning already restored) — the caller should reset to a clean level.
-  feed(input: InputLike): boolean {
+  feed(input: InputLike, aim?: AimLike): boolean {
     const d = this.data;
     if (!d) return false;
     if (this.frame >= d.frames) {
@@ -156,6 +181,12 @@ export class Replayer {
     input.moveY = d.my[this.frame];
     const mask = d.b[this.frame];
     for (let i = 0; i < CHANNELS.length; i++) input[CHANNELS[i]] = (mask & (1 << i)) !== 0;
+    // camera aim is a sim input too (lip stall axis, chase-cam travel frame).
+    // Older takes have no `cy`, so they keep whatever the live camera is doing.
+    if (aim && d.cy && this.frame < d.cy.length) {
+      const y = d.cy[this.frame];
+      aim.set(Math.sin(y), 0, Math.cos(y));
+    }
     this.frame++;
     return true;
   }

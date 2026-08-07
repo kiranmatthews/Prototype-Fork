@@ -5138,11 +5138,19 @@ export class Player {
     fb.scale.y = fb.scale.x; // uniform: a spinning deck must not squash
     fb.visible = true;
     const dir = Math.sign(this.speed || 1);
+    // SEEDED, not Math.random: this launch is NOT cosmetic. updateFlyBoard
+    // integrates the deck on the fixed step and where it comes to rest gates a
+    // real gameplay transition — run over the lying deck on foot and you
+    // remount, which flips freeSkate and rewrites speed. Three loose draws
+    // here meant the same recorded input stream could land the deck somewhere
+    // else on playback and end the run boarded instead of on foot.
     this.flyBoardVel.set(
-      this.axisF.x * this.speed * 0.8 + (Math.random() - 0.5) * 2,
-      Math.max(this.vVel * 0.4, 0) + 4.2 + Math.random() * 1.6,
-      this.axisF.z * this.speed * 0.8 + (Math.random() - 0.5) * 2,
+      this.axisF.x * this.speed * 0.8 + (this.simRand() - 0.5) * 2,
+      Math.max(this.vVel * 0.4, 0) + 4.2 + this.simRand() * 1.6,
+      this.axisF.z * this.speed * 0.8 + (this.simRand() - 0.5) * 2,
     );
+    // the tumble itself IS cosmetic — rotation never feeds back into the
+    // deck's position — so it stays on the visual stream by design
     this.flyBoardAng.set(
       (Math.random() - 0.5) * 18,
       dir * (10 + Math.random() * 8), // helicopter spin reads best
