@@ -626,7 +626,6 @@ export class Player {
   private underProbeT = 0; // periodic clearance re-check while hanging (terrain rises -> pop back up)
   private boardSnapT = 0; // board snapped by an under-hang bail: hidden until this runs out
   private grindYawDir = 1;
-  private grabSpinTotal = 0; // |rotation| racked up this air, for spin scoring
   private grabTrickName = 'Grab'; // variant name for the combo readout
   private airGrabShown: string | null = null; // exact plate label this air's grab was pushed under (renamed live; merged with a landed spin)
   private grabPaid = 0; // what this air's grab actually paid — repriced when the variant resolves to a different trick's decay pool
@@ -1112,6 +1111,7 @@ export class Player {
     this.grounded = true;
     this.spinTimer = 0;
     this.spinCd = 0;
+    this.slamFlatT = 0; // dying mid-pancake must not respawn you still flattened
     this.bodyGroup.rotation.y = 0;
     this.grindRail = null;
     this.regrindCd = 0;
@@ -2334,7 +2334,9 @@ export class Player {
     //  - release Triangle / timer up           -> drop back in, trick kept
     if (this.lipStallT > 0) {
       this.lipStallT -= dt;
-      this.runTime += dt;
+      // (no runTime here: the 'ride' case in step() already counted this frame
+      // before calling stepRide — adding it again ran the clock at 2x through
+      // every lip stall, inflating trial times and the animation clock)
       this.speed = 0;
       this.vVel = 0;
       // needle: + = tipping into the pipe (drifts there naturally), − = deck.
@@ -4086,7 +4088,6 @@ export class Player {
             (isSwitch ? -this.stance * Math.PI * this.sidePose : 0),
         );
         this.grabSpinAngle = 0;
-        this.grabSpinTotal = 0;
         this.airGrabShown = null; // this air's grab entry is settled
         // THPS landing pump: wheels down with X already held (a crouched
         // landing) pays a small speed burst — re-crouch through every
@@ -4726,7 +4727,6 @@ export class Player {
     this.grabT = 0;
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
-    this.grabSpinTotal = 0;
     this.endManual();
     this.balance = 0; // needle: + tips INTO the pipe (forgiving), − out the back (bail)
     this.balanceVel = 0;
@@ -5011,7 +5011,6 @@ export class Player {
     this.grabT = 0;
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
-    this.grabSpinTotal = 0;
     this.sketchyT = 0; // a full bail owns the body — no leftover shimmy
     this.flipT = 0; // the deck stops performing when you're eating dirt
     this.pipeEndFly = false; // this bail settles any pending fly-off judgment
@@ -5486,7 +5485,6 @@ export class Player {
       );
     }
     this.grabSpinAngle = 0;
-    this.grabSpinTotal = 0;
     this.grindTime = 0;
     // Grind trick from the stick at entry (THPS3+ vocabulary):
     // up = Nosegrind, down = 5-0, up-diagonal = Crooked, down-left = Smith,
@@ -5840,8 +5838,14 @@ export class Player {
   // ------------------------------------------------------------------ spin --
 
   private updateSpin(dt: number, input: Input): void {
+    // A KNOCKED-DOWN BODY CANNOT ATTACK. Square is one of the buttons the
+    // bail mash counts (see the mash accumulator in step()), so without this
+    // gate mashing your way out of a wipeout fired real spin attacks —
+    // smashing crates, killing enemies and popping TNT straight through the
+    // "a tumbling body is scenery" guards the collision code carefully keeps.
     const canSpin =
-      this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope';
+      !this.isBailing &&
+      (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope');
     if (input.spinPressed && !this.spinning && this.spinCd <= 0 && canSpin) {
       this.spinTimer = TUNING.spinDuration;
       sfx.play(['spin1', 'spin2', 'spin3'][Math.floor(Math.random() * 3)], 0.5);
@@ -6007,7 +6011,6 @@ export class Player {
         const gsp = this.spinStick();
         if (gsp !== 0) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(gsp) * dt;
-          this.grabSpinTotal += TUNING.grabSpinRate * dt;
         }
         // variant name for the combo readout — and the PLATE follows it: the
         // entry pushed at grab start is renamed in place, so holding a
@@ -6075,7 +6078,6 @@ export class Player {
           this.airFromSkate && this.airGrav === 'board' && !this.wallriding && !this.isBailing;
         if ((this.vertAir || streetSpin) && !this.slamActive && hsp !== 0) {
           this.grabSpinAngle -= TUNING.grabSpinRate * Math.sign(hsp) * dt;
-          this.grabSpinTotal += TUNING.grabSpinRate * dt;
         } else if (this.grabSpinAngle !== 0) {
           const target = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
           const d = target - this.grabSpinAngle;
@@ -6098,7 +6100,6 @@ export class Player {
       // facing where the spin left it rather than snapping back
       this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle);
       this.grabSpinAngle = 0;
-      this.grabSpinTotal = 0;
       this.airGrabShown = null;
     }
   }
@@ -6304,7 +6305,13 @@ export class Player {
         if (this.spinning && this.spinBox.intersectsBox(c.box)) {
           level.detonate(c);
         } else if (this.playerBox.intersectsBox(c.box)) {
-          if (this.uberTimer > 0 || this.sliding) {
+          if (this.isBailing) {
+            // A TUMBLING BODY is not a stomp. Without this the ragdoll's fall
+            // read as isStomping, lit the fuse and crateBounce'd the downed
+            // body back into the sky — the same defect the plain-crate,
+            // arrow-crate and '!' branches each guard against.
+            if (this.grounded) this.pushOutOf(c.box);
+          } else if (this.uberTimer > 0 || this.sliding) {
             level.detonate(c);
           } else if (this.state === 'grind') {
             if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c);
@@ -6364,9 +6371,20 @@ export class Player {
             // rail-line obstacle rules, same as plain crates: WOOD smashes at
             // speed (or a mask pays and breaks it); METAL can't break — a
             // mask lets you pass, otherwise it knocks you off the rail.
-            if (c.bouncy && (this.grindVel >= TUNING.smashSpeed || this.spendMask()))
-              this.smashCrate(level, c);
-            else if (c.bouncy || !this.spendMask()) this.bailFromRail(0, level);
+            //
+            // The metal case MUST read the invuln window first. Metal is never
+            // removed, so the overlap persists for as many fixed steps as it
+            // takes to grind clear — and an unguarded spendMask() here charged
+            // a mask EVERY ONE of those steps, emptying the whole stock and
+            // then bailing anyway. One mask now buys the pass-through and its
+            // invuln covers the rest of the contact.
+            if (c.bouncy) {
+              if (this.grindVel >= TUNING.smashSpeed || this.spendMask())
+                this.smashCrate(level, c);
+              else this.bailFromRail(0, level);
+            } else if (this.invulnTimer <= 0 && !this.spendMask()) {
+              this.bailFromRail(0, level);
+            }
           } else if (this.isStomping(c.box) && this.slamActive) {
             // Slam on WOOD breaks it. Slam on METAL cancels into a plain
             // bounce — clearing slamActive is load-bearing: without it the
@@ -6571,10 +6589,14 @@ export class Player {
           this.score(CONST.ptsEnemy, 'Bonk');
           if (!this.slamActive) {
             this.vVel = TUNING.crateBounce;
-          sfx.play('crateBounce', 0.7);
+            sfx.play('crateBounce', 0.7);
             this.state = 'air';
             this.grounded = false;
-            this.airGrav = 'foot'; // same rule as bounceRefresh: a crate pop is a Crash arc
+            // Was hand-rolling airGrav='foot' and calling itself "the same rule
+            // as bounceRefresh" while skipping the rest of it — so an enemy
+            // stomp, alone among the six bounce handlers, never re-armed the
+            // double jump. Use the real thing.
+            this.bounceRefresh();
             this.charging = false;
             this.chargeTimer = 0;
           }

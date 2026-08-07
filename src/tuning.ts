@@ -54,7 +54,6 @@ export const TUNING = {
   hangSnapAngle: 6, // approach within this many degrees of straight-on snaps to pure vertical hang (no drift)
   hangLateral: 0.8, // beyond that, how much of your off-axis approach speed becomes sideways hang-time drift (gaps)
   landingFlow: 1, // how much fall speed converts into riding speed when you land on a ramp/wall
-  vertGlue: 20, // RETIRED (kept for saved-tuning compat, no slider): vert airs are ballistic now — nothing pulls the flight back onto a wall plane
   vertLaunchConserve: 0.55, // how much of the entry speed a vert launch conserves into vVel (1 = full; an angled carve stops being taxed twice)
   vertGravityBlend: 0.35, // seconds to ease from vert gravity back to street gravity when a tracked wall runs out (0 = the old single-frame 33->119 cliff)
   vertDrift: 4.5, // hang time: stick drift speed ALONG the coping during a vert air
@@ -232,7 +231,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   hangSnapAngle: { min: 0, max: 60, step: 1 },
   hangLateral: { min: 0, max: 2, step: 0.05 },
   landingFlow: { min: 0, max: 1, step: 0.05 },
-  vertGlue: { min: 0, max: 20, step: 0.5 },
   vertLaunchConserve: { min: 0, max: 1, step: 0.05 },
   vertGravityBlend: { min: 0, max: 1, step: 0.05 },
   vertDrift: { min: 0, max: 15, step: 0.5 },
@@ -425,8 +423,6 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Once your approach is past hangSnapAngle, how much of that off-axis speed becomes SIDEWAYS hang-time drift. LOCKED-IN rules: the drift is capped, bleeds off through the hang, and can never carry you past the end of a pipe — an angled entry moves you a few feet down the coping, then you come down glued. Test: hit the lip at an angle, raise it, you shift further before locking.',
   landingFlow:
     'How much of your FALL speed becomes riding speed when you land on a ramp or wall (0 = dead stop like before, 1 = keep it all). This is what makes dropping in from hang time flow instead of stalling. Test: drop into a pipe, raise it, you rocket out the far wall.',
-  vertGlue:
-    'THPS2 hang time: how hard a vert air is pulled back onto the wall plane so you drop into the same transition. 0 = free air, high = riveted. Test: hang time, raise it, you always drop back down the same face.',
   vertLaunchConserve:
     'How much of the speed you carried into a vert launch is conserved as HEIGHT. An angled carve up a wall used to be taxed twice — once for going off-axis, again because the shallower angle shrank the vertical term. 1 = fully conserved (head-on is unchanged either way).',
   vertGravityBlend:
@@ -688,7 +684,6 @@ export const CONST = {
   carveBrakeAngle: 2.7, // rad (~155 deg): stick pulled this far from the heading = brake/dismount, not a carve
   fixedStep: 1 / 60, // deterministic chunky update rate
   bailDownTime: 1.1, // knocked-down beat after a mask-less bail before getting up
-  killY: -48, // fall below this = instant death
   respawnDelay: 0.7, // quick Crash-style respawn
   playerHalf: { x: 0.5, y: 0.46, z: 0.5 }, // capsule-ish AABB: full height 0.92, just shy of one crate (0.96)
   spinReach: 0.8, // extra horizontal hit reach while spinning (arm+board span)
@@ -733,7 +728,6 @@ export const CONST = {
   boardPickupRadius: 1.2, // walk this close to a thrown deck lying on the floor and you scoop it up and hop straight back on
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 40, // pipe hang: cap on the off-axis lateral carry. Effectively uncapped now (THPS conserves coping drift — a hard angled carve genuinely flies you down the pipe); out-running the pipe is the hang-end bail's job, not a clamp's
-  hangLatDamp: 0, // vert hang: how fast the lateral carry bleeds off. 0 = THPS: air has no friction — the drift you launched with is the drift you land with
   rollOffLevelTime: 1.5, // riding out a pipe's open END partway up the wall: the body levels from the wall tilt to wheels-down over this many airborne seconds — touch down still tilted (off a saving surface) and it's the bail you were carrying
   manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
   ropeGrabRadius: 1.1, // jump within this of a swing rope's line to catch it
