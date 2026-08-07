@@ -2465,12 +2465,32 @@ export class Level {
     const live: Crate[] = [];
     for (const c of this.crates) if (c.alive && !c.pending) live.push(c);
 
-    // Group by the two coordinates that hold still along a run, quantised to
-    // 0.1 so a row seated on a wavy floor still counts as one row.
+    // Occupancy, quantised to 0.1 so a row seated on a wavy floor still counts
+    // as one row. Everything below asks this the same question: is there a box
+    // in the cell next door?
     const q = (v: number): number => Math.round(v * 10);
+    const cell = (x: number, y: number, z: number): string =>
+      q(x) + "|" + q(y) + "|" + q(z);
+    const filled = new Set<string>();
+    for (const c of live) {
+      const p = c.mesh.position;
+      filled.add(cell(p.x, p.y, p.z));
+    }
+
+    // A BOX WITH SOMETHING ON TOP OF IT HAS NO LEDGE. Only the crates whose
+    // lids are open to the sky can be ridden, which is why a solid cube offers
+    // its top rim and nothing else, and why chewing into a stack opens new
+    // lines as it goes.
+    const open: Crate[] = [];
+    for (const c of live) {
+      const p = c.mesh.position;
+      if (!filled.has(cell(p.x, p.y + S, p.z))) open.push(c);
+    }
+
     for (const axis of ["x", "z"] as const) {
+      const cross = axis === "x" ? "z" : "x";
       const groups = new Map<string, Crate[]>();
-      for (const c of live) {
+      for (const c of open) {
         const p = c.mesh.position;
         const key =
           axis === "x" ? q(p.y) + "|" + q(p.z) : q(p.y) + "|" + q(p.x);
@@ -2493,7 +2513,7 @@ export class Level {
             run.push(g[i]);
             continue;
           }
-          if (run.length >= 2) this.addCrateRail(run, axis, S);
+          if (run.length >= 2) this.addCrateRails(run, axis, cross, S, filled, cell);
           run = i < g.length ? [g[i]] : [];
         }
       }
@@ -2501,53 +2521,68 @@ export class Level {
     this.grindRailList = this.rails.concat(this.crateRails);
   }
 
-  private addCrateRail(run: Crate[], axis: "x" | "z", S: number): void {
+  /**
+   * THE LINE IS THE EDGE, NOT THE MIDDLE. You grind the lip of a ledge, so a
+   * run gets a rail down each of its two long sides — and only the sides that
+   * are actually open. An edge with another box against it is buried inside
+   * the stack, and offering it would put the rider inside the geometry.
+   */
+  private addCrateRails(
+    run: Crate[],
+    axis: "x" | "z",
+    cross: "x" | "z",
+    S: number,
+    filled: Set<string>,
+    cell: (x: number, y: number, z: number) => string,
+  ): void {
     const a = run[0].mesh.position;
     const b = run[run.length - 1].mesh.position;
     const top = a.y + S / 2; // the surface you actually stand on
-    // Run the line the FULL length of the ledge, half a crate past each end
-    // centre, so the grind covers the whole top rather than stopping short.
-    const p0 =
-      axis === "x"
-        ? new THREE.Vector3(a.x - S / 2, top, a.z)
-        : new THREE.Vector3(a.x, top, a.z - S / 2);
-    const p1 =
-      axis === "x"
-        ? new THREE.Vector3(b.x + S / 2, top, b.z)
-        : new THREE.Vector3(b.x, top, b.z + S / 2);
-    const rail = new Rail([p0, p1], false); // no bar drawn: the boxes ARE the rail
-    this.crateRails.push(rail);
-    this.crateRunOf.set(rail, run.slice());
+    for (const side of [-1, 1]) {
+      // open if ANY box along the run has nothing beside it on this side —
+      // a partly buried edge still has the exposed part worth riding
+      let exposed = false;
+      for (const c of run) {
+        const p = c.mesh.position;
+        const nx = cross === "x" ? p.x + side * S : p.x;
+        const nz = cross === "z" ? p.z + side * S : p.z;
+        if (!filled.has(cell(nx, p.y, nz))) {
+          exposed = true;
+          break;
+        }
+      }
+      if (!exposed) continue;
+      const off = (side * S) / 2; // half a box out: the lip itself
+      // Run the line the FULL length of the ledge, half a crate past each end
+      // centre, so the grind covers the whole edge rather than stopping short.
+      const p0 =
+        axis === "x"
+          ? new THREE.Vector3(a.x - S / 2, top, a.z + off)
+          : new THREE.Vector3(a.x + off, top, a.z - S / 2);
+      const p1 =
+        axis === "x"
+          ? new THREE.Vector3(b.x + S / 2, top, b.z + off)
+          : new THREE.Vector3(b.x + off, top, b.z + S / 2);
+      const rail = new Rail([p0, p1], false); // no bar drawn: the boxes ARE the rail
+      this.crateRails.push(rail);
+      this.crateRunOf.set(rail, run.slice());
+    }
   }
 
   /**
-   * The grind is over: break the crate the rider stepped off above. Pushed
-   * through blastBroken so the player tallies, scores and rewards it exactly
-   * like any other smashed box. Metal and '!' switches survive, as always.
+   * ONE BOX, SMASHED. Routed through blastBroken so the player tallies, scores
+   * and — this is the point — hands over the CONTENTS exactly as if it had
+   * been spun: fruit, a mask, whatever the '?' rolls. Explosives detonate
+   * instead of being quietly deleted; metal and '!' switches survive, as ever.
    */
-  smashCrateRunAt(rail: Rail, x: number, z: number): void {
-    const run = this.crateRunOf.get(rail);
-    if (!run) return;
-    let best: Crate | null = null;
-    let bestD = Infinity;
-    for (const c of run) {
-      if (!c.alive || c.pending) continue;
-      const dx = c.mesh.position.x - x;
-      const dz = c.mesh.position.z - z;
-      const d = dx * dx + dz * dz;
-      if (d < bestD) {
-        bestD = d;
-        best = c;
-      }
-    }
-    if (!best) return;
-    // breakCrate would quietly delete an explosive without it ever going off.
-    if (best.nitro || best.tnt) {
-      this.detonate(best);
+  smashGrindCrate(c: Crate): void {
+    if (!c.alive || c.pending) return;
+    if (c.nitro || c.tnt) {
+      this.detonate(c);
       return;
     }
-    this.breakCrate(best);
-    if (!best.alive) this.blastBroken.push(best);
+    this.breakCrate(c);
+    if (!c.alive) this.blastBroken.push(c);
     this.crateRailsDirty = true;
   }
 
@@ -9629,7 +9664,11 @@ export class Level {
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
     mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
-    if (!kind) mesh.rotation.y = 0.15;
+    // NO PER-CRATE YAW. Plain boxes used to be turned 0.15 rad for a
+    // hand-placed look, which is fine for one on its own and wrong the moment
+    // there are two: a row came out visibly crooked, and a grid of them read
+    // as a pile of jumbled boxes rather than a stack. Crates share the world
+    // axes now, so any arrangement lines up with itself.
     this.root.add(mesh);
     const box = new THREE.Box3().setFromCenterAndSize(
       mesh.position.clone(),

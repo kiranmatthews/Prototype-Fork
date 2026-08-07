@@ -649,6 +649,11 @@ export class Player {
   // grind lasts, and only these — a crate stacked on the run, or the next run
   // along, still hits you exactly as it should.
   private grindRun: Set<Crate> | null = null;
+  // The box currently under the grind. Each one breaks as the rider CLEARS it
+  // — when the next box takes over, and the last when the manoeuvre ends — so
+  // riding a line of crates takes the line apart behind you and pays out every
+  // box's contents on the way, rather than costing exactly one at the end.
+  private grindCrate: Crate | null = null;
   private grindPoseX = 0; // nose-up / nose-down grind lean
   private grindPoseZ = 0; // which side the free end of the deck hangs off (smith/feeble/crook)
   private grindYawPose = 0; // boardslide: body across the rail
@@ -5408,6 +5413,10 @@ export class Player {
       // Ran off the end of the rail: small pop, keep carrying grind speed.
       this.grindT = THREE.MathUtils.clamp(this.grindT, 0, rail.totalLength);
       this.placeOnRail(rail);
+      // One last look at what is underfoot before the exit: running off the
+      // end must still retire the box you rode off AND the one you finish on,
+      // or a full-length grind quietly leaves the last of them standing.
+      this.tickGrindCrate(level);
       const perfect = this.perfectGrindRun(rail, level);
       this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5, level); // from under, no pop up through the rail
       if (perfect) this.applyPerfectGrind();
@@ -5415,6 +5424,7 @@ export class Player {
     }
 
     this.placeOnRail(rail);
+    this.tickGrindCrate(level);
     this.speed = this.grindVel;
     this.surfaceName = 'rail (' + GRIND_NAMES[this.grindStyle] + ')';
     // THPS accrual: the longer the grind, the more the combo is worth.
@@ -5484,6 +5494,7 @@ export class Player {
   // exit (clean, drop-off, board snap, bail) before grindRail is cleared.
   private railLeft(): void {
     this.grindRun = null; // the ledge is a solid box again
+    this.grindCrate = null;
     this.lastRail = this.grindRail;
     this.grindLatched = true;
   }
@@ -5699,6 +5710,27 @@ export class Player {
     sfx.play('crystalGet', 0.7, 1.5);
   }
 
+  // Which box of the ledge is under us right now — and the moment that
+  // changes, the one we just rode off breaks.
+  private tickGrindCrate(level: Level): void {
+    if (this.grindRun === null) return;
+    let best: Crate | null = null;
+    let bestD = Infinity;
+    for (const c of this.grindRun) {
+      if (!c.alive || c.pending) continue;
+      const dx = c.mesh.position.x - this.pos.x;
+      const dz = c.mesh.position.z - this.pos.z;
+      const d = dx * dx + dz * dz;
+      if (d < bestD) {
+        bestD = d;
+        best = c;
+      }
+    }
+    if (best === this.grindCrate) return;
+    if (this.grindCrate) level.smashGrindCrate(this.grindCrate);
+    this.grindCrate = best;
+  }
+
   private exitGrind(vVel: number, level?: Level): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
@@ -5707,13 +5739,11 @@ export class Player {
     // ollies stay ballistic, the approach angle is their steering.
     this.grindExitAir = true;
 
-    // GRINDING A CRATE RUN BREAKS THE BOX YOU FINISH OVER. The ledge holds
-    // you all the way along; stepping off is what costs it a crate. Same for
-    // running out of rail as for popping off it — either way the manoeuvre is
-    // over. Level routes it through the normal smashed-box path, so it tallies
-    // and pays out exactly like one you spun.
-    if (level && this.grindRail && level.isCrateRail(this.grindRail))
-      level.smashCrateRunAt(this.grindRail, this.pos.x, this.pos.z);
+    // ...and the last box goes with the manoeuvre. Every earlier one already
+    // broke as the rider cleared it (tickGrindCrate); this is the one still
+    // underfoot when the grind ends.
+    if (level && this.grindCrate) level.smashGrindCrate(this.grindCrate);
+    this.grindCrate = null;
 
     if (this.grindRail) {
       // Exit ALONG the rail: the tangent becomes the free-skate heading, so
