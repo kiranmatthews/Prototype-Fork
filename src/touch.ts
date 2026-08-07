@@ -165,9 +165,15 @@ export class TouchControls {
       // angular hysteresis: hold the current sector until the thumb is
       // clearly (30° > the 22.5° boundary) into a neighbour — no flicker
       // when resting right on a boundary.
+      // The wrap has to fold into [0,PI] the hard way. `centre` runs 0..315deg
+      // but atan2 returns -180..180deg, so the raw gap reaches 315+180=495deg;
+      // the old `2PI - diff` only corrects a gap under 2PI, and past that it
+      // went NEGATIVE, which sails under the 30deg test and pins the sector.
+      // That locked the whole bottom of the pad: down-right could not step to
+      // down, down could not step to down-left, down-left could not step to
+      // left — the thumb had to be lifted back to the dead zone to escape.
       const centre = this.dirIdx * (Math.PI / 4);
-      let diff = Math.abs(ang - centre);
-      if (diff > Math.PI) diff = 2 * Math.PI - diff;
+      const diff = Math.abs(((ang - centre + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
       if (diff < (Math.PI / 180) * 30) return;
     }
     if (idx !== this.dirIdx) {
