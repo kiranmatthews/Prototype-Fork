@@ -2456,13 +2456,14 @@ export class Level {
     this.crateRunOf.clear();
 
     const S = 0.96; // uniform crate size
-    // Explosives are excluded: a grind line is an invitation, and inviting
-    // somebody onto a nitro is a different feature. Metal and switches stay in
-    // — they are solid, they read as a ledge, and they simply refuse to break
-    // when you step off them.
+    // EVERY solid box counts, explosives included. A nitro sitting in a row is
+    // part of that ledge and reads as one, so leaving it out would break the
+    // line in half around a box you can plainly see — and worse, hide the
+    // hazard. Riding onto one sets it off (see the grindRun branch in the
+    // player's crate loop). Metal and '!' switches are in for the opposite
+    // reason: they read as a ledge and simply refuse to break.
     const live: Crate[] = [];
-    for (const c of this.crates)
-      if (c.alive && !c.pending && !c.nitro && !c.tnt) live.push(c);
+    for (const c of this.crates) if (c.alive && !c.pending) live.push(c);
 
     // Group by the two coordinates that hold still along a run, quantised to
     // 0.1 so a row seated on a wavy floor still counts as one row.
@@ -2540,6 +2541,11 @@ export class Level {
       }
     }
     if (!best) return;
+    // breakCrate would quietly delete an explosive without it ever going off.
+    if (best.nitro || best.tnt) {
+      this.detonate(best);
+      return;
+    }
     this.breakCrate(best);
     if (!best.alive) this.blastBroken.push(best);
     this.crateRailsDirty = true;
@@ -11808,6 +11814,7 @@ export class Level {
   // No gaps, no hazards, no finish — walls only at the far perimeter, so
   // there is nothing to fall off. Marker posts along the axes give bearings.
   private buildFlats(): void {
+    this.skyPreset = "day"; // the test course reads best in full light
     // Tropical resort noon over an endless blacktop lot: high sun, turquoise
     // horizon haze, parking-bay stripes to give the eye a texel scale.
     const mat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // asphalt is full-colour
@@ -11885,20 +11892,44 @@ export class Level {
     this.crate(16, E, -60, "tnt");
     this.crate(20, E, -75, "nitro");
 
-    // --- 6x6 CRATE WALL: the stacking and crate-grind test rig -------------
-    // Six wide by six high, one box deep, on the flat so nothing else is in
-    // the way. Smash anywhere along the bottom and the columns above collapse
-    // into the hole, which is the settle path end to end — including the
-    // third-box-up case that used to hang in the air. Every row of six is
-    // also a six-crate run, so the top edge (and every exposed row once you
-    // have chewed into it) is a grind line: ride it and the box you step off
-    // over breaks.
-    const WALL_X = 30; // clear of the rails, the ramps and the blast pair
-    const WALL_Z = -40;
+    // --- 6x6x6 CRATE CUBE: the stacking test rig ---------------------------
+    // Six by six by six, on the flat so nothing else is in the way. Smash
+    // anywhere into the base and the columns above collapse into the hole,
+    // which is the settle path end to end — including the third-box-up case
+    // that used to hang in the air. Every row on every face is also a
+    // six-crate run, so every exposed edge is a grind line, and the ones you
+    // open up by chewing into it become lines too.
     const CS = 0.96;
+    const CUBE_X = 30; // clear of the rails, the ramps and the blast pair
+    const CUBE_Z = -40;
+    // Bottom layer FIRST: each crate seats on the one already under it.
     for (let row = 0; row < 6; row++)
       for (let col = 0; col < 6; col++)
-        this.crate(WALL_X + (col - 2.5) * CS, E + row * CS, WALL_Z);
+        for (let dep = 0; dep < 6; dep++)
+          this.crate(
+            CUBE_X + (col - 2.5) * CS,
+            E + row * CS,
+            CUBE_Z + (dep - 2.5) * CS,
+          );
+
+    // --- LONG GRIND ROW: one box high, 24 long, nothing else near it -------
+    // A clean line to actually ride, long enough to hold a grind through the
+    // whole balance ramp rather than popping off two beats in.
+    const ROW_X = 24;
+    for (let i = 0; i < 24; i++) this.crate(ROW_X, E, -95 - i * CS);
+
+    // --- HAZARD ROW: the same idea with bombs in it ------------------------
+    // Eight boxes with a nitro at 5 and a TNT at 7. It grinds like any other
+    // ledge right up until it doesn't — riding onto either sets it off under
+    // your feet with no fuse, so the line is a decision, not a freebie.
+    const HAZ_X = 20;
+    for (let i = 0; i < 8; i++)
+      this.crate(
+        HAZ_X,
+        E,
+        -95 - i * CS,
+        i === 5 ? "nitro" : i === 7 ? "tnt" : undefined,
+      );
 
     // --- ramp staircase: seven ramps of increasing steepness ---------------
     // grades 0.15 (8.5 deg) up to 1.9 (62 deg): walk, roll, and pump tests.

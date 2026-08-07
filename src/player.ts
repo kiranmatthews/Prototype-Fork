@@ -6369,14 +6369,32 @@ export class Player {
     // On a rail the board and trucks hang BELOW the feet — reach down so
     // crates sitting on the rail line still clip a grinder.
     if (this.state === 'grind') this.playerBox.min.y -= 0.35;
-    this.spinBox.copy(this.playerBox);
+    // ONE CRATE LAYER AT A TIME. The spin reaches OUT, never up or down.
+    //
+    // It used to add 0.2 above and below, making the box 1.32 tall against a
+    // 0.96 crate, so a spin at the foot of a stack tore through two rows at
+    // once and a wall could never be taken down a row at a time. It also
+    // copied playerBox, which by this point carries the grind reach — another
+    // 0.35 — so spinning along a ledge cleared 1.27 of stack.
+    //
+    // It is built from feetBox instead: the body's own 0.92, before either
+    // adjustment, which fits inside one 0.96 layer in every state.
+    this.spinBox.copy(this.feetBox);
     if (this.spinning) {
-      this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0.2, CONST.spinReach));
+      this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
     }
 
     for (const c of level.crates) {
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
-      if (this.grindRun !== null && this.grindRun.has(c)) continue; // this box IS the rail
+      if (this.grindRun !== null && this.grindRun.has(c)) {
+        // The ledge is not an obstacle — EXCEPT where it is a bomb. A nitro or
+        // a TNT in a grind line is the hazard on that line: ride onto one and
+        // it goes off underneath you, right now, no fuse. The rest of the run
+        // stays scenery for the length of the grind.
+        if ((c.nitro || c.tnt) && this.playerBox.intersectsBox(c.box))
+          level.detonate(c);
+        continue;
+      }
       if (c.nitro) {
         // Nitro: body contact detonates it — fatally, unless uber or a mask
         // (or the invuln flicker from one) absorbs the hit.
