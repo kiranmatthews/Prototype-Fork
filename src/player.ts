@@ -158,6 +158,32 @@ interface GroundHit {
 
 const DOWN = new THREE.Vector3(0, -1, 0);
 
+// STANDING ON A BOX.
+//
+// Crates are NOT ground meshes and must never become them: the whole crate
+// game — land on one and it breaks — depends on a fall onto a box being
+// resolved in collide(), which runs AFTER the state step. Hand the ground
+// raycast a crate lid and stepAir lands on it a frame before collide ever sees
+// a stomp, and nothing you jump on breaks again.
+//
+// So a lid is ground only while this LATCH is live, and the latch is only ever
+// lit by collide() deciding the box under your feet is one you cannot break
+// (the metal slab, or any box at all when you have no board). From there it is
+// refreshed every frame you stay on a crate, which is what lets you walk from
+// box to box across a stack top and — the point of the whole thing — jump off
+// one, including one that is bouncing.
+const CRATE_STAND_GRACE = 0.25;
+// Seat the feet a hair PROUD of the lid. Flush would leave playerBox.min.y
+// exactly equal to the crate's box.max.y, which Box3 counts as an overlap, and
+// the crate loop would answer a stationary stander with a sideways pushOutOf.
+const CRATE_STAND_LIFT = 0.02;
+// How far above the feet a lid may still be claimed while the latch is live —
+// enough for a bouncing box to catch you on the way up (the fastest hop the
+// crateHopSpeed slider allows covers 0.43 in a frame) without letting you walk
+// up a whole extra layer, which is a jump.
+const CRATE_STAND_REACH = 0.55;
+const CRATE_UP = new THREE.Vector3(0, 1, 0);
+
 function wrapAngle(a: number): number {
   return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
 }
@@ -318,6 +344,8 @@ export class Player {
 
   private spinTimer = 0;
   private spinCd = 0;
+  // "A crate lid is ground right now" — see CRATE_STAND_GRACE.
+  private crateFloorT = 0;
   // Grab is a little state machine: reaching into the pose, holding it, and
   // reaching back out. Landing anywhere but 'none' is a bail.
   private grabPhase: 'none' | 'enter' | 'held' | 'exit' = 'none';
@@ -1227,6 +1255,7 @@ export class Player {
     for (const f of this.fruits) this.retireFruit(f);
     this.groundHit = null;
     this.coyoteTimer = 0;
+    this.crateFloorT = 0; // a respawn never inherits "stood on a box"
     this.crouchGraceT = 0;
     this.wallriding = false;
     this.wallCoolT = 0;
@@ -1368,6 +1397,11 @@ export class Player {
       }
     }
     this.jumpBufferT = Math.max(0, this.jumpBufferT - dt);
+    // Still stood on a box? Every ground accept writes surfaceName, so this one
+    // test covers walking box-to-box across a stack as well as staying put; the
+    // latch only runs down once a jump (or a step onto real ground) ends it.
+    if (this.grounded && this.surfaceName === 'crate') this.crateFloorT = CRATE_STAND_GRACE;
+    else this.crateFloorT = Math.max(0, this.crateFloorT - dt);
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
     this.ledgeCoolT = Math.max(0, this.ledgeCoolT - dt);
     this.hangExitW = Math.max(0, this.hangExitW - dt * 2.6);
@@ -6414,6 +6448,10 @@ export class Player {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
     }
 
+    // Is there a deck under the feet — or under the air we're in? Same read
+    // bail() uses to decide whether there is a board to throw. It is what tells
+    // a stomp that breaks a box from one that lands on it.
+    const hasBoard = this.freeSkate || this.airFromSkate;
     for (const c of level.crates) {
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
       // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
@@ -6622,11 +6660,7 @@ export class Player {
           if (this.isBailing) {
             if (this.grounded) this.pushOutOf(c.box); // a tumbling body: scenery
           } else if (this.isStomping(c.box)) {
-            this.slamActive = false;
-            this.vVel = 0; // NO POP. This is the difference from every other lid.
-            this.pos.y = c.box.max.y + 0.02;
-            this.charging = false;
-            this.chargeTimer = 0;
+            this.standOnCrate(c); // NO POP: the difference from every other lid
             sfx.play('crateBounce', 0.45, 0.7); // a dull metal thud, not a boing
           } else if (this.isBonking(c.box)) {
             this.vVel = Math.min(this.vVel, -1);
@@ -6712,18 +6746,36 @@ export class Player {
         } else if (this.isStomping(c.box)) {
           // Crash rules: landing on top breaks it and bounces you — high
           // enough to chain crate to crate. A slam punches straight through.
-          this.smashCrate(level, c);
-          if (!this.slamActive) {
-            this.vVel = TUNING.crateBounce;
-          sfx.play('crateBounce', 0.7);
-            this.state = 'air';
-            this.grounded = false;
-            this.bounceRefresh();
+          //
+          // NO BOARD, NO SMASH. Breaking boxes with your body is what the deck
+          // is for: with nothing under your feet a crate is a crate, and you
+          // land on the lid and stand there. (The slam is the exception that
+          // proves it — it deliberately throws the board away to become a
+          // body attack, and it still goes through the box.) On foot the ways
+          // in are the spin and the slam, both of which you have to mean.
+          if (!hasBoard && !this.slamActive) {
+            this.standOnCrate(c);
+            sfx.play('crateBounce', 0.4, 0.85); // boots on wood, no break
+          } else {
+            this.smashCrate(level, c);
+            if (!this.slamActive) {
+              this.vVel = TUNING.crateBounce;
+              sfx.play('crateBounce', 0.7);
+              this.state = 'air';
+              this.grounded = false;
+              this.bounceRefresh();
+            }
           }
         } else if (this.isBonking(c.box)) {
-          // Crash headbutt: jumping into a box from below breaks it.
-          this.smashCrate(level, c);
-          this.vVel = Math.min(this.vVel, 2);
+          // Crash headbutt: jumping into a box from below breaks it — with a
+          // board to break it with. On foot it's a ceiling: your head stops
+          // you dead and the box doesn't care.
+          if (!hasBoard) {
+            this.vVel = Math.min(this.vVel, -1);
+          } else {
+            this.smashCrate(level, c);
+            this.vVel = Math.min(this.vVel, 2);
+          }
         } else if (Math.abs(this.speed) >= TUNING.smashSpeed) {
           // Fast skating plows straight through plain crates — barely
           // breaking stride. TNT and nitro stay dangerous; this is only
@@ -7157,6 +7209,19 @@ export class Player {
     }
     level.activateCheckpoint(cp, this.cratesBroken, this.fruit, this.masks, this.points);
     this.onCheckpoint();
+  }
+
+  // Came down on a box that isn't going to break. Kill the drop, seat the feet
+  // on the lid and LIGHT THE LATCH — the next step's ground query will find the
+  // crate top and land on it through the ordinary landing path, so everything a
+  // landing does (dust, combo bookkeeping, the jump you can now take off it)
+  // happens for free. Deliberately does NOT flip state to 'ride' here: collide()
+  // runs at the tail of the step, past the code that would react to it.
+  private standOnCrate(c: Crate): void {
+    this.slamActive = false;
+    this.vVel = 0;
+    this.pos.y = c.box.max.y + CRATE_STAND_LIFT;
+    this.crateFloorT = CRATE_STAND_GRACE;
   }
 
   private smashCrate(level: Level, c: Crate): void {
@@ -8592,11 +8657,38 @@ export class Player {
     return null;
   }
 
+  // The lid of a box we are stood on, if there is one under this probe point.
+  // Only live while the crate-stand latch is (see CRATE_STAND_GRACE) — off the
+  // latch a crate is not ground at any height, which is what keeps a fall onto
+  // a box a stomp instead of a landing.
+  private crateFloorY(level: Level, x: number, z: number): number | null {
+    if (this.crateFloorT <= 0) return null;
+    let best: number | null = null;
+    for (const c of level.crates) {
+      if (!c.alive || c.pending) continue;
+      const top = c.box.max.y;
+      // above the feet by more than a bouncing box can climb in a frame, or
+      // deep enough below them that we have already stepped off it
+      if (top > this.pos.y + CRATE_STAND_REACH || top < this.pos.y - 1.1) continue;
+      if (x < c.box.min.x || x > c.box.max.x || z < c.box.min.z || z > c.box.max.z) continue;
+      if (best === null || top > best) best = top;
+    }
+    return best === null ? null : best + CRATE_STAND_LIFT;
+  }
+
   private queryGround(level: Level, ox = 0, oz = 0): GroundHit | null {
-    this.raycaster.set(new THREE.Vector3(this.pos.x + ox, this.pos.y + 2.5, this.pos.z + oz), DOWN);
+    const cx = this.pos.x + ox;
+    const cz = this.pos.z + oz;
+    const crateY = this.crateFloorY(level, cx, cz);
+    this.raycaster.set(new THREE.Vector3(cx, this.pos.y + 2.5, cz), DOWN);
     this.raycaster.far = 12;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
-    if (hits.length === 0) return null;
+    // A box standing on nothing (a level with no floor under it) is still a
+    // floor: answer with the lid rather than falling through it.
+    if (hits.length === 0)
+      return crateY === null
+        ? null
+        : { y: crateY, normal: CRATE_UP.clone(), name: 'crate', vert: false };
     // A plank that's already breaking away (fall/gone) is no longer solid — skip
     // it so a grinder/stander drops straight through instead of riding it down.
     let hit = null as (typeof hits)[number] | null;
@@ -8609,7 +8701,15 @@ export class Player {
       hit = h;
       break;
     }
-    if (!hit) return null;
+    if (!hit)
+      return crateY === null
+        ? null
+        : { y: crateY, normal: CRATE_UP.clone(), name: 'crate', vert: false };
+    // The lid wins whenever it is the higher of the two. vert:false is not
+    // decoration: an undefined `vert` reads as an AUTHORED transition face, and
+    // a crest launch off a crate top would throw you into a vert hang.
+    if (crateY !== null && crateY > hit.point.y)
+      return { y: crateY, normal: CRATE_UP.clone(), name: 'crate', vert: false };
     const hp = hit.object.userData.halfpipe as Halfpipe | undefined;
     // Halfpipe walls hand back the exact ANALYTIC surface normal (perfectly
     // smooth across the transition and always oriented up/inward) instead of
