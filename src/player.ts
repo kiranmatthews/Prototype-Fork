@@ -6448,10 +6448,15 @@ export class Player {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
     }
 
-    // Is there a deck under the feet — or under the air we're in? Same read
-    // bail() uses to decide whether there is a board to throw. It is what tells
-    // a stomp that breaks a box from one that lands on it.
-    const hasBoard = this.freeSkate || this.airFromSkate;
+    // THE DECK IS OVER THERE.
+    //
+    // Not "you happen to be walking": a walker has the board stowed and is one
+    // held X away from riding it, and jumping on a box is how you break boxes
+    // on this course. THIS is the state a skating bail leaves you in — the deck
+    // was thrown, it is lying wherever it landed, and until you run it down and
+    // remount you are carrying nothing to break a box with. It is the one
+    // moment the game already says out loud that you have no board.
+    const deckThrown = this.flyBoard !== null && this.flyBoard.visible;
     for (const c of level.crates) {
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
       // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
@@ -6747,13 +6752,13 @@ export class Player {
           // Crash rules: landing on top breaks it and bounces you — high
           // enough to chain crate to crate. A slam punches straight through.
           //
-          // NO BOARD, NO SMASH. Breaking boxes with your body is what the deck
-          // is for: with nothing under your feet a crate is a crate, and you
-          // land on the lid and stand there. (The slam is the exception that
-          // proves it — it deliberately throws the board away to become a
-          // body attack, and it still goes through the box.) On foot the ways
-          // in are the spin and the slam, both of which you have to mean.
-          if (!hasBoard && !this.slamActive) {
+          // NO BOARD, NO SMASH. Breaking boxes is what the deck is for, so
+          // while yours is lying in the road a crate is just a crate: you land
+          // on the lid and stand there. (The slam is the exception that proves
+          // it — it deliberately throws the board away to become a body attack,
+          // and it still goes through the box.) Deckless the ways in are the
+          // spin and the slam, both of which you have to mean.
+          if (deckThrown && !this.slamActive) {
             this.standOnCrate(c);
             sfx.play('crateBounce', 0.4, 0.85); // boots on wood, no break
           } else {
@@ -6768,9 +6773,9 @@ export class Player {
           }
         } else if (this.isBonking(c.box)) {
           // Crash headbutt: jumping into a box from below breaks it — with a
-          // board to break it with. On foot it's a ceiling: your head stops
+          // board to break it with. Deckless it's a ceiling: your head stops
           // you dead and the box doesn't care.
-          if (!hasBoard) {
+          if (deckThrown) {
             this.vVel = Math.min(this.vVel, -1);
           } else {
             this.smashCrate(level, c);
