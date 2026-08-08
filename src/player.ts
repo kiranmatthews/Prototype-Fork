@@ -6416,6 +6416,22 @@ export class Player {
 
     for (const c of level.crates) {
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
+      // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
+      // cannot be stomped aside, so standing under one is not a situation with
+      // an out. Same terms as a crusher: uber and invuln wave it off, a mask
+      // is spent, otherwise it is fatal.
+      if (
+        (c.metal || c.metalBounce || c.bang) &&
+        c.fallVel !== undefined &&
+        c.fallVel > 0 &&
+        c.box.min.y > this.pos.y + CONST.playerHalf.y &&
+        this.playerBox.intersectsBox(c.box)
+      ) {
+        if (this.uberTimer <= 0 && this.invulnTimer <= 0 && !this.spendMask()) {
+          this.die();
+          return;
+        }
+      }
       if (this.grindRun !== null && this.grindRun.has(c)) {
         // The ledge is not an obstacle — EXCEPT where it is a bomb. A nitro or
         // a TNT in a grind line is the hazard on that line: ride onto one and

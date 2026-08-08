@@ -40,6 +40,7 @@ export interface Crate {
   nitro?: boolean; // green, bobbing, touch = instant detonation
   bouncy?: boolean; // WOOD arrow crate: stomp = super bounce; spin/slam breaks it
   metalBounce?: boolean; // METAL arrow crate: same bounce, never breaks, uncounted
+  metal?: boolean; // plain METAL box: never breaks, uncounted, LETHAL if it lands on you
   tnt?: boolean; // red TNT: solid box; stomp lights the 3-2-1 fuse, spin/slam detonates
   fuse?: number; // seconds left on a lit TNT
   mask?: boolean; // Aku crate: breaking it grants a protective mask
@@ -126,6 +127,11 @@ interface Projectile {
   life: number;
   box: THREE.Box3;
 }
+
+// How hard an arrow crate throws a box that lands on it. Against the settle
+// pass's 42 gravity this is a hop of v^2/2g = 1.19, a little over one crate,
+// and it is re-applied on every contact so the bounce never decays.
+const CRATE_BOUNCE_V = 10;
 
 // Moving platform: slides along one axis on a sine, carrying the rider.
 interface Mover {
@@ -386,6 +392,7 @@ export interface CustomComponent {
     | "wood"
     | "bouncy"
     | "metalbounce"
+    | "metal"
     | "nitro"
     | "tnt"
     | "mask"
@@ -4117,7 +4124,7 @@ export class Level {
     // Run modes strip the checkpoints out of the level, so they leave the
     // tally too or the gem could never be earned in a trial.
     const boxes = this.crates.filter(
-      (c) => !c.bang && !c.nitroBang && !c.metalBounce,
+      (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal,
     ).length;
     return boxes + (this.runMode ? 0 : this.checkpoints.length);
   }
@@ -4840,17 +4847,35 @@ export class Level {
       if (!c.alive || c.pending || c.nitro) continue;
       const p = c.mesh.position;
       const myBase = p.y - SIZE / 2;
-      // the highest thing under this crate's footprint
+      // the highest thing under this crate's footprint, and WHAT it is
       let rest = (c.mesh.userData.groundBaseY as number | undefined) ?? myBase;
+      let restOn: Crate | null = null;
       for (const o of this.crates) {
         if (o === c || !o.alive || o.pending) continue;
         const q = o.mesh.position;
         if (Math.abs(q.x - p.x) > 0.6 || Math.abs(q.z - p.z) > 0.6) continue;
         const top = q.y + SIZE / 2;
-        if (top <= myBase + 0.02 && top > rest) rest = top;
+        if (top <= myBase + 0.02 && top > rest) {
+          rest = top;
+          restOn = o;
+        }
       }
-      if (myBase <= rest + 0.01) {
-        if (c.fallVel !== undefined) {
+      // Rising off a bounce: skip the landing test entirely, or the box would
+      // re-land on the very frame it launched and never get off the pad.
+      const rising = c.fallVel !== undefined && c.fallVel < 0;
+      if (!rising && myBase <= rest + 0.01) {
+        if (c.fallVel === undefined) continue; // already seated: nothing to do
+        if (restOn && (restOn.bouncy || restOn.metalBounce)) {
+          // AN ARROW CRATE THROWS BACK WHATEVER LANDS ON IT. The launch is a
+          // FIXED speed rather than the speed it arrived at, so the hop is the
+          // same height every time: the box neither damps out nor runs away,
+          // it just bounces there. Which is what an arrow crate is for.
+          p.y = rest + SIZE / 2;
+          c.fallVel = -CRATE_BOUNCE_V;
+          this.crateRailsDirty = true; // it is somewhere new on every hop
+          sfx.play("crateBounce", 0.5, 0.95);
+          // and fall through into the motion block: it is airborne again
+        } else {
           // touchdown: seat it exactly, and let the tally know it moved
           c.fallVel = undefined;
           p.y = rest + SIZE / 2;
@@ -4861,8 +4886,8 @@ export class Level {
             new THREE.Vector3(SIZE, SIZE, SIZE),
           );
           sfx.play("crateBounce", 0.35, 1.15);
+          continue;
         }
-        continue;
       }
       // in the air with a gap under it: fall
       falling++;
@@ -4889,7 +4914,7 @@ export class Level {
       this.triggerBang(crate);
       return;
     }
-    if (crate.metalBounce || crate.pending) return;
+    if (crate.metalBounce || crate.metal || crate.pending) return;
     crate.alive = false;
     this.pops.push({ obj: crate.mesh, t: 0.12 });
     sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
@@ -9552,6 +9577,7 @@ export class Level {
       | "nitro"
       | "bouncy"
       | "metalbounce"
+      | "metal"
       | "tnt"
       | "mask"
       | "mystery"
@@ -9577,6 +9603,13 @@ export class Level {
         map: wood ? this.woodPlainTexture() : this.metalPlainTexture(),
       });
       mat = [side, side, lid, lid, side, side];
+    } else if (kind === "metal") {
+      // Blank metal: the arrow crate's lid on every face, no marking. It is a
+      // slab, and its whole job is to be unbreakable and heavy.
+      mat = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        map: this.metalPlainTexture(),
+      });
     } else if (kind === "nitro") {
       mat = new THREE.MeshLambertMaterial({
         color: 0xffffff,
@@ -9681,6 +9714,7 @@ export class Level {
       nitro: kind === "nitro",
       bouncy: kind === "bouncy",
       metalBounce: kind === "metalbounce",
+      metal: kind === "metal",
       tnt: kind === "tnt",
       mask: kind === "mask",
       mystery: kind === "mystery",
@@ -11956,6 +11990,18 @@ export class Level {
     // whole balance ramp rather than popping off two beats in.
     const ROW_X = 24;
     for (let i = 0; i < 24; i++) this.crate(ROW_X, E, -95 - i * CS);
+
+    // --- BOUNCE TOWER: metal-bouncy base, wood middle, blank metal lid -----
+    // Spin the wood box out of the middle and the metal slab on top drops onto
+    // the arrow crate under it, which throws it straight back — and keeps
+    // throwing it, at the same height, indefinitely. Standing under the slab
+    // while it comes down is fatal: metal does not break and cannot be
+    // stomped away.
+    const TOWER_X = 16;
+    const TOWER_Z = -100;
+    this.crate(TOWER_X, E, TOWER_Z, "metalbounce");
+    this.crate(TOWER_X, E + CS, TOWER_Z);
+    this.crate(TOWER_X, E + CS * 2, TOWER_Z, "metal");
 
     // --- HAZARD ROW: the same idea with bombs in it ------------------------
     // Eight boxes with a nitro at 5 and a TNT at 7. It grinds like any other
