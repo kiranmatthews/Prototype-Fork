@@ -6610,6 +6610,40 @@ export class Player {
         }
         continue;
       }
+      if (c.metal) {
+        // BLANK METAL: a slab. It never breaks, and — unlike its arrow-faced
+        // cousin and the '!' switch — it does not throw you either. Landing on
+        // one is landing on a lid: the drop stops dead and you are stood on
+        // top of it, which is the whole point of having a metal box that is
+        // not a bounce pad. Everything else it does is what any unbreakable
+        // box does: a headbutt from below is a hard stop, and running into the
+        // side at speed is a wall crash.
+        if (this.playerBox.intersectsBox(c.box)) {
+          if (this.isBailing) {
+            if (this.grounded) this.pushOutOf(c.box); // a tumbling body: scenery
+          } else if (this.isStomping(c.box)) {
+            this.slamActive = false;
+            this.vVel = 0; // NO POP. This is the difference from every other lid.
+            this.pos.y = c.box.max.y + 0.02;
+            this.charging = false;
+            this.chargeTimer = 0;
+            sfx.play('crateBounce', 0.45, 0.7); // a dull metal thud, not a boing
+          } else if (this.isBonking(c.box)) {
+            this.vVel = Math.min(this.vVel, -1);
+          } else if (this.state === 'grind') {
+            // a slab across the rail line knocks you off like any other
+            // unbreakable box, unless a mask covers it
+            if (this.invulnTimer <= 0 && !this.spendMask()) this.bailFromRail(0, level);
+          } else {
+            const bx = this.pos.x;
+            const bz = this.pos.z;
+            const bs = this.speed;
+            this.pushOutOf(c.box);
+            this.wallSmack(bx, bz, bs); // METAL never smashes: at speed it's a wall crash
+          }
+        }
+        continue;
+      }
       if (c.bang || c.nitroBang) {
         // '!' SWITCH, either colour: any real hit fires it — spin, stomp,
         // headbutt, slide, or a grind-through. It stays solid (bounce off the

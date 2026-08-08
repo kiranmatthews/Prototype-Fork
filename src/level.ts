@@ -128,11 +128,6 @@ interface Projectile {
   box: THREE.Box3;
 }
 
-// How hard an arrow crate throws a box that lands on it. Against the settle
-// pass's 42 gravity this is a hop of v^2/2g = 1.19, a little over one crate,
-// and it is re-applied on every contact so the bounce never decays.
-const CRATE_BOUNCE_V = 10;
-
 // Moving platform: slides along one axis on a sine, carrying the rider.
 interface Mover {
   mesh: THREE.Mesh;
@@ -4871,7 +4866,18 @@ export class Level {
           // same height every time: the box neither damps out nor runs away,
           // it just bounces there. Which is what an arrow crate is for.
           p.y = rest + SIZE / 2;
-          c.fallVel = -CRATE_BOUNCE_V;
+          // TUNING.crateHopSpeed sets the height, and with it the PERIOD —
+          // the window you time a jump through. 0 parks the box on the pad.
+          if (TUNING.crateHopSpeed <= 0) {
+            c.fallVel = undefined;
+            c.mesh.userData.baseY = p.y;
+            c.box.setFromCenterAndSize(
+              p.clone(),
+              new THREE.Vector3(SIZE, SIZE, SIZE),
+            );
+            continue;
+          }
+          c.fallVel = -TUNING.crateHopSpeed;
           this.crateRailsDirty = true; // it is somewhere new on every hop
           sfx.play("crateBounce", 0.5, 0.95);
           // and fall through into the motion block: it is airborne again

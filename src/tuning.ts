@@ -81,6 +81,7 @@ export const TUNING = {
   spinTolerance: 30, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail. 30 still leaves 240 of the circle bailing — it's a net under the auto-correct, not a removal
   sketchyTolerance: 55, // degrees off-line before a SKETCHY landing becomes a full bail — between spinTolerance and this you ride away wobbling with a speed tax and half the spin points (THPS's middle tier)
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
+  crateHopSpeed: 10, // how hard an arrow crate throws a BOX that lands on it (0 = the box just sits there)
   boardSpeed: 8.5, // speed gate on the transition-carve SFX only — the board VISUAL and the rolling loop follow the skate state, not a speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
@@ -261,6 +262,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   spinTolerance: { min: 10, max: 90, step: 5 },
   sketchyTolerance: { min: 20, max: 120, step: 5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
+  crateHopSpeed: { min: 0, max: 26, step: 0.5 },
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
   skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
@@ -479,6 +481,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   sketchyTolerance:
     'The SKETCHY net under spinTolerance: land off-line beyond spinTolerance but inside this and you keep it — with a wobble, a speed tax, and half the spin points. Past this = the full bail. Must be above spinTolerance to matter.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
+  crateHopSpeed:
+    'How hard an arrow crate throws a BOX that lands on it. The launch is re-applied on every contact, so the hop never decays — this sets its height and therefore its RHYTHM: against the settle gravity of 42 the hop is v^2/84 units and the round trip is v/21 seconds. That period is the window you are timing a jump through, so raise it for a lazier, more readable bounce and drop it for a fast chatter. 0 parks the box on the pad.',
   boardSpeed:
     'Speed gate on the transition-carve sound effect. It NO LONGER controls whether the board is drawn or whether the wheels roll — both of those follow the skate state (freeSkate), so the deck is out exactly when you are skating and stowed exactly when you are not. The walk/skate physics boundary is walkSpeed.',
   skateHoldTime:
@@ -673,7 +677,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'landPumpBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
   { title: 'WIPEOUTS', keys: ['ragBounce', 'ragSpin', 'ragFlail', 'wallBailSpeed', 'crateTripSpeed'] },
-  { title: 'CRATES', keys: ['crateBounce', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
+  { title: 'CRATES', keys: ['crateBounce', 'crateHopSpeed', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift', 'camBalanceRoll'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },
 ];
