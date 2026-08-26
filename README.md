@@ -8,6 +8,7 @@ against the equivalent Unity greybox workflow.
 - [Play the Codex/sol fork](https://kiranmatthews.github.io/Prototype-Fork/)
 - [Experiment protocol](docs/CODEX_LEVEL_EXPERIMENT.md)
 - [Iteration log](docs/LEVEL_ITERATIONS.md)
+- [Tripo → img2threejs character pipeline](docs/TRIPO_CHARACTER_PIPELINE.md)
 
 A greybox feel prototype for a PS1/PS2-style fake-physics board platformer —
 Crash Bandicoot 2 corridor structure meets Tony Hawk's Pro Skater 2 momentum.
@@ -31,6 +32,11 @@ npm run build
 Timed geometry briefs should start in `src/levels/codex-lab.ts`; it is a small
 source-owned level that hot reloads through the same component pipeline as the
 in-game editor.
+
+Character asset experiments use the pinned `vendor/img2threejs` and
+`vendor/img2threejs-showcase` submodules plus the isolated official Tripo CLI
+under `tools/tripo-character`. Tripo credentials and generated assets remain
+outside the published browser bundle.
 
 ## Controls
 

@@ -1,0 +1,19 @@
+{
+  "name": "prototype-fork-tripo-character-tools",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "tripo": "tripo",
+    "doctor": "tripo doctor",
+    "docs": "tripo docs --llm",
+    "workflow": "python3 tripo_character.py",
+    "test": "python3 -m unittest discover -s tests -p 'test_*.py'"
+  },
+  "dependencies": {
+    "tripo-cli": "0.2.1"
+  }
+}

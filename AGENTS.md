@@ -26,3 +26,12 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 - Open the MENU and select `Codex Geometry Lab`; `K` and `L` warp between checkpoints during play.
 - If an in-browser edit masks the source version, use the PROJECT panel's restore-original action before judging a code change.
 - Verify supported spawn, intended traversal, collision, pit respawn, checkpoint, and finish-gate behaviour with no console errors.
+
+## Character asset pipeline
+
+- Read `docs/TRIPO_CHARACTER_PIPELINE.md` before character generation or rig work.
+- Use `tools/tripo-character/tripo_character.py`; it composes the official blocking Tripo CLI and must not be replaced by a second polling implementation.
+- Never place `TRIPO_API_KEY` in frontend code, browser storage, logs, screenshots, committed files, or GitHub Pages. Prefer `tripo login` device authorization.
+- The unrigged Tripo GLB is the img2threejs surface measurement instrument. A rigged or animated Tripo GLB is skeleton/motion evidence, not a code-only factory.
+- `characterir-authoring-seed.json` is an authoring seed, not a complete CharacterIR or a validated deformation rig. Model-specific semantic mapping, weights, secondary joints, clearance corrections, and multi-angle motion review remain required.
+- Do not copy `vendor/img2threejs-showcase/src/character` into this Apache-licensed repository; the showcase has no license file. Use the pinned companion checkout until the owner clarifies reuse terms.

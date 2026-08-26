@@ -3,3 +3,12 @@ dist
 *.log
 .DS_Store
 public/_anim/
+
+# Local img2threejs / Tripo character pipeline outputs and credentials.
+tools/tripo-character/node_modules/
+tools/tripo-character/tripo-out/
+tools/tripo-character/work/
+tools/tripo-character/.env
+tools/tripo-character/*.local.json
+__pycache__/
+*.pyc

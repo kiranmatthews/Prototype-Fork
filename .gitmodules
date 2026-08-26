@@ -1,0 +1,6 @@
+[submodule "vendor/img2threejs"]
+	path = vendor/img2threejs
+	url = https://github.com/img2threejs/img2threejs.git
+[submodule "vendor/img2threejs-showcase"]
+	path = vendor/img2threejs-showcase
+	url = https://github.com/img2threejs/img2threejs-showcase.git
