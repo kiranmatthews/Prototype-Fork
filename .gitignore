@@ -12,3 +12,6 @@ tools/tripo-character/.env
 tools/tripo-character/*.local.json
 __pycache__/
 *.pyc
+
+# img2threejs per-subject state, renders, comparison sheets, and generated references.
+work/
