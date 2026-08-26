@@ -1,0 +1,28 @@
+# Codex/sol level-geometry experiment
+
+This repository is the isolated browser prototype used to compare Codex/sol level-authoring speed with Unity. Keep changes focused on playable demo levels and the minimum runtime support they need.
+
+## Fast path
+
+1. Use `src/levels/codex-lab.ts` for timed geometry briefs. It is a small source-owned data level, hot reloads cleanly, and uses the same component pipeline as the in-game editor.
+2. Read the `CustomComponent` contract in `src/level.ts` before introducing a component shape. Prefer existing primitives (`platform`, `ramp`, `terrain`, `vertramp`, `rail`, `wall`, `pit`, `crate`, `checkpoint`, `gate`, `camnode`, and `decor`) over new engine systems.
+3. Put geometry in level data when possible. Change `src/level.ts` only when the shared toolkit cannot express the brief. `public/levels.json` is the synced, published editor snapshot; update it only when a lab result should join that shared level pack.
+4. Run `npm run check:levels` after editing level data and `npm run build` before handoff. Smoke-test the affected level in a real browser and check the console for errors.
+5. Record each completed brief in `docs/LEVEL_ITERATIONS.md`, including elapsed prompt-to-playable time. Do not include unrelated cleanup in a timed iteration.
+
+## Guardrails
+
+- World units are approximately metres; Three.js is right-handed, Y-up, and the normal corridor direction is negative Z.
+- `platform.p` is its centre; its top is `p.y + s.y / 2`. Spawn slightly above supported ground. Ramps rise from +Z toward -Z before yaw, and a rail at yaw `0` runs along Z.
+- Every published level needs one `gate`, a reachable spawn, and `killY` below its playable geometry.
+- Courses that turn or cross themselves need ordered `camnode` components or explicit travel `zone`s.
+- Preserve the authored movement model. Level-geometry tasks should not retune `src/tuning.ts` unless the brief explicitly asks for feel changes.
+- The fork uses `solProto*` browser-storage keys so it cannot overwrite the original demo's saved levels or tuning.
+- Deployment is automatic from `main`; the build stamp must say `Codex/sol fork` when verifying the public page.
+
+## Smoke test
+
+- Use `/?lite` for fast checks and finish with one full-render pass.
+- Open the MENU and select `Codex Geometry Lab`; `K` and `L` warp between checkpoints during play.
+- If an in-browser edit masks the source version, use the PROJECT panel's restore-original action before judging a code change.
+- Verify supported spawn, intended traversal, collision, pit respawn, checkpoint, and finish-gate behaviour with no console errors.

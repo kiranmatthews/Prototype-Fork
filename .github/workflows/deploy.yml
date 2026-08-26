@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - claude/ps1-board-platformer-proto-n3mcnw
   workflow_dispatch:
 
 permissions:

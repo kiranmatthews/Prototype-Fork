@@ -56,6 +56,7 @@ export interface HudState {
 }
 
 declare const __BUILD_TAG__: string; // injected by vite.config define
+declare const __BUILD_CHANNEL__: string; // identifies the experiment fork
 
 export class UI {
   private statsEl: HTMLElement;
@@ -150,7 +151,7 @@ export class UI {
   >();
   // Bookmarked slider names (green) — persisted attention markers, no effect.
   private tunerMarks = new Set<string>(
-    JSON.parse(localStorage.getItem("protoTunerMarks") ?? "[]") as string[],
+    JSON.parse(localStorage.getItem("solProtoTunerMarks") ?? "[]") as string[],
   );
   // Build defaults, captured before any saved tuning is applied — so a new
   // build's numbers are always recoverable under the "defaults" button.
@@ -407,7 +408,7 @@ export class UI {
       // store the defaults alongside, so a future build can tell which keys
       // were DELIBERATE tweaks (only those survive across default changes)
       localStorage.setItem(
-        "protoTuning",
+        "solProtoTuning",
         JSON.stringify({
           __v: TUNING_VERSION,
           tuning: TUNING,
@@ -421,7 +422,7 @@ export class UI {
       this.showMessage("TUNING RESET", "", 800);
     });
     mkBtn("defaults", () => {
-      localStorage.removeItem("protoTuning");
+      localStorage.removeItem("solProtoTuning");
       this.applyTuning(this.defaults);
       this.showMessage("BUILD DEFAULTS", "", 800);
     });
@@ -515,7 +516,7 @@ export class UI {
     // Build stamp: baked at compile time. If a playtest doesn't show a
     // change, check this first — it answers "which build am I running?".
     const stamp = div("hud-build");
-    stamp.textContent = "build " + __BUILD_TAG__;
+    stamp.textContent = `${__BUILD_CHANNEL__} · build ${__BUILD_TAG__}`;
     document.body.appendChild(stamp);
 
     // ---- game HUD: Crash-style counters + THPS trick plate ----
@@ -749,7 +750,7 @@ export class UI {
     const tab = document.createElement("button");
     tab.className = "side-tab";
     tab.textContent = label;
-    const key = "protoPanel_" + side;
+    const key = "solProtoPanel_" + side;
     if (localStorage.getItem(key) !== "open") wrap.classList.add("collapsed");
     tab.addEventListener("click", () => {
       if (this.onSideTab) this.onSideTab(side);
@@ -1088,14 +1089,14 @@ export class UI {
   // kept a retired mechanic alive for days — so it is dropped outright.)
   private readSaved(): Partial<Record<TuningKey, number>> | null {
     try {
-      const raw = JSON.parse(localStorage.getItem("protoTuning") ?? "null") as {
+      const raw = JSON.parse(localStorage.getItem("solProtoTuning") ?? "null") as {
         __v?: number;
         tuning?: Record<string, number>;
         defaults?: Record<string, number>;
       } | null;
       if (!raw) return null;
       if (raw.__v === undefined || !raw.tuning || !raw.defaults) {
-        localStorage.removeItem("protoTuning"); // pre-versioning save: retire it
+        localStorage.removeItem("solProtoTuning"); // pre-versioning save: retire it
         return null;
       }
       const merged: Partial<Record<TuningKey, number>> = { ...this.defaults };
@@ -1406,7 +1407,7 @@ export class UI {
       else this.tunerMarks.add(key);
       label.classList.toggle("hud-marked");
       localStorage.setItem(
-        "protoTunerMarks",
+        "solProtoTunerMarks",
         JSON.stringify([...this.tunerMarks]),
       );
     });

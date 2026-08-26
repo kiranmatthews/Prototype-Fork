@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "check:levels": "node tools/validate-levels.mjs",
+    "build": "npm run check:levels && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

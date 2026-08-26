@@ -904,7 +904,7 @@ export class Player {
     else {
       let saved = 'fox';
       try {
-        saved = localStorage.getItem('protoChar') || 'fox';
+        saved = localStorage.getItem('solProtoChar') || 'fox';
       } catch {
         /* private mode: default fox */
       }

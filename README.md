@@ -1,4 +1,13 @@
-# Board Platformer Prototype
+# Board Platformer Prototype — Codex/sol Fork
+
+This is the isolated level-geometry experiment fork of
+[`kiranmatthews/Game-prototype`](https://github.com/kiranmatthews/Game-prototype).
+It is set up to measure prompt-to-playable speed for Codex/sol level work
+against the equivalent Unity greybox workflow.
+
+- [Play the Codex/sol fork](https://kiranmatthews.github.io/Prototype-Fork/)
+- [Experiment protocol](docs/CODEX_LEVEL_EXPERIMENT.md)
+- [Iteration log](docs/LEVEL_ITERATIONS.md)
 
 A greybox feel prototype for a PS1/PS2-style fake-physics board platformer —
 Crash Bandicoot 2 corridor structure meets Tony Hawk's Pro Skater 2 momentum.
@@ -8,9 +17,20 @@ live-editable in the in-game panel).
 ## Run
 
 ```
-npm install
+npm ci
 npm run dev
 ```
+
+Before publishing a level edit:
+
+```
+npm run check:levels
+npm run build
+```
+
+Timed geometry briefs should start in `src/levels/codex-lab.ts`; it is a small
+source-owned level that hot reloads through the same component pipeline as the
+in-game editor.
 
 ## Controls
 

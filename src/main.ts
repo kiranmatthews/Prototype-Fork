@@ -72,8 +72,8 @@ if (import.meta.env.PROD) {
       if (!res.ok) return;
       const fresh = (await res.text()).match(/index-([\w-]+)\.js/)?.[1];
       if (!fresh || fresh === running) return; // already on the latest build
-      if (sessionStorage.getItem("protoAutoUpdate") === fresh) return; // tried this one already
-      sessionStorage.setItem("protoAutoUpdate", fresh);
+      if (sessionStorage.getItem("solProtoAutoUpdate") === fresh) return; // tried this one already
+      sessionStorage.setItem("solProtoAutoUpdate", fresh);
       const url = new URL(window.location.href);
       url.searchParams.set("v", fresh);
       window.location.replace(url.toString());
@@ -827,7 +827,7 @@ const recorder = new Recorder();
 const replayer = new Replayer();
 adoptLegacyLevels(); // one-shot: old single-slot edits become real user levels
 let current: LevelEntry =
-  findLevel(localStorage.getItem("protoLevelId") ?? "") ??
+  findLevel(localStorage.getItem("solProtoLevelId") ?? "") ??
   findLevel(DEFAULT_LEVEL_ID)!;
 let level = new Level(scene, current);
 // PS1 smoke and dust. One system for every soft effect; it owns its own pooled
@@ -879,7 +879,7 @@ function tintP2(): void {
 // they are single-player modes.
 // Called on every level load and whenever either input to it changes, so the
 // world, the player and the button label can never disagree.
-let runModesOn = localStorage.getItem("protoRunModes") !== "off";
+let runModesOn = localStorage.getItem("solProtoRunModes") !== "off";
 function applyRunModes(): void {
   const on = runModesOn && !split2p;
   level.setRunModesEnabled(on);
@@ -1105,7 +1105,7 @@ function switchLevel(id: string): void {
   // than taking the whole game down on entry.name.toUpperCase().
   const entry = findLevel(id) ?? findLevel(DEFAULT_LEVEL_ID)!;
   current = entry;
-  localStorage.setItem("protoLevelId", entry.id);
+  localStorage.setItem("solProtoLevelId", entry.id);
   if (replayer.active) {
     // a manual level switch cancels a running replay (and restores tuning)
     replayer.end();
@@ -1413,7 +1413,7 @@ ui.onForceResync = async (): Promise<void> => {
   }
   const before = getUserLevels().length;
   setUserLevels(remote.levels);
-  localStorage.setItem("protoCloudPulled", "1");
+  localStorage.setItem("solProtoCloudPulled", "1");
   const after = getUserLevels().length;
   if (editor.active) editor.exit();
   switchLevel(findLevel(current.id) ? current.id : DEFAULT_LEVEL_ID);
@@ -1446,14 +1446,14 @@ ui.setEditUnlocked(isEditUnlocked());
 // Refresh-proof editing: if the page reloads mid-edit, walk straight back into
 // the editor on the SAME level (camera pose restored by Editor.enter()).
 // Deferred past module init — openEditor touches state declared further down.
-if (localStorage.getItem("protoEditorOpen") === "1") {
-  const t = localStorage.getItem("protoEditorTarget") ?? "";
+if (localStorage.getItem("solProtoEditorOpen") === "1") {
+  const t = localStorage.getItem("solProtoEditorTarget") ?? "";
   // a stale target (older build, deleted level) must not reopen on the wrong
   // level — the editor autosaves, so that would overwrite it
   if (findLevel(t)) setTimeout(() => openEditor(t), 0);
   else {
-    localStorage.removeItem("protoEditorOpen");
-    localStorage.removeItem("protoEditorTarget");
+    localStorage.removeItem("solProtoEditorOpen");
+    localStorage.removeItem("solProtoEditorTarget");
   }
 }
 
@@ -1464,15 +1464,15 @@ if (localStorage.getItem("protoEditorOpen") === "1") {
 // that overwrites it, so a fetch can never eat your edits and a level you
 // deleted stays deleted.
 void (async () => {
-  if (localStorage.getItem("protoCloudPulled") === "1") return;
+  if (localStorage.getItem("solProtoCloudPulled") === "1") return;
   if (getUserLevels().length) {
-    localStorage.setItem("protoCloudPulled", "1"); // this device authored its own
+    localStorage.setItem("solProtoCloudPulled", "1"); // this device authored its own
     return;
   }
   const remote = (await fetchRemoteLevels()) as { levels?: LevelEntry[] } | null;
   if (!remote || !Array.isArray(remote.levels)) return;
   setUserLevels(remote.levels);
-  localStorage.setItem("protoCloudPulled", "1");
+  localStorage.setItem("solProtoCloudPulled", "1");
   ui.refreshLevels(current.id);
   ui.refreshEditControls();
 })();
@@ -1588,7 +1588,7 @@ ui.onLevelSelect = switchLevel;
 ui.onToggle2P = () => set2P(!split2p);
 ui.onToggleRunModes = () => {
   runModesOn = !runModesOn;
-  localStorage.setItem("protoRunModes", runModesOn ? "on" : "off");
+  localStorage.setItem("solProtoRunModes", runModesOn ? "on" : "off");
   applyRunModes();
   ui.showMessage(
     runModesOn ? "TIME TRIAL + COMBO ON" : "TIME TRIAL + COMBO OFF",
@@ -1663,7 +1663,7 @@ function recordTT(
   let all: Record<string, number[]> = {};
   try {
     all =
-      (JSON.parse(localStorage.getItem("protoTTtimes") ?? "{}") as Record<
+      (JSON.parse(localStorage.getItem("solProtoTTtimes") ?? "{}") as Record<
         string,
         number[]
       >) ?? {};
@@ -1674,7 +1674,7 @@ function recordTT(
   list.push(time);
   list.sort((a, b) => a - b);
   all[levelId] = list.slice(0, 8);
-  localStorage.setItem("protoTTtimes", JSON.stringify(all));
+  localStorage.setItem("solProtoTTtimes", JSON.stringify(all));
   return { list: all[levelId], rank: all[levelId].indexOf(time) };
 }
 

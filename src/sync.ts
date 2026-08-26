@@ -12,18 +12,18 @@
 // The token is the real write credential; it lives only in the editing
 // browser's localStorage. A ~30s Pages rebuild is the propagation delay.
 
-const REPO = 'kiranmatthews/Game-prototype';
-const BRANCH = 'claude/ps1-board-platformer-proto-n3mcnw';
+const REPO = 'kiranmatthews/Prototype-Fork';
+const BRANCH = 'main';
 const FILE_PATH = 'public/levels.json';
 const API = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`;
 
 export function getToken(): string {
-  return localStorage.getItem('protoGHToken') ?? '';
+  return localStorage.getItem('solProtoGHToken') ?? '';
 }
 export function setToken(t: string): void {
   const v = t.trim();
-  if (v) localStorage.setItem('protoGHToken', v);
-  else localStorage.removeItem('protoGHToken');
+  if (v) localStorage.setItem('solProtoGHToken', v);
+  else localStorage.removeItem('solProtoGHToken');
 }
 
 // UTF-8 → base64 (the contents API wants base64-encoded file content).

@@ -1871,7 +1871,7 @@ export class Editor {
   // SURFACE SNAP: plain drags rest the grabbed piece on the real geometry
   // under the cursor (raycast), resolving the 2D→3D depth ambiguity. Off =
   // the old fixed-Y ground-plane drag. Persisted per browser.
-  private surfaceSnap = localStorage.getItem("protoEdSurfaceSnap") !== "0";
+  private surfaceSnap = localStorage.getItem("solProtoEdSurfaceSnap") !== "0";
   private dragBottomOffset = 0; // grab-time distance from the grabbed piece's origin down to its base
   // group-scale gizmo (multi-selection bounding-box handles)
   // ---- move gizmo ----
@@ -1934,7 +1934,7 @@ export class Editor {
     this.targetId = target.id;
     this.targetName = target.name;
     if (this.nameInput) this.nameInput.value = target.name;
-    localStorage.setItem("protoEditorTarget", target.id); // refresh lands on the same level
+    localStorage.setItem("solProtoEditorTarget", target.id); // refresh lands on the same level
     this.data = migrateCustomLevel(getEditData(target.id));
     this.syncSkySelect();
     this.syncFileButtons();
@@ -1955,7 +1955,7 @@ export class Editor {
     let restored = false;
     try {
       const cam = JSON.parse(
-        localStorage.getItem("protoEditorCam") ?? "null",
+        localStorage.getItem("solProtoEditorCam") ?? "null",
       ) as {
         p: number[];
         t: number[];
@@ -1980,12 +1980,12 @@ export class Editor {
         this.data.spawn[2] + 26,
       );
     }
-    localStorage.setItem("protoEditorOpen", "1"); // refresh lands back in the editor
+    localStorage.setItem("solProtoEditorOpen", "1"); // refresh lands back in the editor
     document.body.classList.add("ed-active"); // hides the play HUD under the tools
     this.panel.style.display = "block";
     if (this.popWrap) this.popWrap.style.display = "block";
     this.setPop(
-      (localStorage.getItem("protoEditorPop") as "add" | "layers" | "") ??
+      (localStorage.getItem("solProtoEditorPop") as "add" | "layers" | "") ??
         "add",
     );
     this.select(-1);
@@ -2009,8 +2009,8 @@ export class Editor {
     this.active = false;
     this.hooks.setView(false); // restore the level's fog + play draw distance
     this.saveCam();
-    localStorage.removeItem("protoEditorOpen");
-    localStorage.removeItem("protoEditorTarget");
+    localStorage.removeItem("solProtoEditorOpen");
+    localStorage.removeItem("solProtoEditorTarget");
     this.controls?.dispose();
     this.controls = null;
     document.body.classList.remove("ed-active");
@@ -2082,7 +2082,7 @@ export class Editor {
     if (!this.controls) return;
     try {
       localStorage.setItem(
-        "protoEditorCam",
+        "solProtoEditorCam",
         JSON.stringify({
           // while a 2D view is up, persist the saved FREE view — a refresh
           // reopens in normal 3D, never stranded on the long 2D lens
@@ -2170,7 +2170,7 @@ export class Editor {
     this.targetId = e.id;
     this.targetName = e.name;
     if (this.nameInput) this.nameInput.value = e.name;
-    localStorage.setItem("protoEditorTarget", e.id);
+    localStorage.setItem("solProtoEditorTarget", e.id);
     this.data = migrateCustomLevel(getEditData(e.id));
     this.syncSkySelect();
     this.syncFileButtons();
@@ -4827,7 +4827,7 @@ export class Editor {
       "dragging rests the piece on whatever is under the cursor (fixes depth). OFF = flat ground-plane drag";
     surfBtn.addEventListener("click", () => {
       this.surfaceSnap = !this.surfaceSnap;
-      localStorage.setItem("protoEdSurfaceSnap", this.surfaceSnap ? "1" : "0");
+      localStorage.setItem("solProtoEdSurfaceSnap", this.surfaceSnap ? "1" : "0");
       surfBtn.textContent = `drop on surface: ${this.surfaceSnap ? "ON" : "OFF"}`;
       surfBtn.blur();
     });
@@ -4955,8 +4955,8 @@ export class Editor {
     arm(delBtn, "tap again to delete", () => {
       const gone = this.targetName;
       deleteUserLevel(this.targetId);
-      localStorage.removeItem("protoEditorOpen");
-      localStorage.removeItem("protoEditorTarget");
+      localStorage.removeItem("solProtoEditorOpen");
+      localStorage.removeItem("solProtoEditorTarget");
       this.hooks.levelsChanged(DEFAULT_LEVEL_ID);
       this.hooks.exitToPlay();
       this.hooks.showMsg("LEVEL DELETED", gone);
@@ -4995,7 +4995,7 @@ export class Editor {
     this.tabAdd?.classList.toggle("ed-tab-on", which === "add");
     this.tabLayers?.classList.toggle("ed-tab-on", which === "layers");
     try {
-      localStorage.setItem("protoEditorPop", which);
+      localStorage.setItem("solProtoEditorPop", which);
     } catch {
       /* ignore */
     }

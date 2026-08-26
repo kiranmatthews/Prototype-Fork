@@ -29,6 +29,7 @@ import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Ro
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
+import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 
 const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { wumpaMesh, WUMPA_SIZE } from "./wumpa";
@@ -1307,6 +1308,11 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
   { id: "warproom", name: "The Warp Room" }, // five wormhole gates round a dais
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
+  {
+    id: "codex-lab",
+    name: CODEX_LAB_LEVEL.name,
+    data: CODEX_LAB_LEVEL,
+  }, // small source-owned course for fast, isolated geometry iterations
 ];
 export const DEFAULT_LEVEL_ID = "jungle";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
@@ -1318,7 +1324,7 @@ export function isBuiltin(id: string): boolean {
 // One localStorage key holds the whole list, in menu order, data and all. It
 // is also exactly the payload the cloud sync pushes and restores, so "what I
 // see" and "what I publish" can never drift apart.
-const USER_KEY = "protoUserLevels";
+const USER_KEY = "solProtoUserLevels";
 let USER_CACHE: LevelEntry[] | null = null;
 
 function sane(e: unknown): e is LevelEntry {
@@ -1432,11 +1438,11 @@ export function deleteUserLevel(id: string): void {
   try {
     // the level is gone, so its best times are unreachable — drop them with it
     const all = JSON.parse(
-      localStorage.getItem("protoTTtimes") ?? "{}",
+      localStorage.getItem("solProtoTTtimes") ?? "{}",
     ) as Record<string, number[]>;
     if (all && typeof all === "object" && id in all) {
       delete all[id];
-      localStorage.setItem("protoTTtimes", JSON.stringify(all));
+      localStorage.setItem("solProtoTTtimes", JSON.stringify(all));
     }
   } catch {
     /* nothing persisted, nothing to drop */
@@ -1498,7 +1504,7 @@ const LEGACY_SLUGS: Record<string, string> = {
 export function adoptLegacyLevels(): number {
   let n = 0;
   try {
-    if (localStorage.getItem("protoLevelsAdopted") === "1") return 0;
+    if (localStorage.getItem("solProtoLevelsAdopted") === "1") return 0;
     const read = (k: string): CustomLevelData | null => {
       try {
         const raw = JSON.parse(
@@ -1512,12 +1518,12 @@ export function adoptLegacyLevels(): number {
     const legacy: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith("protoLevelEdit:")) legacy.push(k);
+      if (k && k.startsWith("solProtoLevelEdit:")) legacy.push(k);
     }
     legacy.sort();
     for (const k of legacy) {
       const d = read(k);
-      const old = k.slice("protoLevelEdit:".length);
+      const old = k.slice("solProtoLevelEdit:".length);
       if (d) {
         saveUserLevel({
           id: "",
@@ -1528,7 +1534,7 @@ export function adoptLegacyLevels(): number {
       }
       localStorage.removeItem(k);
     }
-    const sandbox = read("protoCustomLevel");
+    const sandbox = read("solProtoCustomLevel");
     if (sandbox) {
       saveUserLevel({
         id: "",
@@ -1537,14 +1543,14 @@ export function adoptLegacyLevels(): number {
       });
       n++;
     }
-    localStorage.removeItem("protoCustomLevel");
-    localStorage.removeItem("protoCustomLevelBackup");
-    localStorage.removeItem("protoLevelDirty");
+    localStorage.removeItem("solProtoCustomLevel");
+    localStorage.removeItem("solProtoCustomLevelBackup");
+    localStorage.removeItem("solProtoLevelDirty");
     // Best times were keyed by list INDEX. Re-key the ones whose level still
     // exists; without this every recorded time is silently unreachable.
     try {
       const times = JSON.parse(
-        localStorage.getItem("protoTTtimes") ?? "{}",
+        localStorage.getItem("solProtoTTtimes") ?? "{}",
       ) as Record<string, number[]>;
       const out: Record<string, number[]> = {};
       let moved = false;
@@ -1555,16 +1561,16 @@ export function adoptLegacyLevels(): number {
           moved = true;
         } else if (!/^\d+$/.test(k)) out[k] = v; // already a slug: keep
       }
-      if (moved) localStorage.setItem("protoTTtimes", JSON.stringify(out));
+      if (moved) localStorage.setItem("solProtoTTtimes", JSON.stringify(out));
     } catch {
       /* unreadable times: not worth failing the adoption over */
     }
     // and the numeric last-played becomes its slug
-    const lastNum = localStorage.getItem("protoLevel");
+    const lastNum = localStorage.getItem("solProtoLevel");
     if (lastNum && LEGACY_SLUGS[lastNum])
-      localStorage.setItem("protoLevelId", LEGACY_SLUGS[lastNum]);
-    localStorage.removeItem("protoLevel");
-    localStorage.setItem("protoLevelsAdopted", "1");
+      localStorage.setItem("solProtoLevelId", LEGACY_SLUGS[lastNum]);
+    localStorage.removeItem("solProtoLevel");
+    localStorage.setItem("solProtoLevelsAdopted", "1");
   } catch {
     /* private mode: nothing persisted, nothing to adopt */
   }
@@ -1586,13 +1592,13 @@ export async function checkEditPass(pass: string): Promise<boolean> {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
   if (hex === EDIT_PASS_HASH) {
-    localStorage.setItem("protoEditUnlocked", "1");
+    localStorage.setItem("solProtoEditUnlocked", "1");
     return true;
   }
   return false;
 }
 export function isEditUnlocked(): boolean {
-  return localStorage.getItem("protoEditUnlocked") === "1";
+  return localStorage.getItem("solProtoEditUnlocked") === "1";
 }
 
 export class Level {
