@@ -9,8 +9,6 @@ against the equivalent Unity greybox workflow.
 - [Experiment protocol](docs/CODEX_LEVEL_EXPERIMENT.md)
 - [Iteration log](docs/LEVEL_ITERATIONS.md)
 - [Tripo → img2threejs character pipeline](docs/TRIPO_CHARACTER_PIPELINE.md)
-- [Punky Fox production character](docs/PUNKY_FOX_CHARACTER.md)
-- [Punky Fox motion specification](docs/PUNKY_FOX_MOTION_SPEC.md)
 
 A greybox feel prototype for a PS1/PS2-style fake-physics board platformer —
 Crash Bandicoot 2 corridor structure meets Tony Hawk's Pro Skater 2 momentum.

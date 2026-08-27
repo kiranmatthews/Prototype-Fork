@@ -16,7 +16,6 @@ import { wumpaMesh, WUMPA_SIZE } from './wumpa';
 import { puffs, surfaceFromName } from './puffs';
 import { Tail, type TailCollider } from './tail';
 import { cutsFor } from './modelcuts';
-import { PunkyCharacter, type PunkyAdditivePose } from './punkyCharacter';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
@@ -342,65 +341,6 @@ export class Player {
   // flips true on a load FAILURE, deliberately: a visible placeholder beats an
   // invisible skater if the network drops the model.
   private modelReady = false;
-
-  // Full-resolution Punky Fox runtime. Unlike the legacy Meshy path below,
-  // this keeps the SkinnedMesh and its weights intact. The old pose rig still
-  // runs invisibly because it owns board planting and the procedural tail,
-  // while this character borrows the same rider/body roots.
-  private punky: PunkyCharacter | null = null;
-  private punkyLoadEpoch = 0;
-  private punkyClip: string | null = null;
-  private punkyWasGrounded = true;
-  private punkyPrevVVel = 0;
-  private punkyLandingT = 0;
-  private punkyLandingDuration = 0.24;
-  private punkyMotionReady = false;
-  private readonly punkyPrevPos = new THREE.Vector3();
-  private readonly punkyPoseRot = {
-    hips: new THREE.Euler(),
-    spineLower: new THREE.Euler(),
-    chest: new THREE.Euler(),
-    neck: new THREE.Euler(),
-    head: new THREE.Euler(),
-    leftClavicle: new THREE.Euler(),
-    rightClavicle: new THREE.Euler(),
-    leftUpperArm: new THREE.Euler(),
-    rightUpperArm: new THREE.Euler(),
-    leftForearm: new THREE.Euler(),
-    rightForearm: new THREE.Euler(),
-    leftThigh: new THREE.Euler(),
-    rightThigh: new THREE.Euler(),
-    leftShin: new THREE.Euler(),
-    rightShin: new THREE.Euler(),
-    leftFoot: new THREE.Euler(),
-    rightFoot: new THREE.Euler(),
-  };
-  private readonly punkyPosePos = {
-    hips: new THREE.Vector3(),
-  };
-  private readonly punkyPose: PunkyAdditivePose = {
-    hips: {
-      rotation: this.punkyPoseRot.hips,
-      translation: this.punkyPosePos.hips,
-      rotationSpace: 'parent',
-    },
-    spineLower: { rotation: this.punkyPoseRot.spineLower, rotationSpace: 'parent' },
-    chest: { rotation: this.punkyPoseRot.chest, rotationSpace: 'parent' },
-    neck: { rotation: this.punkyPoseRot.neck, rotationSpace: 'parent' },
-    head: { rotation: this.punkyPoseRot.head, rotationSpace: 'parent' },
-    leftClavicle: { rotation: this.punkyPoseRot.leftClavicle, rotationSpace: 'parent' },
-    rightClavicle: { rotation: this.punkyPoseRot.rightClavicle, rotationSpace: 'parent' },
-    leftUpperArm: { rotation: this.punkyPoseRot.leftUpperArm, rotationSpace: 'parent' },
-    rightUpperArm: { rotation: this.punkyPoseRot.rightUpperArm, rotationSpace: 'parent' },
-    leftForearm: { rotation: this.punkyPoseRot.leftForearm, rotationSpace: 'parent' },
-    rightForearm: { rotation: this.punkyPoseRot.rightForearm, rotationSpace: 'parent' },
-    leftThigh: { rotation: this.punkyPoseRot.leftThigh, rotationSpace: 'parent' },
-    rightThigh: { rotation: this.punkyPoseRot.rightThigh, rotationSpace: 'parent' },
-    leftShin: { rotation: this.punkyPoseRot.leftShin, rotationSpace: 'parent' },
-    rightShin: { rotation: this.punkyPoseRot.rightShin, rotationSpace: 'parent' },
-    leftFoot: { rotation: this.punkyPoseRot.leftFoot, rotationSpace: 'parent' },
-    rightFoot: { rotation: this.punkyPoseRot.rightFoot, rotationSpace: 'parent' },
-  };
 
   private spinTimer = 0;
   private spinCd = 0;
@@ -819,10 +759,6 @@ export class Player {
   }
   get riderRef(): THREE.Group | null {
     return this.riderG;
-  }
-  /** Read-only review seam for the in-browser rig/animation studio. */
-  getPunkyCharacter(): PunkyCharacter | null {
-    return this.punky;
   }
   private tailBodies: TailCollider[] = [];
   // hip anchor half-widths (rig space) — the placeholder + roo use ±0.115/z0;
@@ -8953,23 +8889,7 @@ export class Player {
       (1 - this.grabPose) *
       (1 - this.slidePose) *
       (1 - this.ledgePose);
-    if (!bg || w <= 0.002) {
-      rg.position.set(0, 0, 0);
-      return;
-    }
-    if (this.punky) {
-      // Punky's fitted asset is normalized with the deepest bind-pose sole at
-      // rider y=0. Put that plane directly on the live grip-tape centre. This
-      // deliberately uses the board's local matrix: manuals, slopes and root
-      // turns are already shared by the bodyGroup, while board-only offsets
-      // (notably the charge pump) still make it into the answer.
-      bg.updateMatrix();
-      rg.position
-        .copy(_plantV.set(0, PLANT_DECK_TOP, 0).applyMatrix4(bg.matrix))
-        .multiplyScalar(w);
-      return;
-    }
-    if (!legs || !legR || !legL || !kneeR || !kneeL) {
+    if (!legs || !bg || !legR || !legL || !kneeR || !kneeL || w <= 0.002) {
       rg.position.set(0, 0, 0);
       return;
     }
@@ -9841,8 +9761,7 @@ export class Player {
       // in the face whenever the skater travelled toward +X (the Sideways stretch
       // faces that way the whole time) or turned to face the camera. Camera-space
       // keeps it floating clear IN FRONT of the face no matter the heading.
-      if (this.punky) this.punky.bones.head.getWorldPosition(this.maskAnchor);
-      else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
+      if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
       else this.maskAnchor.set(this.pos.x, this.pos.y + 1.42, this.pos.z);
       const hx = this.maskAnchor.x;
       const hy = this.maskAnchor.y;
@@ -10171,250 +10090,6 @@ export class Player {
       this.floorX.visible = false;
     }
 
-    // The smooth skin samples after every gameplay/root transform and after
-    // the legacy pose rig has finished driving the board and tail. Physics is
-    // already final for the frame; this is presentation only.
-    this.updatePunkyVisual(dt);
-
-  }
-
-  private punkyDesiredClip(planar: number): string {
-    if (this.state === 'dead' || this.state === 'gameover') {
-      return this.bailing || this.ragActive ? 'bail' : 'death';
-    }
-    if (this.bailDownT > 0 || this.ragActive) return 'bail';
-    if (this.spinTimer > 0) return 'spin';
-    if (this.sliding || this.slidePose > 0.55) return 'slide';
-    if ((this.crawling || this.crawlPose > 0.55) && planar > 0.45) return 'crawl';
-    if (this.state === 'air') return this.vVel > -1 && this.airborneT < 0.85 ? 'jump' : 'fall';
-    if (this.state === 'hang' || this.state === 'rope') return 'fall';
-    if (this.walkAmp > 0.15 && planar > 0.45) {
-      return planar > TUNING.walkSpeed * 0.64 ? 'run' : 'walk';
-    }
-    return 'idle';
-  }
-
-  private punkyClipTimeScale(character: PunkyCharacter, name: string, planar: number): number {
-    if (name === 'walk') return THREE.MathUtils.clamp(planar / 4.5, 0.7, 1.45);
-    if (name === 'run') return THREE.MathUtils.clamp(planar / 8, 0.82, 1.6);
-    if (name === 'crawl') return THREE.MathUtils.clamp(planar / 2.2, 0.65, 1.35);
-    if (name === 'spin') {
-      const duration = character.clip(name)?.duration ?? TUNING.spinDuration;
-      return THREE.MathUtils.clamp(duration / Math.max(TUNING.spinDuration, 0.2), 1, 4);
-    }
-    if (name === 'slide') {
-      const duration = character.clip(name)?.duration ?? 0.35;
-      const moveTime = TUNING.slideDistance / Math.max(this.slideSpd, 6);
-      return THREE.MathUtils.clamp(duration / Math.max(moveTime, 0.1), 1, 3.5);
-    }
-    if (name === 'bail') return this.bailRush;
-    if (name === 'fall') return 0.82;
-    return 1;
-  }
-
-  private updatePunkyVisual(dt: number): void {
-    const character = this.punky;
-    if (!character || character.isDisposed) return;
-
-    const planar = Math.max(0, this.lastPlanar);
-    let desired = this.punkyDesiredClip(planar);
-    if (!character.clip(desired)) desired = character.clip('idle') ? 'idle' : (character.clipNames[0] ?? '');
-    const jumpRetrigger =
-      desired === 'jump' &&
-      desired === this.punkyClip &&
-      this.airborneT > 0.08 &&
-      this.vVel - this.punkyPrevVVel > 2.5;
-    if (desired && (desired !== this.punkyClip || jumpRetrigger)) {
-      const loop = desired === 'idle' || desired === 'walk' || desired === 'run' || desired === 'crawl' || desired === 'fall';
-      const urgent = desired === 'spin' || desired === 'slide' || desired === 'bail' || desired === 'death';
-      character.playClip(desired, {
-        fade: this.punkyClip === null ? 0 : urgent ? 0.06 : 0.11,
-        loop,
-        clampWhenFinished: !loop,
-        timeScale: this.punkyClipTimeScale(character, desired, planar),
-      });
-      this.punkyClip = desired;
-    } else if (desired) {
-      // Match foot cadence to live speed without restarting the loop.
-      const clip = character.clip(desired);
-      const action = clip ? character.mixer.existingAction(clip) : null;
-      action?.setEffectiveTimeScale(this.punkyClipTimeScale(character, desired, planar));
-    }
-
-    const landed = this.grounded && !this.punkyWasGrounded;
-    if (landed) {
-      const heavy = this.slamActive || this.slamSquash > 0 || -this.punkyPrevVVel > 15;
-      this.punkyLandingDuration = heavy ? 0.32 : 0.24;
-      this.punkyLandingT = this.punkyLandingDuration;
-    } else {
-      this.punkyLandingT = Math.max(0, this.punkyLandingT - dt);
-    }
-    let landing = 0;
-    if (this.punkyLandingT > 0) {
-      const elapsed = this.punkyLandingDuration - this.punkyLandingT;
-      // Contact catches in 80–100 ms, then recovers over the next 150–220 ms.
-      landing = elapsed < 0.09
-        ? THREE.MathUtils.smoothstep(elapsed, 0, 0.09)
-        : 1 - THREE.MathUtils.smoothstep(elapsed, 0.09, this.punkyLandingDuration);
-    }
-    const groundDistance = this.shadowGroundY === null ? Infinity : Math.max(0, this.pos.y - this.shadowGroundY);
-    const preLand =
-      this.state === 'air' && this.vVel < -1 && groundDistance < 1.25
-        ? THREE.MathUtils.smoothstep(1.25 - groundDistance, 0, 1.1)
-        : 0;
-    const rise = this.state === 'air' ? THREE.MathUtils.clamp(this.vVel / 10, 0, 1) : 0;
-    const lateFall = this.state === 'air' ? THREE.MathUtils.clamp((-this.vVel - 3) / 11, 0, 1) : 0;
-    const apex =
-      this.state === 'air' && !this.wallriding && !this.slamActive
-        ? THREE.MathUtils.clamp(1 - Math.abs(this.vVel) / 8, 0, 1) * (1 - lateFall * 0.82)
-        : 0;
-    const skate = Math.max(this.skatePose, this.deckPose * 0.75);
-    const crawlMove = this.crawlPose * Math.min(1, planar / 1.2);
-    const crouch = Math.max(0, this.crawlPose - crawlMove);
-    const charge = THREE.MathUtils.clamp(
-      this.chargePose + this.wallChargePose * 0.55 + crouch * 0.7,
-      0,
-      1.35,
-    );
-    const grab = this.grabPose;
-    const hang = Math.max(this.ledgePose, this.underK, this.state === 'rope' ? 1 : 0);
-    const sketch = THREE.MathUtils.clamp(this.sketchyT / 0.6, 0, 1);
-    const sketchWave = sketch * Math.sin(this.runTime * 25);
-    const wallSide =
-      this.wallridePose > 0.001
-        ? Math.sign(this.axisF.z * this.wallNormal.x - this.axisF.x * this.wallNormal.z) || 1
-        : 0;
-    const railBalance = this.state === 'grind' ? this.balance : 0;
-    const idleConfidence = desired === 'idle' ? 1 : 0;
-    const balancePose = Math.max(
-      this.grindArmPose,
-      this.manualing !== 0 || this.lipStallT > 0 ? 1 : 0,
-      this.wallridePose,
-    );
-
-    for (const rotation of Object.values(this.punkyPoseRot)) rotation.set(0, 0, 0);
-    this.punkyPosePos.hips.set(0, 0, 0);
-
-    // Pelvis/legs: a compact athletic stance, deep charge load, airborne tuck,
-    // pre-contact square-up, then a fast contact compression. The feet counter
-    // the knee fold so soles stay much closer to the deck plane.
-    const clipOwnsLegs = desired === 'slide' || desired === 'crawl' || desired === 'bail' || desired === 'death';
-    const compact = clipOwnsLegs ? 0 : apex * 0.72 + grab * 0.75;
-    const baseBend = clipOwnsLegs
-      ? 0
-      : 0.24 * skate + 0.72 * charge + compact + 0.42 * preLand + 0.65 * landing + 0.28 * this.wallridePose;
-    const stanceBias = this.stance * (0.09 * skate + 0.12 * this.manualing + 0.1 * this.grindPoseX);
-    const leftBend = Math.max(0, baseBend + stanceBias);
-    const rightBend = Math.max(0, baseBend - stanceBias);
-    this.punkyPoseRot.leftThigh.x = -0.46 * leftBend;
-    this.punkyPoseRot.rightThigh.x = -0.46 * rightBend;
-    this.punkyPoseRot.leftShin.x = 0.82 * leftBend;
-    this.punkyPoseRot.rightShin.x = 0.82 * rightBend;
-    this.punkyPoseRot.leftFoot.x = -0.3 * leftBend;
-    this.punkyPoseRot.rightFoot.x = -0.3 * rightBend;
-    // Crash's star beat is silhouette-first: straight legs split wide.
-    this.punkyPoseRot.leftThigh.z += 0.58 * this.starPose;
-    this.punkyPoseRot.rightThigh.z -= 0.58 * this.starPose;
-    this.punkyPosePos.hips.set(
-      railBalance * 0.035 + sketchWave * 0.018,
-      -0.035 * charge - 0.025 * landing,
-      this.manualing * 0.025,
-    );
-    this.punkyPoseRot.hips.x = 0.06 * skate - 0.12 * preLand;
-    this.punkyPoseRot.hips.z = 0.08 * railBalance + sketchWave * 0.06;
-
-    // Manual/grind/wallride separation lives through the spine instead of a
-    // single rigid lean: hips follow the board, chest and head counterbalance.
-    const manualCounter = -this.manualPitch * 0.7;
-    const balanceRoll = railBalance * 0.18 * this.grindArmPose - wallSide * 0.1 * this.wallridePose;
-    this.punkyPoseRot.spineLower.x = 0.08 * charge + manualCounter * 0.35;
-    this.punkyPoseRot.chest.x = manualCounter - 0.07 * skate + 0.08 * preLand;
-    this.punkyPoseRot.chest.z = balanceRoll + sketchWave * 0.11;
-
-    // Shoulder/head spotting: the rider stays side-on, but eyes track down the
-    // line. During live spins the head counter-rotates for ~80% of each turn,
-    // then snaps through, while the simulation's exact body angle remains the
-    // sole source of landing truth.
-    const liveSpin = this.spinAngle + this.grabSpinAngle;
-    let spot = 0;
-    if (Math.abs(liveSpin) > 0.02) {
-      const phase = THREE.MathUtils.euclideanModulo(Math.abs(liveSpin), Math.PI * 2) / (Math.PI * 2);
-      const counter = phase < 0.8 ? phase / 0.8 : 1 - (phase - 0.8) / 0.2;
-      spot = -Math.sign(liveSpin) * 0.52 * THREE.MathUtils.clamp(counter, 0, 1) * (1 - preLand * 0.65);
-    }
-    const lineLook = -0.82 * this.stance * this.sidePose;
-    this.punkyPoseRot.neck.x = -0.05 * idleConfidence;
-    this.punkyPoseRot.neck.y = lineLook * 0.42 + spot * 0.45;
-    this.punkyPoseRot.head.y = lineLook * 0.58 + spot * 0.55;
-    this.punkyPoseRot.head.x =
-      -0.16 * idleConfidence - 0.16 * charge + 0.12 * rise - 0.15 * this.dropPose;
-    this.punkyPoseRot.head.z =
-      -0.025 * idleConfidence - balanceRoll * 0.7 - sketchWave * 0.08;
-
-    // THPS-style balance arms. They carry the motion while the pelvis stays
-    // comparatively quiet; a grab overrides one hand toward the board socket.
-    const armSpread = 0.62 * balancePose + 0.34 * preLand + 0.72 * this.starPose;
-    this.punkyPoseRot.leftClavicle.z = 0.08 * armSpread;
-    this.punkyPoseRot.rightClavicle.z = -0.08 * armSpread;
-    this.punkyPoseRot.leftUpperArm.z = armSpread * (1 + railBalance * 0.22) + sketchWave * 0.22;
-    this.punkyPoseRot.rightUpperArm.z = -armSpread * (1 - railBalance * 0.22) - sketchWave * 0.22;
-    this.punkyPoseRot.leftUpperArm.z += 0.08 * idleConfidence;
-    this.punkyPoseRot.rightUpperArm.z -= 0.08 * idleConfidence;
-    this.punkyPoseRot.leftUpperArm.x = 0.2 * charge - 0.22 * apex;
-    this.punkyPoseRot.rightUpperArm.x = 0.2 * charge - 0.22 * apex;
-    this.punkyPoseRot.leftForearm.x = 0.28 * compact;
-    this.punkyPoseRot.rightForearm.x = 0.28 * compact;
-    if (grab > 0.001) {
-      const leftHandGrab = this.rawInput.moveX < -0.4;
-      const reachArm = leftHandGrab ? this.punkyPoseRot.leftUpperArm : this.punkyPoseRot.rightUpperArm;
-      const reachForearm = leftHandGrab ? this.punkyPoseRot.leftForearm : this.punkyPoseRot.rightForearm;
-      const freeArm = leftHandGrab ? this.punkyPoseRot.rightUpperArm : this.punkyPoseRot.leftUpperArm;
-      reachArm.x -= (this.rawInput.moveY > 0.4 ? 0.82 : 0.62) * grab;
-      reachArm.z *= 1 - grab * 0.55;
-      reachForearm.x += 0.68 * grab;
-      freeArm.z += (leftHandGrab ? -1 : 1) * 0.48 * grab;
-    }
-    if (hang > 0.001) {
-      this.punkyPoseRot.leftUpperArm.z += 1.45 * hang;
-      this.punkyPoseRot.rightUpperArm.z -= 1.45 * hang;
-      this.punkyPoseRot.leftForearm.x += 0.22 * hang;
-      this.punkyPoseRot.rightForearm.x += 0.22 * hang;
-      this.punkyPoseRot.leftThigh.x -= 0.12 * hang;
-      this.punkyPoseRot.rightThigh.x += 0.08 * hang;
-    }
-    if (this.wallridePose > 0.001) {
-      this.punkyPoseRot.leftUpperArm.x += wallSide * 0.26 * this.wallridePose;
-      this.punkyPoseRot.rightUpperArm.x -= wallSide * 0.26 * this.wallridePose;
-    }
-
-    // Slide/crawl clips already contain their low body line. Cancel only the
-    // duplicate legacy ROOT pitch/drop/squash inherited through bodyGroup;
-    // board, slope, manual, live spin, ragdoll and every gameplay transform
-    // remain untouched. Static Circle crouch is intentionally not cancelled.
-    character.root.position.set(0, 0.38 * this.slidePose + 0.2 * crawlMove, 0);
-    character.root.rotation.set(0.6 * this.slidePose - 0.75 * crawlMove, 0, 0);
-    const inheritedCrawlScale = Math.max(0.3, 1 - 0.22 * this.crawlPose);
-    const wantedCrawlScale = Math.max(0.3, 1 - 0.22 * crouch);
-    character.root.scale.set(1, wantedCrawlScale / inheritedCrawlScale, 1);
-
-    const teleported =
-      !this.punkyMotionReady || this.pos.distanceToSquared(this.punkyPrevPos) > 9;
-    const poseWeight = this.ragActive || this.state === 'dead' ? 0.38 : 1;
-    character.update(dt, {
-      pose: this.punkyPose,
-      poseWeight,
-      secondary: {
-        // Stress review was performed at the spring limits; normal gameplay
-        // deliberately runs at half-strength to keep the ears and hair lively
-        // without letting a rail snap or respawn whip them through the face.
-        weight: 0.52,
-        teleport: teleported,
-      },
-    });
-    this.punkyPrevPos.copy(this.pos);
-    this.punkyMotionReady = true;
-    this.punkyWasGrounded = this.grounded;
-    this.punkyPrevVVel = this.vVel;
   }
 
   // Character/board skins: painted in a `size`-unit space onto a 4x canvas, so
@@ -10529,89 +10204,9 @@ export class Player {
   // Swap the visible character live (menu pick). Re-segmentation cleanly
   // replaces the chunks in the rig groups, so no rebuild/reload is needed.
   setCharacter(id: string): void {
-    if (id === 'roo') {
-      this.clearPunky(true);
-      this.installRoo();
-      return;
-    }
+    if (id === 'roo') { this.installRoo(); return; }
     const c = Player.CHARACTERS.find((x) => x.id === id) ?? Player.CHARACTERS[0];
-    if (c.id === 'fox') {
-      this.installPunky(import.meta.env.BASE_URL + 'models/punky-fox.glb');
-      return;
-    }
-    this.clearPunky(true);
     this.installBiped(import.meta.env.BASE_URL + `models/${c.id}.glb`);
-  }
-
-  private setLegacyRiderVisible(visible: boolean): void {
-    if (this.upperG) this.upperG.visible = visible;
-    if (this.legs) this.legs.visible = visible;
-    // tail.root is a separate riderG child and intentionally stays visible.
-  }
-
-  private clearPunky(showLegacy: boolean): void {
-    this.punkyLoadEpoch++;
-    const current = this.punky;
-    this.punky = null;
-    this.punkyClip = null;
-    this.punkyMotionReady = false;
-    if (current) current.dispose();
-    if (showLegacy) this.setLegacyRiderVisible(true);
-  }
-
-  private installPunky(src: string): void {
-    const epoch = ++this.punkyLoadEpoch;
-    const previous = this.punky;
-    this.punky = null;
-    this.punkyClip = null;
-    this.punkyMotionReady = false;
-    if (previous) previous.dispose();
-    // During a live swap the old procedural rig is a useful loading stand-in.
-    // On first boot bodyGroup's modelReady gate still prevents a placeholder
-    // flash, matching the existing loading behaviour.
-    this.setLegacyRiderVisible(true);
-    void PunkyCharacter.load({
-      url: src,
-      // bodyGroup supplies the old visual stretch. Fit to the same two-metre
-      // world height as segmentBiped, then cancel its X/Z squeeze below.
-      targetHeight: 2 / 1.36,
-      normalizeOrigin: true,
-      castShadow: true,
-      receiveShadow: true,
-      frustumCulled: true,
-    })
-      .then((character) => {
-        if (epoch !== this.punkyLoadEpoch) {
-          character.dispose();
-          return;
-        }
-        // PunkyCharacter registers every embedded clip with planar root motion
-        // removed. The simulation owns travel; local vertical hip motion stays
-        // available for squash, jump, slide and bail silhouettes.
-        const widthCompensation = 1.36 / 1.18;
-        character.content.scale.x *= widthCompensation;
-        character.content.scale.z *= widthCompensation;
-        if (!this.riderG) throw new Error('Punky rider root is unavailable');
-        character.attach(this.riderG);
-        this.punky = character;
-        this.modelSrc = src;
-        this.punkyWasGrounded = this.grounded;
-        this.punkyPrevVVel = this.vVel;
-        this.punkyPrevPos.copy(this.pos);
-        this.punkyMotionReady = false;
-        this.setLegacyRiderVisible(false);
-        this.modelReady = true;
-      })
-      .catch((error: unknown) => {
-        if (epoch !== this.punkyLoadEpoch) return;
-        console.warn('smooth Punky model failed to load (legacy fox fallback stays):', error);
-        this.setLegacyRiderVisible(true);
-        this.modelReady = true;
-        // Keep the public demo playable if the larger asset is absent or a
-        // CDN request fails. This is the old low-poly segmented fox, not a
-        // second route used when the production asset succeeds.
-        this.installBiped(import.meta.env.BASE_URL + 'models/fox.glb');
-      });
   }
 
   private installBiped(src: string): void {
