@@ -364,7 +364,7 @@ export interface CustomComponent {
     | "comboorb" // combo-run activator: the green plus near the start; p = [x, deckY, z]. One per level.
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
-    | "terrain" // DISPLACED GROUND STRIP: a rolling, winding, bumpy floor. p = the near end (highest z), pts = centreline nodes in the rail convention ([dx, dz, corner radius, dy]) relative to p, w = width across, amp = bump height, berms = mossy kerbs + grindable lips down both sides. The one component that is not a flat box.
+    | "terrain" // DISPLACED GROUND STRIP: a rolling, winding, bumpy floor. p = the near end (highest z), pts = centreline nodes in the rail convention ([dx, dz, corner radius, dy]) relative to p, w = width across, amp = bump height, berms = mossy kerbs + grindable lips down both sides, curve:'spline' eases the whole cross-section through its nodes. The one component that is not a flat box.
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
@@ -381,7 +381,7 @@ export interface CustomComponent {
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
   closed?: boolean; // vertramp: loop the spine end to end — a rounded-rect path becomes a pool
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
-  curve?: "corner" | "spline"; // vertramp: filleted corners (parks) or one flowing Catmull-Rom (slides)
+  curve?: "corner" | "spline"; // vertramp: filleted corners or Catmull-Rom; terrain: linear nodes or one shape-preserving cubic spine
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
   shake?: number;
   kind?:
@@ -1312,7 +1312,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
-  }, // small source-owned course for fast, isolated geometry iterations
+  }, // source-owned long course for fast, isolated geometry iterations
 ];
 export const DEFAULT_LEVEL_ID = "jungle";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
@@ -7222,13 +7222,19 @@ export class Level {
       berms?: boolean;
       tex?: string;
       spine?: Spine;
+      curve?: CustomComponent["curve"];
     } = {},
     cx = 0,
   ): void {
     const depth = Math.abs(z1 - z0);
     const cz = (z0 + z1) / 2;
     const amp = opts.amp ?? 0.35;
-    const segZ = Math.max(8, Math.round(depth / 3));
+    // A spline needs enough longitudinal rows for its silhouette to remain a
+    // curve at ground level. Straight/legacy strips keep their old density.
+    const segZ = Math.max(
+      8,
+      Math.round(depth / (opts.curve === "spline" ? 1.5 : 3)),
+    );
     const segX = 4;
     const geo = new THREE.PlaneGeometry(width, depth, segX, segZ);
     geo.rotateX(-Math.PI / 2);
@@ -7294,6 +7300,7 @@ export class Level {
         "#" +
         (mat as THREE.MeshLambertMaterial).color.getHexString(),
       pts: nodes,
+      curve: opts.curve,
       nm: name,
     } as CustomComponent;
     this.root.add(mesh);
@@ -7316,7 +7323,7 @@ export class Level {
     const nodes = raw
       .map((q) => ({ dx: q[0] ?? 0, z: c.p[2] + (q[1] ?? 0), dy: q[3] ?? 0 }))
       .sort((a, b) => b.z - a.z);
-    const spine: Spine = (wz) => {
+    const linearSpine: Spine = (wz) => {
       if (wz >= nodes[0].z) return { dx: nodes[0].dx, dy: nodes[0].dy };
       const last = nodes[nodes.length - 1];
       if (wz <= last.z) return { dx: last.dx, dy: last.dy };
@@ -7333,6 +7340,84 @@ export class Level {
       }
       return { dx: 0, dy: 0 };
     };
+    // Terrain used to accept the shared `curve` field but ignore it. A
+    // shape-preserving cubic gives the floor, walls and lip one C1-continuous
+    // centreline while avoiding the wide overshoots a free Catmull-Rom can
+    // produce beside a narrow road. Stations increase down-course even though
+    // world Z decreases.
+    const stations = nodes.map((node) => nodes[0].z - node.z);
+    const cubicReady =
+      c.curve === "spline" &&
+      nodes.length >= 3 &&
+      stations.every(
+        (station, index) => index === 0 || station > stations[index - 1],
+      );
+    const monotoneTangents = (values: number[]): number[] => {
+      const secants: number[] = [];
+      for (let i = 0; i < values.length - 1; i++) {
+        secants.push(
+          (values[i + 1] - values[i]) / (stations[i + 1] - stations[i]),
+        );
+      }
+      const tangents = new Array<number>(values.length);
+      tangents[0] = secants[0];
+      tangents[tangents.length - 1] = secants[secants.length - 1];
+      for (let i = 1; i < values.length - 1; i++) {
+        const before = secants[i - 1];
+        const after = secants[i];
+        if (before === 0 || after === 0 || before * after <= 0) {
+          tangents[i] = 0;
+          continue;
+        }
+        const hBefore = stations[i] - stations[i - 1];
+        const hAfter = stations[i + 1] - stations[i];
+        const w1 = 2 * hAfter + hBefore;
+        const w2 = hAfter + 2 * hBefore;
+        tangents[i] = (w1 + w2) / (w1 / before + w2 / after);
+      }
+      return tangents;
+    };
+    const dxValues = nodes.map((node) => node.dx);
+    const dyValues = nodes.map((node) => node.dy);
+    const dxTangents = cubicReady ? monotoneTangents(dxValues) : [];
+    const dyTangents = cubicReady ? monotoneTangents(dyValues) : [];
+    const hermite = (
+      values: number[],
+      tangents: number[],
+      index: number,
+      t: number,
+    ): number => {
+      const h = stations[index + 1] - stations[index];
+      const t2 = t * t;
+      const t3 = t2 * t;
+      return (
+        (2 * t3 - 3 * t2 + 1) * values[index] +
+        (t3 - 2 * t2 + t) * h * tangents[index] +
+        (-2 * t3 + 3 * t2) * values[index + 1] +
+        (t3 - t2) * h * tangents[index + 1]
+      );
+    };
+    const splineSpine: Spine = (wz) => {
+      if (!cubicReady) return linearSpine(wz);
+      const station = THREE.MathUtils.clamp(
+        nodes[0].z - wz,
+        stations[0],
+        stations[stations.length - 1],
+      );
+      let index = 0;
+      while (
+        index < stations.length - 2 &&
+        station > stations[index + 1]
+      )
+        index++;
+      const span = stations[index + 1] - stations[index];
+      const t = span > 1e-6 ? (station - stations[index]) / span : 0;
+      return {
+        dx: hermite(dxValues, dxTangents, index, t),
+        dy: hermite(dyValues, dyTangents, index, t),
+      };
+    };
+    const spine = cubicReady ? splineSpine : linearSpine;
     const z0 = nodes[0].z;
     const z1 = nodes[nodes.length - 1].z;
     if (Math.abs(z0 - z1) < 1) return; // degenerate: nothing to sweep
@@ -7350,15 +7435,16 @@ export class Level {
         tex: c.tex ?? "jungle",
         spine,
         berms: c.berms === true,
+        curve: c.curve,
       },
       c.p[0],
     );
   }
 
-  // Firm raised edges: visible ridge + solid collider + a grindable lip rail.
-  // Along a SPINE the ridge is cut into short chunks that follow the bend —
-  // one long box cannot curve, and a straight kerb beside a winding path
-  // reads instantly as a mistake.
+  // Firm raised edges: one continuous swept visible wall, a hidden forgiving
+  // collision chain, and a grindable top lip. The visible wall follows the
+  // exact terrain spine; collision can stay segmented without showing its
+  // boxes or restarting the surface texture at every segment.
   private berms(
     z0: number,
     z1: number,
@@ -7368,57 +7454,253 @@ export class Level {
     spine?: Spine,
   ): void {
     const depth = Math.abs(z1 - z0);
-    const mat = this.baseMat("berm", this.bermTint, "jungle", 1, 8);
     if (spine) {
       const zNear = Math.max(z0, z1);
-      const CHUNK = 4; // short enough that the kerb reads as a curve
-      const n = Math.max(2, Math.round(depth / CHUNK));
-      const segD = depth / n + 0.25;
-      for (const side of [-1, 1]) {
+      const RENDER_STEP = 1.5;
+      const RAIL_STEP = 3;
+      // Two metres keeps endpoint-bounded AABBs close to the visible loft
+      // without quadrupling the old per-frame wall scan on a kilometre course.
+      // Tight curves subdivide only when their lateral shift needs it.
+      const COLLISION_MAX_STEP = 2;
+      const COLLISION_MAX_SHIFT = 0.75;
+      const n = Math.max(2, Math.ceil(depth / RENDER_STEP));
+      // The old visible berm was these same short collision boxes merged into
+      // one draw call. The draw call was cheap, but the silhouette was still a
+      // row of teeth and every box restarted its UVs. Build one true swept
+      // prism instead; collision remains the forgiving invisible slab chain.
+      const curveMat = this.baseMat("bermCurve", this.bermTint, "jungle", 1, 1);
+      for (const side of [-1, 1] as const) {
         const pts: THREE.Vector3[] = [];
-        // one chunk per box, but ONE draw call for the whole kerb: a winding
-        // corridor needs dozens of chunks a side, and dozens of one-box meshes
-        // is the single most expensive thing in a level like this
-        const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
-        for (let i = 0; i < n; i++) {
-          const za = zNear - (depth * i) / n;
-          const zb = zNear - (depth * (i + 1)) / n;
-          const zm = (za + zb) / 2;
-          const sp = spine(zm);
-          const x = cx + sp.dx + side * (width / 2 - 0.45);
-          const y = baseY + sp.dy + 0.55;
-          parts.push({
-            geo: new THREE.BoxGeometry(0.9, 1.5, segD),
-            m: new THREE.Matrix4().makeTranslation(x, y, zm),
-          });
-          this.walls.push(
-            new THREE.Box3().setFromCenterAndSize(
-              new THREE.Vector3(x, y, zm),
-              new THREE.Vector3(0.9, 1.5, segD),
-            ),
+        const sections: {
+          innerBottom: THREE.Vector3;
+          innerTop: THREE.Vector3;
+          outerBottom: THREE.Vector3;
+          outerTop: THREE.Vector3;
+          arc: number;
+          center: THREE.Vector3;
+        }[] = [];
+        let arc = 0;
+        for (let i = 0; i <= n; i++) {
+          const z = zNear - (depth * i) / n;
+          const sp = spine(z);
+          const innerX = cx + sp.dx + side * (width / 2 - 0.9);
+          const outerX = cx + sp.dx + side * (width / 2);
+          const bottomY = baseY + sp.dy - 0.2;
+          const topY = baseY + sp.dy + 1.3;
+          const center = new THREE.Vector3(
+            (innerX + outerX) / 2,
+            (bottomY + topY) / 2,
+            z,
           );
-          if (i === 0) {
-            const s0 = spine(zNear);
-            pts.push(
-              new THREE.Vector3(
-                cx + s0.dx + side * (width / 2 - 0.45),
-                baseY + s0.dy + 1.35,
-                zNear,
-              ),
-            );
-          }
-          const s1 = spine(zb);
+          if (sections.length) arc += center.distanceTo(sections[sections.length - 1].center);
+          sections.push({
+            innerBottom: new THREE.Vector3(innerX, bottomY, z),
+            innerTop: new THREE.Vector3(innerX, topY, z),
+            outerBottom: new THREE.Vector3(outerX, bottomY, z),
+            outerTop: new THREE.Vector3(outerX, topY, z),
+            arc,
+            center,
+          });
+        }
+
+        // Grinding does not need the render mesh's 1.5m tessellation. A
+        // separate 3m path follows the same spline while keeping nearest-rail
+        // searches close to the previous segmented-berm cost.
+        const railCount = Math.max(2, Math.ceil(depth / RAIL_STEP));
+        for (let i = 0; i <= railCount; i++) {
+          const z = zNear - (depth * i) / railCount;
+          const sp = spine(z);
           pts.push(
             new THREE.Vector3(
-              cx + s1.dx + side * (width / 2 - 0.45),
-              baseY + s1.dy + 1.35,
-              zb,
+              cx + sp.dx + side * (width / 2 - 0.45),
+              baseY + sp.dy + 1.35,
+              z,
             ),
           );
         }
-        const kerb = new THREE.Mesh(Level.mergeGeos(parts), mat);
-        for (const p of parts) p.geo.dispose();
-        kerb.name = "berm";
+
+        const positions: number[] = [];
+        const uvs: number[] = [];
+        const indices: number[] = [];
+        const ab = new THREE.Vector3();
+        const ac = new THREE.Vector3();
+        const faceNormal = new THREE.Vector3();
+        const position = (index: number): THREE.Vector3 =>
+          new THREE.Vector3(
+            positions[index * 3],
+            positions[index * 3 + 1],
+            positions[index * 3 + 2],
+          );
+        const pushQuadIndices = (
+          a: number,
+          b: number,
+          c: number,
+          d: number,
+          desiredNormal: THREE.Vector3,
+        ): void => {
+          const pa = position(a);
+          faceNormal
+            .copy(ab.subVectors(position(b), pa))
+            .cross(ac.subVectors(position(c), pa));
+          if (faceNormal.dot(desiredNormal) >= 0) {
+            indices.push(a, b, c, a, c, d);
+          } else {
+            indices.push(a, c, b, a, d, c);
+          }
+        };
+        type SectionKey =
+          | "innerBottom"
+          | "innerTop"
+          | "outerBottom"
+          | "outerTop";
+        const addStrip = (
+          left: SectionKey,
+          right: SectionKey,
+          desiredNormal: (index: number) => THREE.Vector3,
+        ): void => {
+          const base = positions.length / 3;
+          for (const section of sections) {
+            for (const [u, key] of [
+              [0, left],
+              [1, right],
+            ] as const) {
+              const point = section[key];
+              positions.push(point.x, point.y, point.z);
+              uvs.push(u, section.arc / 4);
+            }
+          }
+          for (let i = 0; i < sections.length - 1; i++) {
+            const a = base + i * 2;
+            const d = a + 1;
+            const b = a + 2;
+            const cIndex = a + 3;
+            pushQuadIndices(a, b, cIndex, d, desiredNormal(i));
+          }
+        };
+        const outwardAt = (index: number): THREE.Vector3 => {
+          const tangent = new THREE.Vector3()
+            .subVectors(
+              sections[index + 1].center,
+              sections[index].center,
+            )
+            .setY(0)
+            .normalize();
+          return new THREE.Vector3(
+            -tangent.z * side,
+            0,
+            tangent.x * side,
+          );
+        };
+        // Vertices are shared down each face, so lighting is smooth through a
+        // bend. Each face owns a separate pair per section, retaining a crisp
+        // masonry edge between the wall's top, sides and underside.
+        addStrip("innerBottom", "innerTop", (index) =>
+          outwardAt(index).negate(),
+        );
+        addStrip("outerBottom", "outerTop", outwardAt);
+        addStrip("innerTop", "outerTop", () => new THREE.Vector3(0, 1, 0));
+        addStrip("innerBottom", "outerBottom", () =>
+          new THREE.Vector3(0, -1, 0),
+        );
+
+        // Keep collision independent from the render tessellation. Short AABB
+        // slabs cover their endpoints exactly, so curves have no cracks but a
+        // diagonal cannot grow into a multi-metre invisible blocker.
+        const collisionCount = Math.max(
+          2,
+          Math.ceil(depth / COLLISION_MAX_STEP),
+        );
+        const collisionCenter = (z: number): THREE.Vector3 => {
+          const sp = spine(z);
+          return new THREE.Vector3(
+            cx + sp.dx + side * (width / 2 - 0.45),
+            baseY + sp.dy + 0.55,
+            z,
+          );
+        };
+        const addCollisionSlab = (za: number, zb: number): void => {
+          const a = collisionCenter(za);
+          const b = collisionCenter(zb);
+          if (
+            Math.abs(za - zb) > 0.35 &&
+            (Math.abs(b.x - a.x) > COLLISION_MAX_SHIFT ||
+              Math.abs(b.y - a.y) > COLLISION_MAX_SHIFT)
+          ) {
+            const middle = (za + zb) / 2;
+            addCollisionSlab(za, middle);
+            addCollisionSlab(middle, zb);
+            return;
+          }
+          this.walls.push(
+            new THREE.Box3().setFromCenterAndSize(
+              a.clone().add(b).multiplyScalar(0.5),
+              new THREE.Vector3(
+                0.9 + Math.abs(b.x - a.x),
+                1.5 + Math.abs(b.y - a.y),
+                Math.abs(b.z - a.z) + 0.15,
+              ),
+            ),
+          );
+        };
+        for (let i = 0; i < collisionCount; i++) {
+          const za = zNear - (depth * i) / collisionCount;
+          const zb = zNear - (depth * (i + 1)) / collisionCount;
+          addCollisionSlab(za, zb);
+        }
+
+        const first = sections[0];
+        const last = sections[sections.length - 1];
+        const startOut = new THREE.Vector3().subVectors(first.center, sections[1].center).setY(0).normalize();
+        const endOut = new THREE.Vector3().subVectors(last.center, sections[sections.length - 2].center).setY(0).normalize();
+        const capUv: readonly [number, number][] = [[0, 0], [1, 0], [1, 1], [0, 1]];
+        const addCap = (
+          points: readonly [
+            THREE.Vector3,
+            THREE.Vector3,
+            THREE.Vector3,
+            THREE.Vector3,
+          ],
+          desiredNormal: THREE.Vector3,
+        ): void => {
+          const base = positions.length / 3;
+          for (const point of points)
+            positions.push(point.x, point.y, point.z);
+          for (const [u, v] of capUv) uvs.push(u, v);
+          pushQuadIndices(
+            base,
+            base + 1,
+            base + 2,
+            base + 3,
+            desiredNormal,
+          );
+        };
+        addCap(
+          [
+            first.innerBottom,
+            first.outerBottom,
+            first.outerTop,
+            first.innerTop,
+          ],
+          startOut,
+        );
+        addCap(
+          [
+            last.innerBottom,
+            last.outerBottom,
+            last.outerTop,
+            last.innerTop,
+          ],
+          endOut,
+        );
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+        geometry.setIndex(indices);
+        geometry.computeVertexNormals();
+        geometry.computeBoundingSphere();
+        const kerb = new THREE.Mesh(geometry, curveMat);
+        kerb.name = "continuous berm";
         this.root.add(kerb);
         const lip = new Rail(pts, false); // the grindable lip, bent to match
         this.rails.push(lip);
@@ -7426,6 +7708,7 @@ export class Level {
       }
       return;
     }
+    const mat = this.baseMat("berm", this.bermTint, "jungle", 1, 8);
     for (const side of [-1, 1]) {
       const x = cx + side * (width / 2 - 0.45);
       const berm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.5, depth), mat);
