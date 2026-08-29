@@ -4,6 +4,11 @@ import { defineConfig } from 'vite';
 // like GitHub Pages (https://<user>.github.io/<repo>/).
 export default defineConfig({
   base: './',
+  resolve: {
+    // Postprocessing add-ons and the app must share one core singleton; two
+    // Three instances split instanceof checks and emit a runtime warning.
+    dedupe: ['three'],
+  },
   define: {
     // Baked at build time and shown in the HUD corner, so a playtest can
     // always tell WHICH build it's actually running (cache-confusion killer).

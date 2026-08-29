@@ -1,294 +1,448 @@
-// THE WATER STUDIO — #waterstudio. Live fine-tuning for the coast water:
-// every WaterParams knob as a slider, layer toggles, and the comparison
-// modes (geometry only / raw sky texture / texture+modulation / locked
-// camera influence / labelled sky atlas). Settings persist to localStorage
-// and re-apply to every rebuilt water instance; Copy JSON hands the tuning
-// back for baking.
-import { CoastWater, WATER_DEFAULTS, type WaterParams } from "./water";
-import { el, sec, note, btn, sliderRow, injectStudioCss } from "./studiokit";
+// THE UNITY OCEAN STUDIO — #waterstudio. Live controls for every audited
+// MatrixRex ocean value plus the render-pass/debug switches. Settings use a
+// versioned key so retired CoastWater tunings can never leak into this port.
+import {
+  CoastWater,
+  UNITY_OCEAN_DEFAULTS,
+  type UnityOceanParams,
+} from "./unityOcean";
+import {
+  btn,
+  el,
+  injectStudioCss,
+  note,
+  sec,
+  sliderRow,
+  toT,
+} from "./studiokit";
 
-const STORE = "waterStudioV3"; // v5 water: fresh spec defaults, old tunings retired
+const STORE = "unityOceanStudioV1";
+const STORE_VERSION = 1;
 
 interface Opts {
   getWater: () => CoastWater | null;
   onClose: () => void;
 }
 
+type ColorKey = "shallow" | "deep" | "peak" | "shadow" | "specular" | "intersection";
+type ColorChannel = "r" | "g" | "b" | "a";
+type NumericKey = {
+  [K in keyof UnityOceanParams]: UnityOceanParams[K] extends number ? K : never;
+}[keyof UnityOceanParams];
+type FieldPath = readonly [NumericKey] | readonly [ColorKey, ColorChannel];
+
 interface Field {
-  key: keyof WaterParams;
+  path: FieldPath;
   label: string;
   lo: number;
   hi: number;
   step: number;
 }
 
-const GROUPS: { title: string; fields: Field[] }[] = [
+interface Group {
+  title: string;
+  fields: Field[];
+}
+
+const n = (
+  key: NumericKey,
+  label: string,
+  lo: number,
+  hi: number,
+  step: number,
+): Field => ({ path: [key], label, lo, hi, step });
+
+const c = (
+  key: ColorKey,
+  channel: ColorChannel,
+  label: string,
+  hi = 1,
+): Field => ({ path: [key, channel], label, lo: 0, hi, step: 0.001 });
+
+const rgba = (key: ColorKey, label: string, rgbHi = 1): Field[] => [
+  c(key, "r", `${label} R`, rgbHi),
+  c(key, "g", `${label} G`, rgbHi),
+  c(key, "b", `${label} B`, rgbHi),
+  c(key, "a", `${label} A`),
+];
+
+const GROUPS: Group[] = [
   {
-    title: "PRIMARY SWELL",
+    title: "GERSTNER WAVE 1",
     fields: [
-      { key: "amp1", label: "amplitude", lo: 0, hi: 1.2, step: 0.005 },
-      { key: "len1", label: "wavelength", lo: 4, hi: 80, step: 0.5 },
-      { key: "spd1", label: "speed", lo: 0, hi: 4, step: 0.05 },
+      n("wave1Length", "length", 1, 120, 0.1),
+      n("wave1Height", "height", 0, 2, 0.001),
+      n("wave1Speed", "speed", -3, 3, 0.01),
+      n("wave1DirX", "direction X", -1, 1, 0.001),
+      n("wave1DirZ", "direction Z", -1, 1, 0.001),
+      n("wave1Sharpness", "sharpness", 0, 2, 0.001),
     ],
   },
   {
-    title: "CROSSING SWELL",
+    title: "GERSTNER WAVE 2",
     fields: [
-      { key: "amp2", label: "amplitude", lo: 0, hi: 0.8, step: 0.005 },
-      { key: "len2", label: "wavelength", lo: 2, hi: 40, step: 0.5 },
-      { key: "spd2", label: "speed", lo: 0, hi: 4, step: 0.05 },
+      n("wave2Length", "length", 1, 120, 0.1),
+      n("wave2Height", "height", 0, 2, 0.001),
+      n("wave2Speed", "speed", -3, 3, 0.01),
+      n("wave2DirX", "direction X", -1, 1, 0.001),
+      n("wave2DirZ", "direction Z", -1, 1, 0.001),
+      n("wave2Sharpness", "sharpness", 0, 2, 0.001),
     ],
   },
   {
-    title: "MEDIUM WAVE",
+    title: "BASE / DEPTH",
     fields: [
-      { key: "amp3", label: "amplitude", lo: 0, hi: 0.5, step: 0.005 },
-      { key: "len3", label: "wavelength", lo: 1, hi: 20, step: 0.25 },
-      { key: "spd3", label: "speed", lo: 0, hi: 5, step: 0.05 },
+      ...rgba("shallow", "shallow"),
+      ...rgba("deep", "deep"),
+      n("depthDistance", "depth distance", 0, 20, 0.001),
+      n("distanceStart", "distance start", 0, 100, 0.01),
+      n("distanceFade", "distance fade", 0.01, 200, 0.01),
+      n("shoreFadeSmoothness", "shore fade", 0, 1, 0.001),
+      ...rgba("peak", "wave peak", 2),
     ],
   },
   {
-    title: "RIPPLE",
+    title: "NORMALS / SPECULAR",
     fields: [
-      { key: "amp4", label: "amplitude", lo: 0, hi: 0.2, step: 0.002 },
-      { key: "len4", label: "wavelength", lo: 0.5, hi: 10, step: 0.1 },
-      { key: "spd4", label: "speed", lo: 0, hi: 6, step: 0.05 },
+      n("normalStrength", "normal strength", 0, 20, 0.01),
+      n("normalPan", "normal pan", -4, 4, 0.01),
+      n("normalScale", "normal scale", 0.01, 10, 0.001),
+      n("normalDistanceStrength", "distance normal", 0, 20, 0.01),
+      ...rgba("shadow", "shadow", 2),
+      ...rgba("specular", "specular HDR", 40),
+      n("specularSpread", "spec spread", 0, 2, 0.001),
+      n("specularHardness", "spec hardness", 0, 1, 0.001),
+      n("specularSize", "spec size", 0, 2, 0.001),
     ],
   },
   {
-    title: "SHORE WAVE",
+    title: "REFRACTION",
     fields: [
-      { key: "shoreAmp", label: "amplitude", lo: 0, hi: 1, step: 0.005 },
-      { key: "shoreSpeed", label: "speed", lo: 0, hi: 3, step: 0.02 },
-      { key: "shoreLenMin", label: "beach length", lo: 1, hi: 12, step: 0.25 },
-      { key: "shoreLenMax", label: "deep length", lo: 4, hi: 30, step: 0.5 },
-      { key: "shoalLift", label: "shoal lift", lo: 1, hi: 2.2, step: 0.01 },
-      { key: "shape2", label: "crest bias", lo: 0, hi: 0.6, step: 0.01 },
-      { key: "alongA", label: "vary A", lo: 0, hi: 0.9, step: 0.01 },
-      { key: "alongB", label: "vary B", lo: 0, hi: 0.9, step: 0.01 },
+      n("refractionStrength", "strength", 0, 3, 0.001),
+      n("refractionDistance", "distance", 0, 5, 0.001),
+      n("refractionFade", "fade", 0, 5, 0.001),
     ],
   },
   {
-    title: "REFLECTION FIELD",
+    title: "REFLECTION",
     fields: [
-      { key: "stableElev", label: "elevation", lo: 0.5, hi: 1, step: 0.005 },
-      { key: "stableBias", label: "shore bias", lo: 0, hi: 1, step: 0.01 },
-      {
-        key: "camInfluence",
-        label: "camera pull",
-        lo: 0,
-        hi: 0.15,
-        step: 0.005,
-      },
-      { key: "uScale", label: "world U scale", lo: 0.05, hi: 2, step: 0.01 },
-      { key: "vScale", label: "world V scale", lo: 0.1, hi: 2.5, step: 0.01 },
-      { key: "distort", label: "distortion", lo: 0.3, hi: 4, step: 0.05 },
-      { key: "worldU", label: "drift U", lo: 0, hi: 0.01, step: 0.0001 },
-      { key: "worldV", label: "drift V", lo: 0, hi: 0.005, step: 0.0001 },
-      { key: "palette", label: "palette size", lo: 4, hi: 64, step: 1 },
+      n("reflectionStrength", "strength", 0, 3, 0.001),
+      n("reflectionFresnel", "fresnel", 0, 32, 0.01),
+      n("reflectionDistortion", "distortion", 0, 5, 0.001),
     ],
   },
   {
-    title: "COLOUR",
+    title: "CAUSTICS",
     fields: [
-      { key: "brightness", label: "brightness", lo: 0.4, hi: 1.7, step: 0.01 },
-      { key: "troughDark", label: "trough navy", lo: 0, hi: 0.7, step: 0.01 },
-      { key: "grazeCyan", label: "graze cyan", lo: 0, hi: 1, step: 0.01 },
-      { key: "shallowMix", label: "shallow lift", lo: 0, hi: 1, step: 0.01 },
+      n("causticsDepth", "depth", -20, 20, 0.01),
+      n("causticsPan", "pan", -5, 5, 0.01),
+      n("causticsScale", "scale", 0.01, 10, 0.01),
+      n("causticsStrength", "strength", 0, 5, 0.001),
+      n("causticsDistortion", "distortion", 0, 5, 0.001),
+      n("causticsDistortionScale", "distort scale", 0, 10, 0.01),
+      n("causticsStart", "distance start", 0, 100, 0.01),
+      n("causticsFade", "distance fade", 0.01, 200, 0.01),
     ],
   },
   {
-    title: "SHORE EVENT (one cycle: breaker -> foam -> swash -> wet)",
+    title: "INTERSECTION / SHORELINE",
     fields: [
-      { key: "foamPhase", label: "foam phase", lo: 0, hi: 1, step: 0.01 },
-      { key: "swashPhase", label: "swash phase", lo: 0, hi: 1, step: 0.01 },
-      {
-        key: "swashRetreat",
-        label: "retreat length",
-        lo: 0.1,
-        hi: 0.9,
-        step: 0.01,
-      },
-      { key: "swashRunup", label: "run-up", lo: 0, hi: 10, step: 0.1 },
-      { key: "wetDecay", label: "dry time", lo: 1, hi: 30, step: 0.5 },
-      { key: "foamWidth", label: "foam width", lo: 0.2, hi: 2.5, step: 0.05 },
-      { key: "foamStrength", label: "foam strength", lo: 0, hi: 2, step: 0.02 },
-    ],
-  },
-  {
-    title: "STRUCTURE (applies on level reload)",
-    fields: [
-      {
-        key: "alongDensity",
-        label: "shore density",
-        lo: 0.2,
-        hi: 2,
-        step: 0.05,
-      },
+      ...rgba("intersection", "intersection", 4),
+      n("intersectionWidth", "width", 0, 5, 0.001),
+      n("intersectionDissolve", "dissolve", 0, 10, 0.001),
+      n("intersectionScale", "scale", 0.01, 20, 0.01),
+      n("intersectionTile", "tile", 0.01, 10, 0.01),
+      n("intersectionPanX", "pan X", -5, 5, 0.001),
+      n("intersectionPanY", "pan Y", -5, 5, 0.001),
+      n("intersectionDistortion", "distortion", 0, 10, 0.001),
+      n("intersectionSmoothness", "smoothness", 0, 3, 0.001),
+      n("intersectionInvert", "invert", 0, 1, 0.001),
+      n("intersectionGradient", "gradient", 0, 3, 0.001),
+      n("intersectionEdgeFade", "edge fade", 0, 3, 0.001),
+      n("shorelineEnabled", "shore enabled", 0, 1, 1),
+      n("shorelineAlpha", "shore alpha", 0, 1, 0.001),
     ],
   },
 ];
 
-const TOGGLES: { key: string; label: string; on: boolean }[] = [
-  { key: "water", label: "WATER", on: true },
-  { key: "foam", label: "FOAM", on: true },
-  { key: "swash", label: "SWASH", on: true },
-  { key: "wet", label: "WET", on: true },
-  { key: "freeze", label: "FREEZE", on: false },
-  { key: "wireframe", label: "WIRE", on: false },
-  { key: "coast", label: "COAST", on: false },
-];
+const ALL_FIELDS = GROUPS.flatMap((group) => group.fields);
+
+const DEBUG_KEYS = [
+  "water",
+  "horizon",
+  "reflection",
+  "prepass",
+  "refraction",
+  "caustics",
+  "intersection",
+  "freeze",
+  "wireframe",
+] as const;
+type DebugKey = (typeof DEBUG_KEYS)[number];
+
+const DEBUG_LABELS: Record<DebugKey, string> = {
+  water: "WATER",
+  horizon: "HORIZON",
+  reflection: "REFLECT",
+  prepass: "PREPASS",
+  refraction: "REFRACT",
+  caustics: "CAUSTICS",
+  intersection: "INTERSECT",
+  freeze: "FREEZE",
+  wireframe: "WIRE",
+};
+
+type DebugOverrides = Partial<Record<DebugKey, boolean>>;
+
+function cloneParams(source: UnityOceanParams): UnityOceanParams {
+  return {
+    ...source,
+    shallow: { ...source.shallow },
+    deep: { ...source.deep },
+    peak: { ...source.peak },
+    shadow: { ...source.shadow },
+    specular: { ...source.specular },
+    intersection: { ...source.intersection },
+  };
+}
+
+function fieldValue(params: UnityOceanParams, field: Field): number {
+  const data = params as unknown as Record<string, unknown>;
+  if (field.path.length === 1) return data[field.path[0]] as number;
+  const color = data[field.path[0]] as Record<string, number>;
+  return color[field.path[1]];
+}
+
+function setFieldValue(params: UnityOceanParams, field: Field, value: number): void {
+  const data = params as unknown as Record<string, unknown>;
+  if (field.path.length === 1) {
+    data[field.path[0]] = value;
+    return;
+  }
+  const color = data[field.path[0]] as Record<string, number>;
+  color[field.path[1]] = value;
+}
+
+function valueAtPath(source: unknown, path: FieldPath): unknown {
+  if (!source || typeof source !== "object") return undefined;
+  const data = source as Record<string, unknown>;
+  const first = data[path[0]];
+  if (path.length === 1) return first;
+  if (!first || typeof first !== "object") return undefined;
+  return (first as Record<string, unknown>)[path[1]];
+}
+
+function defaultDebug(water: CoastWater, key: DebugKey): boolean {
+  if (key === "water" || key === "horizon") return true;
+  if (key === "freeze" || key === "wireframe") return false;
+  return water.stats.quality === "full";
+}
+
+function copyText(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text);
+  const box = document.createElement("textarea");
+  box.value = text;
+  box.style.position = "fixed";
+  box.style.opacity = "0";
+  document.body.appendChild(box);
+  box.select();
+  document.execCommand("copy");
+  box.remove();
+  return Promise.resolve();
+}
 
 export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
   injectStudioCss();
-  const params: WaterParams = { ...WATER_DEFAULTS };
+
+  const params = cloneParams(UNITY_OCEAN_DEFAULTS);
+  let debugOverrides: DebugOverrides = {};
   try {
-    const j = JSON.parse(localStorage.getItem(STORE) ?? "null") as {
-      params?: Partial<WaterParams>;
-    } | null;
-    if (j?.params) Object.assign(params, j.params);
+    const saved = JSON.parse(localStorage.getItem(STORE) ?? "null") as unknown;
+    if (saved && typeof saved === "object") {
+      const record = saved as Record<string, unknown>;
+      if (record.version === STORE_VERSION) {
+        for (const field of ALL_FIELDS) {
+          const value = valueAtPath(record.params, field.path);
+          if (typeof value === "number" && Number.isFinite(value)) {
+            setFieldValue(params, field, value);
+          }
+        }
+        if (record.debug && typeof record.debug === "object") {
+          const debug = record.debug as Record<string, unknown>;
+          for (const key of DEBUG_KEYS) {
+            if (typeof debug[key] === "boolean") debugOverrides[key] = debug[key] as boolean;
+          }
+        }
+      }
+    }
   } catch {
-    /* fresh start */
+    // Malformed or obsolete state is ignored; audited Unity defaults win.
   }
 
-  let last: CoastWater | null = null;
-  const apply = (): void => {
-    const w = opts.getWater();
-    if (!w) return;
-    Object.assign(w.params, params);
-    w.markWavesDirty();
-  };
   const save = (): void => {
-    localStorage.setItem(STORE, JSON.stringify({ params }));
+    localStorage.setItem(STORE, JSON.stringify({
+      version: STORE_VERSION,
+      params,
+      debug: debugOverrides,
+    }));
+  };
+
+  const applyParams = (water = opts.getWater()): void => {
+    if (!water) return;
+    Object.assign(water.params, cloneParams(params));
+    water.markWavesDirty();
+  };
+
+  const applyDebug = (water = opts.getWater()): void => {
+    if (!water) return;
+    for (const key of DEBUG_KEYS) {
+      const override = debugOverrides[key];
+      if (override !== undefined) water.debug[key] = override;
+    }
+    // Debug-backed uniforms and visibility are synchronized by the same API
+    // used for parameter changes, so toggles respond before the next frame.
+    water.markWavesDirty();
   };
 
   const panel = el("div", "pst");
-  panel.append(sec("WATER STUDIO"));
-  const hint = note("tunes the coast water live — open The Descent to see it");
+  panel.append(sec("UNITY OCEAN STUDIO"));
+  const hint = note("open The Descent — audited MatrixRex values apply live");
   panel.append(hint);
 
-  const togRow = el("div", "pst-btns");
-  for (const tg of TOGGLES) {
-    const b = btn(tg.label, () => {
-      const w = opts.getWater();
-      if (!w) return;
-      const d = w.debug as unknown as Record<string, boolean>;
-      d[tg.key] = !d[tg.key];
-      b.classList.toggle("pst-on", d[tg.key]);
+  panel.append(sec("RENDER / DEBUG"));
+  const debugRow = el("div", "pst-btns");
+  const debugButtons = new Map<DebugKey, HTMLElement>();
+  const refreshDebugButtons = (water = opts.getWater()): void => {
+    for (const key of DEBUG_KEYS) {
+      const on = debugOverrides[key] ?? (water ? water.debug[key] : key === "water" || key === "horizon");
+      debugButtons.get(key)?.classList.toggle("pst-on", on);
+    }
+  };
+  for (const key of DEBUG_KEYS) {
+    const button = btn(DEBUG_LABELS[key], () => {
+      const water = opts.getWater();
+      const current = debugOverrides[key]
+        ?? (water ? water.debug[key] : key === "water" || key === "horizon");
+      debugOverrides[key] = !current;
+      if (water) {
+        water.debug[key] = !current;
+        water.markWavesDirty();
+      }
+      refreshDebugButtons(water);
+      save();
     });
-    b.classList.toggle("pst-on", tg.on);
-    togRow.append(b);
+    debugButtons.set(key, button);
+    debugRow.append(button);
   }
-  panel.append(togRow);
-
-  // the comparison modes from the correction spec
-  panel.append(sec("COMPARE"));
-  const cmpRow = el("div", "pst-btns");
-  const modes: [string, (w: CoastWater) => void][] = [
-    [
-      "GEOMETRY ONLY",
-      (w) => {
-        w.debug.texture = false;
-        w.debug.modulation = true;
-      },
-    ],
-    [
-      "RAW SKY TEXTURE",
-      (w) => {
-        w.debug.texture = true;
-        w.debug.modulation = false;
-      },
-    ],
-    [
-      "TEXTURE + MOD",
-      (w) => {
-        w.debug.texture = true;
-        w.debug.modulation = true;
-      },
-    ],
-  ];
-  for (const [label, fn] of modes)
-    cmpRow.append(
-      btn(label, () => {
-        const w = opts.getWater();
-        if (w) fn(w);
-      }),
-    );
-  const lockBtn = btn("LOCK CAM", () => {
-    const w = opts.getWater();
-    if (!w) return;
-    w.debug.lockCam = !w.debug.lockCam;
-    lockBtn.classList.toggle("pst-on", w.debug.lockCam);
-  });
-  const atlasBtn = btn("SKY ATLAS", () => {
-    const w = opts.getWater();
-    if (!w) return;
-    w.debug.testAtlas = !w.debug.testAtlas;
-    atlasBtn.classList.toggle("pst-on", w.debug.testAtlas);
-  });
-  // §9: crunchy nearest-filtered reflection as an OPTION, not the default
-  const ps1Btn = btn("PS1 FILTER", () => {
-    const w = opts.getWater();
-    if (!w) return;
-    w.debug.nearest = !w.debug.nearest;
-    ps1Btn.classList.toggle("pst-on", w.debug.nearest);
-  });
-  cmpRow.append(lockBtn, atlasBtn, ps1Btn);
-  panel.append(cmpRow);
+  panel.append(debugRow);
 
   const stats = note("");
+  stats.classList.add("pst-stat");
   panel.append(stats);
 
-  for (const g of GROUPS) {
-    panel.append(sec(g.title));
-    for (const f of g.fields) {
-      panel.append(
-        sliderRow(f.label, params[f.key], f.lo, f.hi, f.step, (v) => {
-          params[f.key] = v;
-          apply();
+  const controlSetters: (() => void)[] = [];
+  for (const group of GROUPS) {
+    panel.append(sec(group.title));
+    for (const field of group.fields) {
+      const row = sliderRow(
+        field.label,
+        fieldValue(params, field),
+        field.lo,
+        field.hi,
+        field.step,
+        (value) => {
+          setFieldValue(params, field, value);
+          applyParams();
           save();
-        }),
+        },
       );
+      const range = row.querySelector<HTMLInputElement>('input[type="range"]');
+      const number = row.querySelector<HTMLInputElement>('input[type="number"]');
+      controlSetters.push(() => {
+        const value = fieldValue(params, field);
+        if (number) number.value = String(value);
+        if (range) {
+          const curve = field.step >= 1 ? 1 : 3;
+          range.value = String(toT(value, field.lo, field.hi, curve) * 1000);
+        }
+      });
+      panel.append(row);
     }
   }
 
   panel.append(sec("PRESET"));
-  const act = el("div", "pst-btns");
-  act.append(
-    btn("Copy JSON", () => {
-      void navigator.clipboard?.writeText(JSON.stringify(params, null, 2));
+  const actions = el("div", "pst-btns");
+  actions.append(
+    btn("Copy JSON", (button) => {
+      void copyText(JSON.stringify(params, null, 2)).then(() => {
+        const old = button.textContent;
+        button.textContent = "COPIED";
+        window.setTimeout(() => { button.textContent = old; }, 900);
+      });
     }),
-    btn("Reset saved", () => {
+    btn("Reset defaults", () => {
+      const defaults = cloneParams(UNITY_OCEAN_DEFAULTS);
+      for (const field of ALL_FIELDS) {
+        setFieldValue(params, field, fieldValue(defaults, field));
+      }
+      debugOverrides = {};
       localStorage.removeItem(STORE);
-      Object.assign(params, WATER_DEFAULTS);
-      apply();
+      const water = opts.getWater();
+      if (water) {
+        for (const key of DEBUG_KEYS) water.debug[key] = defaultDebug(water, key);
+      }
+      applyParams(water);
+      applyDebug(water);
+      for (const refresh of controlSetters) refresh();
+      refreshDebugButtons(water);
     }),
     btn("Close", () => {
       panel.remove();
       opts.onClose();
     }),
   );
-  panel.append(act);
+  panel.append(actions);
   document.body.appendChild(panel);
 
-  let statT = 0;
+  let last: CoastWater | null = null;
+  let statTime = 0;
+  let smoothFps = 60;
+  refreshDebugButtons();
+
   return {
     frame(dt: number): void {
-      const w = opts.getWater();
-      if (w !== last) {
-        last = w;
-        hint.textContent = w
-          ? "live — every change saves; Copy JSON to bake"
-          : "no water in this level — open The Descent";
-        if (w) apply();
+      const water = opts.getWater();
+      if (water !== last) {
+        last = water;
+        hint.textContent = water
+          ? "live — versioned autosave enabled; Copy JSON to bake"
+          : "no Unity ocean in this level — open The Descent";
+        if (water) {
+          applyParams(water);
+          applyDebug(water);
+        }
+        refreshDebugButtons(water);
       }
-      statT += dt;
-      if (w && statT > 0.5) {
-        statT = 0;
+
+      if (dt > 0) smoothFps += (1 / dt - smoothFps) * Math.min(1, dt * 3);
+      statTime += dt;
+      if (water && statTime >= 0.35) {
+        statTime = 0;
+        const s = water.stats;
+        const reflection = water.debug.reflection
+          ? `${s.reflectionWidth}×${s.reflectionHeight} / ${s.reflectionRenders}`
+          : "off";
+        const prepass = water.debug.prepass
+          ? `${s.prepassWidth}×${s.prepassHeight} / ${s.prepassRenders}`
+          : "off";
         stats.textContent =
-          `one lattice: ${w.stats.verts} verts / ${w.stats.tris} tris (constant) · ` +
-          `edge d ${w.stats.edgeMin}..${w.stats.edgeMax}m · ` +
-          `sky ${w.skyReady ? "proxy ready" : "loading"}`;
+          `${s.quality} · ${Math.round(smoothFps)} fps · `
+          + `${s.verts.toLocaleString()} verts / ${s.tris.toLocaleString()} tris · `
+          + `${s.shoreSamples} shore samples\n`
+          + `reflection ${reflection} · prepass ${prepass}`;
+        refreshDebugButtons(water);
+      } else if (!water) {
+        stats.textContent = "waiting for a coastline ocean instance";
       }
     },
   };

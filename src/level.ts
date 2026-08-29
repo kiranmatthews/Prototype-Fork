@@ -1632,6 +1632,7 @@ export class Level {
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
+  softWalls = new Set<THREE.Box3>(); // containment only: no wallride, ledge grab or impact bail
   killY = -48; // per-level death height (every builder authors its own)
   name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
@@ -1706,7 +1707,6 @@ export class Level {
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] =
     [];
   private warpPads: WarpPad[] = []; // end-of-level warp platforms: rings rise, plume flickers
-  private seaMats: THREE.ShaderMaterial[] = []; // open water: uTime is the only thing that moves
 
   // safe = triggered by the player's own spin/slam: breaks the world, not them
   explosions: {
@@ -4090,15 +4090,28 @@ export class Level {
   }
 
   dispose(): void {
+    if (this.water) {
+      this.root.remove(this.water.group);
+      this.water.dispose();
+      this.water = null;
+    }
     // Anything flagged `shared` is a process-wide singleton that outlives this
     // level — the one wumpa geometry/material/texture behind every apple in
     // the game (see src/wumpa.ts), which the player's fruit pool and the HUD
     // icon are still drawing after this level is gone. Freeing it here would
     // yank the GPU buffers out from under them on every level switch.
+    const disposedTextures = new Set<THREE.Texture>();
     const disposeMat = (x: THREE.Material): void => {
       if (x.userData.shared) return;
-      const map = (x as THREE.MeshLambertMaterial).map;
-      if (map) map.dispose();
+      // Standard/physical shoreline materials own more than `map` (normal,
+      // AO, roughness). Dispose every direct texture slot once; water shader
+      // uniforms and render targets are owned by its explicit dispose above.
+      for (const value of Object.values(x)) {
+        const texture = value as THREE.Texture | null;
+        if (!texture?.isTexture || disposedTextures.has(texture)) continue;
+        disposedTextures.add(texture);
+        texture.dispose();
+      }
       x.dispose();
     };
     this.root.traverse((o) => {
@@ -4728,11 +4741,7 @@ export class Level {
       s.tex.offset.x = (s.tex.offset.x + s.su * dt) % 1;
       s.tex.offset.y = (s.tex.offset.y + s.sv * dt) % 1;
     }
-    // The sea moves by advancing one clock. Wrapped at 1000s: the swells all
-    // have irrational-ish periods, so nothing snaps, and a float stays precise.
     for (const p of this.warpPads) p.update(dt);
-    for (const m of this.seaMats)
-      m.uniforms.uTime.value = (m.uniforms.uTime.value + dt) % 1000;
 
     this.updateEnemies(dt);
     this.updateProjectiles(dt);
@@ -5312,24 +5321,24 @@ export class Level {
   //    of the first pass were why the opening seconds stuttered.
   private buildDescent(): void {
     this.batchDecor = true;
-    this.killY = -10; // the bay is the pit: a few metres under the surface
+    this.killY = -12; // Unity Beachfront backup below the deep-water trigger
     this.skyPreset = "coast"; // the beach painting, horizon pinned to sea level
-    this.noFogLevel = true; // only the SEA fades — the world stays crisp (stripFog)
+    this.noFogLevel = false; // Unity Beachfront applies its linear coast fog to the world
     this.theme = {
       skyTop: "#3f8fd8",
-      skyBottom: "#eaf6fa", // bright noon haze over open water
+      skyBottom: "#94c9e0",
       sunColorHex: "#fff8e0",
       sunU: 0.55,
       sunV: 0.26,
       stars: false,
-      fog: 0xdfeef2,
-      fogNear: 110,
-      fogFar: 950, // sea-only haze: the level itself is fog-exempt (see stripFog)
-      hemiSky: 0xd8eef8,
-      hemiGround: 0x7a9a88, // sand + sea bounce
-      hemiI: 1.15,
-      sunColor: 0xfff2d0,
-      sunI: 1.3,
+      fog: 0x94c9e0,
+      fogNear: 190,
+      fogFar: 780,
+      hemiSky: 0x7ab0d1,
+      hemiGround: 0x3d4d57,
+      hemiI: 1,
+      sunColor: 0xffe8bd,
+      sunI: 1.12,
     };
 
     // ---- the road line ----------------------------------------------------
@@ -6100,23 +6109,58 @@ export class Level {
     for (let i = 0; i < NSHORE; i++) {
       const s = BEACH_S0 + ((BEACH_S1 - BEACH_S0) * i) / (NSHORE - 1);
       const p = lotAt(shoreA(s), s);
-      shore.push({ x: p.x, z: p.z, sx: Rv.x, sz: Rv.z, beachSlope: 0.055, bedSlope: 0.13 });
+      shore.push({
+        x: p.x,
+        z: p.z,
+        sx: Rv.x,
+        sz: Rv.z,
+        beachSlope: 0.055,
+        bedSlope: 0.08,
+      });
     }
+    const SEA_LEVEL = -0.36;
     {
-      const rows = 9;
+      // Unity Beachfront's continuous bank: 16 submerged shelf strips and 48
+      // dry-bank strips, with a real waterline at the shared sea height. The
+      // old nine-row web beach existed mainly to feed its moving shoreline
+      // solver; this mesh is now the coastline collision and the visible bed.
+      const submergedSegments = 16;
+      const bankSegments = 48;
+      const rows = submergedSegments + bankSegments + 1;
       const posArr: number[] = [];
+      const uvArr: number[] = [];
       const idx: number[] = [];
+      const shoreArc: number[] = [0];
+      for (let i = 1; i < shore.length; i++) {
+        shoreArc.push(
+          shoreArc[i - 1] +
+            Math.hypot(shore[i].x - shore[i - 1].x, shore[i].z - shore[i - 1].z),
+        );
+      }
       for (let i = 0; i < NSHORE; i++) {
         const s = BEACH_S0 + ((BEACH_S1 - BEACH_S0) * i) / (NSHORE - 1);
         const aSh = shoreA(s);
         const span = aSh - inlandA(s);
         for (let r = 0; r < rows; r++) {
-          const dIn = r < 7 ? span * (1 - r / 6.4) : r === 7 ? -5 : -11;
+          const dIn =
+            r <= submergedSegments
+              ? THREE.MathUtils.lerp(-16, 0, r / submergedSegments)
+              : THREE.MathUtils.lerp(
+                  0,
+                  span,
+                  (r - submergedSegments) / bankSegments,
+                );
           const p = lotAt(aSh - dIn, s);
-          let h = 0.15 + (dIn > 0 ? dIn * 0.055 : dIn * 0.13);
+          let h = SEA_LEVEL + (dIn >= 0 ? dIn * 0.055 : dIn * 0.08);
           const f = span > 0 ? dIn / span : 0;
-          h = THREE.MathUtils.lerp(h, lotTop - 0.12, THREE.MathUtils.smoothstep(f, 0.55, 1));
+          h = THREE.MathUtils.lerp(
+            h,
+            lotTop - 0.12,
+            THREE.MathUtils.smoothstep(f, 0.55, 1),
+          );
           posArr.push(p.x, h, p.z);
+          // Unity orients its 5.4m sand tile in the shoreline frame.
+          uvArr.push(-dIn / 5.4, shoreArc[i] / 5.4);
         }
       }
       for (let i = 0; i < NSHORE - 1; i++)
@@ -6125,14 +6169,21 @@ export class Level {
           idx.push(k, k + rows, k + 1, k + 1, k + rows, k + rows + 1);
         }
       const g = new THREE.BufferGeometry();
-      g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(posArr), 3));
+      g.setAttribute(
+        "position",
+        new THREE.BufferAttribute(new Float32Array(posArr), 3),
+      );
+      const sandUv = new THREE.BufferAttribute(new Float32Array(uvArr), 2);
+      g.setAttribute("uv", sandUv);
+      g.setAttribute("uv1", sandUv.clone());
+      g.setAttribute("uv2", sandUv.clone());
       g.setIndex(idx);
       g.computeVertexNormals();
-      // winding depends on the lot frame's handedness — a down-facing beach
-      // is invisible to lighting AND to the ground raycast (you fall through)
+      // Winding depends on the lot frame's handedness — a down-facing beach
+      // is invisible to lighting AND to the ground raycast (you fall through).
       const nrm = g.getAttribute("normal") as THREE.BufferAttribute;
       if (nrm.getY(0) < 0) {
-        const ia = g.getIndex()!.array as Uint32Array;
+        const ia = g.getIndex()!.array;
         for (let k = 0; k < ia.length; k += 3) {
           const tmp = ia[k + 1];
           ia[k + 1] = ia[k + 2];
@@ -6141,8 +6192,68 @@ export class Level {
         g.getIndex()!.needsUpdate = true;
         g.computeVertexNormals();
       }
-      const sand = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: 0xe2d0a4 }));
-      sand.name = "beach sand";
+      let sand: THREE.Mesh | null = null;
+      let loadedSandTextures = 0;
+      let failedSandTexture = false;
+      const settleSandTexture = (): void => {
+        loadedSandTextures++;
+        if (
+          sand &&
+          !failedSandTexture &&
+          loadedSandTextures === 3 &&
+          sand.parent
+        )
+          sand.visible = true;
+      };
+      const sandTexture = (file: string, srgb = false): THREE.Texture => {
+        const texture = new THREE.TextureLoader().load(
+          import.meta.env.BASE_URL + `water/matrixrex/${file}`,
+          settleSandTexture,
+          undefined,
+          () => {
+            failedSandTexture = true;
+            settleSandTexture();
+          },
+        );
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.colorSpace = srgb
+          ? THREE.SRGBColorSpace
+          : THREE.NoColorSpace;
+        return texture;
+      };
+      const sandMaterial = new THREE.MeshStandardMaterial({
+        map: sandTexture("sand-color.png", true),
+        normalMap: sandTexture("sand-normal.png"),
+        normalScale: new THREE.Vector2(0.5, 0.5),
+        aoMap: sandTexture("sand-mask.png"),
+        aoMapIntensity: 1,
+        metalness: 0,
+        roughness: 1,
+        // Unity's Trilight ambient keeps the yellow bed luminous even where
+        // the cliff blocks its warm key. Three has no equator ambient band,
+        // so a restrained material lift restores that approved beach value.
+        emissive: 0x503a10,
+        emissiveIntensity: 0.35,
+      });
+      // Unity's packed terrain mask stores ambient occlusion in G; Three's
+      // stock Standard shader assumes R for ORM. Swizzle just that lookup.
+      sandMaterial.onBeforeCompile = (shader) => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "texture2D( aoMap, vAoMapUv ).r",
+          "texture2D( aoMap, vAoMapUv ).g",
+        );
+      };
+      sandMaterial.customProgramCacheKey = () => "unity-sand-ao-green-v1";
+      sand = new THREE.Mesh(
+        g,
+        sandMaterial,
+      );
+      sand.name = "Showcase1ContinuousSandSeabed";
+      sand.userData.noShadow = true;
+      sand.visible = !failedSandTexture && loadedSandTextures === 3;
       this.root.add(sand);
       this.groundMeshes.push(sand);
     }
@@ -6156,21 +6267,139 @@ export class Level {
       const s = THREE.MathUtils.clamp(dx * D.x + dz * D.z, -120, 210);
       const aSh = shoreA(s);
       const dIn = aSh - a;
-      let h = 0.15 + (dIn > 0 ? dIn * 0.055 : dIn * 0.13);
+      let h = SEA_LEVEL + (dIn >= 0 ? dIn * 0.055 : dIn * 0.08);
       const span = aSh - inlandA(s);
       const f = span > 0 ? dIn / span : 0;
       h = THREE.MathUtils.lerp(h, lotTop - 0.12, THREE.MathUtils.smoothstep(f, 0.55, 1));
       return h;
     };
+
+    // Unity's ocean is visual-only. Coast traversal is owned by a submerged
+    // sand shelf, a solid curved edge after 3.5m of legal shallows, and a
+    // deeper death fallback for tunnelling. Reproduce that contract instead
+    // of letting the rendered wave height become gameplay collision.
+    const coastPoint = (
+      index: number,
+      nextIndex: number,
+      fraction: number,
+      seaward: number,
+    ): THREE.Vector3 => {
+      const a = shore[index];
+      const b = shore[nextIndex];
+      let sx = THREE.MathUtils.lerp(a.sx, b.sx, fraction);
+      let sz = THREE.MathUtils.lerp(a.sz, b.sz, fraction);
+      const sl = Math.hypot(sx, sz) || 1;
+      sx /= sl;
+      sz /= sl;
+      return new THREE.Vector3(
+        THREE.MathUtils.lerp(a.x, b.x, fraction) + sx * seaward,
+        0,
+        THREE.MathUtils.lerp(a.z, b.z, fraction) + sz * seaward,
+      );
+    };
+    const hazardNear: THREE.Vector3[] = [];
+    const hazardFar: THREE.Vector3[] = [];
+    for (let i = 0; i < shore.length - 1; i++) {
+      const span = Math.hypot(
+        shore[i + 1].x - shore[i].x,
+        shore[i + 1].z - shore[i].z,
+      );
+      // Box3 is the engine's authored wall primitive. Half-metre sampling
+      // keeps its cardinal broadphase within the source prism's 0.125m skin
+      // closely enough that the continuous curve does not feel stair-stepped.
+      const steps = Math.max(1, Math.ceil(span / 0.5));
+      for (let step = 0; step < steps; step++) {
+        const u0 = step / steps;
+        const u1 = (step + 1) / steps;
+        const e0 = coastPoint(i, i + 1, u0, 3.5);
+        const e1 = coastPoint(i, i + 1, u1, 3.5);
+        const edge = new THREE.Box3().setFromPoints([e0, e1]);
+        edge.min.x -= 0.125;
+        edge.max.x += 0.125;
+        edge.min.z -= 0.125;
+        edge.max.z += 0.125;
+        edge.min.y = -12;
+        edge.max.y = 16;
+        this.walls.push(edge);
+        this.softWalls.add(edge);
+
+        hazardNear.push(coastPoint(i, i + 1, u0, 5.75));
+        hazardFar.push(coastPoint(i, i + 1, u0, 33.75));
+        if (i === shore.length - 2 && step === steps - 1) {
+          hazardNear.push(coastPoint(i, i + 1, u1, 5.75));
+          hazardFar.push(coastPoint(i, i + 1, u1, 33.75));
+        }
+      }
+    }
+    // One Unity-shaped polygon, not broad AABB slices: the Box3 is only a
+    // cheap reject and pitMissesPoly performs the exact curved narrow phase.
+    const hazardFootprint = [
+      ...hazardNear,
+      ...hazardFar.slice().reverse(),
+    ];
+    const deepWater = new THREE.Box3().setFromPoints(hazardFootprint);
+    deepWater.min.y = -2.81;
+    deepWater.max.y = -0.81;
+    const hazardCenter = deepWater.getCenter(new THREE.Vector3());
+    this.pitPolyByBox.set(deepWater, {
+      cx: hazardCenter.x,
+      cz: hazardCenter.z,
+      pts: hazardFootprint.map((point) => [
+        point.x - hazardCenter.x,
+        point.z - hazardCenter.z,
+      ]),
+    });
+    this.pitBoxes.push(deepWater);
+    // End caps stop a shallow-water line from slipping around either end of
+    // the continuous edge. Deep-water fallback still owns anything beyond.
+    for (const [index, nextIndex, endpointS] of [
+      [0, 1, BEACH_S0],
+      [shore.length - 1, shore.length - 2, BEACH_S1],
+    ] as const) {
+      const a = shore[index];
+      const b = shore[nextIndex];
+      let tx = b.x - a.x;
+      let tz = b.z - a.z;
+      const tl = Math.hypot(tx, tz) || 1;
+      tx /= tl;
+      tz /= tl;
+      const corners: THREE.Vector3[] = [];
+      const landward = inlandA(endpointS) - shoreA(endpointS) - 0.25;
+      for (const d of [landward, 3.625])
+        for (const along of [-0.25, 0.25])
+          corners.push(
+            new THREE.Vector3(
+              a.x + a.sx * d + tx * along,
+              0,
+              a.z + a.sz * d + tz * along,
+            ),
+          );
+      const cap = new THREE.Box3().setFromPoints(corners);
+      cap.min.y = -12;
+      cap.max.y = 16;
+      this.walls.push(cap);
+      this.softWalls.add(cap);
+    }
     this.water = new CoastWater({
       shore,
-      seaLevel: 0,
+      seaLevel: SEA_LEVEL,
       shoreDirX: -Rv.x,
       shoreDirZ: -Rv.z,
       course: this.lanePts.map((q) => ({ x: q.x, z: q.z })),
       terrainHeight: beachHeight,
     });
     this.root.add(this.water.group);
+    // Focused visual/physics review route: starts on dry sand ten metres from
+    // the Unity waterline without changing the ordinary course spawn.
+    if (new URLSearchParams(window.location.search).has("oceanreview")) {
+      const review = lotAt(shoreA(0) - 10, 0);
+      this.spawnPos.set(
+        review.x,
+        beachHeight(review.x, review.z) + 0.6,
+        review.z,
+      );
+      this.currentSpawn.copy(this.spawnPos);
+    }
     // palms: a lean trunk and a whorl of drooping fronds, PS1 cheap
     const palmTrunkGeo = new THREE.CylinderGeometry(0.14, 0.26, 5.2, 5);
     const palmTrunkMat = new THREE.MeshLambertMaterial({ color: 0x8a6a44 });
@@ -8474,224 +8703,6 @@ export class Level {
 
   // ---------------------------------------------------------- visual kit --
 
-  // ---- THE SEA -----------------------------------------------------------
-  //
-  // Open water, drawn by arithmetic instead of by a bitmap.
-  //
-  // It used to be a 128px canvas tiled 171 times across a 2400-unit plane. One
-  // texel covered about 11cm of sea, so anywhere near the surface the whole
-  // thing turned to soft mush — the magnified-bitmap look, which is NOT the
-  // look this is after. The machines being imitated never had that problem:
-  // their water was maths evaluated at the corners and smeared smooth across
-  // the polygon by the rasteriser, so it stayed clean however close you got.
-  //
-  // Same idea, one step finer — three crossing swells summed per PIXEL. No
-  // texture, no tiling, no resolution: exact at any distance, from eleven
-  // sines on two triangles. It uploads nothing and it never needs a mipmap.
-  //
-  // The trick worth knowing is fwidth(). The bright crests are the contour
-  // where the swell field crosses a level, and the contour's width is taken
-  // from that field's own screen-space gradient — hair-thin up close, and as
-  // the sea tilts away toward the horizon and one pixel starts spanning whole
-  // waves, the line widens to exactly the average it ought to be. So it
-  // neither blocks up near nor boils into moiré far. That is the part a
-  // stretched bitmap cannot do at any price.
-  private seaSurface(y: number, cx: number, cz: number, size: number): void {
-    const uniforms = THREE.UniformsUtils.merge([
-      THREE.UniformsLib.fog,
-      {
-        uTime: { value: 0 },
-        uDeep: { value: new THREE.Color("#07376e") }, // trough: open-ocean navy
-        uMid: { value: new THREE.Color("#1276b8") },
-        uBright: { value: new THREE.Color("#54d2e2") }, // sunlit face of a swell
-        uFoam: { value: new THREE.Color("#e8fdff") }, // crest glint
-      },
-    ]);
-    const mat = new THREE.ShaderMaterial({
-      uniforms,
-      fog: true, // the horizon haze is the level's own fog, same as everything else
-      vertexShader: /* glsl */ `
-        varying vec2 vSea;
-        #include <fog_pars_vertex>
-        void main() {
-          vec4 wp = modelMatrix * vec4(position, 1.0);
-          vSea = wp.xz;                       // world metres: the pattern is pinned to the world, not to UVs
-          vec4 mvPosition = viewMatrix * wp;
-          gl_Position = projectionMatrix * mvPosition;
-          #include <fog_vertex>
-        }`,
-      fragmentShader: /* glsl */ `
-        uniform float uTime;
-        uniform vec3 uDeep, uMid, uBright, uFoam;
-        varying vec2 vSea;
-        #include <fog_pars_fragment>
-
-        // Three swells crossing at angles, wavelengths and speeds that never
-        // line back up, so the sea has no period you can catch.
-        float swell(vec2 p, float t) {
-          float h = sin(dot(p, vec2( 0.42,  0.91)) * 0.075 + t * 0.55);
-          h += sin(dot(p, vec2(-0.83,  0.56)) * 0.113 - t * 0.41) * 0.80;
-          h += sin(dot(p, vec2( 0.97, -0.24)) * 0.181 + t * 0.83) * 0.55;
-          return h * 0.4255;                  // back into roughly -1..1
-        }
-
-        void main() {
-          float t = uTime;
-          // Drag the field through a slow copy of itself. Plain crossed sines
-          // read as corrugated iron; warped ones read as water.
-          vec2 warp = vec2(swell(vSea * 0.6 + 11.0, t * 0.50),
-                           swell(vSea * 0.6 - 23.0, t * 0.43)) * 6.0;
-          vec2 q = vSea + warp;
-
-          // THE RADIAL HALF — the part that makes it read as plasma rather
-          // than as swell. Plane waves alone give parallel ribbons; adding
-          // sin(distance-to-a-point) bends the level sets closed, and closed
-          // level sets are the lava-lamp pools.
-          //
-          // The centres crawl round slow Lissajous loops, so no ring ever sits
-          // still long enough to read as a stone dropped in the water. Far
-          // from a centre the term flattens into just another plane wave, so
-          // it degrades gracefully across a 2400-unit plane instead of leaving
-          // a bullseye at the origin and nothing anywhere else.
-          vec2 c1 = vec2(sin(t * 0.11), cos(t * 0.13)) * 130.0;
-          vec2 c2 = vec2(cos(t * 0.07), sin(t * 0.10)) * 210.0 + vec2(160.0, -95.0);
-          float f = swell(q, t);
-          f += sin(length(q - c1) * 0.125 - t * 0.55) * 0.85;
-          f += sin(length(q - c2) * 0.098 + t * 0.42) * 0.70;
-          f *= 0.42;                          // back to roughly -1..1
-
-          // Body of the water: deep in the troughs, lifting through mid to a
-          // sunlit turquoise where the interference piles up.
-          float lit = f * 0.5 + 0.5;
-          vec3 col = mix(uDeep, uMid, smoothstep(0.04, 0.60, lit));
-          col = mix(col, uBright, smoothstep(0.46, 0.98, lit) * 0.85);
-
-          // THE POOLS. These are level sets of the 2D field, so they close
-          // into blobs — which is exactly the look wanted. The whole trick is
-          // WIDTH: at hairline width a closed contour reads as an oil slick,
-          // at pool width it reads as light gathering on the surface. So the
-          // floor is large and does the shaping, and fwidth only adds what the
-          // pixel needs on top to stay clean.
-          float wPool = fwidth(f) * 1.5 + 0.30;
-          float pool = 1.0 - smoothstep(0.0, wPool, abs(f - 0.36));
-          // A second, tighter ring just inside it — plasma's banding, and what
-          // gives each pool a lit rim instead of a flat fill.
-          float wRim = fwidth(f) * 1.5 + 0.10;
-          float rim = 1.0 - smoothstep(0.0, wRim, abs(f - 0.66));
-
-          // DETAIL FALLOFF. fwidth of the field is how much of the pattern a
-          // pixel can actually resolve. Past a point the bands stop being
-          // features and start being clutter, so fade them out — detail
-          // arrives as you come down to the water and dissolves into flat tone
-          // beyond, which is what the eye expects of a sea.
-          float det = 1.0 - smoothstep(0.25, 0.95, fwidth(f));
-
-          col = mix(col, uBright, pool * 0.45 * det);
-          col = mix(col, uFoam, rim * 0.22 * det);
-
-          gl_FragColor = vec4(col, 1.0);
-          #include <fog_fragment>
-        }`,
-    });
-    // Two triangles. Every bit of the detail is in the pixel maths, so there
-    // is nothing to gain from subdividing it.
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
-    mesh.rotation.x = -Math.PI / 2;
-    mesh.position.set(cx, y, cz);
-    mesh.userData.noShadow = true; // an effect, not a surface — and it is 2400 units wide
-    this.root.add(mesh);
-    this.seaMats.push(mat);
-  }
-
-  // Animated pit floor: scrolling lava or drifting void haze (water goes to
-  // seaSurface, which needs no texture at all).
-  private pitPlane(
-    kind: "water" | "lava" | "void",
-    y: number,
-    cx: number,
-    cz: number,
-    size = 1400,
-  ): void {
-    if (kind === "water") {
-      this.seaSurface(y, cx, cz, size);
-      return;
-    }
-    const canvas = document.createElement("canvas");
-    const S = 64;
-    canvas.width = S;
-    canvas.height = S;
-    const ctx = canvas.getContext("2d")!;
-    let su = 0.004;
-    let sv = 0.002;
-    if (kind === "lava") {
-      ctx.fillStyle = "#1c0a08";
-      ctx.fillRect(0, 0, 64, 64);
-      // sparse thin veins at partial alpha: the chase cam fills the frame
-      // with this plane, so crust must dominate and embers stay accents
-      ctx.strokeStyle = "rgba(255,106,34,0.6)";
-      ctx.lineWidth = 1;
-      for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * 64, 0);
-        let px = Math.random() * 64;
-        for (let s = 1; s <= 4; s++) {
-          px += (Math.random() - 0.5) * 26;
-          ctx.lineTo(px, s * 16);
-        }
-        ctx.stroke();
-      }
-      ctx.fillStyle = "rgba(90,38,24,0.7)"; // cooled crust plates
-      for (let i = 0; i < 9; i++) {
-        ctx.beginPath();
-        ctx.ellipse(
-          Math.random() * 64,
-          Math.random() * 64,
-          6 + Math.random() * 9,
-          4 + Math.random() * 6,
-          Math.random() * 3,
-          0,
-          7,
-        );
-        ctx.fill();
-      }
-      ctx.fillStyle = "#ffb050";
-      for (let i = 0; i < 6; i++)
-        ctx.fillRect(Math.random() * 62, Math.random() * 62, 2, 2);
-      su = 0.0035;
-      sv = 0.0018;
-    } else {
-      ctx.fillStyle = "#0c0a12";
-      ctx.fillRect(0, 0, 64, 64);
-      ctx.fillStyle = "rgba(60,50,80,0.5)";
-      for (let i = 0; i < 8; i++) {
-        ctx.beginPath();
-        ctx.ellipse(
-          Math.random() * 64,
-          Math.random() * 64,
-          8 + Math.random() * 10,
-          5 + Math.random() * 6,
-          0,
-          0,
-          7,
-        );
-        ctx.fill();
-      }
-      su = 0.0016;
-      sv = 0.001;
-    }
-    const tex = Level.finishTex(new THREE.CanvasTexture(canvas));
-    // one tile per ~14u: veins/waves read as surface detail, not spaghetti,
-    // even when the tilted boulder-chase camera fills the frame with the pit
-    tex.repeat.set(size / 14, size / 14);
-    const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(size, size),
-      new THREE.MeshBasicMaterial({ map: tex }),
-    );
-    mesh.rotation.x = -Math.PI / 2;
-    mesh.position.set(cx, y, cz);
-    this.root.add(mesh);
-    this.scrollTexes.push({ tex, su, sv });
-  }
 
   // A fallen log across (part of) the path: hop it. Solid, never breaks.
   private log(x0: number, x1: number, y: number, z: number): void {
@@ -13292,7 +13303,6 @@ export class Level {
     this.endWall(0.2, 0);
 
     this.killY = -26;
-    this.pitPlane("water", -34, 0, -420, 2400);
 
     // CAMERA SPINE: the ribbon's own centerline is the camera lane — the rig
     // and the control frame ease along its tangent, so screen-up is always
@@ -13316,6 +13326,37 @@ export class Level {
     lane.push({ x: 0, y: lane[lane.length - 1].y, z: -874 });
     this.lanePts = lane;
     this.measureLane();
+
+    // The old two-triangle plasma sea is retired with CoastWater. Slipstream
+    // now uses the same audited Unity two-band material and GPU displacement;
+    // its low placement remains scenery only and killY still owns gameplay.
+    this.water = new CoastWater({
+      shore: [
+        {
+          x: -620,
+          z: 780,
+          sx: 1,
+          sz: 0,
+          beachSlope: 0,
+          bedSlope: 0,
+        },
+        {
+          x: -620,
+          z: -1620,
+          sx: 1,
+          sz: 0,
+          beachSlope: 0,
+          bedSlope: 0,
+        },
+      ],
+      seaLevel: -34,
+      shoreDirX: 1,
+      shoreDirZ: 0,
+      course: lane.map((point) => ({ x: point.x, z: point.z })),
+      terrainHeight: () => -80,
+      quality: "lite",
+    });
+    this.root.add(this.water.group);
   }
 
   private endWall(deckY: number, cx = 0): void {

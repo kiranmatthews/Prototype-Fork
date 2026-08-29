@@ -6968,6 +6968,13 @@ export class Player {
         // tripped on) must pass over the top, not get pinned at the face.
         if (this.isBailing && !this.grounded && w.max.y < this.pos.y + 0.35) continue;
         if (this.playerBox.intersectsBox(w)) {
+          if (level.softWalls.has(w)) {
+            // Ocean containment is a gameplay boundary, not an invisible
+            // stunt surface or crash obstacle. Stop cleanly on the legal
+            // shallows side: no wallride, ledge grab, impact bail or fling.
+            this.pushOutOf(w);
+            break;
+          }
           if (this.tryWallride(w)) break; // stuck to the wall — ride it
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
           const bx = this.pos.x;
@@ -6981,6 +6988,7 @@ export class Player {
           // re-presses) — falling a hair off the face must still offer the
           // grab, or those jumps slide down 3cm out of reach forever.
           this.state === 'air' &&
+          !level.softWalls.has(w) &&
           this.vVel <= 1.5 &&
           HANG_BOX.copy(this.playerBox).expandByScalar(0.14).intersectsBox(w) &&
           this.tryLedgeGrab(w, level)

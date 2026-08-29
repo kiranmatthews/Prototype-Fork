@@ -34,11 +34,14 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls } from "./swirls";
 import { fieldSwirls } from "./swirlfield";
+import { CoastPostRenderer } from "./coastpost";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
 // internal resolution — slow frames desync the suite's wall-clock scripting.
 const LITE_RENDER = window.location.search.includes("lite");
+const NO_COAST_POST = window.location.search.includes("nopost");
+const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 // NATIVE RESOLUTION. The device pixel ratio is the baseline — on a Retina
 // panel that is 2x the CSS grid, and rendering below it was the single biggest
@@ -112,13 +115,17 @@ sun.shadow.normalBias = 0.035;
 // The sun rides a fixed offset from whatever it is lighting, so the frustum
 // travels with play and the light direction never changes.
 const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
+// Unity Beachfront directional light rotation (40.1, 98.9, 0), converted to
+// a Three light-position offset opposite its forward ray.
+const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, 11);
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
+  const offset = activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
-    focusX + SUN_OFFSET.x,
-    focusY + SUN_OFFSET.y,
-    focusZ + SUN_OFFSET.z,
+    focusX + offset.x,
+    focusY + offset.y,
+    focusZ + offset.z,
   );
   sun.shadow.camera.updateProjectionMatrix();
 }
@@ -310,27 +317,27 @@ const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
   coast: {
     file: "sky-coast.png",
     label: "coast",
-    fog: 0xdfeef2,
-    fogFarCap: 950, // only the SEA fogs on the coast — see the fog policy in level.ts
-    sunTint: 0xfff4e0,
-    sunK: 0.25,
-    sunMul: 1.15,
-    groundTint: 0xb9c2c8,
-    groundK: 0.25,
-    hemiTint: 0xdcebff,
-    hemiK: 0.45,
-    hemiMul: 1.15,
-    fillTint: 0xcfe2ff,
-    fillK: 0.5,
-    fillMul: 0.26,
+    fog: 0x94c9e0,
+    fogFarCap: 780,
+    sunTint: 0xffe8bd,
+    sunK: 1,
+    sunMul: 1,
+    groundTint: 0x3d4d57,
+    groundK: 1,
+    hemiTint: 0x7ab0d1,
+    hemiK: 1,
+    hemiMul: 1,
+    fillTint: 0x7a9694, // Unity's equator ambient term
+    fillK: 1,
+    fillMul: 0.32,
     top: "#3f8fd8",
     bottom: "#e9f0f4",
     stars: false,
     sunHex: "#fffdf2",
     imgH: 941,
-    horizonPx: 626, // the artist's own call for this painting
+    horizonPx: 630,
     seaHorizon: true,
-    farPlane: 1000,
+    farPlane: 900,
   },
 };
 
@@ -369,8 +376,23 @@ skyMist.frustumCulled = false;
 skyMist.visible = false; // until a painting is actually on it
 scene.add(skyMist);
 
-const cfgSkyTex = (t: THREE.Texture, hv = SKY_HORIZON_V): void => {
+const cfgSkyTex = (
+  t: THREE.Texture,
+  hv = SKY_HORIZON_V,
+  unityCoast = false,
+): void => {
   t.colorSpace = THREE.SRGBColorSpace;
+  if (unityCoast) {
+    // Unity's coast shader maps the full painting over 180 degrees, walks it
+    // backward over the other half, rotates the join 90 degrees, and applies
+    // one fixed latitude offset. Preserve that instead of the old web dome's
+    // seam blur and camera-height horizon correction.
+    t.wrapS = THREE.MirroredRepeatWrapping;
+    t.wrapT = THREE.ClampToEdgeWrapping;
+    t.repeat.set(2, 1);
+    t.offset.set(0.25, -0.14450052);
+    return;
+  }
   // Plain repeat on a made-seamless image (see makeSeamless): a continuous wrap
   // with no hard seam AND — unlike a mirrored wrap — no bilateral fold axis.
   t.wrapS = THREE.RepeatWrapping;
@@ -412,9 +434,18 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
     H = img.naturalHeight;
   const hv = presetHorizonV(p);
   const hpx = SKY_PRESETS[p].horizonPx ?? SKY_HORIZON_PX;
-  const base = makeSeamless(img); // tileable ONCE, both layers share it
+  const unityCoast = p === "coast";
+  const base = unityCoast
+    ? (() => {
+        const canvas = document.createElement("canvas");
+        canvas.width = W;
+        canvas.height = H;
+        canvas.getContext("2d")!.drawImage(img, 0, 0);
+        return canvas;
+      })()
+    : makeSeamless(img); // tileable ONCE, both layers share it
   const bg = new THREE.CanvasTexture(base);
-  cfgSkyTex(bg, hv);
+  cfgSkyTex(bg, hv, unityCoast);
 
   const cFg = document.createElement("canvas");
   cFg.width = W;
@@ -431,7 +462,7 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
   fx.fillRect(0, 0, W, H);
   fx.globalCompositeOperation = "source-over";
   const mist = new THREE.CanvasTexture(cFg);
-  cfgSkyTex(mist, hv); // mist sits at its natural below-horizon position (no lift)
+  cfgSkyTex(mist, hv, unityCoast); // mist sits at its natural below-horizon position
   return { bg, mist };
 }
 
@@ -443,6 +474,7 @@ function buildSkyLayers(img: HTMLImageElement, p: SkyPreset): SkyLayers {
 function updateSeaHorizon(): void {
   const P = SKY_PRESETS[activeSky];
   if (!P.seaHorizon) return;
+  if (activeSky === "coast") return; // Unity owns one fixed panorama horizon
   const hv = presetHorizonV(activeSky);
   // Height is CLAMPED: the true angle from the mountain road (430m up) shoved
   // the painting more than half a texture down and the backdrop fell apart.
@@ -683,6 +715,7 @@ function applyTheme(): void {
   const t = level.theme;
   const P = SKY_PRESETS[level.skyPreset] ?? SKY_PRESETS[DEFAULT_SKY];
   activeSky = level.skyPreset;
+  configureCoastPost(level.skyPreset === "coast" && !NO_COAST_POST);
   loadSky(activeSky); // no-op once cached or known missing
 
   // TIME OF DAY drives the atmosphere; the level's theme still colours it.
@@ -719,6 +752,7 @@ function applyTheme(): void {
   sun.color.set(t.sunColor);
   tint(sun.color, P.sunTint, P.sunK);
   sun.intensity = t.sunI * P.sunMul;
+  sun.shadow.intensity = activeSky === "coast" ? 0.62 : 1;
   // the counter-light stays a fraction of the sky light so it never competes
   fill.color.set(t.hemiSky);
   tint(fill.color, P.fillTint, P.fillK);
@@ -785,6 +819,28 @@ const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 const cam2F = new THREE.Vector3(0, 0, -1);
 let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
 const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
+let coastPost: CoastPostRenderer | null = null;
+function configureCoastPost(enabled: boolean): void {
+  if (!enabled) {
+    coastPost?.dispose();
+    coastPost = null;
+    return;
+  }
+  if (coastPost) return;
+  coastPost = new CoastPostRenderer(renderer, scene, camera, {
+    enabled: true,
+    lite: LITE_RENDER || NO_COAST_POST,
+    // Unity's post profile runs at the Game-view resolution, not Retina 2x.
+    pixelRatio: 1,
+    multisample: true,
+  });
+}
+
+function renderPrimaryScene(dt = 0, prepareOcean = true): void {
+  if (prepareOcean) level.water?.renderPasses(renderer, scene, camera);
+  if (coastPost) coastPost.render(dt);
+  else renderer.render(scene, camera);
+}
 
 function resize(): void {
   const w = window.innerWidth;
@@ -800,7 +856,11 @@ function resize(): void {
   // Native resolution, always. The headless smoke mode is the one exception:
   // it renders at half size purely to keep the software rasteriser quick.
   const rs = LITE_RENDER ? 0.5 : 1;
-  renderer.setSize(Math.round(w * rs), Math.round(h * rs), false);
+  const renderW = Math.round(w * rs);
+  const renderH = Math.round(h * rs);
+  renderer.setSize(renderW, renderH, false);
+  coastPost?.setPixelRatio(1);
+  coastPost?.setSize(renderW, renderH);
   renderer.domElement.style.imageRendering = "";
   camera.aspect = split2p ? w / (h / 2) : w / h;
   camera.updateProjectionMatrix();
@@ -826,7 +886,11 @@ const ui = new UI();
 const recorder = new Recorder();
 const replayer = new Replayer();
 adoptLegacyLevels(); // one-shot: old single-slot edits become real user levels
+const oceanReview = new URLSearchParams(window.location.search).has(
+  "oceanreview",
+);
 let current: LevelEntry =
+  (oceanReview ? findLevel("descent") : null) ??
   findLevel(localStorage.getItem("solProtoLevelId") ?? "") ??
   findLevel(DEFAULT_LEVEL_ID)!;
 let level = new Level(scene, current);
@@ -2033,7 +2097,7 @@ function frame(): void {
     // want to judge a shape against, and nothing moves under the cursor while
     // you are trying to click a polygon.
     studio.frame();
-    renderer.render(scene, camera);
+    renderPrimaryScene(dt);
     return;
   }
   input.update();
@@ -2071,7 +2135,7 @@ function frame(): void {
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
     updateSeaHorizon();
-    renderer.render(scene, camera);
+    renderPrimaryScene(dt);
     return;
   }
 
@@ -2092,7 +2156,7 @@ function frame(): void {
   if (paused) {
     input.consumeEdges(); // presses while paused must not fire on resume
     acc = 0;
-    renderer.render(scene, camera);
+    renderPrimaryScene(dt);
     return;
   }
 
@@ -2159,6 +2223,14 @@ function frame(): void {
   // source is the ACTUAL level skybox, so hand it the active sky art (a
   // string compare per frame; reloads only when the sky really changes).
   if (level.water) {
+    level.water.setQuality(
+      level.skyPreset === "coast" &&
+      !split2p &&
+      !LITE_RENDER &&
+      !NO_OCEAN_PASSES
+        ? "full"
+        : "lite",
+    );
     level.water.setSkyUrl(
       import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
       SKY_PRESETS[activeSky].fog,
@@ -2213,6 +2285,12 @@ function frame(): void {
   // to stay sharp, so it has to travel with them.
   updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
 
+  // Unity Beachfront render contract: low-resolution mirrored capture first,
+  // then opaque color+depth for refraction/intersection/caustics, then the
+  // main water draw and coast-only post chain below. In lite/split mode the
+  // ocean's quality switch makes these hooks a cheap feature-disable path.
+  level.water?.renderPasses(renderer, scene, camera);
+
   if (split2p && p2) {
     const dw = renderer.domElement.width;
     const dh = renderer.domElement.height;
@@ -2226,7 +2304,7 @@ function frame(): void {
     renderer.setScissorTest(false);
     renderer.setViewport(0, 0, dw, dh);
   } else {
-    renderer.render(scene, camera);
+    renderPrimaryScene(dt, false);
   }
   // Collected fruit sails to the counter on its own flat layer, over the
   // finished world and under the HUD icons it is flying to. In split screen

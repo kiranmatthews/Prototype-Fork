@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "vite",
     "check:levels": "node tools/validate-levels.mjs",
+    "check:ocean": "node tools/validate-ocean-port.mjs",
     "character:doctor": "python3 tools/tripo-character/tripo_character.py doctor",
     "character:generate": "python3 tools/tripo-character/tripo_character.py generate",
     "character:test": "python3 -m unittest discover -s tools/tripo-character/tests -p 'test_*.py'",
-    "build": "npm run check:levels && tsc --noEmit && vite build",
+    "build": "npm run check:levels && npm run check:ocean && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

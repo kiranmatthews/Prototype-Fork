@@ -82,6 +82,34 @@ largest thing on screen. They also carry the horizon as an absolute pixel
 constant (`SKY_HORIZON_PX` against `SKY_IMG_H`), so a resize would move the mist
 band as well as blur it.
 
+## MatrixRex Uber Stylized Water textures
+
+The eight water and shoreline inputs in `public/water/matrixrex/` are
+unmodified files from
+[MatrixRex/Uber-Stylized-Water](https://github.com/MatrixRex/Uber-Stylized-Water),
+licensed under the MIT License (Copyright 2025 MatrixRex). They were copied
+byte-for-byte from the Unity port at
+`Assets/Game/ThirdParty/MatrixRexUberStylizedWater/`, which pins upstream
+revision `950f8b41621588b8c8230f52777a49f10758d85c`. The web-facing filenames
+are lowercase; the source filenames and SHA-256 hashes are recorded below.
+
+| Web asset | Unity source path (relative to the vendored package) | SHA-256 |
+| --- | --- | --- |
+| `noise-1.png` | `Resources/MatrixRexUberStylizedWater/Textures/Noise 1.png` | `9354f4e6fb1b2153738920eb7e8b9b46a9a05dfc0ee998c485f537048d6f0b39` |
+| `noise-3.png` | `Resources/MatrixRexUberStylizedWater/Textures/Noise 3.png` | `bed7c1d2072b9c3d8ebb4f87885a3bfc531070d887a5b0d51f5b42c10f78ae78` |
+| `noise-4.png` | `Resources/MatrixRexUberStylizedWater/Textures/Noise 4.png` | `cb255d3eea3d67af16bfb98b877c5346ed42754f193eb333bdf369d27d06aa23` |
+| `caustic-1.png` | `Resources/MatrixRexUberStylizedWater/Textures/Caustic 1.png` | `22ef9ca0d23bf5b57636e713c74a4955c1e1a9bdec9a3cc0afafaff1cdccff09` |
+| `normal-2.png` | `Resources/MatrixRexUberStylizedWater/Textures/Normal 2.png` | `14ffe57b51c476662e83d2c440e808f0a6db4d906493cdc7ef0a7f29321ba914` |
+| `sand-color.png` | `DemoTerrain/sand_01_color_2k.png` | `d356654da7ecf8696b9bcc7477e06e6f09cc9bc50c674780d7c403881fe5fb43` |
+| `sand-normal.png` | `DemoTerrain/sand_01_normal_gl_2k.png` | `f1e92408b9a5f98c2420d28ec93b4e8773f15741a12a4e7fda1bccd23e7fbbf3` |
+| `sand-mask.png` | `DemoTerrain/sand1 mask.png` | `ca61d44cb0dde84aabbedf64dc120445987f8d1465be3747c452d0922987ac33` |
+
+The package's exact `LICENSE.txt` and `SOURCE_REVISION.md` are retained beside
+the maps (SHA-256 `2def5a93859d1a8d868996bae6a8fc9d70fa81a2068398ccd0488870e1b8ac87`
+and `2f898ba2446e98c2647f1d16ee7e1da10398012193a61da7505d42c29babd032`,
+respectively). Noise 5, Unity `.meta` files and the serialized Unity
+`Sand.terrainlayer` are not part of the web port.
+
 ## Everything else
 
 Levels, physics, the character rig, the surface textures, the editor and the
