@@ -68,9 +68,83 @@ export interface ReplayFile {
   cy?: number[]; // camera yaw per frame — absent in takes recorded before it
   frames: number;
   truncated: boolean;
+  endlessDeaths?: boolean; // absent legacy takes use classic lives
 }
 
 const MAX_FRAMES = 60 * 60 * 20; // 20 min @ 60Hz, then the take stops honestly
+const MAX_BUTTON_MASK = (1 << CHANNELS.length) - 1;
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const safeTuningKey = (value: unknown): value is string =>
+  typeof value === 'string' &&
+  value.length > 0 &&
+  value.length <= 128 &&
+  /^[A-Za-z][A-Za-z0-9_]*$/.test(value) &&
+  value !== 'constructor' &&
+  value !== 'prototype' &&
+  value !== '__proto__';
+
+/**
+ * Full replay boundary validation. Loading calls this before switching level,
+ * changing run rules, ending an active take, or applying tuning. Besides the
+ * schema/version, the fixed-step byte streams must agree exactly with
+ * `frames`; button masks may contain only declared input-channel bits.
+ */
+export function isReplayFile(value: unknown): value is ReplayFile {
+  if (!isRecord(value) || value.v !== 2) return false;
+  if (typeof value.level !== 'string' || value.level.length === 0 || value.level.length > 256)
+    return false;
+  if (typeof value.date !== 'string' || value.date.length > 128) return false;
+  if (!Number.isInteger(value.frames) || (value.frames as number) < 0 || (value.frames as number) > MAX_FRAMES)
+    return false;
+  const frames = value.frames as number;
+  if (typeof value.truncated !== 'boolean') return false;
+  if (value.endlessDeaths !== undefined && typeof value.endlessDeaths !== 'boolean') return false;
+
+  if (!Array.isArray(value.mx) || !Array.isArray(value.my) || !Array.isArray(value.b))
+    return false;
+  if (value.mx.length !== frames || value.my.length !== frames || value.b.length !== frames)
+    return false;
+  if (!value.mx.every((n) => typeof n === 'number' && Number.isFinite(n) && n >= -1 && n <= 1))
+    return false;
+  if (!value.my.every((n) => typeof n === 'number' && Number.isFinite(n) && n >= -1 && n <= 1))
+    return false;
+  if (!value.b.every((n) => Number.isInteger(n) && n >= 0 && n <= MAX_BUTTON_MASK))
+    return false;
+  if (
+    value.cy !== undefined &&
+    (!Array.isArray(value.cy) ||
+      value.cy.length > frames ||
+      !value.cy.every((n) => typeof n === 'number' && Number.isFinite(n)))
+  )
+    return false;
+
+  if (!isRecord(value.tuning) || Object.keys(value.tuning).length > 512) return false;
+  for (const [key, number] of Object.entries(value.tuning))
+    if (!safeTuningKey(key) || typeof number !== 'number' || !Number.isFinite(number)) return false;
+
+  if (!Array.isArray(value.tuningChanges) || value.tuningChanges.length > MAX_FRAMES * 4)
+    return false;
+  let previousFrame = -1;
+  for (const change of value.tuningChanges) {
+    if (!Array.isArray(change) || change.length !== 3) return false;
+    const [frame, key, number] = change;
+    if (
+      !Number.isInteger(frame) ||
+      frame < 0 ||
+      frame >= frames ||
+      frame < previousFrame ||
+      !safeTuningKey(key) ||
+      typeof number !== 'number' ||
+      !Number.isFinite(number)
+    )
+      return false;
+    previousFrame = frame;
+  }
+  return true;
+}
 
 export class Recorder {
   private mx: number[] = [];
@@ -82,9 +156,11 @@ export class Recorder {
   private tuningPrev: Record<string, number> = {};
   private tuningChanges: Array<[number, string, number]> = [];
   private truncated = false;
+  private endlessDeaths = false;
 
-  start(level: string): void {
+  start(level: string, endlessDeaths = false): void {
     this.level = level;
+    this.endlessDeaths = endlessDeaths;
     this.mx = [];
     this.my = [];
     this.b = [];
@@ -135,6 +211,7 @@ export class Recorder {
       cy: this.cy.slice(),
       frames: this.b.length,
       truncated: this.truncated,
+      endlessDeaths: this.endlessDeaths,
     };
   }
 }
@@ -155,7 +232,7 @@ export class Replayer {
 
   // Call AFTER the level has been (re)loaded to the replay's level.
   begin(data: ReplayFile): void {
-    if (!data || data.v !== 2 || !Array.isArray(data.b)) throw new Error('bad replay file');
+    if (!isReplayFile(data)) throw new Error('bad replay file');
     this.data = data;
     this.frame = 0;
     this.nextChange = 0;

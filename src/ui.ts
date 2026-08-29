@@ -49,6 +49,8 @@ export interface HudState {
   tricks: string;
   fruit: number;
   lives: number;
+  deaths: number;
+  endlessDeaths: boolean;
   crates: string;
   hasCrystal: boolean;
   hasGem: boolean;
@@ -68,6 +70,9 @@ export class UI {
   private fadeTimer: number | null = null;
   private wumpaRowEl!: HTMLElement; // hidden during time trials
   private livesRowEl!: HTMLElement;
+  private deathModeLabelEl!: HTMLElement;
+  private runRowsHidden = false;
+  private endlessDeaths = false;
   private ttClockEl!: HTMLElement; // the big trial clock, top center
   private ttFreezeEl!: HTMLElement;
   private ttResultsEl!: HTMLElement;
@@ -142,6 +147,11 @@ export class UI {
   private comboState: "none" | "active" | "cashin" | "bail" = "none";
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private msgTimer: number | undefined;
+  private messageState: {
+    title: string;
+    sub: string;
+    expiresAt: number | null;
+  } | null = null;
   private levelRowEl!: HTMLElement; // the re-rendered list container
   private levelRows = new Map<string, HTMLButtonElement>(); // id -> PLAY button
   private currentLevelId = ""; // survives a re-render so .active can be restored
@@ -165,6 +175,7 @@ export class UI {
   onLoadReplay: ((text: string) => void) | null = null;
   onToggle2P: (() => void) | null = null;
   onToggleRunModes: (() => void) | null = null;
+  onToggleEndlessDeaths: (() => void) | null = null;
   // level-list verbs (main.ts wires these)
   onLevelEdit: ((id: string) => void) | null = null;
   onLevelNew: (() => void) | null = null;
@@ -190,6 +201,7 @@ export class UI {
   private recBtn!: HTMLButtonElement;
   private mpBtn!: HTMLButtonElement; // 2-player split toggle
   private runBtn!: HTMLButtonElement; // time trial + combo run toggle
+  private endlessBtn!: HTMLButtonElement; // selectable standard-run death rule
   private syncPanel!: HTMLElement;
   private unlockRow!: HTMLElement;
   private tokenRow!: HTMLElement;
@@ -279,6 +291,20 @@ export class UI {
     statsWrap.appendChild(runBtn);
     this.runBtn = runBtn;
     this.setRunModes(true);
+
+    // STANDARD-RUN RULE: classic lives remains the default. Endless Deaths is
+    // an explicit, persisted selection: Wumpa pays score immediately, deaths
+    // halve score and increment the HUD counter, and game-over is disabled.
+    const endlessBtn = document.createElement("button");
+    endlessBtn.className = "hud-levelbtn hud-editbtn";
+    endlessBtn.title = "switch standard play between classic lives and endless deaths";
+    endlessBtn.addEventListener("click", () => {
+      if (this.onToggleEndlessDeaths) this.onToggleEndlessDeaths();
+      endlessBtn.blur();
+    });
+    statsWrap.appendChild(endlessBtn);
+    this.endlessBtn = endlessBtn;
+    this.setEndlessDeaths(false);
 
     // RESTORE FROM CLOUD (deliberately NOT behind the passcode — the phone is
     // the device that needs it and is never unlocked). Replaces this device's
@@ -566,6 +592,10 @@ export class UI {
     livesRow.appendChild(div("hud-icon hud-icon-face"));
     this.livesEl = div("hud-num hud-lives");
     livesRow.appendChild(this.livesEl);
+    this.deathModeLabelEl = div("hud-deathcount-label");
+    this.deathModeLabelEl.textContent = "DEATHS";
+    this.deathModeLabelEl.style.display = "none";
+    livesRow.appendChild(this.deathModeLabelEl);
     tr.appendChild(livesRow);
     this.livesRowEl = livesRow;
 
@@ -1050,10 +1080,12 @@ export class UI {
       if (s.hasGem) pop(this.gemIcon);
       this.prevHud.gem = s.hasGem;
     }
-    if (s.lives !== this.prevHud.lives) {
-      this.rooLives.set(String(s.lives));
+    const lifeReadout = s.endlessDeaths ? s.deaths : s.lives;
+    if (s.endlessDeaths !== this.endlessDeaths) this.setEndlessDeaths(s.endlessDeaths);
+    if (lifeReadout !== this.prevHud.lives) {
+      this.rooLives.set(String(lifeReadout));
       pop(this.livesEl);
-      this.prevHud.lives = s.lives;
+      this.prevHud.lives = lifeReadout;
     }
     // COMBO plate: appears the moment a REAL trick is in the combo (grind/grab/
     // wallride/slide) — not for bare platforming (spins, crate bounces, enemy
@@ -1137,6 +1169,22 @@ export class UI {
       ? "⏱ TIME TRIAL + COMBO: ON"
       : "⏱ TIME TRIAL + COMBO: OFF";
     this.runBtn.style.color = on ? "" : "#e0705a";
+  }
+
+  setEndlessDeaths(on: boolean): void {
+    this.endlessDeaths = on;
+    this.endlessBtn.textContent = on
+      ? "∞ STANDARD RULE: ENDLESS DEATHS"
+      : "× STANDARD RULE: CLASSIC LIVES";
+    this.endlessBtn.style.color = on ? "#ffd45a" : "";
+    if (this.deathModeLabelEl) this.deathModeLabelEl.style.display = on ? "block" : "none";
+    if (this.livesRowEl) {
+      this.livesRowEl.classList.toggle("hud-deathcount", on);
+      this.livesRowEl.title = on ? "total deaths this run" : "click: +1 life";
+      this.livesRowEl.style.cursor = on ? "default" : "pointer";
+    }
+    this.prevHud.lives = -1; // the same numeral may now mean a different rule
+    this.syncRunRows();
   }
 
   setLevel(id: string): void {
@@ -1272,6 +1320,12 @@ export class UI {
     this.msgWrap.style.display = "block";
     this.rooMsgTitle.set(title);
     if (this.msgTimer !== undefined) window.clearTimeout(this.msgTimer);
+    this.msgTimer = undefined;
+    this.messageState = {
+      title,
+      sub,
+      expiresAt: durationMs > 0 ? performance.now() + durationMs : null,
+    };
     if (durationMs > 0) {
       this.msgTimer = window.setTimeout(() => this.hideMessage(), durationMs);
     }
@@ -1279,6 +1333,28 @@ export class UI {
 
   hideMessage(): void {
     this.msgWrap.style.display = "none";
+    this.messageState = null;
+    if (this.msgTimer !== undefined) window.clearTimeout(this.msgTimer);
+    this.msgTimer = undefined;
+  }
+
+  captureMessage(): { title: string; sub: string; remainingMs: number } | null {
+    if (!this.messageState) return null;
+    return {
+      title: this.messageState.title,
+      sub: this.messageState.sub,
+      remainingMs:
+        this.messageState.expiresAt === null
+          ? 0
+          : Math.max(1, this.messageState.expiresAt - performance.now()),
+    };
+  }
+
+  restoreMessage(
+    state: { title: string; sub: string; remainingMs: number } | null,
+  ): void {
+    if (!state) this.hideMessage();
+    else this.showMessage(state.title, state.sub, state.remainingMs);
   }
 
   flash(): void {
@@ -1303,8 +1379,14 @@ export class UI {
   // Run-mode HUD: the fruit + lives counters sit out (shared by time trials
   // and combo runs).
   setRunRows(on: boolean): void {
-    this.wumpaRowEl.style.display = on ? "none" : "";
-    this.livesRowEl.style.display = on ? "none" : "";
+    this.runRowsHidden = on;
+    this.syncRunRows();
+  }
+
+  private syncRunRows(): void {
+    if (this.wumpaRowEl)
+      this.wumpaRowEl.style.display = this.runRowsHidden || this.endlessDeaths ? "none" : "";
+    if (this.livesRowEl) this.livesRowEl.style.display = this.runRowsHidden ? "none" : "";
   }
 
   // Balance-boost ring: each full turn is one crate window; stacked windows
@@ -1586,6 +1668,15 @@ export class UI {
       }
       .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
       .hud-counter { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+      .hud-deathcount-label {
+        align-self: flex-end;
+        margin: 0 0 clamp(8px, 1.2vh, 13px) -7px;
+        font: bold clamp(10px, 1.45vh, 14px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 1.5px;
+        color: #ff765f;
+        text-shadow: 0 2px 2px #000, 0 0 6px rgba(255, 70, 45, 0.55);
+      }
+      .hud-deathcount .hud-icon-face { filter: grayscale(0.35) saturate(1.3) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6)); }
       /* Sized as CAP HEIGHT — see the .roo-line note below. The icon leads the
          digits slightly, the way the crate and the fruit do in Crash. */
       .hud-num {

@@ -8,6 +8,8 @@ against the equivalent Unity greybox workflow.
 - [Play the Codex/sol fork](https://kiranmatthews.github.io/Prototype-Fork/)
 - [Experiment protocol](docs/CODEX_LEVEL_EXPERIMENT.md)
 - [Iteration log](docs/LEVEL_ITERATIONS.md)
+- [Unity-backport level primitives](docs/UNITY_BACKPORT_PRIMITIVES.md)
+- [Level-editor round-trip contract](docs/EDITOR_ROUNDTRIP.md)
 - [Tripo → img2threejs character pipeline](docs/TRIPO_CHARACTER_PIPELINE.md)
 
 A greybox feel prototype for a PS1/PS2-style fake-physics board platformer —
@@ -48,12 +50,22 @@ outside the published browser bundle.
 | Grind (hold near/over a rail) | Triangle | E |
 | Spin attack / trick | Square | F |
 | Air grab (speed boost on landing) | Circle | Q |
-| Restart | Options | R |
+| Spine transfer / revert | R2 | T |
+| Restart | Share / Create | R |
+| Pause | Options | P / Escape |
+
+During an ordinary board ollie, press and release Jump a second time to perform
+the risky emergency eject. The menu’s **STANDARD RULE** switch selects classic
+lives or the optional Endless Deaths score/death-count ruleset.
 
 Death respawns automatically. Plug in a controller and press any button on it —
 the detected name shows in the debug panel.
 
-## The course
+## The courses
+
+`Backport Mechanics Lab` is the compact validation course for speed and
+trampoline pads, trick gates/rails, return portals, and procedural wood/bamboo
+paths.
 
 Start pad → downhill ramp (speed boost) → jump a death pit → landing deck →
 grind rail over a big pit (hold Triangle near/over the rail — landing on it

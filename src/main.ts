@@ -18,6 +18,8 @@ import {
   restoreBuiltin,
   adoptLegacyLevels,
   starterCustomLevel,
+  normalizeCustomLevelData,
+  userLevelStorageHealthy,
   isEditUnlocked,
   checkEditPass,
   DEFAULT_SKY,
@@ -28,7 +30,7 @@ import { Player } from "./player";
 import { UI } from "./ui";
 import { TUNING, CONST } from "./tuning";
 import { sfx } from "./audio";
-import { Recorder, Replayer, ReplayFile, camYawOf } from "./replay";
+import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { puffs, PUFF_PRESETS } from "./puffs";
@@ -702,14 +704,25 @@ function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
 // exiting restores the level's atmosphere. The flag survives edit rebuilds
 // (applyTheme runs on every commit), so fog stays off the whole session.
 let editorViewActive = false;
-function setEditorView(editing: boolean): void {
+let editorPlayFog: THREE.Scene["fog"] = null;
+function setEditorView(editing: boolean, changed = false): void {
   editorViewActive = editing;
-  camera.far = editing ? 12000 : 400; // 400 = the play draw distance
-  camera.updateProjectionMatrix();
-  applyTheme(); // re-applies (or clears) fog for the new mode
+  if (editing) {
+    // Keep the live atmosphere object intact. The editor only borrows a
+    // fog-free, long-distance lens; Editor restores the exact play camera.
+    editorPlayFog = scene.fog;
+    scene.fog = null;
+    camera.far = 12000;
+    camera.updateProjectionMatrix();
+    return;
+  }
+  if (changed) applyTheme();
+  else scene.fog = editorPlayFog;
+  editorPlayFog = null;
 }
 
 let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
+let proceduralSkyKey = "";
 
 function applyTheme(): void {
   const t = level.theme;
@@ -782,12 +795,13 @@ function applyTheme(): void {
     if (proceduralSky) {
       proceduralSky.dispose();
       proceduralSky = null;
+      proceduralSkyKey = "";
     }
     return;
   }
   mat.transparent = false;
   skyMist.visible = false; // no painting, no cloud sea to hang in front
-  const grad = makeSkyTexture({
+  const gradientTheme = {
     ...t,
     skyTop: P.top,
     skyBottom: P.bottom,
@@ -797,11 +811,21 @@ function applyTheme(): void {
     // has none, or the sky ends up with a noon sun blazing in it
     // "" reads falsy in makeSkyTexture, which is its "no disc" test
     sunColorHex: P.sunHex === null ? "" : (P.sunHex ?? t.sunColorHex),
-  });
+  };
+  const gradientKey = JSON.stringify(gradientTheme);
+  if (proceduralSky && proceduralSkyKey === gradientKey) {
+    if (mat.map !== proceduralSky) {
+      mat.map = proceduralSky;
+      mat.needsUpdate = true;
+    }
+    return;
+  }
+  const grad = makeSkyTexture(gradientTheme);
   mat.map = grad;
   mat.needsUpdate = true;
   if (proceduralSky) proceduralSky.dispose();
   proceduralSky = grad;
+  proceduralSkyKey = gradientKey;
 }
 
 // Slightly wide lens: exaggerates depth so corridors read longer, while the
@@ -862,10 +886,15 @@ function resize(): void {
   coastPost?.setPixelRatio(1);
   coastPost?.setSize(renderW, renderH);
   renderer.domElement.style.imageRendering = "";
-  camera.aspect = split2p ? w / (h / 2) : w / h;
+  const playAspect = split2p ? w / (h / 2) : w / h;
+  // The editor owns the full canvas even when the retained run is split-screen.
+  // Its saved play lens tracks resizes separately so closing cannot restore a
+  // stale pre-rotation aspect ratio.
+  camera.aspect = editorViewActive ? w / h : playAspect;
   camera.updateProjectionMatrix();
-  camera2.aspect = camera.aspect;
+  camera2.aspect = playAspect;
   camera2.updateProjectionMatrix();
+  if (editorViewActive) editor.syncPlayAspect(playAspect);
 }
 window.addEventListener("resize", resize);
 // iOS standalone launches don't reliably fire 'resize' once the viewport
@@ -893,7 +922,27 @@ let current: LevelEntry =
   (oceanReview ? findLevel("descent") : null) ??
   findLevel(localStorage.getItem("solProtoLevelId") ?? "") ??
   findLevel(DEFAULT_LEVEL_ID)!;
-let level = new Level(scene, current);
+let level: Level;
+const initialSceneChildren = new Set(scene.children);
+try {
+  level = new Level(scene, current);
+} catch (error) {
+  console.error("Stored level failed to build; loading the safe default.", error);
+  for (const child of [...scene.children])
+    if (!initialSceneChildren.has(child)) scene.remove(child);
+  current = findLevel(DEFAULT_LEVEL_ID)!;
+  localStorage.setItem("solProtoLevelId", current.id);
+  level = new Level(scene, current);
+}
+let loadedLevelId = current.id;
+let acc = 0;
+let editorSavedAcc: number | null = null;
+let editorSavedMessage: ReturnType<UI["captureMessage"]> = null;
+// A pristine hand-coded built-in keeps rendering from its exact original
+// builder when first opened. Its captured data is built as a hidden,
+// raycastable editor proxy; the proxy becomes the real level only after an
+// actual mutation. This makes selection possible without a destructive open.
+let editorPreviewLevel: Level | null = null;
 // PS1 smoke and dust. One system for every soft effect; it owns its own pooled
 // buffers and adds a handful of meshes to the scene that outlive level swaps
 // (they carry userData.shared, so Level.dispose() leaves them alone).
@@ -944,8 +993,24 @@ function tintP2(): void {
 // Called on every level load and whenever either input to it changes, so the
 // world, the player and the button label can never disagree.
 let runModesOn = localStorage.getItem("solProtoRunModes") !== "off";
+let endlessDeathsOn = localStorage.getItem("solProtoEndlessDeaths") === "on";
+let replaySavedEndlessDeaths: boolean | null = null;
+function applyEndlessDeaths(): void {
+  player.endlessDeaths = endlessDeathsOn;
+  if (p2) p2.endlessDeaths = endlessDeathsOn;
+  ui.setEndlessDeaths(endlessDeathsOn);
+}
+function restoreReplayRunRule(): void {
+  if (replaySavedEndlessDeaths === null) return;
+  endlessDeathsOn = replaySavedEndlessDeaths;
+  replaySavedEndlessDeaths = null;
+  applyEndlessDeaths();
+}
 function applyRunModes(): void {
-  const on = runModesOn && !split2p;
+  // Editor previews show every authored activator even when the gameplay
+  // preference (or split-screen) normally hides run modes. The sim is frozen,
+  // so visibility cannot accidentally start one.
+  const on = editorViewActive || (runModesOn && !split2p);
   level.setRunModesEnabled(on);
   ui.setRunModes(runModesOn);
   if (on) return;
@@ -977,13 +1042,15 @@ function set2P(on: boolean, force = false): void {
       );
       return;
     }
-    if (editor.active) editor.exit();
+    if (editor.active) closeEditorToPlay();
     if (replayer.active) {
       replayer.end();
+      restoreReplayRunRule();
       ui.setReplayBadge(false);
     }
     if (!p2) {
       p2 = new Player(scene);
+      p2.endlessDeaths = endlessDeathsOn;
       // The second rider's fruit needs the same two wires P1 got, or its
       // collected wumpa are parked on a scene nothing renders and simply
       // vanish. Its own lens; the one shared HUD counter.
@@ -1012,7 +1079,10 @@ function set2P(on: boolean, force = false): void {
     );
   } else {
     split2p = false;
-    if (p2) p2.group.visible = false;
+    if (p2) {
+      level.clearTrickPrimitiveSource(p2);
+      p2.group.visible = false;
+    }
     // release both so the 1P scan is free to take any pad again
     input.releaseClaim();
     input2.releaseClaim();
@@ -1133,18 +1203,20 @@ player.cam = camera; // collected wumpa fly to the HUD counter — the flight ne
 // hides entirely during a run mode.
 player.hudFruitAt = () => ui.fruitIconAt();
 player.enterLevel(current.id);
+applyEndlessDeaths();
 player.respawn(level, true);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
 applyTheme();
-recorder.start(current.id); // the take always runs: level load -> now
+applyShadowFlags();
+recorder.start(current.id, endlessDeathsOn); // the take always runs: level load -> now
 
 // Every solid mesh in the world both casts and receives. It's a whole-scene
 // traverse rather than per-builder flags because the builders are hundreds of
 // call sites and a missed one reads as a hole in the lighting. Things that are
 // not surfaces opt out with userData.noShadow: the sky dome, the water/lava
 // planes, the blob shadow and landing X, particle sprites, editor ghosts.
-function applyShadowFlags(): void {
-  scene.traverse((o) => {
+function applyShadowFlags(root: THREE.Object3D = scene): void {
+  root.traverse((o) => {
     const m = o as THREE.Mesh;
     if (!m.isMesh) return;
     let skip = false;
@@ -1163,7 +1235,7 @@ function applyShadowFlags(): void {
   });
 }
 
-function switchLevel(id: string): void {
+function switchLevel(id: string, preserveEditor = false): void {
   // An id that no longer exists — a deleted user level, a replay or saved
   // editor target from an older list — resolves to the default course rather
   // than taking the whole game down on entry.name.toUpperCase().
@@ -1173,14 +1245,26 @@ function switchLevel(id: string): void {
   if (replayer.active) {
     // a manual level switch cancels a running replay (and restores tuning)
     replayer.end();
+    restoreReplayRunRule();
     ui.setReplayBadge(false);
   }
-  if (editor.active && editor.targetId !== entry.id) editor.exit(); // leaving the level under edit closes it
+  // Gameplay/replay switches always close the editor, even for the same id.
+  // The sole exception is the editor's own duplicate/import retarget flow.
+  if (editor.active && !preserveEditor) {
+    editor.exit();
+    editorSavedAcc = null;
+    editorSavedMessage = null;
+  }
+  if (editorPreviewLevel) {
+    editorPreviewLevel.dispose(level);
+    editorPreviewLevel = null;
+  }
   level.dispose();
   puffs.clear(); // no cloud from the level you just left hanging over the new one
   swirls.clear();
   fieldSwirls.clear();
   level = new Level(scene, entry);
+  loadedLevelId = entry.id;
   puffs.attach(scene);
   // Adopt the target level's relic shelf BEFORE respawning, so the run just
   // left banks its crystal and gems against the level they were earned in.
@@ -1196,7 +1280,7 @@ function switchLevel(id: string): void {
   applyShadowFlags();
   ui.setLevel(entry.id);
   ui.showMessage(entry.name.toUpperCase(), "", 1400);
-  recorder.start(entry.id); // fresh take from this load
+  recorder.start(entry.id, endlessDeathsOn); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
     ((
       (window as unknown as Record<string, unknown>).__game as Record<
@@ -1204,26 +1288,247 @@ function switchLevel(id: string): void {
         unknown
       >
     ).level = level);
+  if (preserveEditor) editor.onLevelRebuilt();
 }
 
 // ---- level editor ----------------------------------------------------------
-// Every edit rebuilds the level under edit from its data, so edit = play
-// truth. The editor only ever binds to a USER level, and openEditor has
-// already switched to it — so `current` is the level being edited. Named,
-// because entering and leaving the editor rebuild too (scenery is baked for
-// play and loose for editing — see setEditorBuild).
+// A live edit rebuilds from the editor's in-memory source, so edit = play
+// truth. A no-op session instead keeps the exact original Level alive and uses
+// an unbatched proxy only for picking/guides.
+function tryBuildEditorLevel(entry: LevelEntry, context: string): Level | null {
+  const safeData = entry.data
+    ? normalizeCustomLevelData(entry.data)
+    : undefined;
+  if (entry.data && !safeData) {
+    ui.showMessage(
+      "EDITOR BUILD REJECTED",
+      `${context} · values or geometry exceed safe authoring limits`,
+      3200,
+    );
+    return null;
+  }
+  const safeEntry = safeData ? { ...entry, data: safeData } : entry;
+  const before = new Set(scene.children);
+  const nativeRandom = Math.random;
+  let seed = 0x811c9dc5;
+  const seedText = `${entry.id}:${entry.name}:${entry.data?.components.length ?? 0}`;
+  for (let index = 0; index < seedText.length; index++) {
+    seed ^= seedText.charCodeAt(index);
+    seed = Math.imul(seed, 0x01000193);
+  }
+  Math.random = () => {
+    seed += 0x6d2b79f5;
+    let value = seed;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+  try {
+    return new Level(scene, safeEntry);
+  } catch (error) {
+    // A constructor may have attached its root before a later component
+    // failed. Remove every orphan it introduced; the last good Level remains
+    // mounted and authoritative.
+    for (const child of [...scene.children])
+      if (!before.has(child)) scene.remove(child);
+    const detail = error instanceof Error ? error.message : "invalid level data";
+    ui.showMessage("EDITOR BUILD FAILED", `${context} · ${detail}`, 3200);
+    return null;
+  } finally {
+    Math.random = nativeRandom;
+  }
+}
+
+function maskInitialEditorProxy(preview: Level): void {
+  const originalVisible = new Map<number, boolean>();
+  const materialUse = new Map<THREE.Material, number>();
+  preview.pickRoot.traverse((object) => {
+    const mesh = object as THREE.Mesh;
+    const materials = Array.isArray(mesh.material)
+      ? mesh.material
+      : mesh.material
+        ? [mesh.material]
+        : [];
+    for (const material of materials)
+      materialUse.set(material, (materialUse.get(material) ?? 0) + 1);
+  });
+  for (const child of level.pickRoot.children) {
+    const index = child.userData.editorIdx as number | undefined;
+    if (index === undefined) continue;
+    const visible = child.visible;
+    originalVisible.set(index, (originalVisible.get(index) ?? false) || visible);
+  }
+  for (const child of preview.pickRoot.children) {
+    let hasGhost = false;
+    child.traverse((object) => {
+      if (object.userData.editorGhost) hasGhost = true;
+    });
+    const index = child.userData.editorIdx as number | undefined;
+    const missingFromLiveView =
+      index !== undefined && originalVisible.get(index) === false;
+    if (!hasGhost && !missingFromLiveView) {
+      child.visible = false;
+      continue;
+    }
+    child.traverse((object) => {
+      if (object.userData.editorGhost) return;
+      const renderable = object as THREE.Object3D & {
+        isMesh?: boolean;
+        isLine?: boolean;
+        isPoints?: boolean;
+        isSprite?: boolean;
+        isLight?: boolean;
+      };
+      if (missingFromLiveView && renderable.isMesh) {
+        const mesh = object as THREE.Mesh;
+        const previousMaterials = Array.isArray(mesh.material)
+          ? mesh.material
+          : mesh.material
+            ? [mesh.material]
+            : [];
+        const materials = Array.isArray(mesh.material)
+          ? previousMaterials.map((material) => material.clone())
+          : previousMaterials[0]
+            ? previousMaterials[0].clone()
+            : null;
+        if (materials) {
+          mesh.material = materials;
+          for (const material of Array.isArray(materials)
+            ? materials
+            : [materials]) {
+            // Material.clone() copies userData. This wrapper belongs only to
+            // the disposable editor proxy even when its source wrapper (and
+            // still-shared texture) came from the process-wide Wumpa pool.
+            delete material.userData.shared;
+            material.transparent = true;
+            material.opacity = Math.min(material.opacity, 0.32);
+            material.depthWrite = false;
+          }
+          // Material.dispose does not own/dispose its texture slots; clones
+          // retain those references and the detached wrappers can go now.
+          for (const material of previousMaterials) {
+            const left = (materialUse.get(material) ?? 1) - 1;
+            materialUse.set(material, left);
+            if (left === 0 && !material.userData.shared) material.dispose();
+          }
+        }
+        return;
+      }
+      if (
+        renderable.isMesh ||
+        renderable.isLine ||
+        renderable.isPoints ||
+        renderable.isSprite ||
+        renderable.isLight
+      )
+        object.visible = false;
+    });
+  }
+}
+
+function rebuildEditorPreview(): void {
+  const working = editor.workingEntry();
+  if (!working) return;
+  setEditorBuild(true);
+  const candidate = tryBuildEditorLevel(working, "working preview kept last good build");
+  if (!candidate) return;
+  if (editorPreviewLevel) editorPreviewLevel.dispose(level);
+  editorPreviewLevel = candidate;
+  // A real in-progress mutation is shown from the working build, but the
+  // exact original object remains alive underneath for cancel/no-op restore.
+  level.pickRoot.visible = false;
+  editorPreviewLevel.pickRoot.visible = true;
+  applyShadowFlags(editorPreviewLevel.pickRoot);
+  editor.onLevelRebuilt();
+}
+
+function restoreEditorProxyBaseline(): void {
+  const working = editor.workingEntry();
+  if (!working) return;
+  setEditorBuild(true);
+  const candidate = tryBuildEditorLevel(working, "canceled edit kept original");
+  if (!candidate) {
+    level.pickRoot.visible = true;
+    return;
+  }
+  if (editorPreviewLevel) editorPreviewLevel.dispose(level);
+  editorPreviewLevel = candidate;
+  level.pickRoot.visible = true;
+  applyShadowFlags(editorPreviewLevel.pickRoot);
+  maskInitialEditorProxy(editorPreviewLevel);
+  editor.onLevelRebuilt();
+}
+
+function preflightEditorWorking(): boolean {
+  const working = editor.workingEntry();
+  if (!working) return false;
+  if (working.data && !normalizeCustomLevelData(working.data)) {
+    ui.showMessage(
+      "CHANGE REJECTED",
+      "values or geometry exceed safe authoring limits",
+      2600,
+    );
+    return false;
+  }
+  return true;
+}
+
 function rebuildLevel(): void {
-  current = findLevel(current.id) ?? current; // pick up the just-saved data/name
+  if (editorPreviewLevel) {
+    // No edit was committed: keep the already-built original level object,
+    // rather than rebuilding even that. Its geometry, special systems,
+    // materials, and runtime contract remain exactly the ones opened.
+    if (
+      !editor.active &&
+      !editor.changedThisSession &&
+      current.id === editor.targetId
+    ) {
+      editorPreviewLevel.dispose(level);
+      editorPreviewLevel = null;
+      level.pickRoot.visible = true;
+      return;
+    }
+  }
+  const next = editor?.workingEntry() ?? findLevel(current.id) ?? current;
+  const candidate = tryBuildEditorLevel(next, "playable level kept last good build");
+  if (!candidate) {
+    level.pickRoot.visible = true;
+    if (editorPreviewLevel) editorPreviewLevel.pickRoot.visible = false;
+    return;
+  }
+  if (editorPreviewLevel) {
+    editorPreviewLevel.dispose(level);
+    editorPreviewLevel = null;
+  }
+  if (replayer.active) {
+    replayer.end();
+    restoreReplayRunRule();
+    ui.setReplayBadge(false);
+  }
+  // During editing the in-memory working copy is the authority, including a
+  // live handle drag that has not autosaved yet.
+  current = next;
   level.dispose();
   puffs.clear();
   swirls.clear();
   fieldSwirls.clear();
-  level = new Level(scene, current);
+  level = candidate;
   puffs.attach(scene);
+  const changedLevelId = loadedLevelId !== current.id;
+  loadedLevelId = current.id;
+  localStorage.setItem("solProtoLevelId", current.id);
+  if (changedLevelId) player.enterLevel(current.id);
   player.respawn(level, true);
+  if (split2p && p2) {
+    if (changedLevelId) p2.enterLevel(current.id);
+    p2.respawn(level, true);
+    p2.pos.x += 1.6;
+  }
   applyRunModes();
   applyTheme();
-  recorder.start(current.id);
+  applyShadowFlags();
+  ui.setLevel(current.id);
+  recorder.start(current.id, endlessDeathsOn);
   (window as unknown as Record<string, unknown>).__game &&
     ((
       (window as unknown as Record<string, unknown>).__game as Record<
@@ -1233,27 +1538,67 @@ function rebuildLevel(): void {
     ).level = level);
   editor.onLevelRebuilt();
 }
-const editor = new Editor(scene, camera, renderer.domElement, () => level, {
-  rebuild: () => rebuildLevel(),
-  // The editor renamed / duplicated / deleted a level: the menu is stale.
-  levelsChanged: (goTo?: string) => {
-    if (goTo && goTo !== current.id) switchLevel(goTo);
-    else {
-      current = findLevel(current.id) ?? current;
-      level.name = current.name; // a rename is live, without a rebuild
-    }
-    ui.refreshLevels(current.id);
+function closeEditorToPlay(): boolean {
+  if (!editor.active) return false;
+  const noOp = !editor.changedThisSession;
+  editor.exit();
+  rebuildLevel();
+  if (noOp && editorSavedAcc !== null) acc = editorSavedAcc;
+  if (noOp) ui.restoreMessage(editorSavedMessage);
+  editorSavedAcc = null;
+  editorSavedMessage = null;
+  return noOp;
+}
+let editorExitAlreadyBuilt = false;
+const editor = new Editor(
+  scene,
+  camera,
+  renderer.domElement,
+  () => editorPreviewLevel ?? level,
+  {
+    preflight: () => preflightEditorWorking(),
+    rebuild: (committed = false) =>
+      committed ? rebuildLevel() : rebuildEditorPreview(),
+    resetPreview: () => restoreEditorProxyBaseline(),
+    // The editor renamed / duplicated / deleted a level: the menu is stale.
+    levelsChanged: (goTo?: string) => {
+      if (goTo && goTo !== current.id) {
+        if (editor.targetId === goTo) {
+          current = findLevel(goTo) ?? current;
+          localStorage.setItem("solProtoLevelId", current.id);
+          ui.setLevel(current.id);
+          rebuildEditorPreview();
+        } else {
+          editor.exit();
+          editorSavedAcc = null;
+          editorSavedMessage = null;
+          switchLevel(goTo);
+          editorExitAlreadyBuilt = true;
+        }
+      } else {
+        current = findLevel(current.id) ?? current;
+        level.name = current.name; // a rename is live, without a rebuild
+      }
+      ui.refreshLevels(current.id);
+    },
+    exitToPlay: () => {
+      let noOp = false;
+      if (editorExitAlreadyBuilt) editorExitAlreadyBuilt = false;
+      else noOp = closeEditorToPlay();
+      if (!noOp && paused)
+        ui.showMessage("PAUSED", "Options / P to resume", 0);
+      else if (!noOp)
+        ui.showMessage(
+          "TEST RUN",
+          "press ✎ LEVEL EDITOR to keep editing",
+          1600,
+        );
+    },
+    showMsg: (t, s) => ui.showMessage(t, s ?? "", 1800),
+    // drop fog + extend the far plane on enter, restore on every exit path
+    setView: (editing, changed) => setEditorView(editing, changed),
   },
-  exitToPlay: () => {
-    editor.exit(); // clears the editor build mode
-    rebuildLevel(); // ...and this bakes the scenery back down for play
-    player.respawn(level, true);
-    ui.showMessage("TEST RUN", "press ✎ LEVEL EDITOR to keep editing", 1600);
-  },
-  showMsg: (t, s) => ui.showMessage(t, s ?? "", 1800),
-  // drop fog + extend the far plane on enter, restore on every exit path
-  setView: (editing) => setEditorView(editing),
-});
+);
 // Open the editor on a level (default: whatever is loaded). A level that has
 // never been edited has no data to bind to, so it goes through editLevel,
 // which captures it first.
@@ -1334,66 +1679,87 @@ if (location.hash.toLowerCase().includes("waterstudio")) {
   setTimeout(() => void openStudioTool(), 5000);
 }
 
-function openEditor(target: string = current.id): void {
-  if (split2p) set2P(false); // the editor is a one-player room
+function openEditor(
+  target: string = current.id,
+  initialData?: CustomLevelData,
+  preservedMessage: ReturnType<UI["captureMessage"]> =
+    paused ? ui.captureMessage() : null,
+): void {
   if (editor.active) return;
   const entry = findLevel(target);
   if (!entry) return;
-  if (!entry.data) {
-    editLevel(entry.id);
+  if (!entry.data && !initialData) {
+    editLevel(entry.id, preservedMessage);
     return;
   }
+  // A cross-level pencil click intentionally loads that target, but it must
+  // not replace a persistent PAUSED banner with the transient level-name
+  // toast that switchLevel emits.
   if (current.id !== entry.id) switchLevel(entry.id);
-  // clear anything that could sit over/under the editor: a paused sim, a
-  // dead/game-over player, the death overlay
-  paused = false;
+  editorSavedAcc = acc;
+  editorSavedMessage = preservedMessage ?? ui.captureMessage();
+  // The editor owns the frame and freezes the simulation. Do not respawn,
+  // cancel pause/replay, force 2P off, or otherwise disturb a no-op session.
   ui.hideMessage();
-  player.respawn(level, true);
-  ui.showDeathScreen(false);
-  // Scenery is baked into shared meshes for play and cannot be clicked in
-  // that form, so opening the editor rebuilds it loose. Only when the flag
-  // actually flips — reopening the editor twice must not rebuild twice.
-  if (setEditorBuild(true)) rebuildLevel();
-  editor.enter(entry);
+  const workingData = initialData ?? entry.data!;
+  setEditorBuild(true);
+  const candidate = tryBuildEditorLevel({
+    id: entry.id,
+    name: entry.name,
+    data: workingData,
+  }, "open canceled; live level untouched");
+  if (!candidate) {
+    setEditorBuild(false);
+    editorSavedAcc = null;
+    ui.restoreMessage(editorSavedMessage);
+    editorSavedMessage = null;
+    return;
+  }
+  editorPreviewLevel = candidate;
+  // Hide only renderable proxy leaves, not their ancestors. Raycasting still
+  // sees them, while editorGhost guides (zones, camnodes, invisible walls)
+  // remain visible over the untouched original world.
+  maskInitialEditorProxy(editorPreviewLevel);
+  editor.enter(entry, workingData);
 }
 // MENU / TUNER while the editor owns the screen: the play panels are hidden
 // under the tools, so a tab tap first CLOSES the editor (edits are already
 // saved live) and drops back to play — then the panel opens normally.
 ui.onSideTab = () => {
   if (!editor.active) return;
-  editor.exit(); // clears the editor build mode
-  rebuildLevel(); // ...and this bakes the scenery back down for play
-  player.respawn(level, true);
-  ui.showMessage("EDITOR CLOSED", "press ✎ LEVEL EDITOR to keep editing", 1600);
+  const noOp = closeEditorToPlay();
+  if (!noOp && paused) ui.showMessage("PAUSED", "Options / P to resume", 0);
+  else if (!noOp)
+    ui.showMessage(
+      "EDITOR CLOSED",
+      "press ✎ LEVEL EDITOR to keep editing",
+      1600,
+    );
 };
-// EDIT THIS LEVEL — the level itself, not a copy of it. A level that already
-// builds from data opens straight in the editor. A BUILT-IN has no data yet,
-// so the first edit captures its geometry into components and stores that
-// under the SAME id: it keeps its name, its place in the menu and its best
-// times, and from then on it IS the edited version. The hand-coded builder is
-// still underneath — "restore original" in the editor drops the edits and
-// hands the shipped design back.
-//
-// Bespoke set pieces without a component language (side-scroll zones,
-// sky-ropes, decor foliage) don't survive the capture — what you get is the
-// editable geometry.
-function editLevel(id: string): void {
+// EDIT THIS LEVEL — opening is transactional. Data-owned levels and captured
+// hand-built levels both use a hidden pick proxy; the live world is untouched
+// until an actual edit commits.
+function editLevel(
+  id: string,
+  preservedMessage: ReturnType<UI["captureMessage"]> =
+    paused ? ui.captureMessage() : null,
+): void {
   const entry = findLevel(id);
   if (!entry) return;
   if (entry.data) {
-    openEditor(id);
+    openEditor(id, undefined, preservedMessage);
     return;
   }
   if (current.id !== id) switchLevel(id); // capture reads the LIVE level
+  // captureData reads authored/home snapshots for dynamic entities, so this
+  // harvest is side-effect free: no reset of the live run and no second
+  // hand-built Level spawning global VFX behind the editor.
   const data = level.captureData();
   data.name = entry.name; // in place — not "(copy)"
-  saveUserLevel({ id: entry.id, name: entry.name, data });
-  switchLevel(entry.id); // rebuild: the level now IS its captured data
-  ui.refreshLevels(entry.id);
-  openEditor(entry.id);
+  openEditor(entry.id, data, preservedMessage);
   ui.showMessage(
     `EDITING ${entry.name.toUpperCase()}`,
-    "edits save to this level — restore original is in the PROJECT tab",
+    "original stays untouched · first change creates an editable copy",
     2600,
   );
 }
@@ -1403,6 +1769,12 @@ ui.onLevelNew = () => {
   const data = starterCustomLevel();
   data.name = "New Level";
   const id = saveUserLevel({ id: "", name: data.name, data });
+  if (!userLevelStorageHealthy())
+    ui.showMessage(
+      "SAVE FAILED",
+      "new level is session-only · export before reloading",
+      3000,
+    );
   switchLevel(id);
   ui.refreshLevels(id);
   openEditor(id);
@@ -1425,8 +1797,27 @@ function importLevelFile(txt: string, fallbackName: string): boolean {
   } catch {
     return false;
   }
-  if (!data) return false;
-  const id = saveUserLevel({ id: "", name, data });
+  const normalized = normalizeCustomLevelData(data);
+  if (!normalized) return false;
+  let probe: Level | null = null;
+  try {
+    probe = new Level(new THREE.Scene(), {
+      id: "__import_probe",
+      name,
+      data: normalized,
+    });
+  } catch {
+    return false;
+  } finally {
+    probe?.dispose(level);
+  }
+  const id = saveUserLevel({ id: "", name, data: normalized });
+  if (!userLevelStorageHealthy())
+    ui.showMessage(
+      "SAVE FAILED",
+      "level is session-only · export it before reloading",
+      3000,
+    );
   switchLevel(id);
   ui.refreshLevels(id);
   ui.showMessage("LEVEL IMPORTED", `${findLevel(id)?.name ?? name}`, 2000);
@@ -1535,6 +1926,13 @@ void (async () => {
   }
   const remote = (await fetchRemoteLevels()) as { levels?: LevelEntry[] } | null;
   if (!remote || !Array.isArray(remote.levels)) return;
+  // The request raced the UI. If anything was authored while it was in
+  // flight, local work wins and the automatic first-run pull retires itself;
+  // only the explicitly armed RESTORE action may replace a non-empty list.
+  if (getUserLevels().length) {
+    localStorage.setItem("solProtoCloudPulled", "1");
+    return;
+  }
   setUserLevels(remote.levels);
   localStorage.setItem("solProtoCloudPulled", "1");
   ui.refreshLevels(current.id);
@@ -1566,11 +1964,25 @@ function saveReplay(): void {
   );
 }
 
-function loadReplay(data: ReplayFile): void {
+function loadReplay(data: unknown): void {
+  // Validate every byte stream and tuning tuple before ending a current take,
+  // changing the temporary run rule, or rebuilding the level.
+  if (!isReplayFile(data)) {
+    ui.showMessage("BAD REPLAY FILE", "unsupported version or corrupt input data", 2200);
+    return;
+  }
   if (!findLevel(data.level)) {
     ui.showMessage("REPLAY LEVEL MISSING", String(data.level), 2200);
     return;
   }
+  if (replayer.active) {
+    replayer.end();
+    restoreReplayRunRule();
+    ui.setReplayBadge(false);
+  }
+  replaySavedEndlessDeaths = endlessDeathsOn;
+  endlessDeathsOn = data.endlessDeaths === true;
+  applyEndlessDeaths();
   switchLevel(data.level); // clean slate: replay assumes a fresh level load
   replayer.begin(data);
   ui.setReplayBadge(true);
@@ -1660,10 +2072,39 @@ ui.onToggleRunModes = () => {
     1400,
   );
 };
+ui.onToggleEndlessDeaths = () => {
+  // The click expresses a choice against the rule currently shown. Capture it
+  // before replay cancellation restores the user's pre-replay preference.
+  const desiredEndlessDeaths = !endlessDeathsOn;
+  if (replayer.active) {
+    replayer.end();
+    restoreReplayRunRule();
+    ui.setReplayBadge(false);
+  }
+  endlessDeathsOn = desiredEndlessDeaths;
+  localStorage.setItem("solProtoEndlessDeaths", endlessDeathsOn ? "on" : "off");
+  applyEndlessDeaths();
+  // A ruleset switch starts a fresh standard run so lives, deaths, score and
+  // checkpoint snapshots cannot straddle two incompatible economies.
+  player.respawn(level, true);
+  if (split2p && p2) {
+    p2.respawn(level, true);
+    p2.pos.x += 1.6;
+  }
+  recorder.start(current.id, endlessDeathsOn);
+  ui.showMessage(
+    endlessDeathsOn ? "ENDLESS DEATHS" : "CLASSIC LIVES",
+    endlessDeathsOn
+      ? "wumpa pays score · death count rises · score halves"
+      : "100 wumpa earns a life · game over returns",
+    2200,
+  );
+};
 player.onComboBank = (amount) => ui.comboBank(amount);
 player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
+  if (player.endlessDeaths) return;
   player.lives++;
   sfx.play("lifeGet", 0.8);
 };
@@ -2027,7 +2468,6 @@ camera.position.y += TUNING.camHeight;
 
 // --- fixed-step loop --------------------------------------------------------
 const clock = new THREE.Clock();
-let acc = 0;
 let stepTimer = 0;
 let stepIdx = 0;
 
@@ -2183,6 +2623,7 @@ function frame(): void {
     if (!split2p && replayer.active && !replayer.feed(input, player.camDir)) {
       ui.setReplayBadge(false);
       ui.showMessage("REPLAY DONE", "", 1200);
+      restoreReplayRunRule();
       switchLevel(current.id);
       break;
     }
@@ -2255,6 +2696,8 @@ function frame(): void {
     tricks: (tricks.length > 6 ? "… + " : "") + tricks.slice(-6).join(" + "),
     fruit: player.fruit,
     lives: Math.max(0, player.lives),
+    deaths: player.totalDeaths,
+    endlessDeaths: player.endlessDeaths,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     hasCrystal: player.hasCrystal,
     hasGem: player.gemEarned,
@@ -2329,6 +2772,7 @@ frame();
   fieldSwirls,
   player,
   level,
+  getLevel: () => level,
   input,
   input2,
   TUNING,

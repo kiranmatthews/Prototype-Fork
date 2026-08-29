@@ -4,8 +4,9 @@
 
 export const TUNING = {
   maxSpeed: 23, // top skate speed
-  walkSpeed: 9, // Crash walk: direct drive, instant stop; also the skate/walk boundary
-  walkRampTime: 0.3, // seconds for a fresh walk to ease from 0 up to full walkSpeed (0 = instant Crash snap; higher = a soft start)
+  walkSpeed: 9, // full on-foot run speed; also the skate/walk boundary
+  walkRampTime: 0.75, // seconds for a fresh walk to build from rest to full walkSpeed
+  walkSlowdownTime: 0.45, // seconds for released-input foot momentum to coast from full speed to rest (also shapes committed direction changes)
   friction: 7, // bleed on STEEP ground (transitions) — deliberately linear so a sideways crawl on a wall dies and the stall-flip can fire. FLAT roll-out is rollFriction + windDrag.
   // Jump ballistics: the playtested hand-tuned feel. (A Crash-3-matched fit
   // — rise 22 / fall 62 / v 10.4 / min 8.7 — was tried and felt worse in
@@ -32,6 +33,8 @@ export const TUNING = {
   flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
+  doubleJumpVelocity: 11, // vertical speed of the second on-foot pop
+  doubleJumpHorizontalScale: 0.55, // traversal retained after the second pop
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
@@ -60,7 +63,8 @@ export const TUNING = {
   wallStick: 5, // ground-snap window on steep transitions (how hard the wall holds the board)
   landGive: 0.35, // landing forgiveness on steep faces (vs 0.35 on flat decks)
   railSnapDistance: 2.1, // forgiving radius for Triangle/E grind snap
-  railTripSpeed: 19.5, // side-on into a rail at/above this speed TRIPS you (bail); slower, the rail just blocks your walk
+  grindApproachMargin: 15, // moving catches must be this many degrees away from a perfectly perpendicular rail hit (0 = legacy behavior)
+  railTripSpeed: 12.5, // side-on into a rail at/above this speed enters the shared obstacle-wipeout vocabulary; slower, the rail blocks
   grindDrag: 0, // friction a FLAT rail scrubs per second. 0 = a rail holds the speed you brought and only climbs cost you
   railSpeedBoost: 0, // flat speed handed to you on a rail entry. 0 = THPS speed-keep: a grind now KEEPS the speed you carried in (redirected along the rail, whatever the angle), so the rail no longer needs a consolation gift — only DOWNHILL rails add speed (slope gravity works the grind line)
   perfectGrindSpeed: 48, // THE SLIPSTREAM: pop off after riding a rail end to end and you leave at this — well past downhillMax (30.5), so it is comfortably the fastest the board ever goes. It gets its own temporary ceiling while perfectGrindHold runs, so the usual clamps do not eat it
@@ -81,7 +85,8 @@ export const TUNING = {
   spinTolerance: 30, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail. 30 still leaves 240 of the circle bailing — it's a net under the auto-correct, not a removal
   sketchyTolerance: 55, // degrees off-line before a SKETCHY landing becomes a full bail — between spinTolerance and this you ride away wobbling with a speed tax and half the spin points (THPS's middle tier)
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
-  crateHopSpeed: 10, // how hard an arrow crate throws a BOX that lands on it (0 = the box just sits there)
+  crateHopSpeed: 14, // how hard an arrow crate throws a BOX that lands on it (0 = the box just sits there)
+  crateHopGravity: 28, // gravity on crate-on-Arrow loops; 14/28 produces the stable ~59-tick cadence
   boardSpeed: 8.5, // speed gate on the transition-carve SFX only — the board VISUAL and the rolling loop follow the skate state, not a speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
@@ -90,7 +95,7 @@ export const TUNING = {
   carveGripRatio: 0.05, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
-  slideSpeed: 37, // the slide bursts to at least this speed, direction locked
+  slideSpeed: 26, // the slide starts at least this fast, then analytically brakes to zero over slideDistance
   slideJumpHeight: 1.3, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
   slideJumpTravel: 0.2, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
@@ -142,7 +147,17 @@ export const TUNING = {
   ragBounce: 0.42, // restitution of a tumbling body: how much of each fall the bounce keeps
   ragSpin: 1, // tumble rotation speed scale (0 = the old rigid sprawl, ~3 = washing machine)
   ragFlail: 1, // limb windmill amplitude while airborne in a wipeout
-  wallBailSpeed: 16, // frontal skate into a solid wall/box at or above this = wipeout (below: the old dead stop). MUST sit above cruiseSpeed (12) or every casual no-input wall bump — boundary walls included — becomes a knockdown; 16 means only EARNED speed (a charge or a downhill) crashes
+  wallBailSpeed: 12.5, // frontal skate into a solid at/above this = wipeout (below: a block); shared with the generic obstacle response
+  wallBailFrontal: 0.68, // required head-on dot for a solid/rail wipeout; angled scrapes keep sliding
+  tripMaxHeight: 1.15, // obstacle height above the feet that selects a forward low-obstacle tumble
+  tripLiftBase: 3.8, // base vertical lift for a generic low-obstacle tumble
+  tripLiftPerSpeed: 0.16, // extra trip lift per unit of impact speed
+  tripLiftMax: 8.5, // vertical-lift ceiling for generic low-obstacle trips
+  tripLiftVariation: 0.12, // deterministic +/- variation around generic trip lift
+  tripCarryMin: 0.58, // minimum entry-speed fraction carried through a low trip
+  tripCarryMax: 0.72, // maximum entry-speed fraction carried through a low trip
+  hugeDropDistance: 12, // apex-to-touchdown descent required for a heavy-landing bail
+  hugeDropImpact: 20, // minimum velocity into the landing normal for a heavy-landing bail
   crateTripSpeed: 6, // skate into a wood crate at or above this (but below smashSpeed) = trip and tumble OVER it
   // AUTHENTIC THPS/THUG balance dynamics (Neversoft's CManual is an unstable
   // inverted pendulum: needle position + velocity, nudged by taps and noise).
@@ -156,9 +171,8 @@ export const TUNING = {
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
-  arrowBoostMult: 1.25, // perfect-timed X press on an arrow crate multiplies the launch
-  arrowBoostWindow: 0.09, // press X within this many seconds of impact for the perfect bounce
-  slamRadius: 2.7, // pancake slam: crates/enemies within this radius break on impact
+  arrowBoostMult: 1.25, // holding X on the Arrow-crate impact tick multiplies the launch
+  slamRadius: 3.41526, // pancake slam radius: 1.6x the old 2.7-radius affected area
   nitroRadius: 2.75, // nitro explosion kill/break radius
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
@@ -183,7 +197,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 12; // v12: THPS pass — ballistic vert (vertMax 32 above downhillMax, drift conserved), rails keep entry speed (railSpeedBoost 0)
+export const TUNING_VERSION = 13; // v13: Unity-port feel/collision pass — foot inertia, exact slide, tuned double jump, generic wipeouts, Arrow/crate/Slam updates
 // v11: pipePump retired — pipePumpGain superseded it and applies on every transition
 // v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
 // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
@@ -193,6 +207,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   maxSpeed: { min: 5, max: 60, step: 1 },
   walkSpeed: { min: 6, max: 20, step: 0.5 },
   walkRampTime: { min: 0, max: 2, step: 0.05 },
+  walkSlowdownTime: { min: 0, max: 2, step: 0.05 },
   friction: { min: 0, max: 30, step: 0.5 },
   riseGravity: { min: 10, max: 120, step: 1 },
   fallGravity: { min: 10, max: 160, step: 1 },
@@ -238,6 +253,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   wallStick: { min: 0.8, max: 5, step: 0.1 },
   landGive: { min: 0.35, max: 3, step: 0.05 },
   railSnapDistance: { min: 0.5, max: 8, step: 0.1 },
+  grindApproachMargin: { min: 0, max: 90, step: 1 },
   railTripSpeed: { min: 8, max: 30, step: 0.5 },
   railSpeedBoost: { min: 0, max: 10, step: 0.5 },
   grindDrag: { min: 0, max: 4, step: 0.1 },
@@ -250,6 +266,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   flipHoldTime: { min: 0, max: 0.6, step: 0.02 },
   doubleJump: { min: 0, max: 1, step: 1 },
   doubleJumpWindow: { min: 0.1, max: 1.5, step: 0.05 },
+  doubleJumpVelocity: { min: 4, max: 24, step: 0.5 },
+  doubleJumpHorizontalScale: { min: 0, max: 1, step: 0.05 },
   spinAirCorrection: { min: 0, max: 12, step: 0.5 },
   turnaround: { min: 5, max: 300, step: 1 },
   brakeRampTime: { min: 0.1, max: 6, step: 0.05 },
@@ -263,6 +281,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   sketchyTolerance: { min: 20, max: 120, step: 5 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   crateHopSpeed: { min: 0, max: 26, step: 0.5 },
+  crateHopGravity: { min: 5, max: 80, step: 1 },
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
   skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
@@ -316,6 +335,16 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   ragSpin: { min: 0, max: 3, step: 0.1 },
   ragFlail: { min: 0, max: 2, step: 0.1 },
   wallBailSpeed: { min: 4, max: 30, step: 0.5 },
+  wallBailFrontal: { min: 0.3, max: 1, step: 0.02 },
+  tripMaxHeight: { min: 0.35, max: 1.5, step: 0.05 },
+  tripLiftBase: { min: 0, max: 12, step: 0.2 },
+  tripLiftPerSpeed: { min: 0, max: 0.5, step: 0.01 },
+  tripLiftMax: { min: 1, max: 16, step: 0.25 },
+  tripLiftVariation: { min: 0, max: 0.5, step: 0.01 },
+  tripCarryMin: { min: 0, max: 1, step: 0.02 },
+  tripCarryMax: { min: 0, max: 1, step: 0.02 },
+  hugeDropDistance: { min: 4, max: 30, step: 0.5 },
+  hugeDropImpact: { min: 5, max: 52, step: 1 },
   crateTripSpeed: { min: 1, max: 15, step: 0.5 },
   bailGrace: { min: 0, max: 1.2, step: 0.05 },
   balanceInertia: { min: 0, max: 1, step: 0.05 },
@@ -327,7 +356,6 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   smashSpeed: { min: 8, max: 40, step: 0.5 },
   arrowBounce: { min: 10, max: 60, step: 1 },
   arrowBoostMult: { min: 1, max: 2, step: 0.05 },
-  arrowBoostWindow: { min: 0.04, max: 0.3, step: 0.01 },
   slamRadius: { min: 1.5, max: 7, step: 0.1 },
   nitroRadius: { min: 2, max: 12, step: 0.25 },
   tntRadius: { min: 1.5, max: 10, step: 0.25 },
@@ -347,11 +375,13 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   maxSpeed:
     'Top skate speed from CHARGING. Downhill/pipe riding can exceed it up to the downhillMax slider before bleeding back on the flat.',
   walkSpeed:
-    'On-foot speed AND the walk/skate boundary. Walking is direct drive: instant start/stop, zero inertia, all four directions. Any carried speed above this counts as skating.',
+    'Full on-foot run speed AND the walk/skate boundary. Fresh input builds toward it through walkRampTime; released input coasts through walkSlowdownTime.',
   walkRampTime:
-    'Soft-start for on-foot walking: a fresh push eases from a standstill up to full walkSpeed over this many seconds (applies to sidesteps too). 0 = the instant Crash snap; higher = a gentler pick-up. The STOP stays instant, and it resets every time you let go so each start ramps fresh.',
+    'On-foot acceleration time: a fresh direction builds from rest to full walkSpeed over this many seconds. 0 = instant full pace.',
+  walkSlowdownTime:
+    'On-foot release inertia: time for a full-speed run to coast to a true stop. Committed direction changes use the same envelope to slide physical momentum toward the new intent while the gait and facing lead the turn. 0 = instant stop/turn.',
   friction:
-    'Speed bleed on STEEP ground, plus the on-foot coast — NOT the flat skate roll-out. Two places read it: riding a transition, where a deliberately LINEAR bleed decelerates harder than the flat model (that is what lets a sideways crawl on a wall die out so the stall-flip can roll you back in); and coasting on foot while neither skating nor charging (a third as strong while you still hold a direction, full strength with the stick released). The flat roll-out on the board is rollFriction + windDrag. 0 = no bleed.',
+    'Linear speed bleed on STEEP ridden ground — NOT ordinary foot release inertia and NOT the flat skate roll-out. Foot coasting is owned by walkSlowdownTime; flat board roll-out is rollFriction + windDrag.',
   riseGravity:
     'ON FOOT ONLY: gravity on the way UP in a platforming jump. Lower = floatier. Airs that start on the board ignore this and use boardRiseGravity, so you can retune the Crash jump without touching a single ollie.',
   fallGravity:
@@ -381,6 +411,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'DOUBLE JUMP: a fresh X press mid-air pops a second, smaller jump (quick-tap height) — one per air, re-armed by any ground or rail contact. Hangs, slams, and grabs own their airs and never double-jump.',
   doubleJumpWindow:
     'How LATE into the air the double jump can still fire — seconds since takeoff for a FULL-CHARGE jump. The window scales with each air\'s launch power: bigger pops (arrow crates, crate bounces) earn proportionally more time, quick taps less, and a plain walk-off fall keeps the base value so ledge saves still work. Short = a right-after-takeoff skill window; long = last-moment saves.',
+  doubleJumpVelocity:
+    'Vertical launch speed of the second on-foot jump. It replaces the current rise speed and cancels any running somersault.',
+  doubleJumpHorizontalScale:
+    'Fraction of on-foot horizontal traversal retained after a double jump. 0 stops horizontal travel; 1 keeps the original air movement.',
   chargeBoost:
     'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
   cruiseSpeed:
@@ -436,6 +470,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Landing forgiveness on steep transition faces. Flat decks ignore this and always use a fixed strict window. A HALFPIPE wall also enforces a deep floor of its own however low you set this — its face is near-vertical at the coping, so a fast drifting descent has to LAND on it rather than punch through into the pit below.',
   railSnapDistance:
     'How close (in units) a rail must be for Triangle to snap you onto it. Bigger = more forgiving grind grabs.',
+  grindApproachMargin:
+    'Moving grind-catch safety margin in degrees away from a perfectly PERPENDICULAR rail hit. The default 15° rejects near-square catches while preserving broad angled approaches; the exact boundary catches. 0° restores the old behavior, including fully perpendicular catches. A stationary eligible catch has no approach angle and remains valid.',
   railTripSpeed:
     'Running/skating STRAIGHT INTO a rail from the side (no jump, no grind): below this speed the rail simply BLOCKS you like a curb; at or above it you catch the rail and TRIP (bail/stumble). Jump over it or grind it to pass cleanly.',
   grindDrag:
@@ -482,7 +518,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'The SKETCHY net under spinTolerance: land off-line beyond spinTolerance but inside this and you keep it — with a wobble, a speed tax, and half the spin points. Past this = the full bail. Must be above spinTolerance to matter.',
   crateBounce: 'Vertical pop from stomping a crate — tune so crate-to-crate chains feel right.',
   crateHopSpeed:
-    'How hard an arrow crate throws a BOX that lands on it. The launch is re-applied on every contact, so the hop never decays — this sets its height and therefore its RHYTHM: against the settle gravity of 42 the hop is v^2/84 units and the round trip is v/21 seconds. That period is the window you are timing a jump through, so raise it for a lazier, more readable bounce and drop it for a fast chatter. 0 parks the box on the pad.',
+    'How hard an Arrow crate throws a BOX that lands on it. The fixed launch is re-applied on every contact, so the hop never decays. The shipped 14 launch with 28 gravity produces a stable roughly 59-tick cadence. 0 parks the box on the pad.',
+  crateHopGravity:
+    'Gravity used only by crates falling and bouncing in stacks. Together with crateHopSpeed it owns the height and rhythm of a crate-on-Arrow loop; 28 with launch 14 is the authored stable cadence.',
   boardSpeed:
     'Speed gate on the transition-carve sound effect. It NO LONGER controls whether the board is drawn or whether the wheels roll — both of those follow the skate state (freeSkate), so the deck is out exactly when you are skating and stowed exactly when you are not. The walk/skate physics boundary is walkSpeed.',
   skateHoldTime:
@@ -497,8 +535,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Speed-to-grip coupling: effective turn rate = carveGrip × (1 + ratio × (speed/cruise − 1)), clamped ×0.5–×2. 0 = same grip at every speed (old feel); 1 = your turning circle stays the same size no matter how fast you go; 0.5 = at full charge you carve ~1.5× sharper, at half cruise ~25% lazier.',
   slideMinSpeed: 'Minimum speed for Circle to trigger a slide; slower than this, holding Circle crawls.',
   slideDistance:
-    'How far the canned slide carries you, in world units — duration adapts to slide speed so the distance stays consistent.',
-  slideSpeed: 'The speed the slide bursts to (it never slows you below your current speed).',
+    'Exact authored slide travel in world units. The slide analytically brakes from its entry speed to a genuine stop across this distance.',
+  slideSpeed:
+    'Minimum entry speed of the slide. It never slows a faster entry, then analytically brakes to zero over slideDistance.',
   slideJumpHeight:
     'Crash slide-jump: a fresh X press+release during a slide leaps THIS much higher than a normal jump. It is a PLATFORMING move — always lands back on your feet, never flips out the board into skating.',
   slideJumpTravel:
@@ -573,7 +612,21 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   ragFlail:
     'Limb windmill amplitude while a wipeout is airborne. The arms and legs thrash between bounces and settle once the body is sliding.',
   wallBailSpeed:
-    'Skate head-on into a solid wall, metal box, or spent switch at or above this speed and you wipe out — bounce off backwards, tumble, drop the deck. Below it, the old dead stop. Keep it above cruiseSpeed or every casual wall bump becomes a crash.',
+    'Minimum board speed for a sufficiently frontal wall, balustrade, or other solid impact to enter the generic wipeout response. Below it, the obstacle blocks without a bail.',
+  wallBailFrontal:
+    'Required head-on approach dot for a solid or rail impact to become a wipeout. Higher demands a squarer hit; angled scrapes keep sliding.',
+  tripMaxHeight:
+    'Maximum obstacle height above the feet that selects the forward fold-over low-obstacle tumble instead of a backward wall rebound.',
+  tripLiftBase: 'Base vertical lift for every generic low-obstacle ragdoll trip.',
+  tripLiftPerSpeed: 'Additional low-obstacle lift contributed by impact speed.',
+  tripLiftMax: 'Maximum vertical lift for a generic fold-over ragdoll response.',
+  tripLiftVariation: 'Deterministic per-impact variation around low-obstacle lift.',
+  tripCarryMin: 'Minimum fraction of entry momentum carried through a generic forward trip.',
+  tripCarryMax: 'Maximum fraction of entry momentum carried through a generic forward trip.',
+  hugeDropDistance:
+    'Apex-to-touchdown descent required before a heavy landing can trigger a bail.',
+  hugeDropImpact:
+    'Minimum velocity into the landing surface for a huge-drop bail. A fast but well-aligned transition landing remains safe.',
   crateTripSpeed:
     'Skate into a plain wood crate or checkpoint at or above this (but below smashSpeed, which plows through) and you trip OVER the box and tumble down the far side. Below it, the crate is a wall.',
   crawlSpeed: 'Movement speed of the all-fours Circle-crawl.',
@@ -582,10 +635,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   arrowBounce:
     'Launch velocity of the yellow arrow-crate super bounce. Compare it against the crateBounce slider, which is what a plain crate stomp gives you.',
   arrowBoostMult:
-    'PERFECT BOUNCE: press X right as you hit an arrow crate and the launch is multiplied by this (1 = feature off).',
-  arrowBoostWindow:
-    'How tight the perfect-bounce timing is: X must be pressed within this many seconds before impact.',
-  slamRadius: 'Pancake slam blast radius — crates and enemies within this range of the impact break.',
+    'PERFECT BOUNCE: hold X on the exact Arrow-crate impact tick and the launch is multiplied by this (1 = feature off).',
+  slamRadius:
+    'Pancake slam blast radius. Its shock travels up to 3 units downward through metal support stacks, with only 0.6 upward allowance.',
   nitroRadius: 'Nitro explosion radius — everything (including you, unmasked) within it when a nitro pops.',
   tntRadius: 'TNT explosion radius once the 3-2-1 fuse runs out (or it is spun/slammed).',
   boulderSpeed:
@@ -609,10 +661,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
 // Every TuningKey should appear exactly once; anything missed lands in OTHER.
 export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
-  { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'crawlSpeed'] },
+  { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'walkSlowdownTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
   },
   {
     title: 'SKATING',
@@ -669,15 +721,24 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',
     keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'landPumpBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
-  { title: 'WIPEOUTS', keys: ['ragBounce', 'ragSpin', 'ragFlail', 'wallBailSpeed', 'crateTripSpeed'] },
-  { title: 'CRATES', keys: ['crateBounce', 'crateHopSpeed', 'arrowBounce', 'arrowBoostMult', 'arrowBoostWindow', 'nitroRadius', 'tntRadius'] },
+  {
+    title: 'WIPEOUTS',
+    keys: [
+      'ragBounce', 'ragSpin', 'ragFlail', 'crateTripSpeed',
+      'hugeDropDistance', 'hugeDropImpact',
+      'wallBailSpeed', 'wallBailFrontal', 'tripMaxHeight',
+      'tripLiftBase', 'tripLiftPerSpeed', 'tripLiftMax', 'tripLiftVariation',
+      'tripCarryMin', 'tripCarryMax',
+    ],
+  },
+  { title: 'CRATES', keys: ['crateBounce', 'crateHopSpeed', 'crateHopGravity', 'arrowBounce', 'arrowBoostMult', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift', 'camBalanceRoll'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },
 ];
@@ -729,7 +790,6 @@ export const CONST = {
   flipTime: 0.42, // how long a flip trick takes the deck to complete — finish it in the air or the landing goes sketchy and pays nothing
   ptsFlip: 110, // base for a flip trick (kickflip family), scored the moment the deck completes mid-air
   ptsRevert: 100, // R2 within the beat after a transition touchdown: the pivot that keeps a vert combo alive into the manual (THPS3+/THUG's bridge)
-  boardPickupRadius: 1.2, // walk this close to a thrown deck lying on the floor and you scoop it up and hop straight back on
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 40, // pipe hang: cap on the off-axis lateral carry. Effectively uncapped now (THPS conserves coping drift — a hard angled carve genuinely flies you down the pipe); out-running the pipe is the hang-end bail's job, not a clamp's
   rollOffLevelTime: 1.5, // riding out a pipe's open END partway up the wall: the body levels from the wall tilt to wheels-down over this many airborne seconds — touch down still tilted (off a saving surface) and it's the bail you were carrying

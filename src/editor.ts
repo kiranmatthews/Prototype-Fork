@@ -1,11 +1,11 @@
-// LEVEL EDITOR: an in-game mode over a USER level. The level is pure data
-// (CustomLevelData) — the editor mutates that data and rebuilds the live level
-// after every change, so what you edit is exactly what you play. Built-in
-// levels are never edited in place: main.ts captures one into a new user level
-// first, so the editor only ever binds to something it is safe to overwrite.
+// LEVEL EDITOR: an in-game mode over source-owned level data. The editor keeps
+// a transactional working copy and rebuilds the live preview from that exact
+// copy. A hand-coded built-in is captured only into memory on open; it does not
+// replace the shipped course: its first real edit forks an explicit user copy.
+// Opening and closing without editing hands the original builder back intact.
 //
-//   orbit: left-drag rotate · wheel zoom · right-drag pan
-//   select: click a component · drag it to move (Shift = up/down)
+//   orbit: right-drag rotate · wheel zoom · middle/space-drag pan
+//   select: left-click a component · drag it to move
 //   panel: add components, edit the selection's numbers, spawn/killY,
 //          export/import .json, TEST to play on the spot
 //
@@ -19,9 +19,11 @@ import {
   CustomComponent,
   EnemyKind,
   CustomLevelData,
+  CustomGroup,
   LevelEntry,
   starterCustomLevel,
   migrateCustomLevel,
+  normalizeCustomLevelData,
   groupChainOf,
   TEX_KINDS,
   DECOR_KINDS,
@@ -31,8 +33,10 @@ import {
   SKY_PRESETS,
   asSkyPreset,
   isBuiltin,
+  isOverridden,
   getEditData,
   persistEditData,
+  userLevelStorageHealthy,
   saveUserLevel,
   renameUserLevel,
   deleteUserLevel,
@@ -50,13 +54,15 @@ import {
 } from "./props";
 
 interface Hooks {
-  rebuild: () => void; // dispose + reconstruct the target level from data
+  preflight: () => boolean;
+  rebuild: (committed?: boolean) => void; // live preview, or committed play-source rebuild
+  resetPreview: () => void; // canceled gesture: reveal exact retained level again
   exitToPlay: () => void; // leave the editor and hand control back to the game
   showMsg: (title: string, sub?: string) => void;
   // the level LIST changed (rename / duplicate / delete / import): refresh the
   // menu, and switch to `goTo` if this editor session should follow it there
   levelsChanged: (goTo?: string) => void;
-  setView: (editing: boolean) => void; // toggle the fog-free, far-plane-extended editor view
+  setView: (editing: boolean, changed?: boolean) => void; // toggle the fog-free, far-plane-extended editor view
 }
 
 // what the ADD palette spawns, at the camera's focus point — grouped, each
@@ -66,7 +72,14 @@ interface PalItem {
   label: string;
   icon: Draw;
   make?: (at: THREE.Vector3) => CustomComponent;
-  penDraw?: "platform" | "pit" | "wall" | "rail" | "vertramp" | "terrain"; // pen tool: click-to-draw a polygon (or open path) of this type
+  penDraw?:
+    | "platform"
+    | "pit"
+    | "wall"
+    | "rail"
+    | "vertramp"
+    | "terrain"
+    | "woodpath"; // pen tool: click-to-draw a polygon (or open path) of this type
 }
 
 const box = (
@@ -476,6 +489,45 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           }
         },
         penDraw: "terrain",
+      },
+      {
+        label: "wood + bamboo path",
+        icon: (x) => {
+          x.strokeStyle = "#8b5a2b";
+          x.lineWidth = 5;
+          x.lineCap = "butt";
+          x.beginPath();
+          x.moveTo(2, 15);
+          x.bezierCurveTo(5, 8, 11, 15, 16, 4);
+          x.stroke();
+          x.strokeStyle = "#d8bd70";
+          x.lineWidth = 1.4;
+          for (let i = 3; i < 16; i += 3) {
+            x.beginPath();
+            x.moveTo(i - 2, 14);
+            x.lineTo(i + 1, 10);
+            x.stroke();
+          }
+        },
+        make: (at) => ({
+          t: "woodpath",
+          p: [at.x, at.y, at.z],
+          w: 6,
+          curve: "spline",
+          scaffold: true,
+          supports: true,
+          rails: true,
+          spacing: 0.55,
+          baySpacing: 3.8,
+          supportDepth: 3,
+          pts: [
+            [0, 0, 0, 0, 0],
+            [2, -12, 0, 1, 3],
+            [-1, -24, 0, 2.5, -3],
+            [0, -36, 0, 3, 0],
+          ],
+          widths: [6, 6.5, 5.5, 6],
+        }),
       },
       {
         label: "ramp",
@@ -1040,6 +1092,28 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         penDraw: "vertramp",
       },
       {
+        label: "wood path",
+        icon: (x) => {
+          x.strokeStyle = "#b98243";
+          x.lineWidth = 4;
+          x.beginPath();
+          x.moveTo(2, 14);
+          x.bezierCurveTo(6, 8, 11, 15, 16, 4);
+          x.stroke();
+          x.fillStyle = "#ead49a";
+          for (const [px, py] of [
+            [2, 14],
+            [9, 10],
+            [16, 4],
+          ] as const) {
+            x.beginPath();
+            x.arc(px, py, 1.8, 0, 7);
+            x.fill();
+          }
+        },
+        penDraw: "woodpath",
+      },
+      {
         label: "rope",
         icon: (x) => {
           x.strokeStyle = "#c2a878";
@@ -1499,6 +1573,47 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           foe: "spinner",
         }),
       },
+      {
+        label: "Grindosaurus",
+        icon: (x) => {
+          x.fillStyle = "#4f9a56";
+          x.fillRect(2, 6, 14, 8);
+          x.strokeStyle = "#d8dde2";
+          x.lineWidth = 2;
+          x.beginPath();
+          x.moveTo(2, 5);
+          x.lineTo(16, 5);
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "grindosaurus",
+          p: [at.x, at.y, at.z],
+          range: 4,
+          speed: 1.5,
+          coverage: 0.65,
+          yaw: 0,
+        }),
+      },
+      {
+        label: "Angry Ball",
+        icon: (x) => {
+          x.fillStyle = "#d83d2a";
+          x.beginPath();
+          x.arc(9, 9, 6, 0, 7);
+          x.fill();
+          glyph(x, "•", "#fff099");
+        },
+        make: (at) => ({
+          t: "angryball",
+          p: [at.x, at.y, at.z],
+          w: 3,
+          rise: 4.6,
+          radius: 0.8,
+          range: 12,
+          speed: 7,
+          yaw: 0,
+        }),
+      },
     ],
   },
   {
@@ -1557,6 +1672,90 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           amp: 1.0,
           speed: 1.6,
           phase: 0,
+        }),
+      },
+      {
+        label: "trampoline pad",
+        icon: (x) => {
+          box(x, "#ff8a2b", "#7b2e00");
+          glyph(x, "↑", "#fff2c7");
+        },
+        make: (at) => ({
+          t: "trampoline",
+          p: [at.x, at.y + 0.45, at.z],
+          s: [5, 0.45, 5],
+          speed: 16,
+          amp: 1.25,
+        }),
+      },
+      {
+        label: "speed pad",
+        icon: (x) => {
+          box(x, "#2bdfff", "#07546a");
+          glyph(x, "»", "#ffffff");
+        },
+        make: (at) => ({
+          t: "speedpad",
+          p: [at.x, at.y + 0.3, at.z],
+          s: [4, 0.3, 5],
+          speed: 48,
+          cycle: 3.9,
+        }),
+      },
+      {
+        label: "trick gate",
+        icon: (x) => {
+          x.strokeStyle = "#54dfff";
+          x.lineWidth = 3;
+          x.beginPath();
+          x.arc(9, 9, 6, 0, 7);
+          x.stroke();
+          glyph(x, "F", "#ff75a6");
+        },
+        make: (at) => ({
+          t: "trickgate",
+          p: [at.x, at.y + 3, at.z],
+          s: [12, 8, 0.6],
+          trick: "kick",
+          radius: 2.2,
+        }),
+      },
+      {
+        label: "trick rail",
+        icon: (x) => {
+          x.strokeStyle = "rgba(84,223,255,0.45)";
+          x.lineWidth = 2.5;
+          x.beginPath();
+          x.moveTo(2, 7);
+          x.lineTo(16, 7);
+          x.stroke();
+          glyph(x, "F", "#ff75a6");
+        },
+        make: (at) => ({
+          t: "trickrail",
+          p: [at.x, at.y + 1, at.z],
+          len: 12,
+          yaw: 0,
+          trick: "kick",
+        }),
+      },
+      {
+        label: "return portal",
+        icon: (x) => {
+          x.strokeStyle = "#9f72ff";
+          x.lineWidth = 3;
+          x.beginPath();
+          x.ellipse(9, 9, 5.5, 7, 0, 0, 7);
+          x.stroke();
+          glyph(x, "↪", "#efe8ff");
+        },
+        make: (at) => ({
+          t: "returnportal",
+          p: [at.x, at.y, at.z],
+          s: [3, 4, 1.2],
+          to: [at.x, at.y, at.z + 12],
+          exitYaw: 180,
+          airOnly: false,
         }),
       },
       {
@@ -1665,6 +1864,14 @@ const CRATE_KINDS = [
   "nitrobang",
 ] as const;
 
+const DECK_TRICKS = [
+  ["kick", "Kickflip"],
+  ["heel", "Heelflip"],
+  ["shove", "Pop Shove-It"],
+  ["imposs", "Impossible"],
+  ["varial", "Varial Flip"],
+] as const;
+
 // enemy variants + a one-line hint on how each is beaten, shown in the dropdown
 const FOE_KINDS: { k: EnemyKind; label: string }[] = [
   { k: "grunt", label: "grunt — any attack" },
@@ -1689,12 +1896,18 @@ const RESIZABLE = new Set([
   "phasepad",
   "ramp",
   "rail",
+  "trickrail",
   "rope",
   "zone",
   "vertramp",
   "enemy",
   "pendulum",
   "ropeswing",
+  "trampoline",
+  "speedpad",
+  "trickgate",
+  "returnportal",
+  "woodpath",
 ]);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
@@ -1761,10 +1974,158 @@ const MOVE_GIZMO_PX = 96; // on-screen length of an arrow, held constant with di
 const snapHalf = (v: number): number => Math.round(v * 2) / 2;
 const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 
+/**
+ * Horizontal affine-scale metrics for a path authored as relative X/Z knots.
+ *
+ * A wood path rebuilds every cross-section perpendicular to its transformed
+ * centreline. Under a non-uniform world scale, simply scaling that width by
+ * `(sx + sz) / 2` is wrong: a diagonal path would grow too wide because the
+ * transformed old normal also contains a component along the new tangent.
+ * Projecting it onto the new normal gives, on a smooth unbanked segment,
+ *
+ *     widthScale = det(scale) / |scale * unitTangent|.
+ *
+ * Linear knots use the outgoing segment (the last knot uses the incoming one),
+ * exactly like buildWoodPath's segment selection. Spline knots use the same
+ * centripetal Catmull-Rom and parameter-space tangents as the runtime. Arc
+ * length is measured from the same runtime-density samples in either mode.
+ */
+function pathScaleMetrics(
+  pts: NonNullable<CustomComponent["pts"]>,
+  curve: CustomComponent["curve"],
+  sx: number,
+  sy: number,
+  sz: number,
+): { normalAt: number[]; lengthScale: number } {
+  const EPS = 1e-8;
+  const knotsAt = (
+    scaleX: number,
+    scaleY: number,
+    scaleZ: number,
+  ): THREE.Vector3[] =>
+    pts.map(
+      (point) =>
+        new THREE.Vector3(
+          point[0] * scaleX,
+          (point[3] ?? 0) * scaleY,
+          point[1] * scaleZ,
+        ),
+    );
+  const fallbackTangent = (
+    knots: THREE.Vector3[],
+    index: number,
+  ): THREE.Vector3 => {
+    // Linear runtime frames choose the outgoing segment at every knot except
+    // the last. Skip zero-length duplicates without changing that direction.
+    for (let after = index + 1; after < knots.length; after++) {
+      const tangent = knots[after].clone().sub(knots[index]);
+      if (tangent.lengthSq() > EPS * EPS) return tangent.normalize();
+    }
+    for (let before = index - 1; before >= 0; before--) {
+      const tangent = knots[index].clone().sub(knots[before]);
+      if (tangent.lengthSq() > EPS * EPS) return tangent.normalize();
+    }
+    return new THREE.Vector3(0, 0, -1);
+  };
+  const splineFor = (knots: THREE.Vector3[]): THREE.CatmullRomCurve3 | null =>
+    curve === "spline" && knots.length >= 3
+      ? new THREE.CatmullRomCurve3(knots, false, "centripetal", 0.35)
+      : null;
+  const tangentsAt = (knots: THREE.Vector3[]): THREE.Vector3[] => {
+    const spline = splineFor(knots);
+    if (!spline) return knots.map((_, index) => fallbackTangent(knots, index));
+    return knots.map((_, index) => {
+      const tangent = spline.getTangent(index / (knots.length - 1));
+      return tangent.lengthSq() > EPS * EPS
+        ? tangent.normalize()
+        : fallbackTangent(knots, index);
+    });
+  };
+  const sampledArc = (knots: THREE.Vector3[]): number => {
+    let polyLength = 0;
+    for (let index = 1; index < knots.length; index++)
+      polyLength += knots[index].distanceTo(knots[index - 1]);
+    if (polyLength <= EPS) return 0;
+    const sampleCount = THREE.MathUtils.clamp(
+      Math.ceil(polyLength / 0.65),
+      2,
+      8192,
+    );
+    const spline = splineFor(knots);
+    let previous: THREE.Vector3 | null = null;
+    let arc = 0;
+    for (let index = 0; index <= sampleCount; index++) {
+      const t = index / sampleCount;
+      let center: THREE.Vector3;
+      if (spline) center = spline.getPoint(t);
+      else {
+        const knotF = t * (knots.length - 1);
+        const segment = Math.min(knots.length - 2, Math.floor(knotF));
+        const local = Math.min(1, knotF - segment);
+        center = knots[segment].clone().lerp(knots[segment + 1], local);
+      }
+      if (previous) arc += center.distanceTo(previous);
+      previous = center;
+    }
+    return arc;
+  };
+
+  const rightAt = (forward: THREE.Vector3, bank: number): THREE.Vector3 => {
+    const stableForward = forward.clone();
+    // Match buildWoodPath's near-vertical guard so the editor and runtime pick
+    // the same stable horizontal side axis.
+    if (Math.abs(stableForward.y) > 0.98) stableForward.z += 0.02;
+    stableForward.normalize();
+    const flatRight = new THREE.Vector3()
+      .crossVectors(new THREE.Vector3(0, 1, 0), stableForward)
+      .normalize();
+    const flatUp = new THREE.Vector3()
+      .crossVectors(stableForward, flatRight)
+      .normalize();
+    return flatRight
+      .multiplyScalar(Math.cos(bank))
+      .addScaledVector(flatUp, Math.sin(bank))
+      .normalize();
+  };
+
+  const sourceKnots = knotsAt(1, 1, 1);
+  const transformedKnots = knotsAt(sx, sy, sz);
+  const sourceTangents = tangentsAt(sourceKnots);
+  const transformedTangents = tangentsAt(transformedKnots);
+  const normalAt = pts.map((_, index) => {
+    const bank = THREE.MathUtils.degToRad(pts[index][4] ?? 0);
+    const sourceRight = rightAt(sourceTangents[index], bank);
+    const rebuiltRight = rightAt(transformedTangents[index], bank);
+    // Project the affine transform of the original banked right vector onto
+    // the right vector the transformed procedural path will actually rebuild;
+    // discard tangent/up shear that a scalar per-knot width cannot represent.
+    const scaledRight = sourceRight.multiply(
+      new THREE.Vector3(sx, sy, sz),
+    );
+    return Math.abs(scaledRight.dot(rebuiltRight));
+  });
+
+  const sourceLength = sampledArc(sourceKnots);
+  const transformedLength = sampledArc(transformedKnots);
+  return {
+    normalAt,
+    lengthScale:
+      sourceLength > EPS
+        ? transformedLength / sourceLength
+        : (Math.abs(sx) + Math.abs(sz)) / 2,
+  };
+}
+
 export class Editor {
   active = false;
   targetId = DEFAULT_LEVEL_ID; // the user level this session edits
   private targetName = ""; // its menu name — what the rename field shows
+  private initialTargetId = DEFAULT_LEVEL_ID;
+  private initialJson = "";
+  private pristineBuiltin = false;
+  private registryChanged = false;
+  private forkOnFirstCommit = false;
+  private forkedLevelId: string | null = null;
   private nameInput: HTMLInputElement | null = null;
   private skySelect: HTMLSelectElement | null = null;
   private resetBtn: HTMLButtonElement | null = null;
@@ -1779,6 +2140,15 @@ export class Editor {
   private getLevel: () => Level;
   private hooks: Hooks;
   private controls: OrbitControls | null = null;
+  private playCamera: {
+    position: THREE.Vector3;
+    quaternion: THREE.Quaternion;
+    fov: number;
+    zoom: number;
+    near: number;
+    far: number;
+    aspect: number;
+  } | null = null;
   // double-click a layer row -> glide the camera to that piece (see focusOnBox)
   private focusAnim: {
     fromP: THREE.Vector3;
@@ -1813,6 +2183,10 @@ export class Editor {
   private dragStart = new THREE.Vector3(); // plane hit at drag start
   private dragOrig: [number, number, number] = [0, 0, 0]; // grabbed comp at drag start
   private dragSel: { idx: number; p: [number, number, number] }[] = [];
+  private dragAddedFrom: number | null = null;
+  private dragGroupsBefore: CustomGroup[] | null = null;
+  private dragSourceJson: string | null = null;
+  private dragSelectionBefore: number[] | null = null;
   private downAt: { x: number; y: number } | null = null;
   // marquee (shift-drag on empty space): screen-space rubber band
   private marquee: { x0: number; y0: number; x1: number; y1: number } | null =
@@ -1834,9 +2208,18 @@ export class Editor {
   private marqueeAdd = false; // shift-marquee adds; plain marquee replaces
   private marqueeNodes = false; // node mode: the sweep selects NODES of the edited shape
   private camSaveAt = 0;
+  private cameraDirty = false;
+  private cancelScrub: (() => void) | null = null;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
   private drawing: {
-    t: "platform" | "pit" | "wall" | "rail" | "vertramp" | "terrain";
+    t:
+      | "platform"
+      | "pit"
+      | "wall"
+      | "rail"
+      | "vertramp"
+      | "terrain"
+      | "woodpath";
     y: number;
     pts: THREE.Vector3[];
   } | null = null;
@@ -1861,6 +2244,7 @@ export class Editor {
     lineD: THREE.Vector3;
     t0: number;
     orig: CustomComponent;
+    source?: CustomComponent; // sparse pre-drag form, used when a gesture cancels
     vtx?: number; // polygon vertex drag: uses `plane` instead of the axis line
     plane?: THREE.Plane;
   } | null = null;
@@ -1917,31 +2301,65 @@ export class Editor {
     dom.addEventListener("pointerdown", this.onDown);
     dom.addEventListener("pointermove", this.onMove);
     dom.addEventListener("pointerup", this.onUp);
+    dom.addEventListener("pointercancel", this.onPointerCancel);
+    dom.addEventListener("lostpointercapture", this.onPointerCancel);
     dom.addEventListener("dblclick", this.onDbl);
     // any manual camera move (orbit/pan on any button, or wheel zoom) cancels a
     // running layer-focus glide so the user is never fighting it
-    dom.addEventListener("pointerdown", () => (this.focusAnim = null));
-    dom.addEventListener("wheel", () => (this.focusAnim = null), {
+    dom.addEventListener("pointerdown", (event) => {
+      this.focusAnim = null;
+      if (this.active && (event.button !== 0 || this.spaceHeld))
+        this.cameraDirty = true;
+    });
+    dom.addEventListener("wheel", () => {
+      this.focusAnim = null;
+      if (this.active) this.cameraDirty = true;
+    }, {
       passive: true,
     });
     window.addEventListener("keydown", this.onKey);
     window.addEventListener("keyup", this.onKeyUp);
+    window.addEventListener("blur", this.onPointerCancel);
   }
 
-  enter(target: LevelEntry): void {
+  enter(target: LevelEntry, initialData?: CustomLevelData): void {
     if (this.active) return;
     this.active = true;
     this.targetId = target.id;
     this.targetName = target.name;
     if (this.nameInput) this.nameInput.value = target.name;
     localStorage.setItem("solProtoEditorTarget", target.id); // refresh lands on the same level
-    this.data = migrateCustomLevel(getEditData(target.id));
+    this.data = migrateCustomLevel(
+      deepClone(initialData ?? getEditData(target.id)),
+    );
+    this.initialTargetId = target.id;
+    this.initialJson = JSON.stringify(this.data);
+    this.pristineBuiltin = isBuiltin(target.id) && !isOverridden(target.id);
+    this.registryChanged = false;
+    this.forkOnFirstCommit = isBuiltin(target.id) && target.data === undefined;
+    this.forkedLevelId = null;
+    this.closedGroups.clear();
     this.syncSkySelect();
     this.syncFileButtons();
     // fresh history per target: switching levels must not undo across them
     this.lastCommitted = JSON.stringify(this.data);
     this.undoStack.length = 0;
     this.redoStack.length = 0;
+    this.lastCoalesce = "";
+    this.lastCommitT = 0;
+    this.playCamera = {
+      position: this.camera.position.clone(),
+      quaternion: this.camera.quaternion.clone(),
+      fov: this.camera.fov,
+      zoom: this.camera.zoom,
+      near: this.camera.near,
+      far: this.camera.far,
+      aspect: this.camera.aspect,
+    };
+    const width = Math.max(1, this.dom.clientWidth);
+    const height = Math.max(1, this.dom.clientHeight);
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
     this.controls = new OrbitControls(this.camera, this.dom);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.12;
@@ -1955,7 +2373,9 @@ export class Editor {
     let restored = false;
     try {
       const cam = JSON.parse(
-        localStorage.getItem("solProtoEditorCam") ?? "null",
+        localStorage.getItem(`solProtoEditorCam:${target.id}`) ??
+          localStorage.getItem("solProtoEditorCam") ??
+          "null",
       ) as {
         p: number[];
         t: number[];
@@ -1980,13 +2400,18 @@ export class Editor {
         this.data.spawn[2] + 26,
       );
     }
+    this.cameraDirty = false;
     localStorage.setItem("solProtoEditorOpen", "1"); // refresh lands back in the editor
     document.body.classList.add("ed-active"); // hides the play HUD under the tools
     this.panel.style.display = "block";
     if (this.popWrap) this.popWrap.style.display = "block";
     this.setPop(
-      (localStorage.getItem("solProtoEditorPop") as "add" | "layers" | "") ??
+      (localStorage.getItem(`solProtoEditorPop:${target.id}`) as
+        | "add"
+        | "layers"
+        | "") ??
         "add",
+      false,
     );
     this.select(-1);
     this.renderLayers();
@@ -1999,16 +2424,155 @@ export class Editor {
     );
   }
 
+  /** Exact in-memory source for editor rebuilds, including uncommitted drags. */
+  workingEntry(): LevelEntry | null {
+    if (!this.active) return null;
+    return {
+      id: this.targetId,
+      name: this.targetName,
+      data: this.data,
+    };
+  }
+
+  /** Keep the play-camera snapshot current when the viewport changes mid-edit. */
+  syncPlayAspect(aspect: number): void {
+    if (
+      this.active &&
+      this.playCamera &&
+      Number.isFinite(aspect) &&
+      aspect > 0
+    )
+      this.playCamera.aspect = aspect;
+  }
+
+  get changedThisSession(): boolean {
+    return (
+      this.registryChanged ||
+      this.targetId !== this.initialTargetId ||
+      this.lastCommitted !== this.initialJson
+    );
+  }
+
+  private forkHandBuiltDraft(): boolean {
+    const originalName = findLevel(this.initialTargetId)?.name ?? this.targetName;
+    const forkName =
+      this.data.name && this.data.name !== originalName
+        ? this.data.name
+        : `${originalName} edit`;
+    this.data.name = forkName;
+    const id = saveUserLevel({ id: "", name: forkName, data: this.data });
+    this.targetId = id;
+    this.targetName = findLevel(id)?.name ?? forkName;
+    this.forkedLevelId = id;
+    this.forkOnFirstCommit = false;
+    this.registryChanged = true;
+    localStorage.setItem("solProtoEditorTarget", id);
+    if (this.nameInput) this.nameInput.value = this.targetName;
+    this.syncFileButtons();
+    this.hooks.levelsChanged(id);
+    this.hooks.showMsg(
+      "EDITABLE COPY CREATED",
+      `${originalName} stays untouched · now editing ${this.targetName}`,
+    );
+    return userLevelStorageHealthy();
+  }
+
+  private rollbackActiveGesture(rebuildPreview = false): boolean {
+    const before = JSON.stringify(this.data);
+    const hadGesture =
+      this.moveDrag !== null ||
+      this.gizmoDrag !== null ||
+      this.hdlDrag !== null ||
+      this.dragging;
+    for (const original of this.moveDrag?.orig ?? []) {
+      const component = this.data.components[original.idx];
+      if (component) component.p = [...original.p];
+    }
+    if (this.gizmoDrag)
+      for (const [idx, original] of this.gizmoDrag.orig)
+        this.data.components[idx] = deepClone(original);
+    if (this.hdlDrag && this.resizeIdx >= 0)
+      this.data.components[this.resizeIdx] = deepClone(
+        this.hdlDrag.source ?? this.hdlDrag.orig,
+      );
+    if (this.dragging)
+      for (const original of this.dragSel) {
+        const component = this.data.components[original.idx];
+        if (component) component.p = [...original.p];
+      }
+    if (this.dragAddedFrom !== null) {
+      this.data.components.splice(this.dragAddedFrom);
+      if (this.dragGroupsBefore)
+        this.data.groups = deepClone(this.dragGroupsBefore);
+    }
+    if (this.dragSourceJson)
+      this.data = migrateCustomLevel(
+        JSON.parse(this.dragSourceJson) as CustomLevelData,
+      );
+    if (this.dragSelectionBefore)
+      this.sel = this.dragSelectionBefore.filter(
+        (index) => index >= 0 && index < this.data.components.length,
+      );
+    this.moveDrag = null;
+    this.gizmoDrag = null;
+    this.hdlDrag = null;
+    this.dragging = false;
+    this.dragSel = [];
+    this.dragAddedFrom = null;
+    this.dragGroupsBefore = null;
+    this.dragSourceJson = null;
+    this.dragSelectionBefore = null;
+    this.downAt = null;
+    this.marquee = null;
+    this.hideMarquee();
+    this.spaceHeld = false;
+    if (this.controls) {
+      this.controls.enabled = true;
+      this.controls.mouseButtons.LEFT = -1 as unknown as THREE.MOUSE;
+    }
+    if (hadGesture) {
+      this.refreshSelectionBox();
+      this.refreshHandles();
+      this.renderProps();
+    }
+    if (rebuildPreview && before !== JSON.stringify(this.data))
+      this.hooks.resetPreview();
+    return hadGesture;
+  }
+
+  private onPointerCancel = (): void => {
+    if (!this.active) return;
+    this.cancelScrub?.();
+    this.rollbackActiveGesture(true);
+  };
+
   exit(): void {
     if (!this.active) return;
+    this.cancelScrub?.();
+    const focused = document.activeElement as HTMLElement | null;
+    if (focused && this.panel.contains(focused)) focused.blur();
     // Never leave the build mode stuck on: whoever closes the editor, the
     // next level built goes back to baked scenery. The paths that stay on
     // THIS level rebuild it themselves (see main.ts).
     setEditorBuild(false);
     this.to3D(); // a 2D work view must not leak its long-lens camera into play
+    if (this.cameraDirty) this.saveCam(); // only user camera work is persistent
+    // A lost pointerup/tab switch is cancellation, not a partial hidden edit.
+    this.rollbackActiveGesture(false);
+    if (this.playCamera) {
+      const saved = this.playCamera;
+      this.camera.position.copy(saved.position);
+      this.camera.quaternion.copy(saved.quaternion);
+      this.camera.fov = saved.fov;
+      this.camera.zoom = saved.zoom;
+      this.camera.near = saved.near;
+      this.camera.far = saved.far;
+      this.camera.aspect = saved.aspect;
+      this.camera.updateProjectionMatrix();
+      this.playCamera = null;
+    }
     this.active = false;
-    this.hooks.setView(false); // restore the level's fog + play draw distance
-    this.saveCam();
+    this.hooks.setView(false, this.changedThisSession); // exact restore on no-op; apply committed atmosphere changes
     localStorage.removeItem("solProtoEditorOpen");
     localStorage.removeItem("solProtoEditorTarget");
     this.controls?.dispose();
@@ -2022,13 +2586,17 @@ export class Editor {
     this.hideMarquee();
     this.dragging = false;
     this.dragSel = [];
+    this.moveDrag = null;
+    this.hdlDrag = null;
+    this.downAt = null;
+    this.focusAnim = null;
     this.spaceHeld = false;
     this.dom.style.cursor = "";
     this.gizmoDrag = null;
     this.teardownGizmo();
     this.setGhostsVisible(false);
     if (this.spawnMarker) {
-      this.scene.remove(this.spawnMarker);
+      this.removeHelper(this.spawnMarker);
       this.spawnMarker = null;
     }
   }
@@ -2072,7 +2640,7 @@ export class Editor {
     }
     // periodic camera save: a refresh mid-edit comes back to this exact view
     const now = performance.now();
-    if (this.active && now - this.camSaveAt > 1500) {
+    if (this.active && this.cameraDirty && now - this.camSaveAt > 1500) {
       this.camSaveAt = now;
       this.saveCam();
     }
@@ -2082,7 +2650,7 @@ export class Editor {
     if (!this.controls) return;
     try {
       localStorage.setItem(
-        "solProtoEditorCam",
+        `solProtoEditorCam:${this.targetId}`,
         JSON.stringify({
           // while a 2D view is up, persist the saved FREE view — a refresh
           // reopens in normal 3D, never stranded on the long 2D lens
@@ -2126,13 +2694,30 @@ export class Editor {
   // Adopt a level file as a NEW level in the menu, then edit it. Never
   // overwrites the level that happens to be open.
   importLevel(d: CustomLevelData, name?: string): void {
-    // enforce the one-crystal rule on imported files too (keep the last)
-    const lastCrystal = d.components.map((c) => c.t).lastIndexOf("crystal");
-    d.components = d.components.filter(
-      (c, i) => c.t !== "crystal" || i === lastCrystal,
-    );
-    const data = migrateCustomLevel(d);
+    const data = normalizeCustomLevelData(d);
+    if (!data) {
+      this.hooks.showMsg("BAD LEVEL FILE", "invalid component data");
+      return;
+    }
+    let probe: Level | null = null;
+    try {
+      probe = new Level(new THREE.Scene(), {
+        id: "__editor_import_probe",
+        name: name ?? data.name,
+        data,
+      });
+    } catch {
+      this.hooks.showMsg("BAD LEVEL FILE", "the level could not be built safely");
+      return;
+    } finally {
+      probe?.dispose(this.getLevel());
+    }
     const id = saveUserLevel({ id: "", name: name ?? data.name, data });
+    if (!userLevelStorageHealthy())
+      this.hooks.showMsg(
+        "SAVE FAILED",
+        "import is session-only · export before reloading",
+      );
     this.retarget(id);
     this.hooks.levelsChanged(id);
     this.hooks.showMsg("LEVEL IMPORTED", findLevel(id)?.name ?? "");
@@ -2169,6 +2754,8 @@ export class Editor {
     if (!e) return;
     this.targetId = e.id;
     this.targetName = e.name;
+    this.registryChanged = true;
+    this.closedGroups.clear();
     if (this.nameInput) this.nameInput.value = e.name;
     localStorage.setItem("solProtoEditorTarget", e.id);
     this.data = migrateCustomLevel(getEditData(e.id));
@@ -2177,6 +2764,8 @@ export class Editor {
     this.lastCommitted = JSON.stringify(this.data);
     this.undoStack.length = 0; // history belongs to the level, not the session
     this.redoStack.length = 0;
+    this.lastCoalesce = "";
+    this.lastCommitT = 0;
     this.select(-1);
     this.renderLayers();
     this.refreshSpawnMarker();
@@ -2209,8 +2798,34 @@ export class Editor {
 
   // `coalesce`: edits sharing a key within a second merge into ONE undo step
   // (arrow-key nudge bursts, held number spinners)
-  private commit(rebuild = true, coalesce = ""): void {
+  private commit(rebuild = true, coalesce = ""): boolean {
+    // Selection, a handle click with zero travel, panel rendering, and focus
+    // changes are not edits. Never normalize, autosave, rebuild, or create a
+    // built-in override unless the working JSON actually changed.
+    const beforePrune = JSON.stringify(this.data);
+    if (beforePrune === this.lastCommitted) return true;
+    if (!this.hooks.preflight()) {
+      this.data = migrateCustomLevel(
+        JSON.parse(this.lastCommitted) as CustomLevelData,
+      );
+      this.sel = this.sel.filter(
+        (index) => index >= 0 && index < this.data.components.length,
+      );
+      this.hooks.resetPreview();
+      this.renderLayers();
+      this.renderProps();
+      return false;
+    }
+    this.pruneGroups();
+    let forkPersisted: boolean | null = null;
+    if (
+      this.forkOnFirstCommit &&
+      this.targetId === this.initialTargetId &&
+      JSON.stringify(this.data) !== this.initialJson
+    )
+      forkPersisted = this.forkHandBuiltDraft();
     const now = JSON.stringify(this.data);
+    if (now === this.lastCommitted) return true;
     const t = performance.now();
     const chained =
       coalesce !== "" &&
@@ -2219,15 +2834,27 @@ export class Editor {
     if (this.lastCommitted && now !== this.lastCommitted && !chained) {
       this.undoStack.push(this.lastCommitted);
       if (this.undoStack.length > 100) this.undoStack.shift();
-      this.redoStack.length = 0; // a fresh edit forks history
     }
+    this.redoStack.length = 0; // every real edit forks history, coalesced or not
     this.lastCoalesce = coalesce;
     this.lastCommitT = t;
     this.lastCommitted = now;
-    this.pruneGroups();
     this.renderLayers();
-    persistEditData(this.targetId, now); // autosave straight into the level list
-    if (rebuild) this.hooks.rebuild();
+    let persisted = forkPersisted ?? true;
+    if (forkPersisted === null &&
+      this.pristineBuiltin &&
+      this.targetId === this.initialTargetId &&
+      now === this.initialJson
+    )
+      restoreBuiltin(this.targetId);
+    else if (forkPersisted === null)
+      persisted = persistEditData(this.targetId, now); // autosave straight into the level list
+    if (!persisted || !userLevelStorageHealthy())
+      this.hooks.showMsg(
+        "SAVE FAILED",
+        "browser storage is full · this session is live, export before reloading",
+      );
+    if (rebuild) this.hooks.rebuild(true);
     // keep the selection outline + scale gizmo on the new geometry (field
     // scaling changes the bounds without any pointer drag). Skipped mid-drag,
     // where the live handlers own the visuals.
@@ -2240,16 +2867,55 @@ export class Editor {
     ) {
       this.refreshSelectionBox();
     }
+    return persisted && userLevelStorageHealthy();
   }
 
   // swap in a history state WITHOUT recording it as a new edit
   private applyState(json: string): void {
     this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
     this.syncSkySelect(); // undo/redo can change the time of day
-    this.lastCommitted = json;
-    persistEditData(this.targetId, json);
+    let canonical = JSON.stringify(this.data);
+    let persisted = true;
+    if (this.forkedLevelId && canonical === this.initialJson) {
+      deleteUserLevel(this.forkedLevelId);
+      this.targetId = this.initialTargetId;
+      this.targetName = findLevel(this.initialTargetId)?.name ?? this.data.name;
+      this.forkedLevelId = null;
+      this.forkOnFirstCommit = true;
+      this.registryChanged = false;
+      localStorage.setItem("solProtoEditorTarget", this.targetId);
+      this.syncFileButtons();
+      persisted = userLevelStorageHealthy();
+    } else if (
+      this.forkOnFirstCommit &&
+      this.targetId === this.initialTargetId &&
+      canonical !== this.initialJson
+    ) {
+      persisted = this.forkHandBuiltDraft();
+      canonical = JSON.stringify(this.data);
+    } else if (
+      this.pristineBuiltin &&
+      this.targetId === this.initialTargetId &&
+      canonical === this.initialJson
+    )
+      restoreBuiltin(this.targetId);
+    else persisted = persistEditData(this.targetId, canonical);
+    this.lastCommitted = canonical;
+    this.lastCoalesce = "";
+    this.lastCommitT = 0;
+    if (!persisted || !userLevelStorageHealthy())
+      this.hooks.showMsg(
+        "SAVE FAILED",
+        "browser storage is full · export before reloading",
+      );
+    const wantedName = this.data.name?.trim();
+    if (wantedName && findLevel(this.targetId)?.data)
+      renameUserLevel(this.targetId, wantedName);
+    this.targetName = findLevel(this.targetId)?.name ?? wantedName ?? this.targetName;
+    if (this.nameInput) this.nameInput.value = this.targetName;
+    this.hooks.levelsChanged();
     this.select(-1);
-    this.hooks.rebuild();
+    this.hooks.rebuild(true);
   }
 
   undo(): void {
@@ -2283,7 +2949,7 @@ export class Editor {
 
   // append a batch (duplicate/paste) as ONE undo step and select the copies.
   // The one-crystal / one-gate rules hold: one in the batch replaces the level's.
-  private addBatch(batch: CustomComponent[]): void {
+  private addBatch(batch: CustomComponent[], commit = true): void {
     if (batch.length === 0) return;
     let clean = batch;
     for (const t of ["crystal", "gate", "clock", "comboorb"] as const) {
@@ -2294,9 +2960,16 @@ export class Editor {
       }
     }
     if (clean.length === 0) return;
+    if (this.data.components.length + clean.length > 10_000) {
+      this.hooks.showMsg(
+        "LEVEL LIMIT REACHED",
+        "10,000 components is the safe editor maximum",
+      );
+      return;
+    }
     const start = this.data.components.length;
     this.data.components.push(...clean);
-    this.commit();
+    if (commit) this.commit();
     this.setSelection(clean.map((_, i) => start + i));
   }
 
@@ -2490,6 +3163,15 @@ export class Editor {
     for (const c of this.data.components) {
       for (const id of groupChainOf(c, this.data)) used.add(id);
     }
+    for (const group of this.data.groups)
+      if (group.editorOnly || group.nm) {
+        used.add(group.id);
+        let parent = group.parent;
+        while (parent !== undefined && !used.has(parent)) {
+          used.add(parent);
+          parent = this.data.groups.find((item) => item.id === parent)?.parent;
+        }
+      }
     this.data.groups = this.data.groups.filter((g) => used.has(g.id));
   }
 
@@ -2512,8 +3194,17 @@ export class Editor {
           : undefined;
       this.data.groups.push(
         parent !== undefined
-          ? { id: map.get(id)!, parent }
-          : { id: map.get(id)! },
+          ? {
+              id: map.get(id)!,
+              parent,
+              nm: src?.nm,
+              editorOnly: src?.editorOnly,
+            }
+          : {
+              id: map.get(id)!,
+              nm: src?.nm,
+              editorOnly: src?.editorOnly,
+            },
       );
     }
     for (const c of copies) {
@@ -2537,6 +3228,13 @@ export class Editor {
         valid.push(i);
       }
     }
+    if (
+      valid.length !== this.sel.length ||
+      valid.some((value, index) => value !== this.sel[index])
+    ) {
+      this.lastCoalesce = "";
+      this.lastCommitT = 0;
+    }
     // resize handles only make sense on a lone component
     if (valid.length !== 1 || valid[0] !== this.resizeIdx) this.setResize(-1);
     this.sel = valid;
@@ -2552,6 +3250,24 @@ export class Editor {
       if (child.userData.editorIdx === idx) out.push(child);
     }
     return out;
+  }
+
+  private removeHelper(object: THREE.Object3D, disposeGeometry = true): void {
+    this.scene.remove(object);
+    const geometries = new Set<THREE.BufferGeometry>();
+    const materials = new Set<THREE.Material>();
+    object.traverse((child) => {
+      const mesh = child as THREE.Mesh;
+      if (disposeGeometry && mesh.geometry) geometries.add(mesh.geometry);
+      const list = Array.isArray(mesh.material)
+        ? mesh.material
+        : mesh.material
+          ? [mesh.material]
+          : [];
+      for (const material of list) materials.add(material);
+    });
+    for (const geometry of geometries) geometry.dispose();
+    for (const material of materials) material.dispose();
   }
 
   private boxFor(idx: number): THREE.Box3 | null {
@@ -2588,7 +3304,7 @@ export class Editor {
   }
 
   private refreshSelectionBox(): void {
-    for (const b of this.selBoxes) this.scene.remove(b);
+    for (const b of this.selBoxes) this.removeHelper(b);
     this.selBoxes = [];
     for (const idx of this.sel) {
       const box = this.boxFor(idx);
@@ -2663,6 +3379,7 @@ export class Editor {
   // view angle (just travels in), and eases over ~0.34s (driven in update()).
   private focusOnBox(box: THREE.Box3): void {
     if (!this.controls) return;
+    this.cameraDirty = true;
     const cen = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3()).length();
     const dist = THREE.MathUtils.clamp(size * 0.85 + 4, 6, 60); // close-up, but never inside a big piece
@@ -2729,16 +3446,44 @@ export class Editor {
     sz: number,
   ): void {
     const yaw = (((c.yaw ?? 0) % 360) + 360) % 360;
-    const swap = (yaw >= 45 && yaw < 135) || (yaw >= 225 && yaw < 315);
-    const sLocX = swap ? sz : sx;
-    const sLocZ = swap ? sx : sz;
+    const yawRad = THREE.MathUtils.degToRad(yaw);
+    const cs = Math.cos(yawRad);
+    const sn = Math.sin(yawRad);
+    // Project each local basis vector through the requested world-axis scale.
+    // This is exact at quarter turns and continuous for freely yawed pieces;
+    // unlike the old 45° binary swap it never jumps or scales a diagonal by
+    // an unrelated single axis.
+    const sLocX = Math.hypot(cs * sx, sn * sz);
+    const sLocZ = Math.hypot(sn * sx, cs * sz);
+    const horizontal = (sLocX + sLocZ) / 2;
+    // Widths must be derived from the ORIGINAL path, before the knots below are
+    // rewritten by the affine scale.
+    const pathMetrics =
+      c.t === "woodpath" &&
+      c.pts &&
+      c.pts.length >= 2
+        ? pathScaleMetrics(c.pts, c.curve, sx, sy, sz)
+        : null;
     if (c.pts) {
       // drawn nodes are authored in world XZ around p; radius + per-node height ride along
       c.pts = c.pts.map((pt) => {
         const q = [...pt] as number[];
-        q[0] = pt[0] * sx;
-        q[1] = pt[1] * sz;
-        if (q.length >= 3) q[2] = (pt as number[])[2] * ((sx + sz) / 2);
+        if (c.t === "vertramp" && yaw !== 0) {
+          const a = THREE.MathUtils.degToRad(yaw);
+          const cs = Math.cos(a);
+          const sn = Math.sin(a);
+          const wx = pt[0] * cs + pt[1] * sn;
+          const wz = -pt[0] * sn + pt[1] * cs;
+          const swx = wx * sx;
+          const swz = wz * sz;
+          q[0] = swx * cs - swz * sn;
+          q[1] = swx * sn + swz * cs;
+        } else {
+          q[0] = pt[0] * sx;
+          q[1] = pt[1] * sz;
+        }
+        if (q.length >= 3 && c.t !== "woodpath")
+          q[2] = (pt as number[])[2] * horizontal;
         if (q.length >= 4) q[3] = (pt as number[])[3] * sy;
         return q as typeof pt;
       });
@@ -2750,6 +3495,10 @@ export class Editor {
         Math.max(0.2, c.s[2] * sLocZ),
       ];
     switch (c.t) {
+      case "wall":
+        if (c.collisionHeight != null)
+          c.collisionHeight = Math.max(0.2, c.collisionHeight * sy);
+        break;
       case "ramp":
         if (c.len != null) c.len = Math.max(1, c.len * sLocZ);
         if (c.rise != null) c.rise *= sy;
@@ -2763,7 +3512,13 @@ export class Editor {
           c.deck = Math.max(0, c.deck * ((sLocX + sLocZ) / 2));
         break;
       case "rail":
+      case "trickrail":
         if (!c.pts && c.len != null) c.len = Math.max(1, c.len * sLocZ);
+        if (c.t === "rail" && c.amp != null) {
+          const travelScale =
+            c.axis === "y" ? sy : c.axis === "z" ? sz : sx;
+          c.amp = Math.max(0, c.amp * travelScale);
+        }
         break;
       case "rope":
         if (c.len != null) c.len = Math.max(2, c.len * sLocZ);
@@ -2777,10 +3532,92 @@ export class Editor {
         break;
       case "ropeswing":
         if (c.len != null) c.len = Math.max(2, c.len * sy); // rope length is vertical
+        if (c.range != null) {
+          const travelScale =
+            c.axis === "y" ? sy : c.axis === "z" ? sz : sx;
+          c.range = Math.max(0, c.range * travelScale);
+        }
         break;
       case "camnode":
         if (c.radius != null) c.radius *= (sx + sz) / 2;
         break;
+      case "terrain":
+        // Terrain's displaced strip is parameterized by world Z and its rows
+        // always span world X (see Level.jungle), so X is its exact cross-axis.
+        if (c.w != null) c.w = Math.max(1, c.w * Math.abs(sx));
+        if (c.amp != null) c.amp *= sy;
+        break;
+      case "woodpath": {
+        const fallbackWidth = c.w ?? 6;
+        if (pathMetrics && c.pts) {
+          const sourceWidths = c.pts.map(
+            (_, index) => c.widths?.[index] ?? fallbackWidth,
+          );
+          c.widths = sourceWidths.map((width, index) =>
+            Math.max(0.8, width * pathMetrics.normalAt[index]),
+          );
+          // Every current knot is explicit now; keep `w` useful as the default
+          // for a subsequently-added knot by applying a representative normal
+          // factor instead of leaving stale pre-scale authoring state behind.
+          const normalMean =
+            pathMetrics.normalAt.reduce((sum, factor) => sum + factor, 0) /
+            pathMetrics.normalAt.length;
+          c.w = Math.max(0.8, fallbackWidth * normalMean);
+        } else {
+          // The runtime fallback path runs along Z, whose cross-axis is X.
+          c.w = Math.max(0.8, fallbackWidth * Math.abs(sx));
+          if (c.widths)
+            c.widths = c.widths.map((width) =>
+              Math.max(0.8, width * Math.abs(sx)),
+            );
+        }
+        const longitudinal = pathMetrics?.lengthScale ?? Math.abs(sz);
+        if (c.spacing != null)
+          c.spacing = Math.max(0.18, c.spacing * longitudinal);
+        if (c.baySpacing != null)
+          c.baySpacing = Math.max(1.5, c.baySpacing * longitudinal);
+        if (c.supportDepth != null)
+          c.supportDepth = Math.max(0.8, c.supportDepth * sy);
+        if (c.rise != null) c.rise = Math.max(0.8, c.rise * sy);
+        break;
+      }
+      case "trickgate":
+        if (c.radius != null)
+          c.radius = Math.max(0.8, c.radius * ((sLocX + sy) / 2));
+        break;
+      case "grindosaurus":
+        if (c.range != null) c.range = Math.max(0, c.range * sLocX);
+        break;
+      case "angryball": {
+        const profile = (sLocX + sy) / 2;
+        if (c.w != null) c.w = Math.max(0, c.w * sLocX);
+        if (c.rise != null) c.rise = Math.max(0.5, c.rise * profile);
+        if (c.radius != null)
+          c.radius = Math.max(0.25, c.radius * ((sLocX + sy + sLocZ) / 3));
+        if (c.range != null) c.range = Math.max(1, c.range * horizontal);
+        if (c.amp != null) c.amp *= profile;
+        break;
+      }
+      case "mover":
+        if (c.amp != null) {
+          const travelScale =
+            c.axis === "y" ? sy : c.axis === "z" ? sz : sx;
+          c.amp = Math.max(0, c.amp * travelScale);
+        }
+        break;
+      case "stone":
+        if (c.range != null)
+          c.range = Math.max(0, c.range * (c.axis === "x" ? sx : sz));
+        if (c.radius != null)
+          c.radius = Math.max(0.25, c.radius * ((sx + sy + sz) / 3));
+        break;
+      case "decor": {
+        const uniform = (sx + sy + sz) / 3;
+        if (c.w != null) c.w = Math.max(0.05, c.w * uniform);
+        if (c.rise != null) c.rise = Math.max(0.05, c.rise * sy);
+        if (c.len != null) c.len = Math.max(0.1, c.len * sLocX);
+        break;
+      }
     }
   }
 
@@ -2798,6 +3635,13 @@ export class Editor {
     for (const idx of this.sel) {
       const c = this.data.components[idx];
       if (!c) continue;
+      this.materializeDims(c);
+      if (c.t === "returnportal" && c.to)
+        c.to = [
+          anchor.x + (c.to[0] - anchor.x) * sx,
+          anchor.y + (c.to[1] - anchor.y) * sy,
+          anchor.z + (c.to[2] - anchor.z) * sz,
+        ];
       c.p = [
         anchor.x + (c.p[0] - anchor.x) * sx,
         anchor.y + (c.p[1] - anchor.y) * sy,
@@ -2872,7 +3716,7 @@ export class Editor {
 
   private teardownMoveGizmo(): void {
     if (this.moveGroup) {
-      this.scene.remove(this.moveGroup);
+      this.removeHelper(this.moveGroup, false);
       this.moveGroup = null;
     }
     this.moveParts = [];
@@ -2938,6 +3782,11 @@ export class Editor {
       })),
     };
     if (this.controls) this.controls.enabled = false;
+    try {
+      this.dom.setPointerCapture(e.pointerId);
+    } catch {
+      /* capture optional */
+    }
     this.downAt = null;
     return true;
   }
@@ -3110,7 +3959,7 @@ export class Editor {
 
   private teardownGizmo(): void {
     if (this.gizmoGroup) {
-      this.scene.remove(this.gizmoGroup);
+      this.removeHelper(this.gizmoGroup, false);
       this.gizmoGroup = null;
     }
     this.gizmoHandles = [];
@@ -3179,6 +4028,11 @@ export class Editor {
       min0: box.min.clone(),
     };
     if (this.controls) this.controls.enabled = false;
+    try {
+      this.dom.setPointerCapture(e.pointerId);
+    } catch {
+      /* capture optional */
+    }
     this.downAt = null;
     return true;
   }
@@ -3304,23 +4158,38 @@ export class Editor {
 
   private setResize(idx: number): void {
     this.resizeIdx = idx;
-    if (idx >= 0) this.materializeDims(this.data.components[idx]);
     this.refreshHandles();
   }
 
-  // fill defaulted dimensions in, so handle math (and its grab snapshot) is concrete
+  // Runtime-authored defaults, in one place. Property rendering and handle
+  // display read these without writing them into sparse source data.
+  private defaultSizeFor(c: CustomComponent): [number, number, number] | null {
+    if (c.t === "platform") return [8, 1, 8];
+    if (c.t === "decor") {
+      if (c.dkind === "block") return [6, 6, 6];
+      if (c.dkind === "ruinblock") return [2.4, 1.6, 2.4];
+      return null;
+    }
+    if (c.t === "rock") return [3, 2, 3];
+    if (c.t === "wall") return [8, 4, 1];
+    if (c.t === "pit") return [6, 1, 6];
+    if (c.t === "crumble") return [3, 1, 3];
+    if (c.t === "crusher") return [4, 3, 3];
+    if (c.t === "mover") return [6, 0.8, 6];
+    if (c.t === "phasepad") return [5, 0.6, 5];
+    if (c.t === "trampoline" || c.t === "speedpad") return [5, 0.45, 5];
+    if (c.t === "returnportal") return [3, 4, 1.2];
+    if (c.t === "trickgate") return [12, 8, 0.6];
+    if (c.t === "zone") return [14, 1, 10];
+    return null;
+  }
+
+  // Fill defaults only in an explicit mutation snapshot (handle drag/group
+  // scale), never merely because a component was selected or inspected.
   private materializeDims(c: CustomComponent): void {
-    if (c.t === "platform") c.s = c.s ?? [8, 1, 8];
-    else if (c.t === "decor")
-      c.s = c.s ?? (c.dkind === "block" ? [10, 8, 10] : [2.4, 1.6, 2.4]);
-    else if (c.t === "rock") c.s = c.s ?? [3, 2, 3];
-    else if (c.t === "wall") c.s = c.s ?? [8, 4, 1];
-    else if (c.t === "pit") c.s = c.s ?? [6, 1, 6];
-    else if (c.t === "crumble") c.s = c.s ?? [3, 1, 3];
-    else if (c.t === "crusher") c.s = c.s ?? [4, 3, 3];
-    else if (c.t === "mover") c.s = c.s ?? [6, 0.8, 6];
-    else if (c.t === "phasepad") c.s = c.s ?? [5, 0.6, 5];
-    else if (c.t === "ramp") {
+    const size = this.defaultSizeFor(c);
+    if (size && !c.s) c.s = [...size];
+    if (c.t === "ramp") {
       c.len = c.len ?? 10;
       c.rise = c.rise ?? 4;
       c.w = c.w ?? 8;
@@ -3328,10 +4197,56 @@ export class Editor {
       c.rise = c.rise ?? 6;
       c.w = c.w ?? 3;
       if (!c.pts) c.len = c.len ?? 30;
-    } else if (c.t === "rail") c.len = c.len ?? 12;
+    } else if (c.t === "rail" || c.t === "trickrail" || c.t === "rope")
+      c.len = c.len ?? 12;
     else if (c.t === "enemy") c.range = c.range ?? 5;
     else if (c.t === "pendulum") c.len = c.len ?? 5;
     else if (c.t === "ropeswing") c.len = c.len ?? 6;
+    else if (c.t === "terrain") {
+      c.w = c.w ?? 12;
+      c.amp = c.amp ?? 0.45;
+    } else if (c.t === "woodpath") {
+      c.w = c.w ?? 6;
+      c.s = c.s ?? [1, 0.32, 1];
+      c.spacing = c.spacing ?? 0.55;
+      c.baySpacing = c.baySpacing ?? 3.8;
+      if (c.supports ?? c.scaffold)
+        c.supportDepth = c.supportDepth ?? c.rise ?? 3;
+    } else if (c.t === "trickgate") c.radius = c.radius ?? 2.2;
+    else if (c.t === "grindosaurus") c.range = c.range ?? 4;
+    else if (c.t === "angryball") {
+      c.w = c.w ?? 3;
+      c.rise = c.rise ?? 4.6;
+      c.radius = c.radius ?? 0.8;
+      c.range = c.range ?? 12;
+    } else if (c.t === "stone") {
+      c.range = c.range ?? 20;
+      c.radius = c.radius ?? 0.9;
+    } else if (c.t === "mover") c.amp = c.amp ?? 4;
+    else if (c.t === "torch") {
+      c.rise = c.rise ?? 2.2;
+      c.w = c.w ?? 1;
+    } else if (c.t === "decor") {
+      const kind = c.dkind ?? "fern";
+      if (
+        [
+          "fern", "broadleaf", "toadstool", "toadstools", "idol", "tree",
+          "plants", "boulder", "rocks", "trunk", "slab",
+        ].includes(kind)
+      )
+        c.w = c.w ?? 1;
+      else if (kind === "mossrock") c.w = c.w ?? 1.6;
+      else if (kind === "jungletree") c.rise = c.rise ?? 9;
+      else if (kind === "palm") c.rise = c.rise ?? 4.8;
+      else if (kind === "vines") c.rise = c.rise ?? 4;
+      else if (kind === "log") c.len = c.len ?? 13;
+    }
+  }
+
+  private concreteClone(c: CustomComponent): CustomComponent {
+    const copy = deepClone(c);
+    this.materializeDims(copy);
+    return copy;
   }
 
   private handleDefsFor(c: CustomComponent): HandleDef[] {
@@ -3343,7 +4258,12 @@ export class Editor {
       c.pts.length >= 3 &&
       (c.t === "platform" || c.t === "wall" || c.t === "pit");
     const isPath =
-      c.pts && c.pts.length >= 2 && (c.t === "rail" || c.t === "terrain");
+      c.pts &&
+      c.pts.length >= 2 &&
+      (c.t === "rail" ||
+        c.t === "trickrail" ||
+        c.t === "terrain" ||
+        c.t === "woodpath");
     if (c.pts && (isPoly || isPath)) {
       const y =
         c.t === "wall"
@@ -3355,7 +4275,12 @@ export class Editor {
       return c.pts.map((pt, i) => ({
         pos: new THREE.Vector3(
           c.p[0] + pt[0],
-          c.t === "rail" || c.t === "terrain" ? c.p[1] + (pt[3] ?? 0) + 0.1 : y,
+          c.t === "rail" ||
+          c.t === "trickrail" ||
+          c.t === "terrain" ||
+          c.t === "woodpath"
+            ? c.p[1] + (pt[3] ?? 0) + 0.1
+            : y,
           c.p[2] + pt[1],
         ),
         dir: new THREE.Vector3(0, 1, 0),
@@ -3420,7 +4345,7 @@ export class Editor {
       });
     };
     if (c.t === "platform" || c.t === "rock") {
-      const s = c.s!;
+      const s = c.s ?? this.defaultSizeFor(c)!;
       face(
         loc(1, 0, 0),
         P.clone().addScaledVector(loc(1, 0, 0), s[0] / 2),
@@ -3448,7 +4373,7 @@ export class Editor {
       face(new THREE.Vector3(0, 1, 0), P.clone().setY(P.y + s[1] / 2), 1, 0.5);
       face(new THREE.Vector3(0, -1, 0), P.clone().setY(P.y - s[1] / 2), 1, 0.5);
     } else if (c.t === "wall") {
-      const s = c.s!;
+      const s = c.s ?? this.defaultSizeFor(c)!;
       const mid = P.clone().setY(P.y + s[1] / 2); // p is the BASE center
       const ux = loc(1, 0, 0); // handles ride the SPUN faces
       const uz = loc(0, 0, 1);
@@ -3479,9 +4404,13 @@ export class Editor {
       c.t === "crusher" ||
       c.t === "mover" ||
       c.t === "phasepad" ||
+      c.t === "trampoline" ||
+      c.t === "speedpad" ||
+      c.t === "returnportal" ||
+      c.t === "trickgate" ||
       c.t === "zone"
     ) {
-      const s = c.s ?? [14, 1, 10];
+      const s = c.s ?? this.defaultSizeFor(c) ?? [8, 1, 8];
       const y =
         c.t === "crusher" ? P.y + 1.2 : c.t === "zone" ? P.y + 0.5 : P.y;
       const mid = P.clone().setY(y);
@@ -3502,9 +4431,9 @@ export class Editor {
         1,
       );
     } else if (c.t === "ramp") {
-      const len = c.len!;
-      const rise = c.rise!;
-      const w = c.w!;
+      const len = c.len ?? 10;
+      const rise = c.rise ?? 4;
+      const w = c.w ?? 8;
       const zl = loc(0, 0, 1); // toward the LOW end
       const xl = loc(1, 0, 0);
       span(
@@ -3552,7 +4481,7 @@ export class Editor {
           cc.rise = orig.rise! + d;
         },
       });
-    } else if (c.t === "rail" || c.t === "rope") {
+    } else if (c.t === "rail" || c.t === "trickrail" || c.t === "rope") {
       const u = loc(0, 0, 1); // (sin yaw, 0, cos yaw): the run of the line
       const len = c.len ?? 12;
       span(u, P.clone().addScaledVector(u, len / 2), "len", 1, true);
@@ -3625,24 +4554,30 @@ export class Editor {
         },
       });
     } else if (c.t === "enemy") {
-      const r = c.range!;
+      const r = c.range ?? 5;
+      const enemyYaw = (((c.yaw ?? 0) % 180) + 180) % 180;
+      const patrol =
+        enemyYaw >= 45 && enemyYaw < 135
+          ? new THREE.Vector3(0, 0, 1)
+          : new THREE.Vector3(1, 0, 0);
       span(
-        new THREE.Vector3(1, 0, 0),
-        new THREE.Vector3(P.x + r, P.y + 0.4, P.z),
+        patrol,
+        P.clone().addScaledVector(patrol, r).setY(P.y + 0.4),
         "range",
-        0.5,
+        0,
         false,
       );
       span(
-        new THREE.Vector3(-1, 0, 0),
-        new THREE.Vector3(P.x - r, P.y + 0.4, P.z),
+        patrol.clone().negate(),
+        P.clone().addScaledVector(patrol, -r).setY(P.y + 0.4),
         "range",
-        0.5,
+        0,
         false,
       );
     } else if (c.t === "pendulum" || c.t === "ropeswing") {
+      const len = c.len ?? (c.t === "ropeswing" ? 6 : 5);
       defs.push({
-        pos: P.clone().setY(P.y - c.len!),
+        pos: P.clone().setY(P.y - len),
         dir: new THREE.Vector3(0, -1, 0),
         apply: (orig, cc, d) => {
           cc.len = Math.max(c.t === "ropeswing" ? 2 : 1, orig.len! + d);
@@ -3654,7 +4589,7 @@ export class Editor {
 
   private refreshHandles(): void {
     if (this.handleGroup) {
-      this.scene.remove(this.handleGroup);
+      this.removeHelper(this.handleGroup, false);
       this.handleGroup = null;
     }
     this.handleMeshes = [];
@@ -3835,10 +4770,16 @@ export class Editor {
             lineD,
             t0: 0,
             orig: deepClone(this.data.components[this.resizeIdx]),
+            source: deepClone(this.data.components[this.resizeIdx]),
             vtx: def.vtx,
             plane: new THREE.Plane(new THREE.Vector3(0, 1, 0), -def.pos.y),
           };
           if (this.controls) this.controls.enabled = false;
+          try {
+            this.dom.setPointerCapture(e.pointerId);
+          } catch {
+            /* capture optional */
+          }
           this.downAt = null;
           return;
         }
@@ -3849,9 +4790,15 @@ export class Editor {
             lineO,
             lineD,
             t0,
-            orig: deepClone(this.data.components[this.resizeIdx]),
+            orig: this.concreteClone(this.data.components[this.resizeIdx]),
+            source: deepClone(this.data.components[this.resizeIdx]),
           };
           if (this.controls) this.controls.enabled = false;
+          try {
+            this.dom.setPointerCapture(e.pointerId);
+          } catch {
+            /* capture optional */
+          }
           this.downAt = null;
           return;
         }
@@ -3886,14 +4833,22 @@ export class Editor {
       if (!this.sel.includes(hit)) this.setSelection(this.expandToGroup(hit));
       if (!this.sel.includes(hit)) return; // locked (or filtered): no drag
       let grabbed = hit;
+      this.dragAddedFrom = null;
+      this.dragGroupsBefore = null;
+      this.dragSourceJson = null;
+      this.dragSelectionBefore = null;
       // alt-drag clones: the copies come along, the originals stay put
       if (e.altKey) {
         const order = [...this.sel];
         const start = this.data.components.length;
         const copies = order.map((i) => deepClone(this.data.components[i]));
+        this.dragAddedFrom = start;
+        this.dragGroupsBefore = deepClone(this.data.groups ?? []);
+        this.dragSourceJson = JSON.stringify(this.data);
+        this.dragSelectionBefore = [...this.sel];
         this.remapGroups(copies); // clones get their own group wiring
         grabbed = start + order.indexOf(hit);
-        this.addBatch(copies); // selects the clones (one undo step)
+        this.addBatch(copies, false); // commit only if the drag lands
         if (grabbed >= this.data.components.length) grabbed = this.selected; // crystal filtered
       }
       const c = this.data.components[grabbed];
@@ -3928,6 +4883,13 @@ export class Editor {
           this.refreshSelectionBox();
         }
         if (this.controls) this.controls.enabled = false;
+        try {
+          this.dom.setPointerCapture(e.pointerId);
+        } catch {
+          /* capture optional */
+        }
+      } else if (this.dragAddedFrom !== null) {
+        this.rollbackActiveGesture(true);
       }
     }
   };
@@ -3935,7 +4897,14 @@ export class Editor {
   // ---- pen tool (draw polygon platforms / pits / walls) ----
 
   startDraw(
-    t: "platform" | "pit" | "wall" | "rail" | "vertramp" | "terrain",
+    t:
+      | "platform"
+      | "pit"
+      | "wall"
+      | "rail"
+      | "vertramp"
+      | "terrain"
+      | "woodpath",
   ): void {
     this.cancelDraw();
     this.select(-1);
@@ -3944,7 +4913,7 @@ export class Editor {
     this.dom.style.cursor = "crosshair";
     this.hooks.showMsg(
       `DRAW ${t.toUpperCase()}`,
-      t === "rail" || t === "terrain"
+      t === "rail" || t === "terrain" || t === "woodpath"
         ? "click to drop nodes · Enter or double-click to finish · esc = cancel"
         : "click to drop points · click the FIRST point (or Enter) to close · esc = cancel",
     );
@@ -3953,7 +4922,7 @@ export class Editor {
   private cancelDraw(): void {
     this.drawing = null;
     if (this.drawVis) {
-      this.scene.remove(this.drawVis);
+      this.removeHelper(this.drawVis);
       this.drawVis = null;
     }
     if (this.active) this.dom.style.cursor = "";
@@ -3963,7 +4932,7 @@ export class Editor {
   // and a green "close here" marker on the first point
   private updateDrawVis(cursor?: THREE.Vector3): void {
     if (this.drawVis) {
-      this.scene.remove(this.drawVis);
+      this.removeHelper(this.drawVis);
       this.drawVis = null;
     }
     const d = this.drawing;
@@ -4028,7 +4997,11 @@ export class Editor {
     const pts = d.pts.filter(
       (pt, i) => i === 0 || pt.distanceToSquared(d.pts[i - 1]) > 0.01,
     );
-    const openPath = d.t === "rail" || d.t === "vertramp" || d.t === "terrain";
+    const openPath =
+      d.t === "rail" ||
+      d.t === "vertramp" ||
+      d.t === "terrain" ||
+      d.t === "woodpath";
     const minPts = openPath ? 2 : 3;
     if (pts.length < minPts) {
       this.hooks.showMsg(`NEED ${minPts}+ POINTS`, "shape cancelled");
@@ -4058,6 +5031,21 @@ export class Editor {
         w: 12,
         amp: 0.45,
         berms: true,
+      });
+    } else if (d.t === "woodpath") {
+      this.addComponent({
+        t: "woodpath",
+        p: [cx, d.y, cz],
+        pts: rel,
+        widths: rel.map(() => 6),
+        w: 6,
+        curve: "spline",
+        scaffold: true,
+        supports: true,
+        rails: true,
+        spacing: 0.55,
+        baySpacing: 3.8,
+        supportDepth: 3,
       });
     } else if (d.t === "vertramp") {
       // the transition sweeps along the drawn spine; the draw plane is the
@@ -4358,6 +5346,12 @@ export class Editor {
 
   private onUp = (e: PointerEvent): void => {
     if (!this.active) return;
+    try {
+      if (this.dom.hasPointerCapture(e.pointerId))
+        this.dom.releasePointerCapture(e.pointerId);
+    } catch {
+      /* capture optional */
+    }
     if (this.drawing) return; // pen tool owns the pointer (vertices drop on down)
     if (this.spaceHeld) {
       this.dom.style.cursor = "grab";
@@ -4425,10 +5419,16 @@ export class Editor {
       }
     }
     if (this.dragging) {
-      this.dragging = false;
-      this.dragSel = [];
-      if (this.controls) this.controls.enabled = true;
-      if (!clickish) {
+      if (clickish) {
+        this.rollbackActiveGesture(true);
+      } else {
+        this.dragging = false;
+        this.dragSel = [];
+        this.dragAddedFrom = null;
+        this.dragGroupsBefore = null;
+        this.dragSourceJson = null;
+        this.dragSelectionBefore = null;
+        if (this.controls) this.controls.enabled = true;
         this.commit(); // rebuild: colliders/rails regenerate at the new spot
         this.downAt = null;
         return;
@@ -4478,6 +5478,7 @@ export class Editor {
       return;
     }
     if (e.code === "Escape") {
+      if (this.rollbackActiveGesture(true)) return;
       // step out: resize mode first, then the selection itself
       if (this.resizeIdx >= 0) this.setResize(-1);
       else this.select(-1);
@@ -4736,11 +5737,17 @@ export class Editor {
         nameIn.value = this.targetName;
         return;
       }
-      renameUserLevel(this.targetId, v);
       this.data.name = v; // keep the exported file's name in step with the menu
+      // Commit first: a hand-built source may fork here, so rename the actual
+      // target selected by that transaction rather than the protected source.
+      if (!this.commit(false)) {
+        this.data.name = this.targetName;
+        nameIn.value = this.targetName;
+        return;
+      }
+      renameUserLevel(this.targetId, v);
       this.targetName = findLevel(this.targetId)?.name ?? v;
       nameIn.value = this.targetName;
-      this.commit(false);
       this.hooks.levelsChanged();
     };
     nameIn.addEventListener("change", applyName);
@@ -4924,6 +5931,7 @@ export class Editor {
     arm(resetBtn, "tap again to reset", () => {
       if (isBuiltin(this.targetId)) {
         const name = this.targetName;
+        this.registryChanged = true;
         restoreBuiltin(this.targetId);
         this.hooks.levelsChanged(this.targetId);
         this.hooks.exitToPlay();
@@ -4938,11 +5946,17 @@ export class Editor {
     // DUPLICATE: fork the open level into a new menu row and edit that one, so
     // a risky change never costs you the version that worked.
     mk("duplicate", () => {
+      if (!this.hooks.preflight()) return;
       const id = saveUserLevel({
         id: "",
         name: `${this.targetName} copy`,
         data: JSON.parse(JSON.stringify(this.data)) as CustomLevelData,
       });
+      if (!userLevelStorageHealthy())
+        this.hooks.showMsg(
+          "SAVE FAILED",
+          "copy is session-only · export before reloading",
+        );
       this.retarget(id);
       this.hooks.levelsChanged(id);
       this.hooks.showMsg("DUPLICATED", findLevel(id)?.name ?? "");
@@ -4954,6 +5968,7 @@ export class Editor {
     this.delBtn = delBtn;
     arm(delBtn, "tap again to delete", () => {
       const gone = this.targetName;
+      this.registryChanged = true;
       deleteUserLevel(this.targetId);
       localStorage.removeItem("solProtoEditorOpen");
       localStorage.removeItem("solProtoEditorTarget");
@@ -4967,7 +5982,7 @@ export class Editor {
 
     projPane2.appendChild(
       h(
-        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · <b>time of day</b> swaps skybox + fog + lighting<br>editing a built-in level edits THAT level — <b>restore original</b> hands the shipped design back<br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
+        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · <b>time of day</b> swaps skybox + fog + lighting<br>opening is read-only until a real edit; hand-built courses create a separate editable copy on first change<br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
       ),
     );
 
@@ -4987,18 +6002,19 @@ export class Editor {
   }
 
   // one pop-out at a time (photoshop-dock rules); '' closes both
-  private setPop(which: "add" | "layers" | ""): void {
+  private setPop(which: "add" | "layers" | "", persist = true): void {
     if (this.popAdd)
       this.popAdd.style.display = which === "add" ? "block" : "none";
     if (this.popLayers)
       this.popLayers.style.display = which === "layers" ? "block" : "none";
     this.tabAdd?.classList.toggle("ed-tab-on", which === "add");
     this.tabLayers?.classList.toggle("ed-tab-on", which === "layers");
-    try {
-      localStorage.setItem("solProtoEditorPop", which);
-    } catch {
-      /* ignore */
-    }
+    if (persist)
+      try {
+        localStorage.setItem(`solProtoEditorPop:${this.targetId}`, which);
+      } catch {
+        /* ignore */
+      }
     if (which === "layers") this.renderLayers();
   }
 
@@ -5017,6 +6033,7 @@ export class Editor {
   // keeping the zoom. Already on that axis? Flip to the opposite side.
   snapView(axis: "x" | "y" | "z"): void {
     if (!this.controls) return;
+    this.cameraDirty = true;
     const t = this.controls.target;
     const off = new THREE.Vector3().subVectors(this.camera.position, t);
     const u = {
@@ -5093,6 +6110,14 @@ export class Editor {
       return `crate · ${c.kind ?? "wood"}${c.outline ? " (outline)" : ""}`;
     if (c.t === "enemy") return `foe · ${c.foe ?? "grunt"}`;
     if (c.t === "terrain") return `ground · ${c.pts?.length ?? 0} nodes`;
+    if (c.t === "woodpath") return `wood path · ${c.pts?.length ?? 0} nodes`;
+    if (c.t === "trickgate") return `trick gate · ${c.trick ?? "kick"}`;
+    if (c.t === "trickrail") return `trick rail · ${c.trick ?? "kick"}`;
+    if (c.t === "returnportal") return "return portal";
+    if (c.t === "trampoline") return "trampoline pad";
+    if (c.t === "speedpad") return "speed pad";
+    if (c.t === "grindosaurus") return "Grindosaurus";
+    if (c.t === "angryball") return "Angry Ball";
     if (c.t === "decor")
       return DECOR_LABELS[(c.dkind ?? "fern") as DecorKind] ?? "decor";
     if (c.t === "wall" && c.invisible) return "invis wall";
@@ -5398,6 +6423,7 @@ export class Editor {
       "crumble",
       "rock",
       "rail",
+      "trickrail",
       "rope",
       "enemy",
       "pendulum",
@@ -5405,8 +6431,22 @@ export class Editor {
       "pit",
       "gate",
       "vertramp",
+      "trampoline",
+      "speedpad",
+      "trickgate",
+      "returnportal",
+      "grindosaurus",
+      "angryball",
+      "decor",
     ]);
     for (const c of comps) {
+      if (
+        c.t === "crusher" ||
+        c.t === "mover" ||
+        c.t === "phasepad" ||
+        c.t === "zone"
+      )
+        this.materializeDims(c);
       const [rx, rz] = rot(c.p[0] - cx, c.p[2] - cz);
       c.p = [
         Math.round((cx + rx) * 100) / 100,
@@ -5439,6 +6479,32 @@ export class Editor {
       } else if (yawable.has(c.t)) {
         c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
       }
+      // Symmetric travel axes rotate with their owner. Direction sign is not
+      // authored (motion is ±range), so a quarter turn is exactly an X/Z swap.
+      if (
+        (c.t === "rail" || c.t === "ropeswing") &&
+        (c.axis === "x" || c.axis === "z")
+      )
+        c.axis = c.axis === "x" ? "z" : "x";
+      if (c.t === "stone") c.axis = c.axis === "x" ? "z" : "x";
+      if (c.t === "returnportal") {
+        if (c.to) {
+          const [tx, tz] = rot(c.to[0] - cx, c.to[2] - cz);
+          c.to = [
+            Math.round((cx + tx) * 100) / 100,
+            c.to[1],
+            Math.round((cz + tz) * 100) / 100,
+          ];
+        }
+        // exitYaw uses -Z as zero. Rotate the actual heading vector, then
+        // convert it back, rather than assuming its sign convention matches
+        // component yaw.
+        const exit = THREE.MathUtils.degToRad(c.exitYaw ?? 0);
+        const [hx, hz] = rot(Math.sin(exit), -Math.cos(exit));
+        c.exitYaw =
+          ((THREE.MathUtils.radToDeg(Math.atan2(hx, -hz)) % 360) + 360) %
+          360;
+      }
     }
     this.commit();
     this.renderProps();
@@ -5460,15 +6526,16 @@ export class Editor {
     input.value = String(get());
     input.title = "shift+↑/↓ = ±10 · drag up/down to scrub";
     // read the field, apply it, coalesce bursts into one undo step, resync
-    const apply = (): void => {
+    const apply = (commitChange = true): void => {
       const v = parseFloat(input.value);
       if (isFinite(v)) {
-        set(v);
-        this.commit(true, `num:${label}`);
+        set(THREE.MathUtils.clamp(v, -100_000, 100_000));
+        if (commitChange) this.commit(true, `num:${label}`);
+        else this.hooks.rebuild();
       }
       input.value = String(get());
     };
-    input.addEventListener("change", apply);
+    input.addEventListener("change", () => apply());
     // SHIFT+ARROW = coarse ±10 steps (plain arrows keep the field's fine step)
     input.addEventListener("keydown", (e) => {
       if (e.shiftKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
@@ -5483,7 +6550,13 @@ export class Editor {
     // DRAG-SCRUB: press and drag up/down on the field to slide the value
     // (Blender/Figma style). Shift while scrubbing = coarse. A plain click
     // (no drag) still focuses the field for typing.
-    let scrub: { y: number; val: number; moved: boolean; id: number } | null =
+    let scrub: {
+      y: number;
+      val: number;
+      moved: boolean;
+      id: number;
+      source: string;
+    } | null =
       null;
     let lastScrub = 0;
     input.addEventListener("pointerdown", (e) => {
@@ -5493,7 +6566,9 @@ export class Editor {
         val: parseFloat(input.value) || 0,
         moved: false,
         id: e.pointerId,
+        source: JSON.stringify(this.data),
       };
+      this.cancelScrub = () => endScrub(true);
     });
     input.addEventListener("pointermove", (e) => {
       if (!scrub) return;
@@ -5515,10 +6590,10 @@ export class Editor {
       const now = performance.now();
       if (now - lastScrub > 60) {
         lastScrub = now;
-        apply();
+        apply(false);
       }
     });
-    const endScrub = (): void => {
+    const endScrub = (cancel = false): void => {
       if (scrub?.moved) {
         try {
           input.releasePointerCapture(scrub.id);
@@ -5526,12 +6601,20 @@ export class Editor {
           /* ignore */
         }
         input.style.cursor = "";
-        apply(); // land the final value
+        if (cancel) {
+          this.data = migrateCustomLevel(
+            JSON.parse(scrub.source) as CustomLevelData,
+          );
+          this.hooks.resetPreview();
+          this.renderProps();
+        } else apply(); // land the final value
       }
       scrub = null;
+      this.cancelScrub = null;
     };
-    input.addEventListener("pointerup", endScrub);
-    input.addEventListener("pointercancel", endScrub);
+    input.addEventListener("pointerup", () => endScrub(false));
+    input.addEventListener("pointercancel", () => endScrub(true));
+    input.addEventListener("lostpointercapture", () => endScrub(true));
     row.appendChild(lab);
     row.appendChild(input);
     return row;
@@ -5539,6 +6622,9 @@ export class Editor {
 
   // properties for the current selection, generated per component type
   private renderProps(): void {
+    this.panel.dataset.editorTarget = this.targetId;
+    this.panel.dataset.editorChanged = this.changedThisSession ? "1" : "0";
+    this.panel.dataset.editorComponentCount = String(this.data.components.length);
     this.propsEl.innerHTML = "";
     if (this.sel.length === 0 || !this.data.components[this.selected]) {
       this.propsEl.innerHTML =
@@ -5710,7 +6796,17 @@ export class Editor {
         "ropeswing",
         "enemy",
         "rail",
+        "trickrail",
+        "rope",
         "gate",
+        "vertramp",
+        "trampoline",
+        "speedpad",
+        "trickgate",
+        "returnportal",
+        "grindosaurus",
+        "angryball",
+        "decor",
       ]);
       if (all.every((cc) => yawable.has(cc.t) && !cc.pts)) {
         brow(
@@ -5814,12 +6910,35 @@ export class Editor {
       (v) => (c.p[2] = v),
     );
     const sizeRow = (idx: number, label: string): void => {
-      if (!c.s) c.s = [8, 1, 8];
+      const defaults = this.defaultSizeFor(c) ?? [8, 1, 8];
       num(
         label,
-        () => c.s![idx],
-        (v) => (c.s![idx] = Math.max(0.2, v)),
+        () => c.s?.[idx] ?? defaults[idx],
+        (v) => {
+          const size = c.s ? [...c.s] : [...defaults];
+          size[idx] = Math.max(0.2, v);
+          c.s = size as [number, number, number];
+        },
       );
+    };
+    const boolRow = (
+      labelText: string,
+      checked: () => boolean,
+      set: (value: boolean) => void,
+    ): void => {
+      const row = document.createElement("div");
+      row.className = "ed-row";
+      const label = document.createElement("label");
+      label.textContent = labelText;
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = checked();
+      checkbox.addEventListener("change", () => {
+        set(checkbox.checked);
+        this.commit();
+      });
+      row.append(label, checkbox);
+      this.propsEl.appendChild(row);
     };
     const colorRow = (): void => {
       const row = document.createElement("div");
@@ -5864,9 +6983,9 @@ export class Editor {
             : `node ${picked[0] + 1}`;
         const mutate = (
           vi: number,
-          mut: (nt: [number, number, number, number]) => void,
+          mut: (nt: [number, number, number, number, number]) => void,
         ): void => {
-          const nt = [...c.pts![vi]] as [number, number, number, number];
+          const nt = [...c.pts![vi]] as [number, number, number, number, number];
           if (nt[2] === undefined) nt[2] = 0; // radius slot (0 = square corner)
           mut(nt);
           c.pts![vi] = nt;
@@ -5878,7 +6997,12 @@ export class Editor {
             for (const vi of picked) mutate(vi, (nt) => (nt[0] = v - c.p[0]));
           },
         );
-        if (c.t === "rail") {
+        if (
+          c.t === "rail" ||
+          c.t === "trickrail" ||
+          c.t === "terrain" ||
+          c.t === "woodpath"
+        ) {
           num(
             `${tag} · y`,
             () => c.p[1] + (c.pts![picked[0]][3] ?? 0),
@@ -5894,23 +7018,198 @@ export class Editor {
             for (const vi of picked) mutate(vi, (nt) => (nt[1] = v - c.p[2]));
           },
         );
-        num(
-          `${tag} · radius`,
-          () => c.pts![picked[0]][2] ?? 0,
-          (v) => {
-            for (const vi of picked)
-              mutate(vi, (nt) => (nt[2] = Math.max(0, v)));
-          },
-        );
+        if (c.t !== "woodpath" && c.t !== "terrain")
+          num(
+            `${tag} · radius`,
+            () => c.pts![picked[0]][2] ?? 0,
+            (v) => {
+              for (const vi of picked)
+                mutate(vi, (nt) => (nt[2] = Math.max(0, v)));
+            },
+          );
+        if (c.t === "woodpath" || c.t === "vertramp") {
+          num(
+            `${tag} · bank °`,
+            () => c.pts![picked[0]][4] ?? 0,
+            (v) => {
+              for (const vi of picked) mutate(vi, (nt) => (nt[4] = v));
+            },
+            1,
+          );
+        }
+        if (c.t === "woodpath") {
+          num(
+            `${tag} · width`,
+            () => c.widths?.[picked[0]] ?? c.w ?? 6,
+            (v) => {
+              if (!c.widths) c.widths = c.pts!.map(() => c.w ?? 6);
+              for (const vi of picked) c.widths[vi] = Math.max(0.8, v);
+            },
+            0.25,
+          );
+        }
       } else {
         const tip = document.createElement("div");
         tip.className = "ed-dim";
         tip.textContent =
-          "double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit its position + corner radius here";
+          c.t === "woodpath"
+            ? "double-click, then grab a knot (shift adds · drag empty space = box-select): edit its position, height, bank, and width here"
+            : c.t === "terrain"
+              ? "double-click, then grab a centreline node: edit its position and height here"
+              : c.t === "vertramp"
+                ? "double-click, then grab a spine node: edit its position, height, corner radius, and bank here"
+            : "double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit its position + corner radius here";
         this.propsEl.appendChild(tip);
       }
     };
-    if (c.pts && c.pts.length >= 3 && c.t !== "rail") {
+    if (
+      c.pts &&
+      c.pts.length >= 2 &&
+      (c.t === "woodpath" || c.t === "trickrail")
+    ) {
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent = `${c.t === "woodpath" ? "wood path" : "trick rail"} · ${c.pts.length} nodes — double-click to edit its route`;
+      this.propsEl.appendChild(note);
+      nodeRows();
+      if (c.t === "woodpath") {
+        num("default width", () => c.w ?? 6, (v) => (c.w = Math.max(0.8, v)), 0.25);
+        num(
+          "plank spacing",
+          () => c.spacing ?? 0.55,
+          (v) => (c.spacing = Math.max(0.18, v)),
+          0.05,
+        );
+        num(
+          "support depth",
+          () => c.supportDepth ?? c.rise ?? 3,
+          (v) => (c.supportDepth = Math.max(0.8, v)),
+          0.25,
+        );
+        num(
+          "deck thickness",
+          () => c.s?.[1] ?? 0.32,
+          (v) => {
+            const size = c.s ? [...c.s] : [1, 0.32, 1];
+            size[1] = Math.max(0.08, v);
+            c.s = size as [number, number, number];
+          },
+          0.05,
+        );
+        num("variation seed", () => c.seed ?? 7319, (v) => (c.seed = Math.round(v)), 1);
+        num(
+          "scaffold bay",
+          () => c.baySpacing ?? 3.8,
+          (v) => (c.baySpacing = Math.max(1.5, v)),
+          0.25,
+        );
+        const toggle = (text: () => string, action: () => void): void => {
+          const button = document.createElement("button");
+          button.className = "ed-btn";
+          button.textContent = text();
+          button.addEventListener("click", () => {
+            action();
+            this.commit();
+            this.renderProps();
+          });
+          this.propsEl.appendChild(button);
+        };
+        toggle(
+          () => `path: ${c.curve === "spline" ? "smooth spline" : "linear"}`,
+          () => (c.curve = c.curve === "spline" ? "corner" : "spline"),
+        );
+        toggle(
+          () => `scaffold: ${c.scaffold ? "on" : "off"}`,
+          () => (c.scaffold = !c.scaffold),
+        );
+        toggle(
+          () => `support collision: ${(c.supports ?? c.scaffold) ? "on" : "off"}`,
+          () => (c.supports = !(c.supports ?? c.scaffold)),
+        );
+        toggle(
+          () => `post feet: ${c.terrainSupports ? "raycast to ground" : "fixed depth"}`,
+          () => (c.terrainSupports = !c.terrainSupports),
+        );
+        toggle(
+          () => `grind handrails: ${(c.rails ?? c.scaffold) ? "on" : "off"}`,
+          () => (c.rails = !(c.rails ?? c.scaffold)),
+        );
+        const pathAction = (label: string, action: () => void): void => {
+          const button = document.createElement("button");
+          button.className = "ed-btn";
+          button.textContent = label;
+          button.addEventListener("click", () => {
+            action();
+            this.commit();
+            this.renderProps();
+          });
+          this.propsEl.appendChild(button);
+        };
+        pathAction("+ add end knot", () => {
+          const points = c.pts!;
+          const last = points[points.length - 1];
+          const before = points[points.length - 2] ?? [last[0], last[1] + 8];
+          points.push([
+            last[0] + (last[0] - before[0]),
+            last[1] + (last[1] - before[1]),
+            0,
+            (last[3] ?? 0) + ((last[3] ?? 0) - (before[3] ?? 0)),
+            last[4] ?? 0,
+          ]);
+          if (!c.widths) c.widths = points.slice(0, -1).map(() => c.w ?? 6);
+          c.widths.push(c.widths[c.widths.length - 1] ?? c.w ?? 6);
+        });
+        pathAction("− remove end knot", () => {
+          if (c.pts!.length <= 2) return;
+          c.pts!.pop();
+          c.widths?.pop();
+        });
+        pathAction("reverse route", () => {
+          c.pts!.reverse();
+          for (const point of c.pts!) {
+            if (point[4] !== undefined) point[4] = -point[4];
+          }
+          c.widths?.reverse();
+        });
+        pathAction("preset: straight", () => {
+          c.pts = [[0, 0, 0, 0, 0], [0, -36, 0, 0, 0]];
+          c.widths = [c.w ?? 6, c.w ?? 6];
+        });
+        pathAction("preset: ramp", () => {
+          c.pts = [[0, 0, 0, 0, 0], [0, -36, 0, 7, 0]];
+          c.widths = [c.w ?? 6, c.w ?? 6];
+        });
+        pathAction("preset: serpentine", () => {
+          c.pts = [
+            [0, 0, 0, 0, 0],
+            [5, -12, 0, 1.5, 5],
+            [-5, -24, 0, 4, -5],
+            [0, -38, 0, 6, 0],
+          ];
+          c.widths = [c.w ?? 6, (c.w ?? 6) * 1.1, (c.w ?? 6) * 0.9, c.w ?? 6];
+        });
+        colorRow();
+      } else {
+        const trickSelect = document.createElement("select");
+        trickSelect.className = "ed-select";
+        for (const [value, label] of DECK_TRICKS) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = label;
+          option.selected = (c.trick ?? "kick") === value;
+          trickSelect.appendChild(option);
+        }
+        trickSelect.addEventListener("change", () => {
+          c.trick = trickSelect.value as CustomComponent["trick"];
+          this.commit();
+        });
+        this.propsEl.appendChild(trickSelect);
+      }
+    } else if (
+      c.pts &&
+      c.pts.length >= 3 &&
+      (c.t === "platform" || c.t === "wall" || c.t === "pit")
+    ) {
       // drawn polygon: the outline is edited with the vertex handles
       const note = document.createElement("div");
       note.className = "ed-dim";
@@ -5921,23 +7220,58 @@ export class Editor {
           c.t === "wall" ? "height" : "thickness",
           () => c.s?.[1] ?? (c.t === "wall" ? 4 : 1),
           (v) => {
-            if (!c.s) c.s = [1, 1, 1];
-            c.s[1] = Math.max(0.2, v);
+            const size = c.s
+              ? [...c.s]
+              : [...(this.defaultSizeFor(c) ?? [8, 1, 8])];
+            size[1] = Math.max(0.2, v);
+            c.s = size as [number, number, number];
           },
         );
-        colorRow();
+        if (c.t === "platform")
+          boolRow("slippery surface", () => c.slip === true, (value) => {
+            if (value) c.slip = true;
+            else delete c.slip;
+          });
+        if (c.t === "wall") {
+          num(
+            "collision height",
+            () => c.collisionHeight ?? c.s?.[1] ?? 4,
+            (v) => (c.collisionHeight = Math.max(0.2, v)),
+          );
+          boolRow("invisible in play", () => c.invisible === true, (value) => {
+            if (value) c.invisible = true;
+            else delete c.invisible;
+          });
+        }
+        if (!(c.t === "wall" && c.invisible)) colorRow();
       }
       nodeRows();
     } else if (c.t === "platform" || c.t === "wall") {
       sizeRow(0, "width");
       sizeRow(1, "height");
       sizeRow(2, "depth");
+      if (c.t === "wall")
+        num(
+          "collision height",
+          () => c.collisionHeight ?? c.s?.[1] ?? 4,
+          (v) => (c.collisionHeight = Math.max(0.2, v)),
+        );
       num(
         "yaw °",
         () => c.yaw ?? 0,
         (v) => (c.yaw = v),
         15,
       ); // platforms AND walls spin freely now
+      if (c.t === "platform")
+        boolRow("slippery surface", () => c.slip === true, (value) => {
+          if (value) c.slip = true;
+          else delete c.slip;
+        });
+      if (c.t === "wall")
+        boolRow("invisible in play", () => c.invisible === true, (value) => {
+          if (value) c.invisible = true;
+          else delete c.invisible;
+        });
       if (c.t === "wall" && c.invisible) {
         const note = document.createElement("div");
         note.className = "ed-dim";
@@ -6000,7 +7334,7 @@ export class Editor {
         15,
       );
       colorRow();
-    } else if (c.t === "rail") {
+    } else if (c.t === "rail" || c.t === "trickrail") {
       if (c.pts && c.pts.length >= 2) {
         const note = document.createElement("div");
         note.className = "ed-dim";
@@ -6019,37 +7353,105 @@ export class Editor {
           (v) => (c.yaw = v),
           15,
         );
-        // travel > 0 sends the whole line ferrying on a cycle — a moving rail
-        const axisBtn = document.createElement("button");
-        axisBtn.className = "ed-btn";
-        axisBtn.textContent = `travel: ${(c.axis ?? "x").toUpperCase()}${c.axis === "y" ? " (lift)" : ""}`;
-        axisBtn.title =
-          "which way the whole rail slides — X / Z slide, Y lifts (travel 0 = a fixed rail)";
-        axisBtn.addEventListener("click", () => {
-          c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
-          this.commit();
-          this.renderProps();
-        });
-        this.propsEl.appendChild(axisBtn);
-        num(
-          "travel",
-          () => c.amp ?? 0,
-          (v) => (c.amp = Math.max(0, v)),
-          0.5,
-        );
-        num(
-          "speed",
-          () => c.speed ?? 0.6,
-          (v) => (c.speed = Math.max(0, v)),
-          0.1,
-        );
-        num(
-          "phase",
-          () => c.phase ?? 0,
-          (v) => (c.phase = v),
-          0.2,
-        );
+        if (c.t === "rail") {
+          // travel > 0 sends the whole line ferrying on a cycle — a moving rail
+          const axisBtn = document.createElement("button");
+          axisBtn.className = "ed-btn";
+          axisBtn.textContent = `travel: ${(c.axis ?? "x").toUpperCase()}${c.axis === "y" ? " (lift)" : ""}`;
+          axisBtn.title =
+            "which way the whole rail slides — X / Z slide, Y lifts (travel 0 = a fixed rail)";
+          axisBtn.addEventListener("click", () => {
+            c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
+            this.commit();
+            this.renderProps();
+          });
+          this.propsEl.appendChild(axisBtn);
+          num("travel", () => c.amp ?? 0, (v) => (c.amp = Math.max(0, v)), 0.5);
+          num("speed", () => c.speed ?? 0.6, (v) => (c.speed = Math.max(0, v)), 0.1);
+          num("phase", () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
+        }
       }
+      if (c.t === "rail")
+        boolRow("invisible grind line", () => c.invisible === true, (value) => {
+          if (value) c.invisible = true;
+          else delete c.invisible;
+        });
+      if (c.t === "trickrail") {
+        const select = document.createElement("select");
+        select.className = "ed-select";
+        for (const [value, label] of DECK_TRICKS) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = `requires ${label}`;
+          option.selected = (c.trick ?? "kick") === value;
+          select.appendChild(option);
+        }
+        select.addEventListener("change", () => {
+          c.trick = select.value as CustomComponent["trick"];
+          this.commit();
+        });
+        this.propsEl.appendChild(select);
+      }
+    } else if (c.t === "trampoline" || c.t === "speedpad") {
+      sizeRow(0, "width");
+      sizeRow(1, "thickness");
+      sizeRow(2, "depth");
+      num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      if (c.t === "trampoline") {
+        num("launch", () => c.speed ?? 16, (v) => (c.speed = Math.max(0.1, v)), 0.5);
+        num("held Jump ×", () => c.amp ?? 1.25, (v) => (c.amp = Math.max(1, v)), 0.05);
+      } else {
+        num("boost speed", () => c.speed ?? 48, (v) => (c.speed = Math.max(0.1, v)), 1);
+        num("hold seconds", () => c.cycle ?? 3.9, (v) => (c.cycle = Math.max(0.05, v)), 0.1);
+      }
+    } else if (c.t === "trickgate") {
+      sizeRow(0, "barrier width");
+      sizeRow(1, "barrier height");
+      sizeRow(2, "barrier depth");
+      num("opening radius", () => c.radius ?? 2.2, (v) => (c.radius = Math.max(0.8, v)), 0.1);
+      num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      const select = document.createElement("select");
+      select.className = "ed-select";
+      for (const [value, label] of DECK_TRICKS) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = `requires ${label}`;
+        option.selected = (c.trick ?? "kick") === value;
+        select.appendChild(option);
+      }
+      select.addEventListener("change", () => {
+        c.trick = select.value as CustomComponent["trick"];
+        this.commit();
+      });
+      this.propsEl.appendChild(select);
+    } else if (c.t === "returnportal") {
+      sizeRow(0, "width");
+      sizeRow(1, "height");
+      sizeRow(2, "depth");
+      num("entrance yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      const destination = (): [number, number, number] => c.to ?? c.p;
+      const setDestination = (axis: 0 | 1 | 2, value: number): void => {
+        const to = c.to ? [...c.to] : [...c.p];
+        to[axis] = value;
+        c.to = to as [number, number, number];
+      };
+      num("exit x", () => destination()[0], (v) => setDestination(0, v), 0.5);
+      num("exit y", () => destination()[1], (v) => setDestination(1, v), 0.5);
+      num("exit z", () => destination()[2], (v) => setDestination(2, v), 0.5);
+      num("exit yaw °", () => c.exitYaw ?? 0, (v) => (c.exitYaw = v), 15);
+      const row = document.createElement("div");
+      row.className = "ed-row";
+      const label = document.createElement("label");
+      label.textContent = "airborne only";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = c.airOnly === true;
+      checkbox.addEventListener("change", () => {
+        c.airOnly = checkbox.checked;
+        this.commit();
+      });
+      row.append(label, checkbox);
+      this.propsEl.appendChild(row);
     } else if (c.t === "gate") {
       num(
         "yaw °",
@@ -6135,6 +7537,7 @@ export class Editor {
         "a grindable rope strung between posts: it sags under a grind, snaps after the break time, and restrings itself";
       this.propsEl.appendChild(note);
     } else if (c.t === "vertramp") {
+      num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       if (!c.pts)
         num(
           "length",
@@ -6170,6 +7573,7 @@ export class Editor {
           (v) => (c.bank = Math.max(0, v)),
           5,
         );
+      if (c.pts) nodeRows();
       const toggle = (label: () => string, onClick: () => void): void => {
         const b = document.createElement("button");
         b.className = "ed-btn";
@@ -6260,7 +7664,6 @@ export class Editor {
         }
       }
     } else if (c.t === "rock") {
-      this.materializeDims(c); // rocks default 3×2×3, not the platform 8×1×8
       sizeRow(0, "width");
       sizeRow(1, "height");
       sizeRow(2, "depth");
@@ -6322,6 +7725,7 @@ export class Editor {
       });
       this.propsEl.appendChild(chain);
     } else if (c.t === "terrain") {
+      if (c.pts) nodeRows();
       num(
         "width",
         () => c.w ?? 12,
@@ -6348,6 +7752,15 @@ export class Editor {
       row.appendChild(lab);
       row.appendChild(chk);
       this.propsEl.appendChild(row);
+      const curveBtn = document.createElement("button");
+      curveBtn.className = "ed-btn";
+      curveBtn.textContent = `path: ${c.curve === "spline" ? "smooth spline" : "linear"}`;
+      curveBtn.addEventListener("click", () => {
+        c.curve = c.curve === "spline" ? undefined : "spline";
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(curveBtn);
       colorRow();
       const note = document.createElement("div");
       note.className = "ed-dim";
@@ -6452,14 +7865,16 @@ export class Editor {
       if (SCALED.includes(dk))
         num(
           "scale",
-          () => c.w ?? 1,
+          () => c.w ?? (dk === "mossrock" ? 1.6 : 1),
           (v) => (c.w = Math.max(0.1, v)),
           0.1,
         );
       if (TALL[dk])
         num(
           TALL[dk],
-          () => c.rise ?? 4,
+          () =>
+            c.rise ??
+            (dk === "jungletree" ? 9 : dk === "palm" ? 4.8 : 4),
           (v) => (c.rise = Math.max(0.5, v)),
           0.5,
         );
@@ -6474,7 +7889,7 @@ export class Editor {
         num(
           "strands",
           () => c.n ?? 3,
-          (v) => (c.n = Math.max(1, Math.round(v))),
+          (v) => (c.n = THREE.MathUtils.clamp(Math.round(v), 1, 64)),
           1,
         );
       if (dk === "log")
@@ -6485,7 +7900,6 @@ export class Editor {
           1,
         );
       if (dk === "ruinblock" || dk === "block") {
-        this.materializeDims(c);
         sizeRow(0, "width");
         sizeRow(1, "height");
         sizeRow(2, "depth");
@@ -6510,6 +7924,34 @@ export class Editor {
               : "scenery — visual only, never a floor and never a wall";
       if (!PROP_FAMILIES.includes(dk as PropFamily))
         this.propsEl.appendChild(note);
+    } else if (c.t === "grindosaurus") {
+      num("patrol ±", () => c.range ?? 4, (v) => (c.range = Math.max(0, v)), 0.5);
+      num("patrol speed", () => c.speed ?? 1.5, (v) => (c.speed = Math.max(0, v)), 0.25);
+      num(
+        "required coverage",
+        () => c.coverage ?? 0.65,
+        (v) => (c.coverage = THREE.MathUtils.clamp(v, 0.1, 1)),
+        0.05,
+      );
+      num("patrol yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent =
+        "fatal patrol body — catch its moving spine rail and ride the required fraction to defeat it";
+      this.propsEl.appendChild(note);
+    } else if (c.t === "angryball") {
+      num("flat half", () => c.w ?? 3, (v) => (c.w = Math.max(0, v)), 0.25);
+      num("pipe radius", () => c.rise ?? 4.6, (v) => (c.rise = Math.max(0.5, v)), 0.25);
+      num("ball radius", () => c.radius ?? 0.8, (v) => (c.radius = Math.max(0.25, v)), 0.1);
+      num("activation", () => c.range ?? 12, (v) => (c.range = Math.max(1, v)), 1);
+      num("chase speed", () => c.speed ?? 7, (v) => (c.speed = Math.max(0, v)), 0.5);
+      num("spawn arc offset", () => c.amp ?? 0, (v) => (c.amp = v), 0.5);
+      num("cross yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent =
+        "wakes when you approach and chases at constant arc speed across its analytic flat + quarter-pipe profile";
+      this.propsEl.appendChild(note);
     } else if (c.t === "enemy") {
       const sel = document.createElement("select");
       sel.className = "ed-select";
@@ -6534,7 +7976,7 @@ export class Editor {
         num(
           alongZ ? "patrol ±z" : "patrol ±x",
           () => c.range ?? 5,
-          (v) => (c.range = Math.max(0.5, v)),
+          (v) => (c.range = Math.max(0, v)),
         );
         num(
           "speed",
@@ -6556,6 +7998,7 @@ export class Editor {
       }
     } else if (c.t === "crusher") {
       sizeRow(0, "width");
+      sizeRow(1, "height");
       sizeRow(2, "depth");
       num(
         "cycle s",
@@ -6571,6 +8014,7 @@ export class Editor {
       );
     } else if (c.t === "mover") {
       sizeRow(0, "width");
+      sizeRow(1, "thickness");
       sizeRow(2, "depth");
       const axisBtn = document.createElement("button");
       axisBtn.className = "ed-btn";
@@ -6628,6 +8072,7 @@ export class Editor {
       );
     } else if (c.t === "phasepad") {
       sizeRow(0, "width");
+      sizeRow(1, "thickness");
       sizeRow(2, "depth");
       num(
         "cycle (s)",
@@ -6747,47 +8192,28 @@ export class Editor {
       );
       num(
         "ferry speed",
-        () => c.cycle ?? 0.45,
+        () => c.cycle ?? 0.5,
         (v) => (c.cycle = Math.max(0, v)),
         0.05,
       );
     }
     const row = document.createElement("div");
     row.className = "ed-grid";
-    // ROTATE 90°: yaw for the spinnable, dimension-swap for the axis-bound
-    // (drawn polygons keep their authored outline — no 90° tricks)
-    const rotatable =
-      [
-        "platform",
-        "ramp",
-        "rail",
-        "wall",
-        "pit",
-        "crumble",
-        "rock",
-        "pendulum",
-        "ropeswing",
-        "enemy",
-        "gate",
-        "vertramp",
-      ].includes(c.t) && !c.pts;
-    const swappable = ["crusher", "mover"].includes(c.t) && !c.pts;
-    if (rotatable || swappable) {
+    // One implementation for single and multi-selection rotation; path nodes,
+    // yaw, travel axes, portal destinations, zones and sparse size defaults
+    // must all obey the same transform contract.
+    const rotatable = new Set<CustomComponent["t"]>([
+      "platform", "ramp", "rail", "trickrail", "wall", "pit", "crumble",
+      "rock", "pendulum", "ropeswing", "enemy", "gate", "vertramp", "rope",
+      "trampoline", "speedpad", "trickgate", "returnportal", "grindosaurus",
+      "angryball", "decor", "crusher", "mover", "phasepad", "zone", "stone",
+      "terrain", "woodpath",
+    ]);
+    if (rotatable.has(c.t)) {
       const rot = document.createElement("button");
       rot.className = "ed-btn";
       rot.textContent = "rotate 90°";
-      rot.addEventListener("click", () => {
-        if (rotatable) c.yaw = ((c.yaw ?? 0) + 90) % 360;
-        else if (c.s) {
-          c.s = [c.s[2], c.s[1], c.s[0]];
-          if (c.t === "mover") {
-            if (c.axis === "x") c.axis = "z";
-            else if (c.axis === "z") c.axis = "x";
-          }
-        } else c.s = [8, 1, 8];
-        this.commit();
-        this.renderProps();
-      });
+      rot.addEventListener("click", () => this.rotateSelection(90));
       row.appendChild(rot);
     }
     const dup = document.createElement("button");

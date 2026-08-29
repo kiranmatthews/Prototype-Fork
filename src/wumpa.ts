@@ -100,6 +100,11 @@ function load(): void {
       for (const group of pending.splice(0)) {
         group.clear();
         group.add(build());
+        group.scale.setScalar(
+          ((group.userData.wumpaHeight as number | undefined) ?? 1) /
+            unitHeight,
+        );
+        delete group.userData.wumpaPending;
       }
       settled?.();
     },
@@ -137,12 +142,20 @@ export function wumpaMesh(height = 1): THREE.Group {
   load();
   const group = new THREE.Group();
   group.add(build());
+  group.userData.wumpaHeight = height;
   group.scale.setScalar(height / (geometry ? unitHeight : 1));
   if (!geometry) {
     pending.push(group);
-    // The stand-in is a unit sphere, so the group's scale is already right
-    // for it; re-scaling happens when the real model lands.
-    void wumpaReady.then(() => group.scale.setScalar(height / unitHeight));
+    group.userData.wumpaPending = true;
   }
   return group;
+}
+
+/** Stop an unmounted/disposed level fruit from being retained by async load. */
+export function releaseWumpaMesh(group: THREE.Object3D): void {
+  const candidate = group as THREE.Group;
+  if (!candidate.userData.wumpaPending) return;
+  const index = pending.indexOf(candidate);
+  if (index >= 0) pending.splice(index, 1);
+  delete candidate.userData.wumpaPending;
 }

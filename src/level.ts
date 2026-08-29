@@ -30,9 +30,10 @@ import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 
 const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
-import { wumpaMesh, WUMPA_SIZE } from "./wumpa";
+import { releaseWumpaMesh, wumpaMesh, WUMPA_SIZE } from "./wumpa";
 
 export interface Crate {
   mesh: THREE.Mesh;
@@ -339,7 +340,81 @@ export interface Stone {
   dir: number;
   speed: number;
   r: number;
+  axis?: "x" | "z";
+  x0?: number;
+  x1?: number;
+  z?: number;
   chase?: boolean; // boulder-chase mode: rolls after the player instead of patrolling
+}
+
+export type DeckTrickKind =
+  | "kick"
+  | "heel"
+  | "shove"
+  | "imposs"
+  | "varial";
+
+export interface TrickGate {
+  center: THREE.Vector3;
+  normal: THREE.Vector3;
+  radius: number;
+  outerRadius: number;
+  halfWidth: number;
+  halfHeight: number;
+  trick: DeckTrickKind;
+  unlocked: boolean;
+  seal: THREE.Object3D;
+  ring: THREE.Object3D;
+}
+
+export interface TrickRail {
+  rail: Rail;
+  trick: DeckTrickKind;
+  unlocked: boolean;
+  styled: boolean;
+  presentation: THREE.Object3D;
+}
+
+export interface ReturnPortal {
+  box: THREE.Box3;
+  localBox: THREE.Box3;
+  center: THREE.Vector3;
+  yaw: number;
+  destination: THREE.Vector3;
+  heading: THREE.Vector3;
+  airOnly: boolean;
+  visual: THREE.Object3D;
+}
+
+export interface Grindosaurus {
+  group: THREE.Group;
+  body: THREE.Box3;
+  rail: Rail;
+  axis: THREE.Vector3;
+  home: THREE.Vector3;
+  position: THREE.Vector3;
+  minimum: number;
+  maximum: number;
+  speed: number;
+  direction: number;
+  requiredCoverage: number;
+  alive: boolean;
+}
+
+export interface AngryBall {
+  mesh: THREE.Mesh;
+  box: THREE.Box3;
+  bottom: THREE.Vector3;
+  cross: THREE.Vector3;
+  flatHalf: number;
+  pipeRadius: number;
+  ballRadius: number;
+  activationRadius: number;
+  speed: number;
+  u: number;
+  spawnU: number;
+  alive: boolean;
+  active: boolean;
 }
 
 // Floating wumpa, Crash-style: touch to collect (side-scroll levels).
@@ -399,11 +474,20 @@ export interface CustomComponent {
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
     | "terrain" // DISPLACED GROUND STRIP: a rolling, winding, bumpy floor. p = the near end (highest z), pts = centreline nodes in the rail convention ([dx, dz, corner radius, dy]) relative to p, w = width across, amp = bump height, berms = mossy kerbs + grindable lips down both sides, curve:'spline' eases the whole cross-section through its nodes. The one component that is not a flat box.
+    | "woodpath" // CURVED TIMBER/BAMBOO ROAD: pts = 3D centreline nodes, widths = per-node deck widths, 5th point value = bank degrees. One closed swept mesh owns seamless collision; planks/scaffold are visual.
+    | "trampoline" // broad bounce deck: p = top centre, s = [w,h,d], speed = launch velocity, amp = held-Jump multiplier
+    | "speedpad" // board boost deck: p = top centre, s = [w,h,d], speed = target speed, cycle = hold seconds
+    | "trickgate" // circular trick lock: p = aperture centre, yaw = plane heading, trick selects the required deck trick, radius = opening
+    | "trickrail" // grind path locked until its required deck trick starts; straight or pts like rail
+    | "returnportal" // one-way in-level portal: p/s = entrance volume, to = destination feet point, exitYaw = outgoing heading, airOnly optionally requires air
+    | "grindosaurus" // patrolling lethal body with a moving grindable spine; range/speed patrol, coverage is required ride fraction
+    | "angryball" // proximity-activated ball that chases across its own analytic halfpipe profile
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
   p: [number, number, number];
   s?: [number, number, number];
+  collisionHeight?: number; // wall: optional collider height when visual height differs
   slip?: boolean; // platform only: an icy/slick deck (friction cut, you can't stop short)
   len?: number;
   rise?: number;
@@ -455,13 +539,28 @@ export interface CustomComponent {
   // the collision, the kill footprint, and the grind line alike. The
   // optional 4th number is a HEIGHT OFFSET from p[1] — rails only (grind
   // lines climb and dive node to node; polygons stay planar, their
-  // collision model depends on it).
+  // collision model depends on it). WOODPATH is the explicit exception: its
+  // third slot is reserved, fourth is height, and fifth is bank degrees; the
+  // editor hides corner-radius controls for those knots.
   pts?: (
     | [number, number]
     | [number, number, number]
     | [number, number, number, number]
     | [number, number, number, number, number]
   )[];
+  widths?: number[]; // woodpath: per-node deck width; absent entries use w
+  scaffold?: boolean; // woodpath: bamboo posts/braces/handrails beneath and beside the deck
+  supports?: boolean; // woodpath: generate terrain-reaching/fixed-depth support posts (default follows scaffold)
+  rails?: boolean; // woodpath: grindable bamboo handrails on both sides
+  spacing?: number; // woodpath: decorative plank spacing
+  baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
+  supportDepth?: number; // woodpath: fixed post depth below the deck
+  terrainSupports?: boolean; // woodpath: raycast each post to ground instead of fixed depth
+  trick?: DeckTrickKind; // trickgate / trickrail requirement
+  to?: [number, number, number]; // returnportal destination feet point
+  exitYaw?: number; // returnportal outgoing heading in degrees (0 = -Z)
+  airOnly?: boolean; // returnportal only accepts an airborne player
+  coverage?: number; // grindosaurus: fraction of spine that must be ridden to defeat it
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
   tex?: string; // surface texture kind (see TEX_KINDS) for platform / ramp / wall / crumble / rock — tinted by color
@@ -568,6 +667,7 @@ export interface CustomGroup {
   id: number;
   parent?: number; // nesting: groups can live inside groups
   nm?: string; // editor display name (outliner rename)
+  editorOnly?: boolean; // migrated legacy folder: organization, never '!' wiring
 }
 
 // ---- TIME OF DAY ----------------------------------------------------------
@@ -597,19 +697,41 @@ export interface CustomLevelData {
 }
 
 // the full ancestor chain of group ids for a component (innermost first)
+const GROUP_INDEX = new WeakMap<
+  CustomLevelData,
+  { source: CustomGroup[] | undefined; length: number; map: Map<number, CustomGroup> }
+>();
+function groupIndex(data: CustomLevelData): Map<number, CustomGroup> {
+  const source = data.groups;
+  const cached = GROUP_INDEX.get(data);
+  if (cached && cached.source === source && cached.length === (source?.length ?? 0))
+    return cached.map;
+  const map = new Map((source ?? []).map((group) => [group.id, group]));
+  GROUP_INDEX.set(data, { source, length: source?.length ?? 0, map });
+  return map;
+}
+
 export function groupChainOf(
   c: CustomComponent,
   data: CustomLevelData,
 ): number[] {
   const chain: number[] = [];
+  const groups = groupIndex(data);
   let id = c.grp;
-  let guard = 0;
-  while (id !== undefined && guard++ < 64) {
+  while (id !== undefined) {
     if (chain.includes(id)) break;
     chain.push(id);
-    id = data.groups?.find((g) => g.id === id)?.parent;
+    id = groups.get(id)?.parent;
   }
   return chain;
+}
+
+function gameplayGroupChainOf(
+  c: CustomComponent,
+  data: CustomLevelData,
+): number[] {
+  const groups = groupIndex(data);
+  return groupChainOf(c, data).filter((id) => !groups.get(id)?.editorOnly);
 }
 
 // Where a finish gate lands when a level never had one: the deck of the
@@ -626,7 +748,7 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
       t: "gate",
       p: [d.spawn[0], Math.max(d.spawn[1] - 1, 0), d.spawn[2] - 12],
     };
-  const top = best.p[1] + (best.s?.[1] ?? 1);
+  const top = best.p[1] + (best.s?.[1] ?? 1) / 2;
   // box decks: near the far (-z) edge; drawn blobs: their anchor point
   const gz = best.pts ? best.p[2] : best.p[2] - (best.s?.[2] ?? 8) / 2 + 2.5;
   return {
@@ -635,9 +757,9 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
   };
 }
 
-// LEGACY MIGRATION: t:'outline' predates outline-as-a-state; load it as a
-// wood crate flagged outline so the new '!' wiring applies uniformly. Named
-// layer containers fold into per-component locks (the outliner replaced them).
+// LEGACY MIGRATION + structural normalization. This is idempotent: opening an
+// already-current level cannot keep rewriting it, while old organizational
+// metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   d.components = d.components.map((c) => {
     if (c.t === "outline")
@@ -662,15 +784,102 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     }
     return c;
   });
+  for (const component of d.components) {
+    if (
+      component.t === "woodpath" &&
+      component.pts &&
+      component.widths
+    )
+      component.widths = component.pts.map(
+        (_, index) => component.widths![index] ?? component.w ?? 6,
+      );
+  }
+  if (!d.groups) d.groups = [];
   if (d.layers && d.layers.length > 0) {
-    const locked = new Set(d.layers.filter((l) => l.locked).map((l) => l.id));
-    for (const c of d.components) {
-      if (c.layer !== undefined && locked.has(c.layer)) c.lk = true;
-      delete c.layer;
+    const used = new Set(d.groups.map((group) => group.id));
+    const groups = new Map(d.groups.map((group) => [group.id, group]));
+    const layerGroups = new Map<
+      number,
+      { groupId: number; locked: boolean }
+    >();
+    let next = Math.max(0, ...used) + 1;
+    for (const layer of d.layers) {
+      while (used.has(next)) next++;
+      const groupId = next++;
+      used.add(groupId);
+      const group = { id: groupId, nm: layer.name, editorOnly: true };
+      d.groups.push(group);
+      groups.set(groupId, group);
+      layerGroups.set(layer.id, { groupId, locked: layer.locked === true });
+    }
+    for (const component of d.components) {
+      const layer =
+        component.layer === undefined
+          ? undefined
+          : layerGroups.get(component.layer);
+      if (!layer) {
+        delete component.layer;
+        continue;
+      }
+      if (layer.locked) component.lk = true;
+      if (component.grp === undefined) component.grp = layer.groupId;
+      else {
+        // Preserve an existing nested group by hanging its root beneath the
+        // migrated layer, rather than flattening either organization.
+        const seen = new Set<number>();
+        let current = groups.get(component.grp);
+        while (current?.parent !== undefined && !seen.has(current.parent)) {
+          seen.add(current.id);
+          const parent = groups.get(current.parent);
+          if (!parent) break;
+          current = parent;
+        }
+        if (
+          current &&
+          current.id !== layer.groupId &&
+          current.parent === undefined
+        )
+          current.parent = layer.groupId;
+      }
+      delete component.layer;
     }
     delete d.layers;
   }
-  if (!d.groups) d.groups = [];
+
+  // Keep the first declaration of each finite integer id, preserve order and
+  // names, drop dangling parents, then cut every cycle at the edge that closes
+  // it. Components pointing nowhere become loose rows instead of vanishing.
+  const groupIds = new Set<number>();
+  d.groups = d.groups.filter(
+    (group) =>
+      Number.isInteger(group.id) &&
+      !groupIds.has(group.id) &&
+      (groupIds.add(group.id), true),
+  );
+  const groupById = new Map(d.groups.map((group) => [group.id, group]));
+  for (const group of d.groups)
+    if (
+      group.parent !== undefined &&
+      (group.parent === group.id || !groupById.has(group.parent))
+    )
+      delete group.parent;
+  for (const start of d.groups) {
+    const visited = new Set<number>([start.id]);
+    let current = start;
+    while (current.parent !== undefined) {
+      if (visited.has(current.parent)) {
+        delete current.parent;
+        break;
+      }
+      visited.add(current.parent);
+      const parent = groupById.get(current.parent);
+      if (!parent) break;
+      current = parent;
+    }
+  }
+  for (const component of d.components)
+    if (component.grp !== undefined && !groupById.has(component.grp))
+      delete component.grp;
   // TIME TRIAL PARADIGM: every level carries a finish gate the same way it
   // carries a spawn point — without one a run could never end. Saves from
   // before gates existed get one on their furthest down-course deck (move it
@@ -693,6 +902,11 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
       });
     else d.components = d.components.filter((c, i) => c.t !== t || i === last);
   }
+  const lastCrystal = d.components.map((component) => component.t).lastIndexOf("crystal");
+  if (lastCrystal >= 0)
+    d.components = d.components.filter(
+      (component, index) => component.t !== "crystal" || index === lastCrystal,
+    );
   return d;
 }
 
@@ -722,6 +936,8 @@ export function starterCustomLevel(): CustomLevelData {
       { t: "enemy", p: [4, 0.5, -20], range: 5, speed: 3 },
       { t: "crystal", p: [0, 0.5, -24] },
       { t: "gate", p: [0, 0.5, -26] },
+      { t: "clock", p: [2, 0.6, 15] },
+      { t: "comboorb", p: [-2, 0.6, 15] },
     ],
   };
 }
@@ -1347,6 +1563,11 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  {
+    id: "backport-lab",
+    name: BACKPORT_LAB_LEVEL.name,
+    data: BACKPORT_LAB_LEVEL,
+  }, // reusable Unity-backport mechanics and procedural-path validation course
 ];
 export const DEFAULT_LEVEL_ID = "jungle";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
@@ -1360,17 +1581,389 @@ export function isBuiltin(id: string): boolean {
 // see" and "what I publish" can never drift apart.
 const USER_KEY = "solProtoUserLevels";
 let USER_CACHE: LevelEntry[] | null = null;
+let LAST_USER_WRITE_OK = true;
+
+export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
+  "platform", "ramp", "wall", "rail", "pipe", "vertramp", "crumble",
+  "pit", "crate", "metal", "rock", "camnode", "outline", "checkpoint",
+  "enemy", "crusher", "mover", "torch", "phasepad", "stone", "pendulum",
+  "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
+  "woodpath", "trampoline", "speedpad", "trickgate", "trickrail",
+  "returnportal", "grindosaurus", "angryball", "decor", "wumpa", "crystal",
+]);
+const VALID_CRATE_KINDS = new Set<NonNullable<CustomComponent["kind"]>>([
+  "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
+  "mystery", "bang", "nitrobang",
+]);
+
+const finiteTuple = (
+  value: unknown,
+  minimum: number,
+  maximum = minimum,
+): value is number[] =>
+  Array.isArray(value) &&
+  value.length >= minimum &&
+  value.length <= maximum &&
+  value.every((number) => typeof number === "number" && Number.isFinite(number));
+
+export function normalizeCustomLevelData(value: unknown): CustomLevelData | null {
+  const MAX_ABS = 100_000;
+  const MAX_COMPONENTS = 10_000;
+  const MAX_POINTS = 4_096;
+  const MAX_GROUPS = 512;
+  const MAX_AGGREGATE_NODES = 50_000;
+  const MAX_GENERATED_SAMPLES = 120_000;
+  const MAX_PATH_LENGTH = 20_000;
+  const source = value as CustomLevelData | null;
+  if (
+    !source ||
+    source.v !== 1 ||
+    typeof source.name !== "string" ||
+    !finiteTuple(source.spawn, 3) ||
+    typeof source.killY !== "number" ||
+    !Number.isFinite(source.killY) ||
+    !Array.isArray(source.components) ||
+    source.components.length > MAX_COMPONENTS ||
+    source.spawn.some((number) => Math.abs(number) > MAX_ABS) ||
+    Math.abs(source.killY) > MAX_ABS
+  )
+    return null;
+  const numericKeys: (keyof CustomComponent)[] = [
+    "len", "rise", "w", "yaw", "arc", "deck", "bank", "shake", "range",
+    "speed", "cycle", "phase", "amp", "seed", "n", "vr", "tn", "spacing",
+    "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
+    "collisionHeight",
+  ];
+  if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
+  const axes = new Set(["x", "y", "z"]);
+  const curves = new Set(["corner", "spline"]);
+  const vertKinds = new Set(["quarter", "half"]);
+  const kinds = VALID_CRATE_KINDS;
+  const decorKinds = new Set(DECOR_KINDS);
+  const foes = new Set<EnemyKind>([
+    "grunt", "spiker", "turtle", "charger", "hopper", "floater", "sentry",
+    "spinner", "car",
+  ]);
+  const tricks = new Set<DeckTrickKind>([
+    "kick", "heel", "shove", "imposs", "varial",
+  ]);
+  const directions = new Set(["E", "W", "N", "S"]);
+  const textureKinds = new Set<string>(TEX_KINDS);
+  const booleanKeys: (keyof CustomComponent)[] = [
+    "slip", "closed", "vert", "lit", "berms", "outline", "invisible",
+    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "lk",
+  ];
+  let aggregateNodes = 0;
+  let aggregateSamples = 0;
+  for (const component of source.components) {
+    if (
+      !component ||
+      !CUSTOM_COMPONENT_TYPES.has(component.t) ||
+      !finiteTuple(component.p, 3) ||
+      (component.s !== undefined && !finiteTuple(component.s, 3)) ||
+      (component.to !== undefined && !finiteTuple(component.to, 3)) ||
+      (component.widths !== undefined && !finiteTuple(component.widths, 0, Infinity)) ||
+      (component.pts !== undefined &&
+        (!Array.isArray(component.pts) ||
+          component.pts.length > MAX_POINTS ||
+          !component.pts.every((point) => finiteTuple(point, 2, 5))))
+    )
+      return null;
+    aggregateNodes +=
+      (component.pts?.length ?? 0) + (component.widths?.length ?? 0);
+    if (aggregateNodes > MAX_AGGREGATE_NODES) return null;
+    if (
+      component.p.some((number) => Math.abs(number) > MAX_ABS) ||
+      component.s?.some((number) => Math.abs(number) > MAX_ABS) ||
+      component.to?.some((number) => Math.abs(number) > MAX_ABS) ||
+      component.pts?.some((point) =>
+        point.some((number) => Math.abs(number) > MAX_ABS),
+      )
+    )
+      return null;
+    for (const key of numericKeys) {
+      const number = component[key];
+      if (number !== undefined && (typeof number !== "number" || !Number.isFinite(number)))
+        return null;
+      if (typeof number === "number" && Math.abs(number) > MAX_ABS) return null;
+    }
+    if (
+      (component.axis !== undefined && !axes.has(component.axis)) ||
+      (component.curve !== undefined && !curves.has(component.curve)) ||
+      (component.vkind !== undefined && !vertKinds.has(component.vkind)) ||
+      (component.kind !== undefined && !kinds.has(component.kind)) ||
+      (component.dkind !== undefined && !decorKinds.has(component.dkind)) ||
+      (component.foe !== undefined && !foes.has(component.foe)) ||
+      (component.trick !== undefined && !tricks.has(component.trick)) ||
+      (component.dir !== undefined && !directions.has(component.dir))
+    )
+      return null;
+    if (
+      (component.tex !== undefined &&
+        (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
+      (component.color !== undefined &&
+        (typeof component.color !== "string" ||
+          !/^#[0-9a-f]{6}$/i.test(component.color))) ||
+      (component.nm !== undefined && typeof component.nm !== "string") ||
+      (component.grp !== undefined &&
+        (!Number.isSafeInteger(component.grp) || component.grp < 0))
+    )
+      return null;
+    if (
+      component.layer !== undefined &&
+      (!Number.isSafeInteger(component.layer) || component.layer < 0)
+    )
+      return null;
+    if (
+      component.pts &&
+      ["woodpath", "terrain", "vertramp", "rail", "trickrail"].includes(
+        component.t,
+      )
+    ) {
+      let length = 0;
+      for (let index = 1; index < component.pts.length; index++)
+        length += Math.hypot(
+          component.pts[index][0] - component.pts[index - 1][0],
+          component.pts[index][1] - component.pts[index - 1][1],
+          (component.pts[index][3] ?? 0) -
+            (component.pts[index - 1][3] ?? 0),
+        );
+      if (length > MAX_PATH_LENGTH) return null;
+      aggregateSamples +=
+        component.t === "woodpath"
+          ? Math.min(8192, Math.max(2, Math.ceil(length / 0.65)))
+          : component.t === "terrain"
+            ? Math.max(2, Math.ceil(length / 2))
+            : component.t === "vertramp"
+              ? Math.max(8, Math.ceil(length / 1.6))
+              : component.pts.length;
+      if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
+    }
+    if (!component.pts) {
+      if (component.t === "woodpath") aggregateSamples += 37;
+      else if (component.t === "vertramp")
+        aggregateSamples += Math.max(
+          8,
+          Math.ceil(Math.abs(component.len ?? 30) / 1.6),
+        );
+      else if (component.t === "rail" || component.t === "trickrail")
+        aggregateSamples += 2;
+      if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
+    }
+    for (const key of booleanKeys)
+      if (component[key] !== undefined && typeof component[key] !== "boolean")
+        return null;
+    if (
+      (component.s && component.s.some((number) => number <= 0)) ||
+      (component.widths && component.widths.some((number) => number <= 0)) ||
+      (component.radius !== undefined && component.radius < 0) ||
+      (component.coverage !== undefined &&
+        (component.coverage < 0.1 || component.coverage > 1))
+    )
+      return null;
+    switch (component.t) {
+      case "ramp":
+        if ((component.len ?? 10) < 1 || (component.w ?? 8) < 1) return null;
+        break;
+      case "vertramp":
+        if (
+          (!component.pts && (component.len ?? 30) < 4) ||
+          (component.rise ?? 6) < 0.5 ||
+          (component.w ?? 3) < 0 ||
+          (component.arc !== undefined &&
+            (component.arc < 5 || component.arc > 90)) ||
+          (component.deck ?? 0) < 0 ||
+          (component.bank ?? 0) < 0
+        )
+          return null;
+        break;
+      case "crumble":
+        if ((component.shake ?? 0.7) < 0 || (component.speed ?? 30) < 2)
+          return null;
+        break;
+      case "enemy":
+        if ((component.range ?? 5) < 0 || (component.speed ?? 3) < 0)
+          return null;
+        break;
+      case "mover":
+        if ((component.amp ?? 4) < 0 || (component.speed ?? 0.6) < 0)
+          return null;
+        break;
+      case "phasepad":
+        if (
+          (component.cycle ?? 4) < 0.5 ||
+          (component.amp ?? 0.5) < 0.1 ||
+          (component.amp ?? 0.5) > 0.9
+        )
+          return null;
+        break;
+      case "crusher":
+        if ((component.cycle ?? 3.2) < 0.5) return null;
+        break;
+      case "rail":
+        if (
+          (!component.pts && (component.len ?? 12) < 1) ||
+          (component.amp ?? 0) < 0 ||
+          (component.speed ?? 0.6) < 0
+        )
+          return null;
+        break;
+      case "trickrail":
+        if (!component.pts && (component.len ?? 12) < 1) return null;
+        break;
+      case "rope":
+        if (
+          (component.len ?? 12) < 2 ||
+          (component.amp ?? 1.2) < 0.1 ||
+          (component.shake ?? 3) < 0.2
+        )
+          return null;
+        break;
+      case "ropeswing":
+        if (
+          (component.len ?? 6) < 2 ||
+          (component.amp ?? 0.85) < 0.1 ||
+          (component.range ?? 0) < 0 ||
+          (component.cycle ?? 0.5) < 0
+        )
+          return null;
+        break;
+      case "stone":
+        if (
+          (component.range ?? 20) < 1 ||
+          (component.speed ?? 6) < 0 ||
+          (component.radius ?? 0.9) < 0.2
+        )
+          return null;
+        break;
+      case "pendulum":
+        if (
+          (component.len ?? 5) < 1 ||
+          (component.amp ?? 1) < 0.1 ||
+          (component.speed ?? 1.6) < 0.2
+        )
+          return null;
+        break;
+      case "torch":
+        if ((component.rise ?? 2.2) < 0 || (component.w ?? 1) < 0.2)
+          return null;
+        break;
+      case "terrain":
+        if ((component.w ?? 12) < 1 || (component.amp ?? 0.45) < 0)
+          return null;
+        break;
+      case "woodpath":
+        if (
+          (component.w ?? 6) < 0.8 ||
+          (component.spacing ?? 0.55) < 0.18 ||
+          (component.baySpacing ?? 3.8) < 1.5 ||
+          (component.supportDepth ?? component.rise ?? 3) < 0.8
+        )
+          return null;
+        break;
+      case "trampoline":
+        if ((component.speed ?? 16) <= 0 || (component.amp ?? 1.25) < 1)
+          return null;
+        break;
+      case "speedpad":
+        if ((component.speed ?? 48) <= 0 || (component.cycle ?? 3.9) <= 0)
+          return null;
+        break;
+      case "trickgate":
+        if ((component.radius ?? 2.2) < 0.8) return null;
+        break;
+      case "grindosaurus":
+        if ((component.range ?? 4) < 0 || (component.speed ?? 1.5) < 0)
+          return null;
+        break;
+      case "angryball":
+        if (
+          (component.w ?? 3) < 0 ||
+          (component.rise ?? 4.6) < 0.5 ||
+          (component.radius ?? 0.8) < 0.25 ||
+          (component.range ?? 12) < 1 ||
+          (component.speed ?? 7) < 0
+        )
+          return null;
+        break;
+      case "camnode":
+        if ((component.radius ?? 0) < 0) return null;
+        break;
+    }
+    if (component.t === "decor" && component.dkind === "vines") {
+      const strands = component.n ?? 3;
+      if (strands < 1 || strands > 64) return null;
+      aggregateSamples += Math.ceil(strands);
+      if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
+    }
+  }
+  if (
+    source.groups !== undefined &&
+    (!Array.isArray(source.groups) ||
+      source.groups.length > MAX_GROUPS ||
+      !source.groups.every(
+        (group) =>
+          group &&
+          Number.isSafeInteger(group.id) &&
+          group.id >= 0 &&
+          (group.parent === undefined ||
+            (Number.isSafeInteger(group.parent) && group.parent >= 0)) &&
+          (group.nm === undefined || typeof group.nm === "string") &&
+          (group.editorOnly === undefined || typeof group.editorOnly === "boolean"),
+      ))
+  )
+    return null;
+  if (
+    source.layers !== undefined &&
+    (!Array.isArray(source.layers) ||
+      source.layers.length > MAX_GROUPS ||
+      !source.layers.every(
+        (layer) =>
+          layer &&
+          Number.isSafeInteger(layer.id) &&
+          layer.id >= 0 &&
+          typeof layer.name === "string" &&
+          (layer.locked === undefined || typeof layer.locked === "boolean"),
+      ))
+  )
+    return null;
+  if (
+    source.layers &&
+    new Set(source.layers.map((layer) => layer.id)).size !== source.layers.length
+  )
+    return null;
+  try {
+    const normalized = migrateCustomLevel(
+      JSON.parse(JSON.stringify(source)) as CustomLevelData,
+    );
+    const groups = groupIndex(normalized);
+    for (const start of normalized.groups ?? []) {
+      let depth = 0;
+      let current: CustomGroup | undefined = start;
+      while (current?.parent !== undefined) {
+        if (++depth > 64) return null;
+        current = groups.get(current.parent);
+      }
+    }
+    return normalized;
+  } catch {
+    return null;
+  }
+}
 
 function sane(e: unknown): e is LevelEntry {
   const l = e as LevelEntry | null;
-  return (
-    !!l &&
-    typeof l.id === "string" &&
-    l.id.length > 0 &&
-    typeof l.name === "string" &&
-    !!l.data &&
-    Array.isArray(l.data.components)
-  );
+  try {
+    return (
+      !!l &&
+      typeof l.id === "string" &&
+      l.id.length > 0 &&
+      typeof l.name === "string" &&
+      normalizeCustomLevelData(l.data) !== null
+    );
+  } catch {
+    return false;
+  }
 }
 
 export function getUserLevels(): LevelEntry[] {
@@ -1378,7 +1971,11 @@ export function getUserLevels(): LevelEntry[] {
   let list: LevelEntry[] = [];
   try {
     const raw = JSON.parse(localStorage.getItem(USER_KEY) ?? "[]") as unknown;
-    if (Array.isArray(raw)) list = raw.filter(sane);
+    if (Array.isArray(raw))
+      list = raw.filter(sane).map((entry) => ({
+        ...entry,
+        data: normalizeCustomLevelData(entry.data)!,
+      }));
   } catch {
     /* corrupt store reads as "no user levels" rather than breaking boot */
   }
@@ -1391,13 +1988,22 @@ export function getUserLevels(): LevelEntry[] {
   return list;
 }
 
-export function setUserLevels(list: LevelEntry[]): void {
-  USER_CACHE = list.filter(sane);
+export function setUserLevels(list: LevelEntry[]): boolean {
+  USER_CACHE = list.filter(sane).map((entry) => ({
+    ...entry,
+    data: normalizeCustomLevelData(entry.data)!,
+  }));
   try {
     localStorage.setItem(USER_KEY, JSON.stringify(USER_CACHE));
+    LAST_USER_WRITE_OK = true;
   } catch {
-    /* storage full: the session still has the list in memory */
+    LAST_USER_WRITE_OK = false; // session remains live, caller can surface/export it
   }
+  return LAST_USER_WRITE_OK;
+}
+
+export function userLevelStorageHealthy(): boolean {
+  return LAST_USER_WRITE_OK;
 }
 
 /**
@@ -1441,13 +2047,18 @@ export function cleanLevelName(name: string): string {
 
 /** Insert or replace a user level. Returns the id actually stored. */
 export function saveUserLevel(entry: LevelEntry): string {
+  const normalized = normalizeCustomLevelData(entry.data);
+  if (!normalized) {
+    LAST_USER_WRITE_OK = false;
+    return entry.id;
+  }
   const list = [...getUserLevels()];
   const e: LevelEntry = {
     // only a BLANK id mints a new one; a built-in's id is kept, which is what
     // makes editing one edit the level itself instead of forking a copy
     id: entry.id || newLevelId(),
     name: cleanLevelName(entry.name),
-    data: entry.data,
+    data: normalized,
   };
   const at = list.findIndex((l) => l.id === e.id);
   if (at >= 0) list[at] = e;
@@ -1503,13 +2114,14 @@ export function getEditData(id: string): CustomLevelData {
 }
 
 /** Editor save: write the working JSON back into the level's list entry. */
-export function persistEditData(id: string, json: string): void {
+export function persistEditData(id: string, json: string): boolean {
   const e = findLevel(id);
-  if (!e) return;
+  if (!e) return false;
   try {
     saveUserLevel({ ...e, data: JSON.parse(json) as CustomLevelData });
+    return LAST_USER_WRITE_OK;
   } catch {
-    /* unparseable: keep the last good copy on disk */
+    return false;
   }
 }
 
@@ -1694,6 +2306,16 @@ export class Level {
   torches: Torch[] = [];
   phasePads: PhasePad[] = [];
   movingRails: MovingRail[] = [];
+  trickGates: TrickGate[] = [];
+  trickRails: TrickRail[] = [];
+  private trickPrimitiveSources = new Map<
+    object,
+    { tricks: Set<DeckTrickKind>; comboLive: boolean }
+  >();
+  returnPortals: ReturnPortal[] = [];
+  grindosauri: Grindosaurus[] = [];
+  angryBalls: AngryBall[] = [];
+  private grindosaurusByRail = new Map<Rail, Grindosaurus>();
   // Point lights are EXPENSIVE here: every world material is Lambert/Phong
   // forward-lit, so each light multiplies shader cost across the whole scene
   // and adding one recompiles materials. So the pool is built ONCE at a fixed
@@ -2425,6 +3047,7 @@ export class Level {
     else this.buildJungle(); // "jungle": the enclosed corridor course
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
+    this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
     this.placeComboOrb(); // combo-run orb, the other side of the racing line
     this.bakeDecor(); // any batched decor the builder didn't flush itself
@@ -2766,13 +3389,16 @@ export class Level {
     // a moving platform IS a groundMesh, but its own 'mover' component rebuilds
     // it — capturing it here too would leave a static slab at its rest spot
     const moverMeshes = new Set(this.movers.map((mv) => mv.mesh));
+    const phasePadMeshes = new Set(this.phasePads.map((pad) => pad.mesh));
     // decks, ramps, step blocks, metal crates — everything standable
     for (const m of this.groundMeshes) {
       if (
         hpWalls.has(m) ||
         crumbleMeshes.has(m) ||
         padSolids.has(m) ||
-        moverMeshes.has(m)
+        moverMeshes.has(m) ||
+        phasePadMeshes.has(m) ||
+        m.userData.decorComponent === true
       )
         continue;
       // A displaced ground strip carries its own component (see jungle()).
@@ -2783,6 +3409,11 @@ export class Level {
         C.push(JSON.parse(JSON.stringify(tc)) as CustomComponent);
         continue;
       }
+      const wc = m.userData.woodPathComp as CustomComponent | undefined;
+      if (wc) {
+        C.push(JSON.parse(JSON.stringify(wc)) as CustomComponent);
+        continue;
+      }
       // Transition surfaces belong to their vertramp component, which rebuilds
       // them. hpWalls only covers the ANALYTIC pipes; a swept one is a plain
       // mesh, so it used to be captured as a bounding-box platform AND rebuilt
@@ -2790,10 +3421,22 @@ export class Level {
       // The flag catches every sweep, including the non-vert 'slide deck'
       // variant the Slipstream is made of, which the name check missed.
       if (m.userData.vertRampMesh || m.name === "halfpipe") continue;
+      m.updateWorldMatrix(true, false);
+      const worldPosition = m.getWorldPosition(new THREE.Vector3());
+      const worldQuaternion = m.getWorldQuaternion(new THREE.Quaternion());
+      const worldScale = m.getWorldScale(new THREE.Vector3());
+      const worldEuler = new THREE.Euler().setFromQuaternion(
+        worldQuaternion,
+        "YXZ",
+      );
       if (m.userData.metalCrate) {
         C.push({
           t: "metal",
-          p: [r2(m.position.x), r2(m.position.y - 0.48), r2(m.position.z)],
+          p: [
+            r2(worldPosition.x),
+            r2(worldPosition.y - 0.48 * Math.abs(worldScale.y)),
+            r2(worldPosition.z),
+          ],
         });
         continue;
       }
@@ -2801,14 +3444,14 @@ export class Level {
       const { color, tex } = matInfo(m);
       if (geo.type === "BoxGeometry" && (geo as THREE.BoxGeometry).parameters) {
         const gp = (geo as THREE.BoxGeometry).parameters;
-        if (Math.abs(m.rotation.x) > 0.01) {
+        if (Math.abs(worldEuler.x) > 0.01) {
           // a slope built by ramp(): invert its construction — recover the two
           // top-surface edge lines from the rotation and the surface normal
-          const len = gp.depth;
-          const dy = Math.sin(m.rotation.x) * len;
-          const dz = -Math.cos(m.rotation.x) * len;
-          const cy = m.position.y - (dz / len) * 0.5;
-          const cz = m.position.z + (dy / len) * 0.5;
+          const len = gp.depth * Math.abs(worldScale.z);
+          const dy = Math.sin(worldEuler.x) * len;
+          const dz = -Math.cos(worldEuler.x) * len;
+          const cy = worldPosition.y - (dz / len) * 0.5;
+          const cz = worldPosition.z + (dy / len) * 0.5;
           let z0 = cz - dz / 2,
             z1 = cz + dz / 2,
             y0 = cy - dy / 2,
@@ -2819,19 +3462,27 @@ export class Level {
           }
           C.push({
             t: "ramp",
-            p: [r2(m.position.x), r2(y0), r2((z0 + z1) / 2)],
+            p: [r2(worldPosition.x), r2(y0), r2((z0 + z1) / 2)],
             len: r2(z0 - z1),
             rise: r2(y1 - y0),
-            w: r2(gp.width),
+            w: r2(gp.width * Math.abs(worldScale.x)),
+            yaw:
+              Math.abs(worldEuler.y) > 1e-6
+                ? r2(THREE.MathUtils.radToDeg(worldEuler.y))
+                : undefined,
             color,
             tex,
           });
         } else {
-          const yaw = Math.round(THREE.MathUtils.radToDeg(m.rotation.y)) % 360;
+          const yaw = Math.round(THREE.MathUtils.radToDeg(worldEuler.y)) % 360;
           C.push({
             t: "platform",
-            p: [r2(m.position.x), r2(m.position.y), r2(m.position.z)],
-            s: [r2(gp.width), r2(gp.height), r2(gp.depth)],
+            p: [r2(worldPosition.x), r2(worldPosition.y), r2(worldPosition.z)],
+            s: [
+              r2(gp.width * Math.abs(worldScale.x)),
+              r2(gp.height * Math.abs(worldScale.y)),
+              r2(gp.depth * Math.abs(worldScale.z)),
+            ],
             yaw: yaw !== 0 ? yaw : undefined,
             color,
             tex,
@@ -2842,20 +3493,15 @@ export class Level {
           });
         }
       } else {
-        // exotic standable (wavy jungle floors, displaced planes): flatten to
-        // the bounding box — an editable stand-in for the sculpted original
-        geo.computeBoundingBox();
-        const bb = geo.boundingBox;
-        if (!bb) continue;
-        const sy = Math.max(0.5, bb.max.y - bb.min.y);
+        // exotic standable: capture its world AABB, never a child-local box.
+        const bb = new THREE.Box3().setFromObject(m);
+        const size = bb.getSize(new THREE.Vector3());
+        const center = bb.getCenter(new THREE.Vector3());
+        const sy = Math.max(0.5, size.y);
         C.push({
           t: "platform",
-          p: [
-            r2(m.position.x + (bb.min.x + bb.max.x) / 2),
-            r2(m.position.y + bb.max.y - sy / 2),
-            r2(m.position.z + (bb.min.z + bb.max.z) / 2),
-          ],
-          s: [r2(bb.max.x - bb.min.x), r2(sy), r2(bb.max.z - bb.min.z)],
+          p: [r2(center.x), r2(center.y), r2(center.z)],
+          s: [r2(size.x), r2(sy), r2(size.z)],
           color,
           tex,
         });
@@ -2872,14 +3518,32 @@ export class Level {
         | { w: number; d: number; h: number; visH: number }
         | undefined;
       if (!spec) return;
+      m.updateWorldMatrix(true, false);
+      const worldPosition = m.getWorldPosition(new THREE.Vector3());
+      const worldQuaternion = m.getWorldQuaternion(new THREE.Quaternion());
+      const worldScale = m.getWorldScale(new THREE.Vector3());
+      const worldEuler = new THREE.Euler().setFromQuaternion(
+        worldQuaternion,
+        "YXZ",
+      );
+      const yaw = r2(THREE.MathUtils.radToDeg(worldEuler.y));
       C.push({
         t: "wall",
         p: [
-          r2(m.position.x),
-          r2(m.position.y - spec.visH / 2),
-          r2(m.position.z),
+          r2(worldPosition.x),
+          r2(worldPosition.y - (spec.visH * Math.abs(worldScale.y)) / 2),
+          r2(worldPosition.z),
         ],
-        s: [r2(spec.w), r2(spec.visH), r2(spec.d)],
+        s: [
+          r2(spec.w * Math.abs(worldScale.x)),
+          r2(spec.visH * Math.abs(worldScale.y)),
+          r2(spec.d * Math.abs(worldScale.z)),
+        ],
+        collisionHeight:
+          Math.abs(spec.h - spec.visH) > 1e-6
+            ? r2(spec.h * Math.abs(worldScale.y))
+            : undefined,
+        yaw: Math.abs(yaw) > 1e-6 ? yaw : undefined,
         ...matInfo(m),
       });
     });
@@ -3040,6 +3704,8 @@ export class Level {
           ? "bouncy"
           : cr.metalBounce
             ? "metalbounce"
+            : cr.metal
+              ? "metal"
             : cr.tnt
               ? "tnt"
               : cr.mask
@@ -3060,7 +3726,7 @@ export class Level {
         t: "crate",
         p: [
           r2(cr.mesh.position.x),
-          r2(cr.mesh.position.y - 0.48),
+          r2((cr.homeY ?? cr.mesh.position.y) - 0.48),
           r2(cr.mesh.position.z),
         ],
         kind: kind === "wood" ? "wood" : (kind as CustomComponent["kind"]),
@@ -3069,13 +3735,17 @@ export class Level {
       });
     }
     for (const e of this.enemies) {
-      const range = r2((e.x1 - e.x0) / 2);
+      const range = r2(Math.abs((e.x1 - e.x0) / 2));
       const foe = e.kind !== "grunt" ? e.kind : undefined;
       C.push(
         e.axis === "z"
           ? {
               t: "enemy",
-              p: [r2(e.group.position.x), r2(e.baseY), r2((e.x0 + e.x1) / 2)],
+              p: [
+                r2(e.homeX ?? e.group.position.x),
+                r2(e.baseY),
+                r2((e.x0 + e.x1) / 2),
+              ],
               range,
               speed: r2(e.speed),
               foe,
@@ -3083,7 +3753,11 @@ export class Level {
             }
           : {
               t: "enemy",
-              p: [r2((e.x0 + e.x1) / 2), r2(e.baseY), r2(e.group.position.z)],
+              p: [
+                r2((e.x0 + e.x1) / 2),
+                r2(e.baseY),
+                r2(e.homeZ ?? e.group.position.z),
+              ],
               range,
               speed: r2(e.speed),
               foe,
@@ -3107,7 +3781,11 @@ export class Level {
       const par = (mv.mesh.geometry as THREE.BoxGeometry).parameters;
       C.push({
         t: "mover",
-        p: [r2(mv.base.x), r2(mv.base.y + 0.4), r2(mv.base.z)], // base is the deck CENTER; p is its top
+        p: [
+          r2(mv.base.x),
+          r2(mv.base.y + par.height / 2),
+          r2(mv.base.z),
+        ], // base is the deck CENTER; p is its top
         s: [r2(par.width), r2(par.height), r2(par.depth)],
         axis:
           Math.abs(mv.axisV.x) > 0.5
@@ -3146,7 +3824,11 @@ export class Level {
         t: "phasepad",
         p: [
           r2(pad.mesh.position.x),
-          r2(pad.mesh.position.y + 0.3), // mesh centre -> the top surface p means
+          r2(
+            pad.mesh.position.y +
+              ((pad.mesh.geometry as THREE.BoxGeometry).parameters.height ?? 0.6) /
+                2,
+          ), // mesh centre -> the top surface p means
           r2(pad.mesh.position.z),
         ],
         s: [r2(par.width), r2(par.height), r2(par.depth)],
@@ -3156,16 +3838,32 @@ export class Level {
       });
     }
     for (const st of this.stones) {
+      const alongX = st.axis === "x";
       C.push({
         t: "stone",
         // the mesh sits r above the floor it found; hand that floor back as
         // the y hint so a rebuild lands the boulder on the same deck
-        p: [
-          r2(st.x),
-          r2(st.mesh.position.y - st.r),
-          r2((st.z0 + st.z1) / 2),
-        ],
-        range: r2((st.z0 - st.z1) / 2),
+        p: alongX
+          ? [
+              r2(((st.x0 ?? st.x) + (st.x1 ?? st.x)) / 2),
+              r2(
+                (st.mesh.userData.authoredFloorY as number | undefined) ??
+                  st.mesh.position.y - st.r,
+              ),
+              r2(st.z ?? st.mesh.position.z),
+            ]
+          : [
+              r2(st.x),
+              r2(
+                (st.mesh.userData.authoredFloorY as number | undefined) ??
+                  st.mesh.position.y - st.r,
+              ),
+              r2((st.z0 + st.z1) / 2),
+            ],
+        range: alongX
+          ? r2(((st.x0 ?? st.x) - (st.x1 ?? st.x)) / 2)
+          : r2((st.z0 - st.z1) / 2),
+        axis: alongX ? "x" : undefined,
         speed: r2(st.speed),
         radius: r2(st.r),
       });
@@ -3173,7 +3871,7 @@ export class Level {
     for (const cu of this.crushers) {
       C.push({
         t: "crusher",
-        p: [r2(cu.x), r2(cu.restY - cu.h / 2), r2(cu.z)],
+        p: [r2(cu.x), r2(cu.restY - cu.h / 2 + 0.1), r2(cu.z)],
         s: [r2(cu.w), r2(cu.h), r2(cu.d)],
         cycle: r2(cu.cycle),
         phase: r2(cu.phase),
@@ -3246,8 +3944,13 @@ export class Level {
       });
     }
     if (this.crystalPickup) {
-      const p = this.crystalPickup.group.position;
-      C.push({ t: "crystal", p: [r2(p.x), r2(p.y), r2(p.z)] });
+      const group = this.crystalPickup.group;
+      const baseY =
+        (group.userData.baseY as number | undefined) ?? group.position.y;
+      C.push({
+        t: "crystal",
+        p: [r2(group.position.x), r2(baseY - 1.75), r2(group.position.z)],
+      });
     }
     // CAMERA LANE. The rig and the control frame ease along this spine, so a
     // level that loses it stops steering with the course — which is exactly
@@ -3255,7 +3958,7 @@ export class Level {
     // built FROM data returns that data verbatim at the top of this method,
     // camnodes included; this is the hand-coded path, which holds a dense
     // centreline sample instead.) Hand it back in the editor's own language:
-    // camnodes, near-losslessly simplified and gathered into one group.
+    // exact camnodes gathered into one group.
     if (this.lanePts.length >= 2) {
       // A node's HEIGHT is load-bearing, not decoration: laneDirAt picks the
       // nearest segment in 3D so a course that passes over itself steers by
@@ -3265,7 +3968,10 @@ export class Level {
       // one collapsible outliner row instead of a hundred loose diamonds
       const laneGrp = groups.reduce((m, g) => Math.max(m, g.id), 0) + 1;
       groups.push({ id: laneGrp, nm: "camera lane" });
-      for (const p of simplifyPath(this.lanePts, LANE_SIMPLIFY_EPS))
+      // Editor safety beats file compactness here: every authored sample is
+      // retained, so opening/copying a winding or self-crossing course cannot
+      // introduce even a small steering-angle or nearest-segment change.
+      for (const p of this.lanePts)
         C.push({
           t: "camnode",
           p: [r2(p.x), r2(p.y), r2(p.z)],
@@ -3329,11 +4035,13 @@ export class Level {
     };
     const geomPass = new Set([
       "terrain",
+      "woodpath",
       "platform",
       "ramp",
       "wall",
       "vertramp",
       "rail",
+      "trickrail",
       "rope",
       "crumble",
       "pit",
@@ -3341,6 +4049,10 @@ export class Level {
       "rock",
       "gate",
       "mover", // a moving platform is terrain: crates seat on it
+      "trampoline",
+      "speedpad",
+      "grindosaurus",
+      "angryball",
     ]);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
@@ -3350,15 +4062,20 @@ export class Level {
     const bangGroups = new Set<number>();
     for (const c of data.components) {
       if (c.t === "crate" && c.kind === "bang")
-        for (const id of groupChainOf(c, data)) bangGroups.add(id);
+        for (const id of gameplayGroupChainOf(c, data)) bangGroups.add(id);
     }
-    for (const pass of [true, false]) {
-      // geometry built first (pass 1); before the entity pass, flush world
-      // matrices so build-time raycasts (crate seating) hit the real decks
-      // — freshly added meshes carry an identity matrixWorld until now.
-      if (!pass) this.root.updateMatrixWorld(true);
+    // Geometry is split once more around wood paths. Their terrain-seeking
+    // scaffold posts must see every ordinary floor no matter where either
+    // component appears in the authored array, then entities need to see the
+    // finished wood deck in turn.
+    for (const phase of [0, 1, 2] as const) {
+      if (phase > 0) this.root.updateMatrixWorld(true);
       data.components.forEach((c, i) => {
-        if (geomPass.has(c.t) !== pass) return;
+        const geometry = geomPass.has(c.t);
+        const wood = c.t === "woodpath";
+        const belongs =
+          phase === 0 ? geometry && !wood : phase === 1 ? wood : !geometry;
+        if (!belongs) return;
         buildTagged(i, () => {
           const tinted = (
             fallback: THREE.MeshLambertMaterial,
@@ -3418,7 +4135,8 @@ export class Level {
               this.patterned(tinted(deck), pw, pd, c.tex ?? "checker"),
             );
             mesh.position.set(c.p[0], c.p[1] - th / 2, c.p[2]); // extrude spans local y 0..th; p is the slab centre
-            mesh.name = "platform";
+            mesh.name = c.slip ? "slippy plank" : "platform";
+            if (c.slip) mesh.userData.slippy = true;
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
           } else if (c.t === "wall" && polyPts) {
@@ -3426,25 +4144,49 @@ export class Level {
             // is filled with 1-unit scanline slabs so the AABB engine pushes
             // back everywhere, including diagonal faces (coarsely).
             const h = c.s?.[1] ?? 4;
+            const collisionHeight = Math.max(
+              0.2,
+              c.collisionHeight ?? h,
+            );
             const geo = new THREE.ExtrudeGeometry(polyShape(), {
               depth: h,
               bevelEnabled: false,
             });
             geo.rotateX(-Math.PI / 2);
-            const wallBase = tinted(
-              new THREE.MeshLambertMaterial({ color: 0x9a8a7a }),
-            );
+            const wallBase = c.invisible
+              ? new THREE.MeshBasicMaterial({
+                  color: 0x64d8ff,
+                  transparent: true,
+                  opacity: 0.22,
+                  depthWrite: false,
+                })
+              : tinted(new THREE.MeshLambertMaterial({ color: 0x9a8a7a }));
             const [ww, wd] = polySpan();
             const mesh = new THREE.Mesh(
               geo,
-              c.tex
-                ? this.patterned(wallBase, Math.max(ww, wd), h + 2, c.tex)
+              !c.invisible && c.tex
+                ? this.patterned(
+                    wallBase as THREE.MeshLambertMaterial,
+                    Math.max(ww, wd),
+                    h + 2,
+                    c.tex,
+                  )
                 : wallBase,
             );
             mesh.position.set(c.p[0], c.p[1], c.p[2]); // extrude spans local y 0..h; p is the base centre
+            if (c.invisible) {
+              mesh.visible = false;
+              mesh.userData.editorGhost = true;
+            }
             this.root.add(mesh);
-            this.groundMeshes.push(mesh); // the top is standable
-            this.fillWallSlabs(polyPts, c.p[0], c.p[2], c.p[1], h);
+            if (!c.invisible) this.groundMeshes.push(mesh); // visible wall top is standable
+            this.fillWallSlabs(
+              polyPts,
+              c.p[0],
+              c.p[2],
+              c.p[1],
+              collisionHeight,
+            );
           } else if (c.t === "pit" && polyPts) {
             // drawn death pool: dark polygon visual; the kill volume is the
             // bounding box gated by a true point-in-polygon test (see
@@ -3626,6 +4368,10 @@ export class Level {
             }
           } else if (c.t === "wall") {
             const s = c.s ?? [8, 4, 1];
+            const collisionHeight = Math.max(
+              0.2,
+              c.collisionHeight ?? s[1],
+            );
             const yawQ = (((c.yaw ?? 0) % 360) + 360) % 360;
             const yawRad = THREE.MathUtils.degToRad(yawQ);
             // one collider recipe for every wall flavor: exact box when the
@@ -3635,10 +4381,14 @@ export class Level {
                 const swapped = yawQ % 180 !== 0;
                 this.walls.push(
                   new THREE.Box3().setFromCenterAndSize(
-                    new THREE.Vector3(c.p[0], c.p[1] + s[1] / 2, c.p[2]),
+                    new THREE.Vector3(
+                      c.p[0],
+                      c.p[1] + collisionHeight / 2,
+                      c.p[2],
+                    ),
                     new THREE.Vector3(
                       swapped ? s[2] : s[0],
-                      s[1],
+                      collisionHeight,
                       swapped ? s[0] : s[2],
                     ),
                   ),
@@ -3649,7 +4399,7 @@ export class Level {
                   c.p[0],
                   c.p[2],
                   c.p[1],
-                  s[1],
+                  collisionHeight,
                 );
               }
             };
@@ -3698,6 +4448,7 @@ export class Level {
                 swapped ? s[2] : s[0],
                 swapped ? s[0] : s[2],
                 c.p[1],
+                collisionHeight,
                 s[1],
               );
             }
@@ -3921,7 +4672,7 @@ export class Level {
               c.speed ?? 30,
             );
           } else if (c.t === "crate") {
-            const gids = groupChainOf(c, data);
+            const gids = gameplayGroupChainOf(c, data);
             // sharing a group with a '!' switch ghosts the crate until the
             // switch fires (switches themselves stay solid)
             const wiredToBang =
@@ -3943,7 +4694,7 @@ export class Level {
             // LEGACY saves: build as a wood crate in the outline state
             this.crate(c.p[0], c.p[1], c.p[2], undefined, {
               outline: true,
-              groupIds: groupChainOf(c, data),
+              groupIds: gameplayGroupChainOf(c, data),
             });
           } else if (c.t === "checkpoint") {
             this.checkpoint(c.p[1], c.p[2], c.p[0]);
@@ -3974,6 +4725,10 @@ export class Level {
                 foe,
               );
             }
+          } else if (c.t === "grindosaurus") {
+            this.buildGrindosaurus(c);
+          } else if (c.t === "angryball") {
+            this.buildAngryBall(c);
           } else if (c.t === "mover") {
             const s = c.s ?? [6, 0.8, 6];
             this.mover(
@@ -3987,6 +4742,7 @@ export class Level {
               c.speed ?? 0.6,
               c.phase ?? 0,
               !!c.lit,
+              s[1],
             );
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
@@ -4001,17 +4757,28 @@ export class Level {
               c.cycle ?? 4,
               c.phase ?? 0,
               c.amp ?? 0.5,
+              s[1],
             );
           } else if (c.t === "stone") {
             const half = Math.abs(c.range ?? 20);
-            this.stone(
-              c.p[0],
-              c.p[1],
-              c.p[2] + half,
-              c.p[2] - half,
-              c.speed ?? 6,
-              c.radius ?? 0.9,
-            );
+            if (c.axis === "x")
+              this.stoneX(
+                c.p[0] + half,
+                c.p[0] - half,
+                c.p[1],
+                c.p[2],
+                c.speed ?? 6,
+                c.radius ?? 0.9,
+              );
+            else
+              this.stone(
+                c.p[0],
+                c.p[1],
+                c.p[2] + half,
+                c.p[2] - half,
+                c.speed ?? 6,
+                c.radius ?? 0.9,
+              );
           } else if (c.t === "crusher") {
             const s = c.s ?? [4, 3, 3];
             this.crusher(
@@ -4022,6 +4789,7 @@ export class Level {
               s[2],
               c.cycle ?? 3.2,
               c.phase ?? 0,
+              s[1],
             );
           } else if (c.t === "ropeswing") {
             this.ropeSwing(
@@ -4074,6 +4842,23 @@ export class Level {
             this.root.add(marker);
           } else if (c.t === "crystal") {
             this.crystal(c.p[0], c.p[1], c.p[2]);
+          } else if (c.t === "trampoline") {
+            const pad = this.buildMechanicPad(c, 0xff8a2b, 0x4a1600);
+            pad.userData.trampolineBounce = Math.max(0.1, c.speed ?? 16);
+            pad.userData.trampolineHeldMult = Math.max(1, c.amp ?? 1.25);
+          } else if (c.t === "speedpad") {
+            const pad = this.buildMechanicPad(c, 0x2bdfff, 0x00334a);
+            pad.userData.speedPadSpeed = Math.max(0.1, c.speed ?? 48);
+            pad.userData.speedPadHold = Math.max(0.05, c.cycle ?? 3.9);
+            pad.userData.speedPadId = i + 1;
+          } else if (c.t === "trickgate") {
+            this.buildTrickGate(c);
+          } else if (c.t === "trickrail") {
+            this.buildTrickRail(c);
+          } else if (c.t === "returnportal") {
+            this.buildReturnPortal(c);
+          } else if (c.t === "woodpath") {
+            this.buildWoodPath(c);
           } else if (c.t === "decor") {
             this.decorProp(c);
           } else if (c.t === "terrain") {
@@ -4122,12 +4907,34 @@ export class Level {
     }
   }
 
-  dispose(): void {
+  dispose(preserveResourcesFrom?: Level): void {
+    const preservedGeometry = new Set<THREE.BufferGeometry>();
+    const preservedMaterials = new Set<THREE.Material>();
+    const preservedTextures = new Set<THREE.Texture>();
+    if (preserveResourcesFrom) {
+      preserveResourcesFrom.root.traverse((object) => {
+        const mesh = object as THREE.Mesh;
+        if (mesh.geometry) preservedGeometry.add(mesh.geometry);
+        const materials = Array.isArray(mesh.material)
+          ? mesh.material
+          : mesh.material
+            ? [mesh.material]
+            : [];
+        for (const material of materials) {
+          preservedMaterials.add(material);
+          for (const value of Object.values(material)) {
+            const texture = value as THREE.Texture | null;
+            if (texture?.isTexture) preservedTextures.add(texture);
+          }
+        }
+      });
+    }
     if (this.water) {
       this.root.remove(this.water.group);
       this.water.dispose();
       this.water = null;
     }
+    this.root.traverse((object) => releaseWumpaMesh(object));
     // Anything flagged `shared` is a process-wide singleton that outlives this
     // level — the one wumpa geometry/material/texture behind every apple in
     // the game (see src/wumpa.ts), which the player's fruit pool and the HUD
@@ -4135,21 +4942,33 @@ export class Level {
     // yank the GPU buffers out from under them on every level switch.
     const disposedTextures = new Set<THREE.Texture>();
     const disposeMat = (x: THREE.Material): void => {
-      if (x.userData.shared) return;
+      if (x.userData.shared || preservedMaterials.has(x)) return;
       // Standard/physical shoreline materials own more than `map` (normal,
       // AO, roughness). Dispose every direct texture slot once; water shader
       // uniforms and render targets are owned by its explicit dispose above.
       for (const value of Object.values(x)) {
         const texture = value as THREE.Texture | null;
-        if (!texture?.isTexture || disposedTextures.has(texture)) continue;
+        if (
+          !texture?.isTexture ||
+          texture.userData.shared ||
+          preservedTextures.has(texture) ||
+          disposedTextures.has(texture)
+        )
+          continue;
         disposedTextures.add(texture);
+        texture.userData.disposed = true;
         texture.dispose();
       }
       x.dispose();
     };
     this.root.traverse((o) => {
       const m = o as THREE.Mesh;
-      if (m.geometry && !m.geometry.userData.shared) m.geometry.dispose();
+      if (
+        m.geometry &&
+        !m.geometry.userData.shared &&
+        !preservedGeometry.has(m.geometry)
+      )
+        m.geometry.dispose();
       const mat = m.material as THREE.Material | THREE.Material[] | undefined;
       if (Array.isArray(mat)) mat.forEach(disposeMat);
       else if (mat) disposeMat(mat);
@@ -4602,6 +5421,73 @@ export class Level {
 
   update(dt: number): void {
     this.updateVfx(dt);
+    for (const gate of this.trickGates) {
+      gate.ring.rotation.z += dt * (gate.unlocked ? 1.8 : 0.55);
+      if (!gate.unlocked)
+        gate.seal.scale.setScalar(0.96 + Math.sin(this.time * 5.5) * 0.04);
+    }
+    for (const portal of this.returnPortals) {
+      portal.visual.rotation.z += dt * 0.7;
+    }
+    for (const value of this.grindosauri) {
+      if (!value.alive || value.speed <= 0) continue;
+      const current = value.position.clone().sub(value.home).dot(value.axis);
+      let next = current + value.direction * value.speed * dt;
+      if (next >= value.maximum) {
+        next = value.maximum;
+        value.direction = -1;
+      } else if (next <= value.minimum) {
+        next = value.minimum;
+        value.direction = 1;
+      }
+      const delta = value.axis.clone().multiplyScalar(next - current);
+      value.position.add(delta);
+      value.group.position.copy(value.position);
+      value.rail.object.position.add(delta);
+      for (const point of value.rail.points) point.add(delta);
+      this.updateGrindosaurusBody(value);
+    }
+    for (const value of this.angryBalls) {
+      if (!value.alive) continue;
+      const distance = value.mesh.position.distanceTo(this.playerPos);
+      if (!value.active) {
+        if (distance > value.activationRadius) continue;
+        value.active = true;
+      } else if (distance > value.activationRadius + 4) {
+        value.active = false;
+        continue;
+      }
+      const targetCross = this.playerPos.clone().sub(value.bottom).dot(value.cross);
+      const sign = Math.sign(targetCross) || 1;
+      const magnitude = Math.abs(targetCross);
+      const lipU = value.flatHalf + value.pipeRadius * Math.PI * 0.5;
+      const targetU =
+        magnitude <= value.flatHalf
+          ? targetCross
+          : sign * Math.min(
+              lipU,
+              value.flatHalf +
+                value.pipeRadius *
+                  Math.asin(
+                    THREE.MathUtils.clamp(
+                      (magnitude - value.flatHalf) / value.pipeRadius,
+                      0,
+                      1,
+                    ),
+                  ),
+            );
+      const beforeU = value.u;
+      value.u += THREE.MathUtils.clamp(
+        targetU - value.u,
+        -value.speed * dt,
+        value.speed * dt,
+      );
+      this.placeAngryBall(value);
+      value.mesh.rotateOnWorldAxis(
+        new THREE.Vector3(-value.cross.z, 0, value.cross.x),
+        (value.u - beforeU) / value.ballRadius,
+      );
+    }
     // Re-derive the crate grind lines only when the boxes actually changed —
     // one broke, one finished settling somewhere new, or a respawn put them
     // all back. Nothing recomputes this per frame.
@@ -4642,15 +5528,27 @@ export class Level {
     // Rolling stones: back and forth along the course, always turning.
     for (const st of this.stones) {
       if (st.chase) continue; // the boulder has its own brain below
-      st.mesh.position.z += st.dir * st.speed * dt;
-      if (st.mesh.position.z < st.z1) {
-        st.mesh.position.z = st.z1;
-        st.dir = 1;
-      } else if (st.mesh.position.z > st.z0) {
-        st.mesh.position.z = st.z0;
-        st.dir = -1;
+      if (st.axis === "x") {
+        st.mesh.position.x += st.dir * st.speed * dt;
+        if (st.mesh.position.x < (st.x1 ?? st.x)) {
+          st.mesh.position.x = st.x1 ?? st.x;
+          st.dir = 1;
+        } else if (st.mesh.position.x > (st.x0 ?? st.x)) {
+          st.mesh.position.x = st.x0 ?? st.x;
+          st.dir = -1;
+        }
+        st.mesh.rotation.z += (st.dir * st.speed * dt) / st.r;
+      } else {
+        st.mesh.position.z += st.dir * st.speed * dt;
+        if (st.mesh.position.z < st.z1) {
+          st.mesh.position.z = st.z1;
+          st.dir = 1;
+        } else if (st.mesh.position.z > st.z0) {
+          st.mesh.position.z = st.z0;
+          st.dir = -1;
+        }
+        st.mesh.rotation.x -= (st.dir * st.speed * dt) / st.r;
       }
-      st.mesh.rotation.x -= (st.dir * st.speed * dt) / st.r;
       st.box.setFromCenterAndSize(
         st.mesh.position,
         new THREE.Vector3(st.r * 1.7, st.r * 2, st.r * 1.7),
@@ -5188,7 +6086,7 @@ export class Level {
       }
       // in the air with a gap under it: fall
       falling++;
-      c.fallVel = (c.fallVel ?? 0) + 42 * dt;
+      c.fallVel = (c.fallVel ?? 0) + TUNING.crateHopGravity * dt;
       p.y = Math.max(rest + SIZE / 2, p.y - c.fallVel * dt);
       c.mesh.userData.baseY = p.y;
       c.box.setFromCenterAndSize(
@@ -5423,6 +6321,17 @@ export class Level {
     this.pops.length = 0;
     this.explosions.length = 0;
     this.blastBroken.length = 0;
+    for (const gate of this.trickGates) {
+      gate.unlocked = false;
+      gate.seal.visible = true;
+      gate.ring.scale.setScalar(1);
+    }
+    for (const value of this.trickRails) {
+      value.unlocked = false;
+      value.styled = false;
+      value.rail.grindable = false;
+    }
+    this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
 
     if (!hard && this.activeCheckpoint) {
       const cpSnap = this.activeCheckpoint;
@@ -5476,8 +6385,36 @@ export class Level {
     this.clearProjectiles();
 
     for (const st of this.stones) {
-      st.mesh.position.set(st.x, st.mesh.position.y, (st.z0 + st.z1) / 2);
+      if (st.axis === "x")
+        st.mesh.position.set(
+          ((st.x0 ?? st.x) + (st.x1 ?? st.x)) / 2,
+          st.mesh.position.y,
+          st.z ?? st.mesh.position.z,
+        );
+      else
+        st.mesh.position.set(st.x, st.mesh.position.y, (st.z0 + st.z1) / 2);
       st.dir = 1;
+    }
+    for (const value of this.grindosauri) {
+      const delta = value.home.clone().sub(value.position);
+      value.position.copy(value.home);
+      value.group.position.copy(value.home);
+      value.group.visible = true;
+      value.rail.object.visible = true;
+      value.rail.object.position.add(delta);
+      for (const point of value.rail.points) point.add(delta);
+      value.rail.grindable = true;
+      value.alive = true;
+      value.direction = 1;
+      this.updateGrindosaurusBody(value);
+    }
+    for (const value of this.angryBalls) {
+      value.u = value.spawnU;
+      value.alive = true;
+      value.active = false;
+      value.mesh.visible = true;
+      value.mesh.rotation.set(0, 0, 0);
+      this.placeAngryBall(value);
     }
 
     // Floating wumpa always comes back (the fruit counter reverts with the
@@ -7982,6 +8919,852 @@ export class Level {
     );
   }
 
+  /**
+   * Curve-authored timber road / bamboo scaffold. The decorative planks are
+   * deliberately not gameplay colliders: one closed swept prism owns support,
+   * underside and ledge geometry, so a fast board never catches a plank seam.
+   */
+  private buildWoodPath(c: CustomComponent): void {
+    const raw = c.pts && c.pts.length >= 2 ? c.pts : [[0, 0], [0, -24]];
+    const knots = raw.map(
+      (q) =>
+        new THREE.Vector3(
+          c.p[0] + (q[0] ?? 0),
+          c.p[1] + (q[3] ?? 0),
+          c.p[2] + (q[1] ?? 0),
+        ),
+    );
+    const nodeWidths = knots.map((_, index) =>
+      Math.max(0.8, c.widths?.[index] ?? c.w ?? 6),
+    );
+    const nodeBanks = raw.map((q) => THREE.MathUtils.degToRad(q[4] ?? 0));
+    let polyLength = 0;
+    for (let index = 1; index < knots.length; index++)
+      polyLength += knots[index].distanceTo(knots[index - 1]);
+    if (polyLength < 1) return;
+
+    const sampleCount = THREE.MathUtils.clamp(
+      Math.ceil(polyLength / 0.65),
+      2,
+      8192,
+    );
+    const spline =
+      c.curve === "spline" && knots.length >= 3
+        ? new THREE.CatmullRomCurve3(knots, false, "centripetal", 0.35)
+        : null;
+    type WoodFrame = {
+      center: THREE.Vector3;
+      forward: THREE.Vector3;
+      right: THREE.Vector3;
+      up: THREE.Vector3;
+      width: number;
+      arc: number;
+    };
+    const frames: WoodFrame[] = [];
+    let arc = 0;
+    for (let index = 0; index <= sampleCount; index++) {
+      const t = index / sampleCount;
+      let center: THREE.Vector3;
+      let forward: THREE.Vector3;
+      if (spline) {
+        center = spline.getPoint(t);
+        forward = spline.getTangent(t).normalize();
+      } else {
+        const f = t * (knots.length - 1);
+        const segment = Math.min(knots.length - 2, Math.floor(f));
+        const local = Math.min(1, f - segment);
+        center = knots[segment].clone().lerp(knots[segment + 1], local);
+        forward = knots[segment + 1].clone().sub(knots[segment]).normalize();
+      }
+      if (Math.abs(forward.y) > 0.98) forward.z += 0.02;
+      forward.normalize();
+      const nodeF = t * (knots.length - 1);
+      const node = Math.min(knots.length - 2, Math.floor(nodeF));
+      const nodeT = Math.min(1, nodeF - node);
+      const width = THREE.MathUtils.lerp(
+        nodeWidths[node],
+        nodeWidths[node + 1],
+        nodeT,
+      );
+      const bank = THREE.MathUtils.lerp(
+        nodeBanks[node],
+        nodeBanks[node + 1],
+        nodeT,
+      );
+      const flatRight = new THREE.Vector3()
+        .crossVectors(new THREE.Vector3(0, 1, 0), forward)
+        .normalize();
+      const flatUp = new THREE.Vector3().crossVectors(forward, flatRight).normalize();
+      const right = flatRight
+        .clone()
+        .multiplyScalar(Math.cos(bank))
+        .addScaledVector(flatUp, Math.sin(bank))
+        .normalize();
+      const up = new THREE.Vector3().crossVectors(forward, right).normalize();
+      if (frames.length) arc += center.distanceTo(frames[frames.length - 1].center);
+      frames.push({ center, forward, right, up, width, arc });
+    }
+
+    const thickness = Math.max(0.08, c.s?.[1] ?? 0.32);
+    const positions: number[] = [];
+    const uvs: number[] = [];
+    const indices: number[] = [];
+    for (const frame of frames) {
+      const left = frame.center.clone().addScaledVector(frame.right, -frame.width / 2);
+      const right = frame.center.clone().addScaledVector(frame.right, frame.width / 2);
+      const leftBottom = left.clone().addScaledVector(frame.up, -thickness);
+      const rightBottom = right.clone().addScaledVector(frame.up, -thickness);
+      for (const point of [left, right, leftBottom, rightBottom])
+        positions.push(point.x, point.y, point.z);
+      uvs.push(0, frame.arc / 3, 1, frame.arc / 3, 0, frame.arc / 3, 1, frame.arc / 3);
+    }
+    for (let index = 0; index < frames.length - 1; index++) {
+      const a = index * 4;
+      const b = a + 4;
+      // top, bottom, left side, right side
+      indices.push(a, b, b + 1, a, b + 1, a + 1);
+      indices.push(a + 2, b + 3, b + 2, a + 2, a + 3, b + 3);
+      indices.push(a, a + 2, b + 2, a, b + 2, b);
+      indices.push(a + 1, b + 1, b + 3, a + 1, b + 3, a + 3);
+    }
+    const last = (frames.length - 1) * 4;
+    indices.push(0, 1, 3, 0, 3, 2);
+    indices.push(last, last + 3, last + 1, last, last + 2, last + 3);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+    const deckHex = c.color ? new THREE.Color(c.color).getHex() : 0x8b5a2b;
+    const deckTexture = c.tex ?? "plank";
+    const deckMaterial = this.baseMat(
+      `woodpath-deck:${deckHex.toString(16)}:${deckTexture}`,
+      deckHex,
+      deckTexture,
+      1,
+      1,
+    );
+    const deck = new THREE.Mesh(geometry, deckMaterial);
+    deck.name = c.nm ?? "procedural wood path";
+    deck.userData.woodPathComp = JSON.parse(JSON.stringify(c)) as CustomComponent;
+    deck.userData.surfaceName = "wood";
+    deck.userData.vert = false;
+    deck.userData.undersideThickness = thickness;
+    this.root.add(deck);
+    this.groundMeshes.push(deck);
+    const sideInset = Math.min(0.25, thickness * 0.4);
+    for (let index = 1; index < frames.length; index++) {
+      const before = frames[index - 1];
+      const after = frames[index];
+      // Collision is split into narrow edge slabs. A single AABB spanning the
+      // whole cross-section reaches from the high bank edge to the low one and
+      // puts an invisible wall above the low riding surface. Per-edge boxes
+      // keep the swept deck seamless without filling that banked air space.
+      for (const side of [-1, 1]) {
+        const beforeTop = before.center
+          .clone()
+          .addScaledVector(before.right, (side * before.width) / 2);
+        const afterTop = after.center
+          .clone()
+          .addScaledVector(after.right, (side * after.width) / 2);
+        const solid = new THREE.Box3().setFromPoints([
+          beforeTop,
+          afterTop,
+          beforeTop.clone().addScaledVector(before.up, -thickness),
+          afterTop.clone().addScaledVector(after.up, -thickness),
+        ]);
+        solid.max.y -= sideInset;
+        if (solid.max.y > solid.min.y + 0.02) {
+          solid.expandByVector(new THREE.Vector3(0.03, 0, 0.03));
+          this.walls.push(solid);
+        }
+      }
+    }
+
+    // Planks are one instanced visual layer. Their tiny seeded yaw/width
+    // variations never enter the collision mesh.
+    const plankSpacing = Math.max(0.18, c.spacing ?? 0.55);
+    const plankFrames = frames.filter(
+      (frame, index) =>
+        index === 0 ||
+        index === frames.length - 1 ||
+        Math.floor(frame.arc / plankSpacing) !==
+          Math.floor(frames[index - 1].arc / plankSpacing),
+    );
+    const plankGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const plankMaterial = new THREE.MeshLambertMaterial({
+      color: 0xffffff,
+    });
+    const planks = new THREE.InstancedMesh(
+      plankGeometry,
+      plankMaterial,
+      plankFrames.length,
+    );
+    planks.name = "procedural path planks (visual only)";
+    const matrix = new THREE.Matrix4();
+    const basis = new THREE.Matrix4();
+    const quaternion = new THREE.Quaternion();
+    const scale = new THREE.Vector3();
+    plankFrames.forEach((frame, index) => {
+      basis.makeBasis(frame.right, frame.up, frame.forward);
+      quaternion.setFromRotationMatrix(basis);
+      const jitter = (((index * 1664525 + (c.seed ?? 7319)) >>> 0) % 997) / 997;
+      scale.set(frame.width + 0.22, 0.14, plankSpacing * (0.9 + jitter * 0.05));
+      matrix.compose(
+        frame.center.clone().addScaledVector(frame.up, -0.07),
+        quaternion,
+        scale,
+      );
+      planks.setMatrixAt(index, matrix);
+      planks.setColorAt(
+        index,
+        new THREE.Color().setHSL(0.078, 0.48, 0.28 + jitter * 0.1),
+      );
+    });
+    planks.instanceMatrix.needsUpdate = true;
+    if (planks.instanceColor) planks.instanceColor.needsUpdate = true;
+    this.root.add(planks);
+
+    const scaffold = c.scaffold === true;
+    const makeRails = c.rails ?? scaffold;
+    const makeSupports = c.supports ?? scaffold;
+    if (!makeRails && !makeSupports) return;
+    const bambooMaterial = new THREE.MeshLambertMaterial({ color: 0xb59a57 });
+    const beams: Array<[THREE.Vector3, THREE.Vector3, number]> = [];
+    const leftRail: THREE.Vector3[] = [];
+    const rightRail: THREE.Vector3[] = [];
+    for (const frame of frames) {
+      leftRail.push(
+        frame.center
+          .clone()
+          .addScaledVector(frame.right, -frame.width / 2 + 0.12)
+          .addScaledVector(frame.up, 0.88),
+      );
+      rightRail.push(
+        frame.center
+          .clone()
+          .addScaledVector(frame.right, frame.width / 2 - 0.12)
+          .addScaledVector(frame.up, 0.88),
+      );
+    }
+    if (makeRails) {
+      for (const points of [leftRail, rightRail]) {
+        const rail = new Rail(points.map((point) => point.clone()), false);
+        this.rails.push(rail);
+        for (let index = 1; index < points.length; index++)
+          beams.push([points[index - 1], points[index], 0.08]);
+        // A continuous waist wall behind the visible poles makes failed
+        // catches and ordinary body motion coherent between scaffold bays.
+        for (let index = 1; index < points.length; index++) {
+          const a = points[index - 1].clone().addScaledVector(frames[index - 1].up, -0.42);
+          const b = points[index].clone().addScaledVector(frames[index].up, -0.42);
+          this.walls.push(
+            new THREE.Box3().setFromPoints([a, b]).expandByVector(
+              new THREE.Vector3(0.16, 0.46, 0.16),
+            ),
+          );
+        }
+      }
+    }
+    if (makeSupports) {
+      const baySpacing = Math.max(1.5, c.baySpacing ?? 3.8);
+      const supportGroundMeshes = c.terrainSupports
+        ? this.groundMeshes.filter((mesh) => mesh !== deck)
+        : [];
+      const supportRay = new THREE.Raycaster();
+      const supportBottom = (top: THREE.Vector3, depth: number): THREE.Vector3 => {
+        if (supportGroundMeshes.length > 0) {
+          supportRay.set(
+            top.clone().add(new THREE.Vector3(0, -0.05, 0)),
+            new THREE.Vector3(0, -1, 0),
+          );
+          supportRay.far = Math.max(depth * 4, 80);
+          const hit = supportRay
+            .intersectObjects(supportGroundMeshes, false)
+            .find((entry) => entry.point.y < top.y - 0.1);
+          if (hit) return new THREE.Vector3(top.x, hit.point.y, top.z);
+        }
+        return top.clone().add(new THREE.Vector3(0, -depth, 0));
+      };
+      let previousBay: { leftTop: THREE.Vector3; rightTop: THREE.Vector3 } | null = null;
+      for (let index = 0; index < frames.length; index++) {
+        const frame = frames[index];
+        if (
+          index !== 0 &&
+          index !== frames.length - 1 &&
+          Math.floor(frame.arc / baySpacing) ===
+            Math.floor(frames[index - 1].arc / baySpacing)
+        )
+          continue;
+        const depth = Math.max(0.8, c.supportDepth ?? c.rise ?? 3);
+        const leftTop = frame.center
+          .clone()
+          .addScaledVector(frame.right, -frame.width / 2 + 0.28);
+        const rightTop = frame.center
+          .clone()
+          .addScaledVector(frame.right, frame.width / 2 - 0.28);
+        const leftBottom = supportBottom(leftTop, depth);
+        const rightBottom = supportBottom(rightTop, depth);
+        beams.push([leftBottom, leftTop, 0.11], [rightBottom, rightTop, 0.11]);
+        beams.push([leftTop, rightTop, 0.08]);
+        this.walls.push(
+          new THREE.Box3().setFromPoints([leftBottom, leftTop]).expandByScalar(0.13),
+          new THREE.Box3().setFromPoints([rightBottom, rightTop]).expandByScalar(0.13),
+        );
+        if (previousBay) {
+          beams.push([previousBay.leftTop, rightTop, 0.055]);
+          beams.push([previousBay.rightTop, leftTop, 0.055]);
+        }
+        previousBay = { leftTop, rightTop };
+      }
+    }
+    const beamGeometry = new THREE.CylinderGeometry(1, 1, 1, 7);
+    const bamboo = new THREE.InstancedMesh(beamGeometry, bambooMaterial, beams.length);
+    bamboo.name = "procedural bamboo scaffold (visual)";
+    const yAxis = new THREE.Vector3(0, 1, 0);
+    beams.forEach(([a, b, radius], index) => {
+      const delta = b.clone().sub(a);
+      const length = Math.max(0.01, delta.length());
+      quaternion.setFromUnitVectors(yAxis, delta.normalize());
+      matrix.compose(
+        a.clone().add(b).multiplyScalar(0.5),
+        quaternion,
+        new THREE.Vector3(radius, length, radius),
+      );
+      bamboo.setMatrixAt(index, matrix);
+    });
+    bamboo.instanceMatrix.needsUpdate = true;
+    this.root.add(bamboo);
+  }
+
+  private buildMechanicPad(
+    c: CustomComponent,
+    color: number,
+    emissive: number,
+  ): THREE.Mesh {
+    const size = c.s ?? [5, 0.45, 5];
+    const material = new THREE.MeshLambertMaterial({ color, emissive });
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(size[0], Math.max(0.08, size[1]), size[2]),
+      material,
+    );
+    mesh.position.set(c.p[0], c.p[1] - Math.max(0.08, size[1]) / 2, c.p[2]);
+    mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    mesh.name = c.t;
+    mesh.userData.undersideThickness = Math.max(0.08, size[1]);
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+    // Only the body below the top is a wall. The top remains a valid landing.
+    const bodyHeight = Math.max(0.02, size[1] - 0.16);
+    const yaw = c.yaw ?? 0;
+    if (Math.abs(yaw % 180) < 0.001) {
+      this.walls.push(
+        new THREE.Box3().setFromCenterAndSize(
+          new THREE.Vector3(mesh.position.x, c.p[1] - 0.16 - bodyHeight / 2, mesh.position.z),
+          new THREE.Vector3(size[0] * 0.96, bodyHeight, size[2] * 0.96),
+        ),
+      );
+    } else {
+      this.fillWallSlabs(
+        rectCorners(size[0] * 0.96, size[2] * 0.96, yaw),
+        c.p[0],
+        c.p[2],
+        c.p[1] - 0.16 - bodyHeight,
+        bodyHeight,
+      );
+    }
+    return mesh;
+  }
+
+  private buildTrickGate(c: CustomComponent): void {
+    const radius = Math.max(0.8, c.radius ?? 2.2);
+    const authoredFrame = c.s ?? [12, 8, 0.6];
+    const frameSize: [number, number, number] = [
+      Math.max(authoredFrame[0], radius * 2 + 0.4),
+      Math.max(authoredFrame[1], radius * 2 + 0.4),
+      Math.max(0.1, authoredFrame[2]),
+    ];
+    const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    const normal = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw)).normalize();
+    const group = new THREE.Group();
+    group.position.set(c.p[0], c.p[1], c.p[2]);
+    group.rotation.y = yaw;
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x54dfff });
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(radius + 0.45, 0.32, 6, 28),
+      ringMaterial,
+    );
+    const seal = new THREE.Mesh(
+      new THREE.CircleGeometry(radius, 28),
+      new THREE.MeshBasicMaterial({
+        color: 0xff4d88,
+        transparent: true,
+        opacity: 0.42,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      }),
+    );
+    seal.position.z = 0.03;
+    group.add(ring, seal);
+    const frameMaterial = new THREE.MeshLambertMaterial({ color: 0x273044 });
+    const sideWidth = Math.max(0.2, (frameSize[0] - radius * 2) / 2);
+    const capHeight = Math.max(0.2, (frameSize[1] - radius * 2) / 2);
+    for (const side of [-1, 1]) {
+      const pillar = new THREE.Mesh(
+        new THREE.BoxGeometry(sideWidth, frameSize[1], frameSize[2]),
+        frameMaterial,
+      );
+      pillar.position.x = side * (radius + sideWidth / 2);
+      group.add(pillar);
+      const cap = new THREE.Mesh(
+        new THREE.BoxGeometry(radius * 2, capHeight, frameSize[2]),
+        frameMaterial,
+      );
+      cap.position.y = side * (radius + capHeight / 2);
+      group.add(cap);
+    }
+    group.name = `${c.trick ?? "kick"} trick gate`;
+    this.root.add(group);
+    this.trickGates.push({
+      center: group.position.clone(),
+      normal,
+      radius,
+      outerRadius: radius + 0.9,
+      halfWidth: frameSize[0] / 2,
+      halfHeight: frameSize[1] / 2,
+      trick: c.trick ?? "kick",
+      unlocked: false,
+      seal,
+      ring,
+    });
+  }
+
+  private buildTrickRail(c: CustomComponent): void {
+    let points: THREE.Vector3[];
+    if (c.pts && c.pts.length >= 2) {
+      points = roundCorners(c.pts, false).map(
+        (q) => new THREE.Vector3(c.p[0] + q.x, c.p[1] + q.y, c.p[2] + q.z),
+      );
+    } else {
+      const length = c.len ?? 12;
+      const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+      const dx = (Math.sin(yaw) * length) / 2;
+      const dz = (Math.cos(yaw) * length) / 2;
+      points = [
+        new THREE.Vector3(c.p[0] - dx, c.p[1], c.p[2] - dz),
+        new THREE.Vector3(c.p[0] + dx, c.p[1], c.p[2] + dz),
+      ];
+    }
+    const rail = new Rail(points, true);
+    rail.grindable = false;
+    rail.object.traverse((object) => {
+      const material = (object as THREE.Mesh).material;
+      if (!material) return;
+      for (const value of Array.isArray(material) ? material : [material]) {
+        value.transparent = true;
+        value.opacity = 0.2;
+      }
+    });
+    this.rails.push(rail);
+    this.root.add(rail.object);
+    this.trickRails.push({
+      rail,
+      trick: c.trick ?? "kick",
+      unlocked: false,
+      styled: false,
+      presentation: rail.object,
+    });
+  }
+
+  private buildReturnPortal(c: CustomComponent): void {
+    const size = c.s ?? [3, 4, 1.2];
+    const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    const footprint = rectCorners(size[0], size[2], c.yaw ?? 0);
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minZ = Infinity;
+    let maxZ = -Infinity;
+    for (const [x, z] of footprint) {
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+      minZ = Math.min(minZ, z);
+      maxZ = Math.max(maxZ, z);
+    }
+    const box = new THREE.Box3().setFromCenterAndSize(
+      new THREE.Vector3(c.p[0], c.p[1] + size[1] / 2, c.p[2]),
+      new THREE.Vector3(maxX - minX, size[1], maxZ - minZ),
+    );
+    const group = new THREE.Group();
+    group.position.set(c.p[0], c.p[1] + size[1] / 2, c.p[2]);
+    group.rotation.y = yaw;
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(Math.min(size[0], size[1]) * 0.38, 0.18, 6, 24),
+      new THREE.MeshBasicMaterial({ color: 0x9f72ff }),
+    );
+    const glow = new THREE.Mesh(
+      new THREE.CircleGeometry(Math.min(size[0], size[1]) * 0.34, 24),
+      new THREE.MeshBasicMaterial({
+        color: 0x4a20aa,
+        transparent: true,
+        opacity: 0.55,
+        side: THREE.DoubleSide,
+      }),
+    );
+    glow.position.z = 0.02;
+    group.add(ring, glow);
+    group.name = "return portal";
+    this.root.add(group);
+    const exitYaw = THREE.MathUtils.degToRad(c.exitYaw ?? 0);
+    this.returnPortals.push({
+      box,
+      localBox: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(),
+        new THREE.Vector3(size[0], size[1], size[2]),
+      ),
+      center: group.position.clone(),
+      yaw,
+      destination: new THREE.Vector3(...(c.to ?? c.p)),
+      heading: new THREE.Vector3(Math.sin(exitYaw), 0, -Math.cos(exitYaw)),
+      airOnly: c.airOnly === true,
+      visual: group,
+    });
+  }
+
+  private buildGrindosaurus(c: CustomComponent): void {
+    const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    const axis = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw)).normalize();
+    const home = new THREE.Vector3(c.p[0], c.p[1], c.p[2]);
+    const group = new THREE.Group();
+    group.position.copy(home);
+    group.rotation.y = Math.atan2(axis.x, axis.z);
+    group.name = "grindosaurus";
+    const bodyMat = new THREE.MeshLambertMaterial({ color: 0x4f9a56 });
+    const bellyMat = new THREE.MeshLambertMaterial({ color: 0xd5c47a });
+    const body = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.7, 4.6), bodyMat);
+    body.position.y = 1.15;
+    group.add(body);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(1.05, 8, 6), bodyMat);
+    head.position.set(0, 1.55, -2.25);
+    group.add(head);
+    const belly = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.45, 3.2), bellyMat);
+    belly.position.set(0, 0.55, 0);
+    group.add(belly);
+    for (const x of [-0.9, 0.9]) {
+      for (const z of [-1.45, 1.45]) {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.75, 0.62), bodyMat);
+        leg.position.set(x, 0.38, z);
+        group.add(leg);
+      }
+    }
+    this.root.add(group);
+    const spineStart = home.clone().addScaledVector(axis, -2.1).add(new THREE.Vector3(0, 2.15, 0));
+    const spineEnd = home.clone().addScaledVector(axis, 2.1).add(new THREE.Vector3(0, 2.15, 0));
+    const rail = new Rail([spineStart, spineEnd], true);
+    this.rails.push(rail);
+    this.root.add(rail.object);
+    const range = Math.max(0, c.range ?? 4);
+    const value: Grindosaurus = {
+      group,
+      body: new THREE.Box3(),
+      rail,
+      axis,
+      home,
+      position: home.clone(),
+      minimum: -range,
+      maximum: range,
+      speed: Math.max(0, c.speed ?? 1.5),
+      direction: 1,
+      requiredCoverage: THREE.MathUtils.clamp(c.coverage ?? 0.65, 0.1, 1),
+      alive: true,
+    };
+    this.updateGrindosaurusBody(value);
+    this.grindosauri.push(value);
+    this.grindosaurusByRail.set(rail, value);
+  }
+
+  private updateGrindosaurusBody(value: Grindosaurus): void {
+    // The visual's long local axis follows `axis`; project both local extents
+    // into world X/Z so a turned dinosaur has the same lethal footprint as
+    // the mesh instead of retaining the yaw-zero box.
+    const widthX = Math.abs(value.axis.x) * 4.6 + Math.abs(value.axis.z) * 2.6;
+    const depthZ = Math.abs(value.axis.z) * 4.6 + Math.abs(value.axis.x) * 2.6;
+    value.body.setFromCenterAndSize(
+      value.position.clone().add(new THREE.Vector3(0, 1.15, 0)),
+      new THREE.Vector3(widthX, 2.3, depthZ),
+    );
+  }
+
+  private buildAngryBall(c: CustomComponent): void {
+    const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    const cross = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw)).normalize();
+    const ballRadius = Math.max(0.25, c.radius ?? 0.8);
+    const mesh = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(ballRadius, 1),
+      new THREE.MeshLambertMaterial({
+        color: 0xd83d2a,
+        emissive: 0x3a0803,
+        flatShading: true,
+      }),
+    );
+    mesh.name = "angry ball";
+    this.root.add(mesh);
+    const value: AngryBall = {
+      mesh,
+      box: new THREE.Box3(),
+      bottom: new THREE.Vector3(c.p[0], c.p[1], c.p[2]),
+      cross,
+      flatHalf: Math.max(0, c.w ?? 3),
+      pipeRadius: Math.max(0.5, c.rise ?? 4.6),
+      ballRadius,
+      activationRadius: Math.max(1, c.range ?? 12),
+      speed: Math.max(0, c.speed ?? 7),
+      u: c.amp ?? 0,
+      spawnU: c.amp ?? 0,
+      alive: true,
+      active: false,
+    };
+    this.angryBalls.push(value);
+    this.placeAngryBall(value);
+  }
+
+  private placeAngryBall(value: AngryBall): void {
+    const magnitude = Math.abs(value.u);
+    let crossOffset = value.u;
+    let height = 0;
+    const normal = new THREE.Vector3(0, 1, 0);
+    if (magnitude > value.flatHalf) {
+      const angle = Math.min(
+        Math.PI / 2,
+        (magnitude - value.flatHalf) / value.pipeRadius,
+      );
+      crossOffset =
+        Math.sign(value.u) *
+        (value.flatHalf + value.pipeRadius * Math.sin(angle));
+      height = value.pipeRadius * (1 - Math.cos(angle));
+      normal
+        .set(0, Math.cos(angle), 0)
+        .addScaledVector(value.cross, -Math.sign(value.u) * Math.sin(angle))
+        .normalize();
+    }
+    value.mesh.position
+      .copy(value.bottom)
+      .addScaledVector(value.cross, crossOffset)
+      .add(new THREE.Vector3(0, height, 0))
+      .addScaledVector(normal, value.ballRadius);
+    value.box.setFromCenterAndSize(
+      value.mesh.position,
+      new THREE.Vector3(
+        value.ballRadius * 2,
+        value.ballRadius * 2,
+        value.ballRadius * 2,
+      ),
+    );
+  }
+
+  grindosaurusFor(rail: Rail): Grindosaurus | null {
+    return this.grindosaurusByRail.get(rail) ?? null;
+  }
+
+  isTrickRail(rail: Rail): boolean {
+    return this.trickRails.some((value) => value.rail === rail);
+  }
+
+  defeatGrindosaurus(value: Grindosaurus): void {
+    if (!value.alive) return;
+    value.alive = false;
+    value.group.visible = false;
+    value.rail.grindable = false;
+    value.rail.object.visible = false;
+    value.body.makeEmpty();
+    puffs.burst(
+      "enemyPoof",
+      value.position.x,
+      value.position.y + 1.2,
+      value.position.z,
+      {},
+    );
+    sfx.play("enemyDown", 0.8, 0.75);
+  }
+
+  defeatAngryBall(value: AngryBall): void {
+    if (!value.alive) return;
+    value.alive = false;
+    value.active = false;
+    value.mesh.visible = false;
+    value.box.makeEmpty();
+    puffs.burst(
+      "enemyPoof",
+      value.mesh.position.x,
+      value.mesh.position.y,
+      value.mesh.position.z,
+      {},
+    );
+    sfx.play("enemyDown", 0.7, 1.3);
+  }
+
+  syncTrickPrimitives(
+    tricks: ReadonlySet<DeckTrickKind>,
+    comboLive: boolean,
+    source?: object,
+  ): void {
+    if (source) {
+      if (comboLive || tricks.size > 0)
+        this.trickPrimitiveSources.set(source, {
+          tricks: new Set(tricks),
+          comboLive,
+        });
+      else this.trickPrimitiveSources.delete(source);
+    } else {
+      // Constructor/reset calls own the whole level and intentionally retire
+      // every rider's previous combo evidence.
+      this.trickPrimitiveSources.clear();
+    }
+    const combined = source
+      ? this.combinedTrickPrimitiveState()
+      : { tricks, comboLive };
+    this.applyTrickPrimitiveState(combined.tricks, combined.comboLive);
+  }
+
+  private combinedTrickPrimitiveState(): {
+    tricks: Set<DeckTrickKind>;
+    comboLive: boolean;
+  } {
+    const tricks = new Set<DeckTrickKind>();
+    let comboLive = false;
+    for (const state of this.trickPrimitiveSources.values()) {
+      if (!state.comboLive) continue;
+      comboLive = true;
+      for (const trick of state.tricks) tricks.add(trick);
+    }
+    return { tricks, comboLive };
+  }
+
+  private applyTrickPrimitiveState(
+    tricks: ReadonlySet<DeckTrickKind>,
+    comboLive: boolean,
+  ): void {
+    for (const gate of this.trickGates) {
+      gate.seal.visible = !gate.unlocked;
+      gate.ring.scale.setScalar(gate.unlocked ? 1.08 : 1);
+    }
+    for (const value of this.trickRails) {
+      const unlocked = comboLive && tricks.has(value.trick);
+      if (unlocked === value.unlocked && value.styled) continue;
+      value.unlocked = unlocked;
+      value.styled = true;
+      value.rail.grindable = unlocked;
+      value.presentation.traverse((object) => {
+        const mesh = object as THREE.Mesh;
+        let material = mesh.material;
+        if (!material) return;
+        // dressRails shares one material across every authored rail. A trick
+        // rail needs its own copy or ghosting it would fade every normal rail
+        // in the level as collateral damage.
+        if (!mesh.userData.trickRailMaterialOwned) {
+          material = Array.isArray(material)
+            ? material.map((entry) => entry.clone())
+            : material.clone();
+          mesh.material = material;
+          mesh.userData.trickRailMaterialOwned = true;
+        }
+        for (const entry of Array.isArray(material) ? material : [material]) {
+          entry.transparent = !unlocked;
+          entry.opacity = unlocked ? 1 : 0.2;
+          entry.needsUpdate = true;
+        }
+      });
+    }
+  }
+
+  clearTrickPrimitiveSource(source: object): void {
+    this.trickPrimitiveSources.delete(source);
+    const combined = this.combinedTrickPrimitiveState();
+    this.applyTrickPrimitiveState(combined.tricks, combined.comboLive);
+  }
+
+  resolveTrickGateCrossing(
+    from: THREE.Vector3,
+    to: THREE.Vector3,
+    tricks: ReadonlySet<DeckTrickKind>,
+    clearance = 0,
+  ): { gate: TrickGate; rejected: boolean; normal: THREE.Vector3 } | null {
+    for (const gate of this.trickGates) {
+      const before = from.clone().sub(gate.center).dot(gate.normal);
+      const after = to.clone().sub(gate.center).dot(gate.normal);
+      const sideSign = Math.sign(Math.abs(before) > 1e-8 ? before : -after) || 1;
+      // Sweep the player's slab, not its centre point: contact occurs when
+      // the nearest body corner reaches the gate plane. Moving away from an
+      // already-touching plane is never a fresh collision.
+      if ((after - before) * sideSign >= -1e-8) continue;
+      const beforeContact = before - sideSign * clearance;
+      const afterContact = after - sideSign * clearance;
+      const span = beforeContact - afterContact;
+      if (Math.abs(span) <= 1e-8 || beforeContact * afterContact > 0) continue;
+      const t = beforeContact / span;
+      if (t < 0 || t > 1) continue;
+      const crossing = from.clone().lerp(to, t);
+      const radial = crossing.clone().sub(gate.center);
+      radial.addScaledVector(gate.normal, -radial.dot(gate.normal));
+      const distance = radial.length();
+      const tangent = new THREE.Vector3(gate.normal.z, 0, -gate.normal.x);
+      const side = Math.abs(radial.dot(tangent));
+      const vertical = Math.abs(radial.y);
+      if (
+        side > gate.halfWidth + clearance ||
+        vertical > gate.halfHeight + clearance
+      )
+        continue;
+      const clearRadius = Math.max(0.1, gate.radius - clearance);
+      if (
+        distance <= clearRadius &&
+        (gate.unlocked || tricks.has(gate.trick))
+      ) {
+        gate.unlocked = true;
+        gate.seal.visible = false;
+        return { gate, rejected: false, normal: gate.normal.clone() };
+      }
+      return {
+        gate,
+        rejected: true,
+        normal: gate.normal.clone().multiplyScalar(before >= 0 ? 1 : -1),
+      };
+    }
+    return null;
+  }
+
+  returnPortalAt(
+    from: THREE.Vector3,
+    to: THREE.Vector3,
+    airborne: boolean,
+  ): ReturnPortal | null {
+    for (const portal of this.returnPortals) {
+      if (portal.airOnly && !airborne) continue;
+      const localPoint = (value: THREE.Vector3): THREE.Vector3 => {
+        const dx = value.x - portal.center.x;
+        const dz = value.z - portal.center.z;
+        const cos = Math.cos(portal.yaw);
+        const sin = Math.sin(portal.yaw);
+        return new THREE.Vector3(
+          dx * cos - dz * sin,
+          value.y - portal.center.y,
+          dx * sin + dz * cos,
+        );
+      };
+      const localTo = localPoint(to);
+      if (portal.localBox.containsPoint(localTo)) return portal;
+      const localFrom = localPoint(from);
+      const direction = localTo.clone().sub(localFrom);
+      if (direction.lengthSq() <= 1e-10) continue;
+      const ray = new THREE.Ray(localFrom, direction.clone().normalize());
+      const hit = ray.intersectBox(portal.localBox, new THREE.Vector3());
+      if (hit && hit.distanceTo(localFrom) <= direction.length() + 1e-5)
+        return portal;
+    }
+    return null;
+  }
+
   // Firm raised edges: one continuous swept visible wall, a hidden forgiving
   // collision chain, and a grindable top lip. The visible wall follows the
   // exact terrain spine; collision can stay segmented without showing its
@@ -8399,9 +10182,10 @@ export class Level {
     // corner, so the platform is its own light — a pale hover-plate against a
     // navy sky is invisible exactly when you need to land on it.
     fire = false,
+    height = 0.8,
   ): void {
     const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(w, 0.8, d),
+      new THREE.BoxGeometry(w, height, d),
       this.patterned(
         fire
           ? new THREE.MeshLambertMaterial({ color: 0x5a4632, emissive: 0x5a2c0c })
@@ -8411,7 +10195,7 @@ export class Level {
         "metal", // riveted hover-plate
       ),
     );
-    mesh.position.set(x, topY - 0.4, z);
+    mesh.position.set(x, topY - height / 2, z);
     mesh.name = "moving platform";
     mesh.userData.moverId = this.movers.length;
     this.root.add(mesh);
@@ -8535,6 +10319,7 @@ export class Level {
     cycle = 4,
     phase = 0,
     duty = 0.5,
+    height = 0.6,
   ): void {
     // TWO FAMILIES, one metronome. A pad's phase picks its team: near 0 =
     // AMBER, near a half-turn = COLD BLUE — so "amber lit, blue dark, then
@@ -8564,8 +10349,8 @@ export class Level {
       // fogs like everything else: the ghost only needs to read up close,
       // where you're judging the next stand — not from across the works
     });
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 0.6, d), litMat);
-    mesh.position.set(x, topY - 0.3, z);
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, height, d), litMat);
+    mesh.position.set(x, topY - height / 2, z);
     mesh.name = "phase pad";
     this.root.add(mesh);
     this.groundMeshes.push(mesh); // starts solid; update() flips membership
@@ -9017,8 +10802,11 @@ export class Level {
 
 
   // A fallen log across (part of) the path: hop it. Solid, never breaks.
-  private log(x0: number, x1: number, y: number, z: number): void {
-    this.noteDecor("log", (x0 + x1) / 2, y, z, { len: Math.abs(x1 - x0) });
+  private log(x0: number, x1: number, y: number, z: number, yawDeg = 0): void {
+    this.noteDecor("log", (x0 + x1) / 2, y, z, {
+      len: Math.abs(x1 - x0),
+      yaw: yawDeg || undefined,
+    });
     const len = Math.abs(x1 - x0);
     const geo = new THREE.CylinderGeometry(0.55, 0.55, len, 8);
     geo.rotateZ(Math.PI / 2);
@@ -9028,13 +10816,10 @@ export class Level {
     );
     const gy = this.floorY((x0 + x1) / 2, z, y);
     mesh.position.set((x0 + x1) / 2, gy + 0.55, z);
+    mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg);
     this.root.add(mesh);
-    this.walls.push(
-      new THREE.Box3().setFromCenterAndSize(
-        mesh.position.clone(),
-        new THREE.Vector3(len, 1.1, 1.1),
-      ),
-    );
+    mesh.updateWorldMatrix(true, false);
+    this.walls.push(new THREE.Box3().setFromObject(mesh));
   }
 
   // ------------------------------------------------------- tropical decor --
@@ -9446,7 +11231,7 @@ export class Level {
         );
       case "log": {
         const half = (c.len ?? 13) / 2;
-        return this.log(x - half, x + half, y, z);
+        return this.log(x - half, x + half, y, z, c.yaw ?? 0);
       }
       case "tree":
       case "plants":
@@ -9967,6 +11752,7 @@ export class Level {
     // box for pushes and ledge grabs. (The yawed AABB runs a little proud at
     // the corners; at these sizes and small yaws that reads as forgiveness.)
     m.updateWorldMatrix(true, false);
+    m.userData.decorComponent = true;
     this.groundMeshes.push(m);
     this.walls.push(new THREE.Box3().setFromObject(m));
     // a moss cap on top: the reference's ruins are all green-shouldered
@@ -9993,6 +11779,7 @@ export class Level {
       this.baseMat("rock", 0xa08a70, "dirt", 2, 2),
     );
     mesh.position.set(x, this.floorY(x, (z0 + z1) / 2, y) + r, (z0 + z1) / 2);
+    mesh.userData.authoredFloorY = mesh.position.y - r;
     this.root.add(mesh);
     this.stones.push({
       mesh,
@@ -10003,6 +11790,39 @@ export class Level {
       dir: 1,
       speed,
       r,
+      axis: "z",
+    });
+  }
+
+  private stoneX(
+    x0: number,
+    x1: number,
+    y: number,
+    z: number,
+    speed: number,
+    r = 0.9,
+  ): void {
+    const centerX = (x0 + x1) / 2;
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(r, 10, 8),
+      this.baseMat("rock", 0xa08a70, "dirt", 2, 2),
+    );
+    mesh.position.set(centerX, this.floorY(centerX, z, y) + r, z);
+    mesh.userData.authoredFloorY = mesh.position.y - r;
+    this.root.add(mesh);
+    this.stones.push({
+      mesh,
+      box: new THREE.Box3(),
+      x: centerX,
+      z0: z,
+      z1: z,
+      dir: 1,
+      speed,
+      r,
+      axis: "x",
+      x0: Math.max(x0, x1),
+      x1: Math.min(x0, x1),
+      z,
     });
   }
 
@@ -10520,6 +12340,7 @@ export class Level {
     // again the moment the real face arrives.
     if (!rooLoaded) {
       void rooReady.then(() => {
+        if (tex.userData.disposed) return;
         ctx.clearRect(0, 0, 32, 32);
         draw(ctx);
         tex.needsUpdate = true;
