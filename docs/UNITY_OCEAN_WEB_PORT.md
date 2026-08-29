@@ -24,26 +24,41 @@ source-revision record live beside the web assets in
 
 `src/unityOcean.ts` owns:
 
-1. A curved shoreline ribbon resampled at about 2m, 128 strips across,
-   extending 6m onto land and 120m offshore.
+1. A curved shoreline ribbon with 128 strips across, extending 6m onto land
+   and 120m offshore. The literal Beachfront reference preserves all 371
+   source rows plus Unity's 50-sample pre-tail and 400-sample post-tail;
+   native web coasts resample their own spline at about 2m without changing
+   coordinate handedness.
 2. The exact two Unity Gerstner bands on both GPU and CPU. Geometry, normals
    and `sampleWaterSurface()` therefore share one equation.
-3. A deep-ocean coverage mesh for the web Descent's 2.5km high-road view.
-4. The Unity horizon fill at 105m / 130m / 800m, blending opaque deep water
+3. The Unity horizon fill at 105m / 130m / 800m, blending opaque deep water
    into the coast fog.
-5. MatrixRex normal/specular detail, shallow/deep color, refracted opaque
-   scene color, depth intersection foam, caustics and distorted planar
-   reflection.
-6. A 30%-scale mirrored-camera reflection pass and a display-resolution
-   opaque color/depth pass. Retina DPR does not multiply the Unity Game-view
-   contract.
-7. Full/lite quality modes, explicit render-target and texture disposal, a
+4. A literal translation of the enabled MatrixRex permutation: exponential
+   world-space depth, two-way tangent normals, depth-validated refraction,
+   view-parallax dual-sample HDR caustics, the IntersectionFoamGenerator mask,
+   displacement-driven wave color, screen-space planar reflection, HDR
+   reflect-vector specular, live directional shadows, exact layer alpha/order,
+   and Unity-linear fog.
+5. A 30%-scale mirrored-camera HDR reflection pass and a full drawing-buffer
+   opaque color/depth pass, both sized from actual camera pixels including DPR.
+6. Full/lite quality modes, explicit render-target and texture disposal, a
    pure CPU surface sampler, diagnostics and the versioned WATER studio.
 
-`src/coastpost.ts` owns the coast-only Unity post profile: Bloom 1/.3/.7 plus
-the approved screen-space lens-flare ghosts, warped flare, horizontal streak
-and chromatic dispersion values. It renders at Unity Game-view resolution;
-split-screen and `?lite` fall back to the direct renderer.
+`src/coastpost.ts`, `src/unitySmaa.ts`, and `src/unityPost.ts` own the
+coast-only Unity post path: StopNaN/unsigned-HDR sanitizing, URP SMAA High,
+the half-resolution six-mip HQ Gaussian bloom, and the approved screen-space
+lens-flare ghosts/warped flare/streak pipeline composited into bloom before its
+0.3 intensity. The final Uber stage preserves the source project's LDR grading
+contract: Tonemapping None still saturates, samples a 32^3 R8 identity LUT,
+then applies Unity's triangular 8-bit dither in perceptual sRGB before returning
+to linear color for the final OutputPass transfer. Split-screen and `?lite`
+fall back to the direct renderer.
+
+The SMAA algorithm and lookup textures carry their original 2013 MIT notice in
+`public/unity/smaa/LICENSE.txt`; `area.png` and `search.png` are lossless PNG
+conversions of the corresponding MIT-associated lookup tables. The dither rank
+texture is generated deterministically by repo-owned best-candidate code at
+runtime. No Unity blue-noise image is redistributed.
 
 ## Coast traversal contract
 
@@ -65,8 +80,8 @@ as Unity's `OceanEdge_Invisible`. The player performs an earliest-time capsule
 sweep over the true spline and endpoint caps, resolves with geometric normals,
 then projects only the inward remainder for tangent-preserving glances. It no
 longer approximates the curve with axis-aligned wall boxes. The fallback is in
-`pitBoxes`. An authored `?oceanreview` query starts on dry sand ten metres from
-the waterline for focused QA.
+`pitBoxes`. The authored `?coastphysics` query starts on dry sand just inside
+the waterline for focused containment and deep-water QA.
 
 ## Atmosphere
 
@@ -81,16 +96,20 @@ preset.
 Unity's underwater keyword, surface-foam feature, shoreline trail and ocean
 particle systems are disabled or absent in the source scene, so the web port
 does not invent them. `?nopost` and `?nopasses` are diagnostic fallbacks, not
-alternate authored looks.
+alternate authored looks. `?nosmaa`, `?rawoutput`, `?nolut`, and `?nodither`
+isolate the corresponding post stages for parity review.
 
 ## Verification
 
-Use `/?touch&oceanreview` for the full beach check and `/?lite&oceanreview`
-for the fallback. Verify:
+Use `/?touch&oceanreview&oceanoverview` for the frozen Unity visual target,
+`/?touch&oceanreview` for the exact gameplay-camera target, and
+`/?touch&coastphysics` for the Descent's curved containment/deep-water check.
+Add `?lite` or `&lite` to the corresponding query for the fallback. Verify:
 
 - continuous sand/water/foam/horizon with no rectangular edge;
-- fine animated normal streaks without black grazing bands;
-- shallow refraction and caustic variation;
+- bright, fine animated HDR specular streaks driven by the exact two-way normal;
+- cyan shallows, view-projected dual caustics, broad Noise3 intersection foam,
+  and depth-validated refraction;
 - the player walks into the shallows and stops at the curved 3.5m edge;
 - the ordinary Descent spawn still sees ocean along the high road;
 - Slipstream uses the shared two-wave runtime, not its removed plasma shader;

@@ -29,6 +29,7 @@ import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Ro
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
+import { createUnityBeachfrontReference } from "./beachfront";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 
@@ -1558,6 +1559,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
   { id: "warproom", name: "The Warp Room" }, // five wormhole gates round a dais
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
+  { id: "beachfront", name: "Unity Beachfront Run" },
   {
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,
@@ -3044,6 +3046,7 @@ export class Level {
     else if (entry.id === "dark") this.buildNightworks();
     else if (entry.id === "warproom") this.buildWarpRoom();
     else if (entry.id === "descent") this.buildDescent();
+    else if (entry.id === "beachfront") this.buildUnityBeachfront();
     else this.buildJungle(); // "jungle": the enclosed corridor course
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
@@ -6532,6 +6535,63 @@ export class Level {
   //  - everything long (paint, barriers, hills, pines) is built in ~240m
   //    CHUNKS so the far course frustum-culls; the single full-course meshes
   //    of the first pass were why the opening seconds stuttered.
+  /**
+   * Exact Unity Beachfront shader/geometry reference course. This is the
+   * controlled visual target for the literal MatrixRex port: the same 740m
+   * S-curve, 371×65 sand/depth mesh, nominal shoreline, 50/400 ocean tails,
+   * sea level, atmosphere and tangent frame as BeachfrontRun.unity.
+   */
+  private buildUnityBeachfront(): void {
+    this.killY = -12;
+    this.skyPreset = "coast";
+    this.noFogLevel = false;
+    this.theme = {
+      skyTop: "#3f8fd8",
+      skyBottom: "#94c9e0",
+      sunColorHex: "#fff8e0",
+      sunU: 0.55,
+      sunV: 0.26,
+      stars: false,
+      fog: 0x94c9e0,
+      fogNear: 190,
+      fogFar: 780,
+      hemiSky: 0x7ab0d1,
+      hemiGround: 0x3d4d57,
+      hemiI: 1,
+      sunColor: 0xffe8bd,
+      sunI: 1.12,
+    };
+
+    const reference = createUnityBeachfrontReference();
+    this.root.add(reference.group);
+    this.groundMeshes.push(reference.sand);
+    this.lanePts = reference.lane;
+    this.measureLane();
+    this.spawnPos.copy(reference.spawn);
+    this.currentSpawn.copy(reference.spawn);
+
+    const firstShore = reference.shore[0];
+    this.water = new CoastWater({
+      shore: reference.shore,
+      seaLevel: -0.36,
+      shoreDirX: firstShore?.sx ?? -1,
+      shoreDirZ: firstShore?.sz ?? 0,
+      course: reference.lane.map(({ x, z }) => ({ x, z })),
+      terrainHeight: () => -0.36,
+      extendUnityTails: true,
+      sourceCoordinates: "unity",
+    });
+    this.root.add(this.water.group);
+
+    this.finishZ = reference.finish.z;
+    this.finishGate(
+      reference.finish.y,
+      reference.finish.z,
+      reference.finish.x,
+      0,
+    );
+  }
+
   private buildDescent(): void {
     this.batchDecor = true;
     this.killY = -12; // Unity Beachfront backup below the deep-water trigger
@@ -7300,7 +7360,10 @@ export class Level {
     // A ~330m sweep: tucked behind the car park on one side, running far out
     // past the point on the other, with sine lobes so the waterline bows in
     // and out like a real bay beach instead of one clean parabola.
-    const NSHORE = 48;
+    // Unity's sand/depth input is sampled about every 2m. The depth-driven
+    // caustics and intersection shader reads this geometry directly, so a
+    // sparse 7m bank changes the effect even when the shader is exact.
+    const NSHORE = 166;
     const BEACH_S0 = -120;
     const BEACH_S1 = 210;
     const inlandA = (s: number): number =>
@@ -7430,7 +7493,7 @@ export class Level {
         );
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        texture.minFilter = THREE.LinearMipmapNearestFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.colorSpace = srgb
           ? THREE.SRGBColorSpace
@@ -7445,11 +7508,6 @@ export class Level {
         aoMapIntensity: 1,
         metalness: 0,
         roughness: 1,
-        // Unity's Trilight ambient keeps the yellow bed luminous even where
-        // the cliff blocks its warm key. Three has no equator ambient band,
-        // so a restrained material lift restores that approved beach value.
-        emissive: 0x503a10,
-        emissiveIntensity: 0.35,
       });
       // Unity's packed terrain mask stores ambient occlusion in G; Three's
       // stock Standard shader assumes R for ORM. Swizzle just that lookup.
@@ -7636,12 +7694,18 @@ export class Level {
       shoreDirZ: -Rv.z,
       course: this.lanePts.map((q) => ({ x: q.x, z: q.z })),
       terrainHeight: beachHeight,
+      extendUnityTails: true,
     });
     this.root.add(this.water.group);
-    // Focused visual/physics review route: starts on dry sand ten metres from
-    // the Unity waterline without changing the ordinary course spawn.
-    if (new URLSearchParams(window.location.search).has("oceanreview")) {
-      const review = lotAt(shoreA(0) - 10, 0);
+    // Focused visual/physics review route: starts just above the dry side of
+    // the Unity waterline so caustics, intersection, refraction and glints fill
+    // the gameplay camera without changing the ordinary course spawn.
+    const coastReviewQuery = new URLSearchParams(window.location.search);
+    if (
+      coastReviewQuery.has("oceanreview") ||
+      coastReviewQuery.has("coastphysics")
+    ) {
+      const review = lotAt(shoreA(0) - 2, 0);
       this.spawnPos.set(
         review.x,
         beachHeight(review.x, review.z) + 0.6,

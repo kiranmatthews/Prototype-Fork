@@ -34,9 +34,30 @@ for (const required of [
   "renderPrepass(",
   "sampleWaterSurface(",
   "dispose(): void",
+  "saturate(exp(vertical / max(uDepthDistance",
+  "worldUv * (uNormalScale * 0.5)",
+  "uCausticsDistortion * 0.0001",
+  "causticBase * (uCausticsScale * 1.3)",
+  "vec4(4.0, 4.0, 4.0, 1.0)",
+  "screenUv + normalTs.xy * uReflectionDistortion * 0.1",
+  "exp2((1.0 - uSpecularSpread) * 10.0 + 1.0)",
+  "gl_FragColor = vec4(finalColor, shoreAlpha)",
+  "this.group.add(this.horizon, this.ribbon)",
+  'sourceCoordinates?: "unity" | "three"',
+  'const exactUnitySource = opts.sourceCoordinates === "unity"',
 ]) {
   if (!ocean.includes(required))
     throw new Error(`Unity ocean runtime contract missing: ${required}`);
+}
+for (const retired of [
+  "distanceMix * 0.12",
+  "uCausticsStrength * 0.22",
+  "specularTerm * 0.025",
+  "makeCoverageGeometry(",
+  "smoothstep(0.0, 14.0, aShoreDistance)",
+]) {
+  if (ocean.includes(retired))
+    throw new Error(`Approximated ocean math remains active: ${retired}`);
 }
 
 const waterEntry = readFileSync(path.join(root, "src/water.ts"), "utf8");
@@ -54,6 +75,8 @@ for (const required of [
   "halfThickness: 0.25",
   "const firstSweepHit = (",
   "for (let pass = 0; pass < 3; pass++)",
+  'sourceCoordinates: "unity"',
+  'coastReviewQuery.has("coastphysics")',
 ]) {
   if (!level.includes(required))
     throw new Error(`Continuous Unity coast collision missing: ${required}`);
@@ -71,5 +94,5 @@ for (const required of [
 }
 
 console.log(
-  `Validated Unity ocean port: ${expected.size} pinned assets, runtime, render passes, sampler, continuous coast collision and retired-water removal.`,
+  `Validated literal Unity ocean port: ${expected.size} pinned assets, MatrixRex permutation, render passes, sampler, continuous coast collision and retired-water removal.`,
 );

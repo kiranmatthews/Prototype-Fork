@@ -119,7 +119,7 @@ sun.shadow.normalBias = 0.035;
 const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 // Unity Beachfront directional light rotation (40.1, 98.9, 0), converted to
 // a Three light-position offset opposite its forward ray.
-const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, 11);
+const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const offset = activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
   sun.target.position.set(focusX, focusY, focusZ);
@@ -164,6 +164,9 @@ const sky = new THREE.Mesh(
 sky.renderOrder = -1;
 sky.frustumCulled = false;
 sky.visible = !LITE;
+// Unity's Camera Opaque Texture includes the skybox. Keep this backdrop in the
+// ocean opaque/depth prepass even though its display material is transparent.
+sky.userData.oceanOpaqueBackdrop = true;
 scene.add(sky);
 
 // Photographic skybox: a painted backdrop mapped onto the dome. It is NOT a
@@ -854,9 +857,10 @@ function configureCoastPost(enabled: boolean): void {
   coastPost = new CoastPostRenderer(renderer, scene, camera, {
     enabled: true,
     lite: LITE_RENDER || NO_COAST_POST,
-    // Unity's post profile runs at the Game-view resolution, not Retina 2x.
-    pixelRatio: 1,
-    multisample: true,
+    // Unity operates on actual camera pixels. The browser drawing buffer is
+    // the equivalent target, including device pixel ratio.
+    pixelRatio: renderer.getPixelRatio(),
+    multisample: false,
   });
 }
 
@@ -883,7 +887,7 @@ function resize(): void {
   const renderW = Math.round(w * rs);
   const renderH = Math.round(h * rs);
   renderer.setSize(renderW, renderH, false);
-  coastPost?.setPixelRatio(1);
+  coastPost?.setPixelRatio(renderer.getPixelRatio());
   coastPost?.setSize(renderW, renderH);
   renderer.domElement.style.imageRendering = "";
   const playAspect = split2p ? w / (h / 2) : w / h;
@@ -918,8 +922,18 @@ adoptLegacyLevels(); // one-shot: old single-slot edits become real user levels
 const oceanReview = new URLSearchParams(window.location.search).has(
   "oceanreview",
 );
+const oceanOverview = new URLSearchParams(window.location.search).has(
+  "oceanoverview",
+);
+const coastPhysicsReview = new URLSearchParams(window.location.search).has(
+  "coastphysics",
+);
 let current: LevelEntry =
-  (oceanReview ? findLevel("descent") : null) ??
+  (oceanReview
+    ? findLevel("beachfront")
+    : coastPhysicsReview
+      ? findLevel("descent")
+      : null) ??
   findLevel(localStorage.getItem("solProtoLevelId") ?? "") ??
   findLevel(DEFAULT_LEVEL_ID)!;
 let level: Level;
@@ -2258,6 +2272,27 @@ const chaseF = new THREE.Vector3(0, 0, -1);
 let chaseSteadyT = 0; // seconds of continuous steady travel (filters pipe swings)
 
 function updateCamera(dt: number): void {
+  if (oceanOverview && current.id === "beachfront") {
+    // Frozen Unity d300 seaward golden-camera coordinates.
+    camera.fov = 50;
+    camera.position.set(-19.7656, 18, -258.4284);
+    camera.up.set(0, 1, 0);
+    camera.lookAt(0.4741, 1, -314.9205);
+    camera.updateProjectionMatrix();
+    prevPlayerPos.copy(player.pos);
+    return;
+  }
+  if (oceanReview && current.id === "beachfront") {
+    // Exact authoritative Unity gameplay-spawn capture framing, used by the
+    // parity URL. The normal menu level keeps the live course-spine camera.
+    camera.fov = 43;
+    camera.position.set(1.415, 5.5, 13.852);
+    camera.up.set(0, 1, 0);
+    camera.lookAt(4.065, 0, 2.148);
+    camera.updateProjectionMatrix();
+    prevPlayerPos.copy(player.pos);
+    return;
+  }
   // ONE rig, always facing down -Z. When the path right-angles into an
   // X-running stretch, the same camera sees it side-on — no yaw, just a
   // slightly wider, higher frame with less forward lead.
@@ -2281,7 +2316,8 @@ function updateCamera(dt: number): void {
   // hero HIGH up the screen, well off centre, with all the lead room below him
   // for the crates/gaps rushing up.
   boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
-  const targetFov = THREE.MathUtils.lerp(TUNING.camFov, BOULDER_FOV, boulderF);
+  const authoredFov = current.id === "beachfront" ? 43 : TUNING.camFov;
+  const targetFov = THREE.MathUtils.lerp(authoredFov, BOULDER_FOV, boulderF);
   if (Math.abs(camera.fov - targetFov) > 0.005) {
     camera.fov = targetFov;
     camera.updateProjectionMatrix();

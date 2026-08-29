@@ -15,10 +15,9 @@ const SHORE_SAMPLE_METRES = 2;
 const SHORE_OVERLAP = 6;
 const OCEAN_WIDTH = 120;
 const LATERAL_SEGMENTS = 128;
-const COVERAGE_MARGIN = 800;
-const COVERAGE_CELL = 16;
+const UNITY_SOURCE_TO_THREE_Z = -1;
+const UNITY_BEACHFRONT_PLAYABLE_SHORE_SAMPLES = 371;
 const RIBBON_Y_OFFSET = 0;
-const COVERAGE_Y_OFFSET = -0.04;
 const HORIZON_DISTANCES = [105, 130, 800] as const;
 const HORIZON_ALPHAS = [0, 1, 1] as const;
 
@@ -40,6 +39,14 @@ export interface CoastWaterOpts {
   /** Retained only for drop-in constructor compatibility; shading uses depth. */
   terrainHeight: (x: number, z: number) => number;
   quality?: OceanQuality;
+  /** Unity Beachfront's exact 50×2m pre-tail and 400×2m post-tail. */
+  extendUnityTails?: boolean;
+  /**
+   * Marks source-authored Unity world coordinates for the Z-handedness
+   * conversion. Native Three.js courses may still request the same ocean
+   * tails without having their waves, textures, or reflection mirrored.
+   */
+  sourceCoordinates?: "unity" | "three";
 }
 
 export type OceanQuality = "full" | "lite";
@@ -225,6 +232,7 @@ interface WaveEvaluation {
 
 const OCEAN_VERTEX = /* glsl */ `
 attribute float aShoreDistance;
+attribute vec4 aOceanTangent;
 uniform float uTime;
 uniform float uSeaLevel;
 uniform vec4 uWave1;
@@ -233,10 +241,13 @@ uniform vec4 uWave2;
 uniform vec2 uWave2Dir;
 varying vec3 vWorld;
 varying vec3 vWaveNormal;
+varying vec3 vOceanTangent;
+varying float vOceanTangentW;
 varying float vShoreDistance;
 varying float vViewDepth;
 varying vec4 vClipPosition;
-#include <fog_pars_vertex>
+#include <common>
+#include <shadowmap_pars_vertex>
 
 void unityGerstner(
   vec2 worldXZ,
@@ -267,25 +278,28 @@ void main() {
   vec3 normalSum = vec3(0.0);
   unityGerstner(baseWorld.xz, uWave1, uWave1Dir, displacement, normalSum);
   unityGerstner(baseWorld.xz, uWave2, uWave2Dir, displacement, normalSum);
-  // Unity's production waves run roughly along its beach. The web coast
-  // curves through arbitrary world headings, so applying the 9-13m Gerstner
-  // horizontal term directly at a fixed shore edge can fold individual edge
-  // triangles onto the sand. Ease only that horizontal term in over the first
-  // 14m of water; vertical wave/normal/foam timing remains exact.
-  displacement.xz *= smoothstep(0.0, 14.0, aShoreDistance);
   vec4 world = baseWorld;
   world.xyz += displacement;
   // Meshes are authored at sea level. Keep the uniform in the interface for
   // reflection/depth consumers and protect against transformed authoring.
   world.y += uSeaLevel - (modelMatrix * vec4(0.0, uSeaLevel, 0.0, 1.0)).y;
   vWorld = world.xyz;
-  vWaveNormal = normalize(normalSum);
+  // Shader Graph interpolates the raw summed vertex normal and renormalizes in
+  // BuildSurfaceDescriptionInputs; normalizing per vertex changes that blend.
+  vWaveNormal = mat3(modelMatrix) * normalSum;
+  vOceanTangent = normalize(mat3(modelMatrix) * aOceanTangent.xyz);
+  vOceanTangentW = aOceanTangent.w;
   vShoreDistance = aShoreDistance;
   vec4 mvPosition = viewMatrix * world;
   vViewDepth = -mvPosition.z;
   gl_Position = projectionMatrix * mvPosition;
   vClipPosition = gl_Position;
-  #include <fog_vertex>
+
+  // Three's shadow chunk expects the same intermediates as its stock vertex
+  // path. Feed it the displaced MatrixRex world position and wave normal.
+  vec3 transformedNormal = normalize(normalMatrix * normalSum);
+  vec4 worldPosition = world;
+  #include <shadowmap_vertex>
 }
 `;
 
@@ -298,8 +312,6 @@ uniform sampler2D uCausticsMap;
 uniform sampler2D uSceneColor;
 uniform sampler2D uSceneDepth;
 uniform sampler2D uReflection;
-uniform mat4 uReflectionMatrix;
-uniform vec2 uViewport;
 uniform float uCameraNear;
 uniform float uCameraFar;
 uniform mat4 uInverseProjection;
@@ -310,6 +322,10 @@ uniform float uHasReflection;
 uniform float uRefractionOn;
 uniform float uCausticsOn;
 uniform float uIntersectionOn;
+uniform vec4 uWave1;
+uniform vec2 uWave1Dir;
+uniform vec4 uWave2;
+uniform vec2 uWave2Dir;
 
 uniform vec4 uShallow;
 uniform vec4 uDeep;
@@ -354,148 +370,308 @@ uniform float uIntersectionGradient;
 uniform float uIntersectionEdgeFade;
 uniform float uShorelineEnabled;
 uniform float uShorelineAlpha;
+uniform vec3 uMainLightDirection;
+uniform float uSourceZSign;
+uniform float uReflectionFlipX;
 
 varying vec3 vWorld;
 varying vec3 vWaveNormal;
+varying vec3 vOceanTangent;
+varying float vOceanTangentW;
 varying float vShoreDistance;
 varying float vViewDepth;
 varying vec4 vClipPosition;
-#include <fog_pars_fragment>
+uniform vec3 fogColor;
+uniform float fogNear;
+uniform float fogFar;
+#include <common>
 #include <packing>
+#include <shadowmap_pars_fragment>
 
-float saturate(float x) { return clamp(x, 0.0, 1.0); }
+float distanceMask(float start, float fade) {
+  return saturate((distance(cameraPosition, vWorld) - start)
+    / max(fade, 0.000001));
+}
+
+vec3 sceneWorldPosition(vec2 uv) {
+  float sampledDepth = texture2D(uSceneDepth, uv).x;
+  vec4 sceneClip = vec4(uv * 2.0 - 1.0, sampledDepth * 2.0 - 1.0, 1.0);
+  vec4 sceneView = uInverseProjection * sceneClip;
+  sceneView /= max(abs(sceneView.w), 0.000001);
+  return (uInverseView * sceneView).xyz;
+}
+
+float sceneEyeDepth(vec2 uv) {
+  return -perspectiveDepthToViewZ(
+    texture2D(uSceneDepth, uv).x,
+    uCameraNear,
+    uCameraFar
+  );
+}
+
+// MatrixRex DepthFadeWorldPosition with _WorldSpaceDepth enabled.
+float waterDepth01(vec2 uv) {
+  if (uHasPrepass < 0.5) return 0.0;
+  float vertical = sceneWorldPosition(uv).y - vWorld.y;
+  return saturate(exp(vertical / max(uDepthDistance, 0.000001)));
+}
+
+vec3 unpackUnityNormal(vec4 packedNormal) {
+  // PC normal-map import uses BC5/RG. This is Unity's UnpackNormalMapRGorAG
+  // result after texture decompression.
+  vec2 xy = packedNormal.rg * 2.0 - 1.0;
+  float z = sqrt(max(0.0000000000000001, 1.0 - saturate(dot(xy, xy))));
+  return vec3(xy, z);
+}
+
+vec4 colorLayerAlpha(vec4 base, vec4 layer, float layerMask) {
+  return mix(base, layer, layerMask * layer.a);
+}
+
+float gerstnerHeight(vec2 worldXZ, vec4 wave, vec2 rawDirection) {
+  float k = 6.283185307179586 / wave.x;
+  vec2 direction = normalize(rawDirection);
+  float phi = dot(worldXZ, direction * k)
+    - sqrt(9.8 * k) * uTime * wave.z;
+  return wave.y * cos(phi);
+}
+
+vec2 parallaxUv(float parallaxDepth, vec3 viewTs) {
+  vec3 v = normalize(viewTs);
+  v.z += 0.42;
+  float amplitude = parallaxDepth * 0.1;
+  float height = -amplitude * 0.5; // the Shader Graph heightmap is black
+  vec2 unityWorldXZ = vec2(vWorld.x, vWorld.z * uSourceZSign);
+  return unityWorldXZ * 0.1 + height * (v.xy / max(abs(v.z), 0.000001))
+    * sign(v.z);
+}
 
 void main() {
   vec2 screenUv = vClipPosition.xy / max(abs(vClipPosition.w), 0.0001);
   screenUv = screenUv * 0.5 + 0.5;
-  float sampledDepth = texture2D(uSceneDepth, screenUv).x;
-  float sceneViewZ = perspectiveDepthToViewZ(
-    sampledDepth, uCameraNear, uCameraFar);
-  float waterViewZ = -vViewDepth;
-  float eyeThickness = uHasPrepass > 0.5
-    ? max(0.0, waterViewZ - sceneViewZ)
-    : uCameraFar;
-  vec4 sceneClip = vec4(screenUv * 2.0 - 1.0, sampledDepth * 2.0 - 1.0, 1.0);
-  vec4 sceneView = uInverseProjection * sceneClip;
-  sceneView /= max(abs(sceneView.w), 0.0001);
-  vec3 sceneWorld = (uInverseView * sceneView).xyz;
-  float thickness = uHasPrepass > 0.5 && sampledDepth < 0.9999
-    ? max(0.0, vWorld.y - sceneWorld.y)
-    : uCameraFar;
 
-  vec2 normalUv = vWorld.xz * uNormalScale;
-  vec2 panA = vec2(0.73, 0.29) * uTime * uNormalPan;
-  vec2 panB = vec2(-0.21, 0.91) * uTime * uNormalPan;
-  vec3 mapA = texture2D(uNormalMap, normalUv + panA).xyz * 2.0 - 1.0;
-  vec3 mapB = texture2D(uNormalMap, normalUv * 0.73 + panB).xyz * 2.0 - 1.0;
+  // Exact MatrixRex two-way normal panners and Normal Strength node.
+  // Preserve MatrixRex's Unity-world XZ texture phase after the source scene's
+  // Z axis is mirrored into Three's right-handed -Z course convention.
+  vec2 worldUv = vec2(vWorld.x, vWorld.z * uSourceZSign) * 0.1;
+  vec2 uvA = worldUv * (uNormalScale * 0.5)
+    + vec2(-uNormalPan * 0.05 * uTime);
+  vec2 uvB = worldUv * uNormalScale
+    + vec2(uNormalPan * 0.1 * uTime);
+  vec3 mapA = unpackUnityNormal(texture2D(uNormalMap, uvA));
+  vec3 mapB = unpackUnityNormal(texture2D(uNormalMap, uvB));
+  vec3 rawNormalTs = mix(mapA, mapB, 0.5);
   float cameraDistance = distance(cameraPosition, vWorld);
-  float distanceNormal = mix(
+  float normalStrength = mix(
     uNormalStrength,
     uNormalDistanceStrength,
-    smoothstep(uDistanceStart, uDistanceStart + max(uDistanceFade, 0.0001), cameraDistance));
-  // Shader Graph's normal-strength node operates on an unpacked tangent
-  // normal; its authored 7.79 is not a raw world-slope multiplier. The 0.12
-  // conversion preserves the Unity streak amplitude without tipping broad
-  // bands past grazing, which would turn planar-reflection samples black.
-  vec2 detailSlope = (mapA.xy + mapB.xy) * 0.5 * distanceNormal * 0.12;
-  vec3 N = normalize(vWaveNormal + vec3(detailSlope.x, 0.0, detailSlope.y));
+    distanceMask(uDistanceStart, uDistanceFade)
+  );
+  vec3 normalTs = vec3(
+    rawNormalTs.xy * normalStrength,
+    mix(1.0, rawNormalTs.z, saturate(normalStrength))
+  );
+  vec3 geometricN = normalize(vWaveNormal);
+  vec3 T = normalize(vOceanTangent);
+  vec3 B = normalize(vOceanTangentW * cross(geometricN, T));
+  vec3 detailN = normalize(T * normalTs.x + B * normalTs.y + geometricN * normalTs.z);
   vec3 V = normalize(cameraPosition - vWorld);
+  vec3 viewTs = vec3(dot(T, V), dot(B, V), dot(geometricN, V));
 
-  float depthMix = smoothstep(0.0, max(uDepthDistance, 0.0001), thickness);
-  float distanceMix = smoothstep(
-    uDistanceStart,
-    uDistanceStart + max(uDistanceFade, 0.0001),
-    cameraDistance);
-  depthMix = max(depthMix, distanceMix * 0.12);
-  vec4 waterColor = mix(uShallow, uDeep, depthMix);
-  float crest = saturate(1.0 - N.y);
-  waterColor.rgb = mix(waterColor.rgb, uPeak.rgb, crest * uPeak.a);
+  // Exact shore-fade alpha is evaluated at the undistorted screen position.
+  float directDepth = waterDepth01(screenUv);
+  float shoreAlpha = smoothstep(
+    0.0,
+    max(uShoreFadeSmoothness, 0.000001),
+    saturate(1.0 - directDepth)
+  );
 
-  vec2 refractOffset = N.xz * uRefractionStrength * 0.01;
-  float refractWindow = 1.0 - smoothstep(
+  // MatrixRex screen refraction: camera-distance strength, raw tangent normal,
+  // and a depth validity test that rejects foreground-crossing offsets.
+  float refractionDistanceMask = saturate((cameraDistance - uRefractionFade) / 5.0);
+  float refractionAmount = 0.1 * mix(
+    shoreAlpha * uRefractionStrength,
     uRefractionDistance,
-    uRefractionDistance + max(uRefractionFade, 0.0001),
-    eyeThickness);
-  vec2 refractUv = clamp(screenUv + refractOffset * refractWindow, 0.001, 0.999);
-  vec3 sceneColor = texture2D(uSceneColor, refractUv).rgb;
-  if (uHasPrepass > 0.5 && uRefractionOn > 0.5) {
-    waterColor.rgb = mix(waterColor.rgb, sceneColor, refractWindow * 0.62);
-  }
+    refractionDistanceMask
+  );
+  vec2 candidateUv = screenUv + rawNormalTs.xy * refractionAmount;
+  float candidateDepth = sceneEyeDepth(candidateUv);
+  float validRefraction = step(vViewDepth - candidateDepth, 0.0);
+  vec2 refractedUv = clamp(
+    screenUv + rawNormalTs.xy * refractionAmount * validRefraction,
+    0.001,
+    0.999
+  );
 
-  vec2 distortionUv = vWorld.xz / max(uCausticsDistortionScale, 0.0001)
-    + vec2(uTime * uCausticsPan * 0.07, -uTime * uCausticsPan * 0.05);
-  vec2 causticDistortion =
-    (texture2D(uCausticsDistortionMap, distortionUv).rg * 2.0 - 1.0)
-    * uCausticsDistortion * 0.08;
-  vec2 causticUv = vWorld.xz / max(uCausticsScale, 0.0001)
-    + causticDistortion + vec2(uTime * uCausticsPan * 0.025);
-  float causticPattern = texture2D(uCausticsMap, causticUv).r;
-  float causticDepth = 1.0 - smoothstep(0.0, max(-uCausticsDepth, 0.0001), thickness);
-  float causticDistance = 1.0 - smoothstep(
-    uCausticsStart,
-    uCausticsStart + max(uCausticsFade, 0.0001),
-    cameraDistance);
+  // MatrixRex world-space exponential depth, sampled at the refracted UV.
+  float depthValue = waterDepth01(refractedUv);
+  vec4 waterColor = mix(uDeep, uShallow, depthValue);
+
+  // Exact projected caustics subgraph: view parallax, anisotropic Noise4
+  // distortion, two counter-panning Caustic1 samples, component minimum, HDR
+  // white layer, shallow-depth mask and camera-distance fade.
+  float causticParallaxDepth = (1.0 - depthValue) * uCausticsDepth;
+  vec2 causticBase = parallaxUv(causticParallaxDepth, viewTs);
+  vec2 causticDistortionUv = causticBase * uCausticsDistortionScale
+    + vec2(-uCausticsPan * 0.1 * uTime, 0.0);
+  float causticDistortionSample =
+    texture2D(uCausticsDistortionMap, causticDistortionUv).r * 2.0 - 1.0;
+  vec2 causticDistortion = causticDistortionSample * vec2(
+    uCausticsDistortion * 0.0001,
+    uCausticsDistortion * 0.02
+  );
+  vec2 causticUvA = causticBase * uCausticsScale
+    + vec2(uCausticsPan * 0.1 * uTime) + causticDistortion;
+  vec2 causticUvB = causticBase * (uCausticsScale * 1.3)
+    - vec2(uCausticsPan * 0.1 * uTime) + causticDistortion;
+  float causticPattern = min(
+    texture2D(uCausticsMap, causticUvA).r,
+    texture2D(uCausticsMap, causticUvB).r
+  ) * uCausticsStrength;
+  float causticMask = depthValue * causticPattern
+    * (1.0 - distanceMask(uCausticsStart, uCausticsFade));
   if (uHasPrepass > 0.5 && uCausticsOn > 0.5) {
-    waterColor.rgb += vec3(causticPattern * causticDepth * causticDistance
-      * uCausticsStrength * 0.22);
+    waterColor = colorLayerAlpha(
+      waterColor,
+      vec4(4.0, 4.0, 4.0, 1.0),
+      causticMask
+    );
   }
 
-  vec4 reflectionClip = uReflectionMatrix * vec4(vWorld, 1.0);
-  vec2 reflectionUv = reflectionClip.xy / max(abs(reflectionClip.w), 0.0001);
-  reflectionUv = reflectionUv * 0.5 + 0.5;
-  reflectionUv += N.xz * uReflectionDistortion * 0.012;
-  reflectionUv = clamp(reflectionUv, 0.001, 0.999);
-  vec3 reflectionColor = texture2D(uReflection, reflectionUv).rgb;
-  float fresnel = pow(1.0 - saturate(dot(N, V)), uReflectionFresnel);
-  if (uHasReflection > 0.5) {
-    waterColor.rgb = mix(
-      waterColor.rgb,
-      reflectionColor,
-      saturate(fresnel * uReflectionStrength));
-  }
-
-  vec3 lightDir = normalize(vec3(0.35, 0.85, 0.25));
-  vec3 halfVector = normalize(lightDir + V);
-  float specDot = saturate(dot(N, halfVector));
-  float specExponent = mix(8.0, 256.0, uSpecularHardness);
-  float specularTerm = pow(specDot, specExponent);
-  specularTerm = smoothstep(
-    max(0.0, 1.0 - uSpecularSize - uSpecularSpread),
-    max(0.0001, 1.0 - uSpecularSize),
-    specularTerm);
-  waterColor.rgb += uSpecular.rgb * specularTerm * 0.025;
-  waterColor.rgb = mix(waterColor.rgb, uShadow.rgb, uShadow.a * (1.0 - N.y));
-
-  vec2 intersectionUv = vWorld.xz / max(uIntersectionScale, 0.0001)
-    * uIntersectionTile + uIntersectionPan * uTime;
-  vec2 intersectionWarp =
-    (texture2D(uShoreNoise, intersectionUv * 0.63).rg * 2.0 - 1.0)
-    * uIntersectionDistortion;
-  float intersectionNoise = texture2D(
-    uIntersectionNoise, intersectionUv + intersectionWarp).r;
-  float gradient = 1.0 - smoothstep(
-    0.0, max(uIntersectionWidth, 0.0001), thickness);
-  gradient = mix(1.0, gradient, uIntersectionGradient);
-  float dissolve = pow(max(intersectionNoise, 0.0001), uIntersectionDissolve);
-  float edge = pow(gradient, max(uIntersectionSmoothness, 0.0001));
-  float intersectionMask = saturate(edge * dissolve * uIntersectionEdgeFade);
-  intersectionMask = mix(intersectionMask, 1.0 - intersectionMask, uIntersectionInvert);
+  // Exact current IntersectionFoamGenerator path. Surface distortion is
+  // retained even though the approved profile authors its amount to zero.
+  float intersectionParallaxDepth = (1.0 - depthValue) * -4.0;
+  vec2 intersectionBase = parallaxUv(intersectionParallaxDepth, viewTs);
+  float surfaceDistortion = texture2D(
+    uCausticsDistortionMap,
+    worldUv + vec2(0.1 * uTime)
+  ).r * 2.0 - 1.0;
+  vec2 intersectionUv = intersectionBase * (uIntersectionTile * uIntersectionScale)
+    + uIntersectionPan * (0.1 * uTime)
+    + vec2(surfaceDistortion * uIntersectionDistortion * 0.1);
+  float intersectionNoise = texture2D(uIntersectionNoise, intersectionUv).r;
+  float gradientControl = mix(0.1, 1.0, uIntersectionGradient);
+  float widthScale = mix(0.7, 1.0, gradientControl);
+  float intersectionEdge = 1.0 - uIntersectionWidth * widthScale;
+  float depthBand = smoothstep(
+    intersectionEdge,
+    intersectionEdge + gradientControl,
+    depthValue
+  );
+  float selectedNoise = mix(
+    1.0 - intersectionNoise,
+    intersectionNoise,
+    uIntersectionInvert
+  );
+  float dissolveScale = mix(2.5, 1.0, gradientControl);
+  float combined = depthBand * (
+    depthBand + 1.0 - selectedNoise * uIntersectionDissolve * dissolveScale
+  );
+  float foamBody = smoothstep(
+    0.1,
+    0.1 + max(uIntersectionSmoothness, 0.000001),
+    combined
+  );
+  float foamEdge = smoothstep(intersectionEdge, intersectionEdge + 1.0, depthValue);
+  float intersectionMask = saturate(mix(
+    foamBody,
+    foamBody * foamEdge,
+    uIntersectionEdgeFade
+  ));
   if (uHasPrepass > 0.5 && uIntersectionOn > 0.5) {
-    waterColor.rgb = mix(waterColor.rgb, uIntersection.rgb,
-      intersectionMask * uIntersection.a);
+    waterColor = colorLayerAlpha(waterColor, uIntersection, intersectionMask);
+  } else {
+    intersectionMask = 0.0;
   }
 
-  // Unity's shoreline channel is enabled but authored with alpha exactly 0.
-  float shoreline = texture2D(uShoreNoise,
-    vec2(vShoreDistance * 0.08 + uTime * 0.03, vWorld.x * 0.015)).r;
-  waterColor.rgb = mix(waterColor.rgb, vec3(1.0),
-    shoreline * uShorelineEnabled * uShorelineAlpha);
+  // Shoreline is enabled in Unity but its approved color alpha is exactly 0,
+  // so the entire subgraph is mathematically inert in the active variant.
 
-  float shoreAlpha = uHasPrepass > 0.5
-    ? smoothstep(0.0, max(uShoreFadeSmoothness, 0.0001), thickness)
-    : 1.0;
-  gl_FragColor = vec4(waterColor.rgb, waterColor.a * shoreAlpha);
-  #include <fog_fragment>
+  // Wave-top layer uses summed vertical displacement at the fragment. The
+  // Shader Graph Lerp is intentionally not saturated, so troughs extrapolate.
+  float fragmentWaveHeight =
+    gerstnerHeight(vWorld.xz, uWave1, uWave1Dir)
+    + gerstnerHeight(vWorld.xz, uWave2, uWave2Dir);
+  waterColor = colorLayerAlpha(waterColor, uPeak, fragmentWaveHeight * 10.0);
+
+  // Refraction layer alpha is the depth-color alpha after intersection. It is
+  // separate from the final material opacity, which is shoreAlpha below.
+  float refractionLayerAlpha = mix(uDeep.a, uShallow.a, depthValue);
+  refractionLayerAlpha = mix(
+    refractionLayerAlpha,
+    uIntersection.a,
+    intersectionMask * uIntersection.a
+  );
+  vec3 refractedScene = texture2D(uSceneColor, refractedUv).rgb;
+  vec3 finalColor = waterColor.rgb;
+  if (uHasPrepass > 0.5 && uRefractionOn > 0.5) {
+    finalColor = mix(finalColor, refractedScene, 1.0 - refractionLayerAlpha);
+  }
+
+  // Planar reflection samples the mirrored render with current-camera screen
+  // UV plus the scaled tangent normal; it does not reproject world position.
+  vec2 reflectionUv = clamp(
+    screenUv + normalTs.xy * uReflectionDistortion * 0.1,
+    0.001,
+    0.999
+  );
+  // Unity renders with a determinant-negative reflected view and inverted
+  // culling. Three's proper-handed reflected camera differs by exactly one
+  // horizontal screen reflection, so flip the lookup for source-scene parity.
+  reflectionUv.x = mix(reflectionUv.x, 1.0 - reflectionUv.x, uReflectionFlipX);
+  vec3 reflectionColor = texture2D(uReflection, reflectionUv).rgb;
+  float fresnel = pow(
+    1.0 - saturate(dot(geometricN, V)),
+    uReflectionFresnel
+  );
+  if (uHasReflection > 0.5) {
+    finalColor = mix(
+      finalColor,
+      reflectionColor,
+      fresnel * uReflectionStrength
+    );
+  }
+
+  // Exact MatrixRex main-light reflect-vector specular and hardening graph.
+  float specRaw = pow(
+    saturate(dot(-reflect(normalize(uMainLightDirection), detailN), V)),
+    exp2((1.0 - uSpecularSpread) * 10.0 + 1.0)
+  );
+  float specCut = smoothstep(
+    1.0 - uSpecularSize,
+    1.0 - uSpecularSize + 0.15,
+    specRaw
+  );
+  float specularMask = mix(specRaw, specCut, uSpecularHardness);
+  finalColor += uSpecular.rgb * specularMask;
+
+  // Main-light shadow attenuation, with Unity's authored translucent black
+  // overlay. Three supplies the live directional shadow map to this material.
+  float shadowAttenuation = 1.0;
+  #if defined(USE_SHADOWMAP) && NUM_DIR_LIGHT_SHADOWS > 0
+    DirectionalLightShadow shadowData = directionalLightShadows[0];
+    shadowAttenuation = getShadow(
+      directionalShadowMap[0],
+      shadowData.shadowMapSize,
+      shadowData.shadowIntensity,
+      shadowData.shadowBias,
+      shadowData.shadowRadius,
+      vDirectionalShadowCoord[0]
+    );
+  #endif
+  finalColor = mix(
+    finalColor,
+    uShadow.rgb,
+    (1.0 - shadowAttenuation) * uShadow.a
+  );
+
+  // Unity linear fog (Three's stock Fog chunk uses smoothstep instead).
+  float fogFactor = saturate((vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001));
+  finalColor = mix(finalColor, fogColor, fogFactor);
+
+  // With refraction enabled, MatrixRex outputs shore fade alone as material
+  // alpha—not the shallow/deep color alpha multiplied by it.
+  gl_FragColor = vec4(finalColor, shoreAlpha);
   #include <colorspace_fragment>
 }
 `;
@@ -504,18 +680,19 @@ const HORIZON_VERTEX = /* glsl */ `
 attribute float aHorizon;
 attribute float aAlpha;
 uniform float uTime;
+uniform float uSourceZSign;
 varying float vHorizon;
 varying float vAlpha;
 varying vec2 vWorldXZ;
-#include <fog_pars_vertex>
+varying float vViewDepth;
 void main() {
   vec4 world = modelMatrix * vec4(position, 1.0);
   vHorizon = aHorizon;
   vAlpha = aAlpha;
-  vWorldXZ = world.xz;
+  vWorldXZ = vec2(world.x, world.z * uSourceZSign);
   vec4 mvPosition = viewMatrix * world;
+  vViewDepth = -mvPosition.z;
   gl_Position = projectionMatrix * mvPosition;
-  #include <fog_vertex>
 }
 `;
 
@@ -526,15 +703,23 @@ uniform float uTime;
 varying float vHorizon;
 varying float vAlpha;
 varying vec2 vWorldXZ;
-#include <fog_pars_fragment>
+varying float vViewDepth;
+uniform vec3 fogColor;
+uniform float fogNear;
+uniform float fogFar;
 void main() {
   float horizon = clamp(vHorizon * 1.12, 0.0, 1.0);
   vec3 color = mix(uNearColor, uFarFogColor, horizon);
   float ripple = sin(vWorldXZ.x * 0.037 + uTime * 0.17)
     + sin(vWorldXZ.y * 0.029 - uTime * 0.11);
   color += ripple * 0.008 * (1.0 - horizon);
+  float fogFactor = clamp(
+    (vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001),
+    0.0,
+    1.0
+  );
+  color = mix(color, fogColor, fogFactor);
   gl_FragColor = vec4(color, vAlpha);
-  #include <fog_fragment>
   #include <colorspace_fragment>
 }
 `;
@@ -562,6 +747,7 @@ function evaluateWavePair(
   z: number,
   time: number,
   p: UnityOceanParams,
+  sourceZSign = 1,
 ): WaveEvaluation {
   let height = 0;
   let dx = 0;
@@ -573,8 +759,9 @@ function evaluateWavePair(
     [p.wave1Length, p.wave1Height, p.wave1Speed, p.wave1DirX, p.wave1DirZ, p.wave1Sharpness],
     [p.wave2Length, p.wave2Height, p.wave2Speed, p.wave2DirX, p.wave2DirZ, p.wave2Sharpness],
   ];
-  for (const [length, waveHeight, speed, rawX, rawZ, sharpness] of waves) {
+  for (const [length, waveHeight, speed, rawX, rawSourceZ, sharpness] of waves) {
     const k = TAU / Math.max(length, 1e-5);
+    const rawZ = rawSourceZ * sourceZSign;
     const [dirX, dirZ] = unit2(rawX, rawZ);
     const phi = (x * dirX + z * dirZ) * k - Math.sqrt(GRAVITY * k) * time * speed;
     const sinPhi = Math.sin(phi);
@@ -667,8 +854,90 @@ function resampleShore(
   return dense;
 }
 
-function setOceanAttributes(geometry: THREE.BufferGeometry, shoreDistances: Float32Array): void {
+/**
+ * Preserve Unity Beachfront's authored rows one-for-one. Its playable ribbon
+ * deliberately alternates 5/3m and 5/2m intervals so every original 5m
+ * course frame remains a vertex; uniformly resampling those rows moves the
+ * shoreline and no longer reproduces the source mesh.
+ */
+function preserveShoreRows(
+  coarse: ShoreSample[],
+  fallbackX: number,
+  fallbackZ: number,
+): DenseShoreSample[] {
+  const dense: DenseShoreSample[] = coarse.map((sample) => ({ ...sample, arc: 0 }));
+  for (let index = 1; index < dense.length; index++) {
+    dense[index].arc = dense[index - 1].arc + Math.hypot(
+      dense[index].x - dense[index - 1].x,
+      dense[index].z - dense[index - 1].z,
+    );
+  }
+  for (let index = 0; index < dense.length; index++) {
+    const before = dense[Math.max(0, index - 1)];
+    const after = dense[Math.min(dense.length - 1, index + 1)];
+    const [tx, tz] = unit2(
+      after.x - before.x,
+      after.z - before.z,
+      -fallbackZ,
+      fallbackX,
+    );
+    let sx = tz;
+    let sz = -tx;
+    const [authoredX, authoredZ] = unit2(
+      dense[index].sx,
+      dense[index].sz,
+      fallbackX,
+      fallbackZ,
+    );
+    if (sx * authoredX + sz * authoredZ < 0) {
+      sx = -sx;
+      sz = -sz;
+    }
+    dense[index].sx = sx;
+    dense[index].sz = sz;
+  }
+  return dense;
+}
+
+function extendUnityShoreTails(coarse: ShoreSample[]): ShoreSample[] {
+  if (coarse.length < 2) return coarse;
+  const first = coarse[0];
+  // The 371-row playable ribbon retains 149 exact 5m course frames among its
+  // alternating 3/2 subdivisions. Unity derives tail headings from those
+  // source frames (indices 3 and length-3), not the immediately adjacent
+  // dense rows.
+  const exactBeachfront = coarse.length === UNITY_BEACHFRONT_PLAYABLE_SHORE_SAMPLES;
+  const second = coarse[exactBeachfront ? 3 : 1];
+  const last = coarse[coarse.length - 1];
+  const beforeLast = coarse[coarse.length - (exactBeachfront ? 3 : 2)];
+  const [firstTx, firstTz] = unit2(second.x - first.x, second.z - first.z);
+  const [lastTx, lastTz] = unit2(last.x - beforeLast.x, last.z - beforeLast.z);
+  const extended: ShoreSample[] = [];
+  for (let index = 50; index > 0; index--) {
+    extended.push({
+      ...first,
+      x: first.x - firstTx * index * 2,
+      z: first.z - firstTz * index * 2,
+    });
+  }
+  extended.push(...coarse);
+  for (let index = 1; index <= 400; index++) {
+    extended.push({
+      ...last,
+      x: last.x + lastTx * index * 2,
+      z: last.z + lastTz * index * 2,
+    });
+  }
+  return extended;
+}
+
+function setOceanAttributes(
+  geometry: THREE.BufferGeometry,
+  shoreDistances: Float32Array,
+  tangents: Float32Array,
+): void {
   geometry.setAttribute("aShoreDistance", new THREE.BufferAttribute(shoreDistances, 1));
+  geometry.setAttribute("aOceanTangent", new THREE.BufferAttribute(tangents, 4));
   geometry.computeBoundingBox();
   geometry.computeBoundingSphere();
   if (geometry.boundingSphere) geometry.boundingSphere.radius += 16;
@@ -678,20 +947,34 @@ function makeRibbonGeometry(
   shore: DenseShoreSample[],
   seaLevel: number,
   lateralSegments = LATERAL_SEGMENTS,
+  tangentW = -1,
 ): THREE.BufferGeometry {
   const rows = lateralSegments + 1;
   const count = shore.length * rows;
   const positions = new Float32Array(count * 3);
   const shoreDistances = new Float32Array(count);
+  const tangents = new Float32Array(count * 4);
   for (let i = 0; i < shore.length; i++) {
     const sample = shore[i];
     for (let r = 0; r < rows; r++) {
-      const d = -SHORE_OVERLAP + (r / lateralSegments) * (OCEAN_WIDTH + SHORE_OVERLAP);
+      // Unity columns run offshore -> land overlap (-120m -> +6m in its
+      // right-vector coordinate). `d` is positive seaward here, so the exact
+      // equivalent is 120m -> -6m. Reversing it flips every triangle down and
+      // Cull Back silently removes the ocean on a +Z shoreline.
+      const d = OCEAN_WIDTH
+        - (r / lateralSegments) * (OCEAN_WIDTH + SHORE_OVERLAP);
       const vertex = i * rows + r;
       positions[vertex * 3] = sample.x + sample.sx * d;
       positions[vertex * 3 + 1] = seaLevel + RIBBON_Y_OFFSET;
       positions[vertex * 3 + 2] = sample.z + sample.sz * d;
       shoreDistances[vertex] = d;
+      // Unity's curved ribbon tangent is course-right/landward. Mirroring one
+      // source axis flips tangent-space handedness, so source w=-1 becomes
+      // Three w=+1 for the exact Beachfront conversion.
+      tangents[vertex * 4] = -sample.sx;
+      tangents[vertex * 4 + 1] = 0;
+      tangents[vertex * 4 + 2] = -sample.sz;
+      tangents[vertex * 4 + 3] = tangentW;
     }
   }
   const indices: number[] = [];
@@ -699,71 +982,19 @@ function makeRibbonGeometry(
     for (let r = 0; r < lateralSegments; r++) {
       const a = i * rows + r;
       const b = a + rows;
-      indices.push(a, b, a + 1, a + 1, b, b + 1);
+      if (tangentW > 0) {
+        // C=diag(1,1,-1) has negative determinant, so source triangle order
+        // must reverse when the Unity Beachfront rows enter Three space.
+        indices.push(a, a + 1, b, a + 1, b + 1, b);
+      } else {
+        indices.push(a, b, a + 1, a + 1, b, b + 1);
+      }
     }
   }
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   geometry.setIndex(indices);
-  setOceanAttributes(geometry, shoreDistances);
-  return geometry;
-}
-
-function makeCoverageGeometry(
-  course: { x: number; z: number }[],
-  shore: DenseShoreSample[],
-  seaLevel: number,
-  cell = COVERAGE_CELL,
-): THREE.BufferGeometry {
-  const points: { x: number; z: number }[] = [...course, ...shore];
-  let minX = Infinity;
-  let maxX = -Infinity;
-  let minZ = Infinity;
-  let maxZ = -Infinity;
-  for (const point of points) {
-    minX = Math.min(minX, point.x);
-    maxX = Math.max(maxX, point.x);
-    minZ = Math.min(minZ, point.z);
-    maxZ = Math.max(maxZ, point.z);
-  }
-  if (!Number.isFinite(minX)) {
-    minX = minZ = -100;
-    maxX = maxZ = 100;
-  }
-  minX -= COVERAGE_MARGIN;
-  maxX += COVERAGE_MARGIN;
-  minZ -= COVERAGE_MARGIN;
-  maxZ += COVERAGE_MARGIN;
-  // Cap only pathological authored bounds; spacing grows rather than silently
-  // truncating the 800m coverage contract.
-  const columns = Math.min(321, Math.ceil((maxX - minX) / cell) + 1);
-  const rows = Math.min(321, Math.ceil((maxZ - minZ) / cell) + 1);
-  const count = columns * rows;
-  const positions = new Float32Array(count * 3);
-  const shoreDistances = new Float32Array(count);
-  shoreDistances.fill(999);
-  for (let row = 0; row < rows; row++) {
-    const z = THREE.MathUtils.lerp(minZ, maxZ, row / Math.max(1, rows - 1));
-    for (let column = 0; column < columns; column++) {
-      const x = THREE.MathUtils.lerp(minX, maxX, column / Math.max(1, columns - 1));
-      const vertex = row * columns + column;
-      positions[vertex * 3] = x;
-      positions[vertex * 3 + 1] = seaLevel + COVERAGE_Y_OFFSET;
-      positions[vertex * 3 + 2] = z;
-    }
-  }
-  const indices: number[] = [];
-  for (let row = 0; row < rows - 1; row++) {
-    for (let column = 0; column < columns - 1; column++) {
-      const a = row * columns + column;
-      const b = a + columns;
-      indices.push(a, b, a + 1, a + 1, b, b + 1);
-    }
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  geometry.setIndex(indices);
-  setOceanAttributes(geometry, shoreDistances);
+  setOceanAttributes(geometry, shoreDistances, tangents);
   return geometry;
 }
 
@@ -822,6 +1053,7 @@ export class UnityOcean {
   readonly stats: OceanStats;
   readonly seaLevel: number;
   readonly shore: DenseShoreSample[];
+  private readonly sourceZSign: number;
 
   quality: OceanQuality;
   reflectionScale = 0.3;
@@ -830,7 +1062,6 @@ export class UnityOcean {
   private readonly oceanMaterial: THREE.ShaderMaterial;
   private readonly horizonMaterial: THREE.ShaderMaterial;
   private readonly ribbon: THREE.Mesh;
-  private readonly coverage: THREE.Mesh;
   private readonly horizon: THREE.Mesh;
   private readonly ownedTextures: THREE.Texture[] = [];
   private readonly fallbackColor = solidTexture(0, 63, 128);
@@ -853,13 +1084,23 @@ export class UnityOcean {
     this.seaLevel = opts.seaLevel;
     this.quality = opts.quality ?? detectQuality();
     const lite = this.quality === "lite";
+    const exactUnitySource = opts.sourceCoordinates === "unity";
+    // The source Beachfront is converted with C=diag(1,1,-1). Native web
+    // levels keep their existing Three coordinate convention even when they
+    // reuse Unity's finite ocean-tail layout.
+    this.sourceZSign = exactUnitySource ? UNITY_SOURCE_TO_THREE_Z : 1;
     const fallbackDirection = unit2(opts.shoreDirX, opts.shoreDirZ);
-    this.shore = resampleShore(
-      opts.shore,
-      fallbackDirection[0],
-      fallbackDirection[1],
-      lite ? 8 : SHORE_SAMPLE_METRES,
-    );
+    const sourceShore = opts.extendUnityTails
+      ? extendUnityShoreTails(opts.shore)
+      : opts.shore;
+    this.shore = exactUnitySource && opts.extendUnityTails && !lite
+      ? preserveShoreRows(sourceShore, fallbackDirection[0], fallbackDirection[1])
+      : resampleShore(
+          sourceShore,
+          fallbackDirection[0],
+          fallbackDirection[1],
+          lite ? 8 : SHORE_SAMPLE_METRES,
+        );
     const renderShore = lite
       ? this.shore.filter(
           (_, index) => index % 2 === 0 || index === this.shore.length - 1,
@@ -893,6 +1134,7 @@ export class UnityOcean {
       vertexShader: OCEAN_VERTEX,
       fragmentShader: OCEAN_FRAGMENT,
       fog: true,
+      lights: true,
       transparent: true,
       // MatrixRex's transparent beach forward pass is SrcAlpha blend,
       // ZWrite Off, Cull Back.
@@ -900,6 +1142,7 @@ export class UnityOcean {
       side: THREE.FrontSide,
       uniforms: THREE.UniformsUtils.merge([
         THREE.UniformsLib.fog,
+        THREE.UniformsLib.lights,
         {
           uTime: { value: 0 },
           uSeaLevel: { value: this.seaLevel },
@@ -971,6 +1214,17 @@ export class UnityOcean {
           uIntersectionEdgeFade: { value: this.params.intersectionEdgeFade },
           uShorelineEnabled: { value: this.params.shorelineEnabled },
           uShorelineAlpha: { value: this.params.shorelineAlpha },
+          uSourceZSign: { value: this.sourceZSign },
+          uReflectionFlipX: {
+            value: this.sourceZSign === UNITY_SOURCE_TO_THREE_Z ? 1 : 0,
+          },
+          uMainLightDirection: {
+            value: new THREE.Vector3(
+              -0.7557116095,
+              0.6441236771,
+              0.1183413868 * this.sourceZSign,
+            ),
+          },
         },
       ]),
     });
@@ -987,6 +1241,7 @@ export class UnityOcean {
         THREE.UniformsLib.fog,
         {
           uTime: { value: 0 },
+          uSourceZSign: { value: this.sourceZSign },
           uNearColor: {
             value: new THREE.Color(this.params.deep.r, this.params.deep.g, this.params.deep.b),
           },
@@ -995,41 +1250,34 @@ export class UnityOcean {
       ]),
     });
 
-    this.coverage = new THREE.Mesh(
-      makeCoverageGeometry(
-        opts.course,
-        renderShore,
-        this.seaLevel,
-        lite ? 64 : COVERAGE_CELL,
-      ),
-      this.oceanMaterial,
-    );
-    this.coverage.name = "Unity deep-ocean course coverage";
-    this.coverage.frustumCulled = false;
-    this.coverage.renderOrder = 0;
-
     this.horizon = new THREE.Mesh(
       makeHorizonGeometry(renderShore, this.seaLevel),
       this.horizonMaterial,
     );
     this.horizon.name = "Unity ocean horizon fill";
     this.horizon.frustumCulled = false;
-    this.horizon.renderOrder = 1;
+    this.horizon.renderOrder = -20;
 
     this.ribbon = new THREE.Mesh(
-      makeRibbonGeometry(renderShore, this.seaLevel, lite ? 16 : LATERAL_SEGMENTS),
+      makeRibbonGeometry(
+        renderShore,
+        this.seaLevel,
+        lite ? 16 : LATERAL_SEGMENTS,
+        -this.sourceZSign,
+      ),
       this.oceanMaterial,
     );
     this.ribbon.name = "Unity curved shoreline ocean ribbon";
     this.ribbon.frustumCulled = false;
-    this.ribbon.renderOrder = 2;
+    this.ribbon.receiveShadow = true;
+    this.ribbon.renderOrder = 0;
     this.group.name = "Unity MatrixRex ocean";
     this.group.userData.noShadow = true;
     this.group.userData.editorGhost = true;
-    this.group.add(this.coverage, this.horizon, this.ribbon);
+    this.group.add(this.horizon, this.ribbon);
     this.group.visible = this.pendingTextureLoads === 0;
 
-    const geometries = [this.coverage.geometry, this.horizon.geometry, this.ribbon.geometry];
+    const geometries = [this.horizon.geometry, this.ribbon.geometry];
     this.stats = {
       verts: geometries.reduce((sum, geometry) => sum + geometry.getAttribute("position").count, 0),
       tris: geometries.reduce((sum, geometry) => sum + (geometry.getIndex()?.count ?? 0) / 3, 0),
@@ -1060,7 +1308,7 @@ export class UnityOcean {
     texture.name = `MatrixRex ${file}`;
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.magFilter = THREE.LinearFilter;
-    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.minFilter = THREE.LinearMipmapNearestFilter;
     texture.generateMipmaps = true;
     texture.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
     this.ownedTextures.push(texture);
@@ -1085,11 +1333,17 @@ export class UnityOcean {
     (uniforms.uWave1.value as THREE.Vector4).set(
       p.wave1Length, p.wave1Height, p.wave1Speed, p.wave1Sharpness,
     );
-    (uniforms.uWave1Dir.value as THREE.Vector2).set(p.wave1DirX, p.wave1DirZ);
+    (uniforms.uWave1Dir.value as THREE.Vector2).set(
+      p.wave1DirX,
+      p.wave1DirZ * this.sourceZSign,
+    );
     (uniforms.uWave2.value as THREE.Vector4).set(
       p.wave2Length, p.wave2Height, p.wave2Speed, p.wave2Sharpness,
     );
-    (uniforms.uWave2Dir.value as THREE.Vector2).set(p.wave2DirX, p.wave2DirZ);
+    (uniforms.uWave2Dir.value as THREE.Vector2).set(
+      p.wave2DirX,
+      p.wave2DirZ * this.sourceZSign,
+    );
     (uniforms.uShallow.value as THREE.Vector4).set(
       p.shallow.r, p.shallow.g, p.shallow.b, p.shallow.a,
     );
@@ -1149,7 +1403,6 @@ export class UnityOcean {
     this.oceanMaterial.wireframe = this.debug.wireframe;
     this.horizonMaterial.wireframe = this.debug.wireframe;
     this.ribbon.visible = this.debug.water;
-    this.coverage.visible = this.debug.water;
     this.horizon.visible = this.debug.horizon;
     this.horizonMaterial.uniforms.uTime.value = this.time;
     (this.horizonMaterial.uniforms.uNearColor.value as THREE.Color).setRGB(
@@ -1173,7 +1426,7 @@ export class UnityOcean {
   }
 
   sampleWaterSurface(x: number, z: number, time = this.time): SurfaceSample {
-    const wave = evaluateWavePair(x, z, time, this.params);
+    const wave = evaluateWavePair(x, z, time, this.params, this.sourceZSign);
     return {
       height: this.seaLevel + wave.height,
       nx: wave.nx,
@@ -1237,22 +1490,20 @@ export class UnityOcean {
 
   private allocateTargets(): void {
     if (this.disposed) return;
-    // Unity scales from Game-view pixels. The web renderer may be Retina 2x;
-    // dividing by DPR keeps the audited 30% reflection and 100% opaque copy
-    // at display resolution instead of silently making both four times dearer.
-    const displayScale = 1 / this.bufferPixelRatio;
+    // Unity scales from the actual camera pixel target. Drawing-buffer pixels
+    // are the browser equivalent; DPR must not be divided back out.
     const reflectionWidth = Math.max(
       1,
-      Math.floor(this.bufferWidth * this.reflectionScale * displayScale),
+      Math.round(this.bufferWidth * this.reflectionScale),
     );
     const reflectionHeight = Math.max(
       1,
-      Math.floor(this.bufferHeight * this.reflectionScale * displayScale),
+      Math.round(this.bufferHeight * this.reflectionScale),
     );
     if (!this.reflectionRenderTarget) {
       this.reflectionRenderTarget = new THREE.WebGLRenderTarget(reflectionWidth, reflectionHeight, {
         type: THREE.HalfFloatType,
-        minFilter: THREE.LinearMipmapLinearFilter,
+        minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
         wrapS: THREE.ClampToEdgeWrapping,
         wrapT: THREE.ClampToEdgeWrapping,
@@ -1265,11 +1516,11 @@ export class UnityOcean {
     }
     const prepassWidth = Math.max(
       1,
-      Math.floor(this.bufferWidth * this.prepassScale * displayScale),
+      Math.round(this.bufferWidth * this.prepassScale),
     );
     const prepassHeight = Math.max(
       1,
-      Math.floor(this.bufferHeight * this.prepassScale * displayScale),
+      Math.round(this.bufferHeight * this.prepassScale),
     );
     if (!this.prepassRenderTarget) {
       this.prepassRenderTarget = new THREE.WebGLRenderTarget(prepassWidth, prepassHeight, {
@@ -1282,7 +1533,7 @@ export class UnityOcean {
       });
       this.prepassRenderTarget.texture.name = "Unity ocean opaque color prepass";
       this.prepassRenderTarget.depthTexture = new THREE.DepthTexture(
-        prepassWidth, prepassHeight, THREE.UnsignedShortType,
+        prepassWidth, prepassHeight, THREE.UnsignedIntType,
       );
       this.prepassRenderTarget.depthTexture.name = "Unity ocean opaque depth prepass";
       this.prepassRenderTarget.depthTexture.minFilter = THREE.NearestFilter;
@@ -1295,12 +1546,9 @@ export class UnityOcean {
     this.stats.prepassWidth = prepassWidth;
     this.stats.prepassHeight = prepassHeight;
     const uniforms = this.oceanMaterial.uniforms;
-    // The coast composer renders the main scene at Unity Game-view (display)
-    // resolution even when the backing canvas is Retina 2x. gl_FragCoord and
-    // the opaque prepass must therefore normalize against display pixels.
     uniforms.uViewport.value.set(
-      this.bufferWidth * displayScale,
-      this.bufferHeight * displayScale,
+      this.bufferWidth,
+      this.bufferHeight,
     );
     uniforms.uReflection.value = this.reflectionRenderTarget.texture;
     uniforms.uSceneColor.value = this.prepassRenderTarget.texture;
@@ -1359,7 +1607,7 @@ export class UnityOcean {
     // below the sea from leaking into the mirrored capture.
     const waterPlane = new THREE.Plane(
       new THREE.Vector3(0, 1, 0),
-      -this.seaLevel - 0.01,
+      -this.seaLevel,
     ).applyMatrix4(reflected.matrixWorldInverse);
     const clip = new THREE.Vector4(
       waterPlane.normal.x,
@@ -1471,7 +1719,10 @@ export class UnityOcean {
       const materials = renderable.material
         ? Array.isArray(renderable.material) ? renderable.material : [renderable.material]
         : [];
-      if (materials.some((material) => material.transparent || material.opacity < 1)) {
+      if (
+        !object.userData.oceanOpaqueBackdrop &&
+        materials.some((material) => material.transparent || material.opacity < 1)
+      ) {
         hidden.push(object);
         object.visible = false;
       }
@@ -1554,7 +1805,6 @@ export class UnityOcean {
     this.disposed = true;
     this.disposeTargets();
     this.ribbon.geometry.dispose();
-    this.coverage.geometry.dispose();
     this.horizon.geometry.dispose();
     this.oceanMaterial.dispose();
     this.horizonMaterial.dispose();

@@ -8,7 +8,7 @@
     "check:levels": "node tools/validate-levels.mjs",
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",
     "check:editor-capture": "node tools/validate-editor-roundtrip.mjs --strict-hand-built",
-    "check:ocean": "node tools/validate-ocean-port.mjs",
+    "check:ocean": "node tools/validate-ocean-port.mjs && node tools/test-ocean-formulas.mjs && node tools/test-unity-post.mjs && node tools/test-unity-smaa.mjs",
     "character:doctor": "python3 tools/tripo-character/tripo_character.py doctor",
     "character:generate": "python3 tools/tripo-character/tripo_character.py generate",
     "character:test": "python3 -m unittest discover -s tools/tripo-character/tests -p 'test_*.py'",
