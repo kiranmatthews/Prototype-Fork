@@ -92,6 +92,9 @@ const UNDER_RAIL_SWING = 0.32;
 const PLANT_DECK_TOP = 0.205;
 // How far up from a foot's lowest vertex still counts as "the sole".
 const SOLE_BAND = 0.03;
+// Additional animation pivot seated at the procedural rider's waist. The
+// legacy upper-body root stays at zero so existing gameplay poses are unchanged.
+const PROCEDURAL_SPINE_Y = 0.82;
 /** Convex hull of a point cloud in the XZ plane; each point keeps its own Y. */
 function convexHullXZ(pts: THREE.Vector3[]): THREE.Vector3[] {
   if (pts.length < 4) return pts.slice();
@@ -343,13 +346,10 @@ export class Player {
 
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
-  // The procedural body underneath is the SKELETON plus a placeholder skin.
-  // The skeleton is load-bearing — every model bolts its chunks onto it — but
-  // the placeholder skin used to flash on screen for the second or so the GLB
-  // took to arrive. So the rig stays hidden until a model has landed. It also
-  // flips true on a load FAILURE, deliberately: a visible placeholder beats an
-  // invisible skater if the network drops the model.
-  private modelReady = false;
+  // The procedural body is both the active character and the load-bearing pose
+  // rig. Imported models can still be installed explicitly for comparison,
+  // but the code-authored rider is ready to draw from the first frame.
+  private modelReady = true;
 
   private spinTimer = 0;
   private spinCd = 0;
@@ -772,15 +772,20 @@ export class Player {
   private floorXMat!: THREE.MeshBasicMaterial; // shared by both bars — one opacity
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
   private armL: THREE.Group | null = null;
-  private elbowR: THREE.Group | null = null; // forearm pivots inside each arm (authored model only)
+  private elbowR: THREE.Group | null = null; // forearm pivots inside each arm
   private elbowL: THREE.Group | null = null;
+  private wristR: THREE.Group | null = null; // hand pivots + grip sockets
+  private wristL: THREE.Group | null = null;
   private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
+  private spineG: THREE.Group | null = null; // waist-seated additive/keyframe pivot
   private headM: THREE.Group | null = null; // head pivot: skull, muzzle, ears, hair, eyes
   private legs: THREE.Group | null = null;
   private legL: THREE.Group | null = null; // hip pivots (thigh + knee joint inside)
   private legR: THREE.Group | null = null;
   private kneeL: THREE.Group | null = null; // knee pivots (shin + shoe inside)
   private kneeR: THREE.Group | null = null;
+  private ankleL: THREE.Group | null = null; // rigid foot pivots + contact sockets
+  private ankleR: THREE.Group | null = null;
   // Kangaroo appendages — jointed for follow-through animation.
   // The tail is drawn in code and simulated (src/tail.ts): an installed model's
   // own tail polygons are discarded, because every one we have been handed is
@@ -812,10 +817,10 @@ export class Player {
   // can be shifted as a unit relative to the board without disturbing a single
   // pose write — see plantOnDeck().
   private riderG: THREE.Group | null = null;
-  // Sole footprint: the bottom corners of each foot, in that knee joint's own
-  // local space. Constant for a given rig (the flesh below the knee never
-  // moves), so they're measured once and re-measured when a model is swapped
-  // in. plantOnDeck() pushes them through the live joint chain each frame.
+  // Sole footprint: the bottom corners of each foot, in its lowest available
+  // joint's local space (ankle for the procedural rig, knee for imported
+  // chunks). Constant for a given rig, measured once and pushed through the
+  // live joint chain by plantOnDeck() each frame.
   private soleR: THREE.Vector3[] | null = null;
   private soleL: THREE.Vector3[] | null = null;
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
@@ -938,10 +943,12 @@ export class Player {
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
-    // swap the placeholder body for the chosen authored model when it lands.
-    // Character pick persists in localStorage; roo stays reachable via a flag.
-    if ((window as { __USE_ROO?: boolean }).__USE_ROO) this.installRoo();
-    else {
+    // Keep imported characters as explicit comparison/debug routes. Normal
+    // play stays on the procedural rider so its sculpt and animations can be
+    // authored directly in code without an asynchronous GLB replacing it.
+    const characterFlags = window as { __USE_MESHY?: boolean; __USE_ROO?: boolean };
+    if (characterFlags.__USE_ROO) this.installRoo();
+    else if (characterFlags.__USE_MESHY) {
       let saved = 'fox';
       try {
         saved = localStorage.getItem('solProtoChar') || 'fox';
@@ -9891,14 +9898,15 @@ export class Player {
   }
 
   /**
-   * The outline of one foot's SOLE, in that knee joint's own local space.
+   * The outline of one foot's SOLE, in its lowest rig joint's local space.
    *
    * Real vertices, not bounding boxes. On the authored rig the sole is its own
    * little slab and a box would do, but a loaded model arrives as one merged
    * shin-and-foot chunk whose box is centred on the whole leg — using it put
    * the reference a whole shoe-width behind the actual sole. So: take every
    * vertex below the knee, keep the bottom band, and box THAT. Everything
-   * below the knee is rigid, so the answer only has to be found once per model.
+   * Imported chunks are rigid below the knee; the procedural foot is rigid
+   * below its ankle. Either way the answer only has to be found once per rig.
    */
   private soleFootprint(knee: THREE.Object3D): THREE.Vector3[] {
     const verts: THREE.Vector3[] = [];
@@ -9966,8 +9974,8 @@ export class Player {
    *
    * So stop guessing and measure. Every joint that moves a foot has been
    * written by the time this runs, so push the sole outline through the live
-   * chain (legs → hip → knee), read it in the DECK's own frame, and solve for
-   * the offset that lands it: deepest point onto the grip, the two feet
+   * chain (legs → hip → knee → optional ankle), read it in the DECK's own
+   * frame, and solve for the offset that lands it: deepest point onto the grip, the two feet
    * centred across the width. Whatever the pose and the model did to the legs
    * is already in the answer.
    *
@@ -9981,7 +9989,7 @@ export class Player {
     if (!rg) return;
     const legs = this.legs;
     const bg = this.boardG;
-    const { legR, legL, kneeR, kneeL } = this;
+    const { legR, legL, kneeR, kneeL, ankleR, ankleL } = this;
     // Weight: only while the deck is genuinely flat under her feet. A wallride
     // has it on its edge against the wall, an under-rail hang has it overhead
     // in both hands, a grab has it in one — solving "soles onto the grip" in
@@ -10007,9 +10015,11 @@ export class Player {
       rg.position.set(0, 0, 0);
       return;
     }
+    const soleRootR = ankleR ?? kneeR;
+    const soleRootL = ankleL ?? kneeL;
     if (!this.soleR || !this.soleL) {
-      this.soleR = this.soleFootprint(kneeR);
-      this.soleL = this.soleFootprint(kneeL);
+      this.soleR = this.soleFootprint(soleRootR);
+      this.soleL = this.soleFootprint(soleRootL);
     }
     if (this.soleR.length === 0 || this.soleL.length === 0) {
       rg.position.set(0, 0, 0);
@@ -10020,12 +10030,18 @@ export class Player {
     legL.updateMatrix();
     kneeR.updateMatrix();
     kneeL.updateMatrix();
+    ankleR?.updateMatrix();
+    ankleL?.updateMatrix();
     bg.updateMatrix();
-    // knee-local → rider-local → deck-geometry-local, in one matrix per foot.
+    // sole-root-local → rider-local → deck-geometry-local, one matrix per foot.
     // (riderG carries no rotation, so its parent's frame IS the rider frame.)
     const toDeck = _plantInv.copy(bg.matrix).invert();
-    const mR = _plantMR.multiplyMatrices(legs.matrix, legR.matrix).multiply(kneeR.matrix).premultiply(toDeck);
-    const mL = _plantML.multiplyMatrices(legs.matrix, legL.matrix).multiply(kneeL.matrix).premultiply(toDeck);
+    const mR = _plantMR.multiplyMatrices(legs.matrix, legR.matrix).multiply(kneeR.matrix);
+    const mL = _plantML.multiplyMatrices(legs.matrix, legL.matrix).multiply(kneeL.matrix);
+    if (ankleR) mR.multiply(ankleR.matrix);
+    if (ankleL) mL.multiply(ankleL.matrix);
+    mR.premultiply(toDeck);
+    mL.premultiply(toDeck);
     const v = _plantV;
     let minY = Infinity;
     let lo = Infinity;
@@ -10423,6 +10439,12 @@ export class Player {
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
     }
+    // Distal joints have one authoritative write site even before dedicated
+    // keyframe channels land. Keeping their neutral pose explicit prevents a
+    // debug/stress pose from leaking into the next gameplay frame; future
+    // ankle tracks should blend here, before plantOnDeck measures the soles.
+    this.ankleR?.rotation.set(0, 0, 0);
+    this.ankleL?.rotation.set(0, 0, 0);
 
     // Shoulders: open side-on in the skate stance (the board and hips keep
     // pointing along travel), square through a boardslide (the yaw pose has
@@ -10447,6 +10469,10 @@ export class Player {
       // Hanging, the chest presses gently toward the wall instead.
       this.upperG.rotation.x = -0.07 * this.walkAmp - 0.12 * underW + (HS ? HS.spine * 0.7 * HS.w : 0.16 * ledgeW + 0.5 * mantle); // hang chest: clip or authored
     }
+    // Waist-seated additive spine layer. It is neutral until the full-body
+    // keyframe sampler supplies a rest-relative quaternion here; the legacy
+    // torso root above keeps all current gameplay poses unchanged.
+    this.spineG?.rotation.set(0, 0, 0);
     if (this.headM) {
       const look =
         -0.45 * crawlMove - // crawl: the NECK counters the body pitch (negative = chin up) — eyes forward
@@ -10642,6 +10668,11 @@ export class Player {
       if (this.elbowR) this.elbowR.rotation.x = -Math.max(0.05, bendR);
       if (this.elbowL) this.elbowL.rotation.x = -Math.max(0.05, bendL);
     }
+    // Same single-write hook for future wrist flex/twist keyframes. Elbow and
+    // shoulder animation already carries these neutral hands through every
+    // current gameplay pose without accumulated transforms.
+    this.wristR?.rotation.set(0, 0, 0);
+    this.wristL?.rotation.set(0, 0, 0);
     // ROPE: both hands meet on the line overhead. The under-rail grip spreads
     // the hands to two rail-ends; on a rope they grip the same point, so raise
     // both arms straight up and twist them inward until the hands come together.
@@ -11335,8 +11366,9 @@ export class Player {
     { id: 'fox', name: 'Fox' },
   ];
 
-  // Swap the visible character live (menu pick). Re-segmentation cleanly
-  // replaces the chunks in the rig groups, so no rebuild/reload is needed.
+  // Swap in an imported character for explicit comparison/debug sessions.
+  // Re-segmentation cleanly replaces the chunks in the rig groups, so no
+  // rebuild/reload is needed.
   setCharacter(id: string): void {
     if (id === 'roo') { this.installRoo(); return; }
     const c = Player.CHARACTERS.find((x) => x.id === id) ?? Player.CHARACTERS[0];
@@ -11548,7 +11580,7 @@ export class Player {
       if (!grp) return;
       for (const c of [...grp.children]) if ((c as THREE.Mesh).isMesh) grp.remove(c);
     };
-    if (!this.headM || !this.armR || !this.armL || !this.legs || !this.legR || !this.legL || !this.kneeR || !this.kneeL) return;
+    if (!this.headM || !this.armR || !this.armL || !this.spineG || !this.legs || !this.legR || !this.legL || !this.kneeR || !this.kneeL) return;
 
     // HEAD — pivot at the neck (look-at hinges at the seam); the fox ears +
     // hair tuft ride along.
@@ -11556,9 +11588,11 @@ export class Player {
     this.ponyA = null;
     this.ponyB = null;
     this.headM.position.copy(jNeck);
+    this.headM.position.y -= PROCEDURAL_SPINE_Y;
     this.headM.add(build(bucket.head, jNeck));
 
     // TORSO — pivot at origin, absolute rig positions (upperG sits at 0).
+    strip(this.spineG); // procedural torso meshes; keep head/shoulder joint groups
     strip(this.upperG);
     this.upperG!.add(build(bucket.torso, new THREE.Vector3(0, 0, 0)));
 
@@ -11571,12 +11605,18 @@ export class Player {
       const elG = s === 'R' ? (this.elbowR = new THREE.Group()) : (this.elbowL = new THREE.Group());
       for (const c of [...armG.children]) armG.remove(c);
       armG.position.copy(a.sh);
+      armG.position.y -= PROCEDURAL_SPINE_Y;
       armG.userData.lean = 0.1;
       armG.add(build(bucket[s === 'R' ? 'upperArmR' : 'upperArmL'], a.sh, qDown(a.sh, a.el)));
       elG.position.set(0, -a.el.distanceTo(a.sh), 0);
       armG.add(elG);
       elG.add(build(bucket[s === 'R' ? 'foreArmR' : 'foreArmL'], a.el, qDown(a.el, a.wr)));
     }
+    // Imported chunks currently combine wrist/hand into the forearm. Clear
+    // procedural distal-joint refs so later pose code cannot target a detached
+    // wrist group left behind by the live swap.
+    this.wristR = null;
+    this.wristL = null;
 
     // PELVIS — pivot at (0, hipY, 0) so the chunk renders at true position
     // when added to the legs group (which sits at that hip line).
@@ -11588,6 +11628,10 @@ export class Player {
     // feet plant under the ACTUAL hips (wider than the placeholder's 0.115).
     this.hipBaseR = { x: leg.R.hip.x, z: leg.R.hip.z };
     this.hipBaseL = { x: leg.L.hip.x, z: leg.L.hip.z };
+    this.ankleR?.removeFromParent();
+    this.ankleL?.removeFromParent();
+    this.ankleR = null;
+    this.ankleL = null;
     for (const s of ['R', 'L'] as const) {
       const l = leg[s];
       const legG = s === 'R' ? this.legR! : this.legL!;
@@ -12001,14 +12045,14 @@ export class Player {
         if ((child as THREE.Mesh).isMesh) grp.remove(child);
       }
     };
-    if (!this.headM || !this.armR || !this.armL || !this.legs) return;
+    if (!this.headM || !this.armR || !this.armL || !this.spineG || !this.legs) return;
     // head: everything goes (ears/hair/pony groups included) — the chunk has
     // it all, and the pivot drops to the NECK so look-at pitches and crouches
     // hinge at the seam instead of arcing the head off the body
     for (const child of [...this.headM.children]) this.headM.remove(child);
     this.ponyA = null; // the authored pony is part of the head chunk now
     this.ponyB = null;
-    this.headM.position.y = parts.head.pivot[1];
+    this.headM.position.y = parts.head.pivot[1] - PROCEDURAL_SPINE_Y;
     this.headM.add(build(parts.head));
     // arms: shoulder pivot at the arm root, elbow joint mid-tube, and a
     // relaxed hang (userData.lean) instead of the placeholder's A-frame
@@ -12016,12 +12060,16 @@ export class Player {
     for (const child of [...this.armL.children]) this.armL.remove(child);
     this.armR.position.copy(armJ.R.sh);
     this.armL.position.copy(armJ.L.sh);
+    this.armR.position.y -= PROCEDURAL_SPINE_Y;
+    this.armL.position.y -= PROCEDURAL_SPINE_Y;
     this.armR.userData.lean = 0.1;
     this.armL.userData.lean = 0.1;
     this.armR.add(build(parts.upperArmR));
     this.armL.add(build(parts.upperArmL));
     this.elbowR = new THREE.Group();
     this.elbowL = new THREE.Group();
+    this.wristR = null;
+    this.wristL = null;
     // the upper arm's axis was rotated exactly onto -Y, so the elbow sits
     // straight below the shoulder at the measured arm length
     this.elbowR.position.set(0, -armJ.R.elLen, 0);
@@ -12030,7 +12078,8 @@ export class Player {
     this.armL.add(this.elbowL);
     this.elbowR.add(build(parts.foreArmR));
     this.elbowL.add(build(parts.foreArmL));
-    stripMeshes(this.upperG); // tank/waist/neck/necklace (arm + head groups stay)
+    stripMeshes(this.spineG); // procedural torso meshes; keep arm + head groups
+    stripMeshes(this.upperG);
     this.upperG!.add(build(parts.torso));
     stripMeshes(this.legs); // pelvis/belt/chain (leg groups stay)
     this.legs.position.y = HIP; // re-seat the leg skeleton on the scaled anatomy
@@ -12039,6 +12088,10 @@ export class Player {
     stripMeshes(this.legL);
     this.legR!.add(build(parts.thighR));
     this.legL!.add(build(parts.thighL));
+    this.ankleR?.removeFromParent();
+    this.ankleL?.removeFromParent();
+    this.ankleR = null;
+    this.ankleL = null;
     stripMeshes(this.kneeR);
     stripMeshes(this.kneeL);
     this.kneeR!.position.y = KNEE - HIP;
@@ -12053,6 +12106,7 @@ export class Player {
 
   private buildVisual(): THREE.Group {
     const g = new THREE.Group();
+    g.name = 'player-visual';
     const lam = (tex: THREE.CanvasTexture) => new THREE.MeshLambertMaterial({ map: tex });
 
     // Board (visual only), nose toward local +Z. Grouped with its wheels so
@@ -12145,6 +12199,21 @@ export class Player {
         boardG.add(wheel);
       }
     }
+    // Stable hand-contact anchors for grabs. They live in board-local space,
+    // so every existing flip/grab transform carries them automatically.
+    const boardSockets: Array<[string, number, number]> = [
+      ['socket-board-left', 0.25, 0],
+      ['socket-board-right', -0.25, 0],
+      ['socket-board-nose', 0, 0.72],
+      ['socket-board-tail', 0, -0.72],
+    ];
+    for (const [name, x, z] of boardSockets) {
+      const socket = new THREE.Object3D();
+      socket.name = name;
+      socket.position.set(x, 0.205, z);
+      socket.userData.gripNormal = [0, 1, 0];
+      boardG.add(socket);
+    }
     // The deck reads ~25% oversized against the body — scale the whole board
     // group down (grab lift/tip animate position/rotation, unaffected).
     boardG.scale.setScalar(0.8);
@@ -12154,6 +12223,7 @@ export class Player {
     // The rider rides in her own group (see riderG): the board is pinned to
     // the physics point, and SHE gets to move relative to it.
     const riderG = new THREE.Group();
+    riderG.name = 'procedural-rider';
     g.add(riderG);
     this.riderG = riderG;
 
@@ -12180,10 +12250,10 @@ export class Player {
     const EYE_GREEN = new THREE.MeshLambertMaterial({ color: 0x53b04b });
     const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // nose, pupils, lashes, smile
 
-    // Legs: hip-pivot groups with a REAL knee joint each. Cargo-short thigh
-    // down to a knee group carrying the shorts cuff, knee pad, bare shin,
-    // sock, and chunky platform sneaker.
+    // Legs: hip, knee, and ankle pivots. The foot is a rigid child of the
+    // ankle, so future clips can plant and roll it without breaking the shin.
     const legs = new THREE.Group();
+    legs.name = 'hips';
     legs.position.y = 0.71; // hip line
     // Pelvis: the shorts' seat, riding the legs root (top of the leg squash,
     // so it stays put through crouches while the legs fold under it).
@@ -12233,7 +12303,12 @@ export class Player {
     const strapGeo = new THREE.BoxGeometry(0.115, 0.018, 0.055);
     const soleGeo = new THREE.BoxGeometry(0.145, 0.05, 0.34);
     for (const side of [-1, 1]) {
+      // Rider-local forward is +Z, so +X is her anatomical left. The outer
+      // Player group turns the finished rig toward world -Z at spawn.
+      const anatomicalSide = side === 1 ? 'left' : 'right';
       const leg = new THREE.Group(); // hip pivot — syncVisual writes rot + pos
+      leg.name = `hip-${anatomicalSide}`;
+      leg.userData.anatomicalSide = anatomicalSide;
       leg.position.x = side * 0.115;
       legs.add(leg);
       leg.add(new THREE.Mesh(thighGeo, BLACK));
@@ -12246,6 +12321,8 @@ export class Player {
       // Knee group pivots where the thigh ends; everything below swings with
       // it and squashes with legs.scale.y, same as the rest of the rig.
       const knee = new THREE.Group();
+      knee.name = `knee-${anatomicalSide}`;
+      knee.userData.anatomicalSide = anatomicalSide;
       knee.position.y = -0.26;
       leg.add(knee);
       const cuff = new THREE.Mesh(cuffGeo, BLACK); // capri cuff just past the knee
@@ -12269,27 +12346,54 @@ export class Player {
       const stripe = new THREE.Mesh(sockStripeGeo, PINK);
       stripe.position.y = -0.128;
       knee.add(stripe);
+      // Ankle at the shoe collar. All child coordinates are the former
+      // knee-local values rebased around this pivot, so the rest silhouette is
+      // byte-for-byte equivalent while the foot gains an animation joint.
+      const ankle = new THREE.Group();
+      ankle.name = `ankle-${anatomicalSide}`;
+      ankle.userData.anatomicalSide = anatomicalSide;
+      ankle.position.y = -0.18;
+      knee.add(ankle);
       const shoe = new THREE.Mesh(shoeGeo, SHOE_PINK); // chunky pink hi-top
+      shoe.name = `shoe-${anatomicalSide}`;
       shoe.scale.set(1, 0.6, 1.5);
-      shoe.position.set(0, -0.205, 0.055);
-      knee.add(shoe);
+      shoe.position.set(0, -0.025, 0.055);
+      ankle.add(shoe);
       const strapA = new THREE.Mesh(strapGeo, WHITE);
-      strapA.position.set(0, -0.175, 0.115);
+      strapA.position.set(0, 0.005, 0.115);
       strapA.rotation.x = 0.35;
-      knee.add(strapA);
+      ankle.add(strapA);
       const strapB = new THREE.Mesh(strapGeo, WHITE);
-      strapB.position.set(0, -0.19, 0.045);
+      strapB.position.set(0, -0.01, 0.045);
       strapB.rotation.x = 0.15;
-      knee.add(strapB);
+      ankle.add(strapB);
       const sole = new THREE.Mesh(soleGeo, CREAM); // platform slab (same floor reach as before)
-      sole.position.set(0, -0.255, 0.05);
-      knee.add(sole);
+      sole.name = `sole-${anatomicalSide}`;
+      sole.position.set(0, -0.075, 0.05);
+      ankle.add(sole);
+      const footSocket = new THREE.Object3D();
+      footSocket.name = `socket-foot-${anatomicalSide}`;
+      footSocket.position.set(0, -0.1, 0.05); // centre of the sole's contact plane
+      footSocket.userData.contactNormal = [0, 1, 0];
+      ankle.add(footSocket);
+      const heelSocket = new THREE.Object3D();
+      heelSocket.name = `socket-heel-${anatomicalSide}`;
+      heelSocket.position.set(0, -0.1, -0.12);
+      heelSocket.userData.contactNormal = [0, 1, 0];
+      ankle.add(heelSocket);
+      const toeSocket = new THREE.Object3D();
+      toeSocket.name = `socket-toe-${anatomicalSide}`;
+      toeSocket.position.set(0, -0.1, 0.22);
+      toeSocket.userData.contactNormal = [0, 1, 0];
+      ankle.add(toeSocket);
       if (side === 1) {
         this.legR = leg;
         this.kneeR = knee;
+        this.ankleR = ankle;
       } else {
         this.legL = leg;
         this.kneeL = knee;
+        this.ankleL = ankle;
       }
     }
     riderG.add(legs);
@@ -12300,6 +12404,7 @@ export class Player {
     // late, under gravity, and stops short of her own body. Parented to the
     // body root (NOT the legs group) so leg squashes don't pancake it.
     const tail = new Tail();
+    tail.root.name = 'tail-root';
     // Attach point placed by hand in the studio. It sits FORWARD of the hip
     // pivot, inside her rather than off her back. With bury at 0 this point is
     // where the tube actually starts, so it has to be under the skin on its
@@ -12344,8 +12449,13 @@ export class Player {
     // (skate stance) and counter-swing against the run without dragging the
     // hips, legs, or board around with them.
     const upper = new THREE.Group();
-    tank.position.y = 1.06;
-    upper.add(tank);
+    upper.name = 'torso-root';
+    const spine = new THREE.Group();
+    spine.name = 'spine';
+    spine.position.y = PROCEDURAL_SPINE_Y;
+    upper.add(spine);
+    tank.position.y = 1.06 - PROCEDURAL_SPINE_Y;
+    spine.add(tank);
     // bare midriff: slim fur waist between shorts and hem
     const waistProfile = [
       new THREE.Vector2(0.128, -0.05),
@@ -12355,27 +12465,33 @@ export class Player {
     ];
     const waist = new THREE.Mesh(new THREE.LatheGeometry(waistProfile, 10), FUR);
     waist.scale.z = 0.8;
-    waist.position.y = 0.85;
-    upper.add(waist);
+    waist.position.y = 0.85 - PROCEDURAL_SPINE_Y;
+    spine.add(waist);
     // neck + thin necklace with a little pendant
     const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), FUR);
-    neck.position.y = 1.325;
-    upper.add(neck);
+    neck.position.y = 1.325 - PROCEDURAL_SPINE_Y;
+    spine.add(neck);
     const necklace = new THREE.Mesh(new THREE.TorusGeometry(0.072, 0.007, 5, 12), SILVER);
     necklace.rotation.x = 1.45; // lies nearly flat, dipping toward the chest
-    necklace.position.y = 1.3;
-    upper.add(necklace);
+    necklace.position.y = 1.3 - PROCEDURAL_SPINE_Y;
+    spine.add(necklace);
     const pendant = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 5), SILVER);
-    pendant.position.set(0, 1.272, 0.068);
-    upper.add(pendant);
+    pendant.position.set(0, 1.272 - PROCEDURAL_SPINE_Y, 0.068);
+    spine.add(pendant);
 
     // Head: a GROUP pivot at 1.42 (syncVisual pitches/yaws it for the
     // horizon look-at) carrying the whole kangaroo face — skull, muzzle,
     // geometric eyes, tall ears, blonde bangs, and the jointed ponytail.
     const head = new THREE.Group();
-    head.position.y = 1.42;
-    upper.add(head);
+    head.name = 'head';
+    head.position.y = 1.42 - PROCEDURAL_SPINE_Y;
+    spine.add(head);
     this.headM = head;
+    const lookSocket = new THREE.Object3D();
+    lookSocket.name = 'socket-look';
+    lookSocket.position.set(0, 0.03, 0.19);
+    lookSocket.userData.forward = [0, 0, 1];
+    head.add(lookSocket);
     const skull = new THREE.Mesh(new THREE.SphereGeometry(0.175, 12, 9), FUR);
     skull.scale.set(0.95, 1.0, 0.9);
     head.add(skull);
@@ -12425,7 +12541,9 @@ export class Player {
     const earInnerGeo = new THREE.ConeGeometry(0.032, 0.13, 6);
     earInnerGeo.translate(0, 0.065, 0);
     for (const e of [-1, 1]) {
+      const anatomicalSide = e === 1 ? 'left' : 'right';
       const ear = new THREE.Group();
+      ear.name = `ear-${anatomicalSide}`;
       ear.position.set(e * 0.095, 0.135, -0.02);
       ear.rotation.set(-0.15, 0, -e * 0.42); // splayed up-and-out, tipped back
       head.add(ear);
@@ -12468,6 +12586,7 @@ export class Player {
     sweep.rotation.z = -0.35;
     head.add(sweep);
     const ponyA = new THREE.Group(); // scrunchie + puff
+    ponyA.name = 'ponytail-base';
     ponyA.position.set(0, 0.175, -0.145); // clears the back-hair mass
     ponyA.rotation.x = 1.2; // swung well out off the crown
     head.add(ponyA);
@@ -12481,6 +12600,7 @@ export class Player {
     puff.scale.set(0.95, 1, 0.85);
     ponyA.add(puff);
     const ponyB = new THREE.Group(); // tapering tip
+    ponyB.name = 'ponytail-tip';
     ponyB.position.y = -0.21;
     ponyB.rotation.x = 0.5;
     ponyA.add(ponyB);
@@ -12491,10 +12611,9 @@ export class Player {
     this.ponyA = ponyA;
     this.ponyB = ponyB;
 
-    // Arms: shoulder-pivot GROUPS (origin at the shoulder, geometry hangs
-    // down) so swings, grabs, and windmills pivot where a shoulder is.
-    // Bare fur upper arm, fishnet sleeve forearm, elbow pad, fingerless
-    // glove with pink cuff (left) / studded band (right).
+    // Arms: shoulder → elbow → wrist hierarchy, with a named grip socket below
+    // each hand. Every child is rebased from the former shoulder-local values,
+    // preserving the exact rest silhouette while making the whole chain poseable.
     const netM = lam(this.paintTex(64, (ctx) => {
       ctx.fillStyle = '#f08a2a'; // fur shows through the net
       ctx.fillRect(0, 0, 64, 64);
@@ -12513,53 +12632,158 @@ export class Player {
     const upperArmGeo = new THREE.CapsuleGeometry(0.047, 0.13, 3, 8);
     upperArmGeo.translate(0, -0.105, 0);
     const foreArmGeo = new THREE.CylinderGeometry(0.044, 0.038, 0.17, 8);
-    foreArmGeo.translate(0, -0.315, 0);
+    foreArmGeo.translate(0, -0.095, 0);
     const elbowGeo = new THREE.SphereGeometry(0.05, 8, 6);
     const handGeo = new THREE.SphereGeometry(0.072, 8, 6);
     const fingerGeo = new THREE.SphereGeometry(0.042, 7, 5);
     for (const side of [-1, 1]) {
+      // Rider-local forward is +Z, so +X is her anatomical left. The outer
+      // Player group turns the finished rig toward world -Z at spawn.
+      const anatomicalSide = side === 1 ? 'left' : 'right';
       const arm = new THREE.Group();
-      arm.position.set(side * 0.3, 1.22, 0); // snug to the tank's shoulder line
-      upper.add(arm);
+      arm.name = `shoulder-${anatomicalSide}`;
+      arm.userData.anatomicalSide = anatomicalSide;
+      arm.position.set(side * 0.3, 1.22 - PROCEDURAL_SPINE_Y, 0); // snug to the tank's shoulder line
+      spine.add(arm);
       const shoulder = new THREE.Mesh(shoulderGeo, FUR);
       shoulder.position.set(-side * 0.015, -0.005, 0);
       arm.add(shoulder);
       arm.add(new THREE.Mesh(upperArmGeo, FUR));
-      const elbow = new THREE.Mesh(elbowGeo, PAD); // little elbow pad
-      elbow.scale.set(0.85, 1, 0.85);
-      elbow.position.y = -0.22;
-      arm.add(elbow);
-      arm.add(new THREE.Mesh(foreArmGeo, netM)); // fishnet sleeve
+      const elbowJoint = new THREE.Group();
+      elbowJoint.name = `elbow-${anatomicalSide}`;
+      elbowJoint.userData.anatomicalSide = anatomicalSide;
+      elbowJoint.position.y = -0.22;
+      arm.add(elbowJoint);
+      const elbowPad = new THREE.Mesh(elbowGeo, PAD); // little elbow pad
+      elbowPad.scale.set(0.85, 1, 0.85);
+      elbowJoint.add(elbowPad);
+      elbowJoint.add(new THREE.Mesh(foreArmGeo, netM)); // fishnet sleeve
+      const wrist = new THREE.Group();
+      wrist.name = `wrist-${anatomicalSide}`;
+      wrist.userData.anatomicalSide = anatomicalSide;
+      wrist.position.y = -0.195;
+      elbowJoint.add(wrist);
       const hand = new THREE.Mesh(handGeo, BLACK); // fingerless glove
+      hand.name = `hand-${anatomicalSide}`;
       hand.scale.set(1, 0.92, 1.02);
-      hand.position.y = -0.48;
-      arm.add(hand);
+      hand.position.y = -0.065;
+      wrist.add(hand);
       const fingers = new THREE.Mesh(fingerGeo, FUR); // bare fingertips poking out
       fingers.scale.set(1, 0.7, 1);
-      fingers.position.set(0, -0.53, 0.015);
-      arm.add(fingers);
+      fingers.position.set(0, -0.115, 0.015);
+      wrist.add(fingers);
+      const gripSocket = new THREE.Object3D();
+      gripSocket.name = `socket-grip-${anatomicalSide}`;
+      gripSocket.position.set(0, -0.14, 0.045);
+      gripSocket.userData.gripAxis = [0, 1, 0];
+      gripSocket.userData.palmNormal = [0, 0, 1];
+      wrist.add(gripSocket);
       if (side === 1) {
         const band = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.015, 5, 10), BLACK);
         band.rotation.x = Math.PI / 2;
-        band.position.y = -0.415;
-        arm.add(band);
+        wrist.add(band);
         for (let s = 0; s < 4; s++) {
           const a = (s / 4) * Math.PI * 2 + 0.4;
           const stud = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.014, 0.014), SILVER);
-          stud.position.set(Math.cos(a) * 0.058, -0.415, Math.sin(a) * 0.058);
-          arm.add(stud);
+          stud.position.set(Math.cos(a) * 0.058, 0, Math.sin(a) * 0.058);
+          wrist.add(stud);
         }
         this.armR = arm;
+        this.elbowR = elbowJoint;
+        this.wristR = wrist;
       } else {
         const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.013, 5, 10), PINK);
         cuff.rotation.x = Math.PI / 2;
-        cuff.position.y = -0.415;
-        arm.add(cuff);
+        wrist.add(cuff);
         this.armL = arm;
+        this.elbowL = elbowJoint;
+        this.wristL = wrist;
       }
     }
     riderG.add(upper);
     this.upperG = upper;
+    this.spineG = spine;
+
+    // Serializable semantic lookup data: runtime code and future keyframe
+    // tooling can resolve stable nodes with getObjectByName without keeping
+    // circular Object3D references inside userData.
+    const jointNames = {
+      root: riderG.name,
+      hips: legs.name,
+      torsoRoot: upper.name,
+      spine: spine.name,
+      head: head.name,
+      shoulderLeft: 'shoulder-left',
+      elbowLeft: 'elbow-left',
+      wristLeft: 'wrist-left',
+      shoulderRight: 'shoulder-right',
+      elbowRight: 'elbow-right',
+      wristRight: 'wrist-right',
+      hipLeft: 'hip-left',
+      kneeLeft: 'knee-left',
+      ankleLeft: 'ankle-left',
+      hipRight: 'hip-right',
+      kneeRight: 'knee-right',
+      ankleRight: 'ankle-right',
+      earLeft: 'ear-left',
+      earRight: 'ear-right',
+      ponytailBase: ponyA.name,
+      ponytailTip: ponyB.name,
+      tail: tail.root.name,
+    } as const;
+    const socketNames = {
+      look: 'socket-look',
+      gripLeft: 'socket-grip-left',
+      gripRight: 'socket-grip-right',
+      footLeft: 'socket-foot-left',
+      heelLeft: 'socket-heel-left',
+      toeLeft: 'socket-toe-left',
+      footRight: 'socket-foot-right',
+      heelRight: 'socket-heel-right',
+      toeRight: 'socket-toe-right',
+      boardLeft: 'socket-board-left',
+      boardRight: 'socket-board-right',
+      boardNose: 'socket-board-nose',
+      boardTail: 'socket-board-tail',
+    } as const;
+    const declaredNodeNames = [...Object.values(jointNames), ...Object.values(socketNames)];
+    if (new Set(declaredNodeNames).size !== declaredNodeNames.length)
+      throw new Error('procedural rig contains duplicate semantic node names');
+    for (const name of Object.values(socketNames))
+      if (!g.getObjectByName(name)) throw new Error(`procedural rig is missing socket: ${name}`);
+    const restPose = Object.fromEntries(
+      Object.entries(jointNames).map(([semantic, name]) => {
+        const joint = g.getObjectByName(name);
+        if (!joint) throw new Error(`procedural rig is missing joint: ${name}`);
+        return [
+          semantic,
+          {
+            position: joint.position.toArray(),
+            quaternion: joint.quaternion.toArray(),
+            scale: joint.scale.toArray(),
+            rotationOrder: joint.rotation.order,
+          },
+        ];
+      }),
+    );
+    g.userData.sculptRuntime = {
+      schemaVersion: 1,
+      kind: 'procedural-character',
+      actionRoot: g.name,
+      coordinateSystem: {
+        handedness: 'right',
+        up: 'Y',
+        localForward: '+Z',
+        spawnWorldForward: '-Z',
+        units: 'rig-units',
+        worldUnitApproximation: 'metres',
+        visualScale: [1.18, 1.36, 1.18],
+      },
+      sideConvention: 'anatomical left is +X in the rider-local +Z-forward frame',
+      joints: jointNames,
+      sockets: socketNames,
+      restPose,
+    };
 
     return g;
   }
