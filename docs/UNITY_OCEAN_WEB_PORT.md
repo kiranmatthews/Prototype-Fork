@@ -53,14 +53,20 @@ The Descent reproduces Unity's separate coastline contract instead:
 - sea level `-0.36m`;
 - a continuous textured sand bank plus 16m submerged shelf;
 - legal shallows extending 3.5m seaward from the visible line;
-- a 0.25m continuous invisible containment edge from `y=-12` to `y=16`;
+- a 0.50m-thick continuous invisible containment edge (0.25m half-thickness)
+  from `y=-12` to `y=16`;
 - a deep-water death fallback beginning 5.75m seaward, 28m wide, with its
   top at `y=-0.81`;
 - `killY=-12` as the final backup.
 
 The ocean remains outside `groundMeshes`; only the sand is ground. The edge is
-in `walls`, and the fallback is in `pitBoxes`. An authored `?oceanreview`
-query starts on dry sand ten metres from the waterline for focused QA.
+an oriented continuous-prism narrow phase with the same 0.25m half thickness
+as Unity's `OceanEdge_Invisible`. The player performs an earliest-time capsule
+sweep over the true spline and endpoint caps, resolves with geometric normals,
+then projects only the inward remainder for tangent-preserving glances. It no
+longer approximates the curve with axis-aligned wall boxes. The fallback is in
+`pitBoxes`. An authored `?oceanreview` query starts on dry sand ten metres from
+the waterline for focused QA.
 
 ## Atmosphere
 

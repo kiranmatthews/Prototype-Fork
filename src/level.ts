@@ -129,6 +129,40 @@ interface Projectile {
   box: THREE.Box3;
 }
 
+interface ContinuousCoastSegment {
+  ax: number;
+  az: number;
+  bx: number;
+  bz: number;
+  dx: number;
+  dz: number;
+  tx: number;
+  tz: number;
+  length: number;
+  lengthSq: number;
+  minX: number;
+  maxX: number;
+  minZ: number;
+  maxZ: number;
+  fallbackNx: number;
+  fallbackNz: number;
+}
+
+interface ContinuousCoastBoundary {
+  segments: ContinuousCoastSegment[];
+  halfThickness: number;
+  minY: number;
+  maxY: number;
+}
+
+export interface CoastBoundaryHit {
+  x: number;
+  z: number;
+  nx: number;
+  nz: number;
+  frontal: boolean;
+}
+
 // Moving platform: slides along one axis on a sine, carrying the rider.
 interface Mover {
   mesh: THREE.Mesh;
@@ -1632,7 +1666,6 @@ export class Level {
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
-  softWalls = new Set<THREE.Box3>(); // containment only: no wallride, ledge grab or impact bail
   killY = -48; // per-level death height (every builder authors its own)
   name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
@@ -4203,6 +4236,249 @@ export class Level {
     return !pointInPoly(x - poly.cx, z - poly.cz, poly.pts);
   }
 
+  // Unity's OceanEdge_Invisible is one swept vertical MeshCollider, not a
+  // picket fence of axis-aligned boxes. The browser player is an AABB, so the
+  // equivalent narrow phase sweeps the player capsule prev->current against
+  // every oriented span and resolves along the true curve normal. Grazes
+  // slide around the beach instead of catching on cardinal seams, while a
+  // fast frame cannot tunnel through.
+  private coastBoundary: ContinuousCoastBoundary | null = null;
+  resolveCoastBoundary(
+    previous: THREE.Vector3,
+    current: THREE.Vector3,
+    halfX: number,
+    halfY: number,
+    halfZ: number,
+  ): CoastBoundaryHit | null {
+    const boundary = this.coastBoundary;
+    if (
+      !boundary ||
+      current.y > boundary.maxY ||
+      current.y + halfY * 2 < boundary.minY
+    )
+      return null;
+
+    // Unity casts its 0.5m-radius player capsule against the 0.25m half-width
+    // mesh. In XZ that is exactly a moving point against segment capsules.
+    const radius = boundary.halfThickness + Math.max(halfX, halfZ) + 0.02;
+    const radiusSq = radius * radius;
+    const originalMoveX = current.x - previous.x;
+    const originalMoveZ = current.z - previous.z;
+    const originalLength = Math.hypot(originalMoveX, originalMoveZ);
+
+    const nearest = (x: number, z: number): {
+      distance: number;
+      nx: number;
+      nz: number;
+    } => {
+      let bestDistanceSq = Infinity;
+      let bestNx = 0;
+      let bestNz = 0;
+      for (const segment of boundary.segments) {
+        const u = THREE.MathUtils.clamp(
+          ((x - segment.ax) * segment.dx + (z - segment.az) * segment.dz) /
+            segment.lengthSq,
+          0,
+          1,
+        );
+        const qx = segment.ax + segment.dx * u;
+        const qz = segment.az + segment.dz * u;
+        const rx = x - qx;
+        const rz = z - qz;
+        const distanceSq = rx * rx + rz * rz;
+        if (distanceSq >= bestDistanceSq) continue;
+        bestDistanceSq = distanceSq;
+        if (distanceSq > 1e-12) {
+          const inverse = 1 / Math.sqrt(distanceSq);
+          bestNx = rx * inverse;
+          bestNz = rz * inverse;
+        } else {
+          bestNx = segment.fallbackNx;
+          bestNz = segment.fallbackNz;
+        }
+      }
+      return {
+        distance: Math.sqrt(bestDistanceSq),
+        nx: bestNx,
+        nz: bestNz,
+      };
+    };
+
+    type SweepHit = {
+      t: number;
+      nx: number;
+      nz: number;
+      segmentIndex: number;
+      feature: number;
+    };
+    const firstSweepHit = (
+      startX: number,
+      startZ: number,
+      moveX: number,
+      moveZ: number,
+    ): SweepHit | null => {
+      const moveSq = moveX * moveX + moveZ * moveZ;
+      if (moveSq < 1e-12) return null;
+      const sweepMinX = Math.min(startX, startX + moveX) - radius;
+      const sweepMaxX = Math.max(startX, startX + moveX) + radius;
+      const sweepMinZ = Math.min(startZ, startZ + moveZ) - radius;
+      const sweepMaxZ = Math.max(startZ, startZ + moveZ) + radius;
+      let best: SweepHit | null = null;
+      const consider = (
+        t: number,
+        nx: number,
+        nz: number,
+        segmentIndex: number,
+        feature: number,
+      ): void => {
+        if (t < -1e-7 || t > 1 + 1e-7) return;
+        if (moveX * nx + moveZ * nz >= -1e-7) return;
+        const clampedT = THREE.MathUtils.clamp(t, 0, 1);
+        if (
+          !best ||
+          clampedT < best.t - 1e-7 ||
+          (Math.abs(clampedT - best.t) <= 1e-7 &&
+            (segmentIndex < best.segmentIndex ||
+              (segmentIndex === best.segmentIndex && feature < best.feature)))
+        )
+          best = { t: clampedT, nx, nz, segmentIndex, feature };
+      };
+
+      for (let index = 0; index < boundary.segments.length; index++) {
+        const segment = boundary.segments[index];
+        if (
+          sweepMaxX < segment.minX ||
+          sweepMinX > segment.maxX ||
+          sweepMaxZ < segment.minZ ||
+          sweepMinZ > segment.maxZ
+        )
+          continue;
+
+        // Both infinite offset faces, clipped back to the finite segment.
+        const perpendicularX = -segment.tz;
+        const perpendicularZ = segment.tx;
+        for (let sign = -1; sign <= 1; sign += 2) {
+          const nx = perpendicularX * sign;
+          const nz = perpendicularZ * sign;
+          const denominator = moveX * nx + moveZ * nz;
+          if (denominator >= -1e-7) continue;
+          const startDistance =
+            (startX - segment.ax) * nx + (startZ - segment.az) * nz;
+          const t = (radius - startDistance) / denominator;
+          if (t < -1e-7 || t > 1 + 1e-7) continue;
+          const hitX = startX + moveX * t - segment.ax;
+          const hitZ = startZ + moveZ * t - segment.az;
+          const along = hitX * segment.tx + hitZ * segment.tz;
+          if (along < -1e-7 || along > segment.length + 1e-7) continue;
+          consider(t, nx, nz, index, sign < 0 ? 0 : 1);
+        }
+
+        // Rounded endpoint features complete the segment capsule and remove
+        // every crack at a spline joint or end-cap corner.
+        for (let endpoint = 0; endpoint < 2; endpoint++) {
+          const endpointX = endpoint === 0 ? segment.ax : segment.bx;
+          const endpointZ = endpoint === 0 ? segment.az : segment.bz;
+          const rx = startX - endpointX;
+          const rz = startZ - endpointZ;
+          const b = 2 * (rx * moveX + rz * moveZ);
+          const c = rx * rx + rz * rz - radiusSq;
+          const discriminant = b * b - 4 * moveSq * c;
+          if (discriminant < 0) continue;
+          const t = (-b - Math.sqrt(discriminant)) / (2 * moveSq);
+          if (t < -1e-7 || t > 1 + 1e-7) continue;
+          const normalX = startX + moveX * t - endpointX;
+          const normalZ = startZ + moveZ * t - endpointZ;
+          const normalLength = Math.hypot(normalX, normalZ);
+          if (normalLength < 1e-7) continue;
+          consider(
+            t,
+            normalX / normalLength,
+            normalZ / normalLength,
+            index,
+            endpoint + 2,
+          );
+        }
+      }
+      return best;
+    };
+
+    let resolvedX = previous.x;
+    let resolvedZ = previous.z;
+    let remainingX = originalMoveX;
+    let remainingZ = originalMoveZ;
+    let hitNx = 0;
+    let hitNz = 0;
+    let frontal = false;
+    let hit = false;
+
+    // Match Unity's iterative wall solver: earliest time of impact, remove
+    // only inward remainder, add a tiny separation, then continue tangentially.
+    for (let pass = 0; pass < 3; pass++) {
+      const startNearest = nearest(resolvedX, resolvedZ);
+      if (startNearest.distance < radius - 1e-6) {
+        const desiredX = resolvedX + remainingX;
+        const desiredZ = resolvedZ + remainingZ;
+        const desiredNearest = nearest(desiredX, desiredZ);
+        if (desiredNearest.distance >= radius) {
+          // An already-overlapping body may always leave the collider.
+          resolvedX = desiredX;
+          resolvedZ = desiredZ;
+          remainingX = 0;
+          remainingZ = 0;
+          break;
+        }
+        const repair = Math.min(radius - desiredNearest.distance + 0.01, 0.5);
+        resolvedX = desiredX + desiredNearest.nx * repair;
+        resolvedZ = desiredZ + desiredNearest.nz * repair;
+        remainingX = 0;
+        remainingZ = 0;
+        hitNx = desiredNearest.nx;
+        hitNz = desiredNearest.nz;
+        hit = true;
+        break;
+      }
+
+      const sweep = firstSweepHit(resolvedX, resolvedZ, remainingX, remainingZ);
+      if (!sweep) {
+        resolvedX += remainingX;
+        resolvedZ += remainingZ;
+        remainingX = 0;
+        remainingZ = 0;
+        break;
+      }
+
+      const contactX = resolvedX + remainingX * sweep.t;
+      const contactZ = resolvedZ + remainingZ * sweep.t;
+      let restX = remainingX * (1 - sweep.t);
+      let restZ = remainingZ * (1 - sweep.t);
+      const inward = restX * sweep.nx + restZ * sweep.nz;
+      if (inward < 0) {
+        restX -= sweep.nx * inward;
+        restZ -= sweep.nz * inward;
+      }
+      if (!hit) {
+        hitNx = sweep.nx;
+        hitNz = sweep.nz;
+      }
+      if (originalLength > 1e-7) {
+        const approach = -(
+          (originalMoveX / originalLength) * sweep.nx +
+          (originalMoveZ / originalLength) * sweep.nz
+        );
+        frontal ||= approach > 0.6;
+      }
+      resolvedX = contactX + sweep.nx * 0.01;
+      resolvedZ = contactZ + sweep.nz * 0.01;
+      remainingX = restX;
+      remainingZ = restZ;
+      hit = true;
+    }
+
+    return hit
+      ? { x: resolvedX, z: resolvedZ, nx: hitNx, nz: hitNz, frontal }
+      : null;
+  }
+
   // CAMERA LANE (Crash 3 camera rails): camnode components chain into a
   // polyline; the tangent of the nearest segment is the local "down-course"
   // direction the camera and the controls steer along.
@@ -6299,29 +6575,67 @@ export class Level {
     };
     const hazardNear: THREE.Vector3[] = [];
     const hazardFar: THREE.Vector3[] = [];
+    const coastSegments: ContinuousCoastSegment[] = [];
+    const addCoastSegment = (
+      a: THREE.Vector3,
+      b: THREE.Vector3,
+      outwardX: number,
+      outwardZ: number,
+    ): void => {
+      let tx = b.x - a.x;
+      let tz = b.z - a.z;
+      const length = Math.hypot(tx, tz);
+      if (length < 1e-5) return;
+      tx /= length;
+      tz /= length;
+      // A face normal must be exactly perpendicular to the swept segment;
+      // the authored shore normal only chooses which side is seaward/outside.
+      let nx = -tz;
+      let nz = tx;
+      if (nx * outwardX + nz * outwardZ < 0) {
+        nx = -nx;
+        nz = -nz;
+      }
+      coastSegments.push({
+        ax: a.x,
+        az: a.z,
+        bx: b.x,
+        bz: b.z,
+        dx: b.x - a.x,
+        dz: b.z - a.z,
+        tx,
+        tz,
+        length,
+        lengthSq: length * length,
+        minX: Math.min(a.x, b.x),
+        maxX: Math.max(a.x, b.x),
+        minZ: Math.min(a.z, b.z),
+        maxZ: Math.max(a.z, b.z),
+        fallbackNx: -nx,
+        fallbackNz: -nz,
+      });
+    };
     for (let i = 0; i < shore.length - 1; i++) {
       const span = Math.hypot(
         shore[i + 1].x - shore[i].x,
         shore[i + 1].z - shore[i].z,
       );
-      // Box3 is the engine's authored wall primitive. Half-metre sampling
-      // keeps its cardinal broadphase within the source prism's 0.125m skin
-      // closely enough that the continuous curve does not feel stair-stepped.
+      // Match Unity's swept 0.5m-thick MeshCollider. Half-metre resampling
+      // follows the rendered spline closely, but every span remains an
+      // oriented face in the continuous narrow phase—never an AABB stair.
       const steps = Math.max(1, Math.ceil(span / 0.5));
       for (let step = 0; step < steps; step++) {
         const u0 = step / steps;
         const u1 = (step + 1) / steps;
         const e0 = coastPoint(i, i + 1, u0, 3.5);
         const e1 = coastPoint(i, i + 1, u1, 3.5);
-        const edge = new THREE.Box3().setFromPoints([e0, e1]);
-        edge.min.x -= 0.125;
-        edge.max.x += 0.125;
-        edge.min.z -= 0.125;
-        edge.max.z += 0.125;
-        edge.min.y = -12;
-        edge.max.y = 16;
-        this.walls.push(edge);
-        this.softWalls.add(edge);
+        const mid = (u0 + u1) * 0.5;
+        addCoastSegment(
+          e0,
+          e1,
+          THREE.MathUtils.lerp(shore[i].sx, shore[i + 1].sx, mid),
+          THREE.MathUtils.lerp(shore[i].sz, shore[i + 1].sz, mid),
+        );
 
         hazardNear.push(coastPoint(i, i + 1, u0, 5.75));
         hazardFar.push(coastPoint(i, i + 1, u0, 33.75));
@@ -6350,8 +6664,9 @@ export class Level {
       ]),
     });
     this.pitBoxes.push(deepWater);
-    // End caps stop a shallow-water line from slipping around either end of
-    // the continuous edge. Deep-water fallback still owns anything beyond.
+    // End caps complete the same closed swept prism Unity authors. Their
+    // outward normal follows beyond the route endpoint, while the segment
+    // spans from the cliff-side bank through the shallow-water face.
     for (const [index, nextIndex, endpointS] of [
       [0, 1, BEACH_S0],
       [shore.length - 1, shore.length - 2, BEACH_S1],
@@ -6363,23 +6678,20 @@ export class Level {
       const tl = Math.hypot(tx, tz) || 1;
       tx /= tl;
       tz /= tl;
-      const corners: THREE.Vector3[] = [];
       const landward = inlandA(endpointS) - shoreA(endpointS) - 0.25;
-      for (const d of [landward, 3.625])
-        for (const along of [-0.25, 0.25])
-          corners.push(
-            new THREE.Vector3(
-              a.x + a.sx * d + tx * along,
-              0,
-              a.z + a.sz * d + tz * along,
-            ),
-          );
-      const cap = new THREE.Box3().setFromPoints(corners);
-      cap.min.y = -12;
-      cap.max.y = 16;
-      this.walls.push(cap);
-      this.softWalls.add(cap);
+      addCoastSegment(
+        new THREE.Vector3(a.x + a.sx * landward, 0, a.z + a.sz * landward),
+        new THREE.Vector3(a.x + a.sx * 3.5, 0, a.z + a.sz * 3.5),
+        -tx,
+        -tz,
+      );
     }
+    this.coastBoundary = {
+      segments: coastSegments,
+      halfThickness: 0.25,
+      minY: -12,
+      maxY: 16,
+    };
     this.water = new CoastWater({
       shore,
       seaLevel: SEA_LEVEL,

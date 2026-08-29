@@ -6427,6 +6427,32 @@ export class Player {
 
   private collide(level: Level): void {
     const half = CONST.playerHalf;
+    if (this.state !== 'grind' && !this.wallriding) {
+      const coastHit = level.resolveCoastBoundary(
+        this.prevPos,
+        this.pos,
+        half.x,
+        half.y,
+        half.z,
+      );
+      if (coastHit) {
+        this.pos.x = coastHit.x;
+        this.pos.z = coastHit.z;
+
+        // The swept solver already projects the remaining displacement onto
+        // the tangent. Only a square hit kills authored drive; a shoreline
+        // graze keeps flowing around the spline at the contact point.
+        if (coastHit.frontal) {
+          // A square hit is still a stop, but never a bail, wallride, ledge
+          // grab or axis-aligned rebound from an invisible box.
+          if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
+            sfx.play('skateHalt', 0.7);
+            this.haltCd = 0.5;
+          }
+          this.speed = 0;
+        }
+      }
+    }
     const center = new THREE.Vector3(this.pos.x, this.pos.y + half.y, this.pos.z);
     this.playerBox.setFromCenterAndSize(center, new THREE.Vector3(half.x * 2, half.y * 2, half.z * 2));
     this.feetBox.copy(this.playerBox);
@@ -6968,13 +6994,6 @@ export class Player {
         // tripped on) must pass over the top, not get pinned at the face.
         if (this.isBailing && !this.grounded && w.max.y < this.pos.y + 0.35) continue;
         if (this.playerBox.intersectsBox(w)) {
-          if (level.softWalls.has(w)) {
-            // Ocean containment is a gameplay boundary, not an invisible
-            // stunt surface or crash obstacle. Stop cleanly on the legal
-            // shallows side: no wallride, ledge grab, impact bail or fling.
-            this.pushOutOf(w);
-            break;
-          }
           if (this.tryWallride(w)) break; // stuck to the wall — ride it
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
           const bx = this.pos.x;
@@ -6988,7 +7007,6 @@ export class Player {
           // re-presses) — falling a hair off the face must still offer the
           // grab, or those jumps slide down 3cm out of reach forever.
           this.state === 'air' &&
-          !level.softWalls.has(w) &&
           this.vVel <= 1.5 &&
           HANG_BOX.copy(this.playerBox).expandByScalar(0.14).intersectsBox(w) &&
           this.tryLedgeGrab(w, level)

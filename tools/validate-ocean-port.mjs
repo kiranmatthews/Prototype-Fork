@@ -48,7 +48,28 @@ const level = readFileSync(path.join(root, "src/level.ts"), "utf8");
 for (const retired of ["private seaSurface(", 'pitPlane("water"'])
   if (level.includes(retired))
     throw new Error(`Retired sea runtime remains active: ${retired}`);
+for (const required of [
+  "interface ContinuousCoastBoundary",
+  "resolveCoastBoundary(",
+  "halfThickness: 0.25",
+  "const firstSweepHit = (",
+  "for (let pass = 0; pass < 3; pass++)",
+]) {
+  if (!level.includes(required))
+    throw new Error(`Continuous Unity coast collision missing: ${required}`);
+}
+if (level.includes("softWalls"))
+  throw new Error("Retired AABB coastline collision remains active: softWalls");
+
+const player = readFileSync(path.join(root, "src/player.ts"), "utf8");
+for (const required of [
+  "level.resolveCoastBoundary(",
+  "if (coastHit.frontal)",
+]) {
+  if (!player.includes(required))
+    throw new Error(`Continuous coast player response missing: ${required}`);
+}
 
 console.log(
-  `Validated Unity ocean port: ${expected.size} pinned assets, runtime, render passes, sampler and retired-water removal.`,
+  `Validated Unity ocean port: ${expected.size} pinned assets, runtime, render passes, sampler, continuous coast collision and retired-water removal.`,
 );
