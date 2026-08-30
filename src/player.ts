@@ -42,6 +42,7 @@ import {
   ledgeTraversePoint,
   type LedgeBasis,
 } from './ledgeTraversal';
+import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
 import {
   SpinEffectsPresentation,
   type SpinPresentationDiagnostics,
@@ -11448,17 +11449,27 @@ export class Player {
     // sidestepping, and mid-air drift all turn the model, Crash-style.
     // Movement itself never leaves the course axes; this is purely visual.
     let targetYaw = this.visualYaw; // stationary: keep facing the last direction
-    let snapToIntent = false;
+    let runReversal = false;
+    const onFootRunReversal =
+      this.walkTurnaround &&
+      this.state === 'ride' &&
+      this.grounded &&
+      !this.freeSkate &&
+      this.slideTimer <= 0 &&
+      !this.crawling &&
+      !this.isBailing &&
+      this.walkIntent.lengthSq() > 1e-6;
     if (this.state === 'rope') {
       // On the swing rope, face the direction you were travelling when you
       // grabbed (captured in tryRopeGrab) and hold it — the swing never turns
       // you, and climbing up/down never turns you.
       targetYaw = this.ropeFaceYaw;
-    } else if (this.walkTurnaround && this.walkIntent.lengthSq() > 1e-6) {
-      // Input leads a committed run turnaround: the body faces the newly held
-      // direction immediately while the root still slides through old momentum.
+    } else if (onFootRunReversal) {
+      // Input leads a committed run turnaround while the root still slides
+      // through old momentum. The body takes a very short visible pivot rather
+      // than teleporting through 180 degrees in one rendered frame.
       targetYaw = wrapAngle(Math.atan2(this.walkIntent.x, this.walkIntent.z) - Math.PI);
-      snapToIntent = true;
+      runReversal = true;
     } else {
       const vx = this.pos.x - this.prevPos.x;
       const vz = this.pos.z - this.prevPos.z;
@@ -11466,8 +11477,24 @@ export class Player {
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
       }
     }
-    if (snapToIntent) this.visualYaw = targetYaw;
-    else this.visualYaw += wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
+    if (runReversal) {
+      // Pure lateral reversals are exactly PI apart, where "shortest" has no
+      // unique sign. Turn toward screen-right clockwise and screen-left
+      // counter-clockwise so side-to-side pivots undo each other naturally.
+      const lateralIntent = this.walkIntent.dot(this.axisL);
+      const turnSign = Math.abs(lateralIntent) > 0.25
+        ? -Math.sign(lateralIntent)
+        : -1;
+      this.visualYaw = stepFacingYaw(
+        this.visualYaw,
+        targetYaw,
+        RUN_REVERSAL_YAW_RATE * dt,
+        turnSign,
+      );
+    } else {
+      this.visualYaw +=
+        wrapAngle(targetYaw - this.visualYaw) * Math.min(1, 14 * dt);
+    }
     // Stance is a 90° body turn: regular faces one side of the board,
     // switch faces the other (that's the whole difference — the board and
     // travel don't care). sidePose blends it in; the board counter-rotates

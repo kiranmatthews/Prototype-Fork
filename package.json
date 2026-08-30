@@ -8,6 +8,7 @@
     "check:levels": "node tools/validate-levels.mjs",
     "check:ground": "node tools/validate-ground-acceleration.mjs",
     "check:ledge": "node tools/validate-ledge-traversal.mjs",
+    "check:run-facing": "node tools/test-run-facing.mjs",
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",
     "check:interpolation": "node tools/validate-render-interpolation.mjs",
     "check:crt": "node tools/test-crt-guest-settings.mjs && node tools/test-crt-guest-web.mjs",
@@ -23,7 +24,7 @@
     "character:doctor": "python3 tools/tripo-character/tripo_character.py doctor",
     "character:generate": "python3 tools/tripo-character/tripo_character.py generate",
     "character:test": "python3 -m unittest discover -s tools/tripo-character/tests -p 'test_*.py'",
-    "build": "npm run check:levels && npm run check:ground && npm run check:ledge && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
+    "build": "npm run check:levels && npm run check:ground && npm run check:ledge && npm run check:run-facing && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
