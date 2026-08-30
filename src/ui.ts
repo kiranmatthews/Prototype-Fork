@@ -2159,13 +2159,13 @@ export class UI {
         100% { transform: translateY(0); opacity: 1; }
       }
       .hud-trickline {
-        font: bold clamp(23px, 3.7vh, 36px) Impact, 'Arial Black', sans-serif;
+        font: 400 clamp(23px, 3.7vh, 36px) 'Roo', Impact, 'Arial Black', sans-serif;
         line-height: 1.08; letter-spacing: 1px; color: #ffe08a;
         white-space: normal; overflow-wrap: normal;
         text-shadow: 2px 2px 0 #351806, 0 0 7px rgba(255, 176, 48, 0.34);
       }
       .hud-tricktotal {
-        font: 900 clamp(38px, 6.2vh, 60px) Impact, 'Arial Black', sans-serif;
+        font: 400 clamp(38px, 6.2vh, 60px) 'Roo', Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px; color: #ffb43a; margin-top: 4px;
         line-height: 1.05;
         text-shadow: 2px 2px 0 #351806, 0 0 8px rgba(255, 126, 20, 0.38);

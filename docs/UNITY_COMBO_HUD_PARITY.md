@@ -89,10 +89,15 @@ Persistent counters retain Roo SVG and the accepted source tracking roles:
 Canvas tracking converts the source units from the Roo face's 200-unit
 reference size to pixels at the current rendered font size.
 
-The combo labels and total use ordinary DOM/Canvas text rather than Roo's
-per-glyph gradient renderer. This enables natural multiline layout, makes the
-red bail state literal rather than a coloured glow around orange glyphs, and
-lets the CRT treatment provide the final texture.
+The combo labels and total use the Roo typeface through ordinary DOM/Canvas
+text rather than Roo's per-glyph SVG gradient renderer. This preserves the
+game's lettering while enabling natural multiline layout, makes the red bail
+state literal rather than a coloured glow around orange glyphs, and lets the
+CRT treatment provide the final texture.
+
+`RooRegular.ttf` does not contain `×`, `°`, or `…`. The normal font stack
+therefore keeps the exact gameplay copy and falls through to Impact for only
+those punctuation glyphs; combo letters and numerals remain Roo.
 
 ## Verification
 

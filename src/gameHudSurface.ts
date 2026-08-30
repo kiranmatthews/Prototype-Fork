@@ -934,11 +934,11 @@ export class GameHudSurface {
       x: (width - stableTextWidth) / 2,
       width: stableTextWidth,
     };
-    const comboFamily = `Impact, "Arial Black", sans-serif`;
+    const comboFamily = `"${this.fontFamily}", Impact, "Arial Black", sans-serif`;
     this.drawWrappedPlainText(ctx, line, stableLineRect, {
       size: 28 * sy,
       align: "center",
-      weight: "bold",
+      weight: "400",
       family: comboFamily,
       color: bailed ? "#ff3b30" : "#ffe08a",
       shadow: bailed ? "#ff3b30" : "rgba(53,24,6,0.9)",
@@ -953,7 +953,7 @@ export class GameHudSurface {
       {
         size: 48 * sy,
         align: "center",
-        weight: "900",
+        weight: "400",
         family: comboFamily,
         color: bailed ? "#ff3b30" : "#ffb43a",
         shadow: bailed ? "#ff3b30" : "rgba(53,24,6,0.9)",

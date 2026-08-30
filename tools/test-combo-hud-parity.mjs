@@ -145,6 +145,14 @@ assert.match(ui, /setHUD\(s: HudState, deltaSeconds = 1 \/ 60\)/);
 assert.doesNotMatch(ui, /new RooLabel\(this\.trick(?:Line|Total)El/);
 assert.doesNotMatch(ui, /["']BAILED!["']/);
 assert.doesNotMatch(ui, /rooTrick(?:Line|Total)/);
+assert.match(
+  ui,
+  /\.hud-trickline \{[\s\S]*?font: 400[^;]+['"]Roo['"][^;]+Impact/,
+);
+assert.match(
+  ui,
+  /\.hud-tricktotal \{[\s\S]*?font: 400[^;]+['"]Roo['"][^;]+Impact/,
+);
 const comboBailBody = ui.match(
   /comboBail\(labels: string, pendingPoints: number, multiplier: number\): void \{([\s\S]*?)\n  \}/,
 )?.[1] ?? "";
@@ -172,6 +180,14 @@ assert.match(surface, /drawWrappedPlainText\(ctx, line, stableLineRect/);
 assert.match(surface, /color: bailed \? "#ff3b30" : "#ffe08a"/);
 const trickPainter = surface.match(/private paintTrick\(([\s\S]*?)\n  private paintBalance/)?.[1] ?? "";
 assert.doesNotMatch(trickPainter, /drawRooInRect/);
+assert.match(
+  trickPainter,
+  /const comboFamily = `"\$\{this\.fontFamily\}", Impact/,
+);
+assert.equal((trickPainter.match(/weight: "400"/g) ?? []).length, 2);
+const rooCss = await readFile(`${root}src/roo-text.css`, "utf8");
+assert.match(rooCss, /font-family: "Roo"/);
+assert.match(rooCss, /RooRegular\.ttf/);
 const player = await readFile(`${root}src/player.ts`, "utf8");
 assert.match(player, /get comboHudPreview\(\)/);
 assert.match(player, /deckTrickPreviewSequence\+\+/);
