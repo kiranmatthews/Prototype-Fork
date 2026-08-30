@@ -49,15 +49,6 @@
       /* image-rendering is set live from main.ts's resize(): pixelated only
          when renderScale drops below 0.7, smooth linear upscale otherwise. */
       #app canvas { width: 100% !important; height: 100% !important; display: block; }
-      /* Barely-there scanline texture + gentle vignette over the 3D view,
-         under the HUD (z 10+) so text stays crisp. Pure DOM; main.ts skips it
-         in ?lite. */
-      .crt-overlay {
-        position: fixed; inset: 0; z-index: 5; pointer-events: none;
-        background:
-          repeating-linear-gradient(to bottom, rgba(4, 6, 12, 0.035) 0 1px, transparent 1px 2px),
-          radial-gradient(ellipse 120% 120% at 50% 45%, transparent 58%, rgba(4, 6, 12, 0.26) 100%);
-      }
     </style>
   </head>
   <body>

@@ -39,6 +39,8 @@ import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls } from "./swirls";
 import { fieldSwirls } from "./swirlfield";
 import { CoastPostRenderer } from "./coastpost";
+import { crtGuestSettings } from "./crt-guest/settings";
+import { createCrtGuestTuningPanel } from "./crt-guest/panel";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -143,15 +145,6 @@ scene.add(fill);
 // by the headless smoke autopilot, where software rendering can't afford the
 // fill rate and slow frames desync its wall-clock input scripting.
 const LITE = window.location.search.includes("lite");
-
-// Screen dressing: barely-there scanline texture + gentle vignette (styles
-// live in index.html). Pure DOM, zero GPU cost — skipped in lite along with
-// the rest of the presentation.
-if (!LITE) {
-  const crt = document.createElement("div");
-  crt.className = "crt-overlay";
-  document.body.appendChild(crt);
-}
 
 // Sky dome: a big inward-facing sphere that follows the camera, painted with
 // each level's gradient + sun + stars. Sits behind everything, ignores fog.
@@ -852,15 +845,18 @@ let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
 const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 let coastPost: CoastPostRenderer | null = null;
 function configureCoastPost(enabled: boolean): void {
-  if (!enabled) {
-    coastPost?.dispose();
-    coastPost = null;
+  if (coastPost) {
+    coastPost.setEnabled(enabled);
     return;
   }
-  if (coastPost) return;
+  // The composer is now shared: the coast owns Unity bloom/lens grading,
+  // while CRT Guest can remain active on every level. Its heavy render targets
+  // are lazy, so retaining this shell also makes live CRT enable/disable and
+  // variant changes immediate without rebuilding the renderer.
   coastPost = new CoastPostRenderer(renderer, scene, camera, {
-    enabled: true,
-    lite: LITE_RENDER || NO_COAST_POST,
+    enabled,
+    lite: LITE_RENDER,
+    crtSettings: crtGuestSettings,
     // Unity operates on actual camera pixels. The browser drawing buffer is
     // the equivalent target, including device pixel ratio.
     pixelRatio: renderer.getPixelRatio(),
@@ -920,6 +916,26 @@ const input = new Input();
 input.rival = input2;
 input2.rival = input;
 const ui = new UI();
+const crtGuestPanel = createCrtGuestTuningPanel({
+  settings: crtGuestSettings,
+  bindToggle: (toggle) => {
+    const onKey = (event: KeyboardEvent): void => {
+      if (event.code !== "F10" || event.repeat) return;
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT")
+      )
+        return;
+      event.preventDefault();
+      toggle();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  },
+});
 const recorder = new Recorder();
 const replayer = new Replayer();
 adoptLegacyLevels(); // one-shot: old single-slot edits become real user levels
@@ -990,6 +1006,16 @@ if (frameProbe) {
   frameProbe.id = "frame-probe";
   frameProbe.style.display = "none";
   document.body.appendChild(frameProbe);
+}
+const crtDiagnosticsProbe = new URLSearchParams(window.location.search).has(
+  "crtdiag",
+)
+  ? document.createElement("pre")
+  : null;
+if (crtDiagnosticsProbe) {
+  crtDiagnosticsProbe.id = "crt-diagnostics";
+  crtDiagnosticsProbe.style.display = "none";
+  document.body.appendChild(crtDiagnosticsProbe);
 }
 let editorSavedAcc: number | null = null;
 let editorSavedMessage: ReturnType<UI["captureMessage"]> = null;
@@ -2936,6 +2962,10 @@ function frame(): void {
     frameStats.cameraY = camera.position.y;
     frameStats.cameraZ = camera.position.z;
     if (frameProbe) frameProbe.textContent = JSON.stringify(frameStats);
+    if (crtDiagnosticsProbe)
+      crtDiagnosticsProbe.textContent = JSON.stringify(
+        coastPost?.crt?.diagnostics ?? null,
+      );
   } finally {
     // Render interpolation is presentation-only. Gameplay and the next fixed
     // tick must always see the exact current simulation-authored hierarchy.
@@ -2961,6 +2991,9 @@ frame();
   scene,
   camera,
   renderer,
+  crtGuestSettings,
+  crtGuestPanel,
+  getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,
   saveReplay,

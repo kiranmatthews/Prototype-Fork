@@ -4,6 +4,17 @@ import { defineConfig } from 'vite';
 // like GitHub Pages (https://<user>.github.io/<repo>/).
 export default defineConfig({
   base: './',
+  build: {
+    rollupOptions: {
+      input: {
+        // Keep the entry chunk named index-*; main.ts's Pages cache-buster
+        // intentionally detects that stable stem in both import.meta.url and
+        // the freshly fetched HTML.
+        index: 'index.html',
+        crtReview: 'crt-review.html',
+      },
+    },
+  },
   resolve: {
     // Postprocessing add-ons and the app must share one core singleton; two
     // Three instances split instanceof checks and emit a runtime warning.

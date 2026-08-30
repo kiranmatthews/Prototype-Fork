@@ -1,0 +1,4453 @@
+{
+  "source": {
+    "repository": "https://github.com/libretro/slang-shaders",
+    "commit": "a62d9cda9140294d22b6da5e4ff4187365890d42",
+    "captured": "2026-08-25"
+  },
+  "notes": [
+    "bogus_* pragma rows are UI section headers and info02 is informational; neither is a shader control.",
+    "Canonical step is retained; use stepped sliders/toggles/enums rather than silently widening or smoothing it.",
+    "One parameter ID may be consumed by multiple passes; bind the setting to every consuming Unity pass."
+  ],
+  "counts": {
+    "advanced": 133,
+    "hd": 130,
+    "shared": 120,
+    "union": 143
+  },
+  "groups": [
+    {
+      "id": "resolution",
+      "parameters": [
+        {
+          "id": "internal_res",
+          "label": "Internal Resolution",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Internal Resolution",
+            "default": 1.0,
+            "min": 0.5,
+            "max": 8.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/afterglow0.slang",
+                "line": 35
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 56
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 204
+              }
+            ]
+          }
+        },
+        {
+          "id": "auto_res",
+          "label": "SNES/Amiga Hi-Res Auto Mode",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "SNES/Amiga Hi-Res Auto Mode",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/afterglow0.slang",
+                "line": 36
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 53
+              },
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 44
+              },
+              {
+                "file": "hd/bloom_horizontal.slang",
+                "line": 39
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "afterglow",
+      "parameters": [
+        {
+          "id": "esrc",
+          "label": "Afterglow Effect Source: OriginalHistory | Source",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Afterglow Effect Source: OriginalHistory | Source",
+            "default": 1.0,
+            "min": 1.0,
+            "max": 2.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/afterglow0.slang",
+                "line": 35
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/afterglow0.slang",
+                "line": 39
+              }
+            ]
+          }
+        },
+        {
+          "id": "bth",
+          "label": "Afterglow Effect Threshold",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Afterglow Effect Threshold",
+            "default": 4.0,
+            "min": 1.0,
+            "max": 125.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/afterglow0.slang",
+                "line": 36
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/afterglow0.slang",
+                "line": 40
+              }
+            ]
+          }
+        },
+        {
+          "id": "PR",
+          "label": "Persistence Red",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Persistence Red",
+            "default": 0.32,
+            "min": 0.0,
+            "max": 0.5,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/afterglow0.slang",
+                "line": 37
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/afterglow0.slang",
+                "line": 41
+              }
+            ]
+          }
+        },
+        {
+          "id": "PG",
+          "label": "Persistence Green",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Persistence Green",
+            "default": 0.32,
+            "min": 0.0,
+            "max": 0.5,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/afterglow0.slang",
+                "line": 38
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/afterglow0.slang",
+                "line": 42
+              }
+            ]
+          }
+        },
+        {
+          "id": "PB",
+          "label": "Persistence Blue",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Persistence Blue",
+            "default": 0.32,
+            "min": 0.0,
+            "max": 0.5,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/afterglow0.slang",
+                "line": 39
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/afterglow0.slang",
+                "line": 43
+              }
+            ]
+          }
+        },
+        {
+          "id": "AS",
+          "label": "Afterglow Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Afterglow Strength",
+            "default": 0.2,
+            "min": 0.0,
+            "max": 0.6,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 46
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 46
+              }
+            ]
+          }
+        },
+        {
+          "id": "agsat",
+          "label": "Afterglow saturation",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Afterglow saturation",
+            "default": 0.5,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 49
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 49
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "color",
+      "parameters": [
+        {
+          "id": "CS",
+          "label": "Display Gamut: sRGB, Modern, DCI, Adobe, Rec.2020, P3",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Display Gamut: sRGB, Modern, DCI, Adobe, Rec.2020, P3",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 5.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 54
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 54
+              }
+            ]
+          }
+        },
+        {
+          "id": "CP",
+          "label": "CRT Profile: EBU | P22 | SMPTE-C | Philips | Trin.",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CRT Profile: EBU | P22 | SMPTE-C | Philips | Trin.",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 5.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 56
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 56
+              }
+            ]
+          }
+        },
+        {
+          "id": "TNTC",
+          "label": "LUT Colors: NTSC-J | Trinit. | Nec Mult. | NTSC 1953",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "LUT Colors: NTSC-J | Trinit. | Nec Mult. | NTSC 1953",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 4.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 61
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 61
+              }
+            ]
+          }
+        },
+        {
+          "id": "LS",
+          "label": "LUT Size",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "LUT Size",
+            "default": 32.0,
+            "min": 16.0,
+            "max": 64.0,
+            "step": 16.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 64
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 64
+              }
+            ]
+          }
+        },
+        {
+          "id": "WP",
+          "label": "Color Temperature %",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Color Temperature %",
+            "default": 0.0,
+            "min": -100.0,
+            "max": 100.0,
+            "step": 5.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 71
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 71
+              }
+            ]
+          }
+        },
+        {
+          "id": "wp_saturation",
+          "label": "Saturation Adjustment",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Saturation Adjustment",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 73
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 73
+              }
+            ]
+          }
+        },
+        {
+          "id": "pre_bb",
+          "label": "Brightness Adjustment",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Brightness Adjustment",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 75
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 75
+              }
+            ]
+          }
+        },
+        {
+          "id": "contr",
+          "label": "Contrast Adjustment",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Contrast Adjustment",
+            "default": 0.0,
+            "min": -2.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 77
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 77
+              }
+            ]
+          }
+        },
+        {
+          "id": "pre_gc",
+          "label": "Gamma Correct Adjustment",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Gamma Correct Adjustment",
+            "default": 1.0,
+            "min": 0.5,
+            "max": 1.75,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 79
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 79
+              }
+            ]
+          }
+        },
+        {
+          "id": "sega_fix",
+          "label": "Sega Brightness Fix",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Sega Brightness Fix",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 81
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 81
+              }
+            ]
+          }
+        },
+        {
+          "id": "BP",
+          "label": "Raise Black Level",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Raise Black Level",
+            "default": 0.0,
+            "min": -100.0,
+            "max": 25.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 83
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 83
+              }
+            ]
+          }
+        },
+        {
+          "id": "vigstr",
+          "label": "Vignette Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vignette Strength",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 85
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 85
+              }
+            ]
+          }
+        },
+        {
+          "id": "vigdef",
+          "label": "Vignette Size",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vignette Size",
+            "default": 1.0,
+            "min": 0.5,
+            "max": 3.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/pre-shaders-afterglow.slang",
+                "line": 87
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/pre-shaders-afterglow.slang",
+                "line": 87
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rasterBloom",
+      "parameters": [
+        {
+          "id": "lsmooth",
+          "label": "Raster Bloom Effect Smoothing",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Raster Bloom Effect Smoothing",
+            "default": 0.7,
+            "min": 0.5,
+            "max": 0.99,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/avg-lum.slang",
+                "line": 35
+              }
+            ]
+          }
+        },
+        {
+          "id": "lsdev",
+          "label": "Raster Bloom Smoothing Bright Deviation",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Raster Bloom Smoothing Bright Deviation",
+            "default": 0.0,
+            "min": -0.25,
+            "max": 0.25,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/avg-lum.slang",
+                "line": 36
+              }
+            ]
+          }
+        },
+        {
+          "id": "OS",
+          "label": "R. Bloom Overscan Mode",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "R. Bloom Overscan Mode",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/avg-lum.slang",
+                "line": 37
+              },
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 178
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 152
+              }
+            ]
+          }
+        },
+        {
+          "id": "BLOOM",
+          "label": "Raster bloom %",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Raster bloom %",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 20.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/avg-lum.slang",
+                "line": 38
+              },
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 181
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 155
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "gamma",
+      "parameters": [
+        {
+          "id": "GAMMA_INPUT",
+          "label": "Gamma Input",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "advanced": {
+            "label": "Gamma Input",
+            "default": 2.4,
+            "min": 1.0,
+            "max": 5.0,
+            "step": 0.05
+          },
+          "hd": {
+            "label": "Gamma Input",
+            "default": 1.8,
+            "min": 1.0,
+            "max": 5.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 52
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 50
+              }
+            ]
+          }
+        },
+        {
+          "id": "gamma_out",
+          "label": "Gamma out",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "advanced": {
+            "label": "Gamma out",
+            "default": 2.4,
+            "min": 1.0,
+            "max": 5.0,
+            "step": 0.05
+          },
+          "hd": {
+            "label": "Gamma out",
+            "default": 1.75,
+            "min": 1.0,
+            "max": 5.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 55
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 262
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 53
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 254
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "interlacingAndResampling",
+      "parameters": [
+        {
+          "id": "inter",
+          "label": "Interlace Trigger Resolution/VGA Trigger:",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Interlace Trigger Resolution/VGA Trigger:",
+            "default": 375.0,
+            "min": 0.0,
+            "max": 800.0,
+            "step": 25.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 60
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 58
+              }
+            ]
+          }
+        },
+        {
+          "id": "interm",
+          "label": "Interlace Mode: OFF, Normal 1-3,6; Interpolation 4-5",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "advanced": {
+            "label": "Interlace Mode: OFF, Normal 1-3,6; Interpolation 4-5",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 6.0,
+            "step": 1.0
+          },
+          "hd": {
+            "label": "Interlace Mode: OFF, Normal 1-3,5; Interpolation 4",
+            "default": 4.0,
+            "min": 0.0,
+            "max": 5.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 63
+              },
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 63
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 91
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 61
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 62
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 92
+              }
+            ]
+          }
+        },
+        {
+          "id": "iscan",
+          "label": "Interlacing Scanline Effect ('Laced brightness)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Interlacing Scanline Effect ('Laced brightness)",
+            "default": 0.2,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 66
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 64
+              }
+            ]
+          }
+        },
+        {
+          "id": "intres",
+          "label": "Internal Resolution Y: 0.5...y-dowsample divider",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Internal Resolution Y: 0.5...y-dowsample divider",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 10.0,
+            "step": 0.5
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 71
+              },
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 170
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 69
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 90
+              }
+            ]
+          }
+        },
+        {
+          "id": "downsample_levelx",
+          "label": "Downsampling-X (High-res content, pre-scalers)",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Downsampling-X (High-res content, pre-scalers)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 3.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 75
+              }
+            ]
+          }
+        },
+        {
+          "id": "downsample_levely",
+          "label": "Downsampling-Y (High-res content, pre-scalers)",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Downsampling-Y (High-res content, pre-scalers)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 3.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 78
+              }
+            ]
+          }
+        },
+        {
+          "id": "iscans",
+          "label": "Interlacing (Scanline) Saturation",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Interlacing (Scanline) Saturation",
+            "default": 0.25,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 81
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 72
+              }
+            ]
+          }
+        },
+        {
+          "id": "vga_mode",
+          "label": "VGA Single/Double Scan mode",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "VGA Single/Double Scan mode",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 84
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 75
+              }
+            ]
+          }
+        },
+        {
+          "id": "hiscan",
+          "label": "High Resolution Scanlines (prepend a scaler...)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "High Resolution Scanlines (prepend a scaler...)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/linearize.slang",
+                "line": 87
+              },
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 66
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 94
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/linearize-hd.slang",
+                "line": 78
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 65
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 95
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "filtering",
+      "parameters": [
+        {
+          "id": "h_sharp",
+          "label": "Horizontal sharpness",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Horizontal sharpness",
+            "default": 5.2,
+            "min": 0.2,
+            "max": 15.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 150
+              }
+            ]
+          }
+        },
+        {
+          "id": "s_sharp",
+          "label": "Substractive sharpness (1.0 recommended)",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Substractive sharpness (1.0 recommended)",
+            "default": 0.5,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 153
+              }
+            ]
+          }
+        },
+        {
+          "id": "ring",
+          "label": "Substractive sharpness Ringing",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Substractive sharpness Ringing",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 3.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 156
+              }
+            ]
+          }
+        },
+        {
+          "id": "smart_ei",
+          "label": "Smart Edges Effect Strength",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Smart Edges Effect Strength",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 0.75,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 159
+              }
+            ]
+          }
+        },
+        {
+          "id": "ei_limit",
+          "label": "Smart Edges Effect Strength Limit",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Smart Edges Effect Strength Limit",
+            "default": 0.25,
+            "min": 0.0,
+            "max": 0.75,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 162
+              }
+            ]
+          }
+        },
+        {
+          "id": "sth",
+          "label": "Smart Edges Smoothing Threshold",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "Smart Edges Smoothing Threshold",
+            "default": 0.23,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 165
+              }
+            ]
+          }
+        },
+        {
+          "id": "HSHARPNESS",
+          "label": "Horizontal Filter Range",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Horizontal Filter Range",
+            "default": 1.0,
+            "min": 1.0,
+            "max": 8.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 60
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIGMA_HOR",
+          "label": "Horizontal Blur Sigma",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Horizontal Blur Sigma",
+            "default": 0.5,
+            "min": 0.1,
+            "max": 7.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 63
+              }
+            ]
+          }
+        },
+        {
+          "id": "S_SHARP",
+          "label": "Substractive Sharpness",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Substractive Sharpness",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 66
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 76
+              }
+            ]
+          }
+        },
+        {
+          "id": "HSHARP",
+          "label": "Sharpness Definition",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Sharpness Definition",
+            "default": 1.2,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 69
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 79
+              }
+            ]
+          }
+        },
+        {
+          "id": "MAXS",
+          "label": "Maximum Sharpness",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Maximum Sharpness",
+            "default": 0.15,
+            "min": 0.0,
+            "max": 0.3,
+            "step": 0.01
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 72
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 82
+              }
+            ]
+          }
+        },
+        {
+          "id": "HARNG",
+          "label": "Substractive Sharpness Ringing",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Substractive Sharpness Ringing",
+            "default": 0.2,
+            "min": 0.0,
+            "max": 4.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 75
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 85
+              }
+            ]
+          }
+        },
+        {
+          "id": "VSHARPNESS",
+          "label": "Vertical Filter Range",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Vertical Filter Range",
+            "default": 1.0,
+            "min": 1.0,
+            "max": 8.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 80
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 70
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIGMA_VER",
+          "label": "Vertical Blur Sigma",
+          "variants": [
+            "hd"
+          ],
+          "hd": {
+            "label": "Vertical Blur Sigma",
+            "default": 0.5,
+            "min": 0.1,
+            "max": 7.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 83
+              },
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 73
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "magicGlow",
+      "parameters": [
+        {
+          "id": "m_glow",
+          "label": "Ordinary Glow / Magic Glow",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Ordinary Glow / Magic Glow",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 43
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 101
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 47
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 102
+              }
+            ]
+          }
+        },
+        {
+          "id": "m_glow_cutoff",
+          "label": "Magic Glow Cutoff",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Magic Glow Cutoff",
+            "default": 0.12,
+            "min": 0.0,
+            "max": 0.4,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 46
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 50
+              }
+            ]
+          }
+        },
+        {
+          "id": "m_glow_low",
+          "label": "Magic Glow Low Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Magic Glow Low Strength",
+            "default": 0.35,
+            "min": 0.0,
+            "max": 7.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 49
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 103
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 53
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 104
+              }
+            ]
+          }
+        },
+        {
+          "id": "m_glow_high",
+          "label": "Magic Glow High Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Magic Glow High Strength",
+            "default": 5.0,
+            "min": 0.0,
+            "max": 7.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 51
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 105
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 55
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 106
+              }
+            ]
+          }
+        },
+        {
+          "id": "m_glow_dist",
+          "label": "Magic Glow Distribution",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Magic Glow Distribution",
+            "default": 1.0,
+            "min": 0.2,
+            "max": 4.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 53
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 107
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 57
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 108
+              }
+            ]
+          }
+        },
+        {
+          "id": "m_glow_mask",
+          "label": "Magic Glow Mask Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Magic Glow Mask Strength",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 55
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 109
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 59
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 110
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "glowKernel",
+      "parameters": [
+        {
+          "id": "FINE_GLOW",
+          "label": "Fine Glow/M.Glow Sampling",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Fine Glow/M.Glow Sampling",
+            "default": 1.0,
+            "min": -1.0,
+            "max": 5.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 59
+              },
+              {
+                "file": "advanced/gaussian_vertical.slang",
+                "line": 41
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 63
+              },
+              {
+                "file": "hd/gaussian_vertical.slang",
+                "line": 41
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIZEH",
+          "label": "Horizontal Glow Radius",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Horizontal Glow Radius",
+            "default": 6.0,
+            "min": 1.0,
+            "max": 50.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 62
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 66
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIGMA_H",
+          "label": "Horizontal Glow Sigma",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Horizontal Glow Sigma",
+            "default": 1.2,
+            "min": 0.2,
+            "max": 15.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_horizontal.slang",
+                "line": 65
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_horizontal.slang",
+                "line": 69
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIZEV",
+          "label": "Vertical Glow Radius",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical Glow Radius",
+            "default": 6.0,
+            "min": 1.0,
+            "max": 50.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_vertical.slang",
+                "line": 35
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_vertical.slang",
+                "line": 35
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIGMA_V",
+          "label": "Vertical Glow Sigma",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical Glow Sigma",
+            "default": 1.2,
+            "min": 0.2,
+            "max": 15.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/gaussian_vertical.slang",
+                "line": 38
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/gaussian_vertical.slang",
+                "line": 38
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "bloomHalationKernel",
+      "parameters": [
+        {
+          "id": "FINE_BLOOM",
+          "label": "Fine Bloom/Halation Sampling",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Fine Bloom/Halation Sampling",
+            "default": 1.0,
+            "min": -1.0,
+            "max": 5.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/bloom_horizontal.slang",
+                "line": 37
+              },
+              {
+                "file": "advanced/bloom_vertical.slang",
+                "line": 35
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/bloom_horizontal.slang",
+                "line": 42
+              },
+              {
+                "file": "hd/bloom_vertical.slang",
+                "line": 35
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIZEHB",
+          "label": "Horizontal Bloom/Halation Radius",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Horizontal Bloom/Halation Radius",
+            "default": 3.0,
+            "min": 1.0,
+            "max": 50.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/bloom_horizontal.slang",
+                "line": 40
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/bloom_horizontal.slang",
+                "line": 45
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIGMA_HB",
+          "label": "Horizontal Bloom/Halation Sigma",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Horizontal Bloom/Halation Sigma",
+            "default": 0.75,
+            "min": 0.25,
+            "max": 15.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/bloom_horizontal.slang",
+                "line": 43
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/bloom_horizontal.slang",
+                "line": 48
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIZEVB",
+          "label": "Vertical Bloom/Halation Radius",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical Bloom/Halation Radius",
+            "default": 3.0,
+            "min": 1.0,
+            "max": 50.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/bloom_vertical.slang",
+                "line": 38
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/bloom_vertical.slang",
+                "line": 38
+              }
+            ]
+          }
+        },
+        {
+          "id": "SIGMA_VB",
+          "label": "Vertical Bloom/Halation Sigma",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical Bloom/Halation Sigma",
+            "default": 0.6,
+            "min": 0.25,
+            "max": 15.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/bloom_vertical.slang",
+                "line": 41
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/bloom_vertical.slang",
+                "line": 41
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "brightnessAndBlend",
+      "parameters": [
+        {
+          "id": "glow",
+          "label": "(Magic) Glow Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "(Magic) Glow Strength",
+            "default": 0.08,
+            "min": -2.0,
+            "max": 2.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 71
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 111
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 130
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 112
+              }
+            ]
+          }
+        },
+        {
+          "id": "bloom",
+          "label": "Bloom Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Bloom Strength",
+            "default": 0.0,
+            "min": -2.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 74
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 114
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 133
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 115
+              }
+            ]
+          }
+        },
+        {
+          "id": "mask_bloom",
+          "label": "Mask Bloom",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Mask Bloom",
+            "default": 0.0,
+            "min": -2.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 77
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 117
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 136
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 118
+              }
+            ]
+          }
+        },
+        {
+          "id": "bloom_dist",
+          "label": "Bloom Distribution",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Bloom Distribution",
+            "default": 0.0,
+            "min": -2.0,
+            "max": 3.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 80
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 120
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 139
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 121
+              }
+            ]
+          }
+        },
+        {
+          "id": "halation",
+          "label": "Halation Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Halation Strength",
+            "default": 0.0,
+            "min": -2.0,
+            "max": 2.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 83
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 123
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 142
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 124
+              }
+            ]
+          }
+        },
+        {
+          "id": "bmask1",
+          "label": "Bloom Mask Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Bloom Mask Strength",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 86
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 126
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 145
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 127
+              }
+            ]
+          }
+        },
+        {
+          "id": "hmask1",
+          "label": "Halation Mask Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Halation Mask Strength",
+            "default": 0.35,
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 89
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 129
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 148
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 130
+              }
+            ]
+          }
+        },
+        {
+          "id": "gamma_c",
+          "label": "Gamma correct",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Gamma correct",
+            "default": 1.0,
+            "min": 0.5,
+            "max": 2.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 92
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 138
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 151
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 139
+              }
+            ]
+          }
+        },
+        {
+          "id": "gamma_c2",
+          "label": "Complementary Gamma correct",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Complementary Gamma correct",
+            "default": 1.0,
+            "min": 1.0,
+            "max": 2.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 95
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 141
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 154
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 142
+              }
+            ]
+          }
+        },
+        {
+          "id": "brightboost",
+          "label": "Bright Boost Dark Pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Bright Boost Dark Pixels",
+            "default": 1.4,
+            "min": 0.25,
+            "max": 10.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 98
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 132
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 157
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 133
+              }
+            ]
+          }
+        },
+        {
+          "id": "brightboost1",
+          "label": "Bright Boost Bright Pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Bright Boost Bright Pixels",
+            "default": 1.1,
+            "min": 0.25,
+            "max": 3.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 101
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 135
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 160
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 136
+              }
+            ]
+          }
+        },
+        {
+          "id": "clips",
+          "label": "Clip Saturated Color Beams",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Clip Saturated Color Beams",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 104
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 163
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "scanlines",
+      "parameters": [
+        {
+          "id": "gsl",
+          "label": "Scanline Type",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Type",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 2.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 109
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 168
+              }
+            ]
+          }
+        },
+        {
+          "id": "scanline1",
+          "label": "Scanline Beam Shape Center",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Beam Shape Center",
+            "default": 6.0,
+            "min": -20.0,
+            "max": 40.0,
+            "step": 0.5
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 112
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 171
+              }
+            ]
+          }
+        },
+        {
+          "id": "scanline2",
+          "label": "Scanline Beam Shape Edges",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Beam Shape Edges",
+            "default": 8.0,
+            "min": 0.0,
+            "max": 70.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 115
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 174
+              }
+            ]
+          }
+        },
+        {
+          "id": "beam_min",
+          "label": "Scanline Shape Dark Pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "advanced": {
+            "label": "Scanline Shape Dark Pixels",
+            "default": 1.3,
+            "min": 0.25,
+            "max": 10.0,
+            "step": 0.05
+          },
+          "hd": {
+            "label": "Scanline Shape Dark Pixels",
+            "default": 1.2,
+            "min": 0.25,
+            "max": 10.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 118
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 177
+              }
+            ]
+          }
+        },
+        {
+          "id": "beam_max",
+          "label": "Scanline Shape Bright Pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Shape Bright Pixels",
+            "default": 1.0,
+            "min": 0.2,
+            "max": 3.5,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 121
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 180
+              }
+            ]
+          }
+        },
+        {
+          "id": "tds",
+          "label": "Thinner Dark Scanlines",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Thinner Dark Scanlines",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 124
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 183
+              }
+            ]
+          }
+        },
+        {
+          "id": "beam_size",
+          "label": "Increased Bright Scanline Beam",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Increased Bright Scanline Beam",
+            "default": 0.6,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 127
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 186
+              }
+            ]
+          }
+        },
+        {
+          "id": "scans",
+          "label": "Scanline Saturation / Mask Falloff",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Saturation / Mask Falloff",
+            "default": 0.5,
+            "min": 0.0,
+            "max": 6.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 130
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 189
+              }
+            ]
+          }
+        },
+        {
+          "id": "scan_falloff",
+          "label": "Scanline Falloff",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Falloff",
+            "default": 1.0,
+            "min": 0.1,
+            "max": 2.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 133
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 192
+              }
+            ]
+          }
+        },
+        {
+          "id": "spike",
+          "label": "Scanline Spike Removal",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Spike Removal",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 136
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass1.slang",
+                "line": 86
+              }
+            ]
+          }
+        },
+        {
+          "id": "scangamma",
+          "label": "Scanline Gamma",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Scanline Gamma",
+            "default": 2.4,
+            "min": 0.5,
+            "max": 5.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 139
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 195
+              }
+            ]
+          }
+        },
+        {
+          "id": "rolling_scan",
+          "label": "Rolling Scanlines",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Rolling Scanlines",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 142
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 198
+              }
+            ]
+          }
+        },
+        {
+          "id": "no_scanlines",
+          "label": "No-scanline mode",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "No-scanline mode",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.5,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 145
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 97
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 201
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 98
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "screenGeometry",
+      "parameters": [
+        {
+          "id": "TATE",
+          "label": "TATE Mode",
+          "variants": [
+            "advanced"
+          ],
+          "advanced": {
+            "label": "TATE Mode",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 172
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 146
+              }
+            ]
+          }
+        },
+        {
+          "id": "IOS",
+          "label": "Integer Scaling: Odd:Y, Even:'X'+Y",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Integer Scaling: Odd:Y, Even:'X'+Y",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 4.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 175
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 149
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 92
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 147
+              }
+            ]
+          }
+        },
+        {
+          "id": "warpX",
+          "label": "CurvatureX (default 0.03)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CurvatureX (default 0.03)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 0.25,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 184
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 173
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 95
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 165
+              }
+            ]
+          }
+        },
+        {
+          "id": "warpY",
+          "label": "CurvatureY (default 0.04)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CurvatureY (default 0.04)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 0.25,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 187
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 176
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 98
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 168
+              }
+            ]
+          }
+        },
+        {
+          "id": "c_shape",
+          "label": "Curvature Shape",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Curvature Shape",
+            "default": 0.25,
+            "min": 0.05,
+            "max": 0.6,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 190
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 179
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 101
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 171
+              }
+            ]
+          }
+        },
+        {
+          "id": "overscanX",
+          "label": "Overscan X original pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Overscan X original pixels",
+            "default": 0.0,
+            "min": -200.0,
+            "max": 200.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 193
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 182
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 104
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 174
+              }
+            ]
+          }
+        },
+        {
+          "id": "overscanY",
+          "label": "Overscan Y original pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Overscan Y original pixels",
+            "default": 0.0,
+            "min": -200.0,
+            "max": 200.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 196
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 185
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 107
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 177
+              }
+            ]
+          }
+        },
+        {
+          "id": "VShift",
+          "label": "Vertical shift Y original pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical shift Y original pixels",
+            "default": 0.0,
+            "min": -200.0,
+            "max": 200.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/crt-guest-advanced.slang",
+                "line": 199
+              },
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 188
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 110
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 180
+              }
+            ]
+          }
+        },
+        {
+          "id": "csize",
+          "label": "Corner Size",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Corner Size",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 0.35,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 158
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 113
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 150
+              }
+            ]
+          }
+        },
+        {
+          "id": "bsize1",
+          "label": "Border Size",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Border Size",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 161
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 116
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 153
+              }
+            ]
+          }
+        },
+        {
+          "id": "sborder",
+          "label": "Border Intensity",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Border Intensity",
+            "default": 0.75,
+            "min": 0.25,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 164
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 119
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 156
+              }
+            ]
+          }
+        },
+        {
+          "id": "barspeed",
+          "label": "Hum Bar Speed",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Hum Bar Speed",
+            "default": 50.0,
+            "min": 5.0,
+            "max": 200.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 167
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 122
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 159
+              }
+            ]
+          }
+        },
+        {
+          "id": "barintensity",
+          "label": "Hum Bar Intensity",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Hum Bar Intensity",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 169
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 124
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 161
+              }
+            ]
+          }
+        },
+        {
+          "id": "bardir",
+          "label": "Hum Bar Direction",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Hum Bar Direction",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 171
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/crt-guest-advanced-hd-pass2.slang",
+                "line": 126
+              },
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 163
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "phosphorMask",
+      "parameters": [
+        {
+          "id": "shadowMask",
+          "label": "CRT Mask: 0:CGWG, 1-4:Lottes, 5-14:'Trinitron'",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CRT Mask: 0:CGWG, 1-4:Lottes, 5-14:'Trinitron'",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 14.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 193
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 185
+              }
+            ]
+          }
+        },
+        {
+          "id": "maskstr",
+          "label": "Mask Strength (0, 5-14)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Mask Strength (0, 5-14)",
+            "default": 0.3,
+            "min": -0.5,
+            "max": 1.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 196
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 188
+              }
+            ]
+          }
+        },
+        {
+          "id": "mcut",
+          "label": "Mask 5-14 Low Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Mask 5-14 Low Strength",
+            "default": 1.1,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 199
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 191
+              }
+            ]
+          }
+        },
+        {
+          "id": "maskboost",
+          "label": "CRT Mask Boost",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CRT Mask Boost",
+            "default": 1.0,
+            "min": 1.0,
+            "max": 3.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 202
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 194
+              }
+            ]
+          }
+        },
+        {
+          "id": "masksize",
+          "label": "CRT Mask Size",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CRT Mask Size",
+            "default": 1.0,
+            "min": 1.0,
+            "max": 4.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 205
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 197
+              }
+            ]
+          }
+        },
+        {
+          "id": "mask_zoom",
+          "label": "CRT Mask Zoom (+ mask width)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CRT Mask Zoom (+ mask width)",
+            "default": 0.0,
+            "min": -10.0,
+            "max": 6.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 208
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 200
+              }
+            ]
+          }
+        },
+        {
+          "id": "mzoom_sh",
+          "label": "CRT Mask Zoom Sharpen (needs Mask Zoom)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "CRT Mask Zoom Sharpen (needs Mask Zoom)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 211
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 203
+              }
+            ]
+          }
+        },
+        {
+          "id": "mshift",
+          "label": "(Transform to) Shadow Mask",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "(Transform to) Shadow Mask",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.5
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 214
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 206
+              }
+            ]
+          }
+        },
+        {
+          "id": "mask_layout",
+          "label": "Mask Layout: RGB or BGR (check LCD panel)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Mask Layout: RGB or BGR (check LCD panel)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 217
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 209
+              }
+            ]
+          }
+        },
+        {
+          "id": "maskDark",
+          "label": "Lottes maskDark",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Lottes maskDark",
+            "default": 0.5,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 220
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 212
+              }
+            ]
+          }
+        },
+        {
+          "id": "maskLight",
+          "label": "Lottes maskLight",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Lottes maskLight",
+            "default": 1.5,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 223
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 215
+              }
+            ]
+          }
+        },
+        {
+          "id": "mask_gamma",
+          "label": "Mask gamma",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Mask gamma",
+            "default": 2.4,
+            "min": 1.0,
+            "max": 5.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 226
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 218
+              }
+            ]
+          }
+        },
+        {
+          "id": "slotmask",
+          "label": "Slot Mask Strength Bright Pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Slot Mask Strength Bright Pixels",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 229
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 221
+              }
+            ]
+          }
+        },
+        {
+          "id": "slotmask1",
+          "label": "Slot Mask Strength Dark Pixels",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Slot Mask Strength Dark Pixels",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 232
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 224
+              }
+            ]
+          }
+        },
+        {
+          "id": "slotwidth",
+          "label": "Slot Mask Width (0:Auto)",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Slot Mask Width (0:Auto)",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 16.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 235
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 227
+              }
+            ]
+          }
+        },
+        {
+          "id": "double_slot",
+          "label": "Slot Mask Height: 2x1 or 4x1...",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Slot Mask Height: 2x1 or 4x1...",
+            "default": 2.0,
+            "min": 1.0,
+            "max": 4.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 238
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 230
+              }
+            ]
+          }
+        },
+        {
+          "id": "slotms",
+          "label": "Slot Mask Thickness",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Slot Mask Thickness",
+            "default": 1.0,
+            "min": 1.0,
+            "max": 4.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 241
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 233
+              }
+            ]
+          }
+        },
+        {
+          "id": "smoothmask",
+          "label": "Smooth Masks in bright scanlines",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Smooth Masks in bright scanlines",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 244
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 236
+              }
+            ]
+          }
+        },
+        {
+          "id": "smask_mit",
+          "label": "Mitigate Slotmask Interaction",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Mitigate Slotmask Interaction",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 247
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 239
+              }
+            ]
+          }
+        },
+        {
+          "id": "bmask",
+          "label": "Base (black) Mask strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Base (black) Mask strength",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 0.25,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 250
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 242
+              }
+            ]
+          }
+        },
+        {
+          "id": "mclip",
+          "label": "Preserve Mask Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Preserve Mask Strength",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 253
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 245
+              }
+            ]
+          }
+        },
+        {
+          "id": "pr_scan",
+          "label": "Preserve Scanline Properties",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Preserve Scanline Properties",
+            "default": 0.1,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.025
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 256
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 248
+              }
+            ]
+          }
+        },
+        {
+          "id": "edgemask",
+          "label": "Mitigate Mask on Edges",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Mitigate Mask on Edges",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 259
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 251
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "deconvergenceNoiseOutput",
+      "parameters": [
+        {
+          "id": "dctypex",
+          "label": "Deconvergence type X : 0.0 - static, other - dynamic",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Deconvergence type X : 0.0 - static, other - dynamic",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 0.75,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 268
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 260
+              }
+            ]
+          }
+        },
+        {
+          "id": "dctypey",
+          "label": "Deconvergence type Y : 0.0 - static, other - dynamic",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Deconvergence type Y : 0.0 - static, other - dynamic",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 0.75,
+            "step": 0.05
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 270
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 262
+              }
+            ]
+          }
+        },
+        {
+          "id": "deconrr",
+          "label": "Horizontal Deconvergence Red Range",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Horizontal Deconvergence Red Range",
+            "default": 0.0,
+            "min": -15.0,
+            "max": 15.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 272
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 264
+              }
+            ]
+          }
+        },
+        {
+          "id": "deconrg",
+          "label": "Horizontal Deconvergence Green Range",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Horizontal Deconvergence Green Range",
+            "default": 0.0,
+            "min": -15.0,
+            "max": 15.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 274
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 266
+              }
+            ]
+          }
+        },
+        {
+          "id": "deconrb",
+          "label": "Horizontal Deconvergence Blue Range",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Horizontal Deconvergence Blue Range",
+            "default": 0.0,
+            "min": -15.0,
+            "max": 15.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 276
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 268
+              }
+            ]
+          }
+        },
+        {
+          "id": "deconrry",
+          "label": "Vertical Deconvergence Red Range",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical Deconvergence Red Range",
+            "default": 0.0,
+            "min": -15.0,
+            "max": 15.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 278
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 270
+              }
+            ]
+          }
+        },
+        {
+          "id": "deconrgy",
+          "label": "Vertical Deconvergence Green Range",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical Deconvergence Green Range",
+            "default": 0.0,
+            "min": -15.0,
+            "max": 15.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 280
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 272
+              }
+            ]
+          }
+        },
+        {
+          "id": "deconrby",
+          "label": "Vertical Deconvergence Blue Range",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Vertical Deconvergence Blue Range",
+            "default": 0.0,
+            "min": -15.0,
+            "max": 15.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 282
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 274
+              }
+            ]
+          }
+        },
+        {
+          "id": "decons",
+          "label": "Deconvergence Strength",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Deconvergence Strength",
+            "default": 1.0,
+            "min": 0.0,
+            "max": 3.0,
+            "step": 0.1
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 284
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 276
+              }
+            ]
+          }
+        },
+        {
+          "id": "addnoised",
+          "label": "Add Noise",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Add Noise",
+            "default": 0.0,
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.02
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 286
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 278
+              }
+            ]
+          }
+        },
+        {
+          "id": "noiseresd",
+          "label": "Noise Resolution",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Noise Resolution",
+            "default": 2.0,
+            "min": 1.0,
+            "max": 10.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 288
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 280
+              }
+            ]
+          }
+        },
+        {
+          "id": "noisetype",
+          "label": "Noise Type: Colored, Luma",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Noise Type: Colored, Luma",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 1.0
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 290
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 282
+              }
+            ]
+          }
+        },
+        {
+          "id": "post_br",
+          "label": "Post Brightness",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Post Brightness",
+            "default": 1.0,
+            "min": 0.25,
+            "max": 5.0,
+            "step": 0.01
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 292
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 284
+              }
+            ]
+          }
+        },
+        {
+          "id": "oimage",
+          "label": "Show Original Image",
+          "variants": [
+            "advanced",
+            "hd"
+          ],
+          "canonical": {
+            "label": "Show Original Image",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 1.0,
+            "step": 0.25
+          },
+          "declarations": {
+            "advanced": [
+              {
+                "file": "advanced/deconvergence.slang",
+                "line": 294
+              }
+            ],
+            "hd": [
+              {
+                "file": "hd/deconvergence-hd.slang",
+                "line": 286
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

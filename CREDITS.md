@@ -110,6 +110,25 @@ and `2f898ba2446e98c2647f1d16ee7e1da10398012193a61da7505d42c29babd032`,
 respectively). Noise 5, Unity `.meta` files and the serialized Unity
 `Sand.terrainlayer` are not part of the web port.
 
+## CRT Guest Advanced / HD
+
+The WebGL2 CRT presentation suite in `src/crt-guest/` is a deterministic
+translation of Guest(r)'s **CRT Guest Advanced** and **CRT Guest Advanced HD**
+from [libretro/slang-shaders](https://github.com/libretro/slang-shaders),
+pinned to revision `a62d9cda9140294d22b6da5e4ff4187365890d42`.
+
+The shader work is Copyright (C) 2018–2025 Guest(r), distributed upstream under
+GPL-2.0-or-later, with acknowledged ideas and contributions from Dr. Venom and
+the Libretro community. The four packed color LUT PNGs are copied byte-for-byte
+from the same pinned suite. Complete corresponding Slang source, preset files,
+the parameter manifest, checksums, notices and GPL text are retained under
+`tools/crt-guest-web/upstream/` and `public/crt-guest/provenance/`.
+
+`tools/crt-guest-web/generate.py` performs the reproducible Slang → SPIR-V →
+GLSL ES 3.00 translation and WebGL binding rewrite. See
+`docs/UNITY_CRT_WEB_PORT.md` for the runtime graph and deliberate platform
+adaptations.
+
 ## Everything else
 
 Levels, physics, the character rig, the surface textures, the editor and the
