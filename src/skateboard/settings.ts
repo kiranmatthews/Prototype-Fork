@@ -70,11 +70,12 @@ export const SKATEBOARD_STORAGE_KEY = "solProtoSkateboardTuning.v1";
 export const SKATEBOARD_DEFAULT_ARTWORK =
   "skateboard/surf-cruiser-orange-sun.webp";
 export const SKATEBOARD_DEFAULT_TRUCK = "skateboard/skateboard-truck.glb";
+/** Immutable calibration denominator for the normalized owner-supplied GLB. */
+export const SKATEBOARD_TRUCK_GLTF_REFERENCE_SCALE = 2.2098000049591066;
 
-// This is the approved 2026-08-22 Unity tuning, also serialized in
-// SkateboardTuning.unity and baked into SurfCruiserDeck.asset (3148 verts,
-// 6292 tris). Several older Unity tests still contain obsolete dimensions;
-// they are deliberately not the authority for this port.
+// Canonical 2026-08-30 Board Lab export. The versioned JSON is the authority
+// for the procedural deck, imported truck orientation/scale, wheels, artwork
+// and plywood finish; older Unity/browser defaults are intentionally obsolete.
 export const DEFAULT_SKATEBOARD_SETTINGS: Readonly<SkateboardSettingsValue> =
   Object.freeze({
     deckHalfWidth: 0.23761481046676637,
@@ -98,33 +99,33 @@ export const DEFAULT_SKATEBOARD_SETTINGS: Readonly<SkateboardSettingsValue> =
     deckLengthSegments: 100,
     deckWidthSegments: 12,
     deckThickness: 0.02991834655404091,
-    wheelRadius: 0.03824542835354805,
-    wheelWidth: 0.08432068675756455,
-    wheelTrackHalfWidth: 0.20993120968341828,
+    wheelRadius: 0.071,
+    wheelWidth: 0.101,
+    wheelTrackHalfWidth: 0.202,
     frontTruckLocalZ: 0.6424427032470703,
     rearTruckLocalZ: -0.6424426436424255,
-    frontTruckRotationXDegrees: 0,
+    frontTruckRotationXDegrees: 90,
     frontTruckRotationYDegrees: 0,
     frontTruckRotationZDegrees: 0,
-    rearTruckRotationXDegrees: 0,
+    rearTruckRotationXDegrees: 90,
     rearTruckRotationYDegrees: 0,
     rearTruckRotationZDegrees: 0,
-    truckBaseplateWidth: 0.09000000357627869,
+    truckBaseplateWidth: 0.051,
     truckBaseplateLength: 0.05000000074505806,
-    truckBaseplateThickness: 0.00800000037997961,
-    truckHangerRadius: 0.012000000104308129,
-    boardToGroundDistance: 0.19172483682632447,
-    artworkScale: 1.4980285167694092,
+    truckBaseplateThickness: 0.01,
+    truckHangerRadius: 0.01,
+    boardToGroundDistance: 0.234,
+    artworkScale: 1.37,
     plywoodLightColor: Object.freeze({
-      r: 0.9019607901573181,
-      g: 0.6941176652908325,
-      b: 0.40784314274787905,
+      r: 0.5098039215686274,
+      g: 0.3843137254901961,
+      b: 0.20784313725490197,
       a: 1,
     }),
     plywoodDarkColor: Object.freeze({
-      r: 0.4117647111415863,
-      g: 0.22745098173618318,
-      b: 0.12156862765550614,
+      r: 0.29411764705882354,
+      g: 0.13725490196078433,
+      b: 0.047058823529411764,
       a: 1,
     }),
     topWear: 0,
@@ -134,7 +135,7 @@ export const DEFAULT_SKATEBOARD_SETTINGS: Readonly<SkateboardSettingsValue> =
     bottomArtworkPath: SKATEBOARD_DEFAULT_ARTWORK,
     truckModelPath: SKATEBOARD_DEFAULT_TRUCK,
     wheelModelPath: "procedural",
-    replacementTruckScale: 2.2098000049591066,
+    replacementTruckScale: 4.85,
     replacementWheelScale: 1,
   });
 

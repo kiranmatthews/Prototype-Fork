@@ -37,6 +37,7 @@ import { RenderInterpolator } from './renderInterpolation';
 import {
   createSkateboardPresentation,
   rebuildSkateboardPresentation,
+  SKATEBOARD_GRIP_TOP,
   skateboardRestingPivotLift,
 } from './skateboard/model';
 import { skateboardSettings } from './skateboard/settings';
@@ -163,7 +164,7 @@ const UNDER_RAIL_DEPTH = 1.65;
 const UNDER_RAIL_SWING = 0.32;
 // Deck-plant fallback for a malformed/custom board. The production value is
 // read live from boardG.userData.gripTop so the Unity shape lab can tune it.
-const PLANT_DECK_TOP = 0.19172483682632447;
+const PLANT_DECK_TOP = SKATEBOARD_GRIP_TOP;
 // How far up from a foot's lowest vertex still counts as "the sole".
 const SOLE_BAND = 0.03;
 // Additional animation pivot seated at the procedural rider's waist. The

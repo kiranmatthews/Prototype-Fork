@@ -43,8 +43,9 @@ def main() -> None:
     truck.data.name = "SkateboardTruck_Normalized_Mesh"
     truck.data.materials.clear()
     # This is exactly the reusable Unity prefab child transform. The runtime
-    # presentation applies replacementTruckScale (2.2098 by default) outside
-    # it, so the exported mesh keeps that tuning control meaningful.
+    # presentation divides replacementTruckScale by the fixed 2.2098 GLB
+    # calibration reference outside this asset, so Board Lab defaults may
+    # change without silently changing the imported model's physical size.
     truck.rotation_euler = (math.radians(90.0), 0.0, 0.0)
     truck.location = (0.0, -0.03539066, 0.0)
     truck.scale = (0.24, 0.24, 0.24)

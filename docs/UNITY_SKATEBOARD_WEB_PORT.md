@@ -1,14 +1,22 @@
-# Unity Surf Cruiser skateboard web port
+# Surf Cruiser skateboard web port
 
-The browser now uses the approved Unity Surf Cruiser presentation in normal
-play and exposes the Unity shape lab at `skateboard-lab.html` (or through the
+The browser uses the approved Surf Cruiser presentation in normal play and
+exposes its shape lab at `skateboard-lab.html` (or through the
 in-game **BOARD** tab). This is a presentation-only port: movement, tricks,
 grinds, collision, replay state, and the fixed-step simulation were not
 retuned.
 
-## Port authority
+## Board authority
 
-The source is Unity commit `3da0720`, specifically:
+The canonical tuning is the approved version-1 Board Lab export at
+`public/skateboard/surf-cruiser-board.json`, mirrored exactly by
+`DEFAULT_SKATEBOARD_SETTINGS`. It supersedes the older browser defaults while
+retaining the same schema and storage key. Existing deliberately saved boards
+continue to override the shipped preset; a new browser or **Reset approved
+board** uses this JSON.
+
+The procedural deck topology and material implementation remain measured from
+Unity commit `3da0720`, specifically:
 
 - `SourceSkateboardSettings.cs` and the saved version-1 tuning JSON
 - `SurfCruiserDeckMeshBuilder.cs`
@@ -26,11 +34,14 @@ tests still describe a superseded 0.82 m deck and are not parity authority.
 - The root is the ground/wheel-contact pivot.
 - Length: `1.982568383216858 m`
 - Width: `0.4752296209335327 m`
-- Grip centreline: `0.19172483682632447 m` above the root
+- Grip centreline: `0.234 m` above the root
 - Deck mesh: 3,148 vertices, 6,292 triangles, seven material groups
 - Materials: grip, orange-sun underside, then five alternating plywood bands
-- Wheels: procedural `#756080` cylinders, touching Y=0
-- Trucks: normalized Unity truck mesh/UVs with the flat base-colour atlas
+- Wheels: radius `0.071m`, width `0.101m`, centres at X `±0.202m`, touching Y=0
+- Trucks: normalized source mesh/UVs, local X trim `+90°`, effective imported
+  scale `4.85 / 2.2098000049591066 = 2.1947687524282324`
+- Artwork crop scale: `1.37` (`0.7299270072992701` tiling,
+  `0.13503649635036497` centred offset)
 - Rendering: opaque, unlit, shadowless; underside perimeter wear is evaluated
   from the same silhouette-relative UV channel and shader equations as Unity
 
@@ -63,6 +74,7 @@ Only web delivery derivatives are committed:
 
 | Asset | SHA-256 |
 | --- | --- |
+| `surf-cruiser-board.json` | `5f7b984c86c30c1cbea31a1c9ad8f9dc8c4cb2b82ef0992ba16c3d1ad8bc51ce` |
 | `skateboard-truck.glb` | `20d30d6fb2f594549db6ff219bfa8d925540c8dcdbd912f1116bef8e194b05c7` |
 | `skateboard-truck.webp` | `eb263b1250367575f5666838e8c30253e5344492d0ec1e474ef5829cd631a905` |
 | `surf-cruiser-orange-sun.webp` | `d24e9e704a626fdb7b3e4d26fd35dc9d5760de728c9e8d2e17843cea64ba9ff9` |
@@ -87,5 +99,6 @@ npm run build
 ```
 
 The skateboard check evaluates the TypeScript mesh builder directly and gates
-the exact vertex, triangle, submesh, bounds, kick direction, integration, lab
+the exact Board JSON, vertex/triangle/submesh bounds, kick direction, artwork
+crop, imported-truck calibration/bounds, wheel alignment, integration, lab
 entry, and baked-asset hashes.

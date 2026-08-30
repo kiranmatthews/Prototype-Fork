@@ -4,6 +4,7 @@ import {
   DEFAULT_SKATEBOARD_SETTINGS,
   SKATEBOARD_DEFAULT_ARTWORK,
   SKATEBOARD_DEFAULT_TRUCK,
+  SKATEBOARD_TRUCK_GLTF_REFERENCE_SCALE,
   clampSkateboardSettings,
   type SkateboardColor,
   type SkateboardSettingsValue,
@@ -595,26 +596,32 @@ function colorVector(color: SkateboardColor): THREE.Vector3 {
   return new THREE.Vector3(color.r, color.g, color.b);
 }
 
+export function skateboardArtworkUvTransform(
+  artworkScale: number,
+  bottom: boolean,
+): readonly [tileX: number, tileY: number, offsetX: number, offsetY: number] {
+  const tiling = bottom ? 1 / Math.max(0.0001, artworkScale) : 1;
+  const offset = bottom ? 0.5 - 0.5 * tiling : 0;
+  return [tiling, tiling, offset, offset];
+}
+
 function surfaceMaterial(
   name: string,
   texture: THREE.Texture,
   settings: Readonly<SkateboardSettingsValue>,
   bottom: boolean,
 ): THREE.ShaderMaterial {
-  const artworkTiling = bottom ? 1 / settings.artworkScale : 1;
-  const artworkOffset = bottom ? 0.5 - 0.5 * artworkTiling : 0;
+  const artworkTransform = skateboardArtworkUvTransform(
+    settings.artworkScale,
+    bottom,
+  );
   return new THREE.ShaderMaterial({
     name,
     uniforms: {
       baseMap: { value: texture },
       baseColor: { value: new THREE.Vector3(1, 1, 1) },
       baseMapTransform: {
-        value: new THREE.Vector4(
-          artworkTiling,
-          artworkTiling,
-          artworkOffset,
-          artworkOffset,
-        ),
+        value: new THREE.Vector4(...artworkTransform),
       },
       deckAspect: {
         value:
@@ -684,9 +691,6 @@ function createFallbackTruck(
   name: string,
   z: number,
   endpointYaw: number,
-  rotationXDegrees: number,
-  rotationYDegrees: number,
-  rotationZDegrees: number,
   settings: Readonly<SkateboardSettingsValue>,
 ): THREE.Group {
   const root = new THREE.Group();
@@ -697,13 +701,9 @@ function createFallbackTruck(
   });
   const underside = settings.boardToGroundDistance - settings.deckThickness;
   root.position.set(0, underside, z);
-  skateboardTruckQuaternion(
-    endpointYaw,
-    rotationXDegrees,
-    rotationYDegrees,
-    rotationZDegrees,
-    root.quaternion,
-  );
+  // XYZ trim corrects the imported GLB's source axes. The procedural
+  // fallback is already board-local Y-up and only needs the rear endpoint yaw.
+  skateboardTruckQuaternion(endpointYaw, 0, 0, 0, root.quaternion);
   const baseplate = new THREE.Mesh(
     new THREE.BoxGeometry(
       settings.truckBaseplateWidth,
@@ -896,18 +896,12 @@ export function rebuildSkateboardPresentation(
       "FrontTruck_Fallback",
       settings.frontTruckLocalZ,
       0,
-      settings.frontTruckRotationXDegrees,
-      settings.frontTruckRotationYDegrees,
-      settings.frontTruckRotationZDegrees,
       settings,
     ),
     createFallbackTruck(
       "RearTruck_Fallback",
       settings.rearTruckLocalZ,
       Math.PI,
-      settings.rearTruckRotationXDegrees,
-      settings.rearTruckRotationYDegrees,
-      settings.rearTruckRotationZDegrees,
       settings,
     ),
   );
@@ -923,7 +917,7 @@ export function rebuildSkateboardPresentation(
       trucks.name = "Hardware_Imported";
       const ratio =
         settings.replacementTruckScale /
-        DEFAULT_SKATEBOARD_SETTINGS.replacementTruckScale;
+        SKATEBOARD_TRUCK_GLTF_REFERENCE_SCALE;
       for (const [name, z, yaw, rotationX, rotationY, rotationZ] of [
         [
           "FrontTruck_Model",

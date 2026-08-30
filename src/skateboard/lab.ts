@@ -188,8 +188,8 @@ function frame(): void {
     | { vertices: number; triangles: number; materialGroups: number }
     | undefined;
   diagnostics.textContent = stats
-    ? `Surf Cruiser — Unity parity\n${stats.vertices.toLocaleString()} vertices · ${stats.triangles.toLocaleString()} triangles · ${stats.materialGroups} material groups\ntruck asset ${hero.userData.assetReady ? "ready" : "loading / procedural fallback"}`
-    : "Surf Cruiser: building Unity parity mesh…";
+    ? `Surf Cruiser — approved board JSON\n${stats.vertices.toLocaleString()} vertices · ${stats.triangles.toLocaleString()} triangles · ${stats.materialGroups} material groups\ntruck asset ${hero.userData.assetReady ? "ready" : "loading / procedural fallback"}`
+    : "Surf Cruiser: building approved board mesh…";
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }

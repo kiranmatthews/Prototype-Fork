@@ -220,8 +220,8 @@ export class SkateboardTuningPanel {
         "div",
         "intro",
         options.labMode
-          ? "Unity parity view · edits rebuild every inspection board and autosave in this browser."
-          : "Production Unity deck · edits rebuild the attached player board live and autosave in this browser.",
+          ? "Approved Board JSON · edits rebuild every inspection board and autosave in this browser."
+          : "Approved Surf Cruiser · edits rebuild the attached player board live and autosave in this browser.",
       ),
     );
 
@@ -233,10 +233,10 @@ export class SkateboardTuningPanel {
         document.baseURI,
       ).href;
     });
-    const reset = this.button("Reset Unity defaults");
+    const reset = this.button("Reset approved board");
     reset.addEventListener("click", () => {
       this.settings.reset();
-      this.setStatus("Restored the approved Unity tuning.");
+      this.setStatus("Restored the approved Board Lab JSON.");
     });
     const copy = this.button("Copy JSON");
     copy.addEventListener("click", () => void this.copyJson());
@@ -271,7 +271,7 @@ export class SkateboardTuningPanel {
     this.status = this.make(
       "div",
       "status",
-      "Unity preset v1 · 3,148 vertices · 6,292 triangles · 7 materials",
+      "Board JSON v1 · 3,148 vertices · 6,292 triangles · 7 materials",
     );
     panel.append(this.status);
     this.shadow.append(panel);
