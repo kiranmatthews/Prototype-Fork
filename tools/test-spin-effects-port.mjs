@@ -67,6 +67,56 @@ for (let ring = 0; ring < azimuths.length; ring++) {
   assert.ok(Math.abs(actual - azimuths[ring]) < 0.001, `${ring}: ${actual}`);
 }
 
+const routingApi = compileCommonJs(await text("src/spin-effects/routing.ts"));
+const freshRoute = () => routingApi.createSpinPresentationRouteState();
+const advanceRoute = (state, step, active, boardAttached, reset = false) =>
+  routingApi.advanceSpinPresentationRoute(
+    state,
+    { step, active, boardAttached, reset },
+    15,
+  );
+
+let routeFrame = advanceRoute(freshRoute(), 0, true, false);
+assert.equal(routeFrame.state.route, "character");
+assert.equal(routeFrame.characterActive, true);
+assert.equal(routeFrame.characterLingering, false);
+routeFrame = advanceRoute(routeFrame.state, 1, false, false);
+assert.equal(routeFrame.characterLingering, true);
+for (let step = 2; step <= 15; step++)
+  routeFrame = advanceRoute(routeFrame.state, step, false, false);
+assert.equal(routeFrame.characterLingering, true, "character rings linger through tick 14");
+routeFrame = advanceRoute(routeFrame.state, 16, false, false);
+assert.equal(routeFrame.characterLingering, false, "character rings hide at tick 15");
+
+routeFrame = advanceRoute(freshRoute(), 20, true, true);
+assert.equal(routeFrame.state.route, "board");
+assert.equal(routeFrame.characterActive, false);
+assert.equal(routeFrame.characterLingering, false);
+routeFrame = advanceRoute(routeFrame.state, 21, false, true);
+assert.equal(routeFrame.characterLingering, false, "board routes never create a ring linger");
+
+routeFrame = advanceRoute(freshRoute(), 30, true, false);
+routeFrame = advanceRoute(routeFrame.state, 31, true, true);
+assert.equal(routeFrame.state.route, "board");
+assert.equal(routeFrame.characterActive, false, "mounting cancels an active character effect");
+routeFrame = advanceRoute(routeFrame.state, 32, true, false);
+assert.equal(routeFrame.state.route, "board", "dismount cannot restore a cancelled effect");
+
+routeFrame = advanceRoute(freshRoute(), 40, true, false);
+routeFrame = advanceRoute(routeFrame.state, 41, false, false);
+assert.equal(routeFrame.characterLingering, true);
+routeFrame = advanceRoute(routeFrame.state, 42, false, true);
+assert.equal(routeFrame.state.route, "board");
+assert.equal(routeFrame.characterLingering, false, "mounting cancels ring handoff immediately");
+routeFrame = advanceRoute(routeFrame.state, 43, false, false);
+assert.equal(routeFrame.characterLingering, false, "dismount cannot restore ring handoff");
+routeFrame = advanceRoute(routeFrame.state, 44, true, false);
+assert.equal(routeFrame.state.route, "character", "a later foot spin starts normally");
+routeFrame = advanceRoute(routeFrame.state, 45, false, false, true);
+assert.equal(routeFrame.state.route, "none");
+assert.equal(routeFrame.characterActive, false);
+assert.equal(routeFrame.characterLingering, false);
+
 const modelBytes = await readFile(`${root}public/spin/whirlwind-vixen.glb`);
 assert.equal(
   createHash("sha256").update(modelBytes).digest("hex"),
@@ -94,12 +144,18 @@ assert.equal(
 );
 
 const player = await text("src/player.ts");
+const presentation = await text("src/spin-effects/presentation.ts");
 const main = await text("src/main.ts");
 const index = await text("index.html");
 assert.match(player, /new SpinEffectsPresentation/);
-assert.match(player, /boardRouteCandidate/);
+assert.match(player, /boardAttached: this\.boardG\?\.visible \?\? false/);
+assert.doesNotMatch(player, /presentationRoute === ['"]board['"]/);
 assert.match(player, /runTime \* 60/);
 assert.doesNotMatch(player, /installSmear/);
+assert.match(presentation, /boardRingsVisible: false/);
+assert.match(presentation, /advanceSpinPresentationRoute/);
+assert.doesNotMatch(presentation, /new SpinOrbitalRings\([\s\S]*localBoundsForBoard/);
+assert.doesNotMatch(presentation, /BoardTrickOrbitalRings|BoardTrickRingAnchor/);
 assert.match(main, /createSpinTuningPanel/);
 assert.match(main, /getSpinEffectDiagnostics/);
 assert.match(index, /spin\/whirlwind-vixen\.glb/);

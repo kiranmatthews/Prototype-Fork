@@ -67,16 +67,16 @@ post-spin current/pulse values, then hide without a shrink or fade.
 
 One route is latched at attack start:
 
-- ordinary ride/foot/grind/rope spins replace rider and attached deck with the
-  sculpture plus character-height rings;
-- board-air deck tricks retain the rider and flipping board, with the same
-  ring settings compressed around the board by Unity's intended `Y=.18` anchor;
+- on-foot and rope spins use the sculpture plus character-height rings;
+- any spin with a visibly attached board—ride, air, grab, grind, or
+  wallride—retains the native rider/deck motion without a spin halo or
+  orbital-ring treatment;
 - death, bail, respawn, or a rewound presentation clock clears the effect.
 
-Unity contains the complete board-ring implementation and tests, but its
-current `ApplyAttachedBoard` path accidentally resets that hierarchy without
-calling the updater. The web port restores the evident intended/tested route
-instead of preserving that missing-call bug.
+If the board appears during a character spin or its 15-tick handoff, that
+sequence permanently promotes to the effect-free board route. Dismounting
+again cannot flash the halo back on; the next independent on-foot attack may
+start a fresh character route normally.
 
 ## Lab and tuning
 

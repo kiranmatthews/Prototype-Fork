@@ -11540,9 +11540,11 @@ export class Player {
         : 0;
     const specialTwist =
       specialFlipProgress * specialFlipProgress * (3 - 2 * specialFlipProgress) * Math.PI * 2;
+    // Only an actual airborne deck trick owns the board's yaw. Merely routing
+    // spin VFX away from an attached board must not suppress the rider's native
+    // grounded/grind spin animation.
     const boardRoutedSpin =
-      this.spinEffects?.presentationRoute === 'board' ||
-      (this.spinning && this.state === 'air' && this.flipT > 0);
+      this.spinning && this.state === 'air' && this.flipT > 0;
     this.bodyGroup.rotation.y =
       this.visualYaw +
       (boardRoutedSpin ? 0 : this.spinAngle) +
@@ -12211,22 +12213,21 @@ export class Player {
         this.invulnSilent ||
         Math.sin(this.runTime * 45) > -0.2 ||
         this.state === 'dead');
-    // Unity routes each Square/F sequence once. An ordinary attack replaces
-    // rider+deck with the Whirlwind Vixen sculpture and independent rings; a
-    // board-air deck trick retains the rider/deck and gets board-local rings.
+    // On foot, an ordinary attack replaces the rider with the Whirlwind Vixen
+    // sculpture and independent rings. Whenever a deck is visibly attached,
+    // the native rider/deck motion stays and the halo route is fully suppressed.
     // Gameplay timing, hit reach, scoring and audio remain owned by updateSpin.
     if (this.spinEffects) {
       const active =
         this.spinning && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
       const bodyVisible = this.bodyGroup.visible;
-      const boardVisible = bodyVisible && (this.boardG?.visible ?? false);
       this.spinEffects.update({
         step: Math.floor(this.runTime * 60 + 0.000000001),
         active,
-        boardRouteCandidate:
-          active && this.state === 'air' && boardVisible && this.flipT > 0,
+        // Do not fold bodyVisible into this authority: invulnerability flicker
+        // must never let one attack-start tick route a board spin to the halo.
+        boardAttached: this.boardG?.visible ?? false,
         bodyVisible,
-        boardVisible,
         reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
       });
       if (this.spinEffects.sculptureVisible) this.bodyGroup.visible = false;
@@ -13179,7 +13180,6 @@ export class Player {
     if (!this.boardG) return;
     this.spinEffects = new SpinEffectsPresentation({
       parent: this.group,
-      board: this.boardG,
     });
   }
 

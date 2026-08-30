@@ -93,12 +93,8 @@ const demoRoot = new THREE.Group();
 demoRoot.name = "ProductionSpin_LoopingPreview";
 demoRoot.position.set(0, 0, -3.5);
 scene.add(demoRoot);
-const dummyBoard = new THREE.Group();
-dummyBoard.visible = false;
-demoRoot.add(dummyBoard);
 const production = new SpinEffectsPresentation({
   parent: demoRoot,
-  board: dummyBoard,
   settings: spinRingSettings,
   targetBottom: 0,
 });
@@ -116,10 +112,9 @@ demoBoard.scale.setScalar(1);
 boardDemoRoot.add(demoBoard);
 const boardRoute = new SpinEffectsPresentation({
   parent: boardDemoRoot,
-  board: demoBoard,
   settings: spinRingSettings,
 });
-const boardLabel = worldLabel("INTENDED BOARD-AIR ROUTE");
+const boardLabel = worldLabel("BOARD AIR · NO SPIN HALO");
 boardLabel.position.set(-3.75, 3.15, 2.5);
 scene.add(boardLabel);
 
@@ -150,16 +145,14 @@ function frame(now: number): void {
   production.update({
     step,
     active,
-    boardRouteCandidate: false,
+    boardAttached: false,
     bodyVisible: true,
-    boardVisible: false,
   });
   boardRoute.update({
     step,
     active,
-    boardRouteCandidate: true,
+    boardAttached: true,
     bodyVisible: true,
-    boardVisible: true,
   });
   controls.update();
   const stats = preview.geometryStats;
