@@ -4087,15 +4087,23 @@ export class Player {
     }
     if (ridingPipe) {
       const along = ridingPipe.alongCoord(this.pos.x, this.pos.z);
+      const previousRideSide = ridingPipe.isRideSide(
+        ridingPipe.crossCoord(this.prevPos.x, this.prevPos.z),
+        this.prevPos.y,
+      );
       const lo = Math.min(ridingPipe.l0, ridingPipe.l1) - 0.3;
       const hi = Math.max(ridingPipe.l0, ridingPipe.l1) + 0.3;
-      if (along >= lo && along <= hi) {
+      if (along >= lo && along <= hi && previousRideSide) {
         const pr = ridingPipe.project(
           ridingPipe.crossCoord(this.pos.x, this.pos.z),
           this.pos.y,
         );
         // |pen| window ≈ the old wallStick: near or into the surface = attached
-        if (pr && Math.abs(pr.u) < ridingPipe.uLip - 0.02 && pr.pen > -TUNING.wallStick) {
+        if (
+          pr &&
+          Math.abs(pr.u) < ridingPipe.uLip - 0.02 &&
+          Math.abs(pr.pen) < TUNING.wallStick
+        ) {
           if (ridingPipe.axis === 'z') this.pos.x = pr.cross;
           else this.pos.z = pr.cross;
           // exact surface point; the y-window below passes trivially (dy = 0)
@@ -11140,14 +11148,23 @@ export class Player {
   private pipeCrossHit(level: Level): GroundHit | null {
     for (const hp of level.halfpipes) {
       const along = hp.alongCoord(this.pos.x, this.pos.z);
+      const previousAlong = hp.alongCoord(this.prevPos.x, this.prevPos.z);
       const lo = Math.min(hp.l0, hp.l1) - 0.5;
       const hi = Math.max(hp.l0, hp.l1) + 0.5;
-      if (along < lo || along > hi) continue;
-      const now = hp.project(hp.crossCoord(this.pos.x, this.pos.z), this.pos.y);
-      if (!now || now.pen <= 0) continue; // in open air above the curve
-      if (now.pen > hp.radius * 0.8) continue; // buried deep: not a this-step crossing
-      const prev = hp.project(hp.crossCoord(this.prevPos.x, this.prevPos.z), this.prevPos.y);
-      if (prev && prev.pen > 0.08) continue; // was already inside the material: came from behind
+      if (
+        along < lo ||
+        along > hi ||
+        previousAlong < lo ||
+        previousAlong > hi
+      )
+        continue; // entering through an open pipe end is not a wall crossing
+      const now = hp.rideSideCrossing(
+        hp.crossCoord(this.prevPos.x, this.prevPos.z),
+        this.prevPos.y,
+        hp.crossCoord(this.pos.x, this.pos.z),
+        this.pos.y,
+      );
+      if (!now) continue;
       const normal = hp.normalAt(now.u, new THREE.Vector3());
       return {
         y: now.y,
@@ -11262,6 +11279,22 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
+      const candidatePipe = h.object.userData.halfpipe as Halfpipe | undefined;
+      if (candidatePipe) {
+        const currentCross = candidatePipe.crossCoord(cx, cz);
+        const previousCross = candidatePipe.crossCoord(
+          this.prevPos.x + ox,
+          this.prevPos.z + oz,
+        );
+        // DoubleSide is a rendering requirement, not a second physics face.
+        // If both completed-step samples are under/behind the shell, ignore
+        // this overhead ribbon and let a genuine lower floor win.
+        if (
+          !candidatePipe.isRideSide(currentCross, this.pos.y) &&
+          !candidatePipe.isRideSide(previousCross, this.prevPos.y)
+        )
+          continue;
+      }
       const cid = h.object.userData.crumbleId as number | undefined;
       if (cid !== undefined) {
         const c = level.crumbles[cid];
@@ -11401,7 +11434,19 @@ export class Player {
     this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
     this.raycaster.far = 120;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
-    return hits.length > 0 ? hits[0].point.y : null;
+    for (const hit of hits) {
+      const pipe = hit.object.userData.halfpipe as Halfpipe | undefined;
+      if (
+        pipe &&
+        !pipe.isRideSide(
+          pipe.crossCoord(this.pos.x, this.pos.z),
+          this.pos.y,
+        )
+      )
+        continue;
+      return hit.point.y;
+    }
+    return null;
   }
 
   /**

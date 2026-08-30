@@ -136,6 +136,39 @@ export class Halfpipe {
     };
   }
 
+  /**
+   * Is a feet sample on the concave/open side of this transition?
+   *
+   * The rendered ribbon is DoubleSide, but the physics surface is not: below
+   * the curve or behind a coping is the shell's invalid back side. Air above
+   * coping height remains valid so a real drop-in can cross the lip.
+   */
+  isRideSide(crossWorld: number, y: number, skin = 0.08): boolean {
+    if (y > this.lipY) return true;
+    if (Math.abs(crossWorld - this.cross) > this.lipX + 0.05) return false;
+    const projected = this.project(crossWorld, y);
+    return projected !== null && projected.pen <= Math.max(0, skin);
+  }
+
+  /** A true concave-side → shell crossing, suitable for analytic catch. */
+  rideSideCrossing(
+    previousCross: number,
+    previousY: number,
+    currentCross: number,
+    currentY: number,
+    skin = 0.08,
+  ): { u: number; cross: number; y: number; pen: number } | null {
+    if (!this.isRideSide(previousCross, previousY, skin)) return null;
+    const current = this.project(currentCross, currentY);
+    if (
+      current === null ||
+      current.pen <= 0 ||
+      current.pen > this.radius * 0.8
+    )
+      return null;
+    return current;
+  }
+
   // Cross-axis world coordinate of a position (the coordinate project() wants).
   crossCoord(x: number, z: number): number {
     return this.axis === 'z' ? x : z;

@@ -37,6 +37,7 @@ import {
   disposeGroundAcceleration,
   type GroundAccelerationStats,
 } from "./groundAcceleration";
+import { boxIntersectsMeshTriangles } from "./meshIntersections";
 
 const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { releaseWumpaMesh, wumpaMesh, WUMPA_SIZE } from "./wumpa";
@@ -2669,6 +2670,8 @@ export class Level {
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
+  vertBacks: THREE.Box3[] = []; // accepted analytic-pipe backing slabs
+  vertBacksSkipped = 0; // exact swept-transition intersections rejected at build time
   private wallPathByBox = new Map<THREE.Box3, WallPathRuntime>();
   private wallPathSegmentByBox = new Map<THREE.Box3, number>();
   killY = -48; // per-level death height (every builder authors its own)
@@ -3793,11 +3796,14 @@ export class Level {
   // SOLID BACKS. A transition is a one-sided sheet: from behind you'd ride up
   // its convex face, or drop straight through into the pipe. A thin collision
   // slab just outside each coping line stops that, ending 0.4 short of the lip
-  // so lip play stays clear. Skipped where ANOTHER pipe's mouth opens across
-  // that line — that's a shared ridge, and the spine transfer plus the
-  // ride-through both need it open. Runs once, after every builder is done, so
-  // it can see all the pipes at the time it decides.
+  // so lip play stays clear. Skipped where ANOTHER analytic mouth opens across
+  // that line, or where the slab would physically cut a swept transition —
+  // shared/adjacent park geometry must stay open and must never hide a solid
+  // box inside a visible pool. Runs once after every builder is done.
   private sealVertBacks(): void {
+    const sweptTransitions = this.groundMeshes.filter(
+      (mesh) => mesh.userData.vertRampMesh === true,
+    );
     for (const hp of this.halfpipes) {
       const along = (hp.l0 + hp.l1) / 2;
       const len = Math.abs(hp.l1 - hp.l0);
@@ -3818,16 +3824,27 @@ export class Level {
         // coping reaches within a player-half of it, and the back slab must
         // never clip that climb
         const bc = lipC + side * 1.45;
-        this.walls.push(
-          new THREE.Box3().setFromCenterAndSize(
-            hp.axis === "z"
-              ? new THREE.Vector3(bc, cy, along)
-              : new THREE.Vector3(along, cy, bc),
-            hp.axis === "z"
-              ? new THREE.Vector3(1.3, h, len)
-              : new THREE.Vector3(len, h, 1.3),
-          ),
+        const backing = new THREE.Box3().setFromCenterAndSize(
+          hp.axis === "z"
+            ? new THREE.Vector3(bc, cy, along)
+            : new THREE.Vector3(along, cy, bc),
+          hp.axis === "z"
+            ? new THREE.Vector3(1.3, h, len)
+            : new THREE.Vector3(len, h, 1.3),
         );
+        // A backing wall may seal empty exterior space, never cut through a
+        // neighboring swept pool/quarter-pipe. Exact triangles—not broad
+        // bounds—decide, so curved meshes do not open unrelated pipe backs.
+        if (
+          sweptTransitions.some((mesh) =>
+            boxIntersectsMeshTriangles(backing, mesh),
+          )
+        ) {
+          this.vertBacksSkipped++;
+          continue;
+        }
+        this.vertBacks.push(backing);
+        this.walls.push(backing);
       }
     }
   }
