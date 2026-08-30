@@ -2945,8 +2945,8 @@ function frame(nowMs: number): void {
     level.update(CONST.fixedStep);
     // Player.step authors the fixed pose; PVP may then move either root. Only
     // now is the simulation tick complete and safe to publish to rendering.
-    player.commitRenderStep();
-    if (split2p && p2) p2.commitRenderStep();
+    player.commitRenderStep(level);
+    if (split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
     if (!replayer.active && !split2p) recorder.record(input, player.camDir);
     input.consumeEdges(); // one press = one step

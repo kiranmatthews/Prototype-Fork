@@ -1096,6 +1096,7 @@ export class Player {
       xGroup.add(bar);
     }
     xGroup.rotation.x = -Math.PI / 2;
+    xGroup.visible = false;
     scene.add(xGroup);
     this.floorX = xGroup;
     this.floorXMat = xMat;
@@ -1342,7 +1343,7 @@ export class Player {
     for (const child of object.children) this.collectRenderHierarchy(child);
   }
 
-  commitRenderStep(): void {
+  commitRenderStep(level: Level): void {
     // PVP separation/kicks run after Player.step() authored the pose. Fold that
     // final root correction into the snapshot and carry player-attached world
     // effects with it; the loose board/fruit/sparks have their own trajectories.
@@ -1351,10 +1352,13 @@ export class Player {
     const dz = this.pos.z - this.group.position.z;
     this.group.position.copy(this.pos);
     if (dx * dx + dy * dy + dz * dz > 1e-12) {
-      if (this.floorX.visible) this.floorX.position.add(_renderDelta.set(dx, dy, dz));
       if (this.maskMesh?.visible) this.maskMesh.position.add(_renderDelta.set(dx, dy, dz));
       if (this.boostGlow.visible) this.boostGlow.position.add(_renderDelta.set(dx, dy, dz));
     }
+    // Player.step authored the pose before Level.update advanced movers. Probe
+    // only now, at the final PVP-corrected player position against the final
+    // world transforms, so the landing X cannot flash on stale/old ground.
+    this.refreshGroundPresentation(level);
 
     const objects = this.renderObjects;
     objects.length = 0;
@@ -2091,15 +2095,6 @@ export class Player {
       this.speed = 0;
       this.charging = false;
     }
-
-    // The blob shadow is a landing indicator: probe far down for the floor
-    // every step, independent of the short gameplay ground-follow ray.
-    this.shadowGroundY = this.queryShadowGround(level);
-    // Remember the last real floor level. Over a pit the straight-down probe
-    // finds nothing, but the landing X should keep hovering directly under the
-    // player at that ground/landing level — a live "where am I over the gap"
-    // read, NOT a prediction of where the arc ends (that's the player's call).
-    if (this.shadowGroundY !== null) this.lastGroundY = this.shadowGroundY;
 
     this.liftTyT = Math.max(0, this.liftTyT - dt);
     if (this.liftTyT === 0) this.liftTy = 0;
@@ -11157,8 +11152,47 @@ export class Player {
     this.prevPos.copy(this.pos);
   }
 
-  // Long-range floor probe under the player — shadow/landing indicator only,
-  // never gameplay (queryGround stays short so ground-follow is unchanged).
+  private syncFloorX(): void {
+    // Landing X: persistent live vertical projection, snapped to whatever
+    // floor is below the final player position. It grows a touch with height
+    // so it reads from the top of a big air.
+    const xFade = (height: number): number =>
+      THREE.MathUtils.clamp((height - 0.3) / 1.5, 0, 1);
+    const show = (height: number, floorY: number): void => {
+      const opacity =
+        X_ALPHA *
+        (this.state === 'air'
+          ? Math.max(0.5, xFade(height))
+          : xFade(height));
+      this.floorXMat.opacity = opacity;
+      this.floorX.visible = opacity > 0.02;
+      this.floorX.position.set(this.pos.x, floorY + 0.05, this.pos.z);
+      this.floorX.scale.setScalar(Math.min(1.6, 0.9 + height * 0.06));
+    };
+    if (
+      this.shadowGroundY !== null &&
+      this.state !== 'dead' &&
+      this.state !== 'gameover'
+    ) {
+      show(Math.max(0, this.pos.y - this.shadowGroundY), this.shadowGroundY);
+    } else if (this.state === 'air' && this.pos.y >= this.lastGroundY - 0.3) {
+      // Over a pit: retain the established current-X/Z fallback at the last
+      // real ground plane. This is intentionally not speculative trajectory
+      // prediction; live steering/double-jump/slam may still change the air.
+      show(Math.max(0, this.pos.y - this.lastGroundY), this.lastGroundY);
+    } else {
+      this.floorX.visible = false;
+    }
+  }
+
+  private refreshGroundPresentation(level: Level): void {
+    this.shadowGroundY = this.queryShadowGround(level);
+    if (this.shadowGroundY !== null) this.lastGroundY = this.shadowGroundY;
+    this.syncFloorX();
+  }
+
+  // Long-range floor probe under the player — landing indicator only, never
+  // gameplay (queryGround stays short so ground-follow is unchanged).
   private queryShadowGround(level: Level): number | null {
     this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
     this.raycaster.far = 120;
@@ -12582,36 +12616,6 @@ export class Player {
 
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
-
-    // Landing X: persistent landing indicator, snapped to whatever floor is
-    // below no matter how high the air, growing a touch with height so it
-    // reads from the top of a big one.
-    // Opacity by height above whatever floor is under you: nothing at all
-    // under your feet, full strength by about two thirds of a jump. The 0.3
-    // dead zone keeps it off while you roll over bumps and up kerbs. Airborne
-    // it never fades below half — over a pit the X is the only thing telling
-    // you where you are, and that is exactly when h is small.
-    const xFade = (h: number): number => THREE.MathUtils.clamp((h - 0.3) / 1.5, 0, 1);
-    const showX = (h: number, floorY: number): void => {
-      const a =
-        X_ALPHA * (this.state === 'air' ? Math.max(0.5, xFade(h)) : xFade(h));
-      this.floorXMat.opacity = a;
-      this.floorX.visible = a > 0.02;
-      this.floorX.position.set(this.pos.x, floorY + 0.05, this.pos.z);
-      this.floorX.scale.setScalar(Math.min(1.6, 0.9 + h * 0.06));
-    };
-    if (this.shadowGroundY !== null && this.state !== 'dead' && this.state !== 'gameover') {
-      showX(Math.max(0, this.pos.y - this.shadowGroundY), this.shadowGroundY);
-    } else if (this.state === 'air' && this.pos.y >= this.lastGroundY - 0.3) {
-      // Over a pit: no floor straight down, so hover the X directly UNDER the
-      // player at the last real ground/landing level. It marks where you ARE
-      // over the gap right now (your live x/z) — a "where am I in the jump" read,
-      // not a prediction of where the arc ends (that's the player's call). It
-      // drops away once you sink below the landing plane (missed / plummeting).
-      showX(Math.max(0, this.pos.y - this.lastGroundY), this.lastGroundY);
-    } else {
-      this.floorX.visible = false;
-    }
 
   }
 
