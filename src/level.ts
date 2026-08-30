@@ -348,12 +348,61 @@ export interface Stone {
   chase?: boolean; // boulder-chase mode: rolls after the player instead of patrolling
 }
 
-export type DeckTrickKind =
-  | "kick"
-  | "heel"
-  | "shove"
-  | "imposs"
-  | "varial";
+// One shared deck-trick vocabulary for gameplay, trick primitives and the
+// editor. In particular, the input recipe must not drift from the selector in
+// Player.tryStartDeckTrick(): the gate is only fair if the lock tells you the
+// exact move that will open it.
+export const DECK_TRICKS = [
+  {
+    kind: "kick",
+    label: "Kickflip",
+    recipe: "NEUTRAL + □ / F",
+    hint: "release direction, then Square / F while airborne on the board",
+  },
+  {
+    kind: "heel",
+    label: "Heelflip",
+    recipe: "LEFT ONLY + □ / F",
+    hint: "release forward/back, hold left + Square / F while airborne on the board",
+  },
+  {
+    kind: "shove",
+    label: "Pop Shove-It",
+    recipe: "RIGHT ONLY + □ / F",
+    hint: "release forward/back, hold right + Square / F while airborne on the board",
+  },
+  {
+    kind: "imposs",
+    label: "Impossible",
+    recipe: "UP + □ / F",
+    hint: "hold forward + Square / F while airborne on the board",
+  },
+  {
+    kind: "varial",
+    label: "Varial Flip",
+    recipe: "DOWN + □ / F",
+    hint: "hold back + Square / F while airborne on the board",
+  },
+] as const;
+
+export type DeckTrickKind = (typeof DECK_TRICKS)[number]["kind"];
+
+export function deckTrickInfo(
+  kind: DeckTrickKind,
+): (typeof DECK_TRICKS)[number] {
+  return DECK_TRICKS.find((entry) => entry.kind === kind) ?? DECK_TRICKS[0];
+}
+
+export function deckTrickFromInput(moveX: number, moveY: number): DeckTrickKind {
+  // Vertical has priority: a diagonal-forward press is an Impossible, not a
+  // Heelflip/Pop Shove-It. The shared recipes say LEFT/RIGHT ONLY for exactly
+  // this reason.
+  if (moveY > 0.4) return "imposs";
+  if (moveY < -0.4) return "varial";
+  if (moveX < -0.3) return "heel";
+  if (moveX > 0.3) return "shove";
+  return "kick";
+}
 
 export interface TrickGate {
   center: THREE.Vector3;
@@ -362,6 +411,7 @@ export interface TrickGate {
   outerRadius: number;
   halfWidth: number;
   halfHeight: number;
+  halfDepth: number;
   trick: DeckTrickKind;
   unlocked: boolean;
   seal: THREE.Object3D;
@@ -1646,9 +1696,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
     "grunt", "spiker", "turtle", "charger", "hopper", "floater", "sentry",
     "spinner", "car",
   ]);
-  const tricks = new Set<DeckTrickKind>([
-    "kick", "heel", "shove", "imposs", "varial",
-  ]);
+  const tricks = new Set<DeckTrickKind>(DECK_TRICKS.map((entry) => entry.kind));
   const directions = new Set(["E", "W", "N", "S"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
@@ -2521,6 +2569,7 @@ export class Level {
   // scale on the surface while the edges resolve instead of staircasing.
   private static readonly TEX_SS = 4;
   private surfTexCache = new Map<string, THREE.CanvasTexture>();
+  private trickGateTexCache = new Map<DeckTrickKind, THREE.CanvasTexture>();
   private surfaceTexture(kind: string): THREE.CanvasTexture {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
@@ -9342,7 +9391,58 @@ export class Level {
     return mesh;
   }
 
+  private trickGateSealTexture(trick: DeckTrickKind): THREE.CanvasTexture {
+    const cached = this.trickGateTexCache.get(trick);
+    if (cached) return cached;
+    const info = deckTrickInfo(trick);
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext("2d")!;
+    const paint = (): void => {
+      ctx.clearRect(0, 0, 512, 512);
+      const glow = ctx.createRadialGradient(256, 230, 20, 256, 256, 256);
+      glow.addColorStop(0, "rgba(255,126,183,0.98)");
+      glow.addColorStop(0.72, "rgba(255,55,126,0.92)");
+      glow.addColorStop(1, "rgba(92,8,51,0.96)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, 512, 512);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.lineJoin = "round";
+      const titleSize = info.label.length > 10 ? 48 : 60;
+      ctx.font = `900 ${titleSize}px "Roo", sans-serif`;
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = "rgba(37,13,48,0.92)";
+      ctx.strokeText(info.label.toUpperCase(), 256, 205);
+      ctx.fillStyle = "#fff6ca";
+      ctx.fillText(info.label.toUpperCase(), 256, 205);
+      ctx.font = '800 30px "Roo", sans-serif';
+      ctx.lineWidth = 8;
+      ctx.strokeText("BOARD AIR", 256, 285);
+      ctx.fillStyle = "#8ff7ff";
+      ctx.fillText("BOARD AIR", 256, 285);
+      ctx.font = '800 25px "Roo", sans-serif';
+      ctx.lineWidth = 7;
+      ctx.strokeText(info.recipe, 256, 340);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(info.recipe, 256, 340);
+    };
+    paint();
+    const texture = Level.finishTex(new THREE.CanvasTexture(canvas), false);
+    if (!rooLoaded) {
+      void rooReady.then(() => {
+        if (texture.userData.disposed) return;
+        paint();
+        texture.needsUpdate = true;
+      });
+    }
+    this.trickGateTexCache.set(trick, texture);
+    return texture;
+  }
+
   private buildTrickGate(c: CustomComponent): void {
+    const trick = c.trick ?? "kick";
     const radius = Math.max(0.8, c.radius ?? 2.2);
     const authoredFrame = c.s ?? [12, 8, 0.6];
     const frameSize: [number, number, number] = [
@@ -9360,17 +9460,22 @@ export class Level {
       new THREE.TorusGeometry(radius + 0.45, 0.32, 6, 28),
       ringMaterial,
     );
-    const seal = new THREE.Mesh(
-      new THREE.CircleGeometry(radius, 28),
-      new THREE.MeshBasicMaterial({
-        color: 0xff4d88,
-        transparent: true,
-        opacity: 0.42,
-        depthWrite: false,
-        side: THREE.DoubleSide,
-      }),
-    );
-    seal.position.z = 0.03;
+    const seal = new THREE.Group();
+    const sealGeometry = new THREE.CircleGeometry(radius, 28);
+    const sealMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      map: this.trickGateSealTexture(trick),
+      transparent: true,
+      opacity: 0.92,
+      depthWrite: false,
+      side: THREE.FrontSide,
+    });
+    const sealFront = new THREE.Mesh(sealGeometry, sealMaterial);
+    sealFront.position.z = 0.03;
+    const sealBack = new THREE.Mesh(sealGeometry, sealMaterial);
+    sealBack.position.z = -0.03;
+    sealBack.rotation.y = Math.PI; // readable, not mirrored, from the far side
+    seal.add(sealFront, sealBack);
     group.add(ring, seal);
     const frameMaterial = new THREE.MeshLambertMaterial({ color: 0x273044 });
     const sideWidth = Math.max(0.2, (frameSize[0] - radius * 2) / 2);
@@ -9389,7 +9494,7 @@ export class Level {
       cap.position.y = side * (radius + capHeight / 2);
       group.add(cap);
     }
-    group.name = `${c.trick ?? "kick"} trick gate`;
+    group.name = `${deckTrickInfo(trick).label} trick gate`;
     this.root.add(group);
     this.trickGates.push({
       center: group.position.clone(),
@@ -9398,7 +9503,8 @@ export class Level {
       outerRadius: radius + 0.9,
       halfWidth: frameSize[0] / 2,
       halfHeight: frameSize[1] / 2,
-      trick: c.trick ?? "kick",
+      halfDepth: frameSize[2] / 2,
+      trick,
       unlocked: false,
       seal,
       ring,
@@ -9752,23 +9858,49 @@ export class Level {
     from: THREE.Vector3,
     to: THREE.Vector3,
     tricks: ReadonlySet<DeckTrickKind>,
-    clearance = 0,
-  ): { gate: TrickGate; rejected: boolean; normal: THREE.Vector3 } | null {
+    apertureClearance = 0,
+    planeHalfExtent = 0,
+  ): {
+    gate: TrickGate;
+    rejected: boolean;
+    reason?: "lock" | "frame";
+    normal: THREE.Vector3;
+    separation: number;
+  } | null {
     for (const gate of this.trickGates) {
       const before = from.clone().sub(gate.center).dot(gate.normal);
       const after = to.clone().sub(gate.center).dot(gate.normal);
       const sideSign = Math.sign(Math.abs(before) > 1e-8 ? before : -after) || 1;
-      // Sweep the player's slab, not its centre point: contact occurs when
-      // the nearest body corner reaches the gate plane. Moving away from an
-      // already-touching plane is never a fresh collision.
-      if ((after - before) * sideSign >= -1e-8) continue;
-      const beforeContact = before - sideSign * clearance;
-      const afterContact = after - sideSign * clearance;
-      const span = beforeContact - afterContact;
-      if (Math.abs(span) <= 1e-8 || beforeContact * afterContact > 0) continue;
-      const t = beforeContact / span;
-      if (t < 0 || t > 1) continue;
-      const crossing = from.clone().lerp(to, t);
+      // Plane contact and aperture fit are different measurements. The old
+      // spherical `clearance` shrank the opening correctly, but also seated a
+      // rejected body only 0.68u from the zero-thickness centre plane even
+      // though the visible frame itself is 0.6u deep. Include that half-depth
+      // plus a skin so the resolved body can never remain visibly embedded.
+      const separation = Math.max(0, planeHalfExtent) + gate.halfDepth + 0.04;
+      const delta = after - before;
+      const movingToward = delta * sideSign < -1e-8;
+      const overlappingNow = Math.abs(after) < separation;
+      if (!movingToward && !overlappingNow) continue;
+
+      let crossing: THREE.Vector3 | null = null;
+      if (movingToward) {
+        const beforeContact = before - sideSign * separation;
+        const afterContact = after - sideSign * separation;
+        const span = beforeContact - afterContact;
+        if (Math.abs(span) > 1e-8 && beforeContact * afterContact <= 0) {
+          const t = beforeContact / span;
+          if (t >= 0 && t <= 1) {
+            crossing = from.clone().lerp(to, t);
+          }
+        }
+      }
+      // Recovery path for a body already straddling the frame (for example a
+      // lateral entry or an old replay captured before exact separation).
+      // Project the current centre onto the plane so the same aperture/frame
+      // classification applies, then return an outward normal below.
+      if (!crossing && overlappingNow)
+        crossing = to.clone().addScaledVector(gate.normal, -after);
+      if (!crossing) continue;
       const radial = crossing.clone().sub(gate.center);
       radial.addScaledVector(gate.normal, -radial.dot(gate.normal));
       const distance = radial.length();
@@ -9776,23 +9908,39 @@ export class Level {
       const side = Math.abs(radial.dot(tangent));
       const vertical = Math.abs(radial.y);
       if (
-        side > gate.halfWidth + clearance ||
-        vertical > gate.halfHeight + clearance
+        side > gate.halfWidth + apertureClearance ||
+        vertical > gate.halfHeight + apertureClearance
       )
         continue;
-      const clearRadius = Math.max(0.1, gate.radius - clearance);
-      if (
-        distance <= clearRadius &&
-        (gate.unlocked || tricks.has(gate.trick))
-      ) {
+      const clearRadius = Math.max(0.1, gate.radius - apertureClearance);
+      if (distance <= clearRadius) {
+        // Unlock is a false→true event, not a toll booth. Every later crossing
+        // through the open aperture passes silently; otherwise backtracking
+        // through it would replay the success sparks and chime forever.
+        if (gate.unlocked) continue;
+        if (!tricks.has(gate.trick))
+          return {
+            gate,
+            rejected: true,
+            reason: "lock",
+            normal: gate.normal.clone().multiplyScalar(sideSign),
+            separation,
+          };
         gate.unlocked = true;
         gate.seal.visible = false;
-        return { gate, rejected: false, normal: gate.normal.clone() };
+        return {
+          gate,
+          rejected: false,
+          normal: gate.normal.clone(),
+          separation,
+        };
       }
       return {
         gate,
         rejected: true,
-        normal: gate.normal.clone().multiplyScalar(before >= 0 ? 1 : -1),
+        reason: "frame",
+        normal: gate.normal.clone().multiplyScalar(sideSign),
+        separation,
       };
     }
     return null;

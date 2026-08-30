@@ -7,7 +7,17 @@ import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
-import { Checkpoint, Crate, LaneCursor, Level, RopeSwing, newLaneCursor } from './level';
+import {
+  Checkpoint,
+  Crate,
+  deckTrickFromInput,
+  deckTrickInfo,
+  type DeckTrickKind,
+  LaneCursor,
+  Level,
+  RopeSwing,
+  newLaneCursor,
+} from './level';
 import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
@@ -16,6 +26,7 @@ import { wumpaMesh, WUMPA_SIZE } from './wumpa';
 import { puffs, surfaceFromName } from './puffs';
 import { Tail, type TailCollider } from './tail';
 import { cutsFor } from './modelcuts';
+import { RenderInterpolator } from './renderInterpolation';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
@@ -119,7 +130,6 @@ function convexHullXZ(pts: THREE.Vector3[]): THREE.Vector3[] {
 // Triangle press MID-grind — picks the trick. Names/scores per style; the
 // lipslide is the sideways catch where you came over the TOP of the rail.
 type GrindStyle = 'normal' | 'nose' | 'five0' | 'board' | 'lip' | 'smith' | 'feeble' | 'crook';
-export type DeckTrickKind = 'kick' | 'heel' | 'shove' | 'imposs' | 'varial';
 const GRIND_NAMES: Record<GrindStyle, string> = {
   normal: '50-50',
   nose: 'Nosegrind',
@@ -207,9 +217,15 @@ const VERT_Q = new THREE.Quaternion();
 const VERT_Q2 = new THREE.Quaternion();
 const LEAN_AXIS = new THREE.Vector3(); // heading, for the carve/balance roll
 const LEAN_Q = new THREE.Quaternion();
+const _renderDelta = new THREE.Vector3(); // post-step PVP root correction
 
 export class Player {
   pos = new THREE.Vector3(); // feet position
+  /** Feet position currently presented to the renderer/camera. Never gameplay. */
+  readonly renderPosition = new THREE.Vector3();
+  private readonly renderInterpolator = new RenderInterpolator();
+  private readonly renderObjects: THREE.Object3D[] = [];
+  private _renderSnapVersion = 0;
   // this rider's place on the camera lane — private, so split-screen players
   // don't drag each other's frame around (see Level.laneDirAt)
   readonly laneCursor: LaneCursor = newLaneCursor();
@@ -248,6 +264,7 @@ export class Player {
   onRespawn: () => void = () => {};
   onCheckpoint: () => void = () => {};
   onRelic: (title: string, sub: string) => void = () => {};
+  onTrickGateBlocked: (trick: DeckTrickKind) => void = () => {};
   // TIME TRIAL: grab the stopwatch at spawn to start the clock, cross the
   // finish gate to stop it. Numbered time crates freeze it; dying restarts
   // the level with the trial OFF (grab the clock again to retry).
@@ -692,6 +709,9 @@ export class Player {
   private returnPortalCoolT = 0;
   private readonly primitiveAirTricks = new Set<DeckTrickKind>();
   private readonly primitiveComboTricks = new Set<DeckTrickKind>();
+  private trickGateHintT = 0; // throttle repeated lock copy while held into one gate
+  private trickGateHintKind: DeckTrickKind | null = null;
+  private trickGateImpactT = 0; // shorter physical-hit sound debounce (frame or lock)
   private readonly primitiveFrom = new THREE.Vector3();
   private readonly primitiveTo = new THREE.Vector3();
   private boostGlow!: THREE.Sprite; // pink bloom worn for the length of that window
@@ -1135,6 +1155,87 @@ export class Player {
     return this.skateCharge;
   }
 
+  /** Monotonic teleport epoch consumed by the render-clock camera. */
+  get renderSnapVersion(): number {
+    return this._renderSnapVersion;
+  }
+
+  /**
+   * Discard presentation history without telling the camera the player moved.
+   * Used for pause boundaries and an asynchronously replaced model hierarchy.
+   */
+  resetRenderInterpolation(): void {
+    this.renderInterpolator.snap();
+    this.group.position.copy(this.pos);
+    this.renderPosition.copy(this.pos);
+  }
+
+  /** Freeze both endpoints at current without introducing resume latency. */
+  collapseRenderInterpolation(): void {
+    this.renderInterpolator.collapse();
+    this.group.position.copy(this.pos);
+    this.renderPosition.copy(this.pos);
+  }
+
+  /** A semantic teleport: collapse pose history and snap the camera subject. */
+  snapRenderInterpolation(): void {
+    this.resetRenderInterpolation();
+    this._renderSnapVersion++;
+  }
+
+  /** Capture the visual pose after every completed fixed step. */
+  private collectRenderHierarchy(object: THREE.Object3D): void {
+    // The whirlwind deliberately holds/strobes at 30 Hz. Its parent root still
+    // glides with the rider, but interpolating its local golden-angle poses
+    // would turn that authored flipbook into an ordinary smooth rotation.
+    if (object === this.smearG) return;
+    this.renderObjects.push(object);
+    for (const child of object.children) this.collectRenderHierarchy(child);
+  }
+
+  commitRenderStep(): void {
+    // PVP separation/kicks run after Player.step() authored the pose. Fold that
+    // final root correction into the snapshot and carry player-attached world
+    // effects with it; the loose board/fruit/sparks have their own trajectories.
+    const dx = this.pos.x - this.group.position.x;
+    const dy = this.pos.y - this.group.position.y;
+    const dz = this.pos.z - this.group.position.z;
+    this.group.position.copy(this.pos);
+    if (dx * dx + dy * dy + dz * dz > 1e-12) {
+      if (this.floorX.visible) this.floorX.position.add(_renderDelta.set(dx, dy, dz));
+      if (this.maskMesh?.visible) this.maskMesh.position.add(_renderDelta.set(dx, dy, dz));
+      if (this.boostGlow.visible) this.boostGlow.position.add(_renderDelta.set(dx, dy, dz));
+    }
+
+    const objects = this.renderObjects;
+    objects.length = 0;
+    this.collectRenderHierarchy(this.group);
+    objects.push(this.floorX, this.boostGlow);
+    if (this.maskMesh) objects.push(this.maskMesh);
+    if (this.flyBoard) objects.push(this.flyBoard);
+    for (const fruit of this.fruits)
+      if (fruit.phase !== 'off' && fruit.phase !== 'fly') objects.push(fruit.mesh);
+    for (const spark of this.sparks)
+      if (spark.life > 0) objects.push(spark.mesh);
+    for (const spark of this.maskSparks)
+      if (spark.life > 0) objects.push(spark.sprite);
+    this.renderInterpolator.capture(objects);
+    this.renderPosition.copy(this.pos);
+  }
+
+  /** Temporarily author the interpolated render pose for this RAF. */
+  applyRenderInterpolation(alpha: number): void {
+    if (this.renderInterpolator.hasPose) this.renderInterpolator.apply(alpha);
+    else this.group.position.copy(this.pos);
+    this.renderPosition.copy(this.group.position);
+  }
+
+  /** Put authoritative fixed-step transforms back immediately after drawing. */
+  restoreRenderPose(): void {
+    this.renderInterpolator.restore();
+    this.renderPosition.copy(this.pos);
+  }
+
   // Momentum-skate mode is live (board down, heading model driving) — used by
   // the audio loop so slow carves on a transition still sound like rolling.
   get boardRolling(): boolean {
@@ -1337,6 +1438,9 @@ export class Player {
     this.returnPortalCoolT = 0;
     this.primitiveAirTricks.clear();
     this.primitiveComboTricks.clear();
+    this.trickGateHintT = 0;
+    this.trickGateHintKind = null;
+    this.trickGateImpactT = 0;
     this.lastRail = null;
     this.grindLatched = false;
     this.uberTimer = 0;
@@ -1488,6 +1592,7 @@ export class Player {
     this.lastTy = 0;
     this.rideNormal.set(0, 1, 0);
     this.prevPos.copy(this.pos);
+    this.snapRenderInterpolation();
     for (const s of this.sparks) {
       s.life = 0;
       s.mesh.visible = false;
@@ -1549,6 +1654,9 @@ export class Player {
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
     this.returnPortalCoolT = Math.max(0, this.returnPortalCoolT - dt);
+    this.trickGateHintT = Math.max(0, this.trickGateHintT - dt);
+    if (this.trickGateHintT <= 0) this.trickGateHintKind = null;
+    this.trickGateImpactT = Math.max(0, this.trickGateImpactT - dt);
     this.syncReusablePrimitives(level);
     // While sliding, keep the slide-jump grace topped up; after the slide it
     // runs down, and a release inside it still counts as a slide jump.
@@ -5476,6 +5584,7 @@ export class Player {
     this.vertLatVel = -this.vertLatVel;
     this.hangPipe = target;
     this.transferCoolT = 0.3;
+    this.snapRenderInterpolation();
     this.score(CONST.ptsSpine, 'Spine Transfer');
     sfx.play('woosh2', 0.7);
     this.emitSparks(8, 0xa0e8ff, 2);
@@ -6673,24 +6782,11 @@ export class Player {
     )
       return false;
 
-    const mx = this.rawInput.moveX;
-    const my = this.rawInput.moveY;
-    if (my > 0.4) {
-      this.flipKind = 'imposs';
-      this.flipName = 'Impossible';
-    } else if (my < -0.4) {
-      this.flipKind = 'varial';
-      this.flipName = 'Varial Flip';
-    } else if (mx < -0.3) {
-      this.flipKind = 'heel';
-      this.flipName = 'Heelflip';
-    } else if (mx > 0.3) {
-      this.flipKind = 'shove';
-      this.flipName = 'Pop Shove-It';
-    } else {
-      this.flipKind = 'kick';
-      this.flipName = 'Kickflip';
-    }
+    this.flipKind = deckTrickFromInput(
+      this.rawInput.moveX,
+      this.rawInput.moveY,
+    );
+    this.flipName = deckTrickInfo(this.flipKind).label;
     this.flipT = CONST.flipTime;
     this.deckTricksThisAir.add(this.flipKind);
     this.deckTricksThisCombo.add(this.flipKind);
@@ -6715,7 +6811,6 @@ export class Player {
     if (queueOllieDeckTrick) this.ollieDeckTrickQueued = true;
     if (
       input.spinPressed &&
-      !queueOllieDeckTrick &&
       !this.spinning &&
       this.spinCd <= 0 &&
       canSpin
@@ -6755,9 +6850,10 @@ export class Player {
         this.slideCd = 0;
       }
     }
-    // Square may be pressed during the held ground ollie charge. Preserve that
-    // edge until X releases (holding Square through release also works), then
-    // consume it as deck-trick intent without a generic spin or air-stall.
+    // Square may be pressed during the held ground ollie charge. Start the
+    // ordinary spin immediately (including its hitbox + whirlwind tell), and
+    // also preserve that edge until X releases so the charged ollie can throw
+    // its queued deck trick. Holding Square through release works too.
     const ollieReleaseChord =
       input.jumpReleased &&
       (input.spinHeld || this.ollieDeckTrickQueued) &&
@@ -7159,6 +7255,7 @@ export class Player {
         // envelope together so it cannot resume or attack at the destination.
         this.cancelSlideTraversal();
         this.pos.copy(portal.destination);
+        this.snapRenderInterpolation();
         const h = portal.heading;
         const dir: 'S' | 'E' | 'W' | 'N' =
           Math.abs(h.x) > Math.abs(h.z)
@@ -7248,26 +7345,65 @@ export class Player {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
     }
 
+    const trickGateAperture = Math.hypot(
+      half.y,
+      Math.max(half.x, half.z),
+    );
     const trickGate =
       level.trickGates.length > 0
         ? level.resolveTrickGateCrossing(
             this.primitiveFrom.copy(this.prevPos).addScaledVector(CRATE_UP, half.y),
             this.primitiveTo.copy(this.pos).addScaledVector(CRATE_UP, half.y),
             this.primitiveAirTricks,
-            Math.hypot(half.y, Math.max(half.x, half.z)),
+            trickGateAperture,
+            Math.max(half.x, half.z),
           )
         : null;
     if (trickGate?.rejected) {
       const entrySpeed = Math.abs(this.speed);
-      this.pos.copy(this.prevPos).addScaledVector(trickGate.normal, 0.08);
+      // Seat the whole body outside the VISIBLE frame depth, at the exact
+      // swept side selected by the gate. `prevPos + 0.08` left up to 0.26u of
+      // the rider inside the frame, and a retained skate bail then kept driving
+      // forward through it. Exact separation is independent of step size and
+      // also recovers old replays that begin already straddling the plane.
+      const currentSeparation = this.primitiveTo
+        .copy(this.pos)
+        .sub(trickGate.gate.center)
+        .dot(trickGate.normal);
+      this.pos.addScaledVector(
+        trickGate.normal,
+        Math.max(0, trickGate.separation - currentSeparation),
+      );
+      const trick = trickGate.gate.trick;
+      if (
+        trickGate.reason === 'lock' &&
+        (this.trickGateHintT <= 0 || this.trickGateHintKind !== trick)
+      ) {
+        this.trickGateHintT = 1.1;
+        this.trickGateHintKind = trick;
+        this.onTrickGateBlocked(trick);
+      }
+      if (this.trickGateImpactT <= 0) {
+        this.trickGateImpactT = 0.25;
+        sfx.play('skateHalt', 0.8, 0.85);
+      }
       if (this.freeSkate && entrySpeed >= TUNING.wallBailSpeed) {
         this.bail();
         this.startRagdoll('back');
-        this.vVel = Math.max(this.vVel, 4.2);
+        // A gate is a wall with a condition. Rebound away from its actual
+        // normal just like wallSmack does; bail() intentionally retains speed,
+        // so leaving its sign untouched is what pinned the ragdoll into the
+        // lock while forward remained held.
+        const alongNormal = this.axisF.dot(trickGate.normal);
+        this.speed =
+          Math.abs(alongNormal) > 0.05
+            ? Math.sign(alongNormal) * entrySpeed * 0.32
+            : 0;
+        this.vVel = Math.max(this.vVel, 3.6);
         this.state = 'air';
         this.grounded = false;
         this.airFromSkate = false;
-        this.airGrav = 'board';
+        this.airGrav = 'foot';
         this.airMomentum = true;
       } else {
         if (this.slideTimer > 0 || this.slideContactLatch) {
@@ -7277,17 +7413,18 @@ export class Player {
         } else if (!this.freeSkate && this.walkVelocity.lengthSq() > 1e-6) {
           const into = this.walkVelocity.dot(trickGate.normal);
           if (into < 0)
-            this.walkVelocity.addScaledVector(trickGate.normal, -2 * into);
-          this.walkVelocity.multiplyScalar(0.3);
-          this.walkRamp = Math.min(this.walkRamp, 0.35);
-          this.walkTarget.set(0, 0, 0);
-          this.walkIntent.set(0, 0, 0);
-          this.walkTurnaround = false;
+            this.walkVelocity.addScaledVector(trickGate.normal, -into);
+          // Preserve tangent velocity and the live reversal intent. Clearing
+          // walkTarget/walkIntent here made the new inertia model feel locked
+          // even after the player had already steered out of the impact.
           this.speed = this.walkVelocity.dot(this.axisF);
         } else {
-          this.speed *= -0.3;
+          const alongNormal = this.axisF.dot(trickGate.normal);
+          this.speed =
+            Math.abs(alongNormal) > 0.05
+              ? Math.sign(alongNormal) * Math.min(entrySpeed * 0.25, 3)
+              : 0;
         }
-        this.vVel = Math.max(this.vVel, 2.5);
       }
       center.set(this.pos.x, this.pos.y + half.y, this.pos.z);
       this.playerBox.setFromCenterAndSize(
@@ -7300,7 +7437,6 @@ export class Player {
         this.spinBox.expandByVector(
           new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach),
         );
-      sfx.play('skateHalt', 0.8, 0.85);
     } else if (trickGate) {
       this.emitSparks(10, 0x54dfff, 1.6);
       sfx.play('crystalGet', 0.65, 1.35);
@@ -11336,6 +11472,7 @@ export class Player {
           this.modelReady = true; // nothing usable in the file: show the placeholder
           return;
         }
+        this.resetRenderInterpolation();
         try {
           this.segmentRoo(source);
         } catch (e) {
@@ -11388,6 +11525,7 @@ export class Player {
           this.modelReady = true; // nothing usable in the file: show the placeholder
           return;
         }
+        this.resetRenderInterpolation();
         try {
           this.modelSrc = src;
           this.segmentBiped(mesh);

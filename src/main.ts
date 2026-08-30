@@ -19,9 +19,11 @@ import {
   adoptLegacyLevels,
   starterCustomLevel,
   normalizeCustomLevelData,
+  newLaneCursor,
   userLevelStorageHealthy,
   isEditUnlocked,
   checkEditPass,
+  deckTrickInfo,
   DEFAULT_SKY,
   type SkyPreset,
 } from "./level";
@@ -844,6 +846,8 @@ let p2: Player | null = null;
 const input2 = new Input(true); // pad-only: claims its own gamepad, no keyboard/touch
 const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 const cam2F = new THREE.Vector3(0, 0, -1);
+const cam2LaneCursor = newLaneCursor();
+let cam2RenderSnapVersion = -1;
 let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
 const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 let coastPost: CoastPostRenderer | null = null;
@@ -950,6 +954,41 @@ try {
 }
 let loadedLevelId = current.id;
 let acc = 0;
+const frameStats = {
+  frame: 0,
+  rawDt: 0,
+  dt: 0,
+  simSteps: 0,
+  totalFixedSteps: 0,
+  replayFrame: 0,
+  accumulator: 0,
+  alpha: 0,
+  snapVersion: 0,
+  simX: 0,
+  simY: 0,
+  simZ: 0,
+  renderX: 0,
+  renderY: 0,
+  renderZ: 0,
+  speed: 0,
+  vVel: 0,
+  state: "ride",
+  grounded: false,
+  cameraTargetX: 0,
+  cameraTargetY: 0,
+  cameraTargetZ: 0,
+  cameraX: 0,
+  cameraY: 0,
+  cameraZ: 0,
+};
+const frameProbe = new URLSearchParams(window.location.search).has("frameprobe")
+  ? document.createElement("pre")
+  : null;
+if (frameProbe) {
+  frameProbe.id = "frame-probe";
+  frameProbe.style.display = "none";
+  document.body.appendChild(frameProbe);
+}
 let editorSavedAcc: number | null = null;
 let editorSavedMessage: ReturnType<UI["captureMessage"]> = null;
 // A pristine hand-coded built-in keeps rendering from its exact original
@@ -1070,6 +1109,10 @@ function set2P(on: boolean, force = false): void {
       // vanish. Its own lens; the one shared HUD counter.
       p2.cam = camera2;
       p2.hudFruitAt = () => ui.fruitIconAt();
+      p2.onTrickGateBlocked = (trick) => {
+        const info = deckTrickInfo(trick);
+        ui.showMessage(`P2 · ${info.label.toUpperCase()} REQUIRED`, info.hint, 1800);
+      };
       tintP2();
     }
     p2.group.visible = true;
@@ -1084,6 +1127,7 @@ function set2P(on: boolean, force = false): void {
     player.respawn(level, true);
     p2.respawn(level, true);
     p2.pos.x += 1.6; // side by side at the start line
+    p2.snapRenderInterpolation();
     applyRunModes();
     ui.set2P(true);
     ui.showMessage(
@@ -1186,28 +1230,40 @@ function stepPvp(dt: number): void {
 // full Crash rig belongs to P1; this one just keeps P2 framed and onward.
 function updateCamera2(dt: number): void {
   if (!p2) return;
+  const subject = p2.renderPosition;
+  const snapped = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  if (snapped) {
+    cam2RenderSnapVersion = p2.renderSnapVersion;
+    cam2LaneCursor.s = -1;
+  }
   if (camera2.fov !== camera.fov || camera2.aspect !== camera.aspect) {
     camera2.fov = camera.fov;
     camera2.aspect = camera.aspect;
     camera2.updateProjectionMatrix();
   }
-  const lf = level.laneDirAt(p2.pos.x, p2.pos.y, p2.pos.z, p2.laneCursor) ?? { x: 0, z: -1 };
-  cam2F.x += (lf.x - cam2F.x) * Math.min(1, 3.5 * dt);
-  cam2F.z += (lf.z - cam2F.z) * Math.min(1, 3.5 * dt);
+  const lf = level.laneDirAt(
+    subject.x,
+    subject.y,
+    subject.z,
+    cam2LaneCursor,
+  ) ?? { x: 0, z: -1 };
+  const turn = snapped ? 1 : Math.min(1, 3.5 * dt);
+  cam2F.x += (lf.x - cam2F.x) * turn;
+  cam2F.z += (lf.z - cam2F.z) * turn;
   cam2F.y = 0;
   if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
   cam2F.normalize();
-  const tx = p2.pos.x - cam2F.x * TUNING.camDist;
-  const tz = p2.pos.z - cam2F.z * TUNING.camDist;
-  const ty = p2.pos.y + TUNING.camHeight * 0.85;
-  const k = Math.min(1, 9 * dt);
+  const tx = subject.x - cam2F.x * TUNING.camDist;
+  const tz = subject.z - cam2F.z * TUNING.camDist;
+  const ty = subject.y + TUNING.camHeight * 0.85;
+  const k = snapped ? 1 : Math.min(1, 9 * dt);
   camera2.position.x += (tx - camera2.position.x) * k;
   camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
   camera2.lookAt(
-    p2.pos.x + cam2F.x * 3,
-    p2.pos.y + 1.2,
-    p2.pos.z + cam2F.z * 3,
+    subject.x + cam2F.x * 3,
+    subject.y + 1.2,
+    subject.z + cam2F.z * 3,
   );
   p2.camDir.set(cam2F.x, 0, cam2F.z);
 }
@@ -1288,6 +1344,7 @@ function switchLevel(id: string, preserveEditor = false): void {
     p2.enterLevel(entry.id);
     p2.respawn(level, true);
     p2.pos.x += 1.6;
+    p2.snapRenderInterpolation();
   }
   applyRunModes(); // the new level's pickups obey the switch too
   applyTheme();
@@ -1537,6 +1594,7 @@ function rebuildLevel(): void {
     if (changedLevelId) p2.enterLevel(current.id);
     p2.respawn(level, true);
     p2.pos.x += 1.6;
+    p2.snapRenderInterpolation();
   }
   applyRunModes();
   applyTheme();
@@ -2104,6 +2162,7 @@ ui.onToggleEndlessDeaths = () => {
   if (split2p && p2) {
     p2.respawn(level, true);
     p2.pos.x += 1.6;
+    p2.snapRenderInterpolation();
   }
   recorder.start(current.id, endlessDeathsOn);
   ui.showMessage(
@@ -2155,6 +2214,10 @@ window.addEventListener("keydown", (e) => {
 
 player.onDeath = () => ui.deathFade(true);
 player.onRelic = (title, sub) => ui.showMessage(title, sub, 1400);
+player.onTrickGateBlocked = (trick) => {
+  const info = deckTrickInfo(trick);
+  ui.showMessage(`${info.label.toUpperCase()} REQUIRED`, info.hint, 1800);
+};
 player.onFinish = (time) => {
   // the gate tallies the collectathon haul alongside the clear time
   const gem = player.gemEarned
@@ -2261,6 +2324,8 @@ let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the c
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
 const prevPlayerPos = new THREE.Vector3();
+const cameraLaneCursor = newLaneCursor();
+let cameraRenderSnapVersion = -1;
 // The rig's "down-course" forward. Fixed at -Z normally; on levels with a
 // drawn CAMERA LANE it eases along the lane's local tangent, turning the
 // whole rig through winding corridors (Crash 3 camera rails).
@@ -2272,6 +2337,14 @@ const chaseF = new THREE.Vector3(0, 0, -1);
 let chaseSteadyT = 0; // seconds of continuous steady travel (filters pipe swings)
 
 function updateCamera(dt: number): void {
+  const subject = player.renderPosition;
+  const snapped = cameraRenderSnapVersion !== player.renderSnapVersion;
+  if (snapped) {
+    cameraRenderSnapVersion = player.renderSnapVersion;
+    prevPlayerPos.copy(subject);
+    cameraLaneCursor.s = -1;
+    chaseSteadyT = 0;
+  }
   if (oceanOverview && current.id === "beachfront") {
     // Frozen Unity d300 seaward golden-camera coordinates.
     camera.fov = 50;
@@ -2279,7 +2352,7 @@ function updateCamera(dt: number): void {
     camera.up.set(0, 1, 0);
     camera.lookAt(0.4741, 1, -314.9205);
     camera.updateProjectionMatrix();
-    prevPlayerPos.copy(player.pos);
+    prevPlayerPos.copy(subject);
     return;
   }
   if (oceanReview && current.id === "beachfront") {
@@ -2290,7 +2363,7 @@ function updateCamera(dt: number): void {
     camera.up.set(0, 1, 0);
     camera.lookAt(4.065, 0, 2.148);
     camera.updateProjectionMatrix();
-    prevPlayerPos.copy(player.pos);
+    prevPlayerPos.copy(subject);
     return;
   }
   // ONE rig, always facing down -Z. When the path right-angles into an
@@ -2300,10 +2373,10 @@ function updateCamera(dt: number): void {
   const chaseOn = TUNING.chaseCam > 0.5 && !level.boulder;
   // side framing only on E/W stretches — a run-at-camera ('N') zone keeps the
   // normal corridor shot: the fixed lens IS the chase framing there
-  const znHere = level.zoneAt(player.pos.x, player.pos.z);
+  const znHere = level.zoneAt(subject.x, subject.z);
   const inTurn =
     !chaseOn && znHere !== null && (znHere.dir === "E" || znHere.dir === "W");
-  sideF += ((inTurn ? 1 : 0) - sideF) * Math.min(1, 3.5 * dt);
+  sideF += ((inTurn ? 1 : 0) - sideF) * (snapped ? 1 : Math.min(1, 3.5 * dt));
 
   // Boulder-chase framing is a proper cinematographic shot, not just a further
   // dolly-back. The skater runs TOWARD camera, so "ahead" is the foreground the
@@ -2315,7 +2388,9 @@ function updateCamera(dt: number): void {
   // look point aims well down-course (+Z, where you're heading) which floats the
   // hero HIGH up the screen, well off centre, with all the lead room below him
   // for the crates/gaps rushing up.
-  boulderF += ((level.boulder ? 1 : 0) - boulderF) * Math.min(1, 3 * dt);
+  boulderF +=
+    ((level.boulder ? 1 : 0) - boulderF) *
+    (snapped ? 1 : Math.min(1, 3 * dt));
   const authoredFov = current.id === "beachfront" ? 43 : TUNING.camFov;
   const targetFov = THREE.MathUtils.lerp(authoredFov, BOULDER_FOV, boulderF);
   if (Math.abs(camera.fov - targetFov) > 0.005) {
@@ -2329,8 +2404,17 @@ function updateCamera(dt: number): void {
   // shot — the level's spine is camera noise, not a heading); and the brief
   // sustain window filters what's left. Held while stopped: idling never
   // spins the frame.
-  const vx = dt > 0 ? (player.pos.x - prevPlayerPos.x) / dt : 0;
-  const vz = dt > 0 ? (player.pos.z - prevPlayerPos.z) / dt : 0;
+  if (snapped && chaseOn) {
+    const seed = level.laneDirAt(
+      subject.x,
+      subject.y,
+      subject.z,
+      cameraLaneCursor,
+    ) ?? { x: 0, z: -1 };
+    chaseF.set(seed.x, 0, seed.z).normalize();
+  }
+  const vx = dt > 0 ? (subject.x - prevPlayerPos.x) / dt : 0;
+  const vz = dt > 0 ? (subject.z - prevPlayerPos.z) / dt : 0;
   chaseSteadyT = chaseOn && player.chaseSteady ? chaseSteadyT + dt : 0;
   if (chaseOn && chaseSteadyT > 0.35 && vx * vx + vz * vz > 9) {
     const inv = 1 / Math.hypot(vx, vz);
@@ -2346,8 +2430,15 @@ function updateCamera(dt: number): void {
   // The turn rate sets the carve radius (radius ≈ speed / rate, since the
   // frame chases its own tail while you hold a side) — keep it LAZY: a held
   // side is a wide arc, not a spin-top.
-  const lf = chaseOn ? chaseF : level.laneDirAt(player.pos.x, player.pos.y, player.pos.z, player.laneCursor);
-  const turnK = Math.min(1, (chaseOn ? 1.6 : 3.5) * dt);
+  const lf = chaseOn
+    ? chaseF
+    : level.laneDirAt(
+        subject.x,
+        subject.y,
+        subject.z,
+        cameraLaneCursor,
+      );
+  const turnK = snapped ? 1 : Math.min(1, (chaseOn ? 1.6 : 3.5) * dt);
   camF.x += ((lf ? lf.x : 0) - camF.x) * turnK;
   camF.z += ((lf ? lf.z : -1) - camF.z) * turnK;
   camF.y = 0;
@@ -2356,15 +2447,17 @@ function updateCamera(dt: number): void {
 
   const vAlong =
     dt > 0
-      ? ((player.pos.x - prevPlayerPos.x) * camF.x +
-          (player.pos.z - prevPlayerPos.z) * camF.z) /
+      ? ((subject.x - prevPlayerPos.x) * camF.x +
+          (subject.z - prevPlayerPos.z) * camF.z) /
         dt
       : 0;
-  prevPlayerPos.copy(player.pos);
+  prevPlayerPos.copy(subject);
   // chase mode swings around behind instead of dollying back
   const movingBack =
     !chaseOn && (vAlong < -2.5 || (player.grounded && player.speed < -1.5));
-  camBack += ((movingBack ? 1 : 0) - camBack) * Math.min(1, 3 * dt);
+  camBack +=
+    ((movingBack ? 1 : 0) - camBack) *
+    (snapped ? 1 : Math.min(1, 3 * dt));
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
   // side-scroll stretches scale off the sliders (9.2/5.2 and 3.7/4.1 were the
@@ -2398,27 +2491,29 @@ function updateCamera(dt: number): void {
   const floorY = player.groundBelowY;
   const anchorGoal =
     floorY !== null
-      ? Math.max(floorY, player.pos.y - maxRise)
-      : Math.max(camAnchorY, player.pos.y - maxRise);
-  camAnchorY += (anchorGoal - camAnchorY) * Math.min(1, 4.5 * dt);
+      ? Math.max(floorY, subject.y - maxRise)
+      : Math.max(camAnchorY, subject.y - maxRise);
+  camAnchorY +=
+    (anchorGoal - camAnchorY) *
+    (snapped ? 1 : Math.min(1, 4.5 * dt));
   // camAirLift: how much the rig rides UP with airborne height. 1 = classic
   // full-follow (the camera rises with the jump, so airs read small and snappy
   // on screen); 0 = pure ground anchor (the skater does all the on-screen
   // rising — same physics, but every air reads much bigger and floatier).
   const airLift = Math.max(TUNING.camAirLift, boulderF);
-  const effY = THREE.MathUtils.lerp(camAnchorY, player.pos.y, airLift);
+  const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift);
   // the gentle jump tilt also softens on tight lenses (magnified on screen);
   // kept small overall — the ground stays in shot, the skater does the rising
   const tiltTrack = 0.22 * Math.min(1, frameHalf / 4.5);
 
   camTarget.set(
-    player.pos.x - camF.x * (dist - off),
+    subject.x - camF.x * (dist - off),
     effY + height,
-    player.pos.z - camF.z * (dist - off),
+    subject.z - camF.z * (dist - off),
   );
 
   // Snap after respawn teleports; damp otherwise.
-  if (camera.position.distanceTo(camTarget) > 30) {
+  if (snapped || camera.position.distanceTo(camTarget) > 30) {
     camera.position.copy(camTarget);
     camAnchorY = anchorGoal;
     aimSmooth.set(NaN, 0, 0); // re-seed the aim at the new shot
@@ -2463,11 +2558,11 @@ function updateCamera(dt: number): void {
   // the tilt glances down at a body below the anchor but never dives after a
   // long kill-plane fall — past a couple units the aim just lets them drop out
   lookPoint.set(
-    player.pos.x - camF.x * aimK,
+    subject.x - camF.x * aimK,
     effY +
-      Math.max(-2.5, (player.pos.y - effY) * tiltTrack) +
+      Math.max(-2.5, (subject.y - effY) * tiltTrack) +
       THREE.MathUtils.lerp(aimY, 1.6, boulderF),
-    player.pos.z - camF.z * aimK,
+    subject.z - camF.z * aimK,
   );
   if (Number.isNaN(aimSmooth.x)) aimSmooth.copy(lookPoint);
   // pan (xz) keeps the gentle smoothing; the vertical aim stiffens with
@@ -2498,7 +2593,7 @@ function updateCamera(dt: number): void {
 }
 
 camera.position
-  .copy(player.pos)
+  .copy(player.renderPosition)
   .addScaledVector(new THREE.Vector3(0, 0, 1), TUNING.camDist);
 camera.position.y += TUNING.camHeight;
 
@@ -2563,7 +2658,8 @@ let paused = false;
 
 function frame(): void {
   requestAnimationFrame(frame);
-  const dt = Math.min(clock.getDelta(), 0.1);
+  const rawDt = clock.getDelta();
+  const dt = Math.min(rawDt, 0.1);
   // The model studio takes the stage: it owns the camera, the sim stands down,
   // and the world is still drawn so there is something to point at. Everything
   // else in this function is skipped, which is also what stops the game
@@ -2618,6 +2714,8 @@ function frame(): void {
   // Options / P toggles pause: the sim stops dead, the frame still renders.
   if (input.pausePressed) {
     paused = !paused;
+    player.collapseRenderInterpolation();
+    if (split2p && p2) p2.collapseRenderInterpolation();
     if (paused) ui.showMessage("PAUSED", "Options / P to resume", 0);
     else ui.hideMessage();
     // SPEND THE EDGE HERE. pausePressed is a latch cleared only by
@@ -2653,7 +2751,11 @@ function frame(): void {
   }
 
   acc += dt;
-  while (acc >= CONST.fixedStep) {
+  let simSteps = 0;
+  // Tiny epsilon prevents an exact half+half tick from being stranded one RAF
+  // by binary floating-point error (the visible symptom is another repeated
+  // pose followed by a catch-up step).
+  while (acc + 1e-10 >= CONST.fixedStep) {
     // Playback: overwrite the live input with the recorded frame; when the
     // take runs out, reset to a clean level so the next live take is valid.
     if (!split2p && replayer.active && !replayer.feed(input, player.camDir)) {
@@ -2674,17 +2776,47 @@ function frame(): void {
       stepPvp(CONST.fixedStep);
     }
     level.update(CONST.fixedStep);
+    // Player.step authors the fixed pose; PVP may then move either root. Only
+    // now is the simulation tick complete and safe to publish to rendering.
+    player.commitRenderStep();
+    if (split2p && p2) p2.commitRenderStep();
     // record exactly what the sim consumed (edges intact, pre-consume)
     if (!replayer.active && !split2p) recorder.record(input, player.camDir);
     input.consumeEdges(); // one press = one step
     if (split2p) input2.consumeEdges();
-    acc -= CONST.fixedStep;
+    acc = Math.max(0, acc - CONST.fixedStep);
+    simSteps++;
+    frameStats.totalFixedSteps++;
   }
 
-  // hold the last shot through the death blackout — no drifting after the
-  // corpse; the respawn teleport re-snaps the rig when play resumes
-  if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
-  if (split2p) updateCamera2(dt);
+  const renderAlpha = THREE.MathUtils.clamp(acc / CONST.fixedStep, 0, 1);
+  try {
+    player.applyRenderInterpolation(renderAlpha);
+    if (split2p && p2) p2.applyRenderInterpolation(renderAlpha);
+
+    frameStats.frame++;
+    frameStats.rawDt = rawDt;
+    frameStats.dt = dt;
+    frameStats.simSteps = simSteps;
+    frameStats.accumulator = acc;
+    frameStats.alpha = renderAlpha;
+    frameStats.replayFrame = replayer.frame;
+    frameStats.snapVersion = player.renderSnapVersion;
+    frameStats.simX = player.pos.x;
+    frameStats.simY = player.pos.y;
+    frameStats.simZ = player.pos.z;
+    frameStats.renderX = player.renderPosition.x;
+    frameStats.renderY = player.renderPosition.y;
+    frameStats.renderZ = player.renderPosition.z;
+    frameStats.speed = player.speed;
+    frameStats.vVel = player.vVel;
+    frameStats.state = player.state;
+    frameStats.grounded = player.grounded;
+
+    // hold the last shot through the death blackout — no drifting after the
+    // corpse; the respawn teleport re-snaps the rig when play resumes
+    if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
+    if (split2p) updateCamera2(dt);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
   // camera basis that was settled a line ago or they lag the shot by a frame.
@@ -2762,7 +2894,11 @@ function frame(): void {
 
   // Walk the shadow frustum onto the skater before drawing — it's small enough
   // to stay sharp, so it has to travel with them.
-  updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
+  updateSunShadow(
+    player.renderPosition.x,
+    player.renderPosition.y - 1,
+    player.renderPosition.z,
+  );
 
   // Unity Beachfront render contract: low-resolution mirrored capture first,
   // then opaque color+depth for refraction/intersection/caustics, then the
@@ -2797,6 +2933,19 @@ function frame(): void {
   // The crate, fruit and relic HUD icons are real 3D, spun and drawn over the
   // finished frame into each icon's own DOM box.
   ui.drawIcons(renderer, dt);
+    frameStats.cameraTargetX = camTarget.x;
+    frameStats.cameraTargetY = camTarget.y;
+    frameStats.cameraTargetZ = camTarget.z;
+    frameStats.cameraX = camera.position.x;
+    frameStats.cameraY = camera.position.y;
+    frameStats.cameraZ = camera.position.z;
+    if (frameProbe) frameProbe.textContent = JSON.stringify(frameStats);
+  } finally {
+    // Render interpolation is presentation-only. Gameplay and the next fixed
+    // tick must always see the exact current simulation-authored hierarchy.
+    player.restoreRenderPose();
+    if (split2p && p2) p2.restoreRenderPose();
+  }
 }
 frame();
 
@@ -2823,6 +2972,7 @@ frame();
   toggleVideo,
   replayer,
   recorder,
+  frameStats,
   set2P, // debug/harness: force past the 2-pad gate with set2P(true, true)
   getP2: () => p2,
   editor,

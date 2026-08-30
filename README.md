@@ -54,6 +54,12 @@ outside the published browser bundle.
 | Restart | Share / Create | R |
 | Pause | Options | P / Escape |
 
+In a board air, Square / F selects a deck trick from the held direction:
+neutral = Kickflip, left-only = Heelflip, right-only = Pop Shove-It, forward =
+Impossible, and back = Varial Flip. Forward/back takes priority over sideways
+input. Trick gates display both the required move and its input recipe on the
+lock.
+
 During an ordinary board ollie, press and release Jump a second time to perform
 the risky emergency eject. The menu’s **STANDARD RULE** switch selects classic
 lives or the optional Endless Deaths score/death-count ruleset.

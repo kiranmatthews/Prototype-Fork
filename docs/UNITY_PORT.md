@@ -189,11 +189,14 @@ Update-scoped and will double-fire or drop under a fixed step.
     blend weight written only by `syncVisual`, and eased at two different
     rates (24/s on a pipe, 12/s elsewhere). Today this is safe *only* because
     `syncVisual` is called from inside the fixed step, so the smoothing is
-    deterministic. **If the port puts pose smoothing on `Update` (render rate)
-    while physics stays on `FixedUpdate`, this crash/no-crash verdict silently
-    becomes frame-rate dependent.** Either keep the smoothing in
-    `FixedUpdate`, or replace the test with a sim-owned quantity (the board's
-    actual tilt against the landing normal) before porting.
+    deterministic. The browser now snapshots that completed hierarchy and
+    temporarily interpolates previous→current for drawing, then restores the
+    authoritative fixed pose immediately after the render; `syncVisual` itself
+    still never runs on the render clock. **If the port puts pose smoothing on
+    `Update` while physics stays on `FixedUpdate`, this crash/no-crash verdict
+    silently becomes frame-rate dependent.** Either preserve the same
+    snapshot/interpolate/restore boundary, keep smoothing in `FixedUpdate`, or
+    replace the test with a sim-owned tilt quantity before porting.
 
 ---
 

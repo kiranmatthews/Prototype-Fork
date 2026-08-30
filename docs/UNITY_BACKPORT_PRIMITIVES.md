@@ -48,10 +48,21 @@ retrigger it every tick.
 }
 ```
 
-The valid trick keys are `kick`, `heel`, `shove`, `imposs`, and `varial`.
+The valid trick keys and board-air inputs are:
+
+- `kick`: Kickflip — neutral + Square / F
+- `heel`: Heelflip — left only + Square / F
+- `shove`: Pop Shove-It — right only + Square / F
+- `imposs`: Impossible — forward + Square / F
+- `varial`: Varial Flip — back + Square / F
+
+Forward/back takes priority over sideways input, so release the vertical axis
+before asking for Heelflip or Pop Shove-It.
+
 Starting the required deck trick during the current board air opens the gate
-when crossed. A closed crossing rebounds/wipes out; an opened gate remains open
-until the level resets.
+when crossed. The membrane displays the requirement and a rejected crossing
+repeats it on the HUD. A closed crossing rebounds/wipes out; an opened gate
+remains open until the level resets.
 
 ## Trick rail
 

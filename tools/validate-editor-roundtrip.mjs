@@ -556,6 +556,13 @@ const NEW_PRIMITIVE_FIXTURE = {
       radius: 2.6,
       trick: "shove",
     },
+    // Every serialized trick value must survive unchanged and build its gate.
+    // Browser smoke covers the derived membrane/editor copy; `shove` is in the
+    // rotated gate above and the omitted default is in the sparse fixture.
+    { t: "trickgate", p: [-24, 3, -20], trick: "kick", nm: "named kick lock" },
+    { t: "trickgate", p: [-8, 3, -20], trick: "heel" },
+    { t: "trickgate", p: [8, 3, -20], trick: "imposs" },
+    { t: "trickgate", p: [24, 3, -20], trick: "varial" },
     {
       t: "trickrail",
       p: [-4, 1, -10],
@@ -655,9 +662,14 @@ function assertPrimitiveFixture(canonical, level) {
   assert.equal(trampolines[0].userData.trampolineHeldMult, 1.25);
   assert.equal(speedPads[0].userData.speedPadSpeed, 48);
   assert.equal(speedPads[0].userData.speedPadHold, 3.9);
-  assert.equal(level.trickGates.length, 2);
+  assert.equal(level.trickGates.length, 6);
   assert.equal(level.trickGates[0].radius, 2.2);
+  assert.equal(level.trickGates[0].halfDepth, 0.3);
   assert.equal(level.trickGates[0].trick, "kick");
+  assert.deepStrictEqual(
+    level.trickGates.map((gate) => gate.trick),
+    ["kick", "shove", "kick", "heel", "imposs", "varial"],
+  );
   assert.equal(level.trickRails.length, 3);
   assert.equal(level.trickRails[0].rail.totalLength, 12);
   assert.equal(level.returnPortals.length, 2);

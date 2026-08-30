@@ -20,6 +20,8 @@ import {
   EnemyKind,
   CustomLevelData,
   CustomGroup,
+  DECK_TRICKS,
+  deckTrickInfo,
   LevelEntry,
   starterCustomLevel,
   migrateCustomLevel,
@@ -1862,14 +1864,6 @@ const CRATE_KINDS = [
   "mystery",
   "bang",
   "nitrobang",
-] as const;
-
-const DECK_TRICKS = [
-  ["kick", "Kickflip"],
-  ["heel", "Heelflip"],
-  ["shove", "Pop Shove-It"],
-  ["imposs", "Impossible"],
-  ["varial", "Varial Flip"],
 ] as const;
 
 // enemy variants + a one-line hint on how each is beaten, shown in the dropdown
@@ -6104,15 +6098,21 @@ export class Editor {
   private itemLabel(idx: number): string {
     const c = this.data.components[idx];
     if (!c) return "?";
-    if (c.nm) return c.nm;
+    if (c.nm) {
+      if (c.t === "trickgate" || c.t === "trickrail")
+        return `${c.nm} · requires ${deckTrickInfo(c.trick ?? "kick").label}`;
+      return c.nm;
+    }
     if (c.pts && c.pts.length >= 3) return `${c.t} · drawn`;
     if (c.t === "crate")
       return `crate · ${c.kind ?? "wood"}${c.outline ? " (outline)" : ""}`;
     if (c.t === "enemy") return `foe · ${c.foe ?? "grunt"}`;
     if (c.t === "terrain") return `ground · ${c.pts?.length ?? 0} nodes`;
     if (c.t === "woodpath") return `wood path · ${c.pts?.length ?? 0} nodes`;
-    if (c.t === "trickgate") return `trick gate · ${c.trick ?? "kick"}`;
-    if (c.t === "trickrail") return `trick rail · ${c.trick ?? "kick"}`;
+    if (c.t === "trickgate")
+      return `trick gate · ${deckTrickInfo(c.trick ?? "kick").label}`;
+    if (c.t === "trickrail")
+      return `trick rail · ${deckTrickInfo(c.trick ?? "kick").label}`;
     if (c.t === "returnportal") return "return portal";
     if (c.t === "trampoline") return "trampoline pad";
     if (c.t === "speedpad") return "speed pad";
@@ -6368,6 +6368,32 @@ export class Editor {
     row.appendChild(lab);
     row.appendChild(sel);
     return row;
+  }
+
+  private appendTrickPicker(c: CustomComponent): void {
+    const select = document.createElement("select");
+    select.className = "ed-select";
+    for (const { kind, label } of DECK_TRICKS) {
+      const option = document.createElement("option");
+      option.value = kind;
+      option.textContent = `requires ${label}`;
+      option.selected = (c.trick ?? "kick") === kind;
+      select.appendChild(option);
+    }
+    const recipe = document.createElement("div");
+    recipe.className = "ed-dim";
+    const syncRecipe = (): void => {
+      recipe.textContent = `input · ${deckTrickInfo(c.trick ?? "kick").recipe} · board air`;
+    };
+    syncRecipe();
+    select.addEventListener("change", () => {
+      c.trick = select.value as CustomComponent["trick"];
+      syncRecipe();
+      this.commit();
+      this.renderLayers();
+    });
+    this.propsEl.appendChild(select);
+    this.propsEl.appendChild(recipe);
   }
 
   private texRow(
@@ -7190,20 +7216,7 @@ export class Editor {
         });
         colorRow();
       } else {
-        const trickSelect = document.createElement("select");
-        trickSelect.className = "ed-select";
-        for (const [value, label] of DECK_TRICKS) {
-          const option = document.createElement("option");
-          option.value = value;
-          option.textContent = label;
-          option.selected = (c.trick ?? "kick") === value;
-          trickSelect.appendChild(option);
-        }
-        trickSelect.addEventListener("change", () => {
-          c.trick = trickSelect.value as CustomComponent["trick"];
-          this.commit();
-        });
-        this.propsEl.appendChild(trickSelect);
+        this.appendTrickPicker(c);
       }
     } else if (
       c.pts &&
@@ -7377,20 +7390,7 @@ export class Editor {
           else delete c.invisible;
         });
       if (c.t === "trickrail") {
-        const select = document.createElement("select");
-        select.className = "ed-select";
-        for (const [value, label] of DECK_TRICKS) {
-          const option = document.createElement("option");
-          option.value = value;
-          option.textContent = `requires ${label}`;
-          option.selected = (c.trick ?? "kick") === value;
-          select.appendChild(option);
-        }
-        select.addEventListener("change", () => {
-          c.trick = select.value as CustomComponent["trick"];
-          this.commit();
-        });
-        this.propsEl.appendChild(select);
+        this.appendTrickPicker(c);
       }
     } else if (c.t === "trampoline" || c.t === "speedpad") {
       sizeRow(0, "width");
@@ -7410,20 +7410,7 @@ export class Editor {
       sizeRow(2, "barrier depth");
       num("opening radius", () => c.radius ?? 2.2, (v) => (c.radius = Math.max(0.8, v)), 0.1);
       num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
-      const select = document.createElement("select");
-      select.className = "ed-select";
-      for (const [value, label] of DECK_TRICKS) {
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = `requires ${label}`;
-        option.selected = (c.trick ?? "kick") === value;
-        select.appendChild(option);
-      }
-      select.addEventListener("change", () => {
-        c.trick = select.value as CustomComponent["trick"];
-        this.commit();
-      });
-      this.propsEl.appendChild(select);
+      this.appendTrickPicker(c);
     } else if (c.t === "returnportal") {
       sizeRow(0, "width");
       sizeRow(1, "height");
