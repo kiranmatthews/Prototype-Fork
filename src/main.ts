@@ -974,6 +974,8 @@ const frameStats = {
   vVel: 0,
   state: "ride",
   grounded: false,
+  bailTime: 0,
+  bailRecovery: 0,
   cameraTargetX: 0,
   cameraTargetY: 0,
   cameraTargetZ: 0,
@@ -1155,7 +1157,6 @@ function set2P(on: boolean, force = false): void {
 // no damage, no score — the knockdown (bail tumble + a shove) IS the payoff.
 function pvpAttack(atk: Player, vic: Player): void {
   const A = atk as unknown as Record<string, number & boolean>;
-  const V = vic as unknown as Record<string, number & boolean>;
   if (vic.state === "dead" || vic.state === "gameover" || atk.state === "dead")
     return;
   const dx = vic.pos.x - atk.pos.x;
@@ -1165,18 +1166,7 @@ function pvpAttack(atk: Player, vic: Player): void {
   const uz = planar > 1e-4 ? dz / planar : 0;
   const dy = vic.pos.y - atk.pos.y;
   const knock = (kick: number, pop: number): void => {
-    if (
-      (V.bailDownT as number) > 0 ||
-      (V.invulnTimer as number) > 0 ||
-      (V.uberTimer as number) > 0
-    )
-      return;
-    (V.bailDownT as number) = 0.9;
-    (V.invulnTimer as number) = 1.1; // no juggle-locking the loser
-    vic.state = "air";
-    (V.grounded as boolean) = false;
-    (V.vVel as number) = pop;
-    (V.speed as number) = (V.speed as number) * 0.3;
+    if (!vic.beginPvpKnockdown(pop, Math.sign(ux || uz || 1))) return;
     pvpKicks.set(vic, { x: ux * kick, z: uz * kick, t: 0.3 });
     sfx.play("takeDamage", 0.55);
   };
@@ -2812,6 +2802,8 @@ function frame(): void {
     frameStats.vVel = player.vVel;
     frameStats.state = player.state;
     frameStats.grounded = player.grounded;
+    frameStats.bailTime = player.bailTimeLeft;
+    frameStats.bailRecovery = player.bailRecoveryK;
 
     // hold the last shot through the death blackout — no drifting after the
     // corpse; the respawn teleport re-snaps the rig when play resumes
@@ -2882,6 +2874,10 @@ function frame(): void {
       `${player.lastJumpType} · hold ${player.xHoldT.toFixed(2)}s` +
       ` · skate ${player.skateChargeT.toFixed(2)}/${TUNING.skateHoldTime.toFixed(2)}` +
       (player.skateOn ? " ✓" : ""),
+    bail:
+      player.bailTimeLeft > 0
+        ? `${player.bailTimeLeft.toFixed(2)}s · rise ${player.bailRecoveryK.toFixed(2)}`
+        : "-",
     railDist: player.railCandidateDist,
     crates: `${player.cratesBroken}/${level.totalCrates}`,
     fruit: player.fruit,

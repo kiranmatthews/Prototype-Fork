@@ -34,6 +34,7 @@ export interface Stats {
   surface: string;
   controller: string;
   jump: string;
+  bail: string;
   railDist: number;
   crates: string;
   fruit: number;
@@ -1305,6 +1306,7 @@ export class UI {
       row("surface", s.surface) +
       row("controller", s.controller) +
       row("jump", s.jump) +
+      row("bail", s.bail) +
       row("rail dist", railDist) +
       row("crates", s.crates) +
       row("wumpa", String(s.fruit)) +

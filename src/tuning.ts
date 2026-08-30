@@ -506,12 +506,12 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   bailSpeedKeep:
     'How much speed survives a wipeout. A bail used to zero your momentum, so a 23 u/s crash and a walking-pace crash were the same event; now you slide out of it in proportion to how fast you were going. 0 = the old dead stop.',
   bailFriction:
-    'How fast the downed body scrubs off the speed bailSpeedKeep let it keep. Higher = shorter slide.',
+    'How fast the physical tumble scrubs retained crash speed and how firmly the procedural roll-up blends its run-out velocity toward held movement input. Higher = shorter slide and snappier recovery steering.',
   bailMashWindow:
     'How long a mashed button keeps counting toward getting up. Shorter = you must mash faster to hold the bonus.',
-  bailMashGain: 'How much each mashed button speeds up the knockdown clock (and the get-up animation with it).',
+  bailMashGain: 'How much each mashed button speeds up the knockdown clock and procedural roll-up together.',
   bailMashMax:
-    'Ceiling on the mash speed-up. 1 = mashing flat out HALVES the time you lie there. 0 = mashing does nothing and the lockout is fixed.',
+    'Ceiling on the mash speed-up. 1 = a saturated mash plays the tumble/recovery clock at up to 2x; 0 = mashing does nothing.',
   spinTolerance:
     'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
   sketchyTolerance:
