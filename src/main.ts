@@ -727,8 +727,21 @@ function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
 // (applyTheme runs on every commit), so fog stays off the whole session.
 let editorViewActive = false;
 let editorPlayFog: THREE.Scene["fog"] = null;
+function syncSkyBackdropVisibility(): void {
+  const bonusBackdropActive = current.id === "bonus-level" && !LITE;
+  const skyBridgeFogOnly = current.id === "sky" && !editorViewActive;
+  const preset = SKY_PRESETS[activeSky] ?? SKY_PRESETS[DEFAULT_SKY];
+  sky.visible = !LITE && !bonusBackdropActive && !skyBridgeFogOnly;
+  skyMist.visible =
+    skyCache.has(activeSky) &&
+    !LITE &&
+    !preset.seaHorizon &&
+    !bonusBackdropActive &&
+    !skyBridgeFogOnly;
+}
 function setEditorView(editing: boolean, changed = false): void {
   editorViewActive = editing;
+  syncSkyBackdropVisibility();
   if (editing) {
     // Keep the live atmosphere object intact. The editor only borrows a
     // fog-free, long-distance lens; Editor restores the exact play camera.
@@ -739,7 +752,10 @@ function setEditorView(editing: boolean, changed = false): void {
     return;
   }
   if (changed) applyTheme();
-  else scene.fog = editorPlayFog;
+  else {
+    scene.fog = editorPlayFog;
+    syncSkyBackdropVisibility();
+  }
   editorPlayFog = null;
 }
 
@@ -754,8 +770,11 @@ function applyTheme(): void {
   if (bonusBackdropActive && !bonusParallax.visible)
     bonusParallax.reset(player.pos, loadedLevelId);
   bonusParallax.setVisible(bonusBackdropActive);
-  sky.visible = !LITE && !bonusBackdropActive;
   activeSky = level.skyPreset;
+  // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
+  // background, not a fog-immune painted dome visible behind the last plank.
+  // The editor deliberately restores the dome alongside its fog-free lens.
+  syncSkyBackdropVisibility();
   levelPostEnabled = level.skyPreset === "coast" && !NO_COAST_POST;
   configureCoastPost(
     levelPostEnabled ||
@@ -821,7 +840,7 @@ function applyTheme(): void {
     // seaHorizon presets skip the mist layer: it repaints the below-horizon
     // band IN FRONT of everything past the dome radius, and the coast now
     // draws REAL water out to 1000m that must not be painted over.
-    skyMist.visible = !LITE && !P.seaHorizon && !bonusBackdropActive;
+    syncSkyBackdropVisibility();
     // cached textures are shared across levels — never dispose them here; only
     // the gradient we painted ourselves is ours to free
     if (proceduralSky) {

@@ -47,6 +47,31 @@ assert.ok(
   main.includes("levelPostEnabled ||"),
   "coast and global LOOK enablement must share one post pipeline",
 );
+assert.match(
+  main,
+  /function syncSkyBackdropVisibility\(\): void \{[\s\S]*?const skyBridgeFogOnly = current\.id === "sky" && !editorViewActive/,
+  "Sky Bridge needs one lifecycle-aware painted-sky visibility policy",
+);
+assert.match(
+  main,
+  /syncSkyBackdropVisibility\(\)[\s\S]*?sky\.visible = !LITE && !bonusBackdropActive && !skyBridgeFogOnly/,
+  "Sky Bridge still exposes the painted distance dome",
+);
+assert.match(
+  main,
+  /skyMist\.visible =[\s\S]{0,180}!skyBridgeFogOnly/,
+  "Sky Bridge still exposes the painted horizon mist",
+);
+assert.match(
+  main,
+  /function setEditorView\([\s\S]{0,180}editorViewActive = editing;[\s\S]{0,80}syncSkyBackdropVisibility\(\)/,
+  "editor entry/exit must resync the Sky Bridge dome",
+);
+assert.match(
+  main,
+  /activeSky = level\.skyPreset;[\s\S]{0,260}syncSkyBackdropVisibility\(\)/,
+  "level switches must resync the painted-sky policy",
+);
 
 console.log(
   "Validated one shared LOOK panel and post pass with global source presets for coast, Bonus and Meshy.",
