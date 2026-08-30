@@ -321,6 +321,7 @@ interface Crusher {
 export interface RopeSwing {
   pivot: THREE.Group; // at the anchor; rotation.y = yaw, rotation.z = the swing
   anchor: THREE.Vector3;
+  anchorVel: THREE.Vector3; // analytic travelling-anchor velocity at the sampled level time
   len: number;
   amp: number; // max swing angle (radians)
   speed: number; // drive frequency (rad/s)
@@ -6199,8 +6200,13 @@ export class Level {
 
     // TRAVELLING SWING ROPES: anchor and pivot move together.
     for (const rs of this.ropeSwings) {
+      rs.anchorVel.set(0, 0, 0);
       if (!rs.travel) continue;
-      const s = cycleOffset(rs.travel, this.time);
+      const phase = this.time * rs.travel.speed + rs.travel.phase;
+      const s = Math.sin(phase) * rs.travel.amp;
+      rs.anchorVel
+        .copy(rs.travel.axisV)
+        .multiplyScalar(Math.cos(phase) * rs.travel.amp * rs.travel.speed);
       MR_DELTA.copy(rs.travel.base)
         .addScaledVector(rs.travel.axisV, s)
         .sub(rs.anchor);
@@ -7069,6 +7075,7 @@ export class Level {
     }
     // ...and travelling rope anchors.
     for (const rs of this.ropeSwings) {
+      rs.anchorVel.set(0, 0, 0);
       if (!rs.travel) continue;
       MR_DELTA.copy(rs.travel.base).sub(rs.anchor);
       rs.anchor.add(MR_DELTA);
@@ -11759,6 +11766,7 @@ export class Level {
     this.ropeSwings.push({
       pivot,
       anchor: new THREE.Vector3(x, anchorY, z),
+      anchorVel: new THREE.Vector3(),
       len,
       amp,
       speed: speed > 0 ? speed : Math.sqrt(11 / Math.max(1, len)),
@@ -11804,7 +11812,9 @@ export class Level {
     const cos = Math.cos(rs.yaw);
     const sin = Math.sin(rs.yaw);
     const planar = tang * Math.cos(rs.theta);
-    out.set(planar * cos, tang * Math.sin(rs.theta), -planar * sin);
+    out
+      .set(planar * cos, tang * Math.sin(rs.theta), -planar * sin)
+      .add(rs.anchorVel);
     return out;
   }
 

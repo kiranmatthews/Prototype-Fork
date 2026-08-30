@@ -2558,9 +2558,14 @@ export class Player {
       }
       case 'air':
         this.runTime += dt;
+        // A second Jump release may be the once-per-ollie emergency eject.
+        // Resolve that transaction before any new attachment so one edge can
+        // never both throw the board and catch a rope (or rail) on this tick.
+        const emergencyEjected = this.tickEmergencyBoardEject(dt, input);
         // SPINE TRANSFER: R2 mid-hang pops the hang over the coping onto the
         // adjacent vert (when there is one). Deliberate, edge-triggered.
-        if (!this.isBailing && input.transferPressed) this.trySpineTransfer(level);
+        if (!emergencyEjected && !this.isBailing && input.transferPressed)
+          this.trySpineTransfer(level);
         // NOTE: there is deliberately NO lip-stall catch from the air. The
         // stall is committed ON the wall (climb square holding Triangle,
         // through the crest) — once you're in hangtime, coming down onto the
@@ -2568,6 +2573,7 @@ export class Player {
         // Triangle is held). Getting parked on the coping out of a big hang
         // killed the flow.
         if (
+          !emergencyEjected &&
           this.ropeCoolT <= 0 &&
           !this.wallriding &&
           !this.slamActive &&
@@ -2576,13 +2582,14 @@ export class Player {
         ) {
           // hands on the swing rope
         } else if (
+          !emergencyEjected &&
           !this.wallriding &&
           (input.grindPressed || input.grindHeld) &&
           this.tryGrind(input.grindPressed, level)
         ) {
           // grabbed the rail
         } else {
-          this.stepAir(dt, input, level);
+          this.stepAir(dt, input, level, emergencyEjected);
         }
         break;
       case 'grind':
@@ -4421,7 +4428,12 @@ export class Player {
     return shouldBail;
   }
 
-  private stepAir(dt: number, input: Input, level: Level): void {
+  private stepAir(
+    dt: number,
+    input: Input,
+    level: Level,
+    emergencyEjected: boolean,
+  ): void {
     if (this.wallriding) {
       this.stepWallride(dt, input, level);
       return;
@@ -4432,7 +4444,6 @@ export class Player {
     // rail crosses the line near the apex, falling barely faster than a
     // drop-in crossing its lip.
     if (this.vVel > 1) this.airRose = true;
-    const emergencyEjected = this.tickEmergencyBoardEject(dt, input);
     // Coyote release: letting go of a charge just after rolling off a ledge
     // still jumps. A press-then-release fully in the air (tap) works too.
     if (emergencyEjected) {
@@ -5570,6 +5581,80 @@ export class Player {
 
   // -------------------------------------------------------------- rope swing --
 
+  /**
+   * Hand an attached deck to the existing loose-board simulation without
+   * bailing the rider. Rope traversal is an on-foot authority: every board
+   * latch, boost, brake and board-air judgment must close before the rope
+   * zeros the rider's velocity, while the deck keeps the exact flight it had
+   * on the catch tick.
+   */
+  private detachBoardForTraversal(): boolean {
+    const hadBoard = this.freeSkate;
+    if (hadBoard) {
+      this.throwBoard(true);
+      // A mounted-board catch supersedes the ordinary ollie/eject judgment.
+      // Keep this inside the attached-board branch: catching on foot must not
+      // relaunch or rewrite a deck that was already loose.
+      this.emergencyEjectCharging = false;
+      this.emergencyEjectChargeT = 0;
+      this.emergencyEjectUsed = false;
+      this.emergencyEjectLandingPending = false;
+      this.emergencyEjectLandingWillBail = false;
+      this.skateCharge = 0;
+      this.brakeT = 0;
+      this.brakeLockT = 0;
+      this.brakeRampT = 0;
+      this.oBrakeHold = false;
+      this.greaseT = 0;
+      this.grindBoostT = 0;
+      this.speedPadCap = 0;
+      this.activeSpeedPadId = 0;
+    }
+
+    if (this.manualing !== 0) this.endManual();
+    this.manualArmed = 0;
+    this.manualArmT = 0;
+    this.manualCoyoteT = 0;
+
+    this.freeSkate = false;
+    this.skateOn = false;
+    this.stepOff = true;
+
+    this.airFromSkate = false;
+    this.airGrav = 'foot';
+    this.airMomentum = false;
+    this.floatAir = false;
+    this.grindExitAir = false;
+    this.boardOllieAir = false;
+    this.ollieDeckTrickBufferT = 0;
+    this.deckTricksThisAir.clear();
+    this.flipT = 0;
+    this.clearSpecialMoves();
+
+    this.vertAir = false;
+    this.vertTracked = false;
+    this.vertLossT = 0;
+    this.vertGravT = 0;
+    this.vertLatVel = 0;
+    this.vertInDrift = 0;
+    this.vertLaunchT = 0;
+    this.vertLandGraceT = 0;
+    this.pipeHang = false;
+    this.hangPipe = null;
+    this.pipeRideT = 0;
+    this.pipeLandGraceT = 0;
+    this.pipeEndFly = false;
+    this.rollOffT = 0;
+
+    this.charging = false;
+    this.chargePlanted = false;
+    this.chargeTimer = 0;
+    this.jumpBufferT = 0;
+    this.airTapT = 0;
+    this.bounceJump = false;
+    return hadBoard;
+  }
+
   // Airborne near a swing rope's line: catch it. The grip lands wherever your
   // chest met the rope, so a low pass grabs low — deeper reach, bigger arc.
   private tryRopeGrab(level: Level): boolean {
@@ -5591,20 +5676,16 @@ export class Player {
       const dy = ROPE_P.y - chestY;
       const dz = ROPE_P.z - this.pos.z;
       if (dx * dx + dy * dy + dz * dz > CONST.ropeGrabRadius * CONST.ropeGrabRadius) continue;
+      // Capture the mounted deck before attachment zeros speed/vVel. The rider
+      // does not bail; the deck simply keeps flying on its own while both hands
+      // take the rope. This is the same transaction as Unity's
+      // DetachBoardForTraversal boundary.
+      this.detachBoardForTraversal();
       this.state = 'rope';
-      this.boardOllieAir = false;
-      this.emergencyEjectCharging = false;
-      this.emergencyEjectChargeT = 0;
-      this.deckTricksThisAir.clear();
-      this.floatAir = false; // the launch tag belongs to the air the rope just ended
-      this.flipT = 0; // both hands on the rope — the deck stops performing
-      this.pipeEndFly = false; // grabbing the rope saves a pipe-end fly-off
-      this.rollOffT = 0;
       // ...and the slide-jump arc's launch too. These only cleared on a
       // WHEELS-DOWN landing, so catching a rope mid slide-jump carried the
       // cross-heading drift and the air-steer lockout into the NEXT air.
-      this.slideAirLat = 0;
-      this.slideJumpAir = false;
+      this.cancelSlideTraversal();
       this.ropeObj = rs;
       this.ropeD = d;
       this.ropeJumpArm = false; // the held X that jumped you here must come up first
@@ -5613,20 +5694,22 @@ export class Player {
       this.walkVelocity.set(0, 0, 0);
       this.walkTurnaround = false;
       this.walkIntent.set(0, 0, 0);
-      this.charging = false;
-      this.chargeTimer = 0;
       this.airJumpUsed = false; // a solid grip re-arms the double jump
       this.doubleJumpAir = false;
       this.wallrideLatched = false;
-      if (this.manualing !== 0) this.endManual();
       this.grabPhase = 'none';
       this.grabT = 0;
+      this.grabGraceTimer = 0;
+      this.grabSpinAngle = 0;
+      this.airGrabShown = null;
       // Grab the rope with a clean hang: kill any in-progress roll-jump flip
       // (stepRope skips the airborne flip decay, so a mid-flip grab would freeze
       // the body upside-down). grabPhase/grabT were just cleared, so the grab
       // tuck releases too — hands are on the rope.
       this.flipTimer = 0;
       this.bailSpin = 0;
+      this.spinTimer = 0;
+      this.spinAngle = 0;
       // Face the direction you were actually travelling when you grabbed, and
       // hold it for the whole swing. Prefer the real displacement; fall back to
       // the heading when nearly still.
@@ -5707,16 +5790,25 @@ export class Player {
     this.ropeCoolT = CONST.ropeRegrabCool;
     this.charging = false;
     this.chargeTimer = 0;
-    this.airFromSkate = this.freeSkate; // the landing can flow into a manual
-    this.airGrav = this.freeSkate ? 'board' : 'foot'; // leaping off a rope: board under you or not
+    // Rope traversal is always on foot. The deck—if there was one—is still in
+    // the loose-board simulation, so no mounted momentum or board gravity can
+    // reappear when the hands let go.
+    this.freeSkate = false;
+    this.airFromSkate = false;
+    this.airGrav = 'foot';
+    this.airMomentum = false;
     this.vVel = jumpV + Math.max(0, ROPE_V.y * 0.9);
-    // skating: the swing's planar momentum carries into the flight. On-foot
-    // air is direct-drive, and the course frame is not ours to overwrite.
-    const planar = Math.hypot(ROPE_V.x, ROPE_V.z);
-    if (this.freeSkate && planar > 1.5) {
-      this.axisF.set(ROPE_V.x / planar, 0, ROPE_V.z / planar);
-      this.speed = Math.min(planar * 1.15, TUNING.downhillMax);
-    }
+    this.airborneT = 0;
+    this.launchVy = this.vVel;
+    this.airPeakY = this.pos.y;
+    this.airRose = false;
+    this.airJumpUsed = false;
+    this.doubleJumpAir = false;
+    this.jumpBufferT = 0;
+    this.airTapT = 0;
+    this.coyoteTimer = 0;
+    this.speed = 0; // ordinary on-foot air drive owns planar release movement
+    this.walkVelocity.set(0, 0, 0);
     this.score(CONST.ptsRopeSwing, 'Rope Swing');
     sfx.play('woosh', 0.5, 1.1);
   }
