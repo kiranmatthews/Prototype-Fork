@@ -140,6 +140,22 @@ compression recipe are recorded in `public/meshy/README.md` and
 not recorded, so the public copy follows Meshy's conservative free-plan path:
 **model created with [Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
 
+## Owner-supplied Meshy Stonecliff Bastion
+
+Beachside Run's inland cliff uses the project owner's `StonecliffBastion.fbx`
+Meshy handoff. The browser ships one presentation-only 158 KB core GLB,
+repeated through 150 deterministic cullable instances; gameplay collision
+remains a continuous code-authored cliff face. The bake retains all 2,270
+source triangles, indexes repeated corners, embeds one 512 px JPEG base-color
+map, and replaces the much larger normal/metallic/roughness inputs with matte
+scalar PBR values. Source hashes, the exact compression recipe and the output
+hash are recorded in `public/beachfront/README.md` and
+`tools/bake-beachfront-cliff.mjs`.
+
+The original account tier/community status is not recorded, so the public
+copy follows Meshy's conservative free-plan path: **model created with
+[Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
+
 ## Everything else
 
 Levels, physics, the character rig, the surface textures, the editor and the

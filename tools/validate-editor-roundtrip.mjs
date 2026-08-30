@@ -1289,6 +1289,10 @@ function assertCoastalStreet(data, level) {
 
 try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
+  const beachfrontCourseModule = await server.ssrLoadModule(
+    "/src/beachfrontCourse.ts",
+  );
+  const { beachfrontPointAtDistance } = beachfrontCourseModule;
   const {
     BUILTIN_LEVELS,
     SKY_BRIDGE_FOG_FAR,
@@ -1550,6 +1554,21 @@ try {
   // into a failure and is the regression gate once those captures themselves
   // are made lossless. A lazy, unsaved preview can keep no-op entry safe while
   // this separate capture-fidelity audit still reports conversion limitations.
+  assert.equal(
+    BUILTIN_LEVELS.filter((entry) => entry.name === "Beachside Run").length,
+    1,
+    "Beachside must have one canonical menu row",
+  );
+  assert.equal(
+    BUILTIN_LEVELS.some((entry) => entry.id === "beachside-run"),
+    false,
+    "the approximate Beachside duplicate is still registered",
+  );
+  assert.equal(
+    findLevel("beachside-run")?.id,
+    "beachfront",
+    "legacy Beachside selections must resolve to the consolidated level",
+  );
   window.location.search = "?lite";
   for (const entry of BUILTIN_LEVELS.filter((item) => !item.data)) {
     let original;
@@ -1559,6 +1578,69 @@ try {
       setEditorBuild(false);
       original = new Level(new THREE.Scene(), entry);
       const captured = migrateCustomLevel(clone(original.captureData()));
+      if (entry.id === "beachfront") {
+        const beachDecks = original.groundMeshes.filter(
+          (mesh) => mesh.userData.woodPathComp,
+        );
+        assert.equal(
+          beachDecks.length,
+          7,
+          "Beachside runtime must contain seven continuous collision decks",
+        );
+        assert.equal(original.rails.length, 14, "Beachside needs two rails per boardwalk");
+        assert.equal(original.crates.length, 16, "Beachside source crates drifted");
+        assert.equal(original.checkpoints.length, 4, "Beachside checkpoints drifted");
+        assert.equal(original.pickups.length, 84, "Beachside fruit rhythm drifted");
+        assert.ok(original.water, "Beachside lost the shared MatrixRex ocean");
+        const visualCounts = { planks: 0, poles: 0 };
+        original.pickRoot.traverse((object) => {
+          if (object.name === "woodpath parts · planks") visualCounts.planks++;
+          if (object.name === "woodpath parts · poles") visualCounts.poles++;
+        });
+        assert.deepStrictEqual(
+          visualCounts,
+          { planks: 7, poles: 7 },
+          "Beachside boardwalk visual batches split or duplicated",
+        );
+        const definitions = [
+          [50, -1.5],
+          [138, 1.4],
+          [228, -3],
+          [318, 0.5],
+          [414, -2],
+          [505, 2],
+          [604, -1],
+        ];
+        const ray = new THREE.Raycaster();
+        for (let sequence = 0; sequence < definitions.length; sequence++) {
+          const [start, lateral] = definitions[sequence];
+          let cursor = start;
+          for (let island = 0; island < 3; island++) {
+            const length = 10 + ((sequence * 5 + island * 7) % 9);
+            const gapStart = cursor + length;
+            const gapEnd = gapStart + 3 + ((sequence + island) % 3);
+            const midpoint = (gapStart + gapEnd) * 0.5;
+            const point = beachfrontPointAtDistance(midpoint, lateral, 12);
+            ray.set(
+              new THREE.Vector3(point[0], point[1], point[2]),
+              new THREE.Vector3(0, -1, 0),
+            );
+            ray.far = 20;
+            const hit = ray.intersectObjects(beachDecks, false)[0];
+            assert.ok(
+              hit,
+              `Beachside sequence ${sequence + 1} former gap ${island + 1} has no joined collision`,
+            );
+            cursor = gapEnd;
+          }
+        }
+        assert.equal(
+          captured.components.filter((component) => component.t === "woodpath")
+            .length,
+          7,
+          "Beachside editor capture split or dropped a joined boardwalk",
+        );
+      }
       if (entry.id === "jungle") {
         const wallPaths = captured.components.filter(
           (component) => component.t === "wallpath",

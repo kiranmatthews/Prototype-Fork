@@ -30,8 +30,13 @@ import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
 import { createUnityBeachfrontReference } from "./beachfront";
+import {
+  BEACHFRONT_COURSE_LENGTH,
+  beachfrontPointAtDistance,
+} from "./beachfrontCourse";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
+import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import {
   createProceduralThornCluster,
@@ -2011,7 +2016,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
   { id: "warproom", name: "The Warp Room" }, // five wormhole gates round a dais
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
-  { id: "beachfront", name: "Unity Beachfront Run" },
+  { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
   {
     id: "codex-lab",
@@ -2577,7 +2582,15 @@ export function isOverridden(id: string): boolean {
 }
 
 export function findLevel(id: string): LevelEntry | null {
-  return levelList().find((l) => l.id === id) ?? null;
+  const levels = levelList();
+  const exact = levels.find((level) => level.id === id);
+  if (exact) return exact;
+  // The former approximate port lived under this second id. Keep saved
+  // selections/replays opening the consolidated exact Beachside level after
+  // its duplicate menu row is removed.
+  return id === "beachside-run"
+    ? levels.find((level) => level.id === "beachfront") ?? null
+    : null;
 }
 
 /** Lowest free "uN" — stable across sessions, never reuses a live id. */
@@ -5743,6 +5756,10 @@ export class Level {
       this.water.dispose();
       this.water = null;
     }
+    if (this.beachfrontReferenceDispose) {
+      this.beachfrontReferenceDispose();
+      this.beachfrontReferenceDispose = null;
+    }
     if (this.islandShoreFoam) {
       this.root.remove(this.islandShoreFoam.group);
       this.islandShoreFoam.dispose();
@@ -6130,6 +6147,7 @@ export class Level {
   // The Descent's road spine, kept for the oncoming cars to drive along.
   private roadRibbon: SlideRibbon | null = null;
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
+  private beachfrontReferenceDispose: (() => void) | null = null;
   private islandShoreFoam: IslandShoreFoam | null = null;
   private customUnitySand: Array<{
     mesh: THREE.Mesh;
@@ -7434,6 +7452,190 @@ export class Level {
    * S-curve, 371×65 sand/depth mesh, nominal shoreline, 50/400 ocean tails,
    * sea level, atmosphere and tangent frame as BeachfrontRun.unity.
    */
+  private buildBeachsideGameplayOverlay(): void {
+    // The old source-owned menu duplicate carried the route actors and timber
+    // structures, but also replaced the audited Unity sand/ocean/rock base
+    // with coarse stand-ins. Consume only its reusable component overlay here
+    // so there is one exact presentation owner and one gameplay authoring set.
+    for (const component of BEACHFRONT_RUN_LEVEL.components) {
+      if (component.t === "woodpath") this.buildWoodPath(component);
+    }
+    for (const component of BEACHFRONT_RUN_LEVEL.components) {
+      if (component.t === "crate") {
+        this.crate(
+          component.p[0],
+          component.p[1],
+          component.p[2],
+          component.kind === "wood" ? undefined : component.kind,
+          { noAuto: true },
+        );
+      } else if (component.t === "checkpoint") {
+        this.checkpoint(component.p[1], component.p[2], component.p[0]);
+      } else if (component.t === "wumpa") {
+        this.pickup(component.p[0], component.p[1], component.p[2]);
+      }
+    }
+  }
+
+  private buildBeachsideCliffCollision(): void {
+    // Stonecliff is presentation-only in Unity. One continuous invisible
+    // authored face at lateral 8.42m owns gameplay; short overlapping AABBs
+    // retain that curved boundary without ever raycasting the source mesh.
+    const lateral = 8.42;
+    const halfThickness = 0.38;
+    const step = 4;
+    for (let distance = 0; distance < BEACHFRONT_COURSE_LENGTH; distance += step) {
+      const end = Math.min(BEACHFRONT_COURSE_LENGTH, distance + step);
+      const a = beachfrontPointAtDistance(distance, lateral);
+      const b = beachfrontPointAtDistance(end, lateral);
+      this.walls.push(
+        new THREE.Box3(
+          new THREE.Vector3(
+            Math.min(a[0], b[0]) - halfThickness,
+            -12,
+            Math.min(a[2], b[2]) - halfThickness,
+          ),
+          new THREE.Vector3(
+            Math.max(a[0], b[0]) + halfThickness,
+            12,
+            Math.max(a[2], b[2]) + halfThickness,
+          ),
+        ),
+      );
+    }
+  }
+
+  private buildBeachsideCoastContainment(
+    shore: readonly ShoreSample[],
+  ): void {
+    if (shore.length < 2) return;
+    const coastPoint = (
+      index: number,
+      nextIndex: number,
+      fraction: number,
+      seaward: number,
+    ): THREE.Vector3 => {
+      const a = shore[index];
+      const b = shore[nextIndex];
+      let sx = THREE.MathUtils.lerp(a.sx, b.sx, fraction);
+      let sz = THREE.MathUtils.lerp(a.sz, b.sz, fraction);
+      const length = Math.hypot(sx, sz) || 1;
+      sx /= length;
+      sz /= length;
+      return new THREE.Vector3(
+        THREE.MathUtils.lerp(a.x, b.x, fraction) + sx * seaward,
+        0,
+        THREE.MathUtils.lerp(a.z, b.z, fraction) + sz * seaward,
+      );
+    };
+    const segments: ContinuousCoastSegment[] = [];
+    const addSegment = (
+      a: THREE.Vector3,
+      b: THREE.Vector3,
+      outwardX: number,
+      outwardZ: number,
+    ): void => {
+      let tx = b.x - a.x;
+      let tz = b.z - a.z;
+      const length = Math.hypot(tx, tz);
+      if (length < 1e-5) return;
+      tx /= length;
+      tz /= length;
+      let nx = -tz;
+      let nz = tx;
+      if (nx * outwardX + nz * outwardZ < 0) {
+        nx = -nx;
+        nz = -nz;
+      }
+      segments.push({
+        ax: a.x,
+        az: a.z,
+        bx: b.x,
+        bz: b.z,
+        dx: b.x - a.x,
+        dz: b.z - a.z,
+        tx,
+        tz,
+        length,
+        lengthSq: length * length,
+        minX: Math.min(a.x, b.x),
+        maxX: Math.max(a.x, b.x),
+        minZ: Math.min(a.z, b.z),
+        maxZ: Math.max(a.z, b.z),
+        fallbackNx: -nx,
+        fallbackNz: -nz,
+      });
+    };
+
+    const hazardNear: THREE.Vector3[] = [];
+    const hazardFar: THREE.Vector3[] = [];
+    for (let index = 0; index < shore.length - 1; index++) {
+      const span = Math.hypot(
+        shore[index + 1].x - shore[index].x,
+        shore[index + 1].z - shore[index].z,
+      );
+      const steps = Math.max(1, Math.ceil(span / 0.5));
+      for (let stepIndex = 0; stepIndex < steps; stepIndex++) {
+        const u0 = stepIndex / steps;
+        const u1 = (stepIndex + 1) / steps;
+        const edge0 = coastPoint(index, index + 1, u0, 3.5);
+        const edge1 = coastPoint(index, index + 1, u1, 3.5);
+        const middle = (u0 + u1) * 0.5;
+        addSegment(
+          edge0,
+          edge1,
+          THREE.MathUtils.lerp(shore[index].sx, shore[index + 1].sx, middle),
+          THREE.MathUtils.lerp(shore[index].sz, shore[index + 1].sz, middle),
+        );
+        hazardNear.push(coastPoint(index, index + 1, u0, 5.75));
+        hazardFar.push(coastPoint(index, index + 1, u0, 33.75));
+        if (index === shore.length - 2 && stepIndex === steps - 1) {
+          hazardNear.push(coastPoint(index, index + 1, u1, 5.75));
+          hazardFar.push(coastPoint(index, index + 1, u1, 33.75));
+        }
+      }
+    }
+    const hazardFootprint = [...hazardNear, ...hazardFar.slice().reverse()];
+    const deepWater = new THREE.Box3().setFromPoints(hazardFootprint);
+    deepWater.min.y = -2.81;
+    deepWater.max.y = -0.81;
+    const center = deepWater.getCenter(new THREE.Vector3());
+    this.pitPolyByBox.set(deepWater, {
+      cx: center.x,
+      cz: center.z,
+      pts: hazardFootprint.map((point) => [
+        point.x - center.x,
+        point.z - center.z,
+      ]),
+    });
+    this.pitBoxes.push(deepWater);
+
+    for (const [index, nextIndex] of [
+      [0, 1],
+      [shore.length - 1, shore.length - 2],
+    ] as const) {
+      const a = shore[index];
+      const b = shore[nextIndex];
+      let tx = b.x - a.x;
+      let tz = b.z - a.z;
+      const length = Math.hypot(tx, tz) || 1;
+      tx /= length;
+      tz /= length;
+      addSegment(
+        new THREE.Vector3(a.x - a.sx * 32, 0, a.z - a.sz * 32),
+        new THREE.Vector3(a.x + a.sx * 3.5, 0, a.z + a.sz * 3.5),
+        -tx,
+        -tz,
+      );
+    }
+    this.coastBoundary = {
+      segments,
+      halfThickness: 0.25,
+      minY: -12,
+      maxY: 16,
+    };
+  }
+
   private buildUnityBeachfront(): void {
     this.killY = -12;
     this.skyPreset = "coast";
@@ -7456,12 +7658,21 @@ export class Level {
     };
 
     const reference = createUnityBeachfrontReference();
+    this.beachfrontReferenceDispose = reference.dispose;
     this.root.add(reference.group);
     this.groundMeshes.push(reference.sand);
     this.lanePts = reference.lane;
     this.measureLane();
     this.spawnPos.copy(reference.spawn);
     this.currentSpawn.copy(reference.spawn);
+    this.buildBeachsideCliffCollision();
+    this.buildBeachsideCoastContainment(reference.shore);
+
+    // Seven joined procedural boardwalk sequences plus the Unity actor rhythm
+    // now live on the literal Beachfront terrain instead of beside it as a
+    // second, approximate menu level. Build decks before actors so every
+    // authored crate/checkpoint rests on the continuous swept collision.
+    this.buildBeachsideGameplayOverlay();
 
     const firstShore = reference.shore[0];
     this.water = new CoastWater({
@@ -10317,7 +10528,9 @@ export class Level {
       width: frame.width,
     });
     const supportMeshes = c.terrainSupports
-      ? this.groundMeshes.filter((mesh) => mesh !== deck)
+      ? this.groundMeshes.filter(
+          (mesh) => mesh !== deck && !mesh.userData.woodPathComp,
+        )
       : [];
     const supportRay = new THREE.Raycaster();
     const layout = buildWoodPathLayout(

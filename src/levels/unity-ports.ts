@@ -1,5 +1,4 @@
 import type { CustomLevelData } from "../level";
-import { BEACHFRONT_RUN_LEVEL } from "./beachfront-run";
 import { BONUS_LEVEL } from "./bonus-level";
 import { COASTAL_STREET_RUN_LEVEL } from "./coastal-street-run";
 import { ISLAND_HOPPER_LEVEL } from "./island-hopper";
@@ -14,11 +13,6 @@ export interface UnityPortLevelEntry {
 
 /** Source-owned, editor-compatible browser ports of the current Unity scenes. */
 export const UNITY_PORT_LEVELS: readonly UnityPortLevelEntry[] = [
-  {
-    id: "beachside-run",
-    name: BEACHFRONT_RUN_LEVEL.name,
-    data: BEACHFRONT_RUN_LEVEL,
-  },
   { id: "bonus-level", name: BONUS_LEVEL.name, data: BONUS_LEVEL },
   {
     id: "coastal-street-run",

@@ -37,6 +37,26 @@ async function loadLevel(relativeFile, exportName) {
       `from "${dependencyUrl}"`,
     );
   }
+  if (output.includes('from "../beachfrontCourse"')) {
+    const dependencyFile = path.join(root, "src/beachfrontCourse.ts");
+    const dependencyOutput = ts.transpileModule(
+      readFileSync(dependencyFile, "utf8"),
+      {
+        compilerOptions: {
+          module: ts.ModuleKind.ESNext,
+          target: ts.ScriptTarget.ES2020,
+        },
+        fileName: dependencyFile,
+      },
+    ).outputText;
+    const dependencyUrl = `data:text/javascript;base64,${Buffer.from(
+      dependencyOutput,
+    ).toString("base64")}`;
+    output = output.replace(
+      'from "../beachfrontCourse"',
+      `from "${dependencyUrl}"`,
+    );
+  }
   const sourceUrl = pathToFileURL(file).href;
   const encoded = Buffer.from(`${output}\n//# sourceURL=${sourceUrl}`).toString("base64");
   const module = await import(`data:text/javascript;base64,${encoded}`);
@@ -105,31 +125,57 @@ const count = (level, type) =>
   level.components.filter((component) => component.t === type).length;
 
 const beach = levels.get("BEACHFRONT_RUN_LEVEL");
-assert.equal(count(beach, "woodpath"), 28);
+assert.equal(count(beach, "woodpath"), 7);
 assert.equal(count(beach, "checkpoint"), 4);
 assert.equal(count(beach, "wumpa"), 84);
 assert.equal(count(beach, "crate"), 16);
+for (const type of ["terrain", "platform", "pit", "rock"])
+  assert.equal(
+    count(beach, type),
+    0,
+    `Beachside overlay must not retain approximate ${type} components`,
+  );
 for (let sequence = 0; sequence < 7; sequence++) {
   const paths = beach.components.filter(
     (component) => component.t === "woodpath" && component.grp === 10 + sequence,
   );
-  assert.equal(paths.length, 4, `Beach boardwalk sequence ${sequence + 1}`);
-  for (let index = 1; index < paths.length; index++) {
-    const before = paths[index - 1];
-    const after = paths[index];
-    const last = before.pts.at(-1);
-    const endX = before.p[0] + last[0];
-    const endZ = before.p[2] + last[1];
-    const gap = Math.hypot(after.p[0] - endX, after.p[2] - endZ);
+  assert.equal(paths.length, 1, `Beach boardwalk sequence ${sequence + 1}`);
+  const path = paths[0];
+  assert.equal(path.pts.length, 16, "joined path must retain all source knots");
+  assert.equal(path.widths.length, path.pts.length);
+  assert.equal(path.structureStyle, "beach");
+  assert.equal(path.scaffold, true);
+  assert.equal(path.supports, true);
+  assert.equal(path.rails, true);
+  assert.equal(path.terrainSupports, true);
+  assert.ok(Number.isFinite(path.supportBaseY));
+  assert.equal(path.supportBaseY, Math.round((path.p[1] + path.pts[4][3] - 4) * 100) / 100);
+  for (const [beforeIndex, afterIndex] of [
+    [4, 5],
+    [7, 8],
+    [10, 11],
+  ]) {
+    const before = path.pts[beforeIndex];
+    const after = path.pts[afterIndex];
+    const bridgeLength = Math.hypot(
+      after[0] - before[0],
+      after[1] - before[1],
+    );
     assert.ok(
-      gap >= 2.75 && gap <= 5.25,
-      `Beach boardwalk ${sequence + 1}.${index} gap ${gap.toFixed(2)}m`,
+      bridgeLength >= 2.75 && bridgeLength <= 5.25,
+      `Beach boardwalk ${sequence + 1} internal bridge ${bridgeLength.toFixed(2)}m`,
+    );
+    assert.ok(
+      Math.abs(after[3] - before[3]) <= 0.011,
+      "internal bridge must remain level",
     );
   }
-  assert.ok(paths[0].p[1] < 0.8, "Beach boardwalk entry must meet the sand");
-  const final = paths.at(-1);
-  const finalNode = final.pts.at(-1);
-  assert.ok(final.p[1] + finalNode[3] < 0.8, "Beach boardwalk exit must meet the sand");
+  assert.ok(path.p[1] < 0.8, "Beach boardwalk entry must meet the sand");
+  const finalNode = path.pts.at(-1);
+  assert.ok(
+    path.p[1] + finalNode[3] < 0.8,
+    "Beach boardwalk exit must meet the sand",
+  );
 }
 
 const coastal = levels.get("COASTAL_STREET_RUN_LEVEL");
@@ -463,7 +509,6 @@ for (const literal of [
 
 const registry = readFileSync(path.join(root, "src/levels/unity-ports.ts"), "utf8");
 for (const id of [
-  "beachside-run",
   "bonus-level",
   "coastal-street-run",
   "island-hopper",
@@ -472,6 +517,11 @@ for (const id of [
 ]) {
   assert.ok(registry.includes(`id: "${id}"`), `Unity port registry missing ${id}`);
 }
+assert.equal(
+  registry.includes('id: "beachside-run"'),
+  false,
+  "Beachside must merge into the exact Unity Beachfront menu level",
+);
 
 console.log(
   "Validated six Unity ports: source boardwalks, Coastal road/town/ocean/actors, Island ocean/foam/shelves, Bonus layout, Meshy bridge/camera and thorn cores.",

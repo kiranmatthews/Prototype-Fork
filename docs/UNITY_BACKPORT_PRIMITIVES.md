@@ -176,6 +176,13 @@ All three share the light scaffold's 0.115 m post, 0.09 m crossbeam,
 0.072 m ledger and 0.055 m brace radii. Layout noise, tonal buckets and future
 weighted variant choices use the source deterministic unsigned hashes.
 
+Beachside applies that profile once per complete sequence: seven continuous
+sixteen-knot paths replace the old 28 independently restarted fragments. This
+keeps plank pitch, bents, braces, balustrade collision and both grind rails
+continuous across all 21 former holes. Its terrain-support probes explicitly
+ignore other wood-path decks, so overlapping authoring can never collapse a
+later scaffold onto an earlier one.
+
 ## Grindosaurus
 
 ```json

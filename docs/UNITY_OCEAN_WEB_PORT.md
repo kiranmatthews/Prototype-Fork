@@ -56,6 +56,11 @@ LOOK system used by Bonus and Meshy. Split-screen and `?lite` fall back to the
 direct renderer. See `docs/UNITY_VISUAL_TREATMENT.md` for exact profile values,
 ordering, performance bounds and diagnostics.
 
+The former separate `Unity Beachfront Run` and approximate `Beachside Run`
+rows are consolidated under id `beachfront` and the display name **Beachside
+Run**. That one level owns the exact curved sand/ocean/post path plus the
+component-authored boardwalks and actors; no generic blue water slabs remain.
+
 Island Hopper reuses the same `UnityOcean` owner with its own source-authored
 straight shoreline contract: 500 m long, 220 m wide, 6 m land overlap and
 128×128 subdivisions at sea level -0.36. The configurable width/sample inputs
@@ -87,7 +92,8 @@ runtime. No Unity blue-noise image is redistributed.
 ## Coast traversal contract
 
 The Unity ocean has no collider, buoyancy, swimming or wave-driven gameplay.
-The Descent reproduces Unity's separate coastline contract instead:
+The Descent and consolidated Beachside reproduce Unity's separate coastline
+contract instead:
 
 - sea level `-0.36m`;
 - a continuous textured sand bank plus 16m submerged shelf;
@@ -135,7 +141,7 @@ isolate the shared post stages for parity review.
 
 Use `/?touch&oceanreview&oceanoverview` for the frozen Unity visual target,
 `/?touch&oceanreview` for the exact gameplay-camera target, and
-`/?touch&coastphysics` for the Descent's curved containment/deep-water check.
+`/?touch&coastphysics` for the curved containment/deep-water check.
 Add `?lite` or `&lite` to the corresponding query for the fallback. Verify:
 
 - continuous sand/water/foam/horizon with no rectangular edge;
@@ -144,6 +150,7 @@ Add `?lite` or `&lite` to the corresponding query for the fallback. Verify:
   and depth-validated refraction;
 - the player walks into the shallows and stops at the curved 3.5m edge;
 - the ordinary Descent spawn still sees ocean along the high road;
+- Beachside has one menu row, seven joined boardwalks and no blue slab ocean;
 - Slipstream uses the shared two-wave runtime, not its removed plasma shader;
 - repeated level switches produce no console/WebGL errors;
 - WATER studio reports active reflection/prepass dimensions and stable FPS.

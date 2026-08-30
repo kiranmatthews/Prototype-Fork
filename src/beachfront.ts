@@ -1,28 +1,31 @@
 import * as THREE from "three";
 import type { ShoreSample } from "./unityOcean";
 import { createUnitySandMaterial } from "./unitySandMaterial";
+import {
+  beachfrontCliffReady,
+  createBeachfrontCliffVisual,
+  releaseBeachfrontCliffVisual,
+} from "./beachfrontCliff";
+import {
+  BEACHFRONT_COURSE_LENGTH as COURSE_LENGTH,
+  BEACHFRONT_COURSE_SAMPLE_COUNT as COURSE_SAMPLE_COUNT,
+  BEACHFRONT_SAND_BANK_LATERAL_SEGMENTS as SAND_BANK_LATERAL_SEGMENTS,
+  BEACHFRONT_SAND_LONGITUDINAL_SAMPLE_COUNT as SAND_LONGITUDINAL_SAMPLE_COUNT,
+  BEACHFRONT_SAND_SUBMERGED_LATERAL_SEGMENTS as SAND_SUBMERGED_LATERAL_SEGMENTS,
+  BEACHFRONT_SAND_SUBMERGED_SHELF_WIDTH as SAND_SUBMERGED_SHELF_WIDTH,
+  BEACHFRONT_SAND_TEXTURE_TILE_SIZE as SAND_TEXTURE_TILE_SIZE,
+  BEACHFRONT_SAND_WATERLINE_COLUMN as SAND_WATERLINE_COLUMN,
+  BEACHFRONT_SAND_WET_TRANSITION_WIDTH as SAND_WET_TRANSITION_WIDTH,
+  beachfrontFineShorelineInfluence as fineShorelineInfluence,
+  beachfrontFineShorelineOffset as fineShorelineOffset,
+  beachfrontFrameAtDistance as sourceFrameAtDistance,
+  beachfrontLandwardSandEdgeLateral as landwardSandEdgeLateral,
+  beachfrontSandHeight as sandHeight,
+  beachfrontShorelineLateral as shorelineLateral,
+} from "./beachfrontCourse";
 
-const COURSE_MINIMUM_Z = -20;
-const COURSE_LENGTH = 740;
-const COURSE_SAMPLE_COUNT = 149;
-const SAND_LONGITUDINAL_SAMPLE_COUNT = 371;
-const SAND_SUBMERGED_LATERAL_SEGMENTS = 16;
-const SAND_BANK_LATERAL_SEGMENTS = 48;
 const SAND_LATERAL_SEGMENTS =
   SAND_SUBMERGED_LATERAL_SEGMENTS + SAND_BANK_LATERAL_SEGMENTS;
-const SAND_WATERLINE_COLUMN = SAND_SUBMERGED_LATERAL_SEGMENTS;
-const SAND_SUBMERGED_SHELF_WIDTH = 16;
-const SAND_MAXIMUM_LATERAL = 8;
-const LANDWARD_SAND_MINIMUM_LATERAL = 12.8;
-const LANDWARD_SAND_MAXIMUM_LATERAL = 16.8;
-const SEA_LEVEL = -0.36;
-const SAND_WET_TRANSITION_WIDTH = 3.5;
-const SAND_OFFSHORE_DEPTH = 1.28;
-const DRY_SAND_RELIEF_AMPLITUDE = 0.04;
-const SUBMERGED_SAND_RELIEF_AMPLITUDE = 0.035;
-const FINE_SHORE_SEAWARD_FADE = 5;
-const FINE_SHORE_LANDWARD_FADE = 4;
-const SAND_TEXTURE_TILE_SIZE = 5.4;
 
 interface BeachfrontCourseFrame {
   distance: number;
@@ -54,30 +57,12 @@ function lerp(a: number, b: number, t: number): number {
 }
 
 function frameAtDistance(rawDistance: number): BeachfrontCourseFrame {
-  const distance = clamp(rawDistance, 0, COURSE_LENGTH);
-  const t = distance / COURSE_LENGTH;
-  const phase = Math.PI * 2 * t;
-  const x = 15 * Math.sin(phase) + 6 * Math.sin(phase * 2);
-  const derivative =
-    (15 * Math.PI * 2 * Math.cos(phase) +
-      12 * Math.PI * 2 * Math.cos(phase * 2)) /
-    COURSE_LENGTH;
-  // Unity's world is consumed here as source data.  Mirror source Z when it
-  // enters Three's right-handed world so the native +Z course becomes the
-  // prototype's normal -Z corridor without horizontally mirroring the shot.
-  const forward = new THREE.Vector3(derivative, 0, -1).normalize();
-  // A handedness reflection reverses cross products.  Unity's landward right
-  // is up x forward; after C=diag(1,1,-1), its exact converted vector is
-  // forward x up in Three coordinates.
-  const right = new THREE.Vector3().crossVectors(
-    forward,
-    new THREE.Vector3(0, 1, 0),
-  ).normalize();
+  const source = sourceFrameAtDistance(rawDistance);
   return {
-    distance,
-    center: new THREE.Vector3(x, 0, -(COURSE_MINIMUM_Z + distance)),
-    forward,
-    right,
+    distance: source.distance,
+    center: new THREE.Vector3(source.x, 0, source.z),
+    forward: new THREE.Vector3(source.fx, 0, source.fz),
+    right: new THREE.Vector3(source.rx, 0, source.rz),
   };
 }
 
@@ -120,178 +105,6 @@ function buildSandFrames(
     );
   }
   return frames;
-}
-
-function smoothLongitudinalHeight(distance: number): number {
-  return (
-    0.075 * Math.sin(distance * 0.019 + 0.55 * Math.sin(distance * 0.0043)) +
-    0.05 * Math.sin(distance * 0.051 + 1.1)
-  );
-}
-
-function localizedCove(
-  distance: number,
-  center: number,
-  radius: number,
-): number {
-  const normalized = (distance - center) / Math.max(0.01, radius);
-  return Math.exp(-normalized * normalized);
-}
-
-function sandWidth(distance: number): number {
-  const width =
-    20.5 +
-    Math.sin(distance * 0.018 + 0.4) +
-    0.7 * Math.sin(distance * 0.043 - 1.1) +
-    3.36 * localizedCove(distance, 80, 40) -
-    3.36 * localizedCove(distance, 180, 35) +
-    3.6 * localizedCove(distance, 290, 45) -
-    3.36 * localizedCove(distance, 405, 38) +
-    3.6 * localizedCove(distance, 525, 44) -
-    3.36 * localizedCove(distance, 635, 38) +
-    2.64 * localizedCove(distance, 710, 28);
-  return clamp(width, 16, 25);
-}
-
-function shorelineLateral(distance: number): number {
-  return SAND_MAXIMUM_LATERAL - sandWidth(distance);
-}
-
-function fineShorelineOffset(distance: number): number {
-  return (
-    0.28 *
-      Math.sin(distance * 0.21 + 0.42 * Math.sin(distance * 0.047)) +
-    0.13 * Math.sin(distance * 0.43 + 1.35) +
-    0.055 * Math.sin(distance * 0.71 - 0.6)
-  );
-}
-
-function fineShorelineInfluence(shoreOffset: number): number {
-  const influence =
-    shoreOffset <= 0
-      ? clamp01(1 + shoreOffset / FINE_SHORE_SEAWARD_FADE)
-      : clamp01(1 - shoreOffset / FINE_SHORE_LANDWARD_FADE);
-  return influence * influence * (3 - 2 * influence);
-}
-
-function landwardSandEdgeLateral(distance: number): number {
-  const broad =
-    14.2 +
-    1.05 * Math.sin(distance * 0.016 + 0.65) +
-    0.62 * Math.sin(distance * 0.039 - 1.2) +
-    0.48 * Math.sin(distance * 0.071 + 2.1) +
-    0.9 * localizedCove(distance, 102, 54) -
-    0.85 * localizedCove(distance, 236, 46) +
-    1.05 * localizedCove(distance, 372, 58) -
-    0.75 * localizedCove(distance, 516, 48) +
-    0.8 * localizedCove(distance, 684, 42);
-  const fine =
-    0.32 *
-      Math.sin(distance * 0.19 + 0.38 * Math.sin(distance * 0.043)) +
-    0.16 * Math.sin(distance * 0.41 - 0.9) +
-    0.07 * Math.sin(distance * 0.67 + 1.7);
-  return clamp(
-    broad + fine,
-    LANDWARD_SAND_MINIMUM_LATERAL,
-    LANDWARD_SAND_MAXIMUM_LATERAL,
-  );
-}
-
-function cliffToeBurialHeight(distance: number, lateral: number): number {
-  let toe = clamp01((lateral - 5.8) / 2.6);
-  toe = toe * toe * (3 - 2 * toe);
-  return toe * (0.52 + 0.08 * Math.sin(distance * 0.061 + 0.7));
-}
-
-function submergedSandRelief(distance: number, shelf: number): number {
-  const depthFromShore = clamp01(1 - shelf);
-  const envelope =
-    4 * shelf * depthFromShore * Math.sqrt(depthFromShore);
-  const relief =
-    0.68 *
-      Math.sin(
-        distance * 0.243 +
-          shelf * 8.7 +
-          0.55 * Math.sin(distance * 0.031),
-      ) +
-    0.32 * Math.sin(distance * 0.517 - shelf * 13.1 + 1.2);
-  return SUBMERGED_SAND_RELIEF_AMPLITUDE * envelope * relief;
-}
-
-function drySandRelief(distance: number, bank: number): number {
-  let envelope = Math.sin(Math.PI * clamp01(bank));
-  envelope *= envelope;
-  const relief =
-    0.55 *
-      Math.sin(
-        distance * 0.287 +
-          bank * 9.4 +
-          0.62 * Math.sin(distance * 0.037),
-      ) +
-    0.29 * Math.sin(distance * 0.631 - bank * 16.7 + 1.45) +
-    0.16 * Math.sin(distance * 1.071 + bank * 27.3 - 0.8);
-  return DRY_SAND_RELIEF_AMPLITUDE * envelope * relief;
-}
-
-function sandHeight(distance: number, lateral: number): number {
-  const shoreline = shorelineLateral(distance);
-  const shoreOffset = lateral - shoreline;
-  if (shoreOffset <= 0) {
-    const shelf = clamp01(
-      1 + shoreOffset / SAND_SUBMERGED_SHELF_WIDTH,
-    );
-    return (
-      SEA_LEVEL -
-      SAND_OFFSHORE_DEPTH * Math.pow(1 - shelf, 1.8) +
-      submergedSandRelief(distance, shelf)
-    );
-  }
-
-  const playableBankOffset = SAND_MAXIMUM_LATERAL - shoreline;
-  const bank = clamp01(shoreOffset / Math.max(0.01, playableBankOffset));
-  const shoreSlope = 2.1;
-  const bankProfile =
-    shoreSlope * bank +
-    (3 - 2 * shoreSlope) * bank * bank +
-    (shoreSlope - 2) * bank * bank * bank;
-  const longitudinalBlend = bank * bank * (3 - 2 * bank);
-  const lowShoreNoise =
-    0.012 *
-    Math.sin(distance * 0.109 + 0.55 * Math.sin(distance * 0.017)) *
-    16 *
-    bank *
-    bank *
-    (1 - bank) *
-    (1 - bank);
-  const playableHeight =
-    SEA_LEVEL +
-    0.84 * bankProfile +
-    smoothLongitudinalHeight(distance) * longitudinalBlend +
-    lowShoreNoise +
-    drySandRelief(distance, bank);
-  const cliffToeBurial = cliffToeBurialHeight(distance, lateral);
-  if (lateral <= SAND_MAXIMUM_LATERAL) {
-    return playableHeight + cliffToeBurial;
-  }
-
-  const extension = lateral - SAND_MAXIMUM_LATERAL;
-  const landwardSpan = Math.max(
-    0.01,
-    landwardSandEdgeLateral(distance) - SAND_MAXIMUM_LATERAL,
-  );
-  const extension01 = clamp01(extension / landwardSpan);
-  const smoothExtension = extension01 * extension01 * (3 - 2 * extension01);
-  const rollingRise =
-    0.115 * extension +
-    0.16 * smoothExtension +
-    0.075 *
-      Math.sin(
-        distance * 0.083 +
-          extension * 0.72 +
-          0.5 * Math.sin(distance * 0.019),
-      ) *
-      smoothExtension;
-  return playableHeight + rollingRise + cliffToeBurial;
 }
 
 function buildSandGeometry(
@@ -541,10 +354,21 @@ export function createUnityBeachfrontReference(): UnityBeachfrontReference {
   cliff.name = "LandwardCliffVisual";
   cliff.userData.visualOnly = true;
   cliff.userData.noShadow = true;
+  const stonecliff = createBeachfrontCliffVisual();
+  stonecliff.name = "Stonecliff Bastion source presentation";
 
   const group = new THREE.Group();
   group.name = "Unity Beachfront Run reference";
-  group.add(sand, cliff);
+  group.add(sand, cliff, stonecliff);
+
+  // Keep the synchronous strip as a no-pop fallback while the aggressively
+  // compressed source mesh loads. A successful shared GLB upgrade replaces
+  // it; a served asset failure leaves the fallback visible and debuggable.
+  let disposed = false;
+  void beachfrontCliffReady.then(() => {
+    if (!disposed && stonecliff.userData.assetReady === true)
+      cliff.visible = false;
+  });
 
   const shore = buildShore(sandFrames);
   const lane = courseFrames.map((frame) => ({
@@ -561,10 +385,10 @@ export function createUnityBeachfrontReference(): UnityBeachfrontReference {
     .addScaledVector(finishFrame.right, 2);
   finish.y = sandHeight(720, 2);
 
-  let disposed = false;
   const dispose = (): void => {
     if (disposed) return;
     disposed = true;
+    releaseBeachfrontCliffVisual(stonecliff);
     sand.geometry.dispose();
     sandOwner.dispose();
     cliff.geometry.dispose();

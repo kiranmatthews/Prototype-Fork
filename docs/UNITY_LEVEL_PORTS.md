@@ -1,8 +1,9 @@
 # Unity level ports
 
-This pass ports six current Unity scenes into source-owned `CustomLevelData`.
-The browser files remain editable through the same component pipeline as an
-in-game authored level; imported Unity meshes do not own gameplay collision.
+This pass covers six current Unity scenes. Five remain source-owned
+`CustomLevelData`; Beachside Run now composes its component-authored gameplay
+overlay with the already-audited Unity sand/ocean/post runtime. Imported Unity
+meshes never own gameplay collision.
 
 ## Coordinate policy
 
@@ -17,7 +18,7 @@ in-game authored level; imported Unity meshes do not own gameplay collision.
 
 | Browser level | Unity authority | Notes |
 | --- | --- | --- |
-| Beachside Run | `BeachfrontRun.unity` / `SourceLevelPortSceneBuilder.BeachfrontRun.cs` | Exact 740 m curve, seven four-island procedural boardwalk sequences, sand access joins, actors and deep-water band. |
+| Beachside Run | `BeachfrontRun.unity` / `SourceLevelPortSceneBuilder.BeachfrontRun.cs` | One consolidated level: exact 371×65 sand, curved MatrixRex ocean/post stack and dense camera spine; seven continuous procedural boardwalk runs, source actors, separate coast/cliff collision, and 150 instances of the aggressively compressed Stonecliff Bastion mesh. |
 | Bonus Level | `BonusLevel.unity` and partial builders | Seven supports, all 33 puzzle crates, lift, rail crossing, one-line containment and the registered four-layer parallax painting. |
 | Coastal Street Run | `CoastalStreetRun.unity` / `SourceLevelPortSceneBuilder.CoastalStreetRun.cs` | Exact 23-grade road, four gaps, 46 shoulders, source-count actors, 64-house left-side town rhythm and painted route arrows. The screen-right coast uses the authored 3.4 km MatrixRex ocean layout and the shared Beachside sand material instead of the former blue slab/procedural-sand approximation. |
 | Island Hopper | `IslandHopper.unity` / builder | Five four-ring sand shelves and one-draw animated foam, eleven source-topology timber/scaffold paths, exact jump joins, two snapping ropes, the MatrixRex ocean and authored actor rhythm. |
@@ -38,6 +39,31 @@ Bonus uses the four owner-supplied, registered 1672×941 layers in
 `public/bonus-parallax/`. A camera-aligned compositor preserves the Unity
 motion vectors, aspect-cover crop, smooth player-driven offset, warm-window
 emission and ambient drift.
+
+## Beachside consolidation
+
+The former `Unity Beachfront Run` and approximate `Beachside Run` menu rows are
+one canonical `beachfront` level now, displayed as **Beachside Run**. Legacy
+`beachside-run` selections resolve to that id. The duplicate terrain ribbon,
+eleven blue metal ocean slabs, broad pit blocks, seventeen procedural rocks
+and coarse camera lane were removed; the level retains the exact 740m Unity
+course, 371×65 textured sand/depth surface, 821-row tailed MatrixRex ocean,
+149-node camera/control lane, 43° lens and Coast post treatment.
+
+The seven boardwalk sequences are seven continuous `woodpath` components, not
+28 independently restarted islands. Each path keeps all sixteen source route
+knots but carries collision, plank phase, scaffold bays, braces, balustrades
+and both grind rails continuously through the former 3/4/5m holes. Sequence
+deck tops use Unity's exact 13×13 footprint probe and sit at 4.58–4.75m; both
+ends ease down to exact sand +0.18m. Support rays ignore earlier wood paths and
+terminate only on terrain, with the authored four-metre fallback base.
+
+The inland wall uses all 2,270 triangles of the owner-supplied Stonecliff
+Bastion, indexed and packed with one 512px JPEG into a 158KB decoder-free GLB.
+One shared geometry/material supplies the exact 100 primary and 50 staggered
+Unity transforms in fifteen cullable chunks. The mesh is visual-only: a curved
+continuous proxy remains collision authority. Full measurements, hashes and
+the reproducible bake live in `public/beachfront/README.md`.
 
 ## Coastal Street parity
 
@@ -102,6 +128,9 @@ side while retaining luminous tips as readable warning.
 
 ## Deliberate approximations
 
+- Beachside deliberately joins Unity's four jump islands in each boardwalk
+  sequence into one uninterrupted construction, following the explicit web
+  brief. Small huts, palms, benches and route dressing remain omitted.
 - Coastal Street combines Unity's 46 per-slab boundary rails into ten
   continuous rails over the same five gap-separated road blocks. Small lamps,
   palms, planters, surfboards, cloud banks and district landmarks remain

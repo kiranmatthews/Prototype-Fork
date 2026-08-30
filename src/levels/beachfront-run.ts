@@ -1,4 +1,13 @@
 import type { CustomComponent, CustomLevelData } from "../level";
+import {
+  BEACHFRONT_COURSE_LENGTH as COURSE_LENGTH,
+  beachfrontFootprintMaximumHeight,
+  beachfrontPointAtDistance,
+  beachfrontSandHeight as sandHeight,
+  beachfrontYawAtDistance,
+  clampBeachfront,
+  type BeachfrontWorldPoint,
+} from "../beachfrontCourse";
 
 /**
  * Unity authoring travels from -20 toward +720 on native +Z. This source
@@ -6,36 +15,29 @@ import type { CustomComponent, CustomLevelData } from "../level";
  * prototype's conventional -Z corridor without mirroring its lateral bends.
  */
 
-type WorldPoint = readonly [x: number, y: number, z: number];
+type WorldPoint = Readonly<BeachfrontWorldPoint>;
 
-interface CourseFrame {
-  x: number;
-  z: number;
-  fx: number;
-  fz: number;
-  rx: number;
-  rz: number;
-}
-
-interface BoardwalkIsland {
-  sequence: number;
+interface BoardwalkSpan {
   island: number;
   start: number;
   end: number;
+}
+
+interface BoardwalkSequence {
+  sequence: number;
   lateral: number;
   width: number;
   deckY: number;
+  spans: BoardwalkSpan[];
+  accessStart: number;
+  accessEnd: number;
 }
 
-const COURSE_LENGTH = 740;
-const COURSE_MINIMUM_UNITY_Z = -20;
 const BOARDWALK_ACCESS = 9;
-const BOARDWALK_DECK_Y = 1.85;
+const BOARDWALK_ACCESS_CLEARANCE = 0.18;
+const BOARDWALK_ISLAND_RISE = 4;
 
 const GROUP = {
-  beach: 1,
-  cliff: 2,
-  ocean: 3,
   actors: 4,
   camera: 5,
   boardwalkFirst: 10,
@@ -47,56 +49,19 @@ const add = (component: CustomComponent): void => {
 };
 const r2 = (value: number): number => Math.round(value * 100) / 100;
 const clamp = (value: number, minimum: number, maximum: number): number =>
-  Math.max(minimum, Math.min(maximum, value));
+  clampBeachfront(value, minimum, maximum);
 const smoothstep = (value: number): number => {
   const t = clamp(value, 0, 1);
   return t * t * (3 - 2 * t);
 };
 
-const frameAt = (rawDistance: number): CourseFrame => {
-  const distance = clamp(rawDistance, 0, COURSE_LENGTH);
-  const phase = (Math.PI * 2 * distance) / COURSE_LENGTH;
-  const x = 15 * Math.sin(phase) + 6 * Math.sin(phase * 2);
-  const derivative =
-    (15 * Math.PI * 2 * Math.cos(phase) +
-      12 * Math.PI * 2 * Math.cos(phase * 2)) /
-    COURSE_LENGTH;
-  const magnitude = Math.hypot(derivative, 1);
-  const fx = derivative / magnitude;
-  const fz = -1 / magnitude;
-  return {
-    x,
-    z: -(COURSE_MINIMUM_UNITY_Z + distance),
-    fx,
-    fz,
-    // Reflection reverses handedness: this is the exact converted Unity
-    // `Vector3.Cross(up, forward)` lateral vector.
-    rx: -fz,
-    rz: fx,
-  };
-};
-
-const sandHeight = (distance: number, lateral = 0): number => {
-  const longitudinal =
-    0.075 * Math.sin(distance * 0.019 + 0.55 * Math.sin(distance * 0.0043)) +
-    0.05 * Math.sin(distance * 0.051 + 1.1);
-  const bank = 0.035 * lateral + 0.018 * Math.sin(distance * 0.11 + lateral);
-  return r2(0.18 + longitudinal + bank);
-};
-
 const pointAt = (distance: number, lateral = 0, y?: number): WorldPoint => {
-  const frame = frameAt(distance);
-  return [
-    r2(frame.x + frame.rx * lateral),
-    r2(y ?? sandHeight(distance, lateral)),
-    r2(frame.z + frame.rz * lateral),
-  ];
+  const point = beachfrontPointAtDistance(distance, lateral, y);
+  return [r2(point[0]), r2(point[1]), r2(point[2])];
 };
 
-const yawAt = (distance: number): number => {
-  const frame = frameAt(distance);
-  return r2((Math.atan2(-frame.fx, -frame.fz) * 180) / Math.PI);
-};
+const yawAt = (distance: number): number =>
+  r2(beachfrontYawAtDistance(distance));
 
 const pathPoints = (
   points: readonly WorldPoint[],
@@ -113,73 +78,6 @@ const pathPoints = (
   );
 };
 
-// One continuous procedural sand ribbon follows the same two-frequency
-// shoreline spine as the Unity scene.
-const sandRoute: WorldPoint[] = [];
-for (let distance = 0; distance <= COURSE_LENGTH; distance += 40) {
-  sandRoute.push(pointAt(distance));
-}
-if (sandRoute[sandRoute.length - 1][2] !== pointAt(COURSE_LENGTH)[2]) {
-  sandRoute.push(pointAt(COURSE_LENGTH));
-}
-add({
-  t: "terrain",
-  p: [...sandRoute[0]],
-  pts: pathPoints(sandRoute),
-  w: 34,
-  amp: 0.035,
-  berms: false,
-  curve: "spline",
-  tex: "sand",
-  color: "#e6c788",
-  nm: "continuous beach and shallow shelf",
-  grp: GROUP.beach,
-});
-
-// Procedural ocean/deep-water chunks sit just seaward of the sand ribbon.
-// The blue deck is presentation; the inset pit is the actual deep-water kill.
-for (let distance = 35; distance < COURSE_LENGTH; distance += 70) {
-  const [oceanX, , oceanZ] = pointAt(distance, -34, -1.38);
-  add({
-    t: "platform",
-    p: [oceanX, -1.53, oceanZ],
-    s: [36, 0.3, 76],
-    yaw: yawAt(distance),
-    tex: "metal",
-    color: "#238ea9",
-    nm: "ocean surface",
-    grp: GROUP.ocean,
-  });
-  const [hazardX, , hazardZ] = pointAt(distance, -31, -1.55);
-  add({
-    t: "pit",
-    // Kept just under the blue surface: its shallow touch volume still kills
-    // on contact, while the generic ember-pit artwork remains out of sight.
-    p: [hazardX, -1.55, hazardZ],
-    s: [25, 1, 69],
-    yaw: yawAt(distance),
-    nm: "deep water",
-    grp: GROUP.ocean,
-  });
-}
-
-// Chunked cliff forms keep the landward edge readable without importing the
-// Unity Meshy cliff asset or producing one enormous un-cullable mesh.
-for (let distance = 18, index = 0; distance < COURSE_LENGTH; distance += 46, index++) {
-  const [x, y, z] = pointAt(distance, 19);
-  const height = 4.8 + (index % 4) * 0.65;
-  add({
-    t: "rock",
-    p: [x, r2(y + height * 0.34), z],
-    s: [8.5 + (index % 3), height, 28],
-    seed: 8100 + index * 31,
-    color: index % 2 === 0 ? "#948774" : "#817665",
-    tex: "stone",
-    nm: "buried coast cliff",
-    grp: GROUP.cliff,
-  });
-}
-
 const boardwalkDefinitions = [
   [50, -1.5, 5.5],
   [138, 1.4, 5.8],
@@ -190,129 +88,167 @@ const boardwalkDefinitions = [
   [604, -1, 6],
 ] as const;
 
-const boardwalkIslands: BoardwalkIsland[] = [];
-
-boardwalkDefinitions.forEach(([sequenceStart, lateral, width], sequence) => {
-  let cursor = sequenceStart;
-  for (let island = 0; island < 4; island++) {
-    const length = 10 + ((sequence * 5 + island * 7) % 9);
-    const start = cursor;
-    const end = start + length;
-    boardwalkIslands.push({
+const boardwalkSequences: BoardwalkSequence[] = boardwalkDefinitions.map(
+  ([sequenceStart, lateral, width], sequence) => {
+    const spans: BoardwalkSpan[] = [];
+    let cursor = sequenceStart;
+    for (let island = 0; island < 4; island++) {
+      const length = 10 + ((sequence * 5 + island * 7) % 9);
+      const start = cursor;
+      const end = start + length;
+      spans.push({ island, start, end });
+      cursor = end + (island < 3 ? 3 + ((sequence + island) % 3) : 0);
+    }
+    const islandBases = spans.map((span) => {
+      const middle = (span.start + span.end) * 0.5;
+      const centerBase = sandHeight(middle, lateral) + 0.28;
+      const footprintBase =
+        beachfrontFootprintMaximumHeight(
+          span.start,
+          span.end,
+          lateral,
+          width,
+          13,
+          13,
+        ) + 0.04;
+      return Math.max(centerBase, footprintBase);
+    });
+    return {
       sequence,
-      island,
-      start,
-      end,
       lateral,
       width,
-      deckY: BOARDWALK_DECK_Y + 0.08 * Math.sin(sequence * 0.9),
-    });
-    cursor = end + (island < 3 ? 3 + ((sequence + island) % 3) : 0);
-  }
-});
+      deckY: Math.max(...islandBases) + BOARDWALK_ISLAND_RISE,
+      spans,
+      accessStart: spans[0].start - BOARDWALK_ACCESS,
+      accessEnd: spans[spans.length - 1].end + BOARDWALK_ACCESS,
+    };
+  },
+);
 
-const boardwalkPoint = (
+const boardwalkLateral = (
+  sequence: BoardwalkSequence,
+  span: BoardwalkSpan,
   distance: number,
-  lateral: number,
-  y: number,
-  curveSign: number,
-  start: number,
-  end: number,
-): WorldPoint => {
-  const onIsland = distance >= start && distance <= end;
-  const t = clamp((distance - start) / Math.max(0.01, end - start), 0, 1);
+): number => {
+  const onIsland = distance >= span.start && distance <= span.end;
+  const t = clamp(
+    (distance - span.start) / Math.max(0.01, span.end - span.start),
+    0,
+    1,
+  );
+  const curveSign = (sequence.sequence + span.island) % 2 === 0 ? 1 : -1;
   const curve = onIsland ? curveSign * 0.26 * Math.sin(Math.PI * t) : 0;
-  return pointAt(distance, lateral + curve, y);
+  return sequence.lateral + curve;
 };
 
-boardwalkIslands.forEach((island) => {
-  const curveSign = (island.sequence + island.island) % 2 === 0 ? 1 : -1;
+const boardwalkPoint = (
+  sequence: BoardwalkSequence,
+  span: BoardwalkSpan,
+  distance: number,
+  y: number,
+): WorldPoint => pointAt(distance, boardwalkLateral(sequence, span, distance), y);
+
+const islandWidthScale = (
+  sequence: BoardwalkSequence,
+  span: BoardwalkSpan,
+  distance: number,
+  includeSecondaryCurve: boolean,
+): number => {
+  const t = clamp(
+    (distance - span.start) / Math.max(0.01, span.end - span.start),
+    0,
+    1,
+  );
+  const curveSign = (sequence.sequence + span.island) % 2 === 0 ? 1 : -1;
+  return (
+    0.96 +
+    0.06 * Math.sin(Math.PI * t) +
+    (includeSecondaryCurve
+      ? 0.015 * curveSign * Math.sin(Math.PI * 2 * t)
+      : 0)
+  );
+};
+
+const accessNode = (
+  sequence: BoardwalkSequence,
+  span: BoardwalkSpan,
+  distance: number,
+  entry: boolean,
+): { point: WorldPoint; width: number } => {
+  const accessStart = entry ? sequence.accessStart : span.start;
+  const accessEnd = entry ? span.end : sequence.accessEnd;
+  const accessT = clamp(
+    (distance - accessStart) / Math.max(0.01, accessEnd - accessStart),
+    0,
+    1,
+  );
+  const lateral = boardwalkLateral(sequence, span, distance);
+  const groundY = sandHeight(distance, lateral) + BOARDWALK_ACCESS_CLEARANCE;
+  const eased = smoothstep(accessT);
+  const topY = entry
+    ? groundY + (sequence.deckY - groundY) * eased
+    : sequence.deckY + (groundY - sequence.deckY) * eased;
+  const sourceWidth = islandWidthScale(sequence, span, distance, false);
+  const widthScale = entry
+    ? 0.84 + (sourceWidth - 0.84) * accessT
+    : sourceWidth + (0.84 - sourceWidth) * accessT;
+  return {
+    point: boardwalkPoint(sequence, span, distance, r2(topY)),
+    width: sequence.width * widthScale,
+  };
+};
+
+boardwalkSequences.forEach((sequence) => {
+  const first = sequence.spans[0];
+  const last = sequence.spans[sequence.spans.length - 1];
   const points: WorldPoint[] = [];
   const widths: number[] = [];
-  if (island.island === 0) {
-    const accessStart = island.start - BOARDWALK_ACCESS;
-    points.push(
-      boardwalkPoint(
-        accessStart,
-        island.lateral,
-        sandHeight(accessStart, island.lateral) + 0.12,
-        curveSign,
-        island.start,
-        island.end,
-      ),
-      boardwalkPoint(
-        island.start - 3,
-        island.lateral,
-        r2(
-          sandHeight(island.start - 3, island.lateral) +
-            (island.deckY - sandHeight(island.start - 3, island.lateral)) * 0.72,
-        ),
-        curveSign,
-        island.start,
-        island.end,
-      ),
-    );
-    widths.push(island.width * 0.84, island.width * 0.93);
+  const firstDistances = [
+    sequence.accessStart,
+    first.start,
+    (first.start + first.end) * 0.5,
+    ((first.start + first.end) * 0.5 + first.end) * 0.5,
+    first.end,
+  ];
+  for (const distance of firstDistances) {
+    const node = accessNode(sequence, first, distance, true);
+    points.push(node.point);
+    widths.push(node.width);
   }
-  points.push(
-    boardwalkPoint(
-      island.start,
-      island.lateral,
-      island.deckY,
-      curveSign,
-      island.start,
-      island.end,
-    ),
-    boardwalkPoint(
-      (island.start + island.end) * 0.5,
-      island.lateral,
-      island.deckY,
-      curveSign,
-      island.start,
-      island.end,
-    ),
-    boardwalkPoint(
-      island.end,
-      island.lateral,
-      island.deckY,
-      curveSign,
-      island.start,
-      island.end,
-    ),
-  );
-  widths.push(island.width, island.width * 1.02, island.width);
-  if (island.island === 3) {
-    const accessEnd = island.end + BOARDWALK_ACCESS;
-    points.push(
-      boardwalkPoint(
-        island.end + 3,
-        island.lateral,
-        r2(
-          sandHeight(island.end + 3, island.lateral) +
-            (island.deckY - sandHeight(island.end + 3, island.lateral)) * 0.72,
-        ),
-        curveSign,
-        island.start,
-        island.end,
-      ),
-      boardwalkPoint(
-        accessEnd,
-        island.lateral,
-        sandHeight(accessEnd, island.lateral) + 0.12,
-        curveSign,
-        island.start,
-        island.end,
-      ),
-    );
-    widths.push(island.width * 0.93, island.width * 0.84);
+
+  for (const span of sequence.spans.slice(1, -1)) {
+    for (const distance of [
+      span.start,
+      (span.start + span.end) * 0.5,
+      span.end,
+    ]) {
+      points.push(boardwalkPoint(sequence, span, distance, sequence.deckY));
+      widths.push(
+        sequence.width * islandWidthScale(sequence, span, distance, true),
+      );
+    }
   }
+
+  const lastDistances = [
+    last.start,
+    (last.start + (last.start + last.end) * 0.5) * 0.5,
+    (last.start + last.end) * 0.5,
+    last.end,
+    sequence.accessEnd,
+  ];
+  for (const distance of lastDistances) {
+    const node = accessNode(sequence, last, distance, false);
+    points.push(node.point);
+    widths.push(node.width);
+  }
+
   const [x, y, z] = points[0];
   add({
     t: "woodpath",
     p: [x, y, z],
     pts: pathPoints(points),
     widths: widths.map(r2),
-    w: island.width,
+    w: sequence.width,
     curve: "spline",
     structureStyle: "beach",
     plankPalette: "placeholder-board",
@@ -323,40 +259,30 @@ boardwalkIslands.forEach((island) => {
     spacing: 0.72,
     baySpacing: 4.2,
     supportDepth: 4.5,
+    supportBaseY: r2(sequence.deckY - BOARDWALK_ISLAND_RISE),
     terrainSupports: true,
-    seed: 84100 + island.sequence * 4 + island.island,
+    seed: 84100 + sequence.sequence * 4,
     tex: "plank",
     color: "#9a6434",
-    nm: `boardwalk ${island.sequence + 1}.${island.island + 1}`,
-    grp: GROUP.boardwalkFirst + island.sequence,
+    nm: `boardwalk sequence ${sequence.sequence + 1}`,
+    grp: GROUP.boardwalkFirst + sequence.sequence,
   });
 });
 
 const surfaceY = (distance: number, lateral: number): number => {
   let highest = sandHeight(distance, lateral);
-  for (const island of boardwalkIslands) {
-    if (Math.abs(lateral - island.lateral) > island.width * 0.58) continue;
+  for (const sequence of boardwalkSequences) {
+    if (Math.abs(lateral - sequence.lateral) > sequence.width * 0.58) continue;
+    const first = sequence.spans[0];
+    const last = sequence.spans[sequence.spans.length - 1];
     let boardwalkY: number | undefined;
-    if (distance >= island.start && distance <= island.end) {
-      boardwalkY = island.deckY;
-    } else if (
-      island.island === 0 &&
-      distance >= island.start - BOARDWALK_ACCESS &&
-      distance < island.start
-    ) {
-      const t = smoothstep((distance - island.start + BOARDWALK_ACCESS) / BOARDWALK_ACCESS);
-      boardwalkY =
-        sandHeight(distance, lateral) +
-        (island.deckY - sandHeight(distance, lateral)) * t;
-    } else if (
-      island.island === 3 &&
-      distance > island.end &&
-      distance <= island.end + BOARDWALK_ACCESS
-    ) {
-      const t = smoothstep((distance - island.end) / BOARDWALK_ACCESS);
-      boardwalkY =
-        island.deckY + (sandHeight(distance, lateral) - island.deckY) * t;
-    }
+    if (distance >= sequence.accessStart && distance <= first.end)
+      boardwalkY = accessNode(sequence, first, distance, true).point[1];
+    else if (distance > first.end && distance < last.start)
+      // The former interior holes remain level inside one swept deck.
+      boardwalkY = sequence.deckY;
+    else if (distance >= last.start && distance <= sequence.accessEnd)
+      boardwalkY = accessNode(sequence, last, distance, false).point[1];
     if (boardwalkY !== undefined) highest = Math.max(highest, boardwalkY);
   }
   return r2(highest);
@@ -437,10 +363,10 @@ for (let distance = 0; distance <= COURSE_LENGTH; distance += 55) {
   });
 }
 
-const [gateX, , gateZ] = pointAt(720);
+const [gateX, , gateZ] = pointAt(720, 2);
 add({
   t: "gate",
-  p: [gateX, surfaceY(720, 0), gateZ],
+  p: [gateX, surfaceY(720, 2), gateZ],
   yaw: yawAt(720),
   nm: "beach finish",
   grp: GROUP.actors,
@@ -455,9 +381,6 @@ export const BEACHFRONT_RUN_LEVEL: CustomLevelData = {
   killY: -12,
   sky: "coast",
   groups: [
-    { id: GROUP.beach, nm: "continuous sand" },
-    { id: GROUP.cliff, nm: "landward cliff" },
-    { id: GROUP.ocean, nm: "ocean and deep-water hazard" },
     { id: GROUP.actors, nm: "route actors" },
     { id: GROUP.camera, nm: "camera route" },
     ...boardwalkDefinitions.map((_, index) => ({
