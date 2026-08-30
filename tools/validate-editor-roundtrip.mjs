@@ -348,6 +348,7 @@ const GAMEPLAY_COLLECTIONS = [
   "pitBoxes",
   "tumbleBoxes",
   "rails",
+  "crateRails",
   "halfpipes",
   "zones",
   "crates",
@@ -639,6 +640,158 @@ const MALFORMED_GROUP_FIXTURE = {
   ],
 };
 
+const CRATE_STACK_BRIDGE_FIXTURE = {
+  v: 1,
+  name: "Crate Stack Bridge Sentinel",
+  spawn: [-12, 0.6, 2],
+  killY: -12,
+  components: [
+    { t: "platform", p: [-12, -0.5, 0], s: [8, 1, 8] },
+    // Deliberately serialized TOP-FIRST: runtime support must not depend on
+    // component order, and editor entry/save must not reorder the JSON.
+    { t: "crate", p: [0, 1.92, 0], kind: "metal" },
+    { t: "crate", p: [0, 0.96, 0], kind: "wood" },
+    { t: "crate", p: [0, 0, 0], kind: "wood" },
+    // Same projected column, disconnected upper deck: it is NOT part of the
+    // lower touching stack and must retain its own platform floor.
+    { t: "platform", p: [0, 9.5, 0], s: [4, 1, 4] },
+    { t: "crate", p: [0, 10, 0], kind: "metal" },
+    // One shallow local-height chain crossing several rounded-Y buckets.
+    { t: "crate", p: [5, 0, -5], kind: "wood" },
+    { t: "crate", p: [5, 0.12, -4.04], kind: "wood" },
+    { t: "crate", p: [5, 0.24, -3.08], kind: "wood" },
+    { t: "crate", p: [5, 0.36, -2.12], kind: "wood" },
+    // Crosses the old Math.round(*10) bucket at .05 while remaining aligned
+    // within two millimetres and one valid local height step.
+    { t: "crate", p: [10, 5, 0.049], kind: "wood" },
+    { t: "crate", p: [10.96, 5.12, 0.051], kind: "wood" },
+    // Offset support uses the same .6 footprint law as settling. The buried
+    // lower lid must not publish a grind edge through the upper crate.
+    { t: "crate", p: [15, 0, 0], kind: "wood" },
+    { t: "crate", p: [15.5, 0.96, 0], kind: "metal" },
+    // Geometry-identical comparison stack, serialized BOTTOM-FIRST.
+    { t: "crate", p: [20, 0, 0], kind: "wood" },
+    { t: "crate", p: [20, 0.96, 0], kind: "wood" },
+    { t: "crate", p: [20, 1.92, 0], kind: "metal" },
+    // Two touching parallel rows straddling the old rounded occupancy bucket.
+    { t: "crate", p: [30, 7, 0.091], kind: "wood" },
+    { t: "crate", p: [30.96, 7, 0.091], kind: "wood" },
+    { t: "crate", p: [30, 7, 1.049], kind: "wood" },
+    { t: "crate", p: [30.96, 7, 1.049], kind: "wood" },
+    { t: "gate", p: [-12, 0, -3] },
+    { t: "clock", p: [-10, 0, 2] },
+    { t: "comboorb", p: [-14, 0, 2] },
+  ],
+  groups: [],
+};
+
+function assertCrateStackBridge(canonical, level) {
+  assert.deepStrictEqual(
+    canonical.components
+      .filter((component) => component.t === "crate")
+      .slice(0, 3)
+      .map((component) => component.p[1]),
+    [1.92, 0.96, 0],
+    "normalization reordered the deliberately top-first stack",
+  );
+  if (!level) return;
+  assert.equal(level.crates.length, 19);
+  assert.equal(level.crates[0].metal, true, "stackable metal crate lost its kind");
+  for (let index = 0; index < 3; index++) {
+    assert.equal(
+      round(level.crates[index].mesh.userData.groundBaseY),
+      0,
+      `top-first stack member ${index} inherited the wrong column floor`,
+    );
+  }
+  assert.equal(
+    round(level.crates[3].mesh.userData.groundBaseY),
+    10,
+    "independent upper-deck crate inherited the lower stack floor",
+  );
+  const bridgeRails = level.crateRails.filter(
+    (rail) => level.crateRunFor(rail)?.length === 4,
+  );
+  assert.equal(bridgeRails.length, 2, "sloped crate row did not form two exposed rails");
+  for (const rail of bridgeRails) {
+    assert.equal(rail.points.length, 6, "crate bridge rail must follow every lid");
+    assert.deepStrictEqual(
+      rail.points.slice(1, -1).map((point) => round(point.y)),
+      [0.96, 1.08, 1.2, 1.32],
+      "crate bridge rail flattened or split its lid-height chain",
+    );
+  }
+  const boundaryRails = level.crateRails.filter(
+    (rail) => level.crateRunFor(rail)?.includes(level.crates[8]),
+  );
+  assert.equal(boundaryRails.length, 2, "cross-bucket aligned row lost its rails");
+  assert.ok(
+    boundaryRails.every((rail) => level.crateRunFor(rail)?.includes(level.crates[9])),
+    "cross-bucket row split its two members",
+  );
+  assert.ok(
+    level.crateRails.every(
+      (rail) => !level.crateRunFor(rail)?.includes(level.crates[10]),
+    ),
+    "offset-supported lower crate exposed a buried rail",
+  );
+  const parallelRails = level.crateRails.filter((rail) =>
+    level.crateRunFor(rail)?.some((crate) => level.crates.slice(15, 19).includes(crate)),
+  );
+  assert.equal(
+    parallelRails.length,
+    4,
+    "touching cross-bucket 2x2 grid exposed an internal side rail",
+  );
+
+  const [top, middle, bottom] = level.crates;
+  const compareBottom = level.crates[12];
+  const compareMiddle = level.crates[13];
+  const compareTop = level.crates[14];
+  const authoredY = [top, middle, bottom].map((crate) => round(crate.mesh.position.y));
+  const compareAuthoredY = [compareTop, compareMiddle, compareBottom].map(
+    (crate) => round(crate.mesh.position.y),
+  );
+  level.breakCrate(bottom);
+  level.breakCrate(compareBottom);
+  for (let tick = 0; tick < 180; tick++) {
+    level.update(1 / 60);
+    assert.equal(
+      round(top.mesh.position.y),
+      round(compareTop.mesh.position.y),
+      `top-first and bottom-first top diverged on tick ${tick}`,
+    );
+    assert.equal(
+      round(middle.mesh.position.y),
+      round(compareMiddle.mesh.position.y),
+      `top-first and bottom-first middle diverged on tick ${tick}`,
+    );
+  }
+  assert.equal(bottom.alive, false, "bottom support did not break");
+  assert.equal(round(middle.mesh.position.y), 0.48, "middle crate did not settle to floor");
+  assert.equal(round(top.mesh.position.y), 1.44, "metal lid did not settle onto middle crate");
+  assert.equal(compareBottom.alive, false, "comparison bottom support did not break");
+  for (const crate of [top, middle]) {
+    assert.equal(crate.fallVel, undefined, "settled crate retained fall velocity");
+    assert.deepStrictEqual(
+      numericArray(crate.box.getCenter(new THREE.Vector3()).toArray()),
+      numericArray(crate.mesh.position.toArray()),
+      "settled crate mesh/collider diverged",
+    );
+  }
+  level.reset(true);
+  assert.deepStrictEqual(
+    [top, middle, bottom].map((crate) => round(crate.mesh.position.y)),
+    authoredY,
+    "hard reset did not restore top-first stack homes",
+  );
+  assert.deepStrictEqual(
+    [compareTop, compareMiddle, compareBottom].map((crate) => round(crate.mesh.position.y)),
+    compareAuthoredY,
+    "hard reset did not restore bottom-first stack homes",
+  );
+}
+
 function assertPrimitiveFixture(canonical, level) {
   assert.equal(
     canonical.components.find((component) => component.t === "returnportal")
@@ -772,6 +925,13 @@ try {
       name: MALFORMED_GROUP_FIXTURE.name,
       source: "sparse fixture",
       verify: assertMalformedGroups,
+    },
+    {
+      data: CRATE_STACK_BRIDGE_FIXTURE,
+      id: "crate-stack-bridge",
+      name: CRATE_STACK_BRIDGE_FIXTURE.name,
+      source: "sparse fixture",
+      verify: assertCrateStackBridge,
     },
     ...BUILTIN_LEVELS.filter((entry) => entry.data).map((entry) => ({
       data: entry.data,

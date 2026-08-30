@@ -877,6 +877,18 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
+        label: "metal crate",
+        icon: (x) => {
+          box(x, "#9aa2ac", "#666e78");
+          glyph(x, "M", "#e8eef4");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "metal",
+        }),
+      },
+      {
         label: "TNT",
         icon: (x) => {
           box(x, "#c03a2a", "#6a180e");
@@ -949,7 +961,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
-        label: "metal",
+        label: "metal block",
         icon: (x) => {
           box(x, "#9aa2ac", "#666e78");
           x.fillStyle = "#666e78";
@@ -1858,6 +1870,7 @@ const CRATE_KINDS = [
   "wood",
   "bouncy",
   "metalbounce",
+  "metal",
   "nitro",
   "tnt",
   "mask",

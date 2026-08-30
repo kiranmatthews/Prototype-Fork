@@ -3113,6 +3113,7 @@ export class Level {
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.clearPlayFog(); // ...and the course you run on comes back out of it
+    this.reconcileCrateColumnGrounds(); // support floors cannot depend on component order
     this.snapshotHome(); // last: reset() needs where everything actually started
     this.rebuildCrateRails(); // every crate is placed: derive the grind lines
     // All geometry and authoring transforms are now final. Build local-space
@@ -3195,18 +3196,8 @@ export class Level {
     // reason: they read as a ledge and simply refuse to break.
     const live: Crate[] = [];
     for (const c of this.crates) if (c.alive && !c.pending) live.push(c);
-
-    // Occupancy, quantised to 0.1 so a row seated on a wavy floor still counts
-    // as one row. Everything below asks this the same question: is there a box
-    // in the cell next door?
-    const q = (v: number): number => Math.round(v * 10);
-    const cell = (x: number, y: number, z: number): string =>
-      q(x) + "|" + q(y) + "|" + q(z);
-    const filled = new Set<string>();
-    for (const c of live) {
-      const p = c.mesh.position;
-      filled.add(cell(p.x, p.y, p.z));
-    }
+    const stableOrder = new Map<Crate, number>();
+    for (let i = 0; i < this.crates.length; i++) stableOrder.set(this.crates[i], i);
 
     // A BOX WITH SOMETHING ON TOP OF IT HAS NO LEDGE. Only the crates whose
     // lids are open to the sky can be ridden, which is why a solid cube offers
@@ -3215,38 +3206,85 @@ export class Level {
     const open: Crate[] = [];
     for (const c of live) {
       const p = c.mesh.position;
-      if (!filled.has(cell(p.x, p.y + S, p.z))) open.push(c);
+      const covered = live.some((other) => {
+        if (other === c) return false;
+        const q = other.mesh.position;
+        return (
+          Math.abs(q.x - p.x) <= 0.6 &&
+          Math.abs(q.z - p.z) <= 0.6 &&
+          Math.abs(other.box.min.y - c.box.max.y) <= 0.02
+        );
+      });
+      if (!covered) open.push(c);
     }
 
     for (const axis of ["x", "z"] as const) {
       const cross = axis === "x" ? "z" : "x";
-      const groups = new Map<string, Crate[]>();
-      for (const c of open) {
-        const p = c.mesh.position;
-        const key =
-          axis === "x" ? q(p.y) + "|" + q(p.z) : q(p.y) + "|" + q(p.x);
-        const g = groups.get(key);
-        if (g) g.push(c);
-        else groups.set(key, [c]);
-      }
-      for (const g of groups.values()) {
-        if (g.length < 2) continue;
-        g.sort((a, b) => a.mesh.position[axis] - b.mesh.position[axis]);
-        let run: Crate[] = [g[0]];
-        for (let i = 1; i <= g.length; i++) {
-          const gap =
-            i < g.length
-              ? g[i].mesh.position[axis] - g[i - 1].mesh.position[axis]
-              : Infinity;
-          // touching = one crate apart. A wider gap ends the run; a much
-          // smaller one is two boxes in the same place, which is not a ledge.
-          if (Math.abs(gap - S) < 0.15) {
-            run.push(g[i]);
-            continue;
+      const g = open.slice().sort((a, b) => {
+        const along = a.mesh.position[axis] - b.mesh.position[axis];
+        if (along !== 0) return along;
+        const crosswise = a.mesh.position[cross] - b.mesh.position[cross];
+        if (crosswise !== 0) return crosswise;
+        const height = a.box.max.y - b.box.max.y;
+        return height !== 0
+          ? height
+          : (stableOrder.get(a) ?? 0) - (stableOrder.get(b) ?? 0);
+      });
+      if (g.length < 2) continue;
+
+      // Extract local-height/cross-axis chains directly. Explicit distance
+      // tests avoid the .049/.051 rounded-bucket split while the fit ordering
+      // keeps two close parallel rows from cross-wiring.
+      const assigned = new Array<boolean>(g.length).fill(false);
+      for (let seed = 0; seed < g.length; seed++) {
+        if (assigned[seed]) continue;
+        const run: Crate[] = [g[seed]];
+        assigned[seed] = true;
+        let current = seed;
+        for (;;) {
+          let best = -1;
+          let bestAxisError = Infinity;
+          let bestCrossError = Infinity;
+          let bestHeightDelta = Infinity;
+          const currentAxis = g[current].mesh.position[axis];
+          const currentCross = g[current].mesh.position[cross];
+          const currentTop = g[current].box.max.y;
+          for (let candidate = 0; candidate < g.length; candidate++) {
+            if (assigned[candidate]) continue;
+            const axisError = Math.abs(
+              g[candidate].mesh.position[axis] - currentAxis - S,
+            );
+            const crossError = Math.abs(
+              g[candidate].mesh.position[cross] - currentCross,
+            );
+            const heightDelta = Math.abs(g[candidate].box.max.y - currentTop);
+            if (
+              axisError >= 0.15 ||
+              crossError >= 0.15 ||
+              heightDelta >= 0.15
+            )
+              continue;
+            if (
+              best >= 0 &&
+              (axisError > bestAxisError ||
+                (axisError === bestAxisError &&
+                  (crossError > bestCrossError ||
+                    (crossError === bestCrossError &&
+                      heightDelta >= bestHeightDelta))))
+            )
+              continue;
+            best = candidate;
+            bestAxisError = axisError;
+            bestCrossError = crossError;
+            bestHeightDelta = heightDelta;
           }
-          if (run.length >= 2) this.addCrateRails(run, axis, cross, S, filled, cell);
-          run = i < g.length ? [g[i]] : [];
+          if (best < 0) break;
+          assigned[best] = true;
+          run.push(g[best]);
+          current = best;
         }
+        if (run.length >= 2)
+          this.addCrateRails(run, axis, cross, S, live);
       }
     }
     this.grindRailList = this.rails.concat(this.crateRails);
@@ -3263,38 +3301,44 @@ export class Level {
     axis: "x" | "z",
     cross: "x" | "z",
     S: number,
-    filled: Set<string>,
-    cell: (x: number, y: number, z: number) => string,
+    live: readonly Crate[],
   ): void {
-    const a = run[0].mesh.position;
-    const b = run[run.length - 1].mesh.position;
-    const top = a.y + S / 2; // the surface you actually stand on
+    const a = run[0];
+    const b = run[run.length - 1];
     for (const side of [-1, 1]) {
       // open if ANY box along the run has nothing beside it on this side —
       // a partly buried edge still has the exposed part worth riding
       let exposed = false;
       for (const c of run) {
         const p = c.mesh.position;
-        const nx = cross === "x" ? p.x + side * S : p.x;
-        const nz = cross === "z" ? p.z + side * S : p.z;
-        if (!filled.has(cell(nx, p.y, nz))) {
+        const neighbor = live.some((other) => {
+          if (other === c) return false;
+          const q = other.mesh.position;
+          return (
+            Math.abs(q[axis] - p[axis]) < 0.15 &&
+            Math.abs(q[cross] - p[cross] - side * S) < 0.15 &&
+            Math.abs(other.box.max.y - c.box.max.y) < 0.15
+          );
+        });
+        if (!neighbor) {
           exposed = true;
           break;
         }
       }
       if (!exposed) continue;
       const off = (side * S) / 2; // half a box out: the lip itself
-      // Run the line the FULL length of the ledge, half a crate past each end
-      // centre, so the grind covers the whole edge rather than stopping short.
-      const p0 =
-        axis === "x"
-          ? new THREE.Vector3(a.x - S / 2, top, a.z + off)
-          : new THREE.Vector3(a.x + off, top, a.z - S / 2);
-      const p1 =
-        axis === "x"
-          ? new THREE.Vector3(b.x + S / 2, top, b.z + off)
-          : new THREE.Vector3(b.x + off, top, b.z + S / 2);
-      const rail = new Rail([p0, p1], false); // no bar drawn: the boxes ARE the rail
+      // Follow every lid, with half-crate endpoint extensions. One flat chord
+      // through a shallow bridge can dip into boxes or float over them.
+      const edgePoint = (c: Crate, longitudinalOffset: number): THREE.Vector3 => {
+        const p = c.mesh.position;
+        return axis === "x"
+          ? new THREE.Vector3(p.x + longitudinalOffset, c.box.max.y, p.z + off)
+          : new THREE.Vector3(p.x + off, c.box.max.y, p.z + longitudinalOffset);
+      };
+      const points: THREE.Vector3[] = [edgePoint(a, -S / 2)];
+      for (const c of run) points.push(edgePoint(c, 0));
+      points.push(edgePoint(b, S / 2));
+      const rail = new Rail(points, false); // no bar drawn: the boxes ARE the rail
       this.crateRails.push(rail);
       this.crateRunOf.set(rail, run.slice());
     }
@@ -3322,6 +3366,47 @@ export class Level {
     for (const e of this.enemies) {
       e.homeX = e.group.position.x;
       e.homeZ = e.group.position.z;
+    }
+  }
+
+  /**
+   * Resolve each complete crate column after authoring finishes. `crate()` has
+   * to preserve component/runtime order, so a top-first imported stack cannot
+   * inherit its floor from a lower crate that has not been built yet. The
+   * lowest physically touching member's already-resolved floor is the same
+   * answer a bottom-first build propagated. Disconnected upper decks sharing
+   * X/Z remain independent, as do intentional floating bridges.
+   */
+  private reconcileCrateColumnGrounds(): void {
+    for (const c of this.crates) {
+      let bottom = c;
+      const visited = new Set<Crate>();
+      for (;;) {
+        if (visited.has(bottom)) break;
+        visited.add(bottom);
+        let support: Crate | null = null;
+        let supportTop = -Infinity;
+        const base = bottom.box.min.y;
+        for (const candidate of this.crates) {
+          if (candidate === bottom || visited.has(candidate)) continue;
+          const p = bottom.mesh.position;
+          const q = candidate.mesh.position;
+          if (Math.abs(q.x - p.x) > 0.6 || Math.abs(q.z - p.z) > 0.6)
+            continue;
+          const top = candidate.box.max.y;
+          // Only a physically touching lower member belongs to this stack.
+          // A crate on an independent upper deck at the same X/Z must retain
+          // that deck as its floor rather than inherit the world below it.
+          if (Math.abs(top - base) > 0.02 || top <= supportTop) continue;
+          support = candidate;
+          supportTop = top;
+        }
+        if (support === null) break;
+        bottom = support;
+      }
+      c.mesh.userData.groundBaseY =
+        (bottom.mesh.userData.groundBaseY as number | undefined) ??
+        bottom.box.min.y;
     }
   }
 
@@ -6103,73 +6188,119 @@ export class Level {
     const changed = live !== this.settleLiveCrates;
     this.settleLiveCrates = live;
     if (!changed && this.settleFalling === 0) return;
+    // Solve from one immutable tick snapshot. Mutating a lower crate before a
+    // later upper crate inspected it made top-first and bottom-first component
+    // arrays start falling on different ticks, diverging replays and rail
+    // rebuild timing even though their authored geometry was identical.
+    const snapshot = this.crates.map((crate) => ({
+      crate,
+      x: crate.mesh.position.x,
+      y: crate.mesh.position.y,
+      z: crate.mesh.position.z,
+      base: crate.mesh.position.y - SIZE / 2,
+      top: crate.mesh.position.y + SIZE / 2,
+      fallVel: crate.fallVel,
+      solid: crate.alive && !crate.pending,
+    }));
+    const plans: {
+      crate: Crate;
+      y: number;
+      fallVel: number | undefined;
+      moving: boolean;
+      sound: "bounce" | "land" | null;
+    }[] = [];
     let falling = 0;
-    for (const c of this.crates) {
-      if (!c.alive || c.pending || c.nitro) continue;
-      const p = c.mesh.position;
-      const myBase = p.y - SIZE / 2;
+    for (const state of snapshot) {
+      const c = state.crate;
+      if (!state.solid || c.nitro) continue;
+      const myBase = state.base;
       // the highest thing under this crate's footprint, and WHAT it is
       let rest = (c.mesh.userData.groundBaseY as number | undefined) ?? myBase;
       let restOn: Crate | null = null;
-      for (const o of this.crates) {
-        if (o === c || !o.alive || o.pending) continue;
-        const q = o.mesh.position;
-        if (Math.abs(q.x - p.x) > 0.6 || Math.abs(q.z - p.z) > 0.6) continue;
-        const top = q.y + SIZE / 2;
+      for (const support of snapshot) {
+        if (support.crate === c || !support.solid) continue;
+        if (
+          Math.abs(support.x - state.x) > 0.6 ||
+          Math.abs(support.z - state.z) > 0.6
+        )
+          continue;
+        const top = support.top;
         if (top <= myBase + 0.02 && top > rest) {
           rest = top;
-          restOn = o;
+          restOn = support.crate;
         }
       }
       // Rising off a bounce: skip the landing test entirely, or the box would
       // re-land on the very frame it launched and never get off the pad.
-      const rising = c.fallVel !== undefined && c.fallVel < 0;
+      const rising = state.fallVel !== undefined && state.fallVel < 0;
       if (!rising && myBase <= rest + 0.01) {
-        if (c.fallVel === undefined) continue; // already seated: nothing to do
+        if (state.fallVel === undefined) continue; // already seated: nothing to do
         if (restOn && (restOn.bouncy || restOn.metalBounce)) {
           // AN ARROW CRATE THROWS BACK WHATEVER LANDS ON IT. The launch is a
           // FIXED speed rather than the speed it arrived at, so the hop is the
           // same height every time: the box neither damps out nor runs away,
           // it just bounces there. Which is what an arrow crate is for.
-          p.y = rest + SIZE / 2;
+          const seatedY = rest + SIZE / 2;
           // TUNING.crateHopSpeed sets the height, and with it the PERIOD —
           // the window you time a jump through. 0 parks the box on the pad.
           if (TUNING.crateHopSpeed <= 0) {
-            c.fallVel = undefined;
-            c.mesh.userData.baseY = p.y;
-            c.box.setFromCenterAndSize(
-              p.clone(),
-              new THREE.Vector3(SIZE, SIZE, SIZE),
-            );
+            plans.push({
+              crate: c,
+              y: seatedY,
+              fallVel: undefined,
+              moving: false,
+              sound: null,
+            });
             continue;
           }
-          c.fallVel = -TUNING.crateHopSpeed;
-          this.crateRailsDirty = true; // it is somewhere new on every hop
-          sfx.play("crateBounce", 0.5, 0.95);
-          // and fall through into the motion block: it is airborne again
+          const velocity = -TUNING.crateHopSpeed + TUNING.crateHopGravity * dt;
+          plans.push({
+            crate: c,
+            y: Math.max(rest + SIZE / 2, seatedY - velocity * dt),
+            fallVel: velocity,
+            moving: true,
+            sound: "bounce",
+          });
+          falling++;
+          // this plan integrates the first airborne sample immediately
         } else {
           // touchdown: seat it exactly, and let the tally know it moved
-          c.fallVel = undefined;
-          p.y = rest + SIZE / 2;
-          c.mesh.userData.baseY = p.y;
-          this.crateRailsDirty = true; // a box that dropped is a ledge that moved
-          c.box.setFromCenterAndSize(
-            p.clone(),
-            new THREE.Vector3(SIZE, SIZE, SIZE),
-          );
-          sfx.play("crateBounce", 0.35, 1.15);
+          plans.push({
+            crate: c,
+            y: rest + SIZE / 2,
+            fallVel: undefined,
+            moving: false,
+            sound: "land",
+          });
           continue;
         }
+        continue;
       }
       // in the air with a gap under it: fall
       falling++;
-      c.fallVel = (c.fallVel ?? 0) + TUNING.crateHopGravity * dt;
-      p.y = Math.max(rest + SIZE / 2, p.y - c.fallVel * dt);
-      c.mesh.userData.baseY = p.y;
-      c.box.setFromCenterAndSize(
+      const velocity = (state.fallVel ?? 0) + TUNING.crateHopGravity * dt;
+      plans.push({
+        crate: c,
+        y: Math.max(rest + SIZE / 2, state.y - velocity * dt),
+        fallVel: velocity,
+        moving: true,
+        sound: null,
+      });
+    }
+    for (const plan of plans) {
+      const p = plan.crate.mesh.position;
+      const moved = Math.abs(p.y - plan.y) > 1e-9;
+      p.y = plan.y;
+      plan.crate.fallVel = plan.fallVel;
+      plan.crate.mesh.userData.baseY = p.y;
+      plan.crate.box.setFromCenterAndSize(
         p.clone(),
         new THREE.Vector3(SIZE, SIZE, SIZE),
       );
+      if (moved || plan.moving || plan.sound !== null)
+        this.crateRailsDirty = true;
+      if (plan.sound === "bounce") sfx.play("crateBounce", 0.5, 0.95);
+      else if (plan.sound === "land") sfx.play("crateBounce", 0.35, 1.15);
     }
     this.settleFalling = falling;
   }

@@ -161,6 +161,7 @@ interface GroundHit {
   y: number;
   normal: THREE.Vector3;
   name: string;
+  crate?: Crate; // identity-bearing temporary lid support
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
@@ -202,7 +203,10 @@ const CRATE_STAND_LIFT = 0.02;
 // crateHopSpeed slider allows covers 0.43 in a frame) without letting you walk
 // up a whole extra layer, which is a jump.
 const CRATE_STAND_REACH = 0.55;
+const CRATE_STAND_MIN_OVERLAP = 0.08;
 const CRATE_UP = new THREE.Vector3(0, 1, 0);
+const CRATE_CONTACT_SHIFT = new THREE.Vector3();
+const NO_CRATE_CONTACTS: ReadonlySet<Crate> = new Set();
 // Procedural bail recovery: the physical ragdoll owns the impact/bounces, then
 // stable ground hands the final beat to a shoulder-roll and moving stand-up.
 const BAIL_RECOVER_TIME = 0.72;
@@ -391,6 +395,8 @@ export class Player {
   private spinCd = 0;
   // "A crate lid is ground right now" — see CRATE_STAND_GRACE.
   private crateFloorT = 0;
+  private crateFloor: Crate | null = null;
+  private crateSupportLostThisStep = false;
   // Grab is a little state machine: reaching into the pose, holding it, and
   // reaching back out. Landing anywhere but 'none' is a bail.
   private grabPhase: 'none' | 'enter' | 'held' | 'exit' = 'none';
@@ -1571,6 +1577,8 @@ export class Player {
     this.groundHit = null;
     this.coyoteTimer = 0;
     this.crateFloorT = 0; // a respawn never inherits "stood on a box"
+    this.crateFloor = null;
+    this.crateSupportLostThisStep = false;
     this.crouchGraceT = 0;
     this.wallriding = false;
     this.wallCoolT = 0;
@@ -1731,8 +1739,27 @@ export class Player {
     // Still stood on a box? Every ground accept writes surfaceName, so this one
     // test covers walking box-to-box across a stack as well as staying put; the
     // latch only runs down once a jump (or a step onto real ground) ends it.
-    if (this.grounded && this.surfaceName === 'crate') this.crateFloorT = CRATE_STAND_GRACE;
-    else this.crateFloorT = Math.max(0, this.crateFloorT - dt);
+    this.crateSupportLostThisStep = false;
+    if (
+      this.crateFloor !== null &&
+      (!this.crateFloor.alive || this.crateFloor.pending)
+    ) {
+      // A destroyed support releases the rider for at least this fixed step;
+      // do not spend the old latch by snapping straight to a lower stack box.
+      this.crateFloorT = 0;
+      this.crateFloor = null;
+      this.crateSupportLostThisStep = true;
+    } else if (
+      this.grounded &&
+      this.surfaceName === 'crate' &&
+      this.crateFloor?.alive &&
+      !this.crateFloor.pending
+    ) {
+      this.crateFloorT = CRATE_STAND_GRACE;
+    } else {
+      this.crateFloorT = Math.max(0, this.crateFloorT - dt);
+      if (this.crateFloorT === 0) this.crateFloor = null;
+    }
     this.vertLaunchT = Math.max(0, this.vertLaunchT - dt);
     this.ledgeCoolT = Math.max(0, this.ledgeCoolT - dt);
     this.hangExitW = Math.max(0, this.hangExitW - dt * 2.6);
@@ -4004,6 +4031,7 @@ export class Player {
       this.groundHit = hit;
       this.grounded = true;
       this.surfaceName = hit.name;
+      this.crateFloor = hit.crate ?? null;
       // Ease the ride plane toward the facet under the board: segmented
       // transitions blend into one continuous curve. Fresh landings snap so
       // a stale plane can't misread the first frames of a new surface.
@@ -4717,6 +4745,7 @@ export class Player {
       this.emergencyEjectUsed = false;
       this.deckTricksThisAir.clear();
       this.surfaceName = hit.name;
+      this.crateFloor = hit.crate ?? null;
       this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
@@ -7818,16 +7847,18 @@ export class Player {
       sfx.play('crystalGet', 0.65, 1.35);
     }
 
-    // THE DECK IS OVER THERE.
-    //
-    // Not "you happen to be walking": a walker has the board stowed and is one
-    // held X away from riding it, and jumping on a box is how you break boxes
-    // on this course. THIS is the state a skating bail leaves you in — the deck
-    // was thrown, it is lying wherever it landed, and until you run it down and
-    // remount you are carrying nothing to break a box with. It is the one
-    // moment the game already says out loud that you have no board.
-    const deckThrown = this.flyBoard !== null && this.flyBoard.visible;
-    for (const c of level.crates) {
+    // One fixed-step contact episode has one physical entry speed and one
+    // travel tax. A seam can overlap several adjacent stack boxes at once;
+    // charging 0.92 per array member made the same sweep mutate from Smash to
+    // Trip halfway through and turned crate ordering into gameplay.
+    const crateContactSpeed = this.speed;
+    let crateBoardSmashTax = false;
+    const {
+      ordered: crateContacts,
+      stomps: crateStompContacts,
+      bonks: crateBonkContacts,
+    } = this.cratesInFaceContactOrder(level);
+    for (const c of crateContacts) {
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
       // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
       // cannot be stomped aside, so standing under one is not a situation with
@@ -7921,13 +7952,13 @@ export class Player {
           } else if (this.state === 'grind') {
             if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c);
             else this.bailFromRail(0, level);
-          } else if (this.isStomping(c.box)) {
+          } else if (crateStompContacts.has(c)) {
             if (this.slamActive) {
               level.detonate(c);
             } else {
               level.lightFuse(c);
               this.vVel = TUNING.crateBounce;
-              this.pos.y = c.box.max.y + 0.02; // bounce OFF the lid, no re-intersect
+              this.snapFeetToCrateLid(c); // bounce OFF the lid, no re-intersect
               sfx.play('crateBounce', 0.7);
               this.state = 'air';
               this.grounded = false;
@@ -7935,7 +7966,7 @@ export class Player {
               this.charging = false;
               this.chargeTimer = 0;
             }
-          } else if (this.isBonking(c.box)) {
+          } else if (crateBonkContacts.has(c)) {
             level.lightFuse(c);
             this.vVel = -1;
           } else {
@@ -7989,7 +8020,7 @@ export class Player {
             } else if (this.invulnTimer <= 0 && !this.spendMask()) {
               this.bailFromRail(0, level);
             }
-          } else if (this.isStomping(c.box) && this.slamActive) {
+          } else if (crateStompContacts.has(c) && this.slamActive) {
             // Slam on WOOD breaks it. Slam on METAL cancels into a plain
             // bounce — clearing slamActive is load-bearing: without it the
             // slam's down-force re-stomps the trampoline every frame
@@ -7999,20 +8030,20 @@ export class Player {
             } else {
               this.slamActive = false;
               this.vVel = TUNING.arrowBounce;
-              this.pos.y = c.box.max.y + 0.02;
+              this.snapFeetToCrateLid(c);
               this.state = 'air';
               this.grounded = false;
               this.bounceRefresh();
               this.score(CONST.ptsBouncy, 'Boing');
               sfx.play('bouncyBounce', 0.9, 0.8);
             }
-          } else if (this.isStomping(c.box)) {
+          } else if (crateStompContacts.has(c)) {
             const perfect = this.rawInput.jumpHeld;
             this.vVel = TUNING.arrowBounce * (perfect ? TUNING.arrowBoostMult : 1);
             // snap to the lid: a deep stomp frame left the feet inside the
             // box, and the next rising frame would sideways-eject (the
             // no-input bounce drift). Bounce OFF the top, cleanly.
-            this.pos.y = c.box.max.y + 0.02;
+            this.snapFeetToCrateLid(c);
             this.state = 'air';
             this.grounded = false;
             this.bounceRefresh();
@@ -8021,26 +8052,27 @@ export class Player {
             this.score(CONST.ptsBouncy * (perfect ? 2 : 1), perfect ? 'Perfect Boing' : 'Boing');
             sfx.play('bouncyBounce', 0.9, perfect ? 1.3 : 1);
             if (perfect) this.emitSparks(6, 0xfff3d0, 1.4);
-          } else if (this.isBonking(c.box)) {
+          } else if (crateBonkContacts.has(c)) {
             this.vVel = -1; // head bonk on the underside
           } else if (
             c.bouncy &&
-            (this.uberTimer > 0 || (this.freeSkate && Math.abs(this.speed) >= TUNING.smashSpeed))
+            (this.uberTimer > 0 ||
+              (this.freeSkate && Math.abs(crateContactSpeed) >= TUNING.smashSpeed))
           ) {
             // WOOD arrows are still WOOD: fast skating plows straight through
             // them like any plain box. (They only ever got the metal branch's
             // wall treatment below, which made them unsmashable on the board
             // at any speed — a full-tilt line into one was a wall crash.)
             this.smashCrate(level, c);
-            this.speed *= 0.92;
+            crateBoardSmashTax = true;
           } else if (this.isLatchedCrateTopCarry(c.box)) {
             // The short lid claim owns this tiny trailing-edge overlap.
           } else {
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
-            this.pushOutOf(c.box);
-            this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
+            if (!this.pushOutOf(c.box))
+              this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
           }
         }
         continue;
@@ -8056,7 +8088,7 @@ export class Player {
         if (this.playerBox.intersectsBox(c.box)) {
           if (this.isBailing) {
             if (this.grounded) this.pushOutOf(c.box); // a tumbling body: scenery
-          } else if (this.isStomping(c.box)) {
+          } else if (crateStompContacts.has(c)) {
             if (this.slamActive) {
               // Seat first so the shock origin is the lid contact. The metal
               // survives; eligible crates below it still receive the wave.
@@ -8066,7 +8098,7 @@ export class Player {
               this.standOnCrate(c); // NO POP: the difference from every other lid
             }
             sfx.play('crateBounce', 0.45, 0.7); // a dull metal thud, not a boing
-          } else if (this.isBonking(c.box)) {
+          } else if (crateBonkContacts.has(c)) {
             this.vVel = Math.min(this.vVel, -1);
           } else if (this.state === 'grind') {
             // a slab across the rail line knocks you off like any other
@@ -8078,8 +8110,8 @@ export class Player {
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
-            this.pushOutOf(c.box);
-            this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
+            if (!this.pushOutOf(c.box))
+              this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
           }
         }
         continue;
@@ -8096,18 +8128,18 @@ export class Player {
           if (this.isBailing) {
             // tumbling body: the switch is scenery (no mid-ragdoll bounce)
             if (this.grounded) this.pushOutOf(c.box);
-          } else if (this.isStomping(c.box)) {
+          } else if (crateStompContacts.has(c)) {
             level.triggerBang(c);
             this.slamActive = false; // same anti-relock rule as the metal arrow
             this.vVel = TUNING.crateBounce;
-            this.pos.y = c.box.max.y + 0.02;
+            this.snapFeetToCrateLid(c);
             this.state = 'air';
             this.grounded = false;
             this.bounceRefresh();
             this.charging = false;
             this.chargeTimer = 0;
             sfx.play('crateBounce', 0.7);
-          } else if (this.isBonking(c.box)) {
+          } else if (crateBonkContacts.has(c)) {
             level.triggerBang(c);
             this.vVel = -1;
           } else if (this.state === 'grind') {
@@ -8121,8 +8153,8 @@ export class Player {
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
-            this.pushOutOf(c.box);
-            this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
+            if (!this.pushOutOf(c.box))
+              this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
           }
         }
         continue;
@@ -8137,7 +8169,7 @@ export class Player {
           // the sky.) Airborne it arcs clean over with no shove — a push here
           // pins the arc against the near face; down and sliding it's a wall.
           if (this.grounded) this.pushOutOf(c.box);
-        } else if (this.uberTimer > 0 && !this.isStomping(c.box)) {
+        } else if (this.uberTimer > 0 && !crateStompContacts.has(c)) {
           // Uber: boxes shatter on touch (stomps below still bounce).
           this.smashCrate(level, c);
         } else if (this.sliding) {
@@ -8151,58 +8183,47 @@ export class Player {
           // not a trap).
           if (c.mask || this.grindVel >= TUNING.smashSpeed || this.spendMask()) this.smashCrate(level, c);
           else this.bailFromRail(0, level);
-        } else if (this.isStomping(c.box)) {
+        } else if (crateStompContacts.has(c)) {
           // Crash rules: landing on top breaks it and bounces you — high
-          // enough to chain crate to crate. A slam punches straight through.
-          //
-          // NO BOARD, NO SMASH. Breaking boxes is what the deck is for, so
-          // while yours is lying in the road a crate is just a crate: you land
-          // on the lid and stand there. (The slam is the exception that proves
-          // it — it deliberately throws the board away to become a body attack,
-          // and it still goes through the box.) Deckless the ways in are the
-          // spin and the slam, both of which you have to mean.
-          if (deckThrown && !this.slamActive) {
-            this.standOnCrate(c);
-            sfx.play('crateBounce', 0.4, 0.85); // boots on wood, no break
-          } else {
-            this.smashCrate(level, c);
-            if (!this.slamActive) {
-              this.vVel = TUNING.crateBounce;
-              sfx.play('crateBounce', 0.7);
-              this.state = 'air';
-              this.grounded = false;
-              this.bounceRefresh();
-            }
+          // enough to chain crate to crate. The final Unity rule keeps a true
+          // stomp authoritative even while the loose board is elsewhere.
+          this.smashCrate(level, c);
+          if (!this.slamActive) {
+            this.snapFeetToCrateLid(c);
+            this.vVel = TUNING.crateBounce;
+            sfx.play('crateBounce', 0.7);
+            this.state = 'air';
+            this.grounded = false;
+            this.bounceRefresh();
           }
-        } else if (this.isBonking(c.box)) {
-          // Crash headbutt: jumping into a box from below breaks it — with a
-          // board to break it with. Deckless it's a ceiling: your head stops
-          // you dead and the box doesn't care.
-          if (deckThrown) {
-            this.vVel = Math.min(this.vVel, -1);
-          } else {
-            this.smashCrate(level, c);
-            this.vVel = Math.min(this.vVel, 2);
-          }
-        } else if (Math.abs(this.speed) >= TUNING.smashSpeed) {
+        } else if (crateBonkContacts.has(c)) {
+          // A true underside crossing breaks wood regardless of where the
+          // separately simulated loose deck landed.
+          this.smashCrate(level, c);
+          this.vVel = Math.min(this.vVel, 2);
+        } else if (Math.abs(crateContactSpeed) >= TUNING.smashSpeed) {
           // Fast skating plows straight through plain crates — barely
           // breaking stride. TNT and nitro stay dangerous; this is only
           // the everyday wood.
           this.smashCrate(level, c);
-          this.speed *= 0.92;
-        } else if (this.isLatchedCrateTopCarry(c.box)) {
-          // A few centimetres of overlap while walking lid-to-lid must not
-          // eject the player or fabricate enough measured speed to mount.
+          crateBoardSmashTax = true;
         } else if (this.crateTrip(c.box)) {
           // Too slow to smash, too fast to stop: shins catch the box and the
           // body pitches OVER it, tumbling down the far side (crateTrip did
           // the launch). The crate doesn't care.
+        } else if (this.canStandOnCrate(c.box)) {
+          this.standOnCrate(c);
+        } else if (this.isLatchedCrateTopCarry(c.box)) {
+          // A few centimetres of overlap while walking lid-to-lid must not
+          // eject the player or fabricate enough measured speed to mount.
         } else {
           // Bumping does nothing to the crate — it's a wall. Full stop.
           this.pushOutOf(c.box);
         }
       }
     }
+    if (crateBoardSmashTax && !this.isBailing)
+      this.speed *= 0.92;
 
     // Typed foes publish per-frame flags (see Level.updateEnemies): spinKill /
     // stompKill / meleeKill / touchHurt / spinRecoil. The rules below read them
@@ -8436,8 +8457,8 @@ export class Player {
           const bx = this.pos.x;
           const bz = this.pos.z;
           const bs = this.speed; // pushOutOf full-stops; keep the crash speed
-          this.pushOutOf(w);
-          this.wallSmack(bx, bz, bs, w); // face-first at speed: that's a wipeout — or a fling over a low one
+          if (!this.pushOutOf(w))
+            this.wallSmack(bx, bz, bs, w); // face-first at speed: that's a wipeout — or a fling over a low one
         } else if (
           // NEAR-MISS CATCH: a wall bonk shoves the body just clear of the
           // face and kills the arc's push (slide jumps steer-lock, so nothing
@@ -8490,7 +8511,7 @@ export class Player {
         } else if (this.isStomping(cp.box)) {
           this.bankCheckpoint(level, cp);
           this.vVel = TUNING.crateBounce;
-          this.pos.y = cp.box.max.y + 0.02; // bounce OFF the lid, no re-intersect
+          this.snapFeetToCrateLid(cp); // bounce OFF the lid, no re-intersect
           sfx.play('crateBounce', 0.7);
           this.state = 'air';
           this.grounded = false;
@@ -8682,16 +8703,47 @@ export class Player {
   }
 
   // Came down on a box that isn't going to break. Kill the drop, seat the feet
-  // on the lid and LIGHT THE LATCH — the next step's ground query will find the
-  // crate top and land on it through the ordinary landing path, so everything a
-  // landing does (dust, combo bookkeeping, the jump you can now take off it)
-  // happens for free. Deliberately does NOT flip state to 'ride' here: collide()
-  // runs at the tail of the step, past the code that would react to it.
+  // on the lid and light identity-bearing support. The collision boxes move
+  // immediately so lower/neighboring members of a stack cannot act on the old
+  // body position; an airborne contact still gets the ordinary landing path
+  // next tick, preserving its combo and touchdown bookkeeping.
   private standOnCrate(c: Crate): void {
     this.slamActive = false;
     this.vVel = 0;
-    this.pos.y = c.box.max.y + CRATE_STAND_LIFT;
+    this.snapFeetToCrateLid(c);
     this.crateFloorT = CRATE_STAND_GRACE;
+    this.crateFloor = c;
+    this.groundHit = {
+      y: this.pos.y,
+      normal: CRATE_UP.clone(),
+      name: 'crate',
+      vert: false,
+      crate: c,
+    };
+    this.surfaceName = 'crate';
+    this.rideNormal.copy(CRATE_UP);
+  }
+
+  private snapFeetToCrateLid(c: { box: THREE.Box3 }): void {
+    const oldY = this.pos.y;
+    this.pos.y = c.box.max.y + CRATE_STAND_LIFT;
+    this.translateCollisionBoxes(0, this.pos.y - oldY, 0);
+  }
+
+  private canStandOnCrate(box: THREE.Box3): boolean {
+    const retainedRide = this.state === 'ride';
+    const walkedOffGroundOntoLid =
+      this.state === 'air' &&
+      this.coyoteTimer > 0 &&
+      !this.freeSkate &&
+      !this.airFromSkate &&
+      !this.airRose &&
+      this.vVel <= 0;
+    return (
+      (retainedRide || walkedOffGroundOntoLid) &&
+      this.prevPos.y >= box.max.y - CRATE_STAND_REACH &&
+      this.crateLidOverlapsSole(box, this.pos.x, this.pos.z)
+    );
   }
 
   private isLatchedCrateTopCarry(box: THREE.Box3): boolean {
@@ -8701,6 +8753,23 @@ export class Player {
       !this.freeSkate &&
       this.pos.y >= box.max.y - 0.05 &&
       this.pos.y <= box.max.y + 1.1
+    );
+  }
+
+  private crateLidOverlapsSole(
+    box: THREE.Box3,
+    x: number,
+    z: number,
+  ): boolean {
+    const overlapX =
+      Math.min(x + CONST.playerHalf.x, box.max.x) -
+      Math.max(x - CONST.playerHalf.x, box.min.x);
+    const overlapZ =
+      Math.min(z + CONST.playerHalf.z, box.max.z) -
+      Math.max(z - CONST.playerHalf.z, box.min.z);
+    return (
+      overlapX >= CRATE_STAND_MIN_OVERLAP &&
+      overlapZ >= CRATE_STAND_MIN_OVERLAP
     );
   }
 
@@ -9148,12 +9217,65 @@ export class Player {
     );
   }
 
+  /** Snapshot and order crossed vertical faces before any crate mutates state. */
+  private cratesInFaceContactOrder(level: Level): {
+    ordered: readonly Crate[];
+    stomps: ReadonlySet<Crate>;
+    bonks: ReadonlySet<Crate>;
+  } {
+    if (this.isBailing || this.state !== 'air' || this.vVel === 0)
+      return {
+        ordered: level.crates,
+        stomps: NO_CRATE_CONTACTS,
+        bonks: NO_CRATE_CONTACTS,
+      };
+    const faces: { crate: Crate; index: number; face: number }[] = [];
+    for (let index = 0; index < level.crates.length; index++) {
+      const c = level.crates[index];
+      if (!c.alive || c.pending || !this.playerBox.intersectsBox(c.box)) continue;
+      if (this.vVel < 0) {
+        if (this.isStomping(c.box))
+          faces.push({ crate: c, index, face: c.box.max.y });
+      } else {
+        if (this.isBonking(c.box))
+          faces.push({ crate: c, index, face: c.box.min.y });
+      }
+    }
+    if (faces.length === 0)
+      return {
+        ordered: level.crates,
+        stomps: NO_CRATE_CONTACTS,
+        bonks: NO_CRATE_CONTACTS,
+      };
+    faces.sort((a, b) =>
+      this.vVel < 0
+        ? b.face - a.face || a.index - b.index
+        : a.face - b.face || a.index - b.index,
+    );
+    const faceSet = new Set(faces.map((entry) => entry.crate));
+    return {
+      ordered: [
+        ...faces.map((entry) => entry.crate),
+        ...level.crates.filter((crate) => !faceSet.has(crate)),
+      ],
+      stomps: this.vVel < 0 ? faceSet : NO_CRATE_CONTACTS,
+      bonks: this.vVel > 0 ? faceSet : NO_CRATE_CONTACTS,
+    };
+  }
+
   // Rising and our head is at the target's bottom face = a headbutt from below.
   private isBonking(box: THREE.Box3): boolean {
+    if (this.isBailing || this.state !== 'air' || this.vVel <= 0) return false;
+    const bodyHeight = CONST.playerHalf.y * 2;
+    const previousHead = this.prevPos.y + bodyHeight;
+    const currentHead = this.pos.y + bodyHeight;
+    if (currentHead < box.min.y || previousHead > box.min.y + 0.75)
+      return false;
     return (
-      this.state === 'air' &&
-      this.vVel > 0 &&
-      this.pos.y + CONST.playerHalf.y * 2 < box.min.y + 0.6
+      this.pos.x >= box.min.x &&
+      this.pos.x <= box.max.x &&
+      this.pos.z >= box.min.z &&
+      this.pos.z <= box.max.z
     );
   }
 
@@ -9338,7 +9460,16 @@ export class Player {
     return true;
   }
 
-  private pushOutOf(box: THREE.Box3): void {
+  private translateCollisionBoxes(dx: number, dy: number, dz: number): void {
+    if (dx === 0 && dy === 0 && dz === 0) return;
+    CRATE_CONTACT_SHIFT.set(dx, dy, dz);
+    this.playerBox.translate(CRATE_CONTACT_SHIFT);
+    this.feetBox.translate(CRATE_CONTACT_SHIFT);
+    this.spinBox.translate(CRATE_CONTACT_SHIFT);
+  }
+
+  /** Returns true for positional start-inside repair, false for a fresh hit. */
+  private pushOutOf(box: THREE.Box3): boolean {
     const hx = CONST.playerHalf.x + 0.02;
     const hz = CONST.playerHalf.z + 0.02;
     const minX = box.min.x - hx;
@@ -9360,9 +9491,17 @@ export class Player {
       cand.sort((a, b) => a[0] - b[0]);
       const [pen, ax, dir] = cand[0];
       const step = Math.min(pen + 0.01, 0.5) * dir;
-      if (ax === 'x') this.pos.x += step;
-      else this.pos.z += step;
-      return;
+      const shiftX = ax === 'x' ? step : 0;
+      const shiftZ = ax === 'z' ? step : 0;
+      this.pos.x += shiftX;
+      this.pos.z += shiftZ;
+      // Positional repair is not authored travel. Move the previous sample
+      // and all remaining contact volumes by the exact same delta, matching
+      // Unity a97fde9 and preventing a 0.5u repair becoming ~30u/s next tick.
+      this.prevPos.x += shiftX;
+      this.prevPos.z += shiftZ;
+      this.translateCollisionBoxes(shiftX, 0, shiftZ);
+      return true;
     }
 
     // Swept slab test: the axis whose face was crossed LAST is the one we
@@ -9377,8 +9516,11 @@ export class Player {
     if (t1x > t1z) axis = 'x';
     else if (t1z > t1x) axis = 'z';
     else axis = Math.abs(dz) >= Math.abs(dx) ? 'z' : 'x';
+    const beforeX = this.pos.x;
+    const beforeZ = this.pos.z;
     if (axis === 'x') this.pos.x = dx > 0 ? minX - 0.01 : maxX + 0.01;
     else this.pos.z = dz > 0 ? minZ - 0.01 : maxZ + 0.01;
+    this.translateCollisionBoxes(this.pos.x - beforeX, 0, this.pos.z - beforeZ);
 
     // Head-on (heading mostly into the clamped face) = Crash full stop.
     const head = axis === 'x' ? Math.abs(this.axisF.x) : Math.abs(this.axisF.z);
@@ -9389,6 +9531,7 @@ export class Player {
       }
       this.speed = 0;
     }
+    return false;
   }
 
   // THPS WALLRIDE — try to stick to a wall we've bumped into: must be airborne,
@@ -10076,6 +10219,7 @@ export class Player {
       this.state = 'ride';
       this.grounded = true;
       this.surfaceName = hit.name;
+      this.crateFloor = hit.crate ?? null;
       this.rideNormal.copy(hit.normal);
       this.airMomentum = true; // keep the speed on touchdown
       this.wallriding = false;
@@ -10254,23 +10398,48 @@ export class Player {
   // Only live while the crate-stand latch is (see CRATE_STAND_GRACE) — off the
   // latch a crate is not ground at any height, which is what keeps a fall onto
   // a box a stomp instead of a landing.
-  private findCrateFloorY(level: Level, x: number, z: number): number | null {
-    let best: number | null = null;
+  private findCrateFloor(
+    level: Level,
+    x: number,
+    z: number,
+  ): { crate: Crate; feetY: number } | null {
+    let best: Crate | null = null;
+    let bestTop = -Infinity;
     for (const c of level.crates) {
       if (!c.alive || c.pending || c.nitro) continue;
       const top = c.box.max.y;
       // above the feet by more than a bouncing box can climb in a frame, or
       // deep enough below them that we have already stepped off it
       if (top > this.pos.y + CRATE_STAND_REACH || top < this.pos.y - 1.1) continue;
-      if (x < c.box.min.x || x > c.box.max.x || z < c.box.min.z || z > c.box.max.z) continue;
-      if (best === null || top > best) best = top;
+      if (!this.crateLidOverlapsSole(c.box, x, z)) continue;
+      // Level.crates is stable authoring order, so an exact-height tie keeps
+      // the first identity just as Unity's ordinal stable-identity tie-break.
+      if (best === null || top > bestTop) {
+        best = c;
+        bestTop = top;
+      }
     }
-    return best === null ? null : best + CRATE_STAND_LIFT;
+    return best === null
+      ? null
+      : { crate: best, feetY: bestTop + CRATE_STAND_LIFT };
   }
 
-  private crateFloorY(level: Level, x: number, z: number): number | null {
-    if (this.crateFloorT <= 0) return null;
-    return this.findCrateFloorY(level, x, z);
+  private crateFloorAt(
+    level: Level,
+    x: number,
+    z: number,
+  ): { crate: Crate; feetY: number } | null {
+    // A deliberate rising air has left support. Its next crate contact must
+    // reach stomp/headbutt arbitration rather than spend the old walking latch
+    // as ordinary ground. FootGroundLoss keeps airRose=false and may still use
+    // the grace to settle onto the next bridge lid.
+    if (
+      this.crateFloorT <= 0 ||
+      this.isBailing ||
+      (this.state === 'air' && this.airRose)
+    )
+      return null;
+    return this.findCrateFloor(level, x, z);
   }
 
   private queryGround(
@@ -10281,37 +10450,45 @@ export class Player {
   ): GroundHit | null {
     const cx = this.pos.x + ox;
     const cz = this.pos.z + oz;
-    let crateY = this.crateFloorY(level, cx, cz);
+    let crateContact = this.crateFloorAt(level, cx, cz);
     let seedCrateFloor = false;
     // A grounded on-foot seam may seed the short crate-top claim as the feet
     // reach a live lid. Airborne contacts remain collision-owned, preserving
     // deliberate stomp/headbutt precedence instead of making crates ground.
     if (
-      crateY === null &&
+      crateContact === null &&
       ox === 0 &&
       oz === 0 &&
       this.state === 'ride' &&
       this.grounded &&
       !this.freeSkate &&
       !this.sliding &&
-      !this.isBailing
+      !this.isBailing &&
+      !this.crateSupportLostThisStep
     ) {
-      const eligible = this.findCrateFloorY(level, cx, cz);
-      if (eligible !== null && eligible <= maximumSurfaceY) {
-        crateY = eligible;
+      const eligible = this.findCrateFloor(level, cx, cz);
+      if (eligible !== null && eligible.feetY <= maximumSurfaceY) {
+        crateContact = eligible;
         seedCrateFloor = true;
       }
     }
-    if (crateY !== null && crateY > maximumSurfaceY) crateY = null;
+    if (crateContact !== null && crateContact.feetY > maximumSurfaceY)
+      crateContact = null;
     this.raycaster.set(new THREE.Vector3(cx, this.pos.y + 2.5, cz), DOWN);
     this.raycaster.far = 12;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     // A box standing on nothing (a level with no floor under it) is still a
     // floor: answer with the lid rather than falling through it.
     if (hits.length === 0) {
-      if (crateY === null) return null;
+      if (crateContact === null) return null;
       if (seedCrateFloor) this.crateFloorT = CRATE_STAND_GRACE;
-      return { y: crateY, normal: CRATE_UP.clone(), name: 'crate', vert: false };
+      return {
+        y: crateContact.feetY,
+        normal: CRATE_UP.clone(),
+        name: 'crate',
+        vert: false,
+        crate: crateContact.crate,
+      };
     }
     // A plank that's already breaking away (fall/gone) is no longer solid — skip
     // it so a grinder/stander drops straight through instead of riding it down.
@@ -10327,16 +10504,28 @@ export class Player {
       break;
     }
     if (!hit) {
-      if (crateY === null) return null;
+      if (crateContact === null) return null;
       if (seedCrateFloor) this.crateFloorT = CRATE_STAND_GRACE;
-      return { y: crateY, normal: CRATE_UP.clone(), name: 'crate', vert: false };
+      return {
+        y: crateContact.feetY,
+        normal: CRATE_UP.clone(),
+        name: 'crate',
+        vert: false,
+        crate: crateContact.crate,
+      };
     }
     // The lid wins whenever it is the higher of the two. vert:false is not
     // decoration: an undefined `vert` reads as an AUTHORED transition face, and
     // a crest launch off a crate top would throw you into a vert hang.
-    if (crateY !== null && crateY > hit.point.y) {
+    if (crateContact !== null && crateContact.feetY > hit.point.y) {
       if (seedCrateFloor) this.crateFloorT = CRATE_STAND_GRACE;
-      return { y: crateY, normal: CRATE_UP.clone(), name: 'crate', vert: false };
+      return {
+        y: crateContact.feetY,
+        normal: CRATE_UP.clone(),
+        name: 'crate',
+        vert: false,
+        crate: crateContact.crate,
+      };
     }
     const hp = hit.object.userData.halfpipe as Halfpipe | undefined;
     // Halfpipe walls hand back the exact ANALYTIC surface normal (perfectly
