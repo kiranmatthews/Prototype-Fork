@@ -278,7 +278,8 @@ export class VisualTreatmentPanel {
     this.shadow.append(style);
     const launcher = this.button("LOOK", "launcher");
     launcher.setAttribute("aria-label", "Open visual treatment panel");
-    launcher.addEventListener("click", () => this.element.toggleAttribute("data-open", true));
+    launcher.hidden = document.body.classList.contains("tc-on");
+    launcher.addEventListener("click", () => this.setOpen(true));
     this.shadow.append(launcher);
 
     const panel = document.createElement("section");
@@ -291,7 +292,7 @@ export class VisualTreatmentPanel {
     title.querySelector("span")!.textContent = "VISUAL TREATMENT";
     const close = title.querySelector("button")!;
     close.setAttribute("aria-label", "Close visual treatment panel");
-    close.addEventListener("click", () => this.element.removeAttribute("data-open"));
+    close.addEventListener("click", () => this.setOpen(false));
     panel.append(title);
     const intro = document.createElement("div");
     intro.className = "intro";
@@ -405,6 +406,10 @@ export class VisualTreatmentPanel {
   dispose(): void {
     this.unsubscribe();
     this.element.remove();
+  }
+
+  setOpen(open: boolean): void {
+    this.element.toggleAttribute("data-open", open);
   }
 
   private control(control: NumberControl): HTMLElement {

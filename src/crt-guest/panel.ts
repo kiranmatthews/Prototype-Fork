@@ -172,7 +172,8 @@ export class CrtGuestTuningPanel {
     this.launcher.title = "Open CRT Guest presentation tuning";
     this.launcher.setAttribute("aria-label", "Open CRT Guest tuning panel");
     this.launcher.setAttribute("aria-expanded", "false");
-    this.launcher.hidden = options.showLauncher === false;
+    this.launcher.hidden =
+      options.showLauncher === false || document.body.classList.contains("tc-on");
     this.launcher.addEventListener("click", () => this.open());
     this.shadow.appendChild(this.launcher);
 

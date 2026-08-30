@@ -34,6 +34,12 @@ The renderer uses pixel ratio 1 in fixed mode because the chosen output is
 already expressed in physical pixels. The canvas remains CSS-sized to the
 viewport.
 
+Coarse-pointer/touch presentation deliberately bypasses fixed mode. A short
+landscape phone therefore uses its native-aspect DPR renderer instead of
+allocating a roughly 3K-wide 720p×2 target for an ~850px viewport. The saved
+desktop preference is retained and becomes active again on a fine-pointer
+layout.
+
 ## What runs at the base resolution
 
 - the main world render;
@@ -53,9 +59,16 @@ stamp and capture badges remain sharp browser overlays. Two-player split
 remains on the native scissored direct path until it has two independent
 pre-CRT surfaces. `?lite` also keeps its existing low-cost native fallback.
 
-The same no-swap insertion pass is present in native post mode, so disabling
-the fixed-resolution optimization while leaving CRT enabled does not move the
-gameplay HUD back above CRT.
+The same no-swap insertion pass is present in desktop native post mode, so
+disabling the fixed-resolution optimization while leaving CRT enabled does not
+move the gameplay HUD back above CRT. Touch keeps its established responsive
+DOM HUD above the world/CRT instead; this prevents desktop 720p typography and
+CRT corner distortion from replacing the phone layout.
+
+When a desktop canvas changes dimensions, `GameHudSurface` disposes the old
+WebGL CanvasTexture allocation before uploading the resized canvas. WebGL2
+texture storage is immutable; without that reallocation a portrait HUD bitmap
+survived rotation and stretched across the landscape viewport.
 
 ## CRT reconstruction
 
@@ -80,7 +93,9 @@ per browser animation callback.
 
 ## Controls and diagnostics
 
-Use the fixed **RENDER** launcher. Settings persist under
+Use the fixed **RENDER** launcher on desktop. On touch it lives under the
+right-side **TUNER → PRESENTATION TOOLS** palette with the other developer
+panels, leaving the face-button region clear. Settings persist under
 `solProtoRenderQuality.v1`:
 
 - fixed pre-CRT resolution on/off;
@@ -92,7 +107,8 @@ Use the fixed **RENDER** launcher. Settings persist under
 Add `?renderdiag` to expose the hidden `#render-diagnostics` JSON probe. It
 reports settings, computed sizes, actual drawing buffer, composer resolution,
 ocean native/effective/prepass sizes, frame-limiter counts and rendered frames.
-It also reports gameplay-HUD Canvas2D time, texture uploads and composite draws.
+It also reports gameplay-HUD Canvas2D time, texture uploads, GPU texture
+reallocations and composite draws.
 `?crtdiag` continues to expose per-target CRT diagnostics.
 
 ## Baseline measurements

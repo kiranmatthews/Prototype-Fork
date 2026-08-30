@@ -507,7 +507,9 @@ for (const label of [
   assert.ok(panel.includes(label), `LOOK panel control missing: ${label}`);
 
 const main = read("src/main.ts");
-assert.ok(main.includes("createVisualTreatmentPanel(visualTreatmentSettings)"));
+assert.ok(main.includes("const visualTreatmentPanel = createVisualTreatmentPanel("));
+assert.ok(main.includes("visualTreatmentSettings"));
+assert.ok(main.includes("visualTreatmentPanel.setOpen"));
 assert.ok(main.includes("visualTreatmentSettings.subscribe"));
 assert.ok(main.includes("visualTreatmentActivity"));
 assert.ok(main.includes('lookDiagnosticsProbe.id = "look-diagnostics"'));

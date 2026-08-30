@@ -176,6 +176,7 @@ export interface GameHudSurfaceDiagnostics {
   height: number;
   canvasFrames: number;
   textureUploads: number;
+  textureReallocations: number;
   compositeDraws: number;
   primitives: number;
   lastCanvasMs: number;
@@ -274,6 +275,7 @@ export class GameHudSurface {
   private primitiveCount = 0;
   private canvasFrames = 0;
   private textureUploads = 0;
+  private textureReallocations = 0;
   private compositeDraws = 0;
   private lastCanvasMs = 0;
 
@@ -341,6 +343,7 @@ export class GameHudSurface {
       height: this.canvas.height,
       canvasFrames: this.canvasFrames,
       textureUploads: this.textureUploads,
+      textureReallocations: this.textureReallocations,
       compositeDraws: this.compositeDraws,
       primitives: this.primitiveCount,
       lastCanvasMs: this.lastCanvasMs,
@@ -1661,9 +1664,16 @@ export class GameHudSurface {
 
   private ensureSize(width: number, height: number): void {
     if (this.canvas.width === width && this.canvas.height === height) return;
+    // WebGL2 allocates CanvasTexture storage immutably. Changing only the
+    // canvas dimensions leaves the old portrait allocation alive, so the next
+    // texSubImage upload is stretched across landscape after rotation. Dispose
+    // the GPU allocation first; the same Texture object/material binding is
+    // lazily recreated at the new dimensions on the next upload.
+    this.texture.dispose();
     this.canvas.width = width;
     this.canvas.height = height;
     this.texture.needsUpdate = true;
+    this.textureReallocations++;
   }
 
   private loadLifeFace(url: string): void {

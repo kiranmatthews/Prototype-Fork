@@ -67,8 +67,10 @@ import {
   visualTreatmentSettings,
 } from "./visual-treatment/settings";
 import { createBonusParallax } from "./bonusParallax";
+import { touchControlsRequested } from "./touch";
 
 const app = document.getElementById("app")!;
+const TOUCH_PRESENTATION = touchControlsRequested();
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
 // internal resolution — slow frames desync the suite's wall-clock scripting.
 const LITE_RENDER = window.location.search.includes("lite");
@@ -80,7 +82,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 // thing making the game look cheap. Capped at 2: past that the pixels are far
 // too small to see and it is pure fill-rate.
 renderer.setPixelRatio(
-  renderQualitySettings.enabled && !LITE_RENDER
+  renderQualitySettings.enabled && !LITE_RENDER && !TOUCH_PRESENTATION
     ? 1
     : Math.min(window.devicePixelRatio || 1, 2),
 );
@@ -948,7 +950,11 @@ function renderPrimaryScene(
  * Developer/tool DOM stays outside this function and therefore remains sharp.
  */
 function renderGameplayScene(dt = 0, prepareOcean = true): void {
-  const wantsPreCrtHud = !split2p && (coastPost?.active ?? false);
+  // The Canvas HUD mirror follows the desktop 720p typography contract. Phone
+  // landscape already has a tuned DOM HUD; sending that through Render/CRT
+  // reintroduced desktop sizing and unstable corner distortion.
+  const wantsPreCrtHud =
+    !TOUCH_PRESENTATION && !split2p && (coastPost?.active ?? false);
   let overlayRan = false;
   ui.setGameHudComposited(wantsPreCrtHud);
   renderPrimaryScene(
@@ -981,7 +987,15 @@ function renderGameplayScene(dt = 0, prepareOcean = true): void {
 function fixedResolutionActive(): boolean {
   // Split screen owns two scissored cameras and deliberately remains on its
   // direct renderer path until it gets two independent pre-CRT surfaces.
-  return renderQualitySettings.enabled && !LITE_RENDER && !split2p;
+  // Coarse/touch devices use the native-aspect DPR path. Fixed 720p×2 was
+  // allocating a 3K-wide target on an 853px phone and was the lead trigger for
+  // the mobile HUD composition regression.
+  return (
+    renderQualitySettings.enabled &&
+    !TOUCH_PRESENTATION &&
+    !LITE_RENDER &&
+    !split2p
+  );
 }
 
 function syncPostResolution(): void {
@@ -1097,7 +1111,75 @@ const spinPanel = createSpinTuningPanel({
   settings: spinRingSettings,
   groundedSkateSettings: groundedSkateSpinRingSettings,
 });
-createVisualTreatmentPanel(visualTreatmentSettings);
+const visualTreatmentPanel = createVisualTreatmentPanel(
+  visualTreatmentSettings,
+);
+const presentationPanelHosts = [
+  crtGuestPanel.element,
+  renderQualityPanel.element,
+  skateboardPanel.element,
+  spinPanel.element,
+  visualTreatmentPanel.element,
+];
+const closePresentationPanels = (): void => {
+  crtGuestPanel.close();
+  renderQualityPanel?.setOpen(false);
+  skateboardPanel.setOpen(false);
+  spinPanel.setOpen(false);
+  visualTreatmentPanel.setOpen(false);
+};
+if (TOUCH_PRESENTATION) {
+  ui.setPresentationTools([
+    {
+      label: "CRT",
+      open: () => {
+        closePresentationPanels();
+        crtGuestPanel.open();
+      },
+    },
+    {
+      label: "RENDER",
+      open: () => {
+        closePresentationPanels();
+        renderQualityPanel?.setOpen(true);
+      },
+    },
+    {
+      label: "BOARD",
+      open: () => {
+        closePresentationPanels();
+        skateboardPanel.setOpen(true);
+      },
+    },
+    {
+      label: "SPIN",
+      open: () => {
+        closePresentationPanels();
+        spinPanel.setOpen(true);
+      },
+    },
+    {
+      label: "LOOK",
+      open: () => {
+        closePresentationPanels();
+        visualTreatmentPanel.setOpen(true);
+      },
+    },
+  ]);
+  const syncToolPanelState = (): void => {
+    document.body.classList.toggle(
+      "tool-panel-open",
+      presentationPanelHosts.some((host) => host.hasAttribute("data-open")),
+    );
+  };
+  const panelObserver = new MutationObserver(syncToolPanelState);
+  for (const host of presentationPanelHosts)
+    panelObserver.observe(host, {
+      attributes: true,
+      attributeFilter: ["data-open"],
+    });
+  syncToolPanelState();
+}
 visualTreatmentSettings.subscribe((value) => {
   configureCoastPost(
     levelPostEnabled || (visualTreatmentActivity(value).any && !NO_COAST_POST),

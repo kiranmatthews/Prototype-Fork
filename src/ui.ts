@@ -241,6 +241,9 @@ export class UI {
   // throw away whatever this device had saved
   onForceResync: (() => Promise<void>) | null = null;
   private recBtn!: HTMLButtonElement;
+  private presentationToolsHead!: HTMLElement;
+  private presentationToolsRow!: HTMLElement;
+  private rightSideWrap!: HTMLElement;
   private mpBtn!: HTMLButtonElement; // 2-player split toggle
   private runBtn!: HTMLButtonElement; // time trial + combo run toggle
   private endlessBtn!: HTMLButtonElement; // selectable standard-run death rule
@@ -543,6 +546,13 @@ export class UI {
       () => this.onToggleVideo && this.onToggleVideo(),
     );
     panel.appendChild(capRow);
+    this.presentationToolsHead = div("hud-secttitle");
+    this.presentationToolsHead.textContent = "PRESENTATION TOOLS";
+    this.presentationToolsHead.style.display = "none";
+    panel.appendChild(this.presentationToolsHead);
+    this.presentationToolsRow = div("hud-tunebtns hud-presentation-tools");
+    this.presentationToolsRow.style.display = "none";
+    panel.appendChild(this.presentationToolsRow);
     // Sliders grouped under labelled section headers (walking, skating, ...).
     const placed = new Set<TuningKey>();
     const addSection = (title: string, keys: TuningKey[]): void => {
@@ -568,7 +578,8 @@ export class UI {
     addSection("OTHER", leftovers);
 
     document.body.appendChild(this.sidePanel("left", "MENU", statsWrap));
-    document.body.appendChild(this.sidePanel("right", "TUNER", panel));
+    this.rightSideWrap = this.sidePanel("right", "TUNER", panel);
+    document.body.appendChild(this.rightSideWrap);
 
     // Game-owned presentation has one explicit root so it can be mirrored
     // into the pre-CRT WebGL surface without also capturing MENU, TUNER, the
@@ -918,6 +929,28 @@ export class UI {
     this.recBtn.textContent = on ? "stop + save" : "rec video";
   }
 
+  setPresentationTools(
+    tools: readonly { label: string; open: () => void }[],
+  ): void {
+    this.presentationToolsRow.replaceChildren();
+    const visible = tools.length > 0;
+    this.presentationToolsHead.style.display = visible ? "block" : "none";
+    this.presentationToolsRow.style.display = visible ? "flex" : "none";
+    for (const tool of tools) {
+      const button = document.createElement("button");
+      button.className = "hud-levelbtn";
+      button.textContent = tool.label;
+      button.addEventListener("click", () => {
+        this.rightSideWrap.classList.add("collapsed");
+        document.body.classList.remove("side-panel-right-open");
+        localStorage.setItem("solProtoPanel_right", "closed");
+        tool.open();
+        button.blur();
+      });
+      this.presentationToolsRow.appendChild(button);
+    }
+  }
+
   // A fixed side wrapper with a vertical tab that slides the content off-screen.
   // Collapsed by default (game view); state persists per side.
   private sidePanel(
@@ -931,9 +964,17 @@ export class UI {
     tab.textContent = label;
     const key = "solProtoPanel_" + side;
     if (localStorage.getItem(key) !== "open") wrap.classList.add("collapsed");
+    document.body.classList.toggle(
+      `side-panel-${side}-open`,
+      !wrap.classList.contains("collapsed"),
+    );
     tab.addEventListener("click", () => {
       if (this.onSideTab) this.onSideTab(side);
       wrap.classList.toggle("collapsed");
+      document.body.classList.toggle(
+        `side-panel-${side}-open`,
+        !wrap.classList.contains("collapsed"),
+      );
       localStorage.setItem(
         key,
         wrap.classList.contains("collapsed") ? "closed" : "open",
@@ -1829,6 +1870,8 @@ export class UI {
       .hud-levelactions { display: flex; gap: 4px; margin-bottom: 6px; }
       .hud-levelactions .hud-levelbtn { flex: 1 1 0; }
       .hud-tunebtns { display: flex; gap: 4px; margin-bottom: 6px; }
+      .hud-presentation-tools { flex-wrap: wrap; }
+      .hud-presentation-tools .hud-levelbtn { flex: 1 1 calc(33% - 4px); }
       .hud-capbadge {
         position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
         font: bold 12px ui-monospace, Menlo, Consolas, monospace;

@@ -235,6 +235,7 @@ export class SpinTuningPanel {
     this.shadow.append(style);
     const launcher = this.button("SPIN", "launcher");
     launcher.setAttribute("aria-label", "Open spin effects tuning panel");
+    launcher.hidden = document.body.classList.contains("tc-on");
     launcher.addEventListener("click", () => this.setOpen(true));
     this.shadow.append(launcher);
 

@@ -52,6 +52,14 @@ const SWIPE_MIN_VEL = 0.35; // px per ms
 // enough to span a normal rail-transfer air (4m practice spacing at 9u/s).
 const SWIPE_HOLD_MS = 450;
 
+/** One shared touch/coarse-pointer gate for input and presentation policy. */
+export function touchControlsRequested(): boolean {
+  return (
+    (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
+    window.location.search.includes('touch')
+  );
+}
+
 export class TouchControls {
   enabled = false;
   moveX = 0;
@@ -75,9 +83,7 @@ export class TouchControls {
   >();
 
   constructor() {
-    this.enabled =
-      (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) ||
-      window.location.search.includes('touch');
+    this.enabled = touchControlsRequested();
     if (!this.enabled) return;
     document.body.classList.add('tc-on');
     this.injectStyle();
@@ -322,18 +328,25 @@ export class TouchControls {
         -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
       }
-      .tc-left { left: 0; width: 50vw; height: 46%; }
-      .tc-right { right: 0; width: 50vw; height: 78%; }
+      body.tc-on {
+        --tc-size: clamp(136px, 40vh, 168px);
+        --tc-size: clamp(136px, 40dvh, 168px);
+        --tc-left-edge: max(12px, env(safe-area-inset-left));
+        --tc-right-edge: max(12px, env(safe-area-inset-right));
+        --tc-bottom-edge: max(10px, env(safe-area-inset-bottom));
+      }
+      .tc-left { left: 0; width: 50vw; height: 52%; }
+      .tc-right { right: 0; width: 50vw; height: 62%; }
       /* the two groups: identical footprint, identical height, identical
          distance from their screen edge — a matched pair */
       .tc-pad, .tc-cluster {
         position: absolute;
-        bottom: max(8px, calc(env(safe-area-inset-bottom) - 20px));
-        width: min(39vw, 195px); height: min(39vw, 195px);
+        bottom: var(--tc-bottom-edge);
+        width: var(--tc-size); height: var(--tc-size);
         pointer-events: none;
       }
-      .tc-pad { left: 14px; }
-      .tc-cluster { right: 14px; }
+      .tc-pad { left: var(--tc-left-edge); }
+      .tc-cluster { right: var(--tc-right-edge); }
       /* shared glass finish: frosted fill, hairline light edge, soft drop */
       .tc-arrow, .tc-btn {
         box-sizing: border-box;
@@ -375,8 +388,14 @@ export class TouchControls {
 
       /* ---------- compact phone HUD ---------- */
       body.tc-on #app { touch-action: none; }
-      body.tc-on .hud-tl { top: max(8px, env(safe-area-inset-top)); left: 42px; }
-      body.tc-on .hud-tr { top: max(8px, env(safe-area-inset-top)); right: 42px; }
+      body.tc-on .hud-tl {
+        top: max(8px, env(safe-area-inset-top));
+        left: max(42px, calc(env(safe-area-inset-left) + 8px));
+      }
+      body.tc-on .hud-tr {
+        top: max(8px, env(safe-area-inset-top));
+        right: max(42px, calc(env(safe-area-inset-right) + 8px));
+      }
       body.tc-on .hud-counter { gap: 9px; margin-bottom: 5px; }
       body.tc-on .hud-icon { width: 55px; height: 55px; }
       body.tc-on .hud-icon-crystal { width: 27px; height: 39px; }
@@ -413,6 +432,22 @@ export class TouchControls {
       body.tc-on .hud-msg-title { font-size: 45px; letter-spacing: 3px; }
       body.tc-on .hud-boostlabel { font-size: 16px; }
       body.tc-on .hud-death-title { font-size: 58px; }
+      body.tc-on .hud-special {
+        left: max(12px, env(safe-area-inset-left));
+        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
+        width: min(44vw, 240px);
+      }
+      body.tc-on .hud-build { display: none; }
+
+      /* A presentation panel opened from TUNER owns the screen until closed;
+         dormant touch hit zones must not sit invisibly underneath it. */
+      body.tc-on.tool-panel-open .tc-zone {
+        display: none !important;
+      }
+      body.tc-on.side-panel-left-open .tc-left,
+      body.tc-on.side-panel-right-open .tc-right {
+        display: none !important;
+      }
 
       /* ---------- panels that actually fit a phone ---------- */
       body.tc-on .hud-stats {

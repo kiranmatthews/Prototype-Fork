@@ -70,6 +70,7 @@ export class RenderQualityPanel {
 
     const launcher = this.button("RENDER", "launcher");
     launcher.setAttribute("aria-label", "Open render optimization panel");
+    launcher.hidden = document.body.classList.contains("tc-on");
     launcher.addEventListener("click", () => this.setOpen(true));
     this.shadow.appendChild(launcher);
 
@@ -135,8 +136,9 @@ export class RenderQualityPanel {
     body.appendChild(reset);
     const hint = document.createElement("p");
     hint.className = "hint";
-    hint.textContent =
-      "Native mode bypasses the fixed input size for direct A/B comparison.";
+    hint.textContent = document.body.classList.contains("tc-on")
+      ? "Touch presentation always uses native viewport rendering so phone HUD and controls retain their responsive coordinate space."
+      : "Native mode bypasses the fixed input size for direct A/B comparison.";
     body.appendChild(hint);
     panel.appendChild(body);
     this.shadow.appendChild(panel);

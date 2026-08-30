@@ -202,6 +202,7 @@ export class SkateboardTuningPanel {
 
     const launcher = this.button("BOARD", "launcher");
     launcher.setAttribute("aria-label", "Open skateboard tuning panel");
+    launcher.hidden = document.body.classList.contains("tc-on");
     launcher.addEventListener("click", () => this.setOpen(true));
     this.shadow.appendChild(launcher);
 
