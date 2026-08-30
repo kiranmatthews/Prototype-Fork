@@ -78,6 +78,7 @@ interface PalItem {
     | "platform"
     | "pit"
     | "wall"
+    | "wallpath"
     | "rail"
     | "vertramp"
     | "terrain"
@@ -563,6 +564,30 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           }
         },
         make: (at) => ({ t: "wall", p: [at.x, at.y, at.z], s: [8, 4, 1] }),
+      },
+      {
+        label: "bendy wall",
+        icon: (x) => {
+          x.strokeStyle = "#6a5d50";
+          x.lineWidth = 5;
+          x.beginPath();
+          x.moveTo(2, 15);
+          x.bezierCurveTo(4, 7, 12, 13, 16, 3);
+          x.stroke();
+          x.strokeStyle = "#d0bda2";
+          x.lineWidth = 2;
+          x.stroke();
+        },
+        make: (at) => ({
+          t: "wallpath",
+          p: [at.x, at.y, at.z],
+          pts: [[0, 6], [2, 2], [-2, -3], [0, -8]],
+          w: 1.2,
+          rise: 5,
+          curve: "spline",
+          color: "#9a8a7a",
+          tex: "stone",
+        }),
       },
       {
         label: "invis wall",
@@ -1062,6 +1087,24 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
             x.fillRect(px - 1.5, py - 1.5, 3, 3);
         },
         penDraw: "wall",
+      },
+      {
+        label: "bendy wall path",
+        icon: (x) => {
+          x.strokeStyle = "#d0bda2";
+          x.lineWidth = 4;
+          x.beginPath();
+          x.moveTo(2, 14);
+          x.bezierCurveTo(5, 5, 12, 14, 16, 4);
+          x.stroke();
+          x.fillStyle = "#ffd75e";
+          for (const [px, py] of [[2, 14], [9, 9], [16, 4]] as const) {
+            x.beginPath();
+            x.arc(px, py, 1.5, 0, Math.PI * 2);
+            x.fill();
+          }
+        },
+        penDraw: "wallpath",
       },
       {
         label: "rail path",
@@ -1896,6 +1939,7 @@ const RESIZABLE = new Set([
   "platform",
   "rock",
   "wall",
+  "wallpath",
   "pit",
   "crumble",
   "crusher",
@@ -2003,6 +2047,7 @@ function pathScaleMetrics(
   sx: number,
   sy: number,
   sz: number,
+  closed = false,
 ): { normalAt: number[]; lengthScale: number } {
   const EPS = 1e-8;
   const knotsAt = (
@@ -2022,6 +2067,14 @@ function pathScaleMetrics(
     knots: THREE.Vector3[],
     index: number,
   ): THREE.Vector3 => {
+    if (closed && knots.length > 2) {
+      for (let offset = 1; offset < knots.length; offset++) {
+        const before = knots[(index - offset + knots.length) % knots.length];
+        const after = knots[(index + offset) % knots.length];
+        const tangent = after.clone().sub(before);
+        if (tangent.lengthSq() > EPS * EPS) return tangent.normalize();
+      }
+    }
     // Linear runtime frames choose the outgoing segment at every knot except
     // the last. Skip zero-length duplicates without changing that direction.
     for (let after = index + 1; after < knots.length; after++) {
@@ -2036,13 +2089,13 @@ function pathScaleMetrics(
   };
   const splineFor = (knots: THREE.Vector3[]): THREE.CatmullRomCurve3 | null =>
     curve === "spline" && knots.length >= 3
-      ? new THREE.CatmullRomCurve3(knots, false, "centripetal", 0.35)
+      ? new THREE.CatmullRomCurve3(knots, closed, "centripetal", 0.35)
       : null;
   const tangentsAt = (knots: THREE.Vector3[]): THREE.Vector3[] => {
     const spline = splineFor(knots);
     if (!spline) return knots.map((_, index) => fallbackTangent(knots, index));
     return knots.map((_, index) => {
-      const tangent = spline.getTangent(index / (knots.length - 1));
+      const tangent = spline.getTangent(index / (closed ? knots.length : knots.length - 1));
       return tangent.lengthSq() > EPS * EPS
         ? tangent.normalize()
         : fallbackTangent(knots, index);
@@ -2052,6 +2105,8 @@ function pathScaleMetrics(
     let polyLength = 0;
     for (let index = 1; index < knots.length; index++)
       polyLength += knots[index].distanceTo(knots[index - 1]);
+    if (closed && knots.length > 2)
+      polyLength += knots[0].distanceTo(knots[knots.length - 1]);
     if (polyLength <= EPS) return 0;
     const sampleCount = THREE.MathUtils.clamp(
       Math.ceil(polyLength / 0.65),
@@ -2066,10 +2121,11 @@ function pathScaleMetrics(
       let center: THREE.Vector3;
       if (spline) center = spline.getPoint(t);
       else {
-        const knotF = t * (knots.length - 1);
-        const segment = Math.min(knots.length - 2, Math.floor(knotF));
+        const segmentCount = closed ? knots.length : knots.length - 1;
+        const knotF = t * segmentCount;
+        const segment = Math.min(segmentCount - 1, Math.floor(knotF));
         const local = Math.min(1, knotF - segment);
-        center = knots[segment].clone().lerp(knots[segment + 1], local);
+        center = knots[segment].clone().lerp(knots[(segment + 1) % knots.length], local);
       }
       if (previous) arc += center.distanceTo(previous);
       previous = center;
@@ -2223,6 +2279,7 @@ export class Editor {
       | "platform"
       | "pit"
       | "wall"
+      | "wallpath"
       | "rail"
       | "vertramp"
       | "terrain"
@@ -3466,10 +3523,17 @@ export class Editor {
     // Widths must be derived from the ORIGINAL path, before the knots below are
     // rewritten by the affine scale.
     const pathMetrics =
-      c.t === "woodpath" &&
+      (c.t === "woodpath" || c.t === "wallpath") &&
       c.pts &&
       c.pts.length >= 2
-        ? pathScaleMetrics(c.pts, c.curve, sx, sy, sz)
+        ? pathScaleMetrics(
+            c.pts,
+            c.curve,
+            sx,
+            sy,
+            sz,
+            c.t === "wallpath" && c.closed === true,
+          )
         : null;
     if (c.pts) {
       // drawn nodes are authored in world XZ around p; radius + per-node height ride along
@@ -3554,6 +3618,18 @@ export class Editor {
         if (c.w != null) c.w = Math.max(1, c.w * Math.abs(sx));
         if (c.amp != null) c.amp *= sy;
         break;
+      case "wallpath": {
+        const normalMean = pathMetrics
+          ? pathMetrics.normalAt.reduce((sum, factor) => sum + factor, 0) /
+            pathMetrics.normalAt.length
+          : sLocX;
+        if (c.w != null) c.w = Math.max(0.1, c.w * normalMean);
+        if (!c.pts && c.len != null) c.len = Math.max(1, c.len * sLocZ);
+        if (c.rise != null) c.rise = Math.max(0.2, c.rise * sy);
+        if (c.collisionHeight != null)
+          c.collisionHeight = Math.max(0.2, c.collisionHeight * sy);
+        break;
+      }
       case "woodpath": {
         const fallbackWidth = c.w ?? 6;
         if (pathMetrics && c.pts) {
@@ -4212,6 +4288,10 @@ export class Editor {
     else if (c.t === "terrain") {
       c.w = c.w ?? 12;
       c.amp = c.amp ?? 0.45;
+    } else if (c.t === "wallpath") {
+      c.w = c.w ?? 1.2;
+      c.rise = c.rise ?? 5;
+      if (!c.pts) c.len = c.len ?? 30;
     } else if (c.t === "woodpath") {
       c.w = c.w ?? 6;
       c.s = c.s ?? [1, 0.32, 1];
@@ -4270,7 +4350,8 @@ export class Editor {
       (c.t === "rail" ||
         c.t === "trickrail" ||
         c.t === "terrain" ||
-        c.t === "woodpath");
+        c.t === "woodpath" ||
+        c.t === "wallpath");
     if (c.pts && (isPoly || isPath)) {
       const y =
         c.t === "wall"
@@ -4285,8 +4366,9 @@ export class Editor {
           c.t === "rail" ||
           c.t === "trickrail" ||
           c.t === "terrain" ||
-          c.t === "woodpath"
-            ? c.p[1] + (pt[3] ?? 0) + 0.1
+          c.t === "woodpath" ||
+          c.t === "wallpath"
+            ? c.p[1] + (pt[3] ?? 0) + (c.t === "wallpath" ? c.rise ?? 5 : 0.1)
             : y,
           c.p[2] + pt[1],
         ),
@@ -4725,8 +4807,15 @@ export class Editor {
       this.downAt = null;
       const pt = this.drawPlanePoint(e);
       if (!pt) return;
+      const openPath = [
+        "rail",
+        "vertramp",
+        "terrain",
+        "woodpath",
+        "wallpath",
+      ].includes(this.drawing.t);
       if (
-        this.drawing.t !== "rail" &&
+        !openPath &&
         this.drawing.pts.length >= 3 &&
         pt.distanceTo(this.drawing.pts[0]) < 1.0
       ) {
@@ -4908,6 +4997,7 @@ export class Editor {
       | "platform"
       | "pit"
       | "wall"
+      | "wallpath"
       | "rail"
       | "vertramp"
       | "terrain"
@@ -4920,7 +5010,7 @@ export class Editor {
     this.dom.style.cursor = "crosshair";
     this.hooks.showMsg(
       `DRAW ${t.toUpperCase()}`,
-      t === "rail" || t === "terrain" || t === "woodpath"
+      t === "rail" || t === "terrain" || t === "woodpath" || t === "wallpath"
         ? "click to drop nodes · Enter or double-click to finish · esc = cancel"
         : "click to drop points · click the FIRST point (or Enter) to close · esc = cancel",
     );
@@ -4946,7 +5036,11 @@ export class Editor {
     if (!d || (d.pts.length === 0 && !cursor)) return;
     const g = new THREE.Group();
     const color =
-      d.t === "pit" ? 0xff6a3a : d.t === "wall" ? 0xffd75e : 0x58e08a;
+      d.t === "pit"
+        ? 0xff6a3a
+        : d.t === "wall" || d.t === "wallpath"
+          ? 0xffd75e
+          : 0x58e08a;
     const linePts = [...d.pts];
     if (cursor) linePts.push(cursor);
     if (linePts.length >= 2) {
@@ -5008,7 +5102,8 @@ export class Editor {
       d.t === "rail" ||
       d.t === "vertramp" ||
       d.t === "terrain" ||
-      d.t === "woodpath";
+      d.t === "woodpath" ||
+      d.t === "wallpath";
     const minPts = openPath ? 2 : 3;
     if (pts.length < minPts) {
       this.hooks.showMsg(`NEED ${minPts}+ POINTS`, "shape cancelled");
@@ -5029,6 +5124,17 @@ export class Editor {
     if (d.t === "rail") {
       // open path — no closing, no box dims; grind height is the draw plane
       this.addComponent({ t: "rail", p: [cx, d.y + 1, cz], pts: rel });
+    } else if (d.t === "wallpath") {
+      this.addComponent({
+        t: "wallpath",
+        p: [cx, d.y, cz],
+        pts: rel,
+        w: 1.2,
+        rise: 5,
+        curve: "spline",
+        color: "#9a8a7a",
+        tex: "stone",
+      });
     } else if (d.t === "terrain") {
       // a drawn floor: the nodes are its centreline, the draw plane its base
       this.addComponent({
@@ -6116,6 +6222,7 @@ export class Editor {
         return `${c.nm} · requires ${deckTrickInfo(c.trick ?? "kick").label}`;
       return c.nm;
     }
+    if (c.t === "wallpath") return `bendy wall · ${c.pts?.length ?? 0} nodes`;
     if (c.pts && c.pts.length >= 3) return `${c.t} · drawn`;
     if (c.t === "crate")
       return `crate · ${c.kind ?? "wood"}${c.outline ? " (outline)" : ""}`;
@@ -6459,6 +6566,7 @@ export class Editor {
       "platform",
       "ramp",
       "wall",
+      "wallpath",
       "crumble",
       "rock",
       "rail",
@@ -6828,6 +6936,7 @@ export class Editor {
         "platform",
         "ramp",
         "wall",
+        "wallpath",
         "pit",
         "crumble",
         "rock",
@@ -6874,6 +6983,23 @@ export class Editor {
           (cc, v) => (cc.range = Math.max(0.5, v)),
         );
       }
+      if (all.every((cc) => cc.t === "wallpath")) {
+        brow(
+          "thickness",
+          () => prim.w ?? 1.2,
+          (cc, v) => (cc.w = Math.max(0.1, v)),
+        );
+        brow(
+          "height",
+          () => prim.rise ?? 5,
+          (cc, v) => (cc.rise = Math.max(0.2, v)),
+        );
+        brow(
+          "collision height",
+          () => prim.collisionHeight ?? prim.rise ?? 5,
+          (cc, v) => (cc.collisionHeight = Math.max(0.2, v)),
+        );
+      }
       if (all.every((cc) => cc.t === "camnode")) {
         brow(
           "corner radius",
@@ -6885,6 +7011,7 @@ export class Editor {
         "platform",
         "ramp",
         "wall",
+        "wallpath",
         "crumble",
         "rock",
       ]);
@@ -7040,7 +7167,8 @@ export class Editor {
           c.t === "rail" ||
           c.t === "trickrail" ||
           c.t === "terrain" ||
-          c.t === "woodpath"
+          c.t === "woodpath" ||
+          c.t === "wallpath"
         ) {
           num(
             `${tag} · y`,
@@ -7093,6 +7221,8 @@ export class Editor {
         tip.textContent =
           c.t === "woodpath"
             ? "double-click, then grab a knot (shift adds · drag empty space = box-select): edit its position, height, bank, and width here"
+            : c.t === "wallpath"
+              ? "double-click, then grab a wall knot: edit its position, base height, and corner radius here"
             : c.t === "terrain"
               ? "double-click, then grab a centreline node: edit its position and height here"
               : c.t === "vertramp"
@@ -7101,7 +7231,116 @@ export class Editor {
         this.propsEl.appendChild(tip);
       }
     };
-    if (
+    if (c.t === "wallpath") {
+      if (c.pts && c.pts.length >= 2) {
+        const note = document.createElement("div");
+        note.className = "ed-dim";
+        note.textContent = `bendy wall · ${c.pts.length} nodes — double-click to edit its route`;
+        this.propsEl.appendChild(note);
+        nodeRows();
+      }
+      num("thickness", () => c.w ?? 1.2, (v) => (c.w = Math.max(0.1, v)), 0.1);
+      if (!c.pts)
+        num("length", () => c.len ?? 30, (v) => (c.len = Math.max(1, v)), 1);
+      num("height", () => c.rise ?? 5, (v) => (c.rise = Math.max(0.2, v)), 0.25);
+      num(
+        "collision height",
+        () => c.collisionHeight ?? c.rise ?? 5,
+        (v) => (c.collisionHeight = Math.max(0.2, v)),
+        0.25,
+      );
+      boolRow("solid collision", () => c.solid !== false, (value) => {
+        if (value) delete c.solid;
+        else c.solid = false;
+      });
+      boolRow("invisible in play", () => c.invisible === true, (value) => {
+        if (value) c.invisible = true;
+        else delete c.invisible;
+      });
+      const toggle = (text: () => string, action: () => void): void => {
+        const button = document.createElement("button");
+        button.className = "ed-btn";
+        button.textContent = text();
+        button.addEventListener("click", () => {
+          action();
+          this.commit();
+          this.renderProps();
+        });
+        this.propsEl.appendChild(button);
+      };
+      toggle(
+        () => `bends: ${c.curve === "spline" ? "smooth spline" : "filleted corners"}`,
+        () => (c.curve = c.curve === "spline" ? "corner" : "spline"),
+      );
+      toggle(
+        () => `path: ${c.closed ? "closed loop" : "open"}`,
+        () => {
+          const path = c.pts;
+          if (!c.closed && (!path || path.length < 3)) {
+            this.hooks.showMsg("NEED 3+ KNOTS", "add a knot before closing the wall");
+            return;
+          }
+          c.closed = !c.closed;
+        },
+      );
+      const pathAction = (label: string, action: () => void): void => {
+        const button = document.createElement("button");
+        button.className = "ed-btn";
+        button.textContent = label;
+        button.addEventListener("click", () => {
+          action();
+          this.commit();
+          this.renderProps();
+        });
+        this.propsEl.appendChild(button);
+      };
+      const points = (): NonNullable<CustomComponent["pts"]> => {
+        if (!c.pts) {
+          const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+          const half = (c.len ?? 30) / 2;
+          const dx = Math.sin(yaw) * half;
+          const dz = Math.cos(yaw) * half;
+          c.pts = [[-dx, -dz], [dx, dz]];
+          delete c.yaw;
+          delete c.len;
+        }
+        return c.pts;
+      };
+      pathAction("+ add end knot", () => {
+        const path = points();
+        const last = path[path.length - 1];
+        const before = path[path.length - 2] ?? [last[0], last[1] + 8];
+        path.push([
+          last[0] + (last[0] - before[0]),
+          last[1] + (last[1] - before[1]),
+          0,
+          (last[3] ?? 0) + ((last[3] ?? 0) - (before[3] ?? 0)),
+        ]);
+      });
+      pathAction("− remove end knot", () => {
+        const path = points();
+        if (path.length > 2) path.pop();
+      });
+      pathAction("reverse route", () => points().reverse());
+      pathAction("preset: straight", () => {
+        c.pts = [[0, 10], [0, -10]];
+        delete c.yaw;
+        c.closed = false;
+      });
+      pathAction("preset: curved", () => {
+        c.pts = [[0, 10], [4, 4], [-3, -3], [0, -10]];
+        delete c.yaw;
+        c.curve = "spline";
+        c.closed = false;
+      });
+      pathAction("preset: enclosure", () => {
+        c.pts = [[-8, -6, 2], [8, -6, 2], [8, 6, 2], [-8, 6, 2]];
+        delete c.yaw;
+        c.curve = "corner";
+        c.closed = true;
+      });
+      if (!c.invisible) colorRow();
+    } else if (
       c.pts &&
       c.pts.length >= 2 &&
       (c.t === "woodpath" || c.t === "trickrail")
@@ -8207,7 +8446,7 @@ export class Editor {
       "rock", "pendulum", "ropeswing", "enemy", "gate", "vertramp", "rope",
       "trampoline", "speedpad", "trickgate", "returnportal", "grindosaurus",
       "angryball", "decor", "crusher", "mover", "phasepad", "zone", "stone",
-      "terrain", "woodpath",
+      "terrain", "woodpath", "wallpath",
     ]);
     if (rotatable.has(c.t)) {
       const rot = document.createElement("button");

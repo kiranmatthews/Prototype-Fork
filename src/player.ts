@@ -16,6 +16,7 @@ import {
   LaneCursor,
   Level,
   RopeSwing,
+  type WallPathRuntime,
   newLaneCursor,
 } from './level';
 import { sfx } from './audio';
@@ -750,6 +751,10 @@ export class Player {
   private wallTickT = 0; // THPS accrual while wallriding
   private readonly wallNormal = new THREE.Vector3(); // wall outward normal (horizontal, toward the skater)
   private wallBox: THREE.Box3 | null = null; // the wall we're riding (for glue + run-off)
+  private wallPath: WallPathRuntime | null = null;
+  private wallPathS = 0;
+  private wallPathSide = 1;
+  private wallPathDir = 1;
   // --- LEDGE GRAB: hang off a lip you hit head-on; stepHang owns the state ---
   private ledgeT = 0; // grip time left before the hands give out
   private ledgeCoolT = 0; // re-grab lockout after a climb / hop / slip
@@ -1712,6 +1717,7 @@ export class Player {
     this.crateSupportLostThisStep = false;
     this.crouchGraceT = 0;
     this.wallriding = false;
+    this.wallPath = null;
     this.wallCoolT = 0;
     this.wallrideLatched = false;
     this.wallChargeT = 0;
@@ -6259,6 +6265,7 @@ export class Player {
     this.lipCoolT = Math.max(this.lipCoolT, 0.5);
     this.wallriding = false;
     this.wallBox = null;
+    this.wallPath = null;
     this.wallrideLatched = false;
     this.wallChargeT = 0;
     this.vertAir = false;
@@ -7977,6 +7984,7 @@ export class Player {
         if (this.manualing !== 0) this.endManual();
         this.wallriding = false;
         this.wallBox = null;
+        this.wallPath = null;
         this.vertAir = false;
         this.pipeHang = false;
         this.hangPipe = null;
@@ -8785,7 +8793,33 @@ export class Player {
         // tripped on) must pass over the top, not get pinned at the face.
         if (this.isBailing && !this.grounded && w.max.y < this.pos.y + 0.35) continue;
         if (this.playerBox.intersectsBox(w)) {
-          if (this.tryWallride(w)) break; // stuck to the wall — ride it
+          if (this.tryWallride(w, level)) break; // stuck to the wall — ride it
+          const wallPath = level.wallPathForBox(w);
+          if (wallPath) {
+            const contact = level.closestWallPath(
+              wallPath,
+              this.pos.x,
+              this.pos.z,
+              level.wallPathSegmentForBox(w),
+            );
+            const playerRadius =
+              wallPath.halfThickness +
+              Math.abs(contact.nx) * CONST.playerHalf.x +
+              Math.abs(contact.nz) * CONST.playerHalf.z;
+            if (
+              !contact.cap &&
+              contact.distance <= playerRadius + 0.12 &&
+              this.tryLedgeGrab(w, level)
+            )
+              break;
+            const bx = this.pos.x;
+            const bz = this.pos.z;
+            const bs = this.speed;
+            const resolved = this.pushOutOfWallPath(w, wallPath, level);
+            if (resolved === null) continue;
+            if (!resolved) this.wallSmack(bx, bz, bs, w);
+            break; // one logical path resolves once, never once per broadphase slice
+          }
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
           const bx = this.pos.x;
           const bz = this.pos.z;
@@ -9807,6 +9841,70 @@ export class Player {
     this.spinBox.translate(CRATE_CONTACT_SHIFT);
   }
 
+  /** Exact curved-wall push. null = the Box3 broadphase was a false positive. */
+  private pushOutOfWallPath(
+    box: THREE.Box3,
+    path: WallPathRuntime,
+    level: Level,
+  ): boolean | null {
+    const segment = level.wallPathSegmentForBox(box);
+    const contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
+    if (
+      this.pos.y > contact.y + path.height ||
+      this.pos.y + CONST.playerHalf.y * 2 < contact.y
+    )
+      return null;
+    const insideCapWidth = (sample: ReturnType<Level['closestWallPath']>): boolean => {
+      if (!sample.cap) return true;
+      const lateralRadius =
+        path.halfThickness +
+        Math.abs(sample.nz) * CONST.playerHalf.x +
+        Math.abs(sample.nx) * CONST.playerHalf.z +
+        0.02;
+      return sample.crossDistance < lateralRadius;
+    };
+    if (!insideCapWidth(contact)) return null;
+    const radius =
+      (contact.cap ? 0 : path.halfThickness) +
+      Math.abs(contact.nx) * CONST.playerHalf.x +
+      Math.abs(contact.nz) * CONST.playerHalf.z +
+      0.02;
+    if (contact.distance >= radius) return null;
+    const before = level.closestWallPath(
+      path,
+      this.prevPos.x,
+      this.prevPos.z,
+      segment,
+    );
+    const beforeRadius =
+      (before.cap ? 0 : path.halfThickness) +
+      Math.abs(before.nx) * CONST.playerHalf.x +
+      Math.abs(before.nz) * CONST.playerHalf.z +
+      0.02;
+    const insideBefore = insideCapWidth(before) && before.distance < beforeRadius;
+    const fullShift = radius - contact.distance + 0.01;
+    const shift = insideBefore ? Math.min(fullShift, 0.5) : fullShift;
+    const shiftX = contact.nx * shift;
+    const shiftZ = contact.nz * shift;
+    this.pos.x += shiftX;
+    this.pos.z += shiftZ;
+    this.translateCollisionBoxes(shiftX, 0, shiftZ);
+    if (insideBefore) {
+      this.prevPos.x += shiftX;
+      this.prevPos.z += shiftZ;
+      return true;
+    }
+    const head = Math.abs(this.axisF.x * contact.nx + this.axisF.z * contact.nz);
+    if (head > 0.6 && Math.abs(this.speed) > 0.1) {
+      if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
+        sfx.play('skateHalt', 0.7);
+        this.haltCd = 0.5;
+      }
+      this.speed = 0;
+    }
+    return false;
+  }
+
   /** Returns true for positional start-inside repair, false for a fresh hit. */
   private pushOutOf(box: THREE.Box3): boolean {
     const hx = CONST.playerHalf.x + 0.02;
@@ -9877,7 +9975,7 @@ export class Player {
   // holding grind, off cooldown, moving fast enough, and within the wall's
   // height. The wall is a thin box; its NORMAL is the thin axis, the ride runs
   // along the long axis carrying your speed. Returns true if it grabbed.
-  private tryWallride(w: THREE.Box3): boolean {
+  private tryWallride(w: THREE.Box3, level: Level): boolean {
     if (
       this.state !== 'air' ||
       this.isBailing ||
@@ -9893,32 +9991,77 @@ export class Player {
     const vz = this.axisF.z * this.speed;
     const hspeed = Math.hypot(vx, vz);
     if (hspeed < TUNING.wallrideMinSpeed) return false;
-    if (this.pos.y > w.max.y || this.pos.y + CONST.playerHalf.y * 2 < w.min.y) return false;
-
-    const extX = w.max.x - w.min.x;
-    const extZ = w.max.z - w.min.z;
-    const alongZ = extX <= extZ; // thin in X → wall runs along Z (normal ±X); else along X
-    // Outward normal: points from the wall face back toward the skater.
-    const nx = alongZ ? (this.pos.x >= (w.min.x + w.max.x) / 2 ? 1 : -1) : 0;
-    const nz = alongZ ? 0 : this.pos.z >= (w.min.z + w.max.z) / 2 ? 1 : -1;
-    // APPROACH ANGLE: your flight has to run close to PARALLEL with the face —
-    // the along-wall run vs the into-wall dive. Come in too head-on and you bonk
-    // off it instead of sticking. The off-parallel limit is a slider.
-    const along = alongZ ? Math.abs(vz) : Math.abs(vx);
-    const into = alongZ ? -vx * nx : -vz * nz; // + = flying toward the face
-    const approach = (Math.atan2(Math.abs(into), Math.max(0.001, along)) * 180) / Math.PI;
-    if (approach > TUNING.wallrideMaxAngle) return false;
-
-    if (alongZ) {
-      this.wallNormal.set(nx, 0, 0);
-      const tdir = Math.abs(vz) > 0.01 ? Math.sign(vz) : 1;
-      this.axisF.set(0, 0, tdir);
-      this.pos.x = (nx > 0 ? w.max.x : w.min.x) + nx * (CONST.playerHalf.x + 0.05);
+    const wallPath = level.wallPathForBox(w);
+    if (wallPath) {
+      const contact = level.closestWallPath(
+        wallPath,
+        this.pos.x,
+        this.pos.z,
+        level.wallPathSegmentForBox(w),
+      );
+      if (contact.cap) return false;
+      const contactRadius =
+        wallPath.halfThickness +
+        Math.abs(contact.nx) * CONST.playerHalf.x +
+        Math.abs(contact.nz) * CONST.playerHalf.z +
+        0.08;
+      if (contact.distance > contactRadius) return false;
+      if (
+        this.pos.y > contact.y + wallPath.height ||
+        this.pos.y + CONST.playerHalf.y * 2 < contact.y
+      )
+        return false;
+      const alongVelocity = vx * contact.tx + vz * contact.tz;
+      const along = Math.abs(alongVelocity);
+      const into = -(vx * contact.nx + vz * contact.nz);
+      const approach =
+        (Math.atan2(Math.abs(into), Math.max(0.001, along)) * 180) / Math.PI;
+      if (approach > TUNING.wallrideMaxAngle) return false;
+      this.wallPath = wallPath;
+      this.wallPathS = contact.s;
+      this.wallPathDir = Math.abs(alongVelocity) > 0.01 ? Math.sign(alongVelocity) : 1;
+      const baseNx = -contact.tz;
+      const baseNz = contact.tx;
+      this.wallPathSide = contact.nx * baseNx + contact.nz * baseNz >= 0 ? 1 : -1;
+      this.wallNormal.set(contact.nx, 0, contact.nz);
+      this.axisF.set(
+        contact.tx * this.wallPathDir,
+        0,
+        contact.tz * this.wallPathDir,
+      );
+      const playerRadius =
+        Math.abs(contact.nx) * CONST.playerHalf.x +
+        Math.abs(contact.nz) * CONST.playerHalf.z;
+      this.pos.x = contact.x + contact.nx * (wallPath.halfThickness + playerRadius + 0.05);
+      this.pos.z = contact.z + contact.nz * (wallPath.halfThickness + playerRadius + 0.05);
     } else {
-      this.wallNormal.set(0, 0, nz);
-      const tdir = Math.abs(vx) > 0.01 ? Math.sign(vx) : 1;
-      this.axisF.set(tdir, 0, 0);
-      this.pos.z = (nz > 0 ? w.max.z : w.min.z) + nz * (CONST.playerHalf.z + 0.05);
+      if (this.pos.y > w.max.y || this.pos.y + CONST.playerHalf.y * 2 < w.min.y)
+        return false;
+      const extX = w.max.x - w.min.x;
+      const extZ = w.max.z - w.min.z;
+      const alongZ = extX <= extZ; // thin in X → wall runs along Z (normal ±X); else along X
+      // Outward normal: points from the wall face back toward the skater.
+      const nx = alongZ ? (this.pos.x >= (w.min.x + w.max.x) / 2 ? 1 : -1) : 0;
+      const nz = alongZ ? 0 : this.pos.z >= (w.min.z + w.max.z) / 2 ? 1 : -1;
+      const along = alongZ ? Math.abs(vz) : Math.abs(vx);
+      const into = alongZ ? -vx * nx : -vz * nz;
+      const approach =
+        (Math.atan2(Math.abs(into), Math.max(0.001, along)) * 180) / Math.PI;
+      if (approach > TUNING.wallrideMaxAngle) return false;
+      this.wallPath = null;
+      if (alongZ) {
+        this.wallNormal.set(nx, 0, 0);
+        const tdir = Math.abs(vz) > 0.01 ? Math.sign(vz) : 1;
+        this.axisF.set(0, 0, tdir);
+        this.pos.x =
+          (nx > 0 ? w.max.x : w.min.x) + nx * (CONST.playerHalf.x + 0.05);
+      } else {
+        this.wallNormal.set(0, 0, nz);
+        const tdir = Math.abs(vx) > 0.01 ? Math.sign(vx) : 1;
+        this.axisF.set(tdir, 0, 0);
+        this.pos.z =
+          (nz > 0 ? w.max.z : w.min.z) + nz * (CONST.playerHalf.z + 0.05);
+      }
     }
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
     this.wallSpeed = hspeed; // redirect full momentum along the wall
@@ -10735,6 +10878,7 @@ export class Player {
       }
       this.vVel = TUNING.wallKickUp + charge * TUNING.wallPumpBonus;
       this.wallriding = false;
+      this.wallPath = null;
       this.wallCoolT = 0.35;
       this.state = 'air';
       this.airFromSkate = true;
@@ -10749,7 +10893,38 @@ export class Player {
     if (this.vVel < -CONST.maxFallSpeed) this.vVel = -CONST.maxFallSpeed;
     this.wallSpeed = Math.max(0, this.wallSpeed - TUNING.wallrideFriction * dt);
     this.speed = this.wallSpeed;
-    this.pos.addScaledVector(this.axisF, this.wallSpeed * dt);
+    let pathOff = false;
+    let pathSample = null as ReturnType<Level['wallPathSample']> | null;
+    if (this.wallPath) {
+      const nextS = this.wallPathS + this.wallPathDir * this.wallSpeed * dt;
+      pathOff =
+        !this.wallPath.closed &&
+        (nextS < -0.3 || nextS > this.wallPath.length + 0.3);
+      pathSample = level.wallPathSample(
+        this.wallPath,
+        nextS,
+        this.wallPathSide,
+      );
+      this.wallPathS = pathSample.s;
+      this.axisF.set(
+        pathSample.tx * this.wallPathDir,
+        0,
+        pathSample.tz * this.wallPathDir,
+      );
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      this.wallNormal.set(pathSample.nx, 0, pathSample.nz);
+      const playerRadius =
+        Math.abs(pathSample.nx) * CONST.playerHalf.x +
+        Math.abs(pathSample.nz) * CONST.playerHalf.z;
+      this.pos.x =
+        pathSample.x +
+        pathSample.nx * (this.wallPath.halfThickness + playerRadius + 0.05);
+      this.pos.z =
+        pathSample.z +
+        pathSample.nz * (this.wallPath.halfThickness + playerRadius + 0.05);
+    } else {
+      this.pos.addScaledVector(this.axisF, this.wallSpeed * dt);
+    }
     this.pos.y += this.vVel * dt;
     this.airPeakY = Math.max(this.airPeakY, this.pos.y);
     this.wallrideT -= dt;
@@ -10763,8 +10938,11 @@ export class Player {
     }
     this.emitSparks(1, 0xffd0a0, 0.7); // trail of sparks off the trucks
 
-    let off = false;
-    if (w) {
+    let off = pathOff;
+    if (this.wallPath && pathSample) {
+      if (this.pos.y > pathSample.y + this.wallPath.height + 0.25) off = true;
+      if (this.pos.y + CONST.playerHalf.y * 2 < pathSample.y - 0.05) off = true;
+    } else if (w) {
       if (this.wallNormal.x !== 0) {
         this.pos.x = (this.wallNormal.x > 0 ? w.max.x : w.min.x) + this.wallNormal.x * (CONST.playerHalf.x + 0.05);
         if (this.pos.z < w.min.z - 0.3 || this.pos.z > w.max.z + 0.3) off = true;
@@ -10789,6 +10967,7 @@ export class Player {
         )
       ) {
         this.wallriding = false;
+        this.wallPath = null;
         this.wallCoolT = 0.2;
         this.state = 'air';
         this.grounded = false;
@@ -10807,6 +10986,7 @@ export class Player {
       this.rideNormal.copy(hit.normal);
       this.airMomentum = true; // keep the speed on touchdown
       this.wallriding = false;
+      this.wallPath = null;
       this.wallCoolT = 0.2;
       return;
     }
@@ -10815,6 +10995,7 @@ export class Player {
     // or run off the wall — NOT when you let go of grind.
     if (this.wallrideT <= 0 || this.wallSpeed < 1 || off) {
       this.wallriding = false;
+      this.wallPath = null;
       this.wallCoolT = 0.35;
       this.state = 'air';
       this.airFromSkate = true;

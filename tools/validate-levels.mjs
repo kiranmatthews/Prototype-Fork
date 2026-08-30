@@ -5,7 +5,7 @@ const payload = JSON.parse(await readFile(file, "utf8"));
 const errors = [];
 const rows = [];
 const componentTypes = new Set([
-  "platform", "ramp", "wall", "rail", "pipe", "vertramp", "crumble",
+  "platform", "ramp", "wall", "wallpath", "rail", "pipe", "vertramp", "crumble",
   "pit", "crate", "metal", "rock", "camnode", "outline", "checkpoint",
   "enemy", "crusher", "mover", "torch", "phasepad", "stone", "pendulum",
   "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
@@ -99,11 +99,19 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
     )
       errors.push(`${path}.to must be three finite destination numbers when present`);
     if (
-      component.t === "woodpath" &&
+      (component.t === "woodpath" || component.t === "wallpath") &&
       component.pts !== undefined &&
       component.pts.length < 2
     )
-      errors.push(`${path}.pts must contain at least two wood-path nodes`);
+      errors.push(`${path}.pts must contain at least two path nodes`);
+    if (
+      component.t === "wallpath" &&
+      ((!component.pts && component.len !== undefined && component.len < 1) ||
+        (component.w !== undefined && component.w < 0.1) ||
+        (component.rise !== undefined && component.rise < 0.2) ||
+        (component.collisionHeight !== undefined && component.collisionHeight < 0.2))
+    )
+      errors.push(`${path} wallpath thickness/height fields must be positive`);
     if (
       component.widths !== undefined &&
       (!Array.isArray(component.widths) ||
@@ -163,7 +171,7 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
         (component.speed !== undefined && component.speed < 0))
     )
       errors.push(`${path} Angry Ball profile fields are out of range`);
-    for (const key of ["scaffold", "supports", "rails", "terrainSupports", "airOnly"]) {
+    for (const key of ["scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid"]) {
       if (component[key] !== undefined && typeof component[key] !== "boolean")
         errors.push(`${path}.${key} must be boolean when present`);
     }

@@ -501,6 +501,7 @@ const NEW_PRIMITIVE_FIXTURE = {
     // Every new primitive once with only its required fields: omitted values
     // are part of the editor/runtime contract, not missing test coverage.
     { t: "woodpath", p: [-82, 0.1, 10] },
+    { t: "wallpath", p: [-74, 0.1, 10] },
     { t: "trampoline", p: [-40, 0, 10] },
     { t: "speedpad", p: [-28, 0, 10] },
     { t: "trickgate", p: [-16, 3, 10] },
@@ -532,6 +533,32 @@ const NEW_PRIMITIVE_FIXTURE = {
       baySpacing: 4.2,
       supportDepth: 4,
       seed: 19,
+    },
+    {
+      t: "wallpath",
+      p: [-74, 0.2, -18],
+      pts: [
+        [0, 8, 0, 0],
+        [4, 2, 1.5, 0.8],
+        [-3, -5, 1.2, 1.6],
+        [0, -12, 0, 0.4],
+      ],
+      w: 1.4,
+      rise: 6.5,
+      collisionHeight: 5.8,
+      curve: "spline",
+      solid: false,
+      color: "#8f806c",
+      tex: "stone",
+    },
+    {
+      t: "wallpath",
+      p: [-54, 0.2, -28],
+      pts: [[0, 8], [5, 2], [-4, -5], [0, -12]],
+      w: 1,
+      rise: 4,
+      curve: "spline",
+      invisible: true,
     },
     {
       t: "trampoline",
@@ -805,6 +832,70 @@ function assertPrimitiveFixture(canonical, level) {
     2,
     "wood path default/path variants were not both built",
   );
+  const wallPaths = [];
+  level.root.traverse((object) => {
+    if (object.userData.wallPathComp) wallPaths.push(object);
+  });
+  assert.equal(wallPaths.length, 3, "wallpath default/curved/ghost variants were not built");
+  const solidWall = wallPaths.find(
+    (object) =>
+      object.userData.wallPathComp.solid !== false &&
+      !object.userData.wallPathComp.pts,
+  );
+  const sceneryWall = wallPaths.find((object) => object.userData.wallPathComp.solid === false);
+  const ghostWall = wallPaths.find((object) => object.userData.wallPathComp.invisible === true);
+  assert.ok(solidWall?.userData.wallPathCollision > 0, "sparse wallpath lost its collider");
+  assert.equal(
+    sceneryWall?.userData.wallPathCollision,
+    0,
+    "visual-only wallpath unexpectedly generated collision",
+  );
+  assert.ok(ghostWall?.userData.wallPathCollision > 4, "curved ghost wall lost collision");
+  assert.equal(ghostWall?.visible, false, "invisible wallpath was visible in play/editor build");
+  const runtime = level.walls
+    .map((box) => level.wallPathForBox(box))
+    .find((candidate) => candidate?.spine.length > 2);
+  assert.ok(runtime, "curved wallpath collision lost logical path metadata");
+  const contact = level.closestWallPath(runtime, -54, -28);
+  const sample = level.wallPathSample(runtime, contact.s);
+  assert.ok(Number.isFinite(sample.tx) && Number.isFinite(sample.nx));
+  const firstNode = runtime.spine[0];
+  const secondNode = runtime.spine[1];
+  const firstLength = Math.hypot(
+    secondNode.x - firstNode.x,
+    secondNode.z - firstNode.z,
+  );
+  const firstTx = (secondNode.x - firstNode.x) / firstLength;
+  const firstTz = (secondNode.z - firstNode.z) / firstLength;
+  const cap = level.closestWallPath(
+    runtime,
+    firstNode.x - firstTx * 2,
+    firstNode.z - firstTz * 2,
+    0,
+  );
+  assert.equal(cap.cap, true, "open wallpath endpoint did not resolve as a cap");
+  assert.ok(cap.nx * firstTx + cap.nz * firstTz < -0.9, "start cap normal is wrong");
+  const offCenterCap = level.closestWallPath(
+    runtime,
+    firstNode.x - firstTx * 2 - firstTz * 4,
+    firstNode.z - firstTz * 2 + firstTx * 4,
+    0,
+  );
+  assert.equal(round(offCenterCap.distance), 2, "cap used radial instead of longitudinal depth");
+  assert.equal(round(offCenterCap.crossDistance), 4, "cap lost lateral offset");
+  let previous = sample;
+  for (let index = 1; index <= 20; index++) {
+    const next = level.wallPathSample(
+      runtime,
+      contact.s + (runtime.length * index) / 20,
+    );
+    assert.ok(Number.isFinite(next.x) && Number.isFinite(next.tx));
+    assert.ok(
+      previous.tx * next.tx + previous.tz * next.tz > -0.5,
+      "wallpath tangent flipped discontinuously",
+    );
+    previous = next;
+  }
   const trampolines = level.groundMeshes.filter(
     (mesh) => mesh.name === "trampoline",
   );
@@ -842,6 +933,101 @@ function assertPrimitiveFixture(canonical, level) {
   assert.equal(level.angryBalls[0].activationRadius, 12);
   assert.equal(level.angryBalls[0].speed, 7);
   assert.ok(level.lanePts.length >= 3, "camera path was not rebuilt");
+}
+
+function assertBendyWallBuilder(buildBendyWallGeometry, THREE) {
+  const base = { t: "wallpath", p: [0, 0, 0], w: 1.2, rise: 5 };
+  const straight = buildBendyWallGeometry({
+    ...base,
+    pts: [[0, 0], [0, -186]],
+  });
+  assert.equal(straight.collision.length, 1, "long cardinal wallpath was needlessly sliced");
+  assert.equal(round(straight.collision[0].max.y), 4.8, "wall collision top was not tucked");
+
+  const diagonal = buildBendyWallGeometry({
+    ...base,
+    pts: [[0, 0], [20, -20]],
+  });
+  assert.ok(diagonal.collision.length >= 18, "diagonal wallpath was not collision-subdivided");
+  for (const box of diagonal.collision) {
+    const size = box.getSize(new THREE.Vector3());
+    assert.ok(size.x < 4 && size.z < 4, "diagonal wallpath grew a broad invisible AABB");
+  }
+
+  const climbingCardinal = buildBendyWallGeometry({
+    ...base,
+    pts: [[0, 0, 0, 0], [0, -30, 0, 20]],
+  });
+  assert.ok(
+    climbingCardinal.collision.length >= 33,
+    "climbing cardinal wallpath was not vertically subdivided",
+  );
+  for (const box of climbingCardinal.collision)
+    assert.ok(
+      box.max.y - box.min.y < 6,
+      "climbing wallpath produced a tall phantom collider",
+    );
+
+  const twoNodeClosed = buildBendyWallGeometry({
+    ...base,
+    closed: true,
+    pts: [[0, 0], [0, -12]],
+  });
+  assert.equal(twoNodeClosed.collision.length, 1, "two-node closed wall doubled back on itself");
+  assert.equal(twoNodeClosed.closed, false, "two-node wall retained an invalid closed runtime");
+
+  const repeatedClose = buildBendyWallGeometry({
+    ...base,
+    closed: true,
+    pts: [[-6, -6], [6, -6], [6, 6], [-6, 6], [-6, -6]],
+  });
+  assert.equal(repeatedClose.spine.length, 4, "redundant closed endpoint survived");
+  assert.equal(repeatedClose.collision.length, 4, "closed wall seam duplicated collision");
+  assert.equal(repeatedClose.closed, true);
+
+  const yawedKnots = buildBendyWallGeometry({
+    ...base,
+    yaw: 90,
+    pts: [[2, 0], [2, -4]],
+  });
+  assert.equal(round(yawedKnots.spine[0].x), 2, "explicit wall knots were double-rotated by yaw");
+  const yawedFallback = buildBendyWallGeometry({
+    ...base,
+    yaw: 90,
+  });
+  assert.ok(
+    Math.abs(yawedFallback.spine[1].x - yawedFallback.spine[0].x) > 20,
+    "sparse straight wallpath ignored yaw",
+  );
+
+  const verticalDuplicate = buildBendyWallGeometry({
+    ...base,
+    pts: [[0, 0, 0, 0], [0, 0, 0, 4], [0, -8, 0, 4]],
+  });
+  assert.equal(
+    verticalDuplicate.spine.length,
+    2,
+    "zero-horizontal wall segment survived path cleanup",
+  );
+
+  const hairpin = buildBendyWallGeometry({
+    ...base,
+    pts: [[0, 0], [8, 0, 2], [0.05, 0.08, 2], [8, 0.16]],
+  });
+  for (const attribute of [
+    hairpin.geometry.getAttribute("position"),
+    hairpin.geometry.getAttribute("uv"),
+  ])
+    for (const value of attribute.array)
+      assert.ok(Number.isFinite(value), "hairpin wall generated non-finite geometry");
+
+  const scenery = buildBendyWallGeometry({
+    ...base,
+    solid: false,
+    curve: "spline",
+    pts: [[0, 0], [4, -8], [-3, -16], [0, -24]],
+  });
+  assert.equal(scenery.collision.length, 0, "solid:false wallpath generated collision");
 }
 
 function assertMalformedGroups(canonical) {
@@ -894,6 +1080,7 @@ try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
   const {
     BUILTIN_LEVELS,
+    buildBendyWallGeometry,
     Level,
     findLevel,
     getEditData,
@@ -904,6 +1091,19 @@ try {
     setUserLevels,
     starterCustomLevel,
   } = levelModule;
+  assertBendyWallBuilder(buildBendyWallGeometry, THREE);
+  const playerSource = await readFile(path.join(ROOT, "src", "player.ts"), "utf8");
+  for (const contract of [
+    "level.wallPathForBox(w)",
+    "level.closestWallPath(",
+    "level.wallPathSample(",
+    "this.wallPathS + this.wallPathDir * this.wallSpeed * dt",
+    "this.pushOutOfWallPath(w, wallPath, level)",
+  ])
+    assert.ok(
+      playerSource.includes(contract),
+      `path-aware wallride integration missing ${contract}`,
+    );
 
   const cases = [
     {
@@ -1094,6 +1294,34 @@ try {
       setEditorBuild(false);
       original = new Level(new THREE.Scene(), entry);
       const captured = migrateCustomLevel(clone(original.captureData()));
+      if (entry.id === "jungle") {
+        const wallPaths = captured.components.filter(
+          (component) => component.t === "wallpath",
+        );
+        assert.equal(wallPaths.length, 22, "Jungle wallpaths were dropped or duplicated");
+        assert.equal(
+          wallPaths.filter((component) => component.solid === false).length,
+          18,
+          "Jungle earth banks lost visual-only wallpath identity",
+        );
+        const structural = wallPaths.filter((component) => component.solid !== false);
+        assert.deepStrictEqual(
+          structural.map((component) => [
+            component.p,
+            component.pts,
+            component.w,
+            component.rise,
+            component.collisionHeight,
+          ]),
+          [
+            [[-9, 0, -300], [[0, 0], [0, -186]], 1.2, 16, 16],
+            [[9, 0, -300], [[0, 0], [0, -186]], 1.2, 16, 16],
+            [[-7.6, 0, -676], [[0, 0], [0, -42]], 1.2, 6, 6],
+            [[7.6, 0, -676], [[0, 0], [0, -42]], 1.2, 6, 6],
+          ],
+          "Jungle structural wallpath footprint drifted",
+        );
+      }
       rebuilt = new Level(new THREE.Scene(), {
         id: entry.id,
         name: entry.name,

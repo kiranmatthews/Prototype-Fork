@@ -170,6 +170,29 @@ export interface CoastBoundaryHit {
   frontal: boolean;
 }
 
+export interface WallPathRuntime {
+  spine: VertRampNode[];
+  stations: number[];
+  length: number;
+  halfThickness: number;
+  height: number;
+  closed: boolean;
+}
+
+export interface WallPathSample {
+  s: number;
+  x: number;
+  y: number;
+  z: number;
+  tx: number;
+  tz: number;
+  nx: number;
+  nz: number;
+  distance: number;
+  crossDistance: number;
+  cap: boolean;
+}
+
 // Moving platform: slides along one axis on a sine, carrying the rider.
 interface Mover {
   mesh: THREE.Mesh;
@@ -505,6 +528,7 @@ export interface CustomComponent {
     | "platform" // solid box: p = center, s = [w,h,d], yaw degrees, slip = icy
     | "ramp" // slope along Z (low end at +Z): p = center of the base line, len along z, rise = height gained, w = width, yaw
     | "wall" // solid barrier: p = base center, s = [w,h,d]; invisible = collider only (ghost in the editor)
+    | "wallpath" // swept/bendy wall: pts = relative X/Z knots (optional radius/Y offset), w = thickness, rise = visual height, collisionHeight may differ, curve/closed control the spine
     | "rail" // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z). Give it amp/speed/axis and the whole line TRAVELS on that cycle — a grind that ferries you across a gap
     | "pipe" // LEGACY straight halfpipe (old saves) — migration folds it into 'vertramp'
     | "vertramp" // THE VERT PART: one swept transition profile that covers quarter pipes, half pipes, bowl corners, whole pools and banked slide troughs. Straight along `len`/`yaw`, or drawn along `pts` (rail node convention, plus an optional 5th number = bank degrees). rise = transition radius, w = flat half-width, arc = degrees round the transition, deck = platform past the lip, closed = loop the spine, curve picks filleted corners or a spline, bank auto-leans into turns. Faces carry userData.vert unless `vert` is false.
@@ -543,7 +567,7 @@ export interface CustomComponent {
     | "crystal"; // one per level (the editor enforces it)
   p: [number, number, number];
   s?: [number, number, number];
-  collisionHeight?: number; // wall: optional collider height when visual height differs
+  collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
   slip?: boolean; // platform only: an icy/slick deck (friction cut, you can't stop short)
   len?: number;
   rise?: number;
@@ -555,7 +579,7 @@ export interface CustomComponent {
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
   closed?: boolean; // vertramp: loop the spine end to end — a rounded-rect path becomes a pool
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
-  curve?: "corner" | "spline"; // vertramp: filleted corners or Catmull-Rom; terrain: linear nodes or one shape-preserving cubic spine
+  curve?: "corner" | "spline"; // path primitive: filleted/linear corners or Catmull-Rom; terrain uses linear or spline
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
   shake?: number;
   kind?:
@@ -584,6 +608,7 @@ export interface CustomComponent {
   speed?: number;
   foe?: EnemyKind; // enemy variant (grunt/spiker/turtle/charger/hopper/floater/sentry/spinner)
   invisible?: boolean;
+  solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
   cycle?: number;
   phase?: number;
   amp?: number;
@@ -593,11 +618,10 @@ export interface CustomComponent {
   // multi-node path. Each node's optional 3rd number is a CORNER RADIUS
   // (world units, Figma-style) — the corner gets filleted in the visual,
   // the collision, the kill footprint, and the grind line alike. The
-  // optional 4th number is a HEIGHT OFFSET from p[1] — rails only (grind
-  // lines climb and dive node to node; polygons stay planar, their
-  // collision model depends on it). WOODPATH is the explicit exception: its
-  // third slot is reserved, fourth is height, and fifth is bank degrees; the
-  // editor hides corner-radius controls for those knots.
+  // optional 4th number is a HEIGHT OFFSET from p[1] — rails and wallpaths
+  // climb and dive node to node; polygons stay planar. WOODPATH reserves its
+  // third slot, uses fourth for height and fifth for bank degrees; the editor
+  // hides corner-radius controls for those knots.
   pts?: (
     | [number, number]
     | [number, number, number]
@@ -1393,6 +1417,305 @@ export function vertRampSpine(c: CustomComponent): VertRampNode[] {
   return out;
 }
 
+export interface BendyWallResult {
+  geometry: THREE.BufferGeometry;
+  collision: THREE.Box3[];
+  collisionSegments: number[];
+  spine: VertRampNode[];
+  length: number;
+  closed: boolean;
+}
+
+/**
+ * Build one continuous wall prism along the same editor path convention as a
+ * vert spine. Rendering is genuinely swept; collision is an overlapping chain
+ * of hidden AABBs because the shared player collision vocabulary is Box3.
+ */
+export function buildBendyWallGeometry(c: CustomComponent): BendyWallResult {
+  let inputPoints = c.pts?.map((point) => [...point] as typeof point);
+  if (c.closed === true && inputPoints && inputPoints.length > 2) {
+    const first = inputPoints[0];
+    const last = inputPoints[inputPoints.length - 1];
+    if (
+      Math.hypot(
+        last[0] - first[0],
+        last[1] - first[1],
+        0,
+      ) < 1e-5
+    )
+      inputPoints.pop();
+  }
+  if (inputPoints) {
+    const collapsed: typeof inputPoints = [];
+    for (const point of inputPoints) {
+      const previous = collapsed[collapsed.length - 1];
+      if (previous && Math.hypot(point[0] - previous[0], point[1] - previous[1]) < 1e-5)
+        collapsed[collapsed.length - 1] = point;
+      else collapsed.push(point);
+    }
+    inputPoints = collapsed;
+  }
+  const distinct = new Set(
+    (inputPoints ?? []).map(
+      (point) => `${point[0].toFixed(5)}:${point[1].toFixed(5)}`,
+    ),
+  ).size;
+  const closed = c.closed === true && (inputPoints?.length ?? 0) >= 3 && distinct >= 3;
+  // Editor path knots are already in component/world XZ like woodpath. `yaw`
+  // remains useful only for the sparse straight fallback.
+  const source = vertRampSpine({
+    ...c,
+    pts: inputPoints,
+    closed,
+    yaw: inputPoints && inputPoints.length >= 2 ? 0 : c.yaw,
+  });
+  const spine = source.filter(
+    (node, index) =>
+      index === 0 ||
+      Math.hypot(node.x - source[index - 1].x, node.z - source[index - 1].z) > 1e-5,
+  );
+  if (spine.length < 2) {
+    const x = c.p[0];
+    const y = c.p[1];
+    const z = c.p[2];
+    spine.splice(
+      0,
+      spine.length,
+      { x, y, z: z - 0.5 },
+      { x, y, z: z + 0.5 },
+    );
+  }
+  const thickness = Math.max(0.1, c.w ?? 1.2);
+  const visualHeight = Math.max(0.2, c.rise ?? c.s?.[1] ?? 5);
+  const collisionHeight = Math.max(0.2, c.collisionHeight ?? visualHeight);
+  const wrap = (index: number): number =>
+    closed
+      ? ((index % spine.length) + spine.length) % spine.length
+      : THREE.MathUtils.clamp(index, 0, spine.length - 1);
+  const segmentRight = (a: VertRampNode, b: VertRampNode): THREE.Vector2 => {
+    const tx = b.x - a.x;
+    const tz = b.z - a.z;
+    const length = Math.hypot(tx, tz) || 1;
+    return new THREE.Vector2(tz / length, -tx / length);
+  };
+  const rightAt = (index: number): THREE.Vector2 => {
+    if (!closed && index === 0) return segmentRight(spine[0], spine[1]);
+    if (!closed && index === spine.length - 1)
+      return segmentRight(spine[index - 1], spine[index]);
+    const before = segmentRight(spine[wrap(index - 1)], spine[index]);
+    const after = segmentRight(spine[index], spine[wrap(index + 1)]);
+    const miter = before.add(after);
+    if (miter.lengthSq() < 1e-8) return after;
+    miter.normalize();
+    // Bevel the join on the averaged normal. A mathematical miter reaches past
+    // the constant-radius path collision at sharp corners (metres for a thick
+    // enclosure); the bevel keeps rendered and playable reach identical.
+    return miter;
+  };
+  interface WallSection {
+    leftBottom: THREE.Vector3;
+    leftTop: THREE.Vector3;
+    rightBottom: THREE.Vector3;
+    rightTop: THREE.Vector3;
+    center: THREE.Vector3;
+    right: THREE.Vector2;
+    arc: number;
+  }
+  const sections: WallSection[] = [];
+  let arc = 0;
+  for (let index = 0; index < spine.length; index++) {
+    const node = spine[index];
+    const center = new THREE.Vector3(node.x, node.y, node.z);
+    if (index > 0) arc += center.distanceTo(sections[index - 1].center);
+    const right = rightAt(index);
+    const hx = right.x * thickness * 0.5;
+    const hz = right.y * thickness * 0.5;
+    sections.push({
+      leftBottom: new THREE.Vector3(node.x - hx, node.y, node.z - hz),
+      leftTop: new THREE.Vector3(node.x - hx, node.y + visualHeight, node.z - hz),
+      rightBottom: new THREE.Vector3(node.x + hx, node.y, node.z + hz),
+      rightTop: new THREE.Vector3(node.x + hx, node.y + visualHeight, node.z + hz),
+      center,
+      right,
+      arc,
+    });
+  }
+  const closeLength = closed
+    ? sections[sections.length - 1].center.distanceTo(sections[0].center)
+    : 0;
+  const totalLength = Math.max(0.001, arc + closeLength);
+  const renderSections = [...sections];
+  if (closed) {
+    const first = sections[0];
+    renderSections.push({
+      leftBottom: first.leftBottom.clone(),
+      leftTop: first.leftTop.clone(),
+      rightBottom: first.rightBottom.clone(),
+      rightTop: first.rightTop.clone(),
+      center: first.center.clone(),
+      right: first.right.clone(),
+      arc: totalLength,
+    });
+  }
+
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+  type SectionKey = "leftBottom" | "leftTop" | "rightBottom" | "rightTop";
+  const addStrip = (
+    first: SectionKey,
+    second: SectionKey,
+    desiredNormal: (index: number) => THREE.Vector3,
+    crossUv = 1,
+  ): void => {
+    const base = positions.length / 3;
+    for (const section of renderSections) {
+      for (const [v, key] of [
+        [0, first],
+        [1, second],
+      ] as const) {
+        const point = section[key];
+        positions.push(point.x, point.y, point.z);
+        uvs.push(section.arc / totalLength, v * crossUv);
+      }
+    }
+    const ab = new THREE.Vector3();
+    const ac = new THREE.Vector3();
+    for (let index = 0; index < renderSections.length - 1; index++) {
+      const a = base + index * 2;
+      const d = a + 1;
+      const b = a + 2;
+      const cc = a + 3;
+      const pa = new THREE.Vector3(
+        positions[a * 3],
+        positions[a * 3 + 1],
+        positions[a * 3 + 2],
+      );
+      const pb = new THREE.Vector3(
+        positions[b * 3],
+        positions[b * 3 + 1],
+        positions[b * 3 + 2],
+      );
+      const pc = new THREE.Vector3(
+        positions[cc * 3],
+        positions[cc * 3 + 1],
+        positions[cc * 3 + 2],
+      );
+      const normal = ab.subVectors(pb, pa).cross(ac.subVectors(pc, pa));
+      if (normal.dot(desiredNormal(index)) >= 0)
+        indices.push(a, b, cc, a, cc, d);
+      else indices.push(a, cc, b, a, d, cc);
+    }
+  };
+  addStrip("leftBottom", "leftTop", (index) => {
+    const right = renderSections[index].right;
+    return new THREE.Vector3(-right.x, 0, -right.y);
+  });
+  addStrip("rightBottom", "rightTop", (index) => {
+    const right = renderSections[index].right;
+    return new THREE.Vector3(right.x, 0, right.y);
+  });
+  const thicknessUv = thickness / visualHeight;
+  addStrip(
+    "leftTop",
+    "rightTop",
+    () => new THREE.Vector3(0, 1, 0),
+    thicknessUv,
+  );
+  addStrip(
+    "leftBottom",
+    "rightBottom",
+    () => new THREE.Vector3(0, -1, 0),
+    thicknessUv,
+  );
+
+  if (!closed) {
+    const addCap = (section: WallSection, reverse: boolean): void => {
+      const keys: SectionKey[] = reverse
+        ? ["rightBottom", "leftBottom", "leftTop", "rightTop"]
+        : ["leftBottom", "rightBottom", "rightTop", "leftTop"];
+      const base = positions.length / 3;
+      for (const [index, key] of keys.entries()) {
+        const point = section[key];
+        positions.push(point.x, point.y, point.z);
+        uvs.push(
+          index === 0 || index === 3 ? 0 : thickness / totalLength,
+          index < 2 ? 0 : 1,
+        );
+      }
+      indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
+    };
+    addCap(sections[0], true);
+    addCap(sections[sections.length - 1], false);
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+
+  const collision: THREE.Box3[] = [];
+  const collisionSegments: number[] = [];
+  if (c.solid !== false) {
+    const segmentCount = closed ? spine.length : spine.length - 1;
+    const TOP_INSET = 0.2;
+    for (let index = 0; index < segmentCount; index++) {
+      const sourceA = spine[index];
+      const sourceB = spine[(index + 1) % spine.length];
+      const fullDx = sourceB.x - sourceA.x;
+      const fullDz = sourceB.z - sourceA.z;
+      const horizontal = Math.hypot(fullDx, fullDz);
+      // A cardinal straight can remain one exact Box3 however long it is. Any
+      // diagonal/curved run is subdivided so its bounding rectangle never grows
+      // into a broad invisible blocker beside the rendered strip.
+      const verticalDelta = Math.abs(sourceB.y - sourceA.y);
+      const cardinal = Math.abs(fullDx) < 1e-5 || Math.abs(fullDz) < 1e-5;
+      const steps = cardinal && verticalDelta < 0.05
+        ? 1
+        : Math.max(1, Math.ceil(horizontal / 1.5), Math.ceil(verticalDelta / 0.6));
+      for (let step = 0; step < steps; step++) {
+        const t0 = step / steps;
+        const t1 = (step + 1) / steps;
+        const a = new THREE.Vector3(
+          THREE.MathUtils.lerp(sourceA.x, sourceB.x, t0),
+          THREE.MathUtils.lerp(sourceA.y, sourceB.y, t0),
+          THREE.MathUtils.lerp(sourceA.z, sourceB.z, t0),
+        );
+        const b = new THREE.Vector3(
+          THREE.MathUtils.lerp(sourceA.x, sourceB.x, t1),
+          THREE.MathUtils.lerp(sourceA.y, sourceB.y, t1),
+          THREE.MathUtils.lerp(sourceA.z, sourceB.z, t1),
+        );
+        const dx = b.x - a.x;
+        const dz = b.z - a.z;
+        const length = Math.hypot(dx, dz) || 1;
+        const nx = -dz / length;
+        const nz = dx / length;
+        const minY = Math.min(a.y, b.y);
+        const maxY = Math.max(
+          minY + 0.05,
+          Math.max(a.y, b.y) + collisionHeight - TOP_INSET,
+        );
+        collision.push(
+          new THREE.Box3().setFromCenterAndSize(
+            new THREE.Vector3((a.x + b.x) / 2, (minY + maxY) / 2, (a.z + b.z) / 2),
+            new THREE.Vector3(
+              Math.abs(dx) + Math.abs(nx) * thickness + 0.08,
+              maxY - minY,
+              Math.abs(dz) + Math.abs(nz) * thickness + 0.08,
+            ),
+          ),
+        );
+        collisionSegments.push(index);
+      }
+    }
+  }
+  return { geometry, collision, collisionSegments, spine, length: totalLength, closed };
+}
+
 // Fillet the corners of a polyline/polygon (Figma corner radius). Each
 // vertex is [x, z, radius?, y?]; a radiused corner is replaced by a
 // quadratic fillet trimmed to just under half of the shorter adjacent edge.
@@ -1641,7 +1964,7 @@ let USER_CACHE: LevelEntry[] | null = null;
 let LAST_USER_WRITE_OK = true;
 
 export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
-  "platform", "ramp", "wall", "rail", "pipe", "vertramp", "crumble",
+  "platform", "ramp", "wall", "wallpath", "rail", "pipe", "vertramp", "crumble",
   "pit", "crate", "metal", "rock", "camnode", "outline", "checkpoint",
   "enemy", "crusher", "mover", "torch", "phasepad", "stone", "pendulum",
   "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
@@ -1706,7 +2029,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible",
-    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "lk",
+    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
   ];
   let aggregateNodes = 0;
   let aggregateSamples = 0;
@@ -1771,7 +2094,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       return null;
     if (
       component.pts &&
-      ["woodpath", "terrain", "vertramp", "rail", "trickrail"].includes(
+      ["woodpath", "terrain", "vertramp", "wallpath", "rail", "trickrail"].includes(
         component.t,
       )
     ) {
@@ -1789,7 +2112,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
           ? Math.min(8192, Math.max(2, Math.ceil(length / 0.65)))
           : component.t === "terrain"
             ? Math.max(2, Math.ceil(length / 2))
-            : component.t === "vertramp"
+            : component.t === "vertramp" || component.t === "wallpath"
               ? Math.max(8, Math.ceil(length / 1.6))
               : component.pts.length;
       if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
@@ -1801,6 +2124,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
           8,
           Math.ceil(Math.abs(component.len ?? 30) / 1.6),
         );
+      else if (component.t === "wallpath") aggregateSamples += 2;
       else if (component.t === "rail" || component.t === "trickrail")
         aggregateSamples += 2;
       if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
@@ -1829,6 +2153,16 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
             (component.arc < 5 || component.arc > 90)) ||
           (component.deck ?? 0) < 0 ||
           (component.bank ?? 0) < 0
+        )
+          return null;
+        break;
+      case "wallpath":
+        if (
+          (component.pts !== undefined && component.pts.length < 2) ||
+          (!component.pts && (component.len ?? 30) < 1) ||
+          (component.w ?? 1.2) < 0.1 ||
+          (component.rise ?? 5) < 0.2 ||
+          (component.collisionHeight ?? component.rise ?? 5) < 0.2
         )
           return null;
         break;
@@ -2335,6 +2669,8 @@ export class Level {
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
+  private wallPathByBox = new Map<THREE.Box3, WallPathRuntime>();
+  private wallPathSegmentByBox = new Map<THREE.Box3, number>();
   killY = -48; // per-level death height (every builder authors its own)
   name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
@@ -3663,6 +3999,14 @@ export class Level {
     // capturing a hand-coded level keeps its foliage instead of stripping the
     // world back to grey boxes.
     for (const d of this.decorLog) C.push(JSON.parse(JSON.stringify(d)) as CustomComponent);
+    // Continuous bendy walls keep one component identity on their root mesh.
+    // Capture them before generic wall/ground fallbacks; their collision chain
+    // is deliberately untagged, so it can never explode back into many boxes.
+    this.root.traverse((object) => {
+      const wallPath = object.userData?.wallPathComp as CustomComponent | undefined;
+      if (wallPath)
+        C.push(JSON.parse(JSON.stringify(wallPath)) as CustomComponent);
+    });
     // visible walls (built by wall(); positions live off the meshes)
     this.root.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -4188,6 +4532,7 @@ export class Level {
     const geomPass = new Set([
       "terrain",
       "woodpath",
+      "wallpath",
       "platform",
       "ramp",
       "wall",
@@ -5011,6 +5356,8 @@ export class Level {
             this.buildReturnPortal(c);
           } else if (c.t === "woodpath") {
             this.buildWoodPath(c);
+          } else if (c.t === "wallpath") {
+            this.buildBendyWall(c);
           } else if (c.t === "decor") {
             this.decorProp(c);
           } else if (c.t === "terrain") {
@@ -8178,8 +8525,8 @@ export class Level {
     // ---- THE EARTH BANK ----------------------------------------------------
     // Solid ground either side of the path and under it, so a gap reads as a
     // cut THROUGH the jungle instead of a hole in the sky, and so the wall of
-    // trees has something to stand on. Chunked to follow the spine, then baked
-    // into ONE mesh: pure scenery, never a groundMesh, never a collider.
+    // trees has something to stand on. Each flank is one swept wallpath; only
+    // the under-path mass stays chunked. Pure scenery, never gameplay collision.
     const BANK_H = 14;
     const bank = (
       zNear: number,
@@ -8191,6 +8538,36 @@ export class Level {
       const depth = Math.abs(zNear - zFar);
       const n = Math.max(2, Math.round(depth / 7));
       const d = depth / n;
+      // The old shoulders were 7m decor boxes: even batched into one draw call,
+      // their inner face was a visible staircase wherever gx curved. Each side
+      // is now one visual-only wallpath with the exact same 34×14 cross-section.
+      for (const side of [-1, 1] as const) {
+        const anchorZ = zNear;
+        const anchorX = gx(anchorZ) + side * (inset + 17);
+        const anchorY = base + gy(anchorZ) + 0.35 - BANK_H;
+        const points: NonNullable<CustomComponent["pts"]> = [];
+        for (let index = 0; index <= n; index++) {
+          const z = zNear - (depth * index) / n;
+          points.push([
+            gx(z) + side * (inset + 17) - anchorX,
+            z - anchorZ,
+            0,
+            base + gy(z) + 0.35 - BANK_H - anchorY,
+          ]);
+        }
+        this.buildBendyWall({
+          t: "wallpath",
+          p: [anchorX, anchorY, anchorZ],
+          pts: points,
+          w: 34,
+          rise: BANK_H,
+          curve: "spline",
+          solid: false,
+          color: "#6b5232",
+          tex: "dirt",
+          nm: `${side < 0 ? "left" : "right"} earth bank ${zNear}..${zFar}`,
+        });
+      }
       for (let i = 0; i < n; i++) {
         const zm = zNear - d * (i + 0.5);
         const cy = base + gy(zm);
@@ -8208,13 +8585,6 @@ export class Level {
             BANK_H,
             d + 0.15,
           );
-        // shoulders: tops tucked up INSIDE the berm's own height so the seam
-        // between path and jungle floor never opens from a low camera.
-        // 34 wide, not 20 — the far treeline stands on the outer end of this,
-        // and a rank of trunks with nothing under it shows daylight below the
-        // trunks, which is the level's own edge in frame.
-        push(34, -(inset + 17), cy + 0.35);
-        push(34, inset + 17, cy + 0.35);
         // and the mass under the path, capped below its deepest bump
         if (underW > 0) push(underW, 0, cy - 0.62);
       }
@@ -8574,11 +8944,18 @@ export class Level {
     this.ramp("temple descent", -444, 11.5, -486, 0.4, 14, matRamp, 0, "stone");
     // ruin walls hold the whole temple in — 16 tall, so the terrace has a
     // parapet you cannot hop
-    for (let z = -300; z > -486; z -= 26) {
-      const d = Math.min(26, z + 486);
-      this.wall(-9, z - d / 2, 1.2, d, 0, 16);
-      this.wall(9, z - d / 2, 1.2, d, 0, 16);
-    }
+    for (const side of [-1, 1] as const)
+      this.buildBendyWall({
+        t: "wallpath",
+        p: [side * 9, 0, -300],
+        pts: [[0, 0], [0, -186]],
+        w: 1.2,
+        rise: 16,
+        collisionHeight: 16,
+        color: "#a79f7e",
+        tex: "stone",
+        nm: `${side < 0 ? "left" : "right"} ruin wall`,
+      });
     // Behind the walls the jungle floor stands HIGH — the temple is a cutting
     // through it, which is why the climb exists. Planting up there is also the
     // only way the canopy clears a 16-tall parapet; at ground level you look
@@ -8597,10 +8974,18 @@ export class Level {
     bank(-676, -718);
     // the landing is straight masonry, so it gets masonry sides rather than
     // berms — but it still has to be closed, same as everywhere else
-    for (let z = -676; z > -718; z -= 21) {
-      this.wall(-7.6, z - 10.5, 1.2, 21, 0, 6);
-      this.wall(7.6, z - 10.5, 1.2, 21, 0, 6);
-    }
+    for (const side of [-1, 1] as const)
+      this.buildBendyWall({
+        t: "wallpath",
+        p: [side * 7.6, 0, -676],
+        pts: [[0, 0], [0, -42]],
+        w: 1.2,
+        rise: 6,
+        collisionHeight: 6,
+        color: "#a79f7e",
+        tex: "stone",
+        nm: `${side < 0 ? "left" : "right"} finish wall`,
+      });
 
     // the ravine floor, far enough down to be scenery: killY catches you 1.2
     // above it, so it is something to look into and never something to land on
@@ -9190,6 +9575,199 @@ export class Level {
       },
       c.p[0],
     );
+  }
+
+  wallPathForBox(box: THREE.Box3): WallPathRuntime | null {
+    return this.wallPathByBox.get(box) ?? null;
+  }
+
+  wallPathSegmentForBox(box: THREE.Box3): number | undefined {
+    return this.wallPathSegmentByBox.get(box);
+  }
+
+  private makeWallPathRuntime(
+    spine: VertRampNode[],
+    halfThickness: number,
+    height: number,
+    closed: boolean,
+  ): WallPathRuntime {
+    const stations = [0];
+    for (let index = 1; index < spine.length; index++)
+      stations.push(
+        stations[index - 1] +
+          Math.hypot(
+            spine[index].x - spine[index - 1].x,
+            spine[index].z - spine[index - 1].z,
+          ),
+      );
+    if (closed && spine.length > 2)
+      stations.push(
+        stations[stations.length - 1] +
+          Math.hypot(
+            spine[0].x - spine[spine.length - 1].x,
+            spine[0].z - spine[spine.length - 1].z,
+          ),
+      );
+    return {
+      spine,
+      stations,
+      length: Math.max(0.001, stations[stations.length - 1]),
+      halfThickness,
+      height,
+      closed: closed && stations.length === spine.length + 1,
+    };
+  }
+
+  wallPathSample(path: WallPathRuntime, distance: number, side = 1): WallPathSample {
+    const s = path.closed
+      ? ((distance % path.length) + path.length) % path.length
+      : THREE.MathUtils.clamp(distance, 0, path.length);
+    let segment = 0;
+    while (
+      segment < path.stations.length - 2 &&
+      path.stations[segment + 1] < s
+    )
+      segment++;
+    const next = (segment + 1) % path.spine.length;
+    const a = path.spine[segment];
+    const b = path.spine[next];
+    const span = Math.max(1e-6, path.stations[segment + 1] - path.stations[segment]);
+    const t = THREE.MathUtils.clamp((s - path.stations[segment]) / span, 0, 1);
+    const dx = b.x - a.x;
+    const dz = b.z - a.z;
+    const length = Math.hypot(dx, dz) || 1;
+    const tx = dx / length;
+    const tz = dz / length;
+    return {
+      s,
+      x: THREE.MathUtils.lerp(a.x, b.x, t),
+      y: THREE.MathUtils.lerp(a.y, b.y, t),
+      z: THREE.MathUtils.lerp(a.z, b.z, t),
+      tx,
+      tz,
+      nx: -tz * side,
+      nz: tx * side,
+      distance: 0,
+      crossDistance: 0,
+      cap: false,
+    };
+  }
+
+  closestWallPath(
+    path: WallPathRuntime,
+    x: number,
+    z: number,
+    segmentHint?: number,
+  ): WallPathSample {
+    let best: WallPathSample | null = null;
+    let bestMetric = Infinity;
+    const count = path.closed ? path.spine.length : path.spine.length - 1;
+    const first = segmentHint === undefined ? 0 : THREE.MathUtils.clamp(segmentHint, 0, count - 1);
+    const end = segmentHint === undefined ? count : first + 1;
+    for (let segment = first; segment < end; segment++) {
+      const a = path.spine[segment];
+      const b = path.spine[(segment + 1) % path.spine.length];
+      const dx = b.x - a.x;
+      const dz = b.z - a.z;
+      const lengthSq = dx * dx + dz * dz;
+      if (lengthSq < 1e-10) continue;
+      const rawT = ((x - a.x) * dx + (z - a.z) * dz) / lengthSq;
+      const t = THREE.MathUtils.clamp(rawT, 0, 1);
+      const px = a.x + dx * t;
+      const pz = a.z + dz * t;
+      const ox = x - px;
+      const oz = z - pz;
+      const distance = Math.hypot(ox, oz);
+      if (distance >= bestMetric) continue;
+      const length = Math.sqrt(lengthSq);
+      const tx = dx / length;
+      const tz = dz / length;
+      let nx = -tz;
+      let nz = tx;
+      const startCap = !path.closed && segment === 0 && rawT < 0;
+      const endCap = !path.closed && segment === count - 1 && rawT > 1;
+      if (startCap) {
+        nx = -tx;
+        nz = -tz;
+      } else if (endCap) {
+        nx = tx;
+        nz = tz;
+      }
+      if (ox * nx + oz * nz < 0) {
+        nx = -nx;
+        nz = -nz;
+      }
+      const cap = startCap || endCap;
+      const contactDistance = cap ? Math.abs(ox * nx + oz * nz) : distance;
+      const crossDistance = cap
+        ? Math.abs(ox * -nz + oz * nx)
+        : 0;
+      best = {
+        s: path.stations[segment] + length * t,
+        x: px,
+        y: THREE.MathUtils.lerp(a.y, b.y, t),
+        z: pz,
+        tx,
+        tz,
+        nx,
+        nz,
+        distance: contactDistance,
+        crossDistance,
+        cap,
+      };
+      bestMetric = distance;
+    }
+    return best ?? this.wallPathSample(path, 0);
+  }
+
+  /**
+   * Editor-native continuous masonry/earth wall. Unlike `wall + pts` (a filled
+   * polygon), this is an ordered open centreline whose one mesh owns the whole
+   * silhouette and UV run. Hidden Box3 slabs remain the shared collision form.
+   */
+  private buildBendyWall(c: CustomComponent): THREE.Mesh {
+    const built = buildBendyWallGeometry(c);
+    const visualHeight = Math.max(0.2, c.rise ?? c.s?.[1] ?? 5);
+    const invisible = c.invisible === true;
+    const base = invisible
+      ? new THREE.MeshBasicMaterial({
+          color: 0x64d8ff,
+          transparent: true,
+          opacity: 0.22,
+          depthWrite: false,
+        })
+      : new THREE.MeshLambertMaterial({
+          color: c.color ? new THREE.Color(c.color) : 0x9a8a7a,
+        });
+    // Geometry UVs run 0..1 over the whole path/height. patterned() turns that
+    // into world-density repeats, so stone courses stay one size without a seam
+    // or restart at any knot.
+    const material =
+      invisible
+        ? base
+        : this.patterned(base, built.length, visualHeight, c.tex ?? "stone");
+    const mesh = new THREE.Mesh(built.geometry, material);
+    mesh.name = c.nm ?? "bendy wall";
+    mesh.userData.wallPathComp = JSON.parse(JSON.stringify(c)) as CustomComponent;
+    mesh.userData.wallPathCollision = built.collision.length;
+    mesh.userData.wallPathLength = built.length;
+    if (invisible) {
+      mesh.visible = false;
+      mesh.userData.editorGhost = true;
+    }
+    this.root.add(mesh);
+    const runtime = this.makeWallPathRuntime(
+      built.spine,
+      Math.max(0.05, c.w ?? 1.2) / 2,
+      Math.max(0.2, c.collisionHeight ?? c.rise ?? c.s?.[1] ?? 5),
+      built.closed,
+    );
+    for (const [index, box] of built.collision.entries()) {
+      this.walls.push(box);
+      this.wallPathByBox.set(box, runtime);
+      this.wallPathSegmentByBox.set(box, built.collisionSegments[index]);
+    }
+    return mesh;
   }
 
   /**
@@ -10314,6 +10892,7 @@ export class Level {
             z,
           );
         };
+        const pathBoxes: THREE.Box3[] = [];
         const addCollisionSlab = (za: number, zb: number): void => {
           const a = collisionCenter(za);
           const b = collisionCenter(zb);
@@ -10327,22 +10906,33 @@ export class Level {
             addCollisionSlab(middle, zb);
             return;
           }
-          this.walls.push(
-            new THREE.Box3().setFromCenterAndSize(
+          const box = new THREE.Box3().setFromCenterAndSize(
               a.clone().add(b).multiplyScalar(0.5),
               new THREE.Vector3(
                 0.9 + Math.abs(b.x - a.x),
                 1.5 + Math.abs(b.y - a.y),
                 Math.abs(b.z - a.z) + 0.15,
               ),
-            ),
-          );
+            );
+          this.walls.push(box);
+          pathBoxes.push(box);
         };
         for (let i = 0; i < collisionCount; i++) {
           const za = zNear - (depth * i) / collisionCount;
           const zb = zNear - (depth * (i + 1)) / collisionCount;
           addCollisionSlab(za, zb);
         }
+        const bermPath = this.makeWallPathRuntime(
+          sections.map((section) => ({
+            x: section.center.x,
+            y: section.innerBottom.y,
+            z: section.center.z,
+          })),
+          0.45,
+          1.5,
+          false,
+        );
+        for (const box of pathBoxes) this.wallPathByBox.set(box, bermPath);
 
         const first = sections[0];
         const last = sections[sections.length - 1];
