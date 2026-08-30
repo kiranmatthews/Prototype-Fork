@@ -9151,7 +9151,11 @@ export class Player {
    * One pass for every fruit in flight, over the finished frame, with the
    * depth buffer cleared so nothing in the level can occlude it.
    */
-  drawFlyingFruit(renderer: THREE.WebGLRenderer, half?: 'top' | 'bottom'): void {
+  drawFlyingFruit(
+    renderer: THREE.WebGLRenderer,
+    half?: 'top' | 'bottom',
+    targetSize?: { width: number; height: number },
+  ): void {
     const layer = this.fruitLayer;
     const cam = this.fruitLayerCam;
     if (!layer || !cam) return;
@@ -9183,7 +9187,9 @@ export class Player {
     // themselves — the same trap ui.drawIcons documents. Convert from CSS px,
     // and put back whatever the caller had set.
     if (half) {
-      const size = renderer.getSize(FRUIT_SIZE);
+      const size = targetSize
+        ? FRUIT_SIZE.set(targetSize.width, targetSize.height)
+        : renderer.getSize(FRUIT_SIZE);
       const k = size.y / (canvas.clientHeight || 1);
       renderer.getViewport(FRUIT_PREV);
       renderer.setScissorTest(true);

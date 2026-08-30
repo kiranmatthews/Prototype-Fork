@@ -17,6 +17,62 @@ const smoothstep = (a, b, value) => {
   return t * t * (3 - 2 * t);
 };
 
+const oceanPassSizes = (
+  nativeWidth,
+  nativeHeight,
+  fixedSize,
+  reflectionScale,
+  prepassScale,
+) => {
+  const width = fixedSize?.width ?? nativeWidth;
+  const height = fixedSize?.height ?? nativeHeight;
+  return {
+    scene: [width, height],
+    reflection: [
+      Math.max(1, Math.round(width * reflectionScale)),
+      Math.max(1, Math.round(height * reflectionScale)),
+    ],
+    prepass: [
+      Math.max(1, Math.round(width * prepassScale)),
+      Math.max(1, Math.round(height * prepassScale)),
+    ],
+  };
+};
+
+// Native/no-override behavior remains tied to physical drawing-buffer pixels.
+assert.deepEqual(oceanPassSizes(3840, 2160, null, 0.3, 1), {
+  scene: [3840, 2160],
+  reflection: [1152, 648],
+  prepass: [3840, 2160],
+});
+
+// A fixed pre-CRT scene prevents a high-resolution final display buffer from
+// inflating reflection, opaque-color, and depth passes.
+const fixed720 = { width: 1280, height: 720 };
+assert.deepEqual(oceanPassSizes(3840, 2160, fixed720, 0.3, 1), {
+  scene: [1280, 720],
+  reflection: [384, 216],
+  prepass: [1280, 720],
+});
+assert.deepEqual(oceanPassSizes(5120, 2880, fixed720, 0.3, 1), {
+  scene: [1280, 720],
+  reflection: [384, 216],
+  prepass: [1280, 720],
+});
+assert.deepEqual(oceanPassSizes(5120, 2880, fixed720, 0.15, 0.5), {
+  scene: [1280, 720],
+  reflection: [192, 108],
+  prepass: [640, 360],
+});
+
+// Clearing the fixed size resumes the latest native dimensions, while a base
+// width can derive its height from any presentation aspect ratio.
+assert.deepEqual(oceanPassSizes(5120, 2880, null, 0.3, 1).scene, [5120, 2880]);
+assert.deepEqual(
+  oceanPassSizes(5120, 2880, { width: 1280, height: Math.round(1280 / (21 / 9)) }, 0.3, 1).scene,
+  [1280, 549],
+);
+
 // MatrixRex DepthFadeWorldPosition with WorldSpaceDepth=1.
 const depth01 = (metres) => clamp01(Math.exp(-metres / 0.3));
 close(depth01(0), 1);
@@ -66,6 +122,15 @@ for (const literal of [
   "this.group.add(this.horizon, this.ribbon)",
   'sourceCoordinates?: "unity" | "three"',
   'const exactUnitySource = opts.sourceCoordinates === "unity"',
+  "setPreCrtRenderSize(width: number, height: number): void",
+  "clearPreCrtRenderSize(): void",
+  "const width = this.preCrtWidth ?? this.nativeBufferWidth",
+  "const height = this.preCrtHeight ?? this.nativeBufferHeight",
+  "this.stats.nativeDrawingBufferWidth = this.nativeBufferWidth",
+  "this.stats.preCrtSizeOverride = this.preCrtWidth !== null",
+  "private targetsMatchPassSize(): boolean",
+  "(this.debug.reflection || this.debug.prepass)",
+  "uniforms.uViewport.value.set(",
 ]) {
   assert.ok(shader.includes(literal), `literal MatrixRex path missing: ${literal}`);
 }
@@ -82,4 +147,5 @@ for (const approximation of [
   assert.ok(!shader.includes(approximation), `retired approximation remains: ${approximation}`);
 }
 
-console.log("Validated literal MatrixRex depth, normals, caustics, intersection, reflection, specular, alpha and single-ribbon contracts.");
+console.log("Validated literal MatrixRex shading, fixed pre-CRT ocean sizing, native fallback, and single-ribbon contracts.");
+await import("./test-ocean-sizing.mjs");

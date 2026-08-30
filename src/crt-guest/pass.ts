@@ -38,8 +38,13 @@ export interface CrtGuestSettingsLike {
 export interface CrtGuestPassOptions {
   luts?: CrtGuestLuts | null;
   disposeLutsOnDispose?: boolean;
+  /** Legacy shorthand: initializes both source and output dimensions. */
   width?: number;
   height?: number;
+  sourceWidth?: number;
+  sourceHeight?: number;
+  outputWidth?: number;
+  outputHeight?: number;
   forceDisabled?: boolean;
   /** Honor `?nocrt` and `?lite`. Defaults to true in a browser. */
   respectDisableQuery?: boolean;
@@ -80,8 +85,13 @@ export interface CrtGuestPassDiagnostics {
   runtimeFailure: string | null;
   variant: CrtGuestVariant;
   quality: CrtGuestQuality;
+  /** Legacy aliases for outputWidth/outputHeight. */
   width: number;
   height: number;
+  sourceWidth: number;
+  sourceHeight: number;
+  outputWidth: number;
+  outputHeight: number;
   kernelWidth: number;
   kernelHeight: number;
   frameIndex: number;
@@ -226,8 +236,13 @@ export class CrtGuestPass extends Pass {
   private runtimeFailure: string | null = null;
   private disposed = false;
 
+  /** Pre-CRT source dimensions in physical pixels. */
   private width: number;
   private height: number;
+  /** Final CRT/display dimensions in physical pixels. */
+  private outputWidth: number;
+  private outputHeight: number;
+  private readonly outputSizeScratch = new THREE.Vector2();
   private variant: CrtGuestVariant;
   private quality: CrtGuestQuality;
   private historyPing = false;
@@ -255,8 +270,12 @@ export class CrtGuestPass extends Pass {
     this.settings = settings;
     this.luts = options.luts ?? null;
     this.disposeLutsOnDispose = options.disposeLutsOnDispose ?? false;
-    this.width = validDimension(options.width ?? 1);
-    this.height = validDimension(options.height ?? 1);
+    const legacyWidth = validDimension(options.width ?? 1);
+    const legacyHeight = validDimension(options.height ?? 1);
+    this.width = validDimension(options.sourceWidth ?? legacyWidth);
+    this.height = validDimension(options.sourceHeight ?? legacyHeight);
+    this.outputWidth = validDimension(options.outputWidth ?? legacyWidth);
+    this.outputHeight = validDimension(options.outputHeight ?? legacyHeight);
     this.variant = validVariant(settings.variant);
     this.quality = validQuality(settings.quality);
     this.lastHistoryRevision = finiteRevision(settings.historyRevision);
@@ -318,8 +337,12 @@ export class CrtGuestPass extends Pass {
       runtimeFailure: this.runtimeFailure,
       variant: this.variant,
       quality: this.quality,
-      width: this.width,
-      height: this.height,
+      width: this.outputWidth,
+      height: this.outputHeight,
+      sourceWidth: this.width,
+      sourceHeight: this.height,
+      outputWidth: this.outputWidth,
+      outputHeight: this.outputHeight,
       kernelWidth,
       kernelHeight,
       frameIndex: this.frameIndex,
@@ -402,13 +425,55 @@ export class CrtGuestPass extends Pass {
   }
 
   override setSize(width: number, height: number): void {
+    this.setResolution(width, height, width, height);
+  }
+
+  setInputSize(width: number, height: number): void {
     const nextWidth = validDimension(width);
     const nextHeight = validDimension(height);
     if (nextWidth === this.width && nextHeight === this.height) return;
     this.width = nextWidth;
     this.height = nextHeight;
     if (this.targets) this.resizeTargets(this.targets);
-    this.resetHistory("physical size changed");
+    this.resetHistory("source size changed");
+  }
+
+  setOutputSize(width: number, height: number): void {
+    const nextWidth = validDimension(width);
+    const nextHeight = validDimension(height);
+    if (
+      nextWidth === this.outputWidth &&
+      nextHeight === this.outputHeight
+    ) {
+      return;
+    }
+    this.outputWidth = nextWidth;
+    this.outputHeight = nextHeight;
+    if (this.targets) this.resizeTargets(this.targets);
+  }
+
+  setResolution(
+    sourceWidth: number,
+    sourceHeight: number,
+    outputWidth: number,
+    outputHeight: number,
+  ): void {
+    const nextSourceWidth = validDimension(sourceWidth);
+    const nextSourceHeight = validDimension(sourceHeight);
+    const nextOutputWidth = validDimension(outputWidth);
+    const nextOutputHeight = validDimension(outputHeight);
+    const sourceChanged =
+      nextSourceWidth !== this.width || nextSourceHeight !== this.height;
+    const outputChanged =
+      nextOutputWidth !== this.outputWidth ||
+      nextOutputHeight !== this.outputHeight;
+    if (!sourceChanged && !outputChanged) return;
+    this.width = nextSourceWidth;
+    this.height = nextSourceHeight;
+    this.outputWidth = nextOutputWidth;
+    this.outputHeight = nextOutputHeight;
+    if (this.targets) this.resizeTargets(this.targets);
+    if (sourceChanged) this.resetHistory("source size changed");
   }
 
   getDebugTexture(name: CrtGuestDebugTarget): THREE.Texture | null {
@@ -464,7 +529,25 @@ export class CrtGuestPass extends Pass {
       this.recordFailure("rendered with a different WebGLRenderer");
     }
     if (readBuffer.width !== this.width || readBuffer.height !== this.height) {
-      this.setSize(readBuffer.width, readBuffer.height);
+      this.setInputSize(readBuffer.width, readBuffer.height);
+    }
+    if (!this.renderToScreen) {
+      if (
+        writeBuffer.width !== this.outputWidth ||
+        writeBuffer.height !== this.outputHeight
+      ) {
+        this.setOutputSize(writeBuffer.width, writeBuffer.height);
+      }
+    } else {
+      const drawingBufferSize = renderer.getDrawingBufferSize(
+        this.outputSizeScratch,
+      );
+      if (
+        drawingBufferSize.x !== this.outputWidth ||
+        drawingBufferSize.y !== this.outputHeight
+      ) {
+        this.setOutputSize(drawingBufferSize.x, drawingBufferSize.y);
+      }
     }
     this.syncSettingsState();
 
@@ -665,7 +748,7 @@ export class CrtGuestPass extends Pass {
         materials.variant5,
         this.width,
         this.height,
-        this.width,
+        this.outputWidth,
         this.height,
         this.width,
         this.height,
@@ -772,8 +855,8 @@ export class CrtGuestPass extends Pass {
       materials.main,
       mainSource.width,
       mainSource.height,
-      this.width,
-      this.height,
+      this.outputWidth,
+      this.outputHeight,
       this.width,
       this.height,
       this.frameIndex,
@@ -792,10 +875,10 @@ export class CrtGuestPass extends Pass {
 
     configureStage(
       materials.deconvergence,
-      this.width,
-      this.height,
-      this.width,
-      this.height,
+      this.outputWidth,
+      this.outputHeight,
+      this.outputWidth,
+      this.outputHeight,
       this.width,
       this.height,
       this.frameIndex,
@@ -917,13 +1000,17 @@ export class CrtGuestPass extends Pass {
       targets.stock,
       targets.pre,
       targets.linear,
-      targets.main,
-      targets.deconvergence,
       ...targets.afterglow,
       ...targets.average,
     ]) {
       resizeTarget(target, this.width, this.height);
     }
+    resizeTarget(targets.main, this.outputWidth, this.outputHeight);
+    resizeTarget(
+      targets.deconvergence,
+      this.outputWidth,
+      this.outputHeight,
+    );
     configurePreMipmaps(targets.pre, this.variant === "advanced");
     resizeTarget(targets.glowHorizontal, kernelWidth, this.height);
     resizeTarget(targets.glow, kernelWidth, kernelHeight);
@@ -937,13 +1024,17 @@ export class CrtGuestPass extends Pass {
     if (this.variant === "hd") {
       if (!targets.reconstruction) {
         targets.reconstruction = makeTarget(
-          this.width,
+          this.outputWidth,
           this.height,
           THREE.HalfFloatType,
           "CRTGuest.Reconstruction.RGBA16F",
         );
       } else {
-        resizeTarget(targets.reconstruction, this.width, this.height);
+        resizeTarget(
+          targets.reconstruction,
+          this.outputWidth,
+          this.height,
+        );
       }
     } else if (targets.reconstruction) {
       targets.reconstruction.dispose();
@@ -1058,6 +1149,8 @@ export class CrtGuestPass extends Pass {
     const largest = Math.max(
       this.width,
       this.height,
+      this.outputWidth,
+      this.outputHeight,
       kernelWidth,
       kernelHeight,
     );

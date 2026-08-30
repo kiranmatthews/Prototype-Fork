@@ -208,6 +208,16 @@ export interface OceanStats {
   verts: number;
   tris: number;
   shoreSamples: number;
+  /** Effective scene/pre-CRT pixel width used by all ocean passes. */
+  sceneWidth: number;
+  /** Effective scene/pre-CRT pixel height used by all ocean passes. */
+  sceneHeight: number;
+  /** Latest physical drawing-buffer width reported by the renderer. */
+  nativeDrawingBufferWidth: number;
+  /** Latest physical drawing-buffer height reported by the renderer. */
+  nativeDrawingBufferHeight: number;
+  /** True while sceneWidth/sceneHeight come from setPreCrtRenderSize. */
+  preCrtSizeOverride: boolean;
   reflectionWidth: number;
   reflectionHeight: number;
   prepassWidth: number;
@@ -215,6 +225,11 @@ export interface OceanStats {
   reflectionRenders: number;
   prepassRenders: number;
   quality: OceanQuality;
+}
+
+export interface OceanRenderSize {
+  width: number;
+  height: number;
 }
 
 interface DenseShoreSample extends ShoreSample {
@@ -1071,9 +1086,13 @@ export class UnityOcean {
   private reflectedSource: THREE.Camera | null = null;
   private reflectionRenderTarget: THREE.WebGLRenderTarget | null = null;
   private prepassRenderTarget: THREE.WebGLRenderTarget | null = null;
+  private nativeBufferWidth = 1;
+  private nativeBufferHeight = 1;
+  private nativePixelRatio = 1;
   private bufferWidth = 1;
   private bufferHeight = 1;
-  private bufferPixelRatio = 1;
+  private preCrtWidth: number | null = null;
+  private preCrtHeight: number | null = null;
   private time = 0;
   private disposed = false;
   private currentSkyUrl = "";
@@ -1282,6 +1301,11 @@ export class UnityOcean {
       verts: geometries.reduce((sum, geometry) => sum + geometry.getAttribute("position").count, 0),
       tris: geometries.reduce((sum, geometry) => sum + (geometry.getIndex()?.count ?? 0) / 3, 0),
       shoreSamples: this.shore.length,
+      sceneWidth: 1,
+      sceneHeight: 1,
+      nativeDrawingBufferWidth: 1,
+      nativeDrawingBufferHeight: 1,
+      preCrtSizeOverride: false,
       reflectionWidth: 0,
       reflectionHeight: 0,
       prepassWidth: 0,
@@ -1474,24 +1498,107 @@ export class UnityOcean {
   }
 
   resize(width: number, height: number, pixelRatio = 1): void {
-    this.bufferWidth = Math.max(1, Math.floor(width * pixelRatio));
-    this.bufferHeight = Math.max(1, Math.floor(height * pixelRatio));
-    this.bufferPixelRatio = Math.max(1, pixelRatio);
-    this.allocateTargets();
+    if (this.disposed) return;
+    const ratio = finitePixelScale(pixelRatio);
+    this.setNativeBufferSize(width * ratio, height * ratio, ratio);
+    this.syncPassSize();
   }
 
   resizeFromRenderer(renderer: THREE.WebGLRenderer): void {
+    if (this.disposed) return;
     const size = renderer.getDrawingBufferSize(new THREE.Vector2());
-    this.bufferWidth = Math.max(1, Math.floor(size.x));
-    this.bufferHeight = Math.max(1, Math.floor(size.y));
-    this.bufferPixelRatio = Math.max(1, renderer.getPixelRatio());
-    this.allocateTargets();
+    this.setNativeBufferSize(size.x, size.y, renderer.getPixelRatio());
+    this.syncPassSize();
   }
 
-  private allocateTargets(): void {
+  /**
+   * Pin every ocean render pass to the scene size feeding CRT/post-processing.
+   * Width and height are physical pixels, not CSS pixels, and are deliberately
+   * independent of the renderer's final high-DPR drawing buffer.
+   */
+  setPreCrtRenderSize(width: number, height: number): void {
     if (this.disposed) return;
-    // Unity scales from the actual camera pixel target. Drawing-buffer pixels
-    // are the browser equivalent; DPR must not be divided back out.
+    const nextWidth = finitePixelDimension(width, "width");
+    const nextHeight = finitePixelDimension(height, "height");
+    this.preCrtWidth = nextWidth;
+    this.preCrtHeight = nextHeight;
+    this.syncPassSize();
+  }
+
+  /** Resume native drawing-buffer sizing after setPreCrtRenderSize. */
+  clearPreCrtRenderSize(): void {
+    if (this.disposed) return;
+    this.preCrtWidth = null;
+    this.preCrtHeight = null;
+    this.syncPassSize();
+  }
+
+  /** The configured fixed scene size, or null while native sizing is active. */
+  get preCrtRenderSize(): OceanRenderSize | null {
+    if (this.preCrtWidth === null || this.preCrtHeight === null) return null;
+    return { width: this.preCrtWidth, height: this.preCrtHeight };
+  }
+
+  private setNativeBufferSize(
+    width: number,
+    height: number,
+    pixelRatio: number,
+  ): void {
+    const nextWidth = finitePixelDimension(width, "width");
+    const nextHeight = finitePixelDimension(height, "height");
+    const nextPixelRatio = finitePixelRatio(pixelRatio);
+    this.nativeBufferWidth = nextWidth;
+    this.nativeBufferHeight = nextHeight;
+    this.nativePixelRatio = nextPixelRatio;
+    this.stats.nativeDrawingBufferWidth = this.nativeBufferWidth;
+    this.stats.nativeDrawingBufferHeight = this.nativeBufferHeight;
+  }
+
+  private syncPassSize(): void {
+    if (this.disposed) return;
+    const width = this.preCrtWidth ?? this.nativeBufferWidth;
+    const height = this.preCrtHeight ?? this.nativeBufferHeight;
+    this.bufferWidth = width;
+    this.bufferHeight = height;
+    this.stats.sceneWidth = width;
+    this.stats.sceneHeight = height;
+    this.stats.preCrtSizeOverride = this.preCrtWidth !== null;
+    (this.oceanMaterial.uniforms.uViewport.value as THREE.Vector2).set(
+      width,
+      height,
+    );
+
+    // Disabled ocean passes stay allocation-free. If a debug/presentation
+    // caller re-enables them after a resize, the concrete target dimensions
+    // below detect the stale allocation even though the effective size is
+    // already current.
+    if (
+      (this.debug.reflection || this.debug.prepass)
+      && !this.targetsMatchPassSize()
+    ) {
+      this.allocateTargets();
+    }
+  }
+
+  private targetsMatchPassSize(): boolean {
+    const {
+      reflectionWidth,
+      reflectionHeight,
+      prepassWidth,
+      prepassHeight,
+    } = this.passTargetDimensions();
+    return this.reflectionRenderTarget?.width === reflectionWidth
+      && this.reflectionRenderTarget.height === reflectionHeight
+      && this.prepassRenderTarget?.width === prepassWidth
+      && this.prepassRenderTarget.height === prepassHeight;
+  }
+
+  private passTargetDimensions(): {
+    reflectionWidth: number;
+    reflectionHeight: number;
+    prepassWidth: number;
+    prepassHeight: number;
+  } {
     const reflectionWidth = Math.max(
       1,
       Math.round(this.bufferWidth * this.reflectionScale),
@@ -1500,6 +1607,33 @@ export class UnityOcean {
       1,
       Math.round(this.bufferHeight * this.reflectionScale),
     );
+    const prepassWidth = Math.max(
+      1,
+      Math.round(this.bufferWidth * this.prepassScale),
+    );
+    const prepassHeight = Math.max(
+      1,
+      Math.round(this.bufferHeight * this.prepassScale),
+    );
+    return {
+      reflectionWidth,
+      reflectionHeight,
+      prepassWidth,
+      prepassHeight,
+    };
+  }
+
+  private allocateTargets(): void {
+    if (this.disposed) return;
+    // Unity scales from the actual camera pixel target. bufferWidth/Height are
+    // native drawing-buffer pixels by default, or the explicitly supplied
+    // scene/pre-CRT pixels while fixed-resolution presentation is active.
+    const {
+      reflectionWidth,
+      reflectionHeight,
+      prepassWidth,
+      prepassHeight,
+    } = this.passTargetDimensions();
     if (!this.reflectionRenderTarget) {
       this.reflectionRenderTarget = new THREE.WebGLRenderTarget(reflectionWidth, reflectionHeight, {
         type: THREE.HalfFloatType,
@@ -1514,14 +1648,6 @@ export class UnityOcean {
     } else {
       this.reflectionRenderTarget.setSize(reflectionWidth, reflectionHeight);
     }
-    const prepassWidth = Math.max(
-      1,
-      Math.round(this.bufferWidth * this.prepassScale),
-    );
-    const prepassHeight = Math.max(
-      1,
-      Math.round(this.bufferHeight * this.prepassScale),
-    );
     if (!this.prepassRenderTarget) {
       this.prepassRenderTarget = new THREE.WebGLRenderTarget(prepassWidth, prepassHeight, {
         type: THREE.HalfFloatType,
@@ -1557,17 +1683,17 @@ export class UnityOcean {
 
   private ensureSize(renderer: THREE.WebGLRenderer): void {
     const size = renderer.getDrawingBufferSize(new THREE.Vector2());
-    const width = Math.max(1, Math.floor(size.x));
-    const height = Math.max(1, Math.floor(size.y));
-    const pixelRatio = Math.max(1, renderer.getPixelRatio());
-    if (width !== this.bufferWidth || height !== this.bufferHeight
-      || pixelRatio !== this.bufferPixelRatio
-      || !this.reflectionRenderTarget || !this.prepassRenderTarget) {
-      this.bufferWidth = width;
-      this.bufferHeight = height;
-      this.bufferPixelRatio = pixelRatio;
-      this.allocateTargets();
+    const width = finitePixelDimension(size.x, "width");
+    const height = finitePixelDimension(size.y, "height");
+    const pixelRatio = finitePixelRatio(renderer.getPixelRatio());
+    if (
+      width !== this.nativeBufferWidth
+      || height !== this.nativeBufferHeight
+      || pixelRatio !== this.nativePixelRatio
+    ) {
+      this.setNativeBufferSize(width, height, pixelRatio);
     }
+    this.syncPassSize();
   }
 
   private makeReflectionCamera(source: THREE.Camera): THREE.PerspectiveCamera | THREE.OrthographicCamera | null {
@@ -1798,6 +1924,10 @@ export class UnityOcean {
     this.oceanMaterial.uniforms.uSceneDepth.value = this.fallbackDepth;
     this.oceanMaterial.uniforms.uHasReflection.value = 0;
     this.oceanMaterial.uniforms.uHasPrepass.value = 0;
+    this.stats.reflectionWidth = 0;
+    this.stats.reflectionHeight = 0;
+    this.stats.prepassWidth = 0;
+    this.stats.prepassHeight = 0;
   }
 
   dispose(): void {
@@ -1819,4 +1949,22 @@ export { UnityOcean as CoastWater };
 function detectQuality(): OceanQuality {
   if (typeof window === "undefined") return "full";
   return new URLSearchParams(window.location.search).has("lite") ? "lite" : "full";
+}
+
+function finitePixelDimension(value: number, label: string): number {
+  if (!Number.isFinite(value)) {
+    throw new RangeError(`Ocean render ${label} must be finite.`);
+  }
+  return Math.max(1, Math.floor(value));
+}
+
+function finitePixelRatio(value: number): number {
+  return Math.max(1, finitePixelScale(value));
+}
+
+function finitePixelScale(value: number): number {
+  if (!Number.isFinite(value)) {
+    throw new RangeError("Ocean render pixel ratio must be finite.");
+  }
+  return value;
 }

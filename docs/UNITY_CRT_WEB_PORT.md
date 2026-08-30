@@ -62,6 +62,10 @@ histories. Histories clear after allocation, physical resize, enable/variant or
 preset changes. Advanced generates the required pre-pass mip chain. Linear,
 glow, bloom, reconstruction, main and deconvergence targets use RGBA16F.
 
+The source and output dimensions can now be decoupled. The shipped presentation
+path feeds CRT a 720p world/water frame and lets its reconstruction/main stages
+produce a selectable 1×/2×/3× result. See `FIXED_720P_RENDER_PIPELINE.md`.
+
 Kernel quality changes only intermediate dimensions:
 
 | Quality | Kernel size |
@@ -104,7 +108,9 @@ surface that exercises the real pass and tuning panel without gameplay state.
 - `?crtdiag` exposes live machine-readable pass diagnostics in the game page.
 - `?lite` keeps the existing direct low-cost render path.
 - `?nosmaa` isolates CRT without SMAA.
-- `?nopost` disables the Beachfront Unity bloom/flare/grading path, not CRT.
+- `?nopost` disables the Beachfront Unity neutral grading/dither path, not CRT.
+  Coast-specific bloom and lens flare have been removed; CRT Guest retains its
+  own source-authored glow/bloom stages.
 - WebGL2, `EXT_color_buffer_float`, linear float sampling and a complete
   RGBA16F framebuffer are required. Missing support fails closed to an
   unprocessed copy/direct frame and records the reason in diagnostics.

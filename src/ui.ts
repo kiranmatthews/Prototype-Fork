@@ -948,7 +948,11 @@ export class UI {
    * Spin and draw the 3D HUD icons. Called from the frame loop after the world
    * is drawn, with the renderer the game already owns.
    */
-  drawIcons(renderer: THREE.WebGLRenderer, dt: number): void {
+  drawIcons(
+    renderer: THREE.WebGLRenderer,
+    dt: number,
+    targetSize?: { width: number; height: number },
+  ): void {
     this.buildIcons();
     const scene = this.iconScene;
     const cam = this.iconCam;
@@ -965,7 +969,9 @@ export class UI {
     // else, which on a phone put this pass off-screen entirely AND left a
     // double-size viewport behind that zoomed the next frame's world.
     // So: CSS px -> renderer units, and restore whatever was set before.
-    const size = renderer.getSize(ICON_SIZE);
+    const size = targetSize
+      ? ICON_SIZE.set(targetSize.width, targetSize.height)
+      : renderer.getSize(ICON_SIZE);
     const kx = size.x / cw;
     const ky = size.y / ch;
 

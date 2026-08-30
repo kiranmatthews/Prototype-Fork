@@ -38,9 +38,21 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls } from "./swirls";
 import { fieldSwirls } from "./swirlfield";
-import { CoastPostRenderer } from "./coastpost";
+import {
+  CoastPostRenderer,
+  type CoastPostPreCrtOverlay,
+} from "./coastpost";
 import { crtGuestSettings } from "./crt-guest/settings";
 import { createCrtGuestTuningPanel } from "./crt-guest/panel";
+import {
+  renderQualitySettings,
+  type RenderQualitySizes,
+} from "./render-quality/settings";
+import {
+  createRenderQualityPanel,
+  type RenderQualityPanel,
+} from "./render-quality/panel";
+import { PresentationFrameLimiter } from "./render-quality/frameLimiter";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -53,7 +65,11 @@ const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 // panel that is 2x the CSS grid, and rendering below it was the single biggest
 // thing making the game look cheap. Capped at 2: past that the pixels are far
 // too small to see and it is pure fill-rate.
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setPixelRatio(
+  renderQualitySettings.enabled && !LITE_RENDER
+    ? 1
+    : Math.min(window.devicePixelRatio || 1, 2),
+);
 // No tone curve. Every colour in this game was authored by eye against a raw
 // output, and ACES/AgX/Neutral all pull the saturation out of it — the sky
 // goes milky and the greens go grey. Shot side by side, untouched wins.
@@ -844,9 +860,13 @@ let cam2RenderSnapVersion = -1;
 let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
 const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 let coastPost: CoastPostRenderer | null = null;
+let renderQualityPanel: RenderQualityPanel | null = null;
+let renderQualitySizes: RenderQualitySizes =
+  renderQualitySettings.computeSizes(window.innerWidth, window.innerHeight);
 function configureCoastPost(enabled: boolean): void {
   if (coastPost) {
     coastPost.setEnabled(enabled);
+    syncPostResolution();
     return;
   }
   // The composer is now shared: the coast owns Unity bloom/lens grading,
@@ -857,6 +877,11 @@ function configureCoastPost(enabled: boolean): void {
     enabled,
     lite: LITE_RENDER,
     crtSettings: crtGuestSettings,
+    resolutionMode: fixedResolutionActive() ? "fixed" : "native",
+    inputWidth: renderQualitySizes.inputWidth,
+    inputHeight: renderQualitySizes.inputHeight,
+    outputWidth: renderQualitySizes.outputWidth,
+    outputHeight: renderQualitySizes.outputHeight,
     // Unity operates on actual camera pixels. The browser drawing buffer is
     // the equivalent target, including device pixel ratio.
     pixelRatio: renderer.getPixelRatio(),
@@ -864,10 +889,41 @@ function configureCoastPost(enabled: boolean): void {
   });
 }
 
-function renderPrimaryScene(dt = 0, prepareOcean = true): void {
+function renderPrimaryScene(
+  dt = 0,
+  prepareOcean = true,
+  preCrtOverlay?: CoastPostPreCrtOverlay,
+): void {
   if (prepareOcean) level.water?.renderPasses(renderer, scene, camera);
-  if (coastPost) coastPost.render(dt);
+  if (coastPost) coastPost.render(dt, preCrtOverlay);
   else renderer.render(scene, camera);
+}
+
+function fixedResolutionActive(): boolean {
+  // Split screen owns two scissored cameras and deliberately remains on its
+  // direct renderer path until it gets two independent pre-CRT surfaces.
+  return renderQualitySettings.enabled && !LITE_RENDER && !split2p;
+}
+
+function syncPostResolution(): void {
+  if (!coastPost) return;
+  const optimized = fixedResolutionActive();
+  coastPost.setResolutionMode(optimized ? "fixed" : "native");
+  coastPost.setPixelRatio(renderer.getPixelRatio());
+  const rendererSize = renderer.getSize(new THREE.Vector2());
+  coastPost.setSize(rendererSize.x, rendererSize.y);
+  if (optimized) {
+    coastPost.setInputSize(
+      renderQualitySizes.inputWidth,
+      renderQualitySizes.inputHeight,
+    );
+    coastPost.setOutputSize(
+      renderQualitySizes.outputWidth,
+      renderQualitySizes.outputHeight,
+    );
+  } else {
+    coastPost.syncOutputSizeFromRenderer();
+  }
 }
 
 function resize(): void {
@@ -881,14 +937,25 @@ function resize(): void {
     (navigator as unknown as { standalone?: boolean }).standalone === true;
   if (standalone && h > w && window.screen.height > h) h = window.screen.height;
   document.documentElement.style.setProperty("--vh", h + "px");
-  // Native resolution, always. The headless smoke mode is the one exception:
-  // it renders at half size purely to keep the software rasteriser quick.
-  const rs = LITE_RENDER ? 0.5 : 1;
-  const renderW = Math.round(w * rs);
-  const renderH = Math.round(h * rs);
+  renderQualitySizes = renderQualitySettings.computeSizes(w, h);
+  const optimized = fixedResolutionActive();
+  // Optimized mode owns exact physical pixels: the world/post composer renders
+  // at inputWidth×inputHeight, while the canvas is the CRT's 1×/2×/3× output.
+  // Pixel ratio must be one or the browser would multiply that output again.
+  // Native/lite retain the original DPR contract for a trustworthy A/B path.
+  renderer.setPixelRatio(
+    optimized ? 1 : Math.min(window.devicePixelRatio || 1, 2),
+  );
+  const nativeScale = LITE_RENDER ? 0.5 : 1;
+  const renderW = optimized
+    ? renderQualitySizes.outputWidth
+    : Math.round(w * nativeScale);
+  const renderH = optimized
+    ? renderQualitySizes.outputHeight
+    : Math.round(h * nativeScale);
   renderer.setSize(renderW, renderH, false);
-  coastPost?.setPixelRatio(renderer.getPixelRatio());
-  coastPost?.setSize(renderW, renderH);
+  syncPostResolution();
+  renderQualityPanel?.setMetrics(renderQualitySizes, optimized);
   renderer.domElement.style.imageRendering = "";
   const playAspect = split2p ? w / (h / 2) : w / h;
   // The editor owns the full canvas even when the retained run is split-screen.
@@ -935,6 +1002,14 @@ const crtGuestPanel = createCrtGuestTuningPanel({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   },
+});
+renderQualityPanel = createRenderQualityPanel({
+  settings: renderQualitySettings,
+});
+renderQualityPanel.setMetrics(renderQualitySizes, fixedResolutionActive());
+renderQualitySettings.subscribe(() => {
+  resetRenderFrameLimiter();
+  resize();
 });
 const recorder = new Recorder();
 const replayer = new Replayer();
@@ -1016,6 +1091,17 @@ if (crtDiagnosticsProbe) {
   crtDiagnosticsProbe.id = "crt-diagnostics";
   crtDiagnosticsProbe.style.display = "none";
   document.body.appendChild(crtDiagnosticsProbe);
+}
+const renderDiagnosticsProbe = new URLSearchParams(window.location.search).has(
+  "renderdiag",
+)
+  ? document.createElement("pre")
+  : null;
+const renderDiagnosticsSize = new THREE.Vector2();
+if (renderDiagnosticsProbe) {
+  renderDiagnosticsProbe.id = "render-diagnostics";
+  renderDiagnosticsProbe.style.display = "none";
+  document.body.appendChild(renderDiagnosticsProbe);
 }
 let editorSavedAcc: number | null = null;
 let editorSavedMessage: ReturnType<UI["captureMessage"]> = null;
@@ -2617,6 +2703,19 @@ camera.position.y += TUNING.camHeight;
 const clock = new THREE.Clock();
 let stepTimer = 0;
 let stepIdx = 0;
+const renderFrameLimiter = new PresentationFrameLimiter(60);
+
+function resetRenderFrameLimiter(): void {
+  renderFrameLimiter.reset();
+  clock.getDelta(); // discard time spent changing/reallocating render targets
+}
+
+function allowRenderFrame(nowMs: number): boolean {
+  return renderFrameLimiter.allow(
+    nowMs,
+    renderQualitySettings.fixed60 && !LITE_RENDER,
+  );
+}
 
 // Continuous audio: skating/grinding loops track state and speed; walking
 // pace gets footsteps.
@@ -2672,8 +2771,9 @@ function updateAudio(dt: number): void {
 
 let paused = false;
 
-function frame(): void {
+function frame(nowMs: number): void {
   requestAnimationFrame(frame);
+  if (!allowRenderFrame(nowMs)) return;
   const rawDt = clock.getDelta();
   const dt = Math.min(rawDt, 0.1);
   // The model studio takes the stage: it owns the camera, the sim stands down,
@@ -2850,6 +2950,14 @@ function frame(): void {
   // source is the ACTUAL level skybox, so hand it the active sky art (a
   // string compare per frame; reloads only when the sky really changes).
   if (level.water) {
+    if (fixedResolutionActive()) {
+      level.water.setPreCrtRenderSize(
+        renderQualitySizes.inputWidth,
+        renderQualitySizes.inputHeight,
+      );
+    } else {
+      level.water.clearPreCrtRenderSize();
+    }
     level.water.setQuality(
       level.skyPreset === "coast" &&
       !split2p &&
@@ -2928,6 +3036,7 @@ function frame(): void {
   // ocean's quality switch makes these hooks a cheap feature-disable path.
   level.water?.renderPasses(renderer, scene, camera);
 
+  let primaryOverlaysRendered = false;
   if (split2p && p2) {
     const dw = renderer.domElement.width;
     const dh = renderer.domElement.height;
@@ -2941,7 +3050,21 @@ function frame(): void {
     renderer.setScissorTest(false);
     renderer.setViewport(0, 0, dw, dh);
   } else {
-    renderPrimaryScene(dt, false);
+    renderPrimaryScene(
+      dt,
+      false,
+      fixedResolutionActive()
+        ? (context) => {
+            const size = {
+              width: context.inputWidth,
+              height: context.inputHeight,
+            };
+            player.drawFlyingFruit(context.renderer, undefined, size);
+            ui.drawIcons(context.renderer, dt, size);
+            primaryOverlaysRendered = true;
+          }
+        : undefined,
+    );
   }
   // Collected fruit sails to the counter on its own flat layer, over the
   // finished world and under the HUD icons it is flying to. In split screen
@@ -2949,12 +3072,12 @@ function frame(): void {
   if (split2p && p2) {
     player.drawFlyingFruit(renderer, 'top');
     p2.drawFlyingFruit(renderer, 'bottom');
-  } else {
+  } else if (!primaryOverlaysRendered) {
     player.drawFlyingFruit(renderer);
   }
   // The crate, fruit and relic HUD icons are real 3D, spun and drawn over the
   // finished frame into each icon's own DOM box.
-  ui.drawIcons(renderer, dt);
+  if (!primaryOverlaysRendered) ui.drawIcons(renderer, dt);
     frameStats.cameraTargetX = camTarget.x;
     frameStats.cameraTargetY = camTarget.y;
     frameStats.cameraTargetZ = camTarget.z;
@@ -2966,6 +3089,22 @@ function frame(): void {
       crtDiagnosticsProbe.textContent = JSON.stringify(
         coastPost?.crt?.diagnostics ?? null,
       );
+    if (renderDiagnosticsProbe) {
+      renderer.getDrawingBufferSize(renderDiagnosticsSize);
+      renderDiagnosticsProbe.textContent = JSON.stringify({
+        settings: renderQualitySettings.snapshot(),
+        active: fixedResolutionActive(),
+        sizes: renderQualitySizes,
+        drawingBuffer: {
+          width: renderDiagnosticsSize.x,
+          height: renderDiagnosticsSize.y,
+        },
+        presentation: coastPost?.resolution ?? null,
+        ocean: level.water?.stats ?? null,
+        frameLimiter: renderFrameLimiter.stats,
+        renderedFrames: frameStats.frame,
+      });
+    }
   } finally {
     // Render interpolation is presentation-only. Gameplay and the next fixed
     // tick must always see the exact current simulation-authored hierarchy.
@@ -2973,7 +3112,7 @@ function frame(): void {
     if (split2p && p2) p2.restoreRenderPose();
   }
 }
-frame();
+requestAnimationFrame(frame);
 
 // Smoke-test / console-poking hook.
 (window as unknown as Record<string, unknown>).__game = {
@@ -2993,6 +3132,10 @@ frame();
   renderer,
   crtGuestSettings,
   crtGuestPanel,
+  renderQualitySettings,
+  renderQualityPanel,
+  getRenderQualitySizes: () => ({ ...renderQualitySizes }),
+  getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,
