@@ -875,7 +875,7 @@ export class Player {
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
   private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
-  private grindExitAir = false; // this air left a RAIL: the lateral strafe stays live (rail-to-rail hops), unlike plain ollies
+  private grindExitAir = false; // this air left a RAIL: held R2 may add transfer strafe; left/right alone only rotates
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindTickT = 0; // THPS accrual while grinding
@@ -1680,6 +1680,7 @@ export class Player {
     if (this.flyBoard) this.flyBoard.visible = false;
     this.airFromSkate = false;
     this.airGrav = 'foot';
+    this.grindExitAir = false;
     this.boardOllieAir = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectCharging = false;
@@ -4766,6 +4767,8 @@ export class Player {
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
       // Digital diagonals in the air get the same normalization as the walk.
       const diag = footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
+      const railTransferStrafe =
+        this.grindExitAir && input.transferHeld && !this.isBailing;
       if (footAir) {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
@@ -4789,9 +4792,9 @@ export class Player {
       // The lateral sidestep is a FOOT-AIR move only now (precision hops).
       // On the board that stick axis is the THPS spin — a board air flies
       // ballistic and left/right rotates the body instead (see updateGrab).
-      // EXCEPT airs off a RAIL: those keep the strafe (alongside the spin)
-      // so rail-to-rail hops stay possible — that's how grind combos link.
-      if ((footAir || (this.grindExitAir && !this.isBailing)) && Math.abs(input.moveX) > 0.05) {
+      // A rail hop gets that translation only while R2 is deliberately held.
+      // Without R2 the same left/right axis remains THPS rotation only.
+      if ((footAir || railTransferStrafe) && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(
           this.axisL,
           input.moveX * TUNING.walkSpeed * diag * doubleScale * dt,
@@ -7269,9 +7272,9 @@ export class Player {
   private exitGrind(vVel: number, level?: Level): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
-    // RAIL-HOP window: airs off a rail keep the lateral stick strafe (on top
-    // of the spin) so you can jump BETWEEN rails for grind combos — plain
-    // ollies stay ballistic, the approach angle is their steering.
+    // RAIL-HOP window: R2 may add lateral transfer strafe on top of the spin
+    // so you can deliberately jump between rails. Without R2 the hop stays
+    // ballistic and left/right rotates only, like every other board air.
     this.grindExitAir = true;
 
     // ...and the last box goes with the manoeuvre. Every earlier one already

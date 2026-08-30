@@ -17,7 +17,7 @@ export class Input {
   grindHeld = false;
   spinHeld = false;
   grabHeld = false;
-  transferHeld = false; // R2: spine transfer during a pipe hang
+  transferHeld = false; // R2: rail-air transfer strafe; press also triggers spine/revert actions
 
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.

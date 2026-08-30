@@ -54,7 +54,7 @@ outside the published browser bundle.
 | Grind (hold near/over a rail) | Triangle | E |
 | Spin attack / trick | Square | F |
 | Air grab (speed boost on landing) | Circle | Q |
-| Spine transfer / revert | R2 | T |
+| Transfer modifier / spine transfer / revert | R2 | T |
 | Restart | Share / Create | R |
 | Pause | Options | P / Escape |
 

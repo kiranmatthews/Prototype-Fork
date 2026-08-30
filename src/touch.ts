@@ -48,7 +48,9 @@ const BTNS: BtnDef[] = [
 const SWIPE_MIN_PX = 64;
 const SWIPE_MAX_MS = 320;
 const SWIPE_MIN_VEL = 0.35; // px per ms
-const SWIPE_HOLD_MS = 130; // how long the R2 "press" stays held for the poll
+// Touch has no physical trigger to keep depressed. Hold the emulated R2 long
+// enough to span a normal rail-transfer air (4m practice spacing at 9u/s).
+const SWIPE_HOLD_MS = 450;
 
 export class TouchControls {
   enabled = false;
