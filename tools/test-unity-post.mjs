@@ -24,12 +24,19 @@ for (const literal of [
   "UNITY_LUT_SIZE = 32",
   "UNITY_DITHER_SIZE = 16",
   '"UnityPost.NeutralLdrGrade"',
+  "uLookEnabled",
+  "uColorGrade",
+  "uTint",
+  "uBloom",
+  "uVignette",
+  "localBloom",
+  "visualTreatmentSettings.subscribe",
 ]) {
   assert.ok(post.includes(literal), `Unity grade contract missing: ${literal}`);
 }
 
 for (const retired of [
-  "BLOOM_",
+  "BLOOM_MIP_",
   "STREAK_",
   "FLARE_",
   "UnityBloom",
@@ -38,7 +45,6 @@ for (const retired of [
   "makeRenderTarget",
   "HalfFloatType",
   "tBloom",
-  "uBloom",
   "mipDown",
   "mipUp",
   "bloomMip1",
@@ -76,5 +82,5 @@ assert.ok(order.every((index) => index >= 0), "Shared post stages are incomplete
 assert.deepEqual(order, [...order].sort((a, b) => a - b));
 
 console.log(
-  "Validated grade-only Unity coast post: one draw, zero owned render targets, neutral LDR LUT/dither, no bloom or lens flare.",
+  "Validated shared Unity post: one draw, zero owned render targets, neutral LDR LUT/dither plus tunable local bloom/grade/vignette, no retired lens-flare stack.",
 );

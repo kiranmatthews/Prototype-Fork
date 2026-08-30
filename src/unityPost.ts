@@ -10,6 +10,10 @@ import {
   FullScreenQuad,
   Pass,
 } from "three/examples/jsm/postprocessing/Pass.js";
+import {
+  visualTreatmentSettings,
+  type VisualTreatmentValue,
+} from "./visual-treatment/settings";
 
 export const UNITY_POST_PROFILE = Object.freeze({
   output: Object.freeze({
@@ -41,7 +45,37 @@ const FINAL_GRADE_FRAGMENT = /* glsl */ `
   uniform float uGradeEnabled;
   uniform float uLutEnabled;
   uniform float uDitherEnabled;
+  uniform float uLookEnabled;
+  uniform vec2 uTexelSize;
+  uniform vec3 uColorGrade;
+  uniform vec3 uTint;
+  uniform vec3 uBloom;
+  uniform vec2 uVignette;
   varying vec2 vUv;
+
+  vec3 brightSample(vec2 uv, float threshold) {
+    vec3 sampleColor = texture2D(tSource, clamp(uv, 0.0, 1.0)).rgb;
+    float luminance = dot(sampleColor, vec3(0.2126, 0.7152, 0.0722));
+    float weight = smoothstep(threshold, threshold + 0.22, luminance);
+    return sampleColor * weight;
+  }
+
+  vec3 localBloom(float threshold, float radius) {
+    vec2 x = vec2(uTexelSize.x * radius, 0.0);
+    vec2 y = vec2(0.0, uTexelSize.y * radius);
+    vec2 d1 = vec2(x.x, y.y) * 0.70710678;
+    vec2 d2 = vec2(x.x, -y.y) * 0.70710678;
+    vec3 sum = brightSample(vUv, threshold) * 0.2;
+    sum += brightSample(vUv + x, threshold) * 0.1;
+    sum += brightSample(vUv - x, threshold) * 0.1;
+    sum += brightSample(vUv + y, threshold) * 0.1;
+    sum += brightSample(vUv - y, threshold) * 0.1;
+    sum += brightSample(vUv + d1, threshold) * 0.1;
+    sum += brightSample(vUv - d1, threshold) * 0.1;
+    sum += brightSample(vUv + d2, threshold) * 0.1;
+    sum += brightSample(vUv - d2, threshold) * 0.1;
+    return sum;
+  }
 
   vec3 applyInternalLut(vec3 color) {
     // Color.hlsl ApplyLut2D, with the active 32^3 LDR strip LUT:
@@ -88,6 +122,23 @@ const FINAL_GRADE_FRAGMENT = /* glsl */ `
   void main() {
     vec4 source = texture2D(tSource, vUv);
     vec3 color = source.rgb;
+
+    if (uLookEnabled > 0.5) {
+      color += localBloom(uBloom.y, uBloom.z) * uBloom.x;
+      color *= exp2(uColorGrade.x);
+      float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
+      color = mix(vec3(luminance), color, uColorGrade.z);
+      color = (color - 0.5) * uColorGrade.y + 0.5;
+      color *= uTint;
+      vec2 centred = vUv * 2.0 - 1.0;
+      float edge = length(centred);
+      float vignette = smoothstep(
+        max(0.05, 1.0 - uVignette.y),
+        1.25,
+        edge
+      );
+      color *= 1.0 - vignette * uVignette.x;
+    }
 
     if (uGradeEnabled > 0.5) {
       // Common.hlsl ApplyTonemap returns saturate(input) even when the active
@@ -265,6 +316,7 @@ export class UnityPostPass extends Pass {
   private readonly fsQuad: FullScreenQuad;
   private ditherFrame = 0;
   private disposed = false;
+  private readonly unsubscribeLook: () => void;
 
   constructor(width = 1, height = 1) {
     super();
@@ -284,15 +336,52 @@ export class UnityPostPass extends Pass {
         uGradeEnabled: { value: query.has("rawoutput") ? 0 : 1 },
         uLutEnabled: { value: query.has("nolut") ? 0 : 1 },
         uDitherEnabled: { value: query.has("nodither") ? 0 : 1 },
+        uLookEnabled: { value: 0 },
+        uTexelSize: { value: new THREE.Vector2(1, 1) },
+        uColorGrade: { value: new THREE.Vector3(0, 1, 1) },
+        uTint: { value: new THREE.Vector3(1, 1, 1) },
+        uBloom: { value: new THREE.Vector3(0, 0.72, 4) },
+        uVignette: { value: new THREE.Vector2(0, 0.35) },
       },
     );
     this.fsQuad = new FullScreenQuad(this.finalGradeMaterial);
+    this.unsubscribeLook = visualTreatmentSettings.subscribe(
+      (value) => this.applyVisualTreatment(value),
+      true,
+    );
     this.setSize(width, height);
+  }
+
+  private applyVisualTreatment(value: Readonly<VisualTreatmentValue>): void {
+    this.finalGradeMaterial.uniforms.uLookEnabled.value = value.enabled ? 1 : 0;
+    (this.finalGradeMaterial.uniforms.uColorGrade.value as THREE.Vector3).set(
+      value.exposure,
+      value.contrast,
+      value.saturation,
+    );
+    (this.finalGradeMaterial.uniforms.uTint.value as THREE.Vector3).set(
+      value.tintR,
+      value.tintG,
+      value.tintB,
+    );
+    (this.finalGradeMaterial.uniforms.uBloom.value as THREE.Vector3).set(
+      value.bloomIntensity,
+      value.bloomThreshold,
+      value.bloomRadius,
+    );
+    (this.finalGradeMaterial.uniforms.uVignette.value as THREE.Vector2).set(
+      value.vignetteIntensity,
+      value.vignetteSmoothness,
+    );
   }
 
   override setSize(width: number, height: number): void {
     const fullWidth = Math.max(1, Math.floor(width));
     const fullHeight = Math.max(1, Math.floor(height));
+    (this.finalGradeMaterial.uniforms.uTexelSize.value as THREE.Vector2).set(
+      1 / fullWidth,
+      1 / fullHeight,
+    );
     (
       this.finalGradeMaterial.uniforms.uDitherParams
         .value as THREE.Vector4
@@ -338,6 +427,7 @@ export class UnityPostPass extends Pass {
   override dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.unsubscribeLook();
     this.internalLut.dispose();
     this.blueNoise.dispose();
     this.finalGradeMaterial.dispose();

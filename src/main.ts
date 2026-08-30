@@ -58,6 +58,9 @@ import { skateboardSettings } from "./skateboard/settings";
 import { createSpinTuningPanel } from "./spin-effects/panel";
 import { spinRingSettings } from "./spin-effects/settings";
 import { sourceComboLabelLine } from "./comboHud";
+import { createVisualTreatmentPanel } from "./visual-treatment/panel";
+import { visualTreatmentSettings } from "./visual-treatment/settings";
+import { createBonusParallax } from "./bonusParallax";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -742,12 +745,22 @@ function setEditorView(editing: boolean, changed = false): void {
 
 let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
 let proceduralSkyKey = "";
+let levelPostEnabled = false;
 
 function applyTheme(): void {
   const t = level.theme;
   const P = SKY_PRESETS[level.skyPreset] ?? SKY_PRESETS[DEFAULT_SKY];
+  const bonusBackdropActive = current.id === "bonus-level" && !LITE;
+  if (bonusBackdropActive && !bonusParallax.visible)
+    bonusParallax.reset(player.pos, loadedLevelId);
+  bonusParallax.setVisible(bonusBackdropActive);
+  sky.visible = !LITE && !bonusBackdropActive;
   activeSky = level.skyPreset;
-  configureCoastPost(level.skyPreset === "coast" && !NO_COAST_POST);
+  levelPostEnabled = level.skyPreset === "coast" && !NO_COAST_POST;
+  configureCoastPost(
+    levelPostEnabled ||
+      (visualTreatmentSettings.value.enabled && !NO_COAST_POST),
+  );
   loadSky(activeSky); // no-op once cached or known missing
 
   // TIME OF DAY drives the atmosphere; the level's theme still colours it.
@@ -808,7 +821,7 @@ function applyTheme(): void {
     // seaHorizon presets skip the mist layer: it repaints the below-horizon
     // band IN FRONT of everything past the dome radius, and the coast now
     // draws REAL water out to 1000m that must not be painted over.
-    skyMist.visible = !LITE && !P.seaHorizon;
+    skyMist.visible = !LITE && !P.seaHorizon && !bonusBackdropActive;
     // cached textures are shared across levels — never dispose them here; only
     // the gradient we painted ourselves is ours to free
     if (proceduralSky) {
@@ -854,6 +867,7 @@ function applyTheme(): void {
 // crushing to a foreshortened sliver at the horizon.
 const BOULDER_FOV = 27;
 const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
+const bonusParallax = createBonusParallax(scene, camera, { visible: false });
 // 2P split state (functions live further down, past the player):
 let split2p = false;
 let p2: Player | null = null;
@@ -1056,6 +1070,12 @@ const skateboardPanel = createSkateboardTuningPanel({
 });
 const spinPanel = createSpinTuningPanel({
   settings: spinRingSettings,
+});
+createVisualTreatmentPanel(visualTreatmentSettings);
+visualTreatmentSettings.subscribe((value) => {
+  configureCoastPost(
+    levelPostEnabled || (value.enabled && !NO_COAST_POST),
+  );
 });
 const recorder = new Recorder();
 const replayer = new Replayer();
@@ -2874,6 +2894,8 @@ function frame(nowMs: number): void {
     acc = 0;
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
+    if (bonusParallax.visible)
+      bonusParallax.update(player.pos, dt, loadedLevelId);
     updateSeaHorizon();
     ui.setGameHudComposited(false);
     renderPrimaryScene(dt);
@@ -3033,6 +3055,8 @@ function frame(nowMs: number): void {
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
+  if (bonusParallax.visible)
+    bonusParallax.update(player.pos, dt, loadedLevelId);
   updateSeaHorizon();
 
   ui.updateBalance(player.balanceMeter);

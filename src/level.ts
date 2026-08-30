@@ -32,6 +32,11 @@ import { CoastWater, type ShoreSample } from "./water";
 import { createUnityBeachfrontReference } from "./beachfront";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
+import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
+import {
+  createProceduralThornCluster,
+  type ProceduralThornCluster,
+} from "./proceduralThorns";
 import {
   accelerateGroundMeshes,
   disposeGroundAcceleration,
@@ -534,7 +539,7 @@ export interface CustomComponent {
     | "pipe" // LEGACY straight halfpipe (old saves) — migration folds it into 'vertramp'
     | "vertramp" // THE VERT PART: one swept transition profile that covers quarter pipes, half pipes, bowl corners, whole pools and banked slide troughs. Straight along `len`/`yaw`, or drawn along `pts` (rail node convention, plus an optional 5th number = bank degrees). rise = transition radius, w = flat half-width, arc = degrees round the transition, deck = platform past the lip, closed = loop the spine, curve picks filleted corners or a spline, bank auto-leans into turns. Faces carry userData.vert unless `vert` is false.
     | "crumble" // breakaway pad: p = top center, s = [w,-,d], shake = fall delay in seconds (0.02 = instant), speed = fall accel (default 30)
-    | "pit" // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d]
+    | "pit" // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d], invisible = collider-only
     | "crate" // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
     | "metal" // unbreakable steel crate: solid terrain, spin/slam-proof
     | "rock" // low-poly boulder: p = center, s = [w,h,d] bounds, seed shapes it; solid + walkable
@@ -563,6 +568,7 @@ export interface CustomComponent {
     | "returnportal" // one-way in-level portal: p/s = entrance volume, to = destination feet point, exitYaw = outgoing heading, airOnly optionally requires air
     | "grindosaurus" // patrolling lethal body with a moving grindable spine; range/speed patrol, coverage is required ride fraction
     | "angryball" // proximity-activated ball that chases across its own analytic halfpipe profile
+    | "thorn" // visual-only pulsing procedural thorn cluster; pair with a deliberately smaller pit for lethal collision
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
@@ -643,8 +649,8 @@ export interface CustomComponent {
   airOnly?: boolean; // returnportal only accepts an airborne player
   coverage?: number; // grindosaurus: fraction of spine that must be ridden to defeat it
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
-  color?: string; // '#rrggbb' tint for platform / ramp / wall / crumble / rock
-  tex?: string; // surface texture kind (see TEX_KINDS) for platform / ramp / wall / crumble / rock — tinted by color
+  color?: string; // '#rrggbb' tint for surfaces, rocks, pits and procedural thorns
+  tex?: string; // surface texture kind (see TEX_KINDS) for paintable surfaces — tinted by color
   dir?: "E" | "W" | "N" | "S"; // zone: travel direction — E/W turn the course sideways (side-scroll), N runs it INTO the camera, S = the normal corridor (still overrides a camera lane)
   layer?: number; // LEGACY editor layer id (folded into lk by migration)
   grp?: number; // innermost editor group id — groups wire '!' crates to their outlines
@@ -1939,6 +1945,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "warproom", name: "The Warp Room" }, // five wormhole gates round a dais
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
   { id: "beachfront", name: "Unity Beachfront Run" },
+  ...UNITY_PORT_LEVELS,
   {
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,
@@ -1970,7 +1977,7 @@ export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
   "enemy", "crusher", "mover", "torch", "phasepad", "stone", "pendulum",
   "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
   "woodpath", "trampoline", "speedpad", "trickgate", "trickrail",
-  "returnportal", "grindosaurus", "angryball", "decor", "wumpa", "crystal",
+  "returnportal", "grindosaurus", "angryball", "thorn", "decor", "wumpa", "crystal",
 ]);
 const VALID_CRATE_KINDS = new Set<NonNullable<CustomComponent["kind"]>>([
   "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
@@ -2771,6 +2778,7 @@ export class Level {
   private root = new THREE.Group(); // everything the level owns, for disposal
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
+  private thornClusters: ProceduralThornCluster[] = [];
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
   private maskTex: THREE.CanvasTexture | null = null;
@@ -4715,6 +4723,10 @@ export class Level {
               }),
             );
             pool.position.set(c.p[0], c.p[1] + 0.02, c.p[2]);
+            if (c.invisible) {
+              pool.visible = false;
+              pool.userData.editorGhost = true;
+            }
             this.root.add(pool);
             let minX = Infinity;
             let maxX = -Infinity;
@@ -4980,6 +4992,10 @@ export class Level {
             );
             pool.position.set(c.p[0], c.p[1] + 0.02, c.p[2]);
             pool.rotation.y = yawRad;
+            if (c.invisible) {
+              pool.visible = false;
+              pool.userData.editorGhost = true;
+            }
             this.root.add(pool);
             const rim = new THREE.Mesh(
               new THREE.BoxGeometry(s[0] + 0.5, 0.06, s[2] + 0.5),
@@ -4991,6 +5007,10 @@ export class Level {
             );
             rim.position.set(c.p[0], c.p[1] + 0.001, c.p[2]);
             rim.rotation.y = yawRad;
+            if (c.invisible) {
+              rim.visible = false;
+              rim.userData.editorGhost = true;
+            }
             this.root.add(rim);
             // Kill volume hugs the pool: only 0.25 above the surface (feet must
             // actually touch the lava — landing on a crate seated over the pit
@@ -5375,6 +5395,16 @@ export class Level {
             this.buildWoodPath(c);
           } else if (c.t === "wallpath") {
             this.buildBendyWall(c);
+          } else if (c.t === "thorn") {
+            const thorn = createProceduralThornCluster({
+              size: c.s ?? [2.14, 1.01, 2.26],
+              color: c.color,
+              seed: c.seed,
+            });
+            thorn.group.position.set(c.p[0], c.p[1], c.p[2]);
+            thorn.group.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
+            this.thornClusters.push(thorn);
+            this.root.add(thorn.group);
           } else if (c.t === "decor") {
             this.decorProp(c);
           } else if (c.t === "terrain") {
@@ -6465,6 +6495,7 @@ export class Level {
     this.settleCrates(dt);
     // Nitro crates bob menacingly.
     this.time += dt;
+    for (const thorn of this.thornClusters) thorn.update(this.time);
     for (const c of this.crates) {
       if (!c.nitro) continue;
       c.mesh.position.y =
