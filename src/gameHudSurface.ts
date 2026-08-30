@@ -7,7 +7,11 @@
 // contract, so they remain sharp DOM above the CRT output.
 
 import * as THREE from "three";
-import { SOURCE_HUD_TRACKING, sourceTrackingPixels } from "./comboHud";
+import {
+  SOURCE_HUD_TRACKING,
+  sourceTrackingPixels,
+  wrapComboLabelLine,
+} from "./comboHud";
 
 export interface GameHudRenderSize {
   /** Exact physical-pixel width of the pre-CRT image. */
@@ -225,6 +229,18 @@ interface RooStyle {
   maxWidth?: number;
   alpha?: number;
   glow?: string;
+}
+
+interface PlainTextStyle {
+  size: number;
+  align: CanvasTextAlign;
+  color: string;
+  weight?: string;
+  family?: string;
+  shadow?: string;
+  alpha?: number;
+  maxWidth?: number;
+  lineHeight?: number;
 }
 
 const PREVIOUS_VIEWPORT = new THREE.Vector4();
@@ -892,16 +908,16 @@ export class GameHudSurface {
         ? explicit.visible !== false
         : isLaidOut(this.elements.trick);
     if (!visible) return;
-    const line = explicit?.line ?? readRooHudText(this.elements.trickLine);
+    const line = (explicit?.line ?? readRooHudText(this.elements.trickLine)).toUpperCase();
     const total = explicit?.total ?? readRooHudText(this.elements.trickTotal);
     const bailed = explicit?.bailed ?? this.elements.trick?.classList.contains("hud-trick-bail") ?? false;
     const alpha = explicit ? 1 : elementOpacity(this.elements.trick, 1);
     const sy = height / 720;
     const lineRect = this.rect(this.elements.trickLine, layout) ?? {
       x: width * 0.03,
-      y: height * 0.885,
+      y: height * 0.84,
       width: width * 0.94,
-      height: 48 * sy,
+      height: 84 * sy,
     };
     const totalRect = this.rect(this.elements.trickTotal, layout) ?? {
       x: width * 0.03,
@@ -909,20 +925,42 @@ export class GameHudSurface {
       width: width * 0.94,
       height: 78 * sy,
     };
-    this.drawRooInRect(ctx, line, lineRect, {
-      size: 36 * sy,
+    // CSS transform animations change getBoundingClientRect(), but not the
+    // width the browser used to lay out the text. Wrap against the stable
+    // authored width so entrance/fall motion cannot change the line count.
+    const stableTextWidth = Math.min(width * 0.94, 1100 * layout.scaleX);
+    const stableLineRect = {
+      ...lineRect,
+      x: (width - stableTextWidth) / 2,
+      width: stableTextWidth,
+    };
+    const comboFamily = `Impact, "Arial Black", sans-serif`;
+    this.drawWrappedPlainText(ctx, line, stableLineRect, {
+      size: 28 * sy,
       align: "center",
-      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.trickTitle, 36 * sy),
+      weight: "bold",
+      family: comboFamily,
+      color: bailed ? "#ff3b30" : "#ffe08a",
+      shadow: bailed ? "#ff3b30" : "rgba(53,24,6,0.9)",
       alpha,
-      glow: bailed ? "#ff3b30" : undefined,
+      lineHeight: 31 * sy,
     });
-    this.drawRooInRect(ctx, total, totalRect, {
-      size: 60 * sy,
-      align: "center",
-      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.trickValue, 60 * sy),
-      alpha,
-      glow: bailed ? "#ff3b30" : undefined,
-    });
+    this.drawPlainText(
+      ctx,
+      total,
+      totalRect.x + totalRect.width / 2,
+      totalRect.y + totalRect.height / 2,
+      {
+        size: 48 * sy,
+        align: "center",
+        weight: "900",
+        family: comboFamily,
+        color: bailed ? "#ff3b30" : "#ffb43a",
+        shadow: bailed ? "#ff3b30" : "rgba(53,24,6,0.9)",
+        alpha,
+        maxWidth: stableTextWidth,
+      },
+    );
   }
 
   private paintBalance(
@@ -1362,28 +1400,63 @@ export class GameHudSurface {
     text: string,
     x: number,
     y: number,
-    style: {
-      size: number;
-      align: CanvasTextAlign;
-      color: string;
-      weight?: string;
-      shadow?: string;
-    },
+    style: PlainTextStyle,
   ): void {
     if (!text) return;
     ctx.save();
-    ctx.font = `${style.weight ?? "normal"} ${Math.max(1, style.size)}px ui-monospace, Menlo, Consolas, monospace`;
+    ctx.font = `${style.weight ?? "normal"} ${Math.max(1, style.size)}px ${style.family ?? "ui-monospace, Menlo, Consolas, monospace"}`;
     ctx.textAlign = style.align;
     ctx.textBaseline = "middle";
+    ctx.globalAlpha = clamp01(style.alpha ?? 1);
     ctx.fillStyle = style.color;
     if (style.shadow) {
       ctx.shadowColor = style.shadow;
       ctx.shadowBlur = Math.max(2, style.size * 0.25);
       ctx.shadowOffsetY = Math.max(1, style.size * 0.1);
     }
-    ctx.fillText(text, x, y);
+    if (style.maxWidth !== undefined) ctx.fillText(text, x, y, style.maxWidth);
+    else ctx.fillText(text, x, y);
     ctx.restore();
     this.mark();
+  }
+
+  private drawWrappedPlainText(
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    rect: SurfaceRect,
+    style: PlainTextStyle,
+  ): void {
+    if (!text || rect.width <= 0 || rect.height <= 0) return;
+    const family = style.family ?? "ui-monospace, Menlo, Consolas, monospace";
+    const weight = style.weight ?? "normal";
+    ctx.save();
+    ctx.font = `${weight} ${Math.max(1, style.size)}px ${family}`;
+    const lines = wrapComboLabelLine(
+      text,
+      rect.width,
+      (value) => ctx.measureText(value).width,
+    );
+    ctx.restore();
+    if (lines.length === 0) return;
+
+    const preferredLineHeight = style.lineHeight ?? style.size * 1.08;
+    const lineHeight = Math.min(preferredLineHeight, rect.height / lines.length);
+    const fittedSize = Math.min(style.size, lineHeight / 1.08);
+    const centerY = rect.y + rect.height / 2;
+    for (let i = 0; i < lines.length; i++) {
+      this.drawPlainText(
+        ctx,
+        lines[i],
+        rect.x + rect.width / 2,
+        centerY + (i - (lines.length - 1) / 2) * lineHeight,
+        {
+          ...style,
+          size: fittedSize,
+          align: "center",
+          maxWidth: rect.width,
+        },
+      );
+    }
   }
 
   private drawLifeFace(

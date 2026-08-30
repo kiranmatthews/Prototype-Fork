@@ -326,7 +326,7 @@ export class Player {
   private specialActivationCount = 0;
   private comboTimer = 0; // plain-rolling time left before the combo banks
   onComboBank: (amount: number, labels: string) => void = () => {}; // combo landed clean → cash-in ticker
-  onComboBail: () => void = () => {}; // combo lost on a bail → red shake + drop
+  onComboBail: (labels: string, points: number, multiplier: number) => void = () => {}; // combo lost → frozen red fall-away
 
   // debug readouts
   railCandidateDist = Infinity;
@@ -6165,7 +6165,16 @@ export class Player {
   // to drop the combo in total silence, so losing a twelve-trick rail line read
   // exactly like losing a bare hop.
   private loseCombo(): void {
-    if (this.comboHasTrick && this.comboMult > 0) this.onComboBail(); // red shake + drop
+    if (this.comboHasTrick && this.comboMult > 0) {
+      // Freeze the exact combo before clearing gameplay state. The HUD may not
+      // have rendered the final fixed step yet, so reusing its previous DOM
+      // copy could make a same-frame bail show stale or empty text.
+      this.onComboBail(
+        sourceComboLabelLine(this.comboLabels),
+        this.comboPoints,
+        this.comboMult,
+      );
+    }
     this.comboPoints = 0;
     this.comboMult = 0;
     this.comboTimer = 0;

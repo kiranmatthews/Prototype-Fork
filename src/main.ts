@@ -57,6 +57,7 @@ import { createSkateboardTuningPanel } from "./skateboard/panel";
 import { skateboardSettings } from "./skateboard/settings";
 import { createSpinTuningPanel } from "./spin-effects/panel";
 import { spinRingSettings } from "./spin-effects/settings";
+import { sourceComboLabelLine } from "./comboHud";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -2325,7 +2326,8 @@ ui.onToggleEndlessDeaths = () => {
   );
 };
 player.onComboBank = (amount, labels) => ui.comboBank(amount, labels);
-player.onComboBail = () => ui.comboBail();
+player.onComboBail = (labels, points, multiplier) =>
+  ui.comboBail(labels, points, multiplier);
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
   if (player.endlessDeaths) return;
@@ -3038,25 +3040,28 @@ function frame(nowMs: number): void {
   ui.updateBalanceBoost(player.balanceBoostT, 6);
   const tricks = player.comboLabels;
   const comboPreview = player.comboHudPreview;
-  ui.setHUD({
-    points: player.points,
-    comboPoints: player.comboPoints,
-    comboMult: player.comboMult,
-    comboHasTrick: player.comboHasTrick,
-    tricks: (tricks.length > 6 ? "… + " : "") + tricks.slice(-6).join(" + "),
-    comboActionRevision: player.comboActionRevision,
-    comboPreview,
-    specialMeter: player.specialMeter,
-    specialReady: player.specialReady,
-    fruit: player.fruit,
-    lives: Math.max(0, player.lives),
-    deaths: player.totalDeaths,
-    endlessDeaths: player.endlessDeaths,
-    crates: `${player.cratesBroken}/${level.totalCrates}`,
-    hasCrystal: player.hasCrystal,
-    hasGem: player.gemEarned,
-    hasComboGem: player.comboGemEarned,
-  });
+  ui.setHUD(
+    {
+      points: player.points,
+      comboPoints: player.comboPoints,
+      comboMult: player.comboMult,
+      comboHasTrick: player.comboHasTrick,
+      tricks: sourceComboLabelLine(tricks),
+      comboActionRevision: player.comboActionRevision,
+      comboPreview,
+      specialMeter: player.specialMeter,
+      specialReady: player.specialReady,
+      fruit: player.fruit,
+      lives: Math.max(0, player.lives),
+      deaths: player.totalDeaths,
+      endlessDeaths: player.endlessDeaths,
+      crates: `${player.cratesBroken}/${level.totalCrates}`,
+      hasCrystal: player.hasCrystal,
+      hasGem: player.gemEarned,
+      hasComboGem: player.comboGemEarned,
+    },
+    dt,
+  );
   ui.setStats({
     speed: player.speed,
     state: player.state,

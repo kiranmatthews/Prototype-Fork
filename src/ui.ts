@@ -13,8 +13,13 @@ import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { wumpaMesh } from "./wumpa";
 import { SPECIAL_CONTROL_HELP, SPECIAL_TRICKS } from "./specialTricks";
 import {
+  COMBO_CASH_IN_EXTRA_HOLD_MS,
   SOURCE_HUD_TRACKING,
+  advanceComboCashInDisplay,
+  advanceLiveComboTicker,
   advanceSourceComboTicker,
+  comboCashInIsHolding,
+  createLiveComboTicker,
   sourceComboPurseTarget,
   sourceLiveComboText,
   type ComboHudPreview,
@@ -123,6 +128,7 @@ export class UI {
   private specialFill!: HTMLElement;
   private specialLabelEl!: HTMLElement;
   private specialControlsEl!: HTMLElement;
+  private comboStack!: HTMLElement;
   private specialFrame: GameHudSpecialState | null = null;
   private specialWasReady = false;
   private specialIntroduced = false;
@@ -147,8 +153,6 @@ export class UI {
   private rooTTBest!: RooLabel;
   private rooTTFreeze!: RooLabel;
   private rooTTResTitle!: RooLabel;
-  private rooTrickLine!: RooLabel;
-  private rooTrickTotal!: RooLabel;
   private rooMsgTitle!: RooLabel;
   private scoreLabelEl!: HTMLElement;
   private boostLabelEl!: HTMLElement;
@@ -173,11 +177,15 @@ export class UI {
     gem: false,
     comboGem: false,
   };
-  // Score/combo tickers: displayed numbers chase the real ones fast (arcade feel).
+  // Score cash-in keeps the arcade chase; live timed combo awards use a
+  // constant-rate buffer so quarter-second gameplay packets read continuously.
   private dispScore = 0;
   private dispCombo = 0;
+  private liveComboTicker = createLiveComboTicker();
   private comboState: "none" | "active" | "cashin" | "bail" = "none";
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
+  private comboCashInHoldEnd = 0;
+  private comboCashInWasHolding = false;
   private lastComboActionRevision = -1;
   private lastComboPreviewSequence = -1;
   private msgTimer: number | undefined;
@@ -695,7 +703,6 @@ export class UI {
     boosts.appendChild(boostLab);
     boosts.style.display = "none";
     this.boostRingWrap = boosts;
-    this.gameHudLayer.appendChild(boosts);
     // Debug cheat: clicking the face banks an extra life. The HUD layer is
     // pointer-transparent, so this row opts back in.
     livesRow.style.cursor = "pointer";
@@ -730,6 +737,9 @@ export class UI {
     this.trickPlate.appendChild(this.trickLineEl);
     this.trickPlate.appendChild(this.trickTotalEl);
     this.trickPlate.style.display = "none";
+    this.comboStack = div("hud-combostack");
+    this.comboStack.appendChild(boosts);
+    this.comboStack.appendChild(this.trickPlate);
 
     // black game-over screen: any button restarts
     this.deathEl = div("hud-death");
@@ -783,7 +793,7 @@ export class UI {
       tr,
       this.ttResultsEl,
       this.specialWrap,
-      this.trickPlate,
+      this.comboStack,
       this.balanceWrap,
       this.vBalanceWrap,
       this.deathEl,
@@ -813,16 +823,8 @@ export class UI {
     });
     this.rooTTFreeze = new RooLabel(this.ttFreezeEl, { palette: ROO_TT });
     this.rooTTResTitle = new RooLabel(this.ttResTitleEl, { palette: ROO_TT });
-    // The trick plate and every centre-screen message are HUD furniture, so
-    // they wear the orange face with the counters.
-    this.rooTrickLine = new RooLabel(this.trickLineEl, {
-      palette: ROO_HUD,
-      tracking: SOURCE_HUD_TRACKING.trickTitle,
-    });
-    this.rooTrickTotal = new RooLabel(this.trickTotalEl, {
-      palette: ROO_HUD,
-      tracking: SOURCE_HUD_TRACKING.trickValue,
-    });
+    // Combo copy stays ordinary text. It can wrap naturally and the CRT pass
+    // supplies enough character without a per-glyph SVG treatment.
     this.rooMsgTitle = new RooLabel(this.msgTitle, { palette: ROO_HUD });
     // Fixed captions: set once, then they never change again.
     new RooLabel(this.scoreLabelEl, { palette: ROO_HUD }).set("SCORE");
@@ -952,53 +954,68 @@ export class UI {
     this.deathEl.style.display = visible ? "flex" : "none";
   }
 
-  // Arcade ticker: step the shown number toward the target, landing exactly on
-  // it. Slow + smooth — ~9% of the gap per frame (≈3× the duration of a snappy
-  // count) with a 1/frame floor (twice the frames of a 2-floor), so the number
-  // visibly rolls up rather than jumping.
-  private ticker(cur: number, target: number): number {
-    const d = target - cur;
-    if (d === 0) return cur;
-    const step = Math.min(
-      Math.abs(d),
-      Math.max(1, Math.ceil(Math.abs(d) * 0.09)),
-    );
-    return cur + Math.sign(d) * step;
-  }
-
   private startCombo(labels: string): void {
     this.comboState = "active";
+    this.gameHudLayer.classList.add("hud-combo-present");
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.remove("hud-trick-bail");
-    this.rooTrickLine.set(labels);
+    this.trickLineEl.textContent = labels.toUpperCase();
+  }
+
+  private setComboTotal(value: string): void {
+    this.trickTotalEl.textContent = value;
+  }
+
+  private snapLiveComboTicker(target: number): void {
+    this.liveComboTicker = createLiveComboTicker(target);
+    this.dispCombo = this.liveComboTicker.displayed;
   }
 
   private endCombo(): void {
     this.comboState = "none";
+    this.gameHudLayer.classList.remove("hud-combo-present");
     this.trickPlate.style.display = "none";
     this.trickPlate.classList.remove("hud-trick-bail");
     this.dispCombo = 0;
+    this.liveComboTicker = createLiveComboTicker();
+    this.comboCashInHoldEnd = 0;
+    this.comboCashInWasHolding = false;
   }
 
   // Combo landed clean: freeze the total on the plate and drain it to zero while
   // the score ticks up to match.
   comboBank(amount: number, labels: string): void {
     this.dispCombo = amount;
+    this.liveComboTicker = createLiveComboTicker(amount);
     this.comboState = "cashin";
+    this.gameHudLayer.classList.add("hud-combo-present");
+    this.comboCashInHoldEnd = performance.now() + COMBO_CASH_IN_EXTRA_HOLD_MS;
+    this.comboCashInWasHolding = false;
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.remove("hud-trick-bail");
-    this.rooTrickLine.set(labels);
-    pop(this.scoreEl);
+    this.trickLineEl.textContent = labels.toUpperCase();
+    this.setComboTotal(String(Math.round(this.dispCombo)));
   }
 
-  // Combo lost on a bail: red, shake, drop away.
-  comboBail(): void {
+  // Combo lost on a bail: keep the exact copy already on screen, turn it red,
+  // and drop it away. The callback snapshot is only a same-step fallback for
+  // a trick that scored and failed before the HUD received its first frame.
+  comboBail(labels: string, pendingPoints: number, multiplier: number): void {
+    const hasDisplayedCopy =
+      this.comboState === "active" &&
+      Boolean(this.trickLineEl.textContent) &&
+      Boolean(this.trickTotalEl.textContent);
+    if (!hasDisplayedCopy) {
+      this.trickLineEl.textContent = labels.toUpperCase();
+      this.snapLiveComboTicker(sourceComboPurseTarget(pendingPoints));
+      this.setComboTotal(sourceLiveComboText(this.dispCombo, multiplier));
+    }
     this.comboState = "bail";
+    this.gameHudLayer.classList.add("hud-combo-present");
     this.comboBailEnd = performance.now() + 700;
+    this.comboCashInHoldEnd = 0;
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.add("hud-trick-bail");
-    this.rooTrickLine.set("BAILED!");
-    this.rooTrickTotal.set("NO");
   }
 
   // ---- HUD icons, as real spinning 3D ------------------------------------
@@ -1201,12 +1218,32 @@ export class UI {
     ghost.style.visibility = earned && slot ? "hidden" : "visible";
   }
 
-  setHUD(s: HudState): void {
+  setHUD(s: HudState, deltaSeconds = 1 / 60): void {
+    const hudNow = performance.now();
+    const cashInHolding =
+      this.comboState === "cashin" &&
+      comboCashInIsHolding(hudNow, this.comboCashInHoldEnd);
+    const cashInReleased = this.comboCashInWasHolding && !cashInHolding;
+    this.comboCashInWasHolding = cashInHolding;
     // SCORE ticker: the shown number chases the real score fast.
     if (this.prevHud.points < 0) this.dispScore = s.points; // snap on first frame
-    if (s.points > this.prevHud.points && this.prevHud.points >= 0)
+    const cashInFrame =
+      this.comboState === "cashin"
+        ? advanceComboCashInDisplay(
+            this.dispCombo,
+            this.dispScore,
+            s.points,
+            cashInHolding,
+          )
+        : null;
+    if (
+      (s.points > this.prevHud.points && this.prevHud.points >= 0 && !cashInHolding) ||
+      cashInReleased
+    )
       pop(this.scoreEl);
-    this.dispScore = this.ticker(this.dispScore, s.points);
+    this.dispScore = cashInFrame
+      ? cashInFrame.score
+      : advanceSourceComboTicker(this.dispScore, s.points);
     this.rooScore.set(String(Math.round(this.dispScore)));
     this.prevHud.points = s.points;
     if (s.crates !== this.prevHud.crates) {
@@ -1275,27 +1312,35 @@ export class UI {
     if (this.comboState === "cashin") {
       if (show) {
         this.startCombo(labels); // a fresh combo interrupts the cash-in
-        this.dispCombo = target;
-        this.rooTrickTotal.set(sourceLiveComboText(this.dispCombo, multiplier));
-      } else {
-        this.dispCombo = advanceSourceComboTicker(this.dispCombo, 0);
-        this.rooTrickTotal.set(String(Math.round(this.dispCombo)));
+        this.comboCashInHoldEnd = 0;
+        this.snapLiveComboTicker(target);
+        this.setComboTotal(sourceLiveComboText(this.dispCombo, multiplier));
+      } else if (!cashInHolding) {
+        this.dispCombo = cashInFrame?.combo ?? this.dispCombo;
+        this.setComboTotal(String(Math.round(this.dispCombo)));
         if (this.dispCombo <= 0) this.endCombo();
       }
     } else if (this.comboState === "bail") {
       if (show) {
         this.startCombo(labels);
-        this.dispCombo = target;
-        this.rooTrickTotal.set(sourceLiveComboText(this.dispCombo, multiplier));
+        this.snapLiveComboTicker(target);
+        this.setComboTotal(sourceLiveComboText(this.dispCombo, multiplier));
       }
-      else if (performance.now() >= this.comboBailEnd) this.endCombo();
+      else if (hudNow >= this.comboBailEnd) this.endCombo();
     } else if (show) {
       const entering = this.comboState !== "active";
       this.startCombo(labels);
-      this.dispCombo = entering || fixedChanged
-        ? target
-        : advanceSourceComboTicker(this.dispCombo, target);
-      this.rooTrickTotal.set(sourceLiveComboText(this.dispCombo, multiplier));
+      if (entering || fixedChanged) {
+        this.snapLiveComboTicker(target);
+      } else {
+        this.liveComboTicker = advanceLiveComboTicker(
+          this.liveComboTicker,
+          target,
+          deltaSeconds,
+        );
+        this.dispCombo = this.liveComboTicker.displayed;
+      }
+      this.setComboTotal(sourceLiveComboText(this.dispCombo, multiplier));
     } else if (this.comboState === "active") {
       this.endCombo(); // combo fizzled with no bank/bail signal
     }
@@ -2088,49 +2133,60 @@ export class UI {
       .hud-ttrow-new { background: #2b4436; color: #b6f0cc; }
       .hud-ttres-sub { margin-top: 10px; color: #9fb0c8; font-size: 12px; letter-spacing: 1px; }
 
+      /* Bottom-centre HUD items share one stack. The boost ring therefore
+         rises above however many combo lines are live instead of occupying a
+         fixed coordinate through the middle of them. With no combo, padding
+         restores the ring's established 13%-from-bottom resting position. */
+      .hud-combostack {
+        position: fixed; z-index: 10; bottom: 4%; left: 50%;
+        transform: translateX(-50%); width: min(94vw, 1100px);
+        padding-bottom: 9vh; box-sizing: border-box;
+        display: flex; flex-direction: column; align-items: center; gap: 8px;
+        pointer-events: none;
+      }
+      .game-hud-layer.hud-combo-present .hud-combostack { padding-bottom: 0; }
+
       /* THPS trick readout — bare text, no plate, reads on any background.
          The entrance animation restarts on the existing display none->block
          toggle, so a fresh combo slams in without any new JS. */
       .hud-trickplate {
-        position: fixed; z-index: 10; bottom: 4%; left: 50%;
-        transform: translateX(-50%); pointer-events: none; text-align: center;
-        max-width: 92vw; display: none;
+        position: relative; width: 100%; pointer-events: none;
+        text-align: center; display: none;
         animation: trickin 0.18s ease-out;
       }
       @keyframes trickin {
-        0% { transform: translateX(-50%) scale(1.35); opacity: 0.3; }
-        100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        0% { transform: translateY(10px); opacity: 0.3; }
+        100% { transform: translateY(0); opacity: 1; }
       }
       .hud-trickline {
-        font: bold clamp(18px, 3.2vh, 30px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 2px; color: #ffe08a;
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        font: bold clamp(23px, 3.7vh, 36px) Impact, 'Arial Black', sans-serif;
+        line-height: 1.08; letter-spacing: 1px; color: #ffe08a;
+        white-space: normal; overflow-wrap: normal;
+        text-shadow: 2px 2px 0 #351806, 0 0 7px rgba(255, 176, 48, 0.34);
       }
       .hud-tricktotal {
-        font: 900 clamp(28px, 5vh, 46px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 4px; color: #ffb43a; margin-top: 2px;
+        font: 900 clamp(38px, 6.2vh, 60px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px; color: #ffb43a; margin-top: 4px;
+        line-height: 1.05;
+        text-shadow: 2px 2px 0 #351806, 0 0 8px rgba(255, 126, 20, 0.38);
         animation: combopulse 0.5s ease-in-out infinite alternate;
       }
       @keyframes combopulse {
         from { transform: scale(1); }
         to { transform: scale(1.05); }
       }
-      /* BAILED combo: text goes red, shakes "no", then drops away. */
+      /* Lost combo: preserve its copy, turn it red, and let it fall away. */
       .hud-trick-bail .hud-trickline,
       .hud-trick-bail .hud-tricktotal {
         color: #ff3b30 !important;
+        text-shadow: 2px 2px 0 #3b0806, 0 0 10px #ff3b30;
         animation: none;
       }
-      .hud-trick-bail { animation: trickbail 0.7s ease-in forwards; }
+      .hud-trick-bail { animation: trickbail 0.7s cubic-bezier(.36,.01,.74,.43) forwards; }
       @keyframes trickbail {
-        0%   { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 1; }
-        9%   { transform: translateX(-50%) translateY(0) rotate(-5deg); }
-        18%  { transform: translateX(-50%) translateY(0) rotate(5deg); }
-        27%  { transform: translateX(-50%) translateY(0) rotate(-5deg); }
-        36%  { transform: translateX(-50%) translateY(0) rotate(4deg); }
-        45%  { transform: translateX(-50%) translateY(0) rotate(-2deg); }
-        58%  { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 1; }
-        100% { transform: translateX(-50%) translateY(64px) rotate(0deg); opacity: 0; }
+        0%   { transform: translateY(0); opacity: 1; }
+        24%  { transform: translateY(3px); opacity: 1; }
+        100% { transform: translateY(92px); opacity: 0; }
       }
 
       .hud-msg {
@@ -2187,8 +2243,7 @@ export class UI {
       /* balance-boost ring: green radial meter above the trick readout,
          lapping over itself when crate windows stack */
       .hud-boosts {
-        position: fixed; z-index: 10; left: 50%; bottom: 13%;
-        transform: translateX(-50%); pointer-events: none;
+        position: relative; pointer-events: none;
         display: flex; flex-direction: column; gap: 5px; align-items: center;
       }
       .hud-boostring {
@@ -2204,7 +2259,7 @@ export class UI {
       .hud-boost-low { animation: boostblink 0.3s steps(2, start) infinite; }
 
       /* ---- Roo display face ----------------------------------------------
-         Every readout above is an SVG Roo label (src/rootext.ts), so the
+         Persistent readouts are SVG Roo labels (src/rootext.ts), so the
          rules that shape TEXT no longer bite: a text-shadow can't reach an
          <svg>, and colour/letter-spacing have nothing to act on. The size
          still comes from each rule's own font-size, which keeps every
@@ -2213,17 +2268,13 @@ export class UI {
          would push the counter rows apart. The face carries its own keyline,
          so it needs no shadow to separate it from the level behind. */
       .hud-num, .hud-scorenum, .hud-scorelabel, .hud-tttime, .hud-ttfreeze,
-      .hud-trickline, .hud-tricktotal, .hud-msg-title, .hud-death-title,
-      .hud-boostlabel {
+      .hud-msg-title, .hud-death-title, .hud-boostlabel {
         line-height: 0;
       }
-      /* Both plates are centred with left:50% and no width, so their
-         shrink-to-fit space is only HALF the viewport — which a wrapping glyph
-         row obeys, folding a title in two long before it needed to. Give them
-         the real width to lay out against; the transform still centres them. */
-      .hud-msg, .hud-trickplate { width: 94vw; max-width: 94vw; }
+      /* The Roo message plate is centred with left:50% and no width, so its
+         shrink-to-fit space would otherwise be only half the viewport. */
+      .hud-msg { width: 94vw; max-width: 94vw; }
       .hud-death-title { max-width: 94vw; }
-      .hud-trickline { overflow: visible; }
       /* Every Roo size in one place, and every one of them a CAP HEIGHT in
          px (the .roo-line note below explains why font-size and cap height
          are now the same number). The rules further up still carry the
@@ -2231,8 +2282,7 @@ export class UI {
          here so a readout can't be sized twice with two different answers.
 
          The hierarchy: crate/fruit/lives counters lead, the trial clock
-         matches them, the trick total sits a step under, and the score,
-         trick name and small captions sit under that.
+         matches them, and the score and small captions sit under that.
 
          THESE ARE HAND-PICKED, and the first pass at them was too timid.
          Making font-size mean cap height fixed a real bug — every readout was
@@ -2241,8 +2291,7 @@ export class UI {
          merely fits is not the same as a HUD you can read at a glance while
          you are busy playing. These came back up off a screenshot: counters
          56 -> 90, trial clock 54 -> 90, trick total 40 -> 60, trick name
-         28 -> 36. The score column follows the trick name's tier so it doesn't
-         strand under a counter half again its size. */
+         28 -> 36. */
       .hud-scorelabel { font-size: clamp(15px, 2.4vh, 22px); letter-spacing: 3px; }
       .hud-scorenum { font-size: clamp(24px, 4vh, 36px); }
       .hud-ttfreeze { font-size: clamp(15px, 2.3vh, 22px); margin-top: 1px; }
@@ -2253,8 +2302,6 @@ export class UI {
          beside it. Same clamp as .hud-icon, so the digit is exactly as tall
          as the portrait. */
       .hud-lives { font-size: clamp(68px, 10.7vh, 111px); }
-      .hud-trickline { font-size: clamp(23px, 3.7vh, 36px); }
-      .hud-tricktotal { font-size: clamp(38px, 6.2vh, 60px); margin-top: 4px; }
       .hud-ttres-title { font-size: 42px; }
       .hud-ttres-time { font-size: 66px; }
       .hud-msg-title { font-size: 84px; }
@@ -2289,7 +2336,6 @@ export class UI {
       .roo-line > .roo-text-svg { width: auto; height: 100%; }
       /* Centred plates centre their glyphs; the corner readouts hang right. */
       .hud-msg-title.roo-line, .hud-death-title.roo-line,
-      .hud-trickline.roo-line, .hud-tricktotal.roo-line,
       .hud-ttres-title.roo-line, .hud-boostlabel.roo-line {
         justify-content: center;
       }
@@ -2307,13 +2353,9 @@ export class UI {
         justify-content: flex-end;
       }
       .hud-ttres-time.roo-line { justify-content: center; }
-      /* Frozen clock and bailed combo used to recolour the text. The drawn
-         face has its own colours, so the state reads as a glow instead — a
-         coloured one that says something, not a black shadow. */
+      /* The frozen clock's drawn face has its own colours, so the state reads
+         as a glow instead of attempting to recolour the SVG glyph face. */
       .hud-tt-frozen .hud-tttime { filter: drop-shadow(0 0 9px #6ee6ff); }
-      .hud-trick-bail .hud-trickline, .hud-trick-bail .hud-tricktotal {
-        filter: drop-shadow(0 0 10px #ff3b30);
-      }
       @keyframes boostblink { to { opacity: 0.35; } }
 
       .hud-balance {
@@ -2322,6 +2364,10 @@ export class UI {
         background: linear-gradient(180deg, rgba(8, 10, 15, 0.9), rgba(26, 30, 44, 0.9));
         border: 1px solid #3a4152; border-radius: 7px;
         box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+      .game-hud-layer.hud-combo-present .hud-balance,
+      .game-hud-layer.hud-combo-present .hud-vbalance {
+        bottom: clamp(230px, 36vh, 330px);
       }
       .hud-balance-center {
         position: absolute; left: 50%; top: 2px; bottom: 2px; width: 2px;
