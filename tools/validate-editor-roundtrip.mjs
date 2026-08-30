@@ -1076,6 +1076,120 @@ const fail = (label, error) => {
   console.error(`     ${error instanceof Error ? error.message : String(error)}`);
 };
 
+function assertIslandHopper(data, level) {
+  assert.deepEqual(data.ocean, {
+    p: [106, -0.36, -168],
+    length: 500,
+    yaw: 0,
+    seaward: -1,
+    width: 220,
+    overlap: 6,
+    longitudinalSegments: 128,
+    lateralSegments: 128,
+    sourceCoordinates: "unity",
+  });
+  assert.equal(data.shoreFoam?.length, 5);
+  assert.equal(
+    data.components.some(
+      (component) =>
+        component.nm === "shallow tropical ocean" ||
+        component.nm === "deep water death",
+    ),
+    false,
+  );
+  assert.equal(
+    data.components.filter((component) => component.shoreProfile).length,
+    5,
+  );
+  assert.ok(
+    data.components
+      .filter((component) => component.t === "woodpath")
+      .every(
+        (component) =>
+          component.structureStyle === "island" &&
+          component.baySpacing === 4.5 &&
+          component.supportBaseY === -3.6,
+      ),
+  );
+  if (!level) return;
+
+  assert.ok(level.water, "Island Hopper did not instantiate MatrixRex ocean");
+  if (window.location.search.includes("lite")) {
+    assert.equal(level.water.stats.quality, "lite");
+  } else {
+    assert.equal(level.water.stats.quality, "full");
+    assert.equal(level.water.stats.shoreSamples, 129);
+    assert.equal(level.water.stats.verts, 17_028);
+    assert.equal(level.water.stats.tris, 33_280);
+  }
+  assert.deepEqual(
+    {
+      ...level.shoreFoamDiagnostics,
+      time: 0,
+    },
+    {
+      ovalCount: 5,
+      segmentsPerOval: 72,
+      vertexCount: 720,
+      triangleCount: 720,
+      drawCalls: 1,
+      sourceZSign: -1,
+      renderOrder: 1,
+      time: 0,
+      disposed: false,
+    },
+  );
+  assert.equal(
+    level.groundMeshes.filter((mesh) => mesh.userData.shoreProfile).length,
+    5,
+  );
+  for (const crate of level.crates) {
+    assert.ok(
+      Math.abs(crate.box.min.y - 1.05) < 1e-5,
+      `Island crate at x=${crate.mesh.position.x.toFixed(2)} seated at ${crate.box.min.y}`,
+    );
+    assert.ok(
+      Math.abs(crate.mesh.position.y - 1.53) < 1e-5,
+      "Island crate center no longer matches boardwalk top + half-height",
+    );
+  }
+  const partMeshes = [];
+  level.pickRoot.traverse((object) => {
+    if (object.userData.woodPathPartRole) partMeshes.push(object);
+  });
+  assert.equal(
+    partMeshes.filter((mesh) => mesh.userData.woodPathPartRole === "plank").length,
+    11,
+  );
+  assert.equal(
+    partMeshes.filter((mesh) => mesh.userData.woodPathPartRole === "pole").length,
+    11,
+  );
+  const roles = partMeshes.flatMap((mesh) => mesh.userData.woodPathRoles ?? []);
+  for (const role of [
+    "support-post",
+    "crossbeam",
+    "handrail-post",
+    "top-ledger",
+    "side-brace",
+    "midheight-cross-brace",
+    "top-rail",
+  ])
+    assert.ok(roles.includes(role), `Island boardwalk is missing ${role}`);
+  const collisionDecks = level.groundMeshes.filter(
+    (mesh) => mesh.userData.collisionOnly,
+  );
+  assert.equal(collisionDecks.length, 11);
+  assert.ok(
+    collisionDecks.every((mesh) =>
+      (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).every(
+        (material) => material.colorWrite === false,
+      ),
+    ),
+    "a rendered swept deck can z-fight the visible board palette",
+  );
+}
+
 try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
   const {
@@ -1140,6 +1254,7 @@ try {
       id: entry.id,
       name: entry.name,
       source: "source-owned built-in",
+      verify: entry.id === "island-hopper" ? assertIslandHopper : undefined,
     })),
   ];
 

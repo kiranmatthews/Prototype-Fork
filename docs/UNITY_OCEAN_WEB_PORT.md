@@ -55,6 +55,12 @@ LOOK system used by Bonus and Meshy. Split-screen and `?lite` fall back to the
 direct renderer. See `docs/UNITY_VISUAL_TREATMENT.md` for exact profile values,
 ordering, performance bounds and diagnostics.
 
+Island Hopper reuses the same `UnityOcean` owner with its own source-authored
+straight shoreline contract: 500 m long, 220 m wide, 6 m land overlap and
+128×128 subdivisions at sea level -0.36. The configurable width/sample inputs
+change only ribbon layout; shaders, reflection, prepass, refraction, caustics,
+intersection foam, sizing and disposal remain the one shared MatrixRex path.
+
 The SMAA algorithm and lookup textures carry their original 2013 MIT notice in
 `public/unity/smaa/LICENSE.txt`; `area.png` and `search.png` are lossless PNG
 conversions of the corresponding MIT-associated lookup tables. The dither rank

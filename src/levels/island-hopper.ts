@@ -11,6 +11,7 @@ const r3 = (value: number): number => Math.round(value * 1000) / 1000;
 
 const COURSE_LENGTH = 384;
 const DECK_Y = 1.05;
+const SEA_LEVEL = -0.36;
 
 const GROUP = {
   water: 1,
@@ -96,12 +97,16 @@ const woodPath = (
     pts: points,
     widths: points.map(() => width),
     curve: points.length >= 3 ? "spline" : undefined,
+    structureStyle: "island",
+    plankPalette: "placeholder-board",
+    polePalette: "placeholder-pole",
     scaffold: true,
     supports: true,
     rails: true,
     spacing: 0.68,
-    baySpacing: 3.8,
+    baySpacing: 4.5,
     supportDepth: 4.65,
+    supportBaseY: -3.6,
     terrainSupports: true,
     color: "#8b5a2b",
     tex: "plank",
@@ -126,36 +131,35 @@ const WALK_RUNS = [
   ["Walk 04", 293.2, 327, 7.8],
 ] as const;
 
-// One broad visual ocean, with a low death sheet below it. The sheet sits far
-// enough under the island shelves and deck that only a genuine water fall hits.
-add({
-  t: "decor",
-  dkind: "block",
-  p: [0, -0.42, -168],
-  s: [220, 0.08, 440],
-  color: "#278cab",
-  tex: "metal",
-  nm: "shallow tropical ocean",
-  grp: GROUP.water,
-});
-add({
-  t: "pit",
-  p: [0, -1.45, -168],
-  s: [220, 1, 440],
-  nm: "deep water death",
-  grp: GROUP.water,
+const ISLAND_AXES = [
+  [17.5, 23],
+  [18.25, 26.55],
+  [17.25, 27],
+  [18, 25.035],
+  [19, 32],
+] as const;
+const shoreFoam = PLATFORM_RUNS.map(([, start, end], index) => {
+  const { center, right, forward } = frameAt((start + end) / 2);
+  return {
+    center: [r3(center[0]), SEA_LEVEL, r3(center[2])] as [number, number, number],
+    right: [r3(right[0]), 0, r3(right[2])] as [number, number, number],
+    forward: [r3(forward[0]), 0, r3(forward[2])] as [number, number, number],
+    axes: [...ISLAND_AXES[index]] as [number, number],
+    phase: r3(index * 2.19),
+  };
 });
 
-// Unity's five sand shelves are low elliptical playable islands. The swept
-// boardwalk is only 0.37 m above their crests, so support posts visibly meet.
+// Unity's five shelves slope through four organic radial rings into the sea;
+// the boardwalk collision stays at 1.05 while full-height poles embed through
+// the sand to the authored -3.6 fallback base.
 PLATFORM_RUNS.forEach(([name, start, end, width], index) => {
   const middle = (start + end) / 2;
   const { center, forward, right } = frameAt(middle);
   const halfWidth = width / 2 + 8;
   const halfLength = (end - start) / 2 + 7;
   const points: [number, number][] = [];
-  for (let step = 0; step < 24; step++) {
-    const angle = (step / 24) * Math.PI * 2;
+  for (let step = 0; step < 48; step++) {
+    const angle = (step / 48) * Math.PI * 2;
     const lateral = Math.cos(angle) * halfWidth;
     const longitudinal = Math.sin(angle) * halfLength;
     points.push([
@@ -165,9 +169,12 @@ PLATFORM_RUNS.forEach(([name, start, end, width], index) => {
   }
   add({
     t: "platform",
-    p: [r2(center[0]), 0.36, r2(center[2])],
+    p: [r2(center[0]), DECK_Y, r2(center[2])],
     s: [halfWidth * 2, 0.64, halfLength * 2],
     pts: points,
+    shoreProfile: true,
+    shoreSeaLevel: SEA_LEVEL,
+    shorePhase: r3(index * 1.73),
     tex: "sand",
     color: "#e8a84f",
     nm: `Sand island ${index + 1}`,
@@ -325,6 +332,18 @@ export const ISLAND_HOPPER_LEVEL: CustomLevelData = {
   spawn,
   killY: -2.65,
   sky: "coast",
+  ocean: {
+    p: [106, SEA_LEVEL, -168],
+    length: 500,
+    yaw: 0,
+    seaward: -1,
+    width: 220,
+    overlap: 6,
+    longitudinalSegments: 128,
+    lateralSegments: 128,
+    sourceCoordinates: "unity",
+  },
+  shoreFoam,
   groups: [
     { id: GROUP.water, nm: "ocean and deep water" },
     { id: GROUP.islands, nm: "sand islands" },

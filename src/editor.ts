@@ -541,7 +541,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           supports: true,
           rails: true,
           spacing: 0.55,
-          baySpacing: 3.8,
+          baySpacing: 4.5,
           supportDepth: 3,
           pts: [
             [0, 0, 0, 0, 0],
@@ -4316,7 +4316,7 @@ export class Editor {
       c.w = c.w ?? 6;
       c.s = c.s ?? [1, 0.32, 1];
       c.spacing = c.spacing ?? 0.55;
-      c.baySpacing = c.baySpacing ?? 3.8;
+      c.baySpacing = c.baySpacing ?? 4.5;
       if (c.supports ?? c.scaffold)
         c.supportDepth = c.supportDepth ?? c.rise ?? 3;
     } else if (c.t === "trickgate") c.radius = c.radius ?? 2.2;
@@ -5182,7 +5182,7 @@ export class Editor {
         supports: true,
         rails: true,
         spacing: 0.55,
-        baySpacing: 3.8,
+        baySpacing: 4.5,
         supportDepth: 3,
       });
     } else if (d.t === "vertramp") {
@@ -7402,7 +7402,7 @@ export class Editor {
         num("variation seed", () => c.seed ?? 7319, (v) => (c.seed = Math.round(v)), 1);
         num(
           "scaffold bay",
-          () => c.baySpacing ?? 3.8,
+          () => c.baySpacing ?? 4.5,
           (v) => (c.baySpacing = Math.max(1.5, v)),
           0.25,
         );
@@ -7417,6 +7417,14 @@ export class Editor {
           });
           this.propsEl.appendChild(button);
         };
+        toggle(
+          () => `construction profile: ${c.structureStyle ?? "light"}`,
+          () => {
+            const styles = ["light", "island", "beach"] as const;
+            const index = styles.indexOf(c.structureStyle ?? "light");
+            c.structureStyle = styles[(index + 1) % styles.length];
+          },
+        );
         toggle(
           () => `path: ${c.curve === "spline" ? "smooth spline" : "linear"}`,
           () => (c.curve = c.curve === "spline" ? "corner" : "spline"),

@@ -138,6 +138,44 @@ assert.equal(
   island.components.filter((component) => component.nm?.startsWith("Sand island ")).length,
   5,
 );
+assert.deepEqual(island.ocean, {
+  p: [106, -0.36, -168],
+  length: 500,
+  yaw: 0,
+  seaward: -1,
+  width: 220,
+  overlap: 6,
+  longitudinalSegments: 128,
+  lateralSegments: 128,
+  sourceCoordinates: "unity",
+});
+assert.equal(island.shoreFoam.length, 5);
+assert.deepEqual(
+  island.shoreFoam.map((oval) => oval.axes),
+  [[17.5, 23], [18.25, 26.55], [17.25, 27], [18, 25.035], [19, 32]],
+);
+assert.equal(
+  island.components.filter((component) => component.shoreProfile).length,
+  5,
+);
+assert.ok(
+  island.components
+    .filter((component) => component.t === "woodpath")
+    .every(
+      (component) =>
+        component.structureStyle === "island" &&
+        component.baySpacing === 4.5 &&
+        component.supportBaseY === -3.6,
+    ),
+);
+assert.equal(
+  island.components.some(
+    (component) =>
+      component.nm === "shallow tropical ocean" ||
+      component.nm === "deep water death",
+  ),
+  false,
+);
 
 const jungle = levels.get("JUNGLE_GATE_RUN_LEVEL");
 assert.equal(
@@ -312,5 +350,5 @@ for (const id of [
 }
 
 console.log(
-  "Validated six Unity ports: joins, routes, goals, actors, beach treatment, Bonus layout, actual compressed Meshy bridge, forward camera and reduced thorn cores.",
+  "Validated six Unity ports: source boardwalk profiles, Island ocean/foam/shelves, joins, routes, actors, Bonus layout, Meshy bridge/camera and thorn cores.",
 );

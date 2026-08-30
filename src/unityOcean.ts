@@ -47,6 +47,14 @@ export interface CoastWaterOpts {
    * tails without having their waves, textures, or reflection mirrored.
    */
   sourceCoordinates?: "unity" | "three";
+  /** Source plane width measured seaward from the nominal shoreline. */
+  oceanWidth?: number;
+  /** Small landward overlap that hides the seam under shore geometry. */
+  shoreOverlap?: number;
+  /** Longitudinal spacing used when resampling a simple shoreline. */
+  shoreSampleMetres?: number;
+  /** Across-water subdivisions; source quality uses 128. */
+  lateralSegments?: number;
 }
 
 export type OceanQuality = "full" | "lite";
@@ -963,6 +971,8 @@ function makeRibbonGeometry(
   seaLevel: number,
   lateralSegments = LATERAL_SEGMENTS,
   tangentW = -1,
+  oceanWidth = OCEAN_WIDTH,
+  shoreOverlap = SHORE_OVERLAP,
 ): THREE.BufferGeometry {
   const rows = lateralSegments + 1;
   const count = shore.length * rows;
@@ -972,12 +982,11 @@ function makeRibbonGeometry(
   for (let i = 0; i < shore.length; i++) {
     const sample = shore[i];
     for (let r = 0; r < rows; r++) {
-      // Unity columns run offshore -> land overlap (-120m -> +6m in its
-      // right-vector coordinate). `d` is positive seaward here, so the exact
-      // equivalent is 120m -> -6m. Reversing it flips every triangle down and
-      // Cull Back silently removes the ocean on a +Z shoreline.
-      const d = OCEAN_WIDTH
-        - (r / lateralSegments) * (OCEAN_WIDTH + SHORE_OVERLAP);
+      // Unity columns run offshore -> land overlap in its right-vector
+      // coordinate. `d` is positive seaward here. Reversing that order flips
+      // every triangle down and Cull Back silently removes the ribbon.
+      const d = oceanWidth
+        - (r / lateralSegments) * (oceanWidth + shoreOverlap);
       const vertex = i * rows + r;
       positions[vertex * 3] = sample.x + sample.sx * d;
       positions[vertex * 3 + 1] = seaLevel + RIBBON_Y_OFFSET;
@@ -1109,6 +1118,17 @@ export class UnityOcean {
     // reuse Unity's finite ocean-tail layout.
     this.sourceZSign = exactUnitySource ? UNITY_SOURCE_TO_THREE_Z : 1;
     const fallbackDirection = unit2(opts.shoreDirX, opts.shoreDirZ);
+    const shoreSampleMetres = Math.max(
+      0.25,
+      opts.shoreSampleMetres ?? SHORE_SAMPLE_METRES,
+    );
+    const requestedLateralSegments = Math.max(
+      1,
+      Math.round(opts.lateralSegments ?? LATERAL_SEGMENTS),
+    );
+    const ribbonLateralSegments = lite
+      ? Math.min(16, requestedLateralSegments)
+      : requestedLateralSegments;
     const sourceShore = opts.extendUnityTails
       ? extendUnityShoreTails(opts.shore)
       : opts.shore;
@@ -1118,7 +1138,7 @@ export class UnityOcean {
           sourceShore,
           fallbackDirection[0],
           fallbackDirection[1],
-          lite ? 8 : SHORE_SAMPLE_METRES,
+          lite ? Math.max(8, shoreSampleMetres) : shoreSampleMetres,
         );
     const renderShore = lite
       ? this.shore.filter(
@@ -1281,8 +1301,10 @@ export class UnityOcean {
       makeRibbonGeometry(
         renderShore,
         this.seaLevel,
-        lite ? 16 : LATERAL_SEGMENTS,
+        ribbonLateralSegments,
         -this.sourceZSign,
+        Math.max(1, opts.oceanWidth ?? OCEAN_WIDTH),
+        Math.max(0, opts.shoreOverlap ?? SHORE_OVERLAP),
       ),
       this.oceanMaterial,
     );

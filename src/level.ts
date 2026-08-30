@@ -47,6 +47,21 @@ import {
   type GroundAccelerationStats,
 } from "./groundAcceleration";
 import { boxIntersectsMeshTriangles } from "./meshIntersections";
+import { selectCrateRestSurface } from "./crateRestSurface";
+import {
+  buildWoodPathLayout,
+  UNITY_BEACH_BOARDWALK_PROFILE,
+  UNITY_ISLAND_BOARDWALK_PROFILE,
+  UNITY_LIGHT_BOARDWALK_PROFILE,
+  type WoodPathFrame,
+  type WoodPathProfile,
+} from "./woodPathKit";
+import {
+  createIslandShoreFoam,
+  type IslandShoreFoam,
+  type IslandShoreFoamOval,
+} from "./islandShoreFoam";
+import { buildIslandShelfGeometry } from "./islandShelf";
 
 const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { releaseWumpaMesh, wumpaMesh, WUMPA_SIZE } from "./wumpa";
@@ -650,7 +665,14 @@ export interface CustomComponent {
   spacing?: number; // woodpath: decorative plank spacing
   baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
   supportDepth?: number; // woodpath: fixed post depth below the deck
+  supportBaseY?: number; // woodpath: absolute fallback foot height when a terrain probe misses
   terrainSupports?: boolean; // woodpath: raycast each post to ground instead of fixed depth
+  structureStyle?: "light" | "island" | "beach"; // woodpath topology/plank profile
+  plankPalette?: string; // future fitted mesh palette id; placeholder box is the fallback
+  polePalette?: string; // future fitted mesh palette id; placeholder cylinder is the fallback
+  shoreProfile?: boolean; // polygon platform: Unity four-ring island shelf instead of a flat extrusion
+  shoreSeaLevel?: number; // shoreProfile waterline; defaults to centerY - 1.41
+  shorePhase?: number; // deterministic organic outline/height phase
   trick?: DeckTrickKind; // trickgate / trickrail requirement
   to?: [number, number, number]; // returnportal destination feet point
   exitYaw?: number; // returnportal outgoing heading in degrees (0 = -Z)
@@ -789,10 +811,26 @@ export interface CustomLevelData {
   killY: number;
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
+  ocean?: CustomOceanData;
+  shoreFoam?: IslandShoreFoamOval[];
   sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
   components: CustomComponent[];
   layers?: CustomLayer[];
   groups?: CustomGroup[];
+}
+
+export interface CustomOceanData {
+  /** Nominal shoreline midpoint and sea level. */
+  p: [number, number, number];
+  length: number;
+  yaw?: number;
+  /** -1 = left of travel, +1 = right of travel. */
+  seaward: -1 | 1;
+  width: number;
+  overlap?: number;
+  longitudinalSegments?: number;
+  lateralSegments?: number;
+  sourceCoordinates?: "unity" | "three";
 }
 
 // the full ancestor chain of group ids for a component (innermost first)
@@ -2032,7 +2070,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
     "len", "rise", "w", "yaw", "arc", "deck", "bank", "shake", "range",
     "speed", "cycle", "phase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
-    "collisionHeight",
+    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (
@@ -2041,6 +2079,60 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       !Number.isFinite(source.ledgeAssist) ||
       source.ledgeAssist < 0 ||
       source.ledgeAssist > 1)
+  )
+    return null;
+  if (source.ocean !== undefined) {
+    const ocean = source.ocean;
+    if (
+      !ocean ||
+      !finiteTuple(ocean.p, 3) ||
+      ocean.p.some((number) => Math.abs(number) > MAX_ABS) ||
+      !Number.isFinite(ocean.length) ||
+      ocean.length < 1 ||
+      ocean.length > MAX_PATH_LENGTH ||
+      !Number.isFinite(ocean.width) ||
+      ocean.width < 1 ||
+      ocean.width > MAX_ABS ||
+      (ocean.yaw !== undefined && !Number.isFinite(ocean.yaw)) ||
+      (ocean.seaward !== -1 && ocean.seaward !== 1) ||
+      (ocean.overlap !== undefined &&
+        (!Number.isFinite(ocean.overlap) || ocean.overlap < 0)) ||
+      (ocean.longitudinalSegments !== undefined &&
+        (!Number.isSafeInteger(ocean.longitudinalSegments) ||
+          ocean.longitudinalSegments < 1 ||
+          ocean.longitudinalSegments > 1024)) ||
+      (ocean.lateralSegments !== undefined &&
+        (!Number.isSafeInteger(ocean.lateralSegments) ||
+          ocean.lateralSegments < 1 ||
+          ocean.lateralSegments > 512)) ||
+      ((ocean.longitudinalSegments ?? 128) + 1) *
+          ((ocean.lateralSegments ?? 128) + 1) >
+        MAX_GENERATED_SAMPLES ||
+      (ocean.sourceCoordinates !== undefined &&
+        ocean.sourceCoordinates !== "unity" &&
+        ocean.sourceCoordinates !== "three")
+    )
+      return null;
+  }
+  if (
+    source.shoreFoam !== undefined &&
+    (!Array.isArray(source.shoreFoam) ||
+      source.shoreFoam.length < 1 ||
+      source.shoreFoam.length > 512 ||
+      !source.shoreFoam.every(
+        (oval) =>
+          oval &&
+          finiteTuple(oval.center, 3) &&
+          finiteTuple(oval.right, 3) &&
+          finiteTuple(oval.forward, 3) &&
+          finiteTuple(oval.axes, 2) &&
+          oval.axes.every((value) => value > 0) &&
+          [...oval.center, ...oval.right, ...oval.forward, ...oval.axes].every(
+            (value) => Math.abs(value) <= MAX_ABS,
+          ) &&
+          typeof oval.phase === "number" &&
+          Number.isFinite(oval.phase),
+      ))
   )
     return null;
   const axes = new Set(["x", "y", "z"]);
@@ -2054,10 +2146,12 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   ]);
   const tricks = new Set<DeckTrickKind>(DECK_TRICKS.map((entry) => entry.kind));
   const directions = new Set(["E", "W", "N", "S"]);
+  const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
+    "shoreProfile",
   ];
   let aggregateNodes = 0;
   let aggregateSamples = 0;
@@ -2101,7 +2195,9 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       (component.dkind !== undefined && !decorKinds.has(component.dkind)) ||
       (component.foe !== undefined && !foes.has(component.foe)) ||
       (component.trick !== undefined && !tricks.has(component.trick)) ||
-      (component.dir !== undefined && !directions.has(component.dir))
+      (component.dir !== undefined && !directions.has(component.dir)) ||
+      (component.structureStyle !== undefined &&
+        !structureStyles.has(component.structureStyle))
     )
       return null;
     if (
@@ -2111,6 +2207,10 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
         (typeof component.color !== "string" ||
           !/^#[0-9a-f]{6}$/i.test(component.color))) ||
       (component.nm !== undefined && typeof component.nm !== "string") ||
+      (component.plankPalette !== undefined &&
+        (typeof component.plankPalette !== "string" || component.plankPalette.length > 80)) ||
+      (component.polePalette !== undefined &&
+        (typeof component.polePalette !== "string" || component.polePalette.length > 80)) ||
       (component.grp !== undefined &&
         (!Number.isSafeInteger(component.grp) || component.grp < 0))
     )
@@ -4550,6 +4650,62 @@ export class Level {
   // seat themselves on the ground (crates, enemies, checkpoints) see the
   // geometry pass's floors. Every scene object a component creates gets
   // tagged with its component index for editor picking.
+  private buildCustomWaterPresentation(data: CustomLevelData): void {
+    const spec = data.ocean;
+    if (spec) {
+      const yaw = THREE.MathUtils.degToRad(spec.yaw ?? 0);
+      const tx = Math.sin(yaw);
+      const tz = -Math.cos(yaw);
+      const rightX = -tz;
+      const rightZ = tx;
+      const sx = rightX * spec.seaward;
+      const sz = rightZ * spec.seaward;
+      const half = spec.length * 0.5;
+      const shore: ShoreSample[] = [
+        {
+          x: spec.p[0] - tx * half,
+          z: spec.p[2] - tz * half,
+          sx,
+          sz,
+          beachSlope: 0,
+          bedSlope: 0,
+        },
+        {
+          x: spec.p[0] + tx * half,
+          z: spec.p[2] + tz * half,
+          sx,
+          sz,
+          beachSlope: 0,
+          bedSlope: 0,
+        },
+      ];
+      const longitudinalSegments = Math.max(
+        1,
+        Math.round(spec.longitudinalSegments ?? 128),
+      );
+      this.water = new CoastWater({
+        shore,
+        seaLevel: spec.p[1],
+        shoreDirX: sx,
+        shoreDirZ: sz,
+        course: [],
+        terrainHeight: () => spec.p[1],
+        sourceCoordinates: spec.sourceCoordinates ?? "three",
+        oceanWidth: spec.width,
+        shoreOverlap: spec.overlap ?? 6,
+        shoreSampleMetres: spec.length / longitudinalSegments,
+        lateralSegments: spec.lateralSegments ?? 128,
+      });
+      this.root.add(this.water.group);
+    }
+    if (data.shoreFoam?.length) {
+      this.islandShoreFoam = createIslandShoreFoam(data.shoreFoam, {
+        sourceZSign: data.ocean?.sourceCoordinates === "unity" ? -1 : 1,
+      });
+      this.root.add(this.islandShoreFoam.group);
+    }
+  }
+
   private buildCustom(data: CustomLevelData): void {
     this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
@@ -4575,6 +4731,7 @@ export class Level {
     };
     this.spawnPos.set(data.spawn[0], data.spawn[1], data.spawn[2]);
     this.currentSpawn.copy(this.spawnPos);
+    this.buildCustomWaterPresentation(data);
     // Bake the scenery for PLAY (hundreds of one-plant meshes is the whole
     // frame budget on a phone); leave it loose for the EDITOR, which has to
     // be able to click an individual fern.
@@ -4678,23 +4835,33 @@ export class Level {
             return [xx - nx, xz - nz];
           };
           if (c.t === "platform" && polyPts) {
-            // drawn deck: extruded slab, walkable via the ground raycast.
-            // Sides are raycast-only (the collision engine is AABB — same
-            // deal as free-spun rectangles).
             const th = c.s?.[1] ?? 1;
-            const geo = new THREE.ExtrudeGeometry(polyShape(), {
-              depth: th,
-              bevelEnabled: false,
-            });
-            geo.rotateX(-Math.PI / 2);
             const [pw, pd] = polySpan();
+            // Shore-profile polygons use the Unity center + four radial sand
+            // rings. Ordinary drawn decks retain the extruded slab contract.
+            const geo = c.shoreProfile
+              ? buildIslandShelfGeometry(polyPts, {
+                  centerY: c.p[1],
+                  seaLevel: c.shoreSeaLevel ?? c.p[1] - 1.41,
+                  phase: c.shorePhase ?? 0,
+                })
+              : new THREE.ExtrudeGeometry(polyShape(), {
+                  depth: th,
+                  bevelEnabled: false,
+                });
+            if (!c.shoreProfile) geo.rotateX(-Math.PI / 2);
             const mesh = new THREE.Mesh(
               geo,
               this.patterned(tinted(deck), pw, pd, c.tex ?? "checker"),
             );
-            mesh.position.set(c.p[0], c.p[1] - th / 2, c.p[2]); // extrude spans local y 0..th; p is the slab centre
+            mesh.position.set(
+              c.p[0],
+              c.shoreProfile ? c.p[1] : c.p[1] - th / 2,
+              c.p[2],
+            );
             mesh.name = c.slip ? "slippy plank" : "platform";
             if (c.slip) mesh.userData.slippy = true;
+            if (c.shoreProfile) mesh.userData.shoreProfile = true;
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
           } else if (c.t === "wall" && polyPts) {
@@ -5523,6 +5690,11 @@ export class Level {
       this.water.dispose();
       this.water = null;
     }
+    if (this.islandShoreFoam) {
+      this.root.remove(this.islandShoreFoam.group);
+      this.islandShoreFoam.dispose();
+      this.islandShoreFoam = null;
+    }
     disposeGroundAcceleration(
       this.acceleratedGroundGeometries,
       preservedGeometry,
@@ -5899,6 +6071,10 @@ export class Level {
   // The Descent's road spine, kept for the oncoming cars to drive along.
   private roadRibbon: SlideRibbon | null = null;
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
+  private islandShoreFoam: IslandShoreFoam | null = null;
+  get shoreFoamDiagnostics() {
+    return this.islandShoreFoam?.diagnostics ?? null;
+  }
   private noFogLevel = false; // coast: fog is stripped from everything but the sea
   // arc length to each lane point, so "how far along the course" is metres
   private laneArc: number[] = [];
@@ -6015,6 +6191,7 @@ export class Level {
 
   update(dt: number): void {
     this.updateVfx(dt);
+    this.islandShoreFoam?.update(dt);
     for (const gate of this.trickGates) {
       gate.ring.rotation.z += dt * (gate.unlocked ? 1.8 : 0.55);
       if (!gate.unlocked)
@@ -9413,14 +9590,11 @@ export class Level {
       : fallback;
   }
 
-  // Ground a captured crate should rest on. Capture flattens wavy jungle
-  // floors to a box at their PEAK, so a crate recorded at its lower wavy rest
-  // height must rise to sit on the flat top instead of sinking through it.
-  // floorY can't: its ±1.1 snap band gives up once the flat top is more than
-  // ~1 above the recorded base, and the crate stays buried. This returns the
-  // LOWEST ground within a band around the recorded base — raised up to ~4 for
-  // deep dips — so overhangs far above and any deliberate float below are
-  // ignored. Null when nothing sensible sits beneath/around it (keep base).
+  // Ground a data-authored crate should rest on. The authored deckY is the
+  // primary support hint: choose the highest surface meeting/below it, so a
+  // boardwalk over sand does not bury its crate in the lower island. If no
+  // ordinary support exists, the selector retains the legacy upward repair
+  // for captures whose replacement terrain moved above their recorded base.
   private crateRestSurface(x: number, z: number, deckY: number): number | null {
     const ray = new THREE.Raycaster(
       new THREE.Vector3(x, deckY + 8, z),
@@ -9429,13 +9603,10 @@ export class Level {
       400,
     );
     const hits = ray.intersectObjects(this.groundMeshes, false);
-    let best: number | null = null;
-    for (const h of hits) {
-      const y = h.point.y;
-      if (y >= deckY - 0.6 && y <= deckY + 4 && (best === null || y < best))
-        best = y;
-    }
-    return best;
+    return selectCrateRestSurface(
+      hits.map((hit) => hit.point.y),
+      deckY,
+    );
   }
 
   // Wavy jungle floor strip: a heightfield with rolling bumps, and firm berm
@@ -9891,8 +10062,21 @@ export class Level {
       polyLength += knots[index].distanceTo(knots[index - 1]);
     if (polyLength < 1) return;
 
+    const sourceProfile =
+      c.structureStyle === "island"
+        ? UNITY_ISLAND_BOARDWALK_PROFILE
+        : c.structureStyle === "beach"
+          ? UNITY_BEACH_BOARDWALK_PROFILE
+          : UNITY_LIGHT_BOARDWALK_PROFILE;
+    const profile: WoodPathProfile = {
+      ...sourceProfile,
+      deckThickness: c.s?.[1] ?? sourceProfile.deckThickness,
+      plankSpacing: c.spacing ?? sourceProfile.plankSpacing,
+      bentSpacing: c.baySpacing ?? sourceProfile.bentSpacing,
+    };
+
     const sampleCount = THREE.MathUtils.clamp(
-      Math.ceil(polyLength / 0.65),
+      Math.ceil(polyLength / profile.pathSampleSpacing),
       2,
       8192,
     );
@@ -9953,7 +10137,7 @@ export class Level {
       frames.push({ center, forward, right, up, width, arc });
     }
 
-    const thickness = Math.max(0.08, c.s?.[1] ?? 0.32);
+    const thickness = profile.deckThickness;
     const positions: number[] = [];
     const uvs: number[] = [];
     const indices: number[] = [];
@@ -9994,12 +10178,18 @@ export class Level {
       1,
       1,
     );
+    // Unity's swept deck is collision-only; individual boards own every
+    // visible top/side pixel. Rendering both surfaces coplanar caused the
+    // Island Hopper sand/boardwalk shimmer and defeats future board palettes.
+    deckMaterial.colorWrite = false;
+    deckMaterial.depthWrite = false;
     const deck = new THREE.Mesh(geometry, deckMaterial);
     deck.name = c.nm ?? "procedural wood path";
     deck.userData.woodPathComp = JSON.parse(JSON.stringify(c)) as CustomComponent;
     deck.userData.surfaceName = "wood";
     deck.userData.vert = false;
     deck.userData.undersideThickness = thickness;
+    deck.userData.collisionOnly = true;
     this.root.add(deck);
     this.groundMeshes.push(deck);
     const sideInset = Math.min(0.25, thickness * 0.4);
@@ -10031,160 +10221,205 @@ export class Level {
       }
     }
 
-    // Planks are one instanced visual layer. Their tiny seeded yaw/width
-    // variations never enter the collision mesh.
-    const plankSpacing = Math.max(0.18, c.spacing ?? 0.55);
-    const plankFrames = frames.filter(
-      (frame, index) =>
-        index === 0 ||
-        index === frames.length - 1 ||
-        Math.floor(frame.arc / plankSpacing) !==
-          Math.floor(frames[index - 1].arc / plankSpacing),
-    );
-    const plankGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const plankMaterial = new THREE.MeshLambertMaterial({
-      color: 0xffffff,
+    const scaffold = c.scaffold === true;
+    const makeRails = c.rails ?? scaffold;
+    const makeSupports = c.supports ?? scaffold;
+    const frameAtArc = (distance: number): WoodFrame => {
+      const target = THREE.MathUtils.clamp(distance, 0, arc);
+      let low = 0;
+      let high = frames.length - 1;
+      while (low + 1 < high) {
+        const middle = (low + high) >> 1;
+        if (frames[middle].arc < target) low = middle;
+        else high = middle;
+      }
+      const before = frames[low];
+      const after = frames[Math.min(frames.length - 1, high)];
+      const span = after.arc - before.arc;
+      const t = span > 1e-6 ? (target - before.arc) / span : 0;
+      return {
+        center: before.center.clone().lerp(after.center, t),
+        forward: before.forward.clone().lerp(after.forward, t).normalize(),
+        right: before.right.clone().lerp(after.right, t).normalize(),
+        up: before.up.clone().lerp(after.up, t).normalize(),
+        width: THREE.MathUtils.lerp(before.width, after.width, t),
+        arc: target,
+      };
+    };
+    const asKitFrame = (frame: WoodFrame): WoodPathFrame => ({
+      center: frame.center.toArray() as [number, number, number],
+      forward: frame.forward.toArray() as [number, number, number],
+      right: frame.right.toArray() as [number, number, number],
+      up: frame.up.toArray() as [number, number, number],
+      width: frame.width,
     });
+    const supportMeshes = c.terrainSupports
+      ? this.groundMeshes.filter((mesh) => mesh !== deck)
+      : [];
+    const supportRay = new THREE.Raycaster();
+    const layout = buildWoodPathLayout(
+      {
+        length: arc,
+        sampleAtDistance: (distance) => asKitFrame(frameAtArc(distance)),
+      },
+      {
+        profile,
+        plankSeed: c.seed ?? 7319,
+        poleSeed: (c.seed ?? 7319) ^ 0x6f2b,
+        fallbackBaseY: c.supportBaseY,
+        fallbackSupportDepth: c.supportDepth ?? c.rise ?? 3.5,
+        includeSupports: makeSupports,
+        includeHandrails: makeRails,
+        supportBottom:
+          supportMeshes.length > 0
+            ? (request) => {
+                supportRay.set(
+                  new THREE.Vector3().fromArray(request.probeOrigin),
+                  new THREE.Vector3(0, -1, 0),
+                );
+                supportRay.far = Math.max(
+                  80,
+                  Math.abs(request.probeOrigin[1] - request.fallback[1]) * 4,
+                );
+                const hit = supportRay.intersectObjects(supportMeshes, false)[0];
+                return hit
+                  ? [request.top[0], hit.point.y, request.top[2]]
+                  : null;
+              }
+            : undefined,
+      },
+    );
+
+    // One fallback board batch today; semantic envelopes + palette IDs make
+    // a fitted textured-GLB swap a renderer concern, never a topology rewrite.
+    const plankGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const plankMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
     const planks = new THREE.InstancedMesh(
       plankGeometry,
       plankMaterial,
-      plankFrames.length,
+      layout.planks.length,
     );
-    planks.name = "procedural path planks (visual only)";
+    planks.name = "woodpath parts · planks";
+    planks.userData.woodPathPartRole = "plank";
+    planks.userData.woodPathPalette = c.plankPalette ?? "placeholder-board";
+    planks.userData.woodPathVariants = layout.planks.map((piece) => piece.variantIndex);
     const matrix = new THREE.Matrix4();
     const basis = new THREE.Matrix4();
     const quaternion = new THREE.Quaternion();
     const scale = new THREE.Vector3();
-    plankFrames.forEach((frame, index) => {
-      basis.makeBasis(frame.right, frame.up, frame.forward);
+    layout.planks.forEach((piece, index) => {
+      basis.makeBasis(
+        new THREE.Vector3().fromArray(piece.basis.right),
+        new THREE.Vector3().fromArray(piece.basis.up),
+        new THREE.Vector3().fromArray(piece.basis.forward),
+      );
       quaternion.setFromRotationMatrix(basis);
-      const jitter = (((index * 1664525 + (c.seed ?? 7319)) >>> 0) % 997) / 997;
-      scale.set(frame.width + 0.22, 0.14, plankSpacing * (0.9 + jitter * 0.05));
+      scale.fromArray(piece.size);
       matrix.compose(
-        frame.center.clone().addScaledVector(frame.up, -0.07),
+        new THREE.Vector3().fromArray(piece.center),
         quaternion,
         scale,
       );
       planks.setMatrixAt(index, matrix);
       planks.setColorAt(
         index,
-        new THREE.Color().setHSL(0.078, 0.48, 0.28 + jitter * 0.1),
+        new THREE.Color().setHSL(
+          0.078,
+          0.48,
+          0.27 + piece.tonalBucket * 0.035,
+        ),
       );
     });
     planks.instanceMatrix.needsUpdate = true;
     if (planks.instanceColor) planks.instanceColor.needsUpdate = true;
     this.root.add(planks);
 
-    const scaffold = c.scaffold === true;
-    const makeRails = c.rails ?? scaffold;
-    const makeSupports = c.supports ?? scaffold;
-    if (!makeRails && !makeSupports) return;
-    const bambooMaterial = new THREE.MeshLambertMaterial({ color: 0xb59a57 });
-    const beams: Array<[THREE.Vector3, THREE.Vector3, number]> = [];
-    const leftRail: THREE.Vector3[] = [];
-    const rightRail: THREE.Vector3[] = [];
-    for (const frame of frames) {
-      leftRail.push(
-        frame.center
-          .clone()
-          .addScaledVector(frame.right, -frame.width / 2 + 0.12)
-          .addScaledVector(frame.up, 0.88),
-      );
-      rightRail.push(
-        frame.center
-          .clone()
-          .addScaledVector(frame.right, frame.width / 2 - 0.12)
-          .addScaledVector(frame.up, 0.88),
-      );
-    }
     if (makeRails) {
-      for (const points of [leftRail, rightRail]) {
-        const rail = new Rail(points.map((point) => point.clone()), false);
-        this.rails.push(rail);
-        for (let index = 1; index < points.length; index++)
-          beams.push([points[index - 1], points[index], 0.08]);
-        // A continuous waist wall behind the visible poles makes failed
-        // catches and ordinary body motion coherent between scaffold bays.
-        for (let index = 1; index < points.length; index++) {
-          const a = points[index - 1].clone().addScaledVector(frames[index - 1].up, -0.42);
-          const b = points[index].clone().addScaledVector(frames[index].up, -0.42);
-          this.walls.push(
-            new THREE.Box3().setFromPoints([a, b]).expandByVector(
-              new THREE.Vector3(0.16, 0.46, 0.16),
-            ),
-          );
-        }
-      }
-    }
-    if (makeSupports) {
-      const baySpacing = Math.max(1.5, c.baySpacing ?? 3.8);
-      const supportGroundMeshes = c.terrainSupports
-        ? this.groundMeshes.filter((mesh) => mesh !== deck)
-        : [];
-      const supportRay = new THREE.Raycaster();
-      const supportBottom = (top: THREE.Vector3, depth: number): THREE.Vector3 => {
-        if (supportGroundMeshes.length > 0) {
-          supportRay.set(
-            top.clone().add(new THREE.Vector3(0, -0.05, 0)),
-            new THREE.Vector3(0, -1, 0),
-          );
-          supportRay.far = Math.max(depth * 4, 80);
-          const hit = supportRay
-            .intersectObjects(supportGroundMeshes, false)
-            .find((entry) => entry.point.y < top.y - 0.1);
-          if (hit) return new THREE.Vector3(top.x, hit.point.y, top.z);
-        }
-        return top.clone().add(new THREE.Vector3(0, -depth, 0));
-      };
-      let previousBay: { leftTop: THREE.Vector3; rightTop: THREE.Vector3 } | null = null;
-      for (let index = 0; index < frames.length; index++) {
-        const frame = frames[index];
-        if (
-          index !== 0 &&
-          index !== frames.length - 1 &&
-          Math.floor(frame.arc / baySpacing) ===
-            Math.floor(frames[index - 1].arc / baySpacing)
-        )
-          continue;
-        const depth = Math.max(0.8, c.supportDepth ?? c.rise ?? 3);
-        const leftTop = frame.center
-          .clone()
-          .addScaledVector(frame.right, -frame.width / 2 + 0.28);
-        const rightTop = frame.center
-          .clone()
-          .addScaledVector(frame.right, frame.width / 2 - 0.28);
-        const leftBottom = supportBottom(leftTop, depth);
-        const rightBottom = supportBottom(rightTop, depth);
-        beams.push([leftBottom, leftTop, 0.11], [rightBottom, rightTop, 0.11]);
-        beams.push([leftTop, rightTop, 0.08]);
-        this.walls.push(
-          new THREE.Box3().setFromPoints([leftBottom, leftTop]).expandByScalar(0.13),
-          new THREE.Box3().setFromPoints([rightBottom, rightTop]).expandByScalar(0.13),
+      for (const railLayout of layout.rails) {
+        const rail = new Rail(
+          railLayout.points.map((point) => new THREE.Vector3().fromArray(point)),
+          false,
         );
-        if (previousBay) {
-          beams.push([previousBay.leftTop, rightTop, 0.055]);
-          beams.push([previousBay.rightTop, leftTop, 0.055]);
-        }
-        previousBay = { leftTop, rightTop };
+        this.rails.push(rail);
       }
     }
-    const beamGeometry = new THREE.CylinderGeometry(1, 1, 1, 7);
-    const bamboo = new THREE.InstancedMesh(beamGeometry, bambooMaterial, beams.length);
-    bamboo.name = "procedural bamboo scaffold (visual)";
+
+    const addOrientedBarrier = (
+      center: readonly number[],
+      memberBasis: { right: readonly number[]; up: readonly number[]; forward: readonly number[] },
+      size: readonly number[],
+    ): void => {
+      const box = new THREE.Box3().makeEmpty();
+      const c0 = new THREE.Vector3().fromArray(center);
+      const right = new THREE.Vector3().fromArray(memberBasis.right);
+      const up = new THREE.Vector3().fromArray(memberBasis.up);
+      const forward = new THREE.Vector3().fromArray(memberBasis.forward);
+      for (const sx of [-1, 1])
+        for (const sy of [-1, 1])
+          for (const sz of [-1, 1])
+            box.expandByPoint(
+              c0
+                .clone()
+                .addScaledVector(right, (sx * size[0]) / 2)
+                .addScaledVector(up, (sy * size[1]) / 2)
+                .addScaledVector(forward, (sz * size[2]) / 2),
+            );
+      this.walls.push(box);
+    };
+    for (const barrier of layout.balustradeBarriers)
+      addOrientedBarrier(barrier.center, barrier.basis, barrier.size);
+
+    for (const pole of layout.poles) {
+      if (pole.role === "support-post")
+        this.walls.push(
+          new THREE.Box3()
+            .setFromPoints([
+              new THREE.Vector3().fromArray(pole.start),
+              new THREE.Vector3().fromArray(pole.end),
+            ])
+            .expandByScalar(pole.radius + 0.015),
+        );
+    }
     const yAxis = new THREE.Vector3(0, 1, 0);
-    beams.forEach(([a, b, radius], index) => {
-      const delta = b.clone().sub(a);
-      const length = Math.max(0.01, delta.length());
-      quaternion.setFromUnitVectors(yAxis, delta.normalize());
-      matrix.compose(
-        a.clone().add(b).multiplyScalar(0.5),
-        quaternion,
-        new THREE.Vector3(radius, length, radius),
+    if (layout.poles.length > 0) {
+      const geometry = new THREE.CylinderGeometry(1, 1, 1, 7);
+      const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      const instances = new THREE.InstancedMesh(
+        geometry,
+        material,
+        layout.poles.length,
       );
-      bamboo.setMatrixAt(index, matrix);
-    });
-    bamboo.instanceMatrix.needsUpdate = true;
-    this.root.add(bamboo);
+      instances.name = "woodpath parts · poles";
+      instances.userData.woodPathPartRole = "pole";
+      instances.userData.woodPathPalette = c.polePalette ?? "placeholder-pole";
+      instances.userData.woodPathRoles = layout.poles.map((piece) => piece.role);
+      instances.userData.woodPathVariants = layout.poles.map(
+        (piece) => piece.variantIndex,
+      );
+      layout.poles.forEach((pole, index) => {
+        quaternion.setFromUnitVectors(
+          yAxis,
+          new THREE.Vector3().fromArray(pole.direction),
+        );
+        matrix.compose(
+          new THREE.Vector3().fromArray(pole.center),
+          quaternion,
+          new THREE.Vector3(pole.radius, pole.length, pole.radius),
+        );
+        instances.setMatrixAt(index, matrix);
+        instances.setColorAt(
+          index,
+          new THREE.Color().setHSL(
+            0.12,
+            0.34,
+            0.49 + pole.tonalBucket * 0.035,
+          ),
+        );
+      });
+      instances.instanceMatrix.needsUpdate = true;
+      if (instances.instanceColor) instances.instanceColor.needsUpdate = true;
+      this.root.add(instances);
+    }
   }
 
   private buildMechanicPad(

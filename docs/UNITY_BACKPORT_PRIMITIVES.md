@@ -112,22 +112,69 @@ portals beneath a jump or bonus route.
     [0, -36, 0, 3, 0]
   ],
   "widths": [6, 6.5, 5.5, 6],
+  "structureStyle": "light",
+  "plankPalette": "placeholder-board",
+  "polePalette": "placeholder-pole",
   "spacing": 0.55,
-  "baySpacing": 3.8,
+  "baySpacing": 4.5,
   "scaffold": true,
   "supports": true,
   "rails": true,
-  "supportDepth": 3
+  "supportDepth": 3,
+  "terrainSupports": true
 }
 ```
 
 Nodes are `[dx, dz, reserved, dy, bankDegrees]` relative to `p`.
-`widths` follows the node list. One closed swept mesh is the gameplay surface;
-the instanced planks never create collision seams. Optional bamboo generates
-fixed-depth supports, X braces, a continuous waist barrier, and grindable top
-rails. Enable `terrainSupports` to raycast every post to underlying ground.
-The editor exposes per-node position, height, bank, and width, plus add/remove,
-reverse, Straight, Ramp, and Serpentine presets.
+`widths` follows the node list. One closed swept mesh is the gameplay surface,
+but it is collision-only: the fitted plank pieces own all visible deck pixels.
+This avoids both wheel-catching collision seams and coplanar deck/plank shimmer.
+
+`structureStyle` selects the measured construction profile. `light` is the
+Unity light-boardwalk default; `island` and `beach` retain each source level's
+deck and plank dimensions. The shared layout kernel emits semantic envelopes
+for every plank, support post, crossbeam, handrail post, longitudinal ledger,
+side brace, midheight cross brace and top-rail segment. Placeholder boards and
+seven-sided poles are currently instanced from those envelopes. `plankPalette`
+and `polePalette` are stable palette identifiers stored on the batches; a
+future weighted textured-mesh palette can fit its own pivots, axes and bounds
+into the same envelopes without changing path topology, collision or level
+data.
+
+The light scaffold uses 4.5 m nominal bays. Each bent has two posts, an
+under-deck crossbeam with 0.48 m overhang and two 1.05 m handrail posts. Each
+bay has left/right ledgers, alternating side braces and two genuinely
+three-dimensional cross braces between its 30% and 70% post heights. Top rails
+are visually segmented no farther than 1.15 m apart; separate dense polylines
+remain grindable on both sides. The continuous 1 m balustrade collision is
+generated independently at 0.7 m spacing, so presentation poles never become
+collision authority.
+
+Enable `terrainSupports` to ask the level for ground below the source-authored
+probe origin. `supportBaseY` supplies an absolute fallback foot height when a
+probe misses; otherwise `supportDepth` supplies a relative fallback. Keeping
+the probe, fallback and semantic member layout separate lets an island embed
+full-height poles through its shallow sand shelf while another path can stop
+posts on terrain. The editor exposes per-node position, height, bank, and
+width, plus add/remove, reverse, Straight, Ramp, and Serpentine presets.
+
+The exact source profiles are:
+
+| Value | Light default | Island Hopper | Beachside Run |
+| --- | ---: | ---: | ---: |
+| Deck thickness | 0.32 | 0.42 | 0.24 |
+| Path sample spacing | 0.45 | 0.35 | 0.35 |
+| Plank pitch | 0.55 | 0.68 | 0.72 |
+| Plank gap | 0.045 | 0.038 | 0.038 |
+| Plank thickness | 0.16 | 0.135 | 0.14 |
+| Side overhang, per side | 0.16 | 0.10 | 0.09 |
+| Maximum yaw jitter | 1.15° | 1.65° | 2.2° |
+| Scale jitter | 0.035 | 0.055 | 0.06 |
+| Vertical jitter | 0.012 | 0.014 | 0.014 |
+
+All three share the light scaffold's 0.115 m post, 0.09 m crossbeam,
+0.072 m ledger and 0.055 m brace radii. Layout noise, tonal buckets and future
+weighted variant choices use the source deterministic unsigned hashes.
 
 ## Grindosaurus
 

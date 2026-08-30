@@ -3208,6 +3208,7 @@ function frame(nowMs: number): void {
         },
         presentation: coastPost?.resolution ?? null,
         ocean: level.water?.stats ?? null,
+        islandFoam: level.shoreFoamDiagnostics,
         hud: ui.gameHudDiagnostics,
         frameLimiter: renderFrameLimiter.stats,
         renderedFrames: frameStats.frame,
@@ -3256,6 +3257,7 @@ requestAnimationFrame(frame);
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
+  getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,
   saveReplay,
