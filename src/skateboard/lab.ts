@@ -125,7 +125,9 @@ const hero = addBoard(
   3.92,
 );
 addBoard("X SIDE — ENLARGED", [2.2, 1.45, 6], [0, 90, 0], 2.4, 2.05);
-addBoard("Y TOP — ENLARGED", [-0.65, 2.25, 6], [-90, 0, 0], 2.4, 3.42);
+// Explicit underside proof: every previous gallery board presented its grip
+// side to the initial camera, making correctly assigned base artwork invisible.
+addBoard("Y UNDERSIDE — ARTWORK", [-0.65, 2.25, 6], [90, 0, 0], 2.4, 3.42);
 addBoard("Z END — ENLARGED", [4.7, 1.45, 6], [0, 0, 0], 2.4, 2.05);
 addBoard("ACTUAL SIZE — 1×", [6.55, 2.05, 6], [-90, 0, 0], 1, 2.75);
 

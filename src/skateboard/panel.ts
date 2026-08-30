@@ -78,6 +78,12 @@ const SECTIONS: readonly SectionDefinition[] = [
     controls: [
       { label: "Front truck Z", key: "frontTruckLocalZ", min: 0.05, max: 1.75, step: 0.001 },
       { label: "Rear truck Z", key: "rearTruckLocalZ", min: -1.75, max: -0.05, step: 0.001 },
+      { label: "Front rotation X°", key: "frontTruckRotationXDegrees", min: -180, max: 180, step: 0.1 },
+      { label: "Front rotation Y°", key: "frontTruckRotationYDegrees", min: -180, max: 180, step: 0.1 },
+      { label: "Front rotation Z°", key: "frontTruckRotationZDegrees", min: -180, max: 180, step: 0.1 },
+      { label: "Rear rotation X°", key: "rearTruckRotationXDegrees", min: -180, max: 180, step: 0.1 },
+      { label: "Rear rotation Y°", key: "rearTruckRotationYDegrees", min: -180, max: 180, step: 0.1 },
+      { label: "Rear rotation Z°", key: "rearTruckRotationZDegrees", min: -180, max: 180, step: 0.1 },
       { label: "Baseplate width", key: "truckBaseplateWidth", min: 0.03, max: 0.6, step: 0.001 },
       { label: "Baseplate length", key: "truckBaseplateLength", min: 0.02, max: 0.4, step: 0.001 },
       { label: "Baseplate thick", key: "truckBaseplateThickness", min: 0.003, max: 0.12, step: 0.001 },

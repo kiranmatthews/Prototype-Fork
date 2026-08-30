@@ -36,6 +36,12 @@ export interface SkateboardSettingsValue {
   wheelTrackHalfWidth: number;
   frontTruckLocalZ: number;
   rearTruckLocalZ: number;
+  frontTruckRotationXDegrees: number;
+  frontTruckRotationYDegrees: number;
+  frontTruckRotationZDegrees: number;
+  rearTruckRotationXDegrees: number;
+  rearTruckRotationYDegrees: number;
+  rearTruckRotationZDegrees: number;
   truckBaseplateWidth: number;
   truckBaseplateLength: number;
   truckBaseplateThickness: number;
@@ -97,6 +103,12 @@ export const DEFAULT_SKATEBOARD_SETTINGS: Readonly<SkateboardSettingsValue> =
     wheelTrackHalfWidth: 0.20993120968341828,
     frontTruckLocalZ: 0.6424427032470703,
     rearTruckLocalZ: -0.6424426436424255,
+    frontTruckRotationXDegrees: 0,
+    frontTruckRotationYDegrees: 0,
+    frontTruckRotationZDegrees: 0,
+    rearTruckRotationXDegrees: 0,
+    rearTruckRotationYDegrees: 0,
+    rearTruckRotationZDegrees: 0,
     truckBaseplateWidth: 0.09000000357627869,
     truckBaseplateLength: 0.05000000074505806,
     truckBaseplateThickness: 0.00800000037997961,
@@ -207,6 +219,12 @@ export function clampSkateboardSettings(
     -out.deckTailLength + 0.05,
     -0.05,
   );
+  out.frontTruckRotationXDegrees = clamp(n("frontTruckRotationXDegrees"), -180, 180);
+  out.frontTruckRotationYDegrees = clamp(n("frontTruckRotationYDegrees"), -180, 180);
+  out.frontTruckRotationZDegrees = clamp(n("frontTruckRotationZDegrees"), -180, 180);
+  out.rearTruckRotationXDegrees = clamp(n("rearTruckRotationXDegrees"), -180, 180);
+  out.rearTruckRotationYDegrees = clamp(n("rearTruckRotationYDegrees"), -180, 180);
+  out.rearTruckRotationZDegrees = clamp(n("rearTruckRotationZDegrees"), -180, 180);
   out.truckBaseplateWidth = clamp(n("truckBaseplateWidth"), 0.03, 0.6);
   out.truckBaseplateLength = clamp(n("truckBaseplateLength"), 0.02, 0.4);
   out.truckBaseplateThickness = clamp(n("truckBaseplateThickness"), 0.003, 0.12);

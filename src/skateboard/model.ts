@@ -42,6 +42,26 @@ const assetUrl = (path: string): string => {
 };
 
 const TRUCK_ATLAS_PATH = "skateboard/skateboard-truck.webp";
+const TRUCK_Y_AXIS = new THREE.Vector3(0, 1, 0);
+
+/** Compose the endpoint-facing yaw with model-local XYZ trim rotations. */
+export function skateboardTruckQuaternion(
+  endpointYawRadians: number,
+  rotationXDegrees: number,
+  rotationYDegrees: number,
+  rotationZDegrees: number,
+  out = new THREE.Quaternion(),
+): THREE.Quaternion {
+  const trim = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(
+      THREE.MathUtils.degToRad(rotationXDegrees),
+      THREE.MathUtils.degToRad(rotationYDegrees),
+      THREE.MathUtils.degToRad(rotationZDegrees),
+      "XYZ",
+    ),
+  );
+  return out.setFromAxisAngle(TRUCK_Y_AXIS, endpointYawRadians).multiply(trim);
+}
 
 const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
 
@@ -477,13 +497,11 @@ function getArtworkTexture(path: string): THREE.Texture {
   const resolved = assetUrl(path || SKATEBOARD_DEFAULT_ARTWORK);
   const cached = artworkTextures.get(resolved);
   if (cached) return cached;
-  const fallback = new Uint8Array([207, 113, 49, 255]);
-  const texture = new THREE.DataTexture(fallback, 1, 1, THREE.RGBAFormat);
-  texture.name = "SurfCruiser_OrangeSun_Loading";
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
-  artworkTextures.set(resolved, texture);
-  new THREE.TextureLoader().load(
+  // TextureLoader returns its stable Texture immediately and fills that same
+  // object when the image arrives. Do not mutate a DataTexture into an image
+  // texture: it retains `isDataTexture`, so WebGL follows the typed-pixel
+  // upload path and the loaded artwork may never reach the shader.
+  const texture = new THREE.TextureLoader().load(
     resolved,
     (loaded) => {
       loaded.name = "SurfCruiser_OrangeSun_BaseArtwork_Web";
@@ -494,20 +512,18 @@ function getArtworkTexture(path: string): THREE.Texture {
       loaded.generateMipmaps = true;
       loaded.anisotropy = 4;
       loaded.needsUpdate = true;
-      // Keep the stable uniform object while its image becomes available.
-      texture.image = loaded.image;
-      texture.source = loaded.source;
-      texture.name = loaded.name;
-      texture.wrapS = loaded.wrapS;
-      texture.wrapT = loaded.wrapT;
-      texture.minFilter = loaded.minFilter;
-      texture.magFilter = loaded.magFilter;
-      texture.generateMipmaps = loaded.generateMipmaps;
-      texture.needsUpdate = true;
     },
     undefined,
     (error) => console.warn(`Could not load skateboard artwork ${resolved}`, error),
   );
+  texture.name = "SurfCruiser_OrangeSun_Loading";
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = true;
+  texture.anisotropy = 4;
+  artworkTextures.set(resolved, texture);
   return texture;
 }
 
@@ -667,6 +683,10 @@ function markUnlit(root: THREE.Object3D): void {
 function createFallbackTruck(
   name: string,
   z: number,
+  endpointYaw: number,
+  rotationXDegrees: number,
+  rotationYDegrees: number,
+  rotationZDegrees: number,
   settings: Readonly<SkateboardSettingsValue>,
 ): THREE.Group {
   const root = new THREE.Group();
@@ -676,6 +696,14 @@ function createFallbackTruck(
     color: 0xb9bfc9,
   });
   const underside = settings.boardToGroundDistance - settings.deckThickness;
+  root.position.set(0, underside, z);
+  skateboardTruckQuaternion(
+    endpointYaw,
+    rotationXDegrees,
+    rotationYDegrees,
+    rotationZDegrees,
+    root.quaternion,
+  );
   const baseplate = new THREE.Mesh(
     new THREE.BoxGeometry(
       settings.truckBaseplateWidth,
@@ -684,11 +712,7 @@ function createFallbackTruck(
     ),
     material,
   );
-  baseplate.position.set(
-    0,
-    underside - settings.truckBaseplateThickness * 0.5,
-    z,
-  );
+  baseplate.position.set(0, -settings.truckBaseplateThickness * 0.5, 0);
   root.add(baseplate);
   const hanger = new THREE.Mesh(
     new THREE.CylinderGeometry(
@@ -700,7 +724,7 @@ function createFallbackTruck(
     material,
   );
   hanger.rotation.z = Math.PI * 0.5;
-  hanger.position.set(0, settings.wheelRadius, z);
+  hanger.position.set(0, settings.wheelRadius - underside, 0);
   root.add(hanger);
   const kingpinHeight = Math.max(0.02, underside - settings.wheelRadius);
   const kingpin = new THREE.Mesh(
@@ -712,7 +736,11 @@ function createFallbackTruck(
     ),
     material,
   );
-  kingpin.position.set(0, settings.wheelRadius + kingpinHeight * 0.5, z);
+  kingpin.position.set(
+    0,
+    settings.wheelRadius + kingpinHeight * 0.5 - underside,
+    0,
+  );
   root.add(kingpin);
   markUnlit(root);
   return root;
@@ -864,8 +892,24 @@ export function rebuildSkateboardPresentation(
   const fallback = new THREE.Group();
   fallback.name = "Hardware_Fallback";
   fallback.add(
-    createFallbackTruck("FrontTruck_Fallback", settings.frontTruckLocalZ, settings),
-    createFallbackTruck("RearTruck_Fallback", settings.rearTruckLocalZ, settings),
+    createFallbackTruck(
+      "FrontTruck_Fallback",
+      settings.frontTruckLocalZ,
+      0,
+      settings.frontTruckRotationXDegrees,
+      settings.frontTruckRotationYDegrees,
+      settings.frontTruckRotationZDegrees,
+      settings,
+    ),
+    createFallbackTruck(
+      "RearTruck_Fallback",
+      settings.rearTruckLocalZ,
+      Math.PI,
+      settings.rearTruckRotationXDegrees,
+      settings.rearTruckRotationYDegrees,
+      settings.rearTruckRotationZDegrees,
+      settings,
+    ),
   );
   root.add(fallback, createWheels(settings));
   addSockets(root, settings);
@@ -880,14 +924,34 @@ export function rebuildSkateboardPresentation(
       const ratio =
         settings.replacementTruckScale /
         DEFAULT_SKATEBOARD_SETTINGS.replacementTruckScale;
-      for (const [name, z, yaw] of [
-        ["FrontTruck_Model", settings.frontTruckLocalZ, 0],
-        ["RearTruck_Model", settings.rearTruckLocalZ, Math.PI],
+      for (const [name, z, yaw, rotationX, rotationY, rotationZ] of [
+        [
+          "FrontTruck_Model",
+          settings.frontTruckLocalZ,
+          0,
+          settings.frontTruckRotationXDegrees,
+          settings.frontTruckRotationYDegrees,
+          settings.frontTruckRotationZDegrees,
+        ],
+        [
+          "RearTruck_Model",
+          settings.rearTruckLocalZ,
+          Math.PI,
+          settings.rearTruckRotationXDegrees,
+          settings.rearTruckRotationYDegrees,
+          settings.rearTruckRotationZDegrees,
+        ],
       ] as const) {
         const truck = template.clone(true);
         truck.name = name;
         truck.position.set(0, underside, z);
-        truck.rotation.y = yaw;
+        skateboardTruckQuaternion(
+          yaw,
+          rotationX,
+          rotationY,
+          rotationZ,
+          truck.quaternion,
+        );
         truck.scale.setScalar(ratio);
         trucks.add(truck);
       }

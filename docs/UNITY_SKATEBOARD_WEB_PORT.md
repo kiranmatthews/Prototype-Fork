@@ -45,10 +45,12 @@ lift when it settles.
 ## Shape lab
 
 The lab reproduces Unity's persistent hero board and enlarged X/Y/Z plus 1×
-actual-size gallery. Its right-side panel covers deck plan, curve, topology,
-wheels, trucks, placement, artwork crop, wear, plywood colors, JSON import,
-JSON export, reset, and copy. Changes rebuild every lab view and every player
-board live, then autosave under the fork-isolated browser key
+actual-size gallery. The enlarged Y tile explicitly faces the underside toward
+the camera so the orange-sun artwork is visible without orbiting below the
+scene. Its right-side panel covers deck plan, curve, topology, wheels, per-end
+truck placement and local XYZ rotation, placement, artwork crop, wear, plywood
+colors, JSON import, JSON export, reset, and copy. Changes rebuild every lab
+view and every player board live, then autosave under the fork-isolated browser key
 `solProtoSkateboardTuning.v1`.
 
 The owner-supplied photo remains a labeled visual-reference card in the lab;
