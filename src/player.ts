@@ -219,6 +219,9 @@ const BAIL_TARGET = new THREE.Vector3();
 const BAIL_DELTA = new THREE.Vector3();
 const BAIL_CONTROL_F = new THREE.Vector3();
 const BAIL_CONTROL_L = new THREE.Vector3();
+// Forgive a near-simultaneous Square/X smoosh at takeoff, but never bank an
+// old ground spin through an arbitrarily long held ollie charge.
+const OLLIE_DECK_TRICK_CHORD = 0.1;
 
 function wrapAngle(a: number): number {
   return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
@@ -777,7 +780,7 @@ export class Player {
   // only when that combo banks or is lost.
   private readonly deckTricksThisAir = new Set<DeckTrickKind>();
   private readonly deckTricksThisCombo = new Set<DeckTrickKind>();
-  private ollieDeckTrickQueued = false; // Square pressed during a held ground ollie charge
+  private ollieDeckTrickBufferT = 0; // recent Square edge during a held ground ollie charge
   private flipDeck: THREE.Object3D | null = null; // scene-level deck stand-in: performs the flip while the spin smear hides the rig
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
@@ -1486,7 +1489,7 @@ export class Player {
     this.flipT = 0;
     this.deckTricksThisAir.clear();
     this.deckTricksThisCombo.clear();
-    this.ollieDeckTrickQueued = false;
+    this.ollieDeckTrickBufferT = 0;
     this.floatAir = false;
     this.revertT = 0;
     this.pipeEndFly = false;
@@ -6069,7 +6072,7 @@ export class Player {
     this.flipTimer = 0;
     this.flipT = 0;
     this.boardOllieAir = false;
-    this.ollieDeckTrickQueued = false;
+    this.ollieDeckTrickBufferT = 0;
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectUsed = false;
@@ -7173,13 +7176,15 @@ export class Player {
     const canSpin =
       !this.isBailing &&
       (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope');
-    const queueOllieDeckTrick =
+    this.ollieDeckTrickBufferT = Math.max(0, this.ollieDeckTrickBufferT - dt);
+    const bufferOllieDeckTrick =
       input.spinPressed &&
       this.state === 'ride' &&
       this.grounded &&
       this.freeSkate &&
       this.charging;
-    if (queueOllieDeckTrick) this.ollieDeckTrickQueued = true;
+    if (bufferOllieDeckTrick)
+      this.ollieDeckTrickBufferT = OLLIE_DECK_TRICK_CHORD;
     if (
       input.spinPressed &&
       !this.spinning &&
@@ -7221,18 +7226,18 @@ export class Player {
         this.slideCd = 0;
       }
     }
-    // Square may be pressed during the held ground ollie charge. Start the
-    // ordinary spin immediately (including its hitbox + whirlwind tell), and
-    // also preserve that edge until X releases so the charged ollie can throw
-    // its queued deck trick. Holding Square through release works too.
+    // A Square edge just before X releases is treated as the player smooshing
+    // both buttons at takeoff. The 0.10s edge buffer survives a quick Square
+    // tap/release, but an early spin — even if Square stays held — expires and
+    // cannot silently become a deck trick seconds later.
     const ollieReleaseChord =
       input.jumpReleased &&
-      (input.spinHeld || this.ollieDeckTrickQueued) &&
+      this.ollieDeckTrickBufferT > 0 &&
       this.state === 'air' &&
       this.boardOllieAir;
     this.tryStartDeckTrick(ollieReleaseChord);
     if (input.jumpReleased || (!this.charging && this.state !== 'air'))
-      this.ollieDeckTrickQueued = false;
+      this.ollieDeckTrickBufferT = 0;
     if (this.spinTimer > 0) {
       this.spinTimer -= dt;
       const progress = 1 - Math.max(this.spinTimer, 0) / TUNING.spinDuration;
