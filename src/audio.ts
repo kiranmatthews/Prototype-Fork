@@ -41,6 +41,7 @@ const FILES: Record<string, string> = {
   enemyDown: 'unsure.wav',
   fruitSpun: 'spin-away.wav', // spun a wumpa away instead of collecting it
   uberMusic: 'uber-music.mp3', // triple-mask invincibility theme
+  specialTrick: 'special-trick.mp3', // supplied SPECIAL-trick sting
 };
 
 interface LoopChannel {
@@ -150,7 +151,7 @@ class SfxEngine {
     }
   }
 
-  play(name: string, vol = 1, rate = 1): void {
+  play(name: string, vol = 1, rate = 1, pitchVariance = 0.04): void {
     try {
       const ctx = this.ctx;
       const buf = this.buffers.get(name);
@@ -161,7 +162,8 @@ class SfxEngine {
       this.lastPlay.set(name, now);
       const src = ctx.createBufferSource();
       src.buffer = buf;
-      src.playbackRate.value = rate * (0.96 + Math.random() * 0.08);
+      const jitter = Math.max(0, pitchVariance);
+      src.playbackRate.value = rate * (1 - jitter + Math.random() * jitter * 2);
       const gain = ctx.createGain();
       gain.gain.value = vol;
       src.connect(gain);

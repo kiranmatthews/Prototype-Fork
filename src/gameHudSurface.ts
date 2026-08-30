@@ -41,6 +41,12 @@ export interface GameHudElements {
   timeTrialValue?: HTMLElement;
   timeTrialFreeze?: HTMLElement;
 
+  special?: HTMLElement;
+  specialLabel?: HTMLElement;
+  specialTrack?: HTMLElement;
+  specialFill?: HTMLElement;
+  specialControls?: HTMLElement;
+
   results?: HTMLElement;
   resultsTitle?: HTMLElement;
   resultsTime?: HTMLElement;
@@ -103,6 +109,15 @@ export interface GameHudBoostState {
   label?: string;
 }
 
+export interface GameHudSpecialState {
+  visible?: boolean;
+  /** SPECIAL bar percentage in the inclusive range 0..100. */
+  value: number;
+  ready?: boolean;
+  label?: string;
+  controls?: string;
+}
+
 export interface GameHudBalanceState {
   mode: "grind" | "manual";
   /** Needle position, clamped to [-1, 1]. */
@@ -122,6 +137,7 @@ export interface GameHudFrameState {
   life?: (GameHudCounterState & { deathsMode?: boolean }) | null;
   score?: (GameHudCounterState & { label?: string }) | null;
   clock?: GameHudClockState | null;
+  special?: GameHudSpecialState | null;
   relics?: Partial<Record<"crystal" | "gem" | "comboGem", GameHudRelicState>>;
   results?: GameHudResultsState | null;
   boost?: GameHudBoostState | null;
@@ -348,6 +364,7 @@ export class GameHudSurface {
     this.paintHalo(ctx, width, height, frame);
     this.paintCounters(ctx, layout, width, height, frame, time);
     this.paintScoreAndClock(ctx, layout, width, height, frame);
+    this.paintSpecial(ctx, layout, width, height, frame, time);
     this.paintBoost(ctx, layout, width, height, frame, time);
     this.paintTrick(ctx, layout, width, height, frame);
     this.paintBalance(ctx, layout, width, height, frame);
@@ -371,6 +388,116 @@ export class GameHudSurface {
     this.canvasFrames++;
     this.lastCanvasMs = now() - started;
     return this.hasPixels;
+  }
+
+  private paintSpecial(
+    ctx: CanvasRenderingContext2D,
+    layout: LayoutMap,
+    width: number,
+    height: number,
+    frame: Readonly<GameHudFrameState>,
+    time: number,
+  ): void {
+    const explicit = frame.special;
+    const visible =
+      explicit === null
+        ? false
+        : explicit
+          ? explicit.visible !== false
+          : isLaidOut(this.elements.special);
+    if (!visible) return;
+
+    const sx = width / 1280;
+    const sy = height / 720;
+    const host = this.rect(this.elements.special, layout) ?? {
+      x: 40 * sx,
+      y: height - 96 * sy,
+      width: Math.min(340 * sx, width * 0.42),
+      height: 66 * sy,
+    };
+    const rawValue =
+      explicit?.value ?? Number.parseFloat(this.elements.special?.dataset.value ?? '0');
+    const fraction = clamp01((Number.isFinite(rawValue) ? rawValue : 0) / 100);
+    const ready =
+      explicit?.ready ?? this.elements.special?.classList.contains('hud-special-ready') ?? false;
+    const alpha = explicit ? 1 : elementOpacity(this.elements.special, 1);
+    if (alpha <= 0.001) return;
+
+    const labelRect = this.rect(this.elements.specialLabel, layout) ?? {
+      x: host.x,
+      y: host.y,
+      width: host.width,
+      height: 22 * sy,
+    };
+    const trackRect = this.rect(this.elements.specialTrack, layout) ?? {
+      x: host.x,
+      y: host.y + 25 * sy,
+      width: host.width,
+      height: 15 * sy,
+    };
+    const controlsRect = this.rect(this.elements.specialControls, layout) ?? {
+      x: host.x,
+      y: host.y + 43 * sy,
+      width: host.width,
+      height: 18 * sy,
+    };
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    if (ready) {
+      const pulse = 0.55 + 0.25 * Math.sin(time * 0.012);
+      ctx.shadowColor = `rgba(255, 184, 28, ${pulse})`;
+      ctx.shadowBlur = 18 * sy;
+    }
+    ctx.fillStyle = 'rgba(12, 10, 18, 0.82)';
+    ctx.fillRect(trackRect.x, trackRect.y, trackRect.width, trackRect.height);
+    ctx.strokeStyle = ready ? '#fff16a' : 'rgba(255, 196, 72, 0.72)';
+    ctx.lineWidth = Math.max(1, 2 * sy);
+    ctx.strokeRect(trackRect.x, trackRect.y, trackRect.width, trackRect.height);
+
+    if (fraction > 0) {
+      const inset = Math.max(1, 2 * sy);
+      const fillWidth = Math.max(0, (trackRect.width - inset * 2) * fraction);
+      const gradient = ctx.createLinearGradient(trackRect.x, 0, trackRect.x + trackRect.width, 0);
+      gradient.addColorStop(0, '#ff7a18');
+      gradient.addColorStop(0.72, '#ffc928');
+      gradient.addColorStop(1, ready ? '#fffbd0' : '#ffe36a');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(
+        trackRect.x + inset,
+        trackRect.y + inset,
+        fillWidth,
+        Math.max(0, trackRect.height - inset * 2),
+      );
+    }
+    ctx.restore();
+    this.mark();
+
+    this.drawRooInRect(
+      ctx,
+      explicit?.label ?? (readRooHudText(this.elements.specialLabel) || 'SPECIAL'),
+      labelRect,
+      {
+        size: 18 * sy,
+        align: 'left',
+        glow: ready ? '#ffb41f' : undefined,
+      },
+    );
+    const controls =
+      explicit?.controls ?? readRooHudText(this.elements.specialControls);
+    if (controls) {
+      this.drawPlainText(
+        ctx,
+        controls,
+        controlsRect.x,
+        controlsRect.y + controlsRect.height / 2,
+        {
+          size: Math.max(8, 10 * sy),
+          align: 'left',
+          color: ready ? '#fff5aa' : '#d0b46d',
+        },
+      );
+    }
   }
 
   /**

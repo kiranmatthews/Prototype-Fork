@@ -16,6 +16,7 @@ for (const contract of [
   "renderer.setRenderTarget(previousTarget",
   "paintCounters",
   "paintScoreAndClock",
+  "paintSpecial",
   "paintResults",
   "paintTrick",
   "paintBalance",

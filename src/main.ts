@@ -1112,6 +1112,10 @@ const frameStats = {
   grounded: false,
   bailTime: 0,
   bailRecovery: 0,
+  specialMeter: 0,
+  specialReady: false,
+  specialName: null as string | null,
+  specialSequence: 0,
   cameraTargetX: 0,
   cameraTargetY: 0,
   cameraTargetZ: 0,
@@ -2977,6 +2981,10 @@ function frame(nowMs: number): void {
     frameStats.grounded = player.grounded;
     frameStats.bailTime = player.bailTimeLeft;
     frameStats.bailRecovery = player.bailRecoveryK;
+    frameStats.specialMeter = player.specialMeter;
+    frameStats.specialReady = player.specialReady;
+    frameStats.specialName = player.activeSpecialName;
+    frameStats.specialSequence = player.specialSequence;
 
     // hold the last shot through the death blackout — no drifting after the
     // corpse; the respawn teleport re-snaps the rig when play resumes
@@ -3035,6 +3043,8 @@ function frame(nowMs: number): void {
     comboMult: player.comboMult,
     comboHasTrick: player.comboHasTrick,
     tricks: (tricks.length > 6 ? "… + " : "") + tricks.slice(-6).join(" + "),
+    specialMeter: player.specialMeter,
+    specialReady: player.specialReady,
     fruit: player.fruit,
     lives: Math.max(0, player.lives),
     deaths: player.totalDeaths,

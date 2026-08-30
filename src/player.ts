@@ -46,6 +46,7 @@ import {
   SpinEffectsPresentation,
   type SpinPresentationDiagnostics,
 } from './spin-effects/presentation';
+import { SpecialSystem, type SpecialTrick } from './specialTricks';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
@@ -313,6 +314,8 @@ export class Player {
   comboMult = 0; // ...times the number of actions strung together
   comboLabels: string[] = []; // THPS-style trick names for the combo readout
   comboHasTrick = false; // a REAL trick (grab/grind/wallride/slide) is in the combo — gates the HUD plate; bare spins/bounces/enemy pops don't show it
+  private readonly special = new SpecialSystem();
+  private specialActivationCount = 0;
   private comboTimer = 0; // plain-rolling time left before the combo banks
   onComboBank: (amount: number) => void = () => {}; // combo landed clean → cash-in ticker
   onComboBail: () => void = () => {}; // combo lost on a bail → red shake + drop
@@ -449,6 +452,11 @@ export class Player {
   private grabRoll = 0;
   private armRPose = 0;
   private armLPose = 0;
+  private pendingSpecialGrab: SpecialTrick | null = null;
+  private specialGrab: SpecialTrick | null = null;
+  private specialGrabT = 0;
+  private specialGrabStartAngle = 0;
+  private specialGrabLanding = false;
   private slideTimer = 0;
   private slideCd = 0;
   private slidePose = 0;
@@ -794,6 +802,8 @@ export class Player {
   private grindDir = 1;
   private grindVel = 0; // grind speed = your speed at entry, bleeding slowly
   private grindStyle: GrindStyle = 'normal'; // held dir at entry (or last mid-grind switch)
+  private pendingSpecialGrind: SpecialTrick | null = null;
+  private specialGrind: SpecialTrick | null = null;
   // The boxes of the crate run currently being ground. THE LEDGE IS NOT AN
   // OBSTACLE: collide() reaches 0.35 below the feet on a grind so that crates
   // sitting ON a rail still clip you, and that same reach dips into the tops
@@ -831,6 +841,9 @@ export class Player {
   private readonly deckTricksThisAir = new Set<DeckTrickKind>();
   private readonly deckTricksThisCombo = new Set<DeckTrickKind>();
   private ollieDeckTrickBufferT = 0; // recent Square edge during a held ground ollie charge
+  private pendingSpecialFlip: SpecialTrick | null = null;
+  private specialFlip: SpecialTrick | null = null;
+  private flipDuration = CONST.flipTime;
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
@@ -1194,6 +1207,22 @@ export class Player {
     return this.spinTimer > 0;
   }
 
+  get specialMeter(): number {
+    return this.special.value;
+  }
+
+  get specialReady(): boolean {
+    return this.special.ready;
+  }
+
+  get activeSpecialName(): string | null {
+    return this.specialFlip?.label ?? this.specialGrab?.label ?? this.specialGrind?.label ?? null;
+  }
+
+  get specialSequence(): number {
+    return this.specialActivationCount;
+  }
+
   // The floor under the skater, wherever they are in the air — the camera
   // rig anchors its height to THIS (Crash rules: jumps tilt the view, they
   // never yank the rig skyward), and it's what the shadow/landing-X ride.
@@ -1537,6 +1566,9 @@ export class Player {
     this.comboHasTrick = false;
     this.comboTimer = 0;
     this.comboUses.clear();
+    this.special.reset();
+    this.clearSpecialMoves();
+    this.specialActivationCount = 0;
     this.airGrabShown = null;
     this.sketchyT = 0;
     this.flipT = 0;
@@ -1823,6 +1855,13 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
+    // SPECIAL commands live in raw SCREEN directions, before course/skate
+    // remapping. Decode the two direction taps now so Triangle can reach grind
+    // routing and same-tick ollie releases can reach Square air specials.
+    this.special.step(dt, input.moveX, input.moveY);
+    this.pendingSpecialFlip = input.spinPressed ? this.special.peek('flip') : null;
+    this.pendingSpecialGrab = input.grabPressed ? this.special.peek('grab') : null;
+    this.pendingSpecialGrind = input.grindPressed ? this.special.peek('grind') : null;
     // LEDGE HANG owns the whole step: no movement, physics, or collision runs
     // while gripped — climb up, hop off, or the grip gives out. stepHang ticks
     // the essential shared timers itself.
@@ -2559,6 +2598,31 @@ export class Player {
 
   // ---------------------------------------------------------------- states --
 
+  private confirmSpecial(trick: SpecialTrick): void {
+    this.special.commit(trick);
+    this.specialActivationCount++;
+    // The supplied sting is a signature cue, so keep it at exact pitch rather
+    // than applying the ordinary one-shot jitter.
+    sfx.play('specialTrick', 0.82, 1, 0);
+    this.emitSparks(14, 0xffd22e, 2.4);
+  }
+
+  private clearSpecialMoves(): void {
+    this.pendingSpecialFlip = null;
+    this.pendingSpecialGrab = null;
+    this.pendingSpecialGrind = null;
+    this.specialFlip = null;
+    this.flipDuration = CONST.flipTime;
+    this.specialGrab = null;
+    this.specialGrabT = 0;
+    this.specialGrabLanding = false;
+    this.specialGrind = null;
+  }
+
+  private grindTrickName(): string {
+    return this.specialGrind?.label ?? GRIND_NAMES[this.grindStyle];
+  }
+
   // Score an action. Combos live in the AIR and on rails/slides only: those
   // actions stack base + multiplier, THPS-style, and bank on a clean landing.
   // Plain ground actions (spinning a box while standing there) just pay flat
@@ -2591,6 +2655,7 @@ export class Player {
       pay *= CONST.uberScoreMult;
       shown = 'Tiki ' + label;
     }
+    if (inTrick && isTrick) this.special.award(pay);
     if (inTrick) {
       this.comboPoints += pay;
       // THE MULTIPLIER COUNTS TRICKS, not scoring events. World rewards —
@@ -3056,6 +3121,7 @@ export class Player {
       while (this.lipTickT >= 0.25) {
         this.lipTickT -= 0.25;
         this.comboPoints += CONST.ptsLipTick;
+        this.special.award(CONST.ptsLipTick);
         this.comboTimer = CONST.comboWindow;
       }
       this.emitSparks(Math.random() < 0.3 ? 1 : 0, 0xffe08a, 0.6);
@@ -3858,6 +3924,7 @@ export class Player {
         while (this.manualTickT >= 0.25) {
           this.manualTickT -= 0.25;
           this.comboPoints += CONST.ptsManualTick;
+          this.special.award(CONST.ptsManualTick);
           this.comboTimer = CONST.comboWindow;
         }
       }
@@ -4508,6 +4575,7 @@ export class Player {
       // updateGrab's own hard-down guard then refuses to open the grab.
       this.grabPhase !== 'enter' &&
       this.grabPhase !== 'held' &&
+      this.pendingSpecialGrab === null &&
       input.grabHeld &&
       (!this.airFromSkate || this.rawInput.moveY < -0.5);
     if (slamNow) {
@@ -4530,6 +4598,11 @@ export class Player {
       this.grabGraceTimer = 0;
       this.grabSpinAngle = 0;
       this.flipT = 0; // the deck is stowed — a mid-flip must not score under the slam
+      this.specialFlip = null;
+      this.flipDuration = CONST.flipTime;
+      this.specialGrab = null;
+      this.specialGrabT = 0;
+      this.specialGrabLanding = false;
       this.charging = false;
       this.chargeTimer = 0;
       this.flipTimer = 0;
@@ -4991,8 +5064,13 @@ export class Player {
       // the landing goes sketchy (forgiving where THPS would bail — the crate
       // loop leans on quick spin-attacks, so a late flip stings, not flattens).
       const flipLate = this.flipT > 0;
-      if (flipLate) this.flipT = 0;
-      const funny = spun && offLine > sketchNet;
+      const lateSpecialFlip = flipLate && this.specialFlip !== null;
+      if (flipLate) {
+        this.flipT = 0;
+        this.specialFlip = null;
+        this.flipDuration = CONST.flipTime;
+      }
+      const funny = (spun && offLine > sketchNet) || lateSpecialFlip;
       const sketchy = (spun && !funny && offLine > tol) || (flipLate && !funny);
       if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0) {
@@ -5002,6 +5080,7 @@ export class Player {
           this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle); // no unwind
           this.grabSpinAngle = 0;
           this.airGrabShown = null;
+          this.clearSpecialMoves();
         } else {
           this.landingScoring = false;
           // A mask no longer buys the alpha-flash ride-on: the SAME crash
@@ -5039,7 +5118,8 @@ export class Player {
         // (a real combo), and a bare hang-time spin still pays on its own.
         // Net rotation, credited in 180s (the snap already pulled it on-axis).
         const halves = Math.round(Math.abs(this.grabSpinAngle) / Math.PI);
-        let landedTrick = false;
+        const completedSpecialGrab = this.specialGrabLanding;
+        let landedTrick = completedSpecialGrab;
         if (this.grabGraceTimer > 0) {
           // A clean (released in time, on-line) grab pays out a speed burst.
           // The grab itself already scored on START (it's a timed trick that
@@ -5055,7 +5135,7 @@ export class Player {
         // trick for holding a direction. THUG refuses it explicitly ("if in
         // vert air, only count the spin if it is at least 360, because getting
         // 180 is too easy"). Street airs still pay from the first 180.
-        if (halves >= (wasPipeHang ? CONST.vertSpinMin : 1)) {
+        if (!completedSpecialGrab && halves >= (wasPipeHang ? CONST.vertSpinMin : 1)) {
           const deg = halves * 180;
           const spinBase = Math.round(halves * CONST.ptsSpin * (sketchy ? 0.5 : 1));
           const spinName = `${sketchy ? 'Sketchy ' : ''}${isSwitch ? 'Switch ' : ''}${deg}°`;
@@ -5074,6 +5154,7 @@ export class Player {
             const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
             this.renameLabel(this.airGrabShown, `${pfx}${spinName} ${this.grabTrickName}`);
             this.comboPoints += fold;
+            this.special.award(fold);
             this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
           } else {
             this.score(spinBase, spinName);
@@ -5093,6 +5174,7 @@ export class Player {
         );
         this.grabSpinAngle = 0;
         this.airGrabShown = null; // this air's grab entry is settled
+        this.specialGrabLanding = false;
         // THPS landing pump: wheels down with X already held (a crouched
         // landing) pays a small speed burst — re-crouch through every
         // touchdown and the line stays fast. The clamp never CONFISCATES:
@@ -6061,6 +6143,8 @@ export class Player {
     this.deckTricksThisAir.clear();
     this.deckTricksThisCombo.clear();
     this.airGrabShown = null;
+    this.special.wipe();
+    this.clearSpecialMoves();
   }
 
   // Botched a grab landing: no death — you eat the floor, the pending combo
@@ -6167,6 +6251,7 @@ export class Player {
     this.ledgeClimbQueued = false;
     this.hangClipName = null;
     this.hangExitW = 0;
+    this.clearSpecialMoves();
   }
 
   private armBailRecovery(duration: number): void {
@@ -6442,17 +6527,31 @@ export class Player {
     if (input.grindPressed && this.grindTime > 0.2 && this.lipStallT <= 0) {
       const prev = this.grindStyle;
       const prevYaw = this.grindYawDir;
-      this.pickGrindStyle(false);
-      if (this.grindStyle !== prev) {
+      const prevSpecial = this.specialGrind;
+      const nextSpecial = this.pendingSpecialGrind;
+      if (nextSpecial) {
+        this.specialGrind = nextSpecial;
+        this.grindStyle = 'board';
+        this.grindYawDir = this.rawInput.moveX >= 0 ? 1 : -1;
+      } else {
+        this.specialGrind = null;
+        this.pickGrindStyle(false);
+      }
+      if (nextSpecial || this.grindStyle !== prev || prevSpecial !== null) {
+        if (nextSpecial) {
+          this.pendingSpecialGrind = null;
+          this.confirmSpecial(nextSpecial);
+        }
         this.score(
-          Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
-          GRIND_NAMES[this.grindStyle],
+          nextSpecial?.points ?? Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
+          this.grindTrickName(),
         );
-        this.surfaceName = 'rail (' + GRIND_NAMES[this.grindStyle] + ')';
+        this.surfaceName = 'rail (' + this.grindTrickName() + ')';
         this.balanceVel += (this.simRand() < 0.5 ? -1 : 1) * 0.3; // the swap rocks the needle
         this.emitSparks(4, 0xffb545, 1.2);
         sfx.play('railLand', 0.45, 1.25);
       } else {
+        this.specialGrind = prevSpecial;
         this.grindStyle = prev;
         this.grindYawDir = prevYaw; // a same-style re-press must not silently flip the crosswise pose
       }
@@ -6502,7 +6601,9 @@ export class Player {
     // the crosswise slides look coolest and wobble hardest; the truck-balanced
     // diagonals (Smith/Feeble) sit in between
     const styleWobble =
-      this.grindStyle === 'lip'
+      this.specialGrind
+        ? 1.45
+        : this.grindStyle === 'lip'
         ? 1.35
         : this.grindStyle === 'board'
           ? 1.25
@@ -6632,12 +6733,13 @@ export class Player {
     this.placeOnRail(rail);
     this.tickGrindCrate(level);
     this.speed = this.grindVel;
-    this.surfaceName = 'rail (' + GRIND_NAMES[this.grindStyle] + ')';
+    this.surfaceName = 'rail (' + this.grindTrickName() + ')';
     // THPS accrual: the longer the grind, the more the combo is worth.
     this.grindTickT += dt;
     while (this.grindTickT >= 0.25) {
       this.grindTickT -= 0.25;
       this.comboPoints += CONST.ptsGrindTick;
+      this.special.award(CONST.ptsGrindTick);
       this.comboTimer = CONST.comboWindow;
     }
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
@@ -6703,13 +6805,15 @@ export class Player {
     this.grindCrate = null;
     this.lastRail = this.grindRail;
     this.grindLatched = true;
+    this.specialGrind = null;
   }
 
   private tryGrind(pressed: boolean, level: Level): boolean {
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
     // punishment into a free 50-50.
-    if (this.regrindCd > 0 || this.isBailing || !this.railCand) return false;
+    if (this.regrindCd > 0 || this.isBailing || this.specialGrab !== null || !this.railCand)
+      return false;
     if (
       level.isTrickRail(this.railCand.rail) &&
       !this.freeSkate &&
@@ -6846,6 +6950,14 @@ export class Player {
     // caught it moving AWAY from the line = you crossed over it = lipslide
     const overTop = sideNow * crossVel > 0.01;
     this.pickGrindStyle(overTop);
+    const entrySpecial = this.pendingSpecialGrind;
+    this.specialGrind = entrySpecial;
+    if (entrySpecial) {
+      this.pendingSpecialGrind = null;
+      this.grindStyle = 'board';
+      this.grindYawDir = this.rawInput.moveX >= 0 ? 1 : -1;
+      this.confirmSpecial(entrySpecial);
+    }
     this.grindTickT = 0;
     this.railUnder = false; // every grind starts on top (the switch cooldown carries over)
     this.underK = 0;
@@ -6853,14 +6965,19 @@ export class Player {
     this.underProbeT = 0;
     this.floatAir = false; // the ramp-launch tag dies here — a rail exit re-declares its own air
     this.flipT = 0; // a deck that caught a rail mid-flip is ON the rail — no corkscrew, no late score
+    this.specialFlip = null;
+    this.flipDuration = CONST.flipTime;
+    this.specialGrab = null;
+    this.specialGrabT = 0;
+    this.specialGrabLanding = false;
     this.pipeEndFly = false; // a rail catch SAVES a pipe-end fly-off
     this.rollOffT = 0;
     this.grindExitAir = false; // (re-set by the next exit — the hop window is per-air)
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     this.score(
-      Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
-      GRIND_NAMES[this.grindStyle],
+      entrySpecial?.points ?? Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
+      this.grindTrickName(),
     );
     // Start the needle slightly off-center in a random direction, at rest, with
     // a fresh sketch phase so the wander never repeats across attempts.
@@ -7241,6 +7358,8 @@ export class Player {
     )
       return false;
 
+    this.specialFlip = null;
+    this.flipDuration = CONST.flipTime;
     this.flipKind = deckTrickFromInput(
       this.rawInput.moveX,
       this.rawInput.moveY,
@@ -7249,6 +7368,30 @@ export class Player {
     this.flipT = CONST.flipTime;
     this.deckTricksThisAir.add(this.flipKind);
     this.deckTricksThisCombo.add(this.flipKind);
+    return true;
+  }
+
+  private tryStartSpecialFlip(): boolean {
+    const trick = this.pendingSpecialFlip;
+    if (
+      !trick ||
+      this.state !== 'air' ||
+      !this.airFromSkate ||
+      this.slamActive ||
+      this.wallriding ||
+      this.isBailing ||
+      this.grabPhase !== 'none' ||
+      this.flipT > 0
+    )
+      return false;
+    this.pendingSpecialFlip = null;
+    this.specialFlip = trick;
+    this.flipDuration = trick.duration;
+    this.flipKind = 'kick'; // gate evidence remains ordinary-only; this is visual metadata
+    this.flipName = trick.label;
+    this.flipT = trick.duration;
+    this.ollieDeckTrickBufferT = 0;
+    this.confirmSpecial(trick);
     return true;
   }
 
@@ -7261,8 +7404,10 @@ export class Player {
     const canSpin =
       !this.isBailing &&
       (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope');
+    const specialFlipStarted = input.spinPressed && this.tryStartSpecialFlip();
     this.ollieDeckTrickBufferT = Math.max(0, this.ollieDeckTrickBufferT - dt);
     const bufferOllieDeckTrick =
+      !specialFlipStarted &&
       input.spinPressed &&
       this.state === 'ride' &&
       this.grounded &&
@@ -7272,6 +7417,7 @@ export class Player {
       this.ollieDeckTrickBufferT = OLLIE_DECK_TRICK_CHORD;
     if (
       input.spinPressed &&
+      !specialFlipStarted &&
       !this.spinning &&
       this.spinCd <= 0 &&
       canSpin
@@ -7338,6 +7484,7 @@ export class Player {
     if (this.flipT > 0) {
       this.flipT -= dt;
       if (this.flipT <= 0) {
+        const completedSpecial = this.specialFlip;
         this.flipT = 0;
         if (
           this.state === 'air' &&
@@ -7346,12 +7493,14 @@ export class Player {
           !this.wallriding &&
           !this.slamActive
         ) {
-          this.score(CONST.ptsFlip, this.flipName);
+          this.score(completedSpecial?.points ?? CONST.ptsFlip, this.flipName);
           // The generic spin ends before the slower deck flip. Once the deck
           // really completes, retain only a one-fixed-tick debounce so a fresh
           // Square edge next tick may start another trick in this same air.
           this.spinCd = Math.min(this.spinCd, dt);
         }
+        this.specialFlip = null;
+        this.flipDuration = CONST.flipTime;
       }
     }
   }
@@ -7368,8 +7517,74 @@ export class Player {
     return Math.abs(rx) > 0.3 ? rx : 0;
   }
 
+  private tryStartSpecialGrab(): boolean {
+    const trick = this.pendingSpecialGrab;
+    if (
+      !trick ||
+      this.state !== 'air' ||
+      !this.airFromSkate ||
+      this.wallriding ||
+      this.slamActive ||
+      this.isBailing ||
+      this.flipT > 0 ||
+      this.grabPhase !== 'none'
+    )
+      return false;
+    this.pendingSpecialGrab = null;
+    this.specialGrab = trick;
+    this.specialGrabT = trick.duration;
+    // The recipe's brief RIGHT tap may have begun a tiny ordinary spin. The
+    // committed 900 owns the rotation and starts from the nearest landable line.
+    this.specialGrabStartAngle = Math.round(this.grabSpinAngle / Math.PI) * Math.PI;
+    this.grabSpinAngle = this.specialGrabStartAngle;
+    this.specialGrabLanding = false;
+    this.grabPhase = 'enter';
+    this.grabT = 0;
+    this.grabTrickName = trick.label;
+    this.grabTickT = 0;
+    const scored = this.score(trick.points, trick.label);
+    this.airGrabShown = scored.shown ?? null;
+    this.grabPaid = scored.pay;
+    this.confirmSpecial(trick);
+    return true;
+  }
+
   private updateGrab(dt: number, input: Input): void {
     this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
+    if (input.grabPressed) this.tryStartSpecialGrab();
+    if (this.specialGrab) {
+      const trick = this.specialGrab;
+      if (
+        this.state !== 'air' ||
+        !this.airFromSkate ||
+        this.wallriding ||
+        this.slamActive ||
+        this.isBailing
+      ) {
+        this.specialGrab = null;
+        this.specialGrabT = 0;
+        this.specialGrabLanding = false;
+        this.grabPhase = 'none';
+      } else {
+        this.specialGrabT = Math.max(0, this.specialGrabT - dt);
+        const progress = 1 - this.specialGrabT / Math.max(trick.duration, dt);
+        const eased = progress * progress * (3 - 2 * progress);
+        this.grabSpinAngle = this.specialGrabStartAngle - eased * Math.PI * 5;
+        const releaseWindow = Math.max(0.05, TUNING.grabRelease);
+        if (progress < CONST.grabTransition / Math.max(trick.duration, dt))
+          this.grabPhase = 'enter';
+        else if (this.specialGrabT > releaseWindow) this.grabPhase = 'held';
+        else this.grabPhase = 'exit';
+        if (this.specialGrabT <= 0) {
+          this.grabSpinAngle = this.specialGrabStartAngle - Math.PI * 5;
+          this.specialGrab = null;
+          this.specialGrabLanding = true;
+          this.grabPhase = 'none';
+          this.grabT = 0;
+        }
+        return;
+      }
+    }
     if (this.state === 'air') {
       // A grab needs a DIRECTION to start (the stick picks the variant): Circle
       // alone in the air does nothing, so braking with Circle off a lip doesn't
@@ -7474,6 +7689,7 @@ export class Player {
         while (this.grabTickT >= 0.25) {
           this.grabTickT -= 0.25;
           this.comboPoints += CONST.ptsGrabTick;
+          this.special.award(CONST.ptsGrabTick);
           this.comboTimer = CONST.comboWindow;
         }
       } else {
@@ -7526,6 +7742,9 @@ export class Player {
       this.visualYaw = wrapAngle(this.visualYaw + this.grabSpinAngle);
       this.grabSpinAngle = 0;
       this.airGrabShown = null;
+      this.specialGrab = null;
+      this.specialGrabT = 0;
+      this.specialGrabLanding = false;
     }
   }
 
@@ -10481,6 +10700,7 @@ export class Player {
     while (this.wallTickT >= 0.25) {
       this.wallTickT -= 0.25;
       this.comboPoints += CONST.ptsWallrideTick;
+      this.special.award(CONST.ptsWallrideTick);
       this.comboTimer = CONST.comboWindow;
     }
     this.emitSparks(1, 0xffd0a0, 0.7); // trail of sparks off the trucks
@@ -10656,6 +10876,8 @@ export class Player {
     this.comboTimer = 0;
     this.comboLabels = [];
     this.comboUses.clear();
+    this.special.wipe();
+    this.clearSpecialMoves();
     this.deckTricksThisAir.clear();
     this.deckTricksThisCombo.clear();
     this.boardOllieAir = false;
@@ -11212,6 +11434,12 @@ export class Player {
     // travel don't care). sidePose blends it in; the board counter-rotates
     // below so the deck stays along the line of travel.
     const sideYaw = this.stance * (Math.PI / 2) * this.sidePose;
+    const specialFlipProgress =
+      this.specialFlip && this.flipT > 0
+        ? THREE.MathUtils.clamp(1 - this.flipT / Math.max(this.flipDuration, 0.001), 0, 1)
+        : 0;
+    const specialTwist =
+      specialFlipProgress * specialFlipProgress * (3 - 2 * specialFlipProgress) * Math.PI * 2;
     const boardRoutedSpin =
       this.spinEffects?.presentationRoute === 'board' ||
       (this.spinning && this.state === 'air' && this.flipT > 0);
@@ -11220,7 +11448,8 @@ export class Player {
       (boardRoutedSpin ? 0 : this.spinAngle) +
       this.grabSpinAngle +
       this.grindYawPose +
-      sideYaw;
+      sideYaw +
+      specialTwist;
 
     // Grab pose, skate-photo style: knees tucked high, one hand pulls the
     // board, the other arm throws up. Direction held picks the variant —
@@ -11848,10 +12077,15 @@ export class Player {
       // pose set above (which is authored fresh every frame, so a total-angle
       // rotation here is stable). Board-local axes per the wall basis: +Z nose,
       // +Y griptape, +X width.
+      if (this.state === 'grind' && this.specialGrind?.id === 'darkslide')
+        this.boardG.rotateZ(Math.PI);
       if (this.flipT > 0) {
-        const fprog = 1 - this.flipT / CONST.flipTime;
+        const fprog = 1 - this.flipT / Math.max(this.flipDuration, 0.001);
         const fang = fprog * Math.PI * 2;
-        if (this.flipKind === 'kick') this.boardG.rotateZ(fang);
+        if (this.specialFlip) {
+          this.boardG.rotateZ(fang);
+          this.boardG.rotateY(fang);
+        } else if (this.flipKind === 'kick') this.boardG.rotateZ(fang);
         else if (this.flipKind === 'heel') this.boardG.rotateZ(-fang);
         else if (this.flipKind === 'shove') this.boardG.rotateY(fang);
         else if (this.flipKind === 'imposs') this.boardG.rotateX(fang);
@@ -12085,7 +12319,7 @@ export class Player {
       // forward lean builds with real running speed (sprint posture)
       const runLean = 0.14 * this.walkAmp * Math.min(1, planar / Math.max(TUNING.walkSpeed, 1));
       this.bodyGroup.rotation.x =
-        flip * (1 - this.grabPose) +
+        flip * (1 - this.grabPose) + specialTwist +
         this.grabPitch * this.grabPose -
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
         (0.75 * crawlMove + 0.16 * crouchW) - // all fours hunch when MOVING; a squat stays upright

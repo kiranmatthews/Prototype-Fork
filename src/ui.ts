@@ -5,11 +5,13 @@ import * as THREE from "three";
 import {
   GameHudSurface,
   type GameHudBoostState,
+  type GameHudSpecialState,
   type GameHudSurfaceDiagnostics,
 } from "./gameHudSurface";
 import { COMBO_GEM_TINT, Level, levelList } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { wumpaMesh } from "./wumpa";
+import { SPECIAL_CONTROL_HELP, SPECIAL_TRICKS } from "./specialTricks";
 import {
   TUNING,
   TUNING_RANGES,
@@ -53,6 +55,8 @@ export interface HudState {
   comboMult: number;
   comboHasTrick: boolean;
   tricks: string;
+  specialMeter: number;
+  specialReady: boolean;
   fruit: number;
   lives: number;
   deaths: number;
@@ -106,6 +110,13 @@ export class UI {
   private boostRingWrap!: HTMLElement; // balance-boost ring: laps over itself as windows stack
   private boostRing!: HTMLElement;
   private boostFrame: GameHudBoostState | null = null;
+  private specialWrap!: HTMLElement;
+  private specialFill!: HTMLElement;
+  private specialLabelEl!: HTMLElement;
+  private specialControlsEl!: HTMLElement;
+  private specialFrame: GameHudSpecialState | null = null;
+  private specialWasReady = false;
+  private specialIntroduced = false;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -683,6 +694,24 @@ export class UI {
       this.onLifeCheat();
     });
 
+    // Bottom-left THPS SPECIAL meter. The compact glyph row is always visible;
+    // the first full bar also gets a one-time named tutorial toast.
+    this.specialWrap = div("hud-special");
+    this.specialWrap.setAttribute("role", "meter");
+    this.specialWrap.setAttribute("aria-label", "Special meter");
+    this.specialWrap.setAttribute("aria-valuemin", "0");
+    this.specialWrap.setAttribute("aria-valuemax", "100");
+    this.specialLabelEl = div("hud-special-label");
+    const specialTrack = div("hud-special-track");
+    this.specialFill = div("hud-special-fill");
+    specialTrack.appendChild(this.specialFill);
+    this.specialControlsEl = div("hud-special-controls");
+    this.specialControlsEl.textContent = SPECIAL_TRICKS.map((trick) => trick.controls).join("   ");
+    this.specialWrap.title = SPECIAL_CONTROL_HELP;
+    this.specialWrap.appendChild(this.specialLabelEl);
+    this.specialWrap.appendChild(specialTrack);
+    this.specialWrap.appendChild(this.specialControlsEl);
+
     // bottom-center: THPS trick plate
     this.trickPlate = div("hud-trickplate");
     this.trickLineEl = div("hud-trickline");
@@ -742,6 +771,7 @@ export class UI {
       tl,
       tr,
       this.ttResultsEl,
+      this.specialWrap,
       this.trickPlate,
       this.balanceWrap,
       this.vBalanceWrap,
@@ -779,6 +809,7 @@ export class UI {
     this.rooMsgTitle = new RooLabel(this.msgTitle, { palette: ROO_HUD });
     // Fixed captions: set once, then they never change again.
     new RooLabel(this.scoreLabelEl, { palette: ROO_HUD }).set("SCORE");
+    new RooLabel(this.specialLabelEl, { palette: ROO_HUD }).set("SPECIAL");
     new RooLabel(this.boostLabelEl, { palette: ROO_HUD }).set("BALANCE");
     new RooLabel(this.deathTitleEl, { palette: ROO_HUD, extrusionSteps: 16 }).set(
       "GAME OVER",
@@ -802,6 +833,11 @@ export class UI {
         timeTrialClock: this.ttClockEl,
         timeTrialValue: this.ttTimeEl,
         timeTrialFreeze: this.ttFreezeEl,
+        special: this.specialWrap,
+        specialLabel: this.specialLabelEl,
+        specialTrack,
+        specialFill: this.specialFill,
+        specialControls: this.specialControlsEl,
         results: this.ttResultsEl,
         resultsTitle: this.ttResTitleEl,
         resultsTime: this.ttResTimeEl,
@@ -845,7 +881,7 @@ export class UI {
     return this.gameHudSurface.render(
       renderer,
       targetSize,
-      { boost: this.boostFrame },
+      { boost: this.boostFrame, special: this.specialFrame },
       target,
     );
   }
@@ -1187,6 +1223,26 @@ export class UI {
       pop(this.livesEl);
       this.prevHud.lives = lifeReadout;
     }
+    const specialValue = Math.max(0, Math.min(100, s.specialMeter));
+    const specialFraction = specialValue / 100;
+    this.specialWrap.dataset.value = specialValue.toFixed(4);
+    this.specialWrap.setAttribute("aria-valuenow", specialValue.toFixed(0));
+    this.specialFill.style.transform = `scaleX(${specialFraction})`;
+    this.specialWrap.classList.toggle("hud-special-ready", s.specialReady);
+    this.specialFrame = {
+      value: specialValue,
+      ready: s.specialReady,
+      label: "SPECIAL",
+      controls: this.specialControlsEl.textContent ?? "",
+    };
+    if (s.specialReady && !this.specialWasReady) {
+      pop(this.specialWrap);
+      if (!this.specialIntroduced) {
+        this.specialIntroduced = true;
+        this.showMessage("SPECIAL READY", SPECIAL_CONTROL_HELP, 2400);
+      }
+    }
+    this.specialWasReady = s.specialReady;
     // COMBO plate: appears the moment a REAL trick is in the combo (grind/grab/
     // wallride/slide) — not for bare platforming (spins, crate bounces, enemy
     // pops). The total tickers up while chaining; on a clean bank it drains to
@@ -1913,6 +1969,46 @@ export class UI {
         font: 900 clamp(20px, 3.6vh, 32px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 2px;
         color: #ffe9b0;
+      }
+
+      .hud-special {
+        position: fixed; z-index: 10; left: 40px; bottom: 4%;
+        width: clamp(220px, 27vw, 340px); pointer-events: none;
+        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.72));
+      }
+      .hud-special-label {
+        width: 100%; height: clamp(17px, 2.8vh, 23px);
+        font: 900 clamp(13px, 2.2vh, 19px) Impact, 'Arial Black', sans-serif;
+        letter-spacing: 4px; color: #ffc448;
+      }
+      .hud-special-track {
+        box-sizing: border-box; width: 100%; height: clamp(12px, 2vh, 17px);
+        padding: 2px; overflow: hidden; background: rgba(12, 10, 18, 0.82);
+        border: 2px solid rgba(255, 196, 72, 0.72);
+      }
+      .hud-special-fill {
+        width: 100%; height: 100%; transform: scaleX(0); transform-origin: left center;
+        background: linear-gradient(90deg, #ff7a18 0%, #ffc928 72%, #ffe36a 100%);
+        transition: transform 0.08s linear;
+      }
+      .hud-special-controls {
+        margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: clip;
+        color: #d0b46d; font: 900 clamp(8px, 1.2vh, 10px) ui-monospace, Menlo, Consolas, monospace;
+        letter-spacing: 1px;
+      }
+      .hud-special-ready .hud-special-label,
+      .hud-special-ready .hud-special-controls { color: #fff5aa; }
+      .hud-special-ready .hud-special-track {
+        border-color: #fff16a;
+        box-shadow: 0 0 18px rgba(255, 180, 31, 0.82), inset 0 0 8px rgba(255, 255, 190, 0.6);
+      }
+      .hud-special-ready .hud-special-fill {
+        background: linear-gradient(90deg, #ff8a18 0%, #ffd72d 70%, #fffbd0 100%);
+        animation: specialpulse 0.42s ease-in-out infinite alternate;
+      }
+      @keyframes specialpulse { from { filter: brightness(1); } to { filter: brightness(1.35); } }
+      @media (max-width: 640px) {
+        .hud-special { left: 16px; width: min(58vw, 260px); }
       }
 
       /* TIME TRIAL: big top-center clock — bare gold digits like the score,
