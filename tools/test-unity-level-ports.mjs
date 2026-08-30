@@ -140,6 +140,11 @@ assert.equal(
 );
 
 const jungle = levels.get("JUNGLE_GATE_RUN_LEVEL");
+assert.equal(
+  jungle.ledgeAssist,
+  1,
+  "Jungle Gate must opt into the full level-local ledge recovery envelope",
+);
 assert.equal(count(jungle, "platform"), 14);
 assert.equal(count(jungle, "ramp"), 2);
 assert.equal(count(jungle, "pit"), 6);
@@ -150,6 +155,37 @@ assert.equal(
   2,
 );
 assert.ok(jungle.components.some((component) => component.t === "zone" && component.dir === "E"));
+const junglePlatforms = new Map(
+  jungle.components
+    .filter((component) => component.t === "platform")
+    .map((component) => [component.nm, component]),
+);
+assert.deepEqual(
+  [
+    "Bounce landing 01",
+    "Rail landing 01",
+    "Bounce landing 02",
+    "Skate landing 01",
+    "Rail landing 02",
+    "Finish terrace",
+  ].map((name) => {
+    const platform = junglePlatforms.get(name);
+    return [name, platform.p[0] - platform.s[0] / 2, platform.p[1] + platform.s[1] / 2];
+  }),
+  [
+    ["Bounce landing 01", 20.5, 9],
+    ["Rail landing 01", 98, 6],
+    ["Bounce landing 02", 142.5, 15],
+    ["Skate landing 01", 242, 15.25],
+    ["Rail landing 02", 315, 15.5],
+    ["Finish terrace", 404, 13.25],
+  ],
+  "ledge assistance must not resize or move the six source receiving platforms",
+);
+const perfectBoingDeficit = 9 - 0.96 - (20 * 20) / (2 * 33);
+const ordinaryBoingDeficit = 9 - 0.96 - (16 * 16) / (2 * 33);
+assert.ok(perfectBoingDeficit < 3.2, "Perfect Boing must enter assisted reach");
+assert.ok(ordinaryBoingDeficit > 3.2, "ordinary Boing must not bypass the climb");
 
 const meshy = levels.get("MESHYLOOK_THORNS_LEVEL");
 assert.equal(count(meshy, "ramp"), 16);

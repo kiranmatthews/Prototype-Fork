@@ -250,6 +250,10 @@ export const JUNGLE_GATE_RUN_LEVEL: CustomLevelData = {
   name: "Jungle Gate Run",
   spawn: [-20, 0.12, 0],
   killY: -18,
+  // The source course's two arrow-crate ascents were notoriously exacting.
+  // Keep their geometry, but give every intended lip in this level the full
+  // catch envelope: earlier hand contact, more reach, and a wider near miss.
+  ledgeAssist: 1,
   sky: "day",
   groups: [
     { id: GROUP.platforms, nm: "side-scroll platforms" },

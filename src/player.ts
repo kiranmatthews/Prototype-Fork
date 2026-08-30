@@ -44,10 +44,12 @@ import {
   ledgeBasis,
   ledgeBlockerIntersects,
   ledgeBodyBox,
+  ledgeCatchEnvelope,
   ledgeEdgePoint,
   ledgeLandingPoint,
   ledgeTraversePoint,
   type LedgeBasis,
+  type LedgeCatchEnvelope,
 } from './ledgeTraversal';
 import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
 import {
@@ -777,6 +779,8 @@ export class Player {
   private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
   private ledgeShimmy = 0; // live along-ledge slide input (-1..1) — drives the hand-over-hand
   private ledgeClimbQueued = false; // preserves X pressed/held on the catch frame
+  private readonly ledgeEnvelope: LedgeCatchEnvelope =
+    ledgeCatchEnvelope(TUNING.ledgeReach, 0);
   // baked Mixamo braced-hang clips: which one is playing, its clock, and the
   // exit overlay weight (drop/fall clips bleed into the first beat of the air)
   private hangClipName: keyof typeof HANG_ANIMS | null = null;
@@ -8892,6 +8896,11 @@ export class Player {
     // grinding — the rail owns the position, and a wall collider brushing
     // the rail line (berm lips!) must not wrestle you off it.
     if (this.state !== 'grind' && !this.wallriding) {
+      const ledgeEnvelope = ledgeCatchEnvelope(
+        TUNING.ledgeReach,
+        level.ledgeAssist,
+        this.ledgeEnvelope,
+      );
       for (const w of level.walls) {
         // A tumbling airborne body flung over a LOW solid (the log it just
         // tripped on) must pass over the top, not get pinned at the face.
@@ -8936,8 +8945,10 @@ export class Player {
           // re-presses) — falling a hair off the face must still offer the
           // grab, or those jumps slide down 3cm out of reach forever.
           this.state === 'air' &&
-          this.vVel <= 1.5 &&
-          HANG_BOX.copy(this.playerBox).expandByScalar(0.14).intersectsBox(w) &&
+          this.vVel <= ledgeEnvelope.maximumRisingSpeed &&
+          HANG_BOX.copy(this.playerBox)
+            .expandByScalar(ledgeEnvelope.nearMiss)
+            .intersectsBox(w) &&
           this.tryLedgeGrab(w, level)
         )
           break;
@@ -10414,6 +10425,11 @@ export class Player {
       this.rawInput.grindHeld // grind/wallride intent owns the wall
     )
       return false;
+    const catchEnvelope = ledgeCatchEnvelope(
+      TUNING.ledgeReach,
+      level.ledgeAssist,
+      this.ledgeEnvelope,
+    );
     // NOTE: a somersault (double jump) is NOT a blocker — the catch clears the
     // flip and the reach-and-grab clip owns the pose. Gating on it made every
     // double-jump approach silently ungrabbable (the whole point of the double
@@ -10422,15 +10438,16 @@ export class Player {
     const rise = lipRough - this.pos.y;
     if (this.state === 'ride') {
       // grounded: a chest-high-or-better step within reach
-      if (rise < LEDGE_HANG_DEPTH + 0.2 || rise > TUNING.ledgeReach) return false;
+      if (rise < LEDGE_HANG_DEPTH + 0.2 || rise > catchEnvelope.reach)
+        return false;
     } else {
-      // air: catches on DOWNWARD momentum only — the jump's rise always plays
-      // out (no snag on the way up); once falling (or cresting), PROXIMITY of
-      // the hands to the lip decides: anywhere from just-above-the-hands down
-      // to full reach. The somersault is no blocker — the fall out of a double
-      // jump is exactly when the higher ledges get caught.
-      if (this.vVel > 1.5) return false; // still rising: let the jump finish
-      if (rise < 0.7 || rise > TUNING.ledgeReach) return false;
+      // Default airs catch only at the crest/downward phase. A level-authored
+      // assist can open that hand-contact beat slightly earlier on the rise;
+      // Jungle Gate uses it to turn its source's frame-perfect arrow climbs
+      // into deliberate recovery grabs without moving either platform.
+      if (this.vVel > catchEnvelope.maximumRisingSpeed) return false;
+      if (rise < catchEnvelope.minimumAirRise || rise > catchEnvelope.reach)
+        return false;
     }
     // Which side face was hit? Platform colliders are full footprints (not
     // thin like wallride walls), so pick by least penetration — the shallow
@@ -10463,7 +10480,13 @@ export class Player {
       hz = sl > 0.3 ? sz / sl : this.axisF.z;
     }
     const into = -(hx * nx + hz * nz);
-    if (into < (this.state === 'ride' ? 0.65 : 0.2)) return false;
+    if (
+      into <
+      (this.state === 'ride'
+        ? catchEnvelope.groundedIntoThreshold
+        : catchEnvelope.airIntoThreshold)
+    )
+      return false;
     // landing probe: standable ground just inside the face, near the lip
     const face = useX ? (nx > 0 ? w.max.x : w.min.x) : nz > 0 ? w.max.z : w.min.z;
     const px = useX
@@ -10534,7 +10557,12 @@ export class Player {
       this.rawInput.grindHeld // grind/wallride intent owns the wall
     )
       return false;
-    if (this.vVel > 1.5) return false; // still rising: let the jump play out
+    const catchEnvelope = ledgeCatchEnvelope(
+      TUNING.ledgeReach,
+      level.ledgeAssist,
+      this.ledgeEnvelope,
+    );
+    if (this.vVel > catchEnvelope.maximumRisingSpeed) return false;
     // fall line's horizontal direction: measured travel, else the stick's
     // world direction, else facing (same ladder as the AABB variant)
     const pl = Math.hypot(this.lastVelX, this.lastVelZ);
@@ -10553,7 +10581,7 @@ export class Player {
     }
     // standable ground at horizontal offset t along the fall line, between
     // grip height and full reach? (verts and pipes are never "ledges")
-    const top = this.pos.y + TUNING.ledgeReach + 0.9;
+    const top = this.pos.y + catchEnvelope.reach + 0.9;
     const probe = (t: number): number | null => {
       return this.probeWalkableLedgeTop(
         level,
@@ -10562,20 +10590,21 @@ export class Player {
         top,
         this.pos.y + 0.55,
         this.pos.y + 0.55,
-        this.pos.y + TUNING.ledgeReach,
+        this.pos.y + catchEnvelope.reach,
       )?.y ?? null;
     };
-    const aheadLip = probe(0.62);
+    const aheadLip = probe(catchEnvelope.forwardProbe);
     if (aheadLip === null) return false;
     const rise = aheadLip - this.pos.y;
-    if (rise < 0.7 || rise > TUNING.ledgeReach) return false;
+    if (rise < catchEnvelope.minimumAirRise || rise > catchEnvelope.reach)
+      return false;
     // an edge needs OPEN AIR on our side: ground at our own column near that
     // same height means we're simply landing on top, not falling past a lip
     const own = probe(0.06);
     if (own !== null && own > aheadLip - 0.45) return false;
     // walk the probe inward to locate the edge (first sample that sees the top)
-    let edgeT = 0.62;
-    for (let t = 0.14; t < 0.63; t += 0.12) {
+    let edgeT = catchEnvelope.forwardProbe;
+    for (let t = 0.14; t < catchEnvelope.forwardProbe + 0.01; t += 0.12) {
       const y = probe(t);
       if (y !== null && Math.abs(y - aheadLip) <= 0.4) {
         edgeT = t;

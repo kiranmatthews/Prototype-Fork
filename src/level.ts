@@ -787,6 +787,8 @@ export interface CustomLevelData {
   name: string;
   spawn: [number, number, number];
   killY: number;
+  /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
+  ledgeAssist?: number;
   sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
   components: CustomComponent[];
   layers?: CustomLayer[];
@@ -2033,6 +2035,14 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
     "collisionHeight",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
+  if (
+    source.ledgeAssist !== undefined &&
+    (typeof source.ledgeAssist !== "number" ||
+      !Number.isFinite(source.ledgeAssist) ||
+      source.ledgeAssist < 0 ||
+      source.ledgeAssist > 1)
+  )
+    return null;
   const axes = new Set(["x", "y", "z"]);
   const curves = new Set(["corner", "spline"]);
   const vertKinds = new Set(["quarter", "half"]);
@@ -2692,6 +2702,10 @@ export class Level {
   private wallPathByBox = new Map<THREE.Box3, WallPathRuntime>();
   private wallPathSegmentByBox = new Map<THREE.Box3, number>();
   killY = -48; // per-level death height (every builder authors its own)
+  // Authored per-level accessibility without changing the shared movement
+  // tuning. One source course can widen its ledge catch envelope while every
+  // other level retains the exact global grab feel.
+  ledgeAssist = 0;
   name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
   // here each step so the chase can trigger, rubber-band, and reset fairly.
@@ -4524,6 +4538,7 @@ export class Level {
       name: `${this.name} (copy)`,
       spawn: [r2(this.spawnPos.x), r2(this.spawnPos.y), r2(this.spawnPos.z)],
       killY: r2(this.killY),
+      ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       // only when it isn't the default, so the saved JSON stays quiet
       sky: this.skyPreset === DEFAULT_SKY ? undefined : this.skyPreset,
       components: C,
@@ -4539,6 +4554,7 @@ export class Level {
     this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.killY = data.killY;
+    this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;
     this.theme = {

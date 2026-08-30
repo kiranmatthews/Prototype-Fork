@@ -8,6 +8,38 @@ export interface LedgeBasis {
   skin: number;
 }
 
+export interface LedgeCatchEnvelope {
+  reach: number;
+  minimumAirRise: number;
+  maximumRisingSpeed: number;
+  nearMiss: number;
+  forwardProbe: number;
+  airIntoThreshold: number;
+  groundedIntoThreshold: number;
+}
+
+/**
+ * Expand the default catch gates for a level-authored 0..1 accessibility
+ * assist. Zero is byte-for-byte the shipped global feel; one is the generous
+ * Jungle Gate recovery envelope, still far short of bridging its route gaps.
+ */
+export function ledgeCatchEnvelope(
+  baseReach: number,
+  assistValue: number,
+  out?: LedgeCatchEnvelope,
+): LedgeCatchEnvelope {
+  const assist = Math.min(1, Math.max(0, assistValue));
+  const envelope = out ?? ({} as LedgeCatchEnvelope);
+  envelope.reach = baseReach + assist * 1.4;
+  envelope.minimumAirRise = 0.7 - assist * 0.25;
+  envelope.maximumRisingSpeed = 1.5 + assist * 4.5;
+  envelope.nearMiss = 0.14 + assist * 0.26;
+  envelope.forwardProbe = 0.62 + assist * 0.3;
+  envelope.airIntoThreshold = 0.2 - assist * 0.12;
+  envelope.groundedIntoThreshold = 0.65 - assist * 0.2;
+  return envelope;
+}
+
 /**
  * Build one horizontal ledge frame for arbitrary (including diagonal) faces.
  * `skin` is the AABB support radius along the normal plus a small air gap.

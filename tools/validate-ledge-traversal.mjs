@@ -219,14 +219,16 @@ console.error = (...args) => {
 };
 
 try {
-  const { Level, findLevel } = await server.ssrLoadModule("/src/level.ts");
+  const { Level, findLevel, normalizeCustomLevelData } =
+    await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { Replayer } = await server.ssrLoadModule("/src/replay.ts");
-  const { CONST } = await server.ssrLoadModule("/src/tuning.ts");
+  const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
   const {
     ledgeBasis,
     ledgeBlockerIntersects,
     ledgeBodyBox,
+    ledgeCatchEnvelope,
     ledgeLandingPoint,
     ledgeTraversePoint,
   } = await server.ssrLoadModule("/src/ledgeTraversal.ts");
@@ -282,6 +284,196 @@ try {
   );
   assert.equal(ledgeBlockerIntersects(support, body, 1), false);
   assert.equal(ledgeBlockerIntersects(lowCeiling, body, 1), true);
+
+  // Jungle Gate is the one source course whose receiving terraces opt into a
+  // wider accessibility envelope. Zero must retain every shipped global
+  // value; full assist is generous enough for the authored Perfect Boing but
+  // does not turn an ordinary arrow bounce into a shortcut.
+  assert.deepEqual(ledgeCatchEnvelope(TUNING.ledgeReach, 0), {
+    reach: TUNING.ledgeReach,
+    minimumAirRise: 0.7,
+    maximumRisingSpeed: 1.5,
+    nearMiss: 0.14,
+    forwardProbe: 0.62,
+    airIntoThreshold: 0.2,
+    groundedIntoThreshold: 0.65,
+  });
+  const fullAssist = ledgeCatchEnvelope(TUNING.ledgeReach, 1);
+  for (const [key, expected] of Object.entries({
+    reach: TUNING.ledgeReach + 1.4,
+    minimumAirRise: 0.45,
+    maximumRisingSpeed: 6,
+    nearMiss: 0.4,
+    forwardProbe: 0.92,
+    airIntoThreshold: 0.08,
+    groundedIntoThreshold: 0.45,
+  }))
+    assert.ok(
+      Math.abs(fullAssist[key] - expected) < 1e-9,
+      `full ledge assist ${key} drifted`,
+    );
+
+  const jungleGateEntry = findLevel("jungle-gate-run");
+  assert.ok(jungleGateEntry?.data, "Jungle Gate source data is missing");
+  const invalidAssist = structuredClone(jungleGateEntry.data);
+  invalidAssist.ledgeAssist = 1.01;
+  assert.equal(
+    normalizeCustomLevelData(invalidAssist),
+    null,
+    "out-of-range level ledge assistance must be rejected",
+  );
+
+  const gateScene = new THREE.Scene();
+  const gateLevel = new Level(gateScene, jungleGateEntry);
+  assert.equal(gateLevel.ledgeAssist, 1);
+  assert.equal(gateLevel.captureData().ledgeAssist, 1);
+  const receivingFaces = [
+    { x: 20.5, roughY: 8.75 },
+    { x: 142.5, roughY: 14.75 },
+  ];
+  const faceFor = ({ x, roughY }) =>
+    gateLevel.walls.find(
+      (wall) =>
+        Math.abs(wall.min.x - x) < 1e-6 &&
+        Math.abs(wall.max.y - roughY) < 1e-6 &&
+        wall.min.z < 0 &&
+        wall.max.z > 0,
+    );
+  const prepareCatch = (player, face, rise = 2.4) => {
+    player.rawInput = makeInput();
+    player.state = "air";
+    player.grounded = false;
+    player.pos.set(face.min.x - 0.35, face.max.y - rise, 0);
+    player.lastVelX = 9;
+    player.lastVelZ = 0;
+    player.vVel = 4;
+  };
+  for (const receiving of receivingFaces) {
+    const face = faceFor(receiving);
+    assert.ok(face, `missing receiving platform face at x=${receiving.x}`);
+
+    const baselinePlayer = new Player(gateScene);
+    prepareCatch(baselinePlayer, face);
+    gateLevel.ledgeAssist = 0;
+    assert.equal(
+      baselinePlayer.tryLedgeGrab(face, gateLevel),
+      false,
+      "the global envelope unexpectedly caught the source-problem approach",
+    );
+
+    const assistedPlayer = new Player(gateScene);
+    prepareCatch(assistedPlayer, face);
+    gateLevel.ledgeAssist = 1;
+    assert.equal(
+      assistedPlayer.tryLedgeGrab(face, gateLevel),
+      true,
+      "Jungle Gate assist did not catch the receiving terrace",
+    );
+    assert.equal(assistedPlayer.state, "hang");
+    assert.ok(Math.abs(assistedPlayer.ledgeLip - (receiving.roughY + 0.25)) < 1e-5);
+    assert.ok(
+      Math.abs(
+        assistedPlayer.ledgeAnchor.y -
+          (receiving.roughY + 0.25 - 1.25),
+      ) < 1e-5,
+      "assisted catch did not anchor hands at the true platform lip",
+    );
+    const climbInput = makeInput();
+    climbInput.jumpPressed = true;
+    for (let step = 0; step < 60 && assistedPlayer.state === "hang"; step++) {
+      assistedPlayer.rawInput = climbInput;
+      assistedPlayer.stepHang(CONST.fixedStep, climbInput, gateLevel);
+      climbInput.consumeEdges();
+    }
+    assert.equal(
+      assistedPlayer.state,
+      "air",
+      "assisted receiving catch did not complete its mantle",
+    );
+    assert.ok(
+      assistedPlayer.pos.x > face.min.x,
+      "assisted mantle did not finish inward on the receiving terrace",
+    );
+
+    const ordinaryBounce = new Player(gateScene);
+    prepareCatch(ordinaryBounce, face, 4.1);
+    assert.equal(
+      ordinaryBounce.tryLedgeGrab(face, gateLevel),
+      false,
+      "full assist let an ordinary Boing bypass the Perfect-Boing climb",
+    );
+
+    const grindOwner = new Player(gateScene);
+    prepareCatch(grindOwner, face);
+    grindOwner.rawInput.grindHeld = true;
+    assert.equal(
+      grindOwner.tryLedgeGrab(face, gateLevel),
+      false,
+      "ledge assist stole a receiving face from grind intent",
+    );
+
+    const comboOwner = new Player(gateScene);
+    prepareCatch(comboOwner, face);
+    comboOwner.comboRun = true;
+    assert.equal(
+      comboOwner.tryLedgeGrab(face, gateLevel),
+      false,
+      "ledge assist banked a live combo-run string",
+    );
+  }
+
+  // Exercise the actual first/second Arrow-climb timing: fall onto the real
+  // metal Arrow lid with Jump held, then let normal 9u/s side-view air drive
+  // carry the Perfect Boing to the receiving terrace. This guards the full
+  // collision/timing route instead of only calling the lip resolver directly.
+  const simulatePerfectBoing = (crateX) => {
+    gateLevel.reset(true);
+    gateLevel.update(0);
+    gateLevel.ledgeAssist = 1;
+    const crate = gateLevel.crates.find(
+      (candidate) =>
+        candidate.metalBounce && Math.abs(candidate.mesh.position.x - crateX) < 1e-6,
+    );
+    assert.ok(crate, `missing Jungle Gate Arrow crate at x=${crateX}`);
+    const player = new Player(gateScene);
+    player.enterLevel("jungle-gate-run");
+    player.respawn(gateLevel, true);
+    player.pos.set(crateX, crate.box.max.y + 0.22, 0);
+    player.prevPos.copy(player.pos);
+    player.state = "air";
+    player.grounded = false;
+    player.vVel = -3;
+    const input = makeInput();
+    input.moveX = 1;
+    input.jumpHeld = true;
+    let perfectLaunch = false;
+    let maximumY = player.pos.y;
+    for (let frame = 0; frame < 240; frame++) {
+      player.step(CONST.fixedStep, input, gateLevel);
+      gateLevel.update(CONST.fixedStep);
+      maximumY = Math.max(maximumY, player.pos.y);
+      if (player.vVel > 18) perfectLaunch = true;
+      input.consumeEdges();
+      if (player.state === "hang" || player.state === "dead") break;
+    }
+    return { player, perfectLaunch, maximumY };
+  };
+  for (const [crateX, targetLip] of [
+    [13.5, 9],
+    [135.5, 15],
+  ]) {
+    const result = simulatePerfectBoing(crateX);
+    assert.equal(result.perfectLaunch, true, `Arrow ${crateX} did not Perfect Boing`);
+    assert.equal(
+      result.player.state,
+      "hang",
+      `Perfect Boing at x=${crateX} did not catch its receiving terrace; ` +
+        `ended ${result.player.state} at (${result.player.pos.x.toFixed(2)}, ` +
+        `${result.player.pos.y.toFixed(2)}) after apex ${result.maximumY.toFixed(2)}`,
+    );
+    assert.ok(Math.abs(result.player.ledgeLip - targetLip) < 1e-4);
+  }
+  gateLevel.dispose();
 
   const checkpoints = new Set([
     4351, 4352, 4389, 4360, 4442, 4450, 4497, 4503, 4554, 4565, 4595,
@@ -435,7 +627,7 @@ try {
   );
 
   console.log(
-    "Validated refit diagonal/seam ledge traversal, mover carry, inward mantle targeting, neutral and held-input climbs, and deliberate traverse-only clearance.",
+    "Validated both Jungle Gate Perfect-Boing catches/mantles plus refit diagonal traversal, mover carry, neutral/held climbs, and traverse-only clearance.",
   );
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));

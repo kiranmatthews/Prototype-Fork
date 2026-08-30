@@ -21,7 +21,7 @@ in-game authored level; imported Unity meshes do not own gameplay collision.
 | Bonus Level | `BonusLevel.unity` and partial builders | Seven supports, all 33 puzzle crates, lift, rail crossing, one-line containment and the registered four-layer parallax painting. |
 | Coastal Street Run | `CoastalStreetRun.unity` and partial builders | All 23 road grades and four gaps, interactive street furniture and threats; minor trees, umbrellas and storefront garnish intentionally omitted. Beachside-style coast is placed on screen right. |
 | Island Hopper | `IslandHopper.unity` / builder | Five sand islands, eleven joined procedural timber paths, exact jump joins, two snapping ropes and the authored actor rhythm. |
-| Jungle Gate Run | `JungleGateRun.unity` / builder | Fourteen side-view platforms, two kickers, six thorn gaps, required grind rails, bounce crates and depth containment. |
+| Jungle Gate Run | `JungleGateRun.unity` / builder | Fourteen side-view platforms, two kickers, six thorn gaps, required grind rails, bounce crates and depth containment. Its level-local full ledge assist turns all six source-disabled receiving terraces into generous recovery catches without moving the rail/skate gaps; a normal Boing still cannot clear either Arrow climb. |
 | MeshyLook Thorn Courtyards | `MeshyLookDev.unity` / `MeshyLookDevSceneBuilder.cs` | Four instances of the actual compressed Meshy stone courtyard, hidden deterministic ride hulls, visible thorn wells, eight ridge rails, a forward-looking +X camera, and code-native pulsing thorns. A web-only finish makes the Unity look-dev row a complete menu level. |
 
 ## Shared presentation
