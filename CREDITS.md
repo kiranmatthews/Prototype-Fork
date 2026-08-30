@@ -129,6 +129,17 @@ GLSL ES 3.00 translation and WebGL binding rewrite. See
 `docs/UNITY_CRT_WEB_PORT.md` for the runtime graph and deliberate platform
 adaptations.
 
+## Owner-supplied Meshy courtyard
+
+The visual bridge modules in MeshyLook Thorn Courtyards use the project
+owner's `AncientStoneCourtyard.fbx` Meshy handoff. The browser ships a
+presentation-only 127 KB GLB derived from that model and its base-color map;
+gameplay collision remains original procedural code. Source hashes and the
+compression recipe are recorded in `public/meshy/README.md` and
+`tools/bake-meshy-courtyard.py`. The original account tier/community status is
+not recorded, so the public copy follows Meshy's conservative free-plan path:
+**model created with [Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
+
 ## Everything else
 
 Levels, physics, the character rig, the surface textures, the editor and the

@@ -277,6 +277,25 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
       x.fill();
     }
   },
+  meshycourtyard: (x) => {
+    x.fillStyle = "#68756c";
+    x.beginPath();
+    x.moveTo(1, 15);
+    x.lineTo(3, 5);
+    x.lineTo(7, 2);
+    x.lineTo(11, 2);
+    x.lineTo(15, 5);
+    x.lineTo(17, 15);
+    x.lineTo(13, 15);
+    x.lineTo(12, 9);
+    x.quadraticCurveTo(9, 6, 6, 9);
+    x.lineTo(5, 15);
+    x.closePath();
+    x.fill();
+    x.strokeStyle = "#b3b99f";
+    x.lineWidth = 1;
+    x.stroke();
+  },
   log: (x) => {
     x.fillStyle = "#96683c";
     x.fillRect(1, 7, 16, 5);
@@ -400,6 +419,7 @@ const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
   ruinblock: { s: [2.4, 1.6, 2.4], yaw: 0 },
   log: { len: 13 },
   block: { s: [10, 8, 10], yaw: 0, color: "#6b5232", tex: "dirt" },
+  meshycourtyard: { w: 11.52, yaw: 90, amp: 6 },
   // The library families arrive with NOTHING chosen on purpose: leave vr/tn
   // off and every copy rolls its own model, colour, size, spin and lean from
   // where it stands, which is what makes a scattered handful look planted
@@ -4327,6 +4347,11 @@ export class Editor {
       else if (kind === "palm") c.rise = c.rise ?? 4.8;
       else if (kind === "vines") c.rise = c.rise ?? 4;
       else if (kind === "log") c.len = c.len ?? 13;
+      else if (kind === "meshycourtyard") {
+        c.w = c.w ?? 11.52;
+        c.yaw = c.yaw ?? 90;
+        c.amp = c.amp ?? 6;
+      }
     }
   }
 
@@ -8144,6 +8169,21 @@ export class Editor {
         sizeRow(2, "depth");
       }
       if (dk === "block") colorRow();
+      if (dk === "meshycourtyard") {
+        num(
+          "fitted size",
+          () => c.w ?? 11.52,
+          (v) => (c.w = Math.max(0.1, v)),
+          0.1,
+        );
+        num("yaw °", () => c.yaw ?? 90, (v) => (c.yaw = v), 15);
+        num(
+          "pitch °",
+          () => c.amp ?? 0,
+          (v) => (c.amp = THREE.MathUtils.clamp(v, -45, 45)),
+          1,
+        );
+      }
       if (dk === "idol" || dk === "ruinblock" || dk === "block")
         num(
           "yaw °",
@@ -8154,7 +8194,9 @@ export class Editor {
       const note = document.createElement("div");
       note.className = "ed-dim";
       note.textContent =
-        dk === "idol"
+        dk === "meshycourtyard"
+          ? "compressed owner-supplied Meshy bridge — visual only; keep a separate ride hull"
+          : dk === "idol"
           ? "scenery — solid: it blocks, so it can frame a doorway"
           : dk === "log"
             ? "scenery — solid: a hop-over obstacle across the path"

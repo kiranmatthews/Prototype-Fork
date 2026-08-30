@@ -156,6 +156,26 @@ assert.equal(count(meshy, "ramp"), 16);
 assert.equal(count(meshy, "rail"), 8);
 assert.equal(count(meshy, "pit"), 4);
 assert.equal(count(meshy, "thorn"), 4);
+assert.equal(count(meshy, "zone"), 0, "Meshy camera must follow its +X spine");
+const meshyCamera = meshy.components.filter((component) => component.t === "camnode");
+assert.ok(
+  meshyCamera.every((node, index) => index === 0 || node.p[0] > meshyCamera[index - 1].p[0]),
+  "Meshy camera spine must look and travel forward along +X",
+);
+assert.ok(
+  meshy.components
+    .filter((component) => component.t === "ramp")
+    .every((component) => component.invisible === true),
+  "Meshy gameplay ramps must not cover the actual bridge art",
+);
+const courtyardVisuals = meshy.components.filter(
+  (component) => component.t === "decor" && component.dkind === "meshycourtyard",
+);
+assert.equal(courtyardVisuals.length, 4);
+assert.deepEqual(
+  courtyardVisuals.map((component) => [component.p[0], component.yaw, component.amp]),
+  [[0, 90, 6], [10.8, 90, -6], [21.6, 90, 6], [32.4, 90, -6]],
+);
 const thornPits = meshy.components.filter((component) => component.nm?.startsWith("Small thorn core"));
 assert.equal(thornPits.length, 4);
 assert.ok(thornPits.every((component) => component.s[0] === 1.15 && component.s[2] === 1.25));
@@ -176,6 +196,73 @@ for (const literal of [
   assert.ok(thornSource.includes(literal), `procedural thorn contract missing: ${literal}`);
 }
 
+const courtyardSource = readFileSync(path.join(root, "src/meshyCourtyard.ts"), "utf8");
+for (const literal of [
+  'MESHY_COURTYARD_PATH = "meshy/ancient-stone-courtyard.glb"',
+  "MESHY_COURTYARD_UNIT_BOTTOM = 0.04 / 11.52",
+  "mesh.geometry.userData.shared = true",
+  "template.clone(true)",
+  "releaseMeshyCourtyard",
+  "meshyCourtyardReleased",
+  "AncientStoneCourtyard_EditorBounds",
+]) {
+  assert.ok(courtyardSource.includes(literal), `Meshy courtyard loader missing: ${literal}`);
+}
+const levelSource = readFileSync(path.join(root, "src/level.ts"), "utf8");
+for (const literal of [
+  '"meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh; visual only',
+  'case "meshycourtyard"',
+  "createMeshyCourtyardVisual()",
+  "m.userData.editorGhost = true",
+]) {
+  assert.ok(levelSource.includes(literal), `Meshy runtime integration missing: ${literal}`);
+}
+const editorSource = readFileSync(path.join(root, "src/editor.ts"), "utf8");
+for (const literal of [
+  "meshycourtyard: (x) =>",
+  'meshycourtyard: { w: 11.52, yaw: 90, amp: 6 }',
+  '"fitted size"',
+  '"pitch °"',
+]) {
+  assert.ok(editorSource.includes(literal), `Meshy editor integration missing: ${literal}`);
+}
+const courtyardAsset = readFileSync(
+  path.join(root, "public/meshy/ancient-stone-courtyard.glb"),
+);
+assert.ok(courtyardAsset.byteLength < 160_000, "Meshy courtyard GLB is no longer aggressively compressed");
+assert.equal(
+  createHash("sha256").update(courtyardAsset).digest("hex"),
+  "820899ca1d314fb56cccc7eeb49caa15d9e9f05fe3e16e5a42ae97ea53b01ebb",
+);
+assert.equal(courtyardAsset.toString("ascii", 0, 4), "glTF");
+const courtyardJsonLength = courtyardAsset.readUInt32LE(12);
+const courtyardDocument = JSON.parse(
+  courtyardAsset.toString("utf8", 20, 20 + courtyardJsonLength),
+);
+assert.equal(courtyardDocument.extensionsRequired, undefined);
+assert.equal(courtyardDocument.meshes.length, 1);
+assert.equal(courtyardDocument.meshes[0].primitives.length, 1);
+assert.equal(courtyardDocument.images[0].mimeType, "image/jpeg");
+assert.equal(courtyardDocument.images[0].name, "AncientStoneCourtyard_BaseColor_512");
+assert.equal(courtyardDocument.materials[0].doubleSided, undefined);
+assert.equal(
+  courtyardDocument.asset.copyright,
+  "Ancient Stone Courtyard — model created with Meshy — CC BY 4.0",
+);
+assert.equal(courtyardDocument.accessors[3].componentType, 5123);
+assert.equal(courtyardDocument.accessors[3].count, 3195);
+const courtyardBake = readFileSync(path.join(root, "tools/bake-meshy-courtyard.py"), "utf8");
+for (const literal of [
+  "image.scale(512, 512)",
+  'image.file_format = "JPEG"',
+  "modifier.ratio = 0.78",
+  'material.pop("doubleSided", None)',
+  'document.setdefault("asset", {})["copyright"]',
+  'document["images"][0]["name"] = "AncientStoneCourtyard_BaseColor_512"',
+]) {
+  assert.ok(courtyardBake.includes(literal), `Meshy courtyard bake contract missing: ${literal}`);
+}
+
 const registry = readFileSync(path.join(root, "src/levels/unity-ports.ts"), "utf8");
 for (const id of [
   "beachside-run",
@@ -189,5 +276,5 @@ for (const id of [
 }
 
 console.log(
-  "Validated six Unity ports: joins, routes, goals, actors, beach treatment, Bonus layout and reduced Meshy thorn cores.",
+  "Validated six Unity ports: joins, routes, goals, actors, beach treatment, Bonus layout, actual compressed Meshy bridge, forward camera and reduced thorn cores.",
 );

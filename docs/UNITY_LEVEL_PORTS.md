@@ -22,7 +22,7 @@ in-game authored level; imported Unity meshes do not own gameplay collision.
 | Coastal Street Run | `CoastalStreetRun.unity` and partial builders | All 23 road grades and four gaps, interactive street furniture and threats; minor trees, umbrellas and storefront garnish intentionally omitted. Beachside-style coast is placed on screen right. |
 | Island Hopper | `IslandHopper.unity` / builder | Five sand islands, eleven joined procedural timber paths, exact jump joins, two snapping ropes and the authored actor rhythm. |
 | Jungle Gate Run | `JungleGateRun.unity` / builder | Fourteen side-view platforms, two kickers, six thorn gaps, required grind rails, bounce crates and depth containment. |
-| MeshyLook Thorn Courtyards | `MeshyLookDev.unity` / `MeshyLookDevSceneBuilder.cs` | Four alternating courtyard slopes split around visible thorn wells, eight ridge rails and code-native pulsing thorn visuals. A web-only finish makes the Unity look-dev row a complete menu level. |
+| MeshyLook Thorn Courtyards | `MeshyLookDev.unity` / `MeshyLookDevSceneBuilder.cs` | Four instances of the actual compressed Meshy stone courtyard, hidden deterministic ride hulls, visible thorn wells, eight ridge rails, a forward-looking +X camera, and code-native pulsing thorns. A web-only finish makes the Unity look-dev row a complete menu level. |
 
 ## Shared presentation
 
@@ -55,5 +55,6 @@ side while retaining luminous tips as readable warning.
   knots while retaining the same analytic curve.
 - Bonus's direct floating mask uses a mask crate until a standalone custom
   mask-pickup component is introduced.
-- The imported Meshy courtyard and thorn assets remain Unity reference
-  evidence; browser geometry and collision are procedural/code-native.
+- The actual Meshy courtyard now ships as a 127 KB visual-only GLB. Hidden
+  procedural ride hulls keep browser collision deterministic; thorn geometry
+  and its smaller lethal cores remain code-native.

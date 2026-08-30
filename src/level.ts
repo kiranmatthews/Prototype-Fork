@@ -38,6 +38,10 @@ import {
   type ProceduralThornCluster,
 } from "./proceduralThorns";
 import {
+  createMeshyCourtyardVisual,
+  releaseMeshyCourtyard,
+} from "./meshyCourtyard";
+import {
   accelerateGroundMeshes,
   disposeGroundAcceleration,
   type GroundAccelerationStats,
@@ -618,7 +622,7 @@ export interface CustomComponent {
   range?: number;
   speed?: number;
   foe?: EnemyKind; // enemy variant (grunt/spiker/turtle/charger/hopper/floater/sentry/spinner)
-  invisible?: boolean;
+  invisible?: boolean; // wall/pit/ramp: collider or ride surface only; editor reveals a ghost
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
   cycle?: number;
   phase?: number;
@@ -694,6 +698,7 @@ export const DECOR_KINDS = [
   "ruinblock",
   "log",
   "block", // plain textured box, visual only: earth banks, backdrops, massing
+  "meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh; visual only
   // THE LIBRARY FAMILIES. Six kinds backed by fifty-six external meshes (see
   // props.ts). Each one is a whole species rather than a single shape: pick a
   // model, a tint, a size, a spin and a lean and no two placings match.
@@ -721,6 +726,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   ruinblock: "ruin block",
   log: "fallen log",
   block: "scenery block",
+  meshycourtyard: "Meshy stone courtyard",
   tree: "tree (library)",
   plants: "plant (library)",
   boulder: "boulder (library)",
@@ -2783,6 +2789,7 @@ export class Level {
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private thornClusters: ProceduralThornCluster[] = [];
+  private meshyCourtyards: THREE.Group[] = [];
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
   private maskTex: THREE.CanvasTexture | null = null;
@@ -4893,17 +4900,21 @@ export class Level {
               c.p[0],
               c.tex ?? "stone",
             );
+            const m = this.root.children[this.root.children.length - 1];
             const rad = THREE.MathUtils.degToRad(c.yaw ?? 0);
             if (rad) {
               // spin the built slope around the component centre: orbit its
               // offset position and compose the yaw BEFORE the slope pitch
-              const m = this.root.children[this.root.children.length - 1];
               const dx = m.position.x - c.p[0];
               const dz = m.position.z - c.p[2];
               m.position.x = c.p[0] + dx * Math.cos(rad) + dz * Math.sin(rad);
               m.position.z = c.p[2] - dx * Math.sin(rad) + dz * Math.cos(rad);
               m.rotation.order = "YXZ";
               m.rotation.y = rad;
+            }
+            if (c.invisible) {
+              m.visible = false;
+              m.userData.editorGhost = true;
             }
           } else if (c.t === "wall") {
             const s = c.s ?? [8, 4, 1];
@@ -5467,6 +5478,9 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    for (const courtyard of this.meshyCourtyards)
+      releaseMeshyCourtyard(courtyard);
+    this.meshyCourtyards.length = 0;
     const preservedGeometry = new Set<THREE.BufferGeometry>();
     const preservedMaterials = new Set<THREE.Material>();
     const preservedTextures = new Set<THREE.Texture>();
@@ -12284,6 +12298,24 @@ export class Level {
           c.tex ?? "dirt",
           THREE.MathUtils.degToRad(c.yaw ?? 0),
         );
+      case "meshycourtyard": {
+        const visual = createMeshyCourtyardVisual();
+        visual.position.set(x, y, z);
+        visual.scale.setScalar(c.w ?? 11.52);
+        const yaw = new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 1, 0),
+          THREE.MathUtils.degToRad(c.yaw ?? 90),
+        );
+        const pitch = new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 0, 1),
+          THREE.MathUtils.degToRad(c.amp ?? 0),
+        );
+        // Unity authored module rotation = pitch-about-world-Z * yaw-about-Y.
+        visual.quaternion.copy(yaw).premultiply(pitch);
+        this.meshyCourtyards.push(visual);
+        this.root.add(visual);
+        return;
+      }
     }
   }
 

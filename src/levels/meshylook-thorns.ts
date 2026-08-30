@@ -1,18 +1,19 @@
 import type { CustomComponent, CustomLevelData } from "../level";
 
 /**
- * Primitive-owned port of Unity's playable MeshyLookDev bridge row.
+ * Unity MeshyLookDev bridge row with presentation and gameplay kept separate.
  *
- * The four Ancient Stone Courtyard FBXs remain visual evidence in Unity. Here,
- * alternating ramps own traversal, exact authored ridge paths own grinding,
- * and deliberately smaller pit volumes own thorn lethality.
+ * Four aggressively compressed instances of the actual owner-supplied Ancient
+ * Stone Courtyard mesh own the look. Hidden alternating ramps own deterministic
+ * traversal, exact ridge paths own grinding, and deliberately smaller pit
+ * volumes own thorn lethality.
  */
 
 const GROUP = {
   courtyard: 1,
   rails: 2,
   thornCollision: 3,
-  thornPlaceholders: 4,
+  thornVisuals: 4,
   camera: 5,
   finish: 6,
 } as const;
@@ -69,6 +70,19 @@ const modules = [
   [32.557213, 0.9313072, 10.7408362, 1.1289076, 90],
 ] as const;
 
+THORN_CENTERS.forEach((x, index) =>
+  add({
+    t: "decor",
+    dkind: "meshycourtyard",
+    p: [x, 0, 0],
+    w: 11.52,
+    yaw: 90,
+    amp: index % 2 === 0 ? 6 : -6,
+    nm: `Actual Meshy stone courtyard ${String(index + 1).padStart(2, "0")}`,
+    grp: GROUP.courtyard,
+  }),
+);
+
 modules.forEach(([x, lowY, len, rise, yaw], index) => {
   const minimumX = x - len / 2;
   const maximumX = x + len / 2;
@@ -103,6 +117,7 @@ modules.forEach(([x, lowY, len, rise, yaw], index) => {
       yaw,
       tex: "stone",
       color: index % 2 === 0 ? "#59666b" : "#53615f",
+      invisible: true,
       nm: `Courtyard ${String(index + 1).padStart(2, "0")} ${name}`,
       grp: GROUP.courtyard,
     });
@@ -159,7 +174,7 @@ for (let index = 0; index < MESHYLOOK_THORN_SPECS.length; index++) {
     color: thorn.emission.color,
     seed: 0x6a40 + index * 977,
     nm: `THORN_VISUAL_${String(index + 1).padStart(2, "0")}__${thorn.identity}`,
-    grp: GROUP.thornPlaceholders,
+    grp: GROUP.thornVisuals,
   });
 }
 
@@ -175,14 +190,6 @@ const cameraSpine = [
   [37.92763, 0.9313072, 0],
 ] as const;
 
-add({
-  t: "zone",
-  p: [16.2, 0, 0],
-  s: [50, 1, 20],
-  dir: "E",
-  nm: "Meshy bridge-row east camera",
-  grp: GROUP.camera,
-});
 cameraSpine.forEach(([x, y, z], index) =>
   add({
     t: "camnode",
@@ -220,11 +227,11 @@ export const MESHYLOOK_THORNS_LEVEL: CustomLevelData = {
   sky: "night",
   components,
   groups: [
-    { id: GROUP.courtyard, nm: "four alternating courtyard slopes" },
+    { id: GROUP.courtyard, nm: "actual Meshy bridge + hidden ride hulls" },
     { id: GROUP.rails, nm: "exact ridge grind paths" },
     { id: GROUP.thornCollision, nm: "small lethal thorn cores" },
-    { id: GROUP.thornPlaceholders, nm: "visual-only thorn placeholders" },
-    { id: GROUP.camera, nm: "Unity camera spine" },
+    { id: GROUP.thornVisuals, nm: "procedural glowing thorn visuals" },
+    { id: GROUP.camera, nm: "forward-looking Unity camera spine" },
     { id: GROUP.finish, nm: "web-only completion" },
   ],
 };
