@@ -7,6 +7,15 @@ import * as THREE from "three";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const text = (path) => readFile(`${root}${path}`, "utf8");
+const stored = new Map();
+globalThis.localStorage = {
+  getItem: (key) => stored.get(String(key)) ?? null,
+  setItem: (key, value) => stored.set(String(key), String(value)),
+  removeItem: (key) => stored.delete(String(key)),
+  clear: () => stored.clear(),
+  key: (index) => [...stored.keys()][index] ?? null,
+  get length() { return stored.size; },
+};
 
 function compileCommonJs(source, requireFunction = () => undefined) {
   const output = ts.transpileModule(source, {
@@ -26,12 +35,45 @@ function compileCommonJs(source, requireFunction = () => undefined) {
 
 const settingsApi = compileCommonJs(await text("src/spin-effects/settings.ts"));
 const defaults = settingsApi.DEFAULT_SPIN_RING_SETTINGS;
+const groundedDefaults = settingsApi.DEFAULT_GROUNDED_SKATE_SPIN_RING_SETTINGS;
+assert.equal(stored.size, 0, "constructing settings stores must not write storage");
 assert.equal(defaults.ringCount, 6);
 assert.equal(defaults.segmentCount, 22);
 assert.equal(defaults.seed, 62);
 assert.equal(defaults.selfSpinRadiansPerSecond, 7.508416652679443);
 assert.equal(defaults.ringOverrides[0].lineColorA, 0xfff4a9);
 assert.equal(defaults.ringOverrides[5].radiusScale, 0.5);
+assert.equal(groundedDefaults.ringCount, 3);
+assert.equal(groundedDefaults.segmentCount, 28);
+assert.equal(groundedDefaults.seed, 173);
+assert.equal(groundedDefaults.ringOverrides[0].heightOffset, 0);
+assert.equal(groundedDefaults.ringOverrides[1].heightOffset, 0.08);
+assert.equal(groundedDefaults.ringOverrides[2].heightOffset, 0.16);
+assert.notStrictEqual(
+  groundedDefaults.ringOverrides,
+  defaults.ringOverrides,
+  "grounded skate overrides must not alias character tuning",
+);
+assert.notEqual(
+  settingsApi.GROUNDED_SKATE_SPIN_RING_STORAGE_KEY,
+  settingsApi.SPIN_RING_STORAGE_KEY,
+);
+const isolatedFoot = new settingsApi.SpinRingSettings({
+  storageKey: "test.spin.foot",
+  defaults,
+});
+const isolatedGround = new settingsApi.SpinRingSettings({
+  storageKey: "test.spin.ground",
+  defaults: groundedDefaults,
+});
+const footBeforeGroundEdit = isolatedFoot.serialize(false);
+isolatedGround.patch({ ringCount: 5 });
+assert.equal(isolatedGround.value.ringCount, 5);
+assert.equal(isolatedFoot.serialize(false), footBeforeGroundEdit);
+assert.ok(stored.has("test.spin.ground"));
+assert.equal(stored.has("test.spin.foot"), false);
+isolatedGround.reset();
+assert.equal(isolatedGround.value.ringCount, 3);
 const post = settingsApi.createPostSpinRingSettings(defaults);
 assert.equal(post.current, 1.188);
 assert.equal(post.currentRate, 16);
@@ -66,13 +108,41 @@ for (let ring = 0; ring < azimuths.length; ring++) {
   const actual = ringsApi.spinRingHash(62, ring, 14) * 360;
   assert.ok(Math.abs(actual - azimuths[ring]) < 0.001, `${ring}: ${actual}`);
 }
+const groundedRings = new ringsApi.SpinOrbitalRings(groundedDefaults);
+assert.deepEqual(groundedRings.geometryStats, {
+  rings: 3,
+  segments: 28,
+  vertices: 420,
+  triangles: 672,
+  uploads: 1,
+});
+assert.notStrictEqual(groundedRings, rings);
+assert.notStrictEqual(groundedRings.mesh.geometry, rings.mesh.geometry);
+assert.notStrictEqual(groundedRings.mesh.material, rings.mesh.material);
 
 const routingApi = compileCommonJs(await text("src/spin-effects/routing.ts"));
+const eligible = routingApi.groundedSkateSpinEligible;
+assert.equal(eligible({ active: true, movementState: "ride", grounded: true, freeSkate: true, boardVisible: true }), true);
+for (const sample of [
+  { active: false, movementState: "ride", grounded: true, freeSkate: true, boardVisible: true },
+  { active: true, movementState: "air", grounded: false, freeSkate: true, boardVisible: true },
+  { active: true, movementState: "grind", grounded: false, freeSkate: true, boardVisible: true },
+  { active: true, movementState: "ride", grounded: false, freeSkate: true, boardVisible: true },
+  { active: true, movementState: "ride", grounded: true, freeSkate: false, boardVisible: true },
+  { active: true, movementState: "ride", grounded: true, freeSkate: true, boardVisible: false },
+]) assert.equal(eligible(sample), false);
 const freshRoute = () => routingApi.createSpinPresentationRouteState();
-const advanceRoute = (state, step, active, boardAttached, reset = false) =>
+const advanceRoute = (
+  state,
+  step,
+  active,
+  boardAttached,
+  groundedSkate = false,
+  reset = false,
+) =>
   routingApi.advanceSpinPresentationRoute(
     state,
-    { step, active, boardAttached, reset },
+    { step, active, boardAttached, groundedSkate, reset },
     15,
   );
 
@@ -112,10 +182,28 @@ routeFrame = advanceRoute(routeFrame.state, 43, false, false);
 assert.equal(routeFrame.characterLingering, false, "dismount cannot restore ring handoff");
 routeFrame = advanceRoute(routeFrame.state, 44, true, false);
 assert.equal(routeFrame.state.route, "character", "a later foot spin starts normally");
-routeFrame = advanceRoute(routeFrame.state, 45, false, false, true);
+routeFrame = advanceRoute(routeFrame.state, 45, false, false, false, true);
 assert.equal(routeFrame.state.route, "none");
 assert.equal(routeFrame.characterActive, false);
 assert.equal(routeFrame.characterLingering, false);
+
+routeFrame = advanceRoute(freshRoute(), 50, true, true, true);
+assert.equal(routeFrame.state.route, "grounded-skate");
+assert.equal(routeFrame.groundedSkateActive, true);
+assert.equal(routeFrame.characterActive, false);
+routeFrame = advanceRoute(routeFrame.state, 51, true, true, false);
+assert.equal(routeFrame.state.route, "board", "leaving ground cancels this attack's rings");
+assert.equal(routeFrame.groundedSkateActive, false);
+routeFrame = advanceRoute(routeFrame.state, 52, true, true, true);
+assert.equal(routeFrame.state.route, "board", "landing cannot restore ground rings");
+routeFrame = advanceRoute(routeFrame.state, 53, false, true, true);
+routeFrame = advanceRoute(routeFrame.state, 54, true, true, true);
+assert.equal(routeFrame.state.route, "grounded-skate", "a fresh ground spin re-arms rings");
+
+routeFrame = advanceRoute(freshRoute(), 60, true, true, false);
+assert.equal(routeFrame.state.route, "board", "board air remains effect-free");
+routeFrame = advanceRoute(routeFrame.state, 61, true, true, true);
+assert.equal(routeFrame.state.route, "board", "air-started spin cannot flash on landing");
 
 const modelBytes = await readFile(`${root}public/spin/whirlwind-vixen.glb`);
 assert.equal(
@@ -145,23 +233,46 @@ assert.equal(
 
 const player = await text("src/player.ts");
 const presentation = await text("src/spin-effects/presentation.ts");
+const panelSource = await text("src/spin-effects/panel.ts");
+const labSource = await text("src/spin-effects/lab.ts");
 const main = await text("src/main.ts");
 const index = await text("index.html");
 assert.match(player, /new SpinEffectsPresentation/);
-assert.match(player, /boardAttached: this\.boardG\?\.visible \?\? false/);
+assert.match(player, /const boardAttached = this\.boardG\?\.visible \?\? false/);
+const groundedPlayerRoute = player.slice(
+  player.indexOf("const groundedSkate = groundedSkateSpinEligible"),
+  player.indexOf("this.spinEffects.update", player.indexOf("const groundedSkate =")),
+);
+assert.match(groundedPlayerRoute, /movementState: this\.state/);
+assert.match(groundedPlayerRoute, /grounded: this\.grounded/);
+assert.match(groundedPlayerRoute, /freeSkate: this\.freeSkate/);
+assert.match(groundedPlayerRoute, /boardVisible: boardAttached/);
+assert.doesNotMatch(groundedPlayerRoute, /!this\.charging/);
 assert.doesNotMatch(player, /presentationRoute === ['"]board['"]/);
 assert.match(player, /runTime \* 60/);
 assert.doesNotMatch(player, /installSmear/);
-assert.match(presentation, /boardRingsVisible: false/);
+assert.match(presentation, /GroundedSkateSpinOrbitalRings_Additive_Web/);
+assert.match(presentation, /groundedSkateRingsVisible/);
+assert.match(presentation, /DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS/);
 assert.match(presentation, /advanceSpinPresentationRoute/);
-assert.doesNotMatch(presentation, /new SpinOrbitalRings\([\s\S]*localBoundsForBoard/);
-assert.doesNotMatch(presentation, /BoardTrickOrbitalRings|BoardTrickRingAnchor/);
+assert.doesNotMatch(presentation, /localBoundsForBoard|BoardTrickRingAnchor/);
 assert.match(main, /createSpinTuningPanel/);
+assert.match(main, /groundedSkateSettings: groundedSkateSpinRingSettings/);
 assert.match(main, /getSpinEffectDiagnostics/);
+assert.match(panelSource, /role", "tablist/);
+assert.match(panelSource, /CHARACTER SPIN/);
+assert.match(panelSource, /GROUND SKATE/);
+assert.match(panelSource, /this\.activeSettings\.patch/);
+assert.match(panelSource, /grounded-skate-spin-ring-tuning\.json/);
+assert.match(labSource, /GroundedSkateSpin_PersistentPreview/);
+assert.match(labSource, /GroundedSkateSpin_LoopingPreview/);
+assert.match(labSource, /BOARD AIR · NO SPIN HALO/);
+assert.match(labSource, /groundedProduction/);
+assert.match(labSource, /groundedSettings: groundedSkateSpinRingSettings/);
 assert.match(index, /spin\/whirlwind-vixen\.glb/);
 assert.doesNotMatch(index, /preload[^\n]+models\/smear\.glb/);
 assert.match(await text("spin-lab.html"), /src\/spin-effects\/lab\.ts/);
 
 console.log(
-  "Validated Unity spin defaults, hash/geometry math, 660-vertex additive rings, production sculpture assets, player routing, panel, and lab entry.",
+  "Validated character and grounded-skate spin defaults, independent settings/topology, latched routes, production presentation, panel tabs, and lab instances.",
 );

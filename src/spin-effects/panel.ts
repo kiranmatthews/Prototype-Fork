@@ -1,4 +1,5 @@
 import {
+  groundedSkateSpinRingSettings,
   SpinRingSettings,
   spinRingSettings,
   type SpinRingOverride,
@@ -16,6 +17,7 @@ interface SliderDefinition {
 
 export interface SpinTuningPanelOptions {
   readonly settings?: SpinRingSettings;
+  readonly groundedSkateSettings?: SpinRingSettings;
   readonly parent?: HTMLElement;
   readonly initiallyOpen?: boolean;
   readonly labMode?: boolean;
@@ -107,6 +109,12 @@ const CSS = `
   .title { display: flex; align-items: center; gap: 8px; padding: 10px 12px;
     border-bottom: 2px solid #ff6a35; background: #21110b; font-weight: 900; letter-spacing: 1px; }
   .title span { flex: 1; } .close { width: 30px; padding: 3px; }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #56301d; }
+  .tabs button { min-height: 36px; border: 0; border-right: 1px solid #56301d;
+    background: #100c12; color: #aa929e; font-weight: 900; letter-spacing: .5px; }
+  .tabs button:last-child { border-right: 0; }
+  .tabs button[aria-selected='true'] { background: #3b1628; color: #fff2f8;
+    box-shadow: inset 0 -3px #ff5f9d; }
   .intro { padding: 8px 11px; color: #b7a99f; border-bottom: 1px solid #56301d; font-size: 10px; }
   .actions { display: flex; flex-wrap: wrap; gap: 5px; padding: 8px 10px; border-bottom: 1px solid #56301d; }
   .sections { flex: 1 1 auto; overflow: auto; padding: 8px 9px 14px; scrollbar-color: #b34f65 #080c12; }
@@ -147,6 +155,7 @@ interface Binding {
 }
 
 type ColorSlot = "lineColorA" | "lineColorB" | "glowColorA" | "glowColorB";
+type SpinTuningTarget = "character" | "grounded-skate";
 
 function packedToHex(value: number): string {
   return `#${(value & 0xffffff).toString(16).padStart(6, "0")}`;
@@ -195,6 +204,7 @@ function hsvToPacked(h: number, s: number, v: number): number {
 export class SpinTuningPanel {
   readonly element: HTMLDivElement;
   readonly settings: SpinRingSettings;
+  readonly groundedSkateSettings: SpinRingSettings;
   private readonly shadow: ShadowRoot;
   private readonly bindings: Binding[] = [];
   private readonly ringSelection: HTMLSpanElement;
@@ -202,13 +212,18 @@ export class SpinTuningPanel {
   private readonly colorInput: HTMLInputElement;
   private readonly hexInput: HTMLInputElement;
   private readonly status: HTMLDivElement;
-  private readonly unsubscribe: () => void;
+  private readonly unsubscribes: (() => void)[] = [];
+  private readonly tabButtons = new Map<SpinTuningTarget, HTMLButtonElement>();
+  private readonly intro: HTMLDivElement;
   private selectedRing = 0;
   private selectedSlot: ColorSlot = "lineColorA";
+  private activeTarget: SpinTuningTarget = "character";
   private openState = false;
 
   constructor(options: SpinTuningPanelOptions = {}) {
     this.settings = options.settings ?? spinRingSettings;
+    this.groundedSkateSettings =
+      options.groundedSkateSettings ?? groundedSkateSpinRingSettings;
     const documentRef = options.parent?.ownerDocument ?? document;
     this.element = documentRef.createElement("div");
     this.element.setAttribute("data-spin-panel-host", "");
@@ -233,15 +248,34 @@ export class SpinTuningPanel {
     close.addEventListener("click", () => this.setOpen(false));
     title.append(close);
     panel.append(title);
-    panel.append(
-      this.make(
-        "div",
-        "intro",
-        options.labMode
-          ? "Unity look-dev preview · exact 60 Hz orbital geometry · edits autosave in this browser."
-          : "F / gamepad West = spin · presentation-only edits update every player effect live.",
-      ),
-    );
+    const tabs = this.make("div", "tabs");
+    tabs.setAttribute("role", "tablist");
+    tabs.setAttribute("aria-label", "Spin effect profile");
+    for (const [target, label] of [
+      ["character", "CHARACTER SPIN"],
+      ["grounded-skate", "GROUND SKATE"],
+    ] as const) {
+      const tab = this.button(label);
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", "spin-ring-settings-sections");
+      tab.addEventListener("click", () => this.setActiveTarget(target));
+      tab.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+          return;
+        event.preventDefault();
+        const next =
+          event.key === "ArrowRight" || event.key === "End"
+            ? "grounded-skate"
+            : "character";
+        this.setActiveTarget(next);
+        this.tabButtons.get(next)?.focus();
+      });
+      this.tabButtons.set(target, tab);
+      tabs.append(tab);
+    }
+    panel.append(tabs);
+    this.intro = this.make("div", "intro");
+    panel.append(this.intro);
     const actions = this.make("div", "actions");
     const route = this.button(options.labMode ? "Back to game" : "Open full lab");
     route.addEventListener("click", () => {
@@ -250,10 +284,10 @@ export class SpinTuningPanel {
         document.baseURI,
       ).href;
     });
-    const reset = this.button("Reset Unity defaults");
+    const reset = this.button("Reset tab defaults");
     reset.addEventListener("click", () => {
-      this.settings.reset();
-      this.setStatus("Source-shaped defaults restored.");
+      this.activeSettings.reset();
+      this.setStatus(`${this.activeTargetLabel} defaults restored.`);
     });
     const copy = this.button("Copy JSON");
     copy.addEventListener("click", () => void this.copyJson());
@@ -270,6 +304,7 @@ export class SpinTuningPanel {
     panel.append(actions);
 
     const sections = this.make("div", "sections");
+    sections.id = "spin-ring-settings-sections";
     const perRing = documentRef.createElement("details");
     perRing.open = true;
     perRing.append(this.make("summary", "", "Per-ring"));
@@ -279,14 +314,17 @@ export class SpinTuningPanel {
     previous.setAttribute("aria-label", "Previous spin ring");
     previous.addEventListener("click", () => {
       this.selectedRing = Math.max(0, this.selectedRing - 1);
-      this.refresh(this.settings.value);
+      this.refresh(this.activeSettings.value);
     });
     this.ringSelection = this.make("span", "value");
     const next = this.button(">");
     next.setAttribute("aria-label", "Next spin ring");
     next.addEventListener("click", () => {
-      this.selectedRing = Math.min(this.settings.value.ringCount - 1, this.selectedRing + 1);
-      this.refresh(this.settings.value);
+      this.selectedRing = Math.min(
+        this.activeSettings.value.ringCount - 1,
+        this.selectedRing + 1,
+      );
+      this.refresh(this.activeSettings.value);
     });
     selector.append(previous, this.ringSelection, next);
     perRing.append(selector);
@@ -294,12 +332,12 @@ export class SpinTuningPanel {
       this.createSlider({
         label: "Height offset", min: -1, max: 1, step: 0.001,
         read: (value) => value.ringOverrides[this.selectedRing].heightOffset,
-        write: (value) => this.settings.updateRing(this.selectedRing, { heightOffset: value }),
+        write: (value) => this.activeSettings.updateRing(this.selectedRing, { heightOffset: value }),
       }),
       this.createSlider({
         label: "Radius size", min: 0.5, max: 1.75, step: 0.001,
         read: (value) => value.ringOverrides[this.selectedRing].radiusScale,
-        write: (value) => this.settings.updateRing(this.selectedRing, { radiusScale: value }),
+        write: (value) => this.activeSettings.updateRing(this.selectedRing, { radiusScale: value }),
       }),
     );
     const slots = this.make("div", "slots");
@@ -310,7 +348,7 @@ export class SpinTuningPanel {
       const button = this.button(label);
       button.addEventListener("click", () => {
         this.selectedSlot = slot;
-        this.refresh(this.settings.value);
+        this.refresh(this.activeSettings.value);
       });
       this.slotButtons.set(slot, button);
       slots.append(button);
@@ -328,7 +366,7 @@ export class SpinTuningPanel {
         step: definition.step,
         read: (value) => rgbToHsv(this.selectedColor(value))[definition.channel],
         write: (nextValue) => {
-          const hsv = rgbToHsv(this.selectedColor(this.settings.value));
+          const hsv = rgbToHsv(this.selectedColor(this.activeSettings.value));
           hsv[definition.channel] = nextValue;
           this.setSelectedColor(hsvToPacked(hsv[0], hsv[1], hsv[2]));
         },
@@ -337,7 +375,7 @@ export class SpinTuningPanel {
     perRing.append(this.createSlider({
       label: "Pulse phase", min: 0, max: 1, step: 0.01,
       read: (value) => value.ringOverrides[this.selectedRing].colorPulsePhase,
-      write: (value) => this.settings.updateRing(this.selectedRing, { colorPulsePhase: value }),
+      write: (value) => this.activeSettings.updateRing(this.selectedRing, { colorPulsePhase: value }),
     }));
     const swatch = this.make("div", "swatch");
     this.colorInput = documentRef.createElement("input");
@@ -355,7 +393,7 @@ export class SpinTuningPanel {
       const parsed = hexToPacked(this.hexInput.value);
       if (parsed === null) {
         this.setStatus("Colour must be exactly #RRGGBB.");
-        this.refresh(this.settings.value);
+        this.refresh(this.activeSettings.value);
       } else this.setSelectedColor(parsed);
     });
     swatch.append(this.hexInput);
@@ -370,7 +408,7 @@ export class SpinTuningPanel {
         details.append(this.createSlider({
           ...control,
           read: (value) => value[control.key] as number,
-          write: (value) => this.settings.patch({
+          write: (value) => this.activeSettings.patch({
             [control.key]: value,
           } as Partial<SpinRingSettingsValue>),
         }));
@@ -379,7 +417,7 @@ export class SpinTuningPanel {
         details.append(this.createSlider({
           label: "Ring self-spin (rev/s)", min: -8, max: 8, step: 0.01,
           read: (value) => value.selfSpinRadiansPerSecond / (Math.PI * 2),
-          write: (value) => this.settings.patch({ selfSpinRadiansPerSecond: value * Math.PI * 2 }),
+          write: (value) => this.activeSettings.patch({ selfSpinRadiansPerSecond: value * Math.PI * 2 }),
         }));
       }
       sections.append(details);
@@ -393,8 +431,35 @@ export class SpinTuningPanel {
     panel.append(this.status);
     this.shadow.append(panel);
     (options.parent ?? documentRef.body).append(this.element);
-    this.unsubscribe = this.settings.subscribe((value) => this.refresh(value), true);
+    this.unsubscribes.push(
+      this.settings.subscribe((value) => {
+        if (this.activeTarget === "character") this.refresh(value);
+      }),
+      this.groundedSkateSettings.subscribe((value) => {
+        if (this.activeTarget === "grounded-skate") this.refresh(value);
+      }),
+    );
+    this.refresh(this.activeSettings.value);
     this.setOpen(options.initiallyOpen ?? false);
+  }
+
+  private get activeSettings(): SpinRingSettings {
+    return this.activeTarget === "character"
+      ? this.settings
+      : this.groundedSkateSettings;
+  }
+
+  private get activeTargetLabel(): string {
+    return this.activeTarget === "character"
+      ? "Character spin"
+      : "Grounded skate";
+  }
+
+  private setActiveTarget(target: SpinTuningTarget): void {
+    if (this.activeTarget === target) return;
+    this.activeTarget = target;
+    this.selectedRing = 0;
+    this.refresh(this.activeSettings.value);
   }
 
   setOpen(open: boolean): void {
@@ -402,7 +467,10 @@ export class SpinTuningPanel {
     this.element.toggleAttribute("data-open", open);
   }
   toggle(): void { this.setOpen(!this.openState); }
-  dispose(): void { this.unsubscribe(); this.element.remove(); }
+  dispose(): void {
+    for (const unsubscribe of this.unsubscribes.splice(0)) unsubscribe();
+    this.element.remove();
+  }
   setStatus(text: string): void { this.status.textContent = text; }
 
   private createSlider(definition: SliderDefinition): HTMLDivElement {
@@ -431,6 +499,15 @@ export class SpinTuningPanel {
   }
 
   private refresh(value: Readonly<SpinRingSettingsValue>): void {
+    for (const [target, button] of this.tabButtons) {
+      const selected = target === this.activeTarget;
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    }
+    this.intro.textContent =
+      this.activeTarget === "character"
+        ? "On-foot / rope spin · sculpture + full-height rings · 15-tick ring handoff."
+        : "Grounded skateboard spin · native rider rotation + independent low rings · includes X pump/charge.";
     this.selectedRing = Math.max(0, Math.min(value.ringCount - 1, this.selectedRing));
     this.ringSelection.textContent = `${this.selectedRing + 1} / ${value.ringCount}`;
     for (const { definition, slider, numeric } of this.bindings) {
@@ -444,7 +521,7 @@ export class SpinTuningPanel {
     this.colorInput.value = packedToHex(color);
     if (this.shadow.activeElement !== this.hexInput) this.hexInput.value = packedToHex(color).toUpperCase();
     this.status.textContent =
-      `Live mesh · ${value.ringCount} rings · ${(
+      `${this.activeTargetLabel} · live mesh · ${value.ringCount} rings · ${(
         value.ringCount * 5 * value.segmentCount
       ).toLocaleString()} vertices · ${(
         value.ringCount * 4 * value.segmentCount * 2
@@ -455,13 +532,13 @@ export class SpinTuningPanel {
     return value.ringOverrides[this.selectedRing][this.selectedSlot];
   }
   private setSelectedColor(value: number): void {
-    this.settings.updateRing(this.selectedRing, {
+    this.activeSettings.updateRing(this.selectedRing, {
       [this.selectedSlot]: value,
     } as Partial<SpinRingOverride>);
   }
 
   private async copyJson(): Promise<void> {
-    const source = this.settings.serialize(true);
+    const source = this.activeSettings.serialize(true);
     try {
       await navigator.clipboard.writeText(source);
       this.setStatus("Tuning JSON copied to the clipboard.");
@@ -471,8 +548,13 @@ export class SpinTuningPanel {
   }
   private downloadJson(): void {
     const link = document.createElement("a");
-    link.href = URL.createObjectURL(new Blob([this.settings.serialize(true)], { type: "application/json" }));
-    link.download = "spin-orbital-ring-tuning.json";
+    link.href = URL.createObjectURL(
+      new Blob([this.activeSettings.serialize(true)], { type: "application/json" }),
+    );
+    link.download =
+      this.activeTarget === "character"
+        ? "spin-orbital-ring-tuning.json"
+        : "grounded-skate-spin-ring-tuning.json";
     link.click();
     URL.revokeObjectURL(link.href);
   }
@@ -481,7 +563,7 @@ export class SpinTuningPanel {
     input.value = "";
     if (!file) return;
     try {
-      this.settings.importJson(await file.text());
+      this.activeSettings.importJson(await file.text());
       this.setStatus(`Loaded ${file.name}.`);
     } catch (error) {
       this.setStatus(`Could not load tuning: ${String(error)}`);

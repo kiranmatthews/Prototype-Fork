@@ -28,6 +28,12 @@ export const DEFAULT_SPIN_PREVIEW_BOUNDS: Readonly<SpinRingBounds> = {
   size: new THREE.Vector3(2.35, 3, 2.35),
 };
 
+/** Board-and-lower-leg footprint for the grounded skate-spin treatment. */
+export const DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS: Readonly<SpinRingBounds> = {
+  center: new THREE.Vector3(0, 0.3, 0),
+  size: new THREE.Vector3(2.1, 0.55, 2.1),
+};
+
 const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
 
 export function spinRingHash(seed: number, ring: number, channel: number): number {

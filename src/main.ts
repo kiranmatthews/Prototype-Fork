@@ -56,7 +56,10 @@ import { PresentationFrameLimiter } from "./render-quality/frameLimiter";
 import { createSkateboardTuningPanel } from "./skateboard/panel";
 import { skateboardSettings } from "./skateboard/settings";
 import { createSpinTuningPanel } from "./spin-effects/panel";
-import { spinRingSettings } from "./spin-effects/settings";
+import {
+  groundedSkateSpinRingSettings,
+  spinRingSettings,
+} from "./spin-effects/settings";
 import { sourceComboLabelLine } from "./comboHud";
 import { createVisualTreatmentPanel } from "./visual-treatment/panel";
 import { visualTreatmentSettings } from "./visual-treatment/settings";
@@ -1089,6 +1092,7 @@ const skateboardPanel = createSkateboardTuningPanel({
 });
 const spinPanel = createSpinTuningPanel({
   settings: spinRingSettings,
+  groundedSkateSettings: groundedSkateSpinRingSettings,
 });
 createVisualTreatmentPanel(visualTreatmentSettings);
 visualTreatmentSettings.subscribe((value) => {

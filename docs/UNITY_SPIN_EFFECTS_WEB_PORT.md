@@ -1,7 +1,8 @@
 # Unity spin effects and orbital-ring lab web port
 
 The browser now uses Unity's current production spin sculpture and orbital
-rings in normal play. The complete look-dev lab is available at
+rings in normal play, plus a separate ground-hugging ring treatment for spins
+started while skating on the ground. The complete look-dev lab is available at
 `spin-lab.html` and through the in-game **SPIN** tab. This is a presentation
 port: Square/F timing, hit reach, cooldown, audio, collision, scoring, air
 correction, and slide-cancel behavior remain owned by the existing web
@@ -63,34 +64,48 @@ The character sculpture disappears immediately when the attack ends. Its
 rings remain full-size/full-alpha for exactly 15 fixed ticks using Unity's
 post-spin current/pulse values, then hide without a shrink or fade.
 
+Grounded skate spins use a second, independently tuned textureless mesh:
+
+- three rings × five rows × 28 segments = 420 vertices / 672 triangles;
+- cool cyan/violet/pink palette, low tilt and a 2.1 m board/lower-leg footprint;
+- separate geometry, pulse, distortion, per-ring overrides and browser storage;
+- active only for the grounded attack itself, with no post-spin linger.
+
 ## Presentation routing
 
 One route is latched at attack start:
 
 - on-foot and rope spins use the sculpture plus character-height rings;
-- any spin with a visibly attached board—ride, air, grab, grind, or
-  wallride—retains the native rider/deck motion without a spin halo or
-  orbital-ring treatment;
+- a spin begun while `ride + grounded + freeSkate` uses the native rider/deck
+  rotation plus the dedicated low rings. Holding X to pump/charge does not
+  suppress it;
+- board air, grabs, grinds and wallrides retain native rider/deck motion without
+  a halo;
 - death, bail, respawn, or a rewound presentation clock clears the effect.
 
 If the board appears during a character spin or its 15-tick handoff, that
 sequence permanently promotes to the effect-free board route. Dismounting
 again cannot flash the halo back on; the next independent on-foot attack may
-start a fresh character route normally.
+start a fresh character route normally. Likewise, a grounded-skate route that
+leaves the ground permanently becomes effect-free for that attack, and a spin
+started in board air cannot flash grounded rings when it lands.
 
 ## Lab and tuning
 
-The standalone lab reproduces Unity's 36 m checker arena, exact persistent
-preview location/bounds, 57° camera, Day background, and fog-free look-dev
-stage. It also includes a looping production sculpture so the 0.30 s web
-attack and 15-tick ring handoff can be judged without gameplay input.
+The standalone lab keeps the 36 m checker arena, 57° camera, Day background and
+fog-free look-dev stage. It presents persistent and looping instances for both
+character and grounded-skate rings, plus a board-air specimen that remains
+explicitly halo-free.
 
-The right panel exposes every Unity control: per-ring height/radius and four
+Two tabs at the top of the right panel—**CHARACTER SPIN** and **GROUND SKATE**—
+select independent settings stores. Each tab exposes every ring control:
+per-ring height/radius and four
 palette slots with HSV/hex editing; geometry, stroke, motion/distortion,
 radial travel, current/pulse, palette cycle, and self-spin. It supports reset,
-copy, JSON download/import, and live autosave under the fork-isolated key
-`solProtoSpinOrbitalRingTuning.v1`. The same settings instance updates the lab,
-P1, and P2.
+copy, profile-specific JSON download/import, and live autosave. The original
+character key remains `solProtoSpinOrbitalRingTuning.v1`; the new ground profile
+uses `solProtoGroundedSkateSpinOrbitalRingTuning.v1`. Both shared instances
+update the lab, P1, and P2 without clobbering each other.
 
 Unity's adjacent Punky skeletal recovery clip is not a ring/smear lab asset and
 has no compatible target on the browser's procedural rigid-part rider; it
@@ -121,6 +136,7 @@ npm run check:spin-effects
 npm run build
 ```
 
-The spin check executes the TypeScript settings and ring evaluator, gates the
-exact topology, hash-derived planes, HDR color output, production asset hashes
-and GLB bounds/counts, player routing, panel, preload, and lab entry.
+The spin check executes both TypeScript settings stores and ring evaluators,
+gates their independent topology, hash-derived planes, HDR color output,
+production asset hashes and GLB bounds/counts, grounded/air route latching,
+panel tabs, preload, and lab instances.

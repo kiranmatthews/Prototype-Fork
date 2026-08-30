@@ -62,6 +62,8 @@ export interface SavedSpinRingTuning {
 }
 
 export const SPIN_RING_STORAGE_KEY = "solProtoSpinOrbitalRingTuning.v1";
+export const GROUNDED_SKATE_SPIN_RING_STORAGE_KEY =
+  "solProtoGroundedSkateSpinOrbitalRingTuning.v1";
 export const SPIN_MODEL_PATH = "spin/whirlwind-vixen.glb";
 export const SPIN_MODEL_TEXTURE_PATH = "spin/whirlwind-vixen.webp";
 export const SPIN_RING_MAX_OVERRIDES = 8;
@@ -77,6 +79,17 @@ const canonicalOverrides: readonly Readonly<SpinRingOverride>[] = [
   { heightOffset: -1, radiusScale: 0.5, lineColorA: 10524335, lineColorB: 8359573, glowColorA: 8026746, glowColorB: 5066061, colorPulsePhase: 0 },
   { heightOffset: 0, radiusScale: 1, lineColorA: 16773594, lineColorB: 14218495, glowColorA: 16736864, glowColorB: 6721023, colorPulsePhase: 0 },
   { heightOffset: 0, radiusScale: 1, lineColorA: 16773594, lineColorB: 14218495, glowColorA: 16736864, glowColorB: 6721023, colorPulsePhase: 0 },
+];
+
+const groundedSkateOverrides: readonly Readonly<SpinRingOverride>[] = [
+  { heightOffset: 0, radiusScale: 0.82, lineColorA: 0xe8ffff, lineColorB: 0xa9f5ff, glowColorA: 0x08cfff, glowColorB: 0x5b8cff, colorPulsePhase: 0 },
+  { heightOffset: 0.08, radiusScale: 1, lineColorA: 0xbdfbff, lineColorB: 0xd6c2ff, glowColorA: 0x00a8ff, glowColorB: 0x9d50ff, colorPulsePhase: 1 / 3 },
+  { heightOffset: 0.16, radiusScale: 1.18, lineColorA: 0x8eefff, lineColorB: 0xffb5ee, glowColorA: 0x0878ff, glowColorB: 0xf044c4, colorPulsePhase: 2 / 3 },
+  { heightOffset: 0.04, radiusScale: 0.91, lineColorA: 0xd9ffff, lineColorB: 0xb7dcff, glowColorA: 0x16d8ff, glowColorB: 0x6a6dff, colorPulsePhase: 0.18 },
+  { heightOffset: 0.12, radiusScale: 1.09, lineColorA: 0xb9f8ff, lineColorB: 0xf2c6ff, glowColorA: 0x00a0ff, glowColorB: 0xb549ff, colorPulsePhase: 0.48 },
+  { heightOffset: 0.2, radiusScale: 1.26, lineColorA: 0x92ebff, lineColorB: 0xffb8dc, glowColorA: 0x176bff, glowColorB: 0xed3fbd, colorPulsePhase: 0.78 },
+  { heightOffset: 0.06, radiusScale: 0.96, lineColorA: 0xecffff, lineColorB: 0xc9d3ff, glowColorA: 0x0cc9ff, glowColorB: 0x765cff, colorPulsePhase: 0.28 },
+  { heightOffset: 0.14, radiusScale: 1.14, lineColorA: 0xa9f4ff, lineColorB: 0xffc2ec, glowColorA: 0x048cff, glowColorB: 0xd846dc, colorPulsePhase: 0.62 },
 ];
 
 // Approved Unity tuning serialized by SpinRingTuning.unity and the saved
@@ -131,6 +144,56 @@ export const DEFAULT_SPIN_RING_SETTINGS: Readonly<SpinRingSettingsValue> =
     ) as unknown as SpinRingOverride[],
   });
 
+/** Distinct, low cool-colour treatment for spins begun while skating on ground. */
+export const DEFAULT_GROUNDED_SKATE_SPIN_RING_SETTINGS: Readonly<SpinRingSettingsValue> =
+  Object.freeze({
+    ...DEFAULT_SPIN_RING_SETTINGS,
+    ringCount: 3,
+    segmentCount: 28,
+    seed: 173,
+    radiusScale: 1.08,
+    verticalSpread: 0.12,
+    minimumTiltDegrees: 0.5,
+    maximumTiltDegrees: 3,
+    selfSpinRadiansPerSecond: Math.PI * 2 * 2.1,
+    ringInner: 0.72,
+    ringOuter: 1.08,
+    ringLine: 0.025,
+    ringGlow: 0.1,
+    ringBright: 2.4,
+    alpha: 0.82,
+    vary: 0.1,
+    sharedLow: 0.004,
+    sharedLowRate: 1.2,
+    sharedMid: 0.01,
+    sharedMidRate: 2.4,
+    breathe: 0.005,
+    breatheRate: 2,
+    wavyAmp: 0.005,
+    wavyFreq: 4,
+    wavyRate: 2.5,
+    jagAmp: 0,
+    jagFreq: 6,
+    jagRate: 0,
+    depth: 1,
+    spin: 0.25,
+    spinDiff: 0.2,
+    swallow: 0,
+    current: 0.25,
+    currentRate: 8,
+    pulse: 0.55,
+    pulseRate: 12,
+    lineColor: 0xd8ffff,
+    glowColor: 0x08bfff,
+    coolLineColor: 0xcbbfff,
+    coolGlowColor: 0xb448ff,
+    cycleRate: 5.5,
+    whiteMix: 0.08,
+    ringOverrides: Object.freeze(
+      groundedSkateOverrides.map((value) => Object.freeze({ ...value })),
+    ) as unknown as SpinRingOverride[],
+  });
+
 const finite = (value: unknown, fallback: number): number =>
   typeof value === "number" && Number.isFinite(value) ? value : fallback;
 const clamp = (value: number, minimum: number, maximum: number): number =>
@@ -162,8 +225,9 @@ function fallbackOverride(settings: Readonly<SpinRingSettingsValue>): SpinRingOv
 /** Apply SpinOrbitalRingSettings.CopyClamped() ranges exactly. */
 export function clampSpinRingSettings(
   input: Partial<SpinRingSettingsValue>,
+  defaults: Readonly<SpinRingSettingsValue> = DEFAULT_SPIN_RING_SETTINGS,
 ): SpinRingSettingsValue {
-  const d = DEFAULT_SPIN_RING_SETTINGS;
+  const d = defaults;
   const n = (key: keyof SpinRingSettingsValue): number =>
     finite(input[key], d[key] as number);
   const out = copySpinRingSettings({ ...d, ...input } as SpinRingSettingsValue);
@@ -213,7 +277,7 @@ export function clampSpinRingSettings(
 
   const source = Array.isArray(input.ringOverrides) ? input.ringOverrides : d.ringOverrides;
   out.ringOverrides = Array.from({ length: SPIN_RING_MAX_OVERRIDES }, (_, index) => {
-    const fallback = canonicalOverrides[index] ?? fallbackOverride(out);
+    const fallback = d.ringOverrides[index] ?? canonicalOverrides[index] ?? fallbackOverride(out);
     const candidate = source[index] ?? fallback;
     const radius = finite(candidate.radiusScale, fallback.radiusScale);
     return {
@@ -251,31 +315,50 @@ export function createPostSpinRingSettings(
 
 type Listener = (value: Readonly<SpinRingSettingsValue>) => void;
 
-function readStored(): SpinRingSettingsValue {
+function readStored(
+  storageKey: string,
+  defaults: Readonly<SpinRingSettingsValue>,
+): SpinRingSettingsValue {
   if (typeof localStorage === "undefined")
-    return copySpinRingSettings(DEFAULT_SPIN_RING_SETTINGS);
+    return copySpinRingSettings(defaults);
   try {
-    const source = localStorage.getItem(SPIN_RING_STORAGE_KEY);
-    if (!source) return copySpinRingSettings(DEFAULT_SPIN_RING_SETTINGS);
+    const source = localStorage.getItem(storageKey);
+    if (!source) return copySpinRingSettings(defaults);
     const parsed = JSON.parse(source) as Partial<SavedSpinRingTuning>;
     if (parsed.version !== 1 || !parsed.settings) throw new Error("unsupported spin tuning");
-    return clampSpinRingSettings(parsed.settings);
+    return clampSpinRingSettings(parsed.settings, defaults);
   } catch (error) {
     console.warn("Ignoring invalid spin-ring tuning", error);
-    return copySpinRingSettings(DEFAULT_SPIN_RING_SETTINGS);
+    return copySpinRingSettings(defaults);
   }
 }
 
+export interface SpinRingSettingsOptions {
+  readonly storageKey?: string;
+  readonly defaults?: Readonly<SpinRingSettingsValue>;
+}
+
 export class SpinRingSettings {
-  private current = readStored();
+  private readonly storageKey: string;
+  private readonly defaults: Readonly<SpinRingSettingsValue>;
+  private current: SpinRingSettingsValue;
   private readonly listeners = new Set<Listener>();
+
+  constructor(options: SpinRingSettingsOptions = {}) {
+    this.storageKey = options.storageKey ?? SPIN_RING_STORAGE_KEY;
+    this.defaults = options.defaults ?? DEFAULT_SPIN_RING_SETTINGS;
+    this.current = readStored(this.storageKey, this.defaults);
+  }
 
   get value(): Readonly<SpinRingSettingsValue> {
     return this.current;
   }
 
   patch(patch: Partial<SpinRingSettingsValue>): void {
-    this.current = clampSpinRingSettings({ ...this.current, ...patch });
+    this.current = clampSpinRingSettings(
+      { ...this.current, ...patch },
+      this.defaults,
+    );
     this.persistAndNotify();
   }
 
@@ -287,12 +370,12 @@ export class SpinRingSettings {
   }
 
   replace(value: Partial<SpinRingSettingsValue>): void {
-    this.current = clampSpinRingSettings(value);
+    this.current = clampSpinRingSettings(value, this.defaults);
     this.persistAndNotify();
   }
 
   reset(): void {
-    this.current = copySpinRingSettings(DEFAULT_SPIN_RING_SETTINGS);
+    this.current = copySpinRingSettings(this.defaults);
     this.persistAndNotify();
   }
 
@@ -319,7 +402,7 @@ export class SpinRingSettings {
 
   private persistAndNotify(): void {
     try {
-      localStorage.setItem(SPIN_RING_STORAGE_KEY, this.serialize(false));
+      localStorage.setItem(this.storageKey, this.serialize(false));
     } catch {
       /* Live tuning remains available when storage is blocked or full. */
     }
@@ -328,3 +411,7 @@ export class SpinRingSettings {
 }
 
 export const spinRingSettings = new SpinRingSettings();
+export const groundedSkateSpinRingSettings = new SpinRingSettings({
+  storageKey: GROUNDED_SKATE_SPIN_RING_STORAGE_KEY,
+  defaults: DEFAULT_GROUNDED_SKATE_SPIN_RING_SETTINGS,
+});

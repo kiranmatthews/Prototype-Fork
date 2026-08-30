@@ -2,8 +2,15 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { createSpinTuningPanel } from "./panel";
 import { SpinEffectsPresentation } from "./presentation";
-import { DEFAULT_SPIN_PREVIEW_BOUNDS, SpinOrbitalRings } from "./rings";
-import { spinRingSettings } from "./settings";
+import {
+  DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS,
+  DEFAULT_SPIN_PREVIEW_BOUNDS,
+  SpinOrbitalRings,
+} from "./rings";
+import {
+  groundedSkateSpinRingSettings,
+  spinRingSettings,
+} from "./settings";
 import { createSkateboardPresentation } from "../skateboard/model";
 import { skateboardSettings } from "../skateboard/settings";
 
@@ -18,8 +25,8 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x70947c);
 scene.fog = null;
 const camera = new THREE.PerspectiveCamera(57, 1, 0.05, 120);
-camera.position.set(-6.475, 7.5575, -13.675);
-const target = new THREE.Vector3(2.025, 1.3075, -2.175);
+camera.position.set(0, 8.2, -15.5);
+const target = new THREE.Vector3(0, 1.1, -0.8);
 camera.lookAt(target);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.copy(target);
@@ -83,28 +90,63 @@ const preview = new SpinOrbitalRings(
   DEFAULT_SPIN_PREVIEW_BOUNDS,
 );
 preview.name = "SpinOrbitalRings_PersistentPreview";
-preview.position.set(4.5, 0.35, 2.5);
+preview.position.set(4.3, 0.35, 2.7);
 scene.add(preview);
-const previewLabel = worldLabel("PERSISTENT RING PREVIEW");
-previewLabel.position.set(4.5, 4.45, 2.5);
+const previewLabel = worldLabel("CHARACTER RINGS · PERSISTENT");
+previewLabel.position.set(4.3, 4.45, 2.7);
 scene.add(previewLabel);
 
 const demoRoot = new THREE.Group();
 demoRoot.name = "ProductionSpin_LoopingPreview";
-demoRoot.position.set(0, 0, -3.5);
+demoRoot.position.set(4.3, 0, -3.6);
 scene.add(demoRoot);
 const production = new SpinEffectsPresentation({
   parent: demoRoot,
   settings: spinRingSettings,
+  groundedSkateSettings: groundedSkateSpinRingSettings,
   targetBottom: 0,
 });
-const demoLabel = worldLabel("PRODUCTION SCULPTURE · 0.30s + 15-TICK RING HANDOFF");
-demoLabel.position.set(0, 3.8, -3.5);
+const demoLabel = worldLabel("CHARACTER SPIN + HANDOFF");
+demoLabel.position.set(4.3, 3.8, -3.6);
 scene.add(demoLabel);
+
+const groundedPreviewRoot = new THREE.Group();
+groundedPreviewRoot.name = "GroundedSkateSpin_PersistentPreview";
+groundedPreviewRoot.position.set(-1.5, 0, 2.7);
+scene.add(groundedPreviewRoot);
+const groundedPreviewBoard = createSkateboardPresentation(skateboardSettings.value);
+groundedPreviewBoard.scale.setScalar(1);
+groundedPreviewRoot.add(groundedPreviewBoard);
+const groundedPreview = new SpinOrbitalRings(
+  groundedSkateSpinRingSettings.value,
+  DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS,
+);
+groundedPreview.name = "GroundedSkateSpinOrbitalRings_PersistentPreview";
+groundedPreviewRoot.add(groundedPreview);
+const groundedPreviewLabel = worldLabel("GROUND RINGS · PERSISTENT");
+groundedPreviewLabel.position.set(-1.5, 2.2, 2.7);
+scene.add(groundedPreviewLabel);
+
+const groundedDemoRoot = new THREE.Group();
+groundedDemoRoot.name = "GroundedSkateSpin_LoopingPreview";
+groundedDemoRoot.position.set(-1.5, 0, -3.6);
+scene.add(groundedDemoRoot);
+const groundedDemoBoard = createSkateboardPresentation(skateboardSettings.value);
+groundedDemoBoard.scale.setScalar(1);
+groundedDemoRoot.add(groundedDemoBoard);
+const groundedProduction = new SpinEffectsPresentation({
+  parent: groundedDemoRoot,
+  settings: spinRingSettings,
+  groundedSkateSettings: groundedSkateSpinRingSettings,
+});
+const groundedDemoLabel = worldLabel("GROUNDED SKATE SPIN");
+groundedDemoLabel.position.set(-1.5, 2.2, -3.6);
+scene.add(groundedDemoLabel);
 
 const boardDemoRoot = new THREE.Group();
 boardDemoRoot.name = "BoardRoute_LoopingPreview";
-boardDemoRoot.position.set(-3.75, 1.15, 2.5);
+boardDemoRoot.position.set(0, 0.55, 5.5);
+boardDemoRoot.scale.setScalar(0.78);
 boardDemoRoot.rotation.set(-0.18, 0.35, 0.12);
 scene.add(boardDemoRoot);
 const demoBoard = createSkateboardPresentation(skateboardSettings.value);
@@ -113,14 +155,19 @@ boardDemoRoot.add(demoBoard);
 const boardRoute = new SpinEffectsPresentation({
   parent: boardDemoRoot,
   settings: spinRingSettings,
+  groundedSkateSettings: groundedSkateSpinRingSettings,
 });
 const boardLabel = worldLabel("BOARD AIR · NO SPIN HALO");
-boardLabel.position.set(-3.75, 3.15, 2.5);
+boardLabel.position.set(0, 2.1, 5.5);
 scene.add(boardLabel);
 
 spinRingSettings.subscribe((value) => preview.applySettings(value));
+groundedSkateSpinRingSettings.subscribe((value) =>
+  groundedPreview.applySettings(value),
+);
 const panel = createSpinTuningPanel({
   settings: spinRingSettings,
+  groundedSkateSettings: groundedSkateSpinRingSettings,
   initiallyOpen: true,
   labMode: true,
 });
@@ -142,26 +189,40 @@ function frame(now: number): void {
   const phase = elapsed % 1.15;
   const active = phase < 0.3;
   preview.applyStep(step);
+  groundedPreview.applyStep(step);
   production.update({
     step,
     active,
     boardAttached: false,
+    groundedSkate: false,
+    bodyVisible: true,
+  });
+  groundedProduction.update({
+    step,
+    active,
+    boardAttached: true,
+    groundedSkate: true,
     bodyVisible: true,
   });
   boardRoute.update({
     step,
     active,
     boardAttached: true,
+    groundedSkate: false,
     bodyVisible: true,
   });
   controls.update();
   const stats = preview.geometryStats;
+  const groundedStats = groundedPreview.geometryStats;
   const productionState = production.diagnostics;
+  const groundedState = groundedProduction.diagnostics;
   diagnostics.textContent =
-    `Spin orbital rings — Unity parity\n` +
-    `${stats.rings} rings · ${stats.segments} segments · ${stats.vertices} vertices · ${stats.triangles} triangles\n` +
+    `Spin orbital rings — character + grounded skate\n` +
+    `character ${stats.rings}×${stats.segments} · ${stats.vertices} vertices · ${stats.triangles} triangles\n` +
+    `ground ${groundedStats.rings}×${groundedStats.segments} · ${groundedStats.vertices} vertices · ${groundedStats.triangles} triangles\n` +
     `Whirlwind Vixen ${productionState.assetReady ? "ready" : "loading"} · route ${productionState.route} · ` +
-    `${productionState.sculptureVisible ? "sculpture" : productionState.characterRingsVisible ? "ring handoff" : "idle"}`;
+    `${productionState.sculptureVisible ? "sculpture" : productionState.characterRingsVisible ? "ring handoff" : "idle"} · ` +
+    `ground ${groundedState.groundedSkateRingsVisible ? "rings" : "idle"}`;
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
@@ -174,8 +235,13 @@ requestAnimationFrame(frame);
   controls,
   preview,
   production,
+  groundedPreview,
+  groundedPreviewBoard,
+  groundedProduction,
+  groundedDemoBoard,
   boardRoute,
   demoBoard,
   panel,
   settings: spinRingSettings,
+  groundedSettings: groundedSkateSpinRingSettings,
 };

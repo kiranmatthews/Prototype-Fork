@@ -54,6 +54,7 @@ import {
   SpinEffectsPresentation,
   type SpinPresentationDiagnostics,
 } from './spin-effects/presentation';
+import { groundedSkateSpinEligible } from './spin-effects/routing';
 import { SpecialSystem, type SpecialTrick } from './specialTricks';
 import {
   projectComboLabels,
@@ -12622,19 +12623,29 @@ export class Player {
         Math.sin(this.runTime * 45) > -0.2 ||
         this.state === 'dead');
     // On foot, an ordinary attack replaces the rider with the Whirlwind Vixen
-    // sculpture and independent rings. Whenever a deck is visibly attached,
-    // the native rider/deck motion stays and the halo route is fully suppressed.
-    // Gameplay timing, hit reach, scoring and audio remain owned by updateSpin.
+    // sculpture and character rings. A spin that STARTS while genuinely
+    // grounded on the skateboard keeps the native rider/deck rotation and gets
+    // its own low ring instance; board air, grinds, grabs and wallrides remain
+    // halo-free. Gameplay timing, reach, scoring and audio stay in updateSpin.
     if (this.spinEffects) {
       const active =
         this.spinning && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
       const bodyVisible = this.bodyGroup.visible;
+      const boardAttached = this.boardG?.visible ?? false;
+      const groundedSkate = groundedSkateSpinEligible({
+        active,
+        movementState: this.state,
+        grounded: this.grounded,
+        freeSkate: this.freeSkate,
+        boardVisible: boardAttached,
+      });
       this.spinEffects.update({
         step: Math.floor(this.runTime * 60 + 0.000000001),
         active,
         // Do not fold bodyVisible into this authority: invulnerability flicker
         // must never let one attack-start tick route a board spin to the halo.
-        boardAttached: this.boardG?.visible ?? false,
+        boardAttached,
+        groundedSkate,
         bodyVisible,
         reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
       });

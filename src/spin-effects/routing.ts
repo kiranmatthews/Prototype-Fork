@@ -1,4 +1,8 @@
-export type SpinPresentationRoute = "none" | "character" | "board";
+export type SpinPresentationRoute =
+  | "none"
+  | "character"
+  | "grounded-skate"
+  | "board";
 
 export interface SpinPresentationRouteState {
   readonly route: SpinPresentationRoute;
@@ -11,6 +15,7 @@ export interface SpinPresentationRouteSample {
   readonly step: number;
   readonly active: boolean;
   readonly boardAttached: boolean;
+  readonly groundedSkate: boolean;
   readonly reset?: boolean;
 }
 
@@ -18,7 +23,29 @@ export interface SpinPresentationRouteFrame {
   readonly state: SpinPresentationRouteState;
   readonly characterActive: boolean;
   readonly characterLingering: boolean;
+  readonly groundedSkateActive: boolean;
   readonly lingerTicks: number;
+}
+
+export interface GroundedSkateSpinEligibilitySample {
+  readonly active: boolean;
+  readonly movementState: string;
+  readonly grounded: boolean;
+  readonly freeSkate: boolean;
+  readonly boardVisible: boolean;
+}
+
+/** The sole gameplay boundary that may begin the dedicated skate-ring route. */
+export function groundedSkateSpinEligible(
+  sample: Readonly<GroundedSkateSpinEligibilitySample>,
+): boolean {
+  return (
+    sample.active &&
+    sample.movementState === "ride" &&
+    sample.grounded &&
+    sample.freeSkate &&
+    sample.boardVisible
+  );
 }
 
 export function createSpinPresentationRouteState(): SpinPresentationRouteState {
@@ -56,8 +83,24 @@ export function advanceSpinPresentationRoute(
     lingerStartStep = -1;
   }
 
+  // A ground-started skate spin is a one-way route too. Leaving its precise
+  // ride/ground/board condition cancels the rings for the rest of that attack,
+  // so an air-started spin cannot flash them on landing and a ground spin that
+  // ollies cannot bring them back when the wheels return.
+  if (
+    route === "grounded-skate" &&
+    (!sample.boardAttached || !sample.groundedSkate)
+  ) {
+    route = "board";
+    lingerStartStep = -1;
+  }
+
   if (sample.active && (!previousActive || route === "none")) {
-    route = sample.boardAttached ? "board" : "character";
+    route = sample.boardAttached && sample.groundedSkate
+      ? "grounded-skate"
+      : sample.boardAttached
+        ? "board"
+        : "character";
     lingerStartStep = -1;
   } else if (newStep && !sample.active && previousActive) {
     lingerStartStep = route === "character" ? step : -1;
@@ -83,6 +126,11 @@ export function advanceSpinPresentationRoute(
     },
     characterActive: sample.active && route === "character",
     characterLingering,
+    groundedSkateActive:
+      sample.active &&
+      route === "grounded-skate" &&
+      sample.boardAttached &&
+      sample.groundedSkate,
     lingerTicks: lingerStartStep >= 0 ? elapsedLinger : -1,
   };
 }
