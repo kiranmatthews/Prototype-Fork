@@ -2,7 +2,8 @@
 //
 // Exact active order from Unity 6000.5.7f1 / URP when every authored stage is
 // enabled:
-//   RenderPass -> SMAA High -> UnityPostPass -> CRT Guest -> OutputPass
+//   RenderPass -> SMAA High -> UnityPostPass -> gameplay HUD -> CRT Guest
+//   -> OutputPass
 //
 // UnityPostPass owns only neutral LDR Uber grading and dithering. Glow/bloom
 // belongs to the separately authored CRT/presentation path.
@@ -13,6 +14,7 @@
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
+import { Pass } from "three/examples/jsm/postprocessing/Pass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UNITY_POST_PROFILE, UnityPostPass } from "./unityPost";
 import { UnitySmaaPass } from "./unitySmaa";
@@ -68,6 +70,69 @@ export type CoastPostPreCrtOverlay = (
   context: CoastPostPreCrtOverlayContext,
 ) => void;
 
+/**
+ * A no-swap composer pass that paints game-owned overlays into the completed
+ * pre-CRT colour buffer. Keeping this as a real pass makes the insertion point
+ * identical in native and fixed-resolution modes: Unity grading has finished,
+ * while CRT reconstruction and the final display transfer have not begun.
+ */
+class PreCrtOverlayPass extends Pass {
+  callback: CoastPostPreCrtOverlay | undefined;
+  private readonly viewportScratch = new THREE.Vector4();
+  private readonly scissorScratch = new THREE.Vector4();
+
+  constructor(
+    private readonly facade: THREE.WebGLRenderer,
+    private readonly getResolution: () => CoastPostResolutionState,
+  ) {
+    super();
+    this.needsSwap = false;
+  }
+
+  render(
+    renderer: THREE.WebGLRenderer,
+    _writeBuffer: THREE.WebGLRenderTarget,
+    readBuffer: THREE.WebGLRenderTarget,
+  ): void {
+    const callback = this.callback;
+    if (!callback) return;
+
+    const previousTarget = renderer.getRenderTarget();
+    const previousFace = renderer.getActiveCubeFace();
+    const previousMip = renderer.getActiveMipmapLevel();
+    const previousViewport = renderer.getViewport(this.viewportScratch);
+    const previousScissor = renderer.getScissor(this.scissorScratch);
+    const previousScissorTest = renderer.getScissorTest();
+    const previousAutoClear = renderer.autoClear;
+    const configured = this.getResolution();
+    const resolution: CoastPostResolutionState = {
+      ...configured,
+      inputWidth: readBuffer.width,
+      inputHeight: readBuffer.height,
+      scaleX: configured.outputWidth / readBuffer.width,
+      scaleY: configured.outputHeight / readBuffer.height,
+    };
+    try {
+      renderer.setRenderTarget(readBuffer);
+      // The facade speaks physical pre-CRT pixels even when the real renderer
+      // is in native DPR>1 mode.
+      this.facade.setViewport(0, 0, readBuffer.width, readBuffer.height);
+      renderer.setScissorTest(false);
+      callback({
+        ...resolution,
+        renderer: this.facade,
+        target: readBuffer,
+      });
+    } finally {
+      renderer.setRenderTarget(previousTarget, previousFace, previousMip);
+      renderer.setViewport(previousViewport);
+      renderer.setScissor(previousScissor);
+      renderer.setScissorTest(previousScissorTest);
+      renderer.autoClear = previousAutoClear;
+    }
+  }
+}
+
 export class CoastPostRenderer {
   private readonly renderer: THREE.WebGLRenderer;
   private scene: THREE.Scene;
@@ -76,6 +141,7 @@ export class CoastPostRenderer {
   private readonly renderPass: RenderPass;
   private readonly smaaPass: UnitySmaaPass;
   private readonly unityPostPass: UnityPostPass;
+  private readonly preCrtOverlayPass: PreCrtOverlayPass;
   private readonly crtPass: CrtGuestPass | null;
   private readonly outputPass: OutputPass;
   private crtOutputTarget: THREE.WebGLRenderTarget | null = null;
@@ -159,6 +225,10 @@ export class CoastPostRenderer {
       this.width * this.pixelRatio,
       this.height * this.pixelRatio,
     );
+    this.preCrtOverlayPass = new PreCrtOverlayPass(
+      this.preCrtOverlayRenderer,
+      () => this.resolution,
+    );
     this.crtPass = options.crtSettings
       ? new CrtGuestPass(renderer, options.crtSettings, {
           sourceWidth: this.inputWidth,
@@ -172,6 +242,7 @@ export class CoastPostRenderer {
     this.composer.addPass(this.renderPass);
     this.composer.addPass(this.smaaPass);
     this.composer.addPass(this.unityPostPass);
+    this.composer.addPass(this.preCrtOverlayPass);
     if (this.crtPass) this.composer.addPass(this.crtPass);
     this.composer.addPass(this.outputPass);
     this.applyResolutionMode();
@@ -343,10 +414,16 @@ export class CoastPostRenderer {
       this.renderer.render(this.scene, this.camera);
       return "direct";
     }
-    if (this.resolutionMode === "fixed") {
-      this.renderFixed(deltaSeconds, preCrtOverlay);
-    } else {
-      this.composer.render(deltaSeconds);
+    this.preCrtOverlayPass.callback = preCrtOverlay;
+    try {
+      if (this.resolutionMode === "fixed") {
+        this.renderFixed(deltaSeconds);
+      } else {
+        this.composer.render(deltaSeconds);
+      }
+    } finally {
+      // Never retain closures over live Player/UI state between frames.
+      this.preCrtOverlayPass.callback = undefined;
     }
     return "post";
   }
@@ -368,10 +445,7 @@ export class CoastPostRenderer {
     this.composer.dispose();
   }
 
-  private renderFixed(
-    deltaSeconds: number,
-    preCrtOverlay?: CoastPostPreCrtOverlay,
-  ): void {
+  private renderFixed(deltaSeconds: number): void {
     const previousTarget = this.renderer.getRenderTarget();
     const previousFace = this.renderer.getActiveCubeFace();
     const previousMip = this.renderer.getActiveMipmapLevel();
@@ -391,22 +465,6 @@ export class CoastPostRenderer {
         this.inputWidth = source.width;
         this.inputHeight = source.height;
         this.applyCrtResolution();
-      }
-
-      if (preCrtOverlay) {
-        this.renderer.setRenderTarget(source);
-        try {
-          preCrtOverlay({
-            ...this.resolution,
-            renderer: this.preCrtOverlayRenderer,
-            target: source,
-          });
-        } finally {
-          // A callback may draw several scissored HUD slots. Rebind the full
-          // base target before the fullscreen CRT stages begin.
-          this.renderer.setScissorTest(false);
-          this.renderer.setRenderTarget(source);
-        }
       }
 
       let finalLinear = source;

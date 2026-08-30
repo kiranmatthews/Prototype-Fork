@@ -871,7 +871,7 @@ function configureCoastPost(enabled: boolean): void {
     syncPostResolution();
     return;
   }
-  // The composer is now shared: the coast owns Unity bloom/lens grading,
+  // The composer is now shared: the coast owns Unity neutral grading/dither,
   // while CRT Guest can remain active on every level. Its heavy render targets
   // are lazy, so retaining this shell also makes live CRT enable/disable and
   // variant changes immediate without rebuilding the renderer.
@@ -899,6 +899,41 @@ function renderPrimaryScene(
   if (prepareOcean) level.water?.renderPasses(renderer, scene, camera);
   if (coastPost) coastPost.render(dt, preCrtOverlay);
   else renderer.render(scene, camera);
+}
+
+/**
+ * The single-player presentation path, including every game-owned overlay.
+ * Developer/tool DOM stays outside this function and therefore remains sharp.
+ */
+function renderGameplayScene(dt = 0, prepareOcean = true): void {
+  const wantsPreCrtHud = !split2p && (coastPost?.active ?? false);
+  let overlayRan = false;
+  ui.setGameHudComposited(wantsPreCrtHud);
+  renderPrimaryScene(
+    dt,
+    prepareOcean,
+    wantsPreCrtHud
+      ? (context) => {
+          const size = {
+            width: context.inputWidth,
+            height: context.inputHeight,
+          };
+          // Preserve the old visual stack: collected fruit behind the 3D
+          // counter models, with all 2D HUD furniture on top of both.
+          player.drawFlyingFruit(context.renderer, undefined, size);
+          ui.drawIcons(context.renderer, dt, size);
+          ui.drawGameHud(context.renderer, size, context.target);
+          overlayRan = true;
+        }
+      : undefined,
+  );
+  if (overlayRan) return;
+
+  // Direct/lite/split fallback: the DOM copy remains visible, while the two
+  // pre-existing WebGL overlay helpers still draw over the world.
+  ui.setGameHudComposited(false);
+  player.drawFlyingFruit(renderer);
+  ui.drawIcons(renderer, dt);
 }
 
 function fixedResolutionActive(): boolean {
@@ -2790,6 +2825,7 @@ function frame(nowMs: number): void {
     // want to judge a shape against, and nothing moves under the cursor while
     // you are trying to click a polygon.
     studio.frame();
+    ui.setGameHudComposited(false);
     renderPrimaryScene(dt);
     return;
   }
@@ -2828,6 +2864,7 @@ function frame(nowMs: number): void {
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
     updateSeaHorizon();
+    ui.setGameHudComposited(false);
     renderPrimaryScene(dt);
     return;
   }
@@ -2851,7 +2888,7 @@ function frame(nowMs: number): void {
   if (paused) {
     input.consumeEdges(); // presses while paused must not fire on resume
     acc = 0;
-    renderPrimaryScene(dt);
+    renderGameplayScene(dt);
     return;
   }
 
@@ -3041,8 +3078,8 @@ function frame(nowMs: number): void {
   // ocean's quality switch makes these hooks a cheap feature-disable path.
   level.water?.renderPasses(renderer, scene, camera);
 
-  let primaryOverlaysRendered = false;
   if (split2p && p2) {
+    ui.setGameHudComposited(false);
     const dw = renderer.domElement.width;
     const dh = renderer.domElement.height;
     renderer.setScissorTest(true);
@@ -3055,34 +3092,16 @@ function frame(nowMs: number): void {
     renderer.setScissorTest(false);
     renderer.setViewport(0, 0, dw, dh);
   } else {
-    renderPrimaryScene(
-      dt,
-      false,
-      fixedResolutionActive()
-        ? (context) => {
-            const size = {
-              width: context.inputWidth,
-              height: context.inputHeight,
-            };
-            player.drawFlyingFruit(context.renderer, undefined, size);
-            ui.drawIcons(context.renderer, dt, size);
-            primaryOverlaysRendered = true;
-          }
-        : undefined,
-    );
+    renderGameplayScene(dt, false);
   }
-  // Collected fruit sails to the counter on its own flat layer, over the
-  // finished world and under the HUD icons it is flying to. In split screen
-  // each rider's flight is confined to that rider's half.
+  // Single-player fruit/icons/HUD were composed together above. Split screen
+  // retains its direct fallback, with each fruit flight confined to its half.
   if (split2p && p2) {
     player.drawFlyingFruit(renderer, 'top');
     p2.drawFlyingFruit(renderer, 'bottom');
-  } else if (!primaryOverlaysRendered) {
-    player.drawFlyingFruit(renderer);
   }
-  // The crate, fruit and relic HUD icons are real 3D, spun and drawn over the
-  // finished frame into each icon's own DOM box.
-  if (!primaryOverlaysRendered) ui.drawIcons(renderer, dt);
+  // One shared set of 3D counter icons remains above both split viewports.
+  if (split2p && p2) ui.drawIcons(renderer, dt);
     frameStats.cameraTargetX = camTarget.x;
     frameStats.cameraTargetY = camTarget.y;
     frameStats.cameraTargetZ = camTarget.z;
@@ -3106,6 +3125,7 @@ function frame(nowMs: number): void {
         },
         presentation: coastPost?.resolution ?? null,
         ocean: level.water?.stats ?? null,
+        hud: ui.gameHudDiagnostics,
         frameLimiter: renderFrameLimiter.stats,
         renderedFrames: frameStats.frame,
       });
@@ -3144,6 +3164,7 @@ requestAnimationFrame(frame);
   getRenderQualitySizes: () => ({ ...renderQualitySizes }),
   getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
+  getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,
   saveReplay,

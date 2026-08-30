@@ -2,6 +2,11 @@
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import * as THREE from "three";
+import {
+  GameHudSurface,
+  type GameHudBoostState,
+  type GameHudSurfaceDiagnostics,
+} from "./gameHudSurface";
 import { COMBO_GEM_TINT, Level, levelList } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { wumpaMesh } from "./wumpa";
@@ -62,6 +67,8 @@ declare const __BUILD_TAG__: string; // injected by vite.config define
 declare const __BUILD_CHANNEL__: string; // identifies the experiment fork
 
 export class UI {
+  private gameHudLayer: HTMLElement;
+  private gameHudSurface!: GameHudSurface;
   private statsEl: HTMLElement;
   private msgTitle: HTMLElement;
   private msgSub: HTMLElement;
@@ -71,6 +78,7 @@ export class UI {
   private fadeTimer: number | null = null;
   private wumpaRowEl!: HTMLElement; // hidden during time trials
   private livesRowEl!: HTMLElement;
+  private lifeFaceEl!: HTMLElement;
   private deathModeLabelEl!: HTMLElement;
   private runRowsHidden = false;
   private endlessDeaths = false;
@@ -97,6 +105,7 @@ export class UI {
   }[] = [];
   private boostRingWrap!: HTMLElement; // balance-boost ring: laps over itself as windows stack
   private boostRing!: HTMLElement;
+  private boostFrame: GameHudBoostState | null = null;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -124,10 +133,12 @@ export class UI {
   private scoreLabelEl!: HTMLElement;
   private boostLabelEl!: HTMLElement;
   private deathTitleEl!: HTMLElement;
+  private deathSubEl!: HTMLElement;
   private ttTimeEl!: HTMLElement;
   private ttResTitleEl!: HTMLElement;
   private ttResTimeEl!: HTMLElement;
   private ttResListEl!: HTMLElement;
+  private ttResSubEl!: HTMLElement;
   private trickPlate!: HTMLElement;
   private trickLineEl!: HTMLElement;
   private trickTotalEl!: HTMLElement;
@@ -529,6 +540,14 @@ export class UI {
     document.body.appendChild(this.sidePanel("left", "MENU", statsWrap));
     document.body.appendChild(this.sidePanel("right", "TUNER", panel));
 
+    // Game-owned presentation has one explicit root so it can be mirrored
+    // into the pre-CRT WebGL surface without also capturing MENU, TUNER, the
+    // editor, touch controls or presentation/debug panels. Opacity is applied
+    // to this parent only; descendants keep their live layout and animation
+    // state for the native HUD renderer to read.
+    this.gameHudLayer = div("game-hud-layer");
+    document.body.appendChild(this.gameHudLayer);
+
     // ---- center messages / flash ----
     this.msgWrap = div("hud-msg");
     this.msgTitle = div("hud-msg-title");
@@ -590,7 +609,8 @@ export class UI {
     // the offset is whatever the row above actually measures, at every size.
     const tr = div("hud-tr");
     const livesRow = div("hud-counter");
-    livesRow.appendChild(div("hud-icon hud-icon-face"));
+    this.lifeFaceEl = div("hud-icon hud-icon-face");
+    livesRow.appendChild(this.lifeFaceEl);
     this.livesEl = div("hud-num hud-lives");
     livesRow.appendChild(this.livesEl);
     this.deathModeLabelEl = div("hud-deathcount-label");
@@ -636,6 +656,7 @@ export class UI {
     this.ttResListEl = div("hud-ttres-list");
     const ttResSub = div("hud-ttres-sub");
     ttResSub.textContent = "press R / Options to go again";
+    this.ttResSubEl = ttResSub;
     this.ttResultsEl.appendChild(this.ttResTitleEl);
     this.ttResultsEl.appendChild(this.ttResTimeEl);
     this.ttResultsEl.appendChild(this.ttResListEl);
@@ -652,7 +673,7 @@ export class UI {
     boosts.appendChild(boostLab);
     boosts.style.display = "none";
     this.boostRingWrap = boosts;
-    document.body.appendChild(boosts);
+    this.gameHudLayer.appendChild(boosts);
     // Debug cheat: clicking the face banks an extra life. The HUD layer is
     // pointer-transparent, so this row opts back in.
     livesRow.style.cursor = "pointer";
@@ -676,6 +697,7 @@ export class UI {
     this.deathTitleEl = deathTitle;
     const deathSub = div("hud-death-sub");
     deathSub.textContent = "press any button";
+    this.deathSubEl = deathSub;
     this.deathEl.appendChild(deathTitle);
     this.deathEl.appendChild(deathSub);
     this.deathEl.style.display = "none";
@@ -724,11 +746,13 @@ export class UI {
       this.balanceWrap,
       this.vBalanceWrap,
       this.deathEl,
-      this.replayBadge,
-      this.recBadge,
     ]) {
-      document.body.appendChild(el);
+      this.gameHudLayer.appendChild(el);
     }
+    // Capture/playtest instrumentation is developer chrome, not game HUD. It
+    // intentionally remains razor-sharp above the processed canvas.
+    document.body.appendChild(this.replayBadge);
+    document.body.appendChild(this.recBadge);
 
     // Roo display text, built once the boxes are in the document (the
     // renderer measures a real bounding box, so the hosts have to be live).
@@ -759,6 +783,75 @@ export class UI {
     new RooLabel(this.deathTitleEl, { palette: ROO_HUD, extrusionSteps: 16 }).set(
       "GAME OVER",
     );
+
+    this.gameHudSurface = new GameHudSurface({
+      elements: {
+        viewport: document.getElementById("app") ?? undefined,
+        crateIcon: this.crateIcon,
+        crateValue: this.cratesEl,
+        fruitIcon: this.wumpaIcon,
+        fruitValue: this.wumpaEl,
+        crystalIcon: this.crystalIcon,
+        gemIcon: this.gemIcon,
+        comboGemIcon: this.comboGemIcon,
+        lifeFace: this.lifeFaceEl,
+        lifeValue: this.livesEl,
+        deathModeLabel: this.deathModeLabelEl,
+        scoreLabel: this.scoreLabelEl,
+        scoreValue: this.scoreEl,
+        timeTrialClock: this.ttClockEl,
+        timeTrialValue: this.ttTimeEl,
+        timeTrialFreeze: this.ttFreezeEl,
+        results: this.ttResultsEl,
+        resultsTitle: this.ttResTitleEl,
+        resultsTime: this.ttResTimeEl,
+        resultsList: this.ttResListEl,
+        resultsSub: this.ttResSubEl,
+        boost: this.boostRingWrap,
+        boostRing: this.boostRing,
+        boostLabel: this.boostLabelEl,
+        trick: this.trickPlate,
+        trickLine: this.trickLineEl,
+        trickTotal: this.trickTotalEl,
+        grindBalance: this.balanceWrap,
+        grindNeedle: this.balanceNeedle,
+        manualBalance: this.vBalanceWrap,
+        manualNeedle: this.vBalanceNeedle,
+        message: this.msgWrap,
+        messageTitle: this.msgTitle,
+        messageSub: this.msgSub,
+        flash: this.flashEl,
+        fade: this.fadeEl,
+        halo: this.haloEl,
+        death: this.deathEl,
+        deathTitle: this.deathTitleEl,
+        deathSub: this.deathSubEl,
+      },
+    });
+  }
+
+  /** Hide only the live DOM copy while its Canvas2D mirror is in WebGL. */
+  setGameHudComposited(composited: boolean): void {
+    this.gameHudLayer.classList.toggle("precrt-composited", composited);
+    this.gameHudLayer.toggleAttribute("data-precrt-composited", composited);
+  }
+
+  /** Draw the complete gameplay HUD into the current pre-CRT colour target. */
+  drawGameHud(
+    renderer: THREE.WebGLRenderer,
+    targetSize: { width: number; height: number },
+    target: THREE.WebGLRenderTarget | null = renderer.getRenderTarget(),
+  ): boolean {
+    return this.gameHudSurface.render(
+      renderer,
+      targetSize,
+      { boost: this.boostFrame },
+      target,
+    );
+  }
+
+  get gameHudDiagnostics(): GameHudSurfaceDiagnostics {
+    return this.gameHudSurface.diagnostics;
   }
 
   setReplayBadge(on: boolean): void {
@@ -1402,6 +1495,9 @@ export class UI {
   // underneath the live arc. Flashes when the last second is running out.
   updateBalanceBoost(t: number, per: number): void {
     const on = t > 0;
+    this.boostFrame = on
+      ? { remaining: t, period: per, critical: t < 1, label: "BALANCE" }
+      : null;
     this.boostRingWrap.style.display = on ? "flex" : "none";
     if (!on) return;
     const laps = Math.floor(t / per);
@@ -1668,6 +1764,8 @@ export class UI {
       .side-wrap.right .side-tab { border-radius: 8px 0 0 8px; border-right: none; }
 
       /* --- Crash-style game HUD --- */
+      .game-hud-layer { display: block; }
+      .game-hud-layer.precrt-composited { opacity: 0; }
       .hud-tl { position: fixed; top: 16px; left: 40px; z-index: 10; pointer-events: none; }
       .hud-build {
         position: fixed; bottom: 6px; left: 8px; z-index: 10; pointer-events: none;

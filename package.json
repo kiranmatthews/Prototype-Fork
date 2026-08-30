@@ -10,7 +10,7 @@
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",
     "check:interpolation": "node tools/validate-render-interpolation.mjs",
     "check:crt": "node tools/test-crt-guest-settings.mjs && node tools/test-crt-guest-web.mjs",
-    "check:render-quality": "node tools/test-render-quality-settings.mjs && node tools/test-fixed-render-pipeline.mjs",
+    "check:render-quality": "node tools/test-render-quality-settings.mjs && node tools/test-fixed-render-pipeline.mjs && node tools/test-game-hud-pipeline.mjs",
     "check:skateboard": "node tools/test-skateboard-port.mjs",
     "check:crt-generated": "python3 tools/crt-guest-web/generate.py --check",
     "generate:crt": "python3 tools/crt-guest-web/generate.py",

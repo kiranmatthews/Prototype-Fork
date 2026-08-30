@@ -15,7 +15,10 @@ for (const contract of [
   "setInputSize",
   "setOutputSize",
   "allowRenderFrame",
-  "primaryOverlaysRendered",
+  "renderGameplayScene",
+  "drawGameHud",
+  "setGameHudComposited",
+  "getGameHudDiagnostics",
   "render-diagnostics",
 ]) {
   assert.ok(main.includes(contract), `main render contract missing ${contract}`);
@@ -31,6 +34,8 @@ for (const contract of [
   'CoastPostResolutionMode = "native" | "fixed"',
   "renderFixed",
   "preCrtOverlay",
+  "PreCrtOverlayPass",
+  "preCrtOverlayPass.callback = preCrtOverlay",
   "composer.renderToScreen = false",
   "this.crtPass.setResolution",
   "OutputPass remains the sole display transfer",
@@ -38,6 +43,18 @@ for (const contract of [
 ]) {
   assert.ok(coast.includes(contract), `presentation renderer missing ${contract}`);
 }
+const unityPassAt = coast.indexOf("this.composer.addPass(this.unityPostPass)");
+const hudPassAt = coast.indexOf("this.composer.addPass(this.preCrtOverlayPass)");
+const crtPassAt = coast.indexOf("this.composer.addPass(this.crtPass)");
+assert.ok(
+  unityPassAt >= 0 && unityPassAt < hudPassAt && hudPassAt < crtPassAt,
+  "gameplay overlay pass must sit after Unity grading and before CRT",
+);
+assert.match(
+  coast,
+  /class PreCrtOverlayPass extends Pass[\s\S]*?this\.needsSwap = false/,
+  "gameplay overlay must mutate the current colour buffer without a swap",
+);
 
 const crt = await text("src/crt-guest/pass.ts");
 for (const contract of [

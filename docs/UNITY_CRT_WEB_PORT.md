@@ -115,10 +115,10 @@ surface that exercises the real pass and tuning panel without gameplay state.
   RGBA16F framebuffer are required. Missing support fails closed to an
   unprocessed copy/direct frame and records the reason in diagnostics.
 - Two-player scissored rendering remains on the explicit direct path.
-- Flying fruit and the small 3D HUD icons are currently drawn after the world
-  composer, and the DOM HUD/death curtain intentionally remain sharp. Moving
-  every gameplay overlay inside the processed camera is a separate composition
-  change, not hidden inside this shader port.
+- Flying fruit, the small 3D HUD icons and the Canvas2D gameplay HUD are
+  inserted after Unity grading and before CRT. Developer/tool panels, touch
+  controls and capture diagnostics remain sharp DOM overlays. Lite and
+  two-player direct rendering retain their explicit DOM fallback.
 
 The old CSS scanline/vignette overlay has been removed, so it cannot double the
 real mask or bias before/after comparisons.

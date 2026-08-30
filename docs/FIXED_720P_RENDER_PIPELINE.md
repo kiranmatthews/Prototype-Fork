@@ -11,7 +11,7 @@ For a 16:9 viewport the default graph is:
 World + ocean reflection/refraction + SMAA + coast post
                           1280 × 720
                                ↓
-                    gameplay 3D HUD overlays
+             gameplay 3D + Canvas2D HUD overlays
                                ↓
                   CRT Guest HD reconstruction
                           2560 × 1440
@@ -38,15 +38,23 @@ viewport.
 
 - the main world render;
 - Unity SMAA High;
-- the coast-only Unity bloom/lens-flare/grading stack;
+- the coast-only Unity neutral grading/dither pass;
 - the ocean opaque color/depth prepass;
 - ocean refraction, depth tint, caustics and intersection inputs;
 - planar reflection (30% of the base, 384×216 at 720p);
-- flying fruit and the small 3D HUD icons injected immediately before CRT.
+- flying fruit, the small 3D HUD icons and the complete gameplay HUD injected
+  immediately before CRT.
 
-DOM HUD text and developer panels remain sharp browser overlays. Two-player
-split remains on the native scissored direct path until it has two independent
+The gameplay HUD surface includes counters, score/clock, results, combo and
+balance readouts, centre messages, damage/death fades and GAME OVER. MENU,
+TUNER, editor/studio tools, touch controls, the CRT and RENDER panels, build
+stamp and capture badges remain sharp browser overlays. Two-player split
+remains on the native scissored direct path until it has two independent
 pre-CRT surfaces. `?lite` also keeps its existing low-cost native fallback.
+
+The same no-swap insertion pass is present in native post mode, so disabling
+the fixed-resolution optimization while leaving CRT enabled does not move the
+gameplay HUD back above CRT.
 
 ## CRT reconstruction
 
@@ -83,6 +91,7 @@ Use the fixed **RENDER** launcher. Settings persist under
 Add `?renderdiag` to expose the hidden `#render-diagnostics` JSON probe. It
 reports settings, computed sizes, actual drawing buffer, composer resolution,
 ocean native/effective/prepass sizes, frame-limiter counts and rendered frames.
+It also reports gameplay-HUD Canvas2D time, texture uploads and composite draws.
 `?crtdiag` continues to expose per-target CRT diagnostics.
 
 ## Baseline measurements
