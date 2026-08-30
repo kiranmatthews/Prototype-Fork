@@ -7,6 +7,7 @@
 // contract, so they remain sharp DOM above the CRT output.
 
 import * as THREE from "three";
+import { SOURCE_HUD_TRACKING, sourceTrackingPixels } from "./comboHud";
 
 export interface GameHudRenderSize {
   /** Exact physical-pixel width of the pre-CRT image. */
@@ -480,6 +481,7 @@ export class GameHudSurface {
       {
         size: 18 * sy,
         align: 'left',
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 18 * sy),
         glow: ready ? '#ffb41f' : undefined,
       },
     );
@@ -626,6 +628,7 @@ export class GameHudSurface {
       this.drawRooInRect(ctx, String(crates.value), valueRect, {
         size: counterSize,
         align: "left",
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, counterSize),
       });
     }
 
@@ -648,6 +651,7 @@ export class GameHudSurface {
       this.drawRooInRect(ctx, String(fruit.value), valueRect, {
         size: counterSize,
         align: "left",
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, counterSize),
       });
     }
 
@@ -709,9 +713,11 @@ export class GameHudSurface {
         width: counterSize * 1.25,
         height: counterSize * 1.285,
       };
+      const lifeSize = Math.min(111 * sy, counterSize * 1.23);
       this.drawRooInRect(ctx, String(life.value), lifeRect, {
-        size: Math.min(111 * sy, counterSize * 1.23),
+        size: lifeSize,
         align: "right",
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, lifeSize),
       });
       if (deathsMode) {
         const labelRect = this.rect(this.elements.deathModeLabel, layout) ?? {
@@ -757,10 +763,12 @@ export class GameHudSurface {
       this.drawRooInRect(ctx, frame.score?.label ?? (readRooHudText(this.elements.scoreLabel) || "SCORE"), labelRect, {
         size: 22 * sy,
         align: "right",
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 22 * sy),
       });
       this.drawRooInRect(ctx, String(score.value), valueRect, {
         size: 36 * sy,
         align: "right",
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, 36 * sy),
       });
     }
 
@@ -775,6 +783,7 @@ export class GameHudSurface {
     this.drawRooInRect(ctx, clock.value, valueRect, {
       size: 90 * sy,
       align: "right",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, 90 * sy),
       palette: "bonus",
       glow: clock.frozen ? "#6ee6ff" : undefined,
     });
@@ -788,6 +797,7 @@ export class GameHudSurface {
       this.drawRooInRect(ctx, clock.freeze, freezeRect, {
         size: 22 * sy,
         align: "right",
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 22 * sy),
         palette: "bonus",
       });
     }
@@ -864,6 +874,7 @@ export class GameHudSurface {
     this.drawRooInRect(ctx, label, labelRect, {
       size: 20 * sy,
       align: "center",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 20 * sy),
     });
   }
 
@@ -901,12 +912,14 @@ export class GameHudSurface {
     this.drawRooInRect(ctx, line, lineRect, {
       size: 36 * sy,
       align: "center",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.trickTitle, 36 * sy),
       alpha,
       glow: bailed ? "#ff3b30" : undefined,
     });
     this.drawRooInRect(ctx, total, totalRect, {
       size: 60 * sy,
       align: "center",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.trickValue, 60 * sy),
       alpha,
       glow: bailed ? "#ff3b30" : undefined,
     });
@@ -996,6 +1009,7 @@ export class GameHudSurface {
     this.drawRooInRect(ctx, title, titleRect, {
       size: 84 * sy,
       align: "center",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 84 * sy),
     });
     if (sub) {
       const subRect = this.rect(this.elements.messageSub, layout) ?? {
@@ -1068,11 +1082,13 @@ export class GameHudSurface {
       size: 42 * sy,
       align: "center",
       palette: "bonus",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 42 * sy),
     });
     this.drawRooInRect(ctx, time, timeRect, {
       size: 66 * sy,
       align: "center",
       palette: "bonus",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, 66 * sy),
     });
 
     if (explicit?.rows) {
@@ -1145,6 +1161,7 @@ export class GameHudSurface {
     this.drawRooInRect(ctx, title, titleRect, {
       size: 104 * sy,
       align: "center",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 104 * sy),
     });
     const subRect = this.rect(this.elements.deathSub, layout) ?? {
       x: width * 0.1,

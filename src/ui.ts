@@ -13,6 +13,13 @@ import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { wumpaMesh } from "./wumpa";
 import { SPECIAL_CONTROL_HELP, SPECIAL_TRICKS } from "./specialTricks";
 import {
+  SOURCE_HUD_TRACKING,
+  advanceSourceComboTicker,
+  sourceComboPurseTarget,
+  sourceLiveComboText,
+  type ComboHudPreview,
+} from "./comboHud";
+import {
   TUNING,
   TUNING_RANGES,
   TUNING_INFO,
@@ -55,6 +62,8 @@ export interface HudState {
   comboMult: number;
   comboHasTrick: boolean;
   tricks: string;
+  comboActionRevision: number;
+  comboPreview: ComboHudPreview | null;
   specialMeter: number;
   specialReady: boolean;
   fruit: number;
@@ -169,6 +178,8 @@ export class UI {
   private dispCombo = 0;
   private comboState: "none" | "active" | "cashin" | "bail" = "none";
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
+  private lastComboActionRevision = -1;
+  private lastComboPreviewSequence = -1;
   private msgTimer: number | undefined;
   private messageState: {
     title: string;
@@ -788,24 +799,30 @@ export class UI {
     // renderer measures a real bounding box, so the hosts have to be live).
     // The counters read ORANGE; the trial clock and its result time read
     // GREEN->BLUE.
-    this.rooCrates = new RooLabel(this.cratesEl, { palette: ROO_HUD });
-    this.rooWumpa = new RooLabel(this.wumpaEl, { palette: ROO_HUD });
-    this.rooLives = new RooLabel(this.livesEl, { palette: ROO_HUD });
-    this.rooScore = new RooLabel(this.scoreEl, { palette: ROO_HUD });
+    this.rooCrates = new RooLabel(this.cratesEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
+    this.rooWumpa = new RooLabel(this.wumpaEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
+    this.rooLives = new RooLabel(this.livesEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
+    this.rooScore = new RooLabel(this.scoreEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
     this.rooTTTime = new RooLabel(this.ttTimeEl, {
       palette: ROO_TT,
-      tracking: -2,
+      tracking: SOURCE_HUD_TRACKING.largeNumber,
     });
     this.rooTTBest = new RooLabel(this.ttResTimeEl, {
       palette: ROO_TT,
-      tracking: -2,
+      tracking: SOURCE_HUD_TRACKING.largeNumber,
     });
     this.rooTTFreeze = new RooLabel(this.ttFreezeEl, { palette: ROO_TT });
     this.rooTTResTitle = new RooLabel(this.ttResTitleEl, { palette: ROO_TT });
     // The trick plate and every centre-screen message are HUD furniture, so
     // they wear the orange face with the counters.
-    this.rooTrickLine = new RooLabel(this.trickLineEl, { palette: ROO_HUD });
-    this.rooTrickTotal = new RooLabel(this.trickTotalEl, { palette: ROO_HUD });
+    this.rooTrickLine = new RooLabel(this.trickLineEl, {
+      palette: ROO_HUD,
+      tracking: SOURCE_HUD_TRACKING.trickTitle,
+    });
+    this.rooTrickTotal = new RooLabel(this.trickTotalEl, {
+      palette: ROO_HUD,
+      tracking: SOURCE_HUD_TRACKING.trickValue,
+    });
     this.rooMsgTitle = new RooLabel(this.msgTitle, { palette: ROO_HUD });
     // Fixed captions: set once, then they never change again.
     new RooLabel(this.scoreLabelEl, { palette: ROO_HUD }).set("SCORE");
@@ -949,11 +966,11 @@ export class UI {
     return cur + Math.sign(d) * step;
   }
 
-  private startCombo(s: HudState): void {
+  private startCombo(labels: string): void {
     this.comboState = "active";
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.remove("hud-trick-bail");
-    this.rooTrickLine.set(s.tricks);
+    this.rooTrickLine.set(labels);
   }
 
   private endCombo(): void {
@@ -965,11 +982,12 @@ export class UI {
 
   // Combo landed clean: freeze the total on the plate and drain it to zero while
   // the score ticks up to match.
-  comboBank(amount: number): void {
+  comboBank(amount: number, labels: string): void {
     this.dispCombo = amount;
     this.comboState = "cashin";
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.remove("hud-trick-bail");
+    this.rooTrickLine.set(labels);
     pop(this.scoreEl);
   }
 
@@ -1243,31 +1261,46 @@ export class UI {
       }
     }
     this.specialWasReady = s.specialReady;
-    // COMBO plate: appears the moment a REAL trick is in the combo (grind/grab/
-    // wallride/slide) — not for bare platforming (spins, crate bounces, enemy
-    // pops). The total tickers up while chaining; on a clean bank it drains to
-    // zero as the score climbs to match; on a bail it red-shakes and drops away.
-    const show = s.comboHasTrick && s.comboMult > 0;
+    // The live source plate shows the UNMULTIPLIED purse and a separate ×N.
+    // A started deck trick projects its future fixed award without mutating
+    // gameplay. Fixed awards snap; quarter-second hold accrual alone tickers.
+    const preview = s.comboPreview;
+    const show = preview !== null || (s.comboHasTrick && s.comboMult > 0);
+    const labels = preview?.labels ?? s.tricks;
+    const multiplier = preview?.multiplier ?? s.comboMult;
+    const target = sourceComboPurseTarget(preview?.points ?? s.comboPoints);
+    const fixedChanged =
+      s.comboActionRevision !== this.lastComboActionRevision ||
+      (preview?.sequence ?? -1) !== this.lastComboPreviewSequence;
     if (this.comboState === "cashin") {
       if (show) {
-        this.startCombo(s); // a fresh combo interrupts the cash-in
+        this.startCombo(labels); // a fresh combo interrupts the cash-in
+        this.dispCombo = target;
+        this.rooTrickTotal.set(sourceLiveComboText(this.dispCombo, multiplier));
       } else {
-        this.dispCombo = this.ticker(this.dispCombo, 0);
+        this.dispCombo = advanceSourceComboTicker(this.dispCombo, 0);
         this.rooTrickTotal.set(String(Math.round(this.dispCombo)));
         if (this.dispCombo <= 0) this.endCombo();
       }
     } else if (this.comboState === "bail") {
-      if (show) this.startCombo(s);
+      if (show) {
+        this.startCombo(labels);
+        this.dispCombo = target;
+        this.rooTrickTotal.set(sourceLiveComboText(this.dispCombo, multiplier));
+      }
       else if (performance.now() >= this.comboBailEnd) this.endCombo();
     } else if (show) {
-      this.startCombo(s);
-      this.dispCombo = this.ticker(this.dispCombo, s.comboPoints * s.comboMult);
-      this.rooTrickTotal.set(
-        `${Math.round(this.dispCombo)}  ×${s.comboMult}`,
-      );
+      const entering = this.comboState !== "active";
+      this.startCombo(labels);
+      this.dispCombo = entering || fixedChanged
+        ? target
+        : advanceSourceComboTicker(this.dispCombo, target);
+      this.rooTrickTotal.set(sourceLiveComboText(this.dispCombo, multiplier));
     } else if (this.comboState === "active") {
       this.endCombo(); // combo fizzled with no bank/bail signal
     }
+    this.lastComboActionRevision = s.comboActionRevision;
+    this.lastComboPreviewSequence = preview?.sequence ?? -1;
   }
 
   // Saved tuning snapshot from this browser, if any — merged so that ONLY

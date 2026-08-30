@@ -47,6 +47,11 @@ import {
   type SpinPresentationDiagnostics,
 } from './spin-effects/presentation';
 import { SpecialSystem, type SpecialTrick } from './specialTricks';
+import {
+  projectComboLabels,
+  sourceComboLabelLine,
+  type ComboHudPreview,
+} from './comboHud';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
@@ -314,10 +319,12 @@ export class Player {
   comboMult = 0; // ...times the number of actions strung together
   comboLabels: string[] = []; // THPS-style trick names for the combo readout
   comboHasTrick = false; // a REAL trick (grab/grind/wallride/slide) is in the combo — gates the HUD plate; bare spins/bounces/enemy pops don't show it
+  private comboHudActionRevision = 0; // fixed awards snap; timed accrual alone tickers
+  private deckTrickPreviewSequence = 0;
   private readonly special = new SpecialSystem();
   private specialActivationCount = 0;
   private comboTimer = 0; // plain-rolling time left before the combo banks
-  onComboBank: (amount: number) => void = () => {}; // combo landed clean → cash-in ticker
+  onComboBank: (amount: number, labels: string) => void = () => {}; // combo landed clean → cash-in ticker
   onComboBail: () => void = () => {}; // combo lost on a bail → red shake + drop
 
   // debug readouts
@@ -1221,6 +1228,32 @@ export class Player {
 
   get specialSequence(): number {
     return this.specialActivationCount;
+  }
+
+  get comboActionRevision(): number {
+    return this.comboHudActionRevision;
+  }
+
+  /** Non-authoritative Unity-style plate projection while a deck trick turns. */
+  get comboHudPreview(): ComboHudPreview | null {
+    if (
+      this.flipT <= 0 ||
+      this.state !== 'air' ||
+      this.grounded ||
+      this.isBailing
+    ) return null;
+    const base = this.specialFlip?.points ?? CONST.ptsFlip;
+    const uses = this.comboUses.get(this.flipName) ?? 0;
+    const curve = CONST.repeatDecay;
+    let pay = Math.round(base * curve[Math.min(uses, curve.length - 1)]);
+    if (this.uberTimer > 0) pay *= CONST.uberScoreMult;
+    const shown = `${this.uberTimer > 0 ? 'Tiki ' : ''}${this.flipName}`;
+    return {
+      points: this.comboPoints + pay,
+      multiplier: this.comboMult + 1,
+      labels: sourceComboLabelLine(projectComboLabels(this.comboLabels, shown)),
+      sequence: this.deckTrickPreviewSequence,
+    };
   }
 
   // The floor under the skater, wherever they are in the air — the camera
@@ -2675,6 +2708,7 @@ export class Player {
         if (!/°$|Boing|Flattened|Takedown|Bonk|^Box$|Slam Smash|Crystal|Gem/.test(shown))
           this.comboHasTrick = true;
       }
+      this.comboHudActionRevision++;
     } else {
       this.points += pay;
     }
@@ -2724,7 +2758,8 @@ export class Player {
       this.points += amount;
       // Cash-in ticker only when the plate was actually up (a real trick chained);
       // platforming-only points just land on the score.
-      if (this.comboHasTrick && this.comboMult > 0) this.onComboBank(amount);
+      if (this.comboHasTrick && this.comboMult > 0)
+        this.onComboBank(amount, sourceComboLabelLine(this.comboLabels));
     }
     this.comboPoints = 0;
     this.comboMult = 0;
@@ -5154,6 +5189,7 @@ export class Player {
             const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
             this.renameLabel(this.airGrabShown, `${pfx}${spinName} ${this.grabTrickName}`);
             this.comboPoints += fold;
+            this.comboHudActionRevision++;
             this.special.award(fold);
             this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
           } else {
@@ -7366,6 +7402,7 @@ export class Player {
     );
     this.flipName = deckTrickInfo(this.flipKind).label;
     this.flipT = CONST.flipTime;
+    this.deckTrickPreviewSequence++;
     this.deckTricksThisAir.add(this.flipKind);
     this.deckTricksThisCombo.add(this.flipKind);
     return true;
@@ -7390,6 +7427,7 @@ export class Player {
     this.flipKind = 'kick'; // gate evidence remains ordinary-only; this is visual metadata
     this.flipName = trick.label;
     this.flipT = trick.duration;
+    this.deckTrickPreviewSequence++;
     this.ollieDeckTrickBufferT = 0;
     this.confirmSpecial(trick);
     return true;
@@ -7676,6 +7714,7 @@ export class Player {
           let newPay = Math.round(CONST.ptsGrab * curve[Math.min(nUses, curve.length - 1)]);
           if (this.uberTimer > 0) newPay *= CONST.uberScoreMult;
           this.comboPoints += newPay - this.grabPaid;
+          this.comboHudActionRevision++;
           this.grabPaid = newPay;
           if (this.airGrabShown) {
             const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';

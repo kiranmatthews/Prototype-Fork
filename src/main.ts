@@ -2324,7 +2324,7 @@ ui.onToggleEndlessDeaths = () => {
     2200,
   );
 };
-player.onComboBank = (amount) => ui.comboBank(amount);
+player.onComboBank = (amount, labels) => ui.comboBank(amount, labels);
 player.onComboBail = () => ui.comboBail();
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
@@ -3037,12 +3037,15 @@ function frame(nowMs: number): void {
   ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
   ui.updateBalanceBoost(player.balanceBoostT, 6);
   const tricks = player.comboLabels;
+  const comboPreview = player.comboHudPreview;
   ui.setHUD({
     points: player.points,
     comboPoints: player.comboPoints,
     comboMult: player.comboMult,
     comboHasTrick: player.comboHasTrick,
     tricks: (tricks.length > 6 ? "… + " : "") + tricks.slice(-6).join(" + "),
+    comboActionRevision: player.comboActionRevision,
+    comboPreview,
     specialMeter: player.specialMeter,
     specialReady: player.specialReady,
     fruit: player.fruit,
