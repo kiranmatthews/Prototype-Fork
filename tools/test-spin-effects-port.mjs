@@ -43,12 +43,16 @@ assert.equal(defaults.seed, 62);
 assert.equal(defaults.selfSpinRadiansPerSecond, 7.508416652679443);
 assert.equal(defaults.ringOverrides[0].lineColorA, 0xfff4a9);
 assert.equal(defaults.ringOverrides[5].radiusScale, 0.5);
-assert.equal(groundedDefaults.ringCount, 3);
-assert.equal(groundedDefaults.segmentCount, 28);
-assert.equal(groundedDefaults.seed, 173);
-assert.equal(groundedDefaults.ringOverrides[0].heightOffset, 0);
-assert.equal(groundedDefaults.ringOverrides[1].heightOffset, 0.08);
-assert.equal(groundedDefaults.ringOverrides[2].heightOffset, 0.16);
+assert.equal(groundedDefaults.ringCount, 2);
+assert.equal(groundedDefaults.segmentCount, 22);
+assert.equal(groundedDefaults.seed, 62);
+assert.equal(groundedDefaults.minimumTiltDegrees, 1.63);
+assert.equal(groundedDefaults.maximumTiltDegrees, 7.99);
+assert.equal(groundedDefaults.ringOverrides[0].heightOffset, -0.047);
+assert.equal(groundedDefaults.ringOverrides[0].radiusScale, 0.7150872945785522);
+assert.equal(groundedDefaults.ringOverrides[1].heightOffset, -0.188);
+assert.equal(groundedDefaults.ringOverrides[1].radiusScale, 1.011);
+assert.equal(groundedDefaults.ringOverrides[1].lineColorA, 0xffffff);
 assert.notStrictEqual(
   groundedDefaults.ringOverrides,
   defaults.ringOverrides,
@@ -73,7 +77,7 @@ assert.equal(isolatedFoot.serialize(false), footBeforeGroundEdit);
 assert.ok(stored.has("test.spin.ground"));
 assert.equal(stored.has("test.spin.foot"), false);
 isolatedGround.reset();
-assert.equal(isolatedGround.value.ringCount, 3);
+assert.equal(isolatedGround.value.ringCount, 2);
 const post = settingsApi.createPostSpinRingSettings(defaults);
 assert.equal(post.current, 1.188);
 assert.equal(post.currentRate, 16);
@@ -110,10 +114,10 @@ for (let ring = 0; ring < azimuths.length; ring++) {
 }
 const groundedRings = new ringsApi.SpinOrbitalRings(groundedDefaults);
 assert.deepEqual(groundedRings.geometryStats, {
-  rings: 3,
-  segments: 28,
-  vertices: 420,
-  triangles: 672,
+  rings: 2,
+  segments: 22,
+  vertices: 220,
+  triangles: 352,
   uploads: 1,
 });
 assert.notStrictEqual(groundedRings, rings);

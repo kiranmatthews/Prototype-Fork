@@ -66,8 +66,8 @@ post-spin current/pulse values, then hide without a shrink or fade.
 
 Grounded skate spins use a second, independently tuned textureless mesh:
 
-- three rings × five rows × 28 segments = 420 vertices / 672 triangles;
-- cool cyan/violet/pink palette, low tilt and a 2.1 m board/lower-leg footprint;
+- two rings × five rows × 22 segments = 220 vertices / 352 triangles;
+- tuned gold/white/pink palette, low tilt and a 2.1 m board/lower-leg footprint;
 - separate geometry, pulse, distortion, per-ring overrides and browser storage;
 - active only for the grounded attack itself, with no post-spin linger.
 
