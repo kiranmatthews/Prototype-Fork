@@ -34,6 +34,15 @@ import {
 } from './skateboard/model';
 import { skateboardSettings } from './skateboard/settings';
 import {
+  ledgeBasis,
+  ledgeBlockerIntersects,
+  ledgeBodyBox,
+  ledgeEdgePoint,
+  ledgeLandingPoint,
+  ledgeTraversePoint,
+  type LedgeBasis,
+} from './ledgeTraversal';
+import {
   SpinEffectsPresentation,
   type SpinPresentationDiagnostics,
 } from './spin-effects/presentation';
@@ -93,6 +102,25 @@ export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'g
 const LEDGE_HANG_DEPTH = 1.25;
 const LEDGE_EASE = 0.12;
 const LEDGE_DOWN = new THREE.Vector3(0, -1, 0);
+const LEDGE_EDGE = new THREE.Vector3();
+const LEDGE_CANDIDATE = new THREE.Vector3();
+const LEDGE_RAY_ORIGIN = new THREE.Vector3();
+const LEDGE_LANDING = new THREE.Vector3();
+const LEDGE_PATH = new THREE.Vector3();
+const LEDGE_FACE_NORMAL = new THREE.Vector3();
+const LEDGE_NORMAL_MATRIX = new THREE.Matrix3();
+const LEDGE_BODY = new THREE.Box3();
+const LEDGE_INWARD_DEPTHS = [0.42, 0.56, 0.72, 0.9] as const;
+const LEDGE_FRAME_DIRECTIONS = [
+  [1, 0],
+  [Math.SQRT1_2, Math.SQRT1_2],
+  [0, 1],
+  [-Math.SQRT1_2, Math.SQRT1_2],
+  [-1, 0],
+  [-Math.SQRT1_2, -Math.SQRT1_2],
+  [0, -1],
+  [Math.SQRT1_2, -Math.SQRT1_2],
+] as const;
 const HANG_BOX = new THREE.Box3();
 const ROPE_P = new THREE.Vector3();
 const ROPE_DIR = new THREE.Vector3();
@@ -185,6 +213,11 @@ interface GroundHit {
   speedPadHold?: number;
   speedPadId?: number;
   undersideThickness?: number;
+}
+
+interface LedgeTop {
+  y: number;
+  moverId?: number;
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -693,9 +726,10 @@ export class Player {
   private ledgeEaseT = 0; // catch ease clock: pos glides from ledgeFrom to ledgeAnchor
   private readonly ledgeNormal = new THREE.Vector3(); // outward from the grabbed face
   private readonly ledgeAnchor = new THREE.Vector3(); // hang position (hands at the lip)
+  private readonly ledgeLanding = new THREE.Vector3(); // validated feet point inward of the lip
+  private ledgeMoverId: number | undefined; // moving support carried while hanging/climbing
   private readonly ledgeFrom = new THREE.Vector3(); // where the catch started (ease origin)
   private ledgeLip = 0; // TRUE landing height (probed walk surface, not the collider top)
-  private ledgeBox: THREE.Box3 | null = null; // the grabbed solid (climb clamps into its footprint)
   private ledgePose = 0; // visual weight of the hanging pose
   // the CLAMBER: a committed, animated pull-up-and-over (not a snap) — the
   // body eases up the face then over the lip along a rounded corner path
@@ -706,6 +740,7 @@ export class Player {
   private readonly ledgeClimbTo = new THREE.Vector3();
   private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
   private ledgeShimmy = 0; // live along-ledge slide input (-1..1) — drives the hand-over-hand
+  private ledgeClimbQueued = false; // preserves X pressed/held on the catch frame
   // baked Mixamo braced-hang clips: which one is playing, its clock, and the
   // exit overlay weight (drop/fall clips bleed into the first beat of the air)
   private hangClipName: keyof typeof HANG_ANIMS | null = null;
@@ -1599,13 +1634,15 @@ export class Player {
     this.ledgeT = 0;
     this.ledgeCoolT = 0;
     this.ledgeEaseT = 0;
-    this.ledgeBox = null;
+    this.ledgeLanding.set(0, 0, 0);
+    this.ledgeMoverId = undefined;
     this.ledgePose = 0;
     this.ledgePhase = 'grip';
     this.ledgeClimbT = 0;
     this.ledgeClimbK = 0;
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
+    this.ledgeClimbQueued = false;
     this.hangClipName = null;
     this.hangExitW = 0;
     this.wallridePose = 0;
@@ -6126,7 +6163,8 @@ export class Player {
     this.teetering = false;
     this.ropeObj = null;
     this.ledgeT = 0;
-    this.ledgeBox = null;
+    this.ledgeMoverId = undefined;
+    this.ledgeClimbQueued = false;
     this.hangClipName = null;
     this.hangExitW = 0;
   }
@@ -9645,6 +9683,198 @@ export class Player {
   //     top 0.25 under the walk surface, so the box lip alone lies.
   // The catch EASES to the hang anchor over a beat (never a teleport);
   // stepHang owns the state from there.
+  private probeWalkableLedgeTop(
+    level: Level,
+    x: number,
+    z: number,
+    rayTop: number,
+    rayBottom: number,
+    minY: number,
+    maxY: number,
+  ): LedgeTop | null {
+    this.raycaster.set(LEDGE_RAY_ORIGIN.set(x, rayTop, z), LEDGE_DOWN);
+    this.raycaster.near = 0;
+    this.raycaster.far = Math.max(0.05, rayTop - rayBottom);
+    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    for (const hit of hits) {
+      const data = hit.object.userData as { halfpipe?: unknown; vert?: boolean };
+      if (data.halfpipe || data.vert === true || !hit.face) continue;
+      LEDGE_FACE_NORMAL.copy(hit.face.normal)
+        .applyNormalMatrix(
+          LEDGE_NORMAL_MATRIX.getNormalMatrix(hit.object.matrixWorld),
+        )
+        .normalize();
+      if (LEDGE_FACE_NORMAL.y < 0.72) continue;
+      if (hit.point.y < minY || hit.point.y > maxY) continue;
+      return {
+        y: hit.point.y,
+        moverId: hit.object.userData.moverId as number | undefined,
+      };
+    }
+    return null;
+  }
+
+  private ledgeBodyBlocked(
+    feet: THREE.Vector3,
+    supportY: number,
+    level: Level,
+  ): boolean {
+    ledgeBodyBox(LEDGE_BODY, feet, CONST.playerHalf);
+    for (const wall of level.walls)
+      if (ledgeBlockerIntersects(wall, LEDGE_BODY, supportY)) return true;
+    for (const crate of level.crates)
+      if (
+        crate.alive &&
+        !crate.pending &&
+        ledgeBlockerIntersects(crate.box, LEDGE_BODY, supportY)
+      )
+        return true;
+    for (const crusher of level.crushers)
+      if (ledgeBlockerIntersects(crusher.box, LEDGE_BODY, supportY))
+        return true;
+    return false;
+  }
+
+  /**
+   * Resolve one candidate hang column into a real top and standing point.
+   * The edge stays open on the hanging side, while a walkable surface must
+   * exist inward. No original collider bounds are involved, so a straight
+   * ledge can cross seams and mesh catches are valid at any horizontal angle.
+   */
+  private refitLedgeFrame(
+    level: Level,
+    anchor: THREE.Vector3,
+    basis: LedgeBasis,
+    expectedLip: number,
+  ): void {
+    ledgeEdgePoint(LEDGE_EDGE, anchor, basis);
+    const edgeX = LEDGE_EDGE.x;
+    const edgeZ = LEDGE_EDGE.z;
+    const rayTop = expectedLip + 1.1;
+    const rayBottom = expectedLip - 0.9;
+    const minY = expectedLip - 0.45;
+    const maxY = expectedLip + 0.55;
+    const radius = 0.24;
+    let outwardX = 0;
+    let outwardZ = 0;
+    let supported = 0;
+    let open = 0;
+    for (const [dx, dz] of LEDGE_FRAME_DIRECTIONS) {
+      const hit = this.probeWalkableLedgeTop(
+        level,
+        edgeX + dx * radius,
+        edgeZ + dz * radius,
+        rayTop,
+        rayBottom,
+        minY,
+        maxY,
+      );
+      // Supported samples point inward, so their opposite contributes to the
+      // outward gradient; open samples already point outward.
+      const sign = hit === null ? 1 : -1;
+      outwardX += dx * sign;
+      outwardZ += dz * sign;
+      if (hit === null) open++;
+      else supported++;
+    }
+    if (supported === 0 || open === 0) return;
+    const next = ledgeBasis(
+      { x: outwardX, z: outwardZ },
+      CONST.playerHalf.x,
+      CONST.playerHalf.z,
+    );
+    if (next.nx * basis.nx + next.nz * basis.nz < 0.25) return;
+
+    const supportAt = (distance: number): boolean =>
+      this.probeWalkableLedgeTop(
+        level,
+        edgeX + next.nx * distance,
+        edgeZ + next.nz * distance,
+        rayTop,
+        rayBottom,
+        minY,
+        maxY,
+      ) !== null;
+    let inward = -0.32;
+    let outward = 0.32;
+    if (!supportAt(inward) || supportAt(outward)) {
+      inward = -0.65;
+      outward = 0.65;
+    }
+    if (!supportAt(inward) || supportAt(outward)) return;
+    for (let iteration = 0; iteration < 7; iteration++) {
+      const middle = (inward + outward) * 0.5;
+      if (supportAt(middle)) inward = middle;
+      else outward = middle;
+    }
+    const boundary = (inward + outward) * 0.5;
+    Object.assign(basis, next);
+    anchor.x = edgeX + basis.nx * (boundary + basis.skin);
+    anchor.z = edgeZ + basis.nz * (boundary + basis.skin);
+  }
+
+  private resolveLedgeSupport(
+    level: Level,
+    anchor: THREE.Vector3,
+    basis: LedgeBasis,
+    expectedLip: number,
+    landingOut: THREE.Vector3,
+  ): LedgeTop | null {
+    this.refitLedgeFrame(level, anchor, basis, expectedLip);
+    ledgeEdgePoint(LEDGE_EDGE, anchor, basis);
+    const rayTop = expectedLip + 1.35;
+    const rayBottom = expectedLip - 1.05;
+    const minY = expectedLip - 0.55;
+    const maxY = expectedLip + 0.65;
+
+    // A top continuing onto the hanging side means this is floor, not an edge.
+    const outside = this.probeWalkableLedgeTop(
+      level,
+      LEDGE_EDGE.x + basis.nx * 0.14,
+      LEDGE_EDGE.z + basis.nz * 0.14,
+      rayTop,
+      rayBottom,
+      minY,
+      maxY,
+    );
+    if (outside !== null) return null;
+
+    for (const depth of LEDGE_INWARD_DEPTHS) {
+      const x = LEDGE_EDGE.x - basis.nx * depth;
+      const z = LEDGE_EDGE.z - basis.nz * depth;
+      const lip = this.probeWalkableLedgeTop(
+        level,
+        x,
+        z,
+        rayTop,
+        rayBottom,
+        minY,
+        maxY,
+      );
+      if (lip === null) continue;
+      ledgeLandingPoint(landingOut, anchor, basis, depth, lip.y);
+      LEDGE_PATH.copy(anchor).setY(lip.y - LEDGE_HANG_DEPTH);
+      if (this.ledgeBodyBlocked(LEDGE_PATH, lip.y, level)) return null;
+      return lip;
+    }
+    return null;
+  }
+
+  private ledgeClimbPathClear(to: THREE.Vector3, level: Level): boolean {
+    const smooth = (value: number): number => value * value * (3 - 2 * value);
+    for (const t of [0.2, 0.4, 0.6, 0.8, 1] as const) {
+      const yK = smooth(Math.min(1, t / 0.65));
+      const hK = smooth(Math.max(0, (t - 0.35) / 0.65));
+      LEDGE_PATH.set(
+        THREE.MathUtils.lerp(this.pos.x, to.x, hK),
+        THREE.MathUtils.lerp(this.pos.y, to.y, yK),
+        THREE.MathUtils.lerp(this.pos.z, to.z, hK),
+      );
+      if (this.ledgeBodyBlocked(LEDGE_PATH, this.ledgeLip, level)) return false;
+    }
+    return true;
+  }
+
   private tryLedgeGrab(w: THREE.Box3, level: Level): boolean {
     if (
       (this.state !== 'ride' && this.state !== 'air') ||
@@ -9718,26 +9948,42 @@ export class Player {
     const pz = useX
       ? THREE.MathUtils.clamp(this.pos.z, w.min.z + 0.1, w.max.z - 0.1)
       : face - nz * 0.45;
-    const ray = new THREE.Raycaster(new THREE.Vector3(px, lipRough + 1.6, pz), LEDGE_DOWN, 0, 2.6);
-    const hits = ray.intersectObjects(level.groundMeshes, false);
-    if (hits.length === 0) return false;
-    const lip = hits[0].point.y;
-    if (lip < lipRough - 0.05 || lip > lipRough + 0.75) return false; // no walkable top at the lip = not a ledge
+    const lip = this.probeWalkableLedgeTop(
+      level,
+      px,
+      pz,
+      lipRough + 1.6,
+      lipRough - 1,
+      lipRough - 0.05,
+      lipRough + 0.75,
+    );
+    if (lip === null) return false; // no walkable top at the lip = not a ledge
     // it's a ledge — commit the catch (position settles in stepHang's ease)
     this.ledgeNormal.set(nx, 0, nz);
-    this.ledgeLip = lip;
-    this.ledgeBox = w;
+    this.ledgeLip = lip.y;
     const skin = (useX ? CONST.playerHalf.x : CONST.playerHalf.z) + 0.06;
     this.ledgeAnchor.set(
       useX ? face + nx * skin : THREE.MathUtils.clamp(this.pos.x, w.min.x + 0.3, w.max.x - 0.3),
-      lip - LEDGE_HANG_DEPTH,
+      lip.y - LEDGE_HANG_DEPTH,
       useX ? THREE.MathUtils.clamp(this.pos.z, w.min.z + 0.3, w.max.z - 0.3) : face + nz * skin,
     );
-    // SEAM GUARD: on multi-box structures, a face can sit flush against a
-    // neighboring solid — never ease the body into the neighbor's interior
-    for (const other of level.walls) {
-      if (other !== w && other.containsPoint(this.ledgeAnchor)) return false;
-    }
+    const basis = ledgeBasis(
+      this.ledgeNormal,
+      CONST.playerHalf.x,
+      CONST.playerHalf.z,
+    );
+    const resolvedLip = this.resolveLedgeSupport(
+      level,
+      this.ledgeAnchor,
+      basis,
+      lip.y,
+      this.ledgeLanding,
+    );
+    if (resolvedLip === null) return false;
+    this.ledgeNormal.set(basis.nx, 0, basis.nz);
+    this.ledgeLip = resolvedLip.y;
+    this.ledgeMoverId = resolvedLip.moverId;
+    this.ledgeAnchor.y = resolvedLip.y - LEDGE_HANG_DEPTH;
     return this.commitLedgeCatch();
   }
 
@@ -9785,22 +10031,15 @@ export class Player {
     // grip height and full reach? (verts and pipes are never "ledges")
     const top = this.pos.y + TUNING.ledgeReach + 0.9;
     const probe = (t: number): number | null => {
-      const ray = new THREE.Raycaster(
-        new THREE.Vector3(this.pos.x + hx * t, top, this.pos.z + hz * t),
-        LEDGE_DOWN,
-        0,
-        top - (this.pos.y + 0.55),
-      );
-      const hits = ray.intersectObjects(level.groundMeshes, false);
-      for (const h of hits) {
-        const ud = h.object.userData as { halfpipe?: unknown; vert?: boolean };
-        if (ud.halfpipe || ud.vert === true) return null; // vert faces stay rideable
-        if (!h.face) continue;
-        const ny = h.face.normal.clone().transformDirection(h.object.matrixWorld).y;
-        if (Math.abs(ny) < 0.72) return null; // a wall face, not a walkable lip
-        return h.point.y;
-      }
-      return null;
+      return this.probeWalkableLedgeTop(
+        level,
+        this.pos.x + hx * t,
+        this.pos.z + hz * t,
+        top,
+        this.pos.y + 0.55,
+        this.pos.y + 0.55,
+        this.pos.y + TUNING.ledgeReach,
+      )?.y ?? null;
     };
     const aheadLip = probe(0.62);
     if (aheadLip === null) return false;
@@ -9823,28 +10062,28 @@ export class Player {
     const fz = this.pos.z + hz * Math.max(0.1, edgeT - 0.06);
     this.ledgeNormal.set(-hx, 0, -hz);
     this.ledgeLip = aheadLip;
-    // synthetic footprint: a shelf reaching inward from the face — the climb
-    // lands inside it (the probe just proved that ground real) and the shimmy
-    // stays within its short tangent span
-    const box = new THREE.Box3();
-    const tx = -hz;
-    const tz = hx;
-    for (const [a, b] of [
-      [-1.2, 0],
-      [1.2, 0],
-      [-1.2, 2.4],
-      [1.2, 2.4],
-    ] as const) {
-      box.expandByPoint(new THREE.Vector3(fx + tx * a + hx * b, aheadLip, fz + tz * a + hz * b));
-    }
-    box.min.y = aheadLip - 3;
-    this.ledgeBox = box;
-    const skin = CONST.playerHalf.x + 0.06;
-    this.ledgeAnchor.set(fx - hx * skin, aheadLip - LEDGE_HANG_DEPTH, fz - hz * skin);
-    // seam guard: never ease the body into a real solid
-    for (const other of level.walls) {
-      if (other.containsPoint(this.ledgeAnchor)) return false;
-    }
+    const basis = ledgeBasis(
+      this.ledgeNormal,
+      CONST.playerHalf.x,
+      CONST.playerHalf.z,
+    );
+    this.ledgeAnchor.set(
+      fx + basis.nx * basis.skin,
+      aheadLip - LEDGE_HANG_DEPTH,
+      fz + basis.nz * basis.skin,
+    );
+    const resolvedLip = this.resolveLedgeSupport(
+      level,
+      this.ledgeAnchor,
+      basis,
+      aheadLip,
+      this.ledgeLanding,
+    );
+    if (resolvedLip === null) return false;
+    this.ledgeNormal.set(basis.nx, 0, basis.nz);
+    this.ledgeLip = resolvedLip.y;
+    this.ledgeMoverId = resolvedLip.moverId;
+    this.ledgeAnchor.y = resolvedLip.y - LEDGE_HANG_DEPTH;
     return this.commitLedgeCatch();
   }
 
@@ -9858,6 +10097,7 @@ export class Player {
     this.ledgeClimbK = 0;
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
+    this.ledgeClimbQueued = this.rawInput.jumpPressed || this.rawInput.jumpHeld;
     // NOTE: axisF/axisL are the CONTROL FRAME (stick -> world), owned by the
     // zone/lane system — the hang must never rotate them (that scrambles the
     // controls after you let go). Facing the wall is visualYaw, in stepHang.
@@ -9895,14 +10135,26 @@ export class Player {
   }
 
   // Hanging off a ledge. The hang owns the whole step (no physics/collide).
-  // GRIP phase: X (or up + X) starts the CLAMBER; holding the stick AWAY
-  // from the ledge for a beat lets go (hop down — no button needed); the
+  // GRIP phase: X always requests the CLAMBER; holding the stick AWAY without
+  // X for a beat lets go (hop down — no button needed); the
   // grip fails when the timer runs out. CLIMB phase: a committed, animated
   // pull-up-and-over — the body eases up the face, then over the lip along
   // a rounded corner, ending stood on the landing. Stick reading: moveY +1
   // is screen-UP (same convention as the movement + manual-flick code).
   private stepHang(dt: number, input: Input, level: Level): void {
     this.runTime += dt;
+    if (this.ledgeMoverId !== undefined) {
+      const delta = level.moverDelta(this.ledgeMoverId);
+      if (delta.lengthSq() > 0) {
+        this.pos.add(delta);
+        this.ledgeAnchor.add(delta);
+        this.ledgeLanding.add(delta);
+        this.ledgeFrom.add(delta);
+        this.ledgeClimbFrom.add(delta);
+        this.ledgeClimbTo.add(delta);
+        this.ledgeLip += delta.y;
+      }
+    }
     // essential shared timers (the hang early-outs before the main step body)
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
@@ -9965,10 +10217,13 @@ export class Player {
       const rSgn = this.freeSkate ? -1 : 1;
       const sx = rSgn * this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
       const sz = rSgn * this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
-      const tx = n.z; // ledge tangent (horizontal, perpendicular to the normal)
-      const tz = -n.x;
-      const shim = THREE.MathUtils.clamp(sx * tx + sz * tz, -1, 1);
-      const away = sx * n.x + sz * n.z;
+      const basis = ledgeBasis(n, CONST.playerHalf.x, CONST.playerHalf.z);
+      const shim = THREE.MathUtils.clamp(
+        sx * basis.tx + sz * basis.tz,
+        -1,
+        1,
+      );
+      const away = sx * basis.nx + sz * basis.nz;
       this.ledgeShimmy += ((Math.abs(shim) > 0.25 ? shim : 0) - this.ledgeShimmy) * Math.min(1, 12 * dt);
       // clip selection: the catch hands off to the idle loop; shimmying swaps
       // in the hand-over-hand traverse for that direction
@@ -9977,38 +10232,50 @@ export class Player {
         if (Math.abs(shim) > 0.25) this.setHangClip(shim > 0 ? 'shimmyR' : 'shimmyL', 0, true);
         else this.setHangClip('idle', 0, true);
       }
+      let didShimmy = false;
       if (Math.abs(shim) > 0.25 && this.ledgeEaseT >= LEDGE_EASE) {
-        // sidle along the lip — never past the corners, and only where the
-        // landing probe still finds a standable lip (re-probed as you move)
-        const w = this.ledgeBox;
-        const step = shim * 2.4 * dt;
-        let ax = this.ledgeAnchor.x + tx * step;
-        let az = this.ledgeAnchor.z + tz * step;
-        if (w) {
-          if (tx !== 0) ax = THREE.MathUtils.clamp(ax, w.min.x + 0.3, w.max.x - 0.3);
-          else az = THREE.MathUtils.clamp(az, w.min.z + 0.3, w.max.z - 0.3);
-          const ppx = n.x !== 0 ? (n.x > 0 ? w.max.x : w.min.x) - n.x * 0.45 : ax;
-          const ppz = n.x !== 0 ? az : (n.z > 0 ? w.max.z : w.min.z) - n.z * 0.45;
-          const ray = new THREE.Raycaster(new THREE.Vector3(ppx, w.max.y + 1.6, ppz), LEDGE_DOWN, 0, 2.6);
-          const hits = ray.intersectObjects(level.groundMeshes, false);
-          const lip = hits.length > 0 ? hits[0].point.y : NaN;
-          if (lip >= w.max.y - 0.05 && lip <= w.max.y + 0.75) {
-            this.ledgeAnchor.x = ax;
-            this.ledgeAnchor.z = az;
-            this.ledgeLip = lip;
-            this.ledgeAnchor.y = lip - LEDGE_HANG_DEPTH; // hands track the surface
-          }
+        // Advance in the true tangent frame and accept the step only while an
+        // inward top plus outside air still define a ledge. Original collider
+        // bounds are deliberately irrelevant: adjacent slabs and a long mesh
+        // edge are one traversable lip.
+        ledgeTraversePoint(
+          LEDGE_CANDIDATE,
+          this.ledgeAnchor,
+          basis,
+          shim * 2.4 * dt,
+        );
+        const lip = this.resolveLedgeSupport(
+          level,
+          LEDGE_CANDIDATE,
+          basis,
+          this.ledgeLip,
+          LEDGE_LANDING,
+        );
+        if (lip !== null) {
+          this.ledgeAnchor.copy(LEDGE_CANDIDATE);
+          this.ledgeNormal.set(basis.nx, 0, basis.nz);
+          this.ledgeAnchor.y = lip.y - LEDGE_HANG_DEPTH;
+          this.ledgeLanding.copy(LEDGE_LANDING);
+          this.ledgeLip = lip.y;
+          this.ledgeMoverId = lip.moverId;
+          didShimmy = true;
         }
       }
       this.pos.lerpVectors(this.ledgeFrom, this.ledgeAnchor, k * k * (3 - 2 * k));
       // actively shimmying holds the grip (you're re-setting your hands) —
-      // only an idle hang runs the timer out
-      if (Math.abs(shim) <= 0.25) this.ledgeT -= dt;
+      // requested motion that an actual end blocks does not create an infinite
+      // hang: only real displacement refreshes the hands.
+      if (!didShimmy) this.ledgeT -= dt;
       const pullingAway = away > 0.55;
-      this.ledgeAwayT = pullingAway ? this.ledgeAwayT + dt : 0;
-      if (input.jumpPressed) {
-        if (pullingAway) this.ledgeHopDown();
-        else this.startLedgeClimb(); // plain X, or toward/up + X
+      if (input.jumpPressed) this.ledgeClimbQueued = true;
+      const climbRequested =
+        this.ledgeEaseT >= LEDGE_EASE && this.ledgeClimbQueued;
+      this.ledgeAwayT =
+        pullingAway && !this.ledgeClimbQueued ? this.ledgeAwayT + dt : 0;
+      if (climbRequested) {
+        this.ledgeClimbQueued = false;
+        this.ledgeAwayT = 0;
+        this.startLedgeClimb(level);
       } else if (this.ledgeAwayT > 0.1) {
         this.ledgeHopDown(); // held away: let go (the debounce eats stick noise at the catch)
       } else if (this.ledgeT <= 0) {
@@ -10019,27 +10286,42 @@ export class Player {
     this.measurePlanar(dt);
   }
 
-  // Commit the clamber: aim the path at the landing spot — inward past the
-  // lip, clamped into the solid's footprint so even a thin wall's top works.
-  private startLedgeClimb(): void {
-    const n = this.ledgeNormal;
-    const w = this.ledgeBox;
-    const alongX = n.x !== 0;
-    const face = w ? (alongX ? (n.x > 0 ? w.max.x : w.min.x) : n.z > 0 ? w.max.z : w.min.z) : alongX ? this.pos.x : this.pos.z;
-    const depth = w ? (alongX ? w.max.x - w.min.x : w.max.z - w.min.z) : 2;
-    const inward = Math.min(0.4, Math.max(0.1, depth * 0.5 - 0.05)); // never past the far side
-    this.ledgeClimbFrom.copy(this.pos);
-    this.ledgeClimbTo.set(
-      alongX ? face - n.x * inward : this.pos.x,
-      this.ledgeLip + 0.06,
-      alongX ? this.pos.z : face - n.z * inward,
+  // Commit the clamber only after re-validating its inward landing and the
+  // whole standing-body path. A real overhang leaves us in grip (traversal is
+  // still available); ordinary open ledges always receive the same proven
+  // landing point that their shimmy uses.
+  private startLedgeClimb(level: Level): boolean {
+    const basis = ledgeBasis(
+      this.ledgeNormal,
+      CONST.playerHalf.x,
+      CONST.playerHalf.z,
     );
+    LEDGE_CANDIDATE.copy(this.ledgeAnchor);
+    const lip = this.resolveLedgeSupport(
+      level,
+      LEDGE_CANDIDATE,
+      basis,
+      this.ledgeLip,
+      LEDGE_LANDING,
+    );
+    if (lip === null) return false;
+    this.ledgeAnchor.copy(LEDGE_CANDIDATE);
+    this.ledgeNormal.set(basis.nx, 0, basis.nz);
+    this.ledgeLip = lip.y;
+    this.ledgeMoverId = lip.moverId;
+    this.ledgeAnchor.y = lip.y - LEDGE_HANG_DEPTH;
+    this.ledgeLanding.copy(LEDGE_LANDING);
+    this.ledgeClimbFrom.copy(this.pos);
+    this.ledgeClimbTo.copy(this.ledgeLanding);
+    this.ledgeClimbTo.y += 0.06;
+    if (!this.ledgeClimbPathClear(this.ledgeClimbTo, level)) return false;
     this.ledgePhase = 'climb';
     this.ledgeClimbT = 0;
     this.ledgeClimbK = 0;
     this.setHangClip('climb', Math.max(0.12, TUNING.ledgeClimbTime)); // clip time-fits the clamber
     sfx.play('ollie', 0.4, 1.15);
     this.emitDust(2);
+    return true;
   }
 
   // X + away: kick off the wall and drop back down where you came from.
