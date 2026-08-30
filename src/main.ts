@@ -53,6 +53,8 @@ import {
   type RenderQualityPanel,
 } from "./render-quality/panel";
 import { PresentationFrameLimiter } from "./render-quality/frameLimiter";
+import { createSkateboardTuningPanel } from "./skateboard/panel";
+import { skateboardSettings } from "./skateboard/settings";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -1010,6 +1012,9 @@ renderQualityPanel.setMetrics(renderQualitySizes, fixedResolutionActive());
 renderQualitySettings.subscribe(() => {
   resetRenderFrameLimiter();
   resize();
+});
+const skateboardPanel = createSkateboardTuningPanel({
+  settings: skateboardSettings,
 });
 const recorder = new Recorder();
 const replayer = new Replayer();
@@ -3134,6 +3139,8 @@ requestAnimationFrame(frame);
   crtGuestPanel,
   renderQualitySettings,
   renderQualityPanel,
+  skateboardSettings,
+  skateboardPanel,
   getRenderQualitySizes: () => ({ ...renderQualitySizes }),
   getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,

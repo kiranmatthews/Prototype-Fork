@@ -27,6 +27,12 @@ import { puffs, surfaceFromName } from './puffs';
 import { Tail, type TailCollider } from './tail';
 import { cutsFor } from './modelcuts';
 import { RenderInterpolator } from './renderInterpolation';
+import {
+  createSkateboardPresentation,
+  rebuildSkateboardPresentation,
+  skateboardRestingPivotLift,
+} from './skateboard/model';
+import { skateboardSettings } from './skateboard/settings';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
@@ -98,9 +104,9 @@ const VERT_TRACK_STEPS = [0.15, 0.05, 0, -0.12, -0.26, -0.45, -0.7];
 // the committed swing between top and under takes.
 const UNDER_RAIL_DEPTH = 1.65;
 const UNDER_RAIL_SWING = 0.32;
-// Deck-plant scratch (see plantOnDeck). The grip tape sits 0.205 up the
-// board group's own space: the deck box is 0.09 thick, centred at 0.16.
-const PLANT_DECK_TOP = 0.205;
+// Deck-plant fallback for a malformed/custom board. The production value is
+// read live from boardG.userData.gripTop so the Unity shape lab can tune it.
+const PLANT_DECK_TOP = 0.19172483682632447;
 // How far up from a foot's lowest vertex still counts as "the sole".
 const SOLE_BAND = 0.03;
 // Additional animation pivot seated at the procedural rider's waist. The
@@ -6369,6 +6375,12 @@ export class Player {
         fb.quaternion.setFromRotationMatrix(
           new THREE.Matrix4().makeBasis(right, settledUp, forward),
         );
+        // Unity's loose-board presentation lifts an artwork-up deck by its
+        // actual kicked/concave bounds. Without this, the new continuous deck
+        // sinks almost a quarter metre through the floor when it lands upside
+        // down because its root is the wheel-contact pivot, not mesh centre.
+        fb.position.y =
+          g.y + Math.max(0.06, skateboardRestingPivotLift(fb, fb.quaternion));
         this.flyBoardAng.set(0, 0, 0);
         sfx.play('skateHalt', 0.18, 1.5);
       }
@@ -10765,13 +10777,14 @@ export class Player {
       if (v.x < lo) lo = v.x;
       if (v.x > hi) hi = v.x;
     }
-    // Deck box: 0.09 thick, centred 0.16 up its own group — so the grip tape
-    // is 0.205 in deck-geometry units, whatever the board is doing in world.
-    // Vertical: lift until the DEEPEST corner rests on the grip, so nothing
+    // The presentation publishes its authored centreline grip height in the
+    // board root's own space. Vertical: lift until the DEEPEST corner rests on
+    // the grip, so nothing
     // clips. Lateral: centre the whole two-foot footprint across the width
     // rather than its average, which is what actually minimises the overhang
     // when the two feet sit at different points across the deck.
-    const dy = PLANT_DECK_TOP - minY;
+    const gripTop = Number(bg.userData.gripTop ?? PLANT_DECK_TOP);
+    const dy = (Number.isFinite(gripTop) ? gripTop : PLANT_DECK_TOP) - minY;
     const dx = -0.5 * (lo + hi);
     // Back out of the deck frame: rotation and scale only, never its position
     // (that's the board's own animation, not ours to cancel).
@@ -12029,11 +12042,10 @@ export class Player {
 
   }
 
-  // Character/board skins: painted in a `size`-unit space onto a 4x canvas, so
+  // Character skins: painted in a `size`-unit space onto a 4x canvas, so
   // the artwork keeps its designed proportions at four times the texels. The
-  // old `crisp` flag pinned some of these to NearestFilter for hard grip-tape
-  // grit; that was an era choice, and the grit now comes from the speckle pass
-  // resolving properly instead of from a blocky magnifier.
+  // old `crisp` flag pinned some of these to NearestFilter; the procedural
+  // character textures now all resolve smoothly.
   private paintTex(size: number, draw: (ctx: CanvasRenderingContext2D) => void): THREE.CanvasTexture {
     const SS = 4;
     const canvas = document.createElement('canvas');
@@ -12043,14 +12055,6 @@ export class Player {
     ctx.scale(SS, SS);
     draw(ctx);
     return Level.finishTex(new THREE.CanvasTexture(canvas), false);
-  }
-
-  // 1px noise pass — grip-tape grit only now; fabric and skin get airbrush.
-  private speckle(ctx: CanvasRenderingContext2D, size: number, color: string, n: number): void {
-    ctx.fillStyle = color;
-    for (let i = 0; i < n; i++) {
-      ctx.fillRect(Math.floor(Math.random() * size), Math.floor(Math.random() * size), 1, 1);
-    }
   }
 
   // Low-alpha radial blobs — the painterly shading pass for fabric and skin,
@@ -12074,18 +12078,6 @@ export class Player {
       ctx.fillStyle = grad;
       ctx.fillRect(x - r, y - r, r * 2, r * 2);
     }
-  }
-
-  // 5-point star path — chest logo and the grip-tape spray stencil share it.
-  private starPath(ctx: CanvasRenderingContext2D, cx: number, cy: number, rOut: number, rIn: number): void {
-    ctx.beginPath();
-    for (let i = 0; i < 10; i++) {
-      const r = i % 2 === 0 ? rOut : rIn;
-      const a = -Math.PI / 2 + (i * Math.PI) / 5;
-      if (i === 0) ctx.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-      else ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-    }
-    ctx.closePath();
   }
 
   // ——— The authored kangaroo girl (models/roo.glb, made in Meshy) ————————
@@ -12883,116 +12875,19 @@ export class Player {
     g.name = 'player-visual';
     const lam = (tex: THREE.CanvasTexture) => new THREE.MeshLambertMaterial({ map: tex });
 
-    // Board (visual only), nose toward local +Z. Grouped with its wheels so
-    // grabs can pull the whole board up into the hand. Multi-material box:
-    // grip speckle on top, deck art on the BOTTOM — the underside is what the
-    // camera actually sees through grabs and flips, so the flames go there.
-    // Grip stays crisp — texel grit IS grip tape; the art shades smooth.
-    const boardG = new THREE.Group();
-    boardG.name = 'board'; // findable from the scene graph (probes, debugging)
-    const gripM = lam(this.paintTex(64, (ctx) => {
-      ctx.fillStyle = '#17181c';
-      ctx.fillRect(0, 0, 64, 64);
-      for (let i = 0; i < 130; i++) {
-        const v = 44 + Math.floor(Math.random() * 46);
-        ctx.fillStyle = `rgb(${v},${v},${v + 6})`;
-        ctx.fillRect(Math.floor(Math.random() * 64), Math.floor(Math.random() * 64), 1, 1);
-      }
-      this.speckle(ctx, 64, 'rgba(0,0,0,0.5)', 40);
-      // spray-stencil star, half scuffed away by foot drag
-      ctx.fillStyle = 'rgba(255,122,31,0.85)';
-      this.starPath(ctx, 32, 32, 11, 4.5);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(23,24,28,0.6)';
-      for (let i = 0; i < 30; i++) ctx.fillRect(20 + Math.random() * 22, 20 + Math.random() * 22, 2, 1);
-    }));
-    const artM = lam(this.paintTex(128, (ctx) => {
-      // underside art: magenta dusk gradient, curling flames off the tail,
-      // star sparkles — airbrushed, no hard bands
-      const dusk = ctx.createLinearGradient(0, 0, 0, 128);
-      dusk.addColorStop(0, '#241047');
-      dusk.addColorStop(0.45, '#631d7e');
-      dusk.addColorStop(1, '#a1289a');
-      ctx.fillStyle = dusk;
-      ctx.fillRect(0, 0, 128, 128);
-      const flame = (color: string, h: number) => {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(0, 128);
-        for (let x = 0; x <= 128; x += 16) {
-          const peak = 128 - h - Math.sin(x * 0.3) * 9 - Math.random() * 12;
-          ctx.quadraticCurveTo(x + 4, peak + 16, x + 8, peak);
-          ctx.quadraticCurveTo(x + 12, peak + 16, x + 16, 128 - h * 0.3);
-        }
-        ctx.lineTo(128, 128);
-        ctx.closePath();
-        ctx.fill();
-      };
-      flame('#ff7a1f', 52);
-      flame('#ffd23f', 30);
-      flame('#fff3c4', 12);
-      ctx.fillStyle = '#f4f1e6';
-      for (const [x, y] of [[24, 20], [100, 14], [66, 32]]) {
-        ctx.beginPath(); // soft 4-point sparkle
-        ctx.moveTo(x, y - 7);
-        ctx.quadraticCurveTo(x + 1.5, y - 1.5, x + 7, y);
-        ctx.quadraticCurveTo(x + 1.5, y + 1.5, x, y + 7);
-        ctx.quadraticCurveTo(x - 1.5, y + 1.5, x - 7, y);
-        ctx.quadraticCurveTo(x - 1.5, y - 1.5, x, y - 7);
-        ctx.fill();
-      }
-    }));
-    const edgeM = new THREE.MeshLambertMaterial({ color: 0xd89b52 }); // ply edge
-    const deckMats = [edgeM, edgeM, gripM, artM, edgeM, edgeM]; // +x -x top bottom +z -z
-    const deck = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.09, 1.4), deckMats);
-    deck.position.y = 0.16;
-    boardG.add(deck);
-    // Rounded kicked nose/tail: squashed cylinder caps — grip up, art down,
-    // ply on the rim — so the plank silhouette curves instead of boxing off.
-    const kickGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.08, 10);
-    const kickMats = [edgeM, gripM, artM]; // side, top cap, bottom cap
-    for (const side of [-1, 1]) {
-      const kick = new THREE.Mesh(kickGeo, kickMats);
-      kick.scale.z = 1.35; // stretched into an oval nose
-      kick.position.set(0, 0.175, side * 0.72);
-      kick.rotation.x = -side * 0.3;
-      boardG.add(kick);
-    }
-    const truckM = new THREE.MeshLambertMaterial({ color: 0xb9bfc9 });
-    const truckGeo = new THREE.BoxGeometry(0.32, 0.07, 0.1);
-    const wheelM = new THREE.MeshLambertMaterial({ color: 0xe0568a }); // pink urethane
-    const wheelGeo = new THREE.CylinderGeometry(0.068, 0.068, 0.1, 10);
-    for (const z of [0.55, -0.55]) {
-      const truck = new THREE.Mesh(truckGeo, truckM);
-      truck.position.set(0, 0.1, z);
-      boardG.add(truck);
-      for (const x of [-0.21, 0.21]) {
-        const wheel = new THREE.Mesh(wheelGeo, wheelM);
-        wheel.rotation.z = Math.PI / 2; // axle along x
-        wheel.position.set(x, 0.068, z);
-        boardG.add(wheel);
-      }
-    }
-    // Stable hand-contact anchors for grabs. They live in board-local space,
-    // so every existing flip/grab transform carries them automatically.
-    const boardSockets: Array<[string, number, number]> = [
-      ['socket-board-left', 0.25, 0],
-      ['socket-board-right', -0.25, 0],
-      ['socket-board-nose', 0, 0.72],
-      ['socket-board-tail', 0, -0.72],
-    ];
-    for (const [name, x, z] of boardSockets) {
-      const socket = new THREE.Object3D();
-      socket.name = name;
-      socket.position.set(x, 0.205, z);
-      socket.userData.gripNormal = [0, 1, 0];
-      boardG.add(socket);
-    }
-    // The deck reads ~25% oversized against the body — scale the whole board
-    // group down (grab lift/tip animate position/rotation, unaffected).
-    boardG.scale.setScalar(0.8);
+    // Production Unity Surf Cruiser, presentation only. Its exact 3,148-vertex
+    // seven-material deck, orange-sun art, imported truck and procedural
+    // wheels replace the old box/cylinder cosmetic without touching movement.
+    const boardG = createSkateboardPresentation(skateboardSettings.value);
+    // bodyGroup is deliberately stretched for the rider. Cancel that scale on
+    // the skateboard so Unity's authored metre dimensions survive in world.
+    boardG.scale.set(1 / 1.18, 1 / 1.36, 1 / 1.18);
+    boardG.userData.preserveResourcesOnRebuild = true;
     g.add(boardG);
     this.boardG = boardG;
+    skateboardSettings.subscribe((value) => {
+      rebuildSkateboardPresentation(boardG, value);
+    });
 
     // The rider rides in her own group (see riderG): the board is pinned to
     // the physics point, and SHE gets to move relative to it.

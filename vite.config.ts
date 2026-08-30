@@ -12,6 +12,7 @@ export default defineConfig({
         // the freshly fetched HTML.
         index: 'index.html',
         crtReview: 'crt-review.html',
+        skateboardLab: 'skateboard-lab.html',
       },
     },
   },
