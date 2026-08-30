@@ -2,11 +2,12 @@
 //
 // Exact active order from Unity 6000.5.7f1 / URP when every authored stage is
 // enabled:
-//   RenderPass -> SMAA High -> UnityPostPass -> gameplay HUD -> CRT Guest
-//   -> OutputPass
+//   RenderPass -> SMAA High -> UnityBloomPass -> UnityPostPass -> gameplay HUD
+//   -> CRT Guest -> OutputPass
 //
-// UnityPostPass owns only neutral LDR Uber grading and dithering. Glow/bloom
-// belongs to the separately authored CRT/presentation path.
+// Bloom owns a lazy capped HDR mip pyramid. UnityPostPass owns colored
+// vignette, source-order exposure/tonemapping, a change-driven 32^3 LDR LUT,
+// and dithering.
 // CRT Guest encodes that linear result into its expected sRGB working space,
 // runs the canonical chain, then decodes to linear again. OutputPass alone
 // performs the renderer's final display transfer.
@@ -17,6 +18,7 @@ import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { Pass } from "three/examples/jsm/postprocessing/Pass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UNITY_POST_PROFILE, UnityPostPass } from "./unityPost";
+import { UnityBloomPass } from "./unityBloom";
 import { UnitySmaaPass } from "./unitySmaa";
 import { CrtGuestPass } from "./crt-guest/pass";
 import {
@@ -140,6 +142,7 @@ export class CoastPostRenderer {
   private readonly composer: EffectComposer;
   private readonly renderPass: RenderPass;
   private readonly smaaPass: UnitySmaaPass;
+  private readonly bloomPass: UnityBloomPass;
   private readonly unityPostPass: UnityPostPass;
   private readonly preCrtOverlayPass: PreCrtOverlayPass;
   private readonly crtPass: CrtGuestPass | null;
@@ -221,6 +224,10 @@ export class CoastPostRenderer {
       this.width * this.pixelRatio,
       this.height * this.pixelRatio,
     );
+    this.bloomPass = new UnityBloomPass(
+      this.width * this.pixelRatio,
+      this.height * this.pixelRatio,
+    );
     this.unityPostPass = new UnityPostPass(
       this.width * this.pixelRatio,
       this.height * this.pixelRatio,
@@ -241,6 +248,7 @@ export class CoastPostRenderer {
 
     this.composer.addPass(this.renderPass);
     this.composer.addPass(this.smaaPass);
+    this.composer.addPass(this.bloomPass);
     this.composer.addPass(this.unityPostPass);
     this.composer.addPass(this.preCrtOverlayPass);
     if (this.crtPass) this.composer.addPass(this.crtPass);
@@ -290,6 +298,13 @@ export class CoastPostRenderer {
 
   get crt(): CrtGuestPass | null {
     return this.crtPass;
+  }
+
+  get lookDiagnostics() {
+    return {
+      bloom: this.bloomPass.diagnostics,
+      lut: this.unityPostPass.lutDiagnostics,
+    };
   }
 
   get resolution(): CoastPostResolutionState {
@@ -432,6 +447,7 @@ export class CoastPostRenderer {
     if (this.disposed) return;
     this.disposed = true;
     this.smaaPass.dispose();
+    this.bloomPass.dispose();
     this.unityPostPass.dispose();
     this.crtPass?.dispose();
     this.crtOutputTarget?.dispose();
@@ -602,12 +618,14 @@ export class CoastPostRenderer {
 
   private syncPassEnablement(): void {
     const crtActive = this.crtPass?.active ?? false;
+    const unityPostActive = this.enabledState && !this.liteState;
     // Entering an offscreen composer drops the WebGLRenderer's default-buffer
     // MSAA. Keep Unity SMAA High in front of either authored post path.
     this.smaaPass.enabled =
       !this.noSmaa &&
       (this.resolutionMode === "fixed" || this.enabledState || crtActive);
-    this.unityPostPass.enabled = this.enabledState;
+    this.bloomPass.setPresentationEnabled(unityPostActive);
+    this.unityPostPass.enabled = unityPostActive;
     if (this.crtPass) this.crtPass.enabled = true;
   }
 

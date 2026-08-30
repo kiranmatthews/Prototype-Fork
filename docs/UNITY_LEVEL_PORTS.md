@@ -26,11 +26,13 @@ in-game authored level; imported Unity meshes do not own gameplay collision.
 
 ## Shared presentation
 
-The `LOOK` tab owns exposure, contrast, saturation, color filter, local bloom
-and vignette in one fullscreen pass. Coast, Bonus and Meshy source presets are
+The `LOOK` tab owns one shared Unity-shaped presentation stack: an HDR Gaussian
+bloom pyramid followed by colored vignette, exposure/tone mapping and a
+change-driven 32³ LDR grading LUT. Coast, Bonus and Meshy source presets remain
 global conveniences, not level-owned saved values; this intentionally leaves
 room for per-level persistence later without maintaining multiple render
-stacks.
+stacks. The source values, stage order, performance caps and diagnostics are
+recorded in `docs/UNITY_VISUAL_TREATMENT.md`.
 
 Bonus uses the four owner-supplied, registered 1672×941 layers in
 `public/bonus-parallax/`. A camera-aligned compositor preserves the Unity

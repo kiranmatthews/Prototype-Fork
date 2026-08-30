@@ -40,21 +40,53 @@ for (const contract of [
   "this.crtPass.setResolution",
   "OutputPass remains the sole display transfer",
   'this.resolutionMode === "fixed"',
+  "new UnityBloomPass(",
+  "this.bloomPass.diagnostics",
+  "this.bloomPass.dispose()",
 ]) {
   assert.ok(coast.includes(contract), `presentation renderer missing ${contract}`);
 }
+const smaaPassAt = coast.indexOf("this.composer.addPass(this.smaaPass)");
+const bloomPassAt = coast.indexOf("this.composer.addPass(this.bloomPass)");
 const unityPassAt = coast.indexOf("this.composer.addPass(this.unityPostPass)");
 const hudPassAt = coast.indexOf("this.composer.addPass(this.preCrtOverlayPass)");
 const crtPassAt = coast.indexOf("this.composer.addPass(this.crtPass)");
 assert.ok(
-  unityPassAt >= 0 && unityPassAt < hudPassAt && hudPassAt < crtPassAt,
-  "gameplay overlay pass must sit after Unity grading and before CRT",
+  smaaPassAt >= 0 &&
+    smaaPassAt < bloomPassAt &&
+    bloomPassAt < unityPassAt &&
+    unityPassAt < hudPassAt &&
+    hudPassAt < crtPassAt,
+  "bloom and grading must remain between SMAA and the pre-CRT gameplay HUD",
 );
 assert.match(
   coast,
   /class PreCrtOverlayPass extends Pass[\s\S]*?this\.needsSwap = false/,
   "gameplay overlay must mutate the current colour buffer without a swap",
 );
+assert.match(
+  coast,
+  /this\.configureComposer\(this\.inputWidth, this\.inputHeight, 1\)/,
+  "fixed mode must size bloom/grading through the pre-CRT composer input",
+);
+assert.doesNotMatch(
+  coast,
+  /new UnityBloomPass\([\s\S]{0,120}(?:outputWidth|outputHeight)/,
+  "bloom allocation must never derive from scaled CRT output dimensions",
+);
+
+const bloom = await text("src/unityBloom.ts");
+for (const contract of [
+  "UNITY_BLOOM_MAX_DIMENSION = 960",
+  "unityBloomPyramidSpec(",
+  "sourceWidth / downscale",
+  "sourceHeight / downscale",
+  "if (largest > UNITY_BLOOM_MAX_DIMENSION)",
+  "this.sourceWidth = Math.max(1, Math.floor(width))",
+  "this.sourceHeight = Math.max(1, Math.floor(height))",
+]) {
+  assert.ok(bloom.includes(contract), `fixed-input bloom sizing missing ${contract}`);
+}
 
 const crt = await text("src/crt-guest/pass.ts");
 for (const contract of [

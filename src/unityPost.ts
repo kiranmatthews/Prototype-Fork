@@ -1,9 +1,7 @@
-// Unity 6 URP neutral LDR output port.
-//
-// Bloom and screen-space lens flare intentionally do not live in this pass.
-// The active contract is the remaining Uber output permutation only:
-// Tonemapping None's required saturation, the neutral 32^3 internal LUT, and
-// 8-bit dithering. Three's OutputPass owns the final linear-to-sRGB transfer.
+// Unity 6 URP Uber output port: colored vignette, exposure/tonemapping,
+// change-driven 32^3 LDR grading LUT, and 8-bit dithering. The separate
+// UnityBloomPass feeds this pass before HUD/CRT; OutputPass remains the only
+// final linear-to-sRGB transfer.
 
 import * as THREE from "three";
 import {
@@ -11,9 +9,11 @@ import {
   Pass,
 } from "three/examples/jsm/postprocessing/Pass.js";
 import {
+  DEFAULT_VISUAL_TREATMENT,
   visualTreatmentSettings,
   type VisualTreatmentValue,
 } from "./visual-treatment/settings";
+import { UnityColorLut } from "./unityColorLut";
 
 export const UNITY_POST_PROFILE = Object.freeze({
   output: Object.freeze({
@@ -46,35 +46,48 @@ const FINAL_GRADE_FRAGMENT = /* glsl */ `
   uniform float uLutEnabled;
   uniform float uDitherEnabled;
   uniform float uLookEnabled;
-  uniform vec2 uTexelSize;
-  uniform vec3 uColorGrade;
-  uniform vec3 uTint;
-  uniform vec3 uBloom;
-  uniform vec2 uVignette;
+  uniform float uPostExposure;
+  uniform float uToneMapper;
+  uniform vec3 uVignetteColor;
+  uniform vec4 uVignetteParams;
+  uniform float uVignetteRoundness;
   varying vec2 vUv;
 
-  vec3 brightSample(vec2 uv, float threshold) {
-    vec3 sampleColor = texture2D(tSource, clamp(uv, 0.0, 1.0)).rgb;
-    float luminance = dot(sampleColor, vec3(0.2126, 0.7152, 0.0722));
-    float weight = smoothstep(threshold, threshold + 0.22, luminance);
-    return sampleColor * weight;
+  vec3 neutralCurve(vec3 x) {
+    const float a = 0.2;
+    const float b = 0.29;
+    const float c = 0.24;
+    const float d = 0.272;
+    const float e = 0.02;
+    const float f = 0.3;
+    return ((x * (a * x + c * b) + d * e)
+      / (x * (a * x + b) + d * f)) - e / f;
   }
 
-  vec3 localBloom(float threshold, float radius) {
-    vec2 x = vec2(uTexelSize.x * radius, 0.0);
-    vec2 y = vec2(0.0, uTexelSize.y * radius);
-    vec2 d1 = vec2(x.x, y.y) * 0.70710678;
-    vec2 d2 = vec2(x.x, -y.y) * 0.70710678;
-    vec3 sum = brightSample(vUv, threshold) * 0.2;
-    sum += brightSample(vUv + x, threshold) * 0.1;
-    sum += brightSample(vUv - x, threshold) * 0.1;
-    sum += brightSample(vUv + y, threshold) * 0.1;
-    sum += brightSample(vUv - y, threshold) * 0.1;
-    sum += brightSample(vUv + d1, threshold) * 0.1;
-    sum += brightSample(vUv - d1, threshold) * 0.1;
-    sum += brightSample(vUv + d2, threshold) * 0.1;
-    sum += brightSample(vUv - d2, threshold) * 0.1;
-    return sum;
+  vec3 neutralTonemap(vec3 color) {
+    color = min(max(color, 0.0), 435.18712);
+    vec3 whiteScale = 1.0 / neutralCurve(vec3(5.3));
+    return neutralCurve(color * whiteScale) * whiteScale;
+  }
+
+  vec3 acesTonemap(vec3 color) {
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+    return clamp((color * (a * color + b)) / (color * (c * color + d) + e), 0.0, 1.0);
+  }
+
+  vec3 applyVignette(vec3 color) {
+    vec2 distanceFromCenter = abs(vUv - uVignetteParams.xy)
+      * uVignetteParams.z;
+    distanceFromCenter.x *= uVignetteRoundness;
+    float factor = pow(
+      clamp(1.0 - dot(distanceFromCenter, distanceFromCenter), 0.0, 1.0),
+      uVignetteParams.w
+    );
+    return color * mix(uVignetteColor, vec3(1.0), factor);
   }
 
   vec3 applyInternalLut(vec3 color) {
@@ -123,27 +136,14 @@ const FINAL_GRADE_FRAGMENT = /* glsl */ `
     vec4 source = texture2D(tSource, vUv);
     vec3 color = source.rgb;
 
-    if (uLookEnabled > 0.5) {
-      color += localBloom(uBloom.y, uBloom.z) * uBloom.x;
-      color *= exp2(uColorGrade.x);
-      float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
-      color = mix(vec3(luminance), color, uColorGrade.z);
-      color = (color - 0.5) * uColorGrade.y + 0.5;
-      color *= uTint;
-      vec2 centred = vUv * 2.0 - 1.0;
-      float edge = length(centred);
-      float vignette = smoothstep(
-        max(0.05, 1.0 - uVignette.y),
-        1.25,
-        edge
-      );
-      color *= 1.0 - vignette * uVignette.x;
-    }
-
     if (uGradeEnabled > 0.5) {
-      // Common.hlsl ApplyTonemap returns saturate(input) even when the active
-      // TonemappingMode is None. The neutral default volume then samples the
-      // internally generated 32^3 R8 UNorm identity LUT.
+      if (uLookEnabled > 0.5 && uVignetteParams.z > 0.0) {
+        color = applyVignette(color);
+      }
+      if (uLookEnabled > 0.5) color *= uPostExposure;
+      if (uToneMapper > 1.5) color = acesTonemap(color);
+      else if (uToneMapper > 0.5) color = neutralTonemap(color);
+      // ApplyTonemap saturates even when TonemappingMode is None.
       color = clamp(color, 0.0, 1.0);
       if (uLutEnabled > 0.5) {
         color = applyInternalLut(color);
@@ -160,47 +160,7 @@ const FINAL_GRADE_FRAGMENT = /* glsl */ `
   }
 `;
 
-const UNITY_LUT_SIZE = 32;
-const UNITY_LUT_WIDTH = UNITY_LUT_SIZE * UNITY_LUT_SIZE;
 const UNITY_DITHER_SIZE = 16;
-
-function makeIdentityLdrLut(): THREE.DataTexture {
-  const bytes = new Uint8Array(
-    UNITY_LUT_WIDTH * UNITY_LUT_SIZE * 4,
-  );
-  for (let green = 0; green < UNITY_LUT_SIZE; green += 1) {
-    for (let blue = 0; blue < UNITY_LUT_SIZE; blue += 1) {
-      for (let red = 0; red < UNITY_LUT_SIZE; red += 1) {
-        const x = blue * UNITY_LUT_SIZE + red;
-        const index = (green * UNITY_LUT_WIDTH + x) * 4;
-        bytes[index] = Math.round(red * 255 / (UNITY_LUT_SIZE - 1));
-        bytes[index + 1] = Math.round(
-          green * 255 / (UNITY_LUT_SIZE - 1),
-        );
-        bytes[index + 2] = Math.round(
-          blue * 255 / (UNITY_LUT_SIZE - 1),
-        );
-        bytes[index + 3] = 255;
-      }
-    }
-  }
-
-  const texture = new THREE.DataTexture(
-    bytes,
-    UNITY_LUT_WIDTH,
-    UNITY_LUT_SIZE,
-    THREE.RGBAFormat,
-    THREE.UnsignedByteType,
-  );
-  texture.name = "Unity neutral LDR 32^3 identity LUT";
-  texture.colorSpace = THREE.NoColorSpace;
-  texture.flipY = false;
-  texture.generateMipmaps = false;
-  texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-  texture.minFilter = texture.magFilter = THREE.LinearFilter;
-  texture.needsUpdate = true;
-  return texture;
-}
 
 function hash32(value: number): number {
   let x = value | 0;
@@ -310,12 +270,13 @@ function makeMaterial(
  * issues one fullscreen draw. Add it after SMAA and before CRT/OutputPass.
  */
 export class UnityPostPass extends Pass {
-  private readonly internalLut = makeIdentityLdrLut();
+  private readonly colorLut = new UnityColorLut();
   private readonly blueNoise = makeGeneratedBlueNoise();
   private readonly finalGradeMaterial: THREE.ShaderMaterial;
   private readonly fsQuad: FullScreenQuad;
   private ditherFrame = 0;
   private disposed = false;
+  private aspect = 1;
   private readonly unsubscribeLook: () => void;
 
   constructor(width = 1, height = 1) {
@@ -330,18 +291,18 @@ export class UnityPostPass extends Pass {
       FINAL_GRADE_FRAGMENT,
       {
         tSource: { value: null as THREE.Texture | null },
-        tInternalLut: { value: this.internalLut },
+        tInternalLut: { value: this.colorLut.texture },
         tBlueNoise: { value: this.blueNoise },
         uDitherParams: { value: new THREE.Vector4(1, 1, 0, 0) },
         uGradeEnabled: { value: query.has("rawoutput") ? 0 : 1 },
         uLutEnabled: { value: query.has("nolut") ? 0 : 1 },
         uDitherEnabled: { value: query.has("nodither") ? 0 : 1 },
         uLookEnabled: { value: 0 },
-        uTexelSize: { value: new THREE.Vector2(1, 1) },
-        uColorGrade: { value: new THREE.Vector3(0, 1, 1) },
-        uTint: { value: new THREE.Vector3(1, 1, 1) },
-        uBloom: { value: new THREE.Vector3(0, 0.72, 4) },
-        uVignette: { value: new THREE.Vector2(0, 0.35) },
+        uPostExposure: { value: 1 },
+        uToneMapper: { value: 0 },
+        uVignetteColor: { value: new THREE.Vector3(0, 0, 0) },
+        uVignetteParams: { value: new THREE.Vector4(0.5, 0.5, 0, 1) },
+        uVignetteRoundness: { value: 1 },
       },
     );
     this.fsQuad = new FullScreenQuad(this.finalGradeMaterial);
@@ -352,36 +313,49 @@ export class UnityPostPass extends Pass {
     this.setSize(width, height);
   }
 
+  get lutDiagnostics() {
+    return this.colorLut.diagnostics;
+  }
+
   private applyVisualTreatment(value: Readonly<VisualTreatmentValue>): void {
+    const grading = value.enabled
+      ? value.grading
+      : DEFAULT_VISUAL_TREATMENT.grading;
+    const vignette = value.enabled
+      ? value.vignette
+      : DEFAULT_VISUAL_TREATMENT.vignette;
     this.finalGradeMaterial.uniforms.uLookEnabled.value = value.enabled ? 1 : 0;
-    (this.finalGradeMaterial.uniforms.uColorGrade.value as THREE.Vector3).set(
-      value.exposure,
-      value.contrast,
-      value.saturation,
+    this.finalGradeMaterial.uniforms.uPostExposure.value = Math.pow(
+      2,
+      grading.exposureEV,
     );
-    (this.finalGradeMaterial.uniforms.uTint.value as THREE.Vector3).set(
-      value.tintR,
-      value.tintG,
-      value.tintB,
+    this.finalGradeMaterial.uniforms.uToneMapper.value =
+      grading.toneMapper === "aces"
+        ? 2
+        : grading.toneMapper === "neutral"
+          ? 1
+          : 0;
+    (this.finalGradeMaterial.uniforms.uVignetteColor.value as THREE.Vector3)
+      .fromArray(vignette.color);
+    const vignetteParams = this.finalGradeMaterial.uniforms.uVignetteParams
+      .value as THREE.Vector4;
+    vignetteParams.set(
+      vignette.center[0],
+      vignette.center[1],
+      vignette.intensity * 3,
+      vignette.smoothness * 5,
     );
-    (this.finalGradeMaterial.uniforms.uBloom.value as THREE.Vector3).set(
-      value.bloomIntensity,
-      value.bloomThreshold,
-      value.bloomRadius,
-    );
-    (this.finalGradeMaterial.uniforms.uVignette.value as THREE.Vector2).set(
-      value.vignetteIntensity,
-      value.vignetteSmoothness,
-    );
+    this.finalGradeMaterial.uniforms.uVignetteRoundness.value =
+      vignette.rounded ? this.aspect : 1;
+    this.colorLut.setSettings(grading);
   }
 
   override setSize(width: number, height: number): void {
     const fullWidth = Math.max(1, Math.floor(width));
     const fullHeight = Math.max(1, Math.floor(height));
-    (this.finalGradeMaterial.uniforms.uTexelSize.value as THREE.Vector2).set(
-      1 / fullWidth,
-      1 / fullHeight,
-    );
+    this.aspect = fullWidth / fullHeight;
+    const rounded = visualTreatmentSettings.value.vignette.rounded;
+    this.finalGradeMaterial.uniforms.uVignetteRoundness.value = rounded ? this.aspect : 1;
     (
       this.finalGradeMaterial.uniforms.uDitherParams
         .value as THREE.Vector4
@@ -408,6 +382,8 @@ export class UnityPostPass extends Pass {
     if (maskActive) stencil.setTest(false);
 
     try {
+      if (this.finalGradeMaterial.uniforms.uLutEnabled.value > 0.5)
+        this.colorLut.update(renderer);
       if (maskActive) stencil.setTest(true);
       this.finalGradeMaterial.uniforms.tSource.value = readBuffer.texture;
       const ditherParams = this.finalGradeMaterial.uniforms.uDitherParams
@@ -428,7 +404,7 @@ export class UnityPostPass extends Pass {
     if (this.disposed) return;
     this.disposed = true;
     this.unsubscribeLook();
-    this.internalLut.dispose();
+    this.colorLut.dispose();
     this.blueNoise.dispose();
     this.finalGradeMaterial.dispose();
     this.fsQuad.dispose();

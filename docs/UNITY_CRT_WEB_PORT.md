@@ -108,9 +108,9 @@ surface that exercises the real pass and tuning panel without gameplay state.
 - `?crtdiag` exposes live machine-readable pass diagnostics in the game page.
 - `?lite` keeps the existing direct low-cost render path.
 - `?nosmaa` isolates CRT without SMAA.
-- `?nopost` disables the Beachfront Unity neutral grading/dither path, not CRT.
-  Coast-specific bloom and lens flare have been removed; CRT Guest retains its
-  own source-authored glow/bloom stages.
+- `?nopost` disables shared Unity LOOK routing, not CRT. The retired
+  coast-specific lens-flare chain remains absent; LOOK's Unity-shaped HDR
+  bloom and CRT Guest's source-authored glow/bloom are separate stages.
 - WebGL2, `EXT_color_buffer_float`, linear float sampling and a complete
   RGBA16F framebuffer are required. Missing support fails closed to an
   unprocessed copy/direct frame and records the reason in diagnostics.

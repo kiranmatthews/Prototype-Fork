@@ -62,7 +62,10 @@ import {
 } from "./spin-effects/settings";
 import { sourceComboLabelLine } from "./comboHud";
 import { createVisualTreatmentPanel } from "./visual-treatment/panel";
-import { visualTreatmentSettings } from "./visual-treatment/settings";
+import {
+  visualTreatmentActivity,
+  visualTreatmentSettings,
+} from "./visual-treatment/settings";
 import { createBonusParallax } from "./bonusParallax";
 
 const app = document.getElementById("app")!;
@@ -781,7 +784,7 @@ function applyTheme(): void {
   levelPostEnabled = level.skyPreset === "coast" && !NO_COAST_POST;
   configureCoastPost(
     levelPostEnabled ||
-      (visualTreatmentSettings.value.enabled && !NO_COAST_POST),
+      (visualTreatmentActivity(visualTreatmentSettings.value).any && !NO_COAST_POST),
   );
   loadSky(activeSky); // no-op once cached or known missing
 
@@ -1097,7 +1100,7 @@ const spinPanel = createSpinTuningPanel({
 createVisualTreatmentPanel(visualTreatmentSettings);
 visualTreatmentSettings.subscribe((value) => {
   configureCoastPost(
-    levelPostEnabled || (value.enabled && !NO_COAST_POST),
+    levelPostEnabled || (visualTreatmentActivity(value).any && !NO_COAST_POST),
   );
 });
 const recorder = new Recorder();
@@ -1195,6 +1198,16 @@ if (renderDiagnosticsProbe) {
   renderDiagnosticsProbe.id = "render-diagnostics";
   renderDiagnosticsProbe.style.display = "none";
   document.body.appendChild(renderDiagnosticsProbe);
+}
+const lookDiagnosticsProbe = new URLSearchParams(window.location.search).has(
+  "lookdiag",
+)
+  ? document.createElement("pre")
+  : null;
+if (lookDiagnosticsProbe) {
+  lookDiagnosticsProbe.id = "look-diagnostics";
+  lookDiagnosticsProbe.style.display = "none";
+  document.body.appendChild(lookDiagnosticsProbe);
 }
 let editorSavedAcc: number | null = null;
 let editorSavedMessage: ReturnType<UI["captureMessage"]> = null;
@@ -3200,6 +3213,10 @@ function frame(nowMs: number): void {
         renderedFrames: frameStats.frame,
       });
     }
+    if (lookDiagnosticsProbe)
+      lookDiagnosticsProbe.textContent = JSON.stringify(
+        coastPost?.lookDiagnostics ?? null,
+      );
   } finally {
     // Render interpolation is presentation-only. Gameplay and the next fixed
     // tick must always see the exact current simulation-authored hierarchy.
@@ -3238,6 +3255,7 @@ requestAnimationFrame(frame);
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
+  getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,
   saveReplay,

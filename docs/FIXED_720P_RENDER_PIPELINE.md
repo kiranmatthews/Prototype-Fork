@@ -8,7 +8,7 @@ default is the requested **720p input → 2× CRT output → fixed 60 FPS**.
 For a 16:9 viewport the default graph is:
 
 ```text
-World + ocean reflection/refraction + SMAA + coast post
+World + ocean reflection/refraction + SMAA + optional LOOK bloom/grade
                           1280 × 720
                                ↓
              gameplay 3D + Canvas2D HUD overlays
@@ -38,7 +38,8 @@ viewport.
 
 - the main world render;
 - Unity SMAA High;
-- the coast-only Unity neutral grading/dither pass;
+- active LOOK bloom, colored vignette, tone mapping, 32³ grading LUT and
+  dither;
 - the ocean opaque color/depth prepass;
 - ocean refraction, depth tint, caustics and intersection inputs;
 - planar reflection (30% of the base, 384×216 at 720p);

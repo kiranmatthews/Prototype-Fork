@@ -44,15 +44,16 @@ source-revision record live beside the web assets in
 6. Full/lite quality modes, explicit render-target and texture disposal, a
    pure CPU surface sampler, diagnostics and the versioned WATER studio.
 
-`src/coastpost.ts`, `src/unitySmaa.ts`, and `src/unityPost.ts` own the
-coast-only Unity post path: StopNaN/unsigned-HDR sanitizing, URP SMAA High,
-and one fullscreen neutral LDR grading/dither draw. Tonemapping None still
-saturates, samples a 32^3 R8 identity LUT, then applies Unity's triangular
-8-bit dither in perceptual sRGB before returning to linear color for the final
-OutputPass transfer. The former coast-specific bloom and lens-flare/streak
-pipelines, including all fifteen temporary targets, have been removed; glow
-belongs to the separately authored presentation path. Split-screen and
-`?lite` fall back to the direct renderer.
+`src/coastpost.ts`, `src/unitySmaa.ts`, `src/unityBloom.ts`,
+`src/unityColorLut.ts`, and `src/unityPost.ts` own the shared Unity-style post
+path. URP SMAA High feeds a lazy HDR Gaussian bloom pyramid; the final pass
+applies colored vignette, exposure/tone mapping, the change-driven 32³ RGBA8
+LDR LUT and Unity's triangular 8-bit dither before returning linear color to
+the final `OutputPass`. The former coast-specific lens-flare/streak pipeline
+and its fixed target chain remain removed; the new bloom is the same global
+LOOK system used by Bonus and Meshy. Split-screen and `?lite` fall back to the
+direct renderer. See `docs/UNITY_VISUAL_TREATMENT.md` for exact profile values,
+ordering, performance bounds and diagnostics.
 
 The SMAA algorithm and lookup textures carry their original 2013 MIT notice in
 `public/unity/smaa/LICENSE.txt`; `area.png` and `search.png` are lossless PNG
@@ -95,11 +96,11 @@ preset.
 
 Unity's underwater keyword, surface-foam feature, shoreline trail and ocean
 particle systems are disabled or absent in the source scene, so the web port
-does not invent them. Coast-specific bloom, lens-flare ghosts and streaks are
-also deliberately absent; they are no longer allocated or executed here.
-`?nopost` and `?nopasses` are diagnostic fallbacks, not alternate authored
-looks. `?nosmaa`, `?rawoutput`, `?nolut`, and `?nodither` isolate the remaining
-post stages for parity review.
+does not invent them. The Coast source bloom is available through the shared
+LOOK preset, but its separate screen-space lens-flare ghosts and streaks remain
+deliberately absent. `?nopost` and `?nopasses` are diagnostic fallbacks, not
+alternate authored looks. `?nosmaa`, `?rawoutput`, `?nolut`, and `?nodither`
+isolate the shared post stages for parity review.
 
 ## Verification
 
