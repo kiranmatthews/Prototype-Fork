@@ -46,13 +46,13 @@ source-revision record live beside the web assets in
 
 `src/coastpost.ts`, `src/unitySmaa.ts`, and `src/unityPost.ts` own the
 coast-only Unity post path: StopNaN/unsigned-HDR sanitizing, URP SMAA High,
-the half-resolution six-mip HQ Gaussian bloom, and the approved screen-space
-lens-flare ghosts/warped flare/streak pipeline composited into bloom before its
-0.3 intensity. The final Uber stage preserves the source project's LDR grading
-contract: Tonemapping None still saturates, samples a 32^3 R8 identity LUT,
-then applies Unity's triangular 8-bit dither in perceptual sRGB before returning
-to linear color for the final OutputPass transfer. Split-screen and `?lite`
-fall back to the direct renderer.
+and one fullscreen neutral LDR grading/dither draw. Tonemapping None still
+saturates, samples a 32^3 R8 identity LUT, then applies Unity's triangular
+8-bit dither in perceptual sRGB before returning to linear color for the final
+OutputPass transfer. The former coast-specific bloom and lens-flare/streak
+pipelines, including all fifteen temporary targets, have been removed; glow
+belongs to the separately authored presentation path. Split-screen and
+`?lite` fall back to the direct renderer.
 
 The SMAA algorithm and lookup textures carry their original 2013 MIT notice in
 `public/unity/smaa/LICENSE.txt`; `area.png` and `search.png` are lossless PNG
@@ -95,9 +95,11 @@ preset.
 
 Unity's underwater keyword, surface-foam feature, shoreline trail and ocean
 particle systems are disabled or absent in the source scene, so the web port
-does not invent them. `?nopost` and `?nopasses` are diagnostic fallbacks, not
-alternate authored looks. `?nosmaa`, `?rawoutput`, `?nolut`, and `?nodither`
-isolate the corresponding post stages for parity review.
+does not invent them. Coast-specific bloom, lens-flare ghosts and streaks are
+also deliberately absent; they are no longer allocated or executed here.
+`?nopost` and `?nopasses` are diagnostic fallbacks, not alternate authored
+looks. `?nosmaa`, `?rawoutput`, `?nolut`, and `?nodither` isolate the remaining
+post stages for parity review.
 
 ## Verification
 
