@@ -10,13 +10,33 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 async function loadLevel(relativeFile, exportName) {
   const file = path.join(root, relativeFile);
   const source = readFileSync(file, "utf8");
-  const output = ts.transpileModule(source, {
+  let output = ts.transpileModule(source, {
     compilerOptions: {
       module: ts.ModuleKind.ESNext,
       target: ts.ScriptTarget.ES2020,
     },
     fileName: file,
   }).outputText;
+  if (output.includes('from "../coastalStreetKit"')) {
+    const dependencyFile = path.join(root, "src/coastalStreetKit.ts");
+    const dependencyOutput = ts.transpileModule(
+      readFileSync(dependencyFile, "utf8"),
+      {
+        compilerOptions: {
+          module: ts.ModuleKind.ESNext,
+          target: ts.ScriptTarget.ES2020,
+        },
+        fileName: dependencyFile,
+      },
+    ).outputText;
+    const dependencyUrl = `data:text/javascript;base64,${Buffer.from(
+      dependencyOutput,
+    ).toString("base64")}`;
+    output = output.replace(
+      'from "../coastalStreetKit"',
+      `from "${dependencyUrl}"`,
+    );
+  }
   const sourceUrl = pathToFileURL(file).href;
   const encoded = Buffer.from(`${output}\n//# sourceURL=${sourceUrl}`).toString("base64");
   const module = await import(`data:text/javascript;base64,${encoded}`);
@@ -39,7 +59,13 @@ for (const [file, exportName] of specs) {
   assert.ok(level.name && level.name.length > 2, `${file} needs a menu name`);
   assert.ok(level.spawn.length === 3 && level.spawn.every(Number.isFinite));
   assert.ok(Number.isFinite(level.killY));
-  assert.ok(level.components.length < 512, `${file} exceeds the component budget`);
+  const componentBudget = file.endsWith("coastal-street-run.ts")
+    ? 1024
+    : 512;
+  assert.ok(
+    level.components.length < componentBudget,
+    `${file} exceeds the component budget`,
+  );
   assert.equal(
     level.components.filter((component) => component.t === "gate").length,
     1,
@@ -111,15 +137,113 @@ assert.equal(
   coastal.components.filter(
     (component) =>
       (component.t === "platform" || component.t === "ramp") &&
-      component.grp === 1,
+      component.grp === 1 &&
+      (component.s?.[0] === 12 || component.w === 12),
   ).length,
   23,
+);
+assert.equal(
+  coastal.components.filter(
+    (component) =>
+      (component.t === "platform" || component.t === "ramp") &&
+      component.grp === 1 &&
+      (component.s?.[0] === 1.3 || component.w === 1.3),
+  ).length,
+  46,
+);
+assert.ok(
+  coastal.components
+    .filter(
+      (component) =>
+        (component.t === "platform" || component.t === "ramp") &&
+        component.grp === 1,
+    )
+    .every(
+      (component) =>
+        component.tex === "solid" &&
+        component.color !== "#59636b",
+    ),
+  "Coastal road/shoulders must not reuse the dark striped asphalt treatment",
 );
 assert.equal(count(coastal, "speedpad"), 11);
 assert.equal(count(coastal, "enemy"), 16);
 assert.equal(count(coastal, "checkpoint"), 6);
-assert.ok(coastal.components.some((component) => component.nm === "screen-right beach"));
-assert.ok(coastal.components.some((component) => component.nm === "screen-right deep water"));
+assert.equal(count(coastal, "crate"), 52);
+assert.equal(count(coastal, "wumpa"), 160);
+assert.equal(
+  coastal.components.filter((component) => component.nm?.startsWith("climb ")).length,
+  36,
+);
+assert.equal(
+  coastal.components.filter((component) =>
+    component.nm?.startsWith("street stair approach "),
+  ).length,
+  10,
+);
+assert.equal(
+  coastal.components.filter((component) =>
+    component.nm?.startsWith("street stair terrace "),
+  ).length,
+  10,
+);
+assert.equal(
+  coastal.components.filter((component) =>
+    component.nm?.startsWith("street stair step "),
+  ).length,
+  70,
+);
+assert.equal(
+  coastal.components.filter((component) =>
+    component.nm?.startsWith("stair handrail "),
+  ).length,
+  10,
+);
+assert.equal(
+  coastal.components.filter((component) => component.t === "crate")[12].p[0],
+  3.5,
+  "Coastal crates must vacate the reserved stair/climb side",
+);
+assert.equal(
+  coastal.components.filter(
+    (component) => component.dkind === "coastalhouse",
+  ).length,
+  64,
+);
+assert.equal(
+  coastal.components.filter((component) => component.dkind === "roadarrow").length,
+  99,
+);
+assert.deepEqual(coastal.ocean, {
+  p: [9.2, -0.36, -1500],
+  length: 3400,
+  yaw: 0,
+  seaward: 1,
+  width: 180,
+  overlap: 4,
+  longitudinalSegments: 160,
+  lateralSegments: 128,
+  sourceCoordinates: "unity",
+});
+assert.deepEqual(coastal.unitySand, [
+  { p: [55, -0.78, -1500], s: [70, 0.8, 3300] },
+]);
+assert.equal(
+  coastal.components.some(
+    (component) =>
+      component.nm === "screen-right ocean" ||
+      component.nm === "screen-right deep water",
+  ),
+  false,
+);
+assert.equal(
+  coastal.components.filter((component) => component.nm?.startsWith("town wall ")).length,
+  23,
+);
+assert.ok(
+  coastal.components
+    .filter((component) => component.nm?.includes("boundary"))
+    .every((component) => Math.abs(component.p[0]) === 7.2),
+);
 
 const bonus = levels.get("BONUS_LEVEL");
 assert.equal(count(bonus, "mover"), 1);
@@ -350,5 +474,5 @@ for (const id of [
 }
 
 console.log(
-  "Validated six Unity ports: source boardwalk profiles, Island ocean/foam/shelves, joins, routes, actors, Bonus layout, Meshy bridge/camera and thorn cores.",
+  "Validated six Unity ports: source boardwalks, Coastal road/town/ocean/actors, Island ocean/foam/shelves, Bonus layout, Meshy bridge/camera and thorn cores.",
 );

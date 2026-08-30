@@ -1190,6 +1190,103 @@ function assertIslandHopper(data, level) {
   );
 }
 
+function assertCoastalStreet(data, level) {
+  assert.equal(
+    data.components.filter((component) => component.dkind === "coastalhouse").length,
+    64,
+  );
+  assert.equal(
+    data.components.filter((component) => component.dkind === "roadarrow").length,
+    99,
+  );
+  assert.equal(
+    data.components.filter(
+      (component) =>
+        component.grp === 1 &&
+        (component.s?.[0] === 12 || component.w === 12),
+    ).length,
+    23,
+  );
+  assert.equal(
+    data.components.filter(
+      (component) =>
+        component.grp === 1 &&
+        (component.s?.[0] === 1.3 || component.w === 1.3),
+    ).length,
+    46,
+  );
+  assert.ok(
+    data.components
+      .filter(
+        (component) =>
+          component.grp === 1 &&
+          (component.t === "platform" || component.t === "ramp"),
+      )
+      .every((component) => component.tex === "solid"),
+  );
+  assert.deepEqual(data.ocean, {
+    p: [9.2, -0.36, -1500],
+    length: 3400,
+    yaw: 0,
+    seaward: 1,
+    width: 180,
+    overlap: 4,
+    longitudinalSegments: 160,
+    lateralSegments: 128,
+    sourceCoordinates: "unity",
+  });
+  assert.deepEqual(data.unitySand, [
+    { p: [55, -0.78, -1500], s: [70, 0.8, 3300] },
+  ]);
+  if (!level) return;
+  assert.ok(level.water);
+  assert.equal(level.water.stats.shoreSamples, 161);
+  if (window.location.search.includes("lite")) {
+    assert.equal(level.water.stats.quality, "lite");
+    assert.equal(level.water.stats.verts, 1_620);
+    assert.equal(level.water.stats.tris, 2_880);
+  } else {
+    assert.equal(level.water.stats.quality, "full");
+    assert.equal(level.water.stats.verts, 21_252);
+    assert.equal(level.water.stats.tris, 41_600);
+  }
+  const sandMeshes = [];
+  const coastalBatches = [];
+  level.pickRoot.traverse((object) => {
+    if (object.name.startsWith("Custom MatrixRex sand")) sandMeshes.push(object);
+    const materials = Array.isArray(object.material)
+      ? object.material
+      : object.material
+        ? [object.material]
+        : [];
+    for (const material of materials)
+      if (material.name.startsWith("coastal:")) coastalBatches.push(material);
+  });
+  assert.equal(sandMeshes.length, 1);
+  assert.equal(
+    sandMeshes[0].material.customProgramCacheKey(),
+    "unity-sand-ao-green-v1",
+  );
+  for (const role of [
+    "coastal:route-arrow",
+    "coastal:house-roof",
+    "coastal:house-window",
+    "coastal:house-door",
+  ])
+    assert.ok(
+      coastalBatches.some((material) => material.name === role),
+      `missing Coastal Street batch ${role}; saw ${coastalBatches.map((material) => material.name).join(", ")}`,
+    );
+  const authoredCrates = data.components.filter((component) => component.t === "crate");
+  assert.equal(level.crates.length, authoredCrates.length);
+  level.crates.forEach((crate, index) =>
+    assert.ok(
+      Math.abs(crate.box.min.y - authoredCrates[index].p[1]) < 0.01,
+      `Coastal crate ${index + 1} seated at ${crate.box.min.y}, authored ${authoredCrates[index].p[1]}`,
+    ),
+  );
+}
+
 try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
   const {
@@ -1254,7 +1351,12 @@ try {
       id: entry.id,
       name: entry.name,
       source: "source-owned built-in",
-      verify: entry.id === "island-hopper" ? assertIslandHopper : undefined,
+      verify:
+        entry.id === "island-hopper"
+          ? assertIslandHopper
+          : entry.id === "coastal-street-run"
+            ? assertCoastalStreet
+            : undefined,
     })),
   ];
 

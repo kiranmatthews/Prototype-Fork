@@ -1,4 +1,5 @@
 import type { CustomComponent, CustomLevelData } from "../level";
+import { buildCoastalStreetKit } from "../coastalStreetKit";
 
 /**
  * Unity's three-kilometre street is authored along native +Z. We keep every
@@ -34,6 +35,8 @@ const GROUP = {
   actors: 6,
   beach: 7,
   camera: 8,
+  town: 9,
+  markings: 10,
 } as const;
 
 const components: CustomComponent[] = [];
@@ -99,17 +102,21 @@ const heightAt = (unityZ: number): number => {
   return roadSegments[roadSegments.length - 1].endY;
 };
 
-const isInsideGap = (unityZ: number, padding = 0): boolean =>
-  gaps.some(
-    (gap) => unityZ > gap.start - padding && unityZ < gap.end + padding,
-  );
-
 const resolveSafeActorZ = (unityZ: number): number => {
   for (const gap of gaps) {
     if (unityZ > gap.start - 24 && unityZ < gap.end + 18) return gap.end + 22;
   }
   return unityZ;
 };
+
+const resolveSafeFruitZ = (unityZ: number): number => {
+  for (const gap of gaps) {
+    if (unityZ > gap.start - 10 && unityZ < gap.end + 8) return gap.end + 9;
+  }
+  return unityZ;
+};
+
+const streetKit = buildCoastalStreetKit(roadSegments, heightAt);
 
 const railPath = (
   name: string,
@@ -134,35 +141,92 @@ const railPath = (
   });
 };
 
-// The source road uses 23 exact slabs. Flat pieces stay boxes; grade changes
-// become analytic ramps whose low/high ends meet their neighbours precisely.
-for (const segment of roadSegments) {
+const addRoadSurface = (
+  segment: RoadSegment,
+  centerX: number,
+  width: number,
+  name: string,
+  color: string,
+  grp: number,
+): void => {
   const length = segment.end - segment.start;
   const middleZ = -(segment.start + segment.end) * 0.5;
   if (Math.abs(segment.endY - segment.startY) < 0.001) {
     add({
       t: "platform",
-      p: [0, segment.startY - 0.425, middleZ],
-      s: [12, 0.85, length + 0.08],
-      tex: "asphalt",
-      color: "#59636b",
-      nm: segment.name,
-      grp: GROUP.road,
+      p: [centerX, segment.startY - 0.425, middleZ],
+      s: [width, 0.85, length + 0.08],
+      tex: "solid",
+      color,
+      nm: name,
+      grp,
     });
   } else {
     add({
       t: "ramp",
-      p: [0, Math.min(segment.startY, segment.endY), middleZ],
+      p: [centerX, Math.min(segment.startY, segment.endY), middleZ],
       len: length,
       rise: Math.abs(segment.endY - segment.startY),
-      w: 12,
+      w: width,
       yaw: segment.endY >= segment.startY ? 0 : 180,
-      tex: "asphalt",
-      color: "#59636b",
-      nm: segment.name,
-      grp: GROUP.road,
+      tex: "solid",
+      color,
+      nm: name,
+      grp,
     });
   }
+};
+
+// Collision remains the exact 23-slab route. Presentation is source concrete,
+// not the generic black asphalt tile with false repeating parking stripes.
+for (const segment of roadSegments)
+  addRoadSurface(segment, 0, 12, segment.name, "#cdcdc8", GROUP.road);
+for (const shoulder of streetKit.shoulders) {
+  const segment = roadSegments[shoulder.segmentIndex];
+  addRoadSurface(
+    segment,
+    shoulder.centerX,
+    shoulder.width,
+    `${shoulder.side} shoulder ${shoulder.segmentIndex + 1}`,
+    "#ddd8cc",
+    GROUP.road,
+  );
+}
+
+// Source town/canal containment. The canal wall also replaces the invented
+// broad water death volume: falling over it reaches killY naturally.
+for (const [segmentIndex, segment] of roadSegments.entries()) {
+  add({
+    t: "wallpath",
+    p: [-7.2, segment.startY, -segment.start],
+    pts: [
+      [0, 0, 0, 0],
+      [0, -(segment.end - segment.start), 0, segment.endY - segment.startY],
+    ],
+    w: 0.8,
+    rise: 1.05,
+    collisionHeight: 1.05,
+    tex: "solid",
+    color: "#b8bdb7",
+    nm: `town wall ${segmentIndex + 1}`,
+    grp: GROUP.town,
+  });
+  const canalHeight = Math.max(segment.startY, segment.endY) + 3.36;
+  add({
+    t: "wallpath",
+    p: [7.2, segment.startY - canalHeight, -segment.start],
+    pts: [
+      [0, 0, 0, 0],
+      [0, -(segment.end - segment.start), 0, segment.endY - segment.startY],
+    ],
+    w: 0.8,
+    rise: canalHeight,
+    collisionHeight: canalHeight,
+    tex: "stone",
+    color: "#737870",
+    nm: `canal wall ${segmentIndex + 1}`,
+    grp: GROUP.beach,
+  });
 }
 
 // Ten long path rails replace Unity's 46 per-slab boundary rail objects while
@@ -178,9 +242,17 @@ continuousRoadBlocks.forEach(([start, end], blockIndex) => {
   for (const side of [-1, 1] as const) {
     const points: RailPoint[] = [];
     for (let unityZ = start; unityZ < end; unityZ += 55) {
-      points.push([side * 6.55, heightAt(unityZ) + 0.72, unityZ]);
+      points.push([
+        side * 7.2,
+        heightAt(unityZ) + (side < 0 ? 1.22 : 0.95),
+        unityZ,
+      ]);
     }
-    points.push([side * 6.55, heightAt(end) + 0.72, end]);
+    points.push([
+      side * 7.2,
+      heightAt(end) + (side < 0 ? 1.22 : 0.95),
+      end,
+    ]);
     railPath(
       `${side < 0 ? "town" : "beach"} boundary ${blockIndex + 1}`,
       points,
@@ -220,9 +292,15 @@ gaps.forEach((gap, index) => {
     GROUP.gaps,
   );
 
+  const preTakeoffZ = gap.start - 0.6;
+  const preTakeoffY = lerp(
+    rampStartY,
+    takeoffY,
+    (preTakeoffZ - rampStart) / (gap.start - rampStart),
+  );
   const fruitPoints: RailPoint[] = [
     [gap.rampX, heightAt(gap.start - 8) + 0.9, gap.start - 8],
-    [gap.rampX, takeoffY + 0.9, gap.start - 0.6],
+    [gap.rampX, preTakeoffY + 0.9, preTakeoffZ],
     [gap.rampX, heightAt(gap.start) + 3.05, midpoint],
     [gap.rampX, heightAt(gap.end + 3) + 0.9, gap.end + 3],
   ];
@@ -249,29 +327,58 @@ const stairs = [
   [3.2, 2830, 1.5],
 ] as const;
 
-stairs.forEach(([centerX, startZ, railHeight], setIndex) => {
-  for (let step = 0; step < 4; step++) {
-    const unityZ = startZ + step * 1.55;
-    const top = heightAt(unityZ) + 0.18 * (step + 1);
+stairs.forEach(([centerX, startZ, rise], setIndex) => {
+  const baseY = heightAt(startZ);
+  const approachLength = 12;
+  const terraceLength = 4;
+  const stepCount = 7;
+  const stepDepth = 1.35;
+  addRoadSurface(
+    {
+      name: `street stair approach ${setIndex + 1}`,
+      start: startZ - approachLength,
+      end: startZ,
+      startY: heightAt(startZ - approachLength),
+      endY: baseY + rise,
+    },
+    centerX,
+    4.8,
+    `street stair approach ${setIndex + 1}`,
+    "#aaa392",
+    GROUP.stairs,
+  );
+  add({
+    t: "platform",
+    p: [centerX, r2(baseY + rise - 0.35), r2(-(startZ + 2))],
+    s: [4.8, 0.7, terraceLength],
+    tex: "stone",
+    color: "#aaa392",
+    nm: `street stair terrace ${setIndex + 1}`,
+    grp: GROUP.stairs,
+  });
+  const stairStart = startZ + terraceLength;
+  for (let step = 0; step < stepCount; step++) {
+    const topY = baseY + (rise * (stepCount - step)) / stepCount;
+    const height = Math.max(0.16, topY - baseY);
+    const unityZ = stairStart + (step + 0.5) * stepDepth;
     add({
       t: "platform",
-      p: [centerX, r2(top - 0.14), r2(-unityZ)],
-      s: [4.8, 0.28, 1.62],
+      p: [centerX, r2(baseY + height * 0.5), r2(-unityZ)],
+      s: [4.8, r2(height), stepDepth + 0.04],
       tex: "stone",
       color: "#aaa392",
-      nm: `street stair ${setIndex + 1}.${step + 1}`,
+      nm: `street stair step ${setIndex + 1}.${step + 1}`,
       grp: GROUP.stairs,
     });
   }
-  const side = Math.sign(centerX);
   railPath(
     `stair handrail ${setIndex + 1}`,
     [
-      [centerX + side * 2.15, heightAt(startZ) + railHeight, startZ - 0.8],
+      [centerX, baseY + rise + 0.72, stairStart - 0.3],
       [
-        centerX + side * 2.15,
-        heightAt(startZ + 6.2) + railHeight + 0.72,
-        startZ + 7,
+        centerX,
+        baseY + 0.72,
+        stairStart + stepCount * stepDepth + 0.3,
       ],
     ],
     GROUP.stairs,
@@ -284,12 +391,11 @@ const climbs = [
   [3.2, 2090],
   [-3.2, 2860],
 ] as const;
-const climbElevations = [0.55, 1.45, 2.35, 1.45, 0.55] as const;
-const climbIndices = [0, 2, 4, 6, 8] as const;
+const climbElevations = [0.55, 1, 1.45, 1.9, 2.35, 1.9, 1.45, 1, 0.55] as const;
 climbs.forEach(([centerX, startZ], sequence) => {
-  climbIndices.forEach((sourceIndex, index) => {
-    const unityZ = startZ + sourceIndex * 4.2;
-    const top = heightAt(unityZ) + climbElevations[index];
+  climbElevations.forEach((elevation, index) => {
+    const unityZ = startZ + index * 4.2;
+    const top = heightAt(unityZ) + elevation;
     add({
       t: "platform",
       p: [centerX, r2(top - 0.225), r2(-unityZ)],
@@ -299,11 +405,12 @@ climbs.forEach(([centerX, startZ], sequence) => {
       nm: `climb ${sequence + 1}.${index + 1}`,
       grp: GROUP.ledges,
     });
-    add({
-      t: "wumpa",
-      p: [centerX, r2(top + 0.78), r2(-unityZ)],
-      grp: GROUP.actors,
-    });
+    if (index % 2 === 0)
+      add({
+        t: "wumpa",
+        p: [centerX, r2(top + 0.72), r2(-unityZ)],
+        grp: GROUP.actors,
+      });
   });
 });
 
@@ -329,6 +436,26 @@ boxLedges.forEach(([x, unityZ, length, height], index) => {
     grp: GROUP.ledges,
   });
 });
+
+const reservedSideAt = (unityZ: number): number => {
+  for (const [centerX, startZ] of stairs) {
+    if (unityZ > startZ - 13 && unityZ < startZ + 15)
+      return Math.sign(centerX);
+  }
+  for (const [centerX, startZ] of climbs) {
+    if (unityZ > startZ - 2 && unityZ < startZ + 38)
+      return Math.sign(centerX);
+  }
+  for (const [x, centerZ, length] of boxLedges) {
+    if (
+      Math.abs(x) > 0.1 &&
+      unityZ > centerZ - length * 0.5 - 1 &&
+      unityZ < centerZ + length * 0.5 + 1
+    )
+      return Math.sign(x);
+  }
+  return 0;
+};
 
 const freestandingRails = [
   [2.5, 115, 260, 0.7], [-2.5, 360, 400, 0.68], [2.4, 670, 790, 0.7],
@@ -384,13 +511,20 @@ crossingThreats.forEach((unityZ, index) =>
 );
 
 const lanePattern = [0, -3.4, 3.4, -1.7, 1.7];
-for (let index = 0; index < 32; index++) {
-  const unityZ = resolveSafeActorZ(lerp(30, 2970, index / 31));
+for (let index = 0; index < 52; index++) {
+  const unityZ = resolveSafeActorZ(lerp(30, 2970, index / 51));
   const kind: NonNullable<CustomComponent["kind"]> =
     index % 13 === 8 ? "bouncy" : index % 7 === 4 ? "mystery" : "wood";
+  const reservedSide = reservedSideAt(unityZ);
   add({
     t: "crate",
-    p: [lanePattern[index % lanePattern.length], r2(heightAt(unityZ)), r2(-unityZ)],
+    p: [
+      reservedSide === 0
+        ? lanePattern[index % lanePattern.length]
+        : -reservedSide * 3.5,
+      r2(heightAt(unityZ)),
+      r2(-unityZ),
+    ],
     kind,
     grp: GROUP.actors,
   });
@@ -408,11 +542,13 @@ checkpointCoordinates.forEach(([x, unityZ], index) =>
   }),
 );
 
-// A lighter fruit population than Unity's 160 keeps the browser draw count
-// sensible while preserving the long route rhythm and every authored jump arc.
-for (let index = 0; index < 64; index++) {
-  let unityZ = lerp(15, 2990, index / 63);
-  if (isInsideGap(unityZ, 9)) unityZ += 22;
+// 124 route fruit + 16 gap-arc + 20 climb fruit = the source 160.
+let previousRouteFruitZ = Number.NEGATIVE_INFINITY;
+for (let index = 0; index < 124; index++) {
+  let unityZ = resolveSafeFruitZ(lerp(15, 2990, index / 123));
+  if (unityZ < previousRouteFruitZ + 3)
+    unityZ = previousRouteFruitZ + 3;
+  previousRouteFruitZ = unityZ;
   add({
     t: "wumpa",
     p: [r2(Math.sin(index * 0.67) * 2.05), r2(heightAt(unityZ) + 0.9), r2(-unityZ)],
@@ -420,48 +556,56 @@ for (let index = 0; index < 64; index++) {
   });
 }
 
-// Reuse Beachside's warm sand / turquoise deep-water treatment on screen
-// right, but straighten it to match the street's fixed camera axis.
+for (const house of streetKit.houses) {
+  add({
+    t: "decor",
+    dkind: "coastalhouse",
+    p: [house.body.center[0], r2(house.baseY), r2(-house.unityZ)],
+    s: [house.body.size[0], house.body.size[1], house.body.size[2]],
+    tn: house.district,
+    vr: house.index,
+    nm: `coastal house ${house.index + 1}`,
+    grp: GROUP.town,
+  });
+}
+
+for (const arrow of streetKit.route.arrows) {
+  add({
+    t: "decor",
+    dkind: "roadarrow",
+    p: [arrow.position[0], r2(arrow.position[1]), r2(-arrow.position[2])],
+    amp: r2((Math.asin(arrow.frame.forward[1]) * 180) / Math.PI),
+    nm: arrow.id,
+    grp: GROUP.markings,
+  });
+}
 add({
-  t: "terrain",
-  p: [30, -0.72, 60],
-  pts: [
-    [0, 0, 0, 0],
-    [1.5, -760, 0, 0.14],
-    [-1, -1530, 0, -0.04],
-    [1.2, -2300, 0, 0.11],
-    [0, -3150, 0, 0],
+  t: "decor",
+  dkind: "block",
+  p: [
+    streetKit.route.startStripe.center[0],
+    streetKit.route.startStripe.center[1],
+    -streetKit.route.startStripe.center[2],
   ],
-  w: 36,
-  amp: 0.04,
-  curve: "spline",
-  berms: false,
-  tex: "sand",
-  color: "#e6c788",
-  nm: "screen-right beach",
-  grp: GROUP.beach,
-});
-add({
-  t: "platform",
-  p: [64, -1.53, -1485],
-  s: [38, 0.3, 3300],
-  tex: "metal",
-  color: "#238ea9",
-  nm: "screen-right ocean",
-  grp: GROUP.beach,
-});
-add({
-  t: "pit",
-  // Submerged beneath the blue presentation deck so the shared pit artwork
-  // does not turn the coastal water into lava; its touch volume still reaches
-  // the water surface.
-  p: [65, -1.55, -1485],
-  s: [27, 1, 3250],
-  nm: "screen-right deep water",
-  grp: GROUP.beach,
+  s: [
+    streetKit.route.startStripe.size[0],
+    streetKit.route.startStripe.size[1],
+    streetKit.route.startStripe.size[2],
+  ],
+  tex: "solid",
+  color: "#ffb314",
+  nm: "source start stripe",
+  grp: GROUP.markings,
 });
 
-for (let unityZ = -20; unityZ <= 3030; unityZ += 190) {
+const cameraDistances = new Set<number>();
+for (let unityZ = -20; unityZ <= 3030; unityZ += 190)
+  cameraDistances.add(unityZ);
+for (const segment of roadSegments) {
+  cameraDistances.add(segment.start);
+  cameraDistances.add(segment.end);
+}
+for (const unityZ of [...cameraDistances].sort((a, b) => a - b)) {
   add({
     t: "camnode",
     p: [0, r2(heightAt(unityZ) + 2.2), -unityZ],
@@ -484,6 +628,23 @@ export const COASTAL_STREET_RUN_LEVEL: CustomLevelData = {
   spawn: [0, r2(heightAt(-15) + 0.12), 15],
   killY: -6,
   sky: "coast",
+  ocean: {
+    p: [9.2, -0.36, -1500],
+    length: 3400,
+    yaw: 0,
+    seaward: 1,
+    width: 180,
+    overlap: 4,
+    longitudinalSegments: 160,
+    lateralSegments: 128,
+    sourceCoordinates: "unity",
+  },
+  unitySand: [
+    {
+      p: [55, -0.78, -1500],
+      s: [70, 0.8, 3300],
+    },
+  ],
   groups: [
     { id: GROUP.road, nm: "district road" },
     { id: GROUP.gaps, nm: "death gaps and alternatives" },
@@ -491,8 +652,10 @@ export const COASTAL_STREET_RUN_LEVEL: CustomLevelData = {
     { id: GROUP.ledges, nm: "ledges and climb routes" },
     { id: GROUP.rails, nm: "grind rails" },
     { id: GROUP.actors, nm: "crates, fruit, checkpoints and enemies" },
-    { id: GROUP.beach, nm: "screen-right Beachside treatment" },
+    { id: GROUP.beach, nm: "screen-right MatrixRex coast" },
     { id: GROUP.camera, nm: "camera route" },
+    { id: GROUP.town, nm: "left-side coastal town" },
+    { id: GROUP.markings, nm: "painted route markings" },
   ],
   components,
 };

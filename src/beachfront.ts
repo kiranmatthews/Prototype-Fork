@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import type { ShoreSample } from "./unityOcean";
+import { createUnitySandMaterial } from "./unitySandMaterial";
 
 const COURSE_MINIMUM_Z = -20;
 const COURSE_LENGTH = 740;
@@ -418,20 +419,6 @@ function buildSandGeometry(
   return geometry;
 }
 
-function loadSandTexture(file: string, srgb: boolean): THREE.Texture {
-  const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
-  const texture = new THREE.TextureLoader().load(
-    `${base}water/matrixrex/${file}`,
-  );
-  texture.name = `MatrixRex ${file}`;
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.minFilter = THREE.LinearMipmapNearestFilter;
-  texture.magFilter = THREE.LinearFilter;
-  texture.generateMipmaps = true;
-  texture.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
-  return texture;
-}
-
 function buildShore(
   frames: readonly BeachfrontCourseFrame[],
 ): ShoreSample[] {
@@ -534,31 +521,10 @@ function buildCliffGeometry(
 export function createUnityBeachfrontReference(): UnityBeachfrontReference {
   const courseFrames = buildCourseFrames();
   const sandFrames = buildSandFrames(courseFrames);
-  const colorMap = loadSandTexture("sand-color.png", true);
-  const normalMap = loadSandTexture("sand-normal.png", false);
-  const aoMap = loadSandTexture("sand-mask.png", false);
-  const sandMaterial = new THREE.MeshStandardMaterial({
+  const sandOwner = createUnitySandMaterial({
     name: "BeachfrontRun_Showcase1Sand",
-    color: 0xffffff,
-    map: colorMap,
-    normalMap,
-    normalScale: new THREE.Vector2(0.5, 0.5),
-    aoMap,
-    aoMapIntensity: 1,
-    metalness: 0,
-    roughness: 1,
-    emissive: 0x000000,
-    emissiveIntensity: 0,
   });
-  // Unity's terrain mask packs ambient occlusion in G; Three's standard
-  // material assumes an ORM-style red channel unless this lookup is swizzled.
-  sandMaterial.onBeforeCompile = (shader) => {
-    shader.fragmentShader = shader.fragmentShader.replace(
-      "texture2D( aoMap, vAoMapUv ).r",
-      "texture2D( aoMap, vAoMapUv ).g",
-    );
-  };
-  sandMaterial.customProgramCacheKey = () => "unity-sand-ao-green-v1";
+  const sandMaterial = sandOwner.material;
 
   const sand = new THREE.Mesh(buildSandGeometry(sandFrames), sandMaterial);
   sand.name = "Showcase1ContinuousSandSeabed";
@@ -600,12 +566,9 @@ export function createUnityBeachfrontReference(): UnityBeachfrontReference {
     if (disposed) return;
     disposed = true;
     sand.geometry.dispose();
-    sandMaterial.dispose();
+    sandOwner.dispose();
     cliff.geometry.dispose();
     cliffMaterial.dispose();
-    colorMap.dispose();
-    normalMap.dispose();
-    aoMap.dispose();
     group.clear();
   };
 

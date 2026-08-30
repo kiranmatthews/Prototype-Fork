@@ -277,6 +277,27 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
       x.fill();
     }
   },
+  coastalhouse: (x) => {
+    x.fillStyle = "#f57030";
+    x.fillRect(2, 5, 14, 12);
+    x.fillStyle = "#591c14";
+    x.fillRect(1, 3, 16, 3);
+    x.fillStyle = "#093852";
+    for (const cy of [8, 12])
+      for (const cx of [5, 9, 13]) x.fillRect(cx - 1, cy - 1, 2, 2);
+    x.fillStyle = "#ffc754";
+    x.fillRect(3, 13, 2, 4);
+  },
+  roadarrow: (x) => {
+    x.fillStyle = "#ffb314";
+    x.fillRect(8, 7, 2, 10);
+    x.beginPath();
+    x.moveTo(4, 8);
+    x.lineTo(9, 2);
+    x.lineTo(14, 8);
+    x.closePath();
+    x.fill();
+  },
   meshycourtyard: (x) => {
     x.fillStyle = "#68756c";
     x.beginPath();
@@ -419,6 +440,8 @@ const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
   ruinblock: { s: [2.4, 1.6, 2.4], yaw: 0 },
   log: { len: 13 },
   block: { s: [10, 8, 10], yaw: 0, color: "#6b5232", tex: "dirt" },
+  coastalhouse: { s: [11.5, 10, 39], tn: 0, vr: 0 },
+  roadarrow: { amp: 0, yaw: 0 },
   meshycourtyard: { w: 11.52, yaw: 90, amp: 6 },
   // The library families arrive with NOTHING chosen on purpose: leave vr/tn
   // off and every copy rolls its own model, colour, size, spin and lean from

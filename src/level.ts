@@ -62,6 +62,11 @@ import {
   type IslandShoreFoamOval,
 } from "./islandShoreFoam";
 import { buildIslandShelfGeometry } from "./islandShelf";
+import {
+  applyUnitySandMetricUvs,
+  createUnitySandMaterial,
+  type UnitySandMaterialOwner,
+} from "./unitySandMaterial";
 
 const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { releaseWumpaMesh, wumpaMesh, WUMPA_SIZE } from "./wumpa";
@@ -720,6 +725,8 @@ export const DECOR_KINDS = [
   "ruinblock",
   "log",
   "block", // plain textured box, visual only: earth banks, backdrops, massing
+  "coastalhouse", // batched Coastal Street facade module; visual only
+  "roadarrow", // graded three-piece route arrow; visual only
   "meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh; visual only
   // THE LIBRARY FAMILIES. Six kinds backed by fifty-six external meshes (see
   // props.ts). Each one is a whole species rather than a single shape: pick a
@@ -748,6 +755,8 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   ruinblock: "ruin block",
   log: "fallen log",
   block: "scenery block",
+  coastalhouse: "coastal house",
+  roadarrow: "road arrow",
   meshycourtyard: "Meshy stone courtyard",
   tree: "tree (library)",
   plants: "plant (library)",
@@ -771,6 +780,7 @@ export const TEX_KINDS = [
   "plank",
   "pavement",
   "asphalt",
+  "solid",
   "metal",
 ] as const;
 
@@ -812,6 +822,7 @@ export interface CustomLevelData {
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
   ocean?: CustomOceanData;
+  unitySand?: CustomUnitySandData[];
   shoreFoam?: IslandShoreFoamOval[];
   sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
   components: CustomComponent[];
@@ -831,6 +842,12 @@ export interface CustomOceanData {
   longitudinalSegments?: number;
   lateralSegments?: number;
   sourceCoordinates?: "unity" | "three";
+}
+
+export interface CustomUnitySandData {
+  p: [number, number, number];
+  s: [number, number, number];
+  yaw?: number;
 }
 
 // the full ancestor chain of group ids for a component (innermost first)
@@ -2115,6 +2132,22 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       return null;
   }
   if (
+    source.unitySand !== undefined &&
+    (!Array.isArray(source.unitySand) ||
+      source.unitySand.length < 1 ||
+      source.unitySand.length > 256 ||
+      !source.unitySand.every(
+        (sand) =>
+          sand &&
+          finiteTuple(sand.p, 3) &&
+          finiteTuple(sand.s, 3) &&
+          sand.s.every((value) => value > 0) &&
+          [...sand.p, ...sand.s].every((value) => Math.abs(value) <= MAX_ABS) &&
+          (sand.yaw === undefined || Number.isFinite(sand.yaw)),
+      ))
+  )
+    return null;
+  if (
     source.shoreFoam !== undefined &&
     (!Array.isArray(source.shoreFoam) ||
       source.shoreFoam.length < 1 ||
@@ -3082,7 +3115,10 @@ export class Level {
         }
       }
     };
-    if (kind === "grass") {
+    if (kind === "solid") {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, S, S);
+    } else if (kind === "grass") {
       // meadow wash: overlapping green pools, shade, sun patches — painterly
       ctx.fillStyle = "#e6eed8";
       ctx.fillRect(0, 0, S, S);
@@ -4698,6 +4734,23 @@ export class Level {
       });
       this.root.add(this.water.group);
     }
+    for (const [index, sand] of (data.unitySand ?? []).entries()) {
+      const geometry = applyUnitySandMetricUvs(
+        new THREE.BoxGeometry(sand.s[0], sand.s[1], sand.s[2]),
+        { offsetMetres: [sand.p[0], -sand.p[2]] },
+      );
+      const owner = createUnitySandMaterial({
+        name: `Custom MatrixRex sand ${index + 1}`,
+      });
+      const mesh = new THREE.Mesh(geometry, owner.material);
+      mesh.name = `Custom MatrixRex sand ${index + 1}`;
+      mesh.position.set(sand.p[0], sand.p[1], sand.p[2]);
+      mesh.rotation.y = THREE.MathUtils.degToRad(sand.yaw ?? 0);
+      mesh.userData.visualOnly = true;
+      mesh.userData.noShadow = true;
+      this.customUnitySand.push({ mesh, owner });
+      this.root.add(mesh);
+    }
     if (data.shoreFoam?.length) {
       this.islandShoreFoam = createIslandShoreFoam(data.shoreFoam, {
         sourceZSign: data.ocean?.sourceCoordinates === "unity" ? -1 : 1,
@@ -5695,6 +5748,12 @@ export class Level {
       this.islandShoreFoam.dispose();
       this.islandShoreFoam = null;
     }
+    for (const sand of this.customUnitySand) {
+      this.root.remove(sand.mesh);
+      sand.mesh.geometry.dispose();
+      sand.owner.dispose();
+    }
+    this.customUnitySand.length = 0;
     disposeGroundAcceleration(
       this.acceleratedGroundGeometries,
       preservedGeometry,
@@ -6072,6 +6131,10 @@ export class Level {
   private roadRibbon: SlideRibbon | null = null;
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
   private islandShoreFoam: IslandShoreFoam | null = null;
+  private customUnitySand: Array<{
+    mesh: THREE.Mesh;
+    owner: UnitySandMaterialOwner;
+  }> = [];
   get shoreFoamDiagnostics() {
     return this.islandShoreFoam?.diagnostics ?? null;
   }
@@ -12372,6 +12435,133 @@ export class Level {
     );
   }
 
+  private coastalMaterials = new Map<string, THREE.Material>();
+  private coastalMaterial(
+    key: string,
+    color: number,
+    unlit = false,
+  ): THREE.Material {
+    let material = this.coastalMaterials.get(key);
+    if (material) return material;
+    material = unlit
+      ? new THREE.MeshBasicMaterial({ color })
+      : new THREE.MeshLambertMaterial({ color });
+    material.name = `coastal:${key}`;
+    this.coastalMaterials.set(key, material);
+    return material;
+  }
+
+  private coastalVisualBox(
+    key: string,
+    size: readonly [number, number, number],
+    position: THREE.Vector3,
+    quaternion: THREE.Quaternion,
+    color: number,
+    unlit = false,
+  ): void {
+    this.putDecor(
+      `coastal:${key}`,
+      new THREE.BoxGeometry(size[0], size[1], size[2]),
+      this.coastalMaterial(key, color, unlit),
+      new THREE.Matrix4().compose(
+        position,
+        quaternion,
+        new THREE.Vector3(1, 1, 1),
+      ),
+    );
+  }
+
+  /** Source-faithful, visual-only left-side Coastal Street facade module. */
+  private coastalHouse(c: CustomComponent): void {
+    const [x, baseY, z] = c.p;
+    const size = c.s ?? [11.5, 8, 39];
+    const district = Math.max(0, Math.min(6, Math.round(c.tn ?? 0)));
+    const index = Math.max(0, Math.round(c.vr ?? 0));
+    const palette = [
+      0xf57030, 0x1aa3b0, 0x597aab, 0xb847b3, 0xf2a81f, 0xccc7a8,
+      0x52b8a1,
+    ];
+    const identity = new THREE.Quaternion();
+    this.coastalVisualBox(
+      `house-body-${district}`,
+      size,
+      new THREE.Vector3(x, baseY + size[1] * 0.5, z),
+      identity,
+      palette[district],
+    );
+    this.coastalVisualBox(
+      "house-roof",
+      [12.3, 0.84, size[2] + 1.2],
+      new THREE.Vector3(x, baseY + size[1] + 0.42, z),
+      new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(
+          0,
+          0,
+          THREE.MathUtils.degToRad(index % 2 === 0 ? 3.5 : -3.5),
+        ),
+      ),
+      0x591c14,
+    );
+    const facadeX = x + 5.81;
+    for (const offset of [-7.2, 0, 7.2])
+      this.coastalVisualBox(
+        "house-window",
+        [0.12, 2.15, 3.4],
+        new THREE.Vector3(facadeX, baseY + size[1] * 0.61, z - offset),
+        identity,
+        0x093852,
+        true,
+      );
+    this.coastalVisualBox(
+      `house-awning-${(district + 2) % palette.length}`,
+      [1.25, 0.23, 9],
+      new THREE.Vector3(facadeX + 0.55, baseY + 3, z + 2),
+      new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(0, 0, THREE.MathUtils.degToRad(-6)),
+      ),
+      palette[(district + 2) % palette.length],
+    );
+    this.coastalVisualBox(
+      "house-door",
+      [0.13, 3.1, 1.7],
+      new THREE.Vector3(facadeX, baseY + 1.55, z - 11.5),
+      identity,
+      0xffc754,
+    );
+  }
+
+  /** One source three-piece painted arrow, fitted to the current road grade. */
+  private coastalRoadArrow(c: CustomComponent): void {
+    const root = new THREE.Vector3().fromArray(c.p);
+    const pitch = THREE.MathUtils.degToRad(c.amp ?? 0);
+    const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    const rootRotation = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(pitch, yaw, 0, "YXZ"),
+    );
+    const part = (
+      center: THREE.Vector3,
+      size: [number, number, number],
+      partYaw = 0,
+    ): void => {
+      const localRotation = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        THREE.MathUtils.degToRad(partYaw),
+      );
+      this.coastalVisualBox(
+        "route-arrow",
+        size,
+        center.applyQuaternion(rootRotation).add(root),
+        rootRotation.clone().multiply(localRotation),
+        0xffb314,
+        true,
+      );
+    };
+    // Source +Z arrow reflected into the browser's -Z course direction.
+    part(new THREE.Vector3(0, 0, 0.2), [0.31, 0.028, 1.25]);
+    part(new THREE.Vector3(-0.25, 0, -0.44), [0.27, 0.028, 0.82], 43);
+    part(new THREE.Vector3(0.25, 0, -0.44), [0.27, 0.028, 0.82], -43);
+  }
+
   // ---- THE PROP LIBRARY ----------------------------------------------------
   // Six families of external mesh (see props.ts) placed through the same decor
   // pipeline as everything else, so they capture, round-trip and batch exactly
@@ -12549,6 +12739,10 @@ export class Level {
           c.tex ?? "dirt",
           THREE.MathUtils.degToRad(c.yaw ?? 0),
         );
+      case "coastalhouse":
+        return this.coastalHouse(c);
+      case "roadarrow":
+        return this.coastalRoadArrow(c);
       case "meshycourtyard": {
         const visual = createMeshyCourtyardVisual();
         visual.position.set(x, y, z);

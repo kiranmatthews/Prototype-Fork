@@ -12,6 +12,7 @@ The port was measured from the current Unity project at:
 - `/Users/kiki/Developer/Board Platformer Unity/Assets/Game/Runtime/Presentation/BeachOceanPresentation.cs`
 - `/Users/kiki/Developer/Board Platformer Unity/Assets/Game/Runtime/Presentation/BeachPlanarReflectionPresenter.cs`
 - `/Users/kiki/Developer/Board Platformer Unity/Assets/Game/Editor/SourceLevelPortSceneBuilder.BeachfrontRun.cs`
+- `/Users/kiki/Developer/Board Platformer Unity/Assets/Game/Editor/SourceLevelPortSceneBuilder.CoastalStreetRun.cs`
 - `/Users/kiki/Developer/Board Platformer Unity/Assets/Game/Data/SourceLevelPorts/BeachfrontRun_Showcase1Post.asset`
 
 The five water textures and three sand inputs are byte-identical copies from
@@ -61,6 +62,22 @@ straight shoreline contract: 500 m long, 220 m wide, 6 m land overlap and
 change only ribbon layout; shaders, reflection, prepass, refraction, caustics,
 intersection foam, sizing and disposal remain the one shared MatrixRex path.
 
+Coastal Street Run uses that same owner with its exact straight source layout:
+the reflected shoreline midpoint is `[9.2, -0.36, -1500]`, open water lies on
+screen right, and the ribbon is 3,400m long by 180m wide with 4m overlap and a
+160×128 grid. It therefore uses the same waves, reflection, refraction,
+caustics, foam, horizon and post path as Beachside rather than the retired blue
+metal presentation slab.
+
+`src/unitySandMaterial.ts` is the corresponding shared sand authority for the
+Unity Beachfront presentation and Coastal Street. It owns the registered `sand-color.png`,
+`sand-normal.png` and `sand-mask.png` inputs, the source 0.5 normal strength,
+rough dielectric response, green-channel AO swizzle, 5.4m metric UV repeat and
+idempotent disposal. Coastal keeps Unity's straight sand footprint at
+`[55, -0.78, -1500]` with size `[70, 0.8, 3300]`; only its material treatment
+is upgraded to the same textured MatrixRex Beachfront treatment requested for
+the port.
+
 The SMAA algorithm and lookup textures carry their original 2013 MIT notice in
 `public/unity/smaa/LICENSE.txt`; `area.png` and `search.png` are lossless PNG
 conversions of the corresponding MIT-associated lookup tables. The dither rank
@@ -89,6 +106,12 @@ then projects only the inward remainder for tangent-preserving glances. It no
 longer approximates the curve with axis-aligned wall boxes. The fallback is in
 `pitBoxes`. The authored `?coastphysics` query starts on dry sand just inside
 the waterline for focused containment and deep-water QA.
+
+Coastal Street keeps the same visual-only ocean rule but has a different
+course boundary: its graded canal wall at `x = 7.2m` owns containment and a
+fall beyond it reaches the level's `killY = -6m`. The textured Coastal sand is
+presentation-only, matching the source `DistantBeach` object, so it cannot
+create an unintended second route beside the road.
 
 ## Atmosphere
 
@@ -124,3 +147,7 @@ Add `?lite` or `&lite` to the corresponding query for the fallback. Verify:
 - Slipstream uses the shared two-wave runtime, not its removed plasma shader;
 - repeated level switches produce no console/WebGL errors;
 - WATER studio reports active reflection/prepass dimensions and stable FPS.
+
+For Coastal Street, also select the level from the menu and verify that the
+MatrixRex horizon and textured sand stay on screen right for the full route,
+with no rectangular blue slab, sand-asphalt seam or sand ground collision.
