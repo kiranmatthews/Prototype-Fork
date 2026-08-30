@@ -32,6 +32,11 @@ import { CoastWater, type ShoreSample } from "./water";
 import { createUnityBeachfrontReference } from "./beachfront";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
+import {
+  accelerateGroundMeshes,
+  disposeGroundAcceleration,
+  type GroundAccelerationStats,
+} from "./groundAcceleration";
 
 const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { releaseWumpaMesh, wumpaMesh, WUMPA_SIZE } from "./wumpa";
@@ -2299,6 +2304,8 @@ export function isEditUnlocked(): boolean {
 
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
+  groundAccelerationStats!: GroundAccelerationStats;
+  private acceleratedGroundGeometries = new Set<THREE.BufferGeometry>();
   crates: Crate[] = [];
   enemies: Enemy[] = [];
   projectiles: Projectile[] = []; // sentry orbs in flight
@@ -3108,6 +3115,14 @@ export class Level {
     this.clearPlayFog(); // ...and the course you run on comes back out of it
     this.snapshotHome(); // last: reset() needs where everything actually started
     this.rebuildCrateRails(); // every crate is placed: derive the grind lines
+    // All geometry and authoring transforms are now final. Build local-space
+    // BVHs before the first gameplay tick so every ground consumer—landing,
+    // teeter, shadows, ledges, crates and editor picking—uses the same
+    // accelerated Mesh.raycast contract with no first-query hitch.
+    this.root.updateMatrixWorld(true);
+    const groundAcceleration = accelerateGroundMeshes(this.groundMeshes);
+    this.acceleratedGroundGeometries = groundAcceleration.ownedGeometries;
+    this.groundAccelerationStats = groundAcceleration.stats;
   }
 
   // WHERE EVERYTHING STARTED.
@@ -4986,6 +5001,11 @@ export class Level {
       this.water.dispose();
       this.water = null;
     }
+    disposeGroundAcceleration(
+      this.acceleratedGroundGeometries,
+      preservedGeometry,
+    );
+    this.acceleratedGroundGeometries.clear();
     this.root.traverse((object) => releaseWumpaMesh(object));
     // Anything flagged `shared` is a process-wide singleton that outlives this
     // level — the one wumpa geometry/material/texture behind every apple in
@@ -5673,6 +5693,10 @@ export class Level {
       const s = Math.sin(this.time * m.speed + m.phase) * m.amp;
       m.lastDelta.copy(m.base).addScaledVector(m.axisV, s).sub(m.mesh.position);
       m.mesh.position.add(m.lastDelta);
+      // Player.step can run several fixed ticks before the renderer gets a
+      // chance to update matrices. Keep collision on the transform authored
+      // by this tick; a local-space BVH itself needs no refit for rigid motion.
+      m.mesh.updateWorldMatrix(true, false);
       if (m.torch) {
         // the brazier rides the deck: flame AND its pooled light follow
         m.torch.group.position.add(m.lastDelta);
@@ -5815,6 +5839,7 @@ export class Level {
         c.mesh.position.copy(c.base);
         c.mesh.rotation.set(0, c.yaw, 0);
       }
+      c.mesh.updateWorldMatrix(true, false);
     }
 
     // Sky-bridge ropes: sag + wobble under a grinder, snap if you linger too
@@ -6548,6 +6573,10 @@ export class Level {
       b.st.mesh.visible = true;
       b.st.box.makeEmpty();
     }
+    // Reset can run inside a catch-up fixed step, before any renderer pass.
+    // Publish restored mover/crumble/phase transforms immediately so every
+    // subsequent ground ray sees the reset world rather than stale matrices.
+    this.root.updateMatrixWorld(true);
   }
 
   // ---------------------------------------------------------------- build --

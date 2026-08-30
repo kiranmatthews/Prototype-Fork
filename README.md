@@ -10,6 +10,7 @@ against the equivalent Unity greybox workflow.
 - [Iteration log](docs/LEVEL_ITERATIONS.md)
 - [Unity-backport level primitives](docs/UNITY_BACKPORT_PRIMITIVES.md)
 - [Level-editor round-trip contract](docs/EDITOR_ROUNDTRIP.md)
+- [Universal ground-query acceleration](docs/GROUND_QUERY_ACCELERATION.md)
 - [Tripo → img2threejs character pipeline](docs/TRIPO_CHARACTER_PIPELINE.md)
 
 A greybox feel prototype for a PS1/PS2-style fake-physics board platformer —
@@ -85,5 +86,6 @@ kicker ramp with a gap (carry speed!) → finish gate.
 - `src/player.ts` — authored movement: heading/speed/fake gravity/spin
 - `src/rails.ts` — polyline grind rails; the rail owns the player
 - `src/level.ts` — every level, plus the toolkit they are built from
+- `src/groundAcceleration.ts` — per-geometry BVHs for universal ground queries
 - `src/tuning.ts` — every feel number in the game
 - `src/ui.ts` — debug stats + live tuning sliders

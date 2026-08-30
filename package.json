@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "check:levels": "node tools/validate-levels.mjs",
+    "check:ground": "node tools/validate-ground-acceleration.mjs",
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",
     "check:interpolation": "node tools/validate-render-interpolation.mjs",
     "check:editor-capture": "node tools/validate-editor-roundtrip.mjs --strict-hand-built",
@@ -13,11 +14,12 @@
     "character:doctor": "python3 tools/tripo-character/tripo_character.py doctor",
     "character:generate": "python3 tools/tripo-character/tripo_character.py generate",
     "character:test": "python3 -m unittest discover -s tools/tripo-character/tests -p 'test_*.py'",
-    "build": "npm run check:levels && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:ocean && tsc --noEmit && vite build",
+    "build": "npm run check:levels && npm run check:ground && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:ocean && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "three": "^0.166.1"
+    "three": "^0.166.1",
+    "three-mesh-bvh": "0.9.14"
   },
   "devDependencies": {
     "@types/three": "^0.166.0",
