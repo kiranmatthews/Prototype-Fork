@@ -851,7 +851,7 @@ void main()
     highp vec3 cmask = one;
     highp vec3 cmask1 = one;
     highp vec3 cmask2 = one;
-    highp float mwidth = _1871[int(uParams_shadowMask)];
+    highp float mwidth = _1871[int(max(uParams_shadowMask, 0.0))];
     highp float mask_compensate = fract(mwidth);
     highp float mwidth1 = mwidth;
     if (uParams_shadowMask > (-0.5))
@@ -885,8 +885,8 @@ void main()
             highp vec2 param_17 = floor(maskcoord);
             highp float param_18 = mx;
             highp float param_19 = mb;
-            highp vec3 _1977 = Mask(param_17, param_18, param_19);
-            cmask = _1977;
+            highp vec3 _1978 = Mask(param_17, param_18, param_19);
+            cmask = _1978;
         }
         else
         {
@@ -897,78 +897,78 @@ void main()
                 mlerp = clamp(((1.0 + uGlobal_mzoom_sh) * mlerp) - (0.5 * uGlobal_mzoom_sh), 0.0, 1.0);
             }
             highp float mcoord = floor(maskcoord.x / mscale);
-            bool _2012 = uParams_shadowMask == 12.0;
-            bool _2019;
-            if (_2012)
+            bool _2013 = uParams_shadowMask == 12.0;
+            bool _2020;
+            if (_2013)
             {
-                _2019 = uGlobal_mask_zoom == (-2.0);
+                _2020 = uGlobal_mask_zoom == (-2.0);
             }
             else
             {
-                _2019 = _2012;
+                _2020 = _2013;
             }
-            if (_2019)
+            if (_2020)
             {
                 mcoord = ceil(maskcoord.x / mscale);
             }
             highp vec2 param_20 = vec2(mcoord, maskcoord.y);
             highp float param_21 = mx;
             highp float param_22 = mb;
-            highp vec3 _2036 = Mask(param_20, param_21, param_22);
+            highp vec3 _2037 = Mask(param_20, param_21, param_22);
             highp vec2 param_23 = vec2(mcoord + 1.0, maskcoord.y);
             highp float param_24 = mx;
             highp float param_25 = mb;
-            highp vec3 _2047 = Mask(param_23, param_24, param_25);
-            cmask = mix(_2036, _2047, vec3(mlerp));
+            highp vec3 _2048 = Mask(param_23, param_24, param_25);
+            cmask = mix(_2037, _2048, vec3(mlerp));
         }
         highp float sm_offset = 0.0;
-        bool _2055 = uParams_shadowMask == 0.0;
-        bool _2062;
-        if (!_2055)
+        bool _2056 = uParams_shadowMask == 0.0;
+        bool _2063;
+        if (!_2056)
         {
-            _2062 = uParams_shadowMask == 2.0;
+            _2063 = uParams_shadowMask == 2.0;
         }
         else
         {
-            _2062 = _2055;
+            _2063 = _2056;
         }
-        bool _2069;
-        if (!_2062)
+        bool _2070;
+        if (!_2063)
         {
-            _2069 = uParams_shadowMask == 5.0;
+            _2070 = uParams_shadowMask == 5.0;
         }
         else
         {
-            _2069 = _2062;
+            _2070 = _2063;
         }
-        bool _2076;
-        if (!_2069)
+        bool _2077;
+        if (!_2070)
         {
-            _2076 = uParams_shadowMask == 6.0;
+            _2077 = uParams_shadowMask == 6.0;
         }
         else
         {
-            _2076 = _2069;
+            _2077 = _2070;
         }
-        bool _2083;
-        if (!_2076)
+        bool _2084;
+        if (!_2077)
         {
-            _2083 = uParams_shadowMask == 8.0;
+            _2084 = uParams_shadowMask == 8.0;
         }
         else
         {
-            _2083 = _2076;
+            _2084 = _2077;
         }
-        bool _2090;
-        if (!_2083)
+        bool _2091;
+        if (!_2084)
         {
-            _2090 = uParams_shadowMask == 11.0;
+            _2091 = uParams_shadowMask == 11.0;
         }
         else
         {
-            _2090 = _2083;
+            _2091 = _2084;
         }
-        bool bsm_offset = _2090;
+        bool bsm_offset = _2091;
         if (zoomed)
         {
             if ((uParams_mask_layout < 0.5) && bsm_offset)
@@ -992,8 +992,8 @@ void main()
         highp vec2 param_26 = scoord + vec2(sm_offset, 0.0);
         highp float param_27 = mx;
         highp float param_28 = swidth;
-        highp float _2125 = SlotMask(param_26, param_27, param_28);
-        smask = _2125;
+        highp float _2126 = SlotMask(param_26, param_27, param_28);
+        smask = _2126;
         smask = clamp(smask + mix(uGlobal_smask_mit, 0.0, w3 * pow(colmx, 0.300000011920928955078125)), 0.0, 1.0);
         cmask2 = cmask;
         cmask *= smask;
@@ -1152,8 +1152,8 @@ void main()
     if (abs(uGlobal_addnoised) > 0.00999999977648258209228515625)
     {
         highp vec3 param_49 = vec3(floor((uGlobal_OutputSize.xy * vTexCoord) / vec2(uGlobal_noiseresd)), float(uGlobal_FrameCount));
-        highp vec3 _3028 = _noise(param_49);
-        highp vec3 noise0 = _3028;
+        highp vec3 _3029 = _noise(param_49);
+        highp vec3 noise0 = _3029;
         if (uGlobal_noisetype < 0.5)
         {
             color = mix(color, noise0, vec3((0.25 * abs(uGlobal_addnoised)) * rc));
@@ -1166,9 +1166,9 @@ void main()
     colmx = max(max(orig1.x, orig1.y), orig1.z);
     color += (mix(cmask2, color * (0.125 * (1.0 - colmx)), vec3(min(20.0 * colmx, 1.0))) * uGlobal_bmask);
     highp float param_50 = mix(pos.y, pos.x, uGlobal_bardir);
-    highp float _3096 = humbar(param_50);
+    highp float _3097 = humbar(param_50);
     highp vec2 param_51 = posb;
-    highp float _3104 = corner(param_51);
-    FragColor = mix(vec4((((color * vig) * _3096) * uGlobal_post_br) * _3104, 1.0), crtGuestSampleLinearBorder(StockPass, (floor(pos1 * uGlobal_OriginalSize.xy) + vec2(0.5)) * uGlobal_OriginalSize.zw, 0.0), vec4(step(pos1.x, uGlobal_oimage - 0.00025000001187436282634735107421875)));
+    highp float _3105 = corner(param_51);
+    FragColor = mix(vec4((((color * vig) * _3097) * uGlobal_post_br) * _3105, 1.0), crtGuestSampleLinearBorder(StockPass, (floor(pos1 * uGlobal_OriginalSize.xy) + vec2(0.5)) * uGlobal_OriginalSize.zw, 0.0), vec4(step(pos1.x, uGlobal_oimage - 0.00025000001187436282634735107421875)));
 }
 

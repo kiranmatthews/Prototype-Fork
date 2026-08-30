@@ -51,6 +51,9 @@ for Three.js `RawShaderMaterial` with `glslVersion: THREE.GLSL3`.
 - Dynamic Gaussian/reconstruction loops have the same 512-iteration bound as
   the Unity port.
 - Frame-count uniforms are floats, matching the Unity material binding.
+- The authored `shadowMask = -1` no-mask sentinel clamps the preparatory mask
+  width lookup to index `0`; upstream otherwise reads array index `-1` before
+  reaching its no-mask guard, which is undefined in WebGL GLSL.
 
 Do not hand-edit generated GLSL or `shaders.ts`; change `generate.py` and
 regenerate.

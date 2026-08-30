@@ -51,6 +51,25 @@ export interface CrtGuestParameterGroup {
   readonly parameters: readonly CrtGuestParameterDefinition[];
 }
 
+export interface CrtGuestParameterOffTarget {
+  readonly parameterId: string;
+  readonly value: number;
+}
+
+export interface CrtGuestParameterOffControl {
+  readonly label: string;
+  readonly status: string;
+  readonly targets: readonly CrtGuestParameterOffTarget[];
+}
+
+export interface CrtGuestParameterPresentation {
+  readonly label: string;
+  readonly hint: string | null;
+  readonly fixedValue: number | null;
+  readonly fixedDisplay: string | null;
+  readonly offControl: CrtGuestParameterOffControl | null;
+}
+
 type RangeRow = readonly [
   defaultValue: number,
   minimum: number,
@@ -300,6 +319,309 @@ export function getCrtGuestRange(
   variant: CrtGuestVariant,
 ): CrtGuestParameterRange | null {
   return variant === "advanced" ? parameter.advanced : parameter.hd;
+}
+
+interface ParameterPresentationMetadata {
+  readonly label?: string;
+  readonly hint?: string;
+  readonly fixedValue?: number;
+  readonly fixedDisplay?: string;
+  readonly offControl?: CrtGuestParameterOffControl;
+}
+
+function offControl(
+  label: string,
+  status: string,
+  ...parameterIds: readonly string[]
+): CrtGuestParameterOffControl {
+  return valueControl(label, status, 0, ...parameterIds);
+}
+
+function valueControl(
+  label: string,
+  status: string,
+  value: number,
+  ...parameterIds: readonly string[]
+): CrtGuestParameterOffControl {
+  return Object.freeze({
+    label,
+    status,
+    targets: Object.freeze(
+      parameterIds.map((parameterId) =>
+        Object.freeze({ parameterId, value }),
+      ),
+    ),
+  });
+}
+
+const AFTERGLOW_OFF = offControl(
+  "Afterglow Off",
+  "Afterglow off (AS = 0).",
+  "AS",
+);
+
+const PARAMETER_PRESENTATION: Readonly<
+  Record<string, ParameterPresentationMetadata>
+> = Object.freeze({
+  LS: Object.freeze({
+    label: "LUT Size (fixed 32³)",
+    hint:
+      "Guest's supplied LUTs are fixed at 32 × 32 × 32; this is intentionally locked, not a broken slider.",
+    fixedValue: 32,
+    fixedDisplay: "32³",
+  }),
+  esrc: Object.freeze({
+    hint:
+      "This chooses the afterglow source; it does not turn the effect off. Use Afterglow Strength (AS) = 0 to disable afterglow.",
+    offControl: AFTERGLOW_OFF,
+  }),
+  bth: Object.freeze({
+    label: "Afterglow Effect Threshold (minimum 1)",
+    hint:
+      "This is a threshold, not a strength. Guest's upstream minimum is 1; use Afterglow Strength (AS) = 0 to disable afterglow.",
+    offControl: AFTERGLOW_OFF,
+  }),
+  CP: Object.freeze({
+    label: "CRT Profile: -1 Off | EBU | P22 | SMPTE-C | Philips | Trin.",
+    hint:
+      "This is the profile selector. -1 is Guest's Profile Off value; 0 selects EBU.",
+    offControl: valueControl("Off", "CRT profile off (CP = -1).", -1, "CP"),
+  }),
+  AS: Object.freeze({
+    label: "Afterglow Strength (0 = Off)",
+    hint: "This is the genuine afterglow on/off strength control.",
+    offControl: offControl("Off", "Afterglow off (AS = 0).", "AS"),
+  }),
+  BLOOM: Object.freeze({
+    label: "Raster Bloom % (0 = Off)",
+    hint: "This is the genuine Advanced raster-bloom strength control.",
+    offControl: offControl("Off", "Raster bloom off (BLOOM = 0).", "BLOOM"),
+  }),
+  internal_res: Object.freeze({
+    hint:
+      "This is the core HD processing scale, not an effect strength. It has no master Off value; 0.5 is Guest's upstream minimum.",
+  }),
+  pre_gc: Object.freeze({
+    hint:
+      "This is a positive gamma multiplier/exponent. 1 is neutral/identity; 0 is not an Off value.",
+  }),
+  vigstr: Object.freeze({
+    label: "Vignette Strength (0 = Off)",
+    hint: "This is the genuine vignette on/off strength control.",
+    offControl: offControl("Off", "Vignette off (vigstr = 0).", "vigstr"),
+  }),
+  vigdef: Object.freeze({
+    hint:
+      "This shapes the vignette and is not an on/off control. Use Vignette Strength (vigstr) = 0 to disable vignette.",
+  }),
+  lsmooth: Object.freeze({
+    hint:
+      "This shapes Advanced raster-bloom history smoothing. Use Raster Bloom % (BLOOM) = 0 to disable raster bloom.",
+  }),
+  GAMMA_INPUT: Object.freeze({
+    hint:
+      "This is a positive transfer exponent. 1 is identity; 0 is not an Off value.",
+  }),
+  gamma_out: Object.freeze({
+    hint:
+      "This is a positive transfer exponent. 1 is identity; 0 is not an Off value.",
+  }),
+  h_sharp: Object.freeze({
+    hint:
+      "This is Advanced's core horizontal reconstruction sharpness, not an effect strength. It has no master Off value; 0.2 is Guest's upstream minimum.",
+  }),
+  HSHARPNESS: Object.freeze({
+    hint:
+      "This is Guest's horizontal reconstruction range, not an effect strength. Its upstream minimum is 1 and must not be changed to 0.",
+  }),
+  SIGMA_HOR: Object.freeze({
+    label: "Horizontal Blur Sigma (minimum 0.1)",
+    hint:
+      "This is Guest's horizontal reconstruction width, not an on/off control. 0.1 is the upstream minimum and least-blurred setting.",
+  }),
+  VSHARPNESS: Object.freeze({
+    hint:
+      "This is Guest's vertical reconstruction range, not an effect strength. Its upstream minimum is 1 and must not be changed to 0.",
+  }),
+  SIGMA_VER: Object.freeze({
+    label: "Vertical Blur Sigma (minimum 0.1)",
+    hint:
+      "This is Guest's vertical reconstruction width, not an on/off control. 0.1 is the upstream minimum and least-blurred setting.",
+  }),
+  gamma_c: Object.freeze({
+    hint:
+      "This is a positive gamma exponent. 1 is neutral/identity; 0 is not an Off value.",
+  }),
+  gamma_c2: Object.freeze({
+    hint:
+      "This is a positive complementary-gamma exponent. 1 is neutral/identity; 0 is not an Off value.",
+  }),
+  brightboost: Object.freeze({
+    hint:
+      "This is a brightness multiplier. 1 is neutral/identity; 0 is not an effect Off value.",
+  }),
+  brightboost1: Object.freeze({
+    hint:
+      "This is a brightness multiplier. 1 is neutral/identity; 0 is not an effect Off value.",
+  }),
+  glow: Object.freeze({
+    label: "(Magic) Glow Strength (0 = Off)",
+    hint: "This is the genuine glow on/off strength control.",
+    offControl: offControl("Off", "Glow off (glow = 0).", "glow"),
+  }),
+  bloom: Object.freeze({
+    label: "Bloom Strength (0 = Off)",
+    hint: "This is the genuine bloom on/off strength control.",
+    offControl: offControl("Off", "Bloom off (bloom = 0).", "bloom"),
+  }),
+  mask_bloom: Object.freeze({
+    label: "Mask Bloom (0 = Off)",
+    hint: "This strength is independent of Bloom Strength; set it to 0 to disable mask bloom.",
+    offControl: offControl(
+      "Off",
+      "Mask bloom off (mask_bloom = 0).",
+      "mask_bloom",
+    ),
+  }),
+  halation: Object.freeze({
+    label: "Halation Strength (0 = Off)",
+    hint: "This is the genuine halation on/off strength control.",
+    offControl: offControl(
+      "Off",
+      "Halation off (halation = 0).",
+      "halation",
+    ),
+  }),
+  barintensity: Object.freeze({
+    label: "Hum Bar Intensity (0 = Off)",
+    hint: "Hum Bar Speed does not disable the effect; set this intensity to 0.",
+    offControl: offControl(
+      "Off",
+      "Hum bar off (barintensity = 0).",
+      "barintensity",
+    ),
+  }),
+  barspeed: Object.freeze({
+    label: "Hum Bar Speed (disable with Intensity)",
+    hint:
+      "This timing control has an upstream minimum of 5. Disable hum bars with Hum Bar Intensity = 0.",
+  }),
+  c_shape: Object.freeze({
+    hint:
+      "This only shapes curvature. Curvature is off when Curvature X (warpX) and Curvature Y (warpY) are both 0.",
+  }),
+  sborder: Object.freeze({
+    hint:
+      "This shapes border intensity and is not an on/off control. Border/rounded-corner geometry is governed by Border Size and Corner Size.",
+  }),
+  shadowMask: Object.freeze({
+    label: "CRT Mask: -1 Off; 0 CGWG; 1-4 Lottes; 5-14 Trinitron",
+    hint:
+      "-1 is Guest's Mask Off value. 0 selects the CGWG mask; it does not disable masking.",
+    offControl: valueControl(
+      "Off",
+      "CRT mask off (shadowMask = -1).",
+      -1,
+      "shadowMask",
+    ),
+  }),
+  maskboost: Object.freeze({
+    hint:
+      "This is a mask-shaping multiplier; 1 means no extra boost. Disable the CRT mask with CRT Mask (shadowMask) = -1.",
+  }),
+  masksize: Object.freeze({
+    hint:
+      "This shapes the selected CRT mask and is not an on/off control. Disable the CRT mask with CRT Mask (shadowMask) = -1.",
+  }),
+  mask_gamma: Object.freeze({
+    hint:
+      "This is the selected mask's positive gamma exponent, not an on/off control. Disable the CRT mask with CRT Mask (shadowMask) = -1.",
+  }),
+  double_slot: Object.freeze({
+    hint:
+      "This shapes slot-mask height. Slot masking is off when both slot-mask strength controls (slotmask and slotmask1) are 0.",
+  }),
+  slotms: Object.freeze({
+    hint:
+      "This shapes slot-mask thickness. Slot masking is off when both slot-mask strength controls (slotmask and slotmask1) are 0.",
+  }),
+  noiseresd: Object.freeze({
+    hint:
+      "This shapes noise resolution and is not an on/off control. Use Add Noise (addnoised) = 0 to disable noise.",
+  }),
+  post_br: Object.freeze({
+    hint:
+      "This is a final brightness multiplier. 1 is neutral/identity; 0 is not an effect Off value.",
+  }),
+});
+
+const GLOW_DEPENDENCY_IDS = new Set([
+  "m_glow",
+  "m_glow_cutoff",
+  "m_glow_low",
+  "m_glow_high",
+  "m_glow_dist",
+  "m_glow_mask",
+  "FINE_GLOW",
+  "SIZEH",
+  "SIGMA_H",
+  "SIZEV",
+  "SIGMA_V",
+]);
+
+const BLOOM_HALATION_DEPENDENCY_IDS = new Set([
+  "FINE_BLOOM",
+  "SIZEHB",
+  "SIGMA_HB",
+  "SIZEVB",
+  "SIGMA_VB",
+  "bloom_dist",
+  "bmask1",
+  "hmask1",
+]);
+
+const SCANLINE_SHAPE_IDS = new Set([
+  "beam_min",
+  "beam_max",
+  "scan_falloff",
+  "scangamma",
+]);
+
+/**
+ * Returns panel-only semantics without altering the source-pinned manifest
+ * labels, ranges, shader values, or serialized preset order.
+ */
+export function getCrtGuestParameterPresentation(
+  parameter: CrtGuestParameterDefinition,
+  variant: CrtGuestVariant,
+): CrtGuestParameterPresentation {
+  const metadata = PARAMETER_PRESENTATION[parameter.id];
+  let label = metadata?.label ?? parameter.label;
+  let hint = metadata?.hint ?? null;
+
+  if (parameter.id === "interm" && variant === "hd") {
+    label = "Interlace Mode: OFF, Normal 1-3,5; Interpolation 4";
+  }
+  if (!hint && GLOW_DEPENDENCY_IDS.has(parameter.id)) {
+    hint =
+      "This shapes the glow kernel; it does not enable or disable glow. Use Glow Strength (glow) = 0 to turn glow off.";
+  }
+  if (!hint && BLOOM_HALATION_DEPENDENCY_IDS.has(parameter.id)) {
+    hint =
+      "This shapes the shared bloom/halation kernel; it is not an on/off control. Use Bloom Strength, Mask Bloom, and Halation Strength = 0, plus Glow Strength = 0 when Magic Glow type 2 uses this kernel.";
+  }
+  if (!hint && SCANLINE_SHAPE_IDS.has(parameter.id)) {
+    hint =
+      "This shapes scanlines and is not an on/off control. Use No-scanline mode (no_scanlines) to bypass scanline shaping.";
+  }
+
+  return Object.freeze({
+    label,
+    hint,
+    fixedValue: metadata?.fixedValue ?? null,
+    fixedDisplay: metadata?.fixedDisplay ?? null,
+    offControl: metadata?.offControl ?? null,
+  });
 }
 
 const STARTUP_ADVANCED_VALUES = Object.freeze([0.0,0.0,1.0,4.0,0.3199999928474426,0.3199999928474426,0.3199999928474426,0.20000000298023224,0.5,0.0,0.0,0.0,32.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,0.699999988079071,0.0,1.0,0.0,2.4000000953674316,2.4000000953674316,375.0,1.0,0.20000000298023224,0.0,0.0,0.0,0.25,0.0,0.0,5.199999809265137,0.5,0.0,0.0,0.25,0.23000000417232513,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.11999999731779099,0.3499999940395355,5.0,1.0,1.0,1.0,6.0,1.2000000476837158,6.0,1.2000000476837158,1.0,3.0,0.75,3.0,0.6000000238418579,0.07999999821186066,0.0,0.0,0.0,0.0,0.0,0.3499999940395355,1.0,1.0,1.399999976158142,1.100000023841858,0.0,0.0,6.0,8.0,1.2999999523162842,1.0,0.0,0.6000000238418579,0.5,1.0,1.0,2.4000000953674316,0.0,0.0,0.0,0.0,0.0,0.0,0.25,0.0,0.0,0.0,0.0,0.0,0.75,50.0,0.0,0.0,0.0,0.30000001192092896,1.100000023841858,1.0,1.0,0.0,0.0,0.0,0.0,0.5,1.5,2.4000000953674316,0.0,0.0,0.0,2.0,1.0,0.0,0.0,0.0,0.0,0.10000000149011612,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,2.0,0.0,1.0,0.0]);

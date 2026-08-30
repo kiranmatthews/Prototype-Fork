@@ -21,5 +21,8 @@ Unity/internal source assets. Their hashes are recorded in `LUT-SHA256SUMS.txt`.
 
 WebGL-specific changes are limited to resource binding, deterministic sampler
 selection, transparent-black border emulation, bounded dynamic loops, the
-pinned HD parameter-block typo correction, and color-pipeline wrapper stages.
-The shader algorithms and canonical parameter contract are otherwise retained.
+pinned HD parameter-block typo correction, an array-safe preparatory lookup for
+the authored `shadowMask = -1` no-mask sentinel, and color-pipeline wrapper
+stages. The sentinel adaptation only clamps the otherwise out-of-bounds width
+lookup made before Guest's no-mask guard; mask modes `0..14` and the canonical
+parameter contract are otherwise retained.

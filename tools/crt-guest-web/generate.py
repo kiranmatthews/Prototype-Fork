@@ -357,6 +357,15 @@ def split_fragment_stage(source: str) -> str:
     # Pinned upstream typo: these are push constants, not members of the MVP UBO.
     result = result.replace("global.VSHARPNESS", "params.VSHARPNESS")
     result = result.replace("global.SIGMA_VER", "params.SIGMA_VER")
+    # Guest exposes shadowMask = -1 as the authored no-mask sentinel, but the
+    # source indexes mwidths[int(shadowMask)] before entering its non-negative
+    # mask branch. Clamp only that preparatory lookup so WebGL never evaluates
+    # an out-of-bounds array index; valid mask modes 0..14 remain behaviorally
+    # equivalent.
+    result = result.replace(
+        "mwidths[int(shadowMask)]",
+        "mwidths[int(max(shadowMask, 0.0))]",
+    )
     return result
 
 

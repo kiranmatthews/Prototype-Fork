@@ -8,6 +8,7 @@ import {
   CrtGuestSettingsChange,
   CrtGuestVariant,
   crtGuestSettings,
+  getCrtGuestParameterPresentation,
   getCrtGuestRange,
   type CrtGuestParameterDefinition,
   type CrtGuestQuality,
@@ -95,6 +96,7 @@ const PANEL_CSS = [
   ".parameter:nth-child(odd) { background: #0d1714; }",
   ".parameter-label { min-width: 0; overflow-wrap: anywhere; color: #d8f7eb; }",
   ".parameter-id { display: block; margin-top: 2px; color: #547f70; font-size: 10px; }",
+  ".parameter-hint { display: block; margin-top: 3px; color: #83ad9f; font-size: 9px; line-height: 1.35; }",
   ".range { width: 100%; min-width: 80px; margin: 0; accent-color: #7dffd2; }",
   ".numeric {",
   "  width: 82px; height: 28px; padding: 4px 5px; border: 1px solid #477b69;",
@@ -102,6 +104,10 @@ const PANEL_CSS = [
   "}",
   ".numeric:focus { border-color: #fff; box-shadow: inset 0 -2px #8fffd7; }",
   ".numeric:disabled, .range:disabled { opacity: .55; }",
+  ".fixed-value {",
+  "  grid-column: 2 / 4; min-height: 28px; display: flex; align-items: center; justify-content: center;",
+  "  border: 1px solid #355f51; background: #0b1411; color: #b9ffe7; font-weight: 900; letter-spacing: .5px;",
+  "}",
   ".mini { min-width: 30px; padding: 3px 5px; font-size: 10px; }",
   ".locked { color: #79aa99; font-size: 9px; text-transform: uppercase; letter-spacing: .5px; }",
   ".hidden-file { display: none; }",
@@ -495,18 +501,39 @@ export class CrtGuestTuningPanel {
   ): HTMLElement {
     const range = getCrtGuestRange(parameter, variant);
     if (!range) throw new Error("Unsupported CRT parameter row: " + parameter.id);
+    const presentation = getCrtGuestParameterPresentation(parameter, variant);
 
     const row = this.make("div", "parameter");
-    const label = this.make(
-      "label",
-      "parameter-label",
-      parameter.id === "barspeed"
-        ? "Hum Bar Speed (disable with Intensity)"
-        : parameter.id === "barintensity"
-          ? "Hum Bar Intensity (0 = Off)"
-          : parameter.label,
-    );
+    const labelCell = this.make("div", "parameter-label");
+    const label = this.make("label", "", presentation.label);
+    const labelId = "crt-label-" + variant + "-" + parameter.index;
+    label.id = labelId;
     label.appendChild(this.make("span", "parameter-id", parameter.id));
+    labelCell.appendChild(label);
+    const hintId = presentation.hint
+      ? "crt-hint-" + variant + "-" + parameter.index
+      : null;
+    if (presentation.hint && hintId) {
+      const hint = this.make("span", "parameter-hint", presentation.hint);
+      hint.id = hintId;
+      labelCell.appendChild(hint);
+    }
+
+    const actionCell = this.make("div", "line");
+    if (presentation.fixedValue !== null) {
+      const fixed = this.make(
+        "output",
+        "fixed-value",
+        (presentation.fixedDisplay ?? String(presentation.fixedValue)) + " · fixed",
+      );
+      fixed.id = "crt-value-" + variant + "-" + parameter.index;
+      fixed.setAttribute("aria-labelledby", labelId);
+      if (hintId) fixed.setAttribute("aria-describedby", hintId);
+      label.htmlFor = fixed.id;
+      actionCell.appendChild(this.make("span", "locked", "locked"));
+      row.append(labelCell, fixed, actionCell);
+      return row;
+    }
 
     const slider = this.document.createElement("input");
     slider.className = "range";
@@ -514,7 +541,8 @@ export class CrtGuestTuningPanel {
     slider.min = String(range.min);
     slider.max = String(range.max);
     slider.step = String(range.step);
-    slider.setAttribute("aria-label", parameter.label);
+    slider.setAttribute("aria-labelledby", labelId);
+    if (hintId) slider.setAttribute("aria-describedby", hintId);
 
     const numeric = this.document.createElement("input");
     numeric.className = "numeric";
@@ -523,24 +551,32 @@ export class CrtGuestTuningPanel {
     numeric.min = String(range.min);
     numeric.max = String(range.max);
     numeric.step = String(range.step);
-    numeric.setAttribute("aria-label", parameter.label + " numeric value");
+    numeric.setAttribute(
+      "aria-label",
+      presentation.label + " numeric value",
+    );
+    if (hintId) numeric.setAttribute("aria-describedby", hintId);
     label.htmlFor = "crt-value-" + variant + "-" + parameter.index;
     numeric.id = label.htmlFor;
 
-    const actionCell = this.make("div", "line");
-    if (parameter.id === "LS") {
-      slider.disabled = true;
-      numeric.disabled = true;
-      actionCell.appendChild(this.make("span", "locked", "locked"));
-    } else if (parameter.id === "barintensity") {
-      const off = this.button("Off", "mini");
+    if (presentation.offControl) {
+      const offControl = presentation.offControl;
+      const off = this.button(offControl.label, "mini");
+      off.setAttribute(
+        "aria-label",
+        offControl.label + " — " + presentation.label,
+      );
+      if (hintId) off.setAttribute("aria-describedby", hintId);
       off.addEventListener("click", () => {
-        this.settings.setValue(parameter.id, 0, variant);
-        this.setStatus("Hum bar off (barintensity = 0).");
+        for (const target of offControl.targets) {
+          this.settings.setValue(target.parameterId, target.value, variant);
+        }
+        this.setStatus(offControl.status);
       });
       actionCell.appendChild(off);
     } else if (range.min <= 0 && range.max >= 0) {
       const zero = this.button("0", "mini");
+      zero.setAttribute("aria-label", "Set " + presentation.label + " to 0");
       zero.addEventListener("click", () => {
         this.settings.setValue(parameter.id, 0, variant);
         this.setStatus("Set " + parameter.id + " = 0.");
@@ -570,7 +606,7 @@ export class CrtGuestTuningPanel {
       }
     });
 
-    row.append(label, slider, numeric, actionCell);
+    row.append(labelCell, slider, numeric, actionCell);
     this.parameterControls.set(parameter.id, controls);
     this.syncParameter(controls);
     return row;

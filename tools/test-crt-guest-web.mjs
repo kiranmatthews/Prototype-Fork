@@ -46,6 +46,18 @@ for (const variant of variants) {
         `${path} must keep LUT sampling linear`,
       );
     }
+    if (stage === "deconvergence") {
+      assert.match(
+        shader,
+        /\[int\(max\(uParams_shadowMask, 0\.0\)\)\]/,
+        `${path} must make Guest's shadowMask = -1 sentinel array-safe`,
+      );
+      assert.doesNotMatch(
+        shader,
+        /\[int\(uParams_shadowMask\)\]/,
+        `${path} must not index the mask-width array with -1`,
+      );
+    }
   }
 }
 

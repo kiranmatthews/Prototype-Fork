@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "scope": "Canonical CRT Guest Advanced and Advanced HD parameter contracts",
+  "base": {
+    "repository": "https://github.com/libretro/slang-shaders",
+    "commit": "a62d9cda9140294d22b6da5e4ff4187365890d42",
+    "counts": {
+      "advanced": 133,
+      "hd": 130,
+      "shared": 120,
+      "union": 143
+    }
+  },
+  "target": {
+    "repository": "https://github.com/guestrr/Libretro-Retroarch-SLANG",
+    "commit": "4034f18d2996dad33ab37ecc54602b5ff3620ff8",
+    "release": "crt-guest-advanced-2026-06-22-release1",
+    "captured": "2026-08-30",
+    "counts": {
+      "advanced": 138,
+      "hd": 134,
+      "shared": 125,
+      "union": 147
+    }
+  },
+  "additions": [
+    {
+      "id": "segams",
+      "variants": ["advanced", "hd"],
+      "value": {
+        "label": "Sega MS Blue Lift",
+        "default": 0.0,
+        "min": 0.0,
+        "max": 1.0,
+        "step": 1.0
+      }
+    },
+    {
+      "id": "segapal",
+      "variants": ["advanced", "hd"],
+      "value": {
+        "label": "Sega MD Pallete Fix",
+        "default": 0.0,
+        "min": 0.0,
+        "max": 1.0,
+        "step": 1.0
+      }
+    },
+    {
+      "id": "BP1",
+      "variants": ["advanced", "hd"],
+      "value": {
+        "label": "Raise Black Level",
+        "default": 0.0,
+        "min": 0.0,
+        "max": 25.0,
+        "step": 1.0
+      }
+    },
+    {
+      "id": "bloomsamp",
+      "variants": ["advanced", "hd"],
+      "value": {
+        "label": "Bloom Pixel Sampling",
+        "default": 0.0,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 1.0
+      }
+    },
+    {
+      "id": "ssharp",
+      "variants": ["advanced", "hd"],
+      "value": {
+        "label": "Smart Sharpen Scanlines",
+        "default": 0.0,
+        "min": 0.0,
+        "max": 0.5,
+        "step": 0.01
+      }
+    }
+  ],
+  "removals": [
+    {
+      "id": "HSHARP",
+      "variants": ["hd"],
+      "before": {
+        "label": "Sharpness Definition",
+        "default": 1.2,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.1
+      }
+    }
+  ],
+  "metadataChanges": [
+    {
+      "id": "BP",
+      "variants": ["advanced", "hd"],
+      "before": { "label": "Raise Black Level", "default": 0.0, "min": -100.0, "max": 25.0, "step": 1.0 },
+      "after": { "label": "Lower Black Level", "default": 0.0, "min": -100.0, "max": 0.0, "step": 1.0 }
+    },
+    {
+      "id": "SIGMA_H",
+      "variants": ["advanced", "hd"],
+      "before": { "label": "Horizontal Glow Sigma", "default": 1.2, "min": 0.2, "max": 15.0, "step": 0.05 },
+      "after": { "label": "Horizontal Glow Sigma", "default": 1.2, "min": 0.2, "max": 3.0, "step": 0.01 }
+    },
+    {
+      "id": "SIGMA_V",
+      "variants": ["advanced", "hd"],
+      "before": { "label": "Vertical Glow Sigma", "default": 1.2, "min": 0.2, "max": 15.0, "step": 0.05 },
+      "after": { "label": "Vertical Glow Sigma", "default": 1.2, "min": 0.2, "max": 3.0, "step": 0.01 }
+    },
+    {
+      "id": "SIGMA_HB",
+      "variants": ["advanced"],
+      "before": { "label": "Horizontal Bloom/Halation Sigma", "default": 0.75, "min": 0.25, "max": 15.0, "step": 0.025 },
+      "after": { "label": "Horizontal Bloom/Halation Sigma", "default": 0.75, "min": 0.25, "max": 2.0, "step": 0.01 }
+    },
+    {
+      "id": "SIGMA_HB",
+      "variants": ["hd"],
+      "before": { "label": "Horizontal Bloom/Halation Sigma", "default": 0.75, "min": 0.25, "max": 15.0, "step": 0.025 },
+      "after": { "label": "Horizontal Bloom/Halation Sigma", "default": 0.75, "min": 0.25, "max": 3.0, "step": 0.01 }
+    },
+    {
+      "id": "SIGMA_VB",
+      "variants": ["advanced"],
+      "before": { "label": "Vertical Bloom/Halation Sigma", "default": 0.6, "min": 0.25, "max": 15.0, "step": 0.025 },
+      "after": { "label": "Vertical Bloom/Halation Sigma", "default": 0.6, "min": 0.25, "max": 2.0, "step": 0.01 }
+    },
+    {
+      "id": "SIGMA_VB",
+      "variants": ["hd"],
+      "before": { "label": "Vertical Bloom/Halation Sigma", "default": 0.6, "min": 0.25, "max": 15.0, "step": 0.025 },
+      "after": { "label": "Vertical Bloom/Halation Sigma", "default": 0.6, "min": 0.25, "max": 3.0, "step": 0.01 }
+    },
+    {
+      "id": "SIGMA_HOR",
+      "variants": ["hd"],
+      "before": { "label": "Horizontal Blur Sigma", "default": 0.5, "min": 0.1, "max": 7.0, "step": 0.025 },
+      "after": { "label": "Horizontal Blur Sigma", "default": 0.5, "min": 0.1, "max": 1.0, "step": 0.01 }
+    },
+    {
+      "id": "SIGMA_VER",
+      "variants": ["hd"],
+      "before": { "label": "Vertical Blur Sigma", "default": 0.5, "min": 0.1, "max": 7.0, "step": 0.025 },
+      "after": { "label": "Vertical Blur Sigma", "default": 0.5, "min": 0.1, "max": 1.0, "step": 0.01 }
+    },
+    {
+      "id": "MAXS",
+      "variants": ["hd"],
+      "before": { "label": "Maximum Sharpness", "default": 0.15, "min": 0.0, "max": 0.3, "step": 0.01 },
+      "after": { "label": "Maximum Sharpness", "default": 0.2, "min": 0.0, "max": 0.3, "step": 0.01 }
+    },
+    {
+      "id": "HARNG",
+      "variants": ["hd"],
+      "before": { "label": "Substractive Sharpness Ringing", "default": 0.2, "min": 0.0, "max": 4.0, "step": 0.1 },
+      "after": { "label": "Substractive Sharpness Ringing", "default": 0.3, "min": 0.0, "max": 4.0, "step": 0.1 }
+    }
+  ]
+}
