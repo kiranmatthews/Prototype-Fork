@@ -13,6 +13,7 @@ export default defineConfig({
         index: 'index.html',
         crtReview: 'crt-review.html',
         skateboardLab: 'skateboard-lab.html',
+        spinLab: 'spin-lab.html',
       },
     },
   },

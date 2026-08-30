@@ -12,6 +12,7 @@ against the equivalent Unity greybox workflow.
 - [Level-editor round-trip contract](docs/EDITOR_ROUNDTRIP.md)
 - [Universal ground-query acceleration](docs/GROUND_QUERY_ACCELERATION.md)
 - [Unity Surf Cruiser skateboard + shape lab port](docs/UNITY_SKATEBOARD_WEB_PORT.md)
+- [Unity spin effects + orbital-ring lab port](docs/UNITY_SPIN_EFFECTS_WEB_PORT.md)
 - [Tripo → img2threejs character pipeline](docs/TRIPO_CHARACTER_PIPELINE.md)
 
 A greybox feel prototype for a PS1/PS2-style fake-physics board platformer —

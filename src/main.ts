@@ -55,6 +55,8 @@ import {
 import { PresentationFrameLimiter } from "./render-quality/frameLimiter";
 import { createSkateboardTuningPanel } from "./skateboard/panel";
 import { skateboardSettings } from "./skateboard/settings";
+import { createSpinTuningPanel } from "./spin-effects/panel";
+import { spinRingSettings } from "./spin-effects/settings";
 
 const app = document.getElementById("app")!;
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
@@ -1050,6 +1052,9 @@ renderQualitySettings.subscribe(() => {
 });
 const skateboardPanel = createSkateboardTuningPanel({
   settings: skateboardSettings,
+});
+const spinPanel = createSpinTuningPanel({
+  settings: spinRingSettings,
 });
 const recorder = new Recorder();
 const replayer = new Replayer();
@@ -3161,10 +3166,13 @@ requestAnimationFrame(frame);
   renderQualityPanel,
   skateboardSettings,
   skateboardPanel,
+  spinRingSettings,
+  spinPanel,
   getRenderQualitySizes: () => ({ ...renderQualitySizes }),
   getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
+  getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
   exportReplay,
   saveReplay,

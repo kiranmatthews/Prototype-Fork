@@ -33,6 +33,10 @@ import {
   skateboardRestingPivotLift,
 } from './skateboard/model';
 import { skateboardSettings } from './skateboard/settings';
+import {
+  SpinEffectsPresentation,
+  type SpinPresentationDiagnostics,
+} from './spin-effects/presentation';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 
@@ -342,7 +346,6 @@ export class Player {
   private static readonly WALL_Z = new THREE.Vector3();
   private static readonly WALL_OFF = new THREE.Vector3();
   private static readonly WALL_M = new THREE.Matrix4();
-  private static readonly FLIP_M = new THREE.Matrix4(); // flip-deck stand-in: board world transform pulled into group space
   private static readonly WALL_QT = new THREE.Quaternion();
   private static readonly WALL_QP = new THREE.Quaternion();
   private static relicVault = new Map<
@@ -793,7 +796,6 @@ export class Player {
   private readonly deckTricksThisAir = new Set<DeckTrickKind>();
   private readonly deckTricksThisCombo = new Set<DeckTrickKind>();
   private ollieDeckTrickBufferT = 0; // recent Square edge during a held ground ollie charge
-  private flipDeck: THREE.Object3D | null = null; // scene-level deck stand-in: performs the flip while the spin smear hides the rig
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
@@ -824,7 +826,7 @@ export class Player {
   private maskAnchor = new THREE.Vector3(); // scratch: head world position for the floating mask
   private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
   private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
-  private smearG: THREE.Group | null = null; // whirlwind stand-in shown while spinning
+  private spinEffects: SpinEffectsPresentation | null = null;
   private floorX!: THREE.Group; // landing X pinned to the floor under the skater
   private floorXMat!: THREE.MeshBasicMaterial; // shared by both bars — one opacity
   private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
@@ -1014,7 +1016,7 @@ export class Player {
       }
       this.setCharacter(saved);
     }
-    this.installSmear(); // whirlwind smear model shown during the spin attack
+    this.installSpinEffects(); // Unity Whirlwind Vixen + orbital rings
 
     // Landing X: a small cross pinned to the floor under the skater — the
     // precise "you land HERE" mark. There used to be a soft dark blob under it
@@ -1200,6 +1202,10 @@ export class Player {
     return this.bailDownT;
   }
 
+  get spinEffectDiagnostics(): SpinPresentationDiagnostics | null {
+    return this.spinEffects?.diagnostics ?? null;
+  }
+
   /** Monotonic teleport epoch consumed by the render-clock camera. */
   get renderSnapVersion(): number {
     return this._renderSnapVersion;
@@ -1230,10 +1236,10 @@ export class Player {
 
   /** Capture the visual pose after every completed fixed step. */
   private collectRenderHierarchy(object: THREE.Object3D): void {
-    // The whirlwind deliberately holds/strobes at 30 Hz. Its parent root still
-    // glides with the rider, but interpolating its local golden-angle poses
-    // would turn that authored flipbook into an ordinary smooth rotation.
-    if (object === this.smearG) return;
+    // The Unity whirlwind deliberately holds at authoritative 60 Hz. Its
+    // parent root still glides with the rider, but interpolating local poses
+    // would turn the authored presentation into an ordinary smooth rotation.
+    if (object === this.spinEffects?.root) return;
     this.renderObjects.push(object);
     for (const child of object.children) this.collectRenderHierarchy(child);
   }
@@ -10924,8 +10930,15 @@ export class Player {
     // travel don't care). sidePose blends it in; the board counter-rotates
     // below so the deck stays along the line of travel.
     const sideYaw = this.stance * (Math.PI / 2) * this.sidePose;
+    const boardRoutedSpin =
+      this.spinEffects?.presentationRoute === 'board' ||
+      (this.spinning && this.state === 'air' && this.flipT > 0);
     this.bodyGroup.rotation.y =
-      this.visualYaw + this.spinAngle + this.grabSpinAngle + this.grindYawPose + sideYaw;
+      this.visualYaw +
+      (boardRoutedSpin ? 0 : this.spinAngle) +
+      this.grabSpinAngle +
+      this.grindYawPose +
+      sideYaw;
 
     // Grab pose, skate-photo style: knees tucked high, one hand pulls the
     // board, the other arm throws up. Direction held picks the variant —
@@ -11582,47 +11595,25 @@ export class Player {
         this.invulnSilent ||
         Math.sin(this.runTime * 45) > -0.2 ||
         this.state === 'dead');
-    // Spin smear: swap the skater for the whirlwind while the attack runs.
-    // Held poses, not a smooth turn: a new angle every 2 frames (30Hz), each
-    // step ~137° so consecutive holds never look alike — reads as a strobing
-    // cartoon blur, exactly like Crash's tornado frames.
-    if (this.smearG) {
-      const smearOn =
+    // Unity routes each Square/F sequence once. An ordinary attack replaces
+    // rider+deck with the Whirlwind Vixen sculpture and independent rings; a
+    // board-air deck trick retains the rider/deck and gets board-local rings.
+    // Gameplay timing, hit reach, scoring and audio remain owned by updateSpin.
+    if (this.spinEffects) {
+      const active =
         this.spinning && !this.bailing && this.state !== 'dead' && this.state !== 'gameover';
-      this.smearG.visible = smearOn && this.bodyGroup.visible; // inherit the invuln flicker
-      if (smearOn) {
-        this.bodyGroup.visible = false;
-        const step = Math.floor(this.runTime * 30);
-        this.smearG.rotation.y = step * 2.399; // golden angle
-        const pulse = 1 + 0.09 * Math.sin(step * 1.7);
-        this.smearG.scale.set(1.84 * pulse, 1.52 * (2 - pulse), 1.84 * pulse); // opposing squash
-      }
-      // SPIN + FLIP: the whirlwind swallows the whole rig — deck included, it
-      // rides inside bodyGroup — but the flipping deck IS the trick, so a
-      // scene-level stand-in wears the board's exact world transform (the
-      // hidden rig still updates its matrices) and performs beneath the blur.
-      if (this.boardG) {
-        const showFD = smearOn && this.flipT > 0;
-        if (showFD && !this.flipDeck) {
-          this.flipDeck = this.boardG.clone(true);
-          this.group.add(this.flipDeck);
-        }
-        if (this.flipDeck) {
-          this.flipDeck.visible = showFD;
-          if (showFD) {
-            this.boardG.updateWorldMatrix(true, false);
-            this.group.updateWorldMatrix(true, false);
-            Player.FLIP_M.copy(this.group.matrixWorld)
-              .invert()
-              .multiply(this.boardG.matrixWorld);
-            Player.FLIP_M.decompose(
-              this.flipDeck.position,
-              this.flipDeck.quaternion,
-              this.flipDeck.scale,
-            );
-          }
-        }
-      }
+      const bodyVisible = this.bodyGroup.visible;
+      const boardVisible = bodyVisible && (this.boardG?.visible ?? false);
+      this.spinEffects.update({
+        step: Math.floor(this.runTime * 60 + 0.000000001),
+        active,
+        boardRouteCandidate:
+          active && this.state === 'air' && boardVisible && this.flipT > 0,
+        bodyVisible,
+        boardVisible,
+        reset: this.bailing || this.state === 'dead' || this.state === 'gameover',
+      });
+      if (this.spinEffects.sculptureVisible) this.bodyGroup.visible = false;
     }
     // Perfect-grind bloom: pink, body-enveloping, fading out over the last
     // half second so the boost ENDING is as readable as it starting.
@@ -12597,44 +12588,13 @@ export class Player {
     );
   }
 
-  // ——— Spin smear (models/smear.glb) ————————————————————————————————————
-  // A cartoon motion-blur sculpted in 3D, Crash-style: while the spin attack
-  // runs, the whole skater (board included) is swapped for this whirlwind,
-  // re-posed at a new angle every couple of frames so it strobes instead of
-  // turning smoothly. If it never loads, spins just stay un-smeared.
-  private installSmear(): void {
-    const src =
-      (window as { __SMEAR_GLB?: string }).__SMEAR_GLB ||
-      import.meta.env.BASE_URL + 'models/smear.glb';
-    new GLTFLoader().load(
-      src,
-      (gltf) => {
-        let source: THREE.Mesh | null = null;
-        gltf.scene.traverse((o) => {
-          if (!source && (o as THREE.Mesh).isMesh) source = o as THREE.Mesh;
-        });
-        if (!source) return;
-        const src = source as THREE.Mesh;
-        const mesh = new THREE.Mesh(
-          src.geometry,
-          new THREE.MeshLambertMaterial({
-            map: (src.material as THREE.MeshStandardMaterial).map ?? null,
-            side: THREE.DoubleSide,
-          }),
-        );
-        const g = new THREE.Group();
-        g.add(mesh);
-        // model is a unit cube centered at 0 — size it to the spin's reach:
-        // wider than the body, a head shorter than standing
-        g.scale.set(1.84, 1.52, 1.84);
-        g.position.y = 0.76;
-        g.visible = false;
-        this.group.add(g);
-        this.smearG = g;
-      },
-      undefined,
-      (e) => console.warn('smear model failed to load (spins stay un-smeared):', e),
-    );
+  // ——— Unity production spin presentation ———————————————————————————————
+  private installSpinEffects(): void {
+    if (!this.boardG) return;
+    this.spinEffects = new SpinEffectsPresentation({
+      parent: this.group,
+      board: this.boardG,
+    });
   }
 
   private segmentRoo(source: THREE.Mesh): void {

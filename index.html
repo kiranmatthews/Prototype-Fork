@@ -13,9 +13,10 @@
     <meta name="theme-color" content="#1a1c24" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="data:," />
-    <!-- The spin smear remains an authored effect and can begin downloading
-         with the bundle; the active rider itself is procedural. -->
-    <link rel="preload" href="models/smear.glb" as="fetch" crossorigin />
+    <!-- The current Unity spin sculpture can begin downloading with the
+         bundle; the normal active rider itself remains procedural. -->
+    <link rel="preload" href="spin/whirlwind-vixen.glb" as="fetch" crossorigin />
+    <link rel="preload" href="spin/whirlwind-vixen.webp" as="image" />
     <title>Board Platformer Proto — Codex/sol Fork</title>
     <style>
       /* touch-action: manipulation kills iOS double-tap-to-zoom everywhere
