@@ -1080,6 +1080,8 @@ try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
   const {
     BUILTIN_LEVELS,
+    SKY_BRIDGE_FOG_FAR,
+    SKY_BRIDGE_FOG_NEAR,
     buildBendyWallGeometry,
     Level,
     findLevel,
@@ -1155,6 +1157,52 @@ try {
         path.relative(ROOT, inputPath),
       ),
     );
+  }
+
+  // Sky Bridge's extreme sightline is identity-owned, not builder-owned: the
+  // hand-built source and the published component-data override must both keep
+  // playable planks inside the same dense cloud fog.
+  const sourceSky = BUILTIN_LEVELS.find((entry) => entry.id === "sky");
+  const dataSky = cases.find((entry) => entry.id === "sky");
+  assert.ok(sourceSky, "source Sky Bridge entry is missing");
+  assert.ok(dataSky, "published Sky Bridge data is missing");
+  for (const [label, entry] of [
+    ["source", sourceSky],
+    ["published", { id: "sky", name: dataSky.name, data: clone(dataSky.data) }],
+  ]) {
+    const skyLevel = new Level(new THREE.Scene(), entry);
+    try {
+      assert.equal(skyLevel.keepPlayFog, true, `${label} Sky Bridge stripped play fog`);
+      assert.equal(skyLevel.theme.fogNear, SKY_BRIDGE_FOG_NEAR);
+      assert.equal(skyLevel.theme.fogFar, SKY_BRIDGE_FOG_FAR);
+      assert.ok(
+        skyLevel.theme.fogFar - skyLevel.theme.fogNear <= 20,
+        `${label} Sky Bridge visibility envelope is not extreme`,
+      );
+      for (const mesh of skyLevel.groundMeshes) {
+        for (const material of Array.isArray(mesh.material)
+          ? mesh.material
+          : [mesh.material])
+          assert.notEqual(
+            material.fog,
+            false,
+            `${label} Sky Bridge ground opted out of fog`,
+          );
+      }
+    } finally {
+      skyLevel.dispose();
+    }
+  }
+  const skyCopy = new Level(new THREE.Scene(), {
+    id: "u-sky-copy",
+    name: "Sky-shaped user copy",
+    data: clone(dataSky.data),
+  });
+  try {
+    assert.equal(skyCopy.keepPlayFog, false, "Sky fog leaked to a user-level id");
+    assert.notEqual(skyCopy.theme.fogFar, SKY_BRIDGE_FOG_FAR);
+  } finally {
+    skyCopy.dispose();
   }
 
   let serial = 0;

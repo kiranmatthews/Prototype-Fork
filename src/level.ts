@@ -366,6 +366,9 @@ export interface Theme {
   sunI: number;
 }
 
+export const SKY_BRIDGE_FOG_NEAR = 5;
+export const SKY_BRIDGE_FOG_FAR = 24;
+
 // Rolling stone hazard: patrols along the course, flattens careless riders.
 export interface Stone {
   mesh: THREE.Mesh;
@@ -3452,6 +3455,15 @@ export class Level {
     else if (entry.id === "descent") this.buildDescent();
     else if (entry.id === "beachfront") this.buildUnityBeachfront();
     else this.buildJungle(); // "jungle": the enclosed corridor course
+    // The published level pack can supply Sky Bridge as component data rather
+    // than calling buildSkyBridge(). Its sightline rule belongs to the level
+    // identity, so enforce it after either build path and before play-fog is
+    // stripped from ordinary course materials.
+    if (entry.id === "sky") {
+      this.keepPlayFog = true;
+      this.theme.fogNear = SKY_BRIDGE_FOG_NEAR;
+      this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
+    }
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
@@ -15654,6 +15666,7 @@ export class Level {
   // and snap after a few seconds, so grinding the rail is a gamble. One misstep
   // is a long way down.
   private buildSkyBridge(): void {
+    this.keepPlayFog = true; // the bridge itself must disappear into the cloud bank
     this.killY = -22; // off the bridge = a fatal drop into the clouds
     this.finishZ = -127; // gate on the goal deck
     this.endWallZ = -400;
@@ -15665,8 +15678,9 @@ export class Level {
       sunV: 0.2,
       stars: false,
       fog: 0xeef4f8, // the void below is bright cloud haze
-      fogNear: 40,
-      fogFar: 210,
+      // From the chase camera this leaves roughly 3–4 small planks readable.
+      fogNear: SKY_BRIDGE_FOG_NEAR,
+      fogFar: SKY_BRIDGE_FOG_FAR,
       hemiSky: 0xdff0ff,
       hemiGround: 0xb9c6cf,
       hemiI: 1.25,
