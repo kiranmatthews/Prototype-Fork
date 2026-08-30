@@ -26,6 +26,12 @@ import { wumpaMesh, WUMPA_SIZE } from './wumpa';
 import { puffs, surfaceFromName } from './puffs';
 import { Tail, type TailCollider } from './tail';
 import { cutsFor } from './modelcuts';
+import {
+  PROCEDURAL_SHIN_LENGTH,
+  PROCEDURAL_THIGH_LENGTH,
+  solveSagittalLegTarget,
+  type SagittalLegPose,
+} from './legRig';
 import { RenderInterpolator } from './renderInterpolation';
 import {
   createSkateboardPresentation,
@@ -55,6 +61,14 @@ import {
 } from './comboHud';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
+const LEG_SOLVE_R: SagittalLegPose = {
+  hipPitch: 0,
+  kneeFlex: 0,
+  anklePitch: 0,
+  verticalReach: 0,
+  forwardReach: 0,
+};
+const LEG_SOLVE_L: SagittalLegPose = { ...LEG_SOLVE_R };
 
 // WUMPA. World size is WUMPA_SIZE, shared with every other fruit in the game
 // (see the note on it in wumpa.ts). Once collected, a fruit is this fraction
@@ -490,7 +504,7 @@ export class Player {
   private hangPose = 0;
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
-  private deckPose = 0; // 0..1: the deck is under the feet (rolling, skate airs, grinds) — legs shorten to stand ON it
+  private deckPose = 0; // 0..1: the deck is under the feet; articulated knees + sole planting own the stance
   // SIDE-ON STANCE: a real skater faces 90° across the board — face and
   // belly toward the rail side, head turned to look down the line. This
   // blends the whole body into that pose whenever the board is under you
@@ -11663,9 +11677,8 @@ export class Player {
     const sk = this.skatePose;
     // Standing on-foot charge (jump crouch at a standstill): the running-charge
     // knee fold below swings the shoes forward through the floor and the crouch
-    // drops the hips — with no board deck to telescope into, the feet clip
-    // through flat ground. This weight shallows the fold, shortens the legs, and
-    // eases the drop so a planted charge stays a compact, feet-flat squat. The
+    // drops the hips. This weight shallows the intent before the fixed-length
+    // solver turns it into a compact, feet-flat squat. The
     // charging RUN (not planted) keeps its deep cycling fold — the feet lift.
     const standCharge = this.chargePlanted ? this.chargePose * (1 - sk) : 0;
     // Standing still on foot: the reference idle is SUBTLE — slow weight-shift
@@ -11695,8 +11708,8 @@ export class Player {
       (this.state === 'air' && this.airFromSkate && !this.grabbing && !this.slamActive && this.grabPose < 0.3);
     this.sidePose += ((sideOn ? 1 : 0) - this.sidePose) * Math.min(1, 8 * dt);
     // Deck-stand: any time the board is glued under the feet — rolling, plain
-    // skate airs, every grind (boardslides included) — the legs shorten by the
-    // deck's height so the soles ride ON the grip instead of through it.
+    // skate airs, every grind (boardslides included) — conventional knee flex
+    // and the measured sole solver keep the feet on the grip.
     const deckOn = sideOn || this.state === 'grind';
     this.deckPose += ((deckOn ? 1 : 0) - this.deckPose) * Math.min(1, 10 * dt);
     // Crash star jump: legs split wide, arms thrown up — held for a beat
@@ -11763,13 +11776,34 @@ export class Player {
       const fw = 1 - sp; // forward-frame weight
       const deck = Math.max(sk, this.grindArmPose); // feet planted on a deck
       // forward frame keeps the old modest fore-aft split along local Z
-      this.legR.position.set(this.hipBaseR.x + 0.02 * sk * fw + 0.16 * deck * sp, 0, this.hipBaseR.z + 0.24 * sk * stz * fw);
-      this.legL.position.set(this.hipBaseL.x - 0.02 * sk * fw - 0.16 * deck * sp, 0, this.hipBaseL.z - 0.2 * sk * stz * fw);
+      // Keep the hip sockets inside the pelvis. Nose/tail separation comes
+      // mostly from a mirrored leg splay, not by sliding both thighs outside
+      // the shorts like two disconnected posts.
+      this.legR.position.set(this.hipBaseR.x + 0.02 * sk * fw + 0.035 * deck * sp, 0, this.hipBaseR.z + 0.24 * sk * stz * fw);
+      this.legL.position.set(this.hipBaseL.x - 0.02 * sk * fw - 0.035 * deck * sp, 0, this.hipBaseL.z - 0.2 * sk * stz * fw);
       this.legR.rotation.y = 0.12 * sk * stz * fw - 0.12 * stz * sp;
       this.legL.rotation.y = -0.09 * sk * stz * fw - 0.12 * stz * sp;
-      this.legR.rotation.z = -1.05 * star - 0.72 * doubleSplit; // straddle split
-      this.legL.rotation.z = 1.05 * star + 0.72 * doubleSplit;
+      this.legR.rotation.z = 0.22 * deck * sp - 1.05 * star - 0.72 * doubleSplit;
+      this.legL.rotation.z = -0.22 * deck * sp + 1.05 * star + 0.72 * doubleSplit;
     }
+    // Preserve the old pose system as an ENDPOINT INTENT, not a deformation:
+    // this is the amount it used to squash the entire hierarchy. The
+    // procedural legs convert that shortened virtual ankle target into a real
+    // fixed-length two-bone bend below; imported comparison rigs retain their
+    // legacy scale because their segment lengths are model-specific.
+    const legacyLegScale = Math.max(
+      0.15,
+      1 -
+        0.22 * this.deckPose * (1 - this.wallridePose) -
+        0.1 * this.chargePose * this.skatePose -
+        0.2 * standCharge -
+        0.5 * this.grabPose -
+        0.4 * flipTuck -
+        0.45 * this.crawlPose -
+        0.25 * this.slidePose -
+        0.28 * this.wallridePose -
+        0.4 * this.wallChargePose,
+    );
     // KNEE JOINTS — additive only, layered AFTER the hip channel writes
     // above (which stay untouched). Flex reads off the same pose channels:
     // surf crouch on the board (front knee deeper than back), charge load,
@@ -11788,8 +11822,7 @@ export class Player {
       const frontL = 1.1 * Math.max(0, -Math.sin(this.walkPhase)) * this.walkAmp + 0.8 * jp * Math.max(0, riseK);
       const frontR = 1.1 * Math.max(0, Math.sin(this.walkPhase)) * this.walkAmp + 0.65 * jp * Math.max(0, riseK);
       // the deep running-charge knee fold swings the shoes forward THROUGH
-      // the deck — on the board it eases down to a shallow athletic bend
-      // (the matching legs.scale term keeps the soles pinned to the grip)
+      // the deck — on the board it eases down to a shallow athletic bend.
       const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk) - 0.62 * standCharge; // planted: shallow the forward fold so shoes don't swing through the floor
       const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
       const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
@@ -11797,13 +11830,76 @@ export class Player {
       this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + 0.38 * underW + (HS ? HS.kneeL * 0.65 * HS.w : ledgeW * (0.62 + dangle) + 0.95 * mantle); // hang shins: clip or authored
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
+
+      const proceduralLegs = !!(this.ankleR && this.ankleL);
+      if (proceduralLegs) {
+        const articulate = (
+          leg: THREE.Group,
+          knee: THREE.Group,
+          out: SagittalLegPose,
+        ): void => {
+          const hipIntent = leg.rotation.x;
+          const kneeIntent = THREE.MathUtils.clamp(knee.rotation.x, 0, Math.PI - 0.08);
+          const lowerIntent = hipIntent + kneeIntent;
+          const virtualDown =
+            legacyLegScale *
+            (PROCEDURAL_THIGH_LENGTH * Math.cos(hipIntent) +
+              PROCEDURAL_SHIN_LENGTH * Math.cos(lowerIntent));
+          const virtualForward =
+            -PROCEDURAL_THIGH_LENGTH * Math.sin(hipIntent) -
+            PROCEDURAL_SHIN_LENGTH * Math.sin(lowerIntent);
+          const solved = solveSagittalLegTarget(
+            virtualDown,
+            virtualForward,
+            0,
+            PROCEDURAL_THIGH_LENGTH,
+            PROCEDURAL_SHIN_LENGTH,
+            out,
+          );
+          leg.rotation.x = solved.hipPitch;
+          knee.rotation.x = solved.kneeFlex;
+        };
+        articulate(this.legR, this.kneeR, LEG_SOLVE_R);
+        articulate(this.legL, this.kneeL, LEG_SOLVE_L);
+      }
+      if (this.legs) this.legs.scale.y = proceduralLegs ? 1 : legacyLegScale;
+
+      // The hip sockets stay in the pelvis while a small mirrored splay places
+      // each knee over its foot in the side-on skate stance.
+      const stanceSplay = 0.1 * this.sidePose * Math.max(sk, this.grindArmPose);
+      this.kneeR.rotation.z = -stanceSplay;
+      this.kneeL.rotation.z = stanceSplay;
     }
-    // Distal joints have one authoritative write site even before dedicated
-    // keyframe channels land. Keeping their neutral pose explicit prevents a
-    // debug/stress pose from leaking into the next gameplay frame; future
-    // ankle tracks should blend here, before plantOnDeck measures the soles.
-    this.ankleR?.rotation.set(0, 0, 0);
-    this.ankleL?.rotation.set(0, 0, 0);
+    // Counter-rotate planted feet against the complete hip+knee chain. The
+    // sole solver can translate a tilted shoe onto the deck, but only an ankle
+    // joint can make the whole sole lie flat instead of touching at one corner.
+    const deckFootPlant =
+      THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5) *
+      (1 - this.wallridePose) *
+      (1 - underW) *
+      (1 - this.grabPose) *
+      (1 - this.slidePose) *
+      (1 - this.ledgePose);
+    const groundFootPlant = this.grounded ? Math.max(crouchW, standCharge) : 0;
+    const footPlant = THREE.MathUtils.clamp(
+      Math.max(deckFootPlant, groundFootPlant) * (1 - star),
+      0,
+      1,
+    );
+    if (this.ankleR && this.legR && this.kneeR) {
+      this.ankleR.rotation.set(
+        -(this.legR.rotation.x + this.kneeR.rotation.x) * footPlant,
+        0,
+        -(this.legR.rotation.z + this.kneeR.rotation.z) * footPlant,
+      );
+    }
+    if (this.ankleL && this.legL && this.kneeL) {
+      this.ankleL.rotation.set(
+        -(this.legL.rotation.x + this.kneeL.rotation.x) * footPlant,
+        0,
+        -(this.legL.rotation.z + this.kneeL.rotation.z) * footPlant,
+      );
+    }
 
     // Shoulders: open side-on in the skate stance (the board and hips keep
     // pointing along travel), square through a boardslide (the yaw pose has
@@ -12042,27 +12138,9 @@ export class Player {
       if (this.elbowR) this.elbowR.rotation.x = -0.22;
       if (this.elbowL) this.elbowL.rotation.x = -0.22;
     }
-    // Knees up: legs shorten toward the hips while the body crouches deep,
-    // and the board comes up with them, into the grabbing hand.
-    if (this.legs) {
-      // knees pull up to the chest — for the grab tuck and the flip tuck —
-      // fold deeper through a rolling charge crouch so the feet stay planted
-      // on the deck, tuck under the hips on all fours, and bend through the
-      // slide — never poking through the floor.
-      this.legs.scale.y = Math.max(
-        0.15,
-        1 -
-          0.22 * this.deckPose * (1 - this.wallridePose) - // skate crouch: knees bent over the deck (plantOnDeck owns where the soles land)
-          0.1 * this.chargePose * this.skatePose - // absorbs the pump's shallow knee bend so the feet stay planted
-          0.2 * standCharge - // planted on-foot charge: telescope the legs so the crouch keeps the soles down
-          0.5 * this.grabPose -
-          0.4 * flipTuck -
-          0.45 * this.crawlPose -
-          0.25 * this.slidePose -
-          0.28 * this.wallridePose - // knees bent tucking the board onto the wall
-          0.4 * this.wallChargePose, // sink deeper the more you pump the launch
-      );
-    }
+    // The procedural legs are fixed-length bones now. All shortening intent
+    // was converted into hip/knee articulation above; no nonuniform scaling is
+    // allowed to turn a bent thigh or shin into a voxel-like block.
     if (this.boardG) {
       // The charge crouch drops the whole bodyGroup 0.26 (world) — the board
       // rides that group, so push it back up (0.26 / the 1.18 body scale) to
@@ -12466,7 +12544,7 @@ export class Player {
       this.grabPose * -0.5 -
       this.slidePose * 0.38 -
       (crawlMove * 0.2 + crouchW * 0.36) - // crawl: shallow drop — the pitch already lays her out; deeper buries the knees
-      this.chargePose * (0.26 - 0.14 * this.skatePose) + // board pump: shallower — a full drop telescopes the torso through the deck
+      this.chargePose * (0.26 - 0.14 * this.skatePose) + // board pump: shallower — a full drop buries the torso through the deck
       standCharge * 0.12 - // planted on-foot: ease the crouch drop (no deck to sink into)
       this.wallChargePose * 0.28 - // sink into the wall pump
       (this.grounded ? 0.1 * this.dropPose : 0) +
@@ -12486,10 +12564,11 @@ export class Player {
       this.bodyGroup.position.x = 0;
       this.bodyGroup.position.z = 0;
     }
-    // Impact squash right after a slam lands; crawl also compresses the rig so
-    // the whole body sits low and compact instead of floating pitched-over.
+    // Impact squash right after a slam lands. Crawl keeps only a whisper of
+    // whole-body compression; the articulated hips and knees own its height,
+    // so rotated limbs never inherit a Minecraft-like nonuniform squash.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
-    this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash) * (1 - 0.22 * this.crawlPose);
+    this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash) * (1 - 0.06 * this.crawlPose);
 
     // SKETCHY landing: a fading side-to-side shimmy — you kept it, barely.
     if (this.sketchyT > 0 && !this.ragActive) {
@@ -13512,20 +13591,23 @@ export class Player {
       link.rotation.set(rot, 0.6, 0);
       legs.add(link);
     }
-    const thighGeo = new THREE.CylinderGeometry(0.088, 0.082, 0.24, 9);
-    thighGeo.translate(0, -0.13, 0); // hip → knee, baggy cargo leg
+    const thighGeo = new THREE.CylinderGeometry(0.095, 0.07, 0.23, 10);
+    thighGeo.translate(0, -0.125, 0); // tapered hip → knee cargo leg
     const pocketGeo = new THREE.BoxGeometry(0.035, 0.095, 0.075);
     const flapGeo = new THREE.BoxGeometry(0.037, 0.014, 0.077);
-    const cuffGeo = new THREE.CylinderGeometry(0.086, 0.09, 0.06, 9);
-    const cuffTrimGeo = new THREE.CylinderGeometry(0.091, 0.091, 0.013, 9);
-    const kneePadGeo = new THREE.SphereGeometry(0.072, 8, 6);
-    const shinGeo = new THREE.CylinderGeometry(0.048, 0.042, 0.1, 8);
-    shinGeo.translate(0, -0.115, 0); // bare fur between cuff and sock
-    const sockGeo = new THREE.CylinderGeometry(0.054, 0.058, 0.055, 8);
-    const sockStripeGeo = new THREE.CylinderGeometry(0.059, 0.059, 0.013, 8);
-    const shoeGeo = new THREE.SphereGeometry(0.1, 9, 7);
-    const strapGeo = new THREE.BoxGeometry(0.115, 0.018, 0.055);
-    const soleGeo = new THREE.BoxGeometry(0.145, 0.05, 0.34);
+    const cuffGeo = new THREE.CylinderGeometry(0.075, 0.078, 0.055, 10);
+    const cuffTrimGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.012, 10);
+    const kneePadGeo = new THREE.SphereGeometry(0.064, 10, 7);
+    const shinGeo = new THREE.CylinderGeometry(0.052, 0.038, 0.15, 10);
+    shinGeo.translate(0, -0.12, 0); // tapered calf between knee and sock
+    const sockGeo = new THREE.CylinderGeometry(0.04, 0.046, 0.075, 10);
+    const sockStripeGeo = new THREE.CylinderGeometry(0.048, 0.048, 0.012, 10);
+    const shoeGeo = new THREE.SphereGeometry(0.085, 10, 7);
+    const strapGeo = new THREE.BoxGeometry(0.105, 0.016, 0.05);
+    // Rounded platform sole: capsule along Z, flattened only in its own rigid
+    // foot space. Unlike the old sharp box, it keeps a PS2-like toe/heel arc.
+    const soleGeo = new THREE.CapsuleGeometry(0.0675, 0.135, 2, 10);
+    soleGeo.rotateX(Math.PI / 2);
     for (const side of [-1, 1]) {
       // Rider-local forward is +Z, so +X is her anatomical left. The outer
       // Player group turns the finished rig toward world -Z at spawn.
@@ -13542,33 +13624,33 @@ export class Player {
       const flap = new THREE.Mesh(flapGeo, PINK); // pink-stitched flap
       flap.position.set(side * 0.082, -0.095, 0.01);
       leg.add(flap);
-      // Knee group pivots where the thigh ends; everything below swings with
-      // it and squashes with legs.scale.y, same as the rest of the rig.
+      // Knee group pivots where the thigh ends; the lower leg keeps its full
+      // length through every pose and swings conventionally from this hinge.
       const knee = new THREE.Group();
       knee.name = `knee-${anatomicalSide}`;
       knee.userData.anatomicalSide = anatomicalSide;
-      knee.position.y = -0.26;
+      knee.position.y = -PROCEDURAL_THIGH_LENGTH;
       leg.add(knee);
       const cuff = new THREE.Mesh(cuffGeo, BLACK); // capri cuff just past the knee
-      cuff.position.y = -0.015;
+      cuff.position.y = -0.012;
       knee.add(cuff);
       const cuffTrim = new THREE.Mesh(cuffTrimGeo, PINK);
-      cuffTrim.position.y = -0.052;
+      cuffTrim.position.y = -0.045;
       knee.add(cuffTrim);
       const pad = new THREE.Mesh(kneePadGeo, PAD); // strapped knee pad dome
       pad.scale.set(1, 0.8, 0.65);
-      pad.position.set(0, -0.005, 0.075);
+      pad.position.set(0, -0.003, 0.065);
       knee.add(pad);
-      const padTrim = new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.009, 5, 10), PINK);
-      padTrim.position.set(0, -0.005, 0.09);
+      const padTrim = new THREE.Mesh(new THREE.TorusGeometry(0.046, 0.008, 5, 10), PINK);
+      padTrim.position.set(0, -0.003, 0.079);
       padTrim.scale.set(1, 0.85, 1);
       knee.add(padTrim);
       knee.add(new THREE.Mesh(shinGeo, FUR));
       const sock = new THREE.Mesh(sockGeo, WHITE);
-      sock.position.y = -0.15;
+      sock.position.y = -0.205;
       knee.add(sock);
       const stripe = new THREE.Mesh(sockStripeGeo, PINK);
-      stripe.position.y = -0.128;
+      stripe.position.y = -0.177;
       knee.add(stripe);
       // Ankle at the shoe collar. All child coordinates are the former
       // knee-local values rebased around this pivot, so the rest silhouette is
@@ -13576,38 +13658,39 @@ export class Player {
       const ankle = new THREE.Group();
       ankle.name = `ankle-${anatomicalSide}`;
       ankle.userData.anatomicalSide = anatomicalSide;
-      ankle.position.y = -0.18;
+      ankle.position.y = -PROCEDURAL_SHIN_LENGTH;
       knee.add(ankle);
       const shoe = new THREE.Mesh(shoeGeo, SHOE_PINK); // chunky pink hi-top
       shoe.name = `shoe-${anatomicalSide}`;
-      shoe.scale.set(1, 0.6, 1.5);
-      shoe.position.set(0, -0.025, 0.055);
+      shoe.scale.set(0.85, 0.5, 1.5);
+      shoe.position.set(0, -0.006, 0.065);
       ankle.add(shoe);
       const strapA = new THREE.Mesh(strapGeo, WHITE);
-      strapA.position.set(0, 0.005, 0.115);
+      strapA.position.set(0, 0.006, 0.13);
       strapA.rotation.x = 0.35;
       ankle.add(strapA);
       const strapB = new THREE.Mesh(strapGeo, WHITE);
-      strapB.position.set(0, -0.01, 0.045);
+      strapB.position.set(0, -0.005, 0.055);
       strapB.rotation.x = 0.15;
       ankle.add(strapB);
       const sole = new THREE.Mesh(soleGeo, CREAM); // platform slab (same floor reach as before)
       sole.name = `sole-${anatomicalSide}`;
-      sole.position.set(0, -0.075, 0.05);
+      sole.scale.y = 0.26;
+      sole.position.set(0, -0.0325, 0.065);
       ankle.add(sole);
       const footSocket = new THREE.Object3D();
       footSocket.name = `socket-foot-${anatomicalSide}`;
-      footSocket.position.set(0, -0.1, 0.05); // centre of the sole's contact plane
+      footSocket.position.set(0, -0.05, 0.065); // centre of the sole's contact plane
       footSocket.userData.contactNormal = [0, 1, 0];
       ankle.add(footSocket);
       const heelSocket = new THREE.Object3D();
       heelSocket.name = `socket-heel-${anatomicalSide}`;
-      heelSocket.position.set(0, -0.1, -0.12);
+      heelSocket.position.set(0, -0.05, -0.07);
       heelSocket.userData.contactNormal = [0, 1, 0];
       ankle.add(heelSocket);
       const toeSocket = new THREE.Object3D();
       toeSocket.name = `socket-toe-${anatomicalSide}`;
-      toeSocket.position.set(0, -0.1, 0.22);
+      toeSocket.position.set(0, -0.05, 0.2);
       toeSocket.userData.contactNormal = [0, 1, 0];
       ankle.add(toeSocket);
       if (side === 1) {
@@ -13626,7 +13709,7 @@ export class Player {
     // Tail: the kangaroo signature. ONE skinned tube on a simulated chain
     // (src/tail.ts) — it chases the pose the animation asks for, but arrives
     // late, under gravity, and stops short of her own body. Parented to the
-    // body root (NOT the legs group) so leg squashes don't pancake it.
+    // body root (NOT the legs group) so articulated leg poses never drag it.
     const tail = new Tail();
     tail.root.name = 'tail-root';
     // Attach point placed by hand in the studio. It sits FORWARD of the hip
@@ -14004,6 +14087,12 @@ export class Player {
         visualScale: [1.18, 1.36, 1.18],
       },
       sideConvention: 'anatomical left is +X in the rider-local +Z-forward frame',
+      legRig: {
+        solver: 'fixed-length-two-bone',
+        thighLength: PROCEDURAL_THIGH_LENGTH,
+        shinLength: PROCEDURAL_SHIN_LENGTH,
+        ankleToSole: 0.05,
+      },
       joints: jointNames,
       sockets: socketNames,
       restPose,
