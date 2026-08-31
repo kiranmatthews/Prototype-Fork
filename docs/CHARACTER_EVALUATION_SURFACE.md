@@ -58,6 +58,13 @@ the procedural source body. The Studio continues to select and edit the source
 joint IDs in either view. Its animation selector, timeline, keyframes,
 procedural drivers and per-clip playback speed all operate identically.
 
-Quaternius animation clips added later should be imported as motion evidence
-and converted to the semantic animation document. They should not replace the
-source rig or bypass the browser-editable layers.
+`player.run` demonstrates the import path: Pack #1's in-place
+`Jog_Fwd_Loop` is sampled at its native 30 FPS, transferred through canonical
+world-space deltas, and stored as 29 ordinary linear keys on each semantic body
+joint. The source GLB's limb translations and scales are deliberately omitted,
+so neither the procedural rig nor the female evaluation body's proportions are
+replaced. The final seam is closed exactly and every resulting key remains
+editable in Animation Studio.
+
+Additional Quaternius clips should follow the same conversion path. They should
+not replace the source rig or bypass the browser-editable layers.

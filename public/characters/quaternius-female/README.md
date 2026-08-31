@@ -26,6 +26,15 @@ The GLB was copied byte-for-byte and renamed for a stable, URL-friendly path. It
 
 The asset contains no images or textures, so it has no external runtime dependencies. Source-only project files, alternate engine exports, setup images, and animation-library files were deliberately not imported.
 
+## Imported motion
+
+The browser-editable `player.run` clip is retargeted from `Jog_Fwd_Loop` in the
+free Standard edition of Quaternius' original Universal Animation Library. The
+non-root-motion source was sampled at its native 30 FPS, converted into the
+project's semantic rest-local tracks, and embedded as editable keyframes rather
+than shipping the 43-clip source GLB. See
+`animations/jog-fwd.provenance.json` for source hashes and conversion policy.
+
 ## Technical summary
 
 - glTF 2.0 binary container

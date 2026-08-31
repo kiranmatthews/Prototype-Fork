@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 import { createAnimationSuiteDocument, createProceduralDriver } from './document';
 import { PLAYER_PROCEDURAL_RIG_ID } from './rigBinding';
+import {
+  QUATERNIUS_JOG_FWD_DURATION,
+  QUATERNIUS_JOG_FWD_ROOT_KEYS,
+  QUATERNIUS_JOG_FWD_ROTATION_KEYS,
+  QUATERNIUS_JOG_FWD_SOURCE,
+} from './quaterniusJogFwd.generated';
 import type {
   AnimationClip,
   AnimationContact,
@@ -49,13 +55,47 @@ export const PLAYER_STARTER_CLIP_IDS = [
 
 /**
  * Source-catalog revision, independent from the serialized suite schema.
- * A saved suite records the revision it has seen so later reconciliation can
- * add newly introduced starters without resurrecting clips deliberately
- * deleted from an already-current suite.
+ * A saved suite records the revision it has seen so reconciliation can add
+ * newly introduced starters and upgrade an exact untouched source starter,
+ * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 2;
+export const PLAYER_STARTER_CATALOG_VERSION = 3;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
+
+// FNV-1a of the canonical catalog-v2 Run starter with rigId omitted. A user
+// edit changes the signature and is preserved; only the exact shipped gait is
+// upgraded to Jog_Fwd when an older local draft is reconciled.
+const LEGACY_RUN_STARTER_SIGNATURES = new Set([
+  '225688c1', // source-created catalog v2 clip
+  '182166e3', // normalized/migrated catalog v2 browser draft
+]);
+
+function stableCatalogValue(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map((entry) => stableCatalogValue(entry)).join(',')}]`;
+  }
+  if (value !== null && typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    const entries = Object.keys(record)
+      .filter((key) => record[key] !== undefined)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableCatalogValue(record[key])}`);
+    return `{${entries.join(',')}}`;
+  }
+  return JSON.stringify(value) ?? 'null';
+}
+
+function starterClipSignature(clip: AnimationClip): string {
+  const { rigId: _liveRigId, ...portableClip } = clip;
+  const source = stableCatalogValue(portableClip);
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < source.length; index++) {
+    hash ^= source.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
 
 const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   typeof PLAYER_STARTER_CLIP_IDS[number],
@@ -84,6 +124,11 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
 type TimedScalar = readonly [time: number, value: number, interpolation?: KeyInterpolation];
 type TimedVector = readonly [time: number, value: Vec3Tuple, interpolation?: KeyInterpolation];
 type TimedEuler = readonly [time: number, x: number, y: number, z: number, interpolation?: KeyInterpolation];
+type SampledVector = readonly [time: number, value: readonly [number, number, number]];
+type SampledQuaternion = readonly [
+  time: number,
+  value: readonly [number, number, number, number],
+];
 
 const IDLE_ENTRY = {
   root: [0, 0, 0] as Vec3Tuple,
@@ -156,6 +201,75 @@ function positionTrack(clipId: string, target: string, values: TimedVector[]): A
       interpolation,
     })),
   };
+}
+
+function sampledPositionTrack(
+  clipId: string,
+  target: string,
+  values: readonly SampledVector[],
+): AnimationTrack {
+  const id = `${clipId}:${target}:position`;
+  return {
+    id,
+    kind: 'position',
+    target,
+    keys: values.map(([time, value], index) => ({
+      id: `${id}:key-${index}`,
+      time,
+      value: [...value],
+      interpolation: 'linear',
+    })),
+  };
+}
+
+function sampledQuaternionTrack(
+  clipId: string,
+  target: string,
+  values: readonly SampledQuaternion[],
+): AnimationTrack {
+  const id = `${clipId}:${target}:quaternion`;
+  return {
+    id,
+    kind: 'quaternion',
+    target,
+    keys: values.map(([time, value], index) => ({
+      id: `${id}:key-${index}`,
+      time,
+      value: [...value] as QuaternionTuple,
+      interpolation: 'linear',
+    })),
+  };
+}
+
+function combinedQuaternionSamples(
+  parent: readonly SampledQuaternion[],
+  child: readonly SampledQuaternion[],
+): SampledQuaternion[] {
+  if (parent.length !== child.length) throw new Error('sampled quaternion clocks differ');
+  return parent.map(([time, parentValue], index) => {
+    const [childTime, childValue] = child[index];
+    if (Math.abs(time - childTime) > 1e-6) throw new Error('sampled quaternion times differ');
+    const value = new THREE.Quaternion()
+      .fromArray([...parentValue])
+      .multiply(new THREE.Quaternion().fromArray([...childValue]))
+      .normalize()
+      .toArray() as QuaternionTuple;
+    return [time, value];
+  });
+}
+
+function sampledRunRotationTracks(
+  clipId: string,
+  includeTorsoRoot: boolean,
+): AnimationTrack[] {
+  const torsoRoot = QUATERNIUS_JOG_FWD_ROTATION_KEYS.torsoRoot;
+  return Object.entries(QUATERNIUS_JOG_FWD_ROTATION_KEYS).flatMap(([jointId, rawKeys]) => {
+    if (!includeTorsoRoot && jointId === 'torsoRoot') return [];
+    const keys = !includeTorsoRoot && jointId === 'spine'
+      ? combinedQuaternionSamples(torsoRoot, rawKeys)
+      : rawKeys;
+    return [sampledQuaternionTrack(clipId, jointId, keys)];
+  });
 }
 
 function scalarTrack(clipId: string, target: string, values: TimedScalar[]): AnimationTrack {
@@ -241,70 +355,35 @@ function buildIdle(rigId: string): AnimationClip {
   return clip;
 }
 
-function buildRun(rigId: string): AnimationClip {
-  const clip = baseClip('player.run', 'Run — Gait Starter', 0.8, 'loop', rigId);
+function buildRun(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(
+    'player.run',
+    'Run — Quaternius Jog_Fwd',
+    QUATERNIUS_JOG_FWD_DURATION,
+    'loop',
+    rigId,
+  );
   clip.tracks = [
-    positionTrack(clip.id, 'root', [[0, [0, 0, 0]], [0.2, [0, 0.035, 0]], [0.4, [0, 0, 0]], [0.6, [0, 0.035, 0]], [0.8, [0, 0, 0]]]),
-    quaternionTrack(clip.id, 'spine', [[0, 0.08, -0.06, 0], [0.2, 0.03, 0, 0.025], [0.4, 0.08, 0.06, 0], [0.6, 0.03, 0, -0.025], [0.8, 0.08, -0.06, 0]]),
-    quaternionTrack(clip.id, 'hipLeft', [[0, -0.72, 0, 0], [0.4, 0.68, 0, 0], [0.8, -0.72, 0, 0]]),
-    quaternionTrack(clip.id, 'kneeLeft', [[0, 1.1, 0, 0], [0.2, 0.25, 0, 0], [0.4, 0.65, 0, 0], [0.6, 1.32, 0, 0], [0.8, 1.1, 0, 0]]),
-    quaternionTrack(clip.id, 'ankleLeft', [[0, -0.3, 0, 0], [0.4, -0.15, 0, 0], [0.8, -0.3, 0, 0]]),
-    quaternionTrack(clip.id, 'hipRight', [[0, 0.68, 0, 0], [0.4, -0.72, 0, 0], [0.8, 0.68, 0, 0]]),
-    quaternionTrack(clip.id, 'kneeRight', [[0, 0.65, 0, 0], [0.2, 1.32, 0, 0], [0.4, 1.1, 0, 0], [0.6, 0.25, 0, 0], [0.8, 0.65, 0, 0]]),
-    quaternionTrack(clip.id, 'ankleRight', [[0, -0.15, 0, 0], [0.4, -0.3, 0, 0], [0.8, -0.15, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, 0.62, 0, 0.08], [0.4, -0.68, 0, -0.04], [0.8, 0.62, 0, 0.08]]),
-    quaternionTrack(clip.id, 'elbowLeft', [[0, -0.4, 0, 0], [0.4, -0.85, 0, 0], [0.8, -0.4, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, -0.68, 0, 0.04], [0.4, 0.62, 0, -0.08], [0.8, -0.68, 0, 0.04]]),
-    quaternionTrack(clip.id, 'elbowRight', [[0, -0.85, 0, 0], [0.4, -0.4, 0, 0], [0.8, -0.85, 0, 0]]),
-    // A light, delayed counter-motion keeps the conventional upper chain from
-    // reading as one rigid block. The head remains visually level while the
-    // spine twists through each stride, then carries a fraction past it.
-    quaternionTrack(clip.id, 'neck', [[0, -0.012, 0.018, -0.006], [0.2, 0.012, 0, 0.008], [0.4, -0.012, -0.018, 0.006], [0.6, 0.012, 0, -0.008], [0.8, -0.012, 0.018, -0.006]]),
-    quaternionTrack(clip.id, 'head', [[0, -0.018, 0.025, -0.008], [0.2, 0.02, 0, 0.01], [0.4, -0.018, -0.025, 0.008], [0.6, 0.02, 0, -0.01], [0.8, -0.018, 0.025, -0.008]]),
-    // Foot strikes compress the torso by only a few percent; the passing/lift
-    // poses rebound just above rest. Limb lengths stay completely untouched.
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 0.975], [0.04, 0.965], [0.2, 1.025], [0.4, 0.975], [0.44, 0.965], [0.6, 1.025], [0.8, 0.975]]),
+    sampledPositionTrack(clip.id, 'root', QUATERNIUS_JOG_FWD_ROOT_KEYS),
+    ...sampledRunRotationTracks(clip.id, includeTorsoRoot),
   ];
   clip.contacts = [
-    contact(`${clip.id}:left-stance`, 0.04, 0.22, 'footLeft'),
-    contact(`${clip.id}:right-stance`, 0.44, 0.62, 'footRight'),
+    contact(`${clip.id}:left-stance`, 0.055, 0.185, 'footLeft'),
+    contact(`${clip.id}:right-stance`, 0.522, 0.652, 'footRight'),
   ];
   clip.markers = [
-    { id: `${clip.id}:left-strike`, time: 0.04, name: 'Left foot strike' },
-    { id: `${clip.id}:right-strike`, time: 0.44, name: 'Right foot strike' },
+    { id: `${clip.id}:left-strike`, time: 0.067, name: 'Left foot strike' },
+    { id: `${clip.id}:right-strike`, time: 0.533, name: 'Right foot strike' },
   ];
-  clip.proceduralDrivers = [
-    createProceduralDriver('oscillator', { kind: 'position', target: 'root', component: 'y' }, {
-      id: `${clip.id}:driver:gait-bounce`,
-      name: 'Gait bounce',
-      order: 0,
-      source: 'gaitPhase',
-      waveform: 'sine',
-      amplitude: 0.026,
-      frequency: 2,
-      phase: 0,
-    }),
-    createProceduralDriver('oscillator', { kind: 'quaternion', target: 'shoulderLeft', axis: [1, 0, 0] }, {
-      id: `${clip.id}:driver:arm-swing-left`,
-      name: 'Left arm gait swing',
-      order: 1,
-      source: 'gaitPhase',
-      waveform: 'sine',
-      amplitude: 0.24,
-      frequency: 1,
-      phase: 0,
-    }),
-    createProceduralDriver('oscillator', { kind: 'quaternion', target: 'shoulderRight', axis: [1, 0, 0] }, {
-      id: `${clip.id}:driver:arm-swing-right`,
-      name: 'Right arm gait swing',
-      order: 2,
-      source: 'gaitPhase',
-      waveform: 'sine',
-      amplitude: 0.24,
-      frequency: 1,
-      phase: 0.5,
-    }),
-  ];
+  // The imported clip already owns its cadence, bounce and arm counter-swing.
+  // Keeping the old gait drivers would double those motions and stop this from
+  // being the Quaternius animation the user selected.
+  clip.proceduralDrivers = [];
+  clip.tags = [...(clip.tags ?? []), 'quaternius', 'jog-fwd', 'imported-keyframes'];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    sourceAnimation: { ...QUATERNIUS_JOG_FWD_SOURCE },
+  };
   return clip;
 }
 
@@ -731,10 +810,15 @@ function placeholder(id: string, label: string, duration: number, rigId: string)
   return clip;
 }
 
-export function createPlayerStarterClips(rigId = PLAYER_PROCEDURAL_RIG_ID): AnimationClip[] {
+export function createPlayerStarterClips(
+  rig: string | RigDefinition = PLAYER_PROCEDURAL_RIG_ID,
+): AnimationClip[] {
+  const rigId = typeof rig === 'string' ? rig : rig.id;
+  const includeTorsoRoot = typeof rig === 'string' ||
+    rig.joints.some((joint) => joint.id === 'torsoRoot');
   return [
     buildIdle(rigId),
-    buildRun(rigId),
+    buildRun(rigId, includeTorsoRoot),
     buildPaceStop(rigId),
     buildJump(rigId),
     buildFall(rigId),
@@ -761,8 +845,9 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
 
 /**
  * Refresh the embedded live rig and add only starters introduced after the
- * revision a saved suite has already seen. Existing same-ID clips always win,
- * preserving browser-authored edits. Once a suite records the current
+ * revision a saved suite has already seen. Same-ID clips normally win; the one
+ * exception is a signature-matched source starter with an explicit catalog
+ * replacement (v2 Run -> v3 Jog_Fwd). Once a suite records the current
  * revision, a missing clip is treated as an intentional deletion and remains
  * missing on subsequent loads.
  */
@@ -782,8 +867,24 @@ export function reconcilePlayerStarterAnimationSuite(
     return rigs === document.rigs ? document : { ...document, rigs };
   }
 
-  const existingIds = new Set(document.clips.map((clip) => clip.id));
-  const additions = createPlayerStarterClips(rig.id).filter((clip) => {
+  const starters = createPlayerStarterClips(rig);
+  let clips = document.clips;
+  if (previousVersion < 3) {
+    const importedRun = starters.find((clip) => clip.id === 'player.run')!;
+    let replaced = false;
+    const upgraded = clips.map((clip) => {
+      if (
+        clip.id !== 'player.run' ||
+        !LEGACY_RUN_STARTER_SIGNATURES.has(starterClipSignature(clip))
+      ) return clip;
+      replaced = true;
+      return importedRun;
+    });
+    if (replaced) clips = upgraded;
+  }
+
+  const existingIds = new Set(clips.map((clip) => clip.id));
+  const additions = starters.filter((clip) => {
     if (existingIds.has(clip.id)) return false;
     const introduced = PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION[
       clip.id as typeof PLAYER_STARTER_CLIP_IDS[number]
@@ -793,7 +894,7 @@ export function reconcilePlayerStarterAnimationSuite(
   return {
     ...document,
     rigs,
-    clips: additions.length > 0 ? [...document.clips, ...additions] : document.clips,
+    clips: additions.length > 0 ? [...clips, ...additions] : clips,
     metadata: {
       ...(document.metadata ?? {}),
       [PLAYER_STARTER_CATALOG_METADATA_KEY]: PLAYER_STARTER_CATALOG_VERSION,
@@ -802,7 +903,7 @@ export function reconcilePlayerStarterAnimationSuite(
 }
 
 export function createPlayerStarterAnimationSuite(rig: RigDefinition): AnimationSuiteDocument {
-  const clips = createPlayerStarterClips(rig.id);
+  const clips = createPlayerStarterClips(rig);
   const document = createAnimationSuiteDocument({
     id: 'player-animation-suite',
     name: 'Player Animation Suite',

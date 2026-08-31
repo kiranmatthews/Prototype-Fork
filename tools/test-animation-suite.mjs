@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { gunzipSync } from 'node:zlib';
 import * as THREE from 'three';
 import { createServer } from 'vite';
 
@@ -344,17 +346,62 @@ try {
   const landPose = sampleClip(land, 0.075);
   near(landPose.scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.62);
   assert.ok(idle.proceduralDrivers.length >= 2);
-  assert.ok(run.proceduralDrivers.length >= 3);
+  assert.equal(run.proceduralDrivers.length, 0,
+    'Jog_Fwd already owns its cadence and must not receive the legacy gait twice');
 
-  // Running stays grounded and restrained: only torso length changes, with a
-  // small strike compression and lift extension. Neck/head counter-motion is
-  // loop-seam compatible and no limb-length control is authored.
+  // Run is the native 30 FPS Quaternius Jog_Fwd loop, converted to ordinary
+  // semantic keyframe tracks so every source sample remains editable.
+  assert.equal(run.name, 'Run — Quaternius Jog_Fwd');
+  near(run.duration, 28 / 30, 1e-6);
+  assert.equal(run.rootMotion.mode, 'in-place');
+  assert.equal(run.loop.mode, 'loop');
+  assert.equal(run.loop.seamless, true);
+  assert.equal(run.metadata.sourceAnimation.sourceClip, 'Jog_Fwd_Loop');
+  assert.equal(run.metadata.sourceAnimation.sourceSha256,
+    '69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997');
+  assert.equal(run.metadata.sourceAnimation.sampleRate, 30);
+  assert.equal(run.metadata.sourceAnimation.sourceFrameCount, 29);
+  assert.ok(run.tags.includes('imported-keyframes'));
+  const jogProvenance = JSON.parse(await readFile(new URL(
+    '../public/characters/quaternius-female/animations/jog-fwd.provenance.json',
+    import.meta.url,
+  ), 'utf8'));
+  assert.equal(jogProvenance.asset.id, run.id);
+  assert.equal(jogProvenance.source.sourceClip, run.metadata.sourceAnimation.sourceClip);
+  assert.equal(jogProvenance.source.sourceFileSha256,
+    run.metadata.sourceAnimation.sourceSha256);
+  assert.equal(jogProvenance.conversion.transformSpace, run.transformSpace);
+  assert.equal(jogProvenance.conversion.rootMotion, run.rootMotion.mode);
+  const runRootTrack = run.tracks.find((track) => track.kind === 'position' && track.target === 'root');
+  const runRotationTracks = run.tracks.filter((track) => track.kind === 'quaternion');
+  assert.ok(runRootTrack);
+  assert.equal(runRootTrack.keys.length, 29);
+  assert.equal(runRotationTracks.length, 22);
+  assert.ok(runRotationTracks.every((track) => track.keys.length === 29));
+  assert.ok(run.tracks.every((track) => track.keys.every((key) => key.interpolation === 'linear')));
+  for (const track of [runRootTrack, ...runRotationTracks]) {
+    assert.deepEqual(track.keys.at(-1).value, track.keys[0].value,
+      `${track.target} did not close the Jog_Fwd loop`);
+  }
+  assert.ok(Math.min(...runRootTrack.keys.map((key) => key.value[1])) < -0.2,
+    'source pelvis compression was not retained on the visual root');
+  assert.ok(Math.max(...runRootTrack.keys.map((key) => key.value[1])) > 0.02,
+    'source flight/rebound height was not retained on the visual root');
+  assert.deepEqual(run.tracks.filter((track) => track.kind === 'scalar'), [],
+    'Jog_Fwd should not invent squash/stretch controls absent from the source');
+  for (const track of runRotationTracks) {
+    for (const key of track.keys) near(Math.hypot(...key.value), 1, 2e-6);
+  }
+  assert.deepEqual(run.contacts.map(({ effector }) => effector), ['footLeft', 'footRight']);
+  near(run.markers[0].time, 0.067, 1e-6);
+  near(run.markers[1].time, 0.533, 1e-6);
+
+  // No raw source positions survive outside the cyclic pelvis/root channel;
+  // the player and female mannequin keep their own limb proportions.
   const runScalarTracks = run.tracks.filter((track) => track.kind === 'scalar');
-  assert.deepEqual(runScalarTracks.map((track) => track.target), [PLAYER_DEFORMATION_CONTROLS.torso]);
+  assert.deepEqual(runScalarTracks, []);
   assert.ok(run.tracks.some((track) => track.kind === 'quaternion' && track.target === 'neck'));
   assert.ok(run.tracks.some((track) => track.kind === 'quaternion' && track.target === 'head'));
-  assert.ok(sampleClip(run, 0.04).scalars[PLAYER_DEFORMATION_CONTROLS.torso] <= 0.965);
-  assert.ok(sampleClip(run, 0.2).scalars[PLAYER_DEFORMATION_CONTROLS.torso] >= 1.025);
 
   // The pace transition is selectable, strictly in-place, and ends on the
   // exact channels idle takes over on its first authored frame.
@@ -427,6 +474,46 @@ try {
   assert.ok(findClip(upgradedCatalog, 'player.pace-stop'), 'new catalog clip was not appended');
   assert.equal(findClip(upgradedCatalog, 'player.run'), undefined,
     'a clip from an already-seen revision was resurrected');
+
+  // Catalog v3 replaces only the byte-for-byte v2 starter Run. A touched key
+  // changes its signature, preserving browser-authored work under the same ID.
+  const legacyRunFixture = JSON.parse(gunzipSync(Buffer.from(
+    (await readFile(
+      new URL('./fixtures/player-run-catalog-v2.json.gz.b64', import.meta.url),
+      'utf8',
+    )).replace(/\s/g, ''),
+    'base64',
+  )).toString('utf8'));
+  const legacyRunSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      clip.id === 'player.run' ? legacyRunFixture : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 2 },
+  };
+  const normalizedLegacyRunSuite = parseAnimationSuite(legacyRunSuite);
+  const importedRunUpgrade = reconcilePlayerStarterAnimationSuite(
+    normalizedLegacyRunSuite,
+    binding.definition,
+  );
+  assert.equal(findClip(importedRunUpgrade, 'player.run').name, 'Run — Quaternius Jog_Fwd');
+  assert.equal(
+    findClip(importedRunUpgrade, 'player.run').metadata.sourceAnimation.sourceClip,
+    'Jog_Fwd_Loop',
+  );
+  const customizedLegacyRun = structuredClone(findClip(normalizedLegacyRunSuite, 'player.run'));
+  customizedLegacyRun.tracks[0].keys[1].value[1] += 0.001;
+  const customizedRunSuite = {
+    ...normalizedLegacyRunSuite,
+    clips: normalizedLegacyRunSuite.clips.map((clip) =>
+      clip.id === 'player.run' ? customizedLegacyRun : clip),
+  };
+  const preservedCustomizedRun = reconcilePlayerStarterAnimationSuite(
+    customizedRunSuite,
+    binding.definition,
+  );
+  assert.equal(findClip(preservedCustomizedRun, 'player.run'), customizedLegacyRun,
+    'catalog reconciliation replaced a browser-customized Run');
+
   const deliberatelyDeleted = {
     ...upgradedCatalog,
     clips: upgradedCatalog.clips.filter((clip) => clip.id !== 'player.pace-stop'),
