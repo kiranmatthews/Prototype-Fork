@@ -13,7 +13,8 @@ import {
 export const SKATEBOARD_PLYWOOD_BANDS = 5;
 export const SKATEBOARD_MATERIAL_COUNT = 2 + SKATEBOARD_PLYWOOD_BANDS;
 export const SKATEBOARD_GRIP_TOP =
-  DEFAULT_SKATEBOARD_SETTINGS.boardToGroundDistance;
+  DEFAULT_SKATEBOARD_SETTINGS.boardToGroundDistance *
+  DEFAULT_SKATEBOARD_SETTINGS.overallScale;
 
 export interface SkateboardGeometryStats {
   readonly vertices: number;
@@ -597,12 +598,15 @@ function colorVector(color: SkateboardColor): THREE.Vector3 {
 }
 
 export function skateboardArtworkUvTransform(
-  artworkScale: number,
+  artworkScaleX: number,
+  artworkScaleY: number,
   bottom: boolean,
 ): readonly [tileX: number, tileY: number, offsetX: number, offsetY: number] {
-  const tiling = bottom ? 1 / Math.max(0.0001, artworkScale) : 1;
-  const offset = bottom ? 0.5 - 0.5 * tiling : 0;
-  return [tiling, tiling, offset, offset];
+  const tileX = bottom ? 1 / Math.max(0.0001, artworkScaleX) : 1;
+  const tileY = bottom ? 1 / Math.max(0.0001, artworkScaleY) : 1;
+  const offsetX = bottom ? 0.5 - 0.5 * tileX : 0;
+  const offsetY = bottom ? 0.5 - 0.5 * tileY : 0;
+  return [tileX, tileY, offsetX, offsetY];
 }
 
 function surfaceMaterial(
@@ -612,7 +616,8 @@ function surfaceMaterial(
   bottom: boolean,
 ): THREE.ShaderMaterial {
   const artworkTransform = skateboardArtworkUvTransform(
-    settings.artworkScale,
+    settings.artworkScaleX,
+    settings.artworkScaleY,
     bottom,
   );
   return new THREE.ShaderMaterial({
@@ -877,9 +882,14 @@ export function rebuildSkateboardPresentation(
   if (!root.userData.preserveResourcesOnRebuild) disposeRebuiltParts(root);
   root.clear();
   root.name ||= "board";
-  root.userData.gripTop = settings.boardToGroundDistance;
+  root.userData.gripTop =
+    settings.boardToGroundDistance * settings.overallScale;
   root.userData.settings = settings;
   root.userData.assetReady = false;
+  const assembly = new THREE.Group();
+  assembly.name = "Skateboard_UniformAssembly";
+  assembly.scale.setScalar(settings.overallScale);
+  root.add(assembly);
   const geometry = buildSkateboardDeckGeometry(settings);
   root.userData.geometryStats = geometry.userData.stats;
   const deck = new THREE.Mesh(geometry, deckMaterials(settings));
@@ -887,7 +897,7 @@ export function rebuildSkateboardPresentation(
   deck.position.y = settings.boardToGroundDistance;
   deck.castShadow = false;
   deck.receiveShadow = false;
-  root.add(deck);
+  assembly.add(deck);
 
   const fallback = new THREE.Group();
   fallback.name = "Hardware_Fallback";
@@ -905,8 +915,8 @@ export function rebuildSkateboardPresentation(
       settings,
     ),
   );
-  root.add(fallback, createWheels(settings));
-  addSockets(root, settings);
+  assembly.add(fallback, createWheels(settings));
+  addSockets(assembly, settings);
   markUnlit(root);
 
   getTruckTemplate(settings.truckModelPath).then(
@@ -950,7 +960,7 @@ export function rebuildSkateboardPresentation(
         trucks.add(truck);
       }
       fallback.removeFromParent();
-      root.add(trucks);
+      assembly.add(trucks);
       root.userData.assetReady = true;
       markUnlit(trucks);
     },
@@ -999,5 +1009,8 @@ export function skateboardRestingPivotLift(
     | undefined;
   const highest = deck?.geometry.boundingBox?.max.y ??
     Math.max(settings.tailKickRise, settings.noseKickRise) + settings.concaveDepth;
-  return settings.boardToGroundDistance + Math.max(0, highest);
+  return (
+    (settings.boardToGroundDistance + Math.max(0, highest)) *
+    settings.overallScale
+  );
 }

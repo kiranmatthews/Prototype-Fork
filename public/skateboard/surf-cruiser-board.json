@@ -1,6 +1,7 @@
 {
   "version": 1,
   "settings": {
+    "overallScale": 1,
     "deckHalfWidth": 0.23761481046676636,
     "deckTailLength": 0.991284191608429,
     "deckNoseLength": 0.991284191608429,
@@ -38,7 +39,8 @@
     "truckBaseplateThickness": 0.01,
     "truckHangerRadius": 0.01,
     "boardToGroundDistance": 0.234,
-    "artworkScale": 1.37,
+    "artworkScaleX": 1.37,
+    "artworkScaleY": 1.37,
     "plywoodLightColor": {
       "r": 0.5098039215686274,
       "g": 0.3843137254901961,

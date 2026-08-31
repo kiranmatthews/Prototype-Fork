@@ -10,6 +10,7 @@ export interface SkateboardColor {
  * board-local space; the directional nose points along local +Z.
  */
 export interface SkateboardSettingsValue {
+  overallScale: number;
   deckHalfWidth: number;
   deckTailLength: number;
   deckNoseLength: number;
@@ -47,7 +48,10 @@ export interface SkateboardSettingsValue {
   truckBaseplateThickness: number;
   truckHangerRadius: number;
   boardToGroundDistance: number;
-  artworkScale: number;
+  artworkScaleX: number;
+  artworkScaleY: number;
+  /** Legacy version-1 import alias; normalized settings never serialize it. */
+  artworkScale?: number;
   plywoodLightColor: SkateboardColor;
   plywoodDarkColor: SkateboardColor;
   topWear: number;
@@ -78,6 +82,7 @@ export const SKATEBOARD_TRUCK_GLTF_REFERENCE_SCALE = 2.2098000049591066;
 // and plywood finish; older Unity/browser defaults are intentionally obsolete.
 export const DEFAULT_SKATEBOARD_SETTINGS: Readonly<SkateboardSettingsValue> =
   Object.freeze({
+    overallScale: 1,
     deckHalfWidth: 0.23761481046676637,
     deckTailLength: 0.991284191608429,
     deckNoseLength: 0.991284191608429,
@@ -115,7 +120,8 @@ export const DEFAULT_SKATEBOARD_SETTINGS: Readonly<SkateboardSettingsValue> =
     truckBaseplateThickness: 0.01,
     truckHangerRadius: 0.01,
     boardToGroundDistance: 0.234,
-    artworkScale: 1.37,
+    artworkScaleX: 1.37,
+    artworkScaleY: 1.37,
     plywoodLightColor: Object.freeze({
       r: 0.5098039215686274,
       g: 0.3843137254901961,
@@ -181,7 +187,18 @@ export function clampSkateboardSettings(
       ? candidate
       : (d[key] as number);
   };
+  const artworkN = (key: "artworkScaleX" | "artworkScaleY"): number => {
+    const candidate = input[key];
+    if (typeof candidate === "number" && Number.isFinite(candidate))
+      return candidate;
+    const legacy = input.artworkScale;
+    return typeof legacy === "number" && Number.isFinite(legacy)
+      ? legacy
+      : d[key];
+  };
   const out = copySkateboardSettings({ ...d, ...input } as SkateboardSettingsValue);
+  delete out.artworkScale;
+  out.overallScale = clamp(n("overallScale"), 0.25, 3);
   out.deckHalfWidth = clamp(n("deckHalfWidth"), 0.05, 0.65);
   out.deckTailLength = clamp(n("deckTailLength"), 0.2, 1.8);
   out.deckNoseLength = clamp(n("deckNoseLength"), 0.2, 1.8);
@@ -231,7 +248,8 @@ export function clampSkateboardSettings(
   out.truckBaseplateThickness = clamp(n("truckBaseplateThickness"), 0.003, 0.12);
   out.truckHangerRadius = clamp(n("truckHangerRadius"), 0.004, 0.08);
   out.boardToGroundDistance = clamp(n("boardToGroundDistance"), 0.04, 0.6);
-  out.artworkScale = clamp(n("artworkScale"), 0.2, 3);
+  out.artworkScaleX = clamp(artworkN("artworkScaleX"), 0.2, 3);
+  out.artworkScaleY = clamp(artworkN("artworkScaleY"), 0.2, 3);
   out.plywoodLightColor = clampedColor(input.plywoodLightColor, d.plywoodLightColor);
   out.plywoodDarkColor = clampedColor(input.plywoodDarkColor, d.plywoodDarkColor);
   out.topWear = clamp(n("topWear"), 0, 1);

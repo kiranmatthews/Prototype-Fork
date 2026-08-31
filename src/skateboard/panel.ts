@@ -31,6 +31,7 @@ const SECTIONS: readonly SectionDefinition[] = [
   {
     title: "Board shape",
     controls: [
+      { label: "Overall scale", key: "overallScale", min: 0.25, max: 3, step: 0.001 },
       { label: "Deck half width", key: "deckHalfWidth", min: 0.05, max: 0.65, step: 0.001 },
       {
         label: "Deck length",
@@ -95,7 +96,8 @@ const SECTIONS: readonly SectionDefinition[] = [
     title: "Placement / art",
     controls: [
       { label: "Board to ground", key: "boardToGroundDistance", min: 0.04, max: 0.6, step: 0.001 },
-      { label: "Artwork scale", key: "artworkScale", min: 0.2, max: 3, step: 0.001 },
+      { label: "Artwork scale X", key: "artworkScaleX", min: 0.2, max: 3, step: 0.001 },
+      { label: "Artwork scale Y", key: "artworkScaleY", min: 0.2, max: 3, step: 0.001 },
     ],
   },
   {

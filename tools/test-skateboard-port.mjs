@@ -35,6 +35,10 @@ assert.deepEqual(
   authoredBoard.settings,
   "shipped defaults must exactly match the approved Board Lab JSON",
 );
+assert.equal(defaults.overallScale, 1);
+assert.equal(defaults.artworkScaleX, 1.37);
+assert.equal(defaults.artworkScaleY, 1.37);
+assert.equal("artworkScale" in defaults, false);
 assert.equal(defaults.deckTailLength + defaults.deckNoseLength, 1.982568383216858);
 assert.equal(defaults.deckHalfWidth * 2, 0.47522962093353274);
 assert.equal(defaults.boardToGroundDistance, 0.234);
@@ -63,29 +67,60 @@ const clamped = settingsApi.clampSkateboardSettings({
   railBevelSegments: 50,
   frontTruckRotationXDegrees: 999,
   rearTruckRotationZDegrees: -999,
+  overallScale: 9,
+  artworkScaleX: 0.01,
+  artworkScaleY: 12,
 });
 assert.equal(clamped.deckHalfWidth, 0.65);
 assert.equal(clamped.wheelRadius, 0.025);
 assert.equal(clamped.railBevelSegments, 8);
 assert.equal(clamped.frontTruckRotationXDegrees, 180);
 assert.equal(clamped.rearTruckRotationZDegrees, -180);
+assert.equal(clamped.overallScale, 3);
+assert.equal(clamped.artworkScaleX, 0.2);
+assert.equal(clamped.artworkScaleY, 3);
 const migrated = settingsApi.clampSkateboardSettings({ deckHalfWidth: 0.3 });
 assert.equal(migrated.frontTruckRotationXDegrees, 90);
 assert.equal(migrated.rearTruckRotationXDegrees, 90);
 assert.equal(migrated.frontTruckRotationYDegrees, 0);
 assert.equal(migrated.rearTruckRotationYDegrees, 0);
+assert.equal(migrated.overallScale, 1);
+assert.equal(migrated.artworkScaleX, 1.37);
+assert.equal(migrated.artworkScaleY, 1.37);
+const legacyArtwork = settingsApi.clampSkateboardSettings({
+  artworkScale: 2.1,
+});
+assert.equal(legacyArtwork.artworkScaleX, 2.1);
+assert.equal(legacyArtwork.artworkScaleY, 2.1);
+assert.equal("artworkScale" in legacyArtwork, false);
+const mixedArtwork = settingsApi.clampSkateboardSettings({
+  artworkScale: 1.8,
+  artworkScaleX: 0.7,
+});
+assert.equal(mixedArtwork.artworkScaleX, 0.7);
+assert.equal(mixedArtwork.artworkScaleY, 1.8);
 const tuning = new settingsApi.SkateboardSettings();
 tuning.patch({
   frontTruckRotationXDegrees: 12.5,
   rearTruckRotationZDegrees: -33.25,
+  overallScale: 1.42,
+  artworkScaleX: 0.83,
+  artworkScaleY: 2.17,
 });
 const saved = JSON.parse(tuning.serialize(false));
 assert.equal(saved.settings.frontTruckRotationXDegrees, 12.5);
 assert.equal(saved.settings.rearTruckRotationZDegrees, -33.25);
+assert.equal(saved.settings.overallScale, 1.42);
+assert.equal(saved.settings.artworkScaleX, 0.83);
+assert.equal(saved.settings.artworkScaleY, 2.17);
+assert.equal("artworkScale" in saved.settings, false);
 const importedTuning = new settingsApi.SkateboardSettings();
 importedTuning.importJson(tuning.serialize(false));
 assert.equal(importedTuning.value.frontTruckRotationXDegrees, 12.5);
 assert.equal(importedTuning.value.rearTruckRotationZDegrees, -33.25);
+assert.equal(importedTuning.value.overallScale, 1.42);
+assert.equal(importedTuning.value.artworkScaleX, 0.83);
+assert.equal(importedTuning.value.artworkScaleY, 2.17);
 const authoredTuning = new settingsApi.SkateboardSettings();
 authoredTuning.importJson(JSON.stringify(authoredBoard));
 assert.deepEqual(authoredTuning.value, authoredBoard.settings);
@@ -94,7 +129,14 @@ const modelSource = (await readText("src/skateboard/model.ts")).replaceAll(
   "import.meta.env.BASE_URL",
   '"./"',
 );
-class LoaderStub {}
+THREE.TextureLoader.prototype.load = function loadTextureStub() {
+  return new THREE.Texture();
+};
+class LoaderStub {
+  load(_url, onLoad) {
+    queueMicrotask(() => onLoad({ scene: new THREE.Group() }));
+  }
+}
 const modelApi = compileCommonJs(modelSource, (specifier) => {
   if (specifier === "three") return THREE;
   if (specifier.endsWith("GLTFLoader.js")) return { GLTFLoader: LoaderStub };
@@ -105,7 +147,11 @@ const modelApi = compileCommonJs(modelSource, (specifier) => {
 const geometry = modelApi.buildSkateboardDeckGeometry(defaults);
 assert.equal(modelApi.SKATEBOARD_GRIP_TOP, 0.234);
 assert.deepEqual(
-  modelApi.skateboardArtworkUvTransform(defaults.artworkScale, true),
+  modelApi.skateboardArtworkUvTransform(
+    defaults.artworkScaleX,
+    defaults.artworkScaleY,
+    true,
+  ),
   [
     0.7299270072992701,
     0.7299270072992701,
@@ -113,7 +159,18 @@ assert.deepEqual(
     0.13503649635036497,
   ],
 );
-assert.deepEqual(modelApi.skateboardArtworkUvTransform(defaults.artworkScale, false), [1, 1, 0, 0]);
+assert.deepEqual(
+  modelApi.skateboardArtworkUvTransform(
+    defaults.artworkScaleX,
+    defaults.artworkScaleY,
+    false,
+  ),
+  [1, 1, 0, 0],
+);
+assert.deepEqual(
+  modelApi.skateboardArtworkUvTransform(2, 0.5, true),
+  [0.5, 2, 0.25, -0.5],
+);
 assert.equal(geometry.getAttribute("position").count, 3148);
 assert.equal(geometry.getAttribute("uv").count, 3148);
 assert.equal(geometry.getAttribute("wearUv").count, 3148);
@@ -166,6 +223,125 @@ const frontPitch = modelApi.skateboardTruckQuaternion(0, 90, 0, 0);
 const pitchedUp = new THREE.Vector3(0, 1, 0).applyQuaternion(frontPitch);
 assert.ok(pitchedUp.distanceTo(new THREE.Vector3(0, 0, 1)) < 1e-8);
 
+const overallScale = 1.6;
+const scaledSettings = { ...defaults, overallScale };
+const scaledPresentation = new THREE.Group();
+scaledPresentation.scale.set(0.7, 0.8, 0.9);
+modelApi.rebuildSkateboardPresentation(scaledPresentation, scaledSettings);
+assert.deepEqual(
+  scaledPresentation.scale.toArray(),
+  [0.7, 0.8, 0.9],
+  "uniform board scale overwrote the player's outer compensation",
+);
+const scaledAssembly = scaledPresentation.getObjectByName(
+  "Skateboard_UniformAssembly",
+);
+assert.ok(scaledAssembly, "uniform board assembly is missing");
+assert.deepEqual(scaledAssembly.scale.toArray(), [overallScale, overallScale, overallScale]);
+assert.equal(
+  scaledPresentation.userData.gripTop,
+  defaults.boardToGroundDistance * overallScale,
+);
+const descendsFrom = (object, ancestor) => {
+  for (let cursor = object; cursor; cursor = cursor.parent)
+    if (cursor === ancestor) return true;
+  return false;
+};
+for (const name of [
+  "Deck_ContinuousRoundedKick",
+  "Wheels_Procedural",
+  "Hardware_Fallback",
+  "socket-board-left",
+  "socket-board-right",
+  "socket-board-nose",
+  "socket-board-tail",
+]) {
+  const object = scaledPresentation.getObjectByName(name);
+  assert.ok(object, `${name} missing from scaled board`);
+  assert.equal(descendsFrom(object, scaledAssembly), true, `${name} escaped uniform assembly`);
+}
+
+const worldScaled = new THREE.Group();
+modelApi.rebuildSkateboardPresentation(worldScaled, scaledSettings);
+worldScaled.updateMatrixWorld(true);
+const deckWorld = worldScaled
+  .getObjectByName("Deck_ContinuousRoundedKick")
+  .getWorldPosition(new THREE.Vector3());
+assert.ok(
+  deckWorld.distanceTo(
+    new THREE.Vector3(0, defaults.boardToGroundDistance * overallScale, 0),
+  ) < 1e-9,
+);
+const frontLeftWheel = worldScaled.getObjectByName("Wheel_Front_Left");
+assert.ok(frontLeftWheel);
+const wheelWorld = frontLeftWheel.getWorldPosition(new THREE.Vector3());
+assert.ok(
+  wheelWorld.distanceTo(
+    new THREE.Vector3(
+      -defaults.wheelTrackHalfWidth * overallScale,
+      defaults.wheelRadius * overallScale,
+      defaults.frontTruckLocalZ * overallScale,
+    ),
+  ) < 1e-9,
+  `scaled wheel relationship ${wheelWorld.toArray()}`,
+);
+assert.ok(
+  Math.abs(wheelWorld.y - defaults.wheelRadius * overallScale) < 1e-9,
+  "uniformly scaled wheels no longer touch the root ground plane",
+);
+const leftSocketWorld = worldScaled
+  .getObjectByName("socket-board-left")
+  .getWorldPosition(new THREE.Vector3());
+assert.ok(
+  leftSocketWorld.distanceTo(
+    new THREE.Vector3(
+      defaults.deckHalfWidth * overallScale,
+      defaults.boardToGroundDistance * overallScale,
+      0,
+    ),
+  ) < 1e-9,
+  "semantic sockets did not share the board scale",
+);
+const upsideDown = new THREE.Quaternion().setFromAxisAngle(
+  new THREE.Vector3(1, 0, 0),
+  Math.PI,
+);
+const highestKick = worldScaled.getObjectByName("Deck_ContinuousRoundedKick")
+  .geometry.boundingBox.max.y;
+assert.ok(
+  Math.abs(
+    modelApi.skateboardRestingPivotLift(worldScaled, upsideDown) -
+      (defaults.boardToGroundDistance + highestKick) * overallScale,
+  ) < 1e-9,
+  "artwork-up resting lift did not share the uniform board scale",
+);
+
+await Promise.resolve();
+await Promise.resolve();
+const importedHardware = worldScaled.getObjectByName("Hardware_Imported");
+const importedFront = worldScaled.getObjectByName("FrontTruck_Model");
+assert.ok(importedHardware && importedFront, "imported hardware did not resolve");
+assert.equal(
+  descendsFrom(importedHardware, worldScaled.getObjectByName("Skateboard_UniformAssembly")),
+  true,
+  "imported trucks escaped the uniform board assembly",
+);
+const importedWorldScale = importedFront.getWorldScale(new THREE.Vector3());
+const expectedImportedScale =
+  overallScale *
+  defaults.replacementTruckScale /
+  settingsApi.SKATEBOARD_TRUCK_GLTF_REFERENCE_SCALE;
+assert.ok(
+  importedWorldScale.distanceTo(
+    new THREE.Vector3(
+      expectedImportedScale,
+      expectedImportedScale,
+      expectedImportedScale,
+    ),
+  ) < 1e-9,
+  "imported truck was not scaled exactly once with the board",
+);
+
 const main = await readText("src/main.ts");
 const player = await readText("src/player.ts");
 assert.match(main, /createSkateboardTuningPanel/);
@@ -178,6 +354,10 @@ assert.match(await readText("skateboard-lab.html"), /src\/skateboard\/lab\.ts/);
 const lab = await readText("src/skateboard/lab.ts");
 assert.match(lab, /Y UNDERSIDE — ARTWORK/);
 assert.match(lab, /\[90, 0, 0\]/);
+const panel = await readText("src/skateboard/panel.ts");
+assert.match(panel, /label: "Overall scale", key: "overallScale"/);
+assert.match(panel, /label: "Artwork scale X", key: "artworkScaleX"/);
+assert.match(panel, /label: "Artwork scale Y", key: "artworkScaleY"/);
 assert.match(modelSource, /new THREE\.TextureLoader\(\)\.load/);
 assert.match(modelSource, /settings\.replacementTruckScale\s*\/\s*SKATEBOARD_TRUCK_GLTF_REFERENCE_SCALE/);
 assert.doesNotMatch(
@@ -192,7 +372,7 @@ assert.match(
 assert.doesNotMatch(modelSource, /texture\.source = loaded\.source/);
 
 const expectedAssets = new Map([
-  ["public/skateboard/surf-cruiser-board.json", "5f7b984c86c30c1cbea31a1c9ad8f9dc8c4cb2b82ef0992ba16c3d1ad8bc51ce"],
+  ["public/skateboard/surf-cruiser-board.json", "9767e03ba2fd951e46924477cd762ee3565ff3ac563b586fdd20c170fefaa040"],
   ["public/skateboard/skateboard-truck.glb", "20d30d6fb2f594549db6ff219bfa8d925540c8dcdbd912f1116bef8e194b05c7"],
   ["public/skateboard/skateboard-truck.webp", "eb263b1250367575f5666838e8c30253e5344492d0ec1e474ef5829cd631a905"],
   ["public/skateboard/surf-cruiser-orange-sun.webp", "d24e9e704a626fdb7b3e4d26fd35dc9d5760de728c9e8d2e17843cea64ba9ff9"],
@@ -244,5 +424,5 @@ for (const [path, expected] of expectedAssets) {
 }
 
 console.log(
-  "Validated approved Board JSON, exact deck topology/bottom winding, imported truck calibration/trim, wheel alignment, underside lab view, player integration, and baked web assets.",
+  "Validated approved Board JSON/migration, true uniform assembly scaling, independent artwork axes, exact deck topology, truck/wheel relationships, player integration, and baked web assets.",
 );
