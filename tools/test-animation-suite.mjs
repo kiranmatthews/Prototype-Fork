@@ -363,7 +363,7 @@ try {
   assert.equal(run.metadata.sourceAnimation.sourceFrameCount, 29);
   assert.ok(run.tags.includes('imported-keyframes'));
   const jogProvenance = JSON.parse(await readFile(new URL(
-    '../public/characters/quaternius-female/animations/jog-fwd.provenance.json',
+    '../public/animations/quaternius-jog-fwd/provenance.json',
     import.meta.url,
   ), 'utf8'));
   assert.equal(jogProvenance.asset.id, run.id);
@@ -397,7 +397,7 @@ try {
   near(run.markers[1].time, 0.533, 1e-6);
 
   // No raw source positions survive outside the cyclic pelvis/root channel;
-  // the player and female mannequin keep their own limb proportions.
+  // the procedural character keeps its Character Lab-authored proportions.
   const runScalarTracks = run.tracks.filter((track) => track.kind === 'scalar');
   assert.deepEqual(runScalarTracks, []);
   assert.ok(run.tracks.some((track) => track.kind === 'quaternion' && track.target === 'neck'));

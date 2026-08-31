@@ -26,7 +26,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { wumpaMesh, WUMPA_SIZE } from './wumpa';
 import { puffs, surfaceFromName } from './puffs';
 import { Tail, type TailCollider } from './tail';
-import { cutsFor } from './modelcuts';
 import {
   PROCEDURAL_SHIN_LENGTH,
   PROCEDURAL_THIGH_LENGTH,
@@ -74,29 +73,11 @@ import {
   BAIL_RECOVERY_SPRAWL_PITCH,
   sampleBailRecovery,
 } from './bailRecovery';
+import { CharacterProportionLayer } from './character/proportionLayer';
 import {
-  QuaterniusEvaluationModel,
-  type QuaterniusEvaluationDiagnostics,
-} from './character/quaterniusEvaluationModel';
-import {
-  MeshyFoxEvaluationModel,
-  type MeshyFoxEvaluationDiagnostics,
-} from './character/meshyFoxEvaluationModel';
-
-export type CharacterPresentationMode =
-  | 'procedural'
-  | 'quaternius-female'
-  | 'meshy-fox';
-
-export interface CharacterPresentationDiagnostics {
-  requestedMode: CharacterPresentationMode;
-  activeMode: CharacterPresentationMode;
-  tailVisible: boolean;
-  ready: boolean;
-  error: string | null;
-  evaluation: QuaterniusEvaluationDiagnostics | null;
-  meshyFox: MeshyFoxEvaluationDiagnostics | null;
-}
+  characterProportionSettings,
+  type CharacterProportionSettingsValue,
+} from './character/settings';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -526,20 +507,8 @@ export class Player {
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   private readonly playerAnimationBridge: PlayerAnimationBridge;
-  private quaterniusEvaluationModel: QuaterniusEvaluationModel | null = null;
-  private meshyFoxEvaluationModel: MeshyFoxEvaluationModel | null = null;
-  private characterPresentationModeValue: CharacterPresentationMode = 'quaternius-female';
+  private readonly characterProportionLayer: CharacterProportionLayer;
   private characterTailVisibleValue = true;
-  private characterPresentationSourceRoots: Array<{
-    object: THREE.Object3D;
-    visible: boolean;
-  }> = [];
-  private characterPresentationLoadError: Error | null = null;
-  private meshyFoxLoadError: Error | null = null;
-  // The procedural body is the load-bearing pose rig and immediate visual
-  // fallback. Imported comparison bodies can still be installed explicitly;
-  // the Quaternius surface retargets from this hierarchy without replacing it.
-  private modelReady = true;
 
   private spinTimer = 0;
   private spinCd = 0;
@@ -1006,10 +975,6 @@ export class Player {
   private wristL: THREE.Bone | null = null;
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
-  private chestG: THREE.Bone | null = null;
-  private neckG: THREE.Bone | null = null;
-  private clavicleR: THREE.Bone | null = null;
-  private clavicleL: THREE.Bone | null = null;
   private headM: THREE.Bone | null = null; // head bone: skull, muzzle, ears, hair, eyes
   private legs: THREE.Bone | null = null;
   private legL: THREE.Bone | null = null; // upper-leg bones
@@ -1022,14 +987,10 @@ export class Player {
   private toeR: THREE.Bone | null = null;
   private humanoidSkeleton: THREE.Skeleton | null = null;
   // Kangaroo appendages — jointed for follow-through animation.
-  // The tail is drawn in code and simulated (src/tail.ts): an installed model's
-  // own tail polygons are discarded, because every one we have been handed is
-  // rigged badly and a carved-and-reskinned brush can only ever be as smooth as
-  // the 30-odd triangles it was carved from.
+  // The tail is drawn in code and simulated (src/tail.ts), and Character Lab
+  // can hide it without deleting its animation-ready semantic joint.
   private tail: Tail | null = null;
-  /** which authored model is installed — keys MODEL_CUTS and the studio */
-  modelSrc = '';
-  /** The model studio needs the tail and the body it hangs off. */
+  /** Character Lab needs the tail and the body it hangs off. */
   get tailRef(): Tail | null {
     return this.tail;
   }
@@ -1042,8 +1003,8 @@ export class Player {
   // leg-position formula plants the feet under the real hips
   private hipBaseR = { x: 0.115, z: 0 };
   private hipBaseL = { x: -0.115, z: 0 };
-  // Live bind lengths. Imported comparison bodies keep the same conventional
-  // joints, so ankle presence alone no longer identifies procedural anatomy.
+  // Live effective lengths used by the fixed-length leg solver. Character Lab
+  // scales these without changing the canonical semantic joint identities.
   private upperLegLengthR = PROCEDURAL_THIGH_LENGTH;
   private upperLegLengthL = PROCEDURAL_THIGH_LENGTH;
   private lowerLegLengthR = PROCEDURAL_SHIN_LENGTH;
@@ -1187,22 +1148,11 @@ export class Player {
     scene.add(this.group);
     this.rebuildHumanoidSkeleton();
     this.playerAnimationBridge = new PlayerAnimationBridge(this.group, this.bodyGroup);
-    this.installQuaterniusEvaluationModel();
-    this.installMeshyFoxEvaluationModel();
-    // Keep older imported characters as explicit comparison/debug routes.
-    // The procedural rider remains the authoritative pose rig even when the
-    // intact Quaternius skin is the visible evaluation surface.
-    const characterFlags = window as { __USE_MESHY?: boolean; __USE_ROO?: boolean };
-    if (characterFlags.__USE_ROO) this.installRoo();
-    else if (characterFlags.__USE_MESHY) {
-      let saved = 'fox';
-      try {
-        saved = localStorage.getItem('solProtoChar') || 'fox';
-      } catch {
-        /* private mode: default fox */
-      }
-      this.setCharacter(saved);
-    }
+    this.characterProportionLayer = new CharacterProportionLayer(this.bodyGroup);
+    characterProportionSettings.subscribe(() => {
+      this.syncCharacterAppearance();
+      this.resetRenderInterpolation();
+    }, true);
     this.installSpinEffects(); // Unity Whirlwind Vixen + orbital rings
 
     // Landing X: a small cross pinned to the floor under the skater — the
@@ -1614,48 +1564,49 @@ export class Player {
     return this.humanoidSkeleton;
   }
 
-  get characterPresentationMode(): CharacterPresentationMode {
-    return this.characterPresentationModeValue;
-  }
-
   get characterTailVisible(): boolean {
     return this.characterTailVisibleValue;
   }
 
-  get activeCharacterPresentationMode(): CharacterPresentationMode {
-    if (
-      this.characterPresentationModeValue === 'quaternius-female' &&
-      this.quaterniusEvaluationModel?.readiness === 'ready'
-    ) return 'quaternius-female';
-    if (
-      this.characterPresentationModeValue === 'meshy-fox' &&
-      this.meshyFoxEvaluationModel?.readiness === 'ready'
-    ) return 'meshy-fox';
-    return 'procedural';
+  get characterProportions(): Readonly<CharacterProportionSettingsValue> {
+    return characterProportionSettings.value;
   }
 
-  get characterPresentationDiagnostics(): CharacterPresentationDiagnostics {
-    const model = this.quaterniusEvaluationModel;
-    const meshy = this.meshyFoxEvaluationModel;
-    const ready = this.characterPresentationModeValue === 'procedural'
-      ? true
-      : this.characterPresentationModeValue === 'quaternius-female'
-        ? model?.readiness === 'ready'
-        : meshy?.readiness === 'ready';
-    const error = this.characterPresentationModeValue === 'procedural'
-      ? null
-      : this.characterPresentationModeValue === 'meshy-fox'
-        ? this.meshyFoxLoadError?.message ?? meshy?.error?.message ?? null
-        : this.characterPresentationLoadError?.message ?? model?.error?.message ?? null;
+  get characterProportionDiagnostics(): {
+    readonly settings: Readonly<CharacterProportionSettingsValue>;
+    readonly appliedObjectCount: number;
+    readonly tailVisible: boolean;
+  } {
     return {
-      requestedMode: this.characterPresentationModeValue,
-      activeMode: this.activeCharacterPresentationMode,
+      settings: { ...characterProportionSettings.value },
+      appliedObjectCount: this.characterProportionLayer.appliedObjectCount,
       tailVisible: this.characterTailVisibleValue,
-      ready,
-      error,
-      evaluation: model?.diagnostics ?? null,
-      meshyFox: this.meshyFoxEvaluationModel?.diagnostics ?? null,
     };
+  }
+
+  setCharacterProportions(patch: Partial<CharacterProportionSettingsValue>): void {
+    characterProportionSettings.patch(patch);
+  }
+
+  resetCharacterProportions(): void {
+    characterProportionSettings.reset();
+  }
+
+  private characterLegHeightDelta(): number {
+    const shape = characterProportionSettings.value;
+    return (
+      PROCEDURAL_THIGH_LENGTH * (shape.thighLength - 1) +
+      PROCEDURAL_SHIN_LENGTH * (shape.shinLength - 1)
+    );
+  }
+
+  private characterWaistLocal(base: number): number {
+    return base + this.characterLegHeightDelta();
+  }
+
+  private characterWaistHeight(base: number): number {
+    const shape = characterProportionSettings.value;
+    return this.characterWaistLocal(base) * shape.overallScale * shape.height;
   }
 
   get characterTailVisibilityState(): {
@@ -1690,96 +1641,15 @@ export class Player {
     this.setCharacterTailVisible(!this.characterTailVisibleValue);
   }
 
-  /** Compact host contract used by Animation Studio's BODY switch. */
-  get characterPresentationSurfaceState(): {
-    label: string;
-    ready: boolean;
-    active: boolean;
-    detail: string;
-  } {
-    const mode = this.characterPresentationModeValue;
-    if (mode === 'procedural') {
-      return {
-        label: 'RIG',
-        ready: true,
-        active: true,
-        detail: 'Procedural source body · click for the Quaternius female mannequin',
-      };
-    }
-    const model = mode === 'quaternius-female'
-      ? this.quaterniusEvaluationModel
-      : this.meshyFoxEvaluationModel;
-    const readiness = model?.readiness;
-    const ready = readiness === 'ready';
-    const active = ready && this.activeCharacterPresentationMode === mode;
-    const failed = readiness === 'error';
-    const female = mode === 'quaternius-female';
-    return {
-      label: active
-        ? female ? 'FEMALE' : 'MESHY FOX'
-        : failed
-          ? female ? 'FEMALE ERR' : 'MESHY ERR'
-          : female ? 'FEMALE…' : 'MESHY…',
-      ready,
-      active,
-      detail: failed
-        ? `${female ? 'Female mannequin' : 'Meshy fox'} unavailable: ${model?.error?.message ?? 'load failed'}`
-        : ready
-          ? female
-            ? 'Quaternius UAL2 female mannequin · click for the Meshy fox'
-            : 'Meshy Violet Vixen native skin · click for the procedural source body'
-          : `${female ? 'Quaternius female mannequin' : 'Meshy fox'} is loading · click to cycle`,
-    };
-  }
-
-  setCharacterPresentationMode(mode: CharacterPresentationMode): void {
-    if (mode !== 'procedural' && mode !== 'quaternius-female' && mode !== 'meshy-fox') {
-      throw new Error(`unknown character presentation mode: ${String(mode)}`);
-    }
-    this.characterPresentationModeValue = mode;
-    if (mode === 'meshy-fox') this.ensureMeshyFoxLoad();
-    try {
-      localStorage.setItem('solProtoCharacterPresentationV1', mode);
-    } catch {
-      // Private browsing can disable persistence without disabling the model.
-    }
-    this.syncCharacterPresentation();
-    this.resetRenderInterpolation();
-  }
-
-  toggleCharacterPresentationMode(): void {
-    const next: Record<CharacterPresentationMode, CharacterPresentationMode> = {
-      'quaternius-female': 'meshy-fox',
-      'meshy-fox': 'procedural',
-      procedural: 'quaternius-female',
-    };
-    this.setCharacterPresentationMode(next[this.characterPresentationModeValue]);
-  }
-
-  /**
-   * Copy the final source pose onto the intact evaluation skin and reassert
-   * visibility after bridge/preview snapshot restoration.
-   */
-  syncCharacterPresentation(): void {
-    const female = this.quaterniusEvaluationModel;
-    const meshy = this.meshyFoxEvaluationModel;
-    const showFemale =
-      this.characterPresentationModeValue === 'quaternius-female' &&
-      female?.readiness === 'ready';
-    const showMeshy =
-      this.characterPresentationModeValue === 'meshy-fox' &&
-      meshy?.readiness === 'ready';
-    if (showFemale) female.updateAfterSourcePose();
-    if (showMeshy) meshy.updateAfterSourcePose();
-    female?.setVisible(showFemale);
-    meshy?.setVisible(showMeshy);
-    for (const source of this.characterPresentationSourceRoots) {
-      source.object.visible = showFemale || showMeshy ? false : source.visible;
-    }
-    // Preview and Studio snapshots restore visibility wholesale. The tail is
-    // a host-owned silhouette preference, so reclaim it after those restores
-    // just as the async evaluation surfaces reclaim their own transforms.
+  /** Reapply the persistent Character Lab design after any pose/snapshot write. */
+  syncCharacterAppearance(): void {
+    this.characterProportionLayer.apply(characterProportionSettings.value);
     this.syncCharacterTailVisibility();
+    this.bodyGroup.updateMatrixWorld(true);
+  }
+
+  private clearCharacterAppearance(): void {
+    this.characterProportionLayer.clear();
   }
 
   private restoreCharacterTailVisibilityPreference(): void {
@@ -1795,82 +1665,6 @@ export class Player {
 
   private syncCharacterTailVisibility(): void {
     if (this.tail) this.tail.root.visible = this.characterTailVisibleValue;
-  }
-
-  private installQuaterniusEvaluationModel(): void {
-    // Node movement harnesses install a deliberately tiny window/document
-    // shim. They have no presentation clock or asset server, so keep the
-    // synchronous procedural fallback and do not start a doomed GLB request.
-    if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') return;
-    const rider = this.riderG;
-    const skeleton = this.humanoidSkeleton;
-    if (!rider || !skeleton) return;
-    try {
-      const saved = localStorage.getItem('solProtoCharacterPresentationV1');
-      if (saved === 'procedural' || saved === 'quaternius-female' || saved === 'meshy-fox') {
-        this.characterPresentationModeValue = saved;
-      }
-    } catch {
-      // The requested default remains the female evaluation body.
-    }
-    this.characterPresentationSourceRoots = rider.children.map((object) => ({
-      object,
-      visible: object.visible,
-    }));
-    const model = new QuaterniusEvaluationModel({
-      parent: rider,
-      sourceRoot: this.bodyGroup,
-      sourcePoseRoot: rider,
-      sourceSkeleton: skeleton,
-      visible: false,
-    });
-    this.quaterniusEvaluationModel = model;
-    void model.load().then(() => {
-      if (this.quaterniusEvaluationModel !== model) return;
-      this.characterPresentationLoadError = null;
-      this.syncCharacterPresentation();
-      this.resetRenderInterpolation();
-    }).catch((error: unknown) => {
-      if (this.quaterniusEvaluationModel !== model) return;
-      this.characterPresentationLoadError =
-        error instanceof Error ? error : new Error(String(error));
-      this.syncCharacterPresentation();
-      console.warn(
-        'Quaternius female evaluation model failed to load (procedural body stays):',
-        error,
-      );
-    });
-  }
-
-  private installMeshyFoxEvaluationModel(): void {
-    if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') return;
-    const rider = this.riderG;
-    const skeleton = this.humanoidSkeleton;
-    if (!rider || !skeleton) return;
-    this.meshyFoxEvaluationModel = new MeshyFoxEvaluationModel({
-      parent: rider,
-      sourceRoot: this.bodyGroup,
-      sourcePoseRoot: rider,
-      sourceSkeleton: skeleton,
-      visible: false,
-    });
-    if (this.characterPresentationModeValue === 'meshy-fox') this.ensureMeshyFoxLoad();
-  }
-
-  private ensureMeshyFoxLoad(): void {
-    const model = this.meshyFoxEvaluationModel;
-    if (!model || model.readiness !== 'idle') return;
-    void model.load().then(() => {
-      if (this.meshyFoxEvaluationModel !== model) return;
-      this.meshyFoxLoadError = null;
-      this.syncCharacterPresentation();
-      this.resetRenderInterpolation();
-    }).catch((error: unknown) => {
-      if (this.meshyFoxEvaluationModel !== model) return;
-      this.meshyFoxLoadError = error instanceof Error ? error : new Error(String(error));
-      this.syncCharacterPresentation();
-      console.warn('Meshy fox failed to load (procedural body stays):', error);
-    });
   }
 
   /**
@@ -1917,16 +1711,6 @@ export class Player {
     // THREE.Skeleton's constructor also initializes inverses, but this explicit
     // pass documents and enforces the important ordering above.
     this.humanoidSkeleton.calculateInverses();
-    this.quaterniusEvaluationModel?.rebindSource(
-      this.bodyGroup,
-      this.humanoidSkeleton,
-      this.riderG ?? undefined,
-    );
-    this.meshyFoxEvaluationModel?.rebindSource(
-      this.bodyGroup,
-      this.humanoidSkeleton,
-      this.riderG ?? undefined,
-    );
   }
 
   get animationPreviewActive(): boolean {
@@ -1941,6 +1725,7 @@ export class Player {
    */
   enterAnimationPreview(): PlayerAnimationRig {
     this.restoreRenderPose();
+    this.clearCharacterAppearance();
     this.resetRenderInterpolation();
     return this.playerAnimationBridge.enterPreview();
   }
@@ -1950,7 +1735,7 @@ export class Player {
     this.playerAnimationBridge.resetPreview();
     this.tail?.reset();
     this.resetRenderInterpolation();
-    this.syncCharacterPresentation();
+    this.syncCharacterAppearance();
   }
 
   /** Restore the entry pose and return pose ownership to gameplay. */
@@ -1958,7 +1743,7 @@ export class Player {
     this.playerAnimationBridge.exitPreview();
     this.tail?.reset();
     this.resetRenderInterpolation();
-    this.syncCharacterPresentation();
+    this.syncCharacterAppearance();
   }
 
   /**
@@ -1969,6 +1754,11 @@ export class Player {
   applyAnimationDeformations(values: Readonly<Record<string, number>>): void {
     if (!this.playerAnimationBridge.previewActive)
       throw new Error('independent deformation writes require an animation preview session');
+    // Studio may be resampling over the previous Character Lab pass. Return
+    // visual children to the bridge-owned deformation result before it
+    // resolves a fresh scalar pose, then syncCharacterAppearance reapplies the
+    // persistent design once the complete pose has settled.
+    this.clearCharacterAppearance();
     this.playerAnimationBridge.applyDeformations(values);
   }
 
@@ -7385,7 +7175,8 @@ export class Player {
     if (poseSource !== this.bodyGroup && this.bodyGroup.parent) {
       poseSource.updateWorldMatrix(true, false);
       this.bodyGroup.parent.updateWorldMatrix(true, false);
-      Player.RAG_AXIS.set(0, 0.82, 0).applyMatrix4(poseSource.matrixWorld);
+      Player.RAG_AXIS.set(0, this.characterWaistLocal(0.82), 0)
+        .applyMatrix4(poseSource.matrixWorld);
       this.ragPoseAnchor.copy(Player.RAG_AXIS);
       this.bodyGroup.parent.worldToLocal(this.ragPoseAnchor);
       this.ragPoseAnchorW = 1;
@@ -12580,7 +12371,6 @@ export class Player {
       (1 - this.slidePose) *
       (1 - this.ledgePose);
     if (!legs || !bg || !legR || !legL || !kneeR || !kneeL || w <= 0.002) {
-      rg.position.set(0, 0, 0);
       return;
     }
     // Comparison meshes keep conventional virtual ankle/toe bones even when
@@ -12601,9 +12391,9 @@ export class Player {
       this.soleL = this.soleFootprint(soleRootL);
     }
     if (this.soleR.length === 0 || this.soleL.length === 0) {
-      rg.position.set(0, 0, 0);
       return;
     }
+    rg.updateMatrix();
     legs.updateMatrix();
     legR.updateMatrix();
     legL.updateMatrix();
@@ -12612,11 +12402,18 @@ export class Player {
     ankleR?.updateMatrix();
     ankleL?.updateMatrix();
     bg.updateMatrix();
-    // sole-root-local → rider-local → deck-geometry-local, one matrix per foot.
-    // (riderG carries no rotation, so its parent's frame IS the rider frame.)
+    // sole-root-local → live rider transform → deck-geometry-local, one matrix
+    // per foot. Including riderG is what makes Character Lab scale and the
+    // recovery roll compatible with the final contact correction.
     const toDeck = _plantInv.copy(bg.matrix).invert();
-    const mR = _plantMR.multiplyMatrices(legs.matrix, legR.matrix).multiply(kneeR.matrix);
-    const mL = _plantML.multiplyMatrices(legs.matrix, legL.matrix).multiply(kneeL.matrix);
+    const mR = _plantMR
+      .multiplyMatrices(rg.matrix, legs.matrix)
+      .multiply(legR.matrix)
+      .multiply(kneeR.matrix);
+    const mL = _plantML
+      .multiplyMatrices(rg.matrix, legs.matrix)
+      .multiply(legL.matrix)
+      .multiply(kneeL.matrix);
     if (ankleR) mR.multiply(ankleR.matrix);
     if (ankleL) mL.multiply(ankleL.matrix);
     mR.premultiply(toDeck);
@@ -12650,7 +12447,7 @@ export class Player {
     // (that's the board's own animation, not ours to cancel).
     const o = _plantO.set(0, 0, 0).applyMatrix4(bg.matrix);
     const corr = _plantC.set(dx * w, dy * w, 0).applyMatrix4(bg.matrix).sub(o);
-    rg.position.copy(corr);
+    rg.position.add(corr);
   }
 
   /**
@@ -12700,6 +12497,7 @@ export class Player {
   }
 
   private syncVisual(input: Input, dt: number): void {
+    this.clearCharacterAppearance();
     // A runtime authored overlay wrote after the previous legacy pose. Undo it
     // before any legacy formula reads or accumulates from local transforms.
     this.playerAnimationBridge.prepareLegacyPose();
@@ -12709,10 +12507,14 @@ export class Player {
     // until the recovery layer adds its waist-pivot correction.
     if (this.riderG) {
       this.riderG.rotation.set(0, 0, 0);
-      if (this.isBailing || this.ragActive || this.ragBlend > 0.001)
-        this.riderG.position.set(0, 0, 0);
+      this.riderG.position.set(0, 0, 0);
     }
     this.group.position.copy(this.pos);
+    const characterShape = characterProportionSettings.value;
+    this.upperLegLengthR = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
+    this.upperLegLengthL = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
+    this.lowerLegLengthR = PROCEDURAL_SHIN_LENGTH * characterShape.shinLength;
+    this.lowerLegLengthL = PROCEDURAL_SHIN_LENGTH * characterShape.shinLength;
 
     // Chunky little carve lean; on a rail, the lean IS the balance needle.
     const targetLean =
@@ -13064,8 +12866,8 @@ export class Player {
     // Preserve the old pose system as an ENDPOINT INTENT, not a deformation:
     // this is the amount it used to squash the entire hierarchy. The
     // procedural legs convert that shortened virtual ankle target into a real
-    // fixed-length two-bone bend below. Imported comparison rigs publish their
-    // measured segment lengths into the same solve; the pelvis itself never
+    // fixed-length two-bone bend below. Character Lab publishes its effective
+    // segment lengths into the same solve; the pelvis itself never
     // scales, because it now owns the torso and tail as well as the legs.
     const legacyLegScale = Math.max(
       0.15,
@@ -13246,26 +13048,20 @@ export class Player {
       const headYaw = -0.85 * this.stance * this.sidePose + 0.17 * Math.sin(this.runTime * 0.55) * idleW;
       this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
     }
-    // Tail + ponytail follow-through: the kangaroo signature. The tail
-    // counter-swings the run, flares up through airs and grabs for balance,
-    // and tucks low on all fours; the ponytail bobs against the same beat.
+    // Tail + ponytail follow-through is authored before the final appearance
+    // pass so keyframed secondary channels can still layer over the simulation.
     if (this.tail) {
-      // The authored intent. This is unchanged from when it drove the bones
-      // directly — it is now the TARGET the simulated chain chases, so the
-      // same art direction reads, with lag and weight on top of it. The
-      // hand-written wag LAG is gone: a spring chain produces that for free,
-      // and better, because it lags by however fast she is actually moving.
       const lift =
         0.45 * this.hangPose -
-        0.3 * ledgeW + // dangling: the tail hangs, no counterweight to hold
+        0.3 * ledgeW +
         0.5 * this.grabPose +
         0.3 * this.grindArmPose +
-        0.3 * sk + // rolling: swing clear of the deck
-        -0.45 * crawlMove - // crawling: counter the body pitch so the tail trails LEVEL behind
+        0.3 * sk -
+        0.45 * crawlMove +
         0.15 * crouchW +
-        0.25 * this.walkAmp + // running: the tail streams out behind, counterweight up
-        0.35 * jp + // jumping: the tail flares as the counterweight
-        0.35 * Math.sin(Math.PI * this.bailRecoveryPose); // roll-up counterweight
+        0.25 * this.walkAmp +
+        0.35 * jp +
+        0.35 * Math.sin(Math.PI * this.bailRecoveryPose);
       this.tail.update(
         dt,
         { lift, wag: 0.16 * breathe + 0.5 * swing, roll: 0.05 * breathe },
@@ -13583,20 +13379,15 @@ export class Player {
       }
       if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
-    // Every joint that moves a foot has now been written, and the board has
-    // its final transform — so this is the one moment the two can be measured
-    // against each other. Do it, and put the soles where they belong.
-    this.plantOnDeck(underW);
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
     // Mask hovers at the shoulder; the whole body flickers during
     // mask-invulnerability grace — but NOT during a wipeout's own grace:
     // the ragdoll already says everything the flash used to.
     this.bodyGroup.visible =
-      this.modelReady &&
-      (this.invulnTimer <= 0 ||
+      this.invulnTimer <= 0 ||
         this.invulnSilent ||
         Math.sin(this.runTime * 45) > -0.2 ||
-        this.state === 'dead');
+        this.state === 'dead';
     // On foot, an ordinary attack replaces the rider with the Whirlwind Vixen
     // sculpture and character rings. A spin that STARTS while genuinely
     // grounded on the skateboard keeps the native rider/deck rotation and gets
@@ -13865,7 +13656,7 @@ export class Player {
     // body rotates about it. The offset lives in the group frame, so the
     // pitch axis has to account for the body's own yaw.
     if (flip > 0) {
-      const waistH = 0.95;
+      const waistH = this.characterWaistHeight(0.95);
       const yawB = this.bodyGroup.rotation.y;
       this.bodyGroup.position.y += waistH * (1 - Math.cos(flip));
       this.bodyGroup.position.x = -waistH * Math.sin(flip) * Math.sin(yawB);
@@ -13936,7 +13727,7 @@ export class Player {
         // The tumble wheels about the WAIST, not the rig origin at the feet —
         // same counter-translate as the somersault, generalized to the full
         // quaternion: keep the waist point pinned while the body turns.
-        const waistH = 0.95;
+        const waistH = this.characterWaistHeight(0.95);
         Player.RAG_AXIS.set(0, waistH, 0).applyQuaternion(this.bodyGroup.quaternion);
         this.bodyGroup.position.x += (0 - Player.RAG_AXIS.x) * this.ragBlend;
         this.bodyGroup.position.y += (waistH - Player.RAG_AXIS.y) * this.ragBlend;
@@ -13948,7 +13739,7 @@ export class Player {
           // Pin the same waist point in parent space on the first rag frame,
           // then quickly release it back to the ordinary ballistic pivot.
           Player.RAG_PIVOT_BASE
-            .set(0, 0.82, 0)
+            .set(0, this.characterWaistHeight(0.82), 0)
             .multiply(this.bodyGroup.scale)
             .applyQuaternion(this.bodyGroup.quaternion);
           const anchorW = this.ragPoseAnchorW;
@@ -14041,7 +13832,7 @@ export class Player {
       // the exact old ground pose instead of teleporting a waist-height up;
       // both corrections become zero again at the completed 2π. Position was
       // reset by plantOnDeck, so no fixed-step offset can accumulate.
-      const waistH = 0.82;
+      const waistH = this.characterWaistHeight(0.82);
       Player.RAG_AXIS.set(0, waistH, 0).applyQuaternion(rider.quaternion);
       Player.RAG_PIVOT_BASE.set(0, waistH, 0).applyQuaternion(
         Player.RAG_QP.setFromAxisAngle(
@@ -14102,7 +13893,10 @@ export class Player {
     // complete legacy result first and restores it before the next fixed step,
     // so authored writes are absolute and can never accumulate into gameplay.
     this.playerAnimationBridge.applyOverlay(dt);
-    this.syncCharacterPresentation();
+    this.syncCharacterAppearance();
+    // Character Lab proportions and authored animation both move endpoints.
+    // Plant only after both layers so feet cannot slide away from the deck.
+    this.plantOnDeck(underW);
 
   }
 
@@ -14144,430 +13938,26 @@ export class Player {
     }
   }
 
-  // ——— The authored kangaroo girl (models/roo.glb, made in Meshy) ————————
-  // A single static T-pose mesh with one texture — no skeleton. We carve it
-  // into PS1-style rigid body segments at the joint planes and bolt each one
-  // onto the existing pose rig, exactly like a PSX character: no skinning,
-  // seams live inside overlapping geometry. The procedural body stays up
-  // until the model lands (and remains the fallback if it never does).
-  private installRoo(): void {
-    const src =
-      (window as { __ROO_GLB?: string }).__ROO_GLB || import.meta.env.BASE_URL + 'models/roo.glb';
-    new GLTFLoader().load(
-      src,
-      (gltf) => {
-        let source: THREE.Mesh | null = null;
-        gltf.scene.traverse((o) => {
-          if (!source && (o as THREE.Mesh).isMesh) source = o as THREE.Mesh;
-        });
-        if (!source) {
-          this.modelReady = true; // nothing usable in the file: show the placeholder
-          return;
-        }
-        this.resetRenderInterpolation();
-        try {
-          this.segmentRoo(source);
-        } catch (e) {
-          console.warn('roo segmentation failed (procedural body stays):', e);
-        }
-        this.modelReady = true;
-      },
-      undefined,
-      (e) => {
-        console.warn('roo model failed to load (procedural body stays):', e);
-        this.modelReady = true;
-      },
-    );
-  }
-
-  // ——— Skinned Meshy bipeds ————————————————————————————————————————————
-  // These ship a real 24-bone biped skeleton + skin weights. We do NOT
-  // skeletal-animate them — the game's whole trick vocabulary is procedural
-  // pose-rig driven. Instead we exploit the skeleton to segment the mesh
-  // CLEANLY: each triangle joins the rig part its dominant bone maps to,
-  // pivoted at the bone's rest position, so the PS1 chunks bolt onto the same
-  // pose rig the roo used. A tail (if the model has one) has NO bones, so it's
-  // carved from geometry behind the hips into a procedural sway chain,
-  // roo-style.
-  // The pickable roster (id → glb). 'roo' uses the legacy static-mesh
-  // segmentation instead.
-  static readonly CHARACTERS: { id: string; name: string }[] = [
-    { id: 'fox', name: 'Fox' },
-  ];
-
-  // Swap in an imported character for explicit comparison/debug sessions.
-  // Re-segmentation cleanly replaces the chunks in the rig groups, so no
-  // rebuild/reload is needed.
-  setCharacter(id: string): void {
-    if (id === 'roo') { this.installRoo(); return; }
-    const c = Player.CHARACTERS.find((x) => x.id === id) ?? Player.CHARACTERS[0];
-    this.installBiped(import.meta.env.BASE_URL + `models/${c.id}.glb`);
-  }
-
-  private installBiped(src: string): void {
-    new GLTFLoader().load(
-      src,
-      (gltf) => {
-        let mesh: THREE.SkinnedMesh | null = null;
-        gltf.scene.updateMatrixWorld(true);
-        gltf.scene.traverse((o) => {
-          if (!mesh && (o as THREE.SkinnedMesh).isSkinnedMesh) mesh = o as THREE.SkinnedMesh;
-        });
-        if (!mesh) {
-          this.modelReady = true; // nothing usable in the file: show the placeholder
-          return;
-        }
-        this.resetRenderInterpolation();
-        try {
-          this.modelSrc = src;
-          this.segmentBiped(mesh);
-        } catch (e) {
-          console.warn('biped segmentation failed (procedural body stays):', e);
-        }
-        this.modelReady = true;
-      },
-      undefined,
-      (e) => {
-        console.warn('biped model failed to load (procedural body stays):', e);
-        this.modelReady = true;
-      },
-    );
-  }
-
-  private segmentBiped(mesh: THREE.SkinnedMesh): void {
-    mesh.updateMatrixWorld(true);
-    const skel = mesh.skeleton;
-    const boneW: Record<string, THREE.Vector3> = {};
-    const tw = new THREE.Vector3();
-    for (const bn of skel.bones) {
-      bn.getWorldPosition(tw);
-      boneW[bn.name] = tw.clone();
-    }
-    const boneNames = skel.bones.map((b) => b.name);
-    let geo = mesh.geometry as THREE.BufferGeometry;
-    if (geo.index) geo = geo.toNonIndexed();
-    const P = geo.getAttribute('position');
-    const N = geo.getAttribute('normal');
-    const UV = geo.getAttribute('uv');
-    const JI = geo.getAttribute('skinIndex');
-    const JW = geo.getAttribute('skinWeight');
-    const mat = new THREE.MeshLambertMaterial({
-      map: (mesh.material as THREE.MeshStandardMaterial).map ?? null,
-      side: THREE.DoubleSide, // chunk interiors show at joint gaps — the PS1 look
-    });
-    if (mat.map) mat.map.colorSpace = (mesh.material as THREE.MeshStandardMaterial).map!.colorSpace;
-
-    // bind-pose bounds → uniform scale to HEIGHT (bodyGroup applies 1.18/1.36/
-    // 1.18, so pre-scale x/z by the extra 1.36/1.18 to cancel it in world),
-    // recenter XZ so the mesh stands centred on the board, feet at 0.
-    let minx = 1e9, miny = 1e9, minz = 1e9, maxx = -1e9, maxy = -1e9, maxz = -1e9;
-    for (let i = 0; i < P.count; i++) {
-      const x = P.getX(i), y = P.getY(i), z = P.getZ(i);
-      if (x < minx) minx = x; if (y < miny) miny = y; if (z < minz) minz = z;
-      if (x > maxx) maxx = x; if (y > maxy) maxy = y; if (z > maxz) maxz = z;
-    }
-    const HEIGHT = 2.0;
-    const SY = HEIGHT / 1.36 / (maxy - miny);
-    const SXZ = SY * (1.36 / 1.18);
-    const cx = (minx + maxx) / 2, cz = (minz + maxz) / 2;
-    const mapP = (x: number, y: number, z: number): THREE.Vector3 =>
-      new THREE.Vector3((x - cx) * SXZ, (y - miny) * SY, (z - cz) * SXZ);
-    const mapB = (nm: string): THREE.Vector3 => {
-      const b = boneW[nm];
-      return mapP(b.x, b.y, b.z);
-    };
-    const mapOptionalBone = (nm: string, fallback: THREE.Vector3): THREE.Vector3 =>
-      boneW[nm] ? mapB(nm) : fallback.clone();
-    const DOWN = new THREE.Vector3(0, -1, 0);
-    const qDown = (from: THREE.Vector3, to: THREE.Vector3): THREE.Quaternion =>
-      new THREE.Quaternion().setFromUnitVectors(to.clone().sub(from).normalize(), DOWN);
-
-    // Map by X SIGN, not by name: this rig calls the +X leg "R" (legR at
-    // +0.115), so the fox's Left bones (+X) drive our R groups. Keeping it
-    // sign-based avoids any left/right confusion.
-    const arm = {
-      R: { sh: mapB('LeftArm'), el: mapB('LeftForeArm'), wr: mapB('LeftHand') },
-      L: { sh: mapB('RightArm'), el: mapB('RightForeArm'), wr: mapB('RightHand') },
-    };
-    const footR = mapB('LeftFoot');
-    const footL = mapB('RightFoot');
-    const leg = {
-      R: {
-        hip: mapB('LeftUpLeg'),
-        knee: mapB('LeftLeg'),
-        foot: footR,
-        toe: mapOptionalBone('LeftToeBase', footR.clone().add(new THREE.Vector3(0, 0, 0.12))),
-      },
-      L: {
-        hip: mapB('RightUpLeg'),
-        knee: mapB('RightLeg'),
-        foot: footL,
-        toe: mapOptionalBone('RightToeBase', footL.clone().add(new THREE.Vector3(0, 0, 0.12))),
-      },
-    };
-    const jNeck = mapB('neck');
-    const jHead = mapOptionalBone('Head', jNeck.clone().add(new THREE.Vector3(0, 0.1, 0)));
-    const hipY = (leg.R.hip.y + leg.L.hip.y) / 2;
-
-    // dominant bone per vertex → part key
-    const boneToPart: Record<string, string> = {
-      Head: 'head', neck: 'head', head_end: 'head', headfront: 'head',
-      Spine: 'torso', Spine01: 'torso', Spine02: 'torso',
-      LeftShoulder: 'torso', RightShoulder: 'torso',
-      LeftArm: 'upperArmR', LeftForeArm: 'foreArmR', LeftHand: 'foreArmR',
-      RightArm: 'upperArmL', RightForeArm: 'foreArmL', RightHand: 'foreArmL',
-      LeftUpLeg: 'thighR', LeftLeg: 'shinR', LeftFoot: 'shinR', LeftToeBase: 'shinR',
-      RightUpLeg: 'thighL', RightLeg: 'shinL', RightFoot: 'shinL', RightToeBase: 'shinL',
-      Hips: 'pelvis',
-    };
-    const domBone = (vi: number): string => {
-      let bw = -1, bj = 0;
-      for (let k = 0; k < 4; k++) {
-        const w = JW.getComponent(vi, k);
-        if (w > bw) { bw = w; bj = JI.getComponent(vi, k); }
-      }
-      return boneNames[bj] || 'Hips';
-    };
-    // Verts collected per part. The TAIL is carved GEOMETRICALLY, not by
-    // bone: it's any triangle sitting behind the body and below mid-height.
-    // Meshy rigs the tail inconsistently (the fox weights it to Hips, others to
-    // a thigh bone), so a bone-based carve is fragile — a geometric one
-    // catches the brush wherever the rigger stashed its skin weights, and
-    // returns empty (→ no tail) for a genuinely tailless model.
-    const midY = (miny + maxy) / 2;
-    const backZ = cz - 0.12 * (maxz - minz); // behind the hips
-    // Polygons a human pointed at in the studio. Checked FIRST, and it is the
-    // only cut that can reach outside the geometric band below.
-    const cuts = cutsFor(this.modelSrc, P.count);
-    const bucket: Record<string, number[]> = {};
-    for (const k of ['head', 'torso', 'pelvis', 'upperArmR', 'upperArmL', 'foreArmR', 'foreArmL', 'thighR', 'thighL', 'shinR', 'shinL', 'tail'])
-      bucket[k] = [];
-    // How far behind her a triangle has to sit before it can only be tail,
-    // measured in RIG units so it can be reasoned about against the rig's own
-    // geometry: the tail leaves the hips at z -0.14, and nothing legitimate on
-    // this body reaches past -0.17 below the shoulders (measured across every
-    // chunk — the legs and the torso front all sit forward of it). The first
-    // cut below is the original fraction-of-depth test; this one is the
-    // backstop that catches what it misses.
-    for (let t = 0; t < P.count; t += 3) {
-      const czf = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
-      const cyf = (P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3;
-      // A rescue wins over everything: it is the only way to correct a
-      // geometric rule that reached too far, and it must outrank the rule.
-      if (!cuts?.keep.has(t) && (cuts?.cut.has(t) || (czf < backZ && cyf < midY))) {
-        // Discarded, not built — the tail is drawn in code now (src/tail.ts).
-        //
-        // This ONE original test is all the geometry-based deleting that
-        // happens. Three more rules were tried on top of it to catch the rest
-        // of this model's tail brush, and the last of them reached up to the
-        // shoulder line and took a bite out of her ponytail. Guessing a shape
-        // rule for "which polygons are tail" from screenshots is the wrong
-        // tool; MODEL_CUTS below is a list of triangles picked by eye in the
-        // studio, which cannot over-reach by accident.
-        bucket.tail.push(t, t + 1, t + 2);
-        continue;
-      }
-      const votes: Record<string, number> = {};
-      let best = 'torso', bestN = 0;
-      for (let k = 0; k < 3; k++) {
-        const part = boneToPart[domBone(t + k)] || 'torso';
-        votes[part] = (votes[part] || 0) + 1;
-        if (votes[part] > bestN) { bestN = votes[part]; best = part; }
-      }
-      bucket[best].push(t, t + 1, t + 2);
-    }
-
-    // LAST CUT, and the one that actually gets this model's tail: anything the
-    // bone vote filed as PELVIS that hangs below the knee.
-    //
-    // Meshy weights this tail to Hips, so every triangle the geometric cuts
-    // above miss is voted into the hip block and shipped as part of her body
-    // — which is what left a fan of flat tail polygons swinging off her hip
-    // after the new tail was already drawn. It is not caught by depth: the
-    // brush only reaches z -0.14, no further back than her own backside. It is
-    // caught by HEIGHT. The hip block's real geometry stops at the crotch,
-    // around y 0.6; the fan hangs to y 0.12, which is ankle height. Nothing
-    // that belongs to a pelvis goes there.
-    // Build a chunk: map each vert to rig space, subtract the pivot, optional
-    // rotation onto -Y (limbs), matching normal transform.
-    const build = (verts: number[], pivot: THREE.Vector3, q?: THREE.Quaternion): THREE.Mesh => {
-      const p: number[] = [], nn: number[] = [], uu: number[] = [];
-      const v = new THREE.Vector3(), nv = new THREE.Vector3();
-      for (const vi of verts) {
-        v.set((P.getX(vi) - cx) * SXZ - pivot.x, (P.getY(vi) - miny) * SY - pivot.y, (P.getZ(vi) - cz) * SXZ - pivot.z);
-        nv.set(N.getX(vi) / SXZ, N.getY(vi) / SY, N.getZ(vi) / SXZ);
-        if (q) { v.applyQuaternion(q); nv.applyQuaternion(q); }
-        nv.normalize();
-        p.push(v.x, v.y, v.z);
-        nn.push(nv.x, nv.y, nv.z);
-        uu.push(UV.getX(vi), UV.getY(vi));
-      }
-      const cg = new THREE.BufferGeometry();
-      cg.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
-      cg.setAttribute('normal', new THREE.Float32BufferAttribute(nn, 3));
-      cg.setAttribute('uv', new THREE.Float32BufferAttribute(uu, 2));
-      const chunk = new THREE.Mesh(cg, mat);
-      // PROVENANCE, so a click can be turned into "delete THAT polygon".
-      //
-      // Verts are emitted in bucket order, one per entry, three per triangle,
-      // and the chunk is non-indexed — so three.js reports faceIndex f for the
-      // triangle built from bucket entries [3f, 3f+1, 3f+2], and verts[3f] is
-      // its source VERTEX SLOT. The source geometry is de-indexed before any
-      // of this (geo.toNonIndexed above), so slot t belongs to triangle t/3
-      // and nothing else: the mapping is exact and stable across loads. The
-      // studio (src/studio.ts) records those slots and MODEL_CUTS replays
-      // them, which is a list of things a human pointed at rather than a
-      // shape rule of mine that can quietly over-reach.
-      chunk.userData.srcTris = verts;
-      return chunk;
-    };
-    const strip = (grp: THREE.Object3D | null): void => {
-      if (!grp) return;
-      for (const c of [...grp.children]) if ((c as THREE.Mesh).isMesh) grp.remove(c);
-    };
-    const stripTree = (grp: THREE.Object3D): void => {
-      const meshes: THREE.Object3D[] = [];
-      grp.traverse((child) => {
-        if (child !== grp && (child as THREE.Mesh).isMesh) meshes.push(child);
-      });
-      for (const meshChild of meshes) meshChild.removeFromParent();
-    };
-    if (
-      !this.headM || !this.neckG || !this.chestG || !this.armR || !this.armL ||
-      !this.clavicleR || !this.clavicleL || !this.elbowR || !this.elbowL ||
-      !this.wristR || !this.wristL || !this.spineG || !this.upperG || !this.legs ||
-      !this.legR || !this.legL || !this.kneeR || !this.kneeL ||
-      !this.ankleR || !this.ankleL || !this.toeR || !this.toeL
-    ) return;
-
-    // Re-seat the pelvis while keeping the conventional spine's authored
-    // rider-space stations unchanged. The torso control remains at the hips;
-    // only its lower-spine offset changes with a comparison model's hip line.
-    this.legs.position.set(0, hipY, 0);
-    this.upperG.position.set(0, 0, 0);
-    this.spineG.position.set(0, PROCEDURAL_SPINE_Y - hipY, 0);
-    if (this.tail) this.tail.root.position.y = 0.65 - hipY;
-
-    // HEAD — retain the live neck/head bones and semantic secondary nodes,
-    // replacing only their renderables. Source Head supplies a conventional
-    // head station above the source neck rather than collapsing both pivots.
-    stripTree(this.headM);
-    this.neckG.position.copy(jNeck).sub(
-      new THREE.Vector3(0, PROCEDURAL_SPINE_Y + this.chestG.position.y, 0),
-    );
-    this.headM.position.copy(jHead).sub(jNeck);
-    this.headM.add(build(bucket.head, jHead));
-
-    // TORSO — upperG now sits at hipY, so subtract that pivot from the
-    // absolute imported vertices. Lower-spine/chest bones remain available
-    // even though this debug replacement uses one rigid torso chunk.
-    strip(this.spineG);
-    strip(this.chestG);
-    strip(this.upperG);
-    this.upperG.add(build(bucket.torso, new THREE.Vector3(0, hipY, 0)));
-
-    // ARMS — shoulder group at the arm bone, forearm rotated straight down
-    // from the elbow. armR/L position is NOT overwritten by syncVisual, so it
-    // sticks; the trick poses rotate these groups from an arms-down rest.
-    for (const s of ['R', 'L'] as const) {
-      const a = arm[s];
-      const armG = s === 'R' ? this.armR! : this.armL!;
-      const clavicleG = s === 'R' ? this.clavicleR! : this.clavicleL!;
-      const elG = s === 'R' ? this.elbowR! : this.elbowL!;
-      const wristG = s === 'R' ? this.wristR! : this.wristL!;
-      strip(armG);
-      strip(elG);
-      strip(wristG);
-      const clavicleWorld = new THREE.Vector3(
-        clavicleG.position.x,
-        PROCEDURAL_SPINE_Y + this.chestG.position.y + clavicleG.position.y,
-        clavicleG.position.z,
-      );
-      armG.position.copy(a.sh).sub(clavicleWorld);
-      armG.userData.lean = 0.1;
-      armG.add(build(bucket[s === 'R' ? 'upperArmR' : 'upperArmL'], a.sh, qDown(a.sh, a.el)));
-      elG.position.set(0, -a.el.distanceTo(a.sh), 0);
-      elG.add(build(bucket[s === 'R' ? 'foreArmR' : 'foreArmL'], a.el, qDown(a.el, a.wr)));
-      wristG.position.set(0, -a.wr.distanceTo(a.el), 0);
-    }
-
-    // PELVIS — pivot at (0, hipY, 0) so the chunk renders at true position
-    // when added to the legs group (which sits at that hip line).
-    strip(this.legs);
-    this.legs.add(build(bucket.pelvis, new THREE.Vector3(0, hipY, 0)));
-
-    // LEGS — hip-base fields feed syncVisual's leg-position formula so the
-    // feet plant under the ACTUAL hips (wider than the placeholder's 0.115).
-    this.hipBaseR = { x: leg.R.hip.x, z: leg.R.hip.z };
-    this.hipBaseL = { x: leg.L.hip.x, z: leg.L.hip.z };
-    for (const s of ['R', 'L'] as const) {
-      const l = leg[s];
-      const legG = s === 'R' ? this.legR! : this.legL!;
-      const kneeG = s === 'R' ? this.kneeR! : this.kneeL!;
-      const ankleG = s === 'R' ? this.ankleR! : this.ankleL!;
-      const toeG = s === 'R' ? this.toeR! : this.toeL!;
-      strip(legG);
-      strip(kneeG);
-      strip(ankleG);
-      legG.position.set(l.hip.x, 0, l.hip.z);
-      legG.add(build(bucket[s === 'R' ? 'thighR' : 'thighL'], l.hip, qDown(l.hip, l.knee)));
-      const upperLength = l.knee.distanceTo(l.hip);
-      const lowerLength = l.foot.distanceTo(l.knee);
-      kneeG.position.set(0, -upperLength, 0);
-      const lowerToDown = qDown(l.knee, l.foot);
-      kneeG.add(build(bucket[s === 'R' ? 'shinR' : 'shinL'], l.knee, lowerToDown));
-      ankleG.position.set(0, -lowerLength, 0);
-      toeG.position.copy(l.toe).sub(l.foot).applyQuaternion(lowerToDown);
-      if (s === 'R') {
-        this.upperLegLengthR = upperLength;
-        this.lowerLegLengthR = lowerLength;
-      } else {
-        this.upperLegLengthL = upperLength;
-        this.lowerLegLengthL = lowerLength;
-      }
-    }
-    // new feet: the cached sole footprint belonged to the previous rig
-    this.soleR = null;
-    this.soleL = null;
-
-    // TAIL — the model's own tail triangles are LEFT OUT of the body carve;
-    // the drawn tail (src/tail.ts) stands in. They are still built, as a
-    // hidden ghost, so the studio can show you what has been deleted and let
-    // you put it back. Without that the tool is one-way, and one-way is how a
-    // bite went missing out of her ponytail for a whole build before anyone
-    // could see it had happened.
-    const ghost = build(bucket.tail, new THREE.Vector3(0, hipY, 0));
-    ghost.visible = false;
-    ghost.userData.discarded = true;
-    this.legs.add(ghost);
-    this.rebuildHumanoidSkeleton();
-  }
-
-  /**
-   * The spheres the tail must stay outside of, in world space.
-   *
-   * Read off the LIVE rig rather than hard-coded in rig space, because the
-   * parts most likely to be in the tail's way are the ones that move most: on
-   * all fours the thighs fold up right into the arc the tail wants to swing
-   * through. Four spheres is enough — the hips, the belly above them, and a
-   * thigh each — because a tail leaving the hips and trailing behind can only
-   * reach the back and underside of her.
-   */
   private tailBodies_(): TailCollider[] {
     const rider = this.riderG;
     if (!rider) return this.tailBodies;
     if (this.tailBodies.length === 0)
       for (let i = 0; i < 4; i++) this.tailBodies.push({ c: new THREE.Vector3(), r: 0 });
     rider.updateWorldMatrix(true, false);
-    const scale = TAIL_V.setFromMatrixColumn(rider.matrixWorld, 0).length() || 1;
+    const scaleX = TAIL_V.setFromMatrixColumn(rider.matrixWorld, 0).length() || 1;
+    const scaleZ = TAIL_V.setFromMatrixColumn(rider.matrixWorld, 2).length() || 1;
+    const shape = characterProportionSettings.value;
+    const scale = Math.max(scaleX, scaleZ) * Math.max(shape.torsoWidth, shape.torsoDepth);
+    const hipsY = this.legs?.position.y ?? 0.7;
+    const bellyY = hipsY + 0.25 * shape.torsoLength;
     // These stay MODEST — they only have to cover what can actually get in the
     // tail's way. Which JOINTS each one acts on is worked out by the tail
     // itself from its own rest pose (see firstOutside), so moving the tail
     // cannot silently put a sphere on top of its root and ask the solver for a
     // configuration that does not exist.
-    this.tailBodies[0].c.set(0, 0.7, -0.02).applyMatrix4(rider.matrixWorld);
+    this.tailBodies[0].c.set(0, hipsY, -0.02).applyMatrix4(rider.matrixWorld);
     this.tailBodies[0].r = 0.17 * scale; // hips
-    this.tailBodies[1].c.set(0, 0.95, 0).applyMatrix4(rider.matrixWorld);
+    this.tailBodies[1].c.set(0, bellyY, 0).applyMatrix4(rider.matrixWorld);
     this.tailBodies[1].r = 0.2 * scale; // belly
     // thighs: from the real leg groups, so a crouch or a crawl moves them.
     // Sampled well DOWN the thigh, clear of the hip socket the tail leaves from.
@@ -14722,272 +14112,6 @@ export class Player {
     this.spinEffects = new SpinEffectsPresentation({
       parent: this.group,
     });
-  }
-
-  private segmentRoo(source: THREE.Mesh): void {
-    const geo = (source.geometry as THREE.BufferGeometry).toNonIndexed();
-    const P = geo.getAttribute('position');
-    const N = geo.getAttribute('normal');
-    const UV = geo.getAttribute('uv');
-    const mat = new THREE.MeshLambertMaterial({
-      map: (source.material as THREE.MeshStandardMaterial).map ?? null,
-      side: THREE.DoubleSide, // chunk interiors show at joint gaps — paint them
-    });
-    // Model space: normalized T-pose, feet y=-0.5 → crown +0.5, facing +Z.
-    // Rig space: feet at 0. bodyGroup scales (1.18, 1.36, 1.18), so x/z pick
-    // up the extra 1.36/1.18 here — the world result is uniform. HEIGHT is
-    // the one knob: world units from sole to crown (crates are 0.96).
-    const HEIGHT = 2.0;
-    const SY = HEIGHT / 1.36;
-    const SXZ = SY * (1.36 / 1.18);
-    // skeleton heights derived from the same mapping, so the leg pivots sit
-    // on the anatomy at ANY height
-    const HIP = (-0.062 + 0.5) * SY;
-    const KNEE = (-0.222 + 0.5) * SY;
-    const NECK = (0.195 + 0.5) * SY + 0.02;
-    // Joint planes measured off the mesh (model space): neck 0.195 (the side
-    // ponytail bottoms out at 0.227, so it rides with the head), arm tubes at
-    // |x|>0.155 spanning y 0.06..0.24 angled slightly forward, crotch -0.155,
-    // knees -0.222, tail = everything behind z<-0.105 below the waistline.
-    const isTail = (_x: number, y: number, z: number): boolean => z < -0.105 && y < -0.02;
-    // Whole arm from the armpit out — nothing of the T-pose tube may stay on
-    // the torso or it juts sideways forever. Outboard of 0.135 a simple band
-    // suffices; at the root (0.105..0.135) only triangles hugging the arm's
-    // axis come along, so the tank's side wall stays with the torso.
-    const isArm = (x: number, y: number, z: number): boolean => {
-      const ax = Math.abs(x);
-      if (ax <= 0.105 || z <= -0.03) return false;
-      if (ax > 0.135) return y > 0.09 && y < 0.21;
-      const dy = y - 0.155;
-      const dz = z - 0.076;
-      return dy * dy + dz * dz < 0.0036; // within 0.06 of the arm axis
-    };
-    const mapV = (v: THREE.Vector3): THREE.Vector3 =>
-      new THREE.Vector3(v.x * SXZ, (v.y + 0.5) * SY, v.z * SXZ);
-    // Arm joints come from the mesh too: centroid "stations" along each
-    // T-pose arm give the true shoulder→elbow→wrist axis (Meshy's arms droop
-    // and sweep forward), and each chunk rotates its OWN axis exactly onto
-    // straight-down — so the hang is vertical no matter how the T-pose leans.
-    const DOWN = new THREE.Vector3(0, -1, 0);
-    const station = (side: 1 | -1, x0: number, x1: number, fallback: number): THREE.Vector3 => {
-      const c = new THREE.Vector3();
-      let n = 0;
-      for (let i = 0; i < P.count; i++) {
-        const x = P.getX(i);
-        const y = P.getY(i);
-        const z = P.getZ(i);
-        if (side * x > x0 && side * x < x1 && isArm(x, y, z)) {
-          c.x += x;
-          c.y += y;
-          c.z += z;
-          n++;
-        }
-      }
-      return n > 0 ? c.multiplyScalar(1 / n) : new THREE.Vector3(side * fallback, 0.145, 0.076);
-    };
-    const armJ: Record<string, { sh: THREE.Vector3; el: THREE.Vector3; qUp: THREE.Quaternion; qFo: THREE.Quaternion; elLen: number; wrLen: number }> = {};
-    for (const side of [-1, 1] as const) {
-      const shM = station(side, 0.105, 0.16, 0.13);
-      shM.x = side * 0.112; // pivot AT the armpit crease: the whole arm hangs below its hinge
-      const sh = mapV(shM);
-      const el = mapV(station(side, 0.26, 0.31, 0.285));
-      const wr = mapV(station(side, 0.36, 0.42, 0.39));
-      armJ[side === 1 ? 'R' : 'L'] = {
-        sh,
-        el,
-        qUp: new THREE.Quaternion().setFromUnitVectors(el.clone().sub(sh).normalize(), DOWN),
-        qFo: new THREE.Quaternion().setFromUnitVectors(wr.clone().sub(el).normalize(), DOWN),
-        elLen: el.distanceTo(sh),
-        wrLen: wr.distanceTo(el),
-      };
-    }
-    interface Part {
-      test: (x: number, y: number, z: number) => boolean;
-      pivot: [number, number, number]; // rig space
-      q?: THREE.Quaternion; // arm chunks: rotate the T-pose axis onto -Y
-      verts: number[];
-    }
-    const parts: Record<string, Part> = {
-      head: { test: (_x, y) => y > 0.195, pivot: [0, NECK, 0], verts: [] }, // pivot AT the neck seam
-      foreArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0.285, pivot: [armJ.R.el.x, armJ.R.el.y, armJ.R.el.z], q: armJ.R.qFo, verts: [] },
-      foreArmL: { test: (x, y, z) => isArm(x, y, z) && x < -0.285, pivot: [armJ.L.el.x, armJ.L.el.y, armJ.L.el.z], q: armJ.L.qFo, verts: [] },
-      upperArmR: { test: (x, y, z) => isArm(x, y, z) && x > 0, pivot: [armJ.R.sh.x, armJ.R.sh.y, armJ.R.sh.z], q: armJ.R.qUp, verts: [] },
-      upperArmL: { test: (x, y, z) => isArm(x, y, z) && x < 0, pivot: [armJ.L.sh.x, armJ.L.sh.y, armJ.L.sh.z], q: armJ.L.qUp, verts: [] },
-      // one part, skinned rather than banded (see skinTail) — its pivot is
-      // unused, the chain comes off the tail's own centreline
-      tail: { test: isTail, pivot: [0, 0, 0], verts: [] },
-      // cut BELOW the baggy cuff + knee pad (leg pinches at -0.28): the sock
-      // and shoe fold from inside the cuff, pads ride the thigh chunk
-      shinR: { test: (x, y) => y <= -0.27 && x >= 0, pivot: [0.115, KNEE, 0], verts: [] },
-      shinL: { test: (x, y) => y <= -0.27 && x < 0, pivot: [-0.115, KNEE, 0], verts: [] },
-      // the front cargo pouches hang y -0.08..-0.26 across the crotch line:
-      // they belong to the leg wholesale or they tear in half mid-stride
-      thighR: {
-        test: (x, y, z) => (y <= -0.155 || (z > 0.1 && y <= -0.06)) && x >= 0,
-        pivot: [0.115, HIP, 0],
-        verts: [],
-      },
-      thighL: {
-        test: (x, y, z) => (y <= -0.155 || (z > 0.1 && y <= -0.06)) && x < 0,
-        pivot: [-0.115, HIP, 0],
-        verts: [],
-      },
-      pelvis: { test: (_x, y) => y <= -0.062, pivot: [0, HIP, 0], verts: [] },
-      torso: { test: () => true, pivot: [0, 0, 0], verts: [] },
-    };
-    // One owner per triangle (duplicating seam tris z-fights at rest); the
-    // double-sided material paints chunk interiors, so joint gaps read as
-    // shadowed creases — the honest PS1 look.
-    const order = Object.values(parts);
-    for (let t = 0; t < P.count; t += 3) {
-      const cx = (P.getX(t) + P.getX(t + 1) + P.getX(t + 2)) / 3;
-      const cy = (P.getY(t) + P.getY(t + 1) + P.getY(t + 2)) / 3;
-      const cz = (P.getZ(t) + P.getZ(t + 1) + P.getZ(t + 2)) / 3;
-      for (const part of order) {
-        if (!part.test(cx, cy, cz)) continue;
-        part.verts.push(t, t + 1, t + 2);
-        break;
-      }
-    }
-    const build = (part: Part): THREE.Mesh => {
-      const p: number[] = [];
-      const nn: number[] = [];
-      const uu: number[] = [];
-      const v = new THREE.Vector3();
-      const nv = new THREE.Vector3();
-      for (const vi of part.verts) {
-        v.set(
-          P.getX(vi) * SXZ - part.pivot[0],
-          (P.getY(vi) + 0.5) * SY - part.pivot[1],
-          P.getZ(vi) * SXZ - part.pivot[2],
-        );
-        // normals: undo the anisotropic stretch, then match the chunk rotation
-        nv.set(N.getX(vi) / SXZ, N.getY(vi) / SY, N.getZ(vi) / SXZ);
-        if (part.q) {
-          v.applyQuaternion(part.q);
-          nv.applyQuaternion(part.q);
-          v.y = Math.min(v.y, 0.015); // no slivers above the hinge: flatten to the shoulder line
-        }
-        nv.normalize();
-        p.push(v.x, v.y, v.z);
-        nn.push(nv.x, nv.y, nv.z);
-        uu.push(UV.getX(vi), UV.getY(vi));
-      }
-      const cg = new THREE.BufferGeometry();
-      cg.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
-      cg.setAttribute('normal', new THREE.Float32BufferAttribute(nn, 3));
-      cg.setAttribute('uv', new THREE.Float32BufferAttribute(uu, 2));
-      const chunk = new THREE.Mesh(cg, mat);
-      // PROVENANCE, so a click can be turned into "delete THAT polygon".
-      //
-      // Verts are emitted in bucket order, one per entry, three per triangle,
-      // and the chunk is non-indexed — so three.js reports faceIndex f for the
-      // triangle built from bucket entries [3f, 3f+1, 3f+2], and verts[3f] is
-      // its source VERTEX SLOT. The source geometry is de-indexed before any
-      // of this (geo.toNonIndexed above), so slot t belongs to triangle t/3
-      // and nothing else: the mapping is exact and stable across loads. The
-      // studio (src/studio.ts) records those slots and MODEL_CUTS replays
-      // them, which is a list of things a human pointed at rather than a
-      // shape rule of mine that can quietly over-reach.
-      chunk.userData.srcTris = part.verts;
-      return chunk;
-    };
-    // strip the procedural flesh, keep the joint groups
-    const stripMeshes = (grp: THREE.Object3D | null): void => {
-      if (!grp) return;
-      for (const child of [...grp.children]) {
-        if ((child as THREE.Mesh).isMesh) grp.remove(child);
-      }
-    };
-    const stripMeshTree = (grp: THREE.Object3D): void => {
-      const meshes: THREE.Object3D[] = [];
-      grp.traverse((child) => {
-        if (child !== grp && (child as THREE.Mesh).isMesh) meshes.push(child);
-      });
-      for (const meshChild of meshes) meshChild.removeFromParent();
-    };
-    if (
-      !this.headM || !this.neckG || !this.chestG || !this.armR || !this.armL ||
-      !this.clavicleR || !this.clavicleL || !this.elbowR || !this.elbowL ||
-      !this.wristR || !this.wristL || !this.spineG || !this.upperG || !this.legs ||
-      !this.legR || !this.legL || !this.kneeR || !this.kneeL ||
-      !this.ankleR || !this.ankleL || !this.toeR || !this.toeL
-    ) return;
-
-    this.legs.position.y = HIP;
-    this.upperG.position.set(0, 0, 0);
-    this.spineG.position.set(0, PROCEDURAL_SPINE_Y - HIP, 0);
-    if (this.tail) this.tail.root.position.y = 0.65 - HIP;
-
-    // Keep every semantic helper node live; only the procedural head meshes
-    // disappear under this explicit debug replacement.
-    stripMeshTree(this.headM);
-    const importedNeckY = parts.head.pivot[1] - 0.08;
-    this.neckG.position.set(
-      0,
-      importedNeckY - (PROCEDURAL_SPINE_Y + this.chestG.position.y),
-      0,
-    );
-    this.headM.position.set(0, parts.head.pivot[1] - importedNeckY, 0);
-    this.headM.add(build(parts.head));
-    // arms: shoulder pivot at the arm root, elbow joint mid-tube, and a
-    // relaxed hang (userData.lean) instead of the placeholder's A-frame
-    for (const s of ['R', 'L'] as const) {
-      const joints = armJ[s];
-      const armG = s === 'R' ? this.armR : this.armL;
-      const clavicleG = s === 'R' ? this.clavicleR : this.clavicleL;
-      const elbowG = s === 'R' ? this.elbowR : this.elbowL;
-      const wristG = s === 'R' ? this.wristR : this.wristL;
-      stripMeshes(armG);
-      stripMeshes(elbowG);
-      stripMeshes(wristG);
-      const clavicleWorld = new THREE.Vector3(
-        clavicleG.position.x,
-        PROCEDURAL_SPINE_Y + this.chestG.position.y + clavicleG.position.y,
-        clavicleG.position.z,
-      );
-      armG.position.copy(joints.sh).sub(clavicleWorld);
-      armG.userData.lean = 0.1;
-      armG.add(build(parts[s === 'R' ? 'upperArmR' : 'upperArmL']));
-      elbowG.position.set(0, -joints.elLen, 0);
-      elbowG.add(build(parts[s === 'R' ? 'foreArmR' : 'foreArmL']));
-      wristG.position.set(0, -joints.wrLen, 0);
-    }
-    stripMeshes(this.spineG);
-    stripMeshes(this.chestG);
-    stripMeshes(this.upperG);
-    this.upperG.add(build({ ...parts.torso, pivot: [0, HIP, 0] }));
-    stripMeshes(this.legs); // pelvis/belt/chain (leg groups stay)
-    this.legs.add(build(parts.pelvis));
-    stripMeshes(this.legR);
-    stripMeshes(this.legL);
-    this.legR!.add(build(parts.thighR));
-    this.legL!.add(build(parts.thighL));
-    stripMeshes(this.kneeR);
-    stripMeshes(this.kneeL);
-    stripMeshes(this.ankleR);
-    stripMeshes(this.ankleL);
-    this.kneeR!.position.y = KNEE - HIP;
-    this.kneeL!.position.y = KNEE - HIP;
-    this.kneeR!.add(build(parts.shinR));
-    this.kneeL!.add(build(parts.shinL));
-    // The static source has no bone evidence for the distal stations. Keep
-    // explicit virtual foot/toe bones at reasonable anatomical points.
-    const importedUpperLegLength = HIP - KNEE;
-    const importedLowerLegLength = KNEE - 0.07;
-    this.upperLegLengthR = importedUpperLegLength;
-    this.upperLegLengthL = importedUpperLegLength;
-    this.lowerLegLengthR = importedLowerLegLength;
-    this.lowerLegLengthL = importedLowerLegLength;
-    this.ankleR.position.set(0, -importedLowerLegLength, 0);
-    this.ankleL.position.set(0, -importedLowerLegLength, 0);
-    this.toeR.position.set(0, -0.04, 0.14);
-    this.toeL.position.set(0, -0.04, 0.14);
-    // new feet: the cached sole footprint belonged to the placeholder's shoes
-    this.soleR = null;
-    this.soleL = null;
-    // tail: the model's own is discarded, the drawn one stands in
-    this.rebuildHumanoidSkeleton();
   }
 
   private buildVisual(): THREE.Group {
@@ -15283,6 +14407,7 @@ export class Player {
     // Neck flesh remains a chest renderable so torso length deformation can
     // stretch it without ever non-uniformly scaling the neck/head bones.
     const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), FUR);
+    neckMesh.name = 'neck-volume';
     neckMesh.position.y = NECK_Y - CHEST_Y;
     chest.add(neckMesh);
     const necklace = new THREE.Mesh(new THREE.TorusGeometry(0.072, 0.007, 5, 12), SILVER);
@@ -15336,20 +14461,25 @@ export class Player {
     // and a lash arc over the top lid
     const lashArc = Math.PI * 0.6;
     for (const e of [-1, 1]) {
+      const anatomicalSide = e === 1 ? 'left' : 'right';
       const white = new THREE.Mesh(new THREE.SphereGeometry(0.05, 9, 8), EYE_WHITE);
+      white.name = `eye-white-${anatomicalSide}`;
       white.scale.set(0.72, 1.05, 0.42);
       white.position.set(e * 0.066, 0.03, 0.135);
       white.rotation.y = e * 0.3;
       head.add(white);
       const iris = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), EYE_GREEN);
+      iris.name = `eye-iris-${anatomicalSide}`;
       iris.scale.set(1, 1.15, 0.45);
       iris.position.set(e * 0.069, 0.025, 0.168);
       head.add(iris);
       const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.012, 6, 5), INK);
+      pupil.name = `eye-pupil-${anatomicalSide}`;
       pupil.scale.set(1, 1, 0.5);
       pupil.position.set(e * 0.07, 0.025, 0.185);
       head.add(pupil);
       const lash = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.007, 4, 10, lashArc), INK);
+      lash.name = `eye-lash-${anatomicalSide}`;
       lash.rotation.set(-0.15, e * 0.3, Math.PI / 2 - lashArc / 2); // arc centered on top
       lash.position.set(e * 0.066, 0.035, 0.148);
       head.add(lash);
@@ -15512,7 +14642,6 @@ export class Player {
           stud.position.set(Math.cos(a) * 0.058, 0, Math.sin(a) * 0.058);
           wrist.add(stud);
         }
-        this.clavicleR = clavicle;
         this.armR = arm;
         this.elbowR = elbowJoint;
         this.wristR = wrist;
@@ -15520,7 +14649,6 @@ export class Player {
         const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.013, 5, 10), PINK);
         cuff.rotation.x = Math.PI / 2;
         wrist.add(cuff);
-        this.clavicleL = clavicle;
         this.armL = arm;
         this.elbowL = elbowJoint;
         this.wristL = wrist;
@@ -15529,8 +14657,6 @@ export class Player {
     legs.add(upper);
     this.upperG = upper;
     this.spineG = spine;
-    this.chestG = chest;
-    this.neckG = neck;
 
     // Serializable semantic lookup data: runtime code and future keyframe
     // tooling can resolve stable nodes with getObjectByName without keeping

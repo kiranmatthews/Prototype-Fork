@@ -150,35 +150,16 @@ export interface AnimationStudioContext {
   /** Receives sampled scalar/deformation controls after the joint pose is applied. */
   applyScalars?: (values: Readonly<Record<string, number>>) => void;
   /**
-   * Synchronizes an optional presentation skin after every editor pose path.
-   * This runs once per Studio frame, after playback sampling, direct joint
-   * edits, IK and onion-skin restoration have all settled on the source rig.
+   * Reapplies host-owned appearance layers after every editor pose path. This
+   * runs once per Studio frame, after playback, FK, IK and onion restoration.
    */
   syncPresentation?: () => void;
-  /** Optional host-owned switch between the authoring rig and an evaluation surface. */
-  presentationSurface?: AnimationStudioPresentationSurface;
   /** Optional host-owned procedural-tail silhouette toggle. */
   tailVisibility?: AnimationStudioTailVisibility;
   /** Pure custom procedural evaluators registered by the runtime/tool host. */
   proceduralEvaluators?: ProceduralEvaluatorRegistry;
   /** Called after committed edits and undo/redo, never on every playback frame. */
   onDocumentChange?: (document: AnimationSuiteDocument) => void;
-}
-
-export interface AnimationStudioPresentationSurfaceState {
-  /** Short current surface label, for example "FEMALE" or "RIG". */
-  label: string;
-  /** False while an asynchronous surface is unavailable or failed. */
-  ready: boolean;
-  /** True when the evaluation surface, rather than the source body, is shown. */
-  active: boolean;
-  /** Optional hover explanation supplied by the host. */
-  detail?: string;
-}
-
-export interface AnimationStudioPresentationSurface {
-  getState(): AnimationStudioPresentationSurfaceState;
-  toggle(): void;
 }
 
 export interface AnimationStudioTailVisibilityState {
@@ -218,7 +199,6 @@ export interface AnimationStudioDiagnostics {
     selectedJointId?: string;
     trackCount: number;
     keyCount: number;
-    presentationSurface?: AnimationStudioPresentationSurfaceState;
     tailVisibility?: AnimationStudioTailVisibilityState;
   };
   selectClip(clipId: string): boolean;
@@ -605,7 +585,6 @@ class AnimationStudio implements AnimationStudioHandle {
   private sheet!: HTMLElement;
   private playhead!: HTMLElement;
   private toastElement!: HTMLElement;
-  private presentationSurfaceButton: HTMLButtonElement | undefined;
   private tailVisibilityButton: HTMLButtonElement | undefined;
   private transformInputs: HTMLInputElement[][] = [];
   private scalarInputs = new Map<string, { slider: HTMLInputElement; exact: HTMLInputElement }>();
@@ -682,7 +661,6 @@ class AnimationStudio implements AnimationStudioHandle {
     this.diagnostics = {
       getState: () => {
         const clip = this.activeClip();
-        const presentationSurface = this.ctx.presentationSurface?.getState();
         const tailVisibility = this.ctx.tailVisibility?.getState();
         return {
           ...(clip ? { clipId: clip.id, clipName: clip.name, playbackSpeed: clip.playbackSpeed } : {}),
@@ -694,7 +672,6 @@ class AnimationStudio implements AnimationStudioHandle {
           ...(this.selectedJointId ? { selectedJointId: this.selectedJointId } : {}),
           trackCount: clip?.tracks.length ?? 0,
           keyCount: clip?.tracks.reduce((sum, track) => sum + track.keys.length, 0) ?? 0,
-          ...(presentationSurface ? { presentationSurface } : {}),
           ...(tailVisibility ? { tailVisibility } : {}),
         };
       },
@@ -811,7 +788,6 @@ class AnimationStudio implements AnimationStudioHandle {
     if (this.needsSample) this.sampleCurrentPose();
     if (this.onionEnabled && this.onionDirty) this.updateOnionSkin();
     this.ctx.syncPresentation?.();
-    this.refreshPresentationSurfaceButton();
     this.refreshTailVisibilityButton();
     this.orbit.update();
     this.syncTimeUi();
@@ -948,16 +924,6 @@ class AnimationStudio implements AnimationStudioHandle {
     parent.append(mirrorButton, onionButton);
 
     parent.appendChild(dom('div', 'ast-spacer'));
-    if (this.ctx.presentationSurface) {
-      this.presentationSurfaceButton = button('BODY · …', 'Switch character presentation surface');
-      this.presentationSurfaceButton.onclick = () => {
-        this.ctx.presentationSurface?.toggle();
-        this.ctx.syncPresentation?.();
-        this.refreshPresentationSurfaceButton();
-      };
-      parent.appendChild(this.presentationSurfaceButton);
-      this.refreshPresentationSurfaceButton();
-    }
     if (this.ctx.tailVisibility) {
       this.tailVisibilityButton = button('TAIL · …', 'Show or hide the procedural character tail');
       this.tailVisibilityButton.onclick = () => {
@@ -976,25 +942,6 @@ class AnimationStudio implements AnimationStudioHandle {
     closeButton.classList.add('ast-icon');
     closeButton.onclick = () => this.close();
     parent.append(importButton, exportButton, closeButton);
-  }
-
-  private refreshPresentationSurfaceButton(): void {
-    const button = this.presentationSurfaceButton;
-    const surface = this.ctx.presentationSurface;
-    if (!button || !surface) return;
-    const state = surface.getState();
-    button.textContent = `BODY · ${state.label}`;
-    // A lazy third-party surface may still be loading. Keep the cycle control
-    // usable so the author can return to RIG/FEMALE instead of being trapped.
-    button.disabled = false;
-    button.toggleAttribute('data-loading', !state.ready);
-    button.setAttribute('aria-busy', state.ready ? 'false' : 'true');
-    button.classList.toggle('ast-active', state.active);
-    button.title = state.detail ?? (
-      state.ready
-        ? 'Switch between the evaluation surface and the procedural source body'
-        : 'Evaluation surface is still loading'
-    );
   }
 
   private refreshTailVisibilityButton(): void {

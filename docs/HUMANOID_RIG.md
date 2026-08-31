@@ -75,7 +75,7 @@ translation rather than scaling the entire descendant hierarchy.
 - Gameplay owns the outer player transform, collision, and movement.
 - Animation Studio edits rest-local deltas and scalar deformation controls.
 - Procedural motion and keyed corrections share the same semantic joints.
-- Imported comparison characters may replace geometry, but they must not
-  replace or detach the live semantic bone nodes.
+- Character Lab proportions are a reversible presentation layer over the live
+  procedural rig; they never replace or detach semantic bone nodes.
 - Adding twist, roll, face, finger, or secondary bones is additive; existing
   IDs, roles, aliases, and parent relationships must remain migratable.

@@ -133,7 +133,7 @@ function captureHierarchy(
         reusable[index] = { ...existing, visible: object.visible };
       }
     } else {
-      // Hierarchy replacement (for example a comparison model arriving) makes
+      // Hierarchy replacement (for example a procedural rebuild) makes
       // every later traversal slot suspect. Rebuild only from this point.
       reusable.length = index;
       reusable.push({

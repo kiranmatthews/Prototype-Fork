@@ -58,11 +58,10 @@ export interface TailCollider {
 /**
  * Everything about the tail's SHAPE, in one object.
  *
- * These were module constants until the model studio (src/studio.ts) needed to
- * drive them from sliders — judging a tail's proportions by reading numbers off
- * a screenshot is exactly the kind of thing I am bad at and a human is instant
- * at. Changing any of these means rebuilding the geometry and the bone chain;
- * see reshape().
+ * These stay grouped so Character Lab can grow from its current visibility
+ * switch into signature-shape sliders without rewriting the simulation.
+ * Changing any of these means rebuilding geometry and the bone chain; see
+ * reshape().
  */
 export interface TailShape {
   bones: number;

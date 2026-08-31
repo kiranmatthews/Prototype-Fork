@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "asset": {
+    "id": "player.run",
+    "name": "Run — Quaternius Jog_Fwd",
+    "kind": "retargeted-keyframe-animation",
+    "generatedModule": "src/animation/quaterniusJogFwd.generated.ts"
+  },
+  "source": {
+    "author": "Quaternius",
+    "pack": "Universal Animation Library",
+    "edition": "Standard",
+    "page": "https://quaternius.com/packs/universalanimationlibrary.html",
+    "archive": "Universal Animation Library[Standard].zip",
+    "archiveSha256": "cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724",
+    "archivePath": "Unreal-Godot/UAL1_Standard.glb",
+    "sourceFileByteLength": 7618436,
+    "sourceFileSha256": "69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997",
+    "sourceClip": "Jog_Fwd_Loop",
+    "sourceRootMotion": false,
+    "sourceDurationSeconds": 0.9333333373069763,
+    "sourceSampleRate": 30,
+    "sourceFrameCount": 29,
+    "sourceTrackCount": 195,
+    "importedOn": "2026-08-31"
+  },
+  "license": {
+    "spdx": "CC0-1.0",
+    "name": "CC0 1.0 Universal",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "includedLicenseSha256": "6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061",
+    "includedReadmeSha256": "ccd02718886b5a57f10f0a8911a38cfe10c36880e1d6dfa3445923fba32d2a72"
+  },
+  "conversion": {
+    "tool": "tools/import-quaternius-humanoid-animation.mjs",
+    "targetRig": "player-procedural-v1",
+    "transformSpace": "rest-local-delta",
+    "interpolation": "linear",
+    "rootMotion": "in-place",
+    "method": "Sample Quaternius bind-world rotation deltas, transfer them through the player canonical humanoid pose, then solve player rest-local quaternion keys.",
+    "positionPolicy": "Preserve cyclic pelvis displacement on the visual root; discard all other source translations and every scale track so target proportions remain authoritative.",
+    "jointPolicy": "Import 22 semantic body joints. Finger joints inherit their animated wrists.",
+    "loopPolicy": "Force the final key to equal the first key to remove sub-degree exporter seam drift."
+  }
+}

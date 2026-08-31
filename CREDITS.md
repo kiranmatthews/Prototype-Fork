@@ -33,6 +33,14 @@ To rebuild it, download the kits and run:
 node tools/bake-props.mjs <dir-of-glbs>... > src/prop-data.ts
 ```
 
+## Character animation
+
+The procedural rider's editable Run clip is retargeted from Quaternius'
+`Jog_Fwd_Loop` in the CC0 Universal Animation Library Standard edition. Only
+the sampled semantic keyframes ship; no Quaternius character model is part of
+the runtime. Source hash, conversion rules and the CC0 notice are retained in
+`public/animations/quaternius-jog-fwd/`.
+
 ## HUD display face
 
 The HUD, the crate stencils and every plate on screen are set in **Roo**,

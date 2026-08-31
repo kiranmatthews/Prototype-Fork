@@ -1140,15 +1140,6 @@ const closePresentationPanels = (): void => {
   spinPanel.setOpen(false);
   visualTreatmentPanel.setOpen(false);
 };
-const toggleCharacterPresentation = (): void => {
-  player.toggleCharacterPresentationMode();
-  const state = player.characterPresentationSurfaceState;
-  ui.showMessage(
-    'CHARACTER BODY',
-    state.detail,
-    2200,
-  );
-};
 const toggleCharacterTailVisibility = (): void => {
   player.toggleCharacterTailVisibility();
   const state = player.characterTailVisibilityState;
@@ -1168,10 +1159,10 @@ if (TOUCH_PRESENTATION) {
       },
     },
     {
-      label: "BODY",
+      label: "CHARACTER",
       open: () => {
         closePresentationPanels();
-        toggleCharacterPresentation();
+        void openCharacterLabTool();
       },
     },
     {
@@ -1231,16 +1222,15 @@ if (TOUCH_PRESENTATION) {
     });
   syncToolPanelState();
 } else {
-  // Animation authoring is a project tool, not a presentation-comparison
-  // flag. Keep it reachable from the browser UI in every build.
+  // Character and animation authoring stay reachable in every browser build.
   ui.setPresentationTools([
     {
       label: "ANIMATION",
       open: () => void openAnimationStudioTool(),
     },
     {
-      label: "BODY",
-      open: toggleCharacterPresentation,
+      label: "CHARACTER",
+      open: () => void openCharacterLabTool(),
     },
     {
       label: "TAIL",
@@ -2070,15 +2060,36 @@ const editor = new Editor(
 // Open the editor on a level (default: whatever is loaded). A level that has
 // never been edited has no data to bind to, so it goes through editLevel,
 // which captures it first.
-// ── the model studio (src/studio.ts) ──────────────────────────────────────
-// A dev tool for the questions that are only answerable by eye — which
-// polygons of an authored model are junk, where the tail sits, what colour it
-// is. Lazy: nothing of it is fetched until somebody asks for it.
-let studio: { frame: () => void } | null = null;
-async function openStudioTool(): Promise<void> {
-  if (studio) return;
-  const mod = await import("./studio");
-  studio = mod.openStudio({ renderer, scene, camera, player, onClose: () => (studio = null) });
+// Character Lab owns the procedural rest silhouette while gameplay is frozen.
+// It is lazy so the authoring UI and OrbitControls cost nothing during play.
+let characterLab: {
+  frame: () => void;
+  close: () => void;
+  readonly diagnostics: unknown;
+} | null = null;
+async function openCharacterLabTool(): Promise<void> {
+  if (characterLab || animationStudio) return;
+  const rig = player.enterAnimationPreview();
+  try {
+    const mod = await import("./characterLab");
+    characterLab = mod.openCharacterLab({
+      renderer,
+      scene,
+      camera,
+      player,
+      rigRoot: rig.root,
+      onClose: () => {
+        player.exitAnimationPreview();
+        characterAnimationRuntime.restart();
+        characterLab = null;
+      },
+    });
+    (window as unknown as { __game: Record<string, unknown> }).__game.characterLab =
+      characterLab;
+  } catch (error) {
+    player.exitAnimationPreview();
+    throw error;
+  }
 }
 // Full character animation authoring. Gameplay is frozen while this owns the
 // stage; Player snapshots and restores its authoritative pose at the boundary.
@@ -2088,7 +2099,7 @@ let animationStudio: {
   getDocument: () => unknown;
 } | null = null;
 async function openAnimationStudioTool(): Promise<void> {
-  if (animationStudio) return;
+  if (animationStudio || characterLab) return;
   const rig = player.enterAnimationPreview();
   try {
     const mod = await import("./animationStudio");
@@ -2099,11 +2110,7 @@ async function openAnimationStudioTool(): Promise<void> {
       rigRoot: rig.root,
       document: characterAnimationRuntime.document,
       applyScalars: (values) => player.applyAnimationDeformations(values),
-      syncPresentation: () => player.syncCharacterPresentation(),
-      presentationSurface: {
-        getState: () => player.characterPresentationSurfaceState,
-        toggle: () => player.toggleCharacterPresentationMode(),
-      },
+      syncPresentation: () => player.syncCharacterAppearance(),
       tailVisibility: {
         getState: () => player.characterTailVisibilityState,
         toggle: () => player.toggleCharacterTailVisibility(),
@@ -2125,10 +2132,6 @@ async function openAnimationStudioTool(): Promise<void> {
     throw error;
   }
 }
-// Openable WITHOUT a console, because the person whose eyes this borrows is
-// playing the deployed build on a phone or a laptop, not sitting in devtools:
-// put #studio on the URL. Deferred so the character model is installed and
-// there is something to click before the panel appears.
 // The SMOKE studio: same idea, different subject. #puffstudio on the URL.
 let puffStudio: { frame: (dt: number) => void } | null = null;
 async function openPuffStudioTool(): Promise<void> {
@@ -2178,7 +2181,9 @@ async function openWaterStudioTool(): Promise<void> {
   });
   (window as unknown as { __game: Record<string, unknown> }).__game.waterStudio = waterStudio;
 }
-if (location.hash.toLowerCase().includes("animationstudio")) {
+if (location.hash.toLowerCase().includes("characterlab")) {
+  setTimeout(() => void openCharacterLabTool(), 500);
+} else if (location.hash.toLowerCase().includes("animationstudio")) {
   setTimeout(() => void openAnimationStudioTool(), 500);
 } else if (location.hash.toLowerCase().includes("waterstudio")) {
   setTimeout(() => void openWaterStudioTool(), 2500);
@@ -2188,10 +2193,6 @@ if (location.hash.toLowerCase().includes("animationstudio")) {
   setTimeout(() => void openSwirlStudioTool(), 2500);
 } else if (location.hash.toLowerCase().includes("fieldstudio")) {
   setTimeout(() => void openFieldStudioTool(), 2500);
-} else if (location.hash.toLowerCase().includes("studio")) {
-  // Long enough for the character GLB to land. The studio re-reads the body on
-  // every interaction anyway, so this is only about what you see first.
-  setTimeout(() => void openStudioTool(), 5000);
 }
 
 function openEditor(
@@ -3126,15 +3127,10 @@ function frame(nowMs: number): void {
     renderPrimaryScene(dt);
     return;
   }
-  // The model studio takes the stage: it owns the camera, the sim stands down,
-  // and the world is still drawn so there is something to point at. Everything
-  // else in this function is skipped, which is also what stops the game
-  // reading input while somebody is dragging sliders.
-  if (studio) {
-    // No sim: the tail sits in its REST pose, which is the pose you actually
-    // want to judge a shape against, and nothing moves under the cursor while
-    // you are trying to click a polygon.
-    studio.frame();
+  // Character Lab owns the camera and persistent rest silhouette; the sim
+  // stands down so slider edits never race gameplay or animation state.
+  if (characterLab) {
+    characterLab.frame();
     ui.setGameHudComposited(false);
     renderPrimaryScene(dt);
     return;
@@ -3499,14 +3495,14 @@ requestAnimationFrame(frame);
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
-  getCharacterPresentationDiagnostics: () => player.characterPresentationDiagnostics,
+  getCharacterProportionDiagnostics: () => player.characterProportionDiagnostics,
+  getCharacterProportions: () => player.characterProportions,
+  setCharacterProportions: (patch: Parameters<typeof player.setCharacterProportions>[0]) =>
+    player.setCharacterProportions(patch),
+  resetCharacterProportions: () => player.resetCharacterProportions(),
   getCharacterTailVisibility: () => player.characterTailVisible,
   setCharacterTailVisible: (visible: boolean) => player.setCharacterTailVisible(visible),
   toggleCharacterTailVisibility: () => player.toggleCharacterTailVisibility(),
-  setCharacterPresentationMode: (
-    mode: 'procedural' | 'quaternius-female' | 'meshy-fox',
-  ) =>
-    player.setCharacterPresentationMode(mode),
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
   getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):
@@ -3530,7 +3526,7 @@ requestAnimationFrame(frame);
   restoreBuiltin,
   getCurrentLevel: () => current,
   GLTFLoader, // debug: inspect model files from the console/harness
-  openStudio: openStudioTool, // point-and-click answers: __game.openStudio()
+  openCharacterLab: openCharacterLabTool,
   openAnimationStudio: openAnimationStudioTool,
   characterAnimationRuntime,
 };
