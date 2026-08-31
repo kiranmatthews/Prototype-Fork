@@ -50,6 +50,31 @@ try {
     near(pose.hipPitch + pose.kneeFlex + pose.anklePitch, 0);
   }
 
+  // Imported humanoids retain conventional ankle bones but can have very
+  // different upper/lower proportions. The same fixed-length solve must use
+  // those measured lengths rather than silently falling back to player values.
+  for (const [customUpper, customLower, hip, knee, scale] of [
+    [0.41, 0.27, -0.42, 0.9, 0.72],
+    [0.23, 0.38, -0.76, 1.35, 0.61],
+  ]) {
+    const lowerPitch = hip + knee;
+    const down =
+      scale *
+      (customUpper * Math.cos(hip) + customLower * Math.cos(lowerPitch));
+    const forward =
+      -customUpper * Math.sin(hip) - customLower * Math.sin(lowerPitch);
+    const pose = solveSagittalLegTarget(
+      down,
+      forward,
+      0,
+      customUpper,
+      customLower,
+    );
+    near(pose.verticalReach, down);
+    near(pose.forwardReach, forward);
+    near(pose.hipPitch + pose.kneeFlex + pose.anklePitch, 0);
+  }
+
   const left = solveSagittalLegTarget(0.34, 0.08);
   const right = solveSagittalLegTarget(0.34, -0.08);
   near(left.kneeFlex, right.kneeFlex);

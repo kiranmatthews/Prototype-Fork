@@ -627,7 +627,11 @@ class AnimationStudio implements AnimationStudioHandle {
     this.preferredDraftStore = preferredDraftStore;
     this.storageKey = ctx.autosaveKey ?? draftStore?.keyFor(starterDocument.id) ?? `solProtoAnimationDraft:${starterDocument.id}`;
     this.animationDocument = this.loadInitialDocument(ctx.document, starterDocument);
-    this.ensureActiveClip();
+    // Saved clips are durable, but the live character owns the current rig
+    // contract. Refresh an older embedded definition with the same stable rig
+    // ID so newly added humanoid bones, roles, aliases, and retarget poses are
+    // available immediately without discarding any authored animation.
+    this.ensureRigAndClip();
     this.selectedJointId = this.rig.rootJointId;
     this.diagnostics = {
       getState: () => {
@@ -1189,12 +1193,13 @@ class AnimationStudio implements AnimationStudioHandle {
   }
 
   private ensureRigAndClip(): void {
-    if (!this.animationDocument.rigs.some((candidate) => candidate.id === this.rig.id)) {
-      this.animationDocument = {
-        ...this.animationDocument,
-        rigs: [...this.animationDocument.rigs, this.rig],
-      };
-    }
+    const hasLiveRig = this.animationDocument.rigs.some((candidate) => candidate.id === this.rig.id);
+    this.animationDocument = {
+      ...this.animationDocument,
+      rigs: hasLiveRig
+        ? this.animationDocument.rigs.map((candidate) => candidate.id === this.rig.id ? this.rig : candidate)
+        : [...this.animationDocument.rigs, this.rig],
+    };
     this.ensureActiveClip();
   }
 

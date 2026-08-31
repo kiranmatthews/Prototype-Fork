@@ -178,6 +178,64 @@ try {
   assert.equal(inferred.find((chain) => chain.id === 'arm.left').effectorSocketId, 'gripLeft');
   assert.equal(inferred.find((chain) => chain.id === 'leg.right').effectorSocketId, 'footRight');
 
+  // Explicit humanoid roles take precedence over names. None of these IDs or
+  // node names contain shoulder/elbow/wrist/hip/knee/ankle search tokens.
+  const mappedRoot = new THREE.Group();
+  const mappedJoints = new Map();
+  const mappedDefinitions = [];
+  const mappedSockets = new Map();
+  const mappedSocketDefinitions = [];
+  const mappedHumanoid = {};
+  const addMapped = (id, role, parent, parentId, offset) => {
+    const node = new THREE.Group();
+    node.name = `opaque-${id}`;
+    node.position.fromArray(offset);
+    parent.add(node);
+    mappedJoints.set(id, node);
+    mappedDefinitions.push({
+      id, nodeName: node.name, parentId, role, type: 'transform',
+      rest: { position: [...offset], quaternion: [0, 0, 0, 1], scale: [1, 1, 1] },
+    });
+    mappedHumanoid[role] = id;
+    return node;
+  };
+  for (const side of ['Left', 'Right']) {
+    const sign = side === 'Left' ? 1 : -1;
+    const armA = addMapped(`a0${side}`, `upperArm${side}`, mappedRoot, null, [sign * 0.4, 1, 0]);
+    const armB = addMapped(`a1${side}`, `lowerArm${side}`, armA, `a0${side}`, [sign * 0.5, 0, 0]);
+    const armC = addMapped(`a2${side}`, `hand${side}`, armB, `a1${side}`, [sign * 0.45, 0, 0]);
+    const legA = addMapped(`b0${side}`, `upperLeg${side}`, mappedRoot, null, [sign * 0.2, 0, 0]);
+    const legB = addMapped(`b1${side}`, `lowerLeg${side}`, legA, `b0${side}`, [0, -0.7, 0]);
+    const legC = addMapped(`b2${side}`, `foot${side}`, legB, `b1${side}`, [0, -0.65, 0]);
+    for (const [kind, terminal] of [['grip', armC], ['foot', legC]]) {
+      const id = `${kind}${side}`;
+      const node = new THREE.Object3D();
+      node.name = `opaque-socket-${id}`;
+      terminal.add(node);
+      mappedSockets.set(id, node);
+      mappedSocketDefinitions.push({ id, nodeName: node.name });
+    }
+  }
+  mappedRoot.updateWorldMatrix(true, true);
+  const mappedBinding = {
+    root: mappedRoot,
+    definition: {
+      joints: mappedDefinitions,
+      sockets: mappedSocketDefinitions,
+      humanoid: mappedHumanoid,
+      coordinateSystem: { handedness: 'right', up: 'Y', localForward: '+Z', units: 'rig-units' },
+    },
+    joints: mappedJoints,
+    sockets: mappedSockets,
+  };
+  const mappedChains = inferHumanoidIkChains(mappedBinding);
+  assert.deepEqual(mappedChains.map((chain) => [chain.id, chain.rootId, chain.midId, chain.endId]), [
+    ['arm.left', 'a0Left', 'a1Left', 'a2Left'],
+    ['leg.left', 'b0Left', 'b1Left', 'b2Left'],
+    ['arm.right', 'a0Right', 'a1Right', 'a2Right'],
+    ['leg.right', 'b0Right', 'b1Right', 'b2Right'],
+  ]);
+
   const declared = resolveIkChain({
     id: 'custom.left-leg',
     name: 'Custom left leg',

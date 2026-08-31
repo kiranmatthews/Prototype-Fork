@@ -1,6 +1,7 @@
 import {
   ANIMATION_SUITE_SCHEMA,
   ANIMATION_SUITE_SCHEMA_VERSION,
+  HUMANOID_JOINT_ROLES,
   RIG_SCHEMA,
   RIG_SCHEMA_VERSION,
   PROCEDURAL_DRIVER_SCHEMA,
@@ -110,13 +111,135 @@ function validateUniqueIds(
 
 interface RigValidationInfo {
   id?: string;
+  canonicalJoints: Set<string>;
   joints: Set<string>;
+  aliases: Map<string, string>;
   controls: Set<string>;
   sockets: Set<string>;
 }
 
+function validateLocalTransform(
+  value: unknown,
+  path: string,
+  issues: ValidationIssue[],
+): void {
+  const transform = requireRecord(value, path, issues);
+  if (!transform) return;
+  validateTuple(transform.position, 3, `${path}.position`, issues);
+  if (validateTuple(transform.quaternion, 4, `${path}.quaternion`, issues)) {
+    const length = Math.hypot(...transform.quaternion);
+    if (length < 1e-8) issue(issues, `${path}.quaternion`, 'quaternion.zero', 'must not be zero length');
+    else if (Math.abs(length - 1) > 1e-4) {
+      issue(issues, `${path}.quaternion`, 'quaternion.normalized', 'will be normalized on load', 'warning');
+    }
+  }
+  if (validateTuple(transform.scale, 3, `${path}.scale`, issues)
+    && transform.scale.some((component) => Math.abs(component) < 1e-8)) {
+    issue(issues, `${path}.scale`, 'scale.zero', 'transform scale components must be non-zero');
+  }
+}
+
+function resolvedJointId(
+  id: unknown,
+  joints: ReadonlyMap<string, UnknownRecord>,
+  aliases: ReadonlyMap<string, string>,
+): string | undefined {
+  if (typeof id !== 'string') return undefined;
+  return joints.has(id) ? id : aliases.get(id);
+}
+
+function definitionDescendsFrom(
+  childId: string,
+  ancestorId: string,
+  joints: ReadonlyMap<string, UnknownRecord>,
+  aliases: ReadonlyMap<string, string>,
+): boolean {
+  const visited = new Set<string>();
+  let current: string | undefined = childId;
+  while (current && !visited.has(current)) {
+    if (current === ancestorId) return true;
+    visited.add(current);
+    current = resolvedJointId(joints.get(current)?.parentId, joints, aliases);
+  }
+  return false;
+}
+
+function validateHumanoidMap(
+  value: unknown,
+  path: string,
+  rootJointId: unknown,
+  joints: ReadonlyMap<string, UnknownRecord>,
+  aliases: ReadonlyMap<string, string>,
+  issues: ValidationIssue[],
+): void {
+  if (value === undefined) return;
+  const humanoid = requireRecord(value, path, issues);
+  if (!humanoid) return;
+  const resolved = new Map<string, string>();
+  const assigned = new Map<string, string>();
+  for (const role of HUMANOID_JOINT_ROLES) {
+    const rolePath = `${path}.${role}`;
+    if (role === 'root' && humanoid[role] === undefined) continue;
+    if (!requireString(humanoid[role], rolePath, issues)) continue;
+    const id = resolvedJointId(humanoid[role], joints, aliases);
+    if (!id) {
+      issue(issues, rolePath, 'reference.humanoid-joint', `unknown humanoid joint "${String(humanoid[role])}"`);
+      continue;
+    }
+    const previousRole = assigned.get(id);
+    if (previousRole) {
+      issue(issues, rolePath, 'humanoid.duplicate-joint', `joint "${id}" is already assigned to ${previousRole}`);
+    } else assigned.set(id, role);
+    resolved.set(role, id);
+  }
+
+  const canonicalRoot = resolvedJointId(rootJointId, joints, aliases);
+  const semanticRoot = resolved.get('root');
+  if (semanticRoot && canonicalRoot && semanticRoot !== canonicalRoot) {
+    issue(issues, `${path}.root`, 'humanoid.root-mismatch', 'humanoid root must equal rootJointId');
+  }
+  const hierarchy = (parentRole: string, childRole: string): void => {
+    const parent = resolved.get(parentRole);
+    const child = resolved.get(childRole);
+    if (!parent || !child) return;
+    if (parent === child || !definitionDescendsFrom(child, parent, joints, aliases)) {
+      issue(
+        issues,
+        `${path}.${childRole}`,
+        'hierarchy.humanoid',
+        `${childRole} must descend from ${parentRole}`,
+      );
+    }
+  };
+  const hips = resolved.get('hips');
+  if (hips && canonicalRoot && hips !== canonicalRoot
+    && !definitionDescendsFrom(hips, canonicalRoot, joints, aliases)) {
+    issue(issues, `${path}.hips`, 'hierarchy.humanoid', 'hips/pelvis must descend from rootJointId');
+  }
+  hierarchy('hips', 'spine');
+  hierarchy('spine', 'chest');
+  hierarchy('chest', 'neck');
+  hierarchy('neck', 'head');
+  for (const side of ['Left', 'Right']) {
+    hierarchy('chest', `clavicle${side}`);
+    hierarchy(`clavicle${side}`, `upperArm${side}`);
+    hierarchy(`upperArm${side}`, `lowerArm${side}`);
+    hierarchy(`lowerArm${side}`, `hand${side}`);
+    hierarchy('hips', `upperLeg${side}`);
+    hierarchy(`upperLeg${side}`, `lowerLeg${side}`);
+    hierarchy(`lowerLeg${side}`, `foot${side}`);
+    hierarchy(`foot${side}`, `toes${side}`);
+  }
+}
+
 function validateRigInto(value: unknown, path: string, issues: ValidationIssue[]): RigValidationInfo {
-  const info: RigValidationInfo = { joints: new Set(), controls: new Set(), sockets: new Set() };
+  const info: RigValidationInfo = {
+    canonicalJoints: new Set(),
+    joints: new Set(),
+    aliases: new Map(),
+    controls: new Set(),
+    sockets: new Set(),
+  };
   const rig = requireRecord(value, path, issues);
   if (!rig) return info;
   if (rig.schema !== RIG_SCHEMA) issue(issues, `${path}.schema`, 'schema.rig', `must equal "${RIG_SCHEMA}"`);
@@ -144,7 +267,32 @@ function validateRigInto(value: unknown, path: string, issues: ValidationIssue[]
     issue(issues, `${path}.joints`, 'type.array', 'must be an array');
   } else {
     const joints = validateUniqueIds(rig.joints, `${path}.joints`, issues);
+    info.canonicalJoints = new Set(joints.keys());
     info.joints = new Set(joints.keys());
+    rig.joints.forEach((raw, index) => {
+      if (!isRecord(raw) || typeof raw.id !== 'string' || raw.aliases === undefined) return;
+      const jointId = raw.id;
+      const aliasesPath = `${path}.joints[${index}].aliases`;
+      if (!Array.isArray(raw.aliases)) {
+        issue(issues, aliasesPath, 'type.array', 'must be an array of historical joint IDs');
+        return;
+      }
+      raw.aliases.forEach((alias, aliasIndex) => {
+        const aliasPath = `${aliasesPath}[${aliasIndex}]`;
+        if (!requireString(alias, aliasPath, issues)) return;
+        if (joints.has(alias)) {
+          issue(issues, aliasPath, 'alias.canonical-collision', `alias "${alias}" is already a canonical joint ID`);
+          return;
+        }
+        const owner = info.aliases.get(alias);
+        if (owner && owner !== jointId) {
+          issue(issues, aliasPath, 'alias.duplicate', `alias "${alias}" is already owned by joint "${owner}"`);
+          return;
+        }
+        info.aliases.set(alias, jointId);
+        info.joints.add(alias);
+      });
+    });
     rig.joints.forEach((raw, index) => {
       const jointPath = `${path}.joints[${index}]`;
       const joint = requireRecord(raw, jointPath, issues);
@@ -156,22 +304,11 @@ function validateRigInto(value: unknown, path: string, issues: ValidationIssue[]
         issue(issues, `${jointPath}.parentId`, 'reference.joint', `unknown parent joint "${joint.parentId}"`);
       }
       if (joint.id === joint.parentId) issue(issues, `${jointPath}.parentId`, 'hierarchy.self-parent', 'joint cannot parent itself');
-      const rest = requireRecord(joint.rest, `${jointPath}.rest`, issues);
-      if (rest) {
-        validateTuple(rest.position, 3, `${jointPath}.rest.position`, issues);
-        if (validateTuple(rest.quaternion, 4, `${jointPath}.rest.quaternion`, issues)) {
-          const length = Math.hypot(...rest.quaternion);
-          if (length < 1e-8) issue(issues, `${jointPath}.rest.quaternion`, 'quaternion.zero', 'must not be zero length');
-          else if (Math.abs(length - 1) > 1e-4) {
-            issue(issues, `${jointPath}.rest.quaternion`, 'quaternion.normalized', 'will be normalized on load', 'warning');
-          }
-        }
-        if (validateTuple(rest.scale, 3, `${jointPath}.rest.scale`, issues)) {
-          if (rest.scale.some((component) => Math.abs(component) < 1e-8)) {
-            issue(issues, `${jointPath}.rest.scale`, 'scale.zero', 'rest scale components must be non-zero');
-          }
-        }
-      }
+      validateLocalTransform(joint.rest, `${jointPath}.rest`, issues);
+      if (joint.role !== undefined) requireString(joint.role, `${jointPath}.role`, issues);
+      if (joint.type !== undefined) requireString(joint.type, `${jointPath}.type`, issues);
+      if (joint.bind !== undefined) validateLocalTransform(joint.bind, `${jointPath}.bind`, issues);
+      if (joint.retarget !== undefined) validateLocalTransform(joint.retarget, `${jointPath}.retarget`, issues);
       if (joint.mirrorId !== undefined && (!requireString(joint.mirrorId, `${jointPath}.mirrorId`, issues)
         || !joints.has(joint.mirrorId))) {
         issue(issues, `${jointPath}.mirrorId`, 'reference.mirror-joint', 'must reference a declared joint');
@@ -201,7 +338,7 @@ function validateRigInto(value: unknown, path: string, issues: ValidationIssue[]
               issue(issues, `${jointPath}.stretch.childIds`, 'type.array', 'must be an array of joint IDs');
             } else {
               stretch.childIds.forEach((childId, childIndex) => {
-                if (typeof childId !== 'string' || !joints.has(childId)) {
+                if (typeof childId !== 'string' || !info.joints.has(childId)) {
                   issue(
                     issues,
                     `${jointPath}.stretch.childIds[${childIndex}]`,
@@ -233,6 +370,7 @@ function validateRigInto(value: unknown, path: string, issues: ValidationIssue[]
         current = typeof parent === 'string' ? parent : null;
       }
     }
+    validateHumanoidMap(rig.humanoid, `${path}.humanoid`, rig.rootJointId, joints, info.aliases, issues);
   }
 
   if (!Array.isArray(rig.sockets)) issue(issues, `${path}.sockets`, 'type.array', 'must be an array');

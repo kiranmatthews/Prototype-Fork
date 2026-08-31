@@ -2,7 +2,11 @@ import * as THREE from 'three';
 import {
   RIG_SCHEMA,
   RIG_SCHEMA_VERSION,
+  HUMANOID_JOINT_ROLES,
+  type HumanoidJointRole,
+  type HumanoidSemanticMap,
   type JointId,
+  type JointPoseDelta,
   type LocalTransform,
   type PoseBuffer,
   type RigControlDefinition,
@@ -84,6 +88,140 @@ function stringRecord(value: unknown): Record<string, string> {
   return result;
 }
 
+function jointNameRecord(value: unknown): Record<string, string> {
+  if (!isRecord(value)) return {};
+  const result: Record<string, string> = {};
+  for (const [id, raw] of Object.entries(value)) {
+    if (typeof raw === 'string' && raw.length > 0) result[id] = raw;
+    else if (isRecord(raw)) {
+      const nodeName = typeof raw.nodeName === 'string' ? raw.nodeName : raw.name;
+      if (typeof nodeName === 'string' && nodeName.length > 0) result[id] = nodeName;
+    }
+  }
+  return result;
+}
+
+function stringArray(value: unknown): string[] | undefined {
+  if (typeof value === 'string' && value.length > 0) return [value];
+  if (!Array.isArray(value)) return undefined;
+  const values = [...new Set(value.filter((entry): entry is string =>
+    typeof entry === 'string' && entry.length > 0))];
+  return values.length > 0 ? values : undefined;
+}
+
+function humanoidMetadata(runtime: UnknownRecord): UnknownRecord {
+  return isRecord(runtime.humanoid) ? runtime.humanoid : {};
+}
+
+function runtimeRecord(runtime: UnknownRecord, flatKey: string, nestedKey: string): UnknownRecord {
+  const humanoid = humanoidMetadata(runtime);
+  const flat = isRecord(runtime[flatKey]) ? runtime[flatKey] as UnknownRecord : {};
+  const nested = isRecord(humanoid[nestedKey])
+    ? humanoid[nestedKey] as UnknownRecord
+    : isRecord(humanoid[flatKey]) ? humanoid[flatKey] as UnknownRecord : {};
+  return { ...flat, ...nested };
+}
+
+const HUMANOID_ROLE_NAMES: Record<HumanoidJointRole, readonly string[]> = {
+  root: ['root', 'motionRoot', 'motion-root'],
+  hips: ['hips', 'pelvis'],
+  spine: ['spine', 'spineLower', 'lowerSpine'],
+  chest: ['chest', 'spineUpper', 'upperSpine'],
+  neck: ['neck'],
+  head: ['head'],
+  clavicleLeft: ['clavicleLeft', 'leftClavicle', 'clavicle.left', 'left.clavicle'],
+  upperArmLeft: ['upperArmLeft', 'leftUpperArm', 'upperArm.left', 'left.upperArm', 'shoulderLeft'],
+  lowerArmLeft: ['lowerArmLeft', 'leftLowerArm', 'lowerArm.left', 'left.lowerArm', 'elbowLeft'],
+  handLeft: ['handLeft', 'leftHand', 'hand.left', 'left.hand', 'wristLeft'],
+  upperLegLeft: ['upperLegLeft', 'leftUpperLeg', 'upperLeg.left', 'left.upperLeg', 'hipLeft'],
+  lowerLegLeft: ['lowerLegLeft', 'leftLowerLeg', 'lowerLeg.left', 'left.lowerLeg', 'kneeLeft'],
+  footLeft: ['footLeft', 'leftFoot', 'foot.left', 'left.foot', 'ankleLeft'],
+  toesLeft: ['toesLeft', 'leftToes', 'toes.left', 'left.toes', 'toeLeft'],
+  clavicleRight: ['clavicleRight', 'rightClavicle', 'clavicle.right', 'right.clavicle'],
+  upperArmRight: ['upperArmRight', 'rightUpperArm', 'upperArm.right', 'right.upperArm', 'shoulderRight'],
+  lowerArmRight: ['lowerArmRight', 'rightLowerArm', 'lowerArm.right', 'right.lowerArm', 'elbowRight'],
+  handRight: ['handRight', 'rightHand', 'hand.right', 'right.hand', 'wristRight'],
+  upperLegRight: ['upperLegRight', 'rightUpperLeg', 'upperLeg.right', 'right.upperLeg', 'hipRight'],
+  lowerLegRight: ['lowerLegRight', 'rightLowerLeg', 'lowerLeg.right', 'right.lowerLeg', 'kneeRight'],
+  footRight: ['footRight', 'rightFoot', 'foot.right', 'right.foot', 'ankleRight'],
+  toesRight: ['toesRight', 'rightToes', 'toes.right', 'right.toes', 'toeRight'],
+};
+
+function humanoidSemanticValue(source: UnknownRecord, role: HumanoidJointRole): string | undefined {
+  for (const key of HUMANOID_ROLE_NAMES[role]) {
+    if (typeof source[key] === 'string' && source[key].length > 0) return source[key] as string;
+  }
+  const side = role.endsWith('Left') ? 'left' : role.endsWith('Right') ? 'right' : undefined;
+  if (side && isRecord(source[side])) {
+    const part = role.slice(0, -side.length);
+    const value = (source[side] as UnknownRecord)[part];
+    if (typeof value === 'string' && value.length > 0) return value;
+  }
+  return undefined;
+}
+
+function aliasOwners(joints: readonly RigJointDefinition[]): Map<string, JointId> {
+  const result = new Map<string, JointId>();
+  for (const joint of joints) {
+    result.set(joint.id, joint.id);
+    for (const alias of joint.aliases ?? []) if (!result.has(alias)) result.set(alias, joint.id);
+  }
+  return result;
+}
+
+function applyRuntimeJointMetadata(runtime: UnknownRecord, joints: RigJointDefinition[]): void {
+  const richJoints = isRecord(runtime.joints) ? runtime.joints : {};
+  const roles = runtimeRecord(runtime, 'jointRoles', 'roles');
+  const types = runtimeRecord(runtime, 'jointTypes', 'types');
+  const aliases = runtimeRecord(runtime, 'jointAliases', 'aliases');
+  const bindPose = runtimeRecord(runtime, 'bindPose', 'bindPose');
+  const humanoid = humanoidMetadata(runtime);
+  const retargetPose = {
+    ...(isRecord(runtime.retargetPose) ? runtime.retargetPose : {}),
+    ...(isRecord(runtime.canonicalTPose) ? runtime.canonicalTPose : {}),
+    ...(isRecord(humanoid.retargetPose) ? humanoid.retargetPose : {}),
+    ...(isRecord(humanoid.canonicalTPose) ? humanoid.canonicalTPose : {}),
+  };
+  for (const joint of joints) {
+    const rich = isRecord(richJoints[joint.id]) ? richJoints[joint.id] as UnknownRecord : {};
+    const role = typeof rich.role === 'string' ? rich.role : roles[joint.id];
+    const type = typeof rich.type === 'string' ? rich.type : types[joint.id];
+    const aliasesForJoint = stringArray(rich.aliases ?? aliases[joint.id])
+      ?.filter((alias) => alias !== joint.id);
+    const bind = rich.bind ?? rich.bindLocal ?? bindPose[joint.id];
+    const retarget = rich.retarget ?? rich.retargetLocal ?? retargetPose[joint.id];
+    if (typeof role === 'string' && role.length > 0) joint.role = role;
+    if (typeof type === 'string' && type.length > 0) joint.type = type;
+    if (aliasesForJoint?.length) joint.aliases = aliasesForJoint;
+    if (isRecord(bind)) joint.bind = metadataRestTransform(bind, joint.rest);
+    if (isRecord(retarget)) joint.retarget = metadataRestTransform(retarget, joint.rest);
+  }
+}
+
+function humanoidMapFromRuntime(
+  runtime: UnknownRecord,
+  joints: RigJointDefinition[],
+): HumanoidSemanticMap | undefined {
+  const humanoid = humanoidMetadata(runtime);
+  const explicit = isRecord(runtime.humanoidMap)
+    ? runtime.humanoidMap as UnknownRecord
+    : isRecord(humanoid.semanticMap)
+      ? humanoid.semanticMap as UnknownRecord
+      : isRecord(humanoid.humanoidMap)
+        ? humanoid.humanoidMap as UnknownRecord
+        : isRecord(humanoid.map) ? humanoid.map as UnknownRecord : humanoid;
+  const owners = aliasOwners(joints);
+  const result: Partial<HumanoidSemanticMap> = {};
+  for (const role of HUMANOID_JOINT_ROLES) {
+    const explicitId = humanoidSemanticValue(explicit, role);
+    const inferredId = joints.find((joint) =>
+      joint.role !== undefined && HUMANOID_ROLE_NAMES[role].includes(joint.role))?.id;
+    const id = explicitId ? owners.get(explicitId) ?? explicitId : inferredId;
+    if (id) result[role] = id;
+  }
+  return Object.keys(result).length > 0 ? result as HumanoidSemanticMap : undefined;
+}
+
 function mirroredName(id: string, available: ReadonlySet<string>): string | undefined {
   const substitutions: Array<[RegExp, string]> = [
     [/Left/g, 'Right'], [/Right/g, 'Left'],
@@ -131,14 +269,15 @@ function applyRuntimeMirrorPairs(
 ): RigMirrorDefinition | undefined {
   if (!Array.isArray(runtime.mirrorPairs)) return inferred;
   const jointById = new Map(joints.map((joint) => [joint.id, joint]));
+  const owners = aliasOwners(joints);
   const pairs = new Map<string, [JointId, JointId]>();
   for (const [left, right] of inferred?.jointPairs ?? []) {
     pairs.set([left, right].sort().join('\u0000'), [left, right]);
   }
   for (const raw of runtime.mirrorPairs) {
     if (!Array.isArray(raw) || raw.length !== 2 || typeof raw[0] !== 'string' || typeof raw[1] !== 'string') continue;
-    const left = jointById.get(raw[0]);
-    const right = jointById.get(raw[1]);
+    const left = jointById.get(owners.get(raw[0]) ?? raw[0]);
+    const right = jointById.get(owners.get(raw[1]) ?? raw[1]);
     if (!left || !right) continue;
     left.mirrorId = right.id;
     right.mirrorId = left.id;
@@ -159,13 +298,16 @@ function applyRuntimeDeformations(
 ): void {
   if (!Array.isArray(runtime.deformations)) return;
   const jointById = new Map(joints.map((joint) => [joint.id, joint]));
+  const owners = aliasOwners(joints);
   const controlIds = new Set(controls.map((control) => control.id));
   for (const raw of runtime.deformations) {
     if (!isRecord(raw) || typeof raw.jointId !== 'string' || typeof raw.controlId !== 'string') continue;
-    const joint = jointById.get(raw.jointId);
+    const joint = jointById.get(owners.get(raw.jointId) ?? raw.jointId);
     if (!joint || !controlIds.has(raw.controlId) || !isFiniteTuple(raw.lengthAxis, 3)) continue;
     const childIds = Array.isArray(raw.downstreamJointIds)
-      ? raw.downstreamJointIds.filter((id): id is string => typeof id === 'string' && jointById.has(id))
+      ? raw.downstreamJointIds
+        .filter((id): id is string => typeof id === 'string' && owners.has(id))
+        .map((id) => owners.get(id) ?? id)
       : [];
     joint.stretch = {
       mode: 'translate-children',
@@ -221,7 +363,7 @@ function makeRigDefinition(
   runtime: UnknownRecord,
   options: RigBindingOptions,
 ): { definition: RigDefinition; jointNodes: Map<JointId, THREE.Object3D>; socketNodes: Map<string, THREE.Object3D> } {
-  const jointNames = stringRecord(runtime.joints);
+  const jointNames = jointNameRecord(runtime.joints);
   if (Object.keys(jointNames).length === 0) {
     throw new Error('sculptRuntime.joints must declare semantic joint IDs and Object3D names');
   }
@@ -258,9 +400,12 @@ function makeRigDefinition(
       rest: metadataRestTransform(restPose[id], captureLocalTransform(node)),
     });
   }
-  const rootJointId = jointNodes.has('root')
+  applyRuntimeJointMetadata(runtime, joints);
+  const humanoid = humanoidMapFromRuntime(runtime, joints);
+  let rootJointId = jointNodes.has('root')
     ? 'root'
     : joints.find((joint) => joint.parentId === null)?.id ?? joints[0].id;
+  if (humanoid?.root && jointNodes.has(humanoid.root)) rootJointId = humanoid.root;
   const rootJoint = joints.find((joint) => joint.id === rootJointId);
   if (rootJoint) rootJoint.parentId = null;
 
@@ -308,6 +453,7 @@ function makeRigDefinition(
     joints,
     sockets,
     controls,
+    ...(humanoid ? { humanoid } : {}),
     metadata: {
       source: 'sculptRuntime',
       sourceSchemaVersion: Number.isFinite(runtime.schemaVersion) ? runtime.schemaVersion as number : 0,
@@ -344,6 +490,7 @@ export class RigBinding {
   readonly joints: ReadonlyMap<JointId, THREE.Object3D>;
   readonly sockets: ReadonlyMap<string, THREE.Object3D>;
   private readonly restTransforms = new Map<JointId, LocalTransform>();
+  private readonly jointAliasOwners = new Map<JointId, JointId>();
   private readonly defaultScalarTarget?: ScalarControlTarget;
 
   private constructor(
@@ -358,7 +505,15 @@ export class RigBinding {
     this.joints = joints;
     this.sockets = sockets;
     this.defaultScalarTarget = scalarTarget;
-    for (const joint of definition.joints) this.restTransforms.set(joint.id, copyTransform(joint.rest));
+    for (const joint of definition.joints) {
+      this.restTransforms.set(joint.id, copyTransform(joint.rest));
+      this.jointAliasOwners.set(joint.id, joint.id);
+    }
+    for (const joint of definition.joints) {
+      for (const alias of joint.aliases ?? []) {
+        if (!this.jointAliasOwners.has(alias)) this.jointAliasOwners.set(alias, joint.id);
+      }
+    }
   }
 
   static fromSculptRuntime(sourceRoot: THREE.Object3D, options: RigBindingOptions = {}): RigBinding {
@@ -395,7 +550,13 @@ export class RigBinding {
   }
 
   getJoint(id: JointId): THREE.Object3D | undefined {
-    return this.joints.get(id);
+    const canonical = this.resolveJointId(id);
+    return canonical ? this.joints.get(canonical) : undefined;
+  }
+
+  /** Resolves canonical and historical IDs without mutating authored clips. */
+  resolveJointId(id: JointId): JointId | undefined {
+    return this.jointAliasOwners.get(id);
   }
 
   getSocket(id: string): THREE.Object3D | undefined {
@@ -403,7 +564,8 @@ export class RigBinding {
   }
 
   getRestTransform(id: JointId): LocalTransform | undefined {
-    const rest = this.restTransforms.get(id);
+    const canonical = this.resolveJointId(id);
+    const rest = canonical ? this.restTransforms.get(canonical) : undefined;
     return rest ? copyTransform(rest) : undefined;
   }
 
@@ -427,10 +589,25 @@ export class RigBinding {
     const strict = options.strict === true;
     const identity = new THREE.Quaternion();
     const deltaQuaternion = new THREE.Quaternion();
+    const resolvedDeltas = new Map<JointId, JointPoseDelta>();
+    const mergeDelta = (target: JointId, delta: JointPoseDelta): void => {
+      const previous = resolvedDeltas.get(target);
+      resolvedDeltas.set(target, previous ? { ...previous, ...delta } : delta);
+    };
+    // Historical aliases are applied first so an explicitly canonical channel
+    // wins when a transitional clip happens to contain both forms.
+    for (const [target, delta] of Object.entries(pose.joints)) {
+      const canonical = this.resolveJointId(target);
+      if (canonical && canonical !== target) mergeDelta(canonical, delta);
+    }
+    for (const [target, delta] of Object.entries(pose.joints)) {
+      const canonical = this.resolveJointId(target);
+      if (canonical && canonical === target) mergeDelta(canonical, delta);
+    }
     for (const [id, node] of this.joints) {
       const rest = this.restTransforms.get(id);
       if (!rest) continue;
-      const delta = pose.joints[id];
+      const delta = resolvedDeltas.get(id);
       if (!delta && !resetUnspecified) continue;
       const position = delta?.position ?? [0, 0, 0];
       const scale = delta?.scale ?? [1, 1, 1];
@@ -450,7 +627,8 @@ export class RigBinding {
     }
     if (strict) {
       for (const id of Object.keys(pose.joints)) {
-        if (!this.joints.has(id)) throw new Error(`pose targets unbound joint: ${id}`);
+        const canonical = this.resolveJointId(id);
+        if (!canonical || !this.joints.has(canonical)) throw new Error(`pose targets unbound joint: ${id}`);
       }
     }
     const scalarTarget = options.scalarTarget ?? this.defaultScalarTarget;
@@ -482,8 +660,9 @@ export class RigBinding {
     const inverseRest = new THREE.Quaternion();
     const current = new THREE.Quaternion();
     for (const id of ids) {
-      const node = this.joints.get(id);
-      const rest = this.restTransforms.get(id);
+      const canonical = this.resolveJointId(id);
+      const node = canonical ? this.joints.get(canonical) : undefined;
+      const rest = canonical ? this.restTransforms.get(canonical) : undefined;
       if (!node || !rest) continue;
       inverseRest.fromArray(rest.quaternion).invert();
       current.copy(inverseRest).multiply(node.quaternion).normalize();

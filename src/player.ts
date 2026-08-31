@@ -942,22 +942,29 @@ export class Player {
   private spinEffects: SpinEffectsPresentation | null = null;
   private floorX!: THREE.Group; // landing X pinned to the floor under the skater
   private floorXMat!: THREE.MeshBasicMaterial; // shared by both bars — one opacity
-  private armR: THREE.Group | null = null; // shoulder pivots (fur arm + fishnet + glove inside)
-  private armL: THREE.Group | null = null;
-  private elbowR: THREE.Group | null = null; // forearm pivots inside each arm
-  private elbowL: THREE.Group | null = null;
-  private wristR: THREE.Group | null = null; // hand pivots + grip sockets
-  private wristL: THREE.Group | null = null;
-  private upperG: THREE.Group | null = null; // torso+head+arms: shoulder yaw
-  private spineG: THREE.Group | null = null; // waist-seated additive/keyframe pivot
-  private headM: THREE.Group | null = null; // head pivot: skull, muzzle, ears, hair, eyes
-  private legs: THREE.Group | null = null;
-  private legL: THREE.Group | null = null; // hip pivots (thigh + knee joint inside)
-  private legR: THREE.Group | null = null;
-  private kneeL: THREE.Group | null = null; // knee pivots (shin + shoe inside)
-  private kneeR: THREE.Group | null = null;
-  private ankleL: THREE.Group | null = null; // rigid foot pivots + contact sockets
-  private ankleR: THREE.Group | null = null;
+  private armR: THREE.Bone | null = null; // upper-arm bones (fur arm + fishnet + glove inside)
+  private armL: THREE.Bone | null = null;
+  private elbowR: THREE.Bone | null = null; // lower-arm bones inside each arm
+  private elbowL: THREE.Bone | null = null;
+  private wristR: THREE.Bone | null = null; // hand bones + grip sockets
+  private wristL: THREE.Bone | null = null;
+  private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
+  private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
+  private chestG: THREE.Bone | null = null;
+  private neckG: THREE.Bone | null = null;
+  private clavicleR: THREE.Bone | null = null;
+  private clavicleL: THREE.Bone | null = null;
+  private headM: THREE.Bone | null = null; // head bone: skull, muzzle, ears, hair, eyes
+  private legs: THREE.Bone | null = null;
+  private legL: THREE.Bone | null = null; // upper-leg bones
+  private legR: THREE.Bone | null = null;
+  private kneeL: THREE.Bone | null = null; // lower-leg bones
+  private kneeR: THREE.Bone | null = null;
+  private ankleL: THREE.Bone | null = null; // foot bones + contact sockets
+  private ankleR: THREE.Bone | null = null;
+  private toeL: THREE.Bone | null = null;
+  private toeR: THREE.Bone | null = null;
+  private humanoidSkeleton: THREE.Skeleton | null = null;
   // Kangaroo appendages — jointed for follow-through animation.
   // The tail is drawn in code and simulated (src/tail.ts): an installed model's
   // own tail polygons are discarded, because every one we have been handed is
@@ -979,6 +986,12 @@ export class Player {
   // leg-position formula plants the feet under the real hips
   private hipBaseR = { x: 0.115, z: 0 };
   private hipBaseL = { x: -0.115, z: 0 };
+  // Live bind lengths. Imported comparison bodies keep the same conventional
+  // joints, so ankle presence alone no longer identifies procedural anatomy.
+  private upperLegLengthR = PROCEDURAL_THIGH_LENGTH;
+  private upperLegLengthL = PROCEDURAL_THIGH_LENGTH;
+  private lowerLegLengthR = PROCEDURAL_SHIN_LENGTH;
+  private lowerLegLengthL = PROCEDURAL_SHIN_LENGTH;
   private ponyA: THREE.Group | null = null; // ponytail: scrunchie+puff, then the tip
   private ponyB: THREE.Group | null = null;
   private walkPhase = 0; // procedural run cycle
@@ -1115,6 +1128,7 @@ export class Player {
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
+    this.rebuildHumanoidSkeleton();
     this.playerAnimationBridge = new PlayerAnimationBridge(this.group, this.bodyGroup);
     // Keep imported characters as explicit comparison/debug routes. Normal
     // play stays on the procedural rider so its sculpt and animations can be
@@ -1522,6 +1536,57 @@ export class Player {
   /** Stable semantic rig data for Animation Studio and authored overlays. */
   get animationRig(): PlayerAnimationRig {
     return this.playerAnimationBridge.rig;
+  }
+
+  /** Conventional live humanoid skeleton shared by authoring and future skins. */
+  get humanoidSkeletonRef(): THREE.Skeleton | null {
+    return this.humanoidSkeleton;
+  }
+
+  /**
+   * Rebuild bind inverses only after every bone has a current world matrix.
+   * The body is still assembled from rigid meshes, but exposing one ordinary
+   * THREE.Skeleton lets a later SkinnedMesh bind to this exact live rig.
+   */
+  private rebuildHumanoidSkeleton(): void {
+    const boneNames = [
+      'hips',
+      'torso-root',
+      'spine',
+      'chest',
+      'neck',
+      'head',
+      'clavicle-left',
+      'shoulder-left',
+      'elbow-left',
+      'wrist-left',
+      'clavicle-right',
+      'shoulder-right',
+      'elbow-right',
+      'wrist-right',
+      'hip-left',
+      'knee-left',
+      'ankle-left',
+      'toe-left',
+      'hip-right',
+      'knee-right',
+      'ankle-right',
+      'toe-right',
+    ] as const;
+    const bones: THREE.Bone[] = [];
+    for (const name of boneNames) {
+      const node = this.bodyGroup.getObjectByName(name);
+      if ((node as THREE.Bone | undefined)?.isBone) bones.push(node as THREE.Bone);
+    }
+    if (bones.length !== boneNames.length) {
+      throw new Error(`humanoid rig resolved ${bones.length}/${boneNames.length} bones`);
+    }
+    this.bodyGroup.updateWorldMatrix(true, true);
+    this.humanoidSkeleton?.dispose();
+    this.humanoidSkeleton = new THREE.Skeleton(bones);
+    // THREE.Skeleton's constructor also initializes inverses, but this explicit
+    // pass documents and enforces the important ordering above.
+    this.humanoidSkeleton.calculateInverses();
   }
 
   get animationPreviewActive(): boolean {
@@ -11946,8 +12011,19 @@ export class Player {
       rg.position.set(0, 0, 0);
       return;
     }
-    const soleRootR = ankleR ?? kneeR;
-    const soleRootL = ankleL ?? kneeL;
+    // Comparison meshes keep conventional virtual ankle/toe bones even when
+    // their rigid imported foot polygons still live in the knee chunk. Pick
+    // the lowest joint that actually owns renderable geometry rather than
+    // deleting those useful distal bones to preserve the old fallback.
+    const hasMesh = (root: THREE.Object3D): boolean => {
+      let found = false;
+      root.traverse((node) => {
+        if ((node as THREE.Mesh).isMesh) found = true;
+      });
+      return found;
+    };
+    const soleRootR = ankleR && hasMesh(ankleR) ? ankleR : kneeR;
+    const soleRootL = ankleL && hasMesh(ankleL) ? ankleL : kneeL;
     if (!this.soleR || !this.soleL) {
       this.soleR = this.soleFootprint(soleRootR);
       this.soleL = this.soleFootprint(soleRootL);
@@ -12407,8 +12483,9 @@ export class Player {
     // Preserve the old pose system as an ENDPOINT INTENT, not a deformation:
     // this is the amount it used to squash the entire hierarchy. The
     // procedural legs convert that shortened virtual ankle target into a real
-    // fixed-length two-bone bend below; imported comparison rigs retain their
-    // legacy scale because their segment lengths are model-specific.
+    // fixed-length two-bone bend below. Imported comparison rigs publish their
+    // measured segment lengths into the same solve; the pelvis itself never
+    // scales, because it now owns the torso and tail as well as the legs.
     const legacyLegScale = Math.max(
       0.15,
       1 -
@@ -12422,6 +12499,7 @@ export class Player {
         0.28 * this.wallridePose -
         0.4 * this.wallChargePose,
     );
+    this.legs?.scale.set(1, 1, 1);
     // KNEE JOINTS — additive only, layered AFTER the hip channel writes
     // above (which stay untouched). Flex reads off the same pose channels:
     // surf crouch on the board (front knee deeper than back), charge load,
@@ -12449,38 +12527,52 @@ export class Player {
       this.legR.rotation.x -= straight * 0.5 * stanceR;
       this.legL.rotation.x -= straight * 0.5 * stanceL;
 
-      const proceduralLegs = !!(this.ankleR && this.ankleL);
-      if (proceduralLegs) {
+      if (this.ankleR && this.ankleL) {
         const articulate = (
-          leg: THREE.Group,
-          knee: THREE.Group,
+          leg: THREE.Object3D,
+          knee: THREE.Object3D,
+          upperLength: number,
+          lowerLength: number,
           out: SagittalLegPose,
         ): void => {
+          upperLength = Math.max(1e-4, upperLength);
+          lowerLength = Math.max(1e-4, lowerLength);
           const hipIntent = leg.rotation.x;
           const kneeIntent = THREE.MathUtils.clamp(knee.rotation.x, 0, Math.PI - 0.08);
           const lowerIntent = hipIntent + kneeIntent;
           const virtualDown =
             legacyLegScale *
-            (PROCEDURAL_THIGH_LENGTH * Math.cos(hipIntent) +
-              PROCEDURAL_SHIN_LENGTH * Math.cos(lowerIntent));
+            (upperLength * Math.cos(hipIntent) +
+              lowerLength * Math.cos(lowerIntent));
           const virtualForward =
-            -PROCEDURAL_THIGH_LENGTH * Math.sin(hipIntent) -
-            PROCEDURAL_SHIN_LENGTH * Math.sin(lowerIntent);
+            -upperLength * Math.sin(hipIntent) -
+            lowerLength * Math.sin(lowerIntent);
           const solved = solveSagittalLegTarget(
             virtualDown,
             virtualForward,
             0,
-            PROCEDURAL_THIGH_LENGTH,
-            PROCEDURAL_SHIN_LENGTH,
+            upperLength,
+            lowerLength,
             out,
           );
           leg.rotation.x = solved.hipPitch;
           knee.rotation.x = solved.kneeFlex;
         };
-        articulate(this.legR, this.kneeR, LEG_SOLVE_R);
-        articulate(this.legL, this.kneeL, LEG_SOLVE_L);
+        articulate(
+          this.legR,
+          this.kneeR,
+          this.upperLegLengthR,
+          this.lowerLegLengthR,
+          LEG_SOLVE_R,
+        );
+        articulate(
+          this.legL,
+          this.kneeL,
+          this.upperLegLengthL,
+          this.lowerLegLengthL,
+          LEG_SOLVE_L,
+        );
       }
-      if (this.legs) this.legs.scale.y = proceduralLegs ? 1 : legacyLegScale;
 
       // The hip sockets stay in the pelvis while a small mirrored splay places
       // each knee over its foot in the side-on skate stance.
@@ -12504,6 +12596,12 @@ export class Player {
       0,
       1,
     );
+    // Legacy pose owns a neutral foot/toe baseline every frame. Authored clips
+    // and procedural overlays still run afterward and can articulate either.
+    this.ankleR?.rotation.set(0, 0, 0);
+    this.ankleL?.rotation.set(0, 0, 0);
+    this.toeR?.rotation.set(0, 0, 0);
+    this.toeL?.rotation.set(0, 0, 0);
     if (this.ankleR && this.legR && this.kneeR) {
       this.ankleR.rotation.set(
         -(this.legR.rotation.x + this.kneeR.rotation.x) * footPlant,
@@ -13511,6 +13609,8 @@ export class Player {
       const b = boneW[nm];
       return mapP(b.x, b.y, b.z);
     };
+    const mapOptionalBone = (nm: string, fallback: THREE.Vector3): THREE.Vector3 =>
+      boneW[nm] ? mapB(nm) : fallback.clone();
     const DOWN = new THREE.Vector3(0, -1, 0);
     const qDown = (from: THREE.Vector3, to: THREE.Vector3): THREE.Quaternion =>
       new THREE.Quaternion().setFromUnitVectors(to.clone().sub(from).normalize(), DOWN);
@@ -13522,11 +13622,24 @@ export class Player {
       R: { sh: mapB('LeftArm'), el: mapB('LeftForeArm'), wr: mapB('LeftHand') },
       L: { sh: mapB('RightArm'), el: mapB('RightForeArm'), wr: mapB('RightHand') },
     };
+    const footR = mapB('LeftFoot');
+    const footL = mapB('RightFoot');
     const leg = {
-      R: { hip: mapB('LeftUpLeg'), knee: mapB('LeftLeg'), foot: mapB('LeftFoot') },
-      L: { hip: mapB('RightUpLeg'), knee: mapB('RightLeg'), foot: mapB('RightFoot') },
+      R: {
+        hip: mapB('LeftUpLeg'),
+        knee: mapB('LeftLeg'),
+        foot: footR,
+        toe: mapOptionalBone('LeftToeBase', footR.clone().add(new THREE.Vector3(0, 0, 0.12))),
+      },
+      L: {
+        hip: mapB('RightUpLeg'),
+        knee: mapB('RightLeg'),
+        foot: footL,
+        toe: mapOptionalBone('RightToeBase', footL.clone().add(new THREE.Vector3(0, 0, 0.12))),
+      },
     };
     const jNeck = mapB('neck');
+    const jHead = mapOptionalBone('Head', jNeck.clone().add(new THREE.Vector3(0, 0.1, 0)));
     const hipY = (leg.R.hip.y + leg.L.hip.y) / 2;
 
     // dominant bone per vertex → part key
@@ -13645,21 +13758,46 @@ export class Player {
       if (!grp) return;
       for (const c of [...grp.children]) if ((c as THREE.Mesh).isMesh) grp.remove(c);
     };
-    if (!this.headM || !this.armR || !this.armL || !this.spineG || !this.legs || !this.legR || !this.legL || !this.kneeR || !this.kneeL) return;
+    const stripTree = (grp: THREE.Object3D): void => {
+      const meshes: THREE.Object3D[] = [];
+      grp.traverse((child) => {
+        if (child !== grp && (child as THREE.Mesh).isMesh) meshes.push(child);
+      });
+      for (const meshChild of meshes) meshChild.removeFromParent();
+    };
+    if (
+      !this.headM || !this.neckG || !this.chestG || !this.armR || !this.armL ||
+      !this.clavicleR || !this.clavicleL || !this.elbowR || !this.elbowL ||
+      !this.wristR || !this.wristL || !this.spineG || !this.upperG || !this.legs ||
+      !this.legR || !this.legL || !this.kneeR || !this.kneeL ||
+      !this.ankleR || !this.ankleL || !this.toeR || !this.toeL
+    ) return;
 
-    // HEAD — pivot at the neck (look-at hinges at the seam); the fox ears +
-    // hair tuft ride along.
-    for (const c of [...this.headM.children]) this.headM.remove(c);
-    this.ponyA = null;
-    this.ponyB = null;
-    this.headM.position.copy(jNeck);
-    this.headM.position.y -= PROCEDURAL_SPINE_Y;
-    this.headM.add(build(bucket.head, jNeck));
+    // Re-seat the pelvis while keeping the conventional spine's authored
+    // rider-space stations unchanged. The torso control remains at the hips;
+    // only its lower-spine offset changes with a comparison model's hip line.
+    this.legs.position.set(0, hipY, 0);
+    this.upperG.position.set(0, 0, 0);
+    this.spineG.position.set(0, PROCEDURAL_SPINE_Y - hipY, 0);
+    if (this.tail) this.tail.root.position.y = 0.65 - hipY;
 
-    // TORSO — pivot at origin, absolute rig positions (upperG sits at 0).
-    strip(this.spineG); // procedural torso meshes; keep head/shoulder joint groups
+    // HEAD — retain the live neck/head bones and semantic secondary nodes,
+    // replacing only their renderables. Source Head supplies a conventional
+    // head station above the source neck rather than collapsing both pivots.
+    stripTree(this.headM);
+    this.neckG.position.copy(jNeck).sub(
+      new THREE.Vector3(0, PROCEDURAL_SPINE_Y + this.chestG.position.y, 0),
+    );
+    this.headM.position.copy(jHead).sub(jNeck);
+    this.headM.add(build(bucket.head, jHead));
+
+    // TORSO — upperG now sits at hipY, so subtract that pivot from the
+    // absolute imported vertices. Lower-spine/chest bones remain available
+    // even though this debug replacement uses one rigid torso chunk.
+    strip(this.spineG);
+    strip(this.chestG);
     strip(this.upperG);
-    this.upperG!.add(build(bucket.torso, new THREE.Vector3(0, 0, 0)));
+    this.upperG.add(build(bucket.torso, new THREE.Vector3(0, hipY, 0)));
 
     // ARMS — shoulder group at the arm bone, forearm rotated straight down
     // from the elbow. armR/L position is NOT overwritten by syncVisual, so it
@@ -13667,45 +13805,59 @@ export class Player {
     for (const s of ['R', 'L'] as const) {
       const a = arm[s];
       const armG = s === 'R' ? this.armR! : this.armL!;
-      const elG = s === 'R' ? (this.elbowR = new THREE.Group()) : (this.elbowL = new THREE.Group());
-      for (const c of [...armG.children]) armG.remove(c);
-      armG.position.copy(a.sh);
-      armG.position.y -= PROCEDURAL_SPINE_Y;
+      const clavicleG = s === 'R' ? this.clavicleR! : this.clavicleL!;
+      const elG = s === 'R' ? this.elbowR! : this.elbowL!;
+      const wristG = s === 'R' ? this.wristR! : this.wristL!;
+      strip(armG);
+      strip(elG);
+      strip(wristG);
+      const clavicleWorld = new THREE.Vector3(
+        clavicleG.position.x,
+        PROCEDURAL_SPINE_Y + this.chestG.position.y + clavicleG.position.y,
+        clavicleG.position.z,
+      );
+      armG.position.copy(a.sh).sub(clavicleWorld);
       armG.userData.lean = 0.1;
       armG.add(build(bucket[s === 'R' ? 'upperArmR' : 'upperArmL'], a.sh, qDown(a.sh, a.el)));
       elG.position.set(0, -a.el.distanceTo(a.sh), 0);
-      armG.add(elG);
       elG.add(build(bucket[s === 'R' ? 'foreArmR' : 'foreArmL'], a.el, qDown(a.el, a.wr)));
+      wristG.position.set(0, -a.wr.distanceTo(a.el), 0);
     }
-    // Imported chunks currently combine wrist/hand into the forearm. Clear
-    // procedural distal-joint refs so later pose code cannot target a detached
-    // wrist group left behind by the live swap.
-    this.wristR = null;
-    this.wristL = null;
 
     // PELVIS — pivot at (0, hipY, 0) so the chunk renders at true position
     // when added to the legs group (which sits at that hip line).
     strip(this.legs);
-    this.legs.position.set(0, hipY, 0);
     this.legs.add(build(bucket.pelvis, new THREE.Vector3(0, hipY, 0)));
 
     // LEGS — hip-base fields feed syncVisual's leg-position formula so the
     // feet plant under the ACTUAL hips (wider than the placeholder's 0.115).
     this.hipBaseR = { x: leg.R.hip.x, z: leg.R.hip.z };
     this.hipBaseL = { x: leg.L.hip.x, z: leg.L.hip.z };
-    this.ankleR?.removeFromParent();
-    this.ankleL?.removeFromParent();
-    this.ankleR = null;
-    this.ankleL = null;
     for (const s of ['R', 'L'] as const) {
       const l = leg[s];
       const legG = s === 'R' ? this.legR! : this.legL!;
       const kneeG = s === 'R' ? this.kneeR! : this.kneeL!;
+      const ankleG = s === 'R' ? this.ankleR! : this.ankleL!;
+      const toeG = s === 'R' ? this.toeR! : this.toeL!;
       strip(legG);
       strip(kneeG);
+      strip(ankleG);
+      legG.position.set(l.hip.x, 0, l.hip.z);
       legG.add(build(bucket[s === 'R' ? 'thighR' : 'thighL'], l.hip, qDown(l.hip, l.knee)));
-      kneeG.position.set(0, -l.knee.distanceTo(l.hip), 0);
-      kneeG.add(build(bucket[s === 'R' ? 'shinR' : 'shinL'], l.knee, qDown(l.knee, l.foot)));
+      const upperLength = l.knee.distanceTo(l.hip);
+      const lowerLength = l.foot.distanceTo(l.knee);
+      kneeG.position.set(0, -upperLength, 0);
+      const lowerToDown = qDown(l.knee, l.foot);
+      kneeG.add(build(bucket[s === 'R' ? 'shinR' : 'shinL'], l.knee, lowerToDown));
+      ankleG.position.set(0, -lowerLength, 0);
+      toeG.position.copy(l.toe).sub(l.foot).applyQuaternion(lowerToDown);
+      if (s === 'R') {
+        this.upperLegLengthR = upperLength;
+        this.lowerLegLengthR = lowerLength;
+      } else {
+        this.upperLegLengthL = upperLength;
+        this.lowerLegLengthL = lowerLength;
+      }
     }
     // new feet: the cached sole footprint belonged to the previous rig
     this.soleR = null;
@@ -13721,6 +13873,7 @@ export class Player {
     ghost.visible = false;
     ghost.userData.discarded = true;
     this.legs.add(ghost);
+    this.rebuildHumanoidSkeleton();
   }
 
   /**
@@ -13965,7 +14118,7 @@ export class Player {
       }
       return n > 0 ? c.multiplyScalar(1 / n) : new THREE.Vector3(side * fallback, 0.145, 0.076);
     };
-    const armJ: Record<string, { sh: THREE.Vector3; el: THREE.Vector3; qUp: THREE.Quaternion; qFo: THREE.Quaternion; elLen: number }> = {};
+    const armJ: Record<string, { sh: THREE.Vector3; el: THREE.Vector3; qUp: THREE.Quaternion; qFo: THREE.Quaternion; elLen: number; wrLen: number }> = {};
     for (const side of [-1, 1] as const) {
       const shM = station(side, 0.105, 0.16, 0.13);
       shM.x = side * 0.112; // pivot AT the armpit crease: the whole arm hangs below its hinge
@@ -13978,6 +14131,7 @@ export class Player {
         qUp: new THREE.Quaternion().setFromUnitVectors(el.clone().sub(sh).normalize(), DOWN),
         qFo: new THREE.Quaternion().setFromUnitVectors(wr.clone().sub(el).normalize(), DOWN),
         elLen: el.distanceTo(sh),
+        wrLen: wr.distanceTo(el),
       };
     }
     interface Part {
@@ -14078,63 +14232,95 @@ export class Player {
         if ((child as THREE.Mesh).isMesh) grp.remove(child);
       }
     };
-    if (!this.headM || !this.armR || !this.armL || !this.spineG || !this.legs) return;
-    // head: everything goes (ears/hair/pony groups included) — the chunk has
-    // it all, and the pivot drops to the NECK so look-at pitches and crouches
-    // hinge at the seam instead of arcing the head off the body
-    for (const child of [...this.headM.children]) this.headM.remove(child);
-    this.ponyA = null; // the authored pony is part of the head chunk now
-    this.ponyB = null;
-    this.headM.position.y = parts.head.pivot[1] - PROCEDURAL_SPINE_Y;
+    const stripMeshTree = (grp: THREE.Object3D): void => {
+      const meshes: THREE.Object3D[] = [];
+      grp.traverse((child) => {
+        if (child !== grp && (child as THREE.Mesh).isMesh) meshes.push(child);
+      });
+      for (const meshChild of meshes) meshChild.removeFromParent();
+    };
+    if (
+      !this.headM || !this.neckG || !this.chestG || !this.armR || !this.armL ||
+      !this.clavicleR || !this.clavicleL || !this.elbowR || !this.elbowL ||
+      !this.wristR || !this.wristL || !this.spineG || !this.upperG || !this.legs ||
+      !this.legR || !this.legL || !this.kneeR || !this.kneeL ||
+      !this.ankleR || !this.ankleL || !this.toeR || !this.toeL
+    ) return;
+
+    this.legs.position.y = HIP;
+    this.upperG.position.set(0, 0, 0);
+    this.spineG.position.set(0, PROCEDURAL_SPINE_Y - HIP, 0);
+    if (this.tail) this.tail.root.position.y = 0.65 - HIP;
+
+    // Keep every semantic helper node live; only the procedural head meshes
+    // disappear under this explicit debug replacement.
+    stripMeshTree(this.headM);
+    const importedNeckY = parts.head.pivot[1] - 0.08;
+    this.neckG.position.set(
+      0,
+      importedNeckY - (PROCEDURAL_SPINE_Y + this.chestG.position.y),
+      0,
+    );
+    this.headM.position.set(0, parts.head.pivot[1] - importedNeckY, 0);
     this.headM.add(build(parts.head));
     // arms: shoulder pivot at the arm root, elbow joint mid-tube, and a
     // relaxed hang (userData.lean) instead of the placeholder's A-frame
-    for (const child of [...this.armR.children]) this.armR.remove(child);
-    for (const child of [...this.armL.children]) this.armL.remove(child);
-    this.armR.position.copy(armJ.R.sh);
-    this.armL.position.copy(armJ.L.sh);
-    this.armR.position.y -= PROCEDURAL_SPINE_Y;
-    this.armL.position.y -= PROCEDURAL_SPINE_Y;
-    this.armR.userData.lean = 0.1;
-    this.armL.userData.lean = 0.1;
-    this.armR.add(build(parts.upperArmR));
-    this.armL.add(build(parts.upperArmL));
-    this.elbowR = new THREE.Group();
-    this.elbowL = new THREE.Group();
-    this.wristR = null;
-    this.wristL = null;
-    // the upper arm's axis was rotated exactly onto -Y, so the elbow sits
-    // straight below the shoulder at the measured arm length
-    this.elbowR.position.set(0, -armJ.R.elLen, 0);
-    this.elbowL.position.set(0, -armJ.L.elLen, 0);
-    this.armR.add(this.elbowR);
-    this.armL.add(this.elbowL);
-    this.elbowR.add(build(parts.foreArmR));
-    this.elbowL.add(build(parts.foreArmL));
-    stripMeshes(this.spineG); // procedural torso meshes; keep arm + head groups
+    for (const s of ['R', 'L'] as const) {
+      const joints = armJ[s];
+      const armG = s === 'R' ? this.armR : this.armL;
+      const clavicleG = s === 'R' ? this.clavicleR : this.clavicleL;
+      const elbowG = s === 'R' ? this.elbowR : this.elbowL;
+      const wristG = s === 'R' ? this.wristR : this.wristL;
+      stripMeshes(armG);
+      stripMeshes(elbowG);
+      stripMeshes(wristG);
+      const clavicleWorld = new THREE.Vector3(
+        clavicleG.position.x,
+        PROCEDURAL_SPINE_Y + this.chestG.position.y + clavicleG.position.y,
+        clavicleG.position.z,
+      );
+      armG.position.copy(joints.sh).sub(clavicleWorld);
+      armG.userData.lean = 0.1;
+      armG.add(build(parts[s === 'R' ? 'upperArmR' : 'upperArmL']));
+      elbowG.position.set(0, -joints.elLen, 0);
+      elbowG.add(build(parts[s === 'R' ? 'foreArmR' : 'foreArmL']));
+      wristG.position.set(0, -joints.wrLen, 0);
+    }
+    stripMeshes(this.spineG);
+    stripMeshes(this.chestG);
     stripMeshes(this.upperG);
-    this.upperG!.add(build(parts.torso));
+    this.upperG.add(build({ ...parts.torso, pivot: [0, HIP, 0] }));
     stripMeshes(this.legs); // pelvis/belt/chain (leg groups stay)
-    this.legs.position.y = HIP; // re-seat the leg skeleton on the scaled anatomy
     this.legs.add(build(parts.pelvis));
     stripMeshes(this.legR);
     stripMeshes(this.legL);
     this.legR!.add(build(parts.thighR));
     this.legL!.add(build(parts.thighL));
-    this.ankleR?.removeFromParent();
-    this.ankleL?.removeFromParent();
-    this.ankleR = null;
-    this.ankleL = null;
     stripMeshes(this.kneeR);
     stripMeshes(this.kneeL);
+    stripMeshes(this.ankleR);
+    stripMeshes(this.ankleL);
     this.kneeR!.position.y = KNEE - HIP;
     this.kneeL!.position.y = KNEE - HIP;
     this.kneeR!.add(build(parts.shinR));
     this.kneeL!.add(build(parts.shinL));
+    // The static source has no bone evidence for the distal stations. Keep
+    // explicit virtual foot/toe bones at reasonable anatomical points.
+    const importedUpperLegLength = HIP - KNEE;
+    const importedLowerLegLength = KNEE - 0.07;
+    this.upperLegLengthR = importedUpperLegLength;
+    this.upperLegLengthL = importedUpperLegLength;
+    this.lowerLegLengthR = importedLowerLegLength;
+    this.lowerLegLengthL = importedLowerLegLength;
+    this.ankleR.position.set(0, -importedLowerLegLength, 0);
+    this.ankleL.position.set(0, -importedLowerLegLength, 0);
+    this.toeR.position.set(0, -0.04, 0.14);
+    this.toeL.position.set(0, -0.04, 0.14);
     // new feet: the cached sole footprint belonged to the placeholder's shoes
     this.soleR = null;
     this.soleL = null;
     // tail: the model's own is discarded, the drawn one stands in
+    this.rebuildHumanoidSkeleton();
   }
 
   private buildVisual(): THREE.Group {
@@ -14163,10 +14349,10 @@ export class Player {
     g.add(riderG);
     this.riderG = riderG;
 
-    // ——— The rider: a Crash-era kangaroo girl. Same skeleton as ever —
-    // hip pivots at ±0.115 under legs@0.71, knees at −0.26, shoulders at
-    // (±0.33, 1.22), hands at −0.48, head pivot at 1.42 — syncVisual owns
-    // every joint, so only the flesh changed. Flat-shaded solid materials
+    // ——— The rider: a Crash-era kangaroo girl on a conventional humanoid rig.
+    // Hip pivots sit at ±0.115 under hips@0.71, with pelvis-rooted spine,
+    // clavicle/arm chains, neck/head, foot/toe chains, and stable sockets.
+    // Flat-shaded solid materials
     // give the PS2 facet look; canvases only where cloth needs a print.
     const flat = (color: number): THREE.MeshLambertMaterial =>
       new THREE.MeshLambertMaterial({ color, flatShading: true });
@@ -14188,7 +14374,7 @@ export class Player {
 
     // Legs: hip, knee, and ankle pivots. The foot is a rigid child of the
     // ankle, so future clips can plant and roll it without breaking the shin.
-    const legs = new THREE.Group();
+    const legs = new THREE.Bone();
     legs.name = 'hips';
     legs.position.y = 0.71; // hip line
     // Pelvis: the shorts' seat, riding the legs root (top of the leg squash,
@@ -14245,7 +14431,7 @@ export class Player {
       // Rider-local forward is +Z, so +X is her anatomical left. The outer
       // Player group turns the finished rig toward world -Z at spawn.
       const anatomicalSide = side === 1 ? 'left' : 'right';
-      const leg = new THREE.Group(); // hip pivot — syncVisual writes rot + pos
+      const leg = new THREE.Bone(); // upper-leg bone — syncVisual writes rot + pos
       leg.name = `hip-${anatomicalSide}`;
       leg.userData.anatomicalSide = anatomicalSide;
       leg.position.x = side * 0.115;
@@ -14259,7 +14445,7 @@ export class Player {
       leg.add(flap);
       // Knee group pivots where the thigh ends; the lower leg keeps its full
       // length through every pose and swings conventionally from this hinge.
-      const knee = new THREE.Group();
+      const knee = new THREE.Bone();
       knee.name = `knee-${anatomicalSide}`;
       knee.userData.anatomicalSide = anatomicalSide;
       knee.position.y = -PROCEDURAL_THIGH_LENGTH;
@@ -14288,7 +14474,7 @@ export class Player {
       // Ankle at the shoe collar. All child coordinates are the former
       // knee-local values rebased around this pivot, so the rest silhouette is
       // byte-for-byte equivalent while the foot gains an animation joint.
-      const ankle = new THREE.Group();
+      const ankle = new THREE.Bone();
       ankle.name = `ankle-${anatomicalSide}`;
       ankle.userData.anatomicalSide = anatomicalSide;
       ankle.position.y = -PROCEDURAL_SHIN_LENGTH;
@@ -14321,19 +14507,29 @@ export class Player {
       heelSocket.position.set(0, -0.05, -0.07);
       heelSocket.userData.contactNormal = [0, 1, 0];
       ankle.add(heelSocket);
+      // A real toe bone finishes the conventional leg chain. The rigid shoe
+      // remains on the foot/ankle bone, so adding articulation is silhouette
+      // neutral until a clip deliberately rolls the toes.
+      const toe = new THREE.Bone();
+      toe.name = `toe-${anatomicalSide}`;
+      toe.userData.anatomicalSide = anatomicalSide;
+      toe.position.set(0, -0.05, 0.16);
+      ankle.add(toe);
       const toeSocket = new THREE.Object3D();
       toeSocket.name = `socket-toe-${anatomicalSide}`;
-      toeSocket.position.set(0, -0.05, 0.2);
+      toeSocket.position.set(0, 0, 0.04);
       toeSocket.userData.contactNormal = [0, 1, 0];
-      ankle.add(toeSocket);
+      toe.add(toeSocket);
       if (side === 1) {
         this.legR = leg;
         this.kneeR = knee;
         this.ankleR = ankle;
+        this.toeR = toe;
       } else {
         this.legL = leg;
         this.kneeL = knee;
         this.ankleL = ankle;
+        this.toeL = toe;
       }
     }
     riderG.add(legs);
@@ -14342,7 +14538,7 @@ export class Player {
     // Tail: the kangaroo signature. ONE skinned tube on a simulated chain
     // (src/tail.ts) — it chases the pose the animation asks for, but arrives
     // late, under gravity, and stops short of her own body. Parented to the
-    // body root (NOT the legs group) so articulated leg poses never drag it.
+    // pelvis bone (NOT either upper leg) so leg articulation never drags it.
     const tail = new Tail();
     tail.root.name = 'tail-root';
     // Attach point placed by hand in the studio. It sits FORWARD of the hip
@@ -14350,8 +14546,9 @@ export class Player {
     // where the tube actually starts, so it has to be under the skin on its
     // own — which it is, and the neck pinch (see restRadius) makes the opening
     // small enough that nothing shows through from any angle.
-    tail.root.position.set(0, 0.65, 0.075);
-    riderG.add(tail.root);
+    // Rebased from rider-local y=0.65 after moving the branch under hips@0.71.
+    tail.root.position.set(0, -0.06, 0.075);
+    legs.add(tail.root);
     this.tail = tail;
 
     // Crop tank: ONE wrapped canvas on a lathe — phiStart 1.5π puts u=0.25
@@ -14385,17 +14582,26 @@ export class Player {
     ];
     const tank = new THREE.Mesh(new THREE.LatheGeometry(tankProfile, 12, Math.PI * 1.5, Math.PI * 2), tankM);
     tank.scale.z = 0.72; // chest oval, not a tube
-    // Upper body rides in its own group so the shoulders can open side-on
-    // (skate stance) and counter-swing against the run without dragging the
-    // hips, legs, or board around with them.
-    const upper = new THREE.Group();
+    // The conventional torso starts at the pelvis. Child offsets are rebased
+    // from the old rider-space positions, so the neutral rendered silhouette
+    // is unchanged while bends now pivot from an anatomical waist.
+    const upper = new THREE.Bone();
     upper.name = 'torso-root';
-    const spine = new THREE.Group();
+    upper.position.y = 0;
+    const spine = new THREE.Bone();
     spine.name = 'spine';
-    spine.position.y = PROCEDURAL_SPINE_Y;
+    spine.position.y = PROCEDURAL_SPINE_Y - legs.position.y;
     upper.add(spine);
-    tank.position.y = 1.06 - PROCEDURAL_SPINE_Y;
-    spine.add(tank);
+    const CHEST_Y = 1.06;
+    const NECK_Y = 1.325;
+    const HEAD_Y = 1.42;
+    const CLAVICLE_Y = 1.22;
+    const chest = new THREE.Bone();
+    chest.name = 'chest';
+    chest.position.y = CHEST_Y - PROCEDURAL_SPINE_Y;
+    spine.add(chest);
+    tank.position.y = 0;
+    chest.add(tank);
     // bare midriff: slim fur waist between shorts and hem
     const waistProfile = [
       new THREE.Vector2(0.128, -0.05),
@@ -14407,25 +14613,31 @@ export class Player {
     waist.scale.z = 0.8;
     waist.position.y = 0.85 - PROCEDURAL_SPINE_Y;
     spine.add(waist);
-    // neck + thin necklace with a little pendant
-    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), FUR);
-    neck.position.y = 1.325 - PROCEDURAL_SPINE_Y;
-    spine.add(neck);
+    // Neck flesh remains a chest renderable so torso length deformation can
+    // stretch it without ever non-uniformly scaling the neck/head bones.
+    const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), FUR);
+    neckMesh.position.y = NECK_Y - CHEST_Y;
+    chest.add(neckMesh);
     const necklace = new THREE.Mesh(new THREE.TorusGeometry(0.072, 0.007, 5, 12), SILVER);
     necklace.rotation.x = 1.45; // lies nearly flat, dipping toward the chest
-    necklace.position.y = 1.3 - PROCEDURAL_SPINE_Y;
-    spine.add(necklace);
+    necklace.position.y = 1.3 - CHEST_Y;
+    chest.add(necklace);
     const pendant = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 5), SILVER);
-    pendant.position.set(0, 1.272 - PROCEDURAL_SPINE_Y, 0.068);
-    spine.add(pendant);
+    pendant.position.set(0, 1.272 - CHEST_Y, 0.068);
+    chest.add(pendant);
 
-    // Head: a GROUP pivot at 1.42 (syncVisual pitches/yaws it for the
+    const neck = new THREE.Bone();
+    neck.name = 'neck';
+    neck.position.y = NECK_Y - CHEST_Y;
+    chest.add(neck);
+
+    // Head: a bone pivot at 1.42 (syncVisual pitches/yaws it for the
     // horizon look-at) carrying the whole kangaroo face — skull, muzzle,
     // geometric eyes, tall ears, blonde bangs, and the jointed ponytail.
-    const head = new THREE.Group();
+    const head = new THREE.Bone();
     head.name = 'head';
-    head.position.y = 1.42 - PROCEDURAL_SPINE_Y;
-    spine.add(head);
+    head.position.y = HEAD_Y - NECK_Y;
+    neck.add(head);
     this.headM = head;
     const lookSocket = new THREE.Object3D();
     lookSocket.name = 'socket-look';
@@ -14551,9 +14763,9 @@ export class Player {
     this.ponyA = ponyA;
     this.ponyB = ponyB;
 
-    // Arms: shoulder → elbow → wrist hierarchy, with a named grip socket below
-    // each hand. Every child is rebased from the former shoulder-local values,
-    // preserving the exact rest silhouette while making the whole chain poseable.
+    // Arms: clavicle → upper arm → lower arm → hand, with a named grip socket
+    // below each hand. The arm geometry still hangs down in the bind pose; a
+    // separate canonical T-pose is published below for retargeting.
     const netM = lam(this.paintTex(64, (ctx) => {
       ctx.fillStyle = '#f08a2a'; // fur shows through the net
       ctx.fillRect(0, 0, 64, 64);
@@ -14580,16 +14792,21 @@ export class Player {
       // Rider-local forward is +Z, so +X is her anatomical left. The outer
       // Player group turns the finished rig toward world -Z at spawn.
       const anatomicalSide = side === 1 ? 'left' : 'right';
-      const arm = new THREE.Group();
+      const clavicle = new THREE.Bone();
+      clavicle.name = `clavicle-${anatomicalSide}`;
+      clavicle.userData.anatomicalSide = anatomicalSide;
+      clavicle.position.set(side * 0.1, CLAVICLE_Y - CHEST_Y, 0);
+      chest.add(clavicle);
+      const arm = new THREE.Bone();
       arm.name = `shoulder-${anatomicalSide}`;
       arm.userData.anatomicalSide = anatomicalSide;
-      arm.position.set(side * 0.3, 1.22 - PROCEDURAL_SPINE_Y, 0); // snug to the tank's shoulder line
-      spine.add(arm);
+      arm.position.set(side * 0.2, 0, 0); // world rest remains (±0.3, 1.22, 0)
+      clavicle.add(arm);
       const shoulder = new THREE.Mesh(shoulderGeo, FUR);
       shoulder.position.set(-side * 0.015, -0.005, 0);
       arm.add(shoulder);
       arm.add(new THREE.Mesh(upperArmGeo, FUR));
-      const elbowJoint = new THREE.Group();
+      const elbowJoint = new THREE.Bone();
       elbowJoint.name = `elbow-${anatomicalSide}`;
       elbowJoint.userData.anatomicalSide = anatomicalSide;
       elbowJoint.position.y = -0.22;
@@ -14598,7 +14815,7 @@ export class Player {
       elbowPad.scale.set(0.85, 1, 0.85);
       elbowJoint.add(elbowPad);
       elbowJoint.add(new THREE.Mesh(foreArmGeo, netM)); // fishnet sleeve
-      const wrist = new THREE.Group();
+      const wrist = new THREE.Bone();
       wrist.name = `wrist-${anatomicalSide}`;
       wrist.userData.anatomicalSide = anatomicalSide;
       wrist.position.y = -0.195;
@@ -14628,6 +14845,7 @@ export class Player {
           stud.position.set(Math.cos(a) * 0.058, 0, Math.sin(a) * 0.058);
           wrist.add(stud);
         }
+        this.clavicleR = clavicle;
         this.armR = arm;
         this.elbowR = elbowJoint;
         this.wristR = wrist;
@@ -14635,14 +14853,17 @@ export class Player {
         const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.013, 5, 10), PINK);
         cuff.rotation.x = Math.PI / 2;
         wrist.add(cuff);
+        this.clavicleL = clavicle;
         this.armL = arm;
         this.elbowL = elbowJoint;
         this.wristL = wrist;
       }
     }
-    riderG.add(upper);
+    legs.add(upper);
     this.upperG = upper;
     this.spineG = spine;
+    this.chestG = chest;
+    this.neckG = neck;
 
     // Serializable semantic lookup data: runtime code and future keyframe
     // tooling can resolve stable nodes with getObjectByName without keeping
@@ -14652,19 +14873,25 @@ export class Player {
       hips: legs.name,
       torsoRoot: upper.name,
       spine: spine.name,
+      chest: chest.name,
+      neck: neck.name,
       head: head.name,
+      clavicleLeft: 'clavicle-left',
       shoulderLeft: 'shoulder-left',
       elbowLeft: 'elbow-left',
       wristLeft: 'wrist-left',
+      clavicleRight: 'clavicle-right',
       shoulderRight: 'shoulder-right',
       elbowRight: 'elbow-right',
       wristRight: 'wrist-right',
       hipLeft: 'hip-left',
       kneeLeft: 'knee-left',
       ankleLeft: 'ankle-left',
+      toeLeft: 'toe-left',
       hipRight: 'hip-right',
       kneeRight: 'knee-right',
       ankleRight: 'ankle-right',
+      toeRight: 'toe-right',
       earLeft: 'ear-left',
       earRight: 'ear-right',
       ponytailBase: ponyA.name,
@@ -14706,8 +14933,129 @@ export class Player {
         ];
       }),
     );
+    type PublishedLocalTransform = {
+      position: number[];
+      quaternion: number[];
+      scale: number[];
+    };
+    const bindPose: Record<string, PublishedLocalTransform> = Object.fromEntries(
+      Object.entries(jointNames).map(([semantic, name]) => {
+        const joint = g.getObjectByName(name)!;
+        return [semantic, {
+          position: joint.position.toArray(),
+          quaternion: joint.quaternion.toArray(),
+          scale: joint.scale.toArray(),
+        }];
+      }),
+    );
+    const retargetPose: Record<string, PublishedLocalTransform> = Object.fromEntries(
+      Object.entries(bindPose).map(([semantic, transform]) => [semantic, {
+        position: [...transform.position],
+        quaternion: [...transform.quaternion],
+        scale: [...transform.scale],
+      }]),
+    );
+    // The rendered bind stance stays arms-down. Retargeting gets a canonical
+    // T-pose without forcing the authored presentation to change its neutral
+    // silhouette: +X is anatomical left in this rig.
+    const SQRT_HALF = Math.SQRT1_2;
+    retargetPose.shoulderLeft.quaternion = [0, 0, SQRT_HALF, SQRT_HALF];
+    retargetPose.shoulderRight.quaternion = [0, 0, -SQRT_HALF, SQRT_HALF];
+
+    const jointRoles: Record<string, string> = {
+      root: 'root',
+      hips: 'hips',
+      torsoRoot: 'torsoRoot',
+      spine: 'spine',
+      chest: 'chest',
+      neck: 'neck',
+      head: 'head',
+      clavicleLeft: 'clavicleLeft',
+      shoulderLeft: 'upperArmLeft',
+      elbowLeft: 'lowerArmLeft',
+      wristLeft: 'handLeft',
+      clavicleRight: 'clavicleRight',
+      shoulderRight: 'upperArmRight',
+      elbowRight: 'lowerArmRight',
+      wristRight: 'handRight',
+      hipLeft: 'upperLegLeft',
+      kneeLeft: 'lowerLegLeft',
+      ankleLeft: 'footLeft',
+      toeLeft: 'toesLeft',
+      hipRight: 'upperLegRight',
+      kneeRight: 'lowerLegRight',
+      ankleRight: 'footRight',
+      toeRight: 'toesRight',
+      earLeft: 'earLeft',
+      earRight: 'earRight',
+      ponytailBase: 'hairRoot',
+      ponytailTip: 'hairTip',
+      tail: 'tailRoot',
+    };
+    const boneJointIds = new Set([
+      'hips', 'torsoRoot', 'spine', 'chest', 'neck', 'head',
+      'clavicleLeft', 'shoulderLeft', 'elbowLeft', 'wristLeft',
+      'clavicleRight', 'shoulderRight', 'elbowRight', 'wristRight',
+      'hipLeft', 'kneeLeft', 'ankleLeft', 'toeLeft',
+      'hipRight', 'kneeRight', 'ankleRight', 'toeRight',
+    ]);
+    const jointTypes: Record<string, string> = Object.fromEntries(
+      Object.keys(jointNames).map((id) => [
+        id,
+        id === 'root' ? 'motion-root' : boneJointIds.has(id) ? 'bone' : 'secondary',
+      ]),
+    );
+    const jointAliases: Record<string, string[]> = {
+      root: ['motionRoot', 'Root'],
+      hips: ['pelvis', 'Hips', 'mixamorigHips'],
+      torsoRoot: ['bodyRoot', 'waistControl'],
+      spine: ['lowerSpine', 'Spine', 'mixamorigSpine'],
+      chest: ['upperChest', 'Chest', 'Spine02', 'mixamorigSpine2'],
+      neck: ['Neck', 'mixamorigNeck'],
+      head: ['Head', 'mixamorigHead'],
+      clavicleLeft: ['leftClavicle', 'LeftShoulder', 'mixamorigLeftShoulder'],
+      shoulderLeft: ['upperArmLeft', 'leftUpperArm', 'LeftArm', 'mixamorigLeftArm'],
+      elbowLeft: ['lowerArmLeft', 'leftLowerArm', 'LeftForeArm', 'mixamorigLeftForeArm'],
+      wristLeft: ['handLeft', 'leftHand', 'LeftHand', 'mixamorigLeftHand'],
+      clavicleRight: ['rightClavicle', 'RightShoulder', 'mixamorigRightShoulder'],
+      shoulderRight: ['upperArmRight', 'rightUpperArm', 'RightArm', 'mixamorigRightArm'],
+      elbowRight: ['lowerArmRight', 'rightLowerArm', 'RightForeArm', 'mixamorigRightForeArm'],
+      wristRight: ['handRight', 'rightHand', 'RightHand', 'mixamorigRightHand'],
+      hipLeft: ['upperLegLeft', 'leftUpperLeg', 'LeftUpLeg', 'mixamorigLeftUpLeg'],
+      kneeLeft: ['lowerLegLeft', 'leftLowerLeg', 'LeftLeg', 'mixamorigLeftLeg'],
+      ankleLeft: ['footLeft', 'leftFoot', 'LeftFoot', 'mixamorigLeftFoot'],
+      toeLeft: ['toesLeft', 'leftToes', 'LeftToeBase', 'mixamorigLeftToeBase'],
+      hipRight: ['upperLegRight', 'rightUpperLeg', 'RightUpLeg', 'mixamorigRightUpLeg'],
+      kneeRight: ['lowerLegRight', 'rightLowerLeg', 'RightLeg', 'mixamorigRightLeg'],
+      ankleRight: ['footRight', 'rightFoot', 'RightFoot', 'mixamorigRightFoot'],
+      toeRight: ['toesRight', 'rightToes', 'RightToeBase', 'mixamorigRightToeBase'],
+    };
+    const humanoidMap: Record<string, string> = {
+      root: 'root',
+      hips: 'hips',
+      spine: 'spine',
+      chest: 'chest',
+      neck: 'neck',
+      head: 'head',
+      clavicleLeft: 'clavicleLeft',
+      upperArmLeft: 'shoulderLeft',
+      lowerArmLeft: 'elbowLeft',
+      handLeft: 'wristLeft',
+      upperLegLeft: 'hipLeft',
+      lowerLegLeft: 'kneeLeft',
+      footLeft: 'ankleLeft',
+      toesLeft: 'toeLeft',
+      clavicleRight: 'clavicleRight',
+      upperArmRight: 'shoulderRight',
+      lowerArmRight: 'elbowRight',
+      handRight: 'wristRight',
+      upperLegRight: 'hipRight',
+      lowerLegRight: 'kneeRight',
+      footRight: 'ankleRight',
+      toesRight: 'toeRight',
+    };
     g.userData.sculptRuntime = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       kind: 'procedural-character',
       rigId: 'player-procedural-v1',
       rigName: 'Procedural Rider',
@@ -14722,6 +15070,24 @@ export class Player {
         visualScale: [1.18, 1.36, 1.18],
       },
       sideConvention: 'anatomical left is +X in the rider-local +Z-forward frame',
+      jointRoles,
+      jointTypes,
+      jointAliases,
+      bindPose,
+      retargetPose,
+      humanoidMap,
+      humanoid: {
+        standard: 'conventional-humanoid',
+        semanticMap: humanoidMap,
+        roles: jointRoles,
+        types: jointTypes,
+        aliases: jointAliases,
+        bindPose,
+        canonicalTPose: retargetPose,
+        retargetPose,
+        boneIds: [...boneJointIds],
+        boneNames: [...boneJointIds].map((id) => jointNames[id as keyof typeof jointNames]),
+      },
       legRig: {
         solver: 'fixed-length-two-bone',
         thighLength: PROCEDURAL_THIGH_LENGTH,
@@ -14731,12 +15097,14 @@ export class Player {
       joints: jointNames,
       sockets: socketNames,
       mirrorPairs: [
+        ['clavicleLeft', 'clavicleRight'],
         ['shoulderLeft', 'shoulderRight'],
         ['elbowLeft', 'elbowRight'],
         ['wristLeft', 'wristRight'],
         ['hipLeft', 'hipRight'],
         ['kneeLeft', 'kneeRight'],
         ['ankleLeft', 'ankleRight'],
+        ['toeLeft', 'toeRight'],
         ['earLeft', 'earRight'],
       ],
       controls: {
@@ -14776,7 +15144,16 @@ export class Player {
         {
           controlId: 'deform.torso.length',
           jointId: 'spine',
-          downstreamJointIds: ['head', 'shoulderLeft', 'shoulderRight'],
+          downstreamJointIds: ['chest'],
+          lengthAxis: [0, 1, 0],
+          min: 0.55,
+          max: 1.5,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.torso.length',
+          jointId: 'chest',
+          downstreamJointIds: ['neck', 'clavicleLeft', 'clavicleRight'],
           lengthAxis: [0, 1, 0],
           min: 0.55,
           max: 1.5,

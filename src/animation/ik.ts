@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type {
+  HumanoidJointRole,
   JointId,
   RigDefinition,
   RigJointDefinition,
@@ -58,9 +59,10 @@ export interface IkChainDefinition {
 /** The small RigBinding surface needed by this module. */
 export interface IkRigBindingLike {
   readonly root: THREE.Object3D;
-  readonly definition: Pick<RigDefinition, 'joints' | 'sockets' | 'coordinateSystem'>;
+  readonly definition: Pick<RigDefinition, 'joints' | 'sockets' | 'coordinateSystem' | 'humanoid'>;
   readonly joints: ReadonlyMap<JointId, THREE.Object3D>;
   readonly sockets?: ReadonlyMap<string, THREE.Object3D>;
+  getJoint?(id: JointId): THREE.Object3D | undefined;
 }
 
 /** A chain ready for viewport gizmos and solving. target/pole are world-space points. */
@@ -504,6 +506,8 @@ function jointSemanticScore(joint: RigJointDefinition, part: string, side: 'left
   );
   const tagText = joint.tags?.join(' ');
   score = Math.max(score, fieldScore(tagText, part, side, 10));
+  score = Math.max(score, fieldScore(joint.role, part, side, 16));
+  score = Math.max(score, fieldScore(joint.aliases?.join(' '), part, side, 14));
   return score;
 }
 
@@ -547,6 +551,32 @@ function bestJointTriple(
   return best?.joints;
 }
 
+function jointByIdOrAlias(
+  definition: Pick<RigDefinition, 'joints'>,
+  id: JointId | undefined,
+): RigJointDefinition | undefined {
+  if (!id) return undefined;
+  return definition.joints.find((joint) => joint.id === id)
+    ?? definition.joints.find((joint) => joint.aliases?.includes(id));
+}
+
+function mappedJointTriple(
+  definition: Pick<RigDefinition, 'joints' | 'humanoid'>,
+  roles: readonly [HumanoidJointRole, HumanoidJointRole, HumanoidJointRole],
+): readonly [RigJointDefinition, RigJointDefinition, RigJointDefinition] | undefined {
+  const byId = new Map(definition.joints.map((joint) => [joint.id, joint]));
+  const joints = roles.map((role) => {
+    const mappedId = definition.humanoid?.[role];
+    return jointByIdOrAlias(definition, mappedId)
+      ?? definition.joints.find((joint) => joint.role === role);
+  });
+  const [root, mid, end] = joints;
+  if (!root || !mid || !end
+    || !isDefinitionDescendant(mid.id, root.id, byId)
+    || !isDefinitionDescendant(end.id, mid.id, byId)) return undefined;
+  return [root, mid, end];
+}
+
 function socketSemanticScore(
   socket: RigSocketDefinition,
   role: 'grip' | 'foot',
@@ -584,12 +614,17 @@ function localForwardVector(definition: Pick<RigDefinition, 'coordinateSystem'>)
 
 /** Infer left/right arm and leg chains without requiring humanoid engine classes. */
 export function inferHumanoidIkChainDefinitions(
-  definition: Pick<RigDefinition, 'joints' | 'sockets' | 'coordinateSystem'>,
+  definition: Pick<RigDefinition, 'joints' | 'sockets' | 'coordinateSystem' | 'humanoid'>,
 ): IkChainDefinition[] {
   const result: IkChainDefinition[] = [];
   const poleDirection = localForwardVector(definition);
   for (const side of ['left', 'right'] as const) {
-    const arm = bestJointTriple(definition, ['shoulder', 'elbow', 'wrist'], side);
+    const suffix = side === 'left' ? 'Left' : 'Right';
+    const arm = mappedJointTriple(definition, [
+      `upperArm${suffix}` as HumanoidJointRole,
+      `lowerArm${suffix}` as HumanoidJointRole,
+      `hand${suffix}` as HumanoidJointRole,
+    ]) ?? bestJointTriple(definition, ['shoulder', 'elbow', 'wrist'], side);
     if (arm) {
       const effectorSocketId = inferEffectorSocket(definition, 'grip', side);
       result.push({
@@ -604,7 +639,11 @@ export function inferHumanoidIkChainDefinitions(
         defaultPoleDirection: [...poleDirection],
       });
     }
-    const leg = bestJointTriple(definition, ['hip', 'knee', 'ankle'], side);
+    const leg = mappedJointTriple(definition, [
+      `upperLeg${suffix}` as HumanoidJointRole,
+      `lowerLeg${suffix}` as HumanoidJointRole,
+      `foot${suffix}` as HumanoidJointRole,
+    ]) ?? bestJointTriple(definition, ['hip', 'knee', 'ankle'], side);
     if (leg) {
       const effectorSocketId = inferEffectorSocket(definition, 'foot', side);
       result.push({
@@ -651,9 +690,15 @@ export function resolveIkChain(
   rig: IkRigBindingLike,
   options: ResolveIkChainOptions = {},
 ): ResolvedIkChain | undefined {
-  const root = rig.joints.get(definition.rootId);
-  const mid = rig.joints.get(definition.midId);
-  const end = rig.joints.get(definition.endId);
+  const boundJoint = (id: JointId): THREE.Object3D | undefined => {
+    const direct = rig.getJoint?.(id) ?? rig.joints.get(id);
+    if (direct) return direct;
+    const canonical = rig.definition.joints.find((joint) => joint.aliases?.includes(id))?.id;
+    return canonical ? rig.joints.get(canonical) : undefined;
+  };
+  const root = boundJoint(definition.rootId);
+  const mid = boundJoint(definition.midId);
+  const end = boundJoint(definition.endId);
   if (!root || !mid || !end || !isDescendant(mid, root) || !isDescendant(end, mid)) return undefined;
 
   const effectorSocket = definition.effectorSocketId

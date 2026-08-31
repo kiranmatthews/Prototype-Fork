@@ -33,7 +33,9 @@ function vector(value: Vec3Tuple): Vec3Tuple {
 function quaternion(value: QuaternionTuple, reference?: QuaternionTuple): QuaternionTuple {
   const length = Math.hypot(value[0], value[1], value[2], value[3]);
   let result: QuaternionTuple = length > 1e-12
-    ? [value[0] / length, value[1] / length, value[2] / length, value[3] / length]
+    ? Math.abs(length - 1) <= 1e-12
+      ? [...value]
+      : [value[0] / length, value[1] / length, value[2] / length, value[3] / length]
     : [0, 0, 0, 1];
   const dot = reference
     ? result[0] * reference[0] + result[1] * reference[1] + result[2] * reference[2] + result[3] * reference[3]
@@ -67,6 +69,11 @@ function normalizeJoint(joint: RigJointDefinition): RigJointDefinition {
     ...(joint.name === undefined ? {} : { name: joint.name }),
     parentId: joint.parentId,
     rest: localTransform(joint.rest),
+    ...(joint.role === undefined ? {} : { role: joint.role }),
+    ...(joint.type === undefined ? {} : { type: joint.type }),
+    ...(joint.aliases === undefined ? {} : { aliases: [...joint.aliases].sort(compareText) }),
+    ...(joint.bind === undefined ? {} : { bind: localTransform(joint.bind) }),
+    ...(joint.retarget === undefined ? {} : { retarget: localTransform(joint.retarget) }),
     ...(joint.mirrorId === undefined ? {} : { mirrorId: joint.mirrorId }),
     ...(joint.tags === undefined ? {} : { tags: [...joint.tags].sort(compareText) }),
     ...(joint.stretch === undefined ? {} : {
@@ -100,6 +107,7 @@ function normalizeRig(rig: RigDefinition): RigDefinition {
       ...(socket.tags ? { tags: [...socket.tags].sort(compareText) } : {}),
     })).sort((a, b) => compareText(a.id, b.id)),
     controls: rig.controls.map((control) => ({ ...control })).sort((a, b) => compareText(a.id, b.id)),
+    ...(rig.humanoid ? { humanoid: { ...rig.humanoid } } : {}),
     ...(rig.mirror ? {
       mirror: {
         axis: rig.mirror.axis,

@@ -1,6 +1,7 @@
 import {
   ANIMATION_SUITE_SCHEMA,
   ANIMATION_SUITE_SCHEMA_VERSION,
+  HUMANOID_JOINT_ROLES,
   RIG_SCHEMA,
   RIG_SCHEMA_VERSION,
   PROCEDURAL_DRIVER_SCHEMA,
@@ -13,6 +14,9 @@ import {
   type AnimationTrack,
   type ClipLoopMetadata,
   type JsonValue,
+  type HumanoidJointRole,
+  type HumanoidSemanticMap,
+  type JointStretchPolicy,
   type KeyInterpolation,
   type LocalTransform,
   type RigDefinition,
@@ -51,6 +55,14 @@ function jsonRecord(value: unknown): Record<string, JsonValue> | undefined {
   return isRecord(value) ? value as Record<string, JsonValue> : undefined;
 }
 
+function stringArray(value: unknown): string[] | undefined {
+  if (typeof value === 'string' && value.length > 0) return [value];
+  if (!Array.isArray(value)) return undefined;
+  const result = [...new Set(value.filter((entry): entry is string =>
+    typeof entry === 'string' && entry.length > 0))];
+  return result.length > 0 ? result : undefined;
+}
+
 function legacyRest(value: unknown): LocalTransform {
   const source = isRecord(value) ? value : {};
   return {
@@ -60,19 +72,141 @@ function legacyRest(value: unknown): LocalTransform {
   };
 }
 
+function optionalTransform(value: unknown): LocalTransform | undefined {
+  return isRecord(value) ? legacyRest(value) : undefined;
+}
+
+function nestedHumanoid(source: UnknownRecord): UnknownRecord {
+  return isRecord(source.humanoid) ? source.humanoid : {};
+}
+
+function metadataRecord(source: UnknownRecord, flatKey: string, nestedKey: string): UnknownRecord {
+  const nested = nestedHumanoid(source);
+  const flat = isRecord(source[flatKey]) ? source[flatKey] as UnknownRecord : {};
+  const bundled = isRecord(nested[nestedKey])
+    ? nested[nestedKey] as UnknownRecord
+    : isRecord(nested[flatKey]) ? nested[flatKey] as UnknownRecord : {};
+  return { ...flat, ...bundled };
+}
+
+function migrateStretch(value: unknown): JointStretchPolicy | undefined {
+  if (!isRecord(value)) return undefined;
+  const mode = value.mode === 'scale' || value.mode === 'translate-children' ? value.mode : 'none';
+  return {
+    mode,
+    ...(typeof value.controlId === 'string' ? { controlId: value.controlId } : {}),
+    lengthAxis: tuple(value.lengthAxis, 3, [0, 1, 0]) as [number, number, number],
+    min: number(value.min, 1),
+    max: number(value.max, 1),
+    ...(typeof value.preserveVolume === 'boolean' ? { preserveVolume: value.preserveVolume } : {}),
+    ...(stringArray(value.childIds) ? { childIds: stringArray(value.childIds) } : {}),
+  };
+}
+
+const HUMANOID_ROLE_ALIASES: Record<HumanoidJointRole, readonly string[]> = {
+  root: ['root', 'motionRoot', 'motion-root'],
+  hips: ['hips', 'pelvis'],
+  spine: ['spine', 'spineLower', 'lowerSpine'],
+  chest: ['chest', 'spineUpper', 'upperSpine'],
+  neck: ['neck'],
+  head: ['head'],
+  clavicleLeft: ['clavicleLeft', 'leftClavicle', 'clavicle.left', 'left.clavicle'],
+  upperArmLeft: ['upperArmLeft', 'leftUpperArm', 'upperArm.left', 'left.upperArm', 'shoulderLeft'],
+  lowerArmLeft: ['lowerArmLeft', 'leftLowerArm', 'lowerArm.left', 'left.lowerArm', 'elbowLeft'],
+  handLeft: ['handLeft', 'leftHand', 'hand.left', 'left.hand', 'wristLeft'],
+  upperLegLeft: ['upperLegLeft', 'leftUpperLeg', 'upperLeg.left', 'left.upperLeg', 'hipLeft'],
+  lowerLegLeft: ['lowerLegLeft', 'leftLowerLeg', 'lowerLeg.left', 'left.lowerLeg', 'kneeLeft'],
+  footLeft: ['footLeft', 'leftFoot', 'foot.left', 'left.foot', 'ankleLeft'],
+  toesLeft: ['toesLeft', 'leftToes', 'toes.left', 'left.toes', 'toeLeft'],
+  clavicleRight: ['clavicleRight', 'rightClavicle', 'clavicle.right', 'right.clavicle'],
+  upperArmRight: ['upperArmRight', 'rightUpperArm', 'upperArm.right', 'right.upperArm', 'shoulderRight'],
+  lowerArmRight: ['lowerArmRight', 'rightLowerArm', 'lowerArm.right', 'right.lowerArm', 'elbowRight'],
+  handRight: ['handRight', 'rightHand', 'hand.right', 'right.hand', 'wristRight'],
+  upperLegRight: ['upperLegRight', 'rightUpperLeg', 'upperLeg.right', 'right.upperLeg', 'hipRight'],
+  lowerLegRight: ['lowerLegRight', 'rightLowerLeg', 'lowerLeg.right', 'right.lowerLeg', 'kneeRight'],
+  footRight: ['footRight', 'rightFoot', 'foot.right', 'right.foot', 'ankleRight'],
+  toesRight: ['toesRight', 'rightToes', 'toes.right', 'right.toes', 'toeRight'],
+};
+
+function semanticValue(source: UnknownRecord, role: HumanoidJointRole): string | undefined {
+  for (const key of HUMANOID_ROLE_ALIASES[role]) {
+    if (typeof source[key] === 'string' && source[key].length > 0) return source[key] as string;
+  }
+  const side = role.endsWith('Left') ? 'left' : role.endsWith('Right') ? 'right' : undefined;
+  if (side && isRecord(source[side])) {
+    const part = role.slice(0, -side.length);
+    const nested = source[side] as UnknownRecord;
+    if (typeof nested[part] === 'string' && nested[part].length > 0) return nested[part] as string;
+  }
+  return undefined;
+}
+
+function migrateHumanoidMap(source: UnknownRecord, joints: RigJointDefinition[]): HumanoidSemanticMap | undefined {
+  const bundled = nestedHumanoid(source);
+  const explicit = isRecord(source.humanoidMap)
+    ? source.humanoidMap as UnknownRecord
+    : isRecord(bundled.semanticMap)
+      ? bundled.semanticMap as UnknownRecord
+      : isRecord(bundled.humanoidMap)
+        ? bundled.humanoidMap as UnknownRecord
+      : isRecord(bundled.map)
+        ? bundled.map as UnknownRecord
+        : bundled;
+  const result: Partial<HumanoidSemanticMap> = {};
+  for (const role of HUMANOID_JOINT_ROLES) {
+    const explicitId = semanticValue(explicit, role);
+    const roleJoint = joints.find((joint) =>
+      joint.role !== undefined && HUMANOID_ROLE_ALIASES[role].includes(joint.role));
+    const id = explicitId ?? roleJoint?.id;
+    if (id) result[role] = id;
+  }
+  return Object.keys(result).length > 0 ? result as HumanoidSemanticMap : undefined;
+}
+
 function migrateJoints(source: UnknownRecord): RigJointDefinition[] {
   const restPose = isRecord(source.restPose) ? source.restPose : {};
+  const roles = metadataRecord(source, 'jointRoles', 'roles');
+  const types = metadataRecord(source, 'jointTypes', 'types');
+  const aliases = metadataRecord(source, 'jointAliases', 'aliases');
+  const bindPose = metadataRecord(source, 'bindPose', 'bindPose');
+  const bundled = nestedHumanoid(source);
+  const retargetPose = {
+    ...(isRecord(source.retargetPose) ? source.retargetPose : {}),
+    ...(isRecord(source.canonicalTPose) ? source.canonicalTPose : {}),
+    ...(isRecord(bundled.retargetPose) ? bundled.retargetPose : {}),
+    ...(isRecord(bundled.canonicalTPose) ? bundled.canonicalTPose : {}),
+  };
+  const decorate = (result: RigJointDefinition, joint: UnknownRecord): RigJointDefinition => {
+    const id = result.id;
+    const role = typeof joint.role === 'string' ? joint.role : typeof roles[id] === 'string' ? roles[id] as string : undefined;
+    const type = typeof joint.type === 'string' ? joint.type : typeof types[id] === 'string' ? types[id] as string : undefined;
+    const jointAliases = stringArray(joint.aliases ?? aliases[id]);
+    const bind = optionalTransform(joint.bind ?? joint.bindLocal ?? bindPose[id]);
+    const retarget = optionalTransform(joint.retarget ?? joint.retargetLocal ?? retargetPose[id]);
+    const stretch = migrateStretch(joint.stretch);
+    return {
+      ...result,
+      ...(role ? { role } : {}),
+      ...(type ? { type } : {}),
+      ...(jointAliases ? { aliases: jointAliases } : {}),
+      ...(bind ? { bind } : {}),
+      ...(retarget ? { retarget } : {}),
+      ...(stretch ? { stretch } : {}),
+    };
+  };
   if (Array.isArray(source.joints)) {
     return source.joints.map((raw, index) => {
       const joint = isRecord(raw) ? raw : {};
       const id = text(joint.id ?? joint.semanticId, `joint-${index}`);
-      const result: RigJointDefinition = {
+      const result = decorate({
         id,
         nodeName: text(joint.nodeName ?? joint.name, id),
-        name: typeof joint.displayName === 'string' ? joint.displayName : undefined,
+        ...(typeof joint.displayName === 'string'
+          ? { name: joint.displayName }
+          : joint.nodeName !== undefined && typeof joint.name === 'string' ? { name: joint.name } : {}),
         parentId: joint.parentId === null ? null : typeof joint.parentId === 'string' ? joint.parentId : null,
         rest: legacyRest(joint.rest ?? joint.restLocal ?? restPose[id]),
-      };
+      }, joint);
       if (typeof joint.mirrorId === 'string') result.mirrorId = joint.mirrorId;
       if (Array.isArray(joint.tags)) result.tags = joint.tags.filter((tag): tag is string => typeof tag === 'string');
       return result;
@@ -82,12 +216,13 @@ function migrateJoints(source: UnknownRecord): RigJointDefinition[] {
     return Object.entries(source.joints).map(([id, raw]) => {
       const joint = isRecord(raw) ? raw : {};
       const nodeName = typeof raw === 'string' ? raw : text(joint.nodeName ?? joint.name, id);
-      return {
+      return decorate({
         id,
         nodeName,
+        ...(isRecord(raw) && raw.nodeName !== undefined && typeof raw.name === 'string' ? { name: raw.name } : {}),
         parentId: typeof joint.parentId === 'string' ? joint.parentId : null,
         rest: legacyRest(joint.rest ?? restPose[id]),
-      };
+      }, joint);
     });
   }
   return [];
@@ -117,6 +252,12 @@ export function migrateRigDefinition(input: unknown, fallbackId = 'rig-0'): RigD
       up,
       localForward: text(coordinate.localForward, '+Z'),
       units: text(coordinate.units, 'rig-units'),
+      ...(typeof coordinate.worldUnitApproximation === 'string'
+        ? { worldUnitApproximation: coordinate.worldUnitApproximation }
+        : {}),
+      ...(Array.isArray(coordinate.visualScale)
+        ? { visualScale: tuple(coordinate.visualScale, 3, [1, 1, 1]) as [number, number, number] }
+        : {}),
     },
     joints,
     sockets: [],
@@ -131,6 +272,9 @@ export function migrateRigDefinition(input: unknown, fallbackId = 'rig-0'): RigD
         nodeName: text(socket.nodeName ?? socket.name, id),
         ...(typeof socket.parentJointId === 'string' ? { parentJointId: socket.parentJointId } : {}),
         ...(typeof socket.mirrorId === 'string' ? { mirrorId: socket.mirrorId } : {}),
+        ...(Array.isArray(socket.tags)
+          ? { tags: socket.tags.filter((tag): tag is string => typeof tag === 'string') }
+          : {}),
       };
     });
   } else if (isRecord(input.sockets)) {
@@ -143,6 +287,7 @@ export function migrateRigDefinition(input: unknown, fallbackId = 'rig-0'): RigD
       const control = isRecord(raw) ? raw : {};
       return {
         id: text(control.id, `control-${index}`),
+        ...(typeof control.name === 'string' ? { name: control.name } : {}),
         defaultValue: number(control.defaultValue, 0),
         ...(Number.isFinite(control.min) ? { min: control.min as number } : {}),
         ...(Number.isFinite(control.max) ? { max: control.max as number } : {}),
@@ -150,6 +295,21 @@ export function migrateRigDefinition(input: unknown, fallbackId = 'rig-0'): RigD
         ...(control.mirrorSign === -1 || control.mirrorSign === 1 ? { mirrorSign: control.mirrorSign } : {}),
       };
     });
+  }
+  const humanoid = migrateHumanoidMap(input, joints);
+  if (humanoid) rig.humanoid = humanoid;
+  if (isRecord(input.mirror)) {
+    const axis = input.mirror.axis === 'y' || input.mirror.axis === 'z' ? input.mirror.axis : 'x';
+    const pairs = (value: unknown): [string, string][] | undefined => {
+      if (!Array.isArray(value)) return undefined;
+      const result = value.filter((entry): entry is [string, string] =>
+        Array.isArray(entry) && entry.length === 2
+        && typeof entry[0] === 'string' && typeof entry[1] === 'string');
+      return result.length > 0 ? result.map(([left, right]) => [left, right]) : undefined;
+    };
+    const jointPairs = pairs(input.mirror.jointPairs) ?? [];
+    const controlPairs = pairs(input.mirror.controlPairs);
+    rig.mirror = { axis, jointPairs, ...(controlPairs ? { controlPairs } : {}) };
   }
   const metadata = jsonRecord(input.metadata);
   if (metadata) rig.metadata = metadata;
@@ -437,12 +597,42 @@ function migrateClip(raw: unknown, index: number, defaultRigId: string): Animati
   return clip;
 }
 
+function canonicalizeClipJointTargets(clip: AnimationClip, rig: RigDefinition | undefined): AnimationClip {
+  if (!rig) return clip;
+  const aliases = new Map<string, string>();
+  for (const joint of rig.joints) {
+    aliases.set(joint.id, joint.id);
+    for (const alias of joint.aliases ?? []) if (!aliases.has(alias)) aliases.set(alias, joint.id);
+  }
+  const canonical = (id: string): string => aliases.get(id) ?? id;
+  return {
+    ...clip,
+    rootMotion: clip.rootMotion.jointId
+      ? { ...clip.rootMotion, jointId: canonical(clip.rootMotion.jointId) }
+      : clip.rootMotion,
+    tracks: clip.tracks.map((track) => track.kind === 'scalar'
+      ? track
+      : { ...track, target: canonical(track.target) }),
+    proceduralDrivers: clip.proceduralDrivers.map((driver) => driver.target.kind === 'scalar'
+      ? driver
+      : { ...driver, target: { ...driver.target, target: canonical(driver.target.target) } }),
+  };
+}
+
 /** Upgrades the legacy unversioned/v0 editor shape to the canonical v1 document. */
 export function migrateAnimationSuite(input: unknown): AnimationSuiteDocument {
   const parsed = typeof input === 'string' ? JSON.parse(input) as unknown : input;
   if (!isRecord(parsed)) throw new TypeError('animation suite must be an object');
   if (parsed.schema === ANIMATION_SUITE_SCHEMA && parsed.version === ANIMATION_SUITE_SCHEMA_VERSION) {
-    return clone(parsed) as unknown as AnimationSuiteDocument;
+    // Suite v2 predates rig v2. Preserve clips and draft/editor payloads byte-for-
+    // byte at the object level while upgrading only their embedded rig records.
+    const current = clone(parsed) as unknown as AnimationSuiteDocument;
+    current.rigs = (Array.isArray(parsed.rigs) ? parsed.rigs : [])
+      .map((rig, index) => migrateRigDefinition(rig, `rig-${index}`));
+    const rigById = new Map(current.rigs.map((rig) => [rig.id, rig]));
+    current.clips = (Array.isArray(current.clips) ? current.clips : [])
+      .map((clip) => canonicalizeClipJointTargets(clip, rigById.get(clip.rigId)));
+    return current;
   }
   if (parsed.schema === ANIMATION_SUITE_SCHEMA && number(parsed.version, 0) > ANIMATION_SUITE_SCHEMA_VERSION) {
     throw new Error(
@@ -457,7 +647,11 @@ export function migrateAnimationSuite(input: unknown): AnimationSuiteDocument {
   const rawClips = Array.isArray(parsed.clips)
     ? parsed.clips
     : Array.isArray(parsed.animations) ? parsed.animations : [];
-  const clips = rawClips.map((clip, index) => migrateClip(clip, index, defaultRigId));
+  const rigById = new Map(rigs.map((rig) => [rig.id, rig]));
+  const clips = rawClips.map((clip, index) => {
+    const migrated = migrateClip(clip, index, defaultRigId);
+    return canonicalizeClipJointTargets(migrated, rigById.get(migrated.rigId));
+  });
   const document: AnimationSuiteDocument = {
     schema: ANIMATION_SUITE_SCHEMA,
     version: ANIMATION_SUITE_SCHEMA_VERSION,

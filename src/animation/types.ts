@@ -1,5 +1,5 @@
 export const RIG_SCHEMA = 'sol-rig' as const;
-export const RIG_SCHEMA_VERSION = 1 as const;
+export const RIG_SCHEMA_VERSION = 2 as const;
 export const ANIMATION_SUITE_SCHEMA = 'sol-animation-suite' as const;
 export const ANIMATION_SUITE_SCHEMA_VERSION = 2 as const;
 export const PROCEDURAL_DRIVER_SCHEMA = 'sol-procedural-driver' as const;
@@ -41,6 +41,66 @@ export interface JointStretchPolicy {
   childIds?: JointId[];
 }
 
+/**
+ * Conventional humanoid roles are deliberately independent from scene-node
+ * names and joint IDs. A procedural rig can therefore keep stable authored
+ * IDs while exposing enough anatomy for retargeting and generic IK.
+ */
+export const HUMANOID_JOINT_ROLES = [
+  'root',
+  'hips',
+  'spine',
+  'chest',
+  'neck',
+  'head',
+  'clavicleLeft',
+  'upperArmLeft',
+  'lowerArmLeft',
+  'handLeft',
+  'upperLegLeft',
+  'lowerLegLeft',
+  'footLeft',
+  'toesLeft',
+  'clavicleRight',
+  'upperArmRight',
+  'lowerArmRight',
+  'handRight',
+  'upperLegRight',
+  'lowerLegRight',
+  'footRight',
+  'toesRight',
+] as const;
+
+export type HumanoidJointRole = typeof HUMANOID_JOINT_ROLES[number];
+
+/** Maps conventional anatomy to stable IDs in this particular rig. */
+export interface HumanoidSemanticMap {
+  /** Optional motion/root joint above the pelvis. */
+  root?: JointId;
+  /** The pelvis/hips joint. `hips` is the interchange semantic name. */
+  hips: JointId;
+  spine: JointId;
+  chest: JointId;
+  neck: JointId;
+  head: JointId;
+  clavicleLeft: JointId;
+  upperArmLeft: JointId;
+  lowerArmLeft: JointId;
+  handLeft: JointId;
+  upperLegLeft: JointId;
+  lowerLegLeft: JointId;
+  footLeft: JointId;
+  toesLeft: JointId;
+  clavicleRight: JointId;
+  upperArmRight: JointId;
+  lowerArmRight: JointId;
+  handRight: JointId;
+  upperLegRight: JointId;
+  lowerLegRight: JointId;
+  footRight: JointId;
+  toesRight: JointId;
+}
+
 export interface RigJointDefinition {
   /** Stable semantic identity used by animation tracks; never a display label. */
   id: JointId;
@@ -49,6 +109,16 @@ export interface RigJointDefinition {
   name?: string;
   parentId: JointId | null;
   rest: LocalTransform;
+  /** Semantic purpose, usually one of HUMANOID_JOINT_ROLES. Open for creature rigs. */
+  role?: string;
+  /** Implementation category such as bone, transform, deform, control, or helper. */
+  type?: string;
+  /** Historical/foreign IDs accepted by clips without rewriting their tracks. */
+  aliases?: JointId[];
+  /** Optional source bind local, retained for faithful import and skin binding. */
+  bind?: LocalTransform;
+  /** Optional canonical retarget local (normally a humanoid T-pose). */
+  retarget?: LocalTransform;
   mirrorId?: JointId;
   tags?: string[];
   stretch?: JointStretchPolicy;
@@ -89,6 +159,8 @@ export interface RigDefinition {
   joints: RigJointDefinition[];
   sockets: RigSocketDefinition[];
   controls: RigControlDefinition[];
+  /** Present when this arbitrary rig also satisfies the humanoid contract. */
+  humanoid?: HumanoidSemanticMap;
   mirror?: RigMirrorDefinition;
   metadata?: Record<string, JsonValue>;
 }

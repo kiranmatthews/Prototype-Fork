@@ -30,6 +30,14 @@ export function createRigMirrorMaps(rig: RigDefinition): RigMirrorMaps {
     else if (!joints.has(joint.id)) joints.set(joint.id, joint.id);
   }
   for (const [left, right] of rig.mirror?.jointPairs ?? []) addPair(joints, left, right);
+  for (const joint of rig.joints) {
+    const mirrored = joints.get(joint.id) ?? joint.id;
+    for (const alias of joint.aliases ?? []) {
+      // A paired alias resolves to the opposite canonical joint. An unpaired
+      // helper alias stays textual so mirroring never rewrites it needlessly.
+      joints.set(alias, mirrored === joint.id ? alias : mirrored);
+    }
+  }
   for (const control of rig.controls) {
     if (control.mirrorId) addPair(controls, control.id, control.mirrorId);
     else if (!controls.has(control.id)) controls.set(control.id, control.id);

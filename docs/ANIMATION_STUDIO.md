@@ -77,6 +77,13 @@ motion context, so scrubbing, replay, baking, and fixed-step playback agree.
 Custom evaluators use a stable ID plus JSON parameters and must obey the same
 pure, deterministic contract. Unknown evaluators safely no-op with a warning.
 
+The rider exposes a real pelvis-rooted humanoid `THREE.Skeleton`, including
+spine/chest/neck, clavicles, full arm and leg chains, and toe bones. Its live
+gameplay rest remains the familiar relaxed silhouette; a separate canonical
+T-pose is published for import and retargeting. Existing clip targets continue
+to resolve through stable IDs and aliases. See [HUMANOID_RIG.md](HUMANOID_RIG.md)
+for the hierarchy and compatibility contract.
+
 The runtime applies layers in this order:
 
 1. deterministic movement and the existing legacy pose;

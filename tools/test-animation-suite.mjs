@@ -17,6 +17,7 @@ try {
   const {
     RigBinding,
     ANIMATION_SUITE_SCHEMA_VERSION,
+    RIG_SCHEMA_VERSION,
     PLAYER_DEFORMATION_CONTROLS,
     clipTimeAt,
     bakeProceduralClip,
@@ -29,6 +30,7 @@ try {
     createPlayerStarterClips,
     createProceduralDriver,
     createQuaternionKeyframe,
+    createRigMirrorMaps,
     createScalarKeyframe,
     createVectorKeyframe,
     findClip,
@@ -36,6 +38,7 @@ try {
     mirrorClip,
     mirrorPose,
     parseAnimationSuite,
+    parseRigDefinition,
     removeClip,
     removeKeyframe,
     sampleClip,
@@ -50,6 +53,7 @@ try {
     upsertKeyframe,
     upsertTrack,
     validateAnimationSuite,
+    validateRigDefinition,
     validateProceduralEvaluators,
   } = animation;
 
@@ -156,6 +160,154 @@ try {
   assert.equal(binding.definition.joints.find((joint) => joint.id === 'hipLeft').mirrorId, 'hipRight');
   assert.equal(binding.definition.joints.find((joint) => joint.id === 'hipLeft').stretch.controlId,
     PLAYER_DEFORMATION_CONTROLS.legUpperLeft);
+
+  // Rig v2: a conventional pelvis-rooted humanoid can retain legacy clip IDs
+  // as aliases while carrying bind and canonical T-pose locals for retargeting.
+  const conventionalVisual = new THREE.Group();
+  conventionalVisual.name = 'conventional-visual';
+  const conventionalNodes = {};
+  const addConventionalJoint = (id, parent, offset = [0, 0, 0]) => {
+    const node = new THREE.Group();
+    node.name = `node-${id}`;
+    node.position.fromArray(offset);
+    parent.add(node);
+    conventionalNodes[id] = node;
+    return node;
+  };
+  const motionRoot = addConventionalJoint('motionRoot', conventionalVisual);
+  const pelvis = addConventionalJoint('pelvis', motionRoot, [0, 0.7, 0]);
+  const conventionalSpine = addConventionalJoint('spine', pelvis, [0, 0.18, 0]);
+  const chest = addConventionalJoint('chest', conventionalSpine, [0, 0.24, 0]);
+  const neck = addConventionalJoint('neck', chest, [0, 0.2, 0]);
+  addConventionalJoint('head', neck, [0, 0.14, 0]);
+  for (const side of ['Left', 'Right']) {
+    const sign = side === 'Left' ? 1 : -1;
+    const clavicle = addConventionalJoint(`clavicle${side}`, chest, [sign * 0.12, 0.12, 0]);
+    const upperArm = addConventionalJoint(`upperArm${side}`, clavicle, [sign * 0.12, 0, 0]);
+    const lowerArm = addConventionalJoint(`lowerArm${side}`, upperArm, [sign * 0.34, 0, 0]);
+    addConventionalJoint(`hand${side}`, lowerArm, [sign * 0.28, 0, 0]);
+    const upperLeg = addConventionalJoint(`upperLeg${side}`, pelvis, [sign * 0.14, -0.08, 0]);
+    const lowerLeg = addConventionalJoint(`lowerLeg${side}`, upperLeg, [0, -0.34, 0]);
+    const foot = addConventionalJoint(`foot${side}`, lowerLeg, [0, -0.31, 0]);
+    addConventionalJoint(`toes${side}`, foot, [0, -0.03, 0.16]);
+  }
+  const conventionalJointNames = Object.fromEntries(
+    Object.entries(conventionalNodes).map(([id, node]) => [id, node.name]),
+  );
+  const conventionalRest = Object.fromEntries(
+    Object.entries(conventionalNodes).map(([id, node]) => [id, {
+      position: node.position.toArray(),
+      quaternion: node.quaternion.toArray(),
+      scale: node.scale.toArray(),
+    }]),
+  );
+  const semanticMap = {
+    root: 'motionRoot', hips: 'pelvis', spine: 'spine', chest: 'chest', neck: 'neck', head: 'head',
+    clavicleLeft: 'clavicleLeft', upperArmLeft: 'upperArmLeft', lowerArmLeft: 'lowerArmLeft',
+    handLeft: 'handLeft', upperLegLeft: 'upperLegLeft', lowerLegLeft: 'lowerLegLeft',
+    footLeft: 'footLeft', toesLeft: 'toesLeft',
+    clavicleRight: 'clavicleRight', upperArmRight: 'upperArmRight', lowerArmRight: 'lowerArmRight',
+    handRight: 'handRight', upperLegRight: 'upperLegRight', lowerLegRight: 'lowerLegRight',
+    footRight: 'footRight', toesRight: 'toesRight',
+  };
+  const legacyAliases = {
+    motionRoot: ['root'], pelvis: ['hips'], chest: ['torsoRoot'],
+    upperArmLeft: ['shoulderLeft'], lowerArmLeft: ['elbowLeft'], handLeft: ['wristLeft'],
+    upperLegLeft: ['hipLeft'], lowerLegLeft: ['kneeLeft'], footLeft: ['ankleLeft'],
+    upperArmRight: ['shoulderRight'], lowerArmRight: ['elbowRight'], handRight: ['wristRight'],
+    upperLegRight: ['hipRight'], lowerLegRight: ['kneeRight'], footRight: ['ankleRight'],
+  };
+  const tPose = structuredClone(conventionalRest);
+  tPose.upperArmLeft.quaternion = [0, 0, Math.sin(Math.PI / 8), Math.cos(Math.PI / 8)];
+  tPose.upperArmRight.quaternion = [0, 0, -Math.sin(Math.PI / 8), Math.cos(Math.PI / 8)];
+  conventionalVisual.userData.sculptRuntime = {
+    schemaVersion: 3,
+    kind: 'procedural-character',
+    rigId: 'conventional-player-v2',
+    rigName: 'Conventional Player',
+    coordinateSystem: { handedness: 'right', up: 'Y', localForward: '+Z', units: 'rig-units' },
+    joints: conventionalJointNames,
+    restPose: conventionalRest,
+    controls,
+    mirrorPairs: [
+      ['shoulderLeft', 'shoulderRight'],
+      ['hipLeft', 'hipRight'],
+    ],
+    deformations: [{
+      controlId: PLAYER_DEFORMATION_CONTROLS.legUpperLeft,
+      jointId: 'hipLeft',
+      downstreamJointIds: ['kneeLeft'],
+      lengthAxis: [0, -1, 0],
+      min: 0.55,
+      max: 1.75,
+      volume: 'preserve-cross-section-area',
+    }],
+    humanoid: {
+      roles: Object.fromEntries(Object.entries(semanticMap).map(([role, id]) => [id, role])),
+      types: Object.fromEntries(Object.keys(conventionalNodes).map((id) => [id, 'transform'])),
+      aliases: legacyAliases,
+      bindPose: conventionalRest,
+      canonicalTPose: tPose,
+      semanticMap,
+    },
+  };
+  const conventionalBinding = RigBinding.fromSculptRuntime(conventionalVisual);
+  const conventionalRig = conventionalBinding.definition;
+  assert.equal(conventionalRig.version, RIG_SCHEMA_VERSION);
+  assert.equal(conventionalRig.rootJointId, 'motionRoot');
+  assert.equal(conventionalRig.humanoid.hips, 'pelvis');
+  assert.equal(conventionalRig.joints.find((joint) => joint.id === 'spine').parentId, 'pelvis');
+  assert.equal(conventionalRig.joints.find((joint) => joint.id === 'chest').parentId, 'spine');
+  assert.equal(conventionalRig.joints.find((joint) => joint.id === 'neck').parentId, 'chest');
+  assert.equal(conventionalRig.joints.find((joint) => joint.id === 'clavicleLeft').parentId, 'chest');
+  assert.equal(conventionalRig.joints.find((joint) => joint.id === 'toesRight').parentId, 'footRight');
+  assert.equal(conventionalRig.joints.find((joint) => joint.id === 'upperArmLeft').type, 'transform');
+  assert.deepEqual(conventionalRig.joints.find((joint) => joint.id === 'upperArmLeft').aliases, ['shoulderLeft']);
+  near(conventionalRig.joints.find((joint) => joint.id === 'upperArmLeft').retarget.quaternion[2],
+    Math.sin(Math.PI / 8));
+  assert.equal(parseRigDefinition(conventionalRig).version, RIG_SCHEMA_VERSION);
+  const brokenConventionalRig = structuredClone(conventionalRig);
+  brokenConventionalRig.joints.find((joint) => joint.id === 'toesLeft').parentId = 'pelvis';
+  const brokenHierarchy = validateRigDefinition(brokenConventionalRig);
+  assert.equal(brokenHierarchy.valid, false);
+  assert.ok(brokenHierarchy.issues.some((entry) => entry.code === 'hierarchy.humanoid'));
+
+  const upperLegLeftRest = conventionalNodes.upperLegLeft.position.clone();
+  conventionalNodes.toesLeft.scale.setScalar(4);
+  conventionalBinding.applyPose({ joints: { hipLeft: { position: [0.1, 0.02, 0] } }, scalars: {} }, { strict: true });
+  near(conventionalNodes.upperLegLeft.position.x, upperLegLeftRest.x + 0.1);
+  near(conventionalNodes.toesLeft.scale.x, 1);
+  assert.equal(conventionalBinding.getJoint('shoulderLeft'), conventionalNodes.upperArmLeft);
+  assert.equal(conventionalRig.joints.find((joint) => joint.id === 'upperLegLeft').stretch.controlId,
+    PLAYER_DEFORMATION_CONTROLS.legUpperLeft);
+  assert.deepEqual(conventionalRig.joints.find((joint) => joint.id === 'upperLegLeft').stretch.childIds,
+    ['lowerLegLeft']);
+  const conventionalMirror = createRigMirrorMaps(conventionalRig);
+  assert.equal(conventionalMirror.joints.get('shoulderLeft'), 'upperArmRight');
+  assert.equal(conventionalMirror.joints.get('hips'), 'hips');
+
+  const conventionalStarter = createPlayerStarterAnimationSuite(conventionalRig);
+  const conventionalValidation = validateAnimationSuite(conventionalStarter);
+  assert.equal(conventionalValidation.valid, true,
+    conventionalValidation.issues.map((entry) => `${entry.path}: ${entry.message}`).join('\n'));
+  const migratedConventionalStarter = parseAnimationSuite(conventionalStarter);
+  assert.ok(migratedConventionalStarter.clips.some((clip) =>
+    clip.tracks.some((track) => track.kind !== 'scalar' && track.target === 'upperArmLeft')));
+  assert.ok(!migratedConventionalStarter.clips.some((clip) =>
+    clip.tracks.some((track) => track.kind !== 'scalar' && track.target === 'shoulderLeft')));
+  assert.ok(migratedConventionalStarter.clips.some((clip) =>
+    clip.tracks.some((track) => track.kind !== 'scalar' && track.target === 'chest')));
+  const conventionalRoundTrip = stringifyAnimationSuite(migratedConventionalStarter);
+  const roundTrippedConventional = parseAnimationSuite(conventionalRoundTrip);
+  assert.deepEqual(roundTrippedConventional.rigs[0].humanoid, migratedConventionalStarter.rigs[0].humanoid);
+  assert.deepEqual(roundTrippedConventional.rigs[0].joints.find((joint) => joint.id === 'upperArmLeft').aliases,
+    ['shoulderLeft']);
+  near(roundTrippedConventional.rigs[0].joints.find((joint) => joint.id === 'upperArmLeft').retarget.quaternion[2],
+    Math.sin(Math.PI / 8));
+  assert.deepEqual(
+    roundTrippedConventional.clips.flatMap((clip) => clip.tracks.map((track) => [track.id, track.target])),
+    migratedConventionalStarter.clips.flatMap((clip) => clip.tracks.map((track) => [track.id, track.target])),
+  );
 
   const starterClips = createPlayerStarterClips();
   assert.equal(starterClips.length, 17);
@@ -444,6 +596,33 @@ try {
   const migratedVersionOne = parseAnimationSuite(versionOne);
   assert.equal(migratedVersionOne.version, ANIMATION_SUITE_SCHEMA_VERSION);
   assert.ok(migratedVersionOne.clips.every((clip) => clip.proceduralDrivers.length === 0));
+
+  // Existing suite-v2 drafts commonly embed rig-v1. Upgrading the nested rig
+  // must retain every clip/key and the original deformation policy.
+  const versionTwoDraftWithRigOne = structuredClone(parsedSuite);
+  versionTwoDraftWithRigOne.rigs[0].version = 1;
+  const upgradedRigOneDraft = parseAnimationSuite(versionTwoDraftWithRigOne);
+  assert.equal(upgradedRigOneDraft.rigs[0].version, RIG_SCHEMA_VERSION);
+  const clipStructure = (document) => document.clips.map((clip) => ({
+    id: clip.id,
+    playbackSpeed: clip.playbackSpeed,
+    tracks: clip.tracks.map((track) => ({
+      id: track.id,
+      kind: track.kind,
+      target: track.target,
+      keys: track.keys.map((key) => [key.id, key.time]),
+    })),
+    drivers: clip.proceduralDrivers.map((driver) => [driver.id, driver.target.kind, driver.target.target]),
+  }));
+  assert.deepEqual(clipStructure(upgradedRigOneDraft), clipStructure(parsedSuite));
+  near(
+    sampleClip(findClip(upgradedRigOneDraft, 'player.jump'), 0.32)
+      .scalars[PLAYER_DEFORMATION_CONTROLS.legLowerLeft],
+    sampleClip(findClip(parsedSuite, 'player.jump'), 0.32)
+      .scalars[PLAYER_DEFORMATION_CONTROLS.legLowerLeft],
+  );
+  assert.equal(upgradedRigOneDraft.rigs[0].joints.find((joint) => joint.id === 'hipLeft').stretch.controlId,
+    PLAYER_DEFORMATION_CONTROLS.legUpperLeft);
 
   const reverseOrder = { ...parsedSuite, clips: [...parsedSuite.clips].reverse(), rigs: [...parsedSuite.rigs].reverse() };
   assert.equal(stringifyAnimationSuite(parsedSuite), stringifyAnimationSuite(reverseOrder));
