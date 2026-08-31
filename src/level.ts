@@ -132,6 +132,8 @@ export interface Enemy {
   flungT?: number;
   homeX?: number; // authored world position, so a respawn can undo a fling
   homeZ?: number; // (the patrol axis is re-derived from x0/x1 as before)
+  homePosition?: THREE.Vector3; // immutable full spawn transform for every reset
+  homeRoute?: number; // cars reuse x0 as a live road-arc cursor; preserve its start
   // ---- typed foes ----
   kind: EnemyKind;
   state: string; // per-kind FSM state
@@ -169,7 +171,17 @@ interface Projectile {
   vel: THREE.Vector3;
   life: number;
   box: THREE.Box3;
+  owner: Enemy;
 }
+
+const PROJECTILE_PATH_DIR = new THREE.Vector3();
+const PROJECTILE_PATH_HIT = new THREE.Vector3();
+const PROJECTILE_PREVIOUS = new THREE.Vector3();
+const PROJECTILE_PATH_RAY = new THREE.Ray();
+const PROJECTILE_PATH_RAYCASTER = new THREE.Raycaster();
+const SENTRY_MUZZLE = new THREE.Vector3();
+const SENTRY_TARGET = new THREE.Vector3();
+const SENTRY_ATTACK_RANGE = 32; // source stays inside the readable gameplay frame
 
 interface ContinuousCoastSegment {
   ax: number;
@@ -943,6 +955,39 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     }
     return c;
   });
+  // A historical Test Course section move translated the rendered enemy
+  // groups by -22m but left their reset baseY scalars behind. The next editor
+  // capture baked those stale heights into the shared JSON. Two older calls
+  // also passed (deckY, z) in the opposite order. Exact-signature migration
+  // heals the published pack and already-cached browser copies idempotently.
+  if (d.name === "Test Course") {
+    const fixes = new Map<string, [number, number, number]>([
+      ["0,-252,4", [0, -8.69, -252]],
+      ["0,-556,5", [0, -13, -556]],
+      ["0,0.5,-1150", [0, -21.5, -1150]],
+      ["0,0,-1180", [0, -22, -1180]],
+      ["0,3,-1293", [0, -19, -1293]],
+      ["0,6,-1365", [0, -16, -1365]],
+      ["0,9,-1527", [0, -13, -1527]],
+      ["0,3,-1605", [0, -19, -1605]],
+      ["109,6,-1720", [109, -16, -1720]],
+      ["152,-4,-1847", [152, -26, -1847]],
+      ["152,-4,-1963.5", [152, -26, -1963.5]],
+      ["152,-4,-1972.5", [152, -26, -1972.5]],
+      ["152,-4,-1961.5", [152, -26, -1961.5]],
+      ["152,-4,-1967.5", [152, -26, -1967.5]],
+      ["152,-4,-1973.5", [152, -26, -1973.5]],
+      ["157.75,-4,-2002", [157.75, -26, -2002]],
+      ["146.25,-4,-2017", [146.25, -26, -2017]],
+      ["152,-4,-2255", [152, -26, -2255]],
+      ["152,-4,-2270", [152, -26, -2270]],
+    ]);
+    for (const component of d.components) {
+      if (component.t !== "enemy") continue;
+      const fixed = fixes.get(component.p.join(","));
+      if (fixed) component.p = [...fixed];
+    }
+  }
   for (const component of d.components) {
     if (
       component.t === "woodpath" &&
@@ -3894,6 +3939,18 @@ export class Level {
   private snapshotHome(): void {
     for (const c of this.crates) c.homeY = c.mesh.position.y;
     for (const e of this.enemies) {
+      // Traffic is authored as a road-arc cursor rather than a world point.
+      // Materialise that cursor once before taking the immutable snapshot.
+      if (e.kind === "car") this.carStep(e, 0);
+      e.homePosition = e.group.position.clone();
+      e.homeRoute = e.kind === "car" ? e.x0 : undefined;
+      if (e.kind !== "car") {
+        // The final built transform is the authority. Historical section
+        // shifts moved the group but forgot these parallel scalar fields;
+        // resetEnemyVisual then reapplied the stale Y/cross on first death.
+        e.baseY = e.group.position.y;
+        e.cross = e.axis === "z" ? e.group.position.x : e.group.position.z;
+      }
       e.homeX = e.group.position.x;
       e.homeZ = e.group.position.z;
     }
@@ -7131,6 +7188,9 @@ export class Level {
 
   killEnemy(enemy: Enemy, fling?: THREE.Vector3): void {
     enemy.alive = false;
+    // A defeated turret is no longer a visible/legible source. Its already-
+    // fired orange orbs must not keep attacking from nowhere for 3.4 seconds.
+    this.clearProjectilesFrom(enemy);
     if (fling) {
       // ping away instead of popping; update() flies it into whatever lines up
       enemy.flungVel = fling.clone();
@@ -7281,14 +7341,19 @@ export class Level {
       e.group.visible = e.alive;
       e.flungT = undefined;
       e.flungVel = undefined;
-      // BOTH axes: a fling moves an enemy across its lane as well as along it,
-      // and only the along axis was ever put back. (Cars are driven straight
-      // off the road ribbon every update, so their home is simply overwritten.)
-      if (e.homeX !== undefined) e.group.position.x = e.homeX;
-      if (e.homeZ !== undefined) e.group.position.z = e.homeZ;
-      if (e.axis === "z") e.group.position.z = (e.x0 + e.x1) / 2;
-      else e.group.position.x = (e.x0 + e.x1) / 2;
+      // Restore one immutable full spawn point. Reconstructing it from live
+      // patrol values was incomplete (Y was separate) and outright wrong for
+      // cars, whose x0 field advances as their road-arc cursor every frame.
+      if (e.homePosition) e.group.position.copy(e.homePosition);
+      else {
+        if (e.homeX !== undefined) e.group.position.x = e.homeX;
+        if (e.homeZ !== undefined) e.group.position.z = e.homeZ;
+        if (e.axis === "z") e.group.position.z = (e.x0 + e.x1) / 2;
+        else e.group.position.x = (e.x0 + e.x1) / 2;
+      }
+      if (e.homeRoute !== undefined) e.x0 = e.homeRoute;
       this.resetEnemyVisual(e); // pose + FSM back to start (handles y/rotation/scale)
+      if (e.kind === "car") this.carStep(e, 0); // restore road height + facing too
       e.box.makeEmpty();
     }
     this.clearProjectiles();
@@ -9862,6 +9927,32 @@ export class Level {
     return Math.abs(hits[0].point.y - fallback) <= 1.1
       ? hits[0].point.y
       : fallback;
+  }
+
+  // Enemies are grounded actors (floaters add their hover above this base).
+  // Unlike ordinary hand-authored placement, stale editor captures can be an
+  // entire relocated section away from their support: Test Course shipped an
+  // old +22 Y offset. Choose the vertically nearest real floor at this X/Z so
+  // one bad scalar cannot become an immutable mid-air reset home.
+  private enemyRestSurface(x: number, z: number, authoredY: number): number {
+    this.root.updateMatrixWorld(true);
+    const originY = Math.max(512, authoredY + 256, this.spawnPos.y + 256);
+    const ray = new THREE.Raycaster(
+      new THREE.Vector3(x, originY, z),
+      new THREE.Vector3(0, -1, 0),
+      0,
+      4096,
+    );
+    const hits = ray.intersectObjects(this.groundMeshes, false);
+    let best = authoredY;
+    let bestDistance = Infinity;
+    for (const hit of hits) {
+      const distance = Math.abs(hit.point.y - authoredY);
+      if (distance >= bestDistance) continue;
+      best = hit.point.y;
+      bestDistance = distance;
+    }
+    return best;
   }
 
   // Ground a data-authored crate should rest on. The authored deckY is the
@@ -15517,7 +15608,7 @@ export class Level {
     const mid = (a0 + a1) / 2;
     const gx = axis === "z" ? cross : mid;
     const gz = axis === "z" ? mid : cross;
-    const gy = this.floorY(gx, gz, deckY);
+    const gy = this.enemyRestSurface(gx, gz, deckY);
     group.position.set(gx, gy, gz);
     group.userData.baseY = gy;
     // sentry/spinner are stationary — collapse the patrol span so they hold post
@@ -15860,31 +15951,42 @@ export class Level {
     while (dy < -Math.PI) dy += Math.PI * 2;
     head.rotation.y += dy * Math.min(1, dt * 6);
     const eye = head.getObjectByName("eye");
-    const inRange = Math.hypot(dx, dz) < 44;
+    const muzzle = SENTRY_MUZZLE.set(
+      e.group.position.x + Math.sin(head.rotation.y) * 0.8,
+      e.group.position.y + 0.72,
+      e.group.position.z + Math.cos(head.rotation.y) * 0.8,
+    );
+    const target = SENTRY_TARGET.set(
+      this.playerPos.x,
+      this.playerPos.y + 0.7,
+      this.playerPos.z,
+    );
+    const verticalGap = Math.abs(target.y - muzzle.y);
+    const inRange =
+      muzzle.distanceTo(target) < SENTRY_ATTACK_RANGE &&
+      verticalGap < 10;
     if (e.state === "track") {
       if (eye) eye.scale.setScalar(1);
-      if (e.stateT > 1.3 && inRange) {
+      if (
+        e.stateT > 1.3 &&
+        inRange &&
+        !this.projectilePathBlocked(muzzle, target)
+      ) {
         e.state = "charge";
         e.stateT = 0;
       }
     } else if (e.state === "charge") {
       if (eye) eye.scale.setScalar(1 + e.stateT * 2.4);
       if (e.stateT > 0.55) {
-        e.state = "fire";
-        e.stateT = 0;
-        const muzzle = new THREE.Vector3(
-          e.group.position.x + Math.sin(head.rotation.y) * 0.8,
-          e.group.position.y + 0.72,
-          e.group.position.z + Math.cos(head.rotation.y) * 0.8,
-        );
-        this.spawnProjectile(
-          muzzle,
-          new THREE.Vector3(
-            this.playerPos.x,
-            this.playerPos.y + 0.7,
-            this.playerPos.z,
-          ),
-        );
+        if (inRange && !this.projectilePathBlocked(muzzle, target)) {
+          e.state = "fire";
+          e.stateT = 0;
+          this.spawnProjectile(e, muzzle, target);
+        } else {
+          e.state = "track";
+          e.stateT = 0;
+          if (eye) eye.scale.setScalar(1);
+        }
       }
     } else if (e.state === "fire") {
       if (eye) eye.scale.setScalar(1);
@@ -15934,7 +16036,31 @@ export class Level {
     });
   }
 
-  private spawnProjectile(from: THREE.Vector3, target: THREE.Vector3): void {
+  private projectilePathBlocked(
+    from: THREE.Vector3,
+    to: THREE.Vector3,
+  ): boolean {
+    PROJECTILE_PATH_DIR.subVectors(to, from);
+    const distance = PROJECTILE_PATH_DIR.length();
+    if (distance <= 1e-6) return false;
+    PROJECTILE_PATH_DIR.multiplyScalar(1 / distance);
+    PROJECTILE_PATH_RAY.set(from, PROJECTILE_PATH_DIR);
+    for (const wall of this.walls) {
+      const hit = PROJECTILE_PATH_RAY.intersectBox(wall, PROJECTILE_PATH_HIT);
+      if (hit && hit.distanceTo(from) <= distance + 0.28) return true;
+    }
+    PROJECTILE_PATH_RAYCASTER.set(from, PROJECTILE_PATH_DIR);
+    PROJECTILE_PATH_RAYCASTER.near = 0.05;
+    PROJECTILE_PATH_RAYCASTER.far = distance + 0.28;
+    return PROJECTILE_PATH_RAYCASTER.intersectObjects(this.groundMeshes, false)
+      .length > 0;
+  }
+
+  private spawnProjectile(
+    owner: Enemy,
+    from: THREE.Vector3,
+    target: THREE.Vector3,
+  ): void {
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(0.28, 8, 6),
       new THREE.MeshBasicMaterial({ color: 0xff6a3a }),
@@ -15944,7 +16070,13 @@ export class Level {
     const dir = target.clone().sub(from);
     if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
     dir.normalize().multiplyScalar(15);
-    this.projectiles.push({ mesh, vel: dir, life: 3.4, box: new THREE.Box3() });
+    this.projectiles.push({
+      mesh,
+      vel: dir,
+      life: 3.4,
+      box: new THREE.Box3(),
+      owner,
+    });
     sfx.play("woosh2", 0.55, 1.5);
   }
 
@@ -15952,6 +16084,7 @@ export class Level {
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const pr = this.projectiles[i];
       pr.life -= dt;
+      PROJECTILE_PREVIOUS.copy(pr.mesh.position);
       pr.mesh.position.addScaledVector(pr.vel, dt);
       pr.mesh.rotation.x += dt * 6;
       pr.mesh.rotation.y += dt * 4;
@@ -15959,25 +16092,41 @@ export class Level {
         pr.mesh.position,
         new THREE.Vector3(0.7, 0.7, 0.7),
       );
-      if (pr.life <= 0 || pr.mesh.position.y < this.killY - 4) {
-        this.root.remove(pr.mesh);
-        this.projectiles.splice(i, 1);
-      }
+      if (
+        pr.life <= 0 ||
+        pr.mesh.position.y < this.killY - 4 ||
+        this.projectilePathBlocked(PROJECTILE_PREVIOUS, pr.mesh.position)
+      )
+        this.removeProjectile(i);
     }
   }
 
   // Clear every in-flight sentry orb (respawn / level switch).
-  private clearProjectiles(): void {
-    for (const pr of this.projectiles) this.root.remove(pr.mesh);
-    this.projectiles.length = 0;
+  clearProjectiles(): void {
+    for (let i = this.projectiles.length - 1; i >= 0; i--)
+      this.removeProjectile(i);
+  }
+
+  private clearProjectilesFrom(owner: Enemy): void {
+    for (let i = this.projectiles.length - 1; i >= 0; i--)
+      if (this.projectiles[i].owner === owner) this.removeProjectile(i);
+  }
+
+  private removeProjectile(index: number): void {
+    const pr = this.projectiles[index];
+    if (!pr) return;
+    pr.mesh.removeFromParent();
+    pr.mesh.geometry.dispose();
+    const materials = Array.isArray(pr.mesh.material)
+      ? pr.mesh.material
+      : [pr.mesh.material];
+    for (const material of materials) material.dispose();
+    this.projectiles.splice(index, 1);
   }
 
   // Remove a single orb by index (the player caught it — see player collision).
   popProjectile(index: number): void {
-    const pr = this.projectiles[index];
-    if (!pr) return;
-    this.root.remove(pr.mesh);
-    this.projectiles.splice(index, 1);
+    this.removeProjectile(index);
   }
 
   // Floating collectable wumpa.

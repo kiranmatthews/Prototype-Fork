@@ -1821,6 +1821,7 @@ export class Player {
     this.laneCursor.s = -1; // a teleport invalidates the lane's continuity bias
     this.pos.copy(stop.at);
     level.playerPos.copy(this.pos);
+    level.clearProjectiles(); // no orange orb may follow a debug warp from the old section
     this.settle(level);
     if (stop.cp && !stop.cp.active)
       level.activateCheckpoint(stop.cp, this.cratesBroken, this.fruit, this.masks, this.points);

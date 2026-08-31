@@ -1287,6 +1287,148 @@ function assertCoastalStreet(data, level) {
   );
 }
 
+function assertTestEnemyReset(data, level) {
+  const enemyComponents = data.components.filter(
+    (component) => component.t === "enemy",
+  );
+  for (const stale of [
+    [0, -252, 4],
+    [0, -556, 5],
+    [109, 6, -1720],
+    [152, -4, -2270],
+  ])
+    assert.equal(
+      enemyComponents.some((component) =>
+        component.p.every((value, index) => value === stale[index]),
+      ),
+      false,
+      `legacy malformed enemy survived migration: ${stale.join(",")}`,
+    );
+  for (const expected of [
+    [0, -8.69, -252],
+    [0, -13, -556],
+    [109, -16, -1720],
+    [152, -26, -2270],
+  ])
+    assert.equal(
+      enemyComponents.some((component) =>
+        component.p.every((value, index) => value === expected[index]),
+      ),
+      true,
+      `corrected Test Course enemy is missing: ${expected.join(",")}`,
+    );
+  if (!level) return;
+
+  level.root.updateMatrixWorld(true);
+  const down = new THREE.Vector3(0, -1, 0);
+  const ray = new THREE.Raycaster();
+  for (const enemy of level.enemies) {
+    if (enemy.kind === "car") continue;
+    ray.set(
+      new THREE.Vector3(
+        enemy.group.position.x,
+        enemy.baseY + 1.5,
+        enemy.group.position.z,
+      ),
+      down,
+    );
+    ray.far = 4;
+    const support = ray.intersectObjects(level.groundMeshes, false)[0];
+    assert.ok(support, `${enemy.kind} has no support under its reset home`);
+    assert.ok(
+      Math.abs(support.point.y - enemy.baseY) < 0.08,
+      `${enemy.kind} reset home floats ${enemy.baseY - support.point.y}m above support`,
+    );
+    assert.ok(enemy.homePosition, `${enemy.kind} has no immutable home snapshot`);
+  }
+
+  const homes = level.enemies.map((enemy) => enemy.homePosition.clone());
+  for (let pass = 0; pass < 4; pass++) {
+    for (const enemy of level.enemies) {
+      enemy.group.position.add(new THREE.Vector3(9 + pass, 17 + pass, -13 - pass));
+      enemy.state = "corrupt";
+      enemy.stateT = 99;
+      enemy.vy = 40;
+      enemy.flungT = 0.7;
+      enemy.flungVel = new THREE.Vector3(5, 6, 7);
+    }
+    level.reset((pass & 1) === 0);
+    level.enemies.forEach((enemy, index) => {
+      assert.ok(
+        enemy.group.position.distanceTo(homes[index]) < 1e-9,
+        `${enemy.kind} drifted on reset pass ${pass}`,
+      );
+      assert.equal(enemy.stateT, 0);
+      assert.equal(enemy.vy, 0);
+      assert.equal(enemy.flungT, undefined);
+      assert.equal(enemy.flungVel, undefined);
+    });
+  }
+
+  const sentry = level.enemies.find((enemy) => enemy.kind === "sentry");
+  assert.ok(sentry, "Test Course sentry fixture is missing");
+  const muzzle = sentry.group.position.clone().add(new THREE.Vector3(0, 0.72, 0));
+  level.spawnProjectile(
+    sentry,
+    muzzle,
+    muzzle.clone().add(new THREE.Vector3(0, 0, 20)),
+  );
+  let disposed = false;
+  level.projectiles[0].mesh.geometry.addEventListener("dispose", () => {
+    disposed = true;
+  });
+  level.killEnemy(sentry, new THREE.Vector3(1, 2, 3));
+  assert.equal(level.projectiles.length, 0, "defeated sentry retained an orphan orb");
+  assert.equal(disposed, true, "retired sentry orb leaked its geometry");
+
+  level.reset(true);
+  for (const enemy of level.enemies) enemy.alive = false;
+  sentry.alive = true;
+  sentry.group.position.y = sentry.baseY + 22;
+  sentry.state = "track";
+  sentry.stateT = 0;
+  level.playerPos.set(
+    sentry.group.position.x - 20,
+    sentry.baseY,
+    sentry.group.position.z,
+  );
+  for (let frame = 0; frame < 240; frame++) level.sentryStep(sentry, 1 / 60);
+  assert.equal(
+    level.projectiles.length,
+    0,
+    "vertically separated sentry fired from an unsupported/offscreen source",
+  );
+
+  sentry.group.position.y = sentry.baseY;
+  sentry.state = "track";
+  sentry.stateT = 0;
+  level.playerPos.set(
+    sentry.group.position.x - 40,
+    sentry.baseY,
+    sentry.group.position.z,
+  );
+  for (let frame = 0; frame < 240; frame++) level.sentryStep(sentry, 1 / 60);
+  assert.equal(
+    level.projectiles.length,
+    0,
+    "offscreen sentry fired before its source could be read",
+  );
+  sentry.state = "track";
+  sentry.stateT = 0;
+  level.playerPos.set(
+    sentry.group.position.x - 20,
+    sentry.baseY,
+    sentry.group.position.z,
+  );
+  for (let frame = 0; frame < 240; frame++) level.sentryStep(sentry, 1 / 60);
+  assert.ok(
+    level.projectiles.length > 0,
+    "visible supported sentry can no longer fire",
+  );
+  level.clearProjectiles();
+  level.reset(true);
+}
+
 try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
   const beachfrontCourseModule = await server.ssrLoadModule(
@@ -1321,6 +1463,10 @@ try {
       playerSource.includes(contract),
       `path-aware wallride integration missing ${contract}`,
     );
+  assert.ok(
+    playerSource.includes("level.clearProjectiles();"),
+    "checkpoint warp can carry stale sentry orbs into the destination",
+  );
 
   const cases = [
     {
@@ -1370,6 +1516,31 @@ try {
       JSON.parse(await readFile(packPath, "utf8")),
       path.relative(ROOT, packPath),
     ),
+  );
+  const publishedTest = cases.find((entry) => entry.id === "test");
+  assert.ok(publishedTest, "published Test Course is missing");
+  publishedTest.verify = assertTestEnemyReset;
+
+  // Existing browsers can retain the pre-fix synced Test Course indefinitely.
+  // Migration must heal those exact stale signatures without a cloud restore.
+  const legacyEnemyData = {
+    v: 1,
+    name: "Test Course",
+    spawn: [0, 0.1, 4],
+    killY: -80,
+    components: [
+      { t: "enemy", p: [0, -252, 4], foe: "sentry", range: 0, speed: 0 },
+      { t: "enemy", p: [109, 6, -1720], foe: "sentry", range: 0, speed: 5 },
+      { t: "gate", p: [0, 0, -20] },
+    ],
+  };
+  const healedEnemyData = migrateCustomLevel(clone(legacyEnemyData));
+  assert.deepEqual(healedEnemyData.components[0].p, [0, -8.69, -252]);
+  assert.deepEqual(healedEnemyData.components[1].p, [109, -16, -1720]);
+  assert.deepEqual(
+    migrateCustomLevel(clone(healedEnemyData)),
+    healedEnemyData,
+    "Test Course enemy repair is not idempotent",
   );
   for (const inputPath of inputPaths) {
     cases.push(
@@ -1424,6 +1595,27 @@ try {
     assert.notEqual(skyCopy.theme.fogFar, SKY_BRIDGE_FOG_FAR);
   } finally {
     skyCopy.dispose();
+  }
+
+  const descentEntry = BUILTIN_LEVELS.find((entry) => entry.id === "descent");
+  assert.ok(descentEntry, "Descent entry is missing");
+  const trafficLevel = new Level(new THREE.Scene(), descentEntry);
+  try {
+    const car = trafficLevel.enemies.find((enemy) => enemy.kind === "car");
+    assert.ok(car?.homePosition, "Descent car has no immutable home");
+    assert.ok(Number.isFinite(car.homeRoute), "Descent car has no route home");
+    const homePosition = car.homePosition.clone();
+    const homeRoute = car.homeRoute;
+    for (let frame = 0; frame < 180; frame++) trafficLevel.update(1 / 60);
+    assert.notEqual(car.x0, homeRoute, "traffic route did not advance");
+    trafficLevel.reset(true);
+    assert.equal(car.x0, homeRoute, "traffic reset retained its live route cursor");
+    assert.ok(
+      car.group.position.distanceTo(homePosition) < 1e-9,
+      "traffic reset did not restore its exact road transform",
+    );
+  } finally {
+    trafficLevel.dispose();
   }
 
   let serial = 0;
