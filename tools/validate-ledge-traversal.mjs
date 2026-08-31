@@ -595,19 +595,35 @@ try {
     const input = makeInput();
     const replayer = new Replayer();
     replayer.begin(data);
+    // This historical take validates ledge traversal, not newer wipeout
+    // agency. Keep the pre-feature stationary recovery/no-flail semantics so
+    // a bail thousands of frames earlier cannot rewrite the authored approach
+    // to the ledge under test.
+    const wipeoutTuning = {
+      bailRollOutSpeed: TUNING.bailRollOutSpeed,
+      ragFlailJumpChance: TUNING.ragFlailJumpChance,
+      ragFlailSteerChance: TUNING.ragFlailSteerChance,
+    };
+    TUNING.bailRollOutSpeed = 0;
+    TUNING.ragFlailJumpChance = 0;
+    TUNING.ragFlailSteerChance = 0;
     const rows = new Map();
-    while (replayer.active) {
-      const frame = replayer.frame;
-      beforeFrame?.(frame, player, level);
-      if (!replayer.feed(input, player.camDir)) break;
-      player.step(CONST.fixedStep, input, level);
-      level.update(CONST.fixedStep);
-      if (checkpoints.has(frame)) rows.set(frame, capture(player));
-      input.consumeEdges();
-      if (frame >= stopAfter) {
-        replayer.end();
-        break;
+    try {
+      while (replayer.active) {
+        const frame = replayer.frame;
+        beforeFrame?.(frame, player, level);
+        if (!replayer.feed(input, player.camDir)) break;
+        player.step(CONST.fixedStep, input, level);
+        level.update(CONST.fixedStep);
+        if (checkpoints.has(frame)) rows.set(frame, capture(player));
+        input.consumeEdges();
+        if (frame >= stopAfter) {
+          replayer.end();
+          break;
+        }
       }
+    } finally {
+      Object.assign(TUNING, wipeoutTuning);
     }
     const final = capture(player);
     level.dispose();

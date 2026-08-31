@@ -14,6 +14,7 @@
     "check:rail-air": "node tools/test-rail-air-transfer.mjs",
     "check:landing-x": "node tools/validate-landing-indicator.mjs",
     "check:run-facing": "node tools/test-run-facing.mjs",
+    "check:bail-recovery": "node tools/test-ragdoll-recovery.mjs",
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",
     "check:interpolation": "node tools/validate-render-interpolation.mjs",
     "check:animation": "node tools/test-animation-suite.mjs && node tools/test-animation-ik.mjs && node tools/test-character-animation-runtime.mjs && node tools/test-procedural-leg-rig.mjs",
@@ -31,7 +32,7 @@
     "character:doctor": "python3 tools/tripo-character/tripo_character.py doctor",
     "character:generate": "python3 tools/tripo-character/tripo_character.py generate",
     "character:test": "python3 -m unittest discover -s tools/tripo-character/tests -p 'test_*.py'",
-    "build": "npm run check:levels && npm run check:unity-ports && npm run check:ground && npm run check:pipe && npm run check:ledge && npm run check:rope && npm run check:rail-air && npm run check:landing-x && npm run check:run-facing && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:animation && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:look && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
+    "build": "npm run check:levels && npm run check:unity-ports && npm run check:ground && npm run check:pipe && npm run check:ledge && npm run check:rope && npm run check:rail-air && npm run check:landing-x && npm run check:run-facing && npm run check:bail-recovery && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:animation && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:look && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -70,6 +70,10 @@ import {
   type PlayerAnimationRig,
 } from './animation/bridge';
 import type { ProceduralMotionContext } from './animation/types';
+import {
+  BAIL_RECOVERY_SPRAWL_PITCH,
+  sampleBailRecovery,
+} from './bailRecovery';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 const LEG_SOLVE_R: SagittalLegPose = {
@@ -317,11 +321,14 @@ const BAIL_EXIT_CARRY = 0.4;
 const BAIL_EXIT_MIN = 1.8;
 const BAIL_EXIT_MAX = 5.4;
 const BAIL_MAX_STEP = 0.85;
+const RAG_FLAIL_MAX_JUMPS = 2;
+const RAG_FLAIL_MAX_UP_SPEED = 10;
 const BAIL_V = new THREE.Vector3();
 const BAIL_TARGET = new THREE.Vector3();
 const BAIL_DELTA = new THREE.Vector3();
 const BAIL_CONTROL_F = new THREE.Vector3();
 const BAIL_CONTROL_L = new THREE.Vector3();
+const BAIL_PITCH_AXIS = new THREE.Vector3(1, 0, 0);
 // Forgive a near-simultaneous Square/X smoosh at takeoff, but never bank an
 // old ground spin through an arbitrarily long held ollie charge.
 const OLLIE_DECK_TRICK_CHORD = 0.1;
@@ -579,7 +586,15 @@ export class Player {
   private ragAngVel = new THREE.Vector3(); // tumble rates: x pitch (over axisL), y yaw, z roll (over axisF)
   private ragQ = new THREE.Quaternion(); // accumulated tumble orientation, WORLD space
   private ragBlend = 0; // how much of the pose the tumble owns (eases in/out)
+  private ragPoseAnchor = new THREE.Vector3(); // parent-local waist point preserved across roll interruption
+  private ragPoseAnchorW = 0;
   private ragBounces = 0; // ground hits so far this wipeout (capped)
+  private ragImpacts = 0; // every actual ground contact, including a final non-rebound settle
+  private ragJumpAttemptImpact = 0; // one unreliable X roll per impact
+  private ragSteerAttemptImpact = 0; // one unreliable direction roll per impact
+  private ragSteerInputLatched = false; // held-through-impact stick must release before a pulse
+  private ragFishJumps = 0; // hard cap prevents flailing from extending a bail forever
+  private ragFlailKickT = 0; // presentation-only whole-body thrash after an attempted input
   private ragSeedA = 0; // per-wipeout flail phases so no two crashes thrash alike
   private ragSeedB = 0;
   private ragRollAcc = 0; // accumulated slope-roll angle: a thud every half turn
@@ -590,6 +605,7 @@ export class Player {
   private flyBoardRest = false; // landed and lying still
   private static readonly RAG_DQ = new THREE.Quaternion();
   private static readonly RAG_AXIS = new THREE.Vector3();
+  private static readonly RAG_PIVOT_BASE = new THREE.Vector3();
   private static readonly RAG_QP = new THREE.Quaternion();
   private static readonly RAG_QT = new THREE.Quaternion();
   // ONE capability mask for "is the skater currently wiping out". Everything a
@@ -1524,6 +1540,14 @@ export class Player {
     return this.bailDownT;
   }
 
+  get ragdollImpactCount(): number {
+    return this.ragImpacts;
+  }
+
+  get ragdollFishJumps(): number {
+    return this.ragFishJumps;
+  }
+
   get spinEffectDiagnostics(): SpinPresentationDiagnostics | null {
     return this.spinEffects?.diagnostics ?? null;
   }
@@ -1991,7 +2015,16 @@ export class Player {
     this.bailVelocity.set(0, 0, 0);
     this.ragActive = false;
     this.ragBlend = 0;
+    this.ragPoseAnchor.set(0, 0, 0);
+    this.ragPoseAnchorW = 0;
     this.ragAngVel.set(0, 0, 0);
+    this.ragBounces = 0;
+    this.ragImpacts = 0;
+    this.ragJumpAttemptImpact = 0;
+    this.ragSteerAttemptImpact = 0;
+    this.ragSteerInputLatched = false;
+    this.ragFishJumps = 0;
+    this.ragFlailKickT = 0;
     if (this.flyBoard) this.flyBoard.visible = false;
     this.airFromSkate = false;
     this.airGrav = 'foot';
@@ -2538,14 +2571,27 @@ export class Player {
     this.transferCoolT = Math.max(0, this.transferCoolT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
+    this.ragFlailKickT = Math.max(0, this.ragFlailKickT - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     const bailWas = this.bailDownT;
     // TUMBLE -> STABLE CONTACT -> PROCEDURAL ROLL-UP. The old single timer
     // counted down in the air, then left a full 1.1s belly-down pause after
     // friction had already stopped the body. Reserve the final recovery window
     // until there is stable ground; once the slide is slow (or the impact clock
-    // reaches that window), hand the body to a mashable shoulder-roll instead.
+    // reaches that window), hand the body to a mashable forward roll instead.
     if (this.bailDownT > 0) {
+      // Some bails begin already supported (a lost manual or a tumble-zone
+      // spill) instead of crossing the ground through stepAir. That grounded
+      // frame is still the first real body impact; launched trips remain
+      // ineligible until their later landing records one below.
+      if (
+        this.ragImpacts === 0 &&
+        this.ragActive &&
+        this.bailRecoverT < 0 &&
+        this.state === 'ride' &&
+        this.grounded
+      )
+        this.noteRagdollGroundImpact();
       const edges =
         (input.jumpPressed ? 1 : 0) +
         (input.spinPressed ? 1 : 0) +
@@ -2553,6 +2599,11 @@ export class Player {
         (input.grindPressed ? 1 : 0);
       this.bailMash = Math.max(0, this.bailMash - dt / TUNING.bailMashWindow) + edges;
       this.bailRush = 1 + Math.min(this.bailMash * TUNING.bailMashGain, TUNING.bailMashMax);
+      // Once the body has actually hit ground, X and the stick get one flaky
+      // chance per impact to make the helpless tumble do something useful.
+      // This runs before stable-ground arbitration so a lucky grounded fish
+      // kick can interrupt the get-up and put the body back in the air.
+      this.stepRagdollFlailInput(input, level);
       const stableGround =
         this.grounded &&
         this.state === 'ride' &&
@@ -2564,7 +2615,7 @@ export class Player {
         ? Math.min(BAIL_STABLE_TIME, this.bailGroundT + dt)
         : 0;
       const recoverDuration = Math.max(0.05, this.bailRecoverDuration);
-      // A recovery is a supported shoulder roll, never a mid-air animation.
+      // A recovery is a supported forward roll, never a mid-air animation.
       // If the support really disappears (a ledge, collapsing platform, or a
       // new impact), return control to the ragdoll and earn a fresh stable
       // contact before trying again.
@@ -2577,8 +2628,8 @@ export class Player {
         // Preserve the outgoing roll pose on the rare mid-rise fall. The new
         // rag quaternion is captured from that exact pose; a strong blend
         // prevents one frame of flat base pose showing through underneath it.
-        this.ragBlend = Math.max(this.ragBlend, 0.9);
-        this.startRagdoll('air');
+        this.ragBlend = 1;
+        this.startRagdoll('air', 0, this.riderG ?? this.bodyGroup);
       }
       const canStartRecovery =
         this.bailRecoverT < 0 &&
@@ -2588,6 +2639,15 @@ export class Player {
       if (canStartRecovery) {
         this.bailRecoverT = 0;
         this.bailDownT = Math.min(this.bailDownT, recoverDuration);
+        // Cache the REAL travel heading once. Several wall/rail bails express
+        // an away rebound as negative speed on the old approach axis; driving
+        // +axisF from that representation would turn the roll back into the
+        // obstacle. Flip the frame while preserving the exact velocity.
+        if (this.speed < 0) {
+          this.axisF.negate();
+          this.axisL.negate();
+          this.speed = -this.speed;
+        }
         this.bailVelocity.copy(this.axisF).multiplyScalar(this.speed);
         this.bailExitSpeed = THREE.MathUtils.clamp(
           Math.max(this.bailExitSpeed, Math.abs(this.speed) * BAIL_EXIT_CARRY),
@@ -3335,8 +3395,131 @@ export class Player {
     this.chargeTimer = 0;
   }
 
+  private noteRagdollGroundImpact(): void {
+    this.ragImpacts++;
+    this.ragFlailKickT = Math.max(this.ragFlailKickT, 0.12);
+    // Contact-created bails did not exist during the pre-collision input pass.
+    // Latch any stick already held on this exact impact so only a release and
+    // fresh post-impact pulse may spend the new steering opportunity.
+    if (
+      this.rawInput &&
+      Math.hypot(this.rawInput.moveX, this.rawInput.moveY) > 0.35
+    )
+      this.ragSteerInputLatched = true;
+  }
+
+  private stepRagdollFlailInput(input: Input, level: Level): void {
+    const moveX = this.rawInput.moveX;
+    const moveY = this.rawInput.moveY;
+    const moveHeld = Math.hypot(moveX, moveY) > 0.35;
+    if (!moveHeld) this.ragSteerInputLatched = false;
+    else if (this.ragImpacts <= 0) this.ragSteerInputLatched = true;
+    if (
+      !this.ragActive ||
+      this.ragImpacts <= 0 ||
+      this.bailRecoverT >= 0 ||
+      this.state === 'dead' ||
+      this.state === 'gameover'
+    )
+      return;
+
+    // X remains part of the mash-out rhythm, but after impact its first edge
+    // also rolls the dice on a deliberately bad "fish jump". One roll per
+    // impact and two successes per bail keep it playful without allowing an
+    // infinite invulnerable air chain.
+    if (
+      input.jumpPressed &&
+      this.ragJumpAttemptImpact < this.ragImpacts &&
+      this.ragFishJumps < RAG_FLAIL_MAX_JUMPS
+    ) {
+      this.ragJumpAttemptImpact = this.ragImpacts;
+      this.ragFlailKickT = Math.max(this.ragFlailKickT, 0.28);
+      const jumpChance = THREE.MathUtils.clamp(TUNING.ragFlailJumpChance, 0, 1);
+      if (jumpChance > 0 && this.simRand() < jumpChance) {
+        const impulse = Math.max(0, TUNING.ragFlailJumpVelocity) *
+          THREE.MathUtils.lerp(0.72, 1.12, this.simRand());
+        this.vVel = Math.min(
+          RAG_FLAIL_MAX_UP_SPEED,
+          Math.max(0, this.vVel) * 0.42 + impulse,
+        );
+        this.state = 'air';
+        this.grounded = false;
+        this.groundHit = null;
+        this.airFromSkate = false;
+        this.airGrav = 'foot';
+        this.airMomentum = true;
+        this.airRose = true;
+        this.airborneT = 0;
+        this.launchVy = this.vVel;
+        this.airPeakY = this.pos.y;
+        this.bailGroundT = 0;
+        this.bailDownT = Math.max(this.bailDownT, this.bailRecoverDuration);
+        this.ragFishJumps++;
+        // Cosmetic chaos stays off the replay RNG stream.
+        this.ragAngVel.x += (3 + Math.random() * 4) * (Math.random() < 0.5 ? -1 : 1);
+        this.ragAngVel.z += (Math.random() - 0.5) * 5;
+        sfx.play('woosh2', 0.45, 0.72 + Math.random() * 0.18);
+        this.emitDust(2);
+      } else {
+        // A miss still reads as input: the body arches and kicks, but gains no
+        // authoritative velocity. That visible lie is the flaky-control joke.
+        this.ragAngVel.x += (Math.random() - 0.5) * 3;
+        this.ragAngVel.z += (Math.random() - 0.5) * 4;
+      }
+    }
+
+    // One course/camera-relative steering pulse per impact. Even a success is
+    // rotated away from the requested direction and only partially blends the
+    // current velocity toward it, so this never becomes ordinary air control.
+    if (
+      this.state === 'air' &&
+      !this.grounded &&
+      moveHeld &&
+      !this.ragSteerInputLatched &&
+      this.ragSteerAttemptImpact < this.ragImpacts
+    ) {
+      this.ragSteerInputLatched = true;
+      this.ragSteerAttemptImpact = this.ragImpacts;
+      this.ragFlailKickT = Math.max(this.ragFlailKickT, 0.2);
+      const steerChance = THREE.MathUtils.clamp(TUNING.ragFlailSteerChance, 0, 1);
+      if (steerChance > 0 && this.simRand() < steerChance) {
+        this.resolveBailControlFrame(level);
+        BAIL_TARGET.copy(BAIL_CONTROL_F)
+          .multiplyScalar(moveY)
+          .addScaledVector(BAIL_CONTROL_L, moveX)
+          .normalize();
+        const error = THREE.MathUtils.degToRad(
+          THREE.MathUtils.clamp(TUNING.ragFlailSteerJitter, 0, 180),
+        ) * (this.simRand() * 2 - 1);
+        const cos = Math.cos(error);
+        const sin = Math.sin(error);
+        const tx = BAIL_TARGET.x;
+        const tz = BAIL_TARGET.z;
+        BAIL_TARGET.x = tx * cos - tz * sin;
+        BAIL_TARGET.z = tx * sin + tz * cos;
+        const kickSpeed = Math.max(0, TUNING.ragFlailSteerSpeed) *
+          THREE.MathUtils.lerp(0.65, 1, this.simRand());
+        const currentSpeed = Math.abs(this.speed);
+        BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
+        BAIL_TARGET.multiplyScalar(Math.max(kickSpeed, currentSpeed));
+        BAIL_V.lerp(BAIL_TARGET, THREE.MathUtils.lerp(0.34, 0.58, this.simRand()));
+        const velocity = BAIL_V.length();
+        if (velocity > 1e-4) {
+          const cap = Math.max(TUNING.downhillMax, currentSpeed);
+          this.speed = Math.min(velocity, cap);
+          this.axisF.copy(BAIL_V).multiplyScalar(1 / velocity);
+          this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+          this.bailVelocity.copy(this.axisF).multiplyScalar(this.speed);
+        }
+        this.ragAngVel.y += (Math.random() - 0.5) * 5;
+        this.ragAngVel.z += (Math.random() - 0.5) * 6;
+      }
+    }
+  }
+
   private stepBailRecoveryMotion(dt: number, input: Input, level: Level): void {
     const p = this.bailRecoveryPose;
+    const recovery = sampleBailRecovery(p);
     this.bailVelocity.copy(this.axisF).multiplyScalar(this.speed);
     const intent = Math.min(1, Math.hypot(input.moveX, input.moveY));
     const moveU = THREE.MathUtils.clamp(
@@ -3345,7 +3528,17 @@ export class Player {
       1,
     );
     const moveW = moveU * moveU * (3 - 2 * moveU) * intent;
-    BAIL_TARGET.set(0, 0, 0);
+    // The roll owns a modest forward run-out even with no stick held. This is
+    // what moves the recovery off the planted feet and hands real velocity to
+    // the run state instead of finishing as a stationary rake pop.
+    const carriedCrash = THREE.MathUtils.clamp(
+      (this.bailExitSpeed - BAIL_EXIT_MIN) / Math.max(0.01, BAIL_EXIT_MAX - BAIL_EXIT_MIN),
+      0,
+      1,
+    );
+    const automaticRunOut = Math.max(0, TUNING.bailRollOutSpeed) *
+      THREE.MathUtils.lerp(0.85, 1.25, carriedCrash);
+    BAIL_TARGET.copy(this.axisF).multiplyScalar(automaticRunOut * recovery.drive);
     if (moveW > 0) {
       // Recovery motion turns the gameplay axes to its ACTUAL travel vector
       // below. Deriving the next input target from those same rotating axes
@@ -3361,7 +3554,9 @@ export class Player {
           TUNING.walkSpeed * 0.62,
           Math.max(this.bailExitSpeed, TUNING.walkSpeed * 0.45),
         );
-        BAIL_TARGET.multiplyScalar(runOut * moveW);
+        BAIL_TARGET.multiplyScalar(runOut);
+        BAIL_V.copy(this.axisF).multiplyScalar(automaticRunOut * recovery.drive);
+        BAIL_TARGET.lerp(BAIL_V, 1 - moveW);
       }
     }
     BAIL_DELTA.copy(BAIL_TARGET).sub(this.bailVelocity);
@@ -5228,6 +5423,7 @@ export class Player {
           this.rideNormal.copy(hit.normal);
           this.bail();
           this.startRagdoll('air');
+          this.noteRagdollGroundImpact();
           this.vVel = 3.4 + Math.min(2.2, Math.abs(this.speed) * 0.12);
           this.state = 'air';
           this.grounded = false;
@@ -5387,6 +5583,7 @@ export class Player {
             // the combo survives it — instead of the old alpha-flash absorb.
             this.bail(this.masks > 0);
             this.startRagdoll('side', Math.sign(this.speed) || 1);
+            this.noteRagdollGroundImpact();
             this.vVel = 3.4 + Math.min(2.2, Math.abs(this.speed) * 0.12);
             this.state = 'air';
             this.grounded = false;
@@ -5476,6 +5673,7 @@ export class Player {
           // plays (ragdoll and all) — the mask makes it cheap instead: a
           // shorter knockdown, the deck stays with you, the combo survives.
           this.bail(this.masks > 0);
+          this.noteRagdollGroundImpact();
           // A botched landing SLAPS the transition and the body kicks back up
           // off it — that rebound is what puts the ragdoll on show (grounded,
           // the sprawl would eat the whole crash in one frame).
@@ -5612,13 +5810,12 @@ export class Player {
   // settle below may finish the contact, but no fresh landing effect may steal
   // priority from the bail.
   private resolveRagdollGroundBounce(hit: GroundHit): boolean {
-    if (
-      !this.isBailing ||
-      !this.ragActive ||
-      this.ragBounces >= 3 ||
-      this.vVel >= -3.2 ||
-      hit.normal.y <= 0.6
-    )
+    if (!this.isBailing || !this.ragActive) return false;
+    // An impact is input-eligible even when it is too soft/steep to rebound or
+    // the natural three-bounce budget is already spent. The body has hit the
+    // floor; a lucky X press during the brief settle may still fish-flop it.
+    this.noteRagdollGroundImpact();
+    if (this.ragBounces >= 3 || this.vVel >= -3.2 || hit.normal.y <= 0.6)
       return false;
 
     this.pos.y = hit.y;
@@ -6753,6 +6950,14 @@ export class Player {
     this.bailGroundT = 0;
     this.bailMash = 0;
     this.bailRush = 1;
+    this.ragImpacts = 0;
+    this.ragJumpAttemptImpact = 0;
+    this.ragSteerAttemptImpact = 0;
+    this.ragSteerInputLatched = false;
+    this.ragFishJumps = 0;
+    this.ragFlailKickT = 0;
+    this.ragPoseAnchor.set(0, 0, 0);
+    this.ragPoseAnchorW = 0;
     this.bailVelocity.copy(BAIL_V);
     this.bailExitSpeed = THREE.MathUtils.clamp(
       planar * BAIL_EXIT_CARRY,
@@ -6847,14 +7052,28 @@ export class Player {
   // Seed the tumble. `kind` picks which axis dominates — the crash should
   // visibly happen in the direction of the mistake — and everything gets a
   // random jitter on the other axes so no two wipeouts read the same.
-  private startRagdoll(kind: 'forward' | 'back' | 'side' | 'air', sideSign = 0): void {
+  private startRagdoll(
+    kind: 'forward' | 'back' | 'side' | 'air',
+    sideSign = 0,
+    poseSource: THREE.Object3D = this.bodyGroup,
+  ): void {
     this.ragActive = true;
     this.ragBounces = 0;
     this.ragRollAcc = 0;
     this.ragSeedA = Math.random() * Math.PI * 2;
     this.ragSeedB = Math.random() * Math.PI * 2;
     // start the tumble exactly where the pose left the body — no snap
-    this.bodyGroup.getWorldQuaternion(this.ragQ);
+    poseSource.getWorldQuaternion(this.ragQ);
+    if (poseSource !== this.bodyGroup && this.bodyGroup.parent) {
+      poseSource.updateWorldMatrix(true, false);
+      this.bodyGroup.parent.updateWorldMatrix(true, false);
+      Player.RAG_AXIS.set(0, 0.82, 0).applyMatrix4(poseSource.matrixWorld);
+      this.ragPoseAnchor.copy(Player.RAG_AXIS);
+      this.bodyGroup.parent.worldToLocal(this.ragPoseAnchor);
+      this.ragPoseAnchorW = 1;
+    } else {
+      this.ragPoseAnchorW = 0;
+    }
     const s = TUNING.ragSpin;
     // faster crash = faster tumble, saturating so a hyper-speed wreck stays readable
     const spd = 0.55 + Math.min(1.05, Math.abs(this.speed) * 0.045);
@@ -11423,6 +11642,7 @@ export class Player {
         this.wallCoolT = 0.2;
         this.state = 'air';
         this.grounded = false;
+        this.noteRagdollGroundImpact();
         if (this.ragActive && this.vVel < -3.2 && hit.normal.y > 0.6) {
           this.vVel = -this.vVel * TUNING.ragBounce;
           this.speed *= 0.72;
@@ -12131,6 +12351,15 @@ export class Player {
     // A runtime authored overlay wrote after the previous legacy pose. Undo it
     // before any legacy formula reads or accumulates from local transforms.
     this.playerAnimationBridge.prepareLegacyPose();
+    // Supported wipeout recovery is authored on the rider-only root late in
+    // this method. Clear its previous fixed-step rotation before any joint or
+    // tail calculation; plantOnDeck below remains the sole owner of position
+    // until the recovery layer adds its waist-pivot correction.
+    if (this.riderG) {
+      this.riderG.rotation.set(0, 0, 0);
+      if (this.isBailing || this.ragActive || this.ragBlend > 0.001)
+        this.riderG.position.set(0, 0, 0);
+    }
     this.group.position.copy(this.pos);
 
     // Chunky little carve lean; on a rail, the lean IS the balance needle.
@@ -12289,7 +12518,7 @@ export class Player {
       !this.freeSkate &&
       this.slideTimer <= 0 &&
       !this.crawling &&
-      !this.isBailing &&
+      (!this.isBailing || this.bailRecoverT >= 0) &&
       Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
     // The gait expresses committed intent through a turnaround even on the
     // instant physical velocity crosses zero. Gameplay/debug speed stays honest;
@@ -13210,11 +13439,13 @@ export class Player {
     const hanging = this.slamActive && this.slamHangT > 0;
     const slamDropping =
       (this.slamActive && this.slamHangT <= 0) || this.slamFlatT > 0;
-    // A bail begins in the same grounded sprawl, then the procedural recovery
-    // actually lifts it during the timer instead of holding flat until zero.
+    // A bail begins in the same grounded sprawl. Once supported recovery owns
+    // the rider, the feet-root drop is removed in one equivalent handoff and
+    // the waist-pivoted forward roll below becomes the sole body root motion.
+    const recoveringBail = this.bailRecoverT >= 0 && this.bailRecoveryPose > 0;
     const dropTarget = Math.max(
       slamDropping ? 1 : 0,
-      this.bailDownT > 0 ? 1 - this.bailRecoveryPose : 0,
+      this.bailDownT > 0 && !recoveringBail ? 1 : 0,
     );
     this.hangPose += ((hanging ? 1 : 0) - this.hangPose) * Math.min(1, 16 * dt);
     // The get-up eases at the SAME rush the mash is applying to the clock — the
@@ -13223,6 +13454,7 @@ export class Player {
     this.dropPose +=
       (dropTarget - this.dropPose) *
       Math.min(1, 20 * dropRush * dt);
+    const bodyDropPose = recoveringBail ? 0 : this.dropPose;
     // smoothstep: the roll accelerates into the tuck and eases out upright
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     if (this.state === 'dead' && this.bailing) {
@@ -13238,7 +13470,7 @@ export class Player {
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
         (0.75 * crawlMove + 0.16 * crouchW) - // all fours hunch when MOVING; a squat stays upright
         0.55 * this.hangPose + // rear back: "...uh oh"
-        1.45 * this.dropPose - // belly-first pancake
+        1.45 * bodyDropPose - // belly-first pancake; recovery moves this pitch to riderG
         0.28 * this.teeterPose + // arms-back "whoa whoa" lean
         0.18 * this.skatePose + // athletic crouch over the board
         runLean +
@@ -13273,7 +13505,7 @@ export class Player {
       this.chargePose * (0.26 - 0.14 * this.skatePose) + // board pump: shallower — a full drop buries the torso through the deck
       standCharge * 0.12 - // planted on-foot: ease the crouch drop (no deck to sink into)
       this.wallChargePose * 0.28 - // sink into the wall pump
-      (this.grounded ? 0.1 * this.dropPose : 0) +
+      (this.grounded ? 0.1 * bodyDropPose : 0) +
       Math.abs(Math.sin(this.walkPhase)) * 0.075 * this.walkAmp + // reference bounce: each step hops
       breathe * 0.015 * this.idleAmp;
     // The somersault wheels around the WAIST, not the feet (the rig's origin):
@@ -13357,14 +13589,45 @@ export class Player {
         this.bodyGroup.position.x += (0 - Player.RAG_AXIS.x) * this.ragBlend;
         this.bodyGroup.position.y += (waistH - Player.RAG_AXIS.y) * this.ragBlend;
         this.bodyGroup.position.z += (0 - Player.RAG_AXIS.z) * this.ragBlend;
+        if (this.ragPoseAnchorW > 0.001) {
+          // A collapsing support can interrupt the forward roll halfway
+          // through. Its rider root is offset by more than a metre at some
+          // samples, so preserving quaternion alone still teleports the body.
+          // Pin the same waist point in parent space on the first rag frame,
+          // then quickly release it back to the ordinary ballistic pivot.
+          Player.RAG_PIVOT_BASE
+            .set(0, 0.82, 0)
+            .multiply(this.bodyGroup.scale)
+            .applyQuaternion(this.bodyGroup.quaternion);
+          const anchorW = this.ragPoseAnchorW;
+          this.bodyGroup.position.x = THREE.MathUtils.lerp(
+            this.bodyGroup.position.x,
+            this.ragPoseAnchor.x - Player.RAG_PIVOT_BASE.x,
+            anchorW,
+          );
+          this.bodyGroup.position.y = THREE.MathUtils.lerp(
+            this.bodyGroup.position.y,
+            this.ragPoseAnchor.y - Player.RAG_PIVOT_BASE.y,
+            anchorW,
+          );
+          this.bodyGroup.position.z = THREE.MathUtils.lerp(
+            this.bodyGroup.position.z,
+            this.ragPoseAnchor.z - Player.RAG_PIVOT_BASE.z,
+            anchorW,
+          );
+          this.ragPoseAnchorW *= Math.exp(-8 * dt);
+        }
       }
       // LIMB FLAIL: arms windmill, legs kick, the head whips — sinusoids on
       // per-wipeout random phases, amplitude riding how fast the body is
       // actually spinning, dying off as the sprawl takes over. ADDED after
       // every authored joint write, so it layers on whatever pose is fading.
       if (this.ragBlend > 0.02 && TUNING.ragFlail > 0) {
+        const kick = THREE.MathUtils.clamp(this.ragFlailKickT / 0.28, 0, 1);
         const f =
-          TUNING.ragFlail * this.ragBlend * (0.35 + Math.min(1, this.ragAngVel.length() * 0.12));
+          TUNING.ragFlail * this.ragBlend *
+          (0.35 + Math.min(1, this.ragAngVel.length() * 0.12)) *
+          (1 + kick * 1.35);
         const t = this.runTime;
         const wA = 11 + 3 * Math.sin(this.ragSeedA);
         const wB = 13 + 4 * Math.sin(this.ragSeedB);
@@ -13379,54 +13642,105 @@ export class Player {
         if (this.legR) this.legR.rotation.x += Math.sin(t * wA * 0.8 + this.ragSeedB) * 1.1 * f;
         if (this.legL) this.legL.rotation.x += Math.sin(t * wB * 0.8 + this.ragSeedA + 1.7) * 1.1 * f;
         if (this.headM) this.headM.rotation.x += Math.sin(t * wA + 0.6) * 0.35 * f;
+        this.bodyGroup.rotation.x += Math.sin(t * 24 + this.ragSeedA) * 0.22 * kick;
       }
     }
 
-    // PROCEDURAL ROLL-UP. Every curve is zero at both ends: the final ragdoll
-    // orientation can hand into it from any crash, and p=1 hands into the live
-    // run pose with no residual transform. The shoulder is cosmetic only.
+    // A failed input must still LOOK like a failed input. Once a slow body has
+    // settled, ragBlend can be zero and the airborne flail layer above is no
+    // longer visible; give the short attempt clock its own grounded fish-arch
+    // so X never appears completely ignored even when it loses the dice roll.
+    if (
+      this.ragActive &&
+      this.bailRecoverT < 0 &&
+      this.ragFlailKickT > 0 &&
+      this.ragBlend <= 0.02 &&
+      TUNING.ragFlail > 0
+    ) {
+      const kick = THREE.MathUtils.clamp(this.ragFlailKickT / 0.28, 0, 1) *
+        Math.min(2, TUNING.ragFlail);
+      const wave = Math.sin(this.runTime * 28 + this.ragSeedA);
+      this.bodyGroup.rotation.x += wave * 0.28 * kick;
+      if (this.armR) this.armR.rotation.x += wave * 0.85 * kick;
+      if (this.armL) this.armL.rotation.x -= wave * 0.85 * kick;
+      if (this.legR) this.legR.rotation.x -= wave * 0.55 * kick;
+      if (this.legL) this.legL.rotation.x += wave * 0.55 * kick;
+    }
+
+    // FORWARD ROLL TO RUN. The airborne ragdoll stays on bodyGroup; supported
+    // recovery moves to the rider-only root so its pitch can pivot about the
+    // waist without dragging the board or hinging the whole character at the
+    // feet. The absolute pitch begins at the same 1.45-radian sprawl and ends
+    // at exactly 2π, so the final third is already a normal running stride and
+    // the next frame's identity transform is visually identical.
     const recover = this.bailRecoveryPose;
-    if (recover > 0) {
-      const bell = (from: number, to: number): number => {
-        const u = THREE.MathUtils.clamp((recover - from) / (to - from), 0, 1);
-        return Math.sin(Math.PI * u);
-      };
-      const curl = bell(0, 0.52);
-      const shoulderRoll = bell(0.02, 0.72);
-      const kneel = bell(0.2, 0.94);
-      const firstStride = bell(0.48, 1);
+    const rider = this.riderG;
+    if (recover > 0 && rider) {
+      const recovery = sampleBailRecovery(recover);
       const side = this.bailRecoverSide;
-      this.bodyGroup.rotation.x += 0.38 * curl + 0.2 * kneel;
-      this.bodyGroup.rotation.y += side * 0.16 * shoulderRoll;
-      this.bodyGroup.rotation.z += side * (0.95 * shoulderRoll + 0.18 * kneel);
-      this.bodyGroup.position.x += side * 0.12 * shoulderRoll;
-      this.bodyGroup.position.y += 0.18 * curl + 0.08 * kneel;
+      const handoff = 1 - THREE.MathUtils.clamp(this.ragBlend, 0, 1);
+      rider.rotation.set(
+        recovery.forwardRoll * handoff,
+        side * 0.08 * recovery.shoulder * handoff,
+        side * 0.12 * recovery.shoulder * handoff,
+      );
+      // Counter-translate the rotated rider around a waist point. Subtract the
+      // starting-sprawl correction while the revolution enters, so p=0 is at
+      // the exact old ground pose instead of teleporting a waist-height up;
+      // both corrections become zero again at the completed 2π. Position was
+      // reset by plantOnDeck, so no fixed-step offset can accumulate.
+      const waistH = 0.82;
+      Player.RAG_AXIS.set(0, waistH, 0).applyQuaternion(rider.quaternion);
+      Player.RAG_PIVOT_BASE.set(0, waistH, 0).applyQuaternion(
+        Player.RAG_QP.setFromAxisAngle(
+          BAIL_PITCH_AXIS,
+          BAIL_RECOVERY_SPRAWL_PITCH * handoff,
+        ),
+      );
+      const keepStart = 1 - recovery.roll;
+      rider.position.x +=
+        -Player.RAG_AXIS.x + Player.RAG_PIVOT_BASE.x * keepStart;
+      rider.position.y +=
+        waistH - Player.RAG_AXIS.y -
+        (waistH - Player.RAG_PIVOT_BASE.y) * keepStart -
+        0.1 * keepStart * handoff +
+        0.06 * recovery.tuck * handoff;
+      rider.position.z +=
+        -Player.RAG_AXIS.z + Player.RAG_PIVOT_BASE.z * keepStart;
       if (this.legR && this.legL) {
         const plantR = side > 0;
         this.legR.rotation.x +=
-          0.9 * curl + (plantR ? -0.35 : 0.52) * kneel - 0.25 * firstStride;
+          1.05 * recovery.tuck +
+          (plantR ? -0.34 : 0.5) * recovery.plant -
+          0.36 * recovery.stride;
         this.legL.rotation.x +=
-          0.9 * curl + (plantR ? 0.52 : -0.35) * kneel + 0.25 * firstStride;
-        this.legR.rotation.z -= side * 0.2 * shoulderRoll;
-        this.legL.rotation.z -= side * 0.2 * shoulderRoll;
+          1.05 * recovery.tuck +
+          (plantR ? 0.5 : -0.34) * recovery.plant +
+          0.36 * recovery.stride;
+        this.legR.rotation.z -= side * 0.12 * recovery.shoulder;
+        this.legL.rotation.z -= side * 0.12 * recovery.shoulder;
       }
       if (this.kneeR && this.kneeL) {
         const plantR = side > 0;
-        this.kneeR.rotation.x += 1.25 * curl + (plantR ? 1.35 : 0.72) * kneel;
-        this.kneeL.rotation.x += 1.25 * curl + (plantR ? 0.72 : 1.35) * kneel;
+        this.kneeR.rotation.x +=
+          1.45 * recovery.tuck + (plantR ? 1.3 : 0.68) * recovery.plant;
+        this.kneeL.rotation.x +=
+          1.45 * recovery.tuck + (plantR ? 0.68 : 1.3) * recovery.plant;
       }
       const plantArm = side > 0 ? this.armR : this.armL;
       const freeArm = side > 0 ? this.armL : this.armR;
       if (plantArm) {
-        plantArm.rotation.x -= 0.95 * kneel;
-        plantArm.rotation.z += side * 0.5 * kneel;
+        plantArm.rotation.x -= 1.05 * recovery.plant;
+        plantArm.rotation.z += side * 0.42 * recovery.plant;
       }
-      if (freeArm) freeArm.rotation.x += 0.65 * firstStride;
+      if (freeArm) freeArm.rotation.x += 0.72 * recovery.stride;
       const plantElbow = side > 0 ? this.elbowR : this.elbowL;
-      if (plantElbow) plantElbow.rotation.x -= 0.75 * kneel;
+      if (plantElbow) plantElbow.rotation.x -= 0.78 * recovery.plant;
       const plantWrist = side > 0 ? this.wristR : this.wristL;
-      if (plantWrist) plantWrist.rotation.x += 0.35 * kneel;
-      if (this.headM) this.headM.rotation.x -= 0.42 * (curl + kneel * 0.65);
+      if (plantWrist) plantWrist.rotation.x += 0.38 * recovery.plant;
+      if (this.headM)
+        this.headM.rotation.x -=
+          0.46 * recovery.tuck + 0.24 * recovery.plant;
     }
 
     // A bail stays visible so the tumble reads; a plain death blinks out.

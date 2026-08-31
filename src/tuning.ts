@@ -140,6 +140,7 @@ export const TUNING = {
   bailMashWindow: 0.4, // button-edge accumulator half-life while knocked down
   bailMashGain: 0.2, // knockdown clock speed-up per accumulated edge
   bailMashMax: 1, // cap on that speed-up: 1 = a saturated mash HALVES the lockout (THUG's 1.0-2.0x bash factor)
+  bailRollOutSpeed: 4, // automatic forward carry as the recovery roll becomes its first running stride
   bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
   // RAGDOLL WIPEOUTS: every knockdown becomes a tumbling body — it bounces off
   // the ground, the limbs windmill, the deck flies off on its own, and the
@@ -147,6 +148,11 @@ export const TUNING = {
   ragBounce: 0.42, // restitution of a tumbling body: how much of each fall the bounce keeps
   ragSpin: 1, // tumble rotation speed scale (0 = the old rigid sprawl, ~3 = washing machine)
   ragFlail: 1, // limb windmill amplitude while airborne in a wipeout
+  ragFlailJumpChance: 0.38, // chance that a post-impact X press produces a helpless fish-flop bounce
+  ragFlailJumpVelocity: 6.2, // upward impulse when that unreliable post-impact bounce answers
+  ragFlailSteerChance: 0.3, // chance that each post-impact stick pulse actually changes the tumble direction
+  ragFlailSteerSpeed: 5, // target planar speed of a successful, deliberately sloppy tumble steer
+  ragFlailSteerJitter: 55, // max angular error (degrees) on a successful tumble steer
   wallBailSpeed: 12.5, // frontal skate into a solid at/above this = wipeout (below: a block); shared with the generic obstacle response
   wallBailFrontal: 0.68, // required head-on dot for a solid/rail wipeout; angled scrapes keep sliding
   tripMaxHeight: 1.15, // obstacle height above the feet that selects a forward low-obstacle tumble
@@ -331,9 +337,15 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   bailMashWindow: { min: 0.1, max: 1, step: 0.05 },
   bailMashGain: { min: 0, max: 0.5, step: 0.05 },
   bailMashMax: { min: 0, max: 2, step: 0.1 },
+  bailRollOutSpeed: { min: 0, max: 8, step: 0.25 },
   ragBounce: { min: 0, max: 0.8, step: 0.02 },
   ragSpin: { min: 0, max: 3, step: 0.1 },
   ragFlail: { min: 0, max: 2, step: 0.1 },
+  ragFlailJumpChance: { min: 0, max: 1, step: 0.05 },
+  ragFlailJumpVelocity: { min: 0, max: 14, step: 0.25 },
+  ragFlailSteerChance: { min: 0, max: 1, step: 0.05 },
+  ragFlailSteerSpeed: { min: 0, max: 12, step: 0.25 },
+  ragFlailSteerJitter: { min: 0, max: 120, step: 5 },
   wallBailSpeed: { min: 4, max: 30, step: 0.5 },
   wallBailFrontal: { min: 0.3, max: 1, step: 0.02 },
   tripMaxHeight: { min: 0.35, max: 1.5, step: 0.05 },
@@ -512,6 +524,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   bailMashGain: 'How much each mashed button speeds up the knockdown clock and procedural roll-up together.',
   bailMashMax:
     'Ceiling on the mash speed-up. 1 = a saturated mash plays the tumble/recovery clock at up to 2x; 0 = mashing does nothing.',
+  bailRollOutSpeed:
+    'Automatic forward speed carried out of the waist-pivoted recovery roll, even with no stick held. 0 keeps the recovery in place; higher makes the final stride run farther.',
   spinTolerance:
     'Landing with your grab-spin more than this many degrees off the travel line = you landed funny: bail. Landing within it of the 180 line is CLEAN — you ride away in switch stance.',
   sketchyTolerance:
@@ -611,6 +625,16 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'How fast a wiped-out body cartwheels/pitches while airborne. 0 = the old rigid sprawl with no rotation; around 1 reads like THPS; 3 = washing machine.',
   ragFlail:
     'Limb windmill amplitude while a wipeout is airborne. The arms and legs thrash between bounces and settle once the body is sliding.',
+  ragFlailJumpChance:
+    'After the first wipeout impact, chance that a fresh X press makes the helpless body fish-flop upward. Failed presses still visibly thrash and still count toward mash recovery. 0 = never; 1 = every eligible press.',
+  ragFlailJumpVelocity:
+    'Upward impulse of a successful post-impact fish-flop. Existing rebound speed contributes only partly, so repeated presses stay chaotic instead of becoming a clean double jump.',
+  ragFlailSteerChance:
+    'After the first impact, chance that each coarse stick-control pulse actually redirects an airborne tumble. Even successful pulses carry angular error. 0 = no tumble steering; 1 = every pulse responds.',
+  ragFlailSteerSpeed:
+    'Planar target speed of a successful tumble-direction pulse. This is weak, inaccurate body English, not normal air control.',
+  ragFlailSteerJitter:
+    'Maximum left/right angular error, in degrees, even when a tumble-direction pulse succeeds. Higher makes the response more fish-like and less trustworthy.',
   wallBailSpeed:
     'Minimum board speed for a sufficiently frontal wall, balustrade, or other solid impact to enter the generic wipeout response. Below it, the obstacle blocks without a bail.',
   wallBailFrontal:
@@ -731,7 +755,11 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   {
     title: 'WIPEOUTS',
     keys: [
-      'ragBounce', 'ragSpin', 'ragFlail', 'crateTripSpeed',
+      'ragBounce', 'ragSpin', 'ragFlail',
+      'bailRollOutSpeed',
+      'ragFlailJumpChance', 'ragFlailJumpVelocity',
+      'ragFlailSteerChance', 'ragFlailSteerSpeed', 'ragFlailSteerJitter',
+      'crateTripSpeed',
       'hugeDropDistance', 'hugeDropImpact',
       'wallBailSpeed', 'wallBailFrontal', 'tripMaxHeight',
       'tripLiftBase', 'tripLiftPerSpeed', 'tripLiftMax', 'tripLiftVariation',
