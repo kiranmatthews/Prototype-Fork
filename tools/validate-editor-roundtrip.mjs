@@ -712,6 +712,53 @@ const CRATE_STACK_BRIDGE_FIXTURE = {
   groups: [],
 };
 
+const SYSTEMIC_EDGE_FIXTURE = {
+  v: 1,
+  name: "Systemic Edge Grind Sentinel",
+  spawn: [0, 0.1, 10],
+  killY: -12,
+  components: [
+    { t: "platform", p: [0, -0.5, 0], s: [8, 1, 6] },
+    // Historical web ledge helper: 15cm inset from the real right boundary.
+    // It remains authored, while the parallel systemic duplicate is suppressed.
+    { t: "rail", p: [3.85, 0.05, 0], len: 6, yaw: 0, invisible: true },
+    {
+      t: "platform",
+      p: [12, -0.5, 0],
+      s: [8, 1, 6],
+      edgeGrinding: false,
+    },
+    { t: "ramp", p: [24, 0, 0], len: 8, rise: 3, w: 6, yaw: 37 },
+    { t: "gate", p: [0, 0, -8] },
+  ],
+  groups: [],
+};
+
+function assertSystemicEdges(canonical, level) {
+  assert.equal(canonical.components[2].edgeGrinding, false);
+  if (!level) return;
+  assert.equal(level.rails.length, 1, "systemic edges leaked into physical bars");
+  assert.equal(level.surfaceEdgeRails.length, 7);
+  assert.equal(level.grindRails.length, 8);
+  assert.ok(
+    level.surfaceEdgeRails.every((rail) => !level.rails.includes(rail)),
+    "catch-only systemic edge entered level.rails",
+  );
+  assert.equal(
+    level.surfaceEdgeRails.some((rail) =>
+      rail.points.every((point) => Math.abs(point.x - 4) < 1e-6),
+    ),
+    false,
+    "legacy inset helper kept a parallel systemic rail",
+  );
+  assert.equal(
+    level.captureData().components.filter((component) => component.t === "rail")
+      .length,
+    1,
+    "derived edges were serialized as authored rails",
+  );
+}
+
 function assertCrateStackBridge(canonical, level) {
   assert.deepStrictEqual(
     canonical.components
@@ -1434,6 +1481,9 @@ try {
   const beachfrontCourseModule = await server.ssrLoadModule(
     "/src/beachfrontCourse.ts",
   );
+  const { surfaceBoundaryEdges } = await server.ssrLoadModule(
+    "/src/surfaceEdges.ts",
+  );
   const { beachfrontPointAtDistance } = beachfrontCourseModule;
   const {
     BUILTIN_LEVELS,
@@ -1451,7 +1501,49 @@ try {
     starterCustomLevel,
   } = levelModule;
   assertBendyWallBuilder(buildBendyWallGeometry, THREE);
+  const splitQuad = new THREE.BufferGeometry();
+  splitQuad.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(
+      [
+        0, 0, 0, 1, 0, 1, 1, 0, 0,
+        0, 0, 0, 0, 0, 1, 1, 0, 1,
+      ],
+      3,
+    ),
+  );
+  const splitEdges = surfaceBoundaryEdges(new THREE.Mesh(splitQuad));
+  assert.equal(
+    splitEdges.length,
+    4,
+    "split triangle seam became a fake systemic grind boundary",
+  );
+  const rotatedBox = new THREE.Mesh(new THREE.BoxGeometry(8, 1, 6));
+  rotatedBox.position.set(3, 2, -4);
+  rotatedBox.rotation.set(0.31, 0.57, 0, "YXZ");
+  rotatedBox.updateMatrixWorld(true);
+  const boxEdges = surfaceBoundaryEdges(rotatedBox);
+  assert.equal(boxEdges.length, 4);
+  const inverseBox = rotatedBox.matrixWorld.clone().invert();
+  for (const edge of boxEdges)
+    for (const point of edge)
+      assert.ok(
+        Math.abs(point.clone().applyMatrix4(inverseBox).y - 0.5) < 1e-6,
+        "rotated box edge left its transformed top perimeter",
+      );
+  const malformedEdgeFlag = clone(SYSTEMIC_EDGE_FIXTURE);
+  malformedEdgeFlag.components[0].edgeGrinding = "yes";
+  assert.equal(
+    normalizeCustomLevelData(malformedEdgeFlag),
+    null,
+    "non-boolean edgeGrinding authoring was accepted",
+  );
   const playerSource = await readFile(path.join(ROOT, "src", "player.ts"), "utf8");
+  const editorSource = await readFile(path.join(ROOT, "src", "editor.ts"), "utf8");
+  assert.ok(
+    editorSource.includes('"grindable edges"'),
+    "editor has no systemic edge-grinding opt-out",
+  );
   for (const contract of [
     "level.wallPathForBox(w)",
     "level.closestWallPath(",
@@ -1495,6 +1587,13 @@ try {
       name: CRATE_STACK_BRIDGE_FIXTURE.name,
       source: "sparse fixture",
       verify: assertCrateStackBridge,
+    },
+    {
+      data: SYSTEMIC_EDGE_FIXTURE,
+      id: "systemic-edge-grinds",
+      name: SYSTEMIC_EDGE_FIXTURE.name,
+      source: "sparse fixture",
+      verify: assertSystemicEdges,
     },
     ...BUILTIN_LEVELS.filter((entry) => entry.data).map((entry) => ({
       data: entry.data,

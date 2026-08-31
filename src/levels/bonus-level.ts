@@ -37,6 +37,7 @@ const support = (
     s: [maximumX - minimumX, topY - bottomY, 8.5],
     tex: "stone",
     color,
+    edgeGrinding: false,
     nm: name,
     grp: GROUP.platforms,
   });

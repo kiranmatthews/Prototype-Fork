@@ -53,6 +53,7 @@ import {
 } from "./groundAcceleration";
 import { boxIntersectsMeshTriangles } from "./meshIntersections";
 import { selectCrateRestSurface } from "./crateRestSurface";
+import { surfaceBoundaryEdges } from "./surfaceEdges";
 import {
   buildWoodPathLayout,
   UNITY_BEACH_BOARDWALK_PROFILE,
@@ -621,6 +622,7 @@ export interface CustomComponent {
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
   slip?: boolean; // platform only: an icy/slick deck (friction cut, you can't stop short)
+  edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
   len?: number;
   rise?: number;
   w?: number;
@@ -986,6 +988,18 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
       if (component.t !== "enemy") continue;
       const fixed = fixes.get(component.p.join(","));
       if (fixed) component.p = [...fixed];
+    }
+  }
+  // These two Flats slabs were deliberately authored with grindEdges=false.
+  // Old capture had no schema field for that exception, so preserve it when
+  // adopting the new default-on systemic edge behavior.
+  if (d.name === "Flats & Pipes") {
+    for (const component of d.components) {
+      if (component.t !== "platform" || component.edgeGrinding !== undefined)
+        continue;
+      const key = component.p.join(",");
+      if (key === "0,89.5,-75" || key === "0,89.5,-340")
+        component.edgeGrinding = false;
     }
   }
   for (const component of d.components) {
@@ -2234,7 +2248,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   const booleanKeys: (keyof CustomComponent)[] = [
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile",
+    "shoreProfile", "edgeGrinding",
   ];
   let aggregateNodes = 0;
   let aggregateSamples = 0;
@@ -2857,6 +2871,7 @@ export function isEditUnlocked(): boolean {
 
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
+  private obstacleEdgeMeshes: THREE.Mesh[] = [];
   groundAccelerationStats!: GroundAccelerationStats;
   private acceleratedGroundGeometries = new Set<THREE.BufferGeometry>();
   crates: Crate[] = [];
@@ -3680,6 +3695,7 @@ export class Level {
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
+    this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
     this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
@@ -3735,6 +3751,7 @@ export class Level {
   // a handrail or fold you over like a pole. Only the grind attach path, which
   // reads grindRails, sees them.
   crateRails: Rail[] = [];
+  readonly surfaceEdgeRails: Rail[] = [];
   private crateRunOf = new Map<Rail, Crate[]>();
   private crateRailsDirty = true;
   private grindRailList: Rail[] = [];
@@ -3752,6 +3769,79 @@ export class Level {
   /** The boxes that make up this rail's ledge, or null if it is an authored bar. */
   crateRunFor(rail: Rail): readonly Crate[] | null {
     return this.crateRunOf.get(rail) ?? null;
+  }
+
+  private componentEdgeGrinding(c: CustomComponent | undefined): boolean {
+    if (!c) return true;
+    if (c.edgeGrinding !== undefined) return c.edgeGrinding;
+    if (c.invisible) return false;
+    // Unity's special builders explicitly opt these out: their boundaries
+    // move/disappear, already own coping/handrail paths, or are broad mechanic
+    // pads rather than readable ledges. Static wood paths can opt back in.
+    if (
+      c.t === "vertramp" ||
+      c.t === "wallpath" ||
+      c.t === "mover" ||
+      c.t === "crumble" ||
+      c.t === "trampoline" ||
+      c.t === "speedpad" ||
+      c.t === "woodpath" ||
+      (c.t === "terrain" && c.berms === true) ||
+      (c.t === "platform" && c.shoreProfile === true)
+    )
+      return false;
+    return true;
+  }
+
+  private systemicEdgeAlreadyAuthored(
+    start: THREE.Vector3,
+    end: THREE.Vector3,
+  ): boolean {
+    const edgeDir = end.clone().sub(start).normalize();
+    for (const rail of [...this.rails, ...this.surfaceEdgeRails]) {
+      const first = rail.closest(start);
+      const second = rail.closest(end);
+      if (first.distance > 0.2 || second.distance > 0.2) continue;
+      if (Math.abs(first.tangent.dot(edgeDir)) < 0.98) continue;
+      return true;
+    }
+    return false;
+  }
+
+  private buildSystemicSurfaceEdgeRails(): void {
+    this.surfaceEdgeRails.length = 0;
+    this.root.updateMatrixWorld(true);
+    const excluded = new Set<THREE.Mesh>();
+    for (const halfpipe of this.halfpipes)
+      for (const wall of halfpipe.walls) excluded.add(wall);
+    for (const mover of this.movers) excluded.add(mover.mesh);
+    for (const crumble of this.crumbles) excluded.add(crumble.mesh);
+    for (const pad of this.phasePads) excluded.add(pad.mesh);
+    for (const warp of this.warpPads)
+      for (const solid of warp.solids) excluded.add(solid);
+    const meshes = new Set<THREE.Mesh>([
+      ...this.groundMeshes,
+      ...this.obstacleEdgeMeshes,
+    ]);
+    for (const mesh of meshes) {
+      if (excluded.has(mesh) || mesh.userData.edgeGrinding === false) continue;
+      const componentIndex = mesh.userData.editorIdx as number | undefined;
+      const component =
+        componentIndex === undefined
+          ? ((mesh.userData.woodPathComp ??
+              mesh.userData.terrainComp ??
+              mesh.userData.vertComp) as CustomComponent | undefined)
+          : this.builtFromData?.components[componentIndex];
+      if (!this.componentEdgeGrinding(component)) continue;
+      for (const [rawStart, rawEnd] of surfaceBoundaryEdges(mesh)) {
+        const start = rawStart.clone();
+        const end = rawEnd.clone();
+        start.y += 0.05;
+        end.y += 0.05;
+        if (this.systemicEdgeAlreadyAuthored(start, end)) continue;
+        this.surfaceEdgeRails.push(new Rail([start, end], false));
+      }
+    }
   }
 
   private rebuildCrateRails(): void {
@@ -3862,7 +3952,10 @@ export class Level {
           this.addCrateRails(run, axis, cross, S, live);
       }
     }
-    this.grindRailList = this.rails.concat(this.crateRails);
+    this.grindRailList = this.rails.concat(
+      this.surfaceEdgeRails,
+      this.crateRails,
+    );
   }
 
   /**
@@ -4130,6 +4223,8 @@ export class Level {
         tex: tex === "checker" ? undefined : tex,
       };
     };
+    const edgeInfo = (m: THREE.Mesh): { edgeGrinding?: boolean } =>
+      m.userData.edgeGrinding === false ? { edgeGrinding: false } : {};
     const hpWalls = new Set(this.halfpipes.flatMap((hp) => hp.walls));
     const crumbleMeshes = new Set(this.crumbles.map((c) => c.mesh));
     // The warp pad's masonry stands in groundMeshes so you can ride onto it,
@@ -4190,6 +4285,7 @@ export class Level {
             r2(worldPosition.y - 0.48 * Math.abs(worldScale.y)),
             r2(worldPosition.z),
           ],
+          ...edgeInfo(m),
         });
         continue;
       }
@@ -4225,6 +4321,7 @@ export class Level {
                 : undefined,
             color,
             tex,
+            ...edgeInfo(m),
           });
         } else {
           const yaw = Math.round(THREE.MathUtils.radToDeg(worldEuler.y)) % 360;
@@ -4243,6 +4340,7 @@ export class Level {
             // this a captured copy of that level turned every slippy plank
             // into ordinary wood and the level lost its whole point
             slip: m.userData.slippy === true ? true : undefined,
+            ...edgeInfo(m),
           });
         }
       } else {
@@ -4257,6 +4355,7 @@ export class Level {
           s: [r2(size.x), r2(sy), r2(size.z)],
           color,
           tex,
+          ...edgeInfo(m),
         });
       }
     }
@@ -4305,6 +4404,7 @@ export class Level {
             ? r2(spec.h * Math.abs(worldScale.y))
             : undefined,
         yaw: Math.abs(yaw) > 1e-6 ? yaw : undefined,
+        ...edgeInfo(m),
         ...matInfo(m),
       });
     });
@@ -5027,6 +5127,7 @@ export class Level {
               mesh.userData.editorGhost = true;
             }
             this.root.add(mesh);
+            this.obstacleEdgeMeshes.push(mesh);
             if (!c.invisible) this.groundMeshes.push(mesh); // visible wall top is standable
             this.fillWallSlabs(
               polyPts,
@@ -5276,6 +5377,7 @@ export class Level {
               ghost.visible = false; // the editor reveals it while editing
               ghost.userData.editorGhost = true;
               this.root.add(ghost);
+              this.obstacleEdgeMeshes.push(ghost);
             } else if (c.color || c.tex || yawQ % 90 !== 0) {
               // tinted / textured / spun wall: own mesh so the yaw can rotate it
               const mesh = new THREE.Mesh(
@@ -5294,6 +5396,7 @@ export class Level {
               mesh.position.set(c.p[0], c.p[1] + s[1] / 2, c.p[2]);
               mesh.rotation.y = yawRad;
               this.root.add(mesh);
+              this.obstacleEdgeMeshes.push(mesh);
               wallCollider();
             } else {
               // axis-aligned default texture path; 90/270 swaps footprint
@@ -7725,6 +7828,7 @@ export class Level {
     const reference = createUnityBeachfrontReference();
     this.beachfrontReferenceDispose = reference.dispose;
     this.root.add(reference.group);
+    reference.sand.userData.edgeGrinding = false;
     this.groundMeshes.push(reference.sand);
     this.lanePts = reference.lane;
     this.measureLane();
@@ -7881,6 +7985,7 @@ export class Level {
     // but the chunk underfoot, and the far deck frustum-culls too.
     for (let gi = this.groundMeshes.length - 1; gi >= groundBefore; gi--) {
       const big = this.groundMeshes[gi];
+      big.userData.edgeGrinding = false;
       // buildVertRampGeometry emits an UNINDEXED soup — normalise to that
       // form so every triangle owns 3 consecutive vertices and carving is a
       // straight copy of triples, no index remapping
@@ -7985,6 +8090,7 @@ export class Level {
       g.computeVertexNormals();
       const mesh = new THREE.Mesh(g, mat);
       mesh.name = name;
+      if (ground) mesh.userData.edgeGrinding = false;
       this.root.add(mesh);
       if (ground) this.groundMeshes.push(mesh);
     };
@@ -8432,6 +8538,7 @@ export class Level {
       mesh.position.copy(c).addScaledVector(nrm, 0.06);
       mesh.name = "oil slick";
       mesh.userData.slippy = true;
+      mesh.userData.edgeGrinding = false;
       this.root.add(mesh);
       this.groundMeshes.push(mesh);
     };
@@ -8481,6 +8588,7 @@ export class Level {
     lot.position.set(lc.x, lotTop - 0.4, lc.z);
     lot.rotation.y = yawEnd;
     lot.name = "beach car park";
+    lot.userData.edgeGrinding = false;
     this.root.add(lot);
     this.groundMeshes.push(lot);
     // painted bay dividers along the seaward row
@@ -8693,6 +8801,7 @@ export class Level {
       );
       sand.name = "Showcase1ContinuousSandSeabed";
       sand.userData.noShadow = true;
+      sand.userData.edgeGrinding = false;
       sand.visible = !failedSandTexture && loadedSandTextures === 3;
       this.root.add(sand);
       this.groundMeshes.push(sand);
@@ -10804,6 +10913,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.name = c.t;
     mesh.userData.undersideThickness = Math.max(0.08, size[1]);
+    mesh.userData.edgeGrinding = false;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     // Only the body below the top is a wall. The top remains a valid landing.
@@ -13659,6 +13769,7 @@ export class Level {
     );
     mesh.position.set(cx, topY - 0.5, (z0 + z1) / 2);
     mesh.name = name;
+    mesh.userData.edgeGrinding = grindEdges;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     // Deck edges are solid + ledge-grabbable: the collider is the slab's own
@@ -13760,6 +13871,7 @@ export class Level {
     mesh.userData.wallSpec = { w, d, h, visH }; // capture: position is read live off the mesh
     mesh.position.set(cx, baseY + visH / 2, cz);
     this.root.add(mesh);
+    this.obstacleEdgeMeshes.push(mesh);
     this.walls.push(
       new THREE.Box3().setFromCenterAndSize(
         new THREE.Vector3(cx, baseY + h / 2, cz),

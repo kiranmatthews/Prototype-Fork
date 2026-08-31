@@ -158,6 +158,7 @@ const addRoadSurface = (
       s: [width, 0.85, length + 0.08],
       tex: "solid",
       color,
+      edgeGrinding: false,
       nm: name,
       grp,
     });
@@ -171,6 +172,7 @@ const addRoadSurface = (
       yaw: segment.endY >= segment.startY ? 0 : 180,
       tex: "solid",
       color,
+      edgeGrinding: false,
       nm: name,
       grp,
     });
@@ -278,6 +280,7 @@ gaps.forEach((gap, index) => {
     len: 18,
     rise: r2(takeoffY - rampStartY),
     w: 4.5,
+    edgeGrinding: false,
     tex: "pavement",
     color: "#d27535",
     nm: `${gap.name} launch`,
@@ -353,6 +356,7 @@ stairs.forEach(([centerX, startZ, rise], setIndex) => {
     s: [4.8, 0.7, terraceLength],
     tex: "stone",
     color: "#aaa392",
+    edgeGrinding: false,
     nm: `street stair terrace ${setIndex + 1}`,
     grp: GROUP.stairs,
   });
@@ -367,6 +371,7 @@ stairs.forEach(([centerX, startZ, rise], setIndex) => {
       s: [4.8, r2(height), stepDepth + 0.04],
       tex: "stone",
       color: "#aaa392",
+      edgeGrinding: false,
       nm: `street stair step ${setIndex + 1}.${step + 1}`,
       grp: GROUP.stairs,
     });
@@ -402,6 +407,7 @@ climbs.forEach(([centerX, startZ], sequence) => {
       s: [3.8, 0.45, 3.35],
       tex: "pavement",
       color: "#9f927d",
+      edgeGrinding: false,
       nm: `climb ${sequence + 1}.${index + 1}`,
       grp: GROUP.ledges,
     });

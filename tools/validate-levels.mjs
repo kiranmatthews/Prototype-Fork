@@ -171,7 +171,15 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
         (component.speed !== undefined && component.speed < 0))
     )
       errors.push(`${path} Angry Ball profile fields are out of range`);
-    for (const key of ["scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid"]) {
+    for (const key of [
+      "scaffold",
+      "supports",
+      "rails",
+      "terrainSupports",
+      "airOnly",
+      "solid",
+      "edgeGrinding",
+    ]) {
       if (component[key] !== undefined && typeof component[key] !== "boolean")
         errors.push(`${path}.${key} must be boolean when present`);
     }

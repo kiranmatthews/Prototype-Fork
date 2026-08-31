@@ -4,6 +4,24 @@ These components are authored through the same `CustomComponent` data used by
 the in-browser level editor. They can be placed from **ADD → HAZARDS & THINGS**;
 wood paths can also be drawn with the pen tool.
 
+## Systemic grindable edges
+
+Ordinary solid surface boundaries are grind candidates by default, matching
+Unity commits `7592cc7` and `12493a2`. Boxes expose all four transformed top
+edges. Mesh surfaces weld coincident split vertices to 0.1 mm, retain
+sufficiently horizontal triangles, and expose only their outer topological
+boundaries. These generated paths are grind-catch geometry only: the original
+surface remains the sole collision body, so an edge never becomes a duplicate
+physical bar.
+
+Set `"edgeGrinding": false` on a platform, ramp, wall, terrain, rock, metal
+block, or other eligible static surface to opt out. The editor exposes the same
+setting as **grindable edges**. Explicit rails, coping, crate-top runs and
+boardwalk handrails are independent and remain available when surface edges
+are disabled. Dynamic/disappearing mechanic pads, analytic transitions,
+bermed terrain, island shelves and boardwalk decks retain their source-authored
+opt-outs unless explicitly supported by their own path system.
+
 ## Trampoline pad
 
 ```json

@@ -54,6 +54,7 @@ PLATFORM_DEFINITIONS.forEach(([name, minimumX, maximumX, topY, wood]) => {
     s: [width, PLATFORM_THICKNESS, LANE_DEPTH],
     tex: wood ? "plank" : "jungle",
     color: wood ? "#75401a" : "#3d914f",
+    edgeGrinding: false,
     nm: name,
     grp: GROUP.platforms,
   });
@@ -83,6 +84,7 @@ add({
   rise: 1.25,
   w: LANE_DEPTH,
   yaw: -90,
+  edgeGrinding: false,
   tex: "jungle",
   color: "#3d914f",
   nm: "Skate kicker 01",
@@ -95,6 +97,7 @@ add({
   rise: 1.25,
   w: LANE_DEPTH,
   yaw: -90,
+  edgeGrinding: false,
   tex: "jungle",
   color: "#3d914f",
   nm: "Skate kicker 02",

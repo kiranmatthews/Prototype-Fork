@@ -256,6 +256,7 @@ boardwalkSequences.forEach((sequence) => {
     scaffold: true,
     supports: true,
     rails: true,
+    edgeGrinding: false,
     spacing: 0.72,
     baySpacing: 4.2,
     supportDepth: 4.5,

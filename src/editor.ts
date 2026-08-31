@@ -7279,6 +7279,29 @@ export class Editor {
         this.propsEl.appendChild(tip);
       }
     };
+    if (
+      c.t === "platform" ||
+      c.t === "ramp" ||
+      c.t === "wall" ||
+      c.t === "terrain" ||
+      c.t === "woodpath" ||
+      c.t === "rock" ||
+      c.t === "metal"
+    ) {
+      const defaultEdgeGrinding =
+        !c.invisible &&
+        c.t !== "woodpath" &&
+        !(c.t === "terrain" && c.berms === true) &&
+        !(c.t === "platform" && c.shoreProfile === true);
+      boolRow(
+        "grindable edges",
+        () => c.edgeGrinding ?? defaultEdgeGrinding,
+        (value) => {
+          if (value === defaultEdgeGrinding) delete c.edgeGrinding;
+          else c.edgeGrinding = value;
+        },
+      );
+    }
     if (c.t === "wallpath") {
       if (c.pts && c.pts.length >= 2) {
         const note = document.createElement("div");
