@@ -35,6 +35,8 @@ export const BACKPORT_LAB_LEVEL: CustomLevelData = {
       cycle: 3.9,
       grp: 1,
     },
+    { t: "crate", p: [-5.2, 0, 10], kind: "life", grp: 1 },
+    { t: "crate", p: [5.2, 0, 10], kind: "multihit", grp: 1 },
     {
       t: "woodpath",
       p: [0, 0, 3],

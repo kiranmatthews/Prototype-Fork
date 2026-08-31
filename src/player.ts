@@ -9331,7 +9331,14 @@ export class Player {
           // Crash rules: landing on top breaks it and bounces you — high
           // enough to chain crate to crate. The final Unity rule keeps a true
           // stomp authoritative even while the loose board is elsewhere.
-          this.smashCrate(level, c);
+          if (
+            c.multiHit &&
+            !this.ttActive &&
+            !this.comboRun &&
+            !this.slamActive
+          )
+            this.hitMultiCrate(level, c);
+          else this.smashCrate(level, c);
           if (!this.slamActive) {
             this.snapFeetToCrateLid(c);
             this.vVel = TUNING.crateBounce;
@@ -9343,8 +9350,17 @@ export class Player {
         } else if (crateBonkContacts.has(c)) {
           // A true underside crossing breaks wood regardless of where the
           // separately simulated loose deck landed.
-          this.smashCrate(level, c);
-          this.vVel = Math.min(this.vVel, 2);
+          if (c.multiHit && !this.ttActive && !this.comboRun) {
+            this.hitMultiCrate(level, c);
+            // Reverse out of the underside. Leaving the body rising inside a
+            // crate that survived let one jump consume several fixed-step
+            // hits before the capsule escaped.
+            this.vVel = -1;
+            sfx.play('crateBounce', 0.55, 1.3);
+          } else {
+            this.smashCrate(level, c);
+            this.vVel = Math.min(this.vVel, 2);
+          }
         } else if (Math.abs(crateContactSpeed) >= TUNING.smashSpeed) {
           // Fast skating plows straight through plain crates — barely
           // breaking stride. TNT and nitro stay dangerous; this is only
@@ -9950,7 +9966,16 @@ export class Player {
     );
   }
 
-  private smashCrate(level: Level, c: Crate): void {
+  private hitMultiCrate(level: Level, c: Crate): void {
+    const remaining = level.hitMultiCrate(c);
+    if (remaining <= 0) this.smashCrate(level, c, 2);
+    else {
+      this.spawnFruit(c.box, 2);
+      this.emitSparks(3, 0xffc45c, 0.8);
+    }
+  }
+
+  private smashCrate(level: Level, c: Crate, fruitOverride?: number): void {
     const wasAlive = c.alive;
     PUFF_C.copy(c.box.getCenter(PUFF_C));
     const crateFloor = c.box.min.y;
@@ -9971,11 +9996,11 @@ export class Player {
         strength: 1,
       });
     this.score(CONST.ptsCrate, 'Box');
-    this.crateReward(c);
+    this.crateReward(c, fruitOverride);
   }
 
   // What falls out of a broken box. Mystery crates roll their contents.
-  private crateReward(c: Crate): void {
+  private crateReward(c: Crate, fruitOverride?: number): void {
     // Explosives now count toward the box tally, but blowing one up is not a
     // reward — no fruit falls out of a nitro.
     if (c.nitro || c.tnt) return;
@@ -9996,25 +10021,34 @@ export class Player {
       }
       return;
     }
-    if (c.mask) {
+    if (fruitOverride !== undefined) {
+      this.spawnFruit(c.box, fruitOverride);
+    } else if (c.mask) {
       this.gainMask();
+    } else if (c.life) {
+      this.gainLife();
+    } else if (c.multiHit) {
+      // A force-smash (spin/slam/skate/grind/blast) bypasses the five-hit
+      // sequence and pays the deliberately smaller one-fruit consolation.
+      this.spawnFruit(c.box, 1);
     } else if (c.mystery) {
       const r = this.simRand();
       if (r < 0.55) this.spawnFruit(c.box, 5);
       else if (r < 0.8) this.spawnFruit(c.box, 10);
       else if (r < 0.93) this.gainMask();
-      else {
-        // Endless mode has no life economy; explicit/rolled life awards are
-        // inert there just like the retired 100-fruit threshold.
-        if (!this.endlessDeaths) {
-          this.lives++;
-          sfx.play('lifeGet', 1.0);
-          this.emitSparks(10, 0x9fe07a, 2);
-        }
-      }
+      else this.gainLife();
     } else {
       this.spawnFruit(c.box);
     }
+  }
+
+  private gainLife(): void {
+    // Endless mode has no life economy; explicit/rolled life awards are inert
+    // there just like the retired 100-fruit threshold.
+    if (this.endlessDeaths) return;
+    this.lives++;
+    sfx.play('lifeGet', 1.0);
+    this.emitSparks(10, 0x9fe07a, 2);
   }
 
   // Central wumpa collection: 100 fruit converts into a life, Crash rules.

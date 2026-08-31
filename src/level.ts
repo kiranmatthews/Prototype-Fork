@@ -89,6 +89,10 @@ export interface Crate {
   fuse?: number; // seconds left on a lit TNT
   mask?: boolean; // Aku crate: breaking it grants a protective mask
   mystery?: boolean; // ? crate: random reward (wumpa burst, mask, or a life)
+  life?: boolean; // extra-life crate: breaking it grants one life
+  multiHit?: boolean; // striped fruit crate: five stomps/head-bumps, two fruit each
+  hitsRemaining?: number; // live multi-hit counter (starts at five)
+  hitPulse?: number; // presentation squash after a non-breaking hit
   bang?: boolean; // metal '!' SWITCH: hitting it materializes its group's outline crates; never breaks, uncounted
   bangUsed?: boolean; // the switch fires once, then dims
   fallVel?: number; // >0 while the crate is settling down a smashed stack
@@ -97,7 +101,7 @@ export interface Crate {
   pending?: boolean; // OUTLINE state: ghost visual, no collision, no interactions — until a '!' fires
   wasOutline?: boolean; // authored as an outline: resets re-ghost it
   groupIds?: number[]; // editor group chain: wires '!' switches to their outlines
-  realMat?: THREE.Material; // the true face (kept while ghosted)
+  realMat?: THREE.Material | THREE.Material[]; // the true face (kept while ghosted)
   ghostMat?: THREE.Material; // the translucent shell (kept for resets)
   ghostEdges?: THREE.LineSegments; // outline wireframe, hidden on materialize
   timeSecs?: number; // TIME TRIAL: breaking this crate freezes the clock this many seconds
@@ -565,6 +569,7 @@ export interface Checkpoint {
   savedAlive: boolean[]; // crate alive-states captured when this was broken
   savedPending: boolean[]; // outline-ghost states captured alongside
   savedBangUsed: boolean[]; // '!' switch states captured alongside
+  savedHitsRemaining: (number | undefined)[]; // partial multi-hit progress
   savedCratesBroken: number; // crate counter captured when this was broken
   savedFruit: number; // wumpa counter captured when this was broken
   savedMasks: number;
@@ -644,6 +649,8 @@ export interface CustomComponent {
     | "nitro"
     | "tnt"
     | "mask"
+    | "life"
+    | "multihit"
     | "mystery"
     | "bang"
     | "nitrobang";
@@ -2112,7 +2119,7 @@ export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
 ]);
 const VALID_CRATE_KINDS = new Set<NonNullable<CustomComponent["kind"]>>([
   "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
-  "mystery", "bang", "nitrobang",
+  "life", "multihit", "mystery", "bang", "nitrobang",
 ]);
 
 const finiteTuple = (
@@ -3013,6 +3020,8 @@ export class Level {
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
   private maskTex: THREE.CanvasTexture | null = null;
+  private lifeTex: THREE.CanvasTexture | null = null;
+  private multiHitTexCache = new Map<number, THREE.CanvasTexture>();
   private mysteryTex: THREE.CanvasTexture | null = null;
   private plainTex: THREE.CanvasTexture | null = null;
   private nitroTex: THREE.CanvasTexture | null = null;
@@ -4557,25 +4566,29 @@ export class Level {
     // crates (kind read back off the entity flags; outline wiring keeps its groups)
     const seenGroups = new Set<number>();
     for (const cr of this.crates) {
-      const kind = cr.nitro
-        ? cr.nitroBang
-          ? "nitrobang"
-          : "nitro"
-        : cr.bouncy
-          ? "bouncy"
-          : cr.metalBounce
-            ? "metalbounce"
-            : cr.metal
-              ? "metal"
-            : cr.tnt
-              ? "tnt"
-              : cr.mask
-                ? "mask"
-                : cr.mystery
-                  ? "mystery"
-                  : cr.bang
-                    ? "bang"
-                    : "wood";
+      const kind = cr.nitroBang
+        ? "nitrobang"
+        : cr.nitro
+          ? "nitro"
+          : cr.bouncy
+            ? "bouncy"
+            : cr.metalBounce
+              ? "metalbounce"
+              : cr.metal
+                ? "metal"
+                : cr.tnt
+                  ? "tnt"
+                  : cr.mask
+                    ? "mask"
+                    : cr.life
+                      ? "life"
+                      : cr.multiHit
+                        ? "multihit"
+                        : cr.mystery
+                          ? "mystery"
+                          : cr.bang
+                            ? "bang"
+                            : "wood";
       const gids = cr.groupIds ?? [];
       for (let gi = 0; gi < gids.length; gi++) {
         if (!seenGroups.has(gids[gi])) {
@@ -6606,7 +6619,14 @@ export class Level {
             Math.abs(cp.x - p.x) < st.r + 0.8
           ) {
             if (c.nitro || c.tnt) this.detonate(c);
-            else this.breakCrate(c);
+            else {
+              const wasAlive = c.alive;
+              this.breakCrate(c);
+              // The player owns tally/rewards. Route boulder debris through
+              // the same drain as explosions and flung enemies; switches and
+              // metal remain alive and therefore never enter it.
+              if (wasAlive && !c.alive) this.blastBroken.push(c);
+            }
           }
         }
         for (const e of this.enemies) {
@@ -6959,6 +6979,16 @@ export class Level {
       if (!c.active) c.mesh.rotation.y += dt * 1.2;
     }
     this.settleCrates(dt);
+    // Five-hit fruit crates squash and rebound in place on partial hits. Their
+    // collision box stays authoritative and full-sized; this is presentation
+    // only, so stacked crates never inherit a moving support plane.
+    for (const c of this.crates) {
+      if (!c.alive || !c.multiHit || !c.hitPulse || c.hitPulse <= 0) continue;
+      c.hitPulse = Math.max(0, c.hitPulse - dt);
+      const hit = Math.sin((c.hitPulse / 0.14) * Math.PI);
+      c.mesh.scale.set(1 + hit * 0.08, 1 - hit * 0.18, 1 + hit * 0.08);
+      if (c.hitPulse <= 0) c.mesh.scale.setScalar(1);
+    }
     // Nitro crates bob menacingly.
     this.time += dt;
     for (const thorn of this.thornClusters) thorn.update(this.time);
@@ -7184,6 +7214,18 @@ export class Level {
     sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
   }
 
+  /** One non-destructive stomp/head-bump on a five-hit fruit crate. */
+  hitMultiCrate(crate: Crate): number {
+    if (!crate.alive || !crate.multiHit || crate.pending)
+      return crate.hitsRemaining ?? 0;
+    const remaining = Math.max(0, (crate.hitsRemaining ?? 5) - 1);
+    crate.hitsRemaining = remaining;
+    crate.hitPulse = 0.14;
+    if (remaining > 0)
+      this.setCrateFace(crate, this.multiHitTexture(remaining), 1);
+    return remaining;
+  }
+
   // Repaint a crate's face in place (both '!' switches when they go spent).
   // Handles the per-face material list the arrow crates carry.
   private setCrateFace(
@@ -7191,9 +7233,8 @@ export class Level {
     map: THREE.CanvasTexture,
     shade: number,
   ): void {
-    const mats = Array.isArray(crate.mesh.material)
-      ? crate.mesh.material
-      : [crate.mesh.material];
+    const face = crate.pending && crate.realMat ? crate.realMat : crate.mesh.material;
+    const mats = Array.isArray(face) ? face : [face];
     for (const m of mats as THREE.MeshLambertMaterial[]) {
       m.map = map;
       m.emissive?.setScalar(0);
@@ -7323,6 +7364,7 @@ export class Level {
     cp.savedAlive = this.crates.map((c) => c.alive);
     cp.savedPending = this.crates.map((c) => !!c.pending);
     cp.savedBangUsed = this.crates.map((c) => !!c.bangUsed);
+    cp.savedHitsRemaining = this.crates.map((c) => c.hitsRemaining);
     cp.savedCratesBroken = cratesBroken;
     cp.savedFruit = fruit;
     cp.savedMasks = masks;
@@ -7360,6 +7402,18 @@ export class Level {
       (c.mesh.material as THREE.MeshLambertMaterial).map =
         this.tntTexture("TNT");
     }
+  }
+
+  private restoreMultiHitFace(c: Crate): void {
+    if (!c.multiHit) return;
+    c.hitPulse = 0;
+    c.mesh.scale.setScalar(1);
+    if (c.alive && c.ttOrigMap === undefined)
+      this.setCrateFace(
+        c,
+        this.multiHitTexture(c.hitsRemaining ?? 5),
+        1,
+      );
   }
 
   // Soft reset (death): restore the crate world to the last checkpoint's
@@ -7412,8 +7466,12 @@ export class Level {
         c.mesh.visible = cpSnap.savedAlive[i];
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.hitsRemaining = c.multiHit
+          ? (cpSnap.savedHitsRemaining?.[i] ?? 5)
+          : undefined;
         this.restoreCrateHome(c);
         this.restoreTntFace(c);
+        this.restoreMultiHitFace(c);
         this.setCratePending(c, cpSnap.savedPending?.[i] ?? !!c.pending);
         c.bangUsed = cpSnap.savedBangUsed?.[i] ?? c.bangUsed;
         this.restoreBangFace(c);
@@ -7424,8 +7482,10 @@ export class Level {
         c.mesh.visible = true;
         c.mesh.scale.setScalar(1);
         c.fuse = undefined;
+        c.hitsRemaining = c.multiHit ? 5 : undefined;
         this.restoreCrateHome(c);
         this.restoreTntFace(c);
+        this.restoreMultiHitFace(c);
         // outlines return to ghosts, switches re-arm
         this.setCratePending(c, !!c.wasOutline);
         c.bangUsed = false;
@@ -13943,6 +14003,8 @@ export class Level {
       | "metal"
       | "tnt"
       | "mask"
+      | "life"
+      | "multihit"
       | "mystery"
       | "bang"
       | "nitrobang",
@@ -13988,6 +14050,16 @@ export class Level {
       mat = new THREE.MeshLambertMaterial({
         color: 0xffffff,
         map: this.maskTexture(),
+      });
+    } else if (kind === "life") {
+      mat = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        map: this.lifeTexture(),
+      });
+    } else if (kind === "multihit") {
+      mat = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        map: this.multiHitTexture(5),
       });
     } else if (kind === "mystery") {
       mat = new THREE.MeshLambertMaterial({
@@ -14080,6 +14152,9 @@ export class Level {
       metal: kind === "metal",
       tnt: kind === "tnt",
       mask: kind === "mask",
+      life: kind === "life",
+      multiHit: kind === "multihit",
+      hitsRemaining: kind === "multihit" ? 5 : undefined,
       mystery: kind === "mystery",
       bang: kind === "bang",
       nitroBang: kind === "nitrobang",
@@ -14090,7 +14165,7 @@ export class Level {
     if (opts?.outline) {
       entry.wasOutline = true;
       entry.pending = true;
-      entry.realMat = mesh.material as THREE.Material;
+      entry.realMat = mesh.material;
       entry.ghostMat = new THREE.MeshBasicMaterial({
         color: 0xe8d9a8,
         transparent: true,
@@ -14396,6 +14471,27 @@ export class Level {
     return this.mysteryTex;
   }
 
+  // Five-hit Wumpa crate: striped slats plus its remaining hit count. The
+  // changing digit is deliberately explicit at gameplay camera distance; the
+  // squash pulse sells each hit, while the face says how many are still owed.
+  private multiHitTexture(remaining: number): THREE.CanvasTexture {
+    const hits = THREE.MathUtils.clamp(Math.round(remaining), 1, 5);
+    const cached = this.multiHitTexCache.get(hits);
+    if (cached) return cached;
+    const tex = Level.makeTex((ctx) => {
+      Level.crateWood(ctx, false);
+      ctx.fillStyle = "#6f3d13";
+      for (let x = 5; x < 29; x += 7) ctx.fillRect(x, 3, 3, 26);
+      ctx.fillStyle = "#e6a13d";
+      for (let x = 6; x < 29; x += 7) ctx.fillRect(x, 4, 1, 24);
+      ctx.fillStyle = "rgba(70, 34, 8, 0.72)";
+      ctx.fillRect(10, 8, 12, 17);
+      this.crateLabel(ctx, String(hits), 17, "#ffe88a", "#4b2208", 16, 17);
+    });
+    this.multiHitTexCache.set(hits, tex);
+    return tex;
+  }
+
   // Mask crate: the authored crossbones sticker (public/crossbones.png, alpha)
   // composited over a wood crate face. Higher-res than the 32px PSX faces so the
   // painted bones read; the sticker loads async and repaints when ready.
@@ -14421,6 +14517,33 @@ export class Level {
       tex.needsUpdate = true;
     };
     img.src = import.meta.env.BASE_URL + "crossbones.png";
+    return tex;
+  }
+
+  // Extra-life crate: the same authored Roo portrait used by the lives HUD,
+  // composited over a plain wood face so the reward reads before it is hit.
+  private lifeTexture(): THREE.CanvasTexture {
+    if (this.lifeTex) return this.lifeTex;
+    const S = 128;
+    const canvas = document.createElement("canvas");
+    canvas.width = S;
+    canvas.height = S;
+    const ctx = canvas.getContext("2d")!;
+    ctx.imageSmoothingEnabled = false;
+    ctx.save();
+    ctx.scale(S / 32, S / 32);
+    Level.crateWood(ctx, false);
+    ctx.restore();
+    const tex = new THREE.CanvasTexture(canvas);
+    this.lifeTex = tex;
+    const img = new Image();
+    img.onload = () => {
+      const pad = Math.round(S * 0.07);
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(img, pad, pad, S - pad * 2, S - pad * 2);
+      tex.needsUpdate = true;
+    };
+    img.src = import.meta.env.BASE_URL + "roo.png";
     return tex;
   }
 
@@ -16298,6 +16421,7 @@ export class Level {
       savedAlive: [],
       savedPending: [],
       savedBangUsed: [],
+      savedHitsRemaining: [],
       savedCratesBroken: 0,
       savedFruit: 0,
       savedMasks: 0,

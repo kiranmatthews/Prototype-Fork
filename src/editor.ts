@@ -921,6 +921,30 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
+        label: "extra life",
+        icon: (x) => {
+          box(x, "#b5762f", "#7a4a18");
+          glyph(x, "1UP", "#9fe07a");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "life",
+        }),
+      },
+      {
+        label: "5-hit fruit",
+        icon: (x) => {
+          box(x, "#c98332", "#6f3d13");
+          glyph(x, "5", "#ffe88a");
+        },
+        make: (at) => ({
+          t: "crate",
+          p: [at.x, at.y + 0.5, at.z],
+          kind: "multihit",
+        }),
+      },
+      {
         label: "arrow",
         icon: (x) => {
           box(x, "#b5762f", "#7a4a18");
@@ -1960,6 +1984,8 @@ const CRATE_KINDS = [
   "nitro",
   "tnt",
   "mask",
+  "life",
+  "multihit",
   "mystery",
   "bang",
   "nitrobang",
@@ -7940,7 +7966,11 @@ export class Editor {
             ? "arrow (metal)"
             : k === "bouncy"
               ? "arrow (wood)"
-              : k;
+              : k === "life"
+                ? "extra life"
+                : k === "multihit"
+                  ? "5-hit fruit"
+                  : k;
         if ((c.kind ?? "wood") === k) o.selected = true;
         sel.appendChild(o);
       }

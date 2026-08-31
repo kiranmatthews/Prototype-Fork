@@ -13,6 +13,10 @@ const componentTypes = new Set([
   "returnportal", "grindosaurus", "angryball", "decor", "wumpa", "crystal",
 ]);
 const deckTricks = new Set(["kick", "heel", "shove", "imposs", "varial"]);
+const crateKinds = new Set([
+  "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
+  "life", "multihit", "mystery", "bang", "nitrobang",
+]);
 
 const finiteTuple = (value, length) =>
   Array.isArray(value) &&
@@ -86,6 +90,12 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
     )
       errors.push(`${path}.pts must contain finite 2–5 number points when present`);
     if (component.t === "gate") gates += 1;
+    if (
+      component.t === "crate" &&
+      component.kind !== undefined &&
+      !crateKinds.has(component.kind)
+    )
+      errors.push(`${path}.kind has unsupported crate kind ${component.kind}`);
     if (
       (component.t === "trickgate" || component.t === "trickrail") &&
       component.trick !== undefined &&
