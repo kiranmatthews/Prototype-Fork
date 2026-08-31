@@ -74,6 +74,20 @@ import {
   BAIL_RECOVERY_SPRAWL_PITCH,
   sampleBailRecovery,
 } from './bailRecovery';
+import {
+  QuaterniusEvaluationModel,
+  type QuaterniusEvaluationDiagnostics,
+} from './character/quaterniusEvaluationModel';
+
+export type CharacterPresentationMode = 'procedural' | 'quaternius-female';
+
+export interface CharacterPresentationDiagnostics {
+  requestedMode: CharacterPresentationMode;
+  activeMode: CharacterPresentationMode;
+  ready: boolean;
+  error: string | null;
+  evaluation: QuaterniusEvaluationDiagnostics | null;
+}
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 const LEG_SOLVE_R: SagittalLegPose = {
@@ -501,9 +515,16 @@ export class Player {
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   private readonly playerAnimationBridge: PlayerAnimationBridge;
-  // The procedural body is both the active character and the load-bearing pose
-  // rig. Imported models can still be installed explicitly for comparison,
-  // but the code-authored rider is ready to draw from the first frame.
+  private quaterniusEvaluationModel: QuaterniusEvaluationModel | null = null;
+  private characterPresentationModeValue: CharacterPresentationMode = 'quaternius-female';
+  private characterPresentationSourceRoots: Array<{
+    object: THREE.Object3D;
+    visible: boolean;
+  }> = [];
+  private characterPresentationLoadError: Error | null = null;
+  // The procedural body is the load-bearing pose rig and immediate visual
+  // fallback. Imported comparison bodies can still be installed explicitly;
+  // the Quaternius surface retargets from this hierarchy without replacing it.
   private modelReady = true;
 
   private spinTimer = 0;
@@ -1151,9 +1172,10 @@ export class Player {
     scene.add(this.group);
     this.rebuildHumanoidSkeleton();
     this.playerAnimationBridge = new PlayerAnimationBridge(this.group, this.bodyGroup);
-    // Keep imported characters as explicit comparison/debug routes. Normal
-    // play stays on the procedural rider so its sculpt and animations can be
-    // authored directly in code without an asynchronous GLB replacing it.
+    this.installQuaterniusEvaluationModel();
+    // Keep older imported characters as explicit comparison/debug routes.
+    // The procedural rider remains the authoritative pose rig even when the
+    // intact Quaternius skin is the visible evaluation surface.
     const characterFlags = window as { __USE_MESHY?: boolean; __USE_ROO?: boolean };
     if (characterFlags.__USE_ROO) this.installRoo();
     else if (characterFlags.__USE_MESHY) {
@@ -1576,6 +1598,133 @@ export class Player {
     return this.humanoidSkeleton;
   }
 
+  get characterPresentationMode(): CharacterPresentationMode {
+    return this.characterPresentationModeValue;
+  }
+
+  get activeCharacterPresentationMode(): CharacterPresentationMode {
+    return this.characterPresentationModeValue === 'quaternius-female' &&
+      this.quaterniusEvaluationModel?.readiness === 'ready'
+      ? 'quaternius-female'
+      : 'procedural';
+  }
+
+  get characterPresentationDiagnostics(): CharacterPresentationDiagnostics {
+    const model = this.quaterniusEvaluationModel;
+    return {
+      requestedMode: this.characterPresentationModeValue,
+      activeMode: this.activeCharacterPresentationMode,
+      ready: model?.readiness === 'ready',
+      error: this.characterPresentationLoadError?.message ?? model?.error?.message ?? null,
+      evaluation: model?.diagnostics ?? null,
+    };
+  }
+
+  /** Compact host contract used by Animation Studio's BODY switch. */
+  get characterPresentationSurfaceState(): {
+    label: string;
+    ready: boolean;
+    active: boolean;
+    detail: string;
+  } {
+    const model = this.quaterniusEvaluationModel;
+    const ready = model?.readiness === 'ready';
+    const active = ready && this.characterPresentationModeValue === 'quaternius-female';
+    const failed = model?.readiness === 'error';
+    return {
+      label: active ? 'FEMALE' : failed ? 'RIG' : ready ? 'RIG' : 'LOADING',
+      ready,
+      active,
+      detail: failed
+        ? `Female evaluation body unavailable: ${this.characterPresentationLoadError?.message ?? model?.error?.message ?? 'load failed'}`
+        : ready
+          ? active
+            ? 'Quaternius UAL2 female mannequin · click to show the procedural source body'
+            : 'Procedural source body · click to show the Quaternius UAL2 female mannequin'
+          : 'Quaternius UAL2 female mannequin is loading',
+    };
+  }
+
+  setCharacterPresentationMode(mode: CharacterPresentationMode): void {
+    this.characterPresentationModeValue = mode;
+    try {
+      localStorage.setItem('solProtoCharacterPresentationV1', mode);
+    } catch {
+      // Private browsing can disable persistence without disabling the model.
+    }
+    this.syncCharacterPresentation();
+    this.resetRenderInterpolation();
+  }
+
+  toggleCharacterPresentationMode(): void {
+    this.setCharacterPresentationMode(
+      this.characterPresentationModeValue === 'quaternius-female'
+        ? 'procedural'
+        : 'quaternius-female',
+    );
+  }
+
+  /**
+   * Copy the final source pose onto the intact evaluation skin and reassert
+   * visibility after bridge/preview snapshot restoration.
+   */
+  syncCharacterPresentation(): void {
+    const model = this.quaterniusEvaluationModel;
+    const showEvaluation =
+      this.characterPresentationModeValue === 'quaternius-female' &&
+      model?.readiness === 'ready';
+    if (showEvaluation) model.updateAfterSourcePose();
+    model?.setVisible(showEvaluation);
+    for (const source of this.characterPresentationSourceRoots) {
+      source.object.visible = showEvaluation ? false : source.visible;
+    }
+  }
+
+  private installQuaterniusEvaluationModel(): void {
+    // Node movement harnesses install a deliberately tiny window/document
+    // shim. They have no presentation clock or asset server, so keep the
+    // synchronous procedural fallback and do not start a doomed GLB request.
+    if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') return;
+    const rider = this.riderG;
+    const skeleton = this.humanoidSkeleton;
+    if (!rider || !skeleton) return;
+    try {
+      const saved = localStorage.getItem('solProtoCharacterPresentationV1');
+      if (saved === 'procedural' || saved === 'quaternius-female') {
+        this.characterPresentationModeValue = saved;
+      }
+    } catch {
+      // The requested default remains the female evaluation body.
+    }
+    this.characterPresentationSourceRoots = rider.children.map((object) => ({
+      object,
+      visible: object.visible,
+    }));
+    const model = new QuaterniusEvaluationModel({
+      parent: rider,
+      sourceRoot: this.bodyGroup,
+      sourcePoseRoot: rider,
+      sourceSkeleton: skeleton,
+      visible: false,
+    });
+    this.quaterniusEvaluationModel = model;
+    void model.load().then(() => {
+      if (this.quaterniusEvaluationModel !== model) return;
+      this.characterPresentationLoadError = null;
+      this.syncCharacterPresentation();
+      this.resetRenderInterpolation();
+    }).catch((error: unknown) => {
+      if (this.quaterniusEvaluationModel !== model) return;
+      this.characterPresentationLoadError =
+        error instanceof Error ? error : new Error(String(error));
+      this.syncCharacterPresentation();
+      console.warn(
+        'Quaternius female evaluation model failed to load (procedural body stays):',
+        error,
+      );
+    });
+  }
+
   /**
    * Rebuild bind inverses only after every bone has a current world matrix.
    * The body is still assembled from rigid meshes, but exposing one ordinary
@@ -1620,6 +1769,11 @@ export class Player {
     // THREE.Skeleton's constructor also initializes inverses, but this explicit
     // pass documents and enforces the important ordering above.
     this.humanoidSkeleton.calculateInverses();
+    this.quaterniusEvaluationModel?.rebindSource(
+      this.bodyGroup,
+      this.humanoidSkeleton,
+      this.riderG ?? undefined,
+    );
   }
 
   get animationPreviewActive(): boolean {
@@ -1643,6 +1797,7 @@ export class Player {
     this.playerAnimationBridge.resetPreview();
     this.tail?.reset();
     this.resetRenderInterpolation();
+    this.syncCharacterPresentation();
   }
 
   /** Restore the entry pose and return pose ownership to gameplay. */
@@ -1650,6 +1805,7 @@ export class Player {
     this.playerAnimationBridge.exitPreview();
     this.tail?.reset();
     this.resetRenderInterpolation();
+    this.syncCharacterPresentation();
   }
 
   /**
@@ -13759,6 +13915,7 @@ export class Player {
     // complete legacy result first and restores it before the next fixed step,
     // so authored writes are absolute and can never accumulate into gameplay.
     this.playerAnimationBridge.applyOverlay(dt);
+    this.syncCharacterPresentation();
 
   }
 

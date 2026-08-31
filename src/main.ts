@@ -1140,6 +1140,15 @@ const closePresentationPanels = (): void => {
   spinPanel.setOpen(false);
   visualTreatmentPanel.setOpen(false);
 };
+const toggleCharacterPresentation = (): void => {
+  player.toggleCharacterPresentationMode();
+  const state = player.characterPresentationSurfaceState;
+  ui.showMessage(
+    'CHARACTER BODY',
+    state.active ? 'Quaternius female evaluation surface' : 'Procedural source body',
+    1800,
+  );
+};
 if (TOUCH_PRESENTATION) {
   ui.setPresentationTools([
     {
@@ -1147,6 +1156,13 @@ if (TOUCH_PRESENTATION) {
       open: () => {
         closePresentationPanels();
         void openAnimationStudioTool();
+      },
+    },
+    {
+      label: "BODY",
+      open: () => {
+        closePresentationPanels();
+        toggleCharacterPresentation();
       },
     },
     {
@@ -1205,6 +1221,10 @@ if (TOUCH_PRESENTATION) {
     {
       label: "ANIMATION",
       open: () => void openAnimationStudioTool(),
+    },
+    {
+      label: "BODY",
+      open: toggleCharacterPresentation,
     },
   ]);
 }
@@ -2059,6 +2079,11 @@ async function openAnimationStudioTool(): Promise<void> {
       rigRoot: rig.root,
       document: characterAnimationRuntime.document,
       applyScalars: (values) => player.applyAnimationDeformations(values),
+      syncPresentation: () => player.syncCharacterPresentation(),
+      presentationSurface: {
+        getState: () => player.characterPresentationSurfaceState,
+        toggle: () => player.toggleCharacterPresentationMode(),
+      },
       onDocumentChange: (document) => {
         playerAnimationDocument = document;
         characterAnimationRuntime.setDocument(document);
@@ -3450,6 +3475,9 @@ requestAnimationFrame(frame);
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
+  getCharacterPresentationDiagnostics: () => player.characterPresentationDiagnostics,
+  setCharacterPresentationMode: (mode: 'procedural' | 'quaternius-female') =>
+    player.setCharacterPresentationMode(mode),
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
   getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,
   // playtest capture (also on F8/F9 + tuner buttons + drag-drop):

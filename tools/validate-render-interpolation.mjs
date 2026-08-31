@@ -40,6 +40,30 @@ try {
   near(root.position.x, 1, 1e-6, "root restore");
   near(limb.position.y, 2, 1e-6, "child restore");
 
+  // Morph-only animation still participates in interpolation even though the
+  // mesh's Object3D transform is unchanged.
+  const face = new THREE.Mesh();
+  face.morphTargetInfluences = [0, 1];
+  const morphHistory = new RenderInterpolator();
+  morphHistory.capture([face]);
+  face.morphTargetInfluences[0] = 1;
+  face.morphTargetInfluences[1] = 0.25;
+  morphHistory.capture([face]);
+  morphHistory.apply(0.25);
+  near(face.morphTargetInfluences[0], 0.25, 1e-6, "morph midpoint 0");
+  near(face.morphTargetInfluences[1], 0.8125, 1e-6, "morph midpoint 1");
+  morphHistory.restore();
+  near(face.morphTargetInfluences[0], 1, 1e-6, "morph restore 0");
+  near(face.morphTargetInfluences[1], 0.25, 1e-6, "morph restore 1");
+
+  // A geometry/morph-set replacement snaps the new array because its indices
+  // cannot safely be paired with those from the old shape set.
+  face.morphTargetInfluences = [0.2, 0.4, 0.6];
+  morphHistory.capture([face]);
+  morphHistory.apply(0.5);
+  near(face.morphTargetInfluences[0], 0.2, 1e-6, "morph resize snap 0");
+  near(face.morphTargetInfluences[2], 0.6, 1e-6, "morph resize snap 2");
+
   // Two fixed ticks completed in one RAF: rendering stays between the final
   // two authoritative poses instead of jumping the whole catch-up distance.
   root.position.x = 2;
@@ -135,7 +159,7 @@ try {
   near(accumulator, 0, 1e-9, "120 Hz accumulator drift");
 
   console.log(
-    "Validated render interpolation: hierarchy, catch-up, slerp, restore, visibility, teleports and accumulator cadence.",
+    "Validated render interpolation: hierarchy, morph targets, catch-up, slerp, restore, visibility, teleports and accumulator cadence.",
   );
 } finally {
   await server.close();
