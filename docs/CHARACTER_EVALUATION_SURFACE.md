@@ -66,5 +66,10 @@ so neither the procedural rig nor the female evaluation body's proportions are
 replaced. The final seam is closed exactly and every resulting key remains
 editable in Animation Studio.
 
+Catalog revision 4 also makes the replacement durable across browser storage:
+an older local `player.run` is replaced by Jog_Fwd, while a genuinely edited
+pre-Jog clip is retained as `player.run.pre-jog-local` instead of silently
+overriding the requested Run or being discarded.
+
 Additional Quaternius clips should follow the same conversion path. They should
 not replace the source rig or bypass the browser-editable layers.

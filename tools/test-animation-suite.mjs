@@ -475,8 +475,9 @@ try {
   assert.equal(findClip(upgradedCatalog, 'player.run'), undefined,
     'a clip from an already-seen revision was resurrected');
 
-  // Catalog v3 replaces only the byte-for-byte v2 starter Run. A touched key
-  // changes its signature, preserving browser-authored work under the same ID.
+  // Catalog v4 makes Jog_Fwd authoritative at `player.run`. The untouched v2
+  // starter is replaced directly; a locally edited old Run is retained under
+  // a backup ID so local data cannot hide the requested source animation.
   const legacyRunFixture = JSON.parse(gunzipSync(Buffer.from(
     (await readFile(
       new URL('./fixtures/player-run-catalog-v2.json.gz.b64', import.meta.url),
@@ -500,19 +501,45 @@ try {
     findClip(importedRunUpgrade, 'player.run').metadata.sourceAnimation.sourceClip,
     'Jog_Fwd_Loop',
   );
+  assert.equal(findClip(importedRunUpgrade, 'player.run.pre-jog-local'), undefined,
+    'untouched source starter did not need a local backup');
   const customizedLegacyRun = structuredClone(findClip(normalizedLegacyRunSuite, 'player.run'));
   customizedLegacyRun.tracks[0].keys[1].value[1] += 0.001;
   const customizedRunSuite = {
     ...normalizedLegacyRunSuite,
     clips: normalizedLegacyRunSuite.clips.map((clip) =>
       clip.id === 'player.run' ? customizedLegacyRun : clip),
+    metadata: { ...normalizedLegacyRunSuite.metadata, playerStarterCatalogVersion: 3 },
   };
-  const preservedCustomizedRun = reconcilePlayerStarterAnimationSuite(
+  const replacedCustomizedRun = reconcilePlayerStarterAnimationSuite(
     customizedRunSuite,
     binding.definition,
   );
-  assert.equal(findClip(preservedCustomizedRun, 'player.run'), customizedLegacyRun,
-    'catalog reconciliation replaced a browser-customized Run');
+  assert.equal(findClip(replacedCustomizedRun, 'player.run').name, 'Run — Quaternius Jog_Fwd');
+  const localRunBackup = findClip(replacedCustomizedRun, 'player.run.pre-jog-local');
+  assert.ok(localRunBackup, 'browser-customized pre-Jog Run was not backed up');
+  assert.equal(localRunBackup.tracks[0].keys[1].value[1],
+    customizedLegacyRun.tracks[0].keys[1].value[1]);
+  assert.ok(localRunBackup.tags.includes('local-backup'));
+
+  // Once a draft already contains Jog_Fwd, ordinary browser edits to that
+  // imported clip remain authoritative through the catalog-v4 bump.
+  const customizedJogRun = structuredClone(run);
+  customizedJogRun.name = 'My Tuned Jog_Fwd';
+  customizedJogRun.tracks[0].keys[1].value[1] += 0.002;
+  const versionThreeJogSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      clip.id === 'player.run' ? customizedJogRun : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 3 },
+  };
+  const preservedJogRun = reconcilePlayerStarterAnimationSuite(
+    versionThreeJogSuite,
+    binding.definition,
+  );
+  assert.equal(findClip(preservedJogRun, 'player.run'), customizedJogRun,
+    'catalog reconciliation replaced an already-imported Jog_Fwd edit');
+  assert.equal(findClip(preservedJogRun, 'player.run.pre-jog-local'), undefined);
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,

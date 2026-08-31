@@ -59,13 +59,14 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 3;
+export const PLAYER_STARTER_CATALOG_VERSION = 4;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
+const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
 
-// FNV-1a of the canonical catalog-v2 Run starter with rigId omitted. A user
-// edit changes the signature and is preserved; only the exact shipped gait is
-// upgraded to Jog_Fwd when an older local draft is reconciled.
+// FNV-1a of the canonical catalog-v2 Run starter with rigId omitted. An exact
+// shipped gait can be replaced directly; an edited pre-Jog Run gets a backup
+// clip before `player.run` adopts Jog_Fwd.
 const LEGACY_RUN_STARTER_SIGNATURES = new Set([
   '225688c1', // source-created catalog v2 clip
   '182166e3', // normalized/migrated catalog v2 browser draft
@@ -95,6 +96,28 @@ function starterClipSignature(clip: AnimationClip): string {
     hash = Math.imul(hash, 0x01000193);
   }
   return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+function isJogFwdRun(clip: AnimationClip): boolean {
+  const source = clip.metadata?.sourceAnimation;
+  return source !== null && typeof source === 'object' && !Array.isArray(source) &&
+    source.sourceClip === 'Jog_Fwd_Loop';
+}
+
+function preJogRunBackup(clip: AnimationClip): AnimationClip {
+  return {
+    ...structuredClone(clip),
+    id: PRE_JOG_RUN_BACKUP_ID,
+    name: `${clip.name} — Local Backup`,
+    tags: [...(clip.tags ?? []), 'local-backup', 'pre-jog-fwd'],
+    metadata: {
+      ...(clip.metadata ?? {}),
+      localBackup: {
+        reason: 'player.run replaced by Quaternius Jog_Fwd',
+        catalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+      },
+    },
+  };
 }
 
 const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
@@ -846,10 +869,10 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
 /**
  * Refresh the embedded live rig and add only starters introduced after the
  * revision a saved suite has already seen. Same-ID clips normally win; the one
- * exception is a signature-matched source starter with an explicit catalog
- * replacement (v2 Run -> v3 Jog_Fwd). Once a suite records the current
- * revision, a missing clip is treated as an intentional deletion and remains
- * missing on subsequent loads.
+ * exception is the explicit Run -> Jog_Fwd replacement. A genuinely edited
+ * pre-Jog Run is retained under a backup ID while `player.run` adopts the new
+ * source motion. Once a suite records the current revision, a missing clip is
+ * treated as an intentional deletion and remains missing on subsequent loads.
  */
 export function reconcilePlayerStarterAnimationSuite(
   document: AnimationSuiteDocument,
@@ -869,18 +892,16 @@ export function reconcilePlayerStarterAnimationSuite(
 
   const starters = createPlayerStarterClips(rig);
   let clips = document.clips;
-  if (previousVersion < 3) {
+  if (previousVersion < 4) {
     const importedRun = starters.find((clip) => clip.id === 'player.run')!;
-    let replaced = false;
-    const upgraded = clips.map((clip) => {
-      if (
-        clip.id !== 'player.run' ||
-        !LEGACY_RUN_STARTER_SIGNATURES.has(starterClipSignature(clip))
-      ) return clip;
-      replaced = true;
-      return importedRun;
-    });
-    if (replaced) clips = upgraded;
+    const currentRun = clips.find((clip) => clip.id === 'player.run');
+    if (currentRun && !isJogFwdRun(currentRun)) {
+      const shouldBackUp =
+        !LEGACY_RUN_STARTER_SIGNATURES.has(starterClipSignature(currentRun)) &&
+        !clips.some((clip) => clip.id === PRE_JOG_RUN_BACKUP_ID);
+      clips = clips.map((clip) => clip.id === 'player.run' ? importedRun : clip);
+      if (shouldBackUp) clips = [...clips, preJogRunBackup(currentRun)];
+    }
   }
 
   const existingIds = new Set(clips.map((clip) => clip.id));
