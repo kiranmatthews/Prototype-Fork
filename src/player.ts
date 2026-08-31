@@ -618,14 +618,11 @@ export class Player {
   private airFromSkate = false;
   // WHICH GRAVITY THIS AIRTIME FLIES UNDER. A skate air and a platforming hop
   // are different arcs now, so the choice has to be a property of the LAUNCH,
-  // declared once and never re-read from live state:
-  //  - airFromSkate can't be it. It's a trick-window token, and it disagrees
-  //    with the branch that actually picks the launch velocity — coast the
-  //    board under walkSpeed and chargedJump takes the ON-FOOT scale (and can
-  //    fire the Crash somersault) while airFromSkate is still true.
-  //  - reading any live flag per frame means gravity can flip mid-arc (a rail
-  //    bail clears airFromSkate half a second into a jump; catching a wall
-  //    sets it) — the same single-frame cliff vertGravityBlend exists to kill.
+  // declared once and never re-read from live state. Mounted state chooses a
+  // board launch even at walking pace; speed only distinguishes running and
+  // standing jumps after board/slide ownership has been resolved. airFromSkate
+  // remains a trick-window token which traversal catches and bails may clear
+  // mid-arc, so it cannot safely own the gravity choice frame by frame.
   // Defaults to 'foot' and resets to 'foot' on every touchdown, so a launch
   // site that forgets to declare gets the old behaviour instead of silently
   // inheriting the last air's.
@@ -780,6 +777,7 @@ export class Player {
   private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
   private ledgeShimmy = 0; // live along-ledge slide input (-1..1) — drives the hand-over-hand
   private ledgeClimbQueued = false; // preserves X pressed/held on the catch frame
+  private ledgeControlRightSign: 1 | -1 = 1; // latch axisL handedness before a mounted catch drops the deck
   private readonly ledgeEnvelope: LedgeCatchEnvelope =
     ledgeCatchEnvelope(TUNING.ledgeReach, 0);
   // baked Mixamo braced-hang clips: which one is playing, its clock, and the
@@ -2866,14 +2864,11 @@ export class Player {
     // The slide boost applies during the slide AND for slideJumpGrace seconds
     // after it ends — the old exact-window timing was nearly unhittable.
     const fromSlide = this.slideTimer > 0 || this.slideGraceT > 0;
-    // Grabs are board tricks: only airs that START from skating offer them.
-    this.airFromSkate =
-      this.freeSkate || fromSlide || Math.abs(this.speed) > TUNING.walkSpeed + 0.5;
-    // Gravity is declared by the branch that actually picks the launch, NOT by
-    // airFromSkate — the two disagree. Coast the board below walkSpeed and the
-    // on-foot branch below fires (Crash pop, Crash somersault) while
-    // airFromSkate is still true; that jump IS a platforming hop and gets the
-    // platforming arc. Start at 'foot' and let the board branches claim it.
+    // Grabs are board tricks: only a launch that is actually mounted offers
+    // them. A slide jump is explicitly a boardless platforming move.
+    this.airFromSkate = this.freeSkate && !fromSlide;
+    // Gravity is declared by the branch that actually picks the launch. Start
+    // at 'foot' and let the mounted-board branches claim the skating arc.
     this.airGrav = 'foot';
     this.slideGraceT = 0;
     // THE RAMP CLIMB. Rolling off a lip with NO input converts the climb into
@@ -2975,8 +2970,10 @@ export class Player {
       this.airMomentum = true;
       this.lastJumpType = 'Slide Jump';
       sfx.play('woosh2', 0.6);
-    } else if (spd > TUNING.walkSpeed + 0.5) {
-      // leaving actual skating: THPS board ollie. The ollie charges on its
+    } else if (this.freeSkate) {
+      // Leaving the mounted board: THPS board ollie at any rolling speed. The
+      // deck's ownership, not an arbitrary speed threshold, defines the move.
+      // The ollie charges on its
       // OWN min..max scale, decoupled from the on-foot jump — X doubles as
       // the skate accelerator, so riding the charge scale up to jumpVelocity
       // made every accelerating jump a moon jump. Cruising on direction keys
@@ -10652,6 +10649,13 @@ export class Player {
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
     this.ledgeClimbQueued = this.rawInput.jumpPressed || this.rawInput.jumpHeld;
+    // axisL uses the skating handedness until the catch completes. Preserve
+    // that control frame before traversal hands the mounted deck to the loose-
+    // board simulation, otherwise the first shimmy reverses as freeSkate flips.
+    this.ledgeControlRightSign = this.freeSkate ? -1 : 1;
+    // A two-handed ledge catch cannot leave the deck mounted. Detach before
+    // zeroing speed/vVel so the loose board inherits the actual catch flight.
+    this.detachBoardForTraversal();
     // NOTE: axisF/axisL are the CONTROL FRAME (stick -> world), owned by the
     // zone/lane system — the hang must never rotate them (that scrambles the
     // controls after you let go). Facing the wall is visualYaw, in stepHang.
@@ -10767,8 +10771,9 @@ export class Player {
       // can't be derived from axisF), but the free-skate carve maintains
       // heading-LEFT (its entry seed + negate keep that mirror). A fixed sign
       // here inverted every on-foot shimmy on the course while the skate tests
-      // read fine — so pick stick-right by the frame's current owner.
-      const rSgn = this.freeSkate ? -1 : 1;
+      // read fine. A mounted catch drops the deck, so use the frame owner that
+      // was latched on contact rather than the now-boardless live state.
+      const rSgn = this.ledgeControlRightSign;
       const sx = rSgn * this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
       const sz = rSgn * this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
       const basis = ledgeBasis(n, CONST.playerHalf.x, CONST.playerHalf.z);

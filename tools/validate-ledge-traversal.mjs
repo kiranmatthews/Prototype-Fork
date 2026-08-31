@@ -473,6 +473,103 @@ try {
     );
     assert.ok(Math.abs(result.player.ledgeLip - targetLip) < 1e-4);
   }
+
+  // A mounted rider who catches a ledge has committed both hands to
+  // traversal. The deck must keep flying independently instead of being
+  // hidden for the hang and then magically reappearing underfoot.
+  const mountedFace = faceFor(receivingFaces[0]);
+  assert.ok(mountedFace, "missing mounted ledge-transfer fixture face");
+  const mountedCatch = new Player(gateScene);
+  prepareCatch(mountedCatch, mountedFace);
+  mountedCatch.freeSkate = true;
+  mountedCatch.airFromSkate = true;
+  mountedCatch.airGrav = "board";
+  mountedCatch.boardOllieAir = true;
+  mountedCatch.skateOn = true;
+  mountedCatch.speed = 12;
+  mountedCatch.vVel = -2;
+  mountedCatch.axisF.set(1, 0, 0);
+  mountedCatch.axisL.set(0, 0, -1); // free-skate stores heading-left
+  mountedCatch.syncVisual(mountedCatch.rawInput, 0);
+  gateScene.updateMatrixWorld(true);
+  assert.equal(
+    mountedCatch.tryLedgeGrab(mountedFace, gateLevel),
+    true,
+    "mounted fixture did not catch the ledge",
+  );
+  assert.equal(mountedCatch.state, "hang");
+  assert.equal(mountedCatch.freeSkate, false, "ledge catch kept skate authority");
+  assert.equal(mountedCatch.skateOn, false);
+  assert.equal(mountedCatch.airFromSkate, false);
+  assert.equal(mountedCatch.airGrav, "foot");
+  assert.equal(mountedCatch.boardOllieAir, false);
+  assert.equal(mountedCatch.bailDownT, 0, "clean ledge transfer became a bail");
+  assert.ok(mountedCatch.flyBoard?.visible, "ledge catch did not release the deck");
+  assert.ok(
+    mountedCatch.flyBoardVel.distanceTo(new THREE.Vector3(12, -2, 0)) < 1e-9,
+    "loose deck did not inherit the catch velocity",
+  );
+  assert.equal(
+    mountedCatch.ledgeControlRightSign,
+    -1,
+    "mounted catch forgot the skating control frame",
+  );
+
+  // Detaching flips freeSkate immediately, but must not flip the stick's
+  // left/right meaning while the hands are already on the wall.
+  const shimInput = makeInput();
+  shimInput.moveX = 1;
+  mountedCatch.rawInput = shimInput;
+  const mountedBasis = ledgeBasis(
+    mountedCatch.ledgeNormal,
+    CONST.playerHalf.x,
+    CONST.playerHalf.z,
+  );
+  const expectedShim = THREE.MathUtils.clamp(
+    -mountedCatch.axisL.x * mountedBasis.tx -
+      mountedCatch.axisL.z * mountedBasis.tz,
+    -1,
+    1,
+  );
+  assert.ok(Math.abs(expectedShim) > 0.5, "mounted shimmy fixture is degenerate");
+  mountedCatch.stepHang(CONST.fixedStep, shimInput, gateLevel);
+  assert.equal(
+    Math.sign(mountedCatch.ledgeShimmy),
+    Math.sign(expectedShim),
+    "deck detach reversed the first shimmy input",
+  );
+
+  // Jump identity follows board ownership, not velocity. This is the exact
+  // low-speed contradiction exposed by the Coastal Street replay: a mounted
+  // rider must ollie, while a fast deckless runner retains the foot jump.
+  const jumpFixture = (freeSkate, speed) => {
+    const player = new Player(gateScene);
+    player.rawInput = makeInput();
+    player.state = "ride";
+    player.grounded = true;
+    player.freeSkate = freeSkate;
+    player.skateOn = freeSkate;
+    player.speed = speed;
+    player.pos.set(0, 2, 0);
+    player.prevPos.copy(player.pos);
+    player.chargeTimer = TUNING.jumpChargeTime * 0.4;
+    player.charging = true;
+    player.dirHoldT = TUNING.flipHoldTime + 0.1;
+    player.chargedJump(CONST.fixedStep);
+    return player;
+  };
+  const slowMounted = jumpFixture(true, TUNING.walkSpeed * 0.7);
+  assert.equal(slowMounted.lastJumpType, "Board Ollie");
+  assert.equal(slowMounted.boardOllieAir, true);
+  assert.equal(slowMounted.airFromSkate, true);
+  assert.equal(slowMounted.airGrav, "board");
+  assert.equal(slowMounted.flipTimer, 0, "mounted ollie inherited a body flip");
+
+  const fastDeckless = jumpFixture(false, TUNING.walkSpeed + 4);
+  assert.equal(fastDeckless.lastJumpType, "Forward Flip");
+  assert.equal(fastDeckless.boardOllieAir, false);
+  assert.equal(fastDeckless.airFromSkate, false);
+  assert.equal(fastDeckless.airGrav, "foot");
   gateLevel.dispose();
 
   const checkpoints = new Set([
@@ -627,7 +724,7 @@ try {
   );
 
   console.log(
-    "Validated both Jungle Gate Perfect-Boing catches/mantles plus refit diagonal traversal, mover carry, neutral/held climbs, and traverse-only clearance.",
+    "Validated board-to-ledge detach, mounted jump identity, both Jungle Gate Perfect-Boing catches/mantles, refit diagonal traversal, mover carry, neutral/held climbs, and traverse-only clearance.",
   );
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));
