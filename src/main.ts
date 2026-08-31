@@ -1149,6 +1149,15 @@ const toggleCharacterPresentation = (): void => {
     2200,
   );
 };
+const toggleCharacterTailVisibility = (): void => {
+  player.toggleCharacterTailVisibility();
+  const state = player.characterTailVisibilityState;
+  ui.showMessage(
+    'CHARACTER TAIL',
+    state.detail,
+    1800,
+  );
+};
 if (TOUCH_PRESENTATION) {
   ui.setPresentationTools([
     {
@@ -1163,6 +1172,13 @@ if (TOUCH_PRESENTATION) {
       open: () => {
         closePresentationPanels();
         toggleCharacterPresentation();
+      },
+    },
+    {
+      label: "TAIL",
+      open: () => {
+        closePresentationPanels();
+        toggleCharacterTailVisibility();
       },
     },
     {
@@ -1225,6 +1241,10 @@ if (TOUCH_PRESENTATION) {
     {
       label: "BODY",
       open: toggleCharacterPresentation,
+    },
+    {
+      label: "TAIL",
+      open: toggleCharacterTailVisibility,
     },
   ]);
 }
@@ -2083,6 +2103,10 @@ async function openAnimationStudioTool(): Promise<void> {
       presentationSurface: {
         getState: () => player.characterPresentationSurfaceState,
         toggle: () => player.toggleCharacterPresentationMode(),
+      },
+      tailVisibility: {
+        getState: () => player.characterTailVisibilityState,
+        toggle: () => player.toggleCharacterTailVisibility(),
       },
       onDocumentChange: (document) => {
         playerAnimationDocument = document;
@@ -3476,6 +3500,9 @@ requestAnimationFrame(frame);
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
   getCharacterPresentationDiagnostics: () => player.characterPresentationDiagnostics,
+  getCharacterTailVisibility: () => player.characterTailVisible,
+  setCharacterTailVisible: (visible: boolean) => player.setCharacterTailVisible(visible),
+  toggleCharacterTailVisibility: () => player.toggleCharacterTailVisibility(),
   setCharacterPresentationMode: (
     mode: 'procedural' | 'quaternius-female' | 'meshy-fox',
   ) =>

@@ -408,6 +408,11 @@ assert.match(
   /private characterPresentationModeValue: CharacterPresentationMode = 'quaternius-female';/,
   "new Players request the female evaluation surface by default",
 );
+assert.match(
+  playerSource,
+  /private characterTailVisibleValue = true;/,
+  "the procedural tail remains visible by default",
+);
 assertInOrder(
   sourceSection(playerSource, "constructor(scene: THREE.Scene)", "  // Reaching for or holding the grab", "Player construction"),
   [
@@ -456,6 +461,36 @@ for (const fragment of [
   assert.ok(presentationState.includes(fragment), `presentation surface exposes ${fragment}`);
 }
 
+const tailVisibility = sourceSection(
+  playerSource,
+  "  get characterTailVisibilityState(): {",
+  "  /** Compact host contract used by Animation Studio's BODY switch. */",
+  "Player tail visibility",
+);
+assertInOrder(
+  tailVisibility,
+  [
+    "label: this.characterTailVisibleValue ? 'ON' : 'OFF'",
+    "setCharacterTailVisible(visible: boolean): void",
+    "localStorage.setItem(",
+    "CHARACTER_TAIL_VISIBILITY_STORAGE_KEY",
+    "this.syncCharacterTailVisibility();",
+    "this.resetRenderInterpolation();",
+    "toggleCharacterTailVisibility(): void",
+  ],
+  "the tail switch reports, persists, immediately applies, and render-snaps its state",
+);
+assert.match(
+  playerSource,
+  /localStorage\.getItem\(CHARACTER_TAIL_VISIBILITY_STORAGE_KEY\)[\s\S]*?saved === '0'[\s\S]*?saved === '1'/,
+  "Player restores only the two valid persisted tail states",
+);
+assert.match(
+  playerSource,
+  /private syncCharacterTailVisibility\(\): void \{[\s\S]*?this\.tail\.root\.visible = this\.characterTailVisibleValue;/,
+  "the toggle owns only the procedural animal tail root",
+);
+
 const setMode = sourceSection(
   playerSource,
   "  setCharacterPresentationMode(mode: CharacterPresentationMode): void",
@@ -492,8 +527,9 @@ assertInOrder(
     "female?.setVisible(showFemale);",
     "meshy?.setVisible(showMeshy);",
     "source.object.visible = showFemale || showMeshy ? false : source.visible;",
+    "this.syncCharacterTailVisibility();",
   ],
-  "Player updates the selected evaluation pose and restores source visibility on fallback",
+  "Player updates the selected evaluation pose and reclaims source/tail visibility after snapshots",
 );
 
 const installPresentation = sourceSection(
@@ -566,8 +602,8 @@ assertInOrder(
 
 assert.match(
   animationStudioSource,
-  /syncPresentation\?: \(\) => void;[\s\S]*?presentationSurface\?: AnimationStudioPresentationSurface;/,
-  "Animation Studio context exposes host-owned presentation synchronization and BODY surface controls",
+  /syncPresentation\?: \(\) => void;[\s\S]*?presentationSurface\?: AnimationStudioPresentationSurface;[\s\S]*?tailVisibility\?: AnimationStudioTailVisibility;/,
+  "Animation Studio context exposes host-owned BODY and tail presentation controls",
 );
 const studioFrame = sourceSection(
   animationStudioSource,
@@ -582,8 +618,9 @@ assertInOrder(
     "if (this.onionEnabled && this.onionDirty) this.updateOnionSkin();",
     "this.ctx.syncPresentation?.();",
     "this.refreshPresentationSurfaceButton();",
+    "this.refreshTailVisibilityButton();",
   ],
-  "Animation Studio syncs the mannequin once per settled editor frame",
+  "Animation Studio syncs and refreshes all character presentation controls once per settled frame",
 );
 const studioToolbar = sourceSection(
   animationStudioSource,
@@ -617,6 +654,31 @@ assertInOrder(
   ],
   "Animation Studio BODY selector reflects the host surface state",
 );
+const refreshTailSelector = sourceSection(
+  animationStudioSource,
+  "  private refreshTailVisibilityButton(): void",
+  "  private buildClipPanel",
+  "Animation Studio TAIL selector refresh",
+);
+assertInOrder(
+  refreshTailSelector,
+  [
+    "button.textContent = `TAIL · ${state.label}`;",
+    "button.classList.toggle('ast-active', state.active);",
+    "button.setAttribute('aria-pressed', state.active ? 'true' : 'false');",
+  ],
+  "Animation Studio TAIL selector exposes and reflects the persistent silhouette state",
+);
+assertInOrder(
+  studioToolbar,
+  [
+    "button('TAIL · …', 'Show or hide the procedural character tail')",
+    "this.ctx.tailVisibility?.toggle();",
+    "this.ctx.syncPresentation?.();",
+    "this.refreshTailVisibilityButton();",
+  ],
+  "Animation Studio TAIL selector applies and immediately resynchronizes the silhouette",
+);
 
 const mainStudioWiring = sourceSection(
   mainSource,
@@ -631,6 +693,8 @@ assertInOrder(
     "syncPresentation: () => player.syncCharacterPresentation(),",
     "getState: () => player.characterPresentationSurfaceState,",
     "toggle: () => player.toggleCharacterPresentationMode(),",
+    "getState: () => player.characterTailVisibilityState,",
+    "toggle: () => player.toggleCharacterTailVisibility(),",
     "player.exitAnimationPreview();",
   ],
   "main wires Player presentation controls into the animation preview lifecycle",
@@ -648,6 +712,18 @@ assert.ok(
 assert.ok(
   debugSurface.includes("mode: 'procedural' | 'quaternius-female' | 'meshy-fox',"),
   "__game exposes explicit character presentation switching for browser harnesses",
+);
+for (const fragment of [
+  "getCharacterTailVisibility: () => player.characterTailVisible,",
+  "setCharacterTailVisible: (visible: boolean) => player.setCharacterTailVisible(visible),",
+  "toggleCharacterTailVisibility: () => player.toggleCharacterTailVisibility(),",
+]) {
+  assert.ok(debugSurface.includes(fragment), `__game exposes tail control: ${fragment}`);
+}
+assert.equal(
+  [...mainSource.matchAll(/label: "TAIL"/g)].length,
+  2,
+  "desktop and touch presentation toolbars both expose the tail toggle",
 );
 
 const packageManifest = JSON.parse(packageSource);

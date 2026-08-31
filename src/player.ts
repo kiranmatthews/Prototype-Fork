@@ -91,11 +91,14 @@ export type CharacterPresentationMode =
 export interface CharacterPresentationDiagnostics {
   requestedMode: CharacterPresentationMode;
   activeMode: CharacterPresentationMode;
+  tailVisible: boolean;
   ready: boolean;
   error: string | null;
   evaluation: QuaterniusEvaluationDiagnostics | null;
   meshyFox: MeshyFoxEvaluationDiagnostics | null;
 }
+
+const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 const LEG_SOLVE_R: SagittalLegPose = {
@@ -526,6 +529,7 @@ export class Player {
   private quaterniusEvaluationModel: QuaterniusEvaluationModel | null = null;
   private meshyFoxEvaluationModel: MeshyFoxEvaluationModel | null = null;
   private characterPresentationModeValue: CharacterPresentationMode = 'quaternius-female';
+  private characterTailVisibleValue = true;
   private characterPresentationSourceRoots: Array<{
     object: THREE.Object3D;
     visible: boolean;
@@ -1168,6 +1172,7 @@ export class Player {
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
+    this.restoreCharacterTailVisibilityPreference();
     // YXZ so the yaw (facing travel) is the OUTERMOST rotation: the flip and
     // pose pitch on rotation.x then happen in the FACING frame, so a front
     // flip always tumbles along the direction you're actually moving — not
@@ -1613,6 +1618,10 @@ export class Player {
     return this.characterPresentationModeValue;
   }
 
+  get characterTailVisible(): boolean {
+    return this.characterTailVisibleValue;
+  }
+
   get activeCharacterPresentationMode(): CharacterPresentationMode {
     if (
       this.characterPresentationModeValue === 'quaternius-female' &&
@@ -1641,11 +1650,44 @@ export class Player {
     return {
       requestedMode: this.characterPresentationModeValue,
       activeMode: this.activeCharacterPresentationMode,
+      tailVisible: this.characterTailVisibleValue,
       ready,
       error,
       evaluation: model?.diagnostics ?? null,
       meshyFox: this.meshyFoxEvaluationModel?.diagnostics ?? null,
     };
+  }
+
+  get characterTailVisibilityState(): {
+    label: 'ON' | 'OFF';
+    active: boolean;
+    detail: string;
+  } {
+    return {
+      label: this.characterTailVisibleValue ? 'ON' : 'OFF',
+      active: this.characterTailVisibleValue,
+      detail: this.characterTailVisibleValue
+        ? 'Procedural character tail shown · click to hide it'
+        : 'Procedural character tail hidden · click to restore it',
+    };
+  }
+
+  setCharacterTailVisible(visible: boolean): void {
+    this.characterTailVisibleValue = Boolean(visible);
+    try {
+      localStorage.setItem(
+        CHARACTER_TAIL_VISIBILITY_STORAGE_KEY,
+        this.characterTailVisibleValue ? '1' : '0',
+      );
+    } catch {
+      // Private browsing can disable persistence without disabling the toggle.
+    }
+    this.syncCharacterTailVisibility();
+    this.resetRenderInterpolation();
+  }
+
+  toggleCharacterTailVisibility(): void {
+    this.setCharacterTailVisible(!this.characterTailVisibleValue);
   }
 
   /** Compact host contract used by Animation Studio's BODY switch. */
@@ -1734,6 +1776,25 @@ export class Player {
     for (const source of this.characterPresentationSourceRoots) {
       source.object.visible = showFemale || showMeshy ? false : source.visible;
     }
+    // Preview and Studio snapshots restore visibility wholesale. The tail is
+    // a host-owned silhouette preference, so reclaim it after those restores
+    // just as the async evaluation surfaces reclaim their own transforms.
+    this.syncCharacterTailVisibility();
+  }
+
+  private restoreCharacterTailVisibilityPreference(): void {
+    try {
+      const saved = localStorage.getItem(CHARACTER_TAIL_VISIBILITY_STORAGE_KEY);
+      if (saved === '0') this.characterTailVisibleValue = false;
+      else if (saved === '1') this.characterTailVisibleValue = true;
+    } catch {
+      // Default-on remains available when browser storage is blocked.
+    }
+    this.syncCharacterTailVisibility();
+  }
+
+  private syncCharacterTailVisibility(): void {
+    if (this.tail) this.tail.root.visible = this.characterTailVisibleValue;
   }
 
   private installQuaterniusEvaluationModel(): void {

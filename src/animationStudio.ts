@@ -157,6 +157,8 @@ export interface AnimationStudioContext {
   syncPresentation?: () => void;
   /** Optional host-owned switch between the authoring rig and an evaluation surface. */
   presentationSurface?: AnimationStudioPresentationSurface;
+  /** Optional host-owned procedural-tail silhouette toggle. */
+  tailVisibility?: AnimationStudioTailVisibility;
   /** Pure custom procedural evaluators registered by the runtime/tool host. */
   proceduralEvaluators?: ProceduralEvaluatorRegistry;
   /** Called after committed edits and undo/redo, never on every playback frame. */
@@ -176,6 +178,20 @@ export interface AnimationStudioPresentationSurfaceState {
 
 export interface AnimationStudioPresentationSurface {
   getState(): AnimationStudioPresentationSurfaceState;
+  toggle(): void;
+}
+
+export interface AnimationStudioTailVisibilityState {
+  /** Short state label rendered after “TAIL ·”. */
+  label: string;
+  /** True when the procedural tail is intended to be shown. */
+  active: boolean;
+  /** Optional hover explanation supplied by the host. */
+  detail?: string;
+}
+
+export interface AnimationStudioTailVisibility {
+  getState(): AnimationStudioTailVisibilityState;
   toggle(): void;
 }
 
@@ -203,6 +219,7 @@ export interface AnimationStudioDiagnostics {
     trackCount: number;
     keyCount: number;
     presentationSurface?: AnimationStudioPresentationSurfaceState;
+    tailVisibility?: AnimationStudioTailVisibilityState;
   };
   selectClip(clipId: string): boolean;
   seek(time: number): void;
@@ -589,6 +606,7 @@ class AnimationStudio implements AnimationStudioHandle {
   private playhead!: HTMLElement;
   private toastElement!: HTMLElement;
   private presentationSurfaceButton: HTMLButtonElement | undefined;
+  private tailVisibilityButton: HTMLButtonElement | undefined;
   private transformInputs: HTMLInputElement[][] = [];
   private scalarInputs = new Map<string, { slider: HTMLInputElement; exact: HTMLInputElement }>();
   private keyInterpolationSelect!: HTMLSelectElement;
@@ -665,6 +683,7 @@ class AnimationStudio implements AnimationStudioHandle {
       getState: () => {
         const clip = this.activeClip();
         const presentationSurface = this.ctx.presentationSurface?.getState();
+        const tailVisibility = this.ctx.tailVisibility?.getState();
         return {
           ...(clip ? { clipId: clip.id, clipName: clip.name, playbackSpeed: clip.playbackSpeed } : {}),
           time: this.playTime,
@@ -676,6 +695,7 @@ class AnimationStudio implements AnimationStudioHandle {
           trackCount: clip?.tracks.length ?? 0,
           keyCount: clip?.tracks.reduce((sum, track) => sum + track.keys.length, 0) ?? 0,
           ...(presentationSurface ? { presentationSurface } : {}),
+          ...(tailVisibility ? { tailVisibility } : {}),
         };
       },
       selectClip: (clipId) => {
@@ -792,6 +812,7 @@ class AnimationStudio implements AnimationStudioHandle {
     if (this.onionEnabled && this.onionDirty) this.updateOnionSkin();
     this.ctx.syncPresentation?.();
     this.refreshPresentationSurfaceButton();
+    this.refreshTailVisibilityButton();
     this.orbit.update();
     this.syncTimeUi();
   }
@@ -937,6 +958,16 @@ class AnimationStudio implements AnimationStudioHandle {
       parent.appendChild(this.presentationSurfaceButton);
       this.refreshPresentationSurfaceButton();
     }
+    if (this.ctx.tailVisibility) {
+      this.tailVisibilityButton = button('TAIL · …', 'Show or hide the procedural character tail');
+      this.tailVisibilityButton.onclick = () => {
+        this.ctx.tailVisibility?.toggle();
+        this.ctx.syncPresentation?.();
+        this.refreshTailVisibilityButton();
+      };
+      parent.appendChild(this.tailVisibilityButton);
+      this.refreshTailVisibilityButton();
+    }
     const importButton = button('Import', 'Import animation-suite JSON');
     const exportButton = button('Export', 'Copy or download animation-suite JSON');
     importButton.onclick = () => this.openImportModal();
@@ -964,6 +995,17 @@ class AnimationStudio implements AnimationStudioHandle {
         ? 'Switch between the evaluation surface and the procedural source body'
         : 'Evaluation surface is still loading'
     );
+  }
+
+  private refreshTailVisibilityButton(): void {
+    const button = this.tailVisibilityButton;
+    const tailVisibility = this.ctx.tailVisibility;
+    if (!button || !tailVisibility) return;
+    const state = tailVisibility.getState();
+    button.textContent = `TAIL · ${state.label}`;
+    button.classList.toggle('ast-active', state.active);
+    button.setAttribute('aria-pressed', state.active ? 'true' : 'false');
+    button.title = state.detail ?? 'Show or hide the procedural character tail';
   }
 
   private buildClipPanel(parent: HTMLElement): void {
