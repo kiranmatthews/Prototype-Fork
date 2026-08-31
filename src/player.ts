@@ -64,6 +64,12 @@ import {
   sourceComboLabelLine,
   type ComboHudPreview,
 } from './comboHud';
+import {
+  PlayerAnimationBridge,
+  type PlayerAnimationOverlay,
+  type PlayerAnimationRig,
+} from './animation/bridge';
+import type { ProceduralMotionContext } from './animation/types';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 const LEG_SOLVE_R: SagittalLegPose = {
@@ -121,6 +127,30 @@ const FRUIT_PREV = new THREE.Vector4(); // scratch: viewport to put back
 const FRUIT_GRAB = new THREE.Vector3(1.2, 1.5, 1.2); // same reach a level pickup has
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
+
+/** Presentation-only route into the browser-authored player clip catalog. */
+export type PlayerAnimationClipHint =
+  | 'player.idle'
+  | 'player.run'
+  | 'player.jump'
+  | 'player.fall'
+  | 'player.crouch'
+  | 'player.crawl'
+  | 'player.slide'
+  | 'player.skate'
+  | 'player.grind'
+  | 'player.grab'
+  | 'player.hang'
+  | 'player.climb'
+  | 'player.rope'
+  | 'player.slam'
+  | 'player.bail'
+  | 'player.spin';
+
+export interface PlayerAnimationIntent {
+  readonly clipId: PlayerAnimationClipHint;
+  readonly motion: ProceduralMotionContext;
+}
 
 // Ledge grab geometry: how far below the TRUE lip the body hangs (hands at the
 // lip, head just under it), and how long the catch takes to settle (a caught
@@ -458,6 +488,7 @@ export class Player {
 
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
+  private readonly playerAnimationBridge: PlayerAnimationBridge;
   // The procedural body is both the active character and the load-bearing pose
   // rig. Imported models can still be installed explicitly for comparison,
   // but the code-authored rider is ready to draw from the first frame.
@@ -802,6 +833,9 @@ export class Player {
   // surface — gently on banks, flat-out on vert walls, all the way through hang
   // time — so the body tracks the wall while riding AND while glued in the air.
   alignPose = 0; // 0 = upright, 1 = fully lying on alignNormal
+  // Gameplay owns its own copy of the eased surface tilt. Touchdown judging
+  // reads this, never a transform that Animation Studio is allowed to edit.
+  private landingAlignPose = 0;
   readonly alignNormal = new THREE.Vector3(0, 1, 0); // eased surface normal the rig lies on
   skateOn = false; // debug: the charge is currently driving the board
   lastJumpType = '—'; // debug: what the last X release produced
@@ -1081,6 +1115,7 @@ export class Player {
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
     scene.add(this.group);
+    this.playerAnimationBridge = new PlayerAnimationBridge(this.group, this.bodyGroup);
     // Keep imported characters as explicit comparison/debug routes. Normal
     // play stays on the procedural rider so its sculpt and animations can be
     // authored directly in code without an asynchronous GLB replacing it.
@@ -1303,6 +1338,157 @@ export class Player {
     return this.slideContactLatch || (this.slideTimer > 0 && this.state === 'ride' && this.grounded);
   }
 
+  /**
+   * Read-only presentation intent for the authored-animation runtime. Landing
+   * is deliberately detected there from the airborne -> grounded edge.
+   */
+  get animationClipHint(): PlayerAnimationClipHint {
+    if (this.isBailing || this.state === 'dead' || this.state === 'gameover') return 'player.bail';
+    if (this.state === 'rope') return 'player.rope';
+    if (this.state === 'hang') return this.ledgePhase === 'climb' ? 'player.climb' : 'player.hang';
+    if (this.state === 'grind') return 'player.grind';
+    if (this.slamActive || this.slamFlatT > 0 || this.slamSquash > 0) return 'player.slam';
+    if (this.grabbing || this.grabPose > 0.25 || this.specialGrab !== null) return 'player.grab';
+    if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
+    if (this.sliding || this.slidePose > 0.25) return 'player.slide';
+    if (this.crawling) {
+      return Math.abs(this.speed) > 0.5 ? 'player.crawl' : 'player.crouch';
+    }
+    if (this.state === 'air' || !this.grounded) {
+      return this.vVel > 0 ? 'player.jump' : 'player.fall';
+    }
+    if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
+    return Math.abs(this.speed) > 0.25 ? 'player.run' : 'player.idle';
+  }
+
+  /**
+   * Deterministic fixed-step inputs for pure procedural animation drivers.
+   * Every value is presentation-only and copied out as a finite scalar.
+   */
+  get animationIntent(): PlayerAnimationIntent {
+    const clipId = this.animationClipHint;
+    const gaitPhase = ((this.walkPhase / (Math.PI * 2)) % 1 + 1) % 1;
+    const speedReference =
+      clipId === 'player.crawl' || clipId === 'player.crouch'
+        ? Math.max(TUNING.crawlSpeed, 0.001)
+        : this.freeSkate || this.airFromSkate || this.state === 'grind'
+          ? Math.max(TUNING.maxSpeed, 0.001)
+          : Math.max(TUNING.walkSpeed, 0.001);
+    const planarSpeed = this.state === 'rope' || this.state === 'hang'
+      ? 0
+      : Math.max(
+        0,
+        this.lastPlanar,
+        this.walkVelocity.length(),
+        Math.abs(this.speed),
+      );
+    const normalizedSpeed = THREE.MathUtils.clamp(planarSpeed / speedReference, 0, 1);
+    const crawlMotion = this.crawlPose * Math.min(1, planarSpeed / 1.2);
+    const crouchPose = Math.max(0, this.crawlPose - crawlMotion);
+    const charge = THREE.MathUtils.clamp(
+      this.chargeTimer / Math.max(TUNING.jumpChargeTime, 0.001),
+      0,
+      1,
+    );
+    const skateCharge = THREE.MathUtils.clamp(
+      this.skateCharge / Math.max(TUNING.skateHoldTime, 0.001),
+      0,
+      1,
+    );
+    const slideProgress = THREE.MathUtils.clamp(
+      1 - this.slideDistanceLeft / Math.max(TUNING.slideDistance, 0.001),
+      0,
+      1,
+    );
+    const spinProgress = this.spinTimer > 0
+      ? THREE.MathUtils.clamp(1 - this.spinTimer / Math.max(TUNING.spinDuration, 0.001), 0, 1)
+      : this.flipT > 0
+        ? THREE.MathUtils.clamp(1 - this.flipT / Math.max(this.flipDuration, 0.001), 0, 1)
+        : 0;
+    const slamProgress = this.slamActive
+      ? this.slamHangT > 0
+        ? 0.33 * (1 - this.slamHangT / Math.max(CONST.slamHang, 0.001))
+        : 0.66
+      : this.slamSquash > 0
+        ? 0.66 + 0.17 * (1 - this.slamSquash / Math.max(CONST.slamSquashTime, 0.001))
+        : this.slamFlatT > 0
+          ? 0.83 + 0.17 * (1 - this.slamFlatT / Math.max(CONST.slamFlat, 0.001))
+          : 0;
+    const bailProgress = this.isBailing
+      ? this.bailRecoverT >= 0
+        ? 0.5 + 0.5 * this.bailRecoveryPose
+        : 0.5 * (1 - this.bailDownT / Math.max(CONST.bailDownTime, 0.001))
+      : 0;
+    let actionProgress = 0;
+    if (clipId === 'player.idle' || clipId === 'player.run' || clipId === 'player.crawl' || clipId === 'player.skate') {
+      actionProgress = gaitPhase;
+    } else if (clipId === 'player.jump') {
+      actionProgress = this.launchVy > 0
+        ? 1 - Math.max(0, this.vVel) / this.launchVy
+        : this.airborneT;
+    } else if (clipId === 'player.fall') {
+      actionProgress = -this.vVel / Math.max(TUNING.hugeDropImpact, 0.001);
+    } else if (clipId === 'player.crouch') {
+      actionProgress = this.crawlPose;
+    } else if (clipId === 'player.slide') {
+      actionProgress = slideProgress;
+    } else if (clipId === 'player.grind') {
+      actionProgress = this.grindTime;
+    } else if (clipId === 'player.grab') {
+      actionProgress = this.grabPose;
+    } else if (clipId === 'player.hang') {
+      actionProgress = this.ledgeEaseT / LEDGE_EASE;
+    } else if (clipId === 'player.climb') {
+      actionProgress = this.ledgeClimbK;
+    } else if (clipId === 'player.rope') {
+      actionProgress = charge;
+    } else if (clipId === 'player.slam') {
+      actionProgress = slamProgress;
+    } else if (clipId === 'player.bail') {
+      actionProgress = bailProgress;
+    } else if (clipId === 'player.spin') {
+      actionProgress = spinProgress;
+    }
+    actionProgress = THREE.MathUtils.clamp(actionProgress, 0, 1);
+    const travelSign = Math.sign(this.speed);
+    return {
+      clipId,
+      motion: {
+        normalizedSpeed,
+        gaitPhase,
+        verticalVelocity: Number.isFinite(this.vVel) ? this.vVel : 0,
+        grounded: this.grounded,
+        actionProgress,
+        inputs: {
+          travelSign,
+          signedSpeed: normalizedSpeed * travelSign,
+          balance: THREE.MathUtils.clamp(this.balance, -1, 1),
+          charge,
+          skateCharge,
+          crawl: THREE.MathUtils.clamp(crawlMotion, 0, 1),
+          crouch: THREE.MathUtils.clamp(crouchPose, 0, 1),
+          skate: THREE.MathUtils.clamp(this.skatePose, 0, 1),
+          deck: THREE.MathUtils.clamp(this.deckPose, 0, 1),
+          slide: THREE.MathUtils.clamp(this.slidePose, 0, 1),
+          grab: THREE.MathUtils.clamp(this.grabPose, 0, 1),
+          hang: THREE.MathUtils.clamp(Math.max(this.hangPose, this.ledgePose), 0, 1),
+          climb: THREE.MathUtils.clamp(this.ledgeClimbK, 0, 1),
+          rope: this.state === 'rope' ? 1 : 0,
+          grind: this.state === 'grind' ? 1 : 0,
+          slam: THREE.MathUtils.clamp(slamProgress, 0, 1),
+          bail: this.isBailing ? 1 : 0,
+          spin: spinProgress,
+          manual: this.manualing,
+          stance: this.stance,
+          slope: THREE.MathUtils.clamp(this.slopePose, 0, 1),
+          align: THREE.MathUtils.clamp(this.alignPose, 0, 1),
+          wallride: this.wallriding ? 1 : 0,
+          airborne: this.grounded ? 0 : 1,
+        },
+      },
+    };
+  }
+
   // Reaching for or holding the grab (air control locks during these).
   private get grabbing(): boolean {
     return this.grabPhase === 'enter' || this.grabPhase === 'held';
@@ -1331,6 +1517,66 @@ export class Player {
   /** Monotonic teleport epoch consumed by the render-clock camera. */
   get renderSnapVersion(): number {
     return this._renderSnapVersion;
+  }
+
+  /** Stable semantic rig data for Animation Studio and authored overlays. */
+  get animationRig(): PlayerAnimationRig {
+    return this.playerAnimationBridge.rig;
+  }
+
+  get animationPreviewActive(): boolean {
+    return this.playerAnimationBridge.previewActive;
+  }
+
+  /**
+   * Give Animation Studio temporary ownership of the visual hierarchy.
+   * Interpolated RAF transforms are removed before the authoritative pose is
+   * captured, so closing the studio can never feed an in-between pose back to
+   * gameplay.
+   */
+  enterAnimationPreview(): PlayerAnimationRig {
+    this.restoreRenderPose();
+    this.resetRenderInterpolation();
+    return this.playerAnimationBridge.enterPreview();
+  }
+
+  /** Restore the entry pose but retain Animation Studio ownership. */
+  resetAnimationPreview(): void {
+    this.playerAnimationBridge.resetPreview();
+    this.tail?.reset();
+    this.resetRenderInterpolation();
+  }
+
+  /** Restore the entry pose and return pose ownership to gameplay. */
+  exitAnimationPreview(): void {
+    this.playerAnimationBridge.exitPreview();
+    this.tail?.reset();
+    this.resetRenderInterpolation();
+  }
+
+  /**
+   * Animation Studio's scalar-track adapter. It is deliberately preview-only;
+   * live gameplay uses setAuthoredPoseOverlay(), whose callback receives the
+   * same deformation operation inside a guarded post-legacy pass.
+   */
+  applyAnimationDeformations(values: Readonly<Record<string, number>>): void {
+    if (!this.playerAnimationBridge.previewActive)
+      throw new Error('independent deformation writes require an animation preview session');
+    this.playerAnimationBridge.applyDeformations(values);
+  }
+
+  /**
+   * Install the future AnimationSession's final authored-pose layer. The
+   * returned disposer only removes the overlay it installed, so replacing a
+   * session cannot let an older cleanup tear down the newer one.
+   */
+  setAuthoredPoseOverlay(overlay: PlayerAnimationOverlay | null): () => void {
+    const dispose = this.playerAnimationBridge.setOverlay(overlay);
+    this.resetRenderInterpolation();
+    return () => {
+      dispose();
+      this.resetRenderInterpolation();
+    };
   }
 
   /**
@@ -1746,6 +1992,7 @@ export class Player {
     this.slopePose = 0;
     this.slopeRoll = 0;
     this.alignPose = 0;
+    this.landingAlignPose = 0;
     this.alignNormal.set(0, 1, 0);
     this.slipping = false;
     this.slipClamp = false;
@@ -1932,7 +2179,7 @@ export class Player {
     if (this.state === 'rope') {
       if (input.restartPressed) {
         this.respawn(level, true);
-        this.syncVisual(input, dt);
+        this.finishVisualStep(input, dt);
         return;
       }
       this.stepRope(dt, input, level);
@@ -1942,13 +2189,13 @@ export class Player {
       this.updatePuffs();
       this.updateFlyBoard(dt, level);
       this.updateFruit(dt);
-      this.syncVisual(input, dt);
+      this.finishVisualStep(input, dt);
       return;
     }
     if (this.state === 'hang') {
       if (input.restartPressed) {
         this.respawn(level, true);
-        this.syncVisual(input, dt);
+        this.finishVisualStep(input, dt);
         return;
       }
       this.stepHang(dt, input, level);
@@ -1957,7 +2204,7 @@ export class Player {
       this.updatePuffs();
       this.updateFlyBoard(dt, level);
       this.updateFruit(dt);
-      this.syncVisual(input, dt);
+      this.finishVisualStep(input, dt);
       return;
     }
     // MANUAL FLICK: watch the raw stick's vertical axis for the two-beat flick.
@@ -2497,7 +2744,7 @@ export class Player {
 
     if (input.restartPressed) {
       this.respawn(level, true);
-      this.syncVisual(input, dt);
+      this.finishVisualStep(input, dt);
       return;
     }
 
@@ -2655,7 +2902,7 @@ export class Player {
     // (you get one wallride per air-time — no wall-to-wall chaining).
     if (this.grounded || this.state === 'grind') this.wallrideLatched = false;
 
-    this.syncVisual(input, dt);
+    this.finishVisualStep(input, dt);
   }
 
   // ---------------------------------------------------------------- states --
@@ -5061,7 +5308,7 @@ export class Player {
         // A RIDE-OUT that got the wheels down in time lands like any air;
         // still tilted at touchdown (or the full judged fly-off, which holds
         // its tilt on purpose) = the crash you were carrying.
-        const stillTilted = this.pipeEndFly || this.alignPose > 0.5;
+        const stillTilted = this.pipeEndFly || this.landingAlignPose > 0.5;
         this.pipeEndFly = false;
         this.rollOffT = 0;
         const saved =
@@ -11758,7 +12005,56 @@ export class Player {
     rg.position.copy(corr);
   }
 
+  /**
+   * Finish a fixed simulation step and then author its visual pose. Keeping
+   * the eased surface-alignment state here makes landing judgement independent
+   * of any presentation transforms the animation editor may replace.
+   */
+  private finishVisualStep(input: Input, dt: number): void {
+    this.updateSurfaceAlignment(dt);
+    this.syncVisual(input, dt);
+  }
+
+  private updateSurfaceAlignment(dt: number): void {
+    let alignTarget = 0;
+    let targetNormal: THREE.Vector3 | null = null;
+    const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
+    if (this.vertAir) {
+      alignTarget = 1;
+      targetNormal = this.vertNormal;
+    } else if ((this.pipeEndFly || this.rollOffT > 0) && this.state === 'air') {
+      alignTarget = this.pipeEndFly
+        ? 1
+        : Math.min(1, this.rollOffT / CONST.rollOffLevelTime);
+      targetNormal = this.vertNormal;
+    } else if (this.grounded && this.state === 'ride' && this.groundHit) {
+      const flatY = TUNING.steepStand;
+      const vertY = onPipe ? 0.72 : 0.25;
+      const t = THREE.MathUtils.clamp(
+        (flatY - this.rideNormal.y) / (flatY - vertY),
+        0,
+        1,
+      );
+      alignTarget = t * t * (3 - 2 * t);
+      targetNormal = this.rideNormal;
+    }
+    const ease = onPipe || this.pipeHang ? 24 : 12;
+    this.landingAlignPose +=
+      (alignTarget - this.landingAlignPose) * Math.min(1, ease * dt);
+    // Public/debug presentation mirrors the simulation state, but gameplay
+    // never reads this editor-visible field.
+    this.alignPose = this.landingAlignPose;
+    if (targetNormal) {
+      this.alignNormal.lerp(targetNormal, Math.min(1, ease * dt));
+      if (this.alignNormal.lengthSq() < 1e-6) this.alignNormal.copy(targetNormal);
+      this.alignNormal.normalize();
+    }
+  }
+
   private syncVisual(input: Input, dt: number): void {
+    // A runtime authored overlay wrote after the previous legacy pose. Undo it
+    // before any legacy formula reads or accumulates from local transforms.
+    this.playerAnimationBridge.prepareLegacyPose();
     this.group.position.copy(this.pos);
 
     // Chunky little carve lean; on a rail, the lean IS the balance needle.
@@ -11818,42 +12114,6 @@ export class Player {
     // walls — the SAME quaternion while riding the transition AND while glued
     // in hang time, so lip → hang → drop-in has no snap. Spins (bodyGroup yaw)
     // then run about the rig's own up = the surface normal, THPS-style.
-    let alignT = 0;
-    let targetN: THREE.Vector3 | null = null;
-    const onPipeVis = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
-    if (this.vertAir) {
-      alignT = 1; // hang time: fully on the wall plane
-      targetN = this.vertNormal;
-    } else if ((this.pipeEndFly || this.rollOffT > 0) && this.state === 'air') {
-      // Flew off the pipe's END mid-hang: STAY at the funny wall angle all the
-      // way down. Landing tilted is exactly what the touchdown judges, so
-      // levelling out wheels-down mid-flight lied about what was coming.
-      // A RIDE-OUT (rollOffT) levels gradually instead — the tilt eases to
-      // wheels-down across the window, and the touchdown judges whatever
-      // tilt is left.
-      alignT = this.pipeEndFly ? 1 : Math.min(1, this.rollOffT / CONST.rollOffLevelTime);
-      targetN = this.vertNormal;
-    } else if (this.grounded && this.state === 'ride' && this.groundHit) {
-      // steepness-weighted: upright at/above steepStand, fully lying by ~vert.
-      // On the HALFPIPE the board lays FLUSH on the transition much sooner (and
-      // stays flush all the way up) so it hugs the full curve of the vert as you
-      // climb instead of standing too upright and clipping the wall. rideNormal
-      // is the exact analytic normal, so the fit is seamless.
-      const flatY = TUNING.steepStand;
-      const vertY = onPipeVis ? 0.72 : 0.25; // pipe: reach flush by a ~45° wall
-      const t = THREE.MathUtils.clamp((flatY - this.rideNormal.y) / (flatY - vertY), 0, 1);
-      alignT = t * t * (3 - 2 * t); // smoothstep
-      targetN = this.rideNormal;
-    }
-    // Track the changing wall angle FAST on the pipe so the board hugs the curve
-    // as you climb (the slow general ease lagged behind and let the board clip).
-    const alignEase = onPipeVis || this.pipeHang ? 24 : 12;
-    this.alignPose += (alignT - this.alignPose) * Math.min(1, alignEase * dt);
-    if (targetN) {
-      this.alignNormal.lerp(targetN, Math.min(1, alignEase * dt));
-      if (this.alignNormal.lengthSq() < 1e-6) this.alignNormal.copy(targetN);
-      this.alignNormal.normalize();
-    }
     if (this.alignPose > 0.001) {
       VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
       VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
@@ -13073,6 +13333,11 @@ export class Player {
 
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
+
+    // Authored clips are the final pose layer. The bridge snapshots this
+    // complete legacy result first and restores it before the next fixed step,
+    // so authored writes are absolute and can never accumulate into gameplay.
+    this.playerAnimationBridge.applyOverlay(dt);
 
   }
 
@@ -14442,8 +14707,10 @@ export class Player {
       }),
     );
     g.userData.sculptRuntime = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       kind: 'procedural-character',
+      rigId: 'player-procedural-v1',
+      rigName: 'Procedural Rider',
       actionRoot: g.name,
       coordinateSystem: {
         handedness: 'right',
@@ -14463,6 +14730,131 @@ export class Player {
       },
       joints: jointNames,
       sockets: socketNames,
+      mirrorPairs: [
+        ['shoulderLeft', 'shoulderRight'],
+        ['elbowLeft', 'elbowRight'],
+        ['wristLeft', 'wristRight'],
+        ['hipLeft', 'hipRight'],
+        ['kneeLeft', 'kneeRight'],
+        ['ankleLeft', 'ankleRight'],
+        ['earLeft', 'earRight'],
+      ],
+      controls: {
+        'deform.torso.length': {
+          name: 'Torso Length', defaultValue: 1, min: 0.55, max: 1.5,
+        },
+        'deform.arm.upper.left.length': {
+          name: 'Left Upper Arm Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+        'deform.arm.lower.left.length': {
+          name: 'Left Forearm Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+        'deform.arm.upper.right.length': {
+          name: 'Right Upper Arm Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+        'deform.arm.lower.right.length': {
+          name: 'Right Forearm Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+        'deform.leg.upper.left.length': {
+          name: 'Left Thigh Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+        'deform.leg.lower.left.length': {
+          name: 'Left Shin Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+        'deform.leg.upper.right.length': {
+          name: 'Right Thigh Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+        'deform.leg.lower.right.length': {
+          name: 'Right Shin Length', defaultValue: 1, min: 0.55, max: 1.75,
+        },
+      },
+      // Length controls never non-uniformly scale a joint. The bridge scales
+      // only direct renderable children around the segment anchor and moves
+      // the listed child joint(s) to the new endpoint. That keeps lower limbs,
+      // the gameplay root, and the skateboard out of a parent's squash.
+      deformations: [
+        {
+          controlId: 'deform.torso.length',
+          jointId: 'spine',
+          downstreamJointIds: ['head', 'shoulderLeft', 'shoulderRight'],
+          lengthAxis: [0, 1, 0],
+          min: 0.55,
+          max: 1.5,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.arm.upper.left.length',
+          jointId: 'shoulderLeft',
+          downstreamJointIds: ['elbowLeft'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.arm.lower.left.length',
+          jointId: 'elbowLeft',
+          downstreamJointIds: ['wristLeft'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.arm.upper.right.length',
+          jointId: 'shoulderRight',
+          downstreamJointIds: ['elbowRight'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.arm.lower.right.length',
+          jointId: 'elbowRight',
+          downstreamJointIds: ['wristRight'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.leg.upper.left.length',
+          jointId: 'hipLeft',
+          downstreamJointIds: ['kneeLeft'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.leg.lower.left.length',
+          jointId: 'kneeLeft',
+          downstreamJointIds: ['ankleLeft'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.leg.upper.right.length',
+          jointId: 'hipRight',
+          downstreamJointIds: ['kneeRight'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+        {
+          controlId: 'deform.leg.lower.right.length',
+          jointId: 'kneeRight',
+          downstreamJointIds: ['ankleRight'],
+          lengthAxis: [0, -1, 0],
+          min: 0.55,
+          max: 1.75,
+          volume: 'preserve-cross-section-area',
+        },
+      ],
       restPose,
     };
 

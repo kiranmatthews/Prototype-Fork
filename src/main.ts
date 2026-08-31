@@ -68,6 +68,17 @@ import {
 } from "./visual-treatment/settings";
 import { createBonusParallax } from "./bonusParallax";
 import { touchControlsRequested } from "./touch";
+import {
+  RigBinding,
+  createLocalDraftStore,
+  createPreferredDraftStore,
+  createPlayerStarterAnimationSuite,
+  type AnimationSuiteDocument,
+} from "./animation";
+import {
+  createCharacterAnimationRuntime,
+  type CharacterAnimationRuntime,
+} from "./characterAnimationRuntime";
 
 const app = document.getElementById("app")!;
 const TOUCH_PRESENTATION = touchControlsRequested();
@@ -1131,6 +1142,13 @@ const closePresentationPanels = (): void => {
 if (TOUCH_PRESENTATION) {
   ui.setPresentationTools([
     {
+      label: "ANIMATION",
+      open: () => {
+        closePresentationPanels();
+        void openAnimationStudioTool();
+      },
+    },
+    {
       label: "CRT",
       open: () => {
         closePresentationPanels();
@@ -1179,6 +1197,15 @@ if (TOUCH_PRESENTATION) {
       attributeFilter: ["data-open"],
     });
   syncToolPanelState();
+} else {
+  // Animation authoring is a project tool, not a presentation-comparison
+  // flag. Keep it reachable from the browser UI in every build.
+  ui.setPresentationTools([
+    {
+      label: "ANIMATION",
+      open: () => void openAnimationStudioTool(),
+    },
+  ]);
 }
 visualTreatmentSettings.subscribe((value) => {
   configureCoastPost(
@@ -1310,6 +1337,39 @@ puffs.setQuality(LITE_RENDER ? "low" : "high");
 swirls.attach(scene);
 fieldSwirls.attach(scene);
 const player = new Player(scene);
+const playerAnimationBinding = RigBinding.fromSculptRuntime(
+  player.animationRig.root,
+  { strict: false },
+);
+const playerAnimationStarter = createPlayerStarterAnimationSuite(
+  playerAnimationBinding.definition,
+);
+let playerAnimationDocument: AnimationSuiteDocument = playerAnimationStarter;
+try {
+  playerAnimationDocument =
+    createLocalDraftStore().load(playerAnimationStarter.id) ??
+    playerAnimationStarter;
+} catch {
+  // Private browsing/storage policy: the source-owned starter suite remains
+  // fully usable, but the current session will not resume a previous draft.
+}
+const characterAnimationRuntime: CharacterAnimationRuntime =
+  createCharacterAnimationRuntime(player, playerAnimationDocument);
+try {
+  const preferredAnimationDrafts = createPreferredDraftStore();
+  void preferredAnimationDrafts
+    .load(playerAnimationStarter.id)
+    .then((document) => {
+      if (!document || animationStudio) return;
+      playerAnimationDocument = document;
+      characterAnimationRuntime.setDocument(document);
+    })
+    .catch(() => {
+      // The synchronous local draft or source starter remains authoritative.
+    });
+} catch {
+  // IndexedDB can be disabled independently of localStorage.
+}
 
 // ---- LOCAL 2-PLAYER SPLIT SCREEN (playtest sandbox) ------------------------
 // Two pads, two riders in the same world: top half = P1, bottom = P2. They
@@ -1974,6 +2034,42 @@ async function openStudioTool(): Promise<void> {
   const mod = await import("./studio");
   studio = mod.openStudio({ renderer, scene, camera, player, onClose: () => (studio = null) });
 }
+// Full character animation authoring. Gameplay is frozen while this owns the
+// stage; Player snapshots and restores its authoritative pose at the boundary.
+let animationStudio: {
+  frame: (dt: number) => void;
+  close: () => void;
+  getDocument: () => unknown;
+} | null = null;
+async function openAnimationStudioTool(): Promise<void> {
+  if (animationStudio) return;
+  const rig = player.enterAnimationPreview();
+  try {
+    const mod = await import("./animationStudio");
+    animationStudio = mod.openAnimationStudio({
+      renderer,
+      scene,
+      camera,
+      rigRoot: rig.root,
+      document: characterAnimationRuntime.document,
+      applyScalars: (values) => player.applyAnimationDeformations(values),
+      onDocumentChange: (document) => {
+        playerAnimationDocument = document;
+        characterAnimationRuntime.setDocument(document);
+      },
+      onClose: () => {
+        player.exitAnimationPreview();
+        characterAnimationRuntime.restart();
+        animationStudio = null;
+      },
+    });
+    (window as unknown as { __game: Record<string, unknown> }).__game.animationStudio =
+      animationStudio;
+  } catch (error) {
+    player.exitAnimationPreview();
+    throw error;
+  }
+}
 // Openable WITHOUT a console, because the person whose eyes this borrows is
 // playing the deployed build on a phone or a laptop, not sitting in devtools:
 // put #studio on the URL. Deferred so the character model is installed and
@@ -2027,7 +2123,9 @@ async function openWaterStudioTool(): Promise<void> {
   });
   (window as unknown as { __game: Record<string, unknown> }).__game.waterStudio = waterStudio;
 }
-if (location.hash.toLowerCase().includes("waterstudio")) {
+if (location.hash.toLowerCase().includes("animationstudio")) {
+  setTimeout(() => void openAnimationStudioTool(), 500);
+} else if (location.hash.toLowerCase().includes("waterstudio")) {
   setTimeout(() => void openWaterStudioTool(), 2500);
 } else if (location.hash.toLowerCase().includes("puffstudio")) {
   setTimeout(() => void openPuffStudioTool(), 2500);
@@ -2965,6 +3063,14 @@ function frame(nowMs: number): void {
   if (!allowRenderFrame(nowMs)) return;
   const rawDt = clock.getDelta();
   const dt = Math.min(rawDt, 0.1);
+  // Animation Studio owns only presentation. Its chosen clip speed advances
+  // this preview clock without advancing movement, collisions, replay, or AI.
+  if (animationStudio) {
+    animationStudio.frame(dt);
+    ui.setGameHudComposited(false);
+    renderPrimaryScene(dt);
+    return;
+  }
   // The model studio takes the stage: it owns the camera, the sim stands down,
   // and the world is still drawn so there is something to point at. Everything
   // else in this function is skipped, which is also what stops the game
@@ -3362,4 +3468,6 @@ requestAnimationFrame(frame);
   getCurrentLevel: () => current,
   GLTFLoader, // debug: inspect model files from the console/harness
   openStudio: openStudioTool, // point-and-click answers: __game.openStudio()
+  openAnimationStudio: openAnimationStudioTool,
+  characterAnimationRuntime,
 };
