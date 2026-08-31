@@ -78,8 +78,15 @@ import {
   QuaterniusEvaluationModel,
   type QuaterniusEvaluationDiagnostics,
 } from './character/quaterniusEvaluationModel';
+import {
+  MeshyFoxEvaluationModel,
+  type MeshyFoxEvaluationDiagnostics,
+} from './character/meshyFoxEvaluationModel';
 
-export type CharacterPresentationMode = 'procedural' | 'quaternius-female';
+export type CharacterPresentationMode =
+  | 'procedural'
+  | 'quaternius-female'
+  | 'meshy-fox';
 
 export interface CharacterPresentationDiagnostics {
   requestedMode: CharacterPresentationMode;
@@ -87,6 +94,7 @@ export interface CharacterPresentationDiagnostics {
   ready: boolean;
   error: string | null;
   evaluation: QuaterniusEvaluationDiagnostics | null;
+  meshyFox: MeshyFoxEvaluationDiagnostics | null;
 }
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
@@ -516,12 +524,14 @@ export class Player {
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   private readonly playerAnimationBridge: PlayerAnimationBridge;
   private quaterniusEvaluationModel: QuaterniusEvaluationModel | null = null;
+  private meshyFoxEvaluationModel: MeshyFoxEvaluationModel | null = null;
   private characterPresentationModeValue: CharacterPresentationMode = 'quaternius-female';
   private characterPresentationSourceRoots: Array<{
     object: THREE.Object3D;
     visible: boolean;
   }> = [];
   private characterPresentationLoadError: Error | null = null;
+  private meshyFoxLoadError: Error | null = null;
   // The procedural body is the load-bearing pose rig and immediate visual
   // fallback. Imported comparison bodies can still be installed explicitly;
   // the Quaternius surface retargets from this hierarchy without replacing it.
@@ -1173,6 +1183,7 @@ export class Player {
     this.rebuildHumanoidSkeleton();
     this.playerAnimationBridge = new PlayerAnimationBridge(this.group, this.bodyGroup);
     this.installQuaterniusEvaluationModel();
+    this.installMeshyFoxEvaluationModel();
     // Keep older imported characters as explicit comparison/debug routes.
     // The procedural rider remains the authoritative pose rig even when the
     // intact Quaternius skin is the visible evaluation surface.
@@ -1603,20 +1614,37 @@ export class Player {
   }
 
   get activeCharacterPresentationMode(): CharacterPresentationMode {
-    return this.characterPresentationModeValue === 'quaternius-female' &&
+    if (
+      this.characterPresentationModeValue === 'quaternius-female' &&
       this.quaterniusEvaluationModel?.readiness === 'ready'
-      ? 'quaternius-female'
-      : 'procedural';
+    ) return 'quaternius-female';
+    if (
+      this.characterPresentationModeValue === 'meshy-fox' &&
+      this.meshyFoxEvaluationModel?.readiness === 'ready'
+    ) return 'meshy-fox';
+    return 'procedural';
   }
 
   get characterPresentationDiagnostics(): CharacterPresentationDiagnostics {
     const model = this.quaterniusEvaluationModel;
+    const meshy = this.meshyFoxEvaluationModel;
+    const ready = this.characterPresentationModeValue === 'procedural'
+      ? true
+      : this.characterPresentationModeValue === 'quaternius-female'
+        ? model?.readiness === 'ready'
+        : meshy?.readiness === 'ready';
+    const error = this.characterPresentationModeValue === 'procedural'
+      ? null
+      : this.characterPresentationModeValue === 'meshy-fox'
+        ? this.meshyFoxLoadError?.message ?? meshy?.error?.message ?? null
+        : this.characterPresentationLoadError?.message ?? model?.error?.message ?? null;
     return {
       requestedMode: this.characterPresentationModeValue,
       activeMode: this.activeCharacterPresentationMode,
-      ready: model?.readiness === 'ready',
-      error: this.characterPresentationLoadError?.message ?? model?.error?.message ?? null,
+      ready,
+      error,
       evaluation: model?.diagnostics ?? null,
+      meshyFox: this.meshyFoxEvaluationModel?.diagnostics ?? null,
     };
   }
 
@@ -1627,26 +1655,47 @@ export class Player {
     active: boolean;
     detail: string;
   } {
-    const model = this.quaterniusEvaluationModel;
-    const ready = model?.readiness === 'ready';
-    const active = ready && this.characterPresentationModeValue === 'quaternius-female';
-    const failed = model?.readiness === 'error';
+    const mode = this.characterPresentationModeValue;
+    if (mode === 'procedural') {
+      return {
+        label: 'RIG',
+        ready: true,
+        active: true,
+        detail: 'Procedural source body · click for the Quaternius female mannequin',
+      };
+    }
+    const model = mode === 'quaternius-female'
+      ? this.quaterniusEvaluationModel
+      : this.meshyFoxEvaluationModel;
+    const readiness = model?.readiness;
+    const ready = readiness === 'ready';
+    const active = ready && this.activeCharacterPresentationMode === mode;
+    const failed = readiness === 'error';
+    const female = mode === 'quaternius-female';
     return {
-      label: active ? 'FEMALE' : failed ? 'RIG' : ready ? 'RIG' : 'LOADING',
+      label: active
+        ? female ? 'FEMALE' : 'MESHY FOX'
+        : failed
+          ? female ? 'FEMALE ERR' : 'MESHY ERR'
+          : female ? 'FEMALE…' : 'MESHY…',
       ready,
       active,
       detail: failed
-        ? `Female evaluation body unavailable: ${this.characterPresentationLoadError?.message ?? model?.error?.message ?? 'load failed'}`
+        ? `${female ? 'Female mannequin' : 'Meshy fox'} unavailable: ${model?.error?.message ?? 'load failed'}`
         : ready
-          ? active
-            ? 'Quaternius UAL2 female mannequin · click to show the procedural source body'
-            : 'Procedural source body · click to show the Quaternius UAL2 female mannequin'
-          : 'Quaternius UAL2 female mannequin is loading',
+          ? female
+            ? 'Quaternius UAL2 female mannequin · click for the Meshy fox'
+            : 'Meshy Violet Vixen native skin · click for the procedural source body'
+          : `${female ? 'Quaternius female mannequin' : 'Meshy fox'} is loading · click to cycle`,
     };
   }
 
   setCharacterPresentationMode(mode: CharacterPresentationMode): void {
+    if (mode !== 'procedural' && mode !== 'quaternius-female' && mode !== 'meshy-fox') {
+      throw new Error(`unknown character presentation mode: ${String(mode)}`);
+    }
     this.characterPresentationModeValue = mode;
+    if (mode === 'meshy-fox') this.ensureMeshyFoxLoad();
     try {
       localStorage.setItem('solProtoCharacterPresentationV1', mode);
     } catch {
@@ -1657,11 +1706,12 @@ export class Player {
   }
 
   toggleCharacterPresentationMode(): void {
-    this.setCharacterPresentationMode(
-      this.characterPresentationModeValue === 'quaternius-female'
-        ? 'procedural'
-        : 'quaternius-female',
-    );
+    const next: Record<CharacterPresentationMode, CharacterPresentationMode> = {
+      'quaternius-female': 'meshy-fox',
+      'meshy-fox': 'procedural',
+      procedural: 'quaternius-female',
+    };
+    this.setCharacterPresentationMode(next[this.characterPresentationModeValue]);
   }
 
   /**
@@ -1669,14 +1719,20 @@ export class Player {
    * visibility after bridge/preview snapshot restoration.
    */
   syncCharacterPresentation(): void {
-    const model = this.quaterniusEvaluationModel;
-    const showEvaluation =
+    const female = this.quaterniusEvaluationModel;
+    const meshy = this.meshyFoxEvaluationModel;
+    const showFemale =
       this.characterPresentationModeValue === 'quaternius-female' &&
-      model?.readiness === 'ready';
-    if (showEvaluation) model.updateAfterSourcePose();
-    model?.setVisible(showEvaluation);
+      female?.readiness === 'ready';
+    const showMeshy =
+      this.characterPresentationModeValue === 'meshy-fox' &&
+      meshy?.readiness === 'ready';
+    if (showFemale) female.updateAfterSourcePose();
+    if (showMeshy) meshy.updateAfterSourcePose();
+    female?.setVisible(showFemale);
+    meshy?.setVisible(showMeshy);
     for (const source of this.characterPresentationSourceRoots) {
-      source.object.visible = showEvaluation ? false : source.visible;
+      source.object.visible = showFemale || showMeshy ? false : source.visible;
     }
   }
 
@@ -1690,7 +1746,7 @@ export class Player {
     if (!rider || !skeleton) return;
     try {
       const saved = localStorage.getItem('solProtoCharacterPresentationV1');
-      if (saved === 'procedural' || saved === 'quaternius-female') {
+      if (saved === 'procedural' || saved === 'quaternius-female' || saved === 'meshy-fox') {
         this.characterPresentationModeValue = saved;
       }
     } catch {
@@ -1722,6 +1778,37 @@ export class Player {
         'Quaternius female evaluation model failed to load (procedural body stays):',
         error,
       );
+    });
+  }
+
+  private installMeshyFoxEvaluationModel(): void {
+    if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') return;
+    const rider = this.riderG;
+    const skeleton = this.humanoidSkeleton;
+    if (!rider || !skeleton) return;
+    this.meshyFoxEvaluationModel = new MeshyFoxEvaluationModel({
+      parent: rider,
+      sourceRoot: this.bodyGroup,
+      sourcePoseRoot: rider,
+      sourceSkeleton: skeleton,
+      visible: false,
+    });
+    if (this.characterPresentationModeValue === 'meshy-fox') this.ensureMeshyFoxLoad();
+  }
+
+  private ensureMeshyFoxLoad(): void {
+    const model = this.meshyFoxEvaluationModel;
+    if (!model || model.readiness !== 'idle') return;
+    void model.load().then(() => {
+      if (this.meshyFoxEvaluationModel !== model) return;
+      this.meshyFoxLoadError = null;
+      this.syncCharacterPresentation();
+      this.resetRenderInterpolation();
+    }).catch((error: unknown) => {
+      if (this.meshyFoxEvaluationModel !== model) return;
+      this.meshyFoxLoadError = error instanceof Error ? error : new Error(String(error));
+      this.syncCharacterPresentation();
+      console.warn('Meshy fox failed to load (procedural body stays):', error);
     });
   }
 
@@ -1770,6 +1857,11 @@ export class Player {
     // pass documents and enforces the important ordering above.
     this.humanoidSkeleton.calculateInverses();
     this.quaterniusEvaluationModel?.rebindSource(
+      this.bodyGroup,
+      this.humanoidSkeleton,
+      this.riderG ?? undefined,
+    );
+    this.meshyFoxEvaluationModel?.rebindSource(
       this.bodyGroup,
       this.humanoidSkeleton,
       this.riderG ?? undefined,

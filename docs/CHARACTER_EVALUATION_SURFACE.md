@@ -53,10 +53,25 @@ those targets, so evaluation does not trade smooth shoulders for sliding feet.
 ## Authoring workflow
 
 The female mannequin is the default visible body after its local GLB loads. Use
-`BODY` in the Tuner or `BODY · FEMALE` in Animation Studio to compare it with
-the procedural source body. The Studio continues to select and edit the source
-joint IDs in either view. Its animation selector, timeline, keyframes,
-procedural drivers and per-clip playback speed all operate identically.
+`BODY` in the Tuner or the Animation Studio BODY control to cycle through:
+
+1. `FEMALE` — Quaternius' conventional 65-joint evaluation mannequin;
+2. `MESHY FOX` — the user-supplied Violet Vixen with its intact native
+   24-joint A-pose skeleton and smooth skin;
+3. `RIG` — the procedural source body.
+
+The Meshy FBX is loaded only when selected. The Studio continues to select and
+edit the source joint IDs in every view. Its animation selector, timeline,
+keyframes, procedural drivers and per-clip playback speed all operate
+identically.
+
+The Meshy surface is deliberately a comparison instrument, not a replacement
+rig decision. It propagates independent endpoint lengths but does not yet own
+the Quaternius model's generated volume/shoulder corrective morphs. Its source
+also has 3,911 vertices with more than four weights; standard Three.js retains
+the strongest four, with the largest discarded weights concentrated around the
+upper torso and shoulders. Those source limitations must be separated from
+proportion and rest-pose differences when judging the result.
 
 `player.run` demonstrates the import path: Pack #1's in-place
 `Jog_Fwd_Loop` is sampled at its native 30 FPS, transferred through canonical

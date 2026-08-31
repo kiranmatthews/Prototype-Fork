@@ -429,10 +429,13 @@ assertInOrder(
   [
     "this.characterPresentationModeValue === 'quaternius-female'",
     "this.quaterniusEvaluationModel?.readiness === 'ready'",
-    "? 'quaternius-female'",
-    ": 'procedural'",
+    "return 'quaternius-female';",
+    "this.characterPresentationModeValue === 'meshy-fox'",
+    "this.meshyFoxEvaluationModel?.readiness === 'ready'",
+    "return 'meshy-fox';",
+    "return 'procedural';",
   ],
-  "Player falls back to the procedural body until the female model is ready",
+  "Player resolves both evaluation surfaces and falls back to the procedural body while loading",
 );
 
 const presentationState = sourceSection(
@@ -442,12 +445,13 @@ const presentationState = sourceSection(
   "Player presentation surface state",
 );
 for (const fragment of [
-  "label: active ? 'FEMALE' : failed ? 'RIG' : ready ? 'RIG' : 'LOADING'",
+  "label: 'RIG'",
+  "'MESHY FOX'",
+  "'MESHY…'",
   "ready,",
   "active,",
-  "Female evaluation body unavailable:",
-  "Quaternius UAL2 female mannequin · click to show the procedural source body",
-  "Procedural source body · click to show the Quaternius UAL2 female mannequin",
+  "Meshy Violet Vixen native skin · click for the procedural source body",
+  "Procedural source body · click for the Quaternius female mannequin",
 ]) {
   assert.ok(presentationState.includes(fragment), `presentation surface exposes ${fragment}`);
 }
@@ -462,6 +466,7 @@ assertInOrder(
   setMode,
   [
     "this.characterPresentationModeValue = mode;",
+    "if (mode === 'meshy-fox') this.ensureMeshyFoxLoad();",
     "localStorage.setItem('solProtoCharacterPresentationV1', mode);",
     "this.syncCharacterPresentation();",
     "this.resetRenderInterpolation();",
@@ -479,12 +484,16 @@ assertInOrder(
   syncPresentation,
   [
     "this.characterPresentationModeValue === 'quaternius-female'",
-    "model?.readiness === 'ready'",
-    "if (showEvaluation) model.updateAfterSourcePose();",
-    "model?.setVisible(showEvaluation);",
-    "source.object.visible = showEvaluation ? false : source.visible;",
+    "female?.readiness === 'ready'",
+    "this.characterPresentationModeValue === 'meshy-fox'",
+    "meshy?.readiness === 'ready'",
+    "if (showFemale) female.updateAfterSourcePose();",
+    "if (showMeshy) meshy.updateAfterSourcePose();",
+    "female?.setVisible(showFemale);",
+    "meshy?.setVisible(showMeshy);",
+    "source.object.visible = showFemale || showMeshy ? false : source.visible;",
   ],
-  "Player updates the evaluation pose before showing it and restores source visibility on fallback",
+  "Player updates the selected evaluation pose and restores source visibility on fallback",
 );
 
 const installPresentation = sourceSection(
@@ -502,7 +511,7 @@ assertInOrder(
   installPresentation,
   [
     "localStorage.getItem('solProtoCharacterPresentationV1')",
-    "saved === 'procedural' || saved === 'quaternius-female'",
+    "saved === 'procedural' || saved === 'quaternius-female' || saved === 'meshy-fox'",
     "visible: false,",
     "void model.load().then(() => {",
     "this.syncCharacterPresentation();",
@@ -528,6 +537,7 @@ assertInOrder(
     "this.humanoidSkeleton = new THREE.Skeleton(bones);",
     "this.humanoidSkeleton.calculateInverses();",
     "this.quaterniusEvaluationModel?.rebindSource(",
+    "this.meshyFoxEvaluationModel?.rebindSource(",
   ],
   "a rebuilt source skeleton is rebound into the evaluation model",
 );
@@ -601,7 +611,8 @@ assertInOrder(
   refreshBodySelector,
   [
     "button.textContent = `BODY · ${state.label}`;",
-    "button.disabled = !state.ready;",
+    "button.disabled = false;",
+    "button.toggleAttribute('data-loading', !state.ready);",
     "button.classList.toggle('ast-active', state.active);",
   ],
   "Animation Studio BODY selector reflects the host surface state",
@@ -635,14 +646,14 @@ assert.ok(
   "__game exposes character presentation diagnostics for browser harnesses",
 );
 assert.ok(
-  debugSurface.includes("setCharacterPresentationMode: (mode: 'procedural' | 'quaternius-female') =>"),
+  debugSurface.includes("mode: 'procedural' | 'quaternius-female' | 'meshy-fox',"),
   "__game exposes explicit character presentation switching for browser harnesses",
 );
 
 const packageManifest = JSON.parse(packageSource);
 assert.equal(
   packageManifest.scripts["check:character-evaluation"],
-  "node tools/test-quaternius-evaluation-model.mjs && node tools/test-quaternius-evaluation-runtime.mjs",
+  "node tools/test-quaternius-evaluation-model.mjs && node tools/test-quaternius-evaluation-runtime.mjs && node tools/test-meshy-fox-evaluation.mjs",
   "package exposes the Quaternius integration harness",
 );
 assert.match(

@@ -1145,8 +1145,8 @@ const toggleCharacterPresentation = (): void => {
   const state = player.characterPresentationSurfaceState;
   ui.showMessage(
     'CHARACTER BODY',
-    state.active ? 'Quaternius female evaluation surface' : 'Procedural source body',
-    1800,
+    state.detail,
+    2200,
   );
 };
 if (TOUCH_PRESENTATION) {
@@ -3476,7 +3476,9 @@ requestAnimationFrame(frame);
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
   getCharacterPresentationDiagnostics: () => player.characterPresentationDiagnostics,
-  setCharacterPresentationMode: (mode: 'procedural' | 'quaternius-female') =>
+  setCharacterPresentationMode: (
+    mode: 'procedural' | 'quaternius-female' | 'meshy-fox',
+  ) =>
     player.setCharacterPresentationMode(mode),
   getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null,
   getIslandShoreFoamDiagnostics: () => level.shoreFoamDiagnostics,

@@ -953,7 +953,11 @@ class AnimationStudio implements AnimationStudioHandle {
     if (!button || !surface) return;
     const state = surface.getState();
     button.textContent = `BODY · ${state.label}`;
-    button.disabled = !state.ready;
+    // A lazy third-party surface may still be loading. Keep the cycle control
+    // usable so the author can return to RIG/FEMALE instead of being trapped.
+    button.disabled = false;
+    button.toggleAttribute('data-loading', !state.ready);
+    button.setAttribute('aria-busy', state.ready ? 'false' : 'true');
     button.classList.toggle('ast-active', state.active);
     button.title = state.detail ?? (
       state.ready
