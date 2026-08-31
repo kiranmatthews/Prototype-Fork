@@ -661,7 +661,14 @@ export class MeshyFoxEvaluationModel {
   }
 
   setVisible(visible: boolean): void {
-    if (this.state !== 'disposed') this.root.visible = visible && this.state === 'ready';
+    if (this.state === 'disposed') return;
+    // Animation Studio snapshots the player hierarchy before an asynchronously
+    // requested comparison surface may have finished loading. Restoring that
+    // pre-load snapshot can put this root back at scale 1, turning the native
+    // 197-unit FBX into a building-sized skin. Presentation scale belongs to
+    // this adapter, so every visibility sync reasserts the measured fit.
+    this.enforceFitScale();
+    this.root.visible = visible && this.state === 'ready';
   }
 
   rebindSource(
@@ -676,6 +683,7 @@ export class MeshyFoxEvaluationModel {
 
   updateAfterSourcePose(): void {
     if (this.state !== 'ready') return;
+    this.enforceFitScale();
     const sourceMatrices = currentRelativeBoneMatrices(this.source.root, this.source.skeleton.bones);
     const sourceQuaternions = matrixQuaternions(sourceMatrices);
     const segmentScales = this.sourceSegmentScales(sourceMatrices);
@@ -692,6 +700,7 @@ export class MeshyFoxEvaluationModel {
 
   reset(): void {
     if (this.state === 'disposed') return;
+    this.enforceFitScale();
     for (const skeleton of this.targetSkeletons) {
       for (const bone of skeleton.bones) {
         const rest = this.targetRest.get(bone);
@@ -751,7 +760,7 @@ export class MeshyFoxEvaluationModel {
     if (!Number.isFinite(rawHeight) || rawHeight <= 1e-6) throw new Error('Meshy fox bounds are invalid');
     this.rawHeight = rawHeight;
     this.fitScale = MESHY_FOX_TARGET_HEIGHT / rawHeight;
-    this.root.scale.setScalar(this.fitScale);
+    this.enforceFitScale();
     this.targetRest.clear();
     this.targetRestMatrices.clear();
     this.targetBindings = skeletons.map((skeleton) => {
@@ -793,6 +802,10 @@ export class MeshyFoxEvaluationModel {
     this.state = 'ready';
     this.failure = null;
     this.reset();
+  }
+
+  private enforceFitScale(): void {
+    this.root.scale.setScalar(this.fitScale);
   }
 
   private installTargetCanonicalPose(

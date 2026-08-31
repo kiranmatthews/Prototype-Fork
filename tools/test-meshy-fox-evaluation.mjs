@@ -117,6 +117,109 @@ for (const fragment of [
   'mesh.receiveShadow = true;',
 ]) assert.ok(moduleSource.includes(fragment), `missing runtime contract: ${fragment}`);
 
+function sourceFixture() {
+  const root = new THREE.Group();
+  const names = [...new Set(Object.values(api.MESHY_FOX_TARGET_TO_SOURCE_BONE)
+    .filter((name) => name !== null))];
+  const bones = names.map((name, index) => {
+    const bone = new THREE.Bone();
+    bone.name = name;
+    bone.position.set(0, index * 0.01, 0);
+    root.add(bone);
+    return bone;
+  });
+  const byName = new Map(bones.map((bone) => [bone.name, bone]));
+  byName.get('head').position.y = 1.7;
+  byName.get('toe-left').position.y = 0;
+  byName.get('toe-right').position.y = 0;
+  root.updateMatrixWorld(true);
+  const skeleton = new THREE.Skeleton(bones);
+  skeleton.calculateInverses();
+  return { root, skeleton };
+}
+
+function targetFixture() {
+  const scene = new THREE.Group();
+  const armature = new THREE.Group();
+  const bones = new Map(api.MESHY_FOX_TARGET_BONE_NAMES.map((name) => {
+    const bone = new THREE.Bone();
+    bone.name = name;
+    return [name, bone];
+  }));
+  const attach = (child, parent, position) => {
+    child.position.fromArray(position);
+    parent.add(child);
+  };
+  attach(bones.get('Hips'), armature, [0, 105, 0]);
+  attach(bones.get('LeftUpLeg'), bones.get('Hips'), [12, 0, 0]);
+  attach(bones.get('LeftLeg'), bones.get('LeftUpLeg'), [0, -40, 0]);
+  attach(bones.get('LeftFoot'), bones.get('LeftLeg'), [0, -45, 0]);
+  attach(bones.get('LeftToeBase'), bones.get('LeftFoot'), [0, -15, 8]);
+  attach(bones.get('RightUpLeg'), bones.get('Hips'), [-12, 0, 0]);
+  attach(bones.get('RightLeg'), bones.get('RightUpLeg'), [0, -40, 0]);
+  attach(bones.get('RightFoot'), bones.get('RightLeg'), [0, -45, 0]);
+  attach(bones.get('RightToeBase'), bones.get('RightFoot'), [0, -15, 8]);
+  attach(bones.get('Spine02'), bones.get('Hips'), [0, 0, 0]);
+  attach(bones.get('Spine01'), bones.get('Spine02'), [0, 22, 0]);
+  attach(bones.get('Spine'), bones.get('Spine01'), [0, 22, 0]);
+  attach(bones.get('LeftShoulder'), bones.get('Spine'), [10, 10, 0]);
+  attach(bones.get('LeftArm'), bones.get('LeftShoulder'), [10, 0, 0]);
+  attach(bones.get('LeftForeArm'), bones.get('LeftArm'), [24, -8, 0]);
+  attach(bones.get('LeftHand'), bones.get('LeftForeArm'), [24, 0, 0]);
+  attach(bones.get('RightShoulder'), bones.get('Spine'), [-10, 10, 0]);
+  attach(bones.get('RightArm'), bones.get('RightShoulder'), [-10, 0, 0]);
+  attach(bones.get('RightForeArm'), bones.get('RightArm'), [-24, -8, 0]);
+  attach(bones.get('RightHand'), bones.get('RightForeArm'), [-24, 0, 0]);
+  attach(bones.get('neck'), bones.get('Spine'), [0, 18, 0]);
+  attach(bones.get('Head'), bones.get('neck'), [0, 15, 0]);
+  attach(bones.get('head_end'), bones.get('Head'), [0, 15, 0]);
+  attach(bones.get('headfront'), bones.get('Head'), [0, 5, 8]);
+
+  const geometry = new THREE.BoxGeometry(100, 197, 40);
+  geometry.translate(0, 98.5, 0);
+  const vertexCount = geometry.getAttribute('position').count;
+  const skinIndices = new Uint16Array(vertexCount * 4);
+  const skinWeights = new Float32Array(vertexCount * 4);
+  for (let index = 0; index < vertexCount; index++) skinWeights[index * 4] = 1;
+  geometry.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(skinIndices, 4));
+  geometry.setAttribute('skinWeight', new THREE.Float32BufferAttribute(skinWeights, 4));
+  const skeleton = new THREE.Skeleton(api.MESHY_FOX_TARGET_BONE_NAMES.map((name) => bones.get(name)));
+  const mesh = new THREE.SkinnedMesh(geometry, new THREE.MeshBasicMaterial());
+  scene.add(armature, mesh);
+  scene.updateMatrixWorld(true);
+  mesh.bind(skeleton);
+  return scene;
+}
+
+// Regression: the Animation Studio can capture this root before the async FBX
+// arrives and later restore its old scale of 1. The adapter must reclaim its
+// measured fit on every sync instead of leaving a 197-metre skin around the
+// camera.
+{
+  const source = sourceFixture();
+  const parent = new THREE.Group();
+  const model = EvaluationModel.fromScene(targetFixture(), {
+    parent,
+    sourceRoot: source.root,
+    sourceSkeleton: source.skeleton,
+    visible: true,
+    loader: {},
+  });
+  const expectedFit = api.MESHY_FOX_TARGET_HEIGHT / 197;
+  assert.ok(Math.abs(model.diagnostics.fitScale - expectedFit) < 1e-9);
+  for (const reclaim of [
+    () => model.setVisible(true),
+    () => model.updateAfterSourcePose(),
+    () => model.reset(),
+  ]) {
+    model.root.scale.set(1, 2, 3);
+    reclaim();
+    assert.ok(model.root.scale.toArray().every((value) => Math.abs(value - expectedFit) < 1e-9),
+      'Meshy adapter must reclaim its fitted root scale after a stale snapshot');
+  }
+  model.dispose();
+}
+
 assert.match(player,
   /type CharacterPresentationMode =[\s\S]*'procedural'[\s\S]*'quaternius-female'[\s\S]*'meshy-fox';/);
 assert.ok(player.includes('this.installMeshyFoxEvaluationModel();'));
