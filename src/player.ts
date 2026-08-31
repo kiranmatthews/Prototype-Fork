@@ -332,6 +332,11 @@ const BAIL_PITCH_AXIS = new THREE.Vector3(1, 0, 0);
 // Forgive a near-simultaneous Square/X smoosh at takeoff, but never bank an
 // old ground spin through an arbitrarily long held ollie charge.
 const OLLIE_DECK_TRICK_CHORD = 0.1;
+// Keep authored locomotion routing on the same any-direction threshold as the
+// legacy gait. Tiny release-coast motion belongs to the stop transition, while
+// a genuine lateral run must never be mistaken for idle just because the
+// forward-only `speed` scalar is near zero.
+const RUN_ANIMATION_THRESHOLD = 1.5;
 
 function wrapAngle(a: number): number {
   return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
@@ -1368,9 +1373,20 @@ export class Player {
     return this.slideContactLatch || (this.slideTimer > 0 && this.state === 'ride' && this.grounded);
   }
 
+  private get animationPlanarSpeed(): number {
+    if (this.state === 'rope' || this.state === 'hang') return 0;
+    return Math.max(
+      0,
+      this.lastPlanar,
+      this.walkVelocity.length(),
+      Math.abs(this.speed),
+    );
+  }
+
   /**
    * Read-only presentation intent for the authored-animation runtime. Landing
-   * is deliberately detected there from the airborne -> grounded edge.
+   * and the run-to-idle pacing stop are deliberately detected there from
+   * gameplay-state edges rather than becoming movement states themselves.
    */
   get animationClipHint(): PlayerAnimationClipHint {
     if (this.isBailing || this.state === 'dead' || this.state === 'gameover') return 'player.bail';
@@ -1388,7 +1404,7 @@ export class Player {
       return this.vVel > 0 ? 'player.jump' : 'player.fall';
     }
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
-    return Math.abs(this.speed) > 0.25 ? 'player.run' : 'player.idle';
+    return this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ? 'player.run' : 'player.idle';
   }
 
   /**
@@ -1404,14 +1420,7 @@ export class Player {
         : this.freeSkate || this.airFromSkate || this.state === 'grind'
           ? Math.max(TUNING.maxSpeed, 0.001)
           : Math.max(TUNING.walkSpeed, 0.001);
-    const planarSpeed = this.state === 'rope' || this.state === 'hang'
-      ? 0
-      : Math.max(
-        0,
-        this.lastPlanar,
-        this.walkVelocity.length(),
-        Math.abs(this.speed),
-      );
+    const planarSpeed = this.animationPlanarSpeed;
     const normalizedSpeed = THREE.MathUtils.clamp(planarSpeed / speedReference, 0, 1);
     const crawlMotion = this.crawlPose * Math.min(1, planarSpeed / 1.2);
     const crouchPose = Math.max(0, this.crawlPose - crawlMotion);

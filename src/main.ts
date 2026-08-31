@@ -73,6 +73,7 @@ import {
   createLocalDraftStore,
   createPreferredDraftStore,
   createPlayerStarterAnimationSuite,
+  reconcilePlayerStarterAnimationSuite,
   type AnimationSuiteDocument,
 } from "./animation";
 import {
@@ -1346,9 +1347,10 @@ const playerAnimationStarter = createPlayerStarterAnimationSuite(
 );
 let playerAnimationDocument: AnimationSuiteDocument = playerAnimationStarter;
 try {
-  playerAnimationDocument =
-    createLocalDraftStore().load(playerAnimationStarter.id) ??
-    playerAnimationStarter;
+  const savedAnimationDocument = createLocalDraftStore().load(playerAnimationStarter.id);
+  playerAnimationDocument = savedAnimationDocument
+    ? reconcilePlayerStarterAnimationSuite(savedAnimationDocument, playerAnimationBinding.definition)
+    : playerAnimationStarter;
 } catch {
   // Private browsing/storage policy: the source-owned starter suite remains
   // fully usable, but the current session will not resume a previous draft.
@@ -1361,8 +1363,12 @@ try {
     .load(playerAnimationStarter.id)
     .then((document) => {
       if (!document || animationStudio) return;
-      playerAnimationDocument = document;
-      characterAnimationRuntime.setDocument(document);
+      const reconciled = reconcilePlayerStarterAnimationSuite(
+        document,
+        playerAnimationBinding.definition,
+      );
+      playerAnimationDocument = reconciled;
+      characterAnimationRuntime.setDocument(reconciled);
     })
     .catch(() => {
       // The synchronous local draft or source starter remains authoritative.

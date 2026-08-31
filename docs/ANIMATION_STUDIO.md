@@ -21,8 +21,8 @@ state, camera state, and render interpolation before play resumes.
 ## Authoring workflow
 
 1. Select an animation from the clip selector. The starter suite contains
-   idle, run, jump, fall, land, crouch, crawl, slide, skate, grind, grab,
-   hang, climb, rope, slam, bail, and spin slots.
+   idle, run, pacing stop, jump, fall, land, crouch, crawl, slide, skate,
+   grind, grab, hang, climb, rope, slam, bail, and spin slots.
 2. Set duration, loop range/mode, and **Speed**. Playback speed belongs to the
    selected clip and is exported with it; the slider covers the common range
    and the numeric field accepts the wider validated range.
@@ -52,6 +52,28 @@ state, camera state, and render interpolation before play resumes.
 11. Export deterministic JSON when a clip is accepted. Drafts autosave under
    the `solProtoAnimationSuite:*` namespace; the core also exposes an
    IndexedDB-preferred draft store for larger imported suites.
+
+## Locomotion transitions
+
+`player.pace-stop` is the authored, in-place bridge from a committed run to
+the full resting idle. The runtime owns this clip as an interruptible one-shot:
+it remembers the outgoing gait phase and peak speed, blends briefly from the
+last run pose, lets the feet shed momentum over progressively smaller steps,
+then lands on the exact first pose of `player.idle`. Renewed locomotion or any
+action interrupts it immediately; landing has higher priority.
+
+The motion follows the stop shown around 15:15–15:20 in PlayFrame's
+[Jak & Daxter animation analysis](https://www.youtube.com/watch?v=BbP6Jsh8M6Y&t=915s):
+feet settle first, pelvis and torso follow, arms/clavicles overlap, and the
+head and loose secondary parts finish last. The same reference motivates the
+restrained torso compression/extension carried through the neck and head in
+the run starter. Contrast matters: the final quiet idle makes the larger run
+and stop gestures read more clearly.
+
+Starter-catalog upgrades are versioned. An older saved suite receives newly
+introduced starter clips without replacing any same-ID clip the user has
+edited. Once upgraded, intentionally deleting a starter slot does not cause it
+to reappear on the next load.
 
 Undo/redo uses committed authoring transactions. Gizmo drags and speed/key
 drags preview live, commit once on release, and cancel on Escape.

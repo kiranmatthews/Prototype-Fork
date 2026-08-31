@@ -4,6 +4,7 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import {
   ANIMATION_SUITE_SCHEMA,
   ANIMATION_SUITE_SCHEMA_VERSION,
+  PLAYER_PROCEDURAL_RIG_ID,
   RIG_SCHEMA,
   RIG_SCHEMA_VERSION,
   createAnimationClip,
@@ -25,6 +26,7 @@ import {
   removeClip,
   removeKeyframe,
   removeProceduralDriver,
+  reconcilePlayerStarterAnimationSuite,
   RigBinding,
   sampleComposedClip,
   sampleProceduralDriverValue,
@@ -1200,6 +1202,12 @@ class AnimationStudio implements AnimationStudioHandle {
         ? this.animationDocument.rigs.map((candidate) => candidate.id === this.rig.id ? this.rig : candidate)
         : [...this.animationDocument.rigs, this.rig],
     };
+    if (this.rig.id === PLAYER_PROCEDURAL_RIG_ID) {
+      this.animationDocument = reconcilePlayerStarterAnimationSuite(
+        this.animationDocument,
+        this.rig,
+      );
+    }
     this.ensureActiveClip();
   }
 

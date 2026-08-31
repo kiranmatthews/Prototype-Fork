@@ -1,6 +1,7 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import {
   RigBinding,
+  blendPoses,
   clipTimeAt,
   createProceduralMotionContext,
   sampleComposedClip,
@@ -11,9 +12,28 @@ import {
   type ProceduralCompositionOrder,
   type ProceduralEvaluatorRegistry,
   type ProceduralMotionContext,
+  type PoseBuffer,
 } from './animation';
 
-const LAND_CLIP_ID = 'player.land';
+export const LAND_CLIP_ID = 'player.land';
+export const PACE_STOP_CLIP_ID = 'player.pace-stop';
+export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, PACE_STOP_CLIP_ID] as const;
+
+/** Ignore a stick tap or a nearly stationary authored run before pacing. */
+export const PACE_STOP_MIN_RUN_SECONDS = 0.18;
+export const PACE_STOP_MIN_PEAK_SPEED = 0.35;
+/** Briefly preserve the outgoing stride so an arbitrary gait phase cannot pop. */
+export const PACE_STOP_CROSSFADE_SECONDS = 0.12;
+
+type RuntimeTransientKind = 'landing' | 'pace-stop';
+
+interface RuntimeTransient {
+  readonly kind: RuntimeTransientKind;
+  readonly clipId: ClipId;
+  readonly entryGaitPhase: number;
+  readonly entrySpeed: number;
+  readonly outgoingPose: PoseBuffer | null;
+}
 
 export interface CharacterAnimationRuntimeOptions {
   /** Live multiplier layered on top of each clip's authored playbackSpeed. */
@@ -35,6 +55,13 @@ export interface CharacterAnimationRuntimeDiagnostics {
   readonly authoredPlaybackSpeed: number | null;
   readonly playbackSpeedMultiplier: number;
   readonly landingOneShotActive: boolean;
+  readonly pacingOneShotActive: boolean;
+  readonly transientClipId: ClipId | null;
+  readonly transitionEntryGaitPhase: number | null;
+  readonly transitionEntrySpeed: number | null;
+  readonly transitionBlendWeight: number | null;
+  readonly runQualificationSeconds: number;
+  readonly runQualificationPeakSpeed: number;
   readonly authoredPoseApplied: boolean;
   readonly proceduralOrder: ProceduralCompositionOrder | null;
   readonly proceduralDriverCount: number;
@@ -47,6 +74,51 @@ function finitePlaybackMultiplier(value: number | undefined): number {
 
 function trackHasKeys(track: AnimationTrack): boolean {
   return track.enabled !== false && track.keys.length > 0;
+}
+
+function finiteNonNegative(value: number): number {
+  return Number.isFinite(value) ? Math.max(0, value) : 0;
+}
+
+function normalizedPhase(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return ((value % 1) + 1) % 1;
+}
+
+function smoothstep01(value: number): number {
+  const clamped = Math.min(1, Math.max(0, value));
+  return clamped * clamped * (3 - 2 * clamped);
+}
+
+function withControlDefaults(
+  pose: PoseBuffer,
+  defaults: ReadonlyMap<string, number>,
+): PoseBuffer {
+  const scalars: Record<string, number> = {};
+  for (const [id, value] of defaults) scalars[id] = pose.scalars[id] ?? value;
+  for (const [id, value] of Object.entries(pose.scalars)) scalars[id] = value;
+  return { joints: pose.joints, scalars };
+}
+
+/** Collapse historical joint aliases before blending so one semantic channel
+ * cannot be represented twice and then win merely because it is canonical. */
+function canonicalizePose(pose: PoseBuffer, binding: RigBinding): PoseBuffer {
+  const joints: PoseBuffer['joints'] = {};
+  const merge = (target: string, source: PoseBuffer['joints'][string]): void => {
+    joints[target] = { ...joints[target], ...source };
+  };
+  const entries = Object.entries(pose.joints);
+  // Match RigBinding.applyPose: historical aliases first, explicit canonical
+  // channels second, so a transitional document containing both is stable.
+  for (const [target, delta] of entries) {
+    const canonical = binding.resolveJointId(target);
+    if (canonical && canonical !== target) merge(canonical, delta);
+  }
+  for (const [target, delta] of entries) {
+    const canonical = binding.resolveJointId(target);
+    if (canonical && canonical === target) merge(canonical, delta);
+  }
+  return { joints, scalars: pose.scalars };
 }
 
 function clipTimingIsUsable(clip: AnimationClip): boolean {
@@ -79,10 +151,19 @@ export class CharacterAnimationRuntime {
   private currentClipId: ClipId | null = null;
   private requestedClipId: ClipId | null = null;
   private elapsedSeconds = 0;
+  /** Integrated live-speed clock; unlike wall time it does not jump after unfreezing. */
+  private playbackSeconds = 0;
   private timelineTime: number | null = null;
   private authoredPlaybackSpeed: number | null = null;
   private previousGrounded: boolean;
-  private landingOneShot = false;
+  private previousHint: PlayerAnimationClipHint;
+  private transient: RuntimeTransient | null = null;
+  private runQualificationSeconds = 0;
+  private runQualificationPeakSpeed = 0;
+  private lastRunGaitPhase = 0;
+  private lastSampledPose: PoseBuffer | null = null;
+  private transitionBlendWeight: number | null = null;
+  private readonly controlDefaults = new Map<string, number>();
   private poseApplied = false;
   private compositionOrder: ProceduralCompositionOrder | null = null;
   private proceduralDriverCount = 0;
@@ -102,7 +183,12 @@ export class CharacterAnimationRuntime {
     this.runtimeSpeed = finitePlaybackMultiplier(options.playbackSpeedMultiplier);
     this.manualClipId = options.manualClipId ?? null;
     this.proceduralEvaluators = options.proceduralEvaluators;
-    this.previousGrounded = player.grounded;
+    const initialIntent = player.animationIntent;
+    this.previousGrounded = initialIntent.motion.grounded;
+    this.previousHint = initialIntent.clipId;
+    for (const control of this.binding.definition.controls) {
+      this.controlDefaults.set(control.id, control.defaultValue);
+    }
     this.removeOverlay = player.setAuthoredPoseOverlay((context) => {
       this.applyFrame(context.deltaSeconds, context.applyDeformations);
     });
@@ -125,6 +211,7 @@ export class CharacterAnimationRuntime {
   }
 
   get diagnostics(): CharacterAnimationRuntimeDiagnostics {
+    const transient = this.transient;
     return {
       enabled: this.runtimeEnabled,
       disposed: this.disposed,
@@ -135,7 +222,14 @@ export class CharacterAnimationRuntime {
       timelineTime: this.timelineTime,
       authoredPlaybackSpeed: this.authoredPlaybackSpeed,
       playbackSpeedMultiplier: this.runtimeSpeed,
-      landingOneShotActive: this.landingOneShot,
+      landingOneShotActive: transient?.kind === 'landing',
+      pacingOneShotActive: transient?.kind === 'pace-stop',
+      transientClipId: transient?.clipId ?? null,
+      transitionEntryGaitPhase: transient?.entryGaitPhase ?? null,
+      transitionEntrySpeed: transient?.entrySpeed ?? null,
+      transitionBlendWeight: this.transitionBlendWeight,
+      runQualificationSeconds: this.runQualificationSeconds,
+      runQualificationPeakSpeed: this.runQualificationPeakSpeed,
       authoredPoseApplied: this.poseApplied,
       proceduralOrder: this.compositionOrder,
       proceduralDriverCount: this.proceduralDriverCount,
@@ -149,6 +243,9 @@ export class CharacterAnimationRuntime {
   setDocument(document: AnimationSuiteDocument): void {
     if (this.disposed) return;
     this.animationDocument = document;
+    if (this.transient && !this.findPlayableClip(this.transient.clipId)) {
+      this.cancelTransient();
+    }
     if (this.currentClipId && !this.findPlayableClip(this.currentClipId)) {
       this.clearPlayback();
     }
@@ -158,6 +255,10 @@ export class CharacterAnimationRuntime {
   setManualClipOverride(clipId: ClipId | null, restart = true): void {
     if (this.disposed || this.manualClipId === clipId && !restart) return;
     this.manualClipId = clipId;
+    // A diagnostic selection must not bank a gameplay transition that replays
+    // seconds later when the override is released.
+    this.cancelTransient();
+    this.resetRunQualification();
     if (restart) this.restartPending = true;
   }
 
@@ -175,7 +276,11 @@ export class CharacterAnimationRuntime {
     if (this.disposed || this.runtimeEnabled === enabled) return;
     this.runtimeEnabled = enabled;
     this.restartPending = enabled;
-    if (!enabled) this.clearPlayback();
+    if (!enabled) {
+      this.cancelTransient();
+      this.resetRunQualification();
+      this.clearPlayback();
+    }
   }
 
   restart(): void {
@@ -187,6 +292,8 @@ export class CharacterAnimationRuntime {
     this.disposed = true;
     this.removeOverlay?.();
     this.removeOverlay = null;
+    this.cancelTransient();
+    this.resetRunQualification();
     this.clearPlayback();
   }
 
@@ -195,27 +302,64 @@ export class CharacterAnimationRuntime {
     applyDeformations: (values: Readonly<Record<string, number>>) => void,
   ): void {
     if (this.disposed) return;
+    const dt = Number.isFinite(deltaSeconds) ? Math.max(0, deltaSeconds) : 0;
     const intent = this.player.animationIntent;
     const grounded = intent.motion.grounded;
     const justLanded = grounded && !this.previousGrounded;
+    const previousHint = this.previousHint;
     this.previousGrounded = grounded;
+    this.previousHint = intent.clipId;
     const hint = intent.clipId;
-
-    if (justLanded && hint !== 'player.bail') this.landingOneShot = true;
-    if (!grounded || hint === 'player.bail') this.landingOneShot = false;
 
     if (!this.runtimeEnabled) {
       this.requestedClipId = null;
       this.poseApplied = false;
+      this.cancelTransient();
+      this.resetRunQualification();
       return;
     }
 
+    if (this.manualClipId === null) {
+      this.updateRunQualification(hint, previousHint, intent.motion, dt);
+      // Landing has first refusal on the exact contact frame. This also avoids
+      // an impossible run->idle edge winning over a fresh airborne transition.
+      if (justLanded && hint !== 'player.bail') {
+        this.transient = this.makeTransient('landing', LAND_CLIP_ID, intent.motion);
+      } else if (this.transient?.kind === 'landing') {
+        if (!grounded || hint === 'player.bail') this.cancelTransient();
+      } else if (this.transient?.kind === 'pace-stop') {
+        // Pacing is an idle-bound flourish, never an action lock. Gameplay owns
+        // the same frame in which any new state or renewed run is requested.
+        if (!grounded || hint !== 'player.idle') this.cancelTransient();
+      } else if (
+        grounded &&
+        previousHint === 'player.run' &&
+        hint === 'player.idle' &&
+        this.runQualificationSeconds >= PACE_STOP_MIN_RUN_SECONDS &&
+        this.runQualificationPeakSpeed >= PACE_STOP_MIN_PEAK_SPEED
+      ) {
+        this.transient = {
+          kind: 'pace-stop',
+          clipId: PACE_STOP_CLIP_ID,
+          entryGaitPhase: this.lastRunGaitPhase,
+          // The last routed run frame is necessarily near the idle threshold;
+          // peak speed preserves the momentum that this settle is reacting to.
+          entrySpeed: this.runQualificationPeakSpeed,
+          outgoingPose: this.currentClipId === 'player.run' ? this.lastSampledPose : null,
+        };
+      }
+      if (hint !== 'player.run') this.resetRunQualification();
+    } else {
+      this.cancelTransient();
+      this.resetRunQualification();
+    }
+
     let requested: ClipId =
-      this.manualClipId ?? (this.landingOneShot ? LAND_CLIP_ID : hint);
+      this.manualClipId ?? this.transient?.clipId ?? hint;
     let clip = this.findPlayableClip(requested);
-    // Missing/placeholder landing clips must not hide a valid state clip.
-    if (!clip && this.manualClipId === null && requested === LAND_CLIP_ID) {
-      this.landingOneShot = false;
+    // Missing/placeholder transition clips must not hide a valid state clip.
+    if (!clip && this.manualClipId === null && this.transient?.clipId === requested) {
+      this.cancelTransient();
       requested = hint;
       clip = this.findPlayableClip(requested);
     }
@@ -230,20 +374,44 @@ export class CharacterAnimationRuntime {
     if (switched) {
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
+      this.playbackSeconds = 0;
       this.restartPending = false;
     } else {
-      const dt = Number.isFinite(deltaSeconds) ? Math.max(0, deltaSeconds) : 0;
       this.elapsedSeconds += dt;
+      this.playbackSeconds += dt * this.runtimeSpeed;
     }
 
-    this.timelineTime = clipTimeAt(clip, this.elapsedSeconds, {
-      runtimeSpeed: this.runtimeSpeed,
-    });
+    this.timelineTime = clipTimeAt(clip, this.playbackSeconds);
     this.authoredPlaybackSpeed = clip.playbackSpeed;
     const motion = this.motionForClip(clip, intent.motion);
-    const pose = sampleComposedClip(clip, this.timelineTime, motion, {
+    const sampledPose = sampleComposedClip(clip, this.timelineTime, motion, {
       evaluators: this.proceduralEvaluators,
     });
+    let pose = sampledPose;
+    if (
+      this.transient?.kind === 'pace-stop' &&
+      clip.id === this.transient.clipId &&
+      this.transient.outgoingPose
+    ) {
+      const authoredBlendTime =
+        this.playbackSeconds * clip.playbackSpeed;
+      const authoredBlendDuration = Math.min(
+        PACE_STOP_CROSSFADE_SECONDS,
+        clip.range.end - clip.range.start,
+      );
+      const weight = smoothstep01(authoredBlendTime / authoredBlendDuration);
+      pose = blendPoses(
+        withControlDefaults(
+          canonicalizePose(this.transient.outgoingPose, this.binding),
+          this.controlDefaults,
+        ),
+        withControlDefaults(canonicalizePose(sampledPose, this.binding), this.controlDefaults),
+        weight,
+      );
+      this.transitionBlendWeight = weight;
+    } else {
+      this.transitionBlendWeight = null;
+    }
     this.binding.applyPose(pose, { resetUnspecified: false, strict: false });
     // Controls/deformation are intentionally last: endpoint translation starts
     // from the fully composed joint pose, and limbs never inherit parent scale.
@@ -252,13 +420,14 @@ export class CharacterAnimationRuntime {
     this.compositionOrder = clip.proceduralOrder;
     this.proceduralDriverCount = clip.proceduralDrivers.filter((driver) => driver.enabled !== false).length;
     this.motionContext = motion;
+    this.lastSampledPose = pose;
 
     if (
       this.manualClipId === null &&
-      this.landingOneShot &&
+      this.transient?.clipId === clip.id &&
       this.oneTraversalFinished(clip)
     ) {
-      this.landingOneShot = false;
+      this.cancelTransient(false);
     }
   }
 
@@ -266,18 +435,22 @@ export class CharacterAnimationRuntime {
     const clip = this.animationDocument.clips.find((candidate) => candidate.id === id);
     if (!clip || clip.rigId !== this.binding.definition.id || !clipTimingIsUsable(clip)) return null;
     const validJointIds = this.binding.joints;
+    const hasJoint = (id: string): boolean => {
+      const canonical = this.binding.resolveJointId(id);
+      return canonical !== undefined && validJointIds.has(canonical);
+    };
     const validControlIds = new Set(this.binding.definition.controls.map((control) => control.id));
     const hasUsableTrack = clip.tracks.some((track) => {
       if (!trackHasKeys(track)) return false;
       return track.kind === 'scalar'
         ? validControlIds.has(track.target)
-        : validJointIds.has(track.target);
+        : hasJoint(track.target);
     });
     const hasUsableDriver = clip.proceduralDrivers.some((driver) => {
       if (driver.enabled === false) return false;
       const targetExists = driver.target.kind === 'scalar'
         ? validControlIds.has(driver.target.target)
-        : validJointIds.has(driver.target.target);
+        : hasJoint(driver.target.target);
       if (!targetExists || driver.type !== 'custom') return targetExists;
       if (this.proceduralEvaluators instanceof Map) {
         return this.proceduralEvaluators.has(driver.evaluatorId);
@@ -295,11 +468,14 @@ export class CharacterAnimationRuntime {
     gameplay: ProceduralMotionContext,
   ): ProceduralMotionContext {
     let actionProgress = gameplay.actionProgress;
-    if (this.manualClipId === null && this.landingOneShot && clip.id === LAND_CLIP_ID) {
+    const transient = this.manualClipId === null && this.transient?.clipId === clip.id
+      ? this.transient
+      : null;
+    if (transient) {
       const span = Math.max(clip.range.end - clip.range.start, 1e-9);
       actionProgress = Math.min(
         1,
-        Math.max(0, this.elapsedSeconds * clip.playbackSpeed * this.runtimeSpeed / span),
+        Math.max(0, this.playbackSeconds * clip.playbackSpeed / span),
       );
     }
     return createProceduralMotionContext({
@@ -308,26 +484,73 @@ export class CharacterAnimationRuntime {
       verticalVelocity: gameplay.verticalVelocity,
       grounded: gameplay.grounded,
       actionProgress,
-      inputs: { ...gameplay.inputs },
+      inputs: {
+        ...gameplay.inputs,
+        ...(transient ? {
+          transitionEntryGaitPhase: transient.entryGaitPhase,
+          transitionEntrySpeed: transient.entrySpeed,
+        } : {}),
+      },
     });
+  }
+
+  private makeTransient(
+    kind: RuntimeTransientKind,
+    clipId: ClipId,
+    motion: ProceduralMotionContext,
+  ): RuntimeTransient {
+    return {
+      kind,
+      clipId,
+      entryGaitPhase: normalizedPhase(motion.gaitPhase),
+      entrySpeed: finiteNonNegative(motion.normalizedSpeed),
+      outgoingPose: null,
+    };
+  }
+
+  private updateRunQualification(
+    hint: PlayerAnimationClipHint,
+    previousHint: PlayerAnimationClipHint,
+    motion: ProceduralMotionContext,
+    deltaSeconds: number,
+  ): void {
+    if (hint !== 'player.run') return;
+    if (previousHint !== 'player.run') this.resetRunQualification();
+    const speed = finiteNonNegative(motion.normalizedSpeed);
+    this.runQualificationSeconds += deltaSeconds;
+    this.runQualificationPeakSpeed = Math.max(this.runQualificationPeakSpeed, speed);
+    this.lastRunGaitPhase = normalizedPhase(motion.gaitPhase);
+  }
+
+  private resetRunQualification(): void {
+    this.runQualificationSeconds = 0;
+    this.runQualificationPeakSpeed = 0;
+    this.lastRunGaitPhase = 0;
+  }
+
+  private cancelTransient(clearBlend = true): void {
+    this.transient = null;
+    if (clearBlend) this.transitionBlendWeight = null;
   }
 
   private oneTraversalFinished(clip: AnimationClip): boolean {
     const authoredSpan = clip.range.end - clip.range.start;
-    const effectiveSpeed = clip.playbackSpeed * this.runtimeSpeed;
-    return effectiveSpeed > 0 && this.elapsedSeconds * effectiveSpeed >= authoredSpan;
+    return clip.playbackSpeed > 0 && this.playbackSeconds * clip.playbackSpeed >= authoredSpan;
   }
 
   private clearPlayback(clearRequest = true): void {
     this.currentClipId = null;
     if (clearRequest) this.requestedClipId = null;
     this.elapsedSeconds = 0;
+    this.playbackSeconds = 0;
     this.timelineTime = null;
     this.authoredPlaybackSpeed = null;
     this.poseApplied = false;
     this.compositionOrder = null;
     this.proceduralDriverCount = 0;
     this.motionContext = null;
+    this.lastSampledPose = null;
+    this.transitionBlendWeight = null;
     this.restartPending = false;
   }
 }

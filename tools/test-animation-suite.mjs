@@ -19,6 +19,7 @@ try {
     ANIMATION_SUITE_SCHEMA_VERSION,
     RIG_SCHEMA_VERSION,
     PLAYER_DEFORMATION_CONTROLS,
+    PLAYER_STARTER_CATALOG_VERSION,
     clipTimeAt,
     bakeProceduralClip,
     composeProceduralPose,
@@ -41,6 +42,7 @@ try {
     parseRigDefinition,
     removeClip,
     removeKeyframe,
+    reconcilePlayerStarterAnimationSuite,
     sampleClip,
     sampleComposedClip,
     sampleProceduralDriverValue,
@@ -71,15 +73,19 @@ try {
   const hips = addJoint('hips', 'hips', rider);
   const torsoRoot = addJoint('torsoRoot', 'upper-body', rider);
   const spine = addJoint('spine', 'spine', torsoRoot);
-  const head = addJoint('head', 'head', spine);
+  const legacyChest = addJoint('chest', 'chest', spine);
+  const legacyNeck = addJoint('neck', 'neck', legacyChest);
+  const head = addJoint('head', 'head', legacyNeck);
   for (const side of ['Left', 'Right']) {
     const suffix = side.toLowerCase();
-    const shoulder = addJoint(`shoulder${side}`, `shoulder-${suffix}`, spine);
+    const clavicle = addJoint(`clavicle${side}`, `clavicle-${suffix}`, legacyChest);
+    const shoulder = addJoint(`shoulder${side}`, `shoulder-${suffix}`, clavicle);
     const elbow = addJoint(`elbow${side}`, `elbow-${suffix}`, shoulder);
     addJoint(`wrist${side}`, `wrist-${suffix}`, elbow);
     const hip = addJoint(`hip${side}`, `hip-${suffix}`, hips);
     const knee = addJoint(`knee${side}`, `knee-${suffix}`, hip);
-    addJoint(`ankle${side}`, `ankle-${suffix}`, knee);
+    const ankle = addJoint(`ankle${side}`, `ankle-${suffix}`, knee);
+    addJoint(`toe${side}`, `toe-${suffix}`, ankle);
     addJoint(`ear${side}`, `ear-${suffix}`, head);
   }
   addJoint('ponytailBase', 'ponytail-base', head);
@@ -214,8 +220,10 @@ try {
     motionRoot: ['root'], pelvis: ['hips'], chest: ['torsoRoot'],
     upperArmLeft: ['shoulderLeft'], lowerArmLeft: ['elbowLeft'], handLeft: ['wristLeft'],
     upperLegLeft: ['hipLeft'], lowerLegLeft: ['kneeLeft'], footLeft: ['ankleLeft'],
+    toesLeft: ['toeLeft'],
     upperArmRight: ['shoulderRight'], lowerArmRight: ['elbowRight'], handRight: ['wristRight'],
     upperLegRight: ['hipRight'], lowerLegRight: ['kneeRight'], footRight: ['ankleRight'],
+    toesRight: ['toeRight'],
   };
   const tPose = structuredClone(conventionalRest);
   tPose.upperArmLeft.quaternion = [0, 0, Math.sin(Math.PI / 8), Math.cos(Math.PI / 8)];
@@ -310,9 +318,9 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(starterClips.length, 17);
+  assert.equal(starterClips.length, 18);
   for (const id of [
-    'player.idle', 'player.run', 'player.jump', 'player.fall', 'player.land', 'player.crouch',
+    'player.idle', 'player.run', 'player.pace-stop', 'player.jump', 'player.fall', 'player.land', 'player.crouch',
     'player.crawl', 'player.slide', 'player.skate', 'player.grind', 'player.grab', 'player.hang',
     'player.climb', 'player.rope', 'player.slam', 'player.bail', 'player.spin',
   ]) assert.ok(starterClips.some((clip) => clip.id === id), `missing starter clip ${id}`);
@@ -321,18 +329,117 @@ try {
   assert.equal(validation.valid, true, validation.issues.map((entry) => `${entry.path}: ${entry.message}`).join('\n'));
   const parsedSuite = parseAnimationSuite(suite);
   assert.equal(parsedSuite.activeClipId, 'player.idle');
+  assert.equal(parsedSuite.metadata.playerStarterCatalogVersion, PLAYER_STARTER_CATALOG_VERSION);
 
   const jump = findClip(parsedSuite, 'player.jump');
   const land = findClip(parsedSuite, 'player.land');
-  assert.ok(jump && land);
+  const idle = findClip(parsedSuite, 'player.idle');
+  const run = findClip(parsedSuite, 'player.run');
+  const paceStop = findClip(parsedSuite, 'player.pace-stop');
+  assert.ok(jump && land && idle && run && paceStop);
   assert.equal(jump.playbackSpeed, 1);
   assert.ok(jump.tracks.filter((track) => track.kind === 'scalar').length >= 9);
   const jumpPose = sampleClip(jump, 0.32);
   assert.ok(jumpPose.scalars[PLAYER_DEFORMATION_CONTROLS.legLowerLeft] > 1.25);
   const landPose = sampleClip(land, 0.075);
   near(landPose.scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.62);
-  assert.ok(findClip(parsedSuite, 'player.idle').proceduralDrivers.length >= 2);
-  assert.ok(findClip(parsedSuite, 'player.run').proceduralDrivers.length >= 3);
+  assert.ok(idle.proceduralDrivers.length >= 2);
+  assert.ok(run.proceduralDrivers.length >= 3);
+
+  // Running stays grounded and restrained: only torso length changes, with a
+  // small strike compression and lift extension. Neck/head counter-motion is
+  // loop-seam compatible and no limb-length control is authored.
+  const runScalarTracks = run.tracks.filter((track) => track.kind === 'scalar');
+  assert.deepEqual(runScalarTracks.map((track) => track.target), [PLAYER_DEFORMATION_CONTROLS.torso]);
+  assert.ok(run.tracks.some((track) => track.kind === 'quaternion' && track.target === 'neck'));
+  assert.ok(run.tracks.some((track) => track.kind === 'quaternion' && track.target === 'head'));
+  assert.ok(sampleClip(run, 0.04).scalars[PLAYER_DEFORMATION_CONTROLS.torso] <= 0.965);
+  assert.ok(sampleClip(run, 0.2).scalars[PLAYER_DEFORMATION_CONTROLS.torso] >= 1.025);
+
+  // The pace transition is selectable, strictly in-place, and ends on the
+  // exact channels idle takes over on its first authored frame.
+  assert.equal(paceStop.duration, 1.8);
+  assert.equal(paceStop.loop.mode, 'once');
+  assert.equal(paceStop.loop.seamless, false);
+  assert.equal(paceStop.rootMotion.mode, 'in-place');
+  assert.ok(paceStop.contacts.length >= 5);
+  assert.ok(paceStop.markers.some((marker) => marker.name === 'Idle-compatible pose'));
+  const paceRootTrack = paceStop.tracks.find((track) => track.kind === 'position' && track.target === 'root');
+  assert.ok(paceRootTrack.keys.every((key) => key.value[0] === 0 && key.value[2] === 0));
+  const paceEnd = sampleClip(paceStop, paceStop.duration);
+  const idleEntry = sampleClip(idle, 0);
+  assert.deepEqual(paceEnd.joints.root.position, idleEntry.joints.root.position);
+  for (const jointId of ['spine', 'head', 'shoulderLeft', 'shoulderRight']) {
+    assert.deepEqual(paceEnd.joints[jointId].quaternion, idleEntry.joints[jointId].quaternion,
+      `${jointId} did not hand off exactly to idle`);
+  }
+  near(paceEnd.scalars[PLAYER_DEFORMATION_CONTROLS.torso],
+    idleEntry.scalars[PLAYER_DEFORMATION_CONTROLS.torso]);
+  assert.deepEqual(
+    paceStop.tracks.filter((track) => track.kind === 'scalar').map((track) => track.target),
+    [PLAYER_DEFORMATION_CONTROLS.torso],
+  );
+  const paceDecayDrivers = paceStop.proceduralDrivers.filter((driver) =>
+    driver.type === 'envelope' && driver.blend === 'multiply' && driver.source === 'actionProgress');
+  assert.ok(paceDecayDrivers.length >= 5, 'pace overlap was not procedurally damped');
+  assert.ok(paceStop.proceduralDrivers.some((driver) => driver.source === 'transitionEntryGaitPhase'));
+  assert.ok(paceStop.proceduralDrivers.some((driver) => driver.source === 'transitionEntrySpeed'));
+  const paceEndpointContext = {
+    normalizedSpeed: 0,
+    gaitPhase: 0,
+    verticalVelocity: 0,
+    grounded: true,
+    actionProgress: 1,
+    inputs: { transitionEntryGaitPhase: 0.25, transitionEntrySpeed: 1 },
+  };
+  const finishedOverlap = sampleProceduralDrivers(
+    paceStop.proceduralDrivers,
+    paceStop.duration,
+    paceEndpointContext,
+  );
+  near(finishedOverlap.pose.joints.root.position[1], 0);
+  const composedPaceEnd = sampleComposedClip(paceStop, paceStop.duration, paceEndpointContext);
+  const composedIdleEntry = sampleComposedClip(idle, 0, { ...paceEndpointContext, actionProgress: 0 });
+  assert.deepEqual(composedPaceEnd.joints.root.position, composedIdleEntry.joints.root.position);
+  for (const jointId of ['spine', 'head', 'shoulderLeft', 'shoulderRight']) {
+    assert.deepEqual(composedPaceEnd.joints[jointId].quaternion, composedIdleEntry.joints[jointId].quaternion,
+      `${jointId} composed transition endpoint did not match composed idle entry`);
+  }
+  near(composedPaceEnd.scalars[PLAYER_DEFORMATION_CONTROLS.torso],
+    composedIdleEntry.scalars[PLAYER_DEFORMATION_CONTROLS.torso]);
+
+  // Catalog upgrades append only clips introduced after the saved revision.
+  // Same-ID authored work wins, while a current revision makes deletion an
+  // intentional, persistent choice.
+  const customizedIdle = { ...idle, name: 'My Hand-Tuned Idle' };
+  const versionOneSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips
+      .filter((clip) => clip.id !== 'player.pace-stop' && clip.id !== 'player.run')
+      .map((clip) => clip.id === customizedIdle.id ? customizedIdle : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 1 },
+  };
+  const upgradedCatalog = reconcilePlayerStarterAnimationSuite(versionOneSuite, binding.definition);
+  assert.equal(upgradedCatalog.metadata.playerStarterCatalogVersion, PLAYER_STARTER_CATALOG_VERSION);
+  assert.equal(upgradedCatalog.clips.length, versionOneSuite.clips.length + 1);
+  assert.equal(findClip(upgradedCatalog, 'player.idle'), customizedIdle,
+    'reconciliation replaced a customized same-ID clip');
+  assert.ok(findClip(upgradedCatalog, 'player.pace-stop'), 'new catalog clip was not appended');
+  assert.equal(findClip(upgradedCatalog, 'player.run'), undefined,
+    'a clip from an already-seen revision was resurrected');
+  const deliberatelyDeleted = {
+    ...upgradedCatalog,
+    clips: upgradedCatalog.clips.filter((clip) => clip.id !== 'player.pace-stop'),
+  };
+  const refreshedCurrentCatalog = reconcilePlayerStarterAnimationSuite(deliberatelyDeleted, binding.definition);
+  assert.equal(findClip(refreshedCurrentCatalog, 'player.pace-stop'), undefined,
+    'a current version should preserve deliberate deletion');
+  assert.equal(refreshedCurrentCatalog.rigs.find((candidate) => candidate.id === binding.definition.id),
+    binding.definition, 'reconciliation did not refresh the embedded live rig');
+  const suiteMissingLiveRig = { ...deliberatelyDeleted, rigs: [] };
+  const appendedLiveRig = reconcilePlayerStarterAnimationSuite(suiteMissingLiveRig, binding.definition);
+  assert.equal(appendedLiveRig.rigs.at(-1), binding.definition,
+    'reconciliation did not append a missing live rig');
 
   // Applying the same pose twice must produce the same absolute scene state.
   const appliedPose = {
@@ -642,7 +749,7 @@ try {
   drafts.save(parsedSuite);
   assert.equal(drafts.has(parsedSuite.id), true);
   assert.deepEqual(drafts.listDocumentIds(), [parsedSuite.id]);
-  assert.equal(drafts.load(parsedSuite.id).clips.length, 17);
+  assert.equal(drafts.load(parsedSuite.id).clips.length, 18);
   drafts.remove(parsedSuite.id);
   assert.equal(drafts.load(parsedSuite.id), null);
 
