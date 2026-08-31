@@ -37,6 +37,7 @@ import {
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
+import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import {
   createProceduralThornCluster,
@@ -2084,6 +2085,11 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
+  {
+    id: "jungle-cliff",
+    name: JUNGLE_CLIFF_LEVEL.name,
+    data: JUNGLE_CLIFF_LEVEL,
+  }, // authorized clean-room reconstruction from KraftpaperMan's NST Maker mod
   {
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,

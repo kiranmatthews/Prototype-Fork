@@ -14,6 +14,7 @@ against the equivalent Unity greybox workflow.
 - [Unity Surf Cruiser skateboard + shape lab port](docs/UNITY_SKATEBOARD_WEB_PORT.md)
 - [Unity spin effects + orbital-ring lab port](docs/UNITY_SPIN_EFFECTS_WEB_PORT.md)
 - [Unity combo HUD math and text parity](docs/UNITY_COMBO_HUD_PARITY.md)
+- [Authorized Jungle Cliff NST layout port](docs/JUNGLE_CLIFF_PORT.md)
 - [Tripo → img2threejs character pipeline](docs/TRIPO_CHARACTER_PIPELINE.md)
 
 A greybox feel prototype for a PS1/PS2-style fake-physics board platformer —
@@ -76,6 +77,11 @@ the detected name shows in the debug panel.
 `Backport Mechanics Lab` is the compact validation course for speed and
 trampoline pads, trick gates/rails, return portals, and procedural wood/bamboo
 paths.
+
+`Jungle Cliff` is an authorized clean-room layout reconstruction from
+Kraftpaper's NST Maker mod: a winding jungle climb, west-facing cliff traverse,
+upper temple corridor, and condensed portal-linked death route. It ships only
+procedural project primitives; no Crash render/audio assets are included.
 
 Start pad → downhill ramp (speed boost) → jump a death pit → landing deck →
 grind rail over a big pit (hold Triangle near/over the rail — landing on it

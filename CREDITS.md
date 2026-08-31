@@ -156,6 +156,19 @@ The original account tier/community status is not recorded, so the public
 copy follows Meshy's conservative free-plan path: **model created with
 [Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
 
+## Authorized Jungle Cliff layout reference
+
+`Jungle Cliff` is a clean-room procedural reconstruction of Kraftpaper's
+[Crash NST Maker Jungle Cliff mod](https://www.nexusmods.com/crashbandicootnsanetrilogy/mods/164),
+made after the project owner confirmed the mod author's permission to inspect
+the package and derive its layout. KraftpaperMan's
+[playthrough](https://www.youtube.com/watch?v=sXBuV_GJA6Y) was used to resolve
+the recovered route transitions. The shipped level contains only this
+project's code-native primitives and existing scenery; no Crash/Activision or
+mod render mesh, texture, animation, or audio is redistributed. Verified input
+hashes and the clean-room boundary are recorded in
+`docs/JUNGLE_CLIFF_PORT.md`.
+
 ## Everything else
 
 Levels, physics, the character rig, the surface textures, the editor and the
