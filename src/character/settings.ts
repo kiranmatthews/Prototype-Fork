@@ -59,7 +59,7 @@ export interface CharacterProportionStorage {
 
 export const CHARACTER_PROPORTION_STORAGE_KEY = 'solProtoCharacterProportions.v1';
 export const CHARACTER_HAND_REST_REVISION = 1 as const;
-export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 3 as const;
+export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 4 as const;
 
 /** Identity presentation values used by the original Character Lab baseline. */
 export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
@@ -102,32 +102,35 @@ export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSetting
 export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
   Object.freeze({
     ...IDENTITY_CHARACTER_PROPORTIONS,
-    bodyWidth: 0.96,
-    bodyDepth: 0.96,
-    headSize: 1.4,
+    bodyWidth: 1,
+    bodyDepth: 1,
+    headSize: 1.55,
     headWidth: 1.23,
     headDepth: 1.23,
     neckLength: 0,
-    torsoLength: 0.95,
-    torsoWidth: 1.21,
-    torsoDepth: 1.04,
-    shoulderWidth: 1.05,
-    hipWidth: 1.17,
-    upperArmLength: 0.95,
-    forearmLength: 1.38,
+    torsoLength: 1,
+    torsoWidth: 1.13,
+    torsoDepth: 1.22,
+    shoulderWidth: 1,
+    hipWidth: 0.93,
+    upperArmLength: 1.01,
+    forearmLength: 1.25,
     thighLength: 1.34,
     shinLength: 1.47,
+    shortsWidth: 1.5,
+    shortsHeight: 1.5,
+    shortsDepth: 1.39,
     armThickness: 1.5,
     legThickness: 1.37,
-    armKnobSize: 1.43,
-    legKnobSize: 1.33,
+    armKnobSize: 1.47,
+    legKnobSize: 1.37,
     handSize: 1.36,
-    wristRestPitch: 13,
-    wristRestYaw: -180,
-    wristRestRoll: 6,
-    gloveXAcross: 0,
-    gloveXAlong: 0,
-    gloveXLift: 0,
+    wristRestPitch: 15,
+    wristRestYaw: -167,
+    wristRestRoll: 3,
+    gloveXAcross: 0.025,
+    gloveXAlong: 0.011,
+    gloveXLift: -0.004,
     footSize: 1.53,
   });
 

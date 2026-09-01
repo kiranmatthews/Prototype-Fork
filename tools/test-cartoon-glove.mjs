@@ -321,11 +321,12 @@ try {
   }
   player.resetCharacterProportions();
   for (const side of ['left', 'right']) {
+    const sideSign = side === 'left' ? 1 : -1;
     for (const bar of ['a', 'b']) {
       const mark = player.animationRig.root.getObjectByName(`glove-stitch-${bar}-${side}`);
-      near(mark.position.x, 0);
-      near(mark.position.y, -0.083);
-      near(mark.position.z, 0.068);
+      near(mark.position.x, sideSign * 0.025);
+      near(mark.position.y, -0.072);
+      near(mark.position.z, 0.064);
     }
   }
   assert.equal(player.stretchableBoneDiagnostics.ready, true);
@@ -502,7 +503,9 @@ try {
   const shortsScaleBase = shortsSurface.scale.clone();
   player.setCharacterProportions({ legThickness: 1.5 });
   assert.deepEqual(shortsSurface.scale.toArray(), shortsScaleBase.toArray());
-  assert.deepEqual(shortsSurface.morphTargetInfluences, [0, 0, 0]);
+  near(shortsSurface.morphTargetInfluences[0], 0.5);
+  near(shortsSurface.morphTargetInfluences[1], 0.5);
+  near(shortsSurface.morphTargetInfluences[2], 0.39);
   player.setCharacterProportions({
     legThickness: 1.5,
     shortsWidth: 1.4,
@@ -514,7 +517,9 @@ try {
   near(shortsSurface.morphTargetInfluences[1], 0.25);
   near(shortsSurface.morphTargetInfluences[2], -0.25);
   player.resetCharacterProportions();
-  assert.deepEqual(shortsSurface.morphTargetInfluences, [0, 0, 0]);
+  near(shortsSurface.morphTargetInfluences[0], 0.5);
+  near(shortsSurface.morphTargetInfluences[1], 0.5);
+  near(shortsSurface.morphTargetInfluences[2], 0.39);
   assert.deepEqual(player.proceduralFootwearDiagnostics, {
     ready: true,
     triangles: 1776,

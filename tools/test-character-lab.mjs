@@ -192,35 +192,35 @@ try {
   assert.deepEqual(DEFAULT_CHARACTER_PROPORTIONS, {
     overallScale: 1,
     height: 1,
-    bodyWidth: 0.96,
-    bodyDepth: 0.96,
-    headSize: 1.4,
+    bodyWidth: 1,
+    bodyDepth: 1,
+    headSize: 1.55,
     headWidth: 1.23,
     headDepth: 1.23,
     neckLength: 0,
-    torsoLength: 0.95,
-    torsoWidth: 1.21,
-    torsoDepth: 1.04,
-    shoulderWidth: 1.05,
-    hipWidth: 1.17,
-    upperArmLength: 0.95,
-    forearmLength: 1.38,
+    torsoLength: 1,
+    torsoWidth: 1.13,
+    torsoDepth: 1.22,
+    shoulderWidth: 1,
+    hipWidth: 0.93,
+    upperArmLength: 1.01,
+    forearmLength: 1.25,
     thighLength: 1.34,
     shinLength: 1.47,
-    shortsWidth: 1,
-    shortsHeight: 1,
-    shortsDepth: 1,
+    shortsWidth: 1.5,
+    shortsHeight: 1.5,
+    shortsDepth: 1.39,
     armThickness: 1.5,
     legThickness: 1.37,
-    armKnobSize: 1.43,
-    legKnobSize: 1.33,
+    armKnobSize: 1.47,
+    legKnobSize: 1.37,
     handSize: 1.36,
-    wristRestPitch: 13,
-    wristRestYaw: -180,
-    wristRestRoll: 6,
-    gloveXAcross: 0,
-    gloveXAlong: 0,
-    gloveXLift: 0,
+    wristRestPitch: 15,
+    wristRestYaw: -167,
+    wristRestRoll: 3,
+    gloveXAcross: 0.025,
+    gloveXAlong: 0.011,
+    gloveXLift: -0.004,
     footSize: 1.53,
   });
   const clamped = clampCharacterProportions({
@@ -238,7 +238,7 @@ try {
   });
   assert.equal(clamped.headSize, 1.55);
   assert.equal(clamped.neckLength, 0);
-  assert.equal(clamped.wristRestPitch, 13);
+  assert.equal(clamped.wristRestPitch, 15);
   assert.equal(clamped.wristRestYaw, 180);
   assert.equal(clamped.armKnobSize, 1.62);
   assert.equal(clamped.legKnobSize, 1);
@@ -264,17 +264,17 @@ try {
   assert.equal(settings.value.headSize, 1.31);
   assert.equal(settings.value.shoulderWidth, 1.2);
   assert.equal(settings.value.footSize, 1.53);
-  assert.equal(settings.value.gloveXAcross, 0);
-  assert.equal(settings.value.gloveXAlong, 0);
-  assert.equal(settings.value.gloveXLift, 0);
-  assert.equal(settings.value.armKnobSize, 1.43,
+  assert.equal(settings.value.gloveXAcross, 0.025);
+  assert.equal(settings.value.gloveXAlong, 0.011);
+  assert.equal(settings.value.gloveXLift, -0.004);
+  assert.equal(settings.value.armKnobSize, 1.47,
     'untouched legacy values must adopt the authored defaults');
-  assert.equal(settings.value.shortsWidth, 1,
+  assert.equal(settings.value.shortsWidth, 1.5,
     'older saved Character Lab values must gain clothing controls');
-  assert.equal(settings.value.wristRestPitch, 13,
+  assert.equal(settings.value.wristRestPitch, 15,
     'pre-release wrist tuning must migrate to the corrected anatomical base');
-  assert.equal(settings.value.wristRestYaw, -180);
-  assert.equal(settings.value.wristRestRoll, 6);
+  assert.equal(settings.value.wristRestYaw, -167);
+  assert.equal(settings.value.wristRestRoll, 3);
   let notifications = 0;
   settings.subscribe(() => notifications++);
   settings.patch({ handSize: 1.28 });
@@ -290,6 +290,54 @@ try {
   assert.deepEqual(roundTrip.value, settings.value);
   roundTrip.reset();
   assert.deepEqual(roundTrip.value, DEFAULT_CHARACTER_PROPORTIONS);
+
+  const revision3Defaults = {
+    ...IDENTITY_CHARACTER_PROPORTIONS,
+    bodyWidth: 0.96,
+    bodyDepth: 0.96,
+    headSize: 1.4,
+    headWidth: 1.23,
+    headDepth: 1.23,
+    neckLength: 0,
+    torsoLength: 0.95,
+    torsoWidth: 1.21,
+    torsoDepth: 1.04,
+    shoulderWidth: 1.05,
+    hipWidth: 1.17,
+    upperArmLength: 0.95,
+    forearmLength: 1.38,
+    thighLength: 1.34,
+    shinLength: 1.47,
+    armThickness: 1.5,
+    legThickness: 1.37,
+    armKnobSize: 1.43,
+    legKnobSize: 1.33,
+    handSize: 1.36,
+    wristRestPitch: 13,
+    wristRestYaw: -180,
+    wristRestRoll: 6,
+    gloveXAcross: 0,
+    gloveXAlong: 0,
+    gloveXLift: 0,
+    footSize: 1.53,
+  };
+  const migratedRevision3 = new CharacterProportionSettings(memoryStorage({
+    [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({
+      version: 1,
+      handRestRevision: CHARACTER_HAND_REST_REVISION,
+      defaultsRevision: 3,
+      defaults: revision3Defaults,
+      settings: { ...revision3Defaults, handSize: 1.28 },
+    }),
+  }));
+  assert.equal(migratedRevision3.value.headSize, 1.55,
+    'untouched revision-3 defaults migrate to the new authored silhouette');
+  assert.equal(migratedRevision3.value.shortsWidth, 1.5);
+  assert.equal(migratedRevision3.value.wristRestYaw, -167);
+  assert.equal(migratedRevision3.value.gloveXAcross, 0.025);
+  assert.equal(migratedRevision3.value.handSize, 1.28,
+    'deliberate revision-3 edits remain user-owned during migration');
+
   const explicitAuthoredImport = new CharacterProportionSettings(memoryStorage());
   const { shortsWidth: _shortsWidth, shortsHeight: _shortsHeight, shortsDepth: _shortsDepth,
     ...authoredWithoutShorts } = DEFAULT_CHARACTER_PROPORTIONS;
@@ -494,6 +542,8 @@ try {
   assert.match(labSource, /CHARACTER LAB/);
   assert.match(labSource, /collision remain separate/);
   assert.match(labSource, /Show animal tail/);
+  assert.match(labSource, /toFixed\(inputs\.decimals\)/,
+    'Character Lab number fields must preserve each control step precision');
   const packageJson = JSON.parse(packageSource);
   assert.match(packageJson.scripts['check:character-lab'], /test-character-lab\.mjs/);
   assert.match(packageJson.scripts['check:character-lab'], /test-cartoon-glove\.mjs/);

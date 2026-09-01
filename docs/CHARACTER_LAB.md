@@ -48,7 +48,7 @@ along-hand and dorsal lift match. Left/right anatomy remains linked and
 mirrored in version 1 so a single slider cannot silently create a broken
 asymmetric rig.
 
-The shipped silhouette is an authored defaults-revision-3 pose rather than the
+The shipped silhouette is an authored defaults-revision-4 pose rather than the
 all-ones rig identity. **Reset all** restores that authored pose. The identity
 map remains available to animation/rig tests as the canonical no-op proportion
 layer. Browser saves retain the defaults they were authored against: untouched

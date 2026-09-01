@@ -145,6 +145,7 @@ class CharacterLab implements CharacterLabHandle {
   private readonly inputByKey = new Map<CharacterProportionKey, {
     range: HTMLInputElement;
     number: HTMLInputElement;
+    decimals: number;
   }>();
   private readonly unsubscribe: () => void;
   private tailInput!: HTMLInputElement;
@@ -416,7 +417,8 @@ class CharacterLab implements CharacterLabHandle {
     label.ondblclick = () => characterProportionSettings.patch({
       [control.key]: DEFAULT_CHARACTER_PROPORTIONS[control.key],
     });
-    this.inputByKey.set(control.key, { range, number });
+    const decimals = Math.max(0, (String(control.step).split('.')[1] ?? '').length);
+    this.inputByKey.set(control.key, { range, number, decimals });
     row.append(label, range, number);
     return row;
   }
@@ -425,7 +427,8 @@ class CharacterLab implements CharacterLabHandle {
     for (const [key, inputs] of this.inputByKey) {
       const next = value[key];
       inputs.range.value = String(next);
-      if (document.activeElement !== inputs.number) inputs.number.value = next.toFixed(2);
+      if (document.activeElement !== inputs.number)
+        inputs.number.value = next.toFixed(inputs.decimals);
     }
     if (this.tailInput) this.tailInput.checked = this.ctx.player.characterTailVisible;
   }
