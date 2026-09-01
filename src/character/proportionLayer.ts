@@ -191,6 +191,19 @@ export class CharacterProportionLayer {
       influences[1] = composedAnimationTransverse * value.torsoDepth - 1;
     }
 
+    const shortsSurface = this.root.getObjectByName('meshy-shorts-surface');
+    if (shortsSurface) {
+      const state = this.stateFor(shortsSurface);
+      const influences = (shortsSurface as THREE.Mesh).morphTargetInfluences;
+      if (!influences || influences.length < 3) {
+        throw new Error('Meshy shorts require independent width/height/depth morph channels');
+      }
+      this.ownMorphChannels(state, shortsSurface, [0, 1, 2]);
+      influences[0] = value.shortsWidth - 1;
+      influences[1] = value.shortsHeight - 1;
+      influences[2] = value.shortsDepth - 1;
+    }
+
     const legHeightDelta =
       PROCEDURAL_THIGH_LENGTH * (value.thighLength - 1) +
       PROCEDURAL_SHIN_LENGTH * (value.shinLength - 1);

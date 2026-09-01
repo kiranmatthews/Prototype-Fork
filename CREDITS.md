@@ -225,6 +225,18 @@ upload provenance, conversion, rest fit, and neck-gap mapping are recorded in
 owner-supplied Meshy attribution: **model created with
 [Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
 
+## Owner-supplied Meshy shorts
+
+The visible shorts are the owner's generated **Midnight Chain Denim** Meshy
+model. The browser ships generated position/UV/island data and resized PBR
+maps, not the original FBX or archive. Code-native weights bind the garment to
+the existing hips and upper-leg controls while keeping 44 chain/hardware
+islands rigid. Source/derived hashes, upload provenance, conversion, rest fit,
+and control isolation are recorded in
+`public/characters/meshy-shorts/provenance.json`. It uses the same conservative
+owner-supplied Meshy attribution: **model created with
+[Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
+
 ## Everything else
 
 The remaining levels, physics, character rig, surface textures, editor and UI

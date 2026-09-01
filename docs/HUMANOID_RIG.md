@@ -45,6 +45,15 @@ Head size/width/depth still scale the head bone around that attachment point.
 The look and mask-center sockets are rebased to the imported face while empty
 ear/ponytail nodes preserve old animation IDs.
 
+The visible shorts are the attributed static Meshy **Midnight Chain Denim**
+surface. Runtime code binds its main cloth to `hips`, `hip-left`, and
+`hip-right`; it never adds bones or gives knee/shin rotation authority over the
+hems. The waistband and central crotch remain pelvis-dominant, each cloth leg
+follows only its matching upper-leg bone, and every detached chain/hardware
+island is rigidly assigned. Independent pre-skin width/height/depth morphs own
+clothing fit, so `legThickness` affects limb bones but never the shorts. The
+waistband overlaps the torso and exposed lower legs insert inside the hems.
+
 The visible torso is the attributed Meshy **Skeleton Tank Top** surface. Its
 source FBX is static and unrigged, so runtime code generates smooth weights for
 the existing torso-root, spine, chest, neck, and both clavicles; it does not add

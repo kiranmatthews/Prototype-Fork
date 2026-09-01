@@ -1,0 +1,80 @@
+{
+  "generator": "Meshy",
+  "generatorUrl": "https://www.meshy.ai/",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseBasis": "Owner-supplied Meshy output; conservative free-plan attribution path used elsewhere in this repository",
+  "meshyUploadId": "01a05bba-c6e6-7550-9d5b-415cb12bf6b7",
+  "sourceArchive": {
+    "file": "Meshy_AI_Midnight_Chain_Denim__0901065952_texture_fbx.zip",
+    "bytes": 73749444,
+    "sha256": "8e9050583acb34bdca6267c94fc7f89a2fb03389532f53af4227c144f5daaf8e"
+  },
+  "sourceFbx": {
+    "file": "Meshy_AI_Midnight_Chain_Denim__0901065952_texture.fbx",
+    "bytes": 26409884,
+    "sha256": "ca74185a56d5fd9552088486b59ea4c836e1ac8228919a3743760cb8468629e5",
+    "formatVersion": 7400,
+    "runtimePolygonVertices": 32196,
+    "triangles": 10732,
+    "surfaceIslands": 45,
+    "mainGarmentTriangles": 5041,
+    "detachedDetailIslands": 44,
+    "attributes": ["position", "faceted-normal", "uv"],
+    "sourceBounds": {
+      "min": [-0.5, -0.302734375, -0.3515625],
+      "max": [0.5, 0.306640625, 0.357421875]
+    },
+    "contents": {
+      "meshes": 1,
+      "materials": 1,
+      "bones": 0,
+      "skins": 0,
+      "morphs": 0,
+      "animations": 0
+    }
+  },
+  "sourceTextures": {
+    "baseColor": { "file": "Meshy_AI_Midnight_Chain_Denim__0901065952_texture.png", "size": [4096, 4096], "bytes": 23565301, "sha256": "f752df5e7125043b708b53a6b2181d6ce3f3da07c2830fb58c6da5e7c9a998b7" },
+    "normal": { "file": "Meshy_AI_Midnight_Chain_Denim__0901065952_texture_normal.png", "size": [4096, 4096], "bytes": 22197458, "sha256": "aba3d20ff1e1f0ff5ae6cd139a59b839ea6f1ff0a8518feffb194531f9323ab2" },
+    "roughness": { "file": "Meshy_AI_Midnight_Chain_Denim__0901065952_texture_roughness.png", "size": [2048, 2048], "bytes": 1341705, "sha256": "06f7c31e31d5731846a067e8cd1cfc91decd6ebad228979a7bb250eae7b4ae87" },
+    "metallic": { "file": "Meshy_AI_Midnight_Chain_Denim__0901065952_texture_metallic.png", "size": [2048, 2048], "bytes": 245018, "sha256": "cae1e4d45272ee47762a826261134be15f23604c0a6fc0a93823cfcc47d2fdec" }
+  },
+  "conversionTool": "tools/import-meshy-shorts.mjs",
+  "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
+  "generatedModule": "src/character/meshyShorts.generated.ts",
+  "generatedModuleSha256": "08853e429d4bacbbb604364a8b0497d943720b8cd5f8ff4dca0c2db65fb90803",
+  "webTextureConversion": "macOS sips proportional resize to 1024x1024 PNG",
+  "webTextures": {
+    "baseColor": { "file": "base-color.png", "bytes": 1484854, "sha256": "2a06d9684eb8fc8d8bd80f6a42e21a1a68ca3f153fe684e55ca29b0f6f2d2765" },
+    "normal": { "file": "normal.png", "bytes": 1330684, "sha256": "aa3e66e457de2b531253d982058f3184fbfce6af59610fb1c8e989687acc4555" },
+    "roughness": { "file": "roughness.png", "bytes": 438448, "sha256": "db238c23581188730f40d59161d26991528f3f0178cc3240628d0922ae8e1ffe" },
+    "metallic": { "file": "metallic.png", "bytes": 104158, "sha256": "67c8e9af93a686ae98869ee2ba3dcefe830c302cd4a717f877a2fe2d71623938" }
+  },
+  "runtimeMapping": {
+    "axisConversion": "source [x,y,z] to runtime [x,z,-y]",
+    "runtimeBounds": { "min": [-0.5, -0.3515625, -0.306640625], "max": [0.5, 0.357421875, 0.302734375] },
+    "restScale": 0.388,
+    "restCenterY": 0.627,
+    "restBounds": { "min": [-0.194, 0.49059375, -0.118984375], "max": [0.194, 0.7656796875, 0.1174609375] },
+    "waistbandTorsoOverlap": 0.0556796875,
+    "lowerLegInsertion": 0.03059375,
+    "skinBones": ["hips", "hip-left", "hip-right"],
+    "morphChannels": ["shorts-width", "shorts-length", "shorts-depth"],
+    "proportionControls": ["shortsWidth", "shortsHeight", "shortsDepth"],
+    "legThicknessLinked": false,
+    "collisionChanged": false
+  },
+  "conversion": [
+    "Validated the exact static FBX and all four source texture hashes",
+    "Discarded the source node's 100x centimetre presentation transform",
+    "Preserved source positions, UV seams, all 45 surface islands, and triangle winding",
+    "Validated faceted source normals and used derivative face normals for morph-safe lighting",
+    "Generated smooth hips-to-matching-upper-leg weights for the main garment without knee influence or opposite-leg cross-weighting",
+    "Rigidly assigned all 44 detached detail islands by centroid so chain links and belt hardware cannot shear",
+    "Added independent pre-skin width, top-pinned height, and depth morphs",
+    "Kept legThickness completely isolated from the shorts surface",
+    "Removed the former procedural pelvis, belt, buckle, chain, cargo legs, pockets, and flaps",
+    "Did not redistribute the original FBX, archive, or expiring Meshy URL"
+  ]
+}

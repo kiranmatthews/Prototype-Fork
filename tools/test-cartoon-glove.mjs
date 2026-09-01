@@ -420,6 +420,34 @@ try {
   assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
   assert.deepEqual(headSurface.scale.toArray(), headSurfaceScaleBase.toArray());
   player.resetCharacterProportions();
+  assert.deepEqual(player.meshyShortsDiagnostics, {
+    ready: true,
+    triangles: 10732,
+    sourceSha256: 'ca74185a56d5fd9552088486b59ea4c836e1ac8228919a3743760cb8468629e5',
+    skinBones: ['hips', 'hip-left', 'hip-right'],
+    textureState: 'loading',
+    texturesLoaded: 0,
+    textureError: null,
+  });
+  const shortsSurface = player.animationRig.root.getObjectByName('meshy-shorts-surface');
+  assert.equal(shortsSurface.isSkinnedMesh, true);
+  assert.equal(shortsSurface.parent.name, 'procedural-rider');
+  const shortsScaleBase = shortsSurface.scale.clone();
+  player.setCharacterProportions({ legThickness: 1.5 });
+  assert.deepEqual(shortsSurface.scale.toArray(), shortsScaleBase.toArray());
+  assert.deepEqual(shortsSurface.morphTargetInfluences, [0, 0, 0]);
+  player.setCharacterProportions({
+    legThickness: 1.5,
+    shortsWidth: 1.4,
+    shortsHeight: 1.25,
+    shortsDepth: 0.75,
+  });
+  assert.deepEqual(shortsSurface.scale.toArray(), shortsScaleBase.toArray());
+  near(shortsSurface.morphTargetInfluences[0], 0.4);
+  near(shortsSurface.morphTargetInfluences[1], 0.25);
+  near(shortsSurface.morphTargetInfluences[2], -0.25);
+  player.resetCharacterProportions();
+  assert.deepEqual(shortsSurface.morphTargetInfluences, [0, 0, 0]);
   assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
     'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
     'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',

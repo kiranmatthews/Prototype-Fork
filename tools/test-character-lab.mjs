@@ -65,6 +65,18 @@ function fixture() {
   torsoSurface.geometry.morphAttributes.position = [torsoWidthMorph, torsoDepthMorph];
   torsoSurface.geometry.morphTargetsRelative = true;
   torsoSurface.updateMorphTargets();
+  const shortsSurface = visual('meshy-shorts-surface', rider, [0, 0.627, 0]);
+  shortsSurface.scale.setScalar(0.388);
+  const shortsPosition = shortsSurface.geometry.getAttribute('position');
+  const shortsMorphs = ['shorts-width', 'shorts-length', 'shorts-depth'].map((name) => {
+    const attribute = new THREE.Float32BufferAttribute(
+      new Float32Array(shortsPosition.count * 3), 3);
+    attribute.name = name;
+    return attribute;
+  });
+  shortsSurface.geometry.morphAttributes.position = shortsMorphs;
+  shortsSurface.geometry.morphTargetsRelative = true;
+  shortsSurface.updateMorphTargets();
   const torsoRoot = add('torso-root', hips);
   const spine = add('spine', torsoRoot, [0, 0.12, 0]);
   visual('waist-volume', spine, [0, 0.08, 0]);
@@ -164,7 +176,7 @@ try {
     clampCharacterProportions,
   } = settingsApi;
 
-  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 26);
+  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 29);
   assert.deepEqual(
     new Set(CHARACTER_PROPORTION_CONTROLS.map((control) => control.key)),
     new Set(Object.keys(DEFAULT_CHARACTER_PROPORTIONS)),
@@ -178,6 +190,8 @@ try {
     wristRestYaw: 999,
     armKnobSize: 99,
     legKnobSize: -2,
+    shortsWidth: 99,
+    shortsHeight: -2,
   });
   assert.equal(clamped.headSize, 1.55);
   assert.equal(clamped.neckLength, 0);
@@ -185,6 +199,8 @@ try {
   assert.equal(clamped.wristRestYaw, 180);
   assert.equal(clamped.armKnobSize, 1.62);
   assert.equal(clamped.legKnobSize, 1);
+  assert.equal(clamped.shortsWidth, 1.5);
+  assert.equal(clamped.shortsHeight, 0.65);
 
   const stored = memoryStorage({
     [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({
@@ -204,6 +220,8 @@ try {
   assert.equal(settings.value.footSize, 1);
   assert.equal(settings.value.armKnobSize, 1,
     'older saved Character Lab values must gain the additive knob controls');
+  assert.equal(settings.value.shortsWidth, 1,
+    'older saved Character Lab values must gain clothing controls');
   assert.equal(settings.value.wristRestPitch, 0,
     'pre-release wrist tuning must migrate to the corrected anatomical base');
   assert.equal(settings.value.wristRestYaw, 0);
@@ -250,6 +268,9 @@ try {
     shinLength: 0.8,
     armThickness: 1.22,
     legThickness: 0.82,
+    shortsWidth: 1.3,
+    shortsHeight: 1.2,
+    shortsDepth: 0.8,
     handSize: 1.25,
     wristRestPitch: 20,
     wristRestYaw: 30,
@@ -278,6 +299,11 @@ try {
   near(scene.nodes.get('meshy-torso-surface').morphTargetInfluences[1], -0.3);
   assert.deepEqual(scene.nodes.get('pelvis-volume').scale.toArray(), [1, 1, 1],
     'torso width/depth must not resize shorts or butt surfaces under hips');
+  assert.deepEqual(scene.nodes.get('meshy-shorts-surface').scale.toArray(),
+    [0.388, 0.388, 0.388]);
+  near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[0], 0.3);
+  near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[1], 0.2);
+  near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[2], -0.2);
   near(scene.nodes.get('knee-left').position.y, -0.28 * 1.3);
   near(scene.nodes.get('ankle-left').position.y, -0.25 * 0.8);
   near(scene.nodes.get('wrist-left').scale.x, 1.25);

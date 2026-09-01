@@ -110,6 +110,11 @@ import {
   meshyHeadTextureDiagnostics,
   type MeshyHeadComponent,
 } from './character/meshyHead';
+import {
+  createMeshyShorts,
+  meshyShortsTextureDiagnostics,
+  type MeshyShortsComponent,
+} from './character/meshyShorts';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -1013,6 +1018,7 @@ export class Player {
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
+  private meshyShorts: MeshyShortsComponent | null = null;
   private headVisualCenter: THREE.Object3D | null = null;
   private headLookSocket: THREE.Object3D | null = null;
   private readonly headForward = new THREE.Vector3();
@@ -1717,6 +1723,28 @@ export class Player {
       ready: component !== null,
       triangles: component?.triangles ?? 0,
       sourceSha256: component?.sourceSha256 ?? null,
+      textureState: textures.state,
+      texturesLoaded: textures.loaded,
+      textureError: textures.error,
+    };
+  }
+
+  get meshyShortsDiagnostics(): {
+    readonly ready: boolean;
+    readonly triangles: number;
+    readonly sourceSha256: string | null;
+    readonly skinBones: readonly string[];
+    readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
+    readonly texturesLoaded: number;
+    readonly textureError: string | null;
+  } {
+    const component = this.meshyShorts;
+    const textures = meshyShortsTextureDiagnostics();
+    return {
+      ready: component !== null,
+      triangles: component?.triangles ?? 0,
+      sourceSha256: component?.sourceSha256 ?? null,
+      skinBones: component?.skeleton.bones.map((bone) => bone.name) ?? [],
       textureState: textures.state,
       texturesLoaded: textures.loaded,
       textureError: textures.error,
@@ -14358,11 +14386,8 @@ export class Player {
       new THREE.MeshLambertMaterial({ color, flatShading: true });
     const PINK = flat(0xe8447a); // trim pink (cuffs, socks, stitching)
     const SHOE_PINK = flat(0xe0357a);
-    const BLACK = flat(0x232529); // cargo shorts / gloves
-    const PAD = flat(0x2c2f36); // knee + elbow pads
     const WHITE = flat(0xf2efe8); // socks / straps
     const CREAM = flat(0xefe6d6); // platform soles
-    const SILVER = flat(0xb9bfc9); // buckle, chain, studs
     const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // glove stitches
     const BONE_CLAY = new THREE.MeshPhysicalMaterial({
       name: 'character-bone-clay',
@@ -14381,43 +14406,6 @@ export class Player {
     const legs = new THREE.Bone();
     legs.name = 'hips';
     legs.position.y = 0.71; // hip line
-    // Pelvis: the shorts' seat, riding the legs root (top of the leg squash,
-    // so it stays put through crouches while the legs fold under it).
-    const hipProfile = [
-      new THREE.Vector2(0.115, -0.12),
-      new THREE.Vector2(0.16, -0.06),
-      new THREE.Vector2(0.175, 0.02),
-      new THREE.Vector2(0.16, 0.08),
-      new THREE.Vector2(0.145, 0.115),
-    ];
-    const pelvis = new THREE.Mesh(new THREE.LatheGeometry(hipProfile, 10), BLACK);
-    pelvis.scale.z = 0.85;
-    legs.add(pelvis);
-    const belt = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.024, 6, 12), PAD);
-    belt.rotation.x = Math.PI / 2;
-    belt.position.y = 0.115;
-    belt.scale.set(1, 0.85, 1); // hips are an oval (scale acts pre-rotation: z is world depth)
-    legs.add(belt);
-    const buckle = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.05, 0.025), SILVER);
-    buckle.position.set(0, 0.115, 0.14);
-    legs.add(buckle);
-    // wallet chain swinging off the right hip
-    const linkGeo = new THREE.TorusGeometry(0.021, 0.007, 5, 8);
-    const chainPts: [number, number, number, number][] = [
-      [0.14, 0.07, 0.075, 0.3],
-      [0.16, 0.025, 0.04, 1.2],
-      [0.165, -0.015, 0.0, 0.5],
-    ];
-    for (const [cx, cy, cz, rot] of chainPts) {
-      const link = new THREE.Mesh(linkGeo, SILVER);
-      link.position.set(cx, cy, cz);
-      link.rotation.set(rot, 0.6, 0);
-      legs.add(link);
-    }
-    const thighGeo = new THREE.CylinderGeometry(0.095, 0.07, 0.23, 10);
-    thighGeo.translate(0, -0.125, 0); // tapered hip → knee cargo leg
-    const pocketGeo = new THREE.BoxGeometry(0.035, 0.095, 0.075);
-    const flapGeo = new THREE.BoxGeometry(0.037, 0.014, 0.077);
     const sockGeo = new THREE.CylinderGeometry(0.04, 0.046, 0.075, 10);
     const sockStripeGeo = new THREE.CylinderGeometry(0.048, 0.048, 0.012, 10);
     const shoeGeo = new THREE.SphereGeometry(0.085, 10, 7);
@@ -14435,7 +14423,6 @@ export class Player {
       leg.userData.anatomicalSide = anatomicalSide;
       leg.position.x = side * 0.115;
       legs.add(leg);
-      leg.add(new THREE.Mesh(thighGeo, BLACK));
       const upperLegBone = createStretchableBone({
         id: `upper-leg-${anatomicalSide}`,
         length: PROCEDURAL_THIGH_LENGTH,
@@ -14447,12 +14434,6 @@ export class Player {
       });
       leg.add(upperLegBone.root);
       this.stretchableBones.push(upperLegBone);
-      const pocket = new THREE.Mesh(pocketGeo, BLACK); // cargo pocket on the outseam
-      pocket.position.set(side * 0.082, -0.14, 0.01);
-      leg.add(pocket);
-      const flap = new THREE.Mesh(flapGeo, PINK); // pink-stitched flap
-      flap.position.set(side * 0.082, -0.095, 0.01);
-      leg.add(flap);
       // Knee group pivots where the thigh ends; the lower leg keeps its full
       // length through every pose and swings conventionally from this hinge.
       const knee = new THREE.Bone();
@@ -14540,6 +14521,17 @@ export class Player {
     }
     riderG.add(legs);
     this.legs = legs;
+    const shortsHipLeft = legs.getObjectByName('hip-left');
+    const shortsHipRight = legs.getObjectByName('hip-right');
+    if (!(shortsHipLeft instanceof THREE.Bone) || !(shortsHipRight instanceof THREE.Bone)) {
+      throw new Error('procedural character requires both upper-leg bones');
+    }
+    this.meshyShorts = createMeshyShorts({
+      mount: riderG,
+      hips: legs,
+      hipLeft: shortsHipLeft,
+      hipRight: shortsHipRight,
+    });
 
     // Tail: the kangaroo signature. ONE skinned tube on a simulated chain
     // (src/tail.ts) — it chases the pose the animation asks for, but arrives
@@ -15032,6 +15024,17 @@ export class Player {
         triangles: this.meshyHead.triangles,
         attachmentJoint: 'head',
         neckGapControl: 'neckLength',
+        collisionChanged: false,
+      },
+      shortsSurface: {
+        kind: 'meshy-midnight-chain-denim-shorts',
+        schemaVersion: 1,
+        provenance: 'public/characters/meshy-shorts/provenance.json',
+        sourceSha256: this.meshyShorts.sourceSha256,
+        triangles: this.meshyShorts.triangles,
+        skinBones: this.meshyShorts.skeleton.bones.map((bone) => bone.name),
+        proportions: ['shortsWidth', 'shortsHeight', 'shortsDepth'],
+        legThicknessLinked: false,
         collisionChanged: false,
       },
       limbBoneRig: {

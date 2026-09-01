@@ -16,6 +16,9 @@ export interface CharacterProportionSettingsValue {
   forearmLength: number;
   thighLength: number;
   shinLength: number;
+  shortsWidth: number;
+  shortsHeight: number;
+  shortsDepth: number;
   armThickness: number;
   legThickness: number;
   armKnobSize: number;
@@ -32,7 +35,7 @@ export type CharacterProportionKey = keyof CharacterProportionSettingsValue;
 export interface CharacterProportionControl {
   readonly key: CharacterProportionKey;
   readonly label: string;
-  readonly section: 'Overall' | 'Head & torso' | 'Skeleton' | 'Hands' | 'Mass & details';
+  readonly section: 'Overall' | 'Head & torso' | 'Skeleton' | 'Clothing' | 'Hands' | 'Mass & details';
   readonly min: number;
   readonly max: number;
   readonly step: number;
@@ -71,6 +74,9 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     forearmLength: 1,
     thighLength: 1,
     shinLength: 1,
+    shortsWidth: 1,
+    shortsHeight: 1,
+    shortsDepth: 1,
     armThickness: 1,
     legThickness: 1,
     armKnobSize: 1,
@@ -103,6 +109,10 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'forearmLength', label: 'Forearm length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
     { key: 'thighLength', label: 'Thigh length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
     { key: 'shinLength', label: 'Shin length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
+
+    { key: 'shortsWidth', label: 'Shorts width', section: 'Clothing', min: 0.65, max: 1.5, step: 0.01 },
+    { key: 'shortsHeight', label: 'Shorts height', section: 'Clothing', min: 0.65, max: 1.5, step: 0.01 },
+    { key: 'shortsDepth', label: 'Shorts depth', section: 'Clothing', min: 0.65, max: 1.5, step: 0.01 },
 
     { key: 'wristRestPitch', label: 'Rest pitch (°)', section: 'Hands', min: -90, max: 90, step: 1 },
     { key: 'wristRestYaw', label: 'Rest yaw (°)', section: 'Hands', min: -180, max: 180, step: 1 },

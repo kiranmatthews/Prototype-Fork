@@ -37,7 +37,8 @@ values from one frame to the next.
 
 The first schema includes overall scale/height/build, head size and axes, head gap
 and torso dimensions, shoulder/hip width, separate upper/lower limb lengths,
-limb thickness, independent arm/leg knob size, hand/foot size and animal-tail
+limb thickness, independent arm/leg knob size, shorts width/height/depth,
+hand/foot size and animal-tail
 visibility. Hand-rest pitch, yaw and roll are also persistent: pitch is linked
 while yaw and roll mirror anatomically across the two wrists. These values live
 on presentation mounts below the wrist bones, so a rest-orientation adjustment
@@ -88,6 +89,15 @@ scales the skull, and it adds over rather than multiplying any authored head
 position track. The former visible kangaroo face, eyes, ears, hair, ponytail,
 neck cylinder, necklace, and pendant are retired; empty ear/ponytail nodes stay
 only for saved-animation compatibility.
+
+The **Shorts** view frames the attributed Meshy Midnight Chain Denim garment.
+Its waistband/seat stay hips-dominant while each lower cloth leg follows only
+its matching upper-leg bone; chain links and belt hardware are rigid islands so
+they cannot melt under skinning. Clothing controls independently set shorts
+width, top-pinned height, and depth. `Leg thickness` never targets the shorts.
+At the default fit, the waistband overlaps inside the torso and the lower-leg
+bone surfaces enter slightly inside both frayed hems. The former procedural
+pelvis, belt, cargo legs, pockets, and chain are retired.
 
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current
