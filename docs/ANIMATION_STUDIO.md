@@ -21,7 +21,7 @@ state, camera state, and render interpolation before play resumes.
 ## Authoring workflow
 
 1. Select an animation from the clip selector. The starter suite contains
-   idle, run, pacing stop, jump, fall, land, crouch, crawl, slide, skate,
+   idle, run, pacing stop, jump, double jump, fall, land, crouch, crawl, slide, skate,
    grind, grab, hang, climb, rope, slam, bail, and spin slots.
 2. Set duration, loop range/mode, and **Speed**. Playback speed belongs to the
    selected clip and is exported with it; the slider covers the common range
@@ -80,6 +80,15 @@ are deliberately not copied onto the browser skeleton. During gameplay the
 clip timeline is scrubbed by slam action progress so variable fall height
 cannot desynchronize the pose from anticipation, descent, or impact. Manual
 Studio preview remains normal speed-controlled playback.
+
+## Double-jump pose
+
+`player.double-jump` is a separate authored high-jump clip rather than a second
+pass through `player.jump`. It restarts on the mid-air pop, locks both animation
+roots upright, drives the hips into a broad mirrored straddle with nearly
+straight knees, and throws both arms into a high V. Gameplay also clears the
+first jump's somersault clock before this clip is sampled, so a running forward
+roll cannot bleed into the double jump.
 
 ### Procedural skate ownership
 

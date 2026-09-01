@@ -596,6 +596,7 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   'player.idle',
   'player.run',
   'player.jump',
+  'player.double-jump',
   'player.fall',
   'player.crouch',
   'player.crawl',

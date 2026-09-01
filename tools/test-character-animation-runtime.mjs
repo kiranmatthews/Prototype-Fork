@@ -59,8 +59,8 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  assert.equal(allIds.length, 18);
-  assert.equal(new Set(allIds).size, 18);
+  assert.equal(allIds.length, 19);
+  assert.equal(new Set(allIds).size, 19);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, ['player.slam']);
 
@@ -173,14 +173,14 @@ try {
   near(hipsXWhenDeformed, 0);
 
   // Every state-owned route resolves to its catalog clip.
+  const airborneRoutes = new Set(['player.jump', 'player.double-jump', 'player.fall']);
   const stateRouteOrder = [
-    ...PLAYER_STATE_CLIP_IDS.filter((id) => id !== 'player.jump' && id !== 'player.fall'),
-    'player.jump',
-    'player.fall',
+    ...PLAYER_STATE_CLIP_IDS.filter((id) => !airborneRoutes.has(id)),
+    ...airborneRoutes,
   ];
   for (const id of stateRouteOrder) {
     hint = id;
-    grounded = id !== 'player.jump' && id !== 'player.fall';
+    grounded = !airborneRoutes.has(id);
     runtime.restart();
     if (id === 'player.skate') hips.position.x = 99;
     tick(0.016);
@@ -195,6 +195,19 @@ try {
         near(runtime.diagnostics.timelineTime, actionProgress);
     }
   }
+
+  // The second pop owns a distinct clip edge and restarts at its split pose;
+  // it never continues partway through the first jump timeline.
+  hint = 'player.jump';
+  grounded = false;
+  runtime.restart();
+  tick(0.001);
+  tick(0.24);
+  assert.ok(runtime.diagnostics.timelineTime > 0.2);
+  hint = 'player.double-jump';
+  tick(0.016);
+  assert.equal(runtime.activeClipId, 'player.double-jump');
+  near(runtime.diagnostics.timelineTime, 0);
 
   // Studio/manual preview remains ordinary speed-controlled clip playback.
   hint = 'player.slam';
@@ -366,7 +379,7 @@ try {
 
   // Any gameplay-owned state interrupts pacing in the same sampled frame.
   for (const interruption of [
-    'player.run', 'player.jump', 'player.fall', 'player.crouch', 'player.crawl', 'player.slide',
+    'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.crouch', 'player.crawl', 'player.slide',
     'player.skate', 'player.grind', 'player.grab', 'player.hang', 'player.climb',
     'player.rope', 'player.slam', 'player.spin', 'player.bail',
   ]) {
@@ -377,7 +390,7 @@ try {
     tick(0.016);
     assert.equal(runtime.activeClipId, PACE_STOP_CLIP_ID);
     hint = interruption;
-    grounded = interruption !== 'player.jump' && interruption !== 'player.fall';
+    grounded = !airborneRoutes.has(interruption);
     tick(0.016);
     if (interruption === 'player.skate') {
       assert.equal(runtime.diagnostics.requestedClipId, interruption);

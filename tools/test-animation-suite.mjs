@@ -324,9 +324,9 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(starterClips.length, 18);
+  assert.equal(starterClips.length, 19);
   for (const id of [
-    'player.idle', 'player.run', 'player.pace-stop', 'player.jump', 'player.fall', 'player.land', 'player.crouch',
+    'player.idle', 'player.run', 'player.pace-stop', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
     'player.crawl', 'player.slide', 'player.skate', 'player.grind', 'player.grab', 'player.hang',
     'player.climb', 'player.rope', 'player.slam', 'player.bail', 'player.spin',
   ]) assert.ok(starterClips.some((clip) => clip.id === id), `missing starter clip ${id}`);
@@ -342,8 +342,9 @@ try {
   const idle = findClip(parsedSuite, 'player.idle');
   const run = findClip(parsedSuite, 'player.run');
   const paceStop = findClip(parsedSuite, 'player.pace-stop');
+  const doubleJump = findClip(parsedSuite, 'player.double-jump');
   const slam = findClip(parsedSuite, 'player.slam');
-  assert.ok(jump && land && idle && run && paceStop && slam);
+  assert.ok(jump && doubleJump && land && idle && run && paceStop && slam);
   assert.equal(jump.playbackSpeed, 1);
   assert.ok(jump.tracks.filter((track) => track.kind === 'scalar').length >= 9);
   const jumpPose = sampleClip(jump, 0.32);
@@ -353,6 +354,24 @@ try {
   assert.ok(idle.proceduralDrivers.length >= 2);
   assert.equal(run.proceduralDrivers.length, 0,
     'Jog_Fwd already owns its cadence and must not receive the legacy gait twice');
+
+  assert.equal(doubleJump.name, 'Double Jump — Split High Jump');
+  assert.equal(doubleJump.duration, 0.65);
+  assert.equal(doubleJump.tracks.length, 10);
+  assert.equal(doubleJump.metadata.poseIntent,
+    'upright split-legged high jump; no forward somersault');
+  const fullSplit = sampleClip(doubleJump, 0.08);
+  const doubleRoot = new THREE.Quaternion().fromArray(fullSplit.joints.root.quaternion);
+  near(Math.abs(doubleRoot.dot(new THREE.Quaternion())), 1);
+  const leftHipQuaternion = new THREE.Quaternion().fromArray(fullSplit.joints.hipLeft.quaternion);
+  const rightHipQuaternion = new THREE.Quaternion().fromArray(fullSplit.joints.hipRight.quaternion);
+  const leftKneeDirection = new THREE.Vector3(0, -1, 0).applyQuaternion(leftHipQuaternion);
+  const rightKneeDirection = new THREE.Vector3(0, -1, 0).applyQuaternion(rightHipQuaternion);
+  assert.ok(leftKneeDirection.x > 0.85,
+    'left double-jump thigh did not straddle toward anatomical left');
+  assert.ok(rightKneeDirection.x < -0.85,
+    'right double-jump thigh did not straddle toward anatomical right');
+  assert.ok(fullSplit.joints.kneeLeft && fullSplit.joints.kneeRight);
 
   assert.equal(slam.name, 'Body Slam — Unity Pose');
   assert.equal(slam.duration, UNITY_SLAM_POSE_TIMING.duration);
@@ -640,6 +659,18 @@ try {
   }, binding.definition);
   assert.equal(findClip(preservedEditedSlam, 'player.slam'), editedSlamPlaceholder,
     'catalog v5 replaced an edited local slam clip');
+
+  const versionFiveWithoutDoubleJump = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.filter((clip) => clip.id !== 'player.double-jump'),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 5 },
+  };
+  const upgradedDoubleJump = reconcilePlayerStarterAnimationSuite(
+    versionFiveWithoutDoubleJump,
+    binding.definition,
+  );
+  assert.equal(findClip(upgradedDoubleJump, 'player.double-jump').name,
+    'Double Jump — Split High Jump');
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,
@@ -963,7 +994,7 @@ try {
   drafts.save(parsedSuite);
   assert.equal(drafts.has(parsedSuite.id), true);
   assert.deepEqual(drafts.listDocumentIds(), [parsedSuite.id]);
-  assert.equal(drafts.load(parsedSuite.id).clips.length, 18);
+  assert.equal(drafts.load(parsedSuite.id).clips.length, 19);
   drafts.remove(parsedSuite.id);
   assert.equal(drafts.load(parsedSuite.id), null);
 

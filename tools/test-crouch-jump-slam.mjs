@@ -239,6 +239,60 @@ try {
   assertJointEuler("kneeLeft", [UNITY_SLAM_FALL_POSE_DEGREES.kneeLeft, 0, 0],
     "Unity fall did not straighten the left knee");
 
+  const doublePlayer = new Player(level.scene);
+  const doubleBinding = RigBinding.fromSculptRuntime(
+    doublePlayer.animationRig.root,
+    { strict: false },
+  );
+  const doubleRuntime = createCharacterAnimationRuntime(
+    doublePlayer,
+    createPlayerStarterAnimationSuite(doubleBinding.definition),
+  );
+  doublePlayer.respawn(level, true);
+  doublePlayer.state = "air";
+  doublePlayer.grounded = false;
+  doublePlayer.freeSkate = false;
+  doublePlayer.airFromSkate = false;
+  doublePlayer.airGrav = "foot";
+  doublePlayer.pos.set(0, 4, 0);
+  doublePlayer.prevPos.copy(doublePlayer.pos);
+  doublePlayer.vVel = 8;
+  doublePlayer.launchVy = TUNING.jumpVelocity;
+  doublePlayer.airborneT = 0.15;
+  doublePlayer.flipTimer = CONST.flipDuration * 0.7;
+  doublePlayer.airJumpUsed = false;
+  doublePlayer.doubleJumpAir = false;
+  const tickDouble = (input) => {
+    doublePlayer.step(dt, input, level);
+    level.update(dt);
+    input.consumeEdges();
+  };
+  tickDouble(makeInput());
+  assert.equal(doubleRuntime.activeClipId, "player.jump");
+  assert.ok(doublePlayer.flipTimer > 0, "running first-jump roll fixture was not active");
+  tickDouble(makeInput({ jumpPressed: true, jumpHeld: true }));
+  tickDouble(makeInput({ jumpReleased: true }));
+  assert.equal(doublePlayer.lastJumpType, "Double Jump");
+  assert.equal(doublePlayer.doubleJumpAir, true);
+  assert.equal(doublePlayer.flipTimer, 0, "first-jump somersault survived the double pop");
+  assert.equal(doublePlayer.animationClipHint, "player.double-jump");
+  assert.equal(doubleRuntime.activeClipId, "player.double-jump");
+  closeTo(doubleRuntime.diagnostics.timelineTime, 0,
+    "double-jump clip did not restart on the second pop");
+  closeTo(doublePlayer.bodyGroup.rotation.x, 0,
+    "double jump retained a visible forward body roll", 1e-6);
+  const doubleHipLeft = doublePlayer.animationRig.jointsById.get("hipLeft")?.node;
+  const doubleHipRight = doublePlayer.animationRig.jointsById.get("hipRight")?.node;
+  assert.ok(doubleHipLeft && doubleHipRight, "double-jump hip tracks were not bound");
+  const doubleLeftDirection = new THREE.Vector3(0, -1, 0)
+    .applyQuaternion(doubleHipLeft.quaternion);
+  const doubleRightDirection = new THREE.Vector3(0, -1, 0)
+    .applyQuaternion(doubleHipRight.quaternion);
+  assert.ok(doubleLeftDirection.x > 0.6,
+    "double-jump left leg did not split outward");
+  assert.ok(doubleRightDirection.x < -0.6,
+    "double-jump right leg did not split outward");
+
   // Optional supplied-replay check. The committed synthetic case keeps CI
   // self-contained; passing the bug-report file pins its original fixed-step
   // evidence too: frame 868 launches, frame 869 inherits the grounded hold.
@@ -315,7 +369,8 @@ try {
     replayer.end();
   }
 
-  console.log("Validated crouch-boosted jump priority over inherited Circle holds, with fresh airborne body slam preserved.");
+  console.log("Validated crouch-jump slam priority and an upright, outward split-legged double jump.");
+  doubleRuntime.dispose();
   boardAnimationRuntime.dispose();
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));

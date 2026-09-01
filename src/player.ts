@@ -195,6 +195,7 @@ export type PlayerAnimationClipHint =
   | 'player.idle'
   | 'player.run'
   | 'player.jump'
+  | 'player.double-jump'
   | 'player.fall'
   | 'player.crouch'
   | 'player.crawl'
@@ -1468,6 +1469,7 @@ export class Player {
       return Math.abs(this.speed) > 0.5 ? 'player.crawl' : 'player.crouch';
     }
     if (this.state === 'air' || !this.grounded) {
+      if (this.doubleJumpAir) return 'player.double-jump';
       return this.vVel > 0 ? 'player.jump' : 'player.fall';
     }
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
@@ -1532,6 +1534,11 @@ export class Player {
       actionProgress = this.launchVy > 0
         ? 1 - Math.max(0, this.vVel) / this.launchVy
         : this.airborneT;
+    } else if (clipId === 'player.double-jump') {
+      const doubleVelocity = Math.max(TUNING.doubleJumpVelocity, 0.001);
+      actionProgress = this.vVel >= 0
+        ? 0.5 * (1 - this.vVel / doubleVelocity)
+        : 0.5 + 0.5 * Math.min(1, -this.vVel / doubleVelocity);
     } else if (clipId === 'player.fall') {
       actionProgress = -this.vVel / Math.max(TUNING.hugeDropImpact, 0.001);
     } else if (clipId === 'player.crouch') {
@@ -13128,7 +13135,9 @@ export class Player {
     // the arc — rotation lives in the 15%..80% window — and she's upright
     // again well before touchdown. flipQ is the rotation's own 0..1 clock;
     // the tuck (knees to chest, arms wrapping) peaks halfway through it.
-    const flipProg = this.flipTimer > 0 ? 1 - this.flipTimer / CONST.flipDuration : 0;
+    const flipProg = !this.doubleJumpAir && this.flipTimer > 0
+      ? 1 - this.flipTimer / CONST.flipDuration
+      : 0;
     const flipQ = flipProg > 0 ? THREE.MathUtils.clamp((flipProg - 0.15) / 0.65, 0, 1) : 0;
     const flipTuck = flipQ > 0 && flipQ < 1 ? Math.sin(flipQ * Math.PI) : 0;
     // Skate stance: while actually rolling on the board, plant the feet on the
@@ -13254,8 +13263,11 @@ export class Player {
       this.legL.position.set(this.hipBaseL.x - 0.02 * sk * fw - 0.035 * deck * sp, 0, this.hipBaseL.z - 0.2 * sk * stz * fw);
       this.legR.rotation.y = 0.12 * sk * stz * fw - 0.12 * stz * sp;
       this.legL.rotation.y = -0.09 * sk * stz * fw - 0.12 * stz * sp;
-      this.legR.rotation.z = 0.22 * deck * sp - 1.05 * star - 0.72 * doubleSplit;
-      this.legL.rotation.z = -0.22 * deck * sp + 1.05 * star + 0.72 * doubleSplit;
+      // legR is semantic hipLeft (+X) and legL is hipRight (-X). Opposite
+      // outward roll signs make a real straddle; the old signs crossed both
+      // feet inward and were then hidden by the generic Jump overlay anyway.
+      this.legR.rotation.z = 0.22 * deck * sp - 1.05 * star + 1.0 * doubleSplit;
+      this.legL.rotation.z = -0.22 * deck * sp + 1.05 * star - 1.0 * doubleSplit;
     }
     // Preserve the old pose system as an ENDPOINT INTENT, not a deformation:
     // this is the amount it used to squash the entire hierarchy. The

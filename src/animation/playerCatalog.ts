@@ -44,6 +44,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.run',
   'player.pace-stop',
   'player.jump',
+  'player.double-jump',
   'player.fall',
   'player.land',
   'player.crouch',
@@ -66,7 +67,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 5;
+export const PLAYER_STARTER_CATALOG_VERSION = 6;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -142,6 +143,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.run': 1,
   'player.pace-stop': 2,
   'player.jump': 1,
+  'player.double-jump': 6,
   'player.fall': 1,
   'player.land': 1,
   'player.crouch': 1,
@@ -713,6 +715,69 @@ function buildJump(rigId: string): AnimationClip {
   return clip;
 }
 
+function buildDoubleJump(rigId: string): AnimationClip {
+  const clip = baseClip(
+    'player.double-jump',
+    'Double Jump — Split High Jump',
+    0.65,
+    'once',
+    rigId,
+  );
+  clip.loop.seamless = false;
+  clip.tracks = [
+    // Keep the editable inner rider root neutral; gameplay also gates the
+    // outer legacy somersault with doubleJumpAir before this layer is sampled.
+    quaternionTrack(clip.id, 'root', [
+      [0, 0, 0, 0, 'linear'], [0.65, 0, 0, 0, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'spine', [
+      [0, 0, 0, 0, 'linear'], [0.08, -0.06, 0, 0, 'linear'],
+      [0.34, -0.02, 0, 0, 'linear'], [0.65, 0, 0, 0, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'hipLeft', [
+      [0, -0.2, 0, 0.8, 'linear'], [0.08, -0.3, 0, 1.18, 'linear'],
+      [0.34, -0.18, 0, 1.08, 'linear'], [0.65, -0.12, 0, 0.8, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'hipRight', [
+      [0, -0.2, 0, -0.8, 'linear'], [0.08, -0.3, 0, -1.18, 'linear'],
+      [0.34, -0.18, 0, -1.08, 'linear'], [0.65, -0.12, 0, -0.8, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'kneeLeft', [
+      [0, 0.12, 0, 0, 'linear'], [0.08, 0.06, 0, 0, 'linear'],
+      [0.34, 0.1, 0, 0, 'linear'], [0.65, 0.18, 0, 0, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'kneeRight', [
+      [0, 0.12, 0, 0, 'linear'], [0.08, 0.06, 0, 0, 'linear'],
+      [0.34, 0.1, 0, 0, 'linear'], [0.65, 0.18, 0, 0, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'shoulderLeft', [
+      [0, -0.15, 0, 1.9, 'linear'], [0.08, -0.25, 0, 2.3, 'linear'],
+      [0.34, -0.15, 0, 2.15, 'linear'], [0.65, -0.05, 0, 1.75, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'shoulderRight', [
+      [0, -0.15, 0, -1.9, 'linear'], [0.08, -0.25, 0, -2.3, 'linear'],
+      [0.34, -0.15, 0, -2.15, 'linear'], [0.65, -0.05, 0, -1.75, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'elbowLeft', [
+      [0, -0.12, 0, 0, 'linear'], [0.65, -0.12, 0, 0, 'linear'],
+    ]),
+    quaternionTrack(clip.id, 'elbowRight', [
+      [0, -0.12, 0, 0, 'linear'], [0.65, -0.12, 0, 0, 'linear'],
+    ]),
+  ];
+  clip.markers = [
+    { id: `${clip.id}:split`, time: 0.08, name: 'Full split' },
+    { id: `${clip.id}:apex`, time: 0.34, name: 'High-jump apex' },
+  ];
+  clip.tags = ['player', 'double-jump', 'split', 'high-jump', 'no-roll'];
+  clip.metadata = {
+    starterQuality: 'authored-foundation',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    poseIntent: 'upright split-legged high jump; no forward somersault',
+  };
+  return clip;
+}
+
 function buildFall(rigId: string): AnimationClip {
   const clip = baseClip('player.fall', 'Fall — Air Silhouette Starter', 0.9, 'loop', rigId);
   clip.tracks = [
@@ -910,6 +975,7 @@ export function createPlayerStarterClips(
     buildRun(rigId, includeTorsoRoot),
     buildPaceStop(rigId),
     buildJump(rigId),
+    buildDoubleJump(rigId),
     buildFall(rigId),
     buildLand(rigId),
     buildCrouch(rigId),
