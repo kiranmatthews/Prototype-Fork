@@ -46,6 +46,13 @@ does not alter authored wrist keyframes. Left/right anatomy remains linked and
 mirrored in version 1 so a single slider cannot silently create a broken
 asymmetric rig.
 
+The shipped silhouette is an authored defaults-revision-2 pose rather than the
+all-ones rig identity. **Reset all** restores that authored pose. The identity
+map remains available to animation/rig tests as the canonical no-op proportion
+layer. Browser saves retain the defaults they were authored against: untouched
+legacy identity values adopt the new silhouette, while values the user actually
+changed remain deliberate overrides.
+
 The Hand Rig Preview section provides open, relaxed, curl, fist, pinch and grab
 poses plus a close-up camera. These are inspection presets over the same 24
 digit bones that Animation Studio exposes for keyframing; they are not baked
@@ -83,12 +90,12 @@ procedural heart tank and bare-waist meshes are no longer present.
 The **Head** view frames the attributed Meshy Crowned Inferno Skull. It is a
 rigid child of the existing semantic head bone, so authored and procedural head
 motion remain unchanged. **Neck height / gap** now translates only the head's
-local Y offset: `0` closes the air gap, `1` gives the default 0.095m gap, and
-`1.8` gives 0.171m. It never moves the neck bone, pulls the torso skin, or
-scales the skull, and it adds over rather than multiplying any authored head
-position track. The former visible kangaroo face, eyes, ears, hair, ponytail,
-neck cylinder, necklace, and pendant are retired; empty ear/ponytail nodes stay
-only for saved-animation compatibility.
+local Y offset: the shipped default `0` closes the air gap, `1` gives the
+0.095m reference gap, and `1.8` gives 0.171m. It never moves the neck bone,
+pulls the torso skin, or scales the skull, and it adds over rather than
+multiplying any authored head position track. The former visible kangaroo face,
+eyes, ears, hair, ponytail, neck cylinder, necklace, and pendant are retired;
+empty ear/ponytail nodes stay only for saved-animation compatibility.
 
 The **Shorts** view frames the attributed Meshy Midnight Chain Denim garment.
 Its waistband/seat stay hips-dominant while each lower cloth leg follows only

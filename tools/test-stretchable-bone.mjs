@@ -92,7 +92,7 @@ try {
     '/src/character/meshyLimbBone.generated.ts');
   const { PlayerAnimationBridge } = await server.ssrLoadModule('/src/animation/bridge.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule('/src/character/proportionLayer.ts');
-  const { DEFAULT_CHARACTER_PROPORTIONS } = await server.ssrLoadModule('/src/character/settings.ts');
+  const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule('/src/character/settings.ts');
   const {
     STRETCHABLE_BONE_MAX_SCALE,
     STRETCHABLE_BONE_MIN_SCALE,
@@ -408,7 +408,7 @@ try {
 
   const proportions = new CharacterProportionLayer(rigRoot);
   proportions.apply({
-    ...DEFAULT_CHARACTER_PROPORTIONS,
+    ...IDENTITY_CHARACTER_PROPORTIONS,
     upperArmLength: 1.2,
     armThickness: 1.3,
     armKnobSize: 1.4,
@@ -443,7 +443,7 @@ try {
 
   bridge.applyDeformations({ 'deform.arm.upper.left.length': 0.8 });
   proportions.apply({
-    ...DEFAULT_CHARACTER_PROPORTIONS,
+    ...IDENTITY_CHARACTER_PROPORTIONS,
     upperArmLength: 1.2,
     armThickness: 1.3,
     armKnobSize: 1.4,
@@ -491,7 +491,7 @@ try {
   bridge.applyDeformations({});
   near(endpoint.position.y, -0.22);
   bridge.applyDeformations({ 'deform.arm.upper.left.length': 1.75 });
-  proportions.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, upperArmLength: 1.58 });
+  proportions.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, upperArmLength: 1.58 });
   near(endpoint.position.y, -0.22 * 2.765);
   near(runtimeComponent.shaft.scale.y, importedShaftScaleY(runtimeComponent, 2.765));
   near(runtimeComponent.distalKnob.position.y,
@@ -541,7 +541,7 @@ try {
   removeOverlay();
 
   const design = {
-    ...DEFAULT_CHARACTER_PROPORTIONS,
+    ...IDENTITY_CHARACTER_PROPORTIONS,
     upperArmLength: 1.2,
     armThickness: 1.3,
   };

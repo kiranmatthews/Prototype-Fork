@@ -73,7 +73,7 @@ try {
     '/src/character/meshyFootwear.generated.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule(
     '/src/character/proportionLayer.ts');
-  const { DEFAULT_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
+  const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
     '/src/character/settings.ts');
   const {
     MESHY_FOOTWEAR_REST_SCALE,
@@ -227,14 +227,14 @@ try {
   mount.updateWorldMatrix(true, true);
 
   const layer = new CharacterProportionLayer(mount);
-  layer.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, legThickness: 1.5 });
+  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, legThickness: 1.5 });
   near(left.sock.morphTargetInfluences[0], 0.5);
   near(right.sock.morphTargetInfluences[0], 0.5);
   assert.deepEqual(left.shoe.scale.toArray(), [1, 1, 1],
     'leg thickness must not scale the shoe');
   layer.clear();
   near(left.sock.morphTargetInfluences[0], 0);
-  layer.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, footSize: 1.4 });
+  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, footSize: 1.4 });
   assert.deepEqual(leftLeg.ankle.scale.toArray(), [1.4, 1.4, 1.4]);
   assert.deepEqual(rightLeg.ankle.scale.toArray(), [1.4, 1.4, 1.4]);
   near(left.sock.morphTargetInfluences[0], 0);

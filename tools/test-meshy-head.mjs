@@ -31,7 +31,7 @@ try {
     '/src/character/meshyHead.generated.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule(
     '/src/character/proportionLayer.ts');
-  const { DEFAULT_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
+  const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
     '/src/character/settings.ts');
   const {
     MESHY_HEAD_REST_SCALE,
@@ -83,7 +83,7 @@ try {
   const neckBase = neck.position.clone();
   const torsoPositionBase = torsoMarker.position.clone();
   const torsoScaleBase = torsoMarker.scale.clone();
-  layer.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, neckLength: 0 });
+  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, neckLength: 0 });
   near(head.position.y, 0);
   assert.deepEqual(neck.position.toArray(), neckBase.toArray());
   assert.deepEqual(torsoMarker.position.toArray(), torsoPositionBase.toArray());
@@ -93,7 +93,7 @@ try {
   layer.clear();
   near(head.position.y, 0.095);
 
-  layer.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, neckLength: 1.8 });
+  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, neckLength: 1.8 });
   near(head.position.y, 0.095 * 1.8);
   assert.deepEqual(neck.position.toArray(), neckBase.toArray());
   assert.deepEqual(head.scale.toArray(), [1, 1, 1]);
@@ -101,14 +101,14 @@ try {
   layer.clear();
 
   head.position.y = 0.115;
-  layer.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, neckLength: 1.8 });
+  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, neckLength: 1.8 });
   near(head.position.y, 0.115 + 0.095 * 0.8);
   layer.clear();
   near(head.position.y, 0.115);
   head.position.y = 0.095;
 
   layer.apply({
-    ...DEFAULT_CHARACTER_PROPORTIONS,
+    ...IDENTITY_CHARACTER_PROPORTIONS,
     headSize: 1.25,
     headWidth: 1.2,
     headDepth: 0.8,

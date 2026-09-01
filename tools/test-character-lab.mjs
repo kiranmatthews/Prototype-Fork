@@ -177,10 +177,12 @@ try {
   const { CharacterProportionLayer } = await server.ssrLoadModule('/src/character/proportionLayer.ts');
   const {
     CHARACTER_PROPORTION_CONTROLS,
+    CHARACTER_PROPORTION_DEFAULTS_REVISION,
     CHARACTER_PROPORTION_STORAGE_KEY,
     CHARACTER_HAND_REST_REVISION,
     CharacterProportionSettings,
     DEFAULT_CHARACTER_PROPORTIONS,
+    IDENTITY_CHARACTER_PROPORTIONS,
     clampCharacterProportions,
   } = settingsApi;
 
@@ -191,6 +193,37 @@ try {
     'every persisted proportion has exactly one Character Lab slider',
   );
   assert.deepEqual(clampCharacterProportions({}), DEFAULT_CHARACTER_PROPORTIONS);
+  assert.deepEqual(DEFAULT_CHARACTER_PROPORTIONS, {
+    overallScale: 1,
+    height: 1,
+    bodyWidth: 0.96,
+    bodyDepth: 0.96,
+    headSize: 1.4,
+    headWidth: 1.23,
+    headDepth: 1.23,
+    neckLength: 0,
+    torsoLength: 0.95,
+    torsoWidth: 1.21,
+    torsoDepth: 1.04,
+    shoulderWidth: 1.05,
+    hipWidth: 1.17,
+    upperArmLength: 0.95,
+    forearmLength: 1.38,
+    thighLength: 1.34,
+    shinLength: 1.47,
+    shortsWidth: 1,
+    shortsHeight: 1,
+    shortsDepth: 1,
+    armThickness: 1.5,
+    legThickness: 1.37,
+    armKnobSize: 1.43,
+    legKnobSize: 1.33,
+    handSize: 1.36,
+    wristRestPitch: 13,
+    wristRestYaw: -180,
+    wristRestRoll: 6,
+    footSize: 1.53,
+  });
   const clamped = clampCharacterProportions({
     headSize: 99,
     neckLength: -4,
@@ -203,7 +236,7 @@ try {
   });
   assert.equal(clamped.headSize, 1.55);
   assert.equal(clamped.neckLength, 0);
-  assert.equal(clamped.wristRestPitch, 0);
+  assert.equal(clamped.wristRestPitch, 13);
   assert.equal(clamped.wristRestYaw, 180);
   assert.equal(clamped.armKnobSize, 1.62);
   assert.equal(clamped.legKnobSize, 1);
@@ -225,15 +258,15 @@ try {
   const settings = new CharacterProportionSettings(stored);
   assert.equal(settings.value.headSize, 1.31);
   assert.equal(settings.value.shoulderWidth, 1.2);
-  assert.equal(settings.value.footSize, 1);
-  assert.equal(settings.value.armKnobSize, 1,
-    'older saved Character Lab values must gain the additive knob controls');
+  assert.equal(settings.value.footSize, 1.53);
+  assert.equal(settings.value.armKnobSize, 1.43,
+    'untouched legacy values must adopt the authored defaults');
   assert.equal(settings.value.shortsWidth, 1,
     'older saved Character Lab values must gain clothing controls');
-  assert.equal(settings.value.wristRestPitch, 0,
+  assert.equal(settings.value.wristRestPitch, 13,
     'pre-release wrist tuning must migrate to the corrected anatomical base');
-  assert.equal(settings.value.wristRestYaw, 0);
-  assert.equal(settings.value.wristRestRoll, 0);
+  assert.equal(settings.value.wristRestYaw, -180);
+  assert.equal(settings.value.wristRestRoll, 6);
   let notifications = 0;
   settings.subscribe(() => notifications++);
   settings.patch({ handSize: 1.28 });
@@ -241,20 +274,42 @@ try {
   const persisted = JSON.parse(stored.values.get(CHARACTER_PROPORTION_STORAGE_KEY));
   assert.equal(persisted.version, 1);
   assert.equal(persisted.handRestRevision, CHARACTER_HAND_REST_REVISION);
+  assert.equal(persisted.defaultsRevision, CHARACTER_PROPORTION_DEFAULTS_REVISION);
+  assert.deepEqual(persisted.defaults, DEFAULT_CHARACTER_PROPORTIONS);
   assert.equal(persisted.settings.handSize, 1.28);
   const roundTrip = new CharacterProportionSettings(memoryStorage());
   roundTrip.importJson(settings.serialize(false));
   assert.deepEqual(roundTrip.value, settings.value);
   roundTrip.reset();
   assert.deepEqual(roundTrip.value, DEFAULT_CHARACTER_PROPORTIONS);
+  const explicitAuthoredImport = new CharacterProportionSettings(memoryStorage());
+  const { shortsWidth: _shortsWidth, shortsHeight: _shortsHeight, shortsDepth: _shortsDepth,
+    ...authoredWithoutShorts } = DEFAULT_CHARACTER_PROPORTIONS;
+  explicitAuthoredImport.importJson(JSON.stringify({
+    version: 1,
+    handRestRevision: CHARACTER_HAND_REST_REVISION,
+    settings: authoredWithoutShorts,
+  }));
+  assert.deepEqual(explicitAuthoredImport.value, DEFAULT_CHARACTER_PROPORTIONS,
+    'explicit authored payloads may omit neutral shorts controls');
 
   const scene = fixture();
   const baseline = snapshot(scene.root);
   const layer = new CharacterProportionLayer(scene.root);
-  layer.apply(DEFAULT_CHARACTER_PROPORTIONS);
-  assert.deepEqual(snapshot(scene.root), baseline, 'default proportions are transform-identical');
+  layer.apply(IDENTITY_CHARACTER_PROPORTIONS);
+  assert.deepEqual(snapshot(scene.root), baseline, 'identity proportions are transform-identical');
   layer.clear();
-  assert.deepEqual(snapshot(scene.root), baseline, 'clearing the default layer is exact');
+  assert.deepEqual(snapshot(scene.root), baseline, 'clearing the identity layer is exact');
+  layer.apply(DEFAULT_CHARACTER_PROPORTIONS);
+  const authoredDefault = snapshot(scene.root);
+  assert.notDeepEqual(authoredDefault, baseline, 'authored defaults must change the neutral rig');
+  for (let iteration = 0; iteration < 100; iteration++) {
+    layer.apply(DEFAULT_CHARACTER_PROPORTIONS);
+  }
+  assert.deepEqual(snapshot(scene.root), authoredDefault,
+    '100 authored-default passes do not accumulate');
+  layer.clear();
+  assert.deepEqual(snapshot(scene.root), baseline, 'clearing the authored default layer is exact');
 
   const shaped = {
     ...DEFAULT_CHARACTER_PROPORTIONS,
@@ -360,7 +415,7 @@ try {
   const dynamicThigh = scene.nodes.get('thigh-left');
   dynamicKnee.position.y = -0.28 * 0.8;
   dynamicThigh.scale.y = 0.8;
-  layer.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, thighLength: 1.2 });
+  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, thighLength: 1.2 });
   near(dynamicKnee.position.y, -0.28 * 0.8 * 1.2);
   near(dynamicThigh.scale.y, 0.8 * 1.2);
   layer.clear();

@@ -108,7 +108,7 @@ try {
   const { PlayerAnimationBridge } = await server.ssrLoadModule('/src/animation/bridge.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule(
     '/src/character/proportionLayer.ts');
-  const { DEFAULT_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
+  const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
     '/src/character/settings.ts');
   const { MESHY_TORSO_ASSET } = await server.ssrLoadModule(
     '/src/character/meshyTorso.generated.ts');
@@ -218,7 +218,7 @@ try {
   bridge.applyDeformations({ 'deform.torso.length': 0.8 });
   const proportions = new CharacterProportionLayer(rig.mount);
   proportions.apply({
-    ...DEFAULT_CHARACTER_PROPORTIONS,
+    ...IDENTITY_CHARACTER_PROPORTIONS,
     torsoLength: 1.2,
     torsoWidth: 1.3,
     torsoDepth: 0.8,

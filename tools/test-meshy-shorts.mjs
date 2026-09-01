@@ -59,7 +59,7 @@ try {
     '/src/character/meshyShorts.generated.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule(
     '/src/character/proportionLayer.ts');
-  const { DEFAULT_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
+  const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
     '/src/character/settings.ts');
   const {
     MESHY_SHORTS_REST_SCALE,
@@ -168,7 +168,7 @@ try {
 
   const layer = new CharacterProportionLayer(mount);
   layer.apply({
-    ...DEFAULT_CHARACTER_PROPORTIONS,
+    ...IDENTITY_CHARACTER_PROPORTIONS,
     shortsWidth: 1.4,
     shortsHeight: 1.3,
     shortsDepth: 0.7,
@@ -190,7 +190,7 @@ try {
   layer.clear();
   assert.deepEqual(mesh.morphTargetInfluences, [0, 0, 0]);
 
-  layer.apply({ ...DEFAULT_CHARACTER_PROPORTIONS, legThickness: 1.62 });
+  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, legThickness: 1.62 });
   assert.deepEqual(mesh.morphTargetInfluences, [0, 0, 0],
     'leg thickness must not affect shorts');
   assert.deepEqual(mesh.scale.toArray(), [0.388, 0.388, 0.388]);

@@ -345,12 +345,14 @@ try {
   const thighProximalBase = thighKnobs.proximalKnob.scale.clone();
   const thighInsertionBase = thighKnobs.distalKnob.scale.clone();
   const thighInsertionPositionBase = thighKnobs.distalKnob.position.clone();
+  const defaultArmKnobSize = player.characterProportions.armKnobSize;
+  const defaultLegKnobSize = player.characterProportions.legKnobSize;
   player.setCharacterProportions({ armKnobSize: 1.4, legKnobSize: 1.5 });
   for (const [knob, base, factor] of [
-    [upperArmKnobs.proximalKnob, upperArmProximalBase, 1.4],
-    [upperArmKnobs.distalKnob, upperArmDistalBase, 1.4],
-    [forearmKnobs.proximalKnob, forearmProximalBase, 1.4],
-    [thighKnobs.proximalKnob, thighProximalBase, 1.5],
+    [upperArmKnobs.proximalKnob, upperArmProximalBase, 1.4 / defaultArmKnobSize],
+    [upperArmKnobs.distalKnob, upperArmDistalBase, 1.4 / defaultArmKnobSize],
+    [forearmKnobs.proximalKnob, forearmProximalBase, 1.4 / defaultArmKnobSize],
+    [thighKnobs.proximalKnob, thighProximalBase, 1.5 / defaultLegKnobSize],
   ]) {
     near(knob.scale.x, base.x * factor);
     near(knob.scale.y, base.y * factor);
@@ -358,7 +360,8 @@ try {
   }
   near(upperArmKnobs.distalKnob.position.y,
     upperArmDistalPositionBase.y + upperArmKnobs.baseLength *
-      (1 - upperArmKnobs.root.userData.stretchableBoneRuntime.stretchEnd) * 0.4);
+      (1 - upperArmKnobs.root.userData.stretchableBoneRuntime.stretchEnd) *
+      (1.4 - defaultArmKnobSize));
   assert.deepEqual(upperArmKnobs.distalSocket.position.toArray(), upperArmSocketBase.toArray(),
     'knob sizing must not move the semantic elbow socket');
   assert.deepEqual(forearmKnobs.distalKnob.scale.toArray(), forearmInsertionBase.toArray(),
@@ -487,10 +490,10 @@ try {
   assert.deepEqual(ankleRight.scale.toArray(), [1.4, 1.4, 1.4]);
   near(sockLeft.morphTargetInfluences[0], 0);
   player.resetCharacterProportions();
-  assert.deepEqual(ankleLeft.scale.toArray(), [1, 1, 1]);
-  assert.deepEqual(ankleRight.scale.toArray(), [1, 1, 1]);
-  assert.deepEqual(sockLeft.morphTargetInfluences, [0]);
-  assert.deepEqual(sockRight.morphTargetInfluences, [0]);
+  assert.deepEqual(ankleLeft.scale.toArray(), [1.53, 1.53, 1.53]);
+  assert.deepEqual(ankleRight.scale.toArray(), [1.53, 1.53, 1.53]);
+  near(sockLeft.morphTargetInfluences[0], 0.37);
+  near(sockRight.morphTargetInfluences[0], 0.37);
   assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
     'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
     'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',

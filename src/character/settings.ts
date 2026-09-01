@@ -44,7 +44,9 @@ export interface CharacterProportionControl {
 export interface SavedCharacterProportions {
   readonly version: 1;
   readonly handRestRevision: 1;
+  readonly defaultsRevision?: number;
   readonly settings: CharacterProportionSettingsValue;
+  readonly defaults?: CharacterProportionSettingsValue;
 }
 
 export interface CharacterProportionStorage {
@@ -54,8 +56,10 @@ export interface CharacterProportionStorage {
 
 export const CHARACTER_PROPORTION_STORAGE_KEY = 'solProtoCharacterProportions.v1';
 export const CHARACTER_HAND_REST_REVISION = 1 as const;
+export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 2 as const;
 
-export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
+/** Identity presentation values used by the original Character Lab baseline. */
+export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
   Object.freeze({
     overallScale: 1,
     height: 1,
@@ -86,6 +90,36 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     wristRestYaw: 0,
     wristRestRoll: 0,
     footSize: 1,
+  });
+
+/** Source-owned authored silhouette restored by Character Lab's Reset action. */
+export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
+  Object.freeze({
+    ...IDENTITY_CHARACTER_PROPORTIONS,
+    bodyWidth: 0.96,
+    bodyDepth: 0.96,
+    headSize: 1.4,
+    headWidth: 1.23,
+    headDepth: 1.23,
+    neckLength: 0,
+    torsoLength: 0.95,
+    torsoWidth: 1.21,
+    torsoDepth: 1.04,
+    shoulderWidth: 1.05,
+    hipWidth: 1.17,
+    upperArmLength: 0.95,
+    forearmLength: 1.38,
+    thighLength: 1.34,
+    shinLength: 1.47,
+    armThickness: 1.5,
+    legThickness: 1.37,
+    armKnobSize: 1.43,
+    legKnobSize: 1.33,
+    handSize: 1.36,
+    wristRestPitch: 13,
+    wristRestYaw: -180,
+    wristRestRoll: 6,
+    footSize: 1.53,
   });
 
 export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[] =
@@ -189,11 +223,7 @@ export class CharacterProportionSettings {
 
   serialize(pretty = true): string {
     return JSON.stringify(
-      {
-        version: 1,
-        handRestRevision: CHARACTER_HAND_REST_REVISION,
-        settings: this.current,
-      } satisfies SavedCharacterProportions,
+      this.savedPayload(false),
       null,
       pretty ? 2 : undefined,
     );
@@ -220,7 +250,8 @@ export class CharacterProportionSettings {
       if (!source) return copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
       const parsed = JSON.parse(source) as Partial<SavedCharacterProportions>;
       if (parsed.version !== 1 || !parsed.settings) throw new Error('unsupported version');
-      return clampCharacterProportions(this.migrateHandRest(parsed));
+      const handMigrated = this.migrateHandRest(parsed);
+      return clampCharacterProportions(this.migrateDefaults(parsed, handMigrated));
     } catch (error) {
       console.warn('Ignoring invalid Character Lab proportions', error);
       return copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
@@ -229,7 +260,10 @@ export class CharacterProportionSettings {
 
   private persistAndNotify(): void {
     try {
-      this.storage?.setItem(CHARACTER_PROPORTION_STORAGE_KEY, this.serialize(false));
+      this.storage?.setItem(
+        CHARACTER_PROPORTION_STORAGE_KEY,
+        JSON.stringify(this.savedPayload(true)),
+      );
     } catch {
       // Live editing remains available when browser persistence is blocked.
     }
@@ -245,6 +279,44 @@ export class CharacterProportionSettings {
       wristRestPitch: DEFAULT_CHARACTER_PROPORTIONS.wristRestPitch,
       wristRestYaw: DEFAULT_CHARACTER_PROPORTIONS.wristRestYaw,
       wristRestRoll: DEFAULT_CHARACTER_PROPORTIONS.wristRestRoll,
+    };
+  }
+
+  private migrateDefaults(
+    saved: Partial<SavedCharacterProportions>,
+    settings: Partial<CharacterProportionSettingsValue>,
+  ): Partial<CharacterProportionSettingsValue> {
+    const revision = typeof saved.defaultsRevision === 'number'
+      ? saved.defaultsRevision
+      : 1;
+    if (revision >= CHARACTER_PROPORTION_DEFAULTS_REVISION) return settings;
+
+    // Revision 1 stored a complete snapshot but not the defaults it was based
+    // on. That baseline was the identity map above. Newer saves retain their
+    // exact source defaults so this comparison remains valid for revision 3+.
+    const savedDefaults = saved.defaults ?? IDENTITY_CHARACTER_PROPORTIONS;
+    const merged = copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
+    for (const key of Object.keys(merged) as CharacterProportionKey[]) {
+      const candidate = settings[key];
+      const previousDefault = savedDefaults[key];
+      if (
+        typeof candidate === 'number' &&
+        Number.isFinite(candidate) &&
+        candidate !== previousDefault
+      ) merged[key] = candidate;
+    }
+    return merged;
+  }
+
+  private savedPayload(includeDefaults: boolean): SavedCharacterProportions {
+    return {
+      version: 1,
+      handRestRevision: CHARACTER_HAND_REST_REVISION,
+      defaultsRevision: CHARACTER_PROPORTION_DEFAULTS_REVISION,
+      settings: this.current,
+      ...(includeDefaults
+        ? { defaults: copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS) }
+        : {}),
     };
   }
 }
