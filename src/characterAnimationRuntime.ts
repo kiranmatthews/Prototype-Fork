@@ -18,6 +18,10 @@ import {
 export const LAND_CLIP_ID = 'player.land';
 export const PACE_STOP_CLIP_ID = 'player.pace-stop';
 export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, PACE_STOP_CLIP_ID] as const;
+/** Gameplay routes whose proven procedural presentation remains authoritative.
+ * Their clips stay selectable for Studio/manual preview without double-writing
+ * the live legacy pose. */
+export const LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS = ['player.skate'] as const;
 
 /** Ignore a stick tap or a nearly stationary authored run before pacing. */
 export const PACE_STOP_MIN_RUN_SECONDS = 0.18;
@@ -88,6 +92,10 @@ function normalizedPhase(value: number): number {
 function smoothstep01(value: number): number {
   const clamped = Math.min(1, Math.max(0, value));
   return clamped * clamped * (3 - 2 * clamped);
+}
+
+function usesLegacyGameplayPresentation(id: ClipId): boolean {
+  return (LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS as readonly ClipId[]).includes(id);
 }
 
 function withControlDefaults(
@@ -357,6 +365,14 @@ export class CharacterAnimationRuntime {
     let requested: ClipId =
       this.manualClipId ?? this.transient?.clipId ?? hint;
     let clip = this.findPlayableClip(requested);
+    // The pre-animation-suite skate mount/stance already eases skatePose,
+    // sidePose and deckPose, solves conventional knees/ankles, and plants the
+    // measured soles. The later looping Skate Push starter absolute-wrote those
+    // same channels on top and restarted at every mount. Preserve the older
+    // live pose while keeping its clip available for explicit Studio preview.
+    if (this.manualClipId === null && usesLegacyGameplayPresentation(requested)) {
+      clip = null;
+    }
     // Missing/placeholder transition clips must not hide a valid state clip.
     if (!clip && this.manualClipId === null && this.transient?.clipId === requested) {
       this.cancelTransient();

@@ -18,6 +18,7 @@ try {
     PACE_STOP_CROSSFADE_SECONDS,
     PACE_STOP_MIN_PEAK_SPEED,
     PACE_STOP_MIN_RUN_SECONDS,
+    LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS,
     PLAYER_STATE_CLIP_IDS,
     PLAYER_TRANSITION_CLIP_IDS,
     createCharacterAnimationRuntime,
@@ -59,6 +60,7 @@ try {
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
   assert.equal(allIds.length, 18);
   assert.equal(new Set(allIds).size, 18);
+  assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
 
   const positionTrack = (clipId, x) => ({
     id: `${clipId}:hips`,
@@ -178,9 +180,31 @@ try {
     hint = id;
     grounded = id !== 'player.jump' && id !== 'player.fall';
     runtime.restart();
+    if (id === 'player.skate') hips.position.x = 99;
     tick(0.016);
-    assert.equal(runtime.activeClipId, id);
+    if (id === 'player.skate') {
+      assert.equal(runtime.diagnostics.requestedClipId, 'player.skate');
+      assert.equal(runtime.activeClipId, null);
+      assert.equal(runtime.diagnostics.authoredPoseApplied, false);
+      near(hips.position.x, 99, 1e-8);
+    } else {
+      assert.equal(runtime.activeClipId, id);
+    }
   }
+
+  // The slot remains explicitly previewable/editable; only automatic gameplay
+  // routing yields to the proven procedural skate mount and stance.
+  hint = 'player.skate';
+  grounded = true;
+  runtime.setManualClipOverride('player.skate');
+  tick(0.016);
+  assert.equal(runtime.activeClipId, 'player.skate');
+  assert.equal(runtime.diagnostics.authoredPoseApplied, true);
+  runtime.setManualClipOverride(null);
+  runtime.restart();
+  tick(0.016);
+  assert.equal(runtime.diagnostics.requestedClipId, 'player.skate');
+  assert.equal(runtime.activeClipId, null);
 
   // Landing is detected from the public airborne -> grounded edge and held
   // for one range traversal before locomotion takes ownership again.
@@ -325,7 +349,13 @@ try {
     hint = interruption;
     grounded = interruption !== 'player.jump' && interruption !== 'player.fall';
     tick(0.016);
-    assert.equal(runtime.activeClipId, interruption, `${interruption} did not interrupt pace-stop`);
+    if (interruption === 'player.skate') {
+      assert.equal(runtime.diagnostics.requestedClipId, interruption);
+      assert.equal(runtime.activeClipId, null,
+        'skate did not return control to the procedural presentation');
+    } else {
+      assert.equal(runtime.activeClipId, interruption, `${interruption} did not interrupt pace-stop`);
+    }
     assert.equal(runtime.diagnostics.pacingOneShotActive, false);
   }
 

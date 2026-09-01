@@ -70,6 +70,18 @@ restrained torso compression/extension carried through the neck and head in
 the run starter. Contrast matters: the final quiet idle makes the larger run
 and stop gestures read more clearly.
 
+### Procedural skate ownership
+
+`player.skate` remains a selectable, editable Animation Studio slot, and manual
+preview still plays its authored keys. Automatic gameplay routing deliberately
+leaves that slot inactive, however. The pre-suite procedural skate presentation
+already owns the eased mount, regular/switch side stance, articulated knees,
+ankle counter-planting, measured sole centering, arms, head look, and deck
+counter-yaw. Layering the looping Skate Push starter over those same channels
+made the mount restart at clip frame zero and replaced the proven steady stance.
+Live skating therefore preserves the procedural presentation until a future
+authored skate clip is explicitly approved to replace it.
+
 Starter-catalog upgrades are versioned. An older saved suite receives newly
 introduced starter clips without replacing any same-ID clip the user has
 edited. Once upgraded, intentionally deleting a starter slot does not cause it
@@ -115,6 +127,10 @@ The runtime applies layers in this order:
 4. keyed correction tracks, or the explicitly selected reverse composition;
 5. independent segment deformation controls;
 6. render-pose capture and interpolation.
+
+Gameplay routes listed as legacy-presentation-owned (currently
+`player.skate`) stop after step 2; explicit Studio/manual preview still exercises
+their clip data through the remaining authored layers.
 
 Gameplay collision and movement do not read editable transforms. The one
 former exception, pipe landing alignment, now has a simulation-owned value.
