@@ -9976,14 +9976,16 @@ export class Player {
   }
 
   // Came down on a box that isn't going to break. Kill the drop, seat the feet
-  // on the lid and light identity-bearing support. The collision boxes move
-  // immediately so lower/neighboring members of a stack cannot act on the old
-  // body position; an airborne contact still gets the ordinary landing path
-  // next tick, preserving its combo and touchdown bookkeeping.
+  // on the lid and light identity-bearing support. Unity enters grounded Ride
+  // here; web keeps one final air tick so the ordinary landing path can judge
+  // grabs/spins and retire every board-air/combo flag. Consuming airRose makes
+  // that handoff eligible for its own latch: without it, a RISING metal lid is
+  // reclassified as a side overlap next tick and ejects the rider by 0.5m.
   private standOnCrate(c: Crate): void {
     this.slamActive = false;
     this.vVel = 0;
     this.snapFeetToCrateLid(c);
+    this.airRose = false;
     this.crateFloorT = CRATE_STAND_GRACE;
     this.crateFloor = c;
     this.groundHit = {
