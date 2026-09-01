@@ -1,0 +1,101 @@
+{
+  "generator": "Meshy",
+  "generatorUrl": "https://www.meshy.ai/",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseBasis": "Owner-supplied Meshy output; conservative free-plan attribution path used elsewhere in this repository",
+  "meshyUploadId": "01a05c67-f7f1-715e-a35f-0cf275401a8d",
+  "sourceArchive": {
+    "file": "Meshy_AI_Crowned_Inferno_Skull_0901100025_texture_fbx.zip",
+    "bytes": 36419405,
+    "sha256": "6e066e4854078c3c03894ff7705414781942f125ee117100c016c4b8892b8b29"
+  },
+  "sourceFbx": {
+    "file": "Meshy_AI_Crowned_Inferno_Skull_0901100025_texture.fbx",
+    "bytes": 12633388,
+    "sha256": "7ce05ff91c0b33ff3845c0e5a24610eeb51d3851abf25167e22910ed93f0b234",
+    "formatVersion": 7400,
+    "sourceControlVertices": 8273,
+    "runtimePolygonVertices": 49608,
+    "triangles": 16536,
+    "surfaceShells": [
+      { "role": "outer", "controlVertices": 4464, "triangles": 8923, "winding": "positive-volume" },
+      { "role": "cavity", "controlVertices": 3809, "triangles": 7613, "winding": "negative-volume" }
+    ],
+    "boundaryOrNonmanifoldEdgesPerShell": [5, 5],
+    "attributes": ["position", "faceted-normal", "uv"],
+    "sourceBounds": {
+      "min": [-0.427734375, -0.375, -0.5],
+      "max": [0.427734375, 0.369140625, 0.5]
+    },
+    "contents": {
+      "meshes": 1,
+      "materials": 1,
+      "bones": 0,
+      "skins": 0,
+      "morphs": 0,
+      "animations": 0
+    }
+  },
+  "sourceTextures": {
+    "baseColor": {
+      "file": "Meshy_AI_Crowned_Inferno_Skull_0901100025_texture.png",
+      "size": [4096, 4096],
+      "bytes": 13339517,
+      "sha256": "e62fa53008279d36884368e82cf55106cc0673fc0c0e111e85ef673aa7eb7319"
+    },
+    "normal": {
+      "file": "Meshy_AI_Crowned_Inferno_Skull_0901100025_texture_normal.png",
+      "size": [4096, 4096],
+      "bytes": 9355443,
+      "sha256": "0979609c7b373805c340644b35ac06180218cd21b2189ba3625cba5db512f6a8"
+    },
+    "roughness": {
+      "file": "Meshy_AI_Crowned_Inferno_Skull_0901100025_texture_roughness.png",
+      "size": [2048, 2048],
+      "bytes": 1109088,
+      "sha256": "7820a7c3ac368b3c4505f7bdd21859c8f65e6cbdfdc81ca2c584ebcfa187145b"
+    },
+    "metallic": {
+      "file": "Meshy_AI_Crowned_Inferno_Skull_0901100025_texture_metallic.png",
+      "size": [2048, 2048],
+      "bytes": 18377,
+      "sha256": "9a05f4ad0dc1046e3731bf19b9c883b9bc0bc514192d02747cb7f205566bb84f"
+    }
+  },
+  "conversionTool": "tools/import-meshy-head.mjs",
+  "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
+  "generatedModule": "src/character/meshyHead.generated.ts",
+  "generatedModuleSha256": "a710c48e49667873f50625e62970a89c8f65d604c3282224d3a77a89a3e4d478",
+  "webTextureConversion": "macOS sips proportional resize to 1024x1024 PNG",
+  "webTextures": {
+    "baseColor": { "file": "base-color.png", "bytes": 1149015, "sha256": "8bf0606e6aa3b7e050f27922928cbcb7ae503acfdd431b25f5f49bbfe2a20834" },
+    "normal": { "file": "normal.png", "bytes": 729150, "sha256": "fdfb4662ff75051eb780c2d8e8132aac1dcbf9b4e1632e758343d9ca10e34eb2" },
+    "roughness": { "file": "roughness.png", "bytes": 359739, "sha256": "ed475c636df7a7cf0d849dc399ed9aac79f9207c36ca28d35b370ced859ad622" },
+    "metallic": { "file": "metallic.png", "bytes": 8069, "sha256": "906f873891c76c71c83dc3ee10a315956d4b677fb1ebde027dbb4293a2c4ab42" }
+  },
+  "runtimeMapping": {
+    "axisAndOriginConversion": "source [x,y,z] to runtime [x,z+0.5,-y]",
+    "runtimeBounds": { "min": [-0.427734375, 0, -0.369140625], "max": [0.427734375, 1, 0.375] },
+    "restScale": 0.4,
+    "restLocalBounds": { "min": [-0.17109375, 0, -0.14765625], "max": [0.17109375, 0.4, 0.15] },
+    "attachmentJoint": "head",
+    "lookSocket": [0, 0.181, 0.19],
+    "maskCenterSocket": [0, 0.2, 0],
+    "neckGapFormula": "0.095 * neckLength",
+    "collisionChanged": false
+  },
+  "conversion": [
+    "Validated the exact static FBX and all four source texture hashes",
+    "Discarded the source node's 100x centimetre presentation transform",
+    "Preserved both outer and inward-wound cavity shells, UV seams, and triangle winding",
+    "Validated faceted source normals and used deformation-safe derivative face normals at runtime",
+    "Rebased the lowest skull point to semantic head-local Y=0",
+    "Attached the rigid surface to the existing head bone without adding or renaming joints",
+    "Changed Character Lab neck height to move only the head-local gap; torso, neck bone, and skull scale remain invariant",
+    "Composed the neck-gap offset additively so procedural/keyframed head position remains unchanged",
+    "Retained empty ear and ponytail compatibility nodes while removing their old visible surfaces",
+    "Removed the former visible kangaroo head, neck, necklace, and pendant surfaces",
+    "Did not redistribute the original FBX, archive, or expiring Meshy URL"
+  ]
+}

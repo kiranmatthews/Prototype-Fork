@@ -388,6 +388,38 @@ try {
   assert.equal(torsoSurface.isSkinnedMesh, true);
   assert.equal(torsoSurface.parent.name, 'procedural-rider');
   assert.equal(torsoSurface.geometry.getAttribute('skinWeight').count, 32667);
+  assert.deepEqual(player.meshyHeadDiagnostics, {
+    ready: true,
+    triangles: 16536,
+    sourceSha256: '7ce05ff91c0b33ff3845c0e5a24610eeb51d3851abf25167e22910ed93f0b234',
+    textureState: 'loading',
+    texturesLoaded: 0,
+    textureError: null,
+  });
+  const headSurface = player.animationRig.root.getObjectByName('meshy-head-surface');
+  const headBone = player.animationRig.root.getObjectByName('head');
+  const neckBone = player.animationRig.root.getObjectByName('neck');
+  const lookSocket = player.animationRig.root.getObjectByName('socket-look');
+  const headCenter = player.animationRig.root.getObjectByName('socket-head-visual-center');
+  assert.equal(headSurface.parent, headBone);
+  near(lookSocket.position.y, 0.181);
+  near(headCenter.position.y, 0.2);
+  assert.equal(player.animationRig.root.getObjectByName('neck-volume'), undefined);
+  const neckBase = neckBone.position.clone();
+  const headSurfaceScaleBase = headSurface.scale.clone();
+  const torsoScaleBase = torsoSurface.scale.clone();
+  const torsoMorphBase = [...torsoSurface.morphTargetInfluences];
+  player.setCharacterProportions({ neckLength: 0 });
+  near(headBone.position.y, 0);
+  assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
+  assert.deepEqual(headSurface.scale.toArray(), headSurfaceScaleBase.toArray());
+  assert.deepEqual(torsoSurface.scale.toArray(), torsoScaleBase.toArray());
+  assert.deepEqual(torsoSurface.morphTargetInfluences, torsoMorphBase);
+  player.setCharacterProportions({ neckLength: 1.8 });
+  near(headBone.position.y, 0.095 * 1.8);
+  assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
+  assert.deepEqual(headSurface.scale.toArray(), headSurfaceScaleBase.toArray());
+  player.resetCharacterProportions();
   assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
     'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
     'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',

@@ -72,7 +72,7 @@ function fixture() {
   visual('chest-volume', chest, [0, 0.1, 0]);
   visual('neck-volume', chest, [0, 0.25, 0]);
   const neck = add('neck', chest, [0, 0.25, 0]);
-  const head = add('head', neck, [0, 0.1, 0]);
+  const head = add('head', neck, [0, 0.095, 0]);
   visual('head-volume', head);
 
   const joints = { hips: 'hips', torsoRoot: 'torso-root', spine: 'spine', chest: 'chest', neck: 'neck', head: 'head' };
@@ -164,7 +164,7 @@ try {
     clampCharacterProportions,
   } = settingsApi;
 
-  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 29);
+  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 26);
   assert.deepEqual(
     new Set(CHARACTER_PROPORTION_CONTROLS.map((control) => control.key)),
     new Set(Object.keys(DEFAULT_CHARACTER_PROPORTIONS)),
@@ -174,7 +174,6 @@ try {
   const clamped = clampCharacterProportions({
     headSize: 99,
     neckLength: -4,
-    eyeSize: NaN,
     wristRestPitch: NaN,
     wristRestYaw: 999,
     armKnobSize: 99,
@@ -182,7 +181,6 @@ try {
   });
   assert.equal(clamped.headSize, 1.55);
   assert.equal(clamped.neckLength, 0);
-  assert.equal(clamped.eyeSize, 1);
   assert.equal(clamped.wristRestPitch, 0);
   assert.equal(clamped.wristRestYaw, 180);
   assert.equal(clamped.armKnobSize, 1.62);
@@ -257,9 +255,6 @@ try {
     wristRestYaw: 30,
     wristRestRoll: 40,
     footSize: 1.18,
-    earSize: 1.4,
-    eyeSize: 1.16,
-    ponytailSize: 0.75,
   };
   layer.apply(shaped);
   near(scene.rider.scale.x, 1.1 * 0.9);
@@ -267,6 +262,11 @@ try {
   near(scene.rider.scale.z, 1.1 * 1.15);
   near(scene.nodes.get('head').scale.x, 1.35 * 1.2);
   near(scene.nodes.get('head').scale.y, 1.35);
+  near(scene.nodes.get('neck').position.y, 0.25 * 1.18,
+    1e-9);
+  near(scene.nodes.get('head').position.y, 0.095 * 0.6);
+  assert.deepEqual(scene.nodes.get('neck-volume').scale.toArray(), [1, 1.18, 1],
+    'torso length may stretch its marker, but neck height must not');
   near(scene.nodes.get('clavicle-left').position.x, 0.1 * 1.25);
   near(scene.nodes.get('clavicle-right').position.x, -0.1 * 1.25);
   near(scene.nodes.get('hip-left').position.x, 0.115 * 1.3);
@@ -301,7 +301,6 @@ try {
   )));
   near(Math.abs(leftHandRest.quaternion.dot(expectedLeftHandRest)), 1);
   near(Math.abs(rightHandRest.quaternion.dot(expectedRightHandRest)), 1);
-  near(scene.nodes.get('ear-left').scale.y, 1.4);
   const once = snapshot(scene.root);
   for (let iteration = 0; iteration < 100; iteration++) layer.apply(shaped);
   assert.deepEqual(snapshot(scene.root), once, '100 proportion passes do not accumulate');

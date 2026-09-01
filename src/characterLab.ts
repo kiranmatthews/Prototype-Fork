@@ -266,6 +266,7 @@ class CharacterLab implements CharacterLabHandle {
       ['Side', 'side'],
       ['Rear', 'rear'],
       ['Torso', 'torso'],
+      ['Head', 'head'],
       ['Hands', 'hands'],
       ['Bones', 'bones'],
     ] as const) {
@@ -469,6 +470,11 @@ class CharacterLab implements CharacterLabHandle {
     return new THREE.Box3().setFromObject(torso);
   }
 
+  private headBounds(): THREE.Box3 {
+    const head = this.ctx.rigRoot.getObjectByName('meshy-head-surface');
+    return head ? new THREE.Box3().setFromObject(head) : this.characterBounds();
+  }
+
   private updateFloorAndStatus(): void {
     const bounds = this.characterBounds();
     const size = bounds.getSize(new THREE.Vector3());
@@ -477,6 +483,7 @@ class CharacterLab implements CharacterLabHandle {
     const diagnostics = this.ctx.player.characterProportionDiagnostics;
     const hand = this.ctx.player.riggedCartoonHandDiagnostics;
     const torso = this.ctx.player.meshyTorsoDiagnostics;
+    const head = this.ctx.player.meshyHeadDiagnostics;
     let proceduralHandMeshesVisible = 0;
     for (const side of ['left', 'right'] as const) {
       this.ctx.rigRoot.getObjectByName(`cartoon-glove-${side}`)?.traverse((object) => {
@@ -493,15 +500,21 @@ class CharacterLab implements CharacterLabHandle {
         ? 'Meshy torso ready'
         : `Meshy torso geometry ready · textures ${torso.textureState}`
       : 'Meshy torso missing';
+    const headStatus = head.ready
+      ? head.textureState === 'ready'
+        ? 'Meshy head ready'
+        : `Meshy head geometry ready · textures ${head.textureState}`
+      : 'Meshy head missing';
     this.status.textContent =
       `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} world units\n` +
       `${diagnostics.appliedObjectCount} proportion targets · collision unchanged\n` +
       `${torsoStatus} · ${torso.triangles.toLocaleString()} tris\n` +
+      `${headStatus} · ${head.triangles.toLocaleString()} tris\n` +
       `${handStatus} · fallback meshes visible ${proceduralHandMeshesVisible}`;
   }
 
   private frameCamera(
-    view: 'front' | 'three-quarter' | 'side' | 'rear' | 'torso' |
+    view: 'front' | 'three-quarter' | 'side' | 'rear' | 'torso' | 'head' |
       'hands' | 'hands-front' | 'hands-side' | 'hands-rear' |
       'bones' | 'bones-arms' | 'bones-legs',
   ): void {
@@ -511,6 +524,8 @@ class CharacterLab implements CharacterLabHandle {
         ? this.stretchBoneBounds(view === 'bones-arms' ? 'arms' : view === 'bones-legs' ? 'legs' : 'all')
         : view === 'torso'
           ? this.torsoBounds()
+          : view === 'head'
+            ? this.headBounds()
           : this.characterBounds();
     const center = bounds.getCenter(new THREE.Vector3());
     const size = Math.max(0.5, bounds.getSize(new THREE.Vector3()).length());
@@ -521,6 +536,7 @@ class CharacterLab implements CharacterLabHandle {
       side: new THREE.Vector3(1, 0.12, 0),
       rear: new THREE.Vector3(0, 0.12, 1),
       torso: new THREE.Vector3(0.72, 0.08, -1),
+      head: new THREE.Vector3(0.72, 0.04, -1),
       hands: new THREE.Vector3(0.72, 0.12, -1),
       'hands-front': new THREE.Vector3(0, 0.06, -1),
       'hands-side': new THREE.Vector3(1, 0.06, 0),

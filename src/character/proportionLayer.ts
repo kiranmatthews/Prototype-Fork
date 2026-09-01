@@ -11,6 +11,7 @@ import {
   meshyTorsoEndpointScaleFromTransverse,
   meshyTorsoLengthRatio,
 } from './meshyTorso';
+import { MESHY_HEAD_DEFAULT_GAP } from './meshyHead';
 import type { CharacterProportionSettingsValue } from './settings';
 
 interface TransformState {
@@ -207,12 +208,9 @@ export class CharacterProportionLayer {
       value.headSize * value.headDepth,
     );
 
-    const neck = this.root.getObjectByName('neck');
-    this.multiplyPosition(neck, 1, value.neckLength, 1);
-    this.multiplyPosition(head, 1, value.neckLength, 1);
-    const neckVolume = this.root.getObjectByName('neck-volume');
-    this.multiplyPosition(neckVolume, 1, value.neckLength, 1);
-    this.multiplyScale(neckVolume, 1, value.neckLength, 1);
+    // Neck height is presentation-only air space. The semantic neck and torso
+    // stay fixed; moving only the head cannot deform either surface.
+    this.addPosition(head, 0, MESHY_HEAD_DEFAULT_GAP * (value.neckLength - 1), 0);
 
     for (const side of ['left', 'right'] as const) {
       this.multiplyPosition(this.root.getObjectByName(`clavicle-${side}`), value.shoulderWidth, 1, 1);
@@ -227,7 +225,6 @@ export class CharacterProportionLayer {
         THREE.MathUtils.degToRad(value.wristRestRoll * sideSign),
       );
       this.multiplyScale(this.root.getObjectByName(`ankle-${side}`), value.footSize, value.footSize, value.footSize);
-      this.multiplyScale(this.root.getObjectByName(`ear-${side}`), value.earSize, value.earSize, value.earSize);
     }
 
     for (const anchorName of ['shoulder-left', 'shoulder-right', 'elbow-left', 'elbow-right']) {
@@ -254,23 +251,6 @@ export class CharacterProportionLayer {
         value.legKnobSize,
       );
     }
-
-    for (const side of ['left', 'right'] as const) {
-      for (const part of ['white', 'iris', 'pupil', 'lash'] as const) {
-        this.multiplyScale(
-          this.root.getObjectByName(`eye-${part}-${side}`),
-          value.eyeSize,
-          value.eyeSize,
-          value.eyeSize,
-        );
-      }
-    }
-    this.multiplyScale(
-      this.root.getObjectByName('ponytail-base'),
-      value.ponytailSize,
-      value.ponytailSize,
-      value.ponytailSize,
-    );
 
     for (const state of this.states.values()) {
       state.appliedPosition.copy(state.object.position);
@@ -317,6 +297,19 @@ export class CharacterProportionLayer {
       object.position.y * y,
       object.position.z * z,
     );
+  }
+
+  private addPosition(
+    object: THREE.Object3D | null | undefined,
+    x: number,
+    y: number,
+    z: number,
+  ): void {
+    if (!object) return;
+    this.stateFor(object).movesPosition = true;
+    object.position.x += x;
+    object.position.y += y;
+    object.position.z += z;
   }
 
   private multiplyScale(

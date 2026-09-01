@@ -3500,6 +3500,7 @@ requestAnimationFrame(frame);
   getRiggedCartoonHandDiagnostics: () => player.riggedCartoonHandDiagnostics,
   getStretchableBoneDiagnostics: () => player.stretchableBoneDiagnostics,
   getMeshyTorsoDiagnostics: () => player.meshyTorsoDiagnostics,
+  getMeshyHeadDiagnostics: () => player.meshyHeadDiagnostics,
   getCharacterProportions: () => player.characterProportions,
   setCharacterProportions: (patch: Parameters<typeof player.setCharacterProportions>[0]) =>
     player.setCharacterProportions(patch),

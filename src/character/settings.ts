@@ -25,9 +25,6 @@ export interface CharacterProportionSettingsValue {
   wristRestYaw: number;
   wristRestRoll: number;
   footSize: number;
-  earSize: number;
-  eyeSize: number;
-  ponytailSize: number;
 }
 
 export type CharacterProportionKey = keyof CharacterProportionSettingsValue;
@@ -83,9 +80,6 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     wristRestYaw: 0,
     wristRestRoll: 0,
     footSize: 1,
-    earSize: 1,
-    eyeSize: 1,
-    ponytailSize: 1,
   });
 
 export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[] =
@@ -98,7 +92,7 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'headSize', label: 'Head size', section: 'Head & torso', min: 0.62, max: 1.55, step: 0.01 },
     { key: 'headWidth', label: 'Head width', section: 'Head & torso', min: 0.7, max: 1.42, step: 0.01 },
     { key: 'headDepth', label: 'Head depth', section: 'Head & torso', min: 0.7, max: 1.42, step: 0.01 },
-    { key: 'neckLength', label: 'Neck length', section: 'Head & torso', min: 0, max: 1.8, step: 0.01 },
+    { key: 'neckLength', label: 'Neck height / gap', section: 'Head & torso', min: 0, max: 1.8, step: 0.01 },
     { key: 'torsoLength', label: 'Torso length', section: 'Head & torso', min: 0.62, max: 1.48, step: 0.01 },
     { key: 'torsoWidth', label: 'Torso width', section: 'Head & torso', min: 0.65, max: 1.5, step: 0.01 },
     { key: 'torsoDepth', label: 'Torso depth', section: 'Head & torso', min: 0.65, max: 1.5, step: 0.01 },
@@ -120,9 +114,6 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'legKnobSize', label: 'Leg knob size', section: 'Mass & details', min: 1, max: 1.62, step: 0.01 },
     { key: 'handSize', label: 'Hand size', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
     { key: 'footSize', label: 'Foot size', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
-    { key: 'earSize', label: 'Ear size', section: 'Mass & details', min: 0.5, max: 1.7, step: 0.01 },
-    { key: 'eyeSize', label: 'Eye size', section: 'Mass & details', min: 0.55, max: 1.55, step: 0.01 },
-    { key: 'ponytailSize', label: 'Ponytail size', section: 'Mass & details', min: 0.45, max: 1.7, step: 0.01 },
   ] satisfies CharacterProportionControl[]);
 
 const CONTROL_BY_KEY = new Map(

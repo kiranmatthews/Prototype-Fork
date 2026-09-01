@@ -102,6 +102,14 @@ import {
   meshyTorsoTextureDiagnostics,
   type MeshyTorsoComponent,
 } from './character/meshyTorso';
+import {
+  MESHY_HEAD_DEFAULT_GAP,
+  MESHY_HEAD_EYE_CENTER_Y,
+  MESHY_HEAD_VISUAL_CENTER_Y,
+  createMeshyHead,
+  meshyHeadTextureDiagnostics,
+  type MeshyHeadComponent,
+} from './character/meshyHead';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -1004,9 +1012,14 @@ export class Player {
   private riggedCartoonHandError: string | null = null;
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
+  private meshyHead: MeshyHeadComponent | null = null;
+  private headVisualCenter: THREE.Object3D | null = null;
+  private headLookSocket: THREE.Object3D | null = null;
+  private readonly headForward = new THREE.Vector3();
+  private readonly headWorldQuaternion = new THREE.Quaternion();
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
-  private headM: THREE.Bone | null = null; // head bone: skull, muzzle, ears, hair, eyes
+  private headM: THREE.Bone | null = null; // semantic head bone carrying the imported skull
   private legs: THREE.Bone | null = null;
   private legL: THREE.Bone | null = null; // upper-leg bones
   private legR: THREE.Bone | null = null;
@@ -1040,7 +1053,7 @@ export class Player {
   private upperLegLengthL = PROCEDURAL_THIGH_LENGTH;
   private lowerLegLengthR = PROCEDURAL_SHIN_LENGTH;
   private lowerLegLengthL = PROCEDURAL_SHIN_LENGTH;
-  private ponyA: THREE.Group | null = null; // ponytail: scrunchie+puff, then the tip
+  private ponyA: THREE.Group | null = null; // empty saved-track compatibility nodes
   private ponyB: THREE.Group | null = null;
   private walkPhase = 0; // procedural run cycle
   private walkAmp = 0;
@@ -1684,6 +1697,26 @@ export class Player {
       triangles: component?.triangles ?? 0,
       sourceSha256: component?.sourceSha256 ?? null,
       skinBones: component?.skeleton.bones.map((bone) => bone.name) ?? [],
+      textureState: textures.state,
+      texturesLoaded: textures.loaded,
+      textureError: textures.error,
+    };
+  }
+
+  get meshyHeadDiagnostics(): {
+    readonly ready: boolean;
+    readonly triangles: number;
+    readonly sourceSha256: string | null;
+    readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
+    readonly texturesLoaded: number;
+    readonly textureError: string | null;
+  } {
+    const component = this.meshyHead;
+    const textures = meshyHeadTextureDiagnostics();
+    return {
+      ready: component !== null,
+      triangles: component?.triangles ?? 0,
+      sourceSha256: component?.sourceSha256 ?? null,
       textureState: textures.state,
       texturesLoaded: textures.loaded,
       textureError: textures.error,
@@ -13245,7 +13278,7 @@ export class Player {
     glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.fist, gloveFist);
     if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, glovePose);
     if (this.gloveRight) setCartoonGlovePose(this.gloveRight, glovePose);
-    // Tail + ponytail follow-through is authored before the final appearance
+    // Tail + legacy ponytail-node follow-through is authored before the final appearance
     // pass so keyframed secondary channels can still layer over the simulation.
     if (this.tail) {
       const lift =
@@ -13641,7 +13674,8 @@ export class Player {
       // in the face whenever the skater travelled toward +X (the Sideways stretch
       // faces that way the whole time) or turned to face the camera. Camera-space
       // keeps it floating clear IN FRONT of the face no matter the heading.
-      if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
+      if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
+      else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
       else this.maskAnchor.set(this.pos.x, this.pos.y + 1.42, this.pos.z);
       const hx = this.maskAnchor.x;
       const hy = this.maskAnchor.y;
@@ -13655,20 +13689,37 @@ export class Player {
       const rx = -cfz; // screen-right = camera-forward rotated -90 about Y
       const rz = cfx;
       if (uber) {
-        // third mask: WORN on the face. It sits in front of the muzzle and turns
+        // third mask: WORN on the face. It sits in front of the skull and turns
         // WITH the skater's own facing — so it tracks the head in every direction
         // (running away, left or right included), showing its side/back just like
         // a real worn mask when the skater turns from the camera. (The old
         // camera-relative placement only lined up with the face when you ran
-        // toward the lens.) Head-anchored and pushed out enough to clear the muzzle.
-        const ffx = -Math.sin(this.visualYaw); // the skater's forward (face) axis
-        const ffz = -Math.cos(this.visualYaw);
+        // toward the lens.) Head-anchored and pushed out enough to clear the face.
+        let ffx = -Math.sin(this.visualYaw);
+        let ffy = 0;
+        let ffz = -Math.cos(this.visualYaw);
+        if (this.headLookSocket) {
+          this.headLookSocket.getWorldDirection(this.headForward).normalize();
+          ffx = this.headForward.x;
+          ffy = this.headForward.y;
+          ffz = this.headForward.z;
+        }
         this.maskMesh.position.set(
           hx + ffx * 0.42,
-          hy + 0.03 + Math.sin(this.runTime * 9) * 0.03,
+          hy + ffy * 0.42 + 0.03 + Math.sin(this.runTime * 9) * 0.03,
           hz + ffz * 0.42,
         );
-        this.maskMesh.rotation.y = this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05;
+        if (this.headLookSocket) {
+          this.headLookSocket.getWorldQuaternion(this.headWorldQuaternion);
+          this.maskMesh.quaternion.copy(this.headWorldQuaternion);
+          this.maskMesh.rotateY(Math.PI + Math.sin(this.runTime * 5) * 0.05);
+        } else {
+          this.maskMesh.rotation.set(
+            0,
+            this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05,
+            0,
+          );
+        }
         this.maskMesh.scale.setScalar(0.82);
       } else {
         // held mask (states 1 & 2): floats up and to the screen-side of the head,
@@ -14305,21 +14356,14 @@ export class Player {
     // give the PS2 facet look; canvases only where cloth needs a print.
     const flat = (color: number): THREE.MeshLambertMaterial =>
       new THREE.MeshLambertMaterial({ color, flatShading: true });
-    const FUR = flat(0xf39133); // kangaroo orange
-    const EAR = flat(0xe86a8a); // inner ear pink
-    const HAIR = flat(0xf5c952); // blonde
-    const HAIR_DK = flat(0xe3ab38); // ponytail tip / side sweep
-    const PINK = flat(0xe8447a); // trim pink (scrunchie, cuffs, stitching)
+    const PINK = flat(0xe8447a); // trim pink (cuffs, socks, stitching)
     const SHOE_PINK = flat(0xe0357a);
     const BLACK = flat(0x232529); // cargo shorts / gloves
     const PAD = flat(0x2c2f36); // knee + elbow pads
     const WHITE = flat(0xf2efe8); // socks / straps
     const CREAM = flat(0xefe6d6); // platform soles
     const SILVER = flat(0xb9bfc9); // buckle, chain, studs
-    // eyes + face read cleaner smooth-shaded
-    const EYE_WHITE = new THREE.MeshLambertMaterial({ color: 0xfbfbf6 });
-    const EYE_GREEN = new THREE.MeshLambertMaterial({ color: 0x53b04b });
-    const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // nose, pupils, lashes, smile
+    const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // glove stitches
     const BONE_CLAY = new THREE.MeshPhysicalMaterial({
       name: 'character-bone-clay',
       color: 0xe8dcc7,
@@ -14525,165 +14569,58 @@ export class Player {
     upper.add(spine);
     const CHEST_Y = 1.06;
     const NECK_Y = 1.325;
-    const HEAD_Y = 1.42;
     const CLAVICLE_Y = 1.22;
     const chest = new THREE.Bone();
     chest.name = 'chest';
     chest.position.y = CHEST_Y - PROCEDURAL_SPINE_Y;
     spine.add(chest);
-    // Neck flesh remains a chest renderable so torso length deformation can
-    // stretch it without ever non-uniformly scaling the neck/head bones.
-    const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), FUR);
-    neckMesh.name = 'neck-volume';
-    neckMesh.position.y = NECK_Y - CHEST_Y;
-    chest.add(neckMesh);
-    const necklace = new THREE.Mesh(new THREE.TorusGeometry(0.072, 0.007, 5, 12), SILVER);
-    necklace.rotation.x = 1.45; // lies nearly flat, dipping toward the chest
-    necklace.position.y = 1.3 - CHEST_Y;
-    chest.add(necklace);
-    const pendant = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 5), SILVER);
-    pendant.position.set(0, 1.272 - CHEST_Y, 0.068);
-    chest.add(pendant);
-
     const neck = new THREE.Bone();
     neck.name = 'neck';
     neck.position.y = NECK_Y - CHEST_Y;
     chest.add(neck);
 
-    // Head: a bone pivot at 1.42 (syncVisual pitches/yaws it for the
-    // horizon look-at) carrying the whole kangaroo face — skull, muzzle,
-    // geometric eyes, tall ears, blonde bangs, and the jointed ponytail.
+    // The semantic head pivot remains conventional and owns all authored
+    // look/impact motion. The imported surface is rebased with its lowest
+    // point at this pivot, so the local head offset is a literal air gap.
     const head = new THREE.Bone();
     head.name = 'head';
-    head.position.y = HEAD_Y - NECK_Y;
+    head.position.y = MESHY_HEAD_DEFAULT_GAP;
     neck.add(head);
     this.headM = head;
     const lookSocket = new THREE.Object3D();
     lookSocket.name = 'socket-look';
-    lookSocket.position.set(0, 0.03, 0.19);
+    lookSocket.position.set(0, MESHY_HEAD_EYE_CENTER_Y, 0.19);
     lookSocket.userData.forward = [0, 0, 1];
     head.add(lookSocket);
-    const skull = new THREE.Mesh(new THREE.SphereGeometry(0.175, 12, 9), FUR);
-    skull.scale.set(0.95, 1.0, 0.9);
-    head.add(skull);
-    const jaw = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8), FUR); // cheek/jaw mass
-    jaw.scale.set(1.2, 0.75, 1.05);
-    jaw.position.set(0, -0.075, 0.05);
-    head.add(jaw);
-    const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8), FUR);
-    muzzle.scale.set(0.82, 0.58, 1.05);
-    muzzle.position.set(0, -0.045, 0.125);
-    head.add(muzzle);
-    const nose = new THREE.Mesh(new THREE.SphereGeometry(0.033, 8, 6), INK);
-    nose.scale.set(1.2, 0.75, 0.7);
-    nose.position.set(0, 0.005, 0.225); // sits on TOP of the muzzle, Crash-style
-    head.add(nose);
-    // smile: a thin torus arc lying on the muzzle's underside
-    const smileArc = Math.PI * 0.7;
-    const smile = new THREE.Mesh(new THREE.TorusGeometry(0.054, 0.008, 5, 12, smileArc), INK);
-    smile.rotation.set(0.35, 0, -Math.PI / 2 - smileArc / 2); // arc centered on the bottom
-    smile.position.set(0, -0.055, 0.185);
-    head.add(smile);
-    // eyes: big almond whites hugging the face curve, green iris, dark pupil,
-    // and a lash arc over the top lid
-    const lashArc = Math.PI * 0.6;
-    for (const e of [-1, 1]) {
-      const anatomicalSide = e === 1 ? 'left' : 'right';
-      const white = new THREE.Mesh(new THREE.SphereGeometry(0.05, 9, 8), EYE_WHITE);
-      white.name = `eye-white-${anatomicalSide}`;
-      white.scale.set(0.72, 1.05, 0.42);
-      white.position.set(e * 0.066, 0.03, 0.135);
-      white.rotation.y = e * 0.3;
-      head.add(white);
-      const iris = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), EYE_GREEN);
-      iris.name = `eye-iris-${anatomicalSide}`;
-      iris.scale.set(1, 1.15, 0.45);
-      iris.position.set(e * 0.069, 0.025, 0.168);
-      head.add(iris);
-      const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.012, 6, 5), INK);
-      pupil.name = `eye-pupil-${anatomicalSide}`;
-      pupil.scale.set(1, 1, 0.5);
-      pupil.position.set(e * 0.07, 0.025, 0.185);
-      head.add(pupil);
-      const lash = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.007, 4, 10, lashArc), INK);
-      lash.name = `eye-lash-${anatomicalSide}`;
-      lash.rotation.set(-0.15, e * 0.3, Math.PI / 2 - lashArc / 2); // arc centered on top
-      lash.position.set(e * 0.066, 0.035, 0.148);
-      head.add(lash);
-    }
-    // ears: the silhouette — tall flattened cones, pink inside
-    const earOuterGeo = new THREE.ConeGeometry(0.058, 0.26, 7);
-    earOuterGeo.translate(0, 0.13, 0); // pivot at the base
-    const earInnerGeo = new THREE.ConeGeometry(0.032, 0.13, 6);
-    earInnerGeo.translate(0, 0.065, 0);
+    this.headLookSocket = lookSocket;
+    const visualCenter = new THREE.Object3D();
+    visualCenter.name = 'socket-head-visual-center';
+    visualCenter.position.y = MESHY_HEAD_VISUAL_CENTER_Y;
+    head.add(visualCenter);
+    this.headVisualCenter = visualCenter;
+    this.meshyHead = createMeshyHead();
+    head.add(this.meshyHead.mesh);
+
+    // Retain empty auxiliary nodes so saved clips and procedural driver IDs
+    // remain migratable even though the monolithic skull owns the silhouette.
     for (const e of [-1, 1]) {
       const anatomicalSide = e === 1 ? 'left' : 'right';
       const ear = new THREE.Group();
       ear.name = `ear-${anatomicalSide}`;
       ear.position.set(e * 0.095, 0.135, -0.02);
-      ear.rotation.set(-0.15, 0, -e * 0.42); // splayed up-and-out, tipped back
+      ear.rotation.set(-0.15, 0, -e * 0.42);
       head.add(ear);
-      const outer = new THREE.Mesh(earOuterGeo, FUR);
-      outer.scale.z = 0.55;
-      ear.add(outer);
-      const inner = new THREE.Mesh(earInnerGeo, EAR); // pink lining, kept inside the rim
-      inner.scale.z = 0.3;
-      inner.position.z = 0.026;
-      ear.add(inner);
     }
-    // hair: blonde crown + swept bangs + high ponytail (two joints so it can
-    // swing with the tail driver)
-    const crown = new THREE.Mesh(
-      new THREE.SphereGeometry(0.185, 12, 7, 0, Math.PI * 2, 0, Math.PI * 0.42),
-      HAIR,
-    );
-    crown.position.y = 0.015;
-    crown.rotation.x = -0.06;
-    crown.scale.set(0.97, 1.05, 0.95);
-    head.add(crown);
-    const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.15, 10, 8), HAIR);
-    backHair.scale.set(1.05, 1.1, 0.66); // slim: the ponytail needs to clear it
-    backHair.position.set(0, 0.01, -0.075);
-    head.add(backHair);
-    const bang = (bx: number, by: number, bz: number, r: number, sx: number, rz: number, m = HAIR): void => {
-      const b = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), m);
-      b.scale.set(sx, 0.7, 0.6);
-      b.position.set(bx, by, bz);
-      b.rotation.z = rz;
-      head.add(b);
-    };
-    bang(-0.075, 0.09, 0.115, 0.055, 1.0, 0.25);
-    bang(0.0, 0.105, 0.13, 0.06, 1.05, 0);
-    bang(0.08, 0.085, 0.115, 0.05, 0.95, -0.25);
-    // long side sweep drifting across the right brow
-    const sweep = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), HAIR_DK);
-    sweep.scale.set(0.66, 1.5, 0.5);
-    sweep.position.set(0.115, 0.03, 0.09);
-    sweep.rotation.z = -0.35;
-    head.add(sweep);
-    const ponyA = new THREE.Group(); // scrunchie + puff
+    const ponyA = new THREE.Group();
     ponyA.name = 'ponytail-base';
-    ponyA.position.set(0, 0.175, -0.145); // clears the back-hair mass
-    ponyA.rotation.x = 1.2; // swung well out off the crown
+    ponyA.position.set(0, 0.175, -0.145);
+    ponyA.rotation.x = 1.2;
     head.add(ponyA);
-    const scrunchie = new THREE.Mesh(new THREE.TorusGeometry(0.038, 0.022, 6, 10), PINK);
-    scrunchie.rotation.x = Math.PI / 2;
-    scrunchie.position.y = 0.012; // proud of the crown so the pink ring reads
-    ponyA.add(scrunchie);
-    const puffGeo = new THREE.CapsuleGeometry(0.082, 0.1, 3, 8);
-    puffGeo.translate(0, -0.1, 0);
-    const puff = new THREE.Mesh(puffGeo, HAIR);
-    puff.scale.set(0.95, 1, 0.85);
-    ponyA.add(puff);
-    const ponyB = new THREE.Group(); // tapering tip
+    const ponyB = new THREE.Group();
     ponyB.name = 'ponytail-tip';
     ponyB.position.y = -0.21;
     ponyB.rotation.x = 0.5;
     ponyA.add(ponyB);
-    const ponyTipGeo = new THREE.ConeGeometry(0.052, 0.2, 7);
-    ponyTipGeo.rotateX(Math.PI);
-    ponyTipGeo.translate(0, -0.08, 0);
-    ponyB.add(new THREE.Mesh(ponyTipGeo, HAIR_DK));
     this.ponyA = ponyA;
     this.ponyB = ponyB;
 
@@ -14839,6 +14776,7 @@ export class Player {
     } as const;
     const socketNames = {
       look: 'socket-look',
+      headVisualCenter: 'socket-head-visual-center',
       gripLeft: 'socket-grip-left',
       gripRight: 'socket-grip-right',
       footLeft: 'socket-foot-left',
@@ -15084,6 +15022,16 @@ export class Player {
         skinBones: this.meshyTorso.skeleton.bones.map((bone) => bone.name),
         lengthControl: 'deform.torso.length',
         proportions: ['torsoLength', 'torsoWidth', 'torsoDepth'],
+        collisionChanged: false,
+      },
+      headSurface: {
+        kind: 'meshy-crowned-inferno-skull-head',
+        schemaVersion: 1,
+        provenance: 'public/characters/meshy-head/provenance.json',
+        sourceSha256: this.meshyHead.sourceSha256,
+        triangles: this.meshyHead.triangles,
+        attachmentJoint: 'head',
+        neckGapControl: 'neckLength',
         collisionChanged: false,
       },
       limbBoneRig: {

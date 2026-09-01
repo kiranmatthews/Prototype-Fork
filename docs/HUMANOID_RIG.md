@@ -30,8 +30,20 @@ procedural-rider (root-motion control)
    └─ hip-right → knee-right → ankle-right → toe-right
 ```
 
-The simulated tail, ears, and ponytail remain auxiliary chains. They are
-declared to the animation suite but are not humanoid retarget bones.
+The simulated tail remains an auxiliary chain. Empty ear and ponytail nodes are
+still declared to the animation suite for saved-track compatibility, but no
+longer own visible surfaces and are not humanoid retarget bones.
+
+The visible head is the attributed static Meshy **Crowned Inferno Skull**,
+rigidly attached beneath the existing semantic `head` bone. Its source bottom
+is rebased to local Y=0, making the head bone a stable base pivot.
+Character Lab neck height changes only `head.position.y`: the `neck` bone,
+torso skin, and head scale remain invariant, so the value is literal air space.
+The gap is an additive offset over live animation, preserving procedural or
+keyframed head translation.
+Head size/width/depth still scale the head bone around that attachment point.
+The look and mask-center sockets are rebased to the imported face while empty
+ear/ponytail nodes preserve old animation IDs.
 
 The visible torso is the attributed Meshy **Skeleton Tank Top** surface. Its
 source FBX is static and unrigged, so runtime code generates smooth weights for

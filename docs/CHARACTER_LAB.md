@@ -35,10 +35,9 @@ values from one frame to the next.
 
 ## Controls
 
-The first schema includes overall scale/height/build, head size and axes, neck
+The first schema includes overall scale/height/build, head size and axes, head gap
 and torso dimensions, shoulder/hip width, separate upper/lower limb lengths,
-limb thickness, independent arm/leg knob size, hand/foot size,
-ear/eye/ponytail size and animal-tail
+limb thickness, independent arm/leg knob size, hand/foot size and animal-tail
 visibility. Hand-rest pitch, yaw and roll are also persistent: pitch is linked
 while yaw and roll mirror anatomically across the two wrists. These values live
 on presentation mounts below the wrist bones, so a rest-orientation adjustment
@@ -79,6 +78,16 @@ animation volume correction remain reversible presentation layers. These three
 torso controls target the imported torso surface only; shorts and butt/pelvis
 surfaces remain under whole-body and hip controls. The former
 procedural heart tank and bare-waist meshes are no longer present.
+
+The **Head** view frames the attributed Meshy Crowned Inferno Skull. It is a
+rigid child of the existing semantic head bone, so authored and procedural head
+motion remain unchanged. **Neck height / gap** now translates only the head's
+local Y offset: `0` closes the air gap, `1` gives the default 0.095m gap, and
+`1.8` gives 0.171m. It never moves the neck bone, pulls the torso skin, or
+scales the skull, and it adds over rather than multiplying any authored head
+position track. The former visible kangaroo face, eyes, ears, hair, ponytail,
+neck cylinder, necklace, and pendant are retired; empty ear/ponytail nodes stay
+only for saved-animation compatibility.
 
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current

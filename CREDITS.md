@@ -214,6 +214,17 @@ the same conservative free-plan attribution as the repository's other
 owner-supplied Meshy assets: **models created with
 [Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
 
+## Owner-supplied Meshy head
+
+The visible character head is the owner's generated **Crowned Inferno Skull**
+Meshy model. The browser ships generated position/UV buffers and resized PBR
+maps, not the original FBX or archive. Both the outward skull shell and the
+inward-wound cavity shell are preserved. Source/derived hashes, topology,
+upload provenance, conversion, rest fit, and neck-gap mapping are recorded in
+`public/characters/meshy-head/provenance.json`. It uses the same conservative
+owner-supplied Meshy attribution: **model created with
+[Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
+
 ## Everything else
 
 The remaining levels, physics, character rig, surface textures, editor and UI
