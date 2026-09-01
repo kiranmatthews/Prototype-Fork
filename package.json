@@ -9,7 +9,7 @@
     "check:unity-ports": "node tools/test-unity-level-ports.mjs && node tools/test-beachside-merge.mjs && node tools/test-beachfront-cliff.mjs && node tools/test-wood-path-kit.mjs && node tools/test-island-shelf.mjs && node tools/test-island-shore-foam.mjs && node tools/test-crate-rest-surface.mjs && node tools/test-coastal-street-kit.mjs && node tools/test-unity-sand-material.mjs",
     "check:ground": "node tools/validate-ground-acceleration.mjs",
     "check:crouch-jump": "node tools/test-crouch-jump-slam.mjs",
-    "check:pipe": "node tools/test-halfpipe-contact.mjs && node tools/validate-halfpipe-safety.mjs",
+    "check:pipe": "node tools/test-halfpipe-contact.mjs && node tools/validate-halfpipe-safety.mjs && node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
     "check:ledge": "node tools/validate-ledge-traversal.mjs",
     "check:rope": "node tools/test-rope-board-transfer.mjs",
     "check:rail-air": "node tools/test-rail-air-transfer.mjs",

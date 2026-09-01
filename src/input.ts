@@ -17,7 +17,7 @@ export class Input {
   grindHeld = false;
   spinHeld = false;
   grabHeld = false;
-  transferHeld = false; // R2: rail-air transfer strafe; press also triggers spine/revert actions
+  transferHeld = false; // R2: rail-air transfer strafe; press also triggers revert/lip actions
 
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.
@@ -134,7 +134,7 @@ export class Input {
       grab = grab || !!pad.buttons[1]?.pressed; // Circle
       spin = spin || !!pad.buttons[2]?.pressed; // Square
       grind = grind || !!pad.buttons[3]?.pressed; // Triangle
-      transfer = transfer || !!pad.buttons[7]?.pressed; // R2 = spine transfer
+      transfer = transfer || !!pad.buttons[7]?.pressed; // R2 = transfer/revert modifier
       restart = restart || !!pad.buttons[8]?.pressed; // Share = reset
       pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
     }

@@ -51,11 +51,11 @@ outside the published browser bundle.
 | --- | --- | --- |
 | Forward / back up | Left stick or d-pad up/down | Up/Down (W/S) |
 | Sidestep (axis-locked, works in air) | Left stick left/right | Left/Right (A/D) |
-| Jump | X (Cross) | Space |
+| Jump / vert transfer / board abandon | X (Cross) | Space |
 | Grind (hold near/over a rail) | Triangle | E |
 | Spin attack / trick | Square | F |
 | Air grab (speed boost on landing) | Circle | Q |
-| Transfer modifier / spine transfer / revert | R2 | T |
+| Rail-air transfer modifier / revert / lip exit | R2 | T |
 | Restart | Share / Create | R |
 | Pause | Options | P / Escape |
 
@@ -68,6 +68,11 @@ lock.
 During an ordinary board ollie, press and release Jump a second time to perform
 the risky emergency eject. The menu’s **STANDARD RULE** switch selects classic
 lives or the optional Endless Deaths score/death-count ruleset.
+
+During mounted vert air, the next fresh Jump press/release attempts one spine
+transfer; one further fresh press/release abandons the board. Landing resets the
+sequence, and X must come back up after an unfinished air press before another
+ground charge can begin.
 
 Death respawns automatically. Plug in a controller and press any button on it —
 the detected name shows in the debug panel.

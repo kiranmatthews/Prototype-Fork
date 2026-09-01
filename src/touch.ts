@@ -1,6 +1,6 @@
 // Mobile touch controls: a translucent 8-way D-pad (left thumb), the PS
 // face-button diamond (right thumb), and a quick upward swipe on the right
-// half for R2 (spine transfers). Active only on coarse-pointer devices (or
+// half for R2 (rail-air transfers, reverts, and lip exits). Active only on coarse-pointer devices (or
 // force-enabled with '?touch' for testing) — desktop keeps keyboard/gamepad
 // untouched. The same class also flips the HUD into its compact phone layout
 // via the body.tc-on styles below.

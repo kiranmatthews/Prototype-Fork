@@ -73,6 +73,12 @@ import {
   BAIL_RECOVERY_SPRAWL_PITCH,
   sampleBailRecovery,
 } from './bailRecovery';
+import {
+  beginVertBoardRelease,
+  createVertBoardReleaseState,
+  resetVertBoardRelease,
+  stepVertBoardRelease,
+} from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
 import {
   characterProportionSettings,
@@ -766,6 +772,13 @@ export class Player {
   private emergencyEjectUsed = false;
   private emergencyEjectLandingPending = false;
   private emergencyEjectLandingWillBail = false;
+  // Vert jump input is a release-counted transaction: the launch owns release
+  // one, the next fresh press/release spends the one spine-transfer attempt,
+  // and the third release abandons the board. A held press never advances it.
+  private readonly vertBoardRelease = createVertBoardReleaseState();
+  // If a fresh air press survives touchdown, swallow its eventual release.
+  // Without this latch the held button silently becomes a new ground charge.
+  private jumpReleaseRearmRequired = false;
   // FREE-HEADING SKATE: while on the board (not walking / pipe / sliding),
   // the travel axes ARE the board's heading and the stick carves them around
   // — no more axis-locked "brake if you turn too far".
@@ -835,7 +848,7 @@ export class Player {
   // SPINE TRANSFER: which pipe the current hang crested from; landing a hang on
   // a DIFFERENT pipe = carried across the ridge.
   private hangPipe: Halfpipe | null = null;
-  private transferCoolT = 0; // debounce between R2 spine transfers
+  private transferCoolT = 0; // debounce after the one release-triggered spine transfer
   // Where the follow camera is AIMING (XZ-projected, unit), fed by main every
   // frame. The lip stall projects its tip axis onto this so the balance meter
   // and the stick axis that fights it match what's on screen.
@@ -847,6 +860,9 @@ export class Player {
   // beat that stale hold must not read as a pull-back brake (the skateHalt
   // stall) or carve you back up the face: the drop-in flows.
   private pipeLandGraceT = 0;
+  // One grounded physics beat after an air landing cannot be mistaken for a
+  // new automatic coping crest while the previous steep rideNormal settles.
+  private landingLaunchLockT = 0;
   // THPS WALLRIDE: ollie into a wall HOLDING GRIND and stick to its face, riding
   // along it under gentle gravity; jump to kick off. Owns its own motion while
   // active (its own branch in stepAir).
@@ -2443,6 +2459,8 @@ export class Player {
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
     this.emergencyEjectLandingWillBail = false;
+    resetVertBoardRelease(this.vertBoardRelease);
+    this.jumpReleaseRearmRequired = false;
     this.stepOff = false;
     this.stance = 1;
     this.vertAir = false;
@@ -2451,6 +2469,7 @@ export class Player {
     this.pipeHang = false;
     this.pipeRideT = 0;
     this.pipeLandGraceT = 0;
+    this.landingLaunchLockT = 0;
     this.manualing = 0;
     this.manualArmed = 0;
     this.manualArmT = 0;
@@ -2672,6 +2691,24 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
+    // An X press that began in air remains owned by that air until the button
+    // comes all the way back up. Sanitize it before ANY ground/crest/trick
+    // routing: doing this only inside the late charge block still let the
+    // release add a fresh vert pop earlier in stepRide.
+    if (this.jumpReleaseRearmRequired) {
+      this.charging = false;
+      this.chargePlanted = false;
+      this.chargeTimer = 0;
+      this.jumpBufferT = 0;
+      if (!input.jumpHeld) this.jumpReleaseRearmRequired = false;
+      input = {
+        ...input,
+        jumpHeld: false,
+        jumpPressed: false,
+        jumpReleased: false,
+      } as Input;
+      this.rawInput = input;
+    }
     // SPECIAL commands live in raw SCREEN directions, before course/skate
     // remapping. Decode the two direction taps now so Triangle can reach grind
     // routing and same-tick ollie releases can reach Square air specials.
@@ -2975,6 +3012,7 @@ export class Player {
     }
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
+    this.landingLaunchLockT = Math.max(0, this.landingLaunchLockT - dt);
     this.lipCoolT = Math.max(0, this.lipCoolT - dt);
     this.transferCoolT = Math.max(0, this.transferCoolT - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
@@ -3118,6 +3156,7 @@ export class Player {
     }
     if (this.state !== 'air') {
       this.airRose = false; // each new air re-earns its "this was a jump" flag
+      resetVertBoardRelease(this.vertBoardRelease);
       this.vertAir = false;
       this.pipeHang = false;
       this.vertLatVel = 0;
@@ -3342,16 +3381,32 @@ export class Player {
         }
         break;
       }
-      case 'air':
+      case 'air': {
         this.runTime += dt;
-        // A second Jump release may be the once-per-ollie emergency eject.
-        // Resolve that transaction before any new attachment so one edge can
-        // never both throw the board and catch a rope (or rail) on this tick.
-        const emergencyEjected = this.tickEmergencyBoardEject(dt, input);
-        // SPINE TRANSFER: R2 mid-hang pops the hang over the coping onto the
-        // adjacent vert (when there is one). Deliberate, edge-triggered.
-        if (!emergencyEjected && !this.isBailing && input.transferPressed)
-          this.trySpineTransfer(level);
+        // Vert X is a strict release sequence. Resolve it before attachments:
+        // release 2 spends the single adjacent-spine attempt; release 3 throws
+        // the board. A consumed edge is hidden from every later air handler so
+        // it cannot also buffer a landing jump, double-jump, or trigger a trick.
+        const vertReleaseActive =
+          this.vertAir ||
+          this.vertBoardRelease.stage === 1 ||
+          this.vertBoardRelease.stage === 2;
+        const vertRelease = vertReleaseActive
+          ? stepVertBoardRelease(this.vertBoardRelease, dt, input)
+          : { action: 'none' as const, consumed: false, charge: 0 };
+        if (vertRelease.action === 'transfer') this.tryAdjacentSpineTransfer(level);
+        else if (vertRelease.action === 'abandon')
+          this.performBoardAbandon(vertRelease.charge, 'Board Abandon', this.vertAir);
+
+        // Ordinary board airs retain their charged emergency eject. Vert airs
+        // use the explicit three-release route above instead.
+        const emergencyEjected =
+          vertRelease.action === 'abandon' ? true : this.tickEmergencyBoardEject(dt, input);
+        const jumpActionConsumed = vertRelease.consumed || emergencyEjected;
+        if (jumpActionConsumed) {
+          input = { ...input, jumpPressed: false, jumpReleased: false } as Input;
+          this.rawInput = input;
+        }
         // NOTE: there is deliberately NO lip-stall catch from the air. The
         // stall is committed ON the wall (climb square holding Triangle,
         // through the crest) — once you're in hangtime, coming down onto the
@@ -3359,7 +3414,7 @@ export class Player {
         // Triangle is held). Getting parked on the coping out of a big hang
         // killed the flow.
         if (
-          !emergencyEjected &&
+          !jumpActionConsumed &&
           this.ropeCoolT <= 0 &&
           !this.wallriding &&
           !this.slamActive &&
@@ -3368,16 +3423,17 @@ export class Player {
         ) {
           // hands on the swing rope
         } else if (
-          !emergencyEjected &&
+          !jumpActionConsumed &&
           !this.wallriding &&
           (input.grindPressed || input.grindHeld) &&
           this.tryGrind(input.grindPressed, level)
         ) {
           // grabbed the rail
         } else {
-          this.stepAir(dt, input, level, emergencyEjected);
+          this.stepAir(dt, input, level, jumpActionConsumed);
         }
         break;
+      }
       case 'grind':
         this.runTime += dt;
         this.stepGrind(dt, input, level);
@@ -3628,6 +3684,8 @@ export class Player {
   // jumpVelocity. The jump's IDENTITY is decided here, at release, from the
   // state and speed you're carrying — not from how X was pressed.
   private chargedJump(dt: number): void {
+    resetVertBoardRelease(this.vertBoardRelease);
+    this.jumpReleaseRearmRequired = false;
     this.boardOllieAir = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectCharging = false;
@@ -5070,6 +5128,7 @@ export class Player {
     const hpNow = this.freeSkate && hit ? hit.halfpipe : undefined;
     if (
       hpNow &&
+      this.landingLaunchLockT <= 0 &&
       !this.isBailing && // a tumbling body must never be thrown into a hang
       this.lastTy > 0.15 && // heading is still climbing (not dropping back down)
       this.rideNormal.y <= 0.25 && // at the near-vertical coping stretch
@@ -5098,7 +5157,7 @@ export class Player {
         CONST.maxFallSpeed,
       );
       this.enterVertAir(
-        input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || !input.jumpHeld,
+        input.jumpReleased || this.jumpBufferT > 0 || this.vertLaunchT > 0,
       );
       // (no woosh here: this fires on EVERY vert-air entry, so pumping a pipe
       // spammed it into a wind tunnel. The sparks carry the moment.)
@@ -5106,6 +5165,8 @@ export class Player {
       this.coyoteTimer = 0;
     } else if (
       hit &&
+      this.freeSkate && // automatic board hangs must never conjure a loose deck under a runner
+      this.landingLaunchLockT <= 0 &&
       !this.isBailing && // ...same for the general crest
       this.speed > 0.5 &&
       vertFace(hit) &&
@@ -5123,7 +5184,7 @@ export class Player {
       // higher into the hang (the intuitive pop); holding X = a mellow hang.
       // Approach angle decides straight-in vs a sideways gap (see enterVertAir).
       this.enterVertAir(
-        input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || this.vertLaunchT > 0,
+        input.jumpReleased || this.jumpBufferT > 0 || this.vertLaunchT > 0,
       );
       // (same spam rule as the crest pop: no per-entry woosh)
       this.emitSparks(5, 0xfff3d0, 1.2);
@@ -5207,9 +5268,15 @@ export class Player {
           : 0;
       // A near-vertical lip (halfpipe coping) is hang time; releasing X launches.
       // Same head-on-OR-vert-wall test as the grounded crest (angled entries too).
-      if (this.vVel > 0.5 && vertFace(hit) && (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY)) {
+      if (
+        this.freeSkate &&
+        this.landingLaunchLockT <= 0 &&
+        this.vVel > 0.5 &&
+        vertFace(hit) &&
+        (this.lastTy > TUNING.vertLip || this.rideNormal.y < vertWallY)
+      ) {
         this.enterVertAir(
-          input.jumpReleased || input.jumpPressed || this.jumpBufferT > 0 || this.vertLaunchT > 0,
+          input.jumpReleased || this.jumpBufferT > 0 || this.vertLaunchT > 0,
         );
         // (same spam rule: vert-air entries are silent, the ride is the sound)
       }
@@ -5299,6 +5366,34 @@ export class Player {
     if (!input.jumpReleased || !this.emergencyEjectCharging) return false;
 
     const charge = THREE.MathUtils.clamp(this.emergencyEjectChargeT / 0.4, 0, 1);
+    this.performBoardAbandon(charge, 'Emergency Eject', false);
+    return true;
+  }
+
+  private performBoardAbandon(
+    charge: number,
+    label: 'Emergency Eject' | 'Board Abandon',
+    fromVert: boolean,
+  ): void {
+    charge = THREE.MathUtils.clamp(charge, 0, 1);
+    if (fromVert) {
+      // Vert stores planar flight along the coping rather than in speed. Put it
+      // back into the ordinary velocity frame before cloning the deck so both
+      // rider and loose board inherit the real pre-abandon trajectory.
+      const lateral = this.vertLatVel;
+      if (Math.abs(lateral) > 1e-4) {
+        const direction = Math.sign(lateral);
+        this.axisF.set(
+          -this.vertNormal.z * direction,
+          0,
+          this.vertNormal.x * direction,
+        );
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+        this.speed = Math.abs(lateral);
+      } else {
+        this.speed = 0;
+      }
+    }
     // Capture and launch the real deck before handing its velocity back to the
     // rider at the reduced retention rate.
     this.throwBoard(true);
@@ -5316,6 +5411,15 @@ export class Player {
     this.freeSkate = false;
     this.stepOff = true;
     this.slideFromWalk = true; // first touchdown stays on foot; no speed-remount
+    if (fromVert) {
+      this.vertAir = false;
+      this.vertTracked = false;
+      this.vertLossT = 0;
+      this.vertLatVel = 0;
+      this.vertInDrift = 0;
+      this.pipeHang = false;
+      this.hangPipe = null;
+    }
     this.boardOllieAir = false;
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
@@ -5328,10 +5432,9 @@ export class Player {
     this.flipT = 0;
     this.deckTricksThisAir.clear();
     this.flipTimer = CONST.frontFlip ? CONST.flipDuration : 0;
-    this.lastJumpType = 'Emergency Eject';
+    this.lastJumpType = label;
     sfx.play('ollie', 0.75, 0.9 + charge * 0.2);
     sfx.play('woosh2', 0.6);
-    return true;
   }
 
   // Consume first-contact evidence exactly once. The caller decides whether a
@@ -5575,6 +5678,9 @@ export class Player {
       if (this.airFromSkate) {
         // off the deck: the rest of this air, the landing and everything after
         // it are on foot
+        if (this.vertBoardRelease.pressArmed && input.jumpHeld)
+          this.jumpReleaseRearmRequired = true;
+        resetVertBoardRelease(this.vertBoardRelease);
         this.airFromSkate = false;
         this.airGrav = 'foot';
         this.freeSkate = false;
@@ -5854,9 +5960,19 @@ export class Player {
     }
 
     if (landNow && hit) {
+      const airPressStillHeld =
+        input.jumpHeld &&
+        (this.emergencyEjectCharging || this.vertBoardRelease.pressArmed);
       this.pos.y = hit.y;
       this.state = 'ride';
       this.grounded = true;
+      this.jumpReleaseRearmRequired =
+        this.jumpReleaseRearmRequired || airPressStillHeld;
+      this.landingLaunchLockT = Math.max(
+        this.landingLaunchLockT,
+        2 * CONST.fixedStep,
+      );
+      resetVertBoardRelease(this.vertBoardRelease);
       this.boardOllieAir = false;
       this.emergencyEjectCharging = false;
       this.emergencyEjectChargeT = 0;
@@ -6462,6 +6578,9 @@ export class Player {
     this.pipeEndFly = false; // catching ANOTHER vert saves a pipe-end fly-off
     this.rollOffT = 0; // ...and re-owns a levelling ride-out's pose
     this.vertAir = true;
+    if (this.freeSkate && this.airFromSkate && this.airGrav === 'board')
+      beginVertBoardRelease(this.vertBoardRelease);
+    else resetVertBoardRelease(this.vertBoardRelease);
   }
 
   // BASELINE CRUISE: while free-skating the board holds cruiseSpeed on its
@@ -6516,6 +6635,8 @@ export class Player {
    * on the catch tick.
    */
   private detachBoardForTraversal(): boolean {
+    resetVertBoardRelease(this.vertBoardRelease);
+    this.jumpReleaseRearmRequired = false;
     const hadBoard = this.freeSkate;
     if (hadBoard) {
       this.throwBoard(true);
@@ -7004,19 +7125,13 @@ export class Player {
     this.emitSparks(5, 0xffe08a, 1.2);
   }
 
-  // SPINE TRANSFER — deliberate: R2 during a pipe hang, near or above the
-  // coping. If another vert's mouth sits right across the lip line you're
-  // hanging over, the hang does a one-way switch onto that pipe: position
-  // and glue plane mirror across the coping, the arc (vVel) carries over,
-  // and you come down the far transition. No target = the press does
-  // nothing. Nothing too crazy.
-  private trySpineTransfer(level: Level): boolean {
+  // SPINE TRANSFER — the second vert Jump release gets exactly one adjacent
+  // pipe attempt. If another mouth sits across the ridge, mirror the live arc
+  // onto it; no target means the release is still spent, with no generic
+  // coping exit hidden behind the same input.
+  private tryAdjacentSpineTransfer(level: Level): boolean {
     if (this.isBailing || !this.vertAir || this.transferCoolT > 0) return false;
-    // general vert crest (a ramp lip, not a pipe): R2 still pulls you OUT —
-    // eject over the top onto whatever's behind the wall
-    if (!this.pipeHang || !this.hangPipe) {
-      return this.vertExit(this.vertNormal.clone().negate(), this.pos.y);
-    }
+    if (!this.pipeHang || !this.hangPipe) return false;
     const hp = this.hangPipe;
     if (this.pos.y < hp.lipY - 0.5) return false; // below the coping the ridge is solid
     const anchorCross = hp.crossCoord(this.vertAnchor.x, this.vertAnchor.z);
@@ -7037,21 +7152,17 @@ export class Player {
         break;
       }
     }
-    if (!target) {
-      // no pipe across the ridge — R2 pulls you OUT of the vert instead:
-      // hop the coping onto the deck/platform behind it and roll away
-      const out = new THREE.Vector3(hp.axis === 'z' ? side : 0, 0, hp.axis === 'z' ? 0 : side);
-      if (hp.axis === 'z') this.pos.x = lipCross + side * 1.2;
-      else this.pos.z = lipCross + side * 1.2;
-      return this.vertExit(out, Math.max(this.pos.y, hp.lipY + 0.3));
-    }
+    if (!target) return false;
     // mirror pos + glue plane across the lip line; keep height, arc, lateral
     const myCross = hp.crossCoord(this.pos.x, this.pos.z);
+    const previousCross = hp.crossCoord(this.prevPos.x, this.prevPos.z);
     if (hp.axis === 'z') {
       this.pos.x = 2 * lipCross - myCross;
+      this.prevPos.x = 2 * lipCross - previousCross;
       this.vertAnchor.x = 2 * lipCross - anchorCross;
     } else {
       this.pos.z = 2 * lipCross - myCross;
+      this.prevPos.z = 2 * lipCross - previousCross;
       this.vertAnchor.z = 2 * lipCross - anchorCross;
     }
     this.vertNormal.negate(); // the far pipe's wall faces the other way
@@ -7065,32 +7176,6 @@ export class Player {
     this.score(CONST.ptsSpine, 'Spine Transfer');
     sfx.play('woosh2', 0.7);
     this.emitSparks(8, 0xa0e8ff, 2);
-    return true;
-  }
-
-  // R2 pull-out: leave the glued vert cleanly in `out`'s direction — a small
-  // outward hop that lands on regular ground (deck, platform, whatever's
-  // there). Not a bail: the combo survives, you just roll away.
-  private vertExit(out: THREE.Vector3, y: number): boolean {
-    if (out.lengthSq() < 1e-6) return false;
-    out.setY(0).normalize();
-    this.pos.addScaledVector(out, 0.6);
-    this.pos.y = y;
-    this.vertAir = false;
-    this.pipeHang = false;
-    this.hangPipe = null;
-    this.vertLatVel = 0;
-    this.axisF.copy(out);
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.speed = Math.max(5, Math.abs(this.speed) * 0.5); // roll-out push (hang speed sits in vVel)
-    this.vVel = Math.max(this.vVel, 2.5);
-    this.state = 'air';
-    this.grounded = false;
-    this.airFromSkate = true;
-    this.airGrav = 'board';
-    this.pipeLandGraceT = 0.35; // a stale held direction must not brake the exit
-    this.transferCoolT = 0.3;
-    sfx.play('woosh2', 0.55);
     return true;
   }
 
@@ -7275,6 +7360,8 @@ export class Player {
     // matters because ordinary bails, snapped boards, rail falls, and PvP all
     // enter through different call sites; none may resume a stale move later.
     this.cancelSlideTraversal();
+    resetVertBoardRelease(this.vertBoardRelease);
+    this.jumpReleaseRearmRequired = false;
     if (this.grindRail) this.railLeft();
     this.grindRail = null;
     this.grindRun = null;
@@ -7992,6 +8079,8 @@ export class Player {
   }
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
+    resetVertBoardRelease(this.vertBoardRelease);
+    this.jumpReleaseRearmRequired = false;
     this.boardOllieAir = false;
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
