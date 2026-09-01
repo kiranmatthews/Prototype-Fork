@@ -22,6 +22,10 @@ try {
     RIG_SCHEMA_VERSION,
     PLAYER_DEFORMATION_CONTROLS,
     PLAYER_STARTER_CATALOG_VERSION,
+    UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
+    UNITY_SLAM_FALL_POSE_DEGREES,
+    UNITY_SLAM_POSE_SOURCE,
+    UNITY_SLAM_POSE_TIMING,
     clipTimeAt,
     bakeProceduralClip,
     composeProceduralPose,
@@ -338,7 +342,8 @@ try {
   const idle = findClip(parsedSuite, 'player.idle');
   const run = findClip(parsedSuite, 'player.run');
   const paceStop = findClip(parsedSuite, 'player.pace-stop');
-  assert.ok(jump && land && idle && run && paceStop);
+  const slam = findClip(parsedSuite, 'player.slam');
+  assert.ok(jump && land && idle && run && paceStop && slam);
   assert.equal(jump.playbackSpeed, 1);
   assert.ok(jump.tracks.filter((track) => track.kind === 'scalar').length >= 9);
   const jumpPose = sampleClip(jump, 0.32);
@@ -348,6 +353,62 @@ try {
   assert.ok(idle.proceduralDrivers.length >= 2);
   assert.equal(run.proceduralDrivers.length, 0,
     'Jog_Fwd already owns its cadence and must not receive the legacy gait twice');
+
+  assert.equal(slam.name, 'Body Slam — Unity Pose');
+  assert.equal(slam.duration, UNITY_SLAM_POSE_TIMING.duration);
+  assert.equal(slam.tracks.length, 8);
+  assert.equal(slam.metadata.progressSource, 'gameplay-actionProgress');
+  assert.deepEqual(slam.metadata.sourceAnimation, UNITY_SLAM_POSE_SOURCE);
+  const assertEulerPose = (pose, target, degrees, label) => {
+    assert.ok(pose.joints[target], `${label} did not target ${target}`);
+    const actual = new THREE.Quaternion().fromArray(pose.joints[target].quaternion);
+    const expected = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+      THREE.MathUtils.degToRad(degrees[0]),
+      THREE.MathUtils.degToRad(degrees[1]),
+      THREE.MathUtils.degToRad(degrees[2]),
+      'XYZ',
+    ));
+    near(Math.abs(actual.dot(expected)), 1, 1e-6);
+  };
+  const slamAnticipation = sampleClip(slam, 0);
+  const slamFall = sampleClip(slam, UNITY_SLAM_POSE_TIMING.fallPoseReached);
+  assertEulerPose(
+    slamAnticipation,
+    'shoulderLeft',
+    UNITY_SLAM_ANTICIPATION_POSE_DEGREES.shoulderLeft,
+    'Unity slam anticipation',
+  );
+  assertEulerPose(
+    slamAnticipation,
+    'shoulderRight',
+    UNITY_SLAM_ANTICIPATION_POSE_DEGREES.shoulderRight,
+    'Unity slam anticipation',
+  );
+  assertEulerPose(
+    slamAnticipation,
+    'hipLeft',
+    [UNITY_SLAM_ANTICIPATION_POSE_DEGREES.hipLeft, 0, 0],
+    'Unity slam anticipation',
+  );
+  assertEulerPose(
+    slamAnticipation,
+    'kneeRight',
+    [UNITY_SLAM_ANTICIPATION_POSE_DEGREES.kneeRight, 0, 0],
+    'Unity slam anticipation',
+  );
+  assertEulerPose(
+    slamFall,
+    'shoulderLeft',
+    UNITY_SLAM_FALL_POSE_DEGREES.shoulderLeft,
+    'Unity slam fall',
+  );
+  assertEulerPose(
+    slamFall,
+    'hipRight',
+    [UNITY_SLAM_FALL_POSE_DEGREES.hipRight, 0, 0],
+    'Unity slam fall',
+  );
+  assertEulerPose(slamFall, 'elbowLeft', [0, 0, 0], 'Unity slam fall');
 
   // Run is the native 30 FPS Quaternius Jog_Fwd loop, converted to ordinary
   // semantic keyframe tracks so every source sample remains editable.
@@ -540,6 +601,45 @@ try {
   assert.equal(findClip(preservedJogRun, 'player.run'), customizedJogRun,
     'catalog reconciliation replaced an already-imported Jog_Fwd edit');
   assert.equal(findClip(preservedJogRun, 'player.run.pre-jog-local'), undefined);
+
+  // Catalog v5 replaces only the untouched Slam identity placeholder. A user
+  // who already authored any slam channel keeps that browser-owned work.
+  const slamPlaceholder = {
+    ...structuredClone(slam),
+    name: 'Slam — Starter Placeholder',
+    tracks: [],
+    proceduralDrivers: [],
+    markers: [],
+    tags: ['player', 'starter-placeholder'],
+    metadata: {
+      starterQuality: 'identity-placeholder',
+      note: 'Rest-pose slot ready for browser keyframing.',
+    },
+  };
+  const versionFourPlaceholderSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      clip.id === 'player.slam' ? slamPlaceholder : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 4 },
+  };
+  const upgradedUnitySlam = reconcilePlayerStarterAnimationSuite(
+    versionFourPlaceholderSuite,
+    binding.definition,
+  );
+  assert.equal(findClip(upgradedUnitySlam, 'player.slam').name, 'Body Slam — Unity Pose');
+  assert.equal(findClip(upgradedUnitySlam, 'player.slam').tracks.length, 8);
+  const editedSlamPlaceholder = {
+    ...slamPlaceholder,
+    name: 'My Authored Slam',
+    tracks: [structuredClone(slam.tracks[0])],
+  };
+  const preservedEditedSlam = reconcilePlayerStarterAnimationSuite({
+    ...versionFourPlaceholderSuite,
+    clips: versionFourPlaceholderSuite.clips.map((clip) =>
+      clip.id === 'player.slam' ? editedSlamPlaceholder : clip),
+  }, binding.definition);
+  assert.equal(findClip(preservedEditedSlam, 'player.slam'), editedSlamPlaceholder,
+    'catalog v5 replaced an edited local slam clip');
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,

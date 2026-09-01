@@ -7,6 +7,13 @@ import {
   QUATERNIUS_JOG_FWD_ROTATION_KEYS,
   QUATERNIUS_JOG_FWD_SOURCE,
 } from './quaterniusJogFwd.generated';
+import {
+  UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
+  UNITY_SLAM_FALL_POSE_DEGREES,
+  UNITY_SLAM_POSE_SOURCE,
+  UNITY_SLAM_POSE_TIMING,
+  type UnitySlamLimbPoseDegrees,
+} from './unitySlamPose';
 import type {
   AnimationClip,
   AnimationContact,
@@ -59,7 +66,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 4;
+export const PLAYER_STARTER_CATALOG_VERSION = 5;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -102,6 +109,13 @@ function isJogFwdRun(clip: AnimationClip): boolean {
   const source = clip.metadata?.sourceAnimation;
   return source !== null && typeof source === 'object' && !Array.isArray(source) &&
     source.sourceClip === 'Jog_Fwd_Loop';
+}
+
+function isUntouchedSlamPlaceholder(clip: AnimationClip): boolean {
+  return clip.id === 'player.slam' &&
+    clip.metadata?.starterQuality === 'identity-placeholder' &&
+    clip.tracks.length === 0 &&
+    clip.proceduralDrivers.length === 0;
 }
 
 function preJogRunBackup(clip: AnimationClip): AnimationClip {
@@ -822,6 +836,58 @@ function buildSkate(rigId: string): AnimationClip {
   return clip;
 }
 
+function buildUnitySlam(rigId: string): AnimationClip {
+  const timing = UNITY_SLAM_POSE_TIMING;
+  const clip = baseClip(
+    'player.slam',
+    'Body Slam — Unity Pose',
+    timing.duration,
+    'once',
+    rigId,
+  );
+  clip.loop.seamless = false;
+  const degreesToRadians = (degrees: number): number => THREE.MathUtils.degToRad(degrees);
+  const poseKeys = (
+    pick: (pose: Readonly<UnitySlamLimbPoseDegrees>) => readonly [number, number, number],
+  ): TimedEuler[] => {
+    const anticipation = pick(UNITY_SLAM_ANTICIPATION_POSE_DEGREES)
+      .map(degreesToRadians) as [number, number, number];
+    const fall = pick(UNITY_SLAM_FALL_POSE_DEGREES)
+      .map(degreesToRadians) as [number, number, number];
+    return [
+      [0, ...anticipation, 'linear'],
+      [timing.anticipationHoldEnd, ...anticipation, 'linear'],
+      [timing.fallPoseReached, ...fall, 'linear'],
+      [timing.duration, ...fall, 'linear'],
+    ];
+  };
+  const pitchKeys = (
+    pick: (pose: Readonly<UnitySlamLimbPoseDegrees>) => number,
+  ): TimedEuler[] => poseKeys((pose) => [pick(pose), 0, 0]);
+  clip.tracks = [
+    quaternionTrack(clip.id, 'shoulderLeft', poseKeys((pose) => pose.shoulderLeft)),
+    quaternionTrack(clip.id, 'shoulderRight', poseKeys((pose) => pose.shoulderRight)),
+    quaternionTrack(clip.id, 'elbowLeft', pitchKeys(() => 0)),
+    quaternionTrack(clip.id, 'elbowRight', pitchKeys(() => 0)),
+    quaternionTrack(clip.id, 'hipLeft', pitchKeys((pose) => pose.hipLeft)),
+    quaternionTrack(clip.id, 'hipRight', pitchKeys((pose) => pose.hipRight)),
+    quaternionTrack(clip.id, 'kneeLeft', pitchKeys((pose) => pose.kneeLeft)),
+    quaternionTrack(clip.id, 'kneeRight', pitchKeys((pose) => pose.kneeRight)),
+  ];
+  clip.markers = [
+    { id: `${clip.id}:anticipation`, time: 0, name: 'Unity anticipation pose' },
+    { id: `${clip.id}:drop`, time: timing.fallPoseReached, name: 'Unity falling pose' },
+  ];
+  clip.tags = ['player', 'unity-port', 'slam', 'semantic-keyframes'];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    progressSource: 'gameplay-actionProgress',
+    sourceAnimation: { ...UNITY_SLAM_POSE_SOURCE },
+  };
+  return clip;
+}
+
 function placeholder(id: string, label: string, duration: number, rigId: string): AnimationClip {
   const clip = baseClip(id, `${label} — Starter Placeholder`, duration, 'once', rigId);
   clip.loop.seamless = false;
@@ -855,7 +921,7 @@ export function createPlayerStarterClips(
     placeholder('player.hang', 'Hang', 1, rigId),
     placeholder('player.climb', 'Climb', 1.2, rigId),
     placeholder('player.rope', 'Rope', 1.2, rigId),
-    placeholder('player.slam', 'Slam', 0.7, rigId),
+    buildUnitySlam(rigId),
     placeholder('player.bail', 'Bail', 1.1, rigId),
     placeholder('player.spin', 'Spin', 0.8, rigId),
   ];
@@ -868,8 +934,9 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
 
 /**
  * Refresh the embedded live rig and add only starters introduced after the
- * revision a saved suite has already seen. Same-ID clips normally win; the one
- * exception is the explicit Run -> Jog_Fwd replacement. A genuinely edited
+ * revision a saved suite has already seen. Same-ID clips normally win; the
+ * exceptions are the explicit Run -> Jog_Fwd replacement and upgrading the
+ * untouched Slam identity placeholder to the Unity pose. A genuinely edited
  * pre-Jog Run is retained under a backup ID while `player.run` adopts the new
  * source motion. Once a suite records the current revision, a missing clip is
  * treated as an intentional deletion and remains missing on subsequent loads.
@@ -901,6 +968,13 @@ export function reconcilePlayerStarterAnimationSuite(
         !clips.some((clip) => clip.id === PRE_JOG_RUN_BACKUP_ID);
       clips = clips.map((clip) => clip.id === 'player.run' ? importedRun : clip);
       if (shouldBackUp) clips = [...clips, preJogRunBackup(currentRun)];
+    }
+  }
+  if (previousVersion < 5) {
+    const importedSlam = starters.find((clip) => clip.id === 'player.slam')!;
+    const currentSlam = clips.find((clip) => clip.id === 'player.slam');
+    if (currentSlam && isUntouchedSlamPlaceholder(currentSlam)) {
+      clips = clips.map((clip) => clip.id === 'player.slam' ? importedSlam : clip);
     }
   }
 

@@ -15,6 +15,7 @@ const near = (actual, expected, tolerance = 1e-6) => {
 try {
   const {
     PACE_STOP_CLIP_ID,
+    ACTION_PROGRESS_TIMELINE_CLIP_IDS,
     PACE_STOP_CROSSFADE_SECONDS,
     PACE_STOP_MIN_PEAK_SPEED,
     PACE_STOP_MIN_RUN_SECONDS,
@@ -61,6 +62,7 @@ try {
   assert.equal(allIds.length, 18);
   assert.equal(new Set(allIds).size, 18);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
+  assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, ['player.slam']);
 
   const positionTrack = (clipId, x) => ({
     id: `${clipId}:hips`,
@@ -189,8 +191,36 @@ try {
       near(hips.position.x, 99, 1e-8);
     } else {
       assert.equal(runtime.activeClipId, id);
+      if (id === 'player.slam')
+        near(runtime.diagnostics.timelineTime, actionProgress);
     }
   }
+
+  // Studio/manual preview remains ordinary speed-controlled clip playback.
+  hint = 'player.slam';
+  grounded = false;
+  actionProgress = 0.8;
+  runtime.setManualClipOverride('player.slam');
+  runtime.restart();
+  tick(0.001);
+  near(runtime.diagnostics.timelineTime, 0);
+  tick(0.2);
+  near(runtime.diagnostics.timelineTime, 0.2);
+  runtime.setManualClipOverride(null);
+
+  // Slam impact remains in the authored slam pose; the generic landing
+  // transient must not replace its flattened/recovery phase.
+  runtime.restart();
+  hint = 'player.slam';
+  grounded = false;
+  actionProgress = 0.66;
+  tick(0.016);
+  grounded = true;
+  actionProgress = 0.83;
+  tick(0.016);
+  assert.equal(runtime.activeClipId, 'player.slam');
+  assert.equal(runtime.diagnostics.landingOneShotActive, false);
+  near(runtime.diagnostics.timelineTime, 0.83);
 
   // The slot remains explicitly previewable/editable; only automatic gameplay
   // routing yields to the proven procedural skate mount and stance.

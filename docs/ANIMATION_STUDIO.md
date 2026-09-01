@@ -70,6 +70,17 @@ restrained torso compression/extension carried through the neck and head in
 the run starter. Contrast matters: the final quiet idle makes the larger run
 and stop gestures read more clearly.
 
+## Unity body-slam pose
+
+`player.slam` contains the Unity port's semantic procedural-rig pose as eight
+ordinary editable quaternion tracks: both shoulders, elbows, hips, and knees.
+The tucked anticipation and straight falling/flattened silhouettes come from
+`SourceFoxRigPresentation.cs`; model-specific PunkyFox/Meshy bind-space curves
+are deliberately not copied onto the browser skeleton. During gameplay the
+clip timeline is scrubbed by slam action progress so variable fall height
+cannot desynchronize the pose from anticipation, descent, or impact. Manual
+Studio preview remains normal speed-controlled playback.
+
 ### Procedural skate ownership
 
 `player.skate` remains a selectable, editable Animation Studio slot, and manual

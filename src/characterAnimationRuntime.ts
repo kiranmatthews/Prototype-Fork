@@ -18,6 +18,8 @@ import {
 export const LAND_CLIP_ID = 'player.land';
 export const PACE_STOP_CLIP_ID = 'player.pace-stop';
 export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, PACE_STOP_CLIP_ID] as const;
+/** Gameplay phases scrub these clips; manual Studio preview still uses time. */
+export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = ['player.slam'] as const;
 /** Gameplay routes whose proven procedural presentation remains authoritative.
  * Their clips stay selectable for Studio/manual preview without double-writing
  * the live legacy pose. */
@@ -96,6 +98,10 @@ function smoothstep01(value: number): number {
 
 function usesLegacyGameplayPresentation(id: ClipId): boolean {
   return (LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS as readonly ClipId[]).includes(id);
+}
+
+function usesActionProgressTimeline(id: ClipId): boolean {
+  return (ACTION_PROGRESS_TIMELINE_CLIP_IDS as readonly ClipId[]).includes(id);
 }
 
 function withControlDefaults(
@@ -331,7 +337,7 @@ export class CharacterAnimationRuntime {
       this.updateRunQualification(hint, previousHint, intent.motion, dt);
       // Landing has first refusal on the exact contact frame. This also avoids
       // an impossible run->idle edge winning over a fresh airborne transition.
-      if (justLanded && hint !== 'player.bail') {
+      if (justLanded && hint !== 'player.bail' && hint !== 'player.slam') {
         this.transient = this.makeTransient('landing', LAND_CLIP_ID, intent.motion);
       } else if (this.transient?.kind === 'landing') {
         if (!grounded || hint === 'player.bail') this.cancelTransient();
@@ -397,9 +403,15 @@ export class CharacterAnimationRuntime {
       this.playbackSeconds += dt * this.runtimeSpeed;
     }
 
-    this.timelineTime = clipTimeAt(clip, this.playbackSeconds);
-    this.authoredPlaybackSpeed = clip.playbackSpeed;
     const motion = this.motionForClip(clip, intent.motion);
+    const gameplayProgressTimeline =
+      this.manualClipId === null && usesActionProgressTimeline(clip.id);
+    this.timelineTime = gameplayProgressTimeline
+      ? clip.range.start +
+        Math.min(1, Math.max(0, motion.actionProgress)) *
+        (clip.range.end - clip.range.start)
+      : clipTimeAt(clip, this.playbackSeconds);
+    this.authoredPlaybackSpeed = clip.playbackSpeed;
     const sampledPose = sampleComposedClip(clip, this.timelineTime, motion, {
       evaluators: this.proceduralEvaluators,
     });

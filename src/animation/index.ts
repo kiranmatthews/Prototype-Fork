@@ -10,4 +10,5 @@ export * from './normalize';
 export * from './draftStore';
 export * from './indexedDbDraftStore';
 export * from './playerCatalog';
+export * from './unitySlamPose';
 export * from './ik';

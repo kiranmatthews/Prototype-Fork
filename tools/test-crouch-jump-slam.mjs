@@ -107,6 +107,15 @@ try {
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { Replayer } = await server.ssrLoadModule("/src/replay.ts");
   const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
+  const {
+    RigBinding,
+    UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
+    UNITY_SLAM_FALL_POSE_DEGREES,
+    createPlayerStarterAnimationSuite,
+  } = await server.ssrLoadModule("/src/animation/index.ts");
+  const { createCharacterAnimationRuntime } = await server.ssrLoadModule(
+    "/src/characterAnimationRuntime.ts",
+  );
   const dt = CONST.fixedStep;
 
   const level = new Level(new THREE.Scene(), {
@@ -155,6 +164,25 @@ try {
   assert.equal(player.slamActive, true, "a fresh airborne Circle press no longer starts body slam");
 
   const boardPlayer = new Player(level.scene);
+  const boardAnimationBinding = RigBinding.fromSculptRuntime(
+    boardPlayer.animationRig.root,
+    { strict: false },
+  );
+  const boardAnimationRuntime = createCharacterAnimationRuntime(
+    boardPlayer,
+    createPlayerStarterAnimationSuite(boardAnimationBinding.definition),
+  );
+  const assertJointEuler = (jointId, degrees, message) => {
+    const node = boardPlayer.animationRig.jointsById.get(jointId)?.node;
+    assert.ok(node, `missing animated joint ${jointId}`);
+    const expected = new THREE.Quaternion().setFromEuler(new THREE.Euler(
+      THREE.MathUtils.degToRad(degrees[0]),
+      THREE.MathUtils.degToRad(degrees[1]),
+      THREE.MathUtils.degToRad(degrees[2]),
+      "XYZ",
+    ));
+    closeTo(Math.abs(node.quaternion.dot(expected)), 1, message, 1e-5);
+  };
   const prepareBoardAir = () => {
     boardPlayer.respawn(level, true);
     boardPlayer.state = "air";
@@ -183,6 +211,33 @@ try {
   assert.equal(boardPlayer.slamActive, true, "fresh Circle+down no longer starts a board-air slam");
   assert.equal(boardPlayer.freeSkate, false, "board-air slam did not stow the board");
   assert.equal(boardPlayer.airFromSkate, false, "board-air slam retained skate-air ownership");
+  assert.equal(boardAnimationRuntime.activeClipId, "player.slam");
+  closeTo(
+    boardAnimationRuntime.diagnostics.timelineTime,
+    boardPlayer.animationIntent.motion.actionProgress,
+    "slam anticipation did not scrub from gameplay phase",
+  );
+  assert.ok(boardAnimationRuntime.diagnostics.timelineTime < 0.03,
+    "first slam frame skipped the Unity anticipation hold");
+  assertJointEuler("shoulderLeft", UNITY_SLAM_ANTICIPATION_POSE_DEGREES.shoulderLeft,
+    "Unity anticipation did not reach the left shoulder");
+  assertJointEuler("shoulderRight", UNITY_SLAM_ANTICIPATION_POSE_DEGREES.shoulderRight,
+    "Unity anticipation did not reach the right shoulder");
+  assertJointEuler("hipLeft", [UNITY_SLAM_ANTICIPATION_POSE_DEGREES.hipLeft, 0, 0],
+    "Unity anticipation did not tuck the left thigh");
+  assertJointEuler("kneeRight", [UNITY_SLAM_ANTICIPATION_POSE_DEGREES.kneeRight, 0, 0],
+    "Unity anticipation did not fold the right knee");
+
+  boardPlayer.slamHangT = 0;
+  tickBoard(makeInput());
+  closeTo(boardAnimationRuntime.diagnostics.timelineTime, 0.66,
+    "slam fall pose did not scrub from gameplay phase");
+  assertJointEuler("shoulderLeft", UNITY_SLAM_FALL_POSE_DEGREES.shoulderLeft,
+    "Unity fall did not reach the left shoulder");
+  assertJointEuler("hipRight", [UNITY_SLAM_FALL_POSE_DEGREES.hipRight, 0, 0],
+    "Unity fall did not straighten the right thigh");
+  assertJointEuler("kneeLeft", [UNITY_SLAM_FALL_POSE_DEGREES.kneeLeft, 0, 0],
+    "Unity fall did not straighten the left knee");
 
   // Optional supplied-replay check. The committed synthetic case keeps CI
   // self-contained; passing the bug-report file pins its original fixed-step
@@ -261,6 +316,7 @@ try {
   }
 
   console.log("Validated crouch-boosted jump priority over inherited Circle holds, with fresh airborne body slam preserved.");
+  boardAnimationRuntime.dispose();
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));
   console.warn = originalWarn;
