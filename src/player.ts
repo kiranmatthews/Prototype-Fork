@@ -5524,10 +5524,13 @@ export class Player {
       }
     }
 
-    // PANCAKE SLAM. On foot it is Circle ALONE — that is the move you reach for
-    // mid-air over a crate and it should not want a direction as well. On the
-    // BOARD it is Circle + DOWN, because there Circle on its own has to stay
-    // free for the grab. Either way it is a platforming move, so a board slam
+    // PANCAKE SLAM. On foot it is a fresh Circle press ALONE — that is the move
+    // you reach for mid-air over a crate and it should not want a direction as
+    // well. The fresh edge is load-bearing: Circle held from a grounded crouch
+    // must stay a crouch-boosted jump after X releases, not become a slam on the
+    // first air tick. On the BOARD it is fresh Circle + DOWN, because there
+    // Circle on its own has to stay free for the grab. Either way it is a
+    // platforming move, so a board slam
     // also STOWS THE BOARD: you plummet, land on your feet, and carry on
     // running (exactly like a slide jump, which is the other way off the deck).
     // Vert air is the one place it never fires — a pipe/wall air belongs to the
@@ -5546,7 +5549,7 @@ export class Player {
       this.grabPhase !== 'enter' &&
       this.grabPhase !== 'held' &&
       this.pendingSpecialGrab === null &&
-      input.grabHeld &&
+      input.grabPressed &&
       (!this.airFromSkate || this.rawInput.moveY < -0.5);
     if (slamNow) {
       if (this.airFromSkate) {
