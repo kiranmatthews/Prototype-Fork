@@ -7,6 +7,17 @@ export const RIGGED_CARTOON_HAND_ASSET_PATH =
   'characters/three-finger-hand/three-finger-hand.glb';
 export const RIGGED_CARTOON_HAND_CREDIT = 'Hand Rig by Andy Cuccaro';
 export const RIGGED_CARTOON_HAND_COLOR = 0xeee8dc;
+export const RIGGED_CARTOON_HAND_MARK_COLOR = 0x17181c;
+export const RIGGED_CARTOON_HAND_MARK_TRIANGLES_PER_HAND = 364;
+
+const DORSAL_MARK_GEOMETRY = new THREE.CapsuleGeometry(
+  0.0065,
+  0.057,
+  3,
+  7,
+);
+DORSAL_MARK_GEOMETRY.name = 'artist-hand-dorsal-x-bar-geometry';
+DORSAL_MARK_GEOMETRY.userData.sharedImmutable = true;
 
 const SEMANTIC_BONE_BASES = Object.freeze([
   'finger-index-proximal',
@@ -28,8 +39,10 @@ export interface RiggedCartoonHandSurface {
   readonly side: CartoonGloveSide;
   readonly root: THREE.Object3D;
   readonly meshes: readonly THREE.SkinnedMesh[];
+  readonly decorations: readonly THREE.Mesh[];
   readonly bonesByName: ReadonlyMap<string, THREE.Bone>;
   readonly triangleCount: number;
+  readonly decorationTriangleCount: number;
   syncFrom(rig: CartoonGloveRig): void;
 }
 
@@ -37,6 +50,7 @@ export interface RiggedCartoonHandPair {
   readonly left: RiggedCartoonHandSurface;
   readonly right: RiggedCartoonHandSurface;
   readonly triangleCount: number;
+  readonly decorationTriangleCount: number;
   readonly credit: typeof RIGGED_CARTOON_HAND_CREDIT;
 }
 
@@ -80,7 +94,7 @@ function isolateMaterials(root: THREE.Object3D): void {
     let clone = clones.get(material);
     if (!clone) {
       clone = material.clone();
-      if (clone.name === 'Basic Skin' && 'color' in clone) {
+      if ((clone.name === 'Basic Skin' || clone.name === 'Cloth') && 'color' in clone) {
         (clone as THREE.MeshStandardMaterial).color.setHex(RIGGED_CARTOON_HAND_COLOR);
       }
       clones.set(material, clone);
@@ -96,10 +110,38 @@ function isolateMaterials(root: THREE.Object3D): void {
   });
 }
 
+function createDorsalMark(
+  side: CartoonGloveSide,
+  material: THREE.MeshStandardMaterial,
+): { readonly group: THREE.Group; readonly bars: readonly THREE.Mesh[] } {
+  const sideSign = side === 'left' ? 1 : -1;
+  const group = new THREE.Group();
+  group.name = `artist-hand-dorsal-x-${side}`;
+  group.position.set(-sideSign * 0.025, -0.079, 0.044);
+  group.userData.riggedCartoonHandDecoration = true;
+  group.userData.handDorsalMark = true;
+  group.userData.anatomicalSide = side;
+  const bars = [-0.68, 0.68].map((angle, index) => {
+    const bar = new THREE.Mesh(DORSAL_MARK_GEOMETRY, material);
+    bar.name = `artist-hand-dorsal-x-${index === 0 ? 'a' : 'b'}-${side}`;
+    bar.rotation.z = angle;
+    bar.scale.z = 0.78;
+    bar.castShadow = true;
+    bar.receiveShadow = true;
+    bar.userData.riggedCartoonHandDecoration = true;
+    bar.userData.handDorsalMark = true;
+    group.add(bar);
+    return bar;
+  });
+  return { group, bars: Object.freeze(bars) };
+}
+
 class Surface implements RiggedCartoonHandSurface {
   readonly meshes: readonly THREE.SkinnedMesh[];
+  readonly decorations: readonly THREE.Mesh[];
   readonly bonesByName: ReadonlyMap<string, THREE.Bone>;
   readonly triangleCount: number;
+  readonly decorationTriangleCount: number;
   private readonly orderedBones: readonly THREE.Bone[];
   private readonly restRootQuaternions = new Map<string, THREE.Quaternion>();
   private readonly restRootPositions = new Map<string, THREE.Vector3>();
@@ -123,6 +165,7 @@ class Surface implements RiggedCartoonHandSurface {
   constructor(
     readonly side: CartoonGloveSide,
     readonly root: THREE.Object3D,
+    markMaterial: THREE.MeshStandardMaterial,
   ) {
     const meshes: THREE.SkinnedMesh[] = [];
     const bonesByName = new Map<string, THREE.Bone>();
@@ -160,6 +203,10 @@ class Surface implements RiggedCartoonHandSurface {
     this.meshes = Object.freeze(meshes);
     this.bonesByName = bonesByName;
     this.triangleCount = meshes.reduce((sum, mesh) => sum + triangleCount(mesh), 0);
+    const dorsalMark = createDorsalMark(side, markMaterial);
+    root.add(dorsalMark.group);
+    this.decorations = dorsalMark.bars;
+    this.decorationTriangleCount = RIGGED_CARTOON_HAND_MARK_TRIANGLES_PER_HAND;
     this.orderedBones = Object.freeze(
       [...bonesByName.values()]
         .filter((bone) => bone.name !== `artist-hand-root-${side}`)
@@ -321,12 +368,19 @@ export function createRiggedCartoonHandPairFromScene(
   if (!roots.left || !roots.right) throw new Error('artist hand GLB is missing its left/right roots');
   roots.left.removeFromParent();
   roots.right.removeFromParent();
-  const left = new Surface('left', roots.left);
-  const right = new Surface('right', roots.right);
+  const markMaterial = new THREE.MeshStandardMaterial({
+    name: 'artist-hand-dorsal-x-material',
+    color: RIGGED_CARTOON_HAND_MARK_COLOR,
+    roughness: 0.72,
+    metalness: 0,
+  });
+  const left = new Surface('left', roots.left, markMaterial);
+  const right = new Surface('right', roots.right, markMaterial);
   return {
     left,
     right,
     triangleCount: left.triangleCount + right.triangleCount,
+    decorationTriangleCount: left.decorationTriangleCount + right.decorationTriangleCount,
     credit: RIGGED_CARTOON_HAND_CREDIT,
   };
 }

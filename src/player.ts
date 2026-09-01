@@ -90,6 +90,8 @@ import {
 import {
   attachAndSyncRiggedCartoonHandPair,
   loadRiggedCartoonHandPair,
+  RIGGED_CARTOON_HAND_COLOR,
+  RIGGED_CARTOON_HAND_MARK_COLOR,
   type RiggedCartoonHandPair,
 } from './character/riggedCartoonHand';
 import {
@@ -1650,6 +1652,10 @@ export class Player {
     readonly sides: readonly string[];
     readonly bonesPerHand: number;
     readonly triangles: number;
+    readonly decorationTriangles: number;
+    readonly dorsalMarks: number;
+    readonly cuffColor: number;
+    readonly dorsalMarkColor: number;
     readonly credit: string | null;
     readonly error: string | null;
   } {
@@ -1660,6 +1666,12 @@ export class Player {
       sides: pair ? [pair.left.side, pair.right.side] : [],
       bonesPerHand: pair ? pair.left.bonesByName.size : 0,
       triangles: pair?.triangleCount ?? 0,
+      decorationTriangles: pair?.decorationTriangleCount ?? 0,
+      dorsalMarks: pair
+        ? pair.left.decorations.length / 2 + pair.right.decorations.length / 2
+        : 0,
+      cuffColor: RIGGED_CARTOON_HAND_COLOR,
+      dorsalMarkColor: RIGGED_CARTOON_HAND_MARK_COLOR,
       credit: pair?.credit ?? null,
       error: this.riggedCartoonHandError,
     };

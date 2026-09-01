@@ -123,6 +123,25 @@ try {
     assert.equal(rig.root.userData.sculptRuntime, undefined,
       'nested glove metadata must not masquerade as a complete sculpt runtime');
     assert.equal(rig.root.userData.cartoonGloveRig.digitCount, 3);
+    for (const name of [
+      `glove-cuff-${rig.side}`,
+      `glove-cuff-inner-${rig.side}`,
+      `glove-cuff-sleeve-${rig.side}`,
+    ]) {
+      const cuff = rig.root.getObjectByName(name);
+      assert.equal(cuff.material, gloveMaterial);
+      assert.equal(cuff.material.color.getHex(), 0xeee8dc);
+    }
+    const stitches = [
+      rig.root.getObjectByName(`glove-stitch-a-${rig.side}`),
+      rig.root.getObjectByName(`glove-stitch-b-${rig.side}`),
+    ];
+    assert.ok(stitches.every((stitch) => stitch.material === stitchMaterial));
+    assert.ok(stitches.every((stitch) => stitch.material.color.getHex() === 0x1b1a19));
+    assert.deepEqual(stitches.map((stitch) => stitch.position.toArray()), [
+      [0, -0.083, 0.068],
+      [0, -0.083, 0.068],
+    ]);
     for (const digit of ['index', 'middle', 'outer']) {
       const chain = rig.fingers[digit];
       assert.equal(chain.middle.parent, chain.proximal);

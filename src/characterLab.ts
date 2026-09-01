@@ -520,7 +520,8 @@ class CharacterLab implements CharacterLabHandle {
       });
     }
     const handStatus = hand.ready
-      ? `artist hands ready · ${hand.triangles.toLocaleString()} tris`
+      ? `artist hands ready · ${hand.triangles.toLocaleString()} source tris · ` +
+        `${hand.dorsalMarks} dorsal X marks`
       : `artist hands ${hand.state}`;
     const torsoStatus = torso.ready
       ? torso.textureState === 'ready'

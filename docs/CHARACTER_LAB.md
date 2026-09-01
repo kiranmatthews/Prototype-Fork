@@ -66,8 +66,10 @@ code-built surface remains only until the artist GLB has loaded and bound, then
 is removed from the live hierarchy; its synchronous semantic bones and sockets
 remain. Rest-relative position, rotation and scale changes on all 24 semantic
 digit bones are transferred to the visible skin. The main artist surface is
-presented in the character's glove white; its small authored cuff accent remains
-separate.
+presented in the character's glove white, including the authored rolled cuff.
+Each production hand also carries a mirrored code-native black dorsal X under
+the rigid artist-hand root, so it follows wrist/hand-size changes without being
+pulled or sheared by finger animation.
 
 The Limb Bone Preview frames all bones, arms, or legs. The existing upper-arm,
 forearm, thigh and shin length sliders exercise the production deformation

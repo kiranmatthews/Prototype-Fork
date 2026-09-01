@@ -35,6 +35,8 @@ try {
     RIGGED_CARTOON_HAND_ASSET_PATH,
     RIGGED_CARTOON_HAND_COLOR,
     RIGGED_CARTOON_HAND_CREDIT,
+    RIGGED_CARTOON_HAND_MARK_COLOR,
+    RIGGED_CARTOON_HAND_MARK_TRIANGLES_PER_HAND,
     attachAndSyncRiggedCartoonHandPair,
     createRiggedCartoonHandPairFromScene,
   } = surfaceApi;
@@ -49,6 +51,8 @@ try {
     'characters/three-finger-hand/three-finger-hand.glb');
   assert.equal(RIGGED_CARTOON_HAND_CREDIT, 'Hand Rig by Andy Cuccaro');
   assert.equal(RIGGED_CARTOON_HAND_COLOR, 0xeee8dc);
+  assert.equal(RIGGED_CARTOON_HAND_MARK_COLOR, 0x17181c);
+  assert.equal(RIGGED_CARTOON_HAND_MARK_TRIANGLES_PER_HAND, 364);
   assert.equal(gltf.animations.length, 0, 'free hand source must not invent animation clips');
 
   const sourceMeshes = [];
@@ -86,11 +90,36 @@ try {
   assert.equal(pair.triangleCount, 25152);
   assert.equal(pair.left.triangleCount, 12576);
   assert.equal(pair.right.triangleCount, 12576);
+  assert.equal(pair.left.decorationTriangleCount, 364);
+  assert.equal(pair.right.decorationTriangleCount, 364);
+  assert.equal(pair.decorationTriangleCount, 728);
   assert.equal(pair.left.bonesByName.size, 13);
   assert.equal(pair.right.bonesByName.size, 13);
   assert.ok(pair.left.meshes.every((mesh) => mesh.frustumCulled === false));
   const whiteSurface = pair.left.meshes.find((mesh) => mesh.material.name === 'Basic Skin');
   assert.equal(whiteSurface.material.color.getHex(), RIGGED_CARTOON_HAND_COLOR);
+  const whiteCuff = pair.left.meshes.find((mesh) => mesh.material.name === 'Cloth');
+  assert.equal(whiteCuff.material.color.getHex(), RIGGED_CARTOON_HAND_COLOR);
+  const dorsalMarks = [pair.left, pair.right].map((surface) =>
+    surface.root.getObjectByName(`artist-hand-dorsal-x-${surface.side}`));
+  assert.equal(dorsalMarks[0].parent, pair.left.root);
+  assert.equal(dorsalMarks[1].parent, pair.right.root);
+  near(dorsalMarks[0].position.x, -dorsalMarks[1].position.x);
+  near(dorsalMarks[0].position.y, dorsalMarks[1].position.y);
+  near(dorsalMarks[0].position.z, dorsalMarks[1].position.z);
+  near(dorsalMarks[0].position.x, -0.025);
+  near(dorsalMarks[0].position.y, -0.079);
+  near(dorsalMarks[0].position.z, 0.044);
+  for (const surface of [pair.left, pair.right]) {
+    assert.equal(surface.decorations.length, 2);
+    assert.ok(surface.decorations.every((bar) =>
+      bar.material.color.getHex() === RIGGED_CARTOON_HAND_MARK_COLOR));
+    assert.ok(surface.decorations.every((bar) =>
+      bar.userData.handDorsalMark === true && bar.userData.characterPart === undefined));
+    near(surface.decorations[0].rotation.z, -0.68);
+    near(surface.decorations[1].rotation.z, 0.68);
+    assert.equal(surface.decorations[0].geometry, surface.decorations[1].geometry);
+  }
 
   const secondPair = createRiggedCartoonHandPairFromScene(gltf.scene);
   const firstMaterial = pair.left.meshes[0].material;
@@ -102,6 +131,12 @@ try {
   secondMaterial.color.setHex(0x123456);
   assert.equal(firstMaterial.color.getHex(), firstColor,
     'tinting a second player mutated the first player hand');
+  const firstMarkMaterial = pair.left.decorations[0].material;
+  const secondMarkMaterial = secondPair.left.decorations[0].material;
+  assert.notEqual(firstMarkMaterial, secondMarkMaterial,
+    'separate players share mutable dorsal-mark materials');
+  secondMarkMaterial.color.setHex(0x654321);
+  assert.equal(firstMarkMaterial.color.getHex(), RIGGED_CARTOON_HAND_MARK_COLOR);
 
   assert.equal(removeProceduralCartoonGloveSurface(semanticLeft), 21);
   let remainingProcedural = 0;
@@ -109,8 +144,15 @@ try {
     if (object.userData.characterPart) remainingProcedural++;
   });
   assert.equal(remainingProcedural, 0, 'superseded procedural glove surface remains attached');
+  assert.equal(pair.left.root.getObjectByName('artist-hand-dorsal-x-left'), dorsalMarks[0],
+    'fallback removal deleted the artist dorsal X');
 
   const artistIndex = pair.left.bonesByName.get('finger-index-distal-left');
+  const leftMarkTransform = {
+    position: dorsalMarks[0].position.toArray(),
+    quaternion: dorsalMarks[0].quaternion.toArray(),
+    scale: dorsalMarks[0].scale.toArray(),
+  };
   setCartoonGlovePose(semanticLeft, CARTOON_GLOVE_POSES.open);
   pair.left.syncFrom(semanticLeft);
   pair.left.root.updateMatrixWorld(true);
@@ -122,6 +164,11 @@ try {
   pair.left.root.updateMatrixWorld(true);
   const fist = artistIndex.getWorldQuaternion(new THREE.Quaternion());
   assert.ok(open.angleTo(fist) > 0.5, 'semantic fist did not deform the artist hand skeleton');
+  assert.deepEqual({
+    position: dorsalMarks[0].position.toArray(),
+    quaternion: dorsalMarks[0].quaternion.toArray(),
+    scale: dorsalMarks[0].scale.toArray(),
+  }, leftMarkTransform, 'finger animation moved the rigid dorsal X');
 
   const transformMaterial = new THREE.MeshBasicMaterial();
   const transformStitch = new THREE.MeshBasicMaterial();
