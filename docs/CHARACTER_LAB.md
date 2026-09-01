@@ -57,7 +57,9 @@ the existing twelve semantic digit bones per side. The browser never loads the
 code-built surface remains only until the artist GLB has loaded and bound, then
 is removed from the live hierarchy; its synchronous semantic bones and sockets
 remain. Rest-relative position, rotation and scale changes on all 24 semantic
-digit bones are transferred to the visible skin.
+digit bones are transferred to the visible skin. The main artist surface is
+presented in the character's glove white; its small authored cuff accent remains
+separate.
 
 The Limb Bone Preview frames all bones, arms, or legs. The existing upper-arm,
 forearm, thigh and shin length sliders exercise the production deformation

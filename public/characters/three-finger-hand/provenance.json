@@ -29,6 +29,7 @@
     "bonesPerHand": 13,
     "semanticDigitBonesPerHand": 12,
     "skinnedMaterialSurfaces": 4,
+    "mainSurfaceRuntimeColor": "#eee8dc",
     "triangles": 25152,
     "animations": 0
   },

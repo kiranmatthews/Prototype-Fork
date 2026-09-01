@@ -107,7 +107,7 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'shinLength', label: 'Shin length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
 
     { key: 'wristRestPitch', label: 'Rest pitch (°)', section: 'Hands', min: -90, max: 90, step: 1 },
-    { key: 'wristRestYaw', label: 'Rest yaw (°)', section: 'Hands', min: -90, max: 90, step: 1 },
+    { key: 'wristRestYaw', label: 'Rest yaw (°)', section: 'Hands', min: -180, max: 180, step: 1 },
     { key: 'wristRestRoll', label: 'Rest roll (°)', section: 'Hands', min: -120, max: 120, step: 1 },
 
     { key: 'armThickness', label: 'Arm thickness', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },

@@ -6,6 +6,7 @@ import type { CartoonGloveRig, CartoonGloveSide } from './cartoonGlove';
 export const RIGGED_CARTOON_HAND_ASSET_PATH =
   'characters/three-finger-hand/three-finger-hand.glb';
 export const RIGGED_CARTOON_HAND_CREDIT = 'Hand Rig by Andy Cuccaro';
+export const RIGGED_CARTOON_HAND_COLOR = 0xeee8dc;
 
 const SEMANTIC_BONE_BASES = Object.freeze([
   'finger-index-proximal',
@@ -79,6 +80,9 @@ function isolateMaterials(root: THREE.Object3D): void {
     let clone = clones.get(material);
     if (!clone) {
       clone = material.clone();
+      if (clone.name === 'Basic Skin' && 'color' in clone) {
+        (clone as THREE.MeshStandardMaterial).color.setHex(RIGGED_CARTOON_HAND_COLOR);
+      }
       clones.set(material, clone);
     }
     return clone;

@@ -184,9 +184,9 @@ is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 The shipped derivative applies the authored Catmull-Clark surface, mirrors a
 second hand for the matching right wrist, replaces the 118-bone Rigify arm
 with one rigid palm root plus 12 digit bones per side, folds palm/forearm
-weights into that root, and caps skin weights at four per vertex. Source/output
-hashes and the exact conversion record are in
-`public/characters/three-finger-hand/provenance.json`.
+weights into that root, caps skin weights at four per vertex, and presents the
+main surface in glove white. Source/output hashes and the exact conversion
+record are in `public/characters/three-finger-hand/provenance.json`.
 
 ## Everything else
 

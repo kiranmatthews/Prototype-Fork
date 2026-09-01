@@ -169,7 +169,7 @@ try {
   assert.equal(clamped.neckLength, 0);
   assert.equal(clamped.eyeSize, 1);
   assert.equal(clamped.wristRestPitch, 0);
-  assert.equal(clamped.wristRestYaw, 90);
+  assert.equal(clamped.wristRestYaw, 180);
 
   const stored = memoryStorage({
     [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({

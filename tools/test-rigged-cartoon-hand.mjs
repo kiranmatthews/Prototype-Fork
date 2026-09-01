@@ -33,6 +33,7 @@ try {
   ]);
   const {
     RIGGED_CARTOON_HAND_ASSET_PATH,
+    RIGGED_CARTOON_HAND_COLOR,
     RIGGED_CARTOON_HAND_CREDIT,
     attachAndSyncRiggedCartoonHandPair,
     createRiggedCartoonHandPairFromScene,
@@ -47,6 +48,7 @@ try {
   assert.equal(RIGGED_CARTOON_HAND_ASSET_PATH,
     'characters/three-finger-hand/three-finger-hand.glb');
   assert.equal(RIGGED_CARTOON_HAND_CREDIT, 'Hand Rig by Andy Cuccaro');
+  assert.equal(RIGGED_CARTOON_HAND_COLOR, 0xeee8dc);
   assert.equal(gltf.animations.length, 0, 'free hand source must not invent animation clips');
 
   const sourceMeshes = [];
@@ -87,6 +89,8 @@ try {
   assert.equal(pair.left.bonesByName.size, 13);
   assert.equal(pair.right.bonesByName.size, 13);
   assert.ok(pair.left.meshes.every((mesh) => mesh.frustumCulled === false));
+  const whiteSurface = pair.left.meshes.find((mesh) => mesh.material.name === 'Basic Skin');
+  assert.equal(whiteSurface.material.color.getHex(), RIGGED_CARTOON_HAND_COLOR);
 
   const secondPair = createRiggedCartoonHandPairFromScene(gltf.scene);
   const firstMaterial = pair.left.meshes[0].material;
