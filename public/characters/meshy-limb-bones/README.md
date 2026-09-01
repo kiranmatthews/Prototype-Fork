@@ -21,6 +21,9 @@ The importer derives the closed shaft-volume polynomial from the final Float32
 geometry, so animation and authored thickness compose exactly throughout the
 physical range. If an extreme thin+long combination asks for less volume than
 the fixed collars alone contain, a non-inversion guard takes precedence.
+Character Lab also exposes independent arm/leg knob sizing. It uniformly
+enlarges authored knob regions while preserving semantic sockets; the Rattle's
+knobless insertion tip is never resized.
 
 See `provenance.json` for source hashes, upload IDs, measurements, and the exact
 runtime mapping.

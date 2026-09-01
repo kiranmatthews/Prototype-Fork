@@ -411,29 +411,54 @@ try {
     ...DEFAULT_CHARACTER_PROPORTIONS,
     upperArmLength: 1.2,
     armThickness: 1.3,
+    armKnobSize: 1.4,
   });
   near(endpoint.position.y, -0.22 * 1.2);
   near(runtimeComponent.shaft.scale.y, importedShaftScaleY(runtimeComponent, 1.2));
   near(runtimeComponent.shaft.scale.x, bridgeProximal.scale[0]);
   near(thicknessInfluence(runtimeComponent), 0.3);
-  assert.deepEqual(transform(runtimeComponent.proximalKnob), bridgeProximal);
-  near(runtimeComponent.distalKnob.position.y, importedDistalPositionY(runtimeComponent, 1.2));
+  assert.deepEqual(runtimeComponent.proximalKnob.position.toArray(), bridgeProximal.position);
+  assert.deepEqual(runtimeComponent.proximalKnob.quaternion.toArray(), bridgeProximal.quaternion);
+  for (let axis = 0; axis < 3; axis++) {
+    near(runtimeComponent.proximalKnob.scale.toArray()[axis], bridgeProximal.scale[axis] * 1.4);
+    near(runtimeComponent.distalKnob.scale.toArray()[axis], bridgeDistalScale[axis] * 1.4);
+  }
+  near(runtimeComponent.distalKnob.position.y,
+    importedDistalPositionY(runtimeComponent, 1.2) + runtimeComponent.baseLength *
+      (1 - runtimeComponent.root.userData.stretchableBoneRuntime.stretchEnd) * 0.4);
+  runtimeComponent.distalKnob.geometry.computeBoundingBox();
+  near(
+    runtimeComponent.distalKnob.position.y +
+      runtimeComponent.distalKnob.geometry.boundingBox.min.y * runtimeComponent.distalKnob.scale.y,
+    runtimeComponent.distalSocket.position.y,
+    2e-7,
+  );
   near(runtimeComponent.distalSocket.position.y, -0.22 * 1.2);
   proportions.clear();
   near(endpoint.position.y, -0.22);
   near(thicknessInfluence(runtimeComponent), 0);
   assert.deepEqual(transform(runtimeComponent.proximalKnob), bridgeProximal);
+  assert.deepEqual(runtimeComponent.distalKnob.scale.toArray(), bridgeDistalScale);
+  near(runtimeComponent.distalKnob.position.y, importedDistalPositionY(runtimeComponent, 1));
 
   bridge.applyDeformations({ 'deform.arm.upper.left.length': 0.8 });
   proportions.apply({
     ...DEFAULT_CHARACTER_PROPORTIONS,
     upperArmLength: 1.2,
     armThickness: 1.3,
+    armKnobSize: 1.4,
   });
   near(endpoint.position.y, -0.22 * 0.8 * 1.2);
   near(runtimeComponent.shaft.scale.y, importedShaftScaleY(runtimeComponent, 0.8 * 1.2));
   near(runtimeComponent.distalKnob.position.y,
-    importedDistalPositionY(runtimeComponent, 0.8 * 1.2));
+    importedDistalPositionY(runtimeComponent, 0.8 * 1.2) + runtimeComponent.baseLength *
+      (1 - runtimeComponent.root.userData.stretchableBoneRuntime.stretchEnd) * 0.4);
+  near(
+    runtimeComponent.distalKnob.position.y +
+      runtimeComponent.distalKnob.geometry.boundingBox.min.y * runtimeComponent.distalKnob.scale.y,
+    runtimeComponent.distalSocket.position.y,
+    2e-7,
+  );
   near(runtimeComponent.distalSocket.position.y, -0.22 * 0.8 * 1.2);
   near(thicknessInfluence(runtimeComponent),
     stretchableBoneVolumeMorphInfluence(
@@ -445,7 +470,10 @@ try {
       ),
       0.3,
     ));
-  assert.deepEqual(runtimeComponent.proximalKnob.scale.toArray(), bridgeProximal.scale);
+  for (let axis = 0; axis < 3; axis++) {
+    near(runtimeComponent.proximalKnob.scale.toArray()[axis], bridgeProximal.scale[axis] * 1.4);
+    near(runtimeComponent.distalKnob.scale.toArray()[axis], bridgeDistalScale[axis] * 1.4);
+  }
   proportions.clear();
   near(endpoint.position.y, -0.22 * 0.8);
   near(thicknessInfluence(runtimeComponent),
@@ -457,6 +485,9 @@ try {
         0.8,
       ),
     ));
+  assert.deepEqual(runtimeComponent.proximalKnob.scale.toArray(), bridgeProximal.scale);
+  assert.deepEqual(runtimeComponent.distalKnob.scale.toArray(), bridgeDistalScale);
+  near(runtimeComponent.distalKnob.position.y, importedDistalPositionY(runtimeComponent, 0.8));
   bridge.applyDeformations({});
   near(endpoint.position.y, -0.22);
   bridge.applyDeformations({ 'deform.arm.upper.left.length': 1.75 });
@@ -576,7 +607,8 @@ try {
   assert.doesNotMatch(playerSource, /const foreArmGeo =/);
   assert.doesNotMatch(playerSource, /const shinGeo =/);
   assert.match(labSource, /Limb bone preview/);
-  assert.match(labSource, /only each plain shaft zone stretches/);
+  assert.match(labSource, /Length and thickness keep rigid ends intact/);
+  assert.match(labSource, /knob-size sliders widen the authored knobs independently/);
   assert.match(mainSource, /getStretchableBoneDiagnostics/);
   const spec = JSON.parse(specSource);
   assert.equal(spec.targetId, 'stretchable-cartoon-limb-bone');

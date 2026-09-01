@@ -46,6 +46,10 @@ serializable `stretchableBoneRuntime` schema v2 metadata.
   highlights remain attached to the surface throughout that thickness morph.
 - Character Lab thickness composes through the same morph. Rigid source ends
   and every part's longitudinal Y scale remain unchanged.
+- Separate arm/leg knob-size controls uniformly enlarge real knob regions in
+  XYZ from 1.00–1.62×. Enlarged collars overlap the shaft seam; the range does
+  not permit seam-opening shrink. Ivory Bone's distal knob is repositioned to
+  keep its endpoint pinned, and Rattle insertion tips are excluded entirely.
 - At extreme compression, rigid regions may overlap while the shaft clamps to
   a small positive span; no geometry inverts.
 - No `THREE.Bone` is introduced, so humanoid mapping, IK, sockets, authored

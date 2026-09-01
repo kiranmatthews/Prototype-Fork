@@ -18,6 +18,8 @@ export interface CharacterProportionSettingsValue {
   shinLength: number;
   armThickness: number;
   legThickness: number;
+  armKnobSize: number;
+  legKnobSize: number;
   handSize: number;
   wristRestPitch: number;
   wristRestYaw: number;
@@ -74,6 +76,8 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     shinLength: 1,
     armThickness: 1,
     legThickness: 1,
+    armKnobSize: 1,
+    legKnobSize: 1,
     handSize: 1,
     wristRestPitch: 0,
     wristRestYaw: 0,
@@ -111,7 +115,9 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'wristRestRoll', label: 'Rest roll (°)', section: 'Hands', min: -120, max: 120, step: 1 },
 
     { key: 'armThickness', label: 'Arm thickness', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
+    { key: 'armKnobSize', label: 'Arm knob size', section: 'Mass & details', min: 1, max: 1.62, step: 0.01 },
     { key: 'legThickness', label: 'Leg thickness', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
+    { key: 'legKnobSize', label: 'Leg knob size', section: 'Mass & details', min: 1, max: 1.62, step: 0.01 },
     { key: 'handSize', label: 'Hand size', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
     { key: 'footSize', label: 'Foot size', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
     { key: 'earSize', label: 'Ear size', section: 'Mass & details', min: 0.5, max: 1.7, step: 0.01 },

@@ -242,6 +242,18 @@ export class CharacterProportionLayer {
         value.legThickness,
       );
     }
+    for (const anchorName of ['shoulder-left', 'shoulder-right', 'elbow-left', 'elbow-right']) {
+      this.scaleStretchableKnobs(
+        this.root.getObjectByName(anchorName),
+        value.armKnobSize,
+      );
+    }
+    for (const anchorName of ['hip-left', 'hip-right', 'knee-left', 'knee-right']) {
+      this.scaleStretchableKnobs(
+        this.root.getObjectByName(anchorName),
+        value.legKnobSize,
+      );
+    }
 
     for (const side of ['left', 'right'] as const) {
       for (const part of ['white', 'iris', 'pupil', 'lash'] as const) {
@@ -456,16 +468,28 @@ export class CharacterProportionLayer {
         continue;
       }
       this.multiplyScale(component.shaft, factor, 1, factor);
-      for (const knob of [component.proximalKnob, component.distalKnob]) {
-        // Design-time thickness changes may resize a knobble, but only
-        // uniformly: its double-lobe shape never squashes into an ellipsoid.
-        this.multiplyPosition(knob, factor, 1, factor);
-        this.multiplyScale(knob, factor, factor, factor);
-      }
     }
     for (const visual of anchor.children.filter(isRenderable)) {
       this.multiplyPosition(visual, factor, 1, factor);
       this.multiplyScale(visual, factor, 1, factor);
+    }
+  }
+
+  private scaleStretchableKnobs(
+    anchor: THREE.Object3D | null | undefined,
+    factor: number,
+  ): void {
+    if (!anchor) return;
+    for (const component of directStretchableBones(anchor)) {
+      this.multiplyScale(component.proximalKnob, factor, factor, factor);
+      const distal = component.distalKnob;
+      if (distal && component.metadata.distalKind !== 'insertion-tip') {
+        const state = this.stateFor(distal);
+        state.movesPosition = true;
+        distal.position.y += component.metadata.baseLength *
+          (1 - component.metadata.stretchEnd) * (factor - 1);
+        this.multiplyScale(distal, factor, factor, factor);
+      }
     }
   }
 

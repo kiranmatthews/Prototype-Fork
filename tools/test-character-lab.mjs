@@ -164,7 +164,7 @@ try {
     clampCharacterProportions,
   } = settingsApi;
 
-  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 27);
+  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 29);
   assert.deepEqual(
     new Set(CHARACTER_PROPORTION_CONTROLS.map((control) => control.key)),
     new Set(Object.keys(DEFAULT_CHARACTER_PROPORTIONS)),
@@ -177,12 +177,16 @@ try {
     eyeSize: NaN,
     wristRestPitch: NaN,
     wristRestYaw: 999,
+    armKnobSize: 99,
+    legKnobSize: -2,
   });
   assert.equal(clamped.headSize, 1.55);
   assert.equal(clamped.neckLength, 0);
   assert.equal(clamped.eyeSize, 1);
   assert.equal(clamped.wristRestPitch, 0);
   assert.equal(clamped.wristRestYaw, 180);
+  assert.equal(clamped.armKnobSize, 1.62);
+  assert.equal(clamped.legKnobSize, 1);
 
   const stored = memoryStorage({
     [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({
@@ -200,6 +204,8 @@ try {
   assert.equal(settings.value.headSize, 1.31);
   assert.equal(settings.value.shoulderWidth, 1.2);
   assert.equal(settings.value.footSize, 1);
+  assert.equal(settings.value.armKnobSize, 1,
+    'older saved Character Lab values must gain the additive knob controls');
   assert.equal(settings.value.wristRestPitch, 0,
     'pre-release wrist tuning must migrate to the corrected anatomical base');
   assert.equal(settings.value.wristRestYaw, 0);

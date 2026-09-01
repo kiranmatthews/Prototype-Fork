@@ -37,7 +37,8 @@ values from one frame to the next.
 
 The first schema includes overall scale/height/build, head size and axes, neck
 and torso dimensions, shoulder/hip width, separate upper/lower limb lengths,
-limb thickness, hand/foot size, ear/eye/ponytail size and animal-tail
+limb thickness, independent arm/leg knob size, hand/foot size,
+ear/eye/ponytail size and animal-tail
 visibility. Hand-rest pitch, yaw and roll are also persistent: pitch is linked
 while yaw and roll mirror anatomically across the two wrists. These values live
 on presentation mounts below the wrist bones, so a rest-orientation adjustment
@@ -65,8 +66,10 @@ The Limb Bone Preview frames all bones, arms, or legs. The existing upper-arm,
 forearm, thigh and shin length sliders exercise the production deformation
 path: only each measured Ivory Bone/Rattle shaft changes length while the
 authored knobs and knobless insertion tips remain locally rigid. Thickness
-changes the plain shaft cross-section through a boundary-safe taper without
-changing longitudinal proportions or either rigid end.
+changes the plain shaft cross-section through a boundary-safe taper. Arm/leg
+knob-size sliders then scale the true knob regions uniformly for cohesive fat
+bones. Their 1.00–1.62 range grows into the shaft seam without opening gaps;
+Rattle's knobless glove/sock insertion tips remain byte-stable.
 
 The **Torso** view frames the attributed Meshy skeleton tank-top surface. It is
 not a foreign replacement rig: code-native weights bind it to the existing

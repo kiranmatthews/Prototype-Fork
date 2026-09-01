@@ -341,7 +341,7 @@ class CharacterLab implements CharacterLabHandle {
     this.panel.appendChild(element(
       'div',
       'clab-note',
-      'Use the limb-length sliders below: only each plain shaft zone stretches; the authored knobs and insertion tips stay rigid.',
+      'Length and thickness keep rigid ends intact. Arm/leg knob-size sliders widen the authored knobs independently; knobless glove/sock insertion tips stay fixed.',
     ));
     const boneViews = element('div', 'clab-actions');
     for (const [label, view] of [

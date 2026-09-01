@@ -68,6 +68,7 @@
     "Derived one boundary-tapered relative shaft-thickness morph from the measured source blend widths",
     "Closed and validated the pinned shaft boundary rings during import and derived each morph's quadratic volume polynomial",
     "Solved that polynomial for volume-preserving animation/design composition whenever the fixed boundary collars make a physical solution possible; guarded impossible combined extremes before inversion",
+    "Allowed explicit 1.00-1.62 uniform knob enlargement as a separate authoring layer; pinned Ivory Bone's distal endpoint and excluded every Rattle insertion tip",
     "Kept proximal and distal source regions rigid during longitudinal deformation",
     "Did not redistribute the original FBX files or expiring Meshy URLs"
   ]

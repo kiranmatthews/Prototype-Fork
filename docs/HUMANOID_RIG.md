@@ -88,6 +88,12 @@ extremes. It uses derivative flat normals so lighting follows those faces. The e
 production segments share six source-derived part geometries and one smooth
 clay material.
 
+Character Lab may separately enlarge arm and leg knobs from 1.00–1.62×. That
+authoring layer scales each actual knob region uniformly in XYZ; it does not
+change shaft thickness or the length-animation contract. Ivory Bone's distal
+knob stays pinned to the semantic elbow socket, while every Ivory Rattle
+knobless insertion tip remains unchanged for glove, joint, and sock fit.
+
 ## Stable animation identity
 
 Animation tracks address semantic IDs, not Three.js UUIDs or display labels.

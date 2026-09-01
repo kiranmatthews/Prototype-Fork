@@ -332,6 +332,45 @@ try {
       assert.equal(component.distalKnob.geometry, first.distalKnob.geometry);
     }
   }
+  const upperArmKnobs = productionBones.get('upper-arm-left');
+  const forearmKnobs = productionBones.get('lower-arm-left');
+  const thighKnobs = productionBones.get('upper-leg-left');
+  const upperArmProximalBase = upperArmKnobs.proximalKnob.scale.clone();
+  const upperArmDistalBase = upperArmKnobs.distalKnob.scale.clone();
+  const upperArmDistalPositionBase = upperArmKnobs.distalKnob.position.clone();
+  const upperArmSocketBase = upperArmKnobs.distalSocket.position.clone();
+  const forearmProximalBase = forearmKnobs.proximalKnob.scale.clone();
+  const forearmInsertionBase = forearmKnobs.distalKnob.scale.clone();
+  const forearmInsertionPositionBase = forearmKnobs.distalKnob.position.clone();
+  const thighProximalBase = thighKnobs.proximalKnob.scale.clone();
+  const thighInsertionBase = thighKnobs.distalKnob.scale.clone();
+  const thighInsertionPositionBase = thighKnobs.distalKnob.position.clone();
+  player.setCharacterProportions({ armKnobSize: 1.4, legKnobSize: 1.5 });
+  for (const [knob, base, factor] of [
+    [upperArmKnobs.proximalKnob, upperArmProximalBase, 1.4],
+    [upperArmKnobs.distalKnob, upperArmDistalBase, 1.4],
+    [forearmKnobs.proximalKnob, forearmProximalBase, 1.4],
+    [thighKnobs.proximalKnob, thighProximalBase, 1.5],
+  ]) {
+    near(knob.scale.x, base.x * factor);
+    near(knob.scale.y, base.y * factor);
+    near(knob.scale.z, base.z * factor);
+  }
+  near(upperArmKnobs.distalKnob.position.y,
+    upperArmDistalPositionBase.y + upperArmKnobs.baseLength *
+      (1 - upperArmKnobs.root.userData.stretchableBoneRuntime.stretchEnd) * 0.4);
+  assert.deepEqual(upperArmKnobs.distalSocket.position.toArray(), upperArmSocketBase.toArray(),
+    'knob sizing must not move the semantic elbow socket');
+  assert.deepEqual(forearmKnobs.distalKnob.scale.toArray(), forearmInsertionBase.toArray(),
+    'forearm insertion tip must remain fitted to the glove');
+  assert.deepEqual(forearmKnobs.distalKnob.position.toArray(), forearmInsertionPositionBase.toArray());
+  assert.deepEqual(thighKnobs.distalKnob.scale.toArray(), thighInsertionBase.toArray(),
+    'leg insertion tip must remain fitted to the following joint/sock');
+  assert.deepEqual(thighKnobs.distalKnob.position.toArray(), thighInsertionPositionBase.toArray());
+  player.resetCharacterProportions();
+  assert.deepEqual(upperArmKnobs.proximalKnob.scale.toArray(), upperArmProximalBase.toArray());
+  assert.deepEqual(upperArmKnobs.distalKnob.scale.toArray(), upperArmDistalBase.toArray());
+  assert.deepEqual(upperArmKnobs.distalKnob.position.toArray(), upperArmDistalPositionBase.toArray());
   near(player.stretchableBoneDiagnostics.minScale, 0.319);
   near(player.stretchableBoneDiagnostics.maxScale, 2.765);
   assert.deepEqual(player.meshyTorsoDiagnostics, {
