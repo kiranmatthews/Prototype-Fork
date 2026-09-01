@@ -54,6 +54,10 @@ try {
     if (object.isSkinnedMesh) sourceMeshes.push(object);
   });
   assert.equal(sourceMeshes.length, 4, 'two hands × skin/cloth material surfaces');
+  assert.ok(gltf.scene.getObjectByName('thumb-metacarpal-left').position.x < 0,
+    'authored left hand was assigned to the opposite wrist');
+  assert.ok(gltf.scene.getObjectByName('thumb-metacarpal-right').position.x > 0,
+    'mirrored right hand was assigned to the opposite wrist');
   let sourceTriangles = 0;
   for (const mesh of sourceMeshes) {
     const geometry = mesh.geometry;
@@ -250,6 +254,8 @@ try {
   assert.match(playerSource, /installRiggedCartoonHands/);
   assert.match(labSource, /Rest orientation is linked/);
   assert.match(importerSource, /export_influence_nb=4/);
+  assert.match(importerSource, /"left", orient\)/);
+  assert.match(importerSource, /"right", mirror_x @ orient\)/);
   assert.match(creditsSource, /Hand Rig by \[Andy Cuccaro\]/);
   assert.match(creditsSource, /CC BY 4\.0/);
   assert.match(JSON.parse(packageSource).scripts['check:character-lab'],

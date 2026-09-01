@@ -236,11 +236,8 @@ def main() -> None:
     orient = Matrix.Rotation(math.pi, 4, "X")
     mirror_x = Matrix.Scale(-1.0, 4, (1.0, 0.0, 0.0))
     built = [
-        # The supplied source is labelled left, but its inward-palm pose puts
-        # the thumb behind the rider. Swap the positive-scale mirrored surfaces
-        # at export so both inward palms retain rider-forward thumbs.
-        build_side(baked, source_armature, weights, "left", mirror_x @ orient),
-        build_side(baked, source_armature, weights, "right", orient),
+        build_side(baked, source_armature, weights, "left", orient),
+        build_side(baked, source_armature, weights, "right", mirror_x @ orient),
     ]
     for root, armature, mesh in built:
         validate_side(root.name.rsplit("-", 1)[-1], armature, mesh)

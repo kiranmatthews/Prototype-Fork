@@ -182,10 +182,10 @@ hashes and the clean-room boundary are recorded in
 **Hand Rig by [Andy Cuccaro](https://andycuccaro.gumroad.com/l/three-finger-hand-rig)**
 is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 The shipped derivative applies the authored Catmull-Clark surface, mirrors a
-second hand, swaps the mirrored surfaces to keep inward-palm thumbs forward,
-replaces the 118-bone Rigify arm with one rigid palm root plus 12 digit bones
-per side, folds palm/forearm weights into that root, and caps skin weights at
-four per vertex. Source/output hashes and the exact conversion record are in
+second hand for the matching right wrist, replaces the 118-bone Rigify arm
+with one rigid palm root plus 12 digit bones per side, folds palm/forearm
+weights into that root, and caps skin weights at four per vertex. Source/output
+hashes and the exact conversion record are in
 `public/characters/three-finger-hand/provenance.json`.
 
 ## Everything else

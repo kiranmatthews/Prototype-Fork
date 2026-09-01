@@ -11,7 +11,7 @@
   "sourceBlendSha256": "e2de2663250e0855d8d352d68b8ee3be46a2a093587eb1cb0d98906d4bcd9d5c",
   "sourceBlendVersion": "3.02",
   "output": "three-finger-hand.glb",
-  "outputSha256": "4c10916ddc43dda6cb9f01ea08098f981513860db82264043b2ab3c6670302eb",
+  "outputSha256": "1aa4708dfc9d10179109e229d688e32a34f6a827544c4dca34b39ccc7470e1a9",
   "conversionTool": "tools/import-three-finger-hand.py",
   "conversionRuntime": "Blender 5.2.0 LTS headless with embedded source scripts disabled",
   "conversion": [
@@ -20,7 +20,7 @@
     "Kept one rigid hand root plus twelve deforming digit bones per hand",
     "Folded forearm, hand and palm groups into the rigid hand root",
     "Capped and normalized every vertex to four skin influences",
-    "Baked two positive-scale mirrors and swapped the surfaces between wrists so inward palms keep rider-forward thumbs",
+    "Baked the authored left hand to the left wrist and one positive-scale mirror to the right wrist",
     "Preserved the authored Basic Skin and Cloth materials",
     "Exported no source scripts, controls, cameras, lights or animations"
   ],
