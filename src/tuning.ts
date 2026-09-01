@@ -112,7 +112,7 @@ export const TUNING = {
   ledgeGrabTime: 6, // seconds you can hang off a ledge before your grip fails
   ledgeClimbTime: 0.38, // seconds the animated clamber-up takes (pull up, then over the lip)
   ledgeClimbPop: 1, // extra lift as you top out of the clamber (0 = plant flat)
-  ledgeReach: 1.8, // highest a lip can sit above your feet and still be caught
+  ledgeReach: 2.4, // highest a lip can sit above your feet and still be caught
   airControl: 0, // forward/back speed adjustment in the air
   manualMinSpeed: 3.5, // must be rolling at least this fast to pop (or hold) a manual
   manualDrift: 0.65, // manual balance: how fast the pitch needle runs away
@@ -182,17 +182,16 @@ export const TUNING = {
   nitroRadius: 2.75, // nitro explosion kill/break radius
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
-  // CAMERA defaults (the long-standing hand-tuned chase framing).
-  // camTilt aims AT the character (2.1 ≈ just over her head — this exactly
-  // reproduces the old 21° down-pitch); camOffset TRANSLATES the whole rig
+  // CAMERA defaults (the latest hand-tuned chase framing).
+  // camTilt aims AT the character; camOffset TRANSLATES the whole rig
   // down-course, so framing moves without the tilt changing. Decoupled knobs.
-  camFov: 57, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
+  camFov: 49, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
   chaseCam: 0, // 1 = third-person follow: camera swings behind the travel direction, skater always faces forward
-  camDist: 5.9, // trailing distance behind the character
+  camDist: 3.8, // trailing distance behind the character
   camHeight: 5.1, // camera elevation above the character
   camAirLift: 0, // how much the rig rises WITH an airborne jump: 1 = classic full-follow (jumps read small/snappy on screen), 0 = ground-anchored Crash rig (skater does all the rising on screen). Default 0: with the small playtested jump pops the anchored rig reads clean and keeps the landing framed
-  camTilt: 2.4, // aim height on the character: higher = camera tilts UP (sees more sky)
-  camOffset: 1, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
+  camTilt: 3.3, // aim height on the character: higher = camera tilts UP (sees more sky)
+  camOffset: -1.25, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
   camBalanceRoll: 7, // degrees the horizon rolls with the grind balance needle at a full lean (0 = off)
 };
 
@@ -203,7 +202,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 13; // v13: Unity-port feel/collision pass — foot inertia, exact slide, tuned double jump, generic wipeouts, Arrow/crate/Slam updates
+export const TUNING_VERSION = 14; // v14: wider ledge catch plus the latest close, telephoto camera framing
+// v13: Unity-port feel/collision pass — foot inertia, exact slide, tuned double jump, generic wipeouts, Arrow/crate/Slam updates
 // v11: pipePump retired — pipePumpGain superseded it and applies on every transition
 // v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
 // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
@@ -669,7 +669,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   camFov:
     'ZOOM (focal length): the camera lens angle. Lower = telephoto punch-in (tighter, flatter, more cinematic); higher = wide angle (more of the world, more distortion). Side-scroll zones and the boulder chase still add their own push.',
   camTilt:
-    'TILT: the height on the character the camera aims at — around 2.1 is just over her head, so the current 2.4 aims slightly above it. Higher tilts the view UP toward the horizon/sky; lower buries it into the ground. Pure angle — the framing position knob is camOffset.',
+    'TILT: the height on the character the camera aims at — around 2.1 is just over her head, so the current 3.3 aims above it. Higher tilts the view UP toward the horizon/sky; lower buries it into the ground. Pure angle — the framing position knob is camOffset.',
   camDist: 'DISTANCE: how far the camera trails behind the character. Side-scroll zones scale with it.',
   camBalanceRoll:
     'How far the horizon ROLLS with the grind balance needle, in degrees at a full lean. The shot leans the way you are falling off the rail, so a grind you are losing reads in the frame itself and not only in the meter. 0 turns it off.',

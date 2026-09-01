@@ -2757,8 +2757,8 @@ player.onGameOver = () => ui.showDeathScreen(true);
 // ~18° down so crate TOPS read, hero's feet near the bottom of frame,
 // hero ~30% of frame height.
 // Base framing now lives on TUNING sliders (CAMERA section): camDist,
-// camHeight, camTilt, camOffset, camFov. The hand-tuned defaults
-// are unchanged; special shots (side-scroll, boulder) scale relative to them.
+// camHeight, camTilt, camOffset, camFov. Special shots (side-scroll, boulder)
+// scale relative to the current shipped baseline.
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
 const camAimTmp = new THREE.Vector3();
