@@ -177,7 +177,18 @@ mod render mesh, texture, animation, or audio is redistributed. Verified input
 hashes and the clean-room boundary are recorded in
 `docs/JUNGLE_CLIFF_PORT.md`.
 
+## Three-finger character hands
+
+**Hand Rig by [Andy Cuccaro](https://andycuccaro.gumroad.com/l/three-finger-hand-rig)**
+is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The shipped derivative applies the authored Catmull-Clark surface, mirrors a
+second hand, swaps the mirrored surfaces to keep inward-palm thumbs forward,
+replaces the 118-bone Rigify arm with one rigid palm root plus 12 digit bones
+per side, folds palm/forearm weights into that root, and caps skin weights at
+four per vertex. Source/output hashes and the exact conversion record are in
+`public/characters/three-finger-hand/provenance.json`.
+
 ## Everything else
 
-Levels, physics, the character rig, the surface textures, the editor and the
-UI are original to this project.
+The remaining levels, physics, character rig, surface textures, editor and UI
+are original to this project.

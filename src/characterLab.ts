@@ -363,6 +363,13 @@ class CharacterLab implements CharacterLabHandle {
       if (control.section !== section) {
         section = control.section;
         this.panel.appendChild(element('div', 'clab-section', section));
+        if (section === 'Hands') {
+          this.panel.appendChild(element(
+            'div',
+            'clab-note',
+            'Rest orientation is linked: pitch matches on both wrists; yaw and roll mirror anatomically.',
+          ));
+        }
       }
       this.panel.appendChild(this.slider(control));
     }
@@ -459,9 +466,22 @@ class CharacterLab implements CharacterLabHandle {
     const center = bounds.getCenter(new THREE.Vector3());
     this.grid.position.set(center.x, bounds.min.y, center.z);
     const diagnostics = this.ctx.player.characterProportionDiagnostics;
+    const hand = this.ctx.player.riggedCartoonHandDiagnostics;
+    let proceduralHandMeshesVisible = 0;
+    for (const side of ['left', 'right'] as const) {
+      this.ctx.rigRoot.getObjectByName(`cartoon-glove-${side}`)?.traverse((object) => {
+        if (typeof object.userData.characterPart === 'string' && object.visible) {
+          proceduralHandMeshesVisible++;
+        }
+      });
+    }
+    const handStatus = hand.ready
+      ? `artist hands ready · ${hand.triangles.toLocaleString()} tris`
+      : `artist hands ${hand.state}`;
     this.status.textContent =
       `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} world units\n` +
-      `${diagnostics.appliedObjectCount} proportion targets · collision unchanged`;
+      `${diagnostics.appliedObjectCount} proportion targets · collision unchanged\n` +
+      `${handStatus} · fallback meshes visible ${proceduralHandMeshesVisible}`;
   }
 
   private frameCamera(

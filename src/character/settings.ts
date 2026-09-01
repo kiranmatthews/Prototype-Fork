@@ -19,6 +19,9 @@ export interface CharacterProportionSettingsValue {
   armThickness: number;
   legThickness: number;
   handSize: number;
+  wristRestPitch: number;
+  wristRestYaw: number;
+  wristRestRoll: number;
   footSize: number;
   earSize: number;
   eyeSize: number;
@@ -30,7 +33,7 @@ export type CharacterProportionKey = keyof CharacterProportionSettingsValue;
 export interface CharacterProportionControl {
   readonly key: CharacterProportionKey;
   readonly label: string;
-  readonly section: 'Overall' | 'Head & torso' | 'Skeleton' | 'Mass & details';
+  readonly section: 'Overall' | 'Head & torso' | 'Skeleton' | 'Hands' | 'Mass & details';
   readonly min: number;
   readonly max: number;
   readonly step: number;
@@ -38,6 +41,7 @@ export interface CharacterProportionControl {
 
 export interface SavedCharacterProportions {
   readonly version: 1;
+  readonly handRestRevision: 1;
   readonly settings: CharacterProportionSettingsValue;
 }
 
@@ -47,6 +51,7 @@ export interface CharacterProportionStorage {
 }
 
 export const CHARACTER_PROPORTION_STORAGE_KEY = 'solProtoCharacterProportions.v1';
+export const CHARACTER_HAND_REST_REVISION = 1 as const;
 
 export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
   Object.freeze({
@@ -70,6 +75,9 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     armThickness: 1,
     legThickness: 1,
     handSize: 1,
+    wristRestPitch: 0,
+    wristRestYaw: 0,
+    wristRestRoll: 0,
     footSize: 1,
     earSize: 1,
     eyeSize: 1,
@@ -98,6 +106,10 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'thighLength', label: 'Thigh length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
     { key: 'shinLength', label: 'Shin length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
 
+    { key: 'wristRestPitch', label: 'Rest pitch (°)', section: 'Hands', min: -90, max: 90, step: 1 },
+    { key: 'wristRestYaw', label: 'Rest yaw (°)', section: 'Hands', min: -90, max: 90, step: 1 },
+    { key: 'wristRestRoll', label: 'Rest roll (°)', section: 'Hands', min: -120, max: 120, step: 1 },
+
     { key: 'armThickness', label: 'Arm thickness', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
     { key: 'legThickness', label: 'Leg thickness', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
     { key: 'handSize', label: 'Hand size', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
@@ -111,8 +123,8 @@ const CONTROL_BY_KEY = new Map(
   CHARACTER_PROPORTION_CONTROLS.map((control) => [control.key, control]),
 );
 
-function clamp(value: number, minimum: number, maximum: number): number {
-  return Math.min(maximum, Math.max(minimum, Number.isFinite(value) ? value : 1));
+function clamp(value: number, minimum: number, maximum: number, fallback: number): number {
+  return Math.min(maximum, Math.max(minimum, Number.isFinite(value) ? value : fallback));
 }
 
 export function copyCharacterProportions(
@@ -133,6 +145,7 @@ export function clampCharacterProportions(
       typeof candidate === 'number' ? candidate : result[key],
       control.min,
       control.max,
+      result[key],
     );
   }
   return result;
@@ -169,7 +182,11 @@ export class CharacterProportionSettings {
 
   serialize(pretty = true): string {
     return JSON.stringify(
-      { version: 1, settings: this.current } satisfies SavedCharacterProportions,
+      {
+        version: 1,
+        handRestRevision: CHARACTER_HAND_REST_REVISION,
+        settings: this.current,
+      } satisfies SavedCharacterProportions,
       null,
       pretty ? 2 : undefined,
     );
@@ -180,7 +197,7 @@ export class CharacterProportionSettings {
     if (parsed.version !== 1 || !parsed.settings) {
       throw new Error('Expected a version 1 Character Lab settings file.');
     }
-    this.replace(parsed.settings);
+    this.replace(this.migrateHandRest(parsed));
   }
 
   subscribe(listener: Listener, immediate = false): () => void {
@@ -196,7 +213,7 @@ export class CharacterProportionSettings {
       if (!source) return copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
       const parsed = JSON.parse(source) as Partial<SavedCharacterProportions>;
       if (parsed.version !== 1 || !parsed.settings) throw new Error('unsupported version');
-      return clampCharacterProportions(parsed.settings);
+      return clampCharacterProportions(this.migrateHandRest(parsed));
     } catch (error) {
       console.warn('Ignoring invalid Character Lab proportions', error);
       return copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
@@ -210,6 +227,18 @@ export class CharacterProportionSettings {
       // Live editing remains available when browser persistence is blocked.
     }
     for (const listener of this.listeners) listener(this.current);
+  }
+
+  private migrateHandRest(
+    saved: Partial<SavedCharacterProportions>,
+  ): Partial<CharacterProportionSettingsValue> {
+    if (saved.handRestRevision === CHARACTER_HAND_REST_REVISION) return saved.settings ?? {};
+    return {
+      ...(saved.settings ?? {}),
+      wristRestPitch: DEFAULT_CHARACTER_PROPORTIONS.wristRestPitch,
+      wristRestYaw: DEFAULT_CHARACTER_PROPORTIONS.wristRestYaw,
+      wristRestRoll: DEFAULT_CHARACTER_PROPORTIONS.wristRestRoll,
+    };
   }
 }
 

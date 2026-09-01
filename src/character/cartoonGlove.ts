@@ -206,10 +206,10 @@ function makeBone(
   bone.userData.digit = digit;
   bone.userData.phalange = stage;
   bone.userData.rotationLimit = {
-    // The glove closes toward negative local X. Keep metadata in the same
-    // signed frame as the shipped poses so future constraint solvers do not
-    // clamp a valid fist back toward the bind pose.
-    x: [-1.6, 0.2],
+    // The artist skin closes toward positive local X. Keep metadata in the
+    // same signed frame as the shipped poses so future constraint solvers do
+    // not clamp a valid fist back toward the bind pose.
+    x: [-0.2, 1.6],
     y: [-0.35, 0.35],
     z: [-0.85, 0.85],
   };
@@ -412,7 +412,31 @@ export function createCartoonGlove(
     sockets,
     bones: Object.freeze(Object.values(joints)),
   };
+  root.updateMatrixWorld(true);
+  const inverseRoot = root.getWorldQuaternion(new THREE.Quaternion()).invert();
+  const inverseRootMatrix = root.matrixWorld.clone().invert();
+  for (const bone of rig.bones) {
+    const rest = inverseRoot.clone().multiply(
+      bone.getWorldQuaternion(new THREE.Quaternion()),
+    ).normalize();
+    bone.userData.cartoonGloveRestRootQuaternion = rest.toArray();
+    bone.userData.cartoonGloveRestRootPosition = bone
+      .getWorldPosition(new THREE.Vector3())
+      .applyMatrix4(inverseRootMatrix)
+      .toArray();
+    bone.userData.cartoonGloveRestLocalScale = bone.scale.toArray();
+  }
   return rig;
+}
+
+/** Remove only the superseded code-built surface; semantic bones/sockets remain live. */
+export function removeProceduralCartoonGloveSurface(rig: CartoonGloveRig): number {
+  const surfaces: THREE.Object3D[] = [];
+  rig.root.traverse((object) => {
+    if (typeof object.userData.characterPart === 'string') surfaces.push(object);
+  });
+  for (const surface of surfaces) surface.removeFromParent();
+  return surfaces.length;
 }
 
 export function setCartoonGlovePose(
@@ -435,12 +459,12 @@ export function setCartoonGlovePose(
     const curl = curls[digit];
     const angles = curlAngles[digit];
     chain.proximal.rotation.set(
-      REST_CURL - angles[0] * curl,
+      REST_CURL + angles[0] * curl,
       -sideSign * 0.08 * clamp01(pose.cup),
       chain.restSpread * (1 + THREE.MathUtils.clamp(pose.spread, -0.6, 0.8)),
     );
-    chain.middle.rotation.set(REST_CURL - angles[1] * curl, 0, 0);
-    chain.distal.rotation.set(REST_CURL - angles[2] * curl, 0, 0);
+    chain.middle.rotation.set(REST_CURL + angles[1] * curl, 0, 0);
+    chain.distal.rotation.set(REST_CURL + angles[2] * curl, 0, 0);
   }
   const thumbCurl = clamp01(pose.thumbCurl);
   const opposition = clamp01(pose.thumbOpposition);
@@ -449,8 +473,8 @@ export function setCartoonGlovePose(
     sideSign * 0.12 * opposition,
     rig.thumb.restOpposition + sideSign * 0.72 * opposition,
   );
-  rig.thumb.proximal.rotation.set(-0.82 * thumbCurl, 0, 0);
-  rig.thumb.distal.rotation.set(-1.08 * thumbCurl, 0, 0);
+  rig.thumb.proximal.rotation.set(0.82 * thumbCurl, 0, 0);
+  rig.thumb.distal.rotation.set(1.08 * thumbCurl, 0, 0);
 }
 
 export function blendCartoonGlovePose(

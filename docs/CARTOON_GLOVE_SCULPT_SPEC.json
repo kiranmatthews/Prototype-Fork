@@ -2229,13 +2229,13 @@
           "id": "fingerIndexProximal",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": -0.07
         }
@@ -2448,13 +2448,13 @@
           "id": "fingerIndexMiddle",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0
         }
@@ -2659,13 +2659,13 @@
           "id": "fingerIndexDistal",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0
         }
@@ -2870,13 +2870,13 @@
           "id": "fingerMiddleProximal",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0
         }
@@ -3081,13 +3081,13 @@
           "id": "fingerMiddleMiddle",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0
         }
@@ -3292,13 +3292,13 @@
           "id": "fingerMiddleDistal",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0
         }
@@ -3503,13 +3503,13 @@
           "id": "fingerOuterProximal",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0.08
         }
@@ -3714,13 +3714,13 @@
           "id": "fingerOuterMiddle",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0
         }
@@ -3925,13 +3925,13 @@
           "id": "fingerOuterDistal",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.55,
-            0.15
+            -0.15,
+            1.55
           ],
           "restSpreadRadians": 0
         }
@@ -4148,8 +4148,8 @@
             ]
           ],
           "curlLimitsRadians": [
-            -1.35,
-            0.2
+            -0.2,
+            1.35
           ],
           "oppositionLimitsRadians": [
             0,
@@ -4365,13 +4365,13 @@
           "id": "thumbDistal",
           "type": "revolute",
           "axis": [
-            -1,
+            1,
             0,
             0
           ],
           "limitsRadians": [
-            -1.25,
-            0.1
+            -0.1,
+            1.25
           ]
         }
       ],
@@ -6376,7 +6376,7 @@
           "distal"
         ],
         "curlAxis": [
-          -1,
+          1,
           0,
           0
         ],
@@ -6394,7 +6394,7 @@
           "distal"
         ],
         "curlAxis": [
-          -1,
+          1,
           0,
           0
         ],
@@ -6412,7 +6412,7 @@
           "distal"
         ],
         "curlAxis": [
-          -1,
+          1,
           0,
           0
         ],
@@ -6430,7 +6430,7 @@
           "distal"
         ],
         "curlAxis": [
-          -1,
+          1,
           0,
           0
         ],

@@ -82,10 +82,16 @@ import {
   CARTOON_GLOVE_POSES,
   blendCartoonGlovePose,
   createCartoonGlove,
+  removeProceduralCartoonGloveSurface,
   setCartoonGlovePose,
   type CartoonGloveRig,
   type CartoonGlovePoseName,
 } from './character/cartoonGlove';
+import {
+  attachAndSyncRiggedCartoonHandPair,
+  loadRiggedCartoonHandPair,
+  type RiggedCartoonHandPair,
+} from './character/riggedCartoonHand';
 import {
   createStretchableBone,
   stretchableBoneTriangleCount,
@@ -988,6 +994,9 @@ export class Player {
   private wristL: THREE.Bone | null = null;
   private gloveLeft: CartoonGloveRig | null = null;
   private gloveRight: CartoonGloveRig | null = null;
+  private riggedCartoonHands: RiggedCartoonHandPair | null = null;
+  private riggedCartoonHandState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
+  private riggedCartoonHandError: string | null = null;
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
@@ -1169,6 +1178,9 @@ export class Player {
       this.syncCharacterAppearance();
       this.resetRenderInterpolation();
     }, true);
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+      void this.installRiggedCartoonHands();
+    }
     this.installSpinEffects(); // Unity Whirlwind Vixen + orbital rings
 
     // Landing X: a small cross pinned to the floor under the skater — the
@@ -1601,6 +1613,27 @@ export class Player {
     };
   }
 
+  get riggedCartoonHandDiagnostics(): {
+    readonly state: 'idle' | 'loading' | 'ready' | 'failed';
+    readonly ready: boolean;
+    readonly sides: readonly string[];
+    readonly bonesPerHand: number;
+    readonly triangles: number;
+    readonly credit: string | null;
+    readonly error: string | null;
+  } {
+    const pair = this.riggedCartoonHands;
+    return {
+      state: this.riggedCartoonHandState,
+      ready: pair !== null,
+      sides: pair ? [pair.left.side, pair.right.side] : [],
+      bonesPerHand: pair ? pair.left.bonesByName.size : 0,
+      triangles: pair?.triangleCount ?? 0,
+      credit: pair?.credit ?? null,
+      error: this.riggedCartoonHandError,
+    };
+  }
+
   get stretchableBoneDiagnostics(): {
     readonly ready: boolean;
     readonly componentCount: number;
@@ -1630,6 +1663,7 @@ export class Player {
     if (!pose) throw new Error(`unknown cartoon glove pose: ${String(name)}`);
     if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, pose);
     if (this.gloveRight) setCartoonGlovePose(this.gloveRight, pose);
+    this.syncRiggedCartoonHands();
     this.bodyGroup.updateMatrixWorld(true);
     this.resetRenderInterpolation();
   }
@@ -1712,6 +1746,40 @@ export class Player {
     this.characterProportionLayer.apply(characterProportionSettings.value);
     this.syncCharacterTailVisibility();
     this.bodyGroup.updateMatrixWorld(true);
+    this.syncRiggedCartoonHands();
+  }
+
+  private async installRiggedCartoonHands(): Promise<void> {
+    if (this.riggedCartoonHandState !== 'idle' || !this.gloveLeft || !this.gloveRight) return;
+    const left = this.gloveLeft;
+    const right = this.gloveRight;
+    this.riggedCartoonHandState = 'loading';
+    this.riggedCartoonHandError = null;
+    let pendingPair: RiggedCartoonHandPair | null = null;
+    try {
+      pendingPair = await loadRiggedCartoonHandPair();
+      attachAndSyncRiggedCartoonHandPair(pendingPair, left, right);
+      this.bodyGroup.updateMatrixWorld(true);
+      this.riggedCartoonHands = pendingPair;
+      this.riggedCartoonHandState = 'ready';
+      removeProceduralCartoonGloveSurface(left);
+      removeProceduralCartoonGloveSurface(right);
+      this.resetRenderInterpolation();
+    } catch (error) {
+      pendingPair?.left.root.removeFromParent();
+      pendingPair?.right.root.removeFromParent();
+      this.riggedCartoonHands = null;
+      this.riggedCartoonHandState = 'failed';
+      this.riggedCartoonHandError = error instanceof Error ? error.message : String(error);
+      // The procedural fallback was not removed, so the character remains usable.
+      console.error('Rigged cartoon hand failed to load', error);
+    }
+  }
+
+  private syncRiggedCartoonHands(): void {
+    if (!this.riggedCartoonHands || !this.gloveLeft || !this.gloveRight) return;
+    this.riggedCartoonHands.left.syncFrom(this.gloveLeft);
+    this.riggedCartoonHands.right.syncFrom(this.gloveRight);
   }
 
   private clearCharacterAppearance(): void {
@@ -14716,7 +14784,17 @@ export class Player {
         glove: GLOVE_WHITE,
         stitch: INK,
       });
-      wrist.add(glove.root);
+      // Persistent Character Lab wrist orientation lives on a non-bone mount.
+      // Authored wrist tracks still own the conventional wrist bone, while
+      // this presentation-only layer composes afterward and mirrors yaw/roll.
+      const handRestOrientation = new THREE.Group();
+      handRestOrientation.name = `hand-rest-orientation-${anatomicalSide}`;
+      handRestOrientation.userData.anatomicalSide = anatomicalSide;
+      // Palms face medially at rest while both thumbs point rider-forward.
+      // Character Lab yaw/roll are offsets composed over this authored base.
+      handRestOrientation.rotation.y = -side * Math.PI / 2;
+      wrist.add(handRestOrientation);
+      handRestOrientation.add(glove.root);
       if (side === 1) {
         this.armR = arm;
         this.elbowR = elbowJoint;

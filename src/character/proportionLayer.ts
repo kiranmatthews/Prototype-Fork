@@ -6,10 +6,13 @@ import type { CharacterProportionSettingsValue } from './settings';
 interface TransformState {
   readonly object: THREE.Object3D;
   readonly basePosition: THREE.Vector3;
+  readonly baseQuaternion: THREE.Quaternion;
   readonly baseScale: THREE.Vector3;
   readonly appliedPosition: THREE.Vector3;
+  readonly appliedQuaternion: THREE.Quaternion;
   readonly appliedScale: THREE.Vector3;
   movesPosition: boolean;
+  movesQuaternion: boolean;
   movesScale: boolean;
 }
 
@@ -21,6 +24,8 @@ interface RuntimeDeformation {
 }
 
 const EPSILON_SQ = 1e-14;
+const ROTATION_EULER = new THREE.Euler(0, 0, 0, 'XYZ');
+const ROTATION_QUATERNION = new THREE.Quaternion();
 
 const SEGMENT_FACTORS: Readonly<
   Record<string, keyof CharacterProportionSettingsValue>
@@ -88,6 +93,12 @@ export class CharacterProportionLayer {
       ) {
         state.object.scale.copy(state.baseScale);
       }
+      if (
+        state.movesQuaternion &&
+        1 - Math.abs(state.object.quaternion.dot(state.appliedQuaternion)) <= EPSILON_SQ
+      ) {
+        state.object.quaternion.copy(state.baseQuaternion);
+      }
     }
     this.states.clear();
   }
@@ -154,6 +165,13 @@ export class CharacterProportionLayer {
       this.multiplyPosition(this.root.getObjectByName(`shoulder-${side}`), value.shoulderWidth, 1, 1);
       this.multiplyPosition(this.root.getObjectByName(`hip-${side}`), value.hipWidth, 1, 1);
       this.multiplyScale(this.root.getObjectByName(`wrist-${side}`), value.handSize, value.handSize, value.handSize);
+      const sideSign = side === 'left' ? 1 : -1;
+      this.multiplyQuaternion(
+        this.root.getObjectByName(`hand-rest-orientation-${side}`),
+        THREE.MathUtils.degToRad(value.wristRestPitch),
+        THREE.MathUtils.degToRad(value.wristRestYaw * sideSign),
+        THREE.MathUtils.degToRad(value.wristRestRoll * sideSign),
+      );
       this.multiplyScale(this.root.getObjectByName(`ankle-${side}`), value.footSize, value.footSize, value.footSize);
       this.multiplyScale(this.root.getObjectByName(`ear-${side}`), value.earSize, value.earSize, value.earSize);
     }
@@ -198,6 +216,7 @@ export class CharacterProportionLayer {
 
     for (const state of this.states.values()) {
       state.appliedPosition.copy(state.object.position);
+      state.appliedQuaternion.copy(state.object.quaternion);
       state.appliedScale.copy(state.object.scale);
     }
   }
@@ -208,10 +227,13 @@ export class CharacterProportionLayer {
       state = {
         object,
         basePosition: object.position.clone(),
+        baseQuaternion: object.quaternion.clone(),
         baseScale: object.scale.clone(),
         appliedPosition: object.position.clone(),
+        appliedQuaternion: object.quaternion.clone(),
         appliedScale: object.scale.clone(),
         movesPosition: false,
+        movesQuaternion: false,
         movesScale: false,
       };
       this.states.set(object, state);
@@ -247,6 +269,20 @@ export class CharacterProportionLayer {
       object.scale.y * y,
       object.scale.z * z,
     );
+  }
+
+  private multiplyQuaternion(
+    object: THREE.Object3D | null | undefined,
+    pitch: number,
+    yaw: number,
+    roll: number,
+  ): void {
+    if (!object) return;
+    const state = this.stateFor(object);
+    state.movesQuaternion = true;
+    ROTATION_EULER.set(pitch, yaw, roll, 'XYZ');
+    ROTATION_QUATERNION.setFromEuler(ROTATION_EULER);
+    object.quaternion.copy(state.baseQuaternion).multiply(ROTATION_QUATERNION).normalize();
   }
 
   private scalePositionAlong(object: THREE.Object3D, axis: THREE.Vector3, factor: number): void {

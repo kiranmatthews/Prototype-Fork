@@ -72,7 +72,12 @@ function fixture() {
     const elbow = add(`elbow-${side}`, shoulder, [0, -0.22, 0]);
     visual(`forearm-${side}`, elbow, [0, -0.09, 0]);
     const wrist = add(`wrist-${side}`, elbow, [0, -0.19, 0]);
-    visual(`hand-${side}`, wrist, [0, -0.05, 0]);
+    const handRest = new THREE.Group();
+    handRest.name = `hand-rest-orientation-${side}`;
+    handRest.rotation.y = -sign * Math.PI / 2;
+    wrist.add(handRest);
+    nodes.set(handRest.name, handRest);
+    visual(`hand-${side}`, handRest, [0, -0.05, 0]);
     const hip = add(`hip-${side}`, hips, [sign * 0.115, 0, 0]);
     visual(`thigh-${side}`, hip, [0, -0.12, 0]);
     const knee = add(`knee-${side}`, hip, [0, -0.28, 0]);
@@ -140,39 +145,59 @@ try {
   const {
     CHARACTER_PROPORTION_CONTROLS,
     CHARACTER_PROPORTION_STORAGE_KEY,
+    CHARACTER_HAND_REST_REVISION,
     CharacterProportionSettings,
     DEFAULT_CHARACTER_PROPORTIONS,
     clampCharacterProportions,
   } = settingsApi;
 
-  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 24);
+  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 27);
   assert.deepEqual(
     new Set(CHARACTER_PROPORTION_CONTROLS.map((control) => control.key)),
     new Set(Object.keys(DEFAULT_CHARACTER_PROPORTIONS)),
     'every persisted proportion has exactly one Character Lab slider',
   );
   assert.deepEqual(clampCharacterProportions({}), DEFAULT_CHARACTER_PROPORTIONS);
-  const clamped = clampCharacterProportions({ headSize: 99, neckLength: -4, eyeSize: NaN });
+  const clamped = clampCharacterProportions({
+    headSize: 99,
+    neckLength: -4,
+    eyeSize: NaN,
+    wristRestPitch: NaN,
+    wristRestYaw: 999,
+  });
   assert.equal(clamped.headSize, 1.55);
   assert.equal(clamped.neckLength, 0);
   assert.equal(clamped.eyeSize, 1);
+  assert.equal(clamped.wristRestPitch, 0);
+  assert.equal(clamped.wristRestYaw, 90);
 
   const stored = memoryStorage({
     [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({
       version: 1,
-      settings: { headSize: 1.31, shoulderWidth: 1.2 },
+      settings: {
+        headSize: 1.31,
+        shoulderWidth: 1.2,
+        wristRestPitch: 22,
+        wristRestYaw: -90,
+        wristRestRoll: -4,
+      },
     }),
   });
   const settings = new CharacterProportionSettings(stored);
   assert.equal(settings.value.headSize, 1.31);
   assert.equal(settings.value.shoulderWidth, 1.2);
   assert.equal(settings.value.footSize, 1);
+  assert.equal(settings.value.wristRestPitch, 0,
+    'pre-release wrist tuning must migrate to the corrected anatomical base');
+  assert.equal(settings.value.wristRestYaw, 0);
+  assert.equal(settings.value.wristRestRoll, 0);
   let notifications = 0;
   settings.subscribe(() => notifications++);
   settings.patch({ handSize: 1.28 });
   assert.equal(notifications, 1);
   const persisted = JSON.parse(stored.values.get(CHARACTER_PROPORTION_STORAGE_KEY));
   assert.equal(persisted.version, 1);
+  assert.equal(persisted.handRestRevision, CHARACTER_HAND_REST_REVISION);
   assert.equal(persisted.settings.handSize, 1.28);
   const roundTrip = new CharacterProportionSettings(memoryStorage());
   roundTrip.importJson(settings.serialize(false));
@@ -207,6 +232,9 @@ try {
     armThickness: 1.22,
     legThickness: 0.82,
     handSize: 1.25,
+    wristRestPitch: 20,
+    wristRestYaw: 30,
+    wristRestRoll: 40,
     footSize: 1.18,
     earSize: 1.4,
     eyeSize: 1.16,
@@ -225,6 +253,26 @@ try {
   near(scene.nodes.get('knee-left').position.y, -0.28 * 1.3);
   near(scene.nodes.get('ankle-left').position.y, -0.25 * 0.8);
   near(scene.nodes.get('wrist-left').scale.x, 1.25);
+  const leftHandRest = scene.nodes.get('hand-rest-orientation-left');
+  const rightHandRest = scene.nodes.get('hand-rest-orientation-right');
+  const expectedLeftHandRest = new THREE.Quaternion()
+    .setFromEuler(new THREE.Euler(0, -Math.PI / 2, 0, 'XYZ'))
+    .multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(
+    THREE.MathUtils.degToRad(20),
+    THREE.MathUtils.degToRad(30),
+    THREE.MathUtils.degToRad(40),
+    'XYZ',
+  )));
+  const expectedRightHandRest = new THREE.Quaternion()
+    .setFromEuler(new THREE.Euler(0, Math.PI / 2, 0, 'XYZ'))
+    .multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(
+    THREE.MathUtils.degToRad(20),
+    THREE.MathUtils.degToRad(-30),
+    THREE.MathUtils.degToRad(-40),
+    'XYZ',
+  )));
+  near(Math.abs(leftHandRest.quaternion.dot(expectedLeftHandRest)), 1);
+  near(Math.abs(rightHandRest.quaternion.dot(expectedRightHandRest)), 1);
   near(scene.nodes.get('ear-left').scale.y, 1.4);
   const once = snapshot(scene.root);
   for (let iteration = 0; iteration < 100; iteration++) layer.apply(shaped);
@@ -237,7 +285,11 @@ try {
   for (const [name, value] of baseline) {
     assert.deepEqual(cleared.get(name).position, value.position, `${name} position did not restore`);
     assert.deepEqual(cleared.get(name).scale, value.scale, `${name} scale did not restore`);
+    if (name.startsWith('hand-rest-orientation-')) {
+      assert.deepEqual(cleared.get(name).quaternion, value.quaternion, `${name} quaternion did not restore`);
+    }
   }
+  near(scene.nodes.get('head').rotation.y, 0.7, 1e-6);
 
   // Persistent anatomy multiplies an already-authored temporary deformation:
   // 0.8 animation squash × 1.2 Character Lab length = 0.96 final reach.

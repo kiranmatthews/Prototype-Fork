@@ -33,11 +33,26 @@ procedural-rider (root-motion control)
 The simulated tail, ears, and ponytail remain auxiliary chains. They are
 declared to the animation suite but are not humanoid retarget bones.
 
-Each cartoon glove is constructed by one mirrored procedural factory. The
-conventional wrist remains the humanoid `handLeft`/`handRight` endpoint; 12
-optional digit bones per side extend below it without expanding the required
-humanoid role set. Existing clips therefore remain playable while Animation
-Studio can key, mirror and onion-skin every finger independently.
+Each cartoon glove's semantic controls are constructed by one mirrored
+procedural factory. The visible smooth surface is an attributed artist-authored
+GLB driven from those controls at runtime. Its source Rigify arm is stripped to
+one rigid palm root plus 12 deforming digit bones per side, with no control
+bones, constraints, drivers, source scripts, or invented clips. The
+conventional wrist remains the humanoid `handLeft`/`handRight` endpoint; the 12
+optional semantic digit bones per side extend below it without expanding the
+required humanoid role set. Existing clips therefore remain playable while
+Animation Studio can key, mirror and onion-skin every finger independently.
+The surface adapter transfers each semantic digit's root-space position and
+orientation delta plus its local scale ratio, so the visible mesh follows the
+complete transform track contract rather than rotation-only poses.
+
+`hand-rest-orientation-left/right` are non-bone presentation mounts below the
+conventional wrists. Character Lab writes linked pitch and mirrored yaw/roll to
+those mounts after animation. They are deliberately absent from the semantic
+skeleton so changing the default palm direction cannot contaminate wrist rest
+transforms or saved animation tracks. Their authored base turns both palms
+medially and both thumbs rider-forward; Character Lab values are offsets over
+that anatomical rest.
 
 Arm and leg joint chains now carry reusable `stretchable-cartoon-limb-bone`
 visual components. These add no skeleton joints: each component hangs from an

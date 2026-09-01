@@ -210,8 +210,8 @@ try {
   near(blended.indexCurl, 0.5);
   near(blended.thumbCurl, 0.46);
   setCartoonGlovePose(left, blended);
-  assert.ok(left.fingers.index.middle.rotation.x < 0);
-  assert.ok(left.thumb.proximal.rotation.x < 0);
+  assert.ok(left.fingers.index.middle.rotation.x > 0);
+  assert.ok(left.thumb.proximal.rotation.x > 0);
 
   setCartoonGlovePose(left, CARTOON_GLOVE_POSES.open);
   left.root.updateMatrixWorld(true);
@@ -244,27 +244,27 @@ try {
   const spec = JSON.parse(specSource);
   assert.equal(spec.rig.jointCountPerHand, 12);
   assert.deepEqual(spec.rig.requiredPoses, poseNames);
-  assert.ok(spec.rig.fingerChains.every((chain) => chain.curlAxis[0] === -1));
-  const requiredNegativeCurl = {
-    fingerIndexProximal: -0.92,
-    fingerIndexMiddle: -1.28,
-    fingerIndexDistal: -1.08,
-    fingerMiddleProximal: -0.96,
-    fingerMiddleMiddle: -1.34,
-    fingerMiddleDistal: -1.12,
-    fingerOuterProximal: -0.9,
-    fingerOuterMiddle: -1.26,
-    fingerOuterDistal: -1.08,
-    thumbProximal: -0.82,
-    thumbDistal: -1.08,
+  assert.ok(spec.rig.fingerChains.every((chain) => chain.curlAxis[0] === 1));
+  const requiredPositiveCurl = {
+    fingerIndexProximal: 0.92,
+    fingerIndexMiddle: 1.28,
+    fingerIndexDistal: 1.08,
+    fingerMiddleProximal: 0.96,
+    fingerMiddleMiddle: 1.34,
+    fingerMiddleDistal: 1.12,
+    fingerOuterProximal: 0.9,
+    fingerOuterMiddle: 1.26,
+    fingerOuterDistal: 1.08,
+    thumbProximal: 0.82,
+    thumbDistal: 1.08,
   };
   const componentJoints = spec.componentTree.flatMap((component) => component.joints ?? []);
-  for (const [jointId, requiredMinimum] of Object.entries(requiredNegativeCurl)) {
+  for (const [jointId, requiredMaximum] of Object.entries(requiredPositiveCurl)) {
     const joint = componentJoints.find((candidate) => candidate.id === jointId);
     assert.ok(joint, `sculpt spec is missing ${jointId}`);
-    if (joint.axis) assert.equal(joint.axis[0], -1, `${jointId} publishes the wrong curl axis`);
+    if (joint.axis) assert.equal(joint.axis[0], 1, `${jointId} publishes the wrong curl axis`);
     const limits = joint.limitsRadians ?? joint.curlLimitsRadians;
-    assert.ok(limits[0] <= requiredMinimum && limits[1] >= 0,
+    assert.ok(limits[0] <= 0 && limits[1] >= requiredMaximum,
       `${jointId} limits do not contain the shipped pose range`);
   }
   assert.equal(spec.preSpecAssessment.detailInventory.details.length, 6);

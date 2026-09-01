@@ -38,13 +38,26 @@ values from one frame to the next.
 The first schema includes overall scale/height/build, head size and axes, neck
 and torso dimensions, shoulder/hip width, separate upper/lower limb lengths,
 limb thickness, hand/foot size, ear/eye/ponytail size and animal-tail
-visibility. Left/right anatomy remains linked and mirrored in version 1 so a
-single slider cannot silently create a broken asymmetric rig.
+visibility. Hand-rest pitch, yaw and roll are also persistent: pitch is linked
+while yaw and roll mirror anatomically across the two wrists. These values live
+on presentation mounts below the wrist bones, so a rest-orientation adjustment
+does not alter authored wrist keyframes. Left/right anatomy remains linked and
+mirrored in version 1 so a single slider cannot silently create a broken
+asymmetric rig.
 
 The Hand Rig Preview section provides open, relaxed, curl, fist, pinch and grab
 poses plus a close-up camera. These are inspection presets over the same 24
 digit bones that Animation Studio exposes for keyframing; they are not baked
 animation clips.
+
+The visible hand surface is Andy Cuccaro's attributed CC BY 4.0 three-finger
+hand. Its source-only Rigify arm is reduced offline to one rigid palm root plus
+the existing twelve semantic digit bones per side. The browser never loads the
+`.blend`, Rigify controls, drivers, constraints, or embedded script. The
+code-built surface remains only until the artist GLB has loaded and bound, then
+is removed from the live hierarchy; its synchronous semantic bones and sockets
+remain. Rest-relative position, rotation and scale changes on all 24 semantic
+digit bones are transferred to the visible skin.
 
 The Limb Bone Preview frames all bones, arms, or legs. The existing upper-arm,
 forearm, thigh and shin length sliders exercise the production deformation
