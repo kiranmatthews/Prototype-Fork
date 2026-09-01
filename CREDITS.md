@@ -41,6 +41,16 @@ the sampled semantic keyframes ship; no Quaternius character model is part of
 the runtime. Source hash, conversion rules and the CC0 notice are retained in
 `public/animations/quaternius-jog-fwd/`.
 
+## Character torso
+
+The rider's skeleton-and-tank-top torso is an owner-supplied model created with
+[Meshy](https://www.meshy.ai/), used under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The web build ships
+the derived geometry buffers and resized PBR maps, not the source FBX or ZIP.
+Source and derived hashes, upload provenance, conversion rules, topology, and
+the code-native semantic skin mapping are recorded in
+`public/characters/meshy-torso/`.
+
 ## HUD display face
 
 The HUD, the crate stencils and every plate on screen are set in **Roo**,

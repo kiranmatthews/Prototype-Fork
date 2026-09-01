@@ -5,6 +5,7 @@ import {
   stretchableBoneShaftLengthRatio,
   stretchableBoneVolumeMorphInfluence,
 } from '../character/stretchableBone';
+import { meshyTorsoLengthRatio } from '../character/meshyTorso';
 
 export type RigVector3 = readonly [number, number, number];
 export type RigQuaternion = readonly [number, number, number, number];
@@ -92,13 +93,15 @@ interface AppliedDeformationState {
   readonly object: THREE.Object3D;
   readonly basePosition: THREE.Vector3;
   readonly baseScale: THREE.Vector3;
-  readonly baseMorphInfluence: number | null;
   readonly deformedPosition: THREE.Vector3;
   readonly deformedScale: THREE.Vector3;
-  deformedMorphInfluence: number | null;
   readonly movesPosition: boolean;
   readonly movesScale: boolean;
-  readonly movesMorph: boolean;
+  readonly morphs: Array<{
+    readonly index: number;
+    readonly base: number;
+    deformed: number;
+  }>;
 }
 
 const EPSILON_SQ = 1e-14;
@@ -278,24 +281,10 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
   };
 }
 
-function approximatelyCurrent(
-  object: THREE.Object3D,
-  state: AppliedDeformationState,
-): boolean {
-  return (
-    (!state.movesPosition || object.position.distanceToSquared(state.deformedPosition) <= EPSILON_SQ) &&
-    (!state.movesScale || object.scale.distanceToSquared(state.deformedScale) <= EPSILON_SQ) &&
-    (!state.movesMorph || (
-      firstMorphInfluence(object) !== null &&
-      state.deformedMorphInfluence !== null &&
-      Math.abs(firstMorphInfluence(object)! - state.deformedMorphInfluence) <= 1e-10
-    ))
-  );
-}
-
-function firstMorphInfluence(object: THREE.Object3D): number | null {
-  const influences = (object as THREE.Mesh).morphTargetInfluences;
-  return influences?.length ? influences[0] : null;
+function captureDeformedMorphs(state: AppliedDeformationState): void {
+  const influences = (state.object as THREE.Mesh).morphTargetInfluences;
+  if (!influences) return;
+  for (const morph of state.morphs) morph.deformed = influences[morph.index];
 }
 
 function renderableDirectChildren(node: THREE.Object3D): THREE.Object3D[] {
@@ -415,7 +404,7 @@ export class PlayerAnimationBridge {
       map: Map<THREE.Object3D, AppliedDeformationState>,
       object: THREE.Object3D,
       movesScale: boolean,
-      movesMorph = false,
+      morphIndices: readonly number[] = [],
     ): AppliedDeformationState => {
       let state = map.get(object);
       if (!state) {
@@ -423,15 +412,19 @@ export class PlayerAnimationBridge {
           object,
           basePosition: object.position.clone(),
           baseScale: object.scale.clone(),
-          baseMorphInfluence: firstMorphInfluence(object),
           deformedPosition: object.position.clone(),
           deformedScale: object.scale.clone(),
-          deformedMorphInfluence: firstMorphInfluence(object),
           movesPosition: true,
           movesScale,
-          movesMorph,
+          morphs: [],
         };
         map.set(object, state);
+      }
+      const influences = (object as THREE.Mesh).morphTargetInfluences;
+      for (const index of morphIndices) {
+        if (!influences || index < 0 || index >= influences.length) continue;
+        if (state.morphs.some((morph) => morph.index === index)) continue;
+        state.morphs.push({ index, base: influences[index], deformed: influences[index] });
       }
       return state;
     };
@@ -461,7 +454,7 @@ export class PlayerAnimationBridge {
           visualStates,
           component.shaft,
           true,
-          component.metadata.surface !== 'procedural',
+          component.metadata.surface !== 'procedural' ? [0] : [],
         );
         if (component.metadata.surface !== 'procedural') {
           const distalRigid = component.distalKnob
@@ -483,7 +476,7 @@ export class PlayerAnimationBridge {
           component.shaft.scale.z = shaft.baseScale.z;
           shaft.deformedPosition.copy(component.shaft.position);
           shaft.deformedScale.copy(component.shaft.scale);
-          shaft.deformedMorphInfluence = firstMorphInfluence(component.shaft);
+          captureDeformedMorphs(shaft);
           if (distalRigid && component.distalKnob) {
             distalRigid.deformedPosition.copy(component.distalKnob.position);
             distalRigid.deformedScale.copy(component.distalKnob.scale);
@@ -553,6 +546,37 @@ export class PlayerAnimationBridge {
         state.deformedPosition.copy(endpoint.position);
       }
     }
+
+    // The imported torso is skinned to torsoRoot/spine/chest/neck, so moved
+    // semantic bones provide its longitudinal deformation. Apply only the
+    // matching cross-section correction here; scaling Y would double-stretch
+    // the skin and scaling a joint would contaminate every descendant.
+    const torso = rig.root.getObjectByName('meshy-torso-surface');
+    const torsoPolicy = rig.deformations.find(
+      (policy) => policy.controlId === 'deform.torso.length',
+    );
+    if (torso && torsoPolicy) {
+      const raw = values[torsoPolicy.controlId] ?? 1;
+      const endpointScale = THREE.MathUtils.clamp(
+        Number.isFinite(raw) ? raw : 1,
+        torsoPolicy.min,
+        torsoPolicy.max,
+      );
+      if (Math.abs(endpointScale - 1) > 1e-8) {
+        const state = stateFor(visualStates, torso, false, [0, 1]);
+        const transverse = torsoPolicy.volume === 'preserve-cross-section-area'
+          ? 1 / Math.sqrt(meshyTorsoLengthRatio(endpointScale))
+          : 1;
+        const influences = (torso as THREE.Mesh).morphTargetInfluences;
+        if (influences?.length && influences.length >= 2) {
+          influences[0] = transverse - 1;
+          influences[1] = transverse - 1;
+        }
+        state.deformedPosition.copy(torso.position);
+        state.deformedScale.copy(torso.scale);
+        captureDeformedMorphs(state);
+      }
+    }
     this.deformationStates = [...visualStates.values(), ...endpointStates.values()];
   }
 
@@ -564,11 +588,21 @@ export class PlayerAnimationBridge {
 
   private restoreDeformationStates(force = false): void {
     for (const state of this.deformationStates) {
-      if (!force && !approximatelyCurrent(state.object, state)) continue;
-      if (state.movesPosition) state.object.position.copy(state.basePosition);
-      if (state.movesScale) state.object.scale.copy(state.baseScale);
-      if (state.movesMorph && state.baseMorphInfluence !== null) {
-        (state.object as THREE.Mesh).morphTargetInfluences![0] = state.baseMorphInfluence;
+      if (
+        state.movesPosition &&
+        (force || state.object.position.distanceToSquared(state.deformedPosition) <= EPSILON_SQ)
+      ) state.object.position.copy(state.basePosition);
+      if (
+        state.movesScale &&
+        (force || state.object.scale.distanceToSquared(state.deformedScale) <= EPSILON_SQ)
+      ) state.object.scale.copy(state.baseScale);
+      const influences = (state.object as THREE.Mesh).morphTargetInfluences;
+      if (influences) {
+        for (const morph of state.morphs) {
+          if (force || Math.abs(influences[morph.index] - morph.deformed) <= 1e-10) {
+            influences[morph.index] = morph.base;
+          }
+        }
       }
     }
     this.deformationStates = [];

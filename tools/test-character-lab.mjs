@@ -53,6 +53,18 @@ function fixture() {
 
   const hips = add('hips', rider, [0, 0.7, 0]);
   visual('pelvis-volume', hips);
+  const torsoSurface = visual('meshy-torso-surface', rider, [0, 1.0175, 0]);
+  torsoSurface.scale.setScalar(0.615);
+  const torsoPosition = torsoSurface.geometry.getAttribute('position');
+  const torsoWidthMorph = new THREE.Float32BufferAttribute(
+    new Float32Array(torsoPosition.count * 3), 3);
+  torsoWidthMorph.name = 'torso-width';
+  const torsoDepthMorph = new THREE.Float32BufferAttribute(
+    new Float32Array(torsoPosition.count * 3), 3);
+  torsoDepthMorph.name = 'torso-depth';
+  torsoSurface.geometry.morphAttributes.position = [torsoWidthMorph, torsoDepthMorph];
+  torsoSurface.geometry.morphTargetsRelative = true;
+  torsoSurface.updateMorphTargets();
   const torsoRoot = add('torso-root', hips);
   const spine = add('spine', torsoRoot, [0, 0.12, 0]);
   visual('waist-volume', spine, [0, 0.08, 0]);
@@ -134,6 +146,7 @@ function snapshot(rootNode) {
       position: object.position.toArray(),
       scale: object.scale.toArray(),
       quaternion: object.quaternion.toArray(),
+      morphTargetInfluences: [...((object).morphTargetInfluences ?? [])],
     });
   });
   return result;
@@ -223,6 +236,8 @@ try {
     headWidth: 1.2,
     neckLength: 0.6,
     torsoLength: 1.18,
+    torsoWidth: 1.4,
+    torsoDepth: 0.7,
     shoulderWidth: 1.25,
     hipWidth: 1.3,
     upperArmLength: 1.2,
@@ -250,6 +265,13 @@ try {
   near(scene.nodes.get('clavicle-right').position.x, -0.1 * 1.25);
   near(scene.nodes.get('hip-left').position.x, 0.115 * 1.3);
   near(scene.nodes.get('hip-right').position.x, -0.115 * 1.3);
+  near(scene.nodes.get('meshy-torso-surface').scale.x, 0.615);
+  near(scene.nodes.get('meshy-torso-surface').scale.y, 0.615);
+  near(scene.nodes.get('meshy-torso-surface').scale.z, 0.615);
+  near(scene.nodes.get('meshy-torso-surface').morphTargetInfluences[0], 0.4);
+  near(scene.nodes.get('meshy-torso-surface').morphTargetInfluences[1], -0.3);
+  assert.deepEqual(scene.nodes.get('pelvis-volume').scale.toArray(), [1, 1, 1],
+    'torso width/depth must not resize shorts or butt surfaces under hips');
   near(scene.nodes.get('knee-left').position.y, -0.28 * 1.3);
   near(scene.nodes.get('ankle-left').position.y, -0.25 * 0.8);
   near(scene.nodes.get('wrist-left').scale.x, 1.25);

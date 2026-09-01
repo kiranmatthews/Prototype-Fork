@@ -7,6 +7,10 @@ import {
   stretchableBoneShaftLengthRatio,
   stretchableBoneVolumeMorphInfluence,
 } from './stretchableBone';
+import {
+  meshyTorsoEndpointScaleFromTransverse,
+  meshyTorsoLengthRatio,
+} from './meshyTorso';
 import type { CharacterProportionSettingsValue } from './settings';
 
 interface TransformState {
@@ -14,15 +18,17 @@ interface TransformState {
   readonly basePosition: THREE.Vector3;
   readonly baseQuaternion: THREE.Quaternion;
   readonly baseScale: THREE.Vector3;
-  readonly baseMorphInfluence: number | null;
   readonly appliedPosition: THREE.Vector3;
   readonly appliedQuaternion: THREE.Quaternion;
   readonly appliedScale: THREE.Vector3;
-  appliedMorphInfluence: number | null;
   movesPosition: boolean;
   movesQuaternion: boolean;
   movesScale: boolean;
-  movesMorph: boolean;
+  readonly morphs: Array<{
+    readonly index: number;
+    readonly base: number;
+    applied: number;
+  }>;
 }
 
 interface RuntimeDeformation {
@@ -72,11 +78,6 @@ function runtimeDeformations(root: THREE.Object3D): RuntimeDeformation[] {
   return Array.isArray(runtime?.deformations) ? runtime.deformations as RuntimeDeformation[] : [];
 }
 
-function firstMorphInfluence(object: THREE.Object3D): number | null {
-  const influences = (object as THREE.Mesh).morphTargetInfluences;
-  return influences?.length ? influences[0] : null;
-}
-
 /**
  * Applies persistent body design as a reversible presentation layer.
  *
@@ -114,15 +115,13 @@ export class CharacterProportionLayer {
       ) {
         state.object.quaternion.copy(state.baseQuaternion);
       }
-      const currentMorph = firstMorphInfluence(state.object);
-      if (
-        state.movesMorph &&
-        currentMorph !== null &&
-        state.appliedMorphInfluence !== null &&
-        Math.abs(currentMorph - state.appliedMorphInfluence) <= 1e-10
-      ) {
-        (state.object as THREE.Mesh).morphTargetInfluences![0] =
-          state.baseMorphInfluence ?? 0;
+      const influences = (state.object as THREE.Mesh).morphTargetInfluences;
+      if (influences) {
+        for (const morph of state.morphs) {
+          if (Math.abs(influences[morph.index] - morph.applied) <= 1e-10) {
+            influences[morph.index] = morph.base;
+          }
+        }
       }
     }
     this.states.clear();
@@ -170,6 +169,25 @@ export class CharacterProportionLayer {
         const endpoint = endpointName ? this.root.getObjectByName(endpointName) : null;
         if (endpoint?.parent === anchor) this.scalePositionAlong(endpoint, axis, factor);
       }
+    }
+
+    const torsoSurface = this.root.getObjectByName('meshy-torso-surface');
+    if (torsoSurface) {
+      const state = this.stateFor(torsoSurface);
+      const influences = (torsoSurface as THREE.Mesh).morphTargetInfluences;
+      if (!influences || influences.length < 2) {
+        throw new Error('Meshy torso requires independent width/depth morph channels');
+      }
+      this.ownMorphChannels(state, torsoSurface, [0, 1]);
+      const animationTransverse = 1 + state.morphs.find((morph) => morph.index === 0)!.base;
+      const animationLength = meshyTorsoEndpointScaleFromTransverse(animationTransverse);
+      const combinedLength = animationLength * value.torsoLength;
+      const composedAnimationTransverse = Math.sqrt(
+        meshyTorsoLengthRatio(value.torsoLength) /
+        meshyTorsoLengthRatio(combinedLength),
+      );
+      influences[0] = composedAnimationTransverse * value.torsoWidth - 1;
+      influences[1] = composedAnimationTransverse * value.torsoDepth - 1;
     }
 
     const legHeightDelta =
@@ -225,14 +243,6 @@ export class CharacterProportionLayer {
       );
     }
 
-    for (const anchorName of ['hips', 'torso-root', 'spine', 'chest']) {
-      this.scaleRenderableChildrenCrossSection(
-        this.root.getObjectByName(anchorName),
-        value.torsoWidth,
-        value.torsoDepth,
-      );
-    }
-
     for (const side of ['left', 'right'] as const) {
       for (const part of ['white', 'iris', 'pupil', 'lash'] as const) {
         this.multiplyScale(
@@ -254,7 +264,10 @@ export class CharacterProportionLayer {
       state.appliedPosition.copy(state.object.position);
       state.appliedQuaternion.copy(state.object.quaternion);
       state.appliedScale.copy(state.object.scale);
-      state.appliedMorphInfluence = firstMorphInfluence(state.object);
+      const influences = (state.object as THREE.Mesh).morphTargetInfluences;
+      if (influences) {
+        for (const morph of state.morphs) morph.applied = influences[morph.index];
+      }
     }
   }
 
@@ -266,15 +279,13 @@ export class CharacterProportionLayer {
         basePosition: object.position.clone(),
         baseQuaternion: object.quaternion.clone(),
         baseScale: object.scale.clone(),
-        baseMorphInfluence: firstMorphInfluence(object),
         appliedPosition: object.position.clone(),
         appliedQuaternion: object.quaternion.clone(),
         appliedScale: object.scale.clone(),
-        appliedMorphInfluence: firstMorphInfluence(object),
         movesPosition: false,
         movesQuaternion: false,
         movesScale: false,
-        movesMorph: false,
+        morphs: [],
       };
       this.states.set(object, state);
     }
@@ -333,8 +344,22 @@ export class CharacterProportionLayer {
     const influences = (object as THREE.Mesh).morphTargetInfluences;
     if (!influences?.length) return;
     const state = this.stateFor(object);
-    state.movesMorph = true;
+    this.ownMorphChannels(state, object, [0]);
     influences[0] = (1 + influences[0]) * factor - 1;
+  }
+
+  private ownMorphChannels(
+    state: TransformState,
+    object: THREE.Object3D,
+    indices: readonly number[],
+  ): void {
+    const influences = (object as THREE.Mesh).morphTargetInfluences;
+    if (!influences) return;
+    for (const index of indices) {
+      if (index < 0 || index >= influences.length) continue;
+      if (state.morphs.some((morph) => morph.index === index)) continue;
+      state.morphs.push({ index, base: influences[index], applied: influences[index] });
+    }
   }
 
   private scalePositionAlong(object: THREE.Object3D, axis: THREE.Vector3, factor: number): void {
@@ -386,7 +411,7 @@ export class CharacterProportionLayer {
         if (preserveVolume) {
           const influences = (shaft as THREE.Mesh).morphTargetInfluences;
           if (influences?.length) {
-            shaftState.movesMorph = true;
+            this.ownMorphChannels(shaftState, shaft, [0]);
             influences[0] = stretchableBoneVolumeMorphInfluence(
               component,
               stretchableBoneShaftLengthRatio(component, factor, combinedScale),
@@ -396,7 +421,7 @@ export class CharacterProportionLayer {
         } else {
           const influences = (shaft as THREE.Mesh).morphTargetInfluences;
           if (influences?.length) {
-            shaftState.movesMorph = true;
+            this.ownMorphChannels(shaftState, shaft, [0]);
             influences[0] = thicknessFactor - 1;
           }
         }
@@ -425,7 +450,7 @@ export class CharacterProportionLayer {
     if (!anchor) return;
     for (const component of directStretchableBones(anchor)) {
       if (component.metadata.surface !== 'procedural') {
-        if (!this.states.get(component.shaft)?.movesMorph) {
+        if (!this.states.get(component.shaft)?.morphs.some((morph) => morph.index === 0)) {
           this.multiplyThicknessMorph(component.shaft, factor);
         }
         continue;
@@ -444,15 +469,4 @@ export class CharacterProportionLayer {
     }
   }
 
-  private scaleRenderableChildrenCrossSection(
-    anchor: THREE.Object3D | null | undefined,
-    width: number,
-    depth: number,
-  ): void {
-    if (!anchor) return;
-    for (const visual of anchor.children.filter(isRenderable)) {
-      this.multiplyPosition(visual, width, 1, depth);
-      this.multiplyScale(visual, width, 1, depth);
-    }
-  }
 }

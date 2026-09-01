@@ -68,6 +68,15 @@ authored knobs and knobless insertion tips remain locally rigid. Thickness
 changes the plain shaft cross-section through a boundary-safe taper without
 changing longitudinal proportions or either rigid end.
 
+The **Torso** view frames the attributed Meshy skeleton tank-top surface. It is
+not a foreign replacement rig: code-native weights bind it to the existing
+torso-root, spine, chest, neck, and clavicle controls. Torso length therefore
+bends and stretches through semantic endpoint motion, while width/depth and
+animation volume correction remain reversible presentation layers. These three
+torso controls target the imported torso surface only; shorts and butt/pelvis
+surfaces remain under whole-body and hip controls. The former
+procedural heart tank and bare-waist meshes are no longer present.
+
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current
 versioned settings for source review.

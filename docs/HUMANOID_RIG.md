@@ -33,6 +33,17 @@ procedural-rider (root-motion control)
 The simulated tail, ears, and ponytail remain auxiliary chains. They are
 declared to the animation suite but are not humanoid retarget bones.
 
+The visible torso is the attributed Meshy **Skeleton Tank Top** surface. Its
+source FBX is static and unrigged, so runtime code generates smooth weights for
+the existing torso-root, spine, chest, neck, and both clavicles; it does not add
+or rename a semantic joint. The mesh is mounted beside the skeleton beneath
+`procedural-rider`, avoiding doubled parent/bone transforms. Torso endpoint
+translation drives longitudinal skin deformation. Two relative pre-skin morph
+channels independently own width and depth, and animation volume correction
+composes through both. They target the torso surface only—never the shorts or
+pelvis. The old procedural heart tank and bare-waist surfaces are
+retired, while gameplay collision remains unchanged.
+
 Each cartoon glove's semantic controls are constructed by one mirrored
 procedural factory. The visible smooth surface is an attributed artist-authored
 GLB driven from those controls at runtime. Its source Rigify arm is stripped to

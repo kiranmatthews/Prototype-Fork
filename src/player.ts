@@ -97,6 +97,11 @@ import {
   stretchableBoneTriangleCount,
   type StretchableBoneComponent,
 } from './character/stretchableBone';
+import {
+  createMeshyTorso,
+  meshyTorsoTextureDiagnostics,
+  type MeshyTorsoComponent,
+} from './character/meshyTorso';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -998,6 +1003,7 @@ export class Player {
   private riggedCartoonHandState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
   private riggedCartoonHandError: string | null = null;
   private readonly stretchableBones: StretchableBoneComponent[] = [];
+  private meshyTorso: MeshyTorsoComponent | null = null;
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
   private headM: THREE.Bone | null = null; // head bone: skull, muzzle, ears, hair, eyes
@@ -1659,6 +1665,28 @@ export class Player {
       minScale: Math.min(...this.stretchableBones.map((component) => component.minScale), 1),
       maxScale: Math.max(...this.stretchableBones.map((component) => component.maxScale), 1),
       surfaces,
+    };
+  }
+
+  get meshyTorsoDiagnostics(): {
+    readonly ready: boolean;
+    readonly triangles: number;
+    readonly sourceSha256: string | null;
+    readonly skinBones: readonly string[];
+    readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
+    readonly texturesLoaded: number;
+    readonly textureError: string | null;
+  } {
+    const component = this.meshyTorso;
+    const textures = meshyTorsoTextureDiagnostics();
+    return {
+      ready: component !== null,
+      triangles: component?.triangles ?? 0,
+      sourceSha256: component?.sourceSha256 ?? null,
+      skinBones: component?.skeleton.bones.map((bone) => bone.name) ?? [],
+      textureState: textures.state,
+      texturesLoaded: textures.loaded,
+      textureError: textures.error,
     };
   }
 
@@ -14069,44 +14097,6 @@ export class Player {
 
   }
 
-  // Character skins: painted in a `size`-unit space onto a 4x canvas, so
-  // the artwork keeps its designed proportions at four times the texels. The
-  // old `crisp` flag pinned some of these to NearestFilter; the procedural
-  // character textures now all resolve smoothly.
-  private paintTex(size: number, draw: (ctx: CanvasRenderingContext2D) => void): THREE.CanvasTexture {
-    const SS = 4;
-    const canvas = document.createElement('canvas');
-    canvas.width = size * SS;
-    canvas.height = size * SS;
-    const ctx = canvas.getContext('2d')!;
-    ctx.scale(SS, SS);
-    draw(ctx);
-    return Level.finishTex(new THREE.CanvasTexture(canvas), false);
-  }
-
-  // Low-alpha radial blobs — the painterly shading pass for fabric and skin,
-  // where 1px speckle would read as pixel grit instead of soft wear.
-  private airbrush(
-    ctx: CanvasRenderingContext2D,
-    size: number,
-    rgb: string,
-    a: number,
-    n: number,
-    rMin: number,
-    rMax: number,
-  ): void {
-    for (let i = 0; i < n; i++) {
-      const r = rMin + Math.random() * (rMax - rMin);
-      const x = Math.random() * size;
-      const y = Math.random() * size;
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-      grad.addColorStop(0, `rgba(${rgb},${a})`);
-      grad.addColorStop(1, `rgba(${rgb},0)`);
-      ctx.fillStyle = grad;
-      ctx.fillRect(x - r, y - r, r * 2, r * 2);
-    }
-  }
-
   private tailBodies_(): TailCollider[] {
     const rider = this.riderG;
     if (!rider) return this.tailBodies;
@@ -14286,7 +14276,6 @@ export class Player {
   private buildVisual(): THREE.Group {
     const g = new THREE.Group();
     g.name = 'player-visual';
-    const lam = (tex: THREE.CanvasTexture) => new THREE.MeshLambertMaterial({ map: tex });
 
     // Production Unity Surf Cruiser, presentation only. Its exact 3,148-vertex
     // seven-material deck, orange-sun art, imported truck and procedural
@@ -14524,37 +14513,6 @@ export class Player {
     legs.add(tail.root);
     this.tail = tail;
 
-    // Crop tank: ONE wrapped canvas on a lathe — phiStart 1.5π puts u=0.25
-    // (canvas x=32) at local +Z, so the chest heart paints at x=32 square on
-    // the front. Hem stops high: the midriff below is bare fur.
-    const tankM = lam(this.paintTex(128, (ctx) => {
-      ctx.fillStyle = '#f4f1ec';
-      ctx.fillRect(0, 0, 128, 128);
-      this.airbrush(ctx, 128, '215,205,195', 0.08, 10, 8, 20);
-      ctx.fillStyle = '#e8447a';
-      ctx.fillRect(0, 0, 128, 9); // collar trim
-      ctx.fillRect(0, 117, 128, 11); // hem trim
-      // little heart print on the chest
-      const hx = 32;
-      const hy = 56;
-      const s = 9;
-      ctx.beginPath();
-      ctx.moveTo(hx, hy + s);
-      ctx.bezierCurveTo(hx - s * 1.4, hy, hx - s * 0.7, hy - s, hx, hy - s * 0.35);
-      ctx.bezierCurveTo(hx + s * 0.7, hy - s, hx + s * 1.4, hy, hx, hy + s);
-      ctx.fill();
-    }));
-    const tankProfile = [
-      new THREE.Vector2(0.105, -0.13), // tucked under the hem — hem rides HIGH: bare midriff below
-      new THREE.Vector2(0.155, -0.1), // hem flare over the waist
-      new THREE.Vector2(0.165, -0.04),
-      new THREE.Vector2(0.18, 0.03), // chest
-      new THREE.Vector2(0.215, 0.12), // shoulder, broad enough to meet the arms
-      new THREE.Vector2(0.19, 0.185),
-      new THREE.Vector2(0.09, 0.235), // roll off to the collar
-    ];
-    const tank = new THREE.Mesh(new THREE.LatheGeometry(tankProfile, 12, Math.PI * 1.5, Math.PI * 2), tankM);
-    tank.scale.z = 0.72; // chest oval, not a tube
     // The conventional torso starts at the pelvis. Child offsets are rebased
     // from the old rider-space positions, so the neutral rendered silhouette
     // is unchanged while bends now pivot from an anatomical waist.
@@ -14573,19 +14531,6 @@ export class Player {
     chest.name = 'chest';
     chest.position.y = CHEST_Y - PROCEDURAL_SPINE_Y;
     spine.add(chest);
-    tank.position.y = 0;
-    chest.add(tank);
-    // bare midriff: slim fur waist between shorts and hem
-    const waistProfile = [
-      new THREE.Vector2(0.128, -0.05),
-      new THREE.Vector2(0.112, 0.03),
-      new THREE.Vector2(0.115, 0.1),
-      new THREE.Vector2(0.128, 0.17), // reaches up under the higher hem
-    ];
-    const waist = new THREE.Mesh(new THREE.LatheGeometry(waistProfile, 10), FUR);
-    waist.scale.z = 0.8;
-    waist.position.y = 0.85 - PROCEDURAL_SPINE_Y;
-    spine.add(waist);
     // Neck flesh remains a chest renderable so torso length deformation can
     // stretch it without ever non-uniformly scaling the neck/head bones.
     const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), FUR);
@@ -14843,6 +14788,20 @@ export class Player {
     legs.add(upper);
     this.upperG = upper;
     this.spineG = spine;
+    const clavicleLeft = chest.getObjectByName('clavicle-left');
+    const clavicleRight = chest.getObjectByName('clavicle-right');
+    if (!(clavicleLeft instanceof THREE.Bone) || !(clavicleRight instanceof THREE.Bone)) {
+      throw new Error('procedural character requires both conventional clavicles');
+    }
+    this.meshyTorso = createMeshyTorso({
+      mount: riderG,
+      torsoRoot: upper,
+      spine,
+      chest,
+      neck,
+      clavicleLeft,
+      clavicleRight,
+    });
 
     // Serializable semantic lookup data: runtime code and future keyframe
     // tooling can resolve stable nodes with getObjectByName without keeping
@@ -15115,6 +15074,17 @@ export class Player {
         poses: Object.keys(CARTOON_GLOVE_POSES),
         jointIds: Object.keys(gloveJointNames),
         socketIds: Object.keys(gloveSocketNames),
+      },
+      torsoSurface: {
+        kind: 'meshy-skeleton-tank-top-torso',
+        schemaVersion: 1,
+        provenance: 'public/characters/meshy-torso/provenance.json',
+        sourceSha256: this.meshyTorso.sourceSha256,
+        triangles: this.meshyTorso.triangles,
+        skinBones: this.meshyTorso.skeleton.bones.map((bone) => bone.name),
+        lengthControl: 'deform.torso.length',
+        proportions: ['torsoLength', 'torsoWidth', 'torsoDepth'],
+        collisionChanged: false,
       },
       limbBoneRig: {
         kind: 'stretchable-cartoon-limb-bone',

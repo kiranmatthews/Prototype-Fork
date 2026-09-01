@@ -334,6 +334,21 @@ try {
   }
   near(player.stretchableBoneDiagnostics.minScale, 0.319);
   near(player.stretchableBoneDiagnostics.maxScale, 2.765);
+  assert.deepEqual(player.meshyTorsoDiagnostics, {
+    ready: true,
+    triangles: 10889,
+    sourceSha256: 'eb856706da34e7ffb2042599698c56aeda4db7783ed46c4775bad39cf4b10576',
+    skinBones: [
+      'torso-root', 'spine', 'chest', 'neck', 'clavicle-left', 'clavicle-right',
+    ],
+    textureState: 'loading',
+    texturesLoaded: 0,
+    textureError: null,
+  });
+  const torsoSurface = player.animationRig.root.getObjectByName('meshy-torso-surface');
+  assert.equal(torsoSurface.isSkinnedMesh, true);
+  assert.equal(torsoSurface.parent.name, 'procedural-rider');
+  assert.equal(torsoSurface.geometry.getAttribute('skinWeight').count, 32667);
   assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
     'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
     'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',

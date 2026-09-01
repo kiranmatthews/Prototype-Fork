@@ -1,0 +1,117 @@
+{
+  "generator": "Meshy",
+  "generatorUrl": "https://www.meshy.ai/",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseBasis": "Owner-supplied Meshy output; conservative free-plan attribution path used elsewhere in this repository",
+  "meshyUploadId": "01a05bad-fdbe-768d-af6f-a15b81fd23a9",
+  "sourceArchive": {
+    "file": "Torso.zip",
+    "bytes": 16262165,
+    "sha256": "79ba2237c45dc81f4611acc033a2d44b66153fe311a6732a3dd4357d016d12c6"
+  },
+  "sourceFbx": {
+    "file": "Meshy_AI_Skeleton_Tank_Top_0901063656_texture.fbx",
+    "bytes": 6433116,
+    "sha256": "eb856706da34e7ffb2042599698c56aeda4db7783ed46c4775bad39cf4b10576",
+    "formatVersion": 7400,
+    "sourceControlVertices": 5499,
+    "runtimePolygonVertices": 32667,
+    "triangles": 10889,
+    "connectedSurfaceIslands": 10,
+    "boundaryOrNonmanifoldEdges": 95,
+    "attributes": ["position", "faceted-normal", "uv"],
+    "sourceBounds": {
+      "min": [-0.34375, -0.275390625, -0.5],
+      "max": [0.34375, 0.275390625, 0.5]
+    },
+    "contents": {
+      "meshes": 1,
+      "materials": 1,
+      "bones": 0,
+      "skins": 0,
+      "morphs": 0,
+      "animations": 0
+    }
+  },
+  "sourceTextures": {
+    "baseColor": {
+      "file": "Meshy_AI_Skeleton_Tank_Top_0901063656_texture.png",
+      "bytes": 4888772,
+      "sha256": "96383c2536bd5cb93f1c0fcb6b0f51c2c7cc53b266d39d872b2c7629223cbbe9"
+    },
+    "normal": {
+      "file": "Meshy_AI_Skeleton_Tank_Top_0901063656_texture_normal.png",
+      "bytes": 3738604,
+      "sha256": "94c41ac3342fe230c098a48e84acadf3c99b7ad17167db9a70872de129fdc62f"
+    },
+    "roughness": {
+      "file": "Meshy_AI_Skeleton_Tank_Top_0901063656_texture_roughness.png",
+      "bytes": 1201865,
+      "sha256": "4bf04ca3f2ab635597b49b7dafc643f9584a1d0706c8ec3a302cecf4ece074ca"
+    },
+    "metallic": {
+      "file": "Meshy_AI_Skeleton_Tank_Top_0901063656_texture_metallic.png",
+      "bytes": 22763,
+      "sha256": "032bd5dc23f0ddd41ffdc2122db60cad6c82acb83bad737d6c9d3fe72cf74342"
+    }
+  },
+  "conversionTool": "tools/import-meshy-torso.mjs",
+  "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
+  "generatedModule": "src/character/meshyTorso.generated.ts",
+  "generatedModuleSha256": "112632f34bcb9acc53f1404bf69058d7250bd72e2f7599539e5937fb33099707",
+  "webTextureConversion": "macOS sips proportional resize from 2048x2048 to 1024x1024 PNG",
+  "webTextures": {
+    "baseColor": {
+      "file": "base-color.png",
+      "bytes": 1233151,
+      "sha256": "60b8c022df0fc304eb57c67eaff65a4128d6cd70b9a2585e9acd0ea90d9d5388"
+    },
+    "normal": {
+      "file": "normal.png",
+      "bytes": 977162,
+      "sha256": "d69eef75266da4b9a94a86dfcf985c075488c82411288fb5e3d2736525f1b8ba"
+    },
+    "roughness": {
+      "file": "roughness.png",
+      "bytes": 405050,
+      "sha256": "ea1c9e01d95887c57d9c2ffaa23b081b976bdbf3887f1bdf940f9d43eaf56299"
+    },
+    "metallic": {
+      "file": "metallic.png",
+      "bytes": 10501,
+      "sha256": "ab5d87bcb54801730be5dda42669099da1599c47703f1294fdaeb7ca6378a57d"
+    }
+  },
+  "runtimeMapping": {
+    "axisConversion": "source [x,y,z] to runtime [x,z,-y]",
+    "restScale": 0.615,
+    "restCenterY": 1.0175,
+    "restVerticalSpan": [0.71, 1.325],
+    "skinBones": [
+      "torso-root",
+      "spine",
+      "chest",
+      "neck",
+      "clavicle-left",
+      "clavicle-right"
+    ],
+    "lengthControl": "deform.torso.length",
+    "widthControl": "torsoWidth",
+    "depthControl": "torsoDepth",
+    "crossSectionChannels": ["torso-width", "torso-depth"],
+    "shortsOrPelvisAffected": false,
+    "collisionChanged": false
+  },
+  "conversion": [
+    "Validated the exact static FBX and all four source texture hashes",
+    "Discarded the source node's 100x centimetre presentation transform",
+    "Preserved source polygon-vertex positions, UV seams, islands, and triangle winding; validated faceted source normals and replaced their redundant runtime buffer with deformation-safe derivative face normals",
+    "Mapped every supplied PBR texture explicitly because FBXLoader omits roughness and metallic maps for this Phong source material",
+    "Generated smooth code-native weights over the existing semantic torso and clavicle bones without adding or renaming joints",
+    "Kept longitudinal deformation in endpoint translation and skinning; applied editor width, editor depth, and volume correction through two independent pre-skin morph channels",
+    "Excluded shorts and pelvis renderables from torso width/depth targeting",
+    "Removed the former procedural tank and waist surfaces",
+    "Did not redistribute the original FBX, archive, or expiring Meshy URL"
+  ]
+}
