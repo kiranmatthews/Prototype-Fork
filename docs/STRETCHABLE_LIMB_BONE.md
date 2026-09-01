@@ -13,13 +13,18 @@ proportions and both rigid source regions instead of silently accepting them.
 
 - **Ivory Bone** is used by both upper arms: 1,328 source triangles, baked to
   1,454 triangles after exact boundary clipping.
-- **Ivory Rattle** is used by forearms, thighs, and shins: 1,536 source
-  triangles, baked to 1,698. Its distal end is the authored knobless insertion
-  tip for gloves, socks, or the next joint silhouette.
+- **Ivory Rattle** is used whole by forearms and by the registered-but-hidden
+  thigh surfaces: 1,536 source triangles, baked to 1,698.
+- Each visible shin is a 1,578-triangle composite: Ivory Bone's 674-triangle
+  proximal shoulder knob plus Ivory Rattle's 551-triangle shaft and
+  353-triangle knobless insertion tip. Shaft deformation, thickness morph and
+  volume correction all use the Rattle profile.
 - Local proximal joint is at Y=0; the distal joint lies along local -Y.
 - Left/right components share six immutable part geometries and mirror only at
   the component root. All eight share one smooth ivory clay material.
-- The production character renders 13,096 limb-surface triangles in 24 meshes.
+- The production character instantiates 12,856 limb-surface triangles. The two
+  1,698-triangle thighs remain live but hidden beneath the shorts, leaving
+  9,460 visible triangles across six surface roots.
 - Generated buffers are synchronous and add no fetch or runtime FBX parser.
 
 Source hashes, Meshy upload IDs, measurements, licensing, and conversion rules
@@ -28,7 +33,8 @@ are recorded in `public/characters/meshy-limb-bones/`.
 ## Deformation contract
 
 `PlayerAnimationBridge` and `CharacterProportionLayer` resolve the same
-serializable `stretchableBoneRuntime` schema v2 metadata.
+serializable `stretchableBoneRuntime` schema v3 metadata. Composite metadata
+records proximal/shaft/distal sources and the independent deformation source.
 
 - The source surface is clipped into a rigid proximal region, rebased shaft,
   and rigid distal region at measured cylindrical boundaries.
@@ -46,10 +52,11 @@ serializable `stretchableBoneRuntime` schema v2 metadata.
   highlights remain attached to the surface throughout that thickness morph.
 - Character Lab thickness composes through the same morph. Rigid source ends
   and every part's longitudinal Y scale remain unchanged.
-- Separate arm/leg knob-size controls uniformly enlarge real knob regions in
-  XYZ from 1.00–1.62×. Enlarged collars overlap the shaft seam; the range does
-  not permit seam-opening shrink. Ivory Bone's distal knob is repositioned to
-  keep its endpoint pinned, and Rattle insertion tips are excluded entirely.
+- Separate arm/leg knob-size controls enlarge real knob regions from
+  1.00–1.62×. X/Z always receive the requested thickness. Y normally matches;
+  only a hybrid shin at an extreme compressed endpoint caps proximal Y before
+  the ankle. Enlarged collars overlap the shaft seam, Ivory Bone's distal knob
+  remains pinned, and Rattle insertion tips are excluded entirely.
 - At extreme compression, rigid regions may overlap while the shaft clamps to
   a small positive span; no geometry inverts.
 - No `THREE.Bone` is introduced, so humanoid mapping, IK, sockets, authored

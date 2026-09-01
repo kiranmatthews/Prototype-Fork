@@ -54,17 +54,15 @@ island is rigidly assigned. Independent pre-skin width/height/depth morphs own
 clothing fit, so `legThickness` affects limb bones but never the shorts. The
 waistband overlaps the torso and exposed lower legs insert inside the hems.
 
-Visible footwear uses the attributed static Meshy shoe-and-sock surface. The
-source contains no rig, so deterministic runtime geometry separates its sock
-island from the shoe and five lace/detail islands. Each rigid shoe is an
-`ankle-left/right` descendant, preserving outsole discovery and the existing
-planting contract. Each sock is skinned only to its matching knee and ankle:
-the hidden base follows the ankle while the cuff remains with the shin. The
-opposite foot is a lateral geometry mirror with corrected winding and normals.
-`footSize` still scales the ankle, toe and all three contact sockets together;
-`legThickness` widens the exposed sock through a tapered morph without scaling
-the shoe. `socket-foot-*`, `socket-heel-*`, and `socket-toe-*` retain their
-original transforms and animation identities.
+Visible footwear is procedural again. Each restored shoe, lace, side stripe,
+foxing band, and capsule outsole is an `ankle-left/right` descendant, while
+each sock and cuff is a direct child of its matching `knee-left/right` control.
+That original hierarchy lets `footSize` scale the whole ankle/toe/socket branch
+and lets shin length plus `legThickness` resize only the sock/cuff. The Meshy
+upload supplies palette and style evidence but no runtime surface or texture.
+`socket-foot-*`, `socket-heel-*`, and `socket-toe-*` retain their original
+transforms and animation identities; the outsole still bottoms at Y `-0.05`
+and spans heel/toe Z `-0.07…0.20`.
 
 The visible torso is the attributed Meshy **Skeleton Tank Top** surface. Its
 source FBX is static and unrigged, so runtime code generates smooth weights for
@@ -96,14 +94,20 @@ those mounts after animation. They are deliberately absent from the semantic
 skeleton so changing the default palm direction cannot contaminate wrist rest
 transforms or saved animation tracks. Their authored base turns both palms
 medially and both thumbs rider-forward; Character Lab values are offsets over
-that anatomical rest.
+that anatomical rest. The black dorsal X marks remain rigid under each artist
+hand root. Three additional rest-relative placement controls move them across
+the hand (mirrored), along the hand, and outward from the dorsal surface after
+animation; the same offsets drive the procedural fallback marks.
 
 Arm and leg joint chains carry reusable `stretchable-cartoon-limb-bone` visual
 components without adding skeleton joints. Both upper arms use the attributed
-Meshy **Ivory Bone** surface. Forearms, thighs, and shins use **Ivory Rattle**;
-its distal region is the authored knobless insertion tip that enters gloves,
-socks, or the following joint silhouette. Left/right instances share immutable
-generated geometry and mirror only at the component root.
+Meshy **Ivory Bone** surface. Forearms and the live-but-hidden thigh components
+use **Ivory Rattle**. Each visible shin is a schema-v3 hybrid: Ivory Bone's
+shoulder-style proximal knob at the knee, plus Ivory Rattle's deformable shaft
+and authored knobless sock insertion at the ankle. Left/right instances share
+immutable generated geometry and mirror only at the component root. Hiding the
+two thigh surface roots does not remove hip/knee joints, thigh deformation,
+shorts skinning, IK, or any of the eight registered component IDs.
 
 Each source mesh is split at measured cylindrical boundaries into a rigid
 proximal region, a deformable shaft, and a rigid distal region. Length changes
@@ -122,8 +126,10 @@ production segments share six source-derived part geometries and one smooth
 clay material.
 
 Character Lab may separately enlarge arm and leg knobs from 1.00–1.62×. That
-authoring layer scales each actual knob region uniformly in XYZ; it does not
-change shaft thickness or the length-animation contract. Ivory Bone's distal
+authoring layer normally scales each actual knob region uniformly in XYZ; it
+does not change shaft thickness or the length-animation contract. At the
+hybrid shin's maximum-compression corner, proximal Y growth alone is capped at
+the ankle endpoint while X/Z keep the requested thickness. Ivory Bone's distal
 knob stays pinned to the semantic elbow socket, while every Ivory Rattle
 knobless insertion tip remains unchanged for glove, joint, and sock fit.
 

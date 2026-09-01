@@ -5,11 +5,16 @@ import {
 } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { MESHY_LIMB_BONE_ASSETS } from './meshyLimbBone.generated';
 
-export const STRETCHABLE_BONE_SCHEMA_VERSION = 2 as const;
+export const STRETCHABLE_BONE_SCHEMA_VERSION = 3 as const;
 export const STRETCHABLE_BONE_MIN_SCALE = 0.319;
 export const STRETCHABLE_BONE_MAX_SCALE = 2.765;
-export type StretchableBoneSurface = 'procedural' | 'ivory-bone' | 'ivory-rattle';
+export type StretchableBoneSurface =
+  | 'procedural'
+  | 'ivory-bone'
+  | 'ivory-rattle'
+  | 'ivory-bone-rattle-hybrid';
 type ImportedSurface = Exclude<StretchableBoneSurface, 'procedural'>;
+type ImportedAssetSurface = Exclude<ImportedSurface, 'ivory-bone-rattle-hybrid'>;
 
 interface StretchableBoneCommonOptions {
   id: string;
@@ -62,6 +67,18 @@ export interface StretchableBoneRuntimeMetadata {
   readonly proximalKind: string;
   readonly distalKind: string;
   readonly sourceSha256: string | null;
+  readonly deformationSurface?: ImportedAssetSurface;
+  readonly proximalSourceSpan?: number;
+  readonly partSurfaces?: Readonly<{
+    proximal: ImportedAssetSurface;
+    shaft: ImportedAssetSurface;
+    distal: ImportedAssetSurface;
+  }>;
+  readonly sourceSha256s?: Readonly<{
+    proximal: string;
+    shaft: string;
+    distal: string;
+  }>;
   readonly spec: 'docs/STRETCH_BONE_SCULPT_SPEC.json';
 }
 
@@ -228,10 +245,20 @@ interface GeneratedLimbAsset {
   };
 }
 
-const IMPORTED_ASSETS: Readonly<Record<ImportedSurface, GeneratedLimbAsset>> = {
+const IMPORTED_ASSETS: Readonly<Record<ImportedAssetSurface, GeneratedLimbAsset>> = {
   'ivory-bone': MESHY_LIMB_BONE_ASSETS.ivoryBone,
   'ivory-rattle': MESHY_LIMB_BONE_ASSETS.ivoryRattle,
 };
+
+function importedPartSurfaces(surface: ImportedSurface): Readonly<{
+  proximal: ImportedAssetSurface;
+  shaft: ImportedAssetSurface;
+  distal: ImportedAssetSurface;
+}> {
+  return surface === 'ivory-bone-rattle-hybrid'
+    ? { proximal: 'ivory-bone', shaft: 'ivory-rattle', distal: 'ivory-rattle' }
+    : { proximal: surface, shaft: surface, distal: surface };
+}
 
 const importedGeometryCache = new Map<string, THREE.BufferGeometry>();
 
@@ -243,7 +270,7 @@ function decodeFloat32(source: string): Float32Array {
 }
 
 function importedGeometry(
-  surface: ImportedSurface,
+  surface: ImportedAssetSurface,
   role: keyof GeneratedLimbAsset['parts'],
 ): THREE.BufferGeometry {
   const key = `${surface}:${role}`;
@@ -332,43 +359,51 @@ function createImportedStretchableBone(
   material: THREE.Material,
   knobTwist: number,
 ): StretchableBoneComponent {
-  const asset = IMPORTED_ASSETS[surface];
-  const radialScale = knobRadius / asset.sourceMaxRadius;
+  const partSurfaces = importedPartSurfaces(surface);
+  const proximalAsset = IMPORTED_ASSETS[partSurfaces.proximal];
+  const deformationAsset = IMPORTED_ASSETS[partSurfaces.shaft];
+  const distalAsset = IMPORTED_ASSETS[partSurfaces.distal];
+  const proximalRadialScale = knobRadius / proximalAsset.sourceMaxRadius;
+  const shaftRadialScale = knobRadius / deformationAsset.sourceMaxRadius;
+  const distalRadialScale = knobRadius / distalAsset.sourceMaxRadius;
   const root = new THREE.Group();
   root.name = `stretch-bone-${id}`;
   root.scale.x = options.mirrorX ? -1 : 1;
   root.rotation.y = knobTwist;
 
   const proximalKnob = markMesh(
-    new THREE.Mesh(importedGeometry(surface, 'proximal'), material),
+    new THREE.Mesh(importedGeometry(partSurfaces.proximal, 'proximal'), material),
     `stretch-bone-proximal-knob-${id}`,
     'proximal-rigid',
   );
-  proximalKnob.scale.set(radialScale, length, radialScale);
+  proximalKnob.scale.set(proximalRadialScale, length, proximalRadialScale);
   proximalKnob.userData.lengthDeformationInvariant = true;
-  proximalKnob.userData.rigidEndKind = asset.proximalKind;
+  proximalKnob.userData.rigidEndKind = proximalAsset.proximalKind;
+  proximalKnob.userData.sourceSurface = partSurfaces.proximal;
   root.add(proximalKnob);
 
   const shaft = markMesh(
-    new THREE.Mesh(importedGeometry(surface, 'shaft'), material),
+    new THREE.Mesh(importedGeometry(partSurfaces.shaft, 'shaft'), material),
     `stretch-bone-shaft-${id}`,
     'shaft',
   );
-  shaft.position.y = -length * asset.stretchStart;
-  shaft.scale.set(radialScale, length, radialScale);
+  shaft.position.y = -length * deformationAsset.stretchStart;
+  shaft.scale.set(shaftRadialScale, length, shaftRadialScale);
   shaft.updateMorphTargets();
   shaft.frustumCulled = false;
+  shaft.userData.sourceSurface = partSurfaces.shaft;
   root.add(shaft);
 
   const distalKnob = markMesh(
-    new THREE.Mesh(importedGeometry(surface, 'distal'), material),
+    new THREE.Mesh(importedGeometry(partSurfaces.distal, 'distal'), material),
     `stretch-bone-distal-knob-${id}`,
     'distal-rigid',
   );
-  distalKnob.position.y = -length * asset.stretchEnd;
-  distalKnob.scale.set(radialScale, length, radialScale);
+  distalKnob.position.y = -length * deformationAsset.stretchEnd;
+  distalKnob.scale.set(distalRadialScale, length, distalRadialScale);
   distalKnob.userData.lengthDeformationInvariant = true;
-  distalKnob.userData.rigidEndKind = asset.distalKind;
+  distalKnob.userData.rigidEndKind = distalAsset.distalKind;
+  distalKnob.userData.sourceSurface = partSurfaces.distal;
   root.add(distalKnob);
 
   const proximalSocket = new THREE.Object3D();
@@ -398,11 +433,21 @@ function createImportedStretchableBone(
     proximalSocketName: proximalSocket.name,
     distalSocketName: distalSocket.name,
     invariantParts: ['proximal-knob', 'distal-knob'],
-    stretchStart: asset.stretchStart,
-    stretchEnd: asset.stretchEnd,
-    proximalKind: asset.proximalKind,
-    distalKind: asset.distalKind,
-    sourceSha256: asset.sourceSha256,
+    stretchStart: deformationAsset.stretchStart,
+    stretchEnd: deformationAsset.stretchEnd,
+    proximalKind: proximalAsset.proximalKind,
+    distalKind: distalAsset.distalKind,
+    sourceSha256: surface === partSurfaces.shaft
+      ? deformationAsset.sourceSha256
+      : null,
+    deformationSurface: partSurfaces.shaft,
+    proximalSourceSpan: proximalAsset.stretchStart,
+    partSurfaces,
+    sourceSha256s: {
+      proximal: proximalAsset.sourceSha256,
+      shaft: deformationAsset.sourceSha256,
+      distal: distalAsset.sourceSha256,
+    },
     spec: 'docs/STRETCH_BONE_SCULPT_SPEC.json',
   };
   root.userData.stretchableBoneRuntime = metadata;
@@ -565,7 +610,8 @@ function isMetadata(value: unknown): value is StretchableBoneRuntimeMetadata {
     typeof candidate.id === 'string' &&
     (candidate.surface === 'procedural' ||
       candidate.surface === 'ivory-bone' ||
-      candidate.surface === 'ivory-rattle') &&
+      candidate.surface === 'ivory-rattle' ||
+      candidate.surface === 'ivory-bone-rattle-hybrid') &&
     Number.isFinite(candidate.baseLength) &&
     Number.isFinite(candidate.stretchStart) &&
     Number.isFinite(candidate.stretchEnd) &&
@@ -650,7 +696,11 @@ export function stretchableBoneVolumeMorphInfluence(
   if (component.metadata.surface === 'procedural') {
     return (1 + baseline) / Math.sqrt(ratio) - 1;
   }
-  const morph = IMPORTED_ASSETS[component.metadata.surface].thicknessMorph;
+  const deformationSurface = component.metadata.deformationSurface ??
+    (component.metadata.surface === 'ivory-bone-rattle-hybrid'
+      ? 'ivory-rattle'
+      : component.metadata.surface);
+  const morph = IMPORTED_ASSETS[deformationSurface].thicknessMorph;
   const baselineVolume = 1 + 2 * morph.volumeA * baseline + morph.volumeB * baseline ** 2;
   const targetVolume = baselineVolume / ratio;
   const discriminant = morph.volumeA ** 2 + morph.volumeB * (targetVolume - 1);

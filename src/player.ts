@@ -95,6 +95,7 @@ import {
   type RiggedCartoonHandPair,
 } from './character/riggedCartoonHand';
 import {
+  STRETCHABLE_BONE_SCHEMA_VERSION,
   createStretchableBone,
   stretchableBoneTriangleCount,
   type StretchableBoneComponent,
@@ -118,10 +119,11 @@ import {
   type MeshyShortsComponent,
 } from './character/meshyShorts';
 import {
-  createMeshyFootwear,
-  meshyFootwearTextureDiagnostics,
-  type MeshyFootwearComponent,
-} from './character/meshyFootwear';
+  PROCEDURAL_FOOTWEAR_SCHEMA_VERSION,
+  PROCEDURAL_FOOTWEAR_STYLE_ID,
+  createProceduralFootwear,
+  type ProceduralFootwearComponent,
+} from './character/proceduralFootwear';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -1026,7 +1028,7 @@ export class Player {
   private meshyTorso: MeshyTorsoComponent | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
   private meshyShorts: MeshyShortsComponent | null = null;
-  private readonly meshyFootwear: MeshyFootwearComponent[] = [];
+  private readonly proceduralFootwear: ProceduralFootwearComponent[] = [];
   private headVisualCenter: THREE.Object3D | null = null;
   private headLookSocket: THREE.Object3D | null = null;
   private readonly headForward = new THREE.Vector3();
@@ -1680,8 +1682,11 @@ export class Player {
   get stretchableBoneDiagnostics(): {
     readonly ready: boolean;
     readonly componentCount: number;
+    readonly visibleComponentCount: number;
     readonly ids: readonly string[];
+    readonly hiddenIds: readonly string[];
     readonly triangles: number;
+    readonly visibleTriangles: number;
     readonly minScale: number;
     readonly maxScale: number;
     readonly surfaces: Readonly<Record<string, number>>;
@@ -1694,9 +1699,21 @@ export class Player {
     return {
       ready: this.stretchableBones.length === 8,
       componentCount: this.stretchableBones.length,
+      visibleComponentCount: this.stretchableBones.filter(
+        (component) => component.root.visible,
+      ).length,
       ids: this.stretchableBones.map((component) => component.id),
+      hiddenIds: this.stretchableBones.filter(
+        (component) => !component.root.visible,
+      ).map((component) => component.id).sort(),
       triangles: this.stretchableBones.reduce(
         (sum, component) => sum + stretchableBoneTriangleCount(component),
+        0,
+      ),
+      visibleTriangles: this.stretchableBones.reduce(
+        (sum, component) => sum + (component.root.visible
+          ? stretchableBoneTriangleCount(component)
+          : 0),
         0,
       ),
       minScale: Math.min(...this.stretchableBones.map((component) => component.minScale), 1),
@@ -1769,27 +1786,26 @@ export class Player {
     };
   }
 
-  get meshyFootwearDiagnostics(): {
+  get proceduralFootwearDiagnostics(): {
     readonly ready: boolean;
     readonly triangles: number;
-    readonly sourceSha256: string | null;
     readonly sides: readonly string[];
-    readonly sockSkinBones: readonly (readonly string[])[];
-    readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
-    readonly texturesLoaded: number;
-    readonly textureError: string | null;
+    readonly styleId: string;
+    readonly shoeAttachments: readonly string[];
+    readonly sockAttachments: readonly string[];
   } {
-    const textures = meshyFootwearTextureDiagnostics();
     return {
-      ready: this.meshyFootwear.length === 2,
-      triangles: this.meshyFootwear.reduce((sum, component) => sum + component.triangles, 0),
-      sourceSha256: this.meshyFootwear[0]?.sourceSha256 ?? null,
-      sides: this.meshyFootwear.map((component) => component.side),
-      sockSkinBones: this.meshyFootwear.map((component) =>
-        component.skeleton.bones.map((bone) => bone.name)),
-      textureState: textures.state,
-      texturesLoaded: textures.loaded,
-      textureError: textures.error,
+      ready: this.proceduralFootwear.length === 2,
+      triangles: this.proceduralFootwear.reduce(
+        (sum, component) => sum + component.triangleCount,
+        0,
+      ),
+      sides: this.proceduralFootwear.map((component) => component.side),
+      styleId: PROCEDURAL_FOOTWEAR_STYLE_ID,
+      shoeAttachments: this.proceduralFootwear.map((component) =>
+        component.ankleRoot.parent?.name ?? ''),
+      sockAttachments: this.proceduralFootwear.map((component) =>
+        component.sock.parent?.name ?? ''),
     };
   }
 
@@ -1902,6 +1918,10 @@ export class Player {
       this.riggedCartoonHandState = 'ready';
       removeProceduralCartoonGloveSurface(left);
       removeProceduralCartoonGloveSurface(right);
+      // The new artist mark groups arrived after the last Character Lab pass.
+      // Reapply immediately so X-placement sliders remain live even while the
+      // simulation is paused in Character Lab or Animation Studio.
+      this.syncCharacterAppearance();
       this.resetRenderInterpolation();
     } catch (error) {
       pendingPair?.left.root.removeFromParent();
@@ -14466,6 +14486,11 @@ export class Player {
         mirrorX: anatomicalSide === 'right',
       });
       leg.add(upperLegBone.root);
+      // The thigh surface clips through the fitted shorts during deep poses.
+      // Keep the complete stretch component alive for authored length,
+      // diagnostics and future surface swaps; hide only its render subtree.
+      upperLegBone.root.visible = false;
+      upperLegBone.root.userData.presentationHidden = true;
       this.stretchableBones.push(upperLegBone);
       // Knee group pivots where the thigh ends; the lower leg keeps its full
       // length through every pose and swings conventionally from this hinge.
@@ -14480,7 +14505,7 @@ export class Player {
         knobRadius: 0.052,
         knobTwist: -side * 0.04,
         material: BONE_CLAY,
-        surface: 'ivory-rattle',
+        surface: 'ivory-bone-rattle-hybrid',
         mirrorX: anatomicalSide === 'right',
       });
       knee.add(lowerLegBone.root);
@@ -14536,8 +14561,7 @@ export class Player {
       if (!(knee instanceof THREE.Bone) || !(ankle instanceof THREE.Bone)) {
         throw new Error(`procedural character requires ${side} knee and ankle bones`);
       }
-      this.meshyFootwear.push(createMeshyFootwear({
-        mount: riderG,
+      this.proceduralFootwear.push(createProceduralFootwear({
         knee,
         ankle,
         side,
@@ -15060,24 +15084,23 @@ export class Player {
         collisionChanged: false,
       },
       footwearSurfaces: {
-        kind: 'meshy-shoe-and-sock',
-        schemaVersion: 1,
-        provenance: 'public/characters/meshy-footwear/provenance.json',
-        sourceSha256: this.meshyFootwear[0].sourceSha256,
-        instances: this.meshyFootwear.length,
-        triangles: this.meshyFootwear.reduce((sum, component) =>
-          sum + component.triangles, 0),
-        shoeAttachments: this.meshyFootwear.map((component) =>
-          `ankle-${component.side}`),
-        sockSkinBones: this.meshyFootwear.map((component) =>
-          component.skeleton.bones.map((bone) => bone.name)),
+        kind: 'procedural-cartoon-skate-footwear',
+        schemaVersion: PROCEDURAL_FOOTWEAR_SCHEMA_VERSION,
+        styleId: PROCEDURAL_FOOTWEAR_STYLE_ID,
+        instances: this.proceduralFootwear.length,
+        triangles: this.proceduralFootwear.reduce((sum, component) =>
+          sum + component.triangleCount, 0),
+        shoeAttachments: this.proceduralFootwear.map((component) =>
+          component.ankleRoot.parent?.name),
+        sockAttachments: this.proceduralFootwear.map((component) =>
+          component.sock.parent?.name),
         controls: ['footSize', 'legThickness'],
         footSocketsPreserved: true,
         collisionChanged: false,
       },
       limbBoneRig: {
         kind: 'stretchable-cartoon-limb-bone',
-        schemaVersion: 2,
+        schemaVersion: STRETCHABLE_BONE_SCHEMA_VERSION,
         spec: 'docs/STRETCH_BONE_SCULPT_SPEC.json',
         componentCount: this.stretchableBones.length,
         componentIds: stretchBoneIds,
@@ -15085,9 +15108,12 @@ export class Player {
         surfaces: {
           upperArms: 'ivory-bone',
           forearms: 'ivory-rattle',
-          thighs: 'ivory-rattle',
-          shins: 'ivory-rattle',
+          thighs: 'ivory-rattle-hidden',
+          shins: 'ivory-bone-rattle-hybrid',
         },
+        hiddenSurfaceIds: this.stretchableBones.filter(
+          (component) => !component.root.visible,
+        ).map((component) => component.id).sort(),
         fixedParts: ['proximal-rigid-region', 'distal-rigid-region'],
         lengthMode: 'measured-piecewise-shaft',
         thicknessMode: 'boundary-tapered-shaft-morph',

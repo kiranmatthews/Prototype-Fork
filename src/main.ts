@@ -3502,7 +3502,7 @@ requestAnimationFrame(frame);
   getMeshyTorsoDiagnostics: () => player.meshyTorsoDiagnostics,
   getMeshyHeadDiagnostics: () => player.meshyHeadDiagnostics,
   getMeshyShortsDiagnostics: () => player.meshyShortsDiagnostics,
-  getMeshyFootwearDiagnostics: () => player.meshyFootwearDiagnostics,
+  getProceduralFootwearDiagnostics: () => player.proceduralFootwearDiagnostics,
   getCharacterProportions: () => player.characterProportions,
   setCharacterProportions: (patch: Parameters<typeof player.setCharacterProportions>[0]) =>
     player.setCharacterProportions(patch),

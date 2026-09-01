@@ -27,6 +27,9 @@ export interface CharacterProportionSettingsValue {
   wristRestPitch: number;
   wristRestYaw: number;
   wristRestRoll: number;
+  gloveXAcross: number;
+  gloveXAlong: number;
+  gloveXLift: number;
   footSize: number;
 }
 
@@ -56,7 +59,7 @@ export interface CharacterProportionStorage {
 
 export const CHARACTER_PROPORTION_STORAGE_KEY = 'solProtoCharacterProportions.v1';
 export const CHARACTER_HAND_REST_REVISION = 1 as const;
-export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 2 as const;
+export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 3 as const;
 
 /** Identity presentation values used by the original Character Lab baseline. */
 export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
@@ -89,6 +92,9 @@ export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSetting
     wristRestPitch: 0,
     wristRestYaw: 0,
     wristRestRoll: 0,
+    gloveXAcross: 0,
+    gloveXAlong: 0,
+    gloveXLift: 0,
     footSize: 1,
   });
 
@@ -119,6 +125,9 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     wristRestPitch: 13,
     wristRestYaw: -180,
     wristRestRoll: 6,
+    gloveXAcross: 0,
+    gloveXAlong: 0,
+    gloveXLift: 0,
     footSize: 1.53,
   });
 
@@ -151,6 +160,9 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'wristRestPitch', label: 'Rest pitch (°)', section: 'Hands', min: -90, max: 90, step: 1 },
     { key: 'wristRestYaw', label: 'Rest yaw (°)', section: 'Hands', min: -180, max: 180, step: 1 },
     { key: 'wristRestRoll', label: 'Rest roll (°)', section: 'Hands', min: -120, max: 120, step: 1 },
+    { key: 'gloveXAcross', label: 'Glove X across', section: 'Hands', min: -0.05, max: 0.05, step: 0.001 },
+    { key: 'gloveXAlong', label: 'Glove X along', section: 'Hands', min: -0.05, max: 0.05, step: 0.001 },
+    { key: 'gloveXLift', label: 'Glove X lift', section: 'Hands', min: -0.015, max: 0.025, step: 0.001 },
 
     { key: 'armThickness', label: 'Arm thickness', section: 'Mass & details', min: 0.58, max: 1.62, step: 0.01 },
     { key: 'armKnobSize', label: 'Arm knob size', section: 'Mass & details', min: 1, max: 1.62, step: 0.01 },

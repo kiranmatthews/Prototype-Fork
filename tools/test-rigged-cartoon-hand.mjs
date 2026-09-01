@@ -27,9 +27,11 @@ const near = (actual, expected, tolerance = 1e-5) => {
 };
 
 try {
-  const [surfaceApi, gloveApi] = await Promise.all([
+  const [surfaceApi, gloveApi, proportionApi, settingsApi] = await Promise.all([
     server.ssrLoadModule('/src/character/riggedCartoonHand.ts'),
     server.ssrLoadModule('/src/character/cartoonGlove.ts'),
+    server.ssrLoadModule('/src/character/proportionLayer.ts'),
+    server.ssrLoadModule('/src/character/settings.ts'),
   ]);
   const {
     RIGGED_CARTOON_HAND_ASSET_PATH,
@@ -46,6 +48,8 @@ try {
     removeProceduralCartoonGloveSurface,
     setCartoonGlovePose,
   } = gloveApi;
+  const { CharacterProportionLayer } = proportionApi;
+  const { IDENTITY_CHARACTER_PROPORTIONS } = settingsApi;
 
   assert.equal(RIGGED_CARTOON_HAND_ASSET_PATH,
     'characters/three-finger-hand/three-finger-hand.glb');
@@ -108,6 +112,33 @@ try {
   near(dorsalMarks[0].position.y, dorsalMarks[1].position.y);
   near(dorsalMarks[0].position.z, dorsalMarks[1].position.z);
   near(dorsalMarks[0].position.x, -0.025);
+  near(dorsalMarks[0].position.y, -0.079);
+  near(dorsalMarks[0].position.z, 0.044);
+  const markRigRoot = new THREE.Group();
+  markRigRoot.add(semanticLeft.root, semanticRight.root);
+  const markLayer = new CharacterProportionLayer(markRigRoot);
+  markLayer.apply({
+    ...IDENTITY_CHARACTER_PROPORTIONS,
+    gloveXAcross: 0.02,
+    gloveXAlong: -0.03,
+    gloveXLift: 0.01,
+  });
+  near(dorsalMarks[0].position.x, -0.005);
+  near(dorsalMarks[1].position.x, 0.005);
+  near(dorsalMarks[0].position.y, -0.109);
+  near(dorsalMarks[1].position.y, -0.109);
+  near(dorsalMarks[0].position.z, 0.054);
+  near(dorsalMarks[1].position.z, 0.054);
+  markLayer.apply({
+    ...IDENTITY_CHARACTER_PROPORTIONS,
+    gloveXAcross: 0.02,
+    gloveXAlong: -0.03,
+    gloveXLift: 0.01,
+  });
+  near(dorsalMarks[0].position.x, -0.005);
+  markLayer.clear();
+  near(dorsalMarks[0].position.x, -0.025);
+  near(dorsalMarks[1].position.x, 0.025);
   near(dorsalMarks[0].position.y, -0.079);
   near(dorsalMarks[0].position.z, 0.044);
   for (const surface of [pair.left, pair.right]) {

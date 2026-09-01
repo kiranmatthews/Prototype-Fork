@@ -7,12 +7,20 @@
     "source": "owner-supplied Meshy FBX derivatives",
     "provenance": "public/characters/meshy-limb-bones/provenance.json",
     "upperArms": "ivory-bone",
-    "forearmsThighsShins": "ivory-rattle",
+    "forearms": "ivory-rattle",
+    "thighs": "ivory-rattle-hidden",
+    "shins": "ivory-bone-rattle-hybrid",
+    "shinPartSurfaces": {
+      "proximal": "ivory-bone",
+      "shaft": "ivory-rattle",
+      "distal": "ivory-rattle"
+    },
+    "shinDeformationSurface": "ivory-rattle",
     "ivoryBoneStretchZone": [0.27, 0.76],
     "ivoryRattleStretchZone": [0.19, 0.9],
     "deformationRule": "Scale only the rebased middle shaft along local -Y; translate but never longitudinally scale the rigid distal source region.",
     "thicknessRule": "Use a shared relative X/Z shaft morph whose influence tapers to zero at both clipped boundary rings; shaft thickness never scales either rigid end or any part's longitudinal Y scale.",
-    "knobSizeRule": "Expose separate 1.00-1.62 arm/leg knob controls that uniformly enlarge authored knob regions in XYZ. Pin the Ivory Bone distal endpoint to its semantic socket and never resize Ivory Rattle insertion tips.",
+    "knobSizeRule": "Expose separate 1.00-1.62 arm/leg knob controls. Enlarge authored knobs in X/Z and normally in Y; cap only the hybrid shin's Bone-proximal Y growth when an extreme compressed endpoint would otherwise be crossed. Pin Ivory Bone distal endpoints and never resize Ivory Rattle insertion tips.",
     "volumeRule": "Derive a quadratic closed-volume polynomial from each final Float32 shaft and solve animation plus authored thickness together; clamp influence at -0.98 only when fixed collars make the requested thin+long volume physically impossible.",
     "normalRule": "Use derivative flat normals for the supplied face-normal topology so lighting follows the moving thickness morph.",
     "fallbackNote": "The procedural double-lobe component tree below remains a tested fallback contract, not the production player surface."

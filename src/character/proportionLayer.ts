@@ -204,18 +204,6 @@ export class CharacterProportionLayer {
       influences[2] = value.shortsDepth - 1;
     }
 
-    for (const side of ['left', 'right'] as const) {
-      const sockSurface = this.root.getObjectByName(`meshy-sock-surface-${side}`);
-      if (!sockSurface) continue;
-      const state = this.stateFor(sockSurface);
-      const influences = (sockSurface as THREE.Mesh).morphTargetInfluences;
-      if (!influences?.length) {
-        throw new Error('Meshy sock requires a tapered thickness morph channel');
-      }
-      this.ownMorphChannels(state, sockSurface, [0]);
-      influences[0] = value.legThickness - 1;
-    }
-
     const legHeightDelta =
       PROCEDURAL_THIGH_LENGTH * (value.thighLength - 1) +
       PROCEDURAL_SHIN_LENGTH * (value.shinLength - 1);
@@ -249,6 +237,20 @@ export class CharacterProportionLayer {
         THREE.MathUtils.degToRad(value.wristRestYaw * sideSign),
         THREE.MathUtils.degToRad(value.wristRestRoll * sideSign),
       );
+      const markAcross = value.gloveXAcross * sideSign;
+      const artistMark = this.root.getObjectByName(`artist-hand-dorsal-x-${side}`);
+      if (artistMark) {
+        this.addPosition(artistMark, markAcross, value.gloveXAlong, value.gloveXLift);
+      } else {
+        for (const bar of ['a', 'b']) {
+          this.addPosition(
+            this.root.getObjectByName(`glove-stitch-${bar}-${side}`),
+            markAcross,
+            value.gloveXAlong,
+            value.gloveXLift,
+          );
+        }
+      }
       this.multiplyScale(this.root.getObjectByName(`ankle-${side}`), value.footSize, value.footSize, value.footSize);
     }
 
@@ -499,7 +501,14 @@ export class CharacterProportionLayer {
   ): void {
     if (!anchor) return;
     for (const component of directStretchableBones(anchor)) {
-      this.multiplyScale(component.proximalKnob, factor, factor, factor);
+      const proximalYFactor = component.metadata.surface === 'ivory-bone-rattle-hybrid'
+        ? Math.min(
+            factor,
+            stretchableBoneLengthScale(component) /
+              Math.max(component.metadata.proximalSourceSpan ?? 1, 1e-6),
+          )
+        : factor;
+      this.multiplyScale(component.proximalKnob, factor, proximalYFactor, factor);
       const distal = component.distalKnob;
       if (distal && component.metadata.distalKind !== 'insertion-tip') {
         const state = this.stateFor(distal);

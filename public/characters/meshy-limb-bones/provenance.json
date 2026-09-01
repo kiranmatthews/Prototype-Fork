@@ -16,7 +16,12 @@
       "meshyUploadId": "01a05b6f-44a2-7390-a099-4e7efbb6b901",
       "sourceTriangles": 1328,
       "bakedTrianglesAfterBoundaryClipping": 1454,
-      "mapping": ["upper-arm-left", "upper-arm-right"],
+      "mapping": [
+        "upper-arm-left",
+        "upper-arm-right",
+        "lower-leg-left:proximal",
+        "lower-leg-right:proximal"
+      ],
       "longitudinalAxis": "source local +Z to runtime local -Y",
       "safeStretchZoneSourceZ": [-0.26, 0.23],
       "safeStretchFraction": 0.49,
@@ -42,8 +47,8 @@
         "lower-arm-right",
         "upper-leg-left",
         "upper-leg-right",
-        "lower-leg-left",
-        "lower-leg-right"
+        "lower-leg-left:shaft+distal",
+        "lower-leg-right:shaft+distal"
       ],
       "longitudinalAxis": "source local +Z to runtime local -Y",
       "safeStretchZoneSourceZ": [-0.40, 0.31],
@@ -59,6 +64,18 @@
       "distalRigidKind": "insertion-tip"
     }
   },
+  "runtimeComposition": {
+    "schemaVersion": 3,
+    "hiddenSurfaceIds": ["upper-leg-left", "upper-leg-right"],
+    "lowerLegHybrid": {
+      "surface": "ivory-bone-rattle-hybrid",
+      "proximal": "ivory-bone",
+      "shaft": "ivory-rattle",
+      "distal": "ivory-rattle",
+      "deformationSurface": "ivory-rattle",
+      "trianglesPerSide": 1578
+    }
+  },
   "conversion": [
     "Validated one closed manifold mesh per FBX with no rig, animation, texture, UV, or material dependency",
     "Preserved supplied faceted polygon-vertex normals",
@@ -68,7 +85,7 @@
     "Derived one boundary-tapered relative shaft-thickness morph from the measured source blend widths",
     "Closed and validated the pinned shaft boundary rings during import and derived each morph's quadratic volume polynomial",
     "Solved that polynomial for volume-preserving animation/design composition whenever the fixed boundary collars make a physical solution possible; guarded impossible combined extremes before inversion",
-    "Allowed explicit 1.00-1.62 uniform knob enlargement as a separate authoring layer; pinned Ivory Bone's distal endpoint and excluded every Rattle insertion tip",
+    "Allowed explicit 1.00-1.62 knob enlargement as a separate authoring layer; pinned Ivory Bone's distal endpoint, excluded every Rattle insertion tip, and capped only hybrid-proximal Y at extreme compressed endpoints",
     "Kept proximal and distal source regions rigid during longitudinal deformation",
     "Did not redistribute the original FBX files or expiring Meshy URLs"
   ]

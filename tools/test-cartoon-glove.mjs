@@ -305,12 +305,40 @@ try {
     digitCountPerHand: 3,
     gripSockets: ['socket-grip-left', 'socket-grip-right'],
   });
+  player.setCharacterProportions({
+    gloveXAcross: 0.02,
+    gloveXAlong: -0.03,
+    gloveXLift: 0.01,
+  });
+  for (const side of ['left', 'right']) {
+    const sideSign = side === 'left' ? 1 : -1;
+    for (const bar of ['a', 'b']) {
+      const mark = player.animationRig.root.getObjectByName(`glove-stitch-${bar}-${side}`);
+      near(mark.position.x, sideSign * 0.02);
+      near(mark.position.y, -0.113);
+      near(mark.position.z, 0.078);
+    }
+  }
+  player.resetCharacterProportions();
+  for (const side of ['left', 'right']) {
+    for (const bar of ['a', 'b']) {
+      const mark = player.animationRig.root.getObjectByName(`glove-stitch-${bar}-${side}`);
+      near(mark.position.x, 0);
+      near(mark.position.y, -0.083);
+      near(mark.position.z, 0.068);
+    }
+  }
   assert.equal(player.stretchableBoneDiagnostics.ready, true);
   assert.equal(player.stretchableBoneDiagnostics.componentCount, 8);
-  assert.equal(player.stretchableBoneDiagnostics.triangles, 13096);
+  assert.equal(player.stretchableBoneDiagnostics.visibleComponentCount, 6);
+  assert.deepEqual(player.stretchableBoneDiagnostics.hiddenIds,
+    ['upper-leg-left', 'upper-leg-right']);
+  assert.equal(player.stretchableBoneDiagnostics.triangles, 12856);
+  assert.equal(player.stretchableBoneDiagnostics.visibleTriangles, 9460);
   assert.deepEqual(player.stretchableBoneDiagnostics.surfaces, {
-    'ivory-rattle': 6,
+    'ivory-rattle': 4,
     'ivory-bone': 2,
+    'ivory-bone-rattle-hybrid': 2,
   });
   assert.equal(player.stretchableBones.every((component) =>
     component.shaft.material.flatShading === true), true,
@@ -323,25 +351,26 @@ try {
     'lower-arm-right': 'ivory-rattle',
     'upper-leg-left': 'ivory-rattle',
     'upper-leg-right': 'ivory-rattle',
-    'lower-leg-left': 'ivory-rattle',
-    'lower-leg-right': 'ivory-rattle',
+    'lower-leg-left': 'ivory-bone-rattle-hybrid',
+    'lower-leg-right': 'ivory-bone-rattle-hybrid',
   };
   for (const [id, surface] of Object.entries(expectedSurfaces)) {
     const component = productionBones.get(id);
     assert.ok(component, `missing production limb surface ${id}`);
     assert.equal(component.root.userData.stretchableBoneRuntime.surface, surface);
     assert.equal(component.root.scale.x, id.endsWith('-right') ? -1 : 1);
-    if (surface === 'ivory-rattle') {
+    if (surface === 'ivory-rattle' || surface === 'ivory-bone-rattle-hybrid') {
       assert.equal(component.root.userData.stretchableBoneRuntime.distalKind, 'insertion-tip');
     }
+    assert.equal(component.root.visible, !id.startsWith('upper-leg-'));
   }
   for (const ids of [
     ['upper-arm-left', 'upper-arm-right'],
     [
       'lower-arm-left', 'lower-arm-right',
       'upper-leg-left', 'upper-leg-right',
-      'lower-leg-left', 'lower-leg-right',
     ],
+    ['lower-leg-left', 'lower-leg-right'],
   ]) {
     const first = productionBones.get(ids[0]);
     for (const id of ids.slice(1)) {
@@ -351,9 +380,17 @@ try {
       assert.equal(component.distalKnob.geometry, first.distalKnob.geometry);
     }
   }
+  const hybridShin = productionBones.get('lower-leg-left');
+  assert.equal(hybridShin.proximalKnob.geometry,
+    productionBones.get('upper-arm-left').proximalKnob.geometry);
+  assert.equal(hybridShin.shaft.geometry,
+    productionBones.get('lower-arm-left').shaft.geometry);
+  assert.equal(hybridShin.distalKnob.geometry,
+    productionBones.get('lower-arm-left').distalKnob.geometry);
   const upperArmKnobs = productionBones.get('upper-arm-left');
   const forearmKnobs = productionBones.get('lower-arm-left');
   const thighKnobs = productionBones.get('upper-leg-left');
+  const shinKnobs = productionBones.get('lower-leg-left');
   const upperArmProximalBase = upperArmKnobs.proximalKnob.scale.clone();
   const upperArmDistalBase = upperArmKnobs.distalKnob.scale.clone();
   const upperArmDistalPositionBase = upperArmKnobs.distalKnob.position.clone();
@@ -364,6 +401,9 @@ try {
   const thighProximalBase = thighKnobs.proximalKnob.scale.clone();
   const thighInsertionBase = thighKnobs.distalKnob.scale.clone();
   const thighInsertionPositionBase = thighKnobs.distalKnob.position.clone();
+  const shinProximalBase = shinKnobs.proximalKnob.scale.clone();
+  const shinInsertionBase = shinKnobs.distalKnob.scale.clone();
+  const shinInsertionPositionBase = shinKnobs.distalKnob.position.clone();
   const defaultArmKnobSize = player.characterProportions.armKnobSize;
   const defaultLegKnobSize = player.characterProportions.legKnobSize;
   player.setCharacterProportions({ armKnobSize: 1.4, legKnobSize: 1.5 });
@@ -372,6 +412,7 @@ try {
     [upperArmKnobs.distalKnob, upperArmDistalBase, 1.4 / defaultArmKnobSize],
     [forearmKnobs.proximalKnob, forearmProximalBase, 1.4 / defaultArmKnobSize],
     [thighKnobs.proximalKnob, thighProximalBase, 1.5 / defaultLegKnobSize],
+    [shinKnobs.proximalKnob, shinProximalBase, 1.5 / defaultLegKnobSize],
   ]) {
     near(knob.scale.x, base.x * factor);
     near(knob.scale.y, base.y * factor);
@@ -389,10 +430,14 @@ try {
   assert.deepEqual(thighKnobs.distalKnob.scale.toArray(), thighInsertionBase.toArray(),
     'leg insertion tip must remain fitted to the following joint/sock');
   assert.deepEqual(thighKnobs.distalKnob.position.toArray(), thighInsertionPositionBase.toArray());
+  assert.deepEqual(shinKnobs.distalKnob.scale.toArray(), shinInsertionBase.toArray(),
+    'hybrid shin insertion tip must remain fitted to the sock');
+  assert.deepEqual(shinKnobs.distalKnob.position.toArray(), shinInsertionPositionBase.toArray());
   player.resetCharacterProportions();
   assert.deepEqual(upperArmKnobs.proximalKnob.scale.toArray(), upperArmProximalBase.toArray());
   assert.deepEqual(upperArmKnobs.distalKnob.scale.toArray(), upperArmDistalBase.toArray());
   assert.deepEqual(upperArmKnobs.distalKnob.position.toArray(), upperArmDistalPositionBase.toArray());
+  assert.deepEqual(shinKnobs.proximalKnob.scale.toArray(), shinProximalBase.toArray());
   near(player.stretchableBoneDiagnostics.minScale, 0.319);
   near(player.stretchableBoneDiagnostics.maxScale, 2.765);
   assert.deepEqual(player.meshyTorsoDiagnostics, {
@@ -470,49 +515,49 @@ try {
   near(shortsSurface.morphTargetInfluences[2], -0.25);
   player.resetCharacterProportions();
   assert.deepEqual(shortsSurface.morphTargetInfluences, [0, 0, 0]);
-  assert.deepEqual(player.meshyFootwearDiagnostics, {
+  assert.deepEqual(player.proceduralFootwearDiagnostics, {
     ready: true,
-    triangles: 6270,
-    sourceSha256: 'd9b49aa72ada43f841bb824c3743e05cf19d0b295403f931ff3a821ce8464f43',
+    triangles: 1776,
     sides: ['left', 'right'],
-    sockSkinBones: [
-      ['knee-left', 'ankle-left'],
-      ['knee-right', 'ankle-right'],
-    ],
-    textureState: 'loading',
-    texturesLoaded: 0,
-    textureError: null,
+    styleId: 'legacy-skate-meshy-palette-v1',
+    shoeAttachments: ['ankle-left', 'ankle-right'],
+    sockAttachments: ['knee-left', 'knee-right'],
   });
-  const shoeLeft = player.animationRig.root.getObjectByName('meshy-shoe-surface-left');
-  const shoeRight = player.animationRig.root.getObjectByName('meshy-shoe-surface-right');
-  const sockLeft = player.animationRig.root.getObjectByName('meshy-sock-surface-left');
-  const sockRight = player.animationRig.root.getObjectByName('meshy-sock-surface-right');
+  const shoeLeft = player.animationRig.root.getObjectByName('shoe-left');
+  const shoeRight = player.animationRig.root.getObjectByName('shoe-right');
+  const sockLeft = player.animationRig.root.getObjectByName('sock-left');
+  const sockRight = player.animationRig.root.getObjectByName('sock-right');
+  const soleLeft = player.animationRig.root.getObjectByName('sole-left');
+  const soleRight = player.animationRig.root.getObjectByName('sole-right');
   const ankleLeft = player.animationRig.root.getObjectByName('ankle-left');
   const ankleRight = player.animationRig.root.getObjectByName('ankle-right');
-  assert.equal(shoeLeft.parent, ankleLeft);
-  assert.equal(shoeRight.parent, ankleRight);
-  assert.equal(sockLeft.parent.name, 'procedural-rider');
-  assert.equal(sockRight.parent.name, 'procedural-rider');
-  assert.equal(sockLeft.isSkinnedMesh, true);
-  assert.equal(sockRight.isSkinnedMesh, true);
-  assert.equal(player.animationRig.root.getObjectByName('shoe-left'), undefined);
-  assert.equal(player.animationRig.root.getObjectByName('shoe-right'), undefined);
-  assert.equal(player.animationRig.root.getObjectByName('sole-left'), undefined);
-  assert.equal(player.animationRig.root.getObjectByName('sole-right'), undefined);
+  assert.equal(shoeLeft.parent.parent, ankleLeft);
+  assert.equal(shoeRight.parent.parent, ankleRight);
+  assert.equal(soleLeft.parent, shoeLeft.parent);
+  assert.equal(soleRight.parent, shoeRight.parent);
+  assert.equal(sockLeft.parent.name, 'knee-left');
+  assert.equal(sockRight.parent.name, 'knee-right');
+  assert.equal(sockLeft.isSkinnedMesh, undefined);
+  assert.equal(sockRight.isSkinnedMesh, undefined);
+  assert.equal(shoeLeft.material.color.getHex(), 0x111111);
+  assert.equal(sockLeft.material.color.getHex(), 0x692124);
+  assert.equal(soleLeft.material.color.getHex(), 0xefe6d6);
+  assert.equal(player.animationRig.root.getObjectByName('meshy-shoe-surface-left'), undefined);
+  assert.equal(player.animationRig.root.getObjectByName('meshy-sock-surface-left'), undefined);
   const shoeScaleBase = shoeLeft.scale.clone();
   player.setCharacterProportions({ legThickness: 1.5 });
-  near(sockLeft.morphTargetInfluences[0], 0.5);
-  near(sockRight.morphTargetInfluences[0], 0.5);
+  assert.deepEqual(sockLeft.scale.toArray(), [1.5, 1.47, 1.5]);
+  assert.deepEqual(sockRight.scale.toArray(), [1.5, 1.47, 1.5]);
   assert.deepEqual(shoeLeft.scale.toArray(), shoeScaleBase.toArray());
   player.setCharacterProportions({ footSize: 1.4, legThickness: 1 });
   assert.deepEqual(ankleLeft.scale.toArray(), [1.4, 1.4, 1.4]);
   assert.deepEqual(ankleRight.scale.toArray(), [1.4, 1.4, 1.4]);
-  near(sockLeft.morphTargetInfluences[0], 0);
+  assert.deepEqual(sockLeft.scale.toArray(), [1, 1.47, 1]);
   player.resetCharacterProportions();
   assert.deepEqual(ankleLeft.scale.toArray(), [1.53, 1.53, 1.53]);
   assert.deepEqual(ankleRight.scale.toArray(), [1.53, 1.53, 1.53]);
-  near(sockLeft.morphTargetInfluences[0], 0.37);
-  near(sockRight.morphTargetInfluences[0], 0.37);
+  assert.deepEqual(sockLeft.scale.toArray(), [1.37, 1.47, 1.37]);
+  assert.deepEqual(sockRight.scale.toArray(), [1.37, 1.47, 1.37]);
   assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
     'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
     'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',
@@ -523,11 +568,15 @@ try {
   player.applyAnimationDeformations({ 'deform.arm.upper.left.length': 1.4 });
   player.syncCharacterAppearance();
   player.resetAnimationPreview();
+  assert.equal(productionBones.get('upper-leg-left').root.visible, false);
+  assert.equal(productionBones.get('upper-leg-right').root.visible, false);
   near(previewUpperArm.distalSocket.position.y, -previewUpperArm.baseLength * 1.2);
   near(previewUpperArm.shaft.morphTargetInfluences[0], 0.3);
   player.applyAnimationDeformations({ 'deform.arm.upper.left.length': 1.4 });
   player.syncCharacterAppearance();
   player.exitAnimationPreview();
+  assert.equal(productionBones.get('upper-leg-left').root.visible, false);
+  assert.equal(productionBones.get('upper-leg-right').root.visible, false);
   near(previewUpperArm.distalSocket.position.y, -previewUpperArm.baseLength * 1.2);
   near(previewUpperArm.shaft.morphTargetInfluences[0], 0.3);
   const removeOverlay = player.setAuthoredPoseOverlay(({ applyDeformations }) => {

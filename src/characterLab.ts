@@ -344,7 +344,7 @@ class CharacterLab implements CharacterLabHandle {
     this.panel.appendChild(element(
       'div',
       'clab-note',
-      'Length and thickness keep rigid ends intact. Arm/leg knob-size sliders widen the authored knobs independently; knobless glove/sock insertion tips stay fixed.',
+      'Length and thickness keep rigid ends intact. Upper-leg surfaces are intentionally hidden under the shorts. Lower legs use the shoulder-bone knob at the knee and a knobless rattle insertion at the sock.',
     ));
     const boneViews = element('div', 'clab-actions');
     for (const [label, view] of [
@@ -371,7 +371,7 @@ class CharacterLab implements CharacterLabHandle {
           this.panel.appendChild(element(
             'div',
             'clab-note',
-            'Rest orientation is linked: pitch matches on both wrists; yaw and roll mirror anatomically.',
+            'Rest orientation is linked: pitch matches on both wrists; yaw and roll mirror anatomically. Glove X controls move both marks together: across mirrors, along and lift match.',
           ));
         }
       }
@@ -457,6 +457,7 @@ class CharacterLab implements CharacterLabHandle {
     this.ctx.rigRoot.traverse((object) => {
       if (!object.name.startsWith('stretch-bone-')) return;
       if (object.parent?.name.startsWith('stretch-bone-')) return;
+      if (!object.visible) return;
       if (scope === 'arms' && !object.name.includes('-arm-')) return;
       if (scope === 'legs' && !object.name.includes('-leg-')) return;
       bounds.expandByObject(object);
@@ -488,13 +489,13 @@ class CharacterLab implements CharacterLabHandle {
   private footwearBounds(): THREE.Box3 {
     const bounds = new THREE.Box3().makeEmpty();
     for (const side of ['left', 'right'] as const) {
-      const shoe = this.ctx.rigRoot.getObjectByName(`meshy-shoe-surface-${side}`);
-      if (shoe) bounds.expandByObject(shoe);
-      const sock = this.ctx.rigRoot.getObjectByName(`meshy-sock-surface-${side}`) as
-        THREE.SkinnedMesh | undefined;
-      if (sock?.isSkinnedMesh) {
-        sock.computeBoundingBox();
-        bounds.expandByObject(sock);
+      for (const name of [
+        `procedural-footwear-${side}`,
+        `sock-${side}`,
+        `sock-cuff-${side}`,
+      ]) {
+        const surface = this.ctx.rigRoot.getObjectByName(name);
+        if (surface) bounds.expandByObject(surface);
       }
     }
     return bounds.isEmpty() ? this.characterBounds() : bounds;
@@ -510,7 +511,7 @@ class CharacterLab implements CharacterLabHandle {
     const torso = this.ctx.player.meshyTorsoDiagnostics;
     const head = this.ctx.player.meshyHeadDiagnostics;
     const shorts = this.ctx.player.meshyShortsDiagnostics;
-    const footwear = this.ctx.player.meshyFootwearDiagnostics;
+    const footwear = this.ctx.player.proceduralFootwearDiagnostics;
     let proceduralHandMeshesVisible = 0;
     for (const side of ['left', 'right'] as const) {
       this.ctx.rigRoot.getObjectByName(`cartoon-glove-${side}`)?.traverse((object) => {
@@ -539,10 +540,8 @@ class CharacterLab implements CharacterLabHandle {
         : `Meshy shorts geometry ready · textures ${shorts.textureState}`
       : 'Meshy shorts missing';
     const footwearStatus = footwear.ready
-      ? footwear.textureState === 'ready'
-        ? 'Meshy footwear ready'
-        : `Meshy footwear geometry ready · textures ${footwear.textureState}`
-      : 'Meshy footwear missing';
+      ? `Procedural footwear ready · ${footwear.styleId}`
+      : 'Procedural footwear missing';
     this.status.textContent =
       `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} world units\n` +
       `${diagnostics.appliedObjectCount} proportion targets · collision unchanged\n` +

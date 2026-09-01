@@ -201,8 +201,10 @@ record are in `public/characters/three-finger-hand/provenance.json`.
 ## Owner-supplied Meshy limb bones
 
 The visible upper-arm surfaces use the owner's generated **Ivory Bone** mesh;
-forearms, thighs, and shins use the generated **Ivory Rattle** mesh with its
-knobless glove/sock insertion tip. The browser ships synchronous generated
+forearms use **Ivory Rattle**, and each visible shin combines Ivory Bone's
+proximal shoulder knob with Ivory Rattle's shaft and knobless sock insertion.
+The registered thigh surfaces remain Ivory Rattle but are presentation-hidden
+beneath the shorts to prevent clipping. The browser ships synchronous generated
 position/normal buffers, not the original FBXs. The conversion preserves the
 source silhouettes and faceted normals, splitting only at measured shaft
 boundaries so length deformation cannot scale either rigid end. Source hashes,
@@ -239,14 +241,14 @@ owner-supplied Meshy attribution: **model created with
 
 ## Owner-supplied Meshy footwear
 
-The visible shoes and socks use the owner's generated Meshy shoe-and-sock
-model. The browser ships generated position/normal/UV/island data and resized
-PBR maps, not the original FBX or archive. Runtime code mirrors the single
-source for the opposite foot, keeps shoe/lace islands rigid on each ankle, and
-skins each sock between its matching knee and ankle. Source/derived hashes,
-upload provenance, contact fit, and rigging rules are recorded in
-`public/characters/meshy-footwear/provenance.json`. It uses the same
-conservative owner-supplied Meshy attribution: **model created with
+The owner's generated Meshy shoe-and-sock model remains an attributed
+authoring reference for the production procedural footwear's black, brick-red,
+and warm-white style. The live character no longer instantiates the Meshy mesh
+or requests its textures; it restores the original procedural sock, shoe,
+strap, and capsule-sole envelope. Source/derived hashes and upload provenance
+remain recorded in `public/characters/meshy-footwear/provenance.json`. The
+archived reference uses the same conservative owner-supplied Meshy attribution:
+**model created with
 [Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
 
 ## Everything else

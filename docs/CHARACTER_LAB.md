@@ -42,11 +42,13 @@ hand/foot size and animal-tail
 visibility. Hand-rest pitch, yaw and roll are also persistent: pitch is linked
 while yaw and roll mirror anatomically across the two wrists. These values live
 on presentation mounts below the wrist bones, so a rest-orientation adjustment
-does not alter authored wrist keyframes. Left/right anatomy remains linked and
+does not alter authored wrist keyframes. Three rest-relative Glove X controls
+move both dorsal marks together: the across-hand offset mirrors, while
+along-hand and dorsal lift match. Left/right anatomy remains linked and
 mirrored in version 1 so a single slider cannot silently create a broken
 asymmetric rig.
 
-The shipped silhouette is an authored defaults-revision-2 pose rather than the
+The shipped silhouette is an authored defaults-revision-3 pose rather than the
 all-ones rig identity. **Reset all** restores that authored pose. The identity
 map remains available to animation/rig tests as the canonical no-op proportion
 layer. Browser saves retain the defaults they were authored against: untouched
@@ -69,16 +71,24 @@ digit bones are transferred to the visible skin. The main artist surface is
 presented in the character's glove white, including the authored rolled cuff.
 Each production hand also carries a mirrored code-native black dorsal X under
 the rigid artist-hand root, so it follows wrist/hand-size changes without being
-pulled or sheared by finger animation.
+pulled or sheared by finger animation. Character Lab's across/along/lift
+sliders are applied after animation and work on the synchronous procedural
+fallback as well as the artist surface.
 
-The Limb Bone Preview frames all bones, arms, or legs. The existing upper-arm,
-forearm, thigh and shin length sliders exercise the production deformation
-path: only each measured Ivory Bone/Rattle shaft changes length while the
-authored knobs and knobless insertion tips remain locally rigid. Thickness
+The Limb Bone Preview frames visible bones, arms, or legs. Upper-leg surface
+roots remain live but are intentionally hidden beneath the shorts to prevent
+pose clipping; hip/knee joints and thigh-length animation are unchanged.
+Lower legs combine the Ivory Bone shoulder-style proximal knob with the Ivory
+Rattle shaft and knobless sock insertion. The existing upper-arm, forearm,
+thigh and shin length sliders exercise the production deformation path: only
+each measured shaft changes length while authored knobs and knobless insertion
+tips remain locally rigid. Thickness
 changes the plain shaft cross-section through a boundary-safe taper. Arm/leg
 knob-size sliders then scale the true knob regions uniformly for cohesive fat
 bones. Their 1.00–1.62 range grows into the shaft seam without opening gaps;
-Rattle's knobless glove/sock insertion tips remain byte-stable.
+Rattle's knobless glove/sock insertion tips remain byte-stable. At the most
+compressed hybrid-shin extreme, only proximal-knob Y growth is capped before
+the ankle endpoint; its full X/Z knob thickness remains available.
 
 The **Torso** view frames the attributed Meshy skeleton tank-top surface. It is
 not a foreign replacement rig: code-native weights bind it to the existing
@@ -108,16 +118,15 @@ At the default fit, the waistband overlaps inside the torso and the lower-leg
 bone surfaces enter slightly inside both frayed hems. The former procedural
 pelvis, belt, cargo legs, pockets, and chain are retired.
 
-The **Shoes** view frames the attributed Meshy shoe-and-sock replacement on
-both feet. The single supplied source is mirrored laterally with corrected
-winding and normals. Shoe, sole, tongue, and lace islands remain rigid on the
-matching ankle; the separated sock island blends from ankle at its hidden base
-to the matching lower-leg/knee control at its cuff, so planted-foot rotation
-cannot swing the sock away from the shin. `Foot size` continues to scale the
-semantic ankle/toe/socket branch. `Leg thickness` drives only a tapered sock
-fit morph and leaves the shoe and hidden collar insertion unchanged. The sole
-plane and heel/foot/toe socket positions are preserved exactly. The former
-procedural sock, stripe, shoe sphere, straps, and capsule sole are retired.
+The **Shoes** view frames the restored procedural footwear on both feet. It
+uses the original sock cylinder, shoe ellipsoid, two chunky lace bars, and
+capsule outsole envelope, restyled from the attributed Meshy reference: black
+upper, brick-red sock and darker cuff, warm-white sole/laces/side stripe, and a
+thin black foxing band. `Foot size` continues to scale the semantic
+ankle/toe/socket branch. `Leg thickness` and shin length act on the knee-owned
+sock/cuff without resizing the ankle-owned shoe. The sole remains exactly at
+Y `-0.05` with heel/toe Z `-0.07…0.20`, so all planting sockets are unchanged.
+No Meshy footwear mesh or texture is loaded by the character runtime.
 
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current

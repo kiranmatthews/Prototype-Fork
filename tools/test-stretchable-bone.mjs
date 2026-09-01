@@ -127,8 +127,8 @@ try {
   assert.equal(primary.shaft.geometry, duplicate.shaft.geometry);
   assert.equal(primary.proximalKnob.geometry, duplicate.proximalKnob.geometry);
   assert.equal(primary.distalKnob.geometry, duplicate.distalKnob.geometry);
-  assert.equal(primary.root.userData.stretchableBoneRuntime.schemaVersion, 2);
-  assert.equal(STRETCHABLE_BONE_SCHEMA_VERSION, 2);
+  assert.equal(primary.root.userData.stretchableBoneRuntime.schemaVersion, 3);
+  assert.equal(STRETCHABLE_BONE_SCHEMA_VERSION, 3);
   assert.deepEqual(primary.root.userData.stretchableBoneRuntime.axis, [0, -1, 0]);
   near(primary.maxScale, 2.765);
   assert.equal(resolveStretchableBone(primary.root).shaft, primary.shaft);
@@ -226,14 +226,58 @@ try {
     surface: 'ivory-rattle',
     material: clay,
   });
+  const hybridShin = createStretchableBone({
+    id: 'hybrid-lower-leg-left',
+    length: 0.24,
+    knobRadius: 0.052,
+    surface: 'ivory-bone-rattle-hybrid',
+    material: clay,
+  });
+  const hybridShinDuplicate = createStretchableBone({
+    id: 'hybrid-lower-leg-right',
+    length: 0.24,
+    knobRadius: 0.052,
+    surface: 'ivory-bone-rattle-hybrid',
+    mirrorX: true,
+    material: clay,
+  });
   assert.equal(stretchableBoneTriangleCount(ivoryBone), 1454);
   assert.equal(stretchableBoneTriangleCount(ivoryRattle), 1698);
+  assert.equal(stretchableBoneTriangleCount(hybridShin), 1578);
+  assert.equal(hybridShin.proximalKnob.geometry, ivoryBone.proximalKnob.geometry);
+  assert.equal(hybridShin.shaft.geometry, ivoryRattle.shaft.geometry);
+  assert.equal(hybridShin.distalKnob.geometry, ivoryRattle.distalKnob.geometry);
+  assert.equal(hybridShin.proximalKnob.geometry, hybridShinDuplicate.proximalKnob.geometry);
+  assert.equal(hybridShin.shaft.geometry, hybridShinDuplicate.shaft.geometry);
+  assert.equal(hybridShin.distalKnob.geometry, hybridShinDuplicate.distalKnob.geometry);
+  assert.equal(hybridShinDuplicate.root.scale.x, -1);
   assert.equal(ivoryBone.shaft.geometry, ivoryBoneDuplicate.shaft.geometry);
   assert.equal(ivoryBone.proximalKnob.geometry, ivoryBoneDuplicate.proximalKnob.geometry);
   assert.equal(ivoryBoneDuplicate.root.scale.x, -1);
   assert.equal(ivoryBone.root.userData.stretchableBoneRuntime.surface, 'ivory-bone');
   assert.equal(ivoryRattle.root.userData.stretchableBoneRuntime.surface, 'ivory-rattle');
   assert.equal(ivoryRattle.root.userData.stretchableBoneRuntime.distalKind, 'insertion-tip');
+  const hybridMetadata = hybridShin.root.userData.stretchableBoneRuntime;
+  assert.equal(hybridMetadata.surface, 'ivory-bone-rattle-hybrid');
+  assert.equal(hybridMetadata.deformationSurface, 'ivory-rattle');
+  assert.deepEqual(hybridMetadata.partSurfaces, {
+    proximal: 'ivory-bone',
+    shaft: 'ivory-rattle',
+    distal: 'ivory-rattle',
+  });
+  assert.equal(hybridMetadata.distalKind, 'insertion-tip');
+  assert.equal(hybridMetadata.sourceSha256, null);
+  assert.deepEqual(hybridMetadata.sourceSha256s, {
+    proximal: MESHY_LIMB_BONE_ASSETS.ivoryBone.sourceSha256,
+    shaft: MESHY_LIMB_BONE_ASSETS.ivoryRattle.sourceSha256,
+    distal: MESHY_LIMB_BONE_ASSETS.ivoryRattle.sourceSha256,
+  });
+  near(hybridShin.proximalKnob.scale.x,
+    0.052 / MESHY_LIMB_BONE_ASSETS.ivoryBone.sourceMaxRadius);
+  near(hybridShin.shaft.scale.x,
+    0.052 / MESHY_LIMB_BONE_ASSETS.ivoryRattle.sourceMaxRadius);
+  near(hybridShin.distalKnob.scale.x,
+    0.052 / MESHY_LIMB_BONE_ASSETS.ivoryRattle.sourceMaxRadius);
   assert.equal(ivoryBone.shaft.geometry.morphTargetsRelative, true);
   assert.equal(ivoryBone.shaft.geometry.morphAttributes.position.length, 1);
   assert.equal(ivoryBone.shaft.frustumCulled, false);
@@ -255,6 +299,7 @@ try {
   for (const [component, asset] of [
     [ivoryBone, MESHY_LIMB_BONE_ASSETS.ivoryBone],
     [ivoryRattle, MESHY_LIMB_BONE_ASSETS.ivoryRattle],
+    [hybridShin, MESHY_LIMB_BONE_ASSETS.ivoryRattle],
   ]) {
     for (const influence of [0, 1, 2]) {
       const expectedVolume = asset.thicknessMorph.closedRestVolume * (
@@ -268,6 +313,16 @@ try {
     '13d5a1199abf1d39fa448ce9f2607e1358b5442ea27453ce542c1b25f543ed73');
   assert.equal(ivoryRattle.root.userData.stretchableBoneRuntime.sourceSha256,
     '17acdb80d7144ad39786517910f031117d4ff08c5800e93dfb09b166aef66310');
+  const hybridProximalRest = transform(hybridShin.proximalKnob);
+  const hybridInsertionScale = hybridShin.distalKnob.scale.toArray();
+  const hybridResolved = resolveStretchableBone(hybridShin.root);
+  for (const scale of [STRETCHABLE_BONE_MIN_SCALE, 1, STRETCHABLE_BONE_MAX_SCALE]) {
+    setStretchableBoneLength(hybridShin, hybridShin.baseLength * scale);
+    near(hybridShin.distalSocket.position.y, -hybridShin.baseLength * scale);
+    assert.deepEqual(transform(hybridShin.proximalKnob), hybridProximalRest);
+    assert.deepEqual(hybridShin.distalKnob.scale.toArray(), hybridInsertionScale);
+    finiteTree(hybridShin.root);
+  }
   const ivoryProximalRest = transform(ivoryBone.proximalKnob);
   const ivoryDistalRestScale = ivoryBone.distalKnob.scale.toArray();
   for (const scale of [STRETCHABLE_BONE_MIN_SCALE, 1, STRETCHABLE_BONE_MAX_SCALE]) {
@@ -328,6 +383,14 @@ try {
   const rattleVolume = MESHY_LIMB_BONE_ASSETS.ivoryRattle.thicknessMorph;
   const rattleVolumeFactor = (influence) =>
     1 + 2 * rattleVolume.volumeA * influence + rattleVolume.volumeB * influence ** 2;
+  const hybridRatio = stretchableBoneShaftLengthRatio(hybridResolved, 0.58, 0.58 * 1.75);
+  const hybridInfluence = stretchableBoneVolumeMorphInfluence(
+    hybridResolved,
+    hybridRatio,
+    -0.42,
+  );
+  near(rattleVolumeFactor(hybridInfluence) * hybridRatio,
+    rattleVolumeFactor(-0.42), 1e-9);
   assert.ok(rattleInfluence > -1);
   near(rattleVolumeFactor(rattleInfluence) * rattleRatio,
     rattleVolumeFactor(rattleBaseline), 1e-9);
@@ -343,6 +406,63 @@ try {
     assert.deepEqual(transform(ivoryRattle.proximalKnob), rattleProximalRest);
     assert.deepEqual(ivoryRattle.distalKnob.scale.toArray(), rattleInsertionScale);
   }
+
+  // Extreme authored × animated compression: the hybrid keeps the shoulder
+  // knob's full X/Z fattening, but caps only its longitudinal reach before it
+  // can cross the semantic ankle and clip through the sock/shoe insertion.
+  const hybridPlayerRoot = new THREE.Group();
+  const hybridRigRoot = new THREE.Group();
+  hybridPlayerRoot.add(hybridRigRoot);
+  const hybridKnee = new THREE.Bone();
+  hybridKnee.name = 'knee-left';
+  hybridRigRoot.add(hybridKnee);
+  const hybridAnkle = new THREE.Bone();
+  hybridAnkle.name = 'ankle-left';
+  hybridAnkle.position.y = -0.24;
+  hybridKnee.add(hybridAnkle);
+  const extremeHybrid = createStretchableBone({
+    id: 'extreme-hybrid-lower-leg-left',
+    length: 0.24,
+    knobRadius: 0.052,
+    surface: 'ivory-bone-rattle-hybrid',
+  });
+  hybridKnee.add(extremeHybrid.root);
+  hybridRigRoot.userData.sculptRuntime = {
+    joints: { kneeLeft: hybridKnee.name, ankleLeft: hybridAnkle.name },
+    deformations: [{
+      controlId: 'deform.leg.lower.left.length',
+      jointId: 'kneeLeft',
+      downstreamJointIds: ['ankleLeft'],
+      lengthAxis: [0, -1, 0],
+      volume: 'preserve-cross-section-area',
+    }],
+  };
+  const extremeBridge = new PlayerAnimationBridge(hybridPlayerRoot, hybridRigRoot);
+  const extremeLayer = new CharacterProportionLayer(hybridRigRoot);
+  const extremeProximalBase = extremeHybrid.proximalKnob.scale.clone();
+  const extremeInsertionBase = extremeHybrid.distalKnob.scale.clone();
+  extremeBridge.applyDeformations({ 'deform.leg.lower.left.length': 0.55 });
+  extremeLayer.apply({
+    ...IDENTITY_CHARACTER_PROPORTIONS,
+    shinLength: 0.58,
+    legKnobSize: 1.62,
+  });
+  const extremeScale = 0.55 * 0.58;
+  near(hybridAnkle.position.y, -0.24 * extremeScale);
+  near(extremeHybrid.distalSocket.position.y, -0.24 * extremeScale);
+  near(extremeHybrid.proximalKnob.scale.x, extremeProximalBase.x * 1.62);
+  near(extremeHybrid.proximalKnob.scale.z, extremeProximalBase.z * 1.62);
+  near(extremeHybrid.proximalKnob.scale.y,
+    extremeProximalBase.y * (extremeScale /
+      extremeHybrid.root.userData.stretchableBoneRuntime.proximalSourceSpan));
+  extremeHybrid.proximalKnob.geometry.computeBoundingBox();
+  const proximalEnd = extremeHybrid.proximalKnob.geometry.boundingBox.min.y *
+    extremeHybrid.proximalKnob.scale.y;
+  assert.ok(proximalEnd >= extremeHybrid.distalSocket.position.y - 1e-7,
+    'hybrid knee knob crossed the compressed ankle endpoint');
+  assert.deepEqual(extremeHybrid.distalKnob.scale.toArray(), extremeInsertionBase.toArray());
+  extremeLayer.clear();
+  extremeBridge.applyDeformations({});
 
   const playerRoot = new THREE.Group();
   const rigRoot = new THREE.Group();
@@ -598,23 +718,27 @@ try {
   ]);
   assert.match(playerSource, /createStretchableBone\(/);
   assert.match(playerSource, /componentCount: this\.stretchableBones\.length/);
-  assert.match(playerSource, /limbBoneRig: \{[\s\S]*?schemaVersion: 2/);
+  assert.match(playerSource, /limbBoneRig: \{[\s\S]*?schemaVersion: STRETCHABLE_BONE_SCHEMA_VERSION/);
   assert.match(playerSource, /lengthMode: 'measured-piecewise-shaft'/);
   assert.match(playerSource, /procedural character requires 8 stretchable limb segments/);
   assert.equal((playerSource.match(/surface: 'ivory-bone'/g) ?? []).length, 1);
-  assert.equal((playerSource.match(/surface: 'ivory-rattle'/g) ?? []).length, 3);
+  assert.equal((playerSource.match(/surface: 'ivory-rattle'/g) ?? []).length, 2);
+  assert.equal((playerSource.match(/surface: 'ivory-bone-rattle-hybrid'/g) ?? []).length, 1);
+  assert.match(playerSource, /upperLegBone\.root\.visible = false/);
   assert.doesNotMatch(playerSource, /const upperArmGeo =/);
   assert.doesNotMatch(playerSource, /const foreArmGeo =/);
   assert.doesNotMatch(playerSource, /const shinGeo =/);
   assert.match(labSource, /Limb bone preview/);
-  assert.match(labSource, /Length and thickness keep rigid ends intact/);
-  assert.match(labSource, /knob-size sliders widen the authored knobs independently/);
+  assert.match(labSource, /Upper-leg surfaces are intentionally hidden under the shorts/);
+  assert.match(labSource, /Lower legs use the shoulder-bone knob at the knee/);
   assert.match(mainSource, /getStretchableBoneDiagnostics/);
   const spec = JSON.parse(specSource);
   assert.equal(spec.targetId, 'stretchable-cartoon-limb-bone');
   assert.equal(spec.productionSurfaceOverride.active, true);
   assert.equal(spec.productionSurfaceOverride.upperArms, 'ivory-bone');
-  assert.equal(spec.productionSurfaceOverride.forearmsThighsShins, 'ivory-rattle');
+  assert.equal(spec.productionSurfaceOverride.forearms, 'ivory-rattle');
+  assert.equal(spec.productionSurfaceOverride.thighs, 'ivory-rattle-hidden');
+  assert.equal(spec.productionSurfaceOverride.shins, 'ivory-bone-rattle-hybrid');
   assert.equal(spec.performanceBudget.fpsTarget, 60);
   assert.equal(spec.qualityTargets.mustMatch.includes(
     'measured shaft-only stretch with invariant rigid-end transforms'), true);

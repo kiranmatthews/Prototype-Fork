@@ -102,20 +102,16 @@ function fixture() {
     wrist.add(handRest);
     nodes.set(handRest.name, handRest);
     visual(`hand-${side}`, handRest, [0, -0.05, 0]);
+    visual(`glove-stitch-a-${side}`, handRest, [0, -0.083, 0.068]);
+    visual(`glove-stitch-b-${side}`, handRest, [0, -0.083, 0.068]);
     const hip = add(`hip-${side}`, hips, [sign * 0.115, 0, 0]);
     visual(`thigh-${side}`, hip, [0, -0.12, 0]);
     const knee = add(`knee-${side}`, hip, [0, -0.28, 0]);
     visual(`shin-${side}`, knee, [0, -0.11, 0]);
     const ankle = add(`ankle-${side}`, knee, [0, -0.25, 0]);
     visual(`foot-${side}`, ankle, [0, -0.04, 0.08]);
-    const sockSurface = visual(`meshy-sock-surface-${side}`, rider, [sign * 0.115, 0.15, 0]);
-    const sockPosition = sockSurface.geometry.getAttribute('position');
-    const sockThicknessMorph = new THREE.Float32BufferAttribute(
-      new Float32Array(sockPosition.count * 3), 3);
-    sockThicknessMorph.name = 'sock-thickness';
-    sockSurface.geometry.morphAttributes.position = [sockThicknessMorph];
-    sockSurface.geometry.morphTargetsRelative = true;
-    sockSurface.updateMorphTargets();
+    visual(`sock-${side}`, knee, [0, -0.205, 0]);
+    visual(`sock-cuff-${side}`, knee, [0, -0.177, 0]);
     add(`ear-${side}`, head, [sign * 0.1, 0.13, 0]);
     for (const part of ['white', 'iris', 'pupil', 'lash']) {
       visual(`eye-${part}-${side}`, head, [sign * 0.07, 0.03, 0.15]);
@@ -186,7 +182,7 @@ try {
     clampCharacterProportions,
   } = settingsApi;
 
-  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 29);
+  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 32);
   assert.deepEqual(
     new Set(CHARACTER_PROPORTION_CONTROLS.map((control) => control.key)),
     new Set(Object.keys(DEFAULT_CHARACTER_PROPORTIONS)),
@@ -222,6 +218,9 @@ try {
     wristRestPitch: 13,
     wristRestYaw: -180,
     wristRestRoll: 6,
+    gloveXAcross: 0,
+    gloveXAlong: 0,
+    gloveXLift: 0,
     footSize: 1.53,
   });
   const clamped = clampCharacterProportions({
@@ -233,6 +232,9 @@ try {
     legKnobSize: -2,
     shortsWidth: 99,
     shortsHeight: -2,
+    gloveXAcross: 99,
+    gloveXAlong: -99,
+    gloveXLift: 99,
   });
   assert.equal(clamped.headSize, 1.55);
   assert.equal(clamped.neckLength, 0);
@@ -242,6 +244,9 @@ try {
   assert.equal(clamped.legKnobSize, 1);
   assert.equal(clamped.shortsWidth, 1.5);
   assert.equal(clamped.shortsHeight, 0.65);
+  assert.equal(clamped.gloveXAcross, 0.05);
+  assert.equal(clamped.gloveXAlong, -0.05);
+  assert.equal(clamped.gloveXLift, 0.025);
 
   const stored = memoryStorage({
     [CHARACTER_PROPORTION_STORAGE_KEY]: JSON.stringify({
@@ -259,6 +264,9 @@ try {
   assert.equal(settings.value.headSize, 1.31);
   assert.equal(settings.value.shoulderWidth, 1.2);
   assert.equal(settings.value.footSize, 1.53);
+  assert.equal(settings.value.gloveXAcross, 0);
+  assert.equal(settings.value.gloveXAlong, 0);
+  assert.equal(settings.value.gloveXLift, 0);
   assert.equal(settings.value.armKnobSize, 1.43,
     'untouched legacy values must adopt the authored defaults');
   assert.equal(settings.value.shortsWidth, 1,
@@ -338,6 +346,9 @@ try {
     wristRestPitch: 20,
     wristRestYaw: 30,
     wristRestRoll: 40,
+    gloveXAcross: 0.02,
+    gloveXAlong: -0.03,
+    gloveXLift: 0.01,
     footSize: 1.18,
   };
   layer.apply(shaped);
@@ -367,10 +378,14 @@ try {
   near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[0], 0.3);
   near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[1], 0.2);
   near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[2], -0.2);
-  near(scene.nodes.get('meshy-sock-surface-left').morphTargetInfluences[0], -0.18);
-  near(scene.nodes.get('meshy-sock-surface-right').morphTargetInfluences[0], -0.18);
+  assert.deepEqual(scene.nodes.get('sock-left').scale.toArray(), [0.82, 0.8, 0.82]);
+  assert.deepEqual(scene.nodes.get('sock-right').scale.toArray(), [0.82, 0.8, 0.82]);
+  assert.deepEqual(scene.nodes.get('sock-cuff-left').scale.toArray(), [0.82, 0.8, 0.82]);
+  assert.deepEqual(scene.nodes.get('sock-cuff-right').scale.toArray(), [0.82, 0.8, 0.82]);
   near(scene.nodes.get('knee-left').position.y, -0.28 * 1.3);
   near(scene.nodes.get('ankle-left').position.y, -0.25 * 0.8);
+  assert.deepEqual(scene.nodes.get('ankle-left').scale.toArray(), [1.18, 1.18, 1.18]);
+  assert.deepEqual(scene.nodes.get('ankle-right').scale.toArray(), [1.18, 1.18, 1.18]);
   near(scene.nodes.get('wrist-left').scale.x, 1.25);
   const leftHandRest = scene.nodes.get('hand-rest-orientation-left');
   const rightHandRest = scene.nodes.get('hand-rest-orientation-right');
@@ -392,6 +407,16 @@ try {
   )));
   near(Math.abs(leftHandRest.quaternion.dot(expectedLeftHandRest)), 1);
   near(Math.abs(rightHandRest.quaternion.dot(expectedRightHandRest)), 1);
+  for (const bar of ['a', 'b']) {
+    const leftMark = scene.nodes.get(`glove-stitch-${bar}-left`).position;
+    const rightMark = scene.nodes.get(`glove-stitch-${bar}-right`).position;
+    near(leftMark.x, 0.02);
+    near(rightMark.x, -0.02);
+    near(leftMark.y, -0.113);
+    near(rightMark.y, -0.113);
+    near(leftMark.z, 0.078);
+    near(rightMark.z, 0.078);
+  }
   const once = snapshot(scene.root);
   for (let iteration = 0; iteration < 100; iteration++) layer.apply(shaped);
   assert.deepEqual(snapshot(scene.root), once, '100 proportion passes do not accumulate');
