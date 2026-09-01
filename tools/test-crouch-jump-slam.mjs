@@ -112,6 +112,8 @@ try {
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
     createPlayerStarterAnimationSuite,
+    parseAnimationSuite,
+    reconcilePlayerStarterAnimationSuite,
   } = await server.ssrLoadModule("/src/animation/index.ts");
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule(
     "/src/characterAnimationRuntime.ts",
@@ -167,6 +169,33 @@ try {
   const boardAnimationBinding = RigBinding.fromSculptRuntime(
     boardPlayer.animationRig.root,
     { strict: false },
+  );
+  const oldAirborneClips = JSON.parse(await readFile(new URL(
+    "./fixtures/player-airborne-catalog-v6.json",
+    import.meta.url,
+  ), "utf8"));
+  const oldAirborneById = new Map(oldAirborneClips.map((clip) => [clip.id, clip]));
+  const currentLiveSuite = createPlayerStarterAnimationSuite(boardAnimationBinding.definition);
+  const normalizedLiveV7Draft = parseAnimationSuite({
+    ...currentLiveSuite,
+    clips: currentLiveSuite.clips.map((clip) => oldAirborneById.get(clip.id) ?? clip),
+    metadata: { ...currentLiveSuite.metadata, playerStarterCatalogVersion: 7 },
+  });
+  const upgradedLiveDraft = reconcilePlayerStarterAnimationSuite(
+    normalizedLiveV7Draft,
+    boardAnimationBinding.definition,
+  );
+  for (const clipId of ["player.jump", "player.double-jump", "player.fall"]) {
+    assert.equal(
+      upgradedLiveDraft.clips.find((clip) => clip.id === clipId)?.metadata.progressSource,
+      "gameplay-actionProgress",
+      `live saved ${clipId} did not migrate to phase timing`,
+    );
+  }
+  assert.equal(
+    upgradedLiveDraft.clips.find((clip) => clip.id === "player.land")?.metadata.deformationArc,
+    "neutral fall -> cushion squash -> rebound -> settle",
+    "live saved landing clip did not migrate to the cushion arc",
   );
   const boardAnimationRuntime = createCharacterAnimationRuntime(
     boardPlayer,

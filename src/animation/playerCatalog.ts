@@ -67,7 +67,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 7;
+export const PLAYER_STARTER_CATALOG_VERSION = 8;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -85,14 +85,16 @@ const LEGACY_AIRBORNE_STARTER_SIGNATURES: Readonly<Record<string, ReadonlySet<st
     '5a112f6f', // source catalog v6
     '792240e4', // normalized legacy-rig draft
     '08bf4483', // normalized conventional-rig draft
+    '61b49347', // normalized live sculpt-runtime draft
   ]),
   'player.double-jump': new Set([
     '17b2768b', // source catalog v6
     '2c3edae2', // normalized legacy-rig draft
     '9cbb8b2b', // normalized conventional-rig draft
+    'af898501', // normalized live sculpt-runtime draft
   ]),
-  'player.fall': new Set(['f45194a1', 'fa07436b']),
-  'player.land': new Set(['baa768b5', '44fd70c1']),
+  'player.fall': new Set(['f45194a1', 'fa07436b', '4aa17e81']),
+  'player.land': new Set(['baa768b5', '44fd70c1', '7612e407']),
 };
 
 function stableCatalogValue(value: unknown): string {
@@ -1103,7 +1105,7 @@ export function reconcilePlayerStarterAnimationSuite(
       clips = clips.map((clip) => clip.id === 'player.slam' ? importedSlam : clip);
     }
   }
-  if (previousVersion < 7) {
+  if (previousVersion < 8) {
     for (const [clipId, untouchedSignatures] of Object.entries(
       LEGACY_AIRBORNE_STARTER_SIGNATURES,
     )) {

@@ -725,7 +725,7 @@ try {
   assert.equal(findClip(upgradedDoubleJump, 'player.double-jump').name,
     'Double Jump — Split High Jump');
 
-  // Catalog v7 replaces the exact shipped v6 airborne deformation clips so
+  // The airborne catalog upgrade replaces the exact shipped v6 clips so
   // an untouched browser draft cannot mask the phase-locked stretch arc. A
   // hand-edited same-ID clip remains browser-owned and therefore time-based.
   const legacyAirborneFixtures = JSON.parse(await readFile(new URL(
@@ -764,11 +764,11 @@ try {
     binding.definition,
   );
   assert.equal(findClip(upgradedNormalizedAirborne, 'player.jump').metadata.progressSource,
-    'gameplay-actionProgress', 'normalized saved Jump did not receive catalog v7');
+    'gameplay-actionProgress', 'normalized saved Jump did not receive the current catalog');
   assert.equal(findClip(upgradedNormalizedAirborne, 'player.double-jump').metadata.progressSource,
-    'gameplay-actionProgress', 'normalized saved Double Jump did not receive catalog v7');
+    'gameplay-actionProgress', 'normalized saved Double Jump did not receive the current catalog');
   assert.equal(findClip(upgradedNormalizedAirborne, 'player.fall').metadata.progressSource,
-    'gameplay-actionProgress', 'normalized saved Fall did not receive catalog v7');
+    'gameplay-actionProgress', 'normalized saved Fall did not receive the current catalog');
   near(sampleClip(findClip(upgradedNormalizedAirborne, 'player.land'), 0.34)
     .scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.98);
 
