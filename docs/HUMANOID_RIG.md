@@ -20,14 +20,24 @@ procedural-rider (root-motion control)
    │        │  └─ head
    │        ├─ clavicle-left
    │        │  └─ shoulder-left → elbow-left → wrist-left
+   │        │     ├─ index / middle / outer finger chains (3 bones each)
+   │        │     └─ thumb metacarpal → proximal → distal (3 bones)
    │        └─ clavicle-right
    │           └─ shoulder-right → elbow-right → wrist-right
+   │              ├─ index / middle / outer finger chains (3 bones each)
+   │              └─ thumb metacarpal → proximal → distal (3 bones)
    ├─ hip-left → knee-left → ankle-left → toe-left
    └─ hip-right → knee-right → ankle-right → toe-right
 ```
 
 The simulated tail, ears, and ponytail remain auxiliary chains. They are
 declared to the animation suite but are not humanoid retarget bones.
+
+Each cartoon glove is constructed by one mirrored procedural factory. The
+conventional wrist remains the humanoid `handLeft`/`handRight` endpoint; 12
+optional digit bones per side extend below it without expanding the required
+humanoid role set. Existing clips therefore remain playable while Animation
+Studio can key, mirror and onion-skin every finger independently.
 
 ## Stable animation identity
 

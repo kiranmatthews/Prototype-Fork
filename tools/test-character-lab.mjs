@@ -300,7 +300,8 @@ try {
   assert.match(labSource, /collision remain separate/);
   assert.match(labSource, /Show animal tail/);
   const packageJson = JSON.parse(packageSource);
-  assert.equal(packageJson.scripts['check:character-lab'], 'node tools/test-character-lab.mjs');
+  assert.match(packageJson.scripts['check:character-lab'], /test-character-lab\.mjs/);
+  assert.match(packageJson.scripts['check:character-lab'], /test-cartoon-glove\.mjs/);
   assert.match(packageJson.scripts.build, /npm run check:character-lab/);
   assert.doesNotMatch(packageJson.scripts.build, /check:character-evaluation/);
 

@@ -78,6 +78,14 @@ import {
   characterProportionSettings,
   type CharacterProportionSettingsValue,
 } from './character/settings';
+import {
+  CARTOON_GLOVE_POSES,
+  blendCartoonGlovePose,
+  createCartoonGlove,
+  setCartoonGlovePose,
+  type CartoonGloveRig,
+  type CartoonGlovePoseName,
+} from './character/cartoonGlove';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -973,6 +981,8 @@ export class Player {
   private elbowL: THREE.Bone | null = null;
   private wristR: THREE.Bone | null = null; // hand bones + grip sockets
   private wristL: THREE.Bone | null = null;
+  private gloveLeft: CartoonGloveRig | null = null;
+  private gloveRight: CartoonGloveRig | null = null;
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
   private headM: THREE.Bone | null = null; // head bone: skull, muzzle, ears, hair, eyes
@@ -1568,6 +1578,35 @@ export class Player {
     return this.characterTailVisibleValue;
   }
 
+  get cartoonGloveDiagnostics(): {
+    readonly ready: boolean;
+    readonly bonesPerHand: number;
+    readonly digitCountPerHand: number;
+    readonly gripSockets: readonly string[];
+  } {
+    const gloves = [this.gloveLeft, this.gloveRight].filter(
+      (glove): glove is CartoonGloveRig => glove !== null,
+    );
+    return {
+      ready: gloves.length === 2,
+      bonesPerHand: gloves[0]?.bones.length ?? 0,
+      digitCountPerHand: gloves[0] ? Object.keys(gloves[0].fingers).length : 0,
+      gripSockets: gloves.map((glove) => glove.gripSocket.name),
+    };
+  }
+
+  setCartoonGlovePreviewPose(name: CartoonGlovePoseName): void {
+    if (!this.playerAnimationBridge.previewActive) {
+      throw new Error('cartoon glove preview poses require an animation preview session');
+    }
+    const pose = CARTOON_GLOVE_POSES[name];
+    if (!pose) throw new Error(`unknown cartoon glove pose: ${String(name)}`);
+    if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, pose);
+    if (this.gloveRight) setCartoonGlovePose(this.gloveRight, pose);
+    this.bodyGroup.updateMatrixWorld(true);
+    this.resetRenderInterpolation();
+  }
+
   get characterProportions(): Readonly<CharacterProportionSettingsValue> {
     return characterProportionSettings.value;
   }
@@ -1673,7 +1712,7 @@ export class Player {
    * THREE.Skeleton lets a later SkinnedMesh bind to this exact live rig.
    */
   private rebuildHumanoidSkeleton(): void {
-    const boneNames = [
+    const boneNames: string[] = [
       'hips',
       'torso-root',
       'spine',
@@ -1696,7 +1735,9 @@ export class Player {
       'knee-right',
       'ankle-right',
       'toe-right',
-    ] as const;
+      ...(this.gloveLeft?.bones.map((bone) => bone.name) ?? []),
+      ...(this.gloveRight?.bones.map((bone) => bone.name) ?? []),
+    ];
     const bones: THREE.Bone[] = [];
     for (const name of boneNames) {
       const node = this.bodyGroup.getObjectByName(name);
@@ -13048,6 +13089,24 @@ export class Player {
       const headYaw = -0.85 * this.stance * this.sidePose + 0.17 * Math.sin(this.runTime * 0.55) * idleW;
       this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
     }
+    // A readable hand pose is part of the procedural motion layer. Authored
+    // finger tracks run afterward and therefore remain the final authority.
+    const gloveOpen = THREE.MathUtils.clamp(Math.max(crawlMove, crouchW * 0.35), 0, 1);
+    const gloveGrip = THREE.MathUtils.clamp(
+      Math.max(this.grabPose, ledgeW, underW, this.grindArmPose),
+      0,
+      1,
+    );
+    const gloveFist = this.spinning ? 1 : 0;
+    let glovePose = blendCartoonGlovePose(
+      CARTOON_GLOVE_POSES.relaxed,
+      CARTOON_GLOVE_POSES.open,
+      gloveOpen,
+    );
+    glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.grab, gloveGrip);
+    glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.fist, gloveFist);
+    if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, glovePose);
+    if (this.gloveRight) setCartoonGlovePose(this.gloveRight, glovePose);
     // Tail + ponytail follow-through is authored before the final appearance
     // pass so keyframed secondary channels can still layer over the simulation.
     if (this.tail) {
@@ -14583,8 +14642,7 @@ export class Player {
     const foreArmGeo = new THREE.CylinderGeometry(0.044, 0.038, 0.17, 8);
     foreArmGeo.translate(0, -0.095, 0);
     const elbowGeo = new THREE.SphereGeometry(0.05, 8, 6);
-    const handGeo = new THREE.SphereGeometry(0.072, 8, 6);
-    const fingerGeo = new THREE.SphereGeometry(0.042, 7, 5);
+    const GLOVE_WHITE = flat(0xeee8dc);
     for (const side of [-1, 1]) {
       // Rider-local forward is +Z, so +X is her anatomical left. The outer
       // Player group turns the finished rig toward world -Z at spawn.
@@ -14617,43 +14675,40 @@ export class Player {
       wrist.userData.anatomicalSide = anatomicalSide;
       wrist.position.y = -0.195;
       elbowJoint.add(wrist);
-      const hand = new THREE.Mesh(handGeo, BLACK); // fingerless glove
-      hand.name = `hand-${anatomicalSide}`;
-      hand.scale.set(1, 0.92, 1.02);
-      hand.position.y = -0.065;
-      wrist.add(hand);
-      const fingers = new THREE.Mesh(fingerGeo, FUR); // bare fingertips poking out
-      fingers.scale.set(1, 0.7, 1);
-      fingers.position.set(0, -0.115, 0.015);
-      wrist.add(fingers);
-      const gripSocket = new THREE.Object3D();
-      gripSocket.name = `socket-grip-${anatomicalSide}`;
-      gripSocket.position.set(0, -0.14, 0.045);
-      gripSocket.userData.gripAxis = [0, 1, 0];
-      gripSocket.userData.palmNormal = [0, 0, 1];
-      wrist.add(gripSocket);
+      const glove = createCartoonGlove(anatomicalSide, {
+        glove: GLOVE_WHITE,
+        stitch: INK,
+      });
+      wrist.add(glove.root);
       if (side === 1) {
-        const band = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.015, 5, 10), BLACK);
-        band.rotation.x = Math.PI / 2;
-        wrist.add(band);
-        for (let s = 0; s < 4; s++) {
-          const a = (s / 4) * Math.PI * 2 + 0.4;
-          const stud = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.014, 0.014), SILVER);
-          stud.position.set(Math.cos(a) * 0.058, 0, Math.sin(a) * 0.058);
-          wrist.add(stud);
-        }
         this.armR = arm;
         this.elbowR = elbowJoint;
         this.wristR = wrist;
+        this.gloveLeft = glove;
       } else {
-        const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.013, 5, 10), PINK);
-        cuff.rotation.x = Math.PI / 2;
-        wrist.add(cuff);
         this.armL = arm;
         this.elbowL = elbowJoint;
         this.wristL = wrist;
+        this.gloveRight = glove;
       }
     }
+    const gloveRigs = [this.gloveLeft, this.gloveRight].filter(
+      (glove): glove is CartoonGloveRig => glove !== null,
+    );
+    if (gloveRigs.length !== 2) throw new Error('procedural character requires two glove rigs');
+    const gloveJointNames = Object.fromEntries(
+      gloveRigs.flatMap((glove) =>
+        Object.entries(glove.joints).map(([id, bone]) => [id, bone.name]),
+      ),
+    ) as Record<string, string>;
+    const gloveSocketNames = Object.fromEntries(
+      gloveRigs.flatMap((glove) => [
+        [`fingerIndexTip${glove.side === 'left' ? 'Left' : 'Right'}`, glove.sockets.indexTip.name],
+        [`fingerMiddleTip${glove.side === 'left' ? 'Left' : 'Right'}`, glove.sockets.middleTip.name],
+        [`fingerOuterTip${glove.side === 'left' ? 'Left' : 'Right'}`, glove.sockets.outerTip.name],
+        [`thumbTip${glove.side === 'left' ? 'Left' : 'Right'}`, glove.sockets.thumbTip.name],
+      ]),
+    ) as Record<string, string>;
     legs.add(upper);
     this.upperG = upper;
     this.spineG = spine;
@@ -14690,6 +14745,7 @@ export class Player {
       ponytailBase: ponyA.name,
       ponytailTip: ponyB.name,
       tail: tail.root.name,
+      ...gloveJointNames,
     } as const;
     const socketNames = {
       look: 'socket-look',
@@ -14705,6 +14761,7 @@ export class Player {
       boardRight: 'socket-board-right',
       boardNose: 'socket-board-nose',
       boardTail: 'socket-board-tail',
+      ...gloveSocketNames,
     } as const;
     const declaredNodeNames = [...Object.values(jointNames), ...Object.values(socketNames)];
     if (new Set(declaredNodeNames).size !== declaredNodeNames.length)
@@ -14785,12 +14842,16 @@ export class Player {
       ponytailTip: 'hairTip',
       tail: 'tailRoot',
     };
+    for (const id of Object.keys(gloveJointNames)) {
+      jointRoles[id] = id;
+    }
     const boneJointIds = new Set([
       'hips', 'torsoRoot', 'spine', 'chest', 'neck', 'head',
       'clavicleLeft', 'shoulderLeft', 'elbowLeft', 'wristLeft',
       'clavicleRight', 'shoulderRight', 'elbowRight', 'wristRight',
       'hipLeft', 'kneeLeft', 'ankleLeft', 'toeLeft',
       'hipRight', 'kneeRight', 'ankleRight', 'toeRight',
+      ...Object.keys(gloveJointNames),
     ]);
     const jointTypes: Record<string, string> = Object.fromEntries(
       Object.keys(jointNames).map((id) => [
@@ -14823,6 +14884,9 @@ export class Player {
       ankleRight: ['footRight', 'rightFoot', 'RightFoot', 'mixamorigRightFoot'],
       toeRight: ['toesRight', 'rightToes', 'RightToeBase', 'mixamorigRightToeBase'],
     };
+    for (const id of Object.keys(gloveJointNames)) {
+      jointAliases[id] = [gloveJointNames[id]];
+    }
     const humanoidMap: Record<string, string> = {
       root: 'root',
       hips: 'hips',
@@ -14899,7 +14963,28 @@ export class Player {
         ['ankleLeft', 'ankleRight'],
         ['toeLeft', 'toeRight'],
         ['earLeft', 'earRight'],
+        ['fingerIndexProximalLeft', 'fingerIndexProximalRight'],
+        ['fingerIndexMiddleLeft', 'fingerIndexMiddleRight'],
+        ['fingerIndexDistalLeft', 'fingerIndexDistalRight'],
+        ['fingerMiddleProximalLeft', 'fingerMiddleProximalRight'],
+        ['fingerMiddleMiddleLeft', 'fingerMiddleMiddleRight'],
+        ['fingerMiddleDistalLeft', 'fingerMiddleDistalRight'],
+        ['fingerOuterProximalLeft', 'fingerOuterProximalRight'],
+        ['fingerOuterMiddleLeft', 'fingerOuterMiddleRight'],
+        ['fingerOuterDistalLeft', 'fingerOuterDistalRight'],
+        ['thumbMetacarpalLeft', 'thumbMetacarpalRight'],
+        ['thumbProximalLeft', 'thumbProximalRight'],
+        ['thumbDistalLeft', 'thumbDistalRight'],
       ],
+      handRig: {
+        kind: 'rigid-overlap-cartoon-glove',
+        spec: 'docs/CARTOON_GLOVE_SCULPT_SPEC.json',
+        nonThumbFingerCount: 3,
+        boneCountPerHand: 12,
+        poses: Object.keys(CARTOON_GLOVE_POSES),
+        jointIds: Object.keys(gloveJointNames),
+        socketIds: Object.keys(gloveSocketNames),
+      },
       controls: {
         'deform.torso.length': {
           name: 'Torso Length', defaultValue: 1, min: 0.55, max: 1.5,

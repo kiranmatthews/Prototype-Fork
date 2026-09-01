@@ -6,6 +6,7 @@ dist
 public/_anim/
 
 # Local img2threejs / Tripo character pipeline outputs and credentials.
+.img2threejs/
 tools/tripo-character/node_modules/
 tools/tripo-character/tripo-out/
 tools/tripo-character/work/

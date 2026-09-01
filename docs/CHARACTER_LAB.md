@@ -41,6 +41,11 @@ limb thickness, hand/foot size, ear/eye/ponytail size and animal-tail
 visibility. Left/right anatomy remains linked and mirrored in version 1 so a
 single slider cannot silently create a broken asymmetric rig.
 
+The Hand Rig Preview section provides open, relaxed, curl, fist, pinch and grab
+poses plus a close-up camera. These are inspection presets over the same 24
+digit bones that Animation Studio exposes for keyframing; they are not baked
+animation clips.
+
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current
 versioned settings for source review.

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RigBinding } from './animation';
 import type { Player } from './player';
+import type { CartoonGlovePoseName } from './character/cartoonGlove';
 import {
   CHARACTER_PROPORTION_CONTROLS,
   DEFAULT_CHARACTER_PROPORTIONS,
@@ -176,6 +177,7 @@ class CharacterLab implements CharacterLabHandle {
     }
     ctx.player.tailRef?.reset();
     ctx.player.syncCharacterAppearance();
+    ctx.player.setCartoonGlovePreviewPose('relaxed');
 
     this.grid.material.opacity = 0.28;
     this.grid.material.transparent = true;
@@ -263,6 +265,7 @@ class CharacterLab implements CharacterLabHandle {
       ['3/4', 'three-quarter'],
       ['Side', 'side'],
       ['Rear', 'rear'],
+      ['Hands', 'hands'],
     ] as const) {
       const button = element('button', 'clab-button', label);
       button.type = 'button';
@@ -277,6 +280,7 @@ class CharacterLab implements CharacterLabHandle {
     reset.onclick = () => {
       characterProportionSettings.reset();
       this.ctx.player.setCharacterTailVisible(true);
+      this.ctx.player.setCartoonGlovePreviewPose('relaxed');
       this.tailInput.checked = true;
       this.steered = false;
       this.frameCamera('three-quarter');
@@ -294,6 +298,42 @@ class CharacterLab implements CharacterLabHandle {
     };
     actions.append(reset, copy);
     this.panel.appendChild(actions);
+
+    this.panel.appendChild(element('div', 'clab-section', 'Hand rig preview'));
+    const handViews = element('div', 'clab-actions');
+    for (const [label, view] of [
+      ['Hand front', 'hands-front'],
+      ['Hand 3/4', 'hands'],
+      ['Hand side', 'hands-side'],
+      ['Hand rear', 'hands-rear'],
+    ] as const) {
+      const button = element('button', 'clab-button', label);
+      button.type = 'button';
+      button.onclick = () => {
+        this.steered = true;
+        this.frameCamera(view);
+      };
+      handViews.appendChild(button);
+    }
+    this.panel.appendChild(handViews);
+    const handPoses = element('div', 'clab-actions');
+    const glovePoseNames: readonly CartoonGlovePoseName[] =
+      ['open', 'relaxed', 'curl', 'fist', 'pinch', 'grab'];
+    for (const poseName of glovePoseNames) {
+      const button = element('button', 'clab-button', poseName[0].toUpperCase() + poseName.slice(1));
+      button.type = 'button';
+      button.dataset.handPose = poseName;
+      button.dataset.active = String(poseName === 'relaxed');
+      button.onclick = () => {
+        this.ctx.player.setCartoonGlovePreviewPose(poseName);
+        for (const candidate of handPoses.querySelectorAll<HTMLButtonElement>('[data-hand-pose]')) {
+          candidate.dataset.active = String(candidate.dataset.handPose === poseName);
+        }
+        this.showToast(`${button.textContent} hand pose`);
+      };
+      handPoses.appendChild(button);
+    }
+    this.panel.appendChild(handPoses);
 
     let section = '';
     for (const control of CHARACTER_PROPORTION_CONTROLS) {
@@ -369,6 +409,15 @@ class CharacterLab implements CharacterLabHandle {
     return bounds;
   }
 
+  private handBounds(): THREE.Box3 {
+    const bounds = new THREE.Box3().makeEmpty();
+    for (const name of ['cartoon-glove-left', 'cartoon-glove-right']) {
+      const hand = this.ctx.rigRoot.getObjectByName(name);
+      if (hand) bounds.expandByObject(hand);
+    }
+    return bounds.isEmpty() ? this.characterBounds() : bounds;
+  }
+
   private updateFloorAndStatus(): void {
     const bounds = this.characterBounds();
     const size = bounds.getSize(new THREE.Vector3());
@@ -380,8 +429,11 @@ class CharacterLab implements CharacterLabHandle {
       `${diagnostics.appliedObjectCount} proportion targets · collision unchanged`;
   }
 
-  private frameCamera(view: 'front' | 'three-quarter' | 'side' | 'rear'): void {
-    const bounds = this.characterBounds();
+  private frameCamera(
+    view: 'front' | 'three-quarter' | 'side' | 'rear' |
+      'hands' | 'hands-front' | 'hands-side' | 'hands-rear',
+  ): void {
+    const bounds = view.startsWith('hands') ? this.handBounds() : this.characterBounds();
     const center = bounds.getCenter(new THREE.Vector3());
     const size = Math.max(0.5, bounds.getSize(new THREE.Vector3()).length());
     const distance = size / (2 * Math.tan(THREE.MathUtils.degToRad(this.ctx.camera.fov) / 2)) * 1.22;
@@ -390,6 +442,10 @@ class CharacterLab implements CharacterLabHandle {
       'three-quarter': new THREE.Vector3(0.7, 0.16, -1),
       side: new THREE.Vector3(1, 0.12, 0),
       rear: new THREE.Vector3(0, 0.12, 1),
+      hands: new THREE.Vector3(0.72, 0.12, -1),
+      'hands-front': new THREE.Vector3(0, 0.06, -1),
+      'hands-side': new THREE.Vector3(1, 0.06, 0),
+      'hands-rear': new THREE.Vector3(0, 0.06, 1),
     } as const;
     this.controls.target.copy(center);
     this.ctx.camera.position.copy(center).add(directions[view].clone().normalize().multiplyScalar(distance));
