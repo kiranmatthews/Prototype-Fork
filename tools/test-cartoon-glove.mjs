@@ -286,6 +286,15 @@ try {
     digitCountPerHand: 3,
     gripSockets: ['socket-grip-left', 'socket-grip-right'],
   });
+  assert.equal(player.stretchableBoneDiagnostics.ready, true);
+  assert.equal(player.stretchableBoneDiagnostics.componentCount, 8);
+  assert.equal(player.stretchableBoneDiagnostics.triangles, 35072);
+  near(player.stretchableBoneDiagnostics.minScale, 0.319);
+  near(player.stretchableBoneDiagnostics.maxScale, 2.765);
+  assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
+    'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
+    'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',
+  ]));
   assert.equal(player.humanoidSkeletonRef.bones.length, 46,
     '22 conventional body bones + 24 semantic digit bones');
   const binding = RigBinding.fromSculptRuntime(player.animationRig.root);

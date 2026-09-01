@@ -302,6 +302,7 @@ try {
   const packageJson = JSON.parse(packageSource);
   assert.match(packageJson.scripts['check:character-lab'], /test-character-lab\.mjs/);
   assert.match(packageJson.scripts['check:character-lab'], /test-cartoon-glove\.mjs/);
+  assert.match(packageJson.scripts['check:character-lab'], /test-stretchable-bone\.mjs/);
   assert.match(packageJson.scripts.build, /npm run check:character-lab/);
   assert.doesNotMatch(packageJson.scripts.build, /check:character-evaluation/);
 

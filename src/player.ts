@@ -86,6 +86,11 @@ import {
   type CartoonGloveRig,
   type CartoonGlovePoseName,
 } from './character/cartoonGlove';
+import {
+  createStretchableBone,
+  stretchableBoneTriangleCount,
+  type StretchableBoneComponent,
+} from './character/stretchableBone';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -983,6 +988,7 @@ export class Player {
   private wristL: THREE.Bone | null = null;
   private gloveLeft: CartoonGloveRig | null = null;
   private gloveRight: CartoonGloveRig | null = null;
+  private readonly stretchableBones: StretchableBoneComponent[] = [];
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
   private headM: THREE.Bone | null = null; // head bone: skull, muzzle, ears, hair, eyes
@@ -1592,6 +1598,27 @@ export class Player {
       bonesPerHand: gloves[0]?.bones.length ?? 0,
       digitCountPerHand: gloves[0] ? Object.keys(gloves[0].fingers).length : 0,
       gripSockets: gloves.map((glove) => glove.gripSocket.name),
+    };
+  }
+
+  get stretchableBoneDiagnostics(): {
+    readonly ready: boolean;
+    readonly componentCount: number;
+    readonly ids: readonly string[];
+    readonly triangles: number;
+    readonly minScale: number;
+    readonly maxScale: number;
+  } {
+    return {
+      ready: this.stretchableBones.length === 8,
+      componentCount: this.stretchableBones.length,
+      ids: this.stretchableBones.map((component) => component.id),
+      triangles: this.stretchableBones.reduce(
+        (sum, component) => sum + stretchableBoneTriangleCount(component),
+        0,
+      ),
+      minScale: Math.min(...this.stretchableBones.map((component) => component.minScale), 1),
+      maxScale: Math.max(...this.stretchableBones.map((component) => component.maxScale), 1),
     };
   }
 
@@ -14221,6 +14248,15 @@ export class Player {
     const EYE_WHITE = new THREE.MeshLambertMaterial({ color: 0xfbfbf6 });
     const EYE_GREEN = new THREE.MeshLambertMaterial({ color: 0x53b04b });
     const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // nose, pupils, lashes, smile
+    const BONE_CLAY = new THREE.MeshPhysicalMaterial({
+      name: 'character-bone-clay',
+      color: 0xe8dcc7,
+      roughness: 0.7,
+      metalness: 0,
+      clearcoat: 0.2,
+      clearcoatRoughness: 0.75,
+      flatShading: false,
+    });
 
     // Legs: hip, knee, and ankle pivots. The foot is a rigid child of the
     // ankle, so future clips can plant and roll it without breaking the shin.
@@ -14264,11 +14300,6 @@ export class Player {
     thighGeo.translate(0, -0.125, 0); // tapered hip → knee cargo leg
     const pocketGeo = new THREE.BoxGeometry(0.035, 0.095, 0.075);
     const flapGeo = new THREE.BoxGeometry(0.037, 0.014, 0.077);
-    const cuffGeo = new THREE.CylinderGeometry(0.075, 0.078, 0.055, 10);
-    const cuffTrimGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.012, 10);
-    const kneePadGeo = new THREE.SphereGeometry(0.064, 10, 7);
-    const shinGeo = new THREE.CylinderGeometry(0.052, 0.038, 0.15, 10);
-    shinGeo.translate(0, -0.12, 0); // tapered calf between knee and sock
     const sockGeo = new THREE.CylinderGeometry(0.04, 0.046, 0.075, 10);
     const sockStripeGeo = new THREE.CylinderGeometry(0.048, 0.048, 0.012, 10);
     const shoeGeo = new THREE.SphereGeometry(0.085, 10, 7);
@@ -14287,6 +14318,17 @@ export class Player {
       leg.position.x = side * 0.115;
       legs.add(leg);
       leg.add(new THREE.Mesh(thighGeo, BLACK));
+      const upperLegBone = createStretchableBone({
+        id: `upper-leg-${anatomicalSide}`,
+        length: PROCEDURAL_THIGH_LENGTH,
+        shaftRadius: 0.048,
+        knobRadius: 0.057,
+        knobDepthScale: 0.92,
+        knobTwist: side * 0.06,
+        material: BONE_CLAY,
+      });
+      leg.add(upperLegBone.root);
+      this.stretchableBones.push(upperLegBone);
       const pocket = new THREE.Mesh(pocketGeo, BLACK); // cargo pocket on the outseam
       pocket.position.set(side * 0.082, -0.14, 0.01);
       leg.add(pocket);
@@ -14300,21 +14342,18 @@ export class Player {
       knee.userData.anatomicalSide = anatomicalSide;
       knee.position.y = -PROCEDURAL_THIGH_LENGTH;
       leg.add(knee);
-      const cuff = new THREE.Mesh(cuffGeo, BLACK); // capri cuff just past the knee
-      cuff.position.y = -0.012;
-      knee.add(cuff);
-      const cuffTrim = new THREE.Mesh(cuffTrimGeo, PINK);
-      cuffTrim.position.y = -0.045;
-      knee.add(cuffTrim);
-      const pad = new THREE.Mesh(kneePadGeo, PAD); // strapped knee pad dome
-      pad.scale.set(1, 0.8, 0.65);
-      pad.position.set(0, -0.003, 0.065);
-      knee.add(pad);
-      const padTrim = new THREE.Mesh(new THREE.TorusGeometry(0.046, 0.008, 5, 10), PINK);
-      padTrim.position.set(0, -0.003, 0.079);
-      padTrim.scale.set(1, 0.85, 1);
-      knee.add(padTrim);
-      knee.add(new THREE.Mesh(shinGeo, FUR));
+      const lowerLegBone = createStretchableBone({
+        id: `lower-leg-${anatomicalSide}`,
+        length: PROCEDURAL_SHIN_LENGTH,
+        shaftRadius: 0.04,
+        knobRadius: 0.052,
+        knobDepthScale: 0.92,
+        knobTwist: -side * 0.04,
+        material: BONE_CLAY,
+        showProximalKnob: false,
+      });
+      knee.add(lowerLegBone.root);
+      this.stretchableBones.push(lowerLegBone);
       const sock = new THREE.Mesh(sockGeo, WHITE);
       sock.position.y = -0.205;
       knee.add(sock);
@@ -14622,26 +14661,6 @@ export class Player {
     // Arms: clavicle → upper arm → lower arm → hand, with a named grip socket
     // below each hand. The arm geometry still hangs down in the bind pose; a
     // separate canonical T-pose is published below for retargeting.
-    const netM = lam(this.paintTex(64, (ctx) => {
-      ctx.fillStyle = '#f08a2a'; // fur shows through the net
-      ctx.fillRect(0, 0, 64, 64);
-      ctx.strokeStyle = 'rgba(24,24,30,0.9)';
-      ctx.lineWidth = 1.6;
-      for (let i = -64; i < 128; i += 8) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i + 64, 64);
-        ctx.moveTo(i + 64, 0);
-        ctx.lineTo(i, 64);
-        ctx.stroke();
-      }
-    }));
-    const shoulderGeo = new THREE.SphereGeometry(0.062, 8, 6);
-    const upperArmGeo = new THREE.CapsuleGeometry(0.047, 0.13, 3, 8);
-    upperArmGeo.translate(0, -0.105, 0);
-    const foreArmGeo = new THREE.CylinderGeometry(0.044, 0.038, 0.17, 8);
-    foreArmGeo.translate(0, -0.095, 0);
-    const elbowGeo = new THREE.SphereGeometry(0.05, 8, 6);
     const GLOVE_WHITE = flat(0xeee8dc);
     for (const side of [-1, 1]) {
       // Rider-local forward is +Z, so +X is her anatomical left. The outer
@@ -14657,24 +14676,42 @@ export class Player {
       arm.userData.anatomicalSide = anatomicalSide;
       arm.position.set(side * 0.2, 0, 0); // world rest remains (±0.3, 1.22, 0)
       clavicle.add(arm);
-      const shoulder = new THREE.Mesh(shoulderGeo, FUR);
-      shoulder.position.set(-side * 0.015, -0.005, 0);
-      arm.add(shoulder);
-      arm.add(new THREE.Mesh(upperArmGeo, FUR));
       const elbowJoint = new THREE.Bone();
       elbowJoint.name = `elbow-${anatomicalSide}`;
       elbowJoint.userData.anatomicalSide = anatomicalSide;
       elbowJoint.position.y = -0.22;
       arm.add(elbowJoint);
-      const elbowPad = new THREE.Mesh(elbowGeo, PAD); // little elbow pad
-      elbowPad.scale.set(0.85, 1, 0.85);
-      elbowJoint.add(elbowPad);
-      elbowJoint.add(new THREE.Mesh(foreArmGeo, netM)); // fishnet sleeve
+      const upperArmBone = createStretchableBone({
+        id: `upper-arm-${anatomicalSide}`,
+        length: 0.22,
+        shaftRadius: 0.036,
+        knobRadius: 0.043,
+        knobDepthScale: 0.93,
+        knobTwist: side * 0.08,
+        material: BONE_CLAY,
+      });
+      // The conventional shoulder pivot stays where animation expects it;
+      // only the visual lobe reaches inward to overlap the torso silhouette.
+      if (upperArmBone.proximalKnob) upperArmBone.proximalKnob.position.x = -side * 0.035;
+      arm.add(upperArmBone.root);
+      this.stretchableBones.push(upperArmBone);
       const wrist = new THREE.Bone();
       wrist.name = `wrist-${anatomicalSide}`;
       wrist.userData.anatomicalSide = anatomicalSide;
       wrist.position.y = -0.195;
       elbowJoint.add(wrist);
+      const lowerArmBone = createStretchableBone({
+        id: `lower-arm-${anatomicalSide}`,
+        length: 0.195,
+        shaftRadius: 0.033,
+        knobRadius: 0.039,
+        knobDepthScale: 0.93,
+        knobTwist: -side * 0.06,
+        material: BONE_CLAY,
+        showProximalKnob: false,
+      });
+      elbowJoint.add(lowerArmBone.root);
+      this.stretchableBones.push(lowerArmBone);
       const glove = createCartoonGlove(anatomicalSide, {
         glove: GLOVE_WHITE,
         stitch: INK,
@@ -14709,6 +14746,10 @@ export class Player {
         [`thumbTip${glove.side === 'left' ? 'Left' : 'Right'}`, glove.sockets.thumbTip.name],
       ]),
     ) as Record<string, string>;
+    if (this.stretchableBones.length !== 8) {
+      throw new Error(`procedural character requires 8 stretchable limb segments; resolved ${this.stretchableBones.length}`);
+    }
+    const stretchBoneIds = this.stretchableBones.map((component) => component.id);
     legs.add(upper);
     this.upperG = upper;
     this.spineG = spine;
@@ -14984,6 +15025,25 @@ export class Player {
         poses: Object.keys(CARTOON_GLOVE_POSES),
         jointIds: Object.keys(gloveJointNames),
         socketIds: Object.keys(gloveSocketNames),
+      },
+      limbBoneRig: {
+        kind: 'stretchable-cartoon-limb-bone',
+        schemaVersion: 1,
+        spec: 'docs/STRETCH_BONE_SCULPT_SPEC.json',
+        componentCount: this.stretchableBones.length,
+        componentIds: stretchBoneIds,
+        axis: [0, -1, 0],
+        fixedParts: ['proximal-knob', 'distal-knob'],
+        lengthControls: [
+          'deform.arm.upper.left.length',
+          'deform.arm.lower.left.length',
+          'deform.arm.upper.right.length',
+          'deform.arm.lower.right.length',
+          'deform.leg.upper.left.length',
+          'deform.leg.lower.left.length',
+          'deform.leg.upper.right.length',
+          'deform.leg.lower.right.length',
+        ],
       },
       controls: {
         'deform.torso.length': {

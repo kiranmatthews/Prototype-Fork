@@ -39,6 +39,15 @@ optional digit bones per side extend below it without expanding the required
 humanoid role set. Existing clips therefore remain playable while Animation
 Studio can key, mirror and onion-skin every finger independently.
 
+Arm and leg joint chains now carry reusable `stretchable-cartoon-limb-bone`
+visual components. These add no skeleton joints: each component hangs from an
+existing proximal joint and follows its existing child joint. Its high-density
+shaft owns longitudinal squash/stretch, while joint knobbles retain their local
+scale and shape. Upper segments render both ends; each lower segment reuses the
+preceding joint's distal knobble and adds only its own distal end, avoiding
+overlap at elbows and knees. All eight segment visuals share one shaft geometry,
+one knobble geometry and one smooth clay material.
+
 ## Stable animation identity
 
 Animation tracks address semantic IDs, not Three.js UUIDs or display labels.

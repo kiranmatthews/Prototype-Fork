@@ -46,6 +46,12 @@ poses plus a close-up camera. These are inspection presets over the same 24
 digit bones that Animation Studio exposes for keyframing; they are not baked
 animation clips.
 
+The Limb Bone Preview frames all bones, arms, or legs. The existing upper-arm,
+forearm, thigh and shin length sliders exercise the production deformation
+path: smooth shafts change length while both double-lobed end masses remain
+locally rigid. Thickness changes resize a knobble uniformly so it never turns
+into a stretched ellipsoid.
+
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current
 versioned settings for source review.

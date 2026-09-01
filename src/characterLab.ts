@@ -266,6 +266,7 @@ class CharacterLab implements CharacterLabHandle {
       ['Side', 'side'],
       ['Rear', 'rear'],
       ['Hands', 'hands'],
+      ['Bones', 'bones'],
     ] as const) {
       const button = element('button', 'clab-button', label);
       button.type = 'button';
@@ -334,6 +335,28 @@ class CharacterLab implements CharacterLabHandle {
       handPoses.appendChild(button);
     }
     this.panel.appendChild(handPoses);
+
+    this.panel.appendChild(element('div', 'clab-section', 'Limb bone preview'));
+    this.panel.appendChild(element(
+      'div',
+      'clab-note',
+      'Use the limb-length sliders below: only each smooth shaft stretches; the paired end knobbles keep their local shape.',
+    ));
+    const boneViews = element('div', 'clab-actions');
+    for (const [label, view] of [
+      ['All bones', 'bones'],
+      ['Arms', 'bones-arms'],
+      ['Legs', 'bones-legs'],
+    ] as const) {
+      const button = element('button', 'clab-button', label);
+      button.type = 'button';
+      button.onclick = () => {
+        this.steered = true;
+        this.frameCamera(view);
+      };
+      boneViews.appendChild(button);
+    }
+    this.panel.appendChild(boneViews);
 
     let section = '';
     for (const control of CHARACTER_PROPORTION_CONTROLS) {
@@ -418,6 +441,18 @@ class CharacterLab implements CharacterLabHandle {
     return bounds.isEmpty() ? this.characterBounds() : bounds;
   }
 
+  private stretchBoneBounds(scope: 'all' | 'arms' | 'legs'): THREE.Box3 {
+    const bounds = new THREE.Box3().makeEmpty();
+    this.ctx.rigRoot.traverse((object) => {
+      if (!object.name.startsWith('stretch-bone-')) return;
+      if (object.parent?.name.startsWith('stretch-bone-')) return;
+      if (scope === 'arms' && !object.name.includes('-arm-')) return;
+      if (scope === 'legs' && !object.name.includes('-leg-')) return;
+      bounds.expandByObject(object);
+    });
+    return bounds.isEmpty() ? this.characterBounds() : bounds;
+  }
+
   private updateFloorAndStatus(): void {
     const bounds = this.characterBounds();
     const size = bounds.getSize(new THREE.Vector3());
@@ -431,9 +466,14 @@ class CharacterLab implements CharacterLabHandle {
 
   private frameCamera(
     view: 'front' | 'three-quarter' | 'side' | 'rear' |
-      'hands' | 'hands-front' | 'hands-side' | 'hands-rear',
+      'hands' | 'hands-front' | 'hands-side' | 'hands-rear' |
+      'bones' | 'bones-arms' | 'bones-legs',
   ): void {
-    const bounds = view.startsWith('hands') ? this.handBounds() : this.characterBounds();
+    const bounds = view.startsWith('hands')
+      ? this.handBounds()
+      : view.startsWith('bones')
+        ? this.stretchBoneBounds(view === 'bones-arms' ? 'arms' : view === 'bones-legs' ? 'legs' : 'all')
+        : this.characterBounds();
     const center = bounds.getCenter(new THREE.Vector3());
     const size = Math.max(0.5, bounds.getSize(new THREE.Vector3()).length());
     const distance = size / (2 * Math.tan(THREE.MathUtils.degToRad(this.ctx.camera.fov) / 2)) * 1.22;
@@ -446,6 +486,9 @@ class CharacterLab implements CharacterLabHandle {
       'hands-front': new THREE.Vector3(0, 0.06, -1),
       'hands-side': new THREE.Vector3(1, 0.06, 0),
       'hands-rear': new THREE.Vector3(0, 0.06, 1),
+      bones: new THREE.Vector3(0.72, 0.12, -1),
+      'bones-arms': new THREE.Vector3(0.45, 0.06, -1),
+      'bones-legs': new THREE.Vector3(0.5, 0.06, -1),
     } as const;
     this.controls.target.copy(center);
     this.ctx.camera.position.copy(center).add(directions[view].clone().normalize().multiplyScalar(distance));

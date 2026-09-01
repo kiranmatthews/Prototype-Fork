@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { directStretchableBones } from '../character/stretchableBone';
 
 export type RigVector3 = readonly [number, number, number];
 export type RigQuaternion = readonly [number, number, number, number];
@@ -397,6 +398,26 @@ export class PlayerAnimationBridge {
     const endpointStates = new Map<THREE.Object3D, AppliedDeformationState>();
     const axis = new THREE.Vector3();
     const offset = new THREE.Vector3();
+    const stateFor = (
+      map: Map<THREE.Object3D, AppliedDeformationState>,
+      object: THREE.Object3D,
+      movesScale: boolean,
+    ): AppliedDeformationState => {
+      let state = map.get(object);
+      if (!state) {
+        state = {
+          object,
+          basePosition: object.position.clone(),
+          baseScale: object.scale.clone(),
+          deformedPosition: object.position.clone(),
+          deformedScale: object.scale.clone(),
+          movesPosition: true,
+          movesScale,
+        };
+        map.set(object, state);
+      }
+      return state;
+    };
 
     for (const policy of rig.deformations) {
       const raw = values[policy.controlId] ?? 1;
@@ -414,20 +435,43 @@ export class PlayerAnimationBridge {
       const anchor = rig.jointsById.get(policy.jointId)?.node;
       if (!anchor) continue;
 
-      for (const visual of renderableDirectChildren(anchor)) {
-        let state = visualStates.get(visual);
-        if (!state) {
-          state = {
-            object: visual,
-            basePosition: visual.position.clone(),
-            baseScale: visual.scale.clone(),
-            deformedPosition: visual.position.clone(),
-            deformedScale: visual.scale.clone(),
-            movesPosition: true,
-            movesScale: true,
-          };
-          visualStates.set(visual, state);
+      // A stretchable cartoon bone is one semantic visual component nested
+      // below the existing rig joint. Only its shaft scales. The distal
+      // knobble/socket translate to the new endpoint while both knobbles keep
+      // their local scale and shape exactly unchanged.
+      for (const component of directStretchableBones(anchor)) {
+        const shaft = stateFor(visualStates, component.shaft, true);
+        offset.copy(shaft.basePosition);
+        const projection = offset.dot(axis);
+        component.shaft.position.copy(shaft.basePosition).addScaledVector(
+          axis,
+          projection * (lengthScale - 1),
+        );
+        component.shaft.scale.copy(shaft.baseScale);
+        component.shaft.scale.x *=
+          Math.abs(axis.x) * lengthScale + (1 - Math.abs(axis.x)) * transverse;
+        component.shaft.scale.y *=
+          Math.abs(axis.y) * lengthScale + (1 - Math.abs(axis.y)) * transverse;
+        component.shaft.scale.z *=
+          Math.abs(axis.z) * lengthScale + (1 - Math.abs(axis.z)) * transverse;
+        shaft.deformedPosition.copy(component.shaft.position);
+        shaft.deformedScale.copy(component.shaft.scale);
+
+        for (const follower of [component.distalKnob, component.distalSocket]) {
+          if (!follower) continue;
+          const state = stateFor(visualStates, follower, false);
+          offset.copy(state.basePosition);
+          const followerProjection = offset.dot(axis);
+          follower.position.copy(state.basePosition).addScaledVector(
+            axis,
+            followerProjection * (lengthScale - 1),
+          );
+          state.deformedPosition.copy(follower.position);
         }
+      }
+
+      for (const visual of renderableDirectChildren(anchor)) {
+        const state = stateFor(visualStates, visual, true);
         offset.copy(state.basePosition);
         const projection = offset.dot(axis);
         visual.position.copy(state.basePosition).addScaledVector(
@@ -445,19 +489,7 @@ export class PlayerAnimationBridge {
       for (const endpointId of policy.downstreamJointIds) {
         const endpoint = rig.jointsById.get(endpointId)?.node;
         if (!endpoint || endpoint.parent !== anchor) continue;
-        let state = endpointStates.get(endpoint);
-        if (!state) {
-          state = {
-            object: endpoint,
-            basePosition: endpoint.position.clone(),
-            baseScale: endpoint.scale.clone(),
-            deformedPosition: endpoint.position.clone(),
-            deformedScale: endpoint.scale.clone(),
-            movesPosition: true,
-            movesScale: false,
-          };
-          endpointStates.set(endpoint, state);
-        }
+        const state = stateFor(endpointStates, endpoint, false);
         offset.copy(state.basePosition);
         const projection = offset.dot(axis);
         endpoint.position.copy(state.basePosition).addScaledVector(

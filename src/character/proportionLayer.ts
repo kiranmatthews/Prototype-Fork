@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { PROCEDURAL_SHIN_LENGTH, PROCEDURAL_THIGH_LENGTH } from '../legRig';
+import { directStretchableBones } from './stretchableBone';
 import type { CharacterProportionSettingsValue } from './settings';
 
 interface TransformState {
@@ -112,6 +113,7 @@ export class CharacterProportionLayer {
       const anchor = jointName ? this.root.getObjectByName(jointName) : null;
       if (!factorKey || !axis || !anchor) continue;
       const factor = value[factorKey];
+      this.scaleStretchableBonesAlong(anchor, axis, factor);
       this.scaleRenderableChildrenAlong(anchor, axis, factor);
       const endpointIds = Array.isArray(policy.downstreamJointIds)
         ? policy.downstreamJointIds.filter((id): id is string => typeof id === 'string')
@@ -270,11 +272,46 @@ export class CharacterProportionLayer {
     }
   }
 
+  private scaleStretchableBonesAlong(
+    anchor: THREE.Object3D,
+    axis: THREE.Vector3,
+    factor: number,
+  ): void {
+    for (const component of directStretchableBones(anchor)) {
+      const shaft = component.shaft;
+      const shaftState = this.stateFor(shaft);
+      shaftState.movesPosition = true;
+      shaftState.movesScale = true;
+      const shaftProjection = shaft.position.dot(axis);
+      shaft.position.addScaledVector(axis, shaftProjection * (factor - 1));
+      shaft.scale.x *= Math.abs(axis.x) * factor + (1 - Math.abs(axis.x));
+      shaft.scale.y *= Math.abs(axis.y) * factor + (1 - Math.abs(axis.y));
+      shaft.scale.z *= Math.abs(axis.z) * factor + (1 - Math.abs(axis.z));
+
+      for (const follower of [component.distalKnob, component.distalSocket]) {
+        if (!follower) continue;
+        const followerState = this.stateFor(follower);
+        followerState.movesPosition = true;
+        const projection = follower.position.dot(axis);
+        follower.position.addScaledVector(axis, projection * (factor - 1));
+      }
+    }
+  }
+
   private scaleRenderableChildrenTransverse(
     anchor: THREE.Object3D | null | undefined,
     factor: number,
   ): void {
     if (!anchor) return;
+    for (const component of directStretchableBones(anchor)) {
+      this.multiplyScale(component.shaft, factor, 1, factor);
+      for (const knob of [component.proximalKnob, component.distalKnob]) {
+        // Design-time thickness changes may resize a knobble, but only
+        // uniformly: its double-lobe shape never squashes into an ellipsoid.
+        this.multiplyPosition(knob, factor, 1, factor);
+        this.multiplyScale(knob, factor, factor, factor);
+      }
+    }
     for (const visual of anchor.children.filter(isRenderable)) {
       this.multiplyPosition(visual, factor, 1, factor);
       this.multiplyScale(visual, factor, 1, factor);

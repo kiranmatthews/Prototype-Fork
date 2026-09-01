@@ -3497,6 +3497,7 @@ requestAnimationFrame(frame);
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
   getCharacterProportionDiagnostics: () => player.characterProportionDiagnostics,
   getCartoonGloveDiagnostics: () => player.cartoonGloveDiagnostics,
+  getStretchableBoneDiagnostics: () => player.stretchableBoneDiagnostics,
   getCharacterProportions: () => player.characterProportions,
   setCharacterProportions: (patch: Parameters<typeof player.setCharacterProportions>[0]) =>
     player.setCharacterProportions(patch),
