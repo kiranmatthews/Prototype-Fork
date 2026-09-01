@@ -62,7 +62,11 @@ try {
   assert.equal(allIds.length, 19);
   assert.equal(new Set(allIds).size, 19);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
-  assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, ['player.slam']);
+  assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
+    'player.jump', 'player.double-jump', 'player.fall', 'player.slam',
+  ]);
+
+  const actionProgressTimelineIds = new Set(ACTION_PROGRESS_TIMELINE_CLIP_IDS);
 
   const positionTrack = (clipId, x) => ({
     id: `${clipId}:hips`,
@@ -89,6 +93,9 @@ try {
     markers: [],
     contacts: [],
     events: [],
+    metadata: actionProgressTimelineIds.has(id)
+      ? { progressSource: 'gameplay-actionProgress' }
+      : undefined,
   });
   const clips = allIds.map((id, index) => makeClip(id, index));
   const runClip = clips.find((clip) => clip.id === 'player.run');
@@ -191,23 +198,29 @@ try {
       near(hips.position.x, 99, 1e-8);
     } else {
       assert.equal(runtime.activeClipId, id);
-      if (id === 'player.slam')
+      if (actionProgressTimelineIds.has(id))
         near(runtime.diagnostics.timelineTime, actionProgress);
     }
   }
 
-  // The second pop owns a distinct clip edge and restarts at its split pose;
-  // it never continues partway through the first jump timeline.
+  // Airborne state clips are phase-locked to gameplay actionProgress instead
+  // of drifting with frame time. The second pop owns a fresh progress phase.
   hint = 'player.jump';
   grounded = false;
+  actionProgress = 0.24;
   runtime.restart();
   tick(0.001);
+  near(runtime.diagnostics.timelineTime, 0.24);
   tick(0.24);
-  assert.ok(runtime.diagnostics.timelineTime > 0.2);
+  near(runtime.diagnostics.timelineTime, 0.24);
   hint = 'player.double-jump';
+  actionProgress = 0;
   tick(0.016);
   assert.equal(runtime.activeClipId, 'player.double-jump');
   near(runtime.diagnostics.timelineTime, 0);
+  actionProgress = 0.5;
+  tick(0.016);
+  near(runtime.diagnostics.timelineTime, 0.5);
 
   // Studio/manual preview remains ordinary speed-controlled clip playback.
   hint = 'player.slam';
@@ -220,6 +233,28 @@ try {
   tick(0.2);
   near(runtime.diagnostics.timelineTime, 0.2);
   runtime.setManualClipOverride(null);
+
+  // Membership in the known route list is not sufficient: an edited legacy
+  // clip remains ordinary time-based playback unless its own metadata opts in.
+  const timeBasedLegacyJump = {
+    ...clips.find((clip) => clip.id === 'player.jump'),
+    metadata: { progressSource: 'clip-traversal' },
+  };
+  const suiteWithTimeBasedLegacyJump = {
+    ...suite,
+    clips: suite.clips.map((clip) =>
+      clip.id === timeBasedLegacyJump.id ? timeBasedLegacyJump : clip),
+  };
+  runtime.setDocument(suiteWithTimeBasedLegacyJump);
+  hint = 'player.jump';
+  grounded = false;
+  actionProgress = 0.9;
+  runtime.restart();
+  tick(0.001);
+  near(runtime.diagnostics.timelineTime, 0);
+  tick(0.2);
+  near(runtime.diagnostics.timelineTime, 0.2);
+  runtime.setDocument(suite);
 
   // Slam impact remains in the authored slam pose; the generic landing
   // transient must not replace its flattened/recovery phase.

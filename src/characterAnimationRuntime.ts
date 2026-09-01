@@ -18,8 +18,14 @@ import {
 export const LAND_CLIP_ID = 'player.land';
 export const PACE_STOP_CLIP_ID = 'player.pace-stop';
 export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, PACE_STOP_CLIP_ID] as const;
-/** Gameplay phases scrub these clips; manual Studio preview still uses time. */
-export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = ['player.slam'] as const;
+/** Routes allowed to opt into gameplay-phase scrubbing via clip metadata.
+ * Manual Studio preview always remains ordinary saved-speed playback. */
+export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
+  'player.jump',
+  'player.double-jump',
+  'player.fall',
+  'player.slam',
+] as const;
 /** Gameplay routes whose proven procedural presentation remains authoritative.
  * Their clips stay selectable for Studio/manual preview without double-writing
  * the live legacy pose. */
@@ -100,8 +106,9 @@ function usesLegacyGameplayPresentation(id: ClipId): boolean {
   return (LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS as readonly ClipId[]).includes(id);
 }
 
-function usesActionProgressTimeline(id: ClipId): boolean {
-  return (ACTION_PROGRESS_TIMELINE_CLIP_IDS as readonly ClipId[]).includes(id);
+function usesActionProgressTimeline(clip: AnimationClip): boolean {
+  return (ACTION_PROGRESS_TIMELINE_CLIP_IDS as readonly ClipId[]).includes(clip.id) &&
+    clip.metadata?.progressSource === 'gameplay-actionProgress';
 }
 
 function withControlDefaults(
@@ -405,7 +412,7 @@ export class CharacterAnimationRuntime {
 
     const motion = this.motionForClip(clip, intent.motion);
     const gameplayProgressTimeline =
-      this.manualClipId === null && usesActionProgressTimeline(clip.id);
+      this.manualClipId === null && usesActionProgressTimeline(clip);
     this.timelineTime = gameplayProgressTimeline
       ? clip.range.start +
         Math.min(1, Math.max(0, motion.actionProgress)) *

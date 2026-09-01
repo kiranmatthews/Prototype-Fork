@@ -90,6 +90,24 @@ straight knees, and throws both arms into a high V. Gameplay also clears the
 first jump's somersault clock before this clip is sampled, so a running forward
 roll cannot bleed into the double jump.
 
+## Jump deformation arc
+
+The charged crouch is the anticipation, so `player.jump` begins at release in
+an already elongated pose instead of replaying another squash. It reaches a
+very long whole-limb stretch early in the rise, holds that extension through
+most of the ascent, then folds the hips and knees while independently
+shortening the torso and limb sections as the feet catch the head at the apex.
+`player.fall` begins on that exact apex pose and relaxes every deformation
+control back to neutral during descent. The short `player.land` transient then
+adds a cushion squash, rebound overshoot, small secondary settle, and exact
+neutral finish.
+
+Jump, double-jump, and fall opt into gameplay `actionProgress` timing, so their
+poses follow launch/apex/descent rather than drifting with frame time or jump
+height. Studio/manual preview remains ordinary saved-speed playback. Catalog
+upgrades replace only signature-identical older starters; a locally edited
+same-ID clip stays time-authored unless it explicitly opts into phase timing.
+
 ### Procedural skate ownership
 
 `player.skate` remains a selectable, editable Animation Studio slot, and manual

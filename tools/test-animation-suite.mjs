@@ -338,29 +338,82 @@ try {
   assert.equal(parsedSuite.metadata.playerStarterCatalogVersion, PLAYER_STARTER_CATALOG_VERSION);
 
   const jump = findClip(parsedSuite, 'player.jump');
+  const fall = findClip(parsedSuite, 'player.fall');
   const land = findClip(parsedSuite, 'player.land');
   const idle = findClip(parsedSuite, 'player.idle');
   const run = findClip(parsedSuite, 'player.run');
   const paceStop = findClip(parsedSuite, 'player.pace-stop');
   const doubleJump = findClip(parsedSuite, 'player.double-jump');
   const slam = findClip(parsedSuite, 'player.slam');
-  assert.ok(jump && doubleJump && land && idle && run && paceStop && slam);
+  assert.ok(jump && doubleJump && fall && land && idle && run && paceStop && slam);
   assert.equal(jump.playbackSpeed, 1);
+  assert.equal(jump.duration, 1);
+  assert.equal(jump.metadata.progressSource, 'gameplay-actionProgress');
   assert.ok(jump.tracks.filter((track) => track.kind === 'scalar').length >= 9);
-  const jumpPose = sampleClip(jump, 0.32);
-  assert.ok(jumpPose.scalars[PLAYER_DEFORMATION_CONTROLS.legLowerLeft] > 1.25);
-  const landPose = sampleClip(land, 0.075);
-  near(landPose.scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.62);
+  const deformationControlIds = Object.values(PLAYER_DEFORMATION_CONTROLS);
+  const maximumStretchMarker = jump.markers.find((marker) =>
+    marker.name === 'Maximum rising stretch');
+  assert.ok(maximumStretchMarker);
+  assert.ok(maximumStretchMarker.time >= 0.08 && maximumStretchMarker.time <= 0.15);
+  const jumpRelease = sampleClip(jump, 0);
+  const jumpMaximumStretch = sampleClip(jump, maximumStretchMarker.time);
+  const jumpApex = sampleClip(jump, 1);
+  assert.ok(jumpRelease.scalars[PLAYER_DEFORMATION_CONTROLS.torso] >= 1.2,
+    'jump release did not inherit a long stretched silhouette from the charged crouch');
+  assert.ok(jumpMaximumStretch.scalars[PLAYER_DEFORMATION_CONTROLS.torso] >
+    jumpRelease.scalars[PLAYER_DEFORMATION_CONTROLS.torso]);
+  assert.ok(jumpMaximumStretch.scalars[PLAYER_DEFORMATION_CONTROLS.legLowerLeft] >= 1.6,
+    'rising lower legs did not reach the very long takeoff stretch');
+  assert.ok(deformationControlIds.every((id) => jumpMaximumStretch.scalars[id] > 1.3),
+    'the rising jump did not stretch every independently deformable limb section');
+  assert.ok(deformationControlIds.every((id) => jumpApex.scalars[id] < 0.9),
+    'the apex did not squash the body and limbs together');
+
+  assert.equal(fall.duration, 1);
+  assert.equal(fall.loop.mode, 'once');
+  assert.equal(fall.loop.seamless, false);
+  assert.equal(fall.metadata.progressSource, 'gameplay-actionProgress');
+  const fallStart = sampleClip(fall, 0);
+  const neutralFall = sampleClip(fall, 0.38);
+  for (const id of deformationControlIds) {
+    near(fallStart.scalars[id], jumpApex.scalars[id], 1e-6);
+    near(neutralFall.scalars[id], 1, 1e-6);
+  }
+  for (const target of [
+    'root', 'spine', 'hipLeft', 'kneeLeft', 'hipRight', 'kneeRight',
+    'shoulderLeft', 'shoulderRight',
+  ]) {
+    assert.deepEqual(fallStart.joints[target], jumpApex.joints[target],
+      `Jump apex and Fall entry differ on ${target}`);
+  }
+
+  assert.equal(land.metadata.progressSource, undefined,
+    'landing is a short playback transient, not a gameplay phase-scrubbed state');
+  const landImpact = sampleClip(land, 0.075);
+  const landRebound = sampleClip(land, 0.18);
+  const landSecondaryCushion = sampleClip(land, 0.34);
+  const landNeutral = sampleClip(land, 0.45);
+  near(landImpact.scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.72);
+  assert.ok(deformationControlIds.every((id) => landImpact.scalars[id] < 0.9),
+    'landing impact did not cushion every deformable limb section');
+  assert.ok(deformationControlIds.every((id) => landRebound.scalars[id] > 1),
+    'landing did not rebound beyond neutral after impact');
+  for (const id of deformationControlIds) {
+    near(landSecondaryCushion.scalars[id], 0.98, 1e-6);
+    near(landNeutral.scalars[id], 1, 1e-6);
+  }
   assert.ok(idle.proceduralDrivers.length >= 2);
   assert.equal(run.proceduralDrivers.length, 0,
     'Jog_Fwd already owns its cadence and must not receive the legacy gait twice');
 
   assert.equal(doubleJump.name, 'Double Jump — Split High Jump');
-  assert.equal(doubleJump.duration, 0.65);
-  assert.equal(doubleJump.tracks.length, 10);
+  assert.equal(doubleJump.duration, 1);
+  assert.equal(doubleJump.tracks.length, 19);
+  assert.equal(doubleJump.tracks.filter((track) => track.kind === 'scalar').length, 9);
+  assert.equal(doubleJump.metadata.progressSource, 'gameplay-actionProgress');
   assert.equal(doubleJump.metadata.poseIntent,
     'upright split-legged high jump; no forward somersault');
-  const fullSplit = sampleClip(doubleJump, 0.08);
+  const fullSplit = sampleClip(doubleJump, 0.12);
   const doubleRoot = new THREE.Quaternion().fromArray(fullSplit.joints.root.quaternion);
   near(Math.abs(doubleRoot.dot(new THREE.Quaternion())), 1);
   const leftHipQuaternion = new THREE.Quaternion().fromArray(fullSplit.joints.hipLeft.quaternion);
@@ -671,6 +724,75 @@ try {
   );
   assert.equal(findClip(upgradedDoubleJump, 'player.double-jump').name,
     'Double Jump — Split High Jump');
+
+  // Catalog v7 replaces the exact shipped v6 airborne deformation clips so
+  // an untouched browser draft cannot mask the phase-locked stretch arc. A
+  // hand-edited same-ID clip remains browser-owned and therefore time-based.
+  const legacyAirborneFixtures = JSON.parse(await readFile(new URL(
+    './fixtures/player-airborne-catalog-v6.json',
+    import.meta.url,
+  ), 'utf8'));
+  assert.deepEqual(legacyAirborneFixtures.map((clip) => clip.id), [
+    'player.jump', 'player.double-jump', 'player.fall', 'player.land',
+  ]);
+  const legacyAirborneById = new Map(legacyAirborneFixtures.map((clip) => [clip.id, clip]));
+  const versionSixAirborneSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) => legacyAirborneById.get(clip.id) ?? clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 6 },
+  };
+  const upgradedAirborne = reconcilePlayerStarterAnimationSuite(
+    versionSixAirborneSuite,
+    binding.definition,
+  );
+  const upgradedAirborneJump = findClip(upgradedAirborne, 'player.jump');
+  const upgradedAirborneDoubleJump = findClip(upgradedAirborne, 'player.double-jump');
+  const upgradedAirborneFall = findClip(upgradedAirborne, 'player.fall');
+  const upgradedAirborneLand = findClip(upgradedAirborne, 'player.land');
+  assert.equal(upgradedAirborneJump.name, 'Jump — Stretch, Apex Squash');
+  assert.equal(upgradedAirborneJump.metadata.progressSource, 'gameplay-actionProgress');
+  assert.equal(upgradedAirborneDoubleJump.duration, 1);
+  assert.equal(upgradedAirborneDoubleJump.metadata.progressSource, 'gameplay-actionProgress');
+  assert.equal(upgradedAirborneFall.metadata.progressSource, 'gameplay-actionProgress');
+  assert.equal(upgradedAirborneFall.loop.mode, 'once');
+  near(sampleClip(upgradedAirborneLand, 0.34)
+    .scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.98);
+
+  const normalizedVersionSixAirborne = parseAnimationSuite(versionSixAirborneSuite);
+  const upgradedNormalizedAirborne = reconcilePlayerStarterAnimationSuite(
+    normalizedVersionSixAirborne,
+    binding.definition,
+  );
+  assert.equal(findClip(upgradedNormalizedAirborne, 'player.jump').metadata.progressSource,
+    'gameplay-actionProgress', 'normalized saved Jump did not receive catalog v7');
+  assert.equal(findClip(upgradedNormalizedAirborne, 'player.double-jump').metadata.progressSource,
+    'gameplay-actionProgress', 'normalized saved Double Jump did not receive catalog v7');
+  assert.equal(findClip(upgradedNormalizedAirborne, 'player.fall').metadata.progressSource,
+    'gameplay-actionProgress', 'normalized saved Fall did not receive catalog v7');
+  near(sampleClip(findClip(upgradedNormalizedAirborne, 'player.land'), 0.34)
+    .scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.98);
+
+  const editedLegacyJump = structuredClone(legacyAirborneById.get('player.jump'));
+  editedLegacyJump.tracks[0].keys[0].value[1] += 0.001;
+  const versionSixEditedJumpSuite = {
+    ...versionSixAirborneSuite,
+    clips: versionSixAirborneSuite.clips.map((clip) =>
+      clip.id === 'player.jump' ? editedLegacyJump : clip),
+  };
+  const preservedEditedAirborne = reconcilePlayerStarterAnimationSuite(
+    versionSixEditedJumpSuite,
+    binding.definition,
+  );
+  const preservedEditedJump = findClip(preservedEditedAirborne, 'player.jump');
+  assert.equal(preservedEditedJump.name, 'Jump — Independent Stretch Starter');
+  assert.equal(preservedEditedJump.metadata.progressSource, undefined,
+    'an edited v6 jump must not silently opt into gameplay phase scrubbing');
+  near(preservedEditedJump.tracks[0].keys[0].value[1],
+    editedLegacyJump.tracks[0].keys[0].value[1]);
+  assert.equal(findClip(preservedEditedAirborne, 'player.fall').metadata.progressSource,
+    'gameplay-actionProgress', 'an edited Jump prevented independent Fall migration');
+  near(sampleClip(findClip(preservedEditedAirborne, 'player.land'), 0.34)
+    .scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.98);
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,

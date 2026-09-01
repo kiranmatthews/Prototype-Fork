@@ -277,8 +277,13 @@ try {
   assert.equal(doublePlayer.flipTimer, 0, "first-jump somersault survived the double pop");
   assert.equal(doublePlayer.animationClipHint, "player.double-jump");
   assert.equal(doubleRuntime.activeClipId, "player.double-jump");
-  closeTo(doubleRuntime.diagnostics.timelineTime, 0,
-    "double-jump clip did not restart on the second pop");
+  closeTo(
+    doubleRuntime.diagnostics.timelineTime,
+    doublePlayer.animationIntent.motion.actionProgress,
+    "double-jump clip did not restart at the second pop's gameplay phase",
+  );
+  assert.ok(doubleRuntime.diagnostics.timelineTime < 0.05,
+    "double-jump clip entered too far beyond its launch pose");
   closeTo(doublePlayer.bodyGroup.rotation.x, 0,
     "double jump retained a visible forward body roll", 1e-6);
   const doubleHipLeft = doublePlayer.animationRig.jointsById.get("hipLeft")?.node;

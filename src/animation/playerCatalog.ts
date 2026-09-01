@@ -67,7 +67,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 6;
+export const PLAYER_STARTER_CATALOG_VERSION = 7;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -79,6 +79,21 @@ const LEGACY_RUN_STARTER_SIGNATURES = new Set([
   '225688c1', // source-created catalog v2 clip
   '182166e3', // normalized/migrated catalog v2 browser draft
 ]);
+
+const LEGACY_AIRBORNE_STARTER_SIGNATURES: Readonly<Record<string, ReadonlySet<string>>> = {
+  'player.jump': new Set([
+    '5a112f6f', // source catalog v6
+    '792240e4', // normalized legacy-rig draft
+    '08bf4483', // normalized conventional-rig draft
+  ]),
+  'player.double-jump': new Set([
+    '17b2768b', // source catalog v6
+    '2c3edae2', // normalized legacy-rig draft
+    '9cbb8b2b', // normalized conventional-rig draft
+  ]),
+  'player.fall': new Set(['f45194a1', 'fa07436b']),
+  'player.land': new Set(['baa768b5', '44fd70c1']),
+};
 
 function stableCatalogValue(value: unknown): string {
   if (Array.isArray(value)) {
@@ -686,32 +701,38 @@ function buildPaceStop(rigId: string): AnimationClip {
 }
 
 function buildJump(rigId: string): AnimationClip {
-  const clip = baseClip('player.jump', 'Jump — Independent Stretch Starter', 0.75, 'once', rigId);
+  const clip = baseClip('player.jump', 'Jump — Stretch, Apex Squash', 1, 'once', rigId);
   clip.tracks = [
-    positionTrack(clip.id, 'root', [[0, [0, -0.03, 0]], [0.14, [0, -0.12, 0.025]], [0.31, [0, 0.1, -0.015]], [0.75, [0, 0.045, 0]]]),
-    quaternionTrack(clip.id, 'spine', [[0, 0.12, 0, 0], [0.14, 0.28, 0, 0], [0.31, -0.12, 0, 0], [0.75, -0.02, 0, 0]]),
-    quaternionTrack(clip.id, 'hipLeft', [[0, -0.42, 0, 0], [0.14, -0.72, 0, 0], [0.31, 0.08, 0, 0], [0.75, -0.2, 0, 0]]),
-    quaternionTrack(clip.id, 'kneeLeft', [[0, 0.88, 0, 0], [0.14, 1.42, 0, 0], [0.31, 0.12, 0, 0], [0.75, 0.5, 0, 0]]),
-    quaternionTrack(clip.id, 'hipRight', [[0, -0.38, 0, 0], [0.14, -0.67, 0, 0], [0.31, 0.03, 0, 0], [0.75, -0.24, 0, 0]]),
-    quaternionTrack(clip.id, 'kneeRight', [[0, 0.82, 0, 0], [0.14, 1.36, 0, 0], [0.31, 0.16, 0, 0], [0.75, 0.55, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, 0.35, 0, -0.12], [0.14, 0.62, 0, -0.18], [0.34, -2.55, 0, -0.2], [0.75, -2.1, 0, -0.12]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, 0.32, 0, 0.12], [0.14, 0.58, 0, 0.18], [0.34, -2.48, 0, 0.2], [0.75, -2.05, 0, 0.12]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 0.94], [0.14, 0.82], [0.31, 1.22], [0.58, 1.12], [0.75, 1.04]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 0.94], [0.14, 0.86], [0.31, 1.19], [0.75, 1.08]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 0.96], [0.14, 0.88], [0.34, 1.26], [0.75, 1.1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperRight, [[0, 0.96], [0.14, 0.87], [0.33, 1.17], [0.75, 1.07]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerRight, [[0, 0.95], [0.14, 0.89], [0.36, 1.23], [0.75, 1.09]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperLeft, [[0, 0.9], [0.14, 0.72], [0.3, 1.28], [0.58, 1.14], [0.75, 1.04]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerLeft, [[0, 0.91], [0.14, 0.75], [0.32, 1.34], [0.58, 1.16], [0.75, 1.05]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperRight, [[0, 0.91], [0.14, 0.74], [0.31, 1.25], [0.58, 1.13], [0.75, 1.03]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerRight, [[0, 0.92], [0.14, 0.76], [0.33, 1.31], [0.58, 1.15], [0.75, 1.05]]),
+    positionTrack(clip.id, 'root', [[0, [0, 0.08, 0]], [0.1, [0, 0.14, -0.01]], [0.5, [0, 0.12, -0.01]], [0.85, [0, 0, 0.005]], [1, [0, -0.08, 0.015]]]),
+    quaternionTrack(clip.id, 'spine', [[0, -0.12, 0, 0], [0.1, -0.18, 0, 0], [0.5, -0.1, 0, 0], [0.85, 0.08, 0, 0], [1, 0.22, 0, 0]]),
+    quaternionTrack(clip.id, 'hipLeft', [[0, 0.08, 0, 0], [0.1, 0.15, 0, 0], [0.5, 0.05, 0, 0], [0.85, -0.42, 0, 0], [1, -0.78, 0, 0]]),
+    quaternionTrack(clip.id, 'kneeLeft', [[0, 0.12, 0, 0], [0.1, 0.06, 0, 0], [0.5, 0.18, 0, 0], [0.85, 0.92, 0, 0], [1, 1.45, 0, 0]]),
+    quaternionTrack(clip.id, 'hipRight', [[0, 0.05, 0, 0], [0.1, 0.12, 0, 0], [0.5, 0.03, 0, 0], [0.85, -0.39, 0, 0], [1, -0.74, 0, 0]]),
+    quaternionTrack(clip.id, 'kneeRight', [[0, 0.12, 0, 0], [0.1, 0.06, 0, 0], [0.5, 0.18, 0, 0], [0.85, 0.88, 0, 0], [1, 1.4, 0, 0]]),
+    quaternionTrack(clip.id, 'shoulderLeft', [[0, -2.45, 0, 0.18], [0.1, -2.62, 0, 0.22], [0.5, -2.48, 0, 0.2], [0.85, -0.65, 0, 0.14], [1, 0.45, 0, 0.12]]),
+    quaternionTrack(clip.id, 'shoulderRight', [[0, -2.4, 0, -0.18], [0.1, -2.58, 0, -0.22], [0.5, -2.44, 0, -0.2], [0.85, -0.62, 0, -0.14], [1, 0.42, 0, -0.12]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 1.25], [0.1, 1.42], [0.5, 1.36], [0.85, 0.9], [1, 0.78]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 1.24], [0.1, 1.34], [0.5, 1.3], [0.85, 0.92], [1, 0.86]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 1.3], [0.1, 1.42], [0.5, 1.36], [0.85, 0.88], [1, 0.82]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperRight, [[0, 1.24], [0.1, 1.34], [0.5, 1.3], [0.85, 0.92], [1, 0.86]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerRight, [[0, 1.3], [0.1, 1.42], [0.5, 1.36], [0.85, 0.88], [1, 0.82]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperLeft, [[0, 1.4], [0.1, 1.55], [0.5, 1.48], [0.85, 0.82], [1, 0.74]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerLeft, [[0, 1.48], [0.1, 1.65], [0.5, 1.56], [0.85, 0.78], [1, 0.7]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperRight, [[0, 1.4], [0.1, 1.55], [0.5, 1.48], [0.85, 0.82], [1, 0.74]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerRight, [[0, 1.48], [0.1, 1.65], [0.5, 1.56], [0.85, 0.78], [1, 0.7]]),
   ];
   clip.markers = [
-    { id: `${clip.id}:anticipation`, time: 0.14, name: 'Deepest anticipation' },
-    { id: `${clip.id}:takeoff`, time: 0.3, name: 'Takeoff stretch' },
-    { id: `${clip.id}:apex`, time: 0.58, name: 'Apex' },
+    { id: `${clip.id}:takeoff-stretch`, time: 0.1, name: 'Maximum rising stretch' },
+    { id: `${clip.id}:apex-squash`, time: 1, name: 'Apex catch-up squash' },
   ];
-  clip.events = [{ id: `${clip.id}:launch`, time: 0.3, name: 'launch' }];
+  clip.events = [{ id: `${clip.id}:launch`, time: 0, name: 'launch' }];
+  clip.tags = ['player', 'jump', 'squash-stretch', 'rise-stretch', 'apex-squash'];
+  clip.metadata = {
+    starterQuality: 'authored-foundation',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    progressSource: 'gameplay-actionProgress',
+    deformationArc: 'charged squash -> rising stretch -> apex squash -> neutral fall',
+  };
   return clip;
 }
 
@@ -719,7 +740,7 @@ function buildDoubleJump(rigId: string): AnimationClip {
   const clip = baseClip(
     'player.double-jump',
     'Double Jump — Split High Jump',
-    0.65,
+    1,
     'once',
     rigId,
   );
@@ -728,68 +749,99 @@ function buildDoubleJump(rigId: string): AnimationClip {
     // Keep the editable inner rider root neutral; gameplay also gates the
     // outer legacy somersault with doubleJumpAir before this layer is sampled.
     quaternionTrack(clip.id, 'root', [
-      [0, 0, 0, 0, 'linear'], [0.65, 0, 0, 0, 'linear'],
+      [0, 0, 0, 0, 'linear'], [1, 0, 0, 0, 'linear'],
     ]),
     quaternionTrack(clip.id, 'spine', [
-      [0, 0, 0, 0, 'linear'], [0.08, -0.06, 0, 0, 'linear'],
-      [0.34, -0.02, 0, 0, 'linear'], [0.65, 0, 0, 0, 'linear'],
+      [0, 0, 0, 0, 'linear'], [0.12, -0.06, 0, 0, 'linear'],
+      [0.5, 0.08, 0, 0, 'linear'], [1, 0, 0, 0, 'linear'],
     ]),
     quaternionTrack(clip.id, 'hipLeft', [
-      [0, -0.2, 0, 0.8, 'linear'], [0.08, -0.3, 0, 1.18, 'linear'],
-      [0.34, -0.18, 0, 1.08, 'linear'], [0.65, -0.12, 0, 0.8, 'linear'],
+      [0, -0.2, 0, 0.8, 'linear'], [0.12, -0.3, 0, 1.18, 'linear'],
+      [0.5, -0.42, 0, 1.08, 'linear'], [1, -0.12, 0, 0.8, 'linear'],
     ]),
     quaternionTrack(clip.id, 'hipRight', [
-      [0, -0.2, 0, -0.8, 'linear'], [0.08, -0.3, 0, -1.18, 'linear'],
-      [0.34, -0.18, 0, -1.08, 'linear'], [0.65, -0.12, 0, -0.8, 'linear'],
+      [0, -0.2, 0, -0.8, 'linear'], [0.12, -0.3, 0, -1.18, 'linear'],
+      [0.5, -0.42, 0, -1.08, 'linear'], [1, -0.12, 0, -0.8, 'linear'],
     ]),
     quaternionTrack(clip.id, 'kneeLeft', [
-      [0, 0.12, 0, 0, 'linear'], [0.08, 0.06, 0, 0, 'linear'],
-      [0.34, 0.1, 0, 0, 'linear'], [0.65, 0.18, 0, 0, 'linear'],
+      [0, 0.12, 0, 0, 'linear'], [0.12, 0.06, 0, 0, 'linear'],
+      [0.5, 0.32, 0, 0, 'linear'], [1, 0.18, 0, 0, 'linear'],
     ]),
     quaternionTrack(clip.id, 'kneeRight', [
-      [0, 0.12, 0, 0, 'linear'], [0.08, 0.06, 0, 0, 'linear'],
-      [0.34, 0.1, 0, 0, 'linear'], [0.65, 0.18, 0, 0, 'linear'],
+      [0, 0.12, 0, 0, 'linear'], [0.12, 0.06, 0, 0, 'linear'],
+      [0.5, 0.32, 0, 0, 'linear'], [1, 0.18, 0, 0, 'linear'],
     ]),
     quaternionTrack(clip.id, 'shoulderLeft', [
-      [0, -0.15, 0, 1.9, 'linear'], [0.08, -0.25, 0, 2.3, 'linear'],
-      [0.34, -0.15, 0, 2.15, 'linear'], [0.65, -0.05, 0, 1.75, 'linear'],
+      [0, -0.15, 0, 1.9, 'linear'], [0.12, -0.25, 0, 2.3, 'linear'],
+      [0.5, 0.15, 0, 2.15, 'linear'], [1, -0.05, 0, 1.75, 'linear'],
     ]),
     quaternionTrack(clip.id, 'shoulderRight', [
-      [0, -0.15, 0, -1.9, 'linear'], [0.08, -0.25, 0, -2.3, 'linear'],
-      [0.34, -0.15, 0, -2.15, 'linear'], [0.65, -0.05, 0, -1.75, 'linear'],
+      [0, -0.15, 0, -1.9, 'linear'], [0.12, -0.25, 0, -2.3, 'linear'],
+      [0.5, 0.15, 0, -2.15, 'linear'], [1, -0.05, 0, -1.75, 'linear'],
     ]),
     quaternionTrack(clip.id, 'elbowLeft', [
-      [0, -0.12, 0, 0, 'linear'], [0.65, -0.12, 0, 0, 'linear'],
+      [0, -0.12, 0, 0, 'linear'], [1, -0.12, 0, 0, 'linear'],
     ]),
     quaternionTrack(clip.id, 'elbowRight', [
-      [0, -0.12, 0, 0, 'linear'], [0.65, -0.12, 0, 0, 'linear'],
+      [0, -0.12, 0, 0, 'linear'], [1, -0.12, 0, 0, 'linear'],
     ]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 1.16], [0.12, 1.26], [0.5, 0.84], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 1.12], [0.12, 1.2], [0.5, 0.9], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 1.16], [0.12, 1.24], [0.5, 0.88], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperRight, [[0, 1.12], [0.12, 1.2], [0.5, 0.9], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerRight, [[0, 1.16], [0.12, 1.24], [0.5, 0.88], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperLeft, [[0, 1.2], [0.12, 1.3], [0.5, 0.82], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerLeft, [[0, 1.24], [0.12, 1.36], [0.5, 0.78], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperRight, [[0, 1.2], [0.12, 1.3], [0.5, 0.82], [0.72, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerRight, [[0, 1.24], [0.12, 1.36], [0.5, 0.78], [0.72, 1], [1, 1]]),
   ];
   clip.markers = [
-    { id: `${clip.id}:split`, time: 0.08, name: 'Full split' },
-    { id: `${clip.id}:apex`, time: 0.34, name: 'High-jump apex' },
+    { id: `${clip.id}:split`, time: 0.12, name: 'Full split' },
+    { id: `${clip.id}:apex`, time: 0.5, name: 'High-jump apex squash' },
   ];
   clip.tags = ['player', 'double-jump', 'split', 'high-jump', 'no-roll'];
   clip.metadata = {
     starterQuality: 'authored-foundation',
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    progressSource: 'gameplay-actionProgress',
     poseIntent: 'upright split-legged high jump; no forward somersault',
   };
   return clip;
 }
 
 function buildFall(rigId: string): AnimationClip {
-  const clip = baseClip('player.fall', 'Fall — Air Silhouette Starter', 0.9, 'loop', rigId);
+  const clip = baseClip('player.fall', 'Fall — Apex Squash to Neutral', 1, 'once', rigId);
+  clip.loop.seamless = false;
   clip.tracks = [
-    quaternionTrack(clip.id, 'spine', [[0, -0.06, 0, -0.04], [0.45, 0.04, 0, 0.04], [0.9, -0.06, 0, -0.04]]),
-    quaternionTrack(clip.id, 'hipLeft', [[0, -0.38, 0, 0.08], [0.45, -0.55, 0, -0.05], [0.9, -0.38, 0, 0.08]]),
-    quaternionTrack(clip.id, 'kneeLeft', [[0, 0.72, 0, 0], [0.45, 0.92, 0, 0], [0.9, 0.72, 0, 0]]),
-    quaternionTrack(clip.id, 'hipRight', [[0, -0.52, 0, -0.05], [0.45, -0.34, 0, 0.08], [0.9, -0.52, 0, -0.05]]),
-    quaternionTrack(clip.id, 'kneeRight', [[0, 0.9, 0, 0], [0.45, 0.7, 0, 0], [0.9, 0.9, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, -1.4, 0, -0.35], [0.45, -1.15, 0, -0.2], [0.9, -1.4, 0, -0.35]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, -1.15, 0, 0.2], [0.45, -1.4, 0, 0.35], [0.9, -1.15, 0, 0.2]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 1.08], [0.45, 1.12], [0.9, 1.08]]),
+    positionTrack(clip.id, 'root', [[0, [0, -0.08, 0.015]], [0.18, [0, -0.04, 0.01]], [0.38, [0, 0, 0]], [1, [0, 0, 0]]]),
+    quaternionTrack(clip.id, 'spine', [[0, 0.22, 0, 0], [0.18, 0.12, 0, 0], [0.38, 0.02, 0, 0], [1, 0.02, 0, 0]]),
+    quaternionTrack(clip.id, 'hipLeft', [[0, -0.78, 0, 0], [0.18, -0.48, 0, 0], [0.38, -0.25, 0, 0.04], [1, -0.25, 0, 0.04]]),
+    quaternionTrack(clip.id, 'kneeLeft', [[0, 1.45, 0, 0], [0.18, 0.9, 0, 0], [0.38, 0.5, 0, 0], [1, 0.5, 0, 0]]),
+    quaternionTrack(clip.id, 'hipRight', [[0, -0.74, 0, 0], [0.18, -0.46, 0, 0], [0.38, -0.28, 0, -0.04], [1, -0.28, 0, -0.04]]),
+    quaternionTrack(clip.id, 'kneeRight', [[0, 1.4, 0, 0], [0.18, 0.86, 0, 0], [0.38, 0.54, 0, 0], [1, 0.54, 0, 0]]),
+    quaternionTrack(clip.id, 'shoulderLeft', [[0, 0.45, 0, 0.12], [0.18, -0.35, 0, 0.06], [0.38, -1.2, 0, -0.22], [1, -1.2, 0, -0.22]]),
+    quaternionTrack(clip.id, 'shoulderRight', [[0, 0.42, 0, -0.12], [0.18, -0.32, 0, -0.06], [0.38, -1.15, 0, 0.22], [1, -1.15, 0, 0.22]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 0.78], [0.18, 0.9], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 0.86], [0.18, 0.94], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 0.82], [0.18, 0.91], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperRight, [[0, 0.86], [0.18, 0.94], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerRight, [[0, 0.82], [0.18, 0.91], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperLeft, [[0, 0.74], [0.18, 0.88], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerLeft, [[0, 0.7], [0.18, 0.84], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperRight, [[0, 0.74], [0.18, 0.88], [0.38, 1], [1, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerRight, [[0, 0.7], [0.18, 0.84], [0.38, 1], [1, 1]]),
   ];
+  clip.markers = [
+    { id: `${clip.id}:apex-squash`, time: 0, name: 'Apex catch-up squash' },
+    { id: `${clip.id}:neutral`, time: 0.38, name: 'Neutral descent' },
+  ];
+  clip.tags = ['player', 'fall', 'squash-stretch', 'neutralize'];
+  clip.metadata = {
+    starterQuality: 'authored-foundation',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    progressSource: 'gameplay-actionProgress',
+    deformationArc: 'apex squash -> neutral descent',
+  };
   return clip;
 }
 
@@ -804,15 +856,15 @@ function buildLand(rigId: string): AnimationClip {
     quaternionTrack(clip.id, 'kneeRight', [[0, 0.42, 0, 0], [0.085, 1.46, 0, 0], [0.21, 0.78, 0, 0], [0.45, 0, 0, 0]]),
     quaternionTrack(clip.id, 'shoulderLeft', [[0, -1.75, 0, -0.1], [0.075, 0.65, 0, -0.3], [0.2, -0.2, 0, -0.1], [0.45, 0, 0, 0]]),
     quaternionTrack(clip.id, 'shoulderRight', [[0, -1.7, 0, 0.1], [0.085, 0.6, 0, 0.3], [0.21, -0.18, 0, 0.1], [0.45, 0, 0, 0]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 1.1], [0.075, 0.62], [0.2, 1.1], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 1.08], [0.075, 0.78], [0.2, 1.06], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 1.1], [0.075, 0.82], [0.2, 1.08], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperRight, [[0, 1.07], [0.085, 0.8], [0.21, 1.05], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerRight, [[0, 1.09], [0.085, 0.81], [0.21, 1.07], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperLeft, [[0, 1.08], [0.075, 0.66], [0.2, 1.1], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerLeft, [[0, 1.1], [0.075, 0.7], [0.2, 1.08], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperRight, [[0, 1.07], [0.085, 0.68], [0.21, 1.09], [0.45, 1]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerRight, [[0, 1.09], [0.085, 0.72], [0.21, 1.07], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 1], [0.075, 0.72], [0.18, 1.1], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 1], [0.075, 0.82], [0.18, 1.06], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 1], [0.075, 0.78], [0.18, 1.08], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperRight, [[0, 1], [0.075, 0.82], [0.18, 1.06], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerRight, [[0, 1], [0.075, 0.78], [0.18, 1.08], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperLeft, [[0, 1], [0.075, 0.68], [0.18, 1.08], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerLeft, [[0, 1], [0.075, 0.72], [0.18, 1.06], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperRight, [[0, 1], [0.075, 0.68], [0.18, 1.08], [0.34, 0.98], [0.45, 1]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerRight, [[0, 1], [0.075, 0.72], [0.18, 1.06], [0.34, 0.98], [0.45, 1]]),
   ];
   clip.contacts = [
     contact(`${clip.id}:left-foot`, 0.055, 0.45, 'footLeft'),
@@ -820,9 +872,16 @@ function buildLand(rigId: string): AnimationClip {
   ];
   clip.markers = [
     { id: `${clip.id}:impact`, time: 0.075, name: 'Impact compression' },
-    { id: `${clip.id}:rebound`, time: 0.2, name: 'Rebound overshoot' },
+    { id: `${clip.id}:rebound`, time: 0.18, name: 'Rebound overshoot' },
+    { id: `${clip.id}:settle`, time: 0.34, name: 'Cushion settle' },
   ];
   clip.events = [{ id: `${clip.id}:impact-event`, time: 0.075, name: 'land-impact' }];
+  clip.tags = ['player', 'landing', 'cushion', 'squash-stretch'];
+  clip.metadata = {
+    starterQuality: 'authored-foundation',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    deformationArc: 'neutral fall -> cushion squash -> rebound -> settle',
+  };
   return clip;
 }
 
@@ -1001,11 +1060,12 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
 /**
  * Refresh the embedded live rig and add only starters introduced after the
  * revision a saved suite has already seen. Same-ID clips normally win; the
- * exceptions are the explicit Run -> Jog_Fwd replacement and upgrading the
- * untouched Slam identity placeholder to the Unity pose. A genuinely edited
- * pre-Jog Run is retained under a backup ID while `player.run` adopts the new
- * source motion. Once a suite records the current revision, a missing clip is
- * treated as an intentional deletion and remains missing on subsequent loads.
+ * exceptions are explicit upgrades for shipped, signature-identical starters:
+ * Run -> Jog_Fwd, Slam -> Unity pose, and the phase-locked airborne deformation
+ * arc. A genuinely edited pre-Jog Run is retained under a backup ID while
+ * `player.run` adopts the new source motion. Once a suite records the current
+ * revision, a missing clip is treated as an intentional deletion and remains
+ * missing on subsequent loads.
  */
 export function reconcilePlayerStarterAnimationSuite(
   document: AnimationSuiteDocument,
@@ -1041,6 +1101,20 @@ export function reconcilePlayerStarterAnimationSuite(
     const currentSlam = clips.find((clip) => clip.id === 'player.slam');
     if (currentSlam && isUntouchedSlamPlaceholder(currentSlam)) {
       clips = clips.map((clip) => clip.id === 'player.slam' ? importedSlam : clip);
+    }
+  }
+  if (previousVersion < 7) {
+    for (const [clipId, untouchedSignatures] of Object.entries(
+      LEGACY_AIRBORNE_STARTER_SIGNATURES,
+    )) {
+      const current = clips.find((clip) => clip.id === clipId);
+      const imported = starters.find((clip) => clip.id === clipId);
+      if (
+        current && imported &&
+        untouchedSignatures.has(starterClipSignature(current))
+      ) {
+        clips = clips.map((clip) => clip.id === clipId ? imported : clip);
+      }
     }
   }
 
