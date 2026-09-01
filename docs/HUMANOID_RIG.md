@@ -54,14 +54,28 @@ transforms or saved animation tracks. Their authored base turns both palms
 medially and both thumbs rider-forward; Character Lab values are offsets over
 that anatomical rest.
 
-Arm and leg joint chains now carry reusable `stretchable-cartoon-limb-bone`
-visual components. These add no skeleton joints: each component hangs from an
-existing proximal joint and follows its existing child joint. Its high-density
-shaft owns longitudinal squash/stretch, while joint knobbles retain their local
-scale and shape. Upper segments render both ends; each lower segment reuses the
-preceding joint's distal knobble and adds only its own distal end, avoiding
-overlap at elbows and knees. All eight segment visuals share one shaft geometry,
-one knobble geometry and one smooth clay material.
+Arm and leg joint chains carry reusable `stretchable-cartoon-limb-bone` visual
+components without adding skeleton joints. Both upper arms use the attributed
+Meshy **Ivory Bone** surface. Forearms, thighs, and shins use **Ivory Rattle**;
+its distal region is the authored knobless insertion tip that enters gloves,
+socks, or the following joint silhouette. Left/right instances share immutable
+generated geometry and mirror only at the component root.
+
+Each source mesh is split at measured cylindrical boundaries into a rigid
+proximal region, a deformable shaft, and a rigid distal region. Length changes
+scale the rebased shaft from its proximal boundary and translate the distal
+piece to the new endpoint; neither rigid piece changes local scale or shape.
+At extreme squash values the rigid ends may overlap while the shaft clamps to a
+small positive span—there is never an inverted mesh. Thickness uses a shared
+relative shaft morph that tapers to zero at both clipped boundary rings, so
+knobs and insertion tips remain exact and no seam opens. Source-derived length
+animation can apply the same tapered morph for volume compensation calculated
+from the changing shaft span rather than the unchanged rigid ends. Production
+solves the importer-derived quadratic shaft-volume equation across animation
+and authored thickness, with a non-inversion guard for impossible combined
+extremes. It uses derivative flat normals so lighting follows those faces. The eight
+production segments share six source-derived part geometries and one smooth
+clay material.
 
 ## Stable animation identity
 

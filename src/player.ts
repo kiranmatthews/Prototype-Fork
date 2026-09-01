@@ -1641,7 +1641,13 @@ export class Player {
     readonly triangles: number;
     readonly minScale: number;
     readonly maxScale: number;
+    readonly surfaces: Readonly<Record<string, number>>;
   } {
+    const surfaces: Record<string, number> = {};
+    for (const component of this.stretchableBones) {
+      const surface = component.root.userData.stretchableBoneRuntime?.surface ?? 'unknown';
+      surfaces[surface] = (surfaces[surface] ?? 0) + 1;
+    }
     return {
       ready: this.stretchableBones.length === 8,
       componentCount: this.stretchableBones.length,
@@ -1652,6 +1658,7 @@ export class Player {
       ),
       minScale: Math.min(...this.stretchableBones.map((component) => component.minScale), 1),
       maxScale: Math.max(...this.stretchableBones.map((component) => component.maxScale), 1),
+      surfaces,
     };
   }
 
@@ -1868,6 +1875,7 @@ export class Player {
 
   /** Restore the entry pose but retain Animation Studio ownership. */
   resetAnimationPreview(): void {
+    this.clearCharacterAppearance();
     this.playerAnimationBridge.resetPreview();
     this.tail?.reset();
     this.resetRenderInterpolation();
@@ -1876,6 +1884,7 @@ export class Player {
 
   /** Restore the entry pose and return pose ownership to gameplay. */
   exitAnimationPreview(): void {
+    this.clearCharacterAppearance();
     this.playerAnimationBridge.exitPreview();
     this.tail?.reset();
     this.resetRenderInterpolation();
@@ -1904,10 +1913,14 @@ export class Player {
    * session cannot let an older cleanup tear down the newer one.
    */
   setAuthoredPoseOverlay(overlay: PlayerAnimationOverlay | null): () => void {
+    this.clearCharacterAppearance();
     const dispose = this.playerAnimationBridge.setOverlay(overlay);
+    this.syncCharacterAppearance();
     this.resetRenderInterpolation();
     return () => {
+      this.clearCharacterAppearance();
       dispose();
+      this.syncCharacterAppearance();
       this.resetRenderInterpolation();
     };
   }
@@ -14325,7 +14338,9 @@ export class Player {
       metalness: 0,
       clearcoat: 0.2,
       clearcoatRoughness: 0.75,
-      flatShading: false,
+      // The Meshy sources carry face normals. GPU derivative normals follow
+      // the shaft-thickness morph without stale highlights.
+      flatShading: true,
     });
 
     // Legs: hip, knee, and ankle pivots. The foot is a rigid child of the
@@ -14391,11 +14406,11 @@ export class Player {
       const upperLegBone = createStretchableBone({
         id: `upper-leg-${anatomicalSide}`,
         length: PROCEDURAL_THIGH_LENGTH,
-        shaftRadius: 0.048,
         knobRadius: 0.057,
-        knobDepthScale: 0.92,
         knobTwist: side * 0.06,
         material: BONE_CLAY,
+        surface: 'ivory-rattle',
+        mirrorX: anatomicalSide === 'right',
       });
       leg.add(upperLegBone.root);
       this.stretchableBones.push(upperLegBone);
@@ -14415,12 +14430,11 @@ export class Player {
       const lowerLegBone = createStretchableBone({
         id: `lower-leg-${anatomicalSide}`,
         length: PROCEDURAL_SHIN_LENGTH,
-        shaftRadius: 0.04,
         knobRadius: 0.052,
-        knobDepthScale: 0.92,
         knobTwist: -side * 0.04,
         material: BONE_CLAY,
-        showProximalKnob: false,
+        surface: 'ivory-rattle',
+        mirrorX: anatomicalSide === 'right',
       });
       knee.add(lowerLegBone.root);
       this.stretchableBones.push(lowerLegBone);
@@ -14754,15 +14768,12 @@ export class Player {
       const upperArmBone = createStretchableBone({
         id: `upper-arm-${anatomicalSide}`,
         length: 0.22,
-        shaftRadius: 0.036,
         knobRadius: 0.043,
-        knobDepthScale: 0.93,
         knobTwist: side * 0.08,
         material: BONE_CLAY,
+        surface: 'ivory-bone',
+        mirrorX: anatomicalSide === 'right',
       });
-      // The conventional shoulder pivot stays where animation expects it;
-      // only the visual lobe reaches inward to overlap the torso silhouette.
-      if (upperArmBone.proximalKnob) upperArmBone.proximalKnob.position.x = -side * 0.035;
       arm.add(upperArmBone.root);
       this.stretchableBones.push(upperArmBone);
       const wrist = new THREE.Bone();
@@ -14773,12 +14784,11 @@ export class Player {
       const lowerArmBone = createStretchableBone({
         id: `lower-arm-${anatomicalSide}`,
         length: 0.195,
-        shaftRadius: 0.033,
         knobRadius: 0.039,
-        knobDepthScale: 0.93,
         knobTwist: -side * 0.06,
         material: BONE_CLAY,
-        showProximalKnob: false,
+        surface: 'ivory-rattle',
+        mirrorX: anatomicalSide === 'right',
       });
       elbowJoint.add(lowerArmBone.root);
       this.stretchableBones.push(lowerArmBone);
@@ -15108,12 +15118,20 @@ export class Player {
       },
       limbBoneRig: {
         kind: 'stretchable-cartoon-limb-bone',
-        schemaVersion: 1,
+        schemaVersion: 2,
         spec: 'docs/STRETCH_BONE_SCULPT_SPEC.json',
         componentCount: this.stretchableBones.length,
         componentIds: stretchBoneIds,
         axis: [0, -1, 0],
-        fixedParts: ['proximal-knob', 'distal-knob'],
+        surfaces: {
+          upperArms: 'ivory-bone',
+          forearms: 'ivory-rattle',
+          thighs: 'ivory-rattle',
+          shins: 'ivory-rattle',
+        },
+        fixedParts: ['proximal-rigid-region', 'distal-rigid-region'],
+        lengthMode: 'measured-piecewise-shaft',
+        thicknessMode: 'boundary-tapered-shaft-morph',
         lengthControls: [
           'deform.arm.upper.left.length',
           'deform.arm.lower.left.length',

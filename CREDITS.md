@@ -188,6 +188,22 @@ weights into that root, caps skin weights at four per vertex, and presents the
 main surface in glove white. Source/output hashes and the exact conversion
 record are in `public/characters/three-finger-hand/provenance.json`.
 
+## Owner-supplied Meshy limb bones
+
+The visible upper-arm surfaces use the owner's generated **Ivory Bone** mesh;
+forearms, thighs, and shins use the generated **Ivory Rattle** mesh with its
+knobless glove/sock insertion tip. The browser ships synchronous generated
+position/normal buffers, not the original FBXs. The conversion preserves the
+source silhouettes and faceted normals, splitting only at measured shaft
+boundaries so length deformation cannot scale either rigid end. Source hashes,
+Meshy upload IDs, measurements, mappings, and the generated-module hash are in
+`public/characters/meshy-limb-bones/provenance.json`.
+
+The files contain no embedded licence metadata, so this public derivative uses
+the same conservative free-plan attribution as the repository's other
+owner-supplied Meshy assets: **models created with
+[Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
+
 ## Everything else
 
 The remaining levels, physics, character rig, surface textures, editor and UI

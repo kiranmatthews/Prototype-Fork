@@ -288,13 +288,79 @@ try {
   });
   assert.equal(player.stretchableBoneDiagnostics.ready, true);
   assert.equal(player.stretchableBoneDiagnostics.componentCount, 8);
-  assert.equal(player.stretchableBoneDiagnostics.triangles, 35072);
+  assert.equal(player.stretchableBoneDiagnostics.triangles, 13096);
+  assert.deepEqual(player.stretchableBoneDiagnostics.surfaces, {
+    'ivory-rattle': 6,
+    'ivory-bone': 2,
+  });
+  assert.equal(player.stretchableBones.every((component) =>
+    component.shaft.material.flatShading === true), true,
+  'production bone materials must derive normals from the deformed faces');
+  const productionBones = new Map(player.stretchableBones.map((component) => [component.id, component]));
+  const expectedSurfaces = {
+    'upper-arm-left': 'ivory-bone',
+    'upper-arm-right': 'ivory-bone',
+    'lower-arm-left': 'ivory-rattle',
+    'lower-arm-right': 'ivory-rattle',
+    'upper-leg-left': 'ivory-rattle',
+    'upper-leg-right': 'ivory-rattle',
+    'lower-leg-left': 'ivory-rattle',
+    'lower-leg-right': 'ivory-rattle',
+  };
+  for (const [id, surface] of Object.entries(expectedSurfaces)) {
+    const component = productionBones.get(id);
+    assert.ok(component, `missing production limb surface ${id}`);
+    assert.equal(component.root.userData.stretchableBoneRuntime.surface, surface);
+    assert.equal(component.root.scale.x, id.endsWith('-right') ? -1 : 1);
+    if (surface === 'ivory-rattle') {
+      assert.equal(component.root.userData.stretchableBoneRuntime.distalKind, 'insertion-tip');
+    }
+  }
+  for (const ids of [
+    ['upper-arm-left', 'upper-arm-right'],
+    [
+      'lower-arm-left', 'lower-arm-right',
+      'upper-leg-left', 'upper-leg-right',
+      'lower-leg-left', 'lower-leg-right',
+    ],
+  ]) {
+    const first = productionBones.get(ids[0]);
+    for (const id of ids.slice(1)) {
+      const component = productionBones.get(id);
+      assert.equal(component.shaft.geometry, first.shaft.geometry);
+      assert.equal(component.proximalKnob.geometry, first.proximalKnob.geometry);
+      assert.equal(component.distalKnob.geometry, first.distalKnob.geometry);
+    }
+  }
   near(player.stretchableBoneDiagnostics.minScale, 0.319);
   near(player.stretchableBoneDiagnostics.maxScale, 2.765);
   assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
     'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
     'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',
   ]));
+  const previewUpperArm = productionBones.get('upper-arm-left');
+  player.setCharacterProportions({ upperArmLength: 1.2, armThickness: 1.3 });
+  player.enterAnimationPreview();
+  player.applyAnimationDeformations({ 'deform.arm.upper.left.length': 1.4 });
+  player.syncCharacterAppearance();
+  player.resetAnimationPreview();
+  near(previewUpperArm.distalSocket.position.y, -previewUpperArm.baseLength * 1.2);
+  near(previewUpperArm.shaft.morphTargetInfluences[0], 0.3);
+  player.applyAnimationDeformations({ 'deform.arm.upper.left.length': 1.4 });
+  player.syncCharacterAppearance();
+  player.exitAnimationPreview();
+  near(previewUpperArm.distalSocket.position.y, -previewUpperArm.baseLength * 1.2);
+  near(previewUpperArm.shaft.morphTargetInfluences[0], 0.3);
+  const removeOverlay = player.setAuthoredPoseOverlay(({ applyDeformations }) => {
+    applyDeformations({ 'deform.arm.upper.left.length': 1.4 });
+  });
+  player.clearCharacterAppearance();
+  player.playerAnimationBridge.applyOverlay(1 / 60);
+  player.syncCharacterAppearance();
+  removeOverlay();
+  near(previewUpperArm.distalSocket.position.y, -previewUpperArm.baseLength * 1.2);
+  near(previewUpperArm.shaft.morphTargetInfluences[0], 0.3);
+  player.resetCharacterProportions();
   assert.equal(player.humanoidSkeletonRef.bones.length, 46,
     '22 conventional body bones + 24 semantic digit bones');
   const binding = RigBinding.fromSculptRuntime(player.animationRig.root);

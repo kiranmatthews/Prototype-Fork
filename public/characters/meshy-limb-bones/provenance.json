@@ -1,0 +1,74 @@
+{
+  "generator": "Meshy",
+  "generatorUrl": "https://www.meshy.ai/",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseBasis": "Owner-supplied Meshy output; conservative free-plan attribution path used elsewhere in this repository",
+  "conversionTool": "tools/import-meshy-limb-bones.mjs",
+  "conversionRuntime": "Three.js FBXLoader; no runtime Blender dependency",
+  "generatedModule": "src/character/meshyLimbBone.generated.ts",
+  "generatedModuleSha256": "2ca24fa19b3506455f920582ca05bd784ac4d362957eb06df32346ce224a3377",
+  "assets": {
+    "ivoryBone": {
+      "sourceFile": "Meshy_AI_Ivory_Bone_on_Midnigh_0901052837_generate.fbx",
+      "sourceBytes": 47660,
+      "sourceSha256": "13d5a1199abf1d39fa448ce9f2607e1358b5442ea27453ce542c1b25f543ed73",
+      "meshyUploadId": "01a05b6f-44a2-7390-a099-4e7efbb6b901",
+      "sourceTriangles": 1328,
+      "bakedTrianglesAfterBoundaryClipping": 1454,
+      "mapping": ["upper-arm-left", "upper-arm-right"],
+      "longitudinalAxis": "source local +Z to runtime local -Y",
+      "safeStretchZoneSourceZ": [-0.26, 0.23],
+      "safeStretchFraction": 0.49,
+      "shaftBoundaryRingVertices": [32, 31],
+      "thicknessMorphFadeFractions": [0.08163265306122457, 0.08163265306122457],
+      "thicknessMorphVolumePolynomial": {
+        "formula": "V(m)/V(0) = 1 + 2*A*m + B*m^2",
+        "A": 0.8143475385207111,
+        "B": 0.7546665945284072
+      },
+      "proximalRigidKind": "shoulder-knob",
+      "distalRigidKind": "joint-knob"
+    },
+    "ivoryRattle": {
+      "sourceFile": "Meshy_AI_Ivory_Rattle_0901053229_generate.fbx",
+      "sourceBytes": 52396,
+      "sourceSha256": "17acdb80d7144ad39786517910f031117d4ff08c5800e93dfb09b166aef66310",
+      "meshyUploadId": "01a05b73-f4af-7780-ac48-3814f609318c",
+      "sourceTriangles": 1536,
+      "bakedTrianglesAfterBoundaryClipping": 1698,
+      "mapping": [
+        "lower-arm-left",
+        "lower-arm-right",
+        "upper-leg-left",
+        "upper-leg-right",
+        "lower-leg-left",
+        "lower-leg-right"
+      ],
+      "longitudinalAxis": "source local +Z to runtime local -Y",
+      "safeStretchZoneSourceZ": [-0.40, 0.31],
+      "safeStretchFraction": 0.71,
+      "shaftBoundaryRingVertices": [42, 39],
+      "thicknessMorphFadeFractions": [0.05633802816901406, 0.042253521126760445],
+      "thicknessMorphVolumePolynomial": {
+        "formula": "V(m)/V(0) = 1 + 2*A*m + B*m^2",
+        "A": 0.9454025212425425,
+        "B": 0.9228075116199301
+      },
+      "proximalRigidKind": "joint-knob",
+      "distalRigidKind": "insertion-tip"
+    }
+  },
+  "conversion": [
+    "Validated one closed manifold mesh per FBX with no rig, animation, texture, UV, or material dependency",
+    "Preserved supplied faceted polygon-vertex normals",
+    "Centered the authored cross-section and normalized full source length to one unit",
+    "Clipped only at conservative measured stretch boundaries and preserved the complete source surface",
+    "Encoded generated Float32 position/normal buffers as synchronous base64 data",
+    "Derived one boundary-tapered relative shaft-thickness morph from the measured source blend widths",
+    "Closed and validated the pinned shaft boundary rings during import and derived each morph's quadratic volume polynomial",
+    "Solved that polynomial for volume-preserving animation/design composition whenever the fixed boundary collars make a physical solution possible; guarded impossible combined extremes before inversion",
+    "Kept proximal and distal source regions rigid during longitudinal deformation",
+    "Did not redistribute the original FBX files or expiring Meshy URLs"
+  ]
+}

@@ -1,7 +1,21 @@
 {
   "targetName": "Stretchable Cartoon Limb Bone",
   "targetId": "stretchable-cartoon-limb-bone",
-  "schemaVersion": "2.1",
+  "schemaVersion": "2.2",
+  "productionSurfaceOverride": {
+    "active": true,
+    "source": "owner-supplied Meshy FBX derivatives",
+    "provenance": "public/characters/meshy-limb-bones/provenance.json",
+    "upperArms": "ivory-bone",
+    "forearmsThighsShins": "ivory-rattle",
+    "ivoryBoneStretchZone": [0.27, 0.76],
+    "ivoryRattleStretchZone": [0.19, 0.9],
+    "deformationRule": "Scale only the rebased middle shaft along local -Y; translate but never longitudinally scale the rigid distal source region.",
+    "thicknessRule": "Use a shared relative X/Z shaft morph whose influence tapers to zero at both clipped boundary rings; never scale either rigid end or any part's longitudinal Y scale.",
+    "volumeRule": "Derive a quadratic closed-volume polynomial from each final Float32 shaft and solve animation plus authored thickness together; clamp influence at -0.98 only when fixed collars make the requested thin+long volume physically impossible.",
+    "normalRule": "Use derivative flat normals for the supplied face-normal topology so lighting follows the moving thickness morph.",
+    "fallbackNote": "The procedural double-lobe component tree below remains a tested fallback contract, not the production player surface."
+  },
   "terminologyProfile": {
     "domain": "real-time procedural Three.js asset",
     "geometryTerms": [
@@ -235,8 +249,8 @@
   "qualityContract": {
     "qualityBar": "moderate",
     "definitionOfDone": [
-      "One reusable factory creates a smooth high-density cartoon bone segment with paired end lobes and a slender shaft.",
-      "Length changes from 0.55x to 1.75x affect the shaft and distal placement while both endpoint knobbles retain their local scale and shape.",
+      "One reusable factory instantiates the source-derived Ivory Bone or Ivory Rattle surface from shared synchronous geometry.",
+      "Length changes from 0.55x to 1.75x affect only the measured shaft span and distal placement while both source end regions retain local scale and shape.",
       "The component integrates into all arm and leg segment anchors without adding skeleton joints or breaking existing sockets, IK, keyframes, proportions or gameplay collision.",
       "Neutral, compressed, elongated, side and rear captures show connected volume with no gaps, collapsed silhouette or faceted highlight banding."
     ],
@@ -373,9 +387,9 @@
   "qualityTargets": {
     "targetFidelity": 0.82,
     "mustMatch": [
-      "paired double-lobe end silhouette",
-      "smooth slender waist and gap-free embedded endpoints",
-      "shaft-only stretch with invariant knobble transforms",
+      "authored Ivory Bone upper-arm silhouette",
+      "authored Ivory Rattle knobless insertion tip",
+      "measured shaft-only stretch with invariant rigid-end transforms",
       "warm ivory smooth clay material response",
       "existing semantic rig, sockets, IK and collision remain unchanged"
     ],
@@ -2567,7 +2581,7 @@
           "id": "player-integration-parity",
           "score": 0.98,
           "visible": true,
-          "notes": "Eight instances share one shaft geometry, one knobble geometry and one material; no geometry is regenerated during deformation, and the accepted silhouette is unchanged."
+          "notes": "Eight instances share six source-derived part geometries and one material; no geometry is regenerated during deformation, and the accepted silhouette is unchanged."
         }
       ],
       "referenceScreenshot": ".img2threejs/stretch-bone/reference-limb-crop.png",
@@ -3052,15 +3066,15 @@
           "id": "player-integration-parity",
           "score": 0.98,
           "visible": true,
-          "notes": "Eight instances share one shaft geometry, one knobble geometry and one material; no geometry is regenerated during deformation, and the accepted silhouette is unchanged."
+          "notes": "Each source type shares its immutable proximal, shaft, and distal geometries across every mapped limb plus one material; no geometry is regenerated during deformation, and the accepted silhouette is unchanged."
         }
       ],
       "action": "continue",
       "summary": "The production pair of arms and legs stays within its 60 FPS budget by sharing immutable high-density geometry and material resources.",
       "matched": [
-        "35,072 rendered limb-bone triangles",
-        "20 meshes",
-        "two shared immutable geometries",
+        "13,096 rendered limb-surface triangles",
+        "24 meshes",
+        "six shared immutable source-derived geometries",
         "one shared material",
         "eight components",
         "no per-frame geometry allocation"
@@ -3117,7 +3131,7 @@
     "maxDrawCalls": 28,
     "textureSize": 64,
     "fpsTarget": 60,
-    "optimizationPolicy": "Share one immutable shaft geometry, one immutable knobble geometry and one clay material across all eight limb instances; never regenerate geometry during stretch."
+    "optimizationPolicy": "Share the six immutable source-derived proximal/shaft/distal geometries and one clay material across all mapped limb instances; never regenerate geometry during stretch."
   },
   "lightingFromPhoto": [
     {
@@ -3180,11 +3194,12 @@
     }
   ],
   "proceduralStrategy": [
-    "Revolve a dense smooth radius profile across the inner 90% of the endpoint span.",
-    "Revolve one transverse double-lobe profile and share it between both endpoint meshes.",
+    "Fallback only: revolve a dense smooth radius profile across the inner 90% of the endpoint span.",
+    "Fallback only: revolve one transverse double-lobe profile and share it between both endpoint meshes.",
+    "Production: decode the two audited Meshy surfaces and share their clipped proximal, shaft, and distal geometries across mapped limbs.",
     "Keep the proximal knobble fixed and translate the distal knobble/socket without scaling either end mass.",
     "Use existing semantic bones as attachment anchors; add no replacement skeleton.",
-    "Use solid warm ivory PBR response and smooth normals rather than projected texture or procedural noise.",
+    "Use solid warm ivory PBR response; production source faces use deformation-safe derivative flat normals, while the procedural fallback retains smooth normals.",
     "Share immutable geometry and material objects across every arm and leg instance."
   ],
   "animationAnchors": [

@@ -1,5 +1,10 @@
 import * as THREE from 'three';
-import { directStretchableBones } from '../character/stretchableBone';
+import {
+  applyResolvedStretchableBoneLength,
+  directStretchableBones,
+  stretchableBoneShaftLengthRatio,
+  stretchableBoneVolumeMorphInfluence,
+} from '../character/stretchableBone';
 
 export type RigVector3 = readonly [number, number, number];
 export type RigQuaternion = readonly [number, number, number, number];
@@ -87,10 +92,13 @@ interface AppliedDeformationState {
   readonly object: THREE.Object3D;
   readonly basePosition: THREE.Vector3;
   readonly baseScale: THREE.Vector3;
+  readonly baseMorphInfluence: number | null;
   readonly deformedPosition: THREE.Vector3;
   readonly deformedScale: THREE.Vector3;
+  deformedMorphInfluence: number | null;
   readonly movesPosition: boolean;
   readonly movesScale: boolean;
+  readonly movesMorph: boolean;
 }
 
 const EPSILON_SQ = 1e-14;
@@ -276,8 +284,18 @@ function approximatelyCurrent(
 ): boolean {
   return (
     (!state.movesPosition || object.position.distanceToSquared(state.deformedPosition) <= EPSILON_SQ) &&
-    (!state.movesScale || object.scale.distanceToSquared(state.deformedScale) <= EPSILON_SQ)
+    (!state.movesScale || object.scale.distanceToSquared(state.deformedScale) <= EPSILON_SQ) &&
+    (!state.movesMorph || (
+      firstMorphInfluence(object) !== null &&
+      state.deformedMorphInfluence !== null &&
+      Math.abs(firstMorphInfluence(object)! - state.deformedMorphInfluence) <= 1e-10
+    ))
   );
+}
+
+function firstMorphInfluence(object: THREE.Object3D): number | null {
+  const influences = (object as THREE.Mesh).morphTargetInfluences;
+  return influences?.length ? influences[0] : null;
 }
 
 function renderableDirectChildren(node: THREE.Object3D): THREE.Object3D[] {
@@ -326,16 +344,16 @@ export class PlayerAnimationBridge {
   /** Return to the pose captured on preview entry while keeping preview open. */
   resetPreview(): void {
     if (!this.previewSnapshot) return;
+    this.restoreDeformationStates(true);
     restoreHierarchy(this.previewSnapshot);
-    this.deformationStates = [];
   }
 
   /** Restore the captured pose before relinquishing editor ownership. */
   exitPreview(): void {
     if (!this.previewSnapshot) return;
+    this.restoreDeformationStates(true);
     restoreHierarchy(this.previewSnapshot);
     this.previewSnapshot = null;
-    this.deformationStates = [];
   }
 
   setOverlay(overlay: PlayerAnimationOverlay | null): () => void {
@@ -356,8 +374,8 @@ export class PlayerAnimationBridge {
     // fail closed: return to the captured authoritative pose before gameplay
     // gets a chance to observe or accumulate an editor-authored transform.
     if (this.previewSnapshot) {
+      this.restoreDeformationStates(true);
       restoreHierarchy(this.previewSnapshot);
-      this.deformationStates = [];
     }
   }
 
@@ -386,12 +404,7 @@ export class PlayerAnimationBridge {
     // If the animation sampler has not rewritten an endpoint since the last
     // pass, undo our prior endpoint translation. If it has, that new pose is
     // the baseline and must not be replaced with stale data.
-    for (const state of this.deformationStates) {
-      if (!approximatelyCurrent(state.object, state)) continue;
-      if (state.movesPosition) state.object.position.copy(state.basePosition);
-      if (state.movesScale) state.object.scale.copy(state.baseScale);
-    }
-    this.deformationStates = [];
+    this.restoreDeformationStates();
 
     const rig = this.rig;
     const visualStates = new Map<THREE.Object3D, AppliedDeformationState>();
@@ -402,6 +415,7 @@ export class PlayerAnimationBridge {
       map: Map<THREE.Object3D, AppliedDeformationState>,
       object: THREE.Object3D,
       movesScale: boolean,
+      movesMorph = false,
     ): AppliedDeformationState => {
       let state = map.get(object);
       if (!state) {
@@ -409,10 +423,13 @@ export class PlayerAnimationBridge {
           object,
           basePosition: object.position.clone(),
           baseScale: object.scale.clone(),
+          baseMorphInfluence: firstMorphInfluence(object),
           deformedPosition: object.position.clone(),
           deformedScale: object.scale.clone(),
+          deformedMorphInfluence: firstMorphInfluence(object),
           movesPosition: true,
           movesScale,
+          movesMorph,
         };
         map.set(object, state);
       }
@@ -428,7 +445,7 @@ export class PlayerAnimationBridge {
       );
       if (Math.abs(lengthScale - 1) <= 1e-8) continue;
       axis.fromArray(policy.lengthAxis as [number, number, number]).normalize();
-      const transverse =
+      const proceduralTransverse =
         policy.volume === 'preserve-cross-section-area'
           ? 1 / Math.sqrt(lengthScale)
           : 1;
@@ -440,7 +457,41 @@ export class PlayerAnimationBridge {
       // knobble/socket translate to the new endpoint while both knobbles keep
       // their local scale and shape exactly unchanged.
       for (const component of directStretchableBones(anchor)) {
-        const shaft = stateFor(visualStates, component.shaft, true);
+        const shaft = stateFor(
+          visualStates,
+          component.shaft,
+          true,
+          component.metadata.surface !== 'procedural',
+        );
+        if (component.metadata.surface !== 'procedural') {
+          const distalRigid = component.distalKnob
+            ? stateFor(visualStates, component.distalKnob, false)
+            : null;
+          const distalSocket = stateFor(visualStates, component.distalSocket, false);
+          applyResolvedStretchableBoneLength(component, lengthScale);
+          const shaftLongitudinalRatio = stretchableBoneShaftLengthRatio(
+            component,
+            1,
+            lengthScale,
+          );
+          const shaftTransverse = policy.volume === 'preserve-cross-section-area'
+            ? stretchableBoneVolumeMorphInfluence(component, shaftLongitudinalRatio) + 1
+            : 1;
+          const influences = (component.shaft as THREE.Mesh).morphTargetInfluences;
+          if (influences?.length) influences[0] = shaftTransverse - 1;
+          component.shaft.scale.x = shaft.baseScale.x;
+          component.shaft.scale.z = shaft.baseScale.z;
+          shaft.deformedPosition.copy(component.shaft.position);
+          shaft.deformedScale.copy(component.shaft.scale);
+          shaft.deformedMorphInfluence = firstMorphInfluence(component.shaft);
+          if (distalRigid && component.distalKnob) {
+            distalRigid.deformedPosition.copy(component.distalKnob.position);
+            distalRigid.deformedScale.copy(component.distalKnob.scale);
+          }
+          distalSocket.deformedPosition.copy(component.distalSocket.position);
+          distalSocket.deformedScale.copy(component.distalSocket.scale);
+          continue;
+        }
         offset.copy(shaft.basePosition);
         const projection = offset.dot(axis);
         component.shaft.position.copy(shaft.basePosition).addScaledVector(
@@ -449,11 +500,11 @@ export class PlayerAnimationBridge {
         );
         component.shaft.scale.copy(shaft.baseScale);
         component.shaft.scale.x *=
-          Math.abs(axis.x) * lengthScale + (1 - Math.abs(axis.x)) * transverse;
+          Math.abs(axis.x) * lengthScale + (1 - Math.abs(axis.x)) * proceduralTransverse;
         component.shaft.scale.y *=
-          Math.abs(axis.y) * lengthScale + (1 - Math.abs(axis.y)) * transverse;
+          Math.abs(axis.y) * lengthScale + (1 - Math.abs(axis.y)) * proceduralTransverse;
         component.shaft.scale.z *=
-          Math.abs(axis.z) * lengthScale + (1 - Math.abs(axis.z)) * transverse;
+          Math.abs(axis.z) * lengthScale + (1 - Math.abs(axis.z)) * proceduralTransverse;
         shaft.deformedPosition.copy(component.shaft.position);
         shaft.deformedScale.copy(component.shaft.scale);
 
@@ -479,9 +530,12 @@ export class PlayerAnimationBridge {
           projection * (lengthScale - 1),
         );
         visual.scale.copy(state.baseScale);
-        visual.scale.x *= Math.abs(axis.x) * lengthScale + (1 - Math.abs(axis.x)) * transverse;
-        visual.scale.y *= Math.abs(axis.y) * lengthScale + (1 - Math.abs(axis.y)) * transverse;
-        visual.scale.z *= Math.abs(axis.z) * lengthScale + (1 - Math.abs(axis.z)) * transverse;
+        visual.scale.x *=
+          Math.abs(axis.x) * lengthScale + (1 - Math.abs(axis.x)) * proceduralTransverse;
+        visual.scale.y *=
+          Math.abs(axis.y) * lengthScale + (1 - Math.abs(axis.y)) * proceduralTransverse;
+        visual.scale.z *=
+          Math.abs(axis.z) * lengthScale + (1 - Math.abs(axis.z)) * proceduralTransverse;
         state.deformedPosition.copy(visual.position);
         state.deformedScale.copy(visual.scale);
       }
@@ -503,8 +557,20 @@ export class PlayerAnimationBridge {
   }
 
   private restoreOverlayBaseline(): void {
+    this.restoreDeformationStates(true);
     if (this.overlayBaselineApplied) restoreHierarchy(this.overlayBaseline);
     this.overlayBaselineApplied = false;
+  }
+
+  private restoreDeformationStates(force = false): void {
+    for (const state of this.deformationStates) {
+      if (!force && !approximatelyCurrent(state.object, state)) continue;
+      if (state.movesPosition) state.object.position.copy(state.basePosition);
+      if (state.movesScale) state.object.scale.copy(state.baseScale);
+      if (state.movesMorph && state.baseMorphInfluence !== null) {
+        (state.object as THREE.Mesh).morphTargetInfluences![0] = state.baseMorphInfluence;
+      }
+    }
     this.deformationStates = [];
   }
 }

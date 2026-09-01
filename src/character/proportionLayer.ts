@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 import { PROCEDURAL_SHIN_LENGTH, PROCEDURAL_THIGH_LENGTH } from '../legRig';
-import { directStretchableBones } from './stretchableBone';
+import {
+  applyResolvedStretchableBoneLength,
+  directStretchableBones,
+  stretchableBoneLengthScale,
+  stretchableBoneShaftLengthRatio,
+  stretchableBoneVolumeMorphInfluence,
+} from './stretchableBone';
 import type { CharacterProportionSettingsValue } from './settings';
 
 interface TransformState {
@@ -8,12 +14,15 @@ interface TransformState {
   readonly basePosition: THREE.Vector3;
   readonly baseQuaternion: THREE.Quaternion;
   readonly baseScale: THREE.Vector3;
+  readonly baseMorphInfluence: number | null;
   readonly appliedPosition: THREE.Vector3;
   readonly appliedQuaternion: THREE.Quaternion;
   readonly appliedScale: THREE.Vector3;
+  appliedMorphInfluence: number | null;
   movesPosition: boolean;
   movesQuaternion: boolean;
   movesScale: boolean;
+  movesMorph: boolean;
 }
 
 interface RuntimeDeformation {
@@ -21,6 +30,7 @@ interface RuntimeDeformation {
   jointId?: unknown;
   downstreamJointIds?: unknown;
   lengthAxis?: unknown;
+  volume?: unknown;
 }
 
 const EPSILON_SQ = 1e-14;
@@ -62,6 +72,11 @@ function runtimeDeformations(root: THREE.Object3D): RuntimeDeformation[] {
   return Array.isArray(runtime?.deformations) ? runtime.deformations as RuntimeDeformation[] : [];
 }
 
+function firstMorphInfluence(object: THREE.Object3D): number | null {
+  const influences = (object as THREE.Mesh).morphTargetInfluences;
+  return influences?.length ? influences[0] : null;
+}
+
 /**
  * Applies persistent body design as a reversible presentation layer.
  *
@@ -99,6 +114,16 @@ export class CharacterProportionLayer {
       ) {
         state.object.quaternion.copy(state.baseQuaternion);
       }
+      const currentMorph = firstMorphInfluence(state.object);
+      if (
+        state.movesMorph &&
+        currentMorph !== null &&
+        state.appliedMorphInfluence !== null &&
+        Math.abs(currentMorph - state.appliedMorphInfluence) <= 1e-10
+      ) {
+        (state.object as THREE.Mesh).morphTargetInfluences![0] =
+          state.baseMorphInfluence ?? 0;
+      }
     }
     this.states.clear();
   }
@@ -124,7 +149,18 @@ export class CharacterProportionLayer {
       const anchor = jointName ? this.root.getObjectByName(jointName) : null;
       if (!factorKey || !axis || !anchor) continue;
       const factor = value[factorKey];
-      this.scaleStretchableBonesAlong(anchor, axis, factor);
+      const thicknessFactor = factorKey === 'upperArmLength' || factorKey === 'forearmLength'
+        ? value.armThickness
+        : factorKey === 'thighLength' || factorKey === 'shinLength'
+          ? value.legThickness
+          : 1;
+      this.scaleStretchableBonesAlong(
+        anchor,
+        axis,
+        factor,
+        thicknessFactor,
+        policy.volume === 'preserve-cross-section-area',
+      );
       this.scaleRenderableChildrenAlong(anchor, axis, factor);
       const endpointIds = Array.isArray(policy.downstreamJointIds)
         ? policy.downstreamJointIds.filter((id): id is string => typeof id === 'string')
@@ -218,6 +254,7 @@ export class CharacterProportionLayer {
       state.appliedPosition.copy(state.object.position);
       state.appliedQuaternion.copy(state.object.quaternion);
       state.appliedScale.copy(state.object.scale);
+      state.appliedMorphInfluence = firstMorphInfluence(state.object);
     }
   }
 
@@ -229,12 +266,15 @@ export class CharacterProportionLayer {
         basePosition: object.position.clone(),
         baseQuaternion: object.quaternion.clone(),
         baseScale: object.scale.clone(),
+        baseMorphInfluence: firstMorphInfluence(object),
         appliedPosition: object.position.clone(),
         appliedQuaternion: object.quaternion.clone(),
         appliedScale: object.scale.clone(),
+        appliedMorphInfluence: firstMorphInfluence(object),
         movesPosition: false,
         movesQuaternion: false,
         movesScale: false,
+        movesMorph: false,
       };
       this.states.set(object, state);
     }
@@ -285,6 +325,18 @@ export class CharacterProportionLayer {
     object.quaternion.copy(state.baseQuaternion).multiply(ROTATION_QUATERNION).normalize();
   }
 
+  private multiplyThicknessMorph(
+    object: THREE.Object3D | null | undefined,
+    factor: number,
+  ): void {
+    if (!object) return;
+    const influences = (object as THREE.Mesh).morphTargetInfluences;
+    if (!influences?.length) return;
+    const state = this.stateFor(object);
+    state.movesMorph = true;
+    influences[0] = (1 + influences[0]) * factor - 1;
+  }
+
   private scalePositionAlong(object: THREE.Object3D, axis: THREE.Vector3, factor: number): void {
     this.stateFor(object).movesPosition = true;
     const projection = object.position.dot(axis);
@@ -312,12 +364,44 @@ export class CharacterProportionLayer {
     anchor: THREE.Object3D,
     axis: THREE.Vector3,
     factor: number,
+    thicknessFactor: number,
+    preserveVolume: boolean,
   ): void {
     for (const component of directStretchableBones(anchor)) {
       const shaft = component.shaft;
       const shaftState = this.stateFor(shaft);
       shaftState.movesPosition = true;
       shaftState.movesScale = true;
+      if (component.metadata.surface !== 'procedural') {
+        const animationScale = stretchableBoneLengthScale(component);
+        const combinedScale = animationScale * factor;
+        if (component.distalKnob) {
+          this.stateFor(component.distalKnob).movesPosition = true;
+        }
+        this.stateFor(component.distalSocket).movesPosition = true;
+        applyResolvedStretchableBoneLength(
+          component,
+          combinedScale,
+        );
+        if (preserveVolume) {
+          const influences = (shaft as THREE.Mesh).morphTargetInfluences;
+          if (influences?.length) {
+            shaftState.movesMorph = true;
+            influences[0] = stretchableBoneVolumeMorphInfluence(
+              component,
+              stretchableBoneShaftLengthRatio(component, factor, combinedScale),
+              thicknessFactor - 1,
+            );
+          }
+        } else {
+          const influences = (shaft as THREE.Mesh).morphTargetInfluences;
+          if (influences?.length) {
+            shaftState.movesMorph = true;
+            influences[0] = thicknessFactor - 1;
+          }
+        }
+        continue;
+      }
       const shaftProjection = shaft.position.dot(axis);
       shaft.position.addScaledVector(axis, shaftProjection * (factor - 1));
       shaft.scale.x *= Math.abs(axis.x) * factor + (1 - Math.abs(axis.x));
@@ -340,6 +424,12 @@ export class CharacterProportionLayer {
   ): void {
     if (!anchor) return;
     for (const component of directStretchableBones(anchor)) {
+      if (component.metadata.surface !== 'procedural') {
+        if (!this.states.get(component.shaft)?.movesMorph) {
+          this.multiplyThicknessMorph(component.shaft, factor);
+        }
+        continue;
+      }
       this.multiplyScale(component.shaft, factor, 1, factor);
       for (const knob of [component.proximalKnob, component.distalKnob]) {
         // Design-time thickness changes may resize a knobble, but only

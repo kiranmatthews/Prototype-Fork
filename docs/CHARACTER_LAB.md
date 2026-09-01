@@ -63,9 +63,10 @@ separate.
 
 The Limb Bone Preview frames all bones, arms, or legs. The existing upper-arm,
 forearm, thigh and shin length sliders exercise the production deformation
-path: smooth shafts change length while both double-lobed end masses remain
-locally rigid. Thickness changes resize a knobble uniformly so it never turns
-into a stretched ellipsoid.
+path: only each measured Ivory Bone/Rattle shaft changes length while the
+authored knobs and knobless insertion tips remain locally rigid. Thickness
+changes the plain shaft cross-section through a boundary-safe taper without
+changing longitudinal proportions or either rigid end.
 
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current
