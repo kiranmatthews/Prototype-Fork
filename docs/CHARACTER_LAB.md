@@ -99,6 +99,17 @@ At the default fit, the waistband overlaps inside the torso and the lower-leg
 bone surfaces enter slightly inside both frayed hems. The former procedural
 pelvis, belt, cargo legs, pockets, and chain are retired.
 
+The **Shoes** view frames the attributed Meshy shoe-and-sock replacement on
+both feet. The single supplied source is mirrored laterally with corrected
+winding and normals. Shoe, sole, tongue, and lace islands remain rigid on the
+matching ankle; the separated sock island blends from ankle at its hidden base
+to the matching lower-leg/knee control at its cuff, so planted-foot rotation
+cannot swing the sock away from the shin. `Foot size` continues to scale the
+semantic ankle/toe/socket branch. `Leg thickness` drives only a tapered sock
+fit morph and leaves the shoe and hidden collar insertion unchanged. The sole
+plane and heel/foot/toe socket positions are preserved exactly. The former
+procedural sock, stripe, shoe sphere, straps, and capsule sole are retired.
+
 Double-clicking a slider label restores that one value. **Reset all** restores
 the complete default silhouette, and **Copy JSON** exports the current
 versioned settings for source review.

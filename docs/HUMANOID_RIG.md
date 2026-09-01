@@ -54,6 +54,18 @@ island is rigidly assigned. Independent pre-skin width/height/depth morphs own
 clothing fit, so `legThickness` affects limb bones but never the shorts. The
 waistband overlaps the torso and exposed lower legs insert inside the hems.
 
+Visible footwear uses the attributed static Meshy shoe-and-sock surface. The
+source contains no rig, so deterministic runtime geometry separates its sock
+island from the shoe and five lace/detail islands. Each rigid shoe is an
+`ankle-left/right` descendant, preserving outsole discovery and the existing
+planting contract. Each sock is skinned only to its matching knee and ankle:
+the hidden base follows the ankle while the cuff remains with the shin. The
+opposite foot is a lateral geometry mirror with corrected winding and normals.
+`footSize` still scales the ankle, toe and all three contact sockets together;
+`legThickness` widens the exposed sock through a tapered morph without scaling
+the shoe. `socket-foot-*`, `socket-heel-*`, and `socket-toe-*` retain their
+original transforms and animation identities.
+
 The visible torso is the attributed Meshy **Skeleton Tank Top** surface. Its
 source FBX is static and unrigged, so runtime code generates smooth weights for
 the existing torso-root, spine, chest, neck, and both clavicles; it does not add

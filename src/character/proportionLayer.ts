@@ -204,6 +204,18 @@ export class CharacterProportionLayer {
       influences[2] = value.shortsDepth - 1;
     }
 
+    for (const side of ['left', 'right'] as const) {
+      const sockSurface = this.root.getObjectByName(`meshy-sock-surface-${side}`);
+      if (!sockSurface) continue;
+      const state = this.stateFor(sockSurface);
+      const influences = (sockSurface as THREE.Mesh).morphTargetInfluences;
+      if (!influences?.length) {
+        throw new Error('Meshy sock requires a tapered thickness morph channel');
+      }
+      this.ownMorphChannels(state, sockSurface, [0]);
+      influences[0] = value.legThickness - 1;
+    }
+
     const legHeightDelta =
       PROCEDURAL_THIGH_LENGTH * (value.thighLength - 1) +
       PROCEDURAL_SHIN_LENGTH * (value.shinLength - 1);

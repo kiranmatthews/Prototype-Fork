@@ -1,0 +1,90 @@
+{
+  "generator": "Meshy",
+  "generatorUrl": "https://www.meshy.ai/",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseBasis": "Owner-supplied Meshy output; conservative free-plan attribution path used elsewhere in this repository",
+  "meshyUploadId": "01a05ba7-51f9-70f1-8b0f-8219b463ee92",
+  "sourceArchive": {
+    "file": "shoe and sock.zip",
+    "bytes": 13672755,
+    "uncompressedBytes": 13696128,
+    "sha256": "db0c703a336f51164e291df025d10205a98d569d27d198fb6b640eee2e5fb011"
+  },
+  "sourceFbx": {
+    "file": "Meshy_AI__0901063016_texture.fbx",
+    "bytes": 5386476,
+    "sha256": "d9b49aa72ada43f841bb824c3743e05cf19d0b295403f931ff3a821ce8464f43",
+    "formatVersion": 7400,
+    "runtimePolygonVertices": 9405,
+    "uniquePositions": 1677,
+    "triangles": 3135,
+    "surfaceIslands": 7,
+    "islandTriangleCounts": [1898, 631, 156, 152, 138, 82, 78],
+    "shoeAndLaceTriangles": 2504,
+    "sockTriangles": 631,
+    "attributes": ["position", "smooth-normal", "uv"],
+    "sourceBounds": {
+      "min": [-0.5, -0.26757800579071045, -0.3242189884185791],
+      "max": [0.5, 0.265625, 0.32617199420928955]
+    },
+    "contents": {
+      "meshes": 1,
+      "materials": 1,
+      "bones": 0,
+      "skins": 0,
+      "morphs": 0,
+      "animations": 0
+    },
+    "topologyNotes": "Preserved source openings, UV seams, 201 main-shoe boundary edges, and one source nonmanifold edge without welding or repair"
+  },
+  "sourceTextures": {
+    "baseColor": { "file": "Meshy_AI__0901063016_texture.png", "size": [2048, 2048], "bytes": 4120902, "sha256": "38d1c3b8d5d207444c9881ebc98032b5d88a238c6f74d9dd4980fe1129b69fda" },
+    "normal": { "file": "Meshy_AI__0901063016_texture_normal.png", "size": [2048, 2048], "bytes": 3054405, "sha256": "5a9578683c5b84f6a5dc61b6d570ef6bd64a26e9b33a0d22918821debf3cb5b6" },
+    "roughness": { "file": "Meshy_AI__0901063016_texture_roughness.png", "size": [2048, 2048], "bytes": 1112045, "sha256": "5f0aebd9b0611727ff542e0e47408df8a61bad10d4e17d1026a62020b5745b66" },
+    "metallic": { "file": "Meshy_AI__0901063016_texture_metallic.png", "size": [2048, 2048], "bytes": 22300, "sha256": "d26688c74db4c63b442119c351d3be1dda116a2312fd0e057e9c962058d37ce1" }
+  },
+  "conversionTool": "tools/import-meshy-footwear.mjs",
+  "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
+  "generatedModule": "src/character/meshyFootwear.generated.ts",
+  "generatedModuleSha256": "1a3a6b02872cdf9ee44c4620bdca9ade05b16cb67bdfc13fdc278c7ef47707eb",
+  "webTextureConversion": "macOS sips proportional resize to 1024x1024 PNG",
+  "webTextures": {
+    "baseColor": { "file": "base-color.png", "bytes": 1126661, "sha256": "409c9ad099e468396809eab74776fc0d6e8264f039fe0986f671ac930cfdb9ab" },
+    "normal": { "file": "normal.png", "bytes": 821923, "sha256": "638d8af012450ae8053284b54901d4db3f1b7e52e607767486aad8edc09ff265" },
+    "roughness": { "file": "roughness.png", "bytes": 347215, "sha256": "fbeb53e60ea1f2793517033fbb43722d77180539d697322916767c1aa1d25106" },
+    "metallic": { "file": "metallic.png", "bytes": 9651, "sha256": "2b7bf3425d049716cbe0eaa9ab0f2b1b68b819b73d3ee11b5ff58f131f8fe58b" }
+  },
+  "runtimeMapping": {
+    "axisConversion": "source [x,y,z] to canonical ankle-local [-y,z,-x]",
+    "runtimeBoundsBeforeFit": { "min": [-0.265625, -0.3242189884185791, -0.5], "max": [0.26757800579071045, 0.32617199420928955, 0.5] },
+    "restScale": 0.27,
+    "ankleLocalOffset": [0, 0.03753913, 0.065],
+    "restBounds": { "min": [-0.07171875, -0.05, -0.07], "max": [0.07224606156349182, 0.12560556828975678, 0.2] },
+    "contactContract": {
+      "soleY": -0.05,
+      "heelZ": -0.07,
+      "footCenterZ": 0.065,
+      "toeZ": 0.2
+    },
+    "mirror": "right side reflects final runtime X and reverses triangle winding/normals",
+    "shoeAttachment": "matching ankle bone",
+    "sockSkinBones": ["matching knee", "matching ankle"],
+    "sockKneeWeight": "smoothstep((ankleLocalY - 0.015) / (0.080 - 0.015))",
+    "proportionControls": ["footSize", "legThickness"],
+    "footSocketsPreserved": true,
+    "collisionChanged": false
+  },
+  "conversion": [
+    "Validated the exact static FBX and all four source texture hashes",
+    "Discarded the source node's 100x centimetre presentation transform",
+    "Preserved source positions, smooth normals, UV seams, all seven surface islands, and topology",
+    "Separated the 631-triangle sock island from the rigid shoe and five lace/detail islands",
+    "Attached the shoe rigidly to the existing ankle so deck-planting still discovers the outsole descendant",
+    "Generated a two-bone matching-knee-to-ankle sock skin so the cuff stays with the shin",
+    "Generated the opposite side by a corrected lateral reflection with winding and normal correction",
+    "Added a top-weighted sock thickness morph while keeping the hidden shoe insertion fixed",
+    "Removed the former procedural sock, stripe, shoe, straps, and sole surfaces",
+    "Did not redistribute the original FBX, archive, signed Meshy URL, or local download metadata"
+  ]
+}

@@ -115,6 +115,11 @@ import {
   meshyShortsTextureDiagnostics,
   type MeshyShortsComponent,
 } from './character/meshyShorts';
+import {
+  createMeshyFootwear,
+  meshyFootwearTextureDiagnostics,
+  type MeshyFootwearComponent,
+} from './character/meshyFootwear';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 
@@ -1019,6 +1024,7 @@ export class Player {
   private meshyTorso: MeshyTorsoComponent | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
   private meshyShorts: MeshyShortsComponent | null = null;
+  private readonly meshyFootwear: MeshyFootwearComponent[] = [];
   private headVisualCenter: THREE.Object3D | null = null;
   private headLookSocket: THREE.Object3D | null = null;
   private readonly headForward = new THREE.Vector3();
@@ -1745,6 +1751,30 @@ export class Player {
       triangles: component?.triangles ?? 0,
       sourceSha256: component?.sourceSha256 ?? null,
       skinBones: component?.skeleton.bones.map((bone) => bone.name) ?? [],
+      textureState: textures.state,
+      texturesLoaded: textures.loaded,
+      textureError: textures.error,
+    };
+  }
+
+  get meshyFootwearDiagnostics(): {
+    readonly ready: boolean;
+    readonly triangles: number;
+    readonly sourceSha256: string | null;
+    readonly sides: readonly string[];
+    readonly sockSkinBones: readonly (readonly string[])[];
+    readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
+    readonly texturesLoaded: number;
+    readonly textureError: string | null;
+  } {
+    const textures = meshyFootwearTextureDiagnostics();
+    return {
+      ready: this.meshyFootwear.length === 2,
+      triangles: this.meshyFootwear.reduce((sum, component) => sum + component.triangles, 0),
+      sourceSha256: this.meshyFootwear[0]?.sourceSha256 ?? null,
+      sides: this.meshyFootwear.map((component) => component.side),
+      sockSkinBones: this.meshyFootwear.map((component) =>
+        component.skeleton.bones.map((bone) => bone.name)),
       textureState: textures.state,
       texturesLoaded: textures.loaded,
       textureError: textures.error,
@@ -14384,10 +14414,6 @@ export class Player {
     // give the PS2 facet look; canvases only where cloth needs a print.
     const flat = (color: number): THREE.MeshLambertMaterial =>
       new THREE.MeshLambertMaterial({ color, flatShading: true });
-    const PINK = flat(0xe8447a); // trim pink (cuffs, socks, stitching)
-    const SHOE_PINK = flat(0xe0357a);
-    const WHITE = flat(0xf2efe8); // socks / straps
-    const CREAM = flat(0xefe6d6); // platform soles
     const INK = new THREE.MeshLambertMaterial({ color: 0x17181c }); // glove stitches
     const BONE_CLAY = new THREE.MeshPhysicalMaterial({
       name: 'character-bone-clay',
@@ -14406,14 +14432,6 @@ export class Player {
     const legs = new THREE.Bone();
     legs.name = 'hips';
     legs.position.y = 0.71; // hip line
-    const sockGeo = new THREE.CylinderGeometry(0.04, 0.046, 0.075, 10);
-    const sockStripeGeo = new THREE.CylinderGeometry(0.048, 0.048, 0.012, 10);
-    const shoeGeo = new THREE.SphereGeometry(0.085, 10, 7);
-    const strapGeo = new THREE.BoxGeometry(0.105, 0.016, 0.05);
-    // Rounded platform sole: capsule along Z, flattened only in its own rigid
-    // foot space. Unlike the old sharp box, it keeps a PS2-like toe/heel arc.
-    const soleGeo = new THREE.CapsuleGeometry(0.0675, 0.135, 2, 10);
-    soleGeo.rotateX(Math.PI / 2);
     for (const side of [-1, 1]) {
       // Rider-local forward is +Z, so +X is her anatomical left. The outer
       // Player group turns the finished rig toward world -Z at spawn.
@@ -14452,38 +14470,14 @@ export class Player {
       });
       knee.add(lowerLegBone.root);
       this.stretchableBones.push(lowerLegBone);
-      const sock = new THREE.Mesh(sockGeo, WHITE);
-      sock.position.y = -0.205;
-      knee.add(sock);
-      const stripe = new THREE.Mesh(sockStripeGeo, PINK);
-      stripe.position.y = -0.177;
-      knee.add(stripe);
-      // Ankle at the shoe collar. All child coordinates are the former
-      // knee-local values rebased around this pivot, so the rest silhouette is
-      // byte-for-byte equivalent while the foot gains an animation joint.
+      // Ankle at the shoe collar. The contact children retain their original
+      // authored coordinates, so replacing the visible footwear cannot move
+      // the sole plane or its heel/foot/toe animation targets.
       const ankle = new THREE.Bone();
       ankle.name = `ankle-${anatomicalSide}`;
       ankle.userData.anatomicalSide = anatomicalSide;
       ankle.position.y = -PROCEDURAL_SHIN_LENGTH;
       knee.add(ankle);
-      const shoe = new THREE.Mesh(shoeGeo, SHOE_PINK); // chunky pink hi-top
-      shoe.name = `shoe-${anatomicalSide}`;
-      shoe.scale.set(0.85, 0.5, 1.5);
-      shoe.position.set(0, -0.006, 0.065);
-      ankle.add(shoe);
-      const strapA = new THREE.Mesh(strapGeo, WHITE);
-      strapA.position.set(0, 0.006, 0.13);
-      strapA.rotation.x = 0.35;
-      ankle.add(strapA);
-      const strapB = new THREE.Mesh(strapGeo, WHITE);
-      strapB.position.set(0, -0.005, 0.055);
-      strapB.rotation.x = 0.15;
-      ankle.add(strapB);
-      const sole = new THREE.Mesh(soleGeo, CREAM); // platform slab (same floor reach as before)
-      sole.name = `sole-${anatomicalSide}`;
-      sole.scale.y = 0.26;
-      sole.position.set(0, -0.0325, 0.065);
-      ankle.add(sole);
       const footSocket = new THREE.Object3D();
       footSocket.name = `socket-foot-${anatomicalSide}`;
       footSocket.position.set(0, -0.05, 0.065); // centre of the sole's contact plane
@@ -14521,6 +14515,19 @@ export class Player {
     }
     riderG.add(legs);
     this.legs = legs;
+    for (const side of ['left', 'right'] as const) {
+      const knee = legs.getObjectByName(`knee-${side}`);
+      const ankle = legs.getObjectByName(`ankle-${side}`);
+      if (!(knee instanceof THREE.Bone) || !(ankle instanceof THREE.Bone)) {
+        throw new Error(`procedural character requires ${side} knee and ankle bones`);
+      }
+      this.meshyFootwear.push(createMeshyFootwear({
+        mount: riderG,
+        knee,
+        ankle,
+        side,
+      }));
+    }
     const shortsHipLeft = legs.getObjectByName('hip-left');
     const shortsHipRight = legs.getObjectByName('hip-right');
     if (!(shortsHipLeft instanceof THREE.Bone) || !(shortsHipRight instanceof THREE.Bone)) {
@@ -15035,6 +15042,22 @@ export class Player {
         skinBones: this.meshyShorts.skeleton.bones.map((bone) => bone.name),
         proportions: ['shortsWidth', 'shortsHeight', 'shortsDepth'],
         legThicknessLinked: false,
+        collisionChanged: false,
+      },
+      footwearSurfaces: {
+        kind: 'meshy-shoe-and-sock',
+        schemaVersion: 1,
+        provenance: 'public/characters/meshy-footwear/provenance.json',
+        sourceSha256: this.meshyFootwear[0].sourceSha256,
+        instances: this.meshyFootwear.length,
+        triangles: this.meshyFootwear.reduce((sum, component) =>
+          sum + component.triangles, 0),
+        shoeAttachments: this.meshyFootwear.map((component) =>
+          `ankle-${component.side}`),
+        sockSkinBones: this.meshyFootwear.map((component) =>
+          component.skeleton.bones.map((bone) => bone.name)),
+        controls: ['footSize', 'legThickness'],
+        footSocketsPreserved: true,
         collisionChanged: false,
       },
       limbBoneRig: {

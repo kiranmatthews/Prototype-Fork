@@ -237,6 +237,18 @@ and control isolation are recorded in
 owner-supplied Meshy attribution: **model created with
 [Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
 
+## Owner-supplied Meshy footwear
+
+The visible shoes and socks use the owner's generated Meshy shoe-and-sock
+model. The browser ships generated position/normal/UV/island data and resized
+PBR maps, not the original FBX or archive. Runtime code mirrors the single
+source for the opposite foot, keeps shoe/lace islands rigid on each ankle, and
+skins each sock between its matching knee and ankle. Source/derived hashes,
+upload provenance, contact fit, and rigging rules are recorded in
+`public/characters/meshy-footwear/provenance.json`. It uses the same
+conservative owner-supplied Meshy attribution: **model created with
+[Meshy](https://www.meshy.ai/) — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
+
 ## Everything else
 
 The remaining levels, physics, character rig, surface textures, editor and UI

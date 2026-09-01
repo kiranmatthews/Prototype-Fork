@@ -448,6 +448,49 @@ try {
   near(shortsSurface.morphTargetInfluences[2], -0.25);
   player.resetCharacterProportions();
   assert.deepEqual(shortsSurface.morphTargetInfluences, [0, 0, 0]);
+  assert.deepEqual(player.meshyFootwearDiagnostics, {
+    ready: true,
+    triangles: 6270,
+    sourceSha256: 'd9b49aa72ada43f841bb824c3743e05cf19d0b295403f931ff3a821ce8464f43',
+    sides: ['left', 'right'],
+    sockSkinBones: [
+      ['knee-left', 'ankle-left'],
+      ['knee-right', 'ankle-right'],
+    ],
+    textureState: 'loading',
+    texturesLoaded: 0,
+    textureError: null,
+  });
+  const shoeLeft = player.animationRig.root.getObjectByName('meshy-shoe-surface-left');
+  const shoeRight = player.animationRig.root.getObjectByName('meshy-shoe-surface-right');
+  const sockLeft = player.animationRig.root.getObjectByName('meshy-sock-surface-left');
+  const sockRight = player.animationRig.root.getObjectByName('meshy-sock-surface-right');
+  const ankleLeft = player.animationRig.root.getObjectByName('ankle-left');
+  const ankleRight = player.animationRig.root.getObjectByName('ankle-right');
+  assert.equal(shoeLeft.parent, ankleLeft);
+  assert.equal(shoeRight.parent, ankleRight);
+  assert.equal(sockLeft.parent.name, 'procedural-rider');
+  assert.equal(sockRight.parent.name, 'procedural-rider');
+  assert.equal(sockLeft.isSkinnedMesh, true);
+  assert.equal(sockRight.isSkinnedMesh, true);
+  assert.equal(player.animationRig.root.getObjectByName('shoe-left'), undefined);
+  assert.equal(player.animationRig.root.getObjectByName('shoe-right'), undefined);
+  assert.equal(player.animationRig.root.getObjectByName('sole-left'), undefined);
+  assert.equal(player.animationRig.root.getObjectByName('sole-right'), undefined);
+  const shoeScaleBase = shoeLeft.scale.clone();
+  player.setCharacterProportions({ legThickness: 1.5 });
+  near(sockLeft.morphTargetInfluences[0], 0.5);
+  near(sockRight.morphTargetInfluences[0], 0.5);
+  assert.deepEqual(shoeLeft.scale.toArray(), shoeScaleBase.toArray());
+  player.setCharacterProportions({ footSize: 1.4, legThickness: 1 });
+  assert.deepEqual(ankleLeft.scale.toArray(), [1.4, 1.4, 1.4]);
+  assert.deepEqual(ankleRight.scale.toArray(), [1.4, 1.4, 1.4]);
+  near(sockLeft.morphTargetInfluences[0], 0);
+  player.resetCharacterProportions();
+  assert.deepEqual(ankleLeft.scale.toArray(), [1, 1, 1]);
+  assert.deepEqual(ankleRight.scale.toArray(), [1, 1, 1]);
+  assert.deepEqual(sockLeft.morphTargetInfluences, [0]);
+  assert.deepEqual(sockRight.morphTargetInfluences, [0]);
   assert.deepEqual(new Set(player.stretchableBoneDiagnostics.ids), new Set([
     'upper-arm-left', 'lower-arm-left', 'upper-arm-right', 'lower-arm-right',
     'upper-leg-left', 'lower-leg-left', 'upper-leg-right', 'lower-leg-right',

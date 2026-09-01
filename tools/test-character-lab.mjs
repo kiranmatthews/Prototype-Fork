@@ -108,6 +108,14 @@ function fixture() {
     visual(`shin-${side}`, knee, [0, -0.11, 0]);
     const ankle = add(`ankle-${side}`, knee, [0, -0.25, 0]);
     visual(`foot-${side}`, ankle, [0, -0.04, 0.08]);
+    const sockSurface = visual(`meshy-sock-surface-${side}`, rider, [sign * 0.115, 0.15, 0]);
+    const sockPosition = sockSurface.geometry.getAttribute('position');
+    const sockThicknessMorph = new THREE.Float32BufferAttribute(
+      new Float32Array(sockPosition.count * 3), 3);
+    sockThicknessMorph.name = 'sock-thickness';
+    sockSurface.geometry.morphAttributes.position = [sockThicknessMorph];
+    sockSurface.geometry.morphTargetsRelative = true;
+    sockSurface.updateMorphTargets();
     add(`ear-${side}`, head, [sign * 0.1, 0.13, 0]);
     for (const part of ['white', 'iris', 'pupil', 'lash']) {
       visual(`eye-${part}-${side}`, head, [sign * 0.07, 0.03, 0.15]);
@@ -304,6 +312,8 @@ try {
   near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[0], 0.3);
   near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[1], 0.2);
   near(scene.nodes.get('meshy-shorts-surface').morphTargetInfluences[2], -0.2);
+  near(scene.nodes.get('meshy-sock-surface-left').morphTargetInfluences[0], -0.18);
+  near(scene.nodes.get('meshy-sock-surface-right').morphTargetInfluences[0], -0.18);
   near(scene.nodes.get('knee-left').position.y, -0.28 * 1.3);
   near(scene.nodes.get('ankle-left').position.y, -0.25 * 0.8);
   near(scene.nodes.get('wrist-left').scale.x, 1.25);

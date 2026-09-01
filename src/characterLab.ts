@@ -267,6 +267,7 @@ class CharacterLab implements CharacterLabHandle {
       ['Rear', 'rear'],
       ['Torso', 'torso'],
       ['Shorts', 'shorts'],
+      ['Shoes', 'footwear'],
       ['Head', 'head'],
       ['Hands', 'hands'],
       ['Bones', 'bones'],
@@ -484,6 +485,21 @@ class CharacterLab implements CharacterLabHandle {
     return new THREE.Box3().setFromObject(shorts);
   }
 
+  private footwearBounds(): THREE.Box3 {
+    const bounds = new THREE.Box3().makeEmpty();
+    for (const side of ['left', 'right'] as const) {
+      const shoe = this.ctx.rigRoot.getObjectByName(`meshy-shoe-surface-${side}`);
+      if (shoe) bounds.expandByObject(shoe);
+      const sock = this.ctx.rigRoot.getObjectByName(`meshy-sock-surface-${side}`) as
+        THREE.SkinnedMesh | undefined;
+      if (sock?.isSkinnedMesh) {
+        sock.computeBoundingBox();
+        bounds.expandByObject(sock);
+      }
+    }
+    return bounds.isEmpty() ? this.characterBounds() : bounds;
+  }
+
   private updateFloorAndStatus(): void {
     const bounds = this.characterBounds();
     const size = bounds.getSize(new THREE.Vector3());
@@ -494,6 +510,7 @@ class CharacterLab implements CharacterLabHandle {
     const torso = this.ctx.player.meshyTorsoDiagnostics;
     const head = this.ctx.player.meshyHeadDiagnostics;
     const shorts = this.ctx.player.meshyShortsDiagnostics;
+    const footwear = this.ctx.player.meshyFootwearDiagnostics;
     let proceduralHandMeshesVisible = 0;
     for (const side of ['left', 'right'] as const) {
       this.ctx.rigRoot.getObjectByName(`cartoon-glove-${side}`)?.traverse((object) => {
@@ -520,17 +537,23 @@ class CharacterLab implements CharacterLabHandle {
         ? 'Meshy shorts ready'
         : `Meshy shorts geometry ready · textures ${shorts.textureState}`
       : 'Meshy shorts missing';
+    const footwearStatus = footwear.ready
+      ? footwear.textureState === 'ready'
+        ? 'Meshy footwear ready'
+        : `Meshy footwear geometry ready · textures ${footwear.textureState}`
+      : 'Meshy footwear missing';
     this.status.textContent =
       `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} world units\n` +
       `${diagnostics.appliedObjectCount} proportion targets · collision unchanged\n` +
       `${torsoStatus} · ${torso.triangles.toLocaleString()} tris\n` +
       `${shortsStatus} · ${shorts.triangles.toLocaleString()} tris\n` +
+      `${footwearStatus} · ${footwear.triangles.toLocaleString()} tris\n` +
       `${headStatus} · ${head.triangles.toLocaleString()} tris\n` +
       `${handStatus} · fallback meshes visible ${proceduralHandMeshesVisible}`;
   }
 
   private frameCamera(
-    view: 'front' | 'three-quarter' | 'side' | 'rear' | 'torso' | 'shorts' | 'head' |
+    view: 'front' | 'three-quarter' | 'side' | 'rear' | 'torso' | 'shorts' | 'footwear' | 'head' |
       'hands' | 'hands-front' | 'hands-side' | 'hands-rear' |
       'bones' | 'bones-arms' | 'bones-legs',
   ): void {
@@ -542,6 +565,8 @@ class CharacterLab implements CharacterLabHandle {
           ? this.torsoBounds()
           : view === 'shorts'
             ? this.shortsBounds()
+          : view === 'footwear'
+            ? this.footwearBounds()
           : view === 'head'
             ? this.headBounds()
           : this.characterBounds();
@@ -555,6 +580,7 @@ class CharacterLab implements CharacterLabHandle {
       rear: new THREE.Vector3(0, 0.12, 1),
       torso: new THREE.Vector3(0.72, 0.08, -1),
       shorts: new THREE.Vector3(0.72, 0.05, -1),
+      footwear: new THREE.Vector3(0.72, 0.08, -1),
       head: new THREE.Vector3(0.72, 0.04, -1),
       hands: new THREE.Vector3(0.72, 0.12, -1),
       'hands-front': new THREE.Vector3(0, 0.06, -1),
