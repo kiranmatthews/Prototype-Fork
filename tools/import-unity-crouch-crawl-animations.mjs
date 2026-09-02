@@ -44,7 +44,7 @@ const CLIP_SPECS = Object.freeze({
     outputDuration: CRAWL_OUTPUT_FRAMES / SAMPLE_RATE,
     productionSourceWindow: { start: 219 / SAMPLE_RATE, end: 271 / SAMPLE_RATE },
     productionPostProcess:
-      'frames 219-271 retimed as one half-cycle plus an X-mirrored opposite half; six-frame internal/outer cyclic overlaps reproduce Unity Loop Pose',
+      'frames 219-271 retimed as one half-cycle plus an X-mirrored opposite half; six-frame internal/outer cyclic overlaps reproduce Unity Loop Pose; both wrists receive a 180-degree local-Y yaw correction',
   },
 });
 
@@ -384,6 +384,16 @@ function neutralizeCrouchHipsYaw(sampled) {
     euler.setFromQuaternion(value, 'YXZ');
     euler.y = 0;
     value.setFromEuler(euler).normalize();
+  }
+  return sampled;
+}
+
+function rotateCrawlWristYaw(sampled) {
+  const halfTurn = new THREE.Quaternion(0, 1, 0, 0);
+  for (const joint of ['wristLeft', 'wristRight']) {
+    const values = sampled.rotations.get(joint);
+    if (!values) throw new Error(`crawl retarget is missing the ${joint} rotation track`);
+    for (const value of values) value.multiply(halfTurn).normalize();
   }
   return sampled;
 }
@@ -747,7 +757,7 @@ async function main() {
       id !== 'crawl',
     );
     const sampled = id === 'crawl'
-      ? synthesizeAlternatingCrawlLoop(sourceSamples)
+      ? rotateCrawlWristYaw(synthesizeAlternatingCrawlLoop(sourceSamples))
       : id === 'crouchIdle'
         ? neutralizeCrouchHipsYaw(sourceSamples)
         : sourceSamples;

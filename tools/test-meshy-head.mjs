@@ -27,8 +27,11 @@ const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 try {
   const headApi = await server.ssrLoadModule('/src/character/meshyHead.ts');
+  const alternateHeadApi = await server.ssrLoadModule('/src/character/meshyCocoHead.ts');
   const { MESHY_HEAD_ASSET } = await server.ssrLoadModule(
     '/src/character/meshyHead.generated.ts');
+  const { MESHY_COCO_HEAD_ASSET } = await server.ssrLoadModule(
+    '/src/character/meshyCocoHead.generated.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule(
     '/src/character/proportionLayer.ts');
   const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
@@ -40,6 +43,7 @@ try {
   } = headApi;
 
   const component = createMeshyHead();
+  const alternate = alternateHeadApi.createMeshyCocoHead();
   assert.equal(component.triangles, 16536);
   assert.equal(component.mesh.geometry.getAttribute('position').count, 49608);
   assert.equal(component.mesh.geometry.getAttribute('uv').count, 49608);
@@ -58,6 +62,15 @@ try {
   near(component.mesh.scale.x, MESHY_HEAD_REST_SCALE);
   near(component.mesh.scale.y, MESHY_HEAD_REST_SCALE);
   near(component.mesh.scale.z, MESHY_HEAD_REST_SCALE);
+  assert.equal(alternate.triangles, 15634);
+  assert.equal(alternate.mesh.geometry.getAttribute('position').count, 46902);
+  assert.equal(alternate.mesh.geometry.getAttribute('uv').count, 46902);
+  alternate.mesh.geometry.computeBoundingBox();
+  assert.deepEqual(alternate.mesh.geometry.boundingBox.min.toArray(),
+    [-0.5, 0, -0.259765625]);
+  assert.deepEqual(alternate.mesh.geometry.boundingBox.max.toArray(),
+    [0.5, 0.7890625, 0.26171875]);
+  near(alternate.mesh.scale.x, 0.46);
 
   const rider = new THREE.Group();
   rider.name = 'procedural-rider';
@@ -77,6 +90,7 @@ try {
   head.position.y = 0.095;
   neck.add(head);
   head.add(component.mesh);
+  head.add(alternate.mesh);
   rider.userData.sculptRuntime = { joints: {}, deformations: [] };
   const layer = new CharacterProportionLayer(rider);
 
@@ -149,14 +163,38 @@ try {
     provenance.webTextures.metallic.sha256,
   ]);
   assert.match(playerSource, /createMeshyHead\(/);
+  assert.match(playerSource, /createMeshyCocoHead\(/);
+  assert.match(playerSource, /setCharacterHeadStyle/);
   assert.match(playerSource, /socket-head-visual-center/);
   assert.match(playerSource, /headLookSocket\.getWorldQuaternion/);
   assert.doesNotMatch(playerSource,
     /neck-volume|const skull =|const muzzle =|eye-white-|earOuterGeo|const crown =/);
   assert.match(labSource, /\['Head', 'head'\]/);
+  assert.match(labSource, /\['alternate', 'Alternate'\]/);
   assert.match(mainSource, /getMeshyHeadDiagnostics/);
+  assert.match(mainSource, /getAlternateHeadDiagnostics/);
   assert.match(JSON.parse(packageSource).scripts['check:character-lab'],
     /test-meshy-head\.mjs/);
+
+  const [alternateGenerated, alternateProvenanceSource, ...alternateTextureBytes] =
+    await Promise.all([
+      readFile(resolve(root, 'src/character/meshyCocoHead.generated.ts')),
+      readFile(resolve(root, 'public/characters/meshy-coco-head/provenance.json'), 'utf8'),
+      readFile(resolve(root, 'public/characters/meshy-coco-head/base-color.png')),
+      readFile(resolve(root, 'public/characters/meshy-coco-head/normal.png')),
+      readFile(resolve(root, 'public/characters/meshy-coco-head/roughness.png')),
+      readFile(resolve(root, 'public/characters/meshy-coco-head/metallic.png')),
+    ]);
+  const alternateProvenance = JSON.parse(alternateProvenanceSource);
+  assert.equal(MESHY_COCO_HEAD_ASSET.sourceSha256,
+    '3785121eba8296c773d3d41834ae2e44eb4b7da471576772fe4eea0c1d9aacf3');
+  assert.equal(sha256(alternateGenerated), alternateProvenance.generatedModuleSha256);
+  assert.deepEqual(alternateTextureBytes.map(sha256), [
+    alternateProvenance.webTextures.baseColor.sha256,
+    alternateProvenance.webTextures.normal.sha256,
+    alternateProvenance.webTextures.roughness.sha256,
+    alternateProvenance.webTextures.metallic.sha256,
+  ]);
 
   console.log('PASS Meshy head geometry, textures, semantic attachment, pure neck gap, provenance, and player wiring');
 } finally {

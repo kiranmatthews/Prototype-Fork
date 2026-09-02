@@ -103,7 +103,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 15;
+export const PLAYER_STARTER_CATALOG_VERSION = 16;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -169,6 +169,16 @@ const LEGACY_YAWED_UNITY_CROUCH_CANONICAL_SIGNATURES = new Set([
   'e574b172', // deployed/browser-restored v13
   'ed746188', // deployed catalog v12
 ]);
+const LEGACY_STATIC_LANDING_SIGNATURES = new Set([
+  ...LEGACY_AIRBORNE_STARTER_SIGNATURES['player.land'],
+  '7f302bef', // source catalog v15
+  '778dcc73', // normalized/browser catalog v15
+  '7736ff6e', // deployed/browser-restored catalog v8
+]);
+const LEGACY_STATIC_LANDING_CANONICAL_SIGNATURES = new Set([
+  'a1e20e94',
+  '4fda89e9', // deployed/browser-restored catalog v8
+]);
 
 function stableCatalogValue(value: unknown, quantizeNumbers = false): string {
   if (Array.isArray(value)) {
@@ -225,6 +235,36 @@ function canonicalLegacyStarterClipSignature(clip: AnimationClip): string {
     tags: [...(portableClip.tags ?? [])].sort(),
   };
   return hashCatalogValue(canonical, true);
+}
+
+function withCrawlWristYawRevision(clip: AnimationClip): AnimationClip {
+  if (clip.metadata?.wristYawRevision === 1) return clip;
+  const halfTurn = new THREE.Quaternion(0, 1, 0, 0);
+  return {
+    ...clip,
+    tracks: clip.tracks.map((track) => {
+      if (
+        track.kind !== 'quaternion' ||
+        (track.target !== 'wristLeft' && track.target !== 'wristRight')
+      ) return track;
+      return {
+        ...track,
+        keys: track.keys.map((key) => ({
+          ...key,
+          value: new THREE.Quaternion()
+            .fromArray(key.value)
+            .multiply(halfTurn)
+            .normalize()
+            .toArray() as QuaternionTuple,
+        })),
+      };
+    }),
+    metadata: {
+      ...clip.metadata,
+      wristYawRevision: 1,
+      wristYawCorrectionDegrees: 180,
+    },
+  };
 }
 
 function forwardRollSquashDrivers(clipId: string): ProceduralDriverDefinition[] {
@@ -1021,7 +1061,7 @@ function buildFall(rigId: string): AnimationClip {
 function buildLand(rigId: string): AnimationClip {
   const clip = baseClip('player.land', 'Land — Independent Compression Starter', 0.45, 'once', rigId);
   clip.tracks = [
-    positionTrack(clip.id, 'root', [[0, [0, 0.04, 0]], [0.075, [0, -0.18, 0.035]], [0.2, [0, -0.055, -0.012]], [0.45, [0, 0, 0]]]),
+    positionTrack(clip.id, 'root', [[0, [0, 0.04, 0]], [0.075, [0, -0.18, 0.035]], [0.18, [0, 0.06, -0.012]], [0.3, [0, 0.015, 0]], [0.45, [0, 0, 0]]]),
     quaternionTrack(clip.id, 'spine', [[0, -0.04, 0, 0], [0.075, 0.42, 0, 0], [0.2, 0.16, 0, 0], [0.45, 0, 0, 0]]),
     quaternionTrack(clip.id, 'hipLeft', [[0, -0.18, 0, 0], [0.075, -0.86, 0, 0.04], [0.2, -0.45, 0, 0], [0.45, 0, 0, 0]]),
     quaternionTrack(clip.id, 'kneeLeft', [[0, 0.38, 0, 0], [0.075, 1.52, 0, 0], [0.2, 0.82, 0, 0], [0.45, 0, 0, 0]]),
@@ -1054,6 +1094,13 @@ function buildLand(rigId: string): AnimationClip {
     starterQuality: 'authored-foundation',
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     deformationArc: 'neutral fall -> cushion squash -> rebound -> settle',
+    continuedRunTransition: {
+      impactCrossfadeSeconds: 0.06,
+      blendStartSeconds: 0.055,
+      blendEndSeconds: 0.28,
+      phaseSource: 'touchdown gait phase plus authored playback clock',
+      contactPolicy: 'phase-matched moving run feet; no gameplay or world-space foot lock',
+    },
   };
   return clip;
 }
@@ -1172,6 +1219,8 @@ function buildCrawl(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     floorLift: UNITY_CROUCH_CRAWL_TIMING.floorLift,
     outerPoseOwnership: UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
     contactAdaptation: UNITY_CRAWL_CONTACT_ADAPTATION,
+    wristYawRevision: 1,
+    wristYawCorrectionDegrees: 180,
   };
   return clip;
 }
@@ -1634,6 +1683,26 @@ export function reconcilePlayerStarterAnimationSuite(
     ) {
       clips = clips.map((clip) =>
         clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch ? imported : clip);
+    }
+  }
+  if (previousVersion < 16) {
+    const current = clips.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+    if (current) {
+      clips = clips.map((clip) =>
+        clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl
+          ? withCrawlWristYawRevision(clip)
+          : clip);
+    }
+    const currentLand = clips.find((clip) => clip.id === 'player.land');
+    const importedLand = starters.find((clip) => clip.id === 'player.land');
+    if (
+      currentLand && importedLand &&
+      (LEGACY_STATIC_LANDING_SIGNATURES.has(starterClipSignature(currentLand)) ||
+        LEGACY_STATIC_LANDING_CANONICAL_SIGNATURES.has(
+          canonicalLegacyStarterClipSignature(currentLand),
+        ))
+    ) {
+      clips = clips.map((clip) => clip.id === 'player.land' ? importedLand : clip);
     }
   }
 

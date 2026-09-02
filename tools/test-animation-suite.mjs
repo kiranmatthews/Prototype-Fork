@@ -459,6 +459,14 @@ try {
     'landing impact did not cushion every deformable limb section');
   assert.ok(deformationControlIds.every((id) => landRebound.scalars[id] > 1),
     'landing did not rebound beyond neutral after impact');
+  assert.ok(landImpact.joints.root.position[1] < -0.1,
+    'landing impact lost its grounded compression drop');
+  assert.ok(landRebound.joints.root.position[1] > 0.04,
+    'landing transition lost its gentle rebound above the run baseline');
+  assert.equal(
+    land.metadata.continuedRunTransition.contactPolicy,
+    'phase-matched moving run feet; no gameplay or world-space foot lock',
+  );
   for (const id of deformationControlIds) {
     near(landSecondaryCushion.scalars[id], 0.98, 1e-6);
     near(landNeutral.scalars[id], 1, 1e-6);

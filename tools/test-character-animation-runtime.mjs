@@ -15,6 +15,9 @@ const near = (actual, expected, tolerance = 1e-6) => {
 try {
   const {
     PACE_STOP_CLIP_ID,
+    LAND_IMPACT_CROSSFADE_SECONDS,
+    LAND_RUN_BLEND_END_SECONDS,
+    LAND_RUN_BLEND_START_SECONDS,
     ACTION_PROGRESS_TIMELINE_CLIP_IDS,
     PACE_STOP_CROSSFADE_SECONDS,
     PACE_STOP_MIN_PEAK_SPEED,
@@ -93,7 +96,7 @@ try {
     duration: 1,
     playbackSpeed: 1,
     loop: { mode: PLAYER_TRANSITION_CLIP_IDS.includes(id) ? 'once' : 'loop', seamless: !PLAYER_TRANSITION_CLIP_IDS.includes(id) },
-    range: { start: 0, end: id === 'player.land' ? 0.2 : id === PACE_STOP_CLIP_ID ? 0.4 : 1 },
+    range: { start: 0, end: id === 'player.land' ? 0.45 : id === PACE_STOP_CLIP_ID ? 0.4 : 1 },
     rootMotion: { mode: 'in-place' },
     transformSpace: 'rest-local-delta',
     tracks: [positionTrack(id, x)],
@@ -397,8 +400,9 @@ try {
   assert.equal(runtime.diagnostics.requestedClipId, 'player.skate');
   assert.equal(runtime.activeClipId, null);
 
-  // Landing is detected from the public airborne -> grounded edge and held
-  // for one range traversal before locomotion takes ownership again.
+  // Landing is a short reaction over the live continued-run base. It blends
+  // out by 0.28s and carries the current gait phase into Run without freezing
+  // either foot in world space.
   hint = 'player.fall';
   grounded = false;
   runtime.restart();
@@ -409,11 +413,23 @@ try {
   assert.equal(runtime.activeClipId, 'player.land');
   assert.equal(runtime.diagnostics.landingOneShotActive, true);
   near(runtime.diagnostics.motionContext.actionProgress, 0);
-  tick(0.21);
+  near(runtime.diagnostics.transitionBlendWeight, 0);
+  const impactCrossfadeEnd = LAND_IMPACT_CROSSFADE_SECONDS + 0.001;
+  tick(impactCrossfadeEnd);
+  near(runtime.diagnostics.transitionBlendWeight, 1);
+  tick((LAND_RUN_BLEND_START_SECONDS + LAND_RUN_BLEND_END_SECONDS) * 0.5 -
+    impactCrossfadeEnd);
   assert.equal(runtime.activeClipId, 'player.land');
+  const landingRunInteriorX = hips.position.x;
+  tick(LAND_RUN_BLEND_END_SECONDS -
+    (LAND_RUN_BLEND_START_SECONDS + LAND_RUN_BLEND_END_SECONDS) * 0.5);
+  const runHandoffX = hips.position.x;
   assert.equal(runtime.diagnostics.landingOneShotActive, false);
+  assert.notEqual(runHandoffX, landingRunInteriorX,
+    'landing reaction never blended toward the moving run pose');
   tick(0.016);
   assert.equal(runtime.activeClipId, 'player.run');
+  near(hips.position.x, runHandoffX, 1e-6);
 
   const resetStateRouting = () => {
     runtime.setManualClipOverride('player.idle');
@@ -428,6 +444,87 @@ try {
     assert.equal(runtime.activeClipId, 'player.idle');
     assert.equal(runtime.diagnostics.pacingOneShotActive, false);
   };
+
+  // Diagnostic/manual Run always starts at its own range start. A pending
+  // gameplay handoff phase must not leak out of an interrupted landing.
+  hint = 'player.fall';
+  grounded = false;
+  runtime.restart();
+  tick(0.016);
+  hint = 'player.run';
+  grounded = true;
+  tick(0.016);
+  tick(0.1);
+  runtime.setManualClipOverride('player.run');
+  tick(0.001);
+  near(runtime.diagnostics.timelineTime, 0);
+  runtime.setManualClipOverride(null);
+
+  // Studio/Lab close restarts automatic playback. If that happens during a
+  // landing, both the Land clock and its companion Run mix rewind together.
+  resetStateRouting();
+  hint = 'player.fall';
+  grounded = false;
+  runtime.restart();
+  tick(0.016);
+  hint = 'player.run';
+  grounded = true;
+  tick(0.016);
+  tick(0.1);
+  runtime.restart();
+  tick(0.001);
+  assert.equal(runtime.activeClipId, 'player.land');
+  near(runtime.diagnostics.timelineTime, 0);
+
+  // Crossing the locomotion threshold during Land eases Run in from zero,
+  // and crossing back out eases it away; neither direction may inject the
+  // absolute-time 71% pose jump the old live-hint branch produced.
+  resetStateRouting();
+  hint = 'player.fall';
+  grounded = false;
+  runtime.restart();
+  tick(0.016);
+  hint = 'player.idle';
+  grounded = true;
+  tick(0.016);
+  tick(0.2);
+  const beforeLateRun = hips.position.x;
+  hint = 'player.run';
+  tick(0.016);
+  const afterLateRun = hips.position.x;
+  assert.ok(Math.abs(afterLateRun - beforeLateRun) < 2,
+    'late Run routing injected an abrupt mostly-Run landing pose');
+  hint = 'player.idle';
+  tick(0.016);
+  assert.ok(Math.abs(hips.position.x - afterLateRun) < 2,
+    'idle threshold crossing abruptly removed the landing Run pose');
+
+  // A browser-authored short Land range clamps its pose at the range end but
+  // keeps the compositor alive until the phase-matched Run handoff is whole.
+  const shortLandSuite = {
+    ...suite,
+    clips: suite.clips.map((clip) => clip.id === 'player.land'
+      ? { ...clip, range: { start: 0, end: 0.1 } }
+      : clip),
+  };
+  runtime.setDocument(shortLandSuite);
+  resetStateRouting();
+  hint = 'player.fall';
+  grounded = false;
+  runtime.restart();
+  tick(0.016);
+  hint = 'player.run';
+  grounded = true;
+  tick(0.016);
+  tick(0.12);
+  assert.equal(runtime.activeClipId, 'player.land',
+    'short Land range cancelled before its Run blend completed');
+  tick(0.2);
+  assert.equal(runtime.diagnostics.landingOneShotActive, false);
+  tick(0.001);
+  assert.equal(runtime.activeClipId, 'player.run');
+  runtime.setDocument(suite);
+
   const qualifyRun = (
     speed = PACE_STOP_MIN_PEAK_SPEED + 0.25,
     phase = 0.73,

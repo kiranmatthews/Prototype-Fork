@@ -126,8 +126,11 @@ and whole-body compression are disabled so they cannot stack with the imported
 pose. Both loops remain directly keyframe-editable and retain the Studio's
 saved playback-speed control. Crawl then applies the same procedural contact
 pass in gameplay and Studio: the stretchable arms bring both glove grip sockets
-forward onto the support plane while palm normals face into the ground. Contact
-annotations use alternating diagonal plants. Gameplay passes the saved clip's
+forward onto the support plane while palm normals face into the ground. Every
+sampled Crawl wrist key also carries the requested 180° local-Y correction;
+the contact solve treats local +Z as the dorsal X-mark side and keeps it facing
+up, so the actual local -Z palms remain down. Contact annotations use alternating
+diagonal plants. Gameplay passes the saved clip's
 live timeline into the contact solve—including authored and runtime playback
 speed—while Studio passes its preview timeline, so both surfaces show the same
 arm beat without phase drift.
@@ -151,7 +154,12 @@ shortening the torso and limb sections as the feet catch the head at the apex.
 `player.fall` begins on that exact apex pose and relaxes every deformation
 control back to neutral during descent. The short `player.land` transient then
 adds a cushion squash, rebound overshoot, small secondary settle, and exact
-neutral finish.
+neutral finish. When gameplay is already continuing into `player.run`, landing
+is a reaction over a phase-matched Run pose rather than an exclusive frozen
+base. Both feet begin following the live stride under the impact pose instead
+of being locked in world space, including on moving supports. The rebound reaches
+Run by 0.28 seconds and hands off at the exact sampled Run phase, so locomotion
+stays immediate without a frame-zero restart, floor slide, or release recoil.
 
 Jump, double-jump, and fall opt into gameplay `actionProgress` timing, so their
 poses follow launch/apex/descent rather than drifting with frame time or jump

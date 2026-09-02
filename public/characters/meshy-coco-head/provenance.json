@@ -1,0 +1,58 @@
+{
+  "generator": "Meshy",
+  "generatorUrl": "https://www.meshy.ai/",
+  "license": "unknown-owner-supplied-evaluation-asset",
+  "rightsNote": "The supplied archive contains no licence notice; no third-party character-IP clearance is asserted.",
+  "sourceArchive": {
+    "file": "Meshy_AI_Coco_Bandicoot_0902221249_texture_fbx.zip",
+    "bytes": 45687081,
+    "sha256": "a05b16d4016686e59b2462b2f9d09a029f37c5d54512b12ccf9bfeaad302011d"
+  },
+  "sourceFbx": {
+    "file": "Meshy_AI_Coco_Bandicoot_0902221249_texture.fbx",
+    "bytes": 15229580,
+    "sha256": "3785121eba8296c773d3d41834ae2e44eb4b7da471576772fe4eea0c1d9aacf3",
+    "formatVersion": 7400,
+    "runtimePolygonVertices": 46902,
+    "triangles": 15634,
+    "surfaceShells": 27,
+    "attributes": ["position", "faceted-normal", "uv"],
+    "sourceBounds": {
+      "min": [-0.5, -0.26171875, -0.392578125],
+      "max": [0.5, 0.259765625, 0.396484375]
+    },
+    "contents": {
+      "meshes": 1,
+      "materials": 1,
+      "bones": 0,
+      "skins": 0,
+      "morphs": 0,
+      "animations": 0
+    }
+  },
+  "sourceTextures": {
+    "baseColor": { "file": "Meshy_AI_Coco_Bandicoot_0902221249_texture.png", "size": [4096, 4096], "bytes": 17629373, "sha256": "3eb292fa71eb8efc8308e992c50616b933b9c5d4d376fbd68428d65d2029b530" },
+    "normal": { "file": "Meshy_AI_Coco_Bandicoot_0902221249_texture_normal.png", "size": [4096, 4096], "bytes": 11657174, "sha256": "eb364755973788c23d4dea84705bbead526fec39f8a59b00e527f8fe5c57e698" },
+    "roughness": { "file": "Meshy_AI_Coco_Bandicoot_0902221249_texture_roughness.png", "size": [2048, 2048], "bytes": 1182785, "sha256": "df4df5f209df475392ffaa88da8345820340b5cef008acbe7d086b69957b5e2b" },
+    "metallic": { "file": "Meshy_AI_Coco_Bandicoot_0902221249_texture_metallic.png", "size": [2048, 2048], "bytes": 18764, "sha256": "9c7f6fcbb8a67e14bc3dc28d8b6e5e056ba8700bda9ad96c52edc106a30d9acb" }
+  },
+  "conversionTool": "tools/import-meshy-coco-head.mjs",
+  "conversionRuntime": "Three.js FBXLoader; no runtime FBX dependency",
+  "generatedModule": "src/character/meshyCocoHead.generated.ts",
+  "generatedModuleSha256": "4980a04746f21b83c56fccb2d753d84484f374ab5fe4db0aad0b4c22030a41e3",
+  "webTextureConversion": "macOS sips resize to 1024x1024 PNG",
+  "webTextures": {
+    "baseColor": { "file": "base-color.png", "bytes": 1286729, "sha256": "c5fe1ea6484074dacd436c1915a8bfa209c656d9cabe2400a065098189bcd659" },
+    "normal": { "file": "normal.png", "bytes": 767093, "sha256": "af9b0a7b7bed64bb0c632811d521bea1f119e856ca69294e05d4d0aa8560fd31" },
+    "roughness": { "file": "roughness.png", "bytes": 366987, "sha256": "198a087f7efa81ab4c1014cc84888d2b58c27eb3cc4d52a5668c5c2d3ef25dcb" },
+    "metallic": { "file": "metallic.png", "bytes": 8328, "sha256": "7aa1f39419884b879adb4cfaa1c6587977a9b4e16752dae08ef2a29ce790b2ba" }
+  },
+  "runtimeMapping": {
+    "axisAndOriginConversion": "source [x,y,z] to runtime [x,z+0.392578125,-y]",
+    "runtimeBounds": { "min": [-0.5, 0, -0.259765625], "max": [0.5, 0.7890625, 0.26171875] },
+    "restScale": 0.46,
+    "attachmentJoint": "head",
+    "collisionChanged": false,
+    "evaluationOnly": true
+  }
+}

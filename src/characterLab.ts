@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RigBinding } from './animation';
-import type { Player } from './player';
+import type { CharacterHeadStyle, Player } from './player';
 import type { CartoonGlovePoseName } from './character/cartoonGlove';
 import {
   CHARACTER_PROPORTION_CONTROLS,
@@ -24,6 +24,7 @@ export interface CharacterLabContext {
 export interface CharacterLabDiagnostics {
   readonly settings: Readonly<CharacterProportionSettingsValue>;
   readonly tailVisible: boolean;
+  readonly headStyle: CharacterHeadStyle;
   readonly bounds: { width: number; height: number; depth: number };
   readonly appliedObjectCount: number;
 }
@@ -147,6 +148,7 @@ class CharacterLab implements CharacterLabHandle {
     number: HTMLInputElement;
     decimals: number;
   }>();
+  private readonly headStyleButtons = new Map<CharacterHeadStyle, HTMLButtonElement>();
   private readonly unsubscribe: () => void;
   private tailInput!: HTMLInputElement;
   private steered = false;
@@ -206,6 +208,7 @@ class CharacterLab implements CharacterLabHandle {
     return {
       settings: { ...characterProportionSettings.value },
       tailVisible: this.ctx.player.characterTailVisible,
+      headStyle: this.ctx.player.characterHeadStyle,
       bounds: { width: size.x, height: size.y, depth: size.z },
       appliedObjectCount: this.ctx.player.characterProportionDiagnostics.appliedObjectCount,
     };
@@ -218,6 +221,7 @@ class CharacterLab implements CharacterLabHandle {
   frame(): void {
     if (!this.open) return;
     this.ctx.player.syncCharacterAppearance();
+    this.refreshHeadStyleButtons();
     this.controls.update();
     this.updateFloorAndStatus();
   }
@@ -286,6 +290,7 @@ class CharacterLab implements CharacterLabHandle {
     reset.onclick = () => {
       characterProportionSettings.reset();
       this.ctx.player.setCharacterTailVisible(true);
+      this.ctx.player.setCharacterHeadStyle('skull');
       this.ctx.player.setCartoonGlovePreviewPose('relaxed');
       this.tailInput.checked = true;
       this.steered = false;
@@ -304,6 +309,26 @@ class CharacterLab implements CharacterLabHandle {
     };
     actions.append(reset, copy);
     this.panel.appendChild(actions);
+
+    this.panel.appendChild(element('div', 'clab-section', 'Head shape'));
+    const headStyles = element('div', 'clab-actions');
+    for (const [style, label] of [
+      ['skull', 'Skull'],
+      ['alternate', 'Alternate'],
+    ] as const) {
+      const button = element('button', 'clab-button', label);
+      button.type = 'button';
+      button.onclick = () => {
+        this.ctx.player.setCharacterHeadStyle(style);
+        this.refreshHeadStyleButtons();
+        this.steered = false;
+        this.frameCamera('head');
+      };
+      this.headStyleButtons.set(style, button);
+      headStyles.appendChild(button);
+    }
+    this.panel.appendChild(headStyles);
+    this.refreshHeadStyleButtons();
 
     this.panel.appendChild(element('div', 'clab-section', 'Hand rig preview'));
     const handViews = element('div', 'clab-actions');
@@ -477,7 +502,11 @@ class CharacterLab implements CharacterLabHandle {
   }
 
   private headBounds(): THREE.Box3 {
-    const head = this.ctx.rigRoot.getObjectByName('meshy-head-surface');
+    const head = this.ctx.rigRoot.getObjectByName(
+      this.ctx.player.characterHeadStyle === 'alternate'
+        ? 'meshy-coco-alternate-head-surface'
+        : 'meshy-head-surface',
+    );
     return head ? new THREE.Box3().setFromObject(head) : this.characterBounds();
   }
 
@@ -513,6 +542,7 @@ class CharacterLab implements CharacterLabHandle {
     const hand = this.ctx.player.riggedCartoonHandDiagnostics;
     const torso = this.ctx.player.meshyTorsoDiagnostics;
     const head = this.ctx.player.meshyHeadDiagnostics;
+    const alternateHead = this.ctx.player.alternateHeadDiagnostics;
     const shorts = this.ctx.player.meshyShortsDiagnostics;
     const footwear = this.ctx.player.proceduralFootwearDiagnostics;
     let proceduralHandMeshesVisible = 0;
@@ -552,7 +582,15 @@ class CharacterLab implements CharacterLabHandle {
       `${shortsStatus} · ${shorts.triangles.toLocaleString()} tris\n` +
       `${footwearStatus} · ${footwear.triangles.toLocaleString()} tris\n` +
       `${headStatus} · ${head.triangles.toLocaleString()} tris\n` +
+      `Head style ${this.ctx.player.characterHeadStyle} · alternate ` +
+      `${alternateHead.textureState} · ${alternateHead.triangles.toLocaleString()} tris\n` +
       `${handStatus} · fallback meshes visible ${proceduralHandMeshesVisible}`;
+  }
+
+  private refreshHeadStyleButtons(): void {
+    for (const [style, button] of this.headStyleButtons) {
+      button.dataset.active = String(this.ctx.player.characterHeadStyle === style);
+    }
   }
 
   private frameCamera(

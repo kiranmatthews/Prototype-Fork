@@ -3572,6 +3572,10 @@ requestAnimationFrame(frame);
   getStretchableBoneDiagnostics: () => player.stretchableBoneDiagnostics,
   getMeshyTorsoDiagnostics: () => player.meshyTorsoDiagnostics,
   getMeshyHeadDiagnostics: () => player.meshyHeadDiagnostics,
+  getAlternateHeadDiagnostics: () => player.alternateHeadDiagnostics,
+  getCharacterHeadStyle: () => player.characterHeadStyle,
+  setCharacterHeadStyle: (style: Parameters<typeof player.setCharacterHeadStyle>[0]) =>
+    player.setCharacterHeadStyle(style),
   getMeshyShortsDiagnostics: () => player.meshyShortsDiagnostics,
   getProceduralFootwearDiagnostics: () => player.proceduralFootwearDiagnostics,
   getCharacterProportions: () => player.characterProportions,

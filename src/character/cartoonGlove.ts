@@ -372,7 +372,7 @@ export function createCartoonGlove(
   gripSocket.name = `socket-grip-${side}`;
   gripSocket.position.set(0, -0.14, 0.045);
   gripSocket.userData.gripAxis = [0, 1, 0];
-  gripSocket.userData.palmNormal = [0, 0, 1];
+  gripSocket.userData.palmNormal = [0, 0, -1];
   root.add(gripSocket);
 
   const joints: Record<string, THREE.Bone> = {

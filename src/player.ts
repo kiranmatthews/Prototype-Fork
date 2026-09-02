@@ -139,6 +139,11 @@ import {
   type MeshyHeadComponent,
 } from './character/meshyHead';
 import {
+  createMeshyCocoHead,
+  meshyCocoHeadTextureDiagnostics,
+  type MeshyCocoHeadComponent,
+} from './character/meshyCocoHead';
+import {
   createMeshyShorts,
   meshyShortsTextureDiagnostics,
   type MeshyShortsComponent,
@@ -151,6 +156,8 @@ import {
 } from './character/proceduralFootwear';
 
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
+const CHARACTER_HEAD_STYLE_STORAGE_KEY = 'solProtoCharacterHeadStyleV1';
+export type CharacterHeadStyle = 'skull' | 'alternate';
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 const LEG_SOLVE_R: SagittalLegPose = {
@@ -1117,6 +1124,8 @@ export class Player {
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
+  private meshyCocoHead: MeshyCocoHeadComponent | null = null;
+  private characterHeadStyleValue: CharacterHeadStyle = 'skull';
   private meshyShorts: MeshyShortsComponent | null = null;
   private readonly proceduralFootwear: ProceduralFootwearComponent[] = [];
   private headVisualCenter: THREE.Object3D | null = null;
@@ -1287,6 +1296,7 @@ export class Player {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
     this.restoreCharacterTailVisibilityPreference();
+    this.restoreCharacterHeadStylePreference();
     // YXZ so the yaw (facing travel) is the OUTERMOST rotation: the flip and
     // pose pitch on rotation.x then happen in the FACING frame, so a front
     // flip always tumbles along the direction you're actually moving — not
@@ -1911,6 +1921,28 @@ export class Player {
     };
   }
 
+  get alternateHeadDiagnostics(): {
+    readonly ready: boolean;
+    readonly active: boolean;
+    readonly triangles: number;
+    readonly sourceSha256: string | null;
+    readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
+    readonly texturesLoaded: number;
+    readonly textureError: string | null;
+  } {
+    const component = this.meshyCocoHead;
+    const textures = meshyCocoHeadTextureDiagnostics();
+    return {
+      ready: component !== null,
+      active: this.characterHeadStyleValue === 'alternate',
+      triangles: component?.triangles ?? 0,
+      sourceSha256: component?.sourceSha256 ?? null,
+      textureState: textures.state,
+      texturesLoaded: textures.loaded,
+      textureError: textures.error,
+    };
+  }
+
   get meshyShortsDiagnostics(): {
     readonly ready: boolean;
     readonly triangles: number;
@@ -1993,6 +2025,21 @@ export class Player {
     characterProportionSettings.reset();
   }
 
+  get characterHeadStyle(): CharacterHeadStyle {
+    return this.characterHeadStyleValue;
+  }
+
+  setCharacterHeadStyle(style: CharacterHeadStyle): void {
+    this.characterHeadStyleValue = style === 'alternate' ? 'alternate' : 'skull';
+    try {
+      localStorage.setItem(CHARACTER_HEAD_STYLE_STORAGE_KEY, this.characterHeadStyleValue);
+    } catch {
+      // Private browsing can disable persistence without disabling the option.
+    }
+    this.syncCharacterHeadStyle();
+    this.resetRenderInterpolation();
+  }
+
   private characterLegHeightDelta(): number {
     const shape = characterProportionSettings.value;
     return (
@@ -2046,6 +2093,7 @@ export class Player {
   syncCharacterAppearance(): void {
     this.characterProportionLayer.apply(characterProportionSettings.value);
     this.syncCharacterTailVisibility();
+    this.syncCharacterHeadStyle();
     this.bodyGroup.updateMatrixWorld(true);
     this.syncRiggedCartoonHands();
   }
@@ -2100,6 +2148,22 @@ export class Player {
       // Default-on remains available when browser storage is blocked.
     }
     this.syncCharacterTailVisibility();
+  }
+
+  private restoreCharacterHeadStylePreference(): void {
+    try {
+      const saved = localStorage.getItem(CHARACTER_HEAD_STYLE_STORAGE_KEY);
+      if (saved === 'alternate' || saved === 'skull') this.characterHeadStyleValue = saved;
+    } catch {
+      // The default skull remains available when persistence is blocked.
+    }
+    this.syncCharacterHeadStyle();
+  }
+
+  private syncCharacterHeadStyle(): void {
+    if (this.meshyHead) this.meshyHead.mesh.visible = this.characterHeadStyleValue === 'skull';
+    if (this.meshyCocoHead)
+      this.meshyCocoHead.mesh.visible = this.characterHeadStyleValue === 'alternate';
   }
 
   private syncCharacterTailVisibility(): void {
@@ -7283,11 +7347,12 @@ export class Player {
         THREE.MathUtils.lerp(targetUp, poleUp, 0.55) - poleUp,
       );
 
-      // Socket local +Z is the palm normal; local -Y points toward the fingers.
+      // Socket local +Z is the dorsal/X-mark side; the true palm is local -Z.
+      // Local -Y points toward the fingers.
       wrist.getWorldQuaternion(CRAWL_WRIST_Q);
       grip.getWorldQuaternion(CRAWL_SOCKET_Q);
       CRAWL_RELATIVE_Q.copy(CRAWL_WRIST_Q).invert().multiply(CRAWL_SOCKET_Q);
-      CRAWL_AXIS_Z.copy(CRAWL_DOWN);
+      CRAWL_AXIS_Z.copy(CRAWL_UP);
       CRAWL_AXIS_Y.copy(CRAWL_FORWARD).negate();
       CRAWL_AXIS_X.copy(CRAWL_AXIS_Y).cross(CRAWL_AXIS_Z).normalize();
       CRAWL_AXIS_Y.copy(CRAWL_AXIS_Z).cross(CRAWL_AXIS_X).normalize();
@@ -7303,7 +7368,7 @@ export class Player {
       this.bodyGroup.updateWorldMatrix(true, true);
       grip.getWorldQuaternion(CRAWL_SOCKET_Q);
       CRAWL_AXIS_Z.set(0, 0, 1).applyQuaternion(CRAWL_SOCKET_Q).normalize();
-      CRAWL_RELATIVE_Q.setFromUnitVectors(CRAWL_AXIS_Z, CRAWL_DOWN);
+      CRAWL_RELATIVE_Q.setFromUnitVectors(CRAWL_AXIS_Z, CRAWL_UP);
       CRAWL_CORRECTION_Q.identity();
       if (w < 1) CRAWL_CORRECTION_Q.slerp(CRAWL_RELATIVE_Q, w);
       else CRAWL_CORRECTION_Q.copy(CRAWL_RELATIVE_Q);
@@ -15247,6 +15312,9 @@ export class Player {
     this.headVisualCenter = visualCenter;
     this.meshyHead = createMeshyHead();
     head.add(this.meshyHead.mesh);
+    this.meshyCocoHead = createMeshyCocoHead();
+    this.meshyCocoHead.mesh.visible = false;
+    head.add(this.meshyCocoHead.mesh);
 
     // Retain empty auxiliary nodes so saved clips and procedural driver IDs
     // remain migratable even though the monolithic skull owns the silhouette.

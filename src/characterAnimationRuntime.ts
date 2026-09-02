@@ -44,6 +44,11 @@ export const PACE_STOP_MIN_RUN_SECONDS = 0.18;
 export const PACE_STOP_MIN_PEAK_SPEED = 0.35;
 /** Briefly preserve the outgoing stride so an arbitrary gait phase cannot pop. */
 export const PACE_STOP_CROSSFADE_SECONDS = 0.12;
+export const LAND_IMPACT_CROSSFADE_SECONDS = 0.06;
+export const LAND_RUN_BLEND_START_SECONDS = 0.055;
+export const LAND_RUN_BLEND_END_SECONDS = 0.28;
+export const LAND_RUN_CANCEL_BLEND_SECONDS = 0.12;
+export const LAND_RUN_LATE_BLEND_SECONDS = 0.12;
 
 type RuntimeTransientKind = 'landing' | 'pace-stop';
 
@@ -129,8 +134,17 @@ const CROUCH_CRAWL_CLIP_IDS = new Set<ClipId>([
   UNITY_CROUCH_CRAWL_CLIP_IDS.crawl,
 ]);
 
+const AIRBORNE_CLIP_IDS = new Set<ClipId>([
+  'player.jump',
+  'player.double-jump',
+  'player.fall',
+]);
+
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
+    return LAND_IMPACT_CROSSFADE_SECONDS;
+  }
   if (ROPE_ATTACHED_CLIP_IDS.has(from) && ROPE_ATTACHED_CLIP_IDS.has(to)) {
     return UNITY_ROPE_TIMING.attachedBlend;
   }
@@ -218,6 +232,16 @@ export class CharacterAnimationRuntime {
   private elapsedSeconds = 0;
   /** Integrated live-speed clock; unlike wall time it does not jump after unfreezing. */
   private playbackSeconds = 0;
+  /** Authored-range offset used for phase-continuous loop handoffs. */
+  private playbackOffset = 0;
+  private pendingRunHandoffOffset: number | null = null;
+  private landingRunBlendProgress = 0;
+  private landingRunPreviousTime = 0;
+  private landingRunEntryGaitPhase = 0;
+  private landingRunClockOrigin = 0;
+  private landingRunBlendDuration =
+    LAND_RUN_BLEND_END_SECONDS - LAND_RUN_BLEND_START_SECONDS;
+  private landingRunClockArmed = false;
   private timelineTime: number | null = null;
   private authoredPlaybackSpeed: number | null = null;
   private previousGrounded: boolean;
@@ -360,7 +384,13 @@ export class CharacterAnimationRuntime {
   }
 
   restart(): void {
-    if (!this.disposed) this.restartPending = true;
+    if (this.disposed) return;
+    // Restart rewinds the active clip on the next overlay frame. Keep the
+    // landing transient, but rewind its companion Run mix and clock with it so
+    // editor/lab close cannot combine time zero with stale transition state.
+    if (this.transient?.kind === 'landing') this.resetLandingRunBlend();
+    else this.pendingRunHandoffOffset = null;
+    this.restartPending = true;
   }
 
   dispose(): void {
@@ -403,9 +433,16 @@ export class CharacterAnimationRuntime {
       // Landing has first refusal on the exact contact frame. This also avoids
       // an impossible run->idle edge winning over a fresh airborne transition.
       if (justLanded && hint !== 'player.bail' && hint !== 'player.slam') {
+        this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID, intent.motion);
       } else if (this.transient?.kind === 'landing') {
-        if (!grounded || hint === 'player.bail') this.cancelTransient();
+        if (
+          !grounded ||
+          hint === 'player.bail' ||
+          (hint !== 'player.run' && hint !== 'player.idle')
+        ) {
+          this.cancelTransient();
+        }
       } else if (this.transient?.kind === 'pace-stop') {
         // Pacing is an idle-bound flourish, never an action lock. Gameplay owns
         // the same frame in which any new state or renewed run is requested.
@@ -460,6 +497,11 @@ export class CharacterAnimationRuntime {
     const previousClipId = this.currentClipId;
     const switched = previousClipId !== clip.id || this.restartPending;
     if (switched) {
+      const runHandoffOffset =
+        this.manualClipId === null &&
+        previousClipId === LAND_CLIP_ID && clip.id === 'player.run'
+          ? this.pendingRunHandoffOffset
+          : null;
       const switchBlendDuration = this.manualClipId === null
         ? authoredSwitchBlendDuration(previousClipId, clip.id)
         : 0;
@@ -481,6 +523,8 @@ export class CharacterAnimationRuntime {
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
+      this.playbackOffset = runHandoffOffset ?? 0;
+      this.pendingRunHandoffOffset = null;
       this.restartPending = false;
     } else {
       this.elapsedSeconds += dt;
@@ -495,7 +539,7 @@ export class CharacterAnimationRuntime {
       ? clip.range.start +
         Math.min(1, Math.max(0, motion.actionProgress)) *
         (clip.range.end - clip.range.start)
-      : clipTimeAt(clip, this.playbackSeconds);
+      : clipTimeAt(clip, this.playbackSeconds, { offset: this.playbackOffset });
     const ownsCrawlContacts =
       clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl &&
       clip.metadata?.contactAdaptation === UNITY_CRAWL_CONTACT_ADAPTATION;
@@ -510,6 +554,8 @@ export class CharacterAnimationRuntime {
       evaluators: this.proceduralEvaluators,
     });
     let pose = sampledPose;
+    let landingRunBlendWeight = 0;
+    let landingRunBlendInFlight = false;
     const variant = this.manualClipId === null ? clipVariantBlend(clip) : null;
     if (variant) {
       const variantClip = this.findPlayableClip(variant.clipId);
@@ -527,6 +573,82 @@ export class CharacterAnimationRuntime {
           weight,
         );
       }
+    }
+    if (this.transient?.kind === 'landing' && clip.id === LAND_CLIP_ID) {
+      const runClip = this.findPlayableClip('player.run');
+      if (runClip) {
+        // This clock intentionally continues beyond an edited Land range. The
+        // pose clamps at that range's end, but a short valid clip must still be
+        // able to finish its smooth handoff instead of popping or deadlocking.
+        const landingTime = Math.max(0, this.playbackSeconds * clip.playbackSpeed);
+        const landingDelta = Math.max(0, landingTime - this.landingRunPreviousTime);
+        const runRequested = hint === 'player.run';
+        if (runRequested && !this.landingRunClockArmed) {
+          this.landingRunEntryGaitPhase = normalizedPhase(intent.motion.gaitPhase);
+          this.landingRunClockOrigin = this.playbackSeconds;
+          this.landingRunBlendDuration = Math.max(
+            LAND_RUN_LATE_BLEND_SECONDS,
+            LAND_RUN_BLEND_END_SECONDS -
+              Math.max(LAND_RUN_BLEND_START_SECONDS, landingTime),
+          );
+          this.landingRunClockArmed = true;
+        }
+        if (runRequested) {
+          const activeStart = Math.max(
+            this.landingRunPreviousTime,
+            LAND_RUN_BLEND_START_SECONDS,
+          );
+          const activeDelta = Math.max(0, landingTime - activeStart);
+          this.landingRunBlendProgress = Math.min(
+            1,
+            this.landingRunBlendProgress +
+              activeDelta / this.landingRunBlendDuration,
+          );
+        } else {
+          this.landingRunBlendProgress = Math.max(
+            0,
+            this.landingRunBlendProgress - landingDelta / LAND_RUN_CANCEL_BLEND_SECONDS,
+          );
+          if (this.landingRunBlendProgress <= 0) {
+            this.landingRunClockArmed = false;
+            this.pendingRunHandoffOffset = null;
+          }
+        }
+        this.landingRunPreviousTime = landingTime;
+        landingRunBlendWeight = smoothstep01(this.landingRunBlendProgress);
+        landingRunBlendInFlight =
+          this.landingRunClockArmed && (runRequested || this.landingRunBlendProgress > 0);
+        if (!landingRunBlendInFlight) {
+          this.pendingRunHandoffOffset = null;
+        } else {
+          const runSpan = Math.max(1e-6, runClip.range.end - runClip.range.start);
+          const leftStrike = runClip.markers.find((marker) =>
+            marker.id.endsWith(':left-strike'))?.time ?? runClip.range.start;
+          const runEntryOffset = this.landingRunEntryGaitPhase * runSpan +
+            (leftStrike - runClip.range.start);
+          const runTime = clipTimeAt(
+            runClip,
+            Math.max(0, this.playbackSeconds - this.landingRunClockOrigin),
+            { offset: runEntryOffset },
+          );
+          const runPose = sampleComposedClip(runClip, runTime, motion, {
+            evaluators: this.proceduralEvaluators,
+          });
+          pose = blendPoses(
+            withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
+            withControlDefaults(canonicalizePose(runPose, this.binding), this.controlDefaults),
+            landingRunBlendWeight,
+          );
+          this.pendingRunHandoffOffset = normalizedPhase(
+            (runTime - runClip.range.start) / runSpan,
+          ) * runSpan;
+        }
+      } else {
+        this.resetLandingRunBlend();
+        this.pendingRunHandoffOffset = null;
+      }
+    } else {
+      this.pendingRunHandoffOffset = null;
     }
     let contactTransitionWeight: number | null = null;
     if (
@@ -599,7 +721,14 @@ export class CharacterAnimationRuntime {
     if (
       this.manualClipId === null &&
       this.transient?.clipId === clip.id &&
-      this.oneTraversalFinished(clip)
+      (
+        (
+          this.transient.kind === 'landing' &&
+          hint === 'player.run' &&
+          landingRunBlendWeight >= 1
+        ) ||
+        (this.oneTraversalFinished(clip) && !landingRunBlendInFlight)
+      )
     ) {
       this.cancelTransient(false);
     }
@@ -743,8 +872,21 @@ export class CharacterAnimationRuntime {
   }
 
   private cancelTransient(clearBlend = true): void {
+    const cancelledLanding = this.transient?.kind === 'landing';
     this.transient = null;
+    if (cancelledLanding) this.resetLandingRunBlend(clearBlend);
     if (clearBlend) this.transitionBlendWeight = null;
+  }
+
+  private resetLandingRunBlend(clearHandoff = true): void {
+    this.landingRunBlendProgress = 0;
+    this.landingRunPreviousTime = 0;
+    this.landingRunEntryGaitPhase = 0;
+    this.landingRunClockOrigin = 0;
+    this.landingRunBlendDuration =
+      LAND_RUN_BLEND_END_SECONDS - LAND_RUN_BLEND_START_SECONDS;
+    this.landingRunClockArmed = false;
+    if (clearHandoff) this.pendingRunHandoffOffset = null;
   }
 
   private oneTraversalFinished(clip: AnimationClip): boolean {
@@ -758,6 +900,9 @@ export class CharacterAnimationRuntime {
     if (clearRequest) this.requestedClipId = null;
     this.elapsedSeconds = 0;
     this.playbackSeconds = 0;
+    this.playbackOffset = 0;
+    this.pendingRunHandoffOffset = null;
+    this.resetLandingRunBlend();
     this.timelineTime = null;
     this.authoredPlaybackSpeed = null;
     this.poseApplied = false;

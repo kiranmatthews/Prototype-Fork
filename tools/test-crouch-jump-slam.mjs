@@ -351,7 +351,7 @@ try {
       assert.ok(Math.abs(localGrip.y - 0.012) < 0.15,
         `${side} crawl grip missed the support plane (${label}): ${localGrip.y}`);
       const socketQ = socket.getWorldQuaternion(new THREE.Quaternion());
-      const palmNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(socketQ).normalize();
+      const palmNormal = new THREE.Vector3(0, 0, -1).applyQuaternion(socketQ).normalize();
       const fingerDirection = new THREE.Vector3(0, -1, 0).applyQuaternion(socketQ).normalize();
       assert.ok(palmNormal.dot(crawlUp.clone().negate()) > 0.9,
         `${side} crawl palm did not face the ground (${label})`);
@@ -785,6 +785,90 @@ try {
     "double-jump left leg did not split outward");
   assert.ok(doubleRightDirection.x < -0.6,
     "double-jump right leg did not split outward");
+
+  // Continued running owns gameplay immediately on touchdown. Presentation
+  // keeps a short rebound reaction over a moving Run base, then hands the
+  // exact live phase into Run without freezing gameplay or either foot.
+  const landingFlowPlayer = new Player(level.scene);
+  landingFlowPlayer.enterLevel("landing-run-transition");
+  landingFlowPlayer.respawn(level, true);
+  const landingFlowBinding = RigBinding.fromSculptRuntime(
+    landingFlowPlayer.animationRig.root,
+    { strict: false },
+  );
+  const landingFlowRuntime = createCharacterAnimationRuntime(
+    landingFlowPlayer,
+    createPlayerStarterAnimationSuite(landingFlowBinding.definition),
+  );
+  const runningInput = makeInput({ moveY: 1 });
+  landingFlowPlayer.state = "air";
+  landingFlowPlayer.grounded = false;
+  landingFlowPlayer.pos.set(0, 0.8, 0);
+  landingFlowPlayer.prevPos.copy(landingFlowPlayer.pos);
+  landingFlowPlayer.vVel = -8;
+  landingFlowPlayer.lastPlanar = TUNING.walkSpeed;
+  landingFlowPlayer.syncVisual(runningInput, dt);
+  assert.equal(landingFlowRuntime.activeClipId, "player.fall");
+  landingFlowPlayer.state = "ride";
+  landingFlowPlayer.grounded = true;
+  landingFlowPlayer.pos.y = 0;
+  landingFlowPlayer.prevPos.copy(landingFlowPlayer.pos);
+  landingFlowPlayer.prevPos.z += TUNING.walkSpeed * dt;
+  landingFlowPlayer.walkVelocity.copy(landingFlowPlayer.axisF)
+    .multiplyScalar(TUNING.walkSpeed);
+  landingFlowPlayer.speed = TUNING.walkSpeed;
+  landingFlowPlayer.lastPlanar = TUNING.walkSpeed;
+  landingFlowPlayer.syncVisual(runningInput, dt);
+  assert.equal(landingFlowPlayer.animationClipHint, "player.run");
+  assert.equal(landingFlowRuntime.activeClipId, "player.land");
+
+  let priorLeft = landingFlowPlayer.animationRig.root
+    .getObjectByName("socket-foot-left").getWorldPosition(new THREE.Vector3());
+  let priorRight = landingFlowPlayer.animationRig.root
+    .getObjectByName("socket-foot-right").getWorldPosition(new THREE.Vector3());
+  let priorRoot = landingFlowPlayer.pos.clone();
+  let leftRelativeTravel = 0;
+  let rightRelativeTravel = 0;
+  let maxFootStep = 0;
+  let priorClip = landingFlowRuntime.activeClipId;
+  let runHandoffFootDelta = null;
+  for (let frame = 0; frame < 24; frame++) {
+    landingFlowPlayer.prevPos.copy(landingFlowPlayer.pos);
+    landingFlowPlayer.pos.addScaledVector(
+      landingFlowPlayer.axisF,
+      TUNING.walkSpeed * dt,
+    );
+    landingFlowPlayer.lastPlanar = TUNING.walkSpeed;
+    landingFlowPlayer.syncVisual(runningInput, dt);
+    landingFlowPlayer.animationRig.root.updateMatrixWorld(true);
+    const left = landingFlowPlayer.animationRig.root
+      .getObjectByName("socket-foot-left").getWorldPosition(new THREE.Vector3());
+    const right = landingFlowPlayer.animationRig.root
+      .getObjectByName("socket-foot-right").getWorldPosition(new THREE.Vector3());
+    const rootDelta = landingFlowPlayer.pos.clone().sub(priorRoot);
+    const leftStep = left.clone().sub(priorLeft);
+    const rightStep = right.clone().sub(priorRight);
+    leftRelativeTravel += leftStep.clone().sub(rootDelta).length();
+    rightRelativeTravel += rightStep.clone().sub(rootDelta).length();
+    maxFootStep = Math.max(maxFootStep, leftStep.length(), rightStep.length());
+    if (priorClip === "player.land" && landingFlowRuntime.activeClipId === "player.run") {
+      runHandoffFootDelta = Math.max(left.distanceTo(priorLeft), right.distanceTo(priorRight));
+    }
+    priorLeft = left;
+    priorRight = right;
+    priorRoot = landingFlowPlayer.pos.clone();
+    priorClip = landingFlowRuntime.activeClipId;
+  }
+  assert.ok(leftRelativeTravel > 0.15 && rightRelativeTravel > 0.15,
+    `landing left the feet locked while the root moved (${leftRelativeTravel}, ${rightRelativeTravel})`);
+  assert.ok(maxFootStep < 0.4,
+    `landing-to-run blend recoiled a foot ${maxFootStep}`);
+  assert.equal(landingFlowRuntime.activeClipId, "player.run");
+  assert.ok(landingFlowRuntime.diagnostics.timelineTime > 0.1,
+    "continued Run restarted at frame zero after landing");
+  assert.ok(runHandoffFootDelta !== null && runHandoffFootDelta < 0.22,
+    `landing-to-run handoff popped a foot ${runHandoffFootDelta}`);
+  landingFlowRuntime.dispose();
 
   // Optional supplied-replay check. The committed synthetic case keeps CI
   // self-contained; passing the bug-report file pins its original fixed-step
