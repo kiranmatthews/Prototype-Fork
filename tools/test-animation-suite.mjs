@@ -1085,6 +1085,26 @@ try {
     assert.equal(findClip(candidate, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).name,
       'Crawl — Unity PunkyFox');
   }
+  const persistedRoundTripCrawl = structuredClone(
+    catalogV10LowPoseById.get(UNITY_CROUCH_CRAWL_CLIP_IDS.crawl),
+  );
+  persistedRoundTripCrawl.tracks.sort((a, b) => a.id.localeCompare(b.id));
+  persistedRoundTripCrawl.contacts.sort((a, b) =>
+    a.start - b.start || a.end - b.end || a.id.localeCompare(b.id));
+  const persistedQuaternion = persistedRoundTripCrawl.tracks.find((track) =>
+    track.kind === 'quaternion');
+  persistedQuaternion.keys[0].value[3] += Number.EPSILON;
+  const upgradedPersistedRoundTrip = reconcilePlayerStarterAnimationSuite({
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl
+        ? persistedRoundTripCrawl
+        : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 11 },
+  }, binding.definition);
+  assert.equal(findClip(upgradedPersistedRoundTrip,
+    UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).name, 'Crawl — Unity PunkyFox',
+  'catalog v12 did not migrate an untouched browser-round-tripped Crawl');
   const editedV10Crouch = structuredClone(
     catalogV10LowPoseById.get(UNITY_CROUCH_CRAWL_CLIP_IDS.crouch),
   );
@@ -1102,7 +1122,7 @@ try {
       clip.id !== UNITY_CROUCH_CRAWL_CLIP_IDS.crawl),
   }, binding.definition);
   assert.equal(findClip(deletedV10Crawl, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl), undefined,
-    'catalog v11 resurrected a deliberately deleted Crawl slot');
+    'catalog v12 resurrected a deliberately deleted Crawl slot');
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,

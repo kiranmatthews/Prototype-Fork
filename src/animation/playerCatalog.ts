@@ -103,7 +103,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 11;
+export const PLAYER_STARTER_CATALOG_VERSION = 12;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -146,30 +146,70 @@ const LEGACY_CROUCH_CRAWL_STARTER_SIGNATURES: Readonly<
   'player.crawl': new Set(['7f7a1648', '1608c78e']),
 };
 
-function stableCatalogValue(value: unknown): string {
+/** Semantic signatures tolerate harmless JSON round-trip ordering and
+ * sub-picometre quaternion normalization drift seen in long-lived browsers. */
+const LEGACY_CROUCH_CRAWL_CANONICAL_SIGNATURES: Readonly<
+  Record<string, ReadonlySet<string>>
+> = {
+  'player.crouch': new Set(['b7595ec0']),
+  'player.crawl': new Set(['3672794d']),
+};
+
+function stableCatalogValue(value: unknown, quantizeNumbers = false): string {
   if (Array.isArray(value)) {
-    return `[${value.map((entry) => stableCatalogValue(entry)).join(',')}]`;
+    return `[${value.map((entry) =>
+      stableCatalogValue(entry, quantizeNumbers)).join(',')}]`;
   }
   if (value !== null && typeof value === 'object') {
     const record = value as Record<string, unknown>;
     const entries = Object.keys(record)
       .filter((key) => record[key] !== undefined)
       .sort()
-      .map((key) => `${JSON.stringify(key)}:${stableCatalogValue(record[key])}`);
+      .map((key) =>
+        `${JSON.stringify(key)}:${stableCatalogValue(record[key], quantizeNumbers)}`);
     return `{${entries.join(',')}}`;
+  }
+  if (quantizeNumbers && typeof value === 'number' && Number.isFinite(value)) {
+    const rounded = Math.round(value * 1e12) / 1e12;
+    return JSON.stringify(Object.is(rounded, -0) ? 0 : rounded);
   }
   return JSON.stringify(value) ?? 'null';
 }
 
-function starterClipSignature(clip: AnimationClip): string {
-  const { rigId: _liveRigId, ...portableClip } = clip;
-  const source = stableCatalogValue(portableClip);
+function hashCatalogValue(value: unknown, quantizeNumbers = false): string {
+  const source = stableCatalogValue(value, quantizeNumbers);
   let hash = 0x811c9dc5;
   for (let index = 0; index < source.length; index++) {
     hash ^= source.charCodeAt(index);
     hash = Math.imul(hash, 0x01000193);
   }
   return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+function starterClipSignature(clip: AnimationClip): string {
+  const { rigId: _liveRigId, ...portableClip } = clip;
+  return hashCatalogValue(portableClip);
+}
+
+function canonicalLegacyStarterClipSignature(clip: AnimationClip): string {
+  const { rigId: _liveRigId, ...portableClip } = clip;
+  const byId = <T extends { id: string }>(a: T, b: T) => a.id.localeCompare(b.id);
+  const byTimeThenId = <T extends { id: string; time: number }>(a: T, b: T) =>
+    a.time - b.time || byId(a, b);
+  const canonical = {
+    ...portableClip,
+    tracks: [...portableClip.tracks]
+      .sort(byId)
+      .map((track) => ({ ...track, keys: [...track.keys].sort(byTimeThenId) })),
+    proceduralDrivers: [...portableClip.proceduralDrivers]
+      .sort((a, b) => a.order - b.order || byId(a, b)),
+    markers: [...portableClip.markers].sort(byTimeThenId),
+    contacts: [...portableClip.contacts]
+      .sort((a, b) => a.start - b.start || a.end - b.end || byId(a, b)),
+    events: [...portableClip.events].sort(byTimeThenId),
+    tags: [...(portableClip.tags ?? [])].sort(),
+  };
+  return hashCatalogValue(canonical, true);
 }
 
 function forwardRollSquashDrivers(clipId: string): ProceduralDriverDefinition[] {
@@ -1526,7 +1566,7 @@ export function reconcilePlayerStarterAnimationSuite(
         clip.id === UNITY_ROPE_CLIP_IDS.hang ? importedRope : clip);
     }
   }
-  if (previousVersion < 11) {
+  if (previousVersion < 12) {
     for (const [clipId, untouchedSignatures] of Object.entries(
       LEGACY_CROUCH_CRAWL_STARTER_SIGNATURES,
     )) {
@@ -1534,7 +1574,10 @@ export function reconcilePlayerStarterAnimationSuite(
       const imported = starters.find((clip) => clip.id === clipId);
       if (
         current && imported &&
-        untouchedSignatures.has(starterClipSignature(current))
+        (untouchedSignatures.has(starterClipSignature(current)) ||
+          LEGACY_CROUCH_CRAWL_CANONICAL_SIGNATURES[clipId]?.has(
+            canonicalLegacyStarterClipSignature(current),
+          ))
       ) {
         clips = clips.map((clip) => clip.id === clipId ? imported : clip);
       }
