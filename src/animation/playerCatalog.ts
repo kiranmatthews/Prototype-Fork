@@ -103,7 +103,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 14;
+export const PLAYER_STARTER_CATALOG_VERSION = 15;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -162,10 +162,12 @@ const LEGACY_UNITY_CRAWL_CANONICAL_SIGNATURES = new Set(['fadfab96']);
 const LEGACY_YAWED_UNITY_CROUCH_SIGNATURES = new Set([
   '562671e0', // source catalog v13
   '2270a781', // deployed/browser-restored v13
+  '757cd61b', // deployed catalog v12
 ]);
 const LEGACY_YAWED_UNITY_CROUCH_CANONICAL_SIGNATURES = new Set([
   'a890da41', // source catalog v13
   'e574b172', // deployed/browser-restored v13
+  'ed746188', // deployed catalog v12
 ]);
 
 function stableCatalogValue(value: unknown, quantizeNumbers = false): string {
@@ -1620,7 +1622,7 @@ export function reconcilePlayerStarterAnimationSuite(
         clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl ? imported : clip);
     }
   }
-  if (previousVersion < 14) {
+  if (previousVersion < 15) {
     const current = clips.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
     const imported = starters.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
     if (
