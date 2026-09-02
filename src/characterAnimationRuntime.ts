@@ -1,6 +1,8 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import {
   RigBinding,
+  UNITY_ROPE_CLIP_IDS,
+  UNITY_ROPE_TIMING,
   blendPoses,
   clipTimeAt,
   createProceduralMotionContext,
@@ -24,6 +26,8 @@ export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
   'player.jump',
   'player.double-jump',
   'player.fall',
+  'player.rope-climb',
+  'player.rope-release',
   'player.slam',
 ] as const;
 /** Gameplay routes whose proven procedural presentation remains authoritative.
@@ -111,6 +115,33 @@ function usesActionProgressTimeline(clip: AnimationClip): boolean {
     clip.metadata?.progressSource === 'gameplay-actionProgress';
 }
 
+const ROPE_ATTACHED_CLIP_IDS = new Set<ClipId>([
+  UNITY_ROPE_CLIP_IDS.hang,
+  UNITY_ROPE_CLIP_IDS.climb,
+]);
+
+function ropeSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
+  if (!from) return 0;
+  if (ROPE_ATTACHED_CLIP_IDS.has(from) && ROPE_ATTACHED_CLIP_IDS.has(to)) {
+    return UNITY_ROPE_TIMING.attachedBlend;
+  }
+  if (ROPE_ATTACHED_CLIP_IDS.has(from) && to === UNITY_ROPE_CLIP_IDS.release) {
+    return UNITY_ROPE_TIMING.releaseBlend;
+  }
+  return 0;
+}
+
+function clipVariantBlend(
+  clip: AnimationClip,
+): { clipId: ClipId; source: string } | null {
+  const raw = clip.metadata?.variantBlend;
+  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const value = raw as Record<string, unknown>;
+  return typeof value.clipId === 'string' && typeof value.source === 'string'
+    ? { clipId: value.clipId, source: value.source }
+    : null;
+}
+
 function withControlDefaults(
   pose: PoseBuffer,
   defaults: ReadonlyMap<string, number>,
@@ -184,6 +215,9 @@ export class CharacterAnimationRuntime {
   private lastRunGaitPhase = 0;
   private lastSampledPose: PoseBuffer | null = null;
   private transitionBlendWeight: number | null = null;
+  private switchOutgoingPose: PoseBuffer | null = null;
+  private switchBlendDuration = 0;
+  private switchBlendElapsed = 0;
   private readonly controlDefaults = new Map<string, number>();
   private poseApplied = false;
   private compositionOrder: ProceduralCompositionOrder | null = null;
@@ -399,8 +433,15 @@ export class CharacterAnimationRuntime {
       return;
     }
 
-    const switched = this.currentClipId !== clip.id || this.restartPending;
+    const previousClipId = this.currentClipId;
+    const switched = previousClipId !== clip.id || this.restartPending;
     if (switched) {
+      const switchBlendDuration = this.manualClipId === null
+        ? ropeSwitchBlendDuration(previousClipId, clip.id)
+        : 0;
+      this.switchOutgoingPose = switchBlendDuration > 0 ? this.lastSampledPose : null;
+      this.switchBlendDuration = switchBlendDuration;
+      this.switchBlendElapsed = 0;
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
@@ -408,6 +449,7 @@ export class CharacterAnimationRuntime {
     } else {
       this.elapsedSeconds += dt;
       this.playbackSeconds += dt * this.runtimeSpeed;
+      this.switchBlendElapsed += dt;
     }
 
     const motion = this.motionForClip(clip, intent.motion);
@@ -423,6 +465,24 @@ export class CharacterAnimationRuntime {
       evaluators: this.proceduralEvaluators,
     });
     let pose = sampledPose;
+    const variant = this.manualClipId === null ? clipVariantBlend(clip) : null;
+    if (variant) {
+      const variantClip = this.findPlayableClip(variant.clipId);
+      const weight = Math.min(1, Math.max(0, motion.inputs?.[variant.source] ?? 0));
+      if (variantClip && weight > 0) {
+        const phase = Math.min(1, Math.max(0, motion.actionProgress));
+        const variantTime = variantClip.range.start +
+          phase * (variantClip.range.end - variantClip.range.start);
+        const variantPose = sampleComposedClip(variantClip, variantTime, motion, {
+          evaluators: this.proceduralEvaluators,
+        });
+        pose = blendPoses(
+          withControlDefaults(canonicalizePose(sampledPose, this.binding), this.controlDefaults),
+          withControlDefaults(canonicalizePose(variantPose, this.binding), this.controlDefaults),
+          weight,
+        );
+      }
+    }
     if (
       this.transient?.kind === 'pace-stop' &&
       clip.id === this.transient.clipId &&
@@ -444,6 +504,21 @@ export class CharacterAnimationRuntime {
         weight,
       );
       this.transitionBlendWeight = weight;
+    } else if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
+      const weight = smoothstep01(this.switchBlendElapsed / this.switchBlendDuration);
+      pose = blendPoses(
+        withControlDefaults(
+          canonicalizePose(this.switchOutgoingPose, this.binding),
+          this.controlDefaults,
+        ),
+        withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
+        weight,
+      );
+      this.transitionBlendWeight = weight;
+      if (weight >= 1) {
+        this.switchOutgoingPose = null;
+        this.switchBlendDuration = 0;
+      }
     } else {
       this.transitionBlendWeight = null;
     }
@@ -586,6 +661,9 @@ export class CharacterAnimationRuntime {
     this.motionContext = null;
     this.lastSampledPose = null;
     this.transitionBlendWeight = null;
+    this.switchOutgoingPose = null;
+    this.switchBlendDuration = 0;
+    this.switchBlendElapsed = 0;
     this.restartPending = false;
   }
 }
@@ -614,6 +692,8 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   'player.hang',
   'player.climb',
   'player.rope',
+  'player.rope-climb',
+  'player.rope-release',
   'player.slam',
   'player.bail',
   'player.spin',

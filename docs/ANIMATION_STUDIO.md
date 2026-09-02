@@ -81,6 +81,26 @@ clip timeline is scrubbed by slam action progress so variable fall height
 cannot desynchronize the pose from anticipation, descent, or impact. Manual
 Studio preview remains normal speed-controlled playback.
 
+## Unity rope suite
+
+The rope presentation retargets PunkyFox's Unity `Rope Hang Idle`, `Climb Up
+Rope`, `Swing on Rope to Ground`, and charged `Rope Hang Backflip to Crouch`
+clips onto all 22 conventional humanoid joints. The reproducible importer uses
+the Unity idle bind pose, converts bind-world deltas into player canonical
+rest-local rotations, evaluates the source Hermite curves at 60 fps, then
+reduces them with a measured maximum angular error of 0.5 degrees. Translation
+and root motion are omitted because deterministic gameplay owns the rope and
+rider positions.
+
+`player.rope` is the attached idle loop. `player.rope-climb` follows a
+phase-preserving 2.533-second cycle, plays forward while climbing and backward
+while descending, and crossfades to/from hang over Unity's six-frame attached
+blend. `player.rope-release` continuously blends the swing-jump and charged
+backflip variants from the fixed-step release charge and uses Unity's trimmed
+34-frame/17-frame lead-ins. A final two-bone correction keeps both wrists on
+the live rope axis after the authored pose; the pendulum angle never drives or
+distorts the body animation.
+
 ## Double-jump pose
 
 `player.double-jump` is a separate authored high-jump clip rather than a second

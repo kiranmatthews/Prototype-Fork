@@ -6,6 +6,21 @@ import {
   FORWARD_ROLL_TUCK_INPUT,
 } from './forwardRoll';
 import {
+  UNITY_ROPE_ANIMATION_SOURCE,
+  UNITY_ROPE_CLIMB_DURATION,
+  UNITY_ROPE_CLIMB_ROTATION_KEYS,
+  UNITY_ROPE_HANG_DURATION,
+  UNITY_ROPE_HANG_ROTATION_KEYS,
+  UNITY_ROPE_RELEASE_BACKFLIP_DURATION,
+  UNITY_ROPE_RELEASE_BACKFLIP_ROTATION_KEYS,
+  UNITY_ROPE_RELEASE_SWING_DURATION,
+  UNITY_ROPE_RELEASE_SWING_ROTATION_KEYS,
+} from './unityRopeAnimations.generated';
+import {
+  UNITY_ROPE_CLIP_IDS,
+  UNITY_ROPE_INPUTS,
+} from './unityRope';
+import {
   QUATERNIUS_JOG_FWD_DURATION,
   QUATERNIUS_JOG_FWD_ROOT_KEYS,
   QUATERNIUS_JOG_FWD_ROTATION_KEYS,
@@ -60,6 +75,9 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.hang',
   'player.climb',
   'player.rope',
+  'player.rope-climb',
+  'player.rope-release',
+  'player.rope-release-charged',
   'player.slam',
   'player.bail',
   'player.spin',
@@ -71,7 +89,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 9;
+export const PLAYER_STARTER_CATALOG_VERSION = 10;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -187,6 +205,13 @@ function isUntouchedSlamPlaceholder(clip: AnimationClip): boolean {
     clip.proceduralDrivers.length === 0;
 }
 
+function isUntouchedRopePlaceholder(clip: AnimationClip): boolean {
+  return clip.id === UNITY_ROPE_CLIP_IDS.hang &&
+    clip.metadata?.starterQuality === 'identity-placeholder' &&
+    clip.tracks.length === 0 &&
+    clip.proceduralDrivers.length === 0;
+}
+
 function preJogRunBackup(clip: AnimationClip): AnimationClip {
   return {
     ...structuredClone(clip),
@@ -223,6 +248,9 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.hang': 1,
   'player.climb': 1,
   'player.rope': 1,
+  'player.rope-climb': 10,
+  'player.rope-release': 10,
+  'player.rope-release-charged': 10,
   'player.slam': 1,
   'player.bail': 1,
   'player.spin': 1,
@@ -346,6 +374,18 @@ function sampledQuaternionTrack(
       interpolation: 'linear',
     })),
   };
+}
+
+function sampledRotationTracks(
+  clipId: string,
+  values: Readonly<Record<string, readonly SampledQuaternion[]>>,
+  includeTorsoRoot = true,
+  excludedJoints: ReadonlySet<string> = new Set(),
+): AnimationTrack[] {
+  return Object.entries(values).flatMap(([jointId, keys]) =>
+    (!includeTorsoRoot && jointId === 'torsoRoot') || excludedJoints.has(jointId)
+      ? []
+      : [sampledQuaternionTrack(clipId, jointId, keys)]);
 }
 
 function combinedQuaternionSamples(
@@ -1017,6 +1057,206 @@ function buildSkate(rigId: string): AnimationClip {
   return clip;
 }
 
+type UnityRopeSourceKey = keyof typeof UNITY_ROPE_ANIMATION_SOURCE.clips;
+const UNITY_ROPE_IK_AUTHORED_JOINTS = new Set([
+  'clavicleLeft', 'shoulderLeft', 'elbowLeft',
+  'clavicleRight', 'shoulderRight', 'elbowRight',
+]);
+
+function unityRopeGripTracks(
+  clipId: string,
+  duration: number,
+  climbing: boolean,
+): AnimationTrack[] {
+  if (!climbing) {
+    return [
+      quaternionTrack(clipId, 'clavicleLeft', [[0, 0, 0, 0.04], [duration, 0, 0, 0.04]]),
+      quaternionTrack(clipId, 'clavicleRight', [[0, 0, 0, -0.04], [duration, 0, 0, -0.04]]),
+      quaternionTrack(clipId, 'shoulderLeft', [[0, 0, 0.5, -2.72], [duration, 0, 0.5, -2.72]]),
+      quaternionTrack(clipId, 'shoulderRight', [[0, 0, -0.5, 2.72], [duration, 0, -0.5, 2.72]]),
+      quaternionTrack(clipId, 'elbowLeft', [[0, -0.22, 0, 0], [duration, -0.22, 0, 0]]),
+      quaternionTrack(clipId, 'elbowRight', [[0, -0.22, 0, 0], [duration, -0.22, 0, 0]]),
+    ];
+  }
+  const q1 = duration * 0.25;
+  const q2 = duration * 0.5;
+  const q3 = duration * 0.75;
+  return [
+    quaternionTrack(clipId, 'clavicleLeft', [
+      [0, 0, 0, 0.04], [q1, 0.08, 0, 0.12], [q2, 0, 0, 0.04],
+      [q3, -0.08, 0, -0.04], [duration, 0, 0, 0.04],
+    ]),
+    quaternionTrack(clipId, 'clavicleRight', [
+      [0, 0, 0, -0.04], [q1, -0.08, 0, 0.04], [q2, 0, 0, -0.04],
+      [q3, 0.08, 0, -0.12], [duration, 0, 0, -0.04],
+    ]),
+    quaternionTrack(clipId, 'shoulderLeft', [
+      [0, 0, 0.5, -2.72], [q1, -0.1, 0.4, -2.85], [q2, 0, 0.5, -2.72],
+      [q3, -0.35, 0.35, -2.35], [duration, 0, 0.5, -2.72],
+    ]),
+    quaternionTrack(clipId, 'shoulderRight', [
+      [0, 0, -0.5, 2.72], [q1, -0.35, -0.35, 2.35], [q2, 0, -0.5, 2.72],
+      [q3, -0.1, -0.4, 2.85], [duration, 0, -0.5, 2.72],
+    ]),
+    quaternionTrack(clipId, 'elbowLeft', [
+      [0, -0.22, 0, 0], [q1, -0.1, 0, 0], [q2, -0.22, 0, 0],
+      [q3, -0.95, 0, 0], [duration, -0.22, 0, 0],
+    ]),
+    quaternionTrack(clipId, 'elbowRight', [
+      [0, -0.22, 0, 0], [q1, -0.95, 0, 0], [q2, -0.22, 0, 0],
+      [q3, -0.1, 0, 0], [duration, -0.22, 0, 0],
+    ]),
+  ];
+}
+
+function unityRopeSourceMetadata(sourceKey: UnityRopeSourceKey) {
+  return {
+    ...UNITY_ROPE_ANIMATION_SOURCE.clips[sourceKey],
+    bindAsset: UNITY_ROPE_ANIMATION_SOURCE.bindAsset,
+    bindAssetSha256: UNITY_ROPE_ANIMATION_SOURCE.bindAssetSha256,
+    sampleRate: UNITY_ROPE_ANIMATION_SOURCE.sampleRate,
+    maximumQuaternionErrorDegrees:
+      UNITY_ROPE_ANIMATION_SOURCE.maximumQuaternionErrorDegrees,
+    conversion: UNITY_ROPE_ANIMATION_SOURCE.conversion,
+    translationPolicy: UNITY_ROPE_ANIMATION_SOURCE.translationPolicy,
+  };
+}
+
+function buildUnityRopeHang(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(
+    UNITY_ROPE_CLIP_IDS.hang,
+    'Rope Hang — Unity PunkyFox',
+    UNITY_ROPE_HANG_DURATION,
+    'loop',
+    rigId,
+  );
+  clip.tracks = [
+    ...sampledRotationTracks(
+      clip.id,
+      UNITY_ROPE_HANG_ROTATION_KEYS,
+      includeTorsoRoot,
+      UNITY_ROPE_IK_AUTHORED_JOINTS,
+    ),
+    ...unityRopeGripTracks(clip.id, clip.duration, false),
+  ];
+  clip.contacts = [
+    contact(`${clip.id}:left-grip`, 0, clip.duration, 'gripLeft', 'grip'),
+    contact(`${clip.id}:right-grip`, 0, clip.duration, 'gripRight', 'grip'),
+  ];
+  clip.markers = [
+    { id: `${clip.id}:attached`, time: 0, name: 'Attached grip' },
+    { id: `${clip.id}:idle-overlap`, time: clip.duration * 0.5, name: 'Hanging overlap' },
+  ];
+  clip.tags = ['player', 'unity-port', 'rope', 'hang', 'source-animation-retarget'];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: unityRopeSourceMetadata('hang'),
+    gripAdaptation: 'Unity post-animation two-bone solve; semantic preview keys',
+    physicalSwingOwnership: 'gameplay rope; attached body samples idle independently',
+  };
+  return clip;
+}
+
+function buildUnityRopeClimb(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(
+    UNITY_ROPE_CLIP_IDS.climb,
+    'Rope Climb — Unity PunkyFox',
+    UNITY_ROPE_CLIMB_DURATION,
+    'loop',
+    rigId,
+  );
+  clip.tracks = [
+    ...sampledRotationTracks(
+      clip.id,
+      UNITY_ROPE_CLIMB_ROTATION_KEYS,
+      includeTorsoRoot,
+      UNITY_ROPE_IK_AUTHORED_JOINTS,
+    ),
+    ...unityRopeGripTracks(clip.id, clip.duration, true),
+  ];
+  clip.contacts = [
+    contact(`${clip.id}:left-grip`, 0, clip.duration, 'gripLeft', 'grip'),
+    contact(`${clip.id}:right-grip`, 0, clip.duration, 'gripRight', 'grip'),
+  ];
+  clip.markers = [
+    { id: `${clip.id}:left-pull`, time: clip.duration * 0.25, name: 'Left pull' },
+    { id: `${clip.id}:right-pull`, time: clip.duration * 0.75, name: 'Right pull' },
+  ];
+  clip.tags = ['player', 'unity-port', 'rope', 'climb', 'reversible', 'source-animation-retarget'];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    progressSource: 'gameplay-actionProgress',
+    playbackDirectionSource: UNITY_ROPE_INPUTS.climbDirection,
+    sourceAnimation: unityRopeSourceMetadata('climb'),
+    gripAdaptation: 'Unity post-animation two-bone solve; semantic preview keys',
+  };
+  return clip;
+}
+
+function buildUnityRopeRelease(
+  rigId: string,
+  charged: boolean,
+  includeTorsoRoot: boolean,
+): AnimationClip {
+  const clip = baseClip(
+    charged ? UNITY_ROPE_CLIP_IDS.chargedRelease : UNITY_ROPE_CLIP_IDS.release,
+    charged
+      ? 'Rope Release — Unity Charged Backflip'
+      : 'Rope Release — Unity Swing Jump',
+    charged
+      ? UNITY_ROPE_RELEASE_BACKFLIP_DURATION
+      : UNITY_ROPE_RELEASE_SWING_DURATION,
+    'once',
+    rigId,
+  );
+  clip.loop.seamless = false;
+  clip.tracks = sampledRotationTracks(
+    clip.id,
+    charged
+      ? UNITY_ROPE_RELEASE_BACKFLIP_ROTATION_KEYS
+      : UNITY_ROPE_RELEASE_SWING_ROTATION_KEYS,
+    includeTorsoRoot,
+  );
+  clip.contacts = [
+    contact(`${clip.id}:left-release`, 0, Math.min(clip.duration, 5 / 60), 'gripLeft', 'grip'),
+    contact(`${clip.id}:right-release`, 0, Math.min(clip.duration, 5 / 60), 'gripRight', 'grip'),
+  ];
+  clip.markers = [
+    { id: `${clip.id}:release`, time: 0, name: 'Grip release' },
+    ...(charged ? [{
+      id: `${clip.id}:backflip-apex`,
+      time: clip.duration * 0.5,
+      name: 'Charged backflip apex',
+    }] : []),
+  ];
+  clip.events = [{ id: `${clip.id}:leap`, time: 0, name: 'rope-leap' }];
+  clip.tags = [
+    'player', 'unity-port', 'rope', 'release',
+    charged ? 'charged-backflip' : 'swing-jump',
+    'source-animation-retarget',
+  ];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    progressSource: 'gameplay-actionProgress',
+    sourceAnimation: unityRopeSourceMetadata(
+      charged ? 'releaseBackflip' : 'releaseSwing',
+    ),
+    ...(charged ? {
+      variantFor: UNITY_ROPE_CLIP_IDS.release,
+      variantWeight: 1,
+    } : {
+      variantBlend: {
+        clipId: UNITY_ROPE_CLIP_IDS.chargedRelease,
+        source: UNITY_ROPE_INPUTS.releaseCharge,
+      },
+    }),
+  };
+  return clip;
+}
+
 function buildUnitySlam(rigId: string): AnimationClip {
   const timing = UNITY_SLAM_POSE_TIMING;
   const clip = baseClip(
@@ -1102,7 +1342,10 @@ export function createPlayerStarterClips(
     placeholder('player.grab', 'Grab', 0.8, rigId),
     placeholder('player.hang', 'Hang', 1, rigId),
     placeholder('player.climb', 'Climb', 1.2, rigId),
-    placeholder('player.rope', 'Rope', 1.2, rigId),
+    buildUnityRopeHang(rigId, includeTorsoRoot),
+    buildUnityRopeClimb(rigId, includeTorsoRoot),
+    buildUnityRopeRelease(rigId, false, includeTorsoRoot),
+    buildUnityRopeRelease(rigId, true, includeTorsoRoot),
     buildUnitySlam(rigId),
     placeholder('player.bail', 'Bail', 1.1, rigId),
     placeholder('player.spin', 'Spin', 0.8, rigId),
@@ -1118,11 +1361,11 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
  * Refresh the embedded live rig and add only starters introduced after the
  * revision a saved suite has already seen. Same-ID clips normally win; the
  * exceptions are explicit upgrades for shipped, signature-identical starters:
- * Run -> Jog_Fwd, Slam -> Unity pose, and the phase-locked airborne deformation
- * arc. A genuinely edited pre-Jog Run is retained under a backup ID while
- * `player.run` adopts the new source motion. Once a suite records the current
- * revision, a missing clip is treated as an intentional deletion and remains
- * missing on subsequent loads.
+ * Run -> Jog_Fwd, Slam -> Unity pose, Rope -> Unity suite, and the phase-locked
+ * airborne deformation arc. A genuinely edited pre-Jog Run is retained under
+ * a backup ID while `player.run` adopts the new source motion. Once a suite
+ * records the current revision, a missing clip is treated as an intentional
+ * deletion and remains missing on subsequent loads.
  */
 export function reconcilePlayerStarterAnimationSuite(
   document: AnimationSuiteDocument,
@@ -1186,6 +1429,16 @@ export function reconcilePlayerStarterAnimationSuite(
         const upgraded = withForwardRollSquashLayer(current);
         clips = clips.map((clip) => clip.id === clipId ? upgraded : clip);
       }
+    }
+  }
+  if (previousVersion < 10) {
+    const importedRope = starters.find((clip) =>
+      clip.id === UNITY_ROPE_CLIP_IDS.hang)!;
+    const currentRope = clips.find((clip) =>
+      clip.id === UNITY_ROPE_CLIP_IDS.hang);
+    if (currentRope && isUntouchedRopePlaceholder(currentRope)) {
+      clips = clips.map((clip) =>
+        clip.id === UNITY_ROPE_CLIP_IDS.hang ? importedRope : clip);
     }
   }
 

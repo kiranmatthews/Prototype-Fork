@@ -197,6 +197,17 @@ try {
   const { Level, setEditorBuild } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
+  const {
+    RigBinding,
+    UNITY_ROPE_CLIP_IDS,
+    UNITY_ROPE_INPUTS,
+    UNITY_ROPE_TIMING,
+    createPlayerStarterAnimationSuite,
+    unityRopeReleaseDuration,
+  } = await server.ssrLoadModule("/src/animation/index.ts");
+  const { createCharacterAnimationRuntime } = await server.ssrLoadModule(
+    "/src/characterAnimationRuntime.ts",
+  );
 
   const ropeLevelData = (travel = null) => ({
     v: 1,
@@ -242,6 +253,11 @@ try {
 
   const mounted = createFixture();
   const rider = mounted.player;
+  const ropeBinding = RigBinding.fromSculptRuntime(rider.animationRig.root, { strict: false });
+  const ropeRuntime = createCharacterAnimationRuntime(
+    rider,
+    createPlayerStarterAnimationSuite(ropeBinding.definition),
+  );
   rider.freeSkate = true;
   rider.airFromSkate = true;
   rider.airGrav = "board";
@@ -296,6 +312,13 @@ try {
 
   assert.equal(rider.tryRopeGrab(mounted.level), true, "board air did not catch rope");
   assert.equal(rider.state, "rope");
+  assert.equal(rider.animationClipHint, UNITY_ROPE_CLIP_IDS.hang);
+  rider.syncVisual(mounted.input, CONST.fixedStep);
+  assert.equal(ropeRuntime.activeClipId, UNITY_ROPE_CLIP_IDS.hang);
+  assert.ok(rider.ropeAnimationDiagnostics.leftGripError < 0.02,
+    `left authored rope grip missed by ${rider.ropeAnimationDiagnostics.leftGripError}`);
+  assert.ok(rider.ropeAnimationDiagnostics.rightGripError < 0.02,
+    `right authored rope grip missed by ${rider.ropeAnimationDiagnostics.rightGripError}`);
   assert.equal(rider.freeSkate, false, "rope catch left skate authority active");
   assert.equal(rider.airFromSkate, false);
   assert.equal(rider.airGrav, "foot");
@@ -369,6 +392,33 @@ try {
   vectorClose(rider.flyBoard.position, expectedPosition, "same-tick loose board position");
   closeTo(rider.flyBoardT, 30 - CONST.fixedStep, "same-tick loose board lifetime");
 
+  const hangPhase = rider.ropeAnimationDiagnostics.climbPhase;
+  rider.stepRope(CONST.fixedStep, makeInput({ moveY: 1 }), mounted.level);
+  rider.syncVisual(mounted.input, CONST.fixedStep);
+  assert.equal(rider.animationClipHint, UNITY_ROPE_CLIP_IDS.climb);
+  assert.equal(ropeRuntime.activeClipId, UNITY_ROPE_CLIP_IDS.climb);
+  assert.equal(rider.ropeAnimationDiagnostics.climbDirection, 1);
+  assert.ok(rider.ropeAnimationDiagnostics.climbPhase > hangPhase);
+  assert.ok(rider.ropeAnimationDiagnostics.leftGripError < 0.02);
+  assert.ok(rider.ropeAnimationDiagnostics.rightGripError < 0.02);
+  const upwardPhase = rider.ropeAnimationDiagnostics.climbPhase;
+  rider.stepRope(CONST.fixedStep, makeInput({ moveY: -1 }), mounted.level);
+  rider.syncVisual(mounted.input, CONST.fixedStep);
+  assert.equal(rider.ropeAnimationDiagnostics.climbDirection, -1);
+  closeTo(rider.ropeAnimationDiagnostics.climbPhase, hangPhase,
+    "downward rope climb did not reverse the Unity source cycle", 1e-6);
+  assert.ok(upwardPhase > rider.ropeAnimationDiagnostics.climbPhase);
+  rider.stepRope(CONST.fixedStep, makeInput(), mounted.level);
+  rider.syncVisual(mounted.input, CONST.fixedStep);
+  assert.equal(rider.animationClipHint, UNITY_ROPE_CLIP_IDS.hang);
+  rider.ropeD = 1;
+  const topClimbPhase = rider.ropeAnimationDiagnostics.climbPhase;
+  rider.stepRope(CONST.fixedStep, makeInput({ moveY: 1 }), mounted.level);
+  assert.equal(rider.ropeAnimationDiagnostics.climbDirection, 0,
+    "rope climb kept animating against the top clamp");
+  closeTo(rider.ropeAnimationDiagnostics.climbPhase, topClimbPhase,
+    "rope climb phase advanced without actual grip movement");
+
   // Catching on foot must neither manufacture nor relaunch a board that is
   // already loose. It must also preserve a prior emergency-eject judgment.
   const loosePosition = rider.flyBoard.position.clone();
@@ -401,6 +451,28 @@ try {
   rider.coyoteTimer = 0.2;
   rider.ropeLeap(mounted.level, mounted.level.ropeSwings[0]);
   assert.equal(rider.state, "air");
+  assert.equal(rider.animationClipHint, UNITY_ROPE_CLIP_IDS.release);
+  closeTo(rider.ropeAnimationDiagnostics.releaseCharge, 1,
+    "full rope charge did not select the charged Unity variant");
+  closeTo(rider.ropeAnimationDiagnostics.releaseDuration,
+    UNITY_ROPE_TIMING.backflipReleaseDuration,
+    "full rope charge used the wrong Unity release duration");
+  closeTo(rider.ropeAnimationDiagnostics.releaseDuration,
+    unityRopeReleaseDuration(1),
+    "release duration helper diverged at full charge");
+  closeTo(unityRopeReleaseDuration(0), UNITY_ROPE_TIMING.swingReleaseDuration,
+    "minimum rope charge used the wrong Unity release duration");
+  closeTo(unityRopeReleaseDuration(0.5),
+    (UNITY_ROPE_TIMING.swingReleaseDuration +
+      UNITY_ROPE_TIMING.backflipReleaseDuration) * 0.5,
+    "half rope charge did not interpolate the Unity release durations");
+  rider.syncVisual(mounted.input, CONST.fixedStep);
+  assert.equal(ropeRuntime.activeClipId, UNITY_ROPE_CLIP_IDS.release);
+  closeTo(
+    ropeRuntime.diagnostics.motionContext.inputs[UNITY_ROPE_INPUTS.releaseCharge],
+    1,
+    "animation runtime lost the rope release charge",
+  );
   assert.equal(rider.freeSkate, false);
   assert.equal(rider.airFromSkate, false);
   assert.equal(rider.airGrav, "foot");
@@ -413,6 +485,14 @@ try {
   closeTo(rider.airPeakY, rider.pos.y, "rope release peak reset");
   closeTo(rider.coyoteTimer, 0, "rope release stale coyote time");
   assert.equal(rider.flyBoard.visible, true, "rope release recalled the loose board");
+  rider.step(CONST.fixedStep, makeInput(), mounted.level);
+  closeTo(rider.ropeAnimationDiagnostics.releaseElapsed, CONST.fixedStep,
+    "rope release animation clock did not advance on fixed time");
+  closeTo(
+    ropeRuntime.diagnostics.motionContext.actionProgress,
+    CONST.fixedStep / rider.ropeAnimationDiagnostics.releaseDuration,
+    "rope release clip was not phase-locked to its charge-blended duration",
+  );
 
   // Emergency eject owns its Jump release before rope/rail capture. The same
   // edge cannot perform two board-detach transactions.
@@ -508,7 +588,7 @@ try {
   vertical.level.dispose();
   editorLevel.dispose();
   console.log(
-    "Validated Unity rope catch parity: skate closure, exact loose-board flight, foot release, travelling-anchor velocity, and editor round trip.",
+    "Validated Unity rope catch parity, authored hang/climb/release routing, exact grip IK, and board transfer.",
   );
 } finally {
   // Player construction starts optional presentation loads. Let their mocked

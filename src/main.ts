@@ -3495,6 +3495,7 @@ requestAnimationFrame(frame);
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   getSpinEffectDiagnostics: () => player.spinEffectDiagnostics,
+  getRopeAnimationDiagnostics: () => player.ropeAnimationDiagnostics,
   getCharacterProportionDiagnostics: () => player.characterProportionDiagnostics,
   getCartoonGloveDiagnostics: () => player.cartoonGloveDiagnostics,
   getRiggedCartoonHandDiagnostics: () => player.riggedCartoonHandDiagnostics,

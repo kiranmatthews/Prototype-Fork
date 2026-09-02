@@ -24,6 +24,13 @@ try {
     FORWARD_ROLL_SQUASH_MULTIPLIER,
     FORWARD_ROLL_TUCK_INPUT,
     PLAYER_STARTER_CATALOG_VERSION,
+    UNITY_ROPE_ANIMATION_SOURCE,
+    UNITY_ROPE_CLIP_IDS,
+    UNITY_ROPE_CLIMB_DURATION,
+    UNITY_ROPE_HANG_DURATION,
+    UNITY_ROPE_INPUTS,
+    UNITY_ROPE_RELEASE_BACKFLIP_DURATION,
+    UNITY_ROPE_RELEASE_SWING_DURATION,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
     UNITY_SLAM_POSE_SOURCE,
@@ -327,11 +334,12 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(starterClips.length, 19);
+  assert.equal(starterClips.length, 22);
   for (const id of [
     'player.idle', 'player.run', 'player.pace-stop', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
     'player.crawl', 'player.slide', 'player.skate', 'player.grind', 'player.grab', 'player.hang',
-    'player.climb', 'player.rope', 'player.slam', 'player.bail', 'player.spin',
+    'player.climb', 'player.rope', 'player.rope-climb', 'player.rope-release',
+    'player.rope-release-charged', 'player.slam', 'player.bail', 'player.spin',
   ]) assert.ok(starterClips.some((clip) => clip.id === id), `missing starter clip ${id}`);
   const suite = createPlayerStarterAnimationSuite(binding.definition);
   const validation = validateAnimationSuite(suite);
@@ -347,8 +355,13 @@ try {
   const run = findClip(parsedSuite, 'player.run');
   const paceStop = findClip(parsedSuite, 'player.pace-stop');
   const doubleJump = findClip(parsedSuite, 'player.double-jump');
+  const ropeHang = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.hang);
+  const ropeClimb = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.climb);
+  const ropeRelease = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.release);
+  const ropeReleaseCharged = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.chargedRelease);
   const slam = findClip(parsedSuite, 'player.slam');
-  assert.ok(jump && doubleJump && fall && land && idle && run && paceStop && slam);
+  assert.ok(jump && doubleJump && fall && land && idle && run && paceStop &&
+    ropeHang && ropeClimb && ropeRelease && ropeReleaseCharged && slam);
   assert.equal(jump.playbackSpeed, 1);
   assert.equal(jump.duration, 1);
   assert.equal(jump.metadata.progressSource, 'gameplay-actionProgress');
@@ -468,6 +481,57 @@ try {
   assert.ok(rightKneeDirection.x < -0.85,
     'right double-jump thigh did not straddle toward anatomical right');
   assert.ok(fullSplit.joints.kneeLeft && fullSplit.joints.kneeRight);
+
+  near(ropeHang.duration, UNITY_ROPE_HANG_DURATION);
+  assert.equal(ropeHang.loop.mode, 'loop');
+  assert.equal(ropeHang.loop.seamless, true);
+  assert.equal(ropeHang.tracks.length, 22);
+  assert.ok(ropeHang.tracks.every((track) => track.kind === 'quaternion'));
+  for (const track of ropeHang.tracks) {
+    assert.deepEqual(track.keys.at(-1).value, track.keys[0].value,
+      `Unity rope hang loop is not seam-closed on ${track.target}`);
+  }
+  assert.equal(ropeHang.contacts.filter((entry) => entry.mode === 'grip').length, 2);
+  assert.equal(ropeHang.metadata.sourceAnimation.sourceAssetSha256,
+    UNITY_ROPE_ANIMATION_SOURCE.clips.hang.sourceAssetSha256);
+
+  near(ropeClimb.duration, UNITY_ROPE_CLIMB_DURATION);
+  assert.equal(ropeClimb.loop.mode, 'loop');
+  assert.equal(ropeClimb.metadata.progressSource, 'gameplay-actionProgress');
+  assert.equal(ropeClimb.metadata.playbackDirectionSource,
+    UNITY_ROPE_INPUTS.climbDirection);
+  assert.equal(ropeClimb.tracks.length, 22);
+  const climbQuarter = sampleClip(ropeClimb, ropeClimb.duration * 0.25);
+  const climbThreeQuarter = sampleClip(ropeClimb, ropeClimb.duration * 0.75);
+  const climbLeftQuarter = new THREE.Quaternion().fromArray(
+    climbQuarter.joints.shoulderLeft.quaternion,
+  );
+  const climbLeftThreeQuarter = new THREE.Quaternion().fromArray(
+    climbThreeQuarter.joints.shoulderLeft.quaternion,
+  );
+  assert.ok(Math.abs(climbLeftQuarter.dot(climbLeftThreeQuarter)) < 0.995,
+    'Unity rope climb did not retain its alternating hand-over-hand motion');
+
+  near(ropeRelease.duration, UNITY_ROPE_RELEASE_SWING_DURATION);
+  near(ropeReleaseCharged.duration, UNITY_ROPE_RELEASE_BACKFLIP_DURATION);
+  assert.equal(ropeRelease.loop.mode, 'once');
+  assert.equal(ropeRelease.metadata.progressSource, 'gameplay-actionProgress');
+  assert.deepEqual(ropeRelease.metadata.variantBlend, {
+    clipId: UNITY_ROPE_CLIP_IDS.chargedRelease,
+    source: UNITY_ROPE_INPUTS.releaseCharge,
+  });
+  assert.equal(ropeReleaseCharged.metadata.variantFor, UNITY_ROPE_CLIP_IDS.release);
+  assert.ok(ropeRelease.tracks.every((track) => track.kind === 'quaternion'));
+  assert.ok(ropeReleaseCharged.tracks.every((track) => track.kind === 'quaternion'));
+  const swingReleaseMid = sampleClip(ropeRelease, ropeRelease.duration * 0.5);
+  const backflipReleaseMid = sampleClip(
+    ropeReleaseCharged,
+    ropeReleaseCharged.duration * 0.5,
+  );
+  assert.ok(Math.abs(new THREE.Quaternion()
+    .fromArray(swingReleaseMid.joints.hips.quaternion)
+    .dot(new THREE.Quaternion().fromArray(backflipReleaseMid.joints.hips.quaternion))) < 0.9,
+    'charged Unity rope release lost its distinct backflip rotation');
 
   assert.equal(slam.name, 'Body Slam — Unity Pose');
   assert.equal(slam.duration, UNITY_SLAM_POSE_TIMING.duration);
@@ -887,6 +951,64 @@ try {
     driver.source === FORWARD_ROLL_TUCK_INPUT).length, 9,
     'a hand-edited catalog-v8 Jump did not receive the non-destructive curl layer');
 
+  const legacyRopePlaceholder = {
+    ...structuredClone(ropeHang),
+    name: 'Rope — Starter Placeholder',
+    duration: 1.2,
+    range: { start: 0, end: 1.2 },
+    tracks: [],
+    proceduralDrivers: [],
+    markers: [],
+    contacts: [],
+    events: [],
+    tags: ['player', 'starter-placeholder'],
+    metadata: {
+      starterQuality: 'identity-placeholder',
+      note: 'Rest-pose slot ready for browser keyframing.',
+    },
+  };
+  const versionNineRopeSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips
+      .filter((clip) => ![
+        UNITY_ROPE_CLIP_IDS.climb,
+        UNITY_ROPE_CLIP_IDS.release,
+        UNITY_ROPE_CLIP_IDS.chargedRelease,
+      ].includes(clip.id))
+      .map((clip) => clip.id === UNITY_ROPE_CLIP_IDS.hang
+        ? legacyRopePlaceholder
+        : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 9 },
+  };
+  const upgradedUnityRope = reconcilePlayerStarterAnimationSuite(
+    versionNineRopeSuite,
+    binding.definition,
+  );
+  assert.equal(findClip(upgradedUnityRope, UNITY_ROPE_CLIP_IDS.hang).name,
+    'Rope Hang — Unity PunkyFox');
+  for (const clipId of Object.values(UNITY_ROPE_CLIP_IDS)) {
+    assert.ok(findClip(upgradedUnityRope, clipId), `catalog v10 omitted ${clipId}`);
+  }
+  const editedRopePlaceholder = {
+    ...structuredClone(legacyRopePlaceholder),
+    name: 'My Rope Pose',
+    tracks: [structuredClone(ropeHang.tracks[0])],
+  };
+  const preservedEditedRope = reconcilePlayerStarterAnimationSuite({
+    ...versionNineRopeSuite,
+    clips: versionNineRopeSuite.clips.map((clip) =>
+      clip.id === UNITY_ROPE_CLIP_IDS.hang ? editedRopePlaceholder : clip),
+  }, binding.definition);
+  assert.equal(findClip(preservedEditedRope, UNITY_ROPE_CLIP_IDS.hang).name,
+    'My Rope Pose', 'an edited Rope placeholder was overwritten');
+  const deletedRopeSuite = reconcilePlayerStarterAnimationSuite({
+    ...versionNineRopeSuite,
+    clips: versionNineRopeSuite.clips.filter((clip) =>
+      clip.id !== UNITY_ROPE_CLIP_IDS.hang),
+  }, binding.definition);
+  assert.equal(findClip(deletedRopeSuite, UNITY_ROPE_CLIP_IDS.hang), undefined,
+    'catalog v10 resurrected a deliberately deleted Rope slot');
+
   const deliberatelyDeleted = {
     ...upgradedCatalog,
     clips: upgradedCatalog.clips.filter((clip) => clip.id !== 'player.pace-stop'),
@@ -1209,7 +1331,7 @@ try {
   drafts.save(parsedSuite);
   assert.equal(drafts.has(parsedSuite.id), true);
   assert.deepEqual(drafts.listDocumentIds(), [parsedSuite.id]);
-  assert.equal(drafts.load(parsedSuite.id).clips.length, 19);
+  assert.equal(drafts.load(parsedSuite.id).clips.length, 22);
   drafts.remove(parsedSuite.id);
   assert.equal(drafts.load(parsedSuite.id), null);
 

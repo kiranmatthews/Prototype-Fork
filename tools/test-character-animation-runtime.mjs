@@ -24,6 +24,11 @@ try {
     PLAYER_TRANSITION_CLIP_IDS,
     createCharacterAnimationRuntime,
   } = await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
+  const {
+    UNITY_ROPE_CLIP_IDS,
+    UNITY_ROPE_INPUTS,
+    UNITY_ROPE_TIMING,
+  } = await server.ssrLoadModule('/src/animation/index.ts');
 
   const root = new THREE.Group();
   root.name = 'runtime-rig-root';
@@ -59,11 +64,12 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  assert.equal(allIds.length, 19);
-  assert.equal(new Set(allIds).size, 19);
+  assert.equal(allIds.length, 21);
+  assert.equal(new Set(allIds).size, 21);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
-    'player.jump', 'player.double-jump', 'player.fall', 'player.slam',
+    'player.jump', 'player.double-jump', 'player.fall', 'player.rope-climb',
+    'player.rope-release', 'player.slam',
   ]);
 
   const actionProgressTimelineIds = new Set(ACTION_PROGRESS_TIMELINE_CLIP_IDS);
@@ -98,6 +104,17 @@ try {
       : undefined,
   });
   const clips = allIds.map((id, index) => makeClip(id, index));
+  const chargedRopeRelease = makeClip(UNITY_ROPE_CLIP_IDS.chargedRelease, 100);
+  chargedRopeRelease.metadata = { progressSource: 'gameplay-actionProgress' };
+  clips.push(chargedRopeRelease);
+  const ropeReleaseClip = clips.find((clip) => clip.id === UNITY_ROPE_CLIP_IDS.release);
+  ropeReleaseClip.metadata = {
+    ...ropeReleaseClip.metadata,
+    variantBlend: {
+      clipId: UNITY_ROPE_CLIP_IDS.chargedRelease,
+      source: UNITY_ROPE_INPUTS.releaseCharge,
+    },
+  };
   const runClip = clips.find((clip) => clip.id === 'player.run');
   runClip.tracks.push({
     id: 'player.run:torso-length',
@@ -180,7 +197,9 @@ try {
   near(hipsXWhenDeformed, 0);
 
   // Every state-owned route resolves to its catalog clip.
-  const airborneRoutes = new Set(['player.jump', 'player.double-jump', 'player.fall']);
+  const airborneRoutes = new Set([
+    'player.jump', 'player.double-jump', 'player.fall', 'player.rope-release',
+  ]);
   const stateRouteOrder = [
     ...PLAYER_STATE_CLIP_IDS.filter((id) => !airborneRoutes.has(id)),
     ...airborneRoutes,
@@ -202,6 +221,46 @@ try {
         near(runtime.diagnostics.timelineTime, actionProgress);
     }
   }
+
+  // Unity's attached rope states crossfade for exactly six source frames.
+  // Climb phase is gameplay-scrubbed and may run forward or backward without
+  // restarting the clip clock.
+  hint = UNITY_ROPE_CLIP_IDS.hang;
+  grounded = false;
+  actionProgress = 0.2;
+  motionInputs = { ...motionInputs, [UNITY_ROPE_INPUTS.releaseCharge]: 0 };
+  runtime.restart();
+  tick(0.001);
+  const ropeHangX = hips.position.x;
+  hint = UNITY_ROPE_CLIP_IDS.climb;
+  actionProgress = 0.5;
+  tick(0.016);
+  near(hips.position.x, ropeHangX);
+  near(runtime.diagnostics.transitionBlendWeight, 0);
+  tick(UNITY_ROPE_TIMING.attachedBlend);
+  near(hips.position.x,
+    allIds.indexOf(UNITY_ROPE_CLIP_IDS.climb) + actionProgress);
+  near(runtime.diagnostics.transitionBlendWeight, 1);
+
+  // Rope release continuously blends the Unity swing-jump and charged
+  // backflip source clips from the fixed-step charge value.
+  hint = 'player.idle';
+  grounded = true;
+  tick(0.016);
+  hint = UNITY_ROPE_CLIP_IDS.release;
+  grounded = false;
+  actionProgress = 0.5;
+  motionInputs = { ...motionInputs, [UNITY_ROPE_INPUTS.releaseCharge]: 0 };
+  runtime.restart();
+  tick(0.001);
+  const lowReleaseX = allIds.indexOf(UNITY_ROPE_CLIP_IDS.release) + 0.5;
+  near(hips.position.x, lowReleaseX);
+  motionInputs = { ...motionInputs, [UNITY_ROPE_INPUTS.releaseCharge]: 1 };
+  tick(0.016);
+  near(hips.position.x, 100.5);
+  motionInputs = { ...motionInputs, [UNITY_ROPE_INPUTS.releaseCharge]: 0.5 };
+  tick(0.016);
+  near(hips.position.x, (lowReleaseX + 100.5) * 0.5);
 
   // Airborne state clips are phase-locked to gameplay actionProgress instead
   // of drifting with frame time. The second pop owns a fresh progress phase.
@@ -416,7 +475,8 @@ try {
   for (const interruption of [
     'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.crouch', 'player.crawl', 'player.slide',
     'player.skate', 'player.grind', 'player.grab', 'player.hang', 'player.climb',
-    'player.rope', 'player.slam', 'player.spin', 'player.bail',
+    'player.rope', 'player.rope-climb', 'player.rope-release',
+    'player.slam', 'player.spin', 'player.bail',
   ]) {
     resetStateRouting();
     qualifyRun();
