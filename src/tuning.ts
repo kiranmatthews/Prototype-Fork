@@ -186,6 +186,7 @@ export const TUNING = {
   // camTilt aims AT the character; camOffset TRANSLATES the whole rig
   // down-course, so framing moves without the tilt changing. Decoupled knobs.
   camFov: 49, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
+  camSpeedFovBoost: 6, // extra lens width at maxSpeed while the board is live; eases in above cruiseSpeed
   chaseCam: 0, // 1 = third-person follow: camera swings behind the travel direction, skater always faces forward
   camDist: 3.8, // trailing distance behind the character
   camHeight: 5.1, // camera elevation above the character
@@ -202,7 +203,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 15; // v15: independent low/high skate carve grip replaces the coupled ratio
+export const TUNING_VERSION = 16; // v16: tunable high-speed skating FOV push
+// v15: independent low/high skate carve grip replaces the coupled ratio
 // v14: wider ledge catch plus the latest close, telephoto camera framing
 // v13: Unity-port feel/collision pass — foot inertia, exact slide, tuned double jump, generic wipeouts, Arrow/crate/Slam updates
 // v11: pipePump retired — pipePumpGain superseded it and applies on every transition
@@ -374,6 +376,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   tntRadius: { min: 1.5, max: 10, step: 0.25 },
   boulderSpeed: { min: 10, max: 45, step: 1 },
   camFov: { min: 30, max: 100, step: 1 },
+  camSpeedFovBoost: { min: 0, max: 25, step: 0.5 },
   chaseCam: { min: 0, max: 1, step: 1 },
   camDist: { min: 2, max: 14, step: 0.1 },
   camHeight: { min: 0.5, max: 10, step: 0.1 },
@@ -669,6 +672,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
   camFov:
     'ZOOM (focal length): the camera lens angle. Lower = telephoto punch-in (tighter, flatter, more cinematic); higher = wide angle (more of the world, more distortion). Side-scroll zones and the boulder chase still add their own push.',
+  camSpeedFovBoost:
+    'HIGH-SPEED SKATE lens push in extra FOV degrees. It is 0 at cruiseSpeed, eases up to this full amount at maxSpeed, and holds through downhill/vert overspeed. It only applies while the board is live; walking and stopping ease back to camFov. 0 disables the trick.',
   camTilt:
     'TILT: the height on the character the camera aims at — around 2.1 is just over her head, so the current 3.3 aims above it. Higher tilts the view UP toward the horizon/sky; lower buries it into the ground. Pure angle — the framing position knob is camOffset.',
   camDist: 'DISTANCE: how far the camera trails behind the character. Side-scroll zones scale with it.',
@@ -768,7 +773,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     ],
   },
   { title: 'CRATES', keys: ['crateBounce', 'crateHopSpeed', 'crateHopGravity', 'arrowBounce', 'arrowBoostMult', 'nitroRadius', 'tntRadius'] },
-  { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift', 'camBalanceRoll'] },
+  { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camSpeedFovBoost', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift', 'camBalanceRoll'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },
 ];
 

@@ -31,6 +31,10 @@ import { pushLevels, fetchRemoteLevels, getToken, setToken } from "./sync";
 import { Player } from "./player";
 import { UI } from "./ui";
 import { TUNING, CONST } from "./tuning";
+import {
+  speedSkateFovTarget,
+  stepSpeedSkateFov,
+} from "./cameraSpeedEffect";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
@@ -915,6 +919,7 @@ const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 const cam2F = new THREE.Vector3(0, 0, -1);
 const cam2LaneCursor = newLaneCursor();
 let cam2RenderSnapVersion = -1;
+let cam2SpeedFovBoost = 0;
 let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
 const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 let coastPost: CoastPostRenderer | null = null;
@@ -1309,6 +1314,10 @@ const frameStats = {
   cameraX: 0,
   cameraY: 0,
   cameraZ: 0,
+  cameraFov: TUNING.camFov,
+  cameraSpeedFovBoost: 0,
+  camera2Fov: TUNING.camFov,
+  camera2SpeedFovBoost: 0,
 };
 const frameProbe = new URLSearchParams(window.location.search).has("frameprobe")
   ? document.createElement("pre")
@@ -1622,8 +1631,33 @@ function updateCamera2(dt: number): void {
     cam2RenderSnapVersion = p2.renderSnapVersion;
     cam2LaneCursor.s = -1;
   }
-  if (camera2.fov !== camera.fov || camera2.aspect !== camera.aspect) {
-    camera2.fov = camera.fov;
+  const fixedReviewShot =
+    current.id === "beachfront" && (oceanOverview || oceanReview);
+  const p2SkateSpeed = p2.cameraSkateSpeed;
+  const p2FovGoal = speedSkateFovTarget(
+    p2SkateSpeed,
+    p2SkateSpeed > 0 && !level.boulder && !fixedReviewShot,
+    TUNING.cruiseSpeed,
+    TUNING.maxSpeed,
+    TUNING.camSpeedFovBoost,
+  );
+  cam2SpeedFovBoost = stepSpeedSkateFov(
+    cam2SpeedFovBoost,
+    p2FovGoal,
+    dt,
+    snapped,
+  );
+  const p2AuthoredFov = current.id === "beachfront" ? 43 : TUNING.camFov;
+  const p2TargetFov = THREE.MathUtils.lerp(
+    p2AuthoredFov + cam2SpeedFovBoost,
+    BOULDER_FOV,
+    boulderF,
+  );
+  if (
+    Math.abs(camera2.fov - p2TargetFov) > 0.005 ||
+    camera2.aspect !== camera.aspect
+  ) {
+    camera2.fov = p2TargetFov;
     camera2.aspect = camera.aspect;
     camera2.updateProjectionMatrix();
   }
@@ -2768,6 +2802,7 @@ const aimSmooth = new THREE.Vector3(NaN, 0, 0); // lightly-damped look target (N
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
+let camSpeedFovBoost = 0; // additive high-speed skate lens push, eased in/out
 const prevPlayerPos = new THREE.Vector3();
 const cameraLaneCursor = newLaneCursor();
 let cameraRenderSnapVersion = -1;
@@ -2797,6 +2832,8 @@ function updateCamera(dt: number): void {
     camera.up.set(0, 1, 0);
     camera.lookAt(0.4741, 1, -314.9205);
     camera.updateProjectionMatrix();
+    camSpeedFovBoost = 0;
+    cam2SpeedFovBoost = 0;
     prevPlayerPos.copy(subject);
     return;
   }
@@ -2808,6 +2845,8 @@ function updateCamera(dt: number): void {
     camera.up.set(0, 1, 0);
     camera.lookAt(4.065, 0, 2.148);
     camera.updateProjectionMatrix();
+    camSpeedFovBoost = 0;
+    cam2SpeedFovBoost = 0;
     prevPlayerPos.copy(subject);
     return;
   }
@@ -2836,8 +2875,26 @@ function updateCamera(dt: number): void {
   boulderF +=
     ((level.boulder ? 1 : 0) - boulderF) *
     (snapped ? 1 : Math.min(1, 3 * dt));
+  const cameraSkateSpeed = player.cameraSkateSpeed;
+  const speedFovGoal = speedSkateFovTarget(
+    cameraSkateSpeed,
+    cameraSkateSpeed > 0 && !level.boulder,
+    TUNING.cruiseSpeed,
+    TUNING.maxSpeed,
+    TUNING.camSpeedFovBoost,
+  );
+  camSpeedFovBoost = stepSpeedSkateFov(
+    camSpeedFovBoost,
+    speedFovGoal,
+    dt,
+    snapped,
+  );
   const authoredFov = current.id === "beachfront" ? 43 : TUNING.camFov;
-  const targetFov = THREE.MathUtils.lerp(authoredFov, BOULDER_FOV, boulderF);
+  const targetFov = THREE.MathUtils.lerp(
+    authoredFov + camSpeedFovBoost,
+    BOULDER_FOV,
+    boulderF,
+  );
   if (Math.abs(camera.fov - targetFov) > 0.005) {
     camera.fov = targetFov;
     camera.updateProjectionMatrix();
@@ -3430,6 +3487,10 @@ function frame(nowMs: number): void {
     frameStats.cameraX = camera.position.x;
     frameStats.cameraY = camera.position.y;
     frameStats.cameraZ = camera.position.z;
+    frameStats.cameraFov = camera.fov;
+    frameStats.cameraSpeedFovBoost = camSpeedFovBoost;
+    frameStats.camera2Fov = camera2.fov;
+    frameStats.camera2SpeedFovBoost = cam2SpeedFovBoost;
     if (frameProbe) frameProbe.textContent = JSON.stringify(frameStats);
     if (crtDiagnosticsProbe)
       crtDiagnosticsProbe.textContent = JSON.stringify(

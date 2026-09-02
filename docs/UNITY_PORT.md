@@ -33,7 +33,7 @@ from the fixed-step loop.
 | Collision | `collide(level)` | `CONST.playerHalf` | AABB vs `level.walls`, crates, enemies, killboxes. See §3. |
 | Scoring / combo | `score()`, combo fields | `combo*`, `pts*` in CONST | Repeat-devaluation table, spin+grab merge, mask specials. |
 | Checkpoints / lives | `respawn()`, `settle()` | `CONST.respawnDelay` | `respawn(level, hard)`: soft = checkpoint, hard = new run (**reseeds the PRNG**). |
-| Camera rig | `main.ts` `updateCamera` | `cam*` keys | Ground-anchored Crash-style rig + optional chase cam + editor-drawn camera lane. |
+| Camera rig | `main.ts` `updateCamera` | `cam*` keys | Ground-anchored Crash-style rig + optional chase cam + editor-drawn camera lane. `camSpeedFovBoost` adds an eased board-only lens push from cruise to max speed; split-screen riders own independent boosts and authored review/boulder shots remain authoritative. |
 | Input | `input.ts`, `touch.ts` | — | See §5. |
 | Replay | `replay.ts` | — | See §4. |
 

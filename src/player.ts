@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { liveCarveGripAtSpeed } from './carveGrip';
+import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
 import {
@@ -2284,6 +2285,19 @@ export class Player {
   // the audio loop so slow carves on a transition still sound like rolling.
   get boardRolling(): boolean {
     return this.freeSkate;
+  }
+
+  /** Deterministic board-owned speed consumed only by camera presentation. */
+  get cameraSkateSpeed(): number {
+    return resolveCameraSkateSpeed({
+      state: this.state,
+      speed: this.speed,
+      grindSpeed: this.grindVel,
+      boardRolling: this.freeSkate,
+      airFromSkate: this.airFromSkate,
+      wallriding: this.wallriding,
+      bailing: this.isBailing,
+    });
   }
 
   /** Gameplay-only deck-trick evidence for reusable trick gates and rails. */

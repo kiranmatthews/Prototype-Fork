@@ -27,7 +27,7 @@ try {
     await server.ssrLoadModule('/src/tuning.ts');
   const { Replayer, isReplayFile } = await server.ssrLoadModule('/src/replay.ts');
 
-  assert.equal(TUNING_VERSION, 15);
+  assert.equal(TUNING_VERSION, 16);
   assert.equal('carveGrip' in TUNING, false);
   assert.equal('carveGripRatio' in TUNING, false);
   assert.deepEqual(TUNING_RANGES.carveGripLow, { min: 0, max: 1440, step: 0.0625 });
