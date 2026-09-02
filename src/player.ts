@@ -26,7 +26,11 @@ import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { wumpaMesh, WUMPA_SIZE } from './wumpa';
-import { puffs, surfaceFromName } from './puffs';
+import { puffs, surfaceFromName, type SurfaceKind } from './puffs';
+import {
+  skateGroundFrictionRate,
+  surfaceKindFromGroundObject,
+} from './surfaceFriction';
 import { Tail, type TailCollider } from './tail';
 import {
   PROCEDURAL_SHIN_LENGTH,
@@ -375,6 +379,7 @@ interface GroundHit {
   y: number;
   normal: THREE.Vector3;
   name: string;
+  surface?: SurfaceKind; // painted material; separate from structural names such as halfpipe
   crate?: Crate; // identity-bearing temporary lid support
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
@@ -6792,9 +6797,14 @@ export class Player {
     if (s < 1e-4) return;
     // Steep ground keeps the old linear bleed: it decelerates harder than the
     // constant term, which is what lets the stall-flip (needs speed < 2) fire.
-    let bleed = steep
-      ? TUNING.friction * dt
-      : (TUNING.rollFriction + TUNING.windDrag * s * s) * dt;
+    let bleed = skateGroundFrictionRate({
+      speed: s,
+      steep,
+      surface: this.groundHit?.surface,
+      steepFriction: TUNING.friction,
+      rollFriction: TUNING.rollFriction,
+      windDrag: TUNING.windDrag,
+    }) * dt;
     // Slick planks (icy sky-bridge boards): almost no friction, so you keep
     // sliding and can't stop short of the gap — the precision hazard.
     if (this.groundHit && this.groundHit.slippy) bleed *= CONST.slippyFriction;
@@ -13014,12 +13024,14 @@ export class Player {
     const normal = hp
       ? hp.normalAt(hp.pointToU(hit.point.x, hit.point.z), new THREE.Vector3())
       : hit.face!.normal.clone().transformDirection(hit.object.matrixWorld);
+    const structuralName =
+      (hit.object.userData.surfaceName as string | undefined) ??
+      hit.object.name;
     return {
       y: hit.point.y,
       normal,
-      name:
-        (hit.object.userData.surfaceName as string | undefined) ??
-        hit.object.name,
+      name: structuralName,
+      surface: surfaceKindFromGroundObject(hit.object, structuralName),
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,

@@ -41,7 +41,7 @@ export const TUNING = {
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill (charge still tops at maxSpeed)
   vertMax: 32, // speed ceiling on TRANSITIONS. Above downhillMax (30.5) so vert is the FASTEST surface in the game, the way THPS reads — and the ceiling is enforced as a bleed now, not a one-frame chop, so arriving hot keeps its momentum readable
   heavyDrag: 0.005, // quadratic bleed above maxSpeed, every surface: 2.7 u/s^2 at 23, 7.2 at 38, so the top end has texture instead of a linear countdown
-  rollFriction: 3.5, // CONSTANT rolling friction: the crisp part of the stop (replaces the old speed-scaled curve that made the last 1 u/s ooze)
+  rollFriction: 3.5, // CONSTANT rolling friction on sand/hard ground: the crisp part of the stop. Grass keeps only a light 12% settling fraction so it carries skate momentum.
   windDrag: 0.0015, // v^2 wind resistance: only bites up top, so you coast a long way fast then stop decisively
   groundGravity: 45, // ONE symmetric slope gravity, all surfaces: climbing decelerates exactly as fast as descending accelerates. Asymmetric ramp physics made every dip-and-rise hand back more than it took, so bowls dispensed free speed and the pump sliders were unreadable
   pipeCarve: 16, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
@@ -444,7 +444,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   heavyDrag:
     'Quadratic bleed applied whenever you are above maxSpeed, on EVERY surface. Higher = the top of the speed range gets a harder wall to press against. (The old flat bleed only fired on level ground, so earned speed was immortal on a hill and then vanished the instant it flattened.)',
   rollFriction:
-    'Constant rolling friction on the roll-out — the part that makes the board STOP instead of oozing through the last unit of speed.',
+    'Constant rolling friction on sand and hard-ground roll-out — the part that makes the board STOP instead of oozing through the last unit of speed. Grass keeps only a light settling fraction so it carries skate momentum instead of behaving like sand.',
   windDrag:
     'v-squared wind resistance on the roll-out: near-nothing at walking pace, real up top. Together with rollFriction: coast a long way fast, then settle decisively.',
   groundGravity:
