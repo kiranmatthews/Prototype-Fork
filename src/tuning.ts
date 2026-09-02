@@ -91,8 +91,8 @@ export const TUNING = {
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
-  carveGrip: 135, // omnidirectional skate: heading turn rate toward the stick (deg/s); higher = sideways feels instant
-  carveGripRatio: 0.05, // how much grip scales with speed (0 = constant, 1 = same turn radius at any speed)
+  carveGripLow: 128.25, // omnidirectional skate turn rate at zero/low speed (deg/s); may be far higher than the high-speed endpoint
+  carveGripHigh: 141.1875, // skate turn rate at maxSpeed and above (deg/s); may be near zero for heavily damped high-speed steering
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 26, // the slide starts at least this fast, then analytically brakes to zero over slideDistance
@@ -202,7 +202,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 14; // v14: wider ledge catch plus the latest close, telephoto camera framing
+export const TUNING_VERSION = 15; // v15: independent low/high skate carve grip replaces the coupled ratio
+// v14: wider ledge catch plus the latest close, telephoto camera framing
 // v13: Unity-port feel/collision pass — foot inertia, exact slide, tuned double jump, generic wipeouts, Arrow/crate/Slam updates
 // v11: pipePump retired — pipePumpGain superseded it and applies on every transition
 // v10: board airs fly under their OWN gravity (boardRise/boardFall + apex float), declared at launch; riseGravity/fallGravity are now on-foot platforming only
@@ -292,8 +293,8 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
   skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
   teeterCatchSpeed: { min: 0, max: 15, step: 0.5 },
-  carveGrip: { min: 90, max: 720, step: 15 },
-  carveGripRatio: { min: 0, max: 1.5, step: 0.05 },
+  carveGripLow: { min: 0, max: 1440, step: 0.0625 },
+  carveGripHigh: { min: 0, max: 1440, step: 0.0625 },
   slideMinSpeed: { min: 2, max: 20, step: 0.5 },
   slideDistance: { min: 3, max: 25, step: 0.5 },
   slideSpeed: { min: 10, max: 45, step: 1 },
@@ -543,10 +544,10 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     "Second gate on the skate transition: you must already be moving this fast (walking counts) when the hold meter fills. Roughly 40% of walk speed feels right.",
   teeterCatchSpeed:
     "Ledge forgiveness: roll or skate off a LETHAL edge (a pit, not a step-down) slower than this and you're caught at the brink in a teeter wobble instead of yeeting off to your death. Above it you commit and fall. 0 = no catch, always fall.",
-  carveGrip:
-    "Skate turn rate (deg/sec) the heading swings toward the direction you push, carrying your speed with it. Higher = sideways/turns feel immediate; lower = long drifty carves. This is the rate AT cruise speed — see carveGripRatio.",
-  carveGripRatio:
-    'Speed-to-grip coupling: effective turn rate = carveGrip × (1 + ratio × (speed/cruise − 1)), clamped ×0.5–×2. 0 = same grip at every speed (old feel); 1 = your turning circle stays the same size no matter how fast you go; 0.5 = at full charge you carve ~1.5× sharper, at half cruise ~25% lazier.',
+  carveGripLow:
+    'LOW-SPEED skate turn rate in degrees/second. This is the direct grip at zero speed, fading linearly toward carveGripHigh by maxSpeed. Raise it aggressively for instant, turny low-speed skating; it no longer forces high-speed steering to sharpen too.',
+  carveGripHigh:
+    'HIGH-SPEED skate turn rate in degrees/second, reached at maxSpeed and held for downhill/vert overspeed. Lower it toward 0 for ultra-damped fast lines while keeping carveGripLow extremely responsive. There is no hidden ratio or multiplier clamp.',
   slideMinSpeed: 'Minimum speed for Circle to trigger a slide; slower than this, holding Circle crawls.',
   slideDistance:
     'Exact authored slide travel in world units. The slide analytically brakes from its entry speed to a genuine stop across this distance.',
@@ -709,8 +710,8 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'skateHoldTime',
       'skateEntrySpeed',
       'teeterCatchSpeed',
-      'carveGrip',
-      'carveGripRatio',
+      'carveGripLow',
+      'carveGripHigh',
       'smashSpeed',
     ],
   },

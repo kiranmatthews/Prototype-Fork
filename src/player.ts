@@ -5,6 +5,7 @@
 
 import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
+import { liveCarveGripAtSpeed } from './carveGrip';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
 import {
@@ -4786,14 +4787,16 @@ export class Player {
             // stop on the board and the rollout steps you off at ~0 (no snap).
             if (this.speed <= TUNING.walkSpeed + 0.5) this.brakeLockT = TUNING.brakeLockTime;
           } else {
-            // Grip grows with speed: at cruise you get carveGrip exactly;
-            // faster carves sharper, slower carves lazier. carveGripRatio is
-            // the coupling strength (0 = constant, 1 = turn radius stays the
-            // same size at any speed), clamped to x0.5..x2 of the base rate.
-            const speedFrac = Math.abs(this.speed) / Math.max(TUNING.cruiseSpeed, 1);
-            const grip =
-              TUNING.carveGrip *
-              THREE.MathUtils.clamp(1 + (speedFrac - 1) * TUNING.carveGripRatio, 0.5, 2);
+            // Direct endpoint grip: low and high speed are independently
+            // authored, with a fixed linear blend to maxSpeed and no hidden
+            // ratio/multiplier clamp. This allows a twitchy low-speed board
+            // and a deliberately damped fast line at the same time.
+            const grip = liveCarveGripAtSpeed(
+              this.speed,
+              TUNING.maxSpeed,
+              TUNING.carveGripLow,
+              TUNING.carveGripHigh,
+            );
             const maxTurn = THREE.MathUtils.degToRad(grip) * slick * dt;
             const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
             const c = Math.cos(turn);

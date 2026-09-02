@@ -32,6 +32,7 @@ import {
   TUNING_VERSION,
   TuningKey,
 } from "./tuning";
+import { migrateLegacySavedCarveGrip } from "./carveGrip";
 
 // Real artwork, not shapes drawn in code — so these go through BASE_URL, the
 // same as the sky paintings, or they 404 on the project-path GitHub Pages build.
@@ -1411,6 +1412,19 @@ export class UI {
         const v = raw.tuning[key];
         if (typeof v === "number" && isFinite(v) && v !== raw.defaults[key])
           merged[key] = v;
+      }
+      // v14 and earlier saved a cruise-rate + ratio. Preserve only a
+      // DELIBERATE old edit, translating it to the two direct v15 endpoints;
+      // an untouched legacy pair follows the new build defaults as usual.
+      const migrated = migrateLegacySavedCarveGrip(
+        raw.tuning,
+        raw.defaults,
+        merged.cruiseSpeed ?? TUNING.cruiseSpeed,
+        merged.maxSpeed ?? TUNING.maxSpeed,
+      );
+      if (migrated) {
+        merged.carveGripLow = migrated.low;
+        merged.carveGripHigh = migrated.high;
       }
       return merged;
     } catch {

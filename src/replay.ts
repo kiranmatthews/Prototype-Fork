@@ -27,6 +27,10 @@
 // older takes and simply keep using the live camera.
 
 import { TUNING } from './tuning';
+import {
+  legacyCarveGripEndpointsFromRecord,
+  setLegacyCarveGripReplayCurve,
+} from './carveGrip';
 
 // the button channels the sim reads, packed into one bitmask per frame.
 // APPEND-ONLY: bit positions are the file format — old replays simply never
@@ -221,6 +225,7 @@ export class Replayer {
   frame = 0;
   private nextChange = 0;
   private savedTuning: Record<string, number> | null = null;
+  private legacyCarveGripValues: Record<string, number> | null = null;
 
   get active(): boolean {
     return this.data !== null;
@@ -237,7 +242,21 @@ export class Replayer {
     this.frame = 0;
     this.nextChange = 0;
     this.savedTuning = { ...(TUNING as unknown as Record<string, number>) };
-    Object.assign(TUNING, data.tuning);
+    const replayTuning = { ...data.tuning };
+    const hasDirectCarveGrip =
+      Number.isFinite(replayTuning.carveGripLow) &&
+      Number.isFinite(replayTuning.carveGripHigh);
+    this.legacyCarveGripValues = !hasDirectCarveGrip &&
+      legacyCarveGripEndpointsFromRecord(replayTuning)
+      ? { ...replayTuning }
+      : null;
+    setLegacyCarveGripReplayCurve(this.legacyCarveGripValues);
+    // Retired controls never become live dynamic properties. Legacy takes use
+    // the shadow above, translated into direct endpoints below.
+    delete replayTuning.carveGrip;
+    delete replayTuning.carveGripRatio;
+    Object.assign(TUNING, replayTuning);
+    this.refreshLegacyCarveGrip();
   }
 
   // Overwrite the live Input with the recorded frame. false = take is over
@@ -250,10 +269,21 @@ export class Replayer {
       return false;
     }
     const t = TUNING as unknown as Record<string, number>;
+    let refreshLegacyCarveGrip = false;
     while (this.nextChange < d.tuningChanges.length && d.tuningChanges[this.nextChange][0] === this.frame) {
       const [, k, v] = d.tuningChanges[this.nextChange++];
-      t[k] = v;
+      if (this.legacyCarveGripValues) {
+        this.legacyCarveGripValues[k] = v;
+        if (
+          k === 'carveGrip' ||
+          k === 'carveGripRatio' ||
+          k === 'cruiseSpeed' ||
+          k === 'maxSpeed'
+        ) refreshLegacyCarveGrip = true;
+      }
+      if (k !== 'carveGrip' && k !== 'carveGripRatio') t[k] = v;
     }
+    if (refreshLegacyCarveGrip) this.refreshLegacyCarveGrip();
     input.moveX = d.mx[this.frame];
     input.moveY = d.my[this.frame];
     const mask = d.b[this.frame];
@@ -271,6 +301,23 @@ export class Replayer {
   end(): void {
     if (this.savedTuning) Object.assign(TUNING, this.savedTuning);
     this.savedTuning = null;
+    this.legacyCarveGripValues = null;
+    setLegacyCarveGripReplayCurve(null);
     this.data = null;
+  }
+
+  private refreshLegacyCarveGrip(): void {
+    if (!this.legacyCarveGripValues) return;
+    // Current replay max/cruise values may have changed independently; keep
+    // the legacy shadow synchronized before deriving its direct endpoints.
+    this.legacyCarveGripValues.maxSpeed = TUNING.maxSpeed;
+    this.legacyCarveGripValues.cruiseSpeed = TUNING.cruiseSpeed;
+    const migrated = legacyCarveGripEndpointsFromRecord(
+      this.legacyCarveGripValues,
+    );
+    setLegacyCarveGripReplayCurve(this.legacyCarveGripValues);
+    if (!migrated) return;
+    TUNING.carveGripLow = migrated.low;
+    TUNING.carveGripHigh = migrated.high;
   }
 }
