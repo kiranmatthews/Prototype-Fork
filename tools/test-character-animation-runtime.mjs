@@ -28,6 +28,8 @@ try {
     UNITY_ROPE_CLIP_IDS,
     UNITY_ROPE_INPUTS,
     UNITY_ROPE_TIMING,
+    UNITY_CROUCH_CRAWL_CLIP_IDS,
+    UNITY_CROUCH_CRAWL_TIMING,
   } = await server.ssrLoadModule('/src/animation/index.ts');
 
   const root = new THREE.Group();
@@ -145,6 +147,8 @@ try {
   let motionInputs = { balance: 0.75, charge: 0.2, travelSign: 1 };
   let overlay = null;
   let overlayRemoved = 0;
+  let lowPoseOuterOwnership = null;
+  let lowPoseOuterOwnershipRemoved = 0;
   let deformationValues = null;
   let hipsXWhenDeformed = null;
   const fakePlayer = {
@@ -164,6 +168,13 @@ try {
       };
     },
     animationRig: { root },
+    setAuthoredLowPoseOuterOwnership(next) {
+      lowPoseOuterOwnership = next;
+      return () => {
+        if (lowPoseOuterOwnership === next) lowPoseOuterOwnership = null;
+        lowPoseOuterOwnershipRemoved++;
+      };
+    },
     setAuthoredPoseOverlay(next) {
       overlay = next;
       return () => {
@@ -185,6 +196,9 @@ try {
 
   const runtime = createCharacterAnimationRuntime(fakePlayer, suite);
   assert.equal(runtime.binding.root, root);
+  assert.equal(typeof lowPoseOuterOwnership, 'function');
+  assert.equal(lowPoseOuterOwnership(0.016), 0,
+    'ordinary test clips unexpectedly claimed Unity low-pose outer ownership');
 
   // The authored pose is a final presentation layer. It replaces its tracked
   // hip channel while leaving an untracked legacy head channel untouched.
@@ -261,6 +275,27 @@ try {
   motionInputs = { ...motionInputs, [UNITY_ROPE_INPUTS.releaseCharge]: 0.5 };
   tick(0.016);
   near(hips.position.x, (lowReleaseX + 100.5) * 0.5);
+
+  // Unity crouch/crawl uses the same five-frame rapid blend on entry, exit,
+  // and between the two low poses.
+  hint = 'player.idle';
+  grounded = false; // avoid synthesizing an unrelated landing edge in this routing fixture
+  tick(0.016);
+  hint = UNITY_CROUCH_CRAWL_CLIP_IDS.crouch;
+  tick(0.016);
+  near(runtime.diagnostics.transitionBlendWeight, 0);
+  tick(UNITY_CROUCH_CRAWL_TIMING.rapidBlend);
+  near(runtime.diagnostics.transitionBlendWeight, 1);
+  hint = UNITY_CROUCH_CRAWL_CLIP_IDS.crawl;
+  tick(0.016);
+  near(runtime.diagnostics.transitionBlendWeight, 0);
+  tick(UNITY_CROUCH_CRAWL_TIMING.rapidBlend * 0.5);
+  near(runtime.diagnostics.transitionBlendWeight, 0.5, 1e-5);
+  tick(UNITY_CROUCH_CRAWL_TIMING.rapidBlend * 0.5);
+  near(runtime.diagnostics.transitionBlendWeight, 1);
+  hint = 'player.idle';
+  tick(0.016);
+  near(runtime.diagnostics.transitionBlendWeight, 0);
 
   // Airborne state clips are phase-locked to gameplay actionProgress instead
   // of drifting with frame time. The second pop owns a fresh progress phase.
@@ -738,9 +773,12 @@ try {
   runtime.dispose();
   assert.equal(overlay, null);
   assert.equal(overlayRemoved, 1);
+  assert.equal(lowPoseOuterOwnership, null);
+  assert.equal(lowPoseOuterOwnershipRemoved, 1);
   assert.equal(runtime.diagnostics.disposed, true);
   runtime.dispose();
   assert.equal(overlayRemoved, 1);
+  assert.equal(lowPoseOuterOwnershipRemoved, 1);
 
   console.log('PASS character animation runtime routing, procedural composition, live context, fallback, and disposal');
 } finally {

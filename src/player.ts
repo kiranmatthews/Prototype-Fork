@@ -587,6 +587,8 @@ export class Player {
   readonly group: THREE.Group;
   private bodyGroup: THREE.Group; // rotates for the spin/trick
   private readonly playerAnimationBridge: PlayerAnimationBridge;
+  private authoredLowPoseOuterOwnership: ((deltaSeconds: number) => number) | null = null;
+  private authoredLowPoseOuterOwnershipLatched = 0;
   private readonly characterProportionLayer: CharacterProportionLayer;
   private characterTailVisibleValue = true;
 
@@ -1504,10 +1506,10 @@ export class Player {
     if (this.slamActive || this.slamFlatT > 0 || this.slamSquash > 0) return 'player.slam';
     if (this.grabbing || this.grabPose > 0.25 || this.specialGrab !== null) return 'player.grab';
     if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
-    if (this.sliding || this.slidePose > 0.25) return 'player.slide';
     if (this.crawling) {
-      return Math.abs(this.speed) > 0.5 ? 'player.crawl' : 'player.crouch';
+      return this.animationPlanarSpeed > 0.001 ? 'player.crawl' : 'player.crouch';
     }
+    if (this.sliding || this.slidePose > 0.25) return 'player.slide';
     if (this.state === 'air' || !this.grounded) {
       if (this.doubleJumpAir) return 'player.double-jump';
       if (
@@ -2180,6 +2182,20 @@ export class Player {
       dispose();
       this.syncCharacterAppearance();
       this.resetRenderInterpolation();
+    };
+  }
+
+  /** Let the active animation document claim the complete low-pose parent
+   * composition. The resolver stays document-aware so edited legacy clips and
+   * missing/disabled fallbacks retain their established outer shaping. */
+  setAuthoredLowPoseOuterOwnership(
+    resolver: ((deltaSeconds: number) => number) | null,
+  ): () => void {
+    this.authoredLowPoseOuterOwnership = resolver;
+    return () => {
+      if (this.authoredLowPoseOuterOwnership === resolver) {
+        this.authoredLowPoseOuterOwnership = null;
+      }
     };
   }
 
@@ -13306,6 +13322,19 @@ export class Player {
     // actually moves.
     const crawlMove = this.crawlPose * Math.min(1, planar / 1.2);
     const crouchW = Math.max(0, this.crawlPose - crawlMove);
+    if (this.crawling) {
+      const ownership = this.authoredLowPoseOuterOwnership?.(dt) ?? 0;
+      this.authoredLowPoseOuterOwnershipLatched = Number.isFinite(ownership)
+        ? THREE.MathUtils.clamp(ownership, 0, 1)
+        : 0;
+    } else if (this.crawlPose <= 0.001) {
+      // Keep source ownership through its exit blend while crawlPose eases
+      // away. Re-enabling the old parent drop during that tail would stack it
+      // under the outgoing Unity pose for several frames.
+      this.authoredLowPoseOuterOwnershipLatched = 0;
+    }
+    const legacyLowPoseOuterWeight =
+      1 - this.authoredLowPoseOuterOwnershipLatched;
     // GRIND POSES, ONE PER TRICK NAME.
     //
     // Every style is a pitch (which truck is on the rail), a roll (which side
@@ -14266,7 +14295,7 @@ export class Player {
         flip * (1 - this.grabPose) + specialTwist +
         this.grabPitch * this.grabPose -
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
-        (0.75 * crawlMove + 0.16 * crouchW) - // all fours hunch when MOVING; a squat stays upright
+        (0.75 * crawlMove + 0.16 * crouchW) * legacyLowPoseOuterWeight -
         0.55 * this.hangPose + // rear back: "...uh oh"
         1.45 * bodyDropPose - // belly-first pancake; recovery moves this pitch to riderG
         0.28 * this.teeterPose + // arms-back "whoa whoa" lean
@@ -14293,13 +14322,13 @@ export class Player {
     this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 14 * dt);
     const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
-    // Crouch drops. The crawl and slam use SMALL drops: their pitch already
-    // lays the torso out at ground level, and the old deep crawl drop was
-    // burying the whole body under the floor.
+    // Imported Unity clips own their hips translation, body pitch and 0.225 m
+    // floor lift. Their ownership marker neutralizes this compatibility root;
+    // a missing/invalid or preserved legacy clip deliberately keeps it.
     this.bodyGroup.position.y =
       this.grabPose * -0.5 -
       this.slidePose * 0.38 -
-      (crawlMove * 0.2 + crouchW * 0.36) - // crawl: shallow drop — the pitch already lays her out; deeper buries the knees
+      (crawlMove * 0.2 + crouchW * 0.36) * legacyLowPoseOuterWeight -
       this.chargePose * (0.26 - 0.14 * this.skatePose) + // board pump: shallower — a full drop buries the torso through the deck
       standCharge * 0.12 - // planted on-foot: ease the crouch drop (no deck to sink into)
       this.wallChargePose * 0.28 - // sink into the wall pump
@@ -14320,11 +14349,14 @@ export class Player {
       this.bodyGroup.position.x = 0;
       this.bodyGroup.position.z = 0;
     }
-    // Impact squash right after a slam lands. Crawl keeps only a whisper of
-    // whole-body compression; the articulated hips and knees own its height,
-    // so rotated limbs never inherit a Minecraft-like nonuniform squash.
+    // Impact squash right after a slam lands. Unity crouch/crawl own their
+    // height through authored joints. A missing or preserved legacy low clip
+    // keeps the original fallback compression instead.
     const squash = this.slamSquash > 0 ? this.slamSquash / CONST.slamSquashTime : 0;
-    this.bodyGroup.scale.y = 1.36 * (1 - 0.6 * squash) * (1 - 0.06 * this.crawlPose);
+    this.bodyGroup.scale.y =
+      1.36 *
+      (1 - 0.6 * squash) *
+      (1 - 0.06 * this.crawlPose * legacyLowPoseOuterWeight);
 
     // SKETCHY landing: a fading side-to-side shimmy — you kept it, barely.
     if (this.sketchyT > 0 && !this.ragActive) {

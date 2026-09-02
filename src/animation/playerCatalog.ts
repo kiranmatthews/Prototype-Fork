@@ -21,6 +21,20 @@ import {
   UNITY_ROPE_INPUTS,
 } from './unityRope';
 import {
+  UNITY_CRAWL_DURATION,
+  UNITY_CRAWL_HIPS_POSITION_KEYS,
+  UNITY_CRAWL_ROTATION_KEYS,
+  UNITY_CROUCH_CRAWL_ANIMATION_SOURCE,
+  UNITY_CROUCH_IDLE_DURATION,
+  UNITY_CROUCH_IDLE_HIPS_POSITION_KEYS,
+  UNITY_CROUCH_IDLE_ROTATION_KEYS,
+} from './unityCrouchCrawlAnimations.generated';
+import {
+  UNITY_CROUCH_CRAWL_CLIP_IDS,
+  UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
+  UNITY_CROUCH_CRAWL_TIMING,
+} from './unityCrouchCrawl';
+import {
   QUATERNIUS_JOG_FWD_DURATION,
   QUATERNIUS_JOG_FWD_ROOT_KEYS,
   QUATERNIUS_JOG_FWD_ROTATION_KEYS,
@@ -89,7 +103,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 10;
+export const PLAYER_STARTER_CATALOG_VERSION = 11;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -123,6 +137,13 @@ const LEGACY_AIRBORNE_STARTER_SIGNATURES: Readonly<Record<string, ReadonlySet<st
     'afce5c82', // normalized catalog-v8 draft
   ]),
   'player.land': new Set(['baa768b5', '44fd70c1', '7612e407']),
+};
+
+const LEGACY_CROUCH_CRAWL_STARTER_SIGNATURES: Readonly<
+  Record<string, ReadonlySet<string>>
+> = {
+  'player.crouch': new Set(['c93f806a', '4d0dd720']),
+  'player.crawl': new Set(['7f7a1648', '1608c78e']),
 };
 
 function stableCatalogValue(value: unknown): string {
@@ -982,47 +1003,111 @@ function buildLand(rigId: string): AnimationClip {
   return clip;
 }
 
-function buildCrouch(rigId: string): AnimationClip {
-  const clip = baseClip('player.crouch', 'Crouch — Compression Starter', 0.6, 'loop', rigId);
+function unityCrouchCrawlSourceMetadata(sourceKey: 'crouchIdle' | 'crawl') {
+  return {
+    ...UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips[sourceKey],
+    bindAsset: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.bindAsset,
+    bindAssetSha256: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.bindAssetSha256,
+    sampleRate: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.sampleRate,
+    maximumQuaternionErrorDegrees:
+      UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.maximumQuaternionErrorDegrees,
+    maximumHipsPositionError:
+      UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.maximumHipsPositionError,
+    conversion: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.conversion,
+    translationPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.translationPolicy,
+  };
+}
+
+function scaledUnityLowPosePositionKeys(
+  keys: readonly SampledVector[],
+): SampledVector[] {
+  const scaleXZ = UNITY_CROUCH_CRAWL_TIMING.sourceModelScale / 1.18;
+  const scaleY = UNITY_CROUCH_CRAWL_TIMING.sourceModelScale / 1.36;
+  return keys.map(([time, value]) => [time, [
+    value[0] * scaleXZ,
+    value[1] * scaleY + UNITY_CROUCH_CRAWL_TIMING.floorLift / 1.36,
+    value[2] * scaleXZ,
+  ]]);
+}
+
+function buildCrouch(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(
+    UNITY_CROUCH_CRAWL_CLIP_IDS.crouch,
+    'Crouch Idle — Unity PunkyFox',
+    UNITY_CROUCH_IDLE_DURATION,
+    'loop',
+    rigId,
+  );
   clip.tracks = [
-    positionTrack(clip.id, 'root', [[0, [0, -0.11, 0.025]], [0.3, [0, -0.125, 0.03]], [0.6, [0, -0.11, 0.025]]]),
-    quaternionTrack(clip.id, 'spine', [[0, 0.24, 0, 0], [0.3, 0.28, 0, 0], [0.6, 0.24, 0, 0]]),
-    quaternionTrack(clip.id, 'hipLeft', [[0, -0.62, 0, 0], [0.6, -0.62, 0, 0]]),
-    quaternionTrack(clip.id, 'kneeLeft', [[0, 1.22, 0, 0], [0.6, 1.22, 0, 0]]),
-    quaternionTrack(clip.id, 'hipRight', [[0, -0.62, 0, 0], [0.6, -0.62, 0, 0]]),
-    quaternionTrack(clip.id, 'kneeRight', [[0, 1.22, 0, 0], [0.6, 1.22, 0, 0]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 0.88], [0.3, 0.84], [0.6, 0.88]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperLeft, [[0, 0.82], [0.6, 0.82]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerLeft, [[0, 0.8], [0.6, 0.8]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legUpperRight, [[0, 0.82], [0.6, 0.82]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.legLowerRight, [[0, 0.8], [0.6, 0.8]]),
+    sampledPositionTrack(
+      clip.id,
+      'hips',
+      scaledUnityLowPosePositionKeys(UNITY_CROUCH_IDLE_HIPS_POSITION_KEYS),
+    ),
+    ...sampledRotationTracks(
+      clip.id,
+      UNITY_CROUCH_IDLE_ROTATION_KEYS,
+      includeTorsoRoot,
+    ),
   ];
-  clip.contacts = [contact(`${clip.id}:left`, 0, 0.6, 'footLeft'), contact(`${clip.id}:right`, 0, 0.6, 'footRight')];
+  clip.contacts = [
+    contact(`${clip.id}:left-foot`, 0, clip.duration, 'footLeft'),
+    contact(`${clip.id}:right-foot`, 0, clip.duration, 'footRight'),
+  ];
+  clip.markers = [
+    { id: `${clip.id}:look`, time: clip.duration * 0.5, name: 'Look-around beat' },
+  ];
+  clip.tags = ['player', 'unity-port', 'crouch', 'idle', 'source-animation-retarget'];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: unityCrouchCrawlSourceMetadata('crouchIdle'),
+    floorLift: UNITY_CROUCH_CRAWL_TIMING.floorLift,
+    outerPoseOwnership: UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
+  };
   return clip;
 }
 
-function buildCrawl(rigId: string): AnimationClip {
-  const clip = baseClip('player.crawl', 'Crawl — Four-Point Gait Starter', 1.2, 'loop', rigId);
+function buildCrawl(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(
+    UNITY_CROUCH_CRAWL_CLIP_IDS.crawl,
+    'Crawl — Unity PunkyFox',
+    UNITY_CRAWL_DURATION,
+    'loop',
+    rigId,
+  );
   clip.tracks = [
-    positionTrack(clip.id, 'root', [[0, [0, -0.24, 0]], [0.3, [0, -0.21, 0.015]], [0.6, [0, -0.24, 0]], [0.9, [0, -0.21, 0.015]], [1.2, [0, -0.24, 0]]]),
-    quaternionTrack(clip.id, 'torsoRoot', [[0, 1.02, 0, -0.04], [0.6, 1.02, 0, 0.04], [1.2, 1.02, 0, -0.04]]),
-    quaternionTrack(clip.id, 'hipLeft', [[0, -1.08, 0, 0.08], [0.6, -0.5, 0, -0.04], [1.2, -1.08, 0, 0.08]]),
-    quaternionTrack(clip.id, 'kneeLeft', [[0, 1.82, 0, 0], [0.6, 1.15, 0, 0], [1.2, 1.82, 0, 0]]),
-    quaternionTrack(clip.id, 'hipRight', [[0, -0.5, 0, 0.04], [0.6, -1.08, 0, -0.08], [1.2, -0.5, 0, 0.04]]),
-    quaternionTrack(clip.id, 'kneeRight', [[0, 1.15, 0, 0], [0.6, 1.82, 0, 0], [1.2, 1.15, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, -1.25, 0, -0.22], [0.6, -0.72, 0, -0.08], [1.2, -1.25, 0, -0.22]]),
-    quaternionTrack(clip.id, 'elbowLeft', [[0, 0.28, 0, 0], [0.6, 0.82, 0, 0], [1.2, 0.28, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, -0.72, 0, 0.08], [0.6, -1.25, 0, 0.22], [1.2, -0.72, 0, 0.08]]),
-    quaternionTrack(clip.id, 'elbowRight', [[0, 0.82, 0, 0], [0.6, 0.28, 0, 0], [1.2, 0.82, 0, 0]]),
-    quaternionTrack(clip.id, 'head', [[0, -0.5, -0.08, 0], [0.6, -0.42, 0.08, 0], [1.2, -0.5, -0.08, 0]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 0.9], [0.6, 0.94], [1.2, 0.9]]),
+    sampledPositionTrack(
+      clip.id,
+      'hips',
+      scaledUnityLowPosePositionKeys(UNITY_CRAWL_HIPS_POSITION_KEYS),
+    ),
+    ...sampledRotationTracks(
+      clip.id,
+      UNITY_CRAWL_ROTATION_KEYS,
+      includeTorsoRoot,
+    ),
   ];
+  const half = clip.duration * 0.5;
+  const stance = clip.duration * 0.26;
   clip.contacts = [
-    contact(`${clip.id}:left-hand`, 0, 0.28, 'gripLeft', 'grip'),
-    contact(`${clip.id}:right-foot`, 0, 0.28, 'footRight'),
-    contact(`${clip.id}:right-hand`, 0.6, 0.88, 'gripRight', 'grip'),
-    contact(`${clip.id}:left-foot`, 0.6, 0.88, 'footLeft'),
+    contact(`${clip.id}:left-hand`, 0, stance, 'gripLeft', 'grip'),
+    contact(`${clip.id}:right-foot`, 0, stance, 'footRight'),
+    contact(`${clip.id}:right-hand`, half, half + stance, 'gripRight', 'grip'),
+    contact(`${clip.id}:left-foot`, half, half + stance, 'footLeft'),
   ];
+  clip.markers = [
+    { id: `${clip.id}:left-diagonal`, time: 0, name: 'Left-hand diagonal plant' },
+    { id: `${clip.id}:right-diagonal`, time: half, name: 'Right-hand diagonal plant' },
+  ];
+  clip.tags = ['player', 'unity-port', 'crawl', 'locomotion', 'source-animation-retarget'];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: unityCrouchCrawlSourceMetadata('crawl'),
+    floorLift: UNITY_CROUCH_CRAWL_TIMING.floorLift,
+    outerPoseOwnership: UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
+  };
   return clip;
 }
 
@@ -1334,8 +1419,8 @@ export function createPlayerStarterClips(
     buildDoubleJump(rigId),
     buildFall(rigId),
     buildLand(rigId),
-    buildCrouch(rigId),
-    buildCrawl(rigId),
+    buildCrouch(rigId, includeTorsoRoot),
+    buildCrawl(rigId, includeTorsoRoot),
     buildSlide(rigId),
     buildSkate(rigId),
     placeholder('player.grind', 'Grind', 1, rigId),
@@ -1361,7 +1446,7 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
  * Refresh the embedded live rig and add only starters introduced after the
  * revision a saved suite has already seen. Same-ID clips normally win; the
  * exceptions are explicit upgrades for shipped, signature-identical starters:
- * Run -> Jog_Fwd, Slam -> Unity pose, Rope -> Unity suite, and the phase-locked
+ * Run -> Jog_Fwd, Slam/Rope/Crouch/Crawl -> Unity sources, and the phase-locked
  * airborne deformation arc. A genuinely edited pre-Jog Run is retained under
  * a backup ID while `player.run` adopts the new source motion. Once a suite
  * records the current revision, a missing clip is treated as an intentional
@@ -1439,6 +1524,20 @@ export function reconcilePlayerStarterAnimationSuite(
     if (currentRope && isUntouchedRopePlaceholder(currentRope)) {
       clips = clips.map((clip) =>
         clip.id === UNITY_ROPE_CLIP_IDS.hang ? importedRope : clip);
+    }
+  }
+  if (previousVersion < 11) {
+    for (const [clipId, untouchedSignatures] of Object.entries(
+      LEGACY_CROUCH_CRAWL_STARTER_SIGNATURES,
+    )) {
+      const current = clips.find((clip) => clip.id === clipId);
+      const imported = starters.find((clip) => clip.id === clipId);
+      if (
+        current && imported &&
+        untouchedSignatures.has(starterClipSignature(current))
+      ) {
+        clips = clips.map((clip) => clip.id === clipId ? imported : clip);
+      }
     }
   }
 

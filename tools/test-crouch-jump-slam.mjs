@@ -110,6 +110,7 @@ try {
   const {
     RigBinding,
     FORWARD_ROLL_TUCK_INPUT,
+    UNITY_CROUCH_CRAWL_CLIP_IDS,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
     createPlayerStarterAnimationSuite,
@@ -228,6 +229,171 @@ try {
     1,
     "forward-roll clock did not peak at the inverted ball frame",
   );
+  const oldLowPoseClips = JSON.parse(await readFile(new URL(
+    "./fixtures/player-crouch-crawl-catalog-v10.json",
+    import.meta.url,
+  ), "utf8"));
+  const oldLowPoseById = new Map(oldLowPoseClips.map((clip) => [clip.id, clip]));
+  const normalizedLiveV10LowPoseDraft = parseAnimationSuite({
+    ...currentLiveSuite,
+    clips: currentLiveSuite.clips.map((clip) => oldLowPoseById.get(clip.id) ?? clip),
+    metadata: { ...currentLiveSuite.metadata, playerStarterCatalogVersion: 10 },
+  });
+  const upgradedLiveLowPoses = reconcilePlayerStarterAnimationSuite(
+    normalizedLiveV10LowPoseDraft,
+    boardAnimationBinding.definition,
+  );
+  assert.equal(upgradedLiveLowPoses.clips.find((clip) =>
+    clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch)?.name,
+    "Crouch Idle — Unity PunkyFox");
+  assert.equal(upgradedLiveLowPoses.clips.find((clip) =>
+    clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl)?.name,
+    "Crawl — Unity PunkyFox");
+
+  const lowPosePlayer = new Player(level.scene);
+  lowPosePlayer.enterLevel("crouch-jump-slam-guard");
+  lowPosePlayer.respawn(level, true);
+  const lowPoseBinding = RigBinding.fromSculptRuntime(
+    lowPosePlayer.animationRig.root,
+    { strict: false },
+  );
+  const lowPoseRuntime = createCharacterAnimationRuntime(
+    lowPosePlayer,
+    createPlayerStarterAnimationSuite(lowPoseBinding.definition),
+  );
+  const tickLowPose = (input) => {
+    lowPosePlayer.step(dt, input, level);
+    level.update(dt);
+    input.consumeEdges();
+  };
+  tickLowPose(makeInput());
+  assert.equal(lowPoseRuntime.activeClipId, "player.idle");
+  tickLowPose(makeInput({ grabHeld: true, grabPressed: true }));
+  assert.equal(lowPosePlayer.animationClipHint, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
+  assert.equal(lowPoseRuntime.activeClipId, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
+  closeTo(lowPoseRuntime.diagnostics.transitionBlendWeight, 0,
+    "standing-to-crouch did not begin Unity's rapid blend");
+  lowPosePlayer.syncVisual(makeInput({ grabHeld: true }), 5 / 60);
+  closeTo(lowPoseRuntime.diagnostics.transitionBlendWeight, 1,
+    "standing-to-crouch did not finish Unity's five-frame blend");
+  closeTo(lowPosePlayer.bodyGroup.rotation.x, 0,
+    "legacy outer crawl pitch stacked onto the Unity crouch clip");
+  closeTo(lowPosePlayer.bodyGroup.position.y, 0,
+    "legacy outer crawl drop stacked onto the Unity crouch clip");
+  closeTo(lowPosePlayer.bodyGroup.scale.y, 1.36,
+    "legacy whole-body crawl compression stacked onto the Unity crouch clip");
+
+  // The production controller zeros walkVelocity while crawling and keeps
+  // forward-only speed at zero for a pure sideways crawl. Let two real fixed
+  // steps generate lastPlanar from displacement instead of injecting velocity.
+  // A large residual slidePose reproduces the slide->held-Circle handoff: the
+  // actual crawl state must win immediately over that decaying visual tail.
+  lowPosePlayer.slidePose = 1;
+  tickLowPose(makeInput({ grabHeld: true, moveX: 1 }));
+  tickLowPose(makeInput({ grabHeld: true, moveX: 1 }));
+  assert.equal(lowPosePlayer.walkVelocity.length(), 0,
+    "crawl fixture unexpectedly retained walkVelocity");
+  closeTo(lowPosePlayer.speed, 0,
+    "pure lateral crawl unexpectedly wrote forward speed");
+  assert.ok(lowPosePlayer.slidePose > 0.25,
+    "slide->crawl fixture lost the residual slide presentation state");
+  assert.equal(lowPosePlayer.animationClipHint, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl,
+    "pure lateral measured movement did not select Unity Crawl");
+  assert.equal(lowPoseRuntime.activeClipId, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+  closeTo(lowPoseRuntime.diagnostics.transitionBlendWeight, 0,
+    "crouch-to-crawl did not begin Unity's rapid blend");
+  lowPosePlayer.syncVisual(makeInput({ moveX: 1 }), 5 / 60);
+  closeTo(lowPoseRuntime.diagnostics.transitionBlendWeight, 1,
+    "crouch-to-crawl did not finish Unity's five-frame blend");
+
+  // A preserved v10 low-pose clip has no source-ownership marker and was
+  // authored against the former parent drop/pitch/compression. It must retain
+  // that composition instead of inheriting the Unity clip's neutral parent.
+  lowPoseRuntime.dispose();
+  const legacyLowPosePlayer = new Player(level.scene);
+  legacyLowPosePlayer.respawn(level, true);
+  const legacyLowPoseBinding = RigBinding.fromSculptRuntime(
+    legacyLowPosePlayer.animationRig.root,
+    { strict: false },
+  );
+  const legacyLowPoseRuntime = createCharacterAnimationRuntime(
+    legacyLowPosePlayer,
+    {
+      ...normalizedLiveV10LowPoseDraft,
+      rig: legacyLowPoseBinding.definition,
+      clips: normalizedLiveV10LowPoseDraft.clips.map((clip) => ({
+        ...clip,
+        rigId: legacyLowPoseBinding.definition.id,
+      })),
+    },
+  );
+  legacyLowPosePlayer.crawling = true;
+  legacyLowPosePlayer.crawlPose = 1;
+  legacyLowPosePlayer.speed = 0;
+  legacyLowPosePlayer.walkVelocity.set(0, 0, 0);
+  legacyLowPosePlayer.syncVisual(makeInput({ grabHeld: true }), dt);
+  closeTo(legacyLowPosePlayer.bodyGroup.rotation.x, 0.16,
+    "preserved v10 crouch lost its legacy parent pitch");
+  closeTo(legacyLowPosePlayer.bodyGroup.position.y, -0.36,
+    "preserved v10 crouch lost its legacy parent drop");
+  closeTo(legacyLowPosePlayer.bodyGroup.scale.y, 1.36 * 0.94,
+    "preserved v10 crouch lost its legacy parent compression");
+
+  // A real saved suite can be mixed: untouched Crouch upgrades to Unity while
+  // an edited v10 Crawl is preserved. Parent ownership must crossfade with the
+  // joints instead of snapping legacy shaping on at the route switch.
+  const mixedLowPosePlayer = new Player(level.scene);
+  mixedLowPosePlayer.respawn(level, true);
+  const mixedLowPoseBinding = RigBinding.fromSculptRuntime(
+    mixedLowPosePlayer.animationRig.root,
+    { strict: false },
+  );
+  const mixedLowPoseSuite = {
+    ...currentLiveSuite,
+    rig: mixedLowPoseBinding.definition,
+    clips: currentLiveSuite.clips.map((clip) => ({
+      ...(clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl
+        ? oldLowPoseById.get(clip.id)
+        : clip),
+      rigId: mixedLowPoseBinding.definition.id,
+    })),
+  };
+  const mixedLowPoseRuntime = createCharacterAnimationRuntime(
+    mixedLowPosePlayer,
+    mixedLowPoseSuite,
+  );
+  mixedLowPosePlayer.crawling = true;
+  mixedLowPosePlayer.crawlPose = 1;
+  mixedLowPosePlayer.speed = 0;
+  mixedLowPosePlayer.walkVelocity.set(0, 0, 0);
+  mixedLowPosePlayer.lastPlanar = 0;
+  mixedLowPosePlayer.syncVisual(makeInput({ grabHeld: true }), dt);
+  assert.equal(mixedLowPoseRuntime.activeClipId, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
+  closeTo(mixedLowPosePlayer.bodyGroup.rotation.x, 0,
+    "Unity Crouch did not own the mixed suite's parent pose");
+
+  const moveMixedLowPose = () => {
+    mixedLowPosePlayer.prevPos.copy(mixedLowPosePlayer.pos);
+    mixedLowPosePlayer.pos.x += TUNING.crawlSpeed * dt;
+    mixedLowPosePlayer.lastPlanar = TUNING.crawlSpeed;
+    mixedLowPosePlayer.syncVisual(makeInput({ grabHeld: true, moveX: 1 }), dt);
+  };
+  moveMixedLowPose();
+  assert.equal(mixedLowPoseRuntime.activeClipId, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+  closeTo(mixedLowPoseRuntime.diagnostics.transitionBlendWeight, 0,
+    "mixed low-pose switch did not begin on its outgoing source pose");
+  closeTo(mixedLowPosePlayer.bodyGroup.rotation.x, 0,
+    "mixed low-pose switch snapped legacy pitch on before its joint blend");
+  moveMixedLowPose();
+  const mixedBlend = mixedLowPoseRuntime.diagnostics.transitionBlendWeight;
+  assert.ok(mixedBlend > 0 && mixedBlend < 1,
+    "mixed low-pose ownership fixture skipped its crossfade interior");
+  closeTo(mixedLowPosePlayer.bodyGroup.rotation.x, 0.75 * mixedBlend,
+    "mixed low-pose parent pitch did not match the joint crossfade");
+  closeTo(mixedLowPosePlayer.bodyGroup.position.y, -0.2 * mixedBlend,
+    "mixed low-pose parent drop did not match the joint crossfade");
+  closeTo(mixedLowPosePlayer.bodyGroup.scale.y, 1.36 * (1 - 0.06 * mixedBlend),
+    "mixed low-pose parent compression did not match the joint crossfade");
   const boardAnimationRuntime = createCharacterAnimationRuntime(
     boardPlayer,
     createPlayerStarterAnimationSuite(boardAnimationBinding.definition),
@@ -454,9 +620,11 @@ try {
     replayer.end();
   }
 
-  console.log("Validated crouch-jump slam priority, maximum forward-roll curl, and an upright split double jump.");
+  console.log("Validated Unity crouch/crawl routing, crouch-jump slam priority, forward-roll curl, and split double jump.");
   doubleRuntime.dispose();
   boardAnimationRuntime.dispose();
+  legacyLowPoseRuntime.dispose();
+  mixedLowPoseRuntime.dispose();
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));
   console.warn = originalWarn;

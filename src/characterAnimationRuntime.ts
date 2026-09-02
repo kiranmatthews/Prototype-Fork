@@ -1,6 +1,9 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import {
   RigBinding,
+  UNITY_CROUCH_CRAWL_CLIP_IDS,
+  UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
+  UNITY_CROUCH_CRAWL_TIMING,
   UNITY_ROPE_CLIP_IDS,
   UNITY_ROPE_TIMING,
   blendPoses,
@@ -120,13 +123,21 @@ const ROPE_ATTACHED_CLIP_IDS = new Set<ClipId>([
   UNITY_ROPE_CLIP_IDS.climb,
 ]);
 
-function ropeSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
+const CROUCH_CRAWL_CLIP_IDS = new Set<ClipId>([
+  UNITY_CROUCH_CRAWL_CLIP_IDS.crouch,
+  UNITY_CROUCH_CRAWL_CLIP_IDS.crawl,
+]);
+
+function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
   if (ROPE_ATTACHED_CLIP_IDS.has(from) && ROPE_ATTACHED_CLIP_IDS.has(to)) {
     return UNITY_ROPE_TIMING.attachedBlend;
   }
   if (ROPE_ATTACHED_CLIP_IDS.has(from) && to === UNITY_ROPE_CLIP_IDS.release) {
     return UNITY_ROPE_TIMING.releaseBlend;
+  }
+  if (CROUCH_CRAWL_CLIP_IDS.has(from) || CROUCH_CRAWL_CLIP_IDS.has(to)) {
+    return UNITY_CROUCH_CRAWL_TIMING.rapidBlend;
   }
   return 0;
 }
@@ -197,6 +208,7 @@ export class CharacterAnimationRuntime {
 
   private animationDocument: AnimationSuiteDocument;
   private removeOverlay: (() => void) | null = null;
+  private removeLowPoseOuterOwnership: (() => void) | null = null;
   private runtimeEnabled: boolean;
   private runtimeSpeed: number;
   private manualClipId: ClipId | null;
@@ -218,6 +230,7 @@ export class CharacterAnimationRuntime {
   private switchOutgoingPose: PoseBuffer | null = null;
   private switchBlendDuration = 0;
   private switchBlendElapsed = 0;
+  private switchOutgoingLowPoseOuterOwnership = 0;
   private readonly controlDefaults = new Map<string, number>();
   private poseApplied = false;
   private compositionOrder: ProceduralCompositionOrder | null = null;
@@ -244,6 +257,9 @@ export class CharacterAnimationRuntime {
     for (const control of this.binding.definition.controls) {
       this.controlDefaults.set(control.id, control.defaultValue);
     }
+    this.removeLowPoseOuterOwnership = player.setAuthoredLowPoseOuterOwnership(
+      (deltaSeconds) => this.authoredLowPoseOuterOwnership(deltaSeconds),
+    );
     this.removeOverlay = player.setAuthoredPoseOverlay((context) => {
       this.applyFrame(context.deltaSeconds, context.applyDeformations);
     });
@@ -347,6 +363,8 @@ export class CharacterAnimationRuntime {
     this.disposed = true;
     this.removeOverlay?.();
     this.removeOverlay = null;
+    this.removeLowPoseOuterOwnership?.();
+    this.removeLowPoseOuterOwnership = null;
     this.cancelTransient();
     this.resetRunQualification();
     this.clearPlayback();
@@ -437,11 +455,17 @@ export class CharacterAnimationRuntime {
     const switched = previousClipId !== clip.id || this.restartPending;
     if (switched) {
       const switchBlendDuration = this.manualClipId === null
-        ? ropeSwitchBlendDuration(previousClipId, clip.id)
+        ? authoredSwitchBlendDuration(previousClipId, clip.id)
         : 0;
       this.switchOutgoingPose = switchBlendDuration > 0 ? this.lastSampledPose : null;
       this.switchBlendDuration = switchBlendDuration;
       this.switchBlendElapsed = 0;
+      this.switchOutgoingLowPoseOuterOwnership =
+        switchBlendDuration > 0
+          ? this.clipLowPoseOuterOwnership(
+            previousClipId ? this.findPlayableClip(previousClipId) : null,
+          )
+          : 0;
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
@@ -518,6 +542,7 @@ export class CharacterAnimationRuntime {
       if (weight >= 1) {
         this.switchOutgoingPose = null;
         this.switchBlendDuration = 0;
+        this.switchOutgoingLowPoseOuterOwnership = 0;
       }
     } else {
       this.transitionBlendWeight = null;
@@ -571,6 +596,46 @@ export class CharacterAnimationRuntime {
       return registry?.[driver.evaluatorId] !== undefined;
     });
     return hasUsableTrack || hasUsableDriver ? clip : null;
+  }
+
+  /** The legacy parent-level crawl shaping remains the safe fallback for a
+   * missing, invalid, disabled, or preserved pre-Unity low-pose clip. */
+  private clipLowPoseOuterOwnership(clip: AnimationClip | null): number {
+    return clip?.metadata?.outerPoseOwnership ===
+      UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP ? 1 : 0;
+  }
+
+  /** Predict the ownership weight that applyFrame will use later in this same
+   * visual step. Mixed Unity/legacy saved suites therefore hand parent shaping
+   * across on the exact same smoothstep as their joint-pose crossfade. */
+  private authoredLowPoseOuterOwnership(deltaSeconds: number): number {
+    if (this.disposed || !this.runtimeEnabled) return 0;
+    const requested = this.manualClipId ?? this.player.animationClipHint;
+    if (!CROUCH_CRAWL_CLIP_IDS.has(requested)) return 0;
+    const requestedClip = this.findPlayableClip(requested);
+    const requestedOwnership = this.clipLowPoseOuterOwnership(requestedClip);
+    if (!requestedClip) return 0;
+    if (
+      this.switchOutgoingPose &&
+      this.switchBlendDuration > 0 &&
+      this.currentClipId === requestedClip.id
+    ) {
+      const nextElapsed = this.switchBlendElapsed +
+        (Number.isFinite(deltaSeconds) ? Math.max(0, deltaSeconds) : 0);
+      const weight = smoothstep01(nextElapsed / this.switchBlendDuration);
+      return this.switchOutgoingLowPoseOuterOwnership * (1 - weight) +
+        requestedOwnership * weight;
+    }
+    if (
+      this.currentClipId &&
+      this.currentClipId !== requestedClip.id &&
+      CROUCH_CRAWL_CLIP_IDS.has(this.currentClipId)
+    ) {
+      // applyFrame has not observed this low-pose switch yet. Its first joint
+      // blend sample is 100% outgoing, so preserve that clip's ownership too.
+      return this.clipLowPoseOuterOwnership(this.findPlayableClip(this.currentClipId));
+    }
+    return requestedOwnership;
   }
 
   private motionForClip(
@@ -664,6 +729,7 @@ export class CharacterAnimationRuntime {
     this.switchOutgoingPose = null;
     this.switchBlendDuration = 0;
     this.switchBlendElapsed = 0;
+    this.switchOutgoingLowPoseOuterOwnership = 0;
     this.restartPending = false;
   }
 }

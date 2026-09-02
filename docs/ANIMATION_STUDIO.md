@@ -101,6 +101,25 @@ backflip variants from the fixed-step release charge and uses Unity's trimmed
 the live rope axis after the authored pose; the pendulum angle never drives or
 distorts the body animation.
 
+## Unity crouch and crawl
+
+`player.crouch` retargets PunkyFox's complete 350-frame
+`CrouchLookAroundBow` loop. `player.crawl` uses the exact production window
+from `Crawl and Look Back`—source frames 219–271—so the compact 52-frame gait
+loops without entering either later look-back beat. Both clips carry all 22
+humanoid rotation channels plus the one authored hips-position channel needed
+for their low silhouettes; child-bone translations and gameplay root motion
+remain excluded.
+
+Any measured planar movement above Unity's `0.001` threshold selects Crawl,
+including pure lateral movement. Stopping selects Crouch Idle. Entry, exit, and
+crouch↔crawl changes use Unity's five-frame smooth crossfade. The source's
+separate `+0.225 m` floor correction is included in the hips channel after
+accounting for the browser rig scale, while the old outer crawl drop, pitch,
+and whole-body compression are disabled so they cannot stack with the imported
+pose. Both loops remain directly keyframe-editable and retain the Studio's
+saved playback-speed control.
+
 ## Double-jump pose
 
 `player.double-jump` is a separate authored high-jump clip rather than a second

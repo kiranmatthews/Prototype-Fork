@@ -31,6 +31,11 @@ try {
     UNITY_ROPE_INPUTS,
     UNITY_ROPE_RELEASE_BACKFLIP_DURATION,
     UNITY_ROPE_RELEASE_SWING_DURATION,
+    UNITY_CRAWL_DURATION,
+    UNITY_CROUCH_CRAWL_ANIMATION_SOURCE,
+    UNITY_CROUCH_CRAWL_CLIP_IDS,
+    UNITY_CROUCH_CRAWL_TIMING,
+    UNITY_CROUCH_IDLE_DURATION,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
     UNITY_SLAM_POSE_SOURCE,
@@ -351,6 +356,8 @@ try {
   const jump = findClip(parsedSuite, 'player.jump');
   const fall = findClip(parsedSuite, 'player.fall');
   const land = findClip(parsedSuite, 'player.land');
+  const crouch = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
+  const crawl = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
   const idle = findClip(parsedSuite, 'player.idle');
   const run = findClip(parsedSuite, 'player.run');
   const paceStop = findClip(parsedSuite, 'player.pace-stop');
@@ -360,7 +367,7 @@ try {
   const ropeRelease = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.release);
   const ropeReleaseCharged = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.chargedRelease);
   const slam = findClip(parsedSuite, 'player.slam');
-  assert.ok(jump && doubleJump && fall && land && idle && run && paceStop &&
+  assert.ok(jump && doubleJump && fall && land && crouch && crawl && idle && run && paceStop &&
     ropeHang && ropeClimb && ropeRelease && ropeReleaseCharged && slam);
   assert.equal(jump.playbackSpeed, 1);
   assert.equal(jump.duration, 1);
@@ -456,6 +463,46 @@ try {
     near(landSecondaryCushion.scalars[id], 0.98, 1e-6);
     near(landNeutral.scalars[id], 1, 1e-6);
   }
+
+  near(crouch.duration, UNITY_CROUCH_IDLE_DURATION);
+  near(crawl.duration, UNITY_CRAWL_DURATION);
+  assert.equal(crouch.name, 'Crouch Idle — Unity PunkyFox');
+  assert.equal(crawl.name, 'Crawl — Unity PunkyFox');
+  assert.equal(crouch.loop.mode, 'loop');
+  assert.equal(crawl.loop.mode, 'loop');
+  assert.equal(crouch.loop.seamless, true);
+  assert.equal(crawl.loop.seamless, true);
+  assert.equal(crouch.tracks.length, 23);
+  assert.equal(crawl.tracks.length, 23);
+  assert.equal(crouch.tracks.filter((track) => track.kind === 'position').length, 1);
+  assert.equal(crawl.tracks.filter((track) => track.kind === 'position').length, 1);
+  assert.equal(crouch.tracks.some((track) => track.kind === 'scalar'), false);
+  assert.equal(crawl.tracks.some((track) => track.kind === 'scalar'), false);
+  for (const clip of [crouch, crawl]) {
+    for (const track of clip.tracks) {
+      assert.deepEqual(track.keys.at(-1).value, track.keys[0].value,
+        `${clip.id} loop is not seam-closed on ${track.target}`);
+    }
+  }
+  assert.equal(crouch.metadata.sourceAnimation.sourceAssetSha256,
+    UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips.crouchIdle.sourceAssetSha256);
+  assert.equal(crawl.metadata.sourceAnimation.sourceAssetSha256,
+    UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips.crawl.sourceAssetSha256);
+  near(crouch.metadata.floorLift, UNITY_CROUCH_CRAWL_TIMING.floorLift);
+  near(crawl.metadata.floorLift, UNITY_CROUCH_CRAWL_TIMING.floorLift);
+  const crouchHipsTrack = crouch.tracks.find((track) =>
+    track.kind === 'position' && track.target === 'hips');
+  const crawlHipsTrack = crawl.tracks.find((track) =>
+    track.kind === 'position' && track.target === 'hips');
+  assert.ok(crouchHipsTrack.keys[0].value[1] < -0.3,
+    'Unity crouch lost its authored low hips translation');
+  assert.ok(crawlHipsTrack.keys[0].value[1] < -0.2,
+    'Unity crawl lost its authored low hips translation');
+  const crawlStart = sampleClip(crawl, 0);
+  const crawlHalf = sampleClip(crawl, crawl.duration * 0.5);
+  assert.ok(Math.abs(new THREE.Quaternion().fromArray(crawlStart.joints.shoulderLeft.quaternion)
+    .dot(new THREE.Quaternion().fromArray(crawlHalf.joints.shoulderLeft.quaternion))) < 0.995,
+  'Unity crawl lost its alternating four-point gait');
   assert.ok(idle.proceduralDrivers.length >= 2);
   assert.equal(run.proceduralDrivers.length, 0,
     'Jog_Fwd already owns its cadence and must not receive the legacy gait twice');
@@ -1008,6 +1055,54 @@ try {
   }, binding.definition);
   assert.equal(findClip(deletedRopeSuite, UNITY_ROPE_CLIP_IDS.hang), undefined,
     'catalog v10 resurrected a deliberately deleted Rope slot');
+
+  const catalogV10LowPoseFixtures = JSON.parse(await readFile(new URL(
+    './fixtures/player-crouch-crawl-catalog-v10.json',
+    import.meta.url,
+  ), 'utf8'));
+  assert.deepEqual(catalogV10LowPoseFixtures.map((clip) => clip.id), [
+    UNITY_CROUCH_CRAWL_CLIP_IDS.crouch,
+    UNITY_CROUCH_CRAWL_CLIP_IDS.crawl,
+  ]);
+  const catalogV10LowPoseById = new Map(
+    catalogV10LowPoseFixtures.map((clip) => [clip.id, clip]),
+  );
+  const versionTenLowPoseSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      catalogV10LowPoseById.get(clip.id) ?? clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 10 },
+  };
+  for (const candidate of [
+    reconcilePlayerStarterAnimationSuite(versionTenLowPoseSuite, binding.definition),
+    reconcilePlayerStarterAnimationSuite(
+      parseAnimationSuite(versionTenLowPoseSuite),
+      binding.definition,
+    ),
+  ]) {
+    assert.equal(findClip(candidate, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch).name,
+      'Crouch Idle — Unity PunkyFox');
+    assert.equal(findClip(candidate, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).name,
+      'Crawl — Unity PunkyFox');
+  }
+  const editedV10Crouch = structuredClone(
+    catalogV10LowPoseById.get(UNITY_CROUCH_CRAWL_CLIP_IDS.crouch),
+  );
+  editedV10Crouch.tracks[0].keys[0].value[1] += 0.001;
+  const preservedEditedCrouch = reconcilePlayerStarterAnimationSuite({
+    ...versionTenLowPoseSuite,
+    clips: versionTenLowPoseSuite.clips.map((clip) =>
+      clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch ? editedV10Crouch : clip),
+  }, binding.definition);
+  assert.equal(findClip(preservedEditedCrouch, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch).name,
+    'Crouch — Compression Starter', 'an edited v10 Crouch was overwritten');
+  const deletedV10Crawl = reconcilePlayerStarterAnimationSuite({
+    ...versionTenLowPoseSuite,
+    clips: versionTenLowPoseSuite.clips.filter((clip) =>
+      clip.id !== UNITY_CROUCH_CRAWL_CLIP_IDS.crawl),
+  }, binding.definition);
+  assert.equal(findClip(deletedV10Crawl, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl), undefined,
+    'catalog v11 resurrected a deliberately deleted Crawl slot');
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,

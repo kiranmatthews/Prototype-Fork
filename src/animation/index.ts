@@ -3,6 +3,8 @@ export * from './document';
 export * from './forwardRoll';
 export * from './unityRope';
 export * from './unityRopeAnimations.generated';
+export * from './unityCrouchCrawl';
+export * from './unityCrouchCrawlAnimations.generated';
 export * from './sampling';
 export * from './procedural';
 export * from './rigBinding';
