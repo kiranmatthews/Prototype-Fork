@@ -29,6 +29,7 @@ try {
     UNITY_ROPE_INPUTS,
     UNITY_ROPE_TIMING,
     UNITY_CROUCH_CRAWL_CLIP_IDS,
+    UNITY_CRAWL_CONTACT_ADAPTATION,
     UNITY_CROUCH_CRAWL_TIMING,
   } = await server.ssrLoadModule('/src/animation/index.ts');
 
@@ -106,6 +107,8 @@ try {
       : undefined,
   });
   const clips = allIds.map((id, index) => makeClip(id, index));
+  const crawlClip = clips.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+  crawlClip.metadata = { contactAdaptation: UNITY_CRAWL_CONTACT_ADAPTATION };
   const chargedRopeRelease = makeClip(UNITY_ROPE_CLIP_IDS.chargedRelease, 100);
   chargedRopeRelease.metadata = { progressSource: 'gameplay-actionProgress' };
   clips.push(chargedRopeRelease);
@@ -149,6 +152,8 @@ try {
   let overlayRemoved = 0;
   let lowPoseOuterOwnership = null;
   let lowPoseOuterOwnershipRemoved = 0;
+  let crawlContactPhase = null;
+  let crawlContactWeight = 0;
   let deformationValues = null;
   let hipsXWhenDeformed = null;
   const fakePlayer = {
@@ -168,6 +173,10 @@ try {
       };
     },
     animationRig: { root },
+    setAuthoredCrawlContactPhase(phase, weight = 1) {
+      crawlContactPhase = phase;
+      crawlContactWeight = phase === null ? 0 : weight;
+    },
     setAuthoredLowPoseOuterOwnership(next) {
       lowPoseOuterOwnership = next;
       return () => {
@@ -289,13 +298,23 @@ try {
   hint = UNITY_CROUCH_CRAWL_CLIP_IDS.crawl;
   tick(0.016);
   near(runtime.diagnostics.transitionBlendWeight, 0);
+  near(crawlContactWeight, 0);
   tick(UNITY_CROUCH_CRAWL_TIMING.rapidBlend * 0.5);
   near(runtime.diagnostics.transitionBlendWeight, 0.5, 1e-5);
+  near(crawlContactWeight, 0.5, 1e-5);
+  near(crawlContactPhase, runtime.diagnostics.timelineTime);
   tick(UNITY_CROUCH_CRAWL_TIMING.rapidBlend * 0.5);
   near(runtime.diagnostics.transitionBlendWeight, 1);
+  near(crawlContactWeight, 1);
   hint = 'player.idle';
   tick(0.016);
   near(runtime.diagnostics.transitionBlendWeight, 0);
+  near(crawlContactWeight, 1);
+  tick(UNITY_CROUCH_CRAWL_TIMING.rapidBlend * 0.5);
+  near(crawlContactWeight, 0.5, 1e-5);
+  tick(UNITY_CROUCH_CRAWL_TIMING.rapidBlend * 0.5);
+  near(crawlContactWeight, 0);
+  assert.equal(crawlContactPhase, null);
 
   // Airborne state clips are phase-locked to gameplay actionProgress instead
   // of drifting with frame time. The second pop owns a fresh progress phase.

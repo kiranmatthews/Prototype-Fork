@@ -473,11 +473,11 @@ try {
   assert.equal(crouch.loop.seamless, true);
   assert.equal(crawl.loop.seamless, true);
   assert.equal(crouch.tracks.length, 23);
-  assert.equal(crawl.tracks.length, 23);
+  assert.equal(crawl.tracks.length, 27);
   assert.equal(crouch.tracks.filter((track) => track.kind === 'position').length, 1);
   assert.equal(crawl.tracks.filter((track) => track.kind === 'position').length, 1);
   assert.equal(crouch.tracks.some((track) => track.kind === 'scalar'), false);
-  assert.equal(crawl.tracks.some((track) => track.kind === 'scalar'), false);
+  assert.equal(crawl.tracks.filter((track) => track.kind === 'scalar').length, 4);
   for (const clip of [crouch, crawl]) {
     for (const track of clip.tracks) {
       assert.deepEqual(track.keys.at(-1).value, track.keys[0].value,
@@ -496,8 +496,64 @@ try {
     track.kind === 'position' && track.target === 'hips');
   assert.ok(crouchHipsTrack.keys[0].value[1] < -0.3,
     'Unity crouch lost its authored low hips translation');
-  assert.ok(crawlHipsTrack.keys[0].value[1] < -0.2,
-    'Unity crawl lost its authored low hips translation');
+  assert.ok(crawlHipsTrack.keys.every((key) => key.value.every(Number.isFinite)),
+    'Unity crawl hips translation contains a non-finite sample');
+  assert.equal(crawl.metadata.sourceAnimation.productionSourceWindow.start, 3.65);
+  assert.equal(crawl.metadata.sourceAnimation.productionSourceWindow.end, 4.5166667);
+  assert.equal(crawl.metadata.sourceAnimation.sourceFrameCount, 61);
+  assert.ok(crawl.metadata.sourceAnimation.rawLoopPoseGapDegreesRms > 10,
+    'crawl fixture no longer proves why raw endpoint copying was insufficient');
+  assert.ok(
+    crawl.metadata.sourceAnimation.closedLoopVelocityGapDegreesPerFrameRms < 0.001,
+    'crawl angular velocity is discontinuous across the rebuilt seam',
+  );
+  assert.ok(crawl.metadata.sourceAnimation.closedLoopHipsVelocityGap < 1e-6,
+    'crawl hips velocity is discontinuous across the rebuilt seam');
+  const crawlFramePose = (frame) => sampleClip(crawl, frame / 60);
+  const crawlPose0 = crawlFramePose(0);
+  const crawlPose1 = crawlFramePose(1);
+  const crawlPose29 = crawlFramePose(29);
+  const crawlPose30 = crawlFramePose(30);
+  const crawlPose31 = crawlFramePose(31);
+  const crawlPose59 = crawlFramePose(59);
+  const crawlJointIds = Object.keys(crawlPose0.joints).filter((jointId) =>
+    crawlPose0.joints[jointId].quaternion);
+  const quaternionStepGapDegreesRms = (before, seam, after) => {
+    let squared = 0;
+    for (const jointId of crawlJointIds) {
+      const qBefore = new THREE.Quaternion().fromArray(before.joints[jointId].quaternion);
+      const qSeam = new THREE.Quaternion().fromArray(seam.joints[jointId].quaternion);
+      const qAfter = new THREE.Quaternion().fromArray(after.joints[jointId].quaternion);
+      const incoming = qBefore.clone().invert().multiply(qSeam).normalize();
+      const outgoing = qSeam.clone().invert().multiply(qAfter).normalize();
+      squared += incoming.angleTo(outgoing) ** 2;
+    }
+    return THREE.MathUtils.radToDeg(
+      Math.sqrt(squared / Math.max(1, crawlJointIds.length)),
+    );
+  };
+  assert.ok(
+    quaternionStepGapDegreesRms(crawlPose59, crawlPose0, crawlPose1) < 0.1,
+    'reduced/catalog Crawl reintroduced angular hitching at the outer seam',
+  );
+  assert.ok(
+    quaternionStepGapDegreesRms(crawlPose29, crawlPose30, crawlPose31) < 0.001,
+    'reduced/catalog Crawl reintroduced angular hitching at the mirrored handoff',
+  );
+  const hipsStepIntoSeam = new THREE.Vector3()
+    .fromArray(crawlPose0.joints.hips.position)
+    .sub(new THREE.Vector3().fromArray(crawlPose59.joints.hips.position));
+  const hipsStepOutOfSeam = new THREE.Vector3()
+    .fromArray(crawlPose1.joints.hips.position)
+    .sub(new THREE.Vector3().fromArray(crawlPose0.joints.hips.position));
+  assert.ok(hipsStepIntoSeam.distanceTo(hipsStepOutOfSeam) < 1e-5,
+    'reduced/catalog Crawl reintroduced hips hitching at the outer seam');
+  assert.equal(crawl.metadata.contactAdaptation,
+    'runtime-and-studio palm-down ground socket IK');
+  assert.equal(crawl.contacts.some((entry) => entry.mode === 'grip'), false,
+    'crawl hand contacts still use rope-style grip semantics');
+  assert.equal(crawl.contacts.filter((entry) => entry.effector === 'gripLeft').length, 2,
+    'wrapped left-hand plant was not represented on both sides of the seam');
   const crawlStart = sampleClip(crawl, 0);
   const crawlHalf = sampleClip(crawl, crawl.duration * 0.5);
   assert.ok(Math.abs(new THREE.Quaternion().fromArray(crawlStart.joints.shoulderLeft.quaternion)
@@ -1122,7 +1178,51 @@ try {
       clip.id !== UNITY_CROUCH_CRAWL_CLIP_IDS.crawl),
   }, binding.definition);
   assert.equal(findClip(deletedV10Crawl, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl), undefined,
-    'catalog v12 resurrected a deliberately deleted Crawl slot');
+    'catalog v13 resurrected a deliberately deleted Crawl slot');
+
+  const deployedV12Crawl = JSON.parse(await readFile(new URL(
+    './fixtures/player-unity-crawl-catalog-v12.json',
+    import.meta.url,
+  ), 'utf8'));
+  assert.equal(deployedV12Crawl.id, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+  near(deployedV12Crawl.duration, 52 / 60);
+  const versionTwelveCrawlSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl ? deployedV12Crawl : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 12 },
+  };
+  for (const candidate of [
+    reconcilePlayerStarterAnimationSuite(versionTwelveCrawlSuite, binding.definition),
+    reconcilePlayerStarterAnimationSuite(
+      parseAnimationSuite(versionTwelveCrawlSuite),
+      binding.definition,
+    ),
+  ]) {
+    const upgraded = findClip(candidate, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+    assert.equal(upgraded.duration, 1,
+      'catalog v13 did not replace the deployed incomplete crawl cycle');
+    assert.equal(upgraded.metadata.sourceAnimation.outputDuration, 1);
+  }
+  const editedV12Crawl = structuredClone(deployedV12Crawl);
+  editedV12Crawl.tracks[0].keys[0].value[0] += 0.001;
+  const preservedEditedV12Crawl = reconcilePlayerStarterAnimationSuite({
+    ...versionTwelveCrawlSuite,
+    clips: versionTwelveCrawlSuite.clips.map((clip) =>
+      clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl ? editedV12Crawl : clip),
+  }, binding.definition);
+  near(
+    findClip(preservedEditedV12Crawl, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).duration,
+    52 / 60,
+    1e-6,
+  );
+  const deletedV12Crawl = reconcilePlayerStarterAnimationSuite({
+    ...versionTwelveCrawlSuite,
+    clips: versionTwelveCrawlSuite.clips.filter((clip) =>
+      clip.id !== UNITY_CROUCH_CRAWL_CLIP_IDS.crawl),
+  }, binding.definition);
+  assert.equal(findClip(deletedV12Crawl, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl), undefined,
+    'catalog v13 resurrected a deleted deployed Crawl');
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,

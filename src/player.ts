@@ -274,6 +274,33 @@ const ROPE_ELBOW = new THREE.Vector3();
 const ROPE_WRIST = new THREE.Vector3();
 const ROPE_GRIP_SAMPLE = new THREE.Vector3();
 const ROPE_Q = new THREE.Quaternion();
+const CRAWL_UP = new THREE.Vector3(0, 1, 0);
+const CRAWL_DOWN = new THREE.Vector3(0, -1, 0);
+const CRAWL_HIPS = new THREE.Vector3();
+const CRAWL_CHEST = new THREE.Vector3();
+const CRAWL_SHOULDER_L = new THREE.Vector3();
+const CRAWL_SHOULDER_R = new THREE.Vector3();
+const CRAWL_SHOULDER_MID = new THREE.Vector3();
+const CRAWL_FORWARD = new THREE.Vector3();
+const CRAWL_SIDE = new THREE.Vector3();
+const CRAWL_TARGET = new THREE.Vector3();
+const CRAWL_WRIST_TARGET = new THREE.Vector3();
+const CRAWL_WRIST_POSITION = new THREE.Vector3();
+const CRAWL_GRIP_POSITION = new THREE.Vector3();
+const CRAWL_GRIP_OFFSET = new THREE.Vector3();
+const CRAWL_SHIFT_A = new THREE.Vector3();
+const CRAWL_SHIFT_B = new THREE.Vector3();
+const CRAWL_POLE = new THREE.Vector3();
+const CRAWL_SOCKET_Q = new THREE.Quaternion();
+const CRAWL_WRIST_Q = new THREE.Quaternion();
+const CRAWL_PARENT_Q = new THREE.Quaternion();
+const CRAWL_RELATIVE_Q = new THREE.Quaternion();
+const CRAWL_CORRECTION_Q = new THREE.Quaternion();
+const CRAWL_DESIRED_Q = new THREE.Quaternion();
+const CRAWL_BASIS = new THREE.Matrix4();
+const CRAWL_AXIS_X = new THREE.Vector3();
+const CRAWL_AXIS_Y = new THREE.Vector3();
+const CRAWL_AXIS_Z = new THREE.Vector3();
 const VERT_RAY_O = new THREE.Vector3();
 const VERT_RAY_D = new THREE.Vector3();
 // feeler height ladder relative to the remembered lip: slightly above first
@@ -1130,6 +1157,9 @@ export class Player {
   private ponyA: THREE.Group | null = null; // empty saved-track compatibility nodes
   private ponyB: THREE.Group | null = null;
   private walkPhase = 0; // procedural run cycle
+  private authoredCrawlContactPhase: number | null = null;
+  private authoredCrawlContactWeight = 0;
+  private readonly crawlContactUpperOffset = new THREE.Vector3();
   private walkAmp = 0;
   private idleAmp = 0;
   private boardG: THREE.Group | null = null; // board + wheels: pulled up during grabs
@@ -2140,6 +2170,7 @@ export class Player {
   resetAnimationPreview(): void {
     this.clearCharacterAppearance();
     this.playerAnimationBridge.resetPreview();
+    this.crawlContactUpperOffset.set(0, 0, 0);
     this.tail?.reset();
     this.resetRenderInterpolation();
     this.syncCharacterAppearance();
@@ -2149,6 +2180,7 @@ export class Player {
   exitAnimationPreview(): void {
     this.clearCharacterAppearance();
     this.playerAnimationBridge.exitPreview();
+    this.crawlContactUpperOffset.set(0, 0, 0);
     this.tail?.reset();
     this.resetRenderInterpolation();
     this.syncCharacterAppearance();
@@ -7140,6 +7172,182 @@ export class Player {
     this.ropeRightGripError = this.wristR
       .getWorldPosition(ROPE_GRIP_SAMPLE)
       .distanceTo(ROPE_TARGET_R);
+  }
+
+  /**
+   * Procedural contact adaptation for the imported crawl. The source FBX was
+   * authored for a differently proportioned humanoid, so its raw shoulder
+   * tracks cannot reach this character's floor. Preserve the torso/gait, then
+   * pin both glove contact sockets forward on the ground and orient their
+   * palm normals down. `weight` lets gameplay blend this with crouch/idle;
+   * Animation Studio calls the same operation at full weight for honest QA.
+   */
+  setAuthoredCrawlContactPhase(phase: number | null, weight = 1): void {
+    this.authoredCrawlContactPhase = phase !== null && Number.isFinite(phase)
+      ? ((phase % 1) + 1) % 1
+      : null;
+    this.authoredCrawlContactWeight = this.authoredCrawlContactPhase === null
+      ? 0
+      : THREE.MathUtils.clamp(Number.isFinite(weight) ? weight : 0, 0, 1);
+  }
+
+  private clearAppliedCrawlUpperOffset(): void {
+    if (!this.upperG || this.crawlContactUpperOffset.lengthSq() < 1e-12) return;
+    this.upperG.position.sub(this.crawlContactUpperOffset);
+    this.crawlContactUpperOffset.set(0, 0, 0);
+    this.bodyGroup.updateWorldMatrix(true, true);
+  }
+
+  private alignCrawlHandsToGround(weight: number, phase: number): void {
+    // Animation Studio may render many paused frames without resampling the
+    // authored pose. Remove our preceding contact offset before rebuilding it.
+    this.clearAppliedCrawlUpperOffset();
+    const w = THREE.MathUtils.clamp(Number.isFinite(weight) ? weight : 0, 0, 1);
+    if (
+      w <= 0.001 ||
+      !this.legs || !this.upperG ||
+      !this.armL || !this.armR ||
+      !this.elbowL || !this.elbowR ||
+      !this.wristL || !this.wristR ||
+      !this.gloveLeft || !this.gloveRight
+    ) return;
+
+    this.bodyGroup.updateWorldMatrix(true, true);
+    this.group.updateWorldMatrix(true, true);
+    this.group.getWorldQuaternion(CRAWL_SOCKET_Q);
+    CRAWL_UP.set(0, 1, 0).applyQuaternion(CRAWL_SOCKET_Q).normalize();
+    CRAWL_DOWN.copy(CRAWL_UP).negate();
+    if (this.upperG.parent) {
+      this.upperG.getWorldPosition(CRAWL_SHIFT_A);
+      CRAWL_SHIFT_B.copy(CRAWL_SHIFT_A).addScaledVector(CRAWL_DOWN, 0.08 * w);
+      this.upperG.parent.worldToLocal(CRAWL_SHIFT_A);
+      this.upperG.parent.worldToLocal(CRAWL_SHIFT_B);
+      this.crawlContactUpperOffset.copy(CRAWL_SHIFT_B).sub(CRAWL_SHIFT_A);
+      this.upperG.position.add(this.crawlContactUpperOffset);
+      this.bodyGroup.updateWorldMatrix(true, true);
+    }
+    this.legs.getWorldPosition(CRAWL_HIPS);
+    this.upperG.getWorldPosition(CRAWL_CHEST);
+    this.armL.getWorldPosition(CRAWL_SHOULDER_L);
+    this.armR.getWorldPosition(CRAWL_SHOULDER_R);
+    CRAWL_SHOULDER_MID.copy(CRAWL_SHOULDER_L).add(CRAWL_SHOULDER_R).multiplyScalar(0.5);
+    CRAWL_FORWARD.copy(CRAWL_CHEST).sub(CRAWL_HIPS)
+      .addScaledVector(CRAWL_UP, -CRAWL_FORWARD.dot(CRAWL_UP));
+    if (CRAWL_FORWARD.lengthSq() < 1e-6) {
+      this.bodyGroup.getWorldQuaternion(CRAWL_SOCKET_Q);
+      CRAWL_FORWARD.set(0, 0, 1).applyQuaternion(CRAWL_SOCKET_Q)
+        .addScaledVector(CRAWL_UP, -CRAWL_FORWARD.dot(CRAWL_UP));
+    }
+    CRAWL_FORWARD.normalize();
+    CRAWL_SIDE.copy(CRAWL_FORWARD).cross(CRAWL_UP).normalize();
+    const cycle = Number.isFinite(phase) ? phase * Math.PI * 2 : 0;
+
+    const solve = (
+      arm: THREE.Object3D,
+      elbow: THREE.Object3D,
+      wrist: THREE.Object3D,
+      grip: THREE.Object3D,
+      sideSign: number,
+    ): void => {
+      arm.getWorldPosition(CRAWL_TARGET);
+      const anatomicalSign = Math.sign(
+        CRAWL_WRIST_POSITION.copy(CRAWL_TARGET)
+          .sub(CRAWL_SHOULDER_MID)
+          .dot(CRAWL_SIDE),
+      ) || sideSign;
+      const stride = Math.sin(cycle) * anatomicalSign;
+      CRAWL_TARGET.copy(CRAWL_SHOULDER_MID)
+        .addScaledVector(CRAWL_SIDE, anatomicalSign * 0.18)
+        .addScaledVector(CRAWL_FORWARD, 0.09 + stride * 0.045);
+      this.group.worldToLocal(CRAWL_TARGET);
+      CRAWL_TARGET.y = 0.012;
+      this.group.localToWorld(CRAWL_TARGET);
+      arm.getWorldPosition(CRAWL_POLE);
+      CRAWL_POLE
+        .addScaledVector(CRAWL_SIDE, anatomicalSign * 0.34)
+        .addScaledVector(CRAWL_FORWARD, 0.06);
+      const targetUp = CRAWL_TARGET.dot(CRAWL_UP);
+      const poleUp = CRAWL_POLE.dot(CRAWL_UP);
+      CRAWL_POLE.addScaledVector(
+        CRAWL_UP,
+        THREE.MathUtils.lerp(targetUp, poleUp, 0.55) - poleUp,
+      );
+
+      // Socket local +Z is the palm normal; local -Y points toward the fingers.
+      wrist.getWorldQuaternion(CRAWL_WRIST_Q);
+      grip.getWorldQuaternion(CRAWL_SOCKET_Q);
+      CRAWL_RELATIVE_Q.copy(CRAWL_WRIST_Q).invert().multiply(CRAWL_SOCKET_Q);
+      CRAWL_AXIS_Z.copy(CRAWL_DOWN);
+      CRAWL_AXIS_Y.copy(CRAWL_FORWARD).negate();
+      CRAWL_AXIS_X.copy(CRAWL_AXIS_Y).cross(CRAWL_AXIS_Z).normalize();
+      CRAWL_AXIS_Y.copy(CRAWL_AXIS_Z).cross(CRAWL_AXIS_X).normalize();
+      CRAWL_BASIS.makeBasis(CRAWL_AXIS_X, CRAWL_AXIS_Y, CRAWL_AXIS_Z);
+      CRAWL_DESIRED_Q.setFromRotationMatrix(CRAWL_BASIS)
+        .multiply(CRAWL_RELATIVE_Q.invert())
+        .normalize();
+      if (w < 1) CRAWL_WRIST_Q.slerp(CRAWL_DESIRED_Q, w);
+      else CRAWL_WRIST_Q.copy(CRAWL_DESIRED_Q);
+      if (wrist.parent) wrist.parent.getWorldQuaternion(CRAWL_PARENT_Q);
+      else CRAWL_PARENT_Q.identity();
+      wrist.quaternion.copy(CRAWL_PARENT_Q.invert().multiply(CRAWL_WRIST_Q)).normalize();
+      this.bodyGroup.updateWorldMatrix(true, true);
+      grip.getWorldQuaternion(CRAWL_SOCKET_Q);
+      CRAWL_AXIS_Z.set(0, 0, 1).applyQuaternion(CRAWL_SOCKET_Q).normalize();
+      CRAWL_RELATIVE_Q.setFromUnitVectors(CRAWL_AXIS_Z, CRAWL_DOWN);
+      CRAWL_CORRECTION_Q.identity();
+      if (w < 1) CRAWL_CORRECTION_Q.slerp(CRAWL_RELATIVE_Q, w);
+      else CRAWL_CORRECTION_Q.copy(CRAWL_RELATIVE_Q);
+      wrist.getWorldQuaternion(CRAWL_WRIST_Q);
+      CRAWL_WRIST_Q.premultiply(CRAWL_CORRECTION_Q).normalize();
+      if (wrist.parent) wrist.parent.getWorldQuaternion(CRAWL_PARENT_Q);
+      else CRAWL_PARENT_Q.identity();
+      wrist.quaternion.copy(CRAWL_PARENT_Q.invert().multiply(CRAWL_WRIST_Q)).normalize();
+
+      // With the palm basis settled, turn the grip-socket target into the
+      // corresponding wrist target. Solving the wrist point (not the offset
+      // socket) lets us restore the exact desired wrist world orientation
+      // afterward without the solver rotating the palm away from ground.
+      this.bodyGroup.updateWorldMatrix(true, true);
+      wrist.getWorldPosition(CRAWL_WRIST_POSITION);
+      grip.getWorldPosition(CRAWL_GRIP_POSITION);
+      CRAWL_GRIP_OFFSET.copy(CRAWL_GRIP_POSITION).sub(CRAWL_WRIST_POSITION);
+      CRAWL_WRIST_TARGET.copy(CRAWL_TARGET).sub(CRAWL_GRIP_OFFSET);
+      const iterations = w >= 0.999 ? 2 : 1;
+      for (let iteration = 0; iteration < iterations; iteration++) {
+        solveTwoBoneIk({
+          root: arm,
+          mid: elbow,
+          end: wrist,
+          target: CRAWL_WRIST_TARGET,
+          pole: CRAWL_POLE,
+          weight: w,
+          tolerance: 0.001,
+        });
+      }
+      if (wrist.parent) wrist.parent.getWorldQuaternion(CRAWL_PARENT_Q);
+      else CRAWL_PARENT_Q.identity();
+      wrist.quaternion.copy(CRAWL_PARENT_Q.invert().multiply(CRAWL_WRIST_Q)).normalize();
+    };
+
+    solve(this.armL, this.elbowL, this.wristL, this.gloveRight.gripSocket, -1);
+    solve(this.armR, this.elbowR, this.wristR, this.gloveLeft.gripSocket, 1);
+    this.bodyGroup.updateWorldMatrix(true, true);
+  }
+
+  /** Host hook used by Animation Studio after proportions are reapplied. */
+  applyCrawlHandPlantPreview(
+    timeSeconds: number,
+    durationSeconds: number,
+    weight = 1,
+  ): void {
+    const duration = Math.max(1e-6, Number.isFinite(durationSeconds) ? durationSeconds : 1);
+    const phase = ((timeSeconds / duration) % 1 + 1) % 1;
+    this.alignCrawlHandsToGround(weight, phase);
+  }
+
+  /** Remove preview-only crawl contact presentation before another clip samples. */
+  clearCrawlHandPlantPreview(): void {
+    this.clearAppliedCrawlUpperOffset();
   }
 
   // ------------------------------------------------------------------ manual --
@@ -13166,6 +13374,9 @@ export class Player {
     // A runtime authored overlay wrote after the previous legacy pose. Undo it
     // before any legacy formula reads or accumulates from local transforms.
     this.playerAnimationBridge.prepareLegacyPose();
+    // prepareLegacyPose restored the unadapted upper-body transform, so the
+    // offset tracker must start clean before this frame's contact pass.
+    this.crawlContactUpperOffset.set(0, 0, 0);
     // Supported wipeout recovery is authored on the rider-only root late in
     // this method. Clear its previous fixed-step rotation before any joint or
     // tail calculation; plantOnDeck below remains the sole owner of position
@@ -14614,6 +14825,12 @@ export class Player {
     // so authored writes are absolute and can never accumulate into gameplay.
     this.playerAnimationBridge.applyOverlay(dt);
     this.syncCharacterAppearance();
+    if (this.authoredCrawlContactPhase !== null) {
+      this.alignCrawlHandsToGround(
+        crawlMove * this.authoredCrawlContactWeight,
+        this.authoredCrawlContactPhase,
+      );
+    }
     this.alignHandsToRopeGrip(dt);
     // Character Lab proportions and authored animation both move endpoints.
     // Plant only after both layers so feet cannot slide away from the deck.

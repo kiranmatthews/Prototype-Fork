@@ -12,6 +12,9 @@ const MAX_QUATERNION_ERROR_RADIANS = THREE.MathUtils.degToRad(
 );
 const MAX_HIPS_POSITION_ERROR = 0.0005;
 const UNITY_CROUCH_CRAWL_FLOOR_LIFT = 0.225;
+const CRAWL_OUTPUT_FRAMES = 60;
+const CRAWL_HALF_FRAMES = CRAWL_OUTPUT_FRAMES / 2;
+const CRAWL_LOOP_OVERLAP_FRAMES = 6;
 const EPSILON = 1e-8;
 
 const BIND_ASSET =
@@ -37,9 +40,10 @@ const CLIP_SPECS = Object.freeze({
       'Assets/MeshyImports/Meshy_AI_Punky_Fox_Pop_biped_Animation_Crawl_and_Look_Back_frame_rate_60_20260817_143437/local_export_20260817_143437_a30d5f24fd29494692ab6a75365c96f7.fbx',
     symbol: 'UNITY_CRAWL',
     expectedDuration: 52 / SAMPLE_RATE,
+    outputDuration: CRAWL_OUTPUT_FRAMES / SAMPLE_RATE,
     productionSourceWindow: { start: 219 / SAMPLE_RATE, end: 271 / SAMPLE_RATE },
     productionPostProcess:
-      'frames 219-271 trimmed, Armature translation removed, Hips planar travel detrended in place',
+      'frames 219-271 retimed as one half-cycle plus an X-mirrored opposite half; six-frame internal/outer cyclic overlaps reproduce Unity Loop Pose',
   },
 });
 
@@ -332,6 +336,7 @@ function sampleRetargetedClip(
   bindWorld,
   bindHipsWorld,
   canonicalWorld,
+  forceEndpointClosure = true,
 ) {
   const duration = Math.round(clip.duration * SAMPLE_RATE) / SAMPLE_RATE;
   const times = sampleTimes(duration);
@@ -362,10 +367,162 @@ function sampleRetargetedClip(
       ).sub(bindHipsWorld),
     );
   }
-  // Both production states loop. Remove exporter drift at the browser seam.
-  hipsPositions[hipsPositions.length - 1] = hipsPositions[0].clone();
-  for (const values of rotations.values()) values[values.length - 1] = values[0].clone();
+  if (forceEndpointClosure) {
+    // The complete crouch source is already cyclic; remove exporter epsilon.
+    hipsPositions[hipsPositions.length - 1] = hipsPositions[0].clone();
+    for (const values of rotations.values()) values[values.length - 1] = values[0].clone();
+  }
   return { duration, times, rotations, hipsPositions };
+}
+
+function quaternionStepMismatch(values) {
+  const end = values.length - 1;
+  if (end < 2) return 0;
+  const startStep = values[0].clone().invert().multiply(values[1]).normalize();
+  const endStep = values[end - 1].clone().invert().multiply(values[end]).normalize();
+  return startStep.angleTo(endStep);
+}
+
+function loopMetrics(sampled) {
+  let poseSquared = 0;
+  let velocitySquared = 0;
+  let count = 0;
+  for (const values of sampled.rotations.values()) {
+    poseSquared += values[0].angleTo(values[values.length - 1]) ** 2;
+    velocitySquared += quaternionStepMismatch(values) ** 2;
+    count++;
+  }
+  const dt = sampled.duration / (sampled.times.length - 1);
+  const positionStartVelocity = sampled.hipsPositions[1].clone()
+    .sub(sampled.hipsPositions[0])
+    .divideScalar(dt);
+  const end = sampled.hipsPositions.length - 1;
+  const positionEndVelocity = sampled.hipsPositions[end].clone()
+    .sub(sampled.hipsPositions[end - 1])
+    .divideScalar(dt);
+  return {
+    poseGapRadiansRms: Math.sqrt(poseSquared / Math.max(1, count)),
+    velocityGapRadiansRms: Math.sqrt(velocitySquared / Math.max(1, count)),
+    hipsVelocityGap: positionStartVelocity.distanceTo(positionEndVelocity),
+  };
+}
+
+function overlapQuaternionSeam(values, overlapFrames) {
+  const end = values.length - 1;
+  const overlap = Math.max(1, Math.min(overlapFrames, Math.floor(end / 4)));
+  const tail = values[end - overlap].clone();
+  const head = values[overlap].clone();
+  if (tail.dot(head) < 0) head.set(-head.x, -head.y, -head.z, -head.w);
+  for (let offset = -overlap; offset <= overlap; offset++) {
+    const index = offset < 0 ? end + offset : offset;
+    values[index].copy(tail).slerp(head, (offset + overlap) / (overlap * 2));
+  }
+  values[end].copy(values[0]);
+}
+
+function overlapPositionSeam(values, overlapFrames) {
+  const end = values.length - 1;
+  const overlap = Math.max(1, Math.min(overlapFrames, Math.floor(end / 4)));
+  const tail = values[end - overlap].clone();
+  const head = values[overlap].clone();
+  for (let offset = -overlap; offset <= overlap; offset++) {
+    const index = offset < 0 ? end + offset : offset;
+    values[index].copy(tail).lerp(head, (offset + overlap) / (overlap * 2));
+  }
+  values[end].copy(values[0]);
+}
+
+const CRAWL_MIRROR_JOINT = new Map([
+  ['clavicleLeft', 'clavicleRight'], ['clavicleRight', 'clavicleLeft'],
+  ['shoulderLeft', 'shoulderRight'], ['shoulderRight', 'shoulderLeft'],
+  ['elbowLeft', 'elbowRight'], ['elbowRight', 'elbowLeft'],
+  ['wristLeft', 'wristRight'], ['wristRight', 'wristLeft'],
+  ['hipLeft', 'hipRight'], ['hipRight', 'hipLeft'],
+  ['kneeLeft', 'kneeRight'], ['kneeRight', 'kneeLeft'],
+  ['ankleLeft', 'ankleRight'], ['ankleRight', 'ankleLeft'],
+  ['toeLeft', 'toeRight'], ['toeRight', 'toeLeft'],
+]);
+
+function sampleQuaternionValues(values, alpha) {
+  const clock = THREE.MathUtils.clamp(alpha, 0, 1) * (values.length - 1);
+  const start = Math.floor(clock);
+  const end = Math.min(values.length - 1, start + 1);
+  return values[start].clone().slerp(values[end], clock - start).normalize();
+}
+
+function samplePositionValues(values, alpha) {
+  const clock = THREE.MathUtils.clamp(alpha, 0, 1) * (values.length - 1);
+  const start = Math.floor(clock);
+  const end = Math.min(values.length - 1, start + 1);
+  return values[start].clone().lerp(values[end], clock - start);
+}
+
+function mirrorQuaternionX(value) {
+  return new THREE.Quaternion(value.x, -value.y, -value.z, value.w).normalize();
+}
+
+function overlapQuaternionAt(values, seam, overlapFrames) {
+  const overlap = Math.max(1, Math.min(overlapFrames, seam, values.length - 1 - seam));
+  const tail = values[seam - overlap].clone();
+  const head = values[seam + overlap].clone();
+  if (tail.dot(head) < 0) head.set(-head.x, -head.y, -head.z, -head.w);
+  for (let index = seam - overlap; index <= seam + overlap; index++) {
+    values[index].copy(tail).slerp(head, (index - seam + overlap) / (overlap * 2));
+  }
+}
+
+function overlapPositionAt(values, seam, overlapFrames) {
+  const overlap = Math.max(1, Math.min(overlapFrames, seam, values.length - 1 - seam));
+  const tail = values[seam - overlap].clone();
+  const head = values[seam + overlap].clone();
+  for (let index = seam - overlap; index <= seam + overlap; index++) {
+    values[index].copy(tail).lerp(head, (index - seam + overlap) / (overlap * 2));
+  }
+}
+
+function synthesizeAlternatingCrawlLoop(sampled) {
+  const rawLoopMetrics = loopMetrics(sampled);
+  const duration = CRAWL_OUTPUT_FRAMES / SAMPLE_RATE;
+  const times = sampleTimes(duration);
+  const rotations = new Map();
+  for (const [joint] of PLAYER_HIERARCHY) {
+    const values = [];
+    for (let frame = 0; frame < CRAWL_OUTPUT_FRAMES; frame++) {
+      const mirrored = frame >= CRAWL_HALF_FRAMES;
+      const halfFrame = frame % CRAWL_HALF_FRAMES;
+      const sourceJoint = mirrored ? (CRAWL_MIRROR_JOINT.get(joint) ?? joint) : joint;
+      let value = sampleQuaternionValues(
+        sampled.rotations.get(sourceJoint),
+        halfFrame / CRAWL_HALF_FRAMES,
+      );
+      if (mirrored) value = mirrorQuaternionX(value);
+      values.push(value);
+    }
+    values.push(values[0].clone());
+    overlapQuaternionAt(values, CRAWL_HALF_FRAMES, CRAWL_LOOP_OVERLAP_FRAMES);
+    overlapQuaternionSeam(values, CRAWL_LOOP_OVERLAP_FRAMES);
+    rotations.set(joint, values);
+  }
+  const hipsPositions = [];
+  for (let frame = 0; frame < CRAWL_OUTPUT_FRAMES; frame++) {
+    const mirrored = frame >= CRAWL_HALF_FRAMES;
+    const halfFrame = frame % CRAWL_HALF_FRAMES;
+    const value = samplePositionValues(
+      sampled.hipsPositions,
+      halfFrame / CRAWL_HALF_FRAMES,
+    );
+    if (mirrored) value.x = -value.x;
+    hipsPositions.push(value);
+  }
+  hipsPositions.push(hipsPositions[0].clone());
+  overlapPositionAt(hipsPositions, CRAWL_HALF_FRAMES, CRAWL_LOOP_OVERLAP_FRAMES);
+  overlapPositionSeam(hipsPositions, CRAWL_LOOP_OVERLAP_FRAMES);
+  const result = { duration, times, rotations, hipsPositions };
+  return {
+    ...result,
+    rawLoopMetrics,
+    closedLoopMetrics: loopMetrics(result),
+  };
 }
 
 function simplifyTrack(times, values, errorAt) {
@@ -566,7 +723,7 @@ async function main() {
   const metadataClips = {};
   for (const [id, spec] of Object.entries(CLIP_SPECS)) {
     const clip = await loadClip(args.unityProject, spec);
-    const sampled = sampleRetargetedClip(
+    const sourceSamples = sampleRetargetedClip(
       clip,
       bindRotations,
       bindPositions,
@@ -574,7 +731,11 @@ async function main() {
       bindWorld,
       bindHipsWorld,
       canonicalWorld,
+      id !== 'crawl',
     );
+    const sampled = id === 'crawl'
+      ? synthesizeAlternatingCrawlLoop(sourceSamples)
+      : sourceSamples;
     const reduced = reduceClip(sampled);
     if (reduced.maximumQuaternionError > MAX_QUATERNION_ERROR_RADIANS + 1e-7) {
       throw new Error(`${spec.sourceName} quaternion reduction exceeded tolerance`);
@@ -583,13 +744,15 @@ async function main() {
       throw new Error(`${spec.sourceName} hips-position reduction exceeded tolerance`);
     }
     results.set(id, reduced);
+    const sourceAssetPath = resolve(args.unityProject, spec.sourceAsset);
     const sourceFbxPath = resolve(args.unityProject, spec.sourceFbx);
     metadataClips[id] = {
       sourceName: spec.sourceName,
-      sourceAsset: normalizedPath(relative(args.unityProject, clip.sourcePath)),
-      sourceAssetSha256: await sha256(clip.sourcePath),
+      sourceAsset: normalizedPath(relative(args.unityProject, sourceAssetPath)),
+      sourceAssetSha256: await sha256(sourceAssetPath),
       sourceFbx: normalizedPath(relative(args.unityProject, sourceFbxPath)),
       sourceFbxSha256: await sha256(sourceFbxPath),
+      samplingSource: normalizedPath(relative(args.unityProject, clip.sourcePath)),
       sourceDuration: rounded(clip.duration),
       productionSourceWindow: {
         start: rounded(spec.productionSourceWindow.start),
@@ -605,6 +768,19 @@ async function main() {
         THREE.MathUtils.radToDeg(reduced.maximumQuaternionError),
       ),
       maximumObservedHipsPositionError: rounded(reduced.maximumPositionError),
+      ...(sampled.rawLoopMetrics ? {
+        rawLoopPoseGapDegreesRms: rounded(
+          THREE.MathUtils.radToDeg(sampled.rawLoopMetrics.poseGapRadiansRms),
+        ),
+        rawLoopVelocityGapDegreesPerFrameRms: rounded(
+          THREE.MathUtils.radToDeg(sampled.rawLoopMetrics.velocityGapRadiansRms),
+        ),
+        rawLoopHipsVelocityGap: rounded(sampled.rawLoopMetrics.hipsVelocityGap),
+        closedLoopVelocityGapDegreesPerFrameRms: rounded(
+          THREE.MathUtils.radToDeg(sampled.closedLoopMetrics.velocityGapRadiansRms),
+        ),
+        closedLoopHipsVelocityGap: rounded(sampled.closedLoopMetrics.hipsVelocityGap),
+      } : {}),
     };
   }
 
@@ -626,7 +802,8 @@ async function main() {
     positionSpace:
       'PunkyFox model-local after the Armature basis; +Y is vertical and values are unscaled source model units',
     unityModelPresentationScale: 1.5,
-    loopPolicy: 'exact end-to-start closure after 60 Hz Hermite sampling',
+    loopPolicy:
+      'crouch exact closure; crawl X-mirrored half-cycle synthesis with six-frame internal and outer cyclic overlaps',
     unityFloorCorrection: {
       stanceRootLiftMetres: UNITY_CROUCH_CRAWL_FLOOR_LIFT,
       includedInHipsPositionKeys: false,

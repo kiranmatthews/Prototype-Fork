@@ -103,7 +103,9 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 12;
+export const PLAYER_STARTER_CATALOG_VERSION = 13;
+export const UNITY_CRAWL_CONTACT_ADAPTATION =
+  'runtime-and-studio palm-down ground socket IK';
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -154,6 +156,9 @@ const LEGACY_CROUCH_CRAWL_CANONICAL_SIGNATURES: Readonly<
   'player.crouch': new Set(['b7595ec0']),
   'player.crawl': new Set(['3672794d']),
 };
+
+const LEGACY_UNITY_CRAWL_SIGNATURES = new Set(['522225c8']);
+const LEGACY_UNITY_CRAWL_CANONICAL_SIGNATURES = new Set(['fadfab96']);
 
 function stableCatalogValue(value: unknown, quantizeNumbers = false): string {
   if (Array.isArray(value)) {
@@ -1055,6 +1060,7 @@ function unityCrouchCrawlSourceMetadata(sourceKey: 'crouchIdle' | 'crawl') {
       UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.maximumHipsPositionError,
     conversion: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.conversion,
     translationPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.translationPolicy,
+    loopPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.loopPolicy,
   };
 }
 
@@ -1127,14 +1133,21 @@ function buildCrawl(rigId: string, includeTorsoRoot: boolean): AnimationClip {
       UNITY_CRAWL_ROTATION_KEYS,
       includeTorsoRoot,
     ),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 1.4], [clip.duration, 1.4]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 1.4], [clip.duration, 1.4]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperRight, [[0, 1.4], [clip.duration, 1.4]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerRight, [[0, 1.4], [clip.duration, 1.4]]),
   ];
   const half = clip.duration * 0.5;
-  const stance = clip.duration * 0.26;
+  const plantIn = clip.duration * 0.27;
+  const plantOut = clip.duration * 0.73;
   clip.contacts = [
-    contact(`${clip.id}:left-hand`, 0, stance, 'gripLeft', 'grip'),
-    contact(`${clip.id}:right-foot`, 0, stance, 'footRight'),
-    contact(`${clip.id}:right-hand`, half, half + stance, 'gripRight', 'grip'),
-    contact(`${clip.id}:left-foot`, half, half + stance, 'footLeft'),
+    contact(`${clip.id}:left-hand-a`, 0, plantIn, 'gripLeft'),
+    contact(`${clip.id}:left-hand-b`, plantOut, clip.duration, 'gripLeft'),
+    contact(`${clip.id}:right-foot-a`, 0, plantIn, 'footRight'),
+    contact(`${clip.id}:right-foot-b`, plantOut, clip.duration, 'footRight'),
+    contact(`${clip.id}:right-hand`, clip.duration * 0.23, clip.duration * 0.77, 'gripRight'),
+    contact(`${clip.id}:left-foot`, clip.duration * 0.23, clip.duration * 0.77, 'footLeft'),
   ];
   clip.markers = [
     { id: `${clip.id}:left-diagonal`, time: 0, name: 'Left-hand diagonal plant' },
@@ -1147,6 +1160,7 @@ function buildCrawl(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     sourceAnimation: unityCrouchCrawlSourceMetadata('crawl'),
     floorLift: UNITY_CROUCH_CRAWL_TIMING.floorLift,
     outerPoseOwnership: UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
+    contactAdaptation: UNITY_CRAWL_CONTACT_ADAPTATION,
   };
   return clip;
 }
@@ -1581,6 +1595,20 @@ export function reconcilePlayerStarterAnimationSuite(
       ) {
         clips = clips.map((clip) => clip.id === clipId ? imported : clip);
       }
+    }
+  }
+  if (previousVersion < 13) {
+    const current = clips.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+    const imported = starters.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+    if (
+      current && imported &&
+      (LEGACY_UNITY_CRAWL_SIGNATURES.has(starterClipSignature(current)) ||
+        LEGACY_UNITY_CRAWL_CANONICAL_SIGNATURES.has(
+          canonicalLegacyStarterClipSignature(current),
+        ))
+    ) {
+      clips = clips.map((clip) =>
+        clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl ? imported : clip);
     }
   }
 

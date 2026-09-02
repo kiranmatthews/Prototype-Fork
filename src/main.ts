@@ -74,6 +74,7 @@ import { createBonusParallax } from "./bonusParallax";
 import { touchControlsRequested } from "./touch";
 import {
   RigBinding,
+  UNITY_CRAWL_CONTACT_ADAPTATION,
   createLocalDraftStore,
   createPreferredDraftStore,
   createPlayerStarterAnimationSuite,
@@ -2145,6 +2146,14 @@ async function openAnimationStudioTool(): Promise<void> {
       document: characterAnimationRuntime.document,
       applyScalars: (values) => player.applyAnimationDeformations(values),
       syncPresentation: () => player.syncCharacterAppearance(),
+      clearPostPose: () => player.clearCrawlHandPlantPreview(),
+      applyPostPose: (clip, time) => {
+        if (
+          clip.id === 'player.crawl' &&
+          clip.metadata?.contactAdaptation === UNITY_CRAWL_CONTACT_ADAPTATION
+        ) player.applyCrawlHandPlantPreview(time, clip.duration);
+        else player.clearCrawlHandPlantPreview();
+      },
       tailVisibility: {
         getState: () => player.characterTailVisibilityState,
         toggle: () => player.toggleCharacterTailVisibility(),

@@ -257,9 +257,10 @@ try {
     lowPosePlayer.animationRig.root,
     { strict: false },
   );
+  const lowPoseSuite = createPlayerStarterAnimationSuite(lowPoseBinding.definition);
   const lowPoseRuntime = createCharacterAnimationRuntime(
     lowPosePlayer,
-    createPlayerStarterAnimationSuite(lowPoseBinding.definition),
+    lowPoseSuite,
   );
   const tickLowPose = (input) => {
     lowPosePlayer.step(dt, input, level);
@@ -302,9 +303,178 @@ try {
   assert.equal(lowPoseRuntime.activeClipId, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
   closeTo(lowPoseRuntime.diagnostics.transitionBlendWeight, 0,
     "crouch-to-crawl did not begin Unity's rapid blend");
-  lowPosePlayer.syncVisual(makeInput({ moveX: 1 }), 5 / 60);
+  closeTo(lowPosePlayer.authoredCrawlContactWeight, 0,
+    "crawl contacts snapped on before their joint transition");
+  lowPosePlayer.syncVisual(makeInput({ moveX: 1 }), 2 / 60);
+  const crawlContactMidBlend = lowPoseRuntime.diagnostics.transitionBlendWeight;
+  assert.ok(crawlContactMidBlend > 0 && crawlContactMidBlend < 1,
+    "crawl contact ownership skipped the transition interior");
+  closeTo(lowPosePlayer.authoredCrawlContactWeight, crawlContactMidBlend,
+    "crawl contacts did not share the joint transition weight");
+  lowPosePlayer.syncVisual(makeInput({ moveX: 1 }), 3 / 60);
   closeTo(lowPoseRuntime.diagnostics.transitionBlendWeight, 1,
     "crouch-to-crawl did not finish Unity's five-frame blend");
+  closeTo(lowPosePlayer.authoredCrawlContactWeight, 1,
+    "crawl contacts did not finish their ownership transition");
+  const assertCrawlContacts = (player, label) => {
+    player.animationRig.root.updateMatrixWorld(true);
+    const crawlUp = new THREE.Vector3(0, 1, 0)
+      .applyQuaternion(player.group.getWorldQuaternion(new THREE.Quaternion()))
+      .normalize();
+    const hipsAt = player.animationRig.jointsById.get("hips")?.node
+      .getWorldPosition(new THREE.Vector3());
+    const chestAt = player.animationRig.jointsById.get("chest")?.node
+      .getWorldPosition(new THREE.Vector3());
+    assert.ok(hipsAt && chestAt);
+    const crawlForward = chestAt.clone().sub(hipsAt)
+      .addScaledVector(crawlUp, -chestAt.clone().sub(hipsAt).dot(crawlUp))
+      .normalize();
+    const grips = {};
+    for (const [side, shoulderId] of [
+      ["left", "shoulderLeft"],
+      ["right", "shoulderRight"],
+    ]) {
+      const socket = player.animationRig.root.getObjectByName(`socket-grip-${side}`);
+      const shoulder = player.animationRig.jointsById.get(shoulderId)?.node;
+      assert.ok(socket && shoulder);
+      const gripAt = socket.getWorldPosition(new THREE.Vector3());
+      grips[side] = gripAt.clone();
+      const localGrip = player.group.worldToLocal(gripAt.clone());
+      assert.ok(Math.abs(localGrip.y - 0.012) < 0.15,
+        `${side} crawl grip missed the support plane (${label}): ${localGrip.y}`);
+      const socketQ = socket.getWorldQuaternion(new THREE.Quaternion());
+      const palmNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(socketQ).normalize();
+      const fingerDirection = new THREE.Vector3(0, -1, 0).applyQuaternion(socketQ).normalize();
+      assert.ok(palmNormal.dot(crawlUp.clone().negate()) > 0.9,
+        `${side} crawl palm did not face the ground (${label})`);
+      assert.ok(fingerDirection.dot(crawlForward) > 0.65,
+        `${side} crawl fingers did not face forward (${label})`);
+      const shoulderAt = shoulder.getWorldPosition(new THREE.Vector3());
+      assert.ok(gripAt.clone().sub(shoulderAt).dot(crawlForward) > -0.04,
+        `${side} crawl hand stayed behind its shoulder (${label})`);
+    }
+    return grips;
+  };
+
+  // Live Crawl passes the imported clip's authored-speed timeline into the
+  // procedural hand contacts, so the elbow beat cannot drift over time.
+  for (let index = 0; index < 5; index++) {
+    for (let frame = 0; frame < 15; frame++)
+      tickLowPose(makeInput({ grabHeld: true, moveX: 1 }));
+    closeTo(
+      lowPosePlayer.authoredCrawlContactPhase,
+      lowPoseRuntime.diagnostics.timelineTime,
+      `live Crawl contact phase drifted from its clip timeline on sample ${index}`,
+    );
+    assertCrawlContacts(lowPosePlayer, `runtime sample ${index}`);
+  }
+  const suiteWithCrawlSpeed = (playbackSpeed) => ({
+    ...lowPoseSuite,
+    clips: lowPoseSuite.clips.map((clip) =>
+      clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl
+        ? { ...clip, playbackSpeed }
+        : clip),
+  });
+  for (const [playbackSpeed, expectedTime] of [[0.5, 0.125], [2, 0.5]]) {
+    lowPoseRuntime.setDocument(suiteWithCrawlSpeed(playbackSpeed));
+    lowPoseRuntime.restart();
+    lowPosePlayer.syncVisual(makeInput({ moveX: 1 }), 0);
+    for (let frame = 0; frame < 15; frame++)
+      tickLowPose(makeInput({ grabHeld: true, moveX: 1 }));
+    closeTo(lowPoseRuntime.diagnostics.timelineTime, expectedTime,
+      `live Crawl ignored saved playback speed ${playbackSpeed}`);
+    closeTo(lowPosePlayer.authoredCrawlContactPhase, expectedTime,
+      `crawl contacts ignored saved playback speed ${playbackSpeed}`);
+    assertCrawlContacts(lowPosePlayer, `playback speed ${playbackSpeed}`);
+  }
+  lowPoseRuntime.setDocument(lowPoseSuite);
+  lowPoseRuntime.restart();
+
+  // Studio samples the authored clip first and invokes the shared contact pass
+  // exactly once. Repeating paused frames must be idempotent.
+  const studioPosePlayer = new Player(level.scene);
+  studioPosePlayer.enterLevel("crawl-studio-preview");
+  studioPosePlayer.respawn(level, true);
+  const studioPoseBinding = RigBinding.fromSculptRuntime(
+    studioPosePlayer.animationRig.root,
+    { strict: false },
+  );
+  const studioPoseRuntime = createCharacterAnimationRuntime(
+    studioPosePlayer,
+    createPlayerStarterAnimationSuite(studioPoseBinding.definition),
+  );
+  const sampleStudioCrawl = (time) => {
+    studioPoseRuntime.setManualClipOverride(UNITY_CROUCH_CRAWL_CLIP_IDS.crawl, true);
+    studioPosePlayer.syncVisual(makeInput(), 0);
+    if (time > 0) studioPosePlayer.syncVisual(makeInput(), time);
+  };
+  for (const time of [0, 0.25, 0.5, 0.75, 0.99]) {
+    sampleStudioCrawl(time);
+    studioPosePlayer.applyCrawlHandPlantPreview(time, 1);
+    assertCrawlContacts(studioPosePlayer, `Studio t=${time}`);
+  }
+  sampleStudioCrawl(0.25);
+  studioPosePlayer.applyCrawlHandPlantPreview(0.25, 1);
+  const torsoBeforeRepeat = studioPosePlayer.animationRig.jointsById
+    .get("torsoRoot")?.node.position.clone();
+  const gripsBeforeRepeat = assertCrawlContacts(studioPosePlayer, "paused frame 0");
+  assert.ok(torsoBeforeRepeat);
+  const animationStudioSource = await readFile(new URL(
+    "../src/animationStudio.ts",
+    import.meta.url,
+  ), "utf8");
+  assert.match(animationStudioSource, /if \(clip && sampledThisFrame\)[\s\S]*applyPostPose/,
+    "Animation Studio reapplies crawl IK on unchanged paused frames");
+  for (let frame = 1; frame <= 6; frame++) {
+    // A dirty Studio frame clears the old post layer before sampling, then
+    // applies one fresh solve. Paused frames execute neither operation.
+    studioPosePlayer.clearCrawlHandPlantPreview();
+    sampleStudioCrawl(0.25);
+    studioPosePlayer.applyCrawlHandPlantPreview(0.25, 1);
+    const torsoAfterRepeat = studioPosePlayer.animationRig.jointsById
+      .get("torsoRoot")?.node.position;
+    assert.ok(torsoAfterRepeat.distanceTo(torsoBeforeRepeat) < 1e-8,
+      `paused Studio crawl accumulated a torso offset on frame ${frame}`);
+  }
+  const gripsAfterRepeat = assertCrawlContacts(studioPosePlayer, "paused frame 6");
+  for (const side of ["left", "right"]) {
+    assert.ok(gripsAfterRepeat[side].distanceTo(gripsBeforeRepeat[side]) < 0.002,
+      `${side} paused Studio crawl contact drifted across repeated frames`);
+  }
+
+  // Partial entry weighting must remain partial rather than snapping the palm
+  // or applying two compounded IK blends.
+  sampleStudioCrawl(0.25);
+  const leftSocket = studioPosePlayer.animationRig.root.getObjectByName("socket-grip-left");
+  assert.ok(leftSocket);
+  const unsolvedQ = leftSocket.getWorldQuaternion(new THREE.Quaternion());
+  const unsolvedPosition = leftSocket.getWorldPosition(new THREE.Vector3());
+  studioPosePlayer.applyCrawlHandPlantPreview(0.25, 1, 0.1);
+  const partialQ = leftSocket.getWorldQuaternion(new THREE.Quaternion());
+  const partialPosition = leftSocket.getWorldPosition(new THREE.Vector3());
+  sampleStudioCrawl(0.25);
+  const resetQ = leftSocket.getWorldQuaternion(new THREE.Quaternion());
+  const resetPosition = leftSocket.getWorldPosition(new THREE.Vector3());
+  studioPosePlayer.applyCrawlHandPlantPreview(0.25, 1, 1);
+  const solvedQ = leftSocket.getWorldQuaternion(new THREE.Quaternion());
+  const solvedPosition = leftSocket.getWorldPosition(new THREE.Vector3());
+  const partialAngle = unsolvedQ.angleTo(partialQ);
+  const solvedAngle = resetQ.angleTo(solvedQ);
+  assert.ok(partialAngle > 1e-4 && partialAngle < solvedAngle * 0.4,
+    "crawl palm orientation ignored its partial entry weight");
+  assert.ok(
+    unsolvedPosition.distanceTo(partialPosition) <
+      resetPosition.distanceTo(solvedPosition) * 0.4,
+    "crawl arm IK compounded its partial entry weight",
+  );
+
+  // The support plane follows the rider's local up axis on sloped surfaces.
+  sampleStudioCrawl(0.5);
+  studioPosePlayer.group.rotation.z = 0.35;
+  studioPosePlayer.group.updateWorldMatrix(true, true);
+  studioPosePlayer.applyCrawlHandPlantPreview(0.5, 1);
+  assertCrawlContacts(studioPosePlayer, "tilted support plane");
+  studioPoseRuntime.dispose();
 
   // A preserved v10 low-pose clip has no source-ownership marker and was
   // authored against the former parent drop/pitch/compression. It must retain
@@ -380,6 +550,10 @@ try {
   };
   moveMixedLowPose();
   assert.equal(mixedLowPoseRuntime.activeClipId, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+  assert.equal(mixedLowPosePlayer.authoredCrawlContactPhase, null,
+    "preserved v10 Crawl inherited the v13 contact phase");
+  closeTo(mixedLowPosePlayer.authoredCrawlContactWeight, 0,
+    "preserved v10 Crawl inherited the v13 palm/torso solve");
   closeTo(mixedLowPoseRuntime.diagnostics.transitionBlendWeight, 0,
     "mixed low-pose switch did not begin on its outgoing source pose");
   closeTo(mixedLowPosePlayer.bodyGroup.rotation.x, 0,
@@ -394,6 +568,66 @@ try {
     "mixed low-pose parent drop did not match the joint crossfade");
   closeTo(mixedLowPosePlayer.bodyGroup.scale.y, 1.36 * (1 - 0.06 * mixedBlend),
     "mixed low-pose parent compression did not match the joint crossfade");
+
+  const deployedV12Crawl = JSON.parse(await readFile(new URL(
+    "./fixtures/player-unity-crawl-catalog-v12.json",
+    import.meta.url,
+  ), "utf8"));
+  const editedV12Crawl = structuredClone(deployedV12Crawl);
+  editedV12Crawl.tracks[0].keys[0].value[0] += 0.001;
+  const preservedV12Player = new Player(level.scene);
+  preservedV12Player.respawn(level, true);
+  const preservedV12Binding = RigBinding.fromSculptRuntime(
+    preservedV12Player.animationRig.root,
+    { strict: false },
+  );
+  const v12BaseSuite = createPlayerStarterAnimationSuite(preservedV12Binding.definition);
+  const preservedV12Suite = reconcilePlayerStarterAnimationSuite({
+    ...v12BaseSuite,
+    clips: v12BaseSuite.clips.map((clip) =>
+      clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl
+        ? { ...editedV12Crawl, rigId: preservedV12Binding.definition.id }
+        : clip),
+    metadata: { ...v12BaseSuite.metadata, playerStarterCatalogVersion: 12 },
+  }, preservedV12Binding.definition);
+  assert.equal(preservedV12Suite.clips.find((clip) =>
+    clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl)?.metadata?.contactAdaptation,
+  undefined, "edited v12 Crawl unexpectedly acquired v13 contact ownership");
+  const preservedV12Runtime = createCharacterAnimationRuntime(
+    preservedV12Player,
+    preservedV12Suite,
+  );
+  preservedV12Player.crawling = true;
+  preservedV12Player.crawlPose = 1;
+  preservedV12Player.prevPos.copy(preservedV12Player.pos);
+  preservedV12Player.pos.x += TUNING.crawlSpeed * dt;
+  preservedV12Player.lastPlanar = TUNING.crawlSpeed;
+  preservedV12Player.syncVisual(makeInput({ grabHeld: true, moveX: 1 }), dt);
+  assert.equal(preservedV12Runtime.activeClipId, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+  assert.equal(preservedV12Player.authoredCrawlContactPhase, null,
+    "edited v12 Crawl inherited the v13 contact phase at runtime");
+  closeTo(preservedV12Player.authoredCrawlContactWeight, 0,
+    "edited v12 Crawl inherited the v13 palm/torso solve at runtime");
+
+  const deletedV12Suite = reconcilePlayerStarterAnimationSuite({
+    ...v12BaseSuite,
+    clips: v12BaseSuite.clips.filter((clip) =>
+      clip.id !== UNITY_CROUCH_CRAWL_CLIP_IDS.crawl),
+    metadata: { ...v12BaseSuite.metadata, playerStarterCatalogVersion: 12 },
+  }, preservedV12Binding.definition);
+  preservedV12Runtime.setDocument(deletedV12Suite);
+  preservedV12Runtime.restart();
+  preservedV12Player.prevPos.copy(preservedV12Player.pos);
+  preservedV12Player.pos.x += TUNING.crawlSpeed * dt;
+  preservedV12Player.lastPlanar = TUNING.crawlSpeed;
+  preservedV12Player.syncVisual(makeInput({ grabHeld: true, moveX: 1 }), dt);
+  assert.equal(preservedV12Runtime.activeClipId, null,
+    "deleted v12 Crawl unexpectedly regained a playable clip");
+  assert.equal(preservedV12Player.authoredCrawlContactPhase, null,
+    "deleted v12 Crawl retained a stale contact phase");
+  closeTo(preservedV12Player.authoredCrawlContactWeight, 0,
+    "deleted v12 Crawl retained stale contact ownership");
+  preservedV12Runtime.dispose();
   const boardAnimationRuntime = createCharacterAnimationRuntime(
     boardPlayer,
     createPlayerStarterAnimationSuite(boardAnimationBinding.definition),

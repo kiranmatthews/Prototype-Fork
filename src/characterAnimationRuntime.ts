@@ -1,6 +1,7 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import {
   RigBinding,
+  UNITY_CRAWL_CONTACT_ADAPTATION,
   UNITY_CROUCH_CRAWL_CLIP_IDS,
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
@@ -231,6 +232,10 @@ export class CharacterAnimationRuntime {
   private switchBlendDuration = 0;
   private switchBlendElapsed = 0;
   private switchOutgoingLowPoseOuterOwnership = 0;
+  private crawlContactPhase: number | null = null;
+  private crawlContactOwnership = 0;
+  private switchOutgoingCrawlContactPhase: number | null = null;
+  private switchOutgoingCrawlContactOwnership = 0;
   private readonly controlDefaults = new Map<string, number>();
   private poseApplied = false;
   private compositionOrder: ProceduralCompositionOrder | null = null;
@@ -387,6 +392,7 @@ export class CharacterAnimationRuntime {
     if (!this.runtimeEnabled) {
       this.requestedClipId = null;
       this.poseApplied = false;
+      this.player.setAuthoredCrawlContactPhase(null);
       this.cancelTransient();
       this.resetRunQualification();
       return;
@@ -466,6 +472,12 @@ export class CharacterAnimationRuntime {
             previousClipId ? this.findPlayableClip(previousClipId) : null,
           )
           : 0;
+      this.switchOutgoingCrawlContactPhase = switchBlendDuration > 0
+        ? this.crawlContactPhase
+        : null;
+      this.switchOutgoingCrawlContactOwnership = switchBlendDuration > 0
+        ? this.crawlContactOwnership
+        : 0;
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
@@ -484,6 +496,15 @@ export class CharacterAnimationRuntime {
         Math.min(1, Math.max(0, motion.actionProgress)) *
         (clip.range.end - clip.range.start)
       : clipTimeAt(clip, this.playbackSeconds);
+    const ownsCrawlContacts =
+      clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl &&
+      clip.metadata?.contactAdaptation === UNITY_CRAWL_CONTACT_ADAPTATION;
+    const incomingCrawlContactPhase = ownsCrawlContacts
+      ? normalizedPhase(
+        (this.timelineTime - clip.range.start) /
+        Math.max(1e-6, clip.range.end - clip.range.start),
+      )
+      : null;
     this.authoredPlaybackSpeed = clip.playbackSpeed;
     const sampledPose = sampleComposedClip(clip, this.timelineTime, motion, {
       evaluators: this.proceduralEvaluators,
@@ -507,6 +528,7 @@ export class CharacterAnimationRuntime {
         );
       }
     }
+    let contactTransitionWeight: number | null = null;
     if (
       this.transient?.kind === 'pace-stop' &&
       clip.id === this.transient.clipId &&
@@ -530,6 +552,7 @@ export class CharacterAnimationRuntime {
       this.transitionBlendWeight = weight;
     } else if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
       const weight = smoothstep01(this.switchBlendElapsed / this.switchBlendDuration);
+      contactTransitionWeight = weight;
       pose = blendPoses(
         withControlDefaults(
           canonicalizePose(this.switchOutgoingPose, this.binding),
@@ -546,6 +569,22 @@ export class CharacterAnimationRuntime {
       }
     } else {
       this.transitionBlendWeight = null;
+    }
+    const incomingCrawlContactOwnership = ownsCrawlContacts ? 1 : 0;
+    this.crawlContactOwnership = contactTransitionWeight === null
+      ? incomingCrawlContactOwnership
+      : this.switchOutgoingCrawlContactOwnership * (1 - contactTransitionWeight) +
+        incomingCrawlContactOwnership * contactTransitionWeight;
+    this.crawlContactPhase = incomingCrawlContactPhase ??
+      this.switchOutgoingCrawlContactPhase;
+    if (this.crawlContactOwnership <= 1e-6) this.crawlContactPhase = null;
+    this.player.setAuthoredCrawlContactPhase(
+      this.crawlContactPhase,
+      this.crawlContactOwnership,
+    );
+    if (contactTransitionWeight !== null && contactTransitionWeight >= 1) {
+      this.switchOutgoingCrawlContactPhase = null;
+      this.switchOutgoingCrawlContactOwnership = 0;
     }
     this.binding.applyPose(pose, { resetUnspecified: false, strict: false });
     // Controls/deformation are intentionally last: endpoint translation starts
@@ -714,6 +753,7 @@ export class CharacterAnimationRuntime {
   }
 
   private clearPlayback(clearRequest = true): void {
+    this.player.setAuthoredCrawlContactPhase(null);
     this.currentClipId = null;
     if (clearRequest) this.requestedClipId = null;
     this.elapsedSeconds = 0;
@@ -730,6 +770,10 @@ export class CharacterAnimationRuntime {
     this.switchBlendDuration = 0;
     this.switchBlendElapsed = 0;
     this.switchOutgoingLowPoseOuterOwnership = 0;
+    this.crawlContactPhase = null;
+    this.crawlContactOwnership = 0;
+    this.switchOutgoingCrawlContactPhase = null;
+    this.switchOutgoingCrawlContactOwnership = 0;
     this.restartPending = false;
   }
 }

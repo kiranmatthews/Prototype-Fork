@@ -104,9 +104,12 @@ distorts the body animation.
 ## Unity crouch and crawl
 
 `player.crouch` retargets PunkyFox's complete 350-frame
-`CrouchLookAroundBow` loop. `player.crawl` uses the exact production window
-from `Crawl and Look Back`—source frames 219–271—so the compact 52-frame gait
-loops without entering either later look-back beat. Both clips carry all 22
+`CrouchLookAroundBow` loop. `player.crawl` keeps Unity's clean frames 219–271
+without either look-back beat, retimes that reach as one half-cycle, and builds
+the opposite diagonal from an X-mirrored second half. Six-frame overlaps at the
+internal handoff and outer seam reproduce Unity's Loop Pose behavior; position
+and angular velocity now cross both joins continuously instead of copying the
+first pose onto the final frame. Both clips carry all 22
 humanoid rotation channels plus the one authored hips-position channel needed
 for their low silhouettes; child-bone translations and gameplay root motion
 remain excluded.
@@ -118,7 +121,13 @@ separate `+0.225 m` floor correction is included in the hips channel after
 accounting for the browser rig scale, while the old outer crawl drop, pitch,
 and whole-body compression are disabled so they cannot stack with the imported
 pose. Both loops remain directly keyframe-editable and retain the Studio's
-saved playback-speed control.
+saved playback-speed control. Crawl then applies the same procedural contact
+pass in gameplay and Studio: the stretchable arms bring both glove grip sockets
+forward onto the support plane while palm normals face into the ground. Contact
+annotations use alternating diagonal plants. Gameplay passes the saved clip's
+live timeline into the contact solve—including authored and runtime playback
+speed—while Studio passes its preview timeline, so both surfaces show the same
+arm beat without phase drift.
 
 ## Double-jump pose
 

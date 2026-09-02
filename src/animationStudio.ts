@@ -155,6 +155,10 @@ export interface AnimationStudioContext {
    * runs once per Studio frame, after playback, FK, IK and onion restoration.
    */
   syncPresentation?: () => void;
+  /** Clears the previous host contact layer before an authored resample. */
+  clearPostPose?: () => void;
+  /** Host-owned procedural contact pass applied after proportions/presentation. */
+  applyPostPose?: (clip: AnimationClip, time: number) => void;
   /** Optional host-owned procedural-tail silhouette toggle. */
   tailVisibility?: AnimationStudioTailVisibility;
   /** Pure custom procedural evaluators registered by the runtime/tool host. */
@@ -519,6 +523,7 @@ class AnimationStudio implements AnimationStudioHandle {
   private playbackDirection: 1 | -1 = 1;
   private playTime = 0;
   private needsSample = true;
+  private reframeAfterSample = true;
   private autoKey = true;
   private authoringMode: AuthoringMode = 'fk';
   private transformMode: TransformMode = 'rotate';
@@ -787,9 +792,19 @@ class AnimationStudio implements AnimationStudioHandle {
       this.advancePlayback(safeDt, clip);
       this.needsSample = true;
     }
-    if (this.needsSample) this.sampleCurrentPose();
+    let sampledThisFrame = false;
+    if (this.needsSample) {
+      this.ctx.clearPostPose?.();
+      this.sampleCurrentPose();
+      sampledThisFrame = true;
+    }
     if (this.onionEnabled && this.onionDirty) this.updateOnionSkin();
     this.ctx.syncPresentation?.();
+    if (clip && sampledThisFrame) this.ctx.applyPostPose?.(clip, this.playTime);
+    if (this.reframeAfterSample) {
+      this.frameCamera();
+      this.reframeAfterSample = false;
+    }
     this.refreshTailVisibilityButton();
     this.orbit.update();
     this.syncTimeUi();
@@ -799,6 +814,7 @@ class AnimationStudio implements AnimationStudioHandle {
     if (!this.open) return;
     this.cancelActiveDrag?.();
     this.open = false;
+    this.ctx.clearPostPose?.();
     this.cancelTransaction();
     this.saveDraftNow();
     if (this.storageTimer !== undefined) window.clearTimeout(this.storageTimer);
@@ -2242,6 +2258,7 @@ class AnimationStudio implements AnimationStudioHandle {
     this.selectedDriverId = clip.proceduralDrivers[0]?.id;
     this.selectedAnnotation = undefined;
     this.needsSample = true;
+    this.reframeAfterSample = true;
     this.onionDirty = true;
     this.scheduleAutosave();
     this.refreshAll();
