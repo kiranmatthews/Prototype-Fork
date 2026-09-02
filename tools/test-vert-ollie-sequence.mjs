@@ -127,8 +127,36 @@ try {
     beginVertBoardRelease,
     createVertBoardReleaseState,
     resetVertBoardRelease,
+    SPINE_TRANSFER_DIRECTION_DOT,
+    spineTransferDirectionHeld,
     stepVertBoardRelease,
   } = await server.ssrLoadModule('/src/vertBoardRelease.ts');
+
+  assert.equal(SPINE_TRANSFER_DIRECTION_DOT, 0.35);
+  assert.equal(spineTransferDirectionHeld(1, 0, 0, -1, 1, 0), true,
+    'screen-right did not aim toward a +X transfer');
+  assert.equal(spineTransferDirectionHeld(-1, 0, 0, -1, 1, 0), false,
+    'screen-left incorrectly aimed toward a +X transfer');
+  assert.equal(spineTransferDirectionHeld(0, 1, 0, -1, 1, 0), false,
+    'perpendicular input incorrectly aimed across the spine');
+  assert.equal(spineTransferDirectionHeld(0, 0, 0, -1, 1, 0), false,
+    'neutral input incorrectly aimed across the spine');
+  assert.equal(spineTransferDirectionHeld(0.35, 0, 0, -1, 1, 0), false,
+    'threshold input incorrectly armed a spine transfer');
+  assert.equal(spineTransferDirectionHeld(0.36, 0, 0, -1, 1, 0), true,
+    'deliberate analog input did not arm a spine transfer');
+  assert.equal(spineTransferDirectionHeld(0.3, 0.3, 0, -1, 1, 0), false,
+    'diagonal magnitude bypassed the required toward component');
+  assert.equal(spineTransferDirectionHeld(-1, 0, 0, -1, -1, 0), true,
+    'screen-left did not aim toward a -X transfer');
+  assert.equal(spineTransferDirectionHeld(0, -1, 0, -1, 0, 1), true,
+    'screen-down did not aim toward a +Z transfer');
+  assert.equal(spineTransferDirectionHeld(0, 1, 0, -1, 0, -1), true,
+    'screen-up did not aim toward a -Z transfer');
+  assert.equal(spineTransferDirectionHeld(0, 1, 0, -1, 0, 1), false,
+    'screen-up incorrectly aimed toward a +Z transfer');
+  assert.equal(spineTransferDirectionHeld(1, 0, 1, 0, 0, 1), true,
+    'rotated camera-right did not aim toward a +Z transfer');
 
   const neutralReleaseInput = {
     jumpPressed: false,
@@ -245,22 +273,83 @@ try {
     axis: 'z', cross: 0, lipX: 5, lipY: 500, l0: -10, l1: 10,
     crossCoord: (x) => x,
     alongCoord: (_x, z) => z,
+    rideSideCrossing: () => null,
+    normalAt: (_u, out) => out.set(0, 1, 0),
   };
   const targetPipe = {
     axis: 'z', cross: 6, lipX: 2, lipY: 500, l0: -10, l1: 10,
     crossCoord: (x) => x,
     alongCoord: (_x, z) => z,
+    rideSideCrossing: () => null,
+    normalAt: (_u, out) => out.set(0, 1, 0),
   };
   const authoredPipes = integrationLevel.halfpipes.slice();
   integrationLevel.halfpipes.splice(0, integrationLevel.halfpipes.length, sourcePipe, targetPipe);
-  integrationPlayer.pos.set(5, 500, 0);
-  integrationPlayer.prevPos.copy(integrationPlayer.pos);
-  integrationPlayer.vertAnchor.copy(integrationPlayer.pos);
-  integrationPlayer.hangPipe = sourcePipe;
+  const prepareDirectionalTransfer = () => {
+    integrationPlayer.state = 'air';
+    integrationPlayer.grounded = false;
+    integrationPlayer.pos.set(5, 500, 0);
+    integrationPlayer.prevPos.copy(integrationPlayer.pos);
+    integrationPlayer.vVel = 5;
+    integrationPlayer.freeSkate = true;
+    integrationPlayer.airFromSkate = true;
+    integrationPlayer.airGrav = 'board';
+    integrationPlayer.vertAir = true;
+    integrationPlayer.pipeHang = true;
+    integrationPlayer.hangPipe = sourcePipe;
+    integrationPlayer.vertNormal.set(1, 0, 0);
+    integrationPlayer.vertAnchor.copy(integrationPlayer.pos);
+    integrationPlayer.vertLatVel = 5;
+    integrationPlayer.transferCoolT = 0;
+    integrationPlayer.camDir.set(0, 0, -1);
+    beginVertBoardRelease(integrationPlayer.vertBoardRelease);
+  };
+
+  // Direction is sampled on RELEASE, not remembered from the arming press.
+  prepareDirectionalTransfer();
+  integrationPlayer.step(CONST.fixedStep, makeInput({
+    moveX: 1,
+    jumpPressed: true,
+    jumpHeld: true,
+  }), integrationLevel);
+  integrationPlayer.step(CONST.fixedStep, makeInput({ jumpReleased: true }), integrationLevel);
+  assert.equal(integrationPlayer.vertBoardRelease.stage, 2,
+    'mis-aimed release did not spend the transfer attempt');
+  assert.equal(integrationPlayer.hangPipe, sourcePipe,
+    'direction held only on press leaked into the transfer release');
+  assert.equal(integrationPlayer.transferCoolT, 0,
+    'rejected release armed transfer cooldown');
+  assert.equal(integrationPlayer.pos.x, 5,
+    'rejected release mutated the cross-pipe position');
+
+  prepareDirectionalTransfer();
+  integrationPlayer.step(CONST.fixedStep, makeInput({
+    jumpPressed: true,
+    jumpHeld: true,
+  }), integrationLevel);
+  integrationPlayer.step(CONST.fixedStep, makeInput({
+    moveX: 1,
+    jumpReleased: true,
+  }), integrationLevel);
+  assert.equal(integrationPlayer.hangPipe, targetPipe,
+    'direction first held on release did not transfer');
+  assert.equal(integrationPlayer.prevPos.x, integrationPlayer.pos.x,
+    'transfer mirrors the physics sweep origin');
+  assert.equal(integrationPlayer.vertLatVel, -5,
+    'transfer preserves world lateral carry through mirrored basis');
+
+  prepareDirectionalTransfer();
+  integrationPlayer.rawInput = makeInput();
+  assert.equal(integrationPlayer.tryAdjacentSpineTransfer(integrationLevel), false,
+    'neutral input transferred across the adjacent spine');
+  assert.equal(integrationPlayer.hangPipe, sourcePipe);
+  integrationPlayer.rawInput = makeInput({ moveX: -1 });
+  assert.equal(integrationPlayer.tryAdjacentSpineTransfer(integrationLevel), false,
+    'input held away from the adjacent pipe transferred anyway');
+  assert.equal(integrationPlayer.hangPipe, sourcePipe);
+  integrationPlayer.rawInput = makeInput({ moveX: 1 });
   assert.equal(integrationPlayer.tryAdjacentSpineTransfer(integrationLevel), true);
   assert.equal(integrationPlayer.hangPipe, targetPipe);
-  assert.equal(integrationPlayer.prevPos.x, integrationPlayer.pos.x, 'transfer mirrors the physics sweep origin');
-  assert.equal(integrationPlayer.vertLatVel, -5, 'transfer preserves world lateral carry through mirrored basis');
   integrationLevel.halfpipes.splice(0, integrationLevel.halfpipes.length, ...authoredPipes);
 
   integrationPlayer.pos.set(0, 500, 0);

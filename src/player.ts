@@ -89,6 +89,7 @@ import {
   beginVertBoardRelease,
   createVertBoardReleaseState,
   resetVertBoardRelease,
+  spineTransferDirectionHeld,
   stepVertBoardRelease,
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
@@ -7391,6 +7392,21 @@ export class Player {
       }
     }
     if (!target) return false;
+    // The release edge alone is not a transfer command. Resolve the current
+    // raw screen stick through the recorded camera direction and require it to
+    // point over this lip, toward the adjacent mouth. Direction is sampled on
+    // RELEASE; neutral, perpendicular, and away input spend the attempt but do
+    // not mutate position, cooldown, score, or effects.
+    const transferDirectionX = hp.axis === 'z' ? side : 0;
+    const transferDirectionZ = hp.axis === 'z' ? 0 : side;
+    if (!spineTransferDirectionHeld(
+      this.rawInput?.moveX ?? 0,
+      this.rawInput?.moveY ?? 0,
+      this.camDir.x,
+      this.camDir.z,
+      transferDirectionX,
+      transferDirectionZ,
+    )) return false;
     // mirror pos + glue plane across the lip line; keep height, arc, lateral
     const myCross = hp.crossCoord(this.pos.x, this.pos.z);
     const previousCross = hp.crossCoord(this.prevPos.x, this.prevPos.z);
