@@ -2,6 +2,10 @@ import * as THREE from 'three';
 import { createAnimationSuiteDocument, createProceduralDriver } from './document';
 import { PLAYER_PROCEDURAL_RIG_ID } from './rigBinding';
 import {
+  FORWARD_ROLL_SQUASH_MULTIPLIER,
+  FORWARD_ROLL_TUCK_INPUT,
+} from './forwardRoll';
+import {
   QUATERNIUS_JOG_FWD_DURATION,
   QUATERNIUS_JOG_FWD_ROOT_KEYS,
   QUATERNIUS_JOG_FWD_ROTATION_KEYS,
@@ -67,7 +71,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 8;
+export const PLAYER_STARTER_CATALOG_VERSION = 9;
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
@@ -86,6 +90,8 @@ const LEGACY_AIRBORNE_STARTER_SIGNATURES: Readonly<Record<string, ReadonlySet<st
     '792240e4', // normalized legacy-rig draft
     '08bf4483', // normalized conventional-rig draft
     '61b49347', // normalized live sculpt-runtime draft
+    '97aaf1d4', // source catalog v8
+    'd95f5658', // normalized catalog-v8 draft
   ]),
   'player.double-jump': new Set([
     '17b2768b', // source catalog v6
@@ -93,7 +99,11 @@ const LEGACY_AIRBORNE_STARTER_SIGNATURES: Readonly<Record<string, ReadonlySet<st
     '9cbb8b2b', // normalized conventional-rig draft
     'af898501', // normalized live sculpt-runtime draft
   ]),
-  'player.fall': new Set(['f45194a1', 'fa07436b', '4aa17e81']),
+  'player.fall': new Set([
+    'f45194a1', 'fa07436b', '4aa17e81',
+    'e9bb6a36', // source catalog v8
+    'afce5c82', // normalized catalog-v8 draft
+  ]),
   'player.land': new Set(['baa768b5', '44fd70c1', '7612e407']),
 };
 
@@ -121,6 +131,47 @@ function starterClipSignature(clip: AnimationClip): string {
     hash = Math.imul(hash, 0x01000193);
   }
   return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+function forwardRollSquashDrivers(clipId: string): ProceduralDriverDefinition[] {
+  return Object.values(PLAYER_DEFORMATION_CONTROLS).map((controlId, index) =>
+    createProceduralDriver('response', {
+      kind: 'scalar',
+      target: controlId,
+      baseValue: 1,
+    }, {
+      id: `${clipId}:driver:forward-roll-squash:${controlId}`,
+      name: `Forward-roll squash · ${controlId}`,
+      order: 900 + index,
+      blend: 'multiply',
+      source: FORWARD_ROLL_TUCK_INPUT,
+      amplitude: FORWARD_ROLL_SQUASH_MULTIPLIER - 1,
+      bias: 1,
+      clamp: [FORWARD_ROLL_SQUASH_MULTIPLIER, 1],
+      inputRange: [0, 1],
+      responseCurve: 'smootherstep',
+    }));
+}
+
+function hasForwardRollSquashLayer(clip: AnimationClip): boolean {
+  return clip.proceduralDrivers.some((driver) =>
+    driver.source === FORWARD_ROLL_TUCK_INPUT &&
+    driver.target.kind === 'scalar');
+}
+
+function withForwardRollSquashLayer(clip: AnimationClip): AnimationClip {
+  if (hasForwardRollSquashLayer(clip)) return clip;
+  return {
+    ...clip,
+    proceduralOrder: 'keyed-then-procedural',
+    proceduralDrivers: [...clip.proceduralDrivers, ...forwardRollSquashDrivers(clip.id)],
+    tags: [...new Set([...(clip.tags ?? []), 'forward-roll-squash'])],
+    metadata: {
+      ...(clip.metadata ?? {}),
+      forwardRollInput: FORWARD_ROLL_TUCK_INPUT,
+      forwardRollSquashMultiplier: FORWARD_ROLL_SQUASH_MULTIPLIER,
+    },
+  };
 }
 
 function isJogFwdRun(clip: AnimationClip): boolean {
@@ -728,14 +779,16 @@ function buildJump(rigId: string): AnimationClip {
     { id: `${clip.id}:apex-squash`, time: 1, name: 'Apex catch-up squash' },
   ];
   clip.events = [{ id: `${clip.id}:launch`, time: 0, name: 'launch' }];
-  clip.tags = ['player', 'jump', 'squash-stretch', 'rise-stretch', 'apex-squash'];
+  clip.tags = [
+    'player', 'jump', 'squash-stretch', 'rise-stretch', 'apex-squash',
+  ];
   clip.metadata = {
     starterQuality: 'authored-foundation',
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     progressSource: 'gameplay-actionProgress',
     deformationArc: 'charged squash -> rising stretch -> apex squash -> neutral fall',
   };
-  return clip;
+  return withForwardRollSquashLayer(clip);
 }
 
 function buildDoubleJump(rigId: string): AnimationClip {
@@ -837,14 +890,16 @@ function buildFall(rigId: string): AnimationClip {
     { id: `${clip.id}:apex-squash`, time: 0, name: 'Apex catch-up squash' },
     { id: `${clip.id}:neutral`, time: 0.38, name: 'Neutral descent' },
   ];
-  clip.tags = ['player', 'fall', 'squash-stretch', 'neutralize'];
+  clip.tags = [
+    'player', 'fall', 'squash-stretch', 'neutralize',
+  ];
   clip.metadata = {
     starterQuality: 'authored-foundation',
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     progressSource: 'gameplay-actionProgress',
     deformationArc: 'apex squash -> neutral descent',
   };
-  return clip;
+  return withForwardRollSquashLayer(clip);
 }
 
 function buildLand(rigId: string): AnimationClip {
@@ -1105,7 +1160,7 @@ export function reconcilePlayerStarterAnimationSuite(
       clips = clips.map((clip) => clip.id === 'player.slam' ? importedSlam : clip);
     }
   }
-  if (previousVersion < 8) {
+  if (previousVersion < 9) {
     for (const [clipId, untouchedSignatures] of Object.entries(
       LEGACY_AIRBORNE_STARTER_SIGNATURES,
     )) {
@@ -1116,6 +1171,20 @@ export function reconcilePlayerStarterAnimationSuite(
         untouchedSignatures.has(starterClipSignature(current))
       ) {
         clips = clips.map((clip) => clip.id === clipId ? imported : clip);
+      }
+    }
+    // A locally edited Jump/Fall can keep every authored key and still gain
+    // the new gameplay curl layer when it had no procedural graph of its own.
+    // Input zero is identity, so ordinary/manual playback remains unchanged.
+    for (const clipId of ['player.jump', 'player.fall']) {
+      const current = clips.find((clip) => clip.id === clipId);
+      if (
+        current &&
+        current.proceduralDrivers.length === 0 &&
+        !hasForwardRollSquashLayer(current)
+      ) {
+        const upgraded = withForwardRollSquashLayer(current);
+        clips = clips.map((clip) => clip.id === clipId ? upgraded : clip);
       }
     }
   }

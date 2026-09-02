@@ -108,6 +108,15 @@ height. Studio/manual preview remains ordinary saved-speed playback. Catalog
 upgrades replace only signature-identical older starters; a locally edited
 same-ID clip stays time-authored unless it explicitly opts into phase timing.
 
+Running-jump forward rolls add a second procedural layer shared by Jump and
+Fall. The existing waist-roll clock publishes `forwardRollTuck`; nine editable
+response drivers multiply the authored torso and limb lengths after their base
+keys. At the fully inverted ball frame every deformable segment reaches the
+rig's hard `0.55` minimum, then expands smoothly as the roll opens. Plain jumps,
+board airs, double jumps, slams, and bail recovery do not drive this input. Use
+the **Forward-roll curl** motion-context slider to inspect or tune the response
+drivers in the Studio without changing gameplay timing.
+
 ### Procedural skate ownership
 
 `player.skate` remains a selectable, editable Animation Studio slot, and manual

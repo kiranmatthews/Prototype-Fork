@@ -4,6 +4,7 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import {
   ANIMATION_SUITE_SCHEMA,
   ANIMATION_SUITE_SCHEMA_VERSION,
+  FORWARD_ROLL_TUCK_INPUT,
   PLAYER_PROCEDURAL_RIG_ID,
   RIG_SCHEMA,
   RIG_SCHEMA_VERSION,
@@ -532,6 +533,7 @@ class AnimationStudio implements AnimationStudioHandle {
     verticalVelocity: 0,
     grounded: true,
     actionProgress: 0,
+    inputs: { [FORWARD_ROLL_TUCK_INPUT]: 0 },
   };
   private proceduralBakeFps = FRAME_RATE;
   private currentScalars: Record<string, number> = {};
@@ -1708,7 +1710,10 @@ class AnimationStudio implements AnimationStudioHandle {
     source.value = driver.source;
     const sourceList = dom('datalist');
     sourceList.id = 'ast-procedural-sources';
-    for (const value of ['time', 'normalizedSpeed', 'gaitPhase', 'verticalVelocity', 'grounded', 'actionProgress']) {
+    for (const value of [
+      'time', 'normalizedSpeed', 'gaitPhase', 'verticalVelocity', 'grounded',
+      'actionProgress', FORWARD_ROLL_TUCK_INPUT,
+    ]) {
       const option = dom('option');
       option.value = value;
       sourceList.appendChild(option);
@@ -1985,6 +1990,42 @@ class AnimationStudio implements AnimationStudioHandle {
     addSlider('Gait phase', 'gaitPhase', 0, 1, 0.01);
     addSlider('Vertical', 'verticalVelocity', -30, 30, 0.1);
     addSlider('Action', 'actionProgress', 0, 1, 0.01);
+    const rollTuckSlider = input('range');
+    rollTuckSlider.min = '0';
+    rollTuckSlider.max = '1';
+    rollTuckSlider.step = '0.01';
+    rollTuckSlider.classList.add('ast-grow');
+    const rollTuckExact = input('number');
+    rollTuckExact.min = rollTuckSlider.min;
+    rollTuckExact.max = rollTuckSlider.max;
+    rollTuckExact.step = rollTuckSlider.step;
+    const currentRollTuck = clamp(
+      this.motionContext.inputs?.[FORWARD_ROLL_TUCK_INPUT] ?? 0,
+      0,
+      1,
+    );
+    rollTuckSlider.value = String(currentRollTuck);
+    rollTuckExact.value = rollTuckSlider.value;
+    const rollTuckControls = dom('div', 'ast-button-row ast-grow');
+    rollTuckControls.append(rollTuckSlider, rollTuckExact);
+    const updateRollTuck = (raw: string): void => {
+      const value = clamp(finite(raw, currentRollTuck), 0, 1);
+      this.motionContext = {
+        ...this.motionContext,
+        inputs: {
+          ...(this.motionContext.inputs ?? {}),
+          [FORWARD_ROLL_TUCK_INPUT]: value,
+        },
+      };
+      rollTuckSlider.value = String(value);
+      rollTuckExact.value = String(value);
+      this.needsSample = true;
+      this.refreshProceduralVisualizationOnly();
+      this.refreshTimeline();
+    };
+    rollTuckSlider.oninput = () => updateRollTuck(rollTuckSlider.value);
+    rollTuckExact.oninput = () => updateRollTuck(rollTuckExact.value);
+    parent.appendChild(this.field('Forward-roll curl', rollTuckControls));
     const grounded = input('checkbox');
     grounded.checked = this.motionContext.grounded;
     grounded.onchange = () => {

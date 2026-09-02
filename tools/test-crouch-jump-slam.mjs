@@ -109,11 +109,13 @@ try {
   const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
   const {
     RigBinding,
+    FORWARD_ROLL_TUCK_INPUT,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
     createPlayerStarterAnimationSuite,
     parseAnimationSuite,
     reconcilePlayerStarterAnimationSuite,
+    sampleForwardRollPresentation,
   } = await server.ssrLoadModule("/src/animation/index.ts");
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule(
     "/src/characterAnimationRuntime.ts",
@@ -196,6 +198,35 @@ try {
     upgradedLiveDraft.clips.find((clip) => clip.id === "player.land")?.metadata.deformationArc,
     "neutral fall -> cushion squash -> rebound -> settle",
     "live saved landing clip did not migrate to the cushion arc",
+  );
+  const oldForwardRollClips = JSON.parse(await readFile(new URL(
+    "./fixtures/player-forward-roll-catalog-v8.json",
+    import.meta.url,
+  ), "utf8"));
+  const oldForwardRollById = new Map(oldForwardRollClips.map((clip) => [clip.id, clip]));
+  const normalizedLiveV8Draft = parseAnimationSuite({
+    ...currentLiveSuite,
+    clips: currentLiveSuite.clips.map((clip) => oldForwardRollById.get(clip.id) ?? clip),
+    metadata: { ...currentLiveSuite.metadata, playerStarterCatalogVersion: 8 },
+  });
+  const upgradedForwardRollDraft = reconcilePlayerStarterAnimationSuite(
+    normalizedLiveV8Draft,
+    boardAnimationBinding.definition,
+  );
+  for (const clipId of ["player.jump", "player.fall"]) {
+    const clip = upgradedForwardRollDraft.clips.find((candidate) => candidate.id === clipId);
+    assert.equal(clip?.proceduralOrder, "keyed-then-procedural");
+    assert.equal(clip?.proceduralDrivers.filter((driver) =>
+      driver.source === FORWARD_ROLL_TUCK_INPUT).length, 9,
+      `live saved ${clipId} did not migrate its forward-roll squash layer`);
+  }
+  closeTo(
+    sampleForwardRollPresentation(
+      CONST.flipDuration * (1 - 0.475),
+      CONST.flipDuration,
+    ).tuck,
+    1,
+    "forward-roll clock did not peak at the inverted ball frame",
   );
   const boardAnimationRuntime = createCharacterAnimationRuntime(
     boardPlayer,
@@ -299,11 +330,31 @@ try {
   tickDouble(makeInput());
   assert.equal(doubleRuntime.activeClipId, "player.jump");
   assert.ok(doublePlayer.flipTimer > 0, "running first-jump roll fixture was not active");
+  doublePlayer.flipTimer = CONST.flipDuration * (1 - 0.475) + dt;
+  doublePlayer.vVel = 1;
+  tickDouble(makeInput());
+  closeTo(
+    doublePlayer.animationIntent.motion.inputs[FORWARD_ROLL_TUCK_INPUT],
+    1,
+    "forward roll did not reach maximum curl while rising",
+  );
+  assert.equal(doubleRuntime.activeClipId, "player.jump");
+  doublePlayer.flipTimer = CONST.flipDuration * (1 - 0.475) + dt;
+  doublePlayer.vVel = -0.01;
+  tickDouble(makeInput());
+  closeTo(
+    doublePlayer.animationIntent.motion.inputs[FORWARD_ROLL_TUCK_INPUT],
+    1,
+    "forward-roll curl popped at the Jump-to-Fall route switch",
+  );
+  assert.equal(doubleRuntime.activeClipId, "player.fall");
   tickDouble(makeInput({ jumpPressed: true, jumpHeld: true }));
   tickDouble(makeInput({ jumpReleased: true }));
   assert.equal(doublePlayer.lastJumpType, "Double Jump");
   assert.equal(doublePlayer.doubleJumpAir, true);
   assert.equal(doublePlayer.flipTimer, 0, "first-jump somersault survived the double pop");
+  assert.equal(doublePlayer.animationIntent.motion.inputs[FORWARD_ROLL_TUCK_INPUT], 0,
+    "forward-roll squash leaked into the split double jump");
   assert.equal(doublePlayer.animationClipHint, "player.double-jump");
   assert.equal(doubleRuntime.activeClipId, "player.double-jump");
   closeTo(
@@ -403,7 +454,7 @@ try {
     replayer.end();
   }
 
-  console.log("Validated crouch-jump slam priority and an upright, outward split-legged double jump.");
+  console.log("Validated crouch-jump slam priority, maximum forward-roll curl, and an upright split double jump.");
   doubleRuntime.dispose();
   boardAnimationRuntime.dispose();
 } finally {

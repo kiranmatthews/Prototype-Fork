@@ -21,6 +21,8 @@ try {
     ANIMATION_SUITE_SCHEMA_VERSION,
     RIG_SCHEMA_VERSION,
     PLAYER_DEFORMATION_CONTROLS,
+    FORWARD_ROLL_SQUASH_MULTIPLIER,
+    FORWARD_ROLL_TUCK_INPUT,
     PLAYER_STARTER_CATALOG_VERSION,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
@@ -51,6 +53,7 @@ try {
     reconcilePlayerStarterAnimationSuite,
     sampleClip,
     sampleComposedClip,
+    sampleForwardRollPresentation,
     sampleProceduralDriverValue,
     sampleProceduralDrivers,
     sampleQuaternionKeys,
@@ -349,8 +352,18 @@ try {
   assert.equal(jump.playbackSpeed, 1);
   assert.equal(jump.duration, 1);
   assert.equal(jump.metadata.progressSource, 'gameplay-actionProgress');
+  assert.equal(jump.proceduralOrder, 'keyed-then-procedural');
   assert.ok(jump.tracks.filter((track) => track.kind === 'scalar').length >= 9);
   const deformationControlIds = Object.values(PLAYER_DEFORMATION_CONTROLS);
+  const jumpRollDrivers = jump.proceduralDrivers.filter((driver) =>
+    driver.source === FORWARD_ROLL_TUCK_INPUT);
+  assert.equal(jumpRollDrivers.length, deformationControlIds.length);
+  assert.ok(jumpRollDrivers.every((driver) =>
+    driver.type === 'response' &&
+    driver.blend === 'multiply' &&
+    driver.bias === 1 &&
+    driver.amplitude === FORWARD_ROLL_SQUASH_MULTIPLIER - 1 &&
+    driver.curve === 'smootherstep'));
   const maximumStretchMarker = jump.markers.find((marker) =>
     marker.name === 'Maximum rising stretch');
   assert.ok(maximumStretchMarker);
@@ -369,10 +382,35 @@ try {
   assert.ok(deformationControlIds.every((id) => jumpApex.scalars[id] < 0.9),
     'the apex did not squash the body and limbs together');
 
+  const rollMotion = (tuck) => ({
+    normalizedSpeed: 1,
+    gaitPhase: 0,
+    verticalVelocity: 0,
+    grounded: false,
+    actionProgress: 0.5,
+    inputs: { [FORWARD_ROLL_TUCK_INPUT]: tuck },
+  });
+  const untuckedJump = sampleComposedClip(jump, 0.5, rollMotion(0));
+  const fullyCurledJump = sampleComposedClip(jump, 0.5, rollMotion(1));
+  const keyedJumpMiddle = sampleClip(jump, 0.5);
+  for (const id of deformationControlIds) {
+    near(untuckedJump.scalars[id], keyedJumpMiddle.scalars[id], 1e-6);
+    assert.ok(fullyCurledJump.scalars[id] <= 0.55,
+      `${id} did not reach the rig minimum at full forward-roll curl`);
+    near(binding.definition.controls.find((control) => control.id === id)?.min, 0.55);
+  }
+  const fullBall = sampleForwardRollPresentation(0.525, 1);
+  near(fullBall.progress, 0.475);
+  near(fullBall.rotationPhase, 0.5);
+  near(fullBall.tuck, 1);
+
   assert.equal(fall.duration, 1);
   assert.equal(fall.loop.mode, 'once');
   assert.equal(fall.loop.seamless, false);
   assert.equal(fall.metadata.progressSource, 'gameplay-actionProgress');
+  assert.equal(fall.proceduralOrder, 'keyed-then-procedural');
+  assert.equal(fall.proceduralDrivers.filter((driver) =>
+    driver.source === FORWARD_ROLL_TUCK_INPUT).length, deformationControlIds.length);
   const fallStart = sampleClip(fall, 0);
   const neutralFall = sampleClip(fall, 0.38);
   for (const id of deformationControlIds) {
@@ -386,6 +424,9 @@ try {
     assert.deepEqual(fallStart.joints[target], jumpApex.joints[target],
       `Jump apex and Fall entry differ on ${target}`);
   }
+  const fullyCurledFall = sampleComposedClip(fall, 0, rollMotion(1));
+  assert.ok(deformationControlIds.every((id) => fullyCurledFall.scalars[id] <= 0.55),
+    'Fall did not preserve maximum curl across the apex route switch');
 
   assert.equal(land.metadata.progressSource, undefined,
     'landing is a short playback transient, not a gameplay phase-scrubbed state');
@@ -413,6 +454,8 @@ try {
   assert.equal(doubleJump.metadata.progressSource, 'gameplay-actionProgress');
   assert.equal(doubleJump.metadata.poseIntent,
     'upright split-legged high jump; no forward somersault');
+  assert.equal(doubleJump.proceduralDrivers.some((driver) =>
+    driver.source === FORWARD_ROLL_TUCK_INPUT), false);
   const fullSplit = sampleClip(doubleJump, 0.12);
   const doubleRoot = new THREE.Quaternion().fromArray(fullSplit.joints.root.quaternion);
   near(Math.abs(doubleRoot.dot(new THREE.Quaternion())), 1);
@@ -430,6 +473,8 @@ try {
   assert.equal(slam.duration, UNITY_SLAM_POSE_TIMING.duration);
   assert.equal(slam.tracks.length, 8);
   assert.equal(slam.metadata.progressSource, 'gameplay-actionProgress');
+  assert.equal(slam.proceduralDrivers.some((driver) =>
+    driver.source === FORWARD_ROLL_TUCK_INPUT), false);
   assert.deepEqual(slam.metadata.sourceAnimation, UNITY_SLAM_POSE_SOURCE);
   const assertEulerPose = (pose, target, degrees, label) => {
     assert.ok(pose.joints[target], `${label} did not target ${target}`);
@@ -793,6 +838,54 @@ try {
     'gameplay-actionProgress', 'an edited Jump prevented independent Fall migration');
   near(sampleClip(findClip(preservedEditedAirborne, 'player.land'), 0.34)
     .scalars[PLAYER_DEFORMATION_CONTROLS.torso], 0.98);
+
+  const catalogV8ForwardRollFixtures = JSON.parse(await readFile(new URL(
+    './fixtures/player-forward-roll-catalog-v8.json',
+    import.meta.url,
+  ), 'utf8'));
+  assert.deepEqual(catalogV8ForwardRollFixtures.map((clip) => clip.id), [
+    'player.jump', 'player.fall',
+  ]);
+  const catalogV8ForwardRollById = new Map(
+    catalogV8ForwardRollFixtures.map((clip) => [clip.id, clip]),
+  );
+  const versionEightForwardRollSuite = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      catalogV8ForwardRollById.get(clip.id) ?? clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 8 },
+  };
+  const upgradedForwardRollSuite = reconcilePlayerStarterAnimationSuite(
+    versionEightForwardRollSuite,
+    binding.definition,
+  );
+  const normalizedForwardRollSuite = reconcilePlayerStarterAnimationSuite(
+    parseAnimationSuite(versionEightForwardRollSuite),
+    binding.definition,
+  );
+  for (const candidate of [upgradedForwardRollSuite, normalizedForwardRollSuite]) {
+    for (const clipId of ['player.jump', 'player.fall']) {
+      const clip = findClip(candidate, clipId);
+      assert.equal(clip.proceduralOrder, 'keyed-then-procedural');
+      assert.equal(clip.proceduralDrivers.filter((driver) =>
+        driver.source === FORWARD_ROLL_TUCK_INPUT).length, 9);
+    }
+  }
+  const editedV8Jump = structuredClone(catalogV8ForwardRollById.get('player.jump'));
+  editedV8Jump.tracks[0].keys[0].value[1] += 0.001;
+  const preservedEditedV8Jump = reconcilePlayerStarterAnimationSuite({
+    ...versionEightForwardRollSuite,
+    clips: versionEightForwardRollSuite.clips.map((clip) =>
+      clip.id === 'player.jump' ? editedV8Jump : clip),
+  }, binding.definition);
+  const augmentedEditedV8Jump = findClip(preservedEditedV8Jump, 'player.jump');
+  near(augmentedEditedV8Jump.tracks[0].keys[0].value[1],
+    editedV8Jump.tracks[0].keys[0].value[1]);
+  assert.equal(augmentedEditedV8Jump.name, editedV8Jump.name,
+    'a hand-edited catalog-v8 Jump was replaced instead of augmented');
+  assert.equal(augmentedEditedV8Jump.proceduralDrivers.filter((driver) =>
+    driver.source === FORWARD_ROLL_TUCK_INPUT).length, 9,
+    'a hand-edited catalog-v8 Jump did not receive the non-destructive curl layer');
 
   const deliberatelyDeleted = {
     ...upgradedCatalog,

@@ -1,5 +1,6 @@
 export * from './types';
 export * from './document';
+export * from './forwardRoll';
 export * from './sampling';
 export * from './procedural';
 export * from './rigBinding';

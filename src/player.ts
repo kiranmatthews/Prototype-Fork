@@ -70,6 +70,11 @@ import {
 } from './animation/bridge';
 import type { ProceduralMotionContext } from './animation/types';
 import {
+  FORWARD_ROLL_TUCK_INPUT,
+  sampleForwardRollPresentation,
+  type ForwardRollPresentation,
+} from './animation/forwardRoll';
+import {
   BAIL_RECOVERY_SPRAWL_PITCH,
   sampleBailRecovery,
 } from './bailRecovery';
@@ -1480,6 +1485,20 @@ export class Player {
    * Deterministic fixed-step inputs for pure procedural animation drivers.
    * Every value is presentation-only and copied out as a finite scalar.
    */
+  private forwardRollPresentation(): ForwardRollPresentation {
+    const active =
+      this.state === 'air' &&
+      !this.grounded &&
+      !this.doubleJumpAir &&
+      !this.slamActive &&
+      !this.airFromSkate;
+    return sampleForwardRollPresentation(
+      this.flipTimer,
+      CONST.flipDuration,
+      active,
+    );
+  }
+
   get animationIntent(): PlayerAnimationIntent {
     const clipId = this.animationClipHint;
     const gaitPhase = ((this.walkPhase / (Math.PI * 2)) % 1 + 1) % 1;
@@ -1527,6 +1546,7 @@ export class Player {
         ? 0.5 + 0.5 * this.bailRecoveryPose
         : 0.5 * (1 - this.bailDownT / Math.max(CONST.bailDownTime, 0.001))
       : 0;
+    const forwardRoll = this.forwardRollPresentation();
     let actionProgress = 0;
     if (clipId === 'player.idle' || clipId === 'player.run' || clipId === 'player.crawl' || clipId === 'player.skate') {
       actionProgress = gaitPhase;
@@ -1597,6 +1617,7 @@ export class Player {
           align: THREE.MathUtils.clamp(this.alignPose, 0, 1),
           wallride: this.wallriding ? 1 : 0,
           airborne: this.grounded ? 0 : 1,
+          [FORWARD_ROLL_TUCK_INPUT]: forwardRoll.tuck,
         },
       },
     };
@@ -13135,11 +13156,9 @@ export class Player {
     // the arc — rotation lives in the 15%..80% window — and she's upright
     // again well before touchdown. flipQ is the rotation's own 0..1 clock;
     // the tuck (knees to chest, arms wrapping) peaks halfway through it.
-    const flipProg = !this.doubleJumpAir && this.flipTimer > 0
-      ? 1 - this.flipTimer / CONST.flipDuration
-      : 0;
-    const flipQ = flipProg > 0 ? THREE.MathUtils.clamp((flipProg - 0.15) / 0.65, 0, 1) : 0;
-    const flipTuck = flipQ > 0 && flipQ < 1 ? Math.sin(flipQ * Math.PI) : 0;
+    const forwardRoll = this.forwardRollPresentation();
+    const flipQ = forwardRoll.rotationPhase;
+    const flipTuck = forwardRoll.tuck;
     // Skate stance: while actually rolling on the board, plant the feet on the
     // deck — spread fore-aft (front foot toward the nose, back toward the tail)
     // and angled out — instead of hanging together at the plank's centre.
