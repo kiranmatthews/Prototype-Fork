@@ -30,7 +30,8 @@ const CLIP_SPECS = Object.freeze({
     symbol: 'UNITY_CROUCH_IDLE',
     expectedDuration: 350 / SAMPLE_RATE,
     productionSourceWindow: { start: 0, end: 350 / SAMPLE_RATE },
-    productionPostProcess: 'full source loop; constant imported scale curves removed',
+    productionPostProcess:
+      'full source loop; constant imported scale curves removed; hips YXZ yaw neutralized so gameplay facing remains authoritative',
   },
   crawl: {
     sourceName: 'Crawl and Look Back',
@@ -373,6 +374,18 @@ function sampleRetargetedClip(
     for (const values of rotations.values()) values[values.length - 1] = values[0].clone();
   }
   return { duration, times, rotations, hipsPositions };
+}
+
+function neutralizeCrouchHipsYaw(sampled) {
+  const hips = sampled.rotations.get('hips');
+  if (!hips) throw new Error('crouch retarget is missing the hips rotation track');
+  const euler = new THREE.Euler(0, 0, 0, 'YXZ');
+  for (const value of hips) {
+    euler.setFromQuaternion(value, 'YXZ');
+    euler.y = 0;
+    value.setFromEuler(euler).normalize();
+  }
+  return sampled;
 }
 
 function quaternionStepMismatch(values) {
@@ -735,7 +748,9 @@ async function main() {
     );
     const sampled = id === 'crawl'
       ? synthesizeAlternatingCrawlLoop(sourceSamples)
-      : sourceSamples;
+      : id === 'crouchIdle'
+        ? neutralizeCrouchHipsYaw(sourceSamples)
+        : sourceSamples;
     const reduced = reduceClip(sampled);
     if (reduced.maximumQuaternionError > MAX_QUATERNION_ERROR_RADIANS + 1e-7) {
       throw new Error(`${spec.sourceName} quaternion reduction exceeded tolerance`);
@@ -799,6 +814,8 @@ async function main() {
       'Unity bind-world delta to player canonical-world/rest-local; component Hermite source sampling',
     translationPolicy:
       'retain only Armature/Hips world-position delta from PunkyFox_Idle bind; omit all per-bone translations and gameplay root motion',
+    rootYawPolicy:
+      'neutralize Crouch Idle hips YXZ yaw; gameplay visualYaw remains the sole cardinal/diagonal facing authority',
     positionSpace:
       'PunkyFox model-local after the Armature basis; +Y is vertical and values are unscaled source model units',
     unityModelPresentationScale: 1.5,

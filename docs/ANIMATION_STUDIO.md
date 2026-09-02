@@ -112,7 +112,10 @@ and angular velocity now cross both joins continuously instead of copying the
 first pose onto the final frame. Both clips carry all 22
 humanoid rotation channels plus the one authored hips-position channel needed
 for their low silhouettes; child-bone translations and gameplay root motion
-remain excluded.
+remain excluded. Crouch alone strips the source hips' 37–60° yaw while keeping
+its pitch, roll, and descendant look-around motion, so gameplay facing remains
+the sole N/S/E/W-plus-diagonals authority instead of shifting every direction
+onto an angle.
 
 Any measured planar movement above Unity's `0.001` threshold selects Crawl,
 including pure lateral movement. Stopping selects Crouch Idle. Entry, exit, and

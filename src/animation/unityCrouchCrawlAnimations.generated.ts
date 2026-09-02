@@ -12,6 +12,7 @@ export const UNITY_CROUCH_CRAWL_ANIMATION_SOURCE = Object.freeze({
   "maximumHipsPositionError": 0.0005,
   "conversion": "Unity bind-world delta to player canonical-world/rest-local; component Hermite source sampling",
   "translationPolicy": "retain only Armature/Hips world-position delta from PunkyFox_Idle bind; omit all per-bone translations and gameplay root motion",
+  "rootYawPolicy": "neutralize Crouch Idle hips YXZ yaw; gameplay visualYaw remains the sole cardinal/diagonal facing authority",
   "positionSpace": "PunkyFox model-local after the Armature basis; +Y is vertical and values are unscaled source model units",
   "unityModelPresentationScale": 1.5,
   "loopPolicy": "crouch exact closure; crawl X-mirrored half-cycle synthesis with six-frame internal and outer cyclic overlaps",
@@ -57,13 +58,13 @@ export const UNITY_CROUCH_CRAWL_ANIMATION_SOURCE = Object.freeze({
         "start": 0,
         "end": 5.8333333
       },
-      "productionPostProcess": "full source loop; constant imported scale curves removed",
+      "productionPostProcess": "full source loop; constant imported scale curves removed; hips YXZ yaw neutralized so gameplay facing remains authoritative",
       "outputDuration": 5.8333333,
       "loop": true,
       "sourceFrameCount": 351,
-      "reducedQuaternionKeyCount": 403,
+      "reducedQuaternionKeyCount": 400,
       "reducedHipsPositionKeyCount": 60,
-      "maximumObservedQuaternionErrorDegrees": 0.4968056,
+      "maximumObservedQuaternionErrorDegrees": 0.4967841,
       "maximumObservedHipsPositionError": 0.0004925
     },
     "crawl": {
@@ -93,7 +94,7 @@ export const UNITY_CROUCH_CRAWL_ANIMATION_SOURCE = Object.freeze({
       "closedLoopHipsVelocityGap": 0
     }
   },
-  "canonicalMetadataHash": "dbdd08d88d785e95e3acc03e73107c2f57f5904d91b7de7edfac2d32ebb9df52"
+  "canonicalMetadataHash": "d570344a6d403c2bb6e555dbdbda2ec45769c727920c6dbb71a7bf5762156892"
 } as const);
 
 export const UNITY_CROUCH_IDLE_DURATION = 5.8333333;
@@ -163,22 +164,19 @@ export const UNITY_CROUCH_IDLE_HIPS_POSITION_KEYS = [
 
 export const UNITY_CROUCH_IDLE_ROTATION_KEYS = {
   hips: [
-    [0, [0.173994, 0.4841761, -0.0758151, 0.854138]],
-    [0.8166667, [0.1719117, 0.4738839, -0.0753723, 0.8603484]],
-    [1.6333333, [0.1694059, 0.4608337, -0.0899119, 0.8665159]],
-    [2.1, [0.166714, 0.4646709, -0.0904268, 0.8649338]],
-    [2.3, [0.1674482, 0.4406235, -0.0924154, 0.8770812]],
-    [2.5666667, [0.1696509, 0.37836, -0.0966933, 0.9048274]],
-    [2.7, [0.1659895, 0.3506576, -0.095022, 0.9167647]],
-    [2.85, [0.1543806, 0.3250354, -0.0872099, 0.9289311]],
-    [2.9833333, [0.148463, 0.3215952, -0.0810904, 0.9316435]],
-    [3.2166667, [0.1413485, 0.3358153, -0.0703146, 0.9286035]],
-    [3.45, [0.1431412, 0.3685435, -0.0634834, 0.9163275]],
-    [3.55, [0.1493477, 0.3894076, -0.0633665, 0.9066652]],
-    [3.8, [0.1786744, 0.4619743, -0.0700534, 0.8658797]],
-    [3.9833333, [0.187606, 0.4833788, -0.0721026, 0.8520271]],
-    [4.95, [0.1856282, 0.4871646, -0.0805482, 0.8495439]],
-    [5.8333333, [0.173994, 0.4841761, -0.0758151, 0.854138]],
+    [0, [0.1886719, -0.0039604, 0.0206092, 0.9818159]],
+    [0.7666667, [0.1868071, -0.0034473, 0.0181257, 0.9822233]],
+    [1.6166667, [0.1917681, -0.0000775, 0.0003966, 0.9814402]],
+    [2.15, [0.1896244, 0.0003342, -0.0017306, 0.9818551]],
+    [2.6166667, [0.1926614, 0.0053806, -0.0273936, 0.9808681]],
+    [2.8833333, [0.1720406, 0.0055627, -0.0318341, 0.9845596]],
+    [3.1833333, [0.1577739, 0.0032354, -0.0202455, 0.9872624]],
+    [3.4333333, [0.1560331, 0.0010381, -0.0065716, 0.9877294]],
+    [3.55, [0.1622329, -0.0001207, 0.0007342, 0.9867522]],
+    [3.8166667, [0.1918306, -0.0047667, 0.024379, 0.9811136]],
+    [4.0333333, [0.1994543, -0.006514, 0.0319849, 0.9793633]],
+    [4.95, [0.2009868, -0.0048138, 0.0234553, 0.9793013]],
+    [5.8333333, [0.1886719, -0.0039604, 0.0206092, 0.9818159]],
   ],
   torsoRoot: [
     [0, [0.0633189, 0.0087615, 0.0160284, 0.9978262]],

@@ -277,6 +277,14 @@ try {
   lowPosePlayer.syncVisual(makeInput({ grabHeld: true }), 5 / 60);
   closeTo(lowPoseRuntime.diagnostics.transitionBlendWeight, 1,
     "standing-to-crouch did not finish Unity's five-frame blend");
+  const crouchHips = lowPosePlayer.animationRig.jointsById.get("hips")?.node;
+  assert.ok(crouchHips, "Unity Crouch hips joint is missing");
+  const crouchHipsYaw = new THREE.Euler().setFromQuaternion(
+    crouchHips.quaternion,
+    "YXZ",
+  ).y;
+  closeTo(crouchHipsYaw, 0,
+    "Unity Crouch hips yaw shifted cardinal facing onto a diagonal", 1e-5);
   closeTo(lowPosePlayer.bodyGroup.rotation.x, 0,
     "legacy outer crawl pitch stacked onto the Unity crouch clip");
   closeTo(lowPosePlayer.bodyGroup.position.y, 0,

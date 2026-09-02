@@ -103,7 +103,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 13;
+export const PLAYER_STARTER_CATALOG_VERSION = 14;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -159,6 +159,14 @@ const LEGACY_CROUCH_CRAWL_CANONICAL_SIGNATURES: Readonly<
 
 const LEGACY_UNITY_CRAWL_SIGNATURES = new Set(['522225c8']);
 const LEGACY_UNITY_CRAWL_CANONICAL_SIGNATURES = new Set(['fadfab96']);
+const LEGACY_YAWED_UNITY_CROUCH_SIGNATURES = new Set([
+  '562671e0', // source catalog v13
+  '2270a781', // deployed/browser-restored v13
+]);
+const LEGACY_YAWED_UNITY_CROUCH_CANONICAL_SIGNATURES = new Set([
+  'a890da41', // source catalog v13
+  'e574b172', // deployed/browser-restored v13
+]);
 
 function stableCatalogValue(value: unknown, quantizeNumbers = false): string {
   if (Array.isArray(value)) {
@@ -1060,6 +1068,7 @@ function unityCrouchCrawlSourceMetadata(sourceKey: 'crouchIdle' | 'crawl') {
       UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.maximumHipsPositionError,
     conversion: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.conversion,
     translationPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.translationPolicy,
+    rootYawPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.rootYawPolicy,
     loopPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.loopPolicy,
   };
 }
@@ -1609,6 +1618,20 @@ export function reconcilePlayerStarterAnimationSuite(
     ) {
       clips = clips.map((clip) =>
         clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl ? imported : clip);
+    }
+  }
+  if (previousVersion < 14) {
+    const current = clips.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
+    const imported = starters.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
+    if (
+      current && imported &&
+      (LEGACY_YAWED_UNITY_CROUCH_SIGNATURES.has(starterClipSignature(current)) ||
+        LEGACY_YAWED_UNITY_CROUCH_CANONICAL_SIGNATURES.has(
+          canonicalLegacyStarterClipSignature(current),
+        ))
+    ) {
+      clips = clips.map((clip) =>
+        clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch ? imported : clip);
     }
   }
 

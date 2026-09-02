@@ -490,6 +490,25 @@ try {
     UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips.crawl.sourceAssetSha256);
   near(crouch.metadata.floorLift, UNITY_CROUCH_CRAWL_TIMING.floorLift);
   near(crawl.metadata.floorLift, UNITY_CROUCH_CRAWL_TIMING.floorLift);
+  assert.match(crouch.metadata.sourceAnimation.rootYawPolicy, /gameplay visualYaw/);
+  const crouchHipsRotationTrack = crouch.tracks.find((track) =>
+    track.kind === 'quaternion' && track.target === 'hips');
+  const crouchHipsEulers = crouchHipsRotationTrack.keys.map((key) =>
+    new THREE.Euler().setFromQuaternion(
+      new THREE.Quaternion().fromArray(key.value),
+      'YXZ',
+    ));
+  assert.ok(crouchHipsEulers.every((euler) => Math.abs(euler.y) < 1e-5),
+    'Unity Crouch still overrides gameplay cardinal/diagonal facing with hips yaw');
+  assert.ok(crouchHipsEulers.some((euler) => Math.abs(euler.x) > 0.25),
+    'crouch yaw cleanup accidentally removed the authored pelvis pitch');
+  const crawlHipsRotationTrack = crawl.tracks.find((track) =>
+    track.kind === 'quaternion' && track.target === 'hips');
+  assert.ok(crawlHipsRotationTrack.keys.some((key) =>
+    Math.abs(new THREE.Euler().setFromQuaternion(
+      new THREE.Quaternion().fromArray(key.value),
+      'YXZ',
+    ).y) > 0.05), 'crouch yaw cleanup leaked into Crawl');
   const crouchHipsTrack = crouch.tracks.find((track) =>
     track.kind === 'position' && track.target === 'hips');
   const crawlHipsTrack = crawl.tracks.find((track) =>
