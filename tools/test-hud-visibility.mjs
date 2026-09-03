@@ -34,6 +34,7 @@ const frame = (overrides = {}) => ({
     showFruit: false,
     showBoxes: false,
     showEarnedRelics: false,
+    showScore: false,
   }, "regular gameplay must begin with only the life HUD visible");
 
   assert.equal(
@@ -84,23 +85,35 @@ const frame = (overrides = {}) => ({
     true,
     "L2 did not reveal earned relic inventory",
   );
+  assert.equal(visibility.showScore, true, "L2 did not reveal the points score");
+
+  visibility = state.update(frame({
+    inventoryHeld: true,
+    hasEarnedRelic: true,
+    nowMs: 2_100,
+  }));
+  assert.equal(visibility.showBoxes, true, "holding L2 retriggered the toggle");
 
   visibility = state.update(frame({
     hasEarnedRelic: true,
-    nowMs: 2_000 + hud.HUD_INVENTORY_LINGER_MS - 1,
+    nowMs: 2_200,
   }));
-  assert.equal(visibility.showFruit, true, "fruit did not linger after L2 release");
-  assert.equal(visibility.showBoxes, true, "inventory did not linger after L2 release");
+  assert.equal(visibility.showFruit, true, "L2 inventory closed on release");
+  assert.equal(visibility.showBoxes, true, "L2 inventory closed on release");
   assert.equal(visibility.showEarnedRelics, true);
+  assert.equal(visibility.showScore, true);
 
   visibility = state.update(frame({
+    inventoryHeld: true,
     hasEarnedRelic: true,
-    nowMs: 2_000 + hud.HUD_INVENTORY_LINGER_MS,
+    nowMs: 2_300,
   }));
-  assert.equal(visibility.showFruit, false, "fruit outlived the L2 reveal timer");
-  assert.equal(visibility.showBoxes, false, "inventory outlived its reveal timer");
+  assert.equal(visibility.showFruit, false, "second L2 press did not dismiss fruit");
+  assert.equal(visibility.showBoxes, false, "second L2 press did not dismiss boxes");
   assert.equal(visibility.showEarnedRelics, false);
+  assert.equal(visibility.showScore, false, "second L2 press did not dismiss score");
 
+  state.update(frame({ nowMs: 2_400 }));
   visibility = state.update(frame({ inventoryHeld: true, nowMs: 5_000 }));
   assert.equal(visibility.showBoxes, true);
   assert.equal(
@@ -108,6 +121,15 @@ const frame = (overrides = {}) => ({
     false,
     "an unearned relic exposed a ghost placeholder",
   );
+
+  state.reset(0, true);
+  visibility = state.update(frame({ inventoryHeld: true, nowMs: 6_000 }));
+  assert.equal(visibility.showBoxes, false,
+    "reset treated an already-held L2 as a fresh toggle press");
+  state.update(frame({ nowMs: 6_100 }));
+  visibility = state.update(frame({ inventoryHeld: true, nowMs: 6_200 }));
+  assert.equal(visibility.showBoxes, true,
+    "L2 did not re-arm after a reset-time hold was released");
 }
 
 {
@@ -124,6 +146,7 @@ const frame = (overrides = {}) => ({
     showFruit: true,
     showBoxes: true,
     showEarnedRelics: false,
+    showScore: false,
   }, "bonus stages must keep their title and numeric tally visible");
 }
 
@@ -169,4 +192,4 @@ const frame = (overrides = {}) => ({
     "touch inventory gesture is not merged into presentation input");
 }
 
-console.log("Validated regular/bonus HUD visibility, reveal timers, earned-only relics, and L2 semantics.");
+console.log("Validated regular/bonus HUD visibility, fruit timer, earned-only relics, and L2 toggle semantics.");

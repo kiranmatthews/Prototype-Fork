@@ -39,6 +39,7 @@ for (const handle of [
   "fruitRow?: HTMLElement",
   "relicRow?: HTMLElement",
   "lifeRow?: HTMLElement",
+  "scorePlate?: HTMLElement",
   "bonusTitle?: HTMLElement",
 ]) {
   assert.ok(surface.includes(handle), `game HUD element contract missing ${handle}`);
@@ -58,8 +59,8 @@ assert.match(counterPainter, /const totalSize = 50 \* sy/);
 assert.match(counterPainter, /formatCrateTotal\(crates\.total\)/);
 assert.match(
   counterPainter,
-  /valueRect\.x\s*\+\s*valueRect\.width\s*\+\s*1\s*\*\s*sy/,
-  "native box suffix fallback did not adopt the tighter one-pixel gap",
+  /valueRect\.x\s*\+\s*valueRect\.width\s*-\s*8\s*\*\s*sy/,
+  "native box suffix fallback did not adopt the tighter overlap",
 );
 assert.ok(
   (counterPainter.match(/hudRevealOpacity\s*\(/g) ?? []).length >= 3,
@@ -127,6 +128,7 @@ for (const rowClass of [
   "hud-crate-row",
   "hud-relics",
   "hud-life-row",
+  "hud-scoreplate",
   "hud-bonus-title",
 ])
   assert.match(
@@ -153,6 +155,7 @@ for (const row of [
   "crateRowEl",
   "relicRowEl",
   "livesRowEl",
+  "scorePlateEl",
 ])
   assert.match(
     syncHudVisibility,
@@ -187,6 +190,12 @@ assert.match(
   ui,
   /\.hud-reveal(?:\.hud-reveal-visible|[\s,]+\.hud-reveal-visible)\s*\{/,
   "HUD reveal visible state is missing",
+);
+assert.match(ui, /scale\s*:\s*0\.58/, "HUD reveal lacks a cartoony scale-up");
+assert.match(
+  ui,
+  /cubic-bezier\(0\.16,\s*1\.62,\s*0\.32,\s*1\)/,
+  "HUD reveal lacks an overshooting bounce curve",
 );
 
 const iconPainter = ui.match(
@@ -228,6 +237,16 @@ assert.match(
   /margin-left\s*:\s*(?:-|calc\(\s*-|clamp\(\s*-)/,
   "box denominator does not compensate for Roo's padded numerator edge",
 );
+assert.match(
+  surface,
+  /hudRevealOpacity\s*\(\s*this\.elements\.scorePlate\s*\)/,
+  "points score does not share the contextual HUD reveal",
+);
+assert.match(
+  surface,
+  /hudRevealScale\s*\(/,
+  "native Canvas glyphs do not mirror the cartoony scale bounce",
+);
 for (const retired of [
   "SPECIAL_CONTROL_HELP",
   "SPECIAL READY",
@@ -254,7 +273,10 @@ assert.match(
   /private collectFruit\(\): void \{\s*this\.fruitCollectionRevision\+\+;/,
   "every fruit collection must trigger the transient HUD, including rollovers",
 );
-assert.match(main, /ui\.setLevel\(entry\.id, level\.hudMode, player\.fruitCollectionRevision\);/);
+assert.match(
+  main,
+  /ui\.setLevel\([\s\S]{0,120}entry\.id,[\s\S]{0,120}level\.hudMode,[\s\S]{0,120}player\.fruitCollectionRevision,[\s\S]{0,120}input\.inventoryHeld/,
+);
 assert.match(main, /ui\.setHUD\(currentHudState\(\), 0\);/);
 assert.match(
   main,

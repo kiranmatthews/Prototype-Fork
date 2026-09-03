@@ -1776,7 +1776,12 @@ function switchLevel(id: string, preserveEditor = false): void {
   applyRunModes(); // the new level's pickups obey the switch too
   applyTheme();
   applyShadowFlags();
-  ui.setLevel(entry.id, level.hudMode, player.fruitCollectionRevision);
+  ui.setLevel(
+    entry.id,
+    level.hudMode,
+    player.fruitCollectionRevision,
+    input.inventoryHeld,
+  );
   ui.setHUD(currentHudState(), 0);
   ui.showMessage(entry.name.toUpperCase(), "", 1400);
   recorder.start(entry.id, endlessDeathsOn); // fresh take from this load
@@ -2027,7 +2032,12 @@ function rebuildLevel(): void {
   applyRunModes();
   applyTheme();
   applyShadowFlags();
-  ui.setLevel(current.id, level.hudMode, player.fruitCollectionRevision);
+  ui.setLevel(
+    current.id,
+    level.hudMode,
+    player.fruitCollectionRevision,
+    input.inventoryHeld,
+  );
   ui.setHUD(currentHudState(), 0);
   recorder.start(current.id, endlessDeathsOn);
   (window as unknown as Record<string, unknown>).__game &&
@@ -2067,7 +2077,12 @@ const editor = new Editor(
         if (editor.targetId === goTo) {
           current = findLevel(goTo) ?? current;
           localStorage.setItem("solProtoLevelId", current.id);
-          ui.setLevel(current.id, level.hudMode, player.fruitCollectionRevision);
+          ui.setLevel(
+            current.id,
+            level.hudMode,
+            player.fruitCollectionRevision,
+            input.inventoryHeld,
+          );
           ui.setHUD(currentHudState(), 0);
           rebuildEditorPreview();
         } else {
@@ -2742,7 +2757,7 @@ player.onFinish = (time) => {
   );
 };
 player.onRespawn = () => {
-  ui.resetHudTransients(player.fruitCollectionRevision);
+  ui.resetHudTransients(player.fruitCollectionRevision, input.inventoryHeld);
   ui.setHUD(currentHudState(), 0);
   ui.hideMessage();
   ui.showDeathScreen(false);

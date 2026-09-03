@@ -407,8 +407,12 @@ export class TouchControls {
         right: max(42px, calc(env(safe-area-inset-right) + 8px));
       }
       body.tc-on .hud-life-row {
-        right: max(12px, env(safe-area-inset-right));
-        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
+        right: max(42px, calc(env(safe-area-inset-right) + 8px));
+        top: max(8px, env(safe-area-inset-top));
+        bottom: auto;
+      }
+      body.tc-on .game-hud-layer:not(.hud-run-mode):not(.hud-bonus) .hud-tr {
+        top: max(72px, calc(env(safe-area-inset-top) + 64px));
       }
       body.tc-on .hud-counter { gap: 9px; margin-bottom: 5px; }
       body.tc-on .hud-icon { width: 55px; height: 55px; }
@@ -458,6 +462,10 @@ export class TouchControls {
       }
       body.tc-on .game-hud-layer.hud-bonus .hud-crate-row {
         left: 42%;
+        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
+      }
+      body.tc-on .game-hud-layer.hud-bonus .hud-life-row {
+        top: auto;
         bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
       }
       body.tc-on .hud-bonus-title { top: max(8px, env(safe-area-inset-top)); }

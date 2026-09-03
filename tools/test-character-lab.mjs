@@ -172,6 +172,7 @@ function snapshot(rootNode) {
 try {
   const settingsApi = await server.ssrLoadModule('/src/character/settings.ts');
   const { CharacterProportionLayer } = await server.ssrLoadModule('/src/character/proportionLayer.ts');
+  const collisionApi = await server.ssrLoadModule('/src/character/collisionDimensions.ts');
   const {
     CHARACTER_PROPORTION_CONTROLS,
     CHARACTER_PROPORTION_DEFAULTS_REVISION,
@@ -182,6 +183,10 @@ try {
     IDENTITY_CHARACTER_PROPORTIONS,
     clampCharacterProportions,
   } = settingsApi;
+  const {
+    BASE_CHARACTER_HITBOX_HEIGHT,
+    characterCollisionHeight,
+  } = collisionApi;
 
   assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 35);
   assert.deepEqual(
@@ -227,6 +232,29 @@ try {
     gloveXLift: -0.004,
     footSize: 1.53,
   });
+  near(
+    characterCollisionHeight(DEFAULT_CHARACTER_PROPORTIONS, 'skull'),
+    BASE_CHARACTER_HITBOX_HEIGHT,
+  );
+  assert.ok(
+    characterCollisionHeight({
+      ...DEFAULT_CHARACTER_PROPORTIONS,
+      thighLength: DEFAULT_CHARACTER_PROPORTIONS.thighLength + 0.2,
+    }, 'skull') > BASE_CHARACTER_HITBOX_HEIGHT,
+    'longer legs did not grow the gameplay hitbox',
+  );
+  assert.ok(
+    characterCollisionHeight({
+      ...DEFAULT_CHARACTER_PROPORTIONS,
+      headSize: DEFAULT_CHARACTER_PROPORTIONS.headSize + 0.5,
+    }, 'skull') > BASE_CHARACTER_HITBOX_HEIGHT,
+    'larger head did not grow the gameplay hitbox',
+  );
+  assert.ok(
+    characterCollisionHeight(DEFAULT_CHARACTER_PROPORTIONS, 'roo') <
+      characterCollisionHeight(DEFAULT_CHARACTER_PROPORTIONS, 'skull'),
+    'the shorter BoolieRoo rest mesh did not produce a shorter hitbox',
+  );
   const clamped = clampCharacterProportions({
     headSize: 99,
     headWidth: 99,
@@ -613,7 +641,11 @@ try {
     'P2 must use the same animation runtime so its Run pose also excludes the idle arm angle');
   assert.match(mainSource, /location\.hash\.toLowerCase\(\)\.includes\("characterlab"\)/);
   assert.match(labSource, /CHARACTER LAB/);
-  assert.match(labSource, /collision remain separate/);
+  assert.match(labSource, /stature drives gameplay hitbox height/);
+  assert.match(playerSource, /characterCollisionHeight\(/,
+    'Player does not derive hitbox height from Character Lab settings');
+  assert.match(playerSource, /spinBox\.min\.y \+ BASE_CHARACTER_HITBOX_HEIGHT/,
+    'tall character hitboxes can expand a spin through multiple crate rows');
   assert.match(labSource, /Show animal tail/);
   assert.match(labSource, /toFixed\(inputs\.decimals\)/,
     'Character Lab number fields must preserve each control step precision');

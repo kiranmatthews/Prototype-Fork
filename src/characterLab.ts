@@ -29,6 +29,7 @@ export interface CharacterLabDiagnostics {
   readonly headProfile: CharacterHeadProfileId;
   readonly bounds: { width: number; height: number; depth: number };
   readonly appliedObjectCount: number;
+  readonly hitboxHeight: number;
 }
 
 export interface CharacterLabHandle {
@@ -214,6 +215,7 @@ class CharacterLab implements CharacterLabHandle {
       headProfile: characterProportionSettings.activeHeadProfile,
       bounds: { width: size.x, height: size.y, depth: size.z },
       appliedObjectCount: this.ctx.player.characterProportionDiagnostics.appliedObjectCount,
+      hitboxHeight: this.ctx.player.characterProportionDiagnostics.hitboxHeight,
     };
   }
 
@@ -264,7 +266,7 @@ class CharacterLab implements CharacterLabHandle {
     this.panel.appendChild(element(
       'div',
       'clab-note',
-      'Persistent procedural proportions. Animation, sockets and gameplay collision remain separate.',
+      'Persistent procedural proportions. Upright stature drives gameplay hitbox height; animation squash and sockets remain independent.',
     ));
 
     const actions = element('div', 'clab-actions');
@@ -589,7 +591,7 @@ class CharacterLab implements CharacterLabHandle {
       : 'Procedural footwear missing';
     this.status.textContent =
       `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} world units\n` +
-      `${diagnostics.appliedObjectCount} proportion targets · collision unchanged\n` +
+      `${diagnostics.appliedObjectCount} proportion targets · ${diagnostics.hitboxHeight.toFixed(2)} hitbox height\n` +
       `${torsoStatus} · ${torso.triangles.toLocaleString()} tris\n` +
       `${shortsStatus} · ${shorts.triangles.toLocaleString()} tris\n` +
       `${footwearStatus} · ${footwear.triangles.toLocaleString()} tris\n` +

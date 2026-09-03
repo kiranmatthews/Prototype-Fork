@@ -48,7 +48,7 @@ const ICON_SIZE = new THREE.Vector2();
 const ICON_PREV = new THREE.Vector4();
 /** iconSlots order: crate, wumpa, then the three relics. */
 const RELIC_SLOT_0 = 2;
-const HUD_REVEAL_MS = 180;
+const HUD_REVEAL_EXIT_MS = 150;
 
 export interface Stats {
   speed: number;
@@ -200,6 +200,7 @@ export class UI {
     showFruit: false,
     showBoxes: false,
     showEarnedRelics: false,
+    showScore: false,
   };
   private bonusMode = false;
   private hudBonusExitTimer: number | null = null;
@@ -703,14 +704,13 @@ export class UI {
     this.ttClockEl.style.display = "none";
     tr.appendChild(this.ttClockEl);
 
-    const scorePlate = div("hud-scoreplate");
+    const scorePlate = div("hud-scoreplate hud-reveal");
     this.scorePlateEl = scorePlate;
     const scoreLabel = div("hud-scorelabel");
     this.scoreLabelEl = scoreLabel;
     this.scoreEl = div("hud-scorenum");
     scorePlate.appendChild(scoreLabel);
     scorePlate.appendChild(this.scoreEl);
-    scorePlate.style.display = "none";
     tr.appendChild(scorePlate);
 
     // Results card: the headline time is a Roo label that lives across runs,
@@ -887,6 +887,7 @@ export class UI {
         lifeFace: this.lifeFaceEl,
         lifeValue: this.livesEl,
         deathModeLabel: this.deathModeLabelEl,
+        scorePlate: this.scorePlateEl,
         scoreLabel: this.scoreLabelEl,
         scoreValue: this.scoreEl,
         timeTrialClock: this.ttClockEl,
@@ -1354,12 +1355,12 @@ export class UI {
     const hudNow = performance.now();
     if (s.bonusMode !== this.bonusMode) {
       this.bonusMode = s.bonusMode;
-      this.hudVisibility.reset(s.fruitCollectionRevision);
+      this.hudVisibility.reset(s.fruitCollectionRevision, s.inventoryHeld);
     }
     let nextVisibility = this.hudVisibility.update({
       mode: s.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision: s.fruitCollectionRevision,
-      inventoryHeld: !this.runRowsHidden && s.inventoryHeld,
+      inventoryHeld: s.inventoryHeld,
       hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem,
       nowMs: hudNow,
     });
@@ -1370,6 +1371,7 @@ export class UI {
         showFruit: false,
         showBoxes: false,
         showEarnedRelics: false,
+        showScore: false,
       };
     }
     this.hudVisibilityFrame = nextVisibility;
@@ -1591,14 +1593,15 @@ export class UI {
     id: string,
     hudMode: "standard" | "bonus" = "standard",
     fruitCollectionRevision = 0,
+    inventoryHeld = false,
   ): void {
     this.currentLevelId = id;
     this.bonusMode = hudMode === "bonus";
-    this.hudVisibility.reset(fruitCollectionRevision);
+    this.hudVisibility.reset(fruitCollectionRevision, inventoryHeld);
     this.hudVisibilityFrame = this.hudVisibility.update({
       mode: this.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision,
-      inventoryHeld: false,
+      inventoryHeld,
       hasEarnedRelic: false,
       nowMs: performance.now(),
     });
@@ -1609,12 +1612,15 @@ export class UI {
     this.refreshEditControls();
   }
 
-  resetHudTransients(fruitCollectionRevision = 0): void {
-    this.hudVisibility.reset(fruitCollectionRevision);
+  resetHudTransients(
+    fruitCollectionRevision = 0,
+    inventoryHeld = false,
+  ): void {
+    this.hudVisibility.reset(fruitCollectionRevision, inventoryHeld);
     this.hudVisibilityFrame = this.hudVisibility.update({
       mode: this.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision,
-      inventoryHeld: false,
+      inventoryHeld,
       hasEarnedRelic: false,
       nowMs: performance.now(),
     });
@@ -1814,6 +1820,7 @@ export class UI {
         showFruit: false,
         showBoxes: false,
         showEarnedRelics: false,
+        showScore: false,
       };
     }
     this.syncRunRows();
@@ -1844,7 +1851,7 @@ export class UI {
           this.hudBonusExitTimer = null;
           if (!this.bonusMode)
             this.gameHudLayer.classList.remove("hud-bonus");
-        }, HUD_REVEAL_MS);
+        }, HUD_REVEAL_EXIT_MS);
       }
     }
     this.setHudReveal(
@@ -1867,9 +1874,12 @@ export class UI {
       this.livesRowEl,
       contextual && this.hudVisibilityFrame.showLife,
     );
-    // Score remains available to the explicit time-trial/combo modes, but is
-    // no longer persistent furniture in ordinary or bonus play.
-    this.scorePlateEl.style.display = this.runRowsHidden && !bonus ? "block" : "none";
+    const explicitRunHud = this.runRowsHidden && !bonus;
+    this.gameHudLayer.classList.toggle("hud-run-mode", explicitRunHud);
+    this.setHudReveal(
+      this.scorePlateEl,
+      explicitRunHud || (contextual && this.hudVisibilityFrame.showScore),
+    );
   }
 
   private setHudReveal(element: HTMLElement, visible: boolean): void {
@@ -2168,7 +2178,7 @@ export class UI {
       .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
       .hud-counter { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
       /* Contextual counters stay in one stable stack and animate as a whole.
-         The individual translate property composes with the row's idle
+         Individual translate/scale properties compose with the row's idle
          transform bob, while opacity is also mirrored by the pre-CRT HUD. */
       .hud-reveal {
         --hud-reveal-x: -14px;
@@ -2176,21 +2186,27 @@ export class UI {
         opacity: 0;
         visibility: hidden;
         translate: var(--hud-reveal-x) var(--hud-reveal-y);
+        scale: 0.58;
         transform-origin: left center;
         transition:
-          opacity 140ms ease-in,
-          translate 180ms cubic-bezier(0.4, 0, 0.8, 0.2),
-          visibility 0s linear 180ms;
+          opacity 110ms ease-in,
+          translate 150ms cubic-bezier(0.4, 0, 0.8, 0.2),
+          scale 150ms cubic-bezier(0.4, 0, 0.8, 0.2),
+          visibility 0s linear 150ms;
       }
       .hud-reveal.hud-reveal-visible {
         opacity: 1;
         visibility: visible;
         translate: 0 0;
-        transition-delay: 0ms;
-        transition-timing-function: cubic-bezier(0.22, 0.8, 0.25, 1);
+        scale: 1;
+        transition:
+          opacity 90ms ease-out,
+          translate 300ms cubic-bezier(0.16, 1.55, 0.32, 1),
+          scale 340ms cubic-bezier(0.16, 1.62, 0.32, 1),
+          visibility 0s;
       }
       .hud-life-row {
-        position: fixed; right: 30px; bottom: 20px; z-index: 10;
+        position: fixed; right: 30px; top: 20px; bottom: auto; z-index: 10;
         margin: 0; gap: 8px; pointer-events: none;
         --hud-reveal-x: 14px;
         transform-origin: right center;
@@ -2224,6 +2240,9 @@ export class UI {
         --hud-reveal-x: 0px; --hud-reveal-y: 12px;
         transform-origin: left bottom;
       }
+      .game-hud-layer.hud-bonus .hud-life-row {
+        top: auto; bottom: 20px;
+      }
       .game-hud-layer.hud-bonus .hud-counter { margin-bottom: 0; }
       .hud-deathcount-label {
         align-self: flex-end;
@@ -2244,7 +2263,7 @@ export class UI {
       .hud-box-current { font-size: inherit; }
       .hud-box-total {
         font-size: clamp(30px, 4.8vh, 50px);
-        margin-left: clamp(-4px, -0.45vh, -2px);
+        margin-left: clamp(-11px, -1.1vh, -7px);
         margin-bottom: clamp(8px, 1.4vh, 14px);
       }
       .hud-icon {
@@ -2341,7 +2360,7 @@ export class UI {
       .hud-counter, .hud-scoreplate, .hud-ttclock {
         --bob: clamp(1.5px, 0.3vh, 3px);
         animation: hudbob 5.5s ease-in-out infinite;
-        will-change: transform, opacity, translate;
+        will-change: transform, opacity, translate, scale;
       }
       .hud-tl .hud-counter:nth-child(2) { animation-delay: -0.25s; }
       .hud-tl .hud-counter:nth-child(3) { animation-delay: -0.5s; }
@@ -2360,9 +2379,16 @@ export class UI {
         100% { transform: scale(1); }
       }
 
-      /* Explicit run-mode score: bare gold digits in the top-right column.
-         Ordinary/Bonus play hides the plate entirely. */
-      .hud-scoreplate { text-align: right; }
+      /* Points join the L2 collection reveal beneath the persistent top-right
+         life portrait. Explicit run modes reclaim their original top slot. */
+      .game-hud-layer:not(.hud-run-mode):not(.hud-bonus) .hud-tr {
+        top: clamp(122px, 17vh, 150px);
+      }
+      .hud-scoreplate {
+        --hud-reveal-x: 14px;
+        transform-origin: right center;
+        text-align: right;
+      }
       .hud-scorelabel {
         font: bold clamp(10px, 1.7vh, 14px) Impact, 'Arial Black', sans-serif;
         letter-spacing: 4px;

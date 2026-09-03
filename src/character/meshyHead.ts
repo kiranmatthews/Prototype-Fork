@@ -4,6 +4,9 @@ import { MESHY_HEAD_ASSET } from './meshyHead.generated';
 export const MESHY_HEAD_SCHEMA_VERSION = 1 as const;
 export const MESHY_HEAD_ASSET_PATH = 'characters/meshy-head/';
 export const MESHY_HEAD_REST_SCALE = 0.4;
+export const MESHY_HEAD_REST_HEIGHT =
+  MESHY_HEAD_REST_SCALE *
+  (MESHY_HEAD_ASSET.runtimeBounds.max[1] - MESHY_HEAD_ASSET.runtimeBounds.min[1]);
 export const MESHY_HEAD_DEFAULT_GAP = 0.095;
 export const MESHY_HEAD_VISUAL_CENTER_Y = 0.2;
 export const MESHY_HEAD_EYE_CENTER_Y = 0.181;

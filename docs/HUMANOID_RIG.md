@@ -77,7 +77,9 @@ translation drives longitudinal skin deformation. Two relative pre-skin morph
 channels independently own width and depth, and animation volume correction
 composes through both. They target the torso surface only—never the shorts or
 pelvis. The old procedural heart tank and bare-waist surfaces are
-retired, while gameplay collision remains unchanged.
+retired. Gameplay keeps its forgiving authored body width/depth, while upright
+Character Lab stature now scales the shared collision height from the shipped
+0.92-unit baseline. Animation squash, crouch, and ragdoll posing never resize it.
 
 Each cartoon glove's semantic controls are constructed by one mirrored
 procedural factory. The visible smooth surface is an attributed artist-authored

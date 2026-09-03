@@ -784,7 +784,7 @@ export const CONST = {
   fixedStep: 1 / 60, // deterministic chunky update rate
   bailDownTime: 1.1, // knocked-down beat after a mask-less bail before getting up
   respawnDelay: 0.7, // quick Crash-style respawn
-  playerHalf: { x: 0.5, y: 0.46, z: 0.5 }, // capsule-ish AABB: full height 0.92, just shy of one crate (0.96)
+  playerHalf: { x: 0.5, y: 0.46, z: 0.5 }, // baseline capsule-ish AABB; Character Lab stature scales only the live Y half-height
   spinReach: 0.8, // extra horizontal hit reach while spinning (arm+board span)
   spinCooldown: 0.15,
   maskInvuln: 1.15, // grace after a mask absorbs a hit or bail — must OUTLAST bailDownTime (1.1), or the last beat of a now-MOVING downed body is unprotected and can slide into a nitro

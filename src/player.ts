@@ -103,6 +103,10 @@ import {
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
 import {
+  BASE_CHARACTER_HITBOX_HEIGHT,
+  characterCollisionHeight,
+} from './character/collisionDimensions';
+import {
   characterProportionSettings,
   type CharacterHeadProfileId,
   type CharacterHeadProfiles,
@@ -640,6 +644,7 @@ export class Player {
   private authoredLowPoseOuterOwnership: ((deltaSeconds: number) => number) | null = null;
   private authoredLowPoseOuterOwnershipLatched = 0;
   private readonly characterProportionLayer: CharacterProportionLayer;
+  private readonly hitboxHalf = { ...CONST.playerHalf };
   private characterTailVisibleValue = true;
 
   private spinTimer = 0;
@@ -1324,8 +1329,8 @@ export class Player {
     // about a fixed world axis (which made it look wrong going sideways/back).
     this.bodyGroup.rotation.order = 'YXZ';
     // Slightly chunkier character, Crash-proportioned against the corridor,
-    // stretched a little extra in Y (taller, not wider). Visual only — the
-    // collision box in tuning.ts is unchanged (slightly forgiving hitboxes).
+    // stretched a little extra in Y (taller, not wider). Character Lab's
+    // persistent stature controls scale the forgiving gameplay hitbox too.
     this.bodyGroup.scale.set(1.18, 1.36, 1.18);
     this.group.add(this.bodyGroup);
     this.group.rotation.y = Math.PI; // model nose points down the course (-Z)
@@ -1334,6 +1339,7 @@ export class Player {
     this.playerAnimationBridge = new PlayerAnimationBridge(this.group, this.bodyGroup);
     this.characterProportionLayer = new CharacterProportionLayer(this.bodyGroup);
     characterProportionSettings.subscribe(() => {
+      this.syncCharacterHitboxDimensions();
       this.syncCharacterAppearance();
       this.resetRenderInterpolation();
     }, true);
@@ -2048,11 +2054,13 @@ export class Player {
     readonly settings: Readonly<CharacterProportionSettingsValue>;
     readonly appliedObjectCount: number;
     readonly tailVisible: boolean;
+    readonly hitboxHeight: number;
   } {
     return {
       settings: { ...characterProportionSettings.value },
       appliedObjectCount: this.characterProportionLayer.appliedObjectCount,
       tailVisible: this.characterTailVisibleValue,
+      hitboxHeight: this.hitboxHalf.y * 2,
     };
   }
 
@@ -2094,6 +2102,14 @@ export class Player {
       PROCEDURAL_THIGH_LENGTH * (shape.thighLength - 1) +
       PROCEDURAL_SHIN_LENGTH * (shape.shinLength - 1)
     );
+  }
+
+  private syncCharacterHitboxDimensions(): void {
+    this.hitboxHalf.y =
+      characterCollisionHeight(
+        characterProportionSettings.value,
+        characterProportionSettings.activeHeadProfile,
+      ) / 2;
   }
 
   private characterWaistLocal(base: number): number {
@@ -6312,9 +6328,9 @@ export class Player {
       const underside =
         hit.y -
         (hit.undersideThickness ?? 1) * Math.max(0.1, hit.normal.y);
-      const head = this.pos.y + CONST.playerHalf.y * 2;
+      const head = this.pos.y + this.hitboxHalf.y * 2;
       if (this.pos.y < underside - 0.05 && head > underside) {
-        this.pos.y = underside - CONST.playerHalf.y * 2;
+        this.pos.y = underside - this.hitboxHalf.y * 2;
         this.vVel = 0;
       }
     }
@@ -9975,7 +9991,7 @@ export class Player {
         sfx.play('woosh2', 0.85, 1.2);
       }
     }
-    const half = CONST.playerHalf;
+    const half = this.hitboxHalf;
     if (this.state !== 'grind' && !this.wallriding) {
       const coastHit = level.resolveCoastBoundary(
         this.prevPos,
@@ -10016,9 +10032,14 @@ export class Player {
     // copied playerBox, which by this point carries the grind reach — another
     // 0.35 — so spinning along a ledge cleared 1.27 of stack.
     //
-    // It is built from feetBox instead: the body's own 0.92, before either
-    // adjustment, which fits inside one 0.96 layer in every state.
+    // It is built from feetBox instead, then capped to the authored 0.92 attack
+    // band. A tall Character Lab silhouette gets honest collision without
+    // letting one standing spin tear through two 0.96-high crate layers.
     this.spinBox.copy(this.feetBox);
+    this.spinBox.max.y = Math.min(
+      this.spinBox.max.y,
+      this.spinBox.min.y + BASE_CHARACTER_HITBOX_HEIGHT,
+    );
     if (this.spinning) {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
     }
@@ -10111,6 +10132,10 @@ export class Player {
       );
       this.feetBox.copy(this.playerBox);
       this.spinBox.copy(this.feetBox);
+      this.spinBox.max.y = Math.min(
+        this.spinBox.max.y,
+        this.spinBox.min.y + BASE_CHARACTER_HITBOX_HEIGHT,
+      );
       if (this.spinning)
         this.spinBox.expandByVector(
           new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach),
@@ -10141,7 +10166,7 @@ export class Player {
         (c.metal || c.metalBounce || c.bang || c.nitroBang) &&
         c.fallVel !== undefined &&
         c.fallVel > 0 &&
-        c.box.min.y > this.pos.y + CONST.playerHalf.y &&
+        c.box.min.y > this.pos.y + this.hitboxHalf.y &&
         this.playerBox.intersectsBox(c.box) &&
         this.isCenteredFallingMetalContact(c.box)
       ) {
@@ -10164,7 +10189,7 @@ export class Player {
         !c.tnt &&
         c.fallVel !== undefined &&
         c.fallVel > 0 &&
-        c.box.min.y > this.pos.y + CONST.playerHalf.y &&
+        c.box.min.y > this.pos.y + this.hitboxHalf.y &&
         this.playerBox.intersectsBox(c.box)
       ) {
         this.smashCrate(level, c);
@@ -11360,7 +11385,7 @@ export class Player {
    * or against a box frozen at the moment of death.
    */
   private reach(grow: number): THREE.Box3 {
-    const half = CONST.playerHalf;
+    const half = this.hitboxHalf;
     FRUIT_REACH.setFromCenterAndSize(
       REACH_C.set(this.pos.x, this.pos.y + half.y, this.pos.z),
       REACH_S.set(half.x * 2, half.y * 2, half.z * 2),
@@ -11616,7 +11641,7 @@ export class Player {
   // Rising and our head is at the target's bottom face = a headbutt from below.
   private isBonking(box: THREE.Box3): boolean {
     if (this.isBailing || this.state !== 'air' || this.vVel <= 0) return false;
-    const bodyHeight = CONST.playerHalf.y * 2;
+    const bodyHeight = this.hitboxHalf.y * 2;
     const previousHead = this.prevPos.y + bodyHeight;
     const currentHead = this.pos.y + bodyHeight;
     if (currentHead < box.min.y || previousHead > box.min.y + 0.75)
@@ -11828,7 +11853,7 @@ export class Player {
     const contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
     if (
       this.pos.y > contact.y + path.height ||
-      this.pos.y + CONST.playerHalf.y * 2 < contact.y
+      this.pos.y + this.hitboxHalf.y * 2 < contact.y
     )
       return null;
     const insideCapWidth = (sample: ReturnType<Level['closestWallPath']>): boolean => {
@@ -11985,7 +12010,7 @@ export class Player {
       if (contact.distance > contactRadius) return false;
       if (
         this.pos.y > contact.y + wallPath.height ||
-        this.pos.y + CONST.playerHalf.y * 2 < contact.y
+        this.pos.y + this.hitboxHalf.y * 2 < contact.y
       )
         return false;
       const alongVelocity = vx * contact.tx + vz * contact.tz;
@@ -12012,7 +12037,7 @@ export class Player {
       this.pos.x = contact.x + contact.nx * (wallPath.halfThickness + playerRadius + 0.05);
       this.pos.z = contact.z + contact.nz * (wallPath.halfThickness + playerRadius + 0.05);
     } else {
-      if (this.pos.y > w.max.y || this.pos.y + CONST.playerHalf.y * 2 < w.min.y)
+      if (this.pos.y > w.max.y || this.pos.y + this.hitboxHalf.y * 2 < w.min.y)
         return false;
       const extX = w.max.x - w.min.x;
       const extZ = w.max.z - w.min.z;
@@ -12118,7 +12143,7 @@ export class Player {
     supportY: number,
     level: Level,
   ): boolean {
-    ledgeBodyBox(LEDGE_BODY, feet, CONST.playerHalf);
+    ledgeBodyBox(LEDGE_BODY, feet, this.hitboxHalf);
     for (const wall of level.walls)
       if (ledgeBlockerIntersects(wall, LEDGE_BODY, supportY)) return true;
     for (const crate of level.crates)
@@ -12776,10 +12801,10 @@ export class Player {
   // hang ended (dead or knocked off).
   private hangHazards(level: Level): boolean {
     const cx = this.pos.x;
-    const cy = this.pos.y + CONST.playerHalf.y;
+    const cy = this.pos.y + this.hitboxHalf.y;
     const cz = this.pos.z;
     HANG_BOX.min.set(cx - CONST.playerHalf.x, this.pos.y, cz - CONST.playerHalf.z);
-    HANG_BOX.max.set(cx + CONST.playerHalf.x, this.pos.y + CONST.playerHalf.y * 2, cz + CONST.playerHalf.z);
+    HANG_BOX.max.set(cx + CONST.playerHalf.x, this.pos.y + this.hitboxHalf.y * 2, cz + CONST.playerHalf.z);
     let hit = false;
     for (const st of level.stones) if (st.box.intersectsBox(HANG_BOX)) { hit = true; break; }
     if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) { hit = true; break; }
@@ -12946,7 +12971,7 @@ export class Player {
     let off = pathOff;
     if (this.wallPath && pathSample) {
       if (this.pos.y > pathSample.y + this.wallPath.height + 0.25) off = true;
-      if (this.pos.y + CONST.playerHalf.y * 2 < pathSample.y - 0.05) off = true;
+      if (this.pos.y + this.hitboxHalf.y * 2 < pathSample.y - 0.05) off = true;
     } else if (w) {
       if (this.wallNormal.x !== 0) {
         this.pos.x = (this.wallNormal.x > 0 ? w.max.x : w.min.x) + this.wallNormal.x * (CONST.playerHalf.x + 0.05);
@@ -13017,7 +13042,7 @@ export class Player {
   // rail overhead or well underfoot is ignored, so you never snag on one you can
   // walk beneath or that sits below the deck you're on.
   private railBlock(level: Level): void {
-    const half = CONST.playerHalf;
+    const half = this.hitboxHalf;
     const reach = half.x + CONST.railBlockRadius;
     for (const rail of level.rails) {
       if (!rail.grindable) continue;
@@ -16003,6 +16028,15 @@ export class Player {
         shinLength: PROCEDURAL_SHIN_LENGTH,
         ankleToSole: 0.05,
       },
+      collisionEnvelope: {
+        heightMode: 'normalized-upright-character-stature',
+        baseHeight: BASE_CHARACTER_HITBOX_HEIGHT,
+        controls: [
+          'overallScale', 'height', 'thighLength', 'shinLength',
+          'torsoLength', 'neckLength', 'headSize',
+        ],
+        animationIndependent: true,
+      },
       joints: jointNames,
       sockets: socketNames,
       mirrorPairs: [
@@ -16046,7 +16080,7 @@ export class Player {
         skinBones: this.meshyTorso.skeleton.bones.map((bone) => bone.name),
         lengthControl: 'deform.torso.length',
         proportions: ['torsoLength', 'torsoWidth', 'torsoDepth'],
-        collisionChanged: false,
+        collisionChanged: true,
       },
       headSurface: {
         kind: 'meshy-crowned-inferno-skull-head',
@@ -16062,7 +16096,7 @@ export class Player {
           'headSize', 'headWidth', 'headDepth', 'neckLength',
           'headForwardOffset', 'headRestPitch',
         ],
-        collisionChanged: false,
+        collisionChanged: true,
       },
       presentationControls: {
         upperArmRestAngle: {

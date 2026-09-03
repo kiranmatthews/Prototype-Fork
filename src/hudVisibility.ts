@@ -6,7 +6,6 @@
 export type HudPresentationMode = "standard" | "bonus";
 
 export const HUD_FRUIT_POP_MS = 1_700;
-export const HUD_INVENTORY_LINGER_MS = 1_800;
 
 export interface HudVisibilityInput {
   mode: HudPresentationMode;
@@ -22,27 +21,30 @@ export interface HudVisibility {
   showFruit: boolean;
   showBoxes: boolean;
   showEarnedRelics: boolean;
+  showScore: boolean;
 }
 
 /**
- * Tracks the two transient regular-play reveals. Call `reset` when a level or
- * run is replaced so its initial collection revision cannot look like a fresh
- * pickup.
+ * Tracks the fruit popup and the press-to-toggle regular-play inventory. Call
+ * `reset` when a level or run is replaced so its initial collection revision
+ * cannot look like a fresh pickup.
  */
 export class HudVisibilityState {
   private previousFruitRevision: number | null = null;
   private fruitVisibleUntilMs = 0;
-  private inventoryVisibleUntilMs = 0;
+  private inventoryOpen = false;
+  private inventoryWasHeld = false;
 
-  reset(fruitCollectionRevision?: number): void {
+  reset(fruitCollectionRevision?: number, inventoryHeld = false): void {
     this.previousFruitRevision = fruitCollectionRevision ?? null;
     this.fruitVisibleUntilMs = 0;
-    this.inventoryVisibleUntilMs = 0;
+    this.inventoryOpen = false;
+    this.inventoryWasHeld = inventoryHeld;
   }
 
   clearTransient(): void {
     this.fruitVisibleUntilMs = 0;
-    this.inventoryVisibleUntilMs = 0;
+    this.inventoryOpen = false;
   }
 
   update(input: Readonly<HudVisibilityInput>): HudVisibility {
@@ -59,31 +61,38 @@ export class HudVisibilityState {
     }
 
     if (input.mode === "bonus") {
-      // Bonus stages own a persistent tally. Do not carry an L2 reveal through
-      // a later mode switch when an integration forgets to call reset.
-      this.inventoryVisibleUntilMs = 0;
+      // Bonus stages own a persistent tally. Track the physical L2 state so
+      // leaving while it is held cannot masquerade as a new press.
+      this.inventoryOpen = false;
+      this.inventoryWasHeld = input.inventoryHeld;
       return {
         showLife: true,
         showBonusTitle: true,
         showFruit: true,
         showBoxes: true,
         showEarnedRelics: false,
+        showScore: false,
       };
     }
 
-    if (input.inventoryHeld)
-      this.inventoryVisibleUntilMs = nowMs + HUD_INVENTORY_LINGER_MS;
-    const inventoryVisible =
-      input.inventoryHeld || nowMs < this.inventoryVisibleUntilMs;
+    const inventoryPressed = input.inventoryHeld && !this.inventoryWasHeld;
+    this.inventoryWasHeld = input.inventoryHeld;
+    if (inventoryPressed) {
+      this.inventoryOpen = !this.inventoryOpen;
+      // A deliberate second press dismisses the complete collection HUD,
+      // including any pickup timer that would otherwise keep fruit behind.
+      if (!this.inventoryOpen) this.fruitVisibleUntilMs = 0;
+    }
 
     return {
       showLife: true,
       showBonusTitle: false,
       // L2 reveals the whole collection stack. Fruit therefore occupies the
       // same fixed slot whether it was opened by a pickup or by inventory.
-      showFruit: inventoryVisible || nowMs < this.fruitVisibleUntilMs,
-      showBoxes: inventoryVisible,
-      showEarnedRelics: inventoryVisible && input.hasEarnedRelic,
+      showFruit: this.inventoryOpen || nowMs < this.fruitVisibleUntilMs,
+      showBoxes: this.inventoryOpen,
+      showEarnedRelics: this.inventoryOpen && input.hasEarnedRelic,
+      showScore: this.inventoryOpen,
     };
   }
 }

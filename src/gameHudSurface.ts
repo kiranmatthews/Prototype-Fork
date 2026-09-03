@@ -48,6 +48,7 @@ export interface GameHudElements {
   lifeFace?: HTMLElement;
   lifeValue?: HTMLElement;
   deathModeLabel?: HTMLElement;
+  scorePlate?: HTMLElement;
   scoreLabel?: HTMLElement;
   scoreValue?: HTMLElement;
   timeTrialClock?: HTMLElement;
@@ -437,6 +438,7 @@ export class GameHudSurface {
     if (!isLaidOut(title)) return;
     const alpha = hudRevealOpacity(title);
     if (alpha <= 0.001) return;
+    const revealScale = hudRevealScale(title);
     const sy = height / 720;
     const rect = this.rect(title, layout) ?? {
       x: width * 0.25,
@@ -444,10 +446,11 @@ export class GameHudSurface {
       width: width * 0.5,
       height: 100 * sy,
     };
+    const titleSize = 76 * sy * revealScale;
     this.drawRooInRect(ctx, readRooHudText(title) || "BONUS", rect, {
-      size: 76 * sy,
+      size: titleSize,
       align: "center",
-      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 76 * sy),
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, titleSize),
       glow: "rgba(255, 184, 31, 0.7)",
       alpha,
     });
@@ -496,7 +499,10 @@ export class GameHudSurface {
 
     const cx = face.x + face.width / 2;
     const cy = face.y + face.height / 2;
-    const lineWidth = Math.max(4, 7 * sy);
+    const lineWidth = Math.max(
+      1,
+      7 * sy * hudRevealScale(this.elements.lifeRow),
+    );
     const radius = Math.max(
       1,
       Math.min(face.width, face.height) / 2 + lineWidth * 0.72,
@@ -654,6 +660,7 @@ export class GameHudSurface {
       this.elements.crateTotal,
     );
     const crateAlpha = hudRevealOpacity(this.elements.crateRow);
+    const crateScale = hudRevealScale(this.elements.crateRow);
     if (crates && crateAlpha > 0.001) {
       const iconRect = this.rect(this.elements.crateIcon, layout) ?? {
         x: left,
@@ -681,16 +688,17 @@ export class GameHudSurface {
           };
       if (this.iconFallbacks && !this.elements.crateIcon)
         this.drawCrateFallback(ctx, iconRect, time, crateAlpha);
+      const crateSize = counterSize * crateScale;
       this.drawRooInRect(ctx, String(crates.value), valueRect, {
-        size: counterSize,
+        size: crateSize,
         align: "left",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, counterSize),
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, crateSize),
         alpha: crateAlpha,
       });
       if (crates.total !== undefined) {
-        const totalSize = 50 * sy;
+        const totalSize = 50 * sy * crateScale;
         const totalRect = this.rect(this.elements.crateTotal, layout) ?? {
-          x: valueRect.x + valueRect.width + 1 * sy,
+          x: valueRect.x + valueRect.width - 8 * sy,
           y: valueRect.y + valueRect.height * 0.32,
           width: width * 0.12,
           height: totalSize * 1.285,
@@ -709,6 +717,7 @@ export class GameHudSurface {
 
     const fruit = resolveCounter(frame.fruit, this.elements.fruitValue);
     const fruitAlpha = hudRevealOpacity(this.elements.fruitRow);
+    const fruitScale = hudRevealScale(this.elements.fruitRow);
     if (fruit && fruitAlpha > 0.001) {
       const iconRect = this.rect(this.elements.fruitIcon, layout) ?? {
         x: left,
@@ -724,10 +733,11 @@ export class GameHudSurface {
       };
       if (this.iconFallbacks && !this.elements.fruitIcon)
         this.drawFruitFallback(ctx, iconRect, time, fruitAlpha);
+      const fruitSize = counterSize * fruitScale;
       this.drawRooInRect(ctx, String(fruit.value), valueRect, {
-        size: counterSize,
+        size: fruitSize,
         align: "left",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, counterSize),
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, fruitSize),
         alpha: fruitAlpha,
       });
     }
@@ -737,10 +747,14 @@ export class GameHudSurface {
 
     const life = resolveCounter(frame.life, this.elements.lifeValue);
     const lifeAlpha = hudRevealOpacity(this.elements.lifeRow);
+    const lifeScale = hudRevealScale(this.elements.lifeRow);
     if (life && lifeAlpha > 0.001) {
+      const bonusLife =
+        isLaidOut(this.elements.bonusTitle) &&
+        hudRevealOpacity(this.elements.bonusTitle) > 0.001;
       const faceRect = this.rect(this.elements.lifeFace, layout) ?? {
         x: width - 40 * (width / 1280) - iconSize,
-        y: height - 20 * sy - iconSize,
+        y: bonusLife ? height - 20 * sy - iconSize : top,
         width: iconSize,
         height: iconSize,
       };
@@ -754,7 +768,8 @@ export class GameHudSurface {
         width: counterSize * 1.25,
         height: counterSize * 1.285,
       };
-      const lifeSize = Math.min(111 * sy, counterSize * 1.23);
+      const lifeSize =
+        Math.min(111 * sy, counterSize * 1.23) * lifeScale;
       this.drawRooInRect(ctx, String(life.value), lifeRect, {
         size: lifeSize,
         align: "right",
@@ -769,7 +784,7 @@ export class GameHudSurface {
           height: 18 * sy,
         };
         this.drawPlainText(ctx, "DEATHS", labelRect.x, labelRect.y + labelRect.height / 2, {
-          size: Math.max(10, 14 * sy),
+          size: Math.max(6, 14 * sy * lifeScale),
           align: "left",
           color: "#ff765f",
           weight: "bold",
@@ -790,7 +805,9 @@ export class GameHudSurface {
     const sy = height / 720;
     const right = width - 40 * (width / 1280);
     const score = resolveCounter(frame.score, this.elements.scoreValue);
-    if (score) {
+    const scoreAlpha = hudRevealOpacity(this.elements.scorePlate);
+    const scoreScale = hudRevealScale(this.elements.scorePlate);
+    if (score && scoreAlpha > 0.001) {
       const valueRect = this.rect(this.elements.scoreValue, layout) ?? {
         x: right - 260 * sy,
         y: 128 * sy,
@@ -803,15 +820,19 @@ export class GameHudSurface {
         width: valueRect.width,
         height: 24 * sy,
       };
+      const labelSize = 22 * sy * scoreScale;
       this.drawRooInRect(ctx, frame.score?.label ?? (readRooHudText(this.elements.scoreLabel) || "SCORE"), labelRect, {
-        size: 22 * sy,
+        size: labelSize,
         align: "right",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 22 * sy),
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, labelSize),
+        alpha: scoreAlpha,
       });
+      const scoreSize = 36 * sy * scoreScale;
       this.drawRooInRect(ctx, String(score.value), valueRect, {
-        size: 36 * sy,
+        size: scoreSize,
         align: "right",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, 36 * sy),
+        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, scoreSize),
+        alpha: scoreAlpha,
       });
     }
 
@@ -1788,6 +1809,15 @@ function elementOpacity(element: HTMLElement | undefined, fallback = 0): number 
  */
 function hudRevealOpacity(element: HTMLElement | undefined): number {
   return clamp01(elementOpacity(element, 1));
+}
+
+/** Mirror the row's individual CSS scale so Canvas glyphs bounce with DOM/3D. */
+function hudRevealScale(element: HTMLElement | undefined): number {
+  if (!element || !element.isConnected) return 1;
+  const raw = getComputedStyle(element).getPropertyValue("scale");
+  if (!raw || raw === "none") return 1;
+  const scale = Number.parseFloat(raw);
+  return Number.isFinite(scale) ? Math.min(2, Math.max(0.05, scale)) : 1;
 }
 
 function parseConicBackground(value: string): {
