@@ -1056,6 +1056,7 @@ export class Player {
   private grindPoseX = 0; // nose-up / nose-down grind lean
   private grindPoseZ = 0; // which side the free end of the deck hangs off (smith/feeble/crook)
   private grindYawPose = 0; // boardslide: body across the rail
+  private grindCrossPose = 0; // eased wide stance shared by Boardslide/Lipslide
   private grindArmPose = 0; // arms out wide for balance on the rail
   private railUnder = false; // hanging BENEATH the rail (board crosswise in the hands)
   private underK = 0; // 0 = on top, 1 = hanging under; eases through the committed swing
@@ -1064,6 +1065,7 @@ export class Player {
   private underProbeT = 0; // periodic clearance re-check while hanging (terrain rises -> pop back up)
   private boardSnapT = 0; // board snapped by an under-hang bail: hidden until this runs out
   private grindYawDir = 1;
+  private grindCrossDir = 1; // latched rail-perpendicular sign that matches screen input
   private grabTrickName = 'Grab'; // variant name for the combo readout
   private airGrabShown: string | null = null; // exact plate label this air's grab was pushed under (renamed live; merged with a landed spin)
   private grabPaid = 0; // what this air's grab actually paid — repriced when the variant resolves to a different trick's decay pool
@@ -8453,12 +8455,14 @@ export class Player {
     if (input.grindPressed && this.grindTime > 0.2 && this.lipStallT <= 0) {
       const prev = this.grindStyle;
       const prevYaw = this.grindYawDir;
+      const prevCross = this.grindCrossDir;
       const prevSpecial = this.specialGrind;
       const nextSpecial = this.pendingSpecialGrind;
       if (nextSpecial) {
         this.specialGrind = nextSpecial;
         this.grindStyle = 'board';
         this.grindYawDir = this.rawInput.moveX >= 0 ? 1 : -1;
+        this.grindCrossDir = this.resolveCrossGrindDirection(this.grindYawDir);
       } else {
         this.specialGrind = null;
         this.pickGrindStyle(false);
@@ -8480,6 +8484,7 @@ export class Player {
         this.specialGrind = prevSpecial;
         this.grindStyle = prev;
         this.grindYawDir = prevYaw; // a same-style re-press must not silently flip the crosswise pose
+        this.grindCrossDir = prevCross;
       }
     }
     // A RAIL HOLDS THE SPEED YOU BROUGHT. Flat bar, no cost — only the slope
@@ -8794,6 +8799,36 @@ export class Player {
   // switch. overTop only means something at entry (a sideways catch after
   // crossing the line is a Lipslide); a mid-grind sideways switch is always
   // the Boardslide.
+  private resolveCrossGrindDirection(rawSide: number): number {
+    const side = rawSide < 0 ? -1 : 1;
+    if (!this.grindRail) return side;
+    const tangent = this.grindRail.tangentAt(this.grindT);
+    let hx = tangent.x * this.grindDir;
+    let hz = tangent.z * this.grindDir;
+    const headingLength = Math.hypot(hx, hz);
+    if (headingLength <= 1e-5) return side;
+    hx /= headingLength;
+    hz /= headingLength;
+
+    let cx = this.camDir.x;
+    let cz = this.camDir.z;
+    const cameraLength = Math.hypot(cx, cz);
+    if (cameraLength <= 1e-5) {
+      cx = 0;
+      cz = -1;
+    } else {
+      cx /= cameraLength;
+      cz /= cameraLength;
+    }
+    // P is one rail-perpendicular board-nose candidate; R is screen-right.
+    // Choosing their dot sign makes raw left/right select the same visible
+    // side whether the grind travels away from or toward the camera. Near a
+    // side-scroll degeneracy neither perpendicular points horizontally, so
+    // retain the stable raw sign rather than flipping 180 degrees.
+    const alignment = (-hz) * (-cz) + hx * cx;
+    return Math.abs(alignment) > 0.1 ? side * Math.sign(alignment) : side;
+  }
+
   private pickGrindStyle(overTop: boolean): void {
     const rIn = this.rawInput;
     const mxA = Math.abs(rIn.moveX) > 0.4;
@@ -8803,6 +8838,8 @@ export class Player {
     else if (mxA) this.grindStyle = overTop ? 'lip' : 'board';
     else this.grindStyle = 'normal';
     this.grindYawDir = rIn.moveX >= 0 ? 1 : -1;
+    if (this.grindStyle === 'board' || this.grindStyle === 'lip')
+      this.grindCrossDir = this.resolveCrossGrindDirection(this.grindYawDir);
   }
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
@@ -8883,6 +8920,7 @@ export class Player {
       this.pendingSpecialGrind = null;
       this.grindStyle = 'board';
       this.grindYawDir = this.rawInput.moveX >= 0 ? 1 : -1;
+      this.grindCrossDir = this.resolveCrossGrindDirection(this.grindYawDir);
       this.confirmSpecial(entrySpecial);
     }
     this.grindTickT = 0;
@@ -13763,6 +13801,7 @@ export class Player {
     // travel don't care). sidePose blends it in; the board counter-rotates
     // below so the deck stays along the line of travel.
     const sideYaw = this.stance * (Math.PI / 2) * this.sidePose;
+    const appliedGrindYaw = this.grindYawPose;
     const specialFlipProgress =
       this.specialFlip && this.flipT > 0
         ? THREE.MathUtils.clamp(1 - this.flipT / Math.max(this.flipDuration, 0.001), 0, 1)
@@ -13778,7 +13817,7 @@ export class Player {
       this.visualYaw +
       (boardRoutedSpin ? 0 : this.spinAngle) +
       this.grabSpinAngle +
-      this.grindYawPose +
+      appliedGrindYaw +
       sideYaw +
       specialTwist;
 
@@ -13864,11 +13903,14 @@ export class Player {
     const crossRail = this.grindStyle === 'board' || this.grindStyle === 'lip';
     const gy =
       this.state === 'grind' && crossRail
-        ? this.grindYawDir * (Math.PI / 2) * (this.grindStyle === 'lip' ? -1 : 1)
+        ? -this.grindCrossDir * (Math.PI / 2)
         : gs
           ? gs[2] * (this.grindYawDir || 1)
           : 0;
     this.grindYawPose += (gy - this.grindYawPose) * Math.min(1, 12 * dt);
+    this.grindCrossPose +=
+      ((this.state === 'grind' && crossRail ? 1 : 0) - this.grindCrossPose) *
+      Math.min(1, 12 * dt);
     const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
     const breathe = Math.sin(this.runTime * 2.3);
     // Somersault phasing, straight from the reference: launch EXTENDED (the
@@ -13987,6 +14029,7 @@ export class Player {
       this.legR.rotation.x -= jTuck * 0.8; // slight stagger reads livelier than a sync tuck
       // switch stance mirrors the feet fore-aft (and the ankle angles)
       const stz = this.stance;
+      const cross = this.grindCrossPose;
       // Side-on frame: the body is turned 90°, so the hip line IS the board
       // line — feet spread apart along local X (one over the nose side, one
       // over the tail), toes pointing where the chest points. The board is
@@ -13997,16 +14040,29 @@ export class Player {
       // forward frame keeps the old modest fore-aft split along local Z
       // Keep the hip sockets inside the pelvis. Nose/tail separation comes
       // mostly from a mirrored leg splay, not by sliding both thighs outside
-      // the shorts like two disconnected posts.
-      this.legR.position.set(this.hipBaseR.x + 0.02 * sk * fw + 0.035 * deck * sp, 0, this.hipBaseR.z + 0.24 * sk * stz * fw);
-      this.legL.position.set(this.hipBaseL.x - 0.02 * sk * fw - 0.035 * deck * sp, 0, this.hipBaseL.z - 0.2 * sk * stz * fw);
-      this.legR.rotation.y = 0.12 * sk * stz * fw - 0.12 * stz * sp;
-      this.legL.rotation.y = -0.09 * sk * stz * fw - 0.12 * stz * sp;
+      // the shorts like two disconnected posts. Cross-grind separation is
+      // resolved as an ankle target below, leaving both shorts joints seated.
+      this.legR.position.set(
+        this.hipBaseR.x + 0.02 * sk * fw + 0.035 * deck * sp,
+        0,
+        this.hipBaseR.z + 0.24 * sk * stz * fw,
+      );
+      this.legL.position.set(
+        this.hipBaseL.x - 0.02 * sk * fw - 0.035 * deck * sp,
+        0,
+        this.hipBaseL.z - 0.2 * sk * stz * fw,
+      );
+      this.legR.rotation.y =
+        0.12 * sk * stz * fw - 0.12 * stz * sp + 0.08 * cross * stz;
+      this.legL.rotation.y =
+        -0.09 * sk * stz * fw - 0.12 * stz * sp - 0.08 * cross * stz;
       // legR is semantic hipLeft (+X) and legL is hipRight (-X). Opposite
       // outward roll signs make a real straddle; the old signs crossed both
       // feet inward and were then hidden by the generic Jump overlay anyway.
-      this.legR.rotation.z = 0.22 * deck * sp - 1.05 * star + 1.0 * doubleSplit;
-      this.legL.rotation.z = -0.22 * deck * sp + 1.05 * star - 1.0 * doubleSplit;
+      this.legR.rotation.z =
+        0.22 * deck * sp + 0.12 * cross - 1.05 * star + 1.0 * doubleSplit;
+      this.legL.rotation.z =
+        -0.22 * deck * sp - 0.12 * cross + 1.05 * star - 1.0 * doubleSplit;
     }
     // Preserve the old pose system as an ENDPOINT INTENT, not a deformation:
     // this is the amount it used to squash the entire hierarchy. The
@@ -14061,6 +14117,7 @@ export class Player {
           knee: THREE.Object3D,
           upperLength: number,
           lowerLength: number,
+          forwardOffset: number,
           out: SagittalLegPose,
         ): void => {
           upperLength = Math.max(1e-4, upperLength);
@@ -14072,9 +14129,13 @@ export class Player {
             legacyLegScale *
             (upperLength * Math.cos(hipIntent) +
               lowerLength * Math.cos(lowerIntent));
+          // Cross grinds widen the feet along board-local Z through actual
+          // hip/knee articulation. Moving the hip roots by this amount would
+          // pull the skinned shorts away from the pelvis.
           const virtualForward =
             -upperLength * Math.sin(hipIntent) -
-            lowerLength * Math.sin(lowerIntent);
+            lowerLength * Math.sin(lowerIntent) +
+            forwardOffset;
           const solved = solveSagittalLegTarget(
             virtualDown,
             virtualForward,
@@ -14091,6 +14152,10 @@ export class Player {
           this.kneeR,
           this.upperLegLengthR,
           this.lowerLegLengthR,
+          0.35 *
+            (this.upperLegLengthR + this.lowerLegLengthR) *
+            this.grindCrossPose *
+            this.stance,
           LEG_SOLVE_R,
         );
         articulate(
@@ -14098,13 +14163,19 @@ export class Player {
           this.kneeL,
           this.upperLegLengthL,
           this.lowerLegLengthL,
+          -0.35 *
+            (this.upperLegLengthL + this.lowerLegLengthL) *
+            this.grindCrossPose *
+            this.stance,
           LEG_SOLVE_L,
         );
       }
 
       // The hip sockets stay in the pelvis while a small mirrored splay places
       // each knee over its foot in the side-on skate stance.
-      const stanceSplay = 0.1 * this.sidePose * Math.max(sk, this.grindArmPose);
+      const stanceSplay =
+        0.1 * this.sidePose * Math.max(sk, this.grindArmPose) +
+        0.08 * this.grindCrossPose;
       this.kneeR.rotation.z = -stanceSplay;
       this.kneeL.rotation.z = stanceSplay;
     }
@@ -14190,7 +14261,26 @@ export class Player {
       // Side-on: the head turns back over the lead shoulder to watch the
       // line of travel (the body faces across the board; the eyes don't).
       // Idling, she glances around the scene slowly instead.
-      const headYaw = -0.85 * this.stance * this.sidePose + 0.17 * Math.sin(this.runTime * 0.55) * idleW;
+      const ordinaryHeadYaw =
+        -0.85 * this.stance * this.sidePose +
+        0.17 * Math.sin(this.runTime * 0.55) * idleW;
+      let grindTravelYaw = this.visualYaw;
+      if (this.state === 'grind' && this.grindRail) {
+        const tangent = this.grindRail.tangentAt(this.grindT);
+        const hx = tangent.x * this.grindDir;
+        const hz = tangent.z * this.grindDir;
+        if (Math.hypot(hx, hz) > 1e-5)
+          grindTravelYaw = wrapAngle(Math.atan2(hx, hz) - Math.PI);
+      }
+      const crossHeadYaw = wrapAngle(
+        grindTravelYaw -
+        this.visualYaw -
+        appliedGrindYaw -
+        sideYaw -
+        (this.upperG?.rotation.y ?? 0),
+      );
+      const headYaw = ordinaryHeadYaw +
+        wrapAngle(crossHeadYaw - ordinaryHeadYaw) * this.grindCrossPose;
       this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
     }
     // A readable hand pose is part of the procedural motion layer. Authored

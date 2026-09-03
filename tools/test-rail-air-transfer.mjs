@@ -361,6 +361,108 @@ try {
     ordinaryBoardAir.level.dispose();
   }
 
+  const planar = (value) => new THREE.Vector3(value.x, 0, value.z).normalize();
+  const worldForward = (node) =>
+    new THREE.Vector3(0, 0, 1).transformDirection(node.matrixWorld);
+  const poseRows = [];
+  for (const overTop of [false, true]) {
+    for (const grindDir of [1, -1]) {
+      for (const side of [-1, 1]) {
+        const fixture = createPlayer();
+        const rail = new Rail([
+          new THREE.Vector3(0, 8, 5),
+          new THREE.Vector3(0, 8, -15),
+        ]);
+        fixture.scene.add(rail.object);
+        fixture.player.grindRail = rail;
+        fixture.player.grindT = 10;
+        fixture.player.grindDir = grindDir;
+        fixture.player.grindVel = 12;
+        fixture.player.speed = 12;
+        fixture.player.freeSkate = true;
+        fixture.player.state = "grind";
+        fixture.player.grounded = false;
+        fixture.player.balance = 0;
+        fixture.player.camDir.set(0, 0, -1);
+        const travel = planar(rail.tangentAt(10).multiplyScalar(grindDir));
+        fixture.player.visualYaw = Math.atan2(travel.x, travel.z) - Math.PI;
+        fixture.player.prevPos.copy(fixture.player.pos);
+        const input = makeInput({
+          moveX: side,
+          grindPressed: true,
+          grindHeld: true,
+        });
+        fixture.player.rawInput = input;
+        fixture.player.pickGrindStyle(overTop);
+        assert.equal(fixture.player.grindStyle, overTop ? "lip" : "board");
+        for (let frame = 0; frame < 90; frame++)
+          fixture.player.syncVisual(input, CONST.fixedStep);
+
+        const rig = fixture.player.animationRig.root;
+        rig.updateMatrixWorld(true);
+        const chest = rig.getObjectByName("chest");
+        const look = rig.getObjectByName("socket-look");
+        const nose = rig.getObjectByName("socket-board-nose");
+        const tail = rig.getObjectByName("socket-board-tail");
+        const footLeftSocket = rig.getObjectByName("socket-foot-left");
+        const footRightSocket = rig.getObjectByName("socket-foot-right");
+        const kneeLeft = rig.getObjectByName("knee-left");
+        const kneeRight = rig.getObjectByName("knee-right");
+        assert.ok(chest && look && nose && tail && footLeftSocket && footRightSocket);
+        assert.ok(kneeLeft && kneeRight && fixture.player.boardG);
+
+        const chestForward = planar(worldForward(chest));
+        const headForward = planar(worldForward(look));
+        const boardForward = planar(
+          nose.getWorldPosition(new THREE.Vector3()).sub(
+            tail.getWorldPosition(new THREE.Vector3()),
+          ),
+        );
+        const screenRight = new THREE.Vector3(1, 0, 0);
+        assert.ok(
+          boardForward.dot(screenRight) * side > 0.95,
+          `${overTop ? "Lipslide" : "Boardslide"} ${grindDir} ${side} board swung opposite input`,
+        );
+        assert.ok(
+          chestForward.dot(screenRight) * side > 0.95,
+          `${overTop ? "Lipslide" : "Boardslide"} ${grindDir} ${side} torso faced opposite input`,
+        );
+        assert.ok(Math.abs(chestForward.dot(travel)) < 0.1,
+          "cross-grind torso was not square to travel");
+        assert.ok(headForward.dot(travel) > 0.95,
+          "cross-grind head did not keep looking along travel");
+
+        const board = fixture.player.boardG;
+        const footLeft = board.worldToLocal(
+          footLeftSocket.getWorldPosition(new THREE.Vector3()),
+        );
+        const footRight = board.worldToLocal(
+          footRightSocket.getWorldPosition(new THREE.Vector3()),
+        );
+        const gripTop = Number(board.userData.gripTop);
+        assert.ok(Math.abs(footLeft.z - footRight.z) > 0.35,
+          "cross-grind feet were not spread along the board");
+        closeTo(footLeft.y, gripTop, "cross-grind left sole plant", 0.01);
+        closeTo(footRight.y, gripTop, "cross-grind right sole plant", 0.01);
+        assert.ok(kneeLeft.rotation.x > 1 && kneeRight.rotation.x > 1,
+          "cross-grind knees were not visibly bent");
+        poseRows.push({
+          style: overTop ? "lip" : "board",
+          grindDir,
+          side,
+          boardSide: boardForward.dot(screenRight),
+          chestSide: chestForward.dot(screenRight),
+          headTravel: headForward.dot(travel),
+          footSeparation: Math.abs(footLeft.z - footRight.z),
+        });
+        fixture.level.dispose();
+      }
+    }
+  }
+  assert.equal(poseRows.length, 8);
+  if (process.env.TRACE_GRIND_POSE === "1")
+    console.log(JSON.stringify(poseRows, null, 2));
+
   const respawn = createRailExit();
   respawn.player.respawn(respawn.level, true);
   assert.equal(respawn.player.grindExitAir, false, "respawn leaked rail transfer authority");
@@ -374,7 +476,7 @@ try {
   );
 
   console.log(
-    "Validated R2-gated rail-air traversal, rotation-only stick input without R2, and unchanged foot-air control.",
+    "Validated screen-directed cross-grind poses, planted stance, R2-gated rail-air traversal, rotation-only stick input, and unchanged foot-air control.",
   );
 } finally {
   await server.close();
