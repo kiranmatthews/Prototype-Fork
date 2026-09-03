@@ -25,7 +25,7 @@
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",
     "check:interpolation": "node tools/validate-render-interpolation.mjs",
     "check:animation": "node tools/test-animation-suite.mjs && node tools/test-animation-ik.mjs && node tools/test-character-animation-runtime.mjs && node tools/test-procedural-leg-rig.mjs",
-    "check:character-lab": "node tools/test-character-lab.mjs && node tools/test-cartoon-glove.mjs && node tools/test-rigged-cartoon-hand.mjs && node tools/test-stretchable-bone.mjs && node tools/test-meshy-torso.mjs && node tools/test-meshy-head.mjs && node tools/test-meshy-shorts.mjs && node tools/test-procedural-footwear.mjs",
+    "check:character-lab": "node tools/test-character-head-profile-settings.mjs && node tools/test-character-lab.mjs && node tools/test-cartoon-glove.mjs && node tools/test-rigged-cartoon-hand.mjs && node tools/test-stretchable-bone.mjs && node tools/test-meshy-torso.mjs && node tools/test-meshy-head.mjs && node tools/test-meshy-shorts.mjs && node tools/test-procedural-footwear.mjs",
     "check:crt": "node tools/audit-crt-guest-parameters.mjs && node tools/test-crt-guest-settings.mjs && node tools/test-crt-guest-panel-semantics.mjs && node tools/test-crt-guest-web.mjs",
     "check:render-quality": "node tools/test-render-quality-settings.mjs && node tools/test-fixed-render-pipeline.mjs && node tools/test-game-hud-pipeline.mjs && node tools/test-mobile-ui-layout.mjs",
     "check:look": "node tools/test-visual-treatment.mjs",

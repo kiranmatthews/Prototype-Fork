@@ -101,6 +101,8 @@ import {
 import { CharacterProportionLayer } from './character/proportionLayer';
 import {
   characterProportionSettings,
+  type CharacterHeadProfileId,
+  type CharacterHeadProfiles,
   type CharacterProportionSettingsValue,
 } from './character/settings';
 import {
@@ -157,6 +159,8 @@ import {
 const CHARACTER_TAIL_VISIBILITY_STORAGE_KEY = 'solProtoCharacterTailVisibleV1';
 const CHARACTER_HEAD_STYLE_STORAGE_KEY = 'solProtoCharacterHeadStyleV1';
 export type CharacterHeadStyle = 'skull' | 'alternate';
+const CHARACTER_HEAD_STYLE_PLAYERS = new Set<Player>();
+let sharedCharacterHeadStyle: CharacterHeadStyle | null = null;
 
 const TAIL_V = new THREE.Vector3(); // scratch for the tail collider read
 const LEG_SOLVE_R: SagittalLegPose = {
@@ -1139,7 +1143,8 @@ export class Player {
   private readonly headWorldQuaternion = new THREE.Quaternion();
   private upperG: THREE.Bone | null = null; // legacy torso control below the lower spine
   private spineG: THREE.Bone | null = null; // lower-spine additive/keyframe bone
-  private headM: THREE.Bone | null = null; // semantic head bone carrying the imported skull
+  private headM: THREE.Bone | null = null; // semantic animated head bone above the profile mount
+  private headPresentation: THREE.Group | null = null; // profile-only child; never an animation joint
   private legs: THREE.Bone | null = null;
   private legL: THREE.Bone | null = null; // upper-leg bones
   private legR: THREE.Bone | null = null;
@@ -1300,6 +1305,7 @@ export class Player {
   constructor(scene: THREE.Scene) {
     this.group = new THREE.Group();
     this.bodyGroup = this.buildVisual();
+    CHARACTER_HEAD_STYLE_PLAYERS.add(this);
     this.restoreCharacterTailVisibilityPreference();
     this.restoreCharacterHeadStylePreference();
     // YXZ so the yaw (facing travel) is the OUTERMOST rotation: the flip and
@@ -2012,6 +2018,14 @@ export class Player {
     return characterProportionSettings.value;
   }
 
+  get activeCharacterHeadProfile(): CharacterHeadProfileId {
+    return characterProportionSettings.activeHeadProfile;
+  }
+
+  get characterHeadProfiles(): Readonly<CharacterHeadProfiles> {
+    return characterProportionSettings.headProfiles;
+  }
+
   get characterProportionDiagnostics(): {
     readonly settings: Readonly<CharacterProportionSettingsValue>;
     readonly appliedObjectCount: number;
@@ -2037,14 +2051,23 @@ export class Player {
   }
 
   setCharacterHeadStyle(style: CharacterHeadStyle): void {
-    this.characterHeadStyleValue = style === 'alternate' ? 'alternate' : 'skull';
+    const normalized = style === 'alternate' ? 'alternate' : 'skull';
+    sharedCharacterHeadStyle = normalized;
+    for (const player of CHARACTER_HEAD_STYLE_PLAYERS) {
+      player.characterHeadStyleValue = normalized;
+    }
+    characterProportionSettings.setActiveHeadProfile(
+      normalized === 'alternate' ? 'roo' : 'skull',
+    );
     try {
-      localStorage.setItem(CHARACTER_HEAD_STYLE_STORAGE_KEY, this.characterHeadStyleValue);
+      localStorage.setItem(CHARACTER_HEAD_STYLE_STORAGE_KEY, normalized);
     } catch {
       // Private browsing can disable persistence without disabling the option.
     }
-    this.syncCharacterHeadStyle();
-    this.resetRenderInterpolation();
+    for (const player of CHARACTER_HEAD_STYLE_PLAYERS) {
+      player.syncCharacterHeadStyle();
+      player.resetRenderInterpolation();
+    }
   }
 
   private characterLegHeightDelta(): number {
@@ -2171,13 +2194,21 @@ export class Player {
   }
 
   private restoreCharacterHeadStylePreference(): void {
-    try {
-      const saved = localStorage.getItem(CHARACTER_HEAD_STYLE_STORAGE_KEY);
-      if (saved === 'alternate' || saved === 'skull') this.characterHeadStyleValue = saved;
-    } catch {
-      // The default skull remains available when persistence is blocked.
+    let restored = sharedCharacterHeadStyle ?? 'skull';
+    if (sharedCharacterHeadStyle === null) {
+      try {
+        const saved = localStorage.getItem(CHARACTER_HEAD_STYLE_STORAGE_KEY);
+        if (saved === 'alternate' || saved === 'skull') restored = saved;
+      } catch {
+        // The default skull remains available when persistence is blocked.
+      }
+      sharedCharacterHeadStyle = restored;
     }
-    this.syncCharacterHeadStyle();
+    for (const player of CHARACTER_HEAD_STYLE_PLAYERS) {
+      player.characterHeadStyleValue = restored;
+    }
+    characterProportionSettings.setActiveHeadProfile(restored === 'alternate' ? 'roo' : 'skull');
+    for (const player of CHARACTER_HEAD_STYLE_PLAYERS) player.syncCharacterHeadStyle();
   }
 
   private syncCharacterHeadStyle(): void {
@@ -2195,15 +2226,15 @@ export class Player {
 
   private installMeshyBoolieRooHead(): Promise<void> {
     if (this.meshyBoolieRooHeadLoading) return this.meshyBoolieRooHeadLoading;
-    if (this.meshyBoolieRooHead || !this.headM) return Promise.resolve();
+    if (this.meshyBoolieRooHead || !this.headPresentation) return Promise.resolve();
     this.meshyBoolieRooHeadLoadState = 'loading';
     this.meshyBoolieRooHeadLoadError = null;
     this.meshyBoolieRooHeadLoading = import('./character/meshyBoolieRooHead')
       .then((module) => {
-        if (!this.headM) throw new Error('semantic head bone is unavailable');
+        if (!this.headPresentation) throw new Error('head presentation mount is unavailable');
         const component = module.createMeshyBoolieRooHead();
         component.mesh.visible = false;
-        this.headM.add(component.mesh);
+        this.headPresentation.add(component.mesh);
         this.meshyBoolieRooHead = component;
         this.meshyBoolieRooHeadTextureDiagnostics = module.meshyBoolieRooHeadTextureDiagnostics;
         this.meshyBoolieRooHeadLoadState = 'ready';
@@ -14472,128 +14503,6 @@ export class Player {
         (this.boostGlow.material as THREE.SpriteMaterial).opacity = 0.9 * fade;
       }
     }
-    if (this.maskMesh) {
-      const uber = this.uberTimer > 0; // third mask
-      const two = !uber && this.masks >= 2; // second mask held
-      const vis = (this.masks > 0 || uber) && this.state !== 'dead';
-      this.maskMesh.visible = vis;
-      // Front (local -Z) points at the camera at yaw = atan2(camDir.x, camDir.z);
-      // it rocks around that instead of spinning through — never the back.
-      const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
-      // Anchor to the ACTUAL head (so it tracks every pose — crouch, air, lean),
-      // and lay the mask out in CAMERA space: pulled toward the lens and offset
-      // by the viewer's screen axes. A fixed WORLD offset used to bury the mask
-      // in the face whenever the skater travelled toward +X (the Sideways stretch
-      // faces that way the whole time) or turned to face the camera. Camera-space
-      // keeps it floating clear IN FRONT of the face no matter the heading.
-      if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
-      else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
-      else this.maskAnchor.set(this.pos.x, this.pos.y + 1.42, this.pos.z);
-      const hx = this.maskAnchor.x;
-      const hy = this.maskAnchor.y;
-      const hz = this.maskAnchor.z;
-      // horizontal camera-forward (lens -> scene) and the viewer's screen-right
-      let cfx = this.camDir.x;
-      let cfz = this.camDir.z;
-      const clen = Math.hypot(cfx, cfz) || 1;
-      cfx /= clen;
-      cfz /= clen;
-      const rx = -cfz; // screen-right = camera-forward rotated -90 about Y
-      const rz = cfx;
-      if (uber) {
-        // third mask: WORN on the face. It sits in front of the skull and turns
-        // WITH the skater's own facing — so it tracks the head in every direction
-        // (running away, left or right included), showing its side/back just like
-        // a real worn mask when the skater turns from the camera. (The old
-        // camera-relative placement only lined up with the face when you ran
-        // toward the lens.) Head-anchored and pushed out enough to clear the face.
-        let ffx = -Math.sin(this.visualYaw);
-        let ffy = 0;
-        let ffz = -Math.cos(this.visualYaw);
-        if (this.headLookSocket) {
-          this.headLookSocket.getWorldDirection(this.headForward).normalize();
-          ffx = this.headForward.x;
-          ffy = this.headForward.y;
-          ffz = this.headForward.z;
-        }
-        this.maskMesh.position.set(
-          hx + ffx * 0.42,
-          hy + ffy * 0.42 + 0.03 + Math.sin(this.runTime * 9) * 0.03,
-          hz + ffz * 0.42,
-        );
-        if (this.headLookSocket) {
-          this.headLookSocket.getWorldQuaternion(this.headWorldQuaternion);
-          this.maskMesh.quaternion.copy(this.headWorldQuaternion);
-          this.maskMesh.rotateY(Math.PI + Math.sin(this.runTime * 5) * 0.05);
-        } else {
-          this.maskMesh.rotation.set(
-            0,
-            this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05,
-            0,
-          );
-        }
-        this.maskMesh.scale.setScalar(0.82);
-      } else {
-        // held mask (states 1 & 2): floats up and to the screen-side of the head,
-        // pushed out ~1/3 of a skater-width further right so it isn't fighting the
-        // skater for space, tipped a touch toward the lens so it reads clear of the
-        // face. FIXED size — the 2nd mask doesn't grow, it just glows harder.
-        this.maskMesh.position.set(
-          hx + rx * 0.95 - cfx * 0.18,
-          hy + 0.34 + Math.sin(this.runTime * 3) * 0.09,
-          hz + rz * 0.95 - cfz * 0.18,
-        );
-        this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
-        this.maskMesh.scale.setScalar(0.85); // states 1 & 2: 15% smaller than before
-      }
-      // Crossbones ride under the skull only on the 2nd mask (state 2).
-      if (this.maskBones) this.maskBones.visible = two;
-      // Pink spark comet-tail on the 2nd + 3rd mask: streams off the mask (2nd)
-      // or the skater (3rd), trailing opposite to how the skater is moving.
-      if ((two || uber) && vis) {
-        this.maskSparkT += dt;
-        const interval = uber ? 0.022 : 0.032;
-        const ex = uber ? this.pos.x : this.maskMesh.position.x;
-        const ey = uber ? this.pos.y + 1.1 : this.maskMesh.position.y;
-        const ez = uber ? this.pos.z : this.maskMesh.position.z;
-        const spread = uber ? 0.7 : 0.4;
-        while (this.maskSparkT >= interval) {
-          this.maskSparkT -= interval;
-          const s = this.maskSparks.find((k) => k.life <= 0);
-          if (!s) break;
-          s.sprite.position.set(
-            ex + (Math.random() - 0.5) * spread,
-            ey + (Math.random() - 0.5) * spread,
-            ez + (Math.random() - 0.5) * spread,
-          );
-          s.vel.set(
-            -this.lastVelX * 0.35 + (Math.random() - 0.5) * 1.2,
-            Math.random() * 0.8 + 0.3,
-            -this.lastVelZ * 0.35 + (Math.random() - 0.5) * 1.2,
-          );
-          s.maxLife = 0.4 + Math.random() * 0.3;
-          s.life = s.maxLife;
-        }
-      }
-    }
-    // Advance every live pink spark (runs even after the mask is spent so a
-    // trailing ember finishes fading instead of snapping off).
-    for (const s of this.maskSparks) {
-      if (s.life <= 0) continue;
-      s.life -= dt;
-      if (s.life <= 0) {
-        s.sprite.visible = false;
-        continue;
-      }
-      s.vel.y -= 1.6 * dt; // gentle sag
-      s.sprite.position.x += s.vel.x * dt;
-      s.sprite.position.y += s.vel.y * dt;
-      s.sprite.position.z += s.vel.z * dt;
-      const f = s.life / s.maxLife;
-      s.sprite.visible = true;
-      (s.sprite.material as THREE.SpriteMaterial).opacity = f;
-      s.sprite.scale.setScalar(0.28 * (0.35 + 0.65 * f));
-    }
 
     // Grab tuck + Crash front-flip + slide/crawl crouch + slam poses,
     // blended (they're mutually exclusive in practice). The grab pose ramps
@@ -14967,6 +14876,132 @@ export class Player {
     // Character Lab proportions and authored animation both move endpoints.
     // Plant only after both layers so feet cannot slide away from the deck.
     this.plantOnDeck(underW);
+    // Rope grips and sole planting can still translate the body root. Resolve
+    // the mask from the final head socket only after every post-pose correction.
+    // Mask sockets live under the presentation mount, so sample them only after
+    // both the authored head pose and the active Skull/BoolieRoo profile land.
+    if (this.maskMesh) {
+      const uber = this.uberTimer > 0; // third mask
+      const two = !uber && this.masks >= 2; // second mask held
+      const vis = (this.masks > 0 || uber) && this.state !== 'dead';
+      this.maskMesh.visible = vis;
+      // Front (local -Z) points at the camera at yaw = atan2(camDir.x, camDir.z);
+      // it rocks around that instead of spinning through — never the back.
+      const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
+      // Anchor to the ACTUAL head (so it tracks every pose — crouch, air, lean),
+      // and lay the mask out in CAMERA space: pulled toward the lens and offset
+      // by the viewer's screen axes. A fixed WORLD offset used to bury the mask
+      // in the face whenever the skater travelled toward +X (the Sideways stretch
+      // faces that way the whole time) or turned to face the camera. Camera-space
+      // keeps it floating clear IN FRONT of the face no matter the heading.
+      if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
+      else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
+      else this.maskAnchor.set(this.pos.x, this.pos.y + 1.42, this.pos.z);
+      const hx = this.maskAnchor.x;
+      const hy = this.maskAnchor.y;
+      const hz = this.maskAnchor.z;
+      // horizontal camera-forward (lens -> scene) and the viewer's screen-right
+      let cfx = this.camDir.x;
+      let cfz = this.camDir.z;
+      const clen = Math.hypot(cfx, cfz) || 1;
+      cfx /= clen;
+      cfz /= clen;
+      const rx = -cfz; // screen-right = camera-forward rotated -90 about Y
+      const rz = cfx;
+      if (uber) {
+        // third mask: WORN on the face. It sits in front of the skull and turns
+        // WITH the skater's own facing — so it tracks the head in every direction
+        // (running away, left or right included), showing its side/back just like
+        // a real worn mask when the skater turns from the camera. (The old
+        // camera-relative placement only lined up with the face when you ran
+        // toward the lens.) Head-anchored and pushed out enough to clear the face.
+        let ffx = -Math.sin(this.visualYaw);
+        let ffy = 0;
+        let ffz = -Math.cos(this.visualYaw);
+        if (this.headLookSocket) {
+          this.headLookSocket.getWorldDirection(this.headForward).normalize();
+          ffx = this.headForward.x;
+          ffy = this.headForward.y;
+          ffz = this.headForward.z;
+        }
+        this.maskMesh.position.set(
+          hx + ffx * 0.42,
+          hy + ffy * 0.42 + 0.03 + Math.sin(this.runTime * 9) * 0.03,
+          hz + ffz * 0.42,
+        );
+        if (this.headLookSocket) {
+          this.headLookSocket.getWorldQuaternion(this.headWorldQuaternion);
+          this.maskMesh.quaternion.copy(this.headWorldQuaternion);
+          this.maskMesh.rotateY(Math.PI + Math.sin(this.runTime * 5) * 0.05);
+        } else {
+          this.maskMesh.rotation.set(
+            0,
+            this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05,
+            0,
+          );
+        }
+        this.maskMesh.scale.setScalar(0.82);
+      } else {
+        // held mask (states 1 & 2): floats up and to the screen-side of the head,
+        // pushed out ~1/3 of a skater-width further right so it isn't fighting the
+        // skater for space, tipped a touch toward the lens so it reads clear of the
+        // face. FIXED size — the 2nd mask doesn't grow, it just glows harder.
+        this.maskMesh.position.set(
+          hx + rx * 0.95 - cfx * 0.18,
+          hy + 0.34 + Math.sin(this.runTime * 3) * 0.09,
+          hz + rz * 0.95 - cfz * 0.18,
+        );
+        this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
+        this.maskMesh.scale.setScalar(0.85); // states 1 & 2: 15% smaller than before
+      }
+      // Crossbones ride under the skull only on the 2nd mask (state 2).
+      if (this.maskBones) this.maskBones.visible = two;
+      // Pink spark comet-tail on the 2nd + 3rd mask: streams off the mask (2nd)
+      // or the skater (3rd), trailing opposite to how the skater is moving.
+      if ((two || uber) && vis) {
+        this.maskSparkT += dt;
+        const interval = uber ? 0.022 : 0.032;
+        const ex = uber ? this.pos.x : this.maskMesh.position.x;
+        const ey = uber ? this.pos.y + 1.1 : this.maskMesh.position.y;
+        const ez = uber ? this.pos.z : this.maskMesh.position.z;
+        const spread = uber ? 0.7 : 0.4;
+        while (this.maskSparkT >= interval) {
+          this.maskSparkT -= interval;
+          const s = this.maskSparks.find((k) => k.life <= 0);
+          if (!s) break;
+          s.sprite.position.set(
+            ex + (Math.random() - 0.5) * spread,
+            ey + (Math.random() - 0.5) * spread,
+            ez + (Math.random() - 0.5) * spread,
+          );
+          s.vel.set(
+            -this.lastVelX * 0.35 + (Math.random() - 0.5) * 1.2,
+            Math.random() * 0.8 + 0.3,
+            -this.lastVelZ * 0.35 + (Math.random() - 0.5) * 1.2,
+          );
+          s.maxLife = 0.4 + Math.random() * 0.3;
+          s.life = s.maxLife;
+        }
+      }
+    }
+    // Advance every live pink spark (runs even after the mask is spent so a
+    // trailing ember finishes fading instead of snapping off).
+    for (const s of this.maskSparks) {
+      if (s.life <= 0) continue;
+      s.life -= dt;
+      if (s.life <= 0) {
+        s.sprite.visible = false;
+        continue;
+      }
+      s.vel.y -= 1.6 * dt; // gentle sag
+      s.sprite.position.x += s.vel.x * dt;
+      s.sprite.position.y += s.vel.y * dt;
+      s.sprite.position.z += s.vel.z * dt;
+      const f = s.life / s.maxLife;
+      s.sprite.visible = true;
+      (s.sprite.material as THREE.SpriteMaterial).opacity = f;
+      s.sprite.scale.setScalar(0.28 * (0.35 + 0.65 * f));
+    }
 
   }
 
@@ -15354,19 +15389,27 @@ export class Player {
     head.position.y = MESHY_HEAD_DEFAULT_GAP;
     neck.add(head);
     this.headM = head;
+    // Profile scale, gap/forward placement and neutral pitch live below the
+    // semantic bone. Animation Studio therefore edits a pristine `head`
+    // transform while this non-rig mount composes the selected surface's
+    // baseline afterward across every animation.
+    const headPresentation = new THREE.Group();
+    headPresentation.name = 'head-presentation';
+    head.add(headPresentation);
+    this.headPresentation = headPresentation;
     const lookSocket = new THREE.Object3D();
     lookSocket.name = 'socket-look';
     lookSocket.position.set(0, MESHY_HEAD_EYE_CENTER_Y, 0.19);
     lookSocket.userData.forward = [0, 0, 1];
-    head.add(lookSocket);
+    headPresentation.add(lookSocket);
     this.headLookSocket = lookSocket;
     const visualCenter = new THREE.Object3D();
     visualCenter.name = 'socket-head-visual-center';
     visualCenter.position.y = MESHY_HEAD_VISUAL_CENTER_Y;
-    head.add(visualCenter);
+    headPresentation.add(visualCenter);
     this.headVisualCenter = visualCenter;
     this.meshyHead = createMeshyHead();
-    head.add(this.meshyHead.mesh);
+    headPresentation.add(this.meshyHead.mesh);
 
     // Retain empty auxiliary nodes so saved clips and procedural driver IDs
     // remain migratable even though the monolithic skull owns the silhouette.
@@ -15376,13 +15419,13 @@ export class Player {
       ear.name = `ear-${anatomicalSide}`;
       ear.position.set(e * 0.095, 0.135, -0.02);
       ear.rotation.set(-0.15, 0, -e * 0.42);
-      head.add(ear);
+      headPresentation.add(ear);
     }
     const ponyA = new THREE.Group();
     ponyA.name = 'ponytail-base';
     ponyA.position.set(0, 0.175, -0.145);
     ponyA.rotation.x = 1.2;
-    head.add(ponyA);
+    headPresentation.add(ponyA);
     const ponyB = new THREE.Group();
     ponyB.name = 'ponytail-tip';
     ponyB.position.y = -0.21;
@@ -15798,9 +15841,13 @@ export class Player {
         sourceSha256: this.meshyHead.sourceSha256,
         triangles: this.meshyHead.triangles,
         attachmentJoint: 'head',
+        presentationMount: 'head-presentation',
         neckGapControl: 'neckLength',
         headForwardOffsetControl: 'headForwardOffset',
-        proportions: ['headSize', 'headWidth', 'headDepth'],
+        profileControls: [
+          'headSize', 'headWidth', 'headDepth', 'neckLength',
+          'headForwardOffset', 'headRestPitch',
+        ],
         collisionChanged: false,
       },
       presentationControls: {

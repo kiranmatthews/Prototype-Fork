@@ -467,15 +467,20 @@ try {
   });
   const headSurface = player.animationRig.root.getObjectByName('meshy-head-surface');
   const headBone = player.animationRig.root.getObjectByName('head');
+  const headPresentation = player.animationRig.root.getObjectByName('head-presentation');
   const neckBone = player.animationRig.root.getObjectByName('neck');
   const lookSocket = player.animationRig.root.getObjectByName('socket-look');
   const headCenter = player.animationRig.root.getObjectByName('socket-head-visual-center');
-  assert.equal(headSurface.parent, headBone);
+  assert.equal(headPresentation.parent, headBone);
+  assert.equal(headSurface.parent, headPresentation);
+  assert.equal(lookSocket.parent, headPresentation);
+  assert.equal(headCenter.parent, headPresentation);
   near(lookSocket.position.y, 0.181);
   near(headCenter.position.y, 0.2);
   assert.equal(player.animationRig.root.getObjectByName('neck-volume'), undefined);
   const neckBase = neckBone.position.clone();
   const headBase = headBone.position.clone();
+  const headPresentationBase = headPresentation.position.clone();
   const headSurfaceScaleBase = headSurface.scale.clone();
   const torsoScaleBase = torsoSurface.scale.clone();
   const torsoMorphBase = [...torsoSurface.morphTargetInfluences];
@@ -494,23 +499,32 @@ try {
   const elbowLeftBase = elbowLeft.position.clone();
   const elbowRightBase = elbowRight.position.clone();
   player.setCharacterProportions({ neckLength: 0 });
-  near(headBone.position.y, 0);
+  near(headBone.position.y, headBase.y);
+  near(headPresentation.position.y, -0.095);
   assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
   assert.deepEqual(headSurface.scale.toArray(), headSurfaceScaleBase.toArray());
   assert.deepEqual(torsoSurface.scale.toArray(), torsoScaleBase.toArray());
   assert.deepEqual(torsoSurface.morphTargetInfluences, torsoMorphBase);
   player.setCharacterProportions({ neckLength: 1.8 });
-  near(headBone.position.y, 0.095 * 1.8);
+  near(headBone.position.y, headBase.y);
+  near(headPresentation.position.y, 0.095 * 0.8);
   assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
   assert.deepEqual(headSurface.scale.toArray(), headSurfaceScaleBase.toArray());
   player.setCharacterProportions({
     neckLength: -3,
     headForwardOffset: 0.4,
+    headRestPitch: -32,
     upperArmRestAngle: 55,
   });
   player.syncCharacterAppearance({ upperArmRestAngleWeight: 1 });
-  near(headBone.position.y, 0.095 * -3);
-  near(headBone.position.z, headBase.z + 0.4);
+  near(headBone.position.y, headBase.y);
+  near(headBone.position.z, headBase.z);
+  near(headPresentation.position.y, -0.38);
+  near(headPresentation.position.z, 0.4);
+  const neutralHeadPitch = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(THREE.MathUtils.degToRad(-32), 0, 0),
+  );
+  near(Math.abs(headPresentation.quaternion.dot(neutralHeadPitch)), 1);
   assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
   assert.deepEqual(torsoSurface.scale.toArray(), torsoScaleBase.toArray());
   assert.deepEqual(torsoSurface.morphTargetInfluences, torsoMorphBase);
@@ -542,8 +556,41 @@ try {
   near(Math.abs(shoulderRight.quaternion.dot(inwardRight)), 1);
   player.resetCharacterProportions();
   near(headBone.position.z, headBase.z);
+  assert.deepEqual(headPresentation.position.toArray(), headPresentationBase.toArray());
+  near(Math.abs(headPresentation.quaternion.dot(new THREE.Quaternion())), 1);
   near(Math.abs(shoulderLeft.quaternion.dot(shoulderLeftBase)), 1);
   near(Math.abs(shoulderRight.quaternion.dot(shoulderRightBase)), 1);
+
+  player.setCharacterProportions({ headSize: 2.1, headRestPitch: 14 });
+  const profilePeer = new Player(new THREE.Scene());
+  assert.equal(profilePeer.characterHeadStyle, 'skull');
+  player.setCharacterHeadStyle('alternate');
+  assert.equal(profilePeer.characterHeadStyle, 'alternate',
+    'head style did not propagate to the split-screen peer');
+  near(player.characterProportions.headSize, 1.55);
+  near(player.characterProportions.headRestPitch, 0);
+  player.setCharacterProportions({
+    headSize: 1.35,
+    neckLength: -1.2,
+    headForwardOffset: -0.16,
+    headRestPitch: -22,
+    torsoWidth: 1.2,
+  });
+  player.setCharacterHeadStyle('skull');
+  assert.equal(profilePeer.characterHeadStyle, 'skull');
+  near(player.characterProportions.headSize, 2.1);
+  near(player.characterProportions.headRestPitch, 14);
+  near(player.characterProportions.torsoWidth, 1.2);
+  player.setCharacterHeadStyle('alternate');
+  assert.equal(profilePeer.characterHeadStyle, 'alternate');
+  near(player.characterProportions.headSize, 1.35);
+  near(player.characterProportions.neckLength, -1.2);
+  near(player.characterProportions.headForwardOffset, -0.16);
+  near(player.characterProportions.headRestPitch, -22);
+  near(player.characterProportions.torsoWidth, 1.2);
+  player.resetCharacterProportions();
+  player.setCharacterHeadStyle('skull');
+  assert.equal(profilePeer.characterHeadStyle, 'skull');
   assert.deepEqual(player.meshyShortsDiagnostics, {
     ready: true,
     triangles: 10732,

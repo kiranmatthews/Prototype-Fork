@@ -16,13 +16,13 @@ face normals. Base colour is rebuilt directly from the 4K source as a
 bicubic-sharpened 512² lossless WebP, with a 256² lossless roughness mask. The
 near-neutral normal and exactly-zero metallic maps are not shipped or requested.
 
-The asset is static and unrigged. It is a rigid child of the existing `head`
-bone, so every current animation and procedural look/impact response remains
-valid. Character Lab's gap/overlap control moves only that head bone's local Y,
-including negative overlap, while Head forward/back moves its parent-local Z.
-Neither moves the neck bone, deforms the torso skin, or scales the skull. Both
-compose additively with procedural/keyframed head translation; independent
-overall/width/depth controls provide the intentionally extreme cartoon scale.
+The asset is static and unrigged. It is a rigid child of `head-presentation`, a
+non-rig mount below the existing semantic `head` bone, so every animation and
+procedural look/impact response remains valid. Per-head gap/overlap and
+forward/back controls place the mount in neck-aligned axes; size controls scale
+it, and neutral pitch rotates it across every animation. None of those values
+enter semantic head keys or deform torso skin. Skull and BoolieRoo remember
+their six head/neck values independently.
 
 See `provenance.json` for exact source and derived hashes, topology, upload ID,
 axis conversion, bounds, and runtime mapping.

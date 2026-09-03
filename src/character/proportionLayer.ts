@@ -43,6 +43,8 @@ interface RuntimeDeformation {
 const EPSILON_SQ = 1e-14;
 const ROTATION_EULER = new THREE.Euler(0, 0, 0, 'XYZ');
 const ROTATION_QUATERNION = new THREE.Quaternion();
+const HEAD_PRESENTATION_OFFSET = new THREE.Vector3();
+const HEAD_PRESENTATION_INVERSE = new THREE.Quaternion();
 
 const SEGMENT_FACTORS: Readonly<
   Record<string, keyof CharacterProportionSettingsValue>
@@ -217,21 +219,54 @@ export class CharacterProportionLayer {
     }
 
     const head = this.root.getObjectByName('head');
+    const headPresentation = this.root.getObjectByName('head-presentation') ?? head;
     this.multiplyScale(
-      head,
+      headPresentation,
       value.headSize * value.headWidth,
       value.headSize,
       value.headSize * value.headDepth,
     );
 
-    // Gap/overlap and fore-aft placement are presentation-only head offsets.
-    // The semantic neck and torso stay fixed, and this pass runs after authored
-    // pose sampling so both values compose without erasing animation channels.
-    this.addPosition(
-      head,
+    // Gap/overlap and fore-aft placement are authored in neck/parent axes even
+    // while the semantic head is looking around. Convert that desired parent-
+    // space displacement through the animated head's inverse local transform
+    // before applying it to the non-rig child mount.
+    if (head && headPresentation && headPresentation !== head) {
+      HEAD_PRESENTATION_OFFSET.set(
+        0,
+        MESHY_HEAD_DEFAULT_GAP * (value.neckLength - 1),
+        value.headForwardOffset,
+      ).applyQuaternion(HEAD_PRESENTATION_INVERSE.copy(head.quaternion).invert());
+      HEAD_PRESENTATION_OFFSET.set(
+        HEAD_PRESENTATION_OFFSET.x /
+          (Math.abs(head.scale.x) > 1e-6 ? head.scale.x : 1),
+        HEAD_PRESENTATION_OFFSET.y /
+          (Math.abs(head.scale.y) > 1e-6 ? head.scale.y : 1),
+        HEAD_PRESENTATION_OFFSET.z /
+          (Math.abs(head.scale.z) > 1e-6 ? head.scale.z : 1),
+      );
+      this.addPosition(
+        headPresentation,
+        HEAD_PRESENTATION_OFFSET.x,
+        HEAD_PRESENTATION_OFFSET.y,
+        HEAD_PRESENTATION_OFFSET.z,
+      );
+    } else {
+      this.addPosition(
+        headPresentation,
+        0,
+        MESHY_HEAD_DEFAULT_GAP * (value.neckLength - 1),
+        value.headForwardOffset,
+      );
+    }
+    // Neutral pitch is part of the selected surface's baseline presentation.
+    // It lives off the semantic rig and carries across every animation without
+    // contaminating TransformControls or saved `head` keyframes.
+    this.multiplyQuaternion(
+      headPresentation,
+      THREE.MathUtils.degToRad(value.headRestPitch),
       0,
-      MESHY_HEAD_DEFAULT_GAP * (value.neckLength - 1),
-      value.headForwardOffset,
+      0,
     );
 
     const upperArmRestAngleWeight = THREE.MathUtils.clamp(

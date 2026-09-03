@@ -1397,6 +1397,7 @@ try {
 }
 const characterAnimationRuntime: CharacterAnimationRuntime =
   createCharacterAnimationRuntime(player, playerAnimationDocument);
+let p2CharacterAnimationRuntime: CharacterAnimationRuntime | null = null;
 try {
   const preferredAnimationDrafts = createPreferredDraftStore();
   void preferredAnimationDrafts
@@ -1409,6 +1410,7 @@ try {
       );
       playerAnimationDocument = reconciled;
       characterAnimationRuntime.setDocument(reconciled);
+      p2CharacterAnimationRuntime?.setDocument(reconciled);
     })
     .catch(() => {
       // The synchronous local draft or source starter remains authoritative.
@@ -1511,6 +1513,10 @@ function set2P(on: boolean, force = false): void {
     }
     if (!p2) {
       p2 = new Player(scene);
+      p2CharacterAnimationRuntime = createCharacterAnimationRuntime(
+        p2,
+        playerAnimationDocument,
+      );
       p2.endlessDeaths = endlessDeathsOn;
       // The second rider's fruit needs the same two wires P1 got, or its
       // collected wumpa are parked on a scene nothing renders and simply
@@ -2170,6 +2176,7 @@ async function openAnimationStudioTool(): Promise<void> {
       onDocumentChange: (document) => {
         playerAnimationDocument = document;
         characterAnimationRuntime.setDocument(document);
+        p2CharacterAnimationRuntime?.setDocument(document);
       },
       onClose: () => {
         player.setCharacterUpperArmRestAngleWeight(
@@ -3591,6 +3598,8 @@ requestAnimationFrame(frame);
   getMeshyShortsDiagnostics: () => player.meshyShortsDiagnostics,
   getProceduralFootwearDiagnostics: () => player.proceduralFootwearDiagnostics,
   getCharacterProportions: () => player.characterProportions,
+  getActiveCharacterHeadProfile: () => player.activeCharacterHeadProfile,
+  getCharacterHeadProfiles: () => player.characterHeadProfiles,
   setCharacterProportions: (patch: Parameters<typeof player.setCharacterProportions>[0]) =>
     player.setCharacterProportions(patch),
   resetCharacterProportions: () => player.resetCharacterProportions(),

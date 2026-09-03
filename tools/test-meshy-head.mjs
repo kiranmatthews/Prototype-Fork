@@ -103,8 +103,11 @@ try {
   head.name = 'head';
   head.position.y = 0.095;
   neck.add(head);
-  head.add(component.mesh);
-  head.add(alternate.mesh);
+  const headPresentation = new THREE.Group();
+  headPresentation.name = 'head-presentation';
+  head.add(headPresentation);
+  headPresentation.add(component.mesh);
+  headPresentation.add(alternate.mesh);
   rider.userData.sculptRuntime = { joints: {}, deformations: [] };
   const layer = new CharacterProportionLayer(rider);
 
@@ -112,17 +115,21 @@ try {
   const torsoPositionBase = torsoMarker.position.clone();
   const torsoScaleBase = torsoMarker.scale.clone();
   layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, neckLength: 0 });
-  near(head.position.y, 0);
+  near(head.position.y, 0.095);
+  near(headPresentation.position.y, -0.095);
   assert.deepEqual(neck.position.toArray(), neckBase.toArray());
   assert.deepEqual(torsoMarker.position.toArray(), torsoPositionBase.toArray());
   assert.deepEqual(torsoMarker.scale.toArray(), torsoScaleBase.toArray());
   assert.deepEqual(head.scale.toArray(), [1, 1, 1]);
+  assert.deepEqual(headPresentation.scale.toArray(), [1, 1, 1]);
   assert.deepEqual(component.mesh.scale.toArray(), [0.4, 0.4, 0.4]);
   layer.clear();
   near(head.position.y, 0.095);
+  near(headPresentation.position.y, 0);
 
   layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, neckLength: 1.8 });
-  near(head.position.y, 0.095 * 1.8);
+  near(head.position.y, 0.095);
+  near(headPresentation.position.y, 0.095 * 0.8);
   assert.deepEqual(neck.position.toArray(), neckBase.toArray());
   assert.deepEqual(head.scale.toArray(), [1, 1, 1]);
   assert.deepEqual(component.mesh.scale.toArray(), [0.4, 0.4, 0.4]);
@@ -130,7 +137,8 @@ try {
 
   head.position.y = 0.115;
   layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, neckLength: 1.8 });
-  near(head.position.y, 0.115 + 0.095 * 0.8);
+  near(head.position.y, 0.115);
+  near(headPresentation.position.y, 0.095 * 0.8);
   layer.clear();
   near(head.position.y, 0.115);
   head.position.y = 0.095;
@@ -141,9 +149,16 @@ try {
     ...IDENTITY_CHARACTER_PROPORTIONS,
     neckLength: -3,
     headForwardOffset: 0.35,
+    headRestPitch: -20,
   });
-  near(head.position.y, -0.285);
-  near(head.position.z, 0.35);
+  near(head.position.y, 0.095);
+  near(head.position.z, 0);
+  near(headPresentation.position.y, -0.38);
+  near(headPresentation.position.z, 0.35);
+  const expectedNeutralPitch = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(THREE.MathUtils.degToRad(-20), 0, 0),
+  );
+  near(Math.abs(headPresentation.quaternion.dot(expectedNeutralPitch)), 1);
   assert.deepEqual(neck.position.toArray(), neckPosition.toArray());
   assert.deepEqual(torsoMarker.scale.toArray(), torsoMarkerScale.toArray());
   assert.deepEqual(component.mesh.scale.toArray(), [0.4, 0.4, 0.4]);
@@ -151,6 +166,35 @@ try {
   layer.clear();
   near(head.position.y, 0.095);
   near(head.position.z, 0);
+  near(headPresentation.position.length(), 0);
+  near(Math.abs(headPresentation.quaternion.dot(new THREE.Quaternion())), 1);
+
+  const authoredHead = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(0.18, 0.62, -0.09),
+  );
+  head.quaternion.copy(authoredHead);
+  layer.apply({
+    ...IDENTITY_CHARACTER_PROPORTIONS,
+    neckLength: 0.5,
+    headForwardOffset: 0.3,
+    headRestPitch: -25,
+  });
+  near(Math.abs(head.quaternion.dot(authoredHead)), 1,
+    1e-10);
+  const parentFrameOffset = headPresentation.position.clone()
+    .multiply(head.scale)
+    .applyQuaternion(head.quaternion);
+  near(parentFrameOffset.x, 0, 1e-10);
+  near(parentFrameOffset.y, -0.0475, 1e-10);
+  near(parentFrameOffset.z, 0.3, 1e-10);
+  const authoredNeutralPitch = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(THREE.MathUtils.degToRad(-25), 0, 0),
+  );
+  near(Math.abs(headPresentation.quaternion.dot(authoredNeutralPitch)), 1);
+  layer.clear();
+  near(Math.abs(head.quaternion.dot(authoredHead)), 1);
+  near(headPresentation.position.length(), 0);
+  head.quaternion.identity();
 
   layer.apply({
     ...IDENTITY_CHARACTER_PROPORTIONS,
@@ -159,7 +203,8 @@ try {
     headDepth: 0.8,
   });
   near(head.position.y, 0.095);
-  assert.deepEqual(head.scale.toArray(), [1.5, 1.25, 1]);
+  assert.deepEqual(head.scale.toArray(), [1, 1, 1]);
+  assert.deepEqual(headPresentation.scale.toArray(), [1.5, 1.25, 1]);
   assert.deepEqual(component.mesh.scale.toArray(), [0.4, 0.4, 0.4]);
   layer.clear();
 
@@ -196,10 +241,27 @@ try {
   assert.match(playerSource, /setCharacterHeadStyle/);
   assert.match(playerSource, /socket-head-visual-center/);
   assert.match(playerSource, /headLookSocket\.getWorldQuaternion/);
+  const finalOverlayIndex = playerSource.indexOf('this.playerAnimationBridge.applyOverlay(dt);');
+  const finalAppearanceIndex = playerSource.indexOf(
+    'this.syncCharacterAppearance();',
+    finalOverlayIndex,
+  );
+  const maskSocketSampleIndex = playerSource.indexOf(
+    'this.headVisualCenter.getWorldPosition(this.maskAnchor)',
+    finalAppearanceIndex,
+  );
+  const finalSolePlantIndex = playerSource.indexOf(
+    'this.plantOnDeck(underW);',
+    finalAppearanceIndex,
+  );
+  assert.ok(finalOverlayIndex >= 0 && finalAppearanceIndex > finalOverlayIndex);
+  assert.ok(finalSolePlantIndex > finalAppearanceIndex);
+  assert.ok(maskSocketSampleIndex > finalSolePlantIndex,
+    'mask sockets must be sampled after authored head/profile and final root corrections');
   assert.doesNotMatch(playerSource,
     /neck-volume|const skull =|const muzzle =|eye-white-|earOuterGeo|const crown =/);
   assert.match(labSource, /\['Head', 'head'\]/);
-  assert.match(labSource, /\['alternate', 'Alternate'\]/);
+  assert.match(labSource, /\['alternate', 'BoolieRoo'\]/);
   assert.match(mainSource, /getMeshyHeadDiagnostics/);
   assert.match(mainSource, /getAlternateHeadDiagnostics/);
   assert.match(JSON.parse(packageSource).scripts['check:character-lab'],

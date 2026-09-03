@@ -48,6 +48,13 @@ along-hand and dorsal lift match. Left/right anatomy remains linked and
 mirrored in version 1 so a single slider cannot silently create a broken
 asymmetric rig.
 
+The six head/neck controls—size, width, depth, gap/overlap, forward/back and
+neutral tilt—are stored as independent **Skull** and **BoolieRoo** profiles.
+Changing Head shape swaps only those six values; torso, limbs, clothing, hands
+and the Idle arm angle remain shared. Legacy saves seed both profiles from the
+former shared values. Copy JSON includes both profiles, while Reset all resets
+both and returns to Skull.
+
 The shipped silhouette is an authored defaults-revision-5 pose rather than the
 all-ones rig identity. **Reset all** restores that authored pose. The identity
 map remains available to animation/rig tests as the canonical no-op proportion
@@ -105,26 +112,30 @@ surfaces remain under whole-body and hip controls. The former
 procedural heart tank and bare-waist meshes are no longer present.
 
 The **Head** view frames the attributed Meshy Crowned Inferno Skull. It is a
-rigid child of the existing semantic head bone, so authored and procedural head
-motion remain unchanged. Head size now spans `0.4–4.0×`; independent width and
-depth span `0.4–3.0×`. **Neck gap / overlap** translates only the head's local Y:
+rigid child of a non-semantic `head-presentation` mount below the existing head
+bone, so authored and procedural `head` keys remain unchanged. Head size spans
+`0.4–4.0×`; independent width and depth span `0.4–3.0×`. **Neck gap / overlap**
+moves only that presentation mount in the neck's Y axis:
 the shipped default `0` closes the air gap, `1` gives the 0.095m reference gap,
 and negative values down to `-4` sink the base as far as 0.38m below the neck
-pivot for intentional overlap. **Head forward / back** adds `-0.5…+0.5m` on
-head-local Z (positive is rider-forward). Neither control moves the neck bone,
-pulls the torso skin, or scales either head surface; both add over authored head
-position tracks. The former visible kangaroo face,
+pivot for intentional overlap. **Head forward / back** adds `-0.5…+0.5m` along
+the neck's Z axis (positive is rider-forward), independent of animated head
+look rotation. **Neutral head tilt** adds `-60…+60°` around presentation-local
+X; positive tips the face down and negative raises it. The mount composes all
+three transforms after every animation, so Run, jumps and action poses inherit
+the chosen head profile without baking it into animation keys. None moves the
+semantic neck/head bones, pulls torso skin, or changes collision. The former visible kangaroo face,
 eyes, ears, hair, ponytail, neck cylinder, necklace, and pendant are retired;
 empty ear/ponytail nodes stay only for saved-animation compatibility.
 
 The **Head shape** buttons switch that production skull against the second,
 owner-supplied Meshy **BoolieRoo** head for quick silhouette evaluation. Both are
-rigid children of the same semantic head bone and share the existing head-size,
-width, depth and neck-gap controls; the option changes no skeleton, animation,
+rigid children of the same presentation mount and use their own saved head/neck
+profiles; the option changes no skeleton, animation,
 socket or collision data. The owner confirms BoolieRoo is an original design;
 the unrelated character name that Meshy auto-assigned to its downloaded files
 has been removed from every production identifier. Its losslessly indexed mesh chunk and compact
-textures are loaded only after **Alternate** is selected; the skull stays visible
+textures are loaded only after **BoolieRoo** is selected; the skull stays visible
 during a cold load.
 
 Character colour maps are authored straight from their original 2K/4K sources

@@ -8,6 +8,7 @@ import {
   DEFAULT_CHARACTER_PROPORTIONS,
   characterProportionSettings,
   type CharacterProportionControl,
+  type CharacterHeadProfileId,
   type CharacterProportionKey,
   type CharacterProportionSettingsValue,
 } from './character/settings';
@@ -25,6 +26,7 @@ export interface CharacterLabDiagnostics {
   readonly settings: Readonly<CharacterProportionSettingsValue>;
   readonly tailVisible: boolean;
   readonly headStyle: CharacterHeadStyle;
+  readonly headProfile: CharacterHeadProfileId;
   readonly bounds: { width: number; height: number; depth: number };
   readonly appliedObjectCount: number;
 }
@@ -209,6 +211,7 @@ class CharacterLab implements CharacterLabHandle {
       settings: { ...characterProportionSettings.value },
       tailVisible: this.ctx.player.characterTailVisible,
       headStyle: this.ctx.player.characterHeadStyle,
+      headProfile: characterProportionSettings.activeHeadProfile,
       bounds: { width: size.x, height: size.y, depth: size.z },
       appliedObjectCount: this.ctx.player.characterProportionDiagnostics.appliedObjectCount,
     };
@@ -314,7 +317,7 @@ class CharacterLab implements CharacterLabHandle {
     const headStyles = element('div', 'clab-actions');
     for (const [style, label] of [
       ['skull', 'Skull'],
-      ['alternate', 'Alternate'],
+      ['alternate', 'BoolieRoo'],
     ] as const) {
       const button = element('button', 'clab-button', label);
       button.type = 'button';
@@ -328,6 +331,12 @@ class CharacterLab implements CharacterLabHandle {
       headStyles.appendChild(button);
     }
     this.panel.appendChild(headStyles);
+    this.panel.appendChild(element(
+      'div',
+      'clab-note',
+      'Skull and BoolieRoo remember their six head/neck sliders separately. ' +
+      'For Neutral head tilt, negative raises the face and positive tips it down.',
+    ));
     this.refreshHeadStyleButtons();
 
     this.panel.appendChild(element('div', 'clab-section', 'Hand rig preview'));
@@ -585,7 +594,8 @@ class CharacterLab implements CharacterLabHandle {
       `${shortsStatus} · ${shorts.triangles.toLocaleString()} tris\n` +
       `${footwearStatus} · ${footwear.triangles.toLocaleString()} tris\n` +
       `${headStatus} · ${head.triangles.toLocaleString()} tris\n` +
-      `Head style ${this.ctx.player.characterHeadStyle} · alternate ` +
+      `Head style ${this.ctx.player.characterHeadStyle === 'alternate' ? 'BoolieRoo' : 'Skull'} · ` +
+      `profile ${characterProportionSettings.activeHeadProfile} · alternate ` +
       `${alternateHead.textureState} · ${alternateHead.triangles.toLocaleString()} tris\n` +
       `${handStatus} · fallback meshes visible ${proceduralHandMeshesVisible}`;
   }

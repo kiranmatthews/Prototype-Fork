@@ -8,6 +8,7 @@ export interface CharacterProportionSettingsValue {
   headDepth: number;
   neckLength: number;
   headForwardOffset: number;
+  headRestPitch: number;
   torsoLength: number;
   torsoWidth: number;
   torsoDepth: number;
@@ -37,6 +38,32 @@ export interface CharacterProportionSettingsValue {
 
 export type CharacterProportionKey = keyof CharacterProportionSettingsValue;
 
+export const CHARACTER_HEAD_PROFILE_IDS = ['skull', 'roo'] as const;
+export type CharacterHeadProfileId = (typeof CHARACTER_HEAD_PROFILE_IDS)[number];
+
+export const CHARACTER_HEAD_PROFILE_KEYS = [
+  'headSize',
+  'headWidth',
+  'headDepth',
+  'neckLength',
+  'headForwardOffset',
+  'headRestPitch',
+] as const satisfies readonly CharacterProportionKey[];
+
+export type CharacterHeadProfileSettingsValue = Pick<
+  CharacterProportionSettingsValue,
+  (typeof CHARACTER_HEAD_PROFILE_KEYS)[number]
+>;
+
+export type CharacterHeadProfiles = Record<
+  CharacterHeadProfileId,
+  CharacterHeadProfileSettingsValue
+>;
+
+export type ReadonlyCharacterHeadProfiles = Readonly<{
+  [Profile in CharacterHeadProfileId]: Readonly<CharacterHeadProfileSettingsValue>;
+}>;
+
 export interface CharacterProportionControl {
   readonly key: CharacterProportionKey;
   readonly label: string;
@@ -52,6 +79,8 @@ export interface SavedCharacterProportions {
   readonly defaultsRevision?: number;
   readonly settings: CharacterProportionSettingsValue;
   readonly defaults?: CharacterProportionSettingsValue;
+  /** Optional v1 extension. Older payloads seed both profiles from settings. */
+  readonly headProfiles?: CharacterHeadProfiles;
 }
 
 export interface CharacterProportionStorage {
@@ -75,6 +104,7 @@ export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSetting
     headDepth: 1,
     neckLength: 1,
     headForwardOffset: 0,
+    headRestPitch: 0,
     torsoLength: 1,
     torsoWidth: 1,
     torsoDepth: 1,
@@ -113,6 +143,7 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     headDepth: 1.23,
     neckLength: 0,
     headForwardOffset: 0,
+    headRestPitch: 0,
     torsoLength: 1,
     torsoWidth: 1.13,
     torsoDepth: 1.22,
@@ -140,6 +171,26 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     footSize: 1.53,
   });
 
+export const DEFAULT_CHARACTER_HEAD_PROFILES: ReadonlyCharacterHeadProfiles =
+  Object.freeze({
+    skull: Object.freeze({
+      headSize: DEFAULT_CHARACTER_PROPORTIONS.headSize,
+      headWidth: DEFAULT_CHARACTER_PROPORTIONS.headWidth,
+      headDepth: DEFAULT_CHARACTER_PROPORTIONS.headDepth,
+      neckLength: DEFAULT_CHARACTER_PROPORTIONS.neckLength,
+      headForwardOffset: DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset,
+      headRestPitch: DEFAULT_CHARACTER_PROPORTIONS.headRestPitch,
+    }),
+    roo: Object.freeze({
+      headSize: DEFAULT_CHARACTER_PROPORTIONS.headSize,
+      headWidth: DEFAULT_CHARACTER_PROPORTIONS.headWidth,
+      headDepth: DEFAULT_CHARACTER_PROPORTIONS.headDepth,
+      neckLength: DEFAULT_CHARACTER_PROPORTIONS.neckLength,
+      headForwardOffset: DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset,
+      headRestPitch: DEFAULT_CHARACTER_PROPORTIONS.headRestPitch,
+    }),
+  });
+
 export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[] =
   Object.freeze([
     { key: 'overallScale', label: 'Overall size', section: 'Overall', min: 0.72, max: 1.35, step: 0.01 },
@@ -152,6 +203,7 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'headDepth', label: 'Head depth', section: 'Head & torso', min: 0.4, max: 3, step: 0.01 },
     { key: 'neckLength', label: 'Neck gap / overlap', section: 'Head & torso', min: -4, max: 2.5, step: 0.01 },
     { key: 'headForwardOffset', label: 'Head forward / back (m)', section: 'Head & torso', min: -0.5, max: 0.5, step: 0.005 },
+    { key: 'headRestPitch', label: 'Neutral head tilt (°)', section: 'Head & torso', min: -60, max: 60, step: 1 },
     { key: 'torsoLength', label: 'Torso length', section: 'Head & torso', min: 0.62, max: 1.48, step: 0.01 },
     { key: 'torsoWidth', label: 'Torso width', section: 'Head & torso', min: 0.65, max: 1.5, step: 0.01 },
     { key: 'torsoDepth', label: 'Torso depth', section: 'Head & torso', min: 0.65, max: 1.5, step: 0.01 },
@@ -215,32 +267,139 @@ export function clampCharacterProportions(
   return result;
 }
 
+function copyCharacterHeadProfile(
+  value: Readonly<CharacterHeadProfileSettingsValue>,
+): CharacterHeadProfileSettingsValue {
+  return {
+    headSize: value.headSize,
+    headWidth: value.headWidth,
+    headDepth: value.headDepth,
+    neckLength: value.neckLength,
+    headForwardOffset: value.headForwardOffset,
+    headRestPitch: value.headRestPitch,
+  };
+}
+
+function characterHeadProfileFrom(
+  value: Readonly<CharacterProportionSettingsValue>,
+): CharacterHeadProfileSettingsValue {
+  return copyCharacterHeadProfile(value);
+}
+
+function clampCharacterHeadProfile(
+  input: unknown,
+  fallback: Readonly<CharacterHeadProfileSettingsValue>,
+): CharacterHeadProfileSettingsValue {
+  const candidate = input && typeof input === 'object'
+    ? input as Partial<CharacterHeadProfileSettingsValue>
+    : {};
+  return characterHeadProfileFrom(clampCharacterProportions({
+    ...fallback,
+    ...candidate,
+  }));
+}
+
+function applyCharacterHeadProfile(
+  value: Readonly<CharacterProportionSettingsValue>,
+  profile: Readonly<CharacterHeadProfileSettingsValue>,
+): CharacterProportionSettingsValue {
+  return clampCharacterProportions({ ...value, ...profile });
+}
+
+function defaultCharacterHeadProfiles(): CharacterHeadProfiles {
+  return copyCharacterHeadProfiles(DEFAULT_CHARACTER_HEAD_PROFILES);
+}
+
+function copyCharacterHeadProfiles(
+  value: ReadonlyCharacterHeadProfiles,
+): CharacterHeadProfiles {
+  return {
+    skull: copyCharacterHeadProfile(value.skull),
+    roo: copyCharacterHeadProfile(value.roo),
+  };
+}
+
+function isCharacterHeadProfileId(value: unknown): value is CharacterHeadProfileId {
+  return value === 'skull' || value === 'roo';
+}
+
 type Listener = (value: Readonly<CharacterProportionSettingsValue>) => void;
+
+interface CharacterProportionState {
+  readonly value: CharacterProportionSettingsValue;
+  readonly activeHeadProfile: CharacterHeadProfileId;
+  readonly headProfiles: CharacterHeadProfiles;
+}
 
 export class CharacterProportionSettings {
   private current: CharacterProportionSettingsValue;
+  private activeHeadProfileValue: CharacterHeadProfileId;
+  private headProfileValues: CharacterHeadProfiles;
   private readonly listeners = new Set<Listener>();
 
   constructor(private readonly storage: CharacterProportionStorage | null = defaultStorage()) {
-    this.current = this.read();
+    const state = this.read();
+    this.current = state.value;
+    this.activeHeadProfileValue = state.activeHeadProfile;
+    this.headProfileValues = state.headProfiles;
   }
 
   get value(): Readonly<CharacterProportionSettingsValue> {
     return this.current;
   }
 
+  get activeHeadProfile(): CharacterHeadProfileId {
+    return this.activeHeadProfileValue;
+  }
+
+  get headProfiles(): Readonly<
+    Record<CharacterHeadProfileId, Readonly<CharacterHeadProfileSettingsValue>>
+  > {
+    return copyCharacterHeadProfiles(this.headProfileValues);
+  }
+
+  getHeadProfile(
+    profile: CharacterHeadProfileId,
+  ): Readonly<CharacterHeadProfileSettingsValue> {
+    if (!isCharacterHeadProfileId(profile)) {
+      throw new Error(`Unknown character head profile: ${String(profile)}`);
+    }
+    return copyCharacterHeadProfile(this.headProfileValues[profile]);
+  }
+
   patch(patch: Partial<CharacterProportionSettingsValue>): void {
     this.current = clampCharacterProportions({ ...this.current, ...patch });
+    this.headProfileValues[this.activeHeadProfileValue] =
+      characterHeadProfileFrom(this.current);
     this.persistAndNotify();
   }
 
   replace(value: Partial<CharacterProportionSettingsValue>): void {
     this.current = clampCharacterProportions(value);
+    const profile = characterHeadProfileFrom(this.current);
+    this.headProfileValues = {
+      skull: copyCharacterHeadProfile(profile),
+      roo: copyCharacterHeadProfile(profile),
+    };
+    this.persistAndNotify();
+  }
+
+  setActiveHeadProfile(profile: CharacterHeadProfileId): void {
+    if (!isCharacterHeadProfileId(profile)) {
+      throw new Error(`Unknown character head profile: ${String(profile)}`);
+    }
+    if (profile === this.activeHeadProfileValue) return;
+    this.activeHeadProfileValue = profile;
+    this.current = applyCharacterHeadProfile(
+      this.current,
+      this.headProfileValues[profile],
+    );
     this.persistAndNotify();
   }
 
   reset(): void {
     this.current = copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
+    this.headProfileValues = defaultCharacterHeadProfiles();
     this.persistAndNotify();
   }
 
@@ -257,7 +416,16 @@ export class CharacterProportionSettings {
     if (parsed.version !== 1 || !parsed.settings) {
       throw new Error('Expected a version 1 Character Lab settings file.');
     }
-    this.replace(this.migrateHandRest(parsed));
+    const state = this.hydrate(
+      parsed,
+      clampCharacterProportions(this.migrateHandRest(parsed)),
+      this.activeHeadProfileValue,
+      false,
+    );
+    this.current = state.value;
+    this.activeHeadProfileValue = state.activeHeadProfile;
+    this.headProfileValues = state.headProfiles;
+    this.persistAndNotify();
   }
 
   subscribe(listener: Listener, immediate = false): () => void {
@@ -266,19 +434,84 @@ export class CharacterProportionSettings {
     return () => this.listeners.delete(listener);
   }
 
-  private read(): CharacterProportionSettingsValue {
-    if (!this.storage) return copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
+  private read(): CharacterProportionState {
+    if (!this.storage) return this.defaultState();
     try {
       const source = this.storage.getItem(CHARACTER_PROPORTION_STORAGE_KEY);
-      if (!source) return copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
+      if (!source) return this.defaultState();
       const parsed = JSON.parse(source) as Partial<SavedCharacterProportions>;
       if (parsed.version !== 1 || !parsed.settings) throw new Error('unsupported version');
       const handMigrated = this.migrateHandRest(parsed);
-      return clampCharacterProportions(this.migrateDefaults(parsed, handMigrated));
+      return this.hydrate(
+        parsed,
+        clampCharacterProportions(this.migrateDefaults(parsed, handMigrated)),
+        'skull',
+        true,
+      );
     } catch (error) {
       console.warn('Ignoring invalid Character Lab proportions', error);
-      return copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
+      return this.defaultState();
     }
+  }
+
+  private defaultState(): CharacterProportionState {
+    return {
+      value: copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS),
+      activeHeadProfile: 'skull',
+      headProfiles: defaultCharacterHeadProfiles(),
+    };
+  }
+
+  private hydrate(
+    saved: Partial<SavedCharacterProportions>,
+    legacySettings: CharacterProportionSettingsValue,
+    activeHeadProfile: CharacterHeadProfileId,
+    migrateStoredDefaults: boolean,
+  ): CharacterProportionState {
+    const legacyProfile = characterHeadProfileFrom(legacySettings);
+    const savedProfiles = saved.headProfiles;
+    const headProfiles: CharacterHeadProfiles = {
+      skull: this.hydrateHeadProfile(
+        saved,
+        savedProfiles?.skull,
+        legacyProfile,
+        migrateStoredDefaults,
+      ),
+      roo: this.hydrateHeadProfile(
+        saved,
+        savedProfiles?.roo,
+        legacyProfile,
+        migrateStoredDefaults,
+      ),
+    };
+    return {
+      value: applyCharacterHeadProfile(
+        legacySettings,
+        headProfiles[activeHeadProfile],
+      ),
+      activeHeadProfile,
+      headProfiles,
+    };
+  }
+
+  private hydrateHeadProfile(
+    saved: Partial<SavedCharacterProportions>,
+    input: unknown,
+    fallback: Readonly<CharacterHeadProfileSettingsValue>,
+    migrateStoredDefaults: boolean,
+  ): CharacterHeadProfileSettingsValue {
+    if (!input || typeof input !== 'object') {
+      return copyCharacterHeadProfile(fallback);
+    }
+    if (!migrateStoredDefaults) {
+      return clampCharacterHeadProfile(input, fallback);
+    }
+    return characterHeadProfileFrom(clampCharacterProportions(
+      this.migrateDefaults(saved, {
+        ...(saved.settings ?? {}),
+        ...input as Partial<CharacterHeadProfileSettingsValue>,
+      }),
+    ));
   }
 
   private persistAndNotify(): void {
@@ -337,6 +570,7 @@ export class CharacterProportionSettings {
       handRestRevision: CHARACTER_HAND_REST_REVISION,
       defaultsRevision: CHARACTER_PROPORTION_DEFAULTS_REVISION,
       settings: this.current,
+      headProfiles: copyCharacterHeadProfiles(this.headProfileValues),
       ...(includeDefaults
         ? { defaults: copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS) }
         : {}),

@@ -123,8 +123,10 @@ export function createMeshyHead(): MeshyHeadComponent {
     triangles: MESHY_HEAD_ASSET.triangles,
     restScale: MESHY_HEAD_REST_SCALE,
     attachmentJoint: 'head',
+    presentationMount: 'head-presentation',
     neckGapControl: 'neckLength',
     headForwardOffsetControl: 'headForwardOffset',
+    neutralTiltControl: 'headRestPitch',
     scaleControls: ['headSize', 'headWidth', 'headDepth'],
   };
   return {

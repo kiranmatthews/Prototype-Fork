@@ -17,7 +17,8 @@ procedural-rider (root-motion control)
    │  └─ spine
    │     └─ chest
    │        ├─ neck
-   │        │  └─ head
+   │        │  └─ head (semantic animation bone)
+   │        │     └─ head-presentation (non-rig profile mount)
    │        ├─ clavicle-left
    │        │  └─ shoulder-left → elbow-left → wrist-left
    │        │     ├─ index / middle / outer finger chains (3 bones each)
@@ -35,14 +36,16 @@ still declared to the animation suite for saved-track compatibility, but no
 longer own visible surfaces and are not humanoid retarget bones.
 
 The visible head is the attributed static Meshy **Crowned Inferno Skull**,
-rigidly attached beneath the existing semantic `head` bone. Its source bottom
-is rebased to local Y=0, making the head bone a stable base pivot.
-Character Lab gap/overlap changes only `head.position.y`, while head fore/aft
-changes only parent-local `head.position.z`: the `neck` bone, torso skin, and
-head scale remain invariant. Both are additive offsets over live animation,
-preserving procedural or keyframed head translation. Head size/width/depth scale
-the head bone around that attachment point and intentionally allow extreme
-cartoon ranges (`4×` overall and `3×` on each transverse axis).
+rigidly attached beneath `head-presentation`, a non-rig child of the semantic
+`head` bone. Its source bottom is rebased to local Y=0, making the semantic bone
+a stable animation pivot. Character Lab gap/overlap and fore/aft placement move
+only the mount, resolved in the animated neck's Y/Z axes; the `neck` and `head`
+bones plus torso skin remain invariant. Head size/width/depth scale the mount
+around that attachment point and intentionally allow extreme cartoon ranges
+(`4×` overall and `3×` on each transverse axis). Neutral head pitch also lives
+on the mount and is postmultiplied across every animation, so it is inherited by
+Run and action poses without entering TransformControls or saved head keys.
+Skull and BoolieRoo persist independent six-value head profiles.
 The look and mask-center sockets are rebased to the imported face while empty
 ear/ponytail nodes preserve old animation IDs.
 

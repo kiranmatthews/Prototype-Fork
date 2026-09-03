@@ -85,7 +85,8 @@ function fixture() {
   visual('neck-volume', chest, [0, 0.25, 0]);
   const neck = add('neck', chest, [0, 0.25, 0]);
   const head = add('head', neck, [0, 0.095, 0]);
-  visual('head-volume', head);
+  const headPresentation = add('head-presentation', head);
+  visual('head-volume', headPresentation);
 
   const joints = { hips: 'hips', torsoRoot: 'torso-root', spine: 'spine', chest: 'chest', neck: 'neck', head: 'head' };
   for (const side of ['left', 'right']) {
@@ -112,9 +113,9 @@ function fixture() {
     visual(`foot-${side}`, ankle, [0, -0.04, 0.08]);
     visual(`sock-${side}`, knee, [0, -0.205, 0]);
     visual(`sock-cuff-${side}`, knee, [0, -0.177, 0]);
-    add(`ear-${side}`, head, [sign * 0.1, 0.13, 0]);
+    add(`ear-${side}`, headPresentation, [sign * 0.1, 0.13, 0]);
     for (const part of ['white', 'iris', 'pupil', 'lash']) {
-      visual(`eye-${part}-${side}`, head, [sign * 0.07, 0.03, 0.15]);
+      visual(`eye-${part}-${side}`, headPresentation, [sign * 0.07, 0.03, 0.15]);
     }
     Object.assign(joints, {
       [`clavicle${side === 'left' ? 'Left' : 'Right'}`]: `clavicle-${side}`,
@@ -128,7 +129,7 @@ function fixture() {
   }
   const ponytail = new THREE.Group();
   ponytail.name = 'ponytail-base';
-  head.add(ponytail);
+  headPresentation.add(ponytail);
   nodes.set(ponytail.name, ponytail);
 
   const deformation = (controlId, jointId, endpointId, axis) => ({
@@ -182,7 +183,7 @@ try {
     clampCharacterProportions,
   } = settingsApi;
 
-  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 34);
+  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 35);
   assert.deepEqual(
     new Set(CHARACTER_PROPORTION_CONTROLS.map((control) => control.key)),
     new Set(Object.keys(DEFAULT_CHARACTER_PROPORTIONS)),
@@ -199,6 +200,7 @@ try {
     headDepth: 1.23,
     neckLength: 0,
     headForwardOffset: 0,
+    headRestPitch: 0,
     torsoLength: 1,
     torsoWidth: 1.13,
     torsoDepth: 1.22,
@@ -231,6 +233,7 @@ try {
     headDepth: 99,
     neckLength: -4,
     headForwardOffset: 99,
+    headRestPitch: 99,
     upperArmRestAngle: 99,
     wristRestPitch: NaN,
     wristRestYaw: 999,
@@ -247,6 +250,7 @@ try {
   assert.equal(clamped.headDepth, 3);
   assert.equal(clamped.neckLength, -4);
   assert.equal(clamped.headForwardOffset, 0.5);
+  assert.equal(clamped.headRestPitch, 60);
   assert.equal(clamped.upperArmRestAngle, 75);
   assert.equal(clamped.wristRestPitch, 15);
   assert.equal(clamped.wristRestYaw, 180);
@@ -278,6 +282,7 @@ try {
   assert.equal(settings.value.gloveXAlong, 0.011);
   assert.equal(settings.value.gloveXLift, -0.004);
   assert.equal(settings.value.headForwardOffset, 0);
+  assert.equal(settings.value.headRestPitch, 0);
   assert.equal(settings.value.upperArmRestAngle, 0);
   assert.equal(settings.value.armKnobSize, 1.47,
     'untouched legacy values must adopt the authored defaults');
@@ -312,6 +317,7 @@ try {
     headDepth: 1.23,
     neckLength: 0,
     headForwardOffset: 0,
+    headRestPitch: 0,
     torsoLength: 0.95,
     torsoWidth: 1.21,
     torsoDepth: 1.04,
@@ -392,6 +398,7 @@ try {
     headDepth: 0.85,
     neckLength: 0.6,
     headForwardOffset: 0.22,
+    headRestPitch: -24,
     torsoLength: 1.18,
     torsoWidth: 1.4,
     torsoDepth: 0.7,
@@ -420,13 +427,21 @@ try {
   near(scene.rider.scale.x, 1.1 * 0.9);
   near(scene.rider.scale.y, 1.1 * 1.2);
   near(scene.rider.scale.z, 1.1 * 1.15);
-  near(scene.nodes.get('head').scale.x, 1.35 * 1.2);
-  near(scene.nodes.get('head').scale.y, 1.35);
-  near(scene.nodes.get('head').scale.z, 1.35 * 0.85);
+  const headPresentation = scene.nodes.get('head-presentation');
+  assert.deepEqual(scene.nodes.get('head').scale.toArray(), [1, 1, 1]);
+  near(headPresentation.scale.x, 1.35 * 1.2);
+  near(headPresentation.scale.y, 1.35);
+  near(headPresentation.scale.z, 1.35 * 0.85);
   near(scene.nodes.get('neck').position.y, 0.25 * 1.18,
     1e-9);
-  near(scene.nodes.get('head').position.y, 0.095 * 0.6);
-  near(scene.nodes.get('head').position.z, 0.22);
+  near(scene.nodes.get('head').position.y, 0.095);
+  near(scene.nodes.get('head').position.z, 0);
+  near(headPresentation.position.y, 0.095 * (0.6 - 1));
+  near(headPresentation.position.z, 0.22);
+  const expectedHeadPitch = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(THREE.MathUtils.degToRad(-24), 0, 0),
+  );
+  near(Math.abs(headPresentation.quaternion.dot(expectedHeadPitch)), 1);
   assert.deepEqual(scene.nodes.get('neck-volume').scale.toArray(), [1, 1.18, 1],
     'torso length may stretch its marker, but neck height must not');
   near(scene.nodes.get('clavicle-left').position.x, 0.1 * 1.25);
@@ -492,12 +507,23 @@ try {
   scene.nodes.get('head').quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), 0.7);
   layer.apply(shaped);
   near(scene.nodes.get('head').rotation.y, 0.7, 1e-6);
+  const resolvedHeadOffset = headPresentation.position.clone()
+    .multiply(scene.nodes.get('head').scale)
+    .applyQuaternion(scene.nodes.get('head').quaternion);
+  near(resolvedHeadOffset.x, 0);
+  near(resolvedHeadOffset.y, 0.095 * (0.6 - 1));
+  near(resolvedHeadOffset.z, 0.22);
+  near(Math.abs(headPresentation.quaternion.dot(expectedHeadPitch)), 1);
   layer.clear();
   const cleared = snapshot(scene.root);
   for (const [name, value] of baseline) {
     assert.deepEqual(cleared.get(name).position, value.position, `${name} position did not restore`);
     assert.deepEqual(cleared.get(name).scale, value.scale, `${name} scale did not restore`);
-    if (name.startsWith('hand-rest-orientation-') || name.startsWith('shoulder-')) {
+    if (
+      name === 'head-presentation' ||
+      name.startsWith('hand-rest-orientation-') ||
+      name.startsWith('shoulder-')
+    ) {
       assert.deepEqual(cleared.get(name).quaternion, value.quaternion, `${name} quaternion did not restore`);
     }
   }
@@ -582,6 +608,9 @@ try {
   assert.match(mainSource,
     /syncPresentation:[\s\S]{0,180}setCharacterUpperArmRestAngleWeight\([\s\S]{0,180}clip\?\.id === 'player\.idle'[\s\S]{0,120}\? 1 : 0/,
     'Animation Studio did not keep the resting arm angle off authored Run');
+  assert.match(mainSource,
+    /p2CharacterAnimationRuntime = createCharacterAnimationRuntime\([\s\S]{0,120}p2,[\s\S]{0,120}playerAnimationDocument/,
+    'P2 must use the same animation runtime so its Run pose also excludes the idle arm angle');
   assert.match(mainSource, /location\.hash\.toLowerCase\(\)\.includes\("characterlab"\)/);
   assert.match(labSource, /CHARACTER LAB/);
   assert.match(labSource, /collision remain separate/);
