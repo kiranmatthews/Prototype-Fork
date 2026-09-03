@@ -229,6 +229,7 @@ try {
     ledgeBlockerIntersects,
     ledgeBodyBox,
     ledgeCatchEnvelope,
+    ledgeGripIntent,
     ledgeLandingPoint,
     ledgeTraversePoint,
   } = await server.ssrLoadModule("/src/ledgeTraversal.ts");
@@ -267,6 +268,42 @@ try {
   assert.ok(right.distanceTo(anchor) > 0.79);
   assert.ok(
     (right.x - anchor.x) * basis.tx + (right.z - anchor.z) * basis.tz > 0.79,
+  );
+
+  // Grip input is resolved in the ledge's tangent/normal frame for every
+  // cardinal face. A sideways ledge therefore uses up/down for traversal and
+  // left/right for a deliberate release, rather than inheriting front-only
+  // assumptions.
+  for (const { normal: n, world, shim, away, label } of [
+    { normal: [0, 1], world: [1, 0], shim: 1, away: 0, label: "+Z right" },
+    { normal: [0, 1], world: [0, 1], shim: 0, away: 1, label: "+Z away" },
+    { normal: [0, -1], world: [1, 0], shim: -1, away: 0, label: "-Z right" },
+    { normal: [0, -1], world: [0, -1], shim: 0, away: 1, label: "-Z away" },
+    { normal: [1, 0], world: [0, -1], shim: 1, away: 0, label: "+X up" },
+    { normal: [1, 0], world: [1, 0], shim: 0, away: 1, label: "+X away" },
+    { normal: [-1, 0], world: [0, -1], shim: -1, away: 0, label: "-X up" },
+    { normal: [-1, 0], world: [-1, 0], shim: 0, away: 1, label: "-X away" },
+  ]) {
+    const intent = ledgeGripIntent(
+      world[0],
+      world[1],
+      ledgeBasis({ x: n[0], z: n[1] }, 0.5, 0.5),
+    );
+    assert.ok(Math.abs(intent.shim - shim) < 1e-9, `${label} shim projection changed`);
+    assert.ok(Math.abs(intent.away - away) < 1e-9, `${label} away projection changed`);
+    assert.equal(intent.pullingAway, away === 1, `${label} release intent changed`);
+  }
+  const cornerIntent = ledgeGripIntent(
+    0,
+    -1,
+    ledgeBasis({ x: -Math.SQRT1_2, z: -Math.SQRT1_2 }, 0.5, 0.5),
+  );
+  assert.ok(Math.abs(cornerIntent.shim + Math.SQRT1_2) < 1e-9);
+  assert.ok(Math.abs(cornerIntent.away - Math.SQRT1_2) < 1e-9);
+  assert.equal(
+    cornerIntent.pullingAway,
+    false,
+    "equal corner shimmy/away input released the grip",
   );
 
   const body = ledgeBodyBox(
@@ -539,6 +576,45 @@ try {
     "deck detach reversed the first shimmy input",
   );
 
+  const makeSideGrip = () => {
+    const player = new Player(gateScene);
+    prepareCatch(player, mountedFace);
+    player.axisF.set(0, 0, -1);
+    player.axisL.set(1, 0, 0);
+    assert.equal(player.tryLedgeGrab(mountedFace, gateLevel), true);
+    return player;
+  };
+  const cornerGrip = makeSideGrip();
+  cornerGrip.ledgeNormal.set(-Math.SQRT1_2, 0, -Math.SQRT1_2);
+  const cornerInput = makeInput();
+  cornerInput.moveY = 1;
+  for (let frame = 0; frame < 7; frame++) {
+    cornerGrip.rawInput = cornerInput;
+    cornerGrip.stepHang(CONST.fixedStep, cornerInput, gateLevel);
+  }
+  assert.equal(cornerGrip.state, "hang", "sideways corner shimmy dropped the player");
+  assert.equal(cornerGrip.ledgeAwayT, 0, "corner shimmy accumulated away-release time");
+  assert.ok(cornerGrip.ledgeShimmy < -0.5, "corner input no longer requested a shimmy");
+
+  const outwardGrip = makeSideGrip();
+  const outwardInput = makeInput();
+  outwardInput.moveX = -1;
+  for (let frame = 0; frame < 7; frame++) {
+    outwardGrip.rawInput = outwardInput;
+    outwardGrip.stepHang(CONST.fixedStep, outwardInput, gateLevel);
+  }
+  assert.equal(outwardGrip.state, "air", "pure outward input no longer released a side ledge");
+
+  const inwardGrip = makeSideGrip();
+  const inwardInput = makeInput();
+  inwardInput.moveX = 1;
+  for (let frame = 0; frame < 7; frame++) {
+    inwardGrip.rawInput = inwardInput;
+    inwardGrip.stepHang(CONST.fixedStep, inwardInput, gateLevel);
+  }
+  assert.equal(inwardGrip.state, "hang", "inward side-ledge input released the grip");
+  assert.equal(inwardGrip.ledgeAwayT, 0, "inward input accumulated away-release time");
+
   // Jump identity follows board ownership, not velocity. This is the exact
   // low-speed contradiction exposed by the Coastal Street replay: a mounted
   // rider must ollie, while a fast deckless runner retains the foot jump.
@@ -740,7 +816,7 @@ try {
   );
 
   console.log(
-    "Validated board-to-ledge detach, mounted jump identity, both Jungle Gate Perfect-Boing catches/mantles, refit diagonal traversal, mover carry, neutral/held climbs, and traverse-only clearance.",
+    "Validated wall-relative grip intent, sideways corner traversal/release, board-to-ledge detach, mounted jump identity, both Jungle Gate Perfect-Boing catches/mantles, refit traversal, mover carry, neutral/held climbs, and traverse-only clearance.",
   );
 } finally {
   await new Promise((resolve) => setTimeout(resolve, 250));

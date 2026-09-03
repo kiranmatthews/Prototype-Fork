@@ -53,8 +53,10 @@ import {
   ledgeBodyBox,
   ledgeCatchEnvelope,
   ledgeEdgePoint,
+  ledgeGripIntent,
   ledgeLandingPoint,
   ledgeTraversePoint,
+  LEDGE_SHIM_INPUT_THRESHOLD,
   type LedgeBasis,
   type LedgeCatchEnvelope,
 } from './ledgeTraversal';
@@ -12621,22 +12623,24 @@ export class Player {
       const sx = rSgn * this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
       const sz = rSgn * this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
       const basis = ledgeBasis(n, CONST.playerHalf.x, CONST.playerHalf.z);
-      const shim = THREE.MathUtils.clamp(
-        sx * basis.tx + sz * basis.tz,
-        -1,
-        1,
-      );
-      const away = sx * basis.nx + sz * basis.nz;
-      this.ledgeShimmy += ((Math.abs(shim) > 0.25 ? shim : 0) - this.ledgeShimmy) * Math.min(1, 12 * dt);
+      const gripIntent = ledgeGripIntent(sx, sz, basis);
+      const { shim } = gripIntent;
+      this.ledgeShimmy +=
+        ((Math.abs(shim) > LEDGE_SHIM_INPUT_THRESHOLD ? shim : 0) - this.ledgeShimmy) *
+        Math.min(1, 12 * dt);
       // clip selection: the catch hands off to the idle loop; shimmying swaps
       // in the hand-over-hand traverse for that direction
       if (this.hangClipName === 'catch' && this.hangClipT >= HANG_ANIMS.catch.dur) this.setHangClip('idle', 0, true);
       if (this.hangClipName !== 'catch') {
-        if (Math.abs(shim) > 0.25) this.setHangClip(shim > 0 ? 'shimmyR' : 'shimmyL', 0, true);
+        if (Math.abs(shim) > LEDGE_SHIM_INPUT_THRESHOLD)
+          this.setHangClip(shim > 0 ? 'shimmyR' : 'shimmyL', 0, true);
         else this.setHangClip('idle', 0, true);
       }
       let didShimmy = false;
-      if (Math.abs(shim) > 0.25 && this.ledgeEaseT >= LEDGE_EASE) {
+      if (
+        Math.abs(shim) > LEDGE_SHIM_INPUT_THRESHOLD &&
+        this.ledgeEaseT >= LEDGE_EASE
+      ) {
         // Advance in the true tangent frame and accept the step only while an
         // inward top plus outside air still define a ledge. Original collider
         // bounds are deliberately irrelevant: adjacent slabs and a long mesh
@@ -12669,12 +12673,11 @@ export class Player {
       // requested motion that an actual end blocks does not create an infinite
       // hang: only real displacement refreshes the hands.
       if (!didShimmy) this.ledgeT -= dt;
-      const pullingAway = away > 0.55;
       if (input.jumpPressed) this.ledgeClimbQueued = true;
       const climbRequested =
         this.ledgeEaseT >= LEDGE_EASE && this.ledgeClimbQueued;
       this.ledgeAwayT =
-        pullingAway && !this.ledgeClimbQueued ? this.ledgeAwayT + dt : 0;
+        gripIntent.pullingAway && !this.ledgeClimbQueued ? this.ledgeAwayT + dt : 0;
       if (climbRequested) {
         this.ledgeClimbQueued = false;
         this.ledgeAwayT = 0;

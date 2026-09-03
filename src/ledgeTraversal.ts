@@ -18,6 +18,16 @@ export interface LedgeCatchEnvelope {
   groundedIntoThreshold: number;
 }
 
+export interface LedgeGripIntent {
+  shim: number;
+  away: number;
+  pullingAway: boolean;
+}
+
+export const LEDGE_SHIM_INPUT_THRESHOLD = 0.25;
+export const LEDGE_AWAY_INPUT_THRESHOLD = 0.55;
+export const LEDGE_AWAY_DOMINANCE_MARGIN = 0.05;
+
 /**
  * Expand the default catch gates for a level-authored 0..1 accessibility
  * assist. Zero is byte-for-byte the shipped global feel; one is the generous
@@ -59,6 +69,34 @@ export function ledgeBasis(
     tx: nz,
     tz: -nx,
     skin: Math.abs(nx) * halfX + Math.abs(nz) * halfZ + airGap,
+  };
+}
+
+/**
+ * Resolve one world-space stick vector in the ledge's live tangent/normal
+ * frame. Corners continuously refit that frame, so one held direction can
+ * temporarily project strongly onto both axes. Shimmy wins that ambiguous
+ * overlap; dropping requires an outward component that is clearly dominant.
+ */
+export function ledgeGripIntent(
+  worldX: number,
+  worldZ: number,
+  basis: LedgeBasis,
+): LedgeGripIntent {
+  const shim = Math.max(
+    -1,
+    Math.min(1, worldX * basis.tx + worldZ * basis.tz),
+  );
+  const away = Math.max(
+    -1,
+    Math.min(1, worldX * basis.nx + worldZ * basis.nz),
+  );
+  return {
+    shim,
+    away,
+    pullingAway:
+      away > LEDGE_AWAY_INPUT_THRESHOLD &&
+      away > Math.abs(shim) + LEDGE_AWAY_DOMINANCE_MARGIN,
   };
 }
 
