@@ -77,6 +77,7 @@ const frame = (overrides = {}) => ({
     hasEarnedRelic: true,
     nowMs: 2_000,
   }));
+  assert.equal(visibility.showFruit, true, "L2 did not reveal the fruit tally");
   assert.equal(visibility.showBoxes, true, "L2 did not reveal the box tally");
   assert.equal(
     visibility.showEarnedRelics,
@@ -88,6 +89,7 @@ const frame = (overrides = {}) => ({
     hasEarnedRelic: true,
     nowMs: 2_000 + hud.HUD_INVENTORY_LINGER_MS - 1,
   }));
+  assert.equal(visibility.showFruit, true, "fruit did not linger after L2 release");
   assert.equal(visibility.showBoxes, true, "inventory did not linger after L2 release");
   assert.equal(visibility.showEarnedRelics, true);
 
@@ -95,6 +97,7 @@ const frame = (overrides = {}) => ({
     hasEarnedRelic: true,
     nowMs: 2_000 + hud.HUD_INVENTORY_LINGER_MS,
   }));
+  assert.equal(visibility.showFruit, false, "fruit outlived the L2 reveal timer");
   assert.equal(visibility.showBoxes, false, "inventory outlived its reveal timer");
   assert.equal(visibility.showEarnedRelics, false);
 

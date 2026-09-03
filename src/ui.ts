@@ -48,6 +48,7 @@ const ICON_SIZE = new THREE.Vector2();
 const ICON_PREV = new THREE.Vector4();
 /** iconSlots order: crate, wumpa, then the three relics. */
 const RELIC_SLOT_0 = 2;
+const HUD_REVEAL_MS = 180;
 
 export interface Stats {
   speed: number;
@@ -125,6 +126,8 @@ export class UI {
   private iconCam: THREE.OrthographicCamera | null = null;
   private iconSlots: {
     host: HTMLElement; // the DOM box this is drawn into
+    revealHost: HTMLElement; // row whose in/out opacity this icon mirrors
+    owner: string; // scopes cloned HUD-only materials
     pivot: THREE.Group; // holds the lean; scaled to fit the box
     spin: THREE.Group; // turns
     unit: number; // art height in world units, for the fit
@@ -199,6 +202,7 @@ export class UI {
     showEarnedRelics: false,
   };
   private bonusMode = false;
+  private hudBonusExitTimer: number | null = null;
   // Score cash-in keeps the arcade chase; live timed combo awards use a
   // constant-rate buffer so quarter-second gameplay packets read continuously.
   private dispScore = 0;
@@ -633,7 +637,7 @@ export class UI {
     // The crate and the fruit are 3D, drawn into these boxes by drawIcons —
     // the divs are empty and exist only to be measured and laid out.
     const tl = div("hud-tl");
-    const crateRow = div("hud-counter hud-crate-row");
+    const crateRow = div("hud-counter hud-reveal hud-crate-row");
     this.crateRowEl = crateRow;
     this.crateIcon = div("hud-icon hud-icon-crate");
     crateRow.appendChild(this.crateIcon);
@@ -643,20 +647,20 @@ export class UI {
     this.cratesEl.appendChild(this.cratesCurrentEl);
     this.cratesEl.appendChild(this.cratesTotalEl);
     crateRow.appendChild(this.cratesEl);
-    crateRow.style.display = "none";
-    const wumpaRow = div("hud-counter hud-fruit-row");
+    const wumpaRow = div("hud-counter hud-reveal hud-fruit-row");
     this.wumpaIcon = div("hud-icon hud-icon-wumpa");
     wumpaRow.appendChild(this.wumpaIcon);
     this.wumpaEl = div("hud-num");
     wumpaRow.appendChild(this.wumpaEl);
     this.wumpaRowEl = wumpaRow;
-    wumpaRow.style.display = "none";
-    tl.appendChild(crateRow);
+    // Fruit owns the first inventory slot whether it was opened by a pickup
+    // or by L2. Boxes must never insert above it and make its target jump.
     tl.appendChild(wumpaRow);
+    tl.appendChild(crateRow);
     // Earned-only relic haul: crystal, gem, combo gem. Unearned hosts have no
     // layout or silhouette; an earned host becomes the measured viewport for
     // its real spinning 3D relic (see drawIcons).
-    const relicRow = div("hud-counter hud-relics");
+    const relicRow = div("hud-counter hud-reveal hud-relics");
     this.relicRowEl = relicRow;
     this.crystalIcon = div("hud-icon hud-icon-crystal hud-relic-off");
     this.gemIcon = div("hud-icon hud-icon-gem hud-relic-off");
@@ -666,19 +670,17 @@ export class UI {
     relicRow.appendChild(this.crystalIcon);
     relicRow.appendChild(this.gemIcon);
     relicRow.appendChild(this.comboGemIcon);
-    relicRow.style.display = "none";
     this.crystalIcon.style.display = "none";
     this.gemIcon.style.display = "none";
     this.comboGemIcon.style.display = "none";
     tl.appendChild(relicRow);
 
-    this.bonusTitleEl = div("hud-bonus-title");
-    this.bonusTitleEl.style.display = "none";
+    this.bonusTitleEl = div("hud-reveal hud-bonus-title");
 
     // Bottom-right life portrait; the Special ring shares its exact anchor.
     // The top-right column is reserved for explicit run-mode clock/score UI.
     const tr = div("hud-tr");
-    const livesRow = div("hud-counter hud-life-row");
+    const livesRow = div("hud-counter hud-reveal hud-life-row");
     const lifeFaceWrap = div("hud-life-face-wrap");
     this.lifeFaceEl = div("hud-icon hud-icon-face");
     lifeFaceWrap.appendChild(this.lifeFaceEl);
@@ -869,15 +871,19 @@ export class UI {
     this.gameHudSurface = new GameHudSurface({
       elements: {
         viewport: document.getElementById("app") ?? undefined,
+        crateRow: this.crateRowEl,
         crateIcon: this.crateIcon,
         crateValue: this.cratesEl,
         crateCurrent: this.cratesCurrentEl,
         crateTotal: this.cratesTotalEl,
+        fruitRow: this.wumpaRowEl,
         fruitIcon: this.wumpaIcon,
         fruitValue: this.wumpaEl,
         crystalIcon: this.crystalIcon,
         gemIcon: this.gemIcon,
         comboGemIcon: this.comboGemIcon,
+        relicRow: this.relicRowEl,
+        lifeRow: this.livesRowEl,
         lifeFace: this.lifeFaceEl,
         lifeValue: this.livesEl,
         deathModeLabel: this.deathModeLabelEl,
@@ -1126,6 +1132,7 @@ export class UI {
     // a relic is a trophy and may show off.
     const art: {
       host: HTMLElement;
+      revealHost: HTMLElement;
       make: () => THREE.Group;
       lean: number;
       rate: number;
@@ -1133,13 +1140,13 @@ export class UI {
       relic: boolean;
     }[] = [
       // the crate shows its top face: you look DOWN on crates in this game
-      { host: this.crateIcon, make: () => Level.crateMesh(1), lean: -0.42, rate: 0.6, fill: 0.66, relic: false },
-      { host: this.wumpaIcon, make: () => wumpaMesh(1), lean: -0.12, rate: 0.9, fill: 0.86, relic: false },
-      { host: this.crystalIcon, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
-      { host: this.gemIcon, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
-      { host: this.comboGemIcon, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
+      { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: -0.42, rate: 0.6, fill: 0.66, relic: false },
+      { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => wumpaMesh(1), lean: -0.12, rate: 0.9, fill: 0.86, relic: false },
+      { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
+      { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
+      { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
     ];
-    for (const { host, make, lean, rate, fill, relic } of art) {
+    for (const [index, { host, revealHost, make, lean, rate, fill, relic }] of art.entries()) {
       const model = make();
       // Strip the world halo. It's a camera-facing additive sprite sized for a
       // pickup standing in a level; at HUD scale, over bright scenery, it reads
@@ -1167,8 +1174,63 @@ export class UI {
       // stands. `fill` is that headroom — tightest for the box, loosest for
       // the round fruit, which sweeps almost nothing.
       // relics stay dark until earned; the two counters are always live
-      this.iconSlots.push({ host, pivot, spin, unit: (size.y || 1) / fill, rate, on: !relic });
+      this.iconSlots.push({
+        host,
+        revealHost,
+        owner: `hud-icon-${index}`,
+        pivot,
+        spin,
+        unit: (size.y || 1) / fill,
+        rate,
+        on: !relic,
+      });
     }
+  }
+
+  /** Give each HUD model private materials, then mirror its row's fade. */
+  private setIconRevealAlpha(
+    slot: (typeof this.iconSlots)[number],
+    alpha: number,
+  ): void {
+    slot.pivot.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (!mesh.isMesh || !mesh.material) return;
+      const own = (source: THREE.Material): THREE.Material => {
+        let material = source;
+        if (material.userData.hudRevealOwner !== slot.owner) {
+          material = source.clone();
+          material.userData = {
+            ...source.userData,
+            hudRevealOwner: slot.owner,
+            hudRevealBaseOpacity: source.opacity,
+            hudRevealBaseTransparent: source.transparent,
+            hudRevealBaseDepthWrite: source.depthWrite,
+          };
+        }
+        const baseOpacity = Number(material.userData.hudRevealBaseOpacity ?? 1);
+        const baseTransparent = Boolean(
+          material.userData.hudRevealBaseTransparent,
+        );
+        const baseDepthWrite = Boolean(
+          material.userData.hudRevealBaseDepthWrite,
+        );
+        const faded = alpha < 0.999;
+        const transparent = baseTransparent || faded;
+        if (material.transparent !== transparent) {
+          material.transparent = transparent;
+          material.needsUpdate = true;
+        }
+        // Keep the model solid while its private material fades. In
+        // particular, the double-sided fruit and layered relics must not turn
+        // glassy by exposing their back/interior faces during the transition.
+        material.depthWrite = baseDepthWrite;
+        material.opacity = baseOpacity * alpha;
+        return material;
+      };
+      mesh.material = Array.isArray(mesh.material)
+        ? mesh.material.map(own)
+        : own(mesh.material);
+    });
   }
 
   /**
@@ -1205,6 +1267,9 @@ export class UI {
     let drew = false;
     for (const slot of this.iconSlots) {
       if (!slot.on) continue;
+      const revealAlpha = hudRevealOpacity(slot.revealHost);
+      if (revealAlpha <= 0.001) continue;
+      this.setIconRevealAlpha(slot, revealAlpha);
       slot.spin.rotation.y += dt * slot.rate;
       const r = slot.host.getBoundingClientRect();
       // A hidden HUD (menus, the editor, a closed panel) measures zero, and a
@@ -1291,7 +1356,6 @@ export class UI {
       this.bonusMode = s.bonusMode;
       this.hudVisibility.reset(s.fruitCollectionRevision);
     }
-    const previousVisibility = this.hudVisibilityFrame;
     let nextVisibility = this.hudVisibility.update({
       mode: s.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision: s.fruitCollectionRevision,
@@ -1308,10 +1372,6 @@ export class UI {
         showEarnedRelics: false,
       };
     }
-    const fruitOpened = nextVisibility.showFruit && !previousVisibility.showFruit;
-    const boxesOpened = nextVisibility.showBoxes && !previousVisibility.showBoxes;
-    const relicsOpened =
-      nextVisibility.showEarnedRelics && !previousVisibility.showEarnedRelics;
     this.hudVisibilityFrame = nextVisibility;
     if (s.endlessDeaths !== this.endlessDeaths)
       this.setEndlessDeaths(s.endlessDeaths);
@@ -1375,9 +1435,6 @@ export class UI {
       this.prevHud.lives = lifeReadout;
     }
     this.syncHudVisibility();
-    if (fruitOpened) pop(this.wumpaRowEl);
-    if (boxesOpened) pop(this.crateRowEl);
-    if (relicsOpened) pop(this.relicRowEl);
     const specialValue = Math.max(0, Math.min(100, s.specialMeter));
     const specialFraction = specialValue / 100;
     this.specialWrap.dataset.value = specialValue.toFixed(4);
@@ -1385,7 +1442,7 @@ export class UI {
     this.specialWrap.style.setProperty("--special-turn", `${specialFraction}turn`);
     this.specialWrap.classList.toggle("hud-special-ready", s.specialReady);
     this.specialFrame = {
-      visible: this.livesRowEl.style.display !== "none",
+      visible: this.livesRowEl.classList.contains("hud-reveal-visible"),
       value: specialValue,
       ready: s.specialReady,
     };
@@ -1770,20 +1827,54 @@ export class UI {
     if (!this.gameHudLayer) return;
     const bonus = this.bonusMode;
     const contextual = !this.runRowsHidden || bonus;
+    const wasBonusLayout = this.gameHudLayer.classList.contains("hud-bonus");
     this.gameHudLayer.classList.toggle("hud-bonus", bonus);
-    this.bonusTitleEl.style.display =
-      contextual && this.hudVisibilityFrame.showBonusTitle ? "block" : "none";
-    this.wumpaRowEl.style.display =
-      contextual && this.hudVisibilityFrame.showFruit ? "flex" : "none";
-    this.crateRowEl.style.display =
-      contextual && this.hudVisibilityFrame.showBoxes ? "flex" : "none";
-    this.relicRowEl.style.display =
-      contextual && this.hudVisibilityFrame.showEarnedRelics ? "flex" : "none";
-    this.livesRowEl.style.display =
-      contextual && this.hudVisibilityFrame.showLife ? "flex" : "none";
+    if (bonus) {
+      if (this.hudBonusExitTimer !== null) {
+        window.clearTimeout(this.hudBonusExitTimer);
+        this.hudBonusExitTimer = null;
+      }
+    } else if (wasBonusLayout) {
+      // Fruit and boxes live along the bottom in Bonus but in the top-left
+      // collection stack everywhere else. Let them fade out at their old
+      // coordinates before changing layout, rather than teleporting first.
+      this.gameHudLayer.classList.add("hud-bonus");
+      if (this.hudBonusExitTimer === null) {
+        this.hudBonusExitTimer = window.setTimeout(() => {
+          this.hudBonusExitTimer = null;
+          if (!this.bonusMode)
+            this.gameHudLayer.classList.remove("hud-bonus");
+        }, HUD_REVEAL_MS);
+      }
+    }
+    this.setHudReveal(
+      this.bonusTitleEl,
+      contextual && this.hudVisibilityFrame.showBonusTitle,
+    );
+    this.setHudReveal(
+      this.wumpaRowEl,
+      contextual && this.hudVisibilityFrame.showFruit,
+    );
+    this.setHudReveal(
+      this.crateRowEl,
+      contextual && this.hudVisibilityFrame.showBoxes,
+    );
+    this.setHudReveal(
+      this.relicRowEl,
+      contextual && this.hudVisibilityFrame.showEarnedRelics,
+    );
+    this.setHudReveal(
+      this.livesRowEl,
+      contextual && this.hudVisibilityFrame.showLife,
+    );
     // Score remains available to the explicit time-trial/combo modes, but is
     // no longer persistent furniture in ordinary or bonus play.
     this.scorePlateEl.style.display = this.runRowsHidden && !bonus ? "block" : "none";
+  }
+
+  private setHudReveal(element: HTMLElement, visible: boolean): void {
+    element.classList.toggle("hud-reveal-visible", visible);
+    element.setAttribute("aria-hidden", visible ? "false" : "true");
   }
 
   // Balance-boost ring: each full turn is one crate window; stacked windows
@@ -2076,9 +2167,33 @@ export class UI {
       }
       .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
       .hud-counter { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+      /* Contextual counters stay in one stable stack and animate as a whole.
+         The individual translate property composes with the row's idle
+         transform bob, while opacity is also mirrored by the pre-CRT HUD. */
+      .hud-reveal {
+        --hud-reveal-x: -14px;
+        --hud-reveal-y: 0px;
+        opacity: 0;
+        visibility: hidden;
+        translate: var(--hud-reveal-x) var(--hud-reveal-y);
+        transform-origin: left center;
+        transition:
+          opacity 140ms ease-in,
+          translate 180ms cubic-bezier(0.4, 0, 0.8, 0.2),
+          visibility 0s linear 180ms;
+      }
+      .hud-reveal.hud-reveal-visible {
+        opacity: 1;
+        visibility: visible;
+        translate: 0 0;
+        transition-delay: 0ms;
+        transition-timing-function: cubic-bezier(0.22, 0.8, 0.25, 1);
+      }
       .hud-life-row {
         position: fixed; right: 30px; bottom: 20px; z-index: 10;
         margin: 0; gap: 8px; pointer-events: none;
+        --hud-reveal-x: 14px;
+        transform-origin: right center;
       }
       .hud-life-face-wrap {
         position: relative; flex: 0 0 auto;
@@ -2090,6 +2205,8 @@ export class UI {
       .hud-bonus-title {
         position: fixed; top: 18px; left: 50%; z-index: 10;
         transform: translateX(-50%);
+        --hud-reveal-x: 0px; --hud-reveal-y: -12px;
+        transform-origin: center top;
         font: 900 clamp(52px, 9vh, 86px) Impact, 'Arial Black', sans-serif;
         line-height: 0; pointer-events: none;
         filter: drop-shadow(0 5px 2px rgba(70, 18, 0, 0.78));
@@ -2099,9 +2216,13 @@ export class UI {
       }
       .game-hud-layer.hud-bonus .hud-fruit-row {
         position: fixed; left: 30px; bottom: 20px;
+        --hud-reveal-x: 0px; --hud-reveal-y: 12px;
+        transform-origin: left bottom;
       }
       .game-hud-layer.hud-bonus .hud-crate-row {
         position: fixed; left: 38%; bottom: 20px;
+        --hud-reveal-x: 0px; --hud-reveal-y: 12px;
+        transform-origin: left bottom;
       }
       .game-hud-layer.hud-bonus .hud-counter { margin-bottom: 0; }
       .hud-deathcount-label {
@@ -2119,10 +2240,11 @@ export class UI {
         font: 900 clamp(55px, 8.7vh, 90px) Impact, 'Arial Black', sans-serif;
         color: #ffb43a; letter-spacing: 2px;
       }
-      .hud-box-count { display: flex; align-items: flex-end; gap: 5px; }
+      .hud-box-count { display: flex; align-items: flex-end; gap: 0; }
       .hud-box-current { font-size: inherit; }
       .hud-box-total {
         font-size: clamp(30px, 4.8vh, 50px);
+        margin-left: clamp(-4px, -0.45vh, -2px);
         margin-bottom: clamp(8px, 1.4vh, 14px);
       }
       .hud-icon {
@@ -2219,7 +2341,7 @@ export class UI {
       .hud-counter, .hud-scoreplate, .hud-ttclock {
         --bob: clamp(1.5px, 0.3vh, 3px);
         animation: hudbob 5.5s ease-in-out infinite;
-        will-change: transform;
+        will-change: transform, opacity, translate;
       }
       .hud-tl .hud-counter:nth-child(2) { animation-delay: -0.25s; }
       .hud-tl .hud-counter:nth-child(3) { animation-delay: -0.5s; }
@@ -2231,6 +2353,7 @@ export class UI {
       @media (prefers-reduced-motion: reduce) {
         .hud-counter, .hud-counter.hud-pop, .hud-scoreplate, .hud-ttclock,
         .hud-pop, .hud-special-ready { animation: none; }
+        .hud-reveal { transition: none; }
       }
       @keyframes hudpop {
         0% { transform: scale(1.45); }
@@ -2630,6 +2753,12 @@ function div(cls: string): HTMLElement {
   const el = document.createElement("div");
   el.className = cls;
   return el;
+}
+
+function hudRevealOpacity(element: HTMLElement): number {
+  if (!element.isConnected) return 0;
+  const raw = Number.parseFloat(getComputedStyle(element).opacity);
+  return Number.isFinite(raw) ? Math.max(0, Math.min(1, raw)) : 0;
 }
 
 function row(label: string, value: string): string {

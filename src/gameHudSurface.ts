@@ -29,18 +29,22 @@ export interface GameHudRenderSize {
 export interface GameHudElements {
   viewport?: HTMLElement;
 
+  crateRow?: HTMLElement;
   crateIcon?: HTMLElement;
   /** Current broken-box count. `crateValue` remains as a legacy fallback. */
   crateCurrent?: HTMLElement;
   /** Smaller `/total` suffix beside `crateCurrent`. */
   crateTotal?: HTMLElement;
   crateValue?: HTMLElement;
+  fruitRow?: HTMLElement;
   fruitIcon?: HTMLElement;
   fruitValue?: HTMLElement;
   crystalIcon?: HTMLElement;
   gemIcon?: HTMLElement;
   comboGemIcon?: HTMLElement;
+  relicRow?: HTMLElement;
 
+  lifeRow?: HTMLElement;
   lifeFace?: HTMLElement;
   lifeValue?: HTMLElement;
   deathModeLabel?: HTMLElement;
@@ -431,6 +435,8 @@ export class GameHudSurface {
   ): void {
     const title = this.elements.bonusTitle;
     if (!isLaidOut(title)) return;
+    const alpha = hudRevealOpacity(title);
+    if (alpha <= 0.001) return;
     const sy = height / 720;
     const rect = this.rect(title, layout) ?? {
       x: width * 0.25,
@@ -443,6 +449,7 @@ export class GameHudSurface {
       align: "center",
       tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 76 * sy),
       glow: "rgba(255, 184, 31, 0.7)",
+      alpha,
     });
   }
 
@@ -482,7 +489,9 @@ export class GameHudSurface {
       explicit?.ready ??
       this.elements.special?.classList.contains("hud-special-ready") ??
       false;
-    const alpha = explicit ? 1 : elementOpacity(this.elements.special, 1);
+    const alpha =
+      (explicit ? 1 : elementOpacity(this.elements.special, 1)) *
+      hudRevealOpacity(this.elements.lifeRow);
     if (alpha <= 0.001) return;
 
     const cx = face.x + face.width / 2;
@@ -644,10 +653,11 @@ export class GameHudSurface {
       crateCurrentElement,
       this.elements.crateTotal,
     );
-    if (crates) {
+    const crateAlpha = hudRevealOpacity(this.elements.crateRow);
+    if (crates && crateAlpha > 0.001) {
       const iconRect = this.rect(this.elements.crateIcon, layout) ?? {
         x: left,
-        y: top,
+        y: top + rowStep,
         width: iconSize,
         height: iconSize,
       };
@@ -665,21 +675,22 @@ export class GameHudSurface {
           }
         : {
             x: iconRect.x + iconRect.width + gap,
-            y: top,
+            y: iconRect.y,
             width: width * 0.13,
             height: counterSize * 1.285,
           };
       if (this.iconFallbacks && !this.elements.crateIcon)
-        this.drawCrateFallback(ctx, iconRect, time);
+        this.drawCrateFallback(ctx, iconRect, time, crateAlpha);
       this.drawRooInRect(ctx, String(crates.value), valueRect, {
         size: counterSize,
         align: "left",
         tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, counterSize),
+        alpha: crateAlpha,
       });
       if (crates.total !== undefined) {
         const totalSize = 50 * sy;
         const totalRect = this.rect(this.elements.crateTotal, layout) ?? {
-          x: valueRect.x + valueRect.width + 5 * sy,
+          x: valueRect.x + valueRect.width + 1 * sy,
           y: valueRect.y + valueRect.height * 0.32,
           width: width * 0.12,
           height: totalSize * 1.285,
@@ -691,15 +702,17 @@ export class GameHudSurface {
             SOURCE_HUD_TRACKING.largeNumber,
             totalSize,
           ),
+          alpha: crateAlpha,
         });
       }
     }
 
     const fruit = resolveCounter(frame.fruit, this.elements.fruitValue);
-    if (fruit) {
+    const fruitAlpha = hudRevealOpacity(this.elements.fruitRow);
+    if (fruit && fruitAlpha > 0.001) {
       const iconRect = this.rect(this.elements.fruitIcon, layout) ?? {
         x: left,
-        y: top + rowStep,
+        y: top,
         width: iconSize,
         height: iconSize,
       };
@@ -710,11 +723,12 @@ export class GameHudSurface {
         height: counterSize * 1.285,
       };
       if (this.iconFallbacks && !this.elements.fruitIcon)
-        this.drawFruitFallback(ctx, iconRect, time);
+        this.drawFruitFallback(ctx, iconRect, time, fruitAlpha);
       this.drawRooInRect(ctx, String(fruit.value), valueRect, {
         size: counterSize,
         align: "left",
         tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, counterSize),
+        alpha: fruitAlpha,
       });
     }
 
@@ -722,7 +736,8 @@ export class GameHudSurface {
     // composited immediately before this surface; unearned slots draw nothing.
 
     const life = resolveCounter(frame.life, this.elements.lifeValue);
-    if (life) {
+    const lifeAlpha = hudRevealOpacity(this.elements.lifeRow);
+    if (life && lifeAlpha > 0.001) {
       const faceRect = this.rect(this.elements.lifeFace, layout) ?? {
         x: width - 40 * (width / 1280) - iconSize,
         y: height - 20 * sy - iconSize,
@@ -732,7 +747,7 @@ export class GameHudSurface {
       const deathsMode =
         frame.life?.deathsMode ??
         Boolean(this.elements.lifeFace?.closest(".hud-deathcount"));
-      this.drawLifeFace(ctx, faceRect, deathsMode);
+      this.drawLifeFace(ctx, faceRect, deathsMode, lifeAlpha);
       const lifeRect = this.rect(this.elements.lifeValue, layout) ?? {
         x: faceRect.x - counterSize * 1.35,
         y: faceRect.y + (faceRect.height - counterSize * 1.285) / 2,
@@ -744,6 +759,7 @@ export class GameHudSurface {
         size: lifeSize,
         align: "right",
         tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, lifeSize),
+        alpha: lifeAlpha,
       });
       if (deathsMode) {
         const labelRect = this.rect(this.elements.deathModeLabel, layout) ?? {
@@ -758,6 +774,7 @@ export class GameHudSurface {
           color: "#ff765f",
           weight: "bold",
           shadow: "rgba(0,0,0,0.85)",
+          alpha: lifeAlpha,
         });
       }
     }
@@ -1438,8 +1455,10 @@ export class GameHudSurface {
     ctx: CanvasRenderingContext2D,
     rect: SurfaceRect,
     deathsMode: boolean,
+    alpha = 1,
   ): void {
     ctx.save();
+    ctx.globalAlpha = clamp01(alpha);
     ctx.shadowColor = "rgba(0,0,0,0.65)";
     ctx.shadowBlur = Math.max(3, rect.height * 0.06);
     ctx.shadowOffsetY = Math.max(2, rect.height * 0.035);
@@ -1478,11 +1497,13 @@ export class GameHudSurface {
     ctx: CanvasRenderingContext2D,
     rect: SurfaceRect,
     time: number,
+    alpha = 1,
   ): void {
     const s = Math.min(rect.width, rect.height) * 0.72;
     const x = rect.x + (rect.width - s) / 2;
     const y = rect.y + (rect.height - s) / 2 + Math.sin(time * 0.0011) * rect.height * 0.025;
     ctx.save();
+    ctx.globalAlpha = clamp01(alpha);
     ctx.fillStyle = "#bd6b22";
     ctx.strokeStyle = "#582b0d";
     ctx.lineWidth = Math.max(2, s * 0.07);
@@ -1502,11 +1523,13 @@ export class GameHudSurface {
     ctx: CanvasRenderingContext2D,
     rect: SurfaceRect,
     time: number,
+    alpha = 1,
   ): void {
     const cx = rect.x + rect.width / 2;
     const cy = rect.y + rect.height / 2 + Math.sin(time * 0.0013) * rect.height * 0.025;
     const r = Math.min(rect.width, rect.height) * 0.3;
     ctx.save();
+    ctx.globalAlpha = clamp01(alpha);
     const gradient = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.1, cx, cy, r);
     gradient.addColorStop(0, "#fff76a");
     gradient.addColorStop(0.42, "#f89a21");
@@ -1756,6 +1779,15 @@ function elementOpacity(element: HTMLElement | undefined, fallback = 0): number 
   if (!element || !element.isConnected) return fallback;
   const raw = Number.parseFloat(getComputedStyle(element).opacity);
   return Number.isFinite(raw) ? raw : fallback;
+}
+
+/**
+ * Contextual HUD rows own their reveal opacity. Read that element directly:
+ * the gameplay DOM's parent is intentionally opacity:0 during pre-CRT
+ * composition, but that must not make its Canvas mirror disappear too.
+ */
+function hudRevealOpacity(element: HTMLElement | undefined): number {
+  return clamp01(elementOpacity(element, 1));
 }
 
 function parseConicBackground(value: string): {

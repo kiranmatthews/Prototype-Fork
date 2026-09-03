@@ -79,7 +79,9 @@ export class HudVisibilityState {
     return {
       showLife: true,
       showBonusTitle: false,
-      showFruit: nowMs < this.fruitVisibleUntilMs,
+      // L2 reveals the whole collection stack. Fruit therefore occupies the
+      // same fixed slot whether it was opened by a pickup or by inventory.
+      showFruit: inventoryVisible || nowMs < this.fruitVisibleUntilMs,
       showBoxes: inventoryVisible,
       showEarnedRelics: inventoryVisible && input.hasEarnedRelic,
     };
