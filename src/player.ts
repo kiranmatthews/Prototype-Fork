@@ -91,6 +91,10 @@ import {
   unityRopeReleaseDuration,
 } from './animation/unityRope';
 import {
+  UNITY_WALK_BLEND_INPUT,
+  unityWalkBlendWeight,
+} from './animation/unityCrouchCrawl';
+import {
   BAIL_RECOVERY_SPRAWL_PITCH,
   sampleBailRecovery,
 } from './bailRecovery';
@@ -471,11 +475,13 @@ const BAIL_PITCH_AXIS = new THREE.Vector3(1, 0, 0);
 // Forgive a near-simultaneous Square/X smoosh at takeoff, but never bank an
 // old ground spin through an arbitrarily long held ollie charge.
 const OLLIE_DECK_TRICK_CHORD = 0.1;
-// Keep authored locomotion routing on the same any-direction threshold as the
-// legacy gait. Tiny release-coast motion belongs to the stop transition, while
-// a genuine lateral run must never be mistaken for idle just because the
-// forward-only `speed` scalar is near zero.
-const RUN_ANIMATION_THRESHOLD = 1.5;
+// Raw rail polylines may meet at hard nodes. Curves arrive as many shallow
+// turns; anything this sharp is an authored edge and ejects the grind.
+const MAX_CONTINUOUS_GRIND_CORNER_ANGLE = (50 * Math.PI) / 180;
+// Gentle analogue input still owns a real Walk. World/platform carry is
+// removed before this threshold, so it can stay low without waking the gait
+// while the player is merely standing on something that moves.
+const RUN_ANIMATION_THRESHOLD = 0.08;
 
 function wrapAngle(a: number): number {
   return a - Math.PI * 2 * Math.round(a / (Math.PI * 2));
@@ -1564,6 +1570,15 @@ export class Player {
 
   private get animationPlanarSpeed(): number {
     if (this.state === 'rope' || this.state === 'hang') return 0;
+    if (
+      this.state === 'ride' &&
+      this.grounded &&
+      !this.freeSkate &&
+      !this.crawling &&
+      !this.sliding
+    ) {
+      return this.walkVelocity.length();
+    }
     return Math.max(
       0,
       this.lastPlanar,
@@ -1724,6 +1739,7 @@ export class Player {
         inputs: {
           travelSign,
           signedSpeed: normalizedSpeed * travelSign,
+          [UNITY_WALK_BLEND_INPUT]: unityWalkBlendWeight(normalizedSpeed),
           balance: THREE.MathUtils.clamp(this.balance, -1, 1),
           charge,
           skateCharge,
@@ -6259,8 +6275,10 @@ export class Player {
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
       // Digital diagonals in the air get the same normalization as the walk.
       const diag = footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
-      const railTransferStrafe =
-        this.grindExitAir && input.transferHeld && !this.isBailing;
+      const railSpinInPlace =
+        input.transferHeld || input.grabHeld || input.grabPressed || this.grabbing;
+      const railExitStrafe =
+        this.grindExitAir && !railSpinInPlace && !this.isBailing;
       if (footAir) {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
@@ -6281,12 +6299,10 @@ export class Player {
         const cap = TUNING.downhillMax;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
-      // The lateral sidestep is a FOOT-AIR move only now (precision hops).
-      // On the board that stick axis is the THPS spin — a board air flies
-      // ballistic and left/right rotates the body instead (see updateGrab).
-      // A rail hop gets that translation only while R2 is deliberately held.
-      // Without R2 the same left/right axis remains THPS rotation only.
-      if ((footAir || railTransferStrafe) && Math.abs(input.moveX) > 0.05) {
+      // A rail hop keeps its old horizontal freedom by default. R2 or a grab
+      // says the opposite explicitly: stay on the rail's flight line so the
+      // same left/right input can spin without drifting off-axis.
+      if ((footAir || railExitStrafe) && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(
           this.axisL,
           input.moveX * TUNING.walkSpeed * diag * doubleScale * dt,
@@ -8689,7 +8705,25 @@ export class Player {
       }
     }
 
-    this.grindT += this.grindDir * this.grindVel * dt;
+    const nextGrindT = this.grindT + this.grindDir * this.grindVel * dt;
+    const sharpCorner = rail.sharpCornerBetween(
+      this.grindT,
+      nextGrindT,
+      MAX_CONTINUOUS_GRIND_CORNER_ANGLE,
+    );
+    if (sharpCorner) {
+      // Stop just before the node so exitGrind reads the incoming tangent.
+      // The pop then continues naturally through the air instead of snapping
+      // the board through an unauthored 90-degree redirect.
+      this.grindT = sharpCorner.t - this.grindDir * 1e-4;
+      this.placeOnRail(rail);
+      this.tickGrindCrate(level);
+      this.lastJumpType = 'Sharp Rail Exit';
+      this.exitGrind(this.underK > 0.5 ? 0.8 : 2.5, level);
+      sfx.play('railLand', 0.55, 1.35);
+      return;
+    }
+    this.grindT = nextGrindT;
 
     if (this.grindT <= 0 || this.grindT >= rail.totalLength) {
       // Ran off the end of the rail: small pop, keep carrying grind speed.
@@ -9117,9 +9151,8 @@ export class Player {
   private exitGrind(vVel: number, level?: Level): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
-    // RAIL-HOP window: R2 may add lateral transfer strafe on top of the spin
-    // so you can deliberately jump between rails. Without R2 the hop stays
-    // ballistic and left/right rotates only, like every other board air.
+    // RAIL-HOP window: left/right may translate across the air by default.
+    // R2 or a grab suppresses that translation for an in-place spin.
     this.grindExitAir = true;
 
     // ...and the last box goes with the manoeuvre. Every earlier one already
@@ -12584,8 +12617,8 @@ export class Player {
   }
 
   // Hanging off a ledge. The hang owns the whole step (no physics/collide).
-  // GRIP phase: X always requests the CLAMBER; holding the stick AWAY without
-  // X for a beat lets go (hop down — no button needed); the
+  // GRIP phase: X or a dominant stick push TOWARD the landing requests the
+  // CLAMBER; holding AWAY for a beat lets go (hop down — no button needed); the
   // grip fails when the timer runs out. CLIMB phase: a committed, animated
   // pull-up-and-over — the body eases up the face, then over the lip along
   // a rounded corner, ending stood on the landing. Stick reading: moveY +1
@@ -12717,7 +12750,8 @@ export class Player {
       // requested motion that an actual end blocks does not create an infinite
       // hang: only real displacement refreshes the hands.
       if (!didShimmy) this.ledgeT -= dt;
-      if (input.jumpPressed) this.ledgeClimbQueued = true;
+      if (input.jumpPressed || gripIntent.pullingToward)
+        this.ledgeClimbQueued = true;
       const climbRequested =
         this.ledgeEaseT >= LEDGE_EASE && this.ledgeClimbQueued;
       this.ledgeAwayT =
@@ -13826,10 +13860,24 @@ export class Player {
       targetYaw = this.ropeFaceYaw;
     } else if (onFootRunReversal) {
       // Input leads a committed run turnaround while the root still slides
-      // through old momentum. The body takes a very short visible pivot rather
+      // through old momentum. The body takes a smooth visible pivot rather
       // than teleporting through 180 degrees in one rendered frame.
       targetYaw = wrapAngle(Math.atan2(this.walkIntent.x, this.walkIntent.z) - Math.PI);
       runReversal = true;
+    } else if (
+      this.state === 'ride' &&
+      this.grounded &&
+      !this.freeSkate &&
+      this.slideTimer <= 0 &&
+      !this.crawling &&
+      !this.isBailing
+    ) {
+      // Moving supports change world position but never the character's own
+      // facing. Only authored foot velocity may steer a grounded run.
+      const vx = this.walkVelocity.x;
+      const vz = this.walkVelocity.z;
+      if (vx * vx + vz * vz > RUN_ANIMATION_THRESHOLD ** 2)
+        targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
     } else {
       const vx = this.pos.x - this.prevPos.x;
       const vz = this.pos.z - this.prevPos.z;
@@ -13904,10 +13952,11 @@ export class Player {
     // The gait expresses committed intent through a turnaround even on the
     // instant physical velocity crosses zero. Gameplay/debug speed stays honest;
     // only the run cycle is held at the authored intent pace.
+    const selfDrivenPlanar = this.walkVelocity.length();
     const gaitPlanar = this.walkTurnaround
-      ? Math.max(planar, TUNING.walkSpeed * this.walkRamp)
-      : planar;
-    const runningAnim = onFoot && gaitPlanar > 1.5;
+      ? Math.max(selfDrivenPlanar, TUNING.walkSpeed * this.walkRamp)
+      : selfDrivenPlanar;
+    const runningAnim = onFoot && gaitPlanar > RUN_ANIMATION_THRESHOLD;
     this.walkAmp += ((runningAnim ? 1 : 0) - this.walkAmp) * Math.min(1, 10 * dt);
     this.idleAmp += ((onFoot && !runningAnim ? 1 : 0) - this.idleAmp) * Math.min(1, 6 * dt);
     if (runningAnim) this.walkPhase += (4 + gaitPlanar * 1.0) * dt;

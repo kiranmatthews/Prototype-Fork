@@ -5,6 +5,7 @@ import {
   UNITY_CROUCH_CRAWL_CLIP_IDS,
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
+  UNITY_WALK_BLEND_INPUT,
   UNITY_ROPE_CLIP_IDS,
   UNITY_ROPE_TIMING,
   blendPoses,
@@ -49,6 +50,7 @@ export const LAND_RUN_BLEND_START_SECONDS = 0.055;
 export const LAND_RUN_BLEND_END_SECONDS = 0.28;
 export const LAND_RUN_CANCEL_BLEND_SECONDS = 0.12;
 export const LAND_RUN_LATE_BLEND_SECONDS = 0.12;
+export const LOCOMOTION_ENTRY_BLEND_SECONDS = 0.14;
 
 type RuntimeTransientKind = 'landing' | 'pace-stop';
 
@@ -153,6 +155,9 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   }
   if (CROUCH_CRAWL_CLIP_IDS.has(from) || CROUCH_CRAWL_CLIP_IDS.has(to)) {
     return UNITY_CROUCH_CRAWL_TIMING.rapidBlend;
+  }
+  if (from === 'player.idle' && to === 'player.run') {
+    return LOCOMOTION_ENTRY_BLEND_SECONDS;
   }
   return 0;
 }
@@ -562,12 +567,25 @@ export class CharacterAnimationRuntime {
     let pose = sampledPose;
     let landingRunBlendWeight = 0;
     let landingRunBlendInFlight = false;
-    const variant = this.manualClipId === null ? clipVariantBlend(clip) : null;
+    const variant = this.manualClipId === null
+      ? clipVariantBlend(clip) ??
+        (clip.id === 'player.run'
+          ? {
+              clipId: UNITY_CROUCH_CRAWL_CLIP_IDS.walk,
+              source: UNITY_WALK_BLEND_INPUT,
+            }
+          : null)
+      : null;
     if (variant) {
       const variantClip = this.findPlayableClip(variant.clipId);
       const weight = Math.min(1, Math.max(0, motion.inputs?.[variant.source] ?? 0));
       if (variantClip && weight > 0) {
-        const phase = Math.min(1, Math.max(0, motion.actionProgress));
+        const phase = clip.id === 'player.run'
+          ? normalizedPhase(
+              (this.timelineTime - clip.range.start) /
+                Math.max(1e-6, clip.range.end - clip.range.start),
+            )
+          : Math.min(1, Math.max(0, motion.actionProgress));
         const variantTime = variantClip.range.start +
           phase * (variantClip.range.end - variantClip.range.start);
         const variantPose = sampleComposedClip(variantClip, variantTime, motion, {

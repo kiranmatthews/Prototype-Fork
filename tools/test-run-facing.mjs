@@ -17,8 +17,8 @@ try {
     wrapFacingAngle,
   } = await server.ssrLoadModule("/src/runFacing.ts");
 
-  assert.equal(RUN_REVERSAL_DURATION, 0.1);
-  assert.equal(RUN_REVERSAL_YAW_RATE, Math.PI / 0.1);
+  assert.equal(RUN_REVERSAL_DURATION, 0.4);
+  assert.equal(RUN_REVERSAL_YAW_RATE, Math.PI / 0.4);
   const first = stepFacingYaw(
     0,
     Math.PI,
@@ -27,7 +27,7 @@ try {
   );
   assert.ok(first > 0 && first < Math.PI, "180 reversal still snaps");
   assert.ok(
-    Math.abs(first - Math.PI / 6) < 1e-9,
+    Math.abs(first - Math.PI / 24) < 1e-9,
     "turn rate is not fixed-step",
   );
   assert.ok(
@@ -63,7 +63,10 @@ try {
     }
     assert.equal(frames, fps * RUN_REVERSAL_DURATION);
     const duration = frames / fps;
-    assert.ok(Math.abs(duration - 0.1) < 1e-9, `${fps}Hz turn took ${duration}s`);
+    assert.ok(
+      Math.abs(duration - RUN_REVERSAL_DURATION) < 1e-9,
+      `${fps}Hz turn took ${duration}s`,
+    );
     durations.push(duration);
   }
   assert.ok(
@@ -85,6 +88,16 @@ try {
   assert.ok(Math.abs(wrapFacingAngle(170 * deg - seamBack)) < 20 * deg);
 
   const player = await readFile(`${root}src/player.ts`, "utf8");
+  assert.match(
+    player,
+    /private get animationPlanarSpeed[\s\S]{0,420}this\.state === 'ride'[\s\S]{0,260}return this\.walkVelocity\.length\(\)/,
+    "moving-platform displacement can still wake the grounded run clip",
+  );
+  assert.match(
+    player,
+    /const selfDrivenPlanar = this\.walkVelocity\.length\(\)[\s\S]{0,260}runningAnim = onFoot/,
+    "legacy gait still reads world/platform displacement",
+  );
   assert.match(player, /if \(runReversal\)[\s\S]{0,1200}stepFacingYaw\(/);
   assert.match(player, /RUN_REVERSAL_YAW_RATE \* dt/);
   for (const guard of [
@@ -103,7 +116,7 @@ try {
   );
 
   console.log(
-    "Validated a deterministic ~0.1s on-foot 180 pivot with no one-frame snap or non-turn facing changes.",
+    "Validated a deterministic ~0.4s on-foot pivot with no one-frame snap or non-turn facing changes.",
   );
 } finally {
   await server.close();

@@ -11,6 +11,15 @@ export interface RailSample {
   distance: number; // 3D distance from the queried position
 }
 
+export interface RailSharpCorner {
+  /** Arc length of the authored polyline node. */
+  t: number;
+  /** Direction change in radians along the requested travel direction. */
+  angle: number;
+  incoming: THREE.Vector3;
+  outgoing: THREE.Vector3;
+}
+
 export class Rail {
   readonly points: THREE.Vector3[];
   totalLength: number;
@@ -134,6 +143,41 @@ export class Rail {
 
   tangentAt(t: number): THREE.Vector3 {
     return this.segDirs[this.segmentIndexAt(t)].clone();
+  }
+
+  /**
+   * First unsmoothed corner crossed by one grind step. Curves are authored as
+   * dense, gently turning segments and remain continuous; a raw right-angle
+   * polyline node is an edge to launch from, not a free instant redirect.
+   */
+  sharpCornerBetween(
+    from: number,
+    to: number,
+    minimumAngle: number,
+  ): RailSharpCorner | null {
+    const forward = to >= from;
+    const epsilon = 1e-7;
+    const start = forward ? 1 : this.segDirs.length - 1;
+    const end = forward ? this.segDirs.length : 0;
+    const step = forward ? 1 : -1;
+    for (let index = start; index !== end; index += step) {
+      const boundary = this.cumLengths[index];
+      const crossed = forward
+        ? boundary > from + epsilon && boundary <= to + epsilon
+        : boundary < from - epsilon && boundary >= to - epsilon;
+      if (!crossed) continue;
+      const incoming = forward
+        ? this.segDirs[index - 1].clone()
+        : this.segDirs[index].clone().negate();
+      const outgoing = forward
+        ? this.segDirs[index].clone()
+        : this.segDirs[index - 1].clone().negate();
+      const angle = incoming.angleTo(outgoing);
+      if (angle >= minimumAngle) {
+        return { t: boundary, angle, incoming, outgoing };
+      }
+    }
+    return null;
   }
 
   private segmentIndexAt(t: number): number {

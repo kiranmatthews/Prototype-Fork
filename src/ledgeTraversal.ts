@@ -22,6 +22,7 @@ export interface LedgeGripIntent {
   shim: number;
   away: number;
   pullingAway: boolean;
+  pullingToward: boolean;
 }
 
 export const LEDGE_SHIM_INPUT_THRESHOLD = 0.25;
@@ -97,6 +98,9 @@ export function ledgeGripIntent(
     pullingAway:
       away > LEDGE_AWAY_INPUT_THRESHOLD &&
       away > Math.abs(shim) + LEDGE_AWAY_DOMINANCE_MARGIN,
+    pullingToward:
+      away < -LEDGE_AWAY_INPUT_THRESHOLD &&
+      -away > Math.abs(shim) + LEDGE_AWAY_DOMINANCE_MARGIN,
   };
 }
 

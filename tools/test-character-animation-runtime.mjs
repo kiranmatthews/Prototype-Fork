@@ -18,6 +18,7 @@ try {
     LAND_IMPACT_CROSSFADE_SECONDS,
     LAND_RUN_BLEND_END_SECONDS,
     LAND_RUN_BLEND_START_SECONDS,
+    LOCOMOTION_ENTRY_BLEND_SECONDS,
     ACTION_PROGRESS_TIMELINE_CLIP_IDS,
     PACE_STOP_CROSSFADE_SECONDS,
     PACE_STOP_MIN_PEAK_SPEED,
@@ -34,6 +35,7 @@ try {
     UNITY_CROUCH_CRAWL_CLIP_IDS,
     UNITY_CRAWL_CONTACT_ADAPTATION,
     UNITY_CROUCH_CRAWL_TIMING,
+    UNITY_WALK_BLEND_INPUT,
   } = await server.ssrLoadModule('/src/animation/index.ts');
 
   const root = new THREE.Group();
@@ -110,6 +112,8 @@ try {
       : undefined,
   });
   const clips = allIds.map((id, index) => makeClip(id, index));
+  const walkClip = makeClip('player.walk', 50);
+  clips.push(walkClip);
   const crawlClip = clips.find((clip) => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
   crawlClip.metadata = { contactAdaptation: UNITY_CRAWL_CONTACT_ADAPTATION };
   const chargedRopeRelease = makeClip(UNITY_ROPE_CLIP_IDS.chargedRelease, 100);
@@ -226,6 +230,29 @@ try {
   near(head.position.z, 7);
   near(hipsXWhenDeformed, 0);
   near(upperArmRestAngleWeight, 1);
+
+  // A saved Run without new metadata still discovers the newly introduced
+  // Unity Walk slot. Gentle analogue weight owns Walk, then blends smoothly
+  // back to the existing Run without changing the gameplay route ID.
+  hint = 'player.run';
+  grounded = true;
+  motionInputs = { ...motionInputs, [UNITY_WALK_BLEND_INPUT]: 1 };
+  runtime.restart();
+  tick(0.001);
+  tick(LOCOMOTION_ENTRY_BLEND_SECONDS);
+  assert.equal(runtime.activeClipId, 'player.run');
+  assert.ok(hips.position.x > 50, 'gentle analogue input did not select Unity Walk');
+  const walkX = hips.position.x;
+  motionInputs = { ...motionInputs, [UNITY_WALK_BLEND_INPUT]: 0 };
+  tick(0.016);
+  assert.ok(hips.position.x < 10, 'full input did not restore the existing Run');
+  motionInputs = { ...motionInputs, [UNITY_WALK_BLEND_INPUT]: 0.5 };
+  tick(0.016);
+  assert.ok(hips.position.x > 20 && hips.position.x < walkX,
+    'mid analogue input did not blend Walk and Run');
+  hint = 'player.idle';
+  motionInputs = { balance: 0.75, charge: 0.2, travelSign: 1 };
+  tick(0.016);
 
   // Every state-owned route resolves to its catalog clip.
   const airborneRoutes = new Set([

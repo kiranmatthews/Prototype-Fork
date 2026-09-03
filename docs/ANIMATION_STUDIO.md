@@ -21,7 +21,7 @@ state, camera state, and render interpolation before play resumes.
 ## Authoring workflow
 
 1. Select an animation from the clip selector. The starter suite contains
-   idle, run, pacing stop, jump, double jump, fall, land, crouch, crawl, slide, skate,
+   idle, walk, run, pacing stop, jump, double jump, fall, land, crouch, crawl, slide, skate,
    grind, grab, hang, climb, rope, slam, bail, and spin slots.
 2. Set duration, loop range/mode, and **Speed**. Playback speed belongs to the
    selected clip and is exported with it; the slider covers the common range
@@ -54,6 +54,15 @@ state, camera state, and render interpolation before play resumes.
    IndexedDB-preferred draft store for larger imported suites.
 
 ## Locomotion transitions
+
+`player.walk` is the retargeted Unity PunkyFox **Walking Woman** loop. The
+runtime keeps the gameplay route on `player.run` but phase-blends this Walk
+over it using Unity's original locomotion thresholds: full Walk through 3/9
+normalized speed, then a continuous blend to the existing Quaternius Jog_Fwd
+at full run speed. This makes gentle analogue input visibly different without
+replacing or rewriting the approved Run clip. Grounded gait speed and facing
+come from the character's own walk velocity, so a stationary rider carried by
+a Nightworks platform stays in Idle instead of running in place.
 
 `player.pace-stop` is the authored, in-place bridge from a committed run to
 the full resting idle. The runtime owns this clip as an interruptible one-shot:

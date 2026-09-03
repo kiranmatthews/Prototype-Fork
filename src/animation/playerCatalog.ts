@@ -28,11 +28,15 @@ import {
   UNITY_CROUCH_IDLE_DURATION,
   UNITY_CROUCH_IDLE_HIPS_POSITION_KEYS,
   UNITY_CROUCH_IDLE_ROTATION_KEYS,
+  UNITY_WALK_DURATION,
+  UNITY_WALK_HIPS_POSITION_KEYS,
+  UNITY_WALK_ROTATION_KEYS,
 } from './unityCrouchCrawlAnimations.generated';
 import {
   UNITY_CROUCH_CRAWL_CLIP_IDS,
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
+  UNITY_WALK_BLEND_INPUT,
 } from './unityCrouchCrawl';
 import {
   QUATERNIUS_JOG_FWD_DURATION,
@@ -74,6 +78,7 @@ export const PLAYER_DEFORMATION_CONTROLS = {
 
 export const PLAYER_STARTER_CLIP_IDS = [
   'player.idle',
+  'player.walk',
   'player.run',
   'player.pace-stop',
   'player.jump',
@@ -103,7 +108,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 16;
+export const PLAYER_STARTER_CATALOG_VERSION = 17;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -349,6 +354,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   number
 > = {
   'player.idle': 1,
+  'player.walk': 17,
   'player.run': 1,
   'player.pace-stop': 2,
   'player.jump': 1,
@@ -645,7 +651,12 @@ function buildRun(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   clip.tags = [...(clip.tags ?? []), 'quaternius', 'jog-fwd', 'imported-keyframes'];
   clip.metadata = {
     starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     sourceAnimation: { ...QUATERNIUS_JOG_FWD_SOURCE },
+    variantBlend: {
+      clipId: UNITY_CROUCH_CRAWL_CLIP_IDS.walk,
+      source: UNITY_WALK_BLEND_INPUT,
+    },
   };
   return clip;
 }
@@ -1105,7 +1116,9 @@ function buildLand(rigId: string): AnimationClip {
   return clip;
 }
 
-function unityCrouchCrawlSourceMetadata(sourceKey: 'crouchIdle' | 'crawl') {
+function unityCrouchCrawlSourceMetadata(
+  sourceKey: 'walk' | 'crouchIdle' | 'crawl',
+) {
   return {
     ...UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips[sourceKey],
     bindAsset: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.bindAsset,
@@ -1120,6 +1133,63 @@ function unityCrouchCrawlSourceMetadata(sourceKey: 'crouchIdle' | 'crawl') {
     rootYawPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.rootYawPolicy,
     loopPolicy: UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.loopPolicy,
   };
+}
+
+function scaledUnityWalkPositionKeys(
+  keys: readonly SampledVector[],
+): SampledVector[] {
+  const scaleXZ = UNITY_CROUCH_CRAWL_TIMING.sourceModelScale / 1.18;
+  const scaleY = UNITY_CROUCH_CRAWL_TIMING.sourceModelScale / 1.36;
+  return keys.map(([time, value]) => [time, [
+    value[0] * scaleXZ,
+    value[1] * scaleY,
+    value[2] * scaleXZ,
+  ]]);
+}
+
+function buildWalk(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(
+    UNITY_CROUCH_CRAWL_CLIP_IDS.walk,
+    'Walk — Unity PunkyFox Walking Woman',
+    UNITY_WALK_DURATION,
+    'loop',
+    rigId,
+  );
+  clip.tracks = [
+    sampledPositionTrack(
+      clip.id,
+      'hips',
+      scaledUnityWalkPositionKeys(UNITY_WALK_HIPS_POSITION_KEYS),
+    ),
+    ...sampledRotationTracks(
+      clip.id,
+      UNITY_WALK_ROTATION_KEYS,
+      includeTorsoRoot,
+    ),
+  ];
+  clip.contacts = [
+    contact(`${clip.id}:left-stance`, 0.08, 0.25, 'footLeft'),
+    contact(`${clip.id}:right-stance`, 0.55, 0.72, 'footRight'),
+  ];
+  clip.markers = [
+    { id: `${clip.id}:left-strike`, time: 0.1, name: 'Left foot strike' },
+    { id: `${clip.id}:right-strike`, time: 0.58, name: 'Right foot strike' },
+  ];
+  clip.tags = [
+    'player', 'unity-port', 'walk', 'locomotion', 'source-animation-retarget',
+  ];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: unityCrouchCrawlSourceMetadata('walk'),
+    locomotionBlend: {
+      idleThreshold: 0,
+      walkThreshold: 1 / 3,
+      runThreshold: 1,
+      input: UNITY_WALK_BLEND_INPUT,
+    },
+  };
+  return clip;
 }
 
 function scaledUnityLowPosePositionKeys(
@@ -1527,6 +1597,7 @@ export function createPlayerStarterClips(
     rig.joints.some((joint) => joint.id === 'torsoRoot');
   return [
     buildIdle(rigId),
+    buildWalk(rigId, includeTorsoRoot),
     buildRun(rigId, includeTorsoRoot),
     buildPaceStop(rigId),
     buildJump(rigId),
@@ -1560,8 +1631,8 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
  * Refresh the embedded live rig and add only starters introduced after the
  * revision a saved suite has already seen. Same-ID clips normally win; the
  * exceptions are explicit upgrades for shipped, signature-identical starters:
- * Run -> Jog_Fwd, Slam/Rope/Crouch/Crawl -> Unity sources, and the phase-locked
- * airborne deformation arc. A genuinely edited pre-Jog Run is retained under
+ * Walk/Crouch/Crawl/Rope/Slam -> Unity sources, Run -> Jog_Fwd, and the
+ * phase-locked airborne deformation arc. A genuinely edited pre-Jog Run is retained under
  * a backup ID while `player.run` adopts the new source motion. Once a suite
  * records the current revision, a missing clip is treated as an intentional
  * deletion and remains missing on subsequent loads.

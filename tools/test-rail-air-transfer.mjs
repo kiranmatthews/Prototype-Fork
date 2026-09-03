@@ -265,20 +265,101 @@ try {
     };
   }
 
+  const rightAngleRail = new Rail([
+    new THREE.Vector3(0, 8, 5),
+    new THREE.Vector3(0, 8, 0),
+    new THREE.Vector3(5, 8, 0),
+  ]);
+  const hardCorner = rightAngleRail.sharpCornerBetween(
+    4.9,
+    5.2,
+    THREE.MathUtils.degToRad(50),
+  );
+  assert.ok(hardCorner, "90-degree rail node was treated as a curve");
+  closeTo(hardCorner.angle, Math.PI / 2, "90-degree rail corner angle");
+  assert.ok(
+    rightAngleRail.sharpCornerBetween(
+      5.2,
+      4.9,
+      THREE.MathUtils.degToRad(50),
+    ),
+    "reverse grind missed the same sharp corner",
+  );
+  const shallowCurveRail = new Rail([
+    new THREE.Vector3(0, 8, 5),
+    new THREE.Vector3(0, 8, 0),
+    new THREE.Vector3(1.7, 8, -4.7),
+  ]);
+  assert.equal(
+    shallowCurveRail.sharpCornerBetween(
+      4.9,
+      5.2,
+      THREE.MathUtils.degToRad(50),
+    ),
+    null,
+    "a shallow sampled curve was treated as a hard edge",
+  );
+
+  const cornerExit = createPlayer();
+  cornerExit.player.state = "grind";
+  cornerExit.player.freeSkate = true;
+  cornerExit.player.grindRail = rightAngleRail;
+  cornerExit.player.grindT = 4.9;
+  cornerExit.player.grindDir = 1;
+  cornerExit.player.grindVel = 12;
+  cornerExit.player.balance = 0;
+  const cornerInput = makeInput();
+  cornerExit.player.rawInput = cornerInput;
+  cornerExit.player.stepGrind(CONST.fixedStep, cornerInput, cornerExit.level);
+  assert.equal(cornerExit.player.state, "air");
+  assert.equal(cornerExit.player.lastJumpType, "Sharp Rail Exit");
+  assert.ok(cornerExit.player.axisF.z < -0.99,
+    "sharp corner ejection adopted the outgoing tangent");
+  cornerExit.level.dispose();
+
+  const underCornerExit = createPlayer();
+  underCornerExit.player.state = "grind";
+  underCornerExit.player.freeSkate = true;
+  underCornerExit.player.grindRail = rightAngleRail;
+  underCornerExit.player.grindT = 4.9;
+  underCornerExit.player.grindDir = 1;
+  underCornerExit.player.grindVel = 12;
+  underCornerExit.player.balance = 0;
+  underCornerExit.player.railUnder = true;
+  underCornerExit.player.underK = 1;
+  const underCornerInput = makeInput();
+  underCornerExit.player.rawInput = underCornerInput;
+  underCornerExit.player.stepGrind(
+    CONST.fixedStep,
+    underCornerInput,
+    underCornerExit.level,
+  );
+  assert.equal(underCornerExit.player.state, "air");
+  closeTo(
+    underCornerExit.player.vVel,
+    0.8,
+    "under-rail hard-corner safety pop",
+  );
+  underCornerExit.level.dispose();
+
   for (const sign of [-1, 1]) {
-    const rotationOnly = createRailExit();
+    const freeTransfer = createRailExit();
     const noR2 = stepAndMeasure(
-      rotationOnly,
+      freeTransfer,
       makeInput({ moveX: sign }),
     );
-    closeTo(noR2.lateral, 0, `rail ${sign} without R2 traversed laterally`);
+    closeTo(
+      noR2.lateral,
+      -sign * TUNING.walkSpeed * CONST.fixedStep,
+      `rail ${sign} default horizontal transfer`,
+    );
     closeTo(noR2.forward, 12 * CONST.fixedStep, `rail ${sign} forward carry`);
     closeTo(
       noR2.spin,
       -sign * TUNING.grabSpinRate * CONST.fixedStep,
       `rail ${sign} without R2 did not rotate`,
     );
-    rotationOnly.level.dispose();
+    freeTransfer.level.dispose();
 
     const transferring = createRailExit();
     const withR2 = stepAndMeasure(
@@ -286,9 +367,9 @@ try {
       makeInput({ moveX: sign, transferHeld: true }),
     );
     closeTo(
-      withR2.worldX,
-      sign * TUNING.walkSpeed * CONST.fixedStep,
-      `rail ${sign} held-R2 transfer`,
+      withR2.lateral,
+      0,
+      `rail ${sign} held-R2 in-place spin`,
     );
     closeTo(withR2.forward, 12 * CONST.fixedStep, `rail ${sign} R2 forward carry`);
     closeTo(
@@ -300,7 +381,11 @@ try {
       transferring,
       makeInput({ moveX: sign }),
     );
-    closeTo(released.worldX, 0, `rail ${sign} kept strafe after R2 release`);
+    closeTo(
+      released.lateral,
+      -sign * TUNING.walkSpeed * CONST.fixedStep,
+      `rail ${sign} did not resume transfer after R2 release`,
+    );
     transferring.level.dispose();
 
     const edgeOnly = createRailExit();
@@ -310,10 +395,23 @@ try {
     );
     closeTo(
       pressedNotHeld.lateral,
-      0,
+      -sign * TUNING.walkSpeed * CONST.fixedStep,
       `rail ${sign} transfer edge acted like held R2`,
     );
     edgeOnly.level.dispose();
+
+    const grabbedSpin = createRailExit();
+    const withGrab = stepAndMeasure(
+      grabbedSpin,
+      makeInput({ moveX: sign, grabHeld: true, grabPressed: true }),
+    );
+    closeTo(withGrab.lateral, 0, `rail ${sign} grab drifted sideways`);
+    closeTo(
+      withGrab.spin,
+      -sign * TUNING.grabSpinRate * CONST.fixedStep,
+      `rail ${sign} grab did not preserve spin`,
+    );
+    grabbedSpin.level.dispose();
 
     for (const transferHeld of [false, true]) {
       const foot = createPlayer();
@@ -472,11 +570,11 @@ try {
   assert.match(
     touchSource,
     /const SWIPE_HOLD_MS = 450/,
-    "touch R2 pulse is too short for the authored rail-transfer gap",
+    "touch R2 pulse is too short for an in-place rail spin",
   );
 
   console.log(
-    "Validated screen-directed cross-grind poses, planted stance, R2-gated rail-air traversal, rotation-only stick input, and unchanged foot-air control.",
+    "Validated cross-grind poses, sharp-corner ejection, default rail-air transfer, R2/grab in-place spins, and unchanged foot-air control.",
   );
 } finally {
   await server.close();

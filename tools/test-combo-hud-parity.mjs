@@ -139,6 +139,11 @@ assert.match(ui, /performance\.now\(\) \+ COMBO_CASH_IN_EXTRA_HOLD_MS/);
 assert.match(ui, /comboCashInIsHolding\(hudNow, this\.comboCashInHoldEnd\)/);
 assert.match(ui, /advanceComboCashInDisplay\([\s\S]{0,180}cashInHolding/);
 assert.match(ui, /this\.dispScore = cashInFrame[\s\S]{0,100}cashInFrame\.score/);
+assert.match(
+  ui,
+  /setHudReveal\(\s*this\.scorePlateEl,[\s\S]{0,180}this\.comboState === "cashin"/,
+  "banking combo points does not reveal the score HUD",
+);
 assert.match(ui, /else if \(!cashInHolding\)[\s\S]{0,140}cashInFrame\?\.combo/);
 assert.match(ui, /advanceLiveComboTicker\(/);
 assert.match(ui, /setHUD\(s: HudState, deltaSeconds = 1 \/ 60\)/);

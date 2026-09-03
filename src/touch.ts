@@ -49,7 +49,7 @@ const SWIPE_MIN_PX = 64;
 const SWIPE_MAX_MS = 320;
 const SWIPE_MIN_VEL = 0.35; // px per ms
 // Touch has no physical trigger to keep depressed. Hold the emulated R2 long
-// enough to span a normal rail-transfer air (4m practice spacing at 9u/s).
+// enough to cover an in-place rail-air spin without lateral transfer.
 const SWIPE_HOLD_MS = 450;
 
 /** One shared touch/coarse-pointer gate for input and presentation policy. */

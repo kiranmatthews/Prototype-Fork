@@ -53,46 +53,51 @@ support("Finish bridge", 99, 112, 3, "#516d78");
 
 type BonusCrate = readonly [x: number, deckY: number, kind: "wood" | "mystery"];
 
+// Runtime crates are 0.96 wide. Rows meant to read as continuous use a 0.95
+// pitch (a 1 cm overlap), while the larger puzzle jumps remain deliberately
+// open; preserved Unity centres were 1.06–1.35 apart and created fall-through
+// hairline cracks in the browser.
+
 const bridgeA: readonly BonusCrate[] = [
-  [-15.39, 0, "wood"],
-  [-14.15, 0, "wood"],
-  [-12.96, 0, "wood"],
-  [-11.8, 0, "wood"],
-  [-11.8, 0.96, "mystery"],
-  [-10.64, 0, "mystery"],
-  [-9.51, 0, "wood"],
-  [-8.41, 0, "wood"],
-  [-7.35, 0, "wood"],
+  [-14.7, 0, "wood"],
+  [-13.75, 0, "wood"],
+  [-12.8, 0, "wood"],
+  [-11.85, 0, "wood"],
+  [-11.85, 0.96, "mystery"],
+  [-10.9, 0, "mystery"],
+  [-9.95, 0, "wood"],
+  [-9, 0, "wood"],
+  [-8.05, 0, "wood"],
 ];
 
 const bridgeB: readonly BonusCrate[] = [
-  [7.4, 0, "wood"],
-  [8.59, 0, "wood"],
-  [9.75, 0, "wood"],
-  [10.94, 0, "wood"],
+  [8.3, 0, "wood"],
+  [9.25, 0, "wood"],
+  [10.2, 0, "wood"],
+  [11.15, 0, "wood"],
   [12.1, 0, "wood"],
   [12.1, 0.96, "wood"],
-  [13.38, 0, "wood"],
-  [14.45, 0, "wood"],
-  [14.45, 0.96, "wood"],
-  [15.72, 0, "wood"],
-  [16.8, 0, "wood"],
-  [16.8, 0.96, "wood"],
+  [13.05, 0, "wood"],
+  [14, 0, "wood"],
+  [14, 0.96, "wood"],
+  [14.95, 0, "wood"],
+  [15.9, 0, "wood"],
+  [15.9, 0.96, "wood"],
 ];
 
 const bridgeC: readonly BonusCrate[] = [
-  [78.25, 2, "wood"],
-  [78.25, 2.96, "mystery"],
-  [78.25, 3.92, "mystery"],
-  [79.56, 3.92, "mystery"],
+  [78.43, 2, "wood"],
+  [78.43, 2.96, "mystery"],
+  [78.43, 3.92, "mystery"],
+  [79.38, 3.92, "mystery"],
   [80.75, 2, "wood"],
-  [80.75, 2.96, "mystery"],
-  [82.1, 2.96, "mystery"],
-  [83.25, 2, "wood"],
-  [84.45, 2, "wood"],
+  [80.95, 2.96, "mystery"],
+  [81.9, 2.96, "mystery"],
+  [83.85, 2, "wood"],
+  [84.8, 2, "wood"],
   [85.75, 2, "wood"],
-  [86.95, 2, "wood"],
-  [88.25, 2, "mystery"],
+  [86.7, 2, "wood"],
+  [87.65, 2, "mystery"],
 ];
 
 const addCrateBridge = (name: string, placements: readonly BonusCrate[]): void => {

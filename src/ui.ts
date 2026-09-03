@@ -1878,7 +1878,9 @@ export class UI {
     this.gameHudLayer.classList.toggle("hud-run-mode", explicitRunHud);
     this.setHudReveal(
       this.scorePlateEl,
-      explicitRunHud || (contextual && this.hudVisibilityFrame.showScore),
+      explicitRunHud ||
+        this.comboState === "cashin" ||
+        (contextual && this.hudVisibilityFrame.showScore),
     );
   }
 

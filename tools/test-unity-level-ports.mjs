@@ -304,6 +304,22 @@ assert.ok(
     .filter((component) => component.t === "platform")
     .every((component) => component.edgeGrinding === false),
 );
+const bonusCrates = bonus.components.filter((component) => component.t === "crate");
+for (const [label, row] of [
+  ["Bridge A floor", bonusCrates.filter((c) => c.nm?.startsWith("Bridge A") && c.p[1] === 0)],
+  ["Bridge B floor", bonusCrates.filter((c) => c.nm?.startsWith("Bridge B") && c.p[1] === 0)],
+  ["Bridge C floor tail", bonusCrates.filter((c) => c.nm?.startsWith("Bridge C") && c.p[1] === 2 && c.p[0] >= 83)],
+  ["Bridge C middle pair", bonusCrates.filter((c) => c.nm?.startsWith("Bridge C") && c.p[1] === 2.96 && c.p[0] >= 80)],
+  ["Bridge C upper pair", bonusCrates.filter((c) => c.nm?.startsWith("Bridge C") && c.p[1] === 3.92)],
+]) {
+  const xs = row.map((crate) => crate.p[0]).sort((a, b) => a - b);
+  for (let index = 1; index < xs.length; index++) {
+    assert.ok(
+      xs[index] - xs[index - 1] <= 0.96 + 1e-9,
+      `${label} retains a fall-through crack between ${xs[index - 1]} and ${xs[index]}`,
+    );
+  }
+}
 
 const island = levels.get("ISLAND_HOPPER_LEVEL");
 assert.equal(count(island, "woodpath"), 11);

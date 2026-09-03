@@ -36,6 +36,9 @@ try {
     UNITY_CROUCH_CRAWL_CLIP_IDS,
     UNITY_CROUCH_CRAWL_TIMING,
     UNITY_CROUCH_IDLE_DURATION,
+    UNITY_WALK_BLEND_INPUT,
+    UNITY_WALK_DURATION,
+    unityWalkBlendWeight,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
     UNITY_SLAM_POSE_SOURCE,
@@ -339,9 +342,9 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(starterClips.length, 22);
+  assert.equal(starterClips.length, 23);
   for (const id of [
-    'player.idle', 'player.run', 'player.pace-stop', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
+    'player.idle', 'player.walk', 'player.run', 'player.pace-stop', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
     'player.crawl', 'player.slide', 'player.skate', 'player.grind', 'player.grab', 'player.hang',
     'player.climb', 'player.rope', 'player.rope-climb', 'player.rope-release',
     'player.rope-release-charged', 'player.slam', 'player.bail', 'player.spin',
@@ -359,6 +362,7 @@ try {
   const crouch = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
   const crawl = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
   const idle = findClip(parsedSuite, 'player.idle');
+  const walk = findClip(parsedSuite, 'player.walk');
   const run = findClip(parsedSuite, 'player.run');
   const paceStop = findClip(parsedSuite, 'player.pace-stop');
   const doubleJump = findClip(parsedSuite, 'player.double-jump');
@@ -367,7 +371,7 @@ try {
   const ropeRelease = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.release);
   const ropeReleaseCharged = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.chargedRelease);
   const slam = findClip(parsedSuite, 'player.slam');
-  assert.ok(jump && doubleJump && fall && land && crouch && crawl && idle && run && paceStop &&
+  assert.ok(jump && doubleJump && fall && land && crouch && crawl && idle && walk && run && paceStop &&
     ropeHang && ropeClimb && ropeRelease && ropeReleaseCharged && slam);
   assert.equal(jump.playbackSpeed, 1);
   assert.equal(jump.duration, 1);
@@ -721,6 +725,29 @@ try {
   );
   assertEulerPose(slamFall, 'elbowLeft', [0, 0, 0], 'Unity slam fall');
 
+  // Gentle analogue locomotion uses Unity's Walking Woman source and blends
+  // continuously into the established Quaternius run.
+  assert.equal(walk.name, 'Walk — Unity PunkyFox Walking Woman');
+  near(walk.duration, UNITY_WALK_DURATION);
+  assert.equal(walk.loop.mode, 'loop');
+  assert.equal(walk.loop.seamless, true);
+  assert.equal(walk.tracks.length, 23);
+  assert.equal(walk.tracks.filter((track) => track.kind === 'position').length, 1);
+  assert.equal(walk.metadata.sourceAnimation.sourceAssetSha256,
+    UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips.walk.sourceAssetSha256);
+  for (const track of walk.tracks) {
+    assert.deepEqual(track.keys.at(-1).value, track.keys[0].value,
+      `${track.target} did not close the Unity Walk loop`);
+  }
+  assert.equal(unityWalkBlendWeight(0), 1);
+  assert.equal(unityWalkBlendWeight(1 / 3), 1);
+  near(unityWalkBlendWeight(2 / 3), 0.5);
+  assert.equal(unityWalkBlendWeight(1), 0);
+  assert.deepEqual(run.metadata.variantBlend, {
+    clipId: walk.id,
+    source: UNITY_WALK_BLEND_INPUT,
+  });
+
   // Run is the native 30 FPS Quaternius Jog_Fwd loop, converted to ordinary
   // semantic keyframe tracks so every source sample remains editable.
   assert.equal(run.name, 'Run — Quaternius Jog_Fwd');
@@ -834,16 +861,20 @@ try {
   const versionOneSuite = {
     ...parsedSuite,
     clips: parsedSuite.clips
-      .filter((clip) => clip.id !== 'player.pace-stop' && clip.id !== 'player.run')
+      .filter((clip) =>
+        clip.id !== 'player.pace-stop' &&
+        clip.id !== 'player.walk' &&
+        clip.id !== 'player.run')
       .map((clip) => clip.id === customizedIdle.id ? customizedIdle : clip),
     metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 1 },
   };
   const upgradedCatalog = reconcilePlayerStarterAnimationSuite(versionOneSuite, binding.definition);
   assert.equal(upgradedCatalog.metadata.playerStarterCatalogVersion, PLAYER_STARTER_CATALOG_VERSION);
-  assert.equal(upgradedCatalog.clips.length, versionOneSuite.clips.length + 1);
+  assert.equal(upgradedCatalog.clips.length, versionOneSuite.clips.length + 2);
   assert.equal(findClip(upgradedCatalog, 'player.idle'), customizedIdle,
     'reconciliation replaced a customized same-ID clip');
   assert.ok(findClip(upgradedCatalog, 'player.pace-stop'), 'new catalog clip was not appended');
+  assert.ok(findClip(upgradedCatalog, 'player.walk'), 'Unity Walk was not appended');
   assert.equal(findClip(upgradedCatalog, 'player.run'), undefined,
     'a clip from an already-seen revision was resurrected');
 
@@ -1573,7 +1604,7 @@ try {
   drafts.save(parsedSuite);
   assert.equal(drafts.has(parsedSuite.id), true);
   assert.deepEqual(drafts.listDocumentIds(), [parsedSuite.id]);
-  assert.equal(drafts.load(parsedSuite.id).clips.length, 22);
+  assert.equal(drafts.load(parsedSuite.id).clips.length, 23);
   drafts.remove(parsedSuite.id);
   assert.equal(drafts.load(parsedSuite.id), null);
 

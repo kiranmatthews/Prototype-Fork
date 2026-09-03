@@ -292,6 +292,17 @@ try {
     assert.ok(Math.abs(intent.shim - shim) < 1e-9, `${label} shim projection changed`);
     assert.ok(Math.abs(intent.away - away) < 1e-9, `${label} away projection changed`);
     assert.equal(intent.pullingAway, away === 1, `${label} release intent changed`);
+    assert.equal(intent.pullingToward, false, `${label} unexpectedly requested a climb`);
+  }
+  for (const [nx, nz] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+    const toward = ledgeGripIntent(
+      -nx,
+      -nz,
+      ledgeBasis({ x: nx, z: nz }, 0.5, 0.5),
+    );
+    assert.equal(toward.pullingToward, true,
+      `inward input did not request a climb for normal ${nx},${nz}`);
+    assert.equal(toward.pullingAway, false);
   }
   const cornerIntent = ledgeGripIntent(
     0,
@@ -305,6 +316,8 @@ try {
     false,
     "equal corner shimmy/away input released the grip",
   );
+  assert.equal(cornerIntent.pullingToward, false,
+    "equal corner shimmy/normal input requested a climb");
 
   const body = ledgeBodyBox(
     new THREE.Box3(),
@@ -608,11 +621,12 @@ try {
   const inwardGrip = makeSideGrip();
   const inwardInput = makeInput();
   inwardInput.moveX = 1;
-  for (let frame = 0; frame < 7; frame++) {
+  for (let frame = 0; frame < 8; frame++) {
     inwardGrip.rawInput = inwardInput;
     inwardGrip.stepHang(CONST.fixedStep, inwardInput, gateLevel);
   }
-  assert.equal(inwardGrip.state, "hang", "inward side-ledge input released the grip");
+  assert.equal(inwardGrip.ledgePhase, "climb",
+    "inward side-ledge input did not start the mantle");
   assert.equal(inwardGrip.ledgeAwayT, 0, "inward input accumulated away-release time");
 
   // Jump identity follows board ownership, not velocity. This is the exact
@@ -706,7 +720,15 @@ try {
     return { rows, final };
   }
 
-  const baseline = await runReplay(structuredClone(fixture));
+  const traversalFixture = structuredClone(fixture);
+  // This legacy take held screen-up immediately after the catch. Under the
+  // corrected wall-relative mapping that now means "toward landing: climb";
+  // neutralize that stale hold and its later one-frame repeat so the explicit
+  // left/right shimmy section can keep validating long-edge traversal.
+  for (let frame = 4350; frame <= 4381; frame++)
+    traversalFixture.my[frame] = 0;
+  traversalFixture.my[4499] = 0;
+  const baseline = await runReplay(traversalFixture);
   assert.equal(baseline.rows.get(4351).state, "hang");
   const normal = baseline.rows.get(4351).normal.normalize();
   const tangent = new THREE.Vector3(normal.z, 0, -normal.x);
@@ -765,7 +787,7 @@ try {
   );
 
   // The old target fell unless forward input rescued it after the animation.
-  const neutral = structuredClone(fixture);
+  const neutral = structuredClone(traversalFixture);
   for (let frame = 4565; frame < neutral.frames; frame++) neutral.my[frame] = 0;
   const neutralRun = await runReplay(neutral);
   const neutralEnd = neutralRun.rows.get(4620);
@@ -775,7 +797,7 @@ try {
 
   // Holding X through the collision frame must queue the mantle; no release
   // and second press should be required after the hands catch.
-  const heldCatch = structuredClone(fixture);
+  const heldCatch = structuredClone(traversalFixture);
   for (let frame = 4351; frame <= 4375; frame++) heldCatch.b[frame] |= 1;
   const heldRun = await runReplay(heldCatch);
   assert.equal(heldRun.rows.get(4351).state, "hang");
@@ -787,7 +809,11 @@ try {
 
   // A real low ceiling blocks only the climb. The grip remains live and can
   // traverse away from that deliberate traverse-only section.
-  const blocked = structuredClone(fixture);
+  const blocked = structuredClone(traversalFixture);
+  for (let frame = 4555; frame <= 4565; frame++) {
+    blocked.mx[frame] = 0;
+    blocked.my[frame] = 0;
+  }
   for (let frame = 4566; frame < blocked.frames; frame++) {
     blocked.mx[frame] = -1;
     blocked.my[frame] = 0;

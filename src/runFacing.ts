@@ -1,6 +1,6 @@
 const TAU = Math.PI * 2;
 
-export const RUN_REVERSAL_DURATION = 0.1;
+export const RUN_REVERSAL_DURATION = 0.4;
 export const RUN_REVERSAL_YAW_RATE = Math.PI / RUN_REVERSAL_DURATION;
 
 export function wrapFacingAngle(angle: number): number {
