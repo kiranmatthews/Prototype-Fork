@@ -472,6 +472,11 @@ const BAIL_DELTA = new THREE.Vector3();
 const BAIL_CONTROL_F = new THREE.Vector3();
 const BAIL_CONTROL_L = new THREE.Vector3();
 const BAIL_PITCH_AXIS = new THREE.Vector3(1, 0, 0);
+// A bail or abandoned-board air is an active rescue attempt, not a cutscene.
+// This response reaches roughly 90% of the requested planar velocity in 0.2s
+// while neutral input preserves the trajectory that threw the rider there.
+const AIR_RESCUE_CONTROL_RESPONSE = 12;
+const AIR_RESCUE_INPUT_DEADZONE = 0.05;
 // Forgive a near-simultaneous Square/X smoosh at takeoff, but never bank an
 // old ground spin through an arbitrarily long held ollie charge.
 const OLLIE_DECK_TRICK_CHORD = 0.1;
@@ -4370,9 +4375,10 @@ export class Player {
       }
     }
 
-    // One course/camera-relative steering pulse per impact. Even a success is
-    // rotated away from the requested direction and only partially blends the
-    // current velocity toward it, so this never becomes ordinary air control.
+    // One extra course/camera-relative steering KICK per impact. Dependable
+    // held-direction authority is applied later in stepAir; this pulse keeps
+    // the old fish-like stumble by briefly biasing that trajectory with chance
+    // and angular error.
     if (
       this.state === 'air' &&
       !this.grounded &&
@@ -4535,6 +4541,48 @@ export class Player {
       BAIL_CONTROL_F.set(-1, 0, 0);
       BAIL_CONTROL_L.set(0, 0, -1);
     }
+  }
+
+  /**
+   * Deterministic directional authority while the rider is still flying out
+   * of a wipeout or deliberate board abandonment. The existing post-impact
+   * fish-flail remains an extra unreliable kick; this is the dependable base
+   * layer that makes held arrows and analogue input useful throughout flight.
+   */
+  private stepAirRescueControl(dt: number, level: Level): boolean {
+    const ownsAir =
+      this.state === 'air' &&
+      !this.grounded &&
+      (this.isBailing || this.emergencyEjectLandingPending);
+    if (!ownsAir) return false;
+
+    const moveX = THREE.MathUtils.clamp(this.rawInput.moveX, -1, 1);
+    const moveY = THREE.MathUtils.clamp(this.rawInput.moveY, -1, 1);
+    const intent = Math.min(1, Math.hypot(moveX, moveY));
+    if (intent <= AIR_RESCUE_INPUT_DEADZONE) return true;
+
+    this.resolveBailControlFrame(level);
+    BAIL_TARGET.copy(BAIL_CONTROL_F)
+      .multiplyScalar(moveY)
+      .addScaledVector(BAIL_CONTROL_L, moveX);
+    if (BAIL_TARGET.lengthSq() <= 1e-8) return true;
+    BAIL_TARGET.normalize().multiplyScalar(TUNING.walkSpeed * intent);
+
+    BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
+    BAIL_V.lerp(
+      BAIL_TARGET,
+      1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * Math.max(0, dt)),
+    );
+    const velocity = BAIL_V.length();
+    if (velocity > 1e-4) {
+      this.axisF.copy(BAIL_V).multiplyScalar(1 / velocity);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      this.speed = velocity;
+    } else {
+      this.speed = 0;
+    }
+    if (this.isBailing) this.bailVelocity.copy(BAIL_V);
+    return true;
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
@@ -6256,12 +6304,18 @@ export class Player {
       if (this.vVel < -CONST.maxFallSpeed) this.vVel = -CONST.maxFallSpeed;
     }
 
+    // A wipeout/board-abandon air gets its own dependable rescue steering.
+    // It is independent of the skate airControl tuner (which may legitimately
+    // be zero) and leaves vertical gravity untouched.
+    const rescueAirControl = this.stepAirRescueControl(dt, level);
+
     // Crash-style directional air control: up/down stretches or shortens the
     // jump (down brakes extra hard for precision), left/right sidesteps
     // laterally. Locked while holding a grab, slamming, or GLUED IN HANG TIME
     // (there the wall glue + vertDrift own all motion, so vertDrift is the sole
     // coping-drift control and nothing zeroes the parked speed).
     if (
+      !rescueAirControl &&
       !this.isBailing &&
       !this.grabbing &&
       !this.slamActive &&
@@ -10238,6 +10292,29 @@ export class Player {
           level.detonate(c);
         continue;
       }
+      if (
+        (this.isBailing || this.emergencyEjectLandingPending) &&
+        crateStompContacts.has(c) &&
+        !c.metal &&
+        !c.metalBounce &&
+        !c.bang &&
+        !c.nitroBang &&
+        !c.nitro &&
+        !c.tnt
+      ) {
+        // A precise top-down hit turns a failure air back into platforming:
+        // the destructible box goes, the feet spring from its real lid, and
+        // all ragdoll/eject judgment is retired by bounceRefresh. Typed
+        // hazards and indestructible boxes retain their authored rules below.
+        this.snapFeetToCrateLid(c);
+        this.smashCrate(level, c);
+        this.vVel = TUNING.crateBounce;
+        this.state = 'air';
+        this.grounded = false;
+        this.bounceRefresh();
+        sfx.play('crateBounce', 0.7);
+        break;
+      }
       if (c.nitro) {
         // Nitro: body contact detonates it — fatally, unless uber or a mask
         // (or the invuln flicker from one) absorbs the hit.
@@ -10613,11 +10690,30 @@ export class Player {
           }
           continue;
         }
+        const validStomp = this.isStomping(e.box) && e.stompKill;
+        const rescueStomp =
+          validStomp &&
+          (this.isBailing || this.emergencyEjectLandingPending);
+        if (rescueStomp) {
+          // As with a crate, only a swept top-face stomp can rescue the fall.
+          // Spikes, airborne hoppers/floaters and other non-stompable states
+          // keep their published combat identity through validStomp above.
+          const top = e.box.max.y;
+          level.killEnemy(e);
+          this.score(CONST.ptsEnemy, 'Bonk');
+          this.pos.y = top + 0.02;
+          this.vVel = TUNING.crateBounce;
+          this.state = 'air';
+          this.grounded = false;
+          this.bounceRefresh();
+          sfx.play('crateBounce', 0.7);
+          continue;
+        }
         if ((this.uberTimer > 0 || this.sliding) && e.meleeKill) {
           // Uber plows through; Crash 3 rules: the slide takes out enemies too.
           level.killEnemy(e);
           this.score(CONST.ptsEnemy, 'Takedown');
-        } else if (this.isStomping(e.box) && e.stompKill) {
+        } else if (validStomp) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
           level.killEnemy(e);
@@ -11040,10 +11136,99 @@ export class Player {
     this.onComboRunFail();
   }
 
+  /**
+   * A valid top-down stomp is an escape hatch from either failure air. Keep
+   * the loose board loose, but retire every cached tumble/eject judgment and
+   * hand the bounce to ordinary on-foot movement immediately.
+   */
+  private retireAirRescueFailure(): boolean {
+    if (!this.isBailing && !this.emergencyEjectLandingPending) return false;
+
+    BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
+    this.cancelWipeoutActions();
+
+    this.bailDownT = 0;
+    this.bailRecoverT = -1;
+    this.bailRecoverDuration = BAIL_RECOVER_TIME;
+    this.bailRecoveryPose = 0;
+    this.bailGroundT = 0;
+    this.bailMash = 0;
+    this.bailRush = 1;
+    this.bailExitSpeed = 0;
+    this.bailVelocity.set(0, 0, 0);
+    this.bailSpin = 0;
+    this.dropPose = 0;
+
+    this.ragActive = false;
+    this.ragBlend = 0;
+    this.ragQ.identity();
+    this.ragPoseAnchor.set(0, 0, 0);
+    this.ragPoseAnchorW = 0;
+    this.ragAngVel.set(0, 0, 0);
+    this.ragBounces = 0;
+    this.ragImpacts = 0;
+    this.ragJumpAttemptImpact = 0;
+    this.ragSteerAttemptImpact = 0;
+    this.ragSteerInputLatched = false;
+    this.ragFishJumps = 0;
+    this.ragFlailKickT = 0;
+    this.ragRollAcc = 0;
+
+    this.emergencyEjectCharging = false;
+    this.emergencyEjectChargeT = 0;
+    this.emergencyEjectUsed = false;
+    this.emergencyEjectLandingPending = false;
+    this.emergencyEjectLandingWillBail = false;
+    this.boardOllieAir = false;
+    this.deckTricksThisAir.clear();
+    this.jumpReleaseRearmRequired = false;
+
+    this.state = 'air';
+    this.grounded = false;
+    this.groundHit = null;
+    this.crateFloor = null;
+    this.crateFloorT = 0;
+    this.crateSupportLostThisStep = false;
+    this.freeSkate = false;
+    this.airFromSkate = false;
+    this.airGrav = 'foot';
+    this.airMomentum = false;
+    this.floatAir = false;
+    this.grindExitAir = false;
+    this.stepOff = true;
+    this.slideFromWalk = true;
+    this.slideAirLat = 0;
+    this.slideJumpAir = false;
+    this.skateBlockT = Math.max(this.skateBlockT, 0.3);
+    this.flipTimer = 0;
+    this.flipT = 0;
+    this.invulnTimer = 0;
+    this.invulnSilent = false;
+
+    const planar = BAIL_V.length();
+    if (planar > 1e-4) {
+      this.axisF.copy(BAIL_V).multiplyScalar(1 / planar);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      this.speed = Math.min(planar, TUNING.walkSpeed);
+      this.walkVelocity.copy(this.axisF).multiplyScalar(this.speed);
+    } else {
+      this.speed = 0;
+      this.walkVelocity.set(0, 0, 0);
+    }
+    this.walkTurnaround = false;
+    this.walkIntent.set(0, 0, 0);
+    this.walkRamp = Math.max(
+      this.walkRamp,
+      Math.min(1, this.speed / Math.max(TUNING.walkSpeed, 0.01)),
+    );
+    return true;
+  }
+
   // A crate bounce is a fresh launch: the double jump re-arms, its window
   // clock restarts (next frame records the bounce pop as the window's scale),
   // and even a skate-origin air earns ONE extra tap off the lid.
   private bounceRefresh(): void {
+    const rescued = this.retireAirRescueFailure();
     this.clearCoyoteJumpWindow();
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
@@ -11067,6 +11252,7 @@ export class Player {
     // stomp lost its double-jump re-arm.
     this.charging = false;
     this.chargeTimer = 0;
+    if (rescued) this.lastJumpType = 'Rescue Bounce';
   }
 
   // BANKING A CHECKPOINT is breaking a box. The checkpoint crate counts
@@ -11631,7 +11817,7 @@ export class Player {
     stomps: ReadonlySet<Crate>;
     bonks: ReadonlySet<Crate>;
   } {
-    if (this.isBailing || this.state !== 'air' || this.vVel === 0)
+    if (this.state !== 'air' || this.vVel === 0)
       return {
         ordered: level.crates,
         stomps: NO_CRATE_CONTACTS,

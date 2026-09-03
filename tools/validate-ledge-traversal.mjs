@@ -703,6 +703,20 @@ try {
         const frame = replayer.frame;
         beforeFrame?.(frame, player, level);
         if (!replayer.feed(input, player.camDir)) break;
+        // The current game deliberately gives an airborne wipeout dependable
+        // held-direction control. This pre-feature recording is retained only
+        // as a ledge traversal fixture, so keep its much earlier bail neutral
+        // instead of letting the new rescue mechanic rewrite the approach.
+        if (
+          player.state === "air" &&
+          !player.grounded &&
+          (player.bailTimeLeft > 0 ||
+            player.emergencyEjectCharging ||
+            player.emergencyEjectLandingPending)
+        ) {
+          input.moveX = 0;
+          input.moveY = 0;
+        }
         player.step(CONST.fixedStep, input, level);
         level.update(CONST.fixedStep);
         if (checkpoints.has(frame)) rows.set(frame, capture(player));

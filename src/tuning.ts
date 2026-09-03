@@ -150,9 +150,9 @@ export const TUNING = {
   ragFlail: 1, // limb windmill amplitude while airborne in a wipeout
   ragFlailJumpChance: 0.38, // chance that a post-impact X press produces a helpless fish-flop bounce
   ragFlailJumpVelocity: 6.2, // upward impulse when that unreliable post-impact bounce answers
-  ragFlailSteerChance: 0.3, // chance that each post-impact stick pulse actually changes the tumble direction
-  ragFlailSteerSpeed: 5, // target planar speed of a successful, deliberately sloppy tumble steer
-  ragFlailSteerJitter: 55, // max angular error (degrees) on a successful tumble steer
+  ragFlailSteerChance: 0.3, // chance that a fresh post-impact pulse adds an extra sloppy kick on top of dependable held air steering
+  ragFlailSteerSpeed: 5, // target planar speed of that extra post-impact kick
+  ragFlailSteerJitter: 55, // max angular error (degrees) on the extra post-impact kick
   wallBailSpeed: 12.5, // frontal skate into a solid at/above this = wipeout (below: a block); shared with the generic obstacle response
   wallBailFrontal: 0.68, // required head-on dot for a solid/rail wipeout; angled scrapes keep sliding
   tripMaxHeight: 1.15, // obstacle height above the feet that selects a forward low-obstacle tumble
@@ -634,11 +634,11 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   ragFlailJumpVelocity:
     'Upward impulse of a successful post-impact fish-flop. Existing rebound speed contributes only partly, so repeated presses stay chaotic instead of becoming a clean double jump.',
   ragFlailSteerChance:
-    'After the first impact, chance that each coarse stick-control pulse actually redirects an airborne tumble. Even successful pulses carry angular error. 0 = no tumble steering; 1 = every pulse responds.',
+    'Held direction always steers an airborne wipeout. After the first impact, this is the chance that a fresh stick pulse adds an EXTRA fish-like direction kick; successful kicks still carry angular error. 0 = dependable steering only; 1 = every eligible pulse adds the kick.',
   ragFlailSteerSpeed:
-    'Planar target speed of a successful tumble-direction pulse. This is weak, inaccurate body English, not normal air control.',
+    'Planar target speed of the extra post-impact tumble kick. It layers over the dependable held-direction air steering.',
   ragFlailSteerJitter:
-    'Maximum left/right angular error, in degrees, even when a tumble-direction pulse succeeds. Higher makes the response more fish-like and less trustworthy.',
+    'Maximum left/right angular error, in degrees, on a successful extra post-impact kick. Higher makes that flourish more fish-like without removing base steering authority.',
   wallBailSpeed:
     'Minimum board speed for a sufficiently frontal wall, balustrade, or other solid impact to enter the generic wipeout response. Below it, the obstacle blocks without a bail.',
   wallBailFrontal:

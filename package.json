@@ -19,6 +19,7 @@
     "check:surface-friction": "node tools/test-surface-friction.mjs",
     "check:camera-speed": "node tools/test-camera-speed-effect.mjs",
     "check:bail-recovery": "node tools/test-ragdoll-recovery.mjs",
+    "check:air-rescue": "node tools/test-air-rescue.mjs",
     "check:crate-types": "node tools/test-life-multihit-crates.mjs",
     "check:crate-jump": "node tools/test-crate-jump-parity.mjs",
     "check:nst-port": "python3 -B tools/test_iga_igz_layout.py && node tools/test-jungle-cliff-port.mjs",
@@ -40,7 +41,7 @@
     "character:doctor": "python3 tools/tripo-character/tripo_character.py doctor",
     "character:generate": "python3 tools/tripo-character/tripo_character.py generate",
     "character:test": "python3 -m unittest discover -s tools/tripo-character/tests -p 'test_*.py'",
-    "build": "npm run check:levels && npm run check:unity-ports && npm run check:ground && npm run check:crouch-jump && npm run check:pipe && npm run check:ledge && npm run check:rope && npm run check:rail-air && npm run check:landing-x && npm run check:run-facing && npm run check:carve-grip && npm run check:surface-friction && npm run check:camera-speed && npm run check:bail-recovery && npm run check:crate-types && npm run check:crate-jump && npm run check:nst-port && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:animation && npm run check:character-lab && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:look && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
+    "build": "npm run check:levels && npm run check:unity-ports && npm run check:ground && npm run check:crouch-jump && npm run check:pipe && npm run check:ledge && npm run check:rope && npm run check:rail-air && npm run check:landing-x && npm run check:run-facing && npm run check:carve-grip && npm run check:surface-friction && npm run check:camera-speed && npm run check:bail-recovery && npm run check:air-rescue && npm run check:crate-types && npm run check:crate-jump && npm run check:nst-port && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:animation && npm run check:character-lab && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:look && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

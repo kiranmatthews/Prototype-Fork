@@ -314,23 +314,28 @@ try {
     return { ...fixture, input, getDraws };
   };
 
-  // An edge held on the collision tick is still pre-impact input: it cannot
-  // retroactively fish-jump or steer. The physical contact itself then arms
-  // exactly one post-impact opportunity.
+  // Held direction owns the airborne rescue trajectory even before the first
+  // impact. It is deterministic and consumes no flaky-input RNG; the physical
+  // contact still arms exactly one extra post-impact fish-jump/steer pulse.
   const impactInput = makeInput({ jumpPressed: true, moveX: 1 });
   const armed = createFirstImpact({ input: impactInput });
   assert.equal(armed.player.ragdollImpactCount, 1, "first contact did not arm input");
   assert.equal(armed.player.ragdollFishJumps, 0, "pre-impact X produced a fish jump");
   assert.equal(armed.getDraws(), 0, "pre-impact input consumed gameplay RNG");
-  closeTo(armed.player.axisF.x, 0, "pre-impact stick changed heading");
-  closeTo(armed.player.axisF.z, -1, "pre-impact stick changed travel direction");
+  assert.ok(armed.player.axisF.x > 0.99, "pre-impact rescue steering missed screen-right");
+  closeTo(armed.player.axisF.z, 0, "pre-impact rescue steering kept stale forward heading");
   impactInput.consumeEdges();
   const heldThroughImpact = makeInput({ moveX: 1 });
   armed.player.rawInput = heldThroughImpact;
+  const headingBeforeHeldPulse = armed.player.axisF.clone();
   const heldSteerDraws = installRandomSequence(armed.player, [0, 0.5, 0.5, 0.5]);
   armed.player.stepRagdollFlailInput(heldThroughImpact, armed.level);
   assert.equal(heldSteerDraws(), 0, "held-through-impact stick spent a steer roll");
-  closeTo(armed.player.axisF.x, 0, "held-through-impact stick changed heading");
+  closeTo(
+    armed.player.axisF.distanceTo(headingBeforeHeldPulse),
+    0,
+    "held-through-impact stick spent the extra flaky pulse",
+  );
   armed.player.rawInput = makeInput();
   armed.player.stepRagdollFlailInput(armed.player.rawInput, armed.level);
 
