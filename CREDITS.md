@@ -35,10 +35,12 @@ node tools/bake-props.mjs <dir-of-glbs>... > src/prop-data.ts
 
 ## Character animation
 
-The procedural rider's editable Run clip is retargeted from Quaternius'
-`Jog_Fwd_Loop` in the CC0 Universal Animation Library Standard edition. Only
-the sampled semantic keyframes ship; no Quaternius character model is part of
-the runtime. Source hash, conversion rules and the CC0 notice are retained in
+The procedural rider's editable Walk and Run clips are retargeted from
+Quaternius' `Walk_Loop` and `Jog_Fwd_Loop` in the CC0 Universal Animation
+Library Standard edition. Both come from the same source GLB and skeleton.
+Only sampled semantic keyframes ship; no Quaternius character model is part of
+the runtime. Source hashes, conversion rules, and CC0 notices are retained in
+`public/animations/quaternius-walk/` and
 `public/animations/quaternius-jog-fwd/`.
 
 ## Character torso

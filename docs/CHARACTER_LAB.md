@@ -172,6 +172,7 @@ versioned settings for source review.
 
 The Quaternius mannequin, Violet Vixen FBX, their runtime adapters, and the old
 hidden imported fox/roo comparison routes are intentionally retired. The CC0
-Quaternius Jog_Fwd motion remains the procedural player’s editable Run clip;
-its independent source record lives in
+Quaternius Walk_Loop and Jog_Fwd motions remain the procedural player’s
+editable Walk and Run clips. They share one source skeleton; their independent
+source records live in `public/animations/quaternius-walk/` and
 `public/animations/quaternius-jog-fwd/`.

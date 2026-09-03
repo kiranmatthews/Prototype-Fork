@@ -91,9 +91,9 @@ import {
   unityRopeReleaseDuration,
 } from './animation/unityRope';
 import {
-  UNITY_WALK_BLEND_INPUT,
-  unityWalkBlendWeight,
-} from './animation/unityCrouchCrawl';
+  LOCOMOTION_WALK_BLEND_INPUT,
+  locomotionWalkBlendWeight,
+} from './animation/locomotionBlend';
 import {
   BAIL_RECOVERY_SPRAWL_PITCH,
   sampleBailRecovery,
@@ -1594,8 +1594,8 @@ export class Player {
 
   /**
    * Read-only presentation intent for the authored-animation runtime. Landing
-   * and the run-to-idle pacing stop are deliberately detected there from
-   * gameplay-state edges rather than becoming movement states themselves.
+   * is detected there from gameplay-state edges rather than becoming a
+   * movement state itself.
    */
   get animationClipHint(): PlayerAnimationClipHint {
     if (this.isBailing || this.state === 'dead' || this.state === 'gameover') return 'player.bail';
@@ -1744,7 +1744,7 @@ export class Player {
         inputs: {
           travelSign,
           signedSpeed: normalizedSpeed * travelSign,
-          [UNITY_WALK_BLEND_INPUT]: unityWalkBlendWeight(normalizedSpeed),
+          [LOCOMOTION_WALK_BLEND_INPUT]: locomotionWalkBlendWeight(normalizedSpeed),
           balance: THREE.MathUtils.clamp(this.balance, -1, 1),
           charge,
           skateCharge,

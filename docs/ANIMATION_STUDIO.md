@@ -21,7 +21,7 @@ state, camera state, and render interpolation before play resumes.
 ## Authoring workflow
 
 1. Select an animation from the clip selector. The starter suite contains
-   idle, walk, run, pacing stop, jump, double jump, fall, land, crouch, crawl, slide, skate,
+   idle, walk, run, jump, double jump, fall, land, crouch, crawl, slide, skate,
    grind, grab, hang, climb, rope, slam, bail, and spin slots.
 2. Set duration, loop range/mode, and **Speed**. Playback speed belongs to the
    selected clip and is exported with it; the slider covers the common range
@@ -55,29 +55,17 @@ state, camera state, and render interpolation before play resumes.
 
 ## Locomotion transitions
 
-`player.walk` is the retargeted Unity PunkyFox **Walking Woman** loop. The
-runtime keeps the gameplay route on `player.run` but phase-blends this Walk
-over it using Unity's original locomotion thresholds: full Walk through 3/9
-normalized speed, then a continuous blend to the existing Quaternius Jog_Fwd
-at full run speed. This makes gentle analogue input visibly different without
-replacing or rewriting the approved Run clip. Grounded gait speed and facing
-come from the character's own walk velocity, so a stationary rider carried by
-a Nightworks platform stays in Idle instead of running in place.
-
-`player.pace-stop` is the authored, in-place bridge from a committed run to
-the full resting idle. The runtime owns this clip as an interruptible one-shot:
-it remembers the outgoing gait phase and peak speed, blends briefly from the
-last run pose, lets the feet shed momentum over progressively smaller steps,
-then lands on the exact first pose of `player.idle`. Renewed locomotion or any
-action interrupts it immediately; landing has higher priority.
-
-The motion follows the stop shown around 15:15–15:20 in PlayFrame's
-[Jak & Daxter animation analysis](https://www.youtube.com/watch?v=BbP6Jsh8M6Y&t=915s):
-feet settle first, pelvis and torso follow, arms/clavicles overlap, and the
-head and loose secondary parts finish last. The same reference motivates the
-restrained torso compression/extension carried through the neck and head in
-the run starter. Contrast matters: the final quiet idle makes the larger run
-and stop gestures read more clearly.
+`player.walk` is Quaternius' CC0 `Walk_Loop`, imported from the exact same
+`UAL1_Standard.glb`, skeleton, and 22-joint retargeting path as the approved
+`Jog_Fwd_Loop` Run. Gameplay keeps one `player.run` route and phase-blends Walk
+over Jog: full Walk through 3/9 normalized speed, then a continuous blend to
+full Jog at run speed. The shared gait phase keeps corresponding legs aligned,
+while the runtime eases between each clip's native cycle duration so the
+1.333-second Walk is not accelerated to the 0.933-second Jog cadence. Stopping
+crossfades directly into Idle; the retired pacing-stop interlude is no longer
+part of the catalog or runtime. Grounded gait speed and facing come from the
+character's own walk velocity, so a stationary rider carried by a Nightworks
+platform remains in Idle.
 
 ## Unity body-slam pose
 

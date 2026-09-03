@@ -5,7 +5,8 @@ import {
   UNITY_CROUCH_CRAWL_CLIP_IDS,
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
-  UNITY_WALK_BLEND_INPUT,
+  LOCOMOTION_WALK_BLEND_INPUT,
+  PLAYER_WALK_CLIP_ID,
   UNITY_ROPE_CLIP_IDS,
   UNITY_ROPE_TIMING,
   blendPoses,
@@ -23,8 +24,7 @@ import {
 } from './animation';
 
 export const LAND_CLIP_ID = 'player.land';
-export const PACE_STOP_CLIP_ID = 'player.pace-stop';
-export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, PACE_STOP_CLIP_ID] as const;
+export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID] as const;
 /** Routes allowed to opt into gameplay-phase scrubbing via clip metadata.
  * Manual Studio preview always remains ordinary saved-speed playback. */
 export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
@@ -40,26 +40,18 @@ export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
  * the live legacy pose. */
 export const LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS = ['player.skate'] as const;
 
-/** Ignore a stick tap or a nearly stationary authored run before pacing. */
-export const PACE_STOP_MIN_RUN_SECONDS = 0.18;
-export const PACE_STOP_MIN_PEAK_SPEED = 0.35;
-/** Briefly preserve the outgoing stride so an arbitrary gait phase cannot pop. */
-export const PACE_STOP_CROSSFADE_SECONDS = 0.12;
 export const LAND_IMPACT_CROSSFADE_SECONDS = 0.06;
 export const LAND_RUN_BLEND_START_SECONDS = 0.055;
 export const LAND_RUN_BLEND_END_SECONDS = 0.28;
 export const LAND_RUN_CANCEL_BLEND_SECONDS = 0.12;
 export const LAND_RUN_LATE_BLEND_SECONDS = 0.12;
-export const LOCOMOTION_ENTRY_BLEND_SECONDS = 0.14;
+export const LOCOMOTION_BLEND_SECONDS = 0.14;
 
-type RuntimeTransientKind = 'landing' | 'pace-stop';
+type RuntimeTransientKind = 'landing';
 
 interface RuntimeTransient {
   readonly kind: RuntimeTransientKind;
   readonly clipId: ClipId;
-  readonly entryGaitPhase: number;
-  readonly entrySpeed: number;
-  readonly outgoingPose: PoseBuffer | null;
 }
 
 export interface CharacterAnimationRuntimeOptions {
@@ -82,13 +74,8 @@ export interface CharacterAnimationRuntimeDiagnostics {
   readonly authoredPlaybackSpeed: number | null;
   readonly playbackSpeedMultiplier: number;
   readonly landingOneShotActive: boolean;
-  readonly pacingOneShotActive: boolean;
   readonly transientClipId: ClipId | null;
-  readonly transitionEntryGaitPhase: number | null;
-  readonly transitionEntrySpeed: number | null;
   readonly transitionBlendWeight: number | null;
-  readonly runQualificationSeconds: number;
-  readonly runQualificationPeakSpeed: number;
   readonly authoredPoseApplied: boolean;
   readonly proceduralOrder: ProceduralCompositionOrder | null;
   readonly proceduralDriverCount: number;
@@ -101,10 +88,6 @@ function finitePlaybackMultiplier(value: number | undefined): number {
 
 function trackHasKeys(track: AnimationTrack): boolean {
   return track.enabled !== false && track.keys.length > 0;
-}
-
-function finiteNonNegative(value: number): number {
-  return Number.isFinite(value) ? Math.max(0, value) : 0;
 }
 
 function normalizedPhase(value: number): number {
@@ -156,8 +139,11 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (CROUCH_CRAWL_CLIP_IDS.has(from) || CROUCH_CRAWL_CLIP_IDS.has(to)) {
     return UNITY_CROUCH_CRAWL_TIMING.rapidBlend;
   }
-  if (from === 'player.idle' && to === 'player.run') {
-    return LOCOMOTION_ENTRY_BLEND_SECONDS;
+  if (
+    (from === 'player.idle' && to === 'player.run') ||
+    (from === 'player.run' && to === 'player.idle')
+  ) {
+    return LOCOMOTION_BLEND_SECONDS;
   }
   return 0;
 }
@@ -250,11 +236,7 @@ export class CharacterAnimationRuntime {
   private timelineTime: number | null = null;
   private authoredPlaybackSpeed: number | null = null;
   private previousGrounded: boolean;
-  private previousHint: PlayerAnimationClipHint;
   private transient: RuntimeTransient | null = null;
-  private runQualificationSeconds = 0;
-  private runQualificationPeakSpeed = 0;
-  private lastRunGaitPhase = 0;
   private lastSampledPose: PoseBuffer | null = null;
   private transitionBlendWeight: number | null = null;
   private switchOutgoingPose: PoseBuffer | null = null;
@@ -287,7 +269,6 @@ export class CharacterAnimationRuntime {
     this.proceduralEvaluators = options.proceduralEvaluators;
     const initialIntent = player.animationIntent;
     this.previousGrounded = initialIntent.motion.grounded;
-    this.previousHint = initialIntent.clipId;
     for (const control of this.binding.definition.controls) {
       this.controlDefaults.set(control.id, control.defaultValue);
     }
@@ -328,13 +309,8 @@ export class CharacterAnimationRuntime {
       authoredPlaybackSpeed: this.authoredPlaybackSpeed,
       playbackSpeedMultiplier: this.runtimeSpeed,
       landingOneShotActive: transient?.kind === 'landing',
-      pacingOneShotActive: transient?.kind === 'pace-stop',
       transientClipId: transient?.clipId ?? null,
-      transitionEntryGaitPhase: transient?.entryGaitPhase ?? null,
-      transitionEntrySpeed: transient?.entrySpeed ?? null,
       transitionBlendWeight: this.transitionBlendWeight,
-      runQualificationSeconds: this.runQualificationSeconds,
-      runQualificationPeakSpeed: this.runQualificationPeakSpeed,
       authoredPoseApplied: this.poseApplied,
       proceduralOrder: this.compositionOrder,
       proceduralDriverCount: this.proceduralDriverCount,
@@ -363,7 +339,6 @@ export class CharacterAnimationRuntime {
     // A diagnostic selection must not bank a gameplay transition that replays
     // seconds later when the override is released.
     this.cancelTransient();
-    this.resetRunQualification();
     if (restart) this.restartPending = true;
   }
 
@@ -383,7 +358,6 @@ export class CharacterAnimationRuntime {
     this.restartPending = enabled;
     if (!enabled) {
       this.cancelTransient();
-      this.resetRunQualification();
       this.clearPlayback();
     }
   }
@@ -406,7 +380,6 @@ export class CharacterAnimationRuntime {
     this.removeLowPoseOuterOwnership?.();
     this.removeLowPoseOuterOwnership = null;
     this.cancelTransient();
-    this.resetRunQualification();
     this.clearPlayback();
   }
 
@@ -419,9 +392,7 @@ export class CharacterAnimationRuntime {
     const intent = this.player.animationIntent;
     const grounded = intent.motion.grounded;
     const justLanded = grounded && !this.previousGrounded;
-    const previousHint = this.previousHint;
     this.previousGrounded = grounded;
-    this.previousHint = intent.clipId;
     const hint = intent.clipId;
 
     if (!this.runtimeEnabled) {
@@ -432,17 +403,14 @@ export class CharacterAnimationRuntime {
         hint === 'player.idle' ? 1 : 0,
       );
       this.cancelTransient();
-      this.resetRunQualification();
       return;
     }
 
     if (this.manualClipId === null) {
-      this.updateRunQualification(hint, previousHint, intent.motion, dt);
-      // Landing has first refusal on the exact contact frame. This also avoids
-      // an impossible run->idle edge winning over a fresh airborne transition.
+      // Landing has first refusal on the exact contact frame.
       if (justLanded && hint !== 'player.bail' && hint !== 'player.slam') {
         this.resetLandingRunBlend();
-        this.transient = this.makeTransient('landing', LAND_CLIP_ID, intent.motion);
+        this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {
         if (
           !grounded ||
@@ -451,31 +419,9 @@ export class CharacterAnimationRuntime {
         ) {
           this.cancelTransient();
         }
-      } else if (this.transient?.kind === 'pace-stop') {
-        // Pacing is an idle-bound flourish, never an action lock. Gameplay owns
-        // the same frame in which any new state or renewed run is requested.
-        if (!grounded || hint !== 'player.idle') this.cancelTransient();
-      } else if (
-        grounded &&
-        previousHint === 'player.run' &&
-        hint === 'player.idle' &&
-        this.runQualificationSeconds >= PACE_STOP_MIN_RUN_SECONDS &&
-        this.runQualificationPeakSpeed >= PACE_STOP_MIN_PEAK_SPEED
-      ) {
-        this.transient = {
-          kind: 'pace-stop',
-          clipId: PACE_STOP_CLIP_ID,
-          entryGaitPhase: this.lastRunGaitPhase,
-          // The last routed run frame is necessarily near the idle threshold;
-          // peak speed preserves the momentum that this settle is reacting to.
-          entrySpeed: this.runQualificationPeakSpeed,
-          outgoingPose: this.currentClipId === 'player.run' ? this.lastSampledPose : null,
-        };
       }
-      if (hint !== 'player.run') this.resetRunQualification();
     } else {
       this.cancelTransient();
-      this.resetRunQualification();
     }
 
     let requested: ClipId =
@@ -539,7 +485,8 @@ export class CharacterAnimationRuntime {
       this.restartPending = false;
     } else {
       this.elapsedSeconds += dt;
-      this.playbackSeconds += dt * this.runtimeSpeed;
+      this.playbackSeconds +=
+        dt * this.runtimeSpeed * this.locomotionPlaybackScale(clip, intent.motion);
       this.switchBlendElapsed += dt;
     }
 
@@ -571,8 +518,8 @@ export class CharacterAnimationRuntime {
       ? clipVariantBlend(clip) ??
         (clip.id === 'player.run'
           ? {
-              clipId: UNITY_CROUCH_CRAWL_CLIP_IDS.walk,
-              source: UNITY_WALK_BLEND_INPUT,
+              clipId: PLAYER_WALK_CLIP_ID,
+              source: LOCOMOTION_WALK_BLEND_INPUT,
             }
           : null)
       : null;
@@ -675,28 +622,7 @@ export class CharacterAnimationRuntime {
       this.pendingRunHandoffOffset = null;
     }
     let contactTransitionWeight: number | null = null;
-    if (
-      this.transient?.kind === 'pace-stop' &&
-      clip.id === this.transient.clipId &&
-      this.transient.outgoingPose
-    ) {
-      const authoredBlendTime =
-        this.playbackSeconds * clip.playbackSpeed;
-      const authoredBlendDuration = Math.min(
-        PACE_STOP_CROSSFADE_SECONDS,
-        clip.range.end - clip.range.start,
-      );
-      const weight = smoothstep01(authoredBlendTime / authoredBlendDuration);
-      pose = blendPoses(
-        withControlDefaults(
-          canonicalizePose(this.transient.outgoingPose, this.binding),
-          this.controlDefaults,
-        ),
-        withControlDefaults(canonicalizePose(sampledPose, this.binding), this.controlDefaults),
-        weight,
-      );
-      this.transitionBlendWeight = weight;
-    } else if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
+    if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
       const weight = smoothstep01(this.switchBlendElapsed / this.switchBlendDuration);
       contactTransitionWeight = weight;
       pose = blendPoses(
@@ -718,10 +644,8 @@ export class CharacterAnimationRuntime {
     }
     this.player.setCharacterUpperArmRestAngleWeight(
       clip.id === 'player.idle'
-        ? 1
-        : clip.id === PACE_STOP_CLIP_ID
-          ? this.transitionBlendWeight ?? 1
-          : 0,
+        ? this.transitionBlendWeight ?? 1
+        : 0,
     );
     const incomingCrawlContactOwnership = ownsCrawlContacts ? 1 : 0;
     this.crawlContactOwnership = contactTransitionWeight === null
@@ -858,48 +782,41 @@ export class CharacterAnimationRuntime {
       verticalVelocity: gameplay.verticalVelocity,
       grounded: gameplay.grounded,
       actionProgress,
-      inputs: {
-        ...gameplay.inputs,
-        ...(transient ? {
-          transitionEntryGaitPhase: transient.entryGaitPhase,
-          transitionEntrySpeed: transient.entrySpeed,
-        } : {}),
-      },
+      inputs: gameplay.inputs,
     });
+  }
+
+  /**
+   * Walk and Jog share one normalized gait phase, but their authored cycles
+   * are different lengths. Ease the Run clock toward Walk's native cadence as
+   * Walk gains weight so neither source is time-stretched at its endpoint.
+   */
+  private locomotionPlaybackScale(
+    clip: AnimationClip,
+    motion: ProceduralMotionContext,
+  ): number {
+    if (this.manualClipId !== null || clip.id !== 'player.run') return 1;
+    const variant = clipVariantBlend(clip) ?? {
+      clipId: PLAYER_WALK_CLIP_ID,
+      source: LOCOMOTION_WALK_BLEND_INPUT,
+    };
+    const walk = this.findPlayableClip(variant.clipId);
+    if (!walk) return 1;
+    const weight = Math.min(1, Math.max(0, motion.inputs?.[variant.source] ?? 0));
+    if (weight <= 0) return 1;
+    const runSpan = Math.max(1e-6, clip.range.end - clip.range.start);
+    const walkSpan = Math.max(1e-6, walk.range.end - walk.range.start);
+    const nativeWalkScale =
+      (walk.playbackSpeed * runSpan) /
+      Math.max(1e-6, clip.playbackSpeed * walkSpan);
+    return 1 + (nativeWalkScale - 1) * weight;
   }
 
   private makeTransient(
     kind: RuntimeTransientKind,
     clipId: ClipId,
-    motion: ProceduralMotionContext,
   ): RuntimeTransient {
-    return {
-      kind,
-      clipId,
-      entryGaitPhase: normalizedPhase(motion.gaitPhase),
-      entrySpeed: finiteNonNegative(motion.normalizedSpeed),
-      outgoingPose: null,
-    };
-  }
-
-  private updateRunQualification(
-    hint: PlayerAnimationClipHint,
-    previousHint: PlayerAnimationClipHint,
-    motion: ProceduralMotionContext,
-    deltaSeconds: number,
-  ): void {
-    if (hint !== 'player.run') return;
-    if (previousHint !== 'player.run') this.resetRunQualification();
-    const speed = finiteNonNegative(motion.normalizedSpeed);
-    this.runQualificationSeconds += deltaSeconds;
-    this.runQualificationPeakSpeed = Math.max(this.runQualificationPeakSpeed, speed);
-    this.lastRunGaitPhase = normalizedPhase(motion.gaitPhase);
-  }
-
-  private resetRunQualification(): void {
-    this.runQualificationSeconds = 0;
-    this.runQualificationPeakSpeed = 0;
-    this.lastRunGaitPhase = 0;
+    return { kind, clipId };
   }
 
   private cancelTransient(clearBlend = true): void {

@@ -2175,7 +2175,7 @@ async function openAnimationStudioTool(): Promise<void> {
       applyScalars: (values) => player.applyAnimationDeformations(values),
       syncPresentation: (clip) => {
         player.setCharacterUpperArmRestAngleWeight(
-          clip?.id === 'player.idle' || clip?.id === 'player.pace-stop' ? 1 : 0,
+          clip?.id === 'player.idle' ? 1 : 0,
         );
         player.syncCharacterAppearance();
       },

@@ -14,15 +14,11 @@ const near = (actual, expected, tolerance = 1e-6) => {
 
 try {
   const {
-    PACE_STOP_CLIP_ID,
     LAND_IMPACT_CROSSFADE_SECONDS,
     LAND_RUN_BLEND_END_SECONDS,
     LAND_RUN_BLEND_START_SECONDS,
-    LOCOMOTION_ENTRY_BLEND_SECONDS,
+    LOCOMOTION_BLEND_SECONDS,
     ACTION_PROGRESS_TIMELINE_CLIP_IDS,
-    PACE_STOP_CROSSFADE_SECONDS,
-    PACE_STOP_MIN_PEAK_SPEED,
-    PACE_STOP_MIN_RUN_SECONDS,
     LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS,
     PLAYER_STATE_CLIP_IDS,
     PLAYER_TRANSITION_CLIP_IDS,
@@ -35,7 +31,7 @@ try {
     UNITY_CROUCH_CRAWL_CLIP_IDS,
     UNITY_CRAWL_CONTACT_ADAPTATION,
     UNITY_CROUCH_CRAWL_TIMING,
-    UNITY_WALK_BLEND_INPUT,
+    LOCOMOTION_WALK_BLEND_INPUT,
   } = await server.ssrLoadModule('/src/animation/index.ts');
 
   const root = new THREE.Group();
@@ -72,8 +68,8 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  assert.equal(allIds.length, 21);
-  assert.equal(new Set(allIds).size, 21);
+  assert.equal(allIds.length, 20);
+  assert.equal(new Set(allIds).size, 20);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
     'player.jump', 'player.double-jump', 'player.fall', 'player.rope-climb',
@@ -98,7 +94,7 @@ try {
     duration: 1,
     playbackSpeed: 1,
     loop: { mode: PLAYER_TRANSITION_CLIP_IDS.includes(id) ? 'once' : 'loop', seamless: !PLAYER_TRANSITION_CLIP_IDS.includes(id) },
-    range: { start: 0, end: id === 'player.land' ? 0.45 : id === PACE_STOP_CLIP_ID ? 0.4 : 1 },
+    range: { start: 0, end: id === 'player.land' ? 0.45 : 1 },
     rootMotion: { mode: 'in-place' },
     transformSpace: 'rest-local-delta',
     tracks: [positionTrack(id, x)],
@@ -134,11 +130,6 @@ try {
     target: 'deform.torso.length',
     keys: [{ id: 'player.run:torso-length:key', time: 0, value: 1.4, interpolation: 'step' }],
   });
-  const paceClip = clips.find((clip) => clip.id === PACE_STOP_CLIP_ID);
-  // The pace clip deliberately owns only a historical alias. Runtime
-  // playability must resolve it through the live binding, just like applyPose.
-  paceClip.tracks = [positionTrack(PACE_STOP_CLIP_ID, allIds.indexOf(PACE_STOP_CLIP_ID))];
-  paceClip.tracks[0].target = 'legacyPelvis';
   const suite = {
     schema: 'sol-animation-suite',
     version: 2,
@@ -231,22 +222,22 @@ try {
   near(hipsXWhenDeformed, 0);
   near(upperArmRestAngleWeight, 1);
 
-  // A saved Run without new metadata still discovers the newly introduced
-  // Unity Walk slot. Gentle analogue weight owns Walk, then blends smoothly
+  // A saved Run without new metadata still discovers the source-matched
+  // Quaternius Walk slot. Gentle analogue weight owns Walk, then blends smoothly
   // back to the existing Run without changing the gameplay route ID.
   hint = 'player.run';
   grounded = true;
-  motionInputs = { ...motionInputs, [UNITY_WALK_BLEND_INPUT]: 1 };
+  motionInputs = { ...motionInputs, [LOCOMOTION_WALK_BLEND_INPUT]: 1 };
   runtime.restart();
   tick(0.001);
-  tick(LOCOMOTION_ENTRY_BLEND_SECONDS);
+  tick(LOCOMOTION_BLEND_SECONDS);
   assert.equal(runtime.activeClipId, 'player.run');
-  assert.ok(hips.position.x > 50, 'gentle analogue input did not select Unity Walk');
+  assert.ok(hips.position.x > 50, 'gentle analogue input did not select Quaternius Walk');
   const walkX = hips.position.x;
-  motionInputs = { ...motionInputs, [UNITY_WALK_BLEND_INPUT]: 0 };
+  motionInputs = { ...motionInputs, [LOCOMOTION_WALK_BLEND_INPUT]: 0 };
   tick(0.016);
   assert.ok(hips.position.x < 10, 'full input did not restore the existing Run');
-  motionInputs = { ...motionInputs, [UNITY_WALK_BLEND_INPUT]: 0.5 };
+  motionInputs = { ...motionInputs, [LOCOMOTION_WALK_BLEND_INPUT]: 0.5 };
   tick(0.016);
   assert.ok(hips.position.x > 20 && hips.position.x < walkX,
     'mid analogue input did not blend Walk and Run');
@@ -476,7 +467,6 @@ try {
     runtime.restart();
     tick(0.001);
     assert.equal(runtime.activeClipId, 'player.idle');
-    assert.equal(runtime.diagnostics.pacingOneShotActive, false);
   };
 
   // Diagnostic/manual Run always starts at its own range start. A pending
@@ -559,204 +549,104 @@ try {
   assert.equal(runtime.activeClipId, 'player.run');
   runtime.setDocument(suite);
 
-  const qualifyRun = (
-    speed = PACE_STOP_MIN_PEAK_SPEED + 0.25,
-    phase = 0.73,
-    seconds = PACE_STOP_MIN_RUN_SECONDS + 0.02,
-  ) => {
-    hint = 'player.run';
-    grounded = true;
-    normalizedSpeed = speed;
-    gaitPhase = phase;
-    tick(0.01);
-    tick(seconds);
-    assert.equal(runtime.activeClipId, 'player.run');
-  };
-
-  // A meaningful run -> idle edge owns one pace-stop traversal. Entry gait
-  // phase and peak speed are frozen into generic procedural inputs, while a
-  // short authored-time crossfade preserves the arbitrary outgoing stride.
+  // Run returns directly to Idle with the ordinary locomotion crossfade. No
+  // intermediate transition clip or transient is inserted between states.
   resetStateRouting();
-  qualifyRun(0.72, 0.73);
-  // The routed run can spend its final frame below the qualifying peak. Keep
-  // that frame's planted-foot phase, but retain the meaningful peak momentum.
-  normalizedSpeed = 0.08;
-  gaitPhase = 0.81;
-  tick(0.01);
+  motionInputs = {
+    balance: 0.75,
+    charge: 0.2,
+    travelSign: 1,
+    [LOCOMOTION_WALK_BLEND_INPUT]: 0,
+  };
+  hint = 'player.run';
+  normalizedSpeed = 1;
+  tick(0.016);
+  tick(LOCOMOTION_BLEND_SECONDS);
+  assert.equal(runtime.activeClipId, 'player.run');
   const outgoingRunX = hips.position.x;
   hint = 'player.idle';
   normalizedSpeed = 0;
   tick(0.016);
-  assert.equal(runtime.activeClipId, PACE_STOP_CLIP_ID);
-  assert.equal(runtime.diagnostics.requestedClipId, PACE_STOP_CLIP_ID);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, true);
+  assert.equal(runtime.activeClipId, 'player.idle');
+  assert.equal(runtime.diagnostics.requestedClipId, 'player.idle');
+  assert.equal(runtime.diagnostics.transientClipId, null);
   assert.equal(runtime.diagnostics.landingOneShotActive, false);
-  assert.equal(runtime.diagnostics.transientClipId, PACE_STOP_CLIP_ID);
-  near(runtime.diagnostics.transitionEntryGaitPhase, 0.81);
-  near(runtime.diagnostics.transitionEntrySpeed, 0.72);
   near(runtime.diagnostics.transitionBlendWeight, 0);
   near(upperArmRestAngleWeight, 0);
-  near(runtime.diagnostics.motionContext.actionProgress, 0);
-  near(runtime.diagnostics.motionContext.inputs.transitionEntryGaitPhase, 0.81);
-  near(runtime.diagnostics.motionContext.inputs.transitionEntrySpeed, 0.72);
   near(hips.position.x, outgoingRunX);
   near(deformationValues['deform.torso.length'], 1.4);
 
-  tick(PACE_STOP_CROSSFADE_SECONDS / 2);
-  // smoothstep(0.5) = 0.5. The target clip has no scalar channel, so it must
-  // blend toward the rig's default 1 rather than the generic numeric zero.
+  tick(LOCOMOTION_BLEND_SECONDS / 2);
+  // smoothstep(0.5) = 0.5. Idle has no scalar channel, so it blends toward
+  // the rig default rather than a generic numeric zero.
   near(runtime.diagnostics.transitionBlendWeight, 0.5);
   near(upperArmRestAngleWeight, 0.5);
   near(deformationValues['deform.torso.length'], 1.2);
-  near(hips.position.x, (outgoingRunX + allIds.indexOf(PACE_STOP_CLIP_ID)
-    + PACE_STOP_CROSSFADE_SECONDS / 2) / 2);
-  near(runtime.diagnostics.motionContext.actionProgress,
-    (PACE_STOP_CROSSFADE_SECONDS / 2) / paceClip.range.end);
-
-  tick(paceClip.range.end);
-  assert.equal(runtime.activeClipId, PACE_STOP_CLIP_ID);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
+  near(hips.position.x,
+    (outgoingRunX + LOCOMOTION_BLEND_SECONDS / 2) / 2);
+  tick(LOCOMOTION_BLEND_SECONDS / 2);
+  assert.equal(runtime.activeClipId, 'player.idle');
+  assert.equal(runtime.diagnostics.transientClipId, null);
+  near(runtime.diagnostics.transitionBlendWeight, 1);
   near(upperArmRestAngleWeight, 1);
-  near(runtime.diagnostics.motionContext.actionProgress, 1);
-  near(hips.position.x, allIds.indexOf(PACE_STOP_CLIP_ID) + paceClip.range.end);
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.idle');
+  near(deformationValues['deform.torso.length'], 1);
 
-  // A zero live multiplier is a real freeze, not accumulated wall time waiting
-  // to jump the transition to its end when playback resumes.
-  resetStateRouting();
-  qualifyRun(0.8, 0.61);
-  runtime.setPlaybackSpeedMultiplier(0);
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, PACE_STOP_CLIP_ID);
-  tick(0.5);
-  near(runtime.diagnostics.timelineTime, paceClip.range.start);
-  near(runtime.diagnostics.motionContext.actionProgress, 0);
-  near(runtime.diagnostics.transitionBlendWeight, 0);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, true);
-  runtime.setPlaybackSpeedMultiplier(1);
-  tick(0.05);
-  near(runtime.diagnostics.timelineTime, paceClip.range.start + 0.05);
-  assert.ok(runtime.diagnostics.motionContext.actionProgress > 0);
-  assert.ok(runtime.diagnostics.transitionBlendWeight > 0);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, true);
-
-  // Neither a short tap nor a long low-speed shuffle qualifies as a run-stop.
-  resetStateRouting();
-  qualifyRun(PACE_STOP_MIN_PEAK_SPEED + 0.2, 0.2, PACE_STOP_MIN_RUN_SECONDS * 0.5);
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.idle');
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-  resetStateRouting();
-  qualifyRun(PACE_STOP_MIN_PEAK_SPEED * 0.5, 0.2, PACE_STOP_MIN_RUN_SECONDS + 0.1);
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.idle');
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-
-  // Any gameplay-owned state interrupts pacing in the same sampled frame.
-  for (const interruption of [
-    'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.crouch', 'player.crawl', 'player.slide',
-    'player.skate', 'player.grind', 'player.grab', 'player.hang', 'player.climb',
-    'player.rope', 'player.rope-climb', 'player.rope-release',
-    'player.slam', 'player.spin', 'player.bail',
-  ]) {
-    resetStateRouting();
-    qualifyRun();
-    hint = 'player.idle';
-    normalizedSpeed = 0;
-    tick(0.016);
-    assert.equal(runtime.activeClipId, PACE_STOP_CLIP_ID);
-    hint = interruption;
-    grounded = !airborneRoutes.has(interruption);
-    tick(0.016);
-    if (interruption === 'player.skate') {
-      assert.equal(runtime.diagnostics.requestedClipId, interruption);
-      assert.equal(runtime.activeClipId, null,
-        'skate did not return control to the procedural presentation');
-    } else {
-      assert.equal(runtime.activeClipId, interruption, `${interruption} did not interrupt pace-stop`);
-    }
-    assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-  }
-
-  // A fresh landing wins if the landing edge and a synthetic run->idle edge
-  // occur together; this guards routing priority independent of Player timing.
-  resetStateRouting();
-  qualifyRun();
-  grounded = false;
-  tick(0.016);
-  grounded = true;
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.land');
-  assert.equal(runtime.diagnostics.landingOneShotActive, true);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-
-  // A missing or identity-placeholder transition falls through to idle in the
-  // triggering frame instead of hiding the valid gameplay pose.
-  resetStateRouting();
-  const suiteWithoutPace = { ...suite, clips: suite.clips.filter((clip) => clip.id !== PACE_STOP_CLIP_ID) };
-  runtime.setDocument(suiteWithoutPace);
-  qualifyRun();
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.idle');
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-  const emptyPace = { ...paceClip, tracks: [], proceduralDrivers: [] };
-  runtime.setDocument({ ...suite, clips: suite.clips.map((clip) => clip.id === PACE_STOP_CLIP_ID ? emptyPace : clip) });
-  resetStateRouting();
-  qualifyRun();
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.idle');
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-
-  // Removing an active transient's clip cancels it immediately. A manual clip
-  // and a disabled runtime also discard qualifications rather than banking a
-  // stale flourish for later.
-  runtime.setDocument(suite);
-  resetStateRouting();
-  qualifyRun();
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, true);
-  runtime.setDocument(suiteWithoutPace);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-  runtime.setDocument(suite);
+  // The differently timed Quaternius sources retain their native endpoint
+  // cadence while sharing one normalized gait phase at intermediate weights.
+  const runNativeDuration = 14 / 15;
+  const walkNativeDuration = 4 / 3;
+  const cadenceTrack = (clipId, x, duration) => ({
+    ...positionTrack(clipId, x),
+    keys: [
+      { id: `${clipId}:cadence-a`, time: 0, value: [x, 0, 0], interpolation: 'linear' },
+      { id: `${clipId}:cadence-b`, time: duration, value: [x + 1, 0, 0], interpolation: 'linear' },
+    ],
+  });
+  const cadenceSuite = {
+    ...suite,
+    clips: suite.clips.map((clip) => {
+      if (clip.id === 'player.run') return {
+        ...clip,
+        duration: runNativeDuration,
+        range: { start: 0, end: runNativeDuration },
+        tracks: [cadenceTrack(clip.id, allIds.indexOf(clip.id), runNativeDuration)],
+      };
+      if (clip.id === 'player.walk') return {
+        ...clip,
+        duration: walkNativeDuration,
+        range: { start: 0, end: walkNativeDuration },
+        tracks: [cadenceTrack(clip.id, 50, walkNativeDuration)],
+      };
+      return clip;
+    }),
+  };
+  runtime.setDocument(cadenceSuite);
 
   resetStateRouting();
-  qualifyRun();
-  runtime.setManualClipOverride('player.spin');
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.spin');
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-  runtime.setManualClipOverride(null);
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.idle');
+  motionInputs = { ...motionInputs, [LOCOMOTION_WALK_BLEND_INPUT]: 0 };
+  hint = 'player.run';
+  tick(0);
+  tick(runNativeDuration);
+  near(runtime.diagnostics.timelineTime, 0);
 
   resetStateRouting();
-  qualifyRun();
-  runtime.setEnabled(false);
-  hint = 'player.idle';
-  normalizedSpeed = 0;
-  tick(0.016);
-  assert.equal(runtime.activeClipId, null);
-  assert.equal(runtime.diagnostics.pacingOneShotActive, false);
-  runtime.setEnabled(true);
-  tick(0.016);
-  assert.equal(runtime.activeClipId, 'player.idle');
+  motionInputs = { ...motionInputs, [LOCOMOTION_WALK_BLEND_INPUT]: 1 };
+  hint = 'player.run';
+  tick(0);
+  tick(walkNativeDuration / 2);
+  near(runtime.diagnostics.timelineTime, runNativeDuration / 2);
+  near(hips.position.x, 50.5);
+  tick(walkNativeDuration / 2);
+  near(runtime.diagnostics.timelineTime, 0);
+
+  resetStateRouting();
+  motionInputs = { ...motionInputs, [LOCOMOTION_WALK_BLEND_INPUT]: 0.5 };
+  hint = 'player.run';
+  tick(0);
+  tick(0.2);
+  const blendedPhase = runtime.diagnostics.timelineTime / runNativeDuration;
+  near(hips.position.x,
+    ((allIds.indexOf('player.run') + blendedPhase) + (50 + blendedPhase)) / 2);
 
   runtime.setDocument(suite);
   resetStateRouting();

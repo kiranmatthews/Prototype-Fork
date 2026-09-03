@@ -36,9 +36,11 @@ try {
     UNITY_CROUCH_CRAWL_CLIP_IDS,
     UNITY_CROUCH_CRAWL_TIMING,
     UNITY_CROUCH_IDLE_DURATION,
-    UNITY_WALK_BLEND_INPUT,
-    UNITY_WALK_DURATION,
-    unityWalkBlendWeight,
+    LOCOMOTION_WALK_BLEND_INPUT,
+    PLAYER_WALK_CLIP_ID,
+    QUATERNIUS_WALK_DURATION,
+    QUATERNIUS_WALK_SOURCE,
+    locomotionWalkBlendWeight,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
     UNITY_SLAM_POSE_SOURCE,
@@ -342,9 +344,10 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(starterClips.length, 23);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 18);
+  assert.equal(starterClips.length, 22);
   for (const id of [
-    'player.idle', 'player.walk', 'player.run', 'player.pace-stop', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
+    'player.idle', PLAYER_WALK_CLIP_ID, 'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
     'player.crawl', 'player.slide', 'player.skate', 'player.grind', 'player.grab', 'player.hang',
     'player.climb', 'player.rope', 'player.rope-climb', 'player.rope-release',
     'player.rope-release-charged', 'player.slam', 'player.bail', 'player.spin',
@@ -362,17 +365,18 @@ try {
   const crouch = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
   const crawl = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
   const idle = findClip(parsedSuite, 'player.idle');
-  const walk = findClip(parsedSuite, 'player.walk');
+  const walk = findClip(parsedSuite, PLAYER_WALK_CLIP_ID);
   const run = findClip(parsedSuite, 'player.run');
-  const paceStop = findClip(parsedSuite, 'player.pace-stop');
   const doubleJump = findClip(parsedSuite, 'player.double-jump');
   const ropeHang = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.hang);
   const ropeClimb = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.climb);
   const ropeRelease = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.release);
   const ropeReleaseCharged = findClip(parsedSuite, UNITY_ROPE_CLIP_IDS.chargedRelease);
   const slam = findClip(parsedSuite, 'player.slam');
-  assert.ok(jump && doubleJump && fall && land && crouch && crawl && idle && walk && run && paceStop &&
+  assert.ok(jump && doubleJump && fall && land && crouch && crawl && idle && walk && run &&
     ropeHang && ropeClimb && ropeRelease && ropeReleaseCharged && slam);
+  assert.equal(findClip(parsedSuite, 'player.pace-stop'), undefined,
+    'retired Pace Stop remained in a fresh starter suite');
   assert.equal(jump.playbackSpeed, 1);
   assert.equal(jump.duration, 1);
   assert.equal(jump.metadata.progressSource, 'gameplay-actionProgress');
@@ -725,27 +729,56 @@ try {
   );
   assertEulerPose(slamFall, 'elbowLeft', [0, 0, 0], 'Unity slam fall');
 
-  // Gentle analogue locomotion uses Unity's Walking Woman source and blends
-  // continuously into the established Quaternius run.
-  assert.equal(walk.name, 'Walk — Unity PunkyFox Walking Woman');
-  near(walk.duration, UNITY_WALK_DURATION);
+  // Gentle analogue locomotion uses the Walk_Loop shipped on the same
+  // Quaternius UAL1 rig as Jog_Fwd, then blends continuously into that run.
+  assert.equal(PLAYER_WALK_CLIP_ID, 'player.walk');
+  assert.equal(LOCOMOTION_WALK_BLEND_INPUT, 'locomotionWalkBlend');
+  assert.equal(walk.name, 'Walk — Quaternius Walk_Loop');
+  near(walk.duration, QUATERNIUS_WALK_DURATION);
+  near(walk.duration, 1.3333334);
+  assert.equal(walk.rootMotion.mode, 'in-place');
   assert.equal(walk.loop.mode, 'loop');
   assert.equal(walk.loop.seamless, true);
   assert.equal(walk.tracks.length, 23);
   assert.equal(walk.tracks.filter((track) => track.kind === 'position').length, 1);
-  assert.equal(walk.metadata.sourceAnimation.sourceAssetSha256,
-    UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips.walk.sourceAssetSha256);
+  assert.equal(walk.tracks.filter((track) => track.kind === 'quaternion').length, 22);
+  assert.deepEqual(walk.tracks.filter((track) => track.kind === 'scalar'), [],
+    'Walk_Loop should not invent deformation tracks absent from the source');
+  assert.equal(walk.metadata.sourceAnimation.sourceClip, 'Walk_Loop');
+  assert.equal(walk.metadata.sourceAnimation.sourceFile, 'UAL1_Standard.glb');
+  assert.equal(walk.metadata.sourceAnimation.sourceSha256,
+    '69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997');
+  assert.equal(walk.metadata.sourceAnimation.sourceSha256,
+    QUATERNIUS_WALK_SOURCE.sourceSha256);
+  assert.equal(walk.metadata.sourceAnimation.sampleRate, 30);
+  assert.equal(walk.metadata.sourceAnimation.sourceFrameCount, 41);
+  assert.ok(walk.tags.includes('imported-keyframes'));
+  assert.ok(walk.tracks.every((track) => track.keys.length === 41));
+  assert.ok(walk.tracks.every((track) =>
+    track.keys.every((key) => key.interpolation === 'linear')));
   for (const track of walk.tracks) {
     assert.deepEqual(track.keys.at(-1).value, track.keys[0].value,
-      `${track.target} did not close the Unity Walk loop`);
+      `${track.target} did not close the Quaternius Walk_Loop`);
   }
-  assert.equal(unityWalkBlendWeight(0), 1);
-  assert.equal(unityWalkBlendWeight(1 / 3), 1);
-  near(unityWalkBlendWeight(2 / 3), 0.5);
-  assert.equal(unityWalkBlendWeight(1), 0);
+  const walkProvenance = JSON.parse(await readFile(new URL(
+    '../public/animations/quaternius-walk/provenance.json',
+    import.meta.url,
+  ), 'utf8'));
+  assert.equal(walkProvenance.asset.id, walk.id);
+  assert.equal(walkProvenance.source.sourceClip,
+    walk.metadata.sourceAnimation.sourceClip);
+  assert.equal(walkProvenance.source.sourceFileSha256,
+    walk.metadata.sourceAnimation.sourceSha256);
+  assert.equal(walkProvenance.source.sourceFrameCount, 41);
+  assert.equal(walkProvenance.conversion.transformSpace, walk.transformSpace);
+  assert.equal(walkProvenance.conversion.rootMotion, walk.rootMotion.mode);
+  assert.equal(locomotionWalkBlendWeight(0), 1);
+  assert.equal(locomotionWalkBlendWeight(1 / 3), 1);
+  near(locomotionWalkBlendWeight(2 / 3), 0.5);
+  assert.equal(locomotionWalkBlendWeight(1), 0);
   assert.deepEqual(run.metadata.variantBlend, {
     clipId: walk.id,
-    source: UNITY_WALK_BLEND_INPUT,
+    source: LOCOMOTION_WALK_BLEND_INPUT,
   });
 
   // Run is the native 30 FPS Quaternius Jog_Fwd loop, converted to ordinary
@@ -758,6 +791,9 @@ try {
   assert.equal(run.metadata.sourceAnimation.sourceClip, 'Jog_Fwd_Loop');
   assert.equal(run.metadata.sourceAnimation.sourceSha256,
     '69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997');
+  assert.equal(run.metadata.sourceAnimation.sourceSha256,
+    walk.metadata.sourceAnimation.sourceSha256,
+    'Walk and Jog did not come from the same UAL1 source rig');
   assert.equal(run.metadata.sourceAnimation.sampleRate, 30);
   assert.equal(run.metadata.sourceAnimation.sourceFrameCount, 29);
   assert.ok(run.tags.includes('imported-keyframes'));
@@ -802,58 +838,6 @@ try {
   assert.ok(run.tracks.some((track) => track.kind === 'quaternion' && track.target === 'neck'));
   assert.ok(run.tracks.some((track) => track.kind === 'quaternion' && track.target === 'head'));
 
-  // The pace transition is selectable, strictly in-place, and ends on the
-  // exact channels idle takes over on its first authored frame.
-  assert.equal(paceStop.duration, 1.8);
-  assert.equal(paceStop.loop.mode, 'once');
-  assert.equal(paceStop.loop.seamless, false);
-  assert.equal(paceStop.rootMotion.mode, 'in-place');
-  assert.ok(paceStop.contacts.length >= 5);
-  assert.ok(paceStop.markers.some((marker) => marker.name === 'Idle-compatible pose'));
-  const paceRootTrack = paceStop.tracks.find((track) => track.kind === 'position' && track.target === 'root');
-  assert.ok(paceRootTrack.keys.every((key) => key.value[0] === 0 && key.value[2] === 0));
-  const paceEnd = sampleClip(paceStop, paceStop.duration);
-  const idleEntry = sampleClip(idle, 0);
-  assert.deepEqual(paceEnd.joints.root.position, idleEntry.joints.root.position);
-  for (const jointId of ['spine', 'head', 'shoulderLeft', 'shoulderRight']) {
-    assert.deepEqual(paceEnd.joints[jointId].quaternion, idleEntry.joints[jointId].quaternion,
-      `${jointId} did not hand off exactly to idle`);
-  }
-  near(paceEnd.scalars[PLAYER_DEFORMATION_CONTROLS.torso],
-    idleEntry.scalars[PLAYER_DEFORMATION_CONTROLS.torso]);
-  assert.deepEqual(
-    paceStop.tracks.filter((track) => track.kind === 'scalar').map((track) => track.target),
-    [PLAYER_DEFORMATION_CONTROLS.torso],
-  );
-  const paceDecayDrivers = paceStop.proceduralDrivers.filter((driver) =>
-    driver.type === 'envelope' && driver.blend === 'multiply' && driver.source === 'actionProgress');
-  assert.ok(paceDecayDrivers.length >= 5, 'pace overlap was not procedurally damped');
-  assert.ok(paceStop.proceduralDrivers.some((driver) => driver.source === 'transitionEntryGaitPhase'));
-  assert.ok(paceStop.proceduralDrivers.some((driver) => driver.source === 'transitionEntrySpeed'));
-  const paceEndpointContext = {
-    normalizedSpeed: 0,
-    gaitPhase: 0,
-    verticalVelocity: 0,
-    grounded: true,
-    actionProgress: 1,
-    inputs: { transitionEntryGaitPhase: 0.25, transitionEntrySpeed: 1 },
-  };
-  const finishedOverlap = sampleProceduralDrivers(
-    paceStop.proceduralDrivers,
-    paceStop.duration,
-    paceEndpointContext,
-  );
-  near(finishedOverlap.pose.joints.root.position[1], 0);
-  const composedPaceEnd = sampleComposedClip(paceStop, paceStop.duration, paceEndpointContext);
-  const composedIdleEntry = sampleComposedClip(idle, 0, { ...paceEndpointContext, actionProgress: 0 });
-  assert.deepEqual(composedPaceEnd.joints.root.position, composedIdleEntry.joints.root.position);
-  for (const jointId of ['spine', 'head', 'shoulderLeft', 'shoulderRight']) {
-    assert.deepEqual(composedPaceEnd.joints[jointId].quaternion, composedIdleEntry.joints[jointId].quaternion,
-      `${jointId} composed transition endpoint did not match composed idle entry`);
-  }
-  near(composedPaceEnd.scalars[PLAYER_DEFORMATION_CONTROLS.torso],
-    composedIdleEntry.scalars[PLAYER_DEFORMATION_CONTROLS.torso]);
-
   // Catalog upgrades append only clips introduced after the saved revision.
   // Same-ID authored work wins, while a current revision makes deletion an
   // intentional, persistent choice.
@@ -862,19 +846,20 @@ try {
     ...parsedSuite,
     clips: parsedSuite.clips
       .filter((clip) =>
-        clip.id !== 'player.pace-stop' &&
-        clip.id !== 'player.walk' &&
+        clip.id !== PLAYER_WALK_CLIP_ID &&
         clip.id !== 'player.run')
       .map((clip) => clip.id === customizedIdle.id ? customizedIdle : clip),
     metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 1 },
   };
   const upgradedCatalog = reconcilePlayerStarterAnimationSuite(versionOneSuite, binding.definition);
   assert.equal(upgradedCatalog.metadata.playerStarterCatalogVersion, PLAYER_STARTER_CATALOG_VERSION);
-  assert.equal(upgradedCatalog.clips.length, versionOneSuite.clips.length + 2);
+  assert.equal(upgradedCatalog.clips.length, versionOneSuite.clips.length + 1);
   assert.equal(findClip(upgradedCatalog, 'player.idle'), customizedIdle,
     'reconciliation replaced a customized same-ID clip');
-  assert.ok(findClip(upgradedCatalog, 'player.pace-stop'), 'new catalog clip was not appended');
-  assert.ok(findClip(upgradedCatalog, 'player.walk'), 'Unity Walk was not appended');
+  assert.equal(findClip(upgradedCatalog, PLAYER_WALK_CLIP_ID).metadata.sourceAnimation.sourceClip,
+    'Walk_Loop', 'Quaternius Walk was not appended');
+  assert.equal(findClip(upgradedCatalog, 'player.pace-stop'), undefined,
+    'retired Pace Stop was appended');
   assert.equal(findClip(upgradedCatalog, 'player.run'), undefined,
     'a clip from an already-seen revision was resurrected');
 
@@ -1282,16 +1267,66 @@ try {
   assert.equal(findClip(deletedV12Crawl, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl), undefined,
     'catalog v13 resurrected a deleted deployed Crawl');
 
-  const deliberatelyDeleted = {
-    ...upgradedCatalog,
-    clips: upgradedCatalog.clips.filter((clip) => clip.id !== 'player.pace-stop'),
+  // Catalog v18 retires Pace Stop and replaces only the known-bad Unity
+  // Walking Woman import. Unrelated browser-authored Walk clips remain owned
+  // by the browser, and deleting Walk after seeing v18 remains intentional.
+  const legacyUnityWalk = structuredClone(walk);
+  legacyUnityWalk.name = 'Walk — Unity PunkyFox Walking Woman';
+  legacyUnityWalk.metadata.sourceAnimation = {
+    sourceName: 'Walking Woman',
+    sourceAsset: 'Assets/Game/Art/Characters/PunkyFox/Generated/PunkyFox_Walk.anim',
   };
-  const refreshedCurrentCatalog = reconcilePlayerStarterAnimationSuite(deliberatelyDeleted, binding.definition);
-  assert.equal(findClip(refreshedCurrentCatalog, 'player.pace-stop'), undefined,
-    'a current version should preserve deliberate deletion');
+  const upgradedUnityWalk = reconcilePlayerStarterAnimationSuite({
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      clip.id === PLAYER_WALK_CLIP_ID ? legacyUnityWalk : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 17 },
+  }, binding.definition);
+  assert.equal(findClip(upgradedUnityWalk, PLAYER_WALK_CLIP_ID).name,
+    'Walk — Quaternius Walk_Loop');
+  assert.equal(
+    findClip(upgradedUnityWalk, PLAYER_WALK_CLIP_ID).metadata.sourceAnimation.sourceClip,
+    'Walk_Loop',
+    'catalog v18 did not replace the Unity Walking Woman walk',
+  );
+
+  const customWalk = structuredClone(walk);
+  customWalk.name = 'My Hand-Keyed Walk';
+  customWalk.metadata.sourceAnimation = { sourceClip: 'My_Custom_Walk' };
+  const preservedCustomWalk = reconcilePlayerStarterAnimationSuite({
+    ...parsedSuite,
+    clips: parsedSuite.clips.map((clip) =>
+      clip.id === PLAYER_WALK_CLIP_ID ? customWalk : clip),
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 17 },
+  }, binding.definition);
+  assert.equal(findClip(preservedCustomWalk, PLAYER_WALK_CLIP_ID), customWalk,
+    'catalog v18 replaced an unrelated custom Walk');
+
+  const retiredPace = { ...structuredClone(idle), id: 'player.pace-stop' };
+  const retiredPaceSuite = reconcilePlayerStarterAnimationSuite({
+    ...parsedSuite,
+    clips: [...parsedSuite.clips, retiredPace],
+    activeClipId: retiredPace.id,
+    metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 17 },
+  }, binding.definition);
+  assert.equal(findClip(retiredPaceSuite, retiredPace.id), undefined,
+    'catalog v18 retained the retired Pace Stop clip');
+  assert.equal(retiredPaceSuite.activeClipId, 'player.idle',
+    'catalog v18 did not repair an active retired Pace Stop to Idle');
+
+  const deliberatelyDeletedWalk = {
+    ...parsedSuite,
+    clips: parsedSuite.clips.filter((clip) => clip.id !== PLAYER_WALK_CLIP_ID),
+  };
+  const refreshedCurrentCatalog = reconcilePlayerStarterAnimationSuite(
+    deliberatelyDeletedWalk,
+    binding.definition,
+  );
+  assert.equal(findClip(refreshedCurrentCatalog, PLAYER_WALK_CLIP_ID), undefined,
+    'a current catalog resurrected a deliberately deleted Walk');
   assert.equal(refreshedCurrentCatalog.rigs.find((candidate) => candidate.id === binding.definition.id),
     binding.definition, 'reconciliation did not refresh the embedded live rig');
-  const suiteMissingLiveRig = { ...deliberatelyDeleted, rigs: [] };
+  const suiteMissingLiveRig = { ...deliberatelyDeletedWalk, rigs: [] };
   const appendedLiveRig = reconcilePlayerStarterAnimationSuite(suiteMissingLiveRig, binding.definition);
   assert.equal(appendedLiveRig.rigs.at(-1), binding.definition,
     'reconciliation did not append a missing live rig');
@@ -1604,7 +1639,7 @@ try {
   drafts.save(parsedSuite);
   assert.equal(drafts.has(parsedSuite.id), true);
   assert.deepEqual(drafts.listDocumentIds(), [parsedSuite.id]);
-  assert.equal(drafts.load(parsedSuite.id).clips.length, 23);
+  assert.equal(drafts.load(parsedSuite.id).clips.length, 22);
   drafts.remove(parsedSuite.id);
   assert.equal(drafts.load(parsedSuite.id), null);
 

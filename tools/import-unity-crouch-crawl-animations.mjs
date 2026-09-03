@@ -21,18 +21,6 @@ const BIND_ASSET =
   'Assets/Game/Art/Characters/PunkyFox/Generated/PunkyFox_Idle.anim';
 
 const CLIP_SPECS = Object.freeze({
-  walk: {
-    sourceName: 'Walking Woman',
-    sourceAsset:
-      'Assets/Game/Art/Characters/PunkyFox/Generated/PunkyFox_Walk.anim',
-    sourceFbx:
-      'Assets/Game/Art/Characters/PunkyFox/Source/PunkyFox_Walk.fbx',
-    symbol: 'UNITY_WALK',
-    expectedDuration: 58 / SAMPLE_RATE,
-    productionSourceWindow: { start: 0, end: 58 / SAMPLE_RATE },
-    productionPostProcess:
-      'full source loop; exporter endpoint epsilon closed exactly; gameplay root motion omitted',
-  },
   crouchIdle: {
     sourceName: 'CrouchLookAroundBow',
     sourceAsset:
@@ -837,12 +825,12 @@ async function main() {
     translationPolicy:
       'retain only Armature/Hips world-position delta from PunkyFox_Idle bind; omit all per-bone translations and gameplay root motion',
     rootYawPolicy:
-      'neutralize Crouch Idle hips YXZ yaw; Walk keeps local pelvis sway while gameplay visualYaw owns facing',
+      'neutralize Crouch Idle hips YXZ yaw; gameplay visualYaw remains the sole cardinal/diagonal facing authority',
     positionSpace:
       'PunkyFox model-local after the Armature basis; +Y is vertical and values are unscaled source model units',
     unityModelPresentationScale: 1.5,
     loopPolicy:
-      'walk/crouch exact closure; crawl X-mirrored half-cycle synthesis with six-frame internal and outer cyclic overlaps',
+      'crouch exact closure; crawl X-mirrored half-cycle synthesis with six-frame internal and outer cyclic overlaps',
     unityFloorCorrection: {
       stanceRootLiftMetres: UNITY_CROUCH_CRAWL_FLOOR_LIFT,
       includedInHipsPositionKeys: false,

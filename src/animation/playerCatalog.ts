@@ -28,22 +28,28 @@ import {
   UNITY_CROUCH_IDLE_DURATION,
   UNITY_CROUCH_IDLE_HIPS_POSITION_KEYS,
   UNITY_CROUCH_IDLE_ROTATION_KEYS,
-  UNITY_WALK_DURATION,
-  UNITY_WALK_HIPS_POSITION_KEYS,
-  UNITY_WALK_ROTATION_KEYS,
 } from './unityCrouchCrawlAnimations.generated';
 import {
   UNITY_CROUCH_CRAWL_CLIP_IDS,
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
-  UNITY_WALK_BLEND_INPUT,
 } from './unityCrouchCrawl';
+import {
+  LOCOMOTION_WALK_BLEND_INPUT,
+  PLAYER_WALK_CLIP_ID,
+} from './locomotionBlend';
 import {
   QUATERNIUS_JOG_FWD_DURATION,
   QUATERNIUS_JOG_FWD_ROOT_KEYS,
   QUATERNIUS_JOG_FWD_ROTATION_KEYS,
   QUATERNIUS_JOG_FWD_SOURCE,
 } from './quaterniusJogFwd.generated';
+import {
+  QUATERNIUS_WALK_DURATION,
+  QUATERNIUS_WALK_ROOT_KEYS,
+  QUATERNIUS_WALK_ROTATION_KEYS,
+  QUATERNIUS_WALK_SOURCE,
+} from './quaterniusWalk.generated';
 import {
   UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
   UNITY_SLAM_FALL_POSE_DEGREES,
@@ -58,7 +64,6 @@ import type {
   AnimationTrack,
   KeyInterpolation,
   ProceduralDriverDefinition,
-  ProceduralDriverTarget,
   QuaternionTuple,
   RigDefinition,
   Vec3Tuple,
@@ -80,7 +85,6 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.idle',
   'player.walk',
   'player.run',
-  'player.pace-stop',
   'player.jump',
   'player.double-jump',
   'player.fall',
@@ -108,12 +112,13 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 17;
+export const PLAYER_STARTER_CATALOG_VERSION = 18;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
 const PLAYER_STARTER_CATALOG_METADATA_KEY = 'playerStarterCatalogVersion';
 const PRE_JOG_RUN_BACKUP_ID = 'player.run.pre-jog-local';
+const RETIRED_PACE_STOP_CLIP_ID = 'player.pace-stop';
 
 // FNV-1a of the canonical catalog-v2 Run starter with rigId omitted. An exact
 // shipped gait can be replaced directly; an edited pre-Jog Run gets a backup
@@ -319,6 +324,17 @@ function isJogFwdRun(clip: AnimationClip): boolean {
     source.sourceClip === 'Jog_Fwd_Loop';
 }
 
+function isUnityWalkingWomanWalk(clip: AnimationClip): boolean {
+  if (clip.id !== PLAYER_WALK_CLIP_ID) return false;
+  if (clip.name === 'Walk — Unity PunkyFox Walking Woman') return true;
+  const source = clip.metadata?.sourceAnimation;
+  if (source === null || typeof source !== 'object' || Array.isArray(source))
+    return false;
+  return source.sourceName === 'Walking Woman' ||
+    source.sourceAsset ===
+      'Assets/Game/Art/Characters/PunkyFox/Generated/PunkyFox_Walk.anim';
+}
+
 function isUntouchedSlamPlaceholder(clip: AnimationClip): boolean {
   return clip.id === 'player.slam' &&
     clip.metadata?.starterQuality === 'identity-placeholder' &&
@@ -356,7 +372,6 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.idle': 1,
   'player.walk': 17,
   'player.run': 1,
-  'player.pace-stop': 2,
   'player.jump': 1,
   'player.double-jump': 6,
   'player.fall': 1,
@@ -527,12 +542,13 @@ function combinedQuaternionSamples(
   });
 }
 
-function sampledRunRotationTracks(
+function sampledQuaterniusRotationTracks(
   clipId: string,
+  values: Readonly<Record<string, readonly SampledQuaternion[]>>,
   includeTorsoRoot: boolean,
 ): AnimationTrack[] {
-  const torsoRoot = QUATERNIUS_JOG_FWD_ROTATION_KEYS.torsoRoot;
-  return Object.entries(QUATERNIUS_JOG_FWD_ROTATION_KEYS).flatMap(([jointId, rawKeys]) => {
+  const torsoRoot = values.torsoRoot;
+  return Object.entries(values).flatMap(([jointId, rawKeys]) => {
     if (!includeTorsoRoot && jointId === 'torsoRoot') return [];
     const keys = !includeTorsoRoot && jointId === 'spine'
       ? combinedQuaternionSamples(torsoRoot, rawKeys)
@@ -634,7 +650,11 @@ function buildRun(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   );
   clip.tracks = [
     sampledPositionTrack(clip.id, 'root', QUATERNIUS_JOG_FWD_ROOT_KEYS),
-    ...sampledRunRotationTracks(clip.id, includeTorsoRoot),
+    ...sampledQuaterniusRotationTracks(
+      clip.id,
+      QUATERNIUS_JOG_FWD_ROTATION_KEYS,
+      includeTorsoRoot,
+    ),
   ];
   clip.contacts = [
     contact(`${clip.id}:left-stance`, 0.055, 0.185, 'footLeft'),
@@ -654,269 +674,10 @@ function buildRun(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     sourceAnimation: { ...QUATERNIUS_JOG_FWD_SOURCE },
     variantBlend: {
-      clipId: UNITY_CROUCH_CRAWL_CLIP_IDS.walk,
-      source: UNITY_WALK_BLEND_INPUT,
+      clipId: PLAYER_WALK_CLIP_ID,
+      source: LOCOMOTION_WALK_BLEND_INPUT,
     },
   };
-  return clip;
-}
-
-interface DampedOscillatorOptions {
-  name: string;
-  order: number;
-  source?: string;
-  amplitude: number;
-  frequency: number;
-  phase?: number;
-  waveform?: 'sine' | 'triangle' | 'saw';
-}
-
-/**
- * A pure, scrub-safe damped oscillator assembled from the existing driver
- * graph: the oscillator writes a channel, then a one-shot envelope multiplies
- * that same channel from one to zero over actionProgress.
- */
-function dampedOscillator(
-  clipId: string,
-  id: string,
-  target: ProceduralDriverTarget,
-  options: DampedOscillatorOptions,
-): ProceduralDriverDefinition[] {
-  return [
-    createProceduralDriver('oscillator', target, {
-      id: `${clipId}:driver:${id}`,
-      name: options.name,
-      order: options.order,
-      source: options.source ?? 'time',
-      waveform: options.waveform ?? 'sine',
-      amplitude: options.amplitude,
-      frequency: options.frequency,
-      phase: options.phase ?? 0,
-    }),
-    createProceduralDriver('envelope', target, {
-      id: `${clipId}:driver:${id}-decay`,
-      name: `${options.name} decay`,
-      order: options.order + 1,
-      blend: 'multiply',
-      source: 'actionProgress',
-      amplitude: 1,
-      frequency: 1,
-      phase: 0,
-      bias: 0,
-      clamp: [0, 1],
-      attack: 0,
-      hold: 0,
-      release: 1,
-      loop: false,
-    }),
-  ];
-}
-
-/**
- * Two extra multipliers turn a captured outgoing gait sample into a short
- * residual shoulder swing. Runtime supplies the frozen entry phase and speed;
- * the result remains deterministic and decays under the same action clock.
- */
-function entryCarry(
-  clipId: string,
-  side: 'left' | 'right',
-  target: ProceduralDriverTarget,
-  order: number,
-  phase: number,
-): ProceduralDriverDefinition[] {
-  return [
-    createProceduralDriver('oscillator', target, {
-      id: `${clipId}:driver:entry-carry-${side}`,
-      name: `${side === 'left' ? 'Left' : 'Right'} outgoing gait carry`,
-      order,
-      source: 'transitionEntryGaitPhase',
-      amplitude: 0.18,
-      frequency: 1,
-      phase,
-    }),
-    createProceduralDriver('response', target, {
-      id: `${clipId}:driver:entry-carry-${side}-speed`,
-      name: `${side === 'left' ? 'Left' : 'Right'} carry speed`,
-      order: order + 1,
-      blend: 'multiply',
-      source: 'transitionEntrySpeed',
-      amplitude: 1,
-      inputRange: [0.25, 1],
-      responseCurve: 'smoothstep',
-    }),
-    createProceduralDriver('envelope', target, {
-      id: `${clipId}:driver:entry-carry-${side}-decay`,
-      name: `${side === 'left' ? 'Left' : 'Right'} carry decay`,
-      order: order + 2,
-      blend: 'multiply',
-      source: 'actionProgress',
-      amplitude: 1,
-      clamp: [0, 1],
-      attack: 0,
-      hold: 0,
-      release: 1,
-      loop: false,
-    }),
-  ];
-}
-
-function buildPaceStop(rigId: string): AnimationClip {
-  const clip = baseClip('player.pace-stop', 'Pace Stop — Transitional Idle', 1.8, 'once', rigId);
-  clip.loop.seamless = false;
-  clip.tags = ['player', 'transition', 'locomotion-stop', 'procedural-keyed'];
-  clip.metadata = {
-    starterQuality: 'authored-foundation',
-    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
-    transitionFrom: 'player.run',
-    transitionTo: 'player.idle',
-    progressSource: 'clip-traversal',
-  };
-  clip.tracks = [
-    // No X/Z displacement: the pace is strictly in place. Vertical catches
-    // diminish over three steps before landing on idle's exact root value.
-    positionTrack(clip.id, 'root', [
-      [0, [0, 0.012, 0]], [0.18, [0, -0.025, 0]], [0.46, [0, 0.025, 0]],
-      [0.68, [0, -0.018, 0]], [0.96, [0, 0.018, 0]], [1.2, [0, -0.01, 0]],
-      [1.43, [0, 0.006, 0]], [1.62, [0, 0.003, 0]], [1.8, IDLE_ENTRY.root],
-    ]),
-    quaternionTrack(clip.id, 'hips', [
-      [0, 0.02, 0.045, 0.045], [0.18, 0.035, -0.04, -0.05],
-      [0.46, 0.02, 0.05, 0.045], [0.68, 0.025, -0.035, -0.04],
-      [0.96, 0.015, 0.035, 0.03], [1.2, 0.015, -0.02, -0.025],
-      [1.43, 0.005, 0.012, 0.012], [1.62, 0, -0.006, -0.006], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'spine', [
-      [0, 0.1, -0.035, -0.04], [0.18, 0.12, 0.04, 0.055],
-      [0.46, 0.085, -0.05, -0.045], [0.68, 0.07, 0.04, 0.04],
-      [0.96, 0.045, -0.035, -0.03], [1.2, 0.025, 0.02, 0.02],
-      [1.43, -0.012, -0.01, -0.01], [1.62, 0.008, 0.005, -0.018],
-      [1.8, ...IDLE_ENTRY.spine],
-    ]),
-    // Upper-spine overlap arrives a fraction after the pelvis/spine reversal;
-    // clavicles then finish after the chest instead of stopping as one block.
-    quaternionTrack(clip.id, 'chest', [
-      [0, 0.012, -0.025, -0.022], [0.18, 0.018, 0.032, 0.03],
-      [0.46, 0.012, -0.038, -0.026], [0.68, 0.014, 0.03, 0.024],
-      [0.96, 0.008, -0.024, -0.018], [1.2, 0.006, 0.014, 0.012],
-      [1.43, -0.006, -0.007, -0.006], [1.62, 0.003, 0.002, 0.003], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'clavicleLeft', [
-      [0, 0.012, 0, 0.025], [0.46, -0.014, 0, -0.022],
-      [0.96, 0.01, 0, 0.016], [1.43, -0.005, 0, -0.007],
-      [1.62, 0.002, 0, 0.003], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'clavicleRight', [
-      [0, -0.014, 0, -0.026], [0.46, 0.012, 0, 0.021],
-      [0.96, -0.012, 0, -0.017], [1.43, 0.005, 0, 0.007],
-      [1.62, -0.002, 0, -0.003], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'neck', [
-      [0, -0.025, 0.025, 0.012], [0.46, -0.018, -0.03, -0.012],
-      [0.96, -0.01, 0.02, 0.008], [1.43, 0.008, -0.008, -0.004],
-      [1.62, 0.003, 0.004, 0.002], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'head', [
-      [0, -0.045, 0.03, 0.015], [0.18, -0.02, -0.035, -0.018],
-      [0.46, -0.03, 0.04, 0.016], [0.68, -0.01, -0.03, -0.012],
-      [0.96, -0.018, 0.025, 0.01], [1.2, 0.005, -0.018, -0.006],
-      [1.43, 0.012, 0.012, 0.004], [1.62, 0.015, -0.006, 0.008],
-      [1.8, ...IDLE_ENTRY.head],
-    ]),
-    quaternionTrack(clip.id, 'hipLeft', [
-      [0, -0.42, 0, 0], [0.18, -0.18, 0, 0.025], [0.46, 0.12, 0, -0.015],
-      [0.68, 0.26, 0, 0.02], [0.96, -0.34, 0, -0.015], [1.2, -0.08, 0, 0.01],
-      [1.43, 0.04, 0, 0], [1.62, 0.01, 0, 0], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'kneeLeft', [
-      [0, 0.58, 0, 0], [0.18, 0.28, 0, 0], [0.46, 0.24, 0, 0],
-      [0.68, 0.52, 0, 0], [0.96, 0.82, 0, 0], [1.2, 0.22, 0, 0],
-      [1.43, 0.12, 0, 0], [1.62, 0.06, 0, 0], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'ankleLeft', [
-      [0, -0.18, 0, 0], [0.18, 0.08, 0, 0], [0.46, -0.04, 0, 0],
-      [0.68, -0.1, 0, 0], [0.96, -0.22, 0, 0], [1.2, 0.06, 0, 0],
-      [1.43, 0, 0, 0], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'hipRight', [
-      [0, 0.34, 0, 0], [0.18, 0.34, 0, -0.02], [0.46, -0.48, 0, 0.02],
-      [0.68, -0.14, 0, -0.02], [0.96, 0.1, 0, 0.015], [1.2, 0.18, 0, -0.01],
-      [1.43, -0.16, 0, 0], [1.62, -0.02, 0, 0], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'kneeRight', [
-      [0, 0.48, 0, 0], [0.18, 0.6, 0, 0], [0.46, 1.05, 0, 0],
-      [0.68, 0.25, 0, 0], [0.96, 0.2, 0, 0], [1.2, 0.4, 0, 0],
-      [1.43, 0.42, 0, 0], [1.62, 0.08, 0, 0], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'ankleRight', [
-      [0, -0.08, 0, 0], [0.18, -0.12, 0, 0], [0.46, -0.28, 0, 0],
-      [0.68, 0.08, 0, 0], [0.96, 0, 0, 0], [1.2, -0.08, 0, 0],
-      [1.43, -0.12, 0, 0], [1.62, 0, 0, 0], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'toeRight', [
-      [0, 0, 0, 0], [0.96, 0, 0, 0], [1.2, -0.04, 0, 0],
-      [1.43, 0.22, 0, 0], [1.62, 0.055, 0, 0], [1.8, 0, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'shoulderLeft', [
-      [0, 0.38, 0, 0.06], [0.18, 0.28, 0, 0.05], [0.46, -0.32, 0, -0.035],
-      [0.68, -0.22, 0, -0.025], [0.96, 0.2, 0, 0.035], [1.2, 0.12, 0, 0.03],
-      [1.43, -0.06, 0, 0], [1.62, 0.02, 0, 0.02], [1.8, ...IDLE_ENTRY.shoulderLeft],
-    ]),
-    quaternionTrack(clip.id, 'elbowLeft', [
-      [0, -0.42, 0, 0], [0.46, -0.62, 0, 0], [0.96, -0.34, 0, 0],
-      [1.43, -0.18, 0, 0], [1.62, -0.13, 0, 0], [1.8, -0.12, 0, 0],
-    ]),
-    quaternionTrack(clip.id, 'shoulderRight', [
-      [0, -0.42, 0, -0.055], [0.18, -0.3, 0, -0.045], [0.46, 0.34, 0, 0.04],
-      [0.68, 0.24, 0, 0.03], [0.96, -0.22, 0, -0.035], [1.2, -0.13, 0, -0.025],
-      [1.43, 0.065, 0, 0], [1.62, -0.01, 0, -0.015], [1.8, ...IDLE_ENTRY.shoulderRight],
-    ]),
-    quaternionTrack(clip.id, 'elbowRight', [
-      [0, -0.62, 0, 0], [0.46, -0.42, 0, 0], [0.96, -0.48, 0, 0],
-      [1.43, -0.17, 0, 0], [1.62, -0.13, 0, 0], [1.8, -0.12, 0, 0],
-    ]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [
-      [0, 0.99], [0.18, 0.98], [0.46, 1.01], [0.68, 0.987], [0.96, 1.008],
-      [1.2, 0.995], [1.43, 1.003], [1.62, 1], [1.8, IDLE_ENTRY.torsoLength],
-    ]),
-  ];
-  clip.contacts = [
-    contact(`${clip.id}:left-brake`, 0.1, 0.36, 'footLeft'),
-    contact(`${clip.id}:right-pace`, 0.52, 0.79, 'footRight'),
-    contact(`${clip.id}:left-settle`, 0.94, 1.25, 'footLeft'),
-    contact(`${clip.id}:left-rest`, 1.48, 1.8, 'footLeft'),
-    contact(`${clip.id}:right-rest`, 1.48, 1.8, 'footRight'),
-  ];
-  clip.markers = [
-    { id: `${clip.id}:release-carry`, time: 0, name: 'Outgoing run carry' },
-    { id: `${clip.id}:left-brake-strike`, time: 0.18, name: 'Left braking plant' },
-    { id: `${clip.id}:right-pace-strike`, time: 0.68, name: 'Right pace plant' },
-    { id: `${clip.id}:left-settle-strike`, time: 1.2, name: 'Left settling plant' },
-    { id: `${clip.id}:feet-settled`, time: 1.62, name: 'Both feet settled' },
-    { id: `${clip.id}:idle-ready`, time: 1.8, name: 'Idle-compatible pose' },
-  ];
-  clip.proceduralDrivers = [
-    ...dampedOscillator(clip.id, 'pace-bounce', {
-      kind: 'position', target: 'root', component: 'y',
-    }, {
-      name: 'Diminishing pace bounce', order: 0, amplitude: 0.012, frequency: 2.05, phase: 0.25,
-    }),
-    ...dampedOscillator(clip.id, 'chest-counter-twist', {
-      kind: 'quaternion', target: 'chest', axis: [0, 1, 0],
-    }, {
-      name: 'Diminishing chest counter-twist', order: 2, amplitude: 0.035, frequency: 1.1, phase: 0.08,
-    }),
-    ...dampedOscillator(clip.id, 'neck-overlap', {
-      kind: 'quaternion', target: 'neck', axis: [0, 0, 1],
-    }, {
-      name: 'Delayed neck settle', order: 4, amplitude: 0.018, frequency: 1.25, phase: -0.12,
-    }),
-    ...entryCarry(clip.id, 'left', {
-      kind: 'quaternion', target: 'shoulderLeft', axis: [1, 0, 0],
-    }, 6, 0),
-    ...entryCarry(clip.id, 'right', {
-      kind: 'quaternion', target: 'shoulderRight', axis: [1, 0, 0],
-    }, 9, 0.5),
-  ];
   return clip;
 }
 
@@ -1117,7 +878,7 @@ function buildLand(rigId: string): AnimationClip {
 }
 
 function unityCrouchCrawlSourceMetadata(
-  sourceKey: 'walk' | 'crouchIdle' | 'crawl',
+  sourceKey: 'crouchIdle' | 'crawl',
 ) {
   return {
     ...UNITY_CROUCH_CRAWL_ANIMATION_SOURCE.clips[sourceKey],
@@ -1135,58 +896,44 @@ function unityCrouchCrawlSourceMetadata(
   };
 }
 
-function scaledUnityWalkPositionKeys(
-  keys: readonly SampledVector[],
-): SampledVector[] {
-  const scaleXZ = UNITY_CROUCH_CRAWL_TIMING.sourceModelScale / 1.18;
-  const scaleY = UNITY_CROUCH_CRAWL_TIMING.sourceModelScale / 1.36;
-  return keys.map(([time, value]) => [time, [
-    value[0] * scaleXZ,
-    value[1] * scaleY,
-    value[2] * scaleXZ,
-  ]]);
-}
-
 function buildWalk(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   const clip = baseClip(
-    UNITY_CROUCH_CRAWL_CLIP_IDS.walk,
-    'Walk — Unity PunkyFox Walking Woman',
-    UNITY_WALK_DURATION,
+    PLAYER_WALK_CLIP_ID,
+    'Walk — Quaternius Walk_Loop',
+    QUATERNIUS_WALK_DURATION,
     'loop',
     rigId,
   );
   clip.tracks = [
-    sampledPositionTrack(
+    sampledPositionTrack(clip.id, 'root', QUATERNIUS_WALK_ROOT_KEYS),
+    ...sampledQuaterniusRotationTracks(
       clip.id,
-      'hips',
-      scaledUnityWalkPositionKeys(UNITY_WALK_HIPS_POSITION_KEYS),
-    ),
-    ...sampledRotationTracks(
-      clip.id,
-      UNITY_WALK_ROTATION_KEYS,
+      QUATERNIUS_WALK_ROTATION_KEYS,
       includeTorsoRoot,
     ),
   ];
   clip.contacts = [
-    contact(`${clip.id}:left-stance`, 0.08, 0.25, 'footLeft'),
-    contact(`${clip.id}:right-stance`, 0.55, 0.72, 'footRight'),
+    contact(`${clip.id}:right-stance-wrap`, 0, 0.067, 'footRight'),
+    contact(`${clip.id}:left-stance`, 0.167, 0.667, 'footLeft'),
+    contact(`${clip.id}:right-stance`, 0.833, clip.duration, 'footRight'),
   ];
   clip.markers = [
-    { id: `${clip.id}:left-strike`, time: 0.1, name: 'Left foot strike' },
-    { id: `${clip.id}:right-strike`, time: 0.58, name: 'Right foot strike' },
+    { id: `${clip.id}:left-strike`, time: 0.167, name: 'Left foot strike' },
+    { id: `${clip.id}:right-strike`, time: 0.833, name: 'Right foot strike' },
   ];
   clip.tags = [
-    'player', 'unity-port', 'walk', 'locomotion', 'source-animation-retarget',
+    'player', 'quaternius', 'walk-loop', 'walk', 'locomotion',
+    'source-animation-retarget', 'imported-keyframes',
   ];
   clip.metadata = {
     starterQuality: 'source-animation-retarget',
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
-    sourceAnimation: unityCrouchCrawlSourceMetadata('walk'),
+    sourceAnimation: { ...QUATERNIUS_WALK_SOURCE },
     locomotionBlend: {
       idleThreshold: 0,
       walkThreshold: 1 / 3,
       runThreshold: 1,
-      input: UNITY_WALK_BLEND_INPUT,
+      input: LOCOMOTION_WALK_BLEND_INPUT,
     },
   };
   return clip;
@@ -1599,7 +1346,6 @@ export function createPlayerStarterClips(
     buildIdle(rigId),
     buildWalk(rigId, includeTorsoRoot),
     buildRun(rigId, includeTorsoRoot),
-    buildPaceStop(rigId),
     buildJump(rigId),
     buildDoubleJump(rigId),
     buildFall(rigId),
@@ -1631,8 +1377,9 @@ function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
  * Refresh the embedded live rig and add only starters introduced after the
  * revision a saved suite has already seen. Same-ID clips normally win; the
  * exceptions are explicit upgrades for shipped, signature-identical starters:
- * Walk/Crouch/Crawl/Rope/Slam -> Unity sources, Run -> Jog_Fwd, and the
- * phase-locked airborne deformation arc. A genuinely edited pre-Jog Run is retained under
+ * Walk/Run -> Quaternius sources, Crouch/Crawl/Rope/Slam -> Unity sources,
+ * and the phase-locked airborne deformation arc. The retired Pace Stop is
+ * removed from saved suites. A genuinely edited pre-Jog Run is retained under
  * a backup ID while `player.run` adopts the new source motion. Once a suite
  * records the current revision, a missing clip is treated as an intentional
  * deletion and remains missing on subsequent loads.
@@ -1649,12 +1396,20 @@ export function reconcilePlayerStarterAnimationSuite(
     rigs = [...document.rigs];
     rigs[rigIndex] = rig;
   }
+  let clips = document.clips.filter((clip) =>
+    clip.id !== RETIRED_PACE_STOP_CLIP_ID);
+  const activeClipId = document.activeClipId === RETIRED_PACE_STOP_CLIP_ID
+    ? 'player.idle'
+    : document.activeClipId;
   if (previousVersion >= PLAYER_STARTER_CATALOG_VERSION) {
-    return rigs === document.rigs ? document : { ...document, rigs };
+    return rigs === document.rigs &&
+      clips.length === document.clips.length &&
+      activeClipId === document.activeClipId
+      ? document
+      : { ...document, rigs, clips, activeClipId };
   }
 
   const starters = createPlayerStarterClips(rig);
-  let clips = document.clips;
   if (previousVersion < 4) {
     const importedRun = starters.find((clip) => clip.id === 'player.run')!;
     const currentRun = clips.find((clip) => clip.id === 'player.run');
@@ -1776,6 +1531,14 @@ export function reconcilePlayerStarterAnimationSuite(
       clips = clips.map((clip) => clip.id === 'player.land' ? importedLand : clip);
     }
   }
+  if (previousVersion < 18) {
+    const currentWalk = clips.find((clip) => clip.id === PLAYER_WALK_CLIP_ID);
+    const importedWalk = starters.find((clip) => clip.id === PLAYER_WALK_CLIP_ID);
+    if (currentWalk && importedWalk && isUnityWalkingWomanWalk(currentWalk)) {
+      clips = clips.map((clip) =>
+        clip.id === PLAYER_WALK_CLIP_ID ? importedWalk : clip);
+    }
+  }
 
   const existingIds = new Set(clips.map((clip) => clip.id));
   const additions = starters.filter((clip) => {
@@ -1789,6 +1552,7 @@ export function reconcilePlayerStarterAnimationSuite(
     ...document,
     rigs,
     clips: additions.length > 0 ? [...clips, ...additions] : clips,
+    activeClipId,
     metadata: {
       ...(document.metadata ?? {}),
       [PLAYER_STARTER_CATALOG_METADATA_KEY]: PLAYER_STARTER_CATALOG_VERSION,
