@@ -31,6 +31,7 @@ import {
   legacyCarveGripEndpointsFromRecord,
   setLegacyCarveGripReplayCurve,
 } from './carveGrip';
+import { setLegacyVisualSurfaceFrictionReplay } from './surfaceFriction';
 
 // the button channels the sim reads, packed into one bitmask per frame.
 // APPEND-ONLY: bit positions are the file format — old replays simply never
@@ -73,6 +74,8 @@ export interface ReplayFile {
   frames: number;
   truncated: boolean;
   endlessDeaths?: boolean; // absent legacy takes use classic lives
+  /** Present on takes recorded after visual materials stopped selecting physics. */
+  surfaceFrictionPolicy?: 1;
 }
 
 const MAX_FRAMES = 60 * 60 * 20; // 20 min @ 60Hz, then the take stops honestly
@@ -106,6 +109,7 @@ export function isReplayFile(value: unknown): value is ReplayFile {
   const frames = value.frames as number;
   if (typeof value.truncated !== 'boolean') return false;
   if (value.endlessDeaths !== undefined && typeof value.endlessDeaths !== 'boolean') return false;
+  if (value.surfaceFrictionPolicy !== undefined && value.surfaceFrictionPolicy !== 1) return false;
 
   if (!Array.isArray(value.mx) || !Array.isArray(value.my) || !Array.isArray(value.b))
     return false;
@@ -216,6 +220,7 @@ export class Recorder {
       frames: this.b.length,
       truncated: this.truncated,
       endlessDeaths: this.endlessDeaths,
+      surfaceFrictionPolicy: 1,
     };
   }
 }
@@ -251,6 +256,7 @@ export class Replayer {
       ? { ...replayTuning }
       : null;
     setLegacyCarveGripReplayCurve(this.legacyCarveGripValues);
+    setLegacyVisualSurfaceFrictionReplay(data.surfaceFrictionPolicy !== 1);
     // Retired controls never become live dynamic properties. Legacy takes use
     // the shadow above, translated into direct endpoints below.
     delete replayTuning.carveGrip;
@@ -303,6 +309,7 @@ export class Replayer {
     this.savedTuning = null;
     this.legacyCarveGripValues = null;
     setLegacyCarveGripReplayCurve(null);
+    setLegacyVisualSurfaceFrictionReplay(false);
     this.data = null;
   }
 

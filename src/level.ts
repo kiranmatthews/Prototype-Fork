@@ -5103,7 +5103,13 @@ export class Level {
             );
             mesh.name = c.slip ? "slippy plank" : "platform";
             if (c.slip) mesh.userData.slippy = true;
-            if (c.shoreProfile) mesh.userData.shoreProfile = true;
+            if (c.shoreProfile) {
+              mesh.userData.shoreProfile = true;
+              // Island Hopper's authored shore shelves are real beach sand.
+              // Ordinary Test Course platforms merely painted sand stay on
+              // the universal non-Beach movement baseline.
+              if (c.tex === "sand") mesh.userData.beachSandFriction = true;
+            }
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
           } else if (c.t === "wall" && polyPts) {
@@ -8868,6 +8874,7 @@ export class Level {
       sand.name = "Showcase1ContinuousSandSeabed";
       sand.userData.noShadow = true;
       sand.userData.edgeGrinding = false;
+      sand.userData.beachSandFriction = true;
       sand.visible = !failedSandTexture && loadedSandTextures === 3;
       this.root.add(sand);
       this.groundMeshes.push(sand);

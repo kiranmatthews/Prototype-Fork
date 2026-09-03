@@ -1190,6 +1190,11 @@ function assertIslandHopper(data, level) {
     level.groundMeshes.filter((mesh) => mesh.userData.shoreProfile).length,
     5,
   );
+  assert.equal(
+    level.groundMeshes.filter((mesh) => mesh.userData.beachSandFriction === true).length,
+    5,
+    "only Island Hopper's five shore shelves should opt into Beach-sand drag",
+  );
   for (const crate of level.crates) {
     assert.ok(
       Math.abs(crate.box.min.y - 1.05) < 1e-5,

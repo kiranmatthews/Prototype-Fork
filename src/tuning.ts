@@ -7,7 +7,7 @@ export const TUNING = {
   walkSpeed: 9, // full on-foot run speed; also the skate/walk boundary
   walkRampTime: 0.75, // seconds for a fresh walk to build from rest to full walkSpeed
   walkSlowdownTime: 0.45, // seconds for released-input foot momentum to coast from full speed to rest (also shapes committed direction changes)
-  friction: 7, // bleed on STEEP ground (transitions) — deliberately linear so a sideways crawl on a wall dies and the stall-flip can fire. FLAT roll-out is rollFriction + windDrag.
+  friction: 7, // bleed on STEEP ground (transitions) — deliberately linear so a sideways crawl on a wall dies and the stall-flip can fire. Flat non-Beach rollout uses a light shared fraction of rollFriction plus windDrag.
   // Jump ballistics: the playtested hand-tuned feel. (A Crash-3-matched fit
   // — rise 22 / fall 62 / v 10.4 / min 8.7 — was tried and felt worse in
   // THIS game's speed and level scale; the reference timing already matched.)
@@ -41,7 +41,7 @@ export const TUNING = {
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill (charge still tops at maxSpeed)
   vertMax: 32, // speed ceiling on TRANSITIONS. Above downhillMax (30.5) so vert is the FASTEST surface in the game, the way THPS reads — and the ceiling is enforced as a bleed now, not a one-frame chop, so arriving hot keeps its momentum readable
   heavyDrag: 0.005, // quadratic bleed above maxSpeed, every surface: 2.7 u/s^2 at 23, 7.2 at 38, so the top end has texture instead of a linear countdown
-  rollFriction: 3.5, // CONSTANT rolling friction on sand/hard ground: the crisp part of the stop. Grass keeps only a light 12% settling fraction so it carries skate momentum.
+  rollFriction: 3.5, // Full constant rolling friction is Beach-sand-only. Everywhere else keeps one light material-independent settle; slope gravity remains universal.
   windDrag: 0.0015, // v^2 wind resistance: only bites up top, so you coast a long way fast then stop decisively
   groundGravity: 45, // ONE symmetric slope gravity, all surfaces: climbing decelerates exactly as fast as descending accelerates. Asymmetric ramp physics made every dip-and-rise hand back more than it took, so bowls dispensed free speed and the pump sliders were unreadable
   pipeCarve: 16, // HALFPIPE: speed built per second just by HOLDING a direction (no X) on the transition — carving works the wall for momentum. Scaled by steepness so the flat gives nothing.
@@ -397,7 +397,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   walkSlowdownTime:
     'On-foot release inertia: time for a full-speed run to coast to a true stop. Committed direction changes use the same envelope to slide physical momentum toward the new intent while the gait and facing lead the turn. 0 = instant stop/turn.',
   friction:
-    'Linear speed bleed on STEEP ridden ground — NOT ordinary foot release inertia and NOT the flat skate roll-out. Foot coasting is owned by walkSlowdownTime; flat board roll-out is rollFriction + windDrag.',
+    'Linear speed bleed on STEEP ridden ground — NOT ordinary foot release inertia and NOT the flat skate roll-out. Foot coasting is owned by walkSlowdownTime; flat non-Beach board rollout uses a light shared fraction of rollFriction plus windDrag.',
   riseGravity:
     'ON FOOT ONLY: gravity on the way UP in a platforming jump. Lower = floatier. Airs that start on the board ignore this and use boardRiseGravity, so you can retune the Crash jump without touching a single ollie.',
   fallGravity:
@@ -444,7 +444,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   heavyDrag:
     'Quadratic bleed applied whenever you are above maxSpeed, on EVERY surface. Higher = the top of the speed range gets a harder wall to press against. (The old flat bleed only fired on level ground, so earned speed was immortal on a hill and then vanished the instant it flattened.)',
   rollFriction:
-    'Constant rolling friction on sand and hard-ground roll-out — the part that makes the board STOP instead of oozing through the last unit of speed. Grass keeps only a light settling fraction so it carries skate momentum instead of behaving like sand.',
+    'Full constant rolling friction on explicitly tagged Beach sand only. Every non-Beach surface shares one light material-independent settle, so changing a Test Course/Jungle texture cannot change movement.',
   windDrag:
     'v-squared wind resistance on the roll-out: near-nothing at walking pace, real up top. Together with rollFriction: coast a long way fast, then settle decisively.',
   groundGravity:
@@ -789,7 +789,8 @@ export const CONST = {
   spinCooldown: 0.15,
   maskInvuln: 1.15, // grace after a mask absorbs a hit or bail — must OUTLAST bailDownTime (1.1), or the last beat of a now-MOVING downed body is unprotected and can slide into a nitro
   uberTime: 12, // third mask = Crash-style invincibility for this long
-  coyoteTime: 0.28, // ledge-edge grace: you can still jump this long after rolling off
+  coyoteTime: 0.28, // ledge-edge press grace: start X within this window and the release latch below lets the gesture finish
+  coyoteReleaseTime: 0.22, // once X starts inside coyote time, this bounded release window survives the edge timer expiring
   teeterSpeed: 4, // below this speed, an overhanging edge makes you teeter
   railRideHeight: 0.15, // feet ride this far above the rail line
   railBlockRadius: 0.2, // on-foot rail block/trip: horizontal contact skin around the rail line (added to player half)

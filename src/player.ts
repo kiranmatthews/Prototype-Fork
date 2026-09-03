@@ -390,6 +390,7 @@ interface GroundHit {
   normal: THREE.Vector3;
   name: string;
   surface?: SurfaceKind; // painted material; separate from structural names such as halfpipe
+  beachSand?: boolean; // explicit gameplay tag; visual sand textures alone never add drag
   crate?: Crate; // identity-bearing temporary lid support
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
@@ -1095,6 +1096,9 @@ export class Player {
   private grindLatched = false;
   private respawnTimer = 0;
   private coyoteTimer = 0; // jump grace after running off a ledge
+  private coyoteReleaseT = 0; // an on-time coyote press may finish after edge grace expires
+  private coyotePressOpenThisStep = false; // preserve the final pre-decrement grace tick
+  private coyoteReleaseOpenThisStep = false; // same for the accepted gesture's release
   private crouchGraceT = 0; // crouch-jump grace: a static crouch that just ended still boosts a jump this long after
   private chargeTimer = 0; // X held on the ground: builds jump power + speed
   private charging = false;
@@ -2806,7 +2810,7 @@ export class Player {
     this.bodyGroup.rotation.x = 0;
     for (const f of this.fruits) this.retireFruit(f);
     this.groundHit = null;
-    this.coyoteTimer = 0;
+    this.clearCoyoteJumpWindow();
     this.crateFloorT = 0; // a respawn never inherits "stood on a box"
     this.crateFloor = null;
     this.crateSupportLostThisStep = false;
@@ -3249,7 +3253,12 @@ export class Player {
     this.grindBoostT = Math.max(0, this.grindBoostT - dt);
     if (this.grindBoostT === 0) this.speedPadCap = 0;
     this.spinCd = Math.max(0, this.spinCd - dt);
+    this.coyotePressOpenThisStep = this.coyoteTimer > 0;
+    this.coyoteReleaseOpenThisStep = this.coyoteReleaseT > 0;
     this.coyoteTimer = Math.max(0, this.coyoteTimer - dt);
+    this.coyoteReleaseT = this.grounded
+      ? 0
+      : Math.max(0, this.coyoteReleaseT - dt);
     this.crouchGraceT = Math.max(0, this.crouchGraceT - dt);
     this.vertGravT = Math.max(0, this.vertGravT - dt);
     // the pipe ride-out level-out clock only runs while that air lasts; the
@@ -4009,12 +4018,47 @@ export class Player {
     return true;
   }
 
+  private clearCoyoteJumpWindow(): void {
+    this.coyoteTimer = 0;
+    this.coyoteReleaseT = 0;
+    this.coyotePressOpenThisStep = false;
+    this.coyoteReleaseOpenThisStep = false;
+  }
+
+  private armCoyoteJumpGesture(dt: number, input: Input): void {
+    if (!input.jumpPressed && !input.jumpHeld) return;
+    if (!this.charging) {
+      this.charging = true;
+      this.chargePlanted = false;
+      this.chargeTimer = 0;
+    }
+    this.coyoteReleaseT = CONST.coyoteReleaseTime;
+    if (input.jumpHeld)
+      this.chargeTimer = Math.min(
+        this.chargeTimer + dt,
+        TUNING.jumpChargeTime,
+      );
+  }
+
+  /** Retire a vert release chain without letting its held press become the
+   * jump command of a newly attached rail or wallride. */
+  private retireHeldVertRelease(): void {
+    const heldVertPress =
+      this.vertBoardRelease.pressArmed &&
+      this.rawInput.jumpHeld;
+    resetVertBoardRelease(this.vertBoardRelease);
+    this.jumpReleaseRearmRequired =
+      this.jumpReleaseRearmRequired || heldVertPress;
+  }
+
   // Release-triggered charged jump: tap = jumpMinVelocity, full hold =
   // jumpVelocity. The jump's IDENTITY is decided here, at release, from the
   // state and speed you're carrying — not from how X was pressed.
   private chargedJump(dt: number): void {
+    const airborneRelaunch = this.state === 'air' && !this.grounded;
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
+    this.clearCoyoteJumpWindow();
     this.boardOllieAir = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectCharging = false;
@@ -4085,7 +4129,6 @@ export class Player {
       this.state = 'air';
       this.grounded = false;
       this.airGrav = 'board'; // (vert owns the gravity while glued; this is what the blend eases back TO)
-      this.coyoteTimer = 0;
       this.charging = false;
       this.chargeTimer = 0;
       this.crawling = false;
@@ -4185,7 +4228,14 @@ export class Player {
     }
     this.state = 'air';
     this.grounded = false;
-    this.coyoteTimer = 0;
+    // Ground launches publish zero and let the next air tick capture their
+    // impulse. A coyote release happens inside stepAir, which still applies
+    // gravity later in the SAME tick; epsilon marks its already-captured
+    // launch reference without advancing the visible timeline.
+    this.airborneT = airborneRelaunch ? Number.EPSILON : 0;
+    this.launchVy = this.vVel;
+    this.airPeakY = this.pos.y;
+    this.airRose = false;
     this.charging = false;
     this.chargeTimer = 0;
   }
@@ -5114,7 +5164,7 @@ export class Player {
         this.speed += TUNING.pipePumpGain * transWeight * dt;
       }
       // Sustained powered push on an ORDINARY uphill road must not chatter
-      // across the rollout threshold: X + steering is active drive even when
+      // across the rollout threshold: held X is active drive even when
       // symmetric slope gravity is stronger. Reuse the authored board-entry
       // speed as the slow floor. Transitions/pipes deliberately retain honest
       // stalls and rollback because pumping them is its own skill law.
@@ -5122,7 +5172,6 @@ export class Player {
         this.freeSkate &&
         this.charging &&
         !braking &&
-        (this.rawInput.moveX !== 0 || this.rawInput.moveY !== 0) &&
         ty > 0.02 &&
         !this.onTransition &&
         !onPipe;
@@ -5493,7 +5542,7 @@ export class Player {
       // (no woosh here: this fires on EVERY vert-air entry, so pumping a pipe
       // spammed it into a wind tunnel. The sparks carry the moment.)
       this.emitSparks(5, 0xfff3d0, 1.2);
-      this.coyoteTimer = 0;
+      this.clearCoyoteJumpWindow();
     } else if (
       hit &&
       this.freeSkate && // automatic board hangs must never conjure a loose deck under a runner
@@ -5519,7 +5568,7 @@ export class Player {
       );
       // (same spam rule as the crest pop: no per-entry woosh)
       this.emitSparks(5, 0xfff3d0, 1.2);
-      this.coyoteTimer = 0;
+      this.clearCoyoteJumpWindow();
     } else if (hit && hit.y >= this.pos.y - downWindow && hit.y <= this.pos.y + upWindow) {
       this.pos.y = hit.y;
       this.groundHit = hit;
@@ -5611,7 +5660,14 @@ export class Player {
         );
         // (same spam rule: vert-air entries are silent, the ride is the sound)
       }
-      this.coyoteTimer = CONST.coyoteTime;
+      if (this.vertAir || this.pipeHang) {
+        this.clearCoyoteJumpWindow();
+      } else {
+        this.coyoteTimer = CONST.coyoteTime;
+        this.coyoteReleaseT = 0;
+        this.coyotePressOpenThisStep = false;
+        this.coyoteReleaseOpenThisStep = false;
+      }
     }
 
     // Crash slide-jump: a charge held from BEFORE the slide was dropped at
@@ -5643,7 +5699,17 @@ export class Player {
       // and skates (the speed build lives in the skate branch above); releasing
       // fires the jump (coyote grace applies at ledges). A quick tap still
       // gives a serviceable hop.
-      if (this.state === 'ride' && input.jumpHeld && !slamFlat) {
+      if (
+        this.state === 'air' &&
+        this.coyoteTimer > 0 &&
+        !this.isBailing &&
+        !slamFlat
+      ) this.armCoyoteJumpGesture(dt, input);
+      if (
+        this.state === 'ride' &&
+        (input.jumpPressed || input.jumpHeld) &&
+        !slamFlat
+      ) {
         if (!this.charging) {
           // A charge begun at a STANDSTILL plants the feet: holding a
           // direction won't slide you around or trip the skate — it aims the
@@ -5798,17 +5864,35 @@ export class Player {
     // rail crosses the line near the apex, falling barely faster than a
     // drop-in crossing its lip.
     if (this.vVel > 1) this.airRose = true;
+    const coyotePressOpen =
+      this.coyotePressOpenThisStep || this.coyoteTimer > 0;
+    const coyoteReleaseOpen =
+      this.coyoteReleaseOpenThisStep || this.coyoteReleaseT > 0;
+    // Snapshot ownership for the whole input sample. chargedJump clears the
+    // stored clocks, but the same release must still be excluded from the
+    // double-jump route later in this method.
+    const coyoteInputOwned = coyotePressOpen || coyoteReleaseOpen;
     // Coyote release: letting go of a charge just after rolling off a ledge
     // still jumps. A press-then-release fully in the air (tap) works too.
     if (emergencyEjected) {
       this.jumpBufferT = 0;
       this.charging = false;
       this.chargeTimer = 0;
-    } else if (!this.isBailing && this.coyoteTimer > 0) {
-      if (input.jumpHeld && !this.charging) this.charging = true; // tap started mid-air
-      if (input.jumpReleased && this.charging) {
-        this.chargedJump(dt);
-      }
+    } else if (
+      !this.isBailing &&
+      coyoteInputOwned
+    ) {
+      // Coyote time judges when the PRESS began, not whether a release-to-jump
+      // gesture can fit entirely inside the remaining fraction of the timer.
+      // Once accepted, keep a short bounded release latch so a press on the
+      // final grace frame cannot be cancelled while the button is still down.
+      if (coyotePressOpen) this.armCoyoteJumpGesture(dt, input);
+      else if (this.charging && input.jumpHeld)
+        this.chargeTimer = Math.min(
+          this.chargeTimer + dt,
+          TUNING.jumpChargeTime,
+        );
+      if (input.jumpReleased && this.charging) this.chargedJump(dt);
     } else if (!this.isBailing) {
       if (input.jumpReleased) {
         // X let go in the air: buffer a landing jump for a beat, so a release
@@ -5824,6 +5908,7 @@ export class Player {
     } else {
       this.jumpBufferT = 0;
       this.airTapT = 0;
+      this.clearCoyoteJumpWindow();
       this.charging = false;
       this.chargeTimer = 0;
     }
@@ -5849,7 +5934,7 @@ export class Player {
       !this.isBailing &&
       this.airborneT <= djWindow && // only this early into the air
       (!this.airFromSkate || this.bounceJump) && // a crate bounce earns a tap even mid-skate-air
-      this.coyoteTimer <= 0 &&
+      !coyoteInputOwned &&
       !this.vertAir &&
       !this.slamActive &&
       !this.grabbing
@@ -6291,14 +6376,15 @@ export class Player {
     }
 
     if (landNow && hit) {
-      const airPressStillHeld =
+      const vertPressStillHeld =
         input.jumpHeld &&
-        (this.emergencyEjectCharging || this.vertBoardRelease.pressArmed);
+        this.vertBoardRelease.pressArmed;
       this.pos.y = hit.y;
       this.state = 'ride';
       this.grounded = true;
       this.jumpReleaseRearmRequired =
-        this.jumpReleaseRearmRequired || airPressStillHeld;
+        this.jumpReleaseRearmRequired || vertPressStillHeld;
+      this.clearCoyoteJumpWindow();
       this.landingLaunchLockT = Math.max(
         this.landingLaunchLockT,
         2 * CONST.fixedStep,
@@ -6311,7 +6397,6 @@ export class Player {
       this.deckTricksThisAir.clear();
       this.surfaceName = hit.name;
       this.crateFloor = hit.crate ?? null;
-      this.coyoteTimer = 0;
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
       this.floatAir = false; // the ballistic tag belongs to the air that just ended
@@ -6937,11 +7022,10 @@ export class Player {
     else if (this.grounded) this.speed = Math.min(cruise, this.speed + TUNING.chargeDecay * dt);
   }
 
-  // ROLL-OUT friction, THPS-shaped: a CONSTANT rolling term (so the board stops
-  // decisively instead of oozing through the last unit of speed) plus a v^2 wind
-  // term that only bites up top. The old curve was exactly backwards — it scaled
-  // WITH speed, so hard-won top speed evaporated fastest and the final 1 u/s
-  // took forever. friction 0 = frictionless.
+  // ROLL-OUT friction, THPS-shaped: explicitly tagged Beach sand gets the full
+  // constant rolling term; every other visual material shares one light base.
+  // The v^2 wind term is universal and only bites up top. Texture swaps outside
+  // the Beach levels therefore cannot rewrite movement physics.
   private frictionBleed(dt: number, steep: boolean): void {
     const s = Math.abs(this.speed);
     if (s < 1e-4) return;
@@ -6951,6 +7035,7 @@ export class Player {
       speed: s,
       steep,
       surface: this.groundHit?.surface,
+      beachSand: this.groundHit?.beachSand === true,
       steepFriction: TUNING.friction,
       rollFriction: TUNING.rollFriction,
       windDrag: TUNING.windDrag,
@@ -6973,6 +7058,7 @@ export class Player {
   private detachBoardForTraversal(): boolean {
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
+    this.clearCoyoteJumpWindow();
     const hadBoard = this.freeSkate;
     if (hadBoard) {
       this.throwBoard(true);
@@ -7216,7 +7302,7 @@ export class Player {
     this.doubleJumpAir = false;
     this.jumpBufferT = 0;
     this.airTapT = 0;
-    this.coyoteTimer = 0;
+    this.clearCoyoteJumpWindow();
     this.speed = 0; // ordinary on-foot air drive owns planar release movement
     this.walkVelocity.set(0, 0, 0);
     this.score(CONST.ptsRopeSwing, 'Rope Swing');
@@ -8002,6 +8088,7 @@ export class Player {
     this.cancelSlideTraversal();
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
+    this.clearCoyoteJumpWindow();
     if (this.grindRail) this.railLeft();
     this.grindRail = null;
     this.grindRun = null;
@@ -8719,8 +8806,8 @@ export class Player {
   }
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
-    resetVertBoardRelease(this.vertBoardRelease);
-    this.jumpReleaseRearmRequired = false;
+    this.retireHeldVertRelease();
+    this.clearCoyoteJumpWindow();
     this.boardOllieAir = false;
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
@@ -8747,7 +8834,6 @@ export class Player {
     this.state = 'grind';
     this.grounded = false;
     this.vVel = 0;
-    this.coyoteTimer = 0;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -10833,6 +10919,7 @@ export class Player {
   // clock restarts (next frame records the bounce pop as the window's scale),
   // and even a skate-origin air earns ONE extra tap off the lid.
   private bounceRefresh(): void {
+    this.clearCoyoteJumpWindow();
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
     this.airborneT = 0;
@@ -11886,6 +11973,8 @@ export class Player {
       }
     }
     this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.retireHeldVertRelease();
+    this.clearCoyoteJumpWindow();
     this.wallSpeed = hspeed; // redirect full momentum along the wall
     this.speed = hspeed;
     this.wallBox = w;
@@ -13183,6 +13272,7 @@ export class Player {
       normal,
       name: structuralName,
       surface: surfaceKindFromGroundObject(hit.object, structuralName),
+      beachSand: hit.object.userData.beachSandFriction === true,
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,

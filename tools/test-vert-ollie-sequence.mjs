@@ -122,7 +122,7 @@ try {
   const { Level, findLevel } = await server.ssrLoadModule('/src/level.ts');
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { Replayer, isReplayFile } = await server.ssrLoadModule('/src/replay.ts');
-  const { CONST } = await server.ssrLoadModule('/src/tuning.ts');
+  const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
   const {
     beginVertBoardRelease,
     createVertBoardReleaseState,
@@ -440,6 +440,312 @@ try {
   assert.equal(integrationPlayer.freeSkate, false);
   assert.equal(integrationPlayer.vertBoardRelease.stage, 0, 'board stow cancels vert release sequence');
   assert.equal(integrationPlayer.jumpReleaseRearmRequired, true, 'stowed air press stays owned until release');
+
+  const prepareFlatLanding = (candidate) => {
+    candidate.enterLevel(integrationEntry.id);
+    candidate.respawn(integrationLevel, true);
+    const hit = candidate.queryGround(integrationLevel);
+    assert.ok(hit, 'flat landing fixture has no ground');
+    candidate.state = 'air';
+    candidate.grounded = false;
+    candidate.pos.y = hit.y + 0.02;
+    candidate.prevPos.copy(candidate.pos);
+    candidate.vVel = -2;
+    candidate.speed = 10;
+    candidate.freeSkate = true;
+    candidate.airFromSkate = true;
+    candidate.airGrav = 'board';
+    candidate.vertAir = false;
+    candidate.pipeHang = false;
+    return hit;
+  };
+
+  // The release rearm is a VERT transaction. An ordinary board-air press held
+  // through touchdown becomes the next grounded charge; otherwise X can be
+  // hidden for seconds and both the uphill drive and eventual ollie disappear.
+  const ordinaryLandingPlayer = new Player(integrationLevel.scene);
+  prepareFlatLanding(ordinaryLandingPlayer);
+  ordinaryLandingPlayer.boardOllieAir = true;
+  ordinaryLandingPlayer.emergencyEjectCharging = true;
+  ordinaryLandingPlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpHeld: true }),
+    integrationLevel,
+  );
+  assert.equal(ordinaryLandingPlayer.grounded, true, 'ordinary board air did not land');
+  assert.equal(ordinaryLandingPlayer.jumpReleaseRearmRequired, false,
+    'ordinary board air inherited the vert-only release lock');
+  ordinaryLandingPlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpHeld: true }),
+    integrationLevel,
+  );
+  assert.equal(ordinaryLandingPlayer.charging, true,
+    'held X did not become the next grounded charge after an ordinary landing');
+  ordinaryLandingPlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpReleased: true }),
+    integrationLevel,
+  );
+  assert.equal(ordinaryLandingPlayer.lastJumpType, 'Board Ollie');
+  assert.equal(ordinaryLandingPlayer.state, 'air');
+
+  // The original post-vert guarantee remains: an unfinished transfer/abandon
+  // press cannot silently turn into ground pump or an uphill relaunch.
+  const vertLandingPlayer = new Player(integrationLevel.scene);
+  prepareFlatLanding(vertLandingPlayer);
+  beginVertBoardRelease(vertLandingPlayer.vertBoardRelease);
+  vertLandingPlayer.vertBoardRelease.pressArmed = true;
+  vertLandingPlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpHeld: true }),
+    integrationLevel,
+  );
+  assert.equal(vertLandingPlayer.grounded, true, 'vert release fixture did not land');
+  assert.equal(vertLandingPlayer.jumpReleaseRearmRequired, true,
+    'unfinished vert press was not retained through landing');
+  vertLandingPlayer.step(
+    CONST.fixedStep,
+    makeInput({ moveY: 1, jumpHeld: true }),
+    integrationLevel,
+  );
+  assert.equal(vertLandingPlayer.charging, false,
+    'unfinished vert press bled into grounded charge');
+  vertLandingPlayer.step(
+    CONST.fixedStep,
+    makeInput({ moveY: 1, jumpReleased: true }),
+    integrationLevel,
+  );
+  assert.equal(vertLandingPlayer.state, 'ride',
+    'unfinished vert release launched back uphill after landing');
+  assert.equal(vertLandingPlayer.jumpReleaseRearmRequired, false,
+    'releasing the retained vert press did not rearm X');
+
+  // Input preserves a press+release shorter than one fixed step as two edges
+  // with held=false. The final supported sample before a ledge must still
+  // produce the minimum ollie instead of consuming both edges silently.
+  const supportedTapPlayer = new Player(integrationLevel.scene);
+  supportedTapPlayer.enterLevel(integrationEntry.id);
+  supportedTapPlayer.respawn(integrationLevel, true);
+  assert.equal(supportedTapPlayer.grounded, true,
+    'supported same-sample tap fixture did not settle');
+  supportedTapPlayer.speed = 10;
+  supportedTapPlayer.freeSkate = true;
+  supportedTapPlayer.step(
+    CONST.fixedStep,
+    makeInput({
+      jumpPressed: true,
+      jumpReleased: true,
+      jumpHeld: false,
+    }),
+    integrationLevel,
+  );
+  assert.equal(supportedTapPlayer.state, 'air');
+  assert.equal(supportedTapPlayer.lastJumpType, 'Board Ollie',
+    'supported same-sample X tap was ignored');
+  assert.ok(supportedTapPlayer.vVel >= TUNING.ollieMinVelocity);
+
+  // Coyote eligibility belongs to the PRESS. A valid press near the end of
+  // the edge window gets a bounded beat to finish the release-to-jump gesture.
+  const coyotePlayer = new Player(integrationLevel.scene);
+  coyotePlayer.enterLevel(integrationEntry.id);
+  coyotePlayer.respawn(integrationLevel, true);
+  coyotePlayer.state = 'air';
+  coyotePlayer.grounded = false;
+  coyotePlayer.pos.set(0, 500, 0);
+  coyotePlayer.prevPos.copy(coyotePlayer.pos);
+  coyotePlayer.vVel = 0;
+  coyotePlayer.speed = 10;
+  coyotePlayer.freeSkate = true;
+  coyotePlayer.airFromSkate = true;
+  coyotePlayer.airGrav = 'board';
+  coyotePlayer.boardOllieAir = false;
+  // The timer is decremented before state routing; exactly one remaining tick
+  // must still be eligible on this input sample.
+  coyotePlayer.coyoteTimer = CONST.fixedStep;
+  coyotePlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpPressed: true, jumpHeld: true }),
+    integrationLevel,
+  );
+  assert.equal(coyotePlayer.charging, true, 'on-time coyote press did not arm');
+  for (let frame = 0; frame < 5; frame++) {
+    coyotePlayer.step(
+      CONST.fixedStep,
+      makeInput({ jumpHeld: true }),
+      integrationLevel,
+    );
+  }
+  assert.equal(coyotePlayer.coyoteTimer, 0, 'edge timer did not expire in latch test');
+  assert.equal(coyotePlayer.charging, true,
+    'accepted coyote press was cancelled before its release');
+  // Release on the latch's own final pre-decrement tick as well.
+  coyotePlayer.coyoteReleaseT = CONST.fixedStep;
+  coyotePlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpReleased: true }),
+    integrationLevel,
+  );
+  assert.equal(coyotePlayer.lastJumpType, 'Board Ollie');
+  assert.ok(coyotePlayer.vVel >= TUNING.ollieMinVelocity,
+    'latched coyote release did not launch');
+  assert.ok(coyotePlayer.airborneT <= Number.EPSILON,
+    'coyote relaunch kept counting airtime from the ledge instead of the jump');
+  assert.ok(coyotePlayer.launchVy >= TUNING.ollieMinVelocity,
+    'coyote relaunch did not record its double-jump launch reference');
+  assert.ok(coyotePlayer.launchVy > coyotePlayer.vVel,
+    'launch reference was overwritten by the first post-jump gravity step');
+  const coyoteLaunchReference = coyotePlayer.launchVy;
+  coyotePlayer.step(CONST.fixedStep, makeInput(), integrationLevel);
+  assert.equal(coyotePlayer.launchVy, coyoteLaunchReference,
+    'next air tick overwrote the coyote launch reference after gravity');
+
+  // A tap shorter than one fixed step carries both edges with held=false.
+  // The on-foot route is important: without coyote ownership the same press
+  // can also arm double jump after the pre-decrement timer reaches zero.
+  const sameSampleCoyotePlayer = new Player(integrationLevel.scene);
+  sameSampleCoyotePlayer.enterLevel(integrationEntry.id);
+  sameSampleCoyotePlayer.respawn(integrationLevel, true);
+  sameSampleCoyotePlayer.state = 'air';
+  sameSampleCoyotePlayer.grounded = false;
+  sameSampleCoyotePlayer.pos.set(0, 500, 0);
+  sameSampleCoyotePlayer.prevPos.copy(sameSampleCoyotePlayer.pos);
+  sameSampleCoyotePlayer.vVel = 0;
+  sameSampleCoyotePlayer.speed = TUNING.walkSpeed;
+  sameSampleCoyotePlayer.freeSkate = false;
+  sameSampleCoyotePlayer.airFromSkate = false;
+  sameSampleCoyotePlayer.airGrav = 'foot';
+  sameSampleCoyotePlayer.coyoteTimer = CONST.fixedStep;
+  sameSampleCoyotePlayer.step(
+    CONST.fixedStep,
+    makeInput({
+      jumpPressed: true,
+      jumpReleased: true,
+      jumpHeld: false,
+    }),
+    integrationLevel,
+  );
+  assert.equal(sameSampleCoyotePlayer.state, 'air');
+  assert.notEqual(sameSampleCoyotePlayer.lastJumpType, 'Double Jump',
+    'one coyote tap fired both the first and second jump');
+  assert.equal(sameSampleCoyotePlayer.airJumpUsed, false,
+    'coyote tap spent the double jump on its launch frame');
+  assert.equal(sameSampleCoyotePlayer.airTapT, 0,
+    'coyote-owned press leaked into the double-jump tap latch');
+  assert.ok(sameSampleCoyotePlayer.airborneT <= Number.EPSILON);
+  assert.ok(sameSampleCoyotePlayer.launchVy >= TUNING.jumpMinVelocity);
+  assert.ok(sameSampleCoyotePlayer.launchVy > sameSampleCoyotePlayer.vVel);
+
+  // The same accumulated press+release can occur on the exact ride->air step.
+  // stepRide must consume it after detecting the missing support; stepAir will
+  // not run until the following fixed sample, when both edges are already gone.
+  const edgeSampleCoyotePlayer = new Player(integrationLevel.scene);
+  edgeSampleCoyotePlayer.enterLevel(integrationEntry.id);
+  edgeSampleCoyotePlayer.respawn(integrationLevel, true);
+  const edgeGround = edgeSampleCoyotePlayer.queryGround(integrationLevel);
+  assert.ok(edgeGround, 'same-sample edge fixture has no starting ground');
+  edgeSampleCoyotePlayer.state = 'ride';
+  edgeSampleCoyotePlayer.grounded = true;
+  edgeSampleCoyotePlayer.pos.set(0, 500, 0);
+  edgeSampleCoyotePlayer.prevPos.copy(edgeSampleCoyotePlayer.pos);
+  edgeSampleCoyotePlayer.groundHit = {
+    ...edgeGround,
+    y: edgeSampleCoyotePlayer.pos.y,
+  };
+  edgeSampleCoyotePlayer.rideNormal.set(0, 1, 0);
+  edgeSampleCoyotePlayer.speed = 10;
+  edgeSampleCoyotePlayer.freeSkate = true;
+  edgeSampleCoyotePlayer.queryGround = () => null;
+  edgeSampleCoyotePlayer.queryShadowGround = () => 490;
+  edgeSampleCoyotePlayer.step(
+    CONST.fixedStep,
+    makeInput({
+      jumpPressed: true,
+      jumpReleased: true,
+      jumpHeld: false,
+    }),
+    integrationLevel,
+  );
+  assert.equal(edgeSampleCoyotePlayer.state, 'air');
+  assert.equal(edgeSampleCoyotePlayer.lastJumpType, 'Board Ollie',
+    'same-sample edge tap was consumed before coyote routing saw it');
+  assert.ok(edgeSampleCoyotePlayer.vVel >= TUNING.ollieMinVelocity);
+  assert.ok(edgeSampleCoyotePlayer.airborneT <= Number.EPSILON);
+
+  const lateCoyotePlayer = new Player(integrationLevel.scene);
+  lateCoyotePlayer.enterLevel(integrationEntry.id);
+  lateCoyotePlayer.respawn(integrationLevel, true);
+  lateCoyotePlayer.state = 'air';
+  lateCoyotePlayer.grounded = false;
+  lateCoyotePlayer.pos.set(0, 500, 0);
+  lateCoyotePlayer.prevPos.copy(lateCoyotePlayer.pos);
+  lateCoyotePlayer.vVel = 0;
+  lateCoyotePlayer.speed = 10;
+  lateCoyotePlayer.freeSkate = true;
+  lateCoyotePlayer.airFromSkate = true;
+  lateCoyotePlayer.airGrav = 'board';
+  lateCoyotePlayer.coyoteTimer = 0;
+  const lateJump = lateCoyotePlayer.lastJumpType;
+  lateCoyotePlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpPressed: true, jumpHeld: true }),
+    integrationLevel,
+  );
+  lateCoyotePlayer.step(
+    CONST.fixedStep,
+    makeInput({ jumpReleased: true }),
+    integrationLevel,
+  );
+  assert.equal(lateCoyotePlayer.lastJumpType, lateJump,
+    'press first arriving after coyote expiry launched anyway');
+  assert.ok(lateCoyotePlayer.jumpBufferT > 0,
+    'late release no longer retained the ordinary near-landing buffer');
+
+  // X alone is already valid mounted-board drive. On an ordinary medium road
+  // whose slope gravity exceeds chargeBoost, the original skate-entry floor
+  // must keep the board mounted without requiring steering chatter.
+  const uphillPlayer = new Player(integrationLevel.scene);
+  uphillPlayer.enterLevel(integrationEntry.id);
+  uphillPlayer.respawn(integrationLevel, true);
+  const uphillBaseHit = uphillPlayer.queryGround(integrationLevel);
+  assert.ok(uphillBaseHit, 'uphill fixture has no base ground');
+  const slopeNormal = new THREE.Vector3(0, Math.sqrt(1 - 0.3 ** 2), 0.3);
+  const slopeHit = {
+    y: uphillBaseHit.y,
+    normal: slopeNormal,
+    name: 'ordinary stone road',
+    surface: 'stone',
+    beachSand: false,
+    vert: false,
+  };
+  uphillPlayer.state = 'ride';
+  uphillPlayer.grounded = true;
+  uphillPlayer.pos.set(0, uphillBaseHit.y, 0);
+  uphillPlayer.prevPos.copy(uphillPlayer.pos);
+  uphillPlayer.axisF.set(0, 0, -1);
+  uphillPlayer.axisL.set(-1, 0, 0);
+  uphillPlayer.speed = TUNING.skateEntrySpeed;
+  uphillPlayer.freeSkate = true;
+  uphillPlayer.charging = true;
+  uphillPlayer.groundHit = slopeHit;
+  uphillPlayer.rideNormal.copy(slopeNormal);
+  uphillPlayer.queryGround = () => slopeHit;
+  let minimumUphillSpeed = uphillPlayer.speed;
+  for (let frame = 0; frame < 180; frame++) {
+    uphillPlayer.step(
+      CONST.fixedStep,
+      makeInput({ jumpHeld: true }),
+      integrationLevel,
+    );
+    minimumUphillSpeed = Math.min(minimumUphillSpeed, uphillPlayer.speed);
+    assert.equal(uphillPlayer.freeSkate, true,
+      `ordinary uphill drive dismounted the board at frame ${frame}, ` +
+      `speed ${uphillPlayer.speed}, state ${uphillPlayer.state}, ` +
+      `charging ${uphillPlayer.charging}, pos ${uphillPlayer.pos.toArray()}`);
+  }
+  assert.equal(uphillPlayer.freeSkate, true, 'ordinary uphill drive dismounted the board');
+  assert.ok(minimumUphillSpeed >= TUNING.skateEntrySpeed - 1e-9,
+    `ordinary uphill drive fell below its ${TUNING.skateEntrySpeed} floor`);
 
   // Source contract stays explicit even when CI has no external replay file.
   const playerSource = await readFile(new URL('../src/player.ts', import.meta.url), 'utf8');

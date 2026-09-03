@@ -342,6 +342,7 @@ export function createUnityBeachfrontReference(): UnityBeachfrontReference {
   const sand = new THREE.Mesh(buildSandGeometry(sandFrames), sandMaterial);
   sand.name = "Showcase1ContinuousSandSeabed";
   sand.userData.noShadow = true;
+  sand.userData.beachSandFriction = true;
 
   const cliffMaterial = new THREE.MeshStandardMaterial({
     name: "BeachfrontRun_LandwardCliffVisual",
