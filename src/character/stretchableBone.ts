@@ -214,9 +214,10 @@ function unitDoubleLobeGeometry(): THREE.BufferGeometry {
 
 interface GeneratedPart {
   readonly vertices: number;
+  readonly indexedVertices: number;
   readonly triangles: number;
   readonly positionsBase64: string;
-  readonly normalsBase64: string;
+  readonly indicesBase64: string;
 }
 
 interface GeneratedLimbAsset {
@@ -269,6 +270,13 @@ function decodeFloat32(source: string): Float32Array {
   return new Float32Array(bytes.buffer);
 }
 
+function decodeUint16(source: string): Uint16Array {
+  const binary = atob(source);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+  return new Uint16Array(bytes.buffer);
+}
+
 function importedGeometry(
   surface: ImportedAssetSurface,
   role: keyof GeneratedLimbAsset['parts'],
@@ -280,7 +288,7 @@ function importedGeometry(
   const geometry = new THREE.BufferGeometry();
   geometry.name = `meshy-${surface}-${role}`;
   geometry.setAttribute('position', new THREE.BufferAttribute(decodeFloat32(part.positionsBase64), 3));
-  geometry.setAttribute('normal', new THREE.BufferAttribute(decodeFloat32(part.normalsBase64), 3));
+  geometry.setIndex(new THREE.BufferAttribute(decodeUint16(part.indicesBase64), 1));
   if (role === 'shaft') {
     const position = geometry.getAttribute('position');
     const delta = new Float32Array(position.count * 3);

@@ -124,11 +124,13 @@ try {
   assert.equal(component.mesh.parent, rig.mount);
   assert.equal(component.mesh.isSkinnedMesh, true);
   assert.equal(component.triangles, 10889);
-  assert.equal(component.mesh.geometry.getAttribute('position').count, 32667);
+  assert.equal(component.mesh.geometry.getAttribute('position').count, 6758);
   assert.equal(component.mesh.geometry.getAttribute('normal'), undefined);
-  assert.equal(component.mesh.geometry.getAttribute('uv').count, 32667);
-  assert.equal(component.mesh.geometry.getAttribute('skinIndex').count, 32667);
-  assert.equal(component.mesh.geometry.getAttribute('skinWeight').count, 32667);
+  assert.equal(component.mesh.geometry.getAttribute('uv').count, 6758);
+  assert.equal(component.mesh.geometry.getAttribute('skinIndex').count, 6758);
+  assert.equal(component.mesh.geometry.getAttribute('skinWeight').count, 6758);
+  assert.equal(component.mesh.geometry.getIndex().count, 32667);
+  assert.equal(MESHY_TORSO_ASSET.indexedVertices, 6758);
   assert.equal(component.mesh.geometry.morphAttributes.position.length, 2);
   assert.equal(component.mesh.geometry.morphTargetsRelative, true);
   assert.deepEqual(component.mesh.morphTargetDictionary, {
@@ -141,10 +143,13 @@ try {
   ]);
   assert.equal(component.mesh.frustumCulled, false);
   assert.equal(component.mesh.material.map.colorSpace, THREE.SRGBColorSpace);
-  assert.equal(component.mesh.material.normalMap.colorSpace, THREE.NoColorSpace);
+  assert.equal(component.mesh.material.normalMap, null);
+  assert.equal(component.mesh.material.roughnessMap.colorSpace, THREE.NoColorSpace);
+  assert.equal(component.mesh.material.metalnessMap, null);
+  assert.equal(component.mesh.material.metalness, 0);
   assert.equal(component.mesh.material.flatShading, true);
   assert.deepEqual(meshyTorsoTextureDiagnostics(), {
-    state: 'loading', loaded: 0, requested: 4, error: null,
+    state: 'loading', loaded: 0, requested: 2, error: null,
   });
 
   const weights = component.mesh.geometry.getAttribute('skinWeight');
@@ -262,10 +267,8 @@ try {
     readFile(resolve(root, 'src/characterLab.ts'), 'utf8'),
     readFile(resolve(root, 'src/main.ts'), 'utf8'),
     readFile(resolve(root, 'package.json'), 'utf8'),
-    readFile(resolve(root, 'public/characters/meshy-torso/base-color.png')),
-    readFile(resolve(root, 'public/characters/meshy-torso/normal.png')),
-    readFile(resolve(root, 'public/characters/meshy-torso/roughness.png')),
-    readFile(resolve(root, 'public/characters/meshy-torso/metallic.png')),
+    readFile(resolve(root, 'public/characters/meshy-torso/base-color.webp')),
+    readFile(resolve(root, 'public/characters/meshy-torso/roughness.webp')),
   ]);
   const provenance = JSON.parse(provenanceSource);
   assert.equal(MESHY_TORSO_ASSET.sourceSha256,
@@ -273,9 +276,7 @@ try {
   assert.equal(sha256(generatedSource), provenance.generatedModuleSha256);
   assert.deepEqual(textureBytes.map(sha256), [
     provenance.webTextures.baseColor.sha256,
-    provenance.webTextures.normal.sha256,
     provenance.webTextures.roughness.sha256,
-    provenance.webTextures.metallic.sha256,
   ]);
   assert.match(playerSource, /createMeshyTorso\(/);
   assert.doesNotMatch(playerSource, /Crop tank|little heart print|waistProfile/);

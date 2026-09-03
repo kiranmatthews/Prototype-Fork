@@ -11,7 +11,8 @@
   "sourceBlendSha256": "e2de2663250e0855d8d352d68b8ee3be46a2a093587eb1cb0d98906d4bcd9d5c",
   "sourceBlendVersion": "3.02",
   "output": "three-finger-hand.glb",
-  "outputSha256": "1aa4708dfc9d10179109e229d688e32a34f6a827544c4dca34b39ccc7470e1a9",
+  "outputBytes": 718896,
+  "outputSha256": "adf5c0c60cfd3015f00a0bff03fe7dec82adf3172e95a3545bdbc463ca3bf751",
   "conversionTool": "tools/import-three-finger-hand.py",
   "conversionRuntime": "Blender 5.2.0 LTS headless with embedded source scripts disabled",
   "conversion": [
@@ -21,6 +22,8 @@
     "Folded forearm, hand and palm groups into the rigid hand root",
     "Capped and normalized every vertex to four skin influences",
     "Baked the authored left hand to the left wrist and one positive-scale mirror to the right wrist",
+    "Excluded both unused UV sets and all nine constant vertex-color layers; the exported materials reference no textures and the former COLOR_0 value was uniform white",
+    "Reindexed exact remaining attribute tuples while preserving the byte-identical expanded POSITION, NORMAL, JOINTS_0, and WEIGHTS_0 stream for every triangle corner",
     "Preserved the authored Basic Skin and Cloth materials",
     "Exported no source scripts, controls, cameras, lights or animations"
   ],
@@ -29,6 +32,7 @@
     "bonesPerHand": 13,
     "semanticDigitBonesPerHand": 12,
     "skinnedMaterialSurfaces": 4,
+    "indexedVerticesPerHand": 6292,
     "mainSurfaceRuntimeColor": "#eee8dc",
     "triangles": 25152,
     "animations": 0

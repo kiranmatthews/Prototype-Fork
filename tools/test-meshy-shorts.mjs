@@ -88,11 +88,13 @@ try {
   assert.equal(mesh.parent, mount);
   assert.equal(mesh.isSkinnedMesh, true);
   assert.equal(component.triangles, 10732);
-  assert.equal(mesh.geometry.getAttribute('position').count, 32196);
-  assert.equal(mesh.geometry.getAttribute('uv').count, 32196);
+  assert.equal(mesh.geometry.getAttribute('position').count, 8218);
+  assert.equal(mesh.geometry.getAttribute('uv').count, 8218);
   assert.equal(mesh.geometry.getAttribute('normal'), undefined);
-  assert.equal(mesh.geometry.getAttribute('skinIndex').count, 32196);
-  assert.equal(mesh.geometry.getAttribute('skinWeight').count, 32196);
+  assert.equal(mesh.geometry.getAttribute('skinIndex').count, 8218);
+  assert.equal(mesh.geometry.getAttribute('skinWeight').count, 8218);
+  assert.equal(mesh.geometry.getIndex().count, 32196);
+  assert.equal(MESHY_SHORTS_ASSET.indexedVertices, 8218);
   assert.deepEqual(mesh.morphTargetDictionary, {
     'shorts-width': 0,
     'shorts-length': 1,
@@ -103,8 +105,11 @@ try {
     ['hips', 'hip-left', 'hip-right']);
   assert.equal(mesh.material.flatShading, true);
   assert.equal(mesh.material.map.colorSpace, THREE.SRGBColorSpace);
+  assert.equal(mesh.material.normalMap, null);
+  assert.equal(mesh.material.roughnessMap.colorSpace, THREE.NoColorSpace);
+  assert.equal(mesh.material.metalnessMap.colorSpace, THREE.NoColorSpace);
   assert.deepEqual(meshyShortsTextureDiagnostics(), {
-    state: 'loading', loaded: 0, requested: 4, error: null,
+    state: 'loading', loaded: 0, requested: 3, error: null,
   });
 
   const skinIndex = mesh.geometry.getAttribute('skinIndex');
@@ -134,6 +139,15 @@ try {
   }
   assert.ok(smoothLeft > 500 && smoothRight > 500);
   assert.equal(detailBones.size, 44);
+  assert.deepEqual(
+    Array.from({ length: 45 }, (_, island) => island === 0 ? 0 : detailBones.get(island)),
+    [
+      0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2,
+      2, 0, 0, 2, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 2,
+      2, 2, 0, 0, 0, 2, 0, 0, 2, 2, 2, 2, 2, 2, 0,
+    ],
+    'lossless indexing must retain the expanded triangle-list centroid assignments',
+  );
 
   const movingDetail = [...detailBones.entries()].find(([, bone]) => bone !== 0);
   assert.ok(movingDetail, 'at least one lower-side detail must follow an upper leg');
@@ -211,10 +225,9 @@ try {
     readFile(resolve(root, 'src/characterLab.ts'), 'utf8'),
     readFile(resolve(root, 'src/main.ts'), 'utf8'),
     readFile(resolve(root, 'package.json'), 'utf8'),
-    readFile(resolve(root, 'public/characters/meshy-shorts/base-color.png')),
-    readFile(resolve(root, 'public/characters/meshy-shorts/normal.png')),
-    readFile(resolve(root, 'public/characters/meshy-shorts/roughness.png')),
-    readFile(resolve(root, 'public/characters/meshy-shorts/metallic.png')),
+    readFile(resolve(root, 'public/characters/meshy-shorts/base-color.webp')),
+    readFile(resolve(root, 'public/characters/meshy-shorts/roughness.webp')),
+    readFile(resolve(root, 'public/characters/meshy-shorts/metallic.webp')),
   ]);
   const provenance = JSON.parse(provenanceSource);
   assert.equal(MESHY_SHORTS_ASSET.sourceSha256,
@@ -222,7 +235,6 @@ try {
   assert.equal(sha256(generatedSource), provenance.generatedModuleSha256);
   assert.deepEqual(textureBytes.map(sha256), [
     provenance.webTextures.baseColor.sha256,
-    provenance.webTextures.normal.sha256,
     provenance.webTextures.roughness.sha256,
     provenance.webTextures.metallic.sha256,
   ]);

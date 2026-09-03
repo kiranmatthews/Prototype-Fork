@@ -12,6 +12,11 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import {
+  encodeFloat32,
+  encodeUint16,
+  indexGeneratedGeometry,
+} from './index-generated-geometry.mjs';
 
 const FILES = Object.freeze({
   fbx: Object.freeze({
@@ -95,11 +100,6 @@ function close(actual, expected, tolerance = 1e-9) {
   return Math.abs(actual - expected) <= tolerance;
 }
 
-function encodeFloat32(values) {
-  const typed = values instanceof Float32Array ? values : new Float32Array(values);
-  return Buffer.from(typed.buffer, typed.byteOffset, typed.byteLength).toString('base64');
-}
-
 function parseHead(assetDirectory) {
   installNodeFbxShims();
   const sources = Object.fromEntries(
@@ -159,15 +159,20 @@ function parseHead(assetDirectory) {
     uvs[index * 2] = uv.getX(index);
     uvs[index * 2 + 1] = uv.getY(index);
   }
+  const indexed = indexGeneratedGeometry({
+    position: { values: positions, itemSize: 3 },
+    uv: { values: uvs, itemSize: 2 },
+  });
   return {
     schemaVersion: 1,
     sourceFile: FILES.fbx.name,
     sourceSha256: sources.fbx.hash,
     sourceBytes: sources.fbx.bytes.length,
     vertices: position.count,
+    indexedVertices: indexed.attributes.position.length / 3,
     triangles: position.count / 3,
     sourceAttributes: ['position', 'faceted-normal', 'uv'],
-    generatedAttributes: ['position', 'uv'],
+    generatedAttributes: ['position', 'uv', 'index'],
     sourceLocalBounds: EXPECTED.localBounds,
     runtimeBounds: {
       min: [
@@ -191,8 +196,9 @@ function parseHead(assetDirectory) {
           sourceSize: expected.size,
         }]),
     ),
-    positionsBase64: encodeFloat32(positions),
-    uvsBase64: encodeFloat32(uvs),
+    positionsBase64: encodeFloat32(indexed.attributes.position),
+    uvsBase64: encodeFloat32(indexed.attributes.uv),
+    indicesBase64: encodeUint16(indexed.indices),
   };
 }
 

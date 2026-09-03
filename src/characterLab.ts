@@ -502,11 +502,14 @@ class CharacterLab implements CharacterLabHandle {
   }
 
   private headBounds(): THREE.Box3 {
-    const head = this.ctx.rigRoot.getObjectByName(
+    const preferred = this.ctx.rigRoot.getObjectByName(
       this.ctx.player.characterHeadStyle === 'alternate'
-        ? 'meshy-coco-alternate-head-surface'
+        ? 'meshy-boolieroo-alternate-head-surface'
         : 'meshy-head-surface',
     );
+    // The optional alternate is code-split and loads on first selection. Keep
+    // the camera framed on the existing skull during that cold-cache moment.
+    const head = preferred ?? this.ctx.rigRoot.getObjectByName('meshy-head-surface');
     return head ? new THREE.Box3().setFromObject(head) : this.characterBounds();
   }
 

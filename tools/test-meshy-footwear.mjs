@@ -71,10 +71,6 @@ try {
   const footwearApi = await server.ssrLoadModule('/src/character/meshyFootwear.ts');
   const { MESHY_FOOTWEAR_ASSET } = await server.ssrLoadModule(
     '/src/character/meshyFootwear.generated.ts');
-  const { CharacterProportionLayer } = await server.ssrLoadModule(
-    '/src/character/proportionLayer.ts');
-  const { IDENTITY_CHARACTER_PROPORTIONS } = await server.ssrLoadModule(
-    '/src/character/settings.ts');
   const {
     MESHY_FOOTWEAR_REST_SCALE,
     MESHY_FOOTWEAR_TOTAL_TRIANGLES,
@@ -85,6 +81,7 @@ try {
   assert.equal(MESHY_FOOTWEAR_REST_SCALE, 0.27);
   assert.equal(MESHY_FOOTWEAR_TOTAL_TRIANGLES, 3135);
   assert.equal(MESHY_FOOTWEAR_ASSET.vertices, 9405);
+  assert.equal(MESHY_FOOTWEAR_ASSET.indexedVertices, 2326);
   assert.equal(MESHY_FOOTWEAR_ASSET.uniquePositions, 1677);
   assert.equal(MESHY_FOOTWEAR_ASSET.triangles, 3135);
   assert.deepEqual(MESHY_FOOTWEAR_ASSET.islandTriangleCounts,
@@ -125,21 +122,24 @@ try {
     ['knee-left', 'ankle-left']);
   assert.deepEqual(right.skeleton.bones.map((bone) => bone.name),
     ['knee-right', 'ankle-right']);
-  assert.equal(left.shoe.geometry.getAttribute('position').count, 2504 * 3);
-  assert.equal(left.sock.geometry.getAttribute('position').count, 631 * 3);
-  assert.equal(left.shoe.geometry.getAttribute('normal').count, 2504 * 3);
-  assert.equal(left.sock.geometry.getAttribute('normal').count, 631 * 3);
-  assert.equal(left.shoe.geometry.getAttribute('uv').count, 2504 * 3);
-  assert.equal(left.sock.geometry.getAttribute('uv').count, 631 * 3);
-  assert.equal(left.shoe.geometry.index, null);
-  assert.equal(left.sock.geometry.index, null);
+  assert.equal(left.shoe.geometry.getAttribute('position').count, 1857);
+  assert.equal(left.sock.geometry.getAttribute('position').count, 469);
+  assert.equal(left.shoe.geometry.getAttribute('normal').count, 1857);
+  assert.equal(left.sock.geometry.getAttribute('normal').count, 469);
+  assert.equal(left.shoe.geometry.getAttribute('uv').count, 1857);
+  assert.equal(left.sock.geometry.getAttribute('uv').count, 469);
+  assert.equal(left.shoe.geometry.getIndex().count, 2504 * 3);
+  assert.equal(left.sock.geometry.getIndex().count, 631 * 3);
   assert.equal(left.shoe.material, left.sock.material);
   assert.equal(left.shoe.material, right.shoe.material);
   assert.equal(left.shoe.material.flatShading, false);
   assert.equal(left.shoe.material.map.colorSpace, THREE.SRGBColorSpace);
-  assert.equal(left.shoe.material.normalMap.colorSpace, THREE.NoColorSpace);
+  assert.equal(left.shoe.material.normalMap, null);
+  assert.equal(left.shoe.material.roughnessMap.colorSpace, THREE.NoColorSpace);
+  assert.equal(left.shoe.material.metalnessMap, null);
+  assert.equal(left.shoe.material.metalness, 0);
   assert.deepEqual(meshyFootwearTextureDiagnostics(), {
-    state: 'loading', loaded: 0, requested: 4, error: null,
+    state: 'loading', loaded: 0, requested: 2, error: null,
   });
 
   const leftBounds = left.shoe.geometry.boundingBox.clone().union(
@@ -171,7 +171,11 @@ try {
   const rightNormal = right.shoe.geometry.getAttribute('normal');
   const leftUv = left.shoe.geometry.getAttribute('uv');
   const rightUv = right.shoe.geometry.getAttribute('uv');
-  for (const [leftIndex, rightIndex] of [[0, 0], [1, 2], [2, 1]]) {
+  const leftShoeIndex = left.shoe.geometry.getIndex();
+  const rightShoeIndex = right.shoe.geometry.getIndex();
+  for (const [leftCorner, rightCorner] of [[0, 0], [1, 2], [2, 1]]) {
+    const leftIndex = leftShoeIndex.getX(leftCorner);
+    const rightIndex = rightShoeIndex.getX(rightCorner);
     near(rightPosition.getX(rightIndex), -leftPosition.getX(leftIndex), 1e-8);
     near(rightPosition.getY(rightIndex), leftPosition.getY(leftIndex), 1e-8);
     near(rightPosition.getZ(rightIndex), leftPosition.getZ(leftIndex), 1e-8);
@@ -226,21 +230,6 @@ try {
   leftLeg.ankle.rotation.x = 0;
   mount.updateWorldMatrix(true, true);
 
-  const layer = new CharacterProportionLayer(mount);
-  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, legThickness: 1.5 });
-  near(left.sock.morphTargetInfluences[0], 0.5);
-  near(right.sock.morphTargetInfluences[0], 0.5);
-  assert.deepEqual(left.shoe.scale.toArray(), [1, 1, 1],
-    'leg thickness must not scale the shoe');
-  layer.clear();
-  near(left.sock.morphTargetInfluences[0], 0);
-  layer.apply({ ...IDENTITY_CHARACTER_PROPORTIONS, footSize: 1.4 });
-  assert.deepEqual(leftLeg.ankle.scale.toArray(), [1.4, 1.4, 1.4]);
-  assert.deepEqual(rightLeg.ankle.scale.toArray(), [1.4, 1.4, 1.4]);
-  near(left.sock.morphTargetInfluences[0], 0);
-  layer.clear();
-  assert.deepEqual(leftLeg.ankle.scale.toArray(), [1, 1, 1]);
-
   const [
     generatedSource,
     provenanceSource,
@@ -256,10 +245,8 @@ try {
     readFile(resolve(root, 'src/characterLab.ts'), 'utf8'),
     readFile(resolve(root, 'src/main.ts'), 'utf8'),
     readFile(resolve(root, 'package.json'), 'utf8'),
-    readFile(resolve(root, 'public/characters/meshy-footwear/base-color.png')),
-    readFile(resolve(root, 'public/characters/meshy-footwear/normal.png')),
-    readFile(resolve(root, 'public/characters/meshy-footwear/roughness.png')),
-    readFile(resolve(root, 'public/characters/meshy-footwear/metallic.png')),
+    readFile(resolve(root, 'public/characters/meshy-footwear/base-color.webp')),
+    readFile(resolve(root, 'public/characters/meshy-footwear/roughness.webp')),
   ]);
   const provenance = JSON.parse(provenanceSource);
   assert.equal(MESHY_FOOTWEAR_ASSET.sourceSha256,
@@ -270,25 +257,21 @@ try {
   assert.equal(sha256(generatedSource), provenance.generatedModuleSha256);
   assert.deepEqual(textureBytes.map(sha256), [
     provenance.webTextures.baseColor.sha256,
-    provenance.webTextures.normal.sha256,
     provenance.webTextures.roughness.sha256,
-    provenance.webTextures.metallic.sha256,
   ]);
-  assert.match(playerSource, /createMeshyFootwear\(/);
-  assert.match(playerSource, /get meshyFootwearDiagnostics/);
-  assert.doesNotMatch(playerSource,
-    /sockGeo|sockStripeGeo|shoeGeo|strapGeo|soleGeo|SHOE_PINK/);
+  assert.doesNotMatch(playerSource, /createMeshyFootwear|meshyFootwearDiagnostics/,
+    'archived Meshy footwear returned to the live player bundle');
   for (const socketName of [
     'socket-foot-${anatomicalSide}',
     'socket-heel-${anatomicalSide}',
     'socket-toe-${anatomicalSide}',
   ]) assert.ok(playerSource.includes(socketName));
   assert.match(labSource, /\['Shoes', 'footwear'\]/);
-  assert.match(mainSource, /getMeshyFootwearDiagnostics/);
-  assert.match(JSON.parse(packageSource).scripts['check:character-lab'],
+  assert.doesNotMatch(mainSource, /getMeshyFootwearDiagnostics/);
+  assert.doesNotMatch(JSON.parse(packageSource).scripts['check:character-lab'],
     /test-meshy-footwear\.mjs/);
 
-  console.log('PASS Meshy footwear split, mirrored shoe, knee/ankle sock skin, contacts, proportions, provenance, and player wiring');
+  console.log('PASS archived Meshy footwear geometry, texture compression, provenance, and live-bundle exclusion');
 } finally {
   await server.close();
 }

@@ -66,13 +66,16 @@
   "conversionTool": "tools/import-meshy-head.mjs",
   "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
   "generatedModule": "src/character/meshyHead.generated.ts",
-  "generatedModuleSha256": "a710c48e49667873f50625e62970a89c8f65d604c3282224d3a77a89a3e4d478",
-  "webTextureConversion": "macOS sips proportional resize to 1024x1024 PNG",
+  "generatedModuleSha256": "0e91b399a60b3ef3443099358755a03b932cf67fb6432f4df31a5590f3be6549",
+  "webTextureConversion": "tools/optimize-character-texture.py; original source to 512x512 Bicubic plus light UnsharpMask, then decoded-pixel-exact lossless WebP; roughness uses unsharpened 256x256 Bicubic lossless WebP",
   "webTextures": {
-    "baseColor": { "file": "base-color.png", "bytes": 1149015, "sha256": "8bf0606e6aa3b7e050f27922928cbcb7ae503acfdd431b25f5f49bbfe2a20834" },
-    "normal": { "file": "normal.png", "bytes": 729150, "sha256": "fdfb4662ff75051eb780c2d8e8132aac1dcbf9b4e1632e758343d9ca10e34eb2" },
-    "roughness": { "file": "roughness.png", "bytes": 359739, "sha256": "ed475c636df7a7cf0d849dc399ed9aac79f9207c36ca28d35b370ced859ad622" },
-    "metallic": { "file": "metallic.png", "bytes": 8069, "sha256": "906f873891c76c71c83dc3ee10a315956d4b677fb1ebde027dbb4293a2c4ab42" }
+    "baseColor": { "file": "base-color.webp", "size": [512, 512], "bytes": 204652, "sha256": "8a0dd649f3fdc093d661c9722d1a5736909e88c2b6bce5aa9b27b65de323fefc", "pixelSha256": "c8aeb27567cf430cb7d91b897831a9c948126f7402928cbb36f541a3a8b3604a" },
+    "roughness": { "file": "roughness.webp", "size": [256, 256], "bytes": 23536, "sha256": "1b982fd401c38feb36162aa3d309f8f6a849ad4aae6112351910613989fb8fcf", "pixelSha256": "9771793a96811a216d4a62f364065d3887e044bd2598a3bb5cebcedc8c5d16e6" }
+  },
+  "runtimeTexturePolicy": {
+    "normal": "omitted; supplied tangent perturbation is near-neutral",
+    "metallic": "omitted; supplied map is exactly zero",
+    "metalness": 0
   },
   "runtimeMapping": {
     "axisAndOriginConversion": "source [x,y,z] to runtime [x,z+0.5,-y]",
@@ -89,7 +92,9 @@
     "Validated the exact static FBX and all four source texture hashes",
     "Discarded the source node's 100x centimetre presentation transform",
     "Preserved both outer and inward-wound cavity shells, UV seams, and triangle winding",
+    "Indexed identical Float32 position/UV tuples with a Uint16 corner stream that expands byte-for-byte to the source triangle list",
     "Validated faceted source normals and used deformation-safe derivative face normals at runtime",
+    "Kept the meaningful roughness variation and omitted the near-neutral normal plus exactly-zero metallic runtime maps",
     "Rebased the lowest skull point to semantic head-local Y=0",
     "Attached the rigid surface to the existing head bone without adding or renaming joints",
     "Changed Character Lab neck height to move only the head-local gap; torso, neck bone, and skull scale remain invariant",

@@ -7,7 +7,7 @@
   "conversionTool": "tools/import-meshy-limb-bones.mjs",
   "conversionRuntime": "Three.js FBXLoader; no runtime Blender dependency",
   "generatedModule": "src/character/meshyLimbBone.generated.ts",
-  "generatedModuleSha256": "2ca24fa19b3506455f920582ca05bd784ac4d362957eb06df32346ce224a3377",
+  "generatedModuleSha256": "fc7e83ccd8cb2ad98387e57add6f92d7f6371db202d16716dc16a4bc2de3a6b3",
   "assets": {
     "ivoryBone": {
       "sourceFile": "Meshy_AI_Ivory_Bone_on_Midnigh_0901052837_generate.fbx",
@@ -78,10 +78,10 @@
   },
   "conversion": [
     "Validated one closed manifold mesh per FBX with no rig, animation, texture, UV, or material dependency",
-    "Preserved supplied faceted polygon-vertex normals",
+    "Validated supplied faceted polygon-vertex normals, then omitted their unused runtime buffers because flat-shaded materials derive face normals from the unchanged triangle positions",
     "Centered the authored cross-section and normalized full source length to one unit",
     "Clipped only at conservative measured stretch boundaries and preserved the complete source surface",
-    "Encoded generated Float32 position/normal buffers as synchronous base64 data",
+    "Indexed exact Float32 positions with Uint16 corner streams that expand byte-for-byte to the baked triangle lists",
     "Derived one boundary-tapered relative shaft-thickness morph from the measured source blend widths",
     "Closed and validated the pinned shaft boundary rings during import and derived each morph's quadratic volume polynomial",
     "Solved that polynomial for volume-preserving animation/design composition whenever the fixed boundary collars make a physical solution possible; guarded impossible combined extremes before inversion",

@@ -51,6 +51,8 @@ const signedTetraVolume = (a, b, c) => a.dot(new THREE.Vector3().crossVectors(b,
 
 const closedRuntimeMorphVolume = (component, influence) => {
   const position = component.shaft.geometry.getAttribute('position');
+  const indexAttribute = component.shaft.geometry.getIndex();
+  assert.ok(indexAttribute, 'imported shaft must retain its source triangle index sequence');
   const delta = component.shaft.geometry.morphAttributes.position[0];
   const vertex = (index) => new THREE.Vector3(
     position.getX(index) + delta.getX(index) * influence,
@@ -58,8 +60,12 @@ const closedRuntimeMorphVolume = (component, influence) => {
     position.getZ(index) + delta.getZ(index) * influence,
   );
   let volume = 0;
-  for (let index = 0; index < position.count; index += 3) {
-    volume += signedTetraVolume(vertex(index), vertex(index + 1), vertex(index + 2));
+  for (let corner = 0; corner < indexAttribute.count; corner += 3) {
+    volume += signedTetraVolume(
+      vertex(indexAttribute.getX(corner)),
+      vertex(indexAttribute.getX(corner + 1)),
+      vertex(indexAttribute.getX(corner + 2)),
+    );
   }
   const stretchFraction = component.root.userData.stretchableBoneRuntime.stretchEnd -
     component.root.userData.stretchableBoneRuntime.stretchStart;
@@ -288,6 +294,22 @@ try {
     surface: 'ivory-bone',
   });
   assert.equal(defaultImported.shaft.material.flatShading, true);
+  for (const [component, asset] of [
+    [ivoryBone, MESHY_LIMB_BONE_ASSETS.ivoryBone],
+    [ivoryRattle, MESHY_LIMB_BONE_ASSETS.ivoryRattle],
+  ]) {
+    for (const [role, mesh] of [
+      ['proximal', component.proximalKnob],
+      ['shaft', component.shaft],
+      ['distal', component.distalKnob],
+    ]) {
+      const part = asset.parts[role];
+      assert.equal(mesh.geometry.getAttribute('position').count, part.indexedVertices);
+      assert.equal(mesh.geometry.getIndex().count, part.vertices);
+      assert.equal(mesh.geometry.getAttribute('normal'), undefined,
+        'flat-shaded imported geometry must not carry unused source normals');
+    }
+  }
   assert.throws(() => createStretchableBone({
     id: 'invalid-imported-shaft-contract',
     length: 0.22,
@@ -754,7 +776,7 @@ try {
   near(provenance.assets.ivoryRattle.thicknessMorphVolumePolynomial.B,
     MESHY_LIMB_BONE_ASSETS.ivoryRattle.thicknessMorph.volumeB, 1e-14);
   assert.equal(provenance.generatedModuleSha256,
-    '2ca24fa19b3506455f920582ca05bd784ac4d362957eb06df32346ce224a3377');
+    'fc7e83ccd8cb2ad98387e57add6f92d7f6371db202d16716dc16a4bc2de3a6b3');
   assert.equal(createHash('sha256').update(generatedSource).digest('hex'),
     provenance.generatedModuleSha256);
   const packageJson = JSON.parse(packageSource);

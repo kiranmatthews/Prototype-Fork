@@ -11,8 +11,10 @@ bone, look socket, and compatibility nodes.
 `tools/import-meshy-head.mjs` validates the exact FBX and texture revisions,
 converts the source `+Z`-up mesh to the character's `+Y`-up convention, and
 rebases its lowest point to head-local Y=0. The original FBX is not
-redistributed. Runtime uses synchronous position/UV buffers and derivative
-face normals, plus resized base-color, normal, roughness, and metallic maps.
+redistributed. Runtime uses exact indexed position/UV buffers and derivative
+face normals. Base colour is rebuilt directly from the 4K source as a
+bicubic-sharpened 512² lossless WebP, with a 256² lossless roughness mask. The
+near-neutral normal and exactly-zero metallic maps are not shipped or requested.
 
 The asset is static and unrigged. It is a rigid child of the existing `head`
 bone, so every current animation and procedural look/impact response remains

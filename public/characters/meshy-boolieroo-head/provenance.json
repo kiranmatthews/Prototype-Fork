@@ -1,0 +1,64 @@
+{
+  "generator": "Meshy",
+  "generatorUrl": "https://www.meshy.ai/",
+  "license": "owner-controlled-project-asset",
+  "rightsNote": "The owner confirms BoolieRoo is an original design, not based on the unrelated character name Meshy auto-assigned to its download, and explicitly authorized publication in this project on 2026-09-03.",
+  "sourceNamePolicy": "Meshy auto-assigned member labels are intentionally omitted; immutable source binaries are identified by their hashes and normalized to BoolieRoo names before import.",
+  "sourceArchive": {
+    "file": "Meshy_AI_BoolieRoo_0902221249_texture_fbx.zip",
+    "bytes": 45687081,
+    "sha256": "a05b16d4016686e59b2462b2f9d09a029f37c5d54512b12ccf9bfeaad302011d"
+  },
+  "sourceFbx": {
+    "file": "Meshy_AI_BoolieRoo_0902221249_texture.fbx",
+    "bytes": 15229580,
+    "sha256": "3785121eba8296c773d3d41834ae2e44eb4b7da471576772fe4eea0c1d9aacf3",
+    "formatVersion": 7400,
+    "runtimePolygonVertices": 46902,
+    "triangles": 15634,
+    "surfaceShells": 27,
+    "attributes": ["position", "faceted-normal", "uv"],
+    "sourceBounds": {
+      "min": [-0.5, -0.26171875, -0.392578125],
+      "max": [0.5, 0.259765625, 0.396484375]
+    },
+    "contents": {
+      "meshes": 1,
+      "materials": 1,
+      "bones": 0,
+      "skins": 0,
+      "morphs": 0,
+      "animations": 0
+    }
+  },
+  "sourceTextures": {
+    "baseColor": { "file": "Meshy_AI_BoolieRoo_0902221249_texture.png", "size": [4096, 4096], "bytes": 17629373, "sha256": "3eb292fa71eb8efc8308e992c50616b933b9c5d4d376fbd68428d65d2029b530" },
+    "normal": { "file": "Meshy_AI_BoolieRoo_0902221249_texture_normal.png", "size": [4096, 4096], "bytes": 11657174, "sha256": "eb364755973788c23d4dea84705bbead526fec39f8a59b00e527f8fe5c57e698" },
+    "roughness": { "file": "Meshy_AI_BoolieRoo_0902221249_texture_roughness.png", "size": [2048, 2048], "bytes": 1182785, "sha256": "df4df5f209df475392ffaa88da8345820340b5cef008acbe7d086b69957b5e2b" },
+    "metallic": { "file": "Meshy_AI_BoolieRoo_0902221249_texture_metallic.png", "size": [2048, 2048], "bytes": 18764, "sha256": "9c7f6fcbb8a67e14bc3dc28d8b6e5e056ba8700bda9ad96c52edc106a30d9acb" }
+  },
+  "conversionTool": "tools/import-meshy-boolieroo-head.mjs",
+  "conversionRuntime": "Three.js FBXLoader; no runtime FBX dependency",
+  "generatedModule": "src/character/meshyBoolieRooHead.generated.ts",
+  "generatedModuleSha256": "47589e4d8927eaa13c6263163c95dd1175ca470f3c90bbdfb0d7b1c2b633d142",
+  "geometryEncoding": "Exact Float32 position/UV tuples indexed with a Uint16 corner stream that expands byte-for-byte to the source triangle list",
+  "webTextureConversion": "tools/optimize-character-texture.py; original source to 512x512 Bicubic plus light UnsharpMask, then decoded-pixel-exact lossless WebP; roughness uses unsharpened 256x256 Bicubic lossless WebP",
+  "webTextures": {
+    "baseColor": { "file": "base-color.webp", "size": [512, 512], "bytes": 240928, "sha256": "b481ec680f120110b1a5c4a6764cb0a2cbc8892e52a346306c433bdfe2eff32c", "pixelSha256": "be67d54d8aaf2c72d6793dea5849189720068badd75b7f9e70d36626043169e8" },
+    "roughness": { "file": "roughness.webp", "size": [256, 256], "bytes": 22406, "sha256": "2b0b5aad833919232183fc63dd23721381935818915798e15cd1ca04714ae689", "pixelSha256": "ab47054c7a67b40cdc80611b37f8cd80fd35880a428f972168ecae0ae05322ec" }
+  },
+  "runtimeTexturePolicy": {
+    "normal": "omitted; supplied tangent perturbation is near-neutral",
+    "metallic": "omitted; 99.99 percent of supplied pixels are zero",
+    "metalness": 0,
+    "loading": "geometry module and both textures load only when Alternate is first selected"
+  },
+  "runtimeMapping": {
+    "axisAndOriginConversion": "source [x,y,z] to runtime [x,z+0.392578125,-y]",
+    "runtimeBounds": { "min": [-0.5, 0, -0.259765625], "max": [0.5, 0.7890625, 0.26171875] },
+    "restScale": 0.46,
+    "attachmentJoint": "head",
+    "collisionChanged": false,
+    "evaluationOnly": true
+  }
+}

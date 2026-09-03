@@ -10,6 +10,8 @@ The source is a generated Rigify arm with 118 bones. The browser asset keeps
 only one rigid palm/root plus the twelve deforming digit bones already exposed
 by CharacterIR. Palm and forearm weights are folded into the root; digit
 weights are capped and normalized to four influences for portable glTF skinning.
+The materials have no textures, so unused UV sets and constant vertex-color
+layers are excluded without changing the rendered surface.
 """
 
 from __future__ import annotations
@@ -252,12 +254,16 @@ def main() -> None:
         export_format="GLB",
         use_selection=True,
         export_yup=True,
+        export_texcoords=False,
         export_skins=True,
         export_all_influences=False,
         export_influence_nb=4,
         export_animations=False,
         export_morph=False,
         export_materials="EXPORT",
+        export_vertex_color="NONE",
+        export_all_vertex_colors=False,
+        export_active_vertex_color_when_no_material=False,
         export_cameras=False,
         export_lights=False,
         export_extras=True,

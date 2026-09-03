@@ -43,13 +43,16 @@
   "conversionTool": "tools/import-meshy-shorts.mjs",
   "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
   "generatedModule": "src/character/meshyShorts.generated.ts",
-  "generatedModuleSha256": "08853e429d4bacbbb604364a8b0497d943720b8cd5f8ff4dca0c2db65fb90803",
-  "webTextureConversion": "macOS sips proportional resize to 1024x1024 PNG",
+  "generatedModuleSha256": "3022b37b5d14770c4e6609ab68d8d59d647294157ae58802c4610381b3698eb8",
+  "webTextureConversion": "tools/optimize-character-texture.py; original source to 512x512 Bicubic plus light UnsharpMask, then decoded-pixel-exact lossless WebP; roughness and metallic masks use unsharpened 256x256 Bicubic lossless WebP",
   "webTextures": {
-    "baseColor": { "file": "base-color.png", "bytes": 1484854, "sha256": "2a06d9684eb8fc8d8bd80f6a42e21a1a68ca3f153fe684e55ca29b0f6f2d2765" },
-    "normal": { "file": "normal.png", "bytes": 1330684, "sha256": "aa3e66e457de2b531253d982058f3184fbfce6af59610fb1c8e989687acc4555" },
-    "roughness": { "file": "roughness.png", "bytes": 438448, "sha256": "db238c23581188730f40d59161d26991528f3f0178cc3240628d0922ae8e1ffe" },
-    "metallic": { "file": "metallic.png", "bytes": 104158, "sha256": "67c8e9af93a686ae98869ee2ba3dcefe830c302cd4a717f877a2fe2d71623938" }
+    "baseColor": { "file": "base-color.webp", "size": [512, 512], "bytes": 228144, "sha256": "bd59d136765b534c4249f3e0c6c8a7920ee0c6ee08df7ad06cf20ca8e723005a", "pixelSha256": "f2d617d15e8b6eaee228cf24e6a21db592d010ce476bf67f87a53c09a91d9ee3" },
+    "roughness": { "file": "roughness.webp", "size": [256, 256], "bytes": 22588, "sha256": "ab39fb261b8d5d3aa5df5bc36f3969a8ba025b1bf45e9b9a3a699c806d2ddb54", "pixelSha256": "5739bb5908ab72ccf32b6f62a755d8a04156686b4ae7b1b155c50ab0f05c7c1a" },
+    "metallic": { "file": "metallic.webp", "size": [256, 256], "bytes": 8882, "sha256": "87f835989a2de074bcf80b10acdb7579e1349b2a079286336f7b40be90bb0036", "pixelSha256": "d538837b3e2a96038032123edaded1c7526fc612310fd3a3b50b8162922909a3" }
+  },
+  "runtimeTexturePolicy": {
+    "normal": "omitted; supplied tangent perturbation is near-neutral",
+    "metallic": "retained at 256x256 because chain and hardware regions are materially distinct"
   },
   "runtimeMapping": {
     "axisConversion": "source [x,y,z] to runtime [x,z,-y]",
@@ -69,7 +72,9 @@
     "Validated the exact static FBX and all four source texture hashes",
     "Discarded the source node's 100x centimetre presentation transform",
     "Preserved source positions, UV seams, all 45 surface islands, and triangle winding",
+    "Indexed identical Float32 position/UV/island tuples with a Uint16 corner stream and retained expanded-corner centroid weighting for rigid detail assignments",
     "Validated faceted source normals and used derivative face normals for morph-safe lighting",
+    "Kept roughness and the meaningful chain/hardware metallic mask while omitting the near-neutral normal runtime map",
     "Generated smooth hips-to-matching-upper-leg weights for the main garment without knee influence or opposite-leg cross-weighting",
     "Rigidly assigned all 44 detached detail islands by centroid so chain links and belt hardware cannot shear",
     "Added independent pre-skin width, top-pinned height, and depth morphs",

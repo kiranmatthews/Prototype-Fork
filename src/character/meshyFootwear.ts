@@ -45,6 +45,7 @@ interface DecodedFootwear {
   readonly normals: Float32Array;
   readonly uvs: Float32Array;
   readonly islandIds: Uint8Array;
+  readonly indices: Uint16Array;
 }
 
 let decodedValue: DecodedFootwear | null = null;
@@ -83,20 +84,29 @@ function decodeUint8(source: string): Uint8Array {
   return result;
 }
 
+function decodeUint16(source: string): Uint16Array {
+  const binary = atob(source);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+  return new Uint16Array(bytes.buffer);
+}
+
 function decoded(): DecodedFootwear {
   if (decodedValue) return decodedValue;
   const positions = decodeFloat32(MESHY_FOOTWEAR_ASSET.positionsBase64);
   const normals = decodeFloat32(MESHY_FOOTWEAR_ASSET.normalsBase64);
   const uvs = decodeFloat32(MESHY_FOOTWEAR_ASSET.uvsBase64);
   const islandIds = decodeUint8(MESHY_FOOTWEAR_ASSET.islandIdsBase64);
-  const vertexCount = MESHY_FOOTWEAR_ASSET.vertices;
+  const indices = decodeUint16(MESHY_FOOTWEAR_ASSET.indicesBase64);
+  const vertexCount = MESHY_FOOTWEAR_ASSET.indexedVertices;
   if (
     positions.length !== vertexCount * 3 ||
     normals.length !== vertexCount * 3 ||
     uvs.length !== vertexCount * 2 ||
-    islandIds.length !== vertexCount
+    islandIds.length !== vertexCount ||
+    indices.length !== MESHY_FOOTWEAR_ASSET.vertices
   ) throw new Error('Meshy footwear generated attribute length mismatch');
-  decodedValue = { positions, normals, uvs, islandIds };
+  decodedValue = { positions, normals, uvs, islandIds, indices };
   return decodedValue;
 }
 
@@ -124,64 +134,78 @@ function partGeometry(
   const selectedTriangles = wantSock
     ? MESHY_FOOTWEAR_SOCK_TRIANGLES
     : MESHY_FOOTWEAR_SHOE_TRIANGLES;
-  const positions = new Float32Array(selectedTriangles * 9);
-  const normals = new Float32Array(selectedTriangles * 9);
-  const uvs = new Float32Array(selectedTriangles * 6);
+  const positions: number[] = [];
+  const normals: number[] = [];
+  const uvs: number[] = [];
+  const indices = new Uint16Array(selectedTriangles * 3);
+  const targetBySource = new Map<number, number>();
   const mirror = side === 'right' ? -1 : 1;
-  let targetVertex = 0;
+  let targetCorner = 0;
   for (let triangle = 0; triangle < MESHY_FOOTWEAR_ASSET.triangles; triangle++) {
     const sourceOffset = triangle * 3;
-    const island = source.islandIds[sourceOffset];
+    const sourceVertices = [
+      source.indices[sourceOffset],
+      source.indices[sourceOffset + 1],
+      source.indices[sourceOffset + 2],
+    ];
+    const island = source.islandIds[sourceVertices[0]];
     if (
-      source.islandIds[sourceOffset + 1] !== island ||
-      source.islandIds[sourceOffset + 2] !== island
+      source.islandIds[sourceVertices[1]] !== island ||
+      source.islandIds[sourceVertices[2]] !== island
     ) throw new Error('Meshy footwear triangle crosses connected islands');
     if ((island === MESHY_FOOTWEAR_ASSET.sockIslandId) !== wantSock) continue;
     const order = side === 'right' ? [0, 2, 1] : [0, 1, 2];
     for (const corner of order) {
-      const sourceVertex = sourceOffset + corner;
+      const sourceVertex = sourceVertices[corner];
+      let targetVertex = targetBySource.get(sourceVertex);
+      if (targetVertex !== undefined) {
+        indices[targetCorner++] = targetVertex;
+        continue;
+      }
+      targetVertex = targetBySource.size;
+      targetBySource.set(sourceVertex, targetVertex);
+      indices[targetCorner++] = targetVertex;
       const sourcePosition = sourceVertex * 3;
-      const targetPosition = targetVertex * 3;
-      const targetUv = targetVertex * 2;
-      positions[targetPosition] =
+      positions.push(
         mirror * source.positions[sourcePosition] * MESHY_FOOTWEAR_REST_SCALE +
-        MESHY_FOOTWEAR_LOCAL_OFFSET.x;
-      positions[targetPosition + 1] =
+        MESHY_FOOTWEAR_LOCAL_OFFSET.x,
         source.positions[sourcePosition + 1] * MESHY_FOOTWEAR_REST_SCALE +
-        MESHY_FOOTWEAR_LOCAL_OFFSET.y;
-      positions[targetPosition + 2] =
+        MESHY_FOOTWEAR_LOCAL_OFFSET.y,
         source.positions[sourcePosition + 2] * MESHY_FOOTWEAR_REST_SCALE +
-        MESHY_FOOTWEAR_LOCAL_OFFSET.z;
-      normals[targetPosition] = mirror * source.normals[sourcePosition];
-      normals[targetPosition + 1] = source.normals[sourcePosition + 1];
-      normals[targetPosition + 2] = source.normals[sourcePosition + 2];
-      uvs[targetUv] = source.uvs[sourceVertex * 2];
-      uvs[targetUv + 1] = source.uvs[sourceVertex * 2 + 1];
-      targetVertex++;
+        MESHY_FOOTWEAR_LOCAL_OFFSET.z,
+      );
+      normals.push(
+        mirror * source.normals[sourcePosition],
+        source.normals[sourcePosition + 1],
+        source.normals[sourcePosition + 2],
+      );
+      uvs.push(source.uvs[sourceVertex * 2], source.uvs[sourceVertex * 2 + 1]);
     }
   }
-  if (targetVertex !== selectedTriangles * 3) {
-    throw new Error(`Meshy footwear ${part} split produced ${targetVertex / 3} triangles`);
+  if (targetCorner !== selectedTriangles * 3) {
+    throw new Error(`Meshy footwear ${part} split produced ${targetCorner / 3} triangles`);
   }
+  const positionArray = new Float32Array(positions);
   const result = new THREE.BufferGeometry();
   result.name = `meshy-shoe-sock-${part}-${side}-geometry`;
-  result.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  result.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
-  result.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  result.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
+  result.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
+  result.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));
+  result.setIndex(new THREE.BufferAttribute(indices, 1));
   result.computeBoundingBox();
   if (wantSock) {
     const bounds = result.boundingBox!;
     const centerX = (bounds.min.x + bounds.max.x) * 0.5;
     const centerZ = (bounds.min.z + bounds.max.z) * 0.5;
-    const thicknessDelta = new Float32Array(positions.length);
-    const skinIndex = new Uint16Array(targetVertex * 4);
-    const skinWeight = new Float32Array(targetVertex * 4);
-    for (let index = 0; index < targetVertex; index++) {
+    const thicknessDelta = new Float32Array(positionArray.length);
+    const skinIndex = new Uint16Array(targetBySource.size * 4);
+    const skinWeight = new Float32Array(targetBySource.size * 4);
+    for (let index = 0; index < targetBySource.size; index++) {
       const offset = index * 3;
-      const y = positions[offset + 1];
+      const y = positionArray[offset + 1];
       const kneeWeight = sockKneeWeight(y);
-      thicknessDelta[offset] = (positions[offset] - centerX) * kneeWeight;
-      thicknessDelta[offset + 2] = (positions[offset + 2] - centerZ) * kneeWeight;
+      thicknessDelta[offset] = (positionArray[offset] - centerX) * kneeWeight;
+      thicknessDelta[offset + 2] = (positionArray[offset + 2] - centerZ) * kneeWeight;
       const skinOffset = index * 4;
       skinIndex[skinOffset] = 0;
       skinWeight[skinOffset] = kneeWeight;
@@ -226,12 +250,10 @@ function material(): THREE.MeshStandardMaterial {
   materialValue = new THREE.MeshStandardMaterial({
     name: 'meshy-shoe-sock-material',
     color: 0xffffff,
-    map: texture('base-color.png', THREE.SRGBColorSpace),
-    normalMap: texture('normal.png', THREE.NoColorSpace),
-    roughnessMap: texture('roughness.png', THREE.NoColorSpace),
-    metalnessMap: texture('metallic.png', THREE.NoColorSpace),
+    map: texture('base-color.webp', THREE.SRGBColorSpace),
+    roughnessMap: texture('roughness.webp', THREE.NoColorSpace),
     roughness: 1,
-    metalness: 1,
+    metalness: 0,
     flatShading: false,
   });
   return materialValue;

@@ -138,11 +138,10 @@ import {
   meshyHeadTextureDiagnostics,
   type MeshyHeadComponent,
 } from './character/meshyHead';
-import {
-  createMeshyCocoHead,
-  meshyCocoHeadTextureDiagnostics,
-  type MeshyCocoHeadComponent,
-} from './character/meshyCocoHead';
+import type {
+  MeshyBoolieRooHeadComponent,
+  MeshyBoolieRooHeadTextureDiagnostics,
+} from './character/meshyBoolieRooHead';
 import {
   createMeshyShorts,
   meshyShortsTextureDiagnostics,
@@ -1124,7 +1123,12 @@ export class Player {
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
   private meshyHead: MeshyHeadComponent | null = null;
-  private meshyCocoHead: MeshyCocoHeadComponent | null = null;
+  private meshyBoolieRooHead: MeshyBoolieRooHeadComponent | null = null;
+  private meshyBoolieRooHeadLoadState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
+  private meshyBoolieRooHeadLoadError: string | null = null;
+  private meshyBoolieRooHeadLoading: Promise<void> | null = null;
+  private meshyBoolieRooHeadTextureDiagnostics:
+    (() => MeshyBoolieRooHeadTextureDiagnostics) | null = null;
   private characterHeadStyleValue: CharacterHeadStyle = 'skull';
   private meshyShorts: MeshyShortsComponent | null = null;
   private readonly proceduralFootwear: ProceduralFootwearComponent[] = [];
@@ -1930,16 +1934,18 @@ export class Player {
     readonly texturesLoaded: number;
     readonly textureError: string | null;
   } {
-    const component = this.meshyCocoHead;
-    const textures = meshyCocoHeadTextureDiagnostics();
+    const component = this.meshyBoolieRooHead;
+    const textures = this.meshyBoolieRooHeadTextureDiagnostics?.();
     return {
       ready: component !== null,
       active: this.characterHeadStyleValue === 'alternate',
       triangles: component?.triangles ?? 0,
       sourceSha256: component?.sourceSha256 ?? null,
-      textureState: textures.state,
-      texturesLoaded: textures.loaded,
-      textureError: textures.error,
+      textureState: this.meshyBoolieRooHeadLoadState === 'failed'
+        ? 'failed'
+        : textures?.state ?? this.meshyBoolieRooHeadLoadState,
+      texturesLoaded: textures?.loaded ?? 0,
+      textureError: this.meshyBoolieRooHeadLoadError ?? textures?.error ?? null,
     };
   }
 
@@ -2161,9 +2167,44 @@ export class Player {
   }
 
   private syncCharacterHeadStyle(): void {
-    if (this.meshyHead) this.meshyHead.mesh.visible = this.characterHeadStyleValue === 'skull';
-    if (this.meshyCocoHead)
-      this.meshyCocoHead.mesh.visible = this.characterHeadStyleValue === 'alternate';
+    const alternateReady =
+      this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead !== null;
+    // Keep the skull visible while the optional chunk/texture arrives rather
+    // than flashing a headless character on a cold cache.
+    if (this.meshyHead) this.meshyHead.mesh.visible = !alternateReady;
+    if (this.meshyBoolieRooHead) this.meshyBoolieRooHead.mesh.visible = alternateReady;
+    if (
+      this.characterHeadStyleValue === 'alternate' &&
+      this.meshyBoolieRooHeadLoadState === 'idle'
+    ) void this.installMeshyBoolieRooHead();
+  }
+
+  private installMeshyBoolieRooHead(): Promise<void> {
+    if (this.meshyBoolieRooHeadLoading) return this.meshyBoolieRooHeadLoading;
+    if (this.meshyBoolieRooHead || !this.headM) return Promise.resolve();
+    this.meshyBoolieRooHeadLoadState = 'loading';
+    this.meshyBoolieRooHeadLoadError = null;
+    this.meshyBoolieRooHeadLoading = import('./character/meshyBoolieRooHead')
+      .then((module) => {
+        if (!this.headM) throw new Error('semantic head bone is unavailable');
+        const component = module.createMeshyBoolieRooHead();
+        component.mesh.visible = false;
+        this.headM.add(component.mesh);
+        this.meshyBoolieRooHead = component;
+        this.meshyBoolieRooHeadTextureDiagnostics = module.meshyBoolieRooHeadTextureDiagnostics;
+        this.meshyBoolieRooHeadLoadState = 'ready';
+        this.syncCharacterAppearance();
+        this.resetRenderInterpolation();
+      })
+      .catch((error) => {
+        this.meshyBoolieRooHeadLoadState = 'failed';
+        this.meshyBoolieRooHeadLoadError = error instanceof Error ? error.message : String(error);
+        console.error('Alternate Meshy head failed to load', error);
+      })
+      .finally(() => {
+        this.meshyBoolieRooHeadLoading = null;
+      });
+    return this.meshyBoolieRooHeadLoading;
   }
 
   private syncCharacterTailVisibility(): void {
@@ -15312,9 +15353,6 @@ export class Player {
     this.headVisualCenter = visualCenter;
     this.meshyHead = createMeshyHead();
     head.add(this.meshyHead.mesh);
-    this.meshyCocoHead = createMeshyCocoHead();
-    this.meshyCocoHead.mesh.visible = false;
-    head.add(this.meshyCocoHead.mesh);
 
     // Retain empty auxiliary nodes so saved clips and procedural driver IDs
     // remain migratable even though the monolithic skull owns the silhouette.

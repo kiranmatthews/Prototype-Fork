@@ -12,6 +12,11 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import {
+  encodeFloat32,
+  encodeUint16,
+  indexGeneratedGeometry,
+} from './index-generated-geometry.mjs';
 
 const FILES = Object.freeze({
   fbx: Object.freeze({
@@ -82,11 +87,6 @@ function validatedFile(assetDirectory, expected) {
     throw new Error(`${expected.name} revision mismatch: ${bytes.length} bytes / ${hash}`);
   }
   return { bytes, hash };
-}
-
-function encodeFloat32(values) {
-  const typed = values instanceof Float32Array ? values : new Float32Array(values);
-  return Buffer.from(typed.buffer, typed.byteOffset, typed.byteLength).toString('base64');
 }
 
 function connectedIslandIds(position) {
@@ -202,15 +202,20 @@ function parseShorts(assetDirectory) {
     uvs[index * 2] = uv.getX(index);
     uvs[index * 2 + 1] = uv.getY(index);
   }
+  const indexed = indexGeneratedGeometry({
+    position: { values: positions, itemSize: 3 },
+    uv: { values: uvs, itemSize: 2 },
+  }, islands.ids);
   return {
     schemaVersion: 1,
     sourceFile: FILES.fbx.name,
     sourceSha256: sources.fbx.hash,
     sourceBytes: sources.fbx.bytes.length,
     vertices: position.count,
+    indexedVertices: indexed.attributes.position.length / 3,
     triangles: position.count / 3,
     sourceAttributes: ['position', 'faceted-normal', 'uv'],
-    generatedAttributes: ['position', 'uv', 'island-id'],
+    generatedAttributes: ['position', 'uv', 'island-id', 'index'],
     sourceLocalBounds: EXPECTED.localBounds,
     runtimeBounds: {
       min: [EXPECTED.localBounds.min[0], EXPECTED.localBounds.min[2], -EXPECTED.localBounds.max[1]],
@@ -227,9 +232,10 @@ function parseShorts(assetDirectory) {
           sourceSize: expected.size,
         }]),
     ),
-    positionsBase64: encodeFloat32(positions),
-    uvsBase64: encodeFloat32(uvs),
-    islandIdsBase64: Buffer.from(islands.ids).toString('base64'),
+    positionsBase64: encodeFloat32(indexed.attributes.position),
+    uvsBase64: encodeFloat32(indexed.attributes.uv),
+    islandIdsBase64: Buffer.from(indexed.discriminator).toString('base64'),
+    indicesBase64: encodeUint16(indexed.indices),
   };
 }
 

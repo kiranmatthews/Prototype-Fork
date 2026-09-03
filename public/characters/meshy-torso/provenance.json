@@ -59,29 +59,28 @@
   "conversionTool": "tools/import-meshy-torso.mjs",
   "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
   "generatedModule": "src/character/meshyTorso.generated.ts",
-  "generatedModuleSha256": "112632f34bcb9acc53f1404bf69058d7250bd72e2f7599539e5937fb33099707",
-  "webTextureConversion": "macOS sips proportional resize from 2048x2048 to 1024x1024 PNG",
+  "generatedModuleSha256": "10b429ae834c7b12ffa8c7144b2c93c78fa54e10b82b05591ddd1871970e9e6b",
+  "webTextureConversion": "tools/optimize-character-texture.py; original source to 512x512 Bicubic plus light UnsharpMask, then decoded-pixel-exact lossless WebP; roughness uses unsharpened 256x256 Bicubic lossless WebP",
   "webTextures": {
     "baseColor": {
-      "file": "base-color.png",
-      "bytes": 1233151,
-      "sha256": "60b8c022df0fc304eb57c67eaff65a4128d6cd70b9a2585e9acd0ea90d9d5388"
-    },
-    "normal": {
-      "file": "normal.png",
-      "bytes": 977162,
-      "sha256": "d69eef75266da4b9a94a86dfcf985c075488c82411288fb5e3d2736525f1b8ba"
+      "file": "base-color.webp",
+      "size": [512, 512],
+      "bytes": 213432,
+      "sha256": "fb9a385da25931902ff15695f1607e985978ebe53d9d8cf50bb1830db1e7b831",
+      "pixelSha256": "cecf43238ef9dbbe4c6288d3c8ba3a8d6f918ef05139e6edf1d98552c8754574"
     },
     "roughness": {
-      "file": "roughness.png",
-      "bytes": 405050,
-      "sha256": "ea1c9e01d95887c57d9c2ffaa23b081b976bdbf3887f1bdf940f9d43eaf56299"
-    },
-    "metallic": {
-      "file": "metallic.png",
-      "bytes": 10501,
-      "sha256": "ab5d87bcb54801730be5dda42669099da1599c47703f1294fdaeb7ca6378a57d"
+      "file": "roughness.webp",
+      "size": [256, 256],
+      "bytes": 24908,
+      "sha256": "640448a2fa024d778f66b50ce0a5018bfa1d75b3eb94eddc26f972fa4f89d34e",
+      "pixelSha256": "7deda2d27c1ef1b57142ed65a9670459db73b5839d59210f76e37e1c2a56bc3f"
     }
+  },
+  "runtimeTexturePolicy": {
+    "normal": "omitted; supplied map is near-neutral and derivative face normals preserve the visible shape",
+    "metallic": "omitted; 99.92 percent of supplied pixels are zero",
+    "metalness": 0
   },
   "runtimeMapping": {
     "axisConversion": "source [x,y,z] to runtime [x,z,-y]",
@@ -107,7 +106,8 @@
     "Validated the exact static FBX and all four source texture hashes",
     "Discarded the source node's 100x centimetre presentation transform",
     "Preserved source polygon-vertex positions, UV seams, islands, and triangle winding; validated faceted source normals and replaced their redundant runtime buffer with deformation-safe derivative face normals",
-    "Mapped every supplied PBR texture explicitly because FBXLoader omits roughness and metallic maps for this Phong source material",
+    "Indexed identical Float32 position/UV tuples with a Uint16 corner stream while preserving the exact expanded skinning and morph inputs",
+    "Kept the meaningful roughness variation, omitted the near-neutral normal and effectively-zero metallic runtime maps, and retained the original source hashes",
     "Generated smooth code-native weights over the existing semantic torso and clavicle bones without adding or renaming joints",
     "Kept longitudinal deformation in endpoint translation and skinning; applied editor width, editor depth, and volume correction through two independent pre-skin morph channels",
     "Excluded shorts and pelvis renderables from torso width/depth targeting",

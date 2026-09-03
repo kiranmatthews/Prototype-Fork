@@ -47,13 +47,17 @@
   "conversionTool": "tools/import-meshy-footwear.mjs",
   "conversionRuntime": "Three.js FBXLoader; no runtime Blender or FBX dependency",
   "generatedModule": "src/character/meshyFootwear.generated.ts",
-  "generatedModuleSha256": "1a3a6b02872cdf9ee44c4620bdca9ade05b16cb67bdfc13fdc278c7ef47707eb",
-  "webTextureConversion": "macOS sips proportional resize to 1024x1024 PNG",
+  "generatedModuleSha256": "84fd131564de8a90c3b9a00f7f9afe929aa175ace7623e7c247beebedda2d188",
+  "webTextureConversion": "tools/optimize-character-texture.py; original source to 512x512 Bicubic plus light UnsharpMask, then decoded-pixel-exact lossless WebP; roughness uses unsharpened 256x256 Bicubic lossless WebP",
   "webTextures": {
-    "baseColor": { "file": "base-color.png", "bytes": 1126661, "sha256": "409c9ad099e468396809eab74776fc0d6e8264f039fe0986f671ac930cfdb9ab" },
-    "normal": { "file": "normal.png", "bytes": 821923, "sha256": "638d8af012450ae8053284b54901d4db3f1b7e52e607767486aad8edc09ff265" },
-    "roughness": { "file": "roughness.png", "bytes": 347215, "sha256": "fbeb53e60ea1f2793517033fbb43722d77180539d697322916767c1aa1d25106" },
-    "metallic": { "file": "metallic.png", "bytes": 9651, "sha256": "2b7bf3425d049716cbe0eaa9ab0f2b1b68b819b73d3ee11b5ff58f131f8fe58b" }
+    "baseColor": { "file": "base-color.webp", "size": [512, 512], "bytes": 184050, "sha256": "e58d9505aac314055e1e7129562161ec8f150e4a8d38164578ead020a32c62e7", "pixelSha256": "f0cf9c822a51c9d3a1a4fbda60f83714c7b1e0248aa76204471db8ee56e46947" },
+    "roughness": { "file": "roughness.webp", "size": [256, 256], "bytes": 20064, "sha256": "b2fee9c078834df784a65db6d0fc5cf6f243dbd38b429a9556454511f41f4a22", "pixelSha256": "32b5f257113d48b1bd006f4449ad673fd77c9fa63778cfc985a8f3eda0a4ae85" }
+  },
+  "runtimeTexturePolicy": {
+    "normal": "omitted; archived replacement is not instantiated and supplied tangent perturbation is near-neutral",
+    "metallic": "omitted; supplied map is effectively zero",
+    "metalness": 0,
+    "liveUse": "none; current player uses procedural footwear"
   },
   "runtimeMapping": {
     "axisConversion": "source [x,y,z] to canonical ankle-local [-y,z,-x]",
@@ -79,6 +83,7 @@
     "Validated the exact static FBX and all four source texture hashes",
     "Discarded the source node's 100x centimetre presentation transform",
     "Preserved source positions, smooth normals, UV seams, all seven surface islands, and topology",
+    "Indexed identical Float32 position/normal/UV/island tuples with a Uint16 corner stream that expands byte-for-byte to the source triangle list",
     "Separated the 631-triangle sock island from the rigid shoe and five lace/detail islands",
     "Attached the shoe rigidly to the existing ankle so deck-planting still discovers the outsole descendant",
     "Generated a two-bone matching-knee-to-ankle sock skin so the cuff stays with the shin",

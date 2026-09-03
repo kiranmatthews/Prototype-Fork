@@ -109,13 +109,22 @@ multiplying any authored head position track. The former visible kangaroo face,
 eyes, ears, hair, ponytail, neck cylinder, necklace, and pendant are retired;
 empty ear/ponytail nodes stay only for saved-animation compatibility.
 
-The **Head shape** buttons switch that production skull against a second,
-owner-supplied Meshy bandicoot head for quick silhouette evaluation. Both are
+The **Head shape** buttons switch that production skull against the second,
+owner-supplied Meshy **BoolieRoo** head for quick silhouette evaluation. Both are
 rigid children of the same semantic head bone and share the existing head-size,
 width, depth and neck-gap controls; the option changes no skeleton, animation,
-socket or collision data. The alternate archive contains no licence notice, so
-it is labelled as an evaluation asset and no third-party character-IP clearance
-is asserted by the repository.
+socket or collision data. The owner confirms BoolieRoo is an original design;
+the unrelated character name that Meshy auto-assigned to its downloaded files
+has been removed from every production identifier. Its losslessly indexed mesh chunk and compact
+textures are loaded only after **Alternate** is selected; the skull stays visible
+during a cold load.
+
+Character colour maps are authored straight from their original 2K/4K sources
+as bicubic-sharpened 512² images, then stored as pixel-lossless WebP. Roughness
+and the shorts' meaningful metal mask remain as 256² lossless data textures.
+Near-neutral normal maps and effectively empty metallic maps are omitted. Mesh
+repacking only indexes byte-identical attribute tuples; it does not quantize
+positions, UVs, weights, morph inputs, or animation data.
 
 The **Shorts** view frames the attributed Meshy Midnight Chain Denim garment.
 Its waistband/seat stay hips-dominant while each lower cloth leg follows only

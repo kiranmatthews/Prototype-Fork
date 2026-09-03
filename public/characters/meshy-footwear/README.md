@@ -12,7 +12,9 @@ does not instantiate this mesh or request these textures.
 `tools/import-meshy-footwear.mjs` remains the reproducible archive validator:
 it validates the exact FBX and four PBR texture sources, bakes source axes into
 ankle-local rider space, and records all seven connected surface islands. Its
-generated module is no longer imported by `Player`.
+generated module is no longer imported by `Player`. The archived colour and
+roughness references are compact lossless WebPs; unused normal and metallic
+maps are no longer deployed.
 
 The archived fit proves why the rollback is safe: both surfaces use the same
 sole plane and heel, foot-center, and toe socket positions. The original FBX

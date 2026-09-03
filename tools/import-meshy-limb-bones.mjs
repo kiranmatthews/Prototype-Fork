@@ -12,6 +12,11 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import {
+  encodeFloat32,
+  encodeUint16,
+  indexGeneratedGeometry,
+} from './index-generated-geometry.mjs';
 
 const EXPECTED = Object.freeze({
   ivoryBone: Object.freeze({
@@ -212,6 +217,19 @@ function decodePositions(part) {
   return new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4);
 }
 
+function indexFlatShadedPart(part) {
+  const indexed = indexGeneratedGeometry({
+    position: { values: decodePositions(part), itemSize: 3 },
+  });
+  return {
+    vertices: part.vertices,
+    indexedVertices: indexed.attributes.position.length / 3,
+    triangles: part.triangles,
+    positionsBase64: encodeFloat32(indexed.attributes.position),
+    indicesBase64: encodeUint16(indexed.indices),
+  };
+}
+
 function thicknessMorphDelta(positions, stretchFraction, proximalFade, distalFade) {
   const delta = new Float32Array(positions.length);
   for (let offset = 0; offset < positions.length; offset += 3) {
@@ -323,7 +341,7 @@ function bakeAsset(source, expected) {
   const stretchEnd = 0.5 - expected.lowerBoundaryZ;
   const thicknessStart = 0.5 - expected.upperBlendZ;
   const thicknessEnd = 0.5 - expected.lowerBlendZ;
-  const parts = {
+  const expandedParts = {
     proximal: encodePart(source, expected.upperBoundaryZ, null, 0),
     shaft: encodePart(
       source,
@@ -334,12 +352,19 @@ function bakeAsset(source, expected) {
     distal: encodePart(source, null, expected.lowerBoundaryZ, stretchEnd),
   };
   const thicknessMorph = deriveThicknessMorph(
-    parts.shaft,
+    expandedParts.shaft,
     stretchStart,
     stretchEnd,
     thicknessStart,
     thicknessEnd,
     expected,
+  );
+  // Imported surfaces render with flatShading, so source normals are checked
+  // during import but are not consumed by the shader. Index positions by
+  // their exact Float32 bits and retain the original triangle expansion in
+  // the Uint16 index buffer.
+  const parts = Object.fromEntries(
+    Object.entries(expandedParts).map(([name, part]) => [name, indexFlatShadedPart(part)]),
   );
   return {
     sourceFile: source.sourceFile,

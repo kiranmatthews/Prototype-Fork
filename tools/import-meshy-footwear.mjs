@@ -13,6 +13,11 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import {
+  encodeFloat32,
+  encodeUint16,
+  indexGeneratedGeometry,
+} from './index-generated-geometry.mjs';
 
 const FILES = Object.freeze({
   fbx: Object.freeze({
@@ -49,6 +54,7 @@ const FILES = Object.freeze({
 
 const EXPECTED = Object.freeze({
   vertices: 9405,
+  indexedVertices: 2326,
   triangles: 3135,
   uniquePositions: 1677,
   islandTriangleCounts: Object.freeze([1898, 631, 156, 152, 138, 82, 78]),
@@ -84,11 +90,6 @@ function validatedFile(assetDirectory, expected) {
     throw new Error(`${expected.name} revision mismatch: ${bytes.length} bytes / ${hash}`);
   }
   return { bytes, hash };
-}
-
-function encodeFloat32(values) {
-  const typed = values instanceof Float32Array ? values : new Float32Array(values);
-  return Buffer.from(typed.buffer, typed.byteOffset, typed.byteLength).toString('base64');
 }
 
 function connectedIslandIds(position) {
@@ -207,16 +208,27 @@ function parseFootwear(assetDirectory) {
     uvs[index * 2] = uv.getX(index);
     uvs[index * 2 + 1] = uv.getY(index);
   }
+  const indexed = indexGeneratedGeometry({
+    position: { values: positions, itemSize: 3 },
+    normal: { values: normals, itemSize: 3 },
+    uv: { values: uvs, itemSize: 2 },
+  }, islands.ids);
+  if (indexed.attributes.position.length / 3 !== EXPECTED.indexedVertices) {
+    throw new Error(
+      `footwear indexed vertex count changed: ${indexed.attributes.position.length / 3}`,
+    );
+  }
   return {
     schemaVersion: 1,
     sourceFile: FILES.fbx.name,
     sourceSha256: sources.fbx.hash,
     sourceBytes: sources.fbx.bytes.length,
     vertices: position.count,
+    indexedVertices: indexed.attributes.position.length / 3,
     triangles: position.count / 3,
     uniquePositions: EXPECTED.uniquePositions,
     sourceAttributes: ['position', 'smooth-normal', 'uv'],
-    generatedAttributes: ['position', 'normal', 'uv', 'island-id'],
+    generatedAttributes: ['position', 'normal', 'uv', 'island-id', 'index'],
     sourceLocalBounds: EXPECTED.localBounds,
     runtimeBounds: {
       min: [-EXPECTED.localBounds.max[1], EXPECTED.localBounds.min[2], -EXPECTED.localBounds.max[0]],
@@ -234,10 +246,11 @@ function parseFootwear(assetDirectory) {
           sourceSize: expected.size,
         }]),
     ),
-    positionsBase64: encodeFloat32(positions),
-    normalsBase64: encodeFloat32(normals),
-    uvsBase64: encodeFloat32(uvs),
-    islandIdsBase64: Buffer.from(islands.ids).toString('base64'),
+    positionsBase64: encodeFloat32(indexed.attributes.position),
+    normalsBase64: encodeFloat32(indexed.attributes.normal),
+    uvsBase64: encodeFloat32(indexed.attributes.uv),
+    islandIdsBase64: Buffer.from(indexed.discriminator).toString('base64'),
+    indicesBase64: encodeUint16(indexed.indices),
   };
 }
 

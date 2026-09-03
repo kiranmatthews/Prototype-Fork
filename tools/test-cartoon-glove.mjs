@@ -455,7 +455,8 @@ try {
   const torsoSurface = player.animationRig.root.getObjectByName('meshy-torso-surface');
   assert.equal(torsoSurface.isSkinnedMesh, true);
   assert.equal(torsoSurface.parent.name, 'procedural-rider');
-  assert.equal(torsoSurface.geometry.getAttribute('skinWeight').count, 32667);
+  assert.equal(torsoSurface.geometry.getAttribute('skinWeight').count, 6758);
+  assert.equal(torsoSurface.geometry.getIndex().count, 32667);
   assert.deepEqual(player.meshyHeadDiagnostics, {
     ready: true,
     triangles: 16536,

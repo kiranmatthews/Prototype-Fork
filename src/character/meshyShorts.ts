@@ -62,6 +62,13 @@ function decodeUint8(source: string): Uint8Array {
   return result;
 }
 
+function decodeUint16(source: string): Uint16Array {
+  const binary = atob(source);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+  return new Uint16Array(bytes.buffer);
+}
+
 function smoothstep(value: number): number {
   const t = THREE.MathUtils.clamp(value, 0, 1);
   return t * t * (3 - 2 * t);
@@ -79,7 +86,10 @@ function geometry(): THREE.BufferGeometry {
     'uv',
     new THREE.BufferAttribute(decodeFloat32(MESHY_SHORTS_ASSET.uvsBase64), 2),
   );
+  result.setIndex(new THREE.BufferAttribute(decodeUint16(MESHY_SHORTS_ASSET.indicesBase64), 1));
   const position = result.getAttribute('position');
+  const sourceIndex = result.getIndex();
+  if (!sourceIndex) throw new Error('Meshy shorts index data is missing');
   const islandIds = decodeUint8(MESHY_SHORTS_ASSET.islandIdsBase64);
   if (islandIds.length !== position.count) throw new Error('Meshy shorts island data length mismatch');
 
@@ -105,7 +115,11 @@ function geometry(): THREE.BufferGeometry {
   const islandX = new Float64Array(islandCount);
   const islandY = new Float64Array(islandCount);
   const islandVertexCount = new Uint32Array(islandCount);
-  for (let index = 0; index < position.count; index++) {
+  // Preserve the original triangle-list weighting of detail centroids. A
+  // shared indexed vertex contributes once for every source triangle corner,
+  // exactly as it did before lossless indexing.
+  for (let corner = 0; corner < sourceIndex.count; corner++) {
+    const index = sourceIndex.getX(corner);
     const island = islandIds[index];
     islandX[island] += position.getX(index) * MESHY_SHORTS_REST_SCALE;
     islandY[island] += MESHY_SHORTS_REST_CENTER_Y +
@@ -174,10 +188,9 @@ function material(): THREE.MeshStandardMaterial {
   materialValue = new THREE.MeshStandardMaterial({
     name: 'meshy-midnight-chain-denim-material',
     color: 0xffffff,
-    map: texture('base-color.png', THREE.SRGBColorSpace),
-    normalMap: texture('normal.png', THREE.NoColorSpace),
-    roughnessMap: texture('roughness.png', THREE.NoColorSpace),
-    metalnessMap: texture('metallic.png', THREE.NoColorSpace),
+    map: texture('base-color.webp', THREE.SRGBColorSpace),
+    roughnessMap: texture('roughness.webp', THREE.NoColorSpace),
+    metalnessMap: texture('metallic.webp', THREE.NoColorSpace),
     roughness: 1,
     metalness: 1,
     flatShading: true,

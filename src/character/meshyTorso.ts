@@ -65,6 +65,13 @@ function decodeFloat32(source: string): Float32Array {
   return new Float32Array(bytes.buffer);
 }
 
+function decodeUint16(source: string): Uint16Array {
+  const binary = atob(source);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+  return new Uint16Array(bytes.buffer);
+}
+
 function geometry(): THREE.BufferGeometry {
   if (geometryValue) return geometryValue;
   const result = new THREE.BufferGeometry();
@@ -77,6 +84,7 @@ function geometry(): THREE.BufferGeometry {
     'uv',
     new THREE.BufferAttribute(decodeFloat32(MESHY_TORSO_ASSET.uvsBase64), 2),
   );
+  result.setIndex(new THREE.BufferAttribute(decodeUint16(MESHY_TORSO_ASSET.indicesBase64), 1));
   const position = result.getAttribute('position');
   const widthDelta = new Float32Array(position.count * 3);
   const depthDelta = new Float32Array(position.count * 3);
@@ -175,12 +183,10 @@ function material(): THREE.MeshStandardMaterial {
   materialValue = new THREE.MeshStandardMaterial({
     name: 'meshy-skeleton-tank-top-material',
     color: 0xffffff,
-    map: texture('base-color.png', THREE.SRGBColorSpace),
-    normalMap: texture('normal.png', THREE.NoColorSpace),
-    roughnessMap: texture('roughness.png', THREE.NoColorSpace),
-    metalnessMap: texture('metallic.png', THREE.NoColorSpace),
+    map: texture('base-color.webp', THREE.SRGBColorSpace),
+    roughnessMap: texture('roughness.webp', THREE.NoColorSpace),
     roughness: 1,
-    metalness: 1,
+    metalness: 0,
     // Source normals are polygon-face normals. Derivative normals keep the
     // lighting correct while width/depth morphs move those faces.
     flatShading: true,

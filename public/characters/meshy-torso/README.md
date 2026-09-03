@@ -9,11 +9,13 @@ the conventional gameplay/animation skeleton remains unchanged.
 
 `tools/import-meshy-torso.mjs` validates the exact FBX and texture revisions,
 bakes the source `+Z`-up mesh into the character's `+Y`-up convention, and
-emits synchronous position and UV buffers. The importer validates the supplied
+emits exact indexed position and UV buffers. The importer validates the supplied
 faceted normals; runtime derivative face normals replace that redundant buffer
 so lighting follows width/depth morphs while reducing initial JS weight. The
-original FBX is not redistributed. The four 2048² source maps are resized to
-1024² web assets without changing their UV layout or channel meaning.
+original FBX is not redistributed. Base colour is rebuilt directly from the
+2K source as a bicubic-sharpened 512² lossless WebP; meaningful roughness stays
+as a 256² lossless mask. The near-neutral normal and effectively-zero metallic
+maps are not shipped or requested.
 
 The source contains no rig. Runtime code assigns smooth weights across the
 existing `torso-root → spine → chest → neck` chain and both clavicles. Moved

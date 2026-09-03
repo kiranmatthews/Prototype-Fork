@@ -69,9 +69,15 @@ try {
   assert.ok(gltf.scene.getObjectByName('thumb-metacarpal-right').position.x > 0,
     'mirrored right hand was assigned to the opposite wrist');
   let sourceTriangles = 0;
+  let sourceVertices = 0;
   for (const mesh of sourceMeshes) {
     const geometry = mesh.geometry;
     sourceTriangles += (geometry.index?.count ?? geometry.attributes.position.count) / 3;
+    sourceVertices += geometry.attributes.position.count;
+    assert.deepEqual(Object.keys(geometry.attributes).sort(),
+      ['normal', 'position', 'skinIndex', 'skinWeight'],
+      'hand GLB retained unused UV or constant vertex-color data');
+    assert.ok(geometry.index, 'lossless hand geometry must remain indexed');
     assert.equal(geometry.attributes.skinIndex.itemSize, 4);
     assert.equal(geometry.attributes.skinWeight.itemSize, 4);
     assert.equal(mesh.skeleton.bones.length, 13);
@@ -83,6 +89,7 @@ try {
     }
   }
   assert.equal(sourceTriangles, 25152);
+  assert.equal(sourceVertices, 12584);
 
   const material = new THREE.MeshBasicMaterial();
   const stitch = new THREE.MeshBasicMaterial();
@@ -321,6 +328,8 @@ try {
   assert.equal(provenance.license, 'CC-BY-4.0');
   assert.equal(provenance.requiredCredit, RIGGED_CARTOON_HAND_CREDIT);
   assert.equal(provenance.runtime.triangles, 25152);
+  assert.equal(provenance.runtime.indexedVerticesPerHand, 6292);
+  assert.equal(provenance.outputBytes, bytes.length);
   assert.equal(provenance.outputSha256,
     createHash('sha256').update(bytes).digest('hex'));
 
@@ -336,6 +345,8 @@ try {
   assert.match(playerSource, /installRiggedCartoonHands/);
   assert.match(labSource, /Rest orientation is linked/);
   assert.match(importerSource, /export_influence_nb=4/);
+  assert.match(importerSource, /export_texcoords=False/);
+  assert.match(importerSource, /export_vertex_color="NONE"/);
   assert.match(importerSource, /"left", orient\)/);
   assert.match(importerSource, /"right", mirror_x @ orient\)/);
   assert.match(creditsSource, /Hand Rig by \[Andy Cuccaro\]/);
