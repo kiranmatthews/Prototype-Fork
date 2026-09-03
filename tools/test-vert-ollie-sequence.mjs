@@ -252,6 +252,109 @@ try {
   levels.push(integrationLevel);
   integrationPlayer.enterLevel(integrationEntry.id);
   integrationPlayer.respawn(integrationLevel, true);
+
+  const prepareSteeringPlayer = (headingX, headingZ) => {
+    const candidate = new Player(integrationLevel.scene);
+    candidate.enterLevel(integrationEntry.id);
+    candidate.respawn(integrationLevel, true);
+    candidate.pos.set(0, integrationLevel.spawnPos.y, -220);
+    candidate.prevPos.copy(candidate.pos);
+    const ground = candidate.queryGround(integrationLevel);
+    assert.ok(ground, 'steering-intent fixture has no ordinary support');
+    candidate.pos.y = ground.y;
+    candidate.groundHit = ground;
+    candidate.rideNormal.copy(ground.normal);
+    candidate.state = 'ride';
+    candidate.grounded = true;
+    candidate.speed = 27.2;
+    candidate.freeSkate = true;
+    candidate.axisF.set(headingX, 0, headingZ).normalize();
+    candidate.axisL.set(candidate.axisF.z, 0, -candidate.axisF.x);
+    candidate.prevPos.copy(candidate.pos);
+    candidate.pipeLandGraceT = 0;
+    candidate.brakeLockT = 0;
+    return candidate;
+  };
+  const placeOnPipe = (candidate) => {
+    const pipe = integrationLevel.halfpipes[0];
+    assert.ok(pipe, 'Flats pipe is required for steering-intent integration');
+    const along = (pipe.l0 + pipe.l1) * 0.5;
+    const u = pipe.crossToU(pipe.cross);
+    const normal = pipe.normalAt(u, new THREE.Vector3());
+    candidate.pos.set(pipe.cross, pipe.surfaceY(u), along);
+    candidate.prevPos.copy(candidate.pos);
+    candidate.groundHit = {
+      y: candidate.pos.y,
+      normal,
+      name: 'halfpipe',
+      halfpipe: pipe,
+    };
+    candidate.rideNormal.copy(normal);
+    candidate.pipeRideT = 0.2;
+    return { pipe, along };
+  };
+
+  // Directional intent is global and camera-relative: an opposite lateral
+  // direction means "carve around", not "stop", on both ordinary ground and
+  // a halfpipe. The exact 180-degree tie turns through screen-forward.
+  const flatHardCarve = prepareSteeringPlayer(1, 0);
+  const flatStartZ = flatHardCarve.pos.z;
+  let flatCarveMinSpeed = flatHardCarve.speed;
+  for (let frame = 0; frame < 46; frame++) {
+    flatHardCarve.step(CONST.fixedStep, makeInput({ moveX: -1 }), integrationLevel);
+    flatCarveMinSpeed = Math.min(flatCarveMinSpeed, flatHardCarve.speed);
+  }
+  assert.equal(flatHardCarve.brakeLockT, 0,
+    'ordinary lateral reversal leaked into the pull-back lock');
+  assert.ok(flatCarveMinSpeed > 12,
+    'ordinary lateral hard carve scrubbed away its momentum');
+  assert.ok(flatHardCarve.axisF.z < -0.75 && flatHardCarve.pos.z < flatStartZ - 8,
+    'ordinary lateral reversal did not carve through screen-forward');
+
+  const pipeHardCarve = prepareSteeringPlayer(1, 0);
+  const { along: pipeStartAlong } = placeOnPipe(pipeHardCarve);
+  pipeHardCarve.pipeLandGraceT = 0.2;
+  let pipeCarveMinSpeed = pipeHardCarve.speed;
+  pipeHardCarve.step(CONST.fixedStep, makeInput({ moveX: -1 }), integrationLevel);
+  pipeCarveMinSpeed = Math.min(pipeCarveMinSpeed, pipeHardCarve.speed);
+  assert.ok(Math.abs(pipeHardCarve.axisF.z) < 1e-9 && pipeHardCarve.haltCd === 0,
+    'landing grace did not suppress stale opposite carve input');
+  for (let frame = 1; frame < 46; frame++) {
+    pipeHardCarve.step(CONST.fixedStep, makeInput({ moveX: -1 }), integrationLevel);
+    pipeCarveMinSpeed = Math.min(pipeCarveMinSpeed, pipeHardCarve.speed);
+  }
+  assert.equal(pipeHardCarve.brakeLockT, 0,
+    'pipe lateral reversal leaked into the pull-back lock');
+  assert.ok(pipeCarveMinSpeed > 12 && pipeHardCarve.freeSkate,
+    'pipe lateral hard carve stopped or dismounted the board');
+  assert.ok(pipeHardCarve.axisF.z < -0.75 && pipeHardCarve.pos.z < pipeStartAlong - 8,
+    'pipe lateral reversal did not carve out along the channel');
+
+  // A true screen-back pull against screen-forward travel remains the stop
+  // gesture everywhere; only the accidental lateral/opposite case changed.
+  const gracePullback = prepareSteeringPlayer(0, -1);
+  placeOnPipe(gracePullback);
+  gracePullback.pipeLandGraceT = 0.2;
+  const graceStartSpeed = gracePullback.speed;
+  gracePullback.step(CONST.fixedStep, makeInput({ moveY: -1 }), integrationLevel);
+  assert.ok(gracePullback.speed > graceStartSpeed - 0.1 && gracePullback.haltCd === 0,
+    'fresh pipe landing treated stale climb input as an immediate pull-back');
+
+  for (const [label, onPipe] of [['flat', false], ['pipe', true]]) {
+    const pullback = prepareSteeringPlayer(0, -1);
+    if (onPipe) placeOnPipe(pullback);
+    let maxLock = 0;
+    for (let frame = 0; frame < 46; frame++) {
+      pullback.step(CONST.fixedStep, makeInput({ moveY: -1 }), integrationLevel);
+      maxLock = Math.max(maxLock, pullback.brakeLockT);
+    }
+    assert.ok(maxLock > 0, `${label} pull-back did not arm the stop lock`);
+    assert.ok(pullback.speed < 27.2 * 0.5,
+      `${label} pull-back did not substantially stop forward travel`);
+    assert.ok(pullback.axisF.z < -0.999,
+      `${label} pull-back rotated the heading instead of stopping it`);
+  }
+
   integrationPlayer.state = 'air';
   integrationPlayer.grounded = false;
   integrationPlayer.pos.set(0, 500, 0);

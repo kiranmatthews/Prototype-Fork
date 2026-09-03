@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { TUNING, CONST } from './tuning';
 import { liveCarveGripAtSpeed } from './carveGrip';
+import { solveSkateSteering } from './skateSteering';
 import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
@@ -4989,7 +4990,6 @@ export class Player {
         // pull-back brake — while left/right keeps steering the line; a pure
         // side stick sits at 90° off the heading, well under the brake angle)
         if (rx !== 0 || ry !== 0) {
-          const inv = 1 / Math.hypot(rx, ry);
           // screen-up = the camera's forward: -Z normally, the LANE tangent on
           // camera-spine levels, the live camera aim in chase mode — the same
           // frame the stick decomposition uses. Reading the raw stick as
@@ -5000,13 +5000,21 @@ export class Player {
             (TUNING.chaseCam > 0.5 && !level.boulder
               ? { x: this.camDir.x, z: this.camDir.z }
               : { x: 0, z: -1 });
-          const dx = (cfc.x * ry - cfc.z * rx) * inv;
-          const dz = (cfc.z * ry + cfc.x * rx) * inv;
-          // signed angle from heading toward the stick, then turn (capped by
-          // carveGrip) while KEEPING the speed — momentum survives the carve.
-          const fwd = dx * this.axisF.x + dz * this.axisF.z;
-          const side = dx * this.axisF.z - dz * this.axisF.x;
-          const ang = Math.atan2(side, fwd);
+          const steering = solveSkateSteering(
+            this.axisF.x,
+            this.axisF.z,
+            cfc.x,
+            cfc.z,
+            rx,
+            ry,
+            CONST.carveBrakeAngle,
+          );
+          // A pull-back stop is a SCREEN-LONGITUDINAL reversal, not every
+          // direction that happens to oppose the current heading. Left/right
+          // reversals and diagonal redirects are hard carves on every surface.
+          // This distinction is resolved in the same camera/lane frame as the
+          // target direction, so it survives bends and chase-camera rotation.
+          const ang = steering.angle;
           if (
             Math.abs(ang) > CONST.carveBrakeAngle &&
             (this.pipeLandGraceT > 0 || (steepGround && Math.abs(this.speed) < 4))
@@ -5019,12 +5027,12 @@ export class Player {
             // clamps speed to 0 and (via `braking && ty < 0`) cancels slope
             // gravity too, so a held stick welded you to a 62-degree kicker face
             // and nothing could move you off it.
-          } else if (Math.abs(ang) > CONST.carveBrakeAngle) {
+          } else if (steering.intent === 'pullback-brake') {
             // Pulling (nearly) opposite your travel = the brake: speed bleeds to
             // a FULL stop and then steps off at ~0. It EASES OUT near rest (rate
             // scales with speed) so it rolls smoothly to zero like the no-input
             // decay, instead of snapping off at walking pace. Diagonals still
-            // carve — only a true pull-back skids.
+            // carve — only a true screen-back pull against forward travel skids.
             if (this.speed > 12 && this.haltCd <= 0) {
               sfx.play('skateHalt', 0.6);
               this.haltCd = 0.6;

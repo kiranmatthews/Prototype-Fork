@@ -23,6 +23,7 @@ try {
     liveCarveGripAtSpeed,
     migrateLegacySavedCarveGrip,
   } = await server.ssrLoadModule('/src/carveGrip.ts');
+  const { solveSkateSteering } = await server.ssrLoadModule('/src/skateSteering.ts');
   const { TUNING, TUNING_RANGES, TUNING_SECTIONS, TUNING_VERSION } =
     await server.ssrLoadModule('/src/tuning.ts');
   const { Replayer, isReplayFile } = await server.ssrLoadModule('/src/replay.ts');
@@ -36,6 +37,102 @@ try {
   assert.ok(skating?.keys.includes('carveGripLow'));
   assert.ok(skating?.keys.includes('carveGripHigh'));
   assert.equal(skating?.keys.includes('carveGripRatio'), false);
+
+  const solveSteering = ({
+    heading = [0, -1],
+    screenForward = [0, -1],
+    input = [0, 1],
+  } = {}) => solveSkateSteering(
+    heading[0], heading[1],
+    screenForward[0], screenForward[1],
+    input[0], input[1],
+    2.7,
+  );
+  assert.equal(
+    solveSteering({ heading: [0, -1], input: [0, -1] }).intent,
+    'pullback-brake',
+    'screen-back against forward travel was not a pull-back stop',
+  );
+  assert.equal(
+    solveSteering({ heading: [1, 0], input: [-1, 0] }).intent,
+    'carve',
+    'left/right reversal was misclassified as a stop',
+  );
+  assert.ok(
+    solveSteering({ heading: [1, 0], input: [-1, 0] }).angle > 0,
+    'right-to-left reversal did not choose its arc through screen-forward',
+  );
+  assert.ok(
+    solveSteering({ heading: [-1, 0], input: [1, 0] }).angle < 0,
+    'left-to-right reversal did not choose its arc through screen-forward',
+  );
+  assert.equal(
+    solveSteering({ heading: [1, 0], input: [-Math.SQRT1_2, Math.SQRT1_2] }).intent,
+    'carve',
+    'forward diagonal redirect was misclassified as a stop',
+  );
+  assert.equal(
+    solveSteering({ heading: [0, 1], input: [0, 1] }).intent,
+    'carve',
+    'forward input against screen-back travel was misclassified as pull-back',
+  );
+  assert.equal(
+    solveSteering({ heading: [1, 0], screenForward: [1, 0], input: [0, -1] }).intent,
+    'pullback-brake',
+    'rotated camera frame changed the pull-back gesture',
+  );
+  assert.equal(
+    solveSteering({ heading: [0.6, -0.8], input: [-0.6, -0.8] }).intent,
+    'pullback-brake',
+    'forward-dominant reverse input did not stop',
+  );
+  assert.equal(
+    solveSteering({ heading: [0.8, -0.6], input: [-0.8, -0.6] }).intent,
+    'carve',
+    'side-dominant reverse input did not hard-carve',
+  );
+  assert.equal(
+    solveSteering({
+      heading: [Math.SQRT1_2, -Math.SQRT1_2],
+      input: [-Math.SQRT1_2, -Math.SQRT1_2],
+    }).intent,
+    'carve',
+    '45-degree intent tie did not resolve toward carving',
+  );
+  const headingAt = (degrees) => {
+    const radians = degrees * Math.PI / 180;
+    return [Math.sin(radians), -Math.cos(radians)];
+  };
+  assert.equal(
+    solveSteering({ heading: headingAt(26), input: [0, -1] }).intent,
+    'carve',
+    'sub-threshold reverse angle stopped instead of carving',
+  );
+  assert.equal(
+    solveSteering({ heading: headingAt(24), input: [0, -1] }).intent,
+    'pullback-brake',
+    'above-threshold reverse angle carved instead of stopping',
+  );
+  const rotation = 0.73;
+  const rotate = ([x, z]) => [
+    x * Math.cos(rotation) + z * Math.sin(rotation),
+    -x * Math.sin(rotation) + z * Math.cos(rotation),
+  ];
+  const baseStop = solveSteering({ heading: [0, -1], input: [0, -1] });
+  const rotatedStop = solveSteering({
+    heading: rotate([0, -1]),
+    screenForward: rotate([0, -1]),
+    input: [0, -1],
+  });
+  assert.equal(rotatedStop.intent, baseStop.intent,
+    'world rotation changed screen-relative stop intent');
+  near(Math.abs(rotatedStop.angle), Math.abs(baseStop.angle),
+    'world rotation changed screen-relative steering magnitude');
+  const rotatedTarget = rotate([baseStop.targetX, baseStop.targetZ]);
+  near(rotatedStop.targetX, rotatedTarget[0],
+    'rotated screen frame changed target X');
+  near(rotatedStop.targetZ, rotatedTarget[1],
+    'rotated screen frame changed target Z');
 
   near(carveGripAtSpeed(0, 23, 1440, 0), 1440,
     'zero speed did not receive the low endpoint');
@@ -186,7 +283,7 @@ try {
   assert.doesNotMatch(playerSource, /TUNING\.carveGripRatio/,
     'live skate steering still reads the retired ratio');
 
-  console.log('PASS independent low/high carve grip, saved-tuning migration, and legacy replay compatibility');
+  console.log('PASS global stop/carve intent, independent grip endpoints, migration, and replay compatibility');
 } finally {
   await server.close();
 }
