@@ -100,6 +100,20 @@ export class SpecialSystem {
     return this.armed && this.value > 0.0001;
   }
 
+  /**
+   * Read the presented meter without folding temporary Player-owned powerups
+   * into the earned economy. When that outside context ends, the earned value
+   * underneath is still exactly the SpecialSystem value it would otherwise be.
+   */
+  effectiveValue(forcedFull = false): number {
+    return forcedFull ? SPECIAL_MAX : this.value;
+  }
+
+  /** Temporary readiness follows the same non-mutating rule as the meter. */
+  effectiveReady(forcedReady = false): boolean {
+    return forcedReady || this.ready;
+  }
+
   get direction(): SpecialDirection | null {
     return this.heldDirection;
   }
@@ -144,8 +158,8 @@ export class SpecialSystem {
   }
 
   /** Inspect an action edge without spending its command or changing meter. */
-  peek(category: SpecialCategory): SpecialTrick | null {
-    if (!this.ready || this.taps.length < 2) return null;
+  peek(category: SpecialCategory, forcedReady = false): SpecialTrick | null {
+    if (!this.effectiveReady(forcedReady) || this.taps.length < 2) return null;
     const trick = SPECIAL_TRICKS.find((candidate) => candidate.category === category);
     if (!trick) return null;
     const a = this.taps[this.taps.length - 2];

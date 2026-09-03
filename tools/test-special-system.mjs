@@ -87,6 +87,37 @@ const neutral = (meter) => meter.step(fixed, 0, 0);
   assert.equal(meter.value, 0);
 }
 
+{
+  // A Player-owned temporary powerup may present and authorize full SPECIAL
+  // without changing the earned meter underneath it.
+  const meter = new special.SpecialSystem();
+  meter.award(special.SPECIAL_POINTS_TO_FULL / 2);
+  const earnedValue = meter.value;
+  assert.equal(meter.ready, false);
+  assert.equal(meter.effectiveValue(true), special.SPECIAL_MAX);
+  assert.equal(meter.effectiveReady(true), true);
+  assert.equal(meter.value, earnedValue, 'forced full mutated earned progress');
+  assert.equal(meter.ready, false, 'forced readiness armed the earned meter');
+
+  meter.step(fixed, -1, 0);
+  neutral(meter);
+  meter.step(fixed, 1, 0);
+  assert.equal(meter.peek('flip'), null, 'partial earned meter authorized a special');
+  const forced = meter.peek('flip', true);
+  assert.equal(forced?.id, 'kickflip-mctwist');
+  meter.commit(forced);
+  assert.equal(meter.value, earnedValue, 'forced special commit minted earned meter');
+  assert.equal(meter.ready, false);
+
+  // Wiping ordinary combo state cannot revoke an independently live powerup;
+  // removing the outside override reveals the correctly wiped base meter.
+  meter.wipe();
+  assert.equal(meter.effectiveValue(true), special.SPECIAL_MAX);
+  assert.equal(meter.effectiveReady(true), true);
+  assert.equal(meter.effectiveValue(false), 0);
+  assert.equal(meter.effectiveReady(false), false);
+}
+
 for (const [category, face] of [
   ['flip', '□'],
   ['grab', '○'],
@@ -108,9 +139,40 @@ for (const contract of [
 ]) {
   assert.ok(player.includes(contract), `Player SPECIAL integration missing ${contract}`);
 }
+assert.match(
+  player,
+  /get specialMeter\(\)[\s\S]{0,180}effectiveValue\(this\.tripleMaskSpecialActive\)/,
+  'triple mask must present full SPECIAL without mutating earned meter',
+);
+assert.match(
+  player,
+  /get specialReady\(\)[\s\S]{0,180}effectiveReady\(this\.tripleMaskSpecialActive\)/,
+  'triple mask readiness must use the same temporary context as its meter',
+);
+for (const category of ['flip', 'grab', 'grind']) {
+  assert.ok(
+    player.includes(`this.special.peek('${category}', tripleMaskSpecial)`),
+    `triple mask readiness missing from ${category} command routing`,
+  );
+}
+const uberTick = 'this.uberTimer = Math.max(0, this.uberTimer - dt);';
+assert.equal(
+  player.split(uberTick).length - 1,
+  1,
+  'uber timer must advance exactly once across ordinary/rope/hang routes',
+);
+assert.ok(
+  player.indexOf(uberTick) < player.indexOf('this.special.step(dt, input.moveX, input.moveY);'),
+  'uber expiry must resolve before SPECIAL command decoding',
+);
+assert.match(
+  player,
+  /private die\(\): void \{[\s\S]{0,420}this\.uberTimer = 0;[\s\S]{0,80}this\.state = 'dead';/,
+  'death must revoke the triple-mask SPECIAL override immediately',
+);
 
 const hud = await readFile(`${root}src/gameHudSurface.ts`, 'utf8');
-assert.ok(hud.includes('paintSpecial'), 'pre-CRT HUD must paint the SPECIAL bar');
+assert.ok(hud.includes('paintSpecial'), 'pre-CRT HUD must paint the radial SPECIAL meter');
 const ui = await readFile(`${root}src/ui.ts`, 'utf8');
 assert.ok(ui.includes('hud-special-ready'), 'DOM HUD must expose SPECIAL readiness');
 

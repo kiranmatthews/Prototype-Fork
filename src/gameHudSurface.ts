@@ -30,6 +30,10 @@ export interface GameHudElements {
   viewport?: HTMLElement;
 
   crateIcon?: HTMLElement;
+  /** Current broken-box count. `crateValue` remains as a legacy fallback. */
+  crateCurrent?: HTMLElement;
+  /** Smaller `/total` suffix beside `crateCurrent`. */
+  crateTotal?: HTMLElement;
   crateValue?: HTMLElement;
   fruitIcon?: HTMLElement;
   fruitValue?: HTMLElement;
@@ -79,6 +83,7 @@ export interface GameHudElements {
   death?: HTMLElement;
   deathTitle?: HTMLElement;
   deathSub?: HTMLElement;
+  bonusTitle?: HTMLElement;
   replayBadge?: HTMLElement;
   recordBadge?: HTMLElement;
 }
@@ -88,6 +93,11 @@ export type GameHudRelicState = "hidden" | "ghost" | "earned";
 export interface GameHudCounterState {
   visible?: boolean;
   value: string | number;
+}
+
+export interface GameHudCrateState extends GameHudCounterState {
+  /** Total breakable boxes, rendered as a smaller `/total` suffix. */
+  total?: string | number;
 }
 
 export interface GameHudClockState {
@@ -116,10 +126,12 @@ export interface GameHudBoostState {
 
 export interface GameHudSpecialState {
   visible?: boolean;
-  /** SPECIAL bar percentage in the inclusive range 0..100. */
+  /** Radial SPECIAL meter percentage in the inclusive range 0..100. */
   value: number;
   ready?: boolean;
+  /** @deprecated The life-ring presentation is intentionally textless. */
   label?: string;
+  /** @deprecated Trick hints do not belong on the persistent HUD. */
   controls?: string;
 }
 
@@ -137,7 +149,7 @@ export interface GameHudBalanceState {
  * `undefined` means "read the bound DOM" and `null` means "hide this item".
  */
 export interface GameHudFrameState {
-  crates?: GameHudCounterState | null;
+  crates?: GameHudCrateState | null;
   fruit?: GameHudCounterState | null;
   life?: (GameHudCounterState & { deathsMode?: boolean }) | null;
   score?: (GameHudCounterState & { label?: string }) | null;
@@ -382,6 +394,7 @@ export class GameHudSurface {
     // Same ascending z-order as ui.ts: halo behind persistent HUD; flash and
     // result cards above it; death fade and GAME OVER on top.
     this.paintHalo(ctx, width, height, frame);
+    this.paintBonus(ctx, layout, width, height);
     this.paintCounters(ctx, layout, width, height, frame, time);
     this.paintScoreAndClock(ctx, layout, width, height, frame);
     this.paintSpecial(ctx, layout, width, height, frame, time);
@@ -410,6 +423,29 @@ export class GameHudSurface {
     return this.hasPixels;
   }
 
+  private paintBonus(
+    ctx: CanvasRenderingContext2D,
+    layout: LayoutMap,
+    width: number,
+    height: number,
+  ): void {
+    const title = this.elements.bonusTitle;
+    if (!isLaidOut(title)) return;
+    const sy = height / 720;
+    const rect = this.rect(title, layout) ?? {
+      x: width * 0.25,
+      y: 24 * sy,
+      width: width * 0.5,
+      height: 100 * sy,
+    };
+    this.drawRooInRect(ctx, readRooHudText(title) || "BONUS", rect, {
+      size: 76 * sy,
+      align: "center",
+      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 76 * sy),
+      glow: "rgba(255, 184, 31, 0.7)",
+    });
+  }
+
   private paintSpecial(
     ctx: CanvasRenderingContext2D,
     layout: LayoutMap,
@@ -423,102 +459,75 @@ export class GameHudSurface {
       explicit === null
         ? false
         : explicit
-          ? explicit.visible !== false
+          ? explicit.visible !== false &&
+            (isLaidOut(this.elements.lifeFace) || !this.elements.lifeFace)
           : isLaidOut(this.elements.special);
     if (!visible) return;
 
-    const sx = width / 1280;
     const sy = height / 720;
-    const host = this.rect(this.elements.special, layout) ?? {
-      x: 40 * sx,
-      y: height - 96 * sy,
-      width: Math.min(340 * sx, width * 0.42),
-      height: 66 * sy,
+    // The face is the stable visual anchor in both normal and bonus layouts.
+    // Prefer its measured DOM rectangle so the native ring follows responsive
+    // CSS exactly; explicit-state tests without DOM retain a bottom-right fallback.
+    const face = this.rect(this.elements.lifeFace, layout) ?? {
+      x: width - 117 * sy,
+      y: height - 97 * sy,
+      width: 77 * sy,
+      height: 77 * sy,
     };
     const rawValue =
-      explicit?.value ?? Number.parseFloat(this.elements.special?.dataset.value ?? '0');
+      explicit?.value ??
+      Number.parseFloat(this.elements.special?.dataset.value ?? "0");
     const fraction = clamp01((Number.isFinite(rawValue) ? rawValue : 0) / 100);
     const ready =
-      explicit?.ready ?? this.elements.special?.classList.contains('hud-special-ready') ?? false;
+      explicit?.ready ??
+      this.elements.special?.classList.contains("hud-special-ready") ??
+      false;
     const alpha = explicit ? 1 : elementOpacity(this.elements.special, 1);
     if (alpha <= 0.001) return;
 
-    const labelRect = this.rect(this.elements.specialLabel, layout) ?? {
-      x: host.x,
-      y: host.y,
-      width: host.width,
-      height: 22 * sy,
-    };
-    const trackRect = this.rect(this.elements.specialTrack, layout) ?? {
-      x: host.x,
-      y: host.y + 25 * sy,
-      width: host.width,
-      height: 15 * sy,
-    };
-    const controlsRect = this.rect(this.elements.specialControls, layout) ?? {
-      x: host.x,
-      y: host.y + 43 * sy,
-      width: host.width,
-      height: 18 * sy,
-    };
-
+    const cx = face.x + face.width / 2;
+    const cy = face.y + face.height / 2;
+    const lineWidth = Math.max(4, 7 * sy);
+    const radius = Math.max(
+      1,
+      Math.min(face.width, face.height) / 2 + lineWidth * 0.72,
+    );
+    const start = -Math.PI / 2;
     ctx.save();
     ctx.globalAlpha = alpha;
+    ctx.lineCap = "round";
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = "rgba(38, 20, 10, 0.78)";
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    if (fraction <= 0.0001) {
+      ctx.restore();
+      this.mark();
+      return;
+    }
+
     if (ready) {
       const pulse = 0.55 + 0.25 * Math.sin(time * 0.012);
       ctx.shadowColor = `rgba(255, 184, 28, ${pulse})`;
       ctx.shadowBlur = 18 * sy;
     }
-    ctx.fillStyle = 'rgba(12, 10, 18, 0.82)';
-    ctx.fillRect(trackRect.x, trackRect.y, trackRect.width, trackRect.height);
-    ctx.strokeStyle = ready ? '#fff16a' : 'rgba(255, 196, 72, 0.72)';
-    ctx.lineWidth = Math.max(1, 2 * sy);
-    ctx.strokeRect(trackRect.x, trackRect.y, trackRect.width, trackRect.height);
-
-    if (fraction > 0) {
-      const inset = Math.max(1, 2 * sy);
-      const fillWidth = Math.max(0, (trackRect.width - inset * 2) * fraction);
-      const gradient = ctx.createLinearGradient(trackRect.x, 0, trackRect.x + trackRect.width, 0);
-      gradient.addColorStop(0, '#ff7a18');
-      gradient.addColorStop(0.72, '#ffc928');
-      gradient.addColorStop(1, ready ? '#fffbd0' : '#ffe36a');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(
-        trackRect.x + inset,
-        trackRect.y + inset,
-        fillWidth,
-        Math.max(0, trackRect.height - inset * 2),
-      );
-    }
+    const gradient = ctx.createLinearGradient(
+      cx - radius,
+      cy + radius,
+      cx + radius,
+      cy - radius,
+    );
+    gradient.addColorStop(0, "#ff6d18");
+    gradient.addColorStop(0.7, "#ffc928");
+    gradient.addColorStop(1, ready ? "#fffbd0" : "#ffe36a");
+    ctx.strokeStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, start, start + Math.PI * 2 * fraction);
+    ctx.stroke();
     ctx.restore();
     this.mark();
-
-    this.drawRooInRect(
-      ctx,
-      explicit?.label ?? (readRooHudText(this.elements.specialLabel) || 'SPECIAL'),
-      labelRect,
-      {
-        size: 18 * sy,
-        align: 'left',
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 18 * sy),
-        glow: ready ? '#ffb41f' : undefined,
-      },
-    );
-    const controls =
-      explicit?.controls ?? readRooHudText(this.elements.specialControls);
-    if (controls) {
-      this.drawPlainText(
-        ctx,
-        controls,
-        controlsRect.x,
-        controlsRect.y + controlsRect.height / 2,
-        {
-          size: Math.max(8, 10 * sy),
-          align: 'left',
-          color: ready ? '#fff5aa' : '#d0b46d',
-        },
-      );
-    }
   }
 
   /**
@@ -628,7 +637,13 @@ export class GameHudSurface {
     const gap = 12 * sy;
     const rowStep = iconSize + 8 * sy;
 
-    const crates = resolveCounter(frame.crates, this.elements.crateValue);
+    const crateCurrentElement =
+      this.elements.crateCurrent ?? this.elements.crateValue;
+    const crates = resolveCrateCounter(
+      frame.crates,
+      crateCurrentElement,
+      this.elements.crateTotal,
+    );
     if (crates) {
       const iconRect = this.rect(this.elements.crateIcon, layout) ?? {
         x: left,
@@ -636,12 +651,24 @@ export class GameHudSurface {
         width: iconSize,
         height: iconSize,
       };
-      const valueRect = this.rect(this.elements.crateValue, layout) ?? {
-        x: iconRect.x + iconRect.width + gap,
-        y: top,
-        width: width * 0.24,
-        height: counterSize * 1.285,
-      };
+      const measuredCurrent = this.rect(crateCurrentElement, layout);
+      const valueRect = measuredCurrent
+        ? {
+            ...measuredCurrent,
+            // During the staged DOM migration `crateValue` can still hold the
+            // complete `36/112` string. Reserve roughly half of that legacy
+            // box for the now-separated current count.
+            width:
+              this.elements.crateCurrent || crates.total === undefined
+                ? measuredCurrent.width
+                : measuredCurrent.width * 0.48,
+          }
+        : {
+            x: iconRect.x + iconRect.width + gap,
+            y: top,
+            width: width * 0.13,
+            height: counterSize * 1.285,
+          };
       if (this.iconFallbacks && !this.elements.crateIcon)
         this.drawCrateFallback(ctx, iconRect, time);
       this.drawRooInRect(ctx, String(crates.value), valueRect, {
@@ -649,6 +676,23 @@ export class GameHudSurface {
         align: "left",
         tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, counterSize),
       });
+      if (crates.total !== undefined) {
+        const totalSize = 50 * sy;
+        const totalRect = this.rect(this.elements.crateTotal, layout) ?? {
+          x: valueRect.x + valueRect.width + 5 * sy,
+          y: valueRect.y + valueRect.height * 0.32,
+          width: width * 0.12,
+          height: totalSize * 1.285,
+        };
+        this.drawRooInRect(ctx, formatCrateTotal(crates.total), totalRect, {
+          size: totalSize,
+          align: "left",
+          tracking: sourceTrackingPixels(
+            SOURCE_HUD_TRACKING.largeNumber,
+            totalSize,
+          ),
+        });
+      }
     }
 
     const fruit = resolveCounter(frame.fruit, this.elements.fruitValue);
@@ -674,61 +718,24 @@ export class GameHudSurface {
       });
     }
 
-    const relicFallbackY = top + rowStep * 2;
-    this.paintRelic(
-      ctx,
-      this.elements.crystalIcon,
-      frame.relics?.crystal,
-      this.rect(this.elements.crystalIcon, layout) ?? {
-        x: left,
-        y: relicFallbackY,
-        width: 53 * sy,
-        height: 74 * sy,
-      },
-      "crystal",
-    );
-    this.paintRelic(
-      ctx,
-      this.elements.gemIcon,
-      frame.relics?.gem,
-      this.rect(this.elements.gemIcon, layout) ?? {
-        x: left + 67 * sy,
-        y: relicFallbackY + 12 * sy,
-        width: 67 * sy,
-        height: 50 * sy,
-      },
-      "gem",
-    );
-    this.paintRelic(
-      ctx,
-      this.elements.comboGemIcon,
-      frame.relics?.comboGem,
-      this.rect(this.elements.comboGemIcon, layout) ?? {
-        x: left + 148 * sy,
-        y: relicFallbackY + 12 * sy,
-        width: 67 * sy,
-        height: 50 * sy,
-      },
-      "comboGem",
-    );
+    // Relics have no Canvas2D placeholder. Earned gems are real 3D meshes
+    // composited immediately before this surface; unearned slots draw nothing.
 
     const life = resolveCounter(frame.life, this.elements.lifeValue);
     if (life) {
       const faceRect = this.rect(this.elements.lifeFace, layout) ?? {
         x: width - 40 * (width / 1280) - iconSize,
-        y: top - iconSize * 0.14,
+        y: height - 20 * sy - iconSize,
         width: iconSize,
         height: iconSize,
       };
       const deathsMode =
         frame.life?.deathsMode ??
-        (this.elements.lifeFace?.parentElement?.classList.contains(
-          "hud-deathcount",
-        ) ?? false);
+        Boolean(this.elements.lifeFace?.closest(".hud-deathcount"));
       this.drawLifeFace(ctx, faceRect, deathsMode);
       const lifeRect = this.rect(this.elements.lifeValue, layout) ?? {
         x: faceRect.x - counterSize * 1.35,
-        y: top,
+        y: faceRect.y + (faceRect.height - counterSize * 1.285) / 2,
         width: counterSize * 1.25,
         height: counterSize * 1.285,
       };
@@ -1284,41 +1291,6 @@ export class GameHudSurface {
     this.mark();
   }
 
-  private paintRelic(
-    ctx: CanvasRenderingContext2D,
-    element: HTMLElement | undefined,
-    override: GameHudRelicState | undefined,
-    rect: SurfaceRect,
-    kind: "crystal" | "gem" | "comboGem",
-  ): void {
-    const state = override ?? relicState(element);
-    // Earned relics are the real 3D meshes rendered immediately before this
-    // surface. Only their unearned ghost belongs to Canvas2D.
-    if (state !== "ghost") return;
-    ctx.save();
-    ctx.globalAlpha = 0.22;
-    ctx.fillStyle = "#aeb4bb";
-    ctx.shadowColor = "rgba(0,0,0,0.75)";
-    ctx.shadowBlur = 5;
-    ctx.beginPath();
-    if (kind === "crystal") {
-      ctx.moveTo(rect.x + rect.width * 0.5, rect.y);
-      ctx.lineTo(rect.x + rect.width, rect.y + rect.height * 0.38);
-      ctx.lineTo(rect.x + rect.width * 0.5, rect.y + rect.height);
-      ctx.lineTo(rect.x, rect.y + rect.height * 0.38);
-    } else {
-      ctx.moveTo(rect.x + rect.width * 0.25, rect.y);
-      ctx.lineTo(rect.x + rect.width * 0.75, rect.y);
-      ctx.lineTo(rect.x + rect.width, rect.y + rect.height * 0.35);
-      ctx.lineTo(rect.x + rect.width * 0.5, rect.y + rect.height);
-      ctx.lineTo(rect.x, rect.y + rect.height * 0.35);
-    }
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-    this.mark();
-  }
-
   private drawRooInRect(
     ctx: CanvasRenderingContext2D,
     text: string,
@@ -1711,6 +1683,44 @@ function resolveCounter(
   return value ? { value } : null;
 }
 
+function resolveCrateCounter(
+  override: GameHudCrateState | null | undefined,
+  currentElement: HTMLElement | undefined,
+  totalElement: HTMLElement | undefined,
+): GameHudCrateState | null {
+  if (override === null) return null;
+  if (override?.visible === false) return null;
+  if (
+    !override &&
+    (!isLaidOut(currentElement) || ownVisibilityHidden(currentElement))
+  )
+    return null;
+
+  let value: string | number =
+    override?.value ?? readRooHudText(currentElement);
+  const domTotal = readRooHudText(totalElement);
+  let total: string | number | undefined =
+    override?.total ?? (domTotal || undefined);
+
+  // Legacy callers supplied one `36/112` string. Split it here so the staged
+  // DOM migration gets the new hierarchy immediately and old explicit-state
+  // tests remain valid.
+  if (total === undefined && typeof value === "string") {
+    const slash = value.indexOf("/");
+    if (slash >= 0) {
+      total = value.slice(slash + 1).trim();
+      value = value.slice(0, slash).trim();
+    }
+  }
+  return String(value).trim() ? { value, total } : null;
+}
+
+function formatCrateTotal(total: string | number): string {
+  const text = String(total).trim();
+  if (!text) return "";
+  return text.startsWith("/") ? text : `/${text}`;
+}
+
 function resolveClock(
   override: GameHudClockState | null | undefined,
   clockElement: HTMLElement | undefined,
@@ -1728,13 +1738,6 @@ function resolveClock(
     freeze,
     frozen: clockElement?.classList.contains("hud-tt-frozen") ?? false,
   };
-}
-
-function relicState(element: HTMLElement | undefined): GameHudRelicState {
-  if (!element || !isLaidOut(element)) return "hidden";
-  if (element.classList.contains("hud-relic-off")) return "ghost";
-  if (ownVisibilityHidden(element)) return "earned";
-  return "earned";
 }
 
 function isLaidOut(element: HTMLElement | undefined): boolean {

@@ -198,8 +198,8 @@ assert.match(player, /while \(this\.grindTickT >= 0\.25\)[\s\S]{0,180}this\.comb
 const main = await readFile(`${root}src/main.ts`, "utf8");
 assert.match(main, /comboPreview = player\.comboHudPreview/);
 assert.match(main, /comboActionRevision: player\.comboActionRevision/);
-assert.match(main, /tricks: sourceComboLabelLine\(tricks\)/);
-assert.match(main, /\},\s*dt,?\s*\);/);
+assert.match(main, /tricks: sourceComboLabelLine\(player\.comboLabels\)/);
+assert.match(main, /ui\.setHUD\(currentHudState\(\), dt\);/);
 
 console.log(
   "Validated combo purse-vs-bank math, multiline plain text, constant live ticker, hold timing, and frozen red bail fall-away.",

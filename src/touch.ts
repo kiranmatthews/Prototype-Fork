@@ -1,6 +1,6 @@
 // Mobile touch controls: a translucent 8-way D-pad (left thumb), the PS
-// face-button diamond (right thumb), and a quick upward swipe on the right
-// half for R2 (rail-air transfers, reverts, and lip exits). Active only on coarse-pointer devices (or
+// face-button diamond (right thumb), and quick vertical swipes on the right
+// half: upward for R2, downward for L2 inventory. Active only on coarse-pointer devices (or
 // force-enabled with '?touch' for testing) — desktop keeps keyboard/gamepad
 // untouched. The same class also flips the HUD into its compact phone layout
 // via the body.tc-on styles below.
@@ -70,6 +70,7 @@ export class TouchControls {
   grindHeld = false;
 
   private transferUntil = 0;
+  private inventoryUntil = 0;
   private dirIdx = -1; // active D-pad sector, -1 = neutral (hysteresis state)
   private padPointer: number | null = null;
   private padEl!: HTMLElement;
@@ -100,6 +101,10 @@ export class TouchControls {
 
   transferActive(): boolean {
     return performance.now() < this.transferUntil;
+  }
+
+  inventoryActive(): boolean {
+    return performance.now() < this.inventoryUntil;
   }
 
   // ---------- D-PAD (left zone) ----------
@@ -240,20 +245,25 @@ export class TouchControls {
       if (!t) return;
       e.preventDefault();
       if (!t.swiped && !t.onBtn) {
-        // R2: a quick, clearly-vertical upward flick from EMPTY right-half
-        // space (touches that began on a button are excluded above)
+        // Triggers: a quick, clearly-vertical flick from EMPTY right-half
+        // space (touches that began on a button are excluded above). Up is R2;
+        // down is the touch equivalent of L2 collection inventory.
         const rise = t.y0 - e.clientY;
         const dt = performance.now() - t.t0;
         if (
-          rise > SWIPE_MIN_PX &&
+          Math.abs(rise) > SWIPE_MIN_PX &&
           dt < SWIPE_MAX_MS &&
-          rise / Math.max(dt, 1) > SWIPE_MIN_VEL &&
-          rise > 1.4 * Math.abs(e.clientX - t.x0)
+          Math.abs(rise) / Math.max(dt, 1) > SWIPE_MIN_VEL &&
+          Math.abs(rise) > 1.4 * Math.abs(e.clientX - t.x0)
         ) {
           t.swiped = true;
           t.btn = null; // the swipe gesture owns this touch now
-          this.transferUntil = performance.now() + SWIPE_HOLD_MS;
-          sfx.play('woosh3', 0.4, 1.6);
+          if (rise > 0) {
+            this.transferUntil = performance.now() + SWIPE_HOLD_MS;
+            sfx.play('woosh3', 0.4, 1.6);
+          } else {
+            this.inventoryUntil = performance.now() + SWIPE_HOLD_MS;
+          }
           this.refreshButtons();
           return;
         }
@@ -396,8 +406,14 @@ export class TouchControls {
         top: max(8px, env(safe-area-inset-top));
         right: max(42px, calc(env(safe-area-inset-right) + 8px));
       }
+      body.tc-on .hud-life-row {
+        right: max(12px, env(safe-area-inset-right));
+        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
+      }
       body.tc-on .hud-counter { gap: 9px; margin-bottom: 5px; }
       body.tc-on .hud-icon { width: 55px; height: 55px; }
+      body.tc-on .hud-life-face-wrap { width: 55px; height: 55px; }
+      body.tc-on .hud-box-total { font-size: 25px; margin-bottom: 7px; }
       body.tc-on .hud-icon-crystal { width: 27px; height: 39px; }
       body.tc-on .hud-icon-gem { width: 34px; height: 26px; }
       body.tc-on .hud-relics { gap: 9px; }
@@ -432,11 +448,19 @@ export class TouchControls {
       body.tc-on .hud-msg-title { font-size: 45px; letter-spacing: 3px; }
       body.tc-on .hud-boostlabel { font-size: 16px; }
       body.tc-on .hud-death-title { font-size: 58px; }
-      body.tc-on .hud-special {
+      body.tc-on .hud-special { inset: -6px; width: auto; }
+      body.tc-on .game-hud-layer.hud-bonus .hud-tl {
+        position: static;
+      }
+      body.tc-on .game-hud-layer.hud-bonus .hud-fruit-row {
         left: max(12px, env(safe-area-inset-left));
         bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
-        width: min(44vw, 240px);
       }
+      body.tc-on .game-hud-layer.hud-bonus .hud-crate-row {
+        left: 42%;
+        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
+      }
+      body.tc-on .hud-bonus-title { top: max(8px, env(safe-area-inset-top)); }
       body.tc-on .hud-build { display: none; }
 
       /* A presentation panel opened from TUNER owns the screen until closed;

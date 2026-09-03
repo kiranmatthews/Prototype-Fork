@@ -11,7 +11,6 @@ import {
 import { COMBO_GEM_TINT, Level, levelList } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { wumpaMesh } from "./wumpa";
-import { SPECIAL_CONTROL_HELP, SPECIAL_TRICKS } from "./specialTricks";
 import {
   COMBO_CASH_IN_EXTRA_HOLD_MS,
   SOURCE_HUD_TRACKING,
@@ -33,6 +32,10 @@ import {
   TuningKey,
 } from "./tuning";
 import { migrateLegacySavedCarveGrip } from "./carveGrip";
+import {
+  HudVisibilityState,
+  type HudVisibility,
+} from "./hudVisibility";
 
 // Real artwork, not shapes drawn in code — so these go through BASE_URL, the
 // same as the sky paintings, or they 404 on the project-path GitHub Pages build.
@@ -73,13 +76,17 @@ export interface HudState {
   specialMeter: number;
   specialReady: boolean;
   fruit: number;
+  fruitCollectionRevision: number;
   lives: number;
   deaths: number;
   endlessDeaths: boolean;
-  crates: string;
+  cratesBroken: number;
+  cratesTotal: number;
   hasCrystal: boolean;
   hasGem: boolean;
   hasComboGem: boolean;
+  inventoryHeld: boolean;
+  bonusMode: boolean;
 }
 
 declare const __BUILD_TAG__: string; // injected by vite.config define
@@ -96,6 +103,8 @@ export class UI {
   private fadeEl: HTMLElement;
   private fadeTimer: number | null = null;
   private wumpaRowEl!: HTMLElement; // hidden during time trials
+  private crateRowEl!: HTMLElement;
+  private relicRowEl!: HTMLElement;
   private livesRowEl!: HTMLElement;
   private lifeFaceEl!: HTMLElement;
   private deathModeLabelEl!: HTMLElement;
@@ -127,12 +136,10 @@ export class UI {
   private boostFrame: GameHudBoostState | null = null;
   private specialWrap!: HTMLElement;
   private specialFill!: HTMLElement;
-  private specialLabelEl!: HTMLElement;
-  private specialControlsEl!: HTMLElement;
+  private bonusTitleEl!: HTMLElement;
   private comboStack!: HTMLElement;
   private specialFrame: GameHudSpecialState | null = null;
   private specialWasReady = false;
-  private specialIntroduced = false;
   private balanceWrap: HTMLElement;
   private balanceNeedle: HTMLElement;
   private vBalanceWrap!: HTMLElement;
@@ -141,13 +148,16 @@ export class UI {
   // game HUD elements
   private scoreEl!: HTMLElement;
   private cratesEl!: HTMLElement;
+  private cratesCurrentEl!: HTMLElement;
+  private cratesTotalEl!: HTMLElement;
   private wumpaEl!: HTMLElement;
   private livesEl!: HTMLElement;
   // Roo display text. The counters and the score wear the ORANGE treatment;
   // everything the time trial owns wears the GREEN->BLUE one, so a glance at
   // the top of the screen says which mode you are in before you read a digit.
   private rooScore!: RooLabel;
-  private rooCrates!: RooLabel;
+  private rooCratesCurrent!: RooLabel;
+  private rooCratesTotal!: RooLabel;
   private rooWumpa!: RooLabel;
   private rooLives!: RooLabel;
   private rooTTTime!: RooLabel;
@@ -155,7 +165,9 @@ export class UI {
   private rooTTFreeze!: RooLabel;
   private rooTTResTitle!: RooLabel;
   private rooMsgTitle!: RooLabel;
+  private rooBonusTitle!: RooLabel;
   private scoreLabelEl!: HTMLElement;
+  private scorePlateEl!: HTMLElement;
   private boostLabelEl!: HTMLElement;
   private deathTitleEl!: HTMLElement;
   private deathSubEl!: HTMLElement;
@@ -178,6 +190,15 @@ export class UI {
     gem: false,
     comboGem: false,
   };
+  private hudVisibility = new HudVisibilityState();
+  private hudVisibilityFrame: HudVisibility = {
+    showLife: true,
+    showBonusTitle: false,
+    showFruit: false,
+    showBoxes: false,
+    showEarnedRelics: false,
+  };
+  private bonusMode = false;
   // Score cash-in keeps the arcade chase; live timed combo awards use a
   // constant-rate buffer so quarter-second gameplay packets read continuously.
   private dispScore = 0;
@@ -607,30 +628,36 @@ export class UI {
     stamp.textContent = `${__BUILD_CHANNEL__} · build ${__BUILD_TAG__}`;
     document.body.appendChild(stamp);
 
-    // ---- game HUD: Crash-style counters + THPS trick plate ----
-    // top-left: crate + wumpa counters
+    // ---- game HUD: contextual Crash counters + THPS trick plate ----
+    // top-left: fruit pickup pop-up and L2 inventory
     // The crate and the fruit are 3D, drawn into these boxes by drawIcons —
     // the divs are empty and exist only to be measured and laid out.
     const tl = div("hud-tl");
-    const crateRow = div("hud-counter");
+    const crateRow = div("hud-counter hud-crate-row");
+    this.crateRowEl = crateRow;
     this.crateIcon = div("hud-icon hud-icon-crate");
     crateRow.appendChild(this.crateIcon);
-    this.cratesEl = div("hud-num");
+    this.cratesEl = div("hud-num hud-box-count");
+    this.cratesCurrentEl = div("hud-box-current");
+    this.cratesTotalEl = div("hud-box-total");
+    this.cratesEl.appendChild(this.cratesCurrentEl);
+    this.cratesEl.appendChild(this.cratesTotalEl);
     crateRow.appendChild(this.cratesEl);
-    const wumpaRow = div("hud-counter");
+    crateRow.style.display = "none";
+    const wumpaRow = div("hud-counter hud-fruit-row");
     this.wumpaIcon = div("hud-icon hud-icon-wumpa");
     wumpaRow.appendChild(this.wumpaIcon);
     this.wumpaEl = div("hud-num");
     wumpaRow.appendChild(this.wumpaEl);
     this.wumpaRowEl = wumpaRow;
+    wumpaRow.style.display = "none";
     tl.appendChild(crateRow);
     tl.appendChild(wumpaRow);
-    // Relic haul: crystal, gem, combo gem. Each is a flat ghosted cutout until
-    // it's earned, at which point a real spinning 3D relic is drawn into its
-    // box instead (see drawIcons). The ghost is never removed from the layout
-    // — it goes `visibility: hidden` — because the three boxes are what the 3D
-    // pass measures its slots from, and a reflow would move them.
+    // Earned-only relic haul: crystal, gem, combo gem. Unearned hosts have no
+    // layout or silhouette; an earned host becomes the measured viewport for
+    // its real spinning 3D relic (see drawIcons).
     const relicRow = div("hud-counter hud-relics");
+    this.relicRowEl = relicRow;
     this.crystalIcon = div("hud-icon hud-icon-crystal hud-relic-off");
     this.gemIcon = div("hud-icon hud-icon-gem hud-relic-off");
     this.comboGemIcon = div(
@@ -639,40 +666,33 @@ export class UI {
     relicRow.appendChild(this.crystalIcon);
     relicRow.appendChild(this.gemIcon);
     relicRow.appendChild(this.comboGemIcon);
+    relicRow.style.display = "none";
+    this.crystalIcon.style.display = "none";
+    this.gemIcon.style.display = "none";
+    this.comboGemIcon.style.display = "none";
     tl.appendChild(relicRow);
 
-    // top-right: lives, then the score directly under them.
-    //
-    // The score plate SITS IN THIS COLUMN rather than being positioned on its
-    // own. It used to be fixed at `top: 16px + <icon height> + 4px`, which
-    // silently assumed the lives row was as tall as the face icon — true of
-    // flat text, false the moment the readout became a drawn glyph box, and
-    // the score ended up printed across the lives counter. Stacking them means
-    // the offset is whatever the row above actually measures, at every size.
+    this.bonusTitleEl = div("hud-bonus-title");
+    this.bonusTitleEl.style.display = "none";
+
+    // Bottom-right life portrait; the Special ring shares its exact anchor.
+    // The top-right column is reserved for explicit run-mode clock/score UI.
     const tr = div("hud-tr");
-    const livesRow = div("hud-counter");
+    const livesRow = div("hud-counter hud-life-row");
+    const lifeFaceWrap = div("hud-life-face-wrap");
     this.lifeFaceEl = div("hud-icon hud-icon-face");
-    livesRow.appendChild(this.lifeFaceEl);
+    lifeFaceWrap.appendChild(this.lifeFaceEl);
     this.livesEl = div("hud-num hud-lives");
     livesRow.appendChild(this.livesEl);
+    livesRow.appendChild(lifeFaceWrap);
     this.deathModeLabelEl = div("hud-deathcount-label");
     this.deathModeLabelEl.textContent = "DEATHS";
     this.deathModeLabelEl.style.display = "none";
-    livesRow.appendChild(this.deathModeLabelEl);
-    tr.appendChild(livesRow);
+    livesRow.insertBefore(this.deathModeLabelEl, this.livesEl);
     this.livesRowEl = livesRow;
 
-    // TIME TRIAL: the big clock, IN THIS COLUMN, in the slot the lives row
-    // vacates when a trial starts.
-    //
-    // It used to be `position: fixed` at the same top/right inset as .hud-tr,
-    // on the theory that "lives hide during a trial, so the corner is free".
-    // Only the LIVES hide — the score stays — so the clock was painted
-    // straight over the SCORE caption. Two elements pinned to one coordinate
-    // can only agree by luck, and this pair never did. Stacked in the column,
-    // the clock takes the space it needs and the score follows underneath it,
-    // which is the same fix the score itself got when it stopped guessing its
-    // own offset from the lives row.
+    // TIME TRIAL: the big clock and its score share the explicit run-mode
+    // column. Ordinary and Bonus play leave this column empty.
     this.ttClockEl = div("hud-ttclock");
     this.ttTimeEl = div("hud-tttime");
     this.ttClockEl.appendChild(this.ttTimeEl);
@@ -682,11 +702,13 @@ export class UI {
     tr.appendChild(this.ttClockEl);
 
     const scorePlate = div("hud-scoreplate");
+    this.scorePlateEl = scorePlate;
     const scoreLabel = div("hud-scorelabel");
     this.scoreLabelEl = scoreLabel;
     this.scoreEl = div("hud-scorenum");
     scorePlate.appendChild(scoreLabel);
     scorePlate.appendChild(this.scoreEl);
+    scorePlate.style.display = "none";
     tr.appendChild(scorePlate);
 
     // Results card: the headline time is a Roo label that lives across runs,
@@ -724,23 +746,18 @@ export class UI {
       this.onLifeCheat();
     });
 
-    // Bottom-left THPS SPECIAL meter. The compact glyph row is always visible;
-    // the first full bar also gets a one-time named tutorial toast.
+    // Textless radial SPECIAL meter. It is physically nested with the life
+    // portrait so DOM and pre-CRT paths share one exact anchor.
     this.specialWrap = div("hud-special");
     this.specialWrap.setAttribute("role", "meter");
     this.specialWrap.setAttribute("aria-label", "Special meter");
     this.specialWrap.setAttribute("aria-valuemin", "0");
     this.specialWrap.setAttribute("aria-valuemax", "100");
-    this.specialLabelEl = div("hud-special-label");
     const specialTrack = div("hud-special-track");
     this.specialFill = div("hud-special-fill");
     specialTrack.appendChild(this.specialFill);
-    this.specialControlsEl = div("hud-special-controls");
-    this.specialControlsEl.textContent = SPECIAL_TRICKS.map((trick) => trick.controls).join("   ");
-    this.specialWrap.title = SPECIAL_CONTROL_HELP;
-    this.specialWrap.appendChild(this.specialLabelEl);
     this.specialWrap.appendChild(specialTrack);
-    this.specialWrap.appendChild(this.specialControlsEl);
+    lifeFaceWrap.insertBefore(this.specialWrap, this.lifeFaceEl);
 
     // bottom-center: THPS trick plate
     this.trickPlate = div("hud-trickplate");
@@ -801,10 +818,11 @@ export class UI {
       this.flashEl,
       this.fadeEl,
       this.haloEl,
+      this.bonusTitleEl,
       tl,
       tr,
+      livesRow,
       this.ttResultsEl,
-      this.specialWrap,
       this.comboStack,
       this.balanceWrap,
       this.vBalanceWrap,
@@ -821,7 +839,8 @@ export class UI {
     // renderer measures a real bounding box, so the hosts have to be live).
     // The counters read ORANGE; the trial clock and its result time read
     // GREEN->BLUE.
-    this.rooCrates = new RooLabel(this.cratesEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
+    this.rooCratesCurrent = new RooLabel(this.cratesCurrentEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
+    this.rooCratesTotal = new RooLabel(this.cratesTotalEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
     this.rooWumpa = new RooLabel(this.wumpaEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
     this.rooLives = new RooLabel(this.livesEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
     this.rooScore = new RooLabel(this.scoreEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
@@ -838,9 +857,10 @@ export class UI {
     // Combo copy stays ordinary text. It can wrap naturally and the CRT pass
     // supplies enough character without a per-glyph SVG treatment.
     this.rooMsgTitle = new RooLabel(this.msgTitle, { palette: ROO_HUD });
+    this.rooBonusTitle = new RooLabel(this.bonusTitleEl, { palette: ROO_HUD, extrusionSteps: 12 });
     // Fixed captions: set once, then they never change again.
     new RooLabel(this.scoreLabelEl, { palette: ROO_HUD }).set("SCORE");
-    new RooLabel(this.specialLabelEl, { palette: ROO_HUD }).set("SPECIAL");
+    this.rooBonusTitle.set("BONUS");
     new RooLabel(this.boostLabelEl, { palette: ROO_HUD }).set("BALANCE");
     new RooLabel(this.deathTitleEl, { palette: ROO_HUD, extrusionSteps: 16 }).set(
       "GAME OVER",
@@ -851,6 +871,8 @@ export class UI {
         viewport: document.getElementById("app") ?? undefined,
         crateIcon: this.crateIcon,
         crateValue: this.cratesEl,
+        crateCurrent: this.cratesCurrentEl,
+        crateTotal: this.cratesTotalEl,
         fruitIcon: this.wumpaIcon,
         fruitValue: this.wumpaEl,
         crystalIcon: this.crystalIcon,
@@ -865,10 +887,9 @@ export class UI {
         timeTrialValue: this.ttTimeEl,
         timeTrialFreeze: this.ttFreezeEl,
         special: this.specialWrap,
-        specialLabel: this.specialLabelEl,
         specialTrack,
         specialFill: this.specialFill,
-        specialControls: this.specialControlsEl,
+        bonusTitle: this.bonusTitleEl,
         results: this.ttResultsEl,
         resultsTitle: this.ttResTitleEl,
         resultsTime: this.ttResTimeEl,
@@ -1257,11 +1278,43 @@ export class UI {
     const slot = this.iconSlots[RELIC_SLOT_0 + i];
     if (slot) slot.on = earned;
     ghost.classList.toggle("hud-relic-off", !earned);
+    // No ghost inventory. Unearned relics take no visual/layout slot; an
+    // earned host remains laid out but hides its CSS silhouette beneath the
+    // real 3D icon pass.
+    ghost.style.display = earned ? "" : "none";
     ghost.style.visibility = earned && slot ? "hidden" : "visible";
   }
 
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
     const hudNow = performance.now();
+    if (s.bonusMode !== this.bonusMode) {
+      this.bonusMode = s.bonusMode;
+      this.hudVisibility.reset(s.fruitCollectionRevision);
+    }
+    const previousVisibility = this.hudVisibilityFrame;
+    let nextVisibility = this.hudVisibility.update({
+      mode: s.bonusMode ? "bonus" : "standard",
+      fruitCollectionRevision: s.fruitCollectionRevision,
+      inventoryHeld: !this.runRowsHidden && s.inventoryHeld,
+      hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem,
+      nowMs: hudNow,
+    });
+    if (this.runRowsHidden && !s.bonusMode) {
+      this.hudVisibility.clearTransient();
+      nextVisibility = {
+        ...nextVisibility,
+        showFruit: false,
+        showBoxes: false,
+        showEarnedRelics: false,
+      };
+    }
+    const fruitOpened = nextVisibility.showFruit && !previousVisibility.showFruit;
+    const boxesOpened = nextVisibility.showBoxes && !previousVisibility.showBoxes;
+    const relicsOpened =
+      nextVisibility.showEarnedRelics && !previousVisibility.showEarnedRelics;
+    this.hudVisibilityFrame = nextVisibility;
+    if (s.endlessDeaths !== this.endlessDeaths)
+      this.setEndlessDeaths(s.endlessDeaths);
     const cashInHolding =
       this.comboState === "cashin" &&
       comboCashInIsHolding(hudNow, this.comboCashInHoldEnd);
@@ -1288,13 +1341,15 @@ export class UI {
       : advanceSourceComboTicker(this.dispScore, s.points);
     this.rooScore.set(String(Math.round(this.dispScore)));
     this.prevHud.points = s.points;
-    if (s.crates !== this.prevHud.crates) {
-      this.rooCrates.set(s.crates);
+    const crateKey = `${s.cratesBroken}/${s.cratesTotal}`;
+    if (crateKey !== this.prevHud.crates) {
+      this.rooCratesCurrent.set(String(s.cratesBroken));
+      this.rooCratesTotal.set(`/${s.cratesTotal}`);
       pop(this.cratesEl);
-      this.prevHud.crates = s.crates;
+      this.prevHud.crates = crateKey;
     }
     if (s.fruit !== this.prevHud.fruit) {
-      this.rooWumpa.set(String(s.fruit));
+      this.rooWumpa.set(s.endlessDeaths ? "" : String(s.fruit));
       pop(this.wumpaEl);
       this.prevHud.fruit = s.fruit;
     }
@@ -1314,30 +1369,28 @@ export class UI {
       this.prevHud.gem = s.hasGem;
     }
     const lifeReadout = s.endlessDeaths ? s.deaths : s.lives;
-    if (s.endlessDeaths !== this.endlessDeaths) this.setEndlessDeaths(s.endlessDeaths);
     if (lifeReadout !== this.prevHud.lives) {
       this.rooLives.set(String(lifeReadout));
       pop(this.livesEl);
       this.prevHud.lives = lifeReadout;
     }
+    this.syncHudVisibility();
+    if (fruitOpened) pop(this.wumpaRowEl);
+    if (boxesOpened) pop(this.crateRowEl);
+    if (relicsOpened) pop(this.relicRowEl);
     const specialValue = Math.max(0, Math.min(100, s.specialMeter));
     const specialFraction = specialValue / 100;
     this.specialWrap.dataset.value = specialValue.toFixed(4);
     this.specialWrap.setAttribute("aria-valuenow", specialValue.toFixed(0));
-    this.specialFill.style.transform = `scaleX(${specialFraction})`;
+    this.specialWrap.style.setProperty("--special-turn", `${specialFraction}turn`);
     this.specialWrap.classList.toggle("hud-special-ready", s.specialReady);
     this.specialFrame = {
+      visible: this.livesRowEl.style.display !== "none",
       value: specialValue,
       ready: s.specialReady,
-      label: "SPECIAL",
-      controls: this.specialControlsEl.textContent ?? "",
     };
     if (s.specialReady && !this.specialWasReady) {
       pop(this.specialWrap);
-      if (!this.specialIntroduced) {
-        this.specialIntroduced = true;
-        this.showMessage("SPECIAL READY", SPECIAL_CONTROL_HELP, 2400);
-      }
     }
     this.specialWasReady = s.specialReady;
     // The live source plate shows the UNMULTIPLIED purse and a separate ×N.
@@ -1473,15 +1526,42 @@ export class UI {
       this.livesRowEl.style.cursor = on ? "default" : "pointer";
     }
     this.prevHud.lives = -1; // the same numeral may now mean a different rule
+    this.prevHud.fruit = -1; // endless pickups use an icon-only transient
     this.syncRunRows();
   }
 
-  setLevel(id: string): void {
+  setLevel(
+    id: string,
+    hudMode: "standard" | "bonus" = "standard",
+    fruitCollectionRevision = 0,
+  ): void {
     this.currentLevelId = id;
+    this.bonusMode = hudMode === "bonus";
+    this.hudVisibility.reset(fruitCollectionRevision);
+    this.hudVisibilityFrame = this.hudVisibility.update({
+      mode: this.bonusMode ? "bonus" : "standard",
+      fruitCollectionRevision,
+      inventoryHeld: false,
+      hasEarnedRelic: false,
+      nowMs: performance.now(),
+    });
+    this.syncHudVisibility();
     this.levelRows.forEach((b, key) =>
       b.classList.toggle("active", key === id),
     );
     this.refreshEditControls();
+  }
+
+  resetHudTransients(fruitCollectionRevision = 0): void {
+    this.hudVisibility.reset(fruitCollectionRevision);
+    this.hudVisibilityFrame = this.hudVisibility.update({
+      mode: this.bonusMode ? "bonus" : "standard",
+      fruitCollectionRevision,
+      inventoryHeld: false,
+      hasEarnedRelic: false,
+      nowMs: performance.now(),
+    });
+    this.syncHudVisibility();
   }
 
   /** Rebuild the level list from the registry. Call whenever it changes. */
@@ -1669,14 +1749,41 @@ export class UI {
   // Run-mode HUD: the fruit + lives counters sit out (shared by time trials
   // and combo runs).
   setRunRows(on: boolean): void {
+    if (on !== this.runRowsHidden) this.hudVisibility.clearTransient();
     this.runRowsHidden = on;
+    if (on && !this.bonusMode) {
+      this.hudVisibilityFrame = {
+        ...this.hudVisibilityFrame,
+        showFruit: false,
+        showBoxes: false,
+        showEarnedRelics: false,
+      };
+    }
     this.syncRunRows();
   }
 
   private syncRunRows(): void {
-    if (this.wumpaRowEl)
-      this.wumpaRowEl.style.display = this.runRowsHidden || this.endlessDeaths ? "none" : "";
-    if (this.livesRowEl) this.livesRowEl.style.display = this.runRowsHidden ? "none" : "";
+    this.syncHudVisibility();
+  }
+
+  private syncHudVisibility(): void {
+    if (!this.gameHudLayer) return;
+    const bonus = this.bonusMode;
+    const contextual = !this.runRowsHidden || bonus;
+    this.gameHudLayer.classList.toggle("hud-bonus", bonus);
+    this.bonusTitleEl.style.display =
+      contextual && this.hudVisibilityFrame.showBonusTitle ? "block" : "none";
+    this.wumpaRowEl.style.display =
+      contextual && this.hudVisibilityFrame.showFruit ? "flex" : "none";
+    this.crateRowEl.style.display =
+      contextual && this.hudVisibilityFrame.showBoxes ? "flex" : "none";
+    this.relicRowEl.style.display =
+      contextual && this.hudVisibilityFrame.showEarnedRelics ? "flex" : "none";
+    this.livesRowEl.style.display =
+      contextual && this.hudVisibilityFrame.showLife ? "flex" : "none";
+    // Score remains available to the explicit time-trial/combo modes, but is
+    // no longer persistent furniture in ordinary or bonus play.
+    this.scorePlateEl.style.display = this.runRowsHidden && !bonus ? "block" : "none";
   }
 
   // Balance-boost ring: each full turn is one crate window; stacked windows
@@ -1957,7 +2064,11 @@ export class UI {
       /* --- Crash-style game HUD --- */
       .game-hud-layer { display: block; }
       .game-hud-layer.precrt-composited { opacity: 0; }
-      .hud-tl { position: fixed; top: 16px; left: 40px; z-index: 10; pointer-events: none; }
+      .hud-tl {
+        position: fixed; top: 22px; left: 34px; z-index: 10;
+        display: flex; flex-direction: column; align-items: flex-start;
+        pointer-events: none;
+      }
       .hud-build {
         position: fixed; bottom: 6px; left: 8px; z-index: 10; pointer-events: none;
         font: 10px ui-monospace, Menlo, Consolas, monospace; color: rgba(220, 228, 240, 0.5);
@@ -1965,6 +2076,34 @@ export class UI {
       }
       .hud-tr { position: fixed; top: 16px; right: 40px; z-index: 10; pointer-events: none; }
       .hud-counter { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+      .hud-life-row {
+        position: fixed; right: 30px; bottom: 20px; z-index: 10;
+        margin: 0; gap: 8px; pointer-events: none;
+      }
+      .hud-life-face-wrap {
+        position: relative; flex: 0 0 auto;
+        width: clamp(68px, 10.7vh, 111px);
+        height: clamp(68px, 10.7vh, 111px);
+        transform: translateY(-14%);
+      }
+      .hud-life-face-wrap .hud-icon-face { width: 100%; height: 100%; }
+      .hud-bonus-title {
+        position: fixed; top: 18px; left: 50%; z-index: 10;
+        transform: translateX(-50%);
+        font: 900 clamp(52px, 9vh, 86px) Impact, 'Arial Black', sans-serif;
+        line-height: 0; pointer-events: none;
+        filter: drop-shadow(0 5px 2px rgba(70, 18, 0, 0.78));
+      }
+      .game-hud-layer.hud-bonus .hud-tl {
+        position: static;
+      }
+      .game-hud-layer.hud-bonus .hud-fruit-row {
+        position: fixed; left: 30px; bottom: 20px;
+      }
+      .game-hud-layer.hud-bonus .hud-crate-row {
+        position: fixed; left: 38%; bottom: 20px;
+      }
+      .game-hud-layer.hud-bonus .hud-counter { margin-bottom: 0; }
       .hud-deathcount-label {
         align-self: flex-end;
         margin: 0 0 clamp(8px, 1.2vh, 13px) -7px;
@@ -1979,6 +2118,12 @@ export class UI {
       .hud-num {
         font: 900 clamp(55px, 8.7vh, 90px) Impact, 'Arial Black', sans-serif;
         color: #ffb43a; letter-spacing: 2px;
+      }
+      .hud-box-count { display: flex; align-items: flex-end; gap: 5px; }
+      .hud-box-current { font-size: inherit; }
+      .hud-box-total {
+        font-size: clamp(30px, 4.8vh, 50px);
+        margin-bottom: clamp(8px, 1.4vh, 14px);
       }
       .hud-icon {
         width: clamp(68px, 10.7vh, 111px); height: clamp(68px, 10.7vh, 111px);
@@ -2036,7 +2181,7 @@ export class UI {
            digit rather than its centre of mass. Nothing else animates this
            element's transform — hudpop only ever runs on the digits — so this
            is safe to own outright. */
-        transform: translateY(-14%);
+        transform: none;
       }
       .hud-pop { animation: hudpop 0.22s ease-out; }
       /* IDLE BOB. Every persistent readout floats gently, so the corners
@@ -2081,19 +2226,19 @@ export class UI {
       .hud-tr .hud-counter { animation-delay: -0.15s; }
       .hud-scoreplate { animation-delay: -0.4s; }
       .hud-ttclock { animation-delay: -0.15s; }
+      .hud-counter.hud-pop { animation: hudpop 0.22s ease-out; }
       /* A player who has asked the OS for less motion gets none of it. */
       @media (prefers-reduced-motion: reduce) {
-        .hud-counter, .hud-scoreplate, .hud-ttclock { animation: none; }
+        .hud-counter, .hud-counter.hud-pop, .hud-scoreplate, .hud-ttclock,
+        .hud-pop, .hud-special-ready { animation: none; }
       }
       @keyframes hudpop {
         0% { transform: scale(1.45); }
         100% { transform: scale(1); }
       }
 
-      /* score: bare gold digits under the lives counter, top-right — the
-         heavy text outline reads on any background, no plate needed */
-      /* In the .hud-tr column, directly under the lives row — no guessed
-         offset to fall out of step with the row above it. */
+      /* Explicit run-mode score: bare gold digits in the top-right column.
+         Ordinary/Bonus play hides the plate entirely. */
       .hud-scoreplate { text-align: right; }
       .hud-scorelabel {
         font: bold clamp(10px, 1.7vh, 14px) Impact, 'Arial Black', sans-serif;
@@ -2107,50 +2252,49 @@ export class UI {
       }
 
       .hud-special {
-        position: fixed; z-index: 10; left: 40px; bottom: 4%;
-        width: clamp(220px, 27vw, 340px); pointer-events: none;
-        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.72));
+        --special-turn: 0turn;
+        position: absolute; inset: -7px; z-index: 0;
+        border-radius: 50%; pointer-events: none;
+        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.78));
       }
-      .hud-special-label {
-        width: 100%; height: clamp(17px, 2.8vh, 23px);
-        font: 900 clamp(13px, 2.2vh, 19px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 4px; color: #ffc448;
-      }
-      .hud-special-track {
-        box-sizing: border-box; width: 100%; height: clamp(12px, 2vh, 17px);
-        padding: 2px; overflow: hidden; background: rgba(12, 10, 18, 0.82);
-        border: 2px solid rgba(255, 196, 72, 0.72);
-      }
+      .hud-special-track,
       .hud-special-fill {
-        width: 100%; height: 100%; transform: scaleX(0); transform-origin: left center;
-        background: linear-gradient(90deg, #ff7a18 0%, #ffc928 72%, #ffe36a 100%);
-        transition: transform 0.08s linear;
+        position: absolute; inset: 0; border-radius: 50%;
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
+        mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px));
       }
-      .hud-special-controls {
-        margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: clip;
-        color: #d0b46d; font: 900 clamp(8px, 1.2vh, 10px) ui-monospace, Menlo, Consolas, monospace;
-        letter-spacing: 1px;
+      .hud-special-track { background: rgba(38, 20, 10, 0.78); }
+      .hud-special-fill {
+        background: conic-gradient(
+          from -90deg,
+          #ff6d18 0turn,
+          #ffc928 var(--special-turn),
+          transparent var(--special-turn) 1turn
+        );
+        transition: background 0.08s linear;
       }
-      .hud-special-ready .hud-special-label,
-      .hud-special-ready .hud-special-controls { color: #fff5aa; }
-      .hud-special-ready .hud-special-track {
-        border-color: #fff16a;
-        box-shadow: 0 0 18px rgba(255, 180, 31, 0.82), inset 0 0 8px rgba(255, 255, 190, 0.6);
-      }
-      .hud-special-ready .hud-special-fill {
-        background: linear-gradient(90deg, #ff8a18 0%, #ffd72d 70%, #fffbd0 100%);
+      .hud-special-ready {
+        filter:
+          drop-shadow(0 3px 4px rgba(0, 0, 0, 0.78))
+          drop-shadow(0 0 10px rgba(255, 180, 31, 0.9));
         animation: specialpulse 0.42s ease-in-out infinite alternate;
       }
-      @keyframes specialpulse { from { filter: brightness(1); } to { filter: brightness(1.35); } }
-      @media (max-width: 640px) {
-        .hud-special { left: 16px; width: min(58vw, 260px); }
+      .hud-special-ready .hud-special-fill {
+        background: conic-gradient(
+          from -90deg,
+          #ff7a18 0turn,
+          #fffbd0 var(--special-turn),
+          transparent var(--special-turn) 1turn
+        );
+      }
+      @keyframes specialpulse { from { opacity: 0.86; } to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .hud-special-ready { animation: none; }
       }
 
-      /* TIME TRIAL: big top-center clock — bare gold digits like the score,
+      /* TIME TRIAL: big top-right clock — bare gold digits like the score,
          ice blue while a time crate's freeze holds it still */
-      /* No inset of its own: it is a row of the .hud-tr column now, sitting
-         where the lives row was. Pinning it to .hud-tr's own coordinates put
-         it on top of the score — see the note where it's built. */
+      /* No inset of its own: it is a row of the .hud-tr run-mode column. */
       /* same bottom margin the counter rows carry, so the score sits the same
          distance under the clock as it does under the lives */
       .hud-ttclock { text-align: right; margin-bottom: 8px; }
@@ -2475,6 +2619,11 @@ function pop(el: HTMLElement): void {
   el.classList.remove("hud-pop");
   void el.offsetWidth; // reflow restarts the animation
   el.classList.add("hud-pop");
+  el.addEventListener(
+    "animationend",
+    () => el.classList.remove("hud-pop"),
+    { once: true },
+  );
 }
 
 function div(cls: string): HTMLElement {

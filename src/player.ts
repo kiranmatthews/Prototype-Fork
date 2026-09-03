@@ -506,6 +506,7 @@ export class Player {
   runTime = 0;
   cratesBroken = 0;
   fruit = 0; // wumpa collected
+  fruitCollectionRevision = 0; // monotonic HUD event: includes 99->0 and endless-mode fruit
   masks = 0; // Aku masks held (max 2): absorb one hit or bail; the 3rd = uber
   uberTimer = 0; // Crash third-mask invincibility: auto-smash, perfect balance
   lives = 3; // Crash lives: death costs one, 100 wumpa earns one, out = fresh start
@@ -1483,12 +1484,20 @@ export class Player {
     return this.spinTimer > 0;
   }
 
+  // The third mask is represented by the timed uber state, not masks === 3:
+  // the two banked masks remain in `masks` while this temporary state runs.
+  // Keep this as context supplied to SpecialSystem rather than minting earned
+  // meter, so expiry reveals the ordinary meter that was underneath it.
+  private get tripleMaskSpecialActive(): boolean {
+    return this.uberTimer > 0;
+  }
+
   get specialMeter(): number {
-    return this.special.value;
+    return this.special.effectiveValue(this.tripleMaskSpecialActive);
   }
 
   get specialReady(): boolean {
-    return this.special.ready;
+    return this.special.effectiveReady(this.tripleMaskSpecialActive);
   }
 
   get activeSpecialName(): string | null {
@@ -3037,13 +3046,25 @@ export class Player {
       } as Input;
       this.rawInput = input;
     }
+    // Uber advances once for every live simulation route (ordinary play, rope,
+    // and ledge hang) before SPECIAL is sampled. Keeping the tick here prevents
+    // the final fraction of a mask frame from authorizing a move after the
+    // powerup has expired later in the same step.
+    this.uberTimer = Math.max(0, this.uberTimer - dt);
+    const tripleMaskSpecial = this.tripleMaskSpecialActive;
     // SPECIAL commands live in raw SCREEN directions, before course/skate
     // remapping. Decode the two direction taps now so Triangle can reach grind
     // routing and same-tick ollie releases can reach Square air specials.
     this.special.step(dt, input.moveX, input.moveY);
-    this.pendingSpecialFlip = input.spinPressed ? this.special.peek('flip') : null;
-    this.pendingSpecialGrab = input.grabPressed ? this.special.peek('grab') : null;
-    this.pendingSpecialGrind = input.grindPressed ? this.special.peek('grind') : null;
+    this.pendingSpecialFlip = input.spinPressed
+      ? this.special.peek('flip', tripleMaskSpecial)
+      : null;
+    this.pendingSpecialGrab = input.grabPressed
+      ? this.special.peek('grab', tripleMaskSpecial)
+      : null;
+    this.pendingSpecialGrind = input.grindPressed
+      ? this.special.peek('grind', tripleMaskSpecial)
+      : null;
     if (this.state === 'air' && this.ropeReleaseDuration > 0) {
       this.ropeReleaseElapsed = Math.min(
         this.ropeReleaseDuration,
@@ -3513,7 +3534,6 @@ export class Player {
       this.balanceCritT = 0;
       this.balanceVel = 0; // no needle momentum survives a gap between balance tricks
     }
-    this.uberTimer = Math.max(0, this.uberTimer - dt);
     this.sketchyT = Math.max(0, this.sketchyT - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     if (this.grindBoostT > 0 && Math.random() < 0.7) this.emitSparks(1, 0xff4fd8, 1.6);
@@ -7221,10 +7241,9 @@ export class Player {
   // smash. The rope is driven — your weight never bends it.
   private stepRope(dt: number, input: Input, level: Level): void {
     this.runTime += dt;
-    // essential shared timers (the rope early-outs before the main step body)
+    // state-local timers (uber already advanced before this early route)
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
-    this.uberTimer = Math.max(0, this.uberTimer - dt);
     if (this.ttActive) {
       if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
       else this.ttTime += dt;
@@ -11166,6 +11185,7 @@ export class Player {
 
   // Central wumpa collection: 100 fruit converts into a life, Crash rules.
   private collectFruit(): void {
+    this.fruitCollectionRevision++;
     if (this.endlessDeaths) {
       // No purse and no 100-fruit life threshold: every arrival is a permanent
       // face-value award, outside the pending combo multiplier.
@@ -12559,10 +12579,9 @@ export class Player {
         this.ledgeLip += delta.y;
       }
     }
-    // essential shared timers (the hang early-outs before the main step body)
+    // state-local timers (uber already advanced before this early route)
     this.spinCd = Math.max(0, this.spinCd - dt);
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
-    this.uberTimer = Math.max(0, this.uberTimer - dt);
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.hangClipT += dt * this.hangClipRate;
@@ -13082,6 +13101,10 @@ export class Player {
 
   private die(): void {
     if (this.state === 'dead') return;
+    // A pit/death ends the worn third mask immediately. Respawn also clears it,
+    // but waiting for the blackout would leave forced SPECIAL (and uber audio)
+    // live after the mask visual and player agency were already gone.
+    this.uberTimer = 0;
     this.state = 'dead';
     if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
     else if (this.comboRun) {

@@ -181,6 +181,7 @@ export const BONUS_LEVEL: CustomLevelData = {
   name: "Bonus Level",
   spawn: [-24, 0.12, 0],
   killY: -13,
+  hudMode: "bonus",
   sky: "night",
   components,
   groups: [

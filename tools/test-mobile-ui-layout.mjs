@@ -19,6 +19,9 @@ for (const contract of [
   "body.tc-on.tool-panel-open .tc-zone",
   "body.tc-on.side-panel-left-open .tc-left",
   "body.tc-on.side-panel-right-open .tc-right",
+  "body.tc-on .hud-life-row",
+  "body.tc-on .hud-life-face-wrap",
+  "body.tc-on .hud-special { inset: -6px; width: auto; }",
 ])
   assert.ok(touch.includes(contract), `touch layout missing ${contract}`);
 
@@ -78,8 +81,8 @@ function landscapeLayout(width, height, safe = { left: 0, right: 0, bottom: 0 })
     height: size,
   };
   const faceDiameter = size * 0.38;
-  const specialBottomEdge = height - (bottom + size + 10);
-  return { size, pad, cluster, faceDiameter, specialBottomEdge };
+  const lifeBottomEdge = height - (bottom + size + 10);
+  return { size, pad, cluster, faceDiameter, lifeBottomEdge };
 }
 
 for (const [width, height, expected] of [
@@ -97,9 +100,9 @@ for (const [width, height, expected] of [
     assert.ok(rect.top + rect.height <= height);
   }
   assert.equal(
-    layout.pad.top - layout.specialBottomEdge,
+    layout.pad.top - layout.lifeBottomEdge,
     10,
-    `${width}×${height} SPECIAL/control gap`,
+    `${width}×${height} life-ring/control gap`,
   );
 }
 
@@ -125,5 +128,5 @@ assert.equal(inset.cluster.left + inset.cluster.width, 844 - 21);
 assert.equal(inset.pad.top + inset.pad.height, 390 - 18);
 
 console.log(
-  "Validated mobile native-HUD/Render bypass, rotation-safe HUD texture allocation, safe-area touch geometry, SPECIAL clearance, and coordinated presentation tools.",
+  "Validated mobile native-HUD/Render bypass, rotation-safe HUD texture allocation, safe-area touch geometry, life-ring clearance, and coordinated presentation tools.",
 );

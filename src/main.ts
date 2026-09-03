@@ -29,7 +29,7 @@ import {
 } from "./level";
 import { pushLevels, fetchRemoteLevels, getToken, setToken } from "./sync";
 import { Player } from "./player";
-import { UI } from "./ui";
+import { UI, type HudState } from "./ui";
 import { TUNING, CONST } from "./tuning";
 import {
   speedSkateFovTarget,
@@ -1776,7 +1776,8 @@ function switchLevel(id: string, preserveEditor = false): void {
   applyRunModes(); // the new level's pickups obey the switch too
   applyTheme();
   applyShadowFlags();
-  ui.setLevel(entry.id);
+  ui.setLevel(entry.id, level.hudMode, player.fruitCollectionRevision);
+  ui.setHUD(currentHudState(), 0);
   ui.showMessage(entry.name.toUpperCase(), "", 1400);
   recorder.start(entry.id, endlessDeathsOn); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
@@ -2026,7 +2027,8 @@ function rebuildLevel(): void {
   applyRunModes();
   applyTheme();
   applyShadowFlags();
-  ui.setLevel(current.id);
+  ui.setLevel(current.id, level.hudMode, player.fruitCollectionRevision);
+  ui.setHUD(currentHudState(), 0);
   recorder.start(current.id, endlessDeathsOn);
   (window as unknown as Record<string, unknown>).__game &&
     ((
@@ -2065,7 +2067,8 @@ const editor = new Editor(
         if (editor.targetId === goTo) {
           current = findLevel(goTo) ?? current;
           localStorage.setItem("solProtoLevelId", current.id);
-          ui.setLevel(current.id);
+          ui.setLevel(current.id, level.hudMode, player.fruitCollectionRevision);
+          ui.setHUD(currentHudState(), 0);
           rebuildEditorPreview();
         } else {
           editor.exit();
@@ -2670,6 +2673,7 @@ ui.onToggleEndlessDeaths = () => {
     p2.pos.x += 1.6;
     p2.snapRenderInterpolation();
   }
+  ui.setHUD(currentHudState(), 0);
   recorder.start(current.id, endlessDeathsOn);
   ui.showMessage(
     endlessDeathsOn ? "ENDLESS DEATHS" : "CLASSIC LIVES",
@@ -2738,6 +2742,8 @@ player.onFinish = (time) => {
   );
 };
 player.onRespawn = () => {
+  ui.resetHudTransients(player.fruitCollectionRevision);
+  ui.setHUD(currentHudState(), 0);
   ui.hideMessage();
   ui.showDeathScreen(false);
   ui.hideTTResults();
@@ -3197,6 +3203,33 @@ function updateAudio(dt: number): void {
   }
 }
 
+function currentHudState(): HudState {
+  const comboPreview = player.comboHudPreview;
+  return {
+    points: player.points,
+    comboPoints: player.comboPoints,
+    comboMult: player.comboMult,
+    comboHasTrick: player.comboHasTrick,
+    tricks: sourceComboLabelLine(player.comboLabels),
+    comboActionRevision: player.comboActionRevision,
+    comboPreview,
+    specialMeter: player.specialMeter,
+    specialReady: player.specialReady,
+    fruit: player.fruit,
+    fruitCollectionRevision: player.fruitCollectionRevision,
+    lives: Math.max(0, player.lives),
+    deaths: player.totalDeaths,
+    endlessDeaths: player.endlessDeaths,
+    cratesBroken: player.cratesBroken,
+    cratesTotal: level.totalCrates,
+    hasCrystal: player.hasCrystal,
+    hasGem: player.gemEarned,
+    hasComboGem: player.comboGemEarned,
+    inventoryHeld: input.inventoryHeld,
+    bonusMode: level.hudMode === "bonus",
+  };
+}
+
 let paused = false;
 
 function frame(nowMs: number): void {
@@ -3422,30 +3455,7 @@ function frame(nowMs: number): void {
   ui.updateBalance(player.balanceMeter);
   ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
   ui.updateBalanceBoost(player.balanceBoostT, 6);
-  const tricks = player.comboLabels;
-  const comboPreview = player.comboHudPreview;
-  ui.setHUD(
-    {
-      points: player.points,
-      comboPoints: player.comboPoints,
-      comboMult: player.comboMult,
-      comboHasTrick: player.comboHasTrick,
-      tricks: sourceComboLabelLine(tricks),
-      comboActionRevision: player.comboActionRevision,
-      comboPreview,
-      specialMeter: player.specialMeter,
-      specialReady: player.specialReady,
-      fruit: player.fruit,
-      lives: Math.max(0, player.lives),
-      deaths: player.totalDeaths,
-      endlessDeaths: player.endlessDeaths,
-      crates: `${player.cratesBroken}/${level.totalCrates}`,
-      hasCrystal: player.hasCrystal,
-      hasGem: player.gemEarned,
-      hasComboGem: player.comboGemEarned,
-    },
-    dt,
-  );
+  ui.setHUD(currentHudState(), dt);
   ui.setStats({
     speed: player.speed,
     state: player.state,

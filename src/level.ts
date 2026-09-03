@@ -846,6 +846,8 @@ export interface CustomLevelData {
   name: string;
   spawn: [number, number, number];
   killY: number;
+  /** Bonus stages opt into their distinct persistent collection HUD. */
+  hudMode?: "bonus";
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
   ocean?: CustomOceanData;
@@ -2167,6 +2169,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
+  if (source.hudMode !== undefined && source.hudMode !== "bonus") return null;
   if (
     source.ledgeAssist !== undefined &&
     (typeof source.ledgeAssist !== "number" ||
@@ -2643,7 +2646,19 @@ export function userLevelStorageHealthy(): boolean {
 export function levelList(): LevelEntry[] {
   const user = getUserLevels();
   const edited = new Map(user.map((l) => [l.id, l]));
-  const out = BUILTIN_LEVELS.map((b) => edited.get(b.id) ?? b);
+  const out = BUILTIN_LEVELS.map((builtin) => {
+    const override = edited.get(builtin.id);
+    if (!override) return builtin;
+    // Old edited copies predate semantic HUD metadata. Inherit only a missing
+    // built-in presentation tag without mutating the saved object; an explicit
+    // tag on the override remains authoritative.
+    if (builtin.data?.hudMode && override.data && !override.data.hudMode)
+      return {
+        ...override,
+        data: { ...override.data, hudMode: builtin.data.hudMode },
+      };
+    return override;
+  });
   for (const u of user) if (!isBuiltin(u.id)) out.push(u);
   return out;
 }
@@ -2925,6 +2940,9 @@ export class Level {
   // tuning. One source course can widen its ledge catch envelope while every
   // other level retains the exact global grab feel.
   ledgeAssist = 0;
+  // Presentation semantics are authored with data so edited/copied bonus
+  // stages retain their HUD without relying on a special registry id.
+  hudMode: "standard" | "bonus" = "standard";
   name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
   // here each step so the chase can trigger, rubber-band, and reset fairly.
@@ -4951,6 +4969,7 @@ export class Level {
   private buildCustom(data: CustomLevelData): void {
     this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
+    this.hudMode = data.hudMode ?? "standard";
     this.killY = data.killY;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate

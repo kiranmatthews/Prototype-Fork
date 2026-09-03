@@ -1,8 +1,9 @@
 // Keyboard + Gamepad API + touch overlay input, merged into one snapshot per
 // frame. DualShock 4 exposes the browser "standard" mapping:
 //   buttons[0] = Cross (X), buttons[1] = Circle, buttons[2] = Square,
-//   buttons[3] = Triangle, buttons[8] = Share (reset), buttons[9] = Options
-//   (pause), buttons[12..15] = d-pad,
+//   buttons[3] = Triangle, buttons[6] = L2 (inventory), buttons[7] = R2,
+//   buttons[8] = Share (reset), buttons[9] = Options (pause),
+//   buttons[12..15] = d-pad,
 //   axes[0/1] = left stick.
 
 import { TouchControls } from './touch';
@@ -18,6 +19,9 @@ export class Input {
   spinHeld = false;
   grabHeld = false;
   transferHeld = false; // R2: rail-air transfer strafe; press also triggers revert/lip actions
+  // Presentation-only: it reveals collection inventory and is deliberately
+  // absent from replay.ts, whose channels are only inputs consumed by the sim.
+  inventoryHeld = false;
 
   // Edge-triggered flags. They accumulate until a fixed-step consumes them,
   // so a press between fixed steps is never dropped.
@@ -108,6 +112,7 @@ export class Input {
     let spin = !solo && k.has('KeyF');
     let grab = !solo && k.has('KeyQ');
     let transfer = !solo && k.has('KeyT');
+    let inventory = !solo && k.has('KeyI');
     let restart = !solo && k.has('KeyR');
     let pause = !solo && (k.has('KeyP') || k.has('Escape'));
 
@@ -134,6 +139,7 @@ export class Input {
       grab = grab || !!pad.buttons[1]?.pressed; // Circle
       spin = spin || !!pad.buttons[2]?.pressed; // Square
       grind = grind || !!pad.buttons[3]?.pressed; // Triangle
+      inventory = inventory || !!pad.buttons[6]?.pressed; // L2 = collection inventory
       transfer = transfer || !!pad.buttons[7]?.pressed; // R2 = transfer/revert modifier
       restart = restart || !!pad.buttons[8]?.pressed; // Share = reset
       pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
@@ -152,6 +158,7 @@ export class Input {
       spin = spin || tc.spinHeld;
       grind = grind || tc.grindHeld;
       transfer = transfer || tc.transferActive(); // R2 = the upward swipe
+      inventory = inventory || tc.inventoryActive(); // L2 = the downward swipe
       if (this.gamepadName === 'no controller') this.gamepadName = 'touch';
     }
 
@@ -178,6 +185,7 @@ export class Input {
     this.spinHeld = spin;
     this.grabHeld = grab;
     this.transferHeld = transfer;
+    this.inventoryHeld = inventory;
 
     this.jumpPressed = this.jumpPressed || (jump && !this.prevJump);
     this.jumpReleased = this.jumpReleased || (!jump && this.prevJump);

@@ -112,6 +112,7 @@ try {
   const { Level, normalizeCustomLevelData, setEditorBuild } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { CONST, TUNING } = await server.ssrLoadModule("/src/tuning.ts");
+  const { SPECIAL_POINTS_TO_FULL } = await server.ssrLoadModule("/src/specialTricks.ts");
 
   const editorSource = await readFile(path.join(ROOT, "src/editor.ts"), "utf8");
   const levelSource = await readFile(path.join(ROOT, "src/level.ts"), "utf8");
@@ -165,6 +166,38 @@ try {
     assert.equal(f.player.lives, before + (mode === "normal" ? 1 : 0), `${mode} life reward`);
     assert.equal(activeFruit(f.player), 0, `${mode} life crate emitted fruit`);
   }
+
+  // The third mask owns a temporary full/ready SPECIAL override without
+  // minting permanent progress underneath it.
+  const maskData = levelData(["mask", "mask", "mask"]);
+  const maskLevel = new Level(new THREE.Scene(), {
+    id: "triple-mask-special",
+    name: maskData.name,
+    data: maskData,
+  });
+  const maskPlayer = new Player(maskLevel.scene);
+  maskPlayer.respawn(maskLevel, true);
+  fixtures.push(maskLevel);
+  maskPlayer.special.award(SPECIAL_POINTS_TO_FULL / 2);
+  for (const crate of maskLevel.crates) maskPlayer.smashCrate(maskLevel, crate);
+  assert.equal(maskPlayer.masks, 2, "third mask did not preserve the two banked masks");
+  assert.ok(maskPlayer.uberTimer > 0, "third mask did not start uber time");
+  assert.equal(maskPlayer.specialMeter, 100, "triple mask did not force a full meter");
+  assert.equal(maskPlayer.specialReady, true, "triple mask did not authorize SPECIAL tricks");
+  assert.equal(maskPlayer.special.value, 50, "triple mask mutated earned SPECIAL progress");
+  maskPlayer.uberTimer = 0;
+  assert.equal(maskPlayer.specialMeter, 50, "uber expiry did not reveal earned progress");
+  assert.equal(maskPlayer.specialReady, false, "uber expiry permanently armed SPECIAL");
+
+  const fruitEvent = create("life").player;
+  fruitEvent.fruit = 99;
+  fruitEvent.collectFruit();
+  assert.equal(fruitEvent.fruit, 0, "100th fruit did not roll its purse over");
+  assert.equal(fruitEvent.fruitCollectionRevision, 1, "rollover fruit missed its HUD event");
+  fruitEvent.endlessDeaths = true;
+  fruitEvent.collectFruit();
+  assert.equal(fruitEvent.fruit, 0, "endless-mode fruit unexpectedly entered a purse");
+  assert.equal(fruitEvent.fruitCollectionRevision, 2, "endless fruit missed its HUD event");
 
   const prepareStomp = (player) => {
     player.state = "air"; player.grounded = false; player.spinTimer = 0;
@@ -240,7 +273,7 @@ try {
   checkpoint.level.reset(true);
   assert.equal(checkpoint.crate.hitsRemaining, 5, "hard reset did not restore five hits");
 
-  console.log("Validated life and five-hit fruit crates across schema, rewards, contacts, force-smashes, checkpoints, and capture.");
+  console.log("Validated life/multi-hit crates, triple-mask SPECIAL, fruit HUD events, rewards, contacts, checkpoints, and capture.");
 } finally {
   // Async fallback asset loaders report their expected failures just after
   // construction. Keep the filter installed until those microtasks/timers
