@@ -37,11 +37,12 @@ longer own visible surfaces and are not humanoid retarget bones.
 The visible head is the attributed static Meshy **Crowned Inferno Skull**,
 rigidly attached beneath the existing semantic `head` bone. Its source bottom
 is rebased to local Y=0, making the head bone a stable base pivot.
-Character Lab neck height changes only `head.position.y`: the `neck` bone,
-torso skin, and head scale remain invariant, so the value is literal air space.
-The gap is an additive offset over live animation, preserving procedural or
-keyframed head translation.
-Head size/width/depth still scale the head bone around that attachment point.
+Character Lab gap/overlap changes only `head.position.y`, while head fore/aft
+changes only parent-local `head.position.z`: the `neck` bone, torso skin, and
+head scale remain invariant. Both are additive offsets over live animation,
+preserving procedural or keyframed head translation. Head size/width/depth scale
+the head bone around that attachment point and intentionally allow extreme
+cartoon ranges (`4×` overall and `3×` on each transverse axis).
 The look and mask-center sockets are rebased to the imported face while empty
 ear/ponytail nodes preserve old animation IDs.
 
@@ -124,6 +125,14 @@ and authored thickness, with a non-inversion guard for impossible combined
 extremes. It uses derivative flat normals so lighting follows those faces. The eight
 production segments share six source-derived part geometries and one smooth
 clay material.
+
+Character Lab's `upperArmRestAngle` is a reversible Idle/rest presentation
+offset on `shoulder-left/right`. Positive degrees rotate left about local `-Z`
+and right about local `+Z`, bringing both distal arm chains toward the torso.
+Its weight is one in Character Lab and Idle (including manual Idle preview) and
+zero for Run plus every other authored action; the existing Run upper-arm keys
+therefore remain exact. It does not translate the shoulder pivot, alter
+clavicle width, change elbow offsets, or enter animation clip data.
 
 Character Lab may separately enlarge arm and leg knobs from 1.00–1.62×. That
 authoring layer normally scales each actual knob region uniformly in XYZ; it

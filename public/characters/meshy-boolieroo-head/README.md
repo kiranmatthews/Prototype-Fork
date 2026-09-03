@@ -3,7 +3,8 @@
 This is the owner-supplied original **BoolieRoo** design, used as an alternate
 head-shape evaluation option in Character Lab. It is attached rigidly to the
 existing semantic `head` bone, so the production skeleton and animations do
-not change.
+not change. It shares the skull's expanded size/axis ranges, negative
+gap/overlap, and parent-local forward/back placement controls.
 
 Meshy had auto-assigned an unrelated character name to the downloaded output.
 That label did not describe the design or its source and has been removed from

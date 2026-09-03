@@ -7,10 +7,12 @@ export interface CharacterProportionSettingsValue {
   headWidth: number;
   headDepth: number;
   neckLength: number;
+  headForwardOffset: number;
   torsoLength: number;
   torsoWidth: number;
   torsoDepth: number;
   shoulderWidth: number;
+  upperArmRestAngle: number;
   hipWidth: number;
   upperArmLength: number;
   forearmLength: number;
@@ -59,7 +61,7 @@ export interface CharacterProportionStorage {
 
 export const CHARACTER_PROPORTION_STORAGE_KEY = 'solProtoCharacterProportions.v1';
 export const CHARACTER_HAND_REST_REVISION = 1 as const;
-export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 4 as const;
+export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 5 as const;
 
 /** Identity presentation values used by the original Character Lab baseline. */
 export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
@@ -72,10 +74,12 @@ export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSetting
     headWidth: 1,
     headDepth: 1,
     neckLength: 1,
+    headForwardOffset: 0,
     torsoLength: 1,
     torsoWidth: 1,
     torsoDepth: 1,
     shoulderWidth: 1,
+    upperArmRestAngle: 0,
     hipWidth: 1,
     upperArmLength: 1,
     forearmLength: 1,
@@ -108,10 +112,12 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
     headWidth: 1.23,
     headDepth: 1.23,
     neckLength: 0,
+    headForwardOffset: 0,
     torsoLength: 1,
     torsoWidth: 1.13,
     torsoDepth: 1.22,
     shoulderWidth: 1,
+    upperArmRestAngle: 0,
     hipWidth: 0.93,
     upperArmLength: 1.01,
     forearmLength: 1.25,
@@ -141,15 +147,17 @@ export const CHARACTER_PROPORTION_CONTROLS: readonly CharacterProportionControl[
     { key: 'bodyWidth', label: 'Whole-body width', section: 'Overall', min: 0.68, max: 1.42, step: 0.01 },
     { key: 'bodyDepth', label: 'Whole-body depth', section: 'Overall', min: 0.68, max: 1.42, step: 0.01 },
 
-    { key: 'headSize', label: 'Head size', section: 'Head & torso', min: 0.62, max: 1.55, step: 0.01 },
-    { key: 'headWidth', label: 'Head width', section: 'Head & torso', min: 0.7, max: 1.42, step: 0.01 },
-    { key: 'headDepth', label: 'Head depth', section: 'Head & torso', min: 0.7, max: 1.42, step: 0.01 },
-    { key: 'neckLength', label: 'Neck height / gap', section: 'Head & torso', min: 0, max: 1.8, step: 0.01 },
+    { key: 'headSize', label: 'Head size', section: 'Head & torso', min: 0.4, max: 4, step: 0.01 },
+    { key: 'headWidth', label: 'Head width', section: 'Head & torso', min: 0.4, max: 3, step: 0.01 },
+    { key: 'headDepth', label: 'Head depth', section: 'Head & torso', min: 0.4, max: 3, step: 0.01 },
+    { key: 'neckLength', label: 'Neck gap / overlap', section: 'Head & torso', min: -4, max: 2.5, step: 0.01 },
+    { key: 'headForwardOffset', label: 'Head forward / back (m)', section: 'Head & torso', min: -0.5, max: 0.5, step: 0.005 },
     { key: 'torsoLength', label: 'Torso length', section: 'Head & torso', min: 0.62, max: 1.48, step: 0.01 },
     { key: 'torsoWidth', label: 'Torso width', section: 'Head & torso', min: 0.65, max: 1.5, step: 0.01 },
     { key: 'torsoDepth', label: 'Torso depth', section: 'Head & torso', min: 0.65, max: 1.5, step: 0.01 },
 
     { key: 'shoulderWidth', label: 'Shoulder width', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
+    { key: 'upperArmRestAngle', label: 'Upper-arm inward angle (°)', section: 'Skeleton', min: -45, max: 75, step: 1 },
     { key: 'hipWidth', label: 'Hip width', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
     { key: 'upperArmLength', label: 'Upper-arm length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },
     { key: 'forearmLength', label: 'Forearm length', section: 'Skeleton', min: 0.58, max: 1.58, step: 0.01 },

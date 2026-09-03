@@ -1130,6 +1130,7 @@ export class Player {
   private meshyBoolieRooHeadTextureDiagnostics:
     (() => MeshyBoolieRooHeadTextureDiagnostics) | null = null;
   private characterHeadStyleValue: CharacterHeadStyle = 'skull';
+  private characterUpperArmRestAngleWeight = 1;
   private meshyShorts: MeshyShortsComponent | null = null;
   private readonly proceduralFootwear: ProceduralFootwearComponent[] = [];
   private headVisualCenter: THREE.Object3D | null = null;
@@ -2096,8 +2097,21 @@ export class Player {
   }
 
   /** Reapply the persistent Character Lab design after any pose/snapshot write. */
-  syncCharacterAppearance(): void {
-    this.characterProportionLayer.apply(characterProportionSettings.value);
+  setCharacterUpperArmRestAngleWeight(weight: number): void {
+    this.characterUpperArmRestAngleWeight = THREE.MathUtils.clamp(
+      Number.isFinite(weight) ? weight : 0,
+      0,
+      1,
+    );
+  }
+
+  syncCharacterAppearance(options: { upperArmRestAngleWeight?: number } = {}): void {
+    const upperArmRestAngleWeight = Number.isFinite(options.upperArmRestAngleWeight)
+      ? THREE.MathUtils.clamp(options.upperArmRestAngleWeight as number, 0, 1)
+      : this.characterUpperArmRestAngleWeight;
+    this.characterProportionLayer.apply(characterProportionSettings.value, {
+      upperArmRestAngleWeight,
+    });
     this.syncCharacterTailVisibility();
     this.syncCharacterHeadStyle();
     this.bodyGroup.updateMatrixWorld(true);
@@ -15785,7 +15799,17 @@ export class Player {
         triangles: this.meshyHead.triangles,
         attachmentJoint: 'head',
         neckGapControl: 'neckLength',
+        headForwardOffsetControl: 'headForwardOffset',
+        proportions: ['headSize', 'headWidth', 'headDepth'],
         collisionChanged: false,
+      },
+      presentationControls: {
+        upperArmRestAngle: {
+          joints: ['shoulder-left', 'shoulder-right'],
+          axis: 'local-z-mirrored',
+          positiveDirection: 'inward-toward-torso',
+          ownership: 'idle-and-character-lab-only; zero on run and authored actions',
+        },
       },
       shortsSurface: {
         kind: 'meshy-midnight-chain-denim-shorts',

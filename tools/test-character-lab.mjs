@@ -182,7 +182,7 @@ try {
     clampCharacterProportions,
   } = settingsApi;
 
-  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 32);
+  assert.equal(CHARACTER_PROPORTION_CONTROLS.length, 34);
   assert.deepEqual(
     new Set(CHARACTER_PROPORTION_CONTROLS.map((control) => control.key)),
     new Set(Object.keys(DEFAULT_CHARACTER_PROPORTIONS)),
@@ -198,10 +198,12 @@ try {
     headWidth: 1.23,
     headDepth: 1.23,
     neckLength: 0,
+    headForwardOffset: 0,
     torsoLength: 1,
     torsoWidth: 1.13,
     torsoDepth: 1.22,
     shoulderWidth: 1,
+    upperArmRestAngle: 0,
     hipWidth: 0.93,
     upperArmLength: 1.01,
     forearmLength: 1.25,
@@ -225,7 +227,11 @@ try {
   });
   const clamped = clampCharacterProportions({
     headSize: 99,
+    headWidth: 99,
+    headDepth: 99,
     neckLength: -4,
+    headForwardOffset: 99,
+    upperArmRestAngle: 99,
     wristRestPitch: NaN,
     wristRestYaw: 999,
     armKnobSize: 99,
@@ -236,8 +242,12 @@ try {
     gloveXAlong: -99,
     gloveXLift: 99,
   });
-  assert.equal(clamped.headSize, 1.55);
-  assert.equal(clamped.neckLength, 0);
+  assert.equal(clamped.headSize, 4);
+  assert.equal(clamped.headWidth, 3);
+  assert.equal(clamped.headDepth, 3);
+  assert.equal(clamped.neckLength, -4);
+  assert.equal(clamped.headForwardOffset, 0.5);
+  assert.equal(clamped.upperArmRestAngle, 75);
   assert.equal(clamped.wristRestPitch, 15);
   assert.equal(clamped.wristRestYaw, 180);
   assert.equal(clamped.armKnobSize, 1.62);
@@ -267,6 +277,8 @@ try {
   assert.equal(settings.value.gloveXAcross, 0.025);
   assert.equal(settings.value.gloveXAlong, 0.011);
   assert.equal(settings.value.gloveXLift, -0.004);
+  assert.equal(settings.value.headForwardOffset, 0);
+  assert.equal(settings.value.upperArmRestAngle, 0);
   assert.equal(settings.value.armKnobSize, 1.47,
     'untouched legacy values must adopt the authored defaults');
   assert.equal(settings.value.shortsWidth, 1.5,
@@ -299,10 +311,12 @@ try {
     headWidth: 1.23,
     headDepth: 1.23,
     neckLength: 0,
+    headForwardOffset: 0,
     torsoLength: 0.95,
     torsoWidth: 1.21,
     torsoDepth: 1.04,
     shoulderWidth: 1.05,
+    upperArmRestAngle: 0,
     hipWidth: 1.17,
     upperArmLength: 0.95,
     forearmLength: 1.38,
@@ -375,11 +389,14 @@ try {
     bodyDepth: 1.15,
     headSize: 1.35,
     headWidth: 1.2,
+    headDepth: 0.85,
     neckLength: 0.6,
+    headForwardOffset: 0.22,
     torsoLength: 1.18,
     torsoWidth: 1.4,
     torsoDepth: 0.7,
     shoulderWidth: 1.25,
+    upperArmRestAngle: 30,
     hipWidth: 1.3,
     upperArmLength: 1.2,
     forearmLength: 0.85,
@@ -405,13 +422,17 @@ try {
   near(scene.rider.scale.z, 1.1 * 1.15);
   near(scene.nodes.get('head').scale.x, 1.35 * 1.2);
   near(scene.nodes.get('head').scale.y, 1.35);
+  near(scene.nodes.get('head').scale.z, 1.35 * 0.85);
   near(scene.nodes.get('neck').position.y, 0.25 * 1.18,
     1e-9);
   near(scene.nodes.get('head').position.y, 0.095 * 0.6);
+  near(scene.nodes.get('head').position.z, 0.22);
   assert.deepEqual(scene.nodes.get('neck-volume').scale.toArray(), [1, 1.18, 1],
     'torso length may stretch its marker, but neck height must not');
   near(scene.nodes.get('clavicle-left').position.x, 0.1 * 1.25);
   near(scene.nodes.get('clavicle-right').position.x, -0.1 * 1.25);
+  near(scene.nodes.get('shoulder-left').rotation.z, THREE.MathUtils.degToRad(-30));
+  near(scene.nodes.get('shoulder-right').rotation.z, THREE.MathUtils.degToRad(30));
   near(scene.nodes.get('hip-left').position.x, 0.115 * 1.3);
   near(scene.nodes.get('hip-right').position.x, -0.115 * 1.3);
   near(scene.nodes.get('meshy-torso-surface').scale.x, 0.615);
@@ -476,11 +497,31 @@ try {
   for (const [name, value] of baseline) {
     assert.deepEqual(cleared.get(name).position, value.position, `${name} position did not restore`);
     assert.deepEqual(cleared.get(name).scale, value.scale, `${name} scale did not restore`);
-    if (name.startsWith('hand-rest-orientation-')) {
+    if (name.startsWith('hand-rest-orientation-') || name.startsWith('shoulder-')) {
       assert.deepEqual(cleared.get(name).quaternion, value.quaternion, `${name} quaternion did not restore`);
     }
   }
   near(scene.nodes.get('head').rotation.y, 0.7, 1e-6);
+
+  const authoredShoulderLeft = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(0.2, -0.1, 0.35),
+  );
+  const authoredShoulderRight = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(-0.15, 0.08, -0.28),
+  );
+  scene.nodes.get('shoulder-left').quaternion.copy(authoredShoulderLeft);
+  scene.nodes.get('shoulder-right').quaternion.copy(authoredShoulderRight);
+  layer.apply(
+    { ...IDENTITY_CHARACTER_PROPORTIONS, upperArmRestAngle: 75 },
+    { upperArmRestAngleWeight: 0 },
+  );
+  near(Math.abs(scene.nodes.get('shoulder-left').quaternion.dot(authoredShoulderLeft)), 1);
+  near(Math.abs(scene.nodes.get('shoulder-right').quaternion.dot(authoredShoulderRight)), 1);
+  layer.clear();
+  near(Math.abs(scene.nodes.get('shoulder-left').quaternion.dot(authoredShoulderLeft)), 1);
+  near(Math.abs(scene.nodes.get('shoulder-right').quaternion.dot(authoredShoulderRight)), 1);
+  scene.nodes.get('shoulder-left').quaternion.identity();
+  scene.nodes.get('shoulder-right').quaternion.identity();
 
   // Persistent anatomy multiplies an already-authored temporary deformation:
   // 0.8 animation squash × 1.2 Character Lab length = 0.96 final reach.
@@ -538,6 +579,9 @@ try {
     'Animation Studio still exposes removed comparison surfaces');
   assert.match(mainSource, /label: "CHARACTER"/);
   assert.match(mainSource, /openCharacterLabTool/);
+  assert.match(mainSource,
+    /syncPresentation:[\s\S]{0,180}setCharacterUpperArmRestAngleWeight\([\s\S]{0,180}clip\?\.id === 'player\.idle'[\s\S]{0,120}\? 1 : 0/,
+    'Animation Studio did not keep the resting arm angle off authored Run');
   assert.match(mainSource, /location\.hash\.toLowerCase\(\)\.includes\("characterlab"\)/);
   assert.match(labSource, /CHARACTER LAB/);
   assert.match(labSource, /collision remain separate/);

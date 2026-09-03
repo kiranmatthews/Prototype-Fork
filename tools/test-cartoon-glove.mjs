@@ -475,9 +475,24 @@ try {
   near(headCenter.position.y, 0.2);
   assert.equal(player.animationRig.root.getObjectByName('neck-volume'), undefined);
   const neckBase = neckBone.position.clone();
+  const headBase = headBone.position.clone();
   const headSurfaceScaleBase = headSurface.scale.clone();
   const torsoScaleBase = torsoSurface.scale.clone();
   const torsoMorphBase = [...torsoSurface.morphTargetInfluences];
+  const shoulderLeft = player.animationRig.root.getObjectByName('shoulder-left');
+  const shoulderRight = player.animationRig.root.getObjectByName('shoulder-right');
+  const clavicleLeft = player.animationRig.root.getObjectByName('clavicle-left');
+  const clavicleRight = player.animationRig.root.getObjectByName('clavicle-right');
+  const elbowLeft = player.animationRig.root.getObjectByName('elbow-left');
+  const elbowRight = player.animationRig.root.getObjectByName('elbow-right');
+  const shoulderLeftBasePosition = shoulderLeft.position.clone();
+  const shoulderRightBasePosition = shoulderRight.position.clone();
+  const shoulderLeftBase = shoulderLeft.quaternion.clone();
+  const shoulderRightBase = shoulderRight.quaternion.clone();
+  const clavicleLeftBase = clavicleLeft.position.clone();
+  const clavicleRightBase = clavicleRight.position.clone();
+  const elbowLeftBase = elbowLeft.position.clone();
+  const elbowRightBase = elbowRight.position.clone();
   player.setCharacterProportions({ neckLength: 0 });
   near(headBone.position.y, 0);
   assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
@@ -488,7 +503,47 @@ try {
   near(headBone.position.y, 0.095 * 1.8);
   assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
   assert.deepEqual(headSurface.scale.toArray(), headSurfaceScaleBase.toArray());
+  player.setCharacterProportions({
+    neckLength: -3,
+    headForwardOffset: 0.4,
+    upperArmRestAngle: 55,
+  });
+  player.syncCharacterAppearance({ upperArmRestAngleWeight: 1 });
+  near(headBone.position.y, 0.095 * -3);
+  near(headBone.position.z, headBase.z + 0.4);
+  assert.deepEqual(neckBone.position.toArray(), neckBase.toArray());
+  assert.deepEqual(torsoSurface.scale.toArray(), torsoScaleBase.toArray());
+  assert.deepEqual(torsoSurface.morphTargetInfluences, torsoMorphBase);
+  assert.deepEqual(clavicleLeft.position.toArray(), clavicleLeftBase.toArray());
+  assert.deepEqual(clavicleRight.position.toArray(), clavicleRightBase.toArray());
+  assert.deepEqual(shoulderLeft.position.toArray(), shoulderLeftBasePosition.toArray());
+  assert.deepEqual(shoulderRight.position.toArray(), shoulderRightBasePosition.toArray());
+  assert.deepEqual(elbowLeft.position.toArray(), elbowLeftBase.toArray());
+  assert.deepEqual(elbowRight.position.toArray(), elbowRightBase.toArray());
+  const inwardLeft = shoulderLeftBase.clone().multiply(
+    new THREE.Quaternion().setFromAxisAngle(
+      new THREE.Vector3(0, 0, 1),
+      THREE.MathUtils.degToRad(-55),
+    ),
+  );
+  const inwardRight = shoulderRightBase.clone().multiply(
+    new THREE.Quaternion().setFromAxisAngle(
+      new THREE.Vector3(0, 0, 1),
+      THREE.MathUtils.degToRad(55),
+    ),
+  );
+  near(Math.abs(shoulderLeft.quaternion.dot(inwardLeft)), 1);
+  near(Math.abs(shoulderRight.quaternion.dot(inwardRight)), 1);
+  player.syncCharacterAppearance({ upperArmRestAngleWeight: 0 });
+  near(Math.abs(shoulderLeft.quaternion.dot(shoulderLeftBase)), 1);
+  near(Math.abs(shoulderRight.quaternion.dot(shoulderRightBase)), 1);
+  player.syncCharacterAppearance({ upperArmRestAngleWeight: 1 });
+  near(Math.abs(shoulderLeft.quaternion.dot(inwardLeft)), 1);
+  near(Math.abs(shoulderRight.quaternion.dot(inwardRight)), 1);
   player.resetCharacterProportions();
+  near(headBone.position.z, headBase.z);
+  near(Math.abs(shoulderLeft.quaternion.dot(shoulderLeftBase)), 1);
+  near(Math.abs(shoulderRight.quaternion.dot(shoulderRightBase)), 1);
   assert.deepEqual(player.meshyShortsDiagnostics, {
     ready: true,
     triangles: 10732,

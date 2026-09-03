@@ -58,6 +58,9 @@
     "runtimeBounds": { "min": [-0.5, 0, -0.259765625], "max": [0.5, 0.7890625, 0.26171875] },
     "restScale": 0.46,
     "attachmentJoint": "head",
+    "sharedCharacterLabControls": ["headSize", "headWidth", "headDepth", "neckLength", "headForwardOffset"],
+    "neckGapRange": [-0.38, 0.2375],
+    "headForwardOffsetRange": [-0.5, 0.5],
     "collisionChanged": false,
     "evaluationOnly": true
   }

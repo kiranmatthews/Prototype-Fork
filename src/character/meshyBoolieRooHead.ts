@@ -122,6 +122,9 @@ export function createMeshyBoolieRooHead(): MeshyBoolieRooHeadComponent {
     triangles: MESHY_BOOLIEROO_HEAD_ASSET.triangles,
     restScale: MESHY_BOOLIEROO_HEAD_REST_SCALE,
     attachmentJoint: 'head',
+    neckGapControl: 'neckLength',
+    headForwardOffsetControl: 'headForwardOffset',
+    scaleControls: ['headSize', 'headWidth', 'headDepth'],
     evaluationOnly: true,
   };
   return {

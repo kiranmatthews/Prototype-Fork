@@ -2104,6 +2104,7 @@ let characterLab: {
 } | null = null;
 async function openCharacterLabTool(): Promise<void> {
   if (characterLab || animationStudio) return;
+  player.setCharacterUpperArmRestAngleWeight(1);
   const rig = player.enterAnimationPreview();
   try {
     const mod = await import("./characterLab");
@@ -2114,6 +2115,9 @@ async function openCharacterLabTool(): Promise<void> {
       player,
       rigRoot: rig.root,
       onClose: () => {
+        player.setCharacterUpperArmRestAngleWeight(
+          player.animationClipHint === 'player.idle' ? 1 : 0,
+        );
         player.exitAnimationPreview();
         characterAnimationRuntime.restart();
         characterLab = null;
@@ -2145,7 +2149,12 @@ async function openAnimationStudioTool(): Promise<void> {
       rigRoot: rig.root,
       document: characterAnimationRuntime.document,
       applyScalars: (values) => player.applyAnimationDeformations(values),
-      syncPresentation: () => player.syncCharacterAppearance(),
+      syncPresentation: (clip) => {
+        player.setCharacterUpperArmRestAngleWeight(
+          clip?.id === 'player.idle' || clip?.id === 'player.pace-stop' ? 1 : 0,
+        );
+        player.syncCharacterAppearance();
+      },
       clearPostPose: () => player.clearCrawlHandPlantPreview(),
       applyPostPose: (clip, time) => {
         if (
@@ -2163,6 +2172,9 @@ async function openAnimationStudioTool(): Promise<void> {
         characterAnimationRuntime.setDocument(document);
       },
       onClose: () => {
+        player.setCharacterUpperArmRestAngleWeight(
+          player.animationClipHint === 'player.idle' ? 1 : 0,
+        );
         player.exitAnimationPreview();
         characterAnimationRuntime.restart();
         animationStudio = null;

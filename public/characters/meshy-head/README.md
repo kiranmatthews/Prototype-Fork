@@ -18,10 +18,11 @@ near-neutral normal and exactly-zero metallic maps are not shipped or requested.
 
 The asset is static and unrigged. It is a rigid child of the existing `head`
 bone, so every current animation and procedural look/impact response remains
-valid. Character Lab's neck-height control moves only that head bone's local Y
-offset: it creates literal air space without moving the neck bone, deforming
-the torso skin, or scaling the skull. The offset composes additively with
-future procedural/keyframed head translation.
+valid. Character Lab's gap/overlap control moves only that head bone's local Y,
+including negative overlap, while Head forward/back moves its parent-local Z.
+Neither moves the neck bone, deforms the torso skin, or scales the skull. Both
+compose additively with procedural/keyframed head translation; independent
+overall/width/depth controls provide the intentionally extreme cartoon scale.
 
 See `provenance.json` for exact source and derived hashes, topology, upload ID,
 axis conversion, bounds, and runtime mapping.

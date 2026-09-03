@@ -154,7 +154,7 @@ export interface AnimationStudioContext {
    * Reapplies host-owned appearance layers after every editor pose path. This
    * runs once per Studio frame, after playback, FK, IK and onion restoration.
    */
-  syncPresentation?: () => void;
+  syncPresentation?: (clip: AnimationClip | null) => void;
   /** Clears the previous host contact layer before an authored resample. */
   clearPostPose?: () => void;
   /** Host-owned procedural contact pass applied after proportions/presentation. */
@@ -799,7 +799,7 @@ class AnimationStudio implements AnimationStudioHandle {
       sampledThisFrame = true;
     }
     if (this.onionEnabled && this.onionDirty) this.updateOnionSkin();
-    this.ctx.syncPresentation?.();
+    this.ctx.syncPresentation?.(clip ?? null);
     if (clip && sampledThisFrame) this.ctx.applyPostPose?.(clip, this.playTime);
     if (this.reframeAfterSample) {
       this.frameCamera();
@@ -946,7 +946,7 @@ class AnimationStudio implements AnimationStudioHandle {
       this.tailVisibilityButton = button('TAIL · …', 'Show or hide the procedural character tail');
       this.tailVisibilityButton.onclick = () => {
         this.ctx.tailVisibility?.toggle();
-        this.ctx.syncPresentation?.();
+        this.ctx.syncPresentation?.(this.activeClip() ?? null);
         this.refreshTailVisibilityButton();
       };
       parent.appendChild(this.tailVisibilityButton);

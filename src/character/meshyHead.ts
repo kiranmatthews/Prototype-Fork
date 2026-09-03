@@ -124,6 +124,8 @@ export function createMeshyHead(): MeshyHeadComponent {
     restScale: MESHY_HEAD_REST_SCALE,
     attachmentJoint: 'head',
     neckGapControl: 'neckLength',
+    headForwardOffsetControl: 'headForwardOffset',
+    scaleControls: ['headSize', 'headWidth', 'headDepth'],
   };
   return {
     mesh,

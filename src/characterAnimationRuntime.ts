@@ -423,6 +423,9 @@ export class CharacterAnimationRuntime {
       this.requestedClipId = null;
       this.poseApplied = false;
       this.player.setAuthoredCrawlContactPhase(null);
+      this.player.setCharacterUpperArmRestAngleWeight(
+        hint === 'player.idle' ? 1 : 0,
+      );
       this.cancelTransient();
       this.resetRunQualification();
       return;
@@ -490,6 +493,9 @@ export class CharacterAnimationRuntime {
     this.requestedClipId = requested;
 
     if (!clip) {
+      this.player.setCharacterUpperArmRestAngleWeight(
+        hint === 'player.idle' ? 1 : 0,
+      );
       this.clearPlayback(false);
       return;
     }
@@ -692,6 +698,13 @@ export class CharacterAnimationRuntime {
     } else {
       this.transitionBlendWeight = null;
     }
+    this.player.setCharacterUpperArmRestAngleWeight(
+      clip.id === 'player.idle'
+        ? 1
+        : clip.id === PACE_STOP_CLIP_ID
+          ? this.transitionBlendWeight ?? 1
+          : 0,
+    );
     const incomingCrawlContactOwnership = ownsCrawlContacts ? 1 : 0;
     this.crawlContactOwnership = contactTransitionWeight === null
       ? incomingCrawlContactOwnership

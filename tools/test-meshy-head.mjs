@@ -135,6 +135,23 @@ try {
   near(head.position.y, 0.115);
   head.position.y = 0.095;
 
+  const torsoMarkerScale = torsoMarker.scale.clone();
+  const neckPosition = neck.position.clone();
+  layer.apply({
+    ...IDENTITY_CHARACTER_PROPORTIONS,
+    neckLength: -3,
+    headForwardOffset: 0.35,
+  });
+  near(head.position.y, -0.285);
+  near(head.position.z, 0.35);
+  assert.deepEqual(neck.position.toArray(), neckPosition.toArray());
+  assert.deepEqual(torsoMarker.scale.toArray(), torsoMarkerScale.toArray());
+  assert.deepEqual(component.mesh.scale.toArray(), [0.4, 0.4, 0.4]);
+  assert.deepEqual(alternate.mesh.scale.toArray(), [0.46, 0.46, 0.46]);
+  layer.clear();
+  near(head.position.y, 0.095);
+  near(head.position.z, 0);
+
   layer.apply({
     ...IDENTITY_CHARACTER_PROPORTIONS,
     headSize: 1.25,

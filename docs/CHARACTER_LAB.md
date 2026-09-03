@@ -35,10 +35,10 @@ values from one frame to the next.
 
 ## Controls
 
-The first schema includes overall scale/height/build, head size and axes, head gap
-and torso dimensions, shoulder/hip width, separate upper/lower limb lengths,
-limb thickness, independent arm/leg knob size, shorts width/height/depth,
-hand/foot size and animal-tail
+The first schema includes overall scale/height/build, large-range head size and
+axes, head gap/overlap and fore-aft placement, torso dimensions, shoulder/hip
+width, a mirrored resting upper-arm angle, separate upper/lower limb lengths,
+limb thickness, independent arm/leg knob size, shorts width/height/depth, hand/foot size and animal-tail
 visibility. Hand-rest pitch, yaw and roll are also persistent: pitch is linked
 while yaw and roll mirror anatomically across the two wrists. These values live
 on presentation mounts below the wrist bones, so a rest-orientation adjustment
@@ -48,7 +48,7 @@ along-hand and dorsal lift match. Left/right anatomy remains linked and
 mirrored in version 1 so a single slider cannot silently create a broken
 asymmetric rig.
 
-The shipped silhouette is an authored defaults-revision-4 pose rather than the
+The shipped silhouette is an authored defaults-revision-5 pose rather than the
 all-ones rig identity. **Reset all** restores that authored pose. The identity
 map remains available to animation/rig tests as the canonical no-op proportion
 layer. Browser saves retain the defaults they were authored against: untouched
@@ -89,6 +89,11 @@ bones. Their 1.00–1.62 range grows into the shaft seam without opening gaps;
 Rattle's knobless glove/sock insertion tips remain byte-stable. At the most
 compressed hybrid-shin extreme, only proximal-knob Y growth is capped before
 the ankle endpoint; its full X/Z knob thickness remains available.
+**Upper-arm inward angle** adds a mirrored local-Z shoulder rotation only to
+rest/Idle presentation: positive values slope both arms medially toward the
+torso while the clavicles, shoulder pivots, elbow offsets, and authored limb
+lengths stay fixed. Run and every other authored action receive zero weight, so
+their existing upper-arm keys and silhouette are unchanged.
 
 The **Torso** view frames the attributed Meshy skeleton tank-top surface. It is
 not a foreign replacement rig: code-native weights bind it to the existing
@@ -101,11 +106,14 @@ procedural heart tank and bare-waist meshes are no longer present.
 
 The **Head** view frames the attributed Meshy Crowned Inferno Skull. It is a
 rigid child of the existing semantic head bone, so authored and procedural head
-motion remain unchanged. **Neck height / gap** now translates only the head's
-local Y offset: the shipped default `0` closes the air gap, `1` gives the
-0.095m reference gap, and `1.8` gives 0.171m. It never moves the neck bone,
-pulls the torso skin, or scales the skull, and it adds over rather than
-multiplying any authored head position track. The former visible kangaroo face,
+motion remain unchanged. Head size now spans `0.4–4.0×`; independent width and
+depth span `0.4–3.0×`. **Neck gap / overlap** translates only the head's local Y:
+the shipped default `0` closes the air gap, `1` gives the 0.095m reference gap,
+and negative values down to `-4` sink the base as far as 0.38m below the neck
+pivot for intentional overlap. **Head forward / back** adds `-0.5…+0.5m` on
+head-local Z (positive is rider-forward). Neither control moves the neck bone,
+pulls the torso skin, or scales either head surface; both add over authored head
+position tracks. The former visible kangaroo face,
 eyes, ears, hair, ponytail, neck cylinder, necklace, and pendant are retired;
 empty ear/ponytail nodes stay only for saved-animation compatibility.
 

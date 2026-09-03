@@ -128,7 +128,10 @@ export class CharacterProportionLayer {
     this.states.clear();
   }
 
-  apply(value: Readonly<CharacterProportionSettingsValue>): void {
+  apply(
+    value: Readonly<CharacterProportionSettingsValue>,
+    options: { upperArmRestAngleWeight?: number } = {},
+  ): void {
     this.clear();
 
     const rider = this.root.getObjectByName('procedural-rider');
@@ -221,16 +224,37 @@ export class CharacterProportionLayer {
       value.headSize * value.headDepth,
     );
 
-    // Neck height is presentation-only air space. The semantic neck and torso
-    // stay fixed; moving only the head cannot deform either surface.
-    this.addPosition(head, 0, MESHY_HEAD_DEFAULT_GAP * (value.neckLength - 1), 0);
+    // Gap/overlap and fore-aft placement are presentation-only head offsets.
+    // The semantic neck and torso stay fixed, and this pass runs after authored
+    // pose sampling so both values compose without erasing animation channels.
+    this.addPosition(
+      head,
+      0,
+      MESHY_HEAD_DEFAULT_GAP * (value.neckLength - 1),
+      value.headForwardOffset,
+    );
 
+    const upperArmRestAngleWeight = THREE.MathUtils.clamp(
+      Number.isFinite(options.upperArmRestAngleWeight)
+        ? options.upperArmRestAngleWeight as number
+        : 1,
+      0,
+      1,
+    );
     for (const side of ['left', 'right'] as const) {
+      const sideSign = side === 'left' ? 1 : -1;
       this.multiplyPosition(this.root.getObjectByName(`clavicle-${side}`), value.shoulderWidth, 1, 1);
       this.multiplyPosition(this.root.getObjectByName(`shoulder-${side}`), value.shoulderWidth, 1, 1);
+      this.multiplyQuaternion(
+        this.root.getObjectByName(`shoulder-${side}`),
+        0,
+        0,
+        THREE.MathUtils.degToRad(
+          -value.upperArmRestAngle * sideSign * upperArmRestAngleWeight,
+        ),
+      );
       this.multiplyPosition(this.root.getObjectByName(`hip-${side}`), value.hipWidth, 1, 1);
       this.multiplyScale(this.root.getObjectByName(`wrist-${side}`), value.handSize, value.handSize, value.handSize);
-      const sideSign = side === 'left' ? 1 : -1;
       this.multiplyQuaternion(
         this.root.getObjectByName(`hand-rest-orientation-${side}`),
         THREE.MathUtils.degToRad(value.wristRestPitch),

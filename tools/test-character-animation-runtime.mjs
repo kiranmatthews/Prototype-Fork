@@ -157,6 +157,7 @@ try {
   let lowPoseOuterOwnershipRemoved = 0;
   let crawlContactPhase = null;
   let crawlContactWeight = 0;
+  let upperArmRestAngleWeight = null;
   let deformationValues = null;
   let hipsXWhenDeformed = null;
   const fakePlayer = {
@@ -179,6 +180,9 @@ try {
     setAuthoredCrawlContactPhase(phase, weight = 1) {
       crawlContactPhase = phase;
       crawlContactWeight = phase === null ? 0 : weight;
+    },
+    setCharacterUpperArmRestAngleWeight(weight) {
+      upperArmRestAngleWeight = weight;
     },
     setAuthoredLowPoseOuterOwnership(next) {
       lowPoseOuterOwnership = next;
@@ -221,6 +225,7 @@ try {
   near(hips.position.x, 0);
   near(head.position.z, 7);
   near(hipsXWhenDeformed, 0);
+  near(upperArmRestAngleWeight, 1);
 
   // Every state-owned route resolves to its catalog clip.
   const airborneRoutes = new Set([
@@ -246,6 +251,7 @@ try {
       if (actionProgressTimelineIds.has(id))
         near(runtime.diagnostics.timelineTime, actionProgress);
     }
+    near(upperArmRestAngleWeight, id === 'player.idle' ? 1 : 0);
   }
 
   // Unity's attached rope states crossfade for exactly six source frames.
@@ -263,6 +269,7 @@ try {
   tick(0.016);
   near(hips.position.x, ropeHangX);
   near(runtime.diagnostics.transitionBlendWeight, 0);
+  near(upperArmRestAngleWeight, 0);
   tick(UNITY_ROPE_TIMING.attachedBlend);
   near(hips.position.x,
     allIds.indexOf(UNITY_ROPE_CLIP_IDS.climb) + actionProgress);
@@ -561,6 +568,7 @@ try {
   near(runtime.diagnostics.transitionEntryGaitPhase, 0.81);
   near(runtime.diagnostics.transitionEntrySpeed, 0.72);
   near(runtime.diagnostics.transitionBlendWeight, 0);
+  near(upperArmRestAngleWeight, 0);
   near(runtime.diagnostics.motionContext.actionProgress, 0);
   near(runtime.diagnostics.motionContext.inputs.transitionEntryGaitPhase, 0.81);
   near(runtime.diagnostics.motionContext.inputs.transitionEntrySpeed, 0.72);
@@ -571,6 +579,7 @@ try {
   // smoothstep(0.5) = 0.5. The target clip has no scalar channel, so it must
   // blend toward the rig's default 1 rather than the generic numeric zero.
   near(runtime.diagnostics.transitionBlendWeight, 0.5);
+  near(upperArmRestAngleWeight, 0.5);
   near(deformationValues['deform.torso.length'], 1.2);
   near(hips.position.x, (outgoingRunX + allIds.indexOf(PACE_STOP_CLIP_ID)
     + PACE_STOP_CROSSFADE_SECONDS / 2) / 2);
@@ -580,6 +589,7 @@ try {
   tick(paceClip.range.end);
   assert.equal(runtime.activeClipId, PACE_STOP_CLIP_ID);
   assert.equal(runtime.diagnostics.pacingOneShotActive, false);
+  near(upperArmRestAngleWeight, 1);
   near(runtime.diagnostics.motionContext.actionProgress, 1);
   near(hips.position.x, allIds.indexOf(PACE_STOP_CLIP_ID) + paceClip.range.end);
   tick(0.016);

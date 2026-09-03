@@ -86,6 +86,14 @@
     "lookSocket": [0, 0.181, 0.19],
     "maskCenterSocket": [0, 0.2, 0],
     "neckGapFormula": "0.095 * neckLength",
+    "neckGapRange": [-0.38, 0.2375],
+    "headForwardOffsetControl": "headForwardOffset",
+    "headForwardOffsetRange": [-0.5, 0.5],
+    "headScaleControls": {
+      "overall": ["headSize", 0.4, 4],
+      "width": ["headWidth", 0.4, 3],
+      "depth": ["headDepth", 0.4, 3]
+    },
     "collisionChanged": false
   },
   "conversion": [
@@ -97,8 +105,8 @@
     "Kept the meaningful roughness variation and omitted the near-neutral normal plus exactly-zero metallic runtime maps",
     "Rebased the lowest skull point to semantic head-local Y=0",
     "Attached the rigid surface to the existing head bone without adding or renaming joints",
-    "Changed Character Lab neck height to move only the head-local gap; torso, neck bone, and skull scale remain invariant",
-    "Composed the neck-gap offset additively so procedural/keyframed head position remains unchanged",
+    "Changed Character Lab gap/overlap and forward/back controls to move only head-local Y/Z; torso, neck bone, and skull scale remain invariant",
+    "Composed both head offsets additively so procedural/keyframed head position remains intact",
     "Retained empty ear and ponytail compatibility nodes while removing their old visible surfaces",
     "Removed the former visible kangaroo head, neck, necklace, and pendant surfaces",
     "Did not redistribute the original FBX, archive, or expiring Meshy URL"
