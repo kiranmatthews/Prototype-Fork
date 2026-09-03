@@ -11300,7 +11300,7 @@ export class Player {
   }
 
   private canStandOnCrate(box: THREE.Box3): boolean {
-    const retainedRide = this.state === 'ride';
+    const retainedRide = this.state === 'ride' && this.grounded;
     const walkedOffGroundOntoLid =
       this.state === 'air' &&
       this.coyoteTimer > 0 &&
@@ -11310,6 +11310,11 @@ export class Player {
       this.vVel <= 0;
     return (
       (retainedRide || walkedOffGroundOntoLid) &&
+      // Both samples must still be near the lid. A fast fall can miss the top,
+      // land on terrain below during stepAir, and reach collide() as Ride; the
+      // old prev-only test then used the stale above-ground sample to teleport
+      // the feet a whole crate upward onto a lid they never crossed.
+      this.pos.y >= box.max.y - CRATE_STAND_REACH &&
       this.prevPos.y >= box.max.y - CRATE_STAND_REACH &&
       this.crateLidOverlapsSole(box, this.pos.x, this.pos.z)
     );

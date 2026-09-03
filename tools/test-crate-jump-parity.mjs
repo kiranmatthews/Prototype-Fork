@@ -249,6 +249,32 @@ try {
     return { level, player, arrow, wood, lid };
   };
 
+  const createSingleWood = () => {
+    const scene = new THREE.Scene();
+    const data = {
+      v: 1,
+      name: "Crate edge-landing fixture",
+      spawn: [4, 0.02, 4],
+      killY: -20,
+      components: [
+        { t: "platform", p: [0, -0.5, 0], s: [20, 1, 20] },
+        { t: "crate", p: [0, 0, 0], kind: "wood" },
+        { t: "gate", p: [0, 0, -8] },
+      ],
+      groups: [],
+    };
+    const level = new Level(scene, {
+      id: "crate-edge-landing",
+      name: data.name,
+      data,
+    });
+    const player = new Player(scene);
+    player.respawn(level, true);
+    fixtures.push(level);
+    assert.equal(level.crates.length, 1, "edge fixture did not build its crate");
+    return { level, player, crate: level.crates[0] };
+  };
+
   // A blank Metal top is a landing, never an Arrow-style automatic launch.
   // Web deliberately keeps the contact in Air for one tick so all of its
   // trick/board cleanup runs in the normal landing path. The support latch
@@ -291,6 +317,50 @@ try {
     assert.equal(f.player.airGrav, "foot", "Metal landing left air gravity stale");
     assert.equal(f.player.floatAir, false, "Metal landing left float-air stale");
     assert.equal(f.player.grindExitAir, false, "Metal landing left grind-exit air stale");
+  }
+
+  // A fast fall may miss a crate's top, land on terrain below, then enter
+  // collide() as Ride in the same fixed step. A stale previous-foot sample
+  // must not retroactively turn that terrain landing into a full-crate upward
+  // teleport. Both feet samples need to remain inside the legitimate .55m lid
+  // catch band. A genuine shallow step-up in that band still mounts normally.
+  {
+    const missed = createSingleWood();
+    const box = missed.crate.box;
+    const top = box.max.y;
+    const edgeX = box.max.x + CONST.playerHalf.x - 0.12;
+    missed.player.state = "ride";
+    missed.player.grounded = true;
+    missed.player.surfaceName = "platform";
+    missed.player.crateFloor = null;
+    missed.player.crateFloorT = 0;
+    missed.player.prevPos.set(edgeX, top - 0.392, box.getCenter(new THREE.Vector3()).z);
+    missed.player.pos.set(edgeX, top - 0.866, missed.player.prevPos.z);
+    missed.player.vVel = 0;
+    missed.player.speed = 0;
+    const terrainY = missed.player.pos.y;
+    missed.player.collide(missed.level);
+    assert.equal(missed.player.crateFloor, null, "missed lid seeded crate support");
+    assert.ok(
+      missed.player.pos.y < top - 0.55,
+      `missed lid teleported upward (${terrainY} -> ${missed.player.pos.y}; top ${top})`,
+    );
+
+    const shallow = createSingleWood();
+    const shallowBox = shallow.crate.box;
+    const shallowTop = shallowBox.max.y;
+    const shallowX = shallowBox.max.x + CONST.playerHalf.x - 0.12;
+    const shallowZ = shallowBox.getCenter(new THREE.Vector3()).z;
+    shallow.player.state = "ride";
+    shallow.player.grounded = true;
+    shallow.player.surfaceName = "platform";
+    shallow.player.prevPos.set(shallowX, shallowTop - 0.4, shallowZ);
+    shallow.player.pos.copy(shallow.player.prevPos);
+    shallow.player.vVel = 0;
+    shallow.player.speed = 0;
+    shallow.player.collide(shallow.level);
+    assert.equal(shallow.player.crateFloor, shallow.crate, "valid shallow lid catch was rejected");
+    closeTo(shallow.player.pos.y, shallowTop + 0.02, "valid shallow lid catch height");
   }
 
   // Remove the middle Wood support and wait for the Metal lid to enter its
