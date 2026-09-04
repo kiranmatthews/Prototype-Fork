@@ -21,7 +21,7 @@
     "check:camera-speed": "node tools/test-camera-speed-effect.mjs",
     "check:bail-recovery": "node tools/test-ragdoll-recovery.mjs",
     "check:air-rescue": "node tools/test-air-rescue.mjs",
-    "check:crate-types": "node tools/test-life-multihit-crates.mjs",
+    "check:crate-types": "node tools/test-life-multihit-crates.mjs && node tools/test-nitro-clear-switch.mjs",
     "check:crate-jump": "node tools/test-crate-jump-parity.mjs",
     "check:nst-port": "python3 -B tools/test_iga_igz_layout.py && node tools/test-jungle-cliff-port.mjs",
     "check:editor-roundtrip": "node tools/validate-editor-roundtrip.mjs",

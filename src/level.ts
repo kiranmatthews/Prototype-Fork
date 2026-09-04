@@ -101,6 +101,7 @@ export interface Crate {
   fallVel?: number; // >0 while the crate is settling down a smashed stack
   homeY?: number; // authored height, so a respawn can undo settleCrates
   nitroBang?: boolean; // green '!' crate: breaking it detonates every nitro on the map
+  systemicEndNitroBang?: boolean; // derived finish switch: never captured as authored level data
   pending?: boolean; // OUTLINE state: ghost visual, no collision, no interactions — until a '!' fires
   wasOutline?: boolean; // authored as an outline: resets re-ghost it
   groupIds?: number[]; // editor group chain: wires '!' switches to their outlines
@@ -3770,6 +3771,11 @@ export class Level {
       if (!this.crystalPickup) this.placeCampaignCrystal();
       if (!this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
+    // Nitro belongs to the Level instance that owns it. Derive its clear
+    // switch after every builder has finished so ordinary courses, published
+    // replacements, user levels, and the separately-constructed bonus stage
+    // all get the same rule without hard-coded level lists.
+    this.placeSystemicEndNitroBang();
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
@@ -4635,6 +4641,10 @@ export class Level {
     // crates (kind read back off the entity flags; outline wiring keeps its groups)
     const seenGroups = new Set<number>();
     for (const cr of this.crates) {
+      // This switch is a gameplay invariant derived from the Nitro set and
+      // finish gate. Capturing it would freeze an old gate-relative position
+      // into a hand-built level copy, then leave stale duplicates after edits.
+      if (cr.systemicEndNitroBang) continue;
       const kind = cr.nitroBang
         ? "nitrobang"
         : cr.nitro
@@ -6084,6 +6094,29 @@ export class Level {
       (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal,
     ).length;
     return boxes + (this.runMode ? 0 : this.checkpoints.length + this.bonusCrateTotal);
+  }
+
+  get nitroClearDiagnostics(): {
+    nitros: number;
+    switches: number;
+    generated: number;
+    gateDistance: number | null;
+  } {
+    const switches = this.crates.filter((crate) => crate.nitroBang);
+    const generated = switches.filter((crate) => crate.systemicEndNitroBang);
+    const gate = this.gateSpec;
+    return {
+      nitros: this.crates.filter((crate) => crate.nitro).length,
+      switches: switches.length,
+      generated: generated.length,
+      gateDistance:
+        gate && generated[0]
+          ? Math.hypot(
+              generated[0].mesh.position.x - gate.x,
+              generated[0].mesh.position.z - gate.z,
+            )
+          : null,
+    };
   }
 
   setActive(active: boolean): void {
@@ -9431,6 +9464,117 @@ export class Level {
       if (entity.box.distanceToPoint(feet) < 0.8) return false;
     for (const pickup of [this.crystalPickup, this.clockPickup, this.comboOrb])
       if (pickup && pickup.box.distanceToPoint(feet) < 0.8) return false;
+    return true;
+  }
+
+  // A derived Nitro clear switch belongs to this Level only. That distinction
+  // is load-bearing for bonus stages: the parent level is merely suspended,
+  // so its Nitro set and its switch must never be reachable from the bonus
+  // instance (or vice versa).
+  private placeSystemicEndNitroBang(): void {
+    if (
+      this.hudMode === "hub" ||
+      !this.gateSpec ||
+      !this.crates.some((crate) => crate.nitro) ||
+      this.crates.some((crate) => crate.nitroBang)
+    )
+      return;
+
+    this.root.updateMatrixWorld(true);
+    const route = this.bonusCourseRoute();
+    if (!route) {
+      console.warn(`[nitro] no finish approach for ${this.name}`);
+      return;
+    }
+    const courseLength = Math.abs(route.endS - route.startS);
+    const courseDirection = Math.sign(route.endS - route.startS) || 1;
+    // Four metres is unmistakably "at the end" but clears the warp pad's
+    // masonry/glow. Search backward when a narrow deck, collectible, or other
+    // crate occupies the first choice. Centre-line first keeps the switch
+    // obvious; lateral alternatives stop it becoming an accidental roadblock.
+    const finishDistances = [4, 6, 8, 10, 12, 16, 20, 24];
+    const lateralOffsets = [0, 2, -2, 1, -1, 3, -3];
+    let placement: { x: number; z: number; deckY: number } | null = null;
+    for (const requestedDistance of finishDistances) {
+      if (requestedDistance >= courseLength - 1) continue;
+      const s = route.endS - courseDirection * requestedDistance;
+      const sample = this.sampleBonusRoute(route, s);
+      const rightX = -sample.forward.z;
+      const rightZ = sample.forward.x;
+      for (const lateral of lateralOffsets) {
+        const x = sample.point.x + rightX * lateral;
+        const z = sample.point.z + rightZ * lateral;
+        const deckY = this.endNitroBangGroundY(x, z, sample.point.y);
+        if (deckY === null || !this.endNitroBangSiteClear(x, deckY, z))
+          continue;
+        placement = { x, z, deckY };
+        break;
+      }
+      if (placement) break;
+    }
+    if (!placement) {
+      console.warn(`[nitro] no supported finish switch site in ${this.name}`);
+      return;
+    }
+
+    const before = this.crates.length;
+    this.crate(
+      placement.x,
+      placement.deckY,
+      placement.z,
+      "nitrobang",
+      { noAuto: true },
+    );
+    const clearSwitch = this.crates[before];
+    clearSwitch.systemicEndNitroBang = true;
+    clearSwitch.mesh.name = "systemic end Nitro ! crate";
+    clearSwitch.mesh.userData.systemicEndNitroBang = true;
+  }
+
+  // A crate needs a complete footprint, not merely one ray under its centre.
+  // This prevents an automatic switch balancing half off a narrow bridge or
+  // finding a lower floor through a gap in the intended finish deck.
+  private endNitroBangGroundY(
+    x: number,
+    z: number,
+    referenceY: number,
+  ): number | null {
+    const footprint = 0.4;
+    const probes = [
+      [0, 0],
+      [-footprint, -footprint],
+      [-footprint, footprint],
+      [footprint, -footprint],
+      [footprint, footprint],
+    ] as const;
+    const heights: number[] = [];
+    for (const [dx, dz] of probes) {
+      const y = this.bonusRouteGroundY(x + dx, z + dz, referenceY);
+      if (y === null || Math.abs(y - referenceY) > 2.5) return null;
+      heights.push(y);
+    }
+    if (Math.max(...heights) - Math.min(...heights) > 0.75) return null;
+    return heights[0];
+  }
+
+  private endNitroBangSiteClear(x: number, y: number, z: number): boolean {
+    if (!this.bonusSiteClear(x, y, z)) return false;
+    const candidate = new THREE.Box3().setFromCenterAndSize(
+      new THREE.Vector3(x, y + 0.48, z),
+      new THREE.Vector3(1.16, 1.16, 1.16),
+    );
+    if (candidate.intersectsBox(this.finishGlow)) return false;
+    if (this.bonusPlatform?.box.intersectsBox(candidate)) return false;
+    for (const wall of this.walls)
+      if (wall.intersectsBox(candidate)) return false;
+    for (const entity of [
+      ...this.crates,
+      ...this.checkpoints,
+      ...this.enemies,
+    ])
+      if (entity.box.intersectsBox(candidate)) return false;
+    for (const pickup of [this.crystalPickup, this.clockPickup, this.comboOrb])
+      if (pickup?.box.intersectsBox(candidate)) return false;
     return true;
   }
 
@@ -15023,18 +15167,21 @@ export class Level {
     return this.woodPlainTex;
   }
 
-  // White '!' on nitro green: breaking it detonates every nitro on the map.
+  // White '!' on a green inset plate, with the same brushed/riveted shell as
+  // the other indestructible switches: visibly a METAL Nitro detonator rather
+  // than another green wooden box.
   private nitroBangTex: THREE.CanvasTexture | null = null;
   private nitroBangTexture(): THREE.CanvasTexture {
     if (!this.nitroBangTex)
       this.nitroBangTex = Level.makeTex((ctx) => {
-        ctx.fillStyle = "#2fae44";
-        ctx.fillRect(0, 0, 32, 32);
+        this.crateMetalBase(ctx);
         ctx.fillStyle = "#1c7a2c";
-        ctx.fillRect(0, 0, 32, 3);
-        ctx.fillRect(0, 29, 32, 3);
-        ctx.fillRect(0, 0, 3, 32);
-        ctx.fillRect(29, 0, 3, 32);
+        ctx.fillRect(5, 5, 22, 22);
+        ctx.fillStyle = "#2fae44";
+        ctx.fillRect(6, 6, 20, 20);
+        ctx.fillStyle = "#51cf62";
+        ctx.fillRect(6, 6, 20, 2);
+        ctx.fillRect(6, 6, 2, 20);
         this.crateLabel(ctx, "!", 24, "#eafff0", "#0e4a18", 16, 18);
       });
     return this.nitroBangTex;
