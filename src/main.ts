@@ -1483,16 +1483,24 @@ const coastPhysicsReview = new URLSearchParams(window.location.search).has(
   "coastphysics",
 );
 const fieldStudioRequested = location.hash.toLowerCase().includes("fieldstudio");
+const playtestParams = new URLSearchParams(window.location.search);
+const playtestRequested = playtestParams.has("playtest");
 const shellBypass =
   LITE_RENDER ||
   oceanReview ||
   oceanOverview ||
   coastPhysicsReview ||
   fieldStudioRequested ||
-  new URLSearchParams(window.location.search).has("playtest") ||
+  playtestRequested ||
   localStorage.getItem("solProtoEditorOpen") === "1";
 ui.setLifeCheatEnabled(shellBypass);
+// Shared benchmark links select only a registered level, and only when the
+// explicit playtest flag is present. Invalid/missing ids keep normal startup.
+const linkedPlaytestLevel = playtestRequested
+  ? findLevel(playtestParams.get("level") ?? "")
+  : null;
 let current: LevelEntry =
+  linkedPlaytestLevel ??
   (oceanReview
     ? findLevel("beachfront")
     : coastPhysicsReview
@@ -2422,28 +2430,23 @@ function presentCampaignResults(result: ResultsScreenState): void {
 function showCampaignResults(): void {
   player.bankFlyingFruit();
   const definition = campaignLevelById(current.id);
-  if (!definition) {
-    ui.showMessage(
-      "COURSE CLEAR!",
-      "press R / Options to go again",
-      0,
-    );
-    return;
-  }
-  const before = campaign.levelProgress(current.id);
-  const firstClear = !before?.cleared;
+  const before = definition ? campaign.levelProgress(current.id) : null;
+  const firstClear = definition !== null && !before?.cleared;
   const boxes = player.cratesBroken + (level.runMode ? 0 : player.bonusCrates);
   if (!level.runMode && level.totalCrates > 0 && boxes >= level.totalCrates)
     player.gemEarned = true;
-  campaign.commitClear(current.id, {
-    crystal: player.hasCrystal,
-    boxGem: player.gemEarned,
-    comboGem: player.comboGemEarned,
-  });
+  // Source-owned labs and editor courses share the polished results flow,
+  // without manufacturing a canonical save/progress entry for a debug level.
+  if (definition)
+    campaign.commitClear(current.id, {
+      crystal: player.hasCrystal,
+      boxGem: player.gemEarned,
+      comboGem: player.comboGemEarned,
+    });
   campaign.updateInventory(player.lives, player.fruit);
   const result: ResultsScreenState = {
     kind: "normal",
-    levelName: definition.name,
+    levelName: definition?.name ?? current.name,
     boxes,
     totalBoxes: level.totalCrates,
     crystal: player.hasCrystal && !runStartRewards.crystal,

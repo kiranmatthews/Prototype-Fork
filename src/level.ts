@@ -35,6 +35,7 @@ import {
   beachfrontPointAtDistance,
 } from "./beachfrontCourse";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
@@ -2139,6 +2140,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: "astra-chimeworks", name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL },
   {
     id: "backport-lab",
     name: BACKPORT_LAB_LEVEL.name,
