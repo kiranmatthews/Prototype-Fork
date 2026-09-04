@@ -94,6 +94,25 @@ function formatDate(timestamp: number): string {
   }
 }
 
+// Developer chrome deliberately sits outside the semantic GameFlow tree. When
+// M exposes it, these are the only body surfaces exempted from modal inerting.
+const DEBUG_CHROME_SELECTOR = [
+  ".side-wrap",
+  ".hud-build",
+  ".hud-capbadge",
+  "[data-crt-guest-panel-host]",
+  "[data-render-quality-panel-host]",
+  "[data-skateboard-panel-host]",
+  "[data-spin-panel-host]",
+  "visual-treatment-panel",
+  ".ed-panel",
+  ".ed-popwrap",
+  ".ed-marquee",
+  ".ast-root",
+  ".clab",
+  ".pst",
+].join(",");
+
 export class GameFlowUI {
   private root = element("div", "game-shell");
   private panel = element("section", "game-shell-panel");
@@ -123,6 +142,12 @@ export class GameFlowUI {
   private focusBeforeModal: HTMLElement | null = null;
   private readonly gameFlowSurface: GameFlowSurface;
   private preCrtComposited = false;
+  private preCrtHandoffPending = false;
+  private focusFrame: number | null = null;
+  private layoutObserver: ResizeObserver | null = null;
+  private pointerSelectionArmed = false;
+  private pointerClientX: number | null = null;
+  private pointerClientY: number | null = null;
   private maskReady = document.body.classList.contains("game-flow-mask-ready");
 
   constructor(
@@ -144,7 +169,11 @@ export class GameFlowUI {
           maskReady: this.maskReady,
         }),
       () => {
-        if (this.preCrtComposited && this.screen) this.requestGameplayFrame();
+        if (
+          (this.preCrtComposited || this.preCrtHandoffPending) &&
+          this.screen
+        )
+          this.requestGameplayFrame();
       },
     );
     this.injectStyle();
@@ -164,13 +193,46 @@ export class GameFlowUI {
     this.root.append(this.panel, this.cursor);
     document.body.append(this.root, this.transitionCurtain);
     document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
-    this.root.addEventListener("pointermove", (event) => {
+    document.body.classList.toggle("game-debug-visible", this.debugVisible);
+    this.root.setAttribute("aria-modal", String(!this.debugVisible));
+    window.addEventListener("pointermove", (event) => {
+      const moved =
+        event.clientX !== this.pointerClientX ||
+        event.clientY !== this.pointerClientY;
+      this.pointerClientX = event.clientX;
+      this.pointerClientY = event.clientY;
+      if (
+        !this.screen ||
+        this.transitionActive ||
+        this.isDeveloperChromeTarget(event.target)
+      ) {
+        this.cursor.classList.remove("visible");
+        return;
+      }
       this.cursor.style.transform = `translate3d(${event.clientX - 6}px, ${event.clientY - 4}px, 0)`;
       this.cursor.classList.add("visible");
+      if (moved) {
+        this.pointerSelectionArmed = true;
+        const target = event.target instanceof Element
+          ? event.target.closest<HTMLButtonElement>(".game-menu-button")
+          : null;
+        if (target) this.selectPointerButton(target);
+      }
     });
-    this.root.addEventListener("pointerleave", () => this.cursor.classList.remove("visible"));
+    window.addEventListener("pointerout", (event) => {
+      if (!event.relatedTarget) this.cursor.classList.remove("visible");
+    });
     window.addEventListener("keydown", (event) => this.onKey(event));
     window.addEventListener("resize", () => this.invalidatePreCrt());
+    window.visualViewport?.addEventListener("resize", () => this.invalidatePreCrt());
+    window.visualViewport?.addEventListener("scroll", () => this.invalidatePreCrt());
+    this.panel.addEventListener("scroll", () => this.invalidatePreCrt(), {
+      passive: true,
+    });
+    if (typeof ResizeObserver === "function") {
+      this.layoutObserver = new ResizeObserver(() => this.invalidatePreCrt());
+      this.observePreCrtLayout();
+    }
     void rooReady.then(() => this.invalidatePreCrt());
   }
 
@@ -223,18 +285,28 @@ export class GameFlowUI {
   }
 
   /**
-   * Hide only the visual panel while retaining its real buttons as the pointer,
-   * focus and accessibility plane. The cartoon cursor remains native DOM.
+   * Request presentation ownership without hiding the semantic DOM yet. The
+   * class flips only after drawPreCrt has painted successfully in this task, so
+   * the browser's next composite contains exactly one menu image.
    */
   setPreCrtComposited(composited: boolean): void {
-    if (composited === this.preCrtComposited) return;
-    this.preCrtComposited = composited;
-    this.root.classList.toggle("precrt-composited", composited);
-    this.root.toggleAttribute("data-precrt-composited", composited);
-    // Main calls drawPreCrt in this same admitted frame. Dirty the cache
-    // without requesting a redundant third pause frame.
-    if (composited) this.gameFlowSurface.invalidate();
-    else this.gameFlowSurface.deactivate();
+    if (composited) {
+      if (this.preCrtComposited || this.preCrtHandoffPending) return;
+      this.preCrtHandoffPending = true;
+      this.root.toggleAttribute("data-precrt-handoff-pending", true);
+      this.gameFlowSurface.invalidate();
+      return;
+    }
+
+    const owned = this.preCrtComposited || this.preCrtHandoffPending;
+    this.preCrtComposited = false;
+    this.preCrtHandoffPending = false;
+    this.root.classList.remove("precrt-composited");
+    this.root.removeAttribute("data-precrt-composited");
+    this.root.removeAttribute("data-precrt-handoff-pending");
+    if (this.thumbnailCaptured)
+      this.root.classList.remove("pause-thumbnail-pending");
+    if (owned) this.gameFlowSurface.deactivate();
   }
 
   /** Paint the cached menu quad into the caller's completed pre-CRT target. */
@@ -243,8 +315,17 @@ export class GameFlowUI {
     inputSize: Readonly<GameFlowSurfaceSize>,
     target: THREE.WebGLRenderTarget | null = renderer.getRenderTarget(),
   ): boolean {
-    if (!this.preCrtComposited) return false;
-    return this.gameFlowSurface.drawPreCrt(renderer, inputSize, target);
+    if (!this.preCrtComposited && !this.preCrtHandoffPending) return false;
+    const drawn = this.gameFlowSurface.drawPreCrt(renderer, inputSize, target);
+    if (drawn && this.preCrtHandoffPending) {
+      this.preCrtHandoffPending = false;
+      this.preCrtComposited = true;
+      this.root.removeAttribute("data-precrt-handoff-pending");
+      this.root.classList.remove("pause-thumbnail-pending");
+      this.root.classList.add("precrt-composited");
+      this.root.toggleAttribute("data-precrt-composited", true);
+    }
+    return drawn;
   }
 
   /** Modal screens hold a still gameplay frame until their world changes. */
@@ -266,16 +347,20 @@ export class GameFlowUI {
   }
 
   hide(): void {
+    this.cancelScheduledFocus();
+    this.setPreCrtComposited(false);
     this.cursor.classList.remove("visible");
     this.screen = null;
     this.previousScreen = null;
     this.slotOrigin = "launch";
     this.operationStatus = "";
+    this.root.classList.remove("pause-thumbnail-pending");
     this.root.hidden = true;
     document.body.classList.remove("game-shell-modal", "game-shell-paused", "game-shell-results");
     this.syncVortexBodyClass();
     this.releaseModalFocus();
     this.gameFlowSurface.deactivate();
+    this.layoutObserver?.disconnect();
   }
 
   showPause(state: PauseScreenState): void {
@@ -357,15 +442,44 @@ export class GameFlowUI {
     const width = Math.max(1, source.width);
     const height = Math.max(1, source.height);
     const targetWidth = 640;
-    const targetHeight = Math.round(targetWidth * height / width);
+    const targetHeight = 360;
     if (target.width !== targetWidth || target.height !== targetHeight) {
       target.width = targetWidth;
       target.height = targetHeight;
     }
     const context = target.getContext("2d");
     try {
-      if (!context) return;
-      context.drawImage(source, 0, 0, target.width, target.height);
+      if (!context) {
+        this.root.classList.remove("pause-thumbnail-pending");
+        return;
+      }
+      // The card is always 16:9. Crop the live viewport around its centre
+      // instead of stretching portrait/ultrawide gameplay when Canvas intrinsic
+      // dimensions settle on the first pause frame.
+      const targetAspect = targetWidth / targetHeight;
+      const sourceAspect = width / height;
+      let sourceX = 0;
+      let sourceY = 0;
+      let sourceWidth = width;
+      let sourceHeight = height;
+      if (sourceAspect > targetAspect) {
+        sourceWidth = height * targetAspect;
+        sourceX = (width - sourceWidth) * 0.5;
+      } else {
+        sourceHeight = width / targetAspect;
+        sourceY = (height - sourceHeight) * 0.5;
+      }
+      context.drawImage(
+        source,
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        0,
+        0,
+        targetWidth,
+        targetHeight,
+      );
       this.thumbnailCaptured = true;
       // The pause surface was drawn before this copy existed. Queue exactly one
       // new frozen frame so its cached thumbnail can join the pre-CRT card.
@@ -373,6 +487,7 @@ export class GameFlowUI {
       this.requestGameplayFrame();
     } catch {
       // A lost WebGL frame should not make the pause menu unusable.
+      this.root.classList.remove("pause-thumbnail-pending");
     }
   }
 
@@ -446,6 +561,7 @@ export class GameFlowUI {
 
   private render(): void {
     this.claimModalFocus();
+    this.cancelScheduledFocus();
     this.root.hidden = false;
     document.body.classList.add("game-shell-modal");
     document.body.classList.toggle(
@@ -462,8 +578,13 @@ export class GameFlowUI {
     this.panel.className = `game-shell-panel game-screen-${this.screen ?? "none"}`;
     this.root.setAttribute("aria-label", this.screenLabel());
     this.panel.replaceChildren();
+    this.pointerSelectionArmed = false;
     this.thumbnail = null;
     this.thumbnailCaptured = false;
+    this.root.classList.toggle(
+      "pause-thumbnail-pending",
+      this.screen === "pause",
+    );
     this.requestGameplayFrame();
     this.navButtons = [];
     this.selected = 0;
@@ -478,6 +599,7 @@ export class GameFlowUI {
     else if (this.screen === "pause") this.renderPause();
     else if (this.screen === "options") this.renderOptions();
     else if (this.screen === "gameover") this.renderGameOver();
+    this.observePreCrtLayout();
     this.syncVortexBodyClass();
     this.syncSelection();
     this.seedGamepad();
@@ -884,6 +1006,7 @@ export class GameFlowUI {
 
   private renderResults(state: ResultsScreenState): void {
     this.claimModalFocus();
+    this.cancelScheduledFocus();
     this.root.hidden = false;
     document.body.classList.add("game-shell-modal", "game-shell-results");
     document.body.classList.remove("game-shell-paused");
@@ -891,8 +1014,10 @@ export class GameFlowUI {
     this.panel.className = "game-shell-panel game-screen-results";
     this.root.setAttribute("aria-label", "Run results");
     this.panel.replaceChildren();
+    this.pointerSelectionArmed = false;
     this.thumbnail = null;
     this.thumbnailCaptured = false;
+    this.root.classList.remove("pause-thumbnail-pending");
     this.requestGameplayFrame();
     this.navButtons = [];
     this.selected = 0;
@@ -920,6 +1045,7 @@ export class GameFlowUI {
     );
     card.append(eyebrow, title, tally, awards, actions);
     this.panel.appendChild(card);
+    this.observePreCrtLayout();
     this.syncVortexBodyClass();
     this.syncSelection();
     this.seedGamepad();
@@ -989,14 +1115,26 @@ export class GameFlowUI {
       action();
     });
     button.addEventListener("pointerenter", () => {
+      if (this.pointerSelectionArmed) this.selectPointerButton(button);
+    });
+    button.addEventListener("pointerdown", () => this.cancelScheduledFocus());
+    button.addEventListener("focus", () => {
       const index = this.navButtons.indexOf(button);
       if (index >= 0 && index !== this.selected) {
         this.selected = index;
-        this.syncSelection();
+        this.syncSelection(false);
       }
     });
     this.navButtons.push(button);
     return button;
+  }
+
+  private selectPointerButton(button: HTMLButtonElement): void {
+    this.cancelScheduledFocus();
+    const index = this.navButtons.indexOf(button);
+    if (index < 0 || index === this.selected || button.disabled) return;
+    this.selected = index;
+    this.syncSelection(false);
   }
 
   private onKey(event: KeyboardEvent): void {
@@ -1006,10 +1144,18 @@ export class GameFlowUI {
     if (event.code === "KeyM" && !event.repeat) {
       this.debugVisible = !this.debugVisible;
       document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
+      document.body.classList.toggle("game-debug-visible", this.debugVisible);
       localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");
+      this.root.setAttribute("aria-modal", String(!this.debugVisible));
+      if (this.debugVisible) this.cancelScheduledFocus();
+      if (this.screen) this.claimModalFocus();
       return;
     }
+    if (this.isDeveloperChromeTarget(target)) return;
     if (!this.screen || this.transitionActive || event.repeat) return;
+    // With developer chrome exposed, let native Tab leave the roving GameFlow
+    // buttons and reach those real controls. Arrows/gamepad still own the menu.
+    if (this.debugVisible && event.code === "Tab") return;
     if (event.code === "Tab") {
       event.preventDefault();
       this.moveSelection(event.shiftKey ? -1 : 1);
@@ -1104,7 +1250,7 @@ export class GameFlowUI {
     } else if (this.screen === "pause") this.callbacks.onResume();
   }
 
-  private syncSelection(): void {
+  private syncSelection(focusSelected = true): void {
     if (!this.navButtons[this.selected] || this.navButtons[this.selected].disabled)
       this.selected = this.navButtons.findIndex((button) => !button.disabled);
     this.navButtons.forEach((button, index) => {
@@ -1113,14 +1259,46 @@ export class GameFlowUI {
       button.setAttribute("tabindex", active ? "0" : "-1");
     });
     const selected = this.navButtons[this.selected];
-    if (selected && !selected.disabled)
-      requestAnimationFrame(() => selected.focus({ preventScroll: true }));
+    this.cancelScheduledFocus();
+    if (focusSelected && selected && !selected.disabled) {
+      this.focusFrame = requestAnimationFrame(() => {
+        this.focusFrame = null;
+        if (
+          selected.isConnected &&
+          this.navButtons[this.selected] === selected &&
+          !selected.disabled
+        )
+          selected.focus({ preventScroll: true });
+      });
+    }
     this.invalidatePreCrt();
+  }
+
+  private cancelScheduledFocus(): void {
+    if (this.focusFrame === null) return;
+    cancelAnimationFrame(this.focusFrame);
+    this.focusFrame = null;
+  }
+
+  private observePreCrtLayout(): void {
+    const observer = this.layoutObserver;
+    if (!observer) return;
+    observer.disconnect();
+    observer.observe(this.root);
+    observer.observe(this.panel);
+    for (const node of this.panel.querySelectorAll<HTMLElement>(
+      ".timber-card, .game-over-layout, .game-over-copy, .game-menu-button",
+    ))
+      observer.observe(node);
   }
 
   private invalidatePreCrt(): void {
     this.gameFlowSurface.invalidate();
-    if (this.preCrtComposited && this.screen) this.requestGameplayFrame();
+    if (
+      (this.preCrtComposited || this.preCrtHandoffPending) &&
+      this.screen
+    )
+      this.requestGameplayFrame();
   }
 
   private formatTime(time: number): string {
@@ -1152,7 +1330,7 @@ export class GameFlowUI {
       this.focusBeforeModal = document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
-    if (this.modalAriaHidden.size) return;
+    this.root.setAttribute("aria-modal", String(!this.debugVisible));
     for (const child of Array.from(document.body.children)) {
       if (
         !(child instanceof HTMLElement) ||
@@ -1160,6 +1338,11 @@ export class GameFlowUI {
         child === this.transitionCurtain
       )
         continue;
+      if (this.debugVisible && this.isDeveloperChromeHost(child)) {
+        this.restoreModalElement(child);
+        continue;
+      }
+      if (this.modalAriaHidden.has(child)) continue;
       this.modalAriaHidden.set(child, child.getAttribute("aria-hidden"));
       child.setAttribute("aria-hidden", "true");
       if (!child.inert) {
@@ -1167,6 +1350,34 @@ export class GameFlowUI {
         this.inertedElements.push(child);
       }
     }
+  }
+
+  private restoreModalElement(element: HTMLElement): void {
+    if (this.modalAriaHidden.has(element)) {
+      const previous = this.modalAriaHidden.get(element) ?? null;
+      if (previous === null) element.removeAttribute("aria-hidden");
+      else element.setAttribute("aria-hidden", previous);
+      this.modalAriaHidden.delete(element);
+    }
+    const inertIndex = this.inertedElements.indexOf(element);
+    if (inertIndex >= 0) {
+      element.inert = false;
+      this.inertedElements.splice(inertIndex, 1);
+    }
+  }
+
+  private isDeveloperChromeHost(element: HTMLElement): boolean {
+    return (
+      element.matches(DEBUG_CHROME_SELECTOR) ||
+      element.querySelector(DEBUG_CHROME_SELECTOR) !== null
+    );
+  }
+
+  private isDeveloperChromeTarget(target: EventTarget | null): boolean {
+    return (
+      target instanceof Element &&
+      target.closest(DEBUG_CHROME_SELECTOR) !== null
+    );
   }
 
   private releaseModalFocus(): void {
@@ -1196,7 +1407,7 @@ export class GameFlowUI {
       }
       .game-shell {
         position: fixed; z-index: 60; inset: 0; overflow: hidden;
-        color: #fff7d6; cursor: none; pointer-events: auto;
+        color: #fff7d6; cursor: none; pointer-events: none;
         font-family: Roo, Impact, 'Arial Black', sans-serif;
       }
       .game-shell, .game-shell * { box-sizing: border-box; }
@@ -1205,40 +1416,44 @@ export class GameFlowUI {
         content: ''; position: absolute; inset: 0; z-index: -2;
         background: radial-gradient(circle at 50% 38%, rgba(31,58,100,.26), rgba(3,5,12,.86) 66%, #020308 100%);
       }
-      /* The semantic DOM remains fully laid out, focusable and clickable while
-         its visual twin is painted below CRT. Only the panel/backdrop disappear;
-         the enlarged cartoon pointer stays sharp and event-free above both. */
+      /* The semantic DOM remains fully laid out and its buttons remain the real
+         hit plane. The handoff class is added only after the cached surface has
+         drawn in the same task, so there is never a two-image opacity crossfade. */
       .game-shell.precrt-composited::before { opacity: 0; }
       .game-shell.precrt-composited .game-shell-panel { opacity: 0; }
+      .game-shell.precrt-composited .game-shell-panel,
+      .game-shell.precrt-composited .game-over-mask-fallback { transition: none; }
       .game-shell.precrt-composited .game-menu-button:focus-visible { outline: none; }
+      .game-shell.pause-thumbnail-pending .game-shell-panel { opacity: 0; transition: none; }
       body.game-flow-vortex .game-shell::before {
         background: radial-gradient(circle at 50% 43%, rgba(4,5,14,.08), rgba(3,5,12,.34) 62%, rgba(2,3,8,.72) 100%);
       }
       body.game-shell-results .game-shell::before { background: transparent; backdrop-filter: none; }
-      .game-shell-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); box-sizing: border-box; transition: opacity .18s ease; }
+      .game-shell-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); box-sizing: border-box; pointer-events: none; transition: none; }
       .timber-card {
         position: relative; border: 5px solid #5d2d17; border-radius: 15px 10px 17px 12px;
         background:
           linear-gradient(92deg, transparent 0 12%, rgba(92,42,15,.1) 12.4% 13%, transparent 13.3% 58%, rgba(92,42,15,.08) 58.5% 59%, transparent 59.4%),
           linear-gradient(180deg, var(--game-paper-light), var(--game-paper) 56%, var(--game-paper-dark));
-        color: var(--game-ink); box-shadow: inset 0 3px 0 rgba(255,255,255,.35), inset 0 -8px 0 rgba(87,36,13,.16), 0 9px 0 #35190f, 0 18px 40px rgba(0,0,0,.62);
+        color: var(--game-ink); box-shadow: inset 0 3px 0 rgba(255,255,255,.35), inset 0 -8px 0 rgba(87,36,13,.16), 0 9px 0 #35190f, 0 18px 40px rgba(0,0,0,.62); pointer-events: auto; transform: none;
       }
       .timber-card::before, .timber-card::after { content: ''; position: absolute; pointer-events: none; background: #8a491f; border: 2px solid #4a230f; border-radius: 50%; width: 9px; height: 9px; box-shadow: inset 1px 1px 0 #d98a42; }
       .timber-card::before { top: 9px; left: 10px; }
       .timber-card::after { right: 10px; bottom: 9px; }
       .game-eyebrow { color: #703315; font: 400 clamp(14px, 1.6vw, 21px)/1 Roo, Impact, sans-serif; letter-spacing: .12em; text-align: center; }
-      .game-launch-card { width: min(520px, 90vw); padding: clamp(24px, 5vh, 48px) clamp(25px, 6vw, 64px) 24px; transform: rotate(-.35deg); }
+      .game-launch-card { width: min(520px, 90vw); padding: clamp(24px, 5vh, 48px) clamp(25px, 6vw, 64px) 24px; }
       .game-logo { margin: 5px 0 24px; display: grid; text-align: center; line-height: .72; filter: drop-shadow(0 6px 0 #68200e); }
-      .game-logo span { font-size: clamp(66px, 12vw, 122px); color: var(--game-yellow); -webkit-text-stroke: 4px #b83a13; paint-order: stroke fill; transform: rotate(-2deg); }
-      .game-logo strong { font-size: clamp(52px, 9vw, 90px); color: #ef4b2c; -webkit-text-stroke: 3px #651d12; paint-order: stroke fill; transform: rotate(2deg); }
+      .game-logo span { font-size: clamp(66px, 12vw, 122px); color: var(--game-yellow); -webkit-text-stroke: 4px #b83a13; paint-order: stroke fill; }
+      .game-logo strong { font-size: clamp(52px, 9vw, 90px); color: #ef4b2c; -webkit-text-stroke: 3px #651d12; paint-order: stroke fill; }
       .game-menu-list { display: flex; flex-direction: column; align-items: stretch; gap: 7px; }
-      .game-menu-button { position: relative; min-height: 48px; border: 0; background: transparent; color: #63230e; font: 400 clamp(24px, 3.5vw, 38px)/1 Roo, Impact, sans-serif; letter-spacing: .035em; text-shadow: 0 2px 0 rgba(255,235,151,.6); cursor: none; transition: transform .12s ease, color .12s ease, filter .12s ease; }
-      .game-menu-button::before { content: ''; position: absolute; left: 2px; top: 50%; width: 0; height: 0; opacity: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 17px solid #218d3c; transform: translate(-9px, -50%); filter: drop-shadow(1px 1px 0 #103514); transition: .12s ease; }
-      .game-menu-button.selected { color: #f05a20; transform: scale(1.07) rotate(-1deg); filter: drop-shadow(0 2px 0 #fff0a3); }
-      .game-menu-button.selected::before { opacity: 1; transform: translate(0, -50%); }
-      .game-menu-button:focus-visible { outline: 3px solid #fff0a3; outline-offset: 2px; border-radius: 8px; }
+      .game-menu-button { position: relative; min-height: 48px; border: 0; background: transparent; color: #63230e; font: 400 clamp(24px, 3.5vw, 38px)/1 Roo, Impact, sans-serif; letter-spacing: .035em; text-shadow: 0 2px 0 rgba(255,235,151,.6); cursor: none; pointer-events: auto; transition: none; transform: none; }
+      .game-menu-button::before { content: ''; position: absolute; left: 2px; top: 50%; width: 0; height: 0; opacity: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 17px solid #218d3c; transform: translate(0, -50%); filter: drop-shadow(1px 1px 0 #103514); transition: none; }
+      .game-menu-button.selected { color: #f05a20; transform: none; filter: drop-shadow(0 2px 0 #fff0a3); }
+      .game-menu-button.selected:not(.game-save-slot) { background: rgba(255,244,183,.22); box-shadow: inset 0 0 0 2px rgba(240,90,32,.40); }
+      .game-menu-button.selected::before { opacity: 1; }
+      .game-menu-button:focus-visible { outline: none; }
       .game-menu-button.danger { color: #9a281b; }
-      .game-menu-button:disabled { color: rgba(70,36,22,.34); filter: grayscale(1); }
+      .game-menu-button:disabled { color: #462416; opacity: .34; filter: none; }
       .game-input-hint { margin: 20px 0 0; text-align: center; color: #6e3a20; font: 700 12px/1.4 ui-monospace, Menlo, monospace; letter-spacing: .06em; }
       .game-slot-card { width: min(700px, 92vw); padding: 30px clamp(22px, 5vw, 54px); }
       .game-panel-title { margin: 0; text-align: center; color: #f05a20; font: 400 clamp(40px, 7vw, 70px)/1 Roo, Impact, sans-serif; -webkit-text-stroke: 2px #6c2512; paint-order: stroke fill; }
@@ -1246,17 +1461,17 @@ export class GameFlowUI {
       .game-save-slots { display: grid; gap: 10px; }
       .game-save-slot { min-height: 90px; padding: 13px 24px; border: 3px solid #7f3c1b; border-radius: 9px 13px 8px 12px; background: rgba(255,226,147,.28); text-align: left; }
       .game-save-slot::before { left: -25px; }
-      .game-save-slot.selected { transform: scale(1.025) rotate(-.3deg); background: rgba(255,244,183,.62); }
+      .game-save-slot.selected { transform: none; background: rgba(255,244,183,.68); }
       .game-save-slot-inner { display: grid; grid-template-columns: 1fr auto; gap: 5px 18px; width: 100%; }
       .game-slot-number { font-size: clamp(24px, 4vw, 35px); }
       .game-slot-detail { align-self: end; text-align: right; font-size: clamp(16px, 2.6vw, 24px); color: #7a3218; }
       .game-slot-date { grid-column: 1 / -1; font: 700 11px/1.2 ui-monospace, Menlo, monospace; color: #754a2c; }
       .game-secondary-action { margin-top: 16px; }
       .game-pause-layout { width: min(1080px, 96vw); max-height: calc(100vh - 36px); display: grid; grid-template-columns: minmax(280px, 1.1fr) minmax(250px, .72fr); grid-template-rows: auto auto; gap: 20px; align-items: start; }
-      .game-pause-preview { padding: 10px 10px 18px; transform: rotate(-.5deg); }
+      .game-pause-preview { padding: 10px 10px 18px; }
       .game-pause-thumbnail { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #090b12; border: 4px solid #54280f; box-sizing: border-box; }
       .game-preview-name { margin: 12px 4px 0; text-align: center; color: #f06420; font-size: clamp(27px, 4vw, 46px); line-height: 1; }
-      .game-pause-actions { padding: 24px 42px 28px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; transform: rotate(.45deg); }
+      .game-pause-actions { padding: 24px 42px 28px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
       .game-pause-actions .game-eyebrow { margin-bottom: 18px; }
       .game-progress-card { grid-column: 1 / -1; padding: 18px 28px 22px; }
       .game-progress-head { display: flex; justify-content: space-between; align-items: baseline; }
@@ -1280,7 +1495,7 @@ export class GameFlowUI {
       .game-toggle.toggle-off strong { color: #a52f1c; }
       .game-over-layout { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.18); overflow: hidden; }
       .game-over-layout::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 44%, rgba(176,55,13,.18), transparent 37%), radial-gradient(ellipse at 50% 100%, #220805, transparent 48%); }
-      .game-over-mask-fallback { width: min(760px, 84vw, calc(72vh * 1.15)); aspect-ratio: 1.15 / 1; background: center / min(300px, 43vw) no-repeat url('${import.meta.env.BASE_URL}crossbones.png'); filter: drop-shadow(0 0 35px rgba(255,91,19,.34)); transition: opacity .18s; }
+      .game-over-mask-fallback { width: min(760px, 84vw, calc(72vh * 1.15)); aspect-ratio: 1.15 / 1; background: center / min(300px, 43vw) no-repeat url('${import.meta.env.BASE_URL}crossbones.png'); filter: drop-shadow(0 0 35px rgba(255,91,19,.34)); transition: none; }
       body.game-flow-mask-ready .game-over-mask-fallback { opacity: 0; }
       .game-over-copy { position: absolute; left: 50%; bottom: max(5vh, env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(840px, 94vw); display: grid; grid-template-columns: 1fr auto; gap: 5px 35px; align-items: end; }
       .game-over-title { grid-column: 1 / -1; margin: 0; text-align: center; color: #ffb42f; font: 400 clamp(54px, 10vw, 112px)/.85 Roo, Impact, sans-serif; -webkit-text-stroke: 3px #5b160d; paint-order: stroke fill; filter: drop-shadow(0 6px 0 #250807); }
@@ -1289,7 +1504,7 @@ export class GameFlowUI {
       .game-over-actions .game-menu-button { color: #fff; text-shadow: 0 3px 0 #111; }
       .game-over-actions .game-menu-button.selected { color: #ff9b20; }
       .game-screen-results { place-items: center end; background: linear-gradient(90deg, transparent 0 38%, rgba(3,5,10,.24) 52%, rgba(3,5,10,.85) 100%); backdrop-filter: none; }
-      .game-results-card { width: min(540px, 46vw); min-width: 390px; padding: 26px 34px 30px; margin-right: 4vw; transform: rotate(.25deg); }
+      .game-results-card { width: min(540px, 46vw); min-width: 390px; padding: 26px 34px 30px; margin-right: 4vw; }
       .game-results-title { margin: 7px 0 17px; text-align: center; color: #f05a20; font-size: clamp(32px, 4vw, 52px); line-height: 1; }
       .game-results-tally { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
       .game-results-tally div { display: grid; padding: 10px 14px; background: rgba(92,43,18,.14); border: 2px solid rgba(91,41,17,.55); border-radius: 8px; }
@@ -1322,6 +1537,22 @@ export class GameFlowUI {
       body.game-shell-transitioning [data-spin-panel-host],
       body.game-shell-transitioning visual-treatment-panel { opacity: 0 !important; pointer-events: none !important; }
       body.game-shell-modal .game-hud-layer, body.game-warp-room .game-hud-layer { opacity: 0 !important; pointer-events: none !important; }
+      /* M is an explicit developer override. Its tools sit above the GameFlow
+         semantic buttons but below the transition curtain's hard input guard. */
+      body.game-debug-visible .side-wrap,
+      body.game-debug-visible .hud-build,
+      body.game-debug-visible .hud-capbadge,
+      body.game-debug-visible [data-crt-guest-panel-host],
+      body.game-debug-visible [data-render-quality-panel-host],
+      body.game-debug-visible [data-skateboard-panel-host],
+      body.game-debug-visible [data-spin-panel-host],
+      body.game-debug-visible visual-treatment-panel,
+      body.game-debug-visible .ed-panel,
+      body.game-debug-visible .ed-popwrap,
+      body.game-debug-visible .ed-marquee,
+      body.game-debug-visible .ast-root,
+      body.game-debug-visible .clab,
+      body.game-debug-visible .pst { z-index: 80 !important; }
       body.game-debug-hidden .side-wrap,
       body.game-debug-hidden .hud-build,
       body.game-debug-hidden .hud-capbadge,
@@ -1337,9 +1568,6 @@ export class GameFlowUI {
       body.game-debug-hidden .clab,
       body.game-debug-hidden .pst { display: none !important; }
       body.game-debug-hidden.game-field-studio-open .pst { display: block !important; }
-      @media (hover: hover) {
-        .game-menu-button:hover:not(:disabled) { color: #f05a20; transform: scale(1.05) rotate(-.7deg); }
-      }
       @media (pointer: coarse) {
         .game-shell { cursor: auto; }
         .game-menu-button { cursor: pointer; min-height: 56px; }
@@ -1373,7 +1601,7 @@ export class GameFlowUI {
         .game-progress-card { grid-column: 1 / -1; width: auto; padding: 10px 16px 12px; }
       }
       @media (prefers-reduced-motion: reduce) {
-        .game-menu-button, .game-menu-button::before, .game-transition-curtain, .game-shell-panel { transition-duration: .01ms !important; }
+        .game-transition-curtain { transition-duration: .01ms !important; }
       }
     `;
     document.head.appendChild(style);

@@ -39,25 +39,37 @@ assert.match(
   /resources\.texture\.dispose\(\);[\s\S]{0,120}resources\.canvas\.width = 1;[\s\S]{0,80}resources\.canvas\.height = 1;/,
   "inactive gameplay must release GPU storage and collapse the menu canvas",
 );
+const handoffRequest =
+  flow.match(/setPreCrtComposited\(composited: boolean\): void \{[\s\S]*?\n  \}/)?.[0] ?? "";
 assert.match(
-  flow,
-  /setPreCrtComposited\(composited: boolean\)[\s\S]{0,500}classList\.toggle\("precrt-composited", composited\)/,
-  "GameFlowUI must expose an explicit compositing/fallback switch",
+  handoffRequest,
+  /this\.preCrtHandoffPending = true/,
+  "requesting GameFlow composition must stage an atomic handoff",
+);
+assert.doesNotMatch(
+  handoffRequest,
+  /classList\.(?:add|toggle)\([^)]*precrt-composited/,
+  "the semantic DOM must remain visible until the cached surface draws",
 );
 assert.match(
   flow,
-  /drawPreCrt\([\s\S]{0,400}this\.gameFlowSurface\.drawPreCrt/,
-  "GameFlowUI must expose the cached pre-CRT draw hook",
+  /drawPreCrt\([\s\S]{0,500}this\.gameFlowSurface\.drawPreCrt[\s\S]{0,500}classList\.add\("precrt-composited"\)/,
+  "a successful cached draw must atomically commit pre-CRT ownership",
 );
 assert.match(
   flow,
   /\.game-shell\.precrt-composited \.game-shell-panel \{ opacity: 0; \}/,
   "compositing must hide only the visual panel",
 );
-assert.doesNotMatch(
+assert.match(
   flow,
-  /\.game-shell\.precrt-composited \.game-shell-panel \{[^}]*pointer-events\s*:\s*none/,
-  "the transparent semantic panel must retain pointer hit testing",
+  /\.game-shell \{[\s\S]{0,180}pointer-events: none/,
+  "the full-screen semantic shell must not shield developer chrome",
+);
+assert.match(
+  flow,
+  /\.game-menu-button \{[^}]*pointer-events: auto/,
+  "real semantic buttons must remain pointer hit targets",
 );
 assert.match(
   flow,
@@ -66,7 +78,7 @@ assert.match(
 );
 assert.match(
   flow,
-  /private syncSelection\(\): void \{[\s\S]{0,700}this\.invalidatePreCrt\(\);/,
+  /private syncSelection\(focusSelected = true\): void \{[\s\S]{0,900}this\.invalidatePreCrt\(\);/,
   "keyboard/gamepad/pointer selection changes must invalidate the mirror",
 );
 assert.match(

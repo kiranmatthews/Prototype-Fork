@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "check:levels": "node tools/validate-levels.mjs",
-    "check:campaign": "node tools/test-campaign-flow.mjs && node tools/test-campaign-collectible-visibility.mjs && node tools/test-campaign-performance.mjs && node tools/test-gouraud-context-presets.mjs && node tools/test-game-flow-surface.mjs && node tools/test-game-flow-vortex.mjs",
+    "check:campaign": "node tools/test-campaign-flow.mjs && node tools/test-campaign-collectible-visibility.mjs && node tools/test-campaign-performance.mjs && node tools/test-gouraud-context-presets.mjs && node tools/test-game-flow-surface.mjs && node tools/test-game-flow-interaction.mjs && node tools/test-game-flow-vortex.mjs",
     "check:unity-ports": "node tools/test-unity-level-ports.mjs && node tools/test-beachside-merge.mjs && node tools/test-beachfront-cliff.mjs && node tools/test-wood-path-kit.mjs && node tools/test-island-shelf.mjs && node tools/test-island-shore-foam.mjs && node tools/test-crate-rest-surface.mjs && node tools/test-coastal-street-kit.mjs && node tools/test-unity-sand-material.mjs",
     "check:ground": "node tools/validate-ground-acceleration.mjs",
     "check:crouch-jump": "node tools/test-crouch-jump-slam.mjs",

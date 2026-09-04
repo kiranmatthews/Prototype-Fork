@@ -61,6 +61,7 @@ export interface GameFlowSurfaceButton {
   valueLabel: string;
   color: string;
   valueColor: string;
+  opacity: number;
   fontFamily: string;
   fontSize: number;
   fontWeight: string;
@@ -163,9 +164,27 @@ const TEXT_SELECTOR = [
 
 const PREVIOUS_VIEWPORT = new THREE.Vector4();
 const PREVIOUS_SCISSOR = new THREE.Vector4();
+export const GAME_FLOW_MAX_RASTER_PIXELS = 2_073_600;
 
 function finiteDimension(value: number): number {
   return Number.isFinite(value) ? Math.max(1, Math.round(value)) : 1;
+}
+
+/** Keep Canvas2D uploads bounded while the quad still covers the full target. */
+export function gameFlowRasterSize(
+  width: number,
+  height: number,
+): GameFlowSurfaceSize {
+  const targetWidth = finiteDimension(width);
+  const targetHeight = finiteDimension(height);
+  const pixels = targetWidth * targetHeight;
+  if (pixels <= GAME_FLOW_MAX_RASTER_PIXELS)
+    return { width: targetWidth, height: targetHeight };
+  const scale = Math.sqrt(GAME_FLOW_MAX_RASTER_PIXELS / pixels);
+  return {
+    width: Math.max(1, Math.floor(targetWidth * scale)),
+    height: Math.max(1, Math.floor(targetHeight * scale)),
+  };
 }
 
 function finiteCssNumber(value: string, fallback: number): number {
@@ -175,6 +194,39 @@ function finiteCssNumber(value: string, fallback: number): number {
 
 function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));
+}
+
+/** getComputedStyle normally returns rgb()/rgba(); strip only its alpha. */
+function opaqueCssColor(value: string, fallback: string): string {
+  if (!/^rgba?\(/i.test(value)) return value || fallback;
+  const components = value.match(/-?(?:\d+\.?\d*|\.\d+)%?/g);
+  if (!components || components.length < 3) return fallback;
+  return `rgb(${components[0]} ${components[1]} ${components[2]})`;
+}
+
+function cssColorAlpha(value: string): number {
+  if (!/^rgba?\(/i.test(value)) return 1;
+  const components = value.match(/-?(?:\d+\.?\d*|\.\d+)%?/g);
+  const raw = components?.[3];
+  if (!raw) return 1;
+  const parsed = Number.parseFloat(raw);
+  if (!Number.isFinite(parsed)) return 1;
+  return clamp01(raw.endsWith("%") ? parsed / 100 : parsed);
+}
+
+function stableButtonColor(
+  button: HTMLButtonElement,
+  computedColor: string,
+): string {
+  if (button.disabled) return opaqueCssColor(computedColor, "#462416");
+  const selected = button.classList.contains("selected");
+  const gameOver = button.closest(".game-over-actions") !== null;
+  // These are discrete authored states. Reading their transitioning computed
+  // color would cache an arbitrary in-between frame until the next input.
+  if (gameOver) return selected ? "#ff9b20" : "#ffffff";
+  if (button.classList.contains("danger")) return "#9a281b";
+  if (selected) return "#f05a20";
+  return "#63230e";
 }
 
 function rectFrom(
@@ -280,14 +332,28 @@ export function snapshotGameFlowSurface(
       style.getPropertyValue("-webkit-text-stroke-width"),
       0,
     );
+    const disabledSlot = node.closest<HTMLButtonElement>(
+      ".game-save-slot:disabled",
+    );
+    let opacity = effectiveOpacity(node, source.panel);
+    if (disabledSlot) {
+      const disabledStyle = getComputedStyle(disabledSlot);
+      // New CSS expresses disabled state with element opacity. Retain support
+      // for the old rgba color rule without multiplying the two representations.
+      const localOpacity = clamp01(finiteCssNumber(disabledStyle.opacity, 1));
+      if (localOpacity >= 0.999)
+        opacity *= cssColorAlpha(disabledStyle.color);
+    }
     const font: GameFlowSurfaceFont = Object.freeze({
       family: style.fontFamily || "Roo, Impact, sans-serif",
       size,
       weight: style.fontWeight || "400",
       lineHeight: finiteCssNumber(style.lineHeight, size * 1.15),
-      color: style.color || "#fff7d6",
+      color: disabledSlot
+        ? opaqueCssColor(style.color, "#63230e")
+        : style.color || "#fff7d6",
       align: textAlign(style.textAlign),
-      opacity: effectiveOpacity(node, source.panel),
+      opacity,
       strokeColor:
         style.getPropertyValue("-webkit-text-stroke-color") || "transparent",
       strokeWidth,
@@ -316,6 +382,13 @@ export function snapshotGameFlowSurface(
     const slot = button.classList.contains("game-save-slot");
     const value = toggle ? button.querySelector<HTMLElement>(":scope > strong") : null;
     const label = toggle ? button.querySelector<HTMLElement>(":scope > span") : null;
+    const selected = button.classList.contains("selected");
+    const disabled = button.disabled;
+    const danger = button.classList.contains("danger");
+    const localOpacity = clamp01(finiteCssNumber(style.opacity, 1));
+    let opacity = effectiveOpacity(button, source.panel);
+    if (disabled && localOpacity >= 0.999)
+      opacity *= cssColorAlpha(style.color);
     buttons.push(
       Object.freeze({
         rect,
@@ -326,14 +399,21 @@ export function snapshotGameFlowSurface(
               .replace(/\s+/g, " ")
               .trim(),
         valueLabel: (value?.textContent ?? "").trim(),
-        color: style.color || "#63230e",
-        valueColor: value ? getComputedStyle(value).color : style.color,
+        color: stableButtonColor(button, style.color),
+        valueColor: value
+          ? disabled
+            ? opaqueCssColor(getComputedStyle(value).color, "#462416")
+            : button.classList.contains("toggle-off")
+              ? "#a52f1c"
+              : "#218d3c"
+          : stableButtonColor(button, style.color),
+        opacity,
         fontFamily: style.fontFamily || "Roo, Impact, sans-serif",
         fontSize: finiteCssNumber(style.fontSize, 28),
         fontWeight: style.fontWeight || "400",
-        selected: button.classList.contains("selected"),
-        disabled: button.disabled,
-        danger: button.classList.contains("danger"),
+        selected,
+        disabled,
+        danger,
       }),
     );
   }
@@ -448,8 +528,9 @@ export class GameFlowSurface {
     target: THREE.WebGLRenderTarget | null = renderer.getRenderTarget(),
   ): boolean {
     if (this.disposed) return false;
-    const width = finiteDimension(inputSize.width);
-    const height = finiteDimension(inputSize.height);
+    const targetWidth = finiteDimension(inputSize.width);
+    const targetHeight = finiteDimension(inputSize.height);
+    const raster = gameFlowRasterSize(targetWidth, targetHeight);
     const state = this.state ?? this.readState();
     this.state = state;
     this.screen = state.screen;
@@ -459,10 +540,15 @@ export class GameFlowSurface {
     }
 
     const resources = this.ensureResources();
-    const resized = this.ensureSize(resources, width, height);
-    if (this.dirty || resized) this.paint(resources, state, width, height);
+    const resized = this.ensureSize(resources, raster.width, raster.height);
+    if (this.dirty || resized) this.paint(resources, state, raster.width, raster.height);
     if (!this.hasPixels) return false;
-    return this.composite(resources, renderer, { width, height }, target);
+    return this.composite(
+      resources,
+      renderer,
+      { width: targetWidth, height: targetHeight },
+      target,
+    );
   }
 
   /** Release full-size canvas/GPU storage while retaining one tiny reusable shell. */
@@ -683,7 +769,10 @@ export class GameFlowSurface {
   ): void {
     const { rect } = button;
     ctx.save();
-    ctx.globalAlpha = button.disabled ? 0.34 : 1;
+    // One captured element opacity drives action/toggle text or the slot's
+    // compound background. Slot child text receives that ancestor opacity in
+    // its own snapshot, so rgba color alpha is never multiplied a second time.
+    ctx.globalAlpha = button.opacity;
     if (button.kind === "slot") {
       roundedRect(ctx, rect, 10);
       ctx.fillStyle = button.selected
@@ -692,6 +781,28 @@ export class GameFlowSurface {
       ctx.fill();
       ctx.strokeStyle = "#7f3c1b";
       ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+    if (button.selected && button.kind !== "slot") {
+      // A warm, stable highlight replaces the DOM's layout-changing scale and
+      // filter transition. It uses the same paper/orange palette without ever
+      // moving the semantic hit rectangle underneath the pointer.
+      const insetX = Math.max(3, Math.min(10, rect.height * 0.12));
+      const insetY = Math.max(2, Math.min(6, rect.height * 0.08));
+      roundedRect(
+        ctx,
+        {
+          x: rect.x + insetX,
+          y: rect.y + insetY,
+          width: Math.max(1, rect.width - insetX * 2),
+          height: Math.max(1, rect.height - insetY * 2),
+        },
+        8,
+      );
+      ctx.fillStyle = "rgba(255,244,183,.22)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(240,90,32,.40)";
+      ctx.lineWidth = 1.5;
       ctx.stroke();
     }
     if (button.selected) {
