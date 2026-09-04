@@ -165,6 +165,7 @@ export class CoastPostRenderer {
   private composerPixelRatio: number;
   private composerWidth: number;
   private composerHeight: number;
+  private suspendedForGameFlow = false;
   private readonly sizeScratch = new THREE.Vector2();
   private readonly viewportScratch = new THREE.Vector4();
   private readonly scissorScratch = new THREE.Vector4();
@@ -296,6 +297,10 @@ export class CoastPostRenderer {
     );
   }
 
+  get suspended(): boolean {
+    return this.suspendedForGameFlow;
+  }
+
   get crt(): CrtGuestPass | null {
     return this.crtPass;
   }
@@ -335,6 +340,7 @@ export class CoastPostRenderer {
     }
     this.readRendererOutputSize();
     this.crtPass?.resetHistory("resolution mode changed");
+    if (this.suspendedForGameFlow) return;
     this.applyResolutionMode();
   }
 
@@ -345,7 +351,8 @@ export class CoastPostRenderer {
     if (nextWidth === this.inputWidth && nextHeight === this.inputHeight) return;
     this.inputWidth = nextWidth;
     this.inputHeight = nextHeight;
-    if (this.resolutionMode === "fixed") this.applyResolutionMode();
+    if (this.resolutionMode === "fixed" && !this.suspendedForGameFlow)
+      this.applyResolutionMode();
   }
 
   /** Set fixed-mode CRT/output dimensions, in physical pixels. */
@@ -360,13 +367,15 @@ export class CoastPostRenderer {
     }
     this.outputWidth = nextWidth;
     this.outputHeight = nextHeight;
-    if (this.resolutionMode === "fixed") this.applyCrtResolution();
+    if (this.resolutionMode === "fixed" && !this.suspendedForGameFlow)
+      this.applyCrtResolution();
   }
 
   /** Follow the renderer's current drawing buffer for fixed-mode output. */
   syncOutputSizeFromRenderer(): void {
     this.readRendererOutputSize();
-    if (this.resolutionMode === "fixed") this.applyCrtResolution();
+    if (this.resolutionMode === "fixed" && !this.suspendedForGameFlow)
+      this.applyCrtResolution();
   }
 
   setEnabled(enabled: boolean): void {
@@ -404,6 +413,7 @@ export class CoastPostRenderer {
     this.width = nextWidth;
     this.height = nextHeight;
     if (this.resolutionMode === "fixed") this.readRendererOutputSize();
+    if (this.suspendedForGameFlow) return;
     this.applyResolutionMode();
   }
 
@@ -412,7 +422,31 @@ export class CoastPostRenderer {
     if (next === this.pixelRatio) return;
     this.pixelRatio = next;
     if (this.resolutionMode === "fixed") this.readRendererOutputSize();
+    if (this.suspendedForGameFlow) return;
     this.applyResolutionMode();
+  }
+
+  /**
+   * Keep settings, shaders, and already-decoded LUT assets warm while releasing
+   * the large frame/history targets. The loading vortex owns the same renderer
+   * during this interval, so the two render graphs never overlap at full size.
+   */
+  suspendForGameFlow(): void {
+    if (this.disposed || this.suspendedForGameFlow) return;
+    this.suspendedForGameFlow = true;
+    this.configureComposer(1, 1, 1);
+    this.crtPass?.setResolution(1, 1, 1, 1);
+    this.crtPass?.resetHistory("game-flow presentation owns renderer");
+    this.crtOutputTarget?.dispose();
+    this.crtOutputTarget = null;
+  }
+
+  /** Recreate target storage on the first destination frame, under the fade. */
+  resumeFromGameFlow(): void {
+    if (this.disposed || !this.suspendedForGameFlow) return;
+    this.suspendedForGameFlow = false;
+    this.applyResolutionMode();
+    this.crtPass?.resetHistory("gameplay presentation resumed");
   }
 
   render(
@@ -422,6 +456,7 @@ export class CoastPostRenderer {
     if (this.disposed) {
       throw new Error("CoastPostRenderer.render() called after dispose()");
     }
+    this.resumeFromGameFlow();
     this.syncPassEnablement();
     // EffectComposer owns a complete full-frame target. Preserve caller-owned
     // split-screen viewports by using the direct path while scissoring.

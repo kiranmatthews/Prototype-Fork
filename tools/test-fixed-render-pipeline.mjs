@@ -43,9 +43,21 @@ for (const contract of [
   "new UnityBloomPass(",
   "this.bloomPass.diagnostics",
   "this.bloomPass.dispose()",
+  "suspendForGameFlow",
+  "resumeFromGameFlow",
 ]) {
   assert.ok(coast.includes(contract), `presentation renderer missing ${contract}`);
 }
+assert.match(
+  coast,
+  /suspendForGameFlow\(\): void \{[\s\S]{0,320}this\.configureComposer\(1, 1, 1\);[\s\S]{0,160}this\.crtPass\?\.setResolution\(1, 1, 1, 1\);/,
+  "loading presentation must collapse gameplay targets without dropping LUT assets",
+);
+assert.match(
+  coast,
+  /resumeFromGameFlow\(\): void \{[\s\S]{0,220}this\.applyResolutionMode\(\);/,
+  "the hidden destination frame must restore gameplay target sizes",
+);
 const smaaPassAt = coast.indexOf("this.composer.addPass(this.smaaPass)");
 const bloomPassAt = coast.indexOf("this.composer.addPass(this.bloomPass)");
 const unityPassAt = coast.indexOf("this.composer.addPass(this.unityPostPass)");

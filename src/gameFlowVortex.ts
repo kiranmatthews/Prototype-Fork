@@ -1,6 +1,7 @@
-// Shared title/loading/game-over background. This deliberately reuses the
-// preserved pre-band Gouraud sine-field effect rather than the newer warp-room
-// portal renderer, and draws through the game's existing WebGL context.
+// Shared title/loading/game-over background. The host deliberately owns no
+// THREE resources while gameplay is active: one short-lived presentation
+// stage is created on demand, draws through the game's existing WebGL context,
+// and is completely released at the flow -> gameplay handoff.
 
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -15,96 +16,96 @@ const VORTEX_RADIUS = FIELD_SWIRL_PRESETS.vortex.radius ?? 4.37;
 
 export interface GameFlowVortexDiagnostics {
   active: boolean;
+  resident: boolean;
   renderedFrames: number;
   targetFps: number;
   cadenceOwner: "gameplay-render-loop";
   reducedMotion: boolean;
   maskVisible: boolean;
   maskPartsLoaded: number;
+  targetWidth: number;
+  targetHeight: number;
+  /** One direct scene submission containing both Gouraud meshes. */
+  scenePasses: number;
+  /** Retained in diagnostics to prove that no upscale pass is active. */
+  compositePasses: number;
+  maskPasses: number;
+  createCount: number;
+  disposeCount: number;
 }
 
-export class GameFlowVortex {
-  private scene = new THREE.Scene();
-  private camera = new THREE.OrthographicCamera(-4, 4, 4, -4, 0.1, 30);
-  private maskScene = new THREE.Scene();
-  private maskCamera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  private mask = new THREE.Group();
-  private vortex: FieldSwirl;
-  private size = new THREE.Vector2();
-  private savedViewport = new THREE.Vector4();
-  private savedScissor = new THREE.Vector4();
-  private active = false;
-  private invalidated = true;
-  private accumulatedSeconds = 0;
+interface StageFrameResult {
+  targetWidth: number;
+  targetHeight: number;
+  maskRendered: boolean;
+}
+
+/**
+ * Lifecycle and cadence owner used by main.ts.
+ *
+ * `render` shares the gameplay loop's admitted 60 Hz frames without its own
+ * limiter. `deactivate` is the hard ownership boundary: it disposes and nulls
+ * the whole THREE stage so gameplay retains no menu scene resources.
+ */
+export class GameFlowVortexHost {
+  private stage: GameFlowVortexStage | null = null;
   private renderedFrames = 0;
-  private renderedThisActivation = false;
-  private maskStartedAt = performance.now();
+  private scenePasses = 0;
+  private compositePasses = 0;
+  private maskPasses = 0;
+  private createCount = 0;
+  private disposeCount = 0;
+  private targetWidth = 0;
+  private targetHeight = 0;
   private maskVisible = false;
-  private maskLoadStarted = false;
   private maskPartsLoaded = 0;
-  private disposed = false;
-  private boneMaterial = new THREE.MeshStandardMaterial({
-    color: 0xe8d0a3,
-    roughness: 0.48,
-    metalness: 0,
-    emissive: 0x24180b,
-    emissiveIntensity: 0.22,
-  });
-  private skullMaterial = new THREE.MeshStandardMaterial({
-    color: 0x4b2116,
-    roughness: 0.7,
-    metalness: 0.08,
-    emissive: 0x240804,
-    emissiveIntensity: 0.72,
-  });
-  private reducedMotion =
+  private permanentlyDisposed = false;
+  private readonly reducedMotion =
     window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
-  constructor() {
-    this.scene.background = new THREE.Color(0x02030a);
-    this.camera.position.set(0, 0, 10);
-    this.camera.lookAt(0, 0, 0);
-    const preset: FieldSwirlPreset = {
-      ...FIELD_SWIRL_PRESETS.vortex,
-      billboard: false,
-    };
-    this.vortex = new FieldSwirl(preset, { seed: 37 });
-    this.vortex.group.position.z = 0;
-    this.scene.add(this.vortex.group);
-    this.maskCamera.position.set(0, 0.08, 9);
-    this.maskScene.add(new THREE.HemisphereLight(0xffd9a0, 0x301008, 2.1));
-    const fire = new THREE.PointLight(0xff7a18, 18, 20);
-    fire.position.set(0, 1.5, 3.5);
-    this.maskScene.add(fire);
-    const rim = new THREE.DirectionalLight(0x7edbff, 2.2);
-    rim.position.set(-4, 3, -2);
-    this.maskScene.add(rim, this.mask);
+  get resident(): boolean {
+    return this.stage !== null;
   }
 
   get diagnostics(): GameFlowVortexDiagnostics {
     return {
-      active: this.active,
+      active: this.stage !== null,
+      resident: this.stage !== null,
       renderedFrames: this.renderedFrames,
       targetFps: 60,
       cadenceOwner: "gameplay-render-loop",
       reducedMotion: this.reducedMotion,
       maskVisible: this.maskVisible,
       maskPartsLoaded: this.maskPartsLoaded,
+      targetWidth: this.targetWidth,
+      targetHeight: this.targetHeight,
+      scenePasses: this.scenePasses,
+      compositePasses: this.compositePasses,
+      maskPasses: this.maskPasses,
+      createCount: this.createCount,
+      disposeCount: this.disposeCount,
     };
   }
 
+  /** A resize matters only if an active stage already owns its cameras. */
   invalidate(): void {
-    this.invalidated = true;
+    this.stage?.invalidate();
   }
 
+  /**
+   * Drop every presentation resource at the gameplay handoff. Repeated calls
+   * during ordinary gameplay are an allocation-free no-op.
+   */
   deactivate(): void {
-    if (!this.active) return;
-    this.active = false;
+    const stage = this.stage;
+    if (!stage) return;
+    stage.dispose();
+    this.stage = null;
+    this.disposeCount++;
+    this.targetWidth = 0;
+    this.targetHeight = 0;
     this.maskVisible = false;
-    this.mask.visible = false;
-    this.invalidated = true;
-    this.renderedThisActivation = false;
-    this.accumulatedSeconds = 0;
+    this.maskPartsLoaded = 0;
   }
 
   render(
@@ -113,90 +114,186 @@ export class GameFlowVortex {
     nowMs: number,
     showMask = false,
   ): boolean {
-    if (!this.active) {
-      this.active = true;
-      this.invalidated = true;
-      this.renderedThisActivation = false;
-      this.accumulatedSeconds = 0;
+    if (this.permanentlyDisposed) return false;
+    const stage = this.ensureStage();
+    stage.prepare(showMask);
+    this.maskVisible = showMask;
+    this.maskPartsLoaded = stage.maskPartsLoaded;
+
+    const invalidated = stage.invalidated;
+    if (this.reducedMotion && stage.renderedOnce && !invalidated) {
+      return false;
     }
+
+    const result = stage.render(
+      renderer,
+      this.reducedMotion ? 0 : Math.min(0.1, Math.max(0, deltaSeconds)),
+      nowMs,
+      showMask,
+    );
+    this.targetWidth = result.targetWidth;
+    this.targetHeight = result.targetHeight;
+    this.maskPartsLoaded = stage.maskPartsLoaded;
+    this.renderedFrames++;
+    this.scenePasses++;
+    if (result.maskRendered) this.maskPasses++;
+    return true;
+  }
+
+  /** Permanently retire a host (HMR/tests/page-owned teardown). */
+  dispose(): void {
+    if (this.permanentlyDisposed) return;
+    this.deactivate();
+    this.permanentlyDisposed = true;
+  }
+
+  private ensureStage(): GameFlowVortexStage {
+    if (!this.stage) {
+      this.stage = new GameFlowVortexStage();
+      this.createCount++;
+    }
+    return this.stage;
+  }
+}
+
+/** Backwards-compatible value export while main.ts moves to the explicit host. */
+export { GameFlowVortexHost as GameFlowVortex };
+
+/** All THREE/WebGL-facing presentation resources live below this boundary. */
+class GameFlowVortexStage {
+  private vortexScene = new THREE.Scene();
+  private vortexCamera = new THREE.OrthographicCamera(-4, 4, 4, -4, 0.1, 30);
+  private maskScene = new THREE.Scene();
+  private maskCamera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+  private mask = new THREE.Group();
+  private vortex: FieldSwirl;
+  private drawingBufferSize = new THREE.Vector2();
+  private canvasSize = new THREE.Vector2();
+  private savedViewport = new THREE.Vector4();
+  private savedScissor = new THREE.Vector4();
+  private maskStartedAt = performance.now();
+  private maskVisible = false;
+  private maskLoadStarted = false;
+  private loadedMaskParts = 0;
+  private needsRender = true;
+  private hasRendered = false;
+  private disposed = false;
+
+  private readonly boneMaterial = new THREE.MeshStandardMaterial({
+    color: 0xe8d0a3,
+    roughness: 0.48,
+    metalness: 0,
+    emissive: 0x24180b,
+    emissiveIntensity: 0.22,
+  });
+
+  private readonly skullMaterial = new THREE.MeshStandardMaterial({
+    color: 0x4b2116,
+    roughness: 0.7,
+    metalness: 0.08,
+    emissive: 0x240804,
+    emissiveIntensity: 0.72,
+  });
+
+  constructor() {
+    this.vortexScene.background = new THREE.Color(0x02030a);
+    this.vortexCamera.position.set(0, 0, 10);
+    this.vortexCamera.lookAt(0, 0, 0);
+    const preset: FieldSwirlPreset = {
+      ...FIELD_SWIRL_PRESETS.vortex,
+      billboard: false,
+    };
+    this.vortex = new FieldSwirl(preset, { seed: 37 });
+    this.vortex.group.position.z = 0;
+    this.vortexScene.add(this.vortex.group);
+
+    this.maskCamera.position.set(0, 0.08, 9);
+    this.maskScene.add(new THREE.HemisphereLight(0xffd9a0, 0x301008, 2.1));
+    const fire = new THREE.PointLight(0xff7a18, 18, 20);
+    fire.position.set(0, 1.5, 3.5);
+    const rim = new THREE.DirectionalLight(0x7edbff, 2.2);
+    rim.position.set(-4, 3, -2);
+    this.maskScene.add(fire, rim, this.mask);
+  }
+
+  get invalidated(): boolean {
+    return this.needsRender;
+  }
+
+  get renderedOnce(): boolean {
+    return this.hasRendered;
+  }
+
+  get maskPartsLoaded(): number {
+    return this.loadedMaskParts;
+  }
+
+  invalidate(): void {
+    this.needsRender = true;
+  }
+
+  prepare(showMask: boolean): void {
     if (showMask !== this.maskVisible) {
       this.maskVisible = showMask;
       this.mask.visible = showMask;
-      this.invalidated = true;
+      this.needsRender = true;
+      if (showMask) this.maskStartedAt = performance.now();
     }
     if (showMask) this.ensureMaskLoaded();
-    this.accumulatedSeconds += Math.max(0, deltaSeconds);
-    if (!this.invalidated && this.reducedMotion && this.renderedThisActivation)
-      return false;
+  }
 
-    renderer.getSize(this.size);
-    const width = Math.max(1, this.size.x);
-    const height = Math.max(1, this.size.y);
-    const aspect = width / height;
-    this.camera.left = -VIEW_HALF_HEIGHT * aspect;
-    this.camera.right = VIEW_HALF_HEIGHT * aspect;
-    this.camera.top = VIEW_HALF_HEIGHT;
-    this.camera.bottom = -VIEW_HALF_HEIGHT;
-    this.camera.updateProjectionMatrix();
-    this.maskCamera.aspect = aspect;
-    this.maskCamera.updateProjectionMatrix();
-    // Cover the widest screen dimension so the vortex reads as a background,
-    // not as a portal disc floating behind the menu card.
-    const coverScale = Math.max(
-      1.22,
-      (VIEW_HALF_HEIGHT * aspect * 1.16) / VORTEX_RADIUS,
-    );
-    this.vortex.group.scale.setScalar(coverScale);
-    this.vortex.update(
-      this.reducedMotion
-        ? 0
-        : Math.min(0.1, this.accumulatedSeconds),
-      this.camera,
-    );
-    if (showMask && !this.reducedMotion) {
+  render(
+    renderer: THREE.WebGLRenderer,
+    deltaSeconds: number,
+    nowMs: number,
+    showMask: boolean,
+  ): StageFrameResult {
+    const { targetWidth, targetHeight } = this.syncSize(renderer);
+    this.vortex.update(deltaSeconds, this.vortexCamera);
+    if (showMask) {
       const seconds = (nowMs - this.maskStartedAt) / 1000;
       this.mask.rotation.y = Math.sin(seconds * 0.72) * 0.22;
       this.mask.rotation.z = Math.sin(seconds * 0.53) * 0.025;
       this.mask.position.y = Math.sin(seconds * 1.4) * 0.07;
     }
-    this.accumulatedSeconds = 0;
 
     const savedTarget = renderer.getRenderTarget();
+    const savedFace = renderer.getActiveCubeFace();
+    const savedMip = renderer.getActiveMipmapLevel();
     const savedScissorTest = renderer.getScissorTest();
     const savedAutoClear = renderer.autoClear;
     renderer.getViewport(this.savedViewport);
     renderer.getScissor(this.savedScissor);
     try {
+      // Direct-to-canvas rendering preserves the exact drawing-buffer quality
+      // selected by the gameplay renderer; there is no low-res intermediate.
       renderer.setRenderTarget(null);
       renderer.setScissorTest(false);
-      renderer.setViewport(0, 0, width, height);
+      renderer.setViewport(0, 0, this.canvasSize.x, this.canvasSize.y);
       renderer.autoClear = true;
-      renderer.render(this.scene, this.camera);
+      renderer.render(this.vortexScene, this.vortexCamera);
       if (showMask) {
         renderer.autoClear = false;
         renderer.clearDepth();
         renderer.render(this.maskScene, this.maskCamera);
       }
     } finally {
-      // A context-loss or material exception in presentation must never leak
-      // its viewport/scissor/auto-clear state into the next gameplay frame.
-      renderer.setRenderTarget(savedTarget);
+      renderer.setRenderTarget(savedTarget, savedFace, savedMip);
       renderer.setViewport(this.savedViewport);
       renderer.setScissor(this.savedScissor);
       renderer.setScissorTest(savedScissorTest);
       renderer.autoClear = savedAutoClear;
     }
 
-    this.invalidated = false;
-    this.renderedThisActivation = true;
-    this.renderedFrames++;
-    return true;
+    this.needsRender = false;
+    this.hasRendered = true;
+    return { targetWidth, targetHeight, maskRendered: showMask };
   }
 
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
-    this.scene.remove(this.vortex.group);
+    this.vortexScene.remove(this.vortex.group);
     this.vortex.dispose();
     const geometries = new Set<THREE.BufferGeometry>();
     this.mask.traverse((object) => {
@@ -208,7 +305,34 @@ export class GameFlowVortex {
     });
     this.boneMaterial.dispose();
     this.skullMaterial.dispose();
+    this.mask.clear();
+    this.maskScene.clear();
+    this.vortexScene.clear();
     document.body.classList.remove("game-flow-mask-ready");
+  }
+
+  private syncSize(renderer: THREE.WebGLRenderer): {
+    targetWidth: number;
+    targetHeight: number;
+  } {
+    renderer.getDrawingBufferSize(this.drawingBufferSize);
+    renderer.getSize(this.canvasSize);
+    const targetWidth = Math.max(1, this.drawingBufferSize.x);
+    const targetHeight = Math.max(1, this.drawingBufferSize.y);
+    const aspect = targetWidth / targetHeight;
+    this.vortexCamera.left = -VIEW_HALF_HEIGHT * aspect;
+    this.vortexCamera.right = VIEW_HALF_HEIGHT * aspect;
+    this.vortexCamera.top = VIEW_HALF_HEIGHT;
+    this.vortexCamera.bottom = -VIEW_HALF_HEIGHT;
+    this.vortexCamera.updateProjectionMatrix();
+    this.maskCamera.aspect = aspect;
+    this.maskCamera.updateProjectionMatrix();
+    const coverScale = Math.max(
+      1.22,
+      (VIEW_HALF_HEIGHT * aspect * 1.16) / VORTEX_RADIUS,
+    );
+    this.vortex.group.scale.setScalar(coverScale);
+    return { targetWidth, targetHeight };
   }
 
   private ensureMaskLoaded(): void {
@@ -261,9 +385,9 @@ export class GameFlowVortex {
           mesh.material = skull ? this.skullMaterial : this.boneMaterial;
         });
         this.mask.add(model);
-        this.maskPartsLoaded++;
-        this.invalidated = true;
-        if (this.maskPartsLoaded >= 2)
+        this.loadedMaskParts++;
+        this.needsRender = true;
+        if (this.loadedMaskParts >= 2)
           document.body.classList.add("game-flow-mask-ready");
       },
       undefined,

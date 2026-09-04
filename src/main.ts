@@ -35,7 +35,7 @@ import {
 } from "./player";
 import { UI, type HudState } from "./ui";
 import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";
-import { GameFlowVortex } from "./gameFlowVortex";
+import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
   CampaignStore,
   DEFAULT_CAMPAIGN_LIVES,
@@ -87,7 +87,10 @@ import {
   visualTreatmentActivity,
   visualTreatmentSettings,
 } from "./visual-treatment/settings";
-import { createBonusParallax } from "./bonusParallax";
+import {
+  createBonusParallax,
+  type BonusParallax,
+} from "./bonusParallax";
 import { touchControlsRequested } from "./touch";
 import {
   RigBinding,
@@ -111,7 +114,9 @@ const LITE_RENDER = window.location.search.includes("lite");
 const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
-const gameFlowVortex = new GameFlowVortex();
+// A zero-resource host. The actual Gouraud scene/render target exists only
+// while title/loading/Game Over owns the framebuffer.
+const gameFlowVortex = new GameFlowVortexHost();
 // NATIVE RESOLUTION. The device pixel ratio is the baseline — on a Retina
 // panel that is 2x the CSS grid, and rendering below it was the single biggest
 // thing making the game look cheap. Capped at 2: past that the pixels are far
@@ -419,10 +424,50 @@ interface SkyLayers {
   bg: THREE.CanvasTexture; // the dome backdrop
   mist: THREE.CanvasTexture; // the below-horizon cloud sea, drawn in front
 }
-const skyCache = new Map<SkyPreset, SkyLayers>(); // built once, kept for the session
-const skyPending = new Set<SkyPreset>();
+// One painted sky is enough: only one Level renders at a time, and a bonus
+// deliberately replaces the parent's backdrop. Keeping every visited pair
+// retained two full-size canvas copies plus both GPU textures per preset.
+const skyCache = new Map<SkyPreset, SkyLayers>();
+interface PendingSkyLoad {
+  image: HTMLImageElement;
+  promise: Promise<void>;
+  settle: () => void;
+}
+const skyPending = new Map<SkyPreset, PendingSkyLoad>();
 const skyMissing = new Set<SkyPreset>(); // 404 / decode failure — use the gradient
 let activeSky: SkyPreset = DEFAULT_SKY;
+
+function disposeSkyLayers(layers: SkyLayers): void {
+  for (const texture of [layers.bg, layers.mist]) {
+    texture.dispose();
+    // CanvasTexture keeps its source canvas strongly reachable. Shrinking it
+    // releases the decoded RGBA backing store as well as the WebGL texture.
+    const canvas = texture.source.data;
+    if (
+      typeof HTMLCanvasElement !== "undefined" &&
+      canvas instanceof HTMLCanvasElement
+    ) {
+      canvas.width = 1;
+      canvas.height = 1;
+    }
+  }
+}
+
+function retainOnlyActiveSky(): void {
+  for (const [preset, layers] of skyCache) {
+    if (preset === activeSky) continue;
+    skyCache.delete(preset);
+    disposeSkyLayers(layers);
+  }
+  for (const [preset, request] of skyPending) {
+    if (preset === activeSky) continue;
+    request.image.onload = null;
+    request.image.onerror = null;
+    request.image.src = "";
+    request.settle();
+    skyPending.delete(preset);
+  }
+}
 
 // Foreground horizon mist: created up front (empty), textured by applyTheme.
 // Drawn OVER the level with depth-test ON, so only geometry farther than the
@@ -556,35 +601,56 @@ function updateSeaHorizon(): void {
   if (mm) mm.offset.y = offY;
 }
 
-function loadSky(p: SkyPreset): void {
-  if (skyCache.has(p) || skyPending.has(p) || skyMissing.has(p)) return;
-  skyPending.add(p);
+function loadSky(p: SkyPreset): Promise<void> {
+  if (skyCache.has(p) || skyMissing.has(p)) return Promise.resolve();
+  const pending = skyPending.get(p);
+  if (pending) return pending.promise;
   const img = new Image();
+  let resolveLoad!: () => void;
+  const promise = new Promise<void>((resolve) => {
+    resolveLoad = resolve;
+  });
+  let settled = false;
+  const settle = (): void => {
+    if (settled) return;
+    settled = true;
+    resolveLoad();
+  };
+  skyPending.set(p, { image: img, promise, settle });
   img.crossOrigin = "anonymous";
   img.onload = () => {
     skyPending.delete(p);
-    skyCache.set(p, buildSkyLayers(img, p));
-    // A slow load that lands after the player moved on must not yank the sky
-    // out from under the level they're actually looking at.
-    if (activeSky === p) applyTheme();
+    try {
+      // A level change can beat image decode. Do not build/cache two large
+      // canvases for a painting that is no longer the active destination.
+      if (activeSky !== p) return;
+      skyCache.set(p, buildSkyLayers(img, p));
+      retainOnlyActiveSky();
+      // A slow load that lands after the player moved on must not yank the sky
+      // out from under the level they're actually looking at.
+      if (activeSky === p) applyTheme();
+    } finally {
+      settle();
+    }
   };
   img.onerror = () => {
     skyPending.delete(p);
     skyMissing.add(p);
-    if (activeSky !== p) return;
-    applyTheme(); // repaint with the gradient fallback
+    if (activeSky === p) applyTheme(); // repaint with the gradient fallback
     // Silently swapping in a gradient reads as "the feature is broken". Say
     // which file is missing instead — once per preset, since loadSky won't
     // retry one it has already given up on.
-    ui.showMessage(
-      `${p.toUpperCase()} SKY ART MISSING`,
-      `add public/${SKY_PRESETS[p].file} — using the painted gradient for now`,
-      3600,
-    );
+    if (activeSky === p)
+      ui.showMessage(
+        `${p.toUpperCase()} SKY ART MISSING`,
+        `add public/${SKY_PRESETS[p].file} — using the painted gradient for now`,
+        3600,
+      );
+    settle();
   };
   img.src = import.meta.env.BASE_URL + SKY_PRESETS[p].file;
+  return promise;
 }
-loadSky(DEFAULT_SKY);
 
 // --- sky painting ------------------------------------------------------------
 // Theme colors arrive as both '#rrggbb' strings and 0xrrggbb numbers; the
@@ -812,20 +878,34 @@ function applyTheme(): void {
   const P = SKY_PRESETS[level.skyPreset] ?? SKY_PRESETS[DEFAULT_SKY];
   const bonusBackdropActive =
     (current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
-  if (bonusBackdropActive && !bonusParallax.visible)
-    bonusParallax.reset(player.pos, loadedLevelId);
-  bonusParallax.setVisible(bonusBackdropActive);
+  if (bonusBackdropActive) {
+    const backdrop = ensureBonusParallax();
+    if (!backdrop.visible) backdrop.reset(player.pos, loadedLevelId);
+    backdrop.setVisible(true);
+  } else {
+    releaseBonusParallax();
+  }
   activeSky = level.skyPreset;
+  retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
   // background, not a fog-immune painted dome visible behind the last plank.
   // The editor deliberately restores the dome alongside its fog-free lens.
   syncSkyBackdropVisibility();
   levelPostEnabled = level.skyPreset === "coast" && !NO_COAST_POST;
-  configureCoastPost(
-    levelPostEnabled ||
-      (visualTreatmentActivity(visualTreatmentSettings.value).any && !NO_COAST_POST),
-  );
-  loadSky(activeSky); // no-op once cached or known missing
+  // On initial campaign boot and during fade-backed level travel, the private
+  // game-flow renderer owns the framebuffer. Do not allocate the much larger
+  // gameplay composer behind it; renderPrimaryScene creates that scope for the
+  // first destination frame under the still-opaque curtain.
+  const deferGameplayPost =
+    !shellBypass &&
+    (typeof gameFlow === "undefined" || gameFlow.vortexBackgroundActive);
+  if (!deferGameplayPost)
+    configureCoastPost(
+      levelPostEnabled ||
+        (visualTreatmentActivity(visualTreatmentSettings.value).any &&
+          !NO_COAST_POST),
+    );
+  void loadSky(activeSky); // no-op once cached or known missing
 
   // TIME OF DAY drives the atmosphere; the level's theme still colours it.
   // The haze is the preset's, not the level's: the painting's alpha-faded base
@@ -931,7 +1011,25 @@ function applyTheme(): void {
 // crushing to a foreshortened sliver at the horizon.
 const BOULDER_FOV = 27;
 const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
-const bonusParallax = createBonusParallax(scene, camera, { visible: false });
+// Bonus art is a level-scoped asset, not app furniture. Its four 1672×941
+// layers are requested only under the loading fade on bonus entry, then the
+// whole controller is disposed on return so ordinary levels retain none of it.
+let bonusParallax: BonusParallax | null = null;
+function ensureBonusParallax(): BonusParallax {
+  if (!bonusParallax)
+    bonusParallax = createBonusParallax(scene, camera, { visible: false });
+  return bonusParallax;
+}
+function releaseBonusParallax(): void {
+  bonusParallax?.dispose();
+  bonusParallax = null;
+}
+async function prepareActivePresentationAssets(): Promise<void> {
+  await Promise.all([
+    loadSky(activeSky),
+    bonusParallax?.prepare() ?? Promise.resolve(),
+  ]);
+}
 // 2P split state (functions live further down, past the player):
 let split2p = false;
 let p2: Player | null = null;
@@ -944,6 +1042,9 @@ let cam2SpeedFovBoost = 0;
 let p2Linked = false; // P2 has claimed a pad (join/loss toasts key off this)
 const pvpKicks = new Map<Player, { x: number; z: number; t: number }>();
 let coastPost: CoastPostRenderer | null = null;
+let coastPostCreateCount = 0;
+let coastPostSuspendCount = 0;
+let coastPostResumeCount = 0;
 let renderQualityPanel: RenderQualityPanel | null = null;
 let renderQualitySizes: RenderQualitySizes =
   renderQualitySettings.computeSizes(window.innerWidth, window.innerHeight);
@@ -971,6 +1072,18 @@ function configureCoastPost(enabled: boolean): void {
     pixelRatio: renderer.getPixelRatio(),
     multisample: false,
   });
+  coastPostCreateCount++;
+}
+
+// The game-flow stage and gameplay post chain are mutually exclusive users of
+// the same renderer. Drop the large composer/SMAA/Bloom/CRT targets before the
+// 720p loading vortex is allocated; the first destination frame rebuilds and
+// compiles them while the transition curtain is still opaque.
+function releaseGameplayPostForGameFlow(): void {
+  if (!coastPost || coastPost.suspended) return;
+  coastPost.suspendForGameFlow();
+  coastPostSuspendCount++;
+  renderer.renderLists.dispose();
 }
 
 function renderPrimaryScene(
@@ -978,6 +1091,15 @@ function renderPrimaryScene(
   prepareOcean = true,
   preCrtOverlay?: CoastPostPreCrtOverlay,
 ): void {
+  configureCoastPost(
+    levelPostEnabled ||
+      (visualTreatmentActivity(visualTreatmentSettings.value).any &&
+        !NO_COAST_POST),
+  );
+  if (coastPost?.suspended) {
+    coastPost.resumeFromGameFlow();
+    coastPostResumeCount++;
+  }
   if (prepareOcean) level.water?.renderPasses(renderer, scene, camera);
   if (coastPost) coastPost.render(dt, preCrtOverlay);
   else renderer.render(scene, camera);
@@ -1968,23 +2090,25 @@ function guardGameplayFromMenu(): void {
 
 function startNewCampaign(slot: number): void {
   guardGameplayFromMenu();
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     const save = campaign.newGame(slot);
     player.lives = save.lives;
     player.fruit = save.fruit;
     switchLevel("warproom", false, true);
+    await prepareActivePresentationAssets();
     gameFlow.hide();
   });
 }
 
 function loadCampaign(slot: number): void {
   guardGameplayFromMenu();
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     const save = campaign.load(slot);
     if (!save) return;
     player.lives = save.lives;
     player.fruit = save.fruit;
     switchLevel("warproom", false, true);
+    await prepareActivePresentationAssets();
     gameFlow.hide();
   });
 }
@@ -2011,7 +2135,7 @@ function restoreCommittedRunRewards(): void {
 function restartCurrentRun(): void {
   guardGameplayFromMenu();
   if (!bonusSession) player.bankFlyingFruit();
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     paused = false;
     if (bonusSession) {
       player.lives = bonusSession.parentState.lives;
@@ -2043,6 +2167,7 @@ function restartCurrentRun(): void {
       applyRunModes();
       ui.setHUD(currentHudState(), 0);
     }
+    await prepareActivePresentationAssets();
     gameFlow.hide();
   });
 }
@@ -2070,10 +2195,11 @@ function quitCurrentLevel(): void {
   }
   campaign.updateInventory(player.lives, player.fruit);
   restoreCommittedRunRewards();
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     paused = false;
     if (bonusSession) discardSuspendedBonus();
     switchLevel("warproom", false, true);
+    await prepareActivePresentationAssets();
     gameFlow.hide();
   });
 }
@@ -2101,9 +2227,10 @@ function quitAfterGameOver(): void {
   player.lives = DEFAULT_CAMPAIGN_LIVES;
   player.fruit = 0;
   restoreCommittedRunRewards();
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     paused = false;
     switchLevel("warproom", false, true);
+    await prepareActivePresentationAssets();
     ui.showDeathScreen(false);
     gameFlow.hide();
   });
@@ -2112,9 +2239,10 @@ function quitAfterGameOver(): void {
 function retryFromResults(): void {
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     resultsCameraActive = false;
     switchLevel(current.id, false, true);
+    await prepareActivePresentationAssets();
     gameFlow.hide();
   });
 }
@@ -2122,9 +2250,10 @@ function retryFromResults(): void {
 function continueFromResults(): void {
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     resultsCameraActive = false;
     switchLevel("warproom", false, true);
+    await prepareActivePresentationAssets();
     gameFlow.hide();
   });
 }
@@ -2176,8 +2305,9 @@ function showCampaignResults(time: number, timeRelic = false): void {
 function enterCampaignLevel(targetId: string): void {
   if (!campaignLevelById(targetId)) return;
   campaign.updateInventory(player.lives, player.fruit);
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     switchLevel(targetId, false, true);
+    await prepareActivePresentationAssets();
     gameFlow.hide();
   });
 }
@@ -2190,7 +2320,7 @@ function enterBonusRound(): void {
   const parentState = player.captureRunState();
   const parentFruit = player.captureIdleFruit();
   const returnPoint = parentLevel.bonusReturnPoint();
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     bonusSession = {
       parentLevel,
       parentEntry,
@@ -2223,6 +2353,9 @@ function enterBonusRound(): void {
     player.bonusCrates = 0;
     applyRunModes();
     applyTheme();
+    // The loading vortex owns the framebuffer until all four bonus layers are
+    // settled, so their decode/upload cannot hitch the first playable frames.
+    await prepareActivePresentationAssets();
     applyShadowFlags();
     ui.setLevel(
       current.id,
@@ -2261,7 +2394,7 @@ function returnFromBonus(completed: boolean): void {
     fruit: inventory.fruit,
     bonusCrates: completed ? bonusBoxes : session.parentState.bonusCrates,
   };
-  void gameFlow.transition(() => {
+  void gameFlow.transition(async () => {
     bonusSession = null;
     bonusLevel.dispose(session.parentLevel);
     session.parentLevel.setActive(true);
@@ -2283,6 +2416,7 @@ function returnFromBonus(completed: boolean): void {
     }
     applyRunModes();
     applyTheme();
+    await prepareActivePresentationAssets();
     applyShadowFlags();
     ui.setLevel(
       current.id,
@@ -3830,6 +3964,47 @@ function currentHudState(): HudState {
 
 let paused = false;
 
+function writeRenderDiagnostics(): void {
+  if (!renderDiagnosticsProbe) return;
+  renderer.getDrawingBufferSize(renderDiagnosticsSize);
+  renderDiagnosticsProbe.textContent = JSON.stringify({
+    levelId: current.id,
+    bonusPlatform: level.bonusPlatformDiagnostics,
+    settings: renderQualitySettings.snapshot(),
+    active: fixedResolutionActive(),
+    sizes: renderQualitySizes,
+    drawingBuffer: {
+      width: renderDiagnosticsSize.x,
+      height: renderDiagnosticsSize.y,
+    },
+    presentation: coastPost?.resolution ?? null,
+    ocean: level.water?.stats ?? null,
+    islandFoam: level.shoreFoamDiagnostics,
+    hud: ui.gameHudDiagnostics,
+    assets: {
+      activeSky,
+      cachedSkies: [...skyCache.keys()],
+      pendingSkies: [...skyPending.keys()],
+      bonusParallax: bonusParallax?.diagnostics ?? null,
+    },
+    rendererMemory: {
+      geometries: renderer.info.memory.geometries,
+      textures: renderer.info.memory.textures,
+      programs: renderer.info.programs?.length ?? 0,
+    },
+    gameplayPost: {
+      resident: coastPost !== null,
+      suspended: coastPost?.suspended ?? false,
+      createCount: coastPostCreateCount,
+      suspendCount: coastPostSuspendCount,
+      resumeCount: coastPostResumeCount,
+    },
+    gameFlowVortex: gameFlowVortex.diagnostics,
+    frameLimiter: renderFrameLimiter.stats,
+    renderedFrames: frameStats.frame,
+  });
+}
+
 function frame(nowMs: number): void {
   requestAnimationFrame(frame);
   if (!allowRenderFrame(nowMs)) return;
@@ -3886,7 +4061,7 @@ function frame(nowMs: number): void {
     acc = 0;
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
-    if (bonusParallax.visible)
+    if (bonusParallax?.visible)
       bonusParallax.update(player.pos, dt, loadedLevelId);
     updateSeaHorizon();
     ui.setGameHudComposited(false);
@@ -3917,6 +4092,8 @@ function frame(nowMs: number): void {
     acc = 0;
     sfx.stopLoops();
     if (gameFlow.vortexBackgroundActive) {
+      if (!gameFlowVortex.resident)
+        releaseGameplayPostForGameFlow();
       ui.setGameHudComposited(false);
       gameFlowVortex.render(
         renderer,
@@ -3924,6 +4101,7 @@ function frame(nowMs: number): void {
         nowMs,
         gameFlow.vortexGameOverMaskActive,
       );
+      writeRenderDiagnostics();
       return;
     }
     gameFlowVortex.deactivate();
@@ -4087,7 +4265,7 @@ function frame(nowMs: number): void {
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
-  if (bonusParallax.visible)
+  if (bonusParallax?.visible)
     bonusParallax.update(player.pos, dt, loadedLevelId);
   updateSeaHorizon();
 
@@ -4180,27 +4358,7 @@ function frame(nowMs: number): void {
       crtDiagnosticsProbe.textContent = JSON.stringify(
         coastPost?.crt?.diagnostics ?? null,
       );
-    if (renderDiagnosticsProbe) {
-      renderer.getDrawingBufferSize(renderDiagnosticsSize);
-      renderDiagnosticsProbe.textContent = JSON.stringify({
-        levelId: current.id,
-        bonusPlatform: level.bonusPlatformDiagnostics,
-        settings: renderQualitySettings.snapshot(),
-        active: fixedResolutionActive(),
-        sizes: renderQualitySizes,
-        drawingBuffer: {
-          width: renderDiagnosticsSize.x,
-          height: renderDiagnosticsSize.y,
-        },
-        presentation: coastPost?.resolution ?? null,
-        ocean: level.water?.stats ?? null,
-        islandFoam: level.shoreFoamDiagnostics,
-        hud: ui.gameHudDiagnostics,
-        gameFlowVortex: gameFlowVortex.diagnostics,
-        frameLimiter: renderFrameLimiter.stats,
-        renderedFrames: frameStats.frame,
-      });
-    }
+    writeRenderDiagnostics();
     if (lookDiagnosticsProbe)
       lookDiagnosticsProbe.textContent = JSON.stringify(
         coastPost?.lookDiagnostics ?? null,

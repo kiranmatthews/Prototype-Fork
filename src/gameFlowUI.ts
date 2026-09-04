@@ -111,6 +111,10 @@ export class GameFlowUI {
     this.root.setAttribute("aria-modal", "true");
     this.root.hidden = true;
     this.transitionCurtain.setAttribute("aria-hidden", "true");
+    // A permanently transparent fixed layer is still eligible for compositor
+    // promotion. Keep the curtain out of layout entirely between transitions;
+    // transition() reveals it one settled opacity-0 frame before activation.
+    this.transitionCurtain.hidden = true;
     this.cursor.innerHTML = `
       <svg viewBox="0 0 54 64" aria-hidden="true">
         <path d="M6 4 47 35 29 39 39 57 29 62 19 43 7 55Z"/>
@@ -267,6 +271,11 @@ export class GameFlowUI {
     if (this.transitionActive) return;
     this.transitionActive = true;
     document.body.classList.add("game-shell-transitioning");
+    this.transitionCurtain.hidden = false;
+    // Flush the newly displayed opacity-0 state so adding .active below keeps
+    // the fade-in transition instead of coalescing display + opacity in one
+    // style update and appearing fully black on its first painted frame.
+    void this.transitionCurtain.offsetWidth;
     this.transitionCurtain.classList.add("active");
     try {
       await wait(this.reducedMotion ? 20 : 360);
@@ -291,6 +300,9 @@ export class GameFlowUI {
       this.requestGameplayFrame();
       this.transitionCurtain.classList.remove("vortex", "active");
       await wait(this.reducedMotion ? 20 : 520);
+      // The opacity transition has now finished. Removing the curtain from
+      // layout releases its full-viewport compositor surface during gameplay.
+      this.transitionCurtain.hidden = true;
       this.transitionActive = false;
       document.body.classList.remove("game-shell-transitioning");
       this.syncVortexBodyClass();
@@ -879,6 +891,7 @@ export class GameFlowUI {
       .game-cartoon-cursor path:first-child { fill: #ff8c22; stroke: #47190c; stroke-width: 5; stroke-linejoin: round; }
       .game-cartoon-cursor .game-cursor-shine { fill: #ffd846; stroke: none; }
       .game-transition-curtain { position: fixed; z-index: 100; inset: 0; background-color: #000; opacity: 0; pointer-events: none; transition: opacity .36s ease, background-color .16s ease; }
+      .game-transition-curtain[hidden] { display: none !important; }
       .game-transition-curtain.active { opacity: 1; pointer-events: auto; }
       .game-transition-curtain.active.vortex { background-color: rgba(0,0,0,.16); }
       body.game-shell-transitioning .game-shell-panel { opacity: 0; pointer-events: none; }

@@ -289,7 +289,7 @@ assert.match(
 );
 assert.match(
   main,
-  /if \(gameFlow\.blocksGameplay\)[\s\S]{0,640}if \(gameFlow\.consumeGameplayFrameRequest\(\)\)[\s\S]{0,240}renderGameplayScene\(dt, true, false\)/,
+  /if \(gameFlow\.blocksGameplay\)[\s\S]{0,1200}if \(gameFlow\.consumeGameplayFrameRequest\(\)\)[\s\S]{0,240}renderGameplayScene\(dt, true, false\)/,
   "game-native menus must capture one frozen no-HUD gameplay render behind them",
 );
 assert.ok(

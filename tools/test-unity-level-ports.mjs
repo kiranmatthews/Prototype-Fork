@@ -106,9 +106,30 @@ for (const literal of [
   "vec4(0.108, 0.064, 1.38, 0.0032)",
   "MOTION_SMOOTH_SECONDS = 0.55",
   "scene.add(this.mesh)",
+  "prepare(): Promise<void>",
+  "get diagnostics(): BonusParallaxDiagnostics",
+  "if (visible) void this.prepare()",
 ]) {
   assert.ok(parallaxSource.includes(literal), `Bonus parallax contract missing: ${literal}`);
 }
+const parallaxConstructor = parallaxSource.match(
+  /constructor\([\s\S]*?\n  }\n\n  get visible/,
+)?.[0] ?? "";
+assert.ok(parallaxConstructor, "Bonus parallax constructor could not be audited");
+assert.ok(
+  !parallaxConstructor.includes("new THREE.TextureLoader"),
+  "constructing the hidden Bonus controller must not start image requests",
+);
+assert.match(
+  parallaxSource,
+  /prepare\(\): Promise<void>[\s\S]*new THREE\.TextureLoader\(\)/,
+  "Bonus image requests must be owned by explicit lazy preparation",
+);
+assert.match(
+  parallaxSource,
+  /this\.material\.uniforms\[uniform\]\.value = texture/,
+  "loaded Bonus layers must replace constructor-time placeholders",
+);
 for (const [file, expected] of Object.entries({
   "BonusParallax_Sky.png": "e43dc3ae70b6ca77534b168b7bc7468a7c9bb1ed8f23752c64715afe65dcab2d",
   "BonusParallax_Mountains.png": "9750eb2906ea0f1fb232d8e4820bc615a18ba6457bbbb083f5c6688818350aca",

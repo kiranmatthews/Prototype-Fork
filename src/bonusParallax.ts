@@ -10,6 +10,20 @@ export interface BonusParallaxOptions {
   onTextureError?: (url: string, error: unknown) => void;
 }
 
+export interface BonusParallaxDiagnostics {
+  /** True once an explicit prepare or first visible use requested the layers. */
+  requested: boolean;
+  /** True only when all four authored layers loaded successfully. */
+  loaded: boolean;
+  /** True once every requested layer has either loaded or failed. */
+  settled: boolean;
+  disposed: boolean;
+  requestedLayers: number;
+  loadedLayers: number;
+  failedLayers: number;
+  pendingLayers: number;
+}
+
 export const BONUS_PARALLAX_LAYER_FILES = {
   sky: "BonusParallax_Sky.png",
   mountains: "BonusParallax_Mountains.png",
@@ -172,6 +186,39 @@ function assetUrl(baseUrl: string, fileName: string): string {
   return `${baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`}${fileName}`;
 }
 
+function placeholderTexture(
+  r: number,
+  g: number,
+  b: number,
+  a: number,
+): THREE.DataTexture {
+  const texture = new THREE.DataTexture(
+    new Uint8Array([r, g, b, a]),
+    1,
+    1,
+    THREE.RGBAFormat,
+  );
+  texture.name = "BonusParallax_LazyPlaceholder";
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.minFilter = texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function configureLayerTexture(
+  texture: THREE.Texture,
+  fileName: string,
+): THREE.Texture {
+  texture.name = `BonusParallax_${fileName}`;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.minFilter = texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  return texture;
+}
+
 /**
  * Camera-owned Bonus backdrop. Call `update` once per rendered frame with the
  * presentation delta (zero while paused) and a respawn sequence/key. A changed
@@ -181,7 +228,6 @@ function assetUrl(baseUrl: string, fileName: string): string {
 export class BonusParallax {
   readonly mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
   readonly material: THREE.ShaderMaterial;
-  readonly textures: readonly THREE.Texture[];
 
   private readonly camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
   private readonly cameraPosition = new THREE.Vector3();
@@ -194,6 +240,16 @@ export class BonusParallax {
   private anchorKey: BonusParallaxAnchorKey | undefined;
   private presentationTime = 0;
   private disposed = false;
+  private readonly assetBaseUrl: string;
+  private readonly onTextureError?: (url: string, error: unknown) => void;
+  private readonly placeholders: THREE.Texture[];
+  private readonly loadedTextures: THREE.Texture[] = [];
+  private preparation: Promise<void> | null = null;
+  private requestedLayers = 0;
+  private loadedLayers = 0;
+  private failedLayers = 0;
+  private pendingLayers = 0;
+  private pendingSettlers = new Set<() => void>();
 
   constructor(
     scene: THREE.Scene,
@@ -201,29 +257,17 @@ export class BonusParallax {
     options: BonusParallaxOptions = {},
   ) {
     this.camera = camera;
-    const baseUrl =
+    this.assetBaseUrl =
       options.assetBaseUrl ?? `${import.meta.env.BASE_URL}bonus-parallax/`;
-    const loader = new THREE.TextureLoader();
-    const load = (fileName: string): THREE.Texture => {
-      const url = assetUrl(baseUrl, fileName);
-      const texture = loader.load(
-        url,
-        undefined,
-        undefined,
-        (error) => options.onTextureError?.(url, error),
-      );
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-      texture.minFilter = texture.magFilter = THREE.LinearFilter;
-      texture.generateMipmaps = false;
-      return texture;
-    };
-
-    const sky = load(BONUS_PARALLAX_LAYER_FILES.sky);
-    const mountains = load(BONUS_PARALLAX_LAYER_FILES.mountains);
-    const background = load(BONUS_PARALLAX_LAYER_FILES.backgroundHouses);
-    const foreground = load(BONUS_PARALLAX_LAYER_FILES.foregroundHouses);
-    this.textures = [sky, mountains, background, foreground];
+    this.onTextureError = options.onTextureError;
+    // Constructor-time uniforms use four bytes of local fallback art. The four
+    // 1672x941 authored images are deliberately not requested until Bonus is
+    // actually entered (prepare/setVisible/update below).
+    const sky = placeholderTexture(4, 35, 90, 255);
+    const mountains = placeholderTexture(0, 0, 0, 0);
+    const background = placeholderTexture(0, 0, 0, 0);
+    const foreground = placeholderTexture(0, 0, 0, 0);
+    this.placeholders = [sky, mountains, background, foreground];
     this.material = new THREE.ShaderMaterial({
       name: "BonusParallax_Compositor",
       uniforms: {
@@ -259,8 +303,52 @@ export class BonusParallax {
     return this.mesh.visible;
   }
 
+  /** Network-backed layers only. Empty until prepare() is called. */
+  get textures(): readonly THREE.Texture[] {
+    return this.loadedTextures;
+  }
+
+  get diagnostics(): BonusParallaxDiagnostics {
+    return {
+      requested: this.preparation !== null,
+      loaded:
+        !this.disposed &&
+        this.loadedLayers === Object.keys(BONUS_PARALLAX_LAYER_FILES).length,
+      settled: this.preparation !== null && this.pendingLayers === 0,
+      disposed: this.disposed,
+      requestedLayers: this.requestedLayers,
+      loadedLayers: this.loadedLayers,
+      failedLayers: this.failedLayers,
+      pendingLayers: this.pendingLayers,
+    };
+  }
+
+  /**
+   * Lazily request the four authored layers. Repeated calls share one promise;
+   * disposal resolves outstanding waiters and late loader callbacks self-clean.
+   */
+  prepare(): Promise<void> {
+    if (this.disposed) return Promise.resolve();
+    if (this.preparation) return this.preparation;
+    const loader = new THREE.TextureLoader();
+    const layers = [
+      ["uSky", BONUS_PARALLAX_LAYER_FILES.sky],
+      ["uMountains", BONUS_PARALLAX_LAYER_FILES.mountains],
+      ["uBackgroundHouses", BONUS_PARALLAX_LAYER_FILES.backgroundHouses],
+      ["uForegroundHouses", BONUS_PARALLAX_LAYER_FILES.foregroundHouses],
+    ] as const;
+    this.preparation = Promise.all(
+      layers.map(([uniform, fileName]) =>
+        this.loadLayer(loader, uniform, fileName),
+      ),
+    ).then(() => undefined);
+    return this.preparation;
+  }
+
   setVisible(visible: boolean): void {
+    if (this.disposed) return;
     this.mesh.visible = visible;
+    if (visible) void this.prepare();
   }
 
   setMasterParallax(value: number): void {
@@ -284,6 +372,7 @@ export class BonusParallax {
     anchorKey?: BonusParallaxAnchorKey,
   ): void {
     if (this.disposed) return;
+    if (this.mesh.visible && !this.preparation) void this.prepare();
     if (!this.hasOrigin) this.reset(playerPosition, anchorKey);
 
     const targetX = clampSigned((playerPosition.x - this.origin.x) / MOTION_SPAN_X);
@@ -307,10 +396,89 @@ export class BonusParallax {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    for (const settle of [...this.pendingSettlers]) settle();
+    this.pendingSettlers.clear();
     this.mesh.removeFromParent();
     this.mesh.geometry.dispose();
     this.material.dispose();
-    this.textures.forEach((texture) => texture.dispose());
+    const ownedTextures = new Set<THREE.Texture>([
+      ...this.placeholders,
+      ...this.loadedTextures,
+    ]);
+    for (const texture of ownedTextures) texture.dispose();
+    for (const uniform of [
+      "uSky",
+      "uMountains",
+      "uBackgroundHouses",
+      "uForegroundHouses",
+    ])
+      this.material.uniforms[uniform].value = null;
+    this.placeholders.length = 0;
+    this.loadedTextures.length = 0;
+  }
+
+  private loadLayer(
+    loader: THREE.TextureLoader,
+    uniform: "uSky" | "uMountains" | "uBackgroundHouses" | "uForegroundHouses",
+    fileName: string,
+  ): Promise<void> {
+    const url = assetUrl(this.assetBaseUrl, fileName);
+    this.requestedLayers++;
+    this.pendingLayers++;
+    return new Promise((resolve) => {
+      let finished = false;
+      const settle = (): void => {
+        if (finished) return;
+        finished = true;
+        this.pendingSettlers.delete(settle);
+        this.pendingLayers = Math.max(0, this.pendingLayers - 1);
+        resolve();
+      };
+      this.pendingSettlers.add(settle);
+      let requested: THREE.Texture | null = null;
+      try {
+        requested = loader.load(
+          url,
+          (texture) => {
+            if (this.disposed) {
+              texture.dispose();
+              settle();
+              return;
+            }
+            configureLayerTexture(texture, fileName);
+            this.material.uniforms[uniform].value = texture;
+            this.loadedLayers++;
+            settle();
+          },
+          undefined,
+          (error) => {
+            requested?.dispose();
+            if (!this.disposed) {
+              this.failedLayers++;
+              try {
+                this.onTextureError?.(url, error);
+              } catch {
+                // A diagnostic callback cannot strand the preparation promise.
+              }
+            }
+            settle();
+          },
+        );
+        configureLayerTexture(requested, fileName);
+        this.loadedTextures.push(requested);
+      } catch (error) {
+        requested?.dispose();
+        if (!this.disposed) {
+          this.failedLayers++;
+          try {
+            this.onTextureError?.(url, error);
+          } catch {
+            // A diagnostic callback cannot strand the preparation promise.
+          }
+        }
+        settle();
+      }
+    });
   }
 
   private updateCameraQuad(): void {
