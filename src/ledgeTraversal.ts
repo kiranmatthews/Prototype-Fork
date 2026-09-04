@@ -104,6 +104,31 @@ export function ledgeGripIntent(
   };
 }
 
+/**
+ * Resolve raw screen input through the camera's flattened ground frame before
+ * projecting it onto an arbitrary ledge. This deliberately ignores the
+ * player's course/skate axes: a hang returns before travel-zone remapping, and
+ * those axes may describe board handedness or an airborne approach rather
+ * than what the arrows mean on screen.
+ */
+export function ledgeScreenGripIntent(
+  moveX: number,
+  moveY: number,
+  cameraForward: { x: number; z: number },
+  basis: LedgeBasis,
+): LedgeGripIntent {
+  const length = Math.hypot(cameraForward.x, cameraForward.z);
+  const fx = length > 1e-6 ? cameraForward.x / length : 0;
+  const fz = length > 1e-6 ? cameraForward.z / length : -1;
+  const rightX = -fz;
+  const rightZ = fx;
+  return ledgeGripIntent(
+    rightX * moveX + fx * moveY,
+    rightZ * moveX + fz * moveY,
+    basis,
+  );
+}
+
 /** The actual lip point beneath a hanging body centre. */
 export function ledgeEdgePoint(
   out: THREE.Vector3,

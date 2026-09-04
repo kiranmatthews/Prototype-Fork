@@ -53,8 +53,8 @@ import {
   ledgeBodyBox,
   ledgeCatchEnvelope,
   ledgeEdgePoint,
-  ledgeGripIntent,
   ledgeLandingPoint,
+  ledgeScreenGripIntent,
   ledgeTraversePoint,
   LEDGE_SHIM_INPUT_THRESHOLD,
   type LedgeBasis,
@@ -1061,7 +1061,6 @@ export class Player {
   private ledgeAwayT = 0; // stick held AWAY this long lets go (hop down, no X needed)
   private ledgeShimmy = 0; // live along-ledge slide input (-1..1) — drives the hand-over-hand
   private ledgeClimbQueued = false; // preserves X pressed/held on the catch frame
-  private ledgeControlRightSign: 1 | -1 = 1; // latch axisL handedness before a mounted catch drops the deck
   private readonly ledgeEnvelope: LedgeCatchEnvelope =
     ledgeCatchEnvelope(TUNING.ledgeReach, 0);
   // baked Mixamo braced-hang clips: which one is playing, its clock, and the
@@ -12925,10 +12924,6 @@ export class Player {
     this.ledgeAwayT = 0;
     this.ledgeShimmy = 0;
     this.ledgeClimbQueued = this.rawInput.jumpPressed || this.rawInput.jumpHeld;
-    // axisL uses the skating handedness until the catch completes. Preserve
-    // that control frame before traversal hands the mounted deck to the loose-
-    // board simulation, otherwise the first shimmy reverses as freeSkate flips.
-    this.ledgeControlRightSign = this.freeSkate ? -1 : 1;
     // A two-handed ledge catch cannot leave the deck mounted. Detach before
     // zeroing speed/vVel so the loose board inherits the actual catch flight.
     this.detachBoardForTraversal();
@@ -13037,22 +13032,19 @@ export class Player {
       // GRIP — settle into the hands over a beat (a catch, not a teleport)
       this.ledgeEaseT = Math.min(LEDGE_EASE, this.ledgeEaseT + dt);
       const k = this.ledgeEaseT / LEDGE_EASE;
-      // The stick, read in WALL space (via the course frame, which the hang
-      // never rotates): the along-ledge component SHIMMIES you down the lip,
-      // the off-wall component held for a beat lets go — so "away" is stick-
-      // down for a ledge ahead but stick-left for a wall on your right.
-      // axisL's meaning is MODE-DEPENDENT: the course/on-foot frame stores the
-      // screen-right stick direction (setTravelDir — see the N zone, where it
-      // can't be derived from axisF), but the free-skate carve maintains
-      // heading-LEFT (its entry seed + negate keep that mirror). A fixed sign
-      // here inverted every on-foot shimmy on the course while the skate tests
-      // read fine. A mounted catch drops the deck, so use the frame owner that
-      // was latched on contact rather than the now-boardless live state.
-      const rSgn = this.ledgeControlRightSign;
-      const sx = rSgn * this.axisL.x * this.rawInput.moveX + this.axisF.x * this.rawInput.moveY;
-      const sz = rSgn * this.axisL.z * this.rawInput.moveX + this.axisF.z * this.rawInput.moveY;
+      // Resolve the raw arrows through the recorded camera frame, then into
+      // the ledge's live tangent/normal basis. Course axes are intentionally
+      // excluded: hang returns before E/W zone remapping, and a mounted catch
+      // can leave those axes in free-skate handedness. Camera-space makes the
+      // contract stable on every face: up/down follows a sideways ledge while
+      // the direction toward/away from its landing climbs or dismounts.
       const basis = ledgeBasis(n, CONST.playerHalf.x, CONST.playerHalf.z);
-      const gripIntent = ledgeGripIntent(sx, sz, basis);
+      const gripIntent = ledgeScreenGripIntent(
+        this.rawInput.moveX,
+        this.rawInput.moveY,
+        this.camDir,
+        basis,
+      );
       const { shim } = gripIntent;
       this.ledgeShimmy +=
         ((Math.abs(shim) > LEDGE_SHIM_INPUT_THRESHOLD ? shim : 0) - this.ledgeShimmy) *

@@ -231,6 +231,7 @@ try {
     ledgeCatchEnvelope,
     ledgeGripIntent,
     ledgeLandingPoint,
+    ledgeScreenGripIntent,
     ledgeTraversePoint,
   } = await server.ssrLoadModule("/src/ledgeTraversal.ts");
 
@@ -303,6 +304,23 @@ try {
     assert.equal(toward.pullingToward, true,
       `inward input did not request a climb for normal ${nx},${nz}`);
     assert.equal(toward.pullingAway, false);
+  }
+  // Raw controls are camera-relative while hanging. With the camera looking
+  // down -Z, a sideways (±X-normal) ledge uses screen up/down for its ±Z
+  // tangent, and screen left/right for inward/outward mantle decisions.
+  for (const nx of [-1, 1]) {
+    const sideBasis = ledgeBasis({ x: nx, z: 0 }, 0.5, 0.5);
+    const up = ledgeScreenGripIntent(0, 1, { x: 0, z: -1 }, sideBasis);
+    const down = ledgeScreenGripIntent(0, -1, { x: 0, z: -1 }, sideBasis);
+    assert.ok(Math.abs(up.shim) > 0.99, `screen-up did not traverse ${nx}X ledge`);
+    assert.ok(Math.abs(down.shim) > 0.99, `screen-down did not traverse ${nx}X ledge`);
+    assert.equal(Math.sign(up.shim), -Math.sign(down.shim));
+    assert.equal(up.pullingToward || up.pullingAway, false);
+    assert.equal(down.pullingToward || down.pullingAway, false);
+    const toward = ledgeScreenGripIntent(-nx, 0, { x: 0, z: -1 }, sideBasis);
+    const away = ledgeScreenGripIntent(nx, 0, { x: 0, z: -1 }, sideBasis);
+    assert.equal(toward.pullingToward, true, `screen inward did not climb ${nx}X ledge`);
+    assert.equal(away.pullingAway, true, `screen outward did not drop ${nx}X ledge`);
   }
   const cornerIntent = ledgeGripIntent(
     0,
@@ -559,44 +577,53 @@ try {
     mountedCatch.flyBoardVel.distanceTo(new THREE.Vector3(12, -2, 0)) < 1e-9,
     "loose deck did not inherit the catch velocity",
   );
-  assert.equal(
-    mountedCatch.ledgeControlRightSign,
-    -1,
-    "mounted catch forgot the skating control frame",
-  );
-
-  // Detaching flips freeSkate immediately, but must not flip the stick's
-  // left/right meaning while the hands are already on the wall.
+  // Detaching flips freeSkate immediately, but the recorded camera frame keeps
+  // screen directions stable while the hands are already on the wall.
+  mountedCatch.camDir.set(0, 0, -1);
   const shimInput = makeInput();
-  shimInput.moveX = 1;
   mountedCatch.rawInput = shimInput;
   const mountedBasis = ledgeBasis(
     mountedCatch.ledgeNormal,
     CONST.playerHalf.x,
     CONST.playerHalf.z,
   );
-  const expectedShim = THREE.MathUtils.clamp(
-    -mountedCatch.axisL.x * mountedBasis.tx -
-      mountedCatch.axisL.z * mountedBasis.tz,
-    -1,
-    1,
+  if (Math.abs(mountedCatch.ledgeNormal.x) > Math.abs(mountedCatch.ledgeNormal.z))
+    shimInput.moveY = 1;
+  else shimInput.moveX = 1;
+  const expectedShim = ledgeScreenGripIntent(
+    shimInput.moveX,
+    shimInput.moveY,
+    mountedCatch.camDir,
+    mountedBasis,
   );
-  assert.ok(Math.abs(expectedShim) > 0.5, "mounted shimmy fixture is degenerate");
+  assert.ok(Math.abs(expectedShim.shim) > 0.5, "mounted shimmy fixture is degenerate");
   mountedCatch.stepHang(CONST.fixedStep, shimInput, gateLevel);
   assert.equal(
     Math.sign(mountedCatch.ledgeShimmy),
-    Math.sign(expectedShim),
+    Math.sign(expectedShim.shim),
     "deck detach reversed the first shimmy input",
   );
 
-  const makeSideGrip = () => {
+  const makeSideGrip = (travelDir = "E") => {
     const player = new Player(gateScene);
     prepareCatch(player, mountedFace);
-    player.axisF.set(0, 0, -1);
-    player.axisL.set(1, 0, 0);
+    player.setTravelDir(travelDir);
+    player.camDir.set(0, 0, -1);
     assert.equal(player.tryLedgeGrab(mountedFace, gateLevel), true);
     return player;
   };
+  for (const travelDir of ["E", "W"]) {
+    const sideGrip = makeSideGrip(travelDir);
+    assert.ok(Math.abs(sideGrip.ledgeNormal.x) > 0.9,
+      `${travelDir} fixture is not a sideways ledge`);
+    const verticalInput = makeInput();
+    verticalInput.moveY = 1;
+    sideGrip.rawInput = verticalInput;
+    sideGrip.stepHang(CONST.fixedStep, verticalInput, gateLevel);
+    assert.ok(Math.abs(sideGrip.ledgeShimmy) > 0.15,
+      `${travelDir} travel axes rotated screen-up out of traversal`);
+    assert.equal(sideGrip.ledgeAwayT, 0);
+  }
   const cornerGrip = makeSideGrip();
   cornerGrip.ledgeNormal.set(-Math.SQRT1_2, 0, -Math.SQRT1_2);
   const cornerInput = makeInput();
@@ -611,7 +638,7 @@ try {
 
   const outwardGrip = makeSideGrip();
   const outwardInput = makeInput();
-  outwardInput.moveX = -1;
+  outwardInput.moveX = Math.sign(outwardGrip.ledgeNormal.x) || 1;
   for (let frame = 0; frame < 7; frame++) {
     outwardGrip.rawInput = outwardInput;
     outwardGrip.stepHang(CONST.fixedStep, outwardInput, gateLevel);
@@ -620,7 +647,7 @@ try {
 
   const inwardGrip = makeSideGrip();
   const inwardInput = makeInput();
-  inwardInput.moveX = 1;
+  inwardInput.moveX = -(Math.sign(inwardGrip.ledgeNormal.x) || 1);
   for (let frame = 0; frame < 8; frame++) {
     inwardGrip.rawInput = inwardInput;
     inwardGrip.stepHang(CONST.fixedStep, inwardInput, gateLevel);
