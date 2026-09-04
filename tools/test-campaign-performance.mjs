@@ -108,7 +108,7 @@ assert.match(
 );
 assert.match(
   level,
-  /updateCampaignPortalAnimation\(playerX = this\.playerPos\.x\)/,
+  /updateCampaignPortalAnimation\([\s\S]{0,100}playerX = this\.playerPos\.x,[\s\S]{0,80}playerZ = this\.playerPos\.z/,
   "the long warp-room row must suspend only distant portal animation",
 );
 assert.match(

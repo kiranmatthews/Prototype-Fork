@@ -2079,6 +2079,7 @@ function switchLevel(
   id: string,
   preserveEditor = false,
   preserveInventory = false,
+  warpReturnFromKey: string | null = null,
 ): void {
   ui.hideMessage();
   if (bonusSession) discardSuspendedBonus();
@@ -2118,17 +2119,36 @@ function switchLevel(
   level = new Level(scene, entry);
   loadedLevelId = entry.id;
   puffs.attach(scene);
+  const warpReturnPose =
+    entry.id === "warproom" && warpReturnFromKey
+      ? level.campaignPortalReturnPose(warpReturnFromKey)
+      : null;
   // Bank the old shelf and select the target before resetting its run state.
   player.enterLevel(entry.id);
   player.bonusMode = false;
   player.hubMode = entry.id === "warproom";
   currentRunBonusBoxes = 0;
-  player.respawn(level, true, preserveInventory);
+  player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
   syncCampaignPortalProgress();
   if (split2p && p2) {
     p2.enterLevel(entry.id);
-    p2.respawn(level, true);
-    p2.pos.x += 1.6;
+    if (warpReturnPose) {
+      const p2Pose = {
+        position: warpReturnPose.position.clone().add(
+          new THREE.Vector3(
+            -warpReturnPose.heading.z,
+            0,
+            warpReturnPose.heading.x,
+          ).normalize().multiplyScalar(1.6),
+        ),
+        heading: warpReturnPose.heading.clone(),
+      };
+      p2.respawn(level, true, false, p2Pose);
+      level.playerPos.copy(player.pos);
+    } else {
+      p2.respawn(level, true);
+      p2.pos.x += 1.6;
+    }
     p2.snapRenderInterpolation();
   }
   // Save data wins after every rider's hard reset. Level stores the crystal
@@ -2309,7 +2329,13 @@ function discardSuspendedBonus(): void {
   applyEndlessDeaths();
 }
 
+function returnToWarpRoom(originLevelId: string): void {
+  const returnFromKey = campaignLevelById(originLevelId)?.progressKey ?? null;
+  switchLevel("warproom", false, true, returnFromKey);
+}
+
 function quitCurrentLevel(): void {
+  const originLevelId = bonusSession?.parentEntry.id ?? current.id;
   guardGameplayFromMenu();
   if (!bonusSession) player.bankFlyingFruit();
   if (bonusSession) {
@@ -2321,7 +2347,7 @@ function quitCurrentLevel(): void {
   void gameFlow.transition(async () => {
     paused = false;
     if (bonusSession) discardSuspendedBonus();
-    switchLevel("warproom", false, true);
+    returnToWarpRoom(originLevelId);
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2345,6 +2371,7 @@ function retryAfterGameOver(): void {
 }
 
 function quitAfterGameOver(): void {
+  const originLevelId = current.id;
   guardGameplayFromMenu();
   campaign.resetInventory();
   player.lives = DEFAULT_CAMPAIGN_LIVES;
@@ -2352,7 +2379,7 @@ function quitAfterGameOver(): void {
   restoreCommittedRunRewards();
   void gameFlow.transition(async () => {
     paused = false;
-    switchLevel("warproom", false, true);
+    returnToWarpRoom(originLevelId);
     await prepareActivePresentationAssets();
     ui.showDeathScreen(false);
     gameFlow.hide();
@@ -2371,11 +2398,12 @@ function retryFromResults(): void {
 }
 
 function continueFromResults(): void {
+  const originLevelId = current.id;
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
     resultsCameraActive = false;
-    switchLevel("warproom", false, true);
+    returnToWarpRoom(originLevelId);
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });

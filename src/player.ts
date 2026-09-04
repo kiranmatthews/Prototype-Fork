@@ -16,6 +16,7 @@ import {
   deckTrickFromInput,
   deckTrickInfo,
   type DeckTrickKind,
+  type CampaignPortalReturnPose,
   LaneCursor,
   Level,
   RopeSwing,
@@ -2724,7 +2725,12 @@ export class Player {
 
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
-  respawn(level: Level, hard = false, preserveInventory = false): void {
+  respawn(
+    level: Level,
+    hard = false,
+    preserveInventory = false,
+    placement?: CampaignPortalReturnPose,
+  ): void {
     const preservedLives = this.lives;
     const preservedFruit = this.fruit;
     // Checkpoints restore the authored world/counters, but an endless-mode
@@ -2769,7 +2775,7 @@ export class Player {
       this.restoreRelics();
     }
     level.reset(hard);
-    this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
+    this.pos.copy(placement?.position ?? (hard ? level.spawnPos : level.currentSpawn));
     level.playerPos.copy(this.pos); // keep the boulder trigger honest across respawns
     if (hard) this.runTime = 0;
     // Box/mask/score state follows the checkpoint. Wumpa is global campaign
@@ -2787,7 +2793,7 @@ export class Player {
       this.fruit = preservedFruit;
     }
     if (endlessScore !== null) this.points = endlessScore;
-    this.settle(level);
+    this.settle(level, placement?.heading);
     this.onRespawn();
   }
 
@@ -2831,7 +2837,7 @@ export class Player {
   // it faces. Shared by the death respawn and the checkpoint warp, because a
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
-  private settle(level: Level): void {
+  private settle(level: Level, facing?: THREE.Vector3): void {
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -3029,7 +3035,10 @@ export class Player {
     this.grabGraceTimer = 0;
     this.grabSpinAngle = 0;
     this.spinAngle = 0;
-    this.visualYaw = 0;
+    this.visualYaw = facing && facing.lengthSq() > 1e-8
+      ? wrapAngle(Math.atan2(facing.x, facing.z) - Math.PI)
+      : 0;
+    this.bodyGroup.rotation.y = this.visualYaw;
     this.flipTimer = 0;
     this.balance = 0;
     this.balanceVel = 0;

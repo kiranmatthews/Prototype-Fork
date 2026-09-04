@@ -1921,6 +1921,31 @@ export const COMBO_GEM_TINT = 0x46e882;
 export interface LaneCursor {
   s: number;
 }
+
+/** Safe hub placement authored alongside a campaign gate, never by row index. */
+export interface CampaignPortalReturnPose {
+  position: THREE.Vector3;
+  /** Unit world heading pointing out of the gate and into the Warp Room. */
+  heading: THREE.Vector3;
+}
+
+const CAMPAIGN_PORTAL_RETURN_DOWN = new THREE.Vector3(0, -1, 0);
+
+interface CampaignPortalRuntime {
+  progressKey: string;
+  targetId: string;
+  gate: THREE.Group;
+  localBox: THREE.Box3;
+  /** Current world AABB retained for diagnostics/editor validation. */
+  box: THREE.Box3;
+  transformInitialized: boolean;
+  worldMatrix: THREE.Matrix4;
+  inverseWorldMatrix: THREE.Matrix4;
+  swirl: Swirl;
+  swirlLocalPosition: THREE.Vector3;
+  swirlScale: number;
+  returnObstacleFront: number;
+}
 export function newLaneCursor(): LaneCursor {
   return { s: -1 };
 }
@@ -3043,12 +3068,12 @@ export class Level {
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] =
     [];
   private warpPads: WarpPad[] = []; // end-of-level warp platforms: rings rise, plume flickers
-  private campaignPortals: {
-    targetId: string;
-    box: THREE.Box3;
-    x: number;
-    swirl: Swirl;
-  }[] = [];
+  private campaignPortals: CampaignPortalRuntime[] = [];
+  private campaignPortalPoint = new THREE.Vector3();
+  private campaignPortalWorld = new THREE.Vector3();
+  private campaignPortalScale = new THREE.Vector3();
+  private campaignPortalRotation = new THREE.Quaternion();
+  private campaignPortalSupportRay = new THREE.Raycaster();
   private campaignPortalAwardMeshes: Record<
     "crystal" | "boxGem" | "comboGem" | "timeRelic",
     THREE.InstancedMesh
@@ -6136,9 +6161,58 @@ export class Level {
   }
 
   campaignPortalAt(position: THREE.Vector3): string | null {
-    for (const portal of this.campaignPortals)
-      if (portal.box.containsPoint(position)) return portal.targetId;
+    for (const portal of this.campaignPortals) {
+      this.syncCampaignPortalTransform(portal);
+      const localPoint = this.campaignPortalPoint
+        .copy(position)
+        .applyMatrix4(portal.inverseWorldMatrix);
+      if (portal.localBox.containsPoint(localPoint)) return portal.targetId;
+    }
     return null;
+  }
+
+  campaignPortalReturnPose(progressKey: string): CampaignPortalReturnPose | null {
+    const portal = this.campaignPortals.find(
+      (candidate) => candidate.progressKey === progressKey,
+    );
+    if (!portal) return null;
+    this.syncCampaignPortalTransform(portal);
+    const heading = new THREE.Vector3(0, 0, 1)
+      .transformDirection(portal.worldMatrix);
+    // Gameplay gate roots are Y-up/yaw-only; decorative pitch belongs on a
+    // child mesh. Flatten defensively so authored facing never tilts movement.
+    heading.y = 0;
+    if (heading.lengthSq() < 1e-8) heading.set(0, 0, 1);
+    else heading.normalize();
+    const worldBodyRadius =
+      Math.abs(heading.x) * CONST.playerHalf.x +
+      Math.abs(heading.z) * CONST.playerHalf.z;
+    const worldOrigin = new THREE.Vector3().applyMatrix4(portal.worldMatrix);
+    const worldForward = new THREE.Vector3(0, 0, 1)
+      .applyMatrix4(portal.worldMatrix);
+    const forwardScale = Math.max(1e-6, worldOrigin.distanceTo(worldForward));
+    const returnDistance =
+      portal.returnObstacleFront + (worldBodyRadius + 0.15) / forwardScale;
+    const position = new THREE.Vector3(0, 0.1, returnDistance)
+      .applyMatrix4(portal.worldMatrix);
+
+    // Seat the return pose on whatever real hub support lives beneath this
+    // gate. Today this is the gallery floor; future raised/repositioned portals
+    // do not need to duplicate their floor height in the campaign table.
+    const ray = this.campaignPortalSupportRay;
+    ray.set(
+      this.campaignPortalWorld.set(position.x, position.y + 40, position.z),
+      CAMPAIGN_PORTAL_RETURN_DOWN,
+    );
+    ray.near = 0;
+    ray.far = 80;
+    const support = ray.intersectObjects(this.groundMeshes, false)[0];
+    if (support) position.y = support.point.y + 0.1;
+
+    return {
+      position,
+      heading,
+    };
   }
 
   setCampaignPortalProgress(
@@ -9871,6 +9945,10 @@ export class Level {
       const gx = firstX + i * spacing;
       const gz = -10.8;
       const cy = 4.05;
+      const stepCenterZ = 2.1;
+      const stepDepth = 3.1;
+      const triggerCenterZ = 0.25;
+      const triggerDepth = 3.2;
       const gate = new THREE.Group();
       gate.position.set(gx, 0, gz);
       this.root.add(gate);
@@ -9903,8 +9981,11 @@ export class Level {
         foot.position.set(fx * RS * 0.98, 0.9, 0);
         gate.add(foot);
       }
-      const step = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.62, 3.1), stone);
-      step.position.set(0, 0.31, 2.1);
+      const step = new THREE.Mesh(
+        new THREE.BoxGeometry(5.5, 0.62, stepDepth),
+        stone,
+      );
+      step.position.set(0, 0.31, stepCenterZ);
       step.name = "gate step";
       gate.add(step);
       this.groundMeshes.push(step);
@@ -9945,35 +10026,81 @@ export class Level {
         awardMatrices[kind] = gate.matrix.clone().multiply(awardLocal);
       }
       this.campaignPortalAwardMatrices.set(destination.levelId, awardMatrices);
+      // Returning players clear whichever gate-local obstacle reaches furthest
+      // into the room. Player projection/scale and floor height resolve live in
+      // campaignPortalReturnPose, from this same transform owner.
+      const returnObstacleFront = Math.max(
+        triggerCenterZ + triggerDepth * 0.5,
+        stepCenterZ + stepDepth * 0.5,
+      );
+      const localBox = new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(0, 3.5, triggerCenterZ),
+        new THREE.Vector3(5.7, 7.1, triggerDepth),
+      );
+      gate.updateWorldMatrix(true, false);
       this.campaignPortals.push({
+        progressKey: destination.progressKey,
         targetId: destination.levelId,
-        x: gx,
+        gate,
+        localBox,
+        transformInitialized: false,
+        worldMatrix: new THREE.Matrix4(),
+        inverseWorldMatrix: new THREE.Matrix4(),
         swirl: sw,
-        box: new THREE.Box3().setFromCenterAndSize(
-          new THREE.Vector3(gx, 3.5, gz + 0.25),
-          new THREE.Vector3(5.7, 7.1, 3.2),
-        ),
+        swirlLocalPosition: new THREE.Vector3(0, cy, 0),
+        swirlScale: RS / 4.4,
+        returnObstacleFront,
+        box: new THREE.Box3(),
       });
     });
     sockets.count = socketIndex;
     sockets.instanceMatrix.needsUpdate = true;
     sockets.computeBoundingSphere();
     this.setCampaignPortalProgress(() => null);
-    this.updateCampaignPortalAnimation(this.spawnPos.x);
+    this.updateCampaignPortalAnimation(this.spawnPos.x, this.spawnPos.z);
   }
 
-  private updateCampaignPortalAnimation(playerX = this.playerPos.x): void {
+  private updateCampaignPortalAnimation(
+    playerX = this.playerPos.x,
+    playerZ = this.playerPos.z,
+  ): void {
     // Nothing disappears: hardware, labels and a fully painted portal frame
     // remain renderable. Only distant vertex deformation sleeps, with
     // hysteresis so walking around the threshold cannot flicker the workload.
     for (const portal of this.campaignPortals) {
-      const distance = Math.abs(portal.x - playerX);
+      this.syncCampaignPortalTransform(portal);
+      const distance = Math.hypot(
+        portal.swirl.group.position.x - playerX,
+        portal.swirl.group.position.z - playerZ,
+      );
       if (portal.swirl.paused) {
         if (distance < 30) portal.swirl.paused = false;
       } else if (distance > 38) {
         portal.swirl.paused = true;
       }
     }
+  }
+
+  private syncCampaignPortalTransform(portal: CampaignPortalRuntime): void {
+    portal.gate.updateWorldMatrix(true, false);
+    if (
+      portal.transformInitialized &&
+      portal.worldMatrix.equals(portal.gate.matrixWorld)
+    )
+      return;
+    portal.transformInitialized = true;
+    portal.worldMatrix.copy(portal.gate.matrixWorld);
+    portal.inverseWorldMatrix.copy(portal.worldMatrix).invert();
+    portal.swirl.group.position
+      .copy(portal.swirlLocalPosition)
+      .applyMatrix4(portal.worldMatrix);
+    portal.gate.getWorldQuaternion(this.campaignPortalRotation);
+    portal.swirl.group.quaternion.copy(this.campaignPortalRotation);
+    portal.gate.getWorldScale(this.campaignPortalScale);
+    portal.swirl.group.scale
+      .copy(this.campaignPortalScale)
+      .multiplyScalar(portal.swirlScale);
+    portal.box.copy(portal.localBox).applyMatrix4(portal.worldMatrix);
   }
 
   private buildJungle(): void {

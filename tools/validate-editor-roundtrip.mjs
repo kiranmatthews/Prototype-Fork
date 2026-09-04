@@ -1703,7 +1703,7 @@ try {
       : null);
     for (const mesh of Object.values(warpLevel.campaignPortalAwardMeshes))
       assert.equal(mesh.count, 1, "one earned Jungle award did not reach its gate batch");
-    warpLevel.playerPos.x = 54;
+    warpLevel.playerPos.set(54, 0, 4);
     warpLevel.update(1 / 60);
     assert.ok(
       warpLevel.campaignPortals.every((portal) => portal.swirl.group.visible),

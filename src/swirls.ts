@@ -620,13 +620,13 @@ class SwirlSystem {
   remove(s: Swirl): void {
     const i = this.live.indexOf(s);
     if (i >= 0) this.live.splice(i, 1);
-    this.scene?.remove(s.group);
+    s.group.removeFromParent();
     s.dispose();
   }
 
   clear(): void {
     for (const s of this.live) {
-      this.scene?.remove(s.group);
+      s.group.removeFromParent();
       s.dispose();
     }
     this.live.length = 0;
