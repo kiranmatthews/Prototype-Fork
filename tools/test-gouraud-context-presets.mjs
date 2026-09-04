@@ -49,7 +49,7 @@ try {
     profileApi.GAME_FLOW_VORTEX_PROFILES.menu.preset,
     FIELD_SWIRL_PRESETS.vortex,
   );
-  assert.deepEqual(
+  assert.notDeepEqual(
     profileApi.GAME_FLOW_VORTEX_PROFILES.warp.preset,
     FIELD_SWIRL_PRESETS.vortex,
   );

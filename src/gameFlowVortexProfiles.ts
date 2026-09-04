@@ -45,6 +45,67 @@ function authoredPreset(): Readonly<FieldSwirlPreset> {
   return Object.freeze({ ...FIELD_SWIRL_PRESETS.vortex });
 }
 
+function warpPreset(): Readonly<FieldSwirlPreset> {
+  return Object.freeze({
+    blend: "alpha",
+    blendBright: "add",
+    radius: 4.14,
+    rings: 14,
+    segs: 8,
+    depth: 4,
+    billboard: true,
+    arms: 0,
+    twist: 6,
+    flow: 0.467,
+    current: 0.013,
+    sharp: 2.54,
+    filament: 0.152,
+    glowWidth: 1,
+    wobble: 0,
+    wobbleScale: 0,
+    wobbleRate: 0,
+    edgeCrinkle: 0,
+    warpA: 0.003,
+    warpAScale: 3,
+    warpARate: 4.59,
+    warpB: 0.084,
+    warpBScale: 3,
+    warpBRate: 0.025,
+    warpC: 0.001,
+    warpCScale: 2,
+    warpCRate: 0.5,
+    couple: 2,
+    jag: 3,
+    jagScale: 7,
+    jagRate: 0.009,
+    streak: 0.924,
+    streakScale: 8,
+    streakRate: 5.2,
+    core: 0.321,
+    coreGlow: 1.51,
+    mottle: 0.698,
+    mottleScale: 3.83,
+    mottleRate: 0.963,
+    colCore: 16777215,
+    colFil: 25343,
+    colGlow: 10944256,
+    colGround: 13311,
+    colCoreB: 16777215,
+    colFilB: 16711680,
+    colGlowB: 16711680,
+    cycleRate: 0,
+    hueCycle: 0,
+    alpha: 1,
+    body: 1,
+    rim: 0.411,
+    spin: 0.75,
+    spinDiff: 0.078,
+    pulse: 0.586,
+    pulseRate: 6,
+    colGround2: 2031360,
+  });
+}
+
 function gameOverPreset(): Readonly<FieldSwirlPreset> {
   return Object.freeze({
     blend: "alpha",
@@ -108,7 +169,7 @@ export const GAME_FLOW_VORTEX_PROFILES: Readonly<
   Record<GameFlowVortexContext, Readonly<GameFlowVortexProfile>>
 > = Object.freeze({
   menu: Object.freeze({ seed: 37, preset: authoredPreset() }),
-  warp: Object.freeze({ seed: 37, preset: authoredPreset() }),
+  warp: Object.freeze({ seed: 37, preset: warpPreset() }),
   gameover: Object.freeze({ seed: 37, preset: gameOverPreset() }),
 });
 
