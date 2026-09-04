@@ -289,8 +289,8 @@ assert.match(
 );
 assert.match(
   main,
-  /if \(gameFlow\.blocksGameplay\)[\s\S]{0,1200}if \(gameFlow\.consumeGameplayFrameRequest\(\)\)[\s\S]{0,240}renderGameplayScene\(dt, true, false\)/,
-  "game-native menus must capture one frozen no-HUD gameplay render behind them",
+  /if \(gameFlow\.blocksGameplay\)[\s\S]{0,1200}if \(gameFlow\.consumeGameplayFrameRequest\(\)\)[\s\S]{0,240}renderGameplayWithGameFlow\(dt\)[\s\S]{0,120}gameFlow\.captureGameplay/,
+  "game-native menus must capture and reuse one frozen gameplay-backed frame",
 );
 assert.ok(
   (main.match(/ui\.setGameHudComposited\(false\)/g) ?? []).length >= 3,

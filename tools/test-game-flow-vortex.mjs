@@ -3,13 +3,15 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const [stage, flow, main, field, profiles, studio] = await Promise.all([
+const [stage, flow, main, field, profiles, studio, coast, gameSurface] = await Promise.all([
   readFile(`${root}src/gameFlowVortex.ts`, "utf8"),
   readFile(`${root}src/gameFlowUI.ts`, "utf8"),
   readFile(`${root}src/main.ts`, "utf8"),
   readFile(`${root}src/swirlfield.ts`, "utf8"),
   readFile(`${root}src/gameFlowVortexProfiles.ts`, "utf8"),
   readFile(`${root}src/fieldstudio.ts`, "utf8"),
+  readFile(`${root}src/coastpost.ts`, "utf8"),
+  readFile(`${root}src/gameFlowSurface.ts`, "utf8"),
 ]);
 
 assert.match(stage, /cloneGameFlowVortexProfile\(context\)/);
@@ -56,13 +58,22 @@ assert.doesNotMatch(stage, /PresentationFrameLimiter|VORTEX_RENDER_HZ/,
   "the vortex must share the outer gameplay cadence without a quality gate");
 assert.match(stage, /targetFps: 60/);
 assert.match(stage, /cadenceOwner: "gameplay-render-loop"/);
-assert.match(stage, /this\.reducedMotion && stage\.renderedOnce/);
+assert.match(
+  stage,
+  /this\.reducedMotion[\s\S]{0,120}stage\.renderedOnce[\s\S]{0,120}target === null/,
+  "reduced motion may skip only direct frames; target-backed UI must repaint its clear",
+);
+assert.match(
+  stage,
+  /this\.maskElapsed \+= deltaSeconds;[\s\S]{0,80}const seconds = this\.maskElapsed/,
+  "zero-delta reduced-motion frames must freeze the Game Over mask",
+);
 assert.match(stage, /renderer\.getRenderTarget\(\)/);
 assert.match(stage, /renderer\.setRenderTarget\(savedTarget, savedFace, savedMip\)/);
 assert.match(
   stage,
-  /try \{[\s\S]{0,600}renderer\.setRenderTarget\(null\);[\s\S]{0,400}renderer\.render\(this\.vortexScene, this\.vortexCamera\);[\s\S]{0,700}finally \{[\s\S]{0,400}renderer\.setRenderTarget\(savedTarget, savedFace, savedMip\)/,
-  "presentation exceptions must restore shared gameplay renderer state",
+  /target: THREE\.WebGLRenderTarget \| null = null[\s\S]{0,1400}try \{[\s\S]{0,500}if \(target\) renderer\.setRenderTarget\(target\);[\s\S]{0,120}else renderer\.setRenderTarget\(null\);[\s\S]{0,500}renderer\.render\(this\.vortexScene, this\.vortexCamera\);[\s\S]{0,800}finally \{[\s\S]{0,400}renderer\.setRenderTarget\(savedTarget, savedFace, savedMip\)/,
+  "target and direct presentation exceptions must restore shared renderer state",
 );
 assert.match(stage, /renderer\.clearDepth\(\)[\s\S]{0,100}renderer\.render\(this\.maskScene/,
   "Game Over mask must render directly after the vortex pass");
@@ -114,13 +125,18 @@ assert.match(stage, /renderer\.getDrawingBufferSize\(this\.drawingBufferSize\)/)
 assert.match(stage, /renderer\.getSize\(this\.canvasSize\)/);
 assert.match(
   stage,
-  /renderer\.setRenderTarget\(null\)[\s\S]{0,300}renderer\.setViewport\(0, 0, this\.canvasSize\.x, this\.canvasSize\.y\)[\s\S]{0,300}renderer\.render\(this\.vortexScene, this\.vortexCamera\)/,
-  "both ordered Gouraud meshes must render directly at full canvas resolution",
+  /if \(target\) \{[\s\S]{0,220}targetWidth = Math\.max\(1, target\.width\);[\s\S]{0,100}targetHeight = Math\.max\(1, target\.height\);/,
+  "the shared post target must author the Gouraud camera and viewport size",
+);
+assert.match(
+  stage,
+  /if \(target\) renderer\.setRenderTarget\(target\);\s*else renderer\.setRenderTarget\(null\);/,
+  "a missing target must retain the direct default-framebuffer fallback",
 );
 assert.doesNotMatch(
   stage,
-  /WebGLRenderTarget|compositeScene|compositeCamera|compositeMaterial|gameFlowVortexTargetSize|MAX_TARGET_(?:WIDTH|HEIGHT)/,
-  "the full-quality vortex must not retain a low-resolution upscale path",
+  /new THREE\.WebGLRenderTarget|compositeScene|compositeCamera|compositeMaterial/,
+  "the vortex borrows CoastPost's target and must not allocate a second post surface",
 );
 assert.match(stage, /this\.vortex\.dispose\(\)/,
   "deactivation must release the Gouraud geometry and materials");
@@ -214,12 +230,7 @@ assert.match(main, /getGameFlowVortexDiagnostics: \(\) => gameFlowVortex\.diagno
 assert.match(
   main,
   /function releaseGameplayPostForGameFlow\(\): void \{[\s\S]{0,220}coastPost\.suspendForGameFlow\(\);/,
-  "loading must release the mutually-exclusive gameplay post targets",
-);
-assert.match(
-  main,
-  /if \(!gameFlowVortex\.resident\)\s*releaseGameplayPostForGameFlow\(\);[\s\S]{0,180}gameFlowVortex\.render\(/,
-  "post targets must collapse before the full-quality vortex takes renderer ownership",
+  "the direct fallback must still release mutually-exclusive gameplay targets",
 );
 assert.match(
   main,
@@ -248,8 +259,66 @@ assert.match(main, /async function prepareActivePresentationAssets\(\): Promise<
 assert.match(main, /await prepareActivePresentationAssets\(\);/);
 assert.match(
   main,
-  /const vortexContext = gameFlow\.vortexContext;[\s\S]{0,80}if \(vortexContext\)[\s\S]{0,260}gameFlowVortex\.render\([\s\S]{0,100}vortexContext/,
+  /const vortexContext = gameFlow\.vortexContext;[\s\S]{0,80}if \(vortexContext\)[\s\S]{0,180}renderVortexWithGameFlow\(dt, nowMs, vortexContext\)/,
   "blocked title/loading/Game Over frames must route to the presentation scene",
+);
+
+const vortexFlowStart = main.indexOf("function renderVortexWithGameFlow(");
+const vortexFlowEnd = main.indexOf("\nfunction resize()", vortexFlowStart);
+assert.ok(vortexFlowStart >= 0 && vortexFlowEnd > vortexFlowStart,
+  "GameFlow vortex router missing");
+const vortexFlow = main.slice(vortexFlowStart, vortexFlowEnd);
+assert.match(vortexFlow, /coastPost\?\.gameFlowPostActive/);
+assert.match(vortexFlow, /coastPost\.renderGameFlow\(\s*dt,\s*\(overlay\) =>/);
+const vortexDrawAt = vortexFlow.indexOf("gameFlowVortex.render(");
+const uiDrawAt = vortexFlow.indexOf("drawGameFlowPreCrt(overlay)");
+assert.ok(vortexDrawAt >= 0 && uiDrawAt > vortexDrawAt,
+  "the game-owned UI must composite after the Gouraud background and mask");
+assert.match(
+  vortexFlow,
+  /gameFlowVortex\.render\([\s\S]{0,180}overlay\.renderer,[\s\S]{0,180}overlay\.target/,
+  "the vortex must borrow the LOOK-free pre-CRT target and renderer facade",
+);
+assert.match(
+  vortexFlow,
+  /gameFlow\.setPreCrtComposited\(false\);[\s\S]{0,100}if \(!gameFlowVortex\.resident\) releaseGameplayPostForGameFlow\(\);[\s\S]{0,120}gameFlowVortex\.render\(renderer/,
+  "post-inactive and scissored paths must preserve the direct renderer fallback",
+);
+
+const gameFlowRenderStart = coast.indexOf("  renderGameFlow(");
+const gameFlowRenderEnd = coast.indexOf("\n  render(\n", gameFlowRenderStart);
+assert.ok(gameFlowRenderStart >= 0 && gameFlowRenderEnd > gameFlowRenderStart,
+  "shared LOOK-free GameFlow post entry point missing");
+const gameFlowRender = coast.slice(gameFlowRenderStart, gameFlowRenderEnd);
+assert.match(gameFlowRender, /this\.suspendForGameFlow\(\)/,
+  "GameFlow post must keep the gameplay composer collapsed");
+assert.match(gameFlowRender, /this\.ensureGameFlowInputTarget\(/,
+  "GameFlow post must use its one dedicated pre-CRT input");
+assert.match(gameFlowRender, /this\.crtPass\.render\(/,
+  "GameFlow post must reuse the shared CRT owner");
+assert.match(gameFlowRender, /this\.outputPass\.render\(/,
+  "GameFlow post must reuse the shared Output owner");
+assert.doesNotMatch(
+  gameFlowRender,
+  /this\.(?:composer|smaaPass|bloomPass|unityPostPass)\.render\(/,
+  "the dedicated GameFlow input must bypass every gameplay/LOOK pass",
+);
+assert.match(
+  gameFlowRender,
+  /if \(!this\.gameFlowPostActive \|\| this\.renderer\.getScissorTest\(\)\) return "direct";/,
+  "renderGameFlow must retain an explicit direct fallback",
+);
+
+const snapshotStart = gameSurface.indexOf("export function snapshotGameFlowSurface(");
+const snapshotEnd = gameSurface.indexOf("\n/** One lazy Canvas2D", snapshotStart);
+assert.ok(snapshotStart >= 0 && snapshotEnd > snapshotStart,
+  "GameFlow DOM snapshot boundary missing");
+const snapshotSource = gameSurface.slice(snapshotStart, snapshotEnd);
+assert.match(snapshotSource, /source\.panel\.querySelectorAll/);
+assert.doesNotMatch(
+  snapshotSource,
+  /document\.body|side-wrap|hud-build|data-crt-guest-panel-host|data-render-quality-panel-host|visual-treatment-panel/,
+  "debug/tool DOM must stay outside the game-owned pre-CRT snapshot",
 );
 assert.match(profiles, /"menu",\s*"warp",\s*"gameover"/);
 assert.ok(
@@ -313,4 +382,6 @@ assert.match(
   "topology tuning must release replaced GPU buffers",
 );
 
-console.log("Validated lazy, direct full-resolution 60 Hz Gouraud vortex ownership and lifecycle.");
+console.log(
+  "Validated lazy 60 Hz Gouraud ownership across shared GameFlow post and direct fallback paths.",
+);

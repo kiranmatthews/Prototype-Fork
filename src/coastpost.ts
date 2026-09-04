@@ -146,11 +146,15 @@ export class CoastPostRenderer {
   private readonly unityPostPass: UnityPostPass;
   private readonly preCrtOverlayPass: PreCrtOverlayPass;
   private readonly crtPass: CrtGuestPass | null;
+  private readonly crtSettings: CrtGuestSettings | null;
   private readonly outputPass: OutputPass;
   private crtOutputTarget: THREE.WebGLRenderTarget | null = null;
+  private gameFlowInputTarget: THREE.WebGLRenderTarget | null = null;
+  private gameFlowSourceKey: string | null = null;
   private enabledState: boolean;
   private liteState: boolean;
   private readonly noSmaa: boolean;
+  private readonly crtDisabledByQuery: boolean;
   private crtLuts: CrtGuestLuts | null = null;
   private disposed = false;
   private width: number;
@@ -182,7 +186,9 @@ export class CoastPostRenderer {
     this.camera = camera;
     this.enabledState = options.enabled ?? false;
     this.liteState = options.lite ?? false;
-    this.noSmaa = new URLSearchParams(window.location.search).has("nosmaa");
+    const query = new URLSearchParams(window.location.search);
+    this.noSmaa = query.has("nosmaa");
+    this.crtDisabledByQuery = query.has("nocrt") || query.has("lite");
 
     renderer.getSize(this.sizeScratch);
     this.width = Math.max(1, this.sizeScratch.x);
@@ -237,6 +243,7 @@ export class CoastPostRenderer {
       this.preCrtOverlayRenderer,
       () => this.resolution,
     );
+    this.crtSettings = options.crtSettings ?? null;
     this.crtPass = options.crtSettings
       ? new CrtGuestPass(renderer, options.crtSettings, {
           sourceWidth: this.inputWidth,
@@ -299,6 +306,25 @@ export class CoastPostRenderer {
 
   get suspended(): boolean {
     return this.suspendedForGameFlow;
+  }
+
+  /**
+   * Whether a LOOK-free game-flow frame has anything to gain from the shared
+   * presentation tail. Fixed Render mode always needs its configured input to
+   * output scale. CRT keeps the path available while its LUTs are loading so
+   * the menu does not jump between DOM/direct and pre-CRT ownership mid-screen.
+   */
+  get gameFlowPostActive(): boolean {
+    const crtRequested =
+      this.crtPass !== null &&
+      this.crtSettings?.enabled === true &&
+      this.crtPass.supported &&
+      !this.crtDisabledByQuery;
+    return (
+      !this.liteState &&
+      !this.disposed &&
+      (this.resolutionMode === "fixed" || crtRequested)
+    );
   }
 
   get crt(): CrtGuestPass | null {
@@ -441,12 +467,114 @@ export class CoastPostRenderer {
     this.crtOutputTarget = null;
   }
 
-  /** Recreate target storage on the first destination frame, under the fade. */
+  /**
+   * Release the dedicated GameFlow input before recreating the larger gameplay
+   * composer storage on the first destination frame under the fade.
+   */
   resumeFromGameFlow(): void {
     if (this.disposed || !this.suspendedForGameFlow) return;
+    this.releaseGameFlowInputTarget();
+    this.gameFlowSourceKey = null;
     this.suspendedForGameFlow = false;
     this.applyResolutionMode();
     this.crtPass?.resetHistory("gameplay presentation resumed");
+  }
+
+  /**
+   * Paint a complete game-flow frame into one LOOK-free linear input, then run
+   * the existing CRT Guest and Output owners. The gameplay composer remains
+   * collapsed for the whole residency; `overlay` owns the source clear/draw so
+   * reduced-motion frames can intentionally retain the previous target.
+   *
+   * Callers keep their existing direct renderer fallback when this returns
+   * `"direct"`; the callback is invoked only for the post path.
+   */
+  renderGameFlow(
+    deltaSeconds = 0,
+    overlay: CoastPostPreCrtOverlay,
+    sourceKey = "game-flow",
+  ): CoastPostRenderPath {
+    if (this.disposed) {
+      throw new Error("CoastPostRenderer.renderGameFlow() called after dispose()");
+    }
+    if (!this.gameFlowPostActive || this.renderer.getScissorTest()) return "direct";
+
+    // This is an ownership switch, not a gameplay resume. Keep the composer at
+    // 1x1 and retain only the dedicated GameFlow input plus shared CRT output.
+    this.suspendForGameFlow();
+    if (sourceKey !== this.gameFlowSourceKey) {
+      this.gameFlowSourceKey = sourceKey;
+      this.crtPass?.resetHistory(`game-flow source changed: ${sourceKey}`);
+    }
+    const resolution = this.gameFlowResolution();
+    const source = this.ensureGameFlowInputTarget(
+      resolution.inputWidth,
+      resolution.inputHeight,
+    );
+    const previousTarget = this.renderer.getRenderTarget();
+    const previousFace = this.renderer.getActiveCubeFace();
+    const previousMip = this.renderer.getActiveMipmapLevel();
+    const previousViewport = this.renderer.getViewport(this.viewportScratch);
+    const previousScissor = this.renderer.getScissor(this.scissorScratch);
+    const previousScissorTest = this.renderer.getScissorTest();
+    const previousAutoClear = this.renderer.autoClear;
+
+    try {
+      this.renderer.setRenderTarget(source);
+      this.preCrtOverlayRenderer.setViewport(
+        0,
+        0,
+        resolution.inputWidth,
+        resolution.inputHeight,
+      );
+      this.renderer.setScissorTest(false);
+      overlay({
+        ...resolution,
+        renderer: this.preCrtOverlayRenderer,
+        target: source,
+      });
+
+      let finalLinear = source;
+      this.crtPass?.setResolution(
+        source.width,
+        source.height,
+        resolution.outputWidth,
+        resolution.outputHeight,
+      );
+      if (this.crtPass?.active) {
+        const crtOutput = this.ensureCrtOutputTarget();
+        this.crtPass.renderToScreen = false;
+        this.crtPass.render(
+          this.renderer,
+          crtOutput,
+          source,
+          deltaSeconds,
+          false,
+        );
+        finalLinear = crtOutput;
+      }
+
+      // OutputPass remains the sole linear-to-display transfer. It also owns
+      // the Render-quality upscale when CRT is unavailable or disabled.
+      this.renderer.setViewport(previousViewport);
+      this.renderer.setScissor(previousScissor);
+      this.renderer.setScissorTest(false);
+      this.outputPass.renderToScreen = true;
+      this.outputPass.render(
+        this.renderer,
+        source,
+        finalLinear,
+        deltaSeconds,
+        false,
+      );
+    } finally {
+      this.renderer.setRenderTarget(previousTarget, previousFace, previousMip);
+      this.renderer.setViewport(previousViewport);
+      this.renderer.setScissor(previousScissor);
+      this.renderer.setScissorTest(previousScissorTest);
+      this.renderer.autoClear = previousAutoClear;
+    }
+    return "post";
   }
 
   render(
@@ -487,6 +615,7 @@ export class CoastPostRenderer {
     this.crtPass?.dispose();
     this.crtOutputTarget?.dispose();
     this.crtOutputTarget = null;
+    this.releaseGameFlowInputTarget();
     if (this.crtLuts) {
       // The pass borrows these textures; this renderer owns the async load.
       disposeCrtGuestLuts(this.crtLuts);
@@ -629,6 +758,59 @@ export class CoastPostRenderer {
     return this.crtOutputTarget;
   }
 
+  private gameFlowResolution(): CoastPostResolutionState {
+    if (this.resolutionMode === "fixed") {
+      return {
+        mode: "fixed",
+        inputWidth: this.inputWidth,
+        inputHeight: this.inputHeight,
+        outputWidth: this.outputWidth,
+        outputHeight: this.outputHeight,
+        scaleX: this.outputWidth / this.inputWidth,
+        scaleY: this.outputHeight / this.inputHeight,
+      };
+    }
+
+    const drawingBuffer = this.renderer.getDrawingBufferSize(this.sizeScratch);
+    const inputWidth = CoastPostRenderer.validDimension(drawingBuffer.x);
+    const inputHeight = CoastPostRenderer.validDimension(drawingBuffer.y);
+    // Keep the public resolution diagnostics and the DPR-1 facade coherent
+    // while the normal composer is deliberately collapsed.
+    this.inputWidth = inputWidth;
+    this.inputHeight = inputHeight;
+    this.outputWidth = inputWidth;
+    this.outputHeight = inputHeight;
+    return {
+      mode: "native",
+      inputWidth,
+      inputHeight,
+      outputWidth: inputWidth,
+      outputHeight: inputHeight,
+      scaleX: 1,
+      scaleY: 1,
+    };
+  }
+
+  private ensureGameFlowInputTarget(
+    width: number,
+    height: number,
+  ): THREE.WebGLRenderTarget {
+    if (!this.gameFlowInputTarget) {
+      this.gameFlowInputTarget = makeGameFlowInputTarget(width, height);
+    } else if (
+      this.gameFlowInputTarget.width !== width ||
+      this.gameFlowInputTarget.height !== height
+    ) {
+      this.gameFlowInputTarget.setSize(width, height);
+    }
+    return this.gameFlowInputTarget;
+  }
+
+  private releaseGameFlowInputTarget(): void {
+    this.gameFlowInputTarget?.dispose();
+    this.gameFlowInputTarget = null;
+  }
+
   private detachComposerTail(): void {
     if (!this.composerTailAttached) return;
     if (this.crtPass) this.composer.removePass(this.crtPass);
@@ -693,6 +875,22 @@ function makeLinearTarget(
     samples: 0,
   });
   target.texture.name = name;
+  return target;
+}
+
+function makeGameFlowInputTarget(
+  width: number,
+  height: number,
+): THREE.WebGLRenderTarget {
+  const target = makeLinearTarget(
+    width,
+    height,
+    "GameFlow.PreCRT.InputLinear.RGBA16F",
+  );
+  // The Game Over mask is a real lit mesh pass over the Gouraud background.
+  // Keep one depth attachment on the shared colour target rather than owning a
+  // second mask surface or WebGL context.
+  target.depthBuffer = true;
   return target;
 }
 

@@ -1,8 +1,9 @@
-// Game-owned menus and campaign screens. This layer is intentionally separate
-// from UI's gameplay HUD so it stays crisp, interactive, and outside the
-// pre-CRT composition pass.
+// Game-owned menus and campaign screens. The live DOM remains the semantic
+// input/accessibility owner; GameFlowSurface can mirror its known geometry into
+// the pre-CRT render path without turning the menu into canvas hit regions.
 
-import "./roofont";
+import type * as THREE from "three";
+import { rooReady } from "./roofont";
 import {
   CAMPAIGN_LEVELS,
   CAMPAIGN_SAVE_SLOTS,
@@ -11,12 +12,22 @@ import {
   type GameAudioOptions,
 } from "./campaign";
 import type { GameFlowVortexContext } from "./gameFlowVortexProfiles";
+import {
+  GameFlowSurface,
+  snapshotGameFlowSurface,
+  type GameFlowSurfaceDiagnostics,
+  type GameFlowSurfaceSize,
+} from "./gameFlowSurface";
 
 type GameScreen =
   | "launch"
   | "new-slots"
   | "load-slots"
   | "confirm-new"
+  | "save-load"
+  | "confirm-save"
+  | "confirm-load"
+  | "confirm-quit-main"
   | "pause"
   | "options"
   | "gameover"
@@ -42,6 +53,12 @@ export interface ResultsScreenState {
 export interface GameFlowUICallbacks {
   onNewGame: (slot: number) => void;
   onLoadGame: (slot: number) => void;
+  /** Host banks the live inventory before asking CampaignStore to save. */
+  onSaveGame: () => boolean;
+  /** Returns whether both the preference and any enabling flush succeeded. */
+  onAutosaveChange: (enabled: boolean) => boolean;
+  /** `saveFirst` distinguishes Save & Quit from explicit discard. */
+  onQuitToMain: (saveFirst: boolean) => boolean;
   onResume: () => void;
   onRestart: () => void;
   onQuitLevel: () => void;
@@ -90,6 +107,10 @@ export class GameFlowUI {
   private loadingVortexActive = false;
   private pauseState: PauseScreenState | null = null;
   private pendingNewSlot = 1;
+  private pendingLoadSlot = 1;
+  private slotOrigin: "launch" | "warp" = "launch";
+  private operationStatus = "";
+  private operationStatusError = false;
   private options: GameAudioOptions;
   private previousPad = { up: false, down: false, left: false, right: false, accept: false, back: false };
   private thumbnail: HTMLCanvasElement | null = null;
@@ -100,6 +121,9 @@ export class GameFlowUI {
   private inertedElements: HTMLElement[] = [];
   private modalAriaHidden = new Map<HTMLElement, string | null>();
   private focusBeforeModal: HTMLElement | null = null;
+  private readonly gameFlowSurface: GameFlowSurface;
+  private preCrtComposited = false;
+  private maskReady = document.body.classList.contains("game-flow-mask-ready");
 
   constructor(
     private campaign: CampaignStore,
@@ -107,6 +131,22 @@ export class GameFlowUI {
     initialOptions: GameAudioOptions,
   ) {
     this.options = { ...initialOptions };
+    this.gameFlowSurface = new GameFlowSurface(
+      () =>
+        snapshotGameFlowSurface({
+          root: this.root,
+          panel: this.panel,
+          buttons: this.navButtons,
+          screen: this.screen,
+          transitionActive: this.transitionActive,
+          thumbnail: this.thumbnail,
+          thumbnailCaptured: this.thumbnailCaptured,
+          maskReady: this.maskReady,
+        }),
+      () => {
+        if (this.preCrtComposited && this.screen) this.requestGameplayFrame();
+      },
+    );
     this.injectStyle();
     this.root.setAttribute("role", "dialog");
     this.root.setAttribute("aria-modal", "true");
@@ -130,6 +170,8 @@ export class GameFlowUI {
     });
     this.root.addEventListener("pointerleave", () => this.cursor.classList.remove("visible"));
     window.addEventListener("keydown", (event) => this.onKey(event));
+    window.addEventListener("resize", () => this.invalidatePreCrt());
+    void rooReady.then(() => this.invalidatePreCrt());
   }
 
   get blocksGameplay(): boolean {
@@ -140,6 +182,10 @@ export class GameFlowUI {
     return this.screen;
   }
 
+  get needsPauseThumbnail(): boolean {
+    return this.screen === "pause" && !!this.thumbnail && !this.thumbnailCaptured;
+  }
+
   get vortexContext(): GameFlowVortexContext | null {
     // Loading wins while leaving Game Over, so the bone-mask stage is released
     // before the warp field carries the transition back to gameplay.
@@ -148,7 +194,7 @@ export class GameFlowUI {
     if (
       this.screen === "launch" ||
       this.screen === "new-slots" ||
-      this.screen === "load-slots" ||
+      (this.screen === "load-slots" && this.slotOrigin === "launch") ||
       this.screen === "confirm-new"
     )
       return "menu";
@@ -167,6 +213,40 @@ export class GameFlowUI {
     return this.debugVisible;
   }
 
+  get gameFlowSurfaceDiagnostics(): GameFlowSurfaceDiagnostics & {
+    composited: boolean;
+  } {
+    return {
+      ...this.gameFlowSurface.diagnostics,
+      composited: this.preCrtComposited,
+    };
+  }
+
+  /**
+   * Hide only the visual panel while retaining its real buttons as the pointer,
+   * focus and accessibility plane. The cartoon cursor remains native DOM.
+   */
+  setPreCrtComposited(composited: boolean): void {
+    if (composited === this.preCrtComposited) return;
+    this.preCrtComposited = composited;
+    this.root.classList.toggle("precrt-composited", composited);
+    this.root.toggleAttribute("data-precrt-composited", composited);
+    // Main calls drawPreCrt in this same admitted frame. Dirty the cache
+    // without requesting a redundant third pause frame.
+    if (composited) this.gameFlowSurface.invalidate();
+    else this.gameFlowSurface.deactivate();
+  }
+
+  /** Paint the cached menu quad into the caller's completed pre-CRT target. */
+  drawPreCrt(
+    renderer: THREE.WebGLRenderer,
+    inputSize: Readonly<GameFlowSurfaceSize>,
+    target: THREE.WebGLRenderTarget | null = renderer.getRenderTarget(),
+  ): boolean {
+    if (!this.preCrtComposited) return false;
+    return this.gameFlowSurface.drawPreCrt(renderer, inputSize, target);
+  }
+
   /** Modal screens hold a still gameplay frame until their world changes. */
   requestGameplayFrame(): void {
     this.gameplayFrameRequested = true;
@@ -179,6 +259,8 @@ export class GameFlowUI {
   }
 
   showLaunch(): void {
+    this.slotOrigin = "launch";
+    this.operationStatus = "";
     this.screen = "launch";
     this.render();
   }
@@ -187,10 +269,13 @@ export class GameFlowUI {
     this.cursor.classList.remove("visible");
     this.screen = null;
     this.previousScreen = null;
+    this.slotOrigin = "launch";
+    this.operationStatus = "";
     this.root.hidden = true;
     document.body.classList.remove("game-shell-modal", "game-shell-paused", "game-shell-results");
     this.syncVortexBodyClass();
     this.releaseModalFocus();
+    this.gameFlowSurface.deactivate();
   }
 
   showPause(state: PauseScreenState): void {
@@ -202,12 +287,38 @@ export class GameFlowUI {
   /** Options/Escape/P routing is polled by the gameplay Input owner. */
   handlePauseToggle(): boolean {
     if (this.transitionActive) return true;
-    if (
-      this.screen === "new-slots" ||
-      this.screen === "load-slots" ||
-      this.screen === "confirm-new"
-    ) {
-      this.screen = this.screen === "confirm-new" ? "new-slots" : "launch";
+    if (this.screen === "confirm-new") {
+      this.screen = "new-slots";
+      this.render();
+      return true;
+    }
+    if (this.screen === "new-slots") {
+      this.screen = "launch";
+      this.render();
+      return true;
+    }
+    if (this.screen === "confirm-load") {
+      this.screen = "load-slots";
+      this.render();
+      return true;
+    }
+    if (this.screen === "load-slots") {
+      this.screen = this.slotOrigin === "warp" ? "save-load" : "launch";
+      this.render();
+      return true;
+    }
+    if (this.screen === "confirm-save") {
+      this.screen = "save-load";
+      this.render();
+      return true;
+    }
+    if (this.screen === "confirm-quit-main") {
+      this.screen = "pause";
+      this.render();
+      return true;
+    }
+    if (this.screen === "save-load") {
+      this.screen = "pause";
       this.render();
       return true;
     }
@@ -226,6 +337,7 @@ export class GameFlowUI {
 
   showGameOver(levelName: string): void {
     this.pauseState = { levelName, inWarpRoom: false };
+    this.maskReady = document.body.classList.contains("game-flow-mask-ready");
     this.screen = "gameover";
     this.render();
   }
@@ -252,8 +364,13 @@ export class GameFlowUI {
     }
     const context = target.getContext("2d");
     try {
-      context?.drawImage(source, 0, 0, target.width, target.height);
+      if (!context) return;
+      context.drawImage(source, 0, 0, target.width, target.height);
       this.thumbnailCaptured = true;
+      // The pause surface was drawn before this copy existed. Queue exactly one
+      // new frozen frame so its cached thumbnail can join the pre-CRT card.
+      this.invalidatePreCrt();
+      this.requestGameplayFrame();
     } catch {
       // A lost WebGL frame should not make the pause menu unusable.
     }
@@ -264,6 +381,13 @@ export class GameFlowUI {
     // Input already polls gamepads for gameplay. Do not repeat that scan and
     // allocate an Array/state object on every ordinary gameplay frame.
     if (!this.screen) return;
+    if (this.screen === "gameover") {
+      const maskReady = document.body.classList.contains("game-flow-mask-ready");
+      if (maskReady !== this.maskReady) {
+        this.maskReady = maskReady;
+        this.invalidatePreCrt();
+      }
+    }
     const { up, down, left, right, accept, back } = this.readGamepad();
     if (this.transitionActive) {
       Object.assign(this.previousPad, { up, down, left, right, accept, back });
@@ -279,6 +403,7 @@ export class GameFlowUI {
   async transition(action: () => void | Promise<void>): Promise<void> {
     if (this.transitionActive) return;
     this.transitionActive = true;
+    this.invalidatePreCrt();
     document.body.classList.add("game-shell-transitioning");
     this.transitionCurtain.hidden = false;
     // Flush the newly displayed opacity-0 state so adding .active below keeps
@@ -315,6 +440,7 @@ export class GameFlowUI {
       this.transitionActive = false;
       document.body.classList.remove("game-shell-transitioning");
       this.syncVortexBodyClass();
+      this.invalidatePreCrt();
     }
   }
 
@@ -322,7 +448,16 @@ export class GameFlowUI {
     this.claimModalFocus();
     this.root.hidden = false;
     document.body.classList.add("game-shell-modal");
-    document.body.classList.toggle("game-shell-paused", this.screen === "pause" || this.screen === "options");
+    document.body.classList.toggle(
+      "game-shell-paused",
+      this.screen === "pause" ||
+        this.screen === "options" ||
+        this.screen === "save-load" ||
+        this.screen === "confirm-save" ||
+        this.screen === "confirm-load" ||
+        this.screen === "confirm-quit-main" ||
+        (this.screen === "load-slots" && this.slotOrigin === "warp"),
+    );
     document.body.classList.remove("game-shell-results");
     this.panel.className = `game-shell-panel game-screen-${this.screen ?? "none"}`;
     this.root.setAttribute("aria-label", this.screenLabel());
@@ -336,6 +471,10 @@ export class GameFlowUI {
     else if (this.screen === "new-slots") this.renderSlots(true);
     else if (this.screen === "load-slots") this.renderSlots(false);
     else if (this.screen === "confirm-new") this.renderConfirmNew();
+    else if (this.screen === "save-load") this.renderSaveLoad();
+    else if (this.screen === "confirm-save") this.renderConfirmSave();
+    else if (this.screen === "confirm-load") this.renderConfirmLoad();
+    else if (this.screen === "confirm-quit-main") this.renderConfirmQuitMain();
     else if (this.screen === "pause") this.renderPause();
     else if (this.screen === "options") this.renderOptions();
     else if (this.screen === "gameover") this.renderGameOver();
@@ -366,11 +505,13 @@ export class GameFlowUI {
     }
     actions.push(
       this.button("NEW GAME", () => {
+        this.slotOrigin = "launch";
         this.previousScreen = "launch";
         this.screen = "new-slots";
         this.render();
       }),
       this.button("LOAD GAME", () => {
+        this.slotOrigin = "launch";
         this.previousScreen = "launch";
         this.screen = "load-slots";
         this.render();
@@ -384,13 +525,16 @@ export class GameFlowUI {
   }
 
   private renderSlots(newGame: boolean): void {
+    const warpLoad = !newGame && this.slotOrigin === "warp";
     const card = element("div", "game-slot-card timber-card");
     const title = element("h2", "game-panel-title");
     title.textContent = newGame ? "NEW GAME" : "LOAD GAME";
     const subtitle = element("p", "game-panel-subtitle");
     subtitle.textContent = newGame
       ? "Choose a slot. Existing progress in that slot will be replaced."
-      : "Choose a saved adventure.";
+      : warpLoad
+        ? "Choose a saved adventure to load in the Warp Room."
+        : "Choose a saved adventure.";
     const slots = element("div", "game-save-slots");
     const saves = this.campaign.listSlots();
     for (let slot = 1; slot <= CAMPAIGN_SAVE_SLOTS; slot++) {
@@ -401,7 +545,13 @@ export class GameFlowUI {
           this.screen = "confirm-new";
           this.render();
         } else if (newGame) this.callbacks.onNewGame(slot);
-        else this.callbacks.onLoadGame(slot);
+        else if (warpLoad) {
+          // Unlike title loading, this abandons an active working session. The
+          // callback cannot run until the explicit confirmation screen agrees.
+          this.pendingLoadSlot = slot;
+          this.screen = "confirm-load";
+          this.render();
+        } else this.callbacks.onLoadGame(slot);
       });
       button.classList.add("game-save-slot");
       button.disabled = !newGame && !save;
@@ -409,7 +559,7 @@ export class GameFlowUI {
       slots.appendChild(button);
     }
     const back = this.button("BACK", () => {
-      this.screen = this.previousScreen ?? "launch";
+      this.screen = warpLoad ? "save-load" : this.previousScreen ?? "launch";
       this.render();
     });
     back.classList.add("game-secondary-action");
@@ -433,6 +583,194 @@ export class GameFlowUI {
     );
     card.append(title, warning, actions);
     this.panel.appendChild(card);
+  }
+
+  private renderSaveLoad(): void {
+    const card = element("div", "game-options-card game-save-load-card timber-card");
+    const title = element("h2", "game-panel-title");
+    title.textContent = "SAVE / LOAD";
+    const status = element("p", "game-save-status");
+    const refreshStatus = (): void => {
+      const slot = this.campaign.activeSlot;
+      status.textContent = slot === null
+        ? "NO ACTIVE SAVE"
+        : `SLOT ${slot}  ·  ${
+            this.campaign.dirty ? "UNSAVED CHANGES" : "PROGRESS SAVED"
+          }`;
+    };
+    refreshStatus();
+    const message = this.operationStatusLine();
+    const list = element("div", "game-menu-list");
+    const save = this.button("SAVE GAME", () => {
+      this.operationStatus = "";
+      this.operationStatusError = false;
+      this.screen = "confirm-save";
+      this.render();
+    });
+    save.disabled = this.campaign.activeSlot === null;
+    const load = this.button("LOAD GAME", () => {
+      this.operationStatus = "";
+      this.operationStatusError = false;
+      this.slotOrigin = "warp";
+      this.screen = "load-slots";
+      this.render();
+    });
+    load.disabled = !this.campaign.listSlots().some((entry) => entry !== null);
+    list.append(
+      save,
+      load,
+      this.toggleButton(
+        "AUTOSAVE",
+        this.campaign.autosaveEnabled,
+        (enabled) => {
+          const ok = this.callbacks.onAutosaveChange(enabled);
+          const actual = this.campaign.autosaveEnabled;
+          this.setOperationStatus(
+            ok
+              ? `AUTOSAVE ${actual ? "ON" : "OFF"}`
+              : "AUTOSAVE COULD NOT BE FULLY SAVED",
+            !ok,
+          );
+          refreshStatus();
+          return actual;
+        },
+      ),
+      this.button("BACK", () => {
+        this.operationStatus = "";
+        this.operationStatusError = false;
+        this.screen = "pause";
+        this.render();
+      }),
+    );
+    card.append(title, status, message, list);
+    this.panel.appendChild(card);
+  }
+
+  private renderConfirmSave(): void {
+    const slot = this.campaign.activeSlot;
+    const card = element("div", "game-options-card timber-card");
+    const title = element("h2", "game-panel-title");
+    title.textContent = slot === null ? "SAVE GAME?" : `SAVE SLOT ${slot}?`;
+    const warning = element("p", "game-panel-subtitle");
+    warning.textContent = this.campaign.dirty
+      ? "Write your current Warp Room progress to this slot?"
+      : "Refresh this slot with your current progress?";
+    const message = this.operationStatusLine();
+    const actions = element("div", "game-menu-list");
+    const cancel = this.button("CANCEL", () => {
+      this.operationStatus = "";
+      this.operationStatusError = false;
+      this.screen = "save-load";
+      this.render();
+    });
+    const save = this.button("SAVE GAME", () => {
+      const ok = this.callbacks.onSaveGame();
+      this.operationStatus = ok
+        ? `GAME SAVED TO SLOT ${this.campaign.activeSlot ?? slot ?? "—"}`
+        : "SAVE FAILED — PROGRESS IS STILL UNSAVED";
+      this.operationStatusError = !ok;
+      this.screen = ok ? "save-load" : "confirm-save";
+      this.render();
+    });
+    save.disabled = slot === null;
+    // Safe action first: keyboard/gamepad selection always starts on Cancel.
+    actions.append(cancel, save);
+    card.append(title, warning, message, actions);
+    this.panel.appendChild(card);
+  }
+
+  private renderConfirmLoad(): void {
+    const save = this.campaign.listSlots()[this.pendingLoadSlot - 1] ?? null;
+    const card = element("div", "game-options-card timber-card");
+    const title = element("h2", "game-panel-title");
+    title.textContent = `LOAD SLOT ${this.pendingLoadSlot}?`;
+    const warning = element("p", "game-panel-subtitle");
+    warning.textContent = this.campaign.dirty
+      ? "Unsaved progress in the current game will be lost."
+      : "Load this save and return to the Warp Room?";
+    const actions = element("div", "game-menu-list");
+    const cancel = this.button("CANCEL", () => {
+      this.screen = "load-slots";
+      this.render();
+    });
+    const load = this.button(
+      "LOAD GAME",
+      () => this.callbacks.onLoadGame(this.pendingLoadSlot),
+      this.campaign.dirty ? "danger" : "",
+    );
+    load.disabled = save === null;
+    // Warp-origin loading is the destructive path; never focus it by default.
+    actions.append(cancel, load);
+    card.append(title, warning, actions);
+    this.panel.appendChild(card);
+  }
+
+  private renderConfirmQuitMain(): void {
+    const dirty = this.campaign.dirty;
+    const card = element("div", "game-options-card timber-card");
+    const title = element("h2", "game-panel-title");
+    title.textContent = "QUIT TO MAIN MENU?";
+    const warning = element("p", "game-panel-subtitle");
+    warning.textContent = dirty
+      ? "You have unsaved progress. Save it before leaving?"
+      : "Are you sure? Save your current progress before leaving?";
+    const message = this.operationStatusLine();
+    const actions = element("div", "game-menu-list");
+    actions.append(
+      this.button("CANCEL", () => {
+        this.operationStatus = "";
+        this.operationStatusError = false;
+        this.screen = "pause";
+        this.render();
+      }),
+    );
+    const saveAndQuit = this.button(
+      "SAVE & QUIT",
+      () => this.attemptQuitToMain(true),
+    );
+    saveAndQuit.disabled = this.campaign.activeSlot === null;
+    actions.append(
+      saveAndQuit,
+      this.button(
+        "QUIT WITHOUT SAVING",
+        () => this.attemptQuitToMain(false),
+        "danger",
+      ),
+    );
+    card.append(title, warning, message, actions);
+    this.panel.appendChild(card);
+  }
+
+  private attemptQuitToMain(saveFirst: boolean): void {
+    if (this.callbacks.onQuitToMain(saveFirst)) return;
+    this.operationStatus = saveFirst
+      ? "SAVE FAILED — STILL IN THE WARP ROOM"
+      : "COULD NOT RETURN TO THE MAIN MENU";
+    this.operationStatusError = true;
+    this.screen = "confirm-quit-main";
+    this.render();
+  }
+
+  private operationStatusLine(): HTMLElement {
+    const status = element(
+      "p",
+      `game-operation-status${this.operationStatusError ? " error" : ""}`,
+    );
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    status.textContent = this.operationStatus;
+    return status;
+  }
+
+  private setOperationStatus(message: string, error: boolean): void {
+    this.operationStatus = message;
+    this.operationStatusError = error;
+    const status = this.panel.querySelector<HTMLElement>(".game-operation-status");
+    if (status) {
+      status.textContent = message;
+      status.classList.toggle("error", error);
+    }
+    this.invalidatePreCrt();
   }
 
   private saveSlotContents(slot: number, save: CampaignSaveV1 | null): HTMLElement {
@@ -464,16 +802,32 @@ export class GameFlowUI {
     const paused = element("div", "game-eyebrow");
     paused.textContent = state.inWarpRoom ? "WARP ROOM" : "PAUSED";
     const list = element("div", "game-menu-list");
-    list.append(
-      this.button("RESUME", this.callbacks.onResume),
-      this.button("OPTIONS", () => {
-        this.previousScreen = "pause";
-        this.screen = "options";
-        this.render();
-      }),
-    );
-    if (!state.inWarpRoom) {
+    list.append(this.button("RESUME", this.callbacks.onResume));
+    const openOptions = (): void => {
+      this.previousScreen = "pause";
+      this.screen = "options";
+      this.render();
+    };
+    if (state.inWarpRoom) {
       list.append(
+        this.button("SAVE / LOAD", () => {
+          this.operationStatus = "";
+          this.operationStatusError = false;
+          this.slotOrigin = "warp";
+          this.screen = "save-load";
+          this.render();
+        }),
+        this.button("OPTIONS", openOptions),
+        this.button("QUIT TO MAIN MENU", () => {
+          this.operationStatus = "";
+          this.operationStatusError = false;
+          this.screen = "confirm-quit-main";
+          this.render();
+        }, "danger"),
+      );
+    } else {
+      list.append(
+        this.button("OPTIONS", openOptions),
         this.button("RESTART", this.callbacks.onRestart),
         this.button("QUIT LEVEL", this.callbacks.onQuitLevel, "danger"),
       );
@@ -491,11 +845,13 @@ export class GameFlowUI {
     title.textContent = "OPTIONS";
     const toggles = element("div", "game-menu-list game-toggle-list");
     toggles.append(
-      this.toggleButton("SOUND EFFECTS", !this.options.sfxMuted, () => {
-        this.options.sfxMuted = !this.options.sfxMuted;
+      this.toggleButton("SOUND EFFECTS", !this.options.sfxMuted, (enabled) => {
+        this.options.sfxMuted = !enabled;
+        return enabled;
       }),
-      this.toggleButton("BACKGROUND MUSIC", !this.options.musicMuted, () => {
-        this.options.musicMuted = !this.options.musicMuted;
+      this.toggleButton("BACKGROUND MUSIC", !this.options.musicMuted, (enabled) => {
+        this.options.musicMuted = !enabled;
+        return enabled;
       }),
       this.button("BACK", () => {
         this.callbacks.onAudioOptions({ ...this.options });
@@ -604,13 +960,18 @@ export class GameFlowUI {
     return item;
   }
 
-  private toggleButton(label: string, on: boolean, mutate: () => void): HTMLButtonElement {
+  private toggleButton(
+    label: string,
+    on: boolean,
+    mutate: (enabled: boolean) => boolean,
+  ): HTMLButtonElement {
+    let active = on;
     const button = this.button("", () => {
-      mutate();
-      const active = label === "SOUND EFFECTS" ? !this.options.sfxMuted : !this.options.musicMuted;
+      active = mutate(!active);
       button.setAttribute("aria-pressed", String(active));
       button.querySelector("strong")!.textContent = active ? "ON" : "OFF";
       button.classList.toggle("toggle-off", !active);
+      this.invalidatePreCrt();
     });
     button.classList.add("game-toggle");
     button.setAttribute("aria-pressed", String(on));
@@ -629,7 +990,7 @@ export class GameFlowUI {
     });
     button.addEventListener("pointerenter", () => {
       const index = this.navButtons.indexOf(button);
-      if (index >= 0) {
+      if (index >= 0 && index !== this.selected) {
         this.selected = index;
         this.syncSelection();
       }
@@ -721,8 +1082,20 @@ export class GameFlowUI {
     if (this.screen === "confirm-new") {
       this.screen = "new-slots";
       this.render();
-    } else if (this.screen === "new-slots" || this.screen === "load-slots") {
+    } else if (this.screen === "new-slots") {
       this.screen = "launch";
+      this.render();
+    } else if (this.screen === "confirm-load") {
+      this.screen = "load-slots";
+      this.render();
+    } else if (this.screen === "load-slots") {
+      this.screen = this.slotOrigin === "warp" ? "save-load" : "launch";
+      this.render();
+    } else if (this.screen === "confirm-save") {
+      this.screen = "save-load";
+      this.render();
+    } else if (this.screen === "confirm-quit-main" || this.screen === "save-load") {
+      this.screen = "pause";
       this.render();
     } else if (this.screen === "options") {
       this.callbacks.onAudioOptions({ ...this.options });
@@ -742,6 +1115,12 @@ export class GameFlowUI {
     const selected = this.navButtons[this.selected];
     if (selected && !selected.disabled)
       requestAnimationFrame(() => selected.focus({ preventScroll: true }));
+    this.invalidatePreCrt();
+  }
+
+  private invalidatePreCrt(): void {
+    this.gameFlowSurface.invalidate();
+    if (this.preCrtComposited && this.screen) this.requestGameplayFrame();
   }
 
   private formatTime(time: number): string {
@@ -756,6 +1135,10 @@ export class GameFlowUI {
       case "new-slots": return "New game save slots";
       case "load-slots": return "Load game save slots";
       case "confirm-new": return `Replace save slot ${this.pendingNewSlot}`;
+      case "save-load": return "Warp Room save and load menu";
+      case "confirm-save": return `Save game slot ${this.campaign.activeSlot ?? ""}`.trim();
+      case "confirm-load": return `Load save slot ${this.pendingLoadSlot}`;
+      case "confirm-quit-main": return "Quit to main menu confirmation";
       case "pause": return "Pause menu";
       case "options": return "Audio options";
       case "gameover": return "Game over";
@@ -822,6 +1205,11 @@ export class GameFlowUI {
         content: ''; position: absolute; inset: 0; z-index: -2;
         background: radial-gradient(circle at 50% 38%, rgba(31,58,100,.26), rgba(3,5,12,.86) 66%, #020308 100%);
       }
+      /* The semantic DOM remains fully laid out, focusable and clickable while
+         its visual twin is painted below CRT. Only the panel/backdrop disappear;
+         the enlarged cartoon pointer stays sharp and event-free above both. */
+      .game-shell.precrt-composited::before { opacity: 0; }
+      .game-shell.precrt-composited .game-shell-panel { opacity: 0; }
       body.game-flow-vortex .game-shell::before {
         background: radial-gradient(circle at 50% 43%, rgba(4,5,14,.08), rgba(3,5,12,.34) 62%, rgba(2,3,8,.72) 100%);
       }
@@ -882,6 +1270,10 @@ export class GameFlowUI {
       .game-progress-grid small { font: 800 11px/1 ui-monospace, Menlo, monospace; color: #70492c; }
       .game-progress-cleared { margin: 12px 0 0; text-align: right; color: #754425; font: 800 11px/1 ui-monospace, Menlo, monospace; }
       .game-options-card { width: min(590px, 91vw); padding: 32px 48px 40px; }
+      .game-save-load-card { width: min(620px, 92vw); }
+      .game-save-status { margin: 10px 0 4px; text-align: center; color: #68341c; font: 800 14px/1.35 ui-monospace, Menlo, monospace; letter-spacing: .05em; }
+      .game-operation-status { min-height: 18px; margin: 0 0 10px; text-align: center; color: #27712c; font: 800 12px/1.35 ui-monospace, Menlo, monospace; }
+      .game-operation-status.error { color: #9a281b; }
       .game-toggle { display: flex; justify-content: space-between; align-items: center; padding: 0 24px; }
       .game-toggle strong { color: #218d3c; }
       .game-toggle.toggle-off strong { color: #a52f1c; }

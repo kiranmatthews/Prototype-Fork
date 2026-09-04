@@ -116,6 +116,7 @@ export class GameFlowVortexHost {
     deltaSeconds: number,
     nowMs: number,
     context: GameFlowVortexContext,
+    target: THREE.WebGLRenderTarget | null = null,
   ): boolean {
     if (this.permanentlyDisposed) return false;
     const stage = this.ensureStage(context);
@@ -125,7 +126,12 @@ export class GameFlowVortexHost {
     this.maskPartsLoaded = stage.maskPartsLoaded;
 
     const invalidated = stage.invalidated;
-    if (this.reducedMotion && stage.renderedOnce && !invalidated) {
+    if (
+      this.reducedMotion &&
+      stage.renderedOnce &&
+      !invalidated &&
+      target === null
+    ) {
       return false;
     }
 
@@ -133,6 +139,7 @@ export class GameFlowVortexHost {
       renderer,
       this.reducedMotion ? 0 : Math.min(0.1, Math.max(0, deltaSeconds)),
       nowMs,
+      target,
     );
     this.targetWidth = result.targetWidth;
     this.targetHeight = result.targetHeight;
@@ -177,7 +184,7 @@ class GameFlowVortexStage {
   private canvasSize = new THREE.Vector2();
   private savedViewport = new THREE.Vector4();
   private savedScissor = new THREE.Vector4();
-  private maskStartedAt = performance.now();
+  private maskElapsed = 0;
   private maskLoadStarted = false;
   private loadedMaskParts = 0;
   private needsRender = true;
@@ -228,12 +235,18 @@ class GameFlowVortexStage {
   render(
     renderer: THREE.WebGLRenderer,
     deltaSeconds: number,
-    nowMs: number,
+    _nowMs: number,
+    target: THREE.WebGLRenderTarget | null = null,
   ): StageFrameResult {
-    const { targetWidth, targetHeight } = this.syncSize(renderer);
+    const { targetWidth, targetHeight, viewportWidth, viewportHeight } =
+      this.syncSize(renderer, target);
     this.vortex.update(deltaSeconds, this.vortexCamera);
     if (this.context === "gameover" && this.mask) {
-      const seconds = (nowMs - this.maskStartedAt) / 1000;
+      // Host supplies zero delta for reduced motion. Accumulated time freezes
+      // the mask with the field while still allowing target-backed frames to
+      // repaint/clear before the cached translucent menu is composited.
+      this.maskElapsed += deltaSeconds;
+      const seconds = this.maskElapsed;
       this.mask.rotation.y = Math.sin(seconds * 0.72) * 0.22;
       this.mask.rotation.z = Math.sin(seconds * 0.53) * 0.025;
       this.mask.position.y = Math.sin(seconds * 1.4) * 0.07;
@@ -247,11 +260,13 @@ class GameFlowVortexStage {
     renderer.getViewport(this.savedViewport);
     renderer.getScissor(this.savedScissor);
     try {
-      // Direct-to-canvas rendering preserves the exact drawing-buffer quality
-      // selected by the gameplay renderer; there is no low-res intermediate.
-      renderer.setRenderTarget(null);
+      // Direct fallback paints the default framebuffer. The shared GameFlow
+      // post path instead supplies its one pre-CRT input target; both use this
+      // same scene/mask lifecycle and renderer context.
+      if (target) renderer.setRenderTarget(target);
+      else renderer.setRenderTarget(null);
       renderer.setScissorTest(false);
-      renderer.setViewport(0, 0, this.canvasSize.x, this.canvasSize.y);
+      renderer.setViewport(0, 0, viewportWidth, viewportHeight);
       renderer.autoClear = true;
       renderer.render(this.vortexScene, this.vortexCamera);
       if (this.maskScene && this.maskCamera) {
@@ -301,7 +316,7 @@ class GameFlowVortexStage {
     const rim = new THREE.DirectionalLight(0x7edbff, 2.2);
     rim.position.set(-4, 3, -2);
     this.maskScene.add(fire, rim, this.mask);
-    this.maskStartedAt = performance.now();
+    this.maskElapsed = 0;
   }
 
   dispose(): void {
@@ -325,14 +340,36 @@ class GameFlowVortexStage {
     document.body.classList.remove("game-flow-mask-ready");
   }
 
-  private syncSize(renderer: THREE.WebGLRenderer): {
+  private syncSize(
+    renderer: THREE.WebGLRenderer,
+    target: THREE.WebGLRenderTarget | null,
+  ): {
     targetWidth: number;
     targetHeight: number;
+    viewportWidth: number;
+    viewportHeight: number;
   } {
-    renderer.getDrawingBufferSize(this.drawingBufferSize);
-    renderer.getSize(this.canvasSize);
-    const targetWidth = Math.max(1, this.drawingBufferSize.x);
-    const targetHeight = Math.max(1, this.drawingBufferSize.y);
+    let targetWidth: number;
+    let targetHeight: number;
+    let viewportWidth: number;
+    let viewportHeight: number;
+    if (target) {
+      targetWidth = Math.max(1, target.width);
+      targetHeight = Math.max(1, target.height);
+      // WebGLRenderer multiplies viewport writes by its pixel ratio even for an
+      // offscreen target. CoastPost normally supplies its DPR-1 facade, while
+      // this division also keeps the API correct with the real renderer.
+      const pixelRatio = Math.max(0.1, renderer.getPixelRatio());
+      viewportWidth = targetWidth / pixelRatio;
+      viewportHeight = targetHeight / pixelRatio;
+    } else {
+      renderer.getDrawingBufferSize(this.drawingBufferSize);
+      renderer.getSize(this.canvasSize);
+      targetWidth = Math.max(1, this.drawingBufferSize.x);
+      targetHeight = Math.max(1, this.drawingBufferSize.y);
+      viewportWidth = Math.max(1, this.canvasSize.x);
+      viewportHeight = Math.max(1, this.canvasSize.y);
+    }
     const aspect = targetWidth / targetHeight;
     this.vortexCamera.left = -VIEW_HALF_HEIGHT * aspect;
     this.vortexCamera.right = VIEW_HALF_HEIGHT * aspect;
@@ -348,7 +385,7 @@ class GameFlowVortexStage {
       (VIEW_HALF_HEIGHT * aspect * 1.16) / this.vortexRadius,
     );
     this.vortex.group.scale.setScalar(coverScale);
-    return { targetWidth, targetHeight };
+    return { targetWidth, targetHeight, viewportWidth, viewportHeight };
   }
 
   private ensureMaskLoaded(): void {

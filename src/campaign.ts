@@ -96,6 +96,23 @@ export interface CampaignInventory {
   fruit: number;
 }
 
+export type CampaignSaveResult =
+  | { ok: true; save: CampaignSaveV1 }
+  | {
+      ok: false;
+      reason: "no-active-save" | "ephemeral-save" | "storage-unavailable";
+    };
+
+export interface CampaignLoadOptions {
+  /** Explicit acknowledgement that unsaved working progress may be dropped. */
+  discardDirty?: boolean;
+}
+
+export interface CampaignCloseOptions {
+  /** Required when closing a dirty session without saving it first. */
+  discardDirty?: boolean;
+}
+
 /**
  * Bonus inventory is a temporary purse. Only a completed bonus merges it
  * into the parent run, including a 100-fruit rollover across the boundary.
@@ -117,6 +134,7 @@ export function mergeCompletedBonusInventory(
 
 const SAVES_KEY = "solProtoCampaignSavesV1";
 const LAST_SLOT_KEY = "solProtoCampaignLastSlotV1";
+const AUTOSAVE_KEY = "solProtoCampaignAutosaveV1";
 const OPTIONS_KEY = "solProtoGameOptionsV1";
 
 function emptyLevelProgress(): CampaignLevelProgress {
@@ -145,6 +163,25 @@ function createSave(slot: number, now = Date.now()): CampaignSaveV1 {
     fruit: 0,
     levels: emptyLevels(),
   };
+}
+
+/** Keep the live working copy structurally separate from durable snapshots. */
+function cloneSave(save: Readonly<CampaignSaveV1>): CampaignSaveV1 {
+  return {
+    ...save,
+    levels: Object.fromEntries(
+      Object.entries(save.levels).map(([key, progress]) => [
+        key,
+        { ...progress },
+      ]),
+    ),
+  };
+}
+
+function cloneSlots(
+  slots: readonly (CampaignSaveV1 | null)[],
+): Array<CampaignSaveV1 | null> {
+  return slots.map((save) => (save ? cloneSave(save) : null));
 }
 
 function normalizeLevelProgress(value: unknown): CampaignLevelProgress {
@@ -210,11 +247,12 @@ function readSlots(): Array<CampaignSaveV1 | null> {
   return slots;
 }
 
-function writeSlots(slots: readonly (CampaignSaveV1 | null)[]): void {
+function writeSlots(slots: readonly (CampaignSaveV1 | null)[]): boolean {
   try {
     localStorage.setItem(SAVES_KEY, JSON.stringify(slots));
+    return true;
   } catch {
-    // The running session remains usable when storage is unavailable.
+    return false;
   }
 }
 
@@ -229,25 +267,63 @@ function readLastSlot(): number | null {
   }
 }
 
-function writeLastSlot(slot: number): void {
+function writeLastSlot(slot: number): boolean {
   try {
     localStorage.setItem(LAST_SLOT_KEY, String(slot));
+    return true;
   } catch {
-    // Continue still falls back to the active/latest in-memory save.
+    return false;
+  }
+}
+
+function readAutosave(): boolean {
+  try {
+    // Preserve the historical always-save behavior unless explicitly disabled.
+    return localStorage.getItem(AUTOSAVE_KEY) !== "off";
+  } catch {
+    return true;
+  }
+}
+
+function writeAutosave(enabled: boolean): boolean {
+  try {
+    localStorage.setItem(AUTOSAVE_KEY, enabled ? "on" : "off");
+    return true;
+  } catch {
+    return false;
   }
 }
 
 export class CampaignStore {
-  private slots = readSlots();
+  /** Snapshots known to have been written; never shared with the live run. */
+  private persistedSlots = readSlots();
+  /** Mutable working copy for the active run. */
   private activeValue: CampaignSaveV1 | null = null;
   private lastSlot = readLastSlot();
+  private dirtyValue = false;
+  private autosaveValue = readAutosave();
 
   get active(): CampaignSaveV1 | null {
     return this.activeValue;
   }
 
+  get activeSlot(): number | null {
+    const slot = this.activeValue?.slot ?? 0;
+    return slot > 0 ? slot : null;
+  }
+
+  get dirty(): boolean {
+    return this.dirtyValue;
+  }
+
+  get autosaveEnabled(): boolean {
+    return this.autosaveValue;
+  }
+
   listSlots(): readonly (CampaignSaveV1 | null)[] {
-    return this.slots;
+    // The UI may inspect these freely without gaining a mutation path back to
+    // the last durable snapshots.
+    return cloneSlots(this.persistedSlots);
   }
 
   /**
@@ -256,11 +332,12 @@ export class CampaignStore {
    */
   continueSlot(): number | null {
     const activeSlot = this.activeValue?.slot ?? 0;
-    if (activeSlot > 0 && this.slots[activeSlot - 1]) return activeSlot;
-    if (this.lastSlot && this.slots[this.lastSlot - 1]) return this.lastSlot;
+    if (activeSlot > 0 && this.persistedSlots[activeSlot - 1]) return activeSlot;
+    if (this.lastSlot && this.persistedSlots[this.lastSlot - 1])
+      return this.lastSlot;
 
     let latest: CampaignSaveV1 | null = null;
-    for (const save of this.slots) {
+    for (const save of this.persistedSlots) {
       if (!save) continue;
       if (
         !latest ||
@@ -278,29 +355,94 @@ export class CampaignStore {
   newGame(slot: number): CampaignSaveV1 {
     const index = this.slotIndex(slot);
     const save = createSave(index + 1);
-    this.slots[index] = save;
     this.activeValue = save;
+    this.dirtyValue = true;
     this.lastSlot = save.slot;
-    writeSlots(this.slots);
+    // Slot creation/overwrite is an explicit save operation even when later
+    // gameplay autosave is disabled. A failed write leaves a playable, dirty
+    // working game that can be retried with saveActive().
+    this.saveActive();
     writeLastSlot(save.slot);
     return save;
   }
 
-  load(slot: number): CampaignSaveV1 | null {
-    const save = this.slots[this.slotIndex(slot)];
-    this.activeValue = save;
-    if (save) {
-      this.lastSlot = save.slot;
-      writeLastSlot(save.slot);
-    }
-    return save;
+  load(
+    slot: number,
+    options: CampaignLoadOptions = {},
+  ): CampaignSaveV1 | null {
+    const save = this.persistedSlots[this.slotIndex(slot)];
+    if (!save) return null;
+    if (this.dirtyValue && !options.discardDirty) return null;
+    this.activeValue = cloneSave(save);
+    this.dirtyValue = false;
+    this.lastSlot = save.slot;
+    writeLastSlot(save.slot);
+    return this.activeValue;
   }
 
   /** Used by ?lite and tooling without creating or overwriting a real slot. */
   startEphemeral(): CampaignSaveV1 {
     const save = createSave(0);
     this.activeValue = save;
+    this.dirtyValue = false;
     return save;
+  }
+
+  /**
+   * Persist the active working copy atomically from the store's perspective.
+   * The durable shelf and timestamp change only after localStorage accepts it.
+   */
+  saveActive(): CampaignSaveResult {
+    const active = this.activeValue;
+    if (!active) return { ok: false, reason: "no-active-save" };
+    if (active.slot <= 0) return { ok: false, reason: "ephemeral-save" };
+
+    const snapshot = cloneSave(active);
+    snapshot.updatedAt = Date.now();
+    const nextSlots = cloneSlots(this.persistedSlots);
+    nextSlots[active.slot - 1] = snapshot;
+    if (!writeSlots(nextSlots))
+      return { ok: false, reason: "storage-unavailable" };
+
+    this.persistedSlots = nextSlots;
+    active.updatedAt = snapshot.updatedAt;
+    this.dirtyValue = false;
+    this.lastSlot = active.slot;
+    writeLastSlot(active.slot);
+    return { ok: true, save: cloneSave(snapshot) };
+  }
+
+  /** Restore the active slot's last durable snapshot without closing it. */
+  discardActiveChanges(): CampaignSaveV1 | null {
+    const slot = this.activeSlot;
+    const persisted = slot ? this.persistedSlots[slot - 1] : null;
+    this.activeValue = persisted ? cloneSave(persisted) : null;
+    this.dirtyValue = false;
+    return this.activeValue;
+  }
+
+  /**
+   * End the active session. Dirty data is protected unless the caller has
+   * explicitly chosen Quit Without Saving.
+   */
+  closeActive(options: CampaignCloseOptions = {}): boolean {
+    if (this.dirtyValue && !options.discardDirty) return false;
+    this.activeValue = null;
+    this.dirtyValue = false;
+    return true;
+  }
+
+  /**
+   * Autosave is a device preference. Enabling it immediately flushes a dirty
+   * durable run; the false result lets UI report either write failure honestly.
+   */
+  setAutosave(enabled: boolean): boolean {
+    this.autosaveValue = enabled;
+    const preferenceSaved = writeAutosave(enabled);
+    const activeSaved = enabled && this.dirtyValue
+      ? this.saveActive().ok
+      : true;
+    return preferenceSaved && activeSaved;
   }
 
   updateInventory(lives: number, fruit: number): void {
@@ -311,15 +453,16 @@ export class CampaignStore {
     if (save.lives === nextLives && save.fruit === nextFruit) return;
     save.lives = nextLives;
     save.fruit = nextFruit;
-    this.persist();
+    this.noteWorkingChange();
   }
 
   resetInventory(): void {
     const save = this.activeValue;
     if (!save) return;
+    if (save.lives === DEFAULT_CAMPAIGN_LIVES && save.fruit === 0) return;
     save.lives = DEFAULT_CAMPAIGN_LIVES;
     save.fruit = 0;
-    this.persist();
+    this.noteWorkingChange();
   }
 
   levelProgress(levelId: string): CampaignLevelProgress | null {
@@ -346,6 +489,7 @@ export class CampaignStore {
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
     if (!progress) return null;
+    const before = { ...progress };
     progress.cleared = true;
     progress.crystal = progress.crystal || rewards.crystal;
     progress.boxGem = progress.boxGem || rewards.boxGem;
@@ -355,7 +499,15 @@ export class CampaignStore {
       progress.bestTime = progress.bestTime === undefined
         ? rewards.time
         : Math.min(progress.bestTime, rewards.time);
-    this.persist();
+    if (
+      progress.cleared !== before.cleared ||
+      progress.crystal !== before.crystal ||
+      progress.boxGem !== before.boxGem ||
+      progress.comboGem !== before.comboGem ||
+      progress.timeRelic !== before.timeRelic ||
+      progress.bestTime !== before.bestTime
+    )
+      this.noteWorkingChange();
     return progress;
   }
 
@@ -387,14 +539,11 @@ export class CampaignStore {
     };
   }
 
-  private persist(): void {
+  private noteWorkingChange(): void {
     const save = this.activeValue;
-    if (!save) return;
-    save.updatedAt = Date.now();
-    if (save.slot > 0) {
-      this.slots[save.slot - 1] = save;
-      writeSlots(this.slots);
-    }
+    if (!save || save.slot <= 0) return;
+    this.dirtyValue = true;
+    if (this.autosaveValue) this.saveActive();
   }
 
   private slotIndex(slot: number): number {

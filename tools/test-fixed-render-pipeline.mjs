@@ -16,10 +16,13 @@ for (const contract of [
   "setOutputSize",
   "allowRenderFrame",
   "renderGameplayScene",
-  "drawGameHud",
-  "setGameHudComposited",
-  "getGameHudDiagnostics",
-  "render-diagnostics",
+    "drawGameHud",
+    "setGameHudComposited",
+    "getGameHudDiagnostics",
+    "drawGameFlowPreCrt",
+    "renderGameplayWithGameFlow",
+    "renderVortexWithGameFlow",
+    "render-diagnostics",
 ]) {
   assert.ok(main.includes(contract), `main render contract missing ${contract}`);
 }
@@ -43,20 +46,29 @@ for (const contract of [
   "new UnityBloomPass(",
   "this.bloomPass.diagnostics",
   "this.bloomPass.dispose()",
-  "suspendForGameFlow",
-  "resumeFromGameFlow",
-]) {
+    "suspendForGameFlow",
+    "resumeFromGameFlow",
+    "gameFlowPostActive",
+    "renderGameFlow",
+    "gameFlowInputTarget",
+  ]) {
   assert.ok(coast.includes(contract), `presentation renderer missing ${contract}`);
 }
 assert.match(
   coast,
   /suspendForGameFlow\(\): void \{[\s\S]{0,320}this\.configureComposer\(1, 1, 1\);[\s\S]{0,160}this\.crtPass\?\.setResolution\(1, 1, 1, 1\);/,
-  "loading presentation must collapse gameplay targets without dropping LUT assets",
+  "GameFlow presentation must collapse gameplay targets without dropping LUT assets",
 );
-assert.match(
-  coast,
-  /resumeFromGameFlow\(\): void \{[\s\S]{0,220}this\.applyResolutionMode\(\);/,
-  "the hidden destination frame must restore gameplay target sizes",
+const resumeStart = coast.indexOf("  resumeFromGameFlow(): void {");
+const resumeEnd = coast.indexOf("\n  /**", resumeStart + 4);
+assert.ok(resumeStart >= 0 && resumeEnd > resumeStart,
+  "gameplay-resume ownership boundary missing");
+const resumeSource = coast.slice(resumeStart, resumeEnd);
+const releaseGameFlowAt = resumeSource.indexOf("this.releaseGameFlowInputTarget()");
+const restoreComposerAt = resumeSource.indexOf("this.applyResolutionMode()");
+assert.ok(
+  releaseGameFlowAt >= 0 && restoreComposerAt > releaseGameFlowAt,
+  "the dedicated GameFlow target must be disposed before gameplay targets resume",
 );
 const smaaPassAt = coast.indexOf("this.composer.addPass(this.smaaPass)");
 const bloomPassAt = coast.indexOf("this.composer.addPass(this.bloomPass)");
@@ -69,7 +81,7 @@ assert.ok(
     bloomPassAt < unityPassAt &&
     unityPassAt < hudPassAt &&
     hudPassAt < crtPassAt,
-  "bloom and grading must remain between SMAA and the pre-CRT gameplay HUD",
+  "bloom and grading must remain before every pre-CRT game-owned surface",
 );
 assert.match(
   coast,
@@ -85,6 +97,64 @@ assert.doesNotMatch(
   coast,
   /new UnityBloomPass\([\s\S]{0,120}(?:outputWidth|outputHeight)/,
   "bloom allocation must never derive from scaled CRT output dimensions",
+);
+
+assert.equal(
+  (coast.match(/private gameFlowInputTarget:/g) ?? []).length,
+  1,
+  "GameFlow must own exactly one dedicated pre-CRT input reference",
+);
+assert.equal(
+  (coast.match(/new CrtGuestPass\(/g) ?? []).length,
+  1,
+  "gameplay and GameFlow must share one CRT pass owner",
+);
+assert.equal(
+  (coast.match(/new OutputPass\(/g) ?? []).length,
+  1,
+  "gameplay and GameFlow must share one Output pass owner",
+);
+assert.match(
+  coast,
+  /makeGameFlowInputTarget\([\s\S]{0,220}GameFlow\.PreCRT\.InputLinear\.RGBA16F/,
+  "the LOOK-free GameFlow source needs one named linear input target",
+);
+assert.match(
+  coast,
+  /private gameFlowResolution\(\): CoastPostResolutionState \{[\s\S]{0,360}mode: "fixed",[\s\S]{0,120}inputWidth: this\.inputWidth,[\s\S]{0,100}inputHeight: this\.inputHeight,[\s\S]{0,140}outputWidth: this\.outputWidth/,
+  "fixed Render dimensions must author the GameFlow input and output sizes",
+);
+
+const gameFlowPostStart = coast.indexOf("  renderGameFlow(");
+const gameFlowPostEnd = coast.indexOf("\n  render(\n", gameFlowPostStart);
+assert.ok(gameFlowPostStart >= 0 && gameFlowPostEnd > gameFlowPostStart,
+  "LOOK-free GameFlow rendering entry point missing");
+const gameFlowPost = coast.slice(gameFlowPostStart, gameFlowPostEnd);
+assert.match(gameFlowPost, /this\.suspendForGameFlow\(\)/);
+assert.match(gameFlowPost, /this\.ensureGameFlowInputTarget\(/);
+assert.match(gameFlowPost, /overlay\(\{[\s\S]{0,180}target: source/);
+assert.match(gameFlowPost, /this\.crtPass\.render\(/);
+assert.match(gameFlowPost, /this\.outputPass\.render\(/);
+assert.doesNotMatch(
+  gameFlowPost,
+  /this\.(?:composer|smaaPass|bloomPass|unityPostPass)\.render\(/,
+  "GameFlow must go from its input directly to CRT/Output without LOOK",
+);
+assert.match(
+  gameFlowPost,
+  /return "direct";/,
+  "GameFlow post must report its direct fallback instead of allocating blindly",
+);
+
+const gameplayFlowStart = main.indexOf("function renderGameplayWithGameFlow(");
+const gameplayFlowEnd = main.indexOf("\n/**", gameplayFlowStart + 4);
+assert.ok(gameplayFlowStart >= 0 && gameplayFlowEnd > gameplayFlowStart,
+  "gameplay-backed GameFlow renderer missing");
+const gameplayFlow = main.slice(gameplayFlowStart, gameplayFlowEnd);
+assert.match(
+  gameplayFlow,
+  /renderPrimaryScene\([\s\S]{0,180}composited \? drawGameFlowPreCrt : undefined/,
+  "pause/results UI must enter through the post-LOOK PreCrtOverlay pass",
 );
 
 const bloom = await text("src/unityBloom.ts");
@@ -132,5 +202,5 @@ assert.match(panel, /water FX/);
 assert.match(panel, /CRT out/);
 
 console.log(
-  "Validated fixed-60 scheduling and the 720p world/water -> scaled CRT output graph.",
+  "Validated fixed-60 gameplay and LOOK-free GameFlow paths through the shared CRT output graph.",
 );

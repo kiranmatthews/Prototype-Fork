@@ -1182,6 +1182,76 @@ function syncPostResolution(): void {
 
 let gameFlow!: GameFlowUI;
 
+function drawGameFlowPreCrt(context: Parameters<CoastPostPreCrtOverlay>[0]): void {
+  gameFlow.drawPreCrt(
+    context.renderer,
+    { width: context.inputWidth, height: context.inputHeight },
+    context.target,
+  );
+}
+
+/**
+ * Gameplay-backed pause/results screens keep the world's normal LOOK pass,
+ * then insert only the game-owned menu at the shared pre-CRT seam.
+ */
+function renderGameplayWithGameFlow(dt: number): void {
+  configureCoastPost(
+    levelPostEnabled ||
+      (visualTreatmentActivity(visualTreatmentSettings.value).any &&
+        !NO_COAST_POST),
+  );
+  // Capture the clean world once before hiding the semantic DOM and drawing
+  // the menu into it; the capture then requests one corrected composited frame.
+  const composited =
+    gameFlow.currentScreen !== null &&
+    (coastPost?.gameFlowPostActive ?? false) &&
+    !gameFlow.needsPauseThumbnail;
+  gameFlow.setPreCrtComposited(composited);
+  renderPrimaryScene(
+    dt,
+    true,
+    composited ? drawGameFlowPreCrt : undefined,
+  );
+}
+
+/**
+ * Title/loading/Game Over use one dedicated LOOK-free source target while the
+ * gameplay composer is collapsed. The existing CRT and Output owners present
+ * the Gouraud stage, 3D mask and cached menu surface in that order.
+ */
+function renderVortexWithGameFlow(
+  dt: number,
+  nowMs: number,
+  context: NonNullable<GameFlowUI["vortexContext"]>,
+): void {
+  const postRequested =
+    !LITE_RENDER && (fixedResolutionActive() || crtGuestSettings.enabled);
+  if (postRequested) configureCoastPost(false);
+  const composited = coastPost?.gameFlowPostActive ?? false;
+  gameFlow.setPreCrtComposited(composited);
+  if (composited && coastPost) {
+    const path = coastPost.renderGameFlow(
+      dt,
+      (overlay) => {
+        gameFlowVortex.render(
+          overlay.renderer,
+          dt,
+          nowMs,
+          context,
+          overlay.target,
+        );
+        drawGameFlowPreCrt(overlay);
+      },
+      context,
+    );
+    if (path === "post") return;
+  }
+
+  gameFlow.setPreCrtComposited(false);
+  if (!gameFlowVortex.resident) releaseGameplayPostForGameFlow();
+  gameFlowVortex.render(renderer, dt, nowMs, context);
+}
+
 function resize(): void {
   const w = window.innerWidth;
   let h = window.innerHeight;
@@ -1892,6 +1962,9 @@ gameFlow = new GameFlowUI(
   {
     onNewGame: startNewCampaign,
     onLoadGame: loadCampaign,
+    onSaveGame: saveCampaignFromWarp,
+    onAutosaveChange: setCampaignAutosave,
+    onQuitToMain: quitCampaignToMain,
     onResume: resumeFromPause,
     onRestart: restartCurrentRun,
     onQuitLevel: quitCurrentLevel,
@@ -2117,7 +2190,9 @@ function startNewCampaign(slot: number): void {
 function loadCampaign(slot: number): void {
   guardGameplayFromMenu();
   void gameFlow.transition(async () => {
-    const save = campaign.load(slot);
+    // Warp-origin loads have already passed through the explicit destructive
+    // confirmation; title-origin loads have no working session to discard.
+    const save = campaign.load(slot, { discardDirty: true });
     if (!save) return;
     player.lives = save.lives;
     player.fruit = save.fruit;
@@ -2125,6 +2200,41 @@ function loadCampaign(slot: number): void {
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
+}
+
+function syncCampaignInventoryForSave(): void {
+  if (bonusSession) return;
+  player.bankFlyingFruit();
+  campaign.updateInventory(player.lives, player.fruit);
+}
+
+function saveCampaignFromWarp(): boolean {
+  if (current.id !== "warproom" || campaign.activeSlot === null) return false;
+  syncCampaignInventoryForSave();
+  return campaign.saveActive().ok;
+}
+
+function setCampaignAutosave(enabled: boolean): boolean {
+  if (current.id !== "warproom") return false;
+  // With autosave currently off this marks the final live inventory dirty,
+  // then enabling flushes it. Disabling preserves the already-synced baseline.
+  syncCampaignInventoryForSave();
+  return campaign.setAutosave(enabled);
+}
+
+function quitCampaignToMain(saveFirst: boolean): boolean {
+  if (current.id !== "warproom") return false;
+  if (saveFirst && !saveCampaignFromWarp()) return false;
+  if (!campaign.closeActive({ discardDirty: !saveFirst })) return false;
+
+  guardGameplayFromMenu();
+  void gameFlow.transition(() => {
+    paused = false;
+    resultsCameraActive = false;
+    ui.hideMessage();
+    gameFlow.showLaunch();
+  });
+  return true;
 }
 
 function resumeFromPause(): void {
@@ -4024,6 +4134,7 @@ function writeRenderDiagnostics(): void {
       resumeCount: coastPostResumeCount,
     },
     gameFlowVortex: gameFlowVortex.diagnostics,
+    gameFlowSurface: gameFlow.gameFlowSurfaceDiagnostics,
     frameLimiter: renderFrameLimiter.stats,
     renderedFrames: frameStats.frame,
   });
@@ -4117,15 +4228,8 @@ function frame(nowMs: number): void {
     sfx.stopLoops();
     const vortexContext = gameFlow.vortexContext;
     if (vortexContext) {
-      if (!gameFlowVortex.resident)
-        releaseGameplayPostForGameFlow();
       ui.setGameHudComposited(false);
-      gameFlowVortex.render(
-        renderer,
-        dt,
-        nowMs,
-        vortexContext,
-      );
+      renderVortexWithGameFlow(dt, nowMs, vortexContext);
       writeRenderDiagnostics();
       return;
     }
@@ -4135,11 +4239,12 @@ function frame(nowMs: number): void {
     // This also avoids a WebGL -> Canvas2D pause-thumbnail copy every RAF.
     if (gameFlow.consumeGameplayFrameRequest()) {
       if (resultsCameraActive) updateResultsCamera();
-      renderGameplayScene(dt, true, false);
+      renderGameplayWithGameFlow(dt);
       gameFlow.captureGameplay(renderer.domElement);
     }
     return;
   }
+  gameFlow.setPreCrtComposited(false);
   gameFlowVortex.deactivate();
   paused = false;
 
@@ -4404,6 +4509,7 @@ requestAnimationFrame(frame);
   swirls,
   fieldSwirls,
   getGameFlowVortexDiagnostics: () => gameFlowVortex.diagnostics,
+  getGameFlowSurfaceDiagnostics: () => gameFlow.gameFlowSurfaceDiagnostics,
   player,
   level,
   getLevel: () => level,
