@@ -1077,8 +1077,8 @@ function configureCoastPost(enabled: boolean): void {
 
 // The game-flow stage and gameplay post chain are mutually exclusive users of
 // the same renderer. Drop the large composer/SMAA/Bloom/CRT targets before the
-// 720p loading vortex is allocated; the first destination frame rebuilds and
-// compiles them while the transition curtain is still opaque.
+// full-resolution loading vortex is allocated; the first destination frame
+// rebuilds and compiles them while the transition curtain is still opaque.
 function releaseGameplayPostForGameFlow(): void {
   if (!coastPost || coastPost.suspended) return;
   coastPost.suspendForGameFlow();
@@ -1411,11 +1411,13 @@ const oceanOverview = new URLSearchParams(window.location.search).has(
 const coastPhysicsReview = new URLSearchParams(window.location.search).has(
   "coastphysics",
 );
+const fieldStudioRequested = location.hash.toLowerCase().includes("fieldstudio");
 const shellBypass =
   LITE_RENDER ||
   oceanReview ||
   oceanOverview ||
   coastPhysicsReview ||
+  fieldStudioRequested ||
   new URLSearchParams(window.location.search).has("playtest") ||
   localStorage.getItem("solProtoEditorOpen") === "1";
 ui.setLifeCheatEnabled(shellBypass);
@@ -2946,12 +2948,21 @@ async function openSwirlStudioTool(): Promise<void> {
 let fieldStudio: { frame: (dt: number) => void } | null = null;
 async function openFieldStudioTool(): Promise<void> {
   if (fieldStudio) return;
-  const mod = await import("./fieldstudio");
-  fieldStudio = mod.openFieldStudio({
-    camera,
-    scene,
-    onClose: () => (fieldStudio = null),
-  });
+  document.body.classList.add("game-field-studio-open");
+  try {
+    const mod = await import("./fieldstudio");
+    fieldStudio = mod.openFieldStudio({
+      camera,
+      scene,
+      onClose: () => {
+        fieldStudio = null;
+        document.body.classList.remove("game-field-studio-open");
+      },
+    });
+  } catch (error) {
+    document.body.classList.remove("game-field-studio-open");
+    throw error;
+  }
   (window as unknown as { __game: Record<string, unknown> }).__game.fieldStudio = fieldStudio;
 }
 // The WATER studio: fine-tunes the coast water live. #waterstudio on the URL.
@@ -2975,7 +2986,7 @@ if (location.hash.toLowerCase().includes("characterlab")) {
   setTimeout(() => void openPuffStudioTool(), 2500);
 } else if (location.hash.toLowerCase().includes("swirlstudio")) {
   setTimeout(() => void openSwirlStudioTool(), 2500);
-} else if (location.hash.toLowerCase().includes("fieldstudio")) {
+} else if (fieldStudioRequested) {
   setTimeout(() => void openFieldStudioTool(), 2500);
 }
 
@@ -4104,7 +4115,8 @@ function frame(nowMs: number): void {
     if (split2p) input2.consumeEdges();
     acc = 0;
     sfx.stopLoops();
-    if (gameFlow.vortexBackgroundActive) {
+    const vortexContext = gameFlow.vortexContext;
+    if (vortexContext) {
       if (!gameFlowVortex.resident)
         releaseGameplayPostForGameFlow();
       ui.setGameHudComposited(false);
@@ -4112,7 +4124,7 @@ function frame(nowMs: number): void {
         renderer,
         dt,
         nowMs,
-        gameFlow.vortexGameOverMaskActive,
+        vortexContext,
       );
       writeRenderDiagnostics();
       return;

@@ -3,15 +3,17 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const [stage, flow, main, field] = await Promise.all([
+const [stage, flow, main, field, profiles, studio] = await Promise.all([
   readFile(`${root}src/gameFlowVortex.ts`, "utf8"),
   readFile(`${root}src/gameFlowUI.ts`, "utf8"),
   readFile(`${root}src/main.ts`, "utf8"),
   readFile(`${root}src/swirlfield.ts`, "utf8"),
+  readFile(`${root}src/gameFlowVortexProfiles.ts`, "utf8"),
+  readFile(`${root}src/fieldstudio.ts`, "utf8"),
 ]);
 
-assert.match(stage, /FIELD_SWIRL_PRESETS\.vortex/);
-assert.match(stage, /new FieldSwirl\(preset, \{ seed: 37 \}\)/);
+assert.match(stage, /cloneGameFlowVortexProfile\(context\)/);
+assert.match(stage, /new FieldSwirl\(preset, \{ seed: profile\.seed \}\)/);
 assert.doesNotMatch(
   stage,
   /new THREE\.WebGLRenderer/,
@@ -37,8 +39,13 @@ assert.doesNotMatch(
 );
 assert.match(
   hostSource,
-  /private ensureStage\(\): GameFlowVortexStage[\s\S]{0,180}new GameFlowVortexStage\(\)/,
+  /private ensureStage\(context: GameFlowVortexContext\): GameFlowVortexStage[\s\S]{0,260}new GameFlowVortexStage\(context\)/,
   "the THREE stage must be created lazily by render",
+);
+assert.match(
+  hostSource,
+  /this\.stage && this\.stage\.context !== context[\s\S]{0,40}this\.deactivate\(\)/,
+  "a context change must dispose the old immutable stage",
 );
 assert.match(
   hostSource,
@@ -59,11 +66,18 @@ assert.match(
 );
 assert.match(stage, /renderer\.clearDepth\(\)[\s\S]{0,100}renderer\.render\(this\.maskScene/,
   "Game Over mask must render directly after the vortex pass");
-assert.match(stage, /if \(this\.maskLoadStarted \|\| this\.disposed\) return/,
-  "bone-mask assets must load once per resident stage");
+const ensureMaskFlow =
+  stage.match(/private ensureMaskLoaded\(\): void \{[\s\S]*?\n  \}/)?.[0] ?? "";
+assert.ok(
+  ensureMaskFlow.includes("this.maskLoadStarted") &&
+    ensureMaskFlow.includes("this.disposed") &&
+    ensureMaskFlow.includes("return;"),
+  "bone-mask assets must load once per resident Game Over stage",
+);
 
 for (const fieldName of [
   "resident",
+  "context",
   "targetWidth",
   "targetHeight",
   "scenePasses",
@@ -85,6 +99,16 @@ assert.match(stage, /this\.scenePasses\+\+/);
 assert.doesNotMatch(stage, /this\.compositePasses\+\+/,
   "direct rendering must report zero composite passes");
 assert.match(stage, /if \(result\.maskRendered\) this\.maskPasses\+\+/);
+assert.match(
+  stage,
+  /if \(context === "gameover"\) this\.createMaskStage\(\)/,
+  "mask scene resources must be exclusive to Game Over",
+);
+assert.match(
+  stage,
+  /prepare\(\): void \{\s*if \(this\.context === "gameover"\) this\.ensureMaskLoaded\(\);/,
+  "only the Game Over context may request mask assets",
+);
 
 assert.match(stage, /renderer\.getDrawingBufferSize\(this\.drawingBufferSize\)/);
 assert.match(stage, /renderer\.getSize\(this\.canvasSize\)/);
@@ -100,18 +124,33 @@ assert.doesNotMatch(
 );
 assert.match(stage, /this\.vortex\.dispose\(\)/,
   "deactivation must release the Gouraud geometry and materials");
+assert.match(
+  stage,
+  /\(VIEW_HALF_HEIGHT \* aspect \* 1\.16\) \/ this\.vortexRadius/,
+  "full-screen cover must use the selected context preset's radius",
+);
 
-const policy = flow.match(/get vortexBackgroundActive\(\): boolean \{[\s\S]*?\n  \}/)?.[0] ?? "";
-for (const screen of ["launch", "new-slots", "load-slots", "confirm-new", "gameover"])
-  assert.ok(policy.includes(`this.screen === "${screen}"`), `${screen} lost vortex ownership`);
-assert.ok(policy.includes("this.loadingVortexActive"),
-  "screen-less loading transitions must retain the vortex");
+const policy = flow.match(/get vortexContext\(\): GameFlowVortexContext \| null \{[\s\S]*?\n  \}/)?.[0] ?? "";
+assert.match(policy, /if \(this\.loadingVortexActive\) return "warp";/);
+assert.match(policy, /if \(this\.screen === "gameover"\) return "gameover";/);
+for (const screen of ["launch", "new-slots", "load-slots", "confirm-new"])
+  assert.ok(policy.includes(`this.screen === "${screen}"`), `${screen} lost menu-vortex ownership`);
+assert.match(policy, /return "menu";/);
+assert.ok(
+  policy.indexOf("this.loadingVortexActive") < policy.indexOf('this.screen === "gameover"'),
+  "warp/loading must take precedence while leaving Game Over",
+);
 assert.ok(!policy.includes('this.screen === "pause"'), "Pause must retain frozen gameplay");
 assert.ok(!policy.includes('this.screen === "results"'), "Results must retain its posed scene");
 assert.match(
   flow,
-  /get vortexGameOverMaskActive\(\): boolean \{\s*return !this\.loadingVortexActive && this\.screen === "gameover";/,
-  "loading out of Game Over must show the vortex without retaining the mask",
+  /get vortexBackgroundActive\(\): boolean \{\s*return this\.vortexContext !== null;/,
+  "the legacy active flag must derive from the authoritative context",
+);
+assert.match(
+  flow,
+  /get vortexGameOverMaskActive\(\): boolean \{\s*return this\.vortexContext === "gameover";/,
+  "the mask diagnostic must derive from the Game Over context",
 );
 assert.match(flow, /classList\.add\("vortex"\)/);
 assert.match(flow, /classList\.remove\("vortex"/);
@@ -209,8 +248,49 @@ assert.match(main, /async function prepareActivePresentationAssets\(\): Promise<
 assert.match(main, /await prepareActivePresentationAssets\(\);/);
 assert.match(
   main,
-  /if \(gameFlow\.vortexBackgroundActive\)[\s\S]{0,240}gameFlowVortex\.render\(/,
+  /const vortexContext = gameFlow\.vortexContext;[\s\S]{0,80}if \(vortexContext\)[\s\S]{0,260}gameFlowVortex\.render\([\s\S]{0,100}vortexContext/,
   "blocked title/loading/Game Over frames must route to the presentation scene",
+);
+assert.match(profiles, /"menu",\s*"warp",\s*"gameover"/);
+assert.ok(
+  (profiles.match(/preset: authoredPreset\(\)/g) ?? []).length === 3,
+  "every game-flow context must own an independent authored preset snapshot",
+);
+assert.match(studio, /GOURAUD FIELD LAB/);
+assert.match(studio, /FIELD_STUDIO_CONTEXTS/);
+assert.match(studio, /Copy all/);
+assert.match(
+  studio,
+  /this\.live = new FieldSwirl\(this\.preset, \{ seed: this\.seed \}\)/,
+  "the lab must privately own its preview instead of sharing level effects",
+);
+assert.match(
+  studio,
+  /this\.live\.update\(0, this\.ctx\.camera\)/,
+  "a paused context switch must still initialize its replacement field",
+);
+assert.doesNotMatch(studio, /fieldSwirls\.(?:spawn|remove|update)/);
+assert.match(
+  studio,
+  /if \(!this\.paused\) this\.live\.update\(dt, cam\)/,
+  "pausing a lab preview must retain its GPU resources",
+);
+assert.match(
+  studio,
+  /Copy active'[\s\S]{0,100}this\.activeProfileOutput\(\)/,
+  "Copy active must not trust textarea content replaced by clipboard fallback",
+);
+assert.match(main, /fieldStudioRequested \|\|[\s\S]{0,100}has\("playtest"\)/,
+  "#fieldstudio must bypass the launch shell without an extra query flag");
+assert.match(
+  main,
+  /classList\.add\("game-field-studio-open"\)[\s\S]{0,500}classList\.remove\("game-field-studio-open"\)/,
+  "the direct lab visibility override must be scoped to the open tool",
+);
+assert.match(
+  flow,
+  /game-debug-hidden\.game-field-studio-open \.pst \{ display: block !important; \}/,
+  "opening Field Studio must not persistently change the M-key debug preference",
 );
 assert.match(field, /const bend = wob[\s\S]{0,180}: 0;/,
   "zero-wobble vortex preset should skip unused sine work");
@@ -219,6 +299,16 @@ assert.match(field, /const g = mot[\s\S]{0,220}: 0;/,
 assert.ok(
   (field.match(/THREE\.DynamicDrawUsage/g) ?? []).length >= 3,
   "each per-frame Gouraud attribute must advertise dynamic buffer usage",
+);
+assert.match(
+  field,
+  /const next = \{ \.\.\.p \}[\s\S]{0,900}this\.preset = next/,
+  "FieldSwirl must atomically snapshot mutable lab recipes",
+);
+assert.match(
+  field,
+  /if \(this\.rings > 0\) \{\s*this\.bodyGeo\.dispose\(\);\s*this\.brightGeo\.dispose\(\);/,
+  "topology tuning must release replaced GPU buffers",
 );
 
 console.log("Validated lazy, direct full-resolution 60 Hz Gouraud vortex ownership and lifecycle.");

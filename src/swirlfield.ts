@@ -288,27 +288,40 @@ export class FieldSwirl {
 
   /** Swap or edit the recipe. Rebuilds the grid only when its size changed. */
   setPreset(p: FieldSwirlPreset): void {
-    const rings = Math.max(3, Math.min(MAX_RINGS, Math.round(p.rings ?? 8)));
-    const segs = Math.max(8, Math.min(MAX_SEGS, Math.round(p.segs ?? 24)));
-    if (rings !== this.rings || segs !== this.segs) this.buildGrid(rings, segs);
-    this.preset = p;
+    // Snapshot the caller. Authoring panels mutate their working object; the
+    // renderer must never observe half an edit before its cached palette,
+    // blend mode and topology have all been refreshed together.
+    const next = { ...p };
+    const rings = Math.max(3, Math.min(MAX_RINGS, Math.round(next.rings ?? 8)));
+    const segs = Math.max(8, Math.min(MAX_SEGS, Math.round(next.segs ?? 24)));
+    if (rings !== this.rings || segs !== this.segs) {
+      // Three releases GPU attributes on BufferGeometry's dispose event. Fire
+      // it before replacing a tuned grid or repeated ring/segment edits would
+      // strand the old buffers until the whole lab closed.
+      if (this.rings > 0) {
+        this.bodyGeo.dispose();
+        this.brightGeo.dispose();
+      }
+      this.buildGrid(rings, segs);
+    }
+    this.preset = next;
     for (let i = 0; i < 6; i++) {
-      const a = p[SLOT_A[i]];
+      const a = next[SLOT_A[i]];
       if (a !== undefined) this.balA[i].setHex(a);
       else if (SLOT_DEF[i] >= 0) this.balA[i].setHex(SLOT_DEF[i]);
       else {
         // derived defaults: ground2 = brighter ground, rim = darker ground
-        const ground = p.colGround ?? 0x301848;
+        const ground = next.colGround ?? 0x301848;
         this.balA[i].setHex(ground).multiplyScalar(i === 4 ? 1.45 : 0.4);
       }
-      const b = p[(SLOT_A[i] + 'B') as keyof FieldSwirlPreset] as number | undefined;
+      const b = next[(SLOT_A[i] + 'B') as keyof FieldSwirlPreset] as number | undefined;
       if (b !== undefined) (this.balB[i] ??= new THREE.Color()).setHex(b);
       else this.balB[i] = null;
     }
     this.bodyMat.blending =
-      (p.blend ?? 'alpha') === 'add' ? THREE.AdditiveBlending : THREE.NormalBlending;
+      (next.blend ?? 'alpha') === 'add' ? THREE.AdditiveBlending : THREE.NormalBlending;
     this.brightMat.blending =
-      (p.blendBright ?? 'add') === 'add' ? THREE.AdditiveBlending : THREE.NormalBlending;
+      (next.blendBright ?? 'add') === 'add' ? THREE.AdditiveBlending : THREE.NormalBlending;
   }
 
   private buildGrid(rings: number, segs: number): void {

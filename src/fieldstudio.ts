@@ -1,9 +1,23 @@
-// The FIELD studio — the preserved sine-field disc's control panel.
-// Open with #fieldstudio on the URL. Every control the swirl field
-// reads is on the panel; Copy emits a block that pastes straight into
-// FIELD_SWIRL_PRESETS in src/fieldSwirls.ts.
+// The Gouraud FIELD studio — the preserved sine-field disc's control panel.
+// Open with #fieldstudio on the URL. Scratch remains a general-purpose draft;
+// Menu, Warp/Loading and Game Over retain separate source-profile drafts.
 import * as THREE from 'three';
-import { fieldSwirls, FIELD_SWIRL_PRESETS, type FieldSwirlPreset, type FieldSwirl } from './swirlfield';
+import {
+  FIELD_SWIRL_PRESETS,
+  FieldSwirl,
+  type FieldSwirlPreset,
+} from './swirlfield';
+import {
+  FIELD_STUDIO_CONTEXTS,
+  FIELD_STUDIO_CONTEXT_INFO,
+  gameFlowProfilesFromStudio,
+  loadFieldStudioState,
+  presetForFieldStudioSource,
+  resetFieldStudioContext,
+  saveFieldStudioState,
+  type FieldStudioContext,
+  type FieldStudioState,
+} from './fieldStudioPresets';
 import { el, sec, note, btn, sliderRow, injectStudioCss } from './studiokit';
 
 interface Ctx {
@@ -11,8 +25,6 @@ interface Ctx {
   scene: THREE.Scene;
   onClose: () => void;
 }
-
-const STORE = 'fieldStudioV1';
 
 type Kind = 'num' | 'colour' | 'bool' | 'blend';
 interface Field {
@@ -150,6 +162,8 @@ export function openFieldStudio(ctx: Ctx): FieldStudio {
 
 class FieldStudio {
   private panel: HTMLElement;
+  private state: FieldStudioState;
+  private context: FieldStudioContext;
   private preset: FieldSwirlPreset;
   private name = 'myField';
   private live: FieldSwirl | null = null;
@@ -158,50 +172,61 @@ class FieldStudio {
   private dark = true;
   private out!: HTMLTextAreaElement;
   private seed = 1;
+  private contextDescription!: HTMLElement;
+  private nameLabel!: HTMLLabelElement;
+  private nameInput!: HTMLInputElement;
+  private sourceSelect!: HTMLSelectElement;
 
   constructor(private ctx: Ctx) {
-    const saved = localStorage.getItem(STORE);
-    if (saved) {
-      try {
-        const j = JSON.parse(saved);
-        this.name = j.name ?? this.name;
-        this.preset = j.preset ?? clone(FIELD_SWIRL_PRESETS.vortex);
-      } catch {
-        this.preset = clone(FIELD_SWIRL_PRESETS.vortex);
-      }
-    } else this.preset = clone(FIELD_SWIRL_PRESETS.vortex);
+    this.state = loadFieldStudioState();
+    this.context = this.state.selectedContext;
+    const draft = this.state.drafts[this.context];
+    this.name = draft.name;
+    this.seed = draft.seed;
+    this.preset = clone(draft.preset);
     this.panel = this.build();
     document.body.appendChild(this.panel);
     this.makeBackdrop();
     this.respawn();
-    this.dump();
+    this.dump(false);
   }
 
   /** Called from the frame loop while the studio is open. */
   frame(dt: number): void {
     const cam = this.ctx.camera;
     cam.getWorldDirection(FWD);
-    if (this.live) this.live.group.position.copy(cam.position).addScaledVector(FWD, 9);
+    if (this.live) {
+      this.live.group.position.copy(cam.position).addScaledVector(FWD, 9);
+      if (!this.paused) this.live.update(dt, cam);
+    }
     if (this.backdrop) {
       // 13, not further: the preview parks at 9 and the card must beat the
       // level geometry to the depth buffer or the jungle floor IS the backdrop.
       this.backdrop.position.copy(cam.position).addScaledVector(FWD, 13);
       this.backdrop.quaternion.copy(cam.quaternion);
     }
-    // paused = the system just doesn't tick this one (system.update is driven
-    // by main, which updates every live swirl; pausing removes it instead)
-    void dt;
   }
 
   private respawn(): void {
-    if (this.live) fieldSwirls.remove(this.live);
-    this.live = fieldSwirls.spawn(this.preset, 0, 0, 0, { seed: this.seed++ });
+    if (this.live) {
+      this.ctx.scene.remove(this.live.group);
+      this.live.dispose();
+    }
+    this.live = new FieldSwirl(this.preset, { seed: this.seed });
+    this.ctx.camera.getWorldDirection(FWD);
+    this.live.group.position
+      .copy(this.ctx.camera.position)
+      .addScaledVector(FWD, 9);
+    // A context/source switch is legal while paused. Prime the freshly
+    // allocated buffers once so the frozen replacement is a complete frame.
+    this.live.update(0, this.ctx.camera);
+    this.ctx.scene.add(this.live.group);
   }
 
   /** Push edits into the live instance without recreating it. */
   private apply(): void {
     this.live?.setPreset(this.preset);
-    this.dump();
+    this.dump(true);
   }
 
   private makeBackdrop(): void {
@@ -226,7 +251,7 @@ class FieldStudio {
     injectStudioCss();
     const p = el('div', 'pst');
     const h = el('div', 'pst-head');
-    h.textContent = 'FIELD STUDIO';
+    h.textContent = 'GOURAUD FIELD LAB';
     const x = el('button', 'pst-x');
     x.textContent = '✕';
     x.onclick = () => this.close();
@@ -235,48 +260,58 @@ class FieldStudio {
 
     p.appendChild(
       note(
-        'Wormholes and scenery swirls: a coarse polar grid of Gouraud triangles, ' +
-          'coloured by a cheap field of sines — visualizer maths, PS1 rules. ' +
-          'Dial it, then Copy: the block pastes into FIELD_SWIRL_PRESETS in src/fieldSwirls.ts.',
+        'A coarse polar grid of Gouraud triangles coloured by a cheap field of sines. ' +
+          'Each game-flow context keeps its own auto-saved draft. Copy All emits the ' +
+          'three reviewed profiles for src/gameFlowVortexProfiles.ts.',
       ),
     );
 
+    p.appendChild(sec('CONTEXT'));
+    const contextRow = el('div', 'pst-row');
+    const contextLabel = el('label', 'pst-label');
+    contextLabel.textContent = 'editing';
+    const contextSelect = document.createElement('select');
+    contextSelect.className = 'pst-sel';
+    for (const context of FIELD_STUDIO_CONTEXTS) {
+      const option = document.createElement('option');
+      option.value = context;
+      option.textContent = FIELD_STUDIO_CONTEXT_INFO[context].label;
+      contextSelect.appendChild(option);
+    }
+    contextSelect.value = this.context;
+    contextSelect.addEventListener('change', () => {
+      this.switchContext(contextSelect.value as FieldStudioContext);
+    });
+    contextRow.append(contextLabel, contextSelect);
+    p.appendChild(contextRow);
+    this.contextDescription = note('');
+    p.appendChild(this.contextDescription);
+
     p.appendChild(sec('PRESET'));
     const nameRow = el('div', 'pst-row');
-    const nameLbl = el('label', 'pst-label');
-    nameLbl.textContent = 'name';
-    const nameIn = document.createElement('input');
-    nameIn.type = 'text';
-    nameIn.className = 'pst-text';
-    nameIn.value = this.name;
-    nameIn.addEventListener('input', () => {
-      this.name = nameIn.value.replace(/[^\w]/g, '') || 'myField';
-      this.dump();
+    this.nameLabel = el('label', 'pst-label') as HTMLLabelElement;
+    this.nameInput = document.createElement('input');
+    this.nameInput.type = 'text';
+    this.nameInput.className = 'pst-text';
+    this.nameInput.addEventListener('input', () => {
+      if (this.context !== 'scratch') return;
+      this.name = this.nameInput.value.replace(/[^\w-]/g, '') || 'myField';
+      this.dump(true);
     });
-    nameRow.append(nameLbl, nameIn);
+    nameRow.append(this.nameLabel, this.nameInput);
     p.appendChild(nameRow);
 
     const loadRow = el('div', 'pst-row');
     const loadLbl = el('label', 'pst-label');
     loadLbl.textContent = 'start from';
-    const sel = document.createElement('select');
-    sel.className = 'pst-sel';
-    for (const k of Object.keys(FIELD_SWIRL_PRESETS)) {
-      const o = document.createElement('option');
-      o.value = k;
-      o.textContent = k;
-      sel.appendChild(o);
-    }
-    sel.value = 'vortex';
-    sel.addEventListener('change', () => {
-      this.preset = clone(FIELD_SWIRL_PRESETS[sel.value]);
-      this.name = sel.value;
-      nameIn.value = sel.value;
-      this.respawn();
-      this.rebuild();
+    this.sourceSelect = document.createElement('select');
+    this.sourceSelect.className = 'pst-sel';
+    this.sourceSelect.addEventListener('change', () => {
+      this.applySource(this.sourceSelect.value);
     });
-    loadRow.append(loadLbl, sel);
+    loadRow.append(loadLbl, this.sourceSelect);
     p.appendChild(loadRow);
+    this.refreshContextControls();
 
     p.appendChild(sec('STAGE'));
     const stageBtns = el('div', 'pst-btns');
@@ -291,18 +326,14 @@ class FieldStudio {
         b.textContent = this.backdrop.visible ? 'Hide backdrop' : 'Show backdrop';
       }),
       btn('Pause', (b) => {
-        // Pausing removes it from the ticking system; resuming re-adds it in
-        // place, deterministic from its seed.
         this.paused = !this.paused;
         b.textContent = this.paused ? 'Resume' : 'Pause';
-        if (this.paused) {
-          if (this.live) {
-            fieldSwirls.remove(this.live);
-            this.live = null;
-          }
-        } else this.respawn();
       }),
-      btn('Reseed', () => this.respawn()),
+      btn('Reseed', () => {
+        this.seed = this.seed >= 0x7fffffff ? 1 : this.seed + 1;
+        this.respawn();
+        this.dump(true);
+      }),
     );
     p.appendChild(stageBtns);
 
@@ -317,32 +348,107 @@ class FieldStudio {
     p.appendChild(this.out);
     const outBtns = el('div', 'pst-btns');
     outBtns.append(
-      btn('Copy', async (b) => {
-        try {
-          await navigator.clipboard.writeText(this.out.value);
-          b.textContent = 'Copied';
-          setTimeout(() => (b.textContent = 'Copy'), 1200);
-        } catch {
-          this.out.select();
-          b.textContent = 'Select + copy';
-        }
-      }),
-      btn('Download', () => {
-        const blob = new Blob([this.out.value], { type: 'application/json' });
+      btn('Copy active', (b) => void this.copyText(this.activeProfileOutput(), b, 'Copy active')),
+      btn('Copy all', (b) => void this.copyText(this.allProfilesOutput(), b, 'Copy all')),
+      btn('Download all', () => {
+        const blob = new Blob(
+          [JSON.stringify({ version: 1, profiles: gameFlowProfilesFromStudio(this.state) }, null, 2)],
+          { type: 'application/json' },
+        );
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `${this.name}.json`;
+        a.download = 'game-flow-gouraud-presets.json';
         a.click();
         URL.revokeObjectURL(a.href);
       }),
-      btn('Reset', () => {
-        this.preset = clone(FIELD_SWIRL_PRESETS[sel.value] ?? FIELD_SWIRL_PRESETS.vortex);
+      btn('Reset context', () => {
+        this.syncDraft();
+        resetFieldStudioContext(this.state, this.context);
+        this.loadDraft();
         this.respawn();
-        this.rebuild();
+        this.refreshContextControls();
+        this.rebuild(true);
       }),
     );
     p.appendChild(outBtns);
     return p;
+  }
+
+  private switchContext(context: FieldStudioContext): void {
+    if (!FIELD_STUDIO_CONTEXTS.includes(context) || context === this.context) return;
+    this.syncDraft();
+    this.context = context;
+    this.state.selectedContext = context;
+    this.loadDraft();
+    this.refreshContextControls();
+    this.respawn();
+    this.rebuild(true);
+  }
+
+  private loadDraft(): void {
+    const draft = this.state.drafts[this.context];
+    this.name = draft.name;
+    this.seed = draft.seed;
+    this.preset = clone(draft.preset);
+  }
+
+  private syncDraft(): void {
+    const draft = this.state.drafts[this.context];
+    draft.name = this.name;
+    draft.seed = this.seed;
+    draft.preset = clone(this.preset);
+  }
+
+  private refreshContextControls(): void {
+    const info = FIELD_STUDIO_CONTEXT_INFO[this.context];
+    const draft = this.state.drafts[this.context];
+    this.contextDescription.textContent = info.description;
+    this.nameLabel.textContent = this.context === 'scratch' ? 'name' : 'profile key';
+    this.nameInput.value = this.name;
+    this.nameInput.readOnly = this.context !== 'scratch';
+    this.sourceSelect.replaceChildren();
+    if (this.context !== 'scratch') {
+      const authored = document.createElement('option');
+      authored.value = 'authored';
+      authored.textContent = `authored ${info.label.toLowerCase()}`;
+      this.sourceSelect.appendChild(authored);
+    }
+    for (const key of Object.keys(FIELD_SWIRL_PRESETS)) {
+      const option = document.createElement('option');
+      option.value = key;
+      option.textContent = key;
+      this.sourceSelect.appendChild(option);
+    }
+    this.sourceSelect.value = draft.sourcePreset;
+  }
+
+  private applySource(sourcePreset: string): void {
+    const draft = this.state.drafts[this.context];
+    draft.sourcePreset = sourcePreset;
+    const source = presetForFieldStudioSource(this.context, sourcePreset);
+    this.seed = source.seed;
+    this.preset = source.preset;
+    if (this.context === 'scratch') this.name = sourcePreset;
+    this.syncDraft();
+    this.refreshContextControls();
+    this.respawn();
+    this.rebuild(true);
+  }
+
+  private async copyText(
+    value: string,
+    button: HTMLElement,
+    idleLabel: string,
+  ): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(value);
+      button.textContent = 'Copied';
+      setTimeout(() => (button.textContent = idleLabel), 1200);
+    } catch {
+      this.out.value = value;
+      this.out.select();
+      button.textContent = 'Select + copy';
+    }
   }
 
   private fill(host: HTMLElement): void {
@@ -353,10 +459,10 @@ class FieldStudio {
     }
   }
 
-  private rebuild(): void {
+  private rebuild(save = true): void {
     const body = this.panel.querySelector('.pst-body') as HTMLElement;
     if (body) this.fill(body);
-    this.dump();
+    this.dump(save);
   }
 
   private control(f: Field): HTMLElement {
@@ -438,23 +544,43 @@ class FieldStudio {
     return wrap;
   }
 
-  private dump(): void {
+  private dump(persist: boolean): void {
+    this.syncDraft();
+    this.out.value = this.activeProfileOutput();
+    if (persist) saveFieldStudioState(this.state);
+  }
+
+  private activeProfileOutput(): string {
     const clean: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(this.preset)) {
       if (v === undefined) continue;
       clean[k] = v;
     }
-    const body = JSON.stringify(clean, null, 2)
+    const value = this.context === 'scratch'
+      ? clean
+      : { seed: this.seed, preset: clean };
+    const body = JSON.stringify(value, null, 2)
       .split('\n')
-      .map((l, i) => (i === 0 ? l : '  ' + l))
+      .map((line, index) => (index === 0 ? line : `  ${line}`))
       .join('\n');
-    this.out.value = `  ${this.name}: ${body},`;
-    localStorage.setItem(STORE, JSON.stringify({ name: this.name, preset: this.preset }));
+    return `  ${this.name}: ${body},`;
+  }
+
+  private allProfilesOutput(): string {
+    this.syncDraft();
+    return (
+      'export const GAME_FLOW_VORTEX_PROFILES = ' +
+      JSON.stringify(gameFlowProfilesFromStudio(this.state), null, 2) +
+      ' as const;'
+    );
   }
 
   private close(): void {
-    if (this.live) fieldSwirls.remove(this.live);
-    this.live = null;
+    if (this.live) {
+      this.ctx.scene.remove(this.live.group);
+      this.live.dispose();
+      this.live = null;
+    }
     this.panel.remove();
     if (this.backdrop) {
       this.ctx.scene.remove(this.backdrop);
@@ -468,8 +594,8 @@ class FieldStudio {
 
 const FWD = new THREE.Vector3();
 
-function clone(p: FieldSwirlPreset): FieldSwirlPreset {
-  return JSON.parse(JSON.stringify(p)) as FieldSwirlPreset;
+function clone(p: Readonly<FieldSwirlPreset>): FieldSwirlPreset {
+  return { ...p };
 }
 function num(v: unknown, dflt: number): number {
   return typeof v === 'number' ? v : dflt;

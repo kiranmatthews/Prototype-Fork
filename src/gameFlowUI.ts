@@ -10,6 +10,7 @@ import {
   type CampaignSaveV1,
   type GameAudioOptions,
 } from "./campaign";
+import type { GameFlowVortexContext } from "./gameFlowVortexProfiles";
 
 type GameScreen =
   | "launch"
@@ -139,19 +140,27 @@ export class GameFlowUI {
     return this.screen;
   }
 
-  get vortexBackgroundActive(): boolean {
-    return (
-      this.loadingVortexActive ||
+  get vortexContext(): GameFlowVortexContext | null {
+    // Loading wins while leaving Game Over, so the bone-mask stage is released
+    // before the warp field carries the transition back to gameplay.
+    if (this.loadingVortexActive) return "warp";
+    if (this.screen === "gameover") return "gameover";
+    if (
       this.screen === "launch" ||
       this.screen === "new-slots" ||
       this.screen === "load-slots" ||
-      this.screen === "confirm-new" ||
-      this.screen === "gameover"
-    );
+      this.screen === "confirm-new"
+    )
+      return "menu";
+    return null;
+  }
+
+  get vortexBackgroundActive(): boolean {
+    return this.vortexContext !== null;
   }
 
   get vortexGameOverMaskActive(): boolean {
-    return !this.loadingVortexActive && this.screen === "gameover";
+    return this.vortexContext === "gameover";
   }
 
   get developerChromeVisible(): boolean {
@@ -934,6 +943,7 @@ export class GameFlowUI {
       body.game-debug-hidden .ast-root,
       body.game-debug-hidden .clab,
       body.game-debug-hidden .pst { display: none !important; }
+      body.game-debug-hidden.game-field-studio-open .pst { display: block !important; }
       @media (hover: hover) {
         .game-menu-button:hover:not(:disabled) { color: #f05a20; transform: scale(1.05) rotate(-.7deg); }
       }
