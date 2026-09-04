@@ -3515,8 +3515,24 @@ window.addEventListener("drop", (e) => {
     });
 });
 ui.onLevelSelect = (id) => {
-  if (!shellBypass || gameFlow.blocksGameplay) return;
-  switchLevel(id);
+  if (!findLevel(id)) return;
+  guardGameplayFromMenu();
+  // The M-menu is an explicit developer action in production too. Let the
+  // transition owner serialize loading, including clicks from paused/title UI.
+  void gameFlow.transition(async () => {
+    paused = false;
+    pendingCompletion = null;
+    if (bonusSession) {
+      player.lives = bonusSession.parentState.lives;
+      player.fruit = bonusSession.parentState.fruit;
+    } else player.bankFlyingFruit();
+    restoreCommittedRunRewards();
+    // Title-screen testing must not create a save or replace an active slot.
+    if (!campaign.active) campaign.startEphemeral();
+    switchLevel(id, false, !shellBypass);
+    await prepareActivePresentationAssets();
+    gameFlow.hide();
+  });
 };
 ui.onToggle2P = () => {
   if (!shellBypass) {

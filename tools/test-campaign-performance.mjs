@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import { runInNewContext } from "node:vm";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const [main, flow, level, swirls, player] = await Promise.all([
@@ -10,6 +11,62 @@ const [main, flow, level, swirls, player] = await Promise.all([
   readFile(`${root}src/swirls.ts`, "utf8"),
   readFile(`${root}src/player.ts`, "utf8"),
 ]);
+
+// Exercise the actual button callback in production, where shellBypass is
+// false. Merely opening the debug panel does not prove a level click works.
+const levelSelectCallback = main.slice(
+  main.indexOf("ui.onLevelSelect ="),
+  main.indexOf("ui.onToggle2P ="),
+);
+assert.ok(levelSelectCallback, "debug level callback is missing");
+for (const screen of [null, "launch", "pause", "results", "gameover"]) {
+  const events = [];
+  const active = screen === "launch" ? null : { slot: 2 };
+  const bonus = screen === "pause"
+    ? { parentState: { lives: 7, fruit: 43 } }
+    : null;
+  let finishAssets;
+  const assets = new Promise((resolve) => { finishAssets = resolve; });
+  let transition;
+  const context = {
+    ui: {}, shellBypass: false, paused: true, pendingCompletion: { kind: "normal" },
+    bonusSession: bonus,
+    findLevel: (id) => id === "sky" ? { id } : null,
+    guardGameplayFromMenu: () => events.push("guard"),
+    restoreCommittedRunRewards: () => events.push("restore-rewards"),
+    player: { lives: 0, fruit: 0, bankFlyingFruit: () => events.push("bank-fruit") },
+    campaign: {
+      active,
+      startEphemeral() { events.push("ephemeral"); this.active = { slot: 0 }; },
+    },
+    switchLevel: (...args) => events.push(args),
+    prepareActivePresentationAssets: () => assets,
+    gameFlow: {
+      blocksGameplay: screen !== null,
+      transition(action) { transition = action(); return transition; },
+      hide: () => events.push("hide"),
+    },
+  };
+  runInNewContext(levelSelectCallback, context);
+  context.ui.onLevelSelect("missing");
+  assert.deepEqual(events, [], "an invalid debug selection mutated the run");
+  context.ui.onLevelSelect("sky");
+  assert.ok(transition, `debug level selection was blocked from ${screen ?? "gameplay"}`);
+  assert.equal(context.paused, false);
+  assert.equal(context.pendingCompletion, null);
+  assert.ok(events.some((event) => Array.isArray(event) &&
+    event.join(",") === "sky,false,true"));
+  assert.equal(events.includes("ephemeral"), active === null);
+  if (active) assert.equal(context.campaign.active, active, "debug jump replaced the active save");
+  if (bonus) {
+    assert.equal(context.player.lives, 7);
+    assert.equal(context.player.fruit, 43);
+  }
+  assert.equal(events.includes("hide"), false, "menu revealed before assets were ready");
+  finishAssets();
+  await transition;
+  assert.equal(events.at(-1), "hide", "debug jump left the game menu blocking play");
+}
 
 assert.match(
   main,
