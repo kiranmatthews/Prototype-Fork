@@ -39,6 +39,8 @@ import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
+import { BONUS_CRATE_COUNT } from "./levels/bonus-level";
+import { CAMPAIGN_LEVELS, isCampaignLevel } from "./campaign";
 import {
   createProceduralThornCluster,
   type ProceduralThornCluster,
@@ -1121,14 +1123,19 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // RUN-MODE ACTIVATORS: the stopwatch and the combo orb are level furniture
   // the same way the spawn and the gate are — old saves get them beside the
   // spawn (move them wherever afterwards); duplicates collapse to the last.
-  for (const t of ["clock", "comboorb"] as const) {
-    const last = d.components.map((c) => c.t).lastIndexOf(t);
-    if (last === -1)
-      d.components.push({
-        t,
-        p: [d.spawn[0] + (t === "clock" ? 2 : -2), d.spawn[1], d.spawn[2] - 5],
-      });
-    else d.components = d.components.filter((c, i) => c.t !== t || i === last);
+  if (d.hudMode !== "bonus") {
+    for (const t of ["clock", "comboorb"] as const) {
+      const last = d.components.map((c) => c.t).lastIndexOf(t);
+      if (last === -1)
+        d.components.push({
+          t,
+          p: [d.spawn[0] + (t === "clock" ? 2 : -2), d.spawn[1], d.spawn[2] - 5],
+        });
+      else d.components = d.components.filter((c, i) => c.t !== t || i === last);
+    }
+  } else {
+    d.components = d.components.filter((component) =>
+      component.t !== "clock" && component.t !== "comboorb");
   }
   const lastCrystal = d.components.map((component) => component.t).lastIndexOf("crystal");
   if (lastCrystal >= 0)
@@ -2942,7 +2949,7 @@ export class Level {
   ledgeAssist = 0;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
-  hudMode: "standard" | "bonus" = "standard";
+  hudMode: "standard" | "bonus" | "hub" = "standard";
   name = BUILTIN_LEVELS[0].name;
   // Boulder-chase machinery (Boulder Dash). player.step reports its position
   // here each step so the chase can trigger, rubber-band, and reset fairly.
@@ -3026,6 +3033,15 @@ export class Level {
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] =
     [];
   private warpPads: WarpPad[] = []; // end-of-level warp platforms: rings rise, plume flickers
+  private campaignPortals: { targetId: string; box: THREE.Box3 }[] = [];
+  private bonusPlatform: {
+    group: THREE.Group;
+    box: THREE.Box3;
+    returnPoint: THREE.Vector3;
+    locked: boolean;
+  } | null = null;
+  /** Main-level tally extension supplied by its linked bonus stage. */
+  bonusCrateTotal = 0;
 
   // safe = triggered by the player's own spin/slam: breaks the world, not them
   explosions: {
@@ -3727,12 +3743,18 @@ export class Level {
       this.theme.fogNear = SKY_BRIDGE_FOG_NEAR;
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
+    if (isCampaignLevel(entry.id)) {
+      if (!this.crystalPickup) this.placeCampaignCrystal();
+      if (!this.bonusPlatform) this.placeDefaultBonusPlatform();
+    }
     this.sealVertBacks(); // every pipe is placed by now, so shared ridges are known
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
-    this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
-    this.placeComboOrb(); // combo-run orb, the other side of the racing line
+    if (this.hudMode !== "bonus" && this.hudMode !== "hub") {
+      this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
+      this.placeComboOrb(); // combo-run orb, the other side of the racing line
+    }
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
@@ -6038,7 +6060,41 @@ export class Level {
     const boxes = this.crates.filter(
       (c) => !c.bang && !c.nitroBang && !c.metalBounce && !c.metal,
     ).length;
-    return boxes + (this.runMode ? 0 : this.checkpoints.length);
+    return boxes + (this.runMode ? 0 : this.checkpoints.length + this.bonusCrateTotal);
+  }
+
+  setActive(active: boolean): void {
+    this.root.visible = active;
+  }
+
+  campaignPortalAt(position: THREE.Vector3): string | null {
+    for (const portal of this.campaignPortals)
+      if (portal.box.containsPoint(position)) return portal.targetId;
+    return null;
+  }
+
+  bonusPlatformAt(position: THREE.Vector3): boolean {
+    const platform = this.bonusPlatform;
+    return !!platform && !platform.locked && platform.box.containsPoint(position);
+  }
+
+  bonusReturnPoint(): THREE.Vector3 {
+    return this.bonusPlatform?.returnPoint.clone() ?? this.spawnPos.clone();
+  }
+
+  setBonusPlatformLocked(locked: boolean): void {
+    const platform = this.bonusPlatform;
+    if (!platform || platform.locked === locked) return;
+    platform.locked = locked;
+    platform.group.name = locked ? "bonus platform locked" : "bonus platform";
+    platform.group.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (!mesh.isMesh || !(mesh.material instanceof THREE.MeshLambertMaterial)) return;
+      mesh.material.emissive.setHex(locked ? 0x160f1c : 0x5b2300);
+      const openColor = Number(mesh.userData.bonusOpenColor);
+      if (Number.isFinite(openColor))
+        mesh.material.color.setHex(locked ? new THREE.Color(openColor).multiplyScalar(0.46).getHex() : openColor);
+    });
   }
 
   zoneAt(x: number, z: number): { dir: "E" | "W" | "N" | "S" } | null {
@@ -7947,6 +8003,8 @@ export class Level {
     });
     this.root.add(this.water.group);
 
+    const crystal = beachfrontPointAtDistance(684, -1.5);
+    this.crystal(crystal[0], crystal[1] + 0.65, crystal[2]);
     this.finishZ = reference.finish.z;
     this.finishGate(
       reference.finish.y,
@@ -9125,40 +9183,183 @@ export class Level {
     this.finishGate(end.y, end.z, end.x, THREE.MathUtils.radToDeg(yawEnd));
   }
 
-  // THE WARP ROOM. Not a course — a chamber, straight out of the Crash 2
-  // reference: five great circular stone gates stand in a ring around a gold
-  // dais, each filled with the wormhole. The gate hardware is the trick that
-  // completes the loop illusion: a deep stone collar overlaps the disc's
-  // outer band on both faces, so newborn rings (born at 0.99 of the disc)
-  // fade in BEHIND the masonry and emerge already travelling — the endless
-  // swallow never shows its seam.
+  private worldRooLabel(text: string, width = 8.5): THREE.Sprite {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1024;
+    canvas.height = 256;
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
+    const paint = (): void => {
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = `400 118px ${rooLoaded ? "Roo" : "Impact"}, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 25;
+      ctx.strokeStyle = "#2b1007";
+      ctx.strokeText(text.toUpperCase(), 512, 126, 950);
+      const face = ctx.createLinearGradient(0, 58, 0, 196);
+      face.addColorStop(0, "#fff36a");
+      face.addColorStop(0.52, "#ffad26");
+      face.addColorStop(1, "#e2461f");
+      ctx.fillStyle = face;
+      ctx.fillText(text.toUpperCase(), 512, 126, 950);
+      texture.needsUpdate = true;
+    };
+    paint();
+    if (!rooLoaded) void rooReady.then(paint);
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+      }),
+    );
+    sprite.scale.set(width, width * 0.25, 1);
+    sprite.userData.noShadow = true;
+    return sprite;
+  }
+
+  private placeCampaignCrystal(): void {
+    const gate = this.gateSpec;
+    if (!gate) return;
+    this.root.updateMatrixWorld(true);
+    const lane = this.laneDirAt(gate.x, gate.y, gate.z) ?? {
+      x: Math.sin(THREE.MathUtils.degToRad(this.gateYaw)),
+      z: -Math.cos(THREE.MathUtils.degToRad(this.gateYaw)),
+    };
+    const length = Math.hypot(lane.x, lane.z) || 1;
+    const x = gate.x - (lane.x / length) * 6;
+    const z = gate.z - (lane.z / length) * 6;
+    const y = this.floorY(x, z, gate.y);
+    this.crystal(x, y + 0.65, z);
+  }
+
+  private placeDefaultBonusPlatform(): void {
+    this.root.updateMatrixWorld(true);
+    const lane = this.laneDirAt(
+      this.spawnPos.x,
+      this.spawnPos.y,
+      this.spawnPos.z,
+    ) ?? { x: 0, z: -1 };
+    const length = Math.hypot(lane.x, lane.z) || 1;
+    const fx = lane.x / length;
+    const fz = lane.z / length;
+    const rx = -fz;
+    const rz = fx;
+    // Behind and just off the spawn line: run-mode activators live five metres
+    // forward, so unlocking the stopwatch can never accidentally enter Bonus.
+    let x = this.spawnPos.x - fx * 2.4 + rx * 2.0;
+    let z = this.spawnPos.z - fz * 2.4 + rz * 2.0;
+    let deckY = this.nearbyFloorY(x, z, this.spawnPos.y - 0.1);
+    if (deckY === null) {
+      x = this.spawnPos.x - fx * 3.0;
+      z = this.spawnPos.z - fz * 3.0;
+      deckY = this.nearbyFloorY(x, z, this.spawnPos.y - 0.1);
+    }
+    deckY ??= this.spawnPos.y - 0.1;
+
+    const group = new THREE.Group();
+    group.name = "bonus platform";
+    group.position.set(x, deckY, z);
+    const baseMaterial = new THREE.MeshLambertMaterial({
+      color: 0xf27b23,
+      emissive: 0x5b2300,
+      flatShading: true,
+    });
+    const base = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.58, 1.82, 0.42, 12),
+      baseMaterial,
+    );
+    base.position.y = -0.21;
+    base.name = "bonus platform deck";
+    base.userData.edgeGrinding = false;
+    base.userData.bonusOpenColor = 0xf27b23;
+    group.add(base);
+    this.groundMeshes.push(base);
+    const ringMaterial = new THREE.MeshLambertMaterial({
+      color: 0xffdc45,
+      emissive: 0x5b2300,
+    });
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.22, 0.14, 8, 22), ringMaterial);
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = 0.08;
+    ring.userData.bonusOpenColor = 0xffdc45;
+    group.add(ring);
+    const beacon = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.82, 1.18, 0.16, 10),
+      new THREE.MeshLambertMaterial({
+        color: 0x9e45d6,
+        emissive: 0x361050,
+        transparent: true,
+        opacity: 0.82,
+      }),
+    );
+    beacon.position.y = 0.12;
+    beacon.userData.bonusOpenColor = 0x9e45d6;
+    group.add(beacon);
+    const label = this.worldRooLabel("Bonus", 4.4);
+    label.position.set(0, 2.35, 0);
+    group.add(label);
+    this.root.add(group);
+    const returnX = x + fx * 2.05;
+    const returnZ = z + fz * 2.05;
+    const returnDeckY = this.nearbyFloorY(
+      returnX,
+      returnZ,
+      this.spawnPos.y - 0.1,
+    );
+    this.bonusPlatform = {
+      group,
+      box: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(x, deckY + 0.42, z),
+        new THREE.Vector3(3.1, 1.25, 3.1),
+      ),
+      returnPoint: returnDeckY === null
+        ? this.spawnPos.clone()
+        : new THREE.Vector3(returnX, returnDeckY + 0.1, returnZ),
+      locked: false,
+    };
+    this.bonusCrateTotal = BONUS_CRATE_COUNT;
+  }
+
+  // THE WARP ROOM. A deliberately simple campaign hub: every canonical
+  // destination is one stable record in CAMPAIGN_LEVELS, rendered in a single
+  // readable row so reordering or replacing a course is a data edit.
   private buildWarpRoom(): void {
     this.skyPreset = "night";
-    this.killY = -24;
+    this.hudMode = "hub";
+    this.killY = -30;
+    this.finishZ = -1e9;
     this.theme = {
-      skyTop: "#060a1c",
-      skyBottom: "#101a38",
+      skyTop: "#0a1230",
+      skyBottom: "#253a68",
       sunColorHex: "", // no sun down here — the gates are the light
       sunU: 0.5,
       sunV: 0.5,
       stars: true,
-      fog: 0x070b1a,
+      fog: 0x1b2a50,
       fogNear: 26,
       fogFar: 120,
-      hemiSky: 0x39466b,
-      hemiGround: 0x151a28,
-      hemiI: 0.85,
-      sunColor: 0x8fa8e8,
-      sunI: 0.6,
+      hemiSky: 0x9db9ff,
+      hemiGround: 0x354565,
+      hemiI: 1.8,
+      sunColor: 0xd4e0ff,
+      sunI: 1.55,
     };
 
     const stone = new THREE.MeshLambertMaterial({
-      color: 0x46536d,
-      emissive: 0x0c101c,
+      color: 0x6579a3,
+      emissive: 0x182443,
     });
     const frameMat = new THREE.MeshLambertMaterial({
-      color: 0x5b6478,
-      emissive: 0x0e1119,
+      color: 0x7587ad,
+      emissive: 0x18203a,
     });
     const boltMat = new THREE.MeshLambertMaterial({
       color: 0x8b93a8,
@@ -9170,47 +9371,52 @@ export class Level {
       side: THREE.DoubleSide,
     });
 
-    // the chamber: one broad stone drum, a raised rim lip, a gold dais
-    const floor = new THREE.Mesh(new THREE.CylinderGeometry(30, 31.5, 2, 24), stone);
+    // A broad gallery rather than the old circular dais. The back wall frames
+    // the row while invisible side walls keep the hub non-lethal.
+    const floor = new THREE.Mesh(new THREE.BoxGeometry(118, 2, 30), stone);
     floor.position.y = -1;
-    floor.name = "warp chamber floor";
+    floor.name = "warp gallery floor";
     this.root.add(floor);
     this.groundMeshes.push(floor);
-    const lip = new THREE.Mesh(new THREE.CylinderGeometry(31.5, 31.8, 1.6, 24), frameMat);
-    lip.position.y = -0.2;
-    lip.name = "chamber rim";
-    this.root.add(lip);
-    this.groundMeshes.push(lip);
     const wall = new THREE.Mesh(
-      new THREE.CylinderGeometry(31.8, 31.8, 16, 24, 1, true),
+      new THREE.BoxGeometry(118, 19, 2),
       new THREE.MeshLambertMaterial({
-        color: 0x232c42,
-        emissive: 0x060810,
-        side: THREE.BackSide,
+        color: 0x33466f,
+        emissive: 0x111a36,
       }),
     );
-    wall.position.y = 8;
+    wall.position.set(0, 8.5, -15);
+    wall.name = "warp gallery back wall";
     this.root.add(wall);
-    const dais = new THREE.Mesh(
-      new THREE.CylinderGeometry(5.4, 6, 0.7, 20),
-      new THREE.MeshLambertMaterial({ color: 0x8a6b3a, emissive: 0x1c1206 }),
+    for (const x of [-59, 59]) {
+      const side = new THREE.Mesh(new THREE.BoxGeometry(2, 18, 30), frameMat);
+      side.position.set(x, 8, 0);
+      this.root.add(side);
+    }
+    this.walls.push(
+      new THREE.Box3(new THREE.Vector3(-61, -4, -16), new THREE.Vector3(-57.8, 18, 16)),
+      new THREE.Box3(new THREE.Vector3(57.8, -4, -16), new THREE.Vector3(61, 18, 16)),
+      new THREE.Box3(new THREE.Vector3(-61, -4, -16), new THREE.Vector3(61, 18, -13.8)),
+      new THREE.Box3(new THREE.Vector3(-61, -4, 14), new THREE.Vector3(61, 18, 17)),
     );
-    dais.position.y = 0.35;
-    dais.name = "warp dais";
-    this.root.add(dais);
-    this.groundMeshes.push(dais);
+    this.zones.push({ xMin: -58, xMax: 58, zMin: -14, zMax: 14, dir: "E" });
+    this.lanePts = [
+      { x: -54, y: 0, z: 4 },
+      { x: 54, y: 0, z: 4 },
+    ];
+    this.spawnPos.set(-52, 0.1, 6);
+    this.currentSpawn.copy(this.spawnPos);
 
-    // five gates in a pentagon, wormholes inside, faces turned to the dais
-    const RS = 4.4; // the warpPortal preset's world radius
+    const RS = 3.35;
     const portalPreset = { ...SWIRL_PRESETS.warpPortal, billboard: false };
-    for (let i = 0; i < 5; i++) {
-      const a = -Math.PI / 2 + (i * Math.PI * 2) / 5;
-      const gx = Math.cos(a) * 21;
-      const gz = Math.sin(a) * 21;
-      const cy = 5.1; // portal centre height: disc bottom clears the floor
+    const spacing = 12.5;
+    const firstX = -((CAMPAIGN_LEVELS.length - 1) * spacing) / 2;
+    CAMPAIGN_LEVELS.forEach((destination, i) => {
+      const gx = firstX + i * spacing;
+      const gz = -10.8;
+      const cy = 4.05;
       const gate = new THREE.Group();
       gate.position.set(gx, 0, gz);
-      gate.lookAt(0, 0, 0);
       this.root.add(gate);
 
       // the collar that hides the seam: a deep annulus over the disc's outer
@@ -9221,28 +9427,28 @@ export class Level {
         collar.position.set(0, cy, zs);
         gate.add(collar);
       }
-      for (let b = 0; b < 10; b++) {
-        const sa = (b / 10) * Math.PI * 2 + (i % 2 === 0 ? 0 : 0.31);
+      for (let b = 0; b < 9; b++) {
+        const sa = (b / 9) * Math.PI * 2 + (i % 2 === 0 ? 0 : 0.31);
         const bx = Math.cos(sa) * RS * 1.06;
         const by = cy + Math.sin(sa) * RS * 1.06;
-        const block = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.9, 1.5), frameMat);
+        const block = new THREE.Mesh(new THREE.BoxGeometry(2.55, 1.42, 1.25), frameMat);
         block.position.set(bx, by, 0);
         block.rotation.z = sa + Math.PI / 2;
         gate.add(block);
         if (b % 2 === 0) {
-          const bolt = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 2.1), boltMat);
+          const bolt = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.48, 1.7), boltMat);
           bolt.position.set(bx, by, 0);
           bolt.rotation.z = sa;
           gate.add(bolt);
         }
       }
       for (const fx of [-1, 1]) {
-        const foot = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.8, 2.6), frameMat);
+        const foot = new THREE.Mesh(new THREE.BoxGeometry(1.9, 1.5, 2.25), frameMat);
         foot.position.set(fx * RS * 0.98, 0.9, 0);
         gate.add(foot);
       }
-      const step = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.7, 3.2), stone);
-      step.position.set(0, 0.35, 2.2);
+      const step = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.62, 3.1), stone);
+      step.position.set(0, 0.31, 2.1);
       step.name = "gate step";
       gate.add(step);
       this.groundMeshes.push(step);
@@ -9250,8 +9456,18 @@ export class Level {
       // the wormhole itself — fixed facing (no billboard), phase-offset per
       // gate so the five swallows never sync up
       const sw = swirls.spawn(portalPreset, gx, cy, gz, { seed: 11 + i * 7 });
-      sw.group.quaternion.copy(gate.quaternion);
-    }
+      sw.group.scale.setScalar(RS / 4.4);
+      const label = this.worldRooLabel(destination.name, 9.7);
+      label.position.set(gx, 8.45, gz + 0.1);
+      this.root.add(label);
+      this.campaignPortals.push({
+        targetId: destination.levelId,
+        box: new THREE.Box3().setFromCenterAndSize(
+          new THREE.Vector3(gx, 3.5, gz + 0.25),
+          new THREE.Vector3(5.7, 7.1, 3.2),
+        ),
+      });
+    });
   }
 
   private buildJungle(): void {
@@ -10117,6 +10333,10 @@ export class Level {
   }
 
   private floorY(x: number, z: number, fallback: number): number {
+    return this.nearbyFloorY(x, z, fallback) ?? fallback;
+  }
+
+  private nearbyFloorY(x: number, z: number, fallback: number): number | null {
     const ray = new THREE.Raycaster(
       new THREE.Vector3(x, fallback + 6, z),
       new THREE.Vector3(0, -1, 0),
@@ -10124,10 +10344,10 @@ export class Level {
       14,
     );
     const hits = ray.intersectObjects(this.groundMeshes, false);
-    if (hits.length === 0) return fallback;
+    if (hits.length === 0) return null;
     return Math.abs(hits[0].point.y - fallback) <= 1.1
       ? hits[0].point.y
-      : fallback;
+      : null;
   }
 
   // Enemies are grounded actors (floaters add their hover above this base).

@@ -3,7 +3,7 @@
  * Player; this class only decides which already-known values are on screen.
  */
 
-export type HudPresentationMode = "standard" | "bonus";
+export type HudPresentationMode = "standard" | "bonus" | "hub";
 
 export const HUD_FRUIT_POP_MS = 1_700;
 
@@ -16,7 +16,7 @@ export interface HudVisibilityInput {
 }
 
 export interface HudVisibility {
-  showLife: true;
+  showLife: boolean;
   showBonusTitle: boolean;
   showFruit: boolean;
   showBoxes: boolean;
@@ -70,6 +70,19 @@ export class HudVisibilityState {
         showBonusTitle: true,
         showFruit: true,
         showBoxes: true,
+        showEarnedRelics: false,
+        showScore: false,
+      };
+    }
+
+    if (input.mode === "hub") {
+      this.inventoryOpen = false;
+      this.inventoryWasHeld = input.inventoryHeld;
+      return {
+        showLife: false,
+        showBonusTitle: false,
+        showFruit: false,
+        showBoxes: false,
         showEarnedRelics: false,
         showScore: false,
       };

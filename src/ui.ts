@@ -111,6 +111,7 @@ export class UI {
   private deathModeLabelEl!: HTMLElement;
   private runRowsHidden = false;
   private endlessDeaths = false;
+  private lifeCheatEnabled = true;
   private ttClockEl!: HTMLElement; // the big trial clock, top center
   private ttFreezeEl!: HTMLElement;
   private ttResultsEl!: HTMLElement;
@@ -203,6 +204,7 @@ export class UI {
     showScore: false,
   };
   private bonusMode = false;
+  private hudMode: "standard" | "bonus" | "hub" = "standard";
   private hudBonusExitTimer: number | null = null;
   // Score cash-in keeps the arcade chase; live timed combo awards use a
   // constant-rate buffer so quarter-second gameplay packets read continuously.
@@ -745,7 +747,7 @@ export class UI {
     livesRow.style.pointerEvents = "auto";
     livesRow.title = "click: +1 life";
     livesRow.addEventListener("click", () => {
-      this.onLifeCheat();
+      if (this.lifeCheatEnabled) this.onLifeCheat();
     });
 
     // Textless radial SPECIAL meter. It is physically nested with the life
@@ -1358,7 +1360,7 @@ export class UI {
       this.hudVisibility.reset(s.fruitCollectionRevision, s.inventoryHeld);
     }
     let nextVisibility = this.hudVisibility.update({
-      mode: s.bonusMode ? "bonus" : "standard",
+      mode: this.hudMode === "hub" ? "hub" : s.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision: s.fruitCollectionRevision,
       inventoryHeld: s.inventoryHeld,
       hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem,
@@ -1581,25 +1583,39 @@ export class UI {
     if (this.deathModeLabelEl) this.deathModeLabelEl.style.display = on ? "block" : "none";
     if (this.livesRowEl) {
       this.livesRowEl.classList.toggle("hud-deathcount", on);
-      this.livesRowEl.title = on ? "total deaths this run" : "click: +1 life";
-      this.livesRowEl.style.cursor = on ? "default" : "pointer";
+      this.livesRowEl.title = on
+        ? "total deaths this run"
+        : this.lifeCheatEnabled
+          ? "click: +1 life"
+          : "lives remaining";
+      this.livesRowEl.style.cursor = !on && this.lifeCheatEnabled ? "pointer" : "default";
+      this.livesRowEl.style.pointerEvents = !on && this.lifeCheatEnabled ? "auto" : "none";
     }
     this.prevHud.lives = -1; // the same numeral may now mean a different rule
     this.prevHud.fruit = -1; // endless pickups use an icon-only transient
     this.syncRunRows();
   }
 
+  setLifeCheatEnabled(enabled: boolean): void {
+    this.lifeCheatEnabled = enabled;
+    if (!this.livesRowEl) return;
+    this.livesRowEl.title = enabled ? "click: +1 life" : "lives remaining";
+    this.livesRowEl.style.cursor = enabled ? "pointer" : "default";
+    this.livesRowEl.style.pointerEvents = enabled ? "auto" : "none";
+  }
+
   setLevel(
     id: string,
-    hudMode: "standard" | "bonus" = "standard",
+    hudMode: "standard" | "bonus" | "hub" = "standard",
     fruitCollectionRevision = 0,
     inventoryHeld = false,
   ): void {
     this.currentLevelId = id;
+    this.hudMode = hudMode;
     this.bonusMode = hudMode === "bonus";
     this.hudVisibility.reset(fruitCollectionRevision, inventoryHeld);
     this.hudVisibilityFrame = this.hudVisibility.update({
-      mode: this.bonusMode ? "bonus" : "standard",
+      mode: hudMode,
       fruitCollectionRevision,
       inventoryHeld,
       hasEarnedRelic: false,
@@ -1618,7 +1634,7 @@ export class UI {
   ): void {
     this.hudVisibility.reset(fruitCollectionRevision, inventoryHeld);
     this.hudVisibilityFrame = this.hudVisibility.update({
-      mode: this.bonusMode ? "bonus" : "standard",
+      mode: this.hudMode,
       fruitCollectionRevision,
       inventoryHeld,
       hasEarnedRelic: false,

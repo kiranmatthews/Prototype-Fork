@@ -75,6 +75,10 @@ class SfxEngine {
 
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
+  private sfxBus: GainNode | null = null;
+  private musicBus: GainNode | null = null;
+  private sfxMuted = false;
+  private musicMuted = false;
   private buffers = new Map<string, AudioBuffer>();
   private loops = new Map<string, LoopChannel>();
   private lastPlay = new Map<string, number>();
@@ -125,6 +129,12 @@ class SfxEngine {
         this.ctx = new AudioContext();
         this.master = this.ctx.createGain();
         this.master.gain.value = this.volume;
+        this.sfxBus = this.ctx.createGain();
+        this.musicBus = this.ctx.createGain();
+        this.sfxBus.gain.value = this.sfxMuted ? 0 : 1;
+        this.musicBus.gain.value = this.musicMuted ? 0 : 1;
+        this.sfxBus.connect(this.master);
+        this.musicBus.connect(this.master);
         this.master.connect(this.ctx.destination);
       }
       if (this.ctx.state === 'suspended') void this.ctx.resume();
@@ -155,7 +165,8 @@ class SfxEngine {
     try {
       const ctx = this.ctx;
       const buf = this.buffers.get(name);
-      if (!ctx || !this.master || !buf) return;
+      const bus = this.isMusic(name) ? this.musicBus : this.sfxBus;
+      if (!ctx || !bus || !buf) return;
       // debounce: a blast breaking 6 crates shouldn't stack 6 full-gain hits
       const now = ctx.currentTime;
       if (now - (this.lastPlay.get(name) ?? -1) < 0.04) return;
@@ -167,7 +178,7 @@ class SfxEngine {
       const gain = ctx.createGain();
       gain.gain.value = vol;
       src.connect(gain);
-      gain.connect(this.master);
+      gain.connect(bus);
       src.start();
     } catch {
       /* ignore */
@@ -179,7 +190,8 @@ class SfxEngine {
     try {
       const ctx = this.ctx;
       const existing = this.loops.get(id);
-      if (!active || !ctx || !this.master) {
+      const bus = this.isMusic(name) ? this.musicBus : this.sfxBus;
+      if (!active || !ctx || !bus) {
         if (existing) {
           existing.src.stop();
           this.loops.delete(id);
@@ -204,12 +216,34 @@ class SfxEngine {
       const gain = ctx.createGain();
       gain.gain.value = vol;
       src.connect(gain);
-      gain.connect(this.master);
+      gain.connect(bus);
       src.start();
       this.loops.set(id, { src, gain, name });
     } catch {
       /* ignore */
     }
+  }
+
+  setMuted(options: { sfxMuted: boolean; musicMuted: boolean }): void {
+    this.sfxMuted = options.sfxMuted;
+    this.musicMuted = options.musicMuted;
+    if (this.sfxBus) this.sfxBus.gain.value = this.sfxMuted ? 0 : 1;
+    if (this.musicBus) this.musicBus.gain.value = this.musicMuted ? 0 : 1;
+  }
+
+  stopLoops(): void {
+    for (const loop of this.loops.values()) {
+      try {
+        loop.src.stop();
+      } catch {
+        // It may already have stopped between frames.
+      }
+    }
+    this.loops.clear();
+  }
+
+  private isMusic(name: string): boolean {
+    return name === 'uberMusic';
   }
 }
 

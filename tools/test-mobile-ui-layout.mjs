@@ -43,7 +43,7 @@ for (const host of [
 assert.match(main, /const TOUCH_PRESENTATION = touchControlsRequested\(\)/);
 assert.match(
   main,
-  /const wantsPreCrtHud =\s*!TOUCH_PRESENTATION/,
+  /const wantsPreCrtHud =\s*showHud && !TOUCH_PRESENTATION/,
   "touch must keep the responsive DOM HUD outside the pre-CRT mirror",
 );
 assert.match(

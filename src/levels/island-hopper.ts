@@ -307,6 +307,12 @@ const gateYaw = r2(
   (Math.atan2(-finish.forward[0], -finish.forward[2]) * 180) / Math.PI,
 );
 add({
+  t: "crystal",
+  p: offsetFromFrame(354, 0, 0.75),
+  nm: "Island crystal",
+  grp: GROUP.actors,
+});
+add({
   t: "gate",
   p: [r2(finish.center[0]), DECK_Y, r2(finish.center[2])],
   yaw: gateYaw,

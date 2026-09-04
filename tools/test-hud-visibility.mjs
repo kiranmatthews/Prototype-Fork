@@ -151,6 +151,25 @@ const frame = (overrides = {}) => ({
 }
 
 {
+  const state = new hud.HudVisibilityState();
+  const visibility = state.update(frame({
+    mode: "hub",
+    fruitCollectionRevision: 4,
+    inventoryHeld: true,
+    hasEarnedRelic: true,
+    nowMs: 9_000,
+  }));
+  assert.deepEqual(visibility, {
+    showLife: false,
+    showBonusTitle: false,
+    showFruit: false,
+    showBoxes: false,
+    showEarnedRelics: false,
+    showScore: false,
+  }, "warp-room presentation must suppress the entire gameplay HUD");
+}
+
+{
   const input = await text("src/input.ts");
   assert.match(input, /k\.has\('KeyI'\)/, "keyboard inventory fallback is missing");
   assert.match(
@@ -170,7 +189,7 @@ const frame = (overrides = {}) => ({
   assert.match(level, /hudMode\?: "bonus";/, "custom level bonus HUD tag is missing");
   assert.match(
     level,
-    /hudMode: "standard" \| "bonus" = "standard";/,
+    /hudMode: "standard" \| "bonus" \| "hub" = "standard";/,
     "runtime Level HUD mode is missing",
   );
   assert.match(

@@ -266,7 +266,7 @@ try {
   const main = await readFile(`${root}src/main.ts`, "utf8");
   assert.match(
     main,
-    /level\.update\(CONST\.fixedStep\);[\s\S]{0,220}player\.commitRenderStep\(level\)/,
+    /level\.update\(CONST\.fixedStep\);[\s\S]{0,600}player\.commitRenderStep\(level\)/,
   );
   assert.match(main, /p2\.commitRenderStep\(level\)/);
   const playerSource = await readFile(`${root}src/player.ts`, "utf8");

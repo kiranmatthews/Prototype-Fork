@@ -262,7 +262,11 @@ assert.match(
 );
 
 const main = await text("src/main.ts");
-assert.match(main, /cratesBroken: player\.cratesBroken/);
+assert.match(
+  main,
+  /cratesBroken:\s*player\.cratesBroken \+ \(level\.runMode \? 0 : player\.bonusCrates\)/,
+  "HUD box tally must include banked bonus boxes only in standard play",
+);
 assert.match(main, /cratesTotal: level\.totalCrates/);
 assert.match(main, /inventoryHeld: input\.inventoryHeld/);
 assert.match(main, /bonusMode: level\.hudMode === "bonus"/);
@@ -285,8 +289,8 @@ assert.match(
 );
 assert.match(
   main,
-  /if \(paused\)[\s\S]{0,180}renderGameplayScene\(dt\)/,
-  "paused gameplay must retain the composited PAUSED HUD",
+  /if \(gameFlow\.blocksGameplay\)[\s\S]{0,320}renderGameplayScene\(dt, true, false\)/,
+  "game-native menus must retain a frozen no-HUD gameplay render behind them",
 );
 assert.ok(
   (main.match(/ui\.setGameHudComposited\(false\)/g) ?? []).length >= 3,

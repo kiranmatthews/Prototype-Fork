@@ -621,6 +621,12 @@ for (const unityZ of [...cameraDistances].sort((a, b) => a - b)) {
 }
 
 add({
+  t: "crystal",
+  p: [0, r2(heightAt(2940) + 0.7), -2940],
+  nm: "Coastal crystal",
+  grp: GROUP.actors,
+});
+add({
   t: "gate",
   p: [0, r2(heightAt(3005)), -3005],
   yaw: 0,

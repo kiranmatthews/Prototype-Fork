@@ -28,8 +28,23 @@ import {
   type SkyPreset,
 } from "./level";
 import { pushLevels, fetchRemoteLevels, getToken, setToken } from "./sync";
-import { Player } from "./player";
+import {
+  Player,
+  type PlayerRunState,
+  type PlayerWorldFruitSnapshot,
+} from "./player";
 import { UI, type HudState } from "./ui";
+import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";
+import {
+  CampaignStore,
+  DEFAULT_CAMPAIGN_LIVES,
+  campaignLevelById,
+  isCampaignLevel,
+  loadGameAudioOptions,
+  saveGameAudioOptions,
+  type GameAudioOptions,
+} from "./campaign";
+import { BONUS_LEVEL } from "./levels/bonus-level";
 import { TUNING, CONST } from "./tuning";
 import {
   speedSkateFovTarget,
@@ -753,7 +768,8 @@ function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
 let editorViewActive = false;
 let editorPlayFog: THREE.Scene["fog"] = null;
 function syncSkyBackdropVisibility(): void {
-  const bonusBackdropActive = current.id === "bonus-level" && !LITE;
+  const bonusBackdropActive =
+    (current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
   const skyBridgeFogOnly = current.id === "sky" && !editorViewActive;
   const preset = SKY_PRESETS[activeSky] ?? SKY_PRESETS[DEFAULT_SKY];
   sky.visible = !LITE && !bonusBackdropActive && !skyBridgeFogOnly;
@@ -791,7 +807,8 @@ let levelPostEnabled = false;
 function applyTheme(): void {
   const t = level.theme;
   const P = SKY_PRESETS[level.skyPreset] ?? SKY_PRESETS[DEFAULT_SKY];
-  const bonusBackdropActive = current.id === "bonus-level" && !LITE;
+  const bonusBackdropActive =
+    (current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
   if (bonusBackdropActive && !bonusParallax.visible)
     bonusParallax.reset(player.pos, loadedLevelId);
   bonusParallax.setVisible(bonusBackdropActive);
@@ -967,12 +984,12 @@ function renderPrimaryScene(
  * The single-player presentation path, including every game-owned overlay.
  * Developer/tool DOM stays outside this function and therefore remains sharp.
  */
-function renderGameplayScene(dt = 0, prepareOcean = true): void {
+function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void {
   // The Canvas HUD mirror follows the desktop 720p typography contract. Phone
   // landscape already has a tuned DOM HUD; sending that through Render/CRT
   // reintroduced desktop sizing and unstable corner distortion.
   const wantsPreCrtHud =
-    !TOUCH_PRESENTATION && !split2p && (coastPost?.active ?? false);
+    showHud && !TOUCH_PRESENTATION && !split2p && (coastPost?.active ?? false);
   let overlayRan = false;
   ui.setGameHudComposited(wantsPreCrtHud);
   renderPrimaryScene(
@@ -998,6 +1015,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true): void {
   // Direct/lite/split fallback: the DOM copy remains visible, while the two
   // pre-existing WebGL overlay helpers still draw over the world.
   ui.setGameHudComposited(false);
+  if (!showHud) return;
   player.drawFlyingFruit(renderer);
   ui.drawIcons(renderer, dt);
 }
@@ -1094,6 +1112,10 @@ const input = new Input();
 input.rival = input2;
 input2.rival = input;
 const ui = new UI();
+const campaign = new CampaignStore();
+let gameAudioOptions: GameAudioOptions = loadGameAudioOptions();
+sfx.setMuted(gameAudioOptions);
+let gameFlow: GameFlowUI;
 const crtGuestPanel = createCrtGuestTuningPanel({
   settings: crtGuestSettings,
   bindToggle: (toggle) => {
@@ -1261,13 +1283,25 @@ const oceanOverview = new URLSearchParams(window.location.search).has(
 const coastPhysicsReview = new URLSearchParams(window.location.search).has(
   "coastphysics",
 );
+const shellBypass =
+  LITE_RENDER ||
+  oceanReview ||
+  oceanOverview ||
+  coastPhysicsReview ||
+  new URLSearchParams(window.location.search).has("playtest") ||
+  localStorage.getItem("solProtoEditorOpen") === "1";
+ui.setLifeCheatEnabled(shellBypass);
 let current: LevelEntry =
   (oceanReview
     ? findLevel("beachfront")
     : coastPhysicsReview
       ? findLevel("descent")
       : null) ??
-  findLevel(localStorage.getItem("solProtoLevelId") ?? "") ??
+  findLevel(
+    shellBypass
+      ? localStorage.getItem("solProtoLevelId") ?? ""
+      : "warproom",
+  ) ??
   findLevel(DEFAULT_LEVEL_ID)!;
 let level: Level;
 const initialSceneChildren = new Set(scene.children);
@@ -1459,9 +1493,10 @@ let runModesOn = localStorage.getItem("solProtoRunModes") !== "off";
 let endlessDeathsOn = localStorage.getItem("solProtoEndlessDeaths") === "on";
 let replaySavedEndlessDeaths: boolean | null = null;
 function applyEndlessDeaths(): void {
-  player.endlessDeaths = endlessDeathsOn;
-  if (p2) p2.endlessDeaths = endlessDeathsOn;
-  ui.setEndlessDeaths(endlessDeathsOn);
+  const active = shellBypass && endlessDeathsOn;
+  player.endlessDeaths = active;
+  if (p2) p2.endlessDeaths = active;
+  ui.setEndlessDeaths(active);
 }
 function restoreReplayRunRule(): void {
   if (replaySavedEndlessDeaths === null) return;
@@ -1473,9 +1508,19 @@ function applyRunModes(): void {
   // Editor previews show every authored activator even when the gameplay
   // preference (or split-screen) normally hides run modes. The sim is frozen,
   // so visibility cannot accidentally start one.
-  const on = editorViewActive || (runModesOn && !split2p);
+  const campaignUnlocked =
+    shellBypass ||
+    !isCampaignLevel(current.id) ||
+    campaign.runModesUnlocked(current.id);
+  const campaignRunModesOn = shellBypass ? runModesOn : true;
+  const on =
+    editorViewActive ||
+    (campaignRunModesOn &&
+      campaignUnlocked &&
+      !split2p &&
+      level.hudMode === "standard");
   level.setRunModesEnabled(on);
-  ui.setRunModes(runModesOn);
+  ui.setRunModes(campaignRunModesOn && campaignUnlocked);
   if (on) return;
   // switching off mid-run cancels it rather than freezing a live clock on screen
   level.setTimeTrial(false);
@@ -1699,13 +1744,42 @@ player.cam = camera; // collected wumpa fly to the HUD counter — the flight ne
 // box rather than a guessed corner: the HUD is sized in vh and the counter
 // hides entirely during a run mode.
 player.hudFruitAt = () => ui.fruitIconAt();
+if (shellBypass) campaign.startEphemeral();
 player.enterLevel(current.id);
+player.hubMode = current.id === "warproom";
 applyEndlessDeaths();
 player.respawn(level, true);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
 applyTheme();
 applyShadowFlags();
 recorder.start(current.id, endlessDeathsOn); // the take always runs: level load -> now
+
+gameFlow = new GameFlowUI(
+  campaign,
+  {
+    onNewGame: startNewCampaign,
+    onLoadGame: loadCampaign,
+    onResume: resumeFromPause,
+    onRestart: restartCurrentRun,
+    onQuitLevel: quitCurrentLevel,
+    onGameOverRetry: retryAfterGameOver,
+    onGameOverQuit: quitAfterGameOver,
+    onResultsRetry: retryFromResults,
+    onResultsContinue: continueFromResults,
+    onAudioOptions: applyGameAudioOptions,
+  },
+  gameAudioOptions,
+);
+ui.setLevel(
+  current.id,
+  level.hudMode,
+  player.fruitCollectionRevision,
+  input.inventoryHeld,
+);
+ui.setHUD(currentHudState(), 0);
+gameFlow.setWarpRoom(current.id === "warproom");
+if (shellBypass) gameFlow.hide();
+else gameFlow.showLaunch();
 
 // Every solid mesh in the world both casts and receives. It's a whole-scene
 // traverse rather than per-builder flags because the builders are hundreds of
@@ -1732,11 +1806,71 @@ function applyShadowFlags(root: THREE.Object3D = scene): void {
   });
 }
 
-function switchLevel(id: string, preserveEditor = false): void {
+interface BonusSession {
+  parentLevel: Level;
+  parentEntry: LevelEntry;
+  parentState: PlayerRunState;
+  returnPoint: THREE.Vector3;
+  parentFruit: PlayerWorldFruitSnapshot[];
+}
+
+let bonusSession: BonusSession | null = null;
+let resultsCameraActive = false;
+let currentRunBonusBoxes = 0;
+let runStartRewards = {
+  crystal: false,
+  boxGem: false,
+  comboGem: false,
+  timeRelic: false,
+};
+let pendingCompletion:
+  | { kind: "normal" | "time" | "bonus"; time: number }
+  | null = null;
+
+function adoptCommittedCampaignProgress(levelId: string): void {
+  const progress = campaign.levelProgress(levelId);
+  if (!progress) {
+    currentRunBonusBoxes = 0;
+    runStartRewards = {
+      crystal: false,
+      boxGem: false,
+      comboGem: false,
+      timeRelic: false,
+    };
+    return;
+  }
+  player.setCampaignRelics({
+    crystal: progress.crystal,
+    gem: progress.boxGem,
+    combo: progress.comboGem,
+  });
+  level.setBonusPlatformLocked(false);
+  currentRunBonusBoxes = 0;
+  player.bonusCrates = 0;
+  runStartRewards = {
+    crystal: progress.crystal,
+    boxGem: progress.boxGem,
+    comboGem: progress.comboGem,
+    timeRelic: progress.timeRelic,
+  };
+}
+
+function switchLevel(
+  id: string,
+  preserveEditor = false,
+  preserveInventory = false,
+): void {
+  if (bonusSession) discardSuspendedBonus();
   // An id that no longer exists — a deleted user level, a replay or saved
   // editor target from an older list — resolves to the default course rather
   // than taking the whole game down on entry.name.toUpperCase().
-  const entry = findLevel(id) ?? findLevel(DEFAULT_LEVEL_ID)!;
+  const campaignTarget = campaignLevelById(id);
+  const entry =
+    findLevel(id) ??
+    (campaignTarget?.fallbackLevelId
+      ? findLevel(campaignTarget.fallbackLevelId)
+      : null) ??
+    findLevel(DEFAULT_LEVEL_ID)!;
   current = entry;
   localStorage.setItem("solProtoLevelId", entry.id);
   if (replayer.active) {
@@ -1766,7 +1900,11 @@ function switchLevel(id: string, preserveEditor = false): void {
   // Adopt the target level's relic shelf BEFORE respawning, so the run just
   // left banks its crystal and gems against the level they were earned in.
   player.enterLevel(entry.id);
-  player.respawn(level, true);
+  player.bonusMode = false;
+  player.hubMode = entry.id === "warproom";
+  currentRunBonusBoxes = 0;
+  player.respawn(level, true, preserveInventory);
+  adoptCommittedCampaignProgress(entry.id);
   if (split2p && p2) {
     p2.enterLevel(entry.id);
     p2.respawn(level, true);
@@ -1783,7 +1921,10 @@ function switchLevel(id: string, preserveEditor = false): void {
     input.inventoryHeld,
   );
   ui.setHUD(currentHudState(), 0);
-  ui.showMessage(entry.name.toUpperCase(), "", 1400);
+  const campaignName = campaignLevelById(entry.id)?.name ?? entry.name;
+  ui.showMessage(campaignName.toUpperCase(), "", 1400);
+  resultsCameraActive = false;
+  gameFlow?.setWarpRoom(entry.id === "warproom");
   recorder.start(entry.id, endlessDeathsOn); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
     ((
@@ -1793,6 +1934,388 @@ function switchLevel(id: string, preserveEditor = false): void {
       >
     ).level = level);
   if (preserveEditor) editor.onLevelRebuilt();
+}
+
+function currentCampaignName(): string {
+  if (bonusSession)
+    return `${campaignLevelById(bonusSession.parentEntry.id)?.name ?? bonusSession.parentEntry.name} Bonus`;
+  return campaignLevelById(current.id)?.name ?? current.name;
+}
+
+function applyGameAudioOptions(options: GameAudioOptions): void {
+  gameAudioOptions = { ...options };
+  saveGameAudioOptions(gameAudioOptions);
+  sfx.setMuted(gameAudioOptions);
+}
+
+function guardGameplayFromMenu(): void {
+  input.armMenuReleaseGuard();
+  if (split2p) input2.armMenuReleaseGuard();
+}
+
+function startNewCampaign(slot: number): void {
+  guardGameplayFromMenu();
+  void gameFlow.transition(() => {
+    const save = campaign.newGame(slot);
+    player.lives = save.lives;
+    player.fruit = save.fruit;
+    switchLevel("warproom", false, true);
+    gameFlow.hide();
+  });
+}
+
+function loadCampaign(slot: number): void {
+  guardGameplayFromMenu();
+  void gameFlow.transition(() => {
+    const save = campaign.load(slot);
+    if (!save) return;
+    player.lives = save.lives;
+    player.fruit = save.fruit;
+    switchLevel("warproom", false, true);
+    gameFlow.hide();
+  });
+}
+
+function resumeFromPause(): void {
+  paused = false;
+  gameFlow.hide();
+  ui.hideMessage();
+  input.armMenuReleaseGuard();
+  if (split2p) input2.armMenuReleaseGuard();
+}
+
+function restoreCommittedRunRewards(): void {
+  const levelId = bonusSession?.parentEntry.id ?? current.id;
+  const progress = campaign.levelProgress(levelId);
+  if (!progress) return;
+  player.setCampaignRelics({
+    crystal: progress.crystal,
+    gem: progress.boxGem,
+    combo: progress.comboGem,
+  });
+}
+
+function restartCurrentRun(): void {
+  guardGameplayFromMenu();
+  if (!bonusSession) player.bankFlyingFruit();
+  void gameFlow.transition(() => {
+    paused = false;
+    if (bonusSession) {
+      player.lives = bonusSession.parentState.lives;
+      player.fruit = bonusSession.parentState.fruit;
+      restoreCommittedRunRewards();
+      discardSuspendedBonus();
+      puffs.clear();
+      swirls.clear();
+      fieldSwirls.clear();
+      puffs.attach(scene);
+      player.respawn(level, true, true);
+      adoptCommittedCampaignProgress(current.id);
+      applyRunModes();
+      applyTheme();
+      applyShadowFlags();
+      ui.setLevel(
+        current.id,
+        level.hudMode,
+        player.fruitCollectionRevision,
+        input.inventoryHeld,
+      );
+      ui.setHUD(currentHudState(), 0);
+      recorder.start(current.id, endlessDeathsOn);
+      gameFlow.setWarpRoom(false);
+    } else {
+      restoreCommittedRunRewards();
+      player.respawn(level, true, true);
+      adoptCommittedCampaignProgress(current.id);
+      applyRunModes();
+      ui.setHUD(currentHudState(), 0);
+    }
+    gameFlow.hide();
+  });
+}
+
+function discardSuspendedBonus(): void {
+  const session = bonusSession;
+  if (!session) return;
+  const bonusLevel = level;
+  bonusSession = null;
+  bonusLevel.dispose(session.parentLevel);
+  session.parentLevel.setActive(true);
+  level = session.parentLevel;
+  current = session.parentEntry;
+  loadedLevelId = current.id;
+  player.bonusMode = false;
+}
+
+function quitCurrentLevel(): void {
+  guardGameplayFromMenu();
+  if (!bonusSession) player.bankFlyingFruit();
+  if (bonusSession) {
+    player.lives = bonusSession.parentState.lives;
+    player.fruit = bonusSession.parentState.fruit;
+  }
+  campaign.updateInventory(player.lives, player.fruit);
+  restoreCommittedRunRewards();
+  void gameFlow.transition(() => {
+    paused = false;
+    if (bonusSession) discardSuspendedBonus();
+    switchLevel("warproom", false, true);
+    gameFlow.hide();
+  });
+}
+
+function retryAfterGameOver(): void {
+  guardGameplayFromMenu();
+  campaign.resetInventory();
+  player.lives = DEFAULT_CAMPAIGN_LIVES;
+  player.fruit = 0;
+  restoreCommittedRunRewards();
+  void gameFlow.transition(() => {
+    paused = false;
+    player.respawn(level, true);
+    adoptCommittedCampaignProgress(current.id);
+    applyRunModes();
+    ui.showDeathScreen(false);
+    ui.deathFade(false);
+    gameFlow.hide();
+  });
+}
+
+function quitAfterGameOver(): void {
+  guardGameplayFromMenu();
+  campaign.resetInventory();
+  player.lives = DEFAULT_CAMPAIGN_LIVES;
+  player.fruit = 0;
+  restoreCommittedRunRewards();
+  void gameFlow.transition(() => {
+    paused = false;
+    switchLevel("warproom", false, true);
+    ui.showDeathScreen(false);
+    gameFlow.hide();
+  });
+}
+
+function retryFromResults(): void {
+  guardGameplayFromMenu();
+  campaign.updateInventory(player.lives, player.fruit);
+  void gameFlow.transition(() => {
+    resultsCameraActive = false;
+    switchLevel(current.id, false, true);
+    gameFlow.hide();
+  });
+}
+
+function continueFromResults(): void {
+  guardGameplayFromMenu();
+  campaign.updateInventory(player.lives, player.fruit);
+  void gameFlow.transition(() => {
+    resultsCameraActive = false;
+    switchLevel("warproom", false, true);
+    gameFlow.hide();
+  });
+}
+
+function showCampaignResults(time: number, timeRelic = false): void {
+  player.bankFlyingFruit();
+  const definition = campaignLevelById(current.id);
+  if (!definition) {
+    ui.showMessage(
+      "COURSE CLEAR!",
+      `time ${time.toFixed(2)}s — press R / Options to go again`,
+      0,
+    );
+    return;
+  }
+  const before = campaign.levelProgress(current.id);
+  const firstClear = !before?.cleared;
+  const boxes = player.cratesBroken + (level.runMode ? 0 : player.bonusCrates);
+  if (!level.runMode && level.totalCrates > 0 && boxes >= level.totalCrates)
+    player.gemEarned = true;
+  campaign.commitClear(current.id, {
+    crystal: player.hasCrystal,
+    boxGem: player.gemEarned,
+    comboGem: player.comboGemEarned,
+    timeRelic,
+    time,
+  });
+  campaign.updateInventory(player.lives, player.fruit);
+  const result: ResultsScreenState = {
+    levelName: definition.name,
+    time,
+    boxes,
+    totalBoxes: level.totalCrates,
+    crystal: player.hasCrystal && !runStartRewards.crystal,
+    boxGem: player.gemEarned && !runStartRewards.boxGem,
+    comboGem: player.comboGemEarned && !runStartRewards.comboGem,
+    timeRelic: timeRelic && !runStartRewards.timeRelic,
+    firstClear,
+  };
+  void gameFlow.transition(() => {
+    ui.hideMessage();
+    ui.hideTTResults();
+    player.prepareResultsPose(level);
+    resultsCameraActive = true;
+    gameFlow.showResults(result);
+  });
+}
+
+function enterCampaignLevel(targetId: string): void {
+  if (!campaignLevelById(targetId)) return;
+  campaign.updateInventory(player.lives, player.fruit);
+  void gameFlow.transition(() => {
+    switchLevel(targetId, false, true);
+    gameFlow.hide();
+  });
+}
+
+function enterBonusRound(): void {
+  if (bonusSession || !isCampaignLevel(current.id)) return;
+  player.bankFlyingFruit();
+  const parentEntry = current;
+  const parentLevel = level;
+  const parentState = player.captureRunState();
+  const parentFruit = player.captureIdleFruit();
+  const returnPoint = parentLevel.bonusReturnPoint();
+  void gameFlow.transition(() => {
+    bonusSession = {
+      parentLevel,
+      parentEntry,
+      parentState,
+      returnPoint,
+      parentFruit,
+    };
+    parentLevel.setActive(false);
+    puffs.clear();
+    swirls.clear();
+    fieldSwirls.clear();
+    const parentName = campaignLevelById(parentEntry.id)?.name ?? parentEntry.name;
+    current = {
+      id: `bonus:${parentEntry.id}`,
+      name: `${parentName} Bonus`,
+      data: BONUS_LEVEL,
+    };
+    level = new Level(scene, current);
+    loadedLevelId = current.id;
+    puffs.attach(scene);
+    player.respawn(level, true, true);
+    player.bonusMode = true;
+    player.hubMode = false;
+    player.bonusCrates = 0;
+    applyRunModes();
+    applyTheme();
+    applyShadowFlags();
+    ui.setLevel(
+      current.id,
+      level.hudMode,
+      player.fruitCollectionRevision,
+      input.inventoryHeld,
+    );
+    ui.setHUD(currentHudState(), 0);
+    ui.showMessage("BONUS ROUND!", "break every box — falls return you safely", 2000);
+    recorder.start(current.id, endlessDeathsOn);
+    gameFlow.setWarpRoom(false);
+    gameFlow.hide();
+  });
+}
+
+function returnFromBonus(completed: boolean): void {
+  const session = bonusSession;
+  if (!session) return;
+  const bonusLevel = level;
+  if (completed) player.bankFlyingFruit();
+  const bonusBoxes = completed ? Math.min(bonusLevel.totalCrates, player.cratesBroken) : 0;
+  const state: PlayerRunState = {
+    ...session.parentState,
+    lives: completed ? player.lives : session.parentState.lives,
+    fruit: completed ? player.fruit : session.parentState.fruit,
+    bonusCrates: completed ? bonusBoxes : session.parentState.bonusCrates,
+  };
+  void gameFlow.transition(() => {
+    bonusSession = null;
+    bonusLevel.dispose(session.parentLevel);
+    session.parentLevel.setActive(true);
+    current = session.parentEntry;
+    level = session.parentLevel;
+    loadedLevelId = current.id;
+    puffs.clear();
+    puffs.attach(scene);
+    if (completed) {
+      currentRunBonusBoxes = bonusBoxes;
+    }
+    player.resumeSuspendedLevel(level, session.returnPoint, state);
+    player.hubMode = false;
+    player.restoreIdleFruit(session.parentFruit);
+    if (completed) {
+      level.setBonusPlatformLocked(true);
+      campaign.updateInventory(state.lives, state.fruit);
+    }
+    applyRunModes();
+    applyTheme();
+    applyShadowFlags();
+    ui.setLevel(
+      current.id,
+      level.hudMode,
+      player.fruitCollectionRevision,
+      input.inventoryHeld,
+    );
+    ui.setHUD(currentHudState(), 0);
+    ui.showMessage(
+      completed ? "BONUS COMPLETE!" : "BONUS MISSED",
+      completed ? `${bonusBoxes} boxes banked` : "back to the bonus platform",
+      1900,
+    );
+    recorder.start(current.id, endlessDeathsOn);
+    gameFlow.hide();
+  });
+}
+
+function checkCampaignEntrances(): void {
+  if (gameFlow.blocksGameplay || paused || editor.active || player.state === "dead" || player.state === "gameover" || player.state === "finished")
+    return;
+  if (current.id === "warproom") {
+    const target = level.campaignPortalAt(player.pos);
+    if (target) enterCampaignLevel(target);
+    return;
+  }
+  if (
+    !bonusSession &&
+    isCampaignLevel(current.id) &&
+    !player.ttActive &&
+    !player.comboRun &&
+    player.grounded &&
+    level.bonusPlatformAt(player.pos)
+  )
+    enterBonusRound();
+}
+
+function flushPendingCompletion(): void {
+  const completion = pendingCompletion;
+  if (!completion) return;
+  pendingCompletion = null;
+  if (completion.kind === "bonus") {
+    returnFromBonus(true);
+    return;
+  }
+  if (completion.kind === "time") {
+    recordTT(current.id, completion.time);
+    ui.setTimeTrial(false);
+    const target = campaignLevelById(current.id)?.relicTime;
+    showCampaignResults(
+      completion.time,
+      target !== undefined && completion.time <= target,
+    );
+    return;
+  }
+  showCampaignResults(completion.time);
+}
+
+function updateResultsCamera(): void {
+  const focus = player.pos;
+  camera.fov = 34;
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.position.set(focus.x, focus.y + 1.65, focus.z - 5.6);
+  camera.lookAt(focus.x + 1.15, focus.y + 1.1, focus.z);
+  camera.updateProjectionMatrix();
 }
 
 // ---- level editor ----------------------------------------------------------
@@ -2656,9 +3179,26 @@ window.addEventListener("drop", (e) => {
       }
     });
 });
-ui.onLevelSelect = switchLevel;
-ui.onToggle2P = () => set2P(!split2p);
+ui.onLevelSelect = (id) => {
+  if (!shellBypass || gameFlow.blocksGameplay) return;
+  switchLevel(id);
+};
+ui.onToggle2P = () => {
+  if (!shellBypass) {
+    ui.showMessage("1 PLAYER CAMPAIGN", "split screen remains available in ?playtest", 1800);
+    return;
+  }
+  set2P(!split2p);
+};
 ui.onToggleRunModes = () => {
+  if (!shellBypass) {
+    ui.showMessage(
+      "CAMPAIGN RUN MODES",
+      "time trial and combo unlock after a crystal clear",
+      1800,
+    );
+    return;
+  }
   runModesOn = !runModesOn;
   localStorage.setItem("solProtoRunModes", runModesOn ? "on" : "off");
   applyRunModes();
@@ -2669,6 +3209,10 @@ ui.onToggleRunModes = () => {
   );
 };
 ui.onToggleEndlessDeaths = () => {
+  if (!shellBypass) {
+    ui.showMessage("CLASSIC LIVES", "campaign saves always use lives and game over", 1800);
+    return;
+  }
   // The click expresses a choice against the rule currently shown. Capture it
   // before replay cancellation restores the user's pre-replay preference.
   const desiredEndlessDeaths = !endlessDeathsOn;
@@ -2703,7 +3247,7 @@ player.onComboBail = (labels, points, multiplier) =>
   ui.comboBail(labels, points, multiplier);
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
-  if (player.endlessDeaths) return;
+  if (!shellBypass || player.endlessDeaths) return;
   player.lives++;
   sfx.play("lifeGet", 0.8);
 };
@@ -2719,6 +3263,7 @@ window.addEventListener("keydown", (e) => {
       t.tagName === "SELECT")
   )
     return;
+  if (!shellBypass || gameFlow.blocksGameplay || bonusSession) return;
   if (!editor.active) {
     // level hotkeys are gameplay-only — inside the editor they'd yank the
     // level out from under you
@@ -2745,18 +3290,12 @@ player.onTrickGateBlocked = (trick) => {
   ui.showMessage(`${info.label.toUpperCase()} REQUIRED`, info.hint, 1800);
 };
 player.onFinish = (time) => {
-  // the gate tallies the collectathon haul alongside the clear time
-  const gem = player.gemEarned
-    ? "gem ✓"
-    : `gem ✗ (${player.cratesBroken}/${level.totalCrates} boxes)`;
-  const crystal = player.hasCrystal ? "crystal ✓" : "crystal ✗";
-  ui.showMessage(
-    "COURSE CLEAR!",
-    `time ${time.toFixed(2)}s — ${crystal} · ${gem} — press R / Options to go again`,
-    0,
-  );
+  pendingCompletion = { kind: bonusSession ? "bonus" : "normal", time };
 };
+player.onBonusDeath = () => returnFromBonus(false);
 player.onRespawn = () => {
+  if (!bonusSession && isCampaignLevel(current.id))
+    player.bonusCrates = currentRunBonusBoxes;
   ui.resetHudTransients(player.fruitCollectionRevision, input.inventoryHeld);
   ui.setHUD(currentHudState(), 0);
   ui.hideMessage();
@@ -2784,7 +3323,11 @@ function recordTT(
   list.push(time);
   list.sort((a, b) => a - b);
   all[levelId] = list.slice(0, 8);
-  localStorage.setItem("solProtoTTtimes", JSON.stringify(all));
+  try {
+    localStorage.setItem("solProtoTTtimes", JSON.stringify(all));
+  } catch {
+    // Results still complete when private browsing/quota blocks persistence.
+  }
   return { list: all[levelId], rank: all[levelId].indexOf(time) };
 }
 
@@ -2823,12 +3366,16 @@ player.onComboRunEnd = () => {
   ui.setRunRows(false);
 };
 player.onTTFinish = (time) => {
-  const { list, rank } = recordTT(current.id, time);
-  ui.setTimeTrial(false);
-  ui.showTTResults(time, list, rank);
+  pendingCompletion = { kind: "time", time };
 };
 player.onCheckpoint = () => ui.showMessage("CHECKPOINT", "", 900);
-player.onGameOver = () => ui.showDeathScreen(true);
+player.onGameOver = () => {
+  campaign.resetInventory();
+  player.lives = DEFAULT_CAMPAIGN_LIVES;
+  player.fruit = 0;
+  ui.showDeathScreen(false);
+  gameFlow.showGameOver(currentCampaignName());
+};
 
 // --- Crash-style corridor camera -------------------------------------------
 // Hard-locked to the course axis: it only translates, never yaws, so screen
@@ -3235,7 +3782,8 @@ function currentHudState(): HudState {
     lives: Math.max(0, player.lives),
     deaths: player.totalDeaths,
     endlessDeaths: player.endlessDeaths,
-    cratesBroken: player.cratesBroken,
+    cratesBroken:
+      player.cratesBroken + (level.runMode ? 0 : player.bonusCrates),
     cratesTotal: level.totalCrates,
     hasCrystal: player.hasCrystal,
     hasGem: player.gemEarned,
@@ -3280,6 +3828,7 @@ function frame(nowMs: number): void {
       ui.showMessage("P2 PAD LOST", "press any button on it to rejoin", 3000);
     }
   }
+  gameFlow.update(nowMs);
 
   // Controller-only players fire no keydown/pointer gesture, so the audio
   // context would stay suspended until they touched the keyboard. Nudge it from
@@ -3310,28 +3859,34 @@ function frame(nowMs: number): void {
     return;
   }
 
-  // Options / P toggles pause: the sim stops dead, the frame still renders.
+  // Options / P owns the game-native pause stack. The menu controller also
+  // routes this edge back out of its nested Options screen.
   if (input.pausePressed) {
-    paused = !paused;
-    player.collapseRenderInterpolation();
-    if (split2p && p2) p2.collapseRenderInterpolation();
-    if (paused) ui.showMessage("PAUSED", "Options / P to resume", 0);
-    else ui.hideMessage();
-    // SPEND THE EDGE HERE. pausePressed is a latch cleared only by
-    // consumeEdges(), and on the UNPAUSE frame neither caller runs: the
-    // paused block is skipped (we just unpaused) and the fixed-step loop
-    // starts from acc = 0 + dt, which on any display faster than 60Hz is
-    // below fixedStep, so its body — and its consumeEdges — never executes.
-    // The latch then survived into the next frame and re-paused instantly,
-    // making the game impossible to resume on a 120Hz screen.
+    const handled = gameFlow.handlePauseToggle();
+    if (!handled && !gameFlow.blocksGameplay) {
+      paused = true;
+      player.collapseRenderInterpolation();
+      if (split2p && p2) p2.collapseRenderInterpolation();
+      ui.hideMessage();
+      gameFlow.showPause({
+        levelName: currentCampaignName(),
+        inWarpRoom: current.id === "warproom",
+      });
+    }
     input.pausePressed = false;
   }
-  if (paused) {
-    input.consumeEdges(); // presses while paused must not fire on resume
+
+  if (gameFlow.blocksGameplay) {
+    input.consumeEdges();
+    if (split2p) input2.consumeEdges();
     acc = 0;
-    renderGameplayScene(dt);
+    if (resultsCameraActive) updateResultsCamera();
+    sfx.stopLoops();
+    renderGameplayScene(dt, true, false);
+    gameFlow.captureGameplay(renderer.domElement);
     return;
   }
+  paused = false;
 
   // Tell the player where the camera is aiming (XZ) — the lip stall aligns
   // its balance meter + stick axis with the screen using this.
@@ -3369,12 +3924,25 @@ function frame(nowMs: number): void {
       input.restartPressed = true;
       input2.restartPressed = true;
     }
+    if (
+      !shellBypass &&
+      !split2p &&
+      input.restartPressed &&
+      (bonusSession !== null || current.id === "warproom" || isCampaignLevel(current.id))
+    ) {
+      input.restartPressed = false;
+      restartCurrentRun();
+      break;
+    }
     player.step(CONST.fixedStep, input, level);
     if (split2p && p2) {
       p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
       stepPvp(CONST.fixedStep);
     }
     level.update(CONST.fixedStep);
+    player.flushLevelCrateRewards(level);
+    flushPendingCompletion();
+    checkCampaignEntrances();
     // Player.step authors the fixed pose; PVP may then move either root. Only
     // now is the simulation tick complete and safe to publish to rendering.
     player.commitRenderStep(level);
@@ -3386,7 +3954,11 @@ function frame(nowMs: number): void {
     acc = Math.max(0, acc - CONST.fixedStep);
     simSteps++;
     frameStats.totalFixedSteps++;
+    if (gameFlow.blocksGameplay) break;
   }
+
+  if (!bonusSession && campaign.active)
+    campaign.updateInventory(player.lives, player.fruit);
 
   const renderAlpha = THREE.MathUtils.clamp(acc / CONST.fixedStep, 0, 1);
   try {
@@ -3646,6 +4218,11 @@ requestAnimationFrame(frame);
   editor,
   openEditor,
   ui, // debug: drive menu/sync controls from the console/harness
+  campaign,
+  gameFlow,
+  enterBonusRound,
+  returnFromBonus,
+  showCampaignResults,
   // debug: build/inspect the level list straight from the harness
   levelList,
   findLevel,

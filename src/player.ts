@@ -230,6 +230,29 @@ const FRUIT_GRAB = new THREE.Vector3(1.2, 1.5, 1.2); // same reach a level picku
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
 
+export interface PlayerRunState {
+  lives: number;
+  fruit: number;
+  cratesBroken: number;
+  bonusCrates: number;
+  masks: number;
+  points: number;
+  runTime: number;
+  crystal: boolean;
+  gem: boolean;
+  comboGem: boolean;
+  gemSpawned: boolean;
+  simSeed: number;
+}
+
+export interface PlayerWorldFruitSnapshot {
+  position: [number, number, number];
+  home: [number, number, number];
+  rotationY: number;
+  time: number;
+  hop: number;
+}
+
 /** Presentation-only route into the browser-authored player clip catalog. */
 export type PlayerAnimationClipHint =
   | 'player.idle'
@@ -520,11 +543,12 @@ export class Player {
   surfaceName = '-';
   runTime = 0;
   cratesBroken = 0;
+  bonusCrates = 0; // parent-level tally banked from its linked bonus stage
   fruit = 0; // wumpa collected
   fruitCollectionRevision = 0; // monotonic HUD event: includes 99->0 and endless-mode fruit
   masks = 0; // Aku masks held (max 2): absorb one hit or bail; the 3rd = uber
   uberTimer = 0; // Crash third-mask invincibility: auto-smash, perfect balance
-  lives = 3; // Crash lives: death costs one, 100 wumpa earns one, out = fresh start
+  lives = 4; // Campaign default: death costs one, 100 wumpa earns one, zero = game over
   endlessDeaths = false; // selectable standard-run rule: deaths replace lives and never game-over
   totalDeaths = 0;
   points = 0; // banked score
@@ -549,6 +573,7 @@ export class Player {
   // wired up by main.ts
   onDeath: () => void = () => {};
   onGameOver: () => void = () => {};
+  onBonusDeath: () => void = () => {};
   onFinish: (time: number) => void = () => {};
   onRespawn: () => void = () => {};
   onCheckpoint: () => void = () => {};
@@ -565,6 +590,8 @@ export class Player {
   // ONE combo. The gem lives exactly as long as the combo does.
   comboRun = false;
   comboGemEarned = false;
+  bonusMode = false; // bonus deaths cost nothing and return through the parent platform
+  hubMode = false; // warp-room movement has no damage, deaths, or life economy
   private comboWasLive = false; // last frame's "a combo is pending" — the falling edge is the fail
   private comboFailT = 0; // the despair beat: halo dissipates, then fade out + restart
   private comboGraceT = 0; // seconds after the grab to START a combo — no strolling to the gem
@@ -647,6 +674,40 @@ export class Player {
     if (this.relicKey) this.bankRelics();
     this.relicKey = id;
     this.restoreRelics();
+  }
+
+  campaignRelics(): { crystal: boolean; gem: boolean; combo: boolean } {
+    return {
+      crystal: this.hasCrystal,
+      gem: this.gemEarned,
+      combo: this.comboGemEarned,
+    };
+  }
+
+  setCampaignRelics(relics: {
+    crystal: boolean;
+    gem: boolean;
+    combo: boolean;
+  }): void {
+    Player.relicVault.set(this.relicKey, { ...relics });
+    this.restoreRelics();
+  }
+
+  captureRunState(): PlayerRunState {
+    return {
+      lives: this.lives,
+      fruit: this.fruit,
+      cratesBroken: this.cratesBroken,
+      bonusCrates: this.bonusCrates,
+      masks: this.masks,
+      points: this.points,
+      runTime: this.runTime,
+      crystal: this.hasCrystal,
+      gem: this.gemEarned,
+      comboGem: this.comboGemEarned,
+      gemSpawned: this.gemSpawned,
+      simSeed: this.simSeed,
+    };
   }
 
   readonly group: THREE.Group;
@@ -2661,7 +2722,9 @@ export class Player {
 
   // Soft respawn (death) returns to the last checkpoint; hard (R / new run)
   // returns to the start and relights checkpoints.
-  respawn(level: Level, hard = false): void {
+  respawn(level: Level, hard = false, preserveInventory = false): void {
+    const preservedLives = this.lives;
+    const preservedFruit = this.fruit;
     // Checkpoints restore the authored world/counters, but an endless-mode
     // death penalty is permanent for this run and must not be overwritten by
     // the checkpoint's older score snapshot.
@@ -2693,11 +2756,12 @@ export class Player {
     this.balanceBoostT = 0;
     if (hard) {
       this.simSeed = SIM_SEED0; // a fresh run replays from the same stream
-      this.lives = 3;
+      this.lives = 4;
       this.totalDeaths = 0;
       // The boxes are all back, so the gem has to be able to MATERIALIZE
       // again — but whether it was already earned is the vault's business.
       this.gemSpawned = false;
+      this.bonusCrates = 0;
       this.bankRelics();
       this.restoreRelics();
     }
@@ -2705,16 +2769,58 @@ export class Player {
     this.pos.copy(hard ? level.spawnPos : level.currentSpawn);
     level.playerPos.copy(this.pos); // keep the boulder trigger honest across respawns
     if (hard) this.runTime = 0;
-    // Respawning at a checkpoint restores the counters it banked; a hard
-    // reset (reset() cleared activeCheckpoint) starts from zero.
+    // Box/mask/score state follows the checkpoint. Wumpa is global campaign
+    // inventory: a normal death cannot roll it back, while a hard new run may
+    // explicitly preserve or reset it through preserveInventory.
     this.cratesBroken = level.activeCheckpoint ? level.activeCheckpoint.savedCratesBroken : 0;
-    this.fruit = level.activeCheckpoint ? level.activeCheckpoint.savedFruit : 0;
+    this.fruit = hard
+      ? 0
+      : preservedFruit;
     this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
     this.points = level.activeCheckpoint ? level.activeCheckpoint.savedPoints : 0;
     if (this.endlessDeaths) this.fruit = 0;
+    if (hard && preserveInventory) {
+      this.lives = preservedLives;
+      this.fruit = preservedFruit;
+    }
     if (endlessScore !== null) this.points = endlessScore;
     this.settle(level);
     this.onRespawn();
+  }
+
+  /** Resume a parent level that stayed alive while a bonus stage was running. */
+  resumeSuspendedLevel(
+    level: Level,
+    position: THREE.Vector3,
+    state: PlayerRunState,
+  ): void {
+    this.ttActive = false;
+    this.comboRun = false;
+    this.bonusMode = false;
+    this.lives = state.lives;
+    this.fruit = state.fruit;
+    this.cratesBroken = state.cratesBroken;
+    this.bonusCrates = state.bonusCrates;
+    this.masks = state.masks;
+    this.points = state.points;
+    this.runTime = state.runTime;
+    this.hasCrystal = state.crystal;
+    this.gemEarned = state.gem;
+    this.comboGemEarned = state.comboGem;
+    this.gemSpawned = state.gemSpawned;
+    this.simSeed = state.simSeed;
+    this.laneCursor.s = -1;
+    this.pos.copy(position);
+    level.playerPos.copy(this.pos);
+    this.settle(level);
+    this.onRespawn();
+  }
+
+  /** Freeze a readable front-facing idle for the end-of-run camera. */
+  prepareResultsPose(level: Level): void {
+    this.settle(level);
+    this.finishVisualStep({ moveX: 0 } as unknown as Input, 1);
+    this.collapseRenderInterpolation();
   }
 
   // Everything a body has to LET GO OF when it is put down somewhere new:
@@ -2977,6 +3083,10 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    if (this.hubMode && this.pos.y < level.killY) {
+      this.respawn(level, true, true);
+      return;
+    }
     // Downstream collision/VFX run after movement. Clear last step's evidence
     // here; an active slide step below relatches it before consuming any exact
     // final partial step and zeroing slideTimer.
@@ -3732,8 +3842,11 @@ export class Player {
             // a special-mode death: back to the very start, mode off
             this.ttDied = false;
             this.comboDied = false;
-            this.respawn(level, true);
-          } else if (this.lives < 0) {
+            this.respawn(level, true, true);
+          } else if (this.bonusMode) {
+            this.state = 'gameover';
+            this.onBonusDeath();
+          } else if (this.lives <= 0) {
             // out of lives: hold on the black screen until any button
             this.state = 'gameover';
             this.onGameOver();
@@ -3743,15 +3856,6 @@ export class Player {
         }
         break;
       case 'gameover':
-        if (
-          input.jumpPressed ||
-          input.spinPressed ||
-          input.grabPressed ||
-          input.grindPressed ||
-          input.restartPressed
-        ) {
-          this.respawn(level, true);
-        }
         break;
       case 'finished':
         this.stepFinished(dt, level);
@@ -3861,13 +3965,16 @@ export class Player {
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
+      this.flushLevelCrateRewards(level);
       // All boxes broken -> the gem materializes on the spot, Crash rules.
       // Breaking the last box no longer HANDS you the gem — it makes the gem
       // exist. Picking it up is below, and that is where the points are.
       if (
+        !this.bonusMode &&
+        !level.runMode &&
         !this.gemSpawned &&
         level.totalCrates > 0 &&
-        this.cratesBroken >= level.totalCrates &&
+        this.cratesBroken + (level.runMode ? 0 : this.bonusCrates) >= level.totalCrates &&
         (this.state as MoveState) !== 'dead'
       ) {
         this.gemSpawned = true;
@@ -3875,13 +3982,7 @@ export class Player {
         sfx.play('lifeGet', 0.9);
         this.onRelic('ALL BOXES!', where === 'gate' ? 'the gem is at the finish' : 'grab the gem');
       }
-      // Blast aftermath: tally crates the explosions broke, and die if we're
-      // inside an expanding blast sphere.
-      for (const c of level.consumeBlastBroken()) {
-        this.cratesBroken++;
-        this.score(CONST.ptsCrate, 'Box');
-        this.crateReward(c);
-      }
+      // Blast aftermath: die if we're inside an expanding blast sphere.
       if (this.pos.y < level.killY) this.die();
     }
 
@@ -11454,6 +11555,58 @@ export class Player {
     }
   }
 
+  /**
+   * Cash in fruit that has already been touched but is still flying toward the
+   * HUD when a level/bonus transition freezes simulation.
+   */
+  bankFlyingFruit(): number {
+    let banked = 0;
+    for (const fruit of this.fruits) {
+      if (fruit.phase !== 'fly') continue;
+      this.collectFruit();
+      this.retireFruit(fruit);
+      banked++;
+    }
+    return banked;
+  }
+
+  flushLevelCrateRewards(level: Level): void {
+    for (const crate of level.consumeBlastBroken()) {
+      this.cratesBroken++;
+      this.score(CONST.ptsCrate, 'Box');
+      this.crateReward(crate);
+    }
+  }
+
+  captureIdleFruit(): PlayerWorldFruitSnapshot[] {
+    return this.fruits
+      .filter((fruit) => fruit.phase === 'idle')
+      .map((fruit) => ({
+        position: fruit.mesh.position.toArray() as [number, number, number],
+        home: fruit.home.toArray() as [number, number, number],
+        rotationY: fruit.mesh.rotation.y,
+        time: fruit.t,
+        hop: fruit.hop,
+      }));
+  }
+
+  restoreIdleFruit(snapshots: readonly PlayerWorldFruitSnapshot[]): void {
+    for (const snapshot of snapshots) {
+      const fruit = this.freeFruit();
+      if (!fruit) break;
+      fruit.phase = 'idle';
+      fruit.mesh.visible = true;
+      fruit.mesh.scale.setScalar(WUMPA_SIZE);
+      fruit.mesh.position.fromArray(snapshot.position);
+      fruit.mesh.rotation.set(0, snapshot.rotationY, 0);
+      fruit.home.fromArray(snapshot.home);
+      fruit.vel.set(0, 0, 0);
+      fruit.t = snapshot.time;
+      fruit.hop = snapshot.hop;
+      if (fruit.mesh.parent !== this.worldScene) this.worldScene.add(fruit.mesh);
+    }
+  }
+
   // A body to put a wumpa in.
   //
   // The pool GROWS. It was a fixed 24, a number from when fruit was a burst
@@ -11921,6 +12074,7 @@ export class Player {
   }
 
   private wallSmack(beforeX: number, beforeZ: number, s0: number, box?: THREE.Box3): void {
+    if (this.hubMode) return;
     if (this.isBailing || this.state === 'dead') return;
     if (!this.freeSkate) return; // on foot you can't reach wall-crash speed
     if (Math.abs(s0) < TUNING.wallBailSpeed) return;
@@ -13351,6 +13505,11 @@ export class Player {
 
   private die(): void {
     if (this.state === 'dead') return;
+    if (this.hubMode) {
+      this.speed = 0;
+      this.vVel = 0;
+      return;
+    }
     // A pit/death ends the worn third mask immediately. Respawn also clears it,
     // but waiting for the blackout would leave forced SPECIAL (and uber audio)
     // live after the mask visual and player agency were already gone.
@@ -13364,7 +13523,7 @@ export class Player {
     } else if (this.endlessDeaths) {
       this.totalDeaths++;
       this.points = Math.ceil(this.points / 2);
-    } else this.lives--;
+    } else if (!this.bonusMode) this.lives--;
     this.respawnTimer = CONST.respawnDelay;
     sfx.play('death', 0.9);
     this.speed = 0;

@@ -60,6 +60,7 @@ export class Input {
   private prevTransfer = false;
   private prevRestart = false;
   private prevPause = false;
+  private menuReleaseGuard = false;
 
   // padOnly: the split-screen P2 input — one claimed gamepad only, no
   // keyboard, no touch overlay, no listeners.
@@ -162,6 +163,41 @@ export class Input {
       if (this.gamepadName === 'no controller') this.gamepadName = 'touch';
     }
 
+    // A button used to close a modal must return to neutral before it can drive
+    // the character. This covers keyboard events (which can resume between
+    // frames) as well as held controller/touch actions.
+    if (this.menuReleaseGuard) {
+      const stillHeld =
+        Math.abs(moveX) > 0.01 ||
+        Math.abs(moveY) > 0.01 ||
+        jump ||
+        grind ||
+        spin ||
+        grab ||
+        transfer ||
+        inventory ||
+        restart ||
+        pause;
+      this.moveX = 0;
+      this.moveY = 0;
+      this.jumpHeld = false;
+      this.grindHeld = false;
+      this.spinHeld = false;
+      this.grabHeld = false;
+      this.transferHeld = false;
+      this.inventoryHeld = false;
+      this.prevJump = false;
+      this.prevGrind = false;
+      this.prevSpin = false;
+      this.prevGrab = false;
+      this.prevTransfer = false;
+      this.prevRestart = false;
+      this.prevPause = false;
+      this.consumeEdges();
+      if (!stillHeld) this.menuReleaseGuard = false;
+      return;
+    }
+
     // Clamp the combined vector to unit length (keyboard diagonals become
     // 0.707/0.707) so downstream drive code can use components directly —
     // no separate diagonal normalization, and analog magnitudes survive.
@@ -210,6 +246,19 @@ export class Input {
     this.claimedSlot = null;
     this.claimCandidate = -1;
     this.claimStreak = 0;
+  }
+
+  armMenuReleaseGuard(): void {
+    this.menuReleaseGuard = true;
+    this.moveX = 0;
+    this.moveY = 0;
+    this.jumpHeld = false;
+    this.grindHeld = false;
+    this.spinHeld = false;
+    this.grabHeld = false;
+    this.transferHeld = false;
+    this.inventoryHeld = false;
+    this.consumeEdges();
   }
 
   // Called after the first fixed step of each frame so a single press only

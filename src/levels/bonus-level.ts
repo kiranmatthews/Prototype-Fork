@@ -199,4 +199,6 @@ export const BONUS_LEVEL: CustomLevelData = {
   ],
 };
 
-export const BONUS_CRATE_COUNT = bridgeA.length + bridgeB.length + bridgeC.length;
+// The finish-side mask crate is still a breakable box and therefore belongs in
+// the parent level's all-box tally alongside the three bridge puzzles.
+export const BONUS_CRATE_COUNT = bridgeA.length + bridgeB.length + bridgeC.length + 1;
