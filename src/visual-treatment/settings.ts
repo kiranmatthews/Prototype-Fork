@@ -154,8 +154,22 @@ export function cloneVisualTreatment(
   };
 }
 
+// Neutral remains an identity transform; factory Reset restores the Chrome-tuned look.
 export const DEFAULT_VISUAL_TREATMENT: Readonly<VisualTreatmentValue> =
-  Object.freeze(cloneVisualTreatment(DEFAULT_VALUE));
+  Object.freeze({
+    ...cloneVisualTreatment(DEFAULT_VALUE),
+    grading: { ...DEFAULT_VALUE.grading, exposureEV: -0.18, contrastPct: 19.3 },
+    bloom: {
+      ...DEFAULT_VALUE.bloom,
+      intensity: 2.56, threshold: 0.49, scatter: 0.45, clamp: 41521,
+      tint: [1.07, 1.02, 1.2] as Color3,
+    },
+    vignette: {
+      ...DEFAULT_VALUE.vignette,
+      intensity: 0.29, smoothness: 0.4,
+      color: [0.1803921568627451, 0.08235294117647059, 0] as Color3,
+    },
+  });
 
 const sourcePreset = (patch: VisualTreatmentPatch): Readonly<VisualTreatmentValue> =>
   Object.freeze(clampVisualTreatment({
@@ -169,7 +183,7 @@ const sourcePreset = (patch: VisualTreatmentPatch): Readonly<VisualTreatmentValu
 // Exact active Unity volume values. Advanced controls stay identity until the
 // user changes them, so presets remain literal source references.
 export const VISUAL_TREATMENT_PRESETS = Object.freeze({
-  neutral: DEFAULT_VISUAL_TREATMENT,
+  neutral: Object.freeze(cloneVisualTreatment(DEFAULT_VALUE)),
   unityDefault: sourcePreset({
     grading: { toneMapper: "neutral" },
     bloom: {
@@ -393,7 +407,7 @@ function defaultStorage(): VisualTreatmentStorage | null {
 }
 
 function readStored(storage: VisualTreatmentStorage | null): VisualTreatmentValue {
-  if (!storage) return cloneVisualTreatment(DEFAULT_VALUE);
+  if (!storage) return cloneVisualTreatment(DEFAULT_VISUAL_TREATMENT);
   try {
     const current = storage.getItem(VISUAL_TREATMENT_STORAGE_KEY);
     if (current) {
@@ -414,7 +428,7 @@ function readStored(storage: VisualTreatmentStorage | null): VisualTreatmentValu
   } catch (error) {
     console.warn("Ignoring invalid visual-treatment tuning", error);
   }
-  return cloneVisualTreatment(DEFAULT_VALUE);
+  return cloneVisualTreatment(DEFAULT_VISUAL_TREATMENT);
 }
 
 export class VisualTreatmentSettings {
@@ -444,7 +458,7 @@ export class VisualTreatmentSettings {
   }
 
   reset(): void {
-    this.replace(DEFAULT_VALUE);
+    this.replace(DEFAULT_VISUAL_TREATMENT);
   }
 
   applyPreset(value: Readonly<VisualTreatmentValue>): void {

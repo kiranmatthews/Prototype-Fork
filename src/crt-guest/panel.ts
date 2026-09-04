@@ -243,7 +243,7 @@ export class CrtGuestTuningPanel {
       }),
       this.action("Reset all", () => {
         this.settings.resetAllDefaults();
-        this.setStatus("Reset all CRT settings to manifest defaults.");
+        this.setStatus("Restored the game's factory CRT preset.");
       }),
       this.action("Copy", () => void this.copyPresetToClipboard()),
       this.action("Paste", () => void this.pastePresetFromClipboard()),

@@ -112,7 +112,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 18;
+export const PLAYER_STARTER_CATALOG_VERSION = 19;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -648,6 +648,8 @@ function buildRun(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     'loop',
     rigId,
   );
+  // Promoted from the local Chrome Animation Studio run-cycle tuning.
+  clip.playbackSpeed = 1.6;
   clip.tracks = [
     sampledPositionTrack(clip.id, 'root', QUATERNIUS_JOG_FWD_ROOT_KEYS),
     ...sampledQuaterniusRotationTracks(

@@ -113,6 +113,8 @@ import {
 } from './character/collisionDimensions';
 import {
   characterProportionSettings,
+  DEFAULT_CHARACTER_TAIL_VISIBLE,
+  DEFAULT_CHARACTER_HEAD_STYLE,
   type CharacterHeadProfileId,
   type CharacterHeadProfiles,
   type CharacterProportionSettingsValue,
@@ -720,7 +722,7 @@ export class Player {
   private authoredLowPoseOuterOwnershipLatched = 0;
   private readonly characterProportionLayer: CharacterProportionLayer;
   private readonly hitboxHalf = { ...CONST.playerHalf };
-  private characterTailVisibleValue = true;
+  private characterTailVisibleValue = DEFAULT_CHARACTER_TAIL_VISIBLE;
 
   private spinTimer = 0;
   private spinCd = 0;
@@ -1223,7 +1225,7 @@ export class Player {
   private meshyBoolieRooHeadLoading: Promise<void> | null = null;
   private meshyBoolieRooHeadTextureDiagnostics:
     (() => MeshyBoolieRooHeadTextureDiagnostics) | null = null;
-  private characterHeadStyleValue: CharacterHeadStyle = 'skull';
+  private characterHeadStyleValue: CharacterHeadStyle = DEFAULT_CHARACTER_HEAD_STYLE;
   private characterUpperArmRestAngleWeight = 1;
   private meshyShorts: MeshyShortsComponent | null = null;
   private readonly proceduralFootwear: ProceduralFootwearComponent[] = [];
@@ -2310,19 +2312,19 @@ export class Player {
       if (saved === '0') this.characterTailVisibleValue = false;
       else if (saved === '1') this.characterTailVisibleValue = true;
     } catch {
-      // Default-on remains available when browser storage is blocked.
+      // Keep the source-owned visibility when browser storage is blocked.
     }
     this.syncCharacterTailVisibility();
   }
 
   private restoreCharacterHeadStylePreference(): void {
-    let restored = sharedCharacterHeadStyle ?? 'skull';
+    let restored: CharacterHeadStyle = sharedCharacterHeadStyle ?? DEFAULT_CHARACTER_HEAD_STYLE;
     if (sharedCharacterHeadStyle === null) {
       try {
         const saved = localStorage.getItem(CHARACTER_HEAD_STYLE_STORAGE_KEY);
         if (saved === 'alternate' || saved === 'skull') restored = saved;
       } catch {
-        // The default skull remains available when persistence is blocked.
+        // Keep the source-owned head style when persistence is blocked.
       }
       sharedCharacterHeadStyle = restored;
     }

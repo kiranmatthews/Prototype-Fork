@@ -90,7 +90,9 @@ export interface CharacterProportionStorage {
 
 export const CHARACTER_PROPORTION_STORAGE_KEY = 'solProtoCharacterProportions.v1';
 export const CHARACTER_HAND_REST_REVISION = 1 as const;
-export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 5 as const;
+export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 6 as const;
+export const DEFAULT_CHARACTER_TAIL_VISIBLE: boolean = false;
+export const DEFAULT_CHARACTER_HEAD_STYLE = 'alternate' as const;
 
 /** Identity presentation values used by the original Character Lab baseline. */
 export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
@@ -132,23 +134,24 @@ export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSetting
     footSize: 1,
   });
 
-/** Source-owned authored silhouette restored by Character Lab's Reset action. */
+/** Source-owned silhouette (skull baseline); Player selects the tuned Roo profile. */
 export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
   Object.freeze({
-    ...IDENTITY_CHARACTER_PROPORTIONS,
+    overallScale: 1,
+    height: 1,
     bodyWidth: 1,
     bodyDepth: 1,
-    headSize: 1.55,
-    headWidth: 1.23,
-    headDepth: 1.23,
-    neckLength: 0,
-    headForwardOffset: 0,
+    headSize: 1.64,
+    headWidth: 1.18,
+    headDepth: 1.3,
+    neckLength: 0.01,
+    headForwardOffset: -0.105,
     headRestPitch: 0,
     torsoLength: 1,
     torsoWidth: 1.13,
     torsoDepth: 1.22,
-    shoulderWidth: 1,
-    upperArmRestAngle: 0,
+    shoulderWidth: 0.76,
+    upperArmRestAngle: -19,
     hipWidth: 0.93,
     upperArmLength: 1.01,
     forearmLength: 1.25,
@@ -174,20 +177,20 @@ export const DEFAULT_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettings
 export const DEFAULT_CHARACTER_HEAD_PROFILES: ReadonlyCharacterHeadProfiles =
   Object.freeze({
     skull: Object.freeze({
-      headSize: DEFAULT_CHARACTER_PROPORTIONS.headSize,
-      headWidth: DEFAULT_CHARACTER_PROPORTIONS.headWidth,
-      headDepth: DEFAULT_CHARACTER_PROPORTIONS.headDepth,
-      neckLength: DEFAULT_CHARACTER_PROPORTIONS.neckLength,
-      headForwardOffset: DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset,
-      headRestPitch: DEFAULT_CHARACTER_PROPORTIONS.headRestPitch,
+      headSize: 1.64,
+      headWidth: 1.18,
+      headDepth: 1.3,
+      neckLength: 0.01,
+      headForwardOffset: -0.105,
+      headRestPitch: 0,
     }),
     roo: Object.freeze({
-      headSize: DEFAULT_CHARACTER_PROPORTIONS.headSize,
-      headWidth: DEFAULT_CHARACTER_PROPORTIONS.headWidth,
-      headDepth: DEFAULT_CHARACTER_PROPORTIONS.headDepth,
-      neckLength: DEFAULT_CHARACTER_PROPORTIONS.neckLength,
-      headForwardOffset: DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset,
-      headRestPitch: DEFAULT_CHARACTER_PROPORTIONS.headRestPitch,
+      headSize: 2.45,
+      headWidth: 1.18,
+      headDepth: 1.31,
+      neckLength: -1.82,
+      headForwardOffset: 0.09,
+      headRestPitch: -23,
     }),
   });
 
@@ -398,8 +401,10 @@ export class CharacterProportionSettings {
   }
 
   reset(): void {
-    this.current = copyCharacterProportions(DEFAULT_CHARACTER_PROPORTIONS);
     this.headProfileValues = defaultCharacterHeadProfiles();
+    this.current = applyCharacterHeadProfile(
+      DEFAULT_CHARACTER_PROPORTIONS, this.headProfileValues[this.activeHeadProfileValue],
+    );
     this.persistAndNotify();
   }
 

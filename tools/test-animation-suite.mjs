@@ -344,7 +344,7 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 18);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 19);
   assert.equal(starterClips.length, 22);
   for (const id of [
     'player.idle', PLAYER_WALK_CLIP_ID, 'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',

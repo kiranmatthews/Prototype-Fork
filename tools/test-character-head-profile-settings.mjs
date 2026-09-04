@@ -71,9 +71,9 @@ const {
   assert.notEqual(DEFAULT_CHARACTER_HEAD_PROFILES.skull,
     DEFAULT_CHARACTER_HEAD_PROFILES.roo,
     'each style owns an independent immutable authored-default snapshot');
-  assert.deepEqual(DEFAULT_CHARACTER_HEAD_PROFILES.skull,
+  assert.notDeepEqual(DEFAULT_CHARACTER_HEAD_PROFILES.skull,
     DEFAULT_CHARACTER_HEAD_PROFILES.roo,
-    'skull and roo authored defaults intentionally start identically');
+    'skull and roo preserve their separately tuned head profiles');
   assert.throws(
     () => { DEFAULT_CHARACTER_HEAD_PROFILES.roo.headRestPitch = -12; },
     TypeError,
@@ -82,8 +82,8 @@ const {
   const storage = memoryStorage();
   const settings = new CharacterProportionSettings(storage);
   assert.equal(settings.activeHeadProfile, 'skull');
-  assert.deepEqual(settings.headProfiles.skull, settings.headProfiles.roo,
-    'new skull and roo profiles must have identical authored defaults');
+  assert.notDeepEqual(settings.headProfiles.skull, settings.headProfiles.roo,
+    'new skull and roo profiles must preserve their distinct authored defaults');
   assert.deepEqual(settings.headProfiles, DEFAULT_CHARACTER_HEAD_PROFILES);
   assert.notEqual(settings.headProfiles.skull, DEFAULT_CHARACTER_HEAD_PROFILES.skull,
     'live defaults must be cloned from the immutable authored snapshots');
@@ -101,12 +101,12 @@ const {
   });
   assert.equal(notifications, 1);
   assert.equal(settings.getHeadProfile('skull').headRestPitch, 18);
-  assert.equal(settings.getHeadProfile('roo').headRestPitch, 0);
+  assert.equal(settings.getHeadProfile('roo').headRestPitch, -23);
 
   settings.setActiveHeadProfile('roo');
   assert.equal(notifications, 2);
-  assert.equal(settings.value.headSize, DEFAULT_CHARACTER_PROPORTIONS.headSize);
-  assert.equal(settings.value.headRestPitch, DEFAULT_CHARACTER_PROPORTIONS.headRestPitch);
+  assert.equal(settings.value.headSize, DEFAULT_CHARACTER_HEAD_PROFILES.roo.headSize);
+  assert.equal(settings.value.headRestPitch, DEFAULT_CHARACTER_HEAD_PROFILES.roo.headRestPitch);
   assert.equal(settings.value.torsoWidth, 1.27,
     'switching heads must not replace shared body settings');
   settings.setActiveHeadProfile('roo');
@@ -258,7 +258,7 @@ const {
   assert.deepEqual(imported.value, settings.value);
 
   imported.reset();
-  assert.deepEqual(imported.headProfiles.skull, imported.headProfiles.roo);
+  assert.notDeepEqual(imported.headProfiles.skull, imported.headProfiles.roo);
   assert.deepEqual(imported.headProfiles, DEFAULT_CHARACTER_HEAD_PROFILES);
   assert.notEqual(imported.headProfiles.roo, DEFAULT_CHARACTER_HEAD_PROFILES.roo,
     'reset must clone rather than expose an authored profile object');
@@ -270,7 +270,9 @@ const {
     headForwardOffset: DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset,
     headRestPitch: DEFAULT_CHARACTER_PROPORTIONS.headRestPitch,
   });
-  assert.deepEqual(imported.value, DEFAULT_CHARACTER_PROPORTIONS);
+  assert.deepEqual(imported.value, {
+    ...DEFAULT_CHARACTER_PROPORTIONS, ...DEFAULT_CHARACTER_HEAD_PROFILES.roo,
+  });
 
   const replacement = new CharacterProportionSettings(memoryStorage());
   replacement.setActiveHeadProfile('roo');
@@ -292,6 +294,6 @@ const {
     /Unknown character head profile/,
   );
 
-  assert.equal(CHARACTER_PROPORTION_DEFAULTS_REVISION, 5,
-    'adding optional v1 profile fields does not require rewriting legacy keys');
+  assert.equal(CHARACTER_PROPORTION_DEFAULTS_REVISION, 6,
+    'Chrome-authored defaults advance the existing v1 migration revision');
 console.log('PASS character head profile settings, persistence, and legacy migration');

@@ -95,7 +95,7 @@ try {
   assert.ok(attackDelta > releaseDelta,
     'FOV release was not gentler than its attack');
 
-  assert.equal(TUNING_VERSION, 16);
+  assert.equal(TUNING_VERSION, 17);
   assert.equal(TUNING.camSpeedFovBoost, 6);
   assert.deepEqual(TUNING_RANGES.camSpeedFovBoost, {
     min: 0,

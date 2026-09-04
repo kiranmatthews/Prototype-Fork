@@ -299,6 +299,9 @@ try {
     server.ssrLoadModule('/src/animation/index.ts'),
   ]);
   const player = new Player(new THREE.Scene());
+  // This structural suite exercises the Skull model and raw shoulder rest;
+  // the separate factory-default regression covers the selected Roo profile.
+  player.setCharacterHeadStyle('skull');
   assert.deepEqual(player.cartoonGloveDiagnostics, {
     ready: true,
     bonesPerHand: 12,
@@ -492,6 +495,9 @@ try {
   const elbowRight = player.animationRig.root.getObjectByName('elbow-right');
   const shoulderLeftBasePosition = shoulderLeft.position.clone();
   const shoulderRightBasePosition = shoulderRight.position.clone();
+  const shoulderLeftDefault = shoulderLeft.quaternion.clone();
+  const shoulderRightDefault = shoulderRight.quaternion.clone();
+  player.syncCharacterAppearance({ upperArmRestAngleWeight: 0 });
   const shoulderLeftBase = shoulderLeft.quaternion.clone();
   const shoulderRightBase = shoulderRight.quaternion.clone();
   const clavicleLeftBase = clavicleLeft.position.clone();
@@ -558,8 +564,8 @@ try {
   near(headBone.position.z, headBase.z);
   assert.deepEqual(headPresentation.position.toArray(), headPresentationBase.toArray());
   near(Math.abs(headPresentation.quaternion.dot(new THREE.Quaternion())), 1);
-  near(Math.abs(shoulderLeft.quaternion.dot(shoulderLeftBase)), 1);
-  near(Math.abs(shoulderRight.quaternion.dot(shoulderRightBase)), 1);
+  near(Math.abs(shoulderLeft.quaternion.dot(shoulderLeftDefault)), 1);
+  near(Math.abs(shoulderRight.quaternion.dot(shoulderRightDefault)), 1);
 
   player.setCharacterProportions({ headSize: 2.1, headRestPitch: 14 });
   const profilePeer = new Player(new THREE.Scene());
@@ -567,8 +573,8 @@ try {
   player.setCharacterHeadStyle('alternate');
   assert.equal(profilePeer.characterHeadStyle, 'alternate',
     'head style did not propagate to the split-screen peer');
-  near(player.characterProportions.headSize, 1.55);
-  near(player.characterProportions.headRestPitch, 0);
+  near(player.characterProportions.headSize, 2.45);
+  near(player.characterProportions.headRestPitch, -23);
   player.setCharacterProportions({
     headSize: 1.35,
     neckLength: -1.2,

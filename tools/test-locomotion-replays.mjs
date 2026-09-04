@@ -68,6 +68,9 @@ try {
     const entry = findLevel(replay.level);
     const level = new Level(new THREE.Scene(), entry);
     const player = new Player(level.scene);
+    // Lock the collision silhouette used to establish these historical hashes.
+    player.setCharacterHeadStyle('skull');
+    player.setCharacterProportions({ headSize: 1.55, neckLength: 0 });
     player.enterLevel(entry.id);
     player.endlessDeaths = replay.endlessDeaths === true;
     player.respawn(level, true);

@@ -200,17 +200,17 @@ try {
     height: 1,
     bodyWidth: 1,
     bodyDepth: 1,
-    headSize: 1.55,
-    headWidth: 1.23,
-    headDepth: 1.23,
-    neckLength: 0,
-    headForwardOffset: 0,
+    headSize: 1.64,
+    headWidth: 1.18,
+    headDepth: 1.3,
+    neckLength: 0.01,
+    headForwardOffset: -0.105,
     headRestPitch: 0,
     torsoLength: 1,
     torsoWidth: 1.13,
     torsoDepth: 1.22,
-    shoulderWidth: 1,
-    upperArmRestAngle: 0,
+    shoulderWidth: 0.76,
+    upperArmRestAngle: -19,
     hipWidth: 0.93,
     upperArmLength: 1.01,
     forearmLength: 1.25,
@@ -233,7 +233,7 @@ try {
     footSize: 1.53,
   });
   near(
-    characterCollisionHeight(DEFAULT_CHARACTER_PROPORTIONS, 'skull'),
+    characterCollisionHeight({ ...DEFAULT_CHARACTER_PROPORTIONS, headSize: 1.55, neckLength: 0 }, 'skull'),
     BASE_CHARACTER_HITBOX_HEIGHT,
   );
   assert.ok(
@@ -309,9 +309,9 @@ try {
   assert.equal(settings.value.gloveXAcross, 0.025);
   assert.equal(settings.value.gloveXAlong, 0.011);
   assert.equal(settings.value.gloveXLift, -0.004);
-  assert.equal(settings.value.headForwardOffset, 0);
+  assert.equal(settings.value.headForwardOffset, DEFAULT_CHARACTER_PROPORTIONS.headForwardOffset);
   assert.equal(settings.value.headRestPitch, 0);
-  assert.equal(settings.value.upperArmRestAngle, 0);
+  assert.equal(settings.value.upperArmRestAngle, DEFAULT_CHARACTER_PROPORTIONS.upperArmRestAngle);
   assert.equal(settings.value.armKnobSize, 1.47,
     'untouched legacy values must adopt the authored defaults');
   assert.equal(settings.value.shortsWidth, 1.5,
@@ -378,7 +378,7 @@ try {
       settings: { ...revision3Defaults, handSize: 1.28 },
     }),
   }));
-  assert.equal(migratedRevision3.value.headSize, 1.55,
+  assert.equal(migratedRevision3.value.headSize, 1.64,
     'untouched revision-3 defaults migrate to the new authored silhouette');
   assert.equal(migratedRevision3.value.shortsWidth, 1.5);
   assert.equal(migratedRevision3.value.wristRestYaw, -167);

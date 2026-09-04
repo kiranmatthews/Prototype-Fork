@@ -123,6 +123,9 @@ try {
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { Replayer, isReplayFile } = await server.ssrLoadModule('/src/replay.ts');
   const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
+  // These fixed-rate steering probes assert the original 46-frame carve arc,
+  // independently of subsequent factory tuning.
+  Object.assign(TUNING, { carveGripLow: 128.25, carveGripHigh: 141.1875 });
   const {
     beginVertBoardRelease,
     createVertBoardReleaseState,
@@ -861,6 +864,9 @@ try {
     assert.ok(entry, `replay level ${replay.level} is not registered`);
     const level = new Level(new THREE.Scene(), entry);
     const player = new Player(level.scene);
+    // The historical input-only recording predates appearance capture.
+    player.setCharacterHeadStyle('skull');
+    player.setCharacterProportions({ headSize: 1.55, neckLength: 0 });
     levels.push(level);
     player.enterLevel(entry.id);
     player.endlessDeaths = replay.endlessDeaths === true;

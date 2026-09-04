@@ -91,8 +91,8 @@ export const TUNING = {
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
   teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
-  carveGripLow: 128.25, // omnidirectional skate turn rate at zero/low speed (deg/s); may be far higher than the high-speed endpoint
-  carveGripHigh: 141.1875, // skate turn rate at maxSpeed and above (deg/s); may be near zero for heavily damped high-speed steering
+  carveGripLow: 360, // omnidirectional skate turn rate at zero/low speed (deg/s); may be far higher than the high-speed endpoint
+  carveGripHigh: 60, // skate turn rate at maxSpeed and above (deg/s); may be near zero for heavily damped high-speed steering
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 26, // the slide starts at least this fast, then analytically brakes to zero over slideDistance
@@ -173,7 +173,7 @@ export const TUNING = {
   balanceGravity: 2, // EDGE CLIFF: extra runaway proportional to how far off-center you are — 0 = flat, higher = calm middle but the edges bolt away (react late = no save)
   balanceNoise: 0.18, // SKETCH: smoothed random wander so the tip direction can't be memorized (rides the same capped ramp as the drift; a committed counter-tap quiets it)
   balanceNoiseFreq: 6, // how fast the sketch sways (rad/s) — low = a lazy roll, high = a nervous jitter
-  balanceSafePeriod: 0.15, // entry ease-in: corrective input fades in over this many seconds so an eager first tap can't fling the fresh needle (Neversoft safe_period)
+  balanceSafePeriod: 0.1, // entry ease-in: corrective input fades in over this many seconds so an eager first tap can't fling the fresh needle (Neversoft safe_period)
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
@@ -203,7 +203,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 16; // v16: tunable high-speed skating FOV push
+export const TUNING_VERSION = 17; // v17: captured Chrome carve grip and balance defaults
+// v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
 // v14: wider ledge catch plus the latest close, telephoto camera framing
 // v13: Unity-port feel/collision pass — foot inertia, exact slide, tuned double jump, generic wipeouts, Arrow/crate/Slam updates

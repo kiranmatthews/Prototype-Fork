@@ -51,13 +51,19 @@ export function characterDesignHeight(
 }
 
 const DEFAULT_SKULL_DESIGN_HEIGHT = characterDesignHeight(
-  DEFAULT_CHARACTER_PROPORTIONS,
+  // Level-authoring calibration, not a moving factory-preset denominator.
+  // Promoting browser proportions must retain their existing collision size.
+  {
+    ...DEFAULT_CHARACTER_PROPORTIONS,
+    overallScale: 1, height: 1, torsoLength: 1,
+    thighLength: 1.34, shinLength: 1.47, headSize: 1.55, neckLength: 0,
+  },
   'skull',
 );
 
 /**
  * Scale the forgiving gameplay body with the authored character stature while
- * keeping the shipped default Skull exactly compatible with existing levels.
+ * keeping the original level-authoring Skull compatible with existing levels.
  */
 export function characterCollisionHeight(
   value: Readonly<CharacterProportionSettingsValue>,

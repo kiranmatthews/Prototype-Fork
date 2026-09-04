@@ -6,6 +6,8 @@ import type { CartoonGlovePoseName } from './character/cartoonGlove';
 import {
   CHARACTER_PROPORTION_CONTROLS,
   DEFAULT_CHARACTER_PROPORTIONS,
+  DEFAULT_CHARACTER_TAIL_VISIBLE,
+  DEFAULT_CHARACTER_HEAD_STYLE,
   characterProportionSettings,
   type CharacterProportionControl,
   type CharacterHeadProfileId,
@@ -294,10 +296,10 @@ class CharacterLab implements CharacterLabHandle {
     reset.type = 'button';
     reset.onclick = () => {
       characterProportionSettings.reset();
-      this.ctx.player.setCharacterTailVisible(true);
-      this.ctx.player.setCharacterHeadStyle('skull');
+      this.ctx.player.setCharacterTailVisible(DEFAULT_CHARACTER_TAIL_VISIBLE);
+      this.ctx.player.setCharacterHeadStyle(DEFAULT_CHARACTER_HEAD_STYLE);
       this.ctx.player.setCartoonGlovePreviewPose('relaxed');
-      this.tailInput.checked = true;
+      this.tailInput.checked = DEFAULT_CHARACTER_TAIL_VISIBLE;
       this.steered = false;
       this.frameCamera('three-quarter');
       this.showToast('Default proportions restored');

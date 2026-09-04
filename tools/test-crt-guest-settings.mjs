@@ -61,11 +61,11 @@ const options = {
   persistChanges: false,
 };
 const settings = new api.CrtGuestSettings(options);
-assert.equal(settings.enabled, true);
+assert.equal(settings.enabled, false);
 assert.equal(settings.variant, "hd");
-assert.equal(settings.quality, "apple-tv");
+assert.equal(settings.quality, "exact");
 assert.equal(settings.parameterCount, 143);
-assert.ok(Math.abs(settings.getValue("internal_res") - 4.2) < 1e-9);
+assert.equal(settings.getValue("internal_res"), 1);
 assert.equal(settings.getValue("LS", "advanced"), 32);
 assert.equal(settings.getValue("LS", "hd"), 32);
 assert.equal(settings.setValue("internal_res", 2, "advanced"), false);
@@ -124,15 +124,15 @@ const restored = new api.CrtGuestSettings({
 });
 assert.equal(restored.enabled, false);
 assert.equal(restored.variant, "hd");
-assert.equal(restored.quality, "apple-tv");
+assert.equal(restored.quality, "exact");
 
 let changes = 0;
 const unsubscribe = restored.subscribe(() => {
   changes += 1;
 });
-restored.setQuality("exact");
-unsubscribe();
 restored.setQuality("balanced");
+unsubscribe();
+restored.setQuality("exact");
 assert.equal(changes, 1);
 
 console.log(

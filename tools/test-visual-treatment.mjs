@@ -62,7 +62,8 @@ const {
 
 assert.equal(storageKey, "solProtoVisualTreatment.v2");
 assert.equal(legacyKey, "solProtoVisualTreatment.v1");
-assert.deepEqual(defaults, {
+assert.deepEqual(defaults, JSON.parse(read("tools/fixtures/chrome-factory-defaults.json")).look);
+assert.deepEqual(presets.neutral, {
   enabled: false,
   grading: {
     toneMapper: "none",
@@ -105,7 +106,7 @@ assert.deepEqual(defaults, {
 });
 
 // Exact source volume values, not browser-tuned approximations.
-assert.equal(presets.neutral, defaults);
+assert.notDeepEqual(presets.neutral, defaults);
 assert.deepEqual(
   {
     enabled: presets.unityDefault.enabled,
@@ -369,7 +370,7 @@ currentStorage.values.set(
 );
 const loadedCurrent = new VisualTreatmentSettings(currentStorage);
 assert.equal(loadedCurrent.value.grading.exposureEV, 5);
-assert.equal(loadedCurrent.value.grading.contrastPct, 0);
+assert.equal(loadedCurrent.value.grading.contrastPct, defaults.grading.contrastPct);
 assert.equal(currentStorage.writes.length, 0, "loading v2 settings must be read-only");
 
 // Patches preserve untouched sections, persist v2, and suppress true no-ops.
@@ -389,7 +390,7 @@ assert.equal(notifications, 1);
 assert.equal(storage.writes.length, 1);
 assert.equal(lastNotification.enabled, true);
 settings.patch({ enabled: true });
-settings.patch({ grading: { exposureEV: 0 } });
+settings.patch({ grading: { exposureEV: defaults.grading.exposureEV } });
 assert.equal(notifications, 1, "equivalent patches must not notify");
 assert.equal(storage.writes.length, 1, "equivalent patches must not persist");
 settings.patch({ grading: { exposureEV: 99 } });
@@ -436,7 +437,7 @@ assert.equal(isolated.value.grading.colorFilter[0], 0.25);
 
 // Activity is effective: disabled and zero-strength sub-effects stay neutral.
 const activityOf = (patch) => {
-  const value = cloneVisualTreatment(defaults);
+  const value = cloneVisualTreatment(presets.neutral);
   value.enabled = patch.enabled ?? true;
   if (patch.grading) Object.assign(value.grading, patch.grading);
   if (patch.bloom) Object.assign(value.bloom, patch.bloom);
