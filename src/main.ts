@@ -35,6 +35,7 @@ import {
 } from "./player";
 import { UI, type HudState } from "./ui";
 import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";
+import { GameFlowVortex } from "./gameFlowVortex";
 import {
   CampaignStore,
   DEFAULT_CAMPAIGN_LIVES,
@@ -110,6 +111,7 @@ const LITE_RENDER = window.location.search.includes("lite");
 const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
+const gameFlowVortex = new GameFlowVortex();
 // NATIVE RESOLUTION. The device pixel ratio is the baseline — on a Retina
 // panel that is 2x the CSS grid, and rendering below it was the single biggest
 // thing making the game look cheap. Capped at 2: past that the pixels are far
@@ -1098,6 +1100,7 @@ function resize(): void {
   camera2.aspect = playAspect;
   camera2.updateProjectionMatrix();
   if (editorViewActive) editor.syncPlayAspect(playAspect);
+  gameFlowVortex.invalidate();
   gameFlow?.requestGameplayFrame();
 }
 window.addEventListener("resize", resize);
@@ -3912,6 +3915,17 @@ function frame(nowMs: number): void {
     if (split2p) input2.consumeEdges();
     acc = 0;
     sfx.stopLoops();
+    if (gameFlow.vortexBackgroundActive) {
+      ui.setGameHudComposited(false);
+      gameFlowVortex.render(
+        renderer,
+        dt,
+        nowMs,
+        gameFlow.vortexGameOverMaskActive,
+      );
+      return;
+    }
+    gameFlowVortex.deactivate();
     // Menu worlds are intentionally frozen. Render one fresh frame on entry
     // (and after a fade swaps worlds), then let the browser hold that canvas.
     // This also avoids a WebGL -> Canvas2D pause-thumbnail copy every RAF.
@@ -3922,6 +3936,7 @@ function frame(nowMs: number): void {
     }
     return;
   }
+  gameFlowVortex.deactivate();
   paused = false;
 
   // Tell the player where the camera is aiming (XZ) — the lip stall aligns
@@ -4180,6 +4195,7 @@ function frame(nowMs: number): void {
         ocean: level.water?.stats ?? null,
         islandFoam: level.shoreFoamDiagnostics,
         hud: ui.gameHudDiagnostics,
+        gameFlowVortex: gameFlowVortex.diagnostics,
         frameLimiter: renderFrameLimiter.stats,
         renderedFrames: frameStats.frame,
       });
@@ -4203,6 +4219,7 @@ requestAnimationFrame(frame);
   PUFF_PRESETS,
   swirls,
   fieldSwirls,
+  getGameFlowVortexDiagnostics: () => gameFlowVortex.diagnostics,
   player,
   level,
   getLevel: () => level,

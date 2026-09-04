@@ -342,11 +342,24 @@ export class FieldSwirl {
       }
     // ONE shared position buffer — the disc is deformed once, both passes
     // ride it. Colour buffers are per pass.
-    const posAttr = new THREE.BufferAttribute(new Float32Array(nVerts * 3), 3);
+    const posAttr = new THREE.BufferAttribute(
+      new Float32Array(nVerts * 3),
+      3,
+    ).setUsage(THREE.DynamicDrawUsage);
     this.bodyGeo.setAttribute('position', posAttr);
     this.brightGeo.setAttribute('position', posAttr);
-    this.bodyGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(nVerts * 4), 4));
-    this.brightGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(nVerts * 4), 4));
+    this.bodyGeo.setAttribute(
+      'color',
+      new THREE.BufferAttribute(new Float32Array(nVerts * 4), 4).setUsage(
+        THREE.DynamicDrawUsage,
+      ),
+    );
+    this.brightGeo.setAttribute(
+      'color',
+      new THREE.BufferAttribute(new Float32Array(nVerts * 4), 4).setUsage(
+        THREE.DynamicDrawUsage,
+      ),
+    );
     this.bodyGeo.setIndex(idx);
     this.brightGeo.setIndex(idx);
   }
@@ -469,7 +482,9 @@ export class FieldSwirl {
       // The crinkle phase lives in PATTERN space (u), so it rides the rings
       // through the snap instead of popping to a new shape.
       const crinkle =
-        k === 0 ? 0 : crin * r * r * Math.sin(th * 3 + t * (wobR * 1.3) + u * 31);
+        k === 0 || crin === 0
+          ? 0
+          : crin * r * r * Math.sin(th * 3 + t * (wobR * 1.3) + u * 31);
       const rr = (r + crinkle + warpVal) * R;
       pa[k * 3] = Math.cos(th) * rr;
       pa[k * 3 + 1] = Math.sin(th) * rr;
@@ -477,10 +492,11 @@ export class FieldSwirl {
 
       // -- the field --
       // Two-sine wobble bends the spiral phase so the filament goes wispy.
-      const bend =
-        wob *
-        (Math.sin(r * wobS + t * wobR + thS * 2) * 0.6 +
-          Math.sin(thS * 3 - t * wobR * 1.7 + r * wobS * 1.6) * 0.4);
+      const bend = wob
+        ? wob *
+          (Math.sin(r * wobS + t * wobR + thS * 2) * 0.6 +
+            Math.sin(thS * 3 - t * wobR * 1.7 + r * wobS * 1.6) * 0.4)
+        : 0;
       // PLASMA: high-harmonic phase bend, light at the core and heavy at the
       // rim, seething on its own clock. Lives in pattern space (u) so the
       // kinks ride the rings through the swallow's snap.
@@ -506,9 +522,11 @@ export class FieldSwirl {
         glow *= 1 - streak * 0.6 * m;
       }
       // Mottled backing: one slow sine field in (r, theta, t).
-      const g =
-        0.5 +
-        0.5 * Math.sin(r * motS * TAU * 0.5 + thS * 2 - t * motR) * Math.sin(thS * 3 + t * motR * 0.7 + r * 5);
+      const g = mot
+        ? 0.5 +
+          0.5 * Math.sin(r * motS * TAU * 0.5 + thS * 2 - t * motR) *
+            Math.sin(thS * 3 + t * motR * 0.7 + r * 5)
+        : 0;
       // Hot core blob.
       const coreI = coreG * Math.pow(Math.max(0, 1 - r / coreSz), 1.5);
 

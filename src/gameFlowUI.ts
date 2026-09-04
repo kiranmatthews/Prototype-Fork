@@ -2,8 +2,6 @@
 // from UI's gameplay HUD so it stays crisp, interactive, and outside the
 // pre-CRT composition pass.
 
-import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import "./roofont";
 import {
   CAMPAIGN_LEVELS,
@@ -78,149 +76,6 @@ function formatDate(timestamp: number): string {
   }
 }
 
-class BoneMaskPreview {
-  private renderer: THREE.WebGLRenderer | null = null;
-  private scene: THREE.Scene | null = null;
-  private camera: THREE.PerspectiveCamera | null = null;
-  private mask = new THREE.Group();
-  private startedAt = performance.now();
-  private lastRenderedAt = -Infinity;
-  private disposed = false;
-
-  constructor(private canvas: HTMLCanvasElement) {}
-
-  start(): void {
-    if (this.renderer || this.disposed) return;
-    try {
-      const renderer = new THREE.WebGLRenderer({
-        canvas: this.canvas,
-        alpha: true,
-        antialias: true,
-      });
-      // This is a menu ornament, not the gameplay renderer. A DPR-2 context
-      // was needlessly doubling both dimensions on Retina/mobile screens.
-      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-      camera.position.set(0, 0.08, 9);
-      scene.add(new THREE.HemisphereLight(0xffd9a0, 0x301008, 2.1));
-      const fire = new THREE.PointLight(0xff7a18, 18, 20);
-      fire.position.set(0, 1.5, 3.5);
-      scene.add(fire);
-      const rim = new THREE.DirectionalLight(0x7edbff, 2.2);
-      rim.position.set(-4, 3, -2);
-      scene.add(rim);
-      scene.add(this.mask);
-      this.renderer = renderer;
-      this.scene = scene;
-      this.camera = camera;
-      this.loadModel("models/crossbones.glb", false);
-      this.loadModel("models/skull.glb", true);
-      this.resize();
-    } catch {
-      this.canvas.classList.add("game-mask-failed");
-    }
-  }
-
-  render(now: number): void {
-    if (!this.renderer || !this.scene || !this.camera) return;
-    // The slow mask drift is visually identical at 30 Hz and avoids asking a
-    // second WebGL context to contend with the gameplay renderer every RAF.
-    if (now - this.lastRenderedAt < 1000 / 30) return;
-    this.lastRenderedAt = now;
-    this.resize();
-    const seconds = (now - this.startedAt) / 1000;
-    this.mask.rotation.y = Math.sin(seconds * 0.72) * 0.22;
-    this.mask.rotation.z = Math.sin(seconds * 0.53) * 0.025;
-    this.mask.position.y = Math.sin(seconds * 1.4) * 0.07;
-    this.renderer.render(this.scene, this.camera);
-  }
-
-  dispose(): void {
-    this.disposed = true;
-    this.mask.traverse((object) => {
-      const mesh = object as THREE.Mesh;
-      mesh.geometry?.dispose();
-      const materials = Array.isArray(mesh.material)
-        ? mesh.material
-        : mesh.material
-          ? [mesh.material]
-          : [];
-      for (const material of materials) material.dispose();
-    });
-    this.renderer?.dispose();
-    this.renderer?.forceContextLoss();
-    this.canvas.width = 1;
-    this.canvas.height = 1;
-    this.renderer = null;
-    this.scene = null;
-    this.camera = null;
-  }
-
-  private loadModel(path: string, skull: boolean): void {
-    new GLTFLoader().load(
-      import.meta.env.BASE_URL + path,
-      (gltf) => {
-        const model = gltf.scene;
-        if (this.disposed) {
-          model.traverse((object) => {
-            const mesh = object as THREE.Mesh;
-            mesh.geometry?.dispose();
-            const materials = Array.isArray(mesh.material)
-              ? mesh.material
-              : mesh.material
-                ? [mesh.material]
-                : [];
-            for (const material of materials) material.dispose();
-          });
-          return;
-        }
-        const bounds = new THREE.Box3().setFromObject(model);
-        const center = bounds.getCenter(new THREE.Vector3());
-        const size = bounds.getSize(new THREE.Vector3());
-        const span = Math.max(size.x, size.y, size.z) || 1;
-        const fit = (skull ? 3.25 : 3.8) / span;
-        model.scale.setScalar(fit);
-        model.position.set(
-          -center.x * fit,
-          (skull ? 0.38 : -1.05) - center.y * fit,
-          (skull ? 0.18 : -0.08) - center.z * fit,
-        );
-        model.traverse((object) => {
-          const mesh = object as THREE.Mesh;
-          if (!mesh.isMesh) return;
-          const originals = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-          for (const material of originals) material.dispose();
-          mesh.material = new THREE.MeshStandardMaterial({
-            color: skull ? 0x4b2116 : 0xe8d0a3,
-            roughness: skull ? 0.7 : 0.48,
-            metalness: skull ? 0.08 : 0,
-            emissive: skull ? 0x240804 : 0x24180b,
-            emissiveIntensity: skull ? 0.72 : 0.22,
-          });
-        });
-        this.mask.add(model);
-      },
-      undefined,
-      () => this.canvas.classList.add("game-mask-failed"),
-    );
-  }
-
-  private resize(): void {
-    if (!this.renderer || !this.camera) return;
-    const width = Math.max(1, this.canvas.clientWidth);
-    const height = Math.max(1, this.canvas.clientHeight);
-    const pixelRatio = this.renderer.getPixelRatio();
-    const targetWidth = Math.floor(width * pixelRatio);
-    const targetHeight = Math.floor(height * pixelRatio);
-    if (this.canvas.width !== targetWidth || this.canvas.height !== targetHeight)
-      this.renderer.setSize(width, height, false);
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
-  }
-}
-
 export class GameFlowUI {
   private root = element("div", "game-shell");
   private panel = element("section", "game-shell-panel");
@@ -231,11 +86,11 @@ export class GameFlowUI {
   private navButtons: HTMLButtonElement[] = [];
   private selected = 0;
   private transitionActive = false;
+  private loadingVortexActive = false;
   private pauseState: PauseScreenState | null = null;
   private pendingNewSlot = 1;
   private options: GameAudioOptions;
   private previousPad = { up: false, down: false, left: false, right: false, accept: false, back: false };
-  private boneMask: BoneMaskPreview | null = null;
   private thumbnail: HTMLCanvasElement | null = null;
   private thumbnailCaptured = false;
   private gameplayFrameRequested = true;
@@ -280,6 +135,21 @@ export class GameFlowUI {
     return this.screen;
   }
 
+  get vortexBackgroundActive(): boolean {
+    return (
+      this.loadingVortexActive ||
+      this.screen === "launch" ||
+      this.screen === "new-slots" ||
+      this.screen === "load-slots" ||
+      this.screen === "confirm-new" ||
+      this.screen === "gameover"
+    );
+  }
+
+  get vortexGameOverMaskActive(): boolean {
+    return !this.loadingVortexActive && this.screen === "gameover";
+  }
+
   get developerChromeVisible(): boolean {
     return this.debugVisible;
   }
@@ -301,12 +171,12 @@ export class GameFlowUI {
   }
 
   hide(): void {
-    this.releaseBoneMask();
     this.cursor.classList.remove("visible");
     this.screen = null;
     this.previousScreen = null;
     this.root.hidden = true;
     document.body.classList.remove("game-shell-modal", "game-shell-paused", "game-shell-results");
+    this.syncVortexBodyClass();
     this.releaseModalFocus();
   }
 
@@ -377,7 +247,7 @@ export class GameFlowUI {
   }
 
   update(now = performance.now()): void {
-    if (this.screen === "gameover") this.boneMask?.render(now);
+    void now;
     // Input already polls gamepads for gameplay. Do not repeat that scan and
     // allocate an Array/state object on every ordinary gameplay frame.
     if (!this.screen) return;
@@ -396,23 +266,38 @@ export class GameFlowUI {
   async transition(action: () => void | Promise<void>): Promise<void> {
     if (this.transitionActive) return;
     this.transitionActive = true;
+    document.body.classList.add("game-shell-transitioning");
     this.transitionCurtain.classList.add("active");
     try {
       await wait(this.reducedMotion ? 20 : 360);
+      // The black guard is now opaque: swap the main renderer to the preserved
+      // Gouraud field, then reveal it as the actual loading background.
+      this.loadingVortexActive = true;
+      this.syncVortexBodyClass();
+      this.transitionCurtain.classList.add("vortex");
+      await wait(this.reducedMotion ? 20 : 120);
       await action();
       // Draw the destination exactly once while the curtain is opaque. If the
       // action resumes gameplay, normal rendering takes over after the fade.
       this.requestGameplayFrame();
-      await wait(this.reducedMotion ? 20 : 130);
+      await wait(this.reducedMotion ? 20 : 150);
+      this.transitionCurtain.classList.remove("vortex");
+      await wait(this.reducedMotion ? 20 : 160);
+      this.loadingVortexActive = false;
+      this.syncVortexBodyClass();
     } finally {
-      this.transitionCurtain.classList.remove("active");
+      this.loadingVortexActive = false;
+      this.syncVortexBodyClass();
+      this.requestGameplayFrame();
+      this.transitionCurtain.classList.remove("vortex", "active");
       await wait(this.reducedMotion ? 20 : 520);
       this.transitionActive = false;
+      document.body.classList.remove("game-shell-transitioning");
+      this.syncVortexBodyClass();
     }
   }
 
   private render(): void {
-    this.releaseBoneMask();
     this.claimModalFocus();
     this.root.hidden = false;
     document.body.classList.add("game-shell-modal");
@@ -433,6 +318,7 @@ export class GameFlowUI {
     else if (this.screen === "pause") this.renderPause();
     else if (this.screen === "options") this.renderOptions();
     else if (this.screen === "gameover") this.renderGameOver();
+    this.syncVortexBodyClass();
     this.syncSelection();
     this.seedGamepad();
   }
@@ -588,9 +474,8 @@ export class GameFlowUI {
 
   private renderGameOver(): void {
     const wrap = element("div", "game-over-layout");
-    const canvas = element("canvas", "game-over-mask");
-    this.boneMask = new BoneMaskPreview(canvas);
-    this.boneMask.start();
+    const fallback = element("div", "game-over-mask-fallback");
+    fallback.setAttribute("aria-hidden", "true");
     const content = element("div", "game-over-copy");
     const title = element("h2", "game-over-title");
     title.textContent = "GAME OVER";
@@ -602,12 +487,11 @@ export class GameFlowUI {
       this.button("NO", this.callbacks.onGameOverQuit, "danger"),
     );
     content.append(title, question, list);
-    wrap.append(canvas, content);
+    wrap.append(fallback, content);
     this.panel.appendChild(wrap);
   }
 
   private renderResults(state: ResultsScreenState): void {
-    this.releaseBoneMask();
     this.claimModalFocus();
     this.root.hidden = false;
     document.body.classList.add("game-shell-modal", "game-shell-results");
@@ -645,6 +529,7 @@ export class GameFlowUI {
     );
     card.append(eyebrow, title, tally, awards, actions);
     this.panel.appendChild(card);
+    this.syncVortexBodyClass();
     this.syncSelection();
     this.seedGamepad();
   }
@@ -774,6 +659,13 @@ export class GameFlowUI {
     Object.assign(this.previousPad, this.readGamepad());
   }
 
+  private syncVortexBodyClass(): void {
+    document.body.classList.toggle(
+      "game-flow-vortex",
+      this.vortexBackgroundActive,
+    );
+  }
+
   private moveSelection(direction: number): void {
     const enabled = this.navButtons.filter((button) => !button.disabled);
     if (!enabled.length) return;
@@ -821,11 +713,6 @@ export class GameFlowUI {
     const minutes = Math.floor(time / 60);
     const seconds = time - minutes * 60;
     return `${minutes}:${seconds.toFixed(2).padStart(5, "0")}`;
-  }
-
-  private releaseBoneMask(): void {
-    this.boneMask?.dispose();
-    this.boneMask = null;
   }
 
   private screenLabel(): string {
@@ -900,8 +787,11 @@ export class GameFlowUI {
         content: ''; position: absolute; inset: 0; z-index: -2;
         background: radial-gradient(circle at 50% 38%, rgba(31,58,100,.26), rgba(3,5,12,.86) 66%, #020308 100%);
       }
+      body.game-flow-vortex .game-shell::before {
+        background: radial-gradient(circle at 50% 43%, rgba(4,5,14,.08), rgba(3,5,12,.34) 62%, rgba(2,3,8,.72) 100%);
+      }
       body.game-shell-results .game-shell::before { background: transparent; backdrop-filter: none; }
-      .game-shell-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); box-sizing: border-box; }
+      .game-shell-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); box-sizing: border-box; transition: opacity .18s ease; }
       .timber-card {
         position: relative; border: 5px solid #5d2d17; border-radius: 15px 10px 17px 12px;
         background:
@@ -960,10 +850,10 @@ export class GameFlowUI {
       .game-toggle { display: flex; justify-content: space-between; align-items: center; padding: 0 24px; }
       .game-toggle strong { color: #218d3c; }
       .game-toggle.toggle-off strong { color: #a52f1c; }
-      .game-over-layout { position: absolute; inset: 0; display: grid; place-items: center; background: #000; overflow: hidden; }
+      .game-over-layout { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.18); overflow: hidden; }
       .game-over-layout::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 44%, rgba(176,55,13,.18), transparent 37%), radial-gradient(ellipse at 50% 100%, #220805, transparent 48%); }
-      .game-over-mask { width: min(760px, 84vw, calc(72vh * 1.15)); height: auto; aspect-ratio: 1.15 / 1; filter: drop-shadow(0 0 35px rgba(255,91,19,.34)); }
-      .game-over-mask.game-mask-failed { background: center / min(220px, 35vw) no-repeat url('${import.meta.env.BASE_URL}crossbones.png'); }
+      .game-over-mask-fallback { width: min(760px, 84vw, calc(72vh * 1.15)); aspect-ratio: 1.15 / 1; background: center / min(300px, 43vw) no-repeat url('${import.meta.env.BASE_URL}crossbones.png'); filter: drop-shadow(0 0 35px rgba(255,91,19,.34)); transition: opacity .18s; }
+      body.game-flow-mask-ready .game-over-mask-fallback { opacity: 0; }
       .game-over-copy { position: absolute; left: 50%; bottom: max(5vh, env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(840px, 94vw); display: grid; grid-template-columns: 1fr auto; gap: 5px 35px; align-items: end; }
       .game-over-title { grid-column: 1 / -1; margin: 0; text-align: center; color: #ffb42f; font: 400 clamp(54px, 10vw, 112px)/.85 Roo, Impact, sans-serif; -webkit-text-stroke: 3px #5b160d; paint-order: stroke fill; filter: drop-shadow(0 6px 0 #250807); }
       .game-over-question { margin: 0; align-self: center; text-align: right; font-size: clamp(30px, 5vw, 58px); }
@@ -988,8 +878,20 @@ export class GameFlowUI {
       .game-cartoon-cursor svg { width: 100%; height: 100%; overflow: visible; }
       .game-cartoon-cursor path:first-child { fill: #ff8c22; stroke: #47190c; stroke-width: 5; stroke-linejoin: round; }
       .game-cartoon-cursor .game-cursor-shine { fill: #ffd846; stroke: none; }
-      .game-transition-curtain { position: fixed; z-index: 100; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity .36s ease; }
+      .game-transition-curtain { position: fixed; z-index: 100; inset: 0; background-color: #000; opacity: 0; pointer-events: none; transition: opacity .36s ease, background-color .16s ease; }
       .game-transition-curtain.active { opacity: 1; pointer-events: auto; }
+      .game-transition-curtain.active.vortex { background-color: rgba(0,0,0,.16); }
+      body.game-shell-transitioning .game-shell-panel { opacity: 0; pointer-events: none; }
+      body.game-shell-transitioning .game-hud-layer,
+      body.game-shell-transitioning .tc-zone,
+      body.game-shell-transitioning .tc-pause,
+      body.game-shell-transitioning .side-wrap,
+      body.game-shell-transitioning .hud-build,
+      body.game-shell-transitioning [data-crt-guest-panel-host],
+      body.game-shell-transitioning [data-render-quality-panel-host],
+      body.game-shell-transitioning [data-skateboard-panel-host],
+      body.game-shell-transitioning [data-spin-panel-host],
+      body.game-shell-transitioning visual-treatment-panel { opacity: 0 !important; pointer-events: none !important; }
       body.game-shell-modal .game-hud-layer, body.game-warp-room .game-hud-layer { opacity: 0 !important; pointer-events: none !important; }
       body.game-debug-hidden .side-wrap,
       body.game-debug-hidden .hud-build,
@@ -1041,7 +943,7 @@ export class GameFlowUI {
         .game-progress-card { grid-column: 1 / -1; width: auto; padding: 10px 16px 12px; }
       }
       @media (prefers-reduced-motion: reduce) {
-        .game-menu-button, .game-menu-button::before, .game-transition-curtain { transition-duration: .01ms !important; }
+        .game-menu-button, .game-menu-button::before, .game-transition-curtain, .game-shell-panel { transition-duration: .01ms !important; }
       }
     `;
     document.head.appendChild(style);
