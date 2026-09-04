@@ -31,6 +31,32 @@ assert.match(
   /mergeCompletedBonusInventory\(/,
   "completed bonus rewards must merge into the suspended parent inventory",
 );
+const launchFlow =
+  flow.match(/private renderLaunch\(\): void \{[\s\S]*?\n  \}\n\n  private renderSlots/)?.[0] ?? "";
+assert.ok(launchFlow, "launch-menu flow could not be inspected");
+assert.match(
+  launchFlow,
+  /const continueSlot = this\.campaign\.continueSlot\(\);[\s\S]*if \(continueSlot !== null\)/,
+  "Continue must exist only when CampaignStore resolves a valid save slot",
+);
+const continueAt = launchFlow.indexOf('this.button(\n        "CONTINUE"');
+const continuePushAt = launchFlow.indexOf("actions.push(continueButton)");
+const newGameAt = launchFlow.indexOf('this.button("NEW GAME"');
+const loadGameAt = launchFlow.indexOf('this.button("LOAD GAME"');
+const menuAppendAt = launchFlow.indexOf("menu.append(...actions)");
+assert.ok(
+  continueAt >= 0 &&
+    continueAt < continuePushAt &&
+    continuePushAt < newGameAt &&
+    newGameAt < loadGameAt &&
+    loadGameAt < menuAppendAt,
+  "Continue must be created first so visual and keyboard/gamepad order agree",
+);
+assert.match(
+  launchFlow,
+  /"CONTINUE",[\s\S]{0,100}this\.callbacks\.onLoadGame\(continueSlot\)/,
+  "Continue must use the normal save-load transition path",
+);
 const switchLevelFlow =
   main.match(/function switchLevel\([\s\S]*?\n}\n\nfunction currentCampaignName/)?.[0] ?? "";
 assert.ok(switchLevelFlow, "switchLevel flow could not be inspected");

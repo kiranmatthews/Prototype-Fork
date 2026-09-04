@@ -342,7 +342,20 @@ export class GameFlowUI {
     const title = element("h1", "game-logo");
     title.innerHTML = `<span>BOARD</span><strong>SOL</strong>`;
     const menu = element("div", "game-menu-list");
-    menu.append(
+    const actions: HTMLButtonElement[] = [];
+    const continueSlot = this.campaign.continueSlot();
+    if (continueSlot !== null) {
+      const continueButton = this.button(
+        "CONTINUE",
+        () => this.callbacks.onLoadGame(continueSlot),
+      );
+      continueButton.setAttribute(
+        "aria-label",
+        `Continue save slot ${continueSlot}`,
+      );
+      actions.push(continueButton);
+    }
+    actions.push(
       this.button("NEW GAME", () => {
         this.previousScreen = "launch";
         this.screen = "new-slots";
@@ -354,6 +367,7 @@ export class GameFlowUI {
         this.render();
       }),
     );
+    menu.append(...actions);
     const hint = element("p", "game-input-hint");
     hint.textContent = "ARROWS / STICK TO CHOOSE  ·  PRIMARY BUTTON / ENTER TO SELECT";
     card.append(eyebrow, title, menu, hint);

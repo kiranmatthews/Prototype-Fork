@@ -116,6 +116,7 @@ export function mergeCompletedBonusInventory(
 }
 
 const SAVES_KEY = "solProtoCampaignSavesV1";
+const LAST_SLOT_KEY = "solProtoCampaignLastSlotV1";
 const OPTIONS_KEY = "solProtoGameOptionsV1";
 
 function emptyLevelProgress(): CampaignLevelProgress {
@@ -217,9 +218,29 @@ function writeSlots(slots: readonly (CampaignSaveV1 | null)[]): void {
   }
 }
 
+function readLastSlot(): number | null {
+  try {
+    const slot = Number(localStorage.getItem(LAST_SLOT_KEY));
+    return Number.isInteger(slot) && slot >= 1 && slot <= CAMPAIGN_SAVE_SLOTS
+      ? slot
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLastSlot(slot: number): void {
+  try {
+    localStorage.setItem(LAST_SLOT_KEY, String(slot));
+  } catch {
+    // Continue still falls back to the active/latest in-memory save.
+  }
+}
+
 export class CampaignStore {
   private slots = readSlots();
   private activeValue: CampaignSaveV1 | null = null;
+  private lastSlot = readLastSlot();
 
   get active(): CampaignSaveV1 | null {
     return this.activeValue;
@@ -229,18 +250,49 @@ export class CampaignStore {
     return this.slots;
   }
 
+  /**
+   * Durable save selected by Continue. Prefer the slot actually used this
+   * session/across reloads, then fall back to the newest legacy save.
+   */
+  continueSlot(): number | null {
+    const activeSlot = this.activeValue?.slot ?? 0;
+    if (activeSlot > 0 && this.slots[activeSlot - 1]) return activeSlot;
+    if (this.lastSlot && this.slots[this.lastSlot - 1]) return this.lastSlot;
+
+    let latest: CampaignSaveV1 | null = null;
+    for (const save of this.slots) {
+      if (!save) continue;
+      if (
+        !latest ||
+        save.updatedAt > latest.updatedAt ||
+        (save.updatedAt === latest.updatedAt && save.createdAt > latest.createdAt) ||
+        (save.updatedAt === latest.updatedAt &&
+          save.createdAt === latest.createdAt &&
+          save.slot < latest.slot)
+      )
+        latest = save;
+    }
+    return latest?.slot ?? null;
+  }
+
   newGame(slot: number): CampaignSaveV1 {
     const index = this.slotIndex(slot);
     const save = createSave(index + 1);
     this.slots[index] = save;
     this.activeValue = save;
+    this.lastSlot = save.slot;
     writeSlots(this.slots);
+    writeLastSlot(save.slot);
     return save;
   }
 
   load(slot: number): CampaignSaveV1 | null {
     const save = this.slots[this.slotIndex(slot)];
     this.activeValue = save;
+    if (save) {
+      this.lastSlot = save.slot;
+      writeLastSlot(save.slot);
+    }
     return save;
   }
 
