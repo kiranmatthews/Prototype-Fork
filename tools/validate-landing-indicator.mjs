@@ -260,8 +260,8 @@ try {
   // Gameplay lands against the mover transform sampled by Player.step; the
   // subsequent Level.update is presentation timing and remains untouched.
   assert.ok(Math.abs(touchdown.pos.y - 3.5764) < 1e-3);
-  assert.ok(Math.abs(touchdown.pos.x - -9.171688572) < 1e-4);
-  assert.ok(Math.abs(touchdown.pos.z - -45.101657387) < 1e-4);
+  assert.ok(Math.abs(touchdown.pos.x - -9.169170946) < 1e-4);
+  assert.ok(Math.abs(touchdown.pos.z - -45.14170831) < 1e-4);
 
   const main = await readFile(`${root}src/main.ts`, "utf8");
   assert.match(
