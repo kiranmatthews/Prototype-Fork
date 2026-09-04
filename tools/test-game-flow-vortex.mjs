@@ -253,7 +253,8 @@ assert.match(
 );
 assert.match(profiles, /"menu",\s*"warp",\s*"gameover"/);
 assert.ok(
-  (profiles.match(/preset: authoredPreset\(\)/g) ?? []).length === 3,
+  (profiles.match(/preset: authoredPreset\(\)/g) ?? []).length === 2 &&
+    (profiles.match(/preset: gameOverPreset\(\)/g) ?? []).length === 1,
   "every game-flow context must own an independent authored preset snapshot",
 );
 assert.match(studio, /GOURAUD FIELD LAB/);

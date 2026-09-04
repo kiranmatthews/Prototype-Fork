@@ -40,12 +40,23 @@ try {
   for (const context of profileApi.GAME_FLOW_VORTEX_CONTEXTS) {
     const profile = profileApi.GAME_FLOW_VORTEX_PROFILES[context];
     assert.equal(profile.seed, 37);
-    assert.deepEqual(profile.preset, FIELD_SWIRL_PRESETS.vortex);
     assert.ok(Object.isFrozen(profile));
     assert.ok(Object.isFrozen(profile.preset));
     assert.ok((profile.preset.rings ?? 0) <= 14);
     assert.ok((profile.preset.segs ?? 0) <= 48);
   }
+  assert.deepEqual(
+    profileApi.GAME_FLOW_VORTEX_PROFILES.menu.preset,
+    FIELD_SWIRL_PRESETS.vortex,
+  );
+  assert.deepEqual(
+    profileApi.GAME_FLOW_VORTEX_PROFILES.warp.preset,
+    FIELD_SWIRL_PRESETS.vortex,
+  );
+  assert.notDeepEqual(
+    profileApi.GAME_FLOW_VORTEX_PROFILES.gameover.preset,
+    FIELD_SWIRL_PRESETS.vortex,
+  );
   assert.notStrictEqual(
     profileApi.GAME_FLOW_VORTEX_PROFILES.menu.preset,
     profileApi.GAME_FLOW_VORTEX_PROFILES.warp.preset,
