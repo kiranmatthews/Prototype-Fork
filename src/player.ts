@@ -3973,6 +3973,7 @@ export class Player {
         !this.bonusMode &&
         !level.runMode &&
         !this.gemSpawned &&
+        !this.gemEarned &&
         level.totalCrates > 0 &&
         this.cratesBroken + (level.runMode ? 0 : this.bonusCrates) >= level.totalCrates &&
         (this.state as MoveState) !== 'dead'
@@ -11124,10 +11125,16 @@ export class Player {
       }
     }
 
-    // The level crystal: ride/walk/fly through it and it's yours (a death
-    // won't take it back; only a hard reset re-seats it).
+    // The level crystal: ride/walk/fly through it and it's yours. A soft death
+    // keeps this run's pickup; a hard reset restores the campaign baseline.
     const cr = level.crystalPickup;
-    if (cr && !cr.collected && !level.runMode && this.playerBox.intersectsBox(cr.box)) {
+    if (
+      cr &&
+      !cr.collected &&
+      !this.hasCrystal &&
+      !level.runMode &&
+      this.playerBox.intersectsBox(cr.box)
+    ) {
       this.hasCrystal = true;
       level.collectCrystal();
       sfx.play('crystalGet', 0.9);

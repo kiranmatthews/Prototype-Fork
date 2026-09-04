@@ -31,6 +31,30 @@ assert.match(
   /mergeCompletedBonusInventory\(/,
   "completed bonus rewards must merge into the suspended parent inventory",
 );
+const switchLevelFlow =
+  main.match(/function switchLevel\([\s\S]*?\n}\n\nfunction currentCampaignName/)?.[0] ?? "";
+assert.ok(switchLevelFlow, "switchLevel flow could not be inspected");
+assert.doesNotMatch(
+  switchLevelFlow,
+  /ui\.showMessage\(/,
+  "level switches must not raise an intrusive full-screen level-name splash",
+);
+const bonusEntryFlow =
+  main.match(/function enterBonusRound\([\s\S]*?\n}\n\nfunction returnFromBonus/)?.[0] ?? "";
+assert.ok(bonusEntryFlow, "bonus-entry flow could not be inspected");
+assert.doesNotMatch(
+  bonusEntryFlow,
+  /BONUS ROUND!|break every box — falls return you safely/,
+  "bonus entry must rely on its persistent HUD instead of a full-screen splash",
+);
+const bonusReturnFlow =
+  main.match(/function returnFromBonus\([\s\S]*?\n}\n\nfunction checkCampaignEntrances/)?.[0] ?? "";
+assert.ok(bonusReturnFlow, "bonus-return flow could not be inspected");
+assert.match(
+  bonusReturnFlow,
+  /completed \? "BONUS COMPLETE!" : "BONUS MISSED"/,
+  "bonus completion/failure must retain its banked-or-lost reward summary",
+);
 assert.match(
   player,
   /else if \(this\.bonusMode\)[\s\S]{0,120}this\.onBonusDeath\(\);[\s\S]{0,80}else if \(this\.lives <= 0\)/,
@@ -102,4 +126,4 @@ assert.match(
   "fully offscreen swirl draws must use conservative frustum culling",
 );
 
-console.log("Validated campaign frame-cost guards for menus, hub HUD, portals, and bonus suspension.");
+console.log("Validated campaign frame-cost guards, splash policy, hub HUD, portals, and bonus suspension.");

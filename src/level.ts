@@ -3097,6 +3097,8 @@ export class Level {
     box: THREE.Box3;
     collected: boolean;
   } | null = null;
+  private committedCrystal = false;
+  private committedBoxGem = false;
   // TIME TRIAL: the gold stopwatch near spawn — touch it to start the clock.
   clockPickup: {
     group: THREE.Group;
@@ -7621,12 +7623,15 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
-    // Hard reset re-seats the crystal and clears the materialized gem; a soft
-    // (death) respawn keeps them — Crash rules, once it's yours it's yours.
+    // Hard reset restores the committed crystal baseline and clears any
+    // materialized run-local gem; a soft death keeps current-run pickups.
     if (hard) {
       if (this.crystalPickup) {
-        this.crystalPickup.collected = false;
-        this.crystalPickup.group.visible = true;
+        // A fresh run restores the durable campaign baseline. An uncommitted
+        // crystal comes back; one already banked in a previous run remains
+        // absent, including when a second player hard-resets this same Level.
+        this.crystalPickup.collected = this.committedCrystal;
+        this.crystalPickup.group.visible = !this.committedCrystal;
       }
       // the trial stopwatch reappears — a fresh run can opt in again
       if (this.clockPickup && !this.timeTrial) {
@@ -15845,6 +15850,39 @@ export class Level {
     c.collected = true;
     c.group.visible = false;
     this.glimmerBurst(c.group.position, 0xc83af0);
+  }
+
+  /**
+   * Project durable campaign ownership into this live Level without pickup
+   * VFX, sound, or score. Main calls this after hard run setup; reset() then
+   * keeps the same baseline for every player sharing the Level.
+   */
+  setCommittedCollectibles(rewards: {
+    crystal: boolean;
+    boxGem: boolean;
+  }): void {
+    this.committedCrystal = rewards.crystal;
+    this.committedBoxGem = rewards.boxGem;
+    if (this.crystalPickup) {
+      this.crystalPickup.collected = rewards.crystal;
+      this.crystalPickup.group.visible = !rewards.crystal && !this.runMode;
+    }
+    // Normally adoption happens before an all-box gem can exist. This guard
+    // also makes save-slot swaps and test harness projection idempotent.
+    if (rewards.boxGem && this.gemPickup) {
+      this.gemPickup.collected = true;
+      this.gemPickup.group.visible = false;
+    }
+  }
+
+  get committedCollectibleDiagnostics(): {
+    crystal: boolean;
+    boxGem: boolean;
+  } {
+    return {
+      crystal: this.committedCrystal,
+      boxGem: this.committedBoxGem,
+    };
   }
 
   // ------------------------------------------------------------ time trial --

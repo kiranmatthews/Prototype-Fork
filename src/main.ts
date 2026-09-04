@@ -1702,6 +1702,7 @@ function set2P(on: boolean, force = false): void {
       };
       tintP2();
     }
+    p2.enterLevel(current.id);
     p2.group.visible = true;
     split2p = true;
     // P1 = lowest connected slot; P2 claims itself on its first press. Slot
@@ -1715,6 +1716,7 @@ function set2P(on: boolean, force = false): void {
     p2.respawn(level, true);
     p2.pos.x += 1.6; // side by side at the start line
     p2.snapRenderInterpolation();
+    adoptCommittedCampaignProgress(current.id);
     applyRunModes();
     ui.set2P(true);
     ui.showMessage(
@@ -1963,6 +1965,10 @@ function syncCampaignPortalProgress(): void {
 
 function adoptCommittedCampaignProgress(levelId: string): void {
   const progress = campaign.levelProgress(levelId);
+  level.setCommittedCollectibles({
+    crystal: progress?.crystal ?? false,
+    boxGem: progress?.boxGem ?? false,
+  });
   if (!progress) {
     currentRunBonusBoxes = 0;
     runStartRewards = {
@@ -1978,6 +1984,12 @@ function adoptCommittedCampaignProgress(levelId: string): void {
     gem: progress.boxGem,
     combo: progress.comboGem,
   });
+  if (split2p && p2)
+    p2.setCampaignRelics({
+      crystal: progress.crystal,
+      gem: progress.boxGem,
+      combo: progress.comboGem,
+    });
   level.setBonusPlatformLocked(false);
   currentRunBonusBoxes = 0;
   player.bonusCrates = 0;
@@ -1994,6 +2006,7 @@ function switchLevel(
   preserveEditor = false,
   preserveInventory = false,
 ): void {
+  ui.hideMessage();
   if (bonusSession) discardSuspendedBonus();
   // An id that no longer exists — a deleted user level, a replay or saved
   // editor target from an older list — resolves to the default course rather
@@ -2031,14 +2044,12 @@ function switchLevel(
   level = new Level(scene, entry);
   loadedLevelId = entry.id;
   puffs.attach(scene);
-  // Adopt the target level's relic shelf BEFORE respawning, so the run just
-  // left banks its crystal and gems against the level they were earned in.
+  // Bank the old shelf and select the target before resetting its run state.
   player.enterLevel(entry.id);
   player.bonusMode = false;
   player.hubMode = entry.id === "warproom";
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory);
-  adoptCommittedCampaignProgress(entry.id);
   syncCampaignPortalProgress();
   if (split2p && p2) {
     p2.enterLevel(entry.id);
@@ -2046,6 +2057,9 @@ function switchLevel(
     p2.pos.x += 1.6;
     p2.snapRenderInterpolation();
   }
+  // Save data wins after every rider's hard reset. Level stores the crystal
+  // baseline too, so a later shared/P2 reset cannot resurrect it.
+  adoptCommittedCampaignProgress(entry.id);
   applyRunModes(); // the new level's pickups obey the switch too
   applyTheme();
   applyShadowFlags();
@@ -2056,8 +2070,6 @@ function switchLevel(
     input.inventoryHeld,
   );
   ui.setHUD(currentHudState(), 0);
-  const campaignName = campaignLevelById(entry.id)?.name ?? entry.name;
-  ui.showMessage(campaignName.toUpperCase(), "", 1400);
   resultsCameraActive = false;
   gameFlow?.setWarpRoom(entry.id === "warproom");
   recorder.start(entry.id, endlessDeathsOn); // fresh take from this load
@@ -2314,6 +2326,7 @@ function enterCampaignLevel(targetId: string): void {
 
 function enterBonusRound(): void {
   if (bonusSession || !isCampaignLevel(current.id)) return;
+  ui.hideMessage();
   player.bankFlyingFruit();
   const parentEntry = current;
   const parentLevel = level;
@@ -2364,7 +2377,6 @@ function enterBonusRound(): void {
       input.inventoryHeld,
     );
     ui.setHUD(currentHudState(), 0);
-    ui.showMessage("BONUS ROUND!", "break every box — falls return you safely", 2000);
     recorder.start(current.id, endlessDeathsOn);
     gameFlow.setWarpRoom(false);
     gameFlow.hide();
@@ -2720,6 +2732,7 @@ function rebuildLevel(): void {
     p2.pos.x += 1.6;
     p2.snapRenderInterpolation();
   }
+  adoptCommittedCampaignProgress(current.id);
   applyRunModes();
   applyTheme();
   applyShadowFlags();
