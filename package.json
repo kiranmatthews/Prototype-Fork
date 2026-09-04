@@ -15,7 +15,7 @@
     "check:rope": "node tools/test-rope-board-transfer.mjs",
     "check:rail-air": "node tools/test-rail-air-transfer.mjs",
     "check:landing-x": "node tools/validate-landing-indicator.mjs",
-    "check:run-facing": "node tools/test-run-facing.mjs",
+    "check:run-facing": "node tools/test-run-facing.mjs && node tools/test-locomotion-replays.mjs",
     "check:carve-grip": "node tools/test-carve-grip.mjs",
     "check:surface-friction": "node tools/test-surface-friction.mjs",
     "check:camera-speed": "node tools/test-camera-speed-effect.mjs",

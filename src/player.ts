@@ -1713,7 +1713,10 @@ export class Player {
     const speedReference =
       clipId === 'player.crawl' || clipId === 'player.crouch'
         ? Math.max(TUNING.crawlSpeed, 0.001)
-        : this.freeSkate || this.airFromSkate || this.state === 'grind'
+        // airFromSkate records the last takeoff and can survive a landing or
+        // dismount. It only selects the board speed range while still in air;
+        // grounded on-foot locomotion must reach the Run endpoint at walkSpeed.
+        : this.freeSkate || (this.state === 'air' && this.airFromSkate) || this.state === 'grind'
           ? Math.max(TUNING.maxSpeed, 0.001)
           : Math.max(TUNING.walkSpeed, 0.001);
     const planarSpeed = this.animationPlanarSpeed;
