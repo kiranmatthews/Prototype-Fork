@@ -76,10 +76,10 @@ assert.doesNotMatch(
 const bonusReturnFlow =
   main.match(/function returnFromBonus\([\s\S]*?\n}\n\nfunction checkCampaignEntrances/)?.[0] ?? "";
 assert.ok(bonusReturnFlow, "bonus-return flow could not be inspected");
-assert.match(
+assert.doesNotMatch(
   bonusReturnFlow,
-  /completed \? "BONUS COMPLETE!" : "BONUS MISSED"/,
-  "bonus completion/failure must retain its banked-or-lost reward summary",
+  /ui\.showMessage\(|BONUS COMPLETE!|BONUS MISSED|temporary rewards lost/,
+  "bonus completion/failure must return through the persistent HUD without a full-screen splash",
 );
 assert.match(
   player,

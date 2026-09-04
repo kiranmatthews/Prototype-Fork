@@ -2509,9 +2509,6 @@ function returnFromBonus(completed: boolean): void {
         { lives: bonusLives, fruit: bonusFruit },
       )
     : { lives: session.parentState.lives, fruit: session.parentState.fruit };
-  const bonusLifeGain = completed
-    ? Math.max(0, inventory.lives - session.parentState.lives)
-    : 0;
   const state: PlayerRunState = {
     ...session.parentState,
     lives: inventory.lives,
@@ -2549,13 +2546,6 @@ function returnFromBonus(completed: boolean): void {
       input.inventoryHeld,
     );
     ui.setHUD(currentHudState(), 0);
-    ui.showMessage(
-      completed ? "BONUS COMPLETE!" : "BONUS MISSED",
-      completed
-        ? `${bonusBoxes} boxes · +${bonusLifeGain} lives · +${bonusFruit} wumpa banked`
-        : "temporary rewards lost · back to the bonus platform",
-      1900,
-    );
     recorder.start(current.id, endlessDeathsOn);
     gameFlow.hide();
   });
