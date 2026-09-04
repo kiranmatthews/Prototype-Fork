@@ -213,7 +213,10 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
     typeof raw.lives === "number" && Number.isFinite(raw.lives)
       ? Math.floor(raw.lives)
       : DEFAULT_CAMPAIGN_LIVES;
-  const exhausted = rawLives <= 0;
+  // Zero is the final playable reserve state, not an exhausted/corrupt save.
+  // Game Over writes the explicit four-life retry state before persistence;
+  // only impossible negative data needs recovery here.
+  const invalidLives = rawLives < 0;
   return {
     v: 1,
     slot,
@@ -225,9 +228,9 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
       typeof raw.updatedAt === "number" && Number.isFinite(raw.updatedAt)
         ? raw.updatedAt
         : Date.now(),
-    lives: exhausted ? DEFAULT_CAMPAIGN_LIVES : rawLives,
+    lives: invalidLives ? DEFAULT_CAMPAIGN_LIVES : rawLives,
     fruit:
-      !exhausted && typeof raw.fruit === "number" && Number.isFinite(raw.fruit)
+      !invalidLives && typeof raw.fruit === "number" && Number.isFinite(raw.fruit)
         ? Math.max(0, Math.min(99, Math.floor(raw.fruit)))
         : 0,
     levels,

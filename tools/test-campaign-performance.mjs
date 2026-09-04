@@ -83,13 +83,13 @@ assert.doesNotMatch(
 );
 assert.match(
   player,
-  /else if \(this\.bonusMode\)[\s\S]{0,120}this\.onBonusDeath\(\);[\s\S]{0,80}else if \(this\.lives <= 0\)/,
+  /else if \(this\.bonusMode\)[\s\S]{0,120}this\.onBonusDeath\(\);[\s\S]{0,100}else if \(this\.gameOverPending\)/,
   "zero-life bonus failure must return to the parent before Game Over logic",
 );
 assert.match(
   player,
-  /else if \(!this\.bonusMode\) this\.lives--;/,
-  "bonus death must never spend a parent or temporary life",
+  /else if \(!this\.bonusMode\) \{[\s\S]{0,500}if \(this\.lives <= 0\)[\s\S]{0,100}this\.lives = 0;[\s\S]{0,100}this\.gameOverPending = true;[\s\S]{0,100}else this\.lives--;/,
+  "bonus death must stay free while campaign deaths clamp and latch their zero-life boundary",
 );
 assert.match(
   flow,

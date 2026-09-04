@@ -94,9 +94,15 @@ assert.equal(restored.active?.fruit, 0);
 const storedSlots = JSON.parse(memory.get("solProtoCampaignSavesV1"));
 storedSlots[1] = { ...storedSlots[0], slot: 2, lives: 0, fruit: 87 };
 memory.set("solProtoCampaignSavesV1", JSON.stringify(storedSlots));
-const exhaustedReload = new campaign.CampaignStore().load(2);
-assert.equal(exhaustedReload?.lives, 4, "an exhausted save did not recover to four lives");
-assert.equal(exhaustedReload?.fruit, 0, "an exhausted save did not clear fruit");
+const finalLifeReload = new campaign.CampaignStore().load(2);
+assert.equal(finalLifeReload?.lives, 0, "a saved final zero-life attempt was replaced");
+assert.equal(finalLifeReload?.fruit, 87, "a saved final-attempt fruit purse was cleared");
+
+storedSlots[1] = { ...storedSlots[0], slot: 2, lives: -1, fruit: 87 };
+memory.set("solProtoCampaignSavesV1", JSON.stringify(storedSlots));
+const invalidReload = new campaign.CampaignStore().load(2);
+assert.equal(invalidReload?.lives, 4, "negative save data did not recover to four lives");
+assert.equal(invalidReload?.fruit, 0, "negative save recovery did not clear fruit");
 
 // Continue remembers the last slot explicitly instead of mistaking the save
 // with the most recent progress write for the one the player last selected.

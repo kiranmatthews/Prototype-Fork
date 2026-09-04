@@ -548,7 +548,9 @@ export class Player {
   fruitCollectionRevision = 0; // monotonic HUD event: includes 99->0 and endless-mode fruit
   masks = 0; // Aku masks held (max 2): absorb one hit or bail; the 3rd = uber
   uberTimer = 0; // Crash third-mask invincibility: auto-smash, perfect balance
-  lives = 4; // Campaign default: death costs one, 100 wumpa earns one, zero = game over
+  // Reserve-life counter: zero still means the current, final attempt is live.
+  // Game Over happens only when a new death begins with no reserves remaining.
+  lives = 4;
   endlessDeaths = false; // selectable standard-run rule: deaths replace lives and never game-over
   totalDeaths = 0;
   points = 0; // banked score
@@ -1177,6 +1179,7 @@ export class Player {
   private lastRail: Rail | null = null;
   private grindLatched = false;
   private respawnTimer = 0;
+  private gameOverPending = false; // latched when this death began at zero lives
   private coyoteTimer = 0; // jump grace after running off a ledge
   private coyoteReleaseT = 0; // an on-time coyote press may finish after edge grace expires
   private coyotePressOpenThisStep = false; // preserve the final pre-decrement grace tick
@@ -2747,6 +2750,7 @@ export class Player {
     this.ttFreeze = 0;
     this.grindBoostT = 0; // a leftover over-ceiling window must not survive a respawn
     this.ttDied = false;
+    this.gameOverPending = false;
     this.comboFailT = 0;
     this.comboGraceT = 0;
     this.comboGraceWarned = false;
@@ -3845,8 +3849,10 @@ export class Player {
           } else if (this.bonusMode) {
             this.state = 'gameover';
             this.onBonusDeath();
-          } else if (this.lives <= 0) {
-            // out of lives: hold on the black screen until any button
+          } else if (this.gameOverPending) {
+            // This death began with no reserve lives: hold on the black screen
+            // until the Game Over choice. A late-arriving wumpa cannot rewrite
+            // the outcome after the death has already happened.
             this.state = 'gameover';
             this.onGameOver();
           } else {
@@ -13503,7 +13509,7 @@ export class Player {
   }
 
   private die(): void {
-    if (this.state === 'dead') return;
+    if (this.state === 'dead' || this.state === 'gameover') return;
     if (this.hubMode) {
       this.speed = 0;
       this.vVel = 0;
@@ -13514,6 +13520,7 @@ export class Player {
     // live after the mask visual and player agency were already gone.
     this.uberTimer = 0;
     this.state = 'dead';
+    this.gameOverPending = false;
     if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
     else if (this.comboRun) {
       this.comboDied = true; // same deal for combo runs
@@ -13522,7 +13529,16 @@ export class Player {
     } else if (this.endlessDeaths) {
       this.totalDeaths++;
       this.points = Math.ceil(this.points / 2);
-    } else if (!this.bonusMode) this.lives--;
+    } else if (!this.bonusMode) {
+      // Crash-style reserve lives: dying at 1 spends the reserve and respawns
+      // on the playable 0-life attempt. Only dying while already at 0 is Game
+      // Over. Latch that fact now; rewards still flying to the HUD may settle
+      // during the blackout, but cannot retroactively buy out this death.
+      if (this.lives <= 0) {
+        this.lives = 0;
+        this.gameOverPending = true;
+      } else this.lives--;
+    }
     this.respawnTimer = CONST.respawnDelay;
     sfx.play('death', 0.9);
     this.speed = 0;
