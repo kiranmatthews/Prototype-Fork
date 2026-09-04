@@ -27,7 +27,7 @@ import { CONST, TUNING } from "./tuning";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
 import { puffs, PUFF_PRESETS } from "./puffs";
-import { swirls, SWIRL_PRESETS } from "./swirls";
+import { swirls, SWIRL_PRESETS, type Swirl } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
 import { createUnityBeachfrontReference } from "./beachfront";
 import {
@@ -111,6 +111,8 @@ export interface Crate {
   boost?: "speed" | "balance"; // COMBO RUN: breaking this crate = a speed burst / a perfect-balance window
   ttOrigMap?: THREE.Texture | null; // the normal-mode face, restored when the trial ends
 }
+
+const NO_BROKEN_CRATES: Crate[] = [];
 
 // Functionally distinct foes. Defeat rules and movement differ per kind —
 // the level's update owns each FSM and publishes per-frame combat flags
@@ -3033,7 +3035,13 @@ export class Level {
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] =
     [];
   private warpPads: WarpPad[] = []; // end-of-level warp platforms: rings rise, plume flickers
-  private campaignPortals: { targetId: string; box: THREE.Box3 }[] = [];
+  private campaignPortals: {
+    targetId: string;
+    box: THREE.Box3;
+    x: number;
+    visual: THREE.Group;
+    swirl: Swirl;
+  }[] = [];
   private bonusPlatform: {
     group: THREE.Group;
     box: THREE.Box3;
@@ -6064,7 +6072,17 @@ export class Level {
   }
 
   setActive(active: boolean): void {
-    this.root.visible = active;
+    if (active) {
+      if (this.root.parent !== this.scene) this.scene.add(this.root);
+      this.root.visible = true;
+      return;
+    }
+    // Bonus rooms retain the parent Level object for exact checkpoint/crate
+    // restoration, but a merely invisible group is still walked by the scene
+    // matrix pass. Detach it and release recreatable ocean render targets.
+    this.root.visible = false;
+    this.scene.remove(this.root);
+    this.water?.setQuality("lite");
   }
 
   campaignPortalAt(position: THREE.Vector3): string | null {
@@ -6531,6 +6549,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.updateCampaignPortalVisibility();
     this.updateVfx(dt);
     this.islandShoreFoam?.update(dt);
     for (const gate of this.trickGates) {
@@ -7412,6 +7431,7 @@ export class Level {
   }
 
   consumeBlastBroken(): Crate[] {
+    if (this.blastBroken.length === 0) return NO_BROKEN_CRATES;
     const b = this.blastBroken;
     this.blastBroken = [];
     return b;
@@ -9185,29 +9205,32 @@ export class Level {
 
   private worldRooLabel(text: string, width = 8.5): THREE.Sprite {
     const canvas = document.createElement("canvas");
-    canvas.width = 1024;
-    canvas.height = 256;
+    // These labels occupy only a small slice of the screen. The old 1024x256
+    // backing cost roughly 18 MiB across the nine CPU+GPU portal copies.
+    canvas.width = 512;
+    canvas.height = 128;
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.minFilter = THREE.LinearFilter;
     texture.generateMipmaps = false;
     const paint = (): void => {
+      if (texture.userData.disposed) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = `400 118px ${rooLoaded ? "Roo" : "Impact"}, sans-serif`;
+      ctx.font = `400 59px ${rooLoaded ? "Roo" : "Impact"}, sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.lineJoin = "round";
-      ctx.lineWidth = 25;
+      ctx.lineWidth = 13;
       ctx.strokeStyle = "#2b1007";
-      ctx.strokeText(text.toUpperCase(), 512, 126, 950);
-      const face = ctx.createLinearGradient(0, 58, 0, 196);
+      ctx.strokeText(text.toUpperCase(), 256, 63, 475);
+      const face = ctx.createLinearGradient(0, 29, 0, 98);
       face.addColorStop(0, "#fff36a");
       face.addColorStop(0.52, "#ffad26");
       face.addColorStop(1, "#e2461f");
       ctx.fillStyle = face;
-      ctx.fillText(text.toUpperCase(), 512, 126, 950);
+      ctx.fillText(text.toUpperCase(), 256, 63, 475);
       texture.needsUpdate = true;
     };
     paint();
@@ -9458,16 +9481,31 @@ export class Level {
       const sw = swirls.spawn(portalPreset, gx, cy, gz, { seed: 11 + i * 7 });
       sw.group.scale.setScalar(RS / 4.4);
       const label = this.worldRooLabel(destination.name, 9.7);
-      label.position.set(gx, 8.45, gz + 0.1);
-      this.root.add(label);
+      label.position.set(0, 8.45, 0.1);
+      gate.add(label);
       this.campaignPortals.push({
         targetId: destination.levelId,
+        x: gx,
+        visual: gate,
+        swirl: sw,
         box: new THREE.Box3().setFromCenterAndSize(
           new THREE.Vector3(gx, 3.5, gz + 0.25),
           new THREE.Vector3(5.7, 7.1, 3.2),
         ),
       });
     });
+    this.updateCampaignPortalVisibility(this.spawnPos.x);
+  }
+
+  private updateCampaignPortalVisibility(playerX = this.playerPos.x): void {
+    // A side-on camera can never see the full 112 m gallery. Keep a generous
+    // two-portal margin so gates are live before they approach either edge.
+    const range = 24.5;
+    for (const portal of this.campaignPortals) {
+      const visible = Math.abs(portal.x - playerX) <= range;
+      portal.visual.visible = visible;
+      portal.swirl.group.visible = visible;
+    }
   }
 
   private buildJungle(): void {

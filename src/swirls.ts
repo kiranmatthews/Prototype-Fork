@@ -329,6 +329,10 @@ export class Swirl {
   }
 
   update(dt: number, camera: THREE.Camera): void {
+    // Long portal galleries explicitly hide distant instances. Holding their
+    // last buffers avoids thousands of vertex/color writes and GPU uploads;
+    // an invisible Object3D is already omitted from every render pass.
+    if (!this.group.visible) return;
     const p = this.preset;
     // Billboarding lives OUTSIDE the freeze: the studio keeps repositioning
     // the preview, and a frozen portal must keep facing the lens.

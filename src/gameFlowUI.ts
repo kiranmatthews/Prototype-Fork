@@ -84,6 +84,7 @@ class BoneMaskPreview {
   private camera: THREE.PerspectiveCamera | null = null;
   private mask = new THREE.Group();
   private startedAt = performance.now();
+  private lastRenderedAt = -Infinity;
   private disposed = false;
 
   constructor(private canvas: HTMLCanvasElement) {}
@@ -96,7 +97,9 @@ class BoneMaskPreview {
         alpha: true,
         antialias: true,
       });
-      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+      // This is a menu ornament, not the gameplay renderer. A DPR-2 context
+      // was needlessly doubling both dimensions on Retina/mobile screens.
+      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
@@ -122,6 +125,10 @@ class BoneMaskPreview {
 
   render(now: number): void {
     if (!this.renderer || !this.scene || !this.camera) return;
+    // The slow mask drift is visually identical at 30 Hz and avoids asking a
+    // second WebGL context to contend with the gameplay renderer every RAF.
+    if (now - this.lastRenderedAt < 1000 / 30) return;
+    this.lastRenderedAt = now;
     this.resize();
     const seconds = (now - this.startedAt) / 1000;
     this.mask.rotation.y = Math.sin(seconds * 0.72) * 0.22;
@@ -143,6 +150,9 @@ class BoneMaskPreview {
       for (const material of materials) material.dispose();
     });
     this.renderer?.dispose();
+    this.renderer?.forceContextLoss();
+    this.canvas.width = 1;
+    this.canvas.height = 1;
     this.renderer = null;
     this.scene = null;
     this.camera = null;
@@ -201,8 +211,9 @@ class BoneMaskPreview {
     if (!this.renderer || !this.camera) return;
     const width = Math.max(1, this.canvas.clientWidth);
     const height = Math.max(1, this.canvas.clientHeight);
-    const targetWidth = Math.floor(width * Math.min(devicePixelRatio || 1, 2));
-    const targetHeight = Math.floor(height * Math.min(devicePixelRatio || 1, 2));
+    const pixelRatio = this.renderer.getPixelRatio();
+    const targetWidth = Math.floor(width * pixelRatio);
+    const targetHeight = Math.floor(height * pixelRatio);
     if (this.canvas.width !== targetWidth || this.canvas.height !== targetHeight)
       this.renderer.setSize(width, height, false);
     this.camera.aspect = width / height;
@@ -226,6 +237,8 @@ export class GameFlowUI {
   private previousPad = { up: false, down: false, left: false, right: false, accept: false, back: false };
   private boneMask: BoneMaskPreview | null = null;
   private thumbnail: HTMLCanvasElement | null = null;
+  private thumbnailCaptured = false;
+  private gameplayFrameRequested = true;
   private debugVisible = localStorage.getItem("solProtoDebugChrome") === "visible";
   private reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
   private inertedElements: HTMLElement[] = [];
@@ -265,6 +278,21 @@ export class GameFlowUI {
 
   get currentScreen(): GameScreen | null {
     return this.screen;
+  }
+
+  get developerChromeVisible(): boolean {
+    return this.debugVisible;
+  }
+
+  /** Modal screens hold a still gameplay frame until their world changes. */
+  requestGameplayFrame(): void {
+    this.gameplayFrameRequested = true;
+  }
+
+  consumeGameplayFrameRequest(): boolean {
+    if (!this.gameplayFrameRequested) return false;
+    this.gameplayFrameRequested = false;
+    return true;
   }
 
   showLaunch(): void {
@@ -330,7 +358,7 @@ export class GameFlowUI {
 
   captureGameplay(source: HTMLCanvasElement): void {
     const target = this.thumbnail;
-    if (!target || this.screen !== "pause") return;
+    if (!target || this.screen !== "pause" || this.thumbnailCaptured) return;
     const width = Math.max(1, source.width);
     const height = Math.max(1, source.height);
     const targetWidth = 640;
@@ -342,6 +370,7 @@ export class GameFlowUI {
     const context = target.getContext("2d");
     try {
       context?.drawImage(source, 0, 0, target.width, target.height);
+      this.thumbnailCaptured = true;
     } catch {
       // A lost WebGL frame should not make the pause menu unusable.
     }
@@ -349,28 +378,19 @@ export class GameFlowUI {
 
   update(now = performance.now()): void {
     if (this.screen === "gameover") this.boneMask?.render(now);
-    const pad = navigator.getGamepads
-      ? Array.from(navigator.getGamepads()).find((value) => value?.connected) ?? null
-      : null;
-    if (!pad) {
-      this.previousPad = { up: false, down: false, left: false, right: false, accept: false, back: false };
-      return;
-    }
-    const up = (pad.axes[1] ?? 0) < -0.55 || pad.buttons[12]?.pressed === true;
-    const down = (pad.axes[1] ?? 0) > 0.55 || pad.buttons[13]?.pressed === true;
-    const left = (pad.axes[0] ?? 0) < -0.55 || pad.buttons[14]?.pressed === true;
-    const right = (pad.axes[0] ?? 0) > 0.55 || pad.buttons[15]?.pressed === true;
-    const accept = pad.buttons[0]?.pressed === true;
-    const back = pad.buttons[1]?.pressed === true;
-    if (!this.screen || this.transitionActive) {
-      this.previousPad = { up, down, left, right, accept, back };
+    // Input already polls gamepads for gameplay. Do not repeat that scan and
+    // allocate an Array/state object on every ordinary gameplay frame.
+    if (!this.screen) return;
+    const { up, down, left, right, accept, back } = this.readGamepad();
+    if (this.transitionActive) {
+      Object.assign(this.previousPad, { up, down, left, right, accept, back });
       return;
     }
     if ((up && !this.previousPad.up) || (left && !this.previousPad.left)) this.moveSelection(-1);
     if ((down && !this.previousPad.down) || (right && !this.previousPad.right)) this.moveSelection(1);
     if (accept && !this.previousPad.accept) this.activateSelection();
     if (back && !this.previousPad.back) this.goBack();
-    this.previousPad = { up, down, left, right, accept, back };
+    Object.assign(this.previousPad, { up, down, left, right, accept, back });
   }
 
   async transition(action: () => void | Promise<void>): Promise<void> {
@@ -380,6 +400,9 @@ export class GameFlowUI {
     try {
       await wait(this.reducedMotion ? 20 : 360);
       await action();
+      // Draw the destination exactly once while the curtain is opaque. If the
+      // action resumes gameplay, normal rendering takes over after the fade.
+      this.requestGameplayFrame();
       await wait(this.reducedMotion ? 20 : 130);
     } finally {
       this.transitionCurtain.classList.remove("active");
@@ -399,6 +422,8 @@ export class GameFlowUI {
     this.root.setAttribute("aria-label", this.screenLabel());
     this.panel.replaceChildren();
     this.thumbnail = null;
+    this.thumbnailCaptured = false;
+    this.requestGameplayFrame();
     this.navButtons = [];
     this.selected = 0;
     if (this.screen === "launch") this.renderLaunch();
@@ -409,6 +434,7 @@ export class GameFlowUI {
     else if (this.screen === "options") this.renderOptions();
     else if (this.screen === "gameover") this.renderGameOver();
     this.syncSelection();
+    this.seedGamepad();
   }
 
   private renderLaunch(): void {
@@ -591,6 +617,8 @@ export class GameFlowUI {
     this.root.setAttribute("aria-label", "Run results");
     this.panel.replaceChildren();
     this.thumbnail = null;
+    this.thumbnailCaptured = false;
+    this.requestGameplayFrame();
     this.navButtons = [];
     this.selected = 0;
 
@@ -618,6 +646,7 @@ export class GameFlowUI {
     card.append(eyebrow, title, tally, awards, actions);
     this.panel.appendChild(card);
     this.syncSelection();
+    this.seedGamepad();
   }
 
   private progressCard(): HTMLElement {
@@ -718,6 +747,31 @@ export class GameFlowUI {
       event.preventDefault();
       this.goBack();
     }
+  }
+
+  private readGamepad(): typeof this.previousPad {
+    let pad: Gamepad | null = null;
+    if (navigator.getGamepads) {
+      const pads = navigator.getGamepads();
+      for (let i = 0; i < pads.length; i++) {
+        if (pads[i]?.connected) {
+          pad = pads[i];
+          break;
+        }
+      }
+    }
+    return {
+      up: (pad?.axes[1] ?? 0) < -0.55 || pad?.buttons[12]?.pressed === true,
+      down: (pad?.axes[1] ?? 0) > 0.55 || pad?.buttons[13]?.pressed === true,
+      left: (pad?.axes[0] ?? 0) < -0.55 || pad?.buttons[14]?.pressed === true,
+      right: (pad?.axes[0] ?? 0) > 0.55 || pad?.buttons[15]?.pressed === true,
+      accept: pad?.buttons[0]?.pressed === true,
+      back: pad?.buttons[1]?.pressed === true,
+    };
+  }
+
+  private seedGamepad(): void {
+    Object.assign(this.previousPad, this.readGamepad());
   }
 
   private moveSelection(direction: number): void {
@@ -845,7 +899,6 @@ export class GameFlowUI {
       .game-shell::before {
         content: ''; position: absolute; inset: 0; z-index: -2;
         background: radial-gradient(circle at 50% 38%, rgba(31,58,100,.26), rgba(3,5,12,.86) 66%, #020308 100%);
-        backdrop-filter: blur(5px) saturate(.72) brightness(.62);
       }
       body.game-shell-results .game-shell::before { background: transparent; backdrop-filter: none; }
       .game-shell-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); box-sizing: border-box; }

@@ -1055,6 +1055,8 @@ function syncPostResolution(): void {
   }
 }
 
+let gameFlow!: GameFlowUI;
+
 function resize(): void {
   const w = window.innerWidth;
   let h = window.innerHeight;
@@ -1095,6 +1097,7 @@ function resize(): void {
   camera2.aspect = playAspect;
   camera2.updateProjectionMatrix();
   if (editorViewActive) editor.syncPlayAspect(playAspect);
+  gameFlow?.requestGameplayFrame();
 }
 window.addEventListener("resize", resize);
 // iOS standalone launches don't reliably fire 'resize' once the viewport
@@ -1115,7 +1118,6 @@ const ui = new UI();
 const campaign = new CampaignStore();
 let gameAudioOptions: GameAudioOptions = loadGameAudioOptions();
 sfx.setMuted(gameAudioOptions);
-let gameFlow: GameFlowUI;
 const crtGuestPanel = createCrtGuestTuningPanel({
   settings: crtGuestSettings,
   bindToggle: (toggle) => {
@@ -3880,10 +3882,15 @@ function frame(nowMs: number): void {
     input.consumeEdges();
     if (split2p) input2.consumeEdges();
     acc = 0;
-    if (resultsCameraActive) updateResultsCamera();
     sfx.stopLoops();
-    renderGameplayScene(dt, true, false);
-    gameFlow.captureGameplay(renderer.domElement);
+    // Menu worlds are intentionally frozen. Render one fresh frame on entry
+    // (and after a fade swaps worlds), then let the browser hold that canvas.
+    // This also avoids a WebGL -> Canvas2D pause-thumbnail copy every RAF.
+    if (gameFlow.consumeGameplayFrameRequest()) {
+      if (resultsCameraActive) updateResultsCamera();
+      renderGameplayScene(dt, true, false);
+      gameFlow.captureGameplay(renderer.domElement);
+    }
     return;
   }
   paused = false;
@@ -4039,34 +4046,41 @@ function frame(nowMs: number): void {
     bonusParallax.update(player.pos, dt, loadedLevelId);
   updateSeaHorizon();
 
-  ui.updateBalance(player.balanceMeter);
-  ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
-  ui.updateBalanceBoost(player.balanceBoostT, 6);
-  ui.setHUD(currentHudState(), dt);
-  ui.setStats({
-    speed: player.speed,
-    state: player.state,
-    grounded: player.grounded,
-    vVel: player.vVel,
-    surface: player.surfaceName,
-    controller: input.gamepadName,
-    jump:
-      `${player.lastJumpType} · hold ${player.xHoldT.toFixed(2)}s` +
-      ` · skate ${player.skateChargeT.toFixed(2)}/${TUNING.skateHoldTime.toFixed(2)}` +
-      (player.skateOn ? " ✓" : ""),
-    bail:
-      player.bailTimeLeft > 0
-        ? `${player.bailTimeLeft.toFixed(2)}s · rise ${player.bailRecoveryK.toFixed(2)}`
-        : "-",
-    railDist: player.railCandidateDist,
-    crates: `${player.cratesBroken}/${level.totalCrates}`,
-    fruit: player.fruit,
-    masks:
-      player.uberTimer > 0
-        ? `INVINCIBLE ${player.uberTimer.toFixed(1)}s`
-        : String(player.masks),
-    time: player.runTime,
-  });
+  // The hub has no HUD by design; do not lay out, repaint, and upload its
+  // full-screen Canvas2D mirror only to hide it with CSS.
+  if (level.hudMode !== "hub") {
+    ui.updateBalance(player.balanceMeter);
+    ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
+    ui.updateBalanceBoost(player.balanceBoostT, 6);
+    ui.setHUD(currentHudState(), dt);
+  }
+  // M-hidden developer chrome should be computationally hidden too. Building
+  // these strings and replacing innerHTML every frame was pure background work.
+  if (gameFlow.developerChromeVisible)
+    ui.setStats({
+      speed: player.speed,
+      state: player.state,
+      grounded: player.grounded,
+      vVel: player.vVel,
+      surface: player.surfaceName,
+      controller: input.gamepadName,
+      jump:
+        `${player.lastJumpType} · hold ${player.xHoldT.toFixed(2)}s` +
+        ` · skate ${player.skateChargeT.toFixed(2)}/${TUNING.skateHoldTime.toFixed(2)}` +
+        (player.skateOn ? " ✓" : ""),
+      bail:
+        player.bailTimeLeft > 0
+          ? `${player.bailTimeLeft.toFixed(2)}s · rise ${player.bailRecoveryK.toFixed(2)}`
+          : "-",
+      railDist: player.railCandidateDist,
+      crates: `${player.cratesBroken}/${level.totalCrates}`,
+      fruit: player.fruit,
+      masks:
+        player.uberTimer > 0
+          ? `INVINCIBLE ${player.uberTimer.toFixed(1)}s`
+          : String(player.masks),
+      time: player.runTime,
+    });
 
   // Walk the shadow frustum onto the skater before drawing — it's small enough
   // to stay sharp, so it has to travel with them.
@@ -4096,7 +4110,7 @@ function frame(nowMs: number): void {
     renderer.setScissorTest(false);
     renderer.setViewport(0, 0, dw, dh);
   } else {
-    renderGameplayScene(dt, false);
+    renderGameplayScene(dt, false, level.hudMode !== "hub");
   }
   // Single-player fruit/icons/HUD were composed together above. Split screen
   // retains its direct fallback, with each fruit flight confined to its half.
