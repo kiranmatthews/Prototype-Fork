@@ -6,6 +6,8 @@
 
 export const DEFAULT_CAMPAIGN_LIVES = 4;
 export const CAMPAIGN_SAVE_SLOTS = 3;
+/** Placeholder target shared by every canonical trial until authored per-level. */
+export const CAMPAIGN_TIME_RELIC_TARGET_SECONDS = 60;
 
 export interface CampaignLevelDefinition {
   /** Stable save identity. Keep this when replacing the backing level. */
@@ -21,21 +23,61 @@ export interface CampaignLevelDefinition {
 }
 
 export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
-  { progressKey: "jungle", levelId: "jungle", name: "Jungle Ruins", relicTime: 165 },
+  {
+    progressKey: "jungle",
+    levelId: "jungle",
+    name: "Jungle Ruins",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
   {
     progressKey: "test-course",
     levelId: "test",
     fallbackLevelId: "flats",
     name: "Test Course",
-    relicTime: 300,
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   },
-  { progressKey: "sky-bridge", levelId: "sky", name: "Sky Bridge", relicTime: 95 },
-  { progressKey: "slipstream", levelId: "slip", name: "Slipstream", relicTime: 150 },
-  { progressKey: "nightworks", levelId: "dark", name: "Nightworks", relicTime: 185 },
-  { progressKey: "beachside-run", levelId: "beachfront", name: "Beachside Run", relicTime: 190 },
-  { progressKey: "coastal", levelId: "coastal-street-run", name: "Coastal", relicTime: 420 },
-  { progressKey: "island-hopper", levelId: "island-hopper", name: "Island Hopper", relicTime: 175 },
-  { progressKey: "jungle-gate", levelId: "jungle-gate-run", name: "Jungle Gate", relicTime: 165 },
+  {
+    progressKey: "sky-bridge",
+    levelId: "sky",
+    name: "Sky Bridge",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
+  {
+    progressKey: "slipstream",
+    levelId: "slip",
+    name: "Slipstream",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
+  {
+    progressKey: "nightworks",
+    levelId: "dark",
+    name: "Nightworks",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
+  {
+    progressKey: "beachside-run",
+    levelId: "beachfront",
+    name: "Beachside Run",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
+  {
+    progressKey: "coastal",
+    levelId: "coastal-street-run",
+    name: "Coastal",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
+  {
+    progressKey: "island-hopper",
+    levelId: "island-hopper",
+    name: "Island Hopper",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
+  {
+    progressKey: "jungle-gate",
+    levelId: "jungle-gate-run",
+    name: "Jungle Gate",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();
@@ -486,8 +528,6 @@ export class CampaignStore {
       crystal: boolean;
       boxGem: boolean;
       comboGem: boolean;
-      timeRelic?: boolean;
-      time?: number;
     },
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
@@ -497,18 +537,36 @@ export class CampaignStore {
     progress.crystal = progress.crystal || rewards.crystal;
     progress.boxGem = progress.boxGem || rewards.boxGem;
     progress.comboGem = progress.comboGem || rewards.comboGem;
-    progress.timeRelic = progress.timeRelic || rewards.timeRelic === true;
-    if (typeof rewards.time === "number" && Number.isFinite(rewards.time) && rewards.time > 0)
-      progress.bestTime = progress.bestTime === undefined
-        ? rewards.time
-        : Math.min(progress.bestTime, rewards.time);
     if (
       progress.cleared !== before.cleared ||
       progress.crystal !== before.crystal ||
       progress.boxGem !== before.boxGem ||
-      progress.comboGem !== before.comboGem ||
-      progress.timeRelic !== before.timeRelic ||
-      progress.bestTime !== before.bestTime
+      progress.comboGem !== before.comboGem
+    )
+      this.noteWorkingChange();
+    return progress;
+  }
+
+  /**
+   * Record only a completed time-trial attempt. Trial play never manufactures
+   * the normal clear or collectible milestones that gate access to the mode.
+   */
+  commitTimeTrial(
+    levelId: string,
+    rewards: { time: number; timeRelic: boolean },
+  ): CampaignLevelProgress | null {
+    const progress = this.levelProgress(levelId);
+    if (!progress) return null;
+    const beforeBestTime = progress.bestTime;
+    const beforeTimeRelic = progress.timeRelic;
+    progress.timeRelic = progress.timeRelic || rewards.timeRelic;
+    if (Number.isFinite(rewards.time) && rewards.time > 0)
+      progress.bestTime = progress.bestTime === undefined
+        ? rewards.time
+        : Math.min(progress.bestTime, rewards.time);
+    if (
+      progress.bestTime !== beforeBestTime ||
+      progress.timeRelic !== beforeTimeRelic
     )
       this.noteWorkingChange();
     return progress;

@@ -38,17 +38,23 @@ export interface PauseScreenState {
   inWarpRoom: boolean;
 }
 
-export interface ResultsScreenState {
-  levelName: string;
-  time: number;
-  boxes: number;
-  totalBoxes: number;
-  crystal: boolean;
-  boxGem: boolean;
-  comboGem: boolean;
-  timeRelic: boolean;
-  firstClear: boolean;
-}
+export type ResultsScreenState =
+  | {
+      kind: "normal";
+      levelName: string;
+      boxes: number;
+      totalBoxes: number;
+      crystal: boolean;
+      boxGem: boolean;
+      comboGem: boolean;
+      firstClear: boolean;
+    }
+  | {
+      kind: "time-trial";
+      levelName: string;
+      actualTime: number;
+      relicTarget: number;
+    };
 
 export interface GameFlowUICallbacks {
   onNewGame: (slot: number) => void;
@@ -1012,7 +1018,10 @@ export class GameFlowUI {
     document.body.classList.remove("game-shell-paused");
     this.screen = "results";
     this.panel.className = "game-shell-panel game-screen-results";
-    this.root.setAttribute("aria-label", "Run results");
+    this.root.setAttribute(
+      "aria-label",
+      state.kind === "time-trial" ? "Time trial results" : "Run results",
+    );
     this.panel.replaceChildren();
     this.pointerSelectionArmed = false;
     this.thumbnail = null;
@@ -1022,28 +1031,45 @@ export class GameFlowUI {
     this.navButtons = [];
     this.selected = 0;
 
-    const card = element("div", "game-results-card timber-card");
+    const card = element(
+      "div",
+      `game-results-card game-results-${state.kind} timber-card`,
+    );
     const eyebrow = element("div", "game-eyebrow");
-    eyebrow.textContent = state.firstClear ? "COURSE CLEAR" : "RUN COMPLETE";
+    eyebrow.textContent = state.kind === "time-trial"
+      ? "TIME TRIAL COMPLETE"
+      : state.firstClear
+        ? "COURSE CLEAR"
+        : "RUN COMPLETE";
     const title = element("h2", "game-results-title");
     title.textContent = state.levelName;
-    const tally = element("div", "game-results-tally");
-    tally.innerHTML = `
-      <div><span>TIME</span><strong>${this.formatTime(state.time)}</strong></div>
-      <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>`;
-    const awards = element("div", "game-results-awards");
-    awards.append(
-      this.award("CRYSTAL", state.crystal, "◆"),
-      this.award("BOX GEM", state.boxGem, "◇"),
-      this.award("COMBO GEM", state.comboGem, "✦"),
-      this.award("TIME RELIC", state.timeRelic, "◉"),
+    const tally = element(
+      "div",
+      `game-results-tally game-results-tally-${state.kind}`,
     );
+    let awards: HTMLElement | null = null;
+    if (state.kind === "time-trial") {
+      tally.innerHTML = `
+        <div><span>YOUR TIME</span><strong>${this.formatTime(state.actualTime)}</strong></div>
+        <div><span>RELIC TARGET</span><strong>${this.formatTime(state.relicTarget)}</strong></div>`;
+    } else {
+      tally.innerHTML = `
+        <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>`;
+      awards = element("div", "game-results-awards");
+      awards.append(
+        this.award("CRYSTAL", state.crystal, "◆"),
+        this.award("BOX GEM", state.boxGem, "◇"),
+        this.award("COMBO GEM", state.comboGem, "✦"),
+      );
+    }
     const actions = element("div", "game-menu-list game-results-actions");
     actions.append(
       this.button("RETRY LEVEL", this.callbacks.onResultsRetry),
       this.button("CONTINUE", this.callbacks.onResultsContinue),
     );
-    card.append(eyebrow, title, tally, awards, actions);
+    card.append(eyebrow, title, tally);
+    if (awards) card.append(awards);
+    card.append(actions);
     this.panel.appendChild(card);
     this.observePreCrtLayout();
     this.syncVortexBodyClass();
@@ -1506,11 +1532,16 @@ export class GameFlowUI {
       .game-screen-results { place-items: center end; background: linear-gradient(90deg, transparent 0 38%, rgba(3,5,10,.24) 52%, rgba(3,5,10,.85) 100%); backdrop-filter: none; }
       .game-results-card { width: min(540px, 46vw); min-width: 390px; padding: 26px 34px 30px; margin-right: 4vw; }
       .game-results-title { margin: 7px 0 17px; text-align: center; color: #f05a20; font-size: clamp(32px, 4vw, 52px); line-height: 1; }
-      .game-results-tally { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+      .game-results-tally { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+      .game-results-tally-normal { grid-template-columns: 1fr; }
       .game-results-tally div { display: grid; padding: 10px 14px; background: rgba(92,43,18,.14); border: 2px solid rgba(91,41,17,.55); border-radius: 8px; }
       .game-results-tally span { color: #714326; font: 800 11px/1.2 ui-monospace, Menlo, monospace; }
       .game-results-tally strong { color: #713019; font-size: 29px; }
+      .game-results-time-trial .game-results-tally { margin: 8px 0 15px; gap: clamp(8px, 2vw, 16px); }
+      .game-results-time-trial .game-results-tally div { padding: clamp(12px, 3vw, 17px) clamp(5px, 2vw, 16px) clamp(10px, 2.5vw, 14px); text-align: center; }
+      .game-results-time-trial .game-results-tally strong { min-width: 0; color: #f06420; font-size: clamp(22px, 7vw, 48px); white-space: nowrap; }
       .game-results-awards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 15px 0; }
+      .game-results-normal .game-results-awards { grid-template-columns: repeat(3, 1fr); }
       .game-award { display: flex; align-items: center; gap: 8px; opacity: .35; filter: grayscale(1); }
       .game-award.earned { opacity: 1; filter: none; }
       .game-award span { color: #a45bf0; font-size: 31px; text-shadow: 0 2px 0 #4b214f; }

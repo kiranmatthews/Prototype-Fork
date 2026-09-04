@@ -38,6 +38,7 @@ import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
   CampaignStore,
+  CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   DEFAULT_CAMPAIGN_LIVES,
   campaignLevelById,
   isCampaignLevel,
@@ -2027,10 +2028,10 @@ let runStartRewards = {
   crystal: false,
   boxGem: false,
   comboGem: false,
-  timeRelic: false,
 };
 let pendingCompletion:
-  | { kind: "normal" | "time" | "bonus"; time: number }
+  | { kind: "normal" | "bonus" }
+  | { kind: "time-trial"; time: number }
   | null = null;
 
 function syncCampaignPortalProgress(): void {
@@ -2050,7 +2051,6 @@ function adoptCommittedCampaignProgress(levelId: string): void {
       crystal: false,
       boxGem: false,
       comboGem: false,
-      timeRelic: false,
     };
     return;
   }
@@ -2072,7 +2072,6 @@ function adoptCommittedCampaignProgress(levelId: string): void {
     crystal: progress.crystal,
     boxGem: progress.boxGem,
     comboGem: progress.comboGem,
-    timeRelic: progress.timeRelic,
   };
 }
 
@@ -2382,13 +2381,23 @@ function continueFromResults(): void {
   });
 }
 
-function showCampaignResults(time: number, timeRelic = false): void {
+function presentCampaignResults(result: ResultsScreenState): void {
+  void gameFlow.transition(() => {
+    ui.hideMessage();
+    ui.hideTTResults();
+    player.prepareResultsPose(level);
+    resultsCameraActive = true;
+    gameFlow.showResults(result);
+  });
+}
+
+function showCampaignResults(): void {
   player.bankFlyingFruit();
   const definition = campaignLevelById(current.id);
   if (!definition) {
     ui.showMessage(
       "COURSE CLEAR!",
-      `time ${time.toFixed(2)}s — press R / Options to go again`,
+      "press R / Options to go again",
       0,
     );
     return;
@@ -2402,27 +2411,36 @@ function showCampaignResults(time: number, timeRelic = false): void {
     crystal: player.hasCrystal,
     boxGem: player.gemEarned,
     comboGem: player.comboGemEarned,
-    timeRelic,
-    time,
   });
   campaign.updateInventory(player.lives, player.fruit);
   const result: ResultsScreenState = {
+    kind: "normal",
     levelName: definition.name,
-    time,
     boxes,
     totalBoxes: level.totalCrates,
     crystal: player.hasCrystal && !runStartRewards.crystal,
     boxGem: player.gemEarned && !runStartRewards.boxGem,
     comboGem: player.comboGemEarned && !runStartRewards.comboGem,
-    timeRelic: timeRelic && !runStartRewards.timeRelic,
     firstClear,
   };
-  void gameFlow.transition(() => {
-    ui.hideMessage();
-    ui.hideTTResults();
-    player.prepareResultsPose(level);
-    resultsCameraActive = true;
-    gameFlow.showResults(result);
+  presentCampaignResults(result);
+}
+
+function showTimeTrialResults(time: number): void {
+  player.bankFlyingFruit();
+  const definition = campaignLevelById(current.id);
+  const relicTarget =
+    definition?.relicTime ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
+  campaign.commitTimeTrial(current.id, {
+    time,
+    timeRelic: time <= relicTarget,
+  });
+  campaign.updateInventory(player.lives, player.fruit);
+  presentCampaignResults({
+    kind: "time-trial",
+    levelName: definition?.name ?? current.name,
+    actualTime: time,
+    relicTarget,
   });
 }
 
@@ -2578,17 +2596,14 @@ function flushPendingCompletion(): void {
     returnFromBonus(true);
     return;
   }
-  if (completion.kind === "time") {
+  if (completion.kind === "time-trial") {
     recordTT(current.id, completion.time);
     ui.setTimeTrial(false);
-    const target = campaignLevelById(current.id)?.relicTime;
-    showCampaignResults(
-      completion.time,
-      target !== undefined && completion.time <= target,
-    );
+    level.setTimeTrial(false);
+    showTimeTrialResults(completion.time);
     return;
   }
-  showCampaignResults(completion.time);
+  showCampaignResults();
 }
 
 function updateResultsCamera(): void {
@@ -3581,8 +3596,8 @@ player.onTrickGateBlocked = (trick) => {
   const info = deckTrickInfo(trick);
   ui.showMessage(`${info.label.toUpperCase()} REQUIRED`, info.hint, 1800);
 };
-player.onFinish = (time) => {
-  pendingCompletion = { kind: bonusSession ? "bonus" : "normal", time };
+player.onFinish = () => {
+  pendingCompletion = { kind: bonusSession ? "bonus" : "normal" };
 };
 player.onBonusDeath = () => returnFromBonus(false);
 player.onRespawn = () => {
@@ -3658,7 +3673,7 @@ player.onComboRunEnd = () => {
   ui.setRunRows(false);
 };
 player.onTTFinish = (time) => {
-  pendingCompletion = { kind: "time", time };
+  pendingCompletion = { kind: "time-trial", time };
 };
 player.onCheckpoint = () => ui.showMessage("CHECKPOINT", "", 900);
 player.onGameOver = () => {

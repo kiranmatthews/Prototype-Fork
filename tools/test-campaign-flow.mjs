@@ -51,6 +51,11 @@ assert.equal(
   9,
   "campaign progress keys must remain unique",
 );
+assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
+assert.ok(
+  campaign.CAMPAIGN_LEVELS.every((level) => level.relicTime === 60),
+  "all nine placeholder relic targets must be exactly one minute",
+);
 
 const store = new campaign.CampaignStore();
 assert.equal(store.continueSlot(), null, "an empty save shelf exposed Continue");
@@ -68,9 +73,13 @@ store.commitClear("jungle", {
   crystal: true,
   boxGem: true,
   comboGem: false,
-  time: 52.4,
 });
 assert.equal(store.runModesUnlocked("jungle"), true);
+assert.equal(
+  store.levelProgress("jungle")?.bestTime,
+  undefined,
+  "an ordinary clear polluted time-trial best time",
+);
 store.updateInventory(7, 63);
 
 const totals = store.totals();
@@ -177,12 +186,18 @@ manual.commitClear("jungle", {
   crystal: true,
   boxGem: true,
   comboGem: true,
-  timeRelic: true,
-  time: 48.2,
 });
+manual.commitTimeTrial("jungle", { time: 60, timeRelic: true });
+manual.commitTimeTrial("jungle", { time: 72, timeRelic: false });
 assert.equal(manual.dirty, true);
 assert.equal(manual.active?.lives, 9);
 assert.equal(manual.levelProgress("jungle")?.crystal, true);
+assert.equal(manual.levelProgress("jungle")?.timeRelic, true);
+assert.equal(
+  manual.levelProgress("jungle")?.bestTime,
+  60,
+  "a slower repeated trial replaced the one-minute best time",
+);
 assert.equal(manual.listSlots()[0]?.lives, 4);
 assert.equal(manual.listSlots()[0]?.levels.jungle.crystal, false);
 
@@ -223,7 +238,6 @@ manual.commitClear("jungle", {
   crystal: true,
   boxGem: false,
   comboGem: false,
-  time: 51.5,
 });
 const manualSave = manual.saveActive();
 assert.equal(manualSave.ok, true);
@@ -241,7 +255,6 @@ manual.commitClear("sky", {
   crystal: true,
   boxGem: true,
   comboGem: false,
-  time: 72,
 });
 assert.equal(manual.dirty, true);
 assert.equal(manual.listSlots()[0]?.levels["sky-bridge"].crystal, false);
@@ -312,6 +325,23 @@ assert.deepEqual(new campaign.CampaignStore().saveActive(), {
   ok: false,
   reason: "no-active-save",
 });
+
+// Trial persistence is deliberately unable to manufacture a normal clear or
+// its collectibles. Equality with the placeholder target earns the relic, and
+// a slower repeat cannot worsen the best time.
+memory.clear();
+const trialOnly = new campaign.CampaignStore();
+trialOnly.newGame(1);
+trialOnly.commitTimeTrial("jungle", { time: 61, timeRelic: false });
+assert.equal(trialOnly.levelProgress("jungle")?.cleared, false);
+assert.equal(trialOnly.levelProgress("jungle")?.crystal, false);
+assert.equal(trialOnly.levelProgress("jungle")?.boxGem, false);
+assert.equal(trialOnly.levelProgress("jungle")?.comboGem, false);
+assert.equal(trialOnly.levelProgress("jungle")?.bestTime, 61);
+trialOnly.commitTimeTrial("jungle", { time: 60, timeRelic: true });
+trialOnly.commitTimeTrial("jungle", { time: 75, timeRelic: false });
+assert.equal(trialOnly.levelProgress("jungle")?.bestTime, 60);
+assert.equal(trialOnly.levelProgress("jungle")?.timeRelic, true);
 
 assert.deepEqual(
   campaign.mergeCompletedBonusInventory(
