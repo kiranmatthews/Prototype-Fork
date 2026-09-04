@@ -61,6 +61,11 @@ assert.doesNotMatch(
 );
 assert.match(
   flow,
+  /\.game-shell\.precrt-composited \.game-menu-button:focus-visible \{ outline: none; \}/,
+  "native focus chrome must not leak sharply above the shader-rendered selection",
+);
+assert.match(
+  flow,
   /private syncSelection\(\): void \{[\s\S]{0,700}this\.invalidatePreCrt\(\);/,
   "keyboard/gamepad/pointer selection changes must invalidate the mirror",
 );

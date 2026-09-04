@@ -1210,6 +1210,7 @@ export class GameFlowUI {
          the enlarged cartoon pointer stays sharp and event-free above both. */
       .game-shell.precrt-composited::before { opacity: 0; }
       .game-shell.precrt-composited .game-shell-panel { opacity: 0; }
+      .game-shell.precrt-composited .game-menu-button:focus-visible { outline: none; }
       body.game-flow-vortex .game-shell::before {
         background: radial-gradient(circle at 50% 43%, rgba(4,5,14,.08), rgba(3,5,12,.34) 62%, rgba(2,3,8,.72) 100%);
       }
