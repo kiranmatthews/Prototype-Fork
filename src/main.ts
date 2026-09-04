@@ -3733,7 +3733,8 @@ camera.position.y += TUNING.camHeight;
 const clock = new THREE.Clock();
 let stepTimer = 0;
 let stepIdx = 0;
-const renderFrameLimiter = new PresentationFrameLimiter(60);
+const GAMEPLAY_RENDER_HZ = 60;
+const renderFrameLimiter = new PresentationFrameLimiter(GAMEPLAY_RENDER_HZ);
 
 function resetRenderFrameLimiter(): void {
   renderFrameLimiter.reset();

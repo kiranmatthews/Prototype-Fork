@@ -87,6 +87,18 @@ for (const hz of [60, 120, 144, 240]) {
     `${hz} Hz source produced ${accepted} presented frames`,
   );
 }
+const roundedSixty = new Limiter(60);
+let roundedAccepted = 0;
+for (let frame = 1; frame <= 600; frame += 1) {
+  // Browser timestamps are commonly quantized to 0.1 ms. A strict nested
+  // deadline can alias these 16.7/33.3/50.0 stamps down to 30 or even 20 Hz.
+  const timestamp = Math.round(((frame * 1000) / 60) * 10) / 10;
+  if (roundedSixty.allow(timestamp, true)) roundedAccepted += 1;
+}
+assert.ok(
+  roundedAccepted >= 599 && roundedAccepted <= 600,
+  `rounded 60 Hz source produced ${roundedAccepted} presented frames`,
+);
 const uncapped = new Limiter(60);
 for (let frame = 1; frame <= 144; frame += 1)
   assert.equal(uncapped.allow((frame * 1000) / 144, false), true);

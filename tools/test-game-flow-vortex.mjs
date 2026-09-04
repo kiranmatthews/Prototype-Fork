@@ -24,10 +24,18 @@ assert.doesNotMatch(
 );
 assert.doesNotMatch(stage, /requestAnimationFrame/,
   "the vortex must stay on the existing game RAF");
-assert.match(stage, /const TARGET_FRAME_MS = 1000 \/ 30/);
+assert.doesNotMatch(stage, /1000 \/ 30/,
+  "the shared gameplay renderer must not contain a nested 30 Hz gate");
+assert.match(stage, /targetFps: 60/);
+assert.match(stage, /cadenceOwner: "gameplay-render-loop"/);
 assert.match(stage, /this\.reducedMotion && this\.renderedThisActivation/);
 assert.match(stage, /renderer\.getRenderTarget\(\)/);
 assert.match(stage, /renderer\.setRenderTarget\(savedTarget\)/);
+assert.match(
+  stage,
+  /try \{[\s\S]{0,700}renderer\.render\(this\.scene, this\.camera\);[\s\S]{0,700}finally \{[\s\S]{0,400}renderer\.setRenderTarget\(savedTarget\)/,
+  "presentation exceptions must restore shared gameplay renderer state",
+);
 assert.match(stage, /renderer\.clearDepth\(\)[\s\S]{0,100}renderer\.render\(this\.maskScene/,
   "Game Over mask must share the existing renderer after the vortex pass");
 assert.match(stage, /if \(this\.maskLoadStarted \|\| this\.disposed\) return/,
@@ -58,6 +66,7 @@ assert.doesNotMatch(flow, /new THREE\.WebGLRenderer/,
   "Game Over must not create a second WebGL context");
 
 assert.match(main, /const gameFlowVortex = new GameFlowVortex\(\)/);
+assert.match(main, /const GAMEPLAY_RENDER_HZ = 60/);
 assert.match(main, /getGameFlowVortexDiagnostics: \(\) => gameFlowVortex\.diagnostics/);
 assert.match(
   main,

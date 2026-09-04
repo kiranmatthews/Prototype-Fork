@@ -10,7 +10,6 @@ import {
   type FieldSwirlPreset,
 } from "./swirlfield";
 
-const TARGET_FRAME_MS = 1000 / 30;
 const VIEW_HALF_HEIGHT = 4;
 const VORTEX_RADIUS = FIELD_SWIRL_PRESETS.vortex.radius ?? 4.37;
 
@@ -18,6 +17,7 @@ export interface GameFlowVortexDiagnostics {
   active: boolean;
   renderedFrames: number;
   targetFps: number;
+  cadenceOwner: "gameplay-render-loop";
   reducedMotion: boolean;
   maskVisible: boolean;
   maskPartsLoaded: number;
@@ -36,7 +36,6 @@ export class GameFlowVortex {
   private active = false;
   private invalidated = true;
   private accumulatedSeconds = 0;
-  private lastRenderMs = -Infinity;
   private renderedFrames = 0;
   private renderedThisActivation = false;
   private maskStartedAt = performance.now();
@@ -86,7 +85,8 @@ export class GameFlowVortex {
     return {
       active: this.active,
       renderedFrames: this.renderedFrames,
-      targetFps: 30,
+      targetFps: 60,
+      cadenceOwner: "gameplay-render-loop",
       reducedMotion: this.reducedMotion,
       maskVisible: this.maskVisible,
       maskPartsLoaded: this.maskPartsLoaded,
@@ -100,9 +100,11 @@ export class GameFlowVortex {
   deactivate(): void {
     if (!this.active) return;
     this.active = false;
+    this.maskVisible = false;
+    this.mask.visible = false;
+    this.invalidated = true;
     this.renderedThisActivation = false;
     this.accumulatedSeconds = 0;
-    this.lastRenderMs = -Infinity;
   }
 
   render(
@@ -116,7 +118,6 @@ export class GameFlowVortex {
       this.invalidated = true;
       this.renderedThisActivation = false;
       this.accumulatedSeconds = 0;
-      this.lastRenderMs = -Infinity;
     }
     if (showMask !== this.maskVisible) {
       this.maskVisible = showMask;
@@ -125,11 +126,7 @@ export class GameFlowVortex {
     }
     if (showMask) this.ensureMaskLoaded();
     this.accumulatedSeconds += Math.max(0, deltaSeconds);
-    if (
-      !this.invalidated &&
-      ((this.reducedMotion && this.renderedThisActivation) ||
-        nowMs - this.lastRenderMs < TARGET_FRAME_MS)
-    )
+    if (!this.invalidated && this.reducedMotion && this.renderedThisActivation)
       return false;
 
     renderer.getSize(this.size);
@@ -153,7 +150,7 @@ export class GameFlowVortex {
     this.vortex.update(
       this.reducedMotion
         ? 0
-        : Math.min(0.1, Math.max(1 / 60, this.accumulatedSeconds)),
+        : Math.min(0.1, this.accumulatedSeconds),
       this.camera,
     );
     if (showMask && !this.reducedMotion) {
@@ -169,23 +166,27 @@ export class GameFlowVortex {
     const savedAutoClear = renderer.autoClear;
     renderer.getViewport(this.savedViewport);
     renderer.getScissor(this.savedScissor);
-    renderer.setRenderTarget(null);
-    renderer.setScissorTest(false);
-    renderer.setViewport(0, 0, width, height);
-    renderer.autoClear = true;
-    renderer.render(this.scene, this.camera);
-    if (showMask) {
-      renderer.autoClear = false;
-      renderer.clearDepth();
-      renderer.render(this.maskScene, this.maskCamera);
+    try {
+      renderer.setRenderTarget(null);
+      renderer.setScissorTest(false);
+      renderer.setViewport(0, 0, width, height);
+      renderer.autoClear = true;
+      renderer.render(this.scene, this.camera);
+      if (showMask) {
+        renderer.autoClear = false;
+        renderer.clearDepth();
+        renderer.render(this.maskScene, this.maskCamera);
+      }
+    } finally {
+      // A context-loss or material exception in presentation must never leak
+      // its viewport/scissor/auto-clear state into the next gameplay frame.
+      renderer.setRenderTarget(savedTarget);
+      renderer.setViewport(this.savedViewport);
+      renderer.setScissor(this.savedScissor);
+      renderer.setScissorTest(savedScissorTest);
+      renderer.autoClear = savedAutoClear;
     }
-    renderer.setRenderTarget(savedTarget);
-    renderer.setViewport(this.savedViewport);
-    renderer.setScissor(this.savedScissor);
-    renderer.setScissorTest(savedScissorTest);
-    renderer.autoClear = savedAutoClear;
 
-    this.lastRenderMs = nowMs;
     this.invalidated = false;
     this.renderedThisActivation = true;
     this.renderedFrames++;
