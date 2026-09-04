@@ -269,8 +269,8 @@ export class Swirl {
     this.addMat = mk(THREE.AdditiveBlending);
     this.backMesh = new THREE.Mesh(this.backGeo, this.backMat);
     this.addMesh = new THREE.Mesh(this.addGeo, this.addMat);
-    this.backMesh.frustumCulled = false;
-    this.addMesh.frustumCulled = false;
+    this.backMesh.frustumCulled = true;
+    this.addMesh.frustumCulled = true;
     this.backMesh.renderOrder = 2;
     this.addMesh.renderOrder = 3;
     this.backMesh.position.z = -0.02; // the glow always sits on the cloud
@@ -284,6 +284,18 @@ export class Swirl {
     const nRings = Math.max(1, Math.min(MAX_RINGCOUNT, Math.round(p.ringCount ?? 3)));
     if (segs !== this.segs || nRings !== this.nRings) this.build(segs, nRings);
     this.preset = p;
+    // Dynamic vertices stay around the origin. A deliberately conservative
+    // fixed bound lets Three skip fully off-camera portals without waiting on
+    // an expensive per-frame bounding-sphere rebuild.
+    const boundRadius = Math.max(2, (p.radius ?? 4.4) * 2);
+    this.backGeo.boundingSphere = new THREE.Sphere(
+      new THREE.Vector3(),
+      boundRadius,
+    );
+    this.addGeo.boundingSphere = new THREE.Sphere(
+      new THREE.Vector3(),
+      boundRadius,
+    );
     this.dirty = true; // repaint once even while frozen — edits must show
     for (let i = 0; i < 6; i++) {
       this.warm[i].setHex((p[`warm${PAL_KEYS[i]}` as keyof SwirlPreset] as number) ?? PAL_DEF_WARM[i]);

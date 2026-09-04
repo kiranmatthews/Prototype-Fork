@@ -581,6 +581,13 @@ export interface Checkpoint {
   savedPoints: number;
 }
 
+interface BonusCourseRoute {
+  points: THREE.Vector3[];
+  arc: number[];
+  startS: number;
+  endS: number;
+}
+
 // ---- CUSTOM LEVEL: a data-driven course the in-game editor builds ----------
 // Every component maps onto an existing primitive. Positions are centers
 // (except where noted); pits are simply where you DON'T put floor — anything
@@ -3039,14 +3046,22 @@ export class Level {
     targetId: string;
     box: THREE.Box3;
     x: number;
-    visual: THREE.Group;
     swirl: Swirl;
   }[] = [];
+  private campaignPortalAwardMeshes: Record<
+    "crystal" | "boxGem" | "comboGem" | "timeRelic",
+    THREE.InstancedMesh
+  > | null = null;
+  private campaignPortalAwardMatrices = new Map<
+    string,
+    Record<"crystal" | "boxGem" | "comboGem" | "timeRelic", THREE.Matrix4>
+  >();
   private bonusPlatform: {
     group: THREE.Group;
     box: THREE.Box3;
     returnPoint: THREE.Vector3;
     locked: boolean;
+    laneFraction: number;
   } | null = null;
   /** Main-level tally extension supplied by its linked bonus stage. */
   bonusCrateTotal = 0;
@@ -6091,6 +6106,35 @@ export class Level {
     return null;
   }
 
+  setCampaignPortalProgress(
+    progressAt: (levelId: string) => {
+      crystal: boolean;
+      boxGem: boolean;
+      comboGem: boolean;
+      timeRelic: boolean;
+    } | null,
+  ): void {
+    const meshes = this.campaignPortalAwardMeshes;
+    if (!meshes) return;
+    const counts = { crystal: 0, boxGem: 0, comboGem: 0, timeRelic: 0 };
+    for (const portal of this.campaignPortals) {
+      const progress = progressAt(portal.targetId);
+      const matrices = this.campaignPortalAwardMatrices.get(portal.targetId);
+      if (!progress || !matrices) continue;
+      for (const kind of Object.keys(counts) as (keyof typeof counts)[]) {
+        if (!progress[kind]) continue;
+        meshes[kind].setMatrixAt(counts[kind]++, matrices[kind]);
+      }
+    }
+    for (const kind of Object.keys(counts) as (keyof typeof counts)[]) {
+      const mesh = meshes[kind];
+      mesh.count = counts[kind];
+      mesh.visible = counts[kind] > 0;
+      mesh.instanceMatrix.needsUpdate = true;
+      mesh.computeBoundingSphere();
+    }
+  }
+
   bonusPlatformAt(position: THREE.Vector3): boolean {
     const platform = this.bonusPlatform;
     return !!platform && !platform.locked && platform.box.containsPoint(position);
@@ -6098,6 +6142,22 @@ export class Level {
 
   bonusReturnPoint(): THREE.Vector3 {
     return this.bonusPlatform?.returnPoint.clone() ?? this.spawnPos.clone();
+  }
+
+  get bonusPlatformDiagnostics(): {
+    x: number;
+    y: number;
+    z: number;
+    laneFraction: number;
+  } | null {
+    const platform = this.bonusPlatform;
+    if (!platform) return null;
+    return {
+      x: platform.group.position.x,
+      y: platform.group.position.y,
+      z: platform.group.position.z,
+      laneFraction: platform.laneFraction,
+    };
   }
 
   setBonusPlatformLocked(locked: boolean): void {
@@ -6549,7 +6609,7 @@ export class Level {
   }
 
   update(dt: number): void {
-    this.updateCampaignPortalVisibility();
+    this.updateCampaignPortalAnimation();
     this.updateVfx(dt);
     this.islandShoreFoam?.update(dt);
     for (const gate of this.trickGates) {
@@ -9263,29 +9323,173 @@ export class Level {
     this.crystal(x, y + 0.65, z);
   }
 
+  private bonusCourseRoute(): BonusCourseRoute | null {
+    const gate = this.gateSpec;
+    if (!gate) return null;
+    const source = this.lanePts.length >= 2
+      ? this.lanePts.map((point) => new THREE.Vector3(point.x, point.y, point.z))
+      : [
+          this.spawnPos.clone(),
+          ...this.checkpoints.map((checkpoint) => checkpoint.spawnPos.clone()),
+          new THREE.Vector3(gate.x, gate.y, gate.z),
+        ];
+    const points = source.filter(
+      (point, index) => index === 0 || point.distanceToSquared(source[index - 1]) > 1e-4,
+    );
+    if (points.length < 2) return null;
+    const arc = [0];
+    for (let index = 1; index < points.length; index++)
+      arc.push(arc[index - 1] + points[index].distanceTo(points[index - 1]));
+
+    const project = (target: THREE.Vector3): number => {
+      let bestDistance = Infinity;
+      let bestS = 0;
+      const closest = new THREE.Vector3();
+      for (let index = 0; index < points.length - 1; index++) {
+        const segment = points[index + 1].clone().sub(points[index]);
+        const lengthSq = segment.lengthSq();
+        if (lengthSq < 1e-6) continue;
+        const t = THREE.MathUtils.clamp(
+          target.clone().sub(points[index]).dot(segment) / lengthSq,
+          0,
+          1,
+        );
+        closest.copy(points[index]).addScaledVector(segment, t);
+        const distance = closest.distanceToSquared(target);
+        if (distance >= bestDistance) continue;
+        bestDistance = distance;
+        bestS = THREE.MathUtils.lerp(arc[index], arc[index + 1], t);
+      }
+      return bestS;
+    };
+    let startS = project(this.spawnPos);
+    let endS = project(new THREE.Vector3(gate.x, gate.y, gate.z));
+    if (Math.abs(endS - startS) < 4) {
+      startS = 0;
+      endS = arc[arc.length - 1];
+    }
+    return { points, arc, startS, endS };
+  }
+
+  private sampleBonusRoute(
+    route: BonusCourseRoute,
+    s: number,
+  ): { point: THREE.Vector3; forward: THREE.Vector3 } {
+    const clamped = THREE.MathUtils.clamp(s, 0, route.arc[route.arc.length - 1]);
+    let index = route.arc.length - 2;
+    for (let candidate = 0; candidate < route.arc.length - 1; candidate++) {
+      if (clamped <= route.arc[candidate + 1]) {
+        index = candidate;
+        break;
+      }
+    }
+    const span = Math.max(1e-6, route.arc[index + 1] - route.arc[index]);
+    const t = (clamped - route.arc[index]) / span;
+    const point = route.points[index].clone().lerp(route.points[index + 1], t);
+    const direction = Math.sign(route.endS - route.startS) || 1;
+    const forward = route.points[index + 1].clone().sub(route.points[index]);
+    forward.y = 0;
+    if (forward.lengthSq() < 1e-6) forward.set(0, 0, -1);
+    else forward.normalize();
+    forward.multiplyScalar(direction);
+    return { point, forward };
+  }
+
+  private bonusRouteGroundY(x: number, z: number, referenceY: number): number | null {
+    const ray = new THREE.Raycaster(
+      new THREE.Vector3(x, referenceY + 40, z),
+      new THREE.Vector3(0, -1, 0),
+      0,
+      80,
+    );
+    const hits = ray.intersectObjects(this.groundMeshes, false);
+    let best: number | null = null;
+    let bestDistance = 32;
+    for (const hit of hits) {
+      const distance = Math.abs(hit.point.y - referenceY);
+      if (distance >= bestDistance) continue;
+      best = hit.point.y;
+      bestDistance = distance;
+    }
+    return best;
+  }
+
+  private bonusSiteClear(x: number, y: number, z: number): boolean {
+    const feet = new THREE.Vector3(x, y + 0.1, z);
+    for (const box of this.walls)
+      if (box.containsPoint(feet)) return false;
+    // Coarse gap volumes often meet the edge of their support deck. Reject a
+    // site only when the platform centre itself is lethal; the new platform
+    // is valid support over an adjacent edge.
+    for (const box of [...this.pitBoxes, ...this.tumbleBoxes])
+      if (box.containsPoint(feet)) return false;
+    for (const entity of [
+      ...this.crates,
+      ...this.checkpoints,
+      ...this.enemies,
+    ])
+      if (entity.box.distanceToPoint(feet) < 0.8) return false;
+    for (const pickup of [this.crystalPickup, this.clockPickup, this.comboOrb])
+      if (pickup && pickup.box.distanceToPoint(feet) < 0.8) return false;
+    return true;
+  }
+
   private placeDefaultBonusPlatform(): void {
     this.root.updateMatrixWorld(true);
-    const lane = this.laneDirAt(
-      this.spawnPos.x,
-      this.spawnPos.y,
-      this.spawnPos.z,
-    ) ?? { x: 0, z: -1 };
-    const length = Math.hypot(lane.x, lane.z) || 1;
-    const fx = lane.x / length;
-    const fz = lane.z / length;
-    const rx = -fz;
-    const rz = fx;
-    // Behind and just off the spawn line: run-mode activators live five metres
-    // forward, so unlocking the stopwatch can never accidentally enter Bonus.
-    let x = this.spawnPos.x - fx * 2.4 + rx * 2.0;
-    let z = this.spawnPos.z - fz * 2.4 + rz * 2.0;
-    let deckY = this.nearbyFloorY(x, z, this.spawnPos.y - 0.1);
-    if (deckY === null) {
-      x = this.spawnPos.x - fx * 3.0;
-      z = this.spawnPos.z - fz * 3.0;
-      deckY = this.nearbyFloorY(x, z, this.spawnPos.y - 0.1);
+    const route = this.bonusCourseRoute();
+    if (!route) return;
+    const courseLength = Math.abs(route.endS - route.startS);
+    const courseDirection = Math.sign(route.endS - route.startS) || 1;
+    const searchLimit = Math.min(40, courseLength * 0.1);
+    const alongOffsets = [0];
+    for (let distance = 4; distance <= searchLimit; distance += 4)
+      alongOffsets.push(-distance, distance);
+    const lateralOffsets = [2.7, -2.7, 2.2, -2.2, 0];
+    let placement: {
+      x: number;
+      z: number;
+      deckY: number;
+      s: number;
+      laneFraction: number;
+      lateral: number;
+    } | null = null;
+    for (const along of alongOffsets) {
+      const courseDistance = THREE.MathUtils.clamp(
+        courseLength * 0.5 + along,
+        0,
+        courseLength,
+      );
+      const s = route.startS + courseDirection * courseDistance;
+      const sample = this.sampleBonusRoute(route, s);
+      const deckY = this.bonusRouteGroundY(
+        sample.point.x,
+        sample.point.z,
+        sample.point.y,
+      );
+      if (deckY === null) continue;
+      const rightX = -sample.forward.z;
+      const rightZ = sample.forward.x;
+      for (const lateral of lateralOffsets) {
+        const x = sample.point.x + rightX * lateral;
+        const z = sample.point.z + rightZ * lateral;
+        if (!this.bonusSiteClear(x, deckY, z)) continue;
+        placement = {
+          x,
+          z,
+          deckY,
+          s,
+          laneFraction: courseLength > 0 ? courseDistance / courseLength : 0.5,
+          lateral,
+        };
+        break;
+      }
+      if (placement) break;
     }
-    deckY ??= this.spawnPos.y - 0.1;
+    if (!placement) {
+      console.warn(`[campaign] no supported midpoint bonus site in ${this.name}`);
+      return;
+    }
+    const { x, z, deckY } = placement;
 
     const group = new THREE.Group();
     group.name = "bonus platform";
@@ -9330,23 +9534,27 @@ export class Level {
     label.position.set(0, 2.35, 0);
     group.add(label);
     this.root.add(group);
-    const returnX = x + fx * 2.05;
-    const returnZ = z + fz * 2.05;
-    const returnDeckY = this.nearbyFloorY(
+    const returnDistance = Math.abs(placement.lateral) > 0.1 ? 2.4 : 3.4;
+    const returnSample = this.sampleBonusRoute(
+      route,
+      placement.s + courseDirection * returnDistance,
+    );
+    const returnX = returnSample.point.x;
+    const returnZ = returnSample.point.z;
+    const returnDeckY = this.bonusRouteGroundY(
       returnX,
       returnZ,
-      this.spawnPos.y - 0.1,
-    );
+      returnSample.point.y,
+    ) ?? deckY;
     this.bonusPlatform = {
       group,
       box: new THREE.Box3().setFromCenterAndSize(
         new THREE.Vector3(x, deckY + 0.42, z),
         new THREE.Vector3(3.1, 1.25, 3.1),
       ),
-      returnPoint: returnDeckY === null
-        ? this.spawnPos.clone()
-        : new THREE.Vector3(returnX, returnDeckY + 0.1, returnZ),
+      returnPoint: new THREE.Vector3(returnX, returnDeckY + 0.1, returnZ),
       locked: false,
+      laneFraction: placement.laneFraction,
     };
     this.bonusCrateTotal = BONUS_CRATE_COUNT;
   }
@@ -9431,9 +9639,85 @@ export class Level {
     this.currentSpawn.copy(this.spawnPos);
 
     const RS = 3.35;
-    const portalPreset = { ...SWIRL_PRESETS.warpPortal, billboard: false };
+    // Preserve all five rings but use the swirl renderer's intended PS1
+    // segment budget. Far portals hold a complete frame instead of vanishing.
+    const portalPreset = {
+      ...SWIRL_PRESETS.warpPortal,
+      segs: 24,
+      billboard: false,
+    };
     const spacing = 12.5;
     const firstX = -((CAMPAIGN_LEVELS.length - 1) * spacing) / 2;
+
+    // Four instanced trophy rails cover every gate in four draw calls total.
+    // Dark sockets stay visible so missing awards read as intentional slots.
+    const awardCapacity = CAMPAIGN_LEVELS.length;
+    const makeAwardBatch = (
+      geometry: THREE.BufferGeometry,
+      color: number,
+      emissive: number,
+    ): THREE.InstancedMesh => {
+      const mesh = new THREE.InstancedMesh(
+        geometry,
+        new THREE.MeshPhongMaterial({
+          color,
+          emissive,
+          shininess: 72,
+          flatShading: true,
+        }),
+        awardCapacity,
+      );
+      mesh.count = 0;
+      mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
+      mesh.userData.noShadow = true;
+      this.root.add(mesh);
+      return mesh;
+    };
+    this.campaignPortalAwardMeshes = {
+      crystal: makeAwardBatch(
+        new THREE.OctahedronGeometry(0.43, 0),
+        0xd66cff,
+        0x4e164f,
+      ),
+      boxGem: makeAwardBatch(
+        new THREE.OctahedronGeometry(0.42, 0),
+        0xe8f7ff,
+        0x39566c,
+      ),
+      comboGem: makeAwardBatch(
+        new THREE.OctahedronGeometry(0.42, 0),
+        COMBO_GEM_TINT,
+        0x164c2a,
+      ),
+      timeRelic: makeAwardBatch(
+        new THREE.TorusGeometry(0.31, 0.105, 6, 12),
+        0x64b9ff,
+        0x193f73,
+      ),
+    };
+    const sockets = new THREE.InstancedMesh(
+      new THREE.CylinderGeometry(0.43, 0.43, 0.12, 10),
+      new THREE.MeshLambertMaterial({
+        color: 0x20283b,
+        emissive: 0x080b12,
+      }),
+      awardCapacity * 4,
+    );
+    sockets.instanceMatrix.setUsage(THREE.StaticDrawUsage);
+    sockets.userData.noShadow = true;
+    this.root.add(sockets);
+    const awardKinds = [
+      "crystal",
+      "boxGem",
+      "comboGem",
+      "timeRelic",
+    ] as const;
+    const awardX = [-2.05, -0.69, 0.69, 2.05] as const;
+    const awardRotation = new THREE.Quaternion();
+    const socketRotation = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(Math.PI / 2, 0, 0),
+    );
+    let socketIndex = 0;
     CAMPAIGN_LEVELS.forEach((destination, i) => {
       const gx = firstX + i * spacing;
       const gz = -10.8;
@@ -9483,10 +9767,38 @@ export class Level {
       const label = this.worldRooLabel(destination.name, 9.7);
       label.position.set(0, 8.45, 0.1);
       gate.add(label);
+      gate.updateMatrix();
+      const awardMatrices = {} as Record<
+        (typeof awardKinds)[number],
+        THREE.Matrix4
+      >;
+      for (let award = 0; award < awardKinds.length; award++) {
+        const socketLocal = new THREE.Matrix4().compose(
+          new THREE.Vector3(awardX[award], 0.88, 2.76),
+          socketRotation,
+          new THREE.Vector3(1, 1, 1),
+        );
+        sockets.setMatrixAt(
+          socketIndex++,
+          gate.matrix.clone().multiply(socketLocal),
+        );
+        const kind = awardKinds[award];
+        const scale = kind === "crystal"
+          ? new THREE.Vector3(0.78, 1.35, 0.78)
+          : kind === "timeRelic"
+            ? new THREE.Vector3(1.05, 1.18, 1.05)
+            : new THREE.Vector3(1.05, 0.92, 1.05);
+        const awardLocal = new THREE.Matrix4().compose(
+          new THREE.Vector3(awardX[award], 1.08, 2.88),
+          awardRotation,
+          scale,
+        );
+        awardMatrices[kind] = gate.matrix.clone().multiply(awardLocal);
+      }
+      this.campaignPortalAwardMatrices.set(destination.levelId, awardMatrices);
       this.campaignPortals.push({
         targetId: destination.levelId,
         x: gx,
-        visual: gate,
         swirl: sw,
         box: new THREE.Box3().setFromCenterAndSize(
           new THREE.Vector3(gx, 3.5, gz + 0.25),
@@ -9494,17 +9806,24 @@ export class Level {
         ),
       });
     });
-    this.updateCampaignPortalVisibility(this.spawnPos.x);
+    sockets.count = socketIndex;
+    sockets.instanceMatrix.needsUpdate = true;
+    sockets.computeBoundingSphere();
+    this.setCampaignPortalProgress(() => null);
+    this.updateCampaignPortalAnimation(this.spawnPos.x);
   }
 
-  private updateCampaignPortalVisibility(playerX = this.playerPos.x): void {
-    // A side-on camera can never see the full 112 m gallery. Keep a generous
-    // two-portal margin so gates are live before they approach either edge.
-    const range = 24.5;
+  private updateCampaignPortalAnimation(playerX = this.playerPos.x): void {
+    // Nothing disappears: hardware, labels and a fully painted portal frame
+    // remain renderable. Only distant vertex deformation sleeps, with
+    // hysteresis so walking around the threshold cannot flicker the workload.
     for (const portal of this.campaignPortals) {
-      const visible = Math.abs(portal.x - playerX) <= range;
-      portal.visual.visible = visible;
-      portal.swirl.group.visible = visible;
+      const distance = Math.abs(portal.x - playerX);
+      if (portal.swirl.paused) {
+        if (distance < 30) portal.swirl.paused = false;
+      } else if (distance > 38) {
+        portal.swirl.paused = true;
+      }
     }
   }
 

@@ -87,4 +87,21 @@ const exhaustedReload = new campaign.CampaignStore().load(2);
 assert.equal(exhaustedReload?.lives, 4, "an exhausted save did not recover to four lives");
 assert.equal(exhaustedReload?.fruit, 0, "an exhausted save did not clear fruit");
 
+assert.deepEqual(
+  campaign.mergeCompletedBonusInventory(
+    { lives: 4, fruit: 95 },
+    { lives: 0, fruit: 10 },
+  ),
+  { lives: 5, fruit: 5 },
+  "bonus fruit crossing 100 did not bank a parent life",
+);
+assert.deepEqual(
+  campaign.mergeCompletedBonusInventory(
+    { lives: 7, fruit: 12 },
+    { lives: 2, fruit: 43 },
+  ),
+  { lives: 9, fruit: 55 },
+  "temporary bonus lives/fruit did not merge on completion",
+);
+
 console.log("Validated canonical portal order, save slots, inventory, progress totals, and run-mode unlocks.");

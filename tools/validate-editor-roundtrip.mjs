@@ -1483,6 +1483,8 @@ function assertTestEnemyReset(data, level) {
 
 try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
+  const { CAMPAIGN_LEVELS } = await server.ssrLoadModule("/src/campaign.ts");
+  const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
   const beachfrontCourseModule = await server.ssrLoadModule(
     "/src/beachfrontCourse.ts",
   );
@@ -1654,6 +1656,69 @@ try {
       ),
     );
   }
+
+  // Every mutable campaign destination needs a supported bonus platform near
+  // the middle of its actual route. Build against source entries when present
+  // and the published pack for editor-owned destinations such as Test Course.
+  for (const definition of CAMPAIGN_LEVELS) {
+    const source =
+      BUILTIN_LEVELS.find((entry) => entry.id === definition.levelId) ??
+      cases.find((entry) => entry.id === definition.levelId);
+    assert.ok(source, `campaign level ${definition.levelId} is unavailable`);
+    const campaignLevel = new Level(new THREE.Scene(), {
+      id: definition.levelId,
+      name: source.name,
+      data: source.data ? clone(source.data) : undefined,
+    });
+    try {
+      const placement = campaignLevel.bonusPlatformDiagnostics;
+      assert.ok(placement, `${definition.name} has no supported bonus platform`);
+      assert.ok(
+        placement.laneFraction >= 0.4 && placement.laneFraction <= 0.6,
+        `${definition.name} bonus is not near route midpoint (${placement.laneFraction})`,
+      );
+      assert.equal(
+        campaignLevel.bonusPlatformAt(campaignLevel.spawnPos),
+        false,
+        `${definition.name} still enters Bonus at spawn`,
+      );
+      assert.equal(
+        campaignLevel.bonusPlatformAt(campaignLevel.bonusReturnPoint()),
+        false,
+        `${definition.name} bonus return point immediately re-enters Bonus`,
+      );
+    } finally {
+      campaignLevel.dispose();
+    }
+  }
+  console.log("Validated midpoint bonus platforms across all canonical levels.");
+
+  const warpEntry = BUILTIN_LEVELS.find((entry) => entry.id === "warproom");
+  assert.ok(warpEntry, "warp room source entry is missing");
+  const warpLevel = new Level(new THREE.Scene(), warpEntry);
+  try {
+    assert.equal(warpLevel.campaignPortals.length, CAMPAIGN_LEVELS.length);
+    warpLevel.setCampaignPortalProgress((levelId) => levelId === "jungle"
+      ? { crystal: true, boxGem: true, comboGem: true, timeRelic: true }
+      : null);
+    for (const mesh of Object.values(warpLevel.campaignPortalAwardMeshes))
+      assert.equal(mesh.count, 1, "one earned Jungle award did not reach its gate batch");
+    warpLevel.playerPos.x = 54;
+    warpLevel.update(1 / 60);
+    assert.ok(
+      warpLevel.campaignPortals.every((portal) => portal.swirl.group.visible),
+      "portal LOD made a gate face disappear",
+    );
+    assert.ok(
+      warpLevel.campaignPortals.some((portal) => portal.swirl.paused) &&
+        warpLevel.campaignPortals.some((portal) => !portal.swirl.paused),
+      "portal LOD did not separate nearby animation from distant frozen frames",
+    );
+  } finally {
+    warpLevel.dispose();
+    swirls.clear();
+  }
+  console.log("Validated persistent warp gates, portal LOD, and instanced award rails.");
 
   // Sky Bridge's extreme sightline is identity-owned, not builder-owned: the
   // hand-built source and the published component-data override must both keep

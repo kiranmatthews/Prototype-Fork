@@ -1,7 +1,8 @@
 // Mobile touch controls: a translucent 8-way D-pad (left thumb), the PS
-// face-button diamond (right thumb), and quick vertical swipes on the right
-// half: upward for R2, downward for L2 inventory. Active only on coarse-pointer devices (or
-// force-enabled with '?touch' for testing) — desktop keeps keyboard/gamepad
+// face-button diamond (right thumb), a top-left pause button, and quick
+// vertical swipes on the right half: upward for R2, downward for L2 inventory.
+// Active only on coarse-pointer devices (or force-enabled with '?touch' for
+// testing) — desktop keeps keyboard/gamepad
 // untouched. The same class also flips the HUD into its compact phone layout
 // via the body.tc-on styles below.
 //
@@ -83,13 +84,14 @@ export class TouchControls {
     { btn: BtnDef['key'] | null; x0: number; y0: number; t0: number; swiped: boolean; onBtn: boolean }
   >();
 
-  constructor() {
+  constructor(private onPause: () => void = () => {}) {
     this.enabled = touchControlsRequested();
     if (!this.enabled) return;
     document.body.classList.add('tc-on');
     this.injectStyle();
     this.buildDpad();
     this.buildButtons();
+    this.buildPauseButton();
     // iOS zoom killers: pinch (gesture*) and double-tap (dblclick) must never
     // scale the game. touch-action handles modern Safari; these catch the rest.
     const kill = (e: Event): void => e.preventDefault();
@@ -105,6 +107,26 @@ export class TouchControls {
 
   inventoryActive(): boolean {
     return performance.now() < this.inventoryUntil;
+  }
+
+  private buildPauseButton(): void {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'tc-pause';
+    button.setAttribute('aria-label', 'Pause game');
+    button.innerHTML = '<span aria-hidden="true"></span><span aria-hidden="true"></span>';
+    button.addEventListener('pointerdown', () => button.classList.add('on'));
+    const release = (): void => button.classList.remove('on');
+    button.addEventListener('pointerup', release);
+    button.addEventListener('pointercancel', release);
+    button.addEventListener('pointerleave', release);
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      button.blur();
+      sfx.play('footstep1', 0.32, 2.5);
+      this.onPause();
+    });
+    document.body.appendChild(button);
   }
 
   // ---------- D-PAD (left zone) ----------
@@ -344,7 +366,31 @@ export class TouchControls {
         --tc-left-edge: max(12px, env(safe-area-inset-left));
         --tc-right-edge: max(12px, env(safe-area-inset-right));
         --tc-bottom-edge: max(10px, env(safe-area-inset-bottom));
+        --tc-top-edge: max(8px, env(safe-area-inset-top));
       }
+      .tc-pause {
+        position: fixed; z-index: 14;
+        top: var(--tc-top-edge); left: var(--tc-left-edge);
+        width: 48px; height: 48px; padding: 0;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        background: rgba(244, 238, 218, 0.34);
+        box-shadow: 0 2px 7px rgba(20, 14, 4, 0.22), inset 0 1px 0 rgba(255,255,255,.32);
+        -webkit-backdrop-filter: blur(5px) saturate(1.1);
+        backdrop-filter: blur(5px) saturate(1.1);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .tc-pause span {
+        display: block; width: 6px; height: 21px; border-radius: 2px;
+        background: rgba(48, 42, 31, 0.72);
+        box-shadow: inset 1px 1px 0 rgba(255,255,255,.25);
+      }
+      .tc-pause.on { transform: scale(.92); background: rgba(255,246,208,.68); }
+      body.game-shell-modal .tc-pause,
+      body.ed-active .tc-pause,
+      body.tc-on.tool-panel-open .tc-pause { display: none !important; }
       .tc-left { left: 0; width: 50vw; height: 52%; }
       .tc-right { right: 0; width: 50vw; height: 62%; }
       /* the two groups: identical footprint, identical height, identical
@@ -400,7 +446,7 @@ export class TouchControls {
       body.tc-on #app { touch-action: none; }
       body.tc-on .hud-tl {
         top: max(8px, env(safe-area-inset-top));
-        left: max(42px, calc(env(safe-area-inset-left) + 8px));
+        left: max(72px, calc(env(safe-area-inset-left) + 64px));
       }
       body.tc-on .hud-tr {
         top: max(8px, env(safe-area-inset-top));

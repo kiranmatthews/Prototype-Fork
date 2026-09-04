@@ -6,6 +6,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const text = (path) => readFile(`${root}${path}`, "utf8");
 
 const touch = await text("src/touch.ts");
+const input = await text("src/input.ts");
 const main = await text("src/main.ts");
 const hud = await text("src/gameHudSurface.ts");
 const ui = await text("src/ui.ts");
@@ -15,6 +16,12 @@ for (const contract of [
   "--tc-left-edge: max(12px, env(safe-area-inset-left))",
   "--tc-right-edge: max(12px, env(safe-area-inset-right))",
   "--tc-bottom-edge: max(10px, env(safe-area-inset-bottom))",
+  "--tc-top-edge: max(8px, env(safe-area-inset-top))",
+  "button.className = 'tc-pause'",
+  "button.setAttribute('aria-label', 'Pause game')",
+  "width: 48px; height: 48px",
+  "body.game-shell-modal .tc-pause",
+  "body.ed-active .tc-pause",
   "bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px)",
   "body.tc-on.tool-panel-open .tc-zone",
   "body.tc-on.side-panel-left-open .tc-left",
@@ -52,6 +59,8 @@ assert.match(
   "touch must bypass fixed-resolution Render targets",
 );
 assert.match(main, /ui\.setPresentationTools\(\[/);
+assert.match(input, /new TouchControls\(\(\) => \{[\s\S]{0,160}this\.pausePressed = true;/);
+assert.match(main, /if \(input\.pausePressed\)[\s\S]{0,120}gameFlow\.handlePauseToggle\(\)/);
 assert.match(main, /new MutationObserver\(syncToolPanelState\)/);
 assert.match(ui, /setPresentationTools\(/);
 assert.match(ui, /this\.rightSideWrap\.classList\.add\("collapsed"\)/);
@@ -126,6 +135,19 @@ const inset = landscapeLayout(844, 390, {
 assert.equal(inset.pad.left, 47);
 assert.equal(inset.cluster.left + inset.cluster.width, 844 - 21);
 assert.equal(inset.pad.top + inset.pad.height, 390 - 18);
+
+for (const [height, safeTop, safeLeft] of [[390, 0, 0], [375, 18, 21], [430, 47, 47]]) {
+  const top = Math.max(8, safeTop);
+  const pause = { left: Math.max(12, safeLeft), top, width: 48, height: 48 };
+  assert.ok(pause.left >= 0 && pause.left + pause.width <= 844);
+  assert.ok(pause.top >= safeTop && pause.top + pause.height <= height);
+}
+
+assert.match(
+  await text("src/gameFlowUI.ts"),
+  /orientation: landscape[\s\S]{0,500}grid-template-columns: minmax\(0, 1\.35fr\) minmax\(190px, \.65fr\)[\s\S]{0,500}min-height: 44px/,
+  "short landscape phones must keep pause actions in the first row",
+);
 
 console.log(
   "Validated mobile native-HUD/Render bypass, rotation-safe HUD texture allocation, safe-area touch geometry, life-ring clearance, and coordinated presentation tools.",

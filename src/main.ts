@@ -41,6 +41,7 @@ import {
   campaignLevelById,
   isCampaignLevel,
   loadGameAudioOptions,
+  mergeCompletedBonusInventory,
   saveGameAudioOptions,
   type GameAudioOptions,
 } from "./campaign";
@@ -1754,6 +1755,7 @@ player.respawn(level, true);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
 applyTheme();
 applyShadowFlags();
+syncCampaignPortalProgress();
 recorder.start(current.id, endlessDeathsOn); // the take always runs: level load -> now
 
 gameFlow = new GameFlowUI(
@@ -1828,6 +1830,11 @@ let runStartRewards = {
 let pendingCompletion:
   | { kind: "normal" | "time" | "bonus"; time: number }
   | null = null;
+
+function syncCampaignPortalProgress(): void {
+  if (current.id !== "warproom") return;
+  level.setCampaignPortalProgress((levelId) => campaign.levelProgress(levelId));
+}
 
 function adoptCommittedCampaignProgress(levelId: string): void {
   const progress = campaign.levelProgress(levelId);
@@ -1907,6 +1914,7 @@ function switchLevel(
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory);
   adoptCommittedCampaignProgress(entry.id);
+  syncCampaignPortalProgress();
   if (split2p && p2) {
     p2.enterLevel(entry.id);
     p2.respawn(level, true);
@@ -2047,6 +2055,7 @@ function discardSuspendedBonus(): void {
   current = session.parentEntry;
   loadedLevelId = current.id;
   player.bonusMode = false;
+  applyEndlessDeaths();
 }
 
 function quitCurrentLevel(): void {
@@ -2202,6 +2211,12 @@ function enterBonusRound(): void {
     player.respawn(level, true, true);
     player.bonusMode = true;
     player.hubMode = false;
+    // Crash-style bonus economy: the parent inventory is suspended. The
+    // bonus HUD starts at zero lives/fruit and banks its purse only on clear.
+    player.lives = 0;
+    player.fruit = 0;
+    player.endlessDeaths = false;
+    ui.setEndlessDeaths(false);
     player.bonusCrates = 0;
     applyRunModes();
     applyTheme();
@@ -2226,10 +2241,21 @@ function returnFromBonus(completed: boolean): void {
   const bonusLevel = level;
   if (completed) player.bankFlyingFruit();
   const bonusBoxes = completed ? Math.min(bonusLevel.totalCrates, player.cratesBroken) : 0;
+  const bonusLives = completed ? Math.max(0, player.lives) : 0;
+  const bonusFruit = completed ? Math.max(0, player.fruit) : 0;
+  const inventory = completed
+    ? mergeCompletedBonusInventory(
+        { lives: session.parentState.lives, fruit: session.parentState.fruit },
+        { lives: bonusLives, fruit: bonusFruit },
+      )
+    : { lives: session.parentState.lives, fruit: session.parentState.fruit };
+  const bonusLifeGain = completed
+    ? Math.max(0, inventory.lives - session.parentState.lives)
+    : 0;
   const state: PlayerRunState = {
     ...session.parentState,
-    lives: completed ? player.lives : session.parentState.lives,
-    fruit: completed ? player.fruit : session.parentState.fruit,
+    lives: inventory.lives,
+    fruit: inventory.fruit,
     bonusCrates: completed ? bonusBoxes : session.parentState.bonusCrates,
   };
   void gameFlow.transition(() => {
@@ -2246,6 +2272,7 @@ function returnFromBonus(completed: boolean): void {
     }
     player.resumeSuspendedLevel(level, session.returnPoint, state);
     player.hubMode = false;
+    applyEndlessDeaths();
     player.restoreIdleFruit(session.parentFruit);
     if (completed) {
       level.setBonusPlatformLocked(true);
@@ -2263,7 +2290,9 @@ function returnFromBonus(completed: boolean): void {
     ui.setHUD(currentHudState(), 0);
     ui.showMessage(
       completed ? "BONUS COMPLETE!" : "BONUS MISSED",
-      completed ? `${bonusBoxes} boxes banked` : "back to the bonus platform",
+      completed
+        ? `${bonusBoxes} boxes · +${bonusLifeGain} lives · +${bonusFruit} wumpa banked`
+        : "temporary rewards lost · back to the bonus platform",
       1900,
     );
     recorder.start(current.id, endlessDeathsOn);
@@ -4138,6 +4167,8 @@ function frame(nowMs: number): void {
     if (renderDiagnosticsProbe) {
       renderer.getDrawingBufferSize(renderDiagnosticsSize);
       renderDiagnosticsProbe.textContent = JSON.stringify({
+        levelId: current.id,
+        bonusPlatform: level.bonusPlatformDiagnostics,
         settings: renderQualitySettings.snapshot(),
         active: fixedResolutionActive(),
         sizes: renderQualitySizes,

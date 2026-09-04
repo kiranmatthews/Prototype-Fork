@@ -66,7 +66,11 @@ export class Input {
   // keyboard, no touch overlay, no listeners.
   constructor(private padOnly = false) {
     if (this.padOnly) return; // pad-only: polling does everything
-    this.touch = new TouchControls();
+    this.touch = new TouchControls(() => {
+      // Event-latched like keyboard pause: a quick tap between render polls
+      // cannot be missed by the fixed-step edge accumulator.
+      this.pausePressed = true;
+    });
     window.addEventListener('keydown', (e) => {
       // typing in a panel field (tuner numbers, editor coordinates) must not
       // drive the game — 'p' in an input used to pause, 'r' restarted…

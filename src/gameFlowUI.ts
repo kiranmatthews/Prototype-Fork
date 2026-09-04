@@ -1029,6 +1029,17 @@ export class GameFlowUI {
         .game-results-card { width: min(88vw, 540px); min-width: 0; margin: 0; padding: 19px 24px 22px; }
         .game-results-awards { margin: 8px 0; }
       }
+      @media (pointer: coarse) and (orientation: landscape) and (max-height: 560px) {
+        .game-shell-panel { padding: 8px max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left)); }
+        .game-pause-layout {
+          width: min(96vw, 920px); grid-template-columns: minmax(0, 1.35fr) minmax(190px, .65fr);
+          grid-template-rows: auto auto; gap: 9px;
+        }
+        .game-pause-preview, .game-pause-actions { width: auto; min-width: 0; }
+        .game-pause-actions { padding: 10px 14px 12px; }
+        .game-pause-actions .game-menu-button { min-height: 44px; padding: 4px 13px; font-size: clamp(20px, 5.5vh, 29px); }
+        .game-progress-card { grid-column: 1 / -1; width: auto; padding: 10px 16px 12px; }
+      }
       @media (prefers-reduced-motion: reduce) {
         .game-menu-button, .game-menu-button::before, .game-transition-curtain { transition-duration: .01ms !important; }
       }

@@ -91,6 +91,30 @@ export interface GameAudioOptions {
   musicMuted: boolean;
 }
 
+export interface CampaignInventory {
+  lives: number;
+  fruit: number;
+}
+
+/**
+ * Bonus inventory is a temporary purse. Only a completed bonus merges it
+ * into the parent run, including a 100-fruit rollover across the boundary.
+ */
+export function mergeCompletedBonusInventory(
+  parent: Readonly<CampaignInventory>,
+  bonus: Readonly<CampaignInventory>,
+): CampaignInventory {
+  const parentLives = Math.max(0, Math.floor(parent.lives));
+  const bonusLives = Math.max(0, Math.floor(bonus.lives));
+  const totalFruit =
+    Math.max(0, Math.floor(parent.fruit)) +
+    Math.max(0, Math.floor(bonus.fruit));
+  return {
+    lives: parentLives + bonusLives + Math.floor(totalFruit / 100),
+    fruit: totalFruit % 100,
+  };
+}
+
 const SAVES_KEY = "solProtoCampaignSavesV1";
 const OPTIONS_KEY = "solProtoGameOptionsV1";
 
