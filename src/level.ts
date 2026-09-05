@@ -43,7 +43,17 @@ import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy";
-import { CAMPAIGN_LEVELS, isCampaignLevel } from "./campaign";
+import {
+  CAMPAIGN_LEVELS,
+  isCampaignLevel,
+  type CampaignLevelProgress,
+} from "./campaign";
+import {
+  createCampaignWorldMap,
+  type CampaignMapPose,
+  type CampaignMapTravelSample,
+  type CampaignWorldMapRuntime,
+} from "./worldMap";
 import {
   createProceduralThornCluster,
   type ProceduralThornCluster,
@@ -2128,7 +2138,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
   { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
-  { id: "warproom", name: "The Warp Room" }, // five wormhole gates round a dais
+  { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
@@ -3087,6 +3097,7 @@ export class Level {
     string,
     Record<"crystal" | "boxGem" | "comboGem" | "timeRelic", THREE.Matrix4>
   >();
+  private campaignWorldMap: CampaignWorldMapRuntime | null = null;
   private bonusPlatform: {
     group: THREE.Group;
     box: THREE.Box3;
@@ -6185,7 +6196,55 @@ export class Level {
     return null;
   }
 
+  get isCampaignMap(): boolean {
+    return this.campaignWorldMap !== null;
+  }
+
+  campaignMapHas(progressKey: string): boolean {
+    return this.campaignWorldMap?.has(progressKey) ?? false;
+  }
+
+  campaignMapPose(progressKey: string): CampaignMapPose | null {
+    return this.campaignWorldMap?.pose(progressKey) ?? null;
+  }
+
+  campaignMapTravel(
+    fromProgressKey: string,
+    toProgressKey: string,
+    progress: number,
+  ): CampaignMapTravelSample | null {
+    return this.campaignWorldMap?.route(
+      fromProgressKey,
+      toProgressKey,
+      progress,
+    ) ?? null;
+  }
+
+  campaignMapNeighbor(
+    progressKey: string,
+    screenX: number,
+    screenY: number,
+    unlockedAt: (key: string) => boolean,
+  ): string | null {
+    return this.campaignWorldMap?.neighbor(
+      progressKey,
+      screenX,
+      screenY,
+      unlockedAt,
+    ) ?? null;
+  }
+
+  setCampaignMapProgress(
+    selectedKey: string,
+    progressAt: (levelId: string) => CampaignLevelProgress | null,
+    unlockedAt: (key: string) => boolean,
+  ): void {
+    this.campaignWorldMap?.sync(selectedKey, progressAt, unlockedAt);
+  }
+
   campaignPortalReturnPose(progressKey: string): CampaignPortalReturnPose | null {
+    const mapPose = this.campaignWorldMap?.pose(progressKey);
+    if (mapPose) return mapPose;
     const portal = this.campaignPortals.find(
       (candidate) => candidate.progressKey === progressKey,
     );
@@ -6237,6 +6296,17 @@ export class Level {
       timeRelic: boolean;
     } | null,
   ): void {
+    if (this.campaignWorldMap) {
+      this.campaignWorldMap.sync(
+        CAMPAIGN_LEVELS[0].progressKey,
+        (levelId) => {
+          const progress = progressAt(levelId);
+          return progress ? { cleared: false, ...progress } : null;
+        },
+        (key) => key === CAMPAIGN_LEVELS[0].progressKey,
+      );
+      return;
+    }
     const meshes = this.campaignPortalAwardMeshes;
     if (!meshes) return;
     const counts = { crystal: 0, boxGem: 0, comboGem: 0, timeRelic: 0 };
@@ -6733,6 +6803,7 @@ export class Level {
 
   update(dt: number): void {
     this.discardedBoards.update(dt, this);
+    this.campaignWorldMap?.update(dt);
     this.updateCampaignPortalAnimation();
     this.updateVfx(dt);
     this.islandShoreFoam?.update(dt);
@@ -9798,10 +9869,50 @@ export class Level {
     this.bonusCrateTotal = DEFAULT_BONUS_CRATE_COUNT;
   }
 
-  // THE WARP ROOM. A deliberately simple campaign hub: every canonical
-  // destination is one stable record in CAMPAIGN_LEVELS, rendered in a single
-  // readable row so reordering or replacing a course is a data edit.
+  // THE WORLD MAP. The public level id remains `warproom` so old saves and
+  // tools continue to resolve, but the runtime is a graph-driven island
+  // diorama rather than a free-roam portal gallery.
   private buildWarpRoom(): void {
+    this.skyPreset = "coast";
+    this.hudMode = "hub";
+    this.killY = -30;
+    this.finishZ = -1e9;
+    this.noFogLevel = false;
+    this.theme = {
+      skyTop: "#49a8cf",
+      skyBottom: "#d8f3dc",
+      sunColorHex: "#fff2bf",
+      sunU: 0.34,
+      sunV: 0.26,
+      stars: false,
+      fog: 0x9ddacb,
+      fogNear: 105,
+      fogFar: 310,
+      hemiSky: 0xb9eff0,
+      hemiGround: 0x6d8454,
+      hemiI: 1.34,
+      sunColor: 0xffdd9d,
+      sunI: 1.62,
+    };
+    const built = createCampaignWorldMap(this.root);
+    this.campaignWorldMap = built.runtime;
+    this.water = built.water;
+    this.groundMeshes.push(...built.groundMeshes);
+    const start = built.runtime.pose(CAMPAIGN_LEVELS[0].progressKey);
+    if (start) {
+      this.spawnPos.copy(start.position);
+      this.currentSpawn.copy(start.position);
+    }
+    this.lanePts = CAMPAIGN_LEVELS.map((destination) => ({
+      x: destination.mapPosition[0],
+      y: destination.mapPosition[1],
+      z: destination.mapPosition[2],
+    }));
+    this.measureLane();
+    return;
+
+    // Legacy gallery implementation retained below as migration-readable
+    // source until downstream tools stop naming its historical portal fields.
     this.skyPreset = "night";
     this.hudMode = "hub";
     this.killY = -30;

@@ -20,7 +20,70 @@ export interface CampaignLevelDefinition {
   name: string;
   /** Initial sapphire-style time relic target, in seconds. */
   relicTime: number;
+  /** Stable island identity used by the world-map camera and progress ledger. */
+  islandId: CampaignIslandId;
+  /** World-map hub position. Y is the character's supported feet height. */
+  mapPosition: readonly [number, number, number];
+  /** Progress keys that can reveal this hub. Empty means available at New Game. */
+  unlockAfter: readonly string[];
+  /** Branch joins may accept any cleared prerequisite; ordinary joins require all. */
+  unlockMode?: "all" | "any";
+  /** Boss hubs use a larger silhouette and island-end presentation. */
+  boss?: boolean;
 }
+
+export type CampaignIslandId = "motu-aroha" | "rangi-atoll";
+
+export interface CampaignIslandDefinition {
+  id: CampaignIslandId;
+  name: string;
+  subtitle: string;
+  centre: readonly [number, number, number];
+  levelKeys: readonly string[];
+}
+
+export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
+  {
+    id: "motu-aroha",
+    name: "Motu Aroha",
+    subtitle: "THE FIRST CURRENT",
+    centre: [-27, 0, 14],
+    levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "nightworks"],
+  },
+  {
+    id: "rangi-atoll",
+    name: "Rangi Atoll",
+    subtitle: "BEYOND THE REEF",
+    centre: [31, 0, 3],
+    levelKeys: ["beachside-run", "coastal", "island-hopper", "jungle-gate"],
+  },
+] as const;
+
+export type CampaignMapTravelStyle = "trail" | "boardslide";
+
+export interface CampaignMapEdgeDefinition {
+  from: string;
+  to: string;
+  travel: CampaignMapTravelStyle;
+  /** Optional authored lift at the route midpoint, in world metres. */
+  lift?: number;
+}
+
+/**
+ * The campaign route is deliberately independent from editor ordering. Edges
+ * are traversable in both directions once both endpoint hubs are unlocked.
+ */
+export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
+  { from: "jungle", to: "test-course", travel: "trail" },
+  { from: "test-course", to: "sky-bridge", travel: "trail", lift: 1.1 },
+  { from: "test-course", to: "slipstream", travel: "trail" },
+  { from: "sky-bridge", to: "nightworks", travel: "trail" },
+  { from: "slipstream", to: "nightworks", travel: "boardslide", lift: 2.2 },
+  { from: "nightworks", to: "beachside-run", travel: "boardslide", lift: 5.8 },
+  { from: "beachside-run", to: "coastal", travel: "trail" },
+  { from: "coastal", to: "island-hopper", travel: "boardslide", lift: 2.4 },
+  { from: "island-hopper", to: "jungle-gate", travel: "trail", lift: 1.2 },
+] as const;
 
 export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
   {
@@ -28,6 +91,9 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "jungle",
     name: "Jungle Ruins",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "motu-aroha",
+    mapPosition: [-45, 1.35, 27],
+    unlockAfter: [],
   },
   {
     progressKey: "test-course",
@@ -35,48 +101,75 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     fallbackLevelId: "flats",
     name: "Test Course",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "motu-aroha",
+    mapPosition: [-30, 1.75, 18],
+    unlockAfter: ["jungle"],
   },
   {
     progressKey: "sky-bridge",
     levelId: "sky",
     name: "Sky Bridge",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "motu-aroha",
+    mapPosition: [-14, 3.1, 28],
+    unlockAfter: ["test-course"],
   },
   {
     progressKey: "slipstream",
     levelId: "slip",
     name: "Slipstream",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "motu-aroha",
+    mapPosition: [-13, 2.55, 7],
+    unlockAfter: ["test-course"],
   },
   {
     progressKey: "nightworks",
     levelId: "dark",
     name: "Nightworks",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "motu-aroha",
+    mapPosition: [-29, 5.25, -3],
+    unlockAfter: ["sky-bridge", "slipstream"],
+    unlockMode: "any",
+    boss: true,
   },
   {
     progressKey: "beachside-run",
     levelId: "beachfront",
     name: "Beachside Run",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "rangi-atoll",
+    mapPosition: [13, 1.35, 2],
+    unlockAfter: ["nightworks"],
   },
   {
     progressKey: "coastal",
     levelId: "coastal-street-run",
     name: "Coastal",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "rangi-atoll",
+    mapPosition: [27, 1.75, 16],
+    unlockAfter: ["beachside-run"],
   },
   {
     progressKey: "island-hopper",
     levelId: "island-hopper",
     name: "Island Hopper",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "rangi-atoll",
+    mapPosition: [46, 3.05, 5],
+    unlockAfter: ["coastal"],
   },
   {
     progressKey: "jungle-gate",
     levelId: "jungle-gate-run",
     name: "Jungle Gate",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "rangi-atoll",
+    mapPosition: [32, 5.1, -13],
+    unlockAfter: ["island-hopper"],
+    boss: true,
   },
 ] as const;
 
@@ -538,7 +631,35 @@ export class CampaignStore {
 
   runModesUnlocked(levelId: string): boolean {
     const progress = this.levelProgress(levelId);
-    return progress ? progress.cleared && progress.crystal : false;
+    return progress?.cleared === true;
+  }
+
+  /** True when the active save has satisfied this hub's graph prerequisites. */
+  levelUnlocked(levelIdOrKey: string): boolean {
+    const definition =
+      campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
+    if (!definition || !this.activeValue) return false;
+    if (definition.unlockAfter.length === 0) return true;
+    const cleared = definition.unlockAfter.map(
+      (key) => this.activeValue?.levels[key]?.cleared === true,
+    );
+    return definition.unlockMode === "any"
+      ? cleared.some(Boolean)
+      : cleared.every(Boolean);
+  }
+
+  /**
+   * New Game starts at the first hub. Continue starts at the furthest cleared
+   * hub, or the furthest currently unlocked hub when the frontier is new.
+   */
+  recommendedMapLevelKey(): string {
+    let candidate = CAMPAIGN_LEVELS[0].progressKey;
+    for (const definition of CAMPAIGN_LEVELS) {
+      if (!this.levelUnlocked(definition.progressKey)) continue;
+      candidate = definition.progressKey;
+      if (!this.activeValue?.levels[definition.progressKey]?.cleared) break;
+    }
+    return candidate;
   }
 
   commitClear(

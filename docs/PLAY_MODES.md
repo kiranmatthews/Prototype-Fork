@@ -1,6 +1,7 @@
 # Modern and Classic play modes
 
-Open **Warp Room pause → Options → Play mode** and activate the row to switch.
+Choose **Options** directly from the Island World Map and activate **Play mode**
+to switch.
 The choice applies immediately, is remembered on this browser, and uses the
 same `solProtoEndlessDeaths` preference as the debug menu. It is global across
 save slots; a fresh browser defaults to Classic.
@@ -11,7 +12,7 @@ save slots; a fresh browser defaults to Classic.
 - **Classic:** the existing lives/fruit economy and Game Over rules, including
   the playable zero-reserve-life attempt.
 
-Changing the choice in the Warp Room does not reset position, inventory or
+Changing the choice on the Island World Map does not reset position, inventory or
 campaign progress. A course's pause options keep the choice unavailable, and
 the runtime callback also rejects changes outside the hub. Debug playtests
 retain their existing mid-course toggle/reset behavior. Bonus stages keep

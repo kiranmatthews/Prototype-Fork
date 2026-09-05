@@ -19,6 +19,7 @@ export type GameFlowSurfaceScreen =
   | "confirm-load"
   | "confirm-quit-main"
   | "pause"
+  | "progress"
   | "options"
   | "gameover"
   | "results";
@@ -154,6 +155,10 @@ const TEXT_SELECTOR = [
   ".game-progress-grid strong",
   ".game-progress-grid small",
   ".game-progress-cleared",
+  ".game-progress-island-name",
+  ".game-progress-level-name",
+  ".game-progress-level-rewards",
+  ".game-progress-level-time",
   ".game-over-title",
   ".game-over-question",
   ".game-results-title",

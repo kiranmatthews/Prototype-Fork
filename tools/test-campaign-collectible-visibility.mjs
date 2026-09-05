@@ -268,8 +268,8 @@ const spawnComboGemText = classMethod(
 assert.doesNotMatch(spawnComboGemText, /committed|comboGemEarned|timeRelic/);
 assert.match(
   campaignSource,
-  /runModesUnlocked\(levelId: string\): boolean \{[\s\S]{0,180}progress\.cleared && progress\.crystal/,
-  "earned combo/time awards must not disable their replay objectives",
+  /runModesUnlocked\(levelId: string\): boolean \{[\s\S]{0,180}progress\?\.cleared === true/,
+  "a normal clear must unlock replay objectives without consuming them",
 );
 
 console.log(

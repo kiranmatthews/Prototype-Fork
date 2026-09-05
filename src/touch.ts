@@ -86,6 +86,8 @@ export class TouchControls {
   private arrowEls!: Record<'up' | 'down' | 'left' | 'right', HTMLElement>;
   private btnEls = new Map<string, HTMLElement>();
   private prevBtn = { x: false, o: false, sq: false, tri: false };
+  private pressedBtn = { x: false, o: false, sq: false, tri: false };
+  private directionTap: [number, number] | null = null;
   // every live right-hand pointer: which button it holds + swipe bookkeeping
   private rightTouches = new Map<
     number,
@@ -116,6 +118,20 @@ export class TouchControls {
 
   inventoryActive(): boolean {
     return performance.now() < this.inventoryUntil;
+  }
+
+  /** Preserve a quick tap even when pointer down/up both land between RAFs. */
+  consumeButtonPress(key: BtnDef['key']): boolean {
+    const pressed = this.pressedBtn[key];
+    this.pressedBtn[key] = false;
+    return pressed;
+  }
+
+  /** One discrete map-navigation pulse from the most recent D-pad sector. */
+  consumeDirectionTap(): [number, number] | null {
+    const tap = this.directionTap;
+    this.directionTap = null;
+    return tap;
   }
 
   // ---------- GENTLE LOOK (free upper screen) ----------
@@ -300,6 +316,7 @@ export class TouchControls {
     if (idx !== this.dirIdx) {
       this.dirIdx = idx;
       [this.moveX, this.moveY] = SECTOR_XY[idx];
+      this.directionTap = [this.moveX, this.moveY];
       this.paintArrows();
     }
   }
@@ -418,7 +435,10 @@ export class TouchControls {
     for (const b of BTNS) {
       this.btnEls.get(b.key)!.classList.toggle('on', held[b.key]);
       // audio tick on the press edge only — release stays silent
-      if (held[b.key] && !this.prevBtn[b.key]) sfx.play('footstep1', 0.28, b.tickRate);
+      if (held[b.key] && !this.prevBtn[b.key]) {
+        this.pressedBtn[b.key] = true;
+        sfx.play('footstep1', 0.28, b.tickRate);
+      }
     }
     this.prevBtn = held;
     this.jumpHeld = held.x;

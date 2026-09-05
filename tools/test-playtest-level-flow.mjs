@@ -72,7 +72,9 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
   };
   clear(
     player, { runMode, totalCrates: totalBoxes }, current,
-    (id) => canonical && id === "jungle" ? { name: "Canonical Jungle Name" } : null,
+    (id) => canonical && id === "jungle"
+      ? { name: "Canonical Jungle Name", relicTime: 60 }
+      : null,
     {
       levelProgress(id) { calls.progress.push(id); return before; },
       commitClear(id, rewards) { calls.commits.push({ id, rewards }); },
@@ -107,6 +109,8 @@ assert.equal(alternate.result.boxGem, false);
 const canonical = finish({ canonical: true });
 assert.equal(canonical.result.levelName, "Canonical Jungle Name");
 assert.equal(canonical.result.firstClear, true);
+assert.equal(canonical.result.timeTrialUnlocked, true);
+assert.equal(canonical.result.relicTarget, 60);
 assert.deepEqual(canonical.calls.progress, ["jungle"]);
 assert.deepEqual(canonical.calls.commits, [{
   id: "jungle", rewards: { crystal: true, boxGem: true, comboGem: true },

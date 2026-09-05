@@ -222,6 +222,8 @@ function resultState(timeTrial) {
         boxGem: false,
         comboGem: false,
         firstClear: true,
+        timeTrialUnlocked: true,
+        relicTarget: 60,
       };
 }
 
@@ -269,6 +271,10 @@ try {
     1,
     "normal results must contain only the box tally cell",
   );
+  const unlockedTrial = findClass(normalPanel, "game-results-trial-unlocked");
+  assert.ok(unlockedTrial, "a cleared campaign level did not reveal time-trial UI");
+  assert.match(unlockedTrial.innerHTML, /TIME TRIAL UNLOCKED/);
+  assert.match(unlockedTrial.innerHTML, /TARGET 1:00\.00/);
   const normalAwards = findClass(normalPanel, "game-results-awards");
   assert.equal(normalAwards, null, "earned prizes must be actual 3D assets, not symbol UI");
   assert.match(findClass(normalPanel, "game-results-card").getAttribute("aria-label"), /Crystal/);

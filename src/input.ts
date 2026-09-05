@@ -38,6 +38,14 @@ export class Input {
   transferPressed = false;
   restartPressed = false;
   pausePressed = false;
+  // World-map-only semantic edges. Gameplay ignores them; keeping them here
+  // lets keyboard taps survive a render frame exactly like jump/pause edges.
+  confirmPressed = false;
+  mapProgressPressed = false;
+  mapSaveLoadPressed = false;
+  mapQuitPressed = false;
+  mapDirectionX = 0;
+  mapDirectionY = 0;
 
   gamepadName = 'no controller';
 
@@ -95,6 +103,10 @@ export class Input {
         if (e.code === 'KeyT') this.transferPressed = true;
         if (e.code === 'KeyR') this.restartPressed = true;
         if (e.code === 'KeyP' || e.code === 'Escape') this.pausePressed = true;
+        if (e.code === 'Enter') this.confirmPressed = true;
+        if (e.code === 'KeyI') this.mapProgressPressed = true;
+        if (e.code === 'KeyL') this.mapSaveLoadPressed = true;
+        if (e.code === 'KeyQ') this.mapQuitPressed = true;
       }
     });
     window.addEventListener('keyup', (e) => {
@@ -127,6 +139,10 @@ export class Input {
     let inventory = !solo && k.has('KeyI');
     let restart = !solo && k.has('KeyR');
     let pause = !solo && (k.has('KeyP') || k.has('Escape'));
+    let touchJumpPressed = false;
+    let touchGrindPressed = false;
+    let touchSpinPressed = false;
+    let touchGrabPressed = false;
 
     const pad = this.pollGamepad();
     if (pad) {
@@ -179,6 +195,12 @@ export class Input {
       grind = grind || tc.grindHeld;
       transfer = transfer || tc.transferActive(); // R2 = the upward swipe
       inventory = inventory || tc.inventoryActive(); // L2 = the downward swipe
+      touchJumpPressed = tc.consumeButtonPress('x');
+      touchGrabPressed = tc.consumeButtonPress('o');
+      touchSpinPressed = tc.consumeButtonPress('sq');
+      touchGrindPressed = tc.consumeButtonPress('tri');
+      const mapDirection = tc.consumeDirectionTap();
+      if (mapDirection) [this.mapDirectionX, this.mapDirectionY] = mapDirection;
       if (this.gamepadName === 'no controller') this.gamepadName = 'touch';
     }
 
@@ -248,11 +270,11 @@ export class Input {
     this.transferHeld = transfer;
     this.inventoryHeld = inventory;
 
-    this.jumpPressed = this.jumpPressed || (jump && !this.prevJump);
+    this.jumpPressed = this.jumpPressed || touchJumpPressed || (jump && !this.prevJump);
     this.jumpReleased = this.jumpReleased || (!jump && this.prevJump);
-    this.grindPressed = this.grindPressed || (grind && !this.prevGrind);
-    this.spinPressed = this.spinPressed || (spin && !this.prevSpin);
-    this.grabPressed = this.grabPressed || (grab && !this.prevGrab);
+    this.grindPressed = this.grindPressed || touchGrindPressed || (grind && !this.prevGrind);
+    this.spinPressed = this.spinPressed || touchSpinPressed || (spin && !this.prevSpin);
+    this.grabPressed = this.grabPressed || touchGrabPressed || (grab && !this.prevGrab);
     this.transferPressed = this.transferPressed || (transfer && !this.prevTransfer);
     this.restartPressed = this.restartPressed || (restart && !this.prevRestart);
     this.pausePressed = this.pausePressed || (pause && !this.prevPause);
@@ -299,6 +321,12 @@ export class Input {
     this.transferPressed = false;
     this.restartPressed = false;
     this.pausePressed = false;
+    this.confirmPressed = false;
+    this.mapProgressPressed = false;
+    this.mapSaveLoadPressed = false;
+    this.mapQuitPressed = false;
+    this.mapDirectionX = 0;
+    this.mapDirectionY = 0;
   }
 
   private pollGamepad(): Gamepad | null {

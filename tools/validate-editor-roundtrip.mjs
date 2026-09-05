@@ -1694,31 +1694,46 @@ try {
   console.log("Validated midpoint bonus platforms across all canonical levels.");
 
   const warpEntry = BUILTIN_LEVELS.find((entry) => entry.id === "warproom");
-  assert.ok(warpEntry, "warp room source entry is missing");
+  assert.ok(warpEntry, "world map source entry is missing");
   const warpLevel = new Level(new THREE.Scene(), warpEntry);
   try {
-    assert.equal(warpLevel.campaignPortals.length, CAMPAIGN_LEVELS.length);
-    warpLevel.setCampaignPortalProgress((levelId) => levelId === "jungle"
-      ? { crystal: true, boxGem: true, comboGem: true, timeRelic: true }
-      : null);
-    for (const mesh of Object.values(warpLevel.campaignPortalAwardMeshes))
-      assert.equal(mesh.count, 1, "one earned Jungle award did not reach its gate batch");
-    warpLevel.playerPos.set(54, 0, 4);
+    assert.equal(warpLevel.isCampaignMap, true);
+    assert.equal(
+      warpLevel.groundMeshes.filter(({ name }) => name === "world map level hub").length,
+      CAMPAIGN_LEVELS.length,
+    );
+    warpLevel.setCampaignMapProgress(
+      "jungle",
+      (levelId) => levelId === "jungle"
+        ? {
+            cleared: true,
+            crystal: true,
+            boxGem: true,
+            comboGem: true,
+            timeRelic: true,
+          }
+        : null,
+      (key) => key === "jungle" || key === "test-course",
+    );
     warpLevel.update(1 / 60);
-    assert.ok(
-      warpLevel.campaignPortals.every((portal) => portal.swirl.group.visible),
-      "portal LOD made a gate face disappear",
+    const names = [];
+    warpLevel.root.traverse(({ name }) => names.push(name));
+    assert.equal(
+      names.filter((name) => name === "world map glowing route").length,
+      9,
+      "campaign graph routes did not survive the shared Level build pipeline",
     );
-    assert.ok(
-      warpLevel.campaignPortals.some((portal) => portal.swirl.paused) &&
-        warpLevel.campaignPortals.some((portal) => !portal.swirl.paused),
-      "portal LOD did not separate nearby animation from distant frozen frames",
+    assert.equal(
+      names.filter((name) => name === "world map boardslide rail").length,
+      3,
+      "authored map boardslide edges were not constructed",
     );
+    assert.ok(warpLevel.water, "world map lost the shared Unity ocean owner");
   } finally {
     warpLevel.dispose();
     swirls.clear();
   }
-  console.log("Validated persistent warp gates, portal LOD, and instanced award rails.");
+  console.log("Validated persistent world-map hubs, graph routes, boardslide rails, and ocean ownership.");
 
   // Sky Bridge's extreme sightline is identity-owned, not builder-owned: the
   // hand-built source and the published component-data override must both keep

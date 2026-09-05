@@ -37,6 +37,11 @@ import {
 } from "./player";
 import { UI, type HudState } from "./ui";
 import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";
+import {
+  WorldMapController,
+  type WorldMapSection,
+} from "./worldMapController";
+import { WorldMapUI } from "./worldMapUI";
 import { ResultsPresentation } from "./resultsPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
@@ -1388,6 +1393,8 @@ input.rival = input2;
 input2.rival = input;
 const ui = new UI();
 const campaign = new CampaignStore();
+let worldMapController: WorldMapController | null = null;
+let worldMapUI: WorldMapUI | null = null;
 let gameAudioOptions: GameAudioOptions = loadGameAudioOptions();
 sfx.setMuted(gameAudioOptions);
 const crtGuestPanel = createCrtGuestTuningPanel({
@@ -2072,6 +2079,28 @@ gameFlow = new GameFlowUI(
   },
   gameAudioOptions,
 );
+worldMapUI = new WorldMapUI(campaign, {
+  onNavigate: (screenX, screenY) => {
+    worldMapController?.navigate(screenX, screenY);
+  },
+  onEnter: () => {
+    worldMapController?.enterSelected();
+  },
+  onOpenSection: (section) => {
+    worldMapController?.openSection(section);
+  },
+});
+worldMapController = new WorldMapController(campaign, player, {
+  onSelection: (progressKey, moving) => {
+    worldMapUI?.setSelection(progressKey, moving);
+  },
+  onEnterLevel: enterCampaignLevel,
+  onOpenSection: openWorldMapSection,
+});
+if (current.id === "warproom") {
+  worldMapController.activate(level, null);
+  worldMapUI.show(worldMapController.selectedKey);
+}
 ui.setLevel(
   current.id,
   level.hudMode,
@@ -2137,7 +2166,15 @@ let pendingCompletion:
 
 function syncCampaignPortalProgress(): void {
   if (current.id !== "warproom") return;
-  level.setCampaignPortalProgress((levelId) => campaign.levelProgress(levelId));
+  if (worldMapController?.active) {
+    worldMapController.refresh();
+    return;
+  }
+  level.setCampaignMapProgress(
+    campaign.recommendedMapLevelKey(),
+    (levelId) => campaign.levelProgress(levelId),
+    (key) => campaign.levelUnlocked(key),
+  );
 }
 
 function adoptCommittedCampaignProgress(levelId: string): void {
@@ -2214,6 +2251,8 @@ function switchLevel(
     editorPreviewLevel.dispose(level);
     editorPreviewLevel = null;
   }
+  worldMapController?.deactivate();
+  worldMapUI?.hide();
   level.dispose();
   puffs.clear(); // no cloud from the level you just left hanging over the new one
   swirls.clear();
@@ -2267,6 +2306,11 @@ function switchLevel(
   );
   ui.setHUD(currentHudState(), 0);
   gameFlow?.setWarpRoom(entry.id === "warproom");
+  if (entry.id === "warproom" && worldMapController && worldMapUI) {
+    const focusKey = warpReturnFromKey ?? campaign.recommendedMapLevelKey();
+    worldMapController.activate(level, focusKey);
+    worldMapUI.show(worldMapController.selectedKey);
+  }
   recorder.start(entry.id, endlessDeathsOn); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
     ((
@@ -2378,6 +2422,19 @@ function resumeFromPause(): void {
   ui.hideMessage();
   input.armMenuReleaseGuard();
   if (split2p) input2.armMenuReleaseGuard();
+}
+
+function openWorldMapSection(section: WorldMapSection): void {
+  if (
+    current.id !== "warproom" ||
+    !worldMapController?.active ||
+    gameFlow.blocksGameplay
+  )
+    return;
+  paused = true;
+  player.collapseRenderInterpolation();
+  ui.hideMessage();
+  gameFlow.showMapSection(section);
 }
 
 function restoreCommittedRunRewards(): void {
@@ -2562,6 +2619,13 @@ function showCampaignResults(): void {
     boxGem: player.gemEarned && !runStartRewards.boxGem,
     comboGem: player.comboGemEarned && !runStartRewards.comboGem,
     firstClear,
+    ...(definition
+      ? {
+          // commitClear above has just satisfied the clear-only run-mode gate.
+          timeTrialUnlocked: true,
+          relicTarget: definition.relicTime,
+        }
+      : {}),
   };
   presentCampaignResults(result);
 }
@@ -2591,7 +2655,8 @@ function showTimeTrialResults(time: number): void {
 }
 
 function enterCampaignLevel(targetId: string): void {
-  if (!campaignLevelById(targetId)) return;
+  const destination = campaignLevelById(targetId);
+  if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
     switchLevel(targetId, false, true);
@@ -3661,7 +3726,7 @@ ui.onToggleRunModes = () => {
   if (!shellBypass) {
     ui.showMessage(
       "CAMPAIGN RUN MODES",
-      "time trial and combo unlock after a crystal clear",
+      "time trial and combo unlock after a level clear",
       1800,
     );
     return;
@@ -3677,7 +3742,7 @@ ui.onToggleRunModes = () => {
 };
 ui.onToggleEndlessDeaths = () => {
   if (!shellBypass) {
-    ui.showMessage("PLAY MODE", "choose Modern or Classic in Warp Room → Options", 1800);
+    ui.showMessage("PLAY MODE", "choose Modern or Classic from the Island Map", 1800);
     return;
   }
   // The click expresses a choice against the rule currently shown. Capture it
@@ -3740,7 +3805,11 @@ window.addEventListener("keydown", (e) => {
       if (e.code === `Digit${i + 1}`) switchLevel(rows[i].id);
     }
   }
-  if (!editor.active && (e.code === "KeyK" || e.code === "KeyL")) {
+  if (
+    current.id !== "warproom" &&
+    !editor.active &&
+    (e.code === "KeyK" || e.code === "KeyL")
+  ) {
     // playtest warp: skip up and down the course by checkpoint so a section
     // halfway in doesn't cost a full run to reach
     if (player.warpCheckpoint(level, e.code === "KeyL" ? 1 : -1))
@@ -3885,6 +3954,21 @@ let chaseSteadyT = 0; // seconds of continuous steady travel (filters pipe swing
 
 function updateCamera(dt: number): void {
   const subject = player.renderPosition;
+  if (current.id === "warproom" && worldMapController?.active) {
+    worldMapController.frameCamera(camera, dt);
+    camControlDir
+      .set(
+        worldMapController.moving ? player.renderPosition.x - camera.position.x : 0,
+        0,
+        worldMapController.moving ? player.renderPosition.z - camera.position.z : -1,
+      )
+      .normalize();
+    cameraLook.reset();
+    camSpeedFovBoost = 0;
+    cam2SpeedFovBoost = 0;
+    prevPlayerPos.copy(subject);
+    return;
+  }
   const snapped = cameraRenderSnapVersion !== player.renderSnapVersion;
   if (snapped) {
     cameraRenderSnapVersion = player.renderSnapVersion;
@@ -4354,14 +4438,17 @@ function frame(nowMs: number): void {
   if (input.pausePressed) {
     const handled = gameFlow.handlePauseToggle();
     if (!handled && !gameFlow.blocksGameplay) {
-      paused = true;
-      player.collapseRenderInterpolation();
-      if (split2p && p2) p2.collapseRenderInterpolation();
-      ui.hideMessage();
-      gameFlow.showPause({
-        levelName: currentCampaignName(),
-        inWarpRoom: current.id === "warproom",
-      });
+      if (current.id === "warproom") openWorldMapSection("options");
+      else {
+        paused = true;
+        player.collapseRenderInterpolation();
+        if (split2p && p2) p2.collapseRenderInterpolation();
+        ui.hideMessage();
+        gameFlow.showPause({
+          levelName: currentCampaignName(),
+          inWarpRoom: false,
+        });
+      }
     }
     input.pausePressed = false;
   }
@@ -4451,8 +4538,11 @@ function frame(nowMs: number): void {
       restartCurrentRun();
       break;
     }
-    player.step(CONST.fixedStep, input, level);
-    if (split2p && p2) {
+    if (current.id === "warproom" && worldMapController?.active)
+      worldMapController.step(CONST.fixedStep, input);
+    else
+      player.step(CONST.fixedStep, input, level);
+    if (current.id !== "warproom" && split2p && p2) {
       p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
       stepPvp(CONST.fixedStep);
     }
@@ -4463,7 +4553,7 @@ function frame(nowMs: number): void {
     // Player.step authors the fixed pose; PVP may then move either root. Only
     // now is the simulation tick complete and safe to publish to rendering.
     player.commitRenderStep(level);
-    if (split2p && p2) p2.commitRenderStep(level);
+    if (current.id !== "warproom" && split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
     if (!replayer.active && !split2p) recorder.record(input, player.camDir);
     input.consumeEdges(); // one press = one step
@@ -4511,7 +4601,7 @@ function frame(nowMs: number): void {
     // hold the last shot through the death blackout — no drifting after the
     // corpse; the respawn teleport re-snaps the rig when play resumes
     if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
-    if (split2p) updateCamera2(dt);
+    if (current.id !== "warproom" && split2p) updateCamera2(dt);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
   // camera basis that was settled a line ago or they lag the shot by a frame.
@@ -4584,7 +4674,7 @@ function frame(nowMs: number): void {
   // ocean's quality switch makes these hooks a cheap feature-disable path.
   level.water?.renderPasses(renderer, scene, camera);
 
-  if (split2p && p2) {
+  if (current.id !== "warproom" && split2p && p2) {
     ui.setGameHudComposited(false);
     const dw = renderer.domElement.width;
     const dh = renderer.domElement.height;
@@ -4602,12 +4692,12 @@ function frame(nowMs: number): void {
   }
   // Single-player fruit/icons/HUD were composed together above. Split screen
   // retains its direct fallback, with each fruit flight confined to its half.
-  if (split2p && p2) {
+  if (current.id !== "warproom" && split2p && p2) {
     player.drawFlyingFruit(renderer, 'top');
     p2.drawFlyingFruit(renderer, 'bottom');
   }
   // One shared set of 3D counter icons remains above both split viewports.
-  if (split2p && p2) ui.drawIcons(renderer, dt);
+  if (current.id !== "warproom" && split2p && p2) ui.drawIcons(renderer, dt);
     frameStats.cameraTargetX = camTarget.x;
     frameStats.cameraTargetY = camTarget.y;
     frameStats.cameraTargetZ = camTarget.z;

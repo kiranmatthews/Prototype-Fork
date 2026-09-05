@@ -358,7 +358,6 @@ let warpLevel = null;
 try {
   const { BUILTIN_LEVELS, Level } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
-  const { CONST } = await server.ssrLoadModule("/src/tuning.ts");
   const { CAMPAIGN_LEVELS, campaignLevelById } = await server.ssrLoadModule(
     "/src/campaign.ts",
   );
@@ -377,10 +376,16 @@ try {
   swirls.attach(scene);
   warpLevel = new Level(scene, warpEntry);
   warpLevel.root.updateMatrixWorld(true);
-  assert.equal(warpLevel.campaignPortals.length, CAMPAIGN_LEVELS.length);
+  assert.equal(warpLevel.isCampaignMap, true, "legacy hub did not build the world map");
+  assert.equal(warpLevel.campaignPortals.length, 0, "legacy portal gallery still constructed");
+  assert.equal(
+    warpLevel.groundMeshes.filter(({ name }) => name === "world map level hub").length,
+    CAMPAIGN_LEVELS.length,
+    "every campaign destination needs one supported map hub",
+  );
+  assert.ok(warpLevel.water, "world map did not reuse the campaign ocean shader");
 
   const positionKeys = new Set();
-  const steps = warpLevel.groundMeshes.filter(({ name }) => name === "gate step");
 
   for (const definition of CAMPAIGN_LEVELS) {
     const pose = warpLevel.campaignPortalReturnPose(definition.progressKey);
@@ -392,41 +397,16 @@ try {
       `${definition.name} return heading is not normalized`,
     );
     assert.ok(
-      pose.heading.distanceTo(new THREE.Vector3(0, 0, 1)) < 1e-10,
-      `${definition.name} does not return facing out of its gate (+Z)`,
-    );
-    assert.equal(
-      warpLevel.campaignPortalAt(pose.position),
-      null,
-      `${definition.name} return point immediately retriggers a portal`,
-    );
-
-    const body = bodyBoxAt(pose.position, CONST.playerHalf);
-    assert.ok(
-      warpLevel.campaignPortals.every(
-        ({ gate, localBox }) =>
-          !localBox.intersectsBox(worldBoxInLocalSpace(body, gate)),
-      ),
-      `${definition.name} return body overlaps a portal trigger`,
-    );
-    assert.ok(
-      steps.every((step) => {
-        if (!step.geometry.boundingBox) step.geometry.computeBoundingBox();
-        return !step.geometry.boundingBox.intersectsBox(
-          worldBoxInLocalSpace(body, step),
-        );
-      }),
-      `${definition.name} return body overlaps a raised gate step`,
+      pose.heading.distanceTo(new THREE.Vector3(0, 0, -1)) < 1e-10,
+      `${definition.name} map pose does not use the canonical map heading`,
     );
 
     const support = assertSupported(warpLevel, pose, definition.name);
-    assert.equal(support.object.name, "warp gallery floor");
-
-    const towardGate = pose.position.clone().addScaledVector(pose.heading, -3);
-    assert.equal(
-      warpLevel.campaignPortalAt(towardGate),
-      definition.levelId,
-      `${definition.name} return pose does not approach its own gate`,
+    assert.equal(support.object.name, "world map level hub");
+    assert.deepEqual(
+      pose.position.toArray(),
+      [...definition.mapPosition],
+      `${definition.name} return did not focus its authored hub`,
     );
 
     const baselinePosition = pose.position.toArray();
@@ -457,119 +437,52 @@ try {
     "Test Course fallback did not canonicalize to its progress-key gate",
   );
 
-  // Portal hit testing, return placement, support and presentation all share
-  // the gate transform. Exercise translation, yaw and nonuniform scale at once
-  // so no cached world AABB or separately-authored swirl transform can pass.
-  const transformedDefinition = CAMPAIGN_LEVELS.find(
-    ({ progressKey }) => progressKey === "nightworks",
-  );
-  assert.ok(transformedDefinition);
-  const transformedPortal = warpLevel.campaignPortals.find(
-    ({ progressKey }) => progressKey === transformedDefinition.progressKey,
-  );
-  assert.ok(transformedPortal);
-  transformedPortal.gate.position.add(new THREE.Vector3(1.7, 0, 2.5));
-  transformedPortal.gate.rotation.y = 0.73;
-  transformedPortal.gate.scale.set(1.35, 0.8, 1.6);
-  warpLevel.root.updateMatrixWorld(true);
-  warpLevel.update(1 / 60);
-
-  const transformedPose = warpLevel.campaignPortalReturnPose(
-    transformedDefinition.progressKey,
-  );
-  assert.ok(transformedPose);
-  const expectedHeading = new THREE.Vector3(0, 0, 1)
-    .transformDirection(transformedPortal.gate.matrixWorld);
-  expectedHeading.y = 0;
-  expectedHeading.normalize();
-  assert.ok(transformedPose.heading.distanceTo(expectedHeading) < 1e-10);
+  const onlyStart = new Set(["jungle"]);
   assert.equal(
-    warpLevel.campaignPortalAt(transformedPose.position),
+    warpLevel.campaignMapNeighbor("jungle", 1, 0, (key) => onlyStart.has(key)),
     null,
-    "transformed gate return point retriggers a portal",
+    "a locked destination accepted map navigation",
   );
-  assertSupported(warpLevel, transformedPose, "transformed gate");
-
-  const transformedBody = bodyBoxAt(transformedPose.position, CONST.playerHalf);
-  const transformedBodyAtTrigger = worldBoxInLocalSpace(
-    transformedBody,
-    transformedPortal.gate,
-  );
-  assert.ok(
-    !transformedPortal.localBox.intersectsBox(transformedBodyAtTrigger),
-    "return body overlaps the transformed local-space trigger",
-  );
-  assert.ok(
-    transformedBodyAtTrigger.min.z > transformedPortal.localBox.max.z,
-    "projected body clearance does not clear the transformed trigger front",
-  );
-  const transformedStep = transformedPortal.gate.children.find(
-    ({ name }) => name === "gate step",
-  );
-  assert.ok(transformedStep);
-  if (!transformedStep.geometry.boundingBox)
-    transformedStep.geometry.computeBoundingBox();
-  const transformedBodyAtStep = worldBoxInLocalSpace(
-    transformedBody,
-    transformedStep,
-  );
-  assert.ok(
-    !transformedStep.geometry.boundingBox.intersectsBox(transformedBodyAtStep),
-    "return body overlaps the rotated and scaled gate step",
-  );
-  assert.ok(
-    transformedBodyAtStep.min.z > transformedStep.geometry.boundingBox.max.z,
-    "projected body clearance does not clear the transformed step front",
-  );
-
-  let transformedEntry = null;
-  for (let distance = 0.05; distance <= 12; distance += 0.05) {
-    const point = transformedPose.position
-      .clone()
-      .addScaledVector(transformedPose.heading, -distance);
-    const target = warpLevel.campaignPortalAt(point);
-    if (target) {
-      transformedEntry = { point, target };
-      break;
-    }
-  }
-  assert.ok(transformedEntry, "walking toward the transformed gate never enters it");
+  const firstPair = new Set(["jungle", "test-course"]);
   assert.equal(
-    transformedEntry.target,
-    transformedDefinition.levelId,
-    "walking toward the transformed gate enters the wrong destination",
+    warpLevel.campaignMapNeighbor("jungle", 1, 0, (key) => firstPair.has(key)),
+    "test-course",
+    "right did not select the first connected unlocked hub",
+  );
+  const branch = new Set(["test-course", "sky-bridge", "slipstream"]);
+  assert.equal(
+    warpLevel.campaignMapNeighbor("test-course", 0, 1, (key) => branch.has(key)),
+    "slipstream",
+    "up did not select the upper-screen branch",
+  );
+  assert.equal(
+    warpLevel.campaignMapNeighbor("test-course", 0, -1, (key) => branch.has(key)),
+    "sky-bridge",
+    "down did not select the lower-screen branch",
   );
 
-  const expectedSwirlPosition = transformedPortal.swirlLocalPosition
-    .clone()
-    .applyMatrix4(transformedPortal.gate.matrixWorld);
-  const expectedSwirlQuaternion = transformedPortal.gate.getWorldQuaternion(
-    new THREE.Quaternion(),
-  );
-  const expectedSwirlScale = transformedPortal.gate
-    .getWorldScale(new THREE.Vector3())
-    .multiplyScalar(transformedPortal.swirlScale);
+  const trailStart = warpLevel.campaignMapTravel("jungle", "test-course", 0);
+  const trailEnd = warpLevel.campaignMapTravel("jungle", "test-course", 1);
+  assert.ok(trailStart && trailEnd);
+  assert.equal(trailStart.style, "trail");
+  assert.ok(trailStart.duration > 0);
   assert.ok(
-    transformedPortal.swirl.group.getWorldPosition(new THREE.Vector3())
-      .distanceTo(expectedSwirlPosition) < 1e-10,
-    "swirl world position did not follow the transformed gate",
+    trailStart.position.distanceTo(warpLevel.campaignMapPose("jungle").position) < 1e-10,
   );
   assert.ok(
-    1 - Math.abs(
-      transformedPortal.swirl.group
-        .getWorldQuaternion(new THREE.Quaternion())
-        .dot(expectedSwirlQuaternion),
-    ) < 1e-10,
-    "swirl world quaternion did not follow the transformed gate",
+    trailEnd.position.distanceTo(warpLevel.campaignMapPose("test-course").position) < 1e-10,
   );
-  assert.ok(
-    transformedPortal.swirl.group.getWorldScale(new THREE.Vector3())
-      .distanceTo(expectedSwirlScale) < 1e-10,
-    "swirl world scale did not follow the transformed gate",
+  const boardSample = warpLevel.campaignMapTravel(
+    "nightworks",
+    "beachside-run",
+    0.5,
   );
+  assert.ok(boardSample);
+  assert.equal(boardSample.style, "boardslide");
+  assert.ok(boardSample.position.y > 5, "inter-island boardslide has no authored lift");
 
-  // Instrument the semantic snap itself: the callback must observe both the
-  // final feet position and +Z-facing body, not an intermediate hub spawn.
+  // Returning from a course still uses the semantic respawn snap, then the map
+  // controller can author a canned rail pose without invoking gameplay input.
   const player = new Player(scene);
   const placement = warpLevel.campaignPortalReturnPose(testCourse.progressKey);
   const originalSnap = player.snapRenderInterpolation.bind(player);
@@ -595,9 +508,17 @@ try {
   assert.ok(Math.abs(stateAtSnap.bodyYaw - stateAtSnap.visualYaw) < 1e-10);
   assert.equal(player.renderSnapVersion, snapVersion + 1);
   assert.ok(player.renderPosition.distanceTo(placement.position) < 1e-10);
+  player.stepWorldMapPresentation(
+    boardSample.position,
+    boardSample.tangent,
+    1 / 60,
+    "boardslide",
+  );
+  assert.equal(player.state, "grind");
+  assert.equal(player.surfaceName, "map boardslide rail");
 
   console.log(
-    "Validated campaign gate return poses, transformed local-space safety/presentation, fallback identity, exit routing, and snap-facing order.",
+    "Validated map hub return focus/support, locked branching navigation, trail/boardslide sampling, fallback identity, exit routing, and snap-facing order.",
   );
   swirls.clear();
 } finally {

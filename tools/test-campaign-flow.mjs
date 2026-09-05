@@ -56,6 +56,42 @@ assert.ok(
   campaign.CAMPAIGN_LEVELS.every((level) => level.relicTime === 60),
   "all nine placeholder relic targets must be exactly one minute",
 );
+assert.deepEqual(
+  campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
+  [5, 4],
+  "the prototype map must exercise multiple 4-7 hub islands",
+);
+assert.ok(
+  campaign.CAMPAIGN_LEVELS.filter(({ boss }) => boss).length === 2,
+  "each prototype island needs a boss hub",
+);
+assert.ok(
+  campaign.CAMPAIGN_MAP_EDGES.some(({ travel }) => travel === "boardslide"),
+  "the campaign graph has no canned boardslide connection",
+);
+
+const graph = new campaign.CampaignStore();
+graph.startEphemeral();
+assert.equal(graph.levelUnlocked("jungle"), true);
+assert.equal(graph.levelUnlocked("test-course"), false);
+graph.commitClear("jungle", { crystal: false, boxGem: false, comboGem: false });
+assert.equal(graph.levelUnlocked("test-course"), true);
+assert.equal(
+  graph.runModesUnlocked("jungle"),
+  true,
+  "time trial UI did not unlock after the normal level clear",
+);
+graph.commitClear("test", { crystal: false, boxGem: false, comboGem: false });
+assert.equal(graph.levelUnlocked("sky-bridge"), true);
+assert.equal(graph.levelUnlocked("slipstream"), true);
+assert.equal(graph.levelUnlocked("nightworks"), false);
+graph.commitClear("sky", { crystal: false, boxGem: false, comboGem: false });
+assert.equal(
+  graph.levelUnlocked("nightworks"),
+  true,
+  "the any-cleared branch join did not unlock its boss hub",
+);
+assert.equal(graph.recommendedMapLevelKey(), "slipstream");
 
 const store = new campaign.CampaignStore();
 assert.equal(store.continueSlot(), null, "an empty save shelf exposed Continue");

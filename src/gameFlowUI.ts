@@ -7,9 +7,12 @@ import type { ResultsViewport } from "./resultsPresentation";
 import { runLoadingTransition, type LoadingTransitionPhase } from "./presentationLoading";
 import { rooReady } from "./roofont";
 import {
+  CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
   CAMPAIGN_SAVE_SLOTS,
+  CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   CampaignStore,
+  campaignLevelByKey,
   type CampaignSaveV1,
   type GameAudioOptions,
   type GamePlayMode,
@@ -32,6 +35,7 @@ type GameScreen =
   | "confirm-load"
   | "confirm-quit-main"
   | "pause"
+  | "progress"
   | "options"
   | "gameover"
   | "results";
@@ -51,6 +55,8 @@ export type ResultsScreenState =
       boxGem: boolean;
       comboGem: boolean;
       firstClear: boolean;
+      timeTrialUnlocked?: boolean;
+      relicTarget?: number;
     }
   | {
       kind: "time-trial";
@@ -143,6 +149,7 @@ export class GameFlowUI {
   private destinationRevealing = false;
   private transitionPhase: LoadingTransitionPhase | null = null;
   private pauseState: PauseScreenState | null = null;
+  private mapDirect = false;
   private pendingNewSlot = 1;
   private pendingLoadSlot = 1;
   private slotOrigin: "launch" | "warp" = "launch";
@@ -370,6 +377,7 @@ export class GameFlowUI {
   }
 
   showLaunch(): void {
+    this.mapDirect = false;
     this.slotOrigin = "launch";
     this.operationStatus = "";
     this.screen = "launch";
@@ -379,9 +387,11 @@ export class GameFlowUI {
   hide(): void {
     this.cancelScheduledFocus();
     this.setPreCrtComposited(false);
+    this.gameFlowSurface.deactivate();
     this.cursor.classList.remove("visible");
     this.screen = null;
     this.previousScreen = null;
+    this.mapDirect = false;
     this.slotOrigin = "launch";
     this.operationStatus = "";
     this.root.classList.remove("pause-thumbnail-pending");
@@ -389,13 +399,24 @@ export class GameFlowUI {
     document.body.classList.remove("game-shell-modal", "game-shell-paused", "game-shell-results");
     this.syncVortexBodyClass();
     this.releaseModalFocus();
-    this.gameFlowSurface.deactivate();
     this.layoutObserver?.disconnect();
   }
 
   showPause(state: PauseScreenState): void {
     this.pauseState = state;
+    this.mapDirect = false;
     this.screen = "pause";
+    this.render();
+  }
+
+  /** Open one map-owned utility directly, without a redundant pause submenu. */
+  showMapSection(section: "progress" | "options" | "save-load" | "quit"): void {
+    this.pauseState = { levelName: "THE ISLAND MAP", inWarpRoom: true };
+    this.mapDirect = true;
+    this.slotOrigin = "warp";
+    this.operationStatus = "";
+    this.operationStatusError = false;
+    this.screen = section === "quit" ? "confirm-quit-main" : section;
     this.render();
   }
 
@@ -428,19 +449,20 @@ export class GameFlowUI {
       return true;
     }
     if (this.screen === "confirm-quit-main") {
-      this.screen = "pause";
-      this.render();
+      this.backToMapOrPause();
       return true;
     }
     if (this.screen === "save-load") {
-      this.screen = "pause";
-      this.render();
+      this.backToMapOrPause();
       return true;
     }
     if (this.screen === "options") {
       this.callbacks.onAudioOptions({ ...this.options });
-      this.screen = "pause";
-      this.render();
+      this.backToMapOrPause();
+      return true;
+    }
+    if (this.screen === "progress") {
+      this.backToMapOrPause();
       return true;
     }
     if (this.screen === "pause") {
@@ -451,6 +473,7 @@ export class GameFlowUI {
   }
 
   showGameOver(levelName: string): void {
+    this.mapDirect = false;
     this.pauseState = { levelName, inWarpRoom: false };
     this.maskReady = document.body.classList.contains("game-flow-mask-ready");
     this.screen = "gameover";
@@ -458,12 +481,14 @@ export class GameFlowUI {
   }
 
   showResults(state: ResultsScreenState): void {
+    this.mapDirect = false;
     this.screen = "results";
     this.renderResults(state);
   }
 
   setWarpRoom(active: boolean): void {
     document.body.classList.toggle("game-warp-room", active);
+    document.body.classList.toggle("game-world-map", active);
   }
 
   captureGameplay(source: HTMLCanvasElement): void {
@@ -607,7 +632,8 @@ export class GameFlowUI {
     document.body.classList.add("game-shell-modal");
     document.body.classList.toggle(
       "game-shell-paused",
-      this.screen === "pause" ||
+        this.screen === "pause" ||
+        this.screen === "progress" ||
         this.screen === "options" ||
         this.screen === "save-load" ||
         this.screen === "confirm-save" ||
@@ -638,6 +664,7 @@ export class GameFlowUI {
     else if (this.screen === "confirm-load") this.renderConfirmLoad();
     else if (this.screen === "confirm-quit-main") this.renderConfirmQuitMain();
     else if (this.screen === "pause") this.renderPause();
+    else if (this.screen === "progress") this.renderProgress();
     else if (this.screen === "options") this.renderOptions();
     else if (this.screen === "gameover") this.renderGameOver();
     this.observePreCrtLayout();
@@ -696,7 +723,7 @@ export class GameFlowUI {
     subtitle.textContent = newGame
       ? "Choose a slot. Existing progress in that slot will be replaced."
       : warpLoad
-        ? "Choose a saved adventure to load in the Warp Room."
+        ? "Choose a saved adventure to load on the Island Map."
         : "Choose a saved adventure.";
     const slots = element("div", "game-save-slots");
     const saves = this.campaign.listSlots();
@@ -801,8 +828,7 @@ export class GameFlowUI {
       this.button("BACK", () => {
         this.operationStatus = "";
         this.operationStatusError = false;
-        this.screen = "pause";
-        this.render();
+        this.backToMapOrPause();
       }),
     );
     card.append(title, status, message, list);
@@ -816,7 +842,7 @@ export class GameFlowUI {
     title.textContent = slot === null ? "SAVE GAME?" : `SAVE SLOT ${slot}?`;
     const warning = element("p", "game-panel-subtitle");
     warning.textContent = this.campaign.dirty
-      ? "Write your current Warp Room progress to this slot?"
+      ? "Write your current Island Map progress to this slot?"
       : "Refresh this slot with your current progress?";
     const message = this.operationStatusLine();
     const actions = element("div", "game-menu-list");
@@ -850,7 +876,7 @@ export class GameFlowUI {
     const warning = element("p", "game-panel-subtitle");
     warning.textContent = this.campaign.dirty
       ? "Unsaved progress in the current game will be lost."
-      : "Load this save and return to the Warp Room?";
+      : "Load this save and return to the Island Map?";
     const actions = element("div", "game-menu-list");
     const cancel = this.button("CANCEL", () => {
       this.screen = "load-slots";
@@ -883,8 +909,7 @@ export class GameFlowUI {
       this.button("CANCEL", () => {
         this.operationStatus = "";
         this.operationStatusError = false;
-        this.screen = "pause";
-        this.render();
+        this.backToMapOrPause();
       }),
     );
     const saveAndQuit = this.button(
@@ -907,7 +932,7 @@ export class GameFlowUI {
   private attemptQuitToMain(saveFirst: boolean): void {
     if (this.callbacks.onQuitToMain(saveFirst)) return;
     this.operationStatus = saveFirst
-      ? "SAVE FAILED — STILL IN THE WARP ROOM"
+      ? "SAVE FAILED — STILL ON THE ISLAND MAP"
       : "COULD NOT RETURN TO THE MAIN MENU";
     this.operationStatusError = true;
     this.screen = "confirm-quit-main";
@@ -936,6 +961,15 @@ export class GameFlowUI {
     this.invalidatePreCrt();
   }
 
+  private backToMapOrPause(): void {
+    if (this.mapDirect) {
+      this.callbacks.onResume();
+      return;
+    }
+    this.screen = "pause";
+    this.render();
+  }
+
   private saveSlotContents(slot: number, save: CampaignSaveV1 | null): HTMLElement {
     const contents = element("span", "game-save-slot-inner");
     const number = element("strong", "game-slot-number");
@@ -953,7 +987,7 @@ export class GameFlowUI {
   }
 
   private renderPause(): void {
-    const state = this.pauseState ?? { levelName: "THE WARP ROOM", inWarpRoom: false };
+    const state = this.pauseState ?? { levelName: "THE ISLAND MAP", inWarpRoom: false };
     const layout = element("div", "game-pause-layout");
     const preview = element("div", "game-pause-preview timber-card");
     this.thumbnail = element("canvas", "game-pause-thumbnail");
@@ -963,7 +997,7 @@ export class GameFlowUI {
 
     const actions = element("div", "game-pause-actions timber-card");
     const paused = element("div", "game-eyebrow");
-    paused.textContent = state.inWarpRoom ? "WARP ROOM" : "PAUSED";
+    paused.textContent = state.inWarpRoom ? "ISLAND MAP" : "PAUSED";
     const list = element("div", "game-menu-list");
     list.append(this.button("RESUME", this.callbacks.onResume));
     const openOptions = (): void => {
@@ -999,6 +1033,51 @@ export class GameFlowUI {
 
     const progress = this.progressCard();
     layout.append(preview, actions, progress);
+    this.panel.appendChild(layout);
+  }
+
+  private renderProgress(): void {
+    const layout = element("div", "game-progress-layout");
+    const summary = this.progressCard();
+    const ledger = element("div", "game-progress-ledger timber-card");
+    const title = element("h2", "game-panel-title");
+    title.textContent = "ISLAND PROGRESS";
+    ledger.appendChild(title);
+    for (const island of CAMPAIGN_ISLANDS) {
+      const section = element("section", "game-progress-island");
+      const heading = element("h3", "game-progress-island-name");
+      heading.textContent = island.name.toUpperCase();
+      section.appendChild(heading);
+      for (const key of island.levelKeys) {
+        const definition = campaignLevelByKey(key);
+        if (!definition) continue;
+        const progress = this.campaign.levelProgress(definition.levelId);
+        const unlocked = this.campaign.levelUnlocked(key);
+        const row = element(
+          "div",
+          `game-progress-level${unlocked ? "" : " locked"}${definition.boss ? " boss" : ""}`,
+        );
+        const name = element("strong", "game-progress-level-name");
+        name.textContent = `${definition.boss ? "★ " : ""}${definition.name.toUpperCase()}`;
+        const rewards = element("span", "game-progress-level-rewards");
+        rewards.textContent = unlocked
+          ? `${progress?.crystal ? "◆" : "·"} ${progress?.boxGem ? "◇" : "·"} ${progress?.comboGem ? "⬙" : "·"} ${progress?.timeRelic ? "◉" : "·"}`
+          : "LOCKED";
+        const timing = element("small", "game-progress-level-time");
+        timing.textContent = progress?.cleared
+          ? `BEST ${progress.bestTime === undefined ? "—" : this.formatTime(progress.bestTime)}  ·  TARGET ${this.formatTime(definition.relicTime)}`
+          : unlocked
+            ? "NOT YET CLEARED"
+            : "CLEAR THE CONNECTED PATH";
+        row.append(name, rewards, timing);
+        section.appendChild(row);
+      }
+      ledger.appendChild(section);
+    }
+    const back = this.button("BACK TO MAP", () => this.backToMapOrPause());
+    back.classList.add("game-secondary-action", "game-progress-back");
+    ledger.appendChild(back);
+    layout.append(summary, ledger);
     this.panel.appendChild(layout);
   }
 
@@ -1040,8 +1119,11 @@ export class GameFlowUI {
       }),
       this.button("BACK", () => {
         this.callbacks.onAudioOptions({ ...this.options });
-        this.screen = this.previousScreen ?? "pause";
-        this.render();
+        if (this.mapDirect) this.callbacks.onResume();
+        else {
+          this.screen = this.previousScreen ?? "pause";
+          this.render();
+        }
       }),
     );
     card.append(title, toggles);
@@ -1114,6 +1196,11 @@ export class GameFlowUI {
     } else {
       tally.innerHTML = `
         <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>`;
+      if (state.timeTrialUnlocked) {
+        const trial = element("div", "game-results-trial-unlocked");
+        trial.innerHTML = `<span>TIME TRIAL UNLOCKED</span><strong>TARGET ${this.formatTime(state.relicTarget ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS)}</strong>`;
+        tally.appendChild(trial);
+      }
     }
     const rewardNames = state.kind === "time-trial"
       ? (state.actualTime <= state.relicTarget ? ["Time relic"] : [])
@@ -1313,12 +1400,16 @@ export class GameFlowUI {
       this.screen = "save-load";
       this.render();
     } else if (this.screen === "confirm-quit-main" || this.screen === "save-load") {
-      this.screen = "pause";
-      this.render();
+      this.backToMapOrPause();
     } else if (this.screen === "options") {
       this.callbacks.onAudioOptions({ ...this.options });
-      this.screen = this.previousScreen ?? "pause";
-      this.render();
+      if (this.mapDirect) this.callbacks.onResume();
+      else {
+        this.screen = this.previousScreen ?? "pause";
+        this.render();
+      }
+    } else if (this.screen === "progress") {
+      this.backToMapOrPause();
     } else if (this.screen === "pause") this.callbacks.onResume();
   }
 
@@ -1385,11 +1476,12 @@ export class GameFlowUI {
       case "new-slots": return "New game save slots";
       case "load-slots": return "Load game save slots";
       case "confirm-new": return `Replace save slot ${this.pendingNewSlot}`;
-      case "save-load": return "Warp Room save and load menu";
+      case "save-load": return "Island Map save and load menu";
       case "confirm-save": return `Save game slot ${this.campaign.activeSlot ?? ""}`.trim();
       case "confirm-load": return `Load save slot ${this.pendingLoadSlot}`;
       case "confirm-quit-main": return "Quit to main menu confirmation";
       case "pause": return "Pause menu";
+      case "progress": return "Campaign progress";
       case "options": return "Game options";
       case "gameover": return "Game over";
       case "results": return "Run results";
@@ -1557,6 +1649,19 @@ export class GameFlowUI {
       .game-progress-grid strong { font-size: 24px; color: #71321a; }
       .game-progress-grid small { font: 800 11px/1 ui-monospace, Menlo, monospace; color: #70492c; }
       .game-progress-cleared { margin: 12px 0 0; text-align: right; color: #754425; font: 800 11px/1 ui-monospace, Menlo, monospace; }
+      .game-progress-layout { width: min(1050px, 94vw); display: grid; grid-template-columns: .72fr 1.28fr; gap: 18px; align-items: start; }
+      .game-progress-layout > .game-progress-card { grid-column: 1; position: sticky; top: 0; }
+      .game-progress-ledger { grid-column: 2; padding: 22px 30px 26px; }
+      .game-progress-ledger .game-panel-title { font-size: clamp(34px, 5vw, 55px); }
+      .game-progress-island { margin-top: 15px; }
+      .game-progress-island-name { margin: 0 0 5px; color: #218d3c; font-size: 23px; letter-spacing: .04em; }
+      .game-progress-level { display: grid; grid-template-columns: minmax(150px, 1fr) auto; gap: 2px 14px; align-items: center; padding: 7px 9px; border-top: 1px solid rgba(100,55,29,.22); }
+      .game-progress-level-name { color: #71321a; font-size: 19px; }
+      .game-progress-level-rewards { color: #8b3cd0; font: 900 17px/1 system-ui, sans-serif; letter-spacing: .16em; }
+      .game-progress-level-time { grid-column: 1 / -1; color: #70492c; font: 800 9px/1.2 ui-monospace, Menlo, monospace; }
+      .game-progress-level.locked { opacity: .42; }
+      .game-progress-level.boss .game-progress-level-name { color: #c74a1e; }
+      .game-progress-back { width: 100%; }
       .game-options-card { width: min(590px, 91vw); padding: 32px 48px 40px; }
       .game-save-load-card { width: min(620px, 92vw); }
       .game-save-status { margin: 10px 0 4px; text-align: center; color: #68341c; font: 800 14px/1.35 ui-monospace, Menlo, monospace; letter-spacing: .05em; }
@@ -1588,6 +1693,9 @@ export class GameFlowUI {
       .game-results-time-trial .game-results-tally div { padding: 9px 7px; text-align: center; }
       .game-results-time-trial .game-results-tally strong { min-width: 0; font-size: clamp(22px, 3vw, 32px); white-space: nowrap; }
       .game-results-tally .game-results-run-time, .game-results-tally .game-results-bests { grid-column: 1 / -1; }
+      .game-results-tally .game-results-trial-unlocked { margin-top: 2px; border-color: rgba(33,141,60,.58); background: rgba(75,177,83,.12); text-align: center; }
+      .game-results-trial-unlocked span { color: #27712c; }
+      .game-results-trial-unlocked strong { color: #218d3c; font-size: 23px; }
       .game-results-time-trial .game-results-run-time strong { color: #ee571d; font-size: clamp(45px, 6vw, 72px); line-height: 1.1; }
       .game-results-time-trial .game-results-bests strong { margin-top: 5px; font: 800 clamp(12px, 1.35vw, 17px)/1.3 ui-monospace, Menlo, monospace; }
       .game-results-actions { margin-top: 6px; }
@@ -1657,6 +1765,10 @@ export class GameFlowUI {
         .game-pause-actions { width: min(92vw, 520px); box-sizing: border-box; }
         .game-progress-card { grid-column: 1; width: min(92vw, 520px); box-sizing: border-box; }
         .game-progress-grid { grid-template-columns: 1fr 1fr; }
+        .game-progress-layout { grid-template-columns: 1fr; width: min(94vw, 620px); margin: auto; padding-block: 10px; }
+        .game-progress-layout > .game-progress-card, .game-progress-ledger { grid-column: 1; position: static; width: auto; }
+        .game-progress-ledger { padding: 16px 20px 20px; }
+        .game-progress-level { padding-block: 5px; }
         .game-over-copy { grid-template-columns: 1fr; place-items: center; bottom: 3vh; }
         .game-over-question { text-align: center; }
         .game-over-actions { flex-direction: row; min-width: min(330px, 80vw); }

@@ -2541,6 +2541,56 @@ export class Player {
     this.renderPosition.copy(this.pos);
   }
 
+  /**
+   * Presentation-only movement for the campaign world map. The map owns the
+   * exact rail position, so ordinary acceleration, collision, mounting and
+   * trick inputs stay dormant while the existing character rig still authors
+   * its run/idle/boardslide silhouettes.
+   */
+  stepWorldMapPresentation(
+    position: THREE.Vector3,
+    tangent: THREE.Vector3,
+    dt: number,
+    mode: "idle" | "walk" | "boardslide",
+  ): void {
+    const safeDt = Math.max(dt, 1 / 240);
+    this.prevPos.copy(this.pos);
+    const dx = position.x - this.pos.x;
+    const dz = position.z - this.pos.z;
+    this.pos.copy(position);
+    this.runTime += dt;
+    this.vVel = 0;
+    this.grounded = mode !== "boardslide";
+    this.surfaceName = mode === "boardslide" ? "map boardslide rail" : "world map path";
+    this.axisF.copy(tangent).setY(0);
+    if (this.axisF.lengthSq() < 1e-6) this.axisF.set(0, 0, -1);
+    else this.axisF.normalize();
+    this.axisL.set(-this.axisF.z, 0, this.axisF.x);
+    const measuredSpeed = Math.hypot(dx, dz) / safeDt;
+    this.speed = mode === "idle" ? 0 : measuredSpeed;
+    this.walkVelocity.copy(this.axisF).multiplyScalar(
+      mode === "walk" ? Math.min(measuredSpeed, TUNING.walkSpeed) : 0,
+    );
+    this.walkIntent.copy(this.walkVelocity);
+    this.walkRamp = mode === "walk" ? 1 : 0;
+    this.walkTurnaround = false;
+    this.freeSkate = false;
+    this.skateOn = mode === "boardslide";
+    if (mode === "boardslide") {
+      this.state = "grind";
+      this.grindStyle = "board";
+      this.grindCrossDir = 1;
+      this.grindYawDir = 1;
+      this.grindVel = measuredSpeed;
+    } else {
+      this.state = "ride";
+      this.grindVel = 0;
+    }
+    if (mode !== "idle" && measuredSpeed > 0.01)
+      this.visualYaw = wrapAngle(Math.atan2(this.axisF.x, this.axisF.z) - Math.PI);
+    this.finishVisualStep({ moveX: 0 } as Input, dt);
+  }
+
   /** A semantic teleport: collapse pose history and snap the camera subject. */
   snapRenderInterpolation(): void {
     this.resetRenderInterpolation();

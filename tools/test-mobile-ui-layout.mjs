@@ -19,6 +19,10 @@ for (const contract of [
   "--tc-top-edge: max(8px, env(safe-area-inset-top))",
   "button.className = 'tc-pause'",
   "button.setAttribute('aria-label', 'Pause game')",
+  "consumeButtonPress(key: BtnDef['key'])",
+  "consumeDirectionTap(): [number, number] | null",
+  "this.pressedBtn[b.key] = true",
+  "this.directionTap = [this.moveX, this.moveY]",
   "width: 48px; height: 48px",
   "body.game-shell-modal .tc-pause",
   "body.ed-active .tc-pause",
@@ -60,6 +64,8 @@ assert.match(
 );
 assert.match(main, /ui\.setPresentationTools\(\[/);
 assert.match(input, /new TouchControls\(\(\) => \{[\s\S]{0,160}this\.pausePressed = true;/);
+assert.match(input, /touchJumpPressed = tc\.consumeButtonPress\('x'\)/);
+assert.match(input, /const mapDirection = tc\.consumeDirectionTap\(\)/);
 assert.match(main, /if \(input\.pausePressed\)[\s\S]{0,120}gameFlow\.handlePauseToggle\(\)/);
 assert.match(main, /new MutationObserver\(syncToolPanelState\)/);
 assert.match(ui, /setPresentationTools\(/);
