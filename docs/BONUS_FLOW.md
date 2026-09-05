@@ -4,6 +4,8 @@ Campaign bonus platforms now enter **Bonus: Easy Street**, authored in `src/leve
 
 Parent all-box totals use the new default's 18 crates. Completing the bonus banks its broken-box count and locks that run's bonus platform. Failing returns the original parent fruit/lives purse and leaves the bonus retryable.
 
+Discarded boards survive a successful bonus detour, but a bonus death clears the suspended parent's pile on return, matching normal death/respawn cleanup.
+
 Masks and remaining third-mask invincibility carry into the bonus and back out at their current values, on both completion and failure. Bonus damage can therefore consume a carried mask, and bonus pickups can add protection. Loading fades do not consume invincibility time. Restarting or abandoning the entire parent run still follows the ordinary fresh-run rules.
 
 Fruit and lives are safely merged into Player/campaign inventory before the return reveal. A display-only 2.6-second payout then counts the parent HUD from its previous totals to the banked totals, including a 100-fruit rollover. New gameplay pickups or life losses during the count are not overwritten. In Modern mode the payout briefly shows the inventory totals, then returns to the ordinary death readout without changing endless-lives rules. A reset cancels only the animation, never the already-banked rewards.

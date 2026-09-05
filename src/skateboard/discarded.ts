@@ -377,16 +377,17 @@ export class DiscardedBoards {
     } {
         return { thrown: this.thrown, snapped: this.snapped, folded: this.folded, active: this.active.size, settledPieces: this.settled, batches: this.batches.size, lost: this.lost, poofed: this.poofed };
     }
-    dispose(): void {
+    /** Clear the current life without retiring the Level's reusable owner. */
+    clear(): void {
         if (this.disposed)
             return;
-        this.disposed = true;
-        this.interpolation.restore();
-        this.interpolation.collapse();
+        this.interpolation.snap();
         for (const body of this.bodies) {
             body.root.visible = false;
             body.root.clear();
             body.slots = [];
+            body.rest = true;
+            body.external = false;
         }
         this.active.clear();
         this.bodies.clear();
@@ -395,6 +396,13 @@ export class DiscardedBoards {
             mesh.dispose();
         this.batches.clear();
         this.root.clear();
+        this.thrown = this.snapped = this.folded = this.poofed = this.lost = 0;
+    }
+    dispose(): void {
+        if (this.disposed)
+            return;
+        this.clear();
+        this.disposed = true;
         this.root.removeFromParent();
         this.fractures.dispose();
     }

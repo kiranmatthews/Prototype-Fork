@@ -8680,8 +8680,8 @@ export class Player {
     this.looseBoard = null;
   }
 
-  // Ballistic deck: gravity, restitution bounces, then a permanent sleeping
-  // instance. The level continues its motion after remount, respawn or P2 leaving.
+  // Ballistic deck: gravity, restitution bounces, then a sleeping instance.
+  // Remount/P2 departure leave it behind; a death/respawn clears the pile.
   private updateFlyBoard(dt: number, level: Level): void {
     if (!this.looseBoard) return;
     level.discardedBoards.step(this.looseBoard, dt, level);

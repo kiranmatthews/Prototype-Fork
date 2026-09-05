@@ -7712,6 +7712,7 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    this.discardedBoards.clear(); // no debris from the previous life/run
     // Hard reset restores the committed crystal baseline and clears any
     // materialized run-local gem; a soft death keeps current-run pickups.
     if (hard) {

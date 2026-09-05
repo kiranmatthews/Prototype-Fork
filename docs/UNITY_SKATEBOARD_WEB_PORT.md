@@ -62,10 +62,11 @@ including artwork-up decks and fractured pieces.
 
 Every bail, board abandonment and traversal detach creates a separate board
 owned by the current `Level`. Remounting releases its ownership by the player
-and brings out a fresh deck. Grounded leftovers remain through same-level
-respawns and resets; unloading that Level clears the collection. A suspended
-parent level retains its pile across a bonus detour. Debris falling out of the
-playable world is removed below the kill plane.
+and brings out a fresh deck. Death/respawn and run resets clear all awake,
+sleeping and broken leftovers; the reusable Level owner remains available for
+new discards. A successful bonus detour preserves the parent's pile, while a
+bonus death clears it on return. Unloading also clears the collection. Debris
+falling out of the playable world is removed below the kill plane.
 
 Spin attacks interact with awake and batched sleeping boards: an intact deck
 snaps into two bouncing pieces; an already snapped/folded piece poofs away.

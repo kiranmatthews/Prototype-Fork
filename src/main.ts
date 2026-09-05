@@ -2693,6 +2693,10 @@ function returnFromBonus(completed: boolean): void {
     puffs.attach(scene);
     if (completed) {
       currentRunBonusBoxes = bonusBoxes;
+    } else {
+      // A bonus death also ends the parent's current debris lifetime, even
+      // though its crate/checkpoint state is resumed rather than reset.
+      level.discardedBoards.clear();
     }
     player.resumeSuspendedLevel(level, session.returnPoint, state);
     player.hubMode = false;

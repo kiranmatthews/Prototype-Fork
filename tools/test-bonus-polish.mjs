@@ -62,6 +62,13 @@ try {
   }
   const player = new Player(level.scene);
   player.respawn(level, true);
+  for (const hard of [false, true]) {
+    assert.ok(level.discardedBoards.spawn(player.boardG));
+    assert.equal(level.discardedBoards.diagnostics.active, 1);
+    player.respawn(level, hard, true);
+    assert.equal(level.discardedBoards.diagnostics.active, 0, 'respawn retained an awake discard');
+    assert.equal(level.discardedBoards.root.children.length, 0, 'respawn retained board art');
+  }
   player.shadowGroundY = 900;
   const spawnBefore = player.pos.toArray();
   player.prepareStartPresentation(level);
