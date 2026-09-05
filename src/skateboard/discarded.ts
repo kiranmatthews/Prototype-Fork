@@ -19,11 +19,17 @@ export interface DiscardedBoard {
     stepped: boolean;
     breakStyle: 'none' | 'snap' | 'fold';
     bounds: THREE.Box3;
+    broken: boolean;
+    lastSpin: object | null;
+    slots: BatchSlot[];
 }
 type Batch = {
     mesh: THREE.InstancedMesh;
     capacity: number;
+    key: string;
+    slots: BatchSlot[];
 };
+type BatchSlot = { batch: Batch; index: number; name: string };
 const DOWN = new THREE.Vector3(0, -1, 0);
 /** Level-owned decorative debris. Remounting releases the current discard;
  * it never recalls or deletes it. Sleeping pieces are spatially batched, so
@@ -31,7 +37,9 @@ const DOWN = new THREE.Vector3(0, -1, 0);
 export class DiscardedBoards {
     readonly root = new THREE.Group();
     onImpact: ((broken: boolean) => void) | null = null;
+    onSpinHit: ((position: THREE.Vector3, removed: boolean) => void) | null = null;
     private active = new Set<DiscardedBoard>();
+    private bodies = new Set<DiscardedBoard>();
     private batches = new Map<string, Batch>();
     private fractures = new BoardFractures();
     private interpolation = new RenderInterpolator();
@@ -44,6 +52,7 @@ export class DiscardedBoards {
     private thrown = 0;
     private snapped = 0;
     private folded = 0;
+    private poofed = 0;
     private settled = 0;
     private lost = 0;
     constructor(private readonly random?: () => number) {
@@ -73,10 +82,94 @@ export class DiscardedBoards {
         this.thrown++;
         return board;
     }
-    private addBody(root: THREE.Group, external: boolean, breakStyle: DiscardedBoard['breakStyle']): DiscardedBoard {
-        const board: DiscardedBoard = { root, external, stepped: false, breakStyle, velocity: new THREE.Vector3(), angular: new THREE.Vector3(), remaining: 30, rest: false, bounds: this.localBounds(root) };
+    private addBody(root: THREE.Group, external: boolean, breakStyle: DiscardedBoard['breakStyle'], broken = false, lastSpin: object | null = null): DiscardedBoard {
+        const board: DiscardedBoard = { root, external, stepped: false, breakStyle, velocity: new THREE.Vector3(), angular: new THREE.Vector3(), remaining: 30, rest: false, bounds: this.localBounds(root), broken, lastSpin, slots: [] };
         this.active.add(board);
+        this.bodies.add(board);
         return board;
+    }
+
+    /** One gesture can break a whole board OR clear fragments, never both. */
+    spinAttack(box: THREE.Box3, token: object): number {
+        if (this.disposed) return 0;
+        let hits = 0;
+        const worldBounds = new THREE.Box3();
+        for (const board of [...this.bodies]) {
+            if (board.lastSpin === token) continue;
+            board.root.updateWorldMatrix(true, false);
+            worldBounds.copy(board.bounds).applyMatrix4(board.root.matrixWorld);
+            if (!box.intersectsBox(worldBounds)) continue;
+            board.lastSpin = token;
+            const position = worldBounds.getCenter(new THREE.Vector3());
+            if (board.broken) {
+                this.retire(board);
+                this.poofed++;
+                this.onSpinHit?.(position, true);
+            } else {
+                if (board.rest) this.wake(board);
+                board.breakStyle = 'snap';
+                this.breakBoard(board, 5);
+                this.onSpinHit?.(position, false);
+            }
+            hits++;
+        }
+        return hits;
+    }
+
+    private removeSlots(board: DiscardedBoard): void {
+        const matrix = new THREE.Matrix4();
+        for (const slot of board.slots) {
+            const batch = slot.batch;
+            const last = batch.slots.pop()!;
+            batch.mesh.count--;
+            if (last !== slot) {
+                batch.mesh.getMatrixAt(last.index, matrix);
+                batch.mesh.setMatrixAt(slot.index, matrix);
+                last.index = slot.index;
+                batch.slots[slot.index] = last;
+            }
+            batch.mesh.instanceMatrix.needsUpdate = true;
+            if (batch.mesh.count === 0) {
+                batch.mesh.removeFromParent();
+                batch.mesh.dispose();
+                this.batches.delete(batch.key);
+            } else batch.mesh.computeBoundingSphere();
+        }
+        board.slots = [];
+        this.settled--;
+    }
+
+    private wake(board: DiscardedBoard): void {
+        this.root.add(board.root);
+        board.root.updateWorldMatrix(true, false);
+        const inverse = board.root.matrixWorld.clone().invert();
+        const matrix = new THREE.Matrix4();
+        // Recover only this board's small transform hierarchy from its batches.
+        // Sleeping piles still retain no per-mesh scene graph or physics work.
+        for (const slot of board.slots) {
+            slot.batch.mesh.updateWorldMatrix(true, false);
+            slot.batch.mesh.getMatrixAt(slot.index, matrix);
+            matrix.premultiply(slot.batch.mesh.matrixWorld).premultiply(inverse);
+            const mesh = new THREE.Mesh(slot.batch.mesh.geometry, slot.batch.mesh.material);
+            mesh.name = slot.name;
+            matrix.decompose(mesh.position, mesh.quaternion, mesh.scale);
+            board.root.add(mesh);
+        }
+        this.removeSlots(board);
+        board.rest = false;
+        board.external = false;
+        board.remaining = 30;
+        this.active.add(board);
+    }
+
+    private retire(board: DiscardedBoard): void {
+        if (board.slots.length) this.removeSlots(board);
+        board.root.visible = false;
+        board.root.clear();
+        board.root.removeFromParent();
+        board.rest = true;
+        this.active.delete(board);
+        this.bodies.delete(board);
     }
     release(board: DiscardedBoard | null): void {
         if (board)
@@ -108,10 +201,7 @@ export class DiscardedBoards {
         root.rotation.y += board.angular.y * dt;
         root.rotation.z += board.angular.z * dt;
         if (root.position.y < world.killY - 8 || board.remaining < -15) {
-            root.visible = false;
-            root.removeFromParent();
-            root.clear();
-            this.active.delete(board);
+            this.retire(board);
             this.lost++;
             return;
         }
@@ -179,6 +269,7 @@ export class DiscardedBoards {
     private breakBoard(board: DiscardedBoard, impact: number): void {
         const style = board.breakStyle;
         board.breakStyle = 'none';
+        board.broken = true;
         const halves = this.fractures.split(board.root);
         if (style === 'snap') {
             this.snapped++;
@@ -190,15 +281,12 @@ export class DiscardedBoards {
                 const kick = new THREE.Vector3((this.roll() - 0.5) * 1.4, 0, i === 0 ? 1.4 : -1.4).applyQuaternion(board.root.quaternion);
                 half.position.addScaledVector(kick, 0.045);
                 this.root.add(half);
-                const piece = this.addBody(half, false, 'none');
+                const piece = this.addBody(half, false, 'none', true, board.lastSpin);
                 piece.velocity.copy(board.velocity).multiplyScalar(0.45).add(kick);
                 piece.velocity.y = Math.min(4, 1.5 + impact * 0.16);
                 piece.angular.set((i === 0 ? 1 : -1) * 7, 3 + this.roll() * 4, (this.roll() - 0.5) * 8);
             }
-            board.root.clear();
-            board.root.removeFromParent();
-            board.rest = true;
-            this.active.delete(board);
+            this.retire(board);
         }
         else {
             this.folded++;
@@ -256,10 +344,14 @@ export class DiscardedBoards {
                     batch.mesh.removeFromParent();
                     batch.mesh.dispose();
                 }
-                batch = { mesh, capacity };
+                if (batch) { batch.mesh = mesh; batch.capacity = capacity; }
+                else batch = { mesh, capacity, key, slots: [] };
                 this.batches.set(key, batch);
                 this.root.add(mesh);
             }
+            const slot: BatchSlot = { batch, index: batch.mesh.count, name: source.name };
+            batch.slots.push(slot);
+            board.slots.push(slot);
             batch.mesh.setMatrixAt(batch.mesh.count++, new THREE.Matrix4().multiplyMatrices(inverse, source.matrixWorld));
             batch.mesh.instanceMatrix.needsUpdate = true;
             batch.mesh.computeBoundingSphere();
@@ -281,8 +373,9 @@ export class DiscardedBoards {
         settledPieces: number;
         batches: number;
         lost: number;
+        poofed: number;
     } {
-        return { thrown: this.thrown, snapped: this.snapped, folded: this.folded, active: this.active.size, settledPieces: this.settled, batches: this.batches.size, lost: this.lost };
+        return { thrown: this.thrown, snapped: this.snapped, folded: this.folded, active: this.active.size, settledPieces: this.settled, batches: this.batches.size, lost: this.lost, poofed: this.poofed };
     }
     dispose(): void {
         if (this.disposed)
@@ -290,11 +383,14 @@ export class DiscardedBoards {
         this.disposed = true;
         this.interpolation.restore();
         this.interpolation.collapse();
-        for (const body of this.active) {
+        for (const body of this.bodies) {
             body.root.visible = false;
             body.root.clear();
+            body.slots = [];
         }
         this.active.clear();
+        this.bodies.clear();
+        this.settled = 0;
         for (const { mesh } of this.batches.values())
             mesh.dispose();
         this.batches.clear();

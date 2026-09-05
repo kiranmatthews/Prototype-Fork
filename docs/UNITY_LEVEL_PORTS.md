@@ -25,6 +25,8 @@ meshes never own gameplay collision.
 | Jungle Gate Run | `JungleGateRun.unity` / builder | Fourteen side-view platforms, two kickers, six thorn gaps, required grind rails, bounce crates and depth containment. Its level-local full ledge assist turns all six source-disabled receiving terraces into generous recovery catches without moving the rail/skate gaps; a normal Boing still cannot clear either Arrow climb. |
 | MeshyLook Thorn Courtyards | `MeshyLookDev.unity` / `MeshyLookDevSceneBuilder.cs` | Four instances of the actual compressed Meshy stone courtyard, hidden deterministic ride hulls, visible thorn wells, eight ridge rails, a forward-looking +X camera, and code-native pulsing thorns. A web-only finish makes the Unity look-dev row a complete menu level. |
 
+The Unity bonus above is retained as the original challenge/reference. Campaign bonus platforms now use the shorter, easier `src/levels/bonus-easy.ts` course (18 crates and two short gaps); see `docs/BONUS_FLOW.md`.
+
 ## Shared presentation
 
 The `LOOK` tab owns one shared Unity-shaped presentation stack: an HDR Gaussian

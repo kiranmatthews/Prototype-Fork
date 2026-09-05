@@ -545,7 +545,7 @@ export class GameFlowUI {
     Object.assign(this.previousPad, { up, down, left, right, accept, back });
   }
 
-  async transition(action: () => void | Promise<void>): Promise<void> {
+  async transition(action: () => void | Promise<void>, options: { vortex?: boolean } = {}): Promise<void> {
     if (this.transitionActive) return;
     this.transitionActive = true;
     this.cursor.classList.remove("visible");
@@ -581,7 +581,7 @@ export class GameFlowUI {
         load: async () => { await this.callbacks.waitForLevelData?.(); await action(); },
         waitForAssets: () => this.callbacks.waitForDestinationAssets?.() ?? Promise.resolve(),
         prepareDestination: () => this.callbacks.prepareDestinationFrame?.() ?? Promise.resolve(),
-      }, this.reducedMotion);
+      }, this.reducedMotion, options.vortex !== false);
     } finally {
       this.loadingVortexActive = false;
       this.destinationRevealing = false;

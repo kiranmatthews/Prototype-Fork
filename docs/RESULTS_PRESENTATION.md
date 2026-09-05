@@ -2,6 +2,8 @@
 
 Normal and time-trial finishes share a live shot of the skater at the level end. Gameplay remains stopped: only the results pose, reward bob/spin, water and rendering use the presentation clock.
 
+The completed run now fades directly through black into this shot, without an intervening loading vortex. Asset readiness and hidden-frame preparation are retained.
+
 - No new rewards: a slightly folded, looping catching-breath idle.
 - Rewards earned: arms open, gaze raised, with the actual crystal, clear box gem, green combo gem or blue time relic floating overhead. Normal clears can show any combination of the three collectibles.
 - The fiery finish pad and its foreground systemic Nitro switch are hidden for the shot, without destroying props or changing crate totals. The skater is placed on supported floor near the finish approach.

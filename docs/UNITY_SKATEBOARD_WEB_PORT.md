@@ -67,6 +67,14 @@ respawns and resets; unloading that Level clears the collection. A suspended
 parent level retains its pile across a bonus detour. Debris falling out of the
 playable world is removed below the kill plane.
 
+Spin attacks interact with awake and batched sleeping boards: an intact deck
+snaps into two bouncing pieces; an already snapped/folded piece poofs away.
+Fragments inherit the attacking gesture's token so one spin cannot both create
+and erase them. Sleeping records retain only their instance slots and bounds;
+an intact board's mesh hierarchy is reconstructed only when hit. Slot removal
+compacts the shared batches without deleting neighboring boards. This adds no
+score rewards or physical obstacle collision.
+
 A separate cosmetic random stream chooses occasional first-impact breakage:
 16% split into two independently bouncing halves, and 9% fold into a taco.
 The fractured deck retains its griptape/artwork UVs, plywood, wheels and trucks,

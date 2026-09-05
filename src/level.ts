@@ -42,7 +42,7 @@ import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
-import { BONUS_CRATE_COUNT } from "./levels/bonus-level";
+import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy";
 import { CAMPAIGN_LEVELS, isCampaignLevel } from "./campaign";
 import {
   createProceduralThornCluster,
@@ -2132,6 +2132,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
+  { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
   {
     id: "jungle-cliff",
     name: JUNGLE_CLIFF_LEVEL.name,
@@ -3774,6 +3775,11 @@ export class Level {
     scene.add(this.root);
     this.root.add(this.discardedBoards.root);
     this.discardedBoards.onImpact = (broken) => sfx.play('skateHalt', broken ? 0.35 : 0.18, broken ? 0.65 : 1.5);
+    this.discardedBoards.onSpinHit = (position, removed) => {
+      puffs.burst(removed ? 'dustLand' : 'crateSmash', position.x, position.y, position.z,
+        { surface: 'wood', groundY: position.y - 0.1, strength: removed ? 0.8 : 0.55 });
+      sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
+    };
     this.name = entry.name;
     // A user level carries its own component data and builds through the same
     // pipeline the editor writes. A built-in has none, so its id picks the
@@ -9788,7 +9794,7 @@ export class Level {
       locked: false,
       laneFraction: placement.laneFraction,
     };
-    this.bonusCrateTotal = BONUS_CRATE_COUNT;
+    this.bonusCrateTotal = DEFAULT_BONUS_CRATE_COUNT;
   }
 
   // THE WARP ROOM. A deliberately simple campaign hub: every canonical

@@ -240,6 +240,7 @@ export interface PlayerRunState {
   cratesBroken: number;
   bonusCrates: number;
   masks: number;
+  uberTimer?: number;
   points: number;
   runTime: number;
   crystal: boolean;
@@ -706,6 +707,7 @@ export class Player {
       cratesBroken: this.cratesBroken,
       bonusCrates: this.bonusCrates,
       masks: this.masks,
+      uberTimer: this.uberTimer,
       points: this.points,
       runTime: this.runTime,
       crystal: this.hasCrystal,
@@ -726,6 +728,7 @@ export class Player {
   private characterTailVisibleValue = DEFAULT_CHARACTER_TAIL_VISIBLE;
 
   private spinTimer = 0;
+  private debrisSpinToken: object = {};
   private spinCd = 0;
   // "A crate lid is ground right now" — see CRATE_STAND_GRACE.
   private crateFloorT = 0;
@@ -2834,6 +2837,7 @@ export class Player {
     this.pos.copy(position);
     level.playerPos.copy(this.pos);
     this.settle(level);
+    this.uberTimer = Math.max(0, state.uberTimer ?? 0);
     this.onRespawn();
   }
 
@@ -2843,7 +2847,12 @@ export class Player {
   }
 
   /** A clean spawn frame without consuming input or advancing gameplay. */
-  prepareStartPresentation(): void {
+  prepareStartPresentation(level: Level): void {
+    // A suspended parent may be hundreds of metres above the bonus floor.
+    // Refresh this visual probe before the black curtain reveals its camera.
+    this.shadowGroundY = this.queryShadowGround(level);
+    if (level.hudMode === 'bonus' && this.runTime === 0)
+      this.visualYaw = wrapAngle(Math.atan2(this.axisF.x, this.axisF.z) - Math.PI);
     this.finishVisualStep({ moveX: 0, moveY: 0 } as Input, 0);
     this.collapseRenderInterpolation();
   }
@@ -9646,6 +9655,7 @@ export class Player {
       canSpin
     ) {
       this.spinTimer = TUNING.spinDuration;
+      this.debrisSpinToken = {};
       sfx.play(['spin1', 'spin2', 'spin3'][Math.floor(Math.random() * 3)], 0.5);
       if (this.state === 'air' && this.vVel < 7) {
         // Tiny Crash-style stall. Never boosts an already-rising jump.
@@ -10253,6 +10263,7 @@ export class Player {
     );
     if (this.spinning) {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
+      level.discardedBoards.spinAttack(this.spinBox, this.debrisSpinToken);
     }
 
     const trickGateAperture = Math.hypot(

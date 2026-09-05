@@ -85,6 +85,33 @@ try {
         pile.dispose();
     }
     const handoff = new DiscardedBoards(() => 0.9);
+    // Exercise batched records after growth/compaction: remove a middle board,
+    // then hit the board whose GPU slots moved into the holes.
+    const attackPile = new DiscardedBoards(() => 0.9);
+    const attackBoards = [];
+    for (let i = 0; i < 24; i++) {
+        source.position.set(-24 + i * 2, 2, 0);
+        attackBoards.push(attackPile.spawn(source));
+    }
+    advance(attackPile);
+    const around = body => new THREE.Box3().setFromCenterAndSize(body.root.position.clone().add(new THREE.Vector3(0, 0.3, 0)), new THREE.Vector3(1.6, 2, 2));
+    const token = {};
+    assert.equal(attackPile.spinAttack(around(attackBoards[7]), token), 1);
+    assert.equal(attackPile.diagnostics.snapped, 1);
+    assert.equal(attackPile.diagnostics.active, 2);
+    assert.equal(attackPile.diagnostics.settledPieces, 23);
+    assert.equal(attackPile.spinAttack(around(attackBoards[7]), token), 0, 'one spin broke and deleted the same deck');
+    assert.equal(attackPile.spinAttack(around(attackBoards[23]), {}), 1, 'batch compaction lost another board');
+    advance(attackPile);
+    assert.equal(attackPile.diagnostics.settledPieces, 26);
+    assert.ok(attackPile.spinAttack(new THREE.Box3(new THREE.Vector3(-50, -2, -50), new THREE.Vector3(50, 3, 50)), {}).valueOf() >= 24);
+    assert.equal(attackPile.diagnostics.poofed, 4, 'pre-existing pieces did not poof');
+    const awakeToken = {};
+    assert.ok(attackPile.spinAttack(new THREE.Box3(new THREE.Vector3(-50, -2, -50), new THREE.Vector3(50, 3, 50)), awakeToken) > 0);
+    assert.equal(attackPile.diagnostics.active, 0);
+    assert.equal(attackPile.diagnostics.settledPieces, 0);
+    assert.equal(attackPile.diagnostics.batches, 0);
+    attackPile.dispose();
     source.position.set(12, 8, 12);
     const body = handoff.spawn(source);
     handoff.update(0, world);

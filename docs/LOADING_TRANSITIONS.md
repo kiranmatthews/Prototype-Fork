@@ -11,6 +11,8 @@ Game-owned transitions now follow this sequence:
 
 The readiness barrier includes first-run level data, sky art, bonus layers, character attachment/import work, textures and nested GLTF requests, canvas-backed HUD/crate images, saved animation data, fonts and audio fetch/decode. Ocean reflection art is requested before the first visible gameplay frame. Asset owners retain their existing fallback/error behavior: failed optional requests settle rather than creating an endless loading screen.
 
-The two-second dwell also applies to cached loads and reduced-motion mode. Reduced motion keeps the vortex still and shortens the fades; it does not skip asset readiness. Ordinary pause/resume remains immediate and retains its frozen-frame cache.
+For vortex transitions, the two-second dwell also applies to cached loads and reduced-motion mode. Reduced motion keeps the vortex still and shortens the fades; it does not skip asset readiness. Ordinary pause/resume remains immediate and retains its frozen-frame cache.
+
+Bonus entry/return and the transition from a completed run to its results screen use the black-only variant (`vortex: false`). They still wait for assets and prepare the final frame behind black, but never build/show a vortex or inherit its two-second dwell.
 
 `src/presentationLoading.ts` owns the sequence and asset barrier. GameFlowUI owns the curtain and input lock; main.ts supplies scene preparation. `window.__game.getLoadingDiagnostics()` exposes the current phase and pending/failed URLs for local debugging. The unit sequence tests use deferred promises and a deterministic clock to verify ordering and both fast/slow paths.

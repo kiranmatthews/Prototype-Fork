@@ -53,7 +53,7 @@ import {
   type GameAudioOptions,
   type GamePlayMode,
 } from "./campaign";
-import { BONUS_LEVEL } from "./levels/bonus-level";
+import { EASY_BONUS_LEVEL as BONUS_LEVEL } from "./levels/bonus-easy";
 import { TUNING, CONST } from "./tuning";
 import {
   speedSkateFovTarget,
@@ -848,7 +848,7 @@ let editorViewActive = false;
 let editorPlayFog: THREE.Scene["fog"] = null;
 function syncSkyBackdropVisibility(): void {
   const bonusBackdropActive =
-    (current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
+    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
   const skyBridgeFogOnly = current.id === "sky" && !editorViewActive;
   const preset = SKY_PRESETS[activeSky] ?? SKY_PRESETS[DEFAULT_SKY];
   sky.visible = !LITE && !bonusBackdropActive && !skyBridgeFogOnly;
@@ -887,7 +887,7 @@ function applyTheme(): void {
   const t = level.theme;
   const P = SKY_PRESETS[level.skyPreset] ?? SKY_PRESETS[DEFAULT_SKY];
   const bonusBackdropActive =
-    (current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
+    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
   if (bonusBackdropActive) {
     const backdrop = ensureBonusParallax();
     if (!backdrop.visible) backdrop.reset(player.pos, loadedLevelId);
@@ -1345,8 +1345,8 @@ async function prepareDestinationPresentation(): Promise<void> {
       resultsPresentation.frameCamera(camera, window.innerWidth, window.innerHeight,
         gameFlow.resultsSceneViewport(window.innerWidth, window.innerHeight));
     } else {
-      player.prepareStartPresentation();
-      p2?.prepareStartPresentation();
+      player.prepareStartPresentation(level);
+      p2?.prepareStartPresentation(level);
       updateCamera(1);
       if (split2p) updateCamera2(1);
     }
@@ -2529,10 +2529,11 @@ function presentCampaignResults(result: ResultsScreenState): void {
   void gameFlow.transition(() => {
     ui.hideMessage();
     ui.hideTTResults();
+    ui.resetHudTransients(player.fruitCollectionRevision, input.inventoryHeld);
     clearResultsPresentation();
     resultsPresentation = new ResultsPresentation(scene, player, level, result);
     gameFlow.showResults(result);
-  });
+  }, { vortex: false });
 }
 
 function showCampaignResults(): void {
@@ -2631,6 +2632,8 @@ function enterBonusRound(): void {
     puffs.attach(scene);
     player.respawn(level, true, true);
     player.bonusMode = true;
+    player.masks = parentState.masks;
+    player.uberTimer = parentState.uberTimer ?? 0;
     player.hubMode = false;
     // Crash-style bonus economy: the parent inventory is suspended. The
     // bonus HUD starts at zero lives/fruit and banks its purse only on clear.
@@ -2641,8 +2644,7 @@ function enterBonusRound(): void {
     player.bonusCrates = 0;
     applyRunModes();
     applyTheme();
-    // The loading vortex owns the framebuffer until all four bonus layers are
-    // settled, so their decode/upload cannot hitch the first playable frames.
+    // Bonus travel stays behind black until its parallax and assets are ready.
     await prepareActivePresentationAssets();
     applyShadowFlags();
     ui.setLevel(
@@ -2655,7 +2657,7 @@ function enterBonusRound(): void {
     recorder.start(current.id, endlessDeathsOn);
     gameFlow.setWarpRoom(false);
     gameFlow.hide();
-  });
+  }, { vortex: false });
 }
 
 function returnFromBonus(completed: boolean): void {
@@ -2674,6 +2676,8 @@ function returnFromBonus(completed: boolean): void {
     : { lives: session.parentState.lives, fruit: session.parentState.fruit };
   const state: PlayerRunState = {
     ...session.parentState,
+    masks: player.masks,
+    uberTimer: player.uberTimer,
     lives: inventory.lives,
     fruit: inventory.fruit,
     bonusCrates: completed ? bonusBoxes : session.parentState.bonusCrates,
@@ -2708,10 +2712,11 @@ function returnFromBonus(completed: boolean): void {
       player.fruitCollectionRevision,
       input.inventoryHeld,
     );
+    if (completed) ui.startBonusPayout(bonusLives, bonusFruit);
     ui.setHUD(currentHudState(), 0);
     recorder.start(current.id, endlessDeathsOn);
     gameFlow.hide();
-  });
+  }, { vortex: false });
 }
 
 function checkCampaignEntrances(): void {

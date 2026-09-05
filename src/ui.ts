@@ -2,6 +2,7 @@
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import * as THREE from "three";
+import { BonusPayout } from "./bonusPayout";
 import { localDataResetUrl } from "./localGameStorage";
 import {
   GameHudSurface,
@@ -135,6 +136,7 @@ export class UI {
     pivot: THREE.Group; // holds the lean; scaled to fit the box
     spin: THREE.Group; // turns
     unit: number; // art height in world units, for the fit
+    unitWidth?: number;
     rate: number; // idle turn, rad/s
     on: boolean; // relics are off until earned; the counters are always on
   }[] = [];
@@ -217,6 +219,9 @@ export class UI {
   private comboState: "none" | "active" | "cashin" | "bail" = "none";
   private comboBailEnd = 0; // performance.now() timestamp the bail drop finishes
   private comboCashInHoldEnd = 0;
+  private comboCashInExpires = 0;
+  private bonusPayout: BonusPayout | null = null;
+  private bonusPayoutAnnounced = false;
   private comboCashInWasHolding = false;
   private lastComboActionRevision = -1;
   private lastComboPreviewSequence = -1;
@@ -1063,6 +1068,10 @@ export class UI {
     this.liveComboTicker = createLiveComboTicker();
     this.comboCashInHoldEnd = 0;
     this.comboCashInWasHolding = false;
+    this.comboCashInExpires = 0;
+    this.comboBailEnd = 0;
+    this.trickLineEl.textContent = "";
+    this.trickTotalEl.textContent = "";
   }
 
   // Combo landed clean: freeze the total on the plate and drain it to zero while
@@ -1073,6 +1082,7 @@ export class UI {
     this.comboState = "cashin";
     this.gameHudLayer.classList.add("hud-combo-present");
     this.comboCashInHoldEnd = performance.now() + COMBO_CASH_IN_EXTRA_HOLD_MS;
+    this.comboCashInExpires = this.comboCashInHoldEnd + 2200;
     this.comboCashInWasHolding = false;
     this.trickPlate.style.display = "block";
     this.trickPlate.classList.remove("hud-trick-bail");
@@ -1156,9 +1166,9 @@ export class UI {
       // the crate shows its top face: you look DOWN on crates in this game
       { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: -0.42, rate: 0.6, fill: 0.66, relic: false },
       { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => wumpaMesh(1), lean: -0.12, rate: 0.9, fill: 0.86, relic: false },
-      { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
-      { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
-      { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.82, relic: true },
+      { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
+      { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
+      { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
     ];
     for (const [index, { host, revealHost, make, lean, rate, fill, relic }] of art.entries()) {
       const model = make();
@@ -1176,6 +1186,22 @@ export class UI {
       });
       const c = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
+      let sweepWidth = Math.hypot(size.x, size.z);
+      if (relic) {
+        // Use the actual radial envelope, not the empty corners of a square
+        // bounding box, which shrank the round-cut gems by another sqrt(2).
+        let radius = 0;
+        const vertex = new THREE.Vector3();
+        model.traverse((object) => {
+          if (!(object instanceof THREE.Mesh)) return;
+          const positions = object.geometry.getAttribute('position');
+          for (let i = 0; i < positions.count; i++) {
+            object.getVertexPosition(i, vertex).applyMatrix4(object.matrixWorld).sub(c);
+            radius = Math.max(radius, Math.hypot(vertex.x, vertex.z));
+          }
+        });
+        sweepWidth = radius * 2;
+      }
       model.position.sub(c);
       const spin = new THREE.Group();
       spin.add(model);
@@ -1194,7 +1220,8 @@ export class UI {
         owner: `hud-icon-${index}`,
         pivot,
         spin,
-        unit: (size.y || 1) / fill,
+        unit: relic ? (size.y * Math.cos(lean) + sweepWidth * Math.abs(Math.sin(lean))) / fill : (size.y || 1) / fill,
+        unitWidth: relic ? sweepWidth / fill : undefined,
         rate,
         on: !relic,
       });
@@ -1308,7 +1335,9 @@ export class UI {
       cam.left = -aspect / 2;
       cam.right = aspect / 2;
       cam.updateProjectionMatrix();
-      slot.pivot.scale.setScalar(Math.min(1, aspect) / slot.unit);
+      slot.pivot.scale.setScalar(slot.unitWidth
+        ? Math.min(1 / slot.unit, aspect / slot.unitWidth)
+        : Math.min(1, aspect) / slot.unit);
 
       // GL's origin is bottom-left, hence measuring down from the canvas bottom
       const vx = r.left * kx;
@@ -1366,6 +1395,18 @@ export class UI {
 
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
     const hudNow = performance.now();
+    const payout = this.bonusPayout;
+    if (payout) {
+      const display = payout.update({ lives: s.lives, fruit: s.fruit }, deltaSeconds);
+      // Gameplay/campaign already own the final totals. Only the readout counts
+      // up, so interrupted reveals and new pickups cannot lose or duplicate loot.
+      s = { ...s, ...display, inventoryHeld: true, endlessDeaths: false };
+      if (!this.bonusPayoutAnnounced && deltaSeconds > 0) {
+        this.bonusPayoutAnnounced = true;
+        this.showMessage("BONUS BANKED", `+${payout.fruit} FRUIT  +${payout.lives} ${payout.lives === 1 ? "LIFE" : "LIVES"}`, 2800);
+      }
+      if (payout.complete) this.bonusPayout = null;
+    }
     if (s.bonusMode !== this.bonusMode) {
       this.bonusMode = s.bonusMode;
       this.hudVisibility.reset(s.fruitCollectionRevision, s.inventoryHeld);
@@ -1485,7 +1526,7 @@ export class UI {
       } else if (!cashInHolding) {
         this.dispCombo = cashInFrame?.combo ?? this.dispCombo;
         this.setComboTotal(String(Math.round(this.dispCombo)));
-        if (this.dispCombo <= 0) this.endCombo();
+        if (this.dispCombo <= 0 || hudNow >= this.comboCashInExpires) this.endCombo();
       }
     } else if (this.comboState === "bail") {
       if (show) {
@@ -1626,15 +1667,7 @@ export class UI {
     this.currentLevelId = id;
     this.hudMode = hudMode;
     this.bonusMode = hudMode === "bonus";
-    this.hudVisibility.reset(fruitCollectionRevision, inventoryHeld);
-    this.hudVisibilityFrame = this.hudVisibility.update({
-      mode: hudMode,
-      fruitCollectionRevision,
-      inventoryHeld,
-      hasEarnedRelic: false,
-      nowMs: performance.now(),
-    });
-    this.syncHudVisibility();
+    this.resetHudTransients(fruitCollectionRevision, inventoryHeld);
     this.levelRows.forEach((b, key) =>
       b.classList.toggle("active", key === id),
     );
@@ -1645,6 +1678,12 @@ export class UI {
     fruitCollectionRevision = 0,
     inventoryHeld = false,
   ): void {
+    this.endCombo();
+    this.lastComboActionRevision = -1;
+    this.lastComboPreviewSequence = -1;
+    this.prevHud.points = -1;
+    this.bonusPayout = null;
+    this.bonusPayoutAnnounced = false;
     this.hudVisibility.reset(fruitCollectionRevision, inventoryHeld);
     this.hudVisibilityFrame = this.hudVisibility.update({
       mode: this.hudMode,
@@ -1654,6 +1693,11 @@ export class UI {
       nowMs: performance.now(),
     });
     this.syncHudVisibility();
+  }
+
+  startBonusPayout(lives: number, fruit: number): void {
+    this.bonusPayout = lives > 0 || fruit > 0 ? new BonusPayout(lives, fruit) : null;
+    this.bonusPayoutAnnounced = false;
   }
 
   /** Rebuild the level list from the registry. Call whenever it changes. */
@@ -2320,29 +2364,27 @@ export class UI {
          straight into these rectangles by drawIcons(). A background image
          here would sit on top of the canvas and hide them — the HUD is DOM
          over WebGL, so an icon that is 3D has to be nothing in the DOM. */
-      /* The relic haul is a footnote under the counters, not a third counter:
-         each stone reads at roughly two-thirds the crate icon so the row
-         doesn't out-weigh what it's summarising. */
-      .hud-relics { gap: 14px; }
+      /* Transparent hosts: the actual game meshes are drawn into these boxes. */
+      .hud-relics { gap: 10px; align-items: center; }
       .hud-icon-crystal {
-        width: clamp(35px, 6.1vh, 53px); height: clamp(48px, 8.4vh, 74px);
-        background: linear-gradient(160deg, #ffd4f8 8%, #ff9af0 22%, #c03fe0 55%, #7a1898 90%);
-        clip-path: polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%);
-        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(255, 120, 240, 0.6));
+        width: clamp(68px, 10vh, 94px); height: clamp(110px, 16vh, 150px);
+        background: transparent; clip-path: none; filter: none;
       }
       .hud-icon-gem {
-        width: clamp(43px, 7.7vh, 67px); height: clamp(32px, 5.6vh, 50px);
-        background: linear-gradient(160deg, #eaffff 8%, #bfffff 22%, #35cfe4 55%, #147a90 90%);
-        clip-path: polygon(25% 0%, 75% 0%, 100% 35%, 50% 100%, 0% 35%);
-        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(80, 220, 255, 0.6));
+        width: clamp(108px, 16vh, 152px); height: clamp(108px, 16vh, 152px);
+        background: transparent; clip-path: none; filter: none;
         align-self: center;
       }
-      /* the combo gem: same cut, run through green glass */
-      .hud-icon-combogem {
-        background: linear-gradient(160deg, #eaffe8 8%, #b8ffd2 22%, #35e47a 55%, #148f4a 90%);
-        filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 7px rgba(80, 255, 150, 0.6));
-      }
       .hud-relic-off { opacity: 0.22; filter: grayscale(1) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6)); }
+      @media (max-width: 600px) and (orientation: portrait) {
+        .game-hud-layer:not(.hud-bonus) .hud-tl { top: 18px; left: 16px; }
+        .game-hud-layer:not(.hud-bonus) .hud-life-row { top: 18px; right: 14px; gap: 4px; }
+        .game-hud-layer:not(.hud-bonus) .hud-fruit-row .hud-icon-wumpa { width: 54px; height: 54px; }
+        .game-hud-layer:not(.hud-bonus) .hud-fruit-row .hud-num { font-size: 56px; }
+        .game-hud-layer:not(.hud-bonus) .hud-life-face-wrap { width: 64px; height: 64px; }
+        .game-hud-layer:not(.hud-bonus) .hud-lives { font-size: 60px; }
+        .hud-relics .hud-icon-gem { width: 108px; height: 108px; }
+      }
       .hud-icon-face {
         background-image: ${LIFE_FACE_URL};
         background-size: contain;

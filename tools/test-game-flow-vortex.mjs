@@ -196,7 +196,7 @@ const deactivateCurtain = transitionLifecycle.indexOf(
   'this.transitionCurtain.classList.remove("vortex", "active")',
 );
 const fadeCleanup = transitionLifecycle.indexOf(
-  "}, this.reducedMotion);",
+  "}, this.reducedMotion, options.vortex !== false);",
   deactivateCurtain,
 );
 const hideCurtain = transitionLifecycle.indexOf(

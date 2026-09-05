@@ -80,7 +80,7 @@ export interface LoadingTransitionHooks {
 }
 
 /** Readiness-driven sequence; the input lock is held by GameFlowUI throughout. */
-export async function runLoadingTransition(hooks: LoadingTransitionHooks, reducedMotion: boolean): Promise<void> {
+export async function runLoadingTransition(hooks: LoadingTransitionHooks, reducedMotion: boolean, vortex = true): Promise<void> {
   const wait = hooks.wait ?? ((ms) => new Promise<void>((resolve) => window.setTimeout(resolve, ms)));
   const now = hooks.now ?? (() => performance.now());
   const paint = hooks.paint ?? afterPresentationPaint;
@@ -88,20 +88,24 @@ export async function runLoadingTransition(hooks: LoadingTransitionHooks, reduce
   hooks.phase("cover");
   await wait(fade);
   await paint();
-  hooks.phase("prepare-vortex");
-  await hooks.prepareVortex();
-  await paint();
-  hooks.phase("vortex");
-  await wait(fade);
-  await paint();
+  if (vortex) {
+    hooks.phase("prepare-vortex");
+    await hooks.prepareVortex();
+    await paint();
+    hooks.phase("vortex");
+    await wait(fade);
+    await paint();
+  }
   const visibleAt = now();
   // Start destination work only after the vortex's reveal has actually painted.
   await hooks.load();
   await hooks.waitForAssets();
-  await wait(Math.max(0, MINIMUM_VORTEX_MS - (now() - visibleAt)));
-  hooks.phase("cover-destination");
-  await wait(fade);
-  await paint();
+  if (vortex) {
+    await wait(Math.max(0, MINIMUM_VORTEX_MS - (now() - visibleAt)));
+    hooks.phase("cover-destination");
+    await wait(fade);
+    await paint();
+  }
   hooks.phase("prepare-destination");
   await hooks.prepareDestination();
   await paint();

@@ -33,6 +33,18 @@ try {
   }
 
   const deferred = () => { let resolve; const promise = new Promise(r => { resolve = r; }); return { promise, resolve }; };
+  for (const reduced of [false, true]) {
+    let clock = 0;
+    const phases = [];
+    await runLoadingTransition({ phase: p => phases.push(p), now: () => clock,
+      wait: async ms => { clock += ms; }, paint: async () => {},
+      prepareVortex: async () => { assert.fail('black-only transition prepared a vortex'); },
+      load: async () => { clock += 40; }, waitForAssets: async () => { clock += 60; },
+      prepareDestination: async () => { clock += 50; },
+    }, reduced, false);
+    assert.deepEqual(phases, ['cover', 'prepare-destination', 'reveal']);
+    assert.equal(clock, (reduced ? 40 : 880) + 150, 'black-only transition inherited a vortex dwell');
+  }
   const vortex = deferred(), load = deferred(), assets = deferred(), warm = deferred();
   const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
   const phases = [];
