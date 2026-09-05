@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MESHY_BOOLIEROO_HEAD_ASSET } from './meshyBoolieRooHead.generated';
+import { RooPaintedBlink, ROO_BLINK_ASSET_PATH } from './rooPaintedBlink';
 
 export const MESHY_BOOLIEROO_HEAD_SCHEMA_VERSION = 1 as const;
 export const MESHY_BOOLIEROO_HEAD_ASSET_PATH = 'characters/meshy-boolieroo-head/';
@@ -9,6 +10,7 @@ export interface MeshyBoolieRooHeadComponent {
   readonly mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   readonly triangles: number;
   readonly sourceSha256: string;
+  readonly blink: RooPaintedBlink | null;
 }
 
 export interface MeshyBoolieRooHeadTextureDiagnostics {
@@ -20,6 +22,7 @@ export interface MeshyBoolieRooHeadTextureDiagnostics {
 
 let geometryValue: THREE.BufferGeometry | null = null;
 let materialValue: THREE.MeshStandardMaterial | null = null;
+let paintedMaterialValue: THREE.MeshStandardMaterial | null = null;
 let textureRequestCount = 0;
 let textureLoadCount = 0;
 const textureErrors: string[] = [];
@@ -76,8 +79,8 @@ function geometry(): THREE.BufferGeometry {
   return result;
 }
 
-function texture(name: string, colorSpace: THREE.ColorSpace): THREE.Texture {
-  const url = `${import.meta.env.BASE_URL}${MESHY_BOOLIEROO_HEAD_ASSET_PATH}${name}`;
+function texture(name: string, colorSpace: THREE.ColorSpace, folder = MESHY_BOOLIEROO_HEAD_ASSET_PATH): THREE.Texture {
+  const url = `${import.meta.env.BASE_URL}${folder}${name}`;
   textureRequestCount++;
   const result = new THREE.TextureLoader().load(
     url,
@@ -93,22 +96,30 @@ function texture(name: string, colorSpace: THREE.ColorSpace): THREE.Texture {
   return result;
 }
 
-function material(): THREE.MeshStandardMaterial {
-  if (materialValue) return materialValue;
-  materialValue = new THREE.MeshStandardMaterial({
+function material(painted: boolean): THREE.MeshStandardMaterial {
+  const cached = painted ? paintedMaterialValue : materialValue;
+  if (cached) return cached;
+  const result = new THREE.MeshStandardMaterial({
     name: 'meshy-boolieroo-alternate-head-material',
     color: 0xffffff,
-    map: texture('base-color.webp', THREE.SRGBColorSpace),
+    map: painted
+      ? texture('base-clean.webp', THREE.SRGBColorSpace, ROO_BLINK_ASSET_PATH)
+      : texture('base-color.webp', THREE.SRGBColorSpace),
     roughnessMap: texture('roughness.webp', THREE.NoColorSpace),
     roughness: 1,
     metalness: 0,
     flatShading: true,
   });
-  return materialValue;
+  if (painted) paintedMaterialValue = result;
+  else materialValue = result;
+  return result;
 }
 
-export function createMeshyBoolieRooHead(): MeshyBoolieRooHeadComponent {
-  const mesh = new THREE.Mesh(geometry(), material());
+export function createMeshyBoolieRooHead(options: { blink?: boolean } = {}): MeshyBoolieRooHeadComponent {
+  // Shared immutable surface/textures, independent paint state for each player.
+  const headMaterial = options.blink ? material(true).clone() : material(false);
+  const blink = options.blink ? new RooPaintedBlink(headMaterial) : null;
+  const mesh = new THREE.Mesh(geometry(), headMaterial);
   mesh.name = 'meshy-boolieroo-alternate-head-surface';
   mesh.scale.setScalar(MESHY_BOOLIEROO_HEAD_REST_SCALE);
   mesh.castShadow = true;
@@ -131,6 +142,7 @@ export function createMeshyBoolieRooHead(): MeshyBoolieRooHeadComponent {
   };
   return {
     mesh,
+    blink,
     triangles: MESHY_BOOLIEROO_HEAD_ASSET.triangles,
     sourceSha256: MESHY_BOOLIEROO_HEAD_ASSET.sourceSha256,
   };

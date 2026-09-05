@@ -138,6 +138,16 @@ has been removed from every production identifier. Its losslessly indexed mesh c
 textures are loaded only after **BoolieRoo** is selected; the skull stays visible
 during a cold load.
 
+BoolieRoo now uses the cleaned colour atlas and a painted blink in game. Each
+player independently waits 2–6 seconds between blinks and chooses a 0.2–0.4
+second blink length. The lid closes quickly, briefly holds, and reopens more
+slowly. It follows the existing UVs with a reusable 256² paint layer in the
+same material, so the 15,634 triangles, skeleton, collisions and draw count
+are unchanged. Holding a pose causes no texture uploads; game pause freezes
+the clock and the inactive Skull selection suppresses paint work. This is a
+texture illusion: the original raised lash silhouette remains fixed. Runtime
+state is exposed under `getAlternateHeadDiagnostics().blink`.
+
 Character colour maps are authored straight from their original 2K/4K sources
 as bicubic-sharpened 512² images, then stored as pixel-lossless WebP. Roughness
 and the shorts' meaningful metal mask remain as 256² lossless data textures.

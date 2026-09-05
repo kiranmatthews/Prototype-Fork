@@ -1,0 +1,23 @@
+{
+  "sourceSha256": "3785121eba8296c773d3d41834ae2e44eb4b7da471576772fe4eea0c1d9aacf3",
+  "triangles": 15634,
+  "vertices": 9689,
+  "triangleChange": 0,
+  "topologyChanged": false,
+  "uvsChanged": false,
+  "seamSamplesReconciled": 14822,
+  "changedBaseTexels": 34775,
+  "baseSize": [
+    512,
+    512
+  ],
+  "overlaySize": [
+    256,
+    256
+  ],
+  "baseBytes": 240402,
+  "coordinateBytes": 8262,
+  "originalBaseSha256": "b481ec680f120110b1a5c4a6764cb0a2cbc8892e52a346306c433bdfe2eff32c",
+  "reconciledSeamMeanChannelDifferenceBefore": 2.6929114379525925,
+  "reconciledSeamMeanChannelDifferenceAfter": 0.09731030450231638
+}

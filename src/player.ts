@@ -2054,6 +2054,7 @@ export class Player {
     readonly textureState: 'idle' | 'loading' | 'ready' | 'failed';
     readonly texturesLoaded: number;
     readonly textureError: string | null;
+    readonly blink: NonNullable<MeshyBoolieRooHeadComponent['blink']>['diagnostics'] | null;
   } {
     const component = this.meshyBoolieRooHead;
     const textures = this.meshyBoolieRooHeadTextureDiagnostics?.();
@@ -2067,6 +2068,7 @@ export class Player {
         : textures?.state ?? this.meshyBoolieRooHeadLoadState,
       texturesLoaded: textures?.loaded ?? 0,
       textureError: this.meshyBoolieRooHeadLoadError ?? textures?.error ?? null,
+      blink: component?.blink?.diagnostics ?? null,
     };
   }
 
@@ -2356,7 +2358,7 @@ export class Player {
     this.meshyBoolieRooHeadLoading = import('./character/meshyBoolieRooHead')
       .then((module) => {
         if (!this.headPresentation) throw new Error('head presentation mount is unavailable');
-        const component = module.createMeshyBoolieRooHead();
+        const component = module.createMeshyBoolieRooHead({ blink: true });
         component.mesh.visible = false;
         this.headPresentation.add(component.mesh);
         this.meshyBoolieRooHead = component;
@@ -14094,6 +14096,8 @@ export class Player {
   private finishVisualStep(input: Input, dt: number): void {
     this.updateSurfaceAlignment(dt);
     this.syncVisual(input, dt);
+    this.meshyBoolieRooHead?.blink?.update(dt,
+      this.characterHeadStyleValue === 'alternate' && this.group.visible);
   }
 
   private updateSurfaceAlignment(dt: number): void {
