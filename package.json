@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "check:levels": "node tools/validate-levels.mjs",
+    "check:local-data-reset": "node tools/test-local-game-data-reset.mjs",
     "check:campaign": "node tools/test-playtest-level-flow.mjs && node tools/test-campaign-flow.mjs && node tools/test-campaign-death-flow.mjs && node tools/test-campaign-collectible-visibility.mjs && node tools/test-campaign-performance.mjs && node tools/test-warp-room-return.mjs && node tools/test-gouraud-context-presets.mjs && node tools/test-game-flow-surface.mjs && node tools/test-game-flow-results.mjs && node tools/test-game-flow-interaction.mjs && node tools/test-game-flow-vortex.mjs",
     "check:chimeworks": "node tools/test-chimeworks.mjs",
     "check:unity-ports": "node tools/test-unity-level-ports.mjs && node tools/test-beachside-merge.mjs && node tools/test-beachfront-cliff.mjs && node tools/test-wood-path-kit.mjs && node tools/test-island-shelf.mjs && node tools/test-island-shore-foam.mjs && node tools/test-crate-rest-surface.mjs && node tools/test-coastal-street-kit.mjs && node tools/test-unity-sand-material.mjs",
@@ -43,7 +44,7 @@
     "character:doctor": "python3 tools/tripo-character/tripo_character.py doctor",
     "character:generate": "python3 tools/tripo-character/tripo_character.py generate",
     "character:test": "python3 -m unittest discover -s tools/tripo-character/tests -p 'test_*.py'",
-    "build": "npm run check:levels && npm run check:chimeworks && npm run check:campaign && npm run check:unity-ports && npm run check:ground && npm run check:crouch-jump && npm run check:pipe && npm run check:ledge && npm run check:rope && npm run check:rail-air && npm run check:landing-x && npm run check:run-facing && npm run check:carve-grip && npm run check:surface-friction && npm run check:camera-speed && npm run check:bail-recovery && npm run check:air-rescue && npm run check:crate-types && npm run check:crate-jump && npm run check:nst-port && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:animation && npm run check:character-lab && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:look && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
+    "build": "npm run check:levels && npm run check:local-data-reset && npm run check:chimeworks && npm run check:campaign && npm run check:unity-ports && npm run check:ground && npm run check:crouch-jump && npm run check:pipe && npm run check:ledge && npm run check:rope && npm run check:rail-air && npm run check:landing-x && npm run check:run-facing && npm run check:carve-grip && npm run check:surface-friction && npm run check:camera-speed && npm run check:bail-recovery && npm run check:air-rescue && npm run check:crate-types && npm run check:crate-jump && npm run check:nst-port && npm run check:editor-roundtrip && npm run check:interpolation && npm run check:animation && npm run check:character-lab && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:look && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

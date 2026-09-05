@@ -2,6 +2,7 @@
 // fixed-step game loop.
 
 import * as THREE from "three";
+import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
 import {
   Level,
@@ -110,6 +111,7 @@ import {
 } from "./characterAnimationRuntime";
 
 const app = document.getElementById("app")!;
+installLocalResetListener();
 const TOUCH_PRESENTATION = touchControlsRequested();
 // '?lite' (headless smoke) renders in software: no AA, and resize() caps the
 // internal resolution — slow frames desync the suite's wall-clock scripting.

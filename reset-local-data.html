@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reset local game data · Codex/sol fork</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#111721;color:#e2e8f0;font:15px/1.55 system-ui,sans-serif}main{max-width:680px;margin:7vh auto;padding:30px;border:1px solid #3b465a;border-radius:12px;background:#1b2331}h1{font-size:25px;line-height:1.2;margin:0 0 14px}small{color:#8fa1b8}p,li{color:#b9c6d8}.warning{padding:16px;background:#372a28;border-left:3px solid #f3ae80}.confirm{display:flex;align-items:flex-start;gap:10px;margin:22px 0}.confirm input{margin-top:5px}button,a.action{display:inline-block;padding:10px 15px;border:1px solid #667792;border-radius:6px;background:#303c50;color:#edf3fb;font:inherit;text-decoration:none;cursor:pointer}button:disabled{opacity:.4;cursor:default}#reset{background:#713a32;border-color:#cc7d65}.actions{display:flex;gap:10px;flex-wrap:wrap}#status{white-space:pre-wrap;margin:20px 0}#undo-panel{border-top:1px solid #465167;margin-top:25px;padding-top:20px}#undo-panel p{font-size:13px}[hidden]{display:none!important}@media(max-width:720px){main{margin:16px;padding:22px}}</style></head><body><main>
+<small>DEBUG · THIS BROWSER ONLY</small><h1>Reset local game data</h1>
+<p>Return Prototype Fork to the current published defaults. The game is stopped on this page so it cannot save old values back during the reset.</p>
+<div class="warning"><strong>This clears:</strong><ul><li>Saved tuning, character, camera, rendering and effects settings</li><li>Save slots, progress, time-trial records and local custom levels</li><li>Editor state, animation drafts and this game’s cached application data</li></ul></div>
+<p>Published levels, files on your computer, other sites’ data and your GitHub sync token are kept. One undo backup is retained in this browser.</p>
+<label class="confirm"><input id="confirm-reset" type="checkbox"><span>I want to reset this browser’s local game data.</span></label>
+<div class="actions"><a class="action" id="back" href="./">Cancel</a><button id="reset" disabled>Reset local game data</button></div>
+<p role="status" id="status" aria-live="polite">Nothing has been reset.</p>
+<section id="undo-panel" hidden><strong>Undo last reset</strong><p>Restore the previous local settings, saves and drafts. This replaces any local changes made since that reset.</p><label class="confirm"><input id="confirm-undo" type="checkbox"><span>Restore the previous local game data.</span></label><button id="undo" disabled>Undo last reset</button></section>
+<small id="build"></small>
+</main><script type="module" src="/src/resetLocalDataPage.ts"></script></body></html>

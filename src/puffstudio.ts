@@ -16,6 +16,7 @@
 // player's path, and main.ts imports it lazily so it costs nothing until asked
 // for.
 import * as THREE from 'three';
+import { readForkStudioDraft } from './localGameStorage';
 import { puffs, PUFF_PRESETS, type PuffPreset, type SurfaceKind } from './puffs';
 import { el, sec, note, btn, sliderRow, injectStudioCss } from './studiokit';
 
@@ -25,7 +26,7 @@ interface Ctx {
   onClose: () => void;
 }
 
-const STORE = 'puffStudioV1';
+const STORE = 'solProtoPuffStudioV1';
 
 /** Every editable field, in the order the panel lays them out. */
 type Kind = 'num' | 'range' | 'int2' | 'colour' | 'bool' | 'blend' | 'orient';
@@ -157,7 +158,7 @@ class PuffStudio {
   private seed = 1;
 
   constructor(private ctx: Ctx) {
-    const saved = localStorage.getItem(STORE);
+    const saved = readForkStudioDraft(localStorage, STORE, 'puffStudioV1');
     if (saved) {
       try {
         const j = JSON.parse(saved);

@@ -14,6 +14,7 @@ export default defineConfig({
         crtReview: 'crt-review.html',
         skateboardLab: 'skateboard-lab.html',
         spinLab: 'spin-lab.html',
+        resetLocalData: 'reset-local-data.html',
       },
     },
   },

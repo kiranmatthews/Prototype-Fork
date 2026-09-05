@@ -2,6 +2,7 @@
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
 import * as THREE from "three";
+import { localDataResetUrl } from "./localGameStorage";
 import {
   GameHudSurface,
   type GameHudBoostState,
@@ -485,6 +486,14 @@ export class UI {
     const stats = div("hud-statlines");
     statsWrap.appendChild(stats);
     this.statsEl = stats;
+
+    const resetData = document.createElement("button");
+    resetData.className = "hud-levelbtn";
+    resetData.id = "reset-local-game-data";
+    resetData.textContent = "RESET LOCAL GAME DATA…";
+    resetData.title = "Open the local settings/save reset screen (with confirmation and undo)";
+    resetData.addEventListener("click", () => location.assign(localDataResetUrl()));
+    statsWrap.appendChild(resetData);
 
     // ---- RIGHT side panel (tuning sliders) ----
     // Apply any saved tuning BEFORE building the sliders, so they show it.

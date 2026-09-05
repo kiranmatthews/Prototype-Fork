@@ -1,5 +1,6 @@
 // Versioned, context-local Field Studio drafts. This is authoring state only:
 // production uses the reviewed source recipes in gameFlowVortexProfiles.ts.
+import { LOCAL_RESET_MARKER } from './localGameStorage';
 
 import {
   FIELD_SWIRL_PRESETS,
@@ -167,7 +168,8 @@ export function loadFieldStudioState(
 
   // Preserve the old one-draft lab in Scratch without silently promoting it
   // into a production screen context.
-  const legacy = readJson(storage, LEGACY_FIELD_STUDIO_STORAGE_KEY);
+  const legacy = storage?.getItem(LOCAL_RESET_MARKER) === '1'
+    ? null : readJson(storage, LEGACY_FIELD_STUDIO_STORAGE_KEY);
   if (isRecord(legacy)) {
     const fallback = state.drafts.scratch;
     state.drafts.scratch = {

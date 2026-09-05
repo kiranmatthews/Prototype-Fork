@@ -1,6 +1,7 @@
 // THE UNITY OCEAN STUDIO — #waterstudio. Live controls for every audited
 // MatrixRex ocean value plus the render-pass/debug switches. Settings use a
 // versioned key so retired CoastWater tunings can never leak into this port.
+import { readForkStudioDraft } from './localGameStorage';
 import {
   CoastWater,
   UNITY_OCEAN_DEFAULTS,
@@ -16,7 +17,7 @@ import {
   toT,
 } from "./studiokit";
 
-const STORE = "unityOceanStudioV1";
+const STORE = "solProtoUnityOceanStudioV1";
 const STORE_VERSION = 1;
 
 interface Opts {
@@ -257,7 +258,7 @@ export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
   const params = cloneParams(UNITY_OCEAN_DEFAULTS);
   let debugOverrides: DebugOverrides = {};
   try {
-    const saved = JSON.parse(localStorage.getItem(STORE) ?? "null") as unknown;
+    const saved = JSON.parse(readForkStudioDraft(localStorage, STORE, 'unityOceanStudioV1') ?? "null") as unknown;
     if (saved && typeof saved === "object") {
       const record = saved as Record<string, unknown>;
       if (record.version === STORE_VERSION) {

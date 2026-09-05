@@ -3,6 +3,7 @@
 // halo, backing, warm/cool palettes. Copy emits a block that pastes straight
 // into SWIRL_PRESETS in src/swirls.ts.
 import * as THREE from 'three';
+import { readForkStudioDraft } from './localGameStorage';
 import { swirls, SWIRL_PRESETS, type SwirlPreset, type Swirl } from './swirls';
 import { el, sec, note, btn, sliderRow, injectStudioCss } from './studiokit';
 
@@ -12,7 +13,7 @@ interface Ctx {
   onClose: () => void;
 }
 
-const STORE = 'swirlStudioV3'; // v3: unified seeded rings — older drafts don't fit
+const STORE = 'solProtoSwirlStudioV3'; // v3: unified seeded rings — older drafts don't fit
 
 type Kind = 'num' | 'colour' | 'bool';
 interface Field {
@@ -168,7 +169,7 @@ class SwirlStudio {
 
   /** Saved drafts are only trusted if they speak the band schema. */
   private load(): SwirlPreset {
-    const saved = localStorage.getItem(STORE);
+    const saved = readForkStudioDraft(localStorage, STORE, 'swirlStudioV3');
     if (saved) {
       try {
         const j = JSON.parse(saved);
