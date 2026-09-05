@@ -185,6 +185,14 @@ made the mount restart at clip frame zero and replaced the proven steady stance.
 Live skating therefore preserves the procedural presentation until a future
 authored skate clip is explicitly approved to replace it.
 
+Entering skating now plays one short procedural mount hop: 0.30 seconds of
+lift with a 0.28 m peak, knee tuck and a small arm lift, followed by 0.14 seconds
+of landing compression. Standing/moving charges and automatic momentum or
+downhill mounts use the same transition. The hold threshold and physics stay
+unchanged. Rider lift is applied after deck planting, and the normal skating
+stance is restored exactly at the end. A real jump, dismount, action or respawn
+clears the transient. Its source timing lives in `src/skateMount.ts`.
+
 Starter-catalog upgrades are versioned. An older saved suite receives newly
 introduced starter clips without replacing any same-ID clip the user has
 edited. Once upgraded, intentionally deleting a starter slot does not cause it

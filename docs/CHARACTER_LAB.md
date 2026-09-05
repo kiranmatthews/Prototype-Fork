@@ -29,6 +29,11 @@ foot planting runs last. This keeps the following independent:
 4. persistent Character Lab proportions;
 5. gameplay collision.
 
+Grounded Idle and Walk lower the rider-only root until the lowest visible
+outsole is 6 mm above the support plane. The correction runs after animation
+and proportions, respects slopes, and fades with the existing Walk/Run blend.
+Full Run, skating/deck planting, and airborne/action poses remain unchanged.
+
 The proportion layer scales renderable segment children and translates their
 endpoints. It does not replace joint IDs, change hierarchy, or accumulate its
 values from one frame to the next.

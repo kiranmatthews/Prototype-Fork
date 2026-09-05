@@ -196,7 +196,7 @@ const deactivateCurtain = transitionLifecycle.indexOf(
   'this.transitionCurtain.classList.remove("vortex", "active")',
 );
 const fadeCleanup = transitionLifecycle.indexOf(
-  "await wait(this.reducedMotion ? 20 : 520)",
+  "}, this.reducedMotion);",
   deactivateCurtain,
 );
 const hideCurtain = transitionLifecycle.indexOf(
@@ -207,7 +207,7 @@ assert.ok(
   deactivateCurtain >= 0 &&
     deactivateCurtain < fadeCleanup &&
     fadeCleanup < hideCurtain,
-  "curtain must stay displayed until its normal/reduced-motion fade cleanup",
+  "curtain must stay displayed until the readiness-driven sequence has finished its final fade",
 );
 assert.match(
   flow,

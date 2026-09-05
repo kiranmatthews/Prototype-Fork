@@ -5,7 +5,9 @@
 // finish gate at the far end.
 
 import * as THREE from "three";
+import { trackPresentationImage } from "./presentationLoading";
 import { Rail } from "./rails";
+import { DiscardedBoards } from "./skateboard/discarded";
 import {
   PROP_SCALE,
   PropFamily,
@@ -3104,6 +3106,7 @@ export class Level {
 
   private scene: THREE.Scene;
   private root = new THREE.Group(); // everything the level owns, for disposal
+  readonly discardedBoards = new DiscardedBoards();
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private thornClusters: ProceduralThornCluster[] = [];
@@ -3769,6 +3772,8 @@ export class Level {
   constructor(scene: THREE.Scene, entry: LevelEntry = BUILTIN_LEVELS[0]) {
     this.scene = scene;
     scene.add(this.root);
+    this.root.add(this.discardedBoards.root);
+    this.discardedBoards.onImpact = (broken) => sfx.play('skateHalt', broken ? 0.35 : 0.18, broken ? 0.65 : 1.5);
     this.name = entry.name;
     // A user level carries its own component data and builds through the same
     // pipeline the editor writes. A built-in has none, so its id picks the
@@ -6015,6 +6020,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.discardedBoards.dispose(); // remove borrowed board resources before the level traversal
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
     this.meshyCourtyards.length = 0;
@@ -6720,6 +6726,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.discardedBoards.update(dt, this);
     this.updateCampaignPortalAnimation();
     this.updateVfx(dt);
     this.islandShoreFoam?.update(dt);
@@ -9915,7 +9922,7 @@ export class Level {
         0x164c2a,
       ),
       timeRelic: makeAwardBatch(
-        new THREE.TorusGeometry(0.31, 0.105, 6, 12),
+        Level.timeRelicGeometry(),
         0x64b9ff,
         0x193f73,
       ),
@@ -15406,7 +15413,9 @@ export class Level {
       ctx.drawImage(img, pad, pad, S - pad * 2, S - pad * 2);
       tex.needsUpdate = true;
     };
-    img.src = import.meta.env.BASE_URL + "crossbones.png";
+    const url = import.meta.env.BASE_URL + "crossbones.png";
+    trackPresentationImage(img, url);
+    img.src = url;
     return tex;
   }
 
@@ -15433,7 +15442,9 @@ export class Level {
       ctx.drawImage(img, pad, pad, S - pad * 2, S - pad * 2);
       tex.needsUpdate = true;
     };
-    img.src = import.meta.env.BASE_URL + "roo.png";
+    const url = import.meta.env.BASE_URL + "roo.png";
+    trackPresentationImage(img, url);
+    img.src = url;
     return tex;
   }
 
@@ -15952,6 +15963,54 @@ export class Level {
     halo.scale.set(1.7 * scale, 1.6 * scale, 1);
     g.add(halo);
     return g;
+  }
+
+  static timeRelicGeometry(): THREE.TorusGeometry {
+    return new THREE.TorusGeometry(0.31, 0.105, 6, 12);
+  }
+
+  /** The same blue relic trophy used in the Warp Room's earned-award sockets. */
+  static timeRelicMesh(): THREE.Group {
+    const group = new THREE.Group();
+    const mesh = new THREE.Mesh(Level.timeRelicGeometry(), new THREE.MeshPhongMaterial({
+      color: 0x64b9ff, emissive: 0x193f73, shininess: 72, flatShading: true,
+    }));
+    mesh.scale.set(1.05, 1.18, 1.05);
+    group.add(mesh);
+    return group;
+  }
+
+  /** Hide only finish-pad art and find real support below the results skater. */
+  prepareResultsBackdrop(fallback: THREE.Vector3): {
+    position: THREE.Vector3; forward: THREE.Vector3; restore: () => void;
+  } {
+    // The systemic finish switch sits directly between the lens and the rider.
+    // This is a reversible art-only hide, never a crate break or inventory edit.
+    const hidden = [
+      ...this.warpPads.map((pad) => pad.group),
+      ...this.crates.filter((crate) => crate.systemicEndNitroBang).map((crate) => crate.mesh),
+    ];
+    const visibility = hidden.map((object) => object.visible);
+    hidden.forEach((object) => { object.visible = false; });
+    this.root.updateMatrixWorld(true);
+    const gate = this.gateSpec ?? fallback;
+    const lane = this.laneDirAt(gate.x, gate.y, gate.z);
+    const yaw = THREE.MathUtils.degToRad(this.gateYaw);
+    const forward = new THREE.Vector3(lane?.x ?? Math.sin(yaw), 0, lane?.z ?? -Math.cos(yaw)).normalize();
+    const position = new THREE.Vector3(gate.x, gate.y, gate.z);
+    const supports = this.groundMeshes.filter((mesh) => !mesh.userData.finishPad);
+    const ray = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 14);
+    // The approach keeps the camera on the playable side of an end wall.
+    for (const offset of [1.8, 0, 3.2]) {
+      const candidate = new THREE.Vector3(gate.x, gate.y, gate.z).addScaledVector(forward, -offset);
+      ray.ray.origin.copy(candidate).add(new THREE.Vector3(0, 6, 0));
+      const support = ray.intersectObjects(supports, false).find((hit) => Math.abs(hit.point.y - gate.y) <= 1.1);
+      if (support) { position.copy(candidate); position.y = support.point.y; break; }
+    }
+    return {
+      position, forward,
+      restore: () => hidden.forEach((object, i) => { object.visible = visibility[i]; }),
+    };
   }
 
   // The crystal: Crash 2/3 style pickup on the main route. Faceted octahedron

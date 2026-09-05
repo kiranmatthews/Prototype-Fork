@@ -536,7 +536,11 @@ const SURFACE_VERTEX = `
   void main() {
     vUv = uv;
     vWearUv = wearUv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vec4 boardPosition = vec4(position, 1.0);
+    #ifdef USE_INSTANCING
+      boardPosition = instanceMatrix * boardPosition;
+    #endif
+    gl_Position = projectionMatrix * modelViewMatrix * boardPosition;
   }
 `;
 

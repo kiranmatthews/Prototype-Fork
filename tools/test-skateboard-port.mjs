@@ -263,6 +263,11 @@ for (const name of [
 
 const worldScaled = new THREE.Group();
 modelApi.rebuildSkateboardPresentation(worldScaled, scaledSettings);
+for (const surface of worldScaled.getObjectByName('Deck_ContinuousRoundedKick').material.slice(0, 2)) {
+  assert.ok(surface.isShaderMaterial);
+  assert.match(surface.vertexShader, /#ifdef USE_INSTANCING[\s\S]*instanceMatrix \* boardPosition/,
+    'batched debris lost its textured deck surface');
+}
 worldScaled.updateMatrixWorld(true);
 const deckWorld = worldScaled
   .getObjectByName("Deck_ContinuousRoundedKick")
@@ -347,7 +352,7 @@ const player = await readText("src/player.ts");
 assert.match(main, /createSkateboardTuningPanel/);
 assert.match(main, /skateboardSettings/);
 assert.match(player, /createSkateboardPresentation/);
-assert.match(player, /skateboardRestingPivotLift/);
+assert.match(player, /discardedBoards\.step/);
 assert.match(player, /const PLANT_DECK_TOP = SKATEBOARD_GRIP_TOP/);
 assert.doesNotMatch(player, /new THREE\.BoxGeometry\(0\.5, 0\.09, 1\.4\)/);
 assert.match(await readText("skateboard-lab.html"), /src\/skateboard\/lab\.ts/);

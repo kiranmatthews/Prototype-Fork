@@ -360,4 +360,36 @@ assert.deepEqual(
   "temporary bonus lives/fruit did not merge on completion",
 );
 
-console.log("Validated campaign slots, working snapshots, autosave, failure handling, and progress.");
+// Modern/Classic is one browser preference shared with the existing debug
+// mode, independent of save slots and audio preferences.
+memory.delete('solProtoEndlessDeaths');
+assert.equal(campaign.loadGamePlayMode(), 'classic');
+memory.set('solProtoEndlessDeaths', 'on');
+assert.equal(campaign.loadGamePlayMode(), 'modern', 'legacy debug choice was lost');
+const saveBeforeMode = JSON.stringify(trialOnly.active);
+campaign.saveGamePlayMode('classic');
+assert.equal(memory.get('solProtoEndlessDeaths'), 'off');
+assert.equal(JSON.stringify(trialOnly.active), saveBeforeMode, 'play mode changed campaign progress');
+campaign.saveGamePlayMode('modern');
+assert.equal(campaign.loadGamePlayMode(), 'modern');
+failedWrites.add('solProtoEndlessDeaths');
+assert.doesNotThrow(() => campaign.saveGamePlayMode('classic'));
+assert.equal(campaign.loadGamePlayMode(), 'modern', 'failed write changed stored choice');
+failedWrites.delete('solProtoEndlessDeaths');
+memory.set('solProtoEndlessDeaths', 'invalid');
+assert.equal(campaign.loadGamePlayMode(), 'classic');
+
+// Exercise the real runtime rule application with a normal (non-debug)
+// campaign context. Bonus stages retain their separate free-attempt economy.
+const mainSource = await readFile(`${root}src/main.ts`, 'utf8');
+const applySource = mainSource.match(/function applyEndlessDeaths\(\): void \{[\s\S]*?\n\}/)?.[0];
+assert.ok(applySource);
+const applyRule = new Function('player', 'p2', 'ui', 'endlessDeathsOn', 'shellBypass',
+  ts.transpileModule(applySource, {compilerOptions:{target:ts.ScriptTarget.ES2020}}).outputText + '\napplyEndlessDeaths();');
+for (const [modern,bonus,expected] of [[true,false,true],[false,false,false],[true,true,false]]) {
+  const player={bonusMode:bonus,endlessDeaths:!expected};
+  const p2={endlessDeaths:!expected};let hud=null;
+  applyRule(player,p2,{setEndlessDeaths:value=>{hud=value;}},modern,false);
+  assert.equal(player.endlessDeaths,expected);assert.equal(p2.endlessDeaths,expected);assert.equal(hud,expected);
+}
+console.log("Validated campaign slots, working snapshots, autosave, progress and persistent Modern/Classic rules.");

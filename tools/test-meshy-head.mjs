@@ -243,7 +243,7 @@ try {
   assert.match(playerSource, /headLookSocket\.getWorldQuaternion/);
   const finalOverlayIndex = playerSource.indexOf('this.playerAnimationBridge.applyOverlay(dt);');
   const finalAppearanceIndex = playerSource.indexOf(
-    'this.syncCharacterAppearance();',
+    'this.syncCharacterAppearance(',
     finalOverlayIndex,
   );
   const maskSocketSampleIndex = playerSource.indexOf(
@@ -251,13 +251,18 @@ try {
     finalAppearanceIndex,
   );
   const finalSolePlantIndex = playerSource.indexOf(
-    'this.plantOnDeck(underW);',
+    'this.plantOnDeck(underW, this.skateMountT >= 0);',
     finalAppearanceIndex,
   );
   assert.ok(finalOverlayIndex >= 0 && finalAppearanceIndex > finalOverlayIndex);
   assert.ok(finalSolePlantIndex > finalAppearanceIndex);
   assert.ok(maskSocketSampleIndex > finalSolePlantIndex,
     'mask sockets must be sampled after authored head/profile and final root corrections');
+  const finalMountLiftIndex = playerSource.indexOf(
+    'this.riderG.position.add(_plantC);', finalSolePlantIndex,
+  );
+  assert.ok(finalMountLiftIndex > finalSolePlantIndex && maskSocketSampleIndex > finalMountLiftIndex,
+    'mask must follow the head after mount-hop lift');
   assert.doesNotMatch(playerSource,
     /neck-volume|const skull =|const muzzle =|eye-white-|earOuterGeo|const crown =/);
   assert.match(labSource, /\['Head', 'head'\]/);

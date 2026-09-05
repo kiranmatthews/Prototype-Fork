@@ -3,6 +3,8 @@
 // the pre-CRT render path without turning the menu into canvas hit regions.
 
 import type * as THREE from "three";
+import type { ResultsViewport } from "./resultsPresentation";
+import { runLoadingTransition, type LoadingTransitionPhase } from "./presentationLoading";
 import { rooReady } from "./roofont";
 import {
   CAMPAIGN_LEVELS,
@@ -10,6 +12,7 @@ import {
   CampaignStore,
   type CampaignSaveV1,
   type GameAudioOptions,
+  type GamePlayMode,
 } from "./campaign";
 import type { GameFlowVortexContext } from "./gameFlowVortexProfiles";
 import {
@@ -54,6 +57,9 @@ export type ResultsScreenState =
       levelName: string;
       actualTime: number;
       relicTarget: number;
+      boxes: number;
+      totalBoxes: number;
+      bestTimes: number[];
     };
 
 export interface GameFlowUICallbacks {
@@ -73,10 +79,14 @@ export interface GameFlowUICallbacks {
   onResultsRetry: () => void;
   onResultsContinue: () => void;
   onAudioOptions: (options: GameAudioOptions) => void;
+  getPlayMode: () => GamePlayMode;
+  onPlayMode: (mode: GamePlayMode) => void;
+  prepareLoadingVortex?: () => Promise<void>;
+  waitForLevelData?: () => Promise<void>;
+  waitForDestinationAssets?: () => Promise<void>;
+  prepareDestinationFrame?: () => Promise<void>;
+  onTransitionComplete?: () => void;
 }
-
-const wait = (milliseconds: number): Promise<void> =>
-  new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
 function element<K extends keyof HTMLElementTagNameMap>(
   tag: K,
@@ -130,6 +140,8 @@ export class GameFlowUI {
   private selected = 0;
   private transitionActive = false;
   private loadingVortexActive = false;
+  private destinationRevealing = false;
+  private transitionPhase: LoadingTransitionPhase | null = null;
   private pauseState: PauseScreenState | null = null;
   private pendingNewSlot = 1;
   private pendingLoadSlot = 1;
@@ -169,7 +181,7 @@ export class GameFlowUI {
           panel: this.panel,
           buttons: this.navButtons,
           screen: this.screen,
-          transitionActive: this.transitionActive,
+          transitionActive: this.transitionActive && !this.destinationRevealing && this.transitionPhase !== "cover",
           thumbnail: this.thumbnail,
           thumbnailCaptured: this.thumbnailCaptured,
           maskReady: this.maskReady,
@@ -248,6 +260,18 @@ export class GameFlowUI {
 
   get currentScreen(): GameScreen | null {
     return this.screen;
+  }
+
+  get revealingDestination(): boolean { return this.destinationRevealing; }
+
+  get loadingPhase(): LoadingTransitionPhase | null { return this.transitionPhase; }
+
+  /** Leave the live character shot clear of the real responsive card bounds. */
+  resultsSceneViewport(width: number, height: number): ResultsViewport {
+    const card = this.panel.querySelector(".game-results-card")?.getBoundingClientRect();
+    const beside = width > 760 && height > 560 || width / height > 1.3;
+    if (beside) return { x: 18, y: 18, width: Math.max(80, (card?.left ?? width * 0.5) - 36), height: height - 36 };
+    return { x: 18, y: 12, width: width - 36, height: Math.max(80, (card?.top ?? height * 0.5) - 24) };
   }
 
   get needsPauseThumbnail(): boolean {
@@ -524,37 +548,47 @@ export class GameFlowUI {
   async transition(action: () => void | Promise<void>): Promise<void> {
     if (this.transitionActive) return;
     this.transitionActive = true;
+    this.cursor.classList.remove("visible");
     this.invalidatePreCrt();
-    document.body.classList.add("game-shell-transitioning");
     this.transitionCurtain.hidden = false;
     // Flush the newly displayed opacity-0 state so adding .active below keeps
     // the fade-in transition instead of coalescing display + opacity in one
     // style update and appearing fully black on its first painted frame.
     void this.transitionCurtain.offsetWidth;
-    this.transitionCurtain.classList.add("active");
     try {
-      await wait(this.reducedMotion ? 20 : 360);
-      // The black guard is now opaque: swap the main renderer to the preserved
-      // Gouraud field, then reveal it as the actual loading background.
-      this.loadingVortexActive = true;
-      this.syncVortexBodyClass();
-      this.transitionCurtain.classList.add("vortex");
-      await wait(this.reducedMotion ? 20 : 120);
-      await action();
-      // Draw the destination exactly once while the curtain is opaque. If the
-      // action resumes gameplay, normal rendering takes over after the fade.
-      this.requestGameplayFrame();
-      await wait(this.reducedMotion ? 20 : 150);
-      this.transitionCurtain.classList.remove("vortex");
-      await wait(this.reducedMotion ? 20 : 160);
-      this.loadingVortexActive = false;
-      this.syncVortexBodyClass();
+      await runLoadingTransition({
+        phase: (phase) => {
+          this.transitionPhase = phase;
+          if (phase === "cover") this.transitionCurtain.classList.add("active");
+          if (phase === "prepare-vortex") {
+            this.loadingVortexActive = true;
+            document.body.classList.add("game-shell-transitioning");
+          }
+          if (phase === "vortex") this.transitionCurtain.classList.add("vortex");
+          if (phase === "cover-destination") this.transitionCurtain.classList.remove("vortex");
+          if (phase === "prepare-destination") {
+            this.loadingVortexActive = false;
+            this.destinationRevealing = true;
+            // Restore HUD/menu under opaque black, so it fades with the scene.
+            document.body.classList.remove("game-shell-transitioning");
+          }
+          if (phase === "reveal") this.transitionCurtain.classList.remove("vortex", "active");
+          this.syncVortexBodyClass();
+          this.invalidatePreCrt();
+          this.requestGameplayFrame();
+        },
+        prepareVortex: () => this.callbacks.prepareLoadingVortex?.() ?? Promise.resolve(),
+        load: async () => { await this.callbacks.waitForLevelData?.(); await action(); },
+        waitForAssets: () => this.callbacks.waitForDestinationAssets?.() ?? Promise.resolve(),
+        prepareDestination: () => this.callbacks.prepareDestinationFrame?.() ?? Promise.resolve(),
+      }, this.reducedMotion);
     } finally {
       this.loadingVortexActive = false;
+      this.destinationRevealing = false;
+      this.transitionPhase = null;
       this.syncVortexBodyClass();
       this.requestGameplayFrame();
       this.transitionCurtain.classList.remove("vortex", "active");
-      await wait(this.reducedMotion ? 20 : 520);
       // The opacity transition has now finished. Removing the curtain from
       // layout releases its full-viewport compositor surface during gameplay.
       this.transitionCurtain.hidden = true;
@@ -562,6 +596,7 @@ export class GameFlowUI {
       document.body.classList.remove("game-shell-transitioning");
       this.syncVortexBodyClass();
       this.invalidatePreCrt();
+      this.callbacks.onTransitionComplete?.();
     }
   }
 
@@ -972,6 +1007,28 @@ export class GameFlowUI {
     const title = element("h2", "game-panel-title");
     title.textContent = "OPTIONS";
     const toggles = element("div", "game-menu-list game-toggle-list");
+    if (this.pauseState?.inWarpRoom) {
+      const description = element('p', 'game-panel-subtitle');
+      const modeButton = this.button('', () => {
+        const next = this.callbacks.getPlayMode() === 'modern' ? 'classic' : 'modern';
+        this.callbacks.onPlayMode(next);
+        syncMode();
+        this.invalidatePreCrt();
+      });
+      modeButton.classList.add('game-toggle', 'game-play-mode');
+      modeButton.innerHTML = '<span>PLAY MODE</span><strong></strong>';
+      const syncMode = (): void => {
+        const mode = this.callbacks.getPlayMode();
+        modeButton.querySelector('strong')!.textContent = mode.toUpperCase();
+        modeButton.dataset.playMode = mode;
+        modeButton.setAttribute('aria-label', `Play mode: ${mode}. Activate to switch.`);
+        description.textContent = mode === 'modern'
+          ? 'Endless lives. Deaths are counted. No Game Over.'
+          : 'Limited lives. Lose your last life and face Game Over.';
+      };
+      syncMode();
+      toggles.append(modeButton, description);
+    }
     toggles.append(
       this.toggleButton("SOUND EFFECTS", !this.options.sfxMuted, (enabled) => {
         this.options.sfxMuted = !enabled;
@@ -1047,28 +1104,27 @@ export class GameFlowUI {
       "div",
       `game-results-tally game-results-tally-${state.kind}`,
     );
-    let awards: HTMLElement | null = null;
     if (state.kind === "time-trial") {
+      const bestTimes = state.bestTimes.filter((time) => Number.isFinite(time) && time >= 0).sort((a, b) => a - b).slice(0, 3);
       tally.innerHTML = `
-        <div><span>YOUR TIME</span><strong>${this.formatTime(state.actualTime)}</strong></div>
-        <div><span>RELIC TARGET</span><strong>${this.formatTime(state.relicTarget)}</strong></div>`;
+        <div class="game-results-run-time"><span>YOUR TIME</span><strong>${this.formatTime(state.actualTime)}</strong></div>
+        <div><span>RELIC TARGET</span><strong>${this.formatTime(state.relicTarget)}</strong></div>
+        <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>
+        <div class="game-results-bests"><span>YOUR BEST TIMES</span><strong>${bestTimes.map((time) => this.formatTime(time)).join(" · ") || "—"}</strong></div>`;
     } else {
       tally.innerHTML = `
         <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>`;
-      awards = element("div", "game-results-awards");
-      awards.append(
-        this.award("CRYSTAL", state.crystal, "◆"),
-        this.award("BOX GEM", state.boxGem, "◇"),
-        this.award("COMBO GEM", state.comboGem, "✦"),
-      );
     }
+    const rewardNames = state.kind === "time-trial"
+      ? (state.actualTime <= state.relicTarget ? ["Time relic"] : [])
+      : [state.crystal && "Crystal", state.boxGem && "Box gem", state.comboGem && "Combo gem"].filter(Boolean);
+    card.setAttribute("aria-label", rewardNames.length ? `Rewards earned: ${rewardNames.join(", ")}` : "No new collectibles earned");
     const actions = element("div", "game-menu-list game-results-actions");
     actions.append(
       this.button("RETRY LEVEL", this.callbacks.onResultsRetry),
       this.button("CONTINUE", this.callbacks.onResultsContinue),
     );
     card.append(eyebrow, title, tally);
-    if (awards) card.append(awards);
     card.append(actions);
     this.panel.appendChild(card);
     this.observePreCrtLayout();
@@ -1100,16 +1156,6 @@ export class GameFlowUI {
     cleared.textContent = `${totals.cleared} OF ${CAMPAIGN_LEVELS.length} LEVELS CLEARED`;
     card.append(head, bar, grid, cleared);
     return card;
-  }
-
-  private award(label: string, earned: boolean, icon: string): HTMLElement {
-    const item = element("div", `game-award${earned ? " earned" : ""}`);
-    const glyph = element("span");
-    glyph.textContent = icon;
-    const copy = element("small");
-    copy.textContent = earned ? label : `${label} —`;
-    item.append(glyph, copy);
-    return item;
   }
 
   private toggleButton(
@@ -1344,7 +1390,7 @@ export class GameFlowUI {
       case "confirm-load": return `Load save slot ${this.pendingLoadSlot}`;
       case "confirm-quit-main": return "Quit to main menu confirmation";
       case "pause": return "Pause menu";
-      case "options": return "Audio options";
+      case "options": return "Game options";
       case "gameover": return "Game over";
       case "results": return "Run results";
       default: return "Game menu";
@@ -1516,9 +1562,10 @@ export class GameFlowUI {
       .game-save-status { margin: 10px 0 4px; text-align: center; color: #68341c; font: 800 14px/1.35 ui-monospace, Menlo, monospace; letter-spacing: .05em; }
       .game-operation-status { min-height: 18px; margin: 0 0 10px; text-align: center; color: #27712c; font: 800 12px/1.35 ui-monospace, Menlo, monospace; }
       .game-operation-status.error { color: #9a281b; }
-      .game-toggle { display: flex; justify-content: space-between; align-items: center; padding: 0 24px; }
-      .game-toggle strong { color: #218d3c; }
+      .game-toggle { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 24px; }
+      .game-toggle strong { color: #218d3c; flex-shrink: 0; }
       .game-toggle.toggle-off strong { color: #a52f1c; }
+      .game-play-mode strong { font-size: .8em; }
       .game-over-layout { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.18); overflow: hidden; }
       .game-over-layout::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 44%, rgba(176,55,13,.18), transparent 37%), radial-gradient(ellipse at 50% 100%, #220805, transparent 48%); }
       .game-over-mask-fallback { width: min(760px, 84vw, calc(72vh * 1.15)); aspect-ratio: 1.15 / 1; background: center / min(300px, 43vw) no-repeat url('${import.meta.env.BASE_URL}crossbones.png'); filter: drop-shadow(0 0 35px rgba(255,91,19,.34)); transition: none; }
@@ -1538,21 +1585,18 @@ export class GameFlowUI {
       .game-results-tally span { color: #714326; font: 800 11px/1.2 ui-monospace, Menlo, monospace; }
       .game-results-tally strong { color: #713019; font-size: 29px; }
       .game-results-time-trial .game-results-tally { margin: 8px 0 15px; gap: clamp(8px, 2vw, 16px); }
-      .game-results-time-trial .game-results-tally div { padding: clamp(12px, 3vw, 17px) clamp(5px, 2vw, 16px) clamp(10px, 2.5vw, 14px); text-align: center; }
-      .game-results-time-trial .game-results-tally strong { min-width: 0; color: #f06420; font-size: clamp(22px, 7vw, 48px); white-space: nowrap; }
-      .game-results-awards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 15px 0; }
-      .game-results-normal .game-results-awards { grid-template-columns: repeat(3, 1fr); }
-      .game-award { display: flex; align-items: center; gap: 8px; opacity: .35; filter: grayscale(1); }
-      .game-award.earned { opacity: 1; filter: none; }
-      .game-award span { color: #a45bf0; font-size: 31px; text-shadow: 0 2px 0 #4b214f; }
-      .game-award small { color: #67361e; font: 800 11px/1.2 ui-monospace, Menlo, monospace; }
+      .game-results-time-trial .game-results-tally div { padding: 9px 7px; text-align: center; }
+      .game-results-time-trial .game-results-tally strong { min-width: 0; font-size: clamp(22px, 3vw, 32px); white-space: nowrap; }
+      .game-results-tally .game-results-run-time, .game-results-tally .game-results-bests { grid-column: 1 / -1; }
+      .game-results-time-trial .game-results-run-time strong { color: #ee571d; font-size: clamp(45px, 6vw, 72px); line-height: 1.1; }
+      .game-results-time-trial .game-results-bests strong { margin-top: 5px; font: 800 clamp(12px, 1.35vw, 17px)/1.3 ui-monospace, Menlo, monospace; }
       .game-results-actions { margin-top: 6px; }
       .game-cartoon-cursor { position: fixed; z-index: 90; top: 0; left: 0; width: 42px; height: 50px; pointer-events: none; opacity: 0; transform: translate3d(-100px,-100px,0); transition: opacity .12s; filter: drop-shadow(4px 5px 0 rgba(31,10,5,.65)); }
       .game-cartoon-cursor.visible { opacity: 1; }
       .game-cartoon-cursor svg { width: 100%; height: 100%; overflow: visible; }
       .game-cartoon-cursor path:first-child { fill: #ff8c22; stroke: #47190c; stroke-width: 5; stroke-linejoin: round; }
       .game-cartoon-cursor .game-cursor-shine { fill: #ffd846; stroke: none; }
-      .game-transition-curtain { position: fixed; z-index: 100; inset: 0; background-color: #000; opacity: 0; pointer-events: none; transition: opacity .36s ease, background-color .16s ease; }
+      .game-transition-curtain { position: fixed; z-index: 100; inset: 0; background-color: #000; opacity: 0; pointer-events: none; transition: opacity .36s ease, background-color .36s ease; }
       .game-transition-curtain[hidden] { display: none !important; }
       .game-transition-curtain.active { opacity: 1; pointer-events: auto; }
       .game-transition-curtain.active.vortex { background-color: rgba(0,0,0,.16); }
@@ -1605,6 +1649,7 @@ export class GameFlowUI {
         .game-cartoon-cursor { display: none; }
       }
       @media (max-width: 760px), (max-height: 560px) {
+        .game-options-card { padding: 24px; }
         .game-shell-panel { overflow-y: auto; place-items: start center; }
         .game-launch-card { margin: auto; }
         .game-pause-layout { height: auto; grid-template-columns: 1fr; grid-template-rows: auto; gap: 14px; }
@@ -1618,7 +1663,17 @@ export class GameFlowUI {
         .game-over-actions .game-menu-button { flex: 1; }
         .game-screen-results { place-items: end center; padding-bottom: 3vh; background: linear-gradient(180deg, transparent 0 30%, rgba(3,5,10,.88) 100%); }
         .game-results-card { width: min(88vw, 540px); min-width: 0; margin: 0; padding: 19px 24px 22px; }
-        .game-results-awards { margin: 8px 0; }
+        .game-results-title { margin: 5px 0 10px; font-size: 30px; }
+        .game-results-actions { flex-direction: row; gap: 8px; }
+        .game-results-actions .game-menu-button { flex: 1; min-height: 42px; font-size: 22px; padding: 6px; }
+      }
+      @media (min-aspect-ratio: 13/10) and (max-height: 560px) {
+        .game-screen-results { place-items: center end; padding: 12px; }
+        .game-results-card { width: 46vw; padding: 12px 18px; }
+        .game-results-title { font-size: 27px; }
+        .game-results-time-trial .game-results-tally { margin: 5px 0; gap: 5px; }
+        .game-results-time-trial .game-results-tally div { padding: 5px; }
+        .game-results-time-trial .game-results-run-time strong { font-size: 42px; }
       }
       @media (pointer: coarse) and (orientation: landscape) and (max-height: 560px) {
         .game-shell-panel { padding: 8px max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left)); }

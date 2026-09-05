@@ -9,6 +9,7 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 3. Put geometry in level data when possible. Change `src/level.ts` only when the shared toolkit cannot express the brief. `public/levels.json` is the synced, published editor snapshot; update it only when a lab result should join that shared level pack.
 4. Run `npm run check:levels` after editing level data and `npm run build` before handoff. Smoke-test the affected level in a real browser and check the console for errors.
 5. Record each completed brief in `docs/LEVEL_ITERATIONS.md`, including elapsed prompt-to-playable time. Do not include unrelated cleanup in a timed iteration.
+6. By default, commit and publish completed, validated changes through `origin/main` and the existing GitHub Pages workflow. Verify the deployment before handoff. Stage only task-owned changes and preserve unrelated work; follow any explicit request to keep a change local or use a different delivery workflow.
 
 ## Guardrails
 

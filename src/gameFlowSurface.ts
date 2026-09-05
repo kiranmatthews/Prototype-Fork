@@ -7,6 +7,7 @@
 // render path.
 
 import * as THREE from "three";
+import { trackPresentationImage } from "./presentationLoading";
 
 export type GameFlowSurfaceScreen =
   | "launch"
@@ -158,8 +159,6 @@ const TEXT_SELECTOR = [
   ".game-results-title",
   ".game-results-tally span",
   ".game-results-tally strong",
-  ".game-award > span",
-  ".game-award > small",
 ].join(",");
 
 const PREVIOUS_VIEWPORT = new THREE.Vector4();
@@ -677,7 +676,8 @@ export class GameFlowSurface {
   ): void {
     ctx.save();
     if (screen === "results") {
-      const gradient = ctx.createLinearGradient(0, 0, width, 0);
+      const beside = width > 760 && height > 560 || width / height > 1.3;
+      const gradient = ctx.createLinearGradient(0, 0, beside ? width : 0, beside ? 0 : height);
       gradient.addColorStop(0, "rgba(3,5,10,0)");
       gradient.addColorStop(0.38, "rgba(3,5,10,0)");
       gradient.addColorStop(0.58, "rgba(3,5,10,.35)");
@@ -825,6 +825,15 @@ export class GameFlowSurface {
       ctx.shadowColor = "rgba(255,235,151,.6)";
       ctx.shadowOffsetY = 2;
       if (button.kind === "toggle") {
+        // The Canvas mirror does not inherit flexbox shrinking/wrapping.
+        // Fit the label and choice together, reserving a real gap even for
+        // long values such as CLASSIC on a narrow options card.
+        const gap = 12;
+        const available = Math.max(1, rect.width - 50 - gap);
+        const textWidth = ctx.measureText(button.label).width +
+          ctx.measureText(button.valueLabel).width;
+        const fit = Math.min(1, available / Math.max(1, textWidth));
+        ctx.font = `${button.fontWeight} ${button.fontSize * fit}px ${button.fontFamily}`;
         ctx.textAlign = "left";
         ctx.fillStyle = button.color;
         ctx.fillText(button.label, rect.x + 25, rect.y + rect.height / 2);
@@ -947,7 +956,9 @@ export class GameFlowSurface {
     image.onerror = () => {
       this.maskImageReady = false;
     };
-    image.src = `${import.meta.env.BASE_URL}crossbones.png`;
+    const url = `${import.meta.env.BASE_URL}crossbones.png`;
+    trackPresentationImage(image, url);
+    image.src = url;
     this.maskImage = image;
   }
 

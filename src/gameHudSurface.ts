@@ -7,6 +7,7 @@
 // contract, so they remain sharp DOM above the CRT output.
 
 import * as THREE from "three";
+import { trackPresentationImage } from "./presentationLoading";
 import {
   SOURCE_HUD_TRACKING,
   sourceTrackingPixels,
@@ -1703,6 +1704,7 @@ export class GameHudSurface {
     image.onerror = () => {
       this.lifeFaceReady = false;
     };
+    trackPresentationImage(image, url);
     image.src = url;
     this.lifeFace = image;
   }

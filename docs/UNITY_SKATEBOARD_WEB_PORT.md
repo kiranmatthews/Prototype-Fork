@@ -55,8 +55,29 @@ complete cloneable presentation. It retains all existing mounted, loose,
 flip, grab, manual, grind, wallride, under-rail, and replay transforms. The
 rider's non-uniform presentation scale is cancelled on the board so the Unity
 metre dimensions remain exact in world space. Foot planting reads the live
-grip height, and an artwork-up loose board receives Unity's bounds-based pivot
-lift when it settles.
+grip height. Discarded boards use their full visible bounds when settling,
+including artwork-up decks and fractured pieces.
+
+## Discarded board pile
+
+Every bail, board abandonment and traversal detach creates a separate board
+owned by the current `Level`. Remounting releases its ownership by the player
+and brings out a fresh deck. Grounded leftovers remain through same-level
+respawns and resets; unloading that Level clears the collection. A suspended
+parent level retains its pile across a bonus detour. Debris falling out of the
+playable world is removed below the kill plane.
+
+A separate cosmetic random stream chooses occasional first-impact breakage:
+16% split into two independently bouncing halves, and 9% fold into a taco.
+The fractured deck retains its griptape/artwork UVs, plywood, wheels and trucks,
+with raw wood at the split. This never consumes gameplay RNG or adds collision.
+
+Awake pieces share fixed-step physics and render interpolation; sleeping pieces
+become mesh/material instances grouped into 32 m cells. This preserves the pile
+without per-board sleeping physics or unbounded per-board draw calls. The custom
+deck shader supports instance transforms. Fracture geometry is cached per source
+deck, and level cleanup disposes only owned fracture/instance resources, never
+the live skateboard's borrowed geometry, textures or materials.
 
 ## Shape lab
 

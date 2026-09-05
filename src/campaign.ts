@@ -133,6 +133,25 @@ export interface GameAudioOptions {
   musicMuted: boolean;
 }
 
+export type GamePlayMode = 'modern' | 'classic';
+
+/** Share the existing debug rule preference; old choices remain valid. */
+export function loadGamePlayMode(): GamePlayMode {
+  try {
+    return localStorage.getItem('solProtoEndlessDeaths') === 'on' ? 'modern' : 'classic';
+  } catch {
+    return 'classic';
+  }
+}
+
+export function saveGamePlayMode(mode: GamePlayMode): void {
+  try {
+    localStorage.setItem('solProtoEndlessDeaths', mode === 'modern' ? 'on' : 'off');
+  } catch {
+    // Like audio options, unavailable storage leaves a session-local choice.
+  }
+}
+
 export interface CampaignInventory {
   lives: number;
   fruit: number;

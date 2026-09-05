@@ -209,6 +209,9 @@ function resultState(timeTrial) {
         levelName: "Jungle Ruins",
         actualTime: 59.25,
         relicTarget: 60,
+        boxes: 8,
+        totalBoxes: 20,
+        bestTimes: [59.25, 56.12, 58.3, 70],
       }
     : {
         kind: "normal",
@@ -267,15 +270,8 @@ try {
     "normal results must contain only the box tally cell",
   );
   const normalAwards = findClass(normalPanel, "game-results-awards");
-  assert.ok(
-    normalAwards,
-    "normal clears must retain earned-award presentation",
-  );
-  assert.equal(normalAwards.children.length, 3, "normal results must show exactly three awards");
-  assert.match(normalAwards.textContent, /CRYSTAL/);
-  assert.match(normalAwards.textContent, /BOX GEM/);
-  assert.match(normalAwards.textContent, /COMBO GEM/);
-  assert.doesNotMatch(normalAwards.textContent, /TIME RELIC/);
+  assert.equal(normalAwards, null, "earned prizes must be actual 3D assets, not symbol UI");
+  assert.match(findClass(normalPanel, "game-results-card").getAttribute("aria-label"), /Crystal/);
   assert.ok(findClass(normalPanel, "game-results-title"));
   assert.equal(findClass(normalPanel, "game-results-actions")?.children.length, 2);
 
@@ -287,11 +283,16 @@ try {
   assert.match(trialTally.innerHTML, /0:59\.25/);
   assert.match(trialTally.innerHTML, /RELIC TARGET/i);
   assert.match(trialTally.innerHTML, /1:00\.00/);
-  assert.doesNotMatch(trialTally.innerHTML, /BOXES/i);
+  assert.match(trialTally.innerHTML, /BOXES/i);
+  assert.match(trialTally.innerHTML, /8 \/ 20/);
+  assert.match(trialTally.innerHTML, /YOUR BEST TIMES/);
+  assert.match(trialTally.innerHTML, /0:56\.12 · 0:58\.30 · 0:59\.25/);
+  assert.doesNotMatch(trialTally.innerHTML, /1:10\.00/);
+  assert.match(trialTally.innerHTML, /class="game-results-run-time"/);
   assert.equal(
-    (trialTally.innerHTML.match(/<div>/g) ?? []).length,
-    2,
-    "time-trial results must contain exactly actual and target cells",
+    (trialTally.innerHTML.match(/<div[ >]/g) ?? []).length,
+    4,
+    "time trials need the prominent run time, relic target, boxes, and best times",
   );
   assert.doesNotMatch(
     trialTally.innerHTML,
@@ -334,7 +335,7 @@ try {
   );
   assert.match(
     mainSource,
-    /function showTimeTrialResults\([\s\S]{0,700}kind:\s*"time-trial"[\s\S]{0,200}actualTime:\s*time[\s\S]{0,120}relicTarget/,
+    /function showTimeTrialResults\([\s\S]{0,800}kind:\s*"time-trial"[\s\S]{0,200}actualTime:\s*time[\s\S]{0,120}relicTarget/,
     "time-trial presentation must receive actual time and its relic target",
   );
   assert.match(
@@ -368,6 +369,13 @@ try {
     /"\.game-results-tally span"[\s\S]{0,100}"\.game-results-tally strong"/,
     "the Canvas mirror must capture both timing labels and timing values",
   );
+  const liveStart = mainSource.indexOf('if (resultsPresentation && gameFlow.currentScreen === "results")');
+  const liveEnd = mainSource.indexOf('// Pause/menu worlds', liveStart);
+  const liveFrame = mainSource.slice(liveStart, liveEnd);
+  assert.ok(liveStart > 0 && liveEnd > liveStart);
+  assert.match(liveFrame, /resultsPresentation\.update\(dt\)/);
+  assert.match(liveFrame, /renderGameplayWithGameFlow\(dt\)/);
+  assert.doesNotMatch(liveFrame, /player\.step|level\.update|captureGameplay/, 'results animate without simulation or per-frame thumbnail copies');
 
   console.log(
     "Validated normal and time-trial results content across semantic DOM and Canvas selectors.",

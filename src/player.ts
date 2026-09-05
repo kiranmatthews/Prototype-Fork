@@ -45,9 +45,9 @@ import {
   createSkateboardPresentation,
   rebuildSkateboardPresentation,
   SKATEBOARD_GRIP_TOP,
-  skateboardRestingPivotLift,
 } from './skateboard/model';
 import { skateboardSettings } from './skateboard/settings';
+import type { DiscardedBoard } from './skateboard/discarded';
 import {
   ledgeBasis,
   ledgeBlockerIntersects,
@@ -62,6 +62,7 @@ import {
   type LedgeCatchEnvelope,
 } from './ledgeTraversal';
 import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
+import { sampleSkateMount, SKATE_MOUNT_DURATION } from './skateMount';
 import {
   SpinEffectsPresentation,
   type SpinPresentationDiagnostics,
@@ -771,6 +772,7 @@ export class Player {
   private dropPose = 0;
   private skatePose = 0; // feet-on-the-board stance while rolling
   private deckPose = 0; // 0..1: the deck is under the feet; articulated knees + sole planting own the stance
+  private skateMountT = -1; // one-shot presentation when on-foot movement becomes skating
   // SIDE-ON STANCE: a real skater faces 90° across the board — face and
   // belly toward the rail side, head turned to look down the line. This
   // blends the whole body into that pose whenever the board is under you
@@ -821,11 +823,12 @@ export class Player {
   private ragSeedA = 0; // per-wipeout flail phases so no two crashes thrash alike
   private ragSeedB = 0;
   private ragRollAcc = 0; // accumulated slope-roll angle: a thud every half turn
-  private flyBoard: THREE.Group | null = null; // the deck, mid-flight after a skate wipeout
-  private flyBoardVel = new THREE.Vector3();
-  private flyBoardAng = new THREE.Vector3(); // its own tumble rates (euler rates, cheap and chaotic)
-  private flyBoardT = 0;
-  private flyBoardRest = false; // landed and lying still
+  private looseBoard: DiscardedBoard | null = null;
+  private discardedBoardLevel: Level | null = null;
+  private get flyBoard(): THREE.Group | null { return this.looseBoard?.root ?? null; }
+  private get flyBoardVel(): THREE.Vector3 { return this.looseBoard!.velocity; }
+  private get flyBoardAng(): THREE.Vector3 { return this.looseBoard!.angular; }
+  private get flyBoardT(): number { return this.looseBoard?.remaining ?? 0; }
   private static readonly RAG_DQ = new THREE.Quaternion();
   private static readonly RAG_AXIS = new THREE.Vector3();
   private static readonly RAG_PIVOT_BASE = new THREE.Vector3();
@@ -900,6 +903,8 @@ export class Player {
   private grabSpinAngle = 0; // directional grab-spin; land off-axis = bail
   private spinAngle = 0; // spin-attack rotation (visual only)
   private visualYaw = 0; // Crash-style body facing vs. movement heading
+  private resultsPose: 'rest' | 'celebrate' | null = null;
+  private resultsElapsed = 0;
   private flipTimer = 0; // front-flip on jump (visual only)
   private dirHoldT = 0; // seconds a direction has been held (roll-jump trigger)
   private airJumpUsed = false; // double jump: one extra pop per air
@@ -1215,6 +1220,7 @@ export class Player {
   private gloveRight: CartoonGloveRig | null = null;
   private riggedCartoonHands: RiggedCartoonHandPair | null = null;
   private riggedCartoonHandState: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';
+  private riggedCartoonHandLoading: Promise<void> | null = null;
   private riggedCartoonHandError: string | null = null;
   private readonly stretchableBones: StretchableBoneComponent[] = [];
   private meshyTorso: MeshyTorsoComponent | null = null;
@@ -1421,7 +1427,7 @@ export class Player {
       this.resetRenderInterpolation();
     }, true);
     if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-      void this.installRiggedCartoonHands();
+      this.riggedCartoonHandLoading = this.installRiggedCartoonHands();
     }
     this.installSpinEffects(); // Unity Whirlwind Vixen + orbital rings
 
@@ -2570,7 +2576,6 @@ export class Player {
     this.collectRenderHierarchy(this.group);
     objects.push(this.floorX, this.boostGlow);
     if (this.maskMesh) objects.push(this.maskMesh);
-    if (this.flyBoard) objects.push(this.flyBoard);
     for (const fruit of this.fruits)
       if (fruit.phase !== 'off' && fruit.phase !== 'fly') objects.push(fruit.mesh);
     for (const spark of this.sparks)
@@ -2832,11 +2837,59 @@ export class Player {
     this.onRespawn();
   }
 
-  /** Freeze a readable front-facing idle for the end-of-run camera. */
-  prepareResultsPose(level: Level): void {
-    this.settle(level);
-    this.finishVisualStep({ moveX: 0 } as unknown as Input, 1);
+  /** Wait for asynchronous attachment work as well as the texture loader. */
+  async preparePresentationAssets(): Promise<void> {
+    await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading]);
+  }
+
+  /** A clean spawn frame without consuming input or advancing gameplay. */
+  prepareStartPresentation(): void {
+    this.finishVisualStep({ moveX: 0, moveY: 0 } as Input, 0);
     this.collapseRenderInterpolation();
+  }
+
+  /** Presentation only: never step physics, timers, input, or the run clock. */
+  prepareResultsPose(level: Level, position: THREE.Vector3, facing: THREE.Vector3, celebrate: boolean): void {
+    this.pos.copy(position);
+    this.settle(level, facing);
+    this.resultsPose = celebrate ? 'celebrate' : 'rest';
+    this.resultsElapsed = 0;
+    this.updateResultsPose(0);
+  }
+
+  updateResultsPose(dt: number): void {
+    if (!this.resultsPose) return;
+    this.resultsElapsed += dt;
+    this.finishVisualStep({ moveX: 0, moveY: 0 } as Input, dt);
+    this.collapseRenderInterpolation();
+  }
+
+  endResultsPose(): void {
+    this.resultsPose = null;
+  }
+
+  private applyResultsPose(): void {
+    if (!this.resultsPose) return;
+    const breath = Math.sin(this.resultsElapsed * 2.8);
+    if (this.resultsPose === 'celebrate') {
+      // Open palms and lifted gaze leave the actual prizes as the focal point.
+      if (this.armR) this.armR.rotation.set(-0.22, -0.15, 1.48 + breath * 0.035);
+      if (this.armL) this.armL.rotation.set(-0.22, 0.15, -1.48 - breath * 0.035);
+      if (this.elbowR) this.elbowR.rotation.x = -0.25;
+      if (this.elbowL) this.elbowL.rotation.x = -0.25;
+      if (this.wristR) this.wristR.rotation.z = 0.3;
+      if (this.wristL) this.wristL.rotation.z = -0.3;
+      if (this.headM) this.headM.rotation.x = -0.9 + breath * 0.025;
+      if (this.upperG) this.upperG.rotation.x = -0.04 + breath * 0.018;
+    } else {
+      // A slightly folded posture and deep, looping breaths after an empty run.
+      if (this.upperG) this.upperG.rotation.x = 0.18 + breath * 0.045;
+      if (this.headM) this.headM.rotation.x = 0.08 - breath * 0.035;
+      if (this.armR) this.armR.rotation.set(-0.2, 0, 0.16);
+      if (this.armL) this.armL.rotation.set(-0.2, 0, -0.16);
+      if (this.elbowR) this.elbowR.rotation.x = -0.28 - breath * 0.04;
+      if (this.elbowL) this.elbowL.rotation.x = -0.28 - breath * 0.04;
+    }
   }
 
   // Everything a body has to LET GO OF when it is put down somewhere new:
@@ -2845,6 +2898,7 @@ export class Player {
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
   private settle(level: Level, facing?: THREE.Vector3): void {
+    this.endResultsPose();
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -2936,7 +2990,8 @@ export class Player {
     this.ragSteerInputLatched = false;
     this.ragFishJumps = 0;
     this.ragFlailKickT = 0;
-    if (this.flyBoard) this.flyBoard.visible = false;
+    this.releaseDiscardedBoard();
+    this.discardedBoardLevel = level;
     this.airFromSkate = false;
     this.airGrav = 'foot';
     this.grindExitAir = false;
@@ -3009,6 +3064,7 @@ export class Player {
     this.hangExitW = 0;
     this.wallridePose = 0;
     this.deckPose = 0;
+    this.skateMountT = -1;
     this.wallChargePose = 0;
     this.slopePose = 0;
     this.slopeRoll = 0;
@@ -3102,6 +3158,10 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    if (this.discardedBoardLevel !== level) {
+      this.releaseDiscardedBoard();
+      this.discardedBoardLevel = level;
+    }
     if (this.hubMode && this.pos.y < level.killY) {
       this.respawn(level, true, true);
       return;
@@ -4928,13 +4988,12 @@ export class Player {
       !this.crawling &&
       this.skateBlockT <= 0;
     if (free && !this.freeSkate) {
+      this.skateMountT = 0;
       if (pushingOff && this.flyBoard?.visible) {
-        this.flyBoard.visible = false;
-        this.flyBoardT = 0;
-        this.flyBoardRest = false;
+        this.releaseDiscardedBoard();
         // Deliberate recall is authoritative even if mash shortened the bail
         // below the original hide timer. Without clearing it, the loose clone
-        // disappears but the mounted deck can remain invisible too.
+        // is left behind, but the new mounted deck must still become visible.
         this.boardSnapT = 0;
       }
       // Seed the skate velocity from the direction you're actually going, so
@@ -7296,7 +7355,11 @@ export class Player {
    * zeros the rider's velocity, while the deck keeps the exact flight it had
    * on the catch tick.
    */
-  private detachBoardForTraversal(): boolean {
+  private detachBoardForTraversal(level: Level): boolean {
+    if (this.discardedBoardLevel !== level) {
+      this.releaseDiscardedBoard();
+      this.discardedBoardLevel = level;
+    }
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
     this.clearCoyoteJumpWindow();
@@ -7392,7 +7455,7 @@ export class Player {
       // does not bail; the deck simply keeps flying on its own while both hands
       // take the rope. This is the same transaction as Unity's
       // DetachBoardForTraversal boundary.
-      this.detachBoardForTraversal();
+      this.detachBoardForTraversal(level);
       this.state = 'rope';
       // ...and the slide-jump arc's launch too. These only cleared on a
       // WHEELS-DOWN landing, so catching a rope mid slide-jump carried the
@@ -8568,22 +8631,13 @@ export class Player {
 
   // The deck leaves her feet and goes bouncing off on its own — the single
   // best "that went wrong" read a skate wipeout has. A lazy world-space clone
-  // of the real board (shared geometry + materials); the real one hides behind
-  // boardSnapT, exactly like the under-rail snap always did, and comes back in
-  // hand when the get-up ends.
+  // of the real board (shared geometry + materials); every discard belongs to
+  // this level. Remounting brings out a fresh board and leaves this one behind.
   private throwBoard(inheritFlight = false): void {
-    if (!this.boardG) return;
-    if (!this.flyBoard) {
-      this.flyBoard = this.boardG.clone(true);
-      this.flyBoard.name = 'flyboard';
-      (this.group.parent ?? this.group).add(this.flyBoard);
-    }
-    const fb = this.flyBoard;
-    this.boardG.getWorldPosition(fb.position);
-    this.boardG.getWorldQuaternion(fb.quaternion);
-    this.boardG.getWorldScale(fb.scale);
-    fb.scale.y = fb.scale.x; // uniform: a spinning deck must not squash
-    fb.visible = true;
+    if (!this.boardG || !this.discardedBoardLevel) return;
+    this.releaseDiscardedBoard();
+    this.looseBoard = this.discardedBoardLevel.discardedBoards.spawn(this.boardG);
+    if (!this.looseBoard) return;
     const dir = Math.sign(this.speed || 1);
     if (inheritFlight) {
       // Emergency eject: the independently simulated deck inherits the exact
@@ -8609,76 +8663,23 @@ export class Player {
         (Math.random() - 0.5) * 18,
       );
     }
-    this.flyBoardT = 30; // generous cap: it lies there until deliberate recall
-    this.flyBoardRest = false;
     this.boardSnapT = Math.max(this.boardSnapT, this.bailDownT + 0.5); // real deck hides meanwhile
   }
 
-  // Ballistic deck: gravity, a couple of restitution bounces off the same
-  // ground query the player uses, then it lies where it fell until the get-up
-  // calls it back. Runs even while the player is dead — a board mid-air when
-  // the body hits a pit should still finish its arc.
+  private releaseDiscardedBoard(): void {
+    this.discardedBoardLevel?.discardedBoards.release(this.looseBoard);
+    this.looseBoard = null;
+  }
+
+  // Ballistic deck: gravity, restitution bounces, then a permanent sleeping
+  // instance. The level continues its motion after remount, respawn or P2 leaving.
   private updateFlyBoard(dt: number, level: Level): void {
-    const fb = this.flyBoard;
-    if (!fb || !fb.visible) return;
-    this.flyBoardT -= dt;
-    // The deck lies where it fell until you're back ON a board — the get-up
-    // is on foot now, so remounting (hold X) is what calls it back to your
-    // feet. A long cap tidies up a deck abandoned far away.
+    if (!this.looseBoard) return;
+    level.discardedBoards.step(this.looseBoard, dt, level);
+    // Keep the old missing-board gameplay window, but release its visual to
+    // the level instead of recalling/deleting it. Every remount gets a new deck.
     if (this.freeSkate || this.state === 'grind' || this.flyBoardT <= 0) {
-      fb.visible = false; // the real one is back underfoot
-      return;
-    }
-    if (this.flyBoardRest) return;
-    this.flyBoardVel.y -= 24 * dt;
-    fb.position.addScaledVector(this.flyBoardVel, dt);
-    fb.rotation.x += this.flyBoardAng.x * dt;
-    fb.rotation.y += this.flyBoardAng.y * dt;
-    fb.rotation.z += this.flyBoardAng.z * dt;
-    const g = this.queryGround(level, fb.position.x - this.pos.x, fb.position.z - this.pos.z);
-    if (g !== null && this.flyBoardVel.y < 0 && fb.position.y <= g.y + 0.06) {
-      fb.position.y = g.y + 0.06;
-      if (-this.flyBoardVel.y > 2.2) {
-        this.flyBoardVel.y = -this.flyBoardVel.y * 0.45;
-        this.flyBoardVel.x *= 0.6;
-        this.flyBoardVel.z *= 0.6;
-        this.flyBoardAng.multiplyScalar(0.55);
-        sfx.play('skateHalt', 0.25, 1.3 + Math.random() * 0.3); // clatter
-      } else {
-        // Settle onto whichever BROAD face is already nearer the ground. The
-        // previous x/z zero forced every throw grip-side-up, erasing the final
-        // attitude even though the flight itself was deterministic.
-        this.flyBoardRest = true;
-        const up = new THREE.Vector3(0, 1, 0);
-        const targetUp = up.clone();
-        const broadUp = up.clone().applyQuaternion(fb.quaternion);
-        if (broadUp.y < 0) targetUp.negate();
-        const forward = new THREE.Vector3(0, 0, 1)
-          .applyQuaternion(fb.quaternion);
-        forward.y = 0;
-        if (forward.lengthSq() <= 1e-6) {
-          const right = new THREE.Vector3(1, 0, 0)
-            .applyQuaternion(fb.quaternion);
-          right.y = 0;
-          if (right.lengthSq() > 1e-6)
-            forward.crossVectors(right.normalize(), targetUp);
-          else forward.set(Math.sin(fb.rotation.y), 0, Math.cos(fb.rotation.y));
-        }
-        forward.normalize();
-        const right = new THREE.Vector3().crossVectors(targetUp, forward).normalize();
-        const settledUp = new THREE.Vector3().crossVectors(forward, right).normalize();
-        fb.quaternion.setFromRotationMatrix(
-          new THREE.Matrix4().makeBasis(right, settledUp, forward),
-        );
-        // Unity's loose-board presentation lifts an artwork-up deck by its
-        // actual kicked/concave bounds. Without this, the new continuous deck
-        // sinks almost a quarter metre through the floor when it lands upside
-        // down because its root is the wheel-contact pivot, not mesh centre.
-        fb.position.y =
-          g.y + Math.max(0.06, skateboardRestingPivotLift(fb, fb.quaternion));
-        this.flyBoardAng.set(0, 0, 0);
-        sfx.play('skateHalt', 0.18, 1.5);
-      }
+      this.releaseDiscardedBoard();
     }
   }
 
@@ -12826,7 +12827,7 @@ export class Player {
     this.ledgeLip = resolvedLip.y;
     this.ledgeMoverId = resolvedLip.moverId;
     this.ledgeAnchor.y = resolvedLip.y - LEDGE_HANG_DEPTH;
-    return this.commitLedgeCatch();
+    return this.commitLedgeCatch(level);
   }
 
   // MESH-EDGE LEDGE GRAB — the systemic net. tryLedgeGrab only ever sees AABB
@@ -12932,12 +12933,12 @@ export class Player {
     this.ledgeLip = resolvedLip.y;
     this.ledgeMoverId = resolvedLip.moverId;
     this.ledgeAnchor.y = resolvedLip.y - LEDGE_HANG_DEPTH;
-    return this.commitLedgeCatch();
+    return this.commitLedgeCatch(level);
   }
 
   // The catch itself, shared by the AABB and mesh variants: the detection has
   // set the anchor/normal/lip/box — this settles the body into the hang.
-  private commitLedgeCatch(): boolean {
+  private commitLedgeCatch(level: Level): boolean {
     this.ledgeFrom.copy(this.pos);
     this.ledgeEaseT = 0;
     this.ledgePhase = 'grip';
@@ -12948,7 +12949,7 @@ export class Player {
     this.ledgeClimbQueued = this.rawInput.jumpPressed || this.rawInput.jumpHeld;
     // A two-handed ledge catch cannot leave the deck mounted. Detach before
     // zeroing speed/vVel so the loose board inherits the actual catch flight.
-    this.detachBoardForTraversal();
+    this.detachBoardForTraversal(level);
     // NOTE: axisF/axisL are the CONTROL FRAME (stick -> world), owned by the
     // zone/lane system — the hang must never rotate them (that scrambles the
     // controls after you let go). Facing the wall is visualYaw, in stepHang.
@@ -13981,7 +13982,7 @@ export class Player {
    * Only local matrices are touched, and the correction is applied to the
    * PARENT of everything measured, so there is no feedback and no jitter.
    */
-  private plantOnDeck(underW: number): void {
+  private plantOnDeck(underW: number, mounting = false): void {
     const rg = this.riderG;
     if (!rg) return;
     const legs = this.legs;
@@ -14002,7 +14003,7 @@ export class Player {
     // them and fully drawn. Ramping to full by the time it is half-blended
     // costs nothing at the ends and cuts the walk→skate worst case by 3×.
     const w =
-      THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5) *
+      (mounting ? 1 : THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5)) *
       (1 - this.wallridePose) *
       (1 - underW) *
       (1 - this.grabPose) *
@@ -14088,6 +14089,47 @@ export class Player {
     rg.position.add(corr);
   }
 
+  /** Seat idle and walking on their support plane. Fade out using the same
+   * Walk/Run blend as animation, leaving the authored running pose intact.
+   * The rider-only translation never moves collision, the board or the rig's
+   * bind pose, and the deck solver retains exclusive ownership while skating. */
+  private seatOnFoot(): void {
+    const rg = this.riderG;
+    if (!rg?.parent || this.proceduralFootwear.length !== 2 || !this.grounded || this.freeSkate) return;
+    const hint = this.animationClipHint;
+    if (hint !== 'player.idle' && hint !== 'player.run') return;
+    const walkWeight = hint === 'player.idle' ? 1 : locomotionWalkBlendWeight(
+      this.animationPlanarSpeed / Math.max(TUNING.walkSpeed, 0.001),
+    );
+    const weight = walkWeight * (1 - THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5));
+    if (weight <= 0.002) return;
+
+    const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
+    if (normal.y < 0.1) return;
+    let clearance = Infinity;
+    // The rounded outsole's lowest vertex changes as a foot rolls. Read its
+    // small mesh directly, leaving the separate skate footprint cache intact.
+    for (const { sole } of this.proceduralFootwear) {
+      sole.updateWorldMatrix(true, false);
+      const points = sole.geometry.getAttribute('position');
+      for (let i = 0; i < points.count; i++) {
+        _plantV.fromBufferAttribute(points, i).applyMatrix4(sole.matrixWorld).sub(this.pos);
+        // Vertical clearance above the support plane at THIS sole point's XZ.
+        clearance = Math.min(clearance, _plantV.dot(normal) / normal.y);
+      }
+    }
+    if (!Number.isFinite(clearance)) return;
+
+    const drop = Math.max(0, clearance - 0.006) * weight;
+    if (drop <= 0) return;
+    // A running lean or sloped parent must not turn a vertical correction
+    // into a sideways move. Convert a WORLD-up delta into the rider's parent.
+    _plantInv.copy(rg.parent.matrixWorld).invert();
+    _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+    _plantC.set(0, -drop, 0).applyMatrix4(_plantInv).sub(_plantO);
+    rg.position.add(_plantC);
+  }
+
   /**
    * Finish a fixed simulation step and then author its visual pose. Keeping
    * the eased surface-alignment state here makes landing judgement independent
@@ -14153,6 +14195,19 @@ export class Player {
       this.riderG.position.set(0, 0, 0);
     }
     this.group.position.copy(this.pos);
+    // The transition into skating starts this hop, for charge and automatic
+    // momentum/downhill mounts alike. A real jump,
+    // dismount or action immediately hands the pose back to its normal owner.
+    if (this.skateMountT >= 0) {
+      if (!this.freeSkate || !this.grounded || this.state !== 'ride' || this.isBailing ||
+          this.crawling || this.sliding || this.wallriding || this.grabbing) {
+        this.skateMountT = -1;
+      } else {
+        this.skateMountT += dt;
+        if (this.skateMountT >= SKATE_MOUNT_DURATION) this.skateMountT = -1;
+      }
+    }
+    const mountPose = sampleSkateMount(this.skateMountT);
     const characterShape = characterProportionSettings.value;
     this.upperLegLengthR = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
     this.upperLegLengthL = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
@@ -14595,8 +14650,9 @@ export class Player {
       // the deep running-charge knee fold swings the shoes forward THROUGH
       // the deck — on the board it eases down to a shallow athletic bend.
       const chargeBend = 0.85 * this.chargePose * (1 - 0.6 * sk) - 0.62 * standCharge; // planted: shallow the forward fold so shoes don't swing through the floor
-      const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend; // front leg
-      const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend; // back leg
+      const mountFold = 0.32 * mountPose.tuck + 0.24 * mountPose.settle;
+      const stanceR = 0.7 * sk + 0.5 * this.grindArmPose + chargeBend + mountFold; // front leg
+      const stanceL = 0.5 * sk + 0.5 * this.grindArmPose + chargeBend + mountFold; // back leg
       this.kneeR.rotation.x = straight * (stanceR + tuck + backR + frontR + 0.35 * this.slidePose) + 0.38 * underW + (HS ? HS.kneeR * 0.65 * HS.w : ledgeW * (0.5 - dangle) + 0.8 * mantle);
       this.kneeL.rotation.x = straight * (stanceL + tuck + backL + frontL + 1.0 * this.slidePose) + 0.38 * underW + (HS ? HS.kneeL * 0.65 * HS.w : ledgeW * (0.62 + dangle) + 0.95 * mantle); // hang shins: clip or authored
       this.legR.rotation.x -= straight * 0.5 * stanceR;
@@ -15532,11 +15588,21 @@ export class Player {
     // A bail stays visible so the tumble reads; a plain death blinks out.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
 
+    // A small arm lift sells the mounting hop while the stance turns onto the
+    // board. These additive accents vanish exactly at the end of the settle.
+    if (mountPose.tuck > 0) {
+      if (this.armL) this.armL.rotation.x -= 0.3 * mountPose.tuck;
+      if (this.armR) this.armR.rotation.x -= 0.3 * mountPose.tuck;
+      if (this.elbowL) this.elbowL.rotation.x -= 0.15 * mountPose.tuck;
+      if (this.elbowR) this.elbowR.rotation.x -= 0.15 * mountPose.tuck;
+    }
+
     // Authored clips are the final pose layer. The bridge snapshots this
     // complete legacy result first and restores it before the next fixed step,
     // so authored writes are absolute and can never accumulate into gameplay.
     this.playerAnimationBridge.applyOverlay(dt);
-    this.syncCharacterAppearance();
+    this.applyResultsPose();
+    this.syncCharacterAppearance({ upperArmRestAngleWeight: this.resultsPose ? 0 : undefined });
     if (this.authoredCrawlContactPhase !== null) {
       this.alignCrawlHandsToGround(
         crawlMove * this.authoredCrawlContactWeight,
@@ -15546,7 +15612,19 @@ export class Player {
     this.alignHandsToRopeGrip(dt);
     // Character Lab proportions and authored animation both move endpoints.
     // Plant only after both layers so feet cannot slide away from the deck.
-    this.plantOnDeck(underW);
+    // The hop needs a fully seated reference from its first frame; the old
+    // partial mount blend could start a charged shoe underneath the new deck.
+    this.plantOnDeck(underW, this.skateMountT >= 0);
+    this.seatOnFoot();
+    // Apply lift AFTER deck planting; otherwise the contact solver cancels
+    // the hop. The skateboard and physics point remain on their exact path.
+    if (mountPose.lift > 0 && this.riderG?.parent) {
+      this.riderG.parent.updateWorldMatrix(true, false);
+      _plantInv.copy(this.riderG.parent.matrixWorld).invert();
+      _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+      _plantC.set(0, mountPose.lift, 0).applyMatrix4(_plantInv).sub(_plantO);
+      this.riderG.position.add(_plantC);
+    }
     // Rope grips and sole planting can still translate the body root. Resolve
     // the mask from the final head socket only after every post-pose correction.
     // Mask sockets live under the presentation mount, so sample them only after

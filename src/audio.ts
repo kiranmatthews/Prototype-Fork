@@ -83,13 +83,14 @@ class SfxEngine {
   private loops = new Map<string, LoopChannel>();
   private lastPlay = new Map<string, number>();
   private loading = false;
+  private preparation: Promise<void>;
 
   constructor() {
     // Warm up at PAGE LOAD: create the (suspended) context and start decoding
     // every buffer right away, so sound is ready the instant something resumes
     // the context — instead of only starting the async load on the first gesture
     // (which left the opening seconds silent). unlock() then just resumes.
-    void this.init();
+    this.preparation = this.init();
     const unlock = (): void => this.unlock();
     // keydown/pointer/touch are real user gestures; gamepadconnected + the
     // per-frame poll (see main.ts) cover controller-only players, who fire none
@@ -111,7 +112,7 @@ class SfxEngine {
       // once set; see requestAmbientSession above for the mute-switch trade).
       requestAmbientSession();
       if (!this.ctx) {
-        void this.init();
+        this.preparation = this.init();
         return;
       }
       if (this.ctx.state === 'suspended') void this.ctx.resume();
@@ -119,6 +120,9 @@ class SfxEngine {
       /* no audio — fine */
     }
   }
+
+  /** Includes fetch and decode, without waiting for user-gesture playback. */
+  prepare(): Promise<void> { return this.preparation; }
 
   private async init(): Promise<void> {
     try {

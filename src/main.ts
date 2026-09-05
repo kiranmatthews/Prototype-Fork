@@ -2,6 +2,7 @@
 // fixed-step game loop.
 
 import * as THREE from "three";
+import { afterPresentationPaint, presentationAssets } from "./presentationLoading";
 import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
 import {
@@ -36,6 +37,7 @@ import {
 } from "./player";
 import { UI, type HudState } from "./ui";
 import { GameFlowUI, type ResultsScreenState } from "./gameFlowUI";
+import { ResultsPresentation } from "./resultsPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
   CampaignStore,
@@ -44,9 +46,12 @@ import {
   campaignLevelById,
   isCampaignLevel,
   loadGameAudioOptions,
+  loadGamePlayMode,
   mergeCompletedBonusInventory,
   saveGameAudioOptions,
+  saveGamePlayMode,
   type GameAudioOptions,
+  type GamePlayMode,
 } from "./campaign";
 import { BONUS_LEVEL } from "./levels/bonus-level";
 import { TUNING, CONST } from "./tuning";
@@ -1030,10 +1035,32 @@ function releaseBonusParallax(): void {
   bonusParallax = null;
 }
 async function prepareActivePresentationAssets(): Promise<void> {
+  // Ocean reflection art is normally requested by the first gameplay frame.
+  // Start it here so that first visible frame never owns network loading.
+  updateWaterPresentation(0);
   await Promise.all([
     loadSky(activeSky),
     bonusParallax?.prepare() ?? Promise.resolve(),
+    player.preparePresentationAssets(),
+    p2?.preparePresentationAssets(),
+    document.fonts?.ready,
+    sfx.prepare(),
+    animationPreparation,
   ]);
+  await presentationAssets.waitUntilSettled();
+}
+
+function updateWaterPresentation(dt: number): void {
+  if (!level.water) return;
+  if (fixedResolutionActive()) {
+    level.water.setPreCrtRenderSize(renderQualitySizes.inputWidth, renderQualitySizes.inputHeight);
+  } else {
+    level.water.clearPreCrtRenderSize();
+  }
+  level.water.setQuality(level.skyPreset === "coast" && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
+  level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
+    SKY_PRESETS[activeSky].fog, presetHorizonV(activeSky));
+  level.water.update(dt, camera);
 }
 // 2P split state (functions live further down, past the player):
 let split2p = false;
@@ -1301,6 +1328,48 @@ function resize(): void {
   if (editorViewActive) editor.syncPlayAspect(playAspect);
   gameFlowVortex.invalidate();
   gameFlow?.requestGameplayFrame();
+}
+
+/** Compile and paint the actual loading path while the curtain is opaque. */
+async function prepareLoadingVortexPresentation(): Promise<void> {
+  renderVortexWithGameFlow(0, performance.now(), "warp");
+  await afterPresentationPaint();
+  renderVortexWithGameFlow(0, performance.now(), "warp");
+}
+
+/** Establish the spawn camera/pose and warm the complete final render path. */
+async function prepareDestinationPresentation(): Promise<void> {
+  if (!gameFlow.vortexContext) {
+    if (resultsPresentation) {
+      resultsPresentation.update(0);
+      resultsPresentation.frameCamera(camera, window.innerWidth, window.innerHeight,
+        gameFlow.resultsSceneViewport(window.innerWidth, window.innerHeight));
+    } else {
+      player.prepareStartPresentation();
+      p2?.prepareStartPresentation();
+      updateCamera(1);
+      if (split2p) updateCamera2(1);
+    }
+    sky.position.copy(camera.position);
+    skyMist.position.copy(camera.position);
+    bonusParallax?.update(player.pos, 0, loadedLevelId);
+    updateSeaHorizon();
+    updateWaterPresentation(0);
+    updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
+    ui.setHUD(currentHudState(), 0);
+    await renderer.compileAsync(scene, camera);
+  }
+  const draw = (): void => {
+    const context = gameFlow.vortexContext;
+    if (context) renderVortexWithGameFlow(0, performance.now(), context);
+    else if (gameFlow.currentScreen) renderGameplayWithGameFlow(0);
+    else renderGameplayScene(0, true, level.hudMode !== "hub");
+  };
+  draw();
+  // The first post/HUD draw can lazily request its own textures or models.
+  await presentationAssets.waitUntilSettled();
+  draw();
+  await afterPresentationPaint();
 }
 window.addEventListener("resize", resize);
 // iOS standalone launches don't reliably fire 'resize' once the viewport
@@ -1649,9 +1718,10 @@ try {
 const characterAnimationRuntime: CharacterAnimationRuntime =
   createCharacterAnimationRuntime(player, playerAnimationDocument);
 let p2CharacterAnimationRuntime: CharacterAnimationRuntime | null = null;
+let animationPreparation: Promise<void> = Promise.resolve();
 try {
   const preferredAnimationDrafts = createPreferredDraftStore();
-  void preferredAnimationDrafts
+  animationPreparation = preferredAnimationDrafts
     .load(playerAnimationStarter.id)
     .then((document) => {
       if (!document || animationStudio) return;
@@ -1707,10 +1777,10 @@ function tintP2(): void {
 // Called on every level load and whenever either input to it changes, so the
 // world, the player and the button label can never disagree.
 let runModesOn = localStorage.getItem("solProtoRunModes") !== "off";
-let endlessDeathsOn = localStorage.getItem("solProtoEndlessDeaths") === "on";
+let endlessDeathsOn = loadGamePlayMode() === 'modern';
 let replaySavedEndlessDeaths: boolean | null = null;
 function applyEndlessDeaths(): void {
-  const active = shellBypass && endlessDeathsOn;
+  const active = endlessDeathsOn && !player.bonusMode;
   player.endlessDeaths = active;
   if (p2) p2.endlessDeaths = active;
   ui.setEndlessDeaths(active);
@@ -1992,6 +2062,13 @@ gameFlow = new GameFlowUI(
     onResultsRetry: retryFromResults,
     onResultsContinue: continueFromResults,
     onAudioOptions: applyGameAudioOptions,
+    getPlayMode: () => endlessDeathsOn ? 'modern' : 'classic',
+    onPlayMode: applyGamePlayMode,
+    prepareLoadingVortex: prepareLoadingVortexPresentation,
+    waitForLevelData: () => firstRunLevelSync,
+    waitForDestinationAssets: prepareActivePresentationAssets,
+    prepareDestinationFrame: prepareDestinationPresentation,
+    onTransitionComplete: guardGameplayFromMenu,
   },
   gameAudioOptions,
 );
@@ -2040,7 +2117,13 @@ interface BonusSession {
 }
 
 let bonusSession: BonusSession | null = null;
-let resultsCameraActive = false;
+let resultsPresentation: ResultsPresentation | null = null;
+
+function clearResultsPresentation(): void {
+  resultsPresentation?.dispose();
+  resultsPresentation = null;
+  camera.clearViewOffset();
+}
 let currentRunBonusBoxes = 0;
 let runStartRewards = {
   crystal: false,
@@ -2101,6 +2184,7 @@ function switchLevel(
 ): void {
   ui.hideMessage();
   if (bonusSession) discardSuspendedBonus();
+  clearResultsPresentation();
   // An id that no longer exists — a deleted user level, a replay or saved
   // editor target from an older list — resolves to the default course rather
   // than taking the whole game down on entry.name.toUpperCase().
@@ -2182,7 +2266,6 @@ function switchLevel(
     input.inventoryHeld,
   );
   ui.setHUD(currentHudState(), 0);
-  resultsCameraActive = false;
   gameFlow?.setWarpRoom(entry.id === "warproom");
   recorder.start(entry.id, endlessDeathsOn); // fresh take from this load
   (window as unknown as Record<string, unknown>).__game &&
@@ -2205,6 +2288,21 @@ function applyGameAudioOptions(options: GameAudioOptions): void {
   gameAudioOptions = { ...options };
   saveGameAudioOptions(gameAudioOptions);
   sfx.setMuted(gameAudioOptions);
+}
+
+function applyGamePlayMode(mode: GamePlayMode): void {
+  // A hub option, never a mid-course rules/economy switch. Applying it must
+  // not respawn the player, reset progress, or consume/replenish stored lives.
+  if (current.id !== 'warproom') return;
+  if (replayer.active) {
+    replayer.end();
+    restoreReplayRunRule();
+    ui.setReplayBadge(false);
+  }
+  endlessDeathsOn = mode === 'modern';
+  saveGamePlayMode(mode);
+  applyEndlessDeaths();
+  ui.setHUD(currentHudState(), 0);
 }
 
 function guardGameplayFromMenu(): void {
@@ -2267,7 +2365,7 @@ function quitCampaignToMain(saveFirst: boolean): boolean {
   guardGameplayFromMenu();
   void gameFlow.transition(() => {
     paused = false;
-    resultsCameraActive = false;
+    clearResultsPresentation();
     ui.hideMessage();
     gameFlow.showLaunch();
   });
@@ -2408,7 +2506,7 @@ function retryFromResults(): void {
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
-    resultsCameraActive = false;
+    clearResultsPresentation();
     switchLevel(current.id, false, true);
     await prepareActivePresentationAssets();
     gameFlow.hide();
@@ -2420,7 +2518,7 @@ function continueFromResults(): void {
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
-    resultsCameraActive = false;
+    clearResultsPresentation();
     returnToWarpRoom(originLevelId);
     await prepareActivePresentationAssets();
     gameFlow.hide();
@@ -2431,8 +2529,8 @@ function presentCampaignResults(result: ResultsScreenState): void {
   void gameFlow.transition(() => {
     ui.hideMessage();
     ui.hideTTResults();
-    player.prepareResultsPose(level);
-    resultsCameraActive = true;
+    clearResultsPresentation();
+    resultsPresentation = new ResultsPresentation(scene, player, level, result);
     gameFlow.showResults(result);
   });
 }
@@ -2469,6 +2567,9 @@ function showCampaignResults(): void {
 
 function showTimeTrialResults(time: number): void {
   player.bankFlyingFruit();
+  const { list: bestTimes } = recordTT(current.id, time);
+  const savedBest = campaign.levelProgress(current.id)?.bestTime;
+  if (savedBest != null && !bestTimes.includes(savedBest)) bestTimes.push(savedBest);
   const definition = campaignLevelById(current.id);
   const relicTarget =
     definition?.relicTime ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
@@ -2482,6 +2583,9 @@ function showTimeTrialResults(time: number): void {
     levelName: definition?.name ?? current.name,
     actualTime: time,
     relicTarget,
+    boxes: player.cratesBroken,
+    totalBoxes: level.totalCrates,
+    bestTimes,
   });
 }
 
@@ -2638,22 +2742,12 @@ function flushPendingCompletion(): void {
     return;
   }
   if (completion.kind === "time-trial") {
-    recordTT(current.id, completion.time);
     ui.setTimeTrial(false);
     level.setTimeTrial(false);
     showTimeTrialResults(completion.time);
     return;
   }
   showCampaignResults();
-}
-
-function updateResultsCamera(): void {
-  const focus = player.pos;
-  camera.fov = 34;
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.position.set(focus.x, focus.y + 1.65, focus.z - 5.6);
-  camera.lookAt(focus.x + 1.15, focus.y + 1.1, focus.z);
-  camera.updateProjectionMatrix();
 }
 
 // ---- level editor ----------------------------------------------------------
@@ -3385,7 +3479,7 @@ if (localStorage.getItem("solProtoEditorOpen") === "1") {
 // setup. After that the list is yours: RESTORE FROM CLOUD is the only thing
 // that overwrites it, so a fetch can never eat your edits and a level you
 // deleted stays deleted.
-void (async () => {
+const firstRunLevelSync = (async () => {
   if (localStorage.getItem("solProtoCloudPulled") === "1") return;
   if (getUserLevels().length) {
     localStorage.setItem("solProtoCloudPulled", "1"); // this device authored its own
@@ -3574,7 +3668,7 @@ ui.onToggleRunModes = () => {
 };
 ui.onToggleEndlessDeaths = () => {
   if (!shellBypass) {
-    ui.showMessage("CLASSIC LIVES", "campaign saves always use lives and game over", 1800);
+    ui.showMessage("PLAY MODE", "choose Modern or Classic in Warp Room → Options", 1800);
     return;
   }
   // The click expresses a choice against the rule currently shown. Capture it
@@ -3586,7 +3680,7 @@ ui.onToggleEndlessDeaths = () => {
     ui.setReplayBadge(false);
   }
   endlessDeathsOn = desiredEndlessDeaths;
-  localStorage.setItem("solProtoEndlessDeaths", endlessDeathsOn ? "on" : "off");
+  saveGamePlayMode(endlessDeathsOn ? 'modern' : 'classic');
   applyEndlessDeaths();
   // A ruleset switch starts a fresh standard run so lives, deaths, score and
   // checkpoint snapshots cannot straddle two incompatible economies.
@@ -3683,7 +3777,9 @@ function recordTT(
   } catch {
     all = {};
   }
-  const list = all[levelId] ?? [];
+  if (typeof all !== "object" || Array.isArray(all)) all = {};
+  const stored = all[levelId];
+  const list = Array.isArray(stored) ? stored.filter((value) => Number.isFinite(value) && value >= 0) : [];
   list.push(time);
   list.sort((a, b) => a - b);
   all[levelId] = list.slice(0, 8);
@@ -4274,12 +4370,26 @@ function frame(nowMs: number): void {
       return;
     }
     gameFlowVortex.deactivate();
-    // Menu worlds are intentionally frozen. Render one fresh frame on entry
+    if (resultsPresentation && gameFlow.currentScreen === "results") {
+      resultsPresentation.update(dt);
+      resultsPresentation.frameCamera(camera, window.innerWidth, window.innerHeight,
+        gameFlow.resultsSceneViewport(window.innerWidth, window.innerHeight));
+      sky.position.copy(camera.position);
+      skyMist.position.copy(camera.position);
+      updateSeaHorizon();
+      level.water?.update(dt, camera);
+      updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
+      renderGameplayWithGameFlow(dt);
+      writeRenderDiagnostics();
+      return;
+    }
+    // Pause/menu worlds are intentionally frozen. Render one fresh frame on entry
     // (and after a fade swaps worlds), then let the browser hold that canvas.
     // This also avoids a WebGL -> Canvas2D pause-thumbnail copy every RAF.
     if (gameFlow.consumeGameplayFrameRequest()) {
-      if (resultsCameraActive) updateResultsCamera();
-      renderGameplayWithGameFlow(dt);
+      if ((gameFlow.revealingDestination || gameFlow.loadingPhase === "cover") && !gameFlow.currentScreen)
+        renderGameplayScene(0, true, level.hudMode !== "hub");
+      else renderGameplayWithGameFlow(dt);
       gameFlow.captureGameplay(renderer.domElement);
     }
     return;
@@ -4362,6 +4472,7 @@ function frame(nowMs: number): void {
   try {
     player.applyRenderInterpolation(renderAlpha);
     if (split2p && p2) p2.applyRenderInterpolation(renderAlpha);
+    level.discardedBoards.applyRenderInterpolation(renderAlpha);
 
     frameStats.frame++;
     frameStats.rawDt = rawDt;
@@ -4406,30 +4517,7 @@ function frame(nowMs: number): void {
   // drives visibility and the reflection viewing direction. The reflection
   // source is the ACTUAL level skybox, so hand it the active sky art (a
   // string compare per frame; reloads only when the sky really changes).
-  if (level.water) {
-    if (fixedResolutionActive()) {
-      level.water.setPreCrtRenderSize(
-        renderQualitySizes.inputWidth,
-        renderQualitySizes.inputHeight,
-      );
-    } else {
-      level.water.clearPreCrtRenderSize();
-    }
-    level.water.setQuality(
-      level.skyPreset === "coast" &&
-      !split2p &&
-      !LITE_RENDER &&
-      !NO_OCEAN_PASSES
-        ? "full"
-        : "lite",
-    );
-    level.water.setSkyUrl(
-      import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
-      SKY_PRESETS[activeSky].fog,
-      presetHorizonV(activeSky),
-    );
-    level.water.update(dt, camera);
-  }
+  updateWaterPresentation(dt);
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
@@ -4538,6 +4626,7 @@ function frame(nowMs: number): void {
     // tick must always see the exact current simulation-authored hierarchy.
     player.restoreRenderPose();
     if (split2p && p2) p2.restoreRenderPose();
+    level.discardedBoards.restoreRenderPose();
   }
 }
 requestAnimationFrame(frame);
@@ -4615,6 +4704,8 @@ requestAnimationFrame(frame);
   enterBonusRound,
   returnFromBonus,
   showCampaignResults,
+  showTimeTrialResults,
+  getLoadingDiagnostics: () => ({ phase: gameFlow.loadingPhase, ...presentationAssets.diagnostics }),
   // debug: build/inspect the level list straight from the harness
   levelList,
   findLevel,

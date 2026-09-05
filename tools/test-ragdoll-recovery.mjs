@@ -497,6 +497,15 @@ try {
   // input starts recovery, rolls forward, and hands genuine forward velocity
   // and displacement into the ordinary running state.
   const runOut = createFixture();
+  // The roll must close its waist-pivot offset before the later Idle/Walk
+  // sole correction seats the upright rider. A seated walk no longer has a
+  // zero rider-root translation, so do not conflate those two pose layers.
+  const recoveryRootBeforeSeating = new THREE.Vector3();
+  const seatOnFoot = runOut.player.seatOnFoot.bind(runOut.player);
+  runOut.player.seatOnFoot = () => {
+    recoveryRootBeforeSeating.copy(runOut.player.riderG.position);
+    seatOnFoot();
+  };
   const neutral = makeInput();
   assert.equal(runOut.player.beginPvpKnockdown(0, 1), true);
   runOut.player.state = "ride";
@@ -533,7 +542,7 @@ try {
   assert.equal(observedRecovery, true, "neutral recovery never entered the roll phase");
   assert.ok(recoveryEntryOffset < 0.3, "recovery root teleported at roll entry");
   assert.ok(peakRiderOffset > 0.2, "recovery never moved around its waist pivot");
-  assert.ok(runOut.player.riderG.position.length() < 0.12, "recovery root did not close at 2pi");
+  assert.ok(recoveryRootBeforeSeating.length() < 0.12, "recovery root did not close at 2pi");
   assert.ok(peakRecoverySpeed > 0.5, "neutral recovery never generated run-out speed");
   assert.ok(runOut.player.pos.z < startZ - 0.1, "neutral recovery stayed anchored at its feet");
   assert.ok(runOut.player.walkVelocity.z < -0.1, "recovery did not hand forward carry to walking");

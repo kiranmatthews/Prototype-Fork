@@ -214,6 +214,204 @@ try {
   assert.ok(Math.min(...footprint.map((point) => point.z)) <= -0.0699);
   assert.ok(Math.max(...footprint.map((point) => point.z)) >= 0.1999);
 
+  // Compare the real animated rider with and without the on-foot seating
+  // pass. The actual soles must stay above ground, while running, skating and
+  // airborne poses must remain identical to the existing presentation.
+  const { RigBinding, createPlayerStarterAnimationSuite } =
+    await server.ssrLoadModule('/src/animation/index.ts');
+  const { createCharacterAnimationRuntime } =
+    await server.ssrLoadModule('/src/characterAnimationRuntime.ts');
+  const baseline = new Player(new THREE.Scene());
+  baseline.seatOnFoot = noop;
+  const riders = [baseline, player];
+  const runtimes = riders.map((rider) => createCharacterAnimationRuntime(rider,
+    createPlayerStarterAnimationSuite(RigBinding.fromSculptRuntime(
+      rider.animationRig.root, { strict: false },
+    ).definition)));
+  const soleHeights = (rider) => {
+    rider.group.updateWorldMatrix(true, true);
+    return ['left', 'right'].map((side) => {
+      const sole = rider.group.getObjectByName(`sole-${side}`);
+      const positions = sole.geometry.attributes.position;
+      const point = new THREE.Vector3();
+      let minY = Infinity;
+      for (let i = 0; i < positions.count; i++) {
+        point.fromBufferAttribute(positions, i).applyMatrix4(sole.matrixWorld);
+        minY = Math.min(minY, point.y - rider.pos.y);
+      }
+      return minY;
+    });
+  };
+  const input = { moveX: 0, moveY: 0, lookX: 0, lookY: 0 };
+  const metrics = {};
+  try {
+    for (const [mode, speed, skating, grounded] of [
+      ['idle', 0, false, true], ['walk', 3, false, true], ['run', 9, false, true],
+      ['skate-idle', 0, true, true], ['skate', 12, true, true],
+      ['board-air', 12, true, false], ['foot-air', 0, false, false],
+    ]) {
+      let lowered = 0, minimum = Infinity, maximum = -Infinity;
+      for (let frame = 0; frame < 180; frame++) {
+        for (const rider of riders) {
+          rider.state = grounded ? 'ride' : 'air';
+          rider.grounded = grounded;
+          rider.freeSkate = skating;
+          rider.airFromSkate = skating;
+          rider.speed = speed;
+          rider.walkVelocity.set(0, 0, skating ? 0 : -speed);
+          rider.prevPos.copy(rider.pos);
+          rider.pos.z -= speed / 60;
+          rider.runTime += 1 / 60;
+          rider.rawInput = input;
+          rider.syncVisual(input, 1 / 60);
+        }
+        const before = soleHeights(baseline), after = soleHeights(player);
+        assert.deepEqual(player.pos.toArray(), baseline.pos.toArray(), 'seating changed physics');
+        assert.deepEqual(player.boardG.matrixWorld.elements, baseline.boardG.matrixWorld.elements,
+          'on-foot seating moved the skateboard');
+        near(after[0] - after[1], before[0] - before[1], 1e-8);
+        if (mode === 'run' || skating || !grounded) {
+          near(after[0], before[0], 1e-8);
+          near(after[1], before[1], 1e-8);
+          assert.deepEqual(player.riderG.matrixWorld.elements, baseline.riderG.matrixWorld.elements,
+            `${mode}: protected rider presentation changed`);
+        } else if (frame >= 60) {
+          const low = Math.min(...after);
+          assert.ok(low >= Math.min(0.0059, ...before) - 1e-8,
+            `${mode} frame ${frame}: sole ${low}, original ${Math.min(...before)}`);
+          lowered += Math.min(...before) - low;
+          minimum = Math.min(minimum, low);
+          maximum = Math.max(maximum, low);
+        }
+      }
+      if (mode !== 'run' && !skating && grounded) {
+        assert.ok(lowered / 120 > 0.07, `${mode}: hover was not reduced`);
+        if (mode === 'idle') assert.ok(maximum < 0.04, 'idle still hovers');
+        metrics[mode] = { minimum, maximum, meanLowering: lowered / 120 };
+      }
+    }
+  } finally {
+    for (const runtime of runtimes) runtime.dispose();
+  }
+  console.log('On-foot seating:', metrics);
+
+  const { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_MOUNT_TIMING } =
+    await server.ssrLoadModule('/src/skateMount.ts');
+  assert.deepEqual(sampleSkateMount(0), { lift: 0, tuck: 0, settle: 0 });
+  assert.deepEqual(sampleSkateMount(SKATE_MOUNT_DURATION), sampleSkateMount(-1));
+  near(sampleSkateMount(SKATE_MOUNT_TIMING.airTime / 2).lift, 0.28);
+  near(sampleSkateMount(SKATE_MOUNT_TIMING.airTime + SKATE_MOUNT_TIMING.settleTime / 2).settle, 1);
+  const { Level } = await server.ssrLoadModule('/src/level.ts');
+  const mountLevel = new Level(new THREE.Scene(), { id: 'mount-check', name: 'Mount check', data: {
+    v: 1, name: 'Mount check', spawn: [0, 0.02, 0], killY: -20, groups: [],
+    components: [
+      { t: 'platform', p: [0, -0.5, -100], s: [100, 1, 240] },
+      { t: 'gate', p: [0, 0, -210] },
+    ],
+  } });
+  const mountRiders = [new Player(mountLevel.scene), new Player(mountLevel.scene)];
+  const originalVisual = mountRiders[0].syncVisual.bind(mountRiders[0]);
+  mountRiders[0].syncVisual = (input, dt) => {
+    mountRiders[0].skateMountT = -1;
+    originalVisual(input, dt);
+  };
+  const mountRuntimes = mountRiders.map(rider => createCharacterAnimationRuntime(rider,
+    createPlayerStarterAnimationSuite(RigBinding.fromSculptRuntime(rider.animationRig.root,
+      { strict: false }).definition)));
+  const mountInput = patch => Object.assign({
+    moveX: 0, moveY: 0, lookX: 0, lookY: 0,
+    jumpHeld: false, jumpPressed: false, jumpReleased: false,
+    grindHeld: false, grindPressed: false, spinHeld: false, spinPressed: false,
+    grabHeld: false, grabPressed: false, transferHeld: false, transferPressed: false,
+    restartPressed: false, consumeEdges: noop,
+  }, patch);
+  const physics = rider => [rider.state, rider.grounded, rider.freeSkate,
+    ...rider.pos.toArray(), rider.speed, rider.vVel, ...rider.walkVelocity.toArray(),
+    rider.charging, rider.chargePlanted, rider.skateCharge];
+  const mountStep = (patch = {}) => {
+    for (const rider of mountRiders) rider.step(1 / 60, mountInput(patch), mountLevel);
+    mountLevel.update(1 / 60);
+    assert.deepEqual(physics(mountRiders[1]), physics(mountRiders[0]), 'mount hop changed gameplay');
+    for (const rider of mountRiders) rider.group.updateWorldMatrix(true, true);
+    assert.deepEqual(mountRiders[1].boardG.matrixWorld.elements, mountRiders[0].boardG.matrixWorld.elements,
+      'mount hop moved the board');
+  };
+  const resetMount = () => {
+    for (const rider of mountRiders) {
+      rider.enterLevel('mount-check');
+      rider.respawn(mountLevel, true);
+    }
+    for (let i = 0; i < 30; i++) mountStep();
+  };
+  const mountedSoleGap = rider => {
+    const inverse = rider.boardG.matrixWorld.clone().invert();
+    const point = new THREE.Vector3();
+    let minimum = Infinity;
+    for (const {sole} of rider.proceduralFootwear) {
+      const positions = sole.geometry.getAttribute('position');
+      for (let i=0;i<positions.count;i++) {
+        point.fromBufferAttribute(positions,i).applyMatrix4(sole.matrixWorld).applyMatrix4(inverse);
+        minimum = Math.min(minimum,point.y-rider.boardG.userData.gripTop);
+      }
+    }
+    return minimum;
+  };
+  try {
+    const mounted = mountRiders[1];
+    for (const mode of ['static charge', 'moving charge', 'automatic momentum']) {
+      resetMount();
+      if (mode === 'moving charge') for (let i = 0; i < 75; i++) mountStep({moveY:1});
+      if (mode === 'automatic momentum') for (const rider of mountRiders) {
+        rider.speed = 12;
+        rider.walkVelocity.set(0, 0, -12);
+      }
+      let startFrame = -1, starts = 0, wasActive = false, peakLift = 0, peakSoleGap = 0;
+      for (let frame = 0; frame < 100; frame++) {
+        mountStep(mode === 'automatic momentum' ? {} : {moveY:1,jumpHeld:true,jumpPressed:frame===0});
+        const active = mounted.skateMountT >= 0;
+        if (active && !wasActive) { startFrame = frame; starts++; }
+        wasActive = active;
+        if (active) {
+          assert.equal(mounted.grounded, true, 'visual hop left the physics ground');
+          peakLift = Math.max(peakLift, sampleSkateMount(mounted.skateMountT).lift);
+          const gap=mountedSoleGap(mounted);
+          peakSoleGap=Math.max(peakSoleGap,gap);
+          assert.ok(gap>-0.015,`${mode}: mounting shoe passed through deck (${gap})`);
+        }
+      }
+      assert.equal(starts, 1, `${mode}: hop did not play exactly once`);
+      if (mode !== 'automatic momentum') assert.ok(startFrame >= 32, `${mode}: hop started before commitment`);
+      else assert.equal(startFrame, 0, 'automatic mount did not hop at the transition');
+      assert.ok(peakLift > 0.27, `${mode}: hop never rose`);
+      assert.ok(peakSoleGap>0.2,`${mode}: deck planting canceled the visible hop`);
+      assert.equal(mounted.skateMountT, -1, `${mode}: hop never finished`);
+      near(mounted.riderG.position.distanceTo(mountRiders[0].riderG.position), 0, 1e-8);
+      for (const name of ['hip-left','hip-right','knee-left','knee-right','shoulder-left','shoulder-right']) {
+        const a=mounted.group.getObjectByName(name),b=mountRiders[0].group.getObjectByName(name);
+        near(a.quaternion.angleTo(b.quaternion),0,1e-7);
+      }
+      console.log(`Mount hop: ${mode}, start frame ${startFrame}, peak ${peakLift.toFixed(3)}m; gameplay and board unchanged`);
+    }
+    resetMount();
+    for (let i = 0; i < 10; i++) mountStep({moveY:1,jumpHeld:true,jumpPressed:i===0});
+    assert.equal(mounted.skateMountT,-1,'quick charge triggered a mount hop');
+    mountStep({moveY:1,jumpReleased:true});
+    assert.equal(mounted.skateMountT,-1,'normal jump triggered a mount hop');
+    resetMount();
+    for (let i = 0; i < 38; i++) mountStep({moveY:1,jumpHeld:true,jumpPressed:i===0});
+    assert.ok(mounted.skateMountT>=0,'interruption fixture did not mount');
+    mountStep({moveY:1,jumpReleased:true});
+    assert.equal(mounted.state,'air');
+    assert.equal(mounted.skateMountT,-1,'real ollie retained the mount hop');
+    resetMount();
+    for (let i = 0; i < 38; i++) mountStep({moveY:1,jumpHeld:true,jumpPressed:i===0});
+    mounted.respawn(mountLevel,true);
+    assert.equal(mounted.skateMountT,-1,'respawn retained a stale mount hop');
+  } finally {
+    for (const runtime of mountRuntimes) runtime.dispose();
+    mountLevel.dispose();
+  }
+
   const [playerSource, labSource, mainSource, packageSource, moduleSource] = await Promise.all([
     readFile(resolve(root, 'src/player.ts'), 'utf8'),
     readFile(resolve(root, 'src/characterLab.ts'), 'utf8'),
