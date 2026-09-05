@@ -53,6 +53,7 @@ import {
   speedSkateFovTarget,
   stepSpeedSkateFov,
 } from "./cameraSpeedEffect";
+import { CameraLookOffset } from "./cameraLook";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
@@ -1037,6 +1038,8 @@ let p2: Player | null = null;
 const input2 = new Input(true); // pad-only: claims its own gamepad, no keyboard/touch
 const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 const cam2F = new THREE.Vector3(0, 0, -1);
+const cam2Aim = new THREE.Vector3();
+const cam2Look = new CameraLookOffset();
 const cam2LaneCursor = newLaneCursor();
 let cam2RenderSnapVersion = -1;
 let cam2SpeedFovBoost = 0;
@@ -1560,6 +1563,8 @@ const frameStats = {
   cameraZ: 0,
   cameraFov: TUNING.camFov,
   cameraSpeedFovBoost: 0,
+  cameraLookYaw: 0,
+  cameraLookPitch: 0,
   camera2Fov: TUNING.camFov,
   camera2SpeedFovBoost: 0,
 };
@@ -1893,6 +1898,7 @@ function updateCamera2(dt: number): void {
   if (snapped) {
     cam2RenderSnapVersion = p2.renderSnapVersion;
     cam2LaneCursor.s = -1;
+    cam2Look.reset();
   }
   const fixedReviewShot =
     current.id === "beachfront" && (oceanOverview || oceanReview);
@@ -1943,11 +1949,15 @@ function updateCamera2(dt: number): void {
   camera2.position.x += (tx - camera2.position.x) * k;
   camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
-  camera2.lookAt(
+  cam2Aim.set(
     subject.x + cam2F.x * 3,
     subject.y + 1.2,
     subject.z + cam2F.z * 3,
   );
+  camera2.lookAt(cam2Aim);
+  if (fixedReviewShot) cam2Look.reset();
+  else cam2Look.step(input2.lookX, input2.lookY, dt);
+  cam2Look.apply(camera2, cam2Aim);
   p2.camDir.set(cam2F.x, 0, cam2F.z);
 }
 player.cam = camera; // collected wumpa fly to the HUD counter — the flight needs the lens
@@ -3745,7 +3755,10 @@ player.onGameOver = () => {
 // scale relative to the current shipped baseline.
 const camTarget = new THREE.Vector3();
 const lookPoint = new THREE.Vector3();
-const camAimTmp = new THREE.Vector3();
+// Canonical, un-peeked view direction. Gameplay/replays consume this while
+// the visible camera may carry a small presentation-only right-stick offset.
+const camControlDir = new THREE.Vector3(0, 0, -1);
+const cameraLook = new CameraLookOffset();
 let camAnchorY = 0; // the rig's vertical anchor: the ground under the skater, eased
 let camRoll = 0; // eased dutch roll tracking the grind balance needle (radians)
 const aimSmooth = new THREE.Vector3(NaN, 0, 0); // lightly-damped look target (NaN = seed on first frame)
@@ -3774,6 +3787,7 @@ function updateCamera(dt: number): void {
     prevPlayerPos.copy(subject);
     cameraLaneCursor.s = -1;
     chaseSteadyT = 0;
+    cameraLook.reset();
   }
   if (oceanOverview && current.id === "beachfront") {
     // Frozen Unity d300 seaward golden-camera coordinates.
@@ -3781,6 +3795,14 @@ function updateCamera(dt: number): void {
     camera.position.set(-19.7656, 18, -258.4284);
     camera.up.set(0, 1, 0);
     camera.lookAt(0.4741, 1, -314.9205);
+    camControlDir
+      .set(
+        0.4741 - camera.position.x,
+        0,
+        -314.9205 - camera.position.z,
+      )
+      .normalize();
+    cameraLook.reset();
     camera.updateProjectionMatrix();
     camSpeedFovBoost = 0;
     cam2SpeedFovBoost = 0;
@@ -3794,6 +3816,10 @@ function updateCamera(dt: number): void {
     camera.position.set(1.415, 5.5, 13.852);
     camera.up.set(0, 1, 0);
     camera.lookAt(4.065, 0, 2.148);
+    camControlDir
+      .set(4.065 - camera.position.x, 0, 2.148 - camera.position.z)
+      .normalize();
+    cameraLook.reset();
     camera.updateProjectionMatrix();
     camSpeedFovBoost = 0;
     cam2SpeedFovBoost = 0;
@@ -4025,7 +4051,16 @@ function updateCamera(dt: number): void {
   aimSmooth.z += (lookPoint.z - aimSmooth.z) * kAim;
   aimSmooth.y += (lookPoint.y - aimSmooth.y) * kAimY;
 
+  // Publish the authored view before adding manual look. Right-stick/touch
+  // peeking is intentionally presentation-only: it must not rotate movement,
+  // ledge intent, lip balance axes, or the yaw recorded into a replay.
+  camControlDir.subVectors(aimSmooth, camera.position);
+  camControlDir.y = 0;
+  if (camControlDir.lengthSq() > 1e-6) camControlDir.normalize();
+  else camControlDir.copy(camF);
   camera.lookAt(aimSmooth);
+  cameraLook.step(input.lookX, input.lookY, dt);
+  cameraLook.apply(camera, aimSmooth);
 
   // GRIND BALANCE ROLLS THE SHOT. The needle is a horizontal lean, so the
   // horizon leans with it: a rail you are losing shows up in the frame itself
@@ -4300,11 +4335,9 @@ function frame(nowMs: number): void {
   gameFlowVortex.deactivate();
   paused = false;
 
-  // Tell the player where the camera is aiming (XZ) — the lip stall aligns
-  // its balance meter + stick axis with the screen using this.
-  camera.getWorldDirection(camAimTmp);
-  camAimTmp.y = 0;
-  if (camAimTmp.lengthSq() > 1e-6) {
+  // Tell the player where the AUTHORED camera is aiming (XZ) — the small
+  // presentation-only peek must never rotate simulation controls or replays.
+  if (camControlDir.lengthSq() > 1e-6) {
     // SNAP TO THE REPLAY'S YAW GRID. camDir is sampled here, on the render
     // clock, but it is consumed by the SIM — the lip stall picks its balance
     // stick axis from it, and in chase-cam mode the whole travel frame is
@@ -4312,7 +4345,7 @@ function frame(nowMs: number): void {
     // Quantising it here, before the sim ever reads it, is what makes the
     // number recorded and the number consumed the same by construction (the
     // same trick input.ts plays on the analog axes). 1e-4 rad is 0.006deg.
-    const yaw = camYawOf(camAimTmp.normalize());
+    const yaw = camYawOf(camControlDir);
     player.camDir.set(Math.sin(yaw), 0, Math.cos(yaw));
   }
 
@@ -4533,6 +4566,8 @@ function frame(nowMs: number): void {
     frameStats.cameraZ = camera.position.z;
     frameStats.cameraFov = camera.fov;
     frameStats.cameraSpeedFovBoost = camSpeedFovBoost;
+    frameStats.cameraLookYaw = cameraLook.yaw;
+    frameStats.cameraLookPitch = cameraLook.pitch;
     frameStats.camera2Fov = camera2.fov;
     frameStats.camera2SpeedFovBoost = cam2SpeedFovBoost;
     if (frameProbe) frameProbe.textContent = JSON.stringify(frameStats);

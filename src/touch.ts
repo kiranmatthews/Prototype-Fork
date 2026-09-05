@@ -52,6 +52,9 @@ const SWIPE_MIN_VEL = 0.35; // px per ms
 // Touch has no physical trigger to keep depressed. Hold the emulated R2 long
 // enough to cover an in-place rail-air spin without lateral transfer.
 const SWIPE_HOLD_MS = 450;
+// The unobstructed upper screen is a small, anchored virtual right stick.
+// Reaching full intent should take a deliberate drag, not a tiny camera nudge.
+const LOOK_DRAG_PX = 110;
 
 /** One shared touch/coarse-pointer gate for input and presentation policy. */
 export function touchControlsRequested(): boolean {
@@ -65,6 +68,8 @@ export class TouchControls {
   enabled = false;
   moveX = 0;
   moveY = 0;
+  lookX = 0;
+  lookY = 0;
   jumpHeld = false;
   grabHeld = false;
   spinHeld = false;
@@ -74,6 +79,9 @@ export class TouchControls {
   private inventoryUntil = 0;
   private dirIdx = -1; // active D-pad sector, -1 = neutral (hysteresis state)
   private padPointer: number | null = null;
+  private lookPointer: number | null = null;
+  private lookStartX = 0;
+  private lookStartY = 0;
   private padEl!: HTMLElement;
   private arrowEls!: Record<'up' | 'down' | 'left' | 'right', HTMLElement>;
   private btnEls = new Map<string, HTMLElement>();
@@ -91,6 +99,7 @@ export class TouchControls {
     this.injectStyle();
     this.buildDpad();
     this.buildButtons();
+    this.buildLookSurface();
     this.buildPauseButton();
     // iOS zoom killers: pinch (gesture*) and double-tap (dblclick) must never
     // scale the game. touch-action handles modern Safari; these catch the rest.
@@ -107,6 +116,83 @@ export class TouchControls {
 
   inventoryActive(): boolean {
     return performance.now() < this.inventoryUntil;
+  }
+
+  // ---------- GENTLE LOOK (free upper screen) ----------
+
+  private buildLookSurface(): void {
+    const zone = document.createElement('div');
+    zone.className = 'tc-look';
+    zone.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(zone);
+
+    const down = (e: PointerEvent): void => {
+      if (this.lookPointer !== null || this.lookBlocked()) return;
+      this.lookPointer = e.pointerId;
+      this.lookStartX = e.clientX;
+      this.lookStartY = e.clientY;
+      this.lookX = 0;
+      this.lookY = 0;
+      this.capture(zone, e);
+      e.preventDefault();
+    };
+    const move = (e: PointerEvent): void => {
+      if (e.pointerId !== this.lookPointer) return;
+      if (this.lookBlocked()) {
+        this.clearLook();
+        return;
+      }
+      this.lookX = Math.max(
+        -1,
+        Math.min(1, (e.clientX - this.lookStartX) / LOOK_DRAG_PX),
+      );
+      this.lookY = Math.max(
+        -1,
+        Math.min(1, (this.lookStartY - e.clientY) / LOOK_DRAG_PX),
+      );
+      e.preventDefault();
+    };
+    const up = (e: PointerEvent): void => {
+      if (e.pointerId !== this.lookPointer) return;
+      this.clearLook();
+    };
+    zone.addEventListener('pointerdown', down);
+    zone.addEventListener('pointermove', move);
+    zone.addEventListener('pointerup', up);
+    zone.addEventListener('pointercancel', up);
+    zone.addEventListener('lostpointercapture', up);
+    zone.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Pointer capture normally supplies a matching release, but mobile Safari
+    // can lose it when the app backgrounds. Mode changes can also hide the
+    // surface while a finger is still down, so clear synchronously on either.
+    window.addEventListener('blur', () => this.clearLook());
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.clearLook();
+    });
+    new MutationObserver(() => {
+      if (this.lookBlocked()) this.clearLook();
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  private clearLook(): void {
+    this.lookPointer = null;
+    this.lookX = 0;
+    this.lookY = 0;
+  }
+
+  private lookBlocked(): boolean {
+    const body = document.body.classList;
+    return (
+      body.contains('game-shell-modal') ||
+      body.contains('ed-active') ||
+      body.contains('tool-panel-open') ||
+      body.contains('character-lab-open') ||
+      body.contains('animation-studio-open') ||
+      body.contains('game-field-studio-open') ||
+      body.contains('side-panel-left-open') ||
+      body.contains('side-panel-right-open')
+    );
   }
 
   private buildPauseButton(): void {
@@ -360,6 +446,11 @@ export class TouchControls {
         -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
       }
+      .tc-look {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 38%; z-index: 9;
+        touch-action: none; -webkit-user-select: none; user-select: none;
+        -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+      }
       body.tc-on {
         --tc-size: clamp(136px, 40vh, 168px);
         --tc-size: clamp(136px, 40dvh, 168px);
@@ -391,6 +482,14 @@ export class TouchControls {
       body.game-shell-modal .tc-pause,
       body.ed-active .tc-pause,
       body.tc-on.tool-panel-open .tc-pause { display: none !important; }
+      body.game-shell-modal .tc-look,
+      body.ed-active .tc-look,
+      body.tool-panel-open .tc-look,
+      body.character-lab-open .tc-look,
+      body.animation-studio-open .tc-look,
+      body.game-field-studio-open .tc-look,
+      body.side-panel-left-open .tc-look,
+      body.side-panel-right-open .tc-look { display: none !important; }
       .tc-left { left: 0; width: 50vw; height: 52%; }
       .tc-right { right: 0; width: 50vw; height: 62%; }
       /* the two groups: identical footprint, identical height, identical

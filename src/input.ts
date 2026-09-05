@@ -4,15 +4,20 @@
 //   buttons[3] = Triangle, buttons[6] = L2 (inventory), buttons[7] = R2,
 //   buttons[8] = Share (reset), buttons[9] = Options (pause),
 //   buttons[12..15] = d-pad,
-//   axes[0/1] = left stick.
+//   axes[0/1] = left stick, axes[2/3] = presentation-only camera peek.
 
 import { TouchControls } from './touch';
+import { shapeLookStick } from './cameraLook';
 
 export class Input {
-  // ALL directional input is digital: -1, 0, or +1. Analog sticks are
-  // thresholded into a d-pad — there is no analog magnitude anywhere.
+  // Keyboard/D-pad movement is digital; analog sticks retain radial magnitude
+  // so locomotion and the separate presentation-only look both ease naturally.
   moveX = 0; // analog, -1 left .. +1 right (keyboard/d-pad = full ±1)
   moveY = 0; // analog, +1 forward .. -1 brake; (moveX, moveY) is unit-clamped
+  // Presentation-only right-stick/touch camera intent. It is deliberately
+  // absent from replay.ts and never feeds movement or collision state.
+  lookX = 0; // +1 = peek right
+  lookY = 0; // +1 = peek up
 
   jumpHeld = false;
   grindHeld = false;
@@ -111,6 +116,8 @@ export class Input {
     const k = this.keys;
     let moveX = solo ? 0 : (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0) - (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0);
     let moveY = solo ? 0 : (k.has('ArrowUp') || k.has('KeyW') ? 1 : 0) - (k.has('ArrowDown') || k.has('KeyS') ? 1 : 0);
+    let lookX = 0;
+    let lookY = 0;
 
     let jump = !solo && k.has('Space');
     let grind = !solo && k.has('KeyE');
@@ -140,6 +147,10 @@ export class Input {
       if (pad.buttons[14]?.pressed) moveX = -1;
       if (pad.buttons[15]?.pressed) moveX = 1;
 
+      const look = shapeLookStick(pad.axes[2] ?? 0, -(pad.axes[3] ?? 0));
+      lookX = look.x;
+      lookY = look.y;
+
       jump = jump || !!pad.buttons[0]?.pressed; // Cross
       grab = grab || !!pad.buttons[1]?.pressed; // Circle
       spin = spin || !!pad.buttons[2]?.pressed; // Square
@@ -158,6 +169,10 @@ export class Input {
         moveX = tc.moveX;
         moveY = tc.moveY;
       }
+      if (tc.lookX !== 0 || tc.lookY !== 0) {
+        lookX = tc.lookX;
+        lookY = tc.lookY;
+      }
       jump = jump || tc.jumpHeld;
       grab = grab || tc.grabHeld;
       spin = spin || tc.spinHeld;
@@ -174,6 +189,8 @@ export class Input {
       const stillHeld =
         Math.abs(moveX) > 0.01 ||
         Math.abs(moveY) > 0.01 ||
+        Math.abs(lookX) > 0.01 ||
+        Math.abs(lookY) > 0.01 ||
         jump ||
         grind ||
         spin ||
@@ -184,6 +201,8 @@ export class Input {
         pause;
       this.moveX = 0;
       this.moveY = 0;
+      this.lookX = 0;
+      this.lookY = 0;
       this.jumpHeld = false;
       this.grindHeld = false;
       this.spinHeld = false;
@@ -219,6 +238,8 @@ export class Input {
     // construction. 0.01 on a normalised axis is far below the deadzone.
     this.moveX = Math.round(moveX * 100) / 100;
     this.moveY = Math.round(moveY * 100) / 100;
+    this.lookX = lookX;
+    this.lookY = lookY;
 
     this.jumpHeld = jump;
     this.grindHeld = grind;
@@ -256,6 +277,8 @@ export class Input {
     this.menuReleaseGuard = true;
     this.moveX = 0;
     this.moveY = 0;
+    this.lookX = 0;
+    this.lookY = 0;
     this.jumpHeld = false;
     this.grindHeld = false;
     this.spinHeld = false;
@@ -329,7 +352,10 @@ export class Input {
 // Any deliberate input: a button down or the stick clearly off center.
 function padActive(pad: Gamepad): boolean {
   if (pad.buttons.some((b) => b.pressed)) return true;
-  return Math.hypot(pad.axes[0] ?? 0, pad.axes[1] ?? 0) > 0.35;
+  return (
+    Math.hypot(pad.axes[0] ?? 0, pad.axes[1] ?? 0) > 0.35 ||
+    Math.hypot(pad.axes[2] ?? 0, pad.axes[3] ?? 0) > 0.35
+  );
 }
 
 // Same physical device test for a mirror copy (same id, same live state).
